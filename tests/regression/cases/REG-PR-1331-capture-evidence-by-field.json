@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1331-capture-evidence-by-field",
+  "kind": "fix",
+  "title": "Joomla contract fact fields (stat values, cities, addresses, quotes, clients, team, prices) require evidence by field role, whatever the module title",
+  "pr": 1331,
+  "area": "joomla-contract/evidence",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read the newest tracy-business/j6 and ja-voyara/j6 content maps from packages/cms/tracy-joomla-quickstart/contracts as the Joomla planner reads them (withFieldEvidence in apps/tracy-web/src/lib/fact-fields.js).",
+    "S2: Check the hero stat-value and stat-label cells, the Contact - Branches city and addr cells, Voyara's Home - Stats value and label cells and both singular Testimonial modules (quote, name, role).",
+    "S3: Check the site identity module's slots and the hero title.",
+    "S4: Run capture-contract.py with --evidence-by-field on a module no title pattern names, and scripts/regate-contract.mjs over a capture made without the flag."
+  ],
+  "expect": [
+    "S1: the maps load; every slot the title rule gated is still gated.",
+    "S2: every one of those slots has requiresEvidence true.",
+    "S3: site identity slots and the hero title stay ungated (the planner may write them).",
+    "S4: the flagged capture gates stat-value, stat-label, city and addr and leaves title and lead open; the regated capture equals the flagged one byte for byte."
+  ],
+  "selectors": {
+    "tests": "apps/tracy-web/test/fact-fields.test.mjs, packages/cms/tracy-joomla-quickstart/test/capture-contract.test.mjs"
+  },
+  "evidence": "13/10/2026 readiness check on dev: Tracy Business Joomla hero counters came out as \"0\" or trade words, Branches city cells held the customer's industry, Voyara Home - Stats and Landing - Testimonial were rewritten; the capture gated by module title only (Pricing|Statistics|Testimonials|Clients|Team).",
+  "fence": "Static: the published profiles in the tree read through the planner's gating, plus the capture tool on a fixture; no site is built.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/fact-fields.test.mjs",
+      "packages/cms/tracy-joomla-quickstart/test/capture-contract.test.mjs"
+    ]
+  }
+}

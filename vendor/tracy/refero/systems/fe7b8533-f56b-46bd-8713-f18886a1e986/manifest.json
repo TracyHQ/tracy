@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "fe7b8533-f56b-46bd-8713-f18886a1e986",
+  "status": "complete",
+  "name": "Aurora",
+  "url": "https://styles.refero.design/style/fe7b8533-f56b-46bd-8713-f18886a1e986",
+  "sourceWebsite": "https://aurora.tech",
+  "extractedAt": "2026-06-03T19:00:05.482Z",
+  "capturedAt": "2026-10-08T05:20:00.187671+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "autonomous horizon at dawn — a clean white cockpit looking out onto a sunlit highway, one electric blue dial on the dashboard.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/95d9e90a-170e-4e98-8ed6-cf05bb66d59e.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "0056623788e032d5c4ebfc935f63a563847d8bccd5bac83049a268f3c7318e13",
+      "bytes": 21464
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "27e7f44d9bedd77edf4abedebf50a9deb5a0de915ef807e3d150864f706f85df",
+      "bytes": 110674
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "990675f0f9b1944449e9254f018cc0f4c4bd3a08c16090156b8f7660c918e15a",
+      "bytes": 17944
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0f41ef99015b7633db99b11bc9b80f4891cb56890c2ef4584aee474604536655",
+      "bytes": 12413
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "85deda4a04511c5e54d088a349702adaba2255d0813e4cb1a2cc2de65cc2eeb3",
+      "bytes": 13996
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "90646f3cfae720c62b51fc8c52c240da1849b8945a90443801252ec4c8bb2512",
+      "bytes": 3250
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "65dc2680615f462f2f1293dff4464d3feb920f1e8f7c7ed14c3ab2891a3d2bd7",
+      "bytes": 579
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "153f57941ac61d17d3e8dec8d6b0ce661ac7c1e714e67c3c7a9d83c6752c49f7",
+      "bytes": 683
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8c218a73f5de3f77b83c2b558921bfebedc415226c4bc815ebbfeb4a6bd1c114",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "54759233e5e441df05c89d7fb76d978ad19d64f3203c7c758567952ab4afa58d",
+      "bytes": 46145
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2eadb1c74dde66cd7e29c5dcae52e4bfa49b51ac7eb232c3300dc5d17dc73551",
+      "bytes": 24012
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "97d138111a20c31669b73df7cfe825bda555b5ce0c3fdaa8319f3b29df23684d",
+      "bytes": 51623
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a5740a7c2e48b87387401046cbf188a2601fdc110f2e317733e7587e5486a435",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "3ca38714ab11ddac0ef52e7a540712185d72a292bb4c8676faf2d9eb27290434",
+      "bytes": 1869
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3f13ea604eeebaf6111ea1736204e49fbdd786ceac37e42943b34ae6acebd1b4",
+      "bytes": 2568
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1ae4bcfe-c613-42fc-aab7-f9583381e7cc",
+    "1d4cbd69-ee0f-4f13-ba7d-14d3eaed7349",
+    "4a248569-2b5a-4416-bb2a-c78890218b9f",
+    "5f128a23-f60e-4d2d-a845-c35c16d0534b",
+    "7266b546-2fb0-465c-acd6-79001c39829a",
+    "7aa1dbff-f5f1-4a64-9dba-f4caad7f1ebf",
+    "8f623d19-51f6-4da2-bc45-05573cc98283",
+    "91174f53-6770-4398-b3e7-ad14b1c39b6d",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "b8a8976c-52d9-4ebb-95ea-4c40f4a9acab",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "bf523387-03fc-4243-86ca-25af34daa0ce",
+    "c1052d8d-3663-46a4-a882-e50d9b8a1166",
+    "c1f7749f-319b-491b-8243-22050e85994f",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "d5307f56-76de-4d13-9741-f969c42e9aa5",
+    "e85a82b1-c70e-42de-8c42-4bd95dd5e047",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "fe7b8533-f56b-46bd-8713-f18886a1e986"
+  ]
+}

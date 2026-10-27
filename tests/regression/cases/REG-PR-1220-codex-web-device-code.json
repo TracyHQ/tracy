@@ -1,0 +1,55 @@
+{
+  "id": "REG-PR-1220-codex-web-device-code",
+  "kind": "fix",
+  "title": "On the web, connecting ChatGPT Codex shows a code to type on OpenAI's device page instead of asking for a localhost address; the desktop app keeps the browser sign-in",
+  "pr": 1220,
+  "area": "settings/ai-accounts",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-web seat-plan broker, route and Codex vendor tests (node:test, TEST_DATABASE_URL = the stand's Postgres, fake vendor fetch) and the tracy-model-plan connect tests.",
+    "S2: the end-to-end form: on cowork.tracy.site, Settings > AI accounts > ChatGPT Codex > Connect now; the panel shows a code, Copy code and Open ChatGPT Codex (https://auth.openai.com/codex/device); typing the code there connects the account without pasting an address. In the desktop app the same press opens the browser sign-in and the app catches the callback."
+  ],
+  "expect": [
+    "POST /api/seat-plan/connect/start {provider: 'codex', surface: 'web'} (or no surface) answers signIn 'device' with userCode and authorizeUrl https://auth.openai.com/codex/device, and never the device code itself.",
+    "The same start with surface 'desktop' answers signIn 'browser' with an authorizeUrl whose redirect_uri is http://localhost:1455/auth/callback.",
+    "Claude starts a browser sign-in on every surface; GitHub Copilot a device sign-in on every surface.",
+    "An attempt finishes the way it started: a pasted address for a device attempt, or a poll for a browser one, is refused 400 invalid and the attempt stays open.",
+    "The page sends surface 'desktop' when window.tracyDesktop exists, else 'web'; the device panel shows OpenAI's page and the code the broker sent.",
+    "GET /api/seat-plan/status lists webSignIn per provider: codex 'device', claude 'browser', copilot 'device', key vendors 'key'."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/seat-plan-broker.test.mjs",
+      "apps/tracy-web/test/seat-plan-route.test.mjs",
+      "apps/tracy-web/test/seat-plan-codex.test.mjs",
+      "packages/ui/tracy-model-plan/test/connect.test.mjs"
+    ],
+    "tests": [
+      "on the web Codex hands back a code to type; on the desktop it opens the browser sign-in",
+      "Claude opens the browser sign-in on both surfaces, Copilot a device code on both",
+      "a Codex device attempt connects once OpenAI confirms",
+      "a Codex attempt finishes the way it started, whatever the vendor offers elsewhere",
+      "status says how each vendor signs in",
+      "connect/start hands the broker the surface the person signs in from; anything else is the web",
+      "on the web Codex signs in with a device code, on the desktop through the browser",
+      "device sign-in starts with OpenAI and hands back the code the person types",
+      "device poll stays pending while OpenAI answers 403 or 404",
+      "a confirmed device code is exchanged for tokens through the device callback",
+      "the start says which surface signs in: the desktop app when the page runs in it, else the web",
+      "a Codex device sign-in shows OpenAI's page and the code the broker sent, nothing of GitHub"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 180
+  },
+  "fence": "the sign-in kind is chosen once at connect/start from the vendor and the surface, sealed in the attempt, and complete() finishes it that way; the vendors' registered redirect URIs are unchanged",
+  "selectors": {
+    "panel": ".tv-ob-connect[data-connect='device']",
+    "code": ".tv-ob-code",
+    "open": "[data-action='reopen']"
+  }
+}

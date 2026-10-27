@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-void-black: #000000;
+  --color-smolder-earth: #0b0502;
+  --color-charcoal: #1a1a1a;
+  --color-bone-white: #ffffff;
+  --color-ash: #e3e3e2;
+  --color-driftwood: #c0bfbe;
+
+  /* Typography — Font Families */
+  --font-enreal: 'Enreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ciutadella-medium: 'Ciutadella-Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

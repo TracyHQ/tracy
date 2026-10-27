@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scope": "entry-scalars",
+  "collections": {
+    "site": {
+      "type": "shared",
+      "urlPattern": null
+    },
+    "home": {
+      "type": "page",
+      "urlPattern": "/"
+    },
+    "onepage": {
+      "type": "page",
+      "urlPattern": "/onepage"
+    },
+    "landing": {
+      "type": "page",
+      "urlPattern": "/landing"
+    },
+    "home_2": {
+      "type": "page",
+      "urlPattern": "/home-2"
+    },
+    "product": {
+      "type": "page",
+      "urlPattern": "/product"
+    },
+    "services_page": {
+      "type": "page",
+      "urlPattern": "/services"
+    },
+    "services": {
+      "type": "service",
+      "urlPattern": "/services/{slug}"
+    },
+    "pricing": {
+      "type": "page",
+      "urlPattern": "/pricing"
+    },
+    "blog": {
+      "type": "page",
+      "urlPattern": "/blog"
+    },
+    "posts": {
+      "type": "article",
+      "urlPattern": "/blog/{slug}"
+    },
+    "team": {
+      "type": "page",
+      "urlPattern": "/team"
+    },
+    "people": {
+      "type": "generic",
+      "urlPattern": "/team/{slug}"
+    },
+    "about": {
+      "type": "page",
+      "urlPattern": "/about"
+    },
+    "careers": {
+      "type": "page",
+      "urlPattern": "/careers"
+    },
+    "help": {
+      "type": "page",
+      "urlPattern": "/help"
+    },
+    "contact": {
+      "type": "page",
+      "urlPattern": "/contact"
+    },
+    "design_system": {
+      "type": "page",
+      "urlPattern": "/design-system"
+    },
+    "marketing": {
+      "type": "page",
+      "urlPattern": "/marketing"
+    }
+  },
+  "chrome": {
+    "collection": "site",
+    "slug": "site"
+  }
+}

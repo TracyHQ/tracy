@@ -1,0 +1,89 @@
+{
+  "color": {
+    "cerulean-sky": {
+      "$value": "#117bc8",
+      "$type": "color",
+      "$description": "Cerulean Sky — Full-bleed canvas for hero and atmospheric sections, primary nav background, sky-illustration base"
+    },
+    "deep-cerulean": {
+      "$value": "#0d5c96",
+      "$type": "color",
+      "$description": "Deep Cerulean — Tinted shadow color — the brand-blue cast on every elevation shadow makes even drop shadows feel atmospheric"
+    },
+    "atmosphere-blue": {
+      "$value": "#60a8dd",
+      "$type": "color",
+      "$description": "Atmosphere Blue — Outlined action border — secondary buttons and card outlines gain a cool sky tint instead of neutral gray"
+    },
+    "midnight-navy": {
+      "$value": "#09426c",
+      "$type": "color",
+      "$description": "Midnight Navy — Primary filled action background — the Get Started pill, pressed against the sky, reads as a deep horizon line"
+    },
+    "berry-red": {
+      "$value": "#cf372d",
+      "$type": "color",
+      "$description": "Berry Red — Single chromatic accent — reserved for emphasis ink, important markers, and the occasional stamp of urgency against the blue"
+    },
+    "cloud-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Cloud White — Primary surface for cards, product UI, testimonial panels — the white that floats against the sky"
+    },
+    "mist-gray": {
+      "$value": "#ebebeb",
+      "$type": "color",
+      "$description": "Mist Gray — Subtle card background for nested surfaces, the lightest gray still distinct from pure white"
+    },
+    "fog": {
+      "$value": "#dadada",
+      "$type": "color",
+      "$description": "Fog — Hairline borders and dividers — the only neutral border color in the system"
+    },
+    "stone": {
+      "$value": "#a1a1a1",
+      "$type": "color",
+      "$description": "Stone — Muted helper text and secondary metadata"
+    },
+    "graphite": {
+      "$value": "#7d7d7d",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text, icon fills, low-emphasis labels"
+    },
+    "ink": {
+      "$value": "#2b2b2b",
+      "$type": "color",
+      "$description": "Ink — Body text and dominant UI strokes — the dark that anchors serif type against white cards"
+    },
+    "obsidian": {
+      "$value": "#1d1b20",
+      "$type": "color",
+      "$description": "Obsidian — Deepest text tone, used sparingly for highest-emphasis body copy with a barely-warm purple undertone"
+    }
+  },
+  "font": {
+    "switzer": {
+      "$value": "switzer",
+      "$type": "fontFamily",
+      "$description": "Product and UI workhorse — body copy at 16-18px weight 400, navigation and buttons at 14-16px weight 500-600, labels at 12-14px weight 500. This geometric grotesque (Indian Type Foundry) stays out of the serif's way; the pair of a literary display face and a neutral UI face is the system's tonal balance."
+    },
+    "signifier": {
+      "$value": "signifier",
+      "$type": "fontFamily",
+      "$description": "Display and headline serif — light weight (300) at 45-55px for hero and section titles, regular (400) at 24-36px for subheadings. The italic-leaning, high-contrast serif (Indian Type Foundry family) is the brand's literary voice; weight 300 makes headlines feel aspirational rather than commanding."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://cora.computer",
+      "siteName": "Cora",
+      "extractedAt": "2026-06-03T20:06:09.572Z",
+      "variant": "compact"
+    }
+  }
+}

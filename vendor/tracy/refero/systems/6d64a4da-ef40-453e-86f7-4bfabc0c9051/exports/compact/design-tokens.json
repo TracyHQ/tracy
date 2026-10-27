@@ -1,0 +1,129 @@
+{
+  "color": {
+    "ember-orange": {
+      "$value": "#ff2f00",
+      "$type": "color",
+      "$description": "Ember Orange — Orange action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "marble-white": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Marble White — Page canvas, card surfaces, input fields, default panel backgrounds. The dominant surface tone, barely off-white for warmth"
+    },
+    "stone-gray": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Stone Gray — Secondary surface for filled buttons, muted card backgrounds, image placeholder fills. One step deeper than Marble White to create gentle separation without contrast"
+    },
+    "graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, link color, subdued metadata, helper text. Reads as muted black — never used for primary text or headings"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, all headings, hairline borders (cards, lists, badges, inputs), icons, navigation. The structural backbone — 1px borders everywhere define the system"
+    },
+    "signal-yellow": {
+      "$value": "#ffb700",
+      "$type": "color",
+      "$description": "Signal Yellow — Yellow state accent for badges, validation surfaces, and short status labels."
+    },
+    "ice-blue": {
+      "$value": "#bfe0ff",
+      "$type": "color",
+      "$description": "Ice Blue — Blue state accent for badges, validation surfaces, and short status labels."
+    }
+  },
+  "font": {
+    "neue-montreal": {
+      "$value": "Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "The workhorse and display face. Weight 400 for body, weight 530 for subheads and medium emphasis, weight 600 for headings and display overlays. Used at 145px for hero type, 48px for section headlines, 18-20px for body, 14px for navigation, 12px for badges. The type IS the product — this single family carries the entire brand voice."
+    },
+    "neue-montreal-semibold": {
+      "$value": "Neue Montreal Semibold",
+      "$type": "fontFamily",
+      "$description": "Heavy display variant used for the largest typographic moments in specimen cards. Tighter, more compressed than standard weight 600."
+    },
+    "neue-york": {
+      "$value": "Neue York",
+      "$type": "fontFamily",
+      "$description": "Companion serif/contrast face shown in specimen contexts. The 700 weight provides a sharp counterpoint to the geometric Montreal."
+    },
+    "frama-semibold": {
+      "$value": "Frama Semibold",
+      "$type": "fontFamily",
+      "$description": "Specimen showcase weight — displayed at exact 103px in the grid to demonstrate each family's character at scale."
+    },
+    "kyoto-semibold": {
+      "$value": "Kyoto Semibold",
+      "$type": "fontFamily",
+      "$description": "Specimen showcase — fixed 103px display size in the font grid."
+    },
+    "neue-gstaad-bold": {
+      "$value": "Neue Gstaad Bold",
+      "$type": "fontFamily",
+      "$description": "Specimen showcase — fixed 103px display size in the font grid."
+    },
+    "palma-fizzy-heavy": {
+      "$value": "Palma Fizzy Heavy",
+      "$type": "fontFamily",
+      "$description": "Specimen showcase — fixed 103px display size in the font grid."
+    },
+    "mori-bold": {
+      "$value": "Mori Bold",
+      "$type": "fontFamily",
+      "$description": "Specimen showcase — fixed 103px display size in the font grid."
+    },
+    "museum-light": {
+      "$value": "Museum Light",
+      "$type": "fontFamily",
+      "$description": "Specimen showcase — the 300 weight in the grid is deliberately whisper-light, making weight 300 headlines read as anti-convention: authority through restraint rather than volume."
+    },
+    "neue-corp-semibold": {
+      "$value": "Neue Corp Semibold",
+      "$type": "fontFamily",
+      "$description": "Specimen showcase — fixed 103px display size in the font grid."
+    },
+    "watch-medium": {
+      "$value": "Watch Medium",
+      "$type": "fontFamily",
+      "$description": "Specimen showcase — fixed 103px display size in the font grid."
+    },
+    "monument-narrow-medium": {
+      "$value": "Monument Narrow Medium",
+      "$type": "fontFamily",
+      "$description": "Specimen showcase — fixed 103px display size in the font grid."
+    },
+    "model-plastic-regular": {
+      "$value": "Model Plastic Regular",
+      "$type": "fontFamily",
+      "$description": "Specimen showcase — fixed 103px display size in the font grid."
+    },
+    "neue-gstaad-normal-bold": {
+      "$value": "neue-gstaad-normal-bold",
+      "$type": "fontFamily",
+      "$description": "neue-gstaad-normal-bold — detected in extracted data but not described by AI"
+    },
+    "neue-corp-normal-semibold": {
+      "$value": "neue-corp-normal-semibold",
+      "$type": "fontFamily",
+      "$description": "neue-corp-normal-semibold — detected in extracted data but not described by AI"
+    },
+    "neue-york-normal-normal-bold": {
+      "$value": "neue-york-normal-normal-bold",
+      "$type": "fontFamily",
+      "$description": "neue-york-normal-normal-bold — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://pangrampangram.com",
+      "siteName": "Pangram Pangram Foundry",
+      "extractedAt": "2026-06-03T21:20:44.798Z",
+      "variant": "compact"
+    }
+  }
+}

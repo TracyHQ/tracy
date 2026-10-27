@@ -1,0 +1,36 @@
+{
+  "name": "@tracy/harness-web",
+  "version": "0.1.0",
+  "description": "The screens Tracy operates the harness from — served at harness.tracy.ai",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "dev": "vite --port 5200 --strictPort",
+    "build": "vite build",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/web/tracy-harness"
+  },
+  "dependencies": {
+    "@tracy/core": "workspace:^",
+    "@tracy/site-build-core": "workspace:^",
+    "@tracy/ui": "workspace:^",
+    "@tracy/wo-views": "workspace:^",
+    "lucide-react": "^0.525.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^5.0.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0"
+  },
+  "license": "MIT"
+}

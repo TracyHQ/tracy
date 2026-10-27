@@ -1,0 +1,82 @@
+[
+  {
+    "assertionIds": [
+      "two-seats-isolation#b-doors-refuse-seat-of-a",
+      "two-seats-isolation#a-doors-refuse-seat-of-b",
+      "two-seats-isolation#no-cross-rows-in-seat-book"
+    ],
+    "edgeTags": ["concurrent-seat"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["http", "db"],
+      "writes": ["site"]
+    },
+    "id": "QA-FLOWS-two-seats-concurrent-seat-a-cannot-read-b",
+    "itemIds": ["flow:two-seats"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the doors of site B refuse a seat that holds only site A, and the other way round; a site's public page is not a leak",
+      "ref": "ADR 0014 §3; CONTEXT.md",
+      "source": "docs/adr/0014-one-dsh-per-host-commands-in-web-container.md"
+    },
+    "prerequisites": ["stand", "site", "second-site"],
+    "redProof": null,
+    "ref": "two-seats-isolation",
+    "requirement": "Two seats on two sites cannot see each other's site — a cannot read b (concurrent-seat)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["legacy:J11#verdict"],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["http", "db"],
+      "writes": ["site"]
+    },
+    "id": "QA-FLOWS-two-seats-happy-legacy-rights",
+    "itemIds": ["flow:two-seats", "journey:J11"],
+    "kind": "legacy",
+    "legacyIds": ["J11"],
+    "oracle": {
+      "invariant": "the doors of site B refuse a seat that holds only site A, and the other way round; a site's public page is not a leak",
+      "ref": "ADR 0014 §3; CONTEXT.md",
+      "source": "docs/adr/0014-one-dsh-per-host-commands-in-web-container.md"
+    },
+    "prerequisites": ["stand", "legacy-runner"],
+    "redProof": null,
+    "ref": "J11",
+    "requirement": "Two seats on two sites cannot see each other's site — legacy rights (happy) [journey J11: rights and isolation]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["dependency-failure"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["http", "db"],
+      "writes": ["site"]
+    },
+    "id": "QA-FLOWS-two-seats-dependency-failure-egress-fence",
+    "itemIds": ["flow:two-seats"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the doors of site B refuse a seat that holds only site A, and the other way round; a site's public page is not a leak",
+      "ref": "ADR 0014 §3; CONTEXT.md",
+      "source": "docs/adr/0014-one-dsh-per-host-commands-in-web-container.md"
+    },
+    "pendingReason": "not scripted: a local stand has the egress fence off; J11 does not try the real fence",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Two seats on two sites cannot see each other's site — egress fence (dependency-failure)",
+    "targets": ["local"]
+  }
+]

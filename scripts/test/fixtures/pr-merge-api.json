@@ -1,0 +1,608 @@
+{
+  "about": "GitHub REST responses saved on 05/10/2026 for one ready pull request with every required check green, trimmed to the fields scripts/check-pr-merge.mjs reads. Each key is a GET path; each value lists the responses in the order they are served (the last one repeats).",
+  "repo": "TracyHQ/tch",
+  "pr": 893,
+  "base": "develop",
+  "responses": {
+    "repos/TracyHQ/tch/pulls/893": [
+      {
+        "number": 893,
+        "state": "open",
+        "draft": false,
+        "merged": false,
+        "labels": [],
+        "updated_at": "2026-10-05T08:37:06Z",
+        "html_url": "https://github.com/TracyHQ/tch/pull/893",
+        "head": {
+          "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+          "ref": "fix/add-site-apply-audit",
+          "repo": {
+            "full_name": "TracyHQ/tch"
+          }
+        },
+        "base": {
+          "ref": "develop",
+          "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb",
+          "repo": {
+            "full_name": "TracyHQ/tch"
+          }
+        }
+      }
+    ],
+    "repos/TracyHQ/tch/git/ref/heads/develop": [
+      {
+        "ref": "refs/heads/develop",
+        "object": {
+          "sha": "eaa7e8c73bcbf5397de8ac10cb6ce070a41fbbbe",
+          "type": "commit"
+        }
+      }
+    ],
+    "repos/TracyHQ/tch/actions/workflows/tracy-ci.yml/runs?head_sha=5645e143569316737002d2d018d84d7ca3603a08&per_page=100&page=1": [
+      {
+        "total_count": 2,
+        "workflow_runs": [
+          {
+            "id": 37284753424,
+            "run_number": 2555,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/tracy-ci.yml",
+            "created_at": "2026-10-05T08:37:09Z",
+            "run_started_at": "2026-10-05T08:37:09Z",
+            "updated_at": "2026-10-05T08:46:04Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753424",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          },
+          {
+            "id": 37284686508,
+            "run_number": 2554,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "skipped",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/tracy-ci.yml",
+            "created_at": "2026-10-05T08:36:29Z",
+            "run_started_at": "2026-10-05T08:36:29Z",
+            "updated_at": "2026-10-05T08:36:30Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284686508",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "repos/TracyHQ/tch/actions/runs/37284753424/attempts/1/jobs?per_page=100&page=1": [
+      {
+        "total_count": 8,
+        "jobs": [
+          {
+            "id": 111680878829,
+            "run_id": 37284753424,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "plan the build-check rows",
+            "status": "completed",
+            "conclusion": "success",
+            "labels": ["self-hosted", "linux", "x64", "tracy-light", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753424/job/111680878829"
+          },
+          {
+            "id": 111680879069,
+            "run_id": 37284753424,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "build dsh once for this run",
+            "status": "completed",
+            "conclusion": "success",
+            "labels": ["self-hosted", "linux", "x64", "tracy-check", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753424/job/111680879069"
+          },
+          {
+            "id": 111680911051,
+            "run_id": 37284753424,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "build dsh once for the nightly's commit",
+            "status": "completed",
+            "conclusion": "skipped",
+            "labels": ["self-hosted", "linux", "x64", "tracy-check", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753424/job/111680911051"
+          },
+          {
+            "id": 111680980459,
+            "run_id": 37284753424,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "build check (checks)",
+            "status": "completed",
+            "conclusion": "success",
+            "labels": ["self-hosted", "linux", "x64", "tracy-check", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753424/job/111680980459"
+          },
+          {
+            "id": 111680980464,
+            "run_id": 37284753424,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "build check (tests emdash-business)",
+            "status": "completed",
+            "conclusion": "success",
+            "labels": ["self-hosted", "linux", "x64", "tracy-check", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753424/job/111680980464"
+          },
+          {
+            "id": 111680980508,
+            "run_id": 37284753424,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "build check (tests 1/2)",
+            "status": "completed",
+            "conclusion": "success",
+            "labels": ["self-hosted", "linux", "x64", "tracy-check", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753424/job/111680980508"
+          },
+          {
+            "id": 111680980524,
+            "run_id": 37284753424,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "build check (tests 2/2)",
+            "status": "completed",
+            "conclusion": "success",
+            "labels": ["self-hosted", "linux", "x64", "tracy-check", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753424/job/111680980524"
+          },
+          {
+            "id": 111683899971,
+            "run_id": 37284753424,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "nightly verdict",
+            "status": "completed",
+            "conclusion": "skipped",
+            "labels": ["self-hosted", "linux", "x64", "tracy-light", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753424/job/111683899971"
+          }
+        ]
+      }
+    ],
+    "repos/TracyHQ/tch/actions/workflows/changelog-check.yml/runs?head_sha=5645e143569316737002d2d018d84d7ca3603a08&per_page=100&page=1": [
+      {
+        "total_count": 3,
+        "workflow_runs": [
+          {
+            "id": 37284753301,
+            "run_number": 3559,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/changelog-check.yml",
+            "created_at": "2026-10-05T08:37:09Z",
+            "run_started_at": "2026-10-05T08:37:09Z",
+            "updated_at": "2026-10-05T08:37:15Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753301",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          },
+          {
+            "id": 37284686614,
+            "run_number": 3558,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "skipped",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/changelog-check.yml",
+            "created_at": "2026-10-05T08:36:29Z",
+            "run_started_at": "2026-10-05T08:36:29Z",
+            "updated_at": "2026-10-05T08:36:31Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284686614",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          },
+          {
+            "id": 37284686289,
+            "run_number": 3557,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "skipped",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/changelog-check.yml",
+            "created_at": "2026-10-05T08:36:29Z",
+            "run_started_at": "2026-10-05T08:36:29Z",
+            "updated_at": "2026-10-05T08:36:37Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284686289",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "repos/TracyHQ/tch/actions/runs/37284753301/attempts/1/jobs?per_page=100&page=1": [
+      {
+        "total_count": 1,
+        "jobs": [
+          {
+            "id": 111680877880,
+            "run_id": 37284753301,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "changelog",
+            "status": "completed",
+            "conclusion": "success",
+            "labels": ["self-hosted", "linux", "x64", "tracy-light", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753301/job/111680877880"
+          }
+        ]
+      }
+    ],
+    "repos/TracyHQ/tch/actions/workflows/pr-description-check.yml/runs?head_sha=5645e143569316737002d2d018d84d7ca3603a08&per_page=100&page=1": [
+      {
+        "total_count": 3,
+        "workflow_runs": [
+          {
+            "id": 37284753318,
+            "run_number": 2250,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/pr-description-check.yml",
+            "created_at": "2026-10-05T08:37:09Z",
+            "run_started_at": "2026-10-05T08:37:09Z",
+            "updated_at": "2026-10-05T08:37:16Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753318",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          },
+          {
+            "id": 37284686534,
+            "run_number": 2249,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "skipped",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/pr-description-check.yml",
+            "created_at": "2026-10-05T08:36:29Z",
+            "run_started_at": "2026-10-05T08:36:29Z",
+            "updated_at": "2026-10-05T08:36:30Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284686534",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          },
+          {
+            "id": 37284686153,
+            "run_number": 2248,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "skipped",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/pr-description-check.yml",
+            "created_at": "2026-10-05T08:36:29Z",
+            "run_started_at": "2026-10-05T08:36:29Z",
+            "updated_at": "2026-10-05T08:36:36Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284686153",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "repos/TracyHQ/tch/actions/runs/37284753318/attempts/1/jobs?per_page=100&page=1": [
+      {
+        "total_count": 1,
+        "jobs": [
+          {
+            "id": 111680877811,
+            "run_id": 37284753318,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "description",
+            "status": "completed",
+            "conclusion": "success",
+            "labels": ["self-hosted", "linux", "x64", "tracy-light", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753318/job/111680877811"
+          }
+        ]
+      }
+    ],
+    "repos/TracyHQ/tch/actions/workflows/regression-check.yml/runs?head_sha=5645e143569316737002d2d018d84d7ca3603a08&per_page=100&page=1": [
+      {
+        "total_count": 3,
+        "workflow_runs": [
+          {
+            "id": 37284753432,
+            "run_number": 481,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/regression-check.yml",
+            "created_at": "2026-10-05T08:37:09Z",
+            "run_started_at": "2026-10-05T08:37:09Z",
+            "updated_at": "2026-10-05T08:37:20Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753432",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          },
+          {
+            "id": 37284686176,
+            "run_number": 479,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "skipped",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/regression-check.yml",
+            "created_at": "2026-10-05T08:36:29Z",
+            "run_started_at": "2026-10-05T08:36:29Z",
+            "updated_at": "2026-10-05T08:36:30Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284686176",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          },
+          {
+            "id": 37284686529,
+            "run_number": 480,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "skipped",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/regression-check.yml",
+            "created_at": "2026-10-05T08:36:29Z",
+            "run_started_at": "2026-10-05T08:36:29Z",
+            "updated_at": "2026-10-05T08:36:39Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284686529",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "repos/TracyHQ/tch/actions/runs/37284753432/attempts/1/jobs?per_page=100&page=1": [
+      {
+        "total_count": 1,
+        "jobs": [
+          {
+            "id": 111680878282,
+            "run_id": 37284753432,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "Regression",
+            "status": "completed",
+            "conclusion": "success",
+            "labels": ["self-hosted", "linux", "x64", "tracy-light", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753432/job/111680878282"
+          }
+        ]
+      }
+    ],
+    "repos/TracyHQ/tch/actions/workflows/branch-fresh-check.yml/runs?head_sha=5645e143569316737002d2d018d84d7ca3603a08&per_page=100&page=1": [
+      {
+        "total_count": 2,
+        "workflow_runs": [
+          {
+            "id": 37284753567,
+            "run_number": 86,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/branch-fresh-check.yml",
+            "created_at": "2026-10-05T08:37:09Z",
+            "run_started_at": "2026-10-05T08:37:09Z",
+            "updated_at": "2026-10-05T08:37:19Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753567",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          },
+          {
+            "id": 37284686610,
+            "run_number": 85,
+            "run_attempt": 1,
+            "event": "pull_request",
+            "status": "completed",
+            "conclusion": "skipped",
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "head_branch": "fix/add-site-apply-audit",
+            "path": ".github/workflows/branch-fresh-check.yml",
+            "created_at": "2026-10-05T08:36:29Z",
+            "run_started_at": "2026-10-05T08:36:29Z",
+            "updated_at": "2026-10-05T08:36:30Z",
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284686610",
+            "pull_requests": [
+              {
+                "number": 893,
+                "head": {
+                  "sha": "5645e143569316737002d2d018d84d7ca3603a08",
+                  "ref": "fix/add-site-apply-audit"
+                },
+                "base": {
+                  "ref": "develop",
+                  "sha": "301d49b6c4a5b888087bfa0540c1cebff5348abb"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "repos/TracyHQ/tch/actions/runs/37284753567/attempts/1/jobs?per_page=100&page=1": [
+      {
+        "total_count": 1,
+        "jobs": [
+          {
+            "id": 111680879252,
+            "run_id": 37284753567,
+            "run_attempt": 1,
+            "head_sha": "5645e143569316737002d2d018d84d7ca3603a08",
+            "name": "branch-fresh",
+            "status": "completed",
+            "conclusion": "success",
+            "labels": ["self-hosted", "linux", "x64", "tracy-light", "tracy-lane-dev"],
+            "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753567/job/111680879252"
+          }
+        ]
+      }
+    ]
+  }
+}

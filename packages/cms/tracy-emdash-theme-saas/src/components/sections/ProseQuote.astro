@@ -1,0 +1,122 @@
+---
+/**
+ * Numbered prose block with a pull quote. `body` is Portable Text, rendered by EmDash's renderer.
+ * The source prints the number + title row and not the eyebrow (which repeats them); the eyebrow is
+ * therefore shown only when the entry has neither number nor title.
+ */
+import type { Style } from '@/lib/sections'
+import { getEditMeta } from 'emdash'
+import { PortableText } from 'emdash/ui'
+import Col from './c/Col.astro'
+import RuledHead from './c/RuledHead.astro'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import ProseQuoteGroup from '@/components/site/ProseQuote.astro'
+import { stampBlocks, stampFor, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  narrow?: boolean
+}
+const { data, narrow = false } = Astro.props
+const body = Array.isArray(data.body) ? data.body : []
+const hasHead = Boolean(data.number || data.title || data.meta)
+const showEyebrow = Boolean(data.eyebrow && !data.number && !data.title)
+const show = hasHead || showEyebrow || body.length > 0 || data.quote
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'prose_quote', null)
+// On a stamped request each text block of `body` names itself (`field:body.<_key>`, `stampBlocks`) and is
+// rendered by a renderer that prints it; an ordinary request keeps EmDash's own renderers. A body the
+// visual editor holds (edit metadata) is left as it is, so the inline editor still receives it.
+const editing = Boolean(getEditMeta(data.body))
+const blocks = editing ? data.body : stampBlocks(s, 'body', body)
+const bodyComponents =
+  s.owner && !editing
+    ? { block: ProseBlock, listItem: ProseListItem, type: { blockquoteGroup: ProseQuoteGroup } }
+    : undefined
+---
+
+{
+	show && (
+		<section class="k-section pq" {...s()}>
+			<Col narrow={narrow}>
+				{hasHead && <RuledHead index={data.number} title={data.title} meta={data.meta} gap="22px" marks={{ index: s('number'), title: s('title'), meta: s('meta') }} />}
+				{showEyebrow && <p class="k-eyebrow eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+				{body.length > 0 && (
+					<div class="body">
+						<PortableText value={blocks} components={bodyComponents as any} />
+					</div>
+				)}
+				{data.quote && (
+					<figure class="quote">
+						<blockquote>
+							<p {...s('quote')}>{data.quote}</p>
+						</blockquote>
+						{data.attribution && <figcaption {...s('attribution')}>{data.attribution}</figcaption>}
+					</figure>
+				)}
+			</Col>
+		</section>
+	)
+}
+
+<style>
+	.eyebrow {
+		margin: 0 0 22px;
+	}
+	.body {
+		font-size: 18px;
+		line-height: 1.75;
+		color: var(--k-text);
+	}
+	.body :global(p) {
+		margin: 0 0 22px;
+	}
+	.body :global(p:last-child) {
+		margin-bottom: 0;
+	}
+	.body :global(a) {
+		color: var(--k-primary);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.body :global(strong) {
+		color: var(--k-heading);
+	}
+	.quote {
+		margin: 28px 0 0;
+		padding: 4px 0 4px 24px;
+		border-left: 3px solid var(--k-accent);
+	}
+	.quote blockquote {
+		margin: 0;
+	}
+	.quote p {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 24px;
+		line-height: 1.4;
+		font-weight: 600;
+		color: var(--k-heading);
+		text-wrap: pretty;
+	}
+	.quote figcaption {
+		margin-top: 10px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	@media (max-width: 767px) {
+		.body {
+			font-size: 17px;
+		}
+		.quote p {
+			font-size: 20px;
+		}
+	}
+</style>

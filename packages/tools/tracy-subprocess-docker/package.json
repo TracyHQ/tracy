@@ -1,0 +1,34 @@
+{
+  "name": "@tracy/dsh-subprocess-docker",
+  "version": "0.1.0",
+  "description": "ctx.subprocess for a dsh that serves many sites from one process: every command runs inside the site's own web container via docker exec, the container chosen from the session cwd and nothing else",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "src",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/tools/tracy-subprocess-docker"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "@tracy/dsh-sandbox-docker": "workspace:^"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-subprocess-local": "^0.2.0-rc.2-tracy.26",
+    "@deepseek-ai/schemastery": "^3.18.2"
+  },
+  "license": "MIT"
+}

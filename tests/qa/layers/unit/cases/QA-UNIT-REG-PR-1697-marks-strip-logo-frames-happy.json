@@ -1,0 +1,78 @@
+{
+  "id": "QA-UNIT-REG-PR-1697-marks-strip-logo-frames-happy",
+  "itemIds": ["regression:REG-PR-1697-marks-strip-logo-frames"],
+  "requirement": "A strip of other organisations marks may shrink to the business own (never to none), the business logo in more than two frames of a page is misplaced, and the brief keeps decorative backdrops",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1697-marks-strip-logo-frames.json",
+    "ref": "PR #1697 (fix); fix evidence: none recorded",
+    "invariant": "S1: shrunk passes; emptied and the gallery fail. S2: two pass; four give COLLECTED_MISPLACED logo.",
+    "productSources": [
+      "apps/tracy-host/src/app.js:1138",
+      "apps/tracy-host/src/demo-qa.js:55",
+      "apps/tracy-web/src/host/client.js:34",
+      "apps/tracy-web/src/sites/agent-demo-inventory.js:626",
+      "packages/tools/tracy-site-tools/src/host/wp-blocks.mjs:152",
+      "packages/wo/website-opportunities/domain/neutral-copy.mjs:29",
+      "packages/wo/website-opportunities/domain/slot-fill-manifest.mjs:12"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-host/src/ds-slot.js:439 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:440 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:582 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:583 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:584 readFile() with a computed path",
+      "apps/tracy-host/src/jobs.js:224 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:144 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:151 readFile() with a computed path",
+      "apps/tracy-host/src/provision.js:503 import() with a computed specifier",
+      "apps/tracy-host/src/site-files.js:413 readFile() with a computed path",
+      "apps/tracy-host/src/webroot.js:1628 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:919 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:995 open() with a computed path",
+      "packages/wo/website-opportunities/domain/neutral-copy.mjs:18 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a list of other organisations’ marks may shrink to the business’s own, never to none; other lists keep their count",
+    "collected-used: the name, phone, email, street, an opening time, a review and own photos must all show"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1697-marks-strip-logo-frames"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1697-marks-strip-logo-frames",
+    "pr": 1697,
+    "kind": "fix",
+    "area": "website-opportunities/agent-demo",
+    "file": "tests/regression/cases/REG-PR-1697-marks-strip-logo-frames.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/agent-demo-native-inventory.test.mjs",
+    "apps/tracy-host/test/demo-qa.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a list of other organisations’ marks may shrink to the business’s own, never to none; other lists keep their count",
+    "collected-used: the name, phone, email, street, an opening time, a review and own photos must all show"
+  ],
+  "timeoutS": 600
+}

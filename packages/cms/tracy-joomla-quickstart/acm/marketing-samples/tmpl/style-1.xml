@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Marketing Samples Style 1</title>
+  <fields name="marketing-samples">
+    <fieldset name="intro" label="TPL_TRACY_APPLE_ACM_SAMPLES_INTRO_LABEL">
+      <field
+        name="eyebrow"
+        type="text"
+        default=""
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_EYEBROW_LABEL"
+        description="TPL_TRACY_APPLE_ACM_SAMPLES_EYEBROW_DESC"
+      />
+      <field
+        name="heading"
+        type="text"
+        default=""
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_HEADING_LABEL"
+        description="TPL_TRACY_APPLE_ACM_SAMPLES_HEADING_DESC"
+      />
+      <field
+        name="lead"
+        type="textarea"
+        rows="3"
+        default=""
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_LEAD_LABEL"
+        description="TPL_TRACY_APPLE_ACM_SAMPLES_LEAD_DESC"
+      />
+      <field
+        name="note"
+        type="textarea"
+        rows="3"
+        default=""
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_NOTE_LABEL"
+        description="TPL_TRACY_APPLE_ACM_SAMPLES_NOTE_DESC"
+      />
+    </fieldset>
+    <fieldset name="viewer" label="TPL_TRACY_APPLE_ACM_SAMPLES_VIEWER_LABEL">
+      <field
+        name="base"
+        type="text"
+        default="media/tracy-marketing/"
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_BASE_LABEL"
+        description="TPL_TRACY_APPLE_ACM_SAMPLES_BASE_DESC"
+      />
+      <field
+        name="light-label"
+        type="text"
+        default="Light"
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_LIGHT_LABEL"
+      />
+      <field
+        name="dark-label"
+        type="text"
+        default="Dark"
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_DARK_LABEL"
+      />
+      <field
+        name="appearance-label"
+        type="text"
+        default="Appearance"
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_APPEARANCE_LABEL"
+      />
+      <field
+        name="open-label"
+        type="text"
+        default="Open full page ↗"
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_OPEN_LABEL"
+      />
+      <field
+        name="download-label"
+        type="text"
+        default="Download HTML ↓"
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_DOWNLOAD_LABEL"
+      />
+    </fieldset>
+    <fieldset name="samples" label="TPL_TRACY_APPLE_ACM_SAMPLES_ITEMS_LABEL" multiple="1">
+      <field
+        name="sample-key"
+        type="text"
+        default=""
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_KEY_LABEL"
+        description="TPL_TRACY_APPLE_ACM_SAMPLES_KEY_DESC"
+      />
+      <field
+        name="sample-title"
+        type="text"
+        default=""
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_TITLE_LABEL"
+      />
+      <field
+        name="sample-description"
+        type="textarea"
+        rows="2"
+        default=""
+        label="TPL_TRACY_APPLE_ACM_SAMPLES_DESCRIPTION_LABEL"
+        description="TPL_TRACY_APPLE_ACM_SAMPLES_DESCRIPTION_DESC"
+      />
+    </fieldset>
+  </fields>
+</form>

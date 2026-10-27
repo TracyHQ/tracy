@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a81607e2-254f-4f53-b357-68c39c9cfc03",
+  "status": "complete",
+  "name": "Genway",
+  "url": "https://styles.refero.design/style/a81607e2-254f-4f53-b357-68c39c9cfc03",
+  "sourceWebsite": "https://www.genway.ai",
+  "extractedAt": "2026-06-03T19:13:40.204Z",
+  "capturedAt": "2026-10-08T05:15:54.341814+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Indigo observatory at lavender dawn — a research terminal floating above a violet mist.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/922075b3-7021-4198-bf89-459f096bd675.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4bcdacaf-7107-4183-a622-dd82146ce6d5.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/84625388-ba12-4e12-84c3-8eadbb1d0407.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/915e5adb-dcda-460e-8188-8dac24e3bf67.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4dc254d9-e90b-49a7-a1e4-c55d5a15955c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "35954e18c570fe8e6fb543cfdc986a617945d653c5d6a02d3bd735dcf15f586d",
+      "bytes": 26273
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7417dbf5ea583472beb526a61f31631cac7c4630f96359eb9e0fe0203b617cb1",
+      "bytes": 110970
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4851e449c73a17590952924942c098e955a9fac53605fd8c1ee9290e9b69d533",
+      "bytes": 20489
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3f4ac19b5b92f8ebd5be27ad503e857f9ecee3bcd822744b9275ce48b7f47f63",
+      "bytes": 15484
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "1d434a02125b016f794ff712674996d9ac20cff461da7db7786d8a89de4bcae2",
+      "bytes": 15149
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2bf7d9cbbac8e9627eaa4f800fada143075dff84fd4043f97434c83262875a2d",
+      "bytes": 4423
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "bd38f2a8fd5ef2e7e15e7f20516a7540a28c4797af132f8f9b4515be7c97bec4",
+      "bytes": 1198
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a4b23d684f95fd50c89834de601b92cab693f2a5c4e2b36bb4864f97b93d76d5",
+      "bytes": 1498
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3bfe1092150ef802730c3828af6462397e2a24b0de7906bcedb716060885fc8f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "685231baad81a947efcf51d001ca45f328be9841cd31548323980baa736e664c",
+      "bytes": 48457
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "67642312601637c988e83ccc36a4e7134f07092c0e25f74b55829ffe4f2bfa8f",
+      "bytes": 25559
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1b33cc4fea21a36bdabfaf82c23ce74fe613c24009905690f9204a8ba585d93c",
+      "bytes": 64118
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "149c4f80dac14b8af618f04b77a4a3f1778b40b5a1122a917f91844e710939e4",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d1eda9cf359591e6bcf88111a9557a86c6cb5f1d75c8bedf18467c7116fff46a",
+      "bytes": 2825
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3fe35acb22ed38f76363f3ec4243caf2fa1f693ccc1171eb84c7687ee9b63bb2",
+      "bytes": 3730
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1ae4bcfe-c613-42fc-aab7-f9583381e7cc",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "72da35d5-1cfd-41a3-94f6-cb6b8c07a670",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "a81607e2-254f-4f53-b357-68c39c9cfc03",
+    "b8a8976c-52d9-4ebb-95ea-4c40f4a9acab",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "d51a3a30-965c-427e-9e40-ff177786889f",
+    "d5307f56-76de-4d13-9741-f969c42e9aa5",
+    "d5ed8712-0e42-4c6c-83b1-b3d7f27d1d10",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

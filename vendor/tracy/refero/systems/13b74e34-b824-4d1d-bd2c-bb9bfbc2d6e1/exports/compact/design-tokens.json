@@ -1,0 +1,44 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, all section backgrounds — the unbroken dark that makes the photography luminous"
+    },
+    "star-white": {
+      "$value": "#f0f0fa",
+      "$type": "color",
+      "$description": "Star White — All body text, headings, icons, nav labels, button text, button borders — the sole foreground color; the cool tint reads as artificial light against black, not paper"
+    },
+    "dim-steel": {
+      "$value": "#545457",
+      "$type": "color",
+      "$description": "Dim Steel — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "dark-gunmetal": {
+      "$value": "#404040",
+      "$type": "color",
+      "$description": "Dark Gunmetal — Subtle nav separators and low-emphasis dividers — barely visible against black, used only when structural separation is needed"
+    }
+  },
+  "font": {
+    "d-din": {
+      "$value": "D-DIN",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for navigation, body, labels, buttons. The tracked-out uppercase (0.09–0.10em) at 10-13px turns every nav item and label into an instrument-panel abbreviation. D-DIN is an industrial geometric sans — its sharp terminals and even stroke weight read as engineered hardware typography, not editorial."
+    },
+    "d-din-bold": {
+      "$value": "D-DIN-Bold",
+      "$type": "fontFamily",
+      "$description": "Section headlines — set in ALL CAPS at 48px with 0.02em tracking. The bold weight is reserved exclusively for headlines; the minimal tracking (compared to the 0.10em on nav) tightens the headline mass and lets it feel solid, not scattered. This is the loudest element on any screen."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://spacex.com",
+      "siteName": "SpaceX",
+      "extractedAt": "2026-06-03T16:10:15.905Z",
+      "variant": "compact"
+    }
+  }
+}

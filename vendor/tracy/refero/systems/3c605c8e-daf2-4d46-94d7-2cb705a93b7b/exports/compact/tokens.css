@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-carbon: #000000;
+  --color-bone-white: #ffffff;
+  --color-linen: #eaeae8;
+  --color-mist: #e0e0e0;
+  --color-slate: #333333;
+  --color-graphite: #666666;
+  --color-pewter: #767676;
+  --color-obsidian: #080808;
+  --color-indigo-whisper: #3860be;
+
+  /* Typography — Font Families */
+  --font-arket-sans: 'Arket Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arketsansmono: 'arketSansMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-arketscsansmono: 'arketSCSansMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

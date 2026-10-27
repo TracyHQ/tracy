@@ -1,0 +1,592 @@
+// --------------------------------------------------
+// Module Styles
+// --------------------------------------------------
+
+// Extend style in base
+// --------------------
+@import "../../../plugins/system/t4/themes/base/scss/_modules";
+
+// 
+// Genecric Module
+// --------------------------------------------------
+.t4-module {
+
+  // Module Inner
+  .module-inner {
+  }
+}
+
+// Module Title
+// ------------
+.module-title {
+  border-bottom: 1px solid $border-color;
+  margin: 0 0 $spacer 0;
+  padding: 0;
+  text-transform: uppercase;
+
+  span {
+    border-bottom: 1px solid $gray-500;
+    margin-bottom: -1px;
+    padding: 0 0 calc($spacer/1.5);
+  }
+}
+
+// Module Content
+// --------------
+.module-ct,
+.moduletable {
+}
+
+
+// 
+// Modules Prefixes
+// -----------------------------
+
+// Dark
+// -----
+.module-dark {
+  .module-title {
+  }
+} 
+
+.module.bg-primary,
+.module.bg-secondary,
+.module.bg-success,
+.module.bg-danger,
+.module.bg-warning,
+.module.bg-info,
+.module.bg-dark,
+// Cards
+.card.bg-primary,
+.card.bg-secondary,
+.card.bg-success,
+.card.bg-danger,
+.card.bg-warning,
+.card.bg-info,
+.card.bg-dark {
+  .module-title {
+    span {
+    }
+  }
+
+  .module-ct {
+    p {
+    }
+  }
+}
+
+// Mod rounded
+// -----------
+.module.mod-rounded {
+  .mod-rounded {
+  }
+}
+
+// Hilite
+// ----------
+.module-hilite {
+}
+
+// Shadow
+// ----------
+// Use to add Shadow to modules
+.mod-shadow {
+  .mod-shadow {
+  }
+}
+
+// Module outline
+.mod-border {
+  .mod-border {
+  }
+}
+
+
+//
+// JOOMLA! MODULES
+// --------------------------------------------------
+
+// Generic Modulable
+// -----------------
+// Modules are used in Component Position
+.moduletable {
+  > h3 {
+  }
+}
+
+
+// Menu
+// ----
+.t4-module,
+.t4-card,
+.moduletable,
+.module_menu {
+  .nav {
+  }
+  
+  .nav li {
+  }
+
+  .nav li .separator {
+  }
+  
+  .nav li a {
+    // Link States
+    &:hover, &:active, &:focus {
+    }
+  }
+
+  // Active state
+  .nav > li.active > a {
+    font-weight: $font-weight-bold;
+  }
+
+  // Sub Menus
+  .nav li ul {
+  }
+}
+
+
+// Menus in Dark Modules
+.module.bg-primary,
+.module.bg-secondary,
+.module.bg-success,
+.module.bg-danger,
+.module.bg-warning,
+.module.bg-info,
+.module.bg-dark,
+// Cards
+.card.bg-primary,
+.card.bg-secondary,
+.card.bg-success,
+.card.bg-danger,
+.card.bg-warning,
+.card.bg-info,
+.card.bg-dark {
+  .nav li a {
+  }
+}
+
+
+// Login Form
+// ----------
+#login-form {
+  margin-bottom: 0;
+
+  // Input Icons
+  .add-on {
+  }
+
+  .btn-primary {
+  }
+  
+  .mod-login__username,
+  .mod-login__password,
+  .mod-login__twofactor {
+    margin-bottom: 1rem;
+
+    input {
+      max-width: none;
+
+      @include media-breakpoint-up (md) {
+        max-width: none;
+      }
+    }
+
+    .input-group-text {
+      border-radius: 0 3px 3px 0;
+    }
+  }
+
+  .mod-login__remember {
+    margin-bottom: 1rem;
+  }
+
+  .mod-login__submit {
+    margin-bottom: 0.5rem;
+  }
+
+  .mod-login__options {
+    margin-bottom: 0;
+
+    li {
+      padding: 0.25rem 0;
+
+      a {
+        color: var(--body-text-color);
+        padding-top: 0;
+        padding-bottom: 0;
+
+        &:hover, &:focus, &:active {
+          color: var(--body-link-hover-color);
+        }
+      }
+    }
+  }
+
+}
+
+// Advertisement
+// -------------
+.bannergroup {
+}
+
+.banneritem {
+  a {
+    font-weight: bold;
+  }
+}
+
+.bannerfooter {
+  border-top: 1px solid $border-color;
+}
+
+
+// Categories, Most Read,
+// Most Popular, Archieve, Tags...
+// -------------------------------
+.categories-module {
+  @include module-list($icon: "\f07b");
+
+  > li {
+    border-bottom: 1px dotted $border-color;
+    color: $gray-700;
+
+    h4 {
+      font-weight: 500;
+    }
+  }
+
+  a {
+    color: $body-color;
+
+    &:hover, &:focus, &:active {
+      color: $link-hover-color;
+    }
+  }
+}
+
+.category-module {
+}
+
+.mostread,
+.latestnews,
+.relateditems,
+.tagssimilar ul {
+  li a {
+  }
+}
+
+.archive-module {
+}
+
+
+// News Feed
+// ----------
+.feed {
+  // Feed Title
+  h4 {
+  }
+
+  // Feed list
+  .newsfeed {
+
+    li {
+      border-top: 1px solid $border-color;
+    }
+
+    .feed-link {
+    }
+
+    .feed-item-description {
+    }
+  }
+
+}
+
+
+// Syndication
+// -----------
+a.syndicate-module {
+}
+
+
+// Latest Users 
+// ------------
+.latestusers {
+  li {
+  }
+}
+
+
+// Stats 
+// -----
+.stats-module {
+  dt, dd {
+  }
+}
+
+
+// Popular Tags
+//-------------
+.tagspopular {
+  ul {
+  }
+
+  ul > li {
+  }
+
+  ul > li > a {
+    // Links states
+    &:hover,
+    &:focus,
+    &:active {
+    }
+  }
+
+  .tag-count {
+  }
+}
+
+
+// Breadcrums Module
+// -----------------
+.module-ct > ol.breadcrumb {
+}
+
+
+// Extra style for Articles categories module
+// ------------------------------------------
+.magz-layout {
+  .item-image {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .item-title {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem;
+
+    a {
+      color: var(--body-text-color);
+
+      &:hover, &:focus, &:active {
+        border: 0;
+        color: var(--body-link-hover-color);
+        text-decoration: none;
+      }
+    }
+  }
+
+  h2.item-title {
+    font-size: 2rem;
+  }
+
+  .item-meta {
+    font-size: 0.7rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+
+    span {
+      position: relative;
+
+      &::after {
+        color: $gray-400;
+        padding: 0 4px;
+        content: "-";
+        display: inline-block;
+        // position: absolute;
+        // right: 0;
+        // top: 0;
+      }
+
+      &:last-child::after {
+        display: none;
+      }
+    }
+
+    a {
+      border-bottom: 1px solid $border-color;
+      color: var(--body-text-color);
+
+      &:hover, &:focus, &:active {
+        border-bottom: 1px solid var(--body-link-hover-color);
+        color: var(--body-link-hover-color);
+      }
+    }
+  }
+
+  // Hightlight layout
+  &.highlight-layout {
+
+  }
+
+  // Grid layout
+  &.grid-layout {
+
+  }
+
+  // List layout
+  &.list-layout {
+    .item-inner {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    .item-image {
+      margin: 0.5rem 1rem 0 0;
+      max-width: 25%;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+}
+
+
+// Blog list style
+// ---------------
+.blog-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: $grid-gutter-width 0;
+
+  .item-image {
+    @extend .d-block;
+    @extend .mb-4;
+
+    img {
+      @extend .rounded-4;
+      @extend .shadow-sm;
+    }
+  }
+
+  .item-title {
+    @extend .fs-5;
+    margin: 0 0 0.5rem;
+    
+    a {
+      color: var(--body-text-color);
+
+      &:hover, &:focus, &:active {
+        color: var(--body-link-hover-color);
+      }
+    }
+  }
+
+  .item-meta {
+    @extend .fs-sm;
+    @extend .mb-3;
+    @extend .d-flex;
+
+    span {
+      color: var(--body-text-color);
+      margin-right: 0.5rem;
+      padding-right: 1rem;
+      position: relative;
+
+      &::after {
+        background-color: $gray-400;
+        content: "";
+        display: block;
+        height: 1px;
+        position: absolute;
+        right: 0;
+        top: 10px;
+        width: 6px;
+      }
+
+      &:last-child {
+        &::after {
+          display: none;
+        }
+      }
+    }
+
+    a {
+      color: var(--body-text-color);
+
+      a:hover, a:focus, a:active {
+        color: var(--body-link-hover-color);
+      }
+    }
+
+  }
+
+  .item-introtext {
+    margin-bottom: 1.5rem;
+  }
+
+  .item-readmore {
+    a {
+      @extend .btn;
+      @extend .btn-sm;
+      @extend .btn-outline-primary;
+    }
+  }
+}
+
+
+.item-meta {
+  display: flex;
+  align-items: center;
+
+  .item-author {
+    display: flex;
+    align-items: center;
+  }
+
+  .author-img {
+    border-radius: 50%;
+    display: inline-block;
+    height: 24px;
+    overflow: hidden;
+    margin-right: calc($spacer / 2);
+    padding: 0;
+    position: relative;
+    width: 24px;
+
+    &::after {
+      display: none !important;
+    }
+
+    img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+  }
+
+  strong {
+    display: inline-block;
+    margin-left: 4px;
+  }
+}
+
+.mega-col-module {
+  .list-layout {
+    .blog-item {
+      margin-top: 0;
+    }
+
+    .item-inner {
+      margin-bottom: 0.5rem;
+    }
+
+    .item-image {
+      border-radius: 5px;
+      margin-top: 0;
+      max-width: 20%;
+      overflow: hidden;
+    }
+
+    .item-title {
+      font-size: 1rem;
+      font-weight: 400;
+    }
+  }
+}

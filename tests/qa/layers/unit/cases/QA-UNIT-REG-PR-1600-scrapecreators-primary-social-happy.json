@@ -1,0 +1,43 @@
+{
+  "id": "QA-UNIT-REG-PR-1600-scrapecreators-primary-social-happy",
+  "itemIds": ["regression:REG-PR-1600-scrapecreators-primary-social"],
+  "requirement": "WO configures ScrapeCreators as the primary social stats provider and preserves fallback behavior",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1600-scrapecreators-primary-social.json",
+    "ref": "PR #1600 (feat); fix evidence: ScrapeCreators account and endpoint calls were also verified directly on 22/10/2026; response summaries are recorded in tasks/evidence/wo-scrapecreators-api-probe-2026-10-22.json without credentials.",
+    "invariant": "The WO ops suite passes its ScrapeCreators settings test: key save encrypts/reads safely and test endpoint reports connected for a valid provider response. The WO social stats suite passes its ScrapeCreators request budget test, covering Facebook, Instagram, and TikTok endpoint costs and partial TikTok coverage. The source provider-chain suite passes its ScrapeCreators tests for supported networks, mapping provider data into the stable social stats shape and continuing through existing fallbacks on provider failure.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1600-scrapecreators-primary-social.mjs:28 spawnSync() runs a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": ["REG-PR-1600-scrapecreators-primary-social.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1600-scrapecreators-primary-social"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1600-scrapecreators-primary-social",
+    "pr": 1600,
+    "kind": "feat",
+    "area": "wo/social-stats",
+    "file": "tests/regression/cases/REG-PR-1600-scrapecreators-primary-social.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1600-scrapecreators-primary-social.mjs"],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [],
+  "timeoutS": 600
+}

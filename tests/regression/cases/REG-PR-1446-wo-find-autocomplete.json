@@ -1,0 +1,60 @@
+{
+  "id": "REG-PR-1446-wo-find-autocomplete",
+  "kind": "feat",
+  "title": "Find accepts restaurant names and addresses directly while preserving nearby area discovery and exact autocomplete picks",
+  "pr": 1446,
+  "area": "website-opportunities",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: the domain asks Autocomplete (New) for \"da nang\" with a session token and a language, and Place Details for the picked place id with the same token.",
+    "S2: the suggest door is asked with fewer than 3 characters, with no Google key saved, with a bad session, and past 300 calls in the hour; a resolved pick is sent to /search as lat/lon with its label as query.",
+    "S3: the person types quickly, a slow answer for older text arrives last, the deployment has no Google key, and the person picks a suggestion.",
+    "S4: \"Use my location\" fell back to the network city, then the person types another place.",
+    "S5: Submit GREEN LAND RESTAURANT - AL FAHIDI with intent=place, select a business suggestion, reopen the saved search, and submit an area suggestion. Run all plugin tests and the website-opportunities-doors suite on scratch Postgres.",
+    "Find pre-research: run the command below against scratch PostgreSQL; verify public research fills existing cells, research age, Action after Website, guarded idempotent Build from Find, revision snapshot pinning, no Research job and account-owned demo isolation. Browser evidence covers desktop/mobile and restored lists with no repeated Google discovery."
+  ],
+  "expect": [
+    "S1: the key travels only in the X-Goog-Api-Key header and never appears in an error; area, address and business suggestions are accepted; at most five suggestions; the details mask is id,displayName,formattedAddress,location.",
+    "S2: short input answers {suggestions: []} without calling Google; no key is 503 CREDENTIAL_MISSING; a bad session is 400 INVALID_SUGGEST; the 301st call is 429; /search centres on the point with the label and never geocodes it.",
+    "S3: only the text 300 ms after the last keystroke is asked, all in one session; the stale answer never replaces the newer list; after CREDENTIAL_MISSING nothing is asked again; a pick starts a new session next time.",
+    "S4: the approximate-location hint is shown only while the box still holds that city.",
+    "S5: raw name/address goes unchanged to Google Text Search, with no geocoder/circle/Apify rewrite; business picks use the exact Place ID and session token; named chains stay visible; empty results do not broaden into nearby results; missing Google credentials are 503 and bad intent/ID is 400; area suggestions and Google-confirmed cities preserve nearby discovery; saved named searches retain intent and ID without an old autocomplete session.",
+    "Pre-researched places remain visible by default; research/site-check/social data are reused, Status shows Researched + age, and each Find row has the correct account-scoped next action.",
+    "The Reviews column preserves separate Google and verified Tripadvisor rating/count pairs, never totals or averages them, and omits missing, ambiguous, failed, brand-only or mismatched-ID Tripadvisor records."
+  ],
+  "selectors": {
+    "files": "vendor/tracy/tracy-website-opportunities/domain/discovery-gplaces.mjs, vendor/tracy/tracy-website-opportunities/domain/gplaces-details.mjs, apps/tracy-web/src/opportunities/route.js, vendor/tracy/tracy-website-opportunities/src/client/place-suggest.ts, vendor/tracy/tracy-website-opportunities/src/client/find.tsx, vendor/tracy/tracy-website-opportunities/src/client/location.ts",
+    "dom": ".tracy-wo-search-place"
+  },
+  "evidence": "Typing \"da nang\" in Find places' location box (19/10/2026): no suggestion appeared and the hint \"Searching around Dubai, United Arab Emirates, your approximate location from your network…\" stayed while the box held other text. One live call of suggestPlaces with the deployment's Google key on 19/10/2026 answered \"Da Nang, Vietnam\" and \"Da Nang, Hai Chau, Da Nang, Vietnam\"; fetchPlaceLocation resolved the first to 16.054, 108.072.",
+  "fence": "suggestPlaces and fetchPlaceLocation go through callPlaces/placesCall (key in headers, redacted on failure); the suggest doors refuse short input before Google and rate-limit before the key lookup; /search takes a point before a query; createSuggester drops answers older than its sequence and stops on CREDENTIAL_MISSING; locationNoteShown ties the approximate hint to the box text",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-place-suggest.test.mjs",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-place-suggest.test.mjs",
+      "packages/wo/website-opportunities/test/domain-discovery-gplaces.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-find-input.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-find-memory.test.mjs",
+      "apps/tracy-web/test/website-opportunities-find-research.test.mjs"
+    ],
+    "tests": [
+      "suggestPlaces: one Autocomplete (New) POST, key in the header only, businesses and areas, the session token and language",
+      "suggestPlaces: errors carry a code and never the key",
+      "fetchPlaceLocation: Place Details with the narrow mask and the session token; label, lat, lon",
+      "suggest door: Google Autocomplete through the domain, short input answers nothing, no key is 503, validated and rate-limited",
+      "search by a picked suggestion: lat/lon with its label as query skips the geocoder",
+      "debounced: only the text 300 ms after the last keystroke is asked, with one session token",
+      "a slow answer for old text never replaces a newer one",
+      "reset (a pick or a search) drops what is in flight and starts a new session next time",
+      "no Google key (503 CREDENTIAL_MISSING): suggestions stop for good; other failures only empty the list",
+      "the location hint: the approximate one only while the box still holds that place (typing resets the rest to idle)"
+    ]
+  }
+}

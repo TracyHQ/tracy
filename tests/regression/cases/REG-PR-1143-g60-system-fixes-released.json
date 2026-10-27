@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1143-g60-system-fixes-released",
+  "kind": "fix",
+  "title": "The g60 system fixes of the seven questions hold (Apply door, no silent drop with a disobedient model, built-site audit) and ship with their releases: Claude Cowork for Joomla 0.24.12, Tracy Business EmDash 1.7.8, Tracy SaaS EmDash 1.4.5 pinned, contract ja-essence/wp7/1.0.13 for theme 1.0.13",
+  "pr": 1143,
+  "area": "sites/brief",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/brief-engine-door-actions.test.mjs (every action the brief engines and the seeder call, asked of the Apply door).",
+    "S2: node --test the disobedient-model tests: apps/tracy-web/test/{brief-wp-runs,brief-wp-posts,brief-wp-buttons,brief-wp-block-words,joomla-kit-pages,joomla-article-order,brief-emdash}.test.mjs and tests/personalize-fallback-gate.test.mjs of the Business, SaaS and Base EmDash themes.",
+    "S3: node --test scripts/test/template-customization-question-readiness-built-site.test.mjs, apps/tracy-web/test/template-customization-question-readiness-g60.test.mjs, packages/cms/tracy-wordpress-theme/test/css-words.test.mjs.",
+    "S4: read both quickstarts.json: every Joomla pin's Claude Cowork version, and the tracy-business/emdash and tracy-saas/emdash entries.",
+    "S5: read packages/cms/tracy-wordpress-quickstart/contracts/ja-essence/wp7/1.0.13/{manifest,content-map,presentation-lock}.json against 1.0.12's, and the quickstart/ja-essence/wp7 1.0.13 row of template-profiles.json."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped or cancelled.",
+    "S2: every test passes, none skipped or cancelled.",
+    "S3: every test passes, none skipped or cancelled.",
+    "S4: every Joomla pin on Claude Cowork 0.24.12; tracy-business/emdash 1.7.8 and tracy-saas/emdash 1.4.5, source and state files named for that version with a GitHub asset id.",
+    "S5: contract id ja-essence/wp7/1.0.13, quickstart version 1.0.13, content map identical to 1.0.12, the lock differs from 1.0.12 only in assets/css/je-detail.css, inc/words.php, readme.txt, style.css (template parts and entities identical); the profile row says logos pair, brandReady."
+  ],
+  "selectors": {
+    "tests": "tests/regression/scripts/REG-PR-1143-g60-system-fixes-released.mjs",
+    "door": "APPLY_RULES / applyDoorRefusal in apps/tracy-web/src/sites/route.js",
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-10-tcqr-g60-system-fixes.md",
+  "fence": "The Apply door's allowlist against what the engines call, the fallbacks every engine takes when the model disobeys, the built-site audit, and the releases this repository pins for them.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1143-g60-system-fixes-released.mjs"],
+    "needs": []
+  }
+}

@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture-site",
+  "revision": 3,
+  "source": {
+    "reference": "http://127.0.0.1:9/",
+    "inspiration": "prepass fixture (a two-mode site measured at 1440 and 390)",
+    "version": "1.0.0",
+    "capturedAt": "2026-09-27T00:00:00.000Z"
+  },
+  "theme": {
+    "selector": "html",
+    "attribute": "data-theme",
+    "lightValue": "light",
+    "darkValue": "dark"
+  },
+  "variants": [
+    {
+      "id": "desktop-light",
+      "mode": "light",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "id": "desktop-dark",
+      "mode": "dark",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "id": "mobile-light",
+      "mode": "light",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "id": "mobile-dark",
+      "mode": "dark",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "tokens": {
+    "desktop-light": {
+      "--brand-primary": "#1d4ed8"
+    },
+    "desktop-dark": {
+      "--brand-primary": "#1d4ed8"
+    },
+    "mobile-light": {
+      "--brand-primary": "#1d4ed8"
+    },
+    "mobile-dark": {
+      "--brand-primary": "#1d4ed8"
+    }
+  },
+  "rules": [
+    {
+      "id": "body-type",
+      "category": "typography",
+      "selector": "body",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"Inter Tight\"",
+          "fontSize": "16px",
+          "lineHeight": "24px",
+          "letterSpacing": "normal"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"Inter Tight\"",
+          "fontSize": "16px",
+          "lineHeight": "24px",
+          "letterSpacing": "normal"
+        },
+        "mobile-light": {
+          "fontFamily": "\"Inter Tight\"",
+          "fontSize": "16px",
+          "lineHeight": "24px",
+          "letterSpacing": "normal"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"Inter Tight\"",
+          "fontSize": "16px",
+          "lineHeight": "24px",
+          "letterSpacing": "normal"
+        }
+      }
+    },
+    {
+      "id": "body-colors",
+      "category": "color",
+      "selector": "body",
+      "styles": {
+        "desktop-light": {
+          "color": "rgb(117, 117, 117)",
+          "backgroundColor": "rgb(255, 255, 255)"
+        },
+        "desktop-dark": {
+          "color": "rgb(199, 204, 212)",
+          "backgroundColor": "rgb(15, 20, 28)"
+        },
+        "mobile-light": {
+          "color": "rgb(117, 117, 117)",
+          "backgroundColor": "rgb(255, 255, 255)"
+        },
+        "mobile-dark": {
+          "color": "rgb(199, 204, 212)",
+          "backgroundColor": "rgb(15, 20, 28)"
+        }
+      }
+    },
+    {
+      "id": "heading-h1",
+      "category": "typography",
+      "selector": ".item-page h1",
+      "styles": {
+        "desktop-light": {
+          "fontFamily": "\"Inter Tight\"",
+          "fontSize": "58px",
+          "fontWeight": "500",
+          "lineHeight": "69.6px",
+          "color": "rgb(5, 5, 5)"
+        },
+        "desktop-dark": {
+          "fontFamily": "\"Inter Tight\"",
+          "fontSize": "58px",
+          "fontWeight": "500",
+          "lineHeight": "69.6px",
+          "color": "rgb(241, 243, 246)"
+        },
+        "mobile-light": {
+          "fontFamily": "\"Inter Tight\"",
+          "fontSize": "28px",
+          "fontWeight": "500",
+          "lineHeight": "33.6px",
+          "color": "rgb(5, 5, 5)"
+        },
+        "mobile-dark": {
+          "fontFamily": "\"Inter Tight\"",
+          "fontSize": "28px",
+          "fontWeight": "500",
+          "lineHeight": "33.6px",
+          "color": "rgb(241, 243, 246)"
+        }
+      }
+    },
+    {
+      "id": "heading-h2",
+      "category": "typography",
+      "selector": ".item-page h2",
+      "styles": {
+        "desktop-light": {
+          "fontSize": "48px",
+          "fontWeight": "500",
+          "lineHeight": "57.6px",
+          "color": "rgb(5, 5, 5)"
+        },
+        "desktop-dark": {
+          "fontSize": "48px",
+          "fontWeight": "500",
+          "lineHeight": "57.6px",
+          "color": "rgb(241, 243, 246)"
+        },
+        "mobile-light": {
+          "fontSize": "26px",
+          "fontWeight": "500",
+          "lineHeight": "31.2px",
+          "color": "rgb(5, 5, 5)"
+        },
+        "mobile-dark": {
+          "fontSize": "26px",
+          "fontWeight": "500",
+          "lineHeight": "31.2px",
+          "color": "rgb(241, 243, 246)"
+        }
+      }
+    },
+    {
+      "id": "hero-title",
+      "category": "typography",
+      "selector": ".acm-hero h1",
+      "styles": {
+        "desktop-light": {
+          "fontSize": "56px",
+          "color": "rgb(255, 255, 255)"
+        },
+        "desktop-dark": {
+          "fontSize": "56px",
+          "color": "rgb(241, 243, 246)"
+        },
+        "mobile-light": {
+          "fontSize": "34px",
+          "color": "rgb(255, 255, 255)"
+        },
+        "mobile-dark": {
+          "fontSize": "34px",
+          "color": "rgb(241, 243, 246)"
+        }
+      }
+    },
+    {
+      "id": "btn-primary",
+      "category": "component",
+      "selector": ".btn-primary",
+      "styles": {
+        "desktop-light": {
+          "backgroundColor": "rgb(29, 78, 216)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "8px",
+          "transitionDuration": "0.15s"
+        },
+        "desktop-dark": {
+          "backgroundColor": "rgb(59, 139, 255)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "8px",
+          "transitionDuration": "0.15s"
+        },
+        "mobile-light": {
+          "backgroundColor": "rgb(29, 78, 216)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "8px",
+          "transitionDuration": "0.15s"
+        },
+        "mobile-dark": {
+          "backgroundColor": "rgb(59, 139, 255)",
+          "color": "rgb(255, 255, 255)",
+          "borderRadius": "8px",
+          "transitionDuration": "0.15s"
+        }
+      }
+    },
+    {
+      "id": "footer-band",
+      "category": "color",
+      "selector": "#footer",
+      "styles": {
+        "desktop-light": {
+          "backgroundColor": "rgb(18, 19, 22)",
+          "color": "rgba(255, 255, 255, 0.6)"
+        },
+        "desktop-dark": {
+          "backgroundColor": "rgb(18, 19, 22)",
+          "color": "rgba(255, 255, 255, 0.6)"
+        },
+        "mobile-light": {
+          "backgroundColor": "rgb(18, 19, 22)",
+          "color": "rgba(255, 255, 255, 0.6)"
+        },
+        "mobile-dark": {
+          "backgroundColor": "rgb(18, 19, 22)",
+          "color": "rgba(255, 255, 255, 0.6)"
+        }
+      }
+    },
+    {
+      "id": "section-rhythm",
+      "category": "layout",
+      "selector": ".section.top-large",
+      "styles": {
+        "desktop-light": {
+          "paddingTop": "128px",
+          "paddingBottom": "128px"
+        },
+        "desktop-dark": {
+          "paddingTop": "128px",
+          "paddingBottom": "128px"
+        },
+        "mobile-light": {
+          "paddingTop": "32px",
+          "paddingBottom": "32px"
+        },
+        "mobile-dark": {
+          "paddingTop": "32px",
+          "paddingBottom": "32px"
+        }
+      }
+    },
+    {
+      "id": "container",
+      "category": "layout",
+      "selector": ".section-inner.container",
+      "styles": {
+        "desktop-light": {
+          "maxWidth": "1320px",
+          "paddingLeft": "16px"
+        },
+        "desktop-dark": {
+          "maxWidth": "1320px",
+          "paddingLeft": "16px"
+        },
+        "mobile-light": {
+          "maxWidth": "none",
+          "paddingLeft": "16px"
+        },
+        "mobile-dark": {
+          "maxWidth": "none",
+          "paddingLeft": "16px"
+        }
+      }
+    }
+  ],
+  "coverage": [
+    {
+      "selector": "body",
+      "properties": [
+        "color",
+        "backgroundColor",
+        "fontSize"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "id": "home",
+      "url": "http://127.0.0.1:9/",
+      "expectedUrl": "http://127.0.0.1:9/",
+      "identity": "main",
+      "rules": [
+        "body-type",
+        "body-colors",
+        "heading-h1",
+        "heading-h2",
+        "hero-title",
+        "btn-primary",
+        "footer-band",
+        "section-rhythm",
+        "container"
+      ],
+      "requiredRules": [
+        "body-type"
+      ]
+    }
+  ],
+  "pilotPages": [
+    "home"
+  ],
+  "exceptions": [],
+  "pending": []
+}

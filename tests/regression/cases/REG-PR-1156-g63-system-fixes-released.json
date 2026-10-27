@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1156-g63-system-fixes-released",
+  "kind": "fix",
+  "title": "The g63 system fixes of the seven questions hold (one post title stage written last from each WordPress and Joomla post's own body, EmDash labels the model echoes asked again and reported, seed address words translated, theme example words translated, audit skips person names and dedupes one Joomla article on two routes) and ship with their releases: Tracy Business EmDash 1.7.11, Tracy SaaS EmDash 1.4.8 pinned, contract ja-essence/wp7/1.0.15 for theme 1.0.15",
+  "pr": 1156,
+  "area": "sites/brief",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/{post-title-stage-g62,wp-posts-g62,joomla-posts-g62}.test.mjs (models that cut titles, return the name, carry the demo topic, only rephrase; a planner that gives copies one body).",
+    "S2: node --test the EmDash themes' tests/personalize-labels-echoed.test.mjs (Business, SaaS, Base) and the kit's copy (a model that echoes labels and drops keys), and the Business theme's tests/seed-language-leftovers.test.mjs.",
+    "S3: node --test packages/cms/tracy-wordpress-theme/test/l10n-example-words.test.mjs.",
+    "S4: node --test scripts/test/template-customization-question-readiness-built-site.test.mjs (author names are names; one Joomla article on two routes is one post).",
+    "S5: read both quickstarts.json: the tracy-business/emdash and tracy-saas/emdash entries.",
+    "S6: read packages/cms/tracy-wordpress-quickstart/contracts/ja-essence/wp7/1.0.15 against 1.0.14, and the 1.0.15 row of apps/tracy-web/src/lib/template-profiles.json."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped or cancelled.",
+    "S2: every test passes, none skipped or cancelled.",
+    "S3: every test passes, none skipped or cancelled.",
+    "S4: every test passes, none skipped or cancelled.",
+    "S5: tracy-business/emdash 1.7.11 and tracy-saas/emdash 1.4.8, source and state files named for that version with a GitHub asset id.",
+    "S6: contract id ja-essence/wp7/1.0.15, quickstart version 1.0.15, content map identical to 1.0.14, the lock differs from 1.0.14 only in the eight languages/*.l10n.php, readme.txt and style.css (template parts and entities identical); the profile row says logos pair, brandReady."
+  ],
+  "selectors": {
+    "tests": "tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs",
+    "title-stage": "apps/tracy-web/src/sites/brief-engines/post-title-stage.js and post-title-faults.js",
+    "labels": "translateLabels in the EmDash themes' tools/personalize.mjs",
+    "audit": "scripts/lib/template-customization-question-readiness-built-site",
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy",
+    "contract": "packages/cms/tracy-wordpress-quickstart/contracts/ja-essence/wp7/1.0.15"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-12-tcqr-g63-fixes.md",
+  "fence": "The post title stage every WordPress and Joomla FULL build takes, the EmDash label re-asks and report, the seed and theme translations, the built-site audit, and the releases this repository pins or describes for them.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs"],
+    "needs": []
+  }
+}

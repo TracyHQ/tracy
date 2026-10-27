@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1329-add-site-workspace-button",
+  "kind": "fix",
+  "title": "Creating a site from an existing workspace keeps the ready screen until the new workspace is opened",
+  "pr": 1329,
+  "area": "site/add-site",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs",
+    "S2: Read the pass/fail counts and verify the test named in run.tests."
+  ],
+  "expect": [
+    "The add-site wizard started from an existing site stays on that site after the new site's agent is ready.",
+    "The Open the workspace button remains visible and clicking it navigates to the new site's workspace.",
+    "The /new/ flow keeps its existing automatic navigation behavior."
+  ],
+  "selectors": {
+    "completion": "button accessible name Open the workspace",
+    "existing workspace": "URL path /host.example/",
+    "new workspace": "URL path /deadsite.tracy.ai/"
+  },
+  "fence": "Automatic ready-state navigation does not take over an existing site's workspace; explicit workspace navigation remains available. The /new/ route is unchanged.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs"
+    ],
+    "tests": ["creating from an existing site keeps the ready screen until the new workspace is opened"]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "REG-007",
+  "kind": "fix",
+  "title": "A chat request longer than 4000 characters is recorded as truncated, not full",
+  "pr": 772,
+  "area": "site-changes/record",
+  "cms": ["any"],
+  "needs": ["stand", "site:any", "model", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, WEB, DSH, A and seat A's cookie COOKIE_A, pq (SELECT/WITH only). Case variables: KEY = site key of any WordPress, Joomla or EmDash site where seat A is owner; RUN=$(date +%s).",
+    "Check the build: docker exec $DSH grep -c requestCut /desk-home/profiles/native/node_modules/@tracy/dsh-site-tabs/lib/index.js and docker exec $WEB grep -c \"body?.requestState === 'truncated'\" /opt/tracy-web/src/sites/route.js must each print a number >= 1; otherwise stop with BLOCKED note image-older-than-1bf428e65.",
+    "Build HEAD = 'Do not change anything on the site. Reply with the single word OK. REG-007-' + RUN; LONG = HEAD, then append ' REG-007-filler' while LONG.length < 4100; record LONG.length. Build SHORT = HEAD + '-short'.",
+    "Browser: run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; connect Playwright (repo copy node_modules/.pnpm/playwright@1.63.0) with chromium.connectOverCDP('http://127.0.0.1:9222'), never chromium.launch(); every run uses a NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}, reducedMotion:'no-preference'} with cookie {name:'tracy_sess', value:COOKIE_A, domain:COOKIE_DOMAIN, path:'/', httpOnly:true}; never close a page, a context or the browser (let the script exit).",
+    "Set T0=$(pq \"select now()\"); in a new context page.goto(ORIGIN+'/'+KEY) and wait (<= 90 s) until page.url() contains '/s/session-' and the first [data-composer-input='true'] is visible.",
+    "Send LONG (README § Send a chat message): box = page.locator(\"[data-composer-input='true']\").first(); await box.fill(LONG) (Input.insertText, no clipboard paste); wait (<= 10 s) until box.textContent() === LONG (else fill once more; still different → BLOCKED note composer-rejected-text); box.press('Enter'); wait (<= 15 s) until box.textContent() === '' (else BLOCKED note composer-did-not-send). Never type it as click, Meta+A, Backspace, page.keyboard.insertText in one go: the composer drops the text (7/7 on scv2, 03/10).",
+    "Poll every 2 s for at most 60 s: TURN_LONG = pq \"select turn_id from site_turn where site_key='$KEY' and actor='$A' and opened_at > '$T0' order by opened_at desc limit 1\"; no row after 60 s → FAIL note no-turn-row.",
+    "Poll pq \"select state from site_turn where turn_id='$TURN_LONG'\" every 5 s until it is not 'open' (at most 10 min; still open → continue and add note turn-left-open).",
+    "Read pq \"select request_state, char_length(title), title from site_turn where turn_id='$TURN_LONG'\".",
+    "Set T1=$(pq \"select now()\"); send SHORT the same way in the same page; get TURN_SHORT exactly as TURN_LONG but with opened_at > '$T1'; wait for it to leave 'open' the same way; read pq \"select request_state, title from site_turn where turn_id='$TURN_SHORT'\".",
+    "Read curl -s -H \"Cookie: tracy_sess=$COOKIE_A\" -H \"Origin: $ORIGIN\" \"$ORIGIN/api/sites/$KEY/activity?version=2&filter=chat&limit=50\" and keep any item whose id is TURN_LONG or TURN_SHORT (normally none: a turn that changed nothing has no row)."
+  ],
+  "expect": [
+    "Both build checks print a count >= 1.",
+    "LONG.length >= 4100 (above the 4000-character cap shared by the host and the turn door).",
+    "A site_turn row TURN_LONG exists within 60 s of Enter (it is written when the turn opens, before the model runs).",
+    "TURN_LONG request_state = 'truncated' (before #772: 'full' with a 3995-character title ending in '…', QA-A11 r1 on scv2wp; after: 'truncated', 3999 characters, QA-A11 r2).",
+    "TURN_LONG char_length(title) <= 4000.",
+    "TURN_LONG title ends with '…' (U+2026) and ends with neither '……' nor '… …'.",
+    "TURN_LONG title starts with HEAD.",
+    "TURN_SHORT request_state = 'full' and its title = SHORT.",
+    "If the activity API returned an item with id TURN_LONG: its request.state = 'truncated' and request.text ends with exactly one '…'; an item with id TURN_SHORT has request.state = 'full'."
+  ],
+  "selectors": {
+    "composer": "[data-composer-input='true'] (first)",
+    "hostMarker": "'requestCut' in /desk-home/profiles/native/node_modules/@tracy/dsh-site-tabs/lib/index.js (dsh container)",
+    "webMarker": "\"body?.requestState === 'truncated'\" in /opt/tracy-web/src/sites/route.js (web container)",
+    "turnDoor": "POST /api/sites/:key/turn (host → tracy-web; body.requestState = 'truncated' only when the host cut the title)",
+    "turnRecord": "site_turn(turn_id, site_key, actor, opened_at, state, title, request_state)",
+    "activityApi": "GET /api/sites/:key/activity?version=2&filter=chat&limit=50 → items[].id, items[].request.text, items[].request.state"
+  },
+  "evidence": "packages/site/tracy-site-tabs/test/turn-record.test.mjs",
+  "fence": "The host's turn opening (turn-record.mjs openingOf → moment.mjs contentRequest().cut) sends requestState 'truncated' to POST /api/sites/:key/turn, and the door stores that word in site_turn.request_state instead of re-reading a title already inside its own 4000-character cap as 'full'."
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "77a193de-2472-4637-802f-d930ec61c180",
+  "status": "complete",
+  "name": "Flayks",
+  "url": "https://styles.refero.design/style/77a193de-2472-4637-802f-d930ec61c180",
+  "sourceWebsite": "https://flayks.com",
+  "extractedAt": "2026-06-03T21:31:04.571Z",
+  "capturedAt": "2026-10-08T05:13:38.026703+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "Oversized editorial broadsheet — dark forest green page, peach ink headlines bleeding off the page edges, tiny Nohemi caption text anchoring the corners.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/71fdd74a-3bb7-4626-8fb7-c955c368f054.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8e0e6d859bee3c8f8842f2c71405b1732defb7504593352056edaac7d8a817e0",
+      "bytes": 27191
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "820c9894ce3dadeace8c4ae1417e426fef2bb9f0958e48a60f604088fb066e19",
+      "bytes": 113012
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "fc6bd261be5ceacef26bfb5edeb3ce32745e5bddac10fb43c781bfc23a6dfcc7",
+      "bytes": 21588
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "425e7e326bab9b8fb4f8b5f59e3bd5dec5fa09dc1ff184cb4647dcff47f13f19",
+      "bytes": 15370
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6fee7d591790155c06d2a12890ef174318732dfef387ec78df63ef47eabd5807",
+      "bytes": 16661
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6292179a9636ad6412fe795f755a29021a4f84564e522a11f29eb070b44be384",
+      "bytes": 5545
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "452046b3ff8ea25cc3136334e9f4c9f025aedd444d3b14171b1b32ed95961507",
+      "bytes": 860
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e53c1ea168e5cab8450253b799338916ef4f87fad34d1498ad698536e360d02b",
+      "bytes": 877
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4c637908fcf06121ad003d709eeb265e78cd51ffae8ccb54a70dfd8bf19618dc",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "461a192c29371d80065f61e957cbc8fa64b179e4eb7d775af41239e892d6ea71",
+      "bytes": 49234
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "24b62688d4f8653a6ca68b76c0a4c34374223c3be80980d4ace753fbd6897f09",
+      "bytes": 25164
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7dee961e8c767ce277f6c3a8d0400849341b27f63cd09fda9b7851fdc6eb0773",
+      "bytes": 60065
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "83d738ce7d061d04fb51a5e2c3c4c79bf65d65f110012275bc5a8ddc99af1a33",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4d4557bbbc5a189d5acfdbc4684f64cfa164f4575dd6fd756c899906acb7846e",
+      "bytes": 2555
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "508efc81106119e74d2b08f86432a1c62bd9d2997aa397d5560fd4d1959e5c85",
+      "bytes": 3072
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "2ab2f666-6da7-4cd8-bc91-52a28bd560ad",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "77a193de-2472-4637-802f-d930ec61c180",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "ef73c742-1c3b-48b9-a174-de365ecc4691",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060",
+    "ffb945f9-2d70-45e8-9024-492900318fa8"
+  ]
+}

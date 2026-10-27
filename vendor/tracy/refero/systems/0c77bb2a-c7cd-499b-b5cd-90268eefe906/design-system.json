@@ -1,0 +1,312 @@
+{
+  "dos": [
+    "Use Mackinac at 64px / -2.88px tracking for any hero or section display headline — the serif is the brand's editorial signature, do not substitute it.",
+    "Use #7c3aed Electric Violet exclusively for filled CTA buttons and active nav states; no other saturated color should appear as a button background.",
+    "Apply 9999px radius to all primary buttons and the top navigation container; the pill shape is a defining silhouette.",
+    "Use #5e537c Heather Violet for body copy rather than pure gray — the warm violet tint keeps the page on-brand.",
+    "Use #e7e6f4 Lavender Mist for all hairline borders and dividers instead of neutral gray; the structural neutral should carry the same hue family as the text.",
+    "Space sections with 96–120px vertical gap; the generous breathing room is what makes the whimsical illustrations feel intentional rather than crowded.",
+    "Use the sky→indigo→pink gradient (#7dd3fc → #a5b4fc → #f9a8d4) for full-bleed section bands that introduce illustrated content."
+  ],
+  "donts": [
+    "Do not use a display sans-serif for headlines — the Mackinac serif is the single most distinctive type choice and removing it collapses the brand voice.",
+    "Do not use bright or saturated colors other than #7c3aed for any UI element; the system runs on one accent.",
+    "Do not use square or 4px-radius buttons for primary actions — pill shape is mandatory for CTAs and nav.",
+    "Do not use pure black (#000000) for body text; use #281950 Deep Ink Violet or #5e537c Heather Violet.",
+    "Do not apply heavy drop shadows to cards or panels; the design relies on hairline borders and tonal contrast for separation, not depth.",
+    "Do not use tight tracking on body copy or button text; the positive letter-spacing (0.025–0.05em) at small sizes is part of the editorial voice.",
+    "Do not use real photography in place of illustrations — the hand-drawn watercolor style is load-bearing for the brand atmosphere."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#7c3aed",
+      "name": "Electric Violet",
+      "role": "Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#281950",
+      "name": "Deep Ink Violet",
+      "role": "Headlines, high-emphasis text, logo mark — anchors the brand without feeling heavy",
+      "group": "brand"
+    },
+    {
+      "hex": "#5e537c",
+      "name": "Heather Violet",
+      "role": "Body copy, paragraph text, subdued UI labels — the workhorse text color that keeps prose warm rather than cold",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a39ac1",
+      "name": "Mist Violet",
+      "role": "Secondary text, footer labels, icon strokes, muted links — a washed violet that recedes gracefully",
+      "group": "neutral"
+    },
+    {
+      "hex": "#191034",
+      "name": "Midnight Plum",
+      "role": "Footer background, deepest contrast surface — terminates the page with the same hue family as headings, just darker",
+      "group": "brand"
+    },
+    {
+      "hex": "#202237",
+      "name": "Slate Dusk",
+      "role": "Navigation text, dark-mode-leaning neutral — used where a neutral (not chromatic) dark is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#676b89",
+      "name": "Overcast",
+      "role": "Muted secondary text, helper copy, timestamps — the cool counterpoint to the violet body text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure Paper",
+      "role": "Card surfaces, elevated panels, button text on violet fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e7e6f4",
+      "name": "Lavender Mist",
+      "role": "Hairline borders, card outlines, subtle dividers, inset focus rings — the dominant structural neutral, replacing what would normally be light gray",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f1f2f9",
+      "name": "Iris Haze",
+      "role": "Page background, the canvas beneath all content — a barely-perceptible lavender tint rather than pure white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a5b4fc",
+      "name": "Dawn Wash",
+      "role": "Decorative gradient stop — sky-to-pink section bands",
+      "group": "accent",
+      "gradient": "linear-gradient(to right, #7dd3fc, #a5b4fc, #f9a8d4)"
+    },
+    {
+      "hex": "#a02be4",
+      "name": "Plum Veil",
+      "role": "Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color",
+      "group": "accent",
+      "gradient": "linear-gradient(to right bottom, #a02be4, rgba(0,0,0,0), #4f46e5)"
+    }
+  ],
+  "layout": "Max-width 1200px centered content. Full-bleed section bands with Iris Haze (#f1f2f9) canvas and occasional sky-to-pink gradient washes. Hero is full-bleed illustration behind a centered headline stack. Below the fold, sections alternate between two-column text+illustration layouts and centered text blocks. Trusted-by logo strip is a full-width centered row. Generous 96–120px vertical section gaps create a quiet, gallery-like rhythm. Navigation is a floating pill at the top center-left, not a full-width bar.",
+  "imagery": "Imagery is exclusively hand-drawn watercolor illustration with fine ink outlines. Surreal, dreamlike, populated by anthropomorphic characters (fox-like creatures, geometric beings, bird forms) and floating landscape elements — stars, moons, leaves, architectural fragments, abstract organic shapes. Color treatment is pastel: lavender, peach, teal, mint, cream, soft yellow. Illustrations are contained within sections (not full-bleed except as decorative backdrops in the hero) and always sit on the right or behind text. No photography, no 3D renders, no product screenshots. The illustration carries emotional weight while the UI stays restrained.",
+  "similar": [
+    {
+      "why": "Same violet-tinted dark/light contrast, pill navigation, single saturated accent for CTAs, and confident display typography",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar ultra-clean light canvas with generous spacing, pill buttons, and a single dark text color for hierarchy",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same editorial body type treatment with humanist grotesk, soft neutral canvas, and restrained use of a single brand color",
+      "business": "Stripe"
+    },
+    {
+      "why": "Same devtools audience and pill-shaped navigation, though Fly distinguishes itself with hand-drawn illustration vs Railway's terminal aesthetic",
+      "business": "Railway"
+    },
+    {
+      "why": "Similar warm-neutral canvas, light hairline borders instead of heavy shadows, and playful illustrated personality",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "9999px",
+      "cards": "16px",
+      "small": "4px",
+      "inputs": "10px",
+      "buttons": "9999px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "96-120px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#f1f2f9",
+      "name": "Iris Haze Canvas",
+      "level": 0,
+      "purpose": "Page background — the lavender-tinted base beneath all content"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure Paper",
+      "level": 1,
+      "purpose": "Card surfaces, elevated panels, nav pill background"
+    },
+    {
+      "hex": "#e7e6f4",
+      "name": "Lavender Mist",
+      "level": 2,
+      "purpose": "Subtle elevated washes, gradient band bases, decorative overlays"
+    },
+    {
+      "hex": "#191034",
+      "name": "Midnight Plum",
+      "level": 3,
+      "purpose": "Footer terminal surface"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(91, 33, 182, 0.1) 0px 5px 5px -2px, rgba(91, 33, 182, 0.1) 0px 2px 4px -2px",
+      "element": "Primary CTA Button"
+    },
+    {
+      "style": "rgba(67, 56, 202, 0.25) 0px 0px 0px 1px inset",
+      "element": "Focused Input/Nav"
+    },
+    {
+      "style": "rgba(32, 34, 55, 0.075) 0px 0px 0px 1px, rgba(32, 34, 55, 0.05) 0px 10px 15px -3px, rgba(32, 34, 55, 0.05) 0px 4px 6px -4px",
+      "element": "Navigation Bar"
+    }
+  ],
+  "northStar": "surrealist cloud atlas in violet ink",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 18,
+      "letterSpacing": 0.6
+    },
+    {
+      "role": "body-sm",
+      "size": 15,
+      "lineHeight": 25,
+      "letterSpacing": 0.38
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 30,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 22,
+      "lineHeight": 25,
+      "letterSpacing": -0.55
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 48,
+      "letterSpacing": -0.9
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 74,
+      "letterSpacing": -2.88
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Floating pill container at 9999px radius, white (#ffffff) fill, hairline border at #e7e6f4, subtle drop shadow. Holds logo on left, nav links centered, Sign In ghost link and 'Get Started' violet CTA on right. Padding 10px vertical, 12px horizontal inside the pill."
+    },
+    {
+      "name": "Primary CTA Button",
+      "role": "Primary conversion action (Deploy, Get Started, Sign Up)",
+      "description": "Vivid violet (#7c3aed) fill, white text in Fricolage Grotesque 16px weight 500, 9999px radius, 10px 20px padding. Soft violet-tinted shadow (rgba(91,33,182,0.1) two-layer) lifts it off the page. Optional right-arrow glyph in white at 14px."
+    },
+    {
+      "name": "Outlined Action Button",
+      "role": "Secondary action (Enterprise Features, Fly.io Security)",
+      "description": "Transparent fill, 1.5px solid #7c3aed border, 9999px radius, violet text in Fricolage 16px weight 500, 10px 20px padding. Right-arrow chevron in violet. Used for lower-emphasis but still conversion-oriented actions."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Inline navigation and tertiary actions",
+      "description": "No background or border, text in #281950 or #5e537c, underline on hover only. Fricolage 16px weight 450. Used for 'Sign In', 'Learn more', and inline editorial links."
+    },
+    {
+      "name": "Display Headline",
+      "role": "Hero and section titles",
+      "description": "Mackinac 64px weight 500, color #281950, letter-spacing -2.88px, line-height 1.15. Two-line structure common; italic word accent (e.g. 'fearlessly') set in the same Mackinac italic if available, otherwise Fricolage italic 500. Sits centered or left-aligned above a 16–18px body paragraph in #5e537c."
+    },
+    {
+      "name": "Hero Section",
+      "role": "Above-the-fold introduction",
+      "description": "Full-bleed Iris Haze (#f1f2f9) canvas. Centered display headline stack (max-width 720px) floats over a wide hand-drawn watercolor illustration that extends edge-to-edge. Body paragraph 18px #5e537c, centered, max-width 560px. Single violet CTA below paragraph. Illustration occupies top 40% of viewport behind the text."
+    },
+    {
+      "name": "Gradient Feature Band",
+      "role": "Section transition with illustration",
+      "description": "Full-bleed band with linear-gradient background: #7dd3fc → #a5b4fc → #f9a8d4 (left to right). Contains a two-column layout: text block left (60%), illustration right (40%). Headline 36px Mackinac #281950, body 18px #5e537c, single horizontal hairline divider at #e7e6f4."
+    },
+    {
+      "name": "Trusted By Logo Strip",
+      "role": "Social proof",
+      "description": "Centered uppercase label 'TRUSTED BY TEAMS AT' in Fricolage 12px weight 500, letter-spacing 0.05em, color #7c3aed. Single horizontal row of 6–8 partner logos below, evenly spaced, each in monochrome dark (#281950) at consistent height ~24px."
+    },
+    {
+      "name": "Checkmark Feature List",
+      "role": "Feature checklist (Enterprise, Pricing)",
+      "description": "Vertical stack of 5–7 items. Each row: small violet checkmark glyph (16px, #7c3aed) on left, label text in Fricolage 17px weight 450 #281950 on right. Row gap 16px, no dividers between items."
+    },
+    {
+      "name": "Two-Column Feature Section",
+      "role": "Product/feature explanation with illustration",
+      "description": "Max-width 1200px centered. Alternating left-text/right-illustration and right-text/left-illustration columns. Text column: 36px Mackinac headline, 18px body paragraph, 10px hairline divider (#e7e6f4), optional outlined CTA. Illustration column: contained watercolor character scene, max-width 480px."
+    },
+    {
+      "name": "Enterprise Feature Card",
+      "role": "Grouped feature highlight",
+      "description": "White (#ffffff) surface, 16px radius, no visible border, sits on Iris Haze canvas. Internal padding 32px. Contains a headline in Mackinac 36px #281950, a 2–3 sentence body, and a row of two outlined action buttons."
+    },
+    {
+      "name": "Footer",
+      "role": "Site-wide footer",
+      "description": "Full-bleed #191034 (Midnight Plum) background. White and Mist Violet (#a39ac1) text. Multi-column link grid with column headers in Fricolage 12px uppercase weight 500 letter-spacing 0.05em. Logo mark and copyright row at bottom."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Body copy, UI labels, button text, navigation, footer, captions. Used at 16–18px for body and 12–15px for meta. The weight 325 light is deliberate anti-convention — most devtools use 400 minimum, this whisper weight softens the dense infrastructure copy into something editorial. Positive tracking (0.025em–0.05em) at small sizes gives uppercase labels and button text a slightly spacious, unhurried feel.",
+      "sizes": "12px, 15px, 16px, 17px, 18px, 19px",
+      "family": "Fricolage Grotesque",
+      "weight": "325, 450, 500, 575",
+      "lineHeight": "1.50–1.66",
+      "substitute": "Inter, DM Sans, or General Sans",
+      "letterSpacing": "0.025em at body sizes, 0.05em at button/label sizes"
+    },
+    {
+      "role": "Display headlines and section titles. A high-contrast serif used at weight 500 only — the medium weight gives authority without feeling editorial-stiff. Aggressive negative tracking (-0.045em at 64px, -0.025em at 22–36px) tightens the letterspacing so the serif feels modern rather than traditional. Single most distinctive type choice on the site: pairs a humanist grotesque body with an editorial serif display to create a storybook voice.",
+      "sizes": "22px, 36px, 64px",
+      "family": "Mackinac",
+      "weight": "500",
+      "lineHeight": "1.15–1.33",
+      "substitute": "Source Serif Pro, Tiempos Headline, or GT Super",
+      "letterSpacing": "-0.045em at 64px display, -0.025em at 22–36px headings",
+      "fontFeatureSettings": "\"liga\" on, \"kern\" on"
+    }
+  ],
+  "description": "Fly.io reads like a hand-drawn storybook for infrastructure: a near-white canvas washed in the faintest lavender, populated by surreal watercolor creatures and floating landscapes. The voice is two-part — a confident display serif (Mackinac) sets an editorial tone for headlines with aggressive negative tracking, while a humanist grotesque (Fricolage Grotesque) handles body and UI with subtle positive tracking that keeps the prose unhurried. Interactions live in a single vivid violet pill button that pops against the muted canvas, and a deep-violet ink carries all heading weight. Sections breathe between soft sky-to-pink gradient bands, trusting illustration to carry emotion while text and UI stay restrained.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (headings): #281950\n- text (body): #5e537c\n- background (canvas): #f1f2f9\n- background (card): #ffffff\n- border (hairline): #e7e6f4\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. *Gradient feature band*: Full-bleed band with background linear-gradient(to right, #7dd3fc, #a5b4fc, #f9a8d4). Two-column layout inside max-width 1200px. Left column: Mackinac 36px weight 500, color #281950, letter-spacing -0.9px. Body 18px Fricolage, color #5e537c. Hairline divider 1px #e7e6f4, max-width 80px. Right column: contained illustration, max-width 480px.\n\n3. *Outlined action button*: Transparent fill, 1.5px solid #7c3aed border, 9999px radius, Fricolage 16px weight 500, color #7c3aed, 10px 20px padding, optional right-arrow chevron in #7c3aed at 14px.\n\n4. *Trusted-by logo strip*: Centered uppercase label 'TRUSTED BY TEAMS AT' in Fricolage 12px weight 500, letter-spacing 0.6px, color #7c3aed. Below: single horizontal row of 6 partner logos, monochrome #281950, height 24px, evenly spaced with 48px gaps.\n\n5. *Checkmark feature list*: Vertical stack with 16px row gap. Each row: 16px #7c3aed checkmark glyph, then label in Fricolage 17px weight 450 color #281950. Five to seven items, no dividers between."
+    },
+    {
+      "title": "Typography Pairing Philosophy",
+      "content": "The defining type move is grotesque body + serif display: Fricolage Grotesque (weights 325–575, positive tracking 0.025–0.05em) carries all UI and prose, while Mackinac (weight 500 only, aggressive negative tracking -0.025 to -0.045em) appears only on display headlines. The contrast in family, weight range, and tracking direction creates the storybook voice — neither font alone would produce the same effect. Do not attempt to pair Mackinac with a different sans, and do not attempt to replace Fricolage with a more neutral grotesk like Inter; the warmth and slight looseness of Fricolage is what makes the body copy feel editorial rather than corporate."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Two distinct gradient families:\n\n1. **Section bands** — linear-gradient(to right, #7dd3fc, #a5b4fc, #f9a8d4) at full opacity. Used as full-bleed backgrounds for feature sections that introduce illustrations. The sky-to-pink wash frames the watercolor artwork without competing with it.\n\n2. **Subtle washes** — same hues at 0.1 alpha: linear-gradient(100deg, rgba(125,211,252,0.1), rgba(165,180,252,0.1), rgba(249,168,212,0.1)). Used on inner sections that need a hint of color without committing to a full band.\n\n3. **Plum-to-indigo glow** — linear-gradient(to right bottom, #a02be4, rgba(0,0,0,0), #4f46e5). Used as an accent on hero overlays or behind the primary CTA to create depth on the violet fill."
+    }
+  ]
+}

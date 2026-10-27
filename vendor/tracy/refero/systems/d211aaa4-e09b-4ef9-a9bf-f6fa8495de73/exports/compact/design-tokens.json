@@ -1,0 +1,44 @@
+{
+  "color": {
+    "charcoal-ink": {
+      "$value": "#212529",
+      "$type": "color",
+      "$description": "Charcoal Ink — Body text, headings, nav text, footer text, most borders — the dominant text and structural color, slightly softer than pure black for warmth"
+    },
+    "pure-press": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Press — Secondary text, button borders, link borders, input outlines, nav separators — true black for maximum contrast on outlined elements"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, card surfaces, button fills, input backgrounds — the ground that all ink sits on"
+    }
+  },
+  "font": {
+    "studio-feixen-sans-writer-book-regular": {
+      "$value": "Studio Feixen Sans Writer Book Regular",
+      "$type": "fontFamily",
+      "$description": "Studio Feixen Sans Writer Book Regular — detected in extracted data but not described by AI"
+    },
+    "studio-feixen-sans-writer": {
+      "$value": "Studio Feixen Sans Writer",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all text — body, headings, nav, links, buttons, lists. The Writer variant carries a typewriter/letterpress quality with subtle ink-trapped details that a geometric sans cannot replicate. Weight 700 is used sparingly only on the 60px display; everything else stays at 400, making the single bold moment feel intentional and declarative."
+    },
+    "studio-feixen-sans": {
+      "$value": "Studio Feixen Sans",
+      "$type": "fontFamily",
+      "$description": "Secondary sans variant for select body passages and inputs where the typewriter serifs would be too loud. The same family, stripped of the Writer details, creates a quiet alternation within the same typographic world."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://mybrentano.ch",
+      "siteName": "My Brentano",
+      "extractedAt": "2026-06-03T21:56:18.721Z",
+      "variant": "compact"
+    }
+  }
+}

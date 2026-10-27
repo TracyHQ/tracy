@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1e7dae3b-cb34-4fcf-8c32-051152aebbab",
+  "status": "complete",
+  "name": "Foodnoms",
+  "url": "https://styles.refero.design/style/1e7dae3b-cb34-4fcf-8c32-051152aebbab",
+  "sourceWebsite": "https://foodnoms.com",
+  "extractedAt": "2026-06-03T16:56:49.644Z",
+  "capturedAt": "2026-10-08T05:09:08.140805+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Sunlit fruit market on white porcelain — warm orange, fresh green, and generous rounded forms",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/18944cde-ce05-46db-b6d3-b92b28388baf.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/1973c0ba-1fc7-4e38-b4b5-2245d9270d36.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/3150e17a-496c-4c2b-be44-9faa8fecb692.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/8d5eb288-ba51-466c-a9a3-8600733ef63b.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/d79aade6-1395-4f72-84ea-e0855b9a8938.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "470c4c846b8ab613d2bb5eca615b4ce83a9e9db060bf4c9d4c1361bf059f0163",
+      "bytes": 22036
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "86a1d4029471d09cf5293b55256b8e58068d62603ab2421415ecdf3293afb6a4",
+      "bytes": 118919
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4e4cbdbaf1f1c62f22ff56134ae2142b83673e686fca2ee3c630d92703fb2b86",
+      "bytes": 18962
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a321b9234bca19af8c8b8a18fdd203ea7fd462066c7f7ea4124a1ccbda5f981d",
+      "bytes": 9202
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "69ed4770a9951bd75673a77966732179f63dcc5aa3e5c8f49aa44fcece1ff15d",
+      "bytes": 13835
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7212cf21c123540808f95a8d391e2a28993b0af521e20ba4ff33f7b031975d31",
+      "bytes": 4798
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "fde70f42274d6b2ef56e487bdc0de23debab51121bed911ab630f9a34710b4b7",
+      "bytes": 1061
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "97e67de1f40fba3b8e8ef2f7bd820dccdb80329e97ca87bc5743f05290da37d0",
+      "bytes": 1078
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "30a31482fa10e897c7b107c3708f5496482164801128b6c07464961680192d75",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3e069f1edb1bb087998194dcadc287d4782e7f2c5ccc42ff645c8c685afeb8fa",
+      "bytes": 45256
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "4342ace08a5f07335499735e97f9a67a8069735fa37e876e728504e4caa42208",
+      "bytes": 23339
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "17dbb9a238a5d1b4d2722610f85f296599efe3067ec58be799117ba063e816c1",
+      "bytes": 38343
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f425d70f60f00caf1fb3f7eb02a0f5e4e8b7c9f0e0cb6026f50cfa4177b2335d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "730fbac42912414194296c561aded82bad830d34c830061c275db39d6ed45a16",
+      "bytes": 1683
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "86e682a4e3c533c5085f88ccfb6cdf6eae398da11f9cdb50cc8c9da9bcabb4e3",
+      "bytes": 2249
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "05053a60-1964-4154-9d58-ebdf6352ed3a",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1e7dae3b-cb34-4fcf-8c32-051152aebbab",
+    "21b71be3-78a0-4681-a5b9-64cc4b40eb67",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "3634d5eb-ccfa-4881-b234-3dd735fb7ae4",
+    "59ac8248-1d64-4df3-92f1-919b50e05602",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "b0d80806-b724-4ed1-a1d1-074edd3c9bc9",
+    "c0717d1a-b446-4166-a445-6497fe287fea",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d6c2a911-45ed-4860-a992-43df22793c2a",
+    "d7a73e16-4b3e-4b9d-aef2-2c31a9db7457",
+    "d91841cf-c717-43ef-97a2-400778fa6e1a",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

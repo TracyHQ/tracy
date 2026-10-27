@@ -1,0 +1,67 @@
+{
+  "id": "REG-PR-1422-shard-node-handoff",
+  "kind": "feat",
+  "title": "A shard takes a person only through the master's signed adopt and a one-time ticket, mails no sign-in code, and holds a label at the master before creating a site",
+  "pr": 1422,
+  "area": "shard/handoff",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd` with TEST_DATABASE_URL set to a scratch Postgres. The master is a local double; no server is reached.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": [
+    "0 failures and 0 skipped.",
+    "Every test named in run.tests reports ok.",
+    "No site row and no provision after a create refused for an unreachable master.",
+    "No session cookie on any refused handoff."
+  ],
+  "selectors": {
+    "door": "POST /_shard/adopt; GET /handoff; GET /_shard/status; GET /login; POST /api/sites",
+    "cookie": "tracy_handoff; tracy_sess_<name>",
+    "test": "apps/tracy-web/test/shard-node-*.test.mjs"
+  },
+  "fence": "An unsigned, mis-signed or replayed adopt is 403 with a reason and writes no mirror; a ticket opens a session once and only with the nonce whose hash adopt stored; two nonce cookies, another browser, a used or late ticket send the person back to the master with no session; a shard never mails a sign-in code; a shard session cookie alone passes no cross-site POST; a create is refused with no site row when the master cannot hold the label. Throwaway Postgres and local doubles, no network.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/shard-node-channel.test.mjs",
+      "apps/tracy-web/test/shard-node-adopt.test.mjs",
+      "apps/tracy-web/test/shard-node-handoff.test.mjs",
+      "apps/tracy-web/test/shard-node-signin-guard.test.mjs",
+      "apps/tracy-web/test/shard-node-session-wiring.test.mjs",
+      "apps/tracy-web/test/shard-node-status.test.mjs",
+      "apps/tracy-web/test/shard-node-sites.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "an unsigned, mis-signed or replayed adopt is refused with why, and creates nothing",
+      "adopt makes the mirror once and answers a one-time ticket as a string, with the master’s nonce hash kept",
+      "next is kept with the ticket, as a path of this shard, never /handoff itself",
+      "a body off the contract is 400 BAD_BODY, and the master gets 404 NOT_A_SHARD",
+      "a shard that has not read the catalogue, or is full, answers SHARD_FULL to a NEW person and still takes back a known one",
+      "a signed request verifies once; replay, clock and every other change say why",
+      "a nonce is remembered to the end of ITS OWN window: a signer whose clock runs ahead cannot replay it",
+      "a ticket and its nonce become a session of this shard, once, with W1’s cookies and no pointer",
+      "only t is read: a next in the query never chooses where the person lands",
+      "a ticket without its nonce, with another browser’s, a used one or a late one goes back to the master and sets no session",
+      "two tracy_handoff cookies are a broken ticket, spent and signed in nowhere; a failed handoff never goes back to /handoff",
+      "a shard sends sign-in to the master and never mails a code",
+      "a browser posting the old form gets a page in its language with a way to the master",
+      "the master signs people in exactly as before",
+      "a same-site POST carrying only tracy_sess_<name> is 403 CSRF_ORIGIN: the guard reads the shard cookie too (contract §3)",
+      "forwardHttp on a shard hands dsh the shard’s own session, not the master’s cookie beside it",
+      "a person the master never handed here cannot create a site on the shard",
+      "a handed person creates a site: the label is held at the master first and site.created is queued before the provision",
+      "the master holding the label elsewhere is the same TAKEN refusal as a local clash, and nothing is written",
+      "the master not answering refuses the create with LABEL_REGISTRY_UNAVAILABLE and leaves no site behind",
+      "a shard that has not read the catalogue, or is at its cap, answers SHARD_FULL with the master’s fresh start",
+      "the heartbeat reads sites, catalogue read time, migration head and accepting, signed as a GET",
+      "the heartbeat’s shell signature (W3) is the same as signShardRequest for GET /_shard/status"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, full-bleed backgrounds, surface for all primary content"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "ultraviolet": {
+      "$value": "#c692ff",
+      "$type": "color",
+      "$description": "Ultraviolet — Accent for hover states, active link underline, and occasional highlight punctuation — appears at near-zero frequency, so it functions as surprise, not decoration"
+    }
+  },
+  "font": {
+    "polysans-slim": {
+      "$value": "PolySans-Slim",
+      "$type": "fontFamily",
+      "$description": "Body copy at 16px, subheadings at 20–30px, and section headings at 40px. The Slim optical is the voice of the site: narrow, space-efficient, never decorative. Its tight -0.01em tracking makes 16px body text feel composed rather than casual."
+    },
+    "polysans-neutral": {
+      "$value": "PolySans-Neutral",
+      "$type": "fontFamily",
+      "$description": "Display and hero typography. 60px for section openers, 160px for the brand-level wordmark/display moments. At 160px with 0.90 line-height, the letters nearly touch vertically — an intentional compression that makes the type feel architectural rather than airy."
+    },
+    "polysans-bulky": {
+      "$value": "PolySans-Bulky",
+      "$type": "fontFamily",
+      "$description": "Link and CTA text at 28px. The Bulky optical adds weight and warmth to interactive elements without requiring a bold weight shift — buttons and links feel substantial at body-relative sizes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://yung.studio",
+      "siteName": "Yung Studio",
+      "extractedAt": "2026-06-03T17:29:09.334Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,320 @@
+# Tracy Cowork for Windows and Linux — installers built on our self-hosted build runner, unsigned.
+#
+# The Windows + Linux half of a release (tasks/todo-desktop-windows.md, rule R: one release = Mac +
+# Windows + Linux, one sha, one version). `packages/desktop/tracy-desktop/build/release.mjs prepare`, run
+# on the iMac where the Mac half is built, starts this workflow by `gh workflow run` with the candidate —
+# `sha`, `variant`, `version`, `build_id`, `release_date`, `feed` — finds the run by its name (it carries
+# the build id), waits, downloads the installers and `build-info.json` from this run's DRAFT release
+# `desktop-win-linux-<run id>`, and uploads nothing unless the build record names exactly its candidate.
+# This workflow publishes nothing itself: a draft release has no tag and no one outside the repo sees it.
+#
+# 🔒 NO ACTIONS ARTIFACTS. On GitHub Free, artifacts share the org's pooled 500 MB, recalculated every
+# 6-12 h; one release (~650 MB) filled it and blocked 0.6.0 (12/10/2026; deleting artifacts did not
+# free it in time). Release assets are outside that pool ("There is no limit on the total size of a
+# release, nor bandwidth usage" — docs.github.com, About releases). A draft can be edited by anyone with
+# push access, so the run reports its record's sha256 as a check annotation and prepare refuses a draft
+# whose record differs (build/release-win-linux.mjs). A publish to a real store deletes the draft; the
+# sweep below deletes drafts older than 14 days (rehearsals, abandoned candidates).
+# NOT part of Tracy CI: `scripts/check-all.ts` never reads this file and no PR waits on it.
+#
+# 🔒 A RELEASE BUILD IS THE SHA IT WAS GIVEN. The job checks out `inputs.sha` (never the branch head) and
+# refuses it unless it is in the history of origin/main (stable) or origin/develop (dev) — the same rule
+# the release preflight holds the Mac half to. Stable is dispatched on `main` only, dev on `develop` only,
+# so the lane below follows: stable builds on the production lane's runner.
+#
+# A PUSH to a `feat/desktop-windows*` branch builds that branch's head as a dev candidate
+# (`<package version>-dev.<run number>`, a build id from the time and sha) — to try packaging, and the way
+# a release rehearsal gets its Windows/Linux half while this file is not on the default branch (GitHub
+# dispatches only workflows it finds there): `prepare --win-linux-run <run id>`. Its record says
+# `trigger: push`, and prepare takes such a run for a test target only.
+#
+# 🔒 SELF-HOSTED, LIKE EVERY OTHER WORKFLOW HERE (docs/references/gates-ci-runners.md § Runners).
+# It was written for GitHub-hosted `windows-2025`/`ubuntu-24.04` first and never ran: GitHub refuses
+# hosted jobs for the TracyHQ org ("recent account payments have failed", runs 38046151128 and
+# 38050098735). Since 10/10/2026: build on our runners. One Linux x64 job makes all six files — the
+# NSIS installers through wine (electron-builder runs rcedit and the installer itself under wine to
+# write the exe's icon/version info and the uninstaller), AppImage and .deb cross-built for arm64.
+#
+# 🔒 THE LANE. The same expression as the image builds: `main` (or `staging`) → `tracy-lane-prod`,
+# anything else → `tracy-lane-dev`. A release build comes from a sha on `main` and is built on the
+# production lane's build runner, a machine no pull-request code runs on; a push to a
+# `feat/desktop-windows*` branch can only ever reach the dev lane.
+#
+# 🔒 THE CONTAINER GETS NO MOUNT AT ALL. The runner is itself a container talking to the HOST daemon
+# (tracy-runners `docker-socket.yml`), and its `_work` is a named volume inside it — so a
+# `-v $GITHUB_WORKSPACE:…` would be resolved on the host's disk, where that path does not exist (and
+# the daemon would create it, as root). Instead the job `docker cp`s the staged app and the build
+# scripts in and the installers out. No `--privileged`, no host path, no socket inside; the container
+# is created, used and removed by its id, also when the job fails or is cancelled.
+#
+# ⚠ WHY NOT A SOCKET-LESS `tracy-check` RUNNER — probed 10/10/2026, runs 38054926794 and 38055677273.
+# The Linux half works there unchanged (same four files, sizes within 100 bytes). The Windows half
+# does not: the exe's icon and version info are written in JavaScript (electron-builder 26 `resedit`,
+# no rcedit, no wine), but NSIS makes the uninstaller by RUNNING the installer under wine
+# (`NsisTarget.js`), and the check image has no wine. electron-builder's portable wine 11
+# (`ELECTRON_BUILDER_WINE_TOOLSET_DIR`, checksum-pinned) fails there with `ntdll.dll error c0000135`.
+name: desktop win+linux
+
+run-name: desktop win+linux ${{ inputs.variant || 'dev' }} ${{ inputs.version || github.ref_name }} ${{ inputs.build_id || github.sha }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: The commit to build (40 hex) — on origin/main for stable, origin/develop for dev
+        required: true
+      variant:
+        description: stable (Tracy Cowork → cowork.tracy.ai, dispatch on main) or dev (Tracy Cowork Dev → cowork.tracy.site, dispatch on develop)
+        required: true
+        type: choice
+        options: [dev, stable]
+      version:
+        description: X.Y.Z (stable) or X.Y.Z-dev.N (dev), as prepare decided it
+        required: true
+      build_id:
+        description: The candidate's build id (prepare finds the run by it)
+        required: true
+      release_date:
+        description: The candidate's release date (ISO 8601, UTC), recorded in the build record
+        required: true
+      feed:
+        description: The update feed the apps read (empty = the variant's own; another = a test feed)
+        required: false
+        default: ''
+  push:
+    # Runs before this file exists on main (a dispatch needs it on the default branch).
+    branches: ['feat/desktop-windows*']
+    paths:
+      - packages/desktop/tracy-desktop/**
+      - .github/workflows/desktop-win-linux.yml
+
+# A push replaces the run of its branch before it; a release dispatch is never cancelled by another one
+# (each is its own build id).
+concurrency:
+  group: desktop-win-linux-${{ inputs.build_id || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'push' }}
+
+permissions:
+  contents: read
+
+env:
+  # The lockfile's versions (pnpm-lock.yaml) for the two packaging tools; resvg draws the icons.
+  ELECTRON_BUILDER_VERSION: 26.15.3
+  ELECTRON_FUSES_VERSION: 2.1.3
+  RESVG_VERSION: 2.6.2
+  # electron-builder's own image with wine 11 and Node 24 (Ubuntu 22.04, amd64), tag AND digest pinned:
+  # a moved tag is refused by the pull instead of silently building with other tools.
+  BUILDER_IMAGE: electronuserland/builder:24-wine-05.26@sha256:41ae540902461b6cbc988987db79547fcc10cda04d2a6c6367504f59d4b37c64
+
+jobs:
+  installers:
+    name: windows + linux installers
+    # Write: the draft release this run hands its installers over in, and the sweep of old drafts.
+    permissions:
+      contents: write
+    runs-on: [self-hosted, linux, x64, tracy-build, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    timeout-minutes: 60
+    steps:
+      # Full history: the on-origin check below needs the release branch's ancestry.
+      - name: Check out the release sha
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ inputs.sha || github.sha }}
+          fetch-depth: 0
+          submodules: false
+
+      # Drafts of earlier runs that no publish deleted (rehearsals, abandoned candidates), aged by their
+      # newest upload. Never fails the build: an old draft left over is clutter, not a broken release.
+      # The runner has no `gh`: build/draft-release.mjs talks to the REST API with the job's token.
+      - name: Sweep old draft releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node packages/desktop/tracy-desktop/build/draft-release.mjs sweep --prefix desktop-win-linux- --days 14
+
+      # What this run builds, decided once and written to the job's environment. Inputs go through env,
+      # never pasted into the script (a workflow_dispatch input is text anyone with dispatch rights types).
+      - name: Decide the candidate
+        env:
+          EVENT: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          IN_SHA: ${{ inputs.sha }}
+          IN_VARIANT: ${{ inputs.variant }}
+          IN_VERSION: ${{ inputs.version }}
+          IN_BUILD_ID: ${{ inputs.build_id }}
+          IN_RELEASE_DATE: ${{ inputs.release_date }}
+          IN_FEED: ${{ inputs.feed }}
+          RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          set -euo pipefail
+          PKG_VERSION=$(node -p "require('./packages/desktop/tracy-desktop/package.json').version")
+          if [ "$EVENT" = workflow_dispatch ]; then
+            SHA="$IN_SHA"; VARIANT="$IN_VARIANT"; VERSION="$IN_VERSION"
+            BUILD_ID="$IN_BUILD_ID"; RELEASE_DATE="$IN_RELEASE_DATE"; FEED="$IN_FEED"
+            [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::sha must be 40 hex digits, got: $SHA"; exit 1; }
+            [ "$(git rev-parse HEAD)" = "$SHA" ] || { echo "::error::checked out $(git rev-parse HEAD), asked for $SHA"; exit 1; }
+            case "$VARIANT" in
+              stable) BRANCH=main ;;
+              dev) BRANCH=develop ;;
+              *) echo "::error::variant must be stable or dev, got: $VARIANT"; exit 1 ;;
+            esac
+            # Stable on main only (the production lane), dev on develop only: the lane follows the variant.
+            [ "$REF_NAME" = "$BRANCH" ] || { echo "::error::a $VARIANT build is dispatched on $BRANCH, this run is on $REF_NAME"; exit 1; }
+            git fetch --no-tags origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH"
+            git merge-base --is-ancestor "$SHA" "origin/$BRANCH" \
+              || { echo "::error::$SHA is not in the history of origin/$BRANCH — merge it first"; exit 1; }
+            ON_ORIGIN="origin/$BRANCH"
+          else
+            SHA="$(git rev-parse HEAD)"; VARIANT=dev; VERSION="$PKG_VERSION-dev.$RUN_NUMBER"
+            BUILD_ID="$(date -u +%Y%m%dT%H%M%SZ)-${SHA:0:7}"; RELEASE_DATE="$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"; FEED=""
+            ON_ORIGIN=""
+          fi
+          [[ "$BUILD_ID" =~ ^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$ ]] || { echo "::error::bad build id: $BUILD_ID"; exit 1; }
+          [[ "$RELEASE_DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]{3})?Z$ ]] \
+            || { echo "::error::bad release date: $RELEASE_DATE"; exit 1; }
+          if [ "$VARIANT" = stable ]; then
+            ORIGIN=https://cowork.tracy.ai
+            [ "$VERSION" = "$PKG_VERSION" ] || { echo "::error::stable is the package version at $SHA, $PKG_VERSION; got $VERSION"; exit 1; }
+          else
+            ORIGIN=https://cowork.tracy.site
+            [[ "$VERSION" =~ ^${PKG_VERSION//./\\.}-dev\.[0-9]+$ ]] || { echo "::error::a dev version at $SHA is $PKG_VERSION-dev.N, got $VERSION"; exit 1; }
+          fi
+          {
+            echo "RELEASE_SHA=$SHA"
+            echo "RELEASE_BUILD_ID=$BUILD_ID"
+            echo "RELEASE_DATE=$RELEASE_DATE"
+            echo "TRACY_DESKTOP_ORIGIN=$ORIGIN"
+            echo "TRACY_DESKTOP_VERSION=$VERSION"
+            echo "TRACY_DESKTOP_UPDATE_FEED=$FEED"
+            echo "TRACY_RELEASE_ON_ORIGIN=$ON_ORIGIN"
+          } >> "$GITHUB_ENV"
+          echo "candidate: $VARIANT $VERSION build $BUILD_ID at $SHA (${ON_ORIGIN:-not checked: push}), feed ${FEED:-the channel default}"
+
+      # Same step as the image builds: the submodule is another private repo, GITHUB_TOKEN cannot read it.
+      - name: Fetch the vendored dsh submodule
+        env:
+          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          # An HTTPS submodule URL is the public repository's, fetched without a key.
+          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
+          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
+            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing — vendor/tracy/deepseek-harness cannot be fetched"
+            exit 1
+          fi
+          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
+          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          git submodule status vendor/tracy/deepseek-harness
+
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/vendor_deploy"
+
+      # 🔒 The build runner keeps ONE checkout that the two image workflows also bootstrap in (see
+      # build-dsh-image.yml, "START FROM NO node_modules"). Start clean here, and they start clean too.
+      - name: Start from no node_modules
+        run: rm -rf node_modules vendor/tracy/deepseek-harness/node_modules
+
+      # The cache key is the submodule commit's build stamp, shared with Tracy CI and the image builds.
+      - name: Restore or build the vendored dsh
+        uses: ./.github/actions/dsh-lib
+        with:
+          mode: ensure
+
+      # Only the desktop package and what it imports: the window shell bundle needs esbuild,
+      # electron-updater and two dsh packages (built above), nothing else of the workspace.
+      - name: Install the desktop package
+        run: CI=true pnpm install --frozen-lockfile --filter '@tracy/desktop...'
+
+      # The runner image has no rsvg-convert and no root to install it; resvg comes with npm.
+      - name: Install the icon renderer
+        run: |
+          set -euo pipefail
+          TOOLS="$RUNNER_TEMP/stage-tools"
+          rm -rf "$TOOLS" && mkdir -p "$TOOLS" && cd "$TOOLS"
+          printf '{"name":"stage-tools","private":true}\n' > package.json
+          npm install --no-audit --no-fund --loglevel=error "@resvg/resvg-js@$RESVG_VERSION"
+
+      - name: Stage
+        working-directory: packages/desktop/tracy-desktop
+        env:
+          TRACY_PACK_TOOLS: ${{ runner.temp }}/stage-tools
+        run: node build/package-win-linux.mjs stage "$RUNNER_TEMP/stage" && cat "$RUNNER_TEMP/stage/plan.json"
+
+      - name: Start the packaging container
+        run: |
+          set -euo pipefail
+          # Ceilings of our own: a container the daemon creates does not inherit the runner's.
+          CID=$(docker create --pull missing --cpus 3 --memory 8g --security-opt no-new-privileges \
+                  --label "tracy.job=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+                  "$BUILDER_IMAGE" sleep 3600)
+          echo "PACK_CID=$CID" >> "$GITHUB_ENV"
+          docker start "$CID" > /dev/null
+          echo "packaging container $CID"
+          docker exec "$CID" sh -c 'mkdir -p /pkg /out && node -v && wine --version'
+          docker cp "$RUNNER_TEMP/stage" "$CID:/stage"
+          docker cp packages/desktop/tracy-desktop/build "$CID:/pkg/build"
+          docker cp packages/desktop/tracy-desktop/package.json "$CID:/pkg/package.json"
+
+      - name: Install the packaging tools in the container
+        run: |
+          docker exec -e ELECTRON_BUILDER_VERSION -e ELECTRON_FUSES_VERSION "$PACK_CID" sh -euc '
+            mkdir -p /tools && cd /tools
+            printf "{\"name\":\"pack-tools\",\"private\":true}\n" > package.json
+            npm install --no-audit --no-fund --loglevel=error \
+              "electron-builder@$ELECTRON_BUILDER_VERSION" "@electron/fuses@$ELECTRON_FUSES_VERSION"'
+
+      - name: Pack Windows x64 and arm64
+        run: docker exec -w /pkg -e TRACY_PACK_TOOLS=/tools "$PACK_CID" node build/package-win-linux.mjs pack /stage --platform win --arch x64,arm64 --out /out/win
+
+      - name: Pack Linux x64 and arm64
+        run: docker exec -w /pkg -e TRACY_PACK_TOOLS=/tools "$PACK_CID" node build/package-win-linux.mjs pack /stage --platform linux --arch x64,arm64 --out /out/linux
+
+      - name: Copy the installers out
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/out"
+          rm -rf "$OUT" && mkdir -p "$OUT"
+          for f in $(docker exec "$PACK_CID" sh -c 'ls /out/win/*.exe /out/linux/*.AppImage /out/linux/*.deb'); do
+            docker cp "$PACK_CID:$f" "$OUT/"
+          done
+          ls -la "$OUT" && (cd "$OUT" && sha256sum -- *)
+
+      # The build record prepare checks before it uploads anything (package-win-linux.mjs `buildInfo`):
+      # this candidate, the Electron and lockfile it was built with, every installer's sha512 and size.
+      - name: Write the build record
+        working-directory: packages/desktop/tracy-desktop
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/info"
+          node build/package-win-linux.mjs info "$RUNNER_TEMP/stage" "$RUNNER_TEMP/out" \
+            --sha "$RELEASE_SHA" --build-id "$RELEASE_BUILD_ID" --release-date "$RELEASE_DATE" \
+            > "$RUNNER_TEMP/info/build-info.json"
+          cat "$RUNNER_TEMP/info/build-info.json"
+          # The record's hash, as a check annotation only this run's log can write: prepare refuses a
+          # draft whose build-info.json is not the one this run built.
+          echo "::notice title=build-info.json::sha256 $(sha256sum "$RUNNER_TEMP/info/build-info.json" | cut -d' ' -f1)"
+
+      - name: Remove the packaging container
+        if: always()
+        run: |
+          if [ -n "${PACK_CID:-}" ]; then docker rm -f "$PACK_CID" > /dev/null && echo "removed $PACK_CID"; fi
+
+      # The run's draft release: six installers and the record, for prepare to download (`gh release
+      # download desktop-win-linux-<run id>`). A re-run attempt replaces the draft of the attempt before it;
+      # anything under that name that is not a draft is left alone and fails the run.
+      - name: Hand the installers over in a draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: desktop-win-linux-${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          node packages/desktop/tracy-desktop/build/draft-release.mjs hand-over \
+            --tag "$TAG" --sha "$RELEASE_SHA" \
+            --title "desktop win+linux $TRACY_DESKTOP_VERSION build $RELEASE_BUILD_ID" \
+            --notes "Installers of run ${GITHUB_RUN_ID} attempt ${GITHUB_RUN_ATTEMPT} for build/release.mjs prepare. Not a release: deleted by the publish to a real store, or after 14 days." \
+            "$RUNNER_TEMP"/out/*.exe "$RUNNER_TEMP"/out/*.AppImage "$RUNNER_TEMP"/out/*.deb \
+            "$RUNNER_TEMP/info/build-info.json"

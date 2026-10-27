@@ -1,0 +1,15 @@
+---
+import { blockToRenderOverrides } from "../settings.js";
+import { normalizeHumanSitemapBlock } from "../schemas.js";
+import HumanSitemap from "./HumanSitemap.astro";
+
+interface Props {
+  node: unknown;
+}
+
+const { node } = Astro.props as Props;
+const block = normalizeHumanSitemapBlock(node);
+const overrides = block ? blockToRenderOverrides(block) : null;
+---
+
+{overrides && <HumanSitemap {...overrides} />}

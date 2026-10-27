@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-plum: #2c1338;
+  --color-heather: #412a4c;
+  --color-magenta: #e57cd8;
+  --color-lavender-smoke: #564260;
+  --color-dusty-mauve: #6b5a74;
+  --color-stone-violet: #817187;
+  --color-ink: #000000;
+  --color-bone: #fefbfa;
+  --color-silver: #d5d0d7;
+  --color-fog: #c0b8c3;
+  --color-blush: #fdeae2;
+  --color-petal: #fcf1f8;
+  --color-orchid-mist: #fae5f7;
+  --color-bubblegum-wash: #f7d8f3;
+  --color-amber: #ffde91;
+
+  /* Typography — Font Families */
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gt-haptik: 'GT Haptik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gt-haptik-rotalic: 'GT Haptik Rotalic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gt-haptik-medium-rotalic: 'GT Haptik Medium Rotalic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

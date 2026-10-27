@@ -1,0 +1,48 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "test:ci": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/scripts/check-tests.ts",
+        "$TURBO_ROOT$/scripts/test-timing-reporter.mjs",
+        "$TURBO_ROOT$/scripts/test-database.ts",
+        "$TURBO_ROOT$/scripts/ci/related-tests.mjs",
+        "$TURBO_ROOT$/Brand",
+        "$TURBO_ROOT$/apps/tracy-web/**",
+        "$TURBO_ROOT$/draining",
+        "$TURBO_ROOT$/packages/cms/tracy-joomla-quickstart/**",
+        "$TURBO_ROOT$/packages/cms/tracy-seeder/**",
+        "$TURBO_ROOT$/packages/cms/tracy-wordpress-theme/**",
+        "$TURBO_ROOT$/packages/core/tracy-core/**",
+        "$TURBO_ROOT$/packages/design/tracy-design-inspiration/**",
+        "$TURBO_ROOT$/packages/locale/tracy-locale-vi/**",
+        "$TURBO_ROOT$/packages/locale/tracy-locales/**",
+        "$TURBO_ROOT$/packages/site/tracy-site-build-emdash/**",
+        "$TURBO_ROOT$/packages/site/tracy-site-build-joomla/**",
+        "$TURBO_ROOT$/packages/site/tracy-site-build-wordpress/**",
+        "$TURBO_ROOT$/packages/tools/tracy-site-tools/**",
+        "$TURBO_ROOT$/packages/ui/tracy-sidebar/**",
+        "$TURBO_ROOT$/vendor/tracy/od-brand-engine/**",
+        "$TURBO_ROOT$/packages/wo/website-opportunities/**",
+        "!$TURBO_ROOT$/**/.turbo/**",
+        "!$TURBO_ROOT$/**/node_modules/**",
+        "!$TURBO_ROOT$/**/__pycache__/**",
+        "!$TURBO_ROOT$/**/.DS_Store",
+        "!$TURBO_ROOT$/tests/regression/.runs/**",
+        "!$TURBO_ROOT$/packages/cms/tracy-seeder/dist/**",
+        "!$TURBO_ROOT$/vendor/tracy/dsh-better-sidebar/lib/**",
+        "!$TURBO_ROOT$/vendor/tracy/dsh-passwords/dist/**",
+        "!$TURBO_ROOT$/apps/tracy-docs/src/content/docs/changelog.md",
+        "!$TURBO_ROOT$/apps/tracy-docs/src/content/docs/reference/compatibility.md",
+        "!$TURBO_ROOT$/apps/tracy-docs/src/content/docs/reference/errors.md",
+        "!$TURBO_ROOT$/packages/fleet/tracy-fleet-operation/scripts/lib/__pycache__/**",
+        "!$TURBO_ROOT$/packages/fleet/tracy-fleet-operation/scripts/provision/__pycache__/**",
+        "!$TURBO_ROOT$/packages/fleet/tracy-fleet-operation/scripts/webroot/__pycache__/**",
+        "!$TURBO_ROOT$/vendor/tracy/dsh-passwords/.env",
+        "!$TURBO_ROOT$/packages/cms/tracy-seeder/src/data/**"
+      ]
+    }
+  }
+}

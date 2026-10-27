@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-ember-orange: #f15730;
+  --color-tangerine-blaze: #f7651a;
+  --color-apricot-whisper: #ff8562;
+  --color-graphite-black: #111111;
+  --color-inkwell: #0d1717;
+  --color-pure-white: #ffffff;
+  --color-mist-gray: #eeeeee;
+  --color-smoke: #818181;
+
+  /* Typography — Font Families */
+  --font-onest: 'Onest', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

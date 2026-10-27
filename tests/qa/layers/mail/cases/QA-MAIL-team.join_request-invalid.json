@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.join_request-invalid",
+  "itemIds": [
+    "letter:team.join_request:en",
+    "letter:team.join_request:vi",
+    "letter:team.join_request:de",
+    "letter:team.join_request:it",
+    "letter:team.join_request:fr",
+    "letter:team.join_request:nl",
+    "letter:team.join_request:zh",
+    "letter:team.join_request:es"
+  ],
+  "requirement": "team.join_request refuses an unknown role, wrong-typed facts and header injection",
+  "oracle": {
+    "source": "apps/tracy-web/src/mail/letters/team.js and comments.js header comments (approved copy, spec #809)",
+    "ref": "per-kind button, facts and \"never mailed\" rules",
+    "invariant": "the seat book allows four roles only; a letter needing one sends nothing otherwise"
+  },
+  "edgeTags": ["invalid"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.invalid#team.join_request:"],
+  "redProof": null,
+  "legacyIds": []
+}

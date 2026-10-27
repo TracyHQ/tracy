@@ -1,0 +1,74 @@
+{
+  "color": {
+    "carbon-canvas": {
+      "$value": "#26272c",
+      "$type": "color",
+      "$description": "Carbon Canvas — Page background, hero canvas, section grounds"
+    },
+    "obsidian": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Obsidian — Deepest borders, shadow cores, overlaid text on light surfaces"
+    },
+    "inkwell": {
+      "$value": "#1a1b1f",
+      "$type": "color",
+      "$description": "Inkwell — Secondary surface tint, input fills, subtle elevation step above canvas"
+    },
+    "graphite-card": {
+      "$value": "#3b3c3e",
+      "$type": "color",
+      "$description": "Graphite Card — Elevated card surfaces, modal panels, floating UI containers"
+    },
+    "pewter": {
+      "$value": "#8a8c93",
+      "$type": "color",
+      "$description": "Pewter — Primary hairline borders, structural dividers, most-used neutral"
+    },
+    "slate": {
+      "$value": "#62646a",
+      "$type": "color",
+      "$description": "Slate — Secondary borders, link underlines, subdued UI strokes"
+    },
+    "ash": {
+      "$value": "#535355",
+      "$type": "color",
+      "$description": "Ash — Badge borders, tertiary separators, muted structural lines"
+    },
+    "bone": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Bone — Light card borders, high-contrast dividers, icon strokes on dark surfaces"
+    },
+    "chalk": {
+      "$value": "#b8b8b8",
+      "$type": "color",
+      "$description": "Chalk — Muted body borders, low-emphasis separators"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary heading text, high-contrast body text, emphasis borders"
+    }
+  },
+  "font": {
+    "migra": {
+      "$value": "Migra",
+      "$type": "fontFamily",
+      "$description": "Display headlines and section labels — the only serif in the system, giving Lazy its editorial identity"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Emphasis in body copy, strong button text, active state indicators"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://lazy.so",
+      "siteName": "Lazy",
+      "extractedAt": "2026-06-03T18:27:19.265Z",
+      "variant": "compact"
+    }
+  }
+}

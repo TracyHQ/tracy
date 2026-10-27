@@ -1,0 +1,63 @@
+{
+  "id": "QA-UNIT-REG-PR-1382-help-stop-with-voice-happy",
+  "itemIds": ["regression:REG-PR-1382-help-stop-with-voice"],
+  "requirement": "Help's stop shows once and stops Help while a /help answer streams, with or without the microphone or chat-input",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1382-help-stop-with-voice.json",
+    "ref": "PR #1382 (fix); fix evidence: #1379: on the dev deployment the seat was empty while /help streamed; the microphone at priority -1 held the single slot",
+    "invariant": "S1: the seat holds .tv-help-stop with the stop label and no microphone; the click calls Help's stopAll. S2: .tv-help-stop and no .tv-voice-mic. S3: one .tv-voice-seat row holding .tv-voice, then .tv-help-stop, and exactly one .tv-help-stop. S4: the microphone alone and no .tv-help-stop; then only an empty .tv-voice-seat row. S5: idle draws nothing; streaming draws exactly one .tv-help-stop and no microphone; the click calls stopAll.",
+    "productSources": ["packages/ui/tracy-assistant/src/client/strings.ts:10"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-assistant/test/help-stop-voice.test.mjs:100 require() with a computed specifier",
+      "packages/ui/tracy-assistant/test/help-stop-voice.test.mjs:192 require() with a computed specifier",
+      "packages/ui/tracy-assistant/test/help-stop-voice.test.mjs:193 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "Help streaming with voice registered but no speech key",
+    "Help streaming with voice switched off by the operator",
+    "Help streaming with voice available",
+    "Help idle",
+    "Help without chat-input on the profile"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1382-help-stop-with-voice"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-assistant", "tracy-assistant"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1382-help-stop-with-voice",
+    "pr": 1382,
+    "kind": "fix",
+    "area": "chat-input/activity-seat",
+    "file": "tests/regression/cases/REG-PR-1382-help-stop-with-voice.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-assistant/test/help-stop-voice.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "Help streaming with voice registered but no speech key",
+    "Help streaming with voice switched off by the operator",
+    "Help streaming with voice available",
+    "Help idle",
+    "Help without chat-input on the profile"
+  ],
+  "timeoutS": 600
+}

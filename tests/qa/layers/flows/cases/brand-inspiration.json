@@ -1,0 +1,28 @@
+[
+  {
+    "assertionIds": [],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": [],
+      "writes": []
+    },
+    "id": "QA-FLOWS-brand-inspiration-happy-brand",
+    "itemIds": ["flow:brand-inspiration", "capability:brand"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a brand is built or taken from the community store",
+      "ref": "§6 Brand",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "not scripted: no journey and no approved flow contract",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Brand and Design inspiration — brand (happy)",
+    "targets": ["local"]
+  }
+]

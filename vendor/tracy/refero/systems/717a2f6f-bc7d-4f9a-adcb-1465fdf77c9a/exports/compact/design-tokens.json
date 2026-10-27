@@ -1,0 +1,54 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, light-section canvas, inverse-mode text on dark sections"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Dark-section canvas, headline type on light sections, full-bleed background blocks"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Body copy, secondary text, hairlines and card borders — the working neutral for content"
+    },
+    "bone": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Bone — Tinted surface for subtle elevation against the white canvas, used for off-white blocks and muted framing"
+    },
+    "steel": {
+      "$value": "#525252",
+      "$type": "color",
+      "$description": "Steel — Muted helper text, caption weight, secondary metadata where Graphite reads too heavy"
+    }
+  },
+  "font": {
+    "neue-montreal": {
+      "$value": "Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "Signature display and heading face — weight 300 for monumental headlines at 178px, weight 400 for subhead and body, weight 500 for emphasized labels. The 178px display line-height of 1.00 lets letterforms stack into a typographic block; 0.05em positive tracking prevents the hairline weights from collapsing at small sizes and adds the wide, airy grotesk character that defines the brand."
+    },
+    "neue-montreal-variable": {
+      "$value": "Neue Montreal Variable",
+      "$type": "fontFamily",
+      "$description": "Variable-axis instance used for interactive and mid-scale elements — links, icons, navigation, and mid-weight display blocks. The variable axis lets weight, optical size, and slant interpolate smoothly for hover and active states without swapping fonts."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback only — appears in non-brand utility contexts where a system font is acceptable"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.elvinaprasad.com",
+      "siteName": "Elvina Prasad",
+      "extractedAt": "2026-06-03T21:02:06.817Z",
+      "variant": "compact"
+    }
+  }
+}

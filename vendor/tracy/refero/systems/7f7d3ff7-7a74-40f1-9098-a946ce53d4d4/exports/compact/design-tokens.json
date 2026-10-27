@@ -1,0 +1,79 @@
+{
+  "color": {
+    "forest-grove": {
+      "$value": "#0b835c",
+      "$type": "color",
+      "$description": "Forest Grove — Primary brand color — used for the logo mark, the signature word in serif headlines, accent borders on tags and announcement pills, and small icon highlights. A deep, slightly desaturated green that reads as clinical and trustworthy rather than energetic"
+    },
+    "pine-shadow": {
+      "$value": "#1c2b27",
+      "$type": "color",
+      "$description": "Pine Shadow — Secondary dark surface — a near-black green-tinted shade for inverted buttons and dark surface moments where #000 would feel too harsh against the green accent"
+    },
+    "ink-black": {
+      "$value": "#1c1c1e",
+      "$type": "color",
+      "$description": "Ink Black — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "graphite": {
+      "$value": "#303033",
+      "$type": "color",
+      "$description": "Graphite — Secondary text and dividers — a mid-dark gray for body copy de-emphasis, subtle borders, and metadata"
+    },
+    "slate-mid": {
+      "$value": "#676768",
+      "$type": "color",
+      "$description": "Slate Mid — Muted helper text, inactive labels, and tertiary metadata — sits at a comfortable AA contrast against white"
+    },
+    "mist-gray": {
+      "$value": "#eff1f6",
+      "$type": "color",
+      "$description": "Mist Gray — Card surface and the only neutral fill color in the system. Creates a single elevated tier above the white canvas without introducing a new hue"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card-internal backgrounds, and inverse text on dark fills"
+    },
+    "shadow-smoke": {
+      "$value": "#bfbfbf",
+      "$type": "color",
+      "$description": "Shadow Smoke — Box-shadow base color for the soft elevation that sits behind cards and the floating product mockup on the right side of the hero"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "libre-caslon-text": {
+      "$value": "Libre Caslon Text",
+      "$type": "fontFamily",
+      "$description": "Display serif used exclusively for hero-level headlines and the signature brand word. The italic-leaning contrast strokes give \"Grace\" and \"Meet\" a humanized, editorial voice that contrasts with the precise Geist below. The choice is anti-SaaS: most clinical-tech sites use a geometric sans for the hero; this serif makes the brand feel like a respected medical publication."
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Primary interface and body typeface. Covers body copy (16/24px, 400), subheadings (18–20px, 500), card titles (20–24px, 600), and large stat numbers (32–40px, 500/600). The negative letter-spacing tightens as size grows, creating density at body size and breathing room at display."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced variant for code-like or technical callouts in body content where alignment matters."
+    },
+    "geist-medium": {
+      "$value": "Geist Medium",
+      "$type": "fontFamily",
+      "$description": "Geist Medium — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.grovetrials.com",
+      "siteName": "Grove AI",
+      "extractedAt": "2026-06-03T20:09:22.333Z",
+      "variant": "compact"
+    }
+  }
+}

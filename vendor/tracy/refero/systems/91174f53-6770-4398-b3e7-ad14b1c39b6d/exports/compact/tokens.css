@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-hot-signal: #ff2c6b;
+  --color-carbon: #191818;
+  --color-paper-white: #ffffff;
+  --color-concrete: #e8e6e3;
+  --color-ash: #8c8b8b;
+  --color-smoke: #808080;
+  --color-slate: #d1d5dc;
+  --color-ink: #000000;
+
+  /* Typography — Font Families */
+  --font-zagma: 'Zagma', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neuehaas: 'NeueHaas', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

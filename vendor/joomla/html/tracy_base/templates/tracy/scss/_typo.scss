@@ -1,0 +1,528 @@
+// ------------------------------------
+// Ovveride of BS "type.scss".
+// Leave blank to use default styles
+// ------------------------------------
+
+//
+// Headings
+//
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+  line-height: $headings-line-height;
+  color: $headings-color;
+
+  small,
+  .small {
+    font-weight: normal;
+    line-height: 1;
+  }
+}
+
+h1, .h1,
+h2, .h2,
+h3, .h3 {
+  margin-top: $spacer;
+  margin-bottom: calc($spacer / 2);
+
+  small,
+  .small {
+    font-size: 65%;
+  }
+}
+
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  margin-top: calc($spacer / 2);
+  margin-bottom: calc($spacer / 2); 
+
+  small,
+  .small {
+    font-size: 75%;
+  }
+}
+
+h1, .h1 { font-size: $h1-font-size; }
+h2, .h2 { font-size: $h2-font-size; }
+h3, .h3 { font-size: $h3-font-size; }
+h4, .h4 { font-size: $h4-font-size; }
+h5, .h5 { font-size: $h5-font-size; }
+h6, .h6 { font-size: $h6-font-size; }
+
+
+// Type display classes
+.display-1 {
+}
+
+.display-2 {
+}
+
+.display-3 {
+}
+
+.display-4 {
+}
+
+//
+// Horizontal rules
+//
+hr {
+}
+
+
+//
+// Emphasis
+//
+small,
+.small {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-normal;
+}
+
+mark,
+.mark {
+}
+
+//
+// Image
+//
+.img-rounded {
+  border-radius: 5px;
+}
+
+//
+// Extra button class
+//
+.btn-xl {
+  padding: $btn-padding-y-xl $btn-padding-x-xl;
+  font-size: $btn-font-size-xl;
+}
+
+
+//
+// Lists
+//
+.list-unstyled {
+}
+
+// Inline turns list items into inline-block
+.list-inline {
+}
+
+.list-inline-item {
+}
+
+.pull-right {
+  float: right;
+}
+
+.pull-left {
+  float: left;
+}
+
+// Alert message
+.alert-error {
+  @extend .alert-danger;
+}
+
+
+//
+// Badges
+//
+.badge {
+  padding: $badge-padding-y $badge-padding-x;
+}
+
+
+//
+// Misc
+//
+// Builds on `abbr`
+.initialism {
+}
+
+// Blockquotes
+.blockquote {
+}
+
+.blockquote-footer {
+  margin-top: 0;
+}
+
+// Extend font weight
+.fw-thin      { font-weight: 300; }
+.fw-semi-bold { font-weight: 500; }
+.fw-bold      { font-weight: 600; }
+
+// Extend font size
+.fs-xs    { font-size: ($font-size-base * .725); }
+.fs-sm    { font-size: ($font-size-base * .875); }
+.fs-base  { font-size: $font-size-base; }
+.fs-lg    { font-size: ($font-size-base * 1.25); }
+
+// Extend icon size
+.icon-xs {
+  height: 2.5rem;
+  line-height: 2.5rem;
+  width: 2.5rem;
+}
+
+.icon-sm {
+  height: 3rem;
+  line-height: 3rem;
+  width: 3rem;
+}
+
+.icon-md {
+  height: 3.5rem;
+  line-height: 3.5rem;
+  width: 3.5rem;
+}
+
+.icon-lg {
+  height: 5rem;
+  line-height: 5rem;
+  width: 5rem;
+}
+
+
+// Extend border radius
+.rounded-4 {
+  border-radius: 0.5rem !important; // ~ 8px
+}
+
+.rounded-5 {
+  border-radius: 0.8rem !important; // ~ 12px
+}
+
+//
+// Feature list (Custom style for)
+// ------------------------------------
+.features-list {
+  > div {
+    margin-bottom: $spacer*2;
+
+    @include media-breakpoint-up(md) {
+    }
+  }
+
+  .item {
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    height: 100%;
+    padding: 1.5rem;
+
+    .icon {
+      display: inline-block;
+      border-radius: 50%;
+      height: 5rem;
+      text-align: center;
+      width: 5rem;
+
+      i {
+        color: $gray-500;
+        font-size: $font-size-base*2.5;
+        line-height: 5rem;
+      }
+    }
+  }
+
+  .card {
+    background-color: rgba(0,0,0,0.02);
+    border: 1px solid lighten($border-color, 25%);
+    border-radius: 9px;
+    height: 100%;
+    padding: $spacer*3 $spacer*1.5;
+    transition: $transition-base;
+
+    &:hover {
+      box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+      border-color: $border-color;
+
+      .icon {
+        box-shadow: none;
+        color: $blue;
+      }
+    }
+  }
+
+  .icon {
+    background-color: rgba(0,0,0,0.075);
+    border-radius: 50%;
+    color: $gray-500;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    margin: 0 auto $spacer-lg;
+    transition: $transition-base;
+    width: 100px;
+  }
+
+  .block-title {
+    font-size: $h5-font-size;
+    margin-bottom: $spacer;
+  }
+}
+
+//
+// Dark background
+// ----------------------
+.t4-section.sec-bg-dark {
+  // Feature list
+  .features-list {
+    .card {
+      background-color: rgba($black, .1);
+    }
+
+    .icon {
+      background-color: rgba($black, .15);
+    }
+
+    .item {
+      .icon {
+        i {
+          color: rgba($white, .4);
+        } 
+      }
+    }
+  }
+
+  .testimonial-block {
+    background-color: rgba($black, .1);
+
+    &:after {
+      background: rgba($white, .1);
+    }
+  }
+}
+
+//
+// Introduction
+// ------------
+.t4-introduction {
+  background-color: $gray-100;
+  padding-top: $spacer*5;
+  padding-bottom: $spacer*5;
+
+  h3 {
+    font-weight: 600;
+    margin-bottom: $spacer*2;
+  }
+
+  p {
+    margin-bottom: $spacer*2;
+  }
+}
+
+
+// T4 EXTRA CUSTOM TYPOGRAPHY
+// ----------------------------------------
+// Section heading
+.section-heading {
+  h2 {
+    font-size: var(--h2-font-size);
+    font-weight: var(--heading-font-weight);
+
+    @include media-breakpoint-up(sm) {
+      font-size: $h1-font-size*1.1;
+    }
+  }
+}
+
+//
+// Testimonials block
+ul.testimonial-list {
+  list-style: none;
+  margin: 0;
+  padding: $spacer*3 0 0;
+  text-align: center;
+  @include clearfix();
+
+  li {
+    margin-bottom: $spacer*5;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @include media-breakpoint-up(md) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.testimonial-block {
+  border-radius: $border-radius-lg;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.085);
+  padding: 0 $spacer*3 $spacer*2;
+  position: relative;
+
+  &:after {
+    background-color: $gray-400;
+    border-radius: 5px;
+    content: "";
+    display: block;
+    height: 4px;
+    position: absolute;
+    left: $spacer*3;
+    right: $spacer*3;
+    bottom: -2px;
+    transition: all 0.25s;
+  }
+
+  &:hover {
+    &:after {
+      background-color: $blue;
+    }
+  }
+
+  img {
+    max-width: $spacer*6;
+    margin-top: -$spacer*3;
+    margin-bottom: $spacer*1.5;
+
+    &.img-rounded {
+      border-radius: $border-radius-lg;
+    }
+
+    &.img-circle {
+      border-radius: 50%;
+    }
+  }
+
+  .author-name {
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.5px;
+    margin: 0 0 $spacer;
+    text-transform: uppercase;
+  }
+}
+
+
+//
+// Pre code
+pre {
+  background-color: $gray-100;
+  border-radius: 3px;
+  font-family: Consolas, monospace;
+  padding: calc($spacer / 2) $spacer;
+}
+
+
+// Social list
+// ---------------------------------
+
+
+.social-list-sm {
+  @include socials-list(20px, 20px, transparent, $white);
+}
+
+.social-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+
+  li {
+    padding: 0 0.25rem;
+
+    a {
+      background-color: $gray-200;
+      border-radius: 50%;
+      color: var(--body-text-color);
+      display: block;
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      opacity: .6;
+      width: 36px;
+      transition: $transition-base;
+
+      i, span {
+        font-size: 14px;
+      }
+
+      &:hover, &:focus, &:active {
+        background-color: var(--body-link-color);
+        color: var(--color-white);
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.social-list-lg {
+  @include socials-list(48px, 48px);
+}
+
+ 
+// ---------------------------------
+// CUSTOM STYLE FOR EXAMPLE PAGE
+// ---------------------------------
+.t4-typo-example {
+  border-bottom: 2px solid $gray-200;
+  padding: ($spacer * 4) 0;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+// Accordion
+.accordion {
+  padding: calc($spacer/2);
+  
+  h2 {
+    margin: 0;
+    line-height: 1;
+
+    .btn {
+      padding: 0;
+    }
+  }
+}
+
+// Brand list
+.brand-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+
+  @include media-breakpoint-up(sm) {
+    justify-content: space-between;
+  }
+
+  li {
+    flex-basis: 50%;
+    margin-bottom: $spacer;
+    text-align: center;
+
+    @include media-breakpoint-up(sm) {
+      flex-basis: 25%;
+      text-align: left;
+    }
+
+    @include media-breakpoint-up(md) {
+      flex-basis: auto;
+    }
+
+    img {
+      opacity: 0.4;
+      max-height: 40px;
+      transition: $transition-base;
+    }
+
+    a:hover, a:focus, a:active {
+      img {
+        opacity: 1;
+      }
+    }
+  }
+}

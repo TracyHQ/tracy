@@ -1,0 +1,69 @@
+{
+  "color": {
+    "electric-lime": {
+      "$value": "#a6ff00",
+      "$type": "color",
+      "$description": "Electric Lime — Green action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "deep-violet": {
+      "$value": "#040126",
+      "$type": "color",
+      "$description": "Deep Violet — Outlined action borders, subtle decorative borders — a near-black indigo that adds tonal depth to dark borders without breaking the monochrome canvas"
+    },
+    "obsidian": {
+      "$value": "#101010",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, outermost background, shadow tokens — the base void that every surface floats on"
+    },
+    "carbon": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Carbon — Card surfaces, elevated content panels — the only step above Obsidian in the surface stack"
+    },
+    "slate": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Slate — Hairline borders, card borders, subtle dividers — the structural border color, used more than any other in the system"
+    },
+    "steel": {
+      "$value": "#3d3d3d",
+      "$type": "color",
+      "$description": "Steel — Strokes, secondary card borders — a half-step lighter than Slate for layering borders on borders"
+    },
+    "fog": {
+      "$value": "#6f6f6f",
+      "$type": "color",
+      "$description": "Fog — Dark borders and separators for elevated surfaces and inverted UI."
+    },
+    "paper": {
+      "$value": "#fdfdfd",
+      "$type": "color",
+      "$description": "Paper — Primary text, heading borders, illustration highlights — the only text color that reads as active"
+    },
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — SVG fills, spectrum ring backing — pure black for graphic elements where absolute darkness is needed"
+    }
+  },
+  "font": {
+    "sf-pro-display": {
+      "$value": "SF Pro Display",
+      "$type": "fontFamily",
+      "$description": "Display and heading typography — the choice of SF Pro Display signals a premium, iOS-adjacent system voice. Weights 500-600 (never 700+) keep headings from feeling heavy; the brand's authority comes from size, not weight. Display sizes escalate to 184px, creating poster-scale type that dominates every section. Line-height tightens to 0.95 at the largest sizes, making individual letters feel monumental and architectural."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Body, links, card text, button labels — deliberately a system fallback so it stays invisible. While SF Pro Display headlines shout at 184px, Arial whispers at 14px in the background. This split (premium display + neutral body) is a deliberate hierarchy choice: the display type does all the emotional work, the body text just delivers information."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://stryds.com",
+      "siteName": "Stryds",
+      "extractedAt": "2026-06-03T19:25:55.782Z",
+      "variant": "compact"
+    }
+  }
+}

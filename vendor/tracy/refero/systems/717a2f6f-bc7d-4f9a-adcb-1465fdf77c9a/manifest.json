@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "717a2f6f-bc7d-4f9a-adcb-1465fdf77c9a",
+  "status": "complete",
+  "name": "Elvina Prasad",
+  "url": "https://styles.refero.design/style/717a2f6f-bc7d-4f9a-adcb-1465fdf77c9a",
+  "sourceWebsite": "https://www.elvinaprasad.com",
+  "extractedAt": "2026-06-03T21:02:06.817Z",
+  "capturedAt": "2026-10-08T05:13:16.347422+00:00",
+  "theme": "mixed",
+  "industry": "agency",
+  "description": "Editorial monolith of light and shadow — enormous type carved into a binary canvas, with project imagery crashing into the letters.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b60f7b76-fa69-418c-85ec-08a27b1fa7f5.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "0331a4fad236b2fb80e054b06d184b311074d4a1238af08aabb159773bb0ce01",
+      "bytes": 17724
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d507099bf403b13214c5e33996c69aacb790e4616a667b127a27ecd6489759df",
+      "bytes": 49465
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "340bdec734a0533bae36e58edd2029cc2b5d580aabe03ae405fe15ab8b389b73",
+      "bytes": 14079
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "048ef825caa9511b243145270c5faf5b668d3458e1131bcc900924ec71901472",
+      "bytes": 7606
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ff79aeffb145102be3bad460cf330cfa4e16e6a25af38c93857b665dd90317aa",
+      "bytes": 10673
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "faf66200a59e8c66911d56b4b680bb93bedd986d737f6e4efe2fbd3815bb341c",
+      "bytes": 2319
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a7ac839b0b4d4d9019394b616bbdc6a79e0325f1fddc231afa345483723e9793",
+      "bytes": 579
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5a24fdb5e14a845f945bf914120b030bee1179685df4d3f0f4b53808974e1cf7",
+      "bytes": 596
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "98894d5d3eceb34f0ce16d362fdb8aa882fa979099ddb09a07c9e8da891bd994",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "c7bf64d5319c0e4a2bdec10b9bca8e1bcf7773388156b033b6f66c2e9b1b965f",
+      "bytes": 38643
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "755ebfdbd095eaaf434441e0e93303c397049ef7584a47c1c4329d5cb194029a",
+      "bytes": 19816
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "961c8ac91638e43550a0e94727b13d9f332726f44a6515d73753d7b81d6956bd",
+      "bytes": 29152
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4136255baa906b019584141157851c8596307969d4e0dc0339b07dbef473ac1e",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "af6c61d413588456d21cc97c0c5a9e1c4bdb0ec0a5234f4936af904a636d3d4a",
+      "bytes": 1560
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "42d44d04e51a0bafe38f47f43c0ccd089d702dfb91b83b10ef423d3f7465dbe5",
+      "bytes": 2019
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "24c54bfb-959d-4ca3-b274-e76ba823f3c0",
+    "34aa811f-6084-484c-b4c0-f587b514e970",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5a7ba5ff-0476-4f3f-99f9-0b920534dde5",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "717a2f6f-bc7d-4f9a-adcb-1465fdf77c9a",
+    "7afd842e-44d4-4f01-9ef5-683c31d820c9",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "81a66e75-23af-4525-8a4e-f4a54c2700e7",
+    "8d1b6c70-e045-4ce6-891d-aba5d5c00e0d",
+    "9568198a-5a51-4cbb-9dc3-b7610757cdd6",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "b1e82907-d1cf-46cd-8ae7-3561c5b15fd0",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ffb945f9-2d70-45e8-9024-492900318fa8"
+  ]
+}

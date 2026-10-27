@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1328-icon-font-no-glyph-gap",
+  "kind": "fix",
+  "title": "An icon font is never a glyph gap: Apply gives it no faces and the built-site check does not report it",
+  "pr": 1328,
+  "area": "add-site/apply",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "From apps/tracy-web run: node --test --test-reporter=tap test/glyph-fallback.test.mjs",
+    "Read the ok/not ok line of each test named in run.tests, and the fail count."
+  ],
+  "expect": [
+    "'an icon font is never a gap: by the pictures its file holds, or by the name an icon family goes by' is ok: with Font Awesome 6 Free (its real fa-solid-900.woff2), swiper-icons and Jost on a Vietnamese page, glyphGaps answers only Jost (it answered all three before).",
+    "'the font file of JA Essence WordPress is read: its Jost has no Vietnamese letters' stays ok."
+  ],
+  "selectors": {
+    "glyphs": "glyphGaps and iconFont in apps/tracy-web/src/lib/font-glyphs.js; the readiness rule lang-2-font-glyphs.js imports the same iconFont"
+  },
+  "evidence": "Local stand, run j2 (14/10/2026): the built-site check reported 'font awesome 6 free', 'font awesome 6 brands', 'fontawesome' and 'swiper-icons' as unable to draw Vietnamese on JA Nova, JA Resort, JA Seven and JA Donate Joomla (FULL + design system).",
+  "fence": "glyphGaps over a page and real font files from the repo. Not exercised: a running site.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/glyph-fallback.test.mjs"],
+    "cwd": "apps/tracy-web",
+    "tests": [
+      "an icon font is never a gap: by the pictures its file holds, or by the name an icon family goes by",
+      "the font file of JA Essence WordPress is read: its Jost has no Vietnamese letters"
+    ]
+  }
+}

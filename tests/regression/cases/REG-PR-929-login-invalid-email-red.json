@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-929-login-invalid-email-red",
+  "kind": "fix",
+  "title": "Sign-in email keeps its red border when invalid, after blur and on hover",
+  "pr": 929,
+  "area": "web/sign-in",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --input-type=module -e \"import {loginPage} from './apps/tracy-web/src/identity/pages.js'; const h=loginPage({}); process.stdout.write(typeof h==='string'?h:await h.text())\" and record H = the output.",
+    "S2: Record BASE = H.indexOf('.auth-card input{background'), HOVER = H.indexOf('.auth-card input:hover:not(:focus-visible)'), BAD = H.indexOf('.auth-card input:user-invalid,.auth-card input:user-invalid:hover{border-color:var(--destructive)}').",
+    "S3 (optional, needs a browser): serve H as a file, type 'abc' in input[type=email], click outside it, and read getComputedStyle(input).borderColor; then hover it and read again."
+  ],
+  "expect": [
+    "BASE >= 0 and HOVER >= 0 (the grey rules still exist; if they were renamed, update this case).",
+    "BAD > BASE and BAD > HOVER (pre-fix: BAD === -1, the grey rules won and the blurred invalid field was grey).",
+    "S3 if run: both reads equal the computed --destructive colour (dark theme on the stand: oklch(0.704 0.191 22.216))."
+  ],
+  "selectors": {
+    "email": ".auth-card input[type=email]"
+  },
+  "evidence": "Measured 05/10/2026 in Chrome on loginPage() of develop eaa7e8c73: 'abc' then blur gave border oklab(0.985 0 0 / 0.1) with :user-invalid true.",
+  "fence": "apps/tracy-web/src/lib/page-shell.js: the .auth-card input:user-invalid rule follows .auth-card input and its hover rule.",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-PR-929-login-invalid-email-red.mjs"] }
+}

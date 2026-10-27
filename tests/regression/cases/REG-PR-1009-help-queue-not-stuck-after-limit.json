@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1009-help-queue-not-stuck-after-limit",
+  "kind": "fix",
+  "title": "After a rate limit (429) the next /help the person types is sent instead of sitting on Waiting; the start screen's Help dock follows the newest row",
+  "pr": 1009,
+  "area": "assistant",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/ui/tracy-assistant/test/help.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of the case named: \"after a 429 the queue is held, and the next question the person types lifts the hold and is sent\".",
+    "S3 (stand, optional): on a full stack with tasks/bang-chung/lan-2-sau-merge-966/rest.mjs, cases H5-08b and H-DOCK-SCROLL."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "The named case is 'ok'. On the unfixed code (packages/ui/tracy-assistant/src/client/help.ts at c3ee004f4) it is 'not ok': after a 429 on question one, question two is never posted and stays queued. With the fix, question two is posted (a second POST /api/assistant/turns with message 'two') and finishes as done.",
+    "S3: after the day-limit message a NEW question is answered by the model (it used to sit on Waiting for ever); with five Help rows on the start screen the dock scrolls and the newest answer ends inside it."
+  ],
+  "selectors": {
+    "controller": "createHelp in packages/ui/tracy-assistant/src/client/help.ts",
+    "dock": ".tv-help-dock in packages/ui/tracy-assistant/src/client/index.tsx"
+  },
+  "evidence": "Found 07/10/2026 by re-verifying #966 on images built from its merge commit: tasks/bang-chung/lan-2-sau-merge-966/KET-QUA.md (cases H5-11, H5-17 stayed red behind the stuck queue until the hold was lifted).",
+  "fence": "The queue is lifted by the person's next question and the server's 429 still applies: a limit that stands is shown again on the new row, never bypassed.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "packages/ui/tracy-assistant/test/help.test.mjs"],
+    "needs": [],
+    "tests": [
+      "after a 429 the queue is held, and the next question the person types lifts the hold and is sent"
+    ]
+  }
+}

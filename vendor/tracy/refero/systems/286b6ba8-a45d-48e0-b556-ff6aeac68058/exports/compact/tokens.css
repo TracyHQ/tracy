@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-carbon: #000000;
+  --color-graphite: #282828;
+  --color-bone: #ffffff;
+  --color-fluorescent: #0af500;
+  --color-ember: #ff4600;
+
+  /* Typography — Font Families */
+  --font-custom15364-bjka-display: 'custom_15364 (Bōjka Display)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apple-system-blinkmacsystemfont-system-ui: '-apple-system / BlinkMacSystemFont (System UI)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roboto: 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

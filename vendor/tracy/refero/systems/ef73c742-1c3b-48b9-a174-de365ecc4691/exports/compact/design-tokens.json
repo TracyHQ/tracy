@@ -1,0 +1,99 @@
+{
+  "color": {
+    "canvas-cream": {
+      "$value": "#f8f9f3",
+      "$type": "color",
+      "$description": "Canvas Cream — Page background, button borders, soft surface"
+    },
+    "ink-black": {
+      "$value": "#1d1e19",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, nav borders, link borders, all structural outlines"
+    },
+    "stone-mist": {
+      "$value": "#e9eae2",
+      "$type": "color",
+      "$description": "Stone Mist — Nav borders, icon strokes, subtle dividers, secondary borders"
+    },
+    "shadow-stone": {
+      "$value": "#d0d1cc",
+      "$type": "color",
+      "$description": "Shadow Stone — Card and hero box-shadow base, low-contrast elevation"
+    },
+    "carbon": {
+      "$value": "#151612",
+      "$type": "color",
+      "$description": "Carbon — Footer background, deep surface for dark sections"
+    },
+    "pewter": {
+      "$value": "#686e77",
+      "$type": "color",
+      "$description": "Pewter — Input border, muted form fields"
+    },
+    "sulfur-yellow": {
+      "$value": "#fff714",
+      "$type": "color",
+      "$description": "Sulfur Yellow — Featured project card fill, callout blocks — the loudest accent, reserved for hero-grade emphasis"
+    },
+    "carnation-pink": {
+      "$value": "#fbc2d1",
+      "$type": "color",
+      "$description": "Carnation Pink — Project card background, soft accent block"
+    },
+    "sky-blue": {
+      "$value": "#84bdff",
+      "$type": "color",
+      "$description": "Sky Blue — Project card background, cool accent block"
+    },
+    "ember-orange": {
+      "$value": "#fd6b01",
+      "$type": "color",
+      "$description": "Ember Orange — Project card background, warm accent block"
+    },
+    "cobalt-violet": {
+      "$value": "#204ce5",
+      "$type": "color",
+      "$description": "Cobalt Violet — Filled button background — the only chromatic action in the system, used sparingly"
+    },
+    "midnight": {
+      "$value": "#112337",
+      "$type": "color",
+      "$description": "Midnight — Input text, deep navy utility for form labels"
+    },
+    "lichen-green": {
+      "$value": "#03ac47",
+      "$type": "color",
+      "$description": "Lichen Green — Project card background, rare accent block"
+    }
+  },
+  "font": {
+    "area-normal": {
+      "$value": "area-normal",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse — body, UI labels, buttons, inputs, project titles. Wide weight range lets it carry both fine 14px body copy and 80px display headlines without leaving the family."
+    },
+    "hal-timezone": {
+      "$value": "HAL Timezone",
+      "$type": "fontFamily",
+      "$description": "Nav labels, small caps treatments, secondary headings. The 100-weight gives nav items a thin, almost editorial feel that contrasts with the bolder body sans."
+    },
+    "gooper": {
+      "$value": "Gooper",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headlines with personality — used for large pull-quotes, italic-feeling treatments, and section titles. The tight 0.8 line-height at 40px gives headlines a compressed, magazine-like density."
+    },
+    "oc-highway": {
+      "$value": "OC Highway",
+      "$type": "fontFamily",
+      "$description": "Micro-labels and tracked-out uppercase tags (e.g. '01:27 UK' timestamp). The +0.10em tracking makes 10px text readable as a label."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://fiasco.design",
+      "siteName": "Fiasco",
+      "extractedAt": "2026-06-03T20:28:20.439Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1014-desktop-signin-handoff",
+  "kind": "fix",
+  "title": "Google/GitHub sign-in from the desktop app returns to the app, and Approve on /signin works in a real browser (lane rounds included)",
+  "pr": 1014,
+  "area": "identity/desktop-signin",
+  "cms": ["any"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: boot this checkout's tracy-web (memory store, console mail) on a free port; Chrome via chrome-watch plays the person's browser.",
+    "S2: open a lane round, sign in with an email code on /signin?n=, press Approve.",
+    "S3: open a desktop round (purpose desktop), approve it in the browser, redeem POST /auth/link/:nonce/session with the app's headers; probe a missing Origin, a wrong secret, a lane round at /session, and a second redeem.",
+    "S4: open another desktop round and press Deny."
+  ],
+  "expect": [
+    "The /signin page sends Referrer-Policy: same-origin; the lane round becomes approved (it stayed pending under no-referrer, because Chrome sends Origin: null on the form).",
+    "The approve page names Tracy Cowork for Mac and shows the same matchCode the app received; the round becomes approved.",
+    "Redeem: no Origin 403; wrong secret 404 and the round stays redeemable; a lane round 404; the right secret 204 with Set-Cookie tracy_sess naming the approved account; a second redeem 404.",
+    "Deny turns the round to denied."
+  ],
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1014-desktop-signin-handoff.mjs"],
+    "needs": ["chrome"],
+    "timeout_s": 240
+  },
+  "selectors": {}
+}

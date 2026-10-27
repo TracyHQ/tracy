@@ -1,0 +1,259 @@
+{
+  "dos": [
+    "Use Baton Turbo only for display and oversized headlines — 29px and up; never set it below 20px",
+    "Set the hero headline at 151px on the cobalt background, line-height 1.0, all-caps, with at least one product image overlapping the letterforms",
+    "Use 9999px radius for every button, tag, and pill control — there are no rounded-corner cards or inputs in this system",
+    "Keep surfaces flat: 1px #e5e7eb hairline borders separate content, never drop shadows",
+    "Let #1658b3 carry full-bleed sections as the dominant surface; reserve white for content pages and #0d3c88 for footer/gradient depth",
+    "Use Greycliff 500 for interactive labels and small headings, 400 for body, 700 sparingly for emphasis",
+    "Place a 1px white vertical divider between the wordmark and the descriptor in the header lockup"
+  ],
+  "donts": [
+    "Do not use Baton Turbo for body copy, nav labels, buttons, or anything below 20px — it loses its editorial voice at small sizes",
+    "Do not introduce drop shadows, glows, or multi-layer elevation stacks — the system is intentionally flat",
+    "Do not add chromatic colors outside the blue family plus the single #eee1d9 flesh tone accent",
+    "Do not center the hero composition in a clean symmetrical layout — the scattered overlapping product crops are the signature",
+    "Do not round card corners or input fields; the only radius in the system is the 9999px pill",
+    "Do not use 151px type outside the hero; the display scale steps sharply down to 48px",
+    "Do not break the blue monochrome with a contrasting CTA color — the white pill on blue IS the action pattern"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1658b3",
+      "name": "Cobalt Current",
+      "role": "Hero background, primary surface flood, outlined-link borders — the single color that defines every full-bleed section",
+      "group": "brand"
+    },
+    {
+      "hex": "#0d3c88",
+      "name": "Deep Channel",
+      "role": "Darker blue for gradient depth in decorative graphics, icon accents, footer bands",
+      "group": "brand"
+    },
+    {
+      "hex": "#015fee",
+      "name": "Electric Ripple",
+      "role": "Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#01295f",
+      "name": "Abyssal Ink",
+      "role": "Darkest blue used inside SVG decoration and deep gradient stops — never as text or button",
+      "group": "brand"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White Canvas",
+      "role": "Page background, body text on blue, primary pill button fill — the neutral that carries white sections and inverts on blue",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Cloud Border",
+      "role": "Hairline dividers, card borders, separator rules across all white surfaces — the structural neutral of the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Carbon",
+      "role": "Body text on white, icon fills in black-mode illustrations",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eee1d9",
+      "name": "Nude Clay",
+      "role": "Warm flesh-tone accent inside decorative illustration fills and strokes — the only chromatic neutral, used to humanize blue compositions",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed cobalt hero dominates the first viewport with a centered-but-asymmetric composition: oversized headline on the left, supporting body copy nested in the negative space right of center, product images absolutely positioned to break the type grid. Below the hero, a full-width white-on-blue service marquee ticker runs horizontally. Subsequent content sections are white-canvas with 1px hairline dividers, 24px card padding, and a 1440px max-width centered column. The header is a minimal top bar — wordmark left, single pill CTA + menu right — not sticky, not mega. Navigation is a single line, no dropdowns visible. Vertical rhythm is generous (64px section gaps) but the hero itself is deliberately dense through type-image overlap.",
+  "imagery": "Object photography is the signature: tightly cropped luxury product still-lifes (diamond ring, Givenchy sandal, beauty packaging) floating as overlapping elements over the hero typography. No lifestyle photography, no portraits, no environmental context — each object is hero on its own. The megaphone illustration is the only drawn graphic, rendered in flat brand colors with no outline. Imagery is full-bleed in spirit (objects escape their containers to overlap type) but the individual crops are unframed rectangles, not rounded or masked. Iconography is minimal and line-based, monochromatic.",
+  "similar": [
+    {
+      "why": "Editorial agency layouts with oversized display type overlapping small product or texture crops on a bold single-color field",
+      "business": "Gretel"
+    },
+    {
+      "why": "Full-bleed brand-color sections paired with playful scattered object imagery and confident oversized headlines",
+      "business": "Resn"
+    },
+    {
+      "why": "Agency portfolio pattern of full-bleed saturated hero bands and restrained white content sections beneath",
+      "business": "Locomotive"
+    },
+    {
+      "why": "Monochromatic blue-dominant brand systems with pill-shaped controls and a single working neutral palette",
+      "business": "Gunner"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "0px",
+      "inputs": "0px",
+      "buttons": "9999px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "64px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1440px"
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "White Canvas",
+      "level": 1,
+      "purpose": "Default page background for all content sections"
+    },
+    {
+      "hex": "#1658b3",
+      "name": "Cobalt Field",
+      "level": 2,
+      "purpose": "Full-bleed hero and section floods — the dominant branded surface"
+    },
+    {
+      "hex": "#0d3c88",
+      "name": "Deep Channel",
+      "level": 3,
+      "purpose": "Gradient depth and decorative fills"
+    }
+  ],
+  "northStar": "Cobalt wave with floating luxury objects.\n\nA vivid blue ocean where oversized white type is pierced by editorial product still-lifes.",
+  "typeScale": [
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.56,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.25,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-lg",
+      "size": 36,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.11,
+      "letterSpacing": 0
+    },
+    {
+      "role": "hero",
+      "size": 151,
+      "lineHeight": 1,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "White Pill CTA",
+      "role": "Primary action button",
+      "description": "Filled white pill on blue or white surfaces, 9999px radius, 16px 24px padding, Greycliff 500 at 16px, text in Cobalt Current (#1658b3). The signature control — no shadows, no border, shape alone communicates the action."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Secondary header action",
+      "description": "White text on blue header, no background, 16px Greycliff 500, sits inline with a Menu label and hamburger icon. Underline or icon pairing is the only affordance."
+    },
+    {
+      "name": "Header Logo Lockup",
+      "role": "Brand mark in navigation",
+      "description": "Wordmark 'swwim' in white Greycliff 500 lowercase, followed by a 1px vertical white divider, then the descriptor 'Social Media Marketing' in Greycliff 400. Left-aligned, no logo image."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Primary page statement",
+      "description": "Baton Turbo 400 at 151px, white on Cobalt Current (#1658b3), all-caps, line-height 1.0. Product images absolutely positioned to overlap letterforms — a deliberate collage effect, never centered-clean."
+    },
+    {
+      "name": "Hero Body Caption",
+      "role": "Supporting hero copy",
+      "description": "Greycliff 400 at 18px, white, line-height 1.56, placed in the negative space beside the headline. No quotation marks, no italics — plain prose that lets the display type carry the weight."
+    },
+    {
+      "name": "Dive In Link",
+      "role": "Anchor for scroll",
+      "description": "Small Greycliff 500 link with a circled down-arrow icon, white on blue, 14-16px. The site's only repeated micro-link style — used to invite the user below the fold."
+    },
+    {
+      "name": "Service Marquee",
+      "role": "Horizontal service ticker",
+      "description": "Full-bleed white-on-blue band, Baton Turbo 400 all-caps at 29-36px, separated by bullet dots, scrolling horizontally or static. Sits flush to the bottom of the hero as a visual footer for the section."
+    },
+    {
+      "name": "Product Float Image",
+      "role": "Decorative product crop",
+      "description": "Tightly cropped object photography (rings, shoes, packaging) absolutely positioned over the hero headline, no border-radius, no shadow, no caption. The objects overlap letterforms to create a collage system."
+    },
+    {
+      "name": "White Surface Card",
+      "role": "Content container on white",
+      "description": "24px padding, 1px #e5e7eb border, no radius, no shadow. The default card treatment — flat, hairline-bordered, relying on white-space rather than elevation."
+    },
+    {
+      "name": "Icon",
+      "role": "UI iconography",
+      "description": "Minimal stroked icons, 1.5-2px stroke weight, monochromatic white on blue or Carbon on white. Used sparingly — the megaphone and arrow-down are the only icon-shaped elements visible."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and oversized headlines only — the 151px hero weight is the signature choice, a single weight (400) stretched across 14px to 151px to create the full editorial scale",
+      "sizes": "14px, 16px, 18px, 29px, 36px, 48px, 151px",
+      "family": "Baton Turbo",
+      "weight": "400",
+      "lineHeight": "1.00–1.56",
+      "substitute": "Druk Wide, Tungsten, Antonio"
+    },
+    {
+      "role": "Body, UI labels, nav, buttons, badges, footer — the working typeface at three weights, with 500/700 reserved for small headings and nav emphasis",
+      "sizes": "14px, 16px, 18px, 20px, 24px, 30px",
+      "family": "Greycliff",
+      "weight": "400, 500, 700",
+      "lineHeight": "1.20–1.56",
+      "substitute": "Inter, Manrope, DM Sans",
+      "letterSpacing": "normal"
+    }
+  ],
+  "description": "Swwim is a full-bleed, blue-saturated agency site where the hero IS the brand: a massive all-caps Baton Turbo display at 151px sits on a vivid cobalt field, scattered with floating product crops (a diamond ring, a Givenchy sandal, a megaphone) that overlap the letterforms. The rest of the system stays disciplined — white canvas pages, hairline #e5e7eb borders, pill-shaped controls with 9999px radius, Greycliff for everything readable. The color palette is nearly monochromatic: one hero blue (#1658b3) carries the page, with deeper #0d3c88 and darkest #01295f as gradient depth inside decorative graphics, and a single warm #eee1d9 flesh-tone accent peeking through illustration fills. Components are flat, borderless against the blue, and almost borderless against white — elevation comes from typography weight, not shadow stacks.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text on white: Carbon (#000000)\n- text on blue: White Canvas (#ffffff)\n- page background: White Canvas (#ffffff)\n- hero / section flood: Cobalt Current (#1658b3)\n- border / divider: Cloud Border (#e5e7eb)\n- decorative accent: Nude Clay (#eee1d9)\n- primary action: #1658b3 (outlined action border)\n\n## 3 Example Component Prompts\n\n1. **Hero with floating product crops**: Full-bleed Cobalt Current (#1658b3) background. Headline at 151px Baton Turbo weight 400, all-caps, white, line-height 1.0, occupying the left two-thirds. One product image (tightly cropped, no border, no radius) absolutely positioned to overlap the lower-right letterforms. Supporting body copy in Greycliff 400, 18px, white, line-height 1.56, placed in the negative space right of center. 64px top and bottom padding.\n\n2. **White Pill Button**: 9999px radius, 16px vertical / 24px horizontal padding, white fill, text in Greycliff 500 at 16px colored Cobalt Current (#1658b3). No border, no shadow. Sits inline with body content on white or on a blue surface.\n\n3. **Service Marquee Band**: Full-bleed Cobalt Current (#1658b3), 64px vertical padding, horizontally scrolling or static line of services separated by white bullet dots. Text is Baton Turbo 400 all-caps at 36px, white. Tightly packed — services run edge-to-edge with 24px gaps between items.\n\n4. **White Surface Card**: White background, 24px padding on all sides, 1px solid #e5e7eb border, 0px radius, no shadow. Body text in Greycliff 400, 16px, Carbon (#000000). Optional heading in Greycliff 500, 20px.\n\n5. **Header Lockup**: White background section, 'swwim' wordmark in Greycliff 500 lowercase 24px white, followed by a 1px wide × 24px tall white vertical divider with 12px margin on each side, then 'Social Media Marketing' descriptor in Greycliff 400 14px white. Right-aligned: white pill 'Contact Us' button + 'Menu' label in Greycliff 500 16px + hamburger icon."
+    }
+  ]
+}

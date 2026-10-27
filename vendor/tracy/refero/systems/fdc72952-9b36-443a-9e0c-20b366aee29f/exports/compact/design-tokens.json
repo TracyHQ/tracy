@@ -1,0 +1,79 @@
+{
+  "color": {
+    "forest-ink": {
+      "$value": "#004737",
+      "$type": "color",
+      "$description": "Forest Ink — Dominant brand surface — hero panels, section backgrounds, thick structural borders, nav header, footer blocks. Deep teal absorbs the page and makes cream text glow"
+    },
+    "mint-pulse": {
+      "$value": "#56f09f",
+      "$type": "color",
+      "$description": "Mint Pulse — Green outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "mint-mist": {
+      "$value": "#d4ffe8",
+      "$type": "color",
+      "$description": "Mint Mist — Green accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "cream-canvas": {
+      "$value": "#fffbec",
+      "$type": "color",
+      "$description": "Cream Canvas — Page background — warm off-white replaces pure white. Border-color on teal sections, card fills on light areas, heading text on dark surfaces"
+    },
+    "deep-loam": {
+      "$value": "#032019",
+      "$type": "color",
+      "$description": "Deep Loam — Text color on cream surfaces, subtle dark borders. Near-black with a green undertone that harmonizes with the Forest Ink brand color"
+    },
+    "sage-whisper": {
+      "$value": "#99b5af",
+      "$type": "color",
+      "$description": "Sage Whisper — Muted body text and secondary borders — desaturated green-gray that recedes on cream while staying tonally consistent with the brand palette"
+    },
+    "stone-mist": {
+      "$value": "#ccdad7",
+      "$type": "color",
+      "$description": "Stone Mist — Hairline dividers, icon borders, subtle background tints on cards within light sections"
+    },
+    "bone": {
+      "$value": "#faf2d5",
+      "$type": "color",
+      "$description": "Bone — Soft warm card background — slightly warmer and more saturated than cream canvas, used to lift specific content blocks without breaking the tonal family"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Body text and standard button borders in neutral contexts. Used when chromatic text is not appropriate"
+    },
+    "iris-spark": {
+      "$value": "#8f37ff",
+      "$type": "color",
+      "$description": "Iris Spark — Violet outline accent for tags, dividers, and focused UI edges."
+    }
+  },
+  "font": {
+    "aeonik": {
+      "$value": "Aeonik",
+      "$type": "fontFamily",
+      "$description": "Universal typeface — headings, body, UI labels, buttons. Single weight 400 across the entire system; contrast is achieved through size and negative letter-spacing, not weight. This is the signature choice: a monoweight geometric sans where display headlines at 56–74px tighten to -0.043em while body text at 14–16px sits at normal or slightly positive tracking. Tabular numerals ('tnum') are enabled for all instances."
+    },
+    "roobert": {
+      "$value": "roobert",
+      "$type": "fontFamily",
+      "$description": "Secondary body face — used for longer descriptive copy, list items, and hero subtext. Warmer and more humanist than Aeonik, providing tonal variety in long-form text while staying in the same single-weight, geometric family."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://flecto.io",
+      "siteName": "Flecto",
+      "extractedAt": "2026-06-03T21:22:21.255Z",
+      "variant": "compact"
+    }
+  }
+}

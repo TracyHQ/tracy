@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1723-wo-maps-menu-link",
+  "kind": "feat",
+  "title": "The menu link Google Maps lists for a place reaches the profile's menus as a Maps link, https only",
+  "pr": 1723,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/google-maps",
+  "steps": [
+    "S1: Run the package suite for the SerpApi place lookup's menu link (stubbed SerpApi answer).",
+    "S2: Run the tracy-web Google Maps research suite against Postgres with a stubbed place answer that lists a SinglePlatform menu link."
+  ],
+  "expect": [
+    "S1: the suite passes; a listed https menu link comes back as menuLink {url, source}, none gives null, and a non-https or credentialed link is dropped.",
+    "S2: the suite passes; the google-maps source holds the menuLink and the snapshot profile's menus hold that url exactly once with source google-maps."
+  ],
+  "selectors": {
+    "function": "mapsMenuLink in packages/wo/website-opportunities/src/google-maps-serpapi.js",
+    "step": "profile step in packages/wo/website-opportunities/src/place-executor.js",
+    "tool": "tests/regression/scripts/REG-PR-1723-wo-maps-menu-link.mjs"
+  },
+  "fence": "Google Maps menu link in the place profile",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1723-wo-maps-menu-link.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

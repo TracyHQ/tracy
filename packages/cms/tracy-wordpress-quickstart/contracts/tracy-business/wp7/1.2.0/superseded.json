@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "tracy-quickstart-superseded/wordpress/v1",
+  "$comment": "Earlier bytes of this released profile a sealed site may still be bound to. The receiver accepts a binding to one of these base hashes only while presentation-lock.json is the same bytes, and moves the binding to this profile on its next validated write. Regenerate with scripts/build-wordpress-superseded.mjs after the profile; never list a base whose presentation lock differs.",
+  "contract": "tracy-business/wp7/1.2.0",
+  "baseHash": "d09e36bef64a84d882867cbf4046f786f5b85d4e5b40e1e3f43b749b2a073858",
+  "presentationLock": "3af8fe159e221a8753dad6be1ef76aac9f64e6973f32badf0d0a0b2bcc130a50",
+  "demoTrimHash": "ec88fec5261f1602122bff1dfd8a3ceb2dc902301ffbdce5141daf44c53b1129",
+  "accepts": [
+    {
+      "baseHash": "939e42efe579ba8b132ba4ffb617795821f23cd9ce73ba191a5286fbcfc31cc2",
+      "presentationLock": "3af8fe159e221a8753dad6be1ef76aac9f64e6973f32badf0d0a0b2bcc130a50",
+      "receivers": "0.13.0 to 0.13.5",
+      "reason": "Released in place with other slot write rules (limit or input); the presentation lock is the same bytes.",
+      "demoTrimHash": "bad84244fca6be9f606bd2c05cf838926904123725c54ce817c122bf99b80589"
+    },
+    {
+      "baseHash": "cbeff11c8e5ecd0cc8daffec24a765f50e4d747c96e2554744dad8d942611637",
+      "presentationLock": "3af8fe159e221a8753dad6be1ef76aac9f64e6973f32badf0d0a0b2bcc130a50",
+      "receivers": "0.13.6",
+      "reason": "Released in place with other slot write rules (limit or input); the presentation lock is the same bytes.",
+      "demoTrimHash": "3504a9934df8cc955c8e31a85442b685b634d8c22aa50810e897230daffeeb61"
+    },
+    {
+      "baseHash": "ffa58c4a1929c7fe7498c4f7b2f663621b27313a21bad426a57b2c0af6652737",
+      "presentationLock": "3af8fe159e221a8753dad6be1ef76aac9f64e6973f32badf0d0a0b2bcc130a50",
+      "reason": "Released in place with other slot write rules; the presentation lock is the same bytes.",
+      "demoTrimHash": "0d99a52e6388ba7f076498922b37b32c807b7b9f4394c0ae781125ffb5dc369e"
+    }
+  ]
+}

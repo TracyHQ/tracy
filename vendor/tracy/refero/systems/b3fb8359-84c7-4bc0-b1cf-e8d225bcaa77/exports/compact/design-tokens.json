@@ -1,0 +1,69 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#111118",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, nav text, dark footer surface, filled button background, badge fills — near-black with a barely-perceptible cool tint reads as warmer than pure #000 in print contexts"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on dark fills, inverted button text — the dominant ground"
+    },
+    "soft-ash": {
+      "$value": "#dddddd",
+      "$type": "color",
+      "$description": "Soft Ash — Muted borders, image placeholder backgrounds, secondary dividers"
+    },
+    "stone-gray": {
+      "$value": "#bdbdbd",
+      "$type": "color",
+      "$description": "Stone Gray — List dividers, body-level borders, tertiary structural lines"
+    },
+    "slate": {
+      "$value": "#7c7c7c",
+      "$type": "color",
+      "$description": "Slate — Helper text, de-emphasized body copy, subtle metadata"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Link text and link borders in body context — slight lift from pure ink"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Hard border accent in lists and structural dividers where maximum contrast is needed"
+    },
+    "night-forest": {
+      "$value": "#283338",
+      "$type": "color",
+      "$description": "Night Forest — Navigation-specific borders and text — a cool desaturated charcoal distinct from the warm Ink Black"
+    },
+    "highlighter-yellow": {
+      "$value": "#fef199",
+      "$type": "color",
+      "$description": "Highlighter Yellow — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "pp-mori": {
+      "$value": "PP Mori",
+      "$type": "fontFamily",
+      "$description": "Body, nav, UI, and secondary display — the workhorse sans. Weight 200 carries small labels with editorial lightness; 400 is body; 600 is reserved for button text and emphasis. The unusually wide 0.107em letter-spacing on small text (12-15px) gives nav and badges an open, tracked-out feel typical of fashion-editorial UI."
+    },
+    "editorial-new": {
+      "$value": "Editorial New",
+      "$type": "fontFamily",
+      "$description": "Hero and section display headlines only — a thin didone serif at extreme sizes (70-160px) with 1.0 line-height. The whisper-thin weight 200 is the signature: most serif sites use 400-600 for display, this site lets the letterforms almost disappear, making the few words monumental. The contrast between the ultra-thin serif and the heavier PP Mori body creates the magazine-cover tension that defines the brand."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.andre-candido.com",
+      "siteName": "André Cândido",
+      "extractedAt": "2026-06-03T17:58:46.339Z",
+      "variant": "compact"
+    }
+  }
+}

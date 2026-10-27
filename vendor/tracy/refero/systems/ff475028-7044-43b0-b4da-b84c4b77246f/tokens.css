@@ -1,0 +1,39 @@
+:root {
+  /* Colors */
+  --color-gallery-black: #000000;
+  --color-projection-white: #ffffff;
+  --color-index-gray: #999999;
+
+  /* Typography — Font Families */
+  --font-helveesti: 'Helveesti', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-navigation-and-editorial-label: 14px;
+  --leading-navigation-and-editorial-label: 1.3;
+  --tracking-navigation-and-editorial-label: 0.84px;
+
+  /* Typography — Weights */
+  --font-weight-regular: 400;
+
+  /* Spacing */
+  --spacing-unit: 8px;
+  --spacing-15: 15px;
+  --spacing-20: 20px;
+  --spacing-25: 25px;
+  --spacing-72: 72px;
+  --spacing-144: 144px;
+
+  /* Layout */
+  --section-gap: 72px;
+  --card-padding: 0px;
+  --element-gap: 20px;
+
+  /* Border Radius */
+  --radius-xl: 15px;
+
+  /* Named Radii */
+  --radius-cards: 0px;
+  --radius-links: 0px;
+  --radius-images: 15px;
+  --radius-navigation: 0px;
+}

@@ -1,0 +1,44 @@
+{
+  "color": {
+    "warm-obsidian": {
+      "$value": "#262523",
+      "$type": "color",
+      "$description": "Warm Obsidian — Primary text, logos, pictogram strokes, structural elements — the near-black with a brown undertone is the only ink in the system and gives the minimalism its printed-on-paper warmth"
+    },
+    "bone-white": {
+      "$value": "#ececec",
+      "$type": "color",
+      "$description": "Bone White — Page canvas and primary surface — the warm slightly-grayed white fills the entire viewport and provides the breathing room around monumental type"
+    },
+    "pale-ash": {
+      "$value": "#cfcdcd",
+      "$type": "color",
+      "$description": "Pale Ash — Secondary surface and hairline borders — one step darker than the canvas, used for subtle dividers and the rare nested surface"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Sparing deep contrast for the smallest marks and AAA contrast anchors — never used for body text (that is always Warm Obsidian)"
+    }
+  },
+  "font": {
+    "basis-grotesque": {
+      "$value": "Basis Grotesque",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse typeface — carries the entire system from 10px metadata to 640px hero statements. Weight 400 for body and display, 500 for navigation and small labels, 700 reserved for rare emphasis. The extreme size range is the signature: Basis is asked to perform as both a 10px caption and a building-scale poster without switching families."
+    },
+    "messina-sans": {
+      "$value": "Messina Sans",
+      "$type": "fontFamily",
+      "$description": "Secondary editorial display face — reserved for oversized moments at 240px+ where a slightly more humanist, wider-cut character set can break the Basis rhythm. The 1.0 line-height (versus Basis's 0.82) creates a more relaxed, poster-like cadence when both faces appear together."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://helloelva.com",
+      "siteName": "Elva",
+      "extractedAt": "2026-06-03T19:34:21.159Z",
+      "variant": "compact"
+    }
+  }
+}

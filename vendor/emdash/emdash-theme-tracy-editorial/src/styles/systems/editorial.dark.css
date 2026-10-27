@@ -1,0 +1,99 @@
+/*
+  editorial.dark.css — the dark half of the `apple` design system (theme renamed Editorial).
+
+  GENERATED COMPANION to systems/editorial.css. That file is the system's own
+  tokens.css copied verbatim and it carries a LIGHT ramp only; this file adds
+  the dark one without touching it, so a regeneration of either is safe.
+
+  🔒 EVERY VALUE IS SOURCED. vendor/od-design-system/systems/apple/DESIGN.md §2
+  names Apple's dark palette outright — Absolute Black, four Graphite surface
+  steps, a High-Luminance Link Blue "for darker scenes" — and each line below
+  cites the line it came from. The four the document does not state are marked
+  INFERRED or DERIVED with the reason. Nothing here is picked by eye.
+
+  Two selectors, because a reader has two ways to ask for dark:
+    :root.dark                       the footer switcher's explicit choice
+    prefers-color-scheme + :not(.light)   the OS, when no choice was made
+
+  The template's own names are NOT redefined here — they resolve through
+  styles/theme.css, which references these tokens, so they follow for free.
+*/
+
+:root.dark,
+:root.dark ::backdrop {
+	/* Surfaces — Absolute Black canvas, Graphite ladder above it.
+	   DESIGN.md:29 "Immersive hero canvases, high-drama product chapters,
+	   deep UI anchors" · :40 Graphite Surface A "dark card and media-control
+	   context layer" · :41 Graphite Surface B "slightly deeper dark utility
+	   layer for control groupings". */
+	--bg: #000000;
+	--surface: #272729;
+	--surface-warm: #262629;
+
+	/* Text ramp, inverted. Apple documents the light ramp explicitly and the
+	   dark one only by use, so two of these are INFERRED:
+	     --fg   INFERRED: Pale Apple Gray (:30) read as type on black. The
+	            document names it a light SURFACE; #ffffff on #000000 is the
+	            glare Apple's own dark chapters avoid, so the near-white is
+	            the honest read.
+	     --fg-2 INFERRED: Soft Border Gray (:47) one step down from --fg.
+	   The lower two are documented neutrals used as-is. */
+	--fg: #f5f5f7;
+	--fg-2: #d2d2d7;
+	--muted: #86868b; /* Mid Border Gray, :48 */
+	--meta: #6e6e73; /* Secondary Neutral Gray, :46 */
+
+	/* Borders — the graphite steps whose stated job is separation.
+	   :43 Graphite Surface D "darkest elevated step used for separation in
+	   richer dark scenes" · :42 Graphite Surface C "elevated dark supporting
+	   surfaces". */
+	--border: #2a2a2c;
+	--border-soft: #28282b;
+
+	/* Accent — the one value Apple changes for dark on purpose.
+	   :36 High-Luminance Link Blue "bright link treatment on darker scenes
+	   where stronger contrast is required". */
+	--accent: #2997ff;
+	--accent-on: #ffffff;
+	/* DERIVED, not invented: Apple's buttons LIGHTEN on hover (:120 of
+	   tokens.css), so the hover lifts toward white by a mix rather than a
+	   hand-picked hex the document does not contain. Press returns to the
+	   documented Action Blue (:34). */
+	--accent-hover: color-mix(in srgb, #2997ff 85%, #ffffff);
+	--accent-active: #0071e3;
+
+	/* DERIVED: a black shadow on Absolute Black shows nothing. DESIGN.md §6
+	   Level 3 separates dark surfaces by TONE (#272729 → #2a2a2c), so the
+	   raised step becomes the ring it already sanctions rather than a deeper
+	   shadow Apple explicitly refuses. */
+	--elev-raised: 0 0 0 1px var(--border);
+
+	/* --focus-ring, the semantic trio and every metric token reference
+	   --accent or fixed values, so they follow without being restated. */
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not(.light),
+	:root:not(.light) ::backdrop {
+		--bg: #000000;
+		--surface: #272729;
+		--surface-warm: #262629;
+		--fg: #f5f5f7;
+		--fg-2: #d2d2d7;
+		--muted: #86868b;
+		--meta: #6e6e73;
+		--border: #2a2a2c;
+		--border-soft: #28282b;
+		--accent: #2997ff;
+		--accent-on: #ffffff;
+		--accent-hover: color-mix(in srgb, #2997ff 85%, #ffffff);
+		--accent-active: #0071e3;
+		--elev-raised: 0 0 0 1px var(--border);
+	}
+}
+
+/* The dark half deepens the band to the canvas black Apple reserves for dark
+ * chapters (DESIGN.md:29); the footer still lifts onto graphite through
+ * --surface, so the two do not merge. */
+:root.dark { --ink-band: #000000; }
+@media (prefers-color-scheme: dark) { :root:not(.light) { --ink-band: #000000; } }

@@ -1,0 +1,66 @@
+{
+  "id": "QA-UNIT-area-packages-cms-tracy-cms-sections-happy",
+  "itemIds": ["test-area:packages/cms/tracy-cms-sections"],
+  "requirement": "Every existing node:test file of packages/cms/tracy-cms-sections (3 files, via test:workers) passes with none skipped.",
+  "oracle": {
+    "source": "existing node:test suites of the area",
+    "ref": "scripts/check-tests.ts GROUPS test:workers; packages/cms/tracy-cms-sections",
+    "invariant": "The suite is green with no skipped, todo or missing test; its pass says nothing about RED until a regression case proves one.",
+    "productSources": [
+      "packages/cms/tracy-cms-sections/lib/artifacts.mjs:26",
+      "packages/cms/tracy-cms-sections/lib/fixture.mjs:115",
+      "packages/cms/tracy-cms-sections/scripts/build.mjs:49",
+      "packages/cms/tracy-cms-sections/tailwind.css:12",
+      "vendor/tracy/od-design-system/systems/airbnb/tokens.css:74",
+      "vendor/tracy/od-design-system/systems/apple/tokens.css:67",
+      "vendor/tracy/od-design-system/systems/brutalism/tokens.css:6"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/cms/tracy-cms-sections/scripts/build.mjs:188 import() with a computed specifier",
+      "packages/cms/tracy-cms-sections/scripts/build.mjs:195 readFileSync() with a computed path",
+      "packages/cms/tracy-cms-sections/scripts/build.mjs:219 import() with a computed specifier",
+      "packages/cms/tracy-cms-sections/scripts/build.mjs:273 readFileSync() with a computed path",
+      "packages/cms/tracy-cms-sections/scripts/build.mjs:297 readFileSync() with a computed path",
+      "packages/cms/tracy-cms-sections/scripts/build.mjs:305 readFileSync() with a computed path",
+      "packages/cms/tracy-cms-sections/scripts/build.mjs:345 readFileSync() with a computed path",
+      "packages/cms/tracy-cms-sections/scripts/build.mjs:356 readFileSync() with a computed path",
+      "packages/cms/tracy-cms-sections/scripts/build.mjs:469 readFileSync() with a computed path",
+      "packages/cms/tracy-cms-sections/test/artifacts.test.mjs:36 readFileSync() names vendor/tracy/od-design-system/systems/nope/DESIGN.md, which is not a file",
+      "packages/cms/tracy-cms-sections/test/artifacts.test.mjs:36 readFileSync() names vendor/tracy/od-design-system/systems/nope/tokens.css, which is not a file",
+      "packages/cms/tracy-cms-sections/test/fixture.test.mjs:79 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["node"],
+  "assertionIds": ["unit.packages-cms-tracy-cms-sections.suite-green"],
+  "redProof": null,
+  "legacyIds": [],
+  "kind": "suite",
+  "area": "packages/cms/tracy-cms-sections",
+  "areas": ["packages/cms/tracy-cms-sections", "tracy-cms-sections", "suites"],
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=120000",
+    "--test-force-exit",
+    "packages/cms/tracy-cms-sections/test/artifacts.test.mjs",
+    "packages/cms/tracy-cms-sections/test/build.test.mjs",
+    "packages/cms/tracy-cms-sections/test/fixture.test.mjs"
+  ],
+  "files": [
+    "packages/cms/tracy-cms-sections/test/artifacts.test.mjs",
+    "packages/cms/tracy-cms-sections/test/build.test.mjs",
+    "packages/cms/tracy-cms-sections/test/fixture.test.mjs"
+  ],
+  "timeoutS": 3600
+}

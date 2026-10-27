@@ -1,0 +1,26 @@
+{
+  "layout": {
+    "sections": [
+      {
+        "name": "Header",
+        "contents": [
+          {
+            "type": "block",
+            "name": "mainnav",
+            "block": "mainnav"
+          }
+        ]
+      },
+      {
+        "name": "Hero",
+        "contents": [
+          {
+            "type": "positions",
+            "name": "hero",
+            "positions": "hero"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+:root {
+  /* Colors */
+  --color-pure-canvas: #ffffff;
+  --color-midnight-ink: #000000;
+  --color-deep-charcoal: #1e1e1e;
+  --color-graphite: #111213;
+  --color-slate: #565656;
+  --color-fog: #888889;
+  --color-ash: #666666;
+  --color-steel: #333333;
+  --color-border-medium: #e8e8e8;
+  --color-border-soft: #bebebe;
+  --color-aqua-spark: #57d2ee;
+  --color-teal-deep: #45bfdb;
+  --color-cyan-mist: #bcedf8;
+  --color-cyan-text: #6dd9f2;
+  --color-sky-link: #0299e0;
+  --color-highlighter-yellow: #f2e6b3;
+
+  /* Typography — Font Families */
+  --font-roobert: 'Roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-font-awesome-6-brands: 'Font Awesome 6 Brands', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

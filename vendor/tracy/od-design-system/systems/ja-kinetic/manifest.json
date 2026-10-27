@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "od-design-system-project/v1",
+  "id": "ja-kinetic",
+  "name": "JA Kinetic",
+  "category": "Developer Tools",
+  "description": "Observability and developer-tool system: near-neutral off-white or near-black grounds under flat bordered cards, one saturated accent per colourway (olive and lime, indigo, or cyan) selected by a data-style attribute, Space Grotesk display at weight 700 with negative tracking over IBM Plex Sans body, JetBrains Mono for uppercase eyebrows, chips, stats and code panels, an eight-pixel spacing unit, an 8 / 12 / 16px radius ladder, almost no shadow, and a faint 30px line grid behind the hero and the page mastheads.",
+  "source": {
+    "type": "bundled",
+    "origin": "Read from the ja_kinetic Joomla template source (JoomlArt, T4 framework, version 1.0.0): the unprefixed token set on :root and html[data-style=\"terminal\"] in scss/_kinetic.scss, its dark remap in scss/darkmode.scss and css/darkmode.css, the chrome set in scss/_kinetic-chrome.scss, and the 20 ACM blocks in acm/*/, cross-checked against the template's own docs/design-system.md"
+  },
+  "files": {
+    "design": "DESIGN.md",
+    "tokens": "tokens.css",
+    "components": "components.html"
+  },
+  "importMode": "normalized",
+  "craft": {
+    "applies": [],
+    "suggested": [
+      "color",
+      "accessibility-baseline"
+    ],
+    "exemptions": []
+  },
+  "preview": {
+    "dir": "preview",
+    "pages": [
+      {
+        "path": "preview/colors.html",
+        "role": "colors",
+        "title": "Colors"
+      },
+      {
+        "path": "preview/typography.html",
+        "role": "typography",
+        "title": "Typography"
+      },
+      {
+        "path": "preview/spacing.html",
+        "role": "spacing",
+        "title": "Spacing"
+      }
+    ]
+  }
+}

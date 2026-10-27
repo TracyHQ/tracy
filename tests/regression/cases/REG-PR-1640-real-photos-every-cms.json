@@ -1,0 +1,67 @@
+{
+  "id": "REG-PR-1640-real-photos-every-cms",
+  "kind": "feat",
+  "title": "A one-press build reaches every CMS with the business's own photos and words: EmDash passes the hand-off, crops are Tracy's arithmetic, a plan grows, an unheard check is not counted, and the check judges photos, icons, forms and module settings as they are",
+  "pr": 1640,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: an EmDash client-send build whose site job answers custody skipped, through provision, plan, an amended plan, a check whose caller left, and two checks.",
+    "S2: agentImageRecipe on the agent's own row (\"500/399\", the whole picture as source, an output larger than the crop), on \"4:3\", and on unusable recipes.",
+    "S3: amendsPlan on an image added, a row appended, a row changed, a row dropped, another structure hash, a planned image changed.",
+    "S4: briefOf on an agent build; checkCollectedUsed with three crops of one photo; no-demo-pictures over an icon, a PNG mask and a blog photo; no-demo-words over a form's words; a phone followed by a street number.",
+    "S5: compareAgentInventory over a JA module config held as JSON with a Joomla picture, after its photo and words change and after an item is added.",
+    "S6: stepBudget over forty provision waits; a demo build and an own-site build on one account with a cap of one; an own-site research paused four times; a typed name with a pasted link; nameFromTitle on SEO titles."
+  ],
+  "expect": [
+    "S1: ready and planned; the grown plan saves, a rewritten one is AGENT_DEMO_PLAN_FROZEN; the left check is AGENT_DEMO_CHECK_UNHEARD and not counted, the next is counted.",
+    "S2: 836×667 crop and output with aspect 500/399; \"4:3\" reads as 4/3; each unusable recipe is refused with why.",
+    "S3: true, true, false, false, false, false.",
+    "S4: the research's posts are evidence, its secrets are not; one photo of the place; only the blog photo is a template picture; the form's words pass; the brief's phone passes and another fails.",
+    "S5: structure kept after copy and photo; changed after an item is added.",
+    "S6: not due; both builds accepted, each counted on its own cap; resumed three times then failed SOURCE_PAUSED; the typed name kept; brand names kept, page words dropped."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities/handoff.js apps/tracy-web/src/opportunities/agent-demo-image.js apps/tracy-web/src/opportunities/agent-demo.js apps/tracy-web/src/opportunities/client-demo.js apps/tracy-web/src/opportunities/demo-qa.js apps/tracy-web/src/opportunities/demo-actions.js apps/tracy-web/src/opportunities/own-site.js apps/tracy-web/src/opportunities/executor.js apps/tracy-web/src/sites/agent-demo-inventory.js apps/tracy-host/src/demo-qa.js packages/tools/tracy-site-tools/src/host/site-context.mjs vendor/tracy/tracy-website-opportunities/domain/website-crawler.mjs",
+    "dom": ""
+  },
+  "fence": "the hand-off's custody rule, agentImageRecipe, amendsPlan, the unheard-check refusal, briefOf's evidence, collected-used's photo sources, decoration, form words, pictureValues on JSON, waitsOnProvision, the usage kind, the own-site resumes, mergeProfile's typed name, nameFromTitle",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-demo-runner.test.mjs",
+      "apps/tracy-web/test/agent-demo-image.test.mjs",
+      "apps/tracy-web/test/wo-agent-demo.test.mjs",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs",
+      "apps/tracy-web/test/website-opportunities-demo-actions.test.mjs",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs",
+      "apps/tracy-web/test/website-opportunities-executor.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs",
+      "packages/wo/website-opportunities/test/domain-website-crawler.test.mjs"
+    ],
+    "tests": [
+      "client-send reserves real chat and one native user request before provision",
+      "image recipes read the slot shape as written, crop the largest box of it, and never enlarge",
+      "image recipes reject arbitrary assets, stretching and malformed canvas before upload, each with why",
+      "a saved plan grows",
+      "an agent build's facts check reads its frozen research as evidence, never its reviews",
+      "a module config held as JSON keeps its structure when the build changes its photo and words",
+      "demo builds and own-site builds each have their own daily cap",
+      "Build from my business: its own switch",
+      "a pasted URL: its hostname placeholder never wins the name over the site’s own",
+      "collected-used: the name, phone, email, street, an opening time, a review and own photos must all show",
+      "baselineOf + no-demo-pictures",
+      "no-demo-words: a template block still there fails unless its words are the brief’s",
+      "facts-from-brief: hours, prices, phones and a founding year the brief holds are shown as held",
+      "stepBudget: a demo build waiting on its provision is not looking",
+      "nameFromTitle keeps the brand of a home page title"
+    ],
+    "needs": ["postgres"]
+  }
+}

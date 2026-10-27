@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1782-live-sync-honest-results",
+  "kind": "fix",
+  "title": "Sync from live does not stop on tables tied by a foreign key, makes no backup for a merge that changes nothing, counts the records a person edits; Sync to live says when nothing was sent and which record is open in a live editor; a deleted copy takes its sync history",
+  "pr": 1782,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs packages/fleet/tracy-fleet-operation/test/provision-joomla-check-in.test.mjs (needs a docker daemon for mariadb:11)",
+    "S2: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/live-write.test.mjs",
+    "S3: TEST_DATABASE_URL=… node --test --test-reporter=tap apps/tracy-web/test/live-push.test.mjs apps/tracy-web/test/live-sync.test.mjs",
+    "S4: node --import tsx --test --test-reporter=tap packages/core/tracy-core/test/publish-push-dom.test.mjs packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs"
+  ],
+  "expect": [
+    "S1: 'tables tied by a foreign key, loaded by two streams side by side, load whole: no stream takes a table lock' passes: both tables hold 3000 rows in the scratch copy, no ERROR 1100 in the log.",
+    "S1: 'a title the live site changed in a table the copy left alone is one record that came over, not nothing' (records 1), 'a stamp or a counter the live site moved is no record; a category it added is one' (records 1) and 'one title both sites changed is one place kept: the asset that mirrors it follows, never named' (kept is only db:jos_content:[\"1\"]:title) pass.",
+    "S1: 'every record the live site had open is checked in on the copy, Joomla 4 and Joomla 3 alike' passes: checked_out NULL (Joomla 4) and 0 (Joomla 3), another prefix untouched.",
+    "S2: 'a record open in the live site’s editor is not written, and the answer names whose editor' passes: conflict open-in-editor with lockedBy 'Victor Luu' and lockedSince.",
+    "S3: 'a deleted copy takes its sync and push rows with it' and 'a push that wrote nothing ran no sync: no site_sync row' pass.",
+    "S4: 'a push that wrote nothing says so — never a success of \"0 changes\"' passes ([data-push-nothing-sent], group open with 'open by Victor Luu'), and the four 'Sync, up to date' summaries pass (1 record for a table taken whole; small changes; nothing)."
+  ],
+  "selectors": {
+    "nothing_sent": "[data-push-nothing-sent]",
+    "open_group": "[data-push-group=\"open\"]",
+    "brought": "[data-live-sync-brought]",
+    "push_door": "POST /api/sites/:key/push",
+    "sync_door": "GET /api/sites/:key/sync"
+  },
+  "fence": "webroot-sync.sh ours_try --skip-add-locks; finish_merge took_nothing; live_sync.py records/mirrorColumns; live-push.js recordSync skipped; migration 178",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1782-live-sync-honest-results.mjs"],
+    "needs": ["postgres"]
+  }
+}

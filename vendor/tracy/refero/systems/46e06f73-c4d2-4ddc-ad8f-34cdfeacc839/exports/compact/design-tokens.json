@@ -1,0 +1,69 @@
+{
+  "color": {
+    "charcoal-ink": {
+      "$value": "#1f1915",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary text, dark photographic overlays, dark page bands, logo marks, and iconography"
+    },
+    "workshop-ivory": {
+      "$value": "#f2efe9",
+      "$type": "color",
+      "$description": "Workshop Ivory — Page canvas, light hero fields, and broad editorial section backgrounds"
+    },
+    "paper-white": {
+      "$value": "#fffdf6",
+      "$type": "color",
+      "$description": "Paper White — Warm light text over dark media, light pill actions, and high-contrast light surfaces"
+    },
+    "studio-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Studio White — Filled pill actions, product-interface surfaces, and compact elevated media controls"
+    },
+    "soft-paper": {
+      "$value": "#f7f5f1",
+      "$type": "color",
+      "$description": "Soft Paper — Large display text on dark imagery and the palest alternate surface"
+    },
+    "drafting-line": {
+      "$value": "#e6e3dd",
+      "$type": "color",
+      "$description": "Drafting Line — Hairline borders, card fills, image frames, and dividers"
+    },
+    "quiet-graphite": {
+      "$value": "#6b6661",
+      "$type": "color",
+      "$description": "Quiet Graphite — Secondary body copy and subdued supporting descriptions"
+    },
+    "faded-graphite": {
+      "$value": "#8d8883",
+      "$type": "color",
+      "$description": "Faded Graphite — Tertiary metadata, low-emphasis icons, and supporting labels"
+    },
+    "signal-coral": {
+      "$value": "#fa725a",
+      "$type": "color",
+      "$description": "Signal Coral — Orange text accent for links, tags, and emphasized short phrases"
+    }
+  },
+  "font": {
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Primary editorial and interface family. Use 400 at 120px for display headlines; its -8px tracking and 0.93 line-height make the message read as a compressed poster rather than a conventional marketing headline. Use 500 for section titles, body hierarchy, and interface controls."
+    },
+    "fragment-mono": {
+      "$value": "Fragment Mono",
+      "$type": "fontFamily",
+      "$description": "Technical microtype for all-caps navigation, small labels, status text, and compact metadata. At 10px with +0.3px tracking, it gives the interface its workshop-inventory character against the expressive Geist display type."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://b150.ai",
+      "siteName": "B150",
+      "extractedAt": "2026-09-20T19:25:49.916Z",
+      "variant": "compact"
+    }
+  }
+}

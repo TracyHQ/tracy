@@ -1,0 +1,750 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-morgan/wp7/1.1.16",
+  "baseHash": "30ea4cb2c9195d755238b020a95f47c812a9b9cd903791163a7ab8669ed7848c",
+  "baseFiles": {
+    "manifest.json": "519e349ef5b1e355c5b91c0c95fe2b97d1aa1805d845edba83666cdb7081bb0d",
+    "content-map.json": "5dccf576f1bdb6a99232dd6056682c151d3c58bec21bfac8329cce307a897e20",
+    "presentation-lock.json": "ad85d865baf697ba4fa07025ccec94fc1a8ad1f27c2c448d67411211df8a309a"
+  },
+  "inputs": {
+    "navigation-source.json": "208635a15613c3fd689d2b616102948fc775654d174472eb88b46fa4b66e24a3",
+    "inventory.json": "6f07af63edfe5ef6bcdff72b7863706062e0a93bebb604a3f8856547b35af4e1"
+  },
+  "decisionsHash": "8e7406d5fd5128e1dddbd00d71452352060956d43900dec6ad3239e56d5149b8",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 158,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home Style 1",
+        "pageId": 138
+      },
+      "label": "Home Style 1",
+      "path": [
+        "Home",
+        "Home Style 1"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (136 blocks): another layout of the same demo; no submenu or child page under it, and no other entry links it",
+      "key": "navigation-158",
+      "before": "e9b37551847b6db30a66decb3bb5a0c182c39c867fc738594432a407e5c603cc",
+      "after": "13afaf3cad74e169e3bbdb927412b5c5a8abdfdac1aa9fa4afc03d639b06e455"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 158,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home Style 2",
+        "pageId": 150
+      },
+      "label": "Home Style 2",
+      "path": [
+        "Home",
+        "Home Style 2"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (135 blocks): another layout of the same demo; no submenu or child page under it, and no other entry links it",
+      "key": "navigation-158",
+      "before": "13afaf3cad74e169e3bbdb927412b5c5a8abdfdac1aa9fa4afc03d639b06e455",
+      "after": "75b8a0eb3679a980addad4ed1cd1a01c1a63aadde298fef72cd54b82b342a933"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 158,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home Style 3",
+        "pageId": 151
+      },
+      "label": "Home Style 3",
+      "path": [
+        "Home",
+        "Home Style 3"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (108 blocks): another layout of the same demo; no submenu or child page under it, and no other entry links it",
+      "key": "navigation-158",
+      "before": "75b8a0eb3679a980addad4ed1cd1a01c1a63aadde298fef72cd54b82b342a933",
+      "after": "19295a9c1a41fbc20baf0443c977d179c2e326b09f8de02fcc161e2755aaa3c7"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 158,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home Style 4",
+        "pageId": 152
+      },
+      "label": "Home Style 4",
+      "path": [
+        "Home",
+        "Home Style 4"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "an alternative demo home layout under \"Home\", beside the front page; its block skeleton differs from the front page (76 blocks; its query lists posts that Category Blog and News list too): another layout of the same demo; no submenu or child page under it, and no other entry links it",
+      "key": "navigation-158",
+      "before": "19295a9c1a41fbc20baf0443c977d179c2e326b09f8de02fcc161e2755aaa3c7",
+      "after": "eb5e40d724782b60e4911f6f71aaab58b66251e1f58081e4b51a5b963e40b9a5"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 160,
+        "slug": "joomla-pages"
+      },
+      "link": {
+        "label": "Offline Page",
+        "pageId": 143
+      },
+      "label": "Offline Page",
+      "path": [
+        "Other Pages",
+        "Offline Page"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Offline Page\" is one of the template's own screens",
+      "key": "navigation-160",
+      "before": "1fcf15ca886c7cabefd79a9bf21f4165333415bebf23bd28effdf0427594d4b2",
+      "after": "2e88a053fc803048b61a31ae4b176adedd4274d48942e88aad279c6257851354"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 160,
+        "slug": "joomla-pages"
+      },
+      "link": {
+        "label": "Error Page",
+        "pageId": 144
+      },
+      "label": "Error Page",
+      "path": [
+        "Other Pages",
+        "Error Page"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Error Page\" is one of the template's own screens",
+      "key": "navigation-160",
+      "before": "2e88a053fc803048b61a31ae4b176adedd4274d48942e88aad279c6257851354",
+      "after": "795dc5c58b09ea36f6db9085d0d36eae7f531b5b45c502bffec6393895b4e3da"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 160,
+        "slug": "joomla-pages"
+      },
+      "link": {
+        "label": "List All Categories",
+        "pageId": 149
+      },
+      "label": "List All Categories",
+      "path": [
+        "Content",
+        "List All Categories"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "Joomla sample listing screen in the drawer's \"Content\" branch: its text is the names and descriptions of the post categories, and its links go to the category archives, which the cards of Tagged Items (kept) and News & Update link too; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site",
+      "key": "navigation-160",
+      "before": "795dc5c58b09ea36f6db9085d0d36eae7f531b5b45c502bffec6393895b4e3da",
+      "after": "48f833c644a27d2fa8b5dd092cc3a58114970fb858372912f77f6f7ec55840bf"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 160,
+        "slug": "joomla-pages"
+      },
+      "link": {
+        "label": "Featured Articles",
+        "pageId": 145
+      },
+      "label": "Featured Articles",
+      "path": [
+        "Content",
+        "Featured Articles"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "Joomla sample listing screen in the drawer's \"Content\" branch: the page holds no text and no listing; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site",
+      "key": "navigation-160",
+      "before": "48f833c644a27d2fa8b5dd092cc3a58114970fb858372912f77f6f7ec55840bf",
+      "after": "f234db237e8a67d60e7ca137b02faa8440faea349ff4335b35d9fe36c603ca2e"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 160,
+        "slug": "joomla-pages"
+      },
+      "link": {
+        "label": "Category Blog",
+        "pageId": 154
+      },
+      "label": "Category Blog",
+      "path": [
+        "Content",
+        "Category Blog"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "second link to page 154, which the main menu opens as \"News & Update\"; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site",
+      "key": "navigation-160",
+      "before": "f234db237e8a67d60e7ca137b02faa8440faea349ff4335b35d9fe36c603ca2e",
+      "after": "b370a4f3d745ce4844ad2a7b48a819c996d5085095b7866a630a914bda8d1c05"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 160,
+        "slug": "joomla-pages"
+      },
+      "link": {
+        "label": "Single Article",
+        "pageId": 204
+      },
+      "label": "Single Article",
+      "path": [
+        "Content",
+        "Single Article"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "Joomla sample \"single article\" view: a link to one post, which Tagged Items (kept) lists with every other post; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site",
+      "key": "navigation-160",
+      "before": "b370a4f3d745ce4844ad2a7b48a819c996d5085095b7866a630a914bda8d1c05",
+      "after": "b0a4ccedb0c7e070497a61b96113a5cc0a4b52dd01fa86c8e7c90b491b94a42a"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 160,
+        "slug": "joomla-pages"
+      },
+      "link": {
+        "label": "Typography",
+        "pageId": 147
+      },
+      "label": "Typography",
+      "path": [
+        "Content",
+        "Typography"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Typography\" is one of the template's own screens",
+      "key": "navigation-160",
+      "before": "b0a4ccedb0c7e070497a61b96113a5cc0a4b52dd01fa86c8e7c90b491b94a42a",
+      "after": "7997e4507b3b2464d48ad2085d5e7cd756da6ef147a4cbc5e0046db7eb29a4c0"
+    }
+  ],
+  "finals": [
+    {
+      "key": "navigation-158",
+      "before": "e9b37551847b6db30a66decb3bb5a0c182c39c867fc738594432a407e5c603cc",
+      "after": "eb5e40d724782b60e4911f6f71aaab58b66251e1f58081e4b51a5b963e40b9a5"
+    },
+    {
+      "key": "navigation-160",
+      "before": "1fcf15ca886c7cabefd79a9bf21f4165333415bebf23bd28effdf0427594d4b2",
+      "after": "7997e4507b3b2464d48ad2085d5e7cd756da6ef147a4cbc5e0046db7eb29a4c0"
+    }
+  ],
+  "kept": [
+    {
+      "key": "navigation-158",
+      "where": "wp_navigation 158 (mainmenu)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 131,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-158",
+      "where": "wp_navigation 158 (mainmenu)",
+      "label": "About Us",
+      "path": [
+        "About Us"
+      ],
+      "pageId": 129,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-158",
+      "where": "wp_navigation 158 (mainmenu)",
+      "label": "Services",
+      "path": [
+        "Services"
+      ],
+      "pageId": 130,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-158",
+      "where": "wp_navigation 158 (mainmenu)",
+      "label": "News & Update",
+      "path": [
+        "News & Update"
+      ],
+      "pageId": 154,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-158",
+      "where": "wp_navigation 158 (mainmenu)",
+      "label": "Contact Us",
+      "path": [
+        "Contact Us"
+      ],
+      "pageId": 128,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-159",
+      "where": "wp_navigation 159 (usermenu)",
+      "label": "Your Profile",
+      "path": [
+        "Your Profile"
+      ],
+      "pageId": 127,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-159",
+      "where": "wp_navigation 159 (usermenu)",
+      "label": "Submit an Article",
+      "path": [
+        "Submit an Article"
+      ],
+      "pageId": 131,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-159",
+      "where": "wp_navigation 159 (usermenu)",
+      "label": "Site Administrator",
+      "path": [
+        "Site Administrator"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-159",
+      "where": "wp_navigation 159 (usermenu)",
+      "label": "Template Settings",
+      "path": [
+        "Template Settings"
+      ],
+      "pageId": 131,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-159",
+      "where": "wp_navigation 159 (usermenu)",
+      "label": "Site Settings",
+      "path": [
+        "Site Settings"
+      ],
+      "pageId": 131,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-160",
+      "where": "wp_navigation 160 (joomla-pages)",
+      "label": "Site Pages",
+      "path": [
+        "Site Pages"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-160",
+      "where": "wp_navigation 160 (joomla-pages)",
+      "label": "Login",
+      "path": [
+        "Site Pages",
+        "Login"
+      ],
+      "pageId": 139,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-160",
+      "where": "wp_navigation 160 (joomla-pages)",
+      "label": "Registration",
+      "path": [
+        "Site Pages",
+        "Registration"
+      ],
+      "pageId": 140,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-160",
+      "where": "wp_navigation 160 (joomla-pages)",
+      "label": "Profile",
+      "path": [
+        "Site Pages",
+        "Profile"
+      ],
+      "pageId": 141,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-160",
+      "where": "wp_navigation 160 (joomla-pages)",
+      "label": "Edit Profile",
+      "path": [
+        "Site Pages",
+        "Edit Profile"
+      ],
+      "pageId": 142,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-160",
+      "where": "wp_navigation 160 (joomla-pages)",
+      "label": "Other Pages",
+      "path": [
+        "Other Pages"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-160",
+      "where": "wp_navigation 160 (joomla-pages)",
+      "label": "Smart Search",
+      "path": [
+        "Other Pages",
+        "Smart Search"
+      ],
+      "pageId": 153,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-160",
+      "where": "wp_navigation 160 (joomla-pages)",
+      "label": "Content",
+      "path": [
+        "Content"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-160",
+      "where": "wp_navigation 160 (joomla-pages)",
+      "label": "Tagged Items",
+      "path": [
+        "Content",
+        "Tagged Items"
+      ],
+      "pageId": 155,
+      "rule": "keep.decision",
+      "reason": "its query lists every post; no other menu entry lists the posts outside the Investment Managment category, so it is their only route from the menus"
+    },
+    {
+      "key": "navigation-161",
+      "where": "wp_navigation 161 (navigate)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-161",
+      "where": "wp_navigation 161 (navigate)",
+      "label": "Services",
+      "path": [
+        "Services"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-161",
+      "where": "wp_navigation 161 (navigate)",
+      "label": "News",
+      "path": [
+        "News"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-161",
+      "where": "wp_navigation 161 (navigate)",
+      "label": "Testimonials",
+      "path": [
+        "Testimonials"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-161",
+      "where": "wp_navigation 161 (navigate)",
+      "label": "Advisors",
+      "path": [
+        "Advisors"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-161",
+      "where": "wp_navigation 161 (navigate)",
+      "label": "Contact Us",
+      "path": [
+        "Contact Us"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-162",
+      "where": "wp_navigation 162 (services)",
+      "label": "Research",
+      "path": [
+        "Research"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-162",
+      "where": "wp_navigation 162 (services)",
+      "label": "Financial Modeling",
+      "path": [
+        "Financial Modeling"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-162",
+      "where": "wp_navigation 162 (services)",
+      "label": "Human Resource",
+      "path": [
+        "Human Resource"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-162",
+      "where": "wp_navigation 162 (services)",
+      "label": "Management",
+      "path": [
+        "Management"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-162",
+      "where": "wp_navigation 162 (services)",
+      "label": "Legal Solutions",
+      "path": [
+        "Legal Solutions"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-163",
+      "where": "wp_navigation 163 (support)",
+      "label": "Documentation",
+      "path": [
+        "Documentation"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-163",
+      "where": "wp_navigation 163 (support)",
+      "label": "F.A.Q",
+      "path": [
+        "F.A.Q"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-163",
+      "where": "wp_navigation 163 (support)",
+      "label": "Media",
+      "path": [
+        "Media"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-163",
+      "where": "wp_navigation 163 (support)",
+      "label": "Support Policy",
+      "path": [
+        "Support Policy"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-163",
+      "where": "wp_navigation 163 (support)",
+      "label": "Privacy / Terms of use",
+      "path": [
+        "Privacy / Terms of use"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-163",
+      "where": "wp_navigation 163 (support)",
+      "label": "Advertise",
+      "path": [
+        "Advertise"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-164",
+      "where": "wp_navigation 164 (careers)",
+      "label": "Get the Theme",
+      "path": [
+        "Get the Theme"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-164",
+      "where": "wp_navigation 164 (careers)",
+      "label": "How It Works",
+      "path": [
+        "How It Works"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-164",
+      "where": "wp_navigation 164 (careers)",
+      "label": "Articles & Tips",
+      "path": [
+        "Articles & Tips"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-164",
+      "where": "wp_navigation 164 (careers)",
+      "label": "Terms of Service",
+      "path": [
+        "Terms of Service"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-165",
+      "where": "wp_navigation 165 (terms-privacy)",
+      "label": "Terms & Conditions",
+      "path": [
+        "Terms & Conditions"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-165",
+      "where": "wp_navigation 165 (terms-privacy)",
+      "label": "Cookie Policy",
+      "path": [
+        "Cookie Policy"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "links": 11,
+    "templateParts": 0,
+    "kept": 42,
+    "unresolved": 0
+  }
+}

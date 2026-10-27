@@ -1,0 +1,77 @@
+---
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const { site, locale } = chrome
+// Provenance stamps of the site chrome's fields (`src/lib/stamps.ts`); empty on an ordinary request.
+const s = stampFor(Astro.request, 'site', site)
+// A button into an unticked page goes on its own; its section stays (TCH #1013, `src/lib/link-gate.ts`).
+// A menu link into a page's child (`/services/<slug>`) is not one Apply drops, so the columns go through the gate too.
+const contactUrl = href(locale, '/contact')
+const live = await liveLinks(Astro.request, locale, [
+  contactUrl,
+  ...[...chrome.footerServices, ...chrome.footerCompany, ...chrome.footerLegal].map((i) => i.url)
+])
+const services = chrome.footerServices.filter((i) => live(i.url))
+const company = chrome.footerCompany.filter((i) => live(i.url))
+const legal = chrome.footerLegal.filter((i) => live(i.url))
+// The footer is dark in both themes: it shows the dark-background logo, else the text lockup (decision Q7).
+const logos = brandLogos(await getSiteSettings(), site.logo_dark, site.brand_name)
+/** Whether a social item has somewhere to go: one whose link is empty (K6) is drawn as plain words, never hidden. */
+const linked = (url: unknown) => typeof url === 'string' && url.trim() !== '' && url.trim() !== '#'
+---
+
+<footer class="bg-ink text-on-ink-muted">
+	<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-12 pb-10 pt-16">
+		<div>
+			<div class="mb-[18px] flex items-center gap-3">
+				<BrandLogo spots={logoSpots(logos, "dark")} alt={logos.alt} imgClass="h-9 w-auto max-w-[200px] object-contain">
+					<span class="flex h-9 w-9 items-center justify-center bg-signal text-[17px] font-bold text-[color:var(--ds-c-accent-on,var(--color-white))]" {...s("brand_mark")}>{site.brand_mark}</span>
+					<span class="text-[18px] font-bold tracking-tight text-[color:var(--ds-c-on-ink,var(--color-white))]" {...s("brand_name")}>{site.brand_name}</span>
+				</BrandLogo>
+			</div>
+			<p class="mb-[18px] max-w-[32em] text-[14.5px] leading-[1.7]" {...s("footer_text")}>{site.footer_text}</p>
+			<div class="text-[13.5px] leading-[1.7] text-on-ink-meta" {...s()}>{site.footer_legal_1 && <>{site.footer_legal_1}<br /></>}{site.footer_legal_2}</div>
+		</div>
+		{services.length > 0 && (
+		<div>
+			<div class="column-label mb-4 text-[color:var(--ds-c-on-ink,var(--color-white))]" {...s("footer_services_title")}>{site.footer_services_title}</div>
+			<div class="flex flex-col gap-2.5 text-[14.5px]">{services.map((i) => <a href={i.url} class="text-on-ink-muted">{i.label}</a>)}</div>
+		</div>
+		)}
+		{company.length > 0 && (
+		<div>
+			<div class="column-label mb-4 text-[color:var(--ds-c-on-ink,var(--color-white))]" {...s("footer_company_title")}>{site.footer_company_title}</div>
+			<div class="flex flex-col gap-2.5 text-[14.5px]">{company.map((i) => <a href={i.url} class="text-on-ink-muted">{i.label}</a>)}</div>
+		</div>
+		)}
+		<div>
+			<div class="column-label mb-4 text-[color:var(--ds-c-on-ink,var(--color-white))]" {...s("footer_contact_title")}>{site.footer_contact_title}</div>
+			<div class="flex flex-col gap-2.5 text-[14.5px]">
+				<span {...s("hotline")}>{site.hotline}</span>
+				<span {...s("sales_email")}>{site.sales_email}</span>
+				<span {...s("hours")}>{site.hours}</span>
+				{live(contactUrl) && <a href={contactUrl} class="self-start border-b border-on-ink-line-3 pb-0.5 font-semibold text-[color:var(--ds-c-on-ink,var(--color-white))]" {...s("footer_book_label")}>{site.footer_book_label}</a>}
+				<div class="mt-1.5 flex flex-wrap gap-2" {...s.block("social")}>
+					{/* A social item with no link yet (K6: the demo's buttons stay, their links emptied) is drawn, as plain words. */}
+					{(site.social ?? []).map((one: any) => linked(one.url) ? <a href={one.url} target="_blank" rel="noopener" class="inline-block border border-on-ink-line-2 px-3 py-[7px] text-[13px] font-semibold text-on-ink-soft hover:border-signal" {...s("social.name")}>{one.name}</a> : <span class="inline-block border border-on-ink-line-2 px-3 py-[7px] text-[13px] font-semibold text-on-ink-soft" {...s("social.name")}>{one.name}</span>)}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="border-t border-on-ink-line">
+		<div class="container-site flex flex-wrap justify-between gap-6 py-5 text-[13.5px] text-on-ink-meta">
+			<span {...s("copyright")}>{site.copyright}</span>
+			<div class="flex gap-5">{legal.map((i) => <a href={i.url} class="text-on-ink-meta">{i.label}</a>)}</div>
+		</div>
+	</div>
+</footer>

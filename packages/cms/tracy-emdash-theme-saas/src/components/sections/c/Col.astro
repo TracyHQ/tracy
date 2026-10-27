@@ -1,0 +1,32 @@
+---
+/**
+ * The reading column the pricing/company sections sit in. The source renders these modules inside a
+ * 760px article column (696px of content), not the 1240 site container — measured on /pricing,
+ * /product/faq, /company/about and /company/team.
+ * Inside the page frame's `.k-narrow` wrapper (`narrow`) the 760 cap already exists, so only the side
+ * padding is applied; standalone, the column caps itself.
+ */
+interface Props {
+  narrow?: boolean
+  class?: string
+}
+const { narrow = false, class: className } = Astro.props
+---
+
+<div class:list={['c-col', { 'is-capped': !narrow }, className]}><slot /></div>
+
+<style>
+	.c-col {
+		box-sizing: border-box;
+		padding-inline: 32px;
+	}
+	.c-col.is-capped {
+		max-width: 760px;
+		margin-inline: auto;
+	}
+	@media (max-width: 620px) {
+		.c-col {
+			padding-inline: 20px;
+		}
+	}
+</style>

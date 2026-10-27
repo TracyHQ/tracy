@@ -1,0 +1,313 @@
+{
+  "schemaVersion": "tracy-wordpress-language-packs/v1",
+  "version": "1.0.0",
+  "source": {
+    "api": "https://api.wordpress.org/translations/core/1.0/?version=7.1",
+    "apiVersion": "7.1",
+    "readAt": "2026-09-22",
+    "install": "wp language core install <wpLocale>"
+  },
+  "note": "Which languages Tracy will build a WordPress site in, keyed by the SAME lowercase BCP-47 tag the Joomla catalogue uses (packages/cms/tracy-joomla-quickstart/language-packs.json) so the product offers one list whichever CMS is underneath, and carrying the wpLocale WordPress itself files the translation under. The translation is at the edge that talks to WordPress, not in the product. NOT sha256-pinned, unlike Joomla: Tracy never downloads a WordPress translation. `wp language core install <wpLocale>` makes WordPress fetch it from translate.wordpress.org over its own update channel, so there are no bytes here to pin — pinning a hash would only describe an archive this repo never handles. What IS checked is the KEY SET: every tag here exists in the Joomla catalogue, every tag maps to a wpLocale the WordPress translations API reported for the version named in `source`, and no entry is right-to-left. Admission stays a reviewed commit, the same as Joomla: a runtime lookup could put a locale on a customer site that nobody looked at. RIGHT-TO-LEFT LANGUAGES ARE LEFT OUT, the rule Lee set for Joomla: the themes Tracy ships are laid out left-to-right and an RTL site would be built wrong rather than built in another language. WordPress has ar, fa_IR, he_IL, ur and others; none is admitted, and none appears in the Joomla list either. Some admitted locales carry an older translation package than WordPress 7.1 (af, ms_MY, ta_IN, th are the oldest); WordPress installs what it has and leaves the rest in English, which is a partly translated site, not a failed one.",
+  "locales": {
+    "af-za": {
+      "wpLocale": "af",
+      "englishName": "Afrikaans",
+      "nativeName": "Afrikaans",
+      "rtl": false
+    },
+    "be-by": {
+      "wpLocale": "bel",
+      "englishName": "Belarusian",
+      "nativeName": "Беларуская мова",
+      "rtl": false
+    },
+    "bg-bg": {
+      "wpLocale": "bg_BG",
+      "englishName": "Bulgarian",
+      "nativeName": "Български",
+      "rtl": false
+    },
+    "ca-es": {
+      "wpLocale": "ca",
+      "englishName": "Catalan",
+      "nativeName": "Català",
+      "rtl": false
+    },
+    "cs-cz": {
+      "wpLocale": "cs_CZ",
+      "englishName": "Czech",
+      "nativeName": "Čeština",
+      "rtl": false
+    },
+    "cy-gb": {
+      "wpLocale": "cy",
+      "englishName": "Welsh",
+      "nativeName": "Cymraeg",
+      "rtl": false
+    },
+    "da-dk": {
+      "wpLocale": "da_DK",
+      "englishName": "Danish",
+      "nativeName": "Dansk",
+      "rtl": false
+    },
+    "de-at": {
+      "wpLocale": "de_AT",
+      "englishName": "German (Austria)",
+      "nativeName": "Deutsch (Österreich)",
+      "rtl": false
+    },
+    "de-ch": {
+      "wpLocale": "de_CH",
+      "englishName": "German (Switzerland)",
+      "nativeName": "Deutsch (Schweiz)",
+      "rtl": false
+    },
+    "de-de": {
+      "wpLocale": "de_DE",
+      "englishName": "German",
+      "nativeName": "Deutsch",
+      "rtl": false
+    },
+    "el-gr": {
+      "wpLocale": "el",
+      "englishName": "Greek",
+      "nativeName": "Ελληνικά",
+      "rtl": false
+    },
+    "en-au": {
+      "wpLocale": "en_AU",
+      "englishName": "English (Australia)",
+      "nativeName": "English (Australia)",
+      "rtl": false
+    },
+    "en-ca": {
+      "wpLocale": "en_CA",
+      "englishName": "English (Canada)",
+      "nativeName": "English (Canada)",
+      "rtl": false
+    },
+    "en-gb": {
+      "wpLocale": "en_GB",
+      "englishName": "English (UK)",
+      "nativeName": "English (UK)",
+      "rtl": false
+    },
+    "en-nz": {
+      "wpLocale": "en_NZ",
+      "englishName": "English (New Zealand)",
+      "nativeName": "English (New Zealand)",
+      "rtl": false
+    },
+    "en-us": {
+      "wpLocale": "en_US",
+      "englishName": "English (United States)",
+      "nativeName": "English (United States)",
+      "rtl": false
+    },
+    "es-es": {
+      "wpLocale": "es_ES",
+      "englishName": "Spanish (Spain)",
+      "nativeName": "Español",
+      "rtl": false
+    },
+    "et-ee": {
+      "wpLocale": "et",
+      "englishName": "Estonian",
+      "nativeName": "Eesti",
+      "rtl": false
+    },
+    "fi-fi": {
+      "wpLocale": "fi",
+      "englishName": "Finnish",
+      "nativeName": "Suomi",
+      "rtl": false
+    },
+    "fr-ca": {
+      "wpLocale": "fr_CA",
+      "englishName": "French (Canada)",
+      "nativeName": "Français du Canada",
+      "rtl": false
+    },
+    "fr-fr": {
+      "wpLocale": "fr_FR",
+      "englishName": "French (France)",
+      "nativeName": "Français",
+      "rtl": false
+    },
+    "hr-hr": {
+      "wpLocale": "hr",
+      "englishName": "Croatian",
+      "nativeName": "Hrvatski",
+      "rtl": false
+    },
+    "hu-hu": {
+      "wpLocale": "hu_HU",
+      "englishName": "Hungarian",
+      "nativeName": "Magyar",
+      "rtl": false
+    },
+    "it-it": {
+      "wpLocale": "it_IT",
+      "englishName": "Italian",
+      "nativeName": "Italiano",
+      "rtl": false
+    },
+    "ja-jp": {
+      "wpLocale": "ja",
+      "englishName": "Japanese",
+      "nativeName": "日本語",
+      "rtl": false
+    },
+    "ka-ge": {
+      "wpLocale": "ka_GE",
+      "englishName": "Georgian",
+      "nativeName": "ქართული",
+      "rtl": false
+    },
+    "lo-la": {
+      "wpLocale": "lo",
+      "englishName": "Lao",
+      "nativeName": "ພາສາລາວ",
+      "rtl": false
+    },
+    "lt-lt": {
+      "wpLocale": "lt_LT",
+      "englishName": "Lithuanian",
+      "nativeName": "Lietuvių kalba",
+      "rtl": false
+    },
+    "lv-lv": {
+      "wpLocale": "lv",
+      "englishName": "Latvian",
+      "nativeName": "Latviešu valoda",
+      "rtl": false
+    },
+    "ms-my": {
+      "wpLocale": "ms_MY",
+      "englishName": "Malay",
+      "nativeName": "Bahasa Melayu",
+      "rtl": false
+    },
+    "nb-no": {
+      "wpLocale": "nb_NO",
+      "englishName": "Norwegian (Bokmål)",
+      "nativeName": "Norsk bokmål",
+      "rtl": false
+    },
+    "nl-be": {
+      "wpLocale": "nl_BE",
+      "englishName": "Dutch (Belgium)",
+      "nativeName": "Nederlands (België)",
+      "rtl": false
+    },
+    "nl-nl": {
+      "wpLocale": "nl_NL",
+      "englishName": "Dutch",
+      "nativeName": "Nederlands",
+      "rtl": false
+    },
+    "pl-pl": {
+      "wpLocale": "pl_PL",
+      "englishName": "Polish",
+      "nativeName": "Polski",
+      "rtl": false
+    },
+    "pt-br": {
+      "wpLocale": "pt_BR",
+      "englishName": "Portuguese (Brazil)",
+      "nativeName": "Português do Brasil",
+      "rtl": false
+    },
+    "pt-pt": {
+      "wpLocale": "pt_PT",
+      "englishName": "Portuguese (Portugal)",
+      "nativeName": "Português",
+      "rtl": false
+    },
+    "ro-ro": {
+      "wpLocale": "ro_RO",
+      "englishName": "Romanian",
+      "nativeName": "Română",
+      "rtl": false
+    },
+    "ru-ru": {
+      "wpLocale": "ru_RU",
+      "englishName": "Russian",
+      "nativeName": "Русский",
+      "rtl": false
+    },
+    "sk-sk": {
+      "wpLocale": "sk_SK",
+      "englishName": "Slovak",
+      "nativeName": "Slovenčina",
+      "rtl": false
+    },
+    "sl-si": {
+      "wpLocale": "sl_SI",
+      "englishName": "Slovenian",
+      "nativeName": "Slovenščina",
+      "rtl": false
+    },
+    "sr-rs": {
+      "wpLocale": "sr_RS",
+      "englishName": "Serbian",
+      "nativeName": "Српски језик",
+      "rtl": false
+    },
+    "sv-se": {
+      "wpLocale": "sv_SE",
+      "englishName": "Swedish",
+      "nativeName": "Svenska",
+      "rtl": false
+    },
+    "ta-in": {
+      "wpLocale": "ta_IN",
+      "englishName": "Tamil",
+      "nativeName": "தமிழ்",
+      "rtl": false
+    },
+    "th-th": {
+      "wpLocale": "th",
+      "englishName": "Thai",
+      "nativeName": "ไทย",
+      "rtl": false
+    },
+    "tr-tr": {
+      "wpLocale": "tr_TR",
+      "englishName": "Turkish",
+      "nativeName": "Türkçe",
+      "rtl": false
+    },
+    "uk-ua": {
+      "wpLocale": "uk",
+      "englishName": "Ukrainian",
+      "nativeName": "Українська",
+      "rtl": false
+    },
+    "vi-vn": {
+      "wpLocale": "vi",
+      "englishName": "Vietnamese",
+      "nativeName": "Tiếng Việt",
+      "rtl": false
+    },
+    "zh-cn": {
+      "wpLocale": "zh_CN",
+      "englishName": "Chinese (China)",
+      "nativeName": "简体中文",
+      "rtl": false
+    },
+    "zh-tw": {
+      "wpLocale": "zh_TW",
+      "englishName": "Chinese (Taiwan)",
+      "nativeName": "繁體中文",
+      "rtl": false
+    }
+  },
+  "unsupported": {
+    "de-li": "WordPress publishes no Liechtenstein German translation; only de_DE, de_AT and de_CH exist.",
+    "de-lu": "WordPress publishes no Luxembourg German translation; only de_DE, de_AT and de_CH exist.",
+    "ga-ie": "WordPress core has no Irish translation (gd is Scottish Gaelic, a different language).",
+    "sr-yu": "A legacy Serbia-and-Montenegro tag. WordPress files Serbian under sr_RS only, which this catalogue already admits as sr-rs."
+  }
+}

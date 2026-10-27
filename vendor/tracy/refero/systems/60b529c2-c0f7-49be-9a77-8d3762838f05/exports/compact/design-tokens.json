@@ -1,0 +1,79 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Ink — Primary text, icons, card borders, structural lines — the default foreground across all body and heading content"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, button text, inverted foregrounds"
+    },
+    "whisper": {
+      "$value": "#e6e6e6",
+      "$type": "color",
+      "$description": "Whisper — Hairline borders, dividers, subtle separators, card outlines"
+    },
+    "carbon": {
+      "$value": "#202020",
+      "$type": "color",
+      "$description": "Carbon — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "slate": {
+      "$value": "#3b3b3b",
+      "$type": "color",
+      "$description": "Slate — Secondary dark surfaces, icon strokes, muted dark text on light surfaces"
+    },
+    "graphite": {
+      "$value": "#555555",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text, secondary button borders, subdued labels"
+    },
+    "ash": {
+      "$value": "#838383",
+      "$type": "color",
+      "$description": "Ash — Body secondary text, helper copy, placeholder text"
+    },
+    "fog": {
+      "$value": "#bdbdbd",
+      "$type": "color",
+      "$description": "Fog — Disabled controls, very light icon strokes, decorative dot motifs"
+    },
+    "mist": {
+      "$value": "#c7c7c7",
+      "$type": "color",
+      "$description": "Mist — Inverted muted foreground — light text on Carbon-filled buttons and dark cards (replaces Paper when on dark surfaces)"
+    },
+    "indigo-pulse": {
+      "$value": "#4177ff",
+      "$type": "color",
+      "$description": "Indigo Pulse — Saturated category badge fill — the sole chromatic accent on chrome elements, used sparingly to tag template categories"
+    },
+    "sky-pulse": {
+      "$value": "#41a9ff",
+      "$type": "color",
+      "$description": "Sky Pulse — Secondary category badge fill — lighter blue companion to Indigo Pulse for alternating category tags"
+    }
+  },
+  "font": {
+    "pp-neue-montreal": {
+      "$value": "PP Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "The sole typeface across the entire product — body copy at 14px/1.43, UI labels at 12–13px, subheadings at 16–18px, and a single display step at 38px. Weights 400 for body, 500 for navigation/tabs, 600 for the hero headline and button text. The 0.020em positive tracking is signature: it opens the geometric forms slightly so small sizes (10–12px) stay legible without feeling mechanical."
+    },
+    "proxima-nova": {
+      "$value": "proxima-nova",
+      "$type": "fontFamily",
+      "$description": "proxima-nova — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://jp.works",
+      "siteName": "Jp",
+      "extractedAt": "2026-06-03T19:03:13.094Z",
+      "variant": "compact"
+    }
+  }
+}

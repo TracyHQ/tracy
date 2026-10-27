@@ -1,0 +1,89 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, navigation surface, product-canvas interiors, and reversed text on dark feature panels"
+    },
+    "blush-paper": {
+      "$value": "#f7eef1",
+      "$type": "color",
+      "$description": "Blush Paper — Pale tinted card surface and soft alternate content band"
+    },
+    "control-gray": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Control Gray — Neutral utility-control backgrounds"
+    },
+    "mint-wash": {
+      "$value": "#e9f3eb",
+      "$type": "color",
+      "$description": "Mint Wash — Soft green-tinted list and skip-link surface"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Black utility text, compact headings, and neutral controls"
+    },
+    "cherry-ink": {
+      "$value": "#42242e",
+      "$type": "color",
+      "$description": "Cherry Ink — Deep plum feature-panel surface, large editorial headings, borders, and orange-on-cherry controls"
+    },
+    "workshop-green": {
+      "$value": "#1e3219",
+      "$type": "color",
+      "$description": "Workshop Green — Default editorial text, navigation text, logo mark, and linework over the white canvas"
+    },
+    "acid-glyph": {
+      "$value": "#9aff00",
+      "$type": "color",
+      "$description": "Acid Glyph — Purchase and conversion surfaces, highlighted end-cap sections, and active outlined-action borders — the fluorescent green punctuates otherwise paper-and-ink layouts"
+    },
+    "signal-orange": {
+      "$value": "#f66a06",
+      "$type": "color",
+      "$description": "Signal Orange — Secondary feature panels, tutorial links, oversized decorative glyphs, and circular action controls against Cherry Ink"
+    },
+    "mustard-proof": {
+      "$value": "#f2ad0d",
+      "$type": "color",
+      "$description": "Mustard Proof — Warm feature-card surface and colored editorial emphasis"
+    },
+    "cyan-blueprint": {
+      "$value": "#1ad1e6",
+      "$type": "color",
+      "$description": "Cyan Blueprint — Feature-card surface, product-canvas outlines, and vector-tool overlays; its technical blue makes the editor imagery read as live workspace material"
+    },
+    "ochre-ink": {
+      "$value": "#604900",
+      "$type": "color",
+      "$description": "Ochre Ink — Text and small labels on lime and cyan feature surfaces"
+    },
+    "burnt-ink": {
+      "$value": "#4d2f1a",
+      "$type": "color",
+      "$description": "Burnt Ink — Text and borders on mustard feature surfaces"
+    },
+    "blueprint-ink": {
+      "$value": "#243f42",
+      "$type": "color",
+      "$description": "Blueprint Ink — Dark technical text within cyan-oriented editor and list content"
+    }
+  },
+  "font": {
+    "symbol-helper": {
+      "$value": "Symbol Helper",
+      "$type": "fontFamily",
+      "$description": "Single-family system for every text role: 14px navigation, 18px links and supporting copy, 20px interface labels, 24px card kickers, 34px introductions, 50px testimonial statements and arrows, 80px display headlines, and 480px decorative glyph-scale type. Keeping all weights at 400 makes scale and the font's sharply calligraphic serif shapes do the hierarchy work rather than boldness."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://glyphsapp.com",
+      "siteName": "Glyphs",
+      "extractedAt": "2026-09-24T17:36:38.472Z",
+      "variant": "compact"
+    }
+  }
+}

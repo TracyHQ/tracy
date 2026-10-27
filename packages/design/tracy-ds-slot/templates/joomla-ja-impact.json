@@ -1,0 +1,456 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "modes": true,
+  "modesAuto": false,
+  "modesNote": "17/10/2026 (batch 2, MODE-3, manager decision 02:41): JA Impact has a light/dark switch (the header toggle, js/darkmode.js; css/darkmode.css paints html[data-theme=dark] / html.t4-dark) whose dark side reads the roles too (--dm-* read --ds-c-*), so the Add site popup offers Light | Dark and the switch stays shown; the pre-paint script in index.php always sets data-theme (light or dark, from the stored choice, the template default or the OS) before the page paints, so no unmarked auto state is left: the OS-dark copy is not written (as JA Trip, Vega, Vogue)",
+  "template": "joomla/ja-impact",
+  "minVersion": {
+    "quickstart/ja-impact/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-impact/j6": "1.0.5"
+  },
+  "maxVersionNote": "1.0.5 21/10/2026 (TEXT-1 batch 1): built from 1.0.4 (release-batch.mjs --overlay); only css/template.css and scss/_ds-bootstrap-roles.scss (headings inside a status fill read the text role the fill re-points) differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.4 17/10/2026 (batch 2): the template reads the design-system role variables (VARS-1), unchanged without a system (VERIFICATION.json). 1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-impact/j6@1.0.1",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.hero-title.mt-0",
+    "heading": "h2.mt-0.cta-highlight",
+    "body": "p.mb-0",
+    "button-primary": "div.acm-action a.btn.btn-success",
+    "container": "div.acm-hero-item.item div.container",
+    "section": "#Mod135",
+    "input": "input.cell"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 72px",
+    "displayFace": "Readex Pro 500, tracking -0.02em",
+    "heading": "first section heading: 40px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(12, 183, 109)",
+    "container": "first content container, max-width 1376px",
+    "section": "first padded full-width section, padding-top 128px",
+    "input": "first text field"
+  },
+  "keepScopes": [".donation-layout", ".item-textwhite"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#495057",
+    "--fg-2": "#1d3677",
+    "--accent": "#1d3677",
+    "--accent-hover": "#0cb76d",
+    "--surface": "#fff9ef",
+    "--surface-warm": "#1d3677",
+    "--meta": "#ced4da",
+    "--success": "#0cb76d",
+    "--warn": "#f48a29",
+    "--danger": "#dc3545",
+    "--border": "#dddddd",
+    "--muted": "#666666",
+    "--font-display": "\"Readex Pro\", sans-serif",
+    "--font-body": "\"Readex Pro\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#495057",
+      "fg-2": "#212529",
+      "accent": "#1d3677",
+      "accent-hover": "#0cb76d",
+      "surface": "#fff9ef",
+      "surface-warm": "#1d3677",
+      "meta": "#ced4da",
+      "success": "#0cb76d",
+      "warn": "#f48a29",
+      "danger": "#dc3545",
+      "border": "#dddddd",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#fff9ef",
+      "fg": "#dee2e6",
+      "fg-2": "#1d3677",
+      "accent": "#0cb76d",
+      "accent-on": "#ffffff",
+      "surface-warm": "#1d3677"
+    },
+    {
+      "accent": "#f48a29"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "bg": "#ffffff",
+      "border": "#dee2e6",
+      "fg": "#495057"
+    },
+    {
+      "bg": "#f8f9fa"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (60 line colours, 61 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-title.mt-0",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn:not(.header-action .btn)", "a.btn.btn-success:not(.header-action .btn)"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-success"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["#Mod135"],
+    "bodyFace": ["body"],
+    "cardLike": [".wrap-content", ".item-detail", ".item-wrap", ".sub-feature"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(.badge):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "div.item-content > p.item-description, div.cta-content > div.cta-desc, main p",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "omit": ["--ds-c-surface-hover"],
+  "omitNote": "20/10/2026: the two-mode module sat 17 bytes under MODULE_MAX_BYTES under its largest system (refero 002cc5a7 and others); JA Impact's stylesheets do not read the optional neutral hover role, so the module leaves it out. Remove this once a release reads var(--ds-c-surface-hover).",
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 21 tried (byte 6462); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 144,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#ffffff",
+      "distance": 0
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 7,
+      "kind": "custom",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 10
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#ffffff",
+      "distance": 10
+    },
+    {
+      "hex": "#495057",
+      "uses": 4,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#495057",
+      "distance": 0
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#495057",
+    "--body-link-color": "#1d3677",
+    "--body-link-hover-color": "#0cb76d",
+    "--color-primary": "#1d3677",
+    "--color-secondary": "#6c757d",
+    "--color-success": "#0cb76d",
+    "--color-info": "#2970db",
+    "--color-warning": "#f48a29",
+    "--color-danger": "#dc3545",
+    "--color-light": "#fff9ef",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#1d3677",
+    "--mainnav-link-color": "#1d3677",
+    "--mainnav-link-hover-color": "#0cb76d",
+    "--mainnav-link-active-color": "#0cb76d",
+    "--footer-bg-color": "#1d3677",
+    "--footer-text-color": "#ced4da",
+    "--footer-link-color": "#ced4da",
+    "--footer-link-hover-color": "#0cb76d",
+    "--t4-blue": "#0d6efd",
+    "--t4-red": "#dc3545",
+    "--t4-yellow": "#ffc107",
+    "--t4-green": "#198754",
+    "--t4-gray": "#6c757d",
+    "--t4-gray-dark": "#343a40",
+    "--t4-gray-400": "#ced4da",
+    "--t4-gray-500": "#adb5bd",
+    "--t4-gray-600": "#6c757d",
+    "--t4-gray-700": "#495057",
+    "--t4-gray-800": "#343a40",
+    "--t4-primary": "#0d6efd",
+    "--t4-secondary": "#6c757d",
+    "--t4-success": "#198754",
+    "--t4-warning": "#ffc107",
+    "--t4-danger": "#dc3545",
+    "--t4-light": "#f8f9fa",
+    "--t4-light-text-emphasis": "#495057",
+    "--t4-dark-text-emphasis": "#495057",
+    "--t4-light-border-subtle": "#e9ecef",
+    "--t4-body-bg": "#fff",
+    "--t4-secondary-bg": "#e9ecef",
+    "--t4-tertiary-bg": "#f8f9fa",
+    "--t4-link-color": "#0d6efd",
+    "--t4-link-hover-color": "#0a58ca",
+    "--t4-border-color": "#e9ecef",
+    "--t4-form-valid-color": "#198754",
+    "--t4-form-valid-border-color": "#198754",
+    "--t4-form-invalid-color": "#dc3545",
+    "--t4-form-invalid-border-color": "#dc3545",
+    "--t4-bg-item": "#fbfbfb",
+    "--headings-color": "#1d3677"
+  },
+  "ready": true,
+  "readyNote": "re-verified 12/10/2026 with the unified probe (flow.mjs) on the published 1.0.1 (tasks/evidence/ds-reverify-b-2026-10-12/ja-impact-j6): first 8/12, the four phone misses being two owl-carousel dots inside the kept .donation-layout band that swapped active state between captures (both colours the template's own; carousel timing, not the system), controls 0, no text under 4.5:1, 54-98% follows; the eye saw the hero intro turn dark on the hero photo under MotherDuck and Apple: it takes the system's light ground under a light system (sideRules.light, sideNote); measured again 12/12, controls 0, kept 0, and the hero read by eye under all four systems (…/fix); earlier: re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on a stand built from the published 1.0.1, T4 sheets regenerated (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-impact-j6): first 4/12 (story-card titles and intros over their photos 1.16-3.69:1, green event card intro 1.02:1 under Toggl Track, near-white blog cards with Moxie's light accent 2.19:1, header-top kept band 17 elements); fixed module-side only, no new release: story and event cards kept (keepScopes .donation-layout, .item-textwhite, keepText, --headings-color given back), blog cards and white buttons and figure tiles take the surface under a dark system (sideRules), headings and white-button text take the readable accent; then 12/12, controls 0, kept 0, follows 54-98%, no text worse than the template's own; eye check on Moxie, MotherDuck, Toggl Track, Apple desktop + phone passed; earlier: measured 11/10/2026 on ja-impact/j6@1.0.1 as released (its stylesheets already read the slot, 09/10) (tasks/evidence/ds-contracts-batch1-2026-10-11/ja-impact-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: accent-text, muted, body, footer), 66% or more of the page follows; no new release; module-side only: kept bands get the --t4-* colours its tokenized :root declares back (keepDefaults), the cards' --t4-bg-item (#FBFBFB) takes the system surface (templateVars); tag badges keep the template's warn colour (2.35:1 on its cream, 2.27:1 on Apple's #f5f5f7)",
+  "contrastNote": "tag badges (a.badge.badge-info) are text in the template warn colour, not accent links: left out of accent-text. They stay the template own #f48a29 under every system (no system states a warn colour): 2.35:1 on its cream section, 2.27:1 where Apple paints that section #f5f5f7 (11/10/2026)",
+  "keepDefaultsNote": "the --t4-* colours its tokenized :root declares (Bootstrap 5 inside T4) resolve at :root, so a kept band inherited the worn value (JA Impact header-top: the contact subtitle in the system meta on navy, 2.11:1); each is given back inside kept bands at the value the released page computes",
+  "templateVars": {
+    "--t4-bg-item": "var(--ds-c-surface)",
+    "--headings-color": "var(--ds-c-accent-text)"
+  },
+  "templateNote": "its call-to-action and item cards paint --t4-bg-item, a literal #FBFBFB no palette holds (its text follows the system): under a system the card takes the system surface, so the pair stays readable; inside kept bands it is given back (keepDefaults); its headings read --headings-color, declared on :root as var(--color-primary), which the T4 family points at the accent: under MotherDuck the feature cards' titles took #6fc2ff on white (about 1.9:1, seen by eye, h4 is not a sampled kind), so headings take the readable accent; inside kept bands --headings-color is given back as #1d3677 (keepDefaults)",
+  "keepText": [".donation-layout", ".item-textwhite"],
+  "keepScopesNote": "the story cards (.donation-layout) and the event cards (.item-textwhite) print white words over the template's own photographs: kept as pictures. The header top, contact, footer nav and footer bands follow the system through the auto palette (14/10/2026: they were kept only to reach ROLE-1). 15/10/2026 (v9 and v10 final measures, 4/34 home and 4/8 About, after 34/34 and 6/8 in v8): taking the four bands out of keepScopes left their `bands` entries unread, since a band is worn only when it is a keepScopes band or a fill (bands.mjs wornBands), so they are removed; the paletteKeep added the same morning for .header-top, .t4-footnav, .t4-footer and .t4-palette-blue took it that the contract wore them, and with the palette kept off nothing of the system's painted them: the top bar went back to the accent through --color-primary under the palette's band words (.acm-contact-info), p.contact-subtitle 1.96:1 under Moxie, 1.32 Mailchimp, 1.23 Linear, 4.19 Notion, and the footer nav kept T4's runtime pair (the system's surface-and-muted turned band, links in --footer-link-color). The paletteKeep is removed: the four bands take the palette's band ground and band words again (v9: no regression in the top bar, contact or footer under the fifteen systems).",
+  "followRules": {
+    "div.t4-megamenu .navbar-nav > li.active > a": {
+      "color": "accent-text"
+    },
+    ".btn.btn-white:not(:hover):not(:active)": {
+      "color": "accent-text"
+    },
+    ".acm-cta.style-1 .cta-content .cta-highlight": {
+      "color": "accent-text"
+    },
+    ".t4-footnav .t4-module .navbar .nav > li a.nav-link": {
+      "color": "on-band"
+    },
+    ".magz-layout.masonry-layout .blog-item .item-content.bg-default .item-meta strong[itemprop=name]": {
+      "color": "accent-text"
+    },
+    ":is(.t4-footer, .t4-footnav) a:not([class*=btn]):is(:hover, :focus)": {
+      "color": "accent-on-ink!"
+    },
+    ":is(a.mod-articles-category-title:not(.btn), a[class*=video-btn]):is(:hover, :focus)": {
+      "color": "fg!"
+    }
+  },
+  "followNote": "the active main-menu item paints the template success green (#0cb76d, 2.62:1 on its own white): it takes the system accent text, on the system page; its white buttons (.btn.btn-white: 'Donate today' on the orange band) write their text in --color-primary, the accent under a system: light blue on white under Moxie, sky on white under MotherDuck (seen by eye): the text takes the readable accent, and under a dark system the button takes the system surface (sideRules; the kept event cards' white buttons excepted); the helpline number (.acm-cta.style-1 .cta-content .cta-highlight) is painted with the template’s own warning orange (var(--color-warning)), the same on every system: 2.5:1 on the light page (visual review 14/10/2026); as the call’s highlight it takes the accent made readable on the page; 15/10/2026: the footer-nav links (.t4-footnav .t4-module .navbar .nav > li a.nav-link) are the one band word the palette cannot reach (its rule has a child combinator, which autoPaletteCss refuses), so they kept T4's --footer-link-color, the system's muted, on the palette's band: #858273 on #41403b 2.69:1 under Moxie, #6c6c6c on #000 4.0 Notion, 1.42 Pitch, 1.33 Apple, 16 links under every one of the fifteen systems: they take the band's words (on-band), the colour the palette gives every other word on that band; the authors' names on the blog cards (.item-content.bg-default strong[itemprop=name]) are the template's success green #0cb76d, 2.53:1 on the card's own #fbfbfb: the palette now grounds the card with the system's page (Eddie's #f7f4f2, 2.39:1; Notion, MotherDuck, Pitch and Apple too): they take the success colour's readable shade (success-text, 4.5:1 or more on the page and the surface under all 1334 systems); 21/10/2026 (HOVER-2, TEXT-1 batch 1): states that looked exactly like rest on the worn page while the template's own changed (hover-same, partial 1.0.5 measurement): the footer links kept the band's words on hover (the palette mapped the template's footer hover to on-band, rest and hover alike), they take the accent readable on the ink (accent-on-ink); the event and category titles (a.mod-articles-category-title) and the video play link turned navy to green in the template and stayed the accent under a system: on hover and focus they take the page's text colour (fg), a role apart from their accent rest",
+  "sideRules": {
+    "dark": {
+      ".btn:is(.btn-white, .btn-arrow-right):is(:hover, :focus):not(.item-textwhite *, .donation-layout *)": {
+        "color": "var(--ds-c-bg)!important",
+        "background-color": "var(--color-dark)!important",
+        "border-color": "var(--color-dark)!important"
+      },
+      ":is(.item-content.bg-success a, .item-textwhite a:not(.btn), .donation-layout .badge, a.mod-articles-category-title, a[class*=video-btn], .t4-footer a, .t4-footnav a, .item-content :is(h2, h4) a, .alert-link):is(:hover, :focus), :is(.card-action, .contact-inner a):is(:hover, :focus) :is(.title, .contact-title)": {
+        "text-decoration-line": "underline!important"
+      },
+      ".magz-layout.masonry-layout .blog-item .item-content.bg-default": {
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".btn.btn-white:not(:hover):not(:active):not(.item-textwhite *)": {
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".acm-features .item-detail.bg-white": {
+        "background-color": "var(--ds-c-surface)!important"
+      },
+      ".acm-features.style-6": {
+        "background-color": "var(--ds-c-accent)",
+        "background-blend-mode": "luminosity"
+      },
+      "#t4-masthead#t4-masthead a:not([class*=btn])": {
+        "color": "#ffffff !important"
+      },
+      ".logo-img": {
+        "filter": "none"
+      },
+      "#t4-section-4 .bg-overlay-image": {
+        "filter": "brightness(0.25)"
+      }
+    },
+    "light": {
+      ".btn:is(.btn-white, .btn-arrow-right):is(:hover, :focus):not(.item-textwhite *, .donation-layout *)": {
+        "color": "var(--ds-c-bg)!important",
+        "background-color": "var(--color-dark)!important",
+        "border-color": "var(--color-dark)!important"
+      },
+      ":is(.item-content.bg-success a, .item-textwhite a:not(.btn), .donation-layout .badge, a.mod-articles-category-title, a[class*=video-btn], .t4-footer a, .t4-footnav a, .item-content :is(h2, h4) a, .alert-link):is(:hover, :focus), :is(.card-action, .contact-inner a):is(:hover, :focus) :is(.title, .contact-title)": {
+        "text-decoration-line": "underline!important"
+      },
+      ".acm-hero.style-1 .description": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".acm-features.style-6": {
+        "background-color": "var(--ds-c-accent)",
+        "background-blend-mode": "luminosity"
+      },
+      "#t4-masthead#t4-masthead a:not([class*=btn])": {
+        "color": "#ffffff !important"
+      },
+      ".acm-hero.style-1 :is(.hero-title, .sub-title)": {
+        "color": "var(--ds-c-bg) !important"
+      }
+    }
+  },
+  "sideNote": "the blog cards paint a literal #FBFBFB the tokenizer did not read (.magz-layout.masonry-layout .blog-item .item-content): under a dark system their titles took the light accent on that near-white (Moxie #84acfb on #fbfbfb, 2.19:1), so under a dark system the card takes the system surface; under a light one it stays the template's #FBFBFB, where the template's own green author names keep their released 2.62:1 (on Apple's #f5f5f7 they fell to 2.41); the figure tiles on the navy band (.acm-features .item-detail.bg-white, Bootstrap's .bg-white !important) stay white while their figures and captions follow a dark system's light text (cream captions on white under Moxie, seen by eye on desktop and phone): under a dark system the tile takes the system surface; under a light system the hero intro (.acm-hero.style-1 .description, the release's #DEE2E6 tokenized as the page text) turned the system's dark text on the hero photo's dark overlay (MotherDuck, Apple: unreadable by eye, 12/10/2026; the probe reads text on a picture by eye only): it takes the system's light ground colour instead (sideRules.light); the \"Raise fund\" panel (.acm-features.style-6) is a navy picture (dt-bg.jpg, a scratched flat navy) under white words, around boxes that wear the accent: it stayed the template navy (visual review 14/10/2026). Over the system’s accent with background-blend-mode: luminosity it keeps the picture’s dark (its words read as released) and takes the accent’s hue; 15/10/2026 (final measure, /about): the title band is a photo (picture band); its breadcrumb link took the dark side's cream (#f4efd4) on the photo's gold, 3.03:1, where the template's white reads better: the band's links keep the template's white on its own photo; 17/10/2026 (batch 2): under a light system the hero kicker and title (.acm-hero.style-1 .sub-title, .hero-title) took the accent on the dark hero photo (Figma #4d49fc, unreadable by eye): like the intro they take the system's light ground colour; under a dark system the \"What we do\" band's photograph (a white sky over giraffes, #t4-section-4 .bg-overlay-image) stood as a white block on the dark page with the light accent title on its sky (about 2:1, seen by eye): the photograph is dimmed (brightness 0.25), so the band sits in the dark page and its title reads | 21/10/2026 (HOVER-2, TEXT-1 batch 1): the white buttons and the events' arrow buttons (.btn.btn-white, .btn.btn-arrow-right) turn navy with white words on hover in the template; worn, T4's --t4-btn-hover-bg stayed white (var(--ds-c-bg)) so the state looked like rest: on hover and focus they invert to the system's text colour with the page colour as words (bg words on --color-dark, the page text the :root sets: the 1.0.5 release re-points fg to bg inside the orange fill (.bg-warning), so an fg fill read bg on bg there, 'Donate today' 1:1 on hover under Moxie and 5fd3 light, HOVER-1, probe and stand 21/10/2026; --color-dark is resolved where the :root declares it, so the fill does not reach it), which reads on the page and on the orange band alike (18.1:1 and 21:1); the kept event cards keep the template's own state. Words on accent-filled bands (.item-content.bg-success, .item-wrap.item-textwhite) and the accordion headers (.card-action, accent fill under a system) keep the band's readable words at rest and on hover, so their state is an underline instead of a colour 21/10/2026 (review): the story band's badges, the category titles and video buttons, the blog titles (.item-content h2/h4 a), the alert links and the footer links hover with an underline, and the accordion headers and the contact email underline the child that holds their words (.title, .contact-title: text-decoration does not pass down to it): their rest and hover roles are one colour under some systems (the band's accent and words under 957, accent-text and fg, on-ink and accent-on-ink); the band's badge hover paint is dropped for the bytes (63992 of 64000 under the longest system).",
+  "bands": {
+    ".donation-layout": {
+      "ground": "#fff9ef",
+      "texts": ["#ffffff", "#dee2e6"],
+      "root": false,
+      "paint": {
+        ".badge": {
+          "color": "accent"
+        },
+        ".progress-bar": {
+          "background-color": "accent-fill"
+        },
+        ".t4-section": {
+          "background-color": "ground"
+        },
+        ".blog-item .progress": {
+          "background-color": "text-2"
+        },
+        ".blog-item .meta-top .item-cat, .blog-item .raise, .blog-item .raise *, .blog-item .goal, .blog-item .goal *, .blog-item .current-percent": {
+          "color": "text"
+        },
+        ".pagination .page-link": {
+          "color": "text",
+          "background-color": "card",
+          "border-color": "card"
+        },
+        ".col-xxl-4": {
+          "border-right-color": "card"
+        }
+      },
+      "important": true
+    },
+    ".item-textwhite": {
+      "ground": "#fbfbfb",
+      "texts": ["#ffffff", "#dee2e6"],
+      "picture": true,
+      "paint": {
+        ".feature-date": {
+          "color": "accent"
+        },
+        ".feature-month": {
+          "color": "accent"
+        },
+        ".bg-default": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".sub-feature": {
+      "ground": "#2e4c99",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [":is(.sub-content h4, .sub-content p)"]
+    },
+    ".block-inner": {
+      "ground": "#f48a29",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".item-description"],
+      "repaint": true
+    },
+    ".item-wrap.bg-success.item-textwhite": {
+      "ground": "#0cb76d",
+      "texts": ["#ffffff", "#dee2e6"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [
+        ":is(.item-intro, .item-intro p, .event-location, .event-title a, .item-readmore, .item-readmore a)"
+      ]
+    },
+    ".item-wrap.bg-primary.item-textwhite": {
+      "ground": "#1d3677",
+      "texts": ["#ffffff", "#dee2e6"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [
+        ":is(.item-intro, .item-intro p, .event-location, .event-title a, .item-readmore, .item-readmore a)"
+      ]
+    },
+    ".item-content.bg-success": {
+      "ground": "#0cb76d",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [":is(.item-meta, .item-meta a, .item-meta strong, .item-meta span, .item-title a)"]
+    },
+    ".t4-section.t4-masthead.t4-palette-blue": {
+      "ground": "#1d3677",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [":is(.ja-masthead-title, .pathway span, .mod-breadcrumbs__item a span)"],
+      "picture": true
+    },
+    ".ft-item-detail.bg-info": {
+      "ground": "#2970db",
+      "texts": ["#ffffff", "#e9ecef"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [":is(.item-title, .item-des)"]
+    },
+    ".ft-item-detail.bg-primary": {
+      "ground": "#1d3677",
+      "texts": ["#ffffff", "#e9ecef"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [":is(.item-title, .item-des)"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent; the \"Since 1980\" block (.block-inner, the template’s orange fill) kept its white words, which only asked of the system’s ground what the template’s own orange gave them (2.6:1): white on Toggl Track’s pink at 2.6 (visual review 14/10/2026); its words (.item-description) are now the fill’s, the colour that reads on the ground it wears. The inner About page’s blocks kept by the 14/10 draft: the page-title band (.t4-masthead.t4-palette-blue) and the two coloured cards (.ft-item-detail.bg-info / .bg-primary), whose white words sat on a light accent; 15/10/2026: the green blog card (.item-content.bg-success) kept its white words (2.62:1 on its own green, under 3:1, so the fill did not repaint them and chose its ground for white) while the palette repainted them with the system's muted through the template's `.item-content:not(.bg-default) .item-meta …` rule: #6c6c6c on Notion's #0075de 1.15:1, Stripe 1.02, Toggl Track 1.25, Figma 1.23, MotherDuck 2.17: the fill names its words (words) and repaints them with the words that read on its ground (4.50:1 or more under all 1334 systems); the inner page-title band (.t4-masthead.t4-palette-blue) is the About page's photograph under a 30% veil (.t4-masthead-inner), not the navy the draft read: its words took the accent's own text over the photo, black under Moxie (1.95:1 on a phone, 3.22 on a desktop, already in v8): it is a picture band (picture), its ground kept, its words the system's light side (wordsOn the navy); 17/10/2026 (batch 2): the navy event card (.item-wrap.bg-primary.item-textwhite, the kept event band with the template primary as its fill) is drawn as the green one: a fill whose words (intro, place, title, Join our event) are repainted with the words that read on the ground it wears (its white Join our event read 1.2-4.3:1 on light accents under Linear, Spotify, Moxie and the derived dark sides) | 21/10/2026 (HOVER-2): the donation band's category badge (.badge, accent words at rest) takes the band's text colour on hover and focus, as the template's turns white",
+  "contractNotes1317": "13/10/2026 (#1317): the four navy bands (header top, contact, footnav, footer) kept their white and grey words (#ced4da, #dee2e6, #adb5bd: over 500 left paints) while their ground followed, so the page followed 53% under Moxie; they repaint their words with the system text. The donation cards keep their words (white on their own dark cards inside the cream layout); their progress tracks take the layout ground; the event date badge takes the accent fill. Round 4 (14/10): the donation cards' words sit on their dark card pictures, over the page ground the measure reads (not an ancestor of the photo), so under Moxie 200 of their white and #dee2e6 words counted as left while the section turned; the cards are read as an overlay, so their category, figures and percent repaint with the system's light words for a dark picture, while the titles and intro keep the template's white and #dee2e6 (on the photo's grey any other light word read worse: Moxie's #f4efd4 title 3.87:1 against white's 4.4, BMW's secondary intro 1.97:1), and the progress tracks take the secondary words (the ground paint is not applied to an overlay). The orange call block (.block-inner) repaints its white words on the accent it wears.",
+  "paletteRoles": [
+    {
+      "colour": "#f48a29",
+      "role": "accent",
+      "reason": "the orange call-to-action box ('Since 1980 … Donate today') is drawn as the template's action colour around a white button the contract pairs with it; as a band it went dark under the white button turned the system page colour (14/10/2026)"
+    }
+  ],
+  "headerCtaNote": "17/10/2026 (Akemi, visual review): the header Donate now (.header-action .btn) is a flush, square, full-height cell of the bordered menu row; under Moxie it wore the system pill and floated off the row. It is left out of the button shape (selectors.button) and the template keeps it square (ja-products ds-b2-fin-impact); its fill and words still follow the system accent (selectors.buttonPrimary).",
+  "literalsNote": "#ffffff is the template's own link colour on its own title photo (#t4-masthead, a picture band; the id doubled to outweigh the band’s own word paint)",
+  "pictureRules": {
+    ".mod-finder .js-finder-search-query:focus": {
+      "background-image": "none"
+    }
+  },
+  "pictureRulesNote": "20/10/2026 (PIC-1): the template’s worn-scope rules already clear the search field’s resting icon and draw it as a mask in the accent text role (css/template.css, .mod-finder ::after), but .mod-finder .js-finder-search-query:focus comes later in the sheet at the same weight and puts back templates/ja_impact/images/search-success.svg (the brand green #0CB76D): a focused field showed the green picture beside the masked one. Under a system the focused field has no picture of its own either. No system worn: nothing of this is written (DEF-1)."
+}

@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1068-wordpress-joomla-wear-chosen-design-system",
+  "kind": "feat",
+  "title": "A running WordPress (tracy-base theme) and a running Joomla (tracy-base/j6 quickstart) wear the design system they are given: one variation through the theme's own apply function, one module on every page; the page matches the system's profile by role on the first request after the call, every text reads at 4.5:1, and with no system the page computes exactly what it did before",
+  "pr": 1068,
+  "area": "design/slot",
+  "cms": ["wp", "jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/design/tracy-ds-slot/test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: node packages/design/tracy-ds-slot/scripts/audit.mjs.",
+    "S3: WordPress 7.1 in Docker (image tracy/web-wordpress:php8.3-apache-20260923-r1 + mariadb:11) with this tree's packages/cms/tracy-wordpress-theme/src/tracy-base mounted as the theme, activated, a front page whose content is the theme's tracy/landing pattern. Snap the page (flow.mjs --cms wordpress --snap), then flow.mjs --cms wordpress --wp-container <wp> over Moxie, MotherDuck, arte* (refused) and od:elevenlabs.",
+    "S4: Joomla 6 in Docker from the released tracy-base/j6 1.0.2 quickstart (gh release download from JoomlArt-Products/ja-products, SHA-256 checked; image tracy/web-joomla:6-apache-20260923-r1 + mariadb:11). Snap, then flow.mjs --cms joomla --joomla-db <db> over the same four ids.",
+    "Cleanup: the script removes the four containers, the network and its work folder."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: 'invariants: all hold' (the WordPress variation and the Joomla module of every system that passes the gate included).",
+    "S3 and S4, each: 3 systems × 2 widths judged; each matches its profile on every measurement; each matches its own system ≥ 0.25 better than any other; every measured text kind ≥ 4.5:1 (at least one measured); every step's first request after the call already wears it; the four no-system controls show 0 differences; arte* alone is refused (contrast-fg-bg)."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/wordpress-tracy-base.json, joomla-tracy-base.json (roles, slot selectors, text kinds)",
+    "wordpress": "the variation in wp-content/uploads/tracy/styles/ds-<source>-<key>.json + uploads/tracy/inspirations.json; worn by tracy_apply_inspiration(); marker /* tracy-ds-slot: <id> */ in global styles",
+    "joomla": "#__modules row title 'Tracy design system', module mod_custom, position header-r, ordering 0, menuid 0; <style id=\"tracy-ds-slot\">"
+  },
+  "evidence": "tasks/evidence/ds-slot-3cms-2026-10-09/README.md — the run on 09/10/2026 with every screenshot.",
+  "fence": "Mechanism only: what each CMS is given and what its page then computes. Not covered: the build doors that will send it on the fleet (none yet), the WordPress theme 'tracy' separately, JA and Tracy Business/SaaS templates (no slot contract).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1068-wordpress-joomla-wear-chosen-design-system.mjs"],
+    "needs": []
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "color": {
+    "void-canvas": {
+      "$value": "#070707",
+      "$type": "color",
+      "$description": "Void Canvas — Page background, deepest surface — near-black, the floor everything else sits on"
+    },
+    "carbon-plate": {
+      "$value": "#0d0e12",
+      "$type": "color",
+      "$description": "Carbon Plate — Primary card surface, one step above the canvas — the dominant elevated panel"
+    },
+    "obsidian": {
+      "$value": "#141418",
+      "$type": "color",
+      "$description": "Obsidian — Secondary card surface, code blocks, nested panels"
+    },
+    "iron-edge": {
+      "$value": "#2e3038",
+      "$type": "color",
+      "$description": "Iron Edge — Mid-tier surface, dividers, hover overlays on dark surfaces"
+    },
+    "steel-border": {
+      "$value": "#22222a",
+      "$type": "color",
+      "$description": "Steel Border — Heavy structural borders, button outlines on dark, nav separators"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary text, filled pill button fill, icon strokes — the only high-luminance neutral"
+    },
+    "cloud-mist": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Cloud Mist — Secondary text, soft fills, muted surface highlights"
+    },
+    "fog": {
+      "$value": "#d9dae5",
+      "$type": "color",
+      "$description": "Fog — Card hairline borders — counterintuitively light on the dark canvas, defining card edges by luminosity contrast"
+    },
+    "ash": {
+      "$value": "#c8cad0",
+      "$type": "color",
+      "$description": "Ash — Body text secondary, muted descriptions, helper text"
+    },
+    "graphite": {
+      "$value": "#aeaeb7",
+      "$type": "color",
+      "$description": "Graphite — Tertiary body text, subdued labels, disabled-ish state"
+    },
+    "slate-mute": {
+      "$value": "#a2a4a9",
+      "$type": "color",
+      "$description": "Slate Mute — Nav borders, inactive nav text, structural dividers in chrome"
+    },
+    "cinder": {
+      "$value": "#60606c",
+      "$type": "color",
+      "$description": "Cinder — Deep muted text, low-priority links, icon rest state"
+    },
+    "phosphor-mint": {
+      "$value": "#70dcd3",
+      "$type": "color",
+      "$description": "Phosphor Mint — Accent card fill, highlight surfaces — the signature brand glow, reserved for featured cards and stat panels"
+    },
+    "signal-blue": {
+      "$value": "#0092e4",
+      "$type": "color",
+      "$description": "Signal Blue — Link borders, active link text, focus accents — the interface's action stroke"
+    },
+    "ice-blue": {
+      "$value": "#a6e5f2",
+      "$type": "color",
+      "$description": "Ice Blue — Decorative soft borders, light accent strokes on cards"
+    },
+    "current-blue": {
+      "$value": "#00ade4",
+      "$type": "color",
+      "$description": "Current Blue — Active nav state, selected menu items, current-page indicator"
+    },
+    "deep-signal": {
+      "$value": "#0677d4",
+      "$type": "color",
+      "$description": "Deep Signal — Input focus border, form active state, info semantic stroke"
+    },
+    "verdant-edge": {
+      "$value": "#75ae4c",
+      "$type": "color",
+      "$description": "Verdant Edge — Green accent for outlined action borders, linked labels, and lightweight interactive emphasis. Use as a supporting accent, not as a status color"
+    },
+    "steel-iris": {
+      "$value": "#929dbd",
+      "$type": "color",
+      "$description": "Steel Iris — Card decorative borders with cool blue-gray tint, secondary card outlines"
+    }
+  },
+  "font": {
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Body, UI, and navigation typeface. Geist handles all functional text: body copy at 16px/1.50, nav items at 14-15px, button labels at 14-16px, captions at 12px. Tight negative tracking (-0.017em to -0.020em) at display sizes creates density; positive tracking (0.042-0.094em) at 8-10px gives badge and micro-text an uppercase stencil feel."
+    },
+    "calsans": {
+      "$value": "Calsans",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface. Calsans is a condensed, geometric sans with positive tracking (0.056em) that makes headlines feel engineered rather than editorial — letters spread apart like instrument panel labels. Weight 300 used at largest sizes creates an anti-confident presence: massive, airy, never shouting. Weight 600 appears in mid-size headings for grounding."
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Helvetica — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://gitness.com",
+      "siteName": "Harness.io",
+      "extractedAt": "2026-06-03T17:53:43.027Z",
+      "variant": "compact"
+    }
+  }
+}

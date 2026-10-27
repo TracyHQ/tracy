@@ -1,0 +1,93 @@
+{
+  "id": "QA-UNIT-REG-PR-893-joomla-page-title-description-owners-happy",
+  "itemIds": ["regression:REG-PR-893-joomla-page-title-description-owners"],
+  "requirement": "Joomla Apply: page titles and descriptions the release ships give way to the owner's name and own words",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-joomla-page-title-description-owners.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026 local stand, Apply on ja-vega (Joomla): every word of the home page was the customer's but <title> and meta description still read 'JA Vega - Modern Joomla Template...' (ledger L24; 33 of 42 Joomla releases set one or both on a published entry, 27 on home). Reds b0bcd3380, 95b4422e7, e30e12f4b; fixes 1d52898c7, 43b44bd4c, e3b90c489. Not covered: Global Configuration's MetaDesc and sitename (no plugin door).",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 55). Every named case is 'ok' (none 'not ok', none '# SKIP'): a menu entry's page_title / menu-meta_description equal to a value the release's lock ships is replaced in the tidy-up's transaction (home: the business name and the owner's own description, other entries emptied); a value of somebody else's stays, an entry taken off is not retitled, the menu is read once and a refused menu is said once; the description comes from brief.about only, is cut whole by code point at a sentence or a word, and goes on the home entry of the language the owner wrote in and the shared one.",
+    "productSources": [
+      "apps/tracy-web/src/lib/contracts.js:244",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:772",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:494",
+      "apps/tracy-web/src/sites/brief-engines/pictures.js:63",
+      "apps/tracy-web/src/sites/brief-normalize.js:403",
+      "apps/tracy-web/src/sites/route.js:730"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contract-copy.js:42 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:25 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:43 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-blog-articles.js:115 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:54 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:55 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-languages.js:247 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-site-strings.js:35 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:814 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:361 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:367 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:368 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:392 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:25 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:3063 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a template's own title and description in its menu entries give way to the owner's name and words, in the tidy-up's transaction",
+    "an entry the tidy-up takes off is not written a title, and an owner who wrote nothing gets no description",
+    "only a value the release itself ships is the template's: one that names the owner inside the template's words still goes, one of somebody else's stays",
+    "a release that ships no lock tells the owner's words by their name as a word, not as letters inside another",
+    "the menu is read once, whole: the judge, the entries that lead to a page that is off and the page titles share it",
+    "a menu the site will not hand over is said once, and the rest of Apply goes on",
+    "a home page's description is the owner's own description, never their answers to the questions",
+    "a description is cut whole: never inside a character, at a sentence that is one, else at a word",
+    "the owner's words go on the home page of the language they wrote in and the one every language shares; another edition's home keeps no template description"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-joomla-page-title-description-owners"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-joomla-page-title-description-owners",
+    "pr": 893,
+    "kind": "fix",
+    "area": "sites/apply/joomla",
+    "file": "tests/regression/cases/REG-PR-893-joomla-page-title-description-owners.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-joomla.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a template's own title and description in its menu entries give way to the owner's name and words, in the tidy-up's transaction",
+    "an entry the tidy-up takes off is not written a title, and an owner who wrote nothing gets no description",
+    "only a value the release itself ships is the template's: one that names the owner inside the template's words still goes, one of somebody else's stays",
+    "a release that ships no lock tells the owner's words by their name as a word, not as letters inside another",
+    "the menu is read once, whole: the judge, the entries that lead to a page that is off and the page titles share it",
+    "a menu the site will not hand over is said once, and the rest of Apply goes on",
+    "a home page's description is the owner's own description, never their answers to the questions",
+    "a description is cut whole: never inside a character, at a sentence that is one, else at a word",
+    "the owner's words go on the home page of the language they wrote in and the one every language shares; another edition's home keeps no template description"
+  ],
+  "timeoutS": 600
+}

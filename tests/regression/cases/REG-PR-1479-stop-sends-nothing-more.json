@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1479-stop-sends-nothing-more",
+  "kind": "fix",
+  "title": "Stop keeps a site call that was not yet sent from being sent; a write already on the wire is not sent twice",
+  "pr": 1479,
+  "area": "site-changes/stop",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Through the shipped bundle, abort the turn's signal while a write waits for another conversation's lease.",
+    "S2: Abort the turn's signal while a write is on the wire and its answer is lost.",
+    "S3: Abort the turn's signal during a WordPress replace across several records.",
+    "S4: Call tracy_emdash with the turn's signal already aborted."
+  ],
+  "expect": [
+    "S1: the call answers TURN_STOPPED at once and nothing more is sent.",
+    "S2: the write runs to its answer and no second send follows; a lost answer stays unknown.",
+    "S3: the write on the wire lands; no later write or undo is sent.",
+    "S4: nothing runs in the site container."
+  ],
+  "selectors": {
+    "test": "packages/tools/tracy-site-tools/test/handler.test.mjs",
+    "code": "turn-stop.mjs, index.ts turnSignal, site-call.mjs runSiteCall signal, replace-emdash.mjs emdashScriptRoad signal"
+  },
+  "evidence": "Review 19/10/2026: no site tool read the turn's abort signal; a write waiting for the lease landed up to 100 s after Stop while the session log said the call was aborted",
+  "fence": "Every send asks the turn's signal first; a send on the wire is never cut",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "packages/tools/tracy-site-tools/test/handler.test.mjs"],
+    "tests": [
+      "🔒 C2: Stop while the write waits for the lease — nothing more is sent, at once",
+      "🔒 C2: Stop while a write is on the wire — it runs to its answer, and no second send follows (a lost answer stays unknown)",
+      "🔒 C2: Stop during a replace across several records — the write on the wire lands, no later write or undo is sent",
+      "🔒 C2: a tracy_emdash call after Stop runs nothing in the site container"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+# Shard override: the one front door of a shard VM (spec section 3.1, amended 15/10/2026).
+#
+#   docker compose --env-file /etc/tracy/tracy-web.env -f compose.yml -f compose.server.yml \
+#     -f compose.shard.yml up -d --no-deps nginx
+#
+# IT ADDS ONE SERVICE AND CHANGES NO OTHER. deploy-tracy-stack.sh runs compose with compose.yml and
+# compose.server.yml only (plus TRACY_STACK_EXTRA_FILES when a second stack sets it), so anything
+# this file changed on tracy-web would be undone by every deploy and redone by every nginx `up`: a
+# config hash that flips on each run. tracy-web keeps the base's loopback publish
+# 127.0.0.1:${WEB_PORT}:8080 (compose.yml), which tracy-host's TRACY_WEB_ORIGIN, the deploy smoke
+# test (deploy-tracy-stack.sh) and check-server.sh all dial. Nothing is published beyond the VM's
+# loopback; cloudflared (systemd) is the only way in.
+#
+# ALWAYS `--no-deps`, AND NO `depends_on` HERE. Otherwise `up nginx` also reconciles tracy-web, and
+# a shell that has not exported WEB_IMAGE / HOST_IMAGE the way deploy-tracy-stack.sh does would
+# recreate tracy-web from `tracy/web:<tag>`, an image that exists on no server. install-shard.sh
+# and tracy-updater.sh export them anyway, and also HOST_SECRET (compose.server.yml needs it to
+# load the project at all).
+#
+# NO `container_name`: the container is named by the compose project (`tracy-nginx-1` in project
+# `tracy`, `tracy-d1-nginx-1` in project `tracy-d1`), so a second stack on one host cannot clash.
+services:
+  nginx:
+    # Pinned by tag AND multi-arch index digest, read from Docker Hub on 15/10/2026 (1.30.3 was
+    # pushed 24/06/2026): the front door is not something a re-pushed tag may change.
+    image: nginx:1.30.3-alpine@sha256:0d3b80406a13a767339fbe2f41406d6c7da727ab89cf8fae399e81f780f814d1
+    restart: unless-stopped
+    environment:
+      # The one value shard.conf takes from outside: the gateway of the `tracy` network, the TCP
+      # peer of every request that comes in through the loopback publish.
+      TRACY_NETWORK_PREFIX: "${TRACY_NETWORK_PREFIX:-172.30.0}"
+    volumes:
+      # A template, rendered by the image's entrypoint at every start (see shard.conf's header).
+      # The name on the machine: /opt/tracy-fleet/stack is flat, so the repo's deploy/nginx/shard.conf
+      # lands beside this file as nginx-shard.conf (sync-fleet-files.sh, contract section 10).
+      - ./nginx-shard.conf:/etc/nginx/templates/default.conf.template:ro
+    # The host side is overridable so a second stack on one host (d1 beside the master on the dev
+    # VM) can take its own loopback port: TRACY_NGINX_BIND=127.0.0.1:51880. Unset, it is the
+    # shard's 127.0.0.1:80, and the rendered config of an existing shard does not move.
+    ports: ["${TRACY_NGINX_BIND:-127.0.0.1:80}:80"]
+    networks: [tracy]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/_nginx/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"

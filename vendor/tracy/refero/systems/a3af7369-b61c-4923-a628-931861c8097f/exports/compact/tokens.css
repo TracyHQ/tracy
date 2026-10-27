@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-ember-orange: #ff4100;
+  --color-signal-blue: #0052ef;
+  --color-plex-green: #19d600;
+  --color-plasma-magenta: #f500ff;
+  --color-acid-lime: #45ff00;
+  --color-electric-blue: #027fff;
+  --color-onyx: #0b0b0b;
+  --color-canvas-white: #ffffff;
+  --color-smoke: #b9b9b9;
+  --color-ash: #d6d6d6;
+  --color-graphite: #212121;
+  --color-charcoal: #353535;
+  --color-mid: #797979;
+  --color-steel: #4a4a4a;
+  --color-frost: #ededed;
+
+  /* Typography — Font Families */
+  --font-waldenburg: 'Waldenburg', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ibm-plex-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

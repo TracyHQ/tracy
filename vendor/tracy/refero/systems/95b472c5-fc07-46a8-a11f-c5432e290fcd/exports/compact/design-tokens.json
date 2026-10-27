@@ -1,0 +1,79 @@
+{
+  "color": {
+    "ecto-green": {
+      "$value": "#58cc02",
+      "$type": "color",
+      "$description": "Ecto Green — Green outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "lingot-lime": {
+      "$value": "#a5ed6e",
+      "$type": "color",
+      "$description": "Lingot Lime — Outlined-action border and link accent — used as the chromatic border on link and button elements in 256+ instances. The lighter green outline gives interactive elements a glowing, highlighter-pen quality against white backgrounds"
+    },
+    "eel-light": {
+      "$value": "#d7ffb8",
+      "$type": "color",
+      "$description": "Eel Light — Soft highlight and pale border — lightest green used for card outlines, soft surface washes, and the bottom shadow border on filled green buttons to create a 3D pressable effect"
+    },
+    "macaw-blue": {
+      "$value": "#1cb0f6",
+      "$type": "color",
+      "$description": "Macaw Blue — Secondary action accent — body borders, link text, and outlined button borders for secondary actions like language-specific CTAs. The cyan-blue sibling to the green system, signaling alternative or complementary actions"
+    },
+    "eel-dark-blue": {
+      "$value": "#042c60",
+      "$type": "color",
+      "$description": "Eel Dark Blue — Deep heading text and border — navy blue used for emphasis headings and key border treatments, providing weight and contrast without competing with the green primary"
+    },
+    "midnight": {
+      "$value": "#000437",
+      "$type": "color",
+      "$description": "Midnight — Dark surface and button text — near-black violet used for dark-surface sections and as button label text on green fills"
+    },
+    "graphite": {
+      "$value": "#3c3c3c",
+      "$type": "color",
+      "$description": "Graphite — Dominant neutral border — the workhorse gray used for hundreds of list and card borders throughout navigation, lists, and structural dividers. Not a background, a border system"
+    },
+    "ash": {
+      "$value": "#777777",
+      "$type": "color",
+      "$description": "Ash — Secondary text and nav borders — medium gray for navigation chrome, secondary text labels, and subtle structural borders"
+    },
+    "charcoal": {
+      "$value": "#4b4b4b",
+      "$type": "color",
+      "$description": "Charcoal — Body text and icon borders — darker gray for body copy and icon outlines, sitting between the lighter Ash and the darker structural Graphite"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page and card surface — the white canvas on which all content sits. Also used as text on dark surfaces and as border color for ghost buttons"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Pure black for SVG illustration fills and maximum-contrast text where needed"
+    }
+  },
+  "font": {
+    "din-round": {
+      "$value": "din-round",
+      "$type": "fontFamily",
+      "$description": "Primary UI typeface — used for body text, navigation, buttons, links, lists, and smaller headings. The rounded terminals and friendly weight create an approachable, educational tone. Weight 500 for body, weight 700 for emphasis and button labels. The +0.053em letter-spacing is wider than typical, giving text a breezy, open feel."
+    },
+    "feather": {
+      "$value": "feather",
+      "$type": "fontFamily",
+      "$description": "Display face for large feature headlines — bold, heavy, and tight (letter-spacing: -0.02em). Reserved exclusively for oversized section headlines. The extreme weight contrast against the lighter din-round body creates a shout/whisper rhythm: feather headlines announce, din-round explains."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.duolingo.com",
+      "siteName": "Duolingo",
+      "extractedAt": "2026-06-03T21:58:26.322Z",
+      "variant": "compact"
+    }
+  }
+}

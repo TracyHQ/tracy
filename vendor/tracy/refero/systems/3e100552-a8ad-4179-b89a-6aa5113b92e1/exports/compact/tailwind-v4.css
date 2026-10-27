@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-sprout-orange: #ff4800;
+  --color-canvas-cream: #fcfcfa;
+  --color-warm-parchment: #f8f5ee;
+  --color-ink: #1f1f1f;
+  --color-pure-black: #000000;
+  --color-graphite: #60605f;
+  --color-mist: #cacac8;
+  --color-peach-wash: #fcded2;
+  --color-deep-teal: #042729;
+  --color-sprocket-gradient: #ff4900;
+
+  /* Typography */
+  --font-hubspot-sans: 'HubSpot Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-hubspot-serif: 'HubSpot Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-hubspot-serif-page-header-human: 'HubSpot Serif Page Header Human', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "joomla",
+  "label": "JA Resort",
+  "version": "1.0.1",
+  "cms": "6.1.2",
+  "template": "ja_resort",
+  "install": {
+    "installer": {
+      "file": "ja-resort-j6-quickstart-1.0.1.zip",
+      "sha256": "b19afc2eb5577f0a187dc793d15710559871eb85578948b62250cfb63deca105"
+    }
+  }
+}

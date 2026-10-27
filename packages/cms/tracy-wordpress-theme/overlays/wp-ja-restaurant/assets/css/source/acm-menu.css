@@ -1,0 +1,273 @@
+/* wp-ja-restaurant: acm/menu/css/style.css of the JA Restaurant 1.0.6 Joomla template (GPL v3, JoomlArt), carried rule for rule by tasks/ja-restaurant-wp7/tools/port-css.mjs (DECISIONS D-10). Colours read light-dark(<source>, <derived dark, D-03>); do not edit by hand, re-run the tool. */
+.style-2 {
+  padding-top: 30px;
+}
+.style-2 .dish-item {
+  margin-bottom: 30px;
+}
+.style-2 .dish-item .item-inner {
+  border-bottom: 1px dashed var(--ds-c-border, light-dark(#999999, #4a443d));
+  padding-bottom: 30px;
+  position: relative;
+}
+.style-2 .dish-item .item-inner:before,
+.style-2 .dish-item .item-inner:after {
+  display: table;
+  content: " ";
+}
+.style-2 .dish-item .item-inner:after {
+  clear: both;
+}
+@media (min-width: 768px) {
+  .style-2 .dish-item .item-inner {
+    padding-right: 120px;
+  }
+}
+.style-2 .dish-item .item-inner:hover .dish-price {
+  color: var(--ds-c-accent-text-hover, light-dark(#d24a24, #e8693f));
+}
+.style-2 .dish-item:last-child .item-inner {
+  border-bottom: 0;
+}
+.style-2 .dish-item img {
+  background-color: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+  border: 1px solid var(--ds-c-border-soft, #d9d9d9);
+  border-bottom-width: 2px;
+  padding: 7.5px;
+  margin-bottom: 30px;
+}
+@media (min-width: 768px) {
+  .style-2 .dish-item img {
+    float: left;
+    max-width: 250px;
+    margin: 0 30px 0 0;
+  }
+}
+.style-2 .dish-item .dish-name {
+  margin: 0 0 15px;
+  font-family: var(--ds-font-display, "Noticia Text", serif);
+  font-weight: 700;
+  font-size: 22px;
+}
+.style-2 .dish-item .dish-description {
+  line-height: 1.5;
+}
+.style-2 .dish-item .dish-price {
+  display: block;
+  font-size: 58px;
+  font-family: var(--ds-font-body, var(--ja-font-sans-serif, "Teko"), sans-serif);
+  float: right;
+  margin-left: 15px;
+}
+@media (min-width: 768px) {
+  .style-2 .dish-item .dish-price {
+    position: absolute;
+    right: 30px;
+    margin-top: -60px;
+    margin-left: 0;
+    top: 50%;
+  }
+}
+.style-2 .badge {
+  border-radius: var(--ds-pill-radius, 2px);
+  line-height: 1;
+  padding-bottom: 5px;
+  margin-top: -5px;
+  text-transform: uppercase;
+}
+.style-2 .badge.badge-sale {
+  background-color: var(--ds-c-success, #5cb85c);
+}
+
+.style-3 {
+  margin-left: -15px;
+  margin-right: -15px;
+  padding: 30px 0;
+}
+.style-3:before,
+.style-3:after {
+  display: table;
+  content: " ";
+}
+.style-3:after {
+  clear: both;
+}
+.style-3 .dish-item {
+  margin-bottom: 30px;
+}
+@media (min-width: 768px) {
+  .style-3 .dish-item {
+    float: left;
+    width: 50%;
+  }
+}
+.style-3 .dish-item .item-inner {
+  background-color: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+  border-radius: var(--ds-card-radius, 2px);
+  border: 1px solid var(--ds-c-border-soft, #d9d9d9);
+  border-bottom-width: 2px;
+  margin: 0 15px;
+  padding: 15px 15px 15px 145px;
+  min-height: 125px;
+  position: relative;
+  overflow: hidden;
+}
+.style-3 .dish-item .item-inner:before,
+.style-3 .dish-item .item-inner:after {
+  display: table;
+  content: " ";
+}
+.style-3 .dish-item .item-inner:after {
+  clear: both;
+}
+@media (max-width: 767px) {
+  .style-3 .dish-item .item-inner {
+    padding-left: 140px;
+  }
+}
+.style-3 .dish-item .item-inner:hover .dish-price {
+  border-color: var(--ds-c-accent, #d24a24);
+  color: var(--ds-c-accent-text-hover, light-dark(#d24a24, #e8693f));
+}
+.style-3 .dish-item .dish-img {
+  border-radius: var(--ds-card-radius, 2px) 0 0 var(--ds-card-radius, 2px) ;
+  border: 1px solid var(--ds-c-border-soft, light-dark(#ffffff, #3a352f));
+  display: block;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  width: 125px;
+}
+@media (max-width: 767px) {
+  .style-3 .dish-item .dish-img {
+    background: var(--ds-c-ink, light-dark(#3a352f, #11100e));
+  }
+}
+.style-3 .dish-item .dish-img img {
+  width: 100%;
+}
+.style-3 .dish-item .dish-name {
+  margin: 5px 0 15px;
+  font-family: var(--ds-font-display, "Noticia Text", serif);
+  font-weight: 700;
+  font-size: 18px;
+}
+@media (max-width: 767px) {
+  .style-3 .dish-item .dish-name {
+    font-size: 14px;
+    margin: 0 0 10px 0;
+  }
+}
+.style-3 .dish-item .dish-description {
+  color: var(--ds-c-muted, light-dark(#555555, #b5ad9e));
+  font-size: 14px;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+@media (max-width: 767px) {
+  .style-3 .dish-item .dish-description {
+    font-size: 13px;
+  }
+}
+.style-3 .dish-item .dish-price {
+  background-color: var(--ds-c-bg, light-dark(#eeeeee, #2b2824));
+  border-right: 2px solid var(--ds-c-accent-text, light-dark(#333333, #f0ece2));
+  font-size: 22px;
+  font-family: var(--ds-font-body, var(--ja-font-sans-serif, "Teko"), sans-serif);
+  position: absolute;
+  top: 15px;
+  right: 0;
+  display: block;
+  padding: 5px 10px 2px;
+  line-height: 1;
+}
+@media (max-width: 767px) {
+  .style-3 .dish-item .dish-price {
+    right: auto;
+    left: 0;
+  }
+}
+.style-3 .badge {
+  border-radius: var(--ds-pill-radius, 2px);
+  line-height: 1;
+  padding-bottom: 5px;
+  margin-top: -5px;
+  text-transform: uppercase;
+}
+.style-3 .badge.badge-sale {
+  background-color: var(--ds-c-success, #5cb85c);
+}
+.section-inner {
+  background-size: cover;
+  background-position: center center;
+}
+.acm-menu.full-width .menu-items > .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+.acm-menu .style-1:before,
+.acm-menu .style-1:after {
+  display: table;
+  content: " ";
+}
+.acm-menu .style-1:after {
+  clear: both;
+}
+.acm-menu .style-1 .dish-item {
+  margin-bottom: 30px;
+}
+.acm-menu .style-1 .dish-item .item-inner {
+  border-bottom: 1px dashed var(--ds-c-border, light-dark(#999999, #4a443d));
+}
+.acm-menu .style-1 .dish-item .item-inner:before,
+.acm-menu .style-1 .dish-item .item-inner:after {
+  display: table;
+  content: " ";
+}
+.acm-menu .style-1 .dish-item .item-inner:after {
+  clear: both;
+}
+.acm-menu .style-1 .dish-item .dish-name {
+  float: left;
+  margin: 0 0 7.5px;
+  width: 78%;
+  font-family: var(--ds-font-display, "Noticia Text", serif);
+  font-weight: 700;
+}
+.acm-menu .style-1 .dish-item .dish-price {
+  float: right;
+  font-family: var(--ds-font-display, "Noticia Text", serif);
+  font-weight: 700;
+  font-size: 22px;
+  text-align: right;
+  width: 20%;
+  color: var(--ds-c-accent-text, light-dark(#d24a24, #e8693f));
+}
+.acm-menu .style-1 .dish-item .dish-description {
+  font-size: 13px;
+  float: left;
+  max-width: 78%;
+  min-height: 46px;
+  filter: alpha(opacity=50);
+  opacity: 0.5;
+}
+.acm-menu .style-1.style-dark {
+  color: #ffffff ; /* ds-keep: words on a photo or scrim: the picture decides the ground, not a design role */
+}
+.ie8 .team-items .item .img-intro p {
+  display: none;
+}
+.ie8 .team-items .item:hover .img-intro p {
+  display: block;
+}
+.ie8 .team-items .item:hover .img-intro p:after {
+  background: var(--ds-c-accent, #d24a24);
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}

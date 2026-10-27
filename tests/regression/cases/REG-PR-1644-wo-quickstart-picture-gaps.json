@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1644-wo-quickstart-picture-gaps",
+  "kind": "fix",
+  "title": "A quickstart fill puts a neutral placeholder in a picture slot no business photo fits and goes to review, instead of failing the build",
+  "pr": 1644,
+  "area": "sites/brief-engines/quickstart-pictures",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run`.",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "On WordPress, Joomla and EmDash a slot with no fitting photo keeps its place with an uploaded, read-back placeholder, and the report lists the gap and the placeholder.",
+    "Every picture missing fills every slot with placeholders; an unresolved slot still stops the fill before any upload; a resumed fill reuses verified uploads.",
+    "Quickstart QA with placeholder gaps ends needs-review with reason quickstart-picture-placeholders/1, never passed and never failed."
+  ],
+  "selectors": {
+    "function": "apps/tracy-web/src/sites/brief-engines/quickstart-pictures.js placeNativePictures; apps/tracy-web/src/sites/brief-engines/quickstart-first.js apply",
+    "test": "apps/tracy-web/test/brief-quickstart-first.test.mjs"
+  },
+  "evidence": "Dev, 23/10/2026: a JA Restaurant WordPress Website Opportunities build planned 47 placements and 28 unfilled slots, then failed with QUICKSTART_PICTURE_COVERAGE_INCOMPLETE; the hand-off answered 409 SITE_FILL_FAILED and the site stayed the untouched template.",
+  "fence": "The quickstart-first native picture fill and its QA/hand-off gate; picture matching rules and the EmDash/contract engines are unchanged",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-quickstart-first.test.mjs"],
+    "tests": [
+      "wordpress: a slot no photo fits keeps its place with a neutral placeholder and goes to review",
+      "joomla: a slot no photo fits keeps its place with a neutral placeholder and goes to review",
+      "emdash: a slot no photo fits keeps its place with a neutral placeholder and goes to review",
+      "every picture missing fills every slot with placeholders instead of failing",
+      "an unresolved slot still stops the native picture fill before any upload",
+      "a resumed picture fill reuses verified uploads, placeholders included",
+      "placeholder gaps end the quickstart QA as needs-review, never passed and never failed"
+    ]
+  }
+}

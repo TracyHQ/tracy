@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-kippo-pink: #ee1f66;
+  --color-void-black: #000000;
+  --color-carbon: #29292a;
+  --color-ash: #333333;
+  --color-ghost-white: #ffffff;
+  --color-sunset-gradient: #ffc400;
+  --gradient-sunset-gradient: linear-gradient(to right, #ffc400, #ff33e0);
+  --color-terminal-cyan: #33beff;
+  --gradient-terminal-cyan: linear-gradient(to right, #33beff, #33ffb8);
+
+  /* Typography — Font Families */
+  --font-source-code-pro: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

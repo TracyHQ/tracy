@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-gallery-gray: #eef0f2;
+  --color-porcelain: #ffffff;
+  --color-instrument-ink: #04080d;
+  --color-charcoal-type: #121317;
+  --color-slate: #6a6b6f;
+  --color-graphite: #4a4e52;
+  --color-dial-teal: #a1e5e4;
+  --color-mint-glass: #d5efef;
+  --color-evergreen-dial: #00753e;
+  --color-machine-night-gradient: #6d6f73;
+  --gradient-machine-night-gradient: radial-gradient(53% 128% at 36.4% -18.1%, #6d6f73 0%, #04080d 95.8527%);
+  --color-icy-display-gradient: #d6f6ff;
+  --gradient-icy-display-gradient: linear-gradient(#d6f6ff 0%, #f2ffff 100%);
+  --color-luminous-teal-gradient: #bfffff;
+  --gradient-luminous-teal-gradient: radial-gradient(50% 50% at 50% 24.1%, #bfffff 0%, #29cfcf 100%);
+
+  /* Typography — Font Families */
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

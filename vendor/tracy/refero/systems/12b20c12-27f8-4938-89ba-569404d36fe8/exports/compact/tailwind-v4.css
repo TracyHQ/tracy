@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-marigold: #fcd579;
+  --color-sea-glass: #81d6b9;
+  --color-inkstone: #171717;
+  --color-marigold-gradient: #efcb75;
+
+  /* Typography */
+  --font-untitledsans: 'untitledsans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-signifier: 'signifier', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

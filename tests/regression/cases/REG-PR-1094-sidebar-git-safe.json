@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-1094-sidebar-git-safe",
+  "kind": "fix",
+  "title": "The sidebar's git panel runs no program a site's repository names, and never reads or writes a repository outside the session workspace",
+  "pr": 1094,
+  "area": "security/sidebar-git",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In vendor/tracy/dsh-better-sidebar run the vitest files tests/git-safe.spec.ts (one planted `touch <marker>` per vector: fsmonitor, include/includeIf, worktree config, clean/smudge filters, textconv/external diff, hooks/hooksPath, gpg, merge drivers, pager/editor/askPass/sshCommand/credential helper, submodule config, linked worktrees; plus the single-spawn source test) and tests/git-fence.spec.ts (pointer file, .git symlink, core.worktree, commondir, alternates, symlinked refs, ancestor repository, outside linked worktree; a fingerprinted victim repository outside)."
+  ],
+  "expect": [
+    "S1: both files pass: no marker is ever created, panel data stays correct, every redirect is refused with the victim unchanged, and a normal repository / inside worktree / nested cwd still work."
+  ],
+  "selectors": {
+    "code": "vendor/tracy/dsh-better-sidebar/src/git.ts safeGit, spawnGit, openRepo, checkGitEntry"
+  },
+  "evidence": "09/10/2026, PR #1094: a scratch repo with core.fsmonitor = \"touch marker\" made the fork's status() run it inside the host's shared dsh process.",
+  "fence": "Repository-controlled execution and repository discovery of the fork's in-process git. Residual: a symlink swapped between the check and git's use (milliseconds) — only running git in the site container closes it.",
+  "run": {
+    "cwd": "vendor/tracy/dsh-better-sidebar",
+    "cmd": ["npx", "vitest", "run", "tests/git-safe.spec.ts", "tests/git-fence.spec.ts"]
+  }
+}

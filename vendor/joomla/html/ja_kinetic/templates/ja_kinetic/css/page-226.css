@@ -1,0 +1,266 @@
+/* ============================================================
+   ja_kinetic — Team page (item-226) pixel-parity overlay
+   ALL rules scoped to body.item-226 to prevent bleed.
+   Auto-loaded via filemtime cache-bust in index.php — always fresh.
+   ============================================================ */
+
+/* --- Alpha-tint tokens (lime=primary tint for chip bg / pill bg) --- */
+body.item-226 {
+  /* design-system §A: chip / pill tints are FIXED brand lime in BOTH themes —
+     no olive re-tint in light. Pin to lime-alpha. */
+  --p-a12: rgba(163, 230, 53, 0.125);
+  --p-a25: rgba(163, 230, 53, 0.25);
+}
+html.t4-dark body.item-226 {
+  --p-a12: rgba(163, 230, 53, 0.125);
+  --p-a25: rgba(163, 230, 53, 0.25);
+}
+
+/* ================================================================
+   MASTHEAD  (acm-page-masthead — shared block, overrides only)
+   ================================================================ */
+
+body.item-226 .acm-page-masthead .hx-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  /* .pen: pill tint FIXED brand lime in both themes; only label+dot flip. */
+  background: rgba(163, 230, 53, 0.078);
+  border: 1px solid rgba(163, 230, 53, 0.251);
+  border-radius: 100px;
+  margin: 0 0 16px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+body.item-226 .acm-page-masthead .hx-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+@media (max-width: 860px) {
+  body.item-226 .acm-page-masthead .hx-h1 {
+    font-size: 32px;
+    letter-spacing: -1px;
+    line-height: 1.08;
+  }
+}
+@media (max-width: 620px) {
+  body.item-226 .acm-page-masthead .hx-section {
+    padding: 44px 0 38px;
+  }
+}
+
+/* ================================================================
+   TEAMS GRID SECTION  (acm-teams — shared block, overrides only)
+   ================================================================ */
+
+/* Section: 64px top (BodyWrap top pad), 0 bottom (hiring section top provides the 40px gap) */
+body.item-226 .acm-teams .hx-section {
+  padding: 64px 0 0;
+}
+
+/* Grid: always 4 cols on wide desktop (beats inline style via !important) */
+body.item-226 .acm-teams .hx-cols {
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 18px;
+}
+
+/* Tablet: 2 cols */
+@media (max-width: 980px) {
+  body.item-226 .acm-teams .hx-cols {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* Mobile 390px: 2-col grid (design mobile frame is 2×2) */
+@media (max-width: 620px) {
+  body.item-226 .acm-teams .hx-section {
+    padding: 40px 0 0;
+  }
+  body.item-226 .acm-teams .hx-cols {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 14px !important;
+  }
+  body.item-226 .acm-teams .hx-pad {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* ---- Member card (desktop) ---- */
+/* Card: pad 28/24 (was 28/26), r14 (was r12), gap 0 (spacing via child pt).
+   .pen card is items-center: avatar / name / role / socials all horizontally
+   centered (base acm/teams css ships align-items:flex-start = left). */
+body.item-226 .acm-teams .hx-team-card {
+  padding: 28px 24px;
+  border-radius: 14px;
+  gap: 0;
+  align-items: center;
+  text-align: center;
+}
+body.item-226 .acm-teams .hx-team-id {
+  align-items: center;
+}
+body.item-226 .acm-teams .hx-team-social {
+  justify-content: center;
+}
+
+body.item-226 .acm-teams .hx-team-chip {
+  width: 76px;
+  height: 76px;
+  flex: 0 0 76px;
+  border-radius: 38px;
+  background: var(--p-a12);
+  border: none;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+body.item-226 .acm-teams .hx-team-avatar {
+  width: 76px;
+  height: 76px;
+  flex: 0 0 76px;
+  border-radius: 38px;
+  border: none;
+}
+
+body.item-226 .acm-teams .hx-team-id {
+  padding-top: 16px;
+}
+
+/* Name: 17px (was 18px) */
+body.item-226 .acm-teams .hx-team-name {
+  font-size: 17px;
+  letter-spacing: -0.3px;
+}
+
+/* Role: JetBrains Mono 11.5px weight 400 --muted (was 13.5px 500 --primary) */
+body.item-226 .acm-teams .hx-team-role {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+/* Social: 14px top gap (was 4px), transparent bg, --text icons */
+body.item-226 .acm-teams .hx-team-social {
+  padding-top: 14px;
+}
+body.item-226 .acm-teams .hx-team-social-link {
+  background: transparent;
+  color: var(--text);
+}
+body.item-226 .acm-teams .hx-team-social-link:hover,
+body.item-226 .acm-teams .hx-team-social-link:focus-visible {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: transparent;
+}
+
+/* ---- Member card (mobile ≤ 620px) ---- */
+@media (max-width: 620px) {
+  body.item-226 .acm-teams .hx-team-card {
+    padding: 24px 16px;
+  }
+  body.item-226 .acm-teams .hx-team-chip {
+    width: 72px;
+    height: 72px;
+    flex: 0 0 72px;
+    border-radius: 36px;
+    font-size: 24px;
+  }
+  body.item-226 .acm-teams .hx-team-avatar {
+    width: 72px;
+    height: 72px;
+    flex: 0 0 72px;
+    border-radius: 36px;
+  }
+  body.item-226 .acm-teams .hx-team-id {
+    padding-top: 14px;
+  }
+  body.item-226 .acm-teams .hx-team-name {
+    font-size: 16px;
+  }
+  body.item-226 .acm-teams .hx-team-role {
+    font-size: 11px;
+  }
+}
+
+/* ================================================================
+   HIRING CARD  (module 204 = #acm-cta-204)
+   ================================================================ */
+
+body.item-226 #acm-cta-204 .hx-section {
+  padding-block: 40px 64px;
+}
+
+/* Title: 24px -0.5ls (not the 38px shared default) */
+body.item-226 #acm-cta-204 .hx-cta-title {
+  font-size: 24px;
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+}
+
+body.item-226 #acm-cta-204 .hx-cta-sub {
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 440px;
+}
+
+/* Card inner padding: 36px (design) vs 60px/40px default.
+   .pen Hiring card (B8mBHa is the INCIDENT band; the HIRING card is a separate
+   design) = a FLAT $elevated surface, NO green-glow radial + NO elevated→surface
+   gradient. Light #F2F5EE / dark #161B18 == var(--chrome-elevated) (the design
+   $elevated token; body --elevated is #0F1311, too dark). Kill the cta-card glow. */
+body.item-226 #acm-cta-204 .hx-cta-inner {
+  padding: 36px;
+  border-radius: 16px;
+  background: var(--chrome-elevated) !important;
+  border: 1px solid var(--border);
+}
+
+body.item-226 #acm-cta-204 .hx-cta-btn {
+  padding: 12px 22px;
+  border-radius: 9px;
+  font-size: 14.5px;
+}
+
+/* Hiring card mobile */
+@media (max-width: 620px) {
+  body.item-226 #acm-cta-204 .hx-section {
+    padding-block: 28px 48px;
+  }
+  body.item-226 #acm-cta-204 .hx-cta-title {
+    font-size: 23px;
+  }
+  body.item-226 #acm-cta-204 .hx-cta-sub {
+    font-size: 14.5px;
+  }
+  body.item-226 #acm-cta-204 .hx-cta-inner {
+    padding: 32px 20px;
+  }
+}
+
+/* ================================================================
+   INCIDENT CTA  (module 230 = #acm-cta-230)
+   Uses default card styling (big title 38px, 60/40 card pad) — no
+   overrides needed. Only override: section padding to match CTAWrap.
+   ================================================================ */
+
+body.item-226 #acm-cta-230 .hx-section {
+  padding-block: 40px 80px;
+}
+
+@media (max-width: 620px) {
+  body.item-226 #acm-cta-230 .hx-section {
+    padding-block: 32px 64px;
+  }
+}

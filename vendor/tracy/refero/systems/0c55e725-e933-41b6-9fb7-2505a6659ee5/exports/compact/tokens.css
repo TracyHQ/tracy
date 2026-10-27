@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-ledger-navy: #09234f;
+  --gradient-ledger-navy: linear-gradient(90deg, #09234f 0%, #384ce3 100%);
+  --color-registry-blue: #384ce3;
+  --color-network-teal: #1888a2;
+  --color-paper-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-carbon: #121012;
+  --color-mint-paper: #eff5f0;
+  --color-sky-paper: #c4f0ff;
+  --color-rule-gray: #e5e5e5;
+  --color-steel-rule: #ced3dc;
+  --color-quiet-gray: #595959;
+
+  /* Typography — Font Families */
+  --font-season-vf: 'Season VF', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-uncut-sans: 'Uncut Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-modern-era-mono: 'Modern Era Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

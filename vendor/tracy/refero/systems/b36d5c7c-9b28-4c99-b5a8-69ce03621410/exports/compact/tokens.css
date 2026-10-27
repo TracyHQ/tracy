@@ -1,0 +1,23 @@
+:root {
+  /* Colors */
+  --color-void-black: #000000;
+  --color-panel-sheen: #ffffff;
+  --color-button-sheen: #ffffff;
+  --color-bright-white: #ffffff;
+  --color-cloud: #cccccc;
+  --color-silver: #999999;
+  --color-text-dim: #ffffff;
+  --color-nav-background: #191a1d;
+  --color-spline-blue: #0062ff;
+  --color-neon-pink: #ff5cab;
+  --color-golden-orb: #ffb01f;
+  --color-violet-haze: #a770ff;
+  --color-emerald-glow: #47b35f;
+  --color-code-orange: #ce9178;
+  --color-code-green: #6a9955;
+  --color-code-blue: #569cd6;
+
+  /* Typography — Font Families */
+  --font-spline-sans: 'Spline Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-spline-sans-mono: 'Spline Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

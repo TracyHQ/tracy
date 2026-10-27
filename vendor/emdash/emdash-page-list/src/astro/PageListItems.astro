@@ -1,0 +1,85 @@
+---
+import type { PageListRenderItem, PageListStyle } from "../lib/types.js";
+import PageListItems from "./PageListItems.astro";
+
+interface Props {
+	items: PageListRenderItem[];
+	style: PageListStyle;
+	showExcerpt?: boolean;
+	showDate?: boolean;
+	level?: number;
+}
+
+const {
+	items,
+	style,
+	showExcerpt = false,
+	showDate = false,
+	level = 1,
+} = Astro.props as Props;
+
+function formatDate(value?: string | null): string | null {
+	if (!value) return null;
+	const parsed = new Date(value);
+	if (Number.isNaN(parsed.getTime())) return value;
+	return new Intl.DateTimeFormat(undefined, {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	}).format(parsed);
+}
+---
+
+<ul
+	class:list={[
+		"emdash-page-list__items",
+		`emdash-page-list__items--${style}`,
+		level > 1 && "emdash-page-list__items--nested",
+	]}
+>
+	{
+		items.map((item) => {
+			const formattedDate = formatDate(item.date);
+			return (
+				<li
+					class:list={[
+						"emdash-page-list__item",
+						`emdash-page-list__item--${style}`,
+						item.cssClasses,
+					]}
+				>
+					<div class="emdash-page-list__item-body">
+						<a
+							class="emdash-page-list__link"
+							href={item.href}
+							target={item.target}
+							title={item.titleAttr}
+						>
+							<span class="emdash-page-list__label">{item.label}</span>
+						</a>
+
+						{showDate && formattedDate && (
+							<time class="emdash-page-list__date" datetime={item.date ?? undefined}>
+								{formattedDate}
+							</time>
+						)}
+
+						{showExcerpt && item.excerpt && (
+							<p class="emdash-page-list__excerpt">{item.excerpt}</p>
+						)}
+					</div>
+
+					{item.children.length > 0 && (
+						<PageListItems
+							items={item.children}
+							style={style}
+							showExcerpt={showExcerpt}
+							showDate={showDate}
+							level={level + 1}
+						/>
+					)}
+				</li>
+			);
+		})
+	}
+</ul>

@@ -1,0 +1,398 @@
+{
+  "dos": [
+    "Use #7561b1 (Iris) as the sole emphasis color — apply it to one word or one element per section, never to a button background or body paragraph",
+    "Set headlines at Onest weight 300 with -0.4 to -0.5px tracking; this whisper-weight is the system's most distinctive typographic move",
+    "Use 5px radius for all buttons, badges, and pills; 8px for cards; 14px only for large feature cards",
+    "Pair #96beca filled buttons with #031403 ghost outline buttons for any two-button CTA cluster",
+    "Reserve monospace for telemetry values, code, and metric numbers — never for marketing copy",
+    "Maintain 80px section gaps between major content blocks; the system needs air to read as an instrument panel",
+    "Use 0.04–0.12em letter-spacing only on uppercase 9–12px text; never apply tracking to sentence-case body copy"
+  ],
+  "donts": [
+    "Do not use #7561b1 as a button background — Iris is for emphasis only, not action",
+    "Do not mix #96beca and #74a9b9 as both primary actions; Coastal Teal is the sole primary action color",
+    "Do not apply shadows heavier than rgba(0,0,0,0.2) 0px 2px 5px — the system is flat-first, border-defined",
+    "Do not use weight 600 or 700 for headlines; weight 300 is the signature move and carries the system's identity",
+    "Do not use the chromatic accents (#f4b811, #9db161, #74a9b9) outside of data-visualization contexts — they signal signal-state, not decoration",
+    "Do not set body text below 16px or above 20px; the 16–18px band is the readable core",
+    "Do not introduce new radii between 5px and 8px — the two-tier system is intentional"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#0a090c",
+      "name": "Deep Ink",
+      "role": "Primary text, card borders, list dividers, nav labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#031403",
+      "name": "Near-Black Green",
+      "role": "Secondary text, heavy borders, code-adjacent content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6e6e5",
+      "name": "Bone White",
+      "role": "Page canvas, outer section backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Card surfaces, button text, elevated content blocks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f4f4f4",
+      "name": "Frost",
+      "role": "Subtle surface fill, decorative washes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8a8a8a",
+      "name": "Stone",
+      "role": "Muted helper text, inactive borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#696969",
+      "name": "Slate",
+      "role": "Body secondary text, disabled labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#777777",
+      "name": "Ash",
+      "role": "Body borders at 1px, low-priority dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d1d5db",
+      "name": "Dust",
+      "role": "Card borders on elevated surfaces, input frames",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2d2d2d",
+      "name": "Cinder",
+      "role": "Dark mode accents, badge fills, strong contrast borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5a5a5a",
+      "name": "Smoke",
+      "role": "Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#404040",
+      "name": "Iron",
+      "role": "Dark badges, dense contrast text on tinted chips",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7561b1",
+      "name": "Iris",
+      "role": "Signature emphasis color — hero word highlights, key callouts, brand accents — the only saturated chromatic voice in the system",
+      "group": "brand"
+    },
+    {
+      "hex": "#96beca",
+      "name": "Coastal Teal",
+      "role": "Gray action color for filled buttons, selected navigation states, and focused conversion moments",
+      "group": "brand"
+    },
+    {
+      "hex": "#74a9b9",
+      "name": "Slate Blue",
+      "role": "Decorative borders, icon strokes, secondary blue accents",
+      "group": "accent"
+    },
+    {
+      "hex": "#f4b811",
+      "name": "Amber Glow",
+      "role": "Yellow outline accent for tags, dividers, and focused UI edges",
+      "group": "accent"
+    },
+    {
+      "hex": "#9db161",
+      "name": "Moss",
+      "role": "Green outline accent for tags, dividers, and focused UI edges",
+      "group": "accent"
+    },
+    {
+      "hex": "#ccc6df",
+      "name": "Lilac Mist",
+      "role": "Tinted card borders, violet-tinted shadow glows",
+      "group": "accent"
+    },
+    {
+      "hex": "#d5e8ed",
+      "name": "Pale Aqua",
+      "role": "Cool surface wash, hover state for primary buttons",
+      "group": "accent"
+    },
+    {
+      "hex": "#dfe4d1",
+      "name": "Sand Sage",
+      "role": "Warm neutral surface, decorative section tint",
+      "group": "accent"
+    },
+    {
+      "hex": "#b4cfd7",
+      "name": "Faded Aqua",
+      "role": "Muted border tone, low-contrast decorative strokes",
+      "group": "accent"
+    },
+    {
+      "hex": "#3a344b",
+      "name": "Dusk",
+      "role": "Dark violet text — used for emphasis on light surfaces",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1200px centered content with full-bleed section bands. The hero is a centered headline over a soft gradient strip, followed by a two-column primary button cluster and a full-width product mockup. Sections below alternate between text-left/data-right compositions and centered single-column blocks. The entry-point selector uses a horizontal pill row above a split layout: left column lists journey stages in a vertical stack, right column shows a code window. Navigation is a single top bar, sticky on scroll. Card grids appear in feature sections at 2–3 column counts with 16–24px gutters. Vertical rhythm is 80px between major sections, 16–24px between elements within sections.",
+  "imagery": "Minimal illustrative imagery — the system relies on data visualization rather than photography or illustration. The hero features a product mockup: a horizontal card row with colored progress bars (amber, teal, violet, moss) representing signal processing states. The agent timeline is a flat node-and-connector diagram with circular icon markers. Code panels with macOS chrome dots appear as product screenshots. The only photographic element is the logo mark (mezmo+). Overall density is text-and-data dominant; the page reads as a technical product surface, not a marketing canvas. When color appears in imagery, it is always one of the four data-state hues and never decorative.",
+  "similar": [
+    {
+      "why": "Same typographic confidence with weight-light display headlines, compact density, and a single saturated accent against a near-monochrome interface",
+      "business": "Linear"
+    },
+    {
+      "why": "Light-mode instrument-panel aesthetic with flat surfaces, hairline borders, monospace for code and metrics, and minimal elevation",
+      "business": "Vercel"
+    },
+    {
+      "why": "Developer-tool voice with a single signature color emphasis, 5–8px radii, and content sections that alternate between prose and code/data panels",
+      "business": "PlanetScale"
+    },
+    {
+      "why": "Observability product with violet/purple as the brand voice, monospace-heavy metric presentation, and quiet canvas with data bars as the primary visual motif",
+      "business": "Honeycomb"
+    },
+    {
+      "why": "Compact devtools layout, monospace telemetry values, and restrained color where accent appears only on data signals and emphasis text",
+      "business": "Axiom"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "8px",
+      "badges": "5px",
+      "inputs": "5px",
+      "buttons": "5px",
+      "hairlines": "1px",
+      "large-cards": "14px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#e6e6e5",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Outer page background, banded section backgrounds"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 1,
+      "purpose": "Cards, buttons, input fields, code panels"
+    },
+    {
+      "hex": "#f4f4f4",
+      "name": "Frost",
+      "level": 2,
+      "purpose": "Inline decorative fills, code body backgrounds, light accent surfaces"
+    },
+    {
+      "hex": "#dfe4d1",
+      "name": "Tinted Wash",
+      "level": 3,
+      "purpose": "Warm-tinted section bands, hover state surfaces"
+    },
+    {
+      "hex": "#e7e5ee",
+      "name": "Lilac Mist",
+      "level": 4,
+      "purpose": "Violet-tinted wash for emphasis sections, badge backgrounds"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.2) 0px 2px 5px 0px",
+      "element": "Primary Filled Button"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.2) 2px 2px 8px 0px",
+      "element": "Feature Card"
+    },
+    {
+      "style": "rgba(117, 97, 177, 0.063) 0px 4px 20px 0px",
+      "element": "Elevated Feature Card"
+    },
+    {
+      "style": "rgba(10, 9, 12, 0.04) 0px 1px 4px 0px",
+      "element": "Subtle Card Hover"
+    }
+  ],
+  "northStar": "observatory at dawn",
+  "typeScale": [
+    {
+      "role": "micro",
+      "size": 11,
+      "lineHeight": 1.55,
+      "letterSpacing": 0.06
+    },
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.45
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.24
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.3
+    },
+    {
+      "role": "heading-lg",
+      "size": 36,
+      "lineHeight": 1.13,
+      "letterSpacing": -0.36
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.05,
+      "letterSpacing": -0.48
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Filled Button",
+      "role": "Main call-to-action — e.g. \"Get a demo\", \"Start building with AURA\"",
+      "description": "Background #96beca (Coastal Teal), text #ffffff or #0a090c at 16px Onest weight 500. 5px border-radius, 12px 24px padding (10px vertical / 20px horizontal variant). Subtle hover lift via rgba(0,0,0,0.2) 0px 2px 5px shadow. No border."
+    },
+    {
+      "name": "Ghost Outline Button",
+      "role": "Secondary action — e.g. \"Talk to an engineer\"",
+      "description": "Transparent background, 1px solid #031403 border, text #0a090c at 16px weight 500. 5px radius, 12px 24px padding. Sits adjacent to the primary filled button to create a two-button CTAs cluster."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent header with logo, primary nav, and auth actions",
+      "description": "Full-width white surface, 1px bottom border #d1d5db. Logo \"mezmo+\" in #0a090c with a violet + glyph (#7561b1). Nav items in Onest 14px weight 500, text #0a090c, 16px horizontal gap. Right side: \"Sign In\" text link + Primary Filled Button."
+    },
+    {
+      "name": "Hero Stat Card",
+      "role": "Quantitative summary card in the hero — INGEST, DEDUPLICATE, CLUSTER, CONTEXT-READY",
+      "description": "White card surface, 1px border #d1d5db, 8px radius. Title in monospace 10–11px weight 500 with 0.057em tracking and uppercase treatment. Metric value in monospace 22–26px weight 600, #0a090c. Colored horizontal progress bar beneath (amber #f4b811, teal #96beca, violet #7561b1, moss #9db161) showing proportional states."
+    },
+    {
+      "name": "Code Window",
+      "role": "Embedded code/configuration snippet panel",
+      "description": "Light surface (#f4f4f4 or #ffffff), 8px radius, 1px border #d1d5db. macOS-style traffic-light dots in red/yellow/green. Body text in monospace 11–12px weight 400, with syntax highlighting in #7561b1 (violet for keys), #74a9b9 (blue for strings), #9db161 (green for values), and #c04040 (red for errors). 16px internal padding."
+    },
+    {
+      "name": "Pastel Gradient Banner",
+      "role": "Section divider / eyebrow strip above major sections",
+      "description": "Horizontal band with soft 90deg linear gradient cycling through rgba(147,131,194,0.376) → rgba(116,169,185,0.376) → rgba(147,131,194,0.376) → rgba(157,177,97,0.376). Acts as a chromatic breath between content blocks without competing with content."
+    },
+    {
+      "name": "Agent Timeline Step",
+      "role": "Node in the \"Open-source agent control plane\" flow",
+      "description": "Circular icon node (24–32px) in #74a9b9 or #7561b1 fill, label below in Onest 12–13px weight 500. Connected by 1px horizontal divider line #d1d5db. Active state: filled color; inactive: outlined 1px border only."
+    },
+    {
+      "name": "Tab / Pill Selector",
+      "role": "Entry-point selector — \"Single Agent\", \"Agent Team\", etc.",
+      "description": "Transparent background, 1px solid #031403 border, 5px radius, 10px 16px padding. Text in Onest 13px weight 500, #0a090c. Active state: #0a090c background, #ffffff text. Horizontal flex row with 8px gaps."
+    },
+    {
+      "name": "Logo Lockup",
+      "role": "Brand mark — \"mezmo\" wordmark with + glyph",
+      "description": "Wordmark in Onest weight 500, #0a090c. The + symbol rendered in #7561b1 (Iris) at roughly 1.2x the cap height, positioned as a superscript accent. Functions as a monogram and the only place the violet appears at brand-logotype scale."
+    },
+    {
+      "name": "Section Header",
+      "role": "Intro block for a content section — \"Pick your entry point\"",
+      "description": "Eyebrow label in Onest 11px weight 500, uppercase, 0.06em tracking, #7561b1 or #8a8a8a. Main heading in Onest weight 300, 36–48px, #0a090c, tight -0.36 to -0.48px tracking. Optional subhead in 18px weight 400, #696969."
+    },
+    {
+      "name": "Metric Stat Strip",
+      "role": "Inline KPIs — \"<1min total investigation\", \"<1K signals\", \"<$1 per investigation\"",
+      "description": "Three or more inline stats in a horizontal flex row. Values in monospace 22–26px weight 600 colored by semantic state: moss #9db161 for positive, violet #7561b1 for emphasis. Labels in Onest 13px weight 400, #696969. Separated by 1px vertical dividers or 24px gaps."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Product capability card",
+      "description": "White surface (#ffffff), 1px border #d1d5db or #ccc6df, 8px radius. Internal padding 24px. Optional violet-tinted shadow rgba(117,97,177,0.063) 0px 4px 20px for elevated variant. Title in Onest 18–20px weight 500, body in 16px weight 400."
+    },
+    {
+      "name": "Eyebrow Tag",
+      "role": "Small all-caps label — \"AURA\", \"MEZMO\", \"CONTEXT-READY\"",
+      "description": "5px radius, 4–6px vertical / 8–10px horizontal padding. Background: #e6e5ee or transparent with 1px #ccc6df border. Text in Onest 9–10px weight 600, uppercase, 0.12em tracking, #0a090c or #7561b1."
+    },
+    {
+      "name": "Progress Bar (Data Signal)",
+      "role": "Colored horizontal bar beneath metric cards",
+      "description": "4–6px height, full container width, 5px radius (or pill = 9999px). Colors drawn from the chromatic accent set: #f4b811 (amber), #96beca (teal), #7561b1 (violet), #9db161 (moss). Represents deduplication %, clustering volume, etc."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All interface text — display headlines at weight 300 create a technical-confident tone; body at 16–18px weight 400; labels and micro UI at 11–13px weight 500. Weight 300 headlines are a signature anti-convention choice that makes the system feel like an instrument panel rather than a marketing page",
+      "sizes": "9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 22, 24, 26, 30, 36, 48",
+      "family": "Onest Variable",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.00, 1.05, 1.13, 1.20, 1.23, 1.25, 1.33, 1.45, 1.50, 1.55",
+      "substitute": "Inter, Geist, Satoshi",
+      "letterSpacing": "0.04em at 9–11px (uppercase eyebrow labels); 0.06em at 10–12px (badge text); 0.12em at 9–10px (tracked micro UI)"
+    },
+    {
+      "role": "Telemetry values, code snippets, configuration keys, metric labels in the product UI. Used at 10–12px weight 500 for data density; 0.057em tracking gives a technical, terminal-like read",
+      "sizes": "9, 10, 11, 12",
+      "family": "monospace (system)",
+      "weight": "300, 500, 600",
+      "lineHeight": "1.50",
+      "substitute": "JetBrains Mono, IBM Plex Mono, Berkeley Mono",
+      "letterSpacing": "0.0570em"
+    }
+  ],
+  "description": "Mezmo uses a quiet observatory language: warm off-white canvases, generous whitespace, and a single confident violet as the sole chromatic voice. The interface is typographically driven — thin weight 300 Onest headlines, compact monospace for telemetry values — with color appearing sparingly as semantic punctuation (violet for emphasis, muted teal for primary action, amber/green for data states). Components are flat and border-defined rather than elevated; 5–8px radii and 1px hairline borders create a low-noise, instrument-panel feel. Density is compact but the overall rhythm is unhurried, with wide section gaps and an emphasis on data density within calm containers.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #0a090c\n- background: #e6e6e5 / #ffffff\n- border: #d1d5db (1px)\n- emphasis: #7561b1 (Iris)\n- primary action: #96beca (filled action)\n- monospace data: monospace 11–12px\n\n**3-5 Example Component Prompts**\n\n1. Create a Primary Action Button: #96beca background, #0a090c text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Stat card with progress bar**: White card, 1px #d1d5db border, 8px radius, 24px padding. Eyebrow label in monospace 10px weight 500, uppercase, 0.057em tracking. Metric value in monospace 24px weight 600, #0a090c. Colored progress bar beneath: 6px height, 9999px radius, fill #96beca, background #f4f4f4.\n\n3. **Code window panel**: Background #f4f4f4, 8px radius, 1px #d1d5db border, 16px padding. Three macOS dots (red, amber, green) top-left. Body in monospace 11px weight 400. Syntax colors: keys in #7561b1, strings in #74a9b9, values in #9db161, comments in #8a8a8a.\n\n4. **Section header with eyebrow**: Eyebrow tag — 5px radius, 1px #ccc6df border, 4px 10px padding, text in Onest 9px weight 600 uppercase, 0.12em tracking, #7561b1. Heading below in Onest weight 300, 36px, #0a090c, tracking -0.36px. Subhead at 18px Onest weight 400, #696969.\n\n5. **Entry-point tab selector**: Horizontal flex row, 8px gap. Each tab: transparent background, 1px solid #031403 border, 5px radius, 10px 16px padding, text Onest 13px weight 500, #0a090c. Active tab: #0a090c background, #ffffff text."
+    }
+  ],
+  "elevationPhilosophy": "The system is flat-first and border-defined. 1px hairlines in #d1d5db or #031403 do most of the structural work; shadows appear only on interactive affordances (buttons on hover) and on select elevated cards. The signature violet-tinted shadow at rgba(117,97,177,0.063) is the only brand-colored shadow in the system and is reserved for the most prominent card variants. Heavy elevation would break the instrument-panel feel."
+}

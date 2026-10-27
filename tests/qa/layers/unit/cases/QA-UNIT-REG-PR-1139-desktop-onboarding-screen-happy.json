@@ -1,0 +1,45 @@
+{
+  "id": "QA-UNIT-REG-PR-1139-desktop-onboarding-screen-happy",
+  "itemIds": ["regression:REG-PR-1139-desktop-onboarding-screen"],
+  "requirement": "Desktop first-run screen: three steps end to end in the app from source, Done records the pick and opens Settings › AI accounts on that row, Help reopens it",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1139-desktop-onboarding-screen.json",
+    "ref": "PR #1139 (feat); fix evidence: none recorded",
+    "invariant": "S1: catalogue is a non-empty list of {id, name, homepage}; the page sees tracyDesktop.app.protocolVersion 2. S2: [data-tracy-onboard] present, role=dialog, exactly 3 step buttons. S3: every catalogue id has a card; found count on screen = found ids from detect; claude found on this machine. S4: after Continue data-step-index is 1; body[data-ds-dark-theme] true after Dark, false after System and after Light; after Continue data-step-index is 2. S5: both controls present; the second status() answers with supported true and lastShownAt a number newer than before (or supported false and lastShownAt unchanged). S6: the overlay is gone; preferences.json onboarding.closedAt is a number, outcome 'completed', picked 'codex'; the address carries settings=ai-accounts&vendor=codex and the focused element sits in [data-vendor=codex]. S7: no [data-tracy-onboard] after the relaunch; after the menu click [data-tracy-onboard] is back.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1139-desktop-onboarding-screen.mjs:262 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1139-desktop-onboarding-screen.mjs:82 import() with a computed specifier",
+      "tests/regression/scripts/REG-PR-1139-desktop-onboarding-screen.mjs:84 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": ["REG-PR-1139-desktop-onboarding-screen.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1139-desktop-onboarding-screen"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1139-desktop-onboarding-screen",
+    "pr": 1139,
+    "kind": "feat",
+    "area": "desktop/onboarding",
+    "file": "tests/regression/cases/REG-PR-1139-desktop-onboarding-screen.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1139-desktop-onboarding-screen.mjs"],
+  "cwd": ".",
+  "needs": ["stand"],
+  "tests": [],
+  "timeoutS": 420
+}

@@ -1,0 +1,31 @@
+meta {
+  name: info
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "info",
+    "params": {}
+  }
+}
+
+docs {
+  # The site's component, in one answer
+
+  Asks the site's component to describe itself and the site it serves. The fields come from
+  the component and differ per CMS.
+
+  Look for:
+  - a `200` with the component's own answer, relayed verbatim;
+  - `409 COMPONENT_NOT_REGISTERED` or `409 SITE_PROVISIONING`: the site has no component Tracy
+    can call yet;
+  - `401` / `403`: the session cookie is missing or expired, or your seat is not on this site.
+}

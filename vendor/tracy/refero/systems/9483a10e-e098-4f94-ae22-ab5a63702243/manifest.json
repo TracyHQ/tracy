@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "9483a10e-e098-4f94-ae22-ab5a63702243",
+  "status": "complete",
+  "name": "Yllw",
+  "url": "https://styles.refero.design/style/9483a10e-e098-4f94-ae22-ab5a63702243",
+  "sourceWebsite": "https://www.yllw.com/en",
+  "extractedAt": "2026-06-03T18:37:10.589Z",
+  "capturedAt": "2026-10-08T05:15:00.507258+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Swiss-Bauhaus print monograph. Think oversized Grotesk on warm putty paper, hairline rules, no shadows — architecture rendered as typography.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4fb28655-cca1-4eee-9ad6-9507ab6003d6.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c341f390-0c7c-40ad-ae09-8469f671d4ce.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/cd3adda1-c8b1-4ac6-ad3d-75ec2986c526.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c072c5a7-3ca3-4a16-8977-7e0340e41d4e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/1a11b293-db70-46d1-a3b1-75b6f8c1ea01.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c9c3729883980f53259d1c37f5b53ab31eb64ecf579f89ab02ab6f4688b82c17",
+      "bytes": 22296
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "debcfe640fcb5594871295f214d5515c29c440713fde8bfb46bdfe53c558a890",
+      "bytes": 102974
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "636d3b45e2ee8d3cd4e75d6cf5697f8e9bc40e3206647849d4efaaed43be9ca0",
+      "bytes": 19177
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "836d58d288d3598e20492ccb5930e00cdb241f64092dc49e5efbfd8ef3408eef",
+      "bytes": 13012
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7d1ffbd877334fa8ca0305761545e6592b35575d4675a29122b3739540088711",
+      "bytes": 14976
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6ecbd10c8a9b459d9d7a41f02749cb720594550e1180b6c542ca3a60d1c22968",
+      "bytes": 2126
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d1b2c328c3bea92c7955f40d2810e331cb9e1f54558ebe8c0cfcb95719ef80bf",
+      "bytes": 342
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a267a055a46b21d51f5fe836fff38a47c5bea3e8a5a5cbf060d1d11d5ff99b4b",
+      "bytes": 359
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "510ed0b41593b4247c14fa0ec7fd979aef7e36b319d87050b7ca903ad0c36dca",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "175b18eb0f5cfd61d970b2a00af320c360c7db3286f8381c7b9f46738515ffb2",
+      "bytes": 44764
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3dd5d0084aaf2cfdb77feafaa3fd0472fdd0065b1fdcb37c10acd2c380b5d75b",
+      "bytes": 23011
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3ca7cc19226b783c044341af9004123459386cd73753cebc412f37b5eb2d9271",
+      "bytes": 46917
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "56410387c5e3ab6f2445208d809d1ce928bdf8a4578a31dbfb350dac09ed9b42",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1777f821d9c608a6621f37da7f60b5b21efc81e27cd218414f264ada8086b800",
+      "bytes": 1671
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0c4660f0d737ca0e5106723185db3896e2a75f29f34617272f6a7888c47e0a8d",
+      "bytes": 2276
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0a2bcda6-b5b9-463d-bc8d-2c7ccaa2b776",
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "657e55de-8cff-4d24-9a4e-17d3b7593a55",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318"
+  ]
+}

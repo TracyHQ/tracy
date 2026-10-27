@@ -1,0 +1,99 @@
+{
+  "color": {
+    "electric-violet": {
+      "$value": "#4823ff",
+      "$type": "color",
+      "$description": "Electric Violet — Primary action buttons, filled CTAs, link accents, key icon strokes — the deepest saturated violet in the system carries every conversion moment with maximum voltage against the warm canvas"
+    },
+    "voltage-mid": {
+      "$value": "#7e78ff",
+      "$type": "color",
+      "$description": "Voltage Mid — Hover and active states on the primary violet, selected nav background, secondary fills — carries the brand's chromatic weight when Electric Violet is too loud"
+    },
+    "iris-accent": {
+      "$value": "#6d67fb",
+      "$type": "color",
+      "$description": "Iris Accent — Violet outline accent for tags, dividers, and focused UI edges."
+    },
+    "lilac-wash": {
+      "$value": "#ede9ff",
+      "$type": "color",
+      "$description": "Lilac Wash — Soft section backgrounds, card borders on light surfaces, tinted containers — the lightest tint of the brand violet, used to suggest brand presence without committing to full color"
+    },
+    "periwinkle-border": {
+      "$value": "#d9d2ff",
+      "$type": "color",
+      "$description": "Periwinkle Border — Repeated decorative border tint on light surfaces — sits between Lilac Wash and Iris Accent to provide mid-violet hairline structure on cards and feature frames"
+    },
+    "chartreuse-receipt": {
+      "$value": "#e7ff6e",
+      "$type": "color",
+      "$description": "Chartreuse Receipt — Promotional top banner, highlight callouts, dark-card accent fill — the lone non-violet chromatic in the system, used as a small loud receipt that draws the eye to announcements"
+    },
+    "powder-blue": {
+      "$value": "#99cefe",
+      "$type": "color",
+      "$description": "Powder Blue — Soft highlight washes on product UI mockups, subtle background tints — a cool counterpoint to the warm violet palette, appears only in product screenshots and small badges"
+    },
+    "bone-canvas": {
+      "$value": "#fafaf8",
+      "$type": "color",
+      "$description": "Bone Canvas — Page background, hero canvas, the base layer every surface sits on — a near-white with a barely-warm cast that distinguishes the system from stark pure white"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, elevated panels, button text on dark fills, product UI chrome — the brightest layer above the Bone Canvas"
+    },
+    "obsidian-ink": {
+      "$value": "#18161a",
+      "$type": "color",
+      "$description": "Obsidian Ink — Primary text, dominant borders, dark product card backgrounds, button text on light fills — a near-black with the faintest violet cast that ties dark surfaces back to the brand"
+    },
+    "carbon-border": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Carbon Border — Structural borders on cards and dividers, secondary text in dense lists, icon strokes on dark surfaces"
+    },
+    "graphite": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Graphite — Navigation borders, secondary button borders, supporting text — a dark neutral that sits between Obsidian Ink and Carbon Border"
+    },
+    "slate-helper": {
+      "$value": "#898b91",
+      "$type": "color",
+      "$description": "Slate Helper — Muted helper text, inactive form labels, low-priority dividers"
+    },
+    "lavender-gray": {
+      "$value": "#9e99ab",
+      "$type": "color",
+      "$description": "Lavender Gray — Muted secondary text, subtle card borders on lighter surfaces — carries a slight cool-violet undertone that keeps it from clashing with the brand palette"
+    },
+    "midnight-surface": {
+      "$value": "#1e1b22",
+      "$type": "color",
+      "$description": "Midnight Surface — Dark feature card backgrounds (e.g. cap table live view), product showcase panels — a violet-tinted near-black for dark cards in a light-themed system"
+    }
+  },
+  "font": {
+    "plus-jakarta-sans": {
+      "$value": "Plus Jakarta Sans",
+      "$type": "fontFamily",
+      "$description": "Display headlines — the only place this font appears, reserved for hero and section titles where a heavy condensed-ish sans slams the page with negative tracking; tighter than Inter at the same size gives display lines extra punch"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Sub-headlines and sub-copy beneath Plus Jakarta Sans displays — the light weight creates a deliberate typographic contrast where the heavy display does the shouting and the thin Inter does the whispering"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.cakeequity.com",
+      "siteName": "Cake Equity",
+      "extractedAt": "2026-06-03T18:13:36.941Z",
+      "variant": "compact"
+    }
+  }
+}

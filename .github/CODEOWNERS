@@ -1,0 +1,15 @@
+# What decides where code runs and with which credentials needs the repository owner's review.
+# A fork pull request that edits these files could ask for a self-hosted runner once approved to run
+# (docs/references/public-repo-ci.md).
+/.github/ @leeknowsai
+/scripts/ci/ @leeknowsai
+/scripts/check-english-commits.mjs @leeknowsai
+/scripts/check-language-policy.mjs @leeknowsai
+/scripts/check-language.ts @leeknowsai
+/scripts/lib/english-policy.mjs @leeknowsai
+/scripts/lib/comment-language.ts @leeknowsai
+/scripts/lib/owned-vendor-trees.ts @leeknowsai
+/scripts/language-policy.json @leeknowsai
+/scripts/language-debt.json @leeknowsai
+/scripts/opensource/ @leeknowsai
+/.pre-commit-config.yaml @leeknowsai

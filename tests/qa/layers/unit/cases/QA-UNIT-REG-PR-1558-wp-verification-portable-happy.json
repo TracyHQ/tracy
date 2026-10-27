@@ -1,0 +1,103 @@
+{
+  "id": "QA-UNIT-REG-PR-1558-wp-verification-portable-happy",
+  "itemIds": ["regression:REG-PR-1558-wp-verification-portable"],
+  "requirement": "WordPress quickstart VERIFICATION.json carries no stand origin or machine path",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1558-wp-verification-portable.json",
+    "ref": "PR #1558 (fix); fix evidence: The JA Restaurant WP release's VERIFICATION.json held http://127.0.0.1:<port> origins and ~/ evidence dirs; published WP releases before it held none.",
+    "invariant": "0 failures. Every test in verification-portable.test.mjs passes: stand origins and machine paths (start of value, inside text, file:// URLs) are absent from the record; a non-loopback IPv6 address and repository-relative paths stay; release, version, gate, visual and hashes are unchanged.",
+    "productSources": [
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/lib/canonical.mjs:24",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/cycle.mjs:236",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/patch-chain.mjs:35",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/release.mjs:1242",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/visual/contract.mjs:66"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/lib/canonical.mjs:34 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/lib/canonical.mjs:48 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/lib/parity-acceptance.mjs:50 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/cycle.mjs:319 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/lib.mjs:1403 openSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/lib.mjs:1411 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/lib.mjs:188 openSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/lib.mjs:195 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/patch-chain.mjs:168 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/patch-chain.mjs:66 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/release.mjs:116 openSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/quickstart/release.mjs:134 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:121 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:122 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:135 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:149 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:161 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:163 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:241 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:248 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:321 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:322 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:378 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:381 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:382 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:384 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:90 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:91 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:95 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-cycle.test.mjs:96 spawn() runs computed arguments",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-patch-chain.test.mjs:101 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-patch-chain.test.mjs:198 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-patch-chain.test.mjs:199 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-patch-chain.test.mjs:226 readFileSync() with a computed path",
+      "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test/quickstart-patch-chain.test.mjs:33 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a release record carries no stand origin and no machine path",
+    "a machine path inside a longer message is cut, a repository-",
+    "IPv6 stand origins are replaced too",
+    "a file:// URL of a machine path is cut to the file name",
+    "only loopback IPv6 is a stand origin; a documentation addres"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1558-wp-verification-portable"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1558-wp-verification-portable",
+    "pr": 1558,
+    "kind": "fix",
+    "area": "wordpress-skill/release",
+    "file": "tests/regression/cases/REG-PR-1558-wp-verification-portable.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "scripts/test/verification-portable.test.mjs",
+    "scripts/test/quickstart-patch-chain.test.mjs",
+    "scripts/test/quickstart-cycle.test.mjs"
+  ],
+  "cwd": "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme",
+  "needs": [],
+  "tests": [
+    "a release record carries no stand origin and no machine path",
+    "a machine path inside a longer message is cut, a repository-",
+    "IPv6 stand origins are replaced too",
+    "a file:// URL of a machine path is cut to the file name",
+    "only loopback IPv6 is a stand origin; a documentation addres"
+  ],
+  "timeoutS": 600
+}

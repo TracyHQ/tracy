@@ -1,0 +1,4 @@
+# Insert Tracy's conversation-view plugin row; the user patch then only ever modifies it.
+- insert:
+    - id: tracy-chat-input
+      name: '@tracy/dsh-chat-input'

@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-graphite: #595959;
+
+  /* Typography */
+  --font-helvmono: 'HELVMONO', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-helvetica-bold: 'helvetica-bold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apple-system: '-apple-system', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

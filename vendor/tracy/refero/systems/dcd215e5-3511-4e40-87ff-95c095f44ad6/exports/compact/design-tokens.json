@@ -1,0 +1,44 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#070708",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, all borders, full-bleed dark surfaces, pill-button outlines — the near-black that absorbs everything; choosing 070708 over pure black removes blue-cast and reads warmer on screen"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, reverse text on dark blocks, pill-button backgrounds and inverse outlines"
+    },
+    "ash": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Ash — Secondary labels, muted helper text, inactive filter states, badge borders, meta tags — the only mid-tone voice for tertiary information"
+    }
+  },
+  "font": {
+    "instrument-sans": {
+      "$value": "Instrument-Sans",
+      "$type": "fontFamily",
+      "$description": "The workhorse. One weight (400) handles everything from 11px micro-labels to the 352px edge-to-edge wordmark. Tracking opens dramatically at scale: -0.05em at display, 0 to -0.005em at body, expanding to +0.05em–0.11em on uppercase badges. ss12 stylistic set and ligatures are always on — they define the typeface's character."
+    },
+    "instrument-serif": {
+      "$value": "Instrument-Serif",
+      "$type": "fontFamily",
+      "$description": "Reserved for editorial statement headlines — the 'we are' sentences. One weight, one size, one job. The serif creates an emotional counterpoint to the geometric sans: the page shifts register from confident command (sans) to reflective thought (serif) in a single line."
+    },
+    "instrument-serif-italic": {
+      "$value": "Instrument-Serif-Italic",
+      "$type": "fontFamily",
+      "$description": "Instrument-Serif-Italic — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.instrument.com",
+      "siteName": "Instrument",
+      "extractedAt": "2026-06-03T20:46:22.578Z",
+      "variant": "compact"
+    }
+  }
+}

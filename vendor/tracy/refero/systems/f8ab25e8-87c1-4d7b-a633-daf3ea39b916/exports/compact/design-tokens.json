@@ -1,0 +1,59 @@
+{
+  "color": {
+    "ember-ink": {
+      "$value": "#d9462b",
+      "$type": "color",
+      "$description": "Ember Ink — Hero wordmark color, accent strokes, and the only chromatic text — a warm orange-red that reads as hand-pressed ink against the pink field. Used on display headlines and select illustration details"
+    },
+    "dusty-rose": {
+      "$value": "#e296bb",
+      "$type": "color",
+      "$description": "Dusty Rose — Primary section background — a warm desaturated pink that carries the hero band and full-width content panels. Sets the editorial tone of the site"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, wordmark fill on light sections, illustration linework, and borders. The workhorse neutral"
+    },
+    "charcoal": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Charcoal — Dark section surface — used for full-bleed panels that invert the page to white-on-black editorial spreads"
+    },
+    "bone-white": {
+      "$value": "#f5f6f5",
+      "$type": "color",
+      "$description": "Bone White — Default page canvas and light section background — slightly warm off-white that pairs with the pink rather than competing against it"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Pure white reserved for maximum contrast moments and the lightest content panels"
+    }
+  },
+  "font": {
+    "trjn-davinci": {
+      "$value": "TRJN DaVinci",
+      "$type": "fontFamily",
+      "$description": "Display wordmark and editorial display type. This humanist serif at 300px is the signature — it carries the brand name and section titles. Its tall x-height, ball-terminal details, and slight contrast make it feel like wood-type rather than web type. Used at massive scale for the 'Concrete Club' wordmark and at 14–16px for editorial pull-quotes and chapter labels. Substitute: Playfair Display or DM Serif Display for a similar humanist editorial serif character."
+    },
+    "helveticaneue-light": {
+      "$value": "HelveticaNeue-Light",
+      "$type": "fontFamily",
+      "$description": "Body text, navigation labels, and large all-caps section statements. The 300-weight thinness of this sans is deliberate — it sits quietly beneath the DaVinci wordmark rather than competing. At 48px and 112px it becomes statement type in its own right, used for large chapter intros and hero secondary text. Tight line-height (0.78) makes multi-line headers stack densely. Substitute: Helvetica Neue Light or Inter Light."
+    },
+    "neue-montreal": {
+      "$value": "Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "Micro-labels and small print — copyright lines, location markers, fine meta text. The cleanest, most neutral voice in the system. Substitute: Neue Haas Grotesk or Inter."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://concreteclub.studio",
+      "siteName": "Concrete Club Studio",
+      "extractedAt": "2026-06-03T18:56:04.130Z",
+      "variant": "compact"
+    }
+  }
+}

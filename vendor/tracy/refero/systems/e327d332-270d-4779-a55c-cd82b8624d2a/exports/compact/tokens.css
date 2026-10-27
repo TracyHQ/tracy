@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-warm-canvas: #ebeadf;
+  --color-pristine-surface: #ffffff;
+  --color-sand-beige: #d5cec0;
+  --color-ink-black: #000000;
+  --color-coral-pulse: #f04923;
+
+  /* Typography — Font Families */
+  --font-supreme-ll-tt: 'Supreme LL TT', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

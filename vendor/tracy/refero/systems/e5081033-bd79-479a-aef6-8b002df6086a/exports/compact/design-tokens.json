@@ -1,0 +1,49 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, nav labels, logo, icon strokes, and every text-level heading — sets the full information hierarchy"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surface, and hero overlay text — the default background for almost every screen"
+    },
+    "fog": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Fog — Subtle form inputs, tag surfaces, and quiet secondary panel backgrounds — barely-there neutral"
+    },
+    "signal-blue": {
+      "$value": "#0000ff",
+      "$type": "color",
+      "$description": "Signal Blue — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "coral": {
+      "$value": "#ff8389",
+      "$type": "color",
+      "$description": "Coral — Category tag fills (Downloads, News) — flat rectangular badges that classify content without padding the layout"
+    },
+    "teal": {
+      "$value": "#00d2be",
+      "$type": "color",
+      "$description": "Teal — Category tag fills (Tutorials, Videos) — flat rectangular badges paired with coral to split content taxonomy visually"
+    }
+  },
+  "font": {
+    "futura-pt": {
+      "$value": "futura-pt",
+      "$type": "fontFamily",
+      "$description": "The single typeface powering everything from body copy to 90px display headlines. Futura PT's geometric precision mirrors Ableton's grid-based music software — the type and the product share a visual logic. Weight 700 carries headlines, 400 carries body. No serif, no monospace secondary face — the system stays mono-typographic."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ableton.com",
+      "siteName": "Ableton",
+      "extractedAt": "2026-06-03T19:50:43.615Z",
+      "variant": "compact"
+    }
+  }
+}

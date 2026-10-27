@@ -1,0 +1,29 @@
+/* fixture token layer */
+:root {
+  --bg: #ffffff;
+  --surface: #f5f5f7;
+  --fg: #1d1d1f;
+  --border: #d2d2d7;
+  --accent: #0071e3;
+  --font-body: "SF Pro Text", Inter, sans-serif;
+  --text-base: 17px;
+  --leading-body: 1.47;
+  --section-y-desktop: 100px;
+  --section-y-tablet:  64px;
+  --section-y-phone:   40px;
+  --container-max: 1024px;
+  --container-gutter-desktop: 22px;
+  --space-6: 24px;
+  --tracy-capsule: 980px;
+  --focus-ring: 0 0 0 4px color-mix(in oklab, var(--accent), transparent 65%);
+  --tracy-ring: 0 0 0 1px var(--border);
+}
+
+html[data-theme="dark"],
+[data-bs-theme="dark"] {
+  --bg: #000000;  /* darkest neutral */
+  --surface: #1d1d1f;
+  --fg: #f8f8f8;
+  --border: #2f2f30;
+  --accent: #2997ff;
+}

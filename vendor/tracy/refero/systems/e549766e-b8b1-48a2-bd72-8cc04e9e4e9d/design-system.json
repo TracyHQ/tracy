@@ -1,0 +1,302 @@
+{
+  "dos": [
+    "Use the hard offset shadow (8px 8px 0px 0px #f1f1f1) exclusively on primary pill buttons — never apply blur or diffusion to elevation",
+    "Set Inter Display at weight 400 only; let size and -0.03em tracking carry hierarchy, never switch to bold",
+    "Reserve #855cf7 for the logo gradient and the active tab underline — every other accent must be the muted #dacefd lavender",
+    "Pair every primary CTA with a ghost secondary button of identical 35px radius and padding",
+    "Use 100px between major sections, 10–12px between inline elements, 24px inside cards",
+    "Treat photography as full-bleed and unbordered — let the white canvas frame it like a gallery wall",
+    "Apply Aux Mono 14px -0.04em to all eyebrow labels, timestamps, and tab headings"
+  ],
+  "donts": [
+    "Do not introduce additional brand colors or saturated fills — the system is 99% achromatic by design",
+    "Do not use soft blurred shadows on buttons; the signature is hard, solid, paper-cutout offsets",
+    "Do not bold headlines or use weight 500+ in Inter Display — the single-weight hierarchy is intentional",
+    "Do not round the active tab into a pill background; the 2px violet underline is the only acceptable indicator",
+    "Do not add gradient backgrounds to sections or cards — gradients are reserved for the brand mark",
+    "Do not use border-radius values outside the defined scale (35/20/14/9/2px)",
+    "Do not center-align body paragraphs longer than two lines — the system is left-aligned with a centered display headline only"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#131315",
+      "name": "Charcoal Ink",
+      "role": "Primary text, dark pill button fill, heading borders — warm near-black, the only filled button color in the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Page canvas, card surfaces, button text, ghost button background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f5ff",
+      "name": "Bone",
+      "role": "Secondary canvas, subtle violet-tinted off-white for alternating sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f1f1f1",
+      "name": "Cutout Gray",
+      "role": "Solid offset shadow color under primary buttons and secondary surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#717173",
+      "name": "Slate Mid",
+      "role": "Muted body text, secondary metadata, helper copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d0d0d0",
+      "name": "Hairline",
+      "role": "Subtle borders, dividers, inactive tab indicators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#444444",
+      "name": "Deep Charcoal",
+      "role": "Input borders, slightly heavier dividers than Hairline",
+      "group": "neutral"
+    },
+    {
+      "hex": "#855cf7",
+      "name": "Logo Violet",
+      "role": "Brand mark gradient terminus, logo cube fill — the only saturated color in the system",
+      "group": "brand"
+    },
+    {
+      "hex": "#dacefd",
+      "name": "Lavender Trace",
+      "role": "Selected tab underline, violet hairline accents, announcement pill border — violet at whisper volume",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1200px centered content column on a full-width white canvas. Hero is vertically centered with a display headline, short muted paragraph, and two side-by-side pill CTAs; no hero image — the first visual break is the logo strip, then a large full-bleed photograph. Sections alternate white and bone (#f7f5ff) bands with 100px vertical breathing room. Feature blocks use a 4-column card grid for product screenshots, each card on the bone surface with a 1px inset hairline. Onboarding uses a 3-column timeline with circle checkpoints on a hairline rule. Navigation is a single fixed top bar: logo left, link cluster center-left, login + dark pill CTA right. No sidebar, no mega-menu.",
+  "imagery": "Photography is the emotional engine: full-bleed, high-saturation action and lifestyle imagery (surfing, fashion, vibrant product crops) that contrast sharply against the bone-white interface. Images are treated raw — no overlays, no duotone, no rounded corners, no borders. The interface frames the photography like a gallery wall. Product UI is shown as tilted browser-frame screenshots floating on the canvas. Logo strip is desaturated grayscale partner marks at mid-gray opacity, each monochrome and small. Icons are minimal: a purple gradient cube/diamond for the brand mark, otherwise absent or hairline.",
+  "similar": [
+    {
+      "why": "Same single-weight display type, near-monochrome canvas, pill CTAs with offset flat shadows, and editorial negative tracking on headlines",
+      "business": "Linear"
+    },
+    {
+      "why": "Inter-family typography with compressed letter-spacing, bone-white canvas, full-bleed photography breaks, and minimal component ornamentation",
+      "business": "Vercel"
+    },
+    {
+      "why": "Media-product focus, dark pill primary button on white, and a restrained palette that lets imagery carry the brand",
+      "business": "Frame.io"
+    },
+    {
+      "why": "Editorial SaaS sensibility with single-weight display headlines, generous section breathing room, and a single muted accent color against monochrome UI",
+      "business": "Pitch"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tabs": "2px",
+      "cards": "14px",
+      "inputs": "9px",
+      "buttons": "35px",
+      "smallChips": "2px",
+      "secondaryButtons": "20px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "100px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Primary page background"
+    },
+    {
+      "hex": "#f7f5ff",
+      "name": "Bone",
+      "level": 1,
+      "purpose": "Alternating section background, subtle violet-tinted band"
+    },
+    {
+      "hex": "#f1f1f1",
+      "name": "Cutout",
+      "level": 2,
+      "purpose": "Offset shadow plane under elevated buttons and cards"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "#f1f1f1 8px 8px 0px 0px (hard solid offset, no blur — reads as paper cutout)",
+      "element": "Primary CTA Button"
+    },
+    {
+      "style": "rgba(226,226,227,0.5) 10px 10px 0px -2px (hard offset, partially behind element)",
+      "element": "Ghost/Link Button"
+    },
+    {
+      "style": "rgba(19,19,21,0.12) 0px 1px 4px 0px (subtle soft shadow for small buttons)",
+      "element": "Secondary Action Button"
+    },
+    {
+      "style": "rgba(0,0,0,0.05) 0px 0px 0px 1px inset (inset hairline, no outer shadow)",
+      "element": "Product Card"
+    }
+  ],
+  "northStar": "Editorial paper cutouts on white",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.29,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.16
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.24
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.22,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.15,
+      "letterSpacing": -1.44
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1.1,
+      "letterSpacing": -2.16
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Pill Button",
+      "role": "Highest-emphasis action",
+      "description": "Dark charcoal fill (#131315), white text, 35px border-radius, ~15px vertical / 24px horizontal padding, Inter Display 16px weight 400 with white color. Carries the signature 8px 8px 0px 0px #f1f1f1 hard offset shadow beneath — no blur, reads as a cutout hovering above the page."
+    },
+    {
+      "name": "Ghost Pill Button",
+      "role": "Secondary action paired with primary",
+      "description": "No fill, 1.5px solid #131315 border, #131315 text, 35px radius, same padding as primary. The 8px offset shadow is rendered in semi-transparent gray (rgba(226,226,227,0.5) 10px 10px 0px -2px) so the button appears to sit on a slightly lifted paper plane."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Site-wide navigation",
+      "description": "Sticky white bar with 1px bottom hairline (#d0d0d0). Logo cube left, then 5–6 Inter Display 14px links in #131315 with 20px gap; right side: 'Log In' text link plus the primary pill CTA. Vertical padding ~20px."
+    },
+    {
+      "name": "Announcement Pill",
+      "role": "Inline news/feature flag above hero",
+      "description": "Lavender Trace (#dacefd) 1px border, fully rounded (~999px or matching button radius), Aux Mono 14px text in violet. No fill, no shadow. Floats centered above the hero headline."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Page-level display",
+      "description": "Inter Display 72px (desktop) / 48px (tablet) weight 400, #131315, line-height 1.1, letter-spacing -0.03em. Centered, max-width ~900px. No gradient, no mixed weight — the size and negative tracking do all the work."
+    },
+    {
+      "name": "Tab Navigation Strip",
+      "role": "In-section content switcher",
+      "description": "Four labels (Search / Access / Share / Archive) in Inter Display 16px, evenly spaced, separated by hairline dividers. Active tab is marked by a 2px-tall violet (#855cf7) underline directly beneath the text — not a pill background, just a precise accent line. Inactive tabs are #717173."
+    },
+    {
+      "name": "Product Screenshot Card",
+      "role": "Feature proof point",
+      "description": "Product UI rendered as a browser-frame screenshot, slight tilt or straight, sitting on the bone (#f7f5ff) surface. Card has 1px inset #00000014 hairline, 14px radius, no outer shadow. Image bleeds nearly to the card edge."
+    },
+    {
+      "name": "Logo Strip",
+      "role": "Social proof / partner bar",
+      "description": "Horizontal row of 7–8 partner logos in mid-gray (#717173 or desaturated), evenly spaced with ~40px gaps, all rendered at uniform height (~20px). No labels, no borders — just quiet marks."
+    },
+    {
+      "name": "Timeline Onboarding Row",
+      "role": "Step-based explanation",
+      "description": "Three columns headed by Aux Mono 14px labels ('DAY 1', 'DAY 14', 'DAY 21') in #717173, then Inter Display 24px headings in #131315, then body text. Below the columns runs a full-width hairline with 2px solid charcoal circles at each step; active step is filled, future steps are outlined."
+    },
+    {
+      "name": "Cookie Consent Banner",
+      "role": "Bottom-right compliance notice",
+      "description": "Fixed bottom-right card, white fill, 1px #d0d0d0 border, 9px radius, ~16px padding. Body text in 12px #717173, small 'Okay' button with #131315 text and no background."
+    },
+    {
+      "name": "Brand Logo Mark",
+      "role": "Identity",
+      "description": "A small cube/diamond glyph filled with a conic gradient from transparent to #855cf7, ~24px square, followed by 'shade' wordmark in Inter Display 20px weight 400, #131315. The gradient is the only saturated color mark in the system."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Primary typeface for all UI text, body and headings alike. Single weight 400 carries the entire hierarchy through size and tracking alone — no bold, no light. The custom stylistic sets (ss01, ss07, ss08) reshape the g, a, and l terminals into a more geometric, editorial silhouette that distinguishes it from stock Inter.",
+      "sizes": "10px, 14px, 16px, 18px, 20px, 21px, 24px, 28px, 32px, 36px, 40px, 48px, 56px, 72px",
+      "family": "Inter Display",
+      "weight": "400",
+      "lineHeight": "1.0–1.57 (size-dependent)",
+      "substitute": "Inter",
+      "letterSpacing": "-0.01em to -0.03em (tighter as size increases: -0.01em at body, -0.03em at display)",
+      "fontFeatureSettings": "\"ss01\", \"ss07\", \"ss08\", \"cv03\", \"cv04\", \"cv09\", \"cv11\", \"blwf\""
+    },
+    {
+      "role": "Monospaced label font for section eyebrows (e.g. 'DAY 1', 'LET'S CHAT', nav items, badge text). Sets at 14px with -0.04em tracking gives timestamps and labels a technical, archival feel against the editorial display type.",
+      "sizes": "14px",
+      "family": "Aux Mono",
+      "weight": "400",
+      "lineHeight": "1.29",
+      "substitute": "JetBrains Mono",
+      "letterSpacing": "-0.04em"
+    },
+    {
+      "role": "Secondary fallback / system-level utility text where the custom display features aren't required",
+      "sizes": "12px, 14px, 16px",
+      "family": "Inter",
+      "weight": "400, 500",
+      "lineHeight": "1.2–1.5",
+      "substitute": "system-ui"
+    }
+  ],
+  "description": "Shade operates in a near-monochrome design language: white canvas, soft warm-charcoal text, and one restrained violet accent that appears almost exclusively as hairline borders and a single logo gradient. The interface feels editorial and unhurried — Inter Display at compressed negative tracking gives headlines a sculpted, magazine-cover quality rather than the typical SaaS breathing-room look. Buttons are pill-shaped with hard, solid-color offset shadows (no blur, no diffusion) that read as paper cutouts rather than Material elevations. Color is used as rare punctuation: the violet never fills large surfaces, it traces edges and marks selected states, letting the photographic content do the emotional work.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n• text: #131315 (charcoal)\n• background: #ffffff (canvas), #f7f5ff (bone secondary)\n• border: #d0d0d0 (hairline), #444444 (input)\n• accent: #855cf7 (logo/active tab), #dacefd (lavender whisper)\n• primary action: #131315 (filled action)\n\n3-5 Example Component Prompts:\n\n1. Hero section: white #ffffff canvas. Display headline at 72px Inter Display weight 400, color #131315, letter-spacing -0.03em (-2.16px), line-height 1.1. Muted paragraph at 18px weight 400, #717173. Two buttons side by side: ghost pill (1.5px #131315 border, 35px radius, #131315 text, 15px 24px padding) + dark pill (#131315 fill, white text, 35px radius, hard 8px 8px 0px 0px #f1f1f1 shadow, 15px 24px padding). Centered stack, max-width 900px.\n\n2. Announcement pill: 1px #dacefd border, fully rounded (999px), Aux Mono 14px text in #855cf7, transparent fill, 6px 14px padding, centered above hero with 16px bottom margin.\n\n3. Tab nav strip: four labels in Inter Display 16px #717173, evenly spaced across full width, 1px #d0d0d0 hairline beneath entire row, 2px solid #855cf7 underline directly below the active tab label only.\n\n4. Product screenshot card: 14px radius, 1px inset rgba(0,0,0,0.05) border, no outer shadow, 24px padding, sitting on #f7f5ff bone surface. Image fills the card edge-to-edge with no rounded inner clipping.\n\n5. Timeline step row: three columns with Aux Mono 14px eyebrow in #717173, Inter Display 24px heading in #131315, 16px body text in #717173. Full-width 1px #d0d0d0 rule below, 2px solid #131315 circle markers (10px diameter) at each step column position; outlined circle for inactive steps."
+    }
+  ],
+  "northStarDetail": "A gallery catalog where ink-black text sits on bone-white paper, each interactive element casts a flat gray shadow like a die-cut card lifted slightly from the page."
+}

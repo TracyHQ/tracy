@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1198-menu-ring",
+  "kind": "feat",
+  "title": "Account menu › Getting started: a progress ring and n/N count that follow the rail's rule, and the row leaves when every step is done or the account hid it",
+  "pr": 1198,
+  "area": "onboard/menu-row",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-onboard menu-row tests (node:test, jsdom page, fake /api/onboarding and /api/seat-plan/status doors).",
+    "S2: the end-to-end form is S6 (web) and S7 (desktop) of tasks/evidence/ai-accounts-unify/stand/REPORT.md."
+  ],
+  "expect": [
+    "Web, no AI account: 2/3 (sign-in and appearance always done); desktop, no account, notifications off: 2/4.",
+    "A connect published to the page copy moves the count to 3/4 without a reload; a disconnected row does not count; notifications turned on move it too.",
+    "Every step done: no row. Hidden from the account menu: no row, whatever the count. Operator switch off: no row.",
+    "No answer about the flags (no door): the row shows with the count it knows. The row's ring has stroke-dashoffset = C·(1−done/total)."
+  ],
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "packages/ui/tracy-onboard/test/menu-row.test.mjs"],
+    "tests": [
+      "the web with no AI account: 2/3 — sign-in and appearance are always done",
+      "the desktop app with no AI account and notifications off: 2/4",
+      "a connect published to the page copy moves the count to 3/4 without a reload; a disconnected row does not count",
+      "every step done: no row (web, an account connected)",
+      "hidden from the account menu: no row, whatever the count",
+      "the operator switched Getting started off: no row",
+      "through apply(): the real page copy — publishStatus from a connect moves the web row from 2/3 to gone"
+    ],
+    "timeout_s": 120
+  },
+  "fence": "the count comes from the same stepsDone rule as the screen's rail, so the menu never disagrees with the screen",
+  "selectors": {
+    "row": "[data-menu-item='getting-started']",
+    "ring": ".tv-ob-ring[data-done]",
+    "count": ".tv-ob-menu-count"
+  }
+}

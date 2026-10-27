@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3240fdc0-ffea-4054-a996-a5f6b942eff0",
+  "status": "complete",
+  "name": "Aaron Poe & Co",
+  "url": "https://styles.refero.design/style/3240fdc0-ffea-4054-a996-a5f6b942eff0",
+  "sourceWebsite": "https://aaronpoeandco.com",
+  "extractedAt": "2026-06-03T20:57:46.568Z",
+  "capturedAt": "2026-10-08T05:09:58.926121+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Quiet white gallery — coral pink whispers float in vast considered silence, framed only by pill-shaped nav and tightly-tracked type.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1737b130-dd6c-4d45-b646-5a2df6714d2d.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9033c4fd7bc3f7df0598c818bbd2a6155898187442584996a5f6fee64802ccb4",
+      "bytes": 18280
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "553538862b5012c73c63eac92bed98d3e4488847dc83c919ffc7d10b56f5cf40",
+      "bytes": 38686
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0a1811d76772d69ae4ffc0206b5749dcd6133ec01d436f31ee1880e3feec387c",
+      "bytes": 16136
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9f111f5086c866e09406571248807e025136f6c41e1c3c75d571ddb0b8ec5831",
+      "bytes": 9711
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "9bfba8b1bf92d7348b80664b85af3f83ee78adcf315331c28d83348a0b11d347",
+      "bytes": 11141
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "396bbb56a2195da04bf59057c40166cefd64f1512a624d6d96337a1b894fa7c3",
+      "bytes": 2998
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "443b45a7e22ce72431601a7fa42a838ae75a8350b305cb10b9eb8f0394f41b5e",
+      "bytes": 814
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "63759dedd16ea662dc9fa3433dd238a9d5d6b76ec9296ea48afc80e4feeaf5f9",
+      "bytes": 831
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "aa0486c02a29be2cc942d53b39a9d0df44e6e789c8a5da573f1882b647e63e57",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "38a4287aec61a854e7c8d2b3e050e3d2094672e89bb2b589357d296102d0bef4",
+      "bytes": 40451
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f8b04a646b2cc77dd6570c1383af65121ef96dfa9403d1922c4082ce5dae34fe",
+      "bytes": 20565
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8fce947f2db4f5acb2580e7385e7613c6ca00e5aeae8849b918196a8307e0f2d",
+      "bytes": 33559
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "11ba6ca5af76b8b61c4310c03d17e95ca116377a5a7d614b203502b986231570",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4fc13e9999282037652acf9eb81d1ac9bfa8205410a399132e2c73e3d9492af4",
+      "bytes": 1388
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "8ba2dfbf0754fef6ffe83317ab21e9dfe2d4a7fc6bba4b98b3a1b1274ee16551",
+      "bytes": 1902
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "14f10100-a102-427a-88d1-7cc80cbb332d",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "3240fdc0-ffea-4054-a996-a5f6b942eff0",
+    "36de4683-cce3-4a01-820b-65ef8815747b",
+    "4080f6e4-e61c-4d3c-ab93-de74a1b5dfc2",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "7afd842e-44d4-4f01-9ef5-683c31d820c9",
+    "81a66e75-23af-4525-8a4e-f4a54c2700e7",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "9fe18d8b-58b7-404d-bcc6-9e8a73b8862c",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "a85c74b9-2166-4fa3-be49-a2cc48990c6a",
+    "ab1b113a-ed21-4512-acc2-d10c8927c410",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "e67ac20e-6497-4756-b7e2-17859a794fb6"
+  ]
+}

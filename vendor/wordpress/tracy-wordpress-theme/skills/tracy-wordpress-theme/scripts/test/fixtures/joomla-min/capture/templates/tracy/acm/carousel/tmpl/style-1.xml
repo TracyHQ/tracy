@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Carousel Style 1</title>
+  <fields name="carousel">
+    <fieldset name="band"><field name="heading" type="text" /><field name="ground" type="list" default="canvas" /></fieldset>
+    <fieldset multiple="1" name="slides">
+      <fields name="slide" multiple="1">
+        <field name="slide-title" type="text" /><field name="slide-text" type="textarea" /><field name="slide-link" type="text" />
+      </fields>
+    </fieldset>
+  </fields>
+</form>

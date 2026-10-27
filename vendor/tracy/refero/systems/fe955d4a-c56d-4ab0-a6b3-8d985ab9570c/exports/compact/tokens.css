@@ -1,0 +1,25 @@
+:root {
+  /* Colors */
+  --color-broadcast-burgundy: #390a1a;
+  --color-on-air-coral: #f73b3b;
+  --color-hot-take-red: #ff5340;
+  --color-plum-mid: #651a39;
+  --color-deep-violet: #0c0b5f;
+  --color-soft-violet: #8787e0;
+  --color-pale-peach: #ffe8db;
+  --color-blush-mist: #f1eaed;
+  --color-studio-black: #190308;
+  --color-ink-dark: #1a1a1a;
+  --color-warm-parchment: #faf8f7;
+  --color-pure-white: #ffffff;
+  --color-dusty-rose: #a28993;
+  --color-border-mauve: #907580;
+  --color-fog-gray: #e5e7eb;
+  --color-muted-plum: #583f4a;
+  --color-steel-mauve: #d1c7cb;
+
+  /* Typography — Font Families */
+  --font-booton: 'Booton', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gamuth-display: 'Gamuth Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-brett: 'Brett', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

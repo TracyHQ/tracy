@@ -1,0 +1,44 @@
+{
+  "id": "QA-UNIT-REG-PR-1004-ja-vega-wp7-theme-name-1-1-11-happy",
+  "itemIds": ["regression:REG-PR-1004-ja-vega-wp7-theme-name-1-1-11"],
+  "requirement": "JA Vega wp7 1.1.11: the theme is listed in WordPress as WP Vega (was JA Vega); the site content keeps the name JA Vega",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1004-ja-vega-wp7-theme-name-1-1-11.json",
+    "ref": "PR #1004 (fix); fix evidence: Release chain of 07/10/2026 on the clean restore of the packed 1.1.11 site: wp theme list shows wp-ja-vega titled WP Vega at 1.1.11, active, site title JA Vega; full sweep 11/11, 0 open, 0 not measured",
+    "invariant": "Both style.css files read `Theme Name: WP Vega`; the shipped one reads `Version: 1.1.11` and the overlay theme.config.json has version 1.1.11. The measure was taken by site-sweep.mjs on the zip whose sha256 is the SHA256SUMS line, and 11/11 checks pass.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1004-ja-vega-wp7-theme-name-1-1-11.mjs:28 packages/cms/tracy-wordpress-theme/src/wp-ja-vega/style.css has no code line to point at",
+      "tests/regression/scripts/lib.mjs:139 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1004-ja-vega-wp7-theme-name-1-1-11.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1004-ja-vega-wp7-theme-name-1-1-11"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1004-ja-vega-wp7-theme-name-1-1-11",
+    "pr": 1004,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-vega",
+    "file": "tests/regression/cases/REG-PR-1004-ja-vega-wp7-theme-name-1-1-11.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1004-ja-vega-wp7-theme-name-1-1-11.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

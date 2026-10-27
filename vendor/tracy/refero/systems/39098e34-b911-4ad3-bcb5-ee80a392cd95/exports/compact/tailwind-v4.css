@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-bone: #f6f6f4;
+  --color-slate: #7d7d7d;
+  --color-paper: #ffffff;
+  --color-char: #1a1a1a;
+  --color-solstice-gradient: #ff8400;
+
+  /* Typography */
+  --font-recoleta: 'Recoleta', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-oldschool-grotesk: 'Oldschool Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times-system-fallback: 'Times (system fallback)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

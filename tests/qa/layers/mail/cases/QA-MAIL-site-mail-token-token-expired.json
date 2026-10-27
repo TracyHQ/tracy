@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-site-mail-token-token-expired",
+  "itemIds": ["site-mail:token"],
+  "requirement": "the token has no lifetime and is not single-use, as designed",
+  "oracle": {
+    "source": "apps/tracy-web/src/mail/site-mail/token.js header",
+    "ref": "apps/tracy-web/src/mail/site-mail/token.js header",
+    "invariant": "hex(HMAC-SHA256(host secret, \"site-mail:v1:\" + label)); nothing stores it"
+  },
+  "edgeTags": ["token-expired", "token-replay"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.sitemail.token#no-lifetime-and-not-single-use"],
+  "redProof": null,
+  "legacyIds": []
+}

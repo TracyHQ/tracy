@@ -1,0 +1,7 @@
+# Insert Tracy's Vietnamese dictionaries; the user patch then only ever modifies this row.
+#
+# `- insert:` and not a bare `- id:` row: a bare row only MODIFIES an existing entry, so a
+# plugin that is not in the profile yet is silently skipped. See docs/references/dsh-plugin.md §1.
+- insert:
+    - id: tracy-locale-vi
+      name: '@tracy/dsh-tracy-locale-vi'

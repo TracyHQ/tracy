@@ -1,0 +1,58 @@
+{
+  "id": "REG-PR-1630-wo-section-contract",
+  "kind": "fix",
+  "title": "A WO WordPress demo keeps every template section: missing facts read \"Coming soon\", the hand-off cannot take a section off, and demo QA fails a lost section or an off-site button",
+  "pr": 1630,
+  "area": "sites/brief-engines/wordpress",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run`.",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "A JA Restaurant 1.0.1 WO build keeps every dish item: unsourced items take a neutral name, an empty description and badge (badge class removed) and price \"Coming soon\"; no section is hidden.",
+    "A block pruneBody would cut for naming the template's company stays with \"Coming soon\" text, also when every section of the page names it.",
+    "The hand-off prompt lists each kept page's sections with their action and grants no hide/remove permission.",
+    "structure-kept fails on a lost features-intro or subscribe section, on fewer dish items and on an unread baseline page; shorter text passes with a note; a baseline with no marks passes.",
+    "cta-real fails a booking button to another page or off the site and any button leaving the demo; the plan's Contact page passes and a contact slug is not enough when the plan names one."
+  ],
+  "selectors": {
+    "function": "apps/tracy-web/src/sites/brief-engines/wp-wo-fill.js; wp-residue.js pruneBody/sweepWordPress; vendor/tracy/tracy-website-opportunities/domain/contract-copy-pins.mjs, agent-prompt.mjs, section-fills.mjs; apps/tracy-host/src/demo-qa.js checkStructureKept/checkCtaReal",
+    "test": "apps/tracy-web/test/brief-wordpress.test.mjs; brief-wp-hide.test.mjs; brief-wp-residue.test.mjs; vendor/tracy/tracy-website-opportunities/test/domain-agent-prompt.test.mjs; domain-contract-copy-pins.test.mjs; apps/tracy-host/test/demo-qa.test.mjs"
+  },
+  "evidence": "Dev WO build of a JA Restaurant WP site (22/10/2026): the build hid dish groups, tabs and all but one dish; the hand-off agent's first turn rewrote whole pages (Home 65 KB to 5 KB, Menu 38 KB to 0.7 KB) and the demo QA gate passed.",
+  "fence": "WO WordPress build fill and section marks, the WO hand-off prompt, and the host demo QA checks structure-kept and cta-real",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-wordpress.test.mjs",
+      "apps/tracy-web/test/brief-wp-hide.test.mjs",
+      "apps/tracy-web/test/brief-wp-residue.test.mjs",
+      "packages/wo/website-opportunities/test/domain-agent-prompt.test.mjs",
+      "packages/wo/website-opportunities/test/domain-contract-copy-pins.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs"
+    ],
+    "tests": [
+      "an opportunity's JA Restaurant build: dish items, prices and demo facts take placeholders",
+      "an opportunity's build with no pins records its sections and fills the dishes with the brief's",
+      "an opportunity's sweep marks each section and fills the dish items in the page's one write",
+      "with `fill`, a block naming the template's company stays",
+      "with `fill`, a page whose every section names the company is still filled",
+      "with the sections a build left, the prompt lists them per page with their action and no rule lets a section go",
+      "a section of demo dishes no role reaches: neutral names in turn, empty bodies and badges",
+      "structure-kept: a features-intro the agent rewrote away fails",
+      "structure-kept: a subscribe section that is gone fails",
+      "structure-kept: a menu showing fewer dish items than at build fails",
+      "structure-kept: shorter text passes with a note in the detail",
+      "structure-kept: a page of the baseline this run did not read fails as unread",
+      "structure-kept: a baseline with no marks passes and says why",
+      "cta-real: dead, demo-service and off-site buttons fail",
+      "cta-real: with the plan naming its contact page, a slug saying contact is not enough"
+    ]
+  }
+}

@@ -1,0 +1,6167 @@
+[
+  {
+    "src": "out-r1/ed-ivj9ni/C04#10",
+    "platform": "emdash",
+    "class": "ED-SITE tracy_site on EmDash",
+    "args": {
+      "action": "apply.list",
+      "params": {
+        "apply_id": "hotline-0909-123-456"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "code": "EMDASH_SITE",
+      "error": "This site runs EmDash, which has no Cowork component and needs none: it has its own admin API and MCP tools. Use the tracy_emdash tool ({list: true} first), not tracy_site."
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "EMDASH_SITE"
+    }
+  },
+  {
+    "src": "out-r1/ed-ivj9ni/C05#16",
+    "platform": "emdash",
+    "class": "ED-SITE tracy_site on EmDash",
+    "args": {
+      "action": "apply.list",
+      "params": {
+        "apply_id": "brand-sub-trusted-2004"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "code": "EMDASH_SITE",
+      "error": "This site runs EmDash, which has no Cowork component and needs none: it has its own admin API and MCP tools. Use the tracy_emdash tool ({list: true} first), not tracy_site."
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "EMDASH_SITE"
+    }
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C00#6",
+    "platform": "joomla",
+    "class": "X-WRONGKIND WordPress kind on Joomla (option)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "option",
+        "key": "site"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"kind must be one of: article, category, tag, field, menuItem, menutype, redirect, banner, bannerClient, contact, newsfeed, language, articleAssociation, menuAssociation, moduleAssignment, language…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C04#8",
+    "platform": "joomla",
+    "class": "CC-OP unknown operation",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "list"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown contract operation"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "relay"
+    },
+    "why": "CC-2 (0 in r2) landed in P12 (PR2): corrected and relayed, as F4 planned"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C04#9",
+    "platform": "joomla",
+    "class": "CC-PRECHECK probe of the slot list",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "apply_id": "contract-probe-phone-1",
+        "request_id": "probe-phone-1",
+        "changes": {
+          "bogus.0": "x"
+        },
+        "evidence": {}
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C05#9",
+    "platform": "joomla",
+    "class": "CC-PRECHECK probe of the slot list",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "apply_id": "contract-probe",
+        "request_id": "probe-1",
+        "changes": {
+          "__probe__": "x"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C05#12",
+    "platform": "joomla",
+    "class": "CC-PRECHECK probe of the slot list",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-probe",
+        "changes": {
+          "module-435.2": 123,
+          "brand.tagline": 456
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "probe-2"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C05#14",
+    "platform": "joomla",
+    "class": "CC-OP unknown operation",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "help"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown contract operation"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "UNKNOWN_OPERATION"
+    }
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C05#16",
+    "platform": "joomla",
+    "class": "X-WRONGKIND WordPress kind on Joomla (option)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"kind must be one of: article, category, tag, field, menuItem, menutype, redirect, banner, bannerClient, contact, newsfeed, language, articleAssociation, menuAssociation, moduleAssignment, language…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C05#19",
+    "platform": "joomla",
+    "class": "CC-PRECHECK value rule (Content too long)",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-probe",
+        "changes": {
+          "module-435.0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…[1588 chars]"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "probe-3"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Content too long: module-435.0"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C05#20",
+    "platform": "joomla",
+    "class": "CC-PRECHECK probe of the slot list",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-probe-a",
+        "changes": {
+          "templateStyle-120.0": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…[1463 chars]"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "probe-4"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C05#21",
+    "platform": "joomla",
+    "class": "CC-PRECHECK probe of the slot list",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-probe-b",
+        "changes": {
+          "templateStyle-120.siteTitle": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…[1461 chars]"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "probe-5"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C05#23",
+    "platform": "joomla",
+    "class": "CC-PRECHECK probe of the slot list",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-probe-c",
+        "changes": {
+          "templateStyle-120.typelist-site": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…[1372 chars]"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "probe-6"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C06#1",
+    "platform": "joomla",
+    "class": "CC-BUSY writer_busy",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "writer_busy",
+      "message": "another writer is changing this site"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C06#2",
+    "platform": "joomla",
+    "class": "CC-BUSY writer_busy",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "writer_busy",
+      "message": "another writer is changing this site"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C08#6",
+    "platform": "joomla",
+    "class": "CC-OP unknown operation",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "slots"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown contract operation"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "relay"
+    },
+    "why": "CC-2 (0 in r2) landed in P12 (PR2): corrected and relayed, as F4 planned"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C08#6",
+    "platform": "joomla",
+    "class": "CC-PRECHECK probe of the slot list",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "apply_id": "contract-probe-1",
+        "request_id": "probe-key-check",
+        "changes": {
+          "__probe_unknown_slot__": "x"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C08#11",
+    "platform": "joomla",
+    "class": "CC-PRECHECK value rule (Content too long)",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-probe-2",
+        "changes": {
+          "module-441.1": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA…[299 chars]"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "probe-ceiling"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Content too long: module-441.1"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C08#11",
+    "platform": "joomla",
+    "class": "CC-PRECHECK probe of the slot list",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-probe-3",
+        "changes": {
+          "article-552.title": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA…[888 chars]"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "probe-article-slot"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C08#13",
+    "platform": "joomla",
+    "class": "CC-PRECHECK value rule (Content too long)",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-probe-4",
+        "changes": {
+          "article-550.0": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA…[904 chars]"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "probe-a0"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Content too long: article-550.0"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C08#13",
+    "platform": "joomla",
+    "class": "CC-PRECHECK probe of the slot list",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-probe-5",
+        "changes": {
+          "article-550.introtext": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA…[912 chars]"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "probe-a1"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/j-1ibzqi/C08#13",
+    "platform": "joomla",
+    "class": "CC-PRECHECK value rule (Content too long)",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-probe-6",
+        "changes": {
+          "article-550.1": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA…[912 chars]"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "probe-a2"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Content too long: article-550.1"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C00#2",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=page",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "page",
+        "limit": 20,
+        "include_body": true
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"page\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an …",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C00#4",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C01#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C01#4",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list field)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "field",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"field\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C01#4",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list fieldValue)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "fieldValue",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"fieldValue\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that …",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C01#5",
+    "platform": "wordpress",
+    "class": "WP-FIELDS slot-like keys (hero.heading)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "apply_id": "hero-heading-1",
+        "fields": {
+          "hero.heading": "Built for the way you work"
+        }
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given hero.heading; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_in…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C01#6",
+    "platform": "wordpress",
+    "class": "WP-BATCH content.batch on WordPress",
+    "args": {
+      "action": "content.batch",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.batch"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C02#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C02#3",
+    "platform": "wordpress",
+    "class": "TS-VERB unknown verb (site.restart)",
+    "args": {
+      "action": "site.restart",
+      "params": {}
+    },
+    "answer": "{\"ok\":false,\"code\":\"BAD_ACTION\",\"error\":\"unknown action \\\"site.restart\\\"; one of: media.scan, page.look, page.text, content.find, info, content.list, content.get, extension.list, plugin.list, theme.list, db.tables, core.manifest, content.ba…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "BAD_ACTION"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C03#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C03#4",
+    "platform": "wordpress",
+    "class": "WP-GETKIND content.get kind=page (mappable)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "page",
+        "id": 42
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C03#5",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=templatePart",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "templatePart",
+        "limit": 100
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"templatePart\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and tha…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C04#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C04#3",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 100
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C04#5",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=option",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 200
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"option\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C04#12",
+    "platform": "wordpress",
+    "class": "WP-LANG content.language without apply_id",
+    "args": {
+      "action": "content.language",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "apply_id required"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C04#18",
+    "platform": "wordpress",
+    "class": "WP-FIELDS slot-like keys (contact.item.2.text)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "hotline-contact-slot-39",
+        "fields": {
+          "contact.item.2.text": "0909 123 456"
+        },
+        "id": 39,
+        "kind": "post"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given contact.item.2.text; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, …",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C04#22",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND/invented kind on WordPress (language)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "language"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C04#23",
+    "platform": "wordpress",
+    "class": "WP-GETADDR post/part by slug (post)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "post",
+        "key": "tracy-zh"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 0, key \"tracy-zh\""
+    },
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C05#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C06#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C06#2",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C07#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C07#4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=page",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "page",
+        "limit": 50,
+        "include_body": false
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"page\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an …",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C07#6",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "include_body": false,
+        "kind": "menuItem",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C07#6",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list menutype)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "include_body": false,
+        "kind": "menutype",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menutype\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C07#9",
+    "platform": "wordpress",
+    "class": "WP-FIELDS read-shape names (content)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "apply_id": "home-hero-warranty-line",
+        "fields": {
+          "content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-hero\"} -->\n<section class=\"wp-block-group wtb-section wt…[1768 chars]"
+        }
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given content; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input\",…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C08#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C08#3",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=category",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "category",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"category\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_LISTABLE"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C08#4",
+    "platform": "wordpress",
+    "class": "WP-GETADDR postmeta without key",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 28,
+        "kind": "postmeta"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no postmeta at id 28, key \"\""
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C08#6",
+    "platform": "wordpress",
+    "class": "WP-GETKIND content.get kind=category (mappable)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 49,
+        "kind": "category"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C08#7",
+    "platform": "wordpress",
+    "class": "NG guessed term id",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 49,
+        "kind": "term"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no term at id 49, key \"\""
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    },
+    "f4": {
+      "disposition": "relay"
+    },
+    "why": "WP-18: a term read without its taxonomy key is refused before the relay (F4 row WP-18)"
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C08#7",
+    "platform": "wordpress",
+    "class": "NG guessed term id",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 45,
+        "kind": "term"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no term at id 45, key \"\""
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    },
+    "f4": {
+      "disposition": "relay"
+    },
+    "why": "WP-18: a term read without its taxonomy key is refused before the relay (F4 row WP-18)"
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C08#9",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C08#10",
+    "platform": "wordpress",
+    "class": "WP-GETADDR post/part by slug (term)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "term",
+        "key": "company"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no term at id 0, key \"company\""
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C09#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C09#3",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 100
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C09#4",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "menuItem",
+        "id": 1
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no menuItem at id 1, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C09#4",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND/invented kind on WordPress (menuAssociation)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "menuAssociation"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C09#6",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "request_id": "warranty-inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C09#8",
+    "platform": "wordpress",
+    "class": "AL-ID apply.list without apply_id",
+    "args": {
+      "action": "apply.list",
+      "params": {}
+    },
+    "facts": {
+      "applyIds": []
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "apply_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "note": "AL-4 (14/10/2026): relayed with no apply_id; the Apply door answers the site's recent changes"
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C10#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C10#3",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "apply_id": "contract-email-check",
+        "request_id": "email-check"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C10#4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=option",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 200
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"option\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C10#4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=postmeta",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "postmeta",
+        "limit": 200
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"postmeta\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_LISTABLE"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C10#5",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 100
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C10#10",
+    "platform": "wordpress",
+    "class": "WP-FIELDS slot-like keys (contact.item.3.text)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 39,
+        "fields": {
+          "contact.item.3.text": "hello@example.vn"
+        },
+        "apply_id": "contact-email-contact-page"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given contact.item.3.text; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, …",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C10#10",
+    "platform": "wordpress",
+    "class": "WP-BATCH content.batch on WordPress",
+    "args": {
+      "action": "content.batch",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.batch"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C11#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C11#5",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=page",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "page",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"page\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an …",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C11#6",
+    "platform": "wordpress",
+    "class": "WP-GETKIND content.get kind=page (mappable)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "page",
+        "key": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C11#11",
+    "platform": "wordpress",
+    "class": "WP-GETADDR post/part by slug (post)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "post",
+        "key": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 0, key \"home\""
+    },
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C11#12",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=templatePart",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "templatePart",
+        "limit": 50,
+        "include_body": true
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"templatePart\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and tha…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C11#13",
+    "platform": "wordpress",
+    "class": "WP-GETADDR post/part by slug (templatePart)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "templatePart",
+        "key": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no templatePart at id 0, key \"home\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C12#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C12#3",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=option",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"option\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C12#5",
+    "platform": "wordpress",
+    "class": "WP-FIELDS slot-like keys (hero.heading,hero.intro,hero.cta.1,hero.)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "fields": {
+          "hero.heading": "Xây nền móng cho <br><em>nhà máy thế hệ mới</em>",
+          "hero.intro": "Nhà thầu chính thiết kế – thi công hạ tầng khu công nghiệp, nhà xưởng và hệ thống kỹ thuật tại 14 tỉnh thành miền Trung và vùng Volga, Nga.",
+          "hero.cta.1": "Xem năng lực của chúng tôi",
+          "hero.cta.2": "Tải hồ sơ năng lực (PDF)"
+        },
+        "apply_id": "hero-vi-translate"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given hero.heading, hero.intro, hero.cta.1, hero.cta.2; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_typ…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r1/wp-dmlj6g/C12#8",
+    "platform": "wordpress",
+    "class": "WP-FIELDS update without kind",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "hero-vi-translate",
+        "fields": {
+          "post_content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-hero\"} -->\n<section class=\"wp-block-group wtb-section wt…[4163 chars]"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/ed-ivj9ni/C15#10",
+    "platform": "emdash",
+    "class": "ED-SITE tracy_site on EmDash",
+    "args": {
+      "action": "apply.list",
+      "params": {
+        "apply_id": "home-hero-headline-2026-09-24"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "code": "EMDASH_SITE",
+      "error": "This site runs EmDash, which has no Cowork component and needs none: it has its own admin API and MCP tools. Use the tracy_emdash tool ({list: true} first), not tracy_site."
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "EMDASH_SITE"
+    }
+  },
+  {
+    "src": "out-r2/j-1ibzqi/C05#10",
+    "platform": "joomla",
+    "class": "WP-GETADDR content.get addressing (extensionParams)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "extensionParams",
+        "id": "com_config"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "id required"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/j-1ibzqi/C05#16",
+    "platform": "joomla",
+    "class": "X-WRONGKIND WordPress kind on Joomla (option)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"kind must be one of: article, category, tag, field, menuItem, menutype, redirect, banner, bannerClient, contact, newsfeed, language, articleAssociation, menuAssociation, moduleAssignment, language…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/j-1ibzqi/C05#20",
+    "platform": "joomla",
+    "class": "AL-ID apply.list without apply_id",
+    "args": {
+      "action": "apply.list",
+      "params": {}
+    },
+    "facts": {
+      "applyIds": []
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "apply_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "note": "AL-4 (14/10/2026): relayed with no apply_id; the Apply door answers the site's recent changes"
+  },
+  {
+    "src": "out-r2/j-1ibzqi/C09#3",
+    "platform": "joomla",
+    "class": "AL-ID apply.list without apply_id",
+    "args": {
+      "action": "apply.list",
+      "params": {}
+    },
+    "facts": {
+      "applyIds": []
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "apply_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "note": "AL-4 (14/10/2026): relayed with no apply_id; the Apply door answers the site's recent changes"
+  },
+  {
+    "src": "out-r2/j-1ibzqi/C09#5",
+    "platform": "joomla",
+    "class": "CC-PRECHECK probe of the slot list",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "apply_id": "contract-warranty-probe",
+        "request_id": "warranty-page-probe",
+        "changes": {
+          "menuItem-705.0": "Warranty"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r2/j-1ibzqi/C20#2",
+    "platform": "joomla",
+    "class": "CC-BUSY writer_busy",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "apply_id": "contract-phone-0909",
+        "request_id": "phone-0909-123-456",
+        "changes": {
+          "module-438.0": "0909 123 456",
+          "module-458.0": "0909 123 456",
+          "module-428.1": "Hotline: 0909 123 456",
+          "module-448.1": "Горячая линия: 0909 123 456"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "writer_busy",
+      "message": "another writer is changing this site"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/j-1ibzqi/C20#3",
+    "platform": "joomla",
+    "class": "CC-BUSY writer_busy",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-phone-0909",
+        "changes": {
+          "module-428.1": "Hotline: 0909 123 456",
+          "module-438.0": "0909 123 456",
+          "module-448.1": "Горячая линия: 0909 123 456",
+          "module-458.0": "0909 123 456"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "phone-0909-123-456"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "writer_busy",
+      "message": "another writer is changing this site"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/j-1ibzqi/C20#4",
+    "platform": "joomla",
+    "class": "CC-BUSY writer_busy",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "apply_id": "contract-phone-0909",
+        "changes": {
+          "module-428.1": "Hotline: 0909 123 456",
+          "module-438.0": "0909 123 456",
+          "module-448.1": "Горячая линия: 0909 123 456",
+          "module-458.0": "0909 123 456"
+        },
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "operation": "apply",
+        "request_id": "phone-0909-123-456"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "writer_busy",
+      "message": "another writer is changing this site"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/j-1ibzqi/C24#7",
+    "platform": "joomla",
+    "class": "CC-PRECHECK unknown slot",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "apply_id": "contract-services-consulting",
+        "request_id": "svc-consulting-1",
+        "changes": {
+          "module-442.16": "Consulting"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Unknown content slot or non-string value"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r2/j-1ibzqi/C26#5",
+    "platform": "joomla",
+    "class": "CC-PRECHECK value rule (Content cannot remove an occupied slot)",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+        "apply_id": "contract-hero-btn2",
+        "request_id": "req-hero-btn2-remove-1",
+        "changes": {
+          "module-441.6": "",
+          "module-441.7": ""
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "Content cannot remove an occupied slot: module-441.6"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "precheck"
+    },
+    "why": "CC-14 moved to P9 (PR2): the component decides, and its message gets the next"
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C00#2",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C01#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C02#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C02#3",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C02#6",
+    "platform": "wordpress",
+    "class": "AL-ID apply.list without apply_id",
+    "args": {
+      "action": "apply.list",
+      "params": {}
+    },
+    "facts": {
+      "applyIds": []
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "apply_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "note": "AL-4 (14/10/2026): relayed with no apply_id; the Apply door answers the site's recent changes"
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C02#6",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "apply_id": "contract-hero-cta-1",
+        "request_id": "hero-cta-1",
+        "changes": {
+          "hero.cta.1": "Get a free quote"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C02#7",
+    "platform": "wordpress",
+    "class": "WP-FIELDS slot-like keys (hero.cta.1)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "fields": {
+          "hero.cta.1": "Get a free quote"
+        },
+        "apply_id": "hero-cta-1"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given hero.cta.1; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_inpu…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C02#18",
+    "platform": "wordpress",
+    "class": "WP-FIELDS update without kind",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "restore-home-page",
+        "fields": {
+          "post_content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-hero\"} -->\n<section class=\"wp-block-group wtb-section wt…[8682 chars]"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C02#20",
+    "platform": "wordpress",
+    "class": "WP-FIELDS update without kind",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "restore-home-page",
+        "fields": {
+          "post_content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-hero\"} -->\n<section class=\"wp-block-group wtb-section wt…[17399 chars]"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C02#21",
+    "platform": "wordpress",
+    "class": "WP-FIELDS update without kind",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "restore-home-page",
+        "fields": {
+          "post_content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-hero\"} -->\n<section class=\"wp-block-group wtb-section wt…[17400 chars]"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C02#23",
+    "platform": "wordpress",
+    "class": "WP-FIELDS update without kind",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "restore-home-page",
+        "fields": {
+          "post_content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-hero\"} -->\n<section class=\"wp-block-group wtb-section wt…[26880 chars]"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C03#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C03#3",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=page",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "page",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"page\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an …",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C03#4",
+    "platform": "wordpress",
+    "class": "WP-GETKIND content.get kind=page (mappable)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "page",
+        "id": 42
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C03#8",
+    "platform": "wordpress",
+    "class": "WP-GETADDR postmeta without key",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "postmeta",
+        "id": 42
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no postmeta at id 42, key \"\""
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#4",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 200
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#11",
+    "platform": "wordpress",
+    "class": "WP-FIELDS probing field list",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 39,
+        "fields": {
+          "bogus_probe_field": "x"
+        },
+        "apply_id": "probe-fields"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given bogus_probe_field; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, ta…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#15",
+    "platform": "wordpress",
+    "class": "WP-BATCH content.batch on WordPress",
+    "args": {
+      "action": "content.batch",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.batch"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#16",
+    "platform": "wordpress",
+    "class": "WP-FIELDS update without kind",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "hotline-0909123456",
+        "fields": {
+          "post_content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-contact\"} -->\n<section class=\"wp-block-group wtb-section…[15591 chars]"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#19",
+    "platform": "wordpress",
+    "class": "WP-LANG content.language without apply_id",
+    "args": {
+      "action": "content.language"
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "apply_id required"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#19",
+    "platform": "wordpress",
+    "class": "WP-GETADDR post/part by slug (post)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "post",
+        "key": "contact-vi"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 0, key \"contact-vi\""
+    },
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C05#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C05#3",
+    "platform": "wordpress",
+    "class": "TS-ALIAS action alias (contract)",
+    "args": {
+      "action": "contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": "{\"ok\":false,\"code\":\"BAD_ACTION\",\"error\":\"unknown action \\\"contract\\\"; one of: media.scan, media.draw, page.look, page.text, content.find, info, content.list, content.get, extension.list, plugin.list, theme.list, db.tables, core.manifest, co…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C05#4",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C05#5",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=option",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 5
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"option\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C05#6",
+    "platform": "wordpress",
+    "class": "TS-ALIAS action alias (contract)",
+    "args": {
+      "action": "content_contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": "{\"ok\":false,\"code\":\"BAD_ACTION\",\"error\":\"unknown action \\\"content_contract\\\"; one of: media.scan, media.draw, page.look, page.text, content.find, info, content.list, content.get, extension.list, plugin.list, theme.list, db.tables, core.mani…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C05#6",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "op": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C06#1",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C06#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C06#5",
+    "platform": "wordpress",
+    "class": "WP-FIELDS read-shape names (content)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 68,
+        "apply_id": "menu-news-insights",
+        "fields": {
+          "content": "<!-- wp:navigation-link {\"label\":\"Home\",\"type\":\"page\",\"id\":42,\"url\":\"http://wp-dmlj6g.tracy.test:51710/\",\"kind\":\"post-ty…[832 chars]"
+        }
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given content; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input\",…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C07#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C08#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C08#2",
+    "platform": "wordpress",
+    "class": "WP-FIELDS read-shape names (title,content,status)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "fields": {
+          "title": "Tracy benchmark news",
+          "content": "We have opened a new office in Da Nang.",
+          "status": "publish"
+        },
+        "apply_id": "post-tracy-benchmark-news"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given title, content, status; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_categor…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C09#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C09#2",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 40
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C10#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C10#3",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C10#5",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=postmeta",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "postmeta",
+        "limit": 200
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"postmeta\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_LISTABLE"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C10#6",
+    "platform": "wordpress",
+    "class": "WP-GETADDR post/part by slug (post)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "post",
+        "key": "wp_template_part"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 0, key \"wp_template_part\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C10#26",
+    "platform": "wordpress",
+    "class": "WP-GETADDR postmeta without key",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "postmeta",
+        "id": 25
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no postmeta at id 25, key \"\""
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C10#26",
+    "platform": "wordpress",
+    "class": "WP-GETADDR post/part by slug (postmeta)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "postmeta",
+        "key": "_mail"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no postmeta at id 0, key \"_mail\""
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C11#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C11#7",
+    "platform": "wordpress",
+    "class": "WP-FIELDS read-shape names (content)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "apply_id": "home-why-points-1",
+        "fields": {
+          "content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-hero\"} -->\n<section class=\"wp-block-group wtb-section wt…[24517 chars]"
+        }
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given content; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input\",…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C12#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C12#3",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list module)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "module",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"module\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#4",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#5",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "post",
+        "id": 1
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 1, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#5",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "post",
+        "id": 2
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 2, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#5",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "post",
+        "id": 6
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 6, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#6",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 7,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 7, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#6",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 8,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 8, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#6",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 9,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 9, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#6",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 10,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 10, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#6",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 11,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 11, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#6",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 12,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 12, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#6",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 13,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 13, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#6",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 14,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 14, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#6",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 15,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 15, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#6",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 16,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 16, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#7",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 17,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 17, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#7",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 18,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 18, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#7",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 19,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 19, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#7",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 20,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 20, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#7",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 21,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 21, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#7",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 22,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 22, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#7",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 23,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 23, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C13#7",
+    "platform": "wordpress",
+    "class": "NG guessed id (enumeration)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": 24,
+        "kind": "post"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 24, key \"\""
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C14#3",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C14#4",
+    "platform": "wordpress",
+    "class": "TS-ALIAS action alias (contract)",
+    "args": {
+      "action": "contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": "{\"ok\":false,\"code\":\"BAD_ACTION\",\"error\":\"unknown action \\\"contract\\\"; one of: media.scan, media.draw, page.look, page.text, content.find, info, content.list, content.get, extension.list, plugin.list, theme.list, db.tables, core.manifest, co…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C14#5",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C14#6",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=templatePart",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "templatePart",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"templatePart\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and tha…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C14#6",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=wp_template_part",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "wp_template_part",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"wp_template_part\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C14#6",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=option",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"option\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C15#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C15#4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C15#7",
+    "platform": "wordpress",
+    "class": "WP-FIELDS read-shape names (content)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "apply_id": "home-headline-built-for-the-way-you-work",
+        "fields": {
+          "content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-hero\"} -->\n<section class=\"wp-block-group wtb-section wt…[26817 chars]"
+        }
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given content; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input\",…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C16#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C16#8",
+    "platform": "wordpress",
+    "class": "WP-FIELDS read-shape names (content)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "apply_id": "home-hero-heading",
+        "fields": {
+          "content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-hero\"} -->\n<section class=\"wp-block-group wtb-section wt…[26847 chars]"
+        }
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given content; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input\",…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C17#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C17#3",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C17#5",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 100
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C17#6",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list field)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "field",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"field\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C17#6",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=postmeta",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "postmeta",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"postmeta\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_LISTABLE"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C17#7",
+    "platform": "wordpress",
+    "class": "WP-FIELDS slot-like keys (hero.cta.1)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "fields": {
+          "hero.cta.1": "Get a free quote"
+        },
+        "apply_id": "hero-cta-quote"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given hero.cta.1; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_inpu…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C17#8",
+    "platform": "wordpress",
+    "class": "WP-BATCH content.batch on WordPress",
+    "args": {
+      "action": "content.batch",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.batch"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C18#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C18#3",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C18#5",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=page",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "page",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"page\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an …",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C18#7",
+    "platform": "wordpress",
+    "class": "WP-GETKIND content.get kind=page (mappable)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "page",
+        "id": 42
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C18#10",
+    "platform": "wordpress",
+    "class": "WP-BATCH content.batch on WordPress",
+    "args": {
+      "action": "content.batch",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.batch"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C18#11",
+    "platform": "wordpress",
+    "class": "WP-FIELDS probing field list",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "fields": {
+          "__probe__": ""
+        },
+        "apply_id": "probe-schema"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given __probe__; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C19#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C19#3",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C20#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C20#4",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C20#5",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 100
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C20#16",
+    "platform": "wordpress",
+    "class": "WP-BATCH content.batch on WordPress",
+    "args": {
+      "action": "content.batch",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.batch"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C20#17",
+    "platform": "wordpress",
+    "class": "WP-FIELDS find/replace intent",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "phone-0909-fieldtest",
+        "fields": {
+          "post_content_find": "8 800 550-67-89",
+          "post_content_replace": "0909 123 456"
+        },
+        "id": 39,
+        "kind": "post"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given post_content_find, post_content_replace; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_d…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C20#19",
+    "platform": "wordpress",
+    "class": "WP-FIELDS update without kind",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "phone-0909-123456",
+        "fields": {
+          "post_content": "<!-- wp:group {\"tagName\":\"div\",\"className\":\"tracy-footer__band\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-gr…[6388 chars]"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C20#19",
+    "platform": "wordpress",
+    "class": "WP-FIELDS update without kind",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "phone-0909-123456",
+        "fields": {
+          "post_content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-contact\"} -->\n<section class=\"wp-block-group wtb-section…[15591 chars]"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C21#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C21#4",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C21#5",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=option",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"option\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C21#6",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list templateStyle)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "templateStyle",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"templateStyle\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and th…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C21#8",
+    "platform": "wordpress",
+    "class": "WP-FIELDS addressing/field shape (postmeta needs a key, e.g. _yo)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "postmeta",
+        "id": 81,
+        "fields": {
+          "tracy_probe": "probe"
+        },
+        "apply_id": "probe-address-door"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "write_failed",
+      "message": "postmeta needs a key, e.g. _yoast_wpseo_metadesc"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C21#8",
+    "platform": "wordpress",
+    "class": "WP-LANG content.language without apply_id",
+    "args": {
+      "action": "content.language",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "apply_id required"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C22#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C22#3",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list templateStyle)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "templateStyle",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"templateStyle\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and th…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C22#3",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=option",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 200
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"option\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C22#5",
+    "platform": "wordpress",
+    "class": "WP-FIELDS read-shape names (content)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 81,
+        "apply_id": "footer-hours-2024",
+        "fields": {
+          "content": "<!-- wp:group {\"tagName\":\"div\",\"className\":\"tracy-footer__band\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-gr…[6387 chars]"
+        }
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given content; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input\",…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#3",
+    "platform": "wordpress",
+    "class": "TS-VERB unknown verb (help)",
+    "args": {
+      "action": "help"
+    },
+    "answer": "{\"ok\":false,\"code\":\"BAD_ACTION\",\"error\":\"unknown action \\\"help\\\"; one of: media.scan, media.draw, page.look, page.text, content.find, info, content.list, content.get, extension.list, plugin.list, theme.list, db.tables, core.manifest, conten…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "BAD_ACTION"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#3",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text",
+        "siteKey": "wp-dmlj6g.tracy.test"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#6",
+    "platform": "wordpress",
+    "class": "WP-BATCH content.batch on WordPress",
+    "args": {
+      "action": "content.batch",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.batch"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#6",
+    "platform": "wordpress",
+    "class": "AL-ID apply.list without apply_id",
+    "args": {
+      "action": "apply.list",
+      "params": {}
+    },
+    "facts": {
+      "applyIds": []
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "apply_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "note": "AL-4 (14/10/2026): relayed with no apply_id; the Apply door answers the site's recent changes"
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#7",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND/invented kind on WordPress (contract)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "contract"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#7",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list templateStyle)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "templateStyle",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"templateStyle\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and th…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#8",
+    "platform": "wordpress",
+    "class": "WP-GETADDR content.get addressing (templatePart)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "templatePart",
+        "id": "wp-tracy-business//footer"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "id or key required to name which templatePart to read"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#8",
+    "platform": "wordpress",
+    "class": "WP-GETADDR content.get addressing (templatePart)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "templatePart",
+        "id": "footer"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "id or key required to name which templatePart to read"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#9",
+    "platform": "wordpress",
+    "class": "WP-FIELDS addressing/field shape (fields required)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "templatePart",
+        "key": "footer",
+        "fields": {},
+        "apply_id": "probe-empty-fields"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "fields required"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C23#10",
+    "platform": "wordpress",
+    "class": "WP-FIELDS addressing/field shape (templatePart needs a content f)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "probe-fields",
+        "fields": {
+          "bogus_field": "x"
+        },
+        "key": "footer",
+        "kind": "templatePart"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "write_failed",
+      "message": "templatePart needs a content field: the block markup to render"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#2",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=page",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "page",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"page\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an …",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#3",
+    "platform": "wordpress",
+    "class": "WP-GETKIND content.get kind=page (mappable)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "page",
+        "id": 42
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#6",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=postmeta",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "postmeta",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"postmeta\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_LISTABLE"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#6",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=templatePart",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "templatePart",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"templatePart\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and tha…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#7",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#8",
+    "platform": "wordpress",
+    "class": "TS-ALIAS action alias (contract)",
+    "args": {
+      "action": "content.contract.inspect",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": "{\"ok\":false,\"code\":\"BAD_ACTION\",\"error\":\"unknown action \\\"content.contract.inspect\\\"; one of: media.scan, media.draw, page.look, page.text, content.find, info, content.list, content.get, extension.list, plugin.list, theme.list, db.tables, c…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#8",
+    "platform": "wordpress",
+    "class": "TS-ALIAS action alias (contract)",
+    "args": {
+      "action": "contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": "{\"ok\":false,\"code\":\"BAD_ACTION\",\"error\":\"unknown action \\\"contract\\\"; one of: media.scan, media.draw, page.look, page.text, content.find, info, content.list, content.get, extension.list, plugin.list, theme.list, db.tables, core.manifest, co…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#8",
+    "platform": "wordpress",
+    "class": "WP-FIELDS slot-like keys (services.item.5.title,services.item.5.te)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "fields": {
+          "services.item.5.title": "Consulting",
+          "services.item.5.text": "Planning and feasibility studies before you build."
+        },
+        "apply_id": "svc-consulting",
+        "dry_run": true
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given services.item.5.title, services.item.5.text; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, po…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#9",
+    "platform": "wordpress",
+    "class": "WP-BATCH content.batch on WordPress",
+    "args": {
+      "action": "content.batch",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.batch"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#9",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#10",
+    "platform": "wordpress",
+    "class": "WP-GETADDR postmeta without key",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "postmeta",
+        "id": 42
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no postmeta at id 42, key \"\""
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C26#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C26#3",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C26#5",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list module)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "module",
+        "limit": 100
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"module\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C26#6",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list field)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "field",
+        "limit": 200
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"field\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C26#6",
+    "platform": "wordpress",
+    "class": "WP-BATCH content.batch on WordPress",
+    "args": {
+      "action": "content.batch",
+      "params": {
+        "kind": "post",
+        "id": 42
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.batch"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C26#7",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND/invented kind on WordPress (contract)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "contract"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C26#7",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND/invented kind on WordPress (slot)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "slot",
+        "key": "hero.cta.2"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C26#8",
+    "platform": "wordpress",
+    "class": "WP-FIELDS addressing/field shape (fields required)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "fields": {},
+        "apply_id": "probe-not-a-write"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "fields required"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C26#9",
+    "platform": "wordpress",
+    "class": "WP-FIELDS probing field list",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "probe-not-a-write",
+        "fields": {
+          "nope": "x"
+        },
+        "id": 42,
+        "kind": "post"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given nope; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input\",\"ne…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C28#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C28#4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=postmeta",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "postmeta",
+        "limit": 200
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"postmeta\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_LISTABLE"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C28#4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=option",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 200
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"option\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C28#6",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C28#7",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 100
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C28#11",
+    "platform": "wordpress",
+    "class": "WP-FIELDS slot-like keys (contact.item.2.text)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 39,
+        "apply_id": "contact-hotline-0909",
+        "fields": {
+          "contact.item.2.text": "0909 123 456"
+        }
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given contact.item.2.text; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, …",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C29#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C29#3",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=option",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"option\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C30#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "slots": "text",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C30#3",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=option",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"option\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is a…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C31#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C31#4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=page",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "page",
+        "limit": 50,
+        "include_body": true
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"page\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an …",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C31#4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 100
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C31#5",
+    "platform": "wordpress",
+    "class": "WP-GETADDR post/part by slug (post)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "post",
+        "key": "contact"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "not_found",
+      "message": "no post at id 0, key \"contact\""
+    },
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C31#10",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list templateStyle)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "templateStyle",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"templateStyle\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and th…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C31#10",
+    "platform": "wordpress",
+    "class": "X-WRONGKIND Joomla kind on WordPress (list field)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "field",
+        "limit": 100
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"field\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C32#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C32#3",
+    "platform": "wordpress",
+    "class": "WP-GETKIND content.get kind=page (mappable)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "page",
+        "id": 42
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C32#4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=templatePart",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "templatePart",
+        "limit": 50
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"templatePart\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and tha…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C33#1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect",
+        "page": "home",
+        "slots": "text"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C33#7",
+    "platform": "wordpress",
+    "class": "WP-FIELDS slot-like keys (hero.heading)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "apply_id": "hero-heading-1",
+        "fields": {
+          "hero.heading": "Built for the way you work"
+        }
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given hero.heading; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_in…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "hist/wp-07vce0/n-f1ac298d-1d76-49d3-96ba-ccc8fd8de3ad#t1s4",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=page",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "page",
+        "limit": 30
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"page\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is an …",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/wp-07vce0/n-f1ac298d-1d76-49d3-96ba-ccc8fd8de3ad#t1s5",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "hist/ed-vwptf3/n-1d80feb7-5a3b-4fa4-b28f-67cfa3577b50#t1s7",
+    "platform": "emdash",
+    "class": "ED-SITE tracy_site on EmDash",
+    "args": {
+      "action": "apply.list",
+      "params": {}
+    },
+    "answer": {
+      "ok": false,
+      "code": "EMDASH_SITE",
+      "error": "This site runs EmDash, which has no Cowork component and needs none: it has its own admin API and MCP tools. Use the tracy_emdash tool ({list: true} first), not tracy_site."
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "EMDASH_SITE"
+    }
+  },
+  {
+    "src": "hist/wp-g4bjus/n-392b8b4d-1c77-434d-ae28-f0b9cae848c0#t1s2",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 30
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "hist/wp-jffh6m/n-1ab40fe7-ecdf-439e-a9fe-a58bed8538ad#t1s2",
+    "platform": "wordpress",
+    "class": "WP-LISTKIND content.list kind=menuItem",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "menuItem",
+        "limit": 20
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"content.list serves kind \\\"post\\\" only; \\\"menuItem\\\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.\",\"next\":\"This site answered no, and that is…",
+    "expect": {
+      "disposition": "resolve"
+    }
+  },
+  {
+    "src": "hist/wp-bbr145/n-53dc02f4-4f9c-41d8-aa88-ff195094b880#t1s1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "hist/wp-bbr145/n-2382fe25-4fe2-454d-bbe6-65830782cddb#t1s1",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "hist/wp-bbr145/n-2382fe25-4fe2-454d-bbe6-65830782cddb#t1s5",
+    "platform": "wordpress",
+    "class": "WP-FIELDS probing field list",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 42,
+        "fields": {
+          "__probe_field_list__": "x"
+        },
+        "apply_id": "hero-cta-label-probe"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given __probe_field_list__; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category,…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NO_WRITABLE_FIELD"
+    }
+  },
+  {
+    "src": "hist/ed-vwptf3/n-f7d9fc84-7081-492e-87a1-bc171476eee8#t1s2",
+    "platform": "emdash",
+    "class": "ED-SITE tracy_site on EmDash",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "post",
+        "limit": 50
+      }
+    },
+    "answer": {
+      "ok": false,
+      "code": "EMDASH_SITE",
+      "error": "This site runs EmDash, which has no Cowork component and needs none: it has its own admin API and MCP tools. Use the tracy_emdash tool ({list: true} first), not tracy_site."
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "EMDASH_SITE"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s8",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "apply_id": "h1-toyota-hanoi-motors",
+        "request_id": "h1-toyota-hanoi-motors",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer",
+          "module-441.2": ""
+        },
+        "evidence": {
+          "source": "customer request in chat: change the home page h1 to this exact string"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s9",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "apply_id": "h1-toyota-hanoi-motors",
+        "request_id": "h1-toyota-hanoi-motors",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer"
+        },
+        "evidence": {
+          "slots": {
+            "module-441.1": "h1 of the home page; customer supplied this exact wording"
+          }
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s10",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "apply_id": "h1-toyota-hanoi-motors",
+        "request_id": "h1-toyota-hanoi-motors",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer"
+        },
+        "evidence": {}
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s11",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer"
+        },
+        "apply_id": "h1-toyota-hanoi-motors",
+        "request_id": "h1-toyota-hanoi-motors"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s12",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "apply_id": "h1-toyota-hanoi-motors",
+        "request_id": "h1-toyota-hanoi-motors",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer",
+          "module-441.2": ""
+        },
+        "evidence": {
+          "module-441.1": "customer asked for this exact wording as the home page h1"
+        }
+      },
+      "apply_id": "h1-toyota-hanoi-motors",
+      "request_id": "h1-toyota-hanoi-motors"
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s14",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "apply_id": "h1-toyota-hanoi-motors",
+      "request_id": "h1-toyota-hanoi-motors",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer",
+          "module-441.2": ""
+        },
+        "evidence": {}
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s16",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "apply-id": "h1-toyota-hanoi-motors",
+        "request-id": "h1-toyota-hanoi-motors",
+        "applyId": "h1-toyota-hanoi-motors",
+        "requestId": "h1-toyota-hanoi-motors",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer",
+          "module-441.2": ""
+        },
+        "request": {
+          "apply_id": "h1-toyota-hanoi-motors",
+          "request_id": "h1-toyota-hanoi-motors"
+        },
+        "evidence": {}
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "relay"
+    },
+    "why": "CC-5/CC-6 (0 in r2) landed in P12 (PR2): corrected and relayed, as F4 planned"
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s16",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "apply_id": "h1-toyota-hanoi-motors",
+        "request_id": "h1-toyota-hanoi-motors",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "slots": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer"
+        },
+        "evidence": {}
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "relay"
+    },
+    "why": "CC-5/CC-6 (0 in r2) landed in P12 (PR2): corrected and relayed, as F4 planned"
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s17",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "apply_id": "h1-toyota-hanoi-motors",
+        "request_id": "h1-toyota-hanoi-motors",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer"
+        },
+        "evidence": {
+          "note": "customer request"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s17",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "apply_id": "h1-toyota-hanoi-motors",
+        "request_id": "h1-toyota-hanoi-motors",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer"
+        },
+        "evidence": {
+          "xpath": "h1"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s18",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer",
+          "apply_id": "h1-toyota-hanoi-motors",
+          "request_id": "h1-toyota-hanoi-motors"
+        },
+        "evidence": {}
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s18",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer"
+        },
+        "apply_id": "h1-toyota-hanoi-motors",
+        "request_id": "h1-toyota-hanoi-motors",
+        "evidence": {},
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "request": {
+          "id": "h1-toyota-hanoi-motors"
+        },
+        "meta": {
+          "apply_id": "h1-toyota-hanoi-motors",
+          "request_id": "h1-toyota-hanoi-motors"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "relay"
+    },
+    "why": "CC-5/CC-6 (0 in r2) landed in P12 (PR2): corrected and relayed, as F4 planned"
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s19",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "request_id": "h1-toyota-hanoi-motors",
+        "apply_id": "h1-toyota-hanoi-motors",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer"
+        },
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "evidence": {},
+        "operation": "apply"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s19",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer"
+        },
+        "ids": {
+          "apply_id": "h1-toyota-hanoi-motors",
+          "request_id": "h1-toyota-hanoi-motors"
+        },
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "evidence": {}
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "relay"
+    },
+    "why": "CC-5/CC-6 (0 in r2) landed in P12 (PR2): corrected and relayed, as F4 planned"
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s21",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply",
+        "apply_id": "h1-toyota-hanoi-motors",
+        "request_id": "h1-toyota-hanoi-motors",
+        "expected_revision": "87ec2335b5251e0c1ee9145fcbad1d4c9be59c724cda8f93f3c61078c84ee987",
+        "changes": {
+          "module-441.1": "Toyota Hanoi Motors — your authorised Toyota dealer",
+          "module-441.2": ""
+        },
+        "evidence": {},
+        "args": {
+          "apply_id": "h1-toyota-hanoi-motors",
+          "request_id": "h1-toyota-hanoi-motors"
+        },
+        "options": {
+          "apply_id": "h1-toyota-hanoi-motors",
+          "request_id": "h1-toyota-hanoi-motors"
+        },
+        "contract": {
+          "apply_id": "h1-toyota-hanoi-motors",
+          "request_id": "h1-toyota-hanoi-motors"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "relay"
+    },
+    "why": "CC-5/CC-6 (0 in r2) landed in P12 (PR2): corrected and relayed, as F4 planned"
+  },
+  {
+    "src": "hist/j-1ibzqi/n-2f179916-605f-4d73-bfa0-f6e9d2c32724#t1s21",
+    "platform": "joomla",
+    "class": "CC-IDS apply_id/request_id",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "apply"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "contract_failed",
+      "message": "contract- apply_id and request_id required"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "CONTRACT_RULE"
+    }
+  },
+  {
+    "src": "hist/demowpnam/n-2c25a870-a231-4014-9288-f987b8d8da7f#t1s4",
+    "platform": "wordpress",
+    "class": "WP-NOCONTRACT content.contract on WordPress",
+    "args": {
+      "action": "content.contract",
+      "params": {
+        "operation": "inspect"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_action",
+      "message": "unknown action: content.contract"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "hist/demowpnam/n-2c25a870-a231-4014-9288-f987b8d8da7f#t1s4",
+    "platform": "wordpress",
+    "class": "WP-GETADDR content.get addressing (option)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "option",
+        "id": "blogname"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/demowpnam/n-2c25a870-a231-4014-9288-f987b8d8da7f#t1s39",
+    "platform": "wordpress",
+    "class": "WP-FIELDS update without kind",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "vi-content-02-sample-page",
+        "fields": {
+          "post_content": "<!-- wp:paragraph -->\n<p>Đây là một trang ví dụ. Trang khác với bài viết ở chỗ nó luôn nằm ở một vị trí cố định và sẽ xu…[1456 chars]",
+          "post_title": "Trang mẫu"
+        }
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "hist/demowpnam/n-2c25a870-a231-4014-9288-f987b8d8da7f#t1s45",
+    "platform": "wordpress",
+    "class": "WP-FIELDS addressing/field shape (option needs a key, e.g. blogn)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "vi-settings-title-tagline",
+        "fields": {
+          "option_value": "Demowpnam"
+        },
+        "id": "blogname",
+        "kind": "option"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "write_failed",
+      "message": "option needs a key, e.g. blogname"
+    },
+    "expect": {
+      "disposition": "relay"
+    },
+    "f4": {
+      "disposition": "relay"
+    },
+    "why": "WP-12/WP-25 (0 in r2) landed in P12 (PR2): corrected and relayed, as F4 planned"
+  },
+  {
+    "src": "hist/demowpnam/n-2c25a870-a231-4014-9288-f987b8d8da7f#t1s46",
+    "platform": "wordpress",
+    "class": "WP-FIELDS addressing/field shape (option takes one field: value)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "vi-settings-title-tagline",
+        "fields": {
+          "option_value": "Demowpnam"
+        },
+        "key": "blogname",
+        "kind": "option"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "write_failed",
+      "message": "option takes one field: value"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/demowpnam/n-2c25a870-a231-4014-9288-f987b8d8da7f#t1s46",
+    "platform": "wordpress",
+    "class": "WP-GETADDR content.get addressing (option)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "key": "blogdescription",
+        "kind": "option"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/demowpnam/n-2c25a870-a231-4014-9288-f987b8d8da7f#t1s47",
+    "platform": "wordpress",
+    "class": "WP-GETADDR content.get addressing (option)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": "blogdescription",
+        "kind": "option"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/demowpnam/n-2c25a870-a231-4014-9288-f987b8d8da7f#t1s51",
+    "platform": "wordpress",
+    "class": "WP-FIELDS addressing/field shape (term needs a key: the taxonomy)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "apply_id": "vi-terms-and-menu",
+        "fields": {
+          "name": "Chưa phân loại"
+        },
+        "id": 1,
+        "kind": "term"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "write_failed",
+      "message": "term needs a key: the taxonomy, e.g. \"category\" or \"nav_menu\""
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "hist/demojjjj/n-979571fd-68bc-4580-99e9-0cfbcde508ee#t3s4",
+    "platform": "joomla",
+    "class": "X-WRONGKIND WordPress kind on Joomla (option)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "option",
+        "key": "sitename"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"kind must be one of: article, category, tag, field, menuItem, menutype, redirect, banner, bannerClient, contact, newsfeed, language, module, templateStyle, user, extensionParams\",\"next\":\"This site…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "hist/demojjjj/n-979571fd-68bc-4580-99e9-0cfbcde508ee#t3s4",
+    "platform": "joomla",
+    "class": "X-WRONGKIND WordPress kind on Joomla (option)",
+    "args": {
+      "action": "content.list",
+      "params": {
+        "kind": "option",
+        "limit": 60
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"bad_params\",\"message\":\"kind must be one of: article, category, tag, field, menuItem, menutype, redirect, banner, bannerClient, contact, newsfeed, language, module, templateStyle, user, extensionParams\",\"next\":\"This site…",
+    "expect": {
+      "disposition": "refuse",
+      "code": "NOT_ON_THIS_PLATFORM"
+    }
+  },
+  {
+    "src": "hist/demowpnam/n-378b0671-b30c-46d1-80e1-c402c180b0be#t1s3",
+    "platform": "wordpress",
+    "class": "WP-FIELDS read-shape names (date)",
+    "args": {
+      "action": "content.update",
+      "params": {
+        "kind": "post",
+        "id": 1,
+        "fields": {
+          "date": "2029-09-22 05:27:24"
+        },
+        "apply_id": "date-hello-world-2029"
+      }
+    },
+    "answer": "{\"ok\":false,\"error\":\"write_failed\",\"message\":\"no writable field for kind post; given date; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input\",\"ne…",
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/demowp/n-2fc6edc9-ba18-4735-88a5-4199673dc866#t1s2",
+    "platform": "wordpress",
+    "class": "WP-GETADDR content.get addressing (option)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "option",
+        "id": "WPLANG"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/demowp/n-2fc6edc9-ba18-4735-88a5-4199673dc866#t1s2",
+    "platform": "wordpress",
+    "class": "WP-GETADDR content.get addressing (option)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "kind": "option",
+        "id": "blogname"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  },
+  {
+    "src": "hist/demowp/n-2fc6edc9-ba18-4735-88a5-4199673dc866#t1s2",
+    "platform": "wordpress",
+    "class": "WP-LANG content.language without apply_id",
+    "args": {
+      "action": "content.language"
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "apply_id required"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "hist/demowp/n-2fc6edc9-ba18-4735-88a5-4199673dc866#t1s3",
+    "platform": "wordpress",
+    "class": "WP-GETADDR content.get addressing (undefined)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "id": "blogname"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "id required"
+    },
+    "expect": {
+      "disposition": "refuse",
+      "code": "ADDRESS_MISSING"
+    }
+  },
+  {
+    "src": "hist/demowp/n-2fc6edc9-ba18-4735-88a5-4199673dc866#t1s10",
+    "platform": "wordpress",
+    "class": "WP-GETADDR content.get addressing (option)",
+    "args": {
+      "action": "content.get",
+      "params": {
+        "key": "WPLANG",
+        "kind": "option"
+      }
+    },
+    "answer": {
+      "ok": false,
+      "error": "bad_params",
+      "message": "id required"
+    },
+    "expect": {
+      "disposition": "relay"
+    }
+  }
+]

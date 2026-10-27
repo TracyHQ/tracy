@@ -1,0 +1,481 @@
+{
+  "/": {
+    "title": "Home"
+  },
+  "/product": {
+    "title": "Product",
+    "heading": "A clear foundation for the work ahead."
+  },
+  "/services": {
+    "title": "Service",
+    "heading": "Website services"
+  },
+  "/services/service-detail": {
+    "title": "Website design and build",
+    "heading": "Website design and build"
+  },
+  "/services/website-strategy": {
+    "title": "{{services.strategy.name}}",
+    "heading": "{{services.strategy.name}}"
+  },
+  "/services/brand-and-interface-design": {
+    "title": "{{services.design.name}}",
+    "heading": "{{services.design.name}}"
+  },
+  "/services/website-development": {
+    "title": "{{services.development.name}}",
+    "heading": "{{services.development.name}}"
+  },
+  "/services/content-and-photography": {
+    "title": "{{services.content.name}}",
+    "heading": "{{services.content.name}}"
+  },
+  "/pricing": {
+    "title": "Pricing",
+    "heading": "Choose the level of support that fits."
+  },
+  "/resources/blog": {
+    "title": "Blog",
+    "heading": "Content guides"
+  },
+  "/resources/category-list": {
+    "title": "All articles"
+  },
+  "/resources/archive": {
+    "title": "Archive"
+  },
+  "/resources/all-categories": {
+    "title": "Topics"
+  },
+  "/resources/mag-procurement": {
+    "title": "Website planning"
+  },
+  "/resources/mag-datacenter": {
+    "title": "Website operations"
+  },
+  "/resources/mag-world": {
+    "title": "Studio notes"
+  },
+  "/resources/style-guide": {
+    "title": "Style guide"
+  },
+  "/resources/typography": {
+    "title": "Typography",
+    "heading": "Typography"
+  },
+  "/resources/colors": {
+    "title": "Color roles",
+    "heading": "Color roles"
+  },
+  "/resources/spacing": {
+    "title": "Spacing and radius",
+    "heading": "Spacing and radius"
+  },
+  "/resources/faq": {
+    "title": "Questions",
+    "heading": "Questions"
+  },
+  "/resources/contact": {
+    "title": "Contact us"
+  },
+  "/resources/search": {
+    "title": "Search"
+  },
+  "/resources/tags": {
+    "title": "Tags"
+  },
+  "/resources/sign-in": {
+    "title": "Sign in"
+  },
+  "/resources/home-2": {
+    "title": "Home — variant"
+  },
+  "/resources/single-contact": {
+    "title": "Talk to sales"
+  },
+  "/resources/single-tag": {
+    "title": "Joomla"
+  },
+  "/resources/marketing-samples": {
+    "title": "Marketing samples",
+    "heading": "One identity. Every message."
+  },
+  "/resources/home-variation": {
+    "title": "Home variation"
+  },
+  "/resources/home-onepage": {
+    "title": "Home - Onepage"
+  },
+  "/company/about": {
+    "title": "About",
+    "heading": "Make the first impression feel like you."
+  },
+  "/company/team": {
+    "title": "Team",
+    "heading": "People"
+  },
+  "/company/careers": {
+    "title": "Careers",
+    "heading": "Small steps, a shared direction."
+  },
+  "/pages/contact-category": {
+    "title": "Contact category",
+    "heading": "Studio contacts"
+  },
+  "/pages/featured-contacts": {
+    "title": "Featured contacts"
+  },
+  "/pages/news-feeds": {
+    "title": "News feeds"
+  },
+  "/pages/wrapper": {
+    "title": "Wrapper",
+    "heading": "Design reference"
+  },
+  "/pages/authors": {
+    "title": "Authors"
+  },
+  "/account/create-account": {
+    "title": "Create account"
+  },
+  "/account/profile": {
+    "title": "Sign in"
+  },
+  "/account/reset-password": {
+    "title": "Reset password",
+    "heading": "Reset password"
+  },
+  "/account/forgot-username": {
+    "title": "Forgot username",
+    "heading": "Forgot username"
+  },
+  "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal": {
+    "title": "{{services.care.name}}",
+    "heading": "{{services.care.name}}"
+  },
+  "/services/43-22-sure-fire-headline-formulas-that-work": {
+    "title": "{{services.campaign.name}}",
+    "heading": "{{services.campaign.name}}"
+  },
+  "/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus": {
+    "title": "Writing a useful website brief",
+    "heading": "Writing a useful website brief"
+  },
+  "/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel": {
+    "title": "Designing a contact page people can use",
+    "heading": "Designing a contact page people can use"
+  },
+  "/resources/blog/36-how-to-write-like-hemingway": {
+    "title": "Editing website copy for clarity",
+    "heading": "Editing website copy for clarity"
+  },
+  "/resources/blog/37-how-much-money-do-youtubers-make": {
+    "title": "Choosing what belongs on the homepage",
+    "heading": "Choosing what belongs on the homepage"
+  },
+  "/resources/blog/38-21-useful-keyboard-shortcuts-for-writers": {
+    "title": "Building an editorial calendar",
+    "heading": "Building an editorial calendar"
+  },
+  "/pages/authors/author/tracyagent": {
+    "title": "Authors"
+  },
+  "/resources/tags/t4-framework": {
+    "title": "T4 Framework"
+  },
+  "/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit": {
+    "title": "Making service pages more specific",
+    "heading": "Making service pages more specific"
+  },
+  "/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read": {
+    "title": "Writing headings that guide a reader",
+    "heading": "Writing headings that guide a reader"
+  },
+  "/resources/blog/41-why-being-naive-can-make-your-fortune": {
+    "title": "Using customer stories responsibly",
+    "heading": "Using customer stories responsibly"
+  },
+  "/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22": {
+    "title": "A simple content review workflow",
+    "heading": "A simple content review workflow"
+  },
+  "/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native": {
+    "title": "Lessons from a website discovery workshop",
+    "heading": "Lessons from a website discovery workshop"
+  },
+  "/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum": {
+    "title": "Keeping project communication clear",
+    "heading": "Keeping project communication clear"
+  },
+  "/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices": {
+    "title": "A thoughtful follow-up after launch",
+    "heading": "A thoughtful follow-up after launch"
+  },
+  "/resources/all-categories/2-uncategorised": {
+    "title": "Studio resources",
+    "heading": "Studio resources"
+  },
+  "/resources/all-categories/9-demo-categories": {
+    "title": "Explore the studio",
+    "heading": "Explore the studio"
+  },
+  "/resources/all-categories/9-demo-categories/11-technical": {
+    "title": "Practical guides",
+    "heading": "Practical guides"
+  },
+  "/resources/all-categories/9-demo-categories/12-cool-workspace": {
+    "title": "Inside the studio",
+    "heading": "Inside the studio"
+  },
+  "/resources/all-categories/9-demo-categories/13-food-and-drink": {
+    "title": "Studio life",
+    "heading": "Studio life"
+  },
+  "/resources/all-categories/14-pages": {
+    "title": "Website pages",
+    "heading": "Website pages"
+  },
+  "/resources/all-categories/17-magazine": {
+    "title": "Insights",
+    "heading": "Insights"
+  },
+  "/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction": {
+    "title": "Choosing a CMS your team can use",
+    "heading": "Choosing a CMS your team can use"
+  },
+  "/pages/authors/author/demo": {
+    "title": "Authors"
+  },
+  "/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you": {
+    "title": "Asking better questions about hosting",
+    "heading": "Asking better questions about hosting"
+  },
+  "/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action": {
+    "title": "Preparing an asset inventory",
+    "heading": "Preparing an asset inventory"
+  },
+  "/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity": {
+    "title": "Reviewing third-party integrations",
+    "heading": "Reviewing third-party integrations"
+  },
+  "/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo": {
+    "title": "Comparing proposals on the same basis",
+    "heading": "Comparing proposals on the same basis"
+  },
+  "/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable": {
+    "title": "Studio notes: making time for improvements",
+    "heading": "Studio notes: making time for improvements"
+  },
+  "/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton": {
+    "title": "Studio notes: welcoming a new perspective",
+    "heading": "Studio notes: welcoming a new perspective"
+  },
+  "/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading": {
+    "title": "Studio notes: reviewing work together",
+    "heading": "Studio notes: reviewing work together"
+  },
+  "/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic": {
+    "title": "Studio notes: a better project kickoff",
+    "heading": "Studio notes: a better project kickoff"
+  },
+  "/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise": {
+    "title": "Studio notes: starting with the customer",
+    "heading": "Studio notes: starting with the customer"
+  },
+  "/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger": {
+    "title": "Reducing unnecessary page weight",
+    "heading": "Reducing unnecessary page weight"
+  },
+  "/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace": {
+    "title": "Making recovery part of launch planning",
+    "heading": "Making recovery part of launch planning"
+  },
+  "/pages/authors/author/Lawrence": {
+    "title": "Authors"
+  },
+  "/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce": {
+    "title": "A routine for website updates",
+    "heading": "A routine for website updates"
+  },
+  "/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions": {
+    "title": "Keeping forms connected to your team",
+    "heading": "Keeping forms connected to your team"
+  },
+  "/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world": {
+    "title": "Reading website analytics with a purpose",
+    "heading": "Reading website analytics with a purpose"
+  },
+  "/pages/authors/author/DamonZ": {
+    "title": "Authors"
+  },
+  "/resources/tags/jooma-4-x": {
+    "title": "Jooma 4.x"
+  },
+  "/resources/tags/joomla-3-9": {
+    "title": "Joomla 3.9"
+  },
+  "/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat": {
+    "title": "{{team.hale.name}} — {{team.hale.role}}",
+    "heading": "{{team.hale.name}} — {{team.hale.role}}"
+  },
+  "/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices": {
+    "title": "{{team.lang.name}} — {{team.lang.role}}",
+    "heading": "{{team.lang.name}} — {{team.lang.role}}"
+  },
+  "/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis": {
+    "title": "{{team.lindqvist.name}} — {{team.lindqvist.role}}",
+    "heading": "{{team.lindqvist.name}} — {{team.lindqvist.role}}"
+  },
+  "/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus": {
+    "title": "{{team.meyer.name}} — {{team.meyer.role}}",
+    "heading": "{{team.meyer.name}} — {{team.meyer.role}}"
+  },
+  "/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique": {
+    "title": "How the demo team works together",
+    "heading": "How the demo team works together"
+  },
+  "/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla": {
+    "title": "Meet the people behind a project",
+    "heading": "Meet the people behind a project"
+  },
+  "/pages/news-feeds/5-uncategorised": {
+    "title": "News feeds",
+    "heading": "Industry updates"
+  },
+  "/pages/authors/author/margarete69": {
+    "title": "Authors"
+  },
+  "/pages/authors/author/deonte.daniel": {
+    "title": "Authors"
+  },
+  "/pages/authors/author/dion.parker": {
+    "title": "Authors"
+  },
+  "/resources/all-categories/2-uncategorised/1-about-us": {
+    "title": "About us",
+    "heading": "About us"
+  },
+  "/resources/all-categories/2-uncategorised/13-full-width": {
+    "title": "Full width",
+    "heading": "Full width"
+  },
+  "/resources/all-categories/2-uncategorised/14-sidebar-left-content": {
+    "title": "Sidebar Left + Content",
+    "heading": "Sidebar Left + Content"
+  },
+  "/resources/all-categories/2-uncategorised/15-content-sidebar-right": {
+    "title": "Content + Sidebar Right",
+    "heading": "Content + Sidebar Right"
+  },
+  "/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum": {
+    "title": "Testing a website before launch",
+    "heading": "Testing a website before launch"
+  },
+  "/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat": {
+    "title": "Planning a website migration",
+    "heading": "Planning a website migration"
+  },
+  "/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis": {
+    "title": "Keeping images sharp on smaller screens",
+    "heading": "Keeping images sharp on smaller screens"
+  },
+  "/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum": {
+    "title": "Making a website easy to maintain",
+    "heading": "Making a website easy to maintain"
+  },
+  "/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra": {
+    "title": "A practical handover checklist",
+    "heading": "A practical handover checklist"
+  },
+  "/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies": {
+    "title": "Testing keyboard navigation",
+    "heading": "Testing keyboard navigation"
+  },
+  "/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat": {
+    "title": "Inside a collaborative design review",
+    "heading": "Inside a collaborative design review"
+  },
+  "/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla": {
+    "title": "Preparing for a team photo session",
+    "heading": "Preparing for a team photo session"
+  },
+  "/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut": {
+    "title": "A workspace that supports creative work",
+    "heading": "A workspace that supports creative work"
+  },
+  "/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu": {
+    "title": "From workshop notes to a page plan",
+    "heading": "From workshop notes to a page plan"
+  },
+  "/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem": {
+    "title": "Organising a useful inspiration library",
+    "heading": "Organising a useful inspiration library"
+  },
+  "/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique": {
+    "title": "Keeping project decisions findable",
+    "heading": "Keeping project decisions findable"
+  },
+  "/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu": {
+    "title": "Making room for informal conversations",
+    "heading": "Making room for informal conversations"
+  },
+  "/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut": {
+    "title": "A team lunch with a purpose",
+    "heading": "A team lunch with a purpose"
+  },
+  "/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla": {
+    "title": "Collecting inspiration outside the studio",
+    "heading": "Collecting inspiration outside the studio"
+  },
+  "/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat": {
+    "title": "Sharing knowledge in small sessions",
+    "heading": "Sharing knowledge in small sessions"
+  },
+  "/resources/all-categories/14-pages/32-header-1": {
+    "title": "Header 1",
+    "heading": "Header 1"
+  },
+  "/resources/all-categories/14-pages/33-header-2": {
+    "title": "Header 2",
+    "heading": "Header 2"
+  },
+  "/resources/all-categories/14-pages/34-header-3": {
+    "title": "Header 3",
+    "heading": "Header 3"
+  },
+  "/resources/all-categories/14-pages/35-header-4": {
+    "title": "Header 4 (Main menu - Logo - Topbar right)",
+    "heading": "Header 4 (Main menu - Logo - Topbar right)"
+  },
+  "/pages/news-feeds/5-uncategorised/1-joomla-announcements": {
+    "title": "Joomla! announcements"
+  },
+  "/resources/all-categories/2-uncategorised/16-3-columns": {
+    "title": "3 Columns",
+    "heading": "3 Columns"
+  },
+  "/resources/all-categories/2-uncategorised/17-layouts": {
+    "title": "Layouts",
+    "heading": "Layouts"
+  },
+  "/resources/all-categories/2-uncategorised/31-home-dark": {
+    "title": "Home Dark",
+    "heading": "Home Dark"
+  },
+  "/resources/all-categories/14-pages/65-offline-page": {
+    "title": "Offline page",
+    "heading": "Offline page"
+  },
+  "/resources/all-categories/14-pages/46-features-page": {
+    "title": "Features page",
+    "heading": "Features page"
+  },
+  "/resources/all-categories/14-pages/48-faqs": {
+    "title": "FAQs",
+    "heading": "FAQs"
+  },
+  "/resources/all-categories/14-pages/64-error-page": {
+    "title": "Error page",
+    "heading": "Error page"
+  }
+}

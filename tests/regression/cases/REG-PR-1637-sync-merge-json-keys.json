@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1637-sync-merge-json-keys",
+  "kind": "feat",
+  "title": "A JSON column both sites changed merges key by key: the live site's keys come over, Tracy's stay, a key both changed is Tracy's and named; a saved article indexed on both sites never holds a sync",
+  "pr": 1637,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-sync-json.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs"
+  ],
+  "expect": [
+    "S1: the hero's eyebrow from the copy and title from the live site both stand after a sync; a key both changed is the copy's and named in kept.fields; non-JSON stays one value; Smart Search rows both sites made do not hold the sync"
+  ],
+  "selectors": {
+    "host": "live_sync.py merge_json_column json_merged ignoreTables finder_*, short NUL"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-23-sync-merge-json-keys.md",
+  "fence": "What the live site changed inside a JSON column never disappears because Tracy changed another key of it",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-json.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs"
+    ]
+  }
+}

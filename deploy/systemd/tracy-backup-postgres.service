@@ -1,0 +1,30 @@
+# The unit backup-postgres.sh:30 and deploy-tracy-stack/action.yml:74 name, written down for the
+# first time (prod1's hand-installed copy is not in the repo), with the R2 push of a shard after it.
+#
+# THIS FILE IS THE SHARD'S. The master's own backup stays what it is on its host (01:30 GMT+7, keep 7,
+# no R2 push); nothing installs this unit there.
+#
+# A SECOND STACK ON ONE HOST (the co-hosted trial shard next to another stack): install a prefixed
+# copy under another unit name and change BOTH paths, ExecStart= and ExecStartPost=, with
+# `sed 's#/opt/tracy-fleet/stack/#/opt/tracy-d1/stack/#g'` (or the cohost layout's root) so that
+# neither the dump nor the push reaches into the other stack's copy of the scripts. The copy also
+# needs its own directories and container, or its dump lands next to the other stack's:
+#   Environment=TRACY_POSTGRES_CONTAINER=<that stack's postgres container>
+#   Environment=TRACY_BACKUP_DIR=<own dump directory>
+#   Environment=TRACY_BACKUP_ENV=<own backup-r2.env>
+#   Environment=TRACY_STATE_DIR=<own state directory>
+# (TRACY_POSTGRES_CONTAINER and TRACY_BACKUP_DIR are read by backup-postgres.sh, all four by
+# tracy-pgdump-r2.sh.) Left out of this file on purpose: here they would only restate the defaults.
+[Unit]
+Description=Tracy: dump the tracy database (backup-postgres.sh), then push it encrypted to this shard's R2 bucket
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+# Three local dumps are enough on the VM: the off-machine copies keep 14 days.
+ExecStart=/opt/tracy-fleet/stack/backup-postgres.sh --keep 3
+ExecStartPost=/opt/tracy-fleet/stack/tracy-pgdump-r2.sh
+TimeoutStartSec=2h
+Nice=10
+IOSchedulingClass=idle

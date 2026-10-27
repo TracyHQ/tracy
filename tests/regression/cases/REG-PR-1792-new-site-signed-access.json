@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1792-new-site-signed-access",
+  "kind": "fix",
+  "title": "A new Joomla site is born on the signed access verifier (0.2.0), not the header-trusting plg_system_tracyaccess 0.1.4 the Claude Cowork package installs, with no rollout.list line",
+  "pr": 1792,
+  "area": "fleet/provision/access",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run provision/strict-site-access.sh on a site laid out as provision leaves it after the post-up hook (key + ready record, the Cowork package's 0.1.4 plugin, no rollout.list line).",
+    "S2: Run the Joomla and WordPress resync tools on a born-strict site and an unmarked neighbour.",
+    "S3: Run deploy-host-dsh.sh against a fake docker and read which resyncs it ran."
+  ],
+  "expect": [
+    "S1: the plugin files equal provision/access/joomla/plg_system_tracyaccess (version 0.2.0), strict.json is written, an unproven site or a WordPress mu-plugin that is not the signed one fails the step, and provision runs the step after platform_post_up and before the baseline.",
+    "S2: the born-strict site is upgraded, the unmarked neighbour is held.",
+    "S3: the Joomla resync runs once after the WordPress one, and its failure fails the deploy."
+  ],
+  "selectors": {
+    "tool": "packages/fleet/tracy-fleet-operation/scripts/provision/strict-site-access.sh",
+    "test": "packages/fleet/tracy-fleet-operation/test/strict-site-access.test.mjs"
+  },
+  "evidence": "Fresh local stand 27/10/2026: a new Joomla site ran plg_system_tracyaccess 0.1.4 from pkg_claudecowork 0.24.65, which trusts bare X-Tracy-Email/Tier/Role headers",
+  "fence": "provision step 6c½, the born-strict marker in both resync tools, the deploy-time Joomla resync",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/strict-site-access.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/resync-joomla-access-plugin.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/deploy-same-tag.test.mjs"
+    ],
+    "tests": [
+      "Joomla: the plugin the Cowork package installed is replaced by the signed verifier",
+      "the site is marked born strict",
+      "a site whose readiness was never proven fails the step",
+      "WordPress: the mu-plugin stage 6b copied is checked to be the signed one",
+      "provision runs the step after the post-up hook",
+      "a site born strict is resynced without a rollout.list line",
+      "the Joomla access plugin is resynced too",
+      "the Joomla resync fails: the deploy says so"
+    ],
+    "timeout_s": 300
+  }
+}

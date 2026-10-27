@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1181-brand-failure-words-brand",
+  "kind": "fix",
+  "title": "Brand and Brand builder show a translated sentence for every failure — never 'HTTP 403', the engine's raw error text, or a job named '?'",
+  "pr": 1181,
+  "area": "brand-engine/client",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/design/tracy-brand-engine/test/client-failure.test.mjs",
+    "S2: Record the exit code, the '# fail' line and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "refusalCode maps 401/403 to NOT_ALLOWED and a code-less refusal to UNAVAILABLE; failureText gives a sentence for every known code and job.failed.other for an unknown one; hostOfInput files an own-site refusal under the site's host, never '?'."
+  ],
+  "selectors": {
+    "module": "packages/design/tracy-brand-engine/src/client/failure.ts",
+    "dom": "[data-job][data-state=failed] p[data-code]"
+  },
+  "evidence": "#811 F-S5-008: tabs.tsx built the failed job as { host: url ?? '?', error: { code: 'HTTP 403' } } and JobProgress printed job.error.error for any untranslated code.",
+  "fence": "The client's failure mapping (pure functions); no browser.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/design/tracy-brand-engine/test/client-failure.test.mjs"
+    ],
+    "tests": [
+      "a refusal with no code of its own is named by its kind, never as \"HTTP <status>\"",
+      "every failure reads as a translated sentence; an unknown code gets the general one",
+      "the job a refusal leaves behind is named by the site it was for, never \"?\""
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1134-ds-button-only",
+  "kind": "feat",
+  "title": "The chat route to a design system is kept but turned off by one operator switch (chat-design-system, default off): the agent proposes and applies no design system and points to the Design system button; Use this inspiration is hidden; Help names the button; switched on, the chat applies through the button's own door",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: read packages/core/tracy-core/src/ui-switches/catalogue.json; node --test test/ui-switches.test.mjs (cwd packages/core/tracy-core).",
+    "S2/S3: node --test test/chat-route.test.mjs test/routes.test.mjs (cwd packages/design/tracy-design-inspiration).",
+    "S3: node --test test/chat-design-route.test.mjs test/chat-design-route-wiring.test.mjs test/deferred-tools.test.mjs (cwd packages/tools/tracy-site-tools).",
+    "S4/S5: node --test test/design-system-door.test.mjs test/assistant.test.mjs (cwd apps/tracy-web).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-button-only.mjs"
+  ],
+  "expect": [
+    "S1: switch chat-design-system exists, defaultOn false, group browser-toolbar; switchesAtTracy reads /api/ui at the origin and answers null for no origin, a refusal, a throw or a body without hidden.",
+    "S2: offersUseThis is true only with chatRoute on, outside the public page and for a design system; PreviewDialog reads ui.isShown(CHAT_DS_SWITCH); Create with is not conditioned on it.",
+    "S3: with chat-design-system hidden, tracy_design_propose and POST /choose answer CHAT_DESIGN_SYSTEM_OFF and design-preview.json is unchanged; tracy_design_library and tracy_design_copy form still answer ok; tracy_site theme.style answers CHAT_DESIGN_SYSTEM_OFF with no /apply call; tracy_design_system apply POSTs /api/sites/<key>/design-system with x-tracy-actor, x-tracy-session and x-tracy-workspace-label; the site context has '- Design systems through the chat: OFF' only when read off, and the line names no deferred tool; tracy_design_system is deferred to the design road.",
+    "S4: an apply with an actor grant or x-tracy-session gets 403 CHAT_DESIGN_SYSTEM_OFF with a message naming the Design system button and nothing reaches the host; a cookie press applies; chatRoute true applies from the chat; chatRoute throwing gives 503 UI_SETTING_UNREADABLE.",
+    "S5: the Help prompt says to press the Design system button in the toolbar of the site browser, that a new site gets its design at creation, and that the chat route is off; designFact([]) says the chat can apply; with the button hidden it never points at it."
+  ],
+  "selectors": {
+    "switch": "packages/core/tracy-core/src/ui-switches/catalogue.json chat-design-system; index.mjs switchesAtTracy",
+    "page": "packages/design/tracy-design-inspiration/src/client/chat-route.mjs, PreviewDialog.tsx",
+    "lane": "packages/design/tracy-design-inspiration/src/host/index.ts chatRouteOff; packages/tools/tracy-site-tools/src/host/chat-design-route.mjs, index.ts tracy_design_system / theme.style, site-context.mjs chatRouteLine",
+    "door": "apps/tracy-web/src/sites/design-system.js chatRouteClosed; route.js chatRoute",
+    "help": "apps/tracy-web/src/assistant/prompt.js designFact"
+  },
+  "evidence": "tasks/evidence/ds-button-only-2026-10-11/README.md — the paths found, the results table per flow × CMS, what was measured where (11/10/2026).",
+  "fence": "Real chat turns on the shared stand are in the evidence, not re-run here: the stand's images do not carry this branch, so the refusal, the context line and the door gate are proven by these tests against the shipped bundles. The /ops press itself (PUT /api/ops/ui) is covered by apps/tracy-web/test/ops-ui.test.mjs (needs Postgres).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-button-only.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

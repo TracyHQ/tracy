@@ -1,0 +1,70 @@
+---
+// A pages entry shown as a document: article head, its own `body`, then the blog CTA. Title-only
+// when the entry has no body — nothing is invented to fill the column.
+import Base from '@/layouts/Base.astro'
+import Masthead from './Masthead.astro'
+import Prose from './Prose.astro'
+import { SECTION_COMPONENTS } from '@/components/sections/registry'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import type { ComposedPage } from '@/lib/sections'
+import { loadBlogCta } from '@/lib/posts'
+import PageOwner from '@/components/site/PageOwner.astro'
+import { stampFor, stampsFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path: string
+  page: ComposedPage
+}
+const { chrome, locale, path, page } = Astro.props
+const body: unknown = page.body
+const hasBody = Array.isArray(body) ? body.length > 0 : typeof body === 'string' && body.trim() !== ''
+const cta = await loadBlogCta(locale)
+// Provenance stamps (`src/lib/stamps.ts`): the page entry owns the page and stamps its head and body;
+// the CTA sections stamp their own entries. Empty on an ordinary request.
+const $page = stampFor(Astro.request, 'pages', { slug: page.slug, data: { id: page.id } })
+const $ = stampsFor(Astro.request)
+---
+
+<Base chrome={chrome} title={page.title} currentPath={path} style={page.style}>
+	<PageOwner stamp={$page} />
+	<Masthead
+		size="article"
+		narrow
+		title={page.heading || page.title}
+		sub={page.sub}
+		crumbs={[{ label: ui(locale).w.home, href: href(locale, '/') }, { label: page.title }]}
+		crumbsLabel={ui(locale).w.breadcrumb}
+		marks={{ title: $page(page.heading ? 'heading' : 'title'), sub: $page('sub') }}
+	/>
+	{
+		hasBody && (
+			<section class="wrap">
+				<div class="k-container">
+					<div class="doc">
+						<Prose value={body} stamp={$page} field="body" />
+					</div>
+				</div>
+			</section>
+		)
+	}
+	{
+		cta?.sections.map((s, i) => {
+			const Component = SECTION_COMPONENTS[s.collection]
+			return Component ? <Component data={s.data} index={i} style={cta.style} stamp={$(s.collection, { slug: s.entry, data: s.data })} /> : null
+		})
+	}
+</Base>
+
+<style>
+	.wrap {
+		padding: 56px 0;
+	}
+	.doc {
+		max-width: 760px;
+		margin-inline: auto;
+	}
+</style>

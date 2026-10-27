@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1a2ca4fb-1087-4fd0-83ba-590bc63f54ee",
+  "status": "complete",
+  "name": "Regisgrumberg",
+  "url": "https://styles.refero.design/style/1a2ca4fb-1087-4fd0-83ba-590bc63f54ee",
+  "sourceWebsite": "https://www.regisgrumberg.com",
+  "extractedAt": "2026-06-03T21:14:35.192Z",
+  "capturedAt": "2026-10-08T05:08:53.379403+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "Orbital type on a black void — a typographic planetarium where Anton orbits a single white dot.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/21a3316d-0daa-4f61-86ce-792ff41238de.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "745b0b20d9fd8a978e851c5693fe9bb70bdcc8b05d6977dedfe3944148b552b3",
+      "bytes": 17532
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a5541d6efd49b73816c294e8b138ec8664e34fa7ea30a312236e7553f9c6e458",
+      "bytes": 51588
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e29bbc4c48df88ace98c0b32d24ae86b665746274197253e3d3db6e24ef216da",
+      "bytes": 14365
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "64cc10596a4e549ed8dffdc03d066a382b9ea481839d6ebc4fdf854a5e612e30",
+      "bytes": 8865
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "72776d4d763b76265df5675513903c4835117be242225f5b91de74779c6447a7",
+      "bytes": 11003
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "766860c0e4118cf79f8a24605089a2c9eaefd2351d80c7d38ee0b228571aac5c",
+      "bytes": 2291
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "44faef00159f0b0982b800d435bbaaed80745621d293b83d64e00315c060ba4a",
+      "bytes": 626
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0d35f06ed763f291d9c84268211f4fa3e87950623f5e9430cf85a37310f8ee9c",
+      "bytes": 643
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "073459d1d13a39ca7440adec0839af9e4dcc7b951a88e20ddfe4e16b0972f247",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1ca263f15bf77d90f2bb7fed4cd04973b57554958b214151663aa87ce1c493d1",
+      "bytes": 39251
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "208197ca4acaf80120d8a1b023b9ec498b13bbdde73843e60102b0a0ab384ebe",
+      "bytes": 20009
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b67830001d06565af3afc66e05ed126679e0765ce21b91522ffcd04e5ecda0b4",
+      "bytes": 30084
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "5e4a6b3ef9f398c7a8f74279055a3673913d93d3fbab5cd6e919d684063bec17",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2e6042050ec1d484c78b9337b6b512ffb678f1a913156fd00445d6c6daa441d7",
+      "bytes": 1478
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5ef62efa24db7c7804da736956b63716812773e9fd3b15e68cd090afe853fa5f",
+      "bytes": 1997
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "1a2ca4fb-1087-4fd0-83ba-590bc63f54ee",
+    "34aa811f-6084-484c-b4c0-f587b514e970",
+    "486c3132-9ff7-4e27-9eef-ca2e130bd827",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5b7ecaf1-de2d-4fb9-9995-9f0665e77862",
+    "5c9743ad-fe33-4d21-9185-db012f6f96c7",
+    "5e427a82-a223-4b69-be7f-01c6656ce823",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "717a2f6f-bc7d-4f9a-adcb-1465fdf77c9a",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1e82907-d1cf-46cd-8ae7-3561c5b15fd0",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "bd62b51f-e1be-4e4f-b3d9-e9b91f817625",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "e06224b2-6d52-4d06-bbde-115cec719b47",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761"
+  ]
+}

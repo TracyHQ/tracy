@@ -1,0 +1,1083 @@
+---
+title: Hook Reference
+description: Plugin hooks for extending EmDash functionality.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Hooks allow plugins to intercept and modify EmDash behavior at specific points in the content, media, email, comment, and page lifecycle.
+
+## Hook overview
+
+The following table lists every hook, what triggers it, what it can modify, and whether it is exclusive:
+
+| Hook                    | Trigger                               | Can Modify        | Exclusive |
+| ----------------------- | ------------------------------------- | ----------------- | --------- |
+| `content:beforeSave`    | Before content is saved               | Content data      | No        |
+| `content:afterSave`     | After content is saved                | Nothing           | No        |
+| `content:beforeDelete`  | Before content is deleted             | Can cancel        | No        |
+| `content:afterDelete`   | After content is deleted              | Nothing           | No        |
+| `content:beforePublish` | Before content is published            | Can cancel        | No        |
+| `content:beforeSchedule` | Before content is scheduled           | Can cancel        | No        |
+| `content:beforeUnpublish` | Before content is unpublished         | Can cancel        | No        |
+| `content:afterPublish`  | After content is published            | Nothing           | No        |
+| `content:afterUnpublish` | After content is unpublished         | Nothing           | No        |
+| `content:afterRestore`  | After content is restored             | Nothing           | No        |
+| `content:afterSchedule` | After content is scheduled            | Nothing           | No        |
+| `content:afterUnschedule` | After content is unscheduled        | Nothing           | No        |
+| `media:beforeUpload`    | Before file is uploaded               | File metadata     | No        |
+| `media:afterUpload`     | After file is uploaded                | Nothing           | No        |
+| `cron`                  | Scheduled task fires                  | Nothing           | No        |
+| `email:beforeSend`      | Before email delivery                 | Message, can cancel | No      |
+| `email:deliver`         | Deliver email via transport           | Nothing           | Yes       |
+| `email:afterSend`       | After successful email delivery       | Nothing           | No        |
+| `comment:beforeCreate`  | Before comment is stored              | Comment, can cancel | No      |
+| `comment:moderate`      | Decide comment approval status        | Status            | Yes       |
+| `comment:afterCreate`   | After comment is stored               | Nothing           | No        |
+| `comment:afterModerate` | After admin changes comment status    | Nothing           | No        |
+| `byline:afterSave`      | After a byline is created or updated  | Nothing           | No        |
+| `byline:afterDelete`    | After a byline is deleted             | Nothing           | No        |
+| `page:metadata`         | Rendering public page head            | Contribute tags   | No        |
+| `page:fragments`        | Rendering public page body            | Inject scripts    | No        |
+| `plugin:install`        | When plugin is first installed        | Nothing           | No        |
+| `plugin:activate`       | When plugin is enabled                | Nothing           | No        |
+| `plugin:deactivate`     | When plugin is disabled               | Nothing           | No        |
+| `plugin:uninstall`      | When plugin is removed                | Nothing           | No        |
+
+## Content hooks
+
+### `content:beforeSave`
+
+**Capability:** `content:write`
+
+Runs before content is saved to the database. Use it to validate, transform, or enrich content. A sandboxed hook rejects a save by returning a version 1 hook result with a `SAVE_REJECTED` error and a plain-text `reason` of 1–500 characters. The API responds with `SAVE_REJECTED`, and the admin identifies the plugin and shows the reason as text. Empty, overlong, malformed, and unknown error results fail the save with a generic `CONTENT_HOOK_ERROR` response.
+
+From the host process, throw `ContentSaveRejectedError` (exported from `emdash`) to reject a save. Any other exception from either execution mode fails the save with a generic response that does not expose the exception message.
+
+```ts
+import { definePlugin } from "emdash";
+
+export default definePlugin({
+	id: "my-plugin",
+	version: "1.0.0",
+	hooks: {
+		"content:beforeSave": async (event, ctx) => {
+			const { content, collection, isNew } = event;
+
+			// Add timestamps
+			if (isNew) {
+				content.createdBy = "system";
+			}
+			content.modifiedAt = new Date().toISOString();
+
+			// Return modified content
+			return content;
+		},
+	},
+});
+```
+
+#### Event
+
+```ts
+interface ActorInfo {
+	readonly id: string;
+	readonly role: number;
+}
+
+interface ContentHookEvent {
+	content: Record<string, unknown>; // Content data
+	collection: string; // Collection slug
+	isNew: boolean; // True for creates, false for updates
+	id?: string; // ID of the existing item on updates; absent on creates
+	actor?: ActorInfo; // Authenticated user that initiated the save
+	locale?: string; // Locale of the entry being saved
+	translationOf?: string; // Source entry ID when a create adds a translation
+}
+```
+
+On an update, `content` holds only the submitted field values. Load the stored item with `ctx.content.get(event.collection, event.id)` when the hook needs to compare against it. Authenticated REST, visual editing, and MCP saves include `actor`. Internal writes without an authenticated user omit it.
+
+`locale` is the locale the entry is saved in: on a create, the requested locale resolved against the configured locales, or the default locale when the request names none; on an update, the stored entry's locale. `translationOf` is set only when a create comes from the translation flow, and holds the ID of the entry being translated. Use the two together to tell a new entry from a new translation of an existing one, for example to allow one entry per locale in a collection:
+
+```ts
+"content:beforeSave": async (event, ctx) => {
+	if (event.collection !== "home" || !event.isNew || event.translationOf) return;
+	const existing = await ctx.content.list("home", {
+		limit: 1,
+		where: { locale: event.locale },
+	});
+	if (existing.items.length > 0) {
+		throw new ContentSaveRejectedError("Home already exists in this locale. Add a translation instead.");
+	}
+},
+```
+
+#### Return value
+
+- Return modified content object to apply changes
+- Return a sandbox hook error envelope to reject the save with a bounded plain-text reason
+- Return `void` to pass through unchanged
+
+A sandboxed hook returns this complete envelope to reject a save:
+
+```ts
+return {
+	__emdashSandboxHookResult: true,
+	version: 1,
+	error: {
+		code: "SAVE_REJECTED",
+		reason: "Add a summary before saving.",
+	},
+};
+```
+
+The host trims `reason` and accepts between 1 and 500 characters.
+
+### `content:afterSave`
+
+**Capability:** `content:read`
+
+Runs after content is saved. Use for side effects like notifications, cache invalidation, or external syncing.
+
+```ts
+hooks: {
+  "content:afterSave": async (event, ctx) => {
+    const { content, collection, isNew } = event;
+
+    if (collection === "posts" && content.status === "published") {
+      // Notify external service
+      await ctx.http?.fetch("https://api.example.com/notify", {
+        method: "POST",
+        body: JSON.stringify({ postId: content.id }),
+      });
+    }
+  },
+}
+```
+
+#### Event
+
+`content:afterSave` receives `content`, `collection`, `isNew`, the optional authenticated `actor`, and the same `locale` and `translationOf` as `content:beforeSave`. `content` is the complete saved entry, with its database ID in `content.id` and collection fields under `content.data`. The separate optional `id` used by `content:beforeSave` updates is absent after the save.
+
+#### Return value
+
+No return value expected.
+
+### `content:beforeDelete`
+
+**Capability:** `content:read`
+
+Runs before content is deleted. Use to validate deletion or prevent it.
+
+```ts
+hooks: {
+  "content:beforeDelete": async (event, ctx) => {
+    const { id, collection } = event;
+
+    // Prevent deletion of protected content
+    const item = await ctx.content?.get(collection, id);
+    if (item?.data.protected) {
+      return false; // Cancel deletion
+    }
+
+    // Allow deletion
+    return true;
+  },
+}
+```
+
+#### Event
+
+```ts
+interface ContentDeleteEvent {
+	id: string; // Entry ID
+	collection: string; // Collection slug
+	permanent?: false; // Present for native plugins; omitted in the sandbox runtime
+}
+```
+
+`content:beforeDelete` only runs when an entry moves to trash. Native plugins receive `permanent: false`; the sandbox runtime sends only `id` and `collection`. Do not use this field to branch inside a sandboxed hook. Permanent deletion bypasses `content:beforeDelete`, so the hook cannot prevent an administrator from permanently deleting an entry that is already in the trash.
+
+#### Return value
+
+- Return `false` to cancel deletion
+- Return `true` or `void` to allow
+
+### `content:afterDelete`
+
+**Capability:** `content:read`
+
+Runs after content is deleted. Use for cleanup tasks.
+
+```ts
+hooks: {
+  "content:afterDelete": async (event, ctx) => {
+    const { id, collection, permanent } = event;
+
+    if (permanent) {
+      await ctx.storage.relatedItems.delete(`${collection}:${id}`);
+    }
+  },
+}
+```
+
+The event contains `id`, `collection`, and `permanent`. `permanent` is `false` when the entry moves to trash and `true` when it is permanently deleted. Check it before removing data that a restored trashed entry would still need. This hook has no return value.
+
+### `content:beforePublish`
+
+**Capability:** `hooks.content-policy:register`
+
+Runs before content is published. Return `void` to allow publication or `{ cancel: true, reason }` to reject it. EmDash accepts 1–500 plain-text characters in `reason` and returns `PUBLISH_REJECTED` for an explicit cancellation.
+
+The event contains the current `content`, `collection`, and `origin`. Authenticated API, MCP, and visual-editor actions also contain `actor` with its matching `source`. The `visual-editor` origin requires the signed, short-lived action token from an authenticated toolbar render. Scheduled entries run this hook again when they become due. A scheduler rejection unschedules the entry and lists the affected entry and reason on the dashboard. A successful schedule, publish, or delete clears the record; an administrator can dismiss a stale record.
+
+### `content:beforeSchedule`
+
+**Capability:** `hooks.content-policy:register`
+
+Runs before an entry receives a publication time. It uses the same decision envelope and origin fields as `content:beforePublish`, adds `scheduledAt` to the event, and returns `SCHEDULE_REJECTED` for an explicit cancellation.
+
+There is no `content:beforeUnschedule` hook. An administrator can always cancel a future publication.
+
+### `content:beforeUnpublish`
+
+**Capability:** `hooks.content-policy:register`
+
+Runs before live content is removed. It uses the same decision envelope and origin fields as `content:beforePublish` and returns `UNPUBLISH_REJECTED` for an explicit cancellation.
+
+`hooks.content-policy:register` does not imply `content:read`, `content:write`, or publication actions. Invalid decisions and unexpected abort-policy errors fail closed without exposing exception messages.
+
+### `content:afterPublish`
+
+Runs after an entry is published successfully, including an entry that EmDash publishes automatically at its scheduled time. Use it for work that depends on the published entry, such as notifying another service or refreshing an external search index.
+
+```ts
+hooks: {
+  "content:afterPublish": async (event, ctx) => {
+    ctx.log.info(`Published ${event.collection}/${event.content.id}`);
+  },
+}
+```
+
+The hook requires the `content:read` capability. EmDash runs it after the publish response, so its return value cannot change the entry or undo the publication. An error is logged; with `errorPolicy: "abort"`, later publish hooks do not run.
+
+### `content:afterUnpublish`
+
+Runs after an entry is unpublished successfully. Use it to remove or update copies of content held by external systems. Unpublishing also cancels any pending schedule, without running `content:afterUnschedule`.
+
+```ts
+hooks: {
+  "content:afterUnpublish": async (event, ctx) => {
+    ctx.log.info(`Unpublished ${event.collection}/${event.content.id}`);
+  },
+}
+```
+
+This hook has the same `content:read` capability requirement, deferred execution, event shape, and no-return-value contract as `content:afterPublish`.
+
+### `content:afterRestore`
+
+Runs after trashed content is restored. Requires `content:read` capability. The restored entry is a draft with no schedule, whatever its status was when it was trashed. Dropping the schedule does not also run `content:afterUnschedule`.
+
+```ts
+hooks: {
+  "content:afterRestore": async (event, ctx) => {
+    ctx.log.info(`Restored ${event.collection}/${event.content.id}`);
+  },
+}
+```
+
+### `content:afterSchedule`
+
+Runs after content is scheduled for future publishing. Requires `content:read` capability.
+
+```ts
+hooks: {
+  "content:afterSchedule": async (event, ctx) => {
+    ctx.log.info(`Scheduled ${event.collection}/${event.content.id}`);
+  },
+}
+```
+
+### `content:afterUnschedule`
+
+Runs after scheduled content is unscheduled. Requires `content:read` capability.
+
+```ts
+hooks: {
+  "content:afterUnschedule": async (event, ctx) => {
+    ctx.log.info(`Unscheduled ${event.collection}/${event.content.id}`);
+  },
+}
+```
+
+#### Event
+
+```ts
+interface ContentStateChangeEvent {
+	content: Record<string, unknown>;
+	collection: string;
+}
+```
+
+This event shape is shared by `content:afterPublish`, `content:afterUnpublish`, `content:afterRestore`, `content:afterSchedule`, and `content:afterUnschedule`. `content` is the complete entry after the state change, including its `id`, `slug`, and status; collection fields are under `content.data`.
+
+#### Return value
+
+No return value expected.
+
+## Media hooks
+
+### `media:beforeUpload`
+
+**Capability:** `media:write`
+
+Runs before a file is uploaded. Use to validate, rename, or reject files.
+
+```ts
+hooks: {
+  "media:beforeUpload": async (event, ctx) => {
+    const { file } = event;
+
+    // Reject files over 10MB
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error("File too large");
+    }
+
+    // Rename file
+    return {
+      name: `${Date.now()}-${file.name}`,
+      type: file.type,
+      size: file.size,
+    };
+  },
+}
+```
+
+#### Event
+
+```ts
+interface MediaUploadEvent {
+	file: {
+		name: string; // Original filename
+		type: string; // MIME type
+		size: number; // Size in bytes
+	};
+}
+```
+
+#### Return value
+
+- Return modified file metadata to apply changes
+- Return `void` to pass through unchanged
+- Throw to reject the upload
+
+### `media:afterUpload`
+
+**Capability:** `media:read`
+
+Runs after a file is uploaded. Use for processing, thumbnails, or metadata extraction.
+
+```ts
+hooks: {
+  "media:afterUpload": async (event, ctx) => {
+    const { media } = event;
+
+    if (media.mimeType.startsWith("image/")) {
+      // Store image metadata
+      await ctx.kv.set(`media:${media.id}:analyzed`, {
+        processedAt: new Date().toISOString(),
+      });
+    }
+  },
+}
+```
+
+#### Event
+
+```ts
+interface MediaAfterUploadEvent {
+	media: {
+		id: string;
+		filename: string;
+		mimeType: string;
+		size: number | null;
+		url: string;
+		createdAt: string;
+	};
+}
+```
+
+#### Return value
+
+No return value expected.
+
+## Lifecycle hooks
+
+Lifecycle hooks require no registration capability.
+
+### `plugin:install`
+
+Runs when a plugin is first installed. Use for initial setup, creating storage collections, or seeding data.
+
+```ts
+hooks: {
+  "plugin:install": async (event, ctx) => {
+    // Initialize default settings
+    await ctx.settings.set("enabled", true);
+    await ctx.settings.set("threshold", 100);
+
+    ctx.log.info("Plugin installed successfully");
+  },
+}
+```
+
+### `plugin:activate`
+
+Runs when a plugin is enabled (after install or re-enable).
+
+```ts
+hooks: {
+  "plugin:activate": async (event, ctx) => {
+    ctx.log.info("Plugin activated");
+  },
+}
+```
+
+### `plugin:deactivate`
+
+Runs when a plugin is disabled.
+
+```ts
+hooks: {
+  "plugin:deactivate": async (event, ctx) => {
+    ctx.log.info("Plugin deactivated");
+  },
+}
+```
+
+`plugin:install`, `plugin:activate`, and `plugin:deactivate` receive an empty event object. They have no return value.
+
+### `plugin:uninstall`
+
+Runs when a plugin is removed. Use for cleanup.
+
+```ts
+hooks: {
+  "plugin:uninstall": async (event, ctx) => {
+    const { deleteData } = event;
+
+    if (deleteData) {
+      // Clean up all plugin data
+      const items = await ctx.settings.list();
+      for (const { key } of items) {
+        await ctx.kv.delete(key);
+      }
+    }
+
+    ctx.log.info("Plugin uninstalled");
+  },
+}
+```
+
+#### Event
+
+```ts
+interface UninstallEvent {
+	deleteData: boolean; // User chose to delete data
+}
+```
+
+The uninstall hook has no return value.
+
+## Cron hook
+
+### `cron`
+
+**Capability:** None required
+
+Fired when a scheduled task executes. Schedule tasks with `ctx.cron.schedule()`. Cron expressions are evaluated in UTC on every host.
+
+```ts
+hooks: {
+  "cron": async (event, ctx) => {
+    if (event.name === "daily-sync") {
+      const data = await ctx.http?.fetch("https://api.example.com/data");
+      ctx.log.info("Sync complete");
+    }
+  },
+}
+```
+
+#### Event
+
+```ts
+interface CronEvent {
+	name: string;
+	data?: Record<string, unknown>;
+	scheduledAt: string;
+}
+```
+
+The cron hook has no return value.
+
+## Email hooks
+
+For messages sent by plugins, email hooks run in order: `email:beforeSend`, then `email:deliver`, then `email:afterSend`. System authentication messages go directly to `email:deliver`; they do not run through `email:beforeSend` or `email:afterSend`.
+
+### `email:beforeSend`
+
+**Capability:** `hooks.email-events:register`
+
+Middleware hook that runs before delivery. Transform messages or cancel delivery.
+
+```ts
+hooks: {
+  "email:beforeSend": async (event, ctx) => {
+    // Add footer to all emails
+    return {
+      ...event.message,
+      text: event.message.text + "\n\n—Sent from My Site",
+    };
+
+    // Or return false to cancel delivery
+  },
+}
+```
+
+#### Event
+
+```ts
+interface EmailBeforeSendEvent {
+	message: {
+		to: string;
+		cc?: string[];
+		replyTo?: string;
+		subject: string;
+		text: string;
+		html?: string;
+	};
+	source: string;
+}
+```
+
+#### Return value
+
+- Return modified message to transform
+- Return `false` to cancel delivery
+
+### `email:deliver`
+
+**Capability:** `hooks.email-transport:register` | **Exclusive:** Yes
+
+The transport provider. Only one plugin can deliver emails. Responsible for actually sending the message via an email service.
+
+```ts
+hooks: {
+  "email:deliver": {
+    exclusive: true,
+    handler: async (event, ctx) => {
+      await sendViaSES(event.message);
+    },
+  },
+}
+```
+
+#### Event and return value
+
+```ts
+interface EmailDeliverEvent {
+	message: {
+		to: string;
+		cc?: string[];
+		replyTo?: string;
+		subject: string;
+		text: string;
+		html?: string;
+	};
+	source: string;
+}
+```
+
+The hook has no return value. `source` is `"system"` for EmDash authentication messages and the plugin ID for messages sent by a plugin.
+
+Plugins can set `cc` (additional recipients) and `replyTo` on a message. Providers should deliver both when they are present; a provider that drops `cc` silently leaves those recipients without the message.
+
+### `email:afterSend`
+
+**Capability:** `hooks.email-events:register`
+
+Fire-and-forget hook after successful delivery. Errors are logged but do not propagate.
+
+```ts
+hooks: {
+  "email:afterSend": async (event, ctx) => {
+    await ctx.kv.set(`email:log:${Date.now()}`, {
+      to: event.message.to,
+      subject: event.message.subject,
+    });
+  },
+}
+```
+
+#### Event and return value
+
+`email:afterSend` receives the same `message` and `source` fields as `email:deliver`. It has no return value.
+
+## Comment hooks
+
+Comment hooks run in order: `comment:beforeCreate`, then `comment:moderate`, then `comment:afterCreate`. The `comment:afterModerate` hook runs separately when an administrator or an authorized plugin changes a comment's status.
+
+After a comment is stored, hooks receive this record shape:
+
+```ts
+interface StoredComment {
+	id: string;
+	collection: string;
+	contentId: string;
+	parentId: string | null;
+	authorName: string;
+	authorEmail: string;
+	authorUserId: string | null;
+	body: string;
+	status: string;
+	moderationMetadata: Record<string, unknown> | null;
+	createdAt: string;
+	updatedAt: string;
+}
+```
+
+### `comment:beforeCreate`
+
+**Capability:** `users:read`
+
+Middleware hook before a comment is stored. Enrich, validate, or reject comments.
+
+```ts
+hooks: {
+  "comment:beforeCreate": async (event, ctx) => {
+    // Reject comments with links
+    if (event.comment.body.includes("http")) {
+      return false;
+    }
+  },
+}
+```
+
+#### Event
+
+```ts
+interface CommentBeforeCreateEvent {
+	comment: {
+		collection: string;
+		contentId: string;
+		parentId: string | null;
+		authorName: string;
+		authorEmail: string;
+		authorUserId: string | null;
+		body: string;
+		ipHash: string | null;
+		userAgent: string | null;
+	};
+	metadata: Record<string, unknown>;
+}
+```
+
+#### Return value
+
+- Return modified event to transform
+- Return `false` to reject
+- Return `void` to pass through
+
+### `comment:moderate`
+
+**Capability:** `users:read` | **Exclusive:** Yes
+
+Decide whether a comment is approved, pending, or spam. Only one moderation provider is active.
+
+```ts
+hooks: {
+  "comment:moderate": {
+    exclusive: true,
+    handler: async (event, ctx) => {
+      const score = await checkSpam(event.comment);
+      return {
+        status: score > 0.8 ? "spam" : score > 0.5 ? "pending" : "approved",
+        reason: `Spam score: ${score}`,
+      };
+    },
+  },
+}
+```
+
+#### Event
+
+```ts
+interface CommentModerateEvent {
+	comment: { /* same as beforeCreate */ };
+	metadata: Record<string, unknown>;
+	collectionSettings: {
+		commentsEnabled: boolean;
+		commentsModeration: "all" | "first_time" | "none";
+		commentsClosedAfterDays: number;
+		commentsAutoApproveUsers: boolean;
+	};
+	priorApprovedCount: number;
+}
+```
+
+#### Return value
+
+```ts
+{ status: "approved" | "pending" | "spam"; reason?: string }
+```
+
+#### Active moderator
+
+EmDash includes a built-in moderator that applies the collection's comment settings. When exactly one plugin provides `comment:moderate`, EmDash selects that plugin instead of the built-in moderator and stores the choice. When several plugins provide it and no choice is stored, EmDash selects none of them and new comments wait for review. A stored choice, including one of the built-in moderator, stays in effect while the selected moderator is enabled.
+
+### `comment:afterCreate`
+
+**Capability:** `users:read`
+
+Fire-and-forget hook after a comment is stored. Use for notifications. Sending email also requires the `email:send` capability and a configured `email:deliver` provider; without both, `ctx.email` is undefined.
+
+```ts
+hooks: {
+  "comment:afterCreate": async (event, ctx) => {
+    const recipient = event.contentAuthor?.email;
+    if (event.comment.status === "approved" && recipient && ctx.email) {
+      await ctx.email.send({
+        to: recipient,
+        subject: `New comment on "${event.content.title}"`,
+        text: `${event.comment.authorName} commented: ${event.comment.body}`,
+      });
+    }
+  },
+}
+```
+
+#### Event and return value
+
+```ts
+interface CommentAfterCreateEvent {
+	comment: StoredComment;
+	metadata: Record<string, unknown>;
+	content: { id: string; collection: string; slug: string; title?: string };
+	contentAuthor?: { id: string; name: string | null; email: string };
+}
+```
+
+The hook has no return value.
+
+### `comment:afterModerate`
+
+**Capability:** `users:read`
+
+Runs after an administrator or a plugin changes a comment's status. A successful transition runs the hook once. Hook errors are logged and do not undo the status change.
+
+#### Event
+
+```ts
+interface CommentAfterModerateEvent {
+	comment: StoredComment;
+	previousStatus: string;
+	newStatus: string;
+	moderator: { id: string; name: string | null };
+	origin?:
+		| { source: "admin"; userId: string }
+		| { source: "plugin"; pluginId: string };
+}
+```
+
+The hook has no return value.
+
+## Byline hooks
+
+Byline hooks run after the admin API or an MCP tool changes a byline profile. They do not run for seeds or imports. Use them to keep an external copy of author data, such as a search index, current. Hook errors are logged and do not undo the change.
+
+Relinking a byline to a different user can change the credits inferred for that user's entries. No per-entry hook runs for that change.
+
+### `byline:afterSave`
+
+**Capability:** `bylines:read`
+
+Runs after a byline or a byline translation is created or updated.
+
+```ts
+hooks: {
+  "byline:afterSave": async (event, ctx) => {
+    await ctx.storage.authors.put(event.byline.id, {
+      name: event.byline.displayName,
+      slug: event.byline.slug,
+    });
+  },
+}
+```
+
+#### Event
+
+```ts
+interface BylineAfterSaveEvent {
+	byline: BylineInfo;
+	/** `true` when the byline was just created. */
+	isNew: boolean;
+}
+```
+
+`BylineInfo` has the same public fields that `ctx.bylines.get()` returns. It omits the linked user account, guest flag, and custom field values.
+
+The hook has no return value.
+
+### `byline:afterDelete`
+
+**Capability:** `bylines:read`
+
+Runs after a byline is deleted. The event carries the byline as it was before deletion.
+
+#### Event
+
+```ts
+interface BylineAfterDeleteEvent {
+	byline: BylineInfo;
+}
+```
+
+The hook has no return value.
+
+## Page hooks
+
+Page hooks run when rendering public pages. They allow plugins to inject metadata and scripts.
+
+Both page hooks receive the current public page context:
+
+```ts
+interface PublicPageContext {
+	url: string;
+	path: string;
+	locale: string | null;
+	kind: "content" | "custom";
+	pageType: string;
+	title: string | null;
+	pageTitle?: string | null;
+	description: string | null;
+	canonical: string | null;
+	image: string | null;
+	content?: { collection: string; id: string; slug: string | null };
+	seo?: {
+		ogTitle?: string | null;
+		ogDescription?: string | null;
+		ogImage?: string | null;
+		robots?: string | null;
+	};
+	articleMeta?: {
+		publishedTime?: string | null;
+		modifiedTime?: string | null;
+		author?: string | null;
+	};
+	siteName?: string;
+	breadcrumbs?: Array<{ name: string; url: string }>;
+	siteUrl?: string;
+}
+
+interface PageMetadataEvent { page: PublicPageContext }
+interface PageFragmentEvent { page: PublicPageContext }
+```
+
+### `page:metadata`
+
+**Capability:** None required
+
+Contribute meta tags, Open Graph properties, JSON-LD structured data, or link tags to the page head.
+
+```ts
+hooks: {
+  "page:metadata": async (event, ctx) => {
+    return [
+      { kind: "meta", name: "generator", content: "EmDash" },
+      { kind: "property", property: "og:site_name", content: event.page.siteName ?? "My Site" },
+      { kind: "jsonld", graph: { "@type": "WebSite", name: event.page.siteName } },
+    ];
+  },
+}
+```
+
+#### Contribution types
+
+```ts
+type PageMetadataContribution =
+	| { kind: "meta"; name: string; content: string; key?: string }
+	| { kind: "property"; property: string; content: string; key?: string }
+	| {
+			kind: "link";
+			rel: "canonical" | "alternate" | "author" | "license" | "nlweb" | "site.standard.document";
+			href: string;
+			hreflang?: string;
+			key?: string;
+	  }
+	| {
+			kind: "jsonld";
+			id?: string;
+			graph: Record<string, unknown> | Array<Record<string, unknown>>;
+	  };
+```
+
+The `key` field deduplicates contributions — only the last contribution with a given key is used.
+
+Return one contribution, an array of contributions, or `null` when the plugin has nothing to add.
+
+### `page:fragments`
+
+**Capability:** `hooks.page-fragments:register`
+
+Inject scripts or HTML into pages. Only available to native plugins.
+
+```ts
+hooks: {
+  "page:fragments": async (event, ctx) => {
+    return [
+      {
+        kind: "external-script",
+        placement: "body:end",
+        src: "https://analytics.example.com/script.js",
+        async: true,
+      },
+      {
+        kind: "inline-script",
+        placement: "head",
+        code: `window.siteId = "abc123";`,
+      },
+    ];
+  },
+}
+```
+
+#### Contribution types
+
+```ts
+type PageFragmentContribution =
+	| {
+			kind: "external-script";
+			placement: "head" | "body:start" | "body:end";
+			src: string;
+			async?: boolean;
+			defer?: boolean;
+			attributes?: Record<string, string>;
+			key?: string;
+		}
+	| {
+			kind: "inline-script";
+			placement: "head" | "body:start" | "body:end";
+			code: string;
+			attributes?: Record<string, string>;
+			key?: string;
+		}
+	| {
+			kind: "html";
+			placement: "head" | "body:start" | "body:end";
+			html: string;
+			key?: string;
+		};
+```
+
+Return one fragment contribution, an array of contributions, or `null` when the plugin has nothing to add.
+
+## Hook configuration
+
+Hooks accept either a handler function or a configuration object:
+
+```ts
+hooks: {
+  // Simple handler
+  "content:afterSave": async (event, ctx) => { ... },
+
+  // With configuration
+  "content:beforeSave": {
+    priority: 50,        // Lower runs first (default: 100)
+    timeout: 10000,      // Max execution time in ms (default: 5000)
+    dependencies: [],    // Run after these plugins
+    errorPolicy: "abort", // "continue" or "abort" (default)
+    handler: async (event, ctx) => { ... },
+  },
+}
+```
+
+### Configuration options
+
+| Option         | Type       | Default   | Description                                          |
+| -------------- | ---------- | --------- | ---------------------------------------------------- |
+| `priority`     | `number`   | `100`     | Execution order (lower = earlier)                    |
+| `timeout`      | `number`   | `5000`    | Max execution time in milliseconds                   |
+| `dependencies` | `string[]` | `[]`      | Plugin IDs that must run first                       |
+| `errorPolicy`  | `string`   | `"abort"` | `"continue"` to ignore errors                        |
+| `exclusive`    | `boolean`  | `false`   | Only one plugin can be the active provider (for provider-pattern hooks like `email:deliver`, `comment:moderate`) |
+
+## Plugin context
+
+All hooks receive a context object with access to plugin APIs:
+
+```ts
+interface PluginContext {
+	plugin: { id: string; version: string };
+	storage: PluginStorage;
+	kv: KVAccess;
+	content?: ContentAccess;
+	media?: MediaAccess;
+	http?: HttpAccess;
+	log: LogAccess;
+	site: { name: string; url: string; locale: string };
+	url(path: string): string;
+	users?: UserAccess;
+	cron?: CronAccess;
+	email?: EmailAccess;
+}
+```
+
+See [Plugin capabilities](/plugins/creating-plugins/capabilities/) for the capability required by each context API.
+
+<Aside>
+	Context APIs are gated by plugin capabilities. Declare required capabilities in the plugin
+	definition.
+</Aside>
+
+## Error handling
+
+Errors in hooks are logged and handled based on `errorPolicy`:
+
+- `"abort"` (default) — Stop execution, rollback transaction if applicable
+- `"continue"` — Log error and continue to next hook
+
+```ts
+hooks: {
+  "content:beforeSave": {
+    errorPolicy: "continue", // Don't block save if this fails
+    handler: async (event, ctx) => {
+      try {
+        await ctx.http?.fetch("https://api.example.com/validate");
+      } catch (error) {
+        ctx.log.warn("Validation service unavailable", error);
+      }
+    },
+  },
+}
+```
+
+## Execution order
+
+Hooks run in this order:
+
+1. Sorted by `priority` (ascending)
+2. Plugins with `dependencies` run after their dependencies
+3. Within same priority, order is deterministic but unspecified
+
+```ts
+// This runs first (priority 10)
+{ priority: 10, handler: ... }
+
+// This runs second (priority 50)
+{ priority: 50, handler: ... }
+
+// This runs last (default priority 100)
+{ handler: ... }
+```

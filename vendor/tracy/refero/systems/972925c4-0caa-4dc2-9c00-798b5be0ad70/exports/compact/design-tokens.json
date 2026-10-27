@@ -1,0 +1,114 @@
+{
+  "color": {
+    "electric-cobalt": {
+      "$value": "#3e7ff0",
+      "$type": "color",
+      "$description": "Electric Cobalt — Handwritten annotations overlaid on headlines, heading-level emphasis, brand voice. The single saturated color in the system; its scarcity makes it feel like a marker pen picked up to circle something important"
+    },
+    "signal-blue": {
+      "$value": "#006be6",
+      "$type": "color",
+      "$description": "Signal Blue — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ink": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Ink — Primary body and heading text. Off-black with a hair of warmth so long passages never feel like printed laser output"
+    },
+    "slate": {
+      "$value": "#282b3b",
+      "$type": "color",
+      "$description": "Slate — High-density text color across the interface — appears in button labels, icon strokes, and link copy. The workhorse dark tone that carries most interface chrome"
+    },
+    "graphite": {
+      "$value": "#444444",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text, list items, paragraph copy. One step lighter than Ink for hierarchy without changing weight"
+    },
+    "stone": {
+      "$value": "#334155",
+      "$type": "color",
+      "$description": "Stone — Muted headings and subdued text — used where you need emphasis over Ink but don't want true black. Pairs with borders"
+    },
+    "steel": {
+      "$value": "#4b5563",
+      "$type": "color",
+      "$description": "Steel — Icon strokes at rest, tertiary metadata, badge text. Cool enough to recede behind primary content"
+    },
+    "fog": {
+      "$value": "#969faf",
+      "$type": "color",
+      "$description": "Fog — Placeholder text, disabled labels, the softest readable gray before content disappears"
+    },
+    "ash": {
+      "$value": "#909090",
+      "$type": "color",
+      "$description": "Ash — Hairline metadata, timestamps, count badges — present but not demanding attention"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Maximum-contrast emphasis on icons and small inline marks where Slate is too soft"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, input fields. The default light surface for every elevated component"
+    },
+    "cloud": {
+      "$value": "#f6f6f7",
+      "$type": "color",
+      "$description": "Cloud — First surface step down from Paper — subtle panels, code-block fills, button hover grounds. Warm enough to read as intentional, not gray-by-default"
+    },
+    "chalk": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Chalk — Tag and badge fills where a colored surface is too loud but Paper reads as unstyled"
+    },
+    "pebble": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Pebble — The system border color — dividers, input outlines, card edges, button outlines. This is the most-used neutral after Ink and carries structural separation across the layout"
+    },
+    "mist": {
+      "$value": "#cfd9de",
+      "$type": "color",
+      "$description": "Mist — Image and screenshot frame borders, slightly cooler than Pebble to distinguish illustrated content blocks from UI borders"
+    }
+  },
+  "font": {
+    "ui-sans-serif-inter-system-ui": {
+      "$value": "ui-sans-serif (Inter / system-ui)",
+      "$type": "fontFamily",
+      "$description": "All UI text — navigation, body copy, headings, buttons, badges. System sans-serif keeps the file weight zero and the feel native; weights cluster around 400–600, with 700 reserved for headings and the logo wordmark."
+    },
+    "ui-monospace-jetbrains-mono-sf-mono": {
+      "$value": "ui-monospace (JetBrains Mono / SF Mono)",
+      "$type": "fontFamily",
+      "$description": "Code blocks, terminal panels, inline code. 12px is for badge-style inline `<code>` chips; 16px is for full code-block passages with breathing room."
+    },
+    "menlo": {
+      "$value": "Menlo",
+      "$type": "fontFamily",
+      "$description": "Tiny metadata and version-tag monospace where a tighter face is needed — the strict geometric Menlo reads as a system stamp."
+    },
+    "firsttimewriting-custom-handwriting": {
+      "$value": "FirstTimeWriting (custom handwriting)",
+      "$type": "fontFamily",
+      "$description": "Signature playful annotation overlay — the 'ship ship ship' scribble above the hero, callouts pointing at UI elements. This single custom face is the entire brand voice. Never use it for body copy, navigation, or any interface text."
+    },
+    "monospace": {
+      "$value": "monospace",
+      "$type": "fontFamily",
+      "$description": "monospace — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://orm.drizzle.team",
+      "siteName": "Drizzle ORM",
+      "extractedAt": "2026-06-03T17:32:50.882Z",
+      "variant": "compact"
+    }
+  }
+}

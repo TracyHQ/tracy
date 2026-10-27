@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1427-emdash-handoff",
+  "kind": "feat",
+  "title": "Website Opportunities hand-off on an EmDash site: media.upload goes through tracy-host into the site's own media library (no token in tracy-web), refusals and unreachable hosts are told apart, a duplicate upload is audit-only, and the QA gate holds an Astro content-hashed stylesheet by its stem across a rebuild",
+  "pr": 1427,
+  "area": "website-opportunities/emdash-handoff",
+  "cms": ["em"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup is not needed: every test runs on a throwaway Postgres (TEST_DATABASE_URL) with a fake tracy-host and a fake docker exec; no stand, no site.",
+    "S2: From the TCH checkout run the command in `run.cmd` and read every 'ok -' / 'not ok -' line."
+  ],
+  "expect": [
+    "apps/tracy-web/test/apply-emdash-media.test.mjs: an owner's media.upload on an EmDash site reaches POST /_host/emdash-media with the file name, type and base64, answers {ok, id, url, path: url, deduplicated} and writes one site_write ok row; a viewer is refused at the toolset gate before the host; a path that names no picture is INVALID_MEDIA 400 before the host; a clean no from the site is recorded refused and frees the write lease; a host with no readable answer is 502 EMDASH_MEDIA_UNREACHABLE, recorded unknown, the lease kept; bytes the library already holds are answered ok with deduplicated: true, leave no site_write row and do not move last_write_at.",
+    "apps/tracy-host/test/emdash-media.test.mjs: the in-container MCP script is byte for byte the site tools' own; the upload runs media_upload in <label>-web-1 with the bytes on stdin; the same bytes again come back as the existing item; not-EmDash, a non PNG/JPEG/WebP type, bytes that are not that type, too large and a bad name are refused before docker runs; the site's refusals are named (no token, tool said no, HTTP error, nothing readable).",
+    "apps/tracy-host/test/demo-qa.test.mjs: css-intact holds _astro/<Name>.<hash>.css and assets/<name>-<hash>.css by stem — a rebuild that keeps the rules passes, half the rules lost or a sentinel gone in the new file still fails.",
+    "vendor/tracy/tracy-website-opportunities/test/domain-agent-prompt.test.mjs: the EmDash hand-off prompt names the media library url of each picture, tells the agent to write content with tracy_emdash content_update, to restyle through look.set then one site.rebuild, and never to write a literal \\n."
+  ],
+  "selectors": {
+    "apply_door": "POST /api/sites/:key/apply {action: 'media.upload', params: {path, content_b64}} → 200 {ok, id, url, path, deduplicated} | 400 INVALID_MEDIA | 200 {ok:false, error} | 502 EMDASH_MEDIA_UNREACHABLE",
+    "host_door": "POST /_host/emdash-media (signed) {label, filename, contentType, base64} → {ok, id, url, deduplicated}",
+    "trail": "site_write (action, outcome) and audit.detail.deduplicated"
+  },
+  "evidence": "em-marigold1 on stand wo, 18/10/2026 (tasks/evidence-wo-emdash.md): 24/24 pictures into the EmDash library in 7 s, a re-upload answered deduplicated; the QA gate then failed css-intact only because Astro renamed _astro/Base.BNyaLx3F.css to Base.DVyY2jn1.css after the agent's site.rebuild (205 → 206 rules).",
+  "fence": "The apply door's EmDash branch (seat, toolset, lease, trail), the host door's input and refusal grammar, the stem match in the gate, and the prompt's EmDash rules. Not covered here: a real EmDash site on a stand (E2E in tasks/evidence-wo-emdash.md), the agent's own turn.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/apply-emdash-media.test.mjs",
+      "apps/tracy-host/test/emdash-media.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "packages/wo/website-opportunities/test/domain-agent-prompt.test.mjs"
+    ],
+    "tests": [
+      "an owner’s media.upload on EmDash goes to the host and answers the library item",
+      "a viewer is refused at the toolset gate; the host is never asked",
+      "a path that names no picture is refused before the host; a clean no from the site is refused and frees the site",
+      "a host that gives no readable answer is unknown, not refused: 502 and the site stays held",
+      "bytes the library already holds (deduplicated) are answered ok but write no site_write row",
+      "🔒 the in-container script and its argv are the site tools’ own, byte for byte",
+      "the same bytes again come back as the item already in the library",
+      "css-intact: a content-hashed stylesheet (Astro, Vite) is held by its stem, so a rebuild is not a lost sheet"
+    ]
+  }
+}

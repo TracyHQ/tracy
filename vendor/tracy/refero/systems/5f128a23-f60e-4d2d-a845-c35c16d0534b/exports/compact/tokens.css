@@ -1,0 +1,10 @@
+:root {
+  /* Colors */
+  --color-ultra-light-azak-grey: #f8f7f3;
+  --color-dark-azak-black: #121211;
+  --color-medium-azak-grey: #85837e;
+  --color-terrain-slate: #3a4a49;
+
+  /* Typography — Font Families */
+  --font-ft-aktual: 'FT Aktual', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

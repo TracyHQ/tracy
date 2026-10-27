@@ -1,0 +1,49 @@
+{
+  "color": {
+    "sage-paper": {
+      "$value": "#e5ebda",
+      "$type": "color",
+      "$description": "Sage Paper — Page canvas — the only background the site uses. A pale desaturated celadon that warms the page without ever reading as a color choice, so the plum ink and photography do all the talking"
+    },
+    "plum-ink": {
+      "$value": "#44394c",
+      "$type": "color",
+      "$description": "Plum Ink — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, image backgrounds, and the white overlay panels sitting on top of project photographs. The only non-canvas surface color in the system"
+    },
+    "stone-border": {
+      "$value": "#c0c3b6",
+      "$type": "color",
+      "$description": "Stone Border — Hairline dividers and structural borders. A warm gray that disappears against the sage canvas but keeps the grid legible"
+    },
+    "ash-border": {
+      "$value": "#b0b2a9",
+      "$type": "color",
+      "$description": "Ash Border — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "montreal": {
+      "$value": "Montreal",
+      "$type": "fontFamily",
+      "$description": "All interface, navigation, body, caption, and mid-size editorial text. Used at a single weight 400 with a slight positive tracking (0.02–0.023em) that gives labels a quiet, typeset quality. The 43px size carries agency descriptors and large taglines. Freely available substitute: Inter or Söhne."
+    },
+    "grotesk": {
+      "$value": "Grotesk",
+      "$type": "fontFamily",
+      "$description": "The signature display face. Weight 400 only, but used at 170–386px with crushed 0.75–0.76 line-height so letters nearly touch and the type feels carved rather than set. The entire visual identity depends on this single face being enormous — there is no bold weight, no italic, no alternative. Substitute: Druk, Söhne Breit, or NB Architekt — any compressed, geometric grotesque that holds up at 300+ pixels."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://springsummer.dk",
+      "siteName": "Spring/Summer",
+      "extractedAt": "2026-06-03T17:47:28.357Z",
+      "variant": "compact"
+    }
+  }
+}

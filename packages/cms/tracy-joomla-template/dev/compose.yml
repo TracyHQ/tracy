@@ -1,0 +1,39 @@
+# Local stand of tpl_tracy on the image the fleet's fresh-Joomla path uses. Run from the package:
+#   docker compose -f dev/compose.yml up -d        (first boot installs Joomla + the template zip)
+#   docker compose -f dev/compose.yml down -v      (auto-install only runs on an empty volume)
+# The zip is read from ../dist, so run `node scripts/build.mjs` first.
+# Named, because the directory is `dev` in every package and compose would otherwise share one project.
+name: tracy-joomla-template
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: tracy-dev
+      MARIADB_DATABASE: joomla
+    volumes:
+      - db:/var/lib/mysql
+
+  joomla:
+    image: joomla:6-apache
+    depends_on: [db]
+    ports:
+      - "127.0.0.1:8080:80"
+    environment:
+      JOOMLA_DB_HOST: db
+      JOOMLA_DB_USER: root
+      JOOMLA_DB_PASSWORD: tracy-dev
+      JOOMLA_DB_NAME: joomla
+      JOOMLA_DB_PREFIX: jos_
+      JOOMLA_SITE_NAME: Tracy Demo
+      JOOMLA_ADMIN_USER: Tracy Admin
+      JOOMLA_ADMIN_USERNAME: tracyadmin
+      JOOMLA_ADMIN_PASSWORD: tracy-demo-password-2026
+      JOOMLA_ADMIN_EMAIL: admin@example.com
+      JOOMLA_EXTENSIONS_PATHS: /ext/tpl_tracy.zip
+    volumes:
+      - ../dist/tpl_tracy.zip:/ext/tpl_tracy.zip:ro
+      - www:/var/www/html
+
+volumes:
+  db: {}
+  www: {}

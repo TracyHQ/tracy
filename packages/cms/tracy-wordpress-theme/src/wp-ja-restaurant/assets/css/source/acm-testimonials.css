@@ -1,0 +1,92 @@
+/* wp-ja-restaurant: acm/testimonials/css/style.css of the JA Restaurant 1.0.6 Joomla template (GPL v3, JoomlArt), carried rule for rule by tasks/ja-restaurant-wp7/tools/port-css.mjs (DECISIONS D-10). Colours read light-dark(<source>, <derived dark, D-03>); do not edit by hand, re-run the tool. */
+.acm-testimonials .owl-carousel {
+  padding-left: 0;
+  padding-right: 0;
+}
+.acm-testimonials .owl-carousel .owl-item.active {
+  -webkit-animation: scale-up 0.5s ease-out 0s both;
+  -o-animation: scale-up 0.5s ease-out 0s both;
+  animation: scale-up 0.5s ease-out 0s both;
+}
+.acm-testimonials .owl-theme .owl-controls {
+  margin: 0;
+}
+.acm-testimonials .owl-theme .owl-controls .owl-buttons div {
+  position: absolute;
+  left: 20px;
+  bottom: 0;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  border-radius: var(--ds-btn-radius, 0);
+  margin: 0;
+  padding: 0;
+}
+.acm-testimonials .owl-theme .owl-controls .owl-buttons div.owl-next {
+  right: 20px;
+  left: auto;
+}
+.acm-testimonials .item {
+  position: relative;
+  padding-bottom: 90px;
+  text-align: center;
+  font-size: 18px;
+}
+.acm-testimonials .author-info-text {
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-block;
+  background-color: var(--ds-c-accent, #d24a24);
+  color: var(--ds-c-accent-on, #ffffff);
+  font-size: 13px;
+  text-transform: uppercase;
+  padding: 2px 10px;
+}
+.acm-testimonials .author-info {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  margin-left: -30px;
+}
+.acm-testimonials .author-info img {
+  max-width: 100%;
+}
+.module-dark .acm-testimonials .owl-theme .owl-controls .owl-buttons div {
+  border: 2px solid var(--ds-c-border, light-dark(#615e59, #3a352f));
+  background: none;
+  color: var(--ds-c-muted, #615e59);
+}
+@-webkit-keyframes scale-up {
+  0% {
+    -webkit-transform: scale(0.2);
+  }
+  100% {
+    -webkit-transform: scale(1);
+  }
+}
+@-moz-keyframes scale-up {
+  0% {
+    -moz-transform: scale(0.2);
+  }
+  100% {
+    -moz-transform: scale(1);
+  }
+}
+@keyframes scale-up {
+  0% {
+    transform: scale(0.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-ms-keyframes scale-up {
+  0% {
+    transform: scale(0.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

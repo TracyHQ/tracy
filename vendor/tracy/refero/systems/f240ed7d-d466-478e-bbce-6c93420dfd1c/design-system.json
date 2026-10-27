@@ -1,0 +1,269 @@
+{
+  "dos": [
+    "Use Sentinel 300 weight at 42-53px with -0.8 to -5px letter-spacing for all editorial headlines — never substitute a sans-serif at display size",
+    "Reserve #ff4143 (Coral Ember) for exactly one primary action per surface; let everything else be neutral",
+    "Use 6px border-radius on all inputs, buttons, badges, and cards — never exceed this value",
+    "Pair each feature section with a decorative pastel circle bleeding off the edge of its mockup card",
+    "Set body copy at 18px Whitney 400 with 1.67 line-height — never drop below 16px for running text",
+    "Use the 0.167em tracked small-caps treatment at 12px Whitney 500 for all section eyebrows above headlines",
+    "Keep the wine hero as the only dark band per page — subsequent sections must return to white canvas"
+  ],
+  "donts": [
+    "Don't use Sentinel for body copy, navigation, or UI chrome — it is display-only",
+    "Don't apply drop shadows to cards, inputs, or buttons — the system is intentionally flat",
+    "Don't introduce new chromatic accent colors beyond Coral Ember and Google Signal Blue",
+    "Don't use pure #000000 for text on light surfaces — use Graphite #11110f or Slate Ink #455360",
+    "Don't exceed 1200px page max-width or break the two-column editorial row pattern",
+    "Don't use solid color fills for icons — keep them 1.5-2px monoline strokes in Slate Ink",
+    "Don't add more than one decorative pastel circle per mockup — restraint is the point"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#42022e",
+      "name": "Midnight Wine",
+      "role": "Hero band background, section dividers, deep surface moments — the deepest brand tone, used as atmosphere not as UI fill",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, #42022, rgba(66, 2, 46, 0))"
+    },
+    {
+      "hex": "#ff4143",
+      "name": "Coral Ember",
+      "role": "Red supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#455360",
+      "name": "Slate Ink",
+      "role": "Primary text, icons, heading strokes, input borders, default UI chrome — the dominant near-gray that gives the system its printed-paper authority",
+      "group": "neutral"
+    },
+    {
+      "hex": "#939598",
+      "name": "Fog Gray",
+      "role": "Secondary text, helper copy, muted badges, logo tints — recedes behind Slate Ink to build typographic depth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Canvas background, card surfaces, text on dark bands — the bright neutral that holds the content sections open",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e0e0e0",
+      "name": "Mist",
+      "role": "Hairline dividers, decorative stroke accents, soft borders — the quietest neutral, separates without competing",
+      "group": "neutral"
+    },
+    {
+      "hex": "#11110f",
+      "name": "Graphite",
+      "role": "Highest-emphasis text on light surfaces, deep icon fills — slightly warmer than pure black, reads as ink rather than absence",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4285f4",
+      "name": "Google Signal Blue",
+      "role": "Third-party sign-in button (Google OAuth) — utility color for federated auth, not a brand accent",
+      "group": "accent"
+    }
+  ],
+  "layout": "Hero is full-bleed #42022 with a centered max-width ~1200px two-column layout (text left, product mockup right). Content sections below switch to a white #ffffff canvas with the same 1200px max-width. The pattern is alternating two-column rows: each row pairs a 42px Sentinel headline + eyebrow + body copy on one side with a document mockup card on the other, switching sides between rows. Vertical rhythm between rows is generous (64-80px). Navigation is a single transparent top bar over the dark hero. There are no card grids, no pricing tables, no multi-column feature matrices in the visible viewport — the system prefers long editorial scrolls over dashboard-density layouts.",
+  "imagery": "The visual language is illustration-first, photography-free. Product is shown through flat document mockup cards (white surfaces with gray content bars and selective colored annotation highlights) rather than screenshots. Decorative pastel circles in coral, lavender, and yellow provide warmth behind these mockups. Icons are line-style monoline in Slate Ink, 1.5-2px stroke. The two screenshots together show: a wine hero with one large product card and Google sign-in chrome, followed by alternating editorial feature rows each with a mockup card and an icon+serif headline. Imagery occupies roughly 40% of visual space, always contained, never full-bleed or photographic.",
+  "similar": [
+    {
+      "why": "Same restrained near-grayscale palette, minimal chromatic accent, and editorial whitespace-driven layout on long-form marketing pages",
+      "business": "Notion"
+    },
+    {
+      "why": "Same document-workspace product framing with illustrated product mockup cards floating on white canvas, sans-serif body system",
+      "business": "Coda"
+    },
+    {
+      "why": "Same craft-editorial visual language with playful decorative shapes bleeding behind flat product illustrations",
+      "business": "Dropbox Paper"
+    },
+    {
+      "why": "Same confidence with serif display headlines over a dark brand-colored hero band transitioning to bright white content sections",
+      "business": "Pitch"
+    },
+    {
+      "why": "Same magazine-spread layout rhythm and serif-headline-over-sans-body typographic pairing in a productivity context",
+      "business": "Read.cv"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "6px",
+      "badges": "6px",
+      "inputs": "6px",
+      "buttons": "6px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64-80px",
+    "cardPadding": "24-40px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#42022",
+      "name": "Wine Hero Band",
+      "level": 0,
+      "purpose": "Top hero, dark editorial moments — establishes the midnight-wine atmosphere"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 1,
+      "purpose": "Page canvas, content sections — the bright default surface"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Elevated Card",
+      "level": 2,
+      "purpose": "Feature cards, illustration frames — visually identical to canvas, separated by spatial rhythm and thin Mist borders rather than elevation"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "none — flat white surfaces, depth implied by colored annotation bars",
+      "element": "Document mockup cards"
+    },
+    {
+      "style": "none — 1px Slate Ink border only",
+      "element": "Email input field"
+    },
+    {
+      "style": "none — whitespace and alternating row direction do the separation work",
+      "element": "Feature sections"
+    }
+  ],
+  "northStar": "midnight-wine reading room",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": 2
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.67
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading",
+      "size": 42,
+      "lineHeight": 1.14,
+      "letterSpacing": -0.8
+    },
+    {
+      "role": "display",
+      "size": 53,
+      "lineHeight": 1.24,
+      "letterSpacing": -5
+    }
+  ],
+  "components": [
+    {
+      "name": "Wine Hero Band",
+      "role": "Page-opening atmospheric section",
+      "description": "Full-bleed #42022 background. Left column carries a 53px Sentinel 300-weight headline in #ffffff with -5px letter-spacing, a single-sentence Whitney 400 subhead at 18px, then a Google OAuth button stacked above an email input + Coral Ember CTA. Right column holds a large product mockup (document editor card) with soft purple/coral decorative circles bleeding off the edges. The wine-to-transparent horizontal gradient sits behind the mockup area."
+    },
+    {
+      "name": "Coral Ember Primary Button",
+      "role": "Primary action",
+      "description": "6px border-radius, #ff4143 fill, #ffffff text at 16px Whitney 500, horizontal padding 24px, vertical padding 12px. Sits inline beside a neutral input field. The coral is the only chromatic button in the system — reserving it for the single most important action per surface."
+    },
+    {
+      "name": "Ghost Outlined Button",
+      "role": "Secondary navigation action (e.g., Log In)",
+      "description": "No background, #ffffff text at 16px Whitney 400, 1px white border on dark surfaces, arrow glyph (→) in Slate Ink or white depending on surface."
+    },
+    {
+      "name": "Google OAuth Button",
+      "role": "Federated sign-in",
+      "description": "6px border-radius, #4285f4 fill, #ffffff text, full-width within its column, white Google 'G' mark on the left, 16px Whitney 500. Treated as utility chrome, not a brand element."
+    },
+    {
+      "name": "Email Input Field",
+      "role": "Inline email capture beside CTA",
+      "description": "6px border-radius, #ffffff background, 1px Slate Ink border, 16px Whitney 400 placeholder ('Work Email'), 16px 24px padding. Sits directly left of Coral Ember button with zero gap, creating a unified input+button control."
+    },
+    {
+      "name": "Editorial Feature Card",
+      "role": "Alternating two-column feature section (Create / Organize)",
+      "description": "White canvas, no border, no shadow. Each feature is a 2-column row: one side is a 300-weight Sentinel headline at 42px with a small icon+label eyebrow (Whitney 500, 12px tracked small-caps) in Slate Ink, the other side is a product mockup card with its own decorative pastel circle behind it. 80px vertical padding between rows."
+    },
+    {
+      "name": "Document Mockup Card",
+      "role": "Product illustration inside hero and feature sections",
+      "description": "White card surface with subtle window chrome (three colored dots in coral/yellow/green or just gray), body content rendered as horizontal gray bars representing text lines, with selective colored highlight bars (coral, yellow, teal) to suggest annotations or user presence cursors. The card is a flat, borderless rectangle — depth comes from the colored highlight bars, not shadows."
+    },
+    {
+      "name": "Decorative Pastel Circle",
+      "role": "Atmospheric backdrop element",
+      "description": "Large soft circles in muted coral (#f0a0a0 range), pale lavender, and warm yellow sit behind mockup cards. Partially clipped by the page edge or by adjacent content. They are the system's substitute for gradients or drop shadows — adding warmth and craft without competing with text."
+    },
+    {
+      "name": "Eyebrow Label",
+      "role": "Small section identifier above headlines",
+      "description": "12px Whitney 500, 0.167em letter-spacing (tracked small-caps), Slate Ink color, paired with a small 20px icon (person, list, grid) in Slate Ink. Reads as an editorial section marker, not a UI tag."
+    },
+    {
+      "name": "Customer Logo Strip",
+      "role": "Social proof at hero bottom",
+      "description": "Single row of monochrome white logos on the wine hero band, evenly spaced, no dividers. Logos are rendered at a uniform height with generous horizontal padding. Sits at the bottom edge of the hero, separated from the CTA stack by ~64px."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Transparent over the wine hero, no border. Left: Slab wordmark in coral lowercase. Center: nav links (Product, Resources, Library, Pricing) in white Whitney 400 16px. Right: 'Log In' ghost text button with arrow. Sticky behavior keeps the bar over dark surfaces."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and editorial headlines. The 300-weight sentinel at 53px with -5px tracking is a signature anti-convention choice — most SaaS sites push 600-700 weight sans-serifs at this size; Sentinel whispers and the negative tracking tightens the forms so the whisper still commands. Its serif construction gives the brand a print-publication voice, distancing it from generic dashboard UI.",
+      "sizes": "16px, 42px, 53px",
+      "family": "Sentinel",
+      "weight": "300, 400",
+      "lineHeight": "1.14, 1.24",
+      "substitute": "Charter, Source Serif Pro, or Lora as freely available serif substitutes",
+      "letterSpacing": "-0.019em at 42px, -0.094em at 53px"
+    },
+    {
+      "role": "All UI, body copy, buttons, inputs, icons-as-type, navigation, and feature subheadings. Whitney carries a slightly geometric humanist character that softens the serif display — it reads as warm utilitarian rather than tech-bro geometric. The 0.167em tracked small-caps treatment for 12px badges creates a distinct editorial eyebrow style above section heads.",
+      "sizes": "12px, 16px, 18px, 20px, 24px",
+      "family": "Whitney",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.15, 1.20, 1.33, 1.50, 1.60, 1.67, 1.75",
+      "substitute": "Inter, IBM Plex Sans, or Untitled Sans as Whitney substitutes",
+      "letterSpacing": "0.167em for 12px small-caps/badges, tracking 0 otherwise"
+    }
+  ],
+  "description": "Slab reads like a curated library wrapped in a midnight-wine storefront: a deep plum hero cradles white serif headlines, then opens into bright, spacious editorial layouts where serif display type meets a quiet Whitney sans-serif system. Color is rationed — nearly all of the interface is grayscale — but the single coral-red action and the wine hero create a two-temperature palette: warm authority at the edges, cool utility in the middle. The aesthetic borrows from print publishing: Sentinel's 300-weight serif whispers rather than shouts, generous whitespace around each section feels like a magazine spread, and the 6px corner radius on inputs/buttons is restrained enough to feel editorial rather than soft. Decorative circles, organic blobs, and illustrated document cards float alongside flat UI — the visual language is human and craft-forward, not corporate.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #455360 (Slate Ink) / #11110f (Graphite for highest emphasis)\n- background: #ffffff (Paper White)\n- border: #e0e0e0 (Mist) / #455360 (Slate Ink for input borders)\n- accent: #ff4143 (Coral Ember)\n- primary action: no distinct CTA color\n- dark surface: #42022e (Midnight Wine)\n\n## Example Component Prompts\n\n1. **Wine Hero Section**: Full-bleed #42022e background. Headline at 53px Sentinel weight 300, #ffffff, letter-spacing -5px. Subtext at 18px Whitney 400, #ffffff at 80% opacity. Google OAuth button: #4285f4 fill, white text, 6px radius, full-width. Email input: #ffffff background, 1px #455360 border, 6px radius, 16px Whitney 400 placeholder 'Work Email'. Coral Ember 'Get Started' button: #ff4143 fill, #ffffff text at 16px Whitney 500, 6px radius, 16px 24px padding. Right column: a white document mockup card with three gray window dots, gray content bars, and two colored annotation highlights (one coral, one teal). Behind the mockup, a large soft lavender circle bleeding off the right edge.\n\n2. **Editorial Feature Row (Create)**: White #ffffff canvas, max-width 1200px centered. Left side: a 20px person-icon in #455360 above a 12px Whitney 500 'Create' eyebrow with 0.167em letter-spacing. Headline at 42px Sentinel weight 300, #455360, letter-spacing -0.8px. Body at 18px Whitney 400, #455360, max-width 480px. Right side: a white document mockup card titled 'Weekly planning notes' with gray content bars and three colored user-cursor highlights (blue, yellow, coral) labeled with names. Behind the card, a soft pastel yellow circle.\n\n3. **Customer Logo Strip**: Single row on the #42022e wine band, 1200px max-width, logos in white at uniform 24px height, evenly distributed with 48px gaps. No dividers, no border, no background.\n\n4. **Outlined Ghost Nav Button (Log In)**: No background, 1px #ffffff border, 6px radius, #ffffff text at 16px Whitney 400, 12px 20px padding, followed by a white → arrow glyph at 14px.\n\n5. **Top Navigation Bar**: Transparent background over wine hero, 1200px max-width centered. Left: 'slab' wordmark in #ff4143 lowercase at 20px Whitney 600. Center: nav links 'Product / Resources / Library / Pricing' in #ffffff at 16px Whitney 400, 24px gap. Right: 'Log In →' ghost button in #ffffff."
+    }
+  ],
+  "elevationPhilosophy": "Slab deliberately avoids drop shadows across the entire system. Elevation is replaced by three spatial techniques: (1) alternating left/right two-column rows create visual rhythm without boxes, (2) thin 1px Mist or Slate Ink borders define inputs and dividers, and (3) decorative pastel circles bleed behind mockup cards to add depth through color overlap. This produces a print-editorial flatness that reads as confident and editorial rather than dashboard-flat."
+}

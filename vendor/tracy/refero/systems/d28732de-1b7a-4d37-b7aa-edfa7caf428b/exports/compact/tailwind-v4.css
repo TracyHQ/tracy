@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-charcoal: #23212c;
+  --color-paper: #f7f0e1;
+  --color-snow: #ffffff;
+  --color-pine: #006434;
+  --color-marigold: #fcbd1c;
+  --color-morning-sky: #a6dfff;
+  --color-ember: #dd5000;
+
+  /* Typography */
+  --font-neue-haas-unica: 'neue-haas-unica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-fonts: 'fonts', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

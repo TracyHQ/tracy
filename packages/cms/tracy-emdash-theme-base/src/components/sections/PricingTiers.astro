@@ -1,0 +1,91 @@
+---
+/**
+ * Three plan cards. Default: the OpenDesign card (recommended plan gets the accent ring, features
+ * above the button). `variant="acm"` is the ACM `pricing` block as rendered: badge first, the
+ * action between price and features, the recommended plan on the warm surface with a quiet ring.
+ */
+import type { Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  tiers: Array<{
+    name: string
+    badge?: string
+    summary?: string
+    price: string
+    period?: string
+    features?: string
+    cta_label?: string
+    cta_url?: string
+    recommended?: boolean
+  }>
+  variant?: 'default' | 'acm'
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the repeater field the rows come from. */
+  stamp?: Stamp
+  field?: string
+}
+const { tiers, variant = 'default', stamp, field } = Astro.props
+const none = {}
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(
+  Astro.request,
+  splitPath(Astro.url.pathname).locale,
+  tiers.map((t) => t?.cta_url)
+)
+const row = stamp && field ? stamp.block(field) : none
+const sub = (k: string) => (stamp && field ? stamp(`${field}.${k}`) : none)
+const lines = (s?: string) =>
+  String(s ?? '')
+    .split('\n')
+    .map((x) => x.trim())
+    .filter(Boolean)
+---
+
+{variant === "acm" ? (
+	<div class="mx-auto grid max-w-[480px] items-start gap-6 lg:max-w-none lg:grid-cols-3" data-block="pricing">
+		{tiers.map((t) => (
+			<div class:list={["flex flex-col gap-3 rounded-[var(--ds-card-radius,18px)] p-5 sm:p-6", t.recommended ? "bg-surface-warm shadow-[0_0_0_1px_var(--color-fg-meta)] sm:py-8" : "bg-bg shadow-ring-card"]} {...row}>
+				{t.badge && <span class="self-start rounded-[var(--ds-pill-radius,calc(infinity_*_1px))] bg-fg-muted/12 px-3 py-1 text-[12px] font-medium leading-[1.4] tracking-[-0.01em] text-fg-muted" {...sub("badge")}>{t.badge}</span>}
+				<h3 class="text-[21px] font-semibold leading-[1.05] tracking-[-0.015em]" {...sub("name")}>{t.name}</h3>
+				{t.summary && <p class="text-[14px] leading-[1.47] text-fg-muted" {...sub("summary")}>{t.summary}</p>}
+				<div class="mt-2 flex flex-wrap items-baseline gap-2">
+					<span class="text-[40px] font-semibold leading-[1.05] tracking-[-0.015em]" {...sub("price")}>{t.price}</span>
+					{t.period && <span class="text-[14px] text-fg-meta" {...sub("period")}>{t.period}</span>}
+				</div>
+				{t.cta_label && live(t.cta_url) && <a href={t.cta_url || "#"} class:list={["btn my-2 w-full", t.recommended ? "btn-primary" : "bg-transparent text-fg shadow-ring hover:bg-surface"]} {...sub("cta_label")}>{t.cta_label}</a>}
+				<ul class="flex flex-col gap-3">
+					{lines(t.features).map((f) => (
+						<li class="flex items-start gap-2 text-[14px] leading-[1.47] text-fg-2">
+							<svg class="h-[20px] w-4 shrink-0 text-fg-meta" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7" /></svg>
+							<span {...sub("features")}>{f}</span>
+						</li>
+					))}
+				</ul>
+			</div>
+		))}
+	</div>
+) : (
+	<div class="grid-3 items-stretch" data-block="pricing">
+		{tiers.map((t) => {
+			const hot = t.recommended || !!t.badge
+			return (
+				<div class:list={["card flex flex-col p-8", hot && "ring-2 ring-accent"]} {...row}>
+					<div class="mb-3 flex items-center justify-between gap-3">
+						<span class="text-[17px] font-semibold" {...sub("name")}>{t.name}</span>
+						{t.badge && <span class="rounded-[var(--ds-pill-radius,calc(infinity_*_1px))] bg-accent px-3 py-1 text-[11px] font-semibold text-accent-on" {...sub("badge")}>{t.badge}</span>}
+					</div>
+					{t.summary && <p class="mb-5 text-[15px] leading-[1.5] text-fg-muted" {...sub("summary")}>{t.summary}</p>}
+					<div class="mb-5 flex items-baseline gap-2">
+						<span class="text-[40px] font-semibold leading-none tracking-[-0.02em]" {...sub("price")}>{t.price}</span>
+						{t.period && <span class="text-[13px] text-fg-muted" {...sub("period")}>{t.period}</span>}
+					</div>
+					<ul class="mb-8 flex flex-col gap-1">
+						{lines(t.features).map((f) => <li class="flex gap-2 py-1 text-[17px] text-fg-muted"><svg class="mt-[5px] h-[14px] w-[14px] shrink-0 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10" /></svg><span {...sub("features")}>{f}</span></li>)}
+					</ul>
+					{t.cta_label && live(t.cta_url) && <a href={t.cta_url || "#"} class:list={["btn mt-auto w-full", hot ? "btn-primary" : "btn-secondary"]} {...sub("cta_label")}>{t.cta_label}</a>}
+				</div>
+			)
+		})}
+	</div>
+)}

@@ -1,0 +1,9 @@
+node_modules
+test
+docs
+data
+.turbo
+turbo.json
+Dockerfile
+docker-compose.yml
+.dockerignore

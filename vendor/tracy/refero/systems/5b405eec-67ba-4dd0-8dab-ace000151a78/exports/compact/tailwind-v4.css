@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-inkwell: #000000;
+  --color-bone: #ffffff;
+  --color-ash: #a9a9a9;
+  --color-ember: #302f2d;
+  --color-meadow: #34a847;
+  --color-coral-blush: #fbcbcb;
+  --color-apricot: #f27851;
+
+  /* Typography */
+  --font-canela-web: 'Canela Web', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-polysans: 'PolySans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans-serif-system: 'sans-serif (system)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

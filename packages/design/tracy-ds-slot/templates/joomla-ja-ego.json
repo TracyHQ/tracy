@@ -1,0 +1,217 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-ego",
+  "release": "quickstart/ja-ego/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "heading": "h2",
+    "button-primary": "div.action a.btn.btn-primary",
+    "container": "div.my-3.container",
+    "section": "#t4-main-body"
+  },
+  "discovered": {
+    "page": "body",
+    "heading": "first section heading: 36px",
+    "button-primary": "first filled, coloured call to action: rgb(13, 110, 253)",
+    "container": "first content container, max-width 1140px",
+    "section": "first padded full-width section, padding-top 96.3px"
+  },
+  "keepScopes": [".t4-footer-info", "#t4-header"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#212529",
+    "--fg-2": "#212529",
+    "--accent": "#0d6efd",
+    "--accent-hover": "#084298",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#212529",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#eeeeee",
+    "--muted": "#9e9e9e",
+    "--font-display": "\"Marcellus\", sans-serif",
+    "--font-body": "\"Marcellus\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#212529",
+      "fg-2": "#212529",
+      "accent": "#0d6efd",
+      "accent-hover": "#084298",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212529",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#eeeeee",
+      "muted": "#9e9e9e"
+    },
+    {
+      "bg": "#ffffff",
+      "fg-2": "#000000",
+      "accent": "#0d6efd",
+      "accent-on": "#ffffff",
+      "surface-warm": "#f8f9fa"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#f7f8f7",
+      "surface-warm": "#212121",
+      "border-soft": "#dee2e6"
+    },
+    {
+      "border-soft": "#e9ecef",
+      "surface": "#eeeeee"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (59 line colours, 46 text colours seen)",
+  "selectors": {
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": [".t4-section .container", "div.my-3.container"],
+    "section": ["#t4-main-body"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .card p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "mega-1",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 10 tried (byte 14022); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#f7f8f7",
+      "uses": 43,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 3
+    },
+    {
+      "hex": "#212121",
+      "uses": 24,
+      "kind": "custom",
+      "role": "surface-warm",
+      "near": "#212529",
+      "distance": 9
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 9,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 5,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 19
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the 1.0.1 release build itself (~/tracy-bench-work/release/ds-batch5/ja-ego/release, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-ego-j6 — 12/12, controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 80% or more of the page follows, checked by eye on the four systems' screenshots; the header laid over the dark masthead photograph keeps the template's own menu colours (keepNote); the body and footer kinds name nothing on this page. Earlier: measured 11/10/2026 on the tokenized build of quickstart/ja-ego/j6@1.0.0 (tasks/evidence/ds-contracts-batch5-2026-10-11/ja-ego-j6): 6/12, default unchanged, no text made less readable than the template's own under the systems tried (every heading and text element judged against the same one on the default page), 97% or more of the page follows, checked by eye on the Toggl Track (dark) screenshot",
+  "templateVars": {
+    "--body-headings-color": "var(--ds-c-fg)"
+  },
+  "templateVarsNote": "T4's heading colour (--body-headings-color, from the theme's body_heading_color) is not among the family's runtime variables; JA Ego's landing links read it (.landing-page .sub a) on a ground that follows: it takes the system's text colour",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#212529",
+    "--body-link-color": "#0d6efd",
+    "--body-link-hover-color": "#084298",
+    "--color-primary": "#0d6efd",
+    "--color-secondary": "#b88c58",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#ffffff",
+    "--mainnav-link-color": "#ffffff",
+    "--mainnav-link-hover-color": "#0d6efd",
+    "--mainnav-link-active-color": "#084298",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "rgba(255, 255, 255, 0.8)",
+    "--footer-link-color": "rgba(255, 255, 255, 0.8)",
+    "--footer-link-hover-color": "#ffffff",
+    "--body-headings-color": "#000000"
+  },
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples); block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026",
+  "minVersion": {
+    "quickstart/ja-ego/j6": "1.0.1"
+  },
+  "minVersionNote": "the tokenized re-release batch 5 built and verified locally (~/tracy-bench-work/release/ds-batch5/ja-ego; uploaded by ~/tracy-bench-work/RELEASE-DS-BATCH5.sh, run by a person): a site built from an older version is refused",
+  "keepColors": {
+    "#t4-header": "rgb(33, 37, 41)"
+  },
+  "keepNote": "#t4-header (re-measure of 11/10/2026): the header overlaps the dark masthead photograph (section-overlap), which no system repaints, so it keeps the template's own main-menu colours (white links, --mainnav-* given back by keepDefaults); its links took the light systems' dark text and read 1.3:1 under MotherDuck and 1.02:1 under Apple at 1440",
+  "maxVersion": {
+    "quickstart/ja-ego/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".t4-footer-info": {
+      "ground": "#212529",
+      "texts": ["#d3d3d4", "#ffffff"],
+      "important": true
+    },
+    "#t4-header": {
+      "ground": "#ffffff",
+      "texts": ["#ffffff"],
+      "root": false,
+      "paint": {
+        ".t4-content-inner": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours"
+}

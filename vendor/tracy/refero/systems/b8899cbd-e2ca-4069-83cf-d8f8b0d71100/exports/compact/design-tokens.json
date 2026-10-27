@@ -1,0 +1,44 @@
+{
+  "color": {
+    "carbon": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Carbon — Body text, footer background, heading text on light surfaces — the near-black structural anchor"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, header background, inverted text on dark footer"
+    },
+    "concrete": {
+      "$value": "#bbbbbb",
+      "$type": "color",
+      "$description": "Concrete — Muted helper text and secondary dividers on white surfaces, secondary text on dark footer"
+    },
+    "fog": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Fog — Alternate surface band, subtle card background where a step up from pure white is needed"
+    }
+  },
+  "font": {
+    "bmwtypenextlatin": {
+      "$value": "BMWTypeNextLatin",
+      "$type": "fontFamily",
+      "$description": "Workhorse type family — 400 for body copy and nav links, 700 for inline emphasis and section labels, 900 reserved for brand wordmarks. Compact leading (1.20–1.30) on headings, generous (1.60+) on body. Custom typeface with squared geometric forms; substitute with Inter or Neue Haas Grotesk for close fidelity."
+    },
+    "bmwtypenextlatin-light": {
+      "$value": "BMWTypeNextLatin Light",
+      "$type": "fontFamily",
+      "$description": "Display heading only — the 300 weight at 60px is the brand's anti-convention signature; it whispers rather than shouts, signaling premium through restraint. Used exclusively for the largest section title per page. Do not reuse for anything below 40px."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bmw.com",
+      "siteName": "BMW.com",
+      "extractedAt": "2026-06-03T15:25:48.551Z",
+      "variant": "compact"
+    }
+  }
+}

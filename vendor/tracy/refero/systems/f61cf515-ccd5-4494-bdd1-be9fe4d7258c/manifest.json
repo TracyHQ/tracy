@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "f61cf515-ccd5-4494-bdd1-be9fe4d7258c",
+  "status": "complete",
+  "name": "Hyer Aviation",
+  "url": "https://styles.refero.design/style/f61cf515-ccd5-4494-bdd1-be9fe4d7258c",
+  "sourceWebsite": "https://www.flyhyer.com",
+  "extractedAt": "2026-07-03T03:14:39.142Z",
+  "capturedAt": "2026-10-08T05:19:37.925372+00:00",
+  "theme": "mixed",
+  "industry": "other",
+  "description": "Cockpit twilight over parchment. A pale dawn-sky meets a slab-serif logo the size of a fuselage, with one warm clay accent breaking the monochrome restraint.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/5d380ab2-c080-4163-a600-4eebfd39cc75.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/b2ceae78-314c-4107-b6aa-3409fb452ec9.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/2447f501-c210-4916-bd62-7a697394f205.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/71a70678-43cd-4266-b12a-4b0c1d5fb295.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/253487ec-b111-4906-b110-2f28603cbc59.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2c341d911d3214144f1b2fec0044df60f288ffaac1f5ec83082a8f8218b1d82a",
+      "bytes": 19083
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "38bc5a773c5feca0a01cca0fb1a6838a731bbe06852205435b9092e289941a3d",
+      "bytes": 73736
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "fc838caa6fb64f1eacdce79b07ffee6d7fcafbc4a9ee7a23787806820dbf8162",
+      "bytes": 16003
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2a4c16db991f2104a6d803db966aa6b8986db8d7c49615f977e22c6d3779c4f9",
+      "bytes": 11743
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4f0b0407d89ad9759b83578231e74bf6e8f5cf904f83b690c1cd3e7ddf1e3356",
+      "bytes": 11760
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "397e4f8336a72332ae76020f22f05b4cdde1864266bd64dae55ef8787e7aed0e",
+      "bytes": 2555
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e276912fb0bfe918e4681ff7fdd45504dde6a64801638f29a9216043ec2e17eb",
+      "bytes": 534
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "620b8c9a4522c21e0ae514c5a5509a4f41423357f5822aa769350c336eac778f",
+      "bytes": 551
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5298032d82d512232c29e9a7071d3cbe631dad50266d2514d9c2bba6ba560969",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "269eea1f84a63db75306aca964ef101ba6ea3441479049f1d0fe0ec8624baebe",
+      "bytes": 42690
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6337fdb42511dbb0b0fc80499b0f585d0857f7f1a6067c93253ff60f4b9d5b40",
+      "bytes": 22299
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7cc2d5c0c2112daa201fa90d7cdb54d0340649cf922a9e6c0370b61bb51c89e9",
+      "bytes": 39383
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "968bf2721370cfc6c3b7fc67c27c69595b5143bc8560e1c5f7aec12b988f21b6",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c801166e2989f6afd69980747ab27caf5c0bda369bb40897c78b889da4905323",
+      "bytes": 1759
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "eeb6ea93e1bf13c300f885f6d7767a6fd687416f8d869f0797fdd77c37748603",
+      "bytes": 2350
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "1f32d914-6fdd-4692-b4fc-fcee2c414766",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "28a7115a-bcf8-4b05-89a5-5290f5842a3c",
+    "4a248569-2b5a-4416-bb2a-c78890218b9f",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "a5089389-4220-4fc2-82d9-973203d2e2f5",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "bf523387-03fc-4243-86ca-25af34daa0ce",
+    "c1052d8d-3663-46a4-a882-e50d9b8a1166",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d3289fe7-a85e-42d8-96b7-eb7faa62a104",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "f11750fc-d7c0-4d26-b32a-3b1d2098ae34",
+    "f532c703-1179-465d-9933-7736df44d0ae",
+    "f61cf515-ccd5-4494-bdd1-be9fe4d7258c"
+  ]
+}

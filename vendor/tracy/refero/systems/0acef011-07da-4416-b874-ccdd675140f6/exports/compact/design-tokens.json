@@ -1,0 +1,124 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, hero backgrounds, full-bleed sections"
+    },
+    "obsidian": {
+      "$value": "#0e0f11",
+      "$type": "color",
+      "$description": "Obsidian — Card surfaces, elevated panels, content containers above the page"
+    },
+    "carbon": {
+      "$value": "#141617",
+      "$type": "color",
+      "$description": "Carbon — Secondary surface layer, input fields, nested containers"
+    },
+    "graphite": {
+      "$value": "#1d2023",
+      "$type": "color",
+      "$description": "Graphite — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "slate": {
+      "$value": "#21223a",
+      "$type": "color",
+      "$description": "Slate — Subtle violet-tinted surface for spotlight/featured cards"
+    },
+    "ash": {
+      "$value": "#303438",
+      "$type": "color",
+      "$description": "Ash — Hairline borders and dividers, very low-contrast separation"
+    },
+    "steel": {
+      "$value": "#3a3d40",
+      "$type": "color",
+      "$description": "Steel — Slightly stronger borders, subtle outer shadow tint"
+    },
+    "fog": {
+      "$value": "#61626b",
+      "$type": "color",
+      "$description": "Fog — Muted helper text, disabled labels, low-priority metadata"
+    },
+    "smoke": {
+      "$value": "#8d8d96",
+      "$type": "color",
+      "$description": "Smoke — Secondary icons, inactive navigation items, tertiary text"
+    },
+    "cloud": {
+      "$value": "#a1a1aa",
+      "$type": "color",
+      "$description": "Cloud — Body text secondary, link text in resting state, icon strokes"
+    },
+    "silver": {
+      "$value": "#cfcfd3",
+      "$type": "color",
+      "$description": "Silver — Body text default, paragraph copy, description text"
+    },
+    "bone": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Bone — Captions, fine print, decorative text"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary headings, button text on dark fills, high-emphasis text"
+    },
+    "signal-violet": {
+      "$value": "#b6abff",
+      "$type": "color",
+      "$description": "Signal Violet — Brand accent — highlighted phrases, feature body text, link emphasis, inline brand moments"
+    },
+    "live-wire": {
+      "$value": "#eef35f",
+      "$type": "color",
+      "$description": "Live Wire — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "circuit-teal": {
+      "$value": "#00cbaa",
+      "$type": "color",
+      "$description": "Circuit Teal — Decorative icon and illustration accent — network node strokes, lock/connection diagrams, graphic highlights"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "tt-hoves-light": {
+      "$value": "TT Hoves Light",
+      "$type": "fontFamily",
+      "$description": "Display and headline — all large hero/section headlines (48–68px) use weight 300 with tight negative tracking (-0.018em to -0.007em). The whisper-weight at huge sizes is the brand's signature: confidence through restraint, not volume."
+    },
+    "tt-hoves-medium": {
+      "$value": "TT Hoves Medium",
+      "$type": "fontFamily",
+      "$description": "Subheadings, feature card titles, navigation, button labels — the workhorse of the system. 32px appears as a mid-tier section heading, 20px as card titles."
+    },
+    "tt-hoves-regular": {
+      "$value": "TT Hoves Regular",
+      "$type": "fontFamily",
+      "$description": "Body text and long-form copy — paragraph text at 16px with generous 1.5–1.7 line-height, smaller annotations at 11–14px"
+    },
+    "basis-grotesque-mono-pro": {
+      "$value": "Basis Grotesque Mono Pro",
+      "$type": "fontFamily",
+      "$description": "Code snippets, terminal-style text, and technical labels — used sparingly as a technical accent, never for body copy"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary body text and supporting UI labels (appears as a fallback/supplement to TT Hoves Regular in some contexts)"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://twingate.com",
+      "siteName": "Twingate",
+      "extractedAt": "2026-06-03T18:04:16.919Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-base/j6/1.0.0",
+  "platform": "joomla",
+  "template": "tracy",
+  "quickstart": {
+    "release": "tracy-base/j6",
+    "version": "1.0.0",
+    "platform": "joomla",
+    "platformVersion": "6.1.1",
+    "template": "tracy",
+    "coworkRelease": "joomla-v0.15.0-design.1"
+  },
+  "receiverVersion": "0.15.0",
+  "mode": "content-only"
+}

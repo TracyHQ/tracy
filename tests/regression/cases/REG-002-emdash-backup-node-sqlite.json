@@ -1,0 +1,33 @@
+{
+  "id": "REG-002",
+  "kind": "fix",
+  "title": "EmDash backup and restore check read SQLite through node:sqlite, not host python3 (3.40)",
+  "pr": 747,
+  "area": "fleet/backup-sqlite",
+  "cms": ["em"],
+  "needs": ["stand", "site:em", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup (tests/regression/README.md § Common setup): O, seat A's cookie, api, pq, HOST; PRIV=$(docker inspect $HOST --format '{{range .Config.Env}}{{println .}}{{end}}' | sed -n 's/^TRACY_PRIVATE_ROOT=//p').",
+    "S2: Pick S = an EmDash site A owns where Restore everything is allowed (scv2 stand: qa1em03.scv2.tracy.test; never scv2*); L = the part of S before the first '.'.",
+    "S3: Run docker exec $HOST node --no-warnings -e 'process.exit(typeof require(\"node:sqlite\").backup === \"function\" ? 0 : 1)'; echo rc=$? — then docker exec $HOST test -f /opt/tracy-fleet/lib/sqlite-tool.mjs; echo rc=$?",
+    "S4: Record only (no verdict): docker exec $HOST python3 -c 'import sqlite3;print(sqlite3.sqlite_version)'; docker exec $HOST node --no-warnings -e 'const {DatabaseSync}=require(\"node:sqlite\");console.log(new DatabaseSync(\":memory:\").prepare(\"select sqlite_version() v\").get().v)'; docker exec -w /app <L>-web-1 node -e 'const D=require(\"better-sqlite3\");console.log(new D(\":memory:\").prepare(\"select sqlite_version() v\").get().v)'.",
+    "S5: Run api a POST /api/sites/<S>/backup '{\"title\":\"REG-002-point\",\"notes\":\"\"}'; record N = body.version and body.database.",
+    "S6: Run ls -lA $PRIV/<L>/backups/; shasum -a 256 $PRIV/<L>/backups/v<N>.sqlite.gz; wc -c < $PRIV/<L>/backups/v<N>.sqlite.gz; git --git-dir=$PRIV/<L>/webroot-baseline.git tag -l --format='%(contents)' tracy-release/v<N>.",
+    "S7: Run docker exec $HOST sh -c 'd=$(mktemp -d); gzip -dc \"$TRACY_PRIVATE_ROOT/$1/backups/v$2.sqlite.gz\" > \"$d/x.db\"; node --no-warnings /opt/tracy-fleet/lib/sqlite-tool.mjs check \"$d/x.db\"; rc=$?; rm -rf \"$d\"; echo rc=$rc' sh <L> <N>.",
+    "S8: Run api a POST /api/sites/<S>/restore '{\"mode\":\"everything\",\"version\":<N>,\"idemKey\":\"reg002-<unix-seconds>\",\"confirm\":\"restore\"}' (curl -m 300).",
+    "S9: Run pq \"select action,status,coalesce(error,'') from site_operation where site_key='<S>' order by created_at desc limit 1\"; poll curl -s -o /dev/null -w '%{http_code}' http://<L>.scv2.tracy.test:34080/ every 5 s until 200 (≤120 s); run api a GET /api/sites/<S>/backups."
+  ],
+  "expect": [
+    "S3: both commands print rc=0 (the branch lib/site-backup.sh _tracy_sqlite takes is node:sqlite, not python3).",
+    "S5: HTTP 200, ok true, database.state 'full', engine 'sqlite', size > 0, sha256 = 64 lowercase hex (pre-fix: database.state 'none'; host python3 SQLite 3.40 failed with 'malformed database schema … near ORDER').",
+    "S6: v<N>.sqlite.gz and v<N>.uploads.tar.gz exist, both -rw-------; no entry starting with '.v<N>.' (no .tmp/-wal/-shm left); sha256 of v<N>.sqlite.gz == database.sha256; its byte count == database.size.",
+    "S6: tag contents contain 'Tracy-Database: sha256:<database.sha256> size:<database.size> kind:sqlite tables:<n>' with n ≥ 1, and a line starting 'Tracy-Uploads: sha256:'.",
+    "S7: last line is 'rc=0' and the integer printed before it equals the trailer's tables:<n>.",
+    "S8: HTTP 200, ok true, status 'succeeded', version == N (pre-fix: 409 BACKUP_NOT_FULL, or 409 RESTORE_REFUSED reason RESTORE_FAILED at the load/check step).",
+    "S9: latest site_operation: action 'restore-everything', status 'succeeded', error empty; site answers 200 within 120 s; /backups has a row kind 'backup', auto 'pre-restore', version N+1, database.state 'full', engine 'sqlite'."
+  ],
+  "selectors": {},
+  "evidence": "tasks/evidence/site-changes-v2/qa/r1/bugs/QA-I01.md (fix 8bff4ef63; side files d131ca337); the QA note is Studio-local (not in git), the fix commit is on develop",
+  "fence": "packages/fleet/tracy-fleet-operation/scripts/lib/site-backup.sh _tracy_sqlite sends EmDash backup and integrity/table check (dump, restore load, post-swap check) through lib/sqlite-tool.mjs on node:sqlite (3.53) instead of the host's python3 SQLite 3.40."
+}

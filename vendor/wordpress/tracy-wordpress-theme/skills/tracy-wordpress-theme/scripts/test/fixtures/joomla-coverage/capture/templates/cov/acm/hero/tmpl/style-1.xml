@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fields name="hero">
+    <fieldset name="content"><field name="title" type="text" /></fieldset>
+  </fields>
+</form>

@@ -1,0 +1,99 @@
+{
+  "color": {
+    "charcoal": {
+      "$value": "#131313",
+      "$type": "color",
+      "$description": "Charcoal — Page canvas, primary background, inverted sections"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Deepest darks, shadows, text on light surfaces"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary text, inverted surfaces, light icons"
+    },
+    "iron": {
+      "$value": "#313131",
+      "$type": "color",
+      "$description": "Iron — Elevated card surface, image-adjacent panels"
+    },
+    "graphite": {
+      "$value": "#272727",
+      "$type": "color",
+      "$description": "Graphite — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "fog": {
+      "$value": "#949494",
+      "$type": "color",
+      "$description": "Fog — Supporting neutral for secondary UI, dividers, and muted labels"
+    },
+    "mist": {
+      "$value": "#e9e9e9",
+      "$type": "color",
+      "$description": "Mist — Light hairline borders, high-contrast meta text on dark"
+    },
+    "silver": {
+      "$value": "#c9c9c9",
+      "$type": "color",
+      "$description": "Silver — Tertiary text, subdued metadata"
+    },
+    "signal-mint": {
+      "$value": "#3cffd0",
+      "$type": "color",
+      "$description": "Signal Mint — Teal supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ultraviolet": {
+      "$value": "#5200ff",
+      "$type": "color",
+      "$description": "Ultraviolet — Most Popular section card background, ranked-list emphasis"
+    },
+    "heat-red": {
+      "$value": "#ff3d00",
+      "$type": "color",
+      "$description": "Heat Red — Podcasts section card background, audio content emphasis"
+    },
+    "forest": {
+      "$value": "#309875",
+      "$type": "color",
+      "$description": "Forest — Secondary green accent for category labels and subdued highlights"
+    }
+  },
+  "font": {
+    "manuka": {
+      "$value": "Manuka",
+      "$type": "fontFamily",
+      "$description": "Display headlines for hero and feature stories — ultra-heavy, near-zero leading creates editorial impact at the largest scale"
+    },
+    "poly-sans": {
+      "$value": "Poly Sans",
+      "$type": "fontFamily",
+      "$description": "Primary UI font — nav, section headers, list items, card titles; tracks wide at small sizes (0.06–0.15em) for ALL-CAPS labels and tight at body sizes"
+    },
+    "fk-roman-standard": {
+      "$value": "Fk Roman Standard",
+      "$type": "fontFamily",
+      "$description": "Article body text — serif distinguishes reading mode from navigation; slight negative tracking tightens running text"
+    },
+    "poly-sans-mono": {
+      "$value": "Poly Sans Mono",
+      "$type": "fontFamily",
+      "$description": "Metadata, category tags, timestamps — monospaced feel with wide letter-spacing (0.10–0.125em) for technical/journalistic texture"
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "System fallback for non-critical UI copy"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://theverge.com",
+      "siteName": "The Verge",
+      "extractedAt": "2026-06-03T18:39:56.188Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-canvas-gunmetal: #9ea29f;
+  --color-obsidian: #000000;
+  --color-paper-white: #ffffff;
+  --color-anodized-graphite: #4b514d;
+  --color-brushed-steel: #8e9194;
+  --color-linen-mist: #a7aaad;
+  --color-aluminum-hairline: #d8d8d8;
+
+  /* Typography — Font Families */
+  --font-pp-neue-montreal: 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

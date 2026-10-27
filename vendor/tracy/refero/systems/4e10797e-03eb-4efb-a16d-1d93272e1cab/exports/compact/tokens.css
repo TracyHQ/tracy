@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-obsidian-void: #10020a;
+  --color-dark-mulberry: #1e0313;
+  --color-frost-white: #ffffff;
+  --color-soft-chalk: #f2f2f2;
+  --color-plasma-pink: #ff0068;
+  --color-deep-crimson: #91013d;
+  --color-ruby-shadow: #700130;
+  --color-magenta-wine: #9f0142;
+
+  /* Typography — Font Families */
+  --font-graphik-web: 'Graphik Web', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-graphik-cond-web: 'Graphik Cond Web', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

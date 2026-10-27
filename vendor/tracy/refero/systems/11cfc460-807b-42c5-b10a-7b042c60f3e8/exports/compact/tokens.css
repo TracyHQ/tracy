@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-cream-paper: #f8f8f2;
+  --color-card-white: #ffffff;
+  --color-studio-ink: #1a1a1a;
+  --color-deep-black: #000000;
+  --color-powder-blue: #bedbff;
+  --color-mint-wash: #a4f4cf;
+  --color-blush-tint: #ffc9c9;
+  --color-signal-green: #00c950;
+
+  /* Typography — Font Families */
+  --font-apple-system: '-apple-system', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

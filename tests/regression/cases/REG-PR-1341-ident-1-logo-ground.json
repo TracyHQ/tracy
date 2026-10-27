@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1341-ident-1-logo-ground",
+  "kind": "fix",
+  "title": "IDENT-1 reads the logo on its real ground: a logo on a photo, a badge on its own fill, a template's own 2.9:1 and a site-name text logo no longer fail",
+  "pr": 1341,
+  "area": "ops/road-to-live/design-system",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/design/tracy-ds-slot/test/identity.test.mjs.",
+    "S2: Read packages/cms/tracy-joomla-quickstart/contracts/{ja-essence/j6/1.0.7,ja-resume/j6/1.0.3,ja-social-ii/j6/1.0.3,ja-space/j6/1.0.4,tracy-business/j6/1.2.3}/design-system-measurement.json and score each with judgeMeasurement."
+  ],
+  "expect": [
+    "S1: every test passes: a text mark onPicture is not judged by a colour, a mark no less readable than the template's own ratio passes (2:1 floor), a badge is read on its own fill, the probe parses and looks for .navbar-brand .site-name before header a > span.",
+    "S2: IDENT-1 pass on all five rows, every native view ident true."
+  ],
+  "selectors": {
+    "probe": "packages/design/tracy-ds-slot/src/identity.mjs identityProbe (elementsFromPoint, onPicture) and identityVerdict",
+    "files": "the five design-system-measurement.json files above"
+  },
+  "evidence": "Before the fix the five files held ident false on every view (round 4 of #1317 filed them as empty logos for #1318) while the screenshots showed every logo: the probe read the page colour behind the hero photo, the header behind the NG badge, an absolute 3:1 against JA Resume's own 2.9:1, and a glyph-only icon span for JA Essence's site name",
+  "fence": "No template, contract or release changes; the other published rows keep their old-probe IDENT-1 readings",
+  "run": {
+    "cmd": ["node", "--test", "packages/design/tracy-ds-slot/test/identity.test.mjs"]
+  }
+}

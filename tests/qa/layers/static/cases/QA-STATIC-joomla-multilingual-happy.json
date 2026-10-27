@@ -1,0 +1,30 @@
+{
+  "id": "QA-STATIC-joomla-multilingual-happy",
+  "itemIds": ["gate:joomla-multilingual"],
+  "requirement": "Gate joomla-multilingual (scripts/build-joomla-multilingual.mjs --check) exits 0 on the current tree and goes red on a tree that breaks the rule it enforces.",
+  "oracle": {
+    "source": "scripts/build-joomla-multilingual.mjs",
+    "ref": "header comment",
+    "invariant": "The tree satisfies the rule stated in the header comment of scripts/build-joomla-multilingual.mjs; the gate exits 0 only then.",
+    "productSources": ["scripts/check-all.ts:200", "scripts/build-joomla-multilingual.mjs:29"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["node", "tsx (node_modules)"],
+  "assertionIds": ["static.joomla-multilingual.exit-0"],
+  "redProof": null,
+  "legacyIds": [],
+  "gate": "joomla-multilingual",
+  "command": ["pnpm", "exec", "tsx", "scripts/check-all.ts", "--only", "joomla-multilingual"],
+  "successMarker": "check-all: 1 gate(s) passed",
+  "gateScript": "scripts/build-joomla-multilingual.mjs",
+  "mode": "run",
+  "mutations": []
+}

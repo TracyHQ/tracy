@@ -1,0 +1,34 @@
+{
+  "contractId": "example-studio",
+  "contractHash": "d68b50095d7edf05e9108451676e90fd3e72cdbc8b9c06e40010737771e9c299",
+  "surfaces": [
+    {
+      "id": "pricing.html",
+      "fields": {
+        "title": {
+          "ref": "pricing.studio.name"
+        },
+        "price": {
+          "ref": "pricing.studio.amount"
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    },
+    {
+      "id": "email.html",
+      "fields": {
+        "title": {
+          "ref": "company.name"
+        },
+        "message": {
+          "template": "Explore {{pricing.studio.name}} from {{pricing.studio.amount}}."
+        },
+        "disclosure": {
+          "ref": "demo.disclosure"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+---
+import { getEmDashEntry } from 'emdash'
+import { href } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+import Photo from '@/components/site/Photo.astro'
+import { swatchFill } from '@/lib/swatch-role'
+const { sample: s, locale, chrome } = Astro.props
+const site = chrome?.site ?? {}
+const deck0 = (s.decks ?? [])[0]
+const kinds: Record<string, string> = {
+  cover: 'bg-ink',
+  agenda: 'bg-paper',
+  stats: 'bg-line',
+  case: 'bg-paper',
+  process: 'bg-paper',
+  quote: 'bg-paper-2 border-l-4 border-signal',
+  map: 'bg-paper-2',
+  contact: 'bg-forest'
+}
+// Thumbnail mock-ups (source: Slide.html draws each slide type with sample content). The specimens
+// are the site's own content rather than copy of their own: the flagship project for the title
+// slide, the home stats for facts and figures, the Services process for the work stages, the
+// Careers testimonial for the client quote, and the site contacts + quote CTA for the closing slide.
+const [home, services, careers] = await Promise.all([
+  getEmDashEntry('home', 'home', { locale }),
+  getEmDashEntry('services_page', 'services', { locale }),
+  getEmDashEntry('careers', 'careers', { locale })
+])
+const h = (home.entry?.data ?? {}) as Record<string, any>
+const flagship = (chrome?.recentProjects ?? [])[0]
+const stats = ((h.stats ?? []) as any[]).slice(0, 4)
+const stages = (((services.entry?.data ?? {}) as Record<string, any>).process ?? [])
+  .slice(0, 4)
+  .map((x: any) => x.title)
+const c = (careers.entry?.data ?? {}) as Record<string, any>
+// A button into an unticked page goes on its own; the mockup stays (TCH #1013, `src/lib/link-gate.ts`).
+const ctaUrl = href(locale, '/contact')
+const live = await liveLinks(Astro.request, locale, [ctaUrl])
+const tocBars = ['flex-1', 'flex-1', 'w-[70%]', 'w-[55%]']
+const eyebrow = 'text-[10px] font-bold uppercase tracking-[.16em] text-signal-text'
+---
+<div class="grid-lines mb-[52px] grid-cols-[repeat(auto-fit,minmax(180px,1fr))]">
+	{(s.meta ?? []).map((m: any) => <div class="p-5"><div class="text-[12px] uppercase tracking-[.1em] text-fg-meta">{m.k}</div><div class="mt-1.5 text-[17px] font-semibold">{m.v}</div></div>)}
+</div>
+<div class="mb-[26px] flex flex-wrap items-baseline justify-between gap-5 border-b border-line pb-3.5"><h2 class="h-section-sm">{s.libT}</h2><span class="text-[14px] text-fg-meta">{s.libP}</span></div>
+<div class="mb-16 grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-[26px]">
+	{(s.slides ?? []).map((sl: any) => {
+		const url = deck0?.href ? `${deck0.href}#page=${sl.page ?? 1}` : null;
+		const mock =
+			sl.kind === "cover" ? (
+				<div class="absolute inset-0 flex flex-col justify-between bg-ink p-[22px]">
+					<div class="flex items-center gap-2"><span class="flex h-5 w-5 items-center justify-center bg-forest text-[9px] font-bold text-[color:var(--ds-c-on-accent-band,var(--color-white))]">{site.brand_mark}</span><span class="text-[10px] font-bold tracking-[.04em] text-on-ink">{site.brand_name}</span></div>
+					<div><div class="mb-2.5 h-[3px] w-9 bg-signal"></div><div class="font-serif text-[21px] leading-[1.15] text-[color:var(--ds-c-on-ink,var(--color-white))]">{flagship?.title ?? sl.t}</div>{flagship?.meta && <div class="mt-1.5 text-[10.5px] text-on-ink-meta">{flagship.meta}</div>}</div>
+				</div>
+			) : sl.kind === "agenda" ? (
+				<div class="absolute inset-0 flex flex-col gap-2 p-[22px]">
+					<div class={eyebrow}>{sl.t}</div>
+					<div class="mt-0.5 flex flex-col gap-1.5">{tocBars.map((w, i) => <div class:list={["flex items-baseline gap-2.5", i < 3 && "border-b border-line pb-[5px]"]}><span class="font-serif text-[12px] text-signal-text">{String(i + 1).padStart(2, "0")}</span><span class:list={["h-[7px] bg-line", w]}></span></div>)}</div>
+				</div>
+			) : sl.kind === "stats" && stats.length ? (
+				<div class="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-px bg-line">
+					{stats.map((st: any, i: number) => <div class:list={["flex flex-col justify-center p-3.5", i === 3 ? "bg-forest" : "bg-paper"]}><span class:list={["font-serif text-[22px] leading-none", i === 3 ? "text-[color:var(--ds-c-on-accent-band,var(--color-white))]" : "text-fg"]}>{st.value}</span><span class:list={["mt-[3px] text-[9.5px]", i === 3 ? "text-on-forest-muted" : "text-fg-meta"]}>{st.label}</span></div>)}
+				</div>
+			) : sl.kind === "process" ? (
+				<div class="absolute inset-0 flex flex-col justify-center gap-3.5 p-[22px]">
+					<div class={eyebrow}>{sl.t}</div>
+					<div class="flex items-center"><span class="tb-mark h-[11px] w-[11px] shrink-0 bg-forest"></span><span class="h-0.5 flex-1 bg-line"></span><span class="tb-mark h-[11px] w-[11px] shrink-0 bg-forest"></span><span class="h-0.5 flex-1 bg-line"></span><span class="h-[11px] w-[11px] shrink-0 bg-signal"></span><span class="h-0.5 flex-1 bg-line"></span><span class="h-[11px] w-[11px] shrink-0 border-2 border-line-strong"></span></div>
+					{stages.length > 0 && <div class="grid grid-cols-4 gap-2 text-[9px] leading-[1.3] text-fg-meta">{stages.map((t: string, i: number) => <span class:list={["min-w-0", i === stages.length - 1 && "text-right"]}>{t}</span>)}</div>}
+				</div>
+			) : sl.kind === "quote" && c.quote ? (
+				<div class="absolute inset-0 flex flex-col justify-center bg-paper-2 p-[22px]">
+					<div class="font-serif text-[15px] leading-[1.4] text-fg">{c.quote}</div>
+					{c.quote_by && <div class="mt-2.5 text-[9.5px] text-fg-meta">{c.quote_by}</div>}
+				</div>
+			) : sl.kind === "contact" ? (
+				<div class="absolute inset-0 flex flex-col justify-center gap-[7px] bg-forest p-[22px]">
+					<div class="font-serif text-[19px] leading-[1.15] text-[color:var(--ds-c-on-accent-band,var(--color-white))]">{h.band_title ?? sl.t}</div>
+					<div class="text-[10.5px] text-on-forest-muted">{[site.sales_email, site.hotline].filter(Boolean).join(" · ")}</div>
+					{site.quote_label && <span class="mt-1.5 self-start bg-signal px-3 py-[7px] text-[10px] font-semibold text-[color:var(--ds-c-accent-on,var(--color-white))]">{site.quote_label}</span>}
+				</div>
+			) : (
+				<span class:list={["absolute inset-0 flex items-center justify-center p-5 text-center font-serif text-[18px]", sl.kind === "cover" ? "text-[color:var(--ds-c-on-ink,var(--color-white))]" : sl.kind === "contact" ? "text-[color:var(--ds-c-on-accent-band,var(--color-white))]" : "text-fg"]}>{sl.t}</span>
+			);
+		const inner = <><div class:list={["relative aspect-video overflow-hidden border border-line", kinds[sl.kind] ?? "bg-paper"]}>{sl.image && <Photo image={sl.image} alt={sl.t ?? ""} class="absolute inset-0 !border-0" width={640} height={360} />}{mock}<span class="absolute left-0 top-0 bg-ink px-2 py-1 text-[10px] font-bold tracking-[.06em] text-[color:var(--ds-c-on-ink,var(--color-white))]">{sl.n}</span></div><div class="mt-3 text-[16px] font-semibold text-fg">{sl.t}</div><div class="mt-[3px] text-[13.5px] text-fg-meta">{sl.d}</div>{url && <div class="mt-2 text-[13px] font-semibold text-forest-text">{s.use}</div>}</>;
+		return url ? <a href={url} target="_blank" rel="noopener" class="block">{inner}</a> : <div>{inner}</div>;
+	})}
+</div>
+<div class="flex flex-wrap items-start gap-12">
+	<div class="min-w-0 flex-[2_1_480px]">
+		<h2 class="h-section-sm mb-[18px] border-b border-line pb-3.5">{s.deckT}</h2>
+		{(s.decks ?? []).map((d: any) => { const inner = <><div><div class="text-[16.5px] font-semibold leading-[1.35] text-fg">{d.t}</div><div class="mt-1 text-[13.5px] text-fg-meta">{d.d}</div></div><span class="whitespace-nowrap text-[12.5px] font-semibold text-signal-text">{d.f}{d.href ? " ↓" : ""}</span></>; return d.href ? <a href={d.href} target="_blank" rel="noopener" download class="grid grid-cols-[1fr_auto] items-center gap-[18px] border-b border-line-soft py-[17px] hover:text-forest-text">{inner}</a> : <div class="grid grid-cols-[1fr_auto] items-center gap-[18px] border-b border-line-soft py-[17px]">{inner}</div>; })}
+		<h2 class="h-section-sm mb-[18px] mt-11 border-b border-line pb-3.5">{s.rulesT}</h2>
+		{(s.rules ?? []).map((r: string) => <div class="grid grid-cols-[24px_1fr] gap-3 border-b border-line-soft py-3 text-[16px] leading-[1.6] text-fg-body"><span class="font-serif text-forest-text">→</span><span>{r}</span></div>)}
+	</div>
+	<aside class="flex min-w-0 flex-[1_1_260px] flex-col gap-[26px]">
+		<div class="border border-line-card p-[22px]"><div class="column-label mb-3">{s.assetT}</div>{(s.assets ?? []).map((a: any) => <div class="flex justify-between gap-3 border-b border-line-soft py-[11px] text-[14.5px]">{a.t} <span class="whitespace-nowrap text-fg-faint">{a.f}</span></div>)}</div>
+		<div class="border border-line-card p-[22px]"><div class="column-label mb-3.5">{s.palT}</div><div class="flex flex-col gap-2.5">{(s.pal ?? []).map((c: any) => <div class="flex items-center gap-3"><span class="h-[30px] w-[30px] shrink-0 border border-line" style={`background:${swatchFill(c.v, c.c)}`}></span><span class="text-[14.5px] font-semibold">{c.n}</span><span class="ml-auto text-[13px] text-fg-meta">{c.v}</span></div>)}</div></div>
+		<div class="band-ink p-6"><div class="mb-2 font-serif text-[21px] leading-[1.25]">{s.ctaT}</div><p class="mb-4 text-[14.5px] leading-[1.6] text-on-ink-muted">{s.ctaP}</p>{live(ctaUrl) && <a href={ctaUrl} class="btn-primary !px-[22px] !py-3 !text-[14.5px]">{s.ctaBtn}</a>}</div>
+	</aside>
+</div>

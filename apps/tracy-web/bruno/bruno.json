@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "name": "Tracy Apply door",
+  "type": "collection",
+  "ignore": ["node_modules", ".git"]
+}

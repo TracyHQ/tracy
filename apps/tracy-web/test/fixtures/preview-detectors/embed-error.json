@@ -1,0 +1,124 @@
+{
+  "kind": "embed-error",
+  "about": "embed-error: probe data cut from the Add site preview under Moxie, light visitor scheme, 14/10/2026 (preview-check.mjs PREVIEW_DATA=1, no script as the frame runs, fleet01 demos, one demo at a time). broken: JA Directory Joomla 1.0.2, its 'Featured Video' module a bare YouTube iframe (the frame's sandbox reaches it, so YouTube answers 'An error occurred… enable JavaScript'). clean: JA Voyara (no embed), JA Symphony (its videos are poster images; the player markup waits in data-video for a click, so no iframe is in the page) and JA Donate (its YouTube background sits in an Owl carousel that stays hidden without its script). Regenerate by re-running the probe; never edit values by hand.",
+  "broken": [
+    {
+      "source": "quickstart/ja-directory/j6@1.0.2 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#858273",
+        "#1a1a1a",
+        "#868474",
+        "#7a786a",
+        "#b7b39f",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/div:2/div:1/div:2/div:1/div:1/div:1/div:1/div:1/iframe:1",
+            "at": "iframe",
+            "tag": "iframe",
+            "host": "youtube.com",
+            "route": "/embed/Spel7vfkpNc",
+            "state": "scriptless",
+            "w": 360,
+            "h": 203,
+            "top": 232,
+            "section": "div.module-ct",
+            "heading": "Featured Video"
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/div:2/div:1/div:2/div:1/div:1/div:1/div:1/div:1/iframe:1",
+            "at": "iframe",
+            "tag": "iframe",
+            "host": "youtube.com",
+            "route": "/embed/Spel7vfkpNc",
+            "state": "scriptless",
+            "w": 370,
+            "h": 208,
+            "top": 232,
+            "section": "div.module-ct",
+            "heading": "Featured Video"
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-voyara/j6@1.0.8 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#84acfb",
+        "#b7b39f",
+        "#000000",
+        "#858273",
+        "#1a1a1a",
+        "#f4efd4",
+        "#93b6fb",
+        "#060605",
+        "#7a786a",
+        "#868474",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": []
+      },
+      "worn": {
+        "data": []
+      }
+    },
+    {
+      "source": "quickstart/ja-symphony/j6@1.0.2 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#858273",
+        "#93b6fb",
+        "#000000",
+        "#84acfb",
+        "#868474",
+        "#7a786a",
+        "#b7b39f",
+        "#1a1a1a",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": []
+      },
+      "worn": {
+        "data": []
+      }
+    },
+    {
+      "source": "quickstart/ja-donate/j6@1.0.5 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#000000",
+        "#868474",
+        "#1a1a1a",
+        "#858273",
+        "#7a786a",
+        "#93b6fb",
+        "#b7b39f",
+        "#84acfb",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": []
+      },
+      "worn": {
+        "data": []
+      }
+    }
+  ]
+}

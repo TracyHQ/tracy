@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-tour/j6/1.0.0",
+  "platform": "joomla",
+  "template": "ja_tour",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-tour",
+    "id": "quickstart/ja-tour/j6",
+    "version": "1.0.0",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_tour",
+    "parts": {
+      "installer": {
+        "file": "ja-tour-j6-quickstart.zip",
+        "bytes": 64769308,
+        "sha256": "718967906611ec8de752ec36a7875a96e7b516ea992b76e6446b038e3e3c2871"
+      }
+    },
+    "release": "quickstart/ja-tour/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

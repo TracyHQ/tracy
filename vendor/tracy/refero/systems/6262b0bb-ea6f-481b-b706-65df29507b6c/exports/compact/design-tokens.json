@@ -1,0 +1,54 @@
+{
+  "color": {
+    "ink-carbon": {
+      "$value": "#2e2a2b",
+      "$type": "color",
+      "$description": "Ink Carbon — Primary text, logo mark, dark surface inversions, footer text on cream — a near-black with a barely-warm undertone that keeps the page from feeling clinical"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas and nav surface — the warm-white background that everything floats on"
+    },
+    "whisper-taupe": {
+      "$value": "#afa697",
+      "$type": "color",
+      "$description": "Whisper Taupe — Supporting neutral for secondary UI, dividers, and muted labels."
+    },
+    "bone-cream": {
+      "$value": "#e6dcd4",
+      "$type": "color",
+      "$description": "Bone Cream — Alternate panel background and footer band — a warm cream that signals a quieter section without leaving the monochrome family"
+    },
+    "lampblack": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Lampblack — Deep surface for inversions and image overlays — slightly cooler than Ink Carbon, used where absolute darkness is needed without color cast"
+    },
+    "signal-orange": {
+      "$value": "#fe5431",
+      "$type": "color",
+      "$description": "Signal Orange — Decorative illustration accent — appears inside graphic bands and artwork, never as a UI control fill"
+    },
+    "amber-pulse": {
+      "$value": "#ff8000",
+      "$type": "color",
+      "$description": "Amber Pulse — Decorative illustration accent — companion to Signal Orange inside warm gradient bands and visual punctuation"
+    }
+  },
+  "font": {
+    "good-sans": {
+      "$value": "Good Sans",
+      "$type": "fontFamily",
+      "$description": "Single voice across the entire interface — body, nav, buttons, headings, and display all share weight 400. The absence of bold is the signature: hierarchy comes from size and color, not weight."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://weareink.co.uk",
+      "siteName": "INK",
+      "extractedAt": "2026-06-03T19:38:11.951Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "color": {
+    "aubergine-ink": {
+      "$value": "#321929",
+      "$type": "color",
+      "$description": "Aubergine Ink — Primary text, icons, outlined action borders, badges, links — a warm near-black that gives the monochrome system its only chromatic voice without ever feeling colored"
+    },
+    "warm-linen": {
+      "$value": "#e0dddf",
+      "$type": "color",
+      "$description": "Warm Linen — Structural borders on cards, dividers, image edges, nav, lists — the single most-used color in the system defines every edge between surfaces"
+    },
+    "soft-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Soft White — Page background, card surfaces, nav fill, badge fills — the canvas on which everything sits"
+    },
+    "charcoal": {
+      "$value": "#1d1d1f",
+      "$type": "color",
+      "$description": "Charcoal — Input field borders, image container borders, secondary structural edges where slightly more weight is needed than Warm Linen"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Icon fills, SVG strokes, link text in decorative contexts — used sparingly where absolute contrast is required"
+    },
+    "smoke-gray": {
+      "$value": "#636363",
+      "$type": "color",
+      "$description": "Smoke Gray — Secondary muted text, price labels, helper copy — sits behind Aubergine Ink in the text hierarchy"
+    },
+    "ink": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Ink — Monochrome icon fills, brand marks, and high-contrast graphic details. Do not promote it to the primary CTA color"
+    },
+    "stone": {
+      "$value": "#6f6d6b",
+      "$type": "color",
+      "$description": "Stone — Card body text, descriptive copy — a warm gray that reads as natural on the white canvas"
+    },
+    "pale-mist": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Pale Mist — Subtle background fills and dividers where Warm Linen would be too warm — a cool counterpoint for nested surfaces"
+    }
+  },
+  "font": {
+    "neue-haas-grotesk": {
+      "$value": "Neue Haas Grotesk",
+      "$type": "fontFamily",
+      "$description": "Workhorse sans for all UI text: body, nav, product names, prices, badges, inputs, buttons. The single weight (400) with near-zero tracking (0.007em) creates a calm, evenly-spaced rhythm that never competes with photography. Sizes are deliberately compact (body at 14-15px), giving the system an editorial density rather than a marketing scale."
+    },
+    "bongusta": {
+      "$value": "Bongusta",
+      "$type": "fontFamily",
+      "$description": "Custom display face reserved for the brand wordmark and signature headings only. The single-weight, single-size deployment suggests a refined serif or humanist display cut meant to act as a logo-like anchor — never used for body or UI text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bongusta.dk",
+      "siteName": "Bongusta",
+      "extractedAt": "2026-06-03T21:36:47.629Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+---
+/** /help — the article title as h1, the intro, then the FAQ list (first item open, as in the source). */
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import SectionHead from '@/components/sections/SectionHead.astro'
+import FaqList from '@/components/sections/FaqList.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { entry } = await getEmDashEntry('help', 'help', { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const d = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'help', entry)
+---
+
+<Base chrome={chrome} title={d.title} description={d.intro} currentPath="/help" content={{ collection: "help", id: entry.data.id, slug: "help", toPath: () => "/help" }}>
+	<main id="main" class="wrap band">
+		<PageOwner stamp={$page} />
+		<header class="mb-8 max-w-[720px]">
+			<h1 class="h-page" {...$page("title")}>{d.title}</h1>
+			{d.intro && <p class="lead mt-4" {...$page("intro")}>{d.intro}</p>}
+		</header>
+		<SectionHead eyebrow={d.faq_eyebrow} title={d.faq_heading} lead={d.faq_intro} class="section-head--acm [&>.eyebrow]:text-fg-meta empty:hidden" stamp={$page} fields={{ eyebrow: "faq_eyebrow", title: "faq_heading", lead: "faq_intro" }} />
+		<FaqList items={d.faq_items ?? []} width="wide" stamp={$page} field="faq_items" />
+	</main>
+</Base>

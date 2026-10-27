@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1499-ds-dot3-b-measured-clean",
+  "kind": "feat",
+  "title": "Design system dot 3 group B: the committed probe-v10 measurements of JA Prodex J 1.0.4, JA Smallbiz J 1.0.4, JA Rent J 1.0.5, JA Mood J 1.0.4, JA Symphony J 1.0.4, JA Donate J 1.0.7, JA Space J 1.0.6 and JA Morgan WP 1.1.16 judge clean; the detector fixes kept at v10 hold",
+  "pr": 1499,
+  "area": "design-system/readiness",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Judge the committed design-system-measurement.json of the eight releases with judgeMeasurement and preview-system-issues.json, as /ops judges them (PREVIEW-PARITY on Joomla only).",
+    "S2: Run the slot emitter, identity and content-edit tests, the detector fixtures this line added, the PARITY slot-carrier and map tests, the MODE-3 readiness test, the design-system door test and the wp-ja-morgan theme test."
+  ],
+  "expect": [
+    "S1: every one of the 8 releases leaves 0 rules failing; only SCREEN-1 may warn.",
+    "S2: every listed test file passes."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1499-ds-dot3-b-measured-clean.mjs",
+    "evidence": "packages/cms/*/contracts/**/design-system-measurement.json"
+  },
+  "evidence": "Committed v10 measurements of the eight releases plus the unit tests over the emitter, detectors, readiness and the door",
+  "fence": "Measurement judging, detectors and readiness logic in tracy-web and tracy-ds-slot; does not drive a stand or a browser",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1499-ds-dot3-b-measured-clean.mjs"],
+    "timeout_s": 600
+  }
+}

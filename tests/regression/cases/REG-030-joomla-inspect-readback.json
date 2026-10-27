@@ -1,0 +1,27 @@
+{
+  "id": "REG-030",
+  "kind": "fix",
+  "title": "A Joomla quickstart provision ends its pairing on the inspect answer a bound site really gives, which carries no `bound` field",
+  "pr": 832,
+  "area": "fleet/provision-joomla",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: On a machine with php (or docker) run from the TCH checkout: node --test packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs",
+    "S2: Read the pass/fail/skip counts and the two tests named 'REGRESSION #824'."
+  ],
+  "expect": [
+    "0 failures and 0 skipped: the suite runs the real joomla-bootstrap.php against a fake database and door.",
+    "A first pairing and a re-run both complete when inspect answers {ok:true, contract:'<requested id>'} with or without `revision`, and with no `bound` key.",
+    "The read-back refuses: another, empty, missing or non-string contract; `ok` that is not exactly true; a status outside 2xx or no answer; `bound:false`; `construction:true` (also beside `bound:true`); a `bound` or `construction` that is present but not a boolean.",
+    "A bind answer still needs `bound:true` beside the requested contract, or the exact 'This site is already bound to <contract>' conflict."
+  ],
+  "selectors": {
+    "function": "packages/fleet/tracy-fleet-operation/scripts/provision/joomla-bootstrap.php tracy_inspect_confirms",
+    "test": "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs"
+  },
+  "evidence": "Dev, 03/10/2026, reinstalling quickstart/ja-essence/j6: provision failed after a successful bind with `Quickstart contract inspect after bind did not confirm it: {\"ok\":true,\"contract\":\"ja-essence/j6/1.0.0\"}` (issue #824). The suite's door stub had answered inspect with `bound:true`, a field the component's inspect of a bound site does not carry.",
+  "fence": "tracy_inspect_confirms only; bind acceptance, token handling and the retry bound are unchanged. Not covered: a provision on a live host",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-030.mjs"] }
+}

@@ -1,0 +1,243 @@
+---
+import { tintStyle } from "../../utils/tint";
+/**
+ * bravada.text — Bravada's landing-page text areas (.lp-text): a white
+ * card on a tinted full-bleed band, with an optional photo that pokes
+ * 6.5em out of the card (left or right, alternating in the demo), a
+ * Playfair title underlined by the gold highlighter strip, body copy
+ * and outlined text-buttons (gold primary / teal secondary).
+ */
+interface TextButton {
+	label: string;
+	url: string;
+	style?: "primary" | "secondary";
+}
+
+interface TextNode {
+	title?: string;
+	/** One or more paragraphs */
+	text?: string;
+	paragraphs?: string[];
+	image?: string;
+	imageAlt?: string;
+	/** Which side the photo pokes out of. Default "left". */
+	imageSide?: "left" | "right";
+	/** Band background tint (hex). Demo alternates warm neutrals. */
+	tint?: string;
+	buttons?: TextButton[];
+}
+
+// astro-portabletext hands custom type components the block as `node`
+const { node } = Astro.props as { node: TextNode };
+const {
+	title,
+	text,
+	paragraphs,
+	image,
+	imageAlt = "",
+	imageSide = "left",
+	tint,
+	buttons = [],
+} = node;
+const paras = paragraphs ?? (text ? [text] : []);
+---
+
+<section
+	class:list={[
+		"lp-text",
+		"full-bleed",
+		{ "has-image": !!image, "image-right": imageSide === "right" },
+	]}
+	style={tintStyle(tint)}
+>
+	<div class="lp-text-inside">
+		<div class="lp-text-background">
+			{
+				image && (
+					<div class="lp-text-image aos">
+						<img src={image} alt={imageAlt} loading="lazy" />
+					</div>
+				)
+			}
+			<div class="lp-text-card">
+				{title && <h3 class="lp-text-title hl-gold aos">{title}</h3>}
+				<div class="lp-text-content aos">
+					{paras.map((p) => <p>{p}</p>)}
+					{
+						buttons.length > 0 && (
+							<p class="lp-text-buttons">
+								{buttons.map((b, i) => (
+									<a
+										class:list={[
+											"btn-cry",
+											(b.style ?? (i === 0 ? "primary" : "secondary")) ===
+											"primary"
+												? "btn-cry-primary"
+												: "btn-cry-secondary",
+										]}
+										href={b.url}
+									>
+										{b.label}
+									</a>
+								))}
+							</p>
+						)
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.lp-text {
+		overflow: hidden;
+		background-color: var(--tint-warm);
+	}
+
+	.lp-text-inside {
+		max-width: var(--wide-width);
+		margin: 3em auto;
+		padding: 0 2.5em;
+	}
+
+	/* Demo: side padding tapers 2.5em -> 2em (<=1152px) -> 1em (<=640px),
+	   same schedule as the hero caption. Was flat at 2.5em here, which
+	   compounded with .lp-text-background's own padding to squeeze the
+	   card content to ~63% of viewport at mobile instead of the demo's
+	   ~78%. */
+	@media (max-width: 1152px) {
+		.lp-text-inside {
+			padding: 0 2em;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.lp-text-inside {
+			padding: 0 1em;
+		}
+	}
+
+	.lp-text-background {
+		display: flex;
+		align-items: center;
+		padding: 4em;
+		background-color: var(--color-surface);
+	}
+
+	.lp-text-image {
+		position: relative;
+		order: 0;
+		width: 45%;
+		line-height: 0;
+		flex-shrink: 0;
+	}
+
+	.lp-text-image img {
+		position: relative;
+		left: -6.5em;
+		top: 0;
+		max-width: 100%;
+		transition: 0.3s ease-out all;
+	}
+
+	.lp-text-background:hover .lp-text-image img {
+		top: -7px;
+	}
+
+	.image-right .lp-text-image {
+		order: 2;
+	}
+
+	.image-right .lp-text-image img {
+		left: auto;
+		right: -6.5em;
+	}
+
+	.lp-text-card {
+		position: relative;
+		z-index: 9;
+		width: 90%;
+		margin: 0 auto;
+	}
+
+	.has-image .lp-text-card {
+		width: 50%;
+		flex: 1;
+		text-align: left;
+	}
+
+	.lp-text-title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 2.617924em;
+		line-height: 1.3;
+		font-weight: 700;
+		color: var(--color-heading);
+	}
+
+	.lp-text-content {
+		margin-top: 1.5em;
+	}
+
+	.lp-text-content p {
+		margin: 0 0 1em;
+	}
+
+	.lp-text-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1em 0;
+		margin-top: 2em !important;
+	}
+
+	@media (max-width: 900px) {
+		/* The demo scales down a root font-size at this breakpoint,
+		   which shrinks the -5em image pull and the surrounding em-based
+		   spacing together, keeping the pull mostly absorbed. This
+		   template doesn't apply that global scale, so at the same flat
+		   3em .lp-text-inside margin the full-size -80px pull escapes
+		   the section top by ~50px instead of the demo's ~14px. Where
+		   the preceding section has its own visible tint (e.g. a boxes
+		   band), that shortfall reads as the image landing hard against
+		   the seam instead of a small, controlled overlap. Widening the
+		   margin here (rather than shrinking the pull, which is correct
+		   and already matches source everywhere else) absorbs it back
+		   down to a comparable few px. */
+		.lp-text-inside {
+			margin: 5em auto;
+		}
+
+		.lp-text-background {
+			flex-flow: column;
+			padding: 2em;
+		}
+
+		/* Demo mobile: the image sits above the card on BOTH variants —
+		   left in column flow the pulled-up image would climb over the
+		   card's last lines instead of peeking out of the band top */
+		.image-right .lp-text-image {
+			order: 0;
+		}
+
+		.lp-text-image {
+			width: auto;
+		}
+
+		.lp-text-image img {
+			left: 0 !important;
+			right: 0 !important;
+			margin: -5em auto 0;
+		}
+
+		.has-image .lp-text-card {
+			width: auto;
+			max-width: 480px;
+			margin-top: 2em;
+		}
+
+		.lp-text-title {
+			font-size: 1.5em;
+		}
+	}
+</style>

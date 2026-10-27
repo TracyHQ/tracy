@@ -1,0 +1,309 @@
+{
+  "dos": [
+    "Use GT Alpina Standard weight 300 for all display and section headlines — the thin serif is the brand's most distinctive choice and must carry the editorial voice",
+    "Set display headlines at 86px with line-height 0.88 and letter-spacing -3.44px for the compressed, carved-into-stone effect",
+    "Use Amber Compass (#dc8c46) exclusively for filled CTAs and accent moments — never as a surface fill or decorative wash",
+    "Step surfaces using the green scale: Moss Canvas (#314218) → Fern (#3d521e) → Lichen (#64754b) for elevation, not shadows",
+    "Set body and UI text in Atlas Grotesk weight 400 with 0.033em letter-spacing for legibility on the dark green canvas",
+    "Embed product UI panels in light surface (#ffffff) with 6px radius and the single subtle shadow to create contrast against the dark page",
+    "Maintain centered, magazine-style layouts with 80px section gaps — the page rhythm should feel like turning pages in an atlas"
+  ],
+  "donts": [
+    "Don't use Amber Compass (#dc8c46) for body text, backgrounds, or large surface areas — it loses its compass-needle effect when overused",
+    "Don't set serif headlines at line-height above 1.0 — the compressed treatment is essential to the editorial feel",
+    "Don't apply multiple shadow layers — Felt uses elevation through color stepping, not shadow stacks",
+    "Don't use pure black (#000000) as a page background — the mossy green tones are the canvas, not black",
+    "Don't replace GT Alpina Standard with a geometric or grotesque display face — the serif is the brand identity",
+    "Don't use border-radius above 6px on cards, images, or product panels — only buttons get the 20px pill radius",
+    "Don't introduce new accent hues — the entire palette is green monochrome plus one warm amber; any other color breaks the system"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#314218",
+      "name": "Moss Canvas",
+      "role": "Page background, hero sections, dominant canvas — the deep mossy green that carries the entire site and grounds the editorial atmosphere",
+      "group": "brand"
+    },
+    {
+      "hex": "#3d521e",
+      "name": "Fern",
+      "role": "Mid-green surface for cards, elevated panels, and the topside of the surface stack",
+      "group": "brand"
+    },
+    {
+      "hex": "#64754b",
+      "name": "Lichen",
+      "role": "Muted green for secondary surfaces, borders on cards, and subtle dividers against the canvas",
+      "group": "brand"
+    },
+    {
+      "hex": "#212f0c",
+      "name": "Forest Floor",
+      "role": "Deeper green for nested surface layers and inset product UI backgrounds",
+      "group": "brand"
+    },
+    {
+      "hex": "#18210c",
+      "name": "Deep Bog",
+      "role": "Darkest green for the deepest surface layer, code blocks, and high-contrast panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dc8c46",
+      "name": "Amber Compass",
+      "role": "Primary action — filled CTA buttons, link borders, active link text. The single warm accent that cuts through the green monochrome like a compass needle",
+      "group": "brand"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bone White",
+      "role": "Primary text, heading color, button text on amber fills, and the dominant border for ghost/outlined controls",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eeeeee",
+      "name": "Parchment",
+      "role": "Light surface for embedded product UI, inset map views, and light-mode panel surfaces against the dark canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Charcoal",
+      "role": "Text and borders inside the light parchment product UI panels — the dark-on-light text color for embedded app surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d8dcd2",
+      "name": "Limestone",
+      "role": "Soft warm-tinted gray for badge backgrounds, subtle borders, and muted helper text inside light panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink",
+      "role": "SVG fills, max-contrast elements, and the map marker pin color",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Centered, magazine-style page layout with max-width 1200px for content. Hero is full-bleed dark green with centered oversized serif headline, subtitle, and two side-by-side CTAs. Below the hero, a full-width embedded product UI panel breaks the layout to a wider reveal (like a fold-out map spread). Sections alternate between typographic hero zones (centered text, 80px vertical padding) and product reveal zones (full-width embedded app surfaces). A scrolling ticker banner sits at the very top. Navigation is a clean transparent bar overlaying the dark canvas. The page rhythm is: ticker → nav → hero headline → product reveal → social proof logos → feature section (headline + product) → repeating feature sections. All content is centered; no asymmetric or left-aligned compositions.",
+  "imagery": "Imagery is dominated by embedded product screenshots showing the Felt map application — these are full-width, light-surface panels with real GIS map content (street maps, satellite views, data overlays, map markers). The product UI itself IS the hero imagery. No lifestyle photography, no stock imagery, no decorative illustration. The only non-product visual elements are topographic contour-line patterns in muted green (#64754b) that appear as background decoration on hero sections, evoking actual cartographic map texture. Client logos appear in white monochrome. The map marker pin (#dc8c46 with white border) serves as the brand's recurring visual signature across product surfaces.",
+  "similar": [
+    {
+      "why": "Both use dark canvas backgrounds with a single warm accent color and center their hero on embedded map product UI rather than abstract imagery",
+      "business": "Mapbox"
+    },
+    {
+      "why": "Same editorial approach with oversized serif headlines on dark backgrounds, though Notion uses black rather than green canvas",
+      "business": "Notion"
+    },
+    {
+      "why": "Dark monochromatic UI with one distinctive accent color, centered layouts, and serif/serif-adjacent display type for a premium editorial feel",
+      "business": "Linear"
+    },
+    {
+      "why": "Both use nature-inspired dark canvas palettes (Roam uses deep navy, Felt uses moss green) with serif headlines and a single warm accent for interactive elements",
+      "business": "Roam Research"
+    },
+    {
+      "why": "Cartographic design studio aesthetic — mossy greens, topographic texture, and serif typography rooted in atlas and map traditions",
+      "business": "Stamen Design"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "6px",
+      "badges": "6px",
+      "images": "6px",
+      "inputs": "6px",
+      "buttons": "20px"
+    },
+    "elementGap": "12px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#314218",
+      "name": "Moss Canvas",
+      "level": 0,
+      "purpose": "Primary page background and hero zones"
+    },
+    {
+      "hex": "#3d521",
+      "name": "Fern",
+      "level": 1,
+      "purpose": "First elevation — cards and content panels sitting on the canvas"
+    },
+    {
+      "hex": "#64754b",
+      "name": "Lichen",
+      "level": 2,
+      "purpose": "Secondary surface for sub-cards and dividers"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bone White",
+      "level": 3,
+      "purpose": "Inverted product UI surfaces (embedded map app panels)"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.2) 0px 2px 5px 0px",
+      "element": "Embedded product UI panels"
+    }
+  ],
+  "northStar": "topographic atlas at dusk — moss-green pages, serif headlines, one amber needle",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.43,
+      "letterSpacing": 0.4
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": 0.46
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.53
+    },
+    {
+      "role": "subheading",
+      "size": 19,
+      "lineHeight": 1.33,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-sm",
+      "size": 28,
+      "lineHeight": 1.11,
+      "letterSpacing": -0.92
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1,
+      "letterSpacing": -1.19
+    },
+    {
+      "role": "heading-lg",
+      "size": 50,
+      "lineHeight": 0.96,
+      "letterSpacing": -1.65
+    },
+    {
+      "role": "display",
+      "size": 86,
+      "lineHeight": 0.88,
+      "letterSpacing": -3.44
+    }
+  ],
+  "components": [
+    {
+      "name": "Amber CTA Button",
+      "role": "Primary action — filled button for conversion moments",
+      "description": "Filled #dc8c46 background, white (#ffffff) text in Atlas Grotesk 16px weight 500, tracking 0.033em. 20px border-radius (pilled). Horizontal padding 20-24px, vertical padding 12-16px. No border. Includes a white play-arrow icon inline at the right."
+    },
+    {
+      "name": "Ghost Link Button",
+      "role": "Secondary action — text link with underline border treatment",
+      "description": "No fill, no border. Atlas Grotesk 16px weight 400, #ffffff text. Underline created by a 1px white bottom border. Used for \"Book a demo\" style secondary CTAs."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Transparent on Moss Canvas. Felt wordmark in white serif at left. Nav items (PLATFORM, INDUSTRIES, RESOURCES, PRICING) in Atlas Grotesk 12px weight 500, uppercase, 0.033em tracking, white. Right side: \"BOOK A DEMO\" and \"LOG IN\" as ghost text links, \"SIGN UP\" as a filled Amber CTA with play icon."
+    },
+    {
+      "name": "Hero Section",
+      "role": "Above-the-fold headline and CTA zone",
+      "description": "Centered layout on Moss Canvas. Headline in GT Alpina Standard 86px weight 300, white, line-height 0.88, letter-spacing -3.44px. Subtitle in Atlas Grotesk 18px weight 400, #eeeeee. Two CTAs side by side: Amber CTA + Ghost Link."
+    },
+    {
+      "name": "Scrolling Ticker Banner",
+      "role": "Top announcement bar",
+      "description": "Full-width strip. White text on Moss Canvas (#314218). Atlas Grotesk 12px weight 500, uppercase, repeated headline text with separators. Sits above the navigation."
+    },
+    {
+      "name": "Product UI Panel",
+      "role": "Embedded application screenshot / product surface",
+      "description": "Light surface (#ffffff or #eeeeee) with rounded corners 6px. Dark text (#333333) inside. Subtle shadow rgba(0,0,0,0.2) 0px 2px 5px. Contains toolbars, map canvases, and library sidebars — mimics the actual Felt product."
+    },
+    {
+      "name": "Client Logo Row",
+      "role": "Social proof — trusted-by brand logos",
+      "description": "Horizontal row of client logos (Lyft, Lime, Turo, Cushman & Wakefield) rendered in white on Moss Canvas. Section title \"Leading a modern GIS movement\" in GT Alpina Standard 36px weight 300, white, centered above."
+    },
+    {
+      "name": "Feature Section",
+      "role": "Mid-page content blocks with headline + product visual",
+      "description": "Centered serif headline (GT Alpina Standard 36-50px, white) followed by Atlas Grotesk 18px subtext, then a full-width Product UI Panel below. Generous 80px vertical gap between sections."
+    },
+    {
+      "name": "Badge / Tag",
+      "role": "Category labels and metadata tags",
+      "description": "Limestone (#d8dcd2) background, small radius 6px, Atlas Grotesk 12px weight 500, 0.033em tracking. Minimal padding 2px 6px."
+    },
+    {
+      "name": "Map Marker Pin",
+      "role": "Interactive map point indicator",
+      "description": "#dc8c46 (Amber) circular pin with a white border, placed on the map canvas. Small drop shadow. Acts as the brand's visual signature on the product surface."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "14px, 16px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.25, 1.33, 1.43"
+    },
+    {
+      "role": "Display and heading serif — the editorial headline face. Used at large sizes for hero headlines and section titles. The tight negative tracking (-0.033em to -0.040em) and line-height under 1.0 give the serif a compressed, almost carved-into-stone quality that evokes old cartographic title plates. This is the signature type choice: a humanist serif that feels hand-drawn rather than mechanical.",
+      "sizes": "28px, 36px, 43px, 46px, 50px, 86px",
+      "family": "GT Alpina Standard",
+      "weight": "300, 400",
+      "lineHeight": "0.80, 0.96, 1.00, 1.11, 1.33",
+      "substitute": "Fraunces, Tiempos Headline, Playfair Display",
+      "letterSpacing": "-0.0400em at 86px, -0.0330em at 36-50px"
+    },
+    {
+      "role": "Primary UI and body sans-serif — handles navigation, body text, button labels, badges, and links. The slight positive tracking (0.033em) on body sizes adds legibility on the dark green canvas. The grotesque geometry provides a clean utility counterpoint to the expressive serif headlines.",
+      "sizes": "12px, 14px, 16px, 18px, 19px, 20px",
+      "family": "Atlas Grotesk",
+      "weight": "300, 400, 500, 700",
+      "lineHeight": "1.00, 1.11, 1.20, 1.25, 1.30, 1.33, 1.43, 1.50, 1.56",
+      "substitute": "Inter, Söhne, Helvetica Neue",
+      "letterSpacing": "0.0330em"
+    },
+    {
+      "role": "Fallback system serif at extreme display sizes. The 101px / 0.88 line-height ratio confirms the compressed display treatment for the largest headlines.",
+      "sizes": "36px, 101px",
+      "family": "Times New Roman",
+      "weight": "400",
+      "lineHeight": "0.88, 2.46",
+      "substitute": "system serif"
+    }
+  ],
+  "description": "Felt renders as a cartographer's field journal at dusk: a deep mossy-green canvas carries oversized editorial serif headlines that feel pulled from a vintage atlas, while a grotesque sans handles utility text. The warm amber accent appears sparingly — a compass needle against the green — punctuating CTAs, links, and interactive borders without ever flooding the surface. Layout is centered, magazine-like, with generous breathing room and full-width product reveals that feel like fold-out map spreads. The visual rhythm alternates between typographic hero zones and embedded product UI, creating a sense of a working tool rather than a marketing site.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Background (canvas): #314218 (Moss Canvas)\n- Text: #ffffff (headings) / #eeeeee (body on dark)\n- Border / divider: #64754b (Lichen) or #3d521e (Fern)\n- Accent / brand: #dc8c46 (Amber Compass)\n- Product surface: #ffffff (Bone White)\n- primary action: #ffffff (filled action)\n\n## Example Component Prompts\n\n1. Create a Primary Action Button: #ffffff background, #eeeeee text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Feature Section**: Moss Canvas background, centered content. Section headline: GT Alpina Standard 50px, weight 300, #ffffff, line-height 0.96, letter-spacing -1.65px, centered. Body text: Atlas Grotesk 18px, weight 400, #eeeeee, centered, max-width 720px. Below: full-width Product UI Panel — #ffffff surface, 6px border-radius, shadow rgba(0,0,0,0.2) 0px 2px 5px, containing a mock map interface with #333333 toolbar elements.\n\n3. **Client Logo Row**: Moss Canvas background. Section title: GT Alpina Standard 36px, weight 300, #ffffff, centered. Below: horizontal row of 4–5 client logos in white monochrome, evenly spaced with 48px gaps, centered in the layout.\n\n4. **Embedded Product Panel**: White (#ffffff) surface, 6px border-radius, shadow rgba(0,0,0,0.2) 0px 2px 5px 0px. Interior toolbar in #333333, Atlas Grotesk 14px. Map canvas fills the body. Amber map marker pin (#dc8c46 circle, 2px white border) at a notable location.\n"
+    },
+    {
+      "title": "Type & Tone",
+      "content": "The visual voice is editorial-cartographic: think National Geographic meets a modern SaaS landing page. Serif headlines do the heavy emotional lifting while the grotesque sans handles all functional text. The amber accent acts as a compass needle — singular, precise, never decorative. Topographic contour-line patterns appear as background texture on hero sections to reinforce the mapping identity without resorting to literal map imagery. The overall effect should feel like opening a beautifully typeset atlas: authoritative, warm, and slightly adventurous."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is used sparingly and only to separate embedded light-mode product surfaces from the dark green canvas. The site avoids decorative shadows — depth comes from surface color stepping (Moss → Fern → Lichen → Bone White) rather than shadow stacks."
+}

@@ -1,0 +1,84 @@
+{
+  "color": {
+    "voltage-blue": {
+      "$value": "#2142e7",
+      "$type": "color",
+      "$description": "Voltage Blue — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-voltage": {
+      "$value": "#182fa5",
+      "$type": "color",
+      "$description": "Deep Voltage — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "midnight-ink": {
+      "$value": "#111827",
+      "$type": "color",
+      "$description": "Midnight Ink — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "slate-600": {
+      "$value": "#4b5563",
+      "$type": "color",
+      "$description": "Slate 600 — Body text, nav links, icon fills, card secondary copy — the dominant text color across the page"
+    },
+    "slate-700": {
+      "$value": "#374151",
+      "$type": "color",
+      "$description": "Slate 700 — Nav link hover, emphasized body text, secondary headings"
+    },
+    "slate-500": {
+      "$value": "#70747d",
+      "$type": "color",
+      "$description": "Slate 500 — Muted helper text, placeholder copy, low-emphasis labels"
+    },
+    "graphite": {
+      "$value": "#414652",
+      "$type": "color",
+      "$description": "Graphite — Subheadings and section titles that sit between body and display weight"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, button text, input fields, nav bar background — the primary elevated surface"
+    },
+    "fog-50": {
+      "$value": "#f9fafb",
+      "$type": "color",
+      "$description": "Fog 50 — Page canvas, section backgrounds, the base layer everything sits on"
+    },
+    "fog-100": {
+      "$value": "#f3f4f6",
+      "$type": "color",
+      "$description": "Fog 100 — Alternate section background, subtle hover fills, tag backgrounds"
+    },
+    "mist-200": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Mist 200 — Hairline borders, input borders, card outlines, divider lines"
+    },
+    "smoke-300": {
+      "$value": "#d9dadc",
+      "$type": "color",
+      "$description": "Smoke 300 — Stronger borders, checkbox frames, visible structural edges"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the system. Display sizes (36–64px) use weight 700 with -0.020 to -0.025em tracking to optically tighten the geometric letterforms. Body and UI sizes (14–18px) sit at weight 400–500 with near-normal tracking. Weight 600 is reserved for section titles, weight 700 for the hero headline. The consistent geometric skeleton means no font-mood shift between headline and body — the system speaks in one voice at every size."
+    },
+    "balig-script": {
+      "$value": "Balig Script",
+      "$type": "fontFamily",
+      "$description": "Balig Script — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://arcade.software",
+      "siteName": "Arcade",
+      "extractedAt": "2026-06-03T15:17:53.160Z",
+      "variant": "compact"
+    }
+  }
+}

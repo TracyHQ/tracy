@@ -1,0 +1,36 @@
+---
+/** Testimonial cards: quote, then initials mark + name + role. */
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  items: Array<{ quote: string; initials?: string; name: string; role?: string }>
+  /** The OpenDesign landing rings its quote cards; the ACM `testimonials` block does not. */
+  ring?: boolean
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the repeater field the rows come from. */
+  stamp?: Stamp
+  field?: string
+}
+const { items, ring = true, stamp, field } = Astro.props
+const none = {}
+const row = stamp && field ? stamp.block(field) : none
+const sub = (k: string) => (stamp && field ? stamp(`${field}.${k}`) : none)
+const initials = (n: string) =>
+  n
+    .split(/\s+/)
+    .map((w) => w[0] ?? '')
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
+---
+
+<div class="grid-3" data-block="testimonials">
+	{items.map((q) => (
+		<figure class:list={["flex flex-col gap-6 rounded-[var(--ds-card-radius,18px)] bg-bg", ring ? "card p-6" : "justify-between p-4 md:p-6"]} {...row}>
+			<blockquote class:list={["text-fg", ring ? "text-[21px] leading-[1.6]" : "text-[17px] leading-[1.47]"]} {...sub("quote")}>{q.quote}</blockquote>
+			<figcaption class="flex items-center gap-3">
+				<span class:list={["flex shrink-0 items-center justify-center rounded-full bg-accent-tint text-[12px] font-semibold text-accent", ring ? "h-8 w-8" : "h-9 w-9"]}>{initials(q.name)}</span>
+				<span><span class:list={["block font-semibold", ring ? "text-[17px]" : "text-[15px]"]} {...sub("name")}>{q.name}</span>{q.role && <span class:list={["block text-fg-muted", ring ? "text-[12px]" : "text-[13px]"]} {...sub("role")}>{q.role}</span>}</span>
+			</figcaption>
+		</figure>
+	))}
+</div>

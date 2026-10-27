@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-donate/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_donate",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-donate",
+    "id": "quickstart/ja-donate/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_donate",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-donate-j6-webroot-1.0.1.tar.gz",
+        "bytes": 48432269,
+        "sha256": "77a67bbb46afb226d6ea517c4bd525a0ebf31431cad4800c4419765151409adc"
+      },
+      "database": {
+        "file": "ja-donate-j6-database-1.0.1.sql.gz",
+        "bytes": 104913,
+        "sha256": "d78a89fc853d0286b8dfe81a607acdae094474272718841af9210d5daf83e7fe"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-08T06:22:15.576Z",
+    "builtFrom": {
+      "site": "don",
+      "tag": "quickstart/ja-donate/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-donate/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.2",
+  "mode": "content-recommendation"
+}

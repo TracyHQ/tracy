@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1382-help-stop-with-voice",
+  "kind": "fix",
+  "title": "Help's stop shows once and stops Help while a /help answer streams, with or without the microphone or chat-input",
+  "pr": 1382,
+  "area": "chat-input/activity-seat",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Load @tracy/dsh-assistant and @tracy/dsh-chat-input over a stand-in dsh whose conversation.input.activity keeps the single-slot rule; /api/speech answers available=false; a Help answer of session s1 is streaming. Render the seat and click .tv-help-stop.",
+    "S2: Same, with voice switched off by the operator (composer-voice-input hidden).",
+    "S3: Same, with voice available.",
+    "S4: No Help answer streaming, voice available; then voice unavailable.",
+    "S5: Load @tracy/dsh-assistant alone (no chat-input); render the seat idle, then with a Help answer streaming, and click .tv-help-stop."
+  ],
+  "expect": [
+    "S1: the seat holds .tv-help-stop with the stop label and no microphone; the click calls Help's stopAll.",
+    "S2: .tv-help-stop and no .tv-voice-mic.",
+    "S3: one .tv-voice-seat row holding .tv-voice, then .tv-help-stop, and exactly one .tv-help-stop.",
+    "S4: the microphone alone and no .tv-help-stop; then only an empty .tv-voice-seat row.",
+    "S5: idle draws nothing; streaming draws exactly one .tv-help-stop and no microphone; the click calls stopAll."
+  ],
+  "selectors": {
+    "slot": "conversation.input.activity",
+    "classes": ".tv-help-stop, .tv-voice-mic",
+    "shared": "Symbol.for('tracy.input-activity') on document"
+  },
+  "evidence": "#1379: on the dev deployment the seat was empty while /help streamed; the microphone at priority -1 held the single slot",
+  "fence": "Both real plugin bundles over a stand-in single slot that renders only the lowest priority",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-assistant/test/help-stop-voice.test.mjs"
+    ],
+    "tests": [
+      "Help streaming with voice registered but no speech key",
+      "Help streaming with voice switched off by the operator",
+      "Help streaming with voice available",
+      "Help idle",
+      "Help without chat-input on the profile"
+    ]
+  }
+}

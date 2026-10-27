@@ -1,0 +1,340 @@
+{
+  "dos": [
+    "Use Hanae for all editorial and structural type — the custom serif IS the brand. Open Sans appears only as a supporting voice, never as the primary type on a key screen.",
+    "Let section backgrounds be full-bleed color planes (Ember Rust, Ochre, Deep Teal, etc.) to signal project boundaries — never use cards, shadows, or borders to separate sections.",
+    "Track display headlines aggressively positive: ~0.4em at 62–68px, scaling down to ~0.1em at 25px and negative at body sizes. The letter-spacing fan is what makes the type read as editorial.",
+    "Use Blush (#ddbad0) as the default hairline border color for all rules, dividers, and interactive outlines — it recedes into a warm tint that complements every earth-tone ground.",
+    "Round all interactive elements (buttons, inputs, language toggle) to 120–180px — pill geometry reinforces the soft, warm, tactile feel of the system.",
+    "Keep navigation and UI chrome minimal: bare text links, a tiny parenthesized tag system, and at most one pill toggle. Let the typography and color planes carry hierarchy.",
+    "Switch on dlig, liga, and swsh font features for Hanae — the swash and discretionary ligatures contribute the inscriptional character the type is known for."
+  ],
+  "donts": [
+    "Do not add drop shadows, card elevation, or rounded panels to separate content — hierarchy comes from full-bleed color changes and type scale, not from surface lift.",
+    "Do not use Blush (#ddbad0) or any chromatic color as a filled button background — the system has no filled CTA pattern; actions are bare text or outlined pills.",
+    "Do not bold Hanae above weight 500 — the serif's authority comes from its weight combined with extreme tracking, not from heavy weight.",
+    "Do not set body copy in a sans-serif — even secondary text should stay in Hanae to preserve the editorial voice. Open Sans is a rare accent, not a substitute.",
+    "Do not center-align long-form body paragraphs — the intro hero uses wide tracking as its style, but multi-line reading text should stay left-aligned for legibility.",
+    "Do not introduce cool grays or pure neutral grays for backgrounds — the palette stays warm (Bone White → Linen Mist → Paper Cream) to match the linen-paper atmosphere.",
+    "Do not crop or round the magazine-spread thumbnail images — they should sit as raw rectangular blocks, possibly overlapping at slight rotations, to preserve the printed-object feel."
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Body text, hairline borders, and rule lines — the dominant structural color used everywhere text and dividers are drawn",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bone White",
+      "role": "Primary page canvas and base background for gallery and intro spreads",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eeecec",
+      "name": "Linen Mist",
+      "role": "Warm light-gray surface for secondary spreads and subtle tonal shifts between sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fefdf8",
+      "name": "Paper Cream",
+      "role": "Warm off-white alt canvas for soft tonal contrast against Bone White",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a1a1a1",
+      "name": "Chalk Gray",
+      "role": "Muted helper text, secondary labels, and low-emphasis borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d6e0eb",
+      "name": "Haze Blue",
+      "role": "Cool gray-blue tint for quiet borders and subdued type, balancing the warm earth tones",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6b969f",
+      "name": "Slate Blue",
+      "role": "Dusty blue-gray accent for heading type and project labels",
+      "group": "accent"
+    },
+    {
+      "hex": "#9ec5d6",
+      "name": "Sky Mist",
+      "role": "Light dusty blue for heading type and border rules — the coolest note in the palette",
+      "group": "accent"
+    },
+    {
+      "hex": "#9cb8d3",
+      "name": "Periwinkle",
+      "role": "Soft lavender-blue for heading copy and delicate dividers",
+      "group": "accent"
+    },
+    {
+      "hex": "#167070",
+      "name": "Deep Teal",
+      "role": "Saturated muted teal for heading type — the strongest cool accent in the system",
+      "group": "accent"
+    },
+    {
+      "hex": "#507f70",
+      "name": "Sage",
+      "role": "Muted green accent for tag labels and short heading runs",
+      "group": "accent"
+    },
+    {
+      "hex": "#576041",
+      "name": "Olive",
+      "role": "Warm gray-olive for heading type and project titles — anchors the earth-tone half of the palette",
+      "group": "accent"
+    },
+    {
+      "hex": "#495116",
+      "name": "Moss",
+      "role": "Darker olive for emphasized heading type and link rules, reading as near-black with warmth",
+      "group": "accent"
+    },
+    {
+      "hex": "#cda04f",
+      "name": "Ochre",
+      "role": "Golden mustard for full-bleed project backgrounds and accent headings — a signature warm note",
+      "group": "accent"
+    },
+    {
+      "hex": "#a65d4d",
+      "name": "Ember Rust",
+      "role": "Full-bleed intro section background — the signature terracotta that defines the brand's cover moment",
+      "group": "brand"
+    },
+    {
+      "hex": "#f75929",
+      "name": "Lava",
+      "role": "Vivid orange punctuation for accent text and graphic highlights against muted grounds",
+      "group": "brand"
+    },
+    {
+      "hex": "#ddbad0",
+      "name": "Blush",
+      "role": "Dusty pink used as the dominant hairline border color across the entire UI — the single most repeated chromatic color",
+      "group": "accent"
+    },
+    {
+      "hex": "#d7b5bf",
+      "name": "Rose Ash",
+      "role": "Muted rose-gray for heading type and link borders, a softer companion to Blush",
+      "group": "accent"
+    },
+    {
+      "hex": "#c7afac",
+      "name": "Clay",
+      "role": "Warm taupe for heading rules and type — the bridge between the pinks and the earth tones",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed editorial page model — sections are viewport-wide color planes that change abruptly between Bone White, Linen Mist, and project-specific earth tones. The first viewport is a scattered, overlapping grid of magazine-spread thumbnails filling the entire screen with no headline or CTA — the work is the hero. Navigation is a single thin top bar with bare text links, flush left and right, no background fill. Sections alternate between image-dominant spreads and type-dominant spreads, each filling the full viewport. Hero sections are split asymmetrically: a large image or display-type specimen on one side meets a solid color plane with a paragraph on the other (as in the rust intro and the Jasmine project). Section rhythm is spacious — 80px+ vertical gaps between blocks, with no visible dividers between sections (color change does the separating). Content is arranged in 2-column asymmetric splits or single full-width centered text blocks; no 3-column card grids, no pricing tables, no feature comparison layouts. The entire page reads as a flip-through of magazine pages rather than a scrollable app interface.",
+  "imagery": "Photography and editorial spreads dominate the visual language — no icons, no illustrations, no abstract graphics, no 3D. The imagery is the designer's own work: full magazine spreads, book covers, type specimens, and brand identity layouts photographed as physical objects. Images are presented as raw rectangular crops with no rounding, no shadows, and no border treatments; they overlap slightly at varying rotations to evoke a desk of printed work. Treatment is high-fidelity editorial photography — high-key lighting, sharp detail, the paper texture and ink visible. When type is shown as imagery, it appears as oversized display specimens (e.g. the 'JASMINE' lettering) filling entire viewports, functioning as both content and decoration. The role of imagery is the portfolio itself: the work IS the hero, with type and color planes framing it.",
+  "similar": [
+    {
+      "why": "Same editorial-portfolio DNA — full-bleed project spreads, custom serif display type, minimal nav, no card components. Pentagram's per-partner full-bleed color covers mirror Ayaka's project-as-magazine-spread approach.",
+      "business": "Pentagram (pentagram.com)"
+    },
+    {
+      "why": "Editorial publishing layout with oversized serif headlines, warm earth-tone section backgrounds, and bare text-link navigation. Both treat type and color as the primary structural elements rather than UI scaffolding.",
+      "business": "It's Nice That (itsnicethat.com)"
+    },
+    {
+      "why": "Full-bleed color-block project pages with large serif headlines, minimal chrome, and the same 'work IS the hero' philosophy. The flat-color section transitions and generous vertical rhythm are closely related.",
+      "business": "Wolff Olins (wolff-olins.com)"
+    },
+    {
+      "why": "Both lean on custom serif display type with extreme positive letter-spacing on hero headlines, creating a printed-magazine rhythm. Lava's warm editorial palette and hairline typographic details echo Ayaka's system.",
+      "business": "Lava (lavamagazine.com)"
+    },
+    {
+      "why": "Same warm linen atmosphere, custom serif with swash features, overlapping spread thumbnails on the cover, and parenthesized micro-tags as the only metadata layer.",
+      "business": "Anja Meiners / editorial portfolio sites (anjameiners.com)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "180px",
+      "tags": "120px",
+      "inputs": "140px",
+      "buttons": "120px",
+      "sections": "0px"
+    },
+    "elementGap": "26px",
+    "sectionGap": "80px",
+    "cardPadding": "26px",
+    "pageMaxWidth": null
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Bone White Canvas",
+      "level": 1,
+      "purpose": "Primary page background for gallery and list spreads"
+    },
+    {
+      "hex": "#fefdf8",
+      "name": "Paper Cream Alt",
+      "level": 2,
+      "purpose": "Warm off-white canvas used as tonal variant to break up long pages"
+    },
+    {
+      "hex": "#eeecec",
+      "name": "Linen Mist",
+      "level": 3,
+      "purpose": "Soft warm-gray surface for project panels and secondary spreads"
+    },
+    {
+      "hex": "#a65d4d",
+      "name": "Full-Bleed Color Plane",
+      "level": 4,
+      "purpose": "Project section background — the terracotta and other earth tones take over entire pages as editorial spreads"
+    }
+  ],
+  "northStar": "Editorial spread on warm linen paper.\n\nA tactile, magazine-like atmosphere where oversized serif type and flat color planes replace the usual UI scaffolding.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.82,
+      "letterSpacing": -0.41
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.67,
+      "letterSpacing": 0.27
+    },
+    {
+      "role": "subheading",
+      "size": 25,
+      "lineHeight": 1.16,
+      "letterSpacing": 2.5
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.1,
+      "letterSpacing": 4.35
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.05,
+      "letterSpacing": 10.9
+    },
+    {
+      "role": "display",
+      "size": 68,
+      "lineHeight": 1,
+      "letterSpacing": 27.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Category Navigation",
+      "role": "Primary site navigation bar",
+      "description": "Horizontally arranged text links in Hanae at ~13–16px, weight 400, tracking -0.44px. Left side: brand mark 'Ayaka B. Ito —' followed by bare category links (Branding, Editorial, Typefaces, Illustrations). Right side: Info, Instagram, and a pill-shaped language toggle. No background, no border, no underline — links sit on the page surface. Vertically thin with 7–13px padding. The language toggle uses the 120px pill radius."
+    },
+    {
+      "name": "Language Toggle Pill",
+      "role": "Bilingual UI switcher",
+      "description": "Pill-shaped button with 120px border-radius, ~10px vertical and 18px horizontal padding, hairline Blush (#ddbad0) border, Hanae 11px text weight 500, uppercase or small-caps treatment. Background transparent or white; text Ink Black."
+    },
+    {
+      "name": "Section Tag Label",
+      "role": "Tiny editorial metadata tag",
+      "description": "Parenthesized uppercase label like '(INTRO)' or '(FEATURED PROJECTS)'. Hanae 10–11px, weight 500, letter-spacing ~0.1em, rendered in a muted accent color (Sage, Olive, or Rose Ash depending on section). Sits above or beside a headline as a quiet classification marker."
+    },
+    {
+      "name": "Display Headline",
+      "role": "Oversized editorial headline for section intros and project titles",
+      "description": "Hanae 62–68px, weight 400, line-height 1.0, letter-spacing 0.4em (~27px). Renders as a wide horizontal band of individually tracked glyphs. Color typically Ink Black or a muted accent (Olive, Teal). The extreme tracking transforms the headline from a sentence into a graphic mark."
+    },
+    {
+      "name": "Intro Hero Block",
+      "role": "Full-bleed welcome panel",
+      "description": "Full-viewport-width section with Ember Rust (#a65d4d) background. Contains a large editorial paragraph in Hanae 32–38px weight 400, color Bone White or light cream, tracking ~0.27em. A tiny '(INTRO)' tag sits above in Rose Ash. The block acts as a magazine cover spread — no image, no card, just flat color and type."
+    },
+    {
+      "name": "Project Title Overlay",
+      "role": "Headline positioned over a project background color panel",
+      "description": "Large Hanae serif (38–40px) at weight 400, tight tracking, placed to the right of or overlapping a full-bleed colored panel (Ochre, Teal, etc.). Color is either Ink Black or a contrasting neutral. A small '(CUSTOM TYPEFACE)' or similar tag sits below in muted accent color at 10–11px."
+    },
+    {
+      "name": "Gallery Grid (Magazine Spread Thumbnails)",
+      "role": "Portfolio project thumbnail arrangement",
+      "description": "Loose, overlapping arrangement of editorial magazine spread images at varying rotations, filling the viewport. Each spread sits as a raw rectangular image with no border, no shadow, no rounded corners. The grid is the hero — no headline or CTA competes for attention."
+    },
+    {
+      "name": "Full-Bleed Color Spread",
+      "role": "Project or section background plane",
+      "description": "Edge-to-edge single-color section (Ochre, Ember Rust, Deep Teal, Sky Mist, etc.) that functions as a magazine page. Holds only type and optionally one or two large images. Zero padding inside the color plane — type sits at the edges with generous internal margins."
+    },
+    {
+      "name": "Bare Text Link",
+      "role": "In-line or nav link",
+      "description": "Hanae 13–16px weight 400, color Ink Black or an accent. No underline by default; on hover, a Blush (#ddbad0) hairline underline appears via border-bottom. No background, no padding chip — links are typographic, not boxy."
+    },
+    {
+      "name": "Project Meta Label",
+      "role": "Small project category or role descriptor",
+      "description": "Hanae 10–11px weight 500, tracking 0.1em, uppercase, in a muted accent color (Sage, Rose Ash, Clay). Sits adjacent to a project title as a quiet annotation."
+    },
+    {
+      "name": "Input Field",
+      "role": "Form input for contact or newsletter",
+      "description": "Pill-shaped input with 140px border-radius, Blush (#ddbad0) hairline border, 18–20px vertical padding, Hanae 16px text. Background white. No visible label — placeholder text only. Used in sparse contact contexts."
+    },
+    {
+      "name": "Footer Link Row",
+      "role": "Bottom-of-page contact and social links",
+      "description": "Horizontal row of bare text links in Hanae 13–16px, Ink Black, flush left or center. Same hairline-underline-on-hover behavior as nav links. No background bar."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary custom display and body serif. Carries the site's editorial identity. Used for hero headlines at 62–68px with extreme positive tracking (~0.4em), for body copy at 16–20px, and for tiny parenthesized section tags at 10–11px. The custom typeface's swash and discretionary ligature features are switched on for a handwritten inscriptional quality. Weight stays 400–500 even at display sizes — the scale and tracking carry the voice, not boldness.",
+      "sizes": "10px, 11px, 13px, 16px, 18px, 20px, 23px, 25px, 32px, 38px, 40px, 62px, 68px",
+      "family": "Hanae",
+      "weight": "400, 500",
+      "lineHeight": "1.0–2.73 (tightest on display sizes 62–68px, loosest on tag/label 10–11px)",
+      "substitute": "Cormorant Garamond or Fraunces (variable serif) — both offer the high-contrast modern serif feel with delicate inscriptional qualities",
+      "letterSpacing": "Negative at small sizes (-0.41px at 10px, -0.44px at 11px, -0.34px at 16px), shifting positive as size grows (0.27px at 18px, 2.5px at 25px, 4.35px at 32px, ~10.9px at 40px, ~24.8–27.2px at 62–68px). The tracking fan-out on display sizes is a signature.",
+      "fontFeatureSettings": "\"dlig\" on, \"liga\" on, \"swsh\" on"
+    },
+    {
+      "role": "Secondary sans for occasional subhead and hero-supporting text where a cleaner geometric voice is needed alongside the serif. Used sparingly — the serif does the structural work.",
+      "sizes": "18px, 50px",
+      "family": "Open Sans",
+      "weight": "400, 700",
+      "lineHeight": "1.67",
+      "substitute": "Inter or system-ui sans",
+      "letterSpacing": "normal",
+      "fontFeatureSettings": "\"dlig\" on, \"liga\" on, \"swsh\" on"
+    }
+  ],
+  "description": "Ayaka B. Ito presents an editorial portfolio language: full-bleed warm-toned pages flipping between a dust-pink cover collage, a terracotta-rust intro spread, and oversized serif display panels. The system reads like a printed magazine — flat color planes, hairline rules, and one custom display serif that swells to extreme positive tracking on hero copy. Color is used as whole-page atmosphere rather than UI accent: terracotta, olive, teal, gold, and dusty pink each take over entire sections to signal project boundaries. Components are reduced to their editorial primitives — a top bar of bare category links, tiny parenthesized section tags, and pill-shaped language toggles — with no shadows, no cards, and almost no raised surfaces. The page breathes with generous vertical rhythm and lets typography do all the structural work.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #000000 (Ink Black)\n- background: #ffffff (Bone White)\n- border: #ddbad0 (Blush, hairline)\n- accent: #a65d4d (Ember Rust, full-bleed panels)\n- secondary accent: #cda04f (Ochre), #167070 (Deep Teal), #576041 (Olive)\n- primary action: #ddbad0 (outlined action border)\n\nExample Component Prompts:\n1. Create a full-bleed intro hero section: Ember Rust (#a65d4d) background spanning the full viewport. Tiny '(INTRO)' tag in Hanae 11px, weight 500, letter-spacing 0.1em, color #d7b5bf (Rose Ash). Body headline in Hanae 38px, weight 400, letter-spacing 0.27em, color #fefdf8 (Paper Cream), line-height 1.3. Generous internal padding, no border, no card.\n\n2. Create a display headline block: Hanae 68px, weight 400, letter-spacing 0.4em (~27px), line-height 1.0, color #000000 (Ink Black). The text reads as a wide horizontal band of individually tracked glyphs against a Bone White (#ffffff) background. No border, no shadow.\n\n3. Create a language toggle pill: 120px border-radius, 1px solid #ddbad0 (Blush) border, transparent or white background, Hanae 11px weight 500 text, 10px vertical / 18px horizontal padding. Text color #000000.\n\n4. Create a project title overlay over an Ochre (#cda04f) full-bleed panel: Hanae 40px, weight 400, letter-spacing 0.27em, color #000000, placed to the right side. Small '(CUSTOM TYPEFACE)' tag below in Hanae 10px, weight 500, letter-spacing 0.1em, color #507f70 (Sage). Panel fills the full viewport with zero rounded corners.\n\n5. Create a portfolio gallery hero: viewport-filling arrangement of rectangular editorial magazine-spread images overlapping at slight rotations. No headlines, no navigation beyond the top bar, no CTA. Images are raw rectangles with 0px border-radius and no shadows."
+    },
+    {
+      "title": "Letter-Spacing System",
+      "content": "The site's tracking behavior is one of its most recognizable traits. Hanae shifts from negative to dramatically positive as type size grows:\n- 10–13px: -0.41 to -0.44px (tight, for tags and micro labels)\n- 16–18px: 0.27 to 0.34px (near-normal, for body)\n- 20–25px: ~2.5px (loose, for subheadings)\n- 32–38px: ~4.35px (spaced, for editorial paragraphs)\n- 40px: ~10.9px (wide, for project titles)\n- 62–68px: ~24.8–27.2px (extreme, for display headlines)\n\nThis tracking fan-out is the design's signature. Do not flatten it to a single value — display and body must feel categorically different in rhythm."
+    },
+    {
+      "title": "Editorial Section Tagging",
+      "content": "The parenthesized uppercase tag system (e.g. '(INTRO)', '(FEATURED PROJECTS)', '(CUSTOM TYPEFACE)') functions as the site's only metadata layer. Tags are always:\n- Hanae 10–11px, weight 500\n- Uppercase, letter-spacing 0.1em\n- Wrapped in parentheses\n- Colored in a muted accent appropriate to the section (Sage for type, Rose Ash for intro, Clay for editorial)\n- Placed above or beside the headline they describe, not below\n\nThis tag system replaces the conventional eyebrow/kicker text pattern found in typical SaaS sites and reinforces the magazine-spread metaphor."
+    }
+  ],
+  "elevationPhilosophy": "The design intentionally avoids shadows and raised surfaces. Hierarchy is built through typography scale, flat color planes, and hairline borders rather than elevation. Cards and panels sit flush with the page; if a section needs emphasis, it gets a full-bleed color change instead of a drop shadow."
+}

@@ -1,0 +1,40 @@
+{
+  "name": "create-emdash",
+  "version": "1.1.0",
+  "description": "Create a new EmDash CMS project",
+  "type": "module",
+  "bin": "./dist/index.mjs",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run",
+    "typecheck": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.0",
+    "giget": "^1.2.3",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "keywords": [
+    "create",
+    "emdash",
+    "astro",
+    "cms"
+  ],
+  "author": "Matt Kane",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emdash-cms/emdash.git",
+    "directory": "packages/create-emdash"
+  }
+}

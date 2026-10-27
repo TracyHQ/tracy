@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "00ce9181-45be-4340-b6a6-75a4d5d60cef",
+  "status": "complete",
+  "name": "Cowboy",
+  "url": "https://styles.refero.design/style/00ce9181-45be-4340-b6a6-75a4d5d60cef",
+  "sourceWebsite": "https://cowboy.com",
+  "extractedAt": "2026-06-03T18:56:05.727Z",
+  "capturedAt": "2026-10-08T05:07:42.987503+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Belgian bicycle gallery in porcelain white. A showroom where matte surfaces, oversized editorial type, and near-zero decoration force the eye onto the machine and the message.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/cb6fb493-ce76-4c28-8c8c-f49b3acc2135.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "deeacc0c2201cbc9c690362db48a35a5cf72222f61e385ec97875d285d104b51",
+      "bytes": 22015
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "64e46d6782858c4660c0d27ca6d9bb22421490b7961a75d1ffc9ab51a51e0ba2",
+      "bytes": 168352
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "53c060c411cf3887ca890df280cc0d34ae9341ea8a8f9e4bdffcc4bfd0c2ed02",
+      "bytes": 17853
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "36082cf92e7c806cee377194965d67b6b1e1ec10d39a1048668fc3cd5f04222c",
+      "bytes": 16473
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "559ffb2fd88bf46b1a42ac7394dc24268223eb77ce40e9da80d47bc0d37e51f6",
+      "bytes": 12350
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "388191ebb17ed3d0cc1e4139308a40627c46da6a015046cb4c67c16067c4f08c",
+      "bytes": 3885
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "097455d7abd20f407f90f600c405520d1ef67dee4f6375e14b765f09d177dc15",
+      "bytes": 871
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2340ad8610f6395d761a425e1a4dc2cea42c4b8da1ccd4573a5e0a80d0bb154b",
+      "bytes": 888
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "db0a10b6a9b207f4eda1bf448e05c3b2b1f0f93d5c413ff4b9c5fd9b69616a8c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "7191040ecf1caacf32c88ccfcb17423eb5b6abfb109b3c54cd656c1d65271ab8",
+      "bytes": 44978
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a54cd286bc53638bebce40ae95546aeb370f36dcebb90e3215390f29ec2259cb",
+      "bytes": 23436
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "25dd3795e1ca29ed49b660b4b91da5f22bb18959e8ed5e8beb35a19d4307e288",
+      "bytes": 58380
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4d2d7f69e2c9999944efdcef00e36c7a9b83f59ea1a057e14e9232653905cdf1",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7f7da9adc4ff09cb7dd75c491b369bb247bbdf2b573ae7c30b4cd6164ade5099",
+      "bytes": 2173
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ec214362d65196fed9bb44e86e828ec17304c11f616db29afcee09ddc18a7a15",
+      "bytes": 2730
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "00ce9181-45be-4340-b6a6-75a4d5d60cef",
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "27a4a4fa-4b1a-4e7e-b2c3-3e5bf57f00e5",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "3ad131ed-b603-49a3-9491-7407db6cb423",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "5183054c-4c6e-4ecf-bd90-f7d794d5eb17",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a59e7f31-1fca-46c1-a6b0-8d1294b33a7c",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d75a643b-a518-4550-b430-679cd989a447",
+    "e85a82b1-c70e-42de-8c42-4bd95dd5e047"
+  ]
+}

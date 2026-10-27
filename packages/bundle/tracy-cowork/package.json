@@ -1,0 +1,37 @@
+{
+  "name": "@tracy/dsh-cowork-bundle",
+  "version": "0.4.43",
+  "description": "Every Tracy plugin as one profile bundle: the Cowork layer over a base-backed dsh profile",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./presets.patch.yml": "./presets.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "presets.patch.yml"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": [
+        "./cordis.patch.yml",
+        "./presets.patch.yml"
+      ]
+    }
+  },
+  "dependencies": {
+    "@huanlin/dsh-plugin-better-locale": "0.3.0-tracy.13",
+    "@tracy/dsh-brand": "workspace:^",
+    "@tracy/dsh-assistant": "workspace:^",
+    "@tracy/dsh-chat-input": "workspace:^",
+    "@tracy/dsh-settings": "workspace:^",
+    "@tracy/dsh-tracy-locale-vi": "workspace:^",
+    "@tracy/dsh-tracy-locales": "workspace:^",
+    "@tracy/dsh-webroot-read": "workspace:^",
+    "dsh-locale-vi": "0.1.0-tracy.14",
+    "@tracy/dsh-mode-picker": "workspace:^",
+    "dsh-passwords": "2.7.7-tracy.19"
+  }
+}

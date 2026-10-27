@@ -1,0 +1,248 @@
+/*
+ * Tracy — ACM block `pricing`, block-scoped styles.
+ *
+ * Self-contained: mod_ja_acm loads this file itself (helper.php addAssets), so it is NOT imported
+ * into scss/_all.scss. It only ever CONSUMES the token layer defined in scss/_tokens-base.scss —
+ * it never defines a token. That is what makes dark free: darkmode.css remaps the same names under
+ * html[data-theme="dark"], so every rule below follows without a dark block of its own.
+ *
+ * A literal colour here would be a defect (design-spec §2). The only literals are the 1px hairline
+ * and the grid breakpoints, neither of which the token set names.
+ *
+ * Radius tiers are used on purpose, never flattened (DESIGN.md §7 "Don't"):
+ *   --radius-lg  (18px)  the tier card
+ *   --radius-pill(980px) the capsule action and the recommended badge
+ * Containment is --elev-ring, never a shadow (design-spec §4).
+ */
+
+/* ── The band ────────────────────────────────────────────────────────────────
+ * Section separation is contrast-led: the surface change IS the separator, so there is
+ * deliberately no border-top/bottom here (design-spec §4). --tracy-band-y is remapped for
+ * tablet and phone by the template's own media queries, so the rhythm is responsive for free.
+ */
+.acm-pricing {
+  padding-block: var(--tracy-band-y);
+  border: 0;
+}
+
+.acm-pricing--canvas { background: var(--bg); }
+.acm-pricing--warm   { background: var(--surface-warm); }
+.acm-pricing--gray   { background: var(--surface); }
+
+/* ── Section head ──────────────────────────────────────────────────────────── */
+.acm-pricing .tracy-pricing__head {
+  max-width: 52ch;
+  margin: 0 auto var(--space-12);
+  text-align: center;
+}
+
+/* The eyebrow is a LABEL, not an action, so it stays neutral. DESIGN.md §7 reserves blue for
+   genuine action and navigation semantics, and this block's single accent is spent on the
+   recommended tier's button. */
+.acm-pricing .tracy-pricing__eyebrow {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tracy-quiet, var(--meta));
+}
+
+.acm-pricing .tracy-pricing__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+.acm-pricing .tracy-pricing__intro {
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-body);
+  color: var(--muted);
+}
+
+/* ── The three tiers ───────────────────────────────────────────────────────── */
+.acm-pricing .tracy-pricing__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.acm-pricing .tracy-plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background: var(--bg);
+  border: 0;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-ring);
+}
+
+/* Emphasis by SURFACE CHANGE plus one step of neutral containment, not by a second accent colour
+   (design-spec §2). --meta is DESIGN.md §6's "Level 1 / retail border strong" step — the documented
+   stronger containment rung on the same neutral ramp, so it reads as weight, not as colour. */
+.acm-pricing .tracy-plan--recommended {
+  padding-block: var(--space-8);
+  background: var(--surface-warm);
+  box-shadow: 0 0 0 1px var(--tracy-quiet, var(--meta));
+}
+
+/* The badge is the muted pill of the fixture's .badge-muted, not a blue chip. */
+.acm-pricing .tracy-plan__badge {
+  align-self: flex-start;
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  background: color-mix(in oklab, var(--muted), transparent 88%);
+}
+
+.acm-pricing .tracy-plan__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+.acm-pricing .tracy-plan__summary {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--muted);
+}
+
+.acm-pricing .tracy-plan__price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+}
+
+.acm-pricing .tracy-plan__amount {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+.acm-pricing .tracy-plan__period {
+  font-size: var(--text-sm);
+  color: var(--tracy-quiet, var(--meta));
+}
+
+/* ── Actions: the capsule, and the accent budget ───────────────────────────── */
+.acm-pricing .tracy-plan__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-block: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) var(--ease-standard),
+    color var(--motion-fast) var(--ease-standard),
+    transform var(--motion-fast) var(--ease-standard);
+}
+
+.acm-pricing .tracy-plan__action:active { transform: scale(0.98); }
+
+.acm-pricing .tracy-plan__action:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* The ONE blue thing in this block. */
+.acm-pricing .tracy-plan__action--accent {
+  background: var(--accent);
+  color: var(--accent-on);
+}
+
+.acm-pricing .tracy-plan__action--accent:hover  { background: var(--accent-hover); color: var(--accent-on); }
+.acm-pricing .tracy-plan__action--accent:active { background: var(--accent-active); }
+
+/* The ringed counterpart the other two tiers use — same capsule, no fill, neutral ink. */
+.acm-pricing .tracy-plan__action--ring {
+  background: transparent;
+  color: var(--fg);
+  box-shadow: var(--elev-ring);
+}
+
+.acm-pricing .tracy-plan__action--ring:hover {
+  background: var(--surface);
+  color: var(--fg);
+}
+
+.acm-pricing .tracy-plan__action--ring:focus-visible {
+  box-shadow: var(--elev-ring), var(--focus-ring);
+}
+
+/* ── Feature list ──────────────────────────────────────────────────────────── */
+.acm-pricing .tracy-plan__features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acm-pricing .tracy-plan__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--fg-2);
+}
+
+/* Neutral, like every other mark in the block: the tick confirms, it does not call for action. */
+.acm-pricing .tracy-plan__check {
+  flex: 0 0 auto;
+  /* Height = the first line box, so the tick centres on line one with no magic offset. */
+  height: calc(var(--text-sm) * var(--leading-body));
+  color: var(--tracy-quiet, var(--meta));
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────────── */
+@media (max-width: 991.98px) {
+  .acm-pricing .tracy-pricing__grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 480px;
+    margin-inline: auto;
+  }
+
+  .acm-pricing .tracy-pricing__head { margin-block-end: var(--space-8); }
+}
+
+@media (max-width: 575.98px) {
+  .acm-pricing .tracy-pricing__heading { font-size: var(--text-xl); }
+  .acm-pricing .tracy-pricing__intro   { font-size: var(--text-base); }
+  .acm-pricing .tracy-plan             { padding: var(--space-5); }
+  .acm-pricing .tracy-plan__action     { width: 100%; }
+}

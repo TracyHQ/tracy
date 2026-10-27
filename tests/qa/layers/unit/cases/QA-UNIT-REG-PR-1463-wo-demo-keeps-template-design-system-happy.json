@@ -1,0 +1,99 @@
+{
+  "id": "QA-UNIT-REG-PR-1463-wo-demo-keeps-template-design-system-happy",
+  "itemIds": ["regression:REG-PR-1463-wo-demo-keeps-template-design-system"],
+  "requirement": "A WO demo keeps the design system its template wears: the record is written at provision, the agent is told to keep it, and the QA gate holds the look",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1463-wo-demo-keeps-template-design-system.json",
+    "ref": "PR #1463 (feat); fix evidence: PR 1463; stand wo2 (19/10/2026): three Tracy Base demos with site_design empty and no docs/agents/design.json; opal-moon-bistro-j-base-2 templates/tracy/css/custom.css set every --ds-c-* token from Facebook photo colours",
+    "invariant": "S1: Joomla/WordPress catalogue → {id, source: catalog, name, tokens from the map, tokensFrom tracy-web:design-tokens.json}; EmDash catalogue → tokens null; quickstart → the contract's tokens; none/unknown → record null with TEMPLATE_WEARS_NONE / DESIGN_UNRESOLVED. S2: the brief keeps template.designSystem and validates; the markdown says 'Design system: Apple (`apple`, catalog) — bound to the template. Tracy keeps it' and prints no Colours/Fonts; acceptance holds the system; the prompt's rule 1 ends with 'preserve its bound design system' on every CMS and rule 8 names that CMS's look doors as the ones not to change colours through; 'restyle it with the brief's brand colours' appears nowhere. S3: the handed-over page passes its own baseline; --ds-c-bg/--ds-c-fg redefined in custom.css fail with before/after; a colour or font rule in custom.css fails, a margin rule and a var() reference pass; a rebuilt _astro bundle with new rules passes, one with a changed token fails; a new #wp-custom-css block and an inline background-color fail.",
+    "productSources": [
+      "apps/tracy-host/src/app.js:1138",
+      "apps/tracy-host/src/demo-qa.js:55",
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/host/client.js:34",
+      "apps/tracy-web/src/lib/site-design.js:106",
+      "apps/tracy-web/src/sites/design-at-provision.js:27",
+      "packages/wo/website-opportunities/domain/agent-prompt.mjs:38",
+      "packages/wo/website-opportunities/domain/brief.mjs:158",
+      "packages/wo/website-opportunities/domain/neutral-copy.mjs:29",
+      "packages/wo/website-opportunities/domain/slot-fill-manifest.mjs:12",
+      "packages/wo/website-opportunities/domain/trade-words.mjs:16",
+      "packages/wo/website-opportunities/domain/trades.mjs:6"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-host/src/ds-slot.js:439 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:440 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:582 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:583 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:584 readFile() with a computed path",
+      "apps/tracy-host/src/jobs.js:224 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:144 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:151 readFile() with a computed path",
+      "apps/tracy-host/src/provision.js:503 import() with a computed specifier",
+      "apps/tracy-host/src/site-files.js:413 readFile() with a computed path",
+      "apps/tracy-host/src/webroot.js:1628 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:919 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:995 open() with a computed path",
+      "apps/tracy-web/src/db/index.js:52 readFile() with a computed path",
+      "packages/wo/website-opportunities/domain/neutral-copy.mjs:18 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a catalogue system on WordPress or Joomla: the catalogue tokens are the ruler, frozen at provision",
+    "a catalogue system on EmDash: the name is bound, the tokens are read from the site later, never the catalogue map",
+    "a quickstart look carries its own tokens, read off the release that declared it",
+    "a template that wears none, or whose look could not be resolved, writes nothing and says why",
+    "look-kept: the look Tracy handed over is held — tokens, new colour or font rules, <style> blocks and inline styles (plan wo-design-follows-template)",
+    "the template’s design system travels with the brief by name only, and the agent’s markdown says who keeps it",
+    "acceptance holds the template’s design system when the brief names one",
+    "the agent keeps the template’s design system: no restyle from brand observations, through any door (council 19/10/2026)",
+    "the look doors are named per CMS as the doors NOT to change colours through; layout CSS stays plain, the compiled CSS untouched"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1463-wo-demo-keeps-template-design-system"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1463-wo-demo-keeps-template-design-system",
+    "pr": 1463,
+    "kind": "feat",
+    "area": "website-opportunities/design-system",
+    "file": "tests/regression/cases/REG-PR-1463-wo-demo-keeps-template-design-system.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/design-at-provision.test.mjs",
+    "apps/tracy-host/test/demo-qa.test.mjs",
+    "packages/wo/website-opportunities/test/domain-brief.test.mjs",
+    "packages/wo/website-opportunities/test/domain-agent-prompt.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a catalogue system on WordPress or Joomla: the catalogue tokens are the ruler, frozen at provision",
+    "a catalogue system on EmDash: the name is bound, the tokens are read from the site later, never the catalogue map",
+    "a quickstart look carries its own tokens, read off the release that declared it",
+    "a template that wears none, or whose look could not be resolved, writes nothing and says why",
+    "look-kept: the look Tracy handed over is held — tokens, new colour or font rules, <style> blocks and inline styles (plan wo-design-follows-template)",
+    "the template’s design system travels with the brief by name only, and the agent’s markdown says who keeps it",
+    "acceptance holds the template’s design system when the brief names one",
+    "the agent keeps the template’s design system: no restyle from brand observations, through any door (council 19/10/2026)",
+    "the look doors are named per CMS as the doors NOT to change colours through; layout CSS stays plain, the compiled CSS untouched"
+  ],
+  "timeoutS": 600
+}

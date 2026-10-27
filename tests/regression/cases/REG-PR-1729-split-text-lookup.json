@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1729-split-text-lookup",
+  "kind": "fix",
+  "title": "content.replace on Joomla finds a quoted line split across styled fragment slots (accent span) on the first ask",
+  "pr": 1729,
+  "area": "site-tools/content-replace",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/tools/tracy-site-tools/test/replace-joomla-fragments.test.mjs (a JA Boxing-shaped contract: module-169.0/1/2 = 'Sign up for the ' / 'Boxing' / ' newsletter' under one h4).",
+    "S2: In that run, content.replace {find:'Sign up for the Boxing newsletter', replace:'Get our weekly training tips'} on the page that prints <h4>Sign up for the <span>Boxing</span> newsletter</h4>."
+  ],
+  "expect": [
+    "S1: every test passes.",
+    "S2: ok:true, one contract apply with module-169.0 'Get our weekly ', module-169.1 'training', module-169.2 ' tips'; never NOT_EDITABLE 'a form label'."
+  ],
+  "selectors": {
+    "tool": "packages/tools/tracy-site-tools/test/replace-joomla-fragments.test.mjs",
+    "door": "tracy_site content.replace"
+  },
+  "evidence": "accept-boxing-104.tracy.site 25/10/2026: the agent answered 'I couldn't change that one ... the label built into the newsletter sign-up form itself' for words three content-map slots hold",
+  "fence": "replace-joomla acrossFragments + fragment-groups.mjs: a quote crossing fragment slots of one field and block is located and every fragment keeps a word",
+  "run": {
+    "cmd": ["node", "--test", "packages/tools/tracy-site-tools/test/replace-joomla-fragments.test.mjs"]
+  }
+}

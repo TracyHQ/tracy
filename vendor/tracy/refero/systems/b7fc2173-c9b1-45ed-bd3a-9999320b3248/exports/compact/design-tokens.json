@@ -1,0 +1,49 @@
+{
+  "color": {
+    "electric-cobalt": {
+      "$value": "#0004eb",
+      "$type": "color",
+      "$description": "Electric Cobalt — Headlines, nav links, logo block fill, project category labels, section accents — the only chromatic voice in the system, treated at massive scale (wordmarks, 44–68px type) to dominate every surface it touches"
+    },
+    "abyssal-ink": {
+      "$value": "#050516",
+      "$type": "color",
+      "$description": "Abyssal Ink — Dark section canvases, primary body text on light surfaces, reversed logo lockup — near-black with a barely-perceptible blue cast that keeps it on-brand rather than neutral"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Light section canvases, inverted text on dark and blue surfaces, floating card backgrounds over media"
+    },
+    "concrete-mist": {
+      "$value": "#e6e6e6",
+      "$type": "color",
+      "$description": "Concrete Mist — Primary light-mode page canvas, muted text fills, ghost-surface panels — the cool gray ground that lets the blue detonate"
+    },
+    "fog-gray": {
+      "$value": "#979797",
+      "$type": "color",
+      "$description": "Fog Gray — Secondary text, meta labels, placeholders, scrolling ticker background, low-emphasis chrome"
+    }
+  },
+  "font": {
+    "haas-grotesk": {
+      "$value": "Haas Grotesk",
+      "$type": "fontFamily",
+      "$description": "Primary type system for all UI, nav, body, and display. Weight 100 (ultralight) and weight 500 (medium) are used in deliberate tension — ultralight for ambient/nav/micro-copy, medium for headlines and emphasis. The ultralight is anti-convention; most brands use 500–700 for headlines, this system whispers and then SHOUTS with the same family"
+    },
+    "trjndavinci": {
+      "$value": "TRJNDaVinci",
+      "$type": "fontFamily",
+      "$description": "Display italic serif for project category labels and editorial accent lines ('Basketball', 'New York Knicks', 'Prompt & Purpose') — the only non-grotesque voice in the system, used sparingly to create a cinematic-magazine credit-roll feel against the geometric body type"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.nakedcityfilms.com",
+      "siteName": "Nakedcityfilms",
+      "extractedAt": "2026-06-03T19:24:04.168Z",
+      "variant": "compact"
+    }
+  }
+}

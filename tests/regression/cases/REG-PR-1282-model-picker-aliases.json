@@ -1,0 +1,54 @@
+{
+  "id": "REG-PR-1282-model-picker-aliases",
+  "kind": "fix",
+  "title": "Model selection filters deployment providers, preserves account models and applies display aliases safely",
+  "pr": 1282,
+  "area": "settings/model-picker",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the model policy, alias, wire and Help & about tests against the branch source with the TAP reporter.",
+    "Require the named assertions below to pass; this case does not call a paid LLM or mutate a user session."
+  ],
+  "expect": [
+    "Disabled operator providers are excluded while connected personal account groups remain available.",
+    "Deployment aliases leave routing IDs and personal account model names unchanged.",
+    "Browser IDs stay stable across labels and are encoded in catalog, history and stream projections.",
+    "The prompt identity preserves current site rules and treats aliases only as display data.",
+    "Web Help displays download/version/changelog and respects its operator switch; desktop hides its preference switches."
+  ],
+  "selectors": {
+    "menu": "[data-session-menu]",
+    "chip": "[data-model-chip]",
+    "help": ".ts-help",
+    "catalog": "/api/session/modelCatalog"
+  },
+  "fence": "Operator/provider availability, account ownership, opaque route serialization, prompt preservation and UI switch policy. Stand screenshots are separate acceptance evidence.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-force-exit",
+      "apps/tracy-web/test/workspace-model-policy.test.mjs",
+      "apps/tracy-web/test/model-aliases.test.mjs",
+      "apps/tracy-web/test/model-wire.test.mjs",
+      "packages/ui/tracy-mode-picker/test/account-subscriptions.test.mjs",
+      "packages/ui/tracy-settings/test/help-about.test.mjs",
+      "apps/tracy-web/test/seat-plan-model-catalog.test.mjs"
+    ],
+    "tests": [
+      "deployment aliases change names only, leaving personal account models untouched",
+      "public IDs are stable, route-specific and independent of display aliases",
+      "catalog, defaults, replies, history and stream projections share public IDs",
+      "Tracy identity uses display aliases as data and preserves the complete effective prompt",
+      "web download version links to its changelog and respects the operator switch",
+      "desktop update preferences stay out of the UI for either saved value",
+      "desktop notification preferences stay out of the UI for either saved value",
+      "disabled, unreadable and unconfigured operator accounts are excluded",
+      "catalog covers each connected provider and separates accounts of the same provider",
+      "ownership is checked before dsh changes a selection, and Tracy AI clears the account pin"
+    ]
+  }
+}

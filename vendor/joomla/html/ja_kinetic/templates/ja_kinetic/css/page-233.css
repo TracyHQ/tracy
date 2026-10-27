@@ -1,0 +1,227 @@
+/* =============================================================================
+   ja_kinetic — Login page (com_users/login, Itemid=233) overlay
+   .pen: W1uty7 (dark-d) / dBSZC (light-d) / EqzdM (mobile-dark) / eufIt (mobile-light)
+   Structure is now REAL markup in html/com_users/login/default_login.php:
+     full-width masthead (eyebrow pill + H1 + sub) → 2-col split (card + benefits).
+   This overlay carries ONLY spacing/token styling. No ::after text, no font-size:0,
+   no :has()-hide, no pseudo-eyebrow — every string is real text / a lang key.
+   ============================================================================= */
+
+/* T4 masthead renders page_heading as a duplicate h2 above the component — hide it;
+   the override authors its own full-width masthead. */
+body.item-233 .t4-masthead { display: none; }
+body.item-233 .t4-main-body { padding-top: 0; }
+
+/* ── wrapper: full-width column (kill base flex-centering) ────────────────── */
+body.item-233 .kinetic-auth {
+  display: block;
+  width: 100%;
+  max-width: none;
+  background-color: transparent;
+  padding: 0 0 80px;
+}
+
+/* ── full-width masthead ──────────────────────────────────────────────────── */
+body.item-233 .kinetic-auth-masthead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 64px 24px 56px;
+  text-align: center;
+  background-image: radial-gradient(ellipse 75% 60% at 50% 0%, rgba(163,230,53,0.10) 0%, transparent 60%);
+}
+body.item-233 .kinetic-auth__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 5px 12px;
+  background: rgba(163,230,53,0.082);
+  border: 1px solid rgba(163,230,53,0.25);
+  border-radius: 100px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+body.item-233 .kinetic-auth__eyebrow-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--primary); flex-shrink: 0;
+}
+body.item-233 .kinetic-auth-masthead__title {
+  margin: 0;
+  max-width: 780px;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -1.3px;
+  color: var(--heading);
+}
+body.item-233 .kinetic-auth-masthead__sub {
+  margin: 0;
+  max-width: 600px;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* ── 2-col split: form card LEFT + benefits RIGHT ─────────────────────────── */
+body.item-233 .kinetic-auth__split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+body.item-233 .kinetic-auth__card {
+  min-width: 0;
+  max-width: none;
+  padding: 34px;
+}
+
+/* ── card form fields ─────────────────────────────────────────────────────── */
+body.item-233 .kinetic-auth .control-label,
+body.item-233 .kinetic-auth label:not(.form-check-label) {
+  color: var(--text) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+}
+body.item-233 .kinetic-auth .star { display: none; }
+body.item-233 .kinetic-auth input:not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),
+body.item-233 .kinetic-auth .form-control {
+  background: var(--bg) !important;
+  border-radius: 9px !important;
+  padding: 12px 13px !important;
+  max-width: none !important;
+}
+/* password input-group: flatten the inner (right) corners; eye button on the right */
+body.item-233 .kinetic-auth .password-group input:not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]) {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+body.item-233 .kinetic-auth .input-group-text,
+body.item-233 .kinetic-auth .input-group > button:last-child,
+body.item-233 .kinetic-auth .password-group .btn {
+  background: var(--bg);
+  border-color: var(--border);
+  color: var(--muted);
+  border-left: 0;
+  border-radius: 0 9px 9px 0;
+}
+
+/* Forgot-password inline link (right-aligned, between password and submit) */
+body.item-233 .kinetic-auth__inline-link {
+  display: flex;
+  justify-content: flex-end;
+  margin: -4px 0 4px;
+}
+body.item-233 .kinetic-auth__inline-link a {
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 400;
+}
+body.item-233 .kinetic-auth__inline-link a:hover { color: var(--primary-hover); text-decoration: underline; }
+
+body.item-233 .kinetic-auth button[type="submit"].btn-primary {
+  font-size: 15px !important;
+  font-weight: 600;
+  padding: 13px 0 !important;
+  border-radius: 9px !important;
+  margin-top: 4px;
+}
+
+body.item-233 .kinetic-sso-btn {
+  width: 100%;
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--heading);
+  font-size: 14px;
+  font-weight: 600;
+}
+body.item-233 .kinetic-sso-btn:hover { background: var(--elevated); }
+body.item-233 .kinetic-sso-btn svg { width: 16px; height: 16px; }
+
+body.item-233 .kinetic-auth__altrow {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 16px 0 0;
+  font-size: 13.5px;
+}
+body.item-233 .kinetic-auth__altrow span { color: var(--muted); }
+body.item-233 .kinetic-auth__altrow a { color: var(--primary); font-weight: 600; }
+body.item-233 .kinetic-auth__altrow a:hover { color: var(--primary-hover); text-decoration: underline; }
+
+/* hide remember-me (not in design) */
+body.item-233 .kinetic-auth .login-remember { display: none !important; }
+
+/* ── benefits panel ───────────────────────────────────────────────────────── */
+body.item-233 .kinetic-auth__benefits {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+body.item-233 .kinetic-auth__benefits-title {
+  margin: 0;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  color: var(--heading);
+}
+body.item-233 .kinetic-auth__checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+body.item-233 .kinetic-auth__checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+body.item-233 .kinetic-auth__check {
+  width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px;
+  color: var(--primary);
+}
+body.item-233 .kinetic-auth__checklist li span {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.53;
+  color: var(--text);
+}
+
+/* ═══════════════════ MOBILE (≤767.98px) ═══════════════════════════════════ */
+@media (max-width: 767.98px) {
+  body.item-233 .kinetic-auth { padding: 0 0 56px; }
+  body.item-233 .kinetic-auth-masthead { padding: 40px 20px 36px; gap: 14px; }
+  body.item-233 .kinetic-auth-masthead__title { font-size: 32px; letter-spacing: -1px; line-height: 1.1; }
+  body.item-233 .kinetic-auth__eyebrow { font-size: 11px; }
+  body.item-233 .kinetic-auth-masthead__sub { font-size: 15px; }
+  body.item-233 .kinetic-auth__split {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 32px;
+    padding: 0 20px;
+  }
+  body.item-233 .kinetic-auth__card { padding: 24px; }
+  body.item-233 .kinetic-auth__benefits-title { font-size: 22px; }
+}

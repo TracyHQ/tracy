@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1403-emdash-mcp-prewarm",
+  "kind": "fix",
+  "title": "An EmDash agent's pre-warm also warms the site's MCP road (one read-only call that needs no argument), on a log line of its own; other CMSes never exec",
+  "pr": 1403,
+  "area": "site-tools/prewarm",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Create an agent on an EmDash site whose browser said hello, with an exec that records its input.",
+    "S2: The same on a WordPress site."
+  ],
+  "expect": [
+    "S1: the two door reads as before, and one exec whose stdin is tools/call schema_list_collections with no argument; an answer it cannot read is one warning of its own.",
+    "S2: no exec."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/index.ts (prewarm, warmEmdash)"
+  },
+  "evidence": "bench v7 (todo-agent-v7.md): an EmDash agent's first MCP call after a container start paid 20–40 s; the pre-warm read only through the Apply door, which EmDash reads do not use",
+  "fence": "The pre-warm stays a courtesy: not awaited, at most once per site per five minutes, a failure is one log line",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "packages/tools/tracy-site-tools/test/prewarm.test.mjs"],
+    "tests": ["an EmDash agent also warms the site's MCP road", "a warm that fails is one log line"]
+  }
+}

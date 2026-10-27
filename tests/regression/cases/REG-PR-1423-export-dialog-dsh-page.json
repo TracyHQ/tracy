@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1423-export-dialog-dsh-page",
+  "kind": "fix",
+  "title": "Export site as ZIP from the '…' menu lands on the ZIP flow of the Publish tab (the dialog is gone): through My Sites' real menu action, once, and the ZIP step runs Prepare, Send code and Download; the backup download dialog focuses itself on dsh's React 18",
+  "pr": 1423,
+  "area": "site-backup/export-zip",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With the real My Sites row menu and its action (site-actions.ts), choose Export site as ZIP for an Owner's site.",
+    "S2: Then choose Publish for another site, and again Export site as ZIP followed by the tab header's site picker to another site.",
+    "S3: On the ZIP step press Prepare ZIP, then Send code; type five digits, then six; press Download.",
+    "S4: On React 18, open the Backup download dialog and read the focused element."
+  ],
+  "expect": [
+    "S1: the side card opens tracy:site-publish with meta { siteKey, publishEntry: 'zip' }, and the wizard shows data-publish-kind=\"zip\" on data-publish-step=\"zip\".",
+    "S2: the other site's wizard starts on data-publish-step=\"kind\" both times, never on the ZIP flow again.",
+    "S3: the stage goes confirm, ready, code; Download stays disabled with five digits and is enabled with six; then downloaded.",
+    "S4: the dialog itself holds focus."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-my-sites/src/client/site-actions.ts, packages/site/tracy-my-sites/src/client/more.tsx, packages/site/tracy-site-tabs/src/client/index.tsx, packages/core/tracy-core/src/site-tabs/publish/PublishWizard.tsx, packages/core/tracy-core/src/site-tabs/publish/ZipStep.tsx, packages/core/tracy-core/src/site-tabs/DownloadBackupDialog.tsx",
+    "dom": "[data-publish-wizard][data-publish-kind][data-publish-step], [data-export-stage], [data-export-start], [data-export-send-code], [data-export-download], [data-download-backup]",
+    "tool": "node --test browser test of the Publish tab with the real My Sites menu, the ZIP step DOM test (jsdom), and the backup download dialog test bundled on dsh's React 18"
+  },
+  "evidence": "Measured on dev 17/10/2026 after #1421: the dialog was 1248px wide at 1280 (later sheets' `.max-w-[calc(100%-2rem)]` beat My Sites' `sm:max-w-lg`), and Base UI focused the Export details trigger 18ms after the menu click: dsh runs React 18.3.1, which drops the `ref` given to tracy-ui's DialogContent, so `initialFocus={ref}` resolved to null and fell back to the first tabbable control. The local tests had passed on React 19 with one stylesheet.",
+  "fence": "Browser fixture with the plugin's real apply() and My Sites' real menu action, API doors stubbed; the ZIP step in jsdom with the export doors stubbed; English only. The 512px dialog width and its focus on the dsh page have no counterpart since Export became a step of the Publish tab (23/10/2026)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-site-tabs/test/e2e/site-publish-screen.test.mjs",
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs",
+      "packages/site/tracy-site-tabs/test/e2e/backup-download-dialog.test.mjs"
+    ],
+    "tests": [
+      "\"Export site as ZIP\" lands on the ZIP flow once; Publish of another site and the site picker start at the choice",
+      "ZIP: Prepare, Send code, then Download only once six digits are typed, and Downloaded",
+      "opening the backup download dialog focuses the dialog, not its first button"
+    ]
+  }
+}

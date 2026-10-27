@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d51a3a30-965c-427e-9e40-ff177786889f",
+  "status": "complete",
+  "name": "Vetric",
+  "url": "https://styles.refero.design/style/d51a3a30-965c-427e-9e40-ff177786889f",
+  "sourceWebsite": "https://vetric.io",
+  "extractedAt": "2026-06-03T19:52:03.372Z",
+  "capturedAt": "2026-10-08T05:17:56.823587+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Iridescent prism refracting clarity — a white room with one glass diamond that throws pink, blue, yellow, and green light across every surface.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c357d578-8e06-4527-9afe-2ed236428b5a.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d31b1e1e-d11d-4f69-aca1-7d260c969ca6.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/14b02aa6-a607-4755-b734-df7463f2d626.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/11f1b157-3a9a-4bed-9880-21f729dec91a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/180a21fd-c5fd-4070-ae67-aa69bc688d47.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "fae1c5164b19658d9d43e49c85ff0ae4cf56aeeb811715cfb348d68d0bb1cf57",
+      "bytes": 19348
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c293816bfcd3e8a447609bec929513f3b303c24500f3e4f5274c5935e54ac42c",
+      "bytes": 64621
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f6dac98e431a12169adcf6eb080172f5b04e824c9fe550b87ff5b7c05b919e6a",
+      "bytes": 16520
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0f347892f5dc9b77e41b83955c14c49a37ffb1fdbad9caebca733c328b3a9813",
+      "bytes": 12155
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b37aeaec6147721421c42cef4b3571c5b938d78fb213b97f3e443a25dfa43077",
+      "bytes": 12932
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "aac02ed8628c72fd9a7228902f34efe64088a80210f37b3c2b89c80177839bf9",
+      "bytes": 3779
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7823736c1ce5f5772551891891ee4eb2fad87ac37ac682afcd3de63c1f9e417d",
+      "bytes": 699
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f1145624195db8fe5b992c87a8bc7b0eb56fa1a50aa1f800970aa6c743b3d3f2",
+      "bytes": 801
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "33a4112da84fdb3689bad9d8aed4a0566bfc284c10f66b986e8ec1a42fdbaf3d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3c4a20a350892a2b99a9330470c07e78c388b3d8f445add19c7e3714dfd79e2c",
+      "bytes": 44985
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "85ac826e5207ca0097e9d638aec2b2bc8aa7aeb68147702dc1fe87fa967f3171",
+      "bytes": 23800
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "de0fb205f6ab3480cd3fa609c75e8cf137d72cbc6977876a6ecb97d09dfebf0a",
+      "bytes": 51170
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d8c2fd5d465cbf8979cad548812c64c3aed23e30ee6ba51f3103d304ebc57e40",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "87fa78713152bc0773a0f085c733a6b7822f2ad9a826d3b66b928efd519d3f9e",
+      "bytes": 1611
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3e62ea2f6f3b913c62d7fea78e75bec7af6585f037445f5fa1214ec9c8ad8600",
+      "bytes": 2265
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "7eed2626-ab11-472c-b04a-603476ff8957",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "8875b14e-c59a-492f-8780-8027a480f21c",
+    "8e9e585f-5ad4-4273-8418-e1f82cdb51cf",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "b5fdba21-fd4d-427e-b551-1e22c51e42db",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "d51a3a30-965c-427e-9e40-ff177786889f",
+    "d5ed8712-0e42-4c6c-83b1-b3d7f27d1d10",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a"
+  ]
+}

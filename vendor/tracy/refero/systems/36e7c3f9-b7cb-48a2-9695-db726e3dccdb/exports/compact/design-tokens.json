@@ -1,0 +1,44 @@
+{
+  "color": {
+    "photocopy-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Photocopy Black — Display type, sidebar text, structural borders, image outlines, header bands — the ink"
+    },
+    "newsprint-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Newsprint White — Primary canvas, card surfaces, text on black bands"
+    },
+    "muted-ash": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Muted Ash — Input placeholder text, form field borders, secondary metadata"
+    },
+    "highlighter-yellow": {
+      "$value": "#ffff01",
+      "$type": "color",
+      "$description": "Highlighter Yellow — Accent bands, feature name callouts, section dividers — the highlighter drag that breaks the monochrome"
+    },
+    "link-cobalt": {
+      "$value": "#2b4dff",
+      "$type": "color",
+      "$description": "Link Cobalt — Rotated category labels and inline links between editorial blocks — the only chromatic voice besides yellow"
+    }
+  },
+  "font": {
+    "archivo-black": {
+      "$value": "Archivo Black",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system — display masthead fills 252px viewport, captions drop to 12px, no other family exists. Negative tracking tightens at scale, positive tracking opens at body size"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.infringe.com",
+      "siteName": "INFRINGE",
+      "extractedAt": "2026-06-03T20:29:56.090Z",
+      "variant": "compact"
+    }
+  }
+}

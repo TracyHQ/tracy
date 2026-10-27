@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1333-ops-measured-on-line",
+  "kind": "fix",
+  "title": "Road to live, Design system: every measured rule row shows its own 'Measured on <version>, <date>, <machine>' sub line, passed built-site rules are listed, rules not measured yet stay in their group without it",
+  "pr": 1333,
+  "area": "ops/road-to-live/design-system",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test --test-name-pattern 'JA Nova 1.0.6' apps/tracy-web/test/template-design-system-readiness.test.mjs.",
+    "S2: Run node --test --test-name-pattern 'every measured rule row' packages/web/tracy-harness/test/template-presses.test.mjs."
+  ],
+  "expect": [
+    "S1: passes: summarizeDsReadiness on JA Nova 1.0.6 gives ROLE-1 (must fix) measuredOn '1.0.6, 2026-10-13, imac', measuredPassed SCREEN-1, CON-1, UNDO-1, FONT-1 with the same stamp, IDENT-1, MODE-1, MODE-2 unmeasured with none.",
+    "S2: passes: RoadToLive with ds-live-failing shows [data-road-rule-measured] 'Measured on 1.0.6, 2026-10-13, imac' under ROLE-1, SCREEN-1 and CON-1, a Passed group, and no such line in Not measured yet."
+  ],
+  "selectors": {
+    "summary": "apps/tracy-web/src/lib/template-design-system-readiness/severity.js summarizeDsReadiness",
+    "panel": "[data-road-step=design-system] [data-road-rule] [data-road-rule-measured]"
+  },
+  "evidence": "Dev 14/10 after #1321: JA Nova j6 1.0.6 showed 'Measured on 1.0.6, 2026-10-13, imac' only inside the Paste into Claude Code prompt; a DOM scan found no sub line on any rule row (ds-live-failing replaced the step-level line, passed rules had no row)",
+  "fence": "The stamp is read from each rule's own result; a rule not measured yet never shows Measured on",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs",
+      "packages/web/tracy-harness/test/template-presses.test.mjs"
+    ]
+  }
+}

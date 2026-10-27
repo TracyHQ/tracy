@@ -1,0 +1,325 @@
+/* ==========================================================================
+ * page-219.css — Integrations page (Itemid 219) design-review overlay.
+ * Loaded LAST via index.php per-page mechanism (auto cache-busted via filemtime).
+ * ALL rules scoped to body.item-219 to avoid leaking.
+ * References: .pen frame ONnhu (dark) · wXv0L (light) · O5Qz43 (mobile-dark) · ORi1N (mobile-light)
+ * ========================================================================== */
+
+/* =========================================================================
+ * 0. STRUCTURAL: remove t4-main-body top padding so masthead bg starts at nav.
+ *    The masthead section has its own padding-top (66px), so content still
+ *    clears the sticky nav. Only applies to this page.
+ * ========================================================================= */
+body.item-219 #t4-main-body {
+    padding-top: 0 !important;
+}
+
+/* =========================================================================
+ * 1. PAGE MASTHEAD (acm-page-masthead-208)
+ * ========================================================================= */
+
+/* Background override: radial gradient replaces the hx-grid-bg lines pattern. */
+body.item-219 .acm-page-masthead .hx-section {
+    background-color: #161B18;
+    background-image: radial-gradient(ellipse 150% 120% at 50% 0%,
+        rgba(163, 230, 53, 0.059) 0%,
+        #161B18 55%);
+    border-bottom: 1px solid #232A27;
+    padding: 66px 0 58px;
+}
+
+/* Light mode masthead bg */
+html:not(.t4-dark) body.item-219 .acm-page-masthead .hx-section {
+    background-color: #F2F5EE;
+    background-image: radial-gradient(ellipse 150% 120% at 50% 0%,
+        rgba(163, 230, 53, 0.059) 0%,
+        #F2F5EE 55%);
+    border-bottom: 1px solid #E4E8E0;
+}
+
+/* H1: design shows 46px / lh 1.08 / ls -1.3px (vs block default 52px/-1.5px/1.04) */
+body.item-219 .acm-page-masthead .hx-h1 {
+    font-size: 46px;
+    line-height: 1.08;
+    letter-spacing: -1.3px;
+}
+
+body.item-219 .acm-page-masthead .hx-mast-sub {
+    max-width: 600px;
+    line-height: 1.6;
+    font-size: 17px;
+}
+
+/* The block renders <p class="hx-eyebrow"> with text "INTEGRATIONS" (set via DB). */
+body.item-219 .acm-page-masthead .hx-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(163, 230, 53, 0.078);
+    border: 1px solid rgba(163, 230, 53, 0.251);
+    border-radius: 100px;
+    padding: 5px 12px;
+    font-size: 11.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #A3E635;
+    margin: 0 0 16px;
+}
+body.item-219 .acm-page-masthead .hx-eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #A3E635;
+    flex-shrink: 0;
+}
+/* Light mode: design-system §A pins the PILL bg/border to FIXED brand lime in
+   both themes (inherited from the base rule above — do NOT re-tint to olive).
+   Only the label text + dot flip to the theme primary (olive in light). */
+html:not(.t4-dark) body.item-219 .acm-page-masthead .hx-eyebrow {
+    color: #4D7C0F;
+}
+html:not(.t4-dark) body.item-219 .acm-page-masthead .hx-eyebrow::before {
+    background: #4D7C0F;
+}
+
+/* Gap between eyebrow and h1: design gap 16px (between all masthead children) */
+body.item-219 .acm-page-masthead .hx-mast-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0; /* gaps set via margins below to be precise */
+}
+
+/* =========================================================================
+ * 2. INTEGRATION GRID (acm-clients-209, style-2)
+ * The shared style.css already sets most layout; fix gaps here.
+ * ========================================================================= */
+
+/* card-body flex-grow: pushes arrow to far-right (fill_container in design) */
+body.item-219 .acm-clients.style-2 .acm-clients-card-body {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Light mode: icon img filter to approximate olive (#4D7C0F) from lime (#A3E635).
+   Color-match: lime brightness ≈0.72 → olive ≈0.29 → ratio ~0.42 */
+html:not(.t4-dark) body.item-219 .acm-clients.style-2 .acm-clients-mark img {
+    filter: brightness(0.42) saturate(1.3);
+}
+
+/* Icon TILE background stays the lime brand tint (#A3E63520) in BOTH themes.
+   .pen wXv0L/ONnhu both render bg-[#A3E63520]; the shared block ties the tile
+   bg to --clients-primary which FLIPS to olive in light → leak. Pin to lime.
+   (Glyph itself still flips olive via the brightness filter above — correct.) */
+body.item-219 .acm-clients.style-2 .acm-clients-mark {
+    background: rgba(163, 230, 53, 0.125);
+}
+
+body.item-219 .acm-clients.style-2 .hx-section {
+    background: var(--bg, #0A0D0C);
+}
+html:not(.t4-dark) body.item-219 .acm-clients.style-2 .hx-section {
+    background: var(--bg, #FBFCFA);
+}
+
+/* =========================================================================
+ * 3. HIDE features-intro (module 210 — not in Integrations design)
+ * ========================================================================= */
+body.item-219 .acm-features-intro {
+    display: none !important;
+}
+
+/* =========================================================================
+ * 4. CTA BAR (acm-cta-211, variant=bar → class cta-bar)
+ * ========================================================================= */
+
+/* Section outer — remove standard 72px padding-block, set BottomWrap dims */
+body.item-219 .acm-cta.cta-bar .hx-section {
+    padding-top: 0;
+    padding-bottom: 72px;
+    background: #0A0D0C;
+}
+html:not(.t4-dark) body.item-219 .acm-cta.cta-bar .hx-section {
+    background: #FBFCFA;
+}
+
+body.item-219 .acm-cta.cta-bar .hx-container {
+    max-width: 1240px;
+    padding-inline: 32px;
+}
+
+body.item-219 .acm-cta.cta-bar .hx-cta-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 20px;
+    row-gap: 0;
+    align-items: center;
+    text-align: left;
+    background: #161B18;
+    border: 1px solid #232A27;
+    border-radius: 16px;
+    padding: 32px;
+    /* Reset any inherited cta-card radial gradient */
+    background-image: none;
+}
+html:not(.t4-dark) body.item-219 .acm-cta.cta-bar .hx-cta-inner {
+    background: #F2F5EE;
+    border-color: #E4E8E0;
+    background-image: none;
+}
+
+body.item-219 .acm-cta.cta-bar .hx-cta-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: normal;
+    line-height: 1.3;
+    color: #F2F5F3;
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0 0 4px;
+}
+html:not(.t4-dark) body.item-219 .acm-cta.cta-bar .hx-cta-title {
+    color: #10140F;
+}
+
+body.item-219 .acm-cta.cta-bar .hx-cta-sub {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #9AA6A1;
+    max-width: none;
+    margin: 0;
+    grid-column: 1;
+    grid-row: 2;
+}
+html:not(.t4-dark) body.item-219 .acm-cta.cta-bar .hx-cta-sub {
+    color: #46514B;
+}
+
+body.item-219 .acm-cta.cta-bar .hx-cta-actions {
+    margin: 0;
+    grid-column: 2;
+    grid-row: 1 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+}
+
+body.item-219 .acm-cta.cta-bar .hx-cta-btn-primary {
+    font-size: 14.5px;
+    font-weight: 600;
+    padding: 12px 22px;
+    border-radius: 9px;
+    background: #A3E635;
+    color: #0A0D0C;
+    white-space: nowrap;
+}
+body.item-219 .acm-cta.cta-bar .hx-cta-btn-primary:hover {
+    background: #BCF25A;
+    color: #0A0D0C;
+}
+html:not(.t4-dark) body.item-219 .acm-cta.cta-bar .hx-cta-btn-primary {
+    background: #4D7C0F;
+    color: #FFFFFF;
+}
+html:not(.t4-dark) body.item-219 .acm-cta.cta-bar .hx-cta-btn-primary:hover {
+    background: #3F6A0A;
+    color: #FFFFFF;
+}
+
+/* =========================================================================
+ * 5. MOBILE (≤ 767.98px) — strict per-frame (O5Qz43 dark / ORi1N light)
+ * ========================================================================= */
+@media (max-width: 767.98px) {
+
+    /* Masthead */
+    body.item-219 .acm-page-masthead .hx-section {
+        padding: 44px 0 38px;
+    }
+    body.item-219 .acm-page-masthead .hx-container {
+        padding-inline: 24px;
+    }
+    body.item-219 .acm-page-masthead .hx-h1 {
+        font-size: 30px;
+        line-height: 1.1;
+        letter-spacing: -1px;
+    }
+    body.item-219 .acm-page-masthead .hx-mast-sub {
+        font-size: 15px;
+    }
+
+    body.item-219 .acm-clients.style-2 .hx-section {
+        padding: 40px 0 0;
+    }
+    body.item-219 .acm-clients.style-2 .hx-container {
+        padding-inline: 20px;
+    }
+    body.item-219 .acm-clients.style-2 .acm-clients-group {
+        margin-bottom: 36px;
+    }
+    body.item-219 .acm-clients.style-2 .acm-clients-card {
+        padding: 16px 18px;
+    }
+
+    /* CTA bar → vertical layout on mobile */
+    body.item-219 .acm-cta.cta-bar .hx-section {
+        padding-top: 8px;
+        padding-bottom: 56px;
+    }
+    body.item-219 .acm-cta.cta-bar .hx-container {
+        padding-inline: 20px;
+    }
+    body.item-219 .acm-cta.cta-bar .hx-cta-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 28px;
+        border-radius: 16px;
+    }
+    body.item-219 .acm-cta.cta-bar .hx-cta-title {
+        grid-column: unset;
+        grid-row: unset;
+        margin-bottom: 4px;
+    }
+    body.item-219 .acm-cta.cta-bar .hx-cta-sub {
+        grid-column: unset;
+        grid-row: unset;
+    }
+    body.item-219 .acm-cta.cta-bar .hx-cta-actions {
+        grid-column: unset;
+        grid-row: unset;
+        width: 100%;
+        justify-content: center;
+    }
+    body.item-219 .acm-cta.cta-bar .hx-cta-btn-primary {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    /* Dark mobile masthead uses t4-dark hook (body class added before mobile query) */
+    html.t4-dark body.item-219 .acm-page-masthead .hx-section {
+        background-color: #161B18;
+        background-image: radial-gradient(ellipse 160% 110% at 50% 0%,
+            rgba(163, 230, 53, 0.059) 0%,
+            #161B18 55%);
+    }
+    /* Light mobile masthead */
+    html:not(.t4-dark) body.item-219 .acm-page-masthead .hx-section {
+        background-color: #F2F5EE;
+        background-image: radial-gradient(ellipse 160% 110% at 50% 0%,
+            rgba(163, 230, 53, 0.059) 0%,
+            #F2F5EE 55%);
+    }
+}
+
+/* =========================================================================
+ * 6. CANVAS PAGE — prevent double padding from .hx-article wrapper
+ * ========================================================================= */
+body.item-219 .kinetic-canvas-page .moduletable {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}

@@ -1,0 +1,38 @@
+:root {
+  /* Colors */
+  --color-ember-orange: #ff3d00;
+  --color-pulse-violet: #5900cc;
+  --color-cobalt-blue: #2835f8;
+  --color-crimson: #ff003d;
+  --color-caution-yellow: #ffff00;
+  --color-voltage-green: #05ff00;
+  --color-electric-blue: #1b73e6;
+  --color-sky-cyan: #00c2ff;
+  --color-forest: #008163;
+  --color-lime-pulse: #3eea5a;
+  --gradient-lime-pulse: linear-gradient(rgba(0, 0, 0, 0) calc(100% - 1px), rgb(62, 234, 90));
+  --color-tangerine: #ff5c00;
+  --color-signal-red: #ee2526;
+  --color-ink: #0e0e0e;
+  --color-bone-cream: #f4e9e1;
+  --color-paper-white: #ffffff;
+  --color-charcoal: #242320;
+  --color-sage: #cee4cd;
+  --color-blush: #e4d0cd;
+  --color-sand: #e7e4d0;
+  --color-sky-tint: #cddae4;
+  --color-celadon: #ddded3;
+  --color-olive-slate: #444639;
+  --color-forest-slate: #374936;
+  --color-cocoa-slate: #4a3937;
+  --color-plum-slate: #493648;
+
+  /* Typography — Font Families */
+  --font-stabilgrotesk: 'StabilGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-optimistic-text: 'Optimistic Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-klarheitkurrent: 'KlarheitKurrent', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-htq-waldenburg-fettschmal: 'HTQ-Waldenburg-FettSchmal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-rightgrotesk: 'RightGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-moderat: 'Moderat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-courier-new: 'Courier New', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

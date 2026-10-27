@@ -1,0 +1,6 @@
+# Insert Tracy's left-column row; the bundle that loads it must also disable `ui-sidebar`,
+# because both register the single `sidebar` slot AND declare its five child slots — a second
+# declaration of a child slot throws at registration.
+- insert:
+    - id: tracy-sidebar
+      name: '@tracy/dsh-sidebar'

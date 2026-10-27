@@ -1,0 +1,31 @@
+---
+/**
+ * Type specimen of the design-system kit (source: `.tracy-fixture .type-stack`). The four lines
+ * are CMS fields of `design_system` (specimen_*); the scale they demonstrate is the token contract
+ * itself (eyebrow / display / lead / body from tokens.css), so nothing here is measured by hand.
+ */
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  eyebrow?: string | null
+  heading?: string | null
+  lede?: string | null
+  body?: string | null
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: { eyebrow?: string; heading?: string; lede?: string; body?: string }
+}
+const { eyebrow, heading, lede, body, stamp, fields } = Astro.props
+const none = {}
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+---
+
+<div class="flex flex-col gap-3">
+	{eyebrow && <span class="eyebrow mb-0" {...at("eyebrow")}>{eyebrow}</span>}
+	{heading && <p class="h-hero h-hero--specimen text-fg" {...at("heading")}>{heading}</p>}
+	{lede && <p class="lead lead--specimen mt-2 text-fg-2 tracking-normal" {...at("lede")}>{lede}</p>}
+	{body && <p class="text-[17px] leading-[1.47] text-fg-meta" {...at("body")}>{body}</p>}
+</div>

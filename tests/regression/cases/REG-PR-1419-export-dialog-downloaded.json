@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1419-export-dialog-downloaded",
+  "kind": "fix",
+  "title": "Export site as ZIP and Backup download dialogs end on a disabled Downloaded button, accept digits only, and keep non-code refusals out of the code step",
+  "pr": 1419,
+  "area": "site-backup/export-zip",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Drive the Export site as ZIP dialog at 360px through Prepare ZIP, Send code, a six-digit code and Download.",
+    "S2: Drive the Backup download dialog through Send code, a six-digit code and Download.",
+    "S3: In either dialog type letters into the code field.",
+    "S4: Answer POST …/download with a refusal that is not about the code (EXPORT_NOT_READY).",
+    "S5: Fail Send code once while the ZIP is ready, then press Try again."
+  ],
+  "expect": [
+    "S1: the dialog shows 'Download started.', the primary button reads Downloaded and is disabled, the code field is gone, and every part stays inside the 360px viewport.",
+    "S2: same end state: Downloaded disabled, no code field.",
+    "S3: no letter is accepted and Download stays disabled.",
+    "S4: the destructive failed alert with Try again / Close shows, not the inline wrong-code text.",
+    "S5: the code door is called again and no new POST /backup is made."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-my-sites/src/client/ExportSiteDialog.tsx, packages/core/tracy-core/src/site-tabs/DownloadBackupDialog.tsx",
+    "tool": "node --test browser tests of both dialogs"
+  },
+  "evidence": "Before this change both dialogs returned to the Send code step after the download link was handed to the browser, and every download refusal read as a wrong code",
+  "fence": "Browser tests against the built plugin bundles with the API doors stubbed; the real code email and download on a stand are not exercised",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs",
+      "packages/site/tracy-site-tabs/test/e2e/backup-download-dialog.test.mjs"
+    ],
+    "tests": [
+      "ZIP: Prepare, Send code, then Download",
+      "ZIP: a non-code refusal of the download",
+      "ZIP: retrying a failed Send code",
+      "a backup download stays complete after the browser receives its link",
+      "a non-code refusal enters the destructive download-failed state",
+      "retrying a failed Send code request reuses the existing export"
+    ]
+  }
+}

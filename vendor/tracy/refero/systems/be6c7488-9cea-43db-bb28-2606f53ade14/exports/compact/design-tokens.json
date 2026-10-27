@@ -1,0 +1,79 @@
+{
+  "color": {
+    "cyan-signal": {
+      "$value": "#17d5ff",
+      "$type": "color",
+      "$description": "Cyan Signal — Primary action background, active nav, the single brand chromatic — filled CTAs and selected states. Electric against matte white, cool enough to feel like light rather than pigment"
+    },
+    "cyan-depth": {
+      "$value": "#13b1d4",
+      "$type": "color",
+      "$description": "Cyan Depth — Blue wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "ink-black": {
+      "$value": "#141a20",
+      "$type": "color",
+      "$description": "Ink Black — Dark section backgrounds (platform showcase bands, footer), filled dark buttons. Near-black with a cool blue undertone that keeps it on-brand rather than neutral"
+    },
+    "carbon": {
+      "$value": "#0a0e12",
+      "$type": "color",
+      "$description": "Carbon — Primary text, heading color, strongest dark neutral for text on light surfaces and borders on dark surfaces"
+    },
+    "slate": {
+      "$value": "#23313b",
+      "$type": "color",
+      "$description": "Slate — Secondary text, footer borders, muted UI elements. Cool gray-blue that bridges between the dark ink and mid-grays"
+    },
+    "graphite": {
+      "$value": "#3d4751",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text, outlined action borders, link colors. The mid-tone that carries most secondary information"
+    },
+    "steel": {
+      "$value": "#4c5864",
+      "$type": "color",
+      "$description": "Steel — Navigation borders, body text secondary level, card text. Lighter mid-gray for tertiary UI structure"
+    },
+    "fog": {
+      "$value": "#a9b2bc",
+      "$type": "color",
+      "$description": "Fog — Muted helper text, disabled states, low-emphasis borders. The softest mid-gray for de-emphasized content"
+    },
+    "cloud": {
+      "$value": "#dfe4ea",
+      "$type": "color",
+      "$description": "Cloud — Subtle background fills, nav hover states, light surface layer above the white canvas"
+    },
+    "paper": {
+      "$value": "#fafcfd",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, primary background. The near-white with a barely-perceptible cool tint — cleaner than pure white, warmer than #fff"
+    },
+    "midnight": {
+      "$value": "#192028",
+      "$type": "color",
+      "$description": "Midnight — Dark card surface, elevated dark panels above #141a20 backgrounds. Used for layered dark UI"
+    }
+  },
+  "font": {
+    "abcrepro": {
+      "$value": "ABCRepro",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI text. Weight 400 for body and descriptions, 500 for emphasized body and subheadings, 700 for headings and buttons. The custom neo-grotesque has tight apertures and mechanical terminals; at display sizes (40-72px) the tight tracking (-0.05em) and 1.00 leading make headlines feel architectural rather than decorative. At body sizes (16px) it reads as clean, slightly condensed, editorial — closer to a European tech product than a warm consumer brand."
+    },
+    "abcrepromono": {
+      "$value": "ABCReproMono",
+      "$type": "fontFamily",
+      "$description": "Monospace accent for code-like or technical labels. Used sparingly — only when mechanical/technical voice is needed."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://vimeo.com",
+      "siteName": "Vimeo",
+      "extractedAt": "2026-06-03T20:47:19.106Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "styles": {
+    "css": "html { color-scheme: light dark; }\nhtml[data-theme=\"dark\"] { --wp--preset--color--bg: #0f141c; }"
+  },
+  "templateParts": [{ "name": "header", "area": "header" }]
+}

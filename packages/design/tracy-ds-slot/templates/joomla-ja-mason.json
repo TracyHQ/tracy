@@ -1,0 +1,362 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-mason",
+  "release": "quickstart/ja-mason/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "display": "h1",
+    "heading": "div.features-item.col-xs-12 h2",
+    "body": "div.features-item.col-xs-12 p",
+    "section": "#Section89"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 90px",
+    "displayFace": "Archivo 700, tracking -0.017em",
+    "heading": "first section heading: 40px",
+    "body": "first body paragraph",
+    "section": "first padded full-width section, padding-top 144px"
+  },
+  "keepScopes": [".acm-slideshow"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#000000",
+    "--fg": "#bbbbbb",
+    "--fg-2": "#ffffff",
+    "--accent": "#ffc400",
+    "--accent-hover": "#ffffff",
+    "--surface": "#1c1c1c",
+    "--meta": "#888888",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#252525",
+    "--muted": "#555555",
+    "--font-display": "\"Archivo\", sans-serif",
+    "--font-body": "\"Archivo\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#000000",
+      "fg": "#bbbbbb",
+      "fg-2": "#ffffff",
+      "accent": "#ffc400",
+      "accent-hover": "#ffffff",
+      "surface": "#f7f7f7",
+      "meta": "#888888",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#252525",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#000000",
+      "surface": "#1c1c1c",
+      "fg": "#bbbbbb",
+      "fg-2": "#ffffff"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#252525",
+      "danger": "#eb4c49",
+      "surface-warm": "#f9f9f9",
+      "bg": "#080808",
+      "border-soft": "#f4f4f4",
+      "border": "#181818"
+    },
+    {
+      "surface": "#151515",
+      "surface-warm": "#eeeeee",
+      "bg": "#0c0c0c",
+      "border-soft": "#e0e2e3",
+      "border": "#1c1c1c"
+    },
+    {
+      "surface-warm": "#f5f5f5",
+      "surface": "#1d1d1d",
+      "border-soft": "#f2f2f2",
+      "border": "#262626"
+    },
+    {
+      "surface-warm": "#f7f7f7",
+      "surface": "#222222",
+      "border-soft": "#e1e1e1"
+    },
+    {
+      "surface-warm": "#f9f2f4",
+      "surface": "#202020"
+    },
+    {
+      "surface": "#1b1b1b",
+      "surface-warm": "#f0f0f0"
+    },
+    {
+      "surface-warm": "#fafafa"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (63 line colours, 71 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Section89"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": ".t3-wrapper p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t3-wrapper p, .t3-wrapper li",
+    "heading": ".t3-wrapper :is(h1, h2, h3, h4)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 13 tried (byte 7856); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#252525",
+      "uses": 140,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#1c1c1c",
+      "distance": 16
+    },
+    {
+      "hex": "#eb4c49",
+      "uses": 92,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#d9534f",
+      "distance": 20
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 70,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 5
+    },
+    {
+      "hex": "#151515",
+      "uses": 69,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#1c1c1c",
+      "distance": 12
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 50,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 24
+    },
+    {
+      "hex": "#080808",
+      "uses": 28,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#000000",
+      "distance": 14
+    },
+    {
+      "hex": "#f5f5f5",
+      "uses": 20,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 12
+    },
+    {
+      "hex": "#1d1d1d",
+      "uses": 20,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#1c1c1c",
+      "distance": 2
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 14,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 8
+    },
+    {
+      "hex": "#0c0c0c",
+      "uses": 12,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#000000",
+      "distance": 21
+    },
+    {
+      "hex": "#f4f4f4",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 18
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 8,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#181818",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#252525",
+      "distance": 23
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 15
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 13
+    },
+    {
+      "hex": "#222222",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#1c1c1c",
+      "distance": 10
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#202020",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#1c1c1c",
+      "distance": 7
+    },
+    {
+      "hex": "#1b1b1b",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#1c1c1c",
+      "distance": 2
+    },
+    {
+      "hex": "#1c1c1c",
+      "uses": 4,
+      "kind": "line",
+      "role": "border",
+      "near": "#252525",
+      "distance": 16
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 20
+    },
+    {
+      "hex": "#262626",
+      "uses": 4,
+      "kind": "line",
+      "role": "border",
+      "near": "#252525",
+      "distance": 2
+    },
+    {
+      "hex": "#fafafa",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 3
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on the 1.0.1 build stood up from its own zip (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-mason-j6): first 8/12, the only text flagged being T3's 'powered by' link in the footer, set at font 0/0 (Bootstrap .text-hide) behind a logo drawn as a background, which nobody sees: flow.mjs no longer measures text set under 1 px (on the default page either); contract unchanged; then 12/12, controls 0, kept 0, follows 83-100%, no text worse than the template's own; eye check on Moxie, MotherDuck, Toggl Track, Apple desktop + phone passed (its line icons stay the template's yellow, drawn for its dark page, on a light system's page); earlier: measured 11/10/2026 (round 2) on quickstart/ja-mason/j6 1.0.0, stylesheets tokenized as the next release (1.0.1) ships them (tasks/evidence/ds-contracts-r2a-2026-10-11/templates/ja-mason-j6): 12/12, default unchanged, no text made less readable than the template's own under the systems tried, 79% or more of the page follows; the hero slideshow is a kept band (keepText); under light systems the white logo and the black striped eyebrow discs, drawn for the dark page, are inverted (sideRules); checked by eye on the MotherDuck, Apple and Toggl Track screenshots",
+  "contrastNote": "every text of the page's wrapper (a home page built of modules has no #t3-mainbody), each judged against itself on the default page (batch 2's flow.mjs)",
+  "sideRules": {
+    "light": {
+      ".logo-img": {
+        "filter": "invert(1)"
+      },
+      ".sub-heading::after": {
+        "filter": "invert(1)"
+      }
+    }
+  },
+  "keepNote": "kept: the hero slideshow, whose white titles sit on its photographs; it paints no text colour of its own, so it takes the template page text back (keepText, #bbbbbb as the released page computes it)",
+  "sideNote": "under a light worn page the template's pictures drawn for its dark page (the white logo, the black striped disc behind each section eyebrow) are inverted, as its own light variant draws them",
+  "keepDefaults": {
+    "--body-text-color": "#bbbbbb"
+  },
+  "keepText": [".acm-slideshow"],
+  "minVersion": {
+    "quickstart/ja-mason/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-mason/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".acm-slideshow": {
+      "ground": "#1c1c1c",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "containerGutter": 136,
+  "containerGutterNote": "14/10/2026 (visual review): the features band's decorative picture (div.features-image) hangs 120px off the container's right edge; under Notion, Apple, ElevenLabs and Stripe it was cut at the window's edge. The container keeps 136px from the window's edges instead of 32."
+}

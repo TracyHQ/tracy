@@ -1,0 +1,54 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#f2f1ed",
+      "$type": "color",
+      "$description": "Bone — Page background, large section canvases — the warm off-white that gives the system its paper-like editorial feel"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, elevated panels, light benefit cards — sits one step above Bone to create lift without shadows"
+    },
+    "cocoa": {
+      "$value": "#3b3429",
+      "$type": "color",
+      "$description": "Cocoa — Dark accent cards, inverted text blocks — warm near-black that softens pure ink and keeps dark sections feeling organic rather than digital"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, nav links, logo wordmark, hairline borders, hero backdrop"
+    },
+    "stone": {
+      "$value": "#646464",
+      "$type": "color",
+      "$description": "Stone — Secondary body copy, muted helper text, subdued descriptions"
+    },
+    "ash": {
+      "$value": "#b4aeac",
+      "$type": "color",
+      "$description": "Ash — Subtle link hover shadows, barely-there elevation hints"
+    }
+  },
+  "font": {
+    "goudy-old-style": {
+      "$value": "Goudy Old Style",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for headlines, section titles, product names, card titles, and editorial body — a classical Venetian serif that signals craft and heritage. The narrow weight range (400 only) and tight line-heights (1.05–1.08) let the type sit in dense, menu-like stacks. Letter-spacing of -0.012em tightens optical gaps in display sizes without losing the serif's elegance."
+    },
+    "system-sans-ui-chrome": {
+      "$value": "System Sans (UI chrome)",
+      "$type": "fontFamily",
+      "$description": "Inferred secondary face for navigation, buttons, captions, and dense utility text where serif would be illegible at small sizes. Kept restrained so the serif remains dominant."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://aplos.world",
+      "siteName": "Aplós",
+      "extractedAt": "2026-06-03T19:41:10.534Z",
+      "variant": "compact"
+    }
+  }
+}

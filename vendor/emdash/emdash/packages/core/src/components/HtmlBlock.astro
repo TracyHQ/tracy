@@ -1,0 +1,44 @@
+---
+/**
+ * Portable Text HTML block component
+ *
+ * Renders isolated blocks in a sandboxed frame with their CSS and JavaScript.
+ * Renders other blocks as inline HTML, sanitized to prevent XSS attacks.
+ */
+import { htmlBlockFields } from "@emdash-cms/admin/html-block";
+
+import { sanitizeContent } from "../utils/sanitize.js";
+import HtmlBlockFrame from "./HtmlBlockFrame.astro";
+
+export interface Props {
+	node: {
+		_type: "htmlBlock";
+		_key: string;
+		html: string;
+		css?: string;
+		js?: string;
+		isolated?: boolean;
+	};
+}
+
+const { node } = Astro.props;
+const { html, css = "", js = "", isolated } = htmlBlockFields(node ?? {});
+
+if (isolated ? !html.trim() && !css.trim() && !js.trim() : !html) {
+	return null;
+}
+---
+
+{
+	isolated ? (
+		<HtmlBlockFrame html={html} css={css} js={js} />
+	) : (
+		<div class="emdash-html-block" set:html={sanitizeContent(html)} />
+	)
+}
+
+<style>
+	.emdash-html-block {
+		margin: 1.5rem 0;
+	}
+</style>

@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-937-demo-banner-offered-only",
+  "kind": "fix",
+  "title": "The JoomlArt demo banner shows only on a demo whose template is on Design inspiration; demos with a card keep it",
+  "pr": 937,
+  "area": "badge/demo-banner",
+  "cms": ["jo"],
+  "needs": ["checkout", "playwright"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-web/test/build-with-tracy-demo.test.mjs apps/tracy-web/test/tracy-badge.test.mjs apps/tracy-web/test/badge-setting.test.mjs apps/tracy-web/test/bar-badge.test.mjs. Read the pass/fail counts and the three tests named 'the demo banner shows only on a template Design inspiration offers', 'the demo banner keeps showing when the template list cannot be read' and 'the list rides in the script; without one the script is unchanged'.",
+    "S2: Read the script this checkout serves, without a stand: node --input-type=module -e \"import {badgeRoutes} from './apps/tracy-web/src/badge/route.js'; const row=(t)=>({tag:'quickstart/'+t+'/j6',release:{name:'quickstart/'+t+'/j6',kind:'quickstart',github:'published',assets:[]},setting:{platform:'joomla',version:'1.0.0',template:t,label:t},inspiration:{blurb:'x'},inspiration_hidden:false,tracy:null,reason:null,fetched_at:null}); const app=badgeRoutes({config:{origin:'https://cowork.tracy.ai'},pool:{query:async(s)=>/quickstart_releases/.test(s)?{rows:[row('ja-kinetic'),{...row('ja-hidden'),inspiration_hidden:true}]}:{rows:[]}}}); const r=await app.fetch(new Request('https://cowork.tracy.ai/build-with-tracy-demo.js')); const s=await r.text(); console.log(r.status, r.headers.get('access-control-allow-origin'), /var OFFERED = (.*)/.exec(s)[1])\". Record the printed line.",
+    "S3: Fetch https://cowork.tracy.ai/api/templates and keep the list of templates[].id (the gallery production offers now). Check that ja-kinetic, ja-phio and ja-vega are on it and ja-titan, ja-aiga and ja-teline-v are not; if that changed, stop with BLOCKED and name which id moved (the probe refuses to run in that case).",
+    "S4: From the TCH checkout run: node tasks/evidence/demo-banner-offered/probe.mjs (it attaches to the chrome-watch CDP endpoint of the common setup, http://127.0.0.1:9222 or CDP_URL, opens its own contexts there, never closes a page or the browser, and prints {\"browser\":\"cdp ...\"} first) > $Q/probe.log 2>&1; record the exit code. It needs network access to *.demo.joomlart.com and cowork.tracy.ai and takes about 4 minutes; it opens one demo at a time with a 6 s pause (demo.joomlart.com blocks an address that opens many pages at once). If every demo in the log has an error containing ERR_CONNECTION or Timeout, stop with BLOCKED 'demo.joomlart.com unreachable'.",
+    "S5: Read the three run lines of $Q/probe.log (filtered, unfiltered, unpublished) and the last line (the checks). For each run and each of the six demos record template, served, tag, shown and href."
+  ],
+  "expect": [
+    "S1: 0 failures, and the three named tests pass.",
+    "S2: prints exactly: 200 * [\"ja-kinetic\"]  (a release unpublished from the gallery is not on the list).",
+    "S4: exit code 0.",
+    "S5 every run: each demo has served 1 and tag equal to its own template id (the page ran this checkout's script, not production's).",
+    "S5 filtered: offeredInScript equals the number of ids read in S3; ja-kinetic, ja-phio and ja-vega have shown true and href 'https://cowork.tracy.ai/design-inspiration?open=<id>&provider=JoomlArt'; ja-titan, ja-aiga and ja-teline-v have shown false and href null.",
+    "S5 unfiltered: offeredInScript null; all six demos have shown true.",
+    "S5 unpublished: offeredInScript is one less than in filtered; ja-kinetic has shown false; ja-phio and ja-vega have shown true; ja-titan, ja-aiga and ja-teline-v have shown false.",
+    "S5 last line: scriptCarriesList, everyDemoLoadedTheBranchScript, offeredShowLinked, notOfferedHidden, unreadableListShowsAll and unpublishedHidesOnlyIt are all true, and PASS is true."
+  ],
+  "selectors": {
+    "door": "GET /build-with-tracy-demo.js",
+    "list": "GET https://cowork.tracy.ai/api/templates templates[].id",
+    "host": "#build-with-tracy-demo",
+    "link": "#build-with-tracy-demo shadowRoot a.go[href]",
+    "script-list": "var OFFERED = <json> in the served script",
+    "probe": "tasks/evidence/demo-banner-offered/probe.mjs"
+  },
+  "evidence": "Scan of 05/10/2026 in Chrome over 169 JoomlArt demos: 61 carried the banner and 36 of them (ja-aiga ... ja-titan) had no card on cowork.tracy.ai, so the button opened the gallery on nothing. tasks/evidence/demo-banner-offered/ holds the scan and the probe run on unmodified develop a3c4a55a0, where all six demos keep the banner (PASS false).",
+  "fence": "inspirationTemplateIds (same templateCards as GET /api/templates) written into the script by badge/route.js, and the OFFERED check at the top of buildWithTracyScript; an unreadable list serves null and the banner draws as before."
+}

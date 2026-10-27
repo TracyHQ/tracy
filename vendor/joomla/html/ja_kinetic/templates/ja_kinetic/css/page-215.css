@@ -1,0 +1,24 @@
+/* ==============================================================
+   ja_kinetic — Home / Blueprint direction (item-215) overlay
+   All rules scoped to body.item-215 to prevent bleed onto
+   Terminal (214) / Signal (216). Auto-loaded via index.php
+   addCustomTag (loaded LAST, cache-busted by filemtime).
+   ============================================================== */
+
+/* --- Page background: light-mode --body-bg-color is not re-declared
+   per data-style (T4 base keeps Terminal #FBFCFA), so Blueprint light
+   pages painted the wrong bg. Re-point to the per-style --bg token.
+   Dark is already correct; var(--bg) is safe in both themes. --- */
+body.item-215,
+body.item-215 .t4-content { background: var(--bg); }
+
+/* --- Hero terminal-mock + KineticQL code panel accents are hardcoded
+   #A3E635 (Terminal lime) in the shared ACM css, so they leak lime into
+   the Blueprint indigo reskin. design-spec §3: code keyword + info =
+   --primary (flip per direction). Remap to this direction's primary. --- */
+body.item-215 .acm-hero .hx-term-live,
+body.item-215 .acm-hero .hx-term-body .t-ok { color: var(--primary); }
+body.item-215 .acm-hero .hx-live-dot,
+body.item-215 .acm-hero .hx-caret,
+body.item-215 .acm-hero .hx-spark span.on { background: var(--primary); }
+body.item-215 .acm-kineticql-split { --split-syn-key: var(--primary); }

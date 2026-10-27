@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-butter-highlight: #fbda5f;
+  --color-signal-blue: #006aff;
+  --color-ink: #0d0d0d;
+  --color-pure-black: #000000;
+  --color-paper: #ffffff;
+  --color-fog: #edeef0;
+  --color-stone: #e5e4e3;
+  --color-charcoal: #333333;
+  --color-mist: #999999;
+  --color-silver: #cccccc;
+
+  /* Typography */
+  --font-phudu: 'Phudu', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-interdisplay: 'InterDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

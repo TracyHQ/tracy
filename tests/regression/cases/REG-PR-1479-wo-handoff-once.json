@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1479-wo-handoff-once",
+  "kind": "fix",
+  "title": "One hand-off per demo: a second press is told so, and a press after the verdict keeps it",
+  "pr": 1479,
+  "area": "website-opportunities/handoff",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: two presses of Hand to the agent while the first runs.",
+    "S2: a press after the QA verdict."
+  ],
+  "expect": [
+    "S1: 409 HANDOFF_IN_PROGRESS; one chat, one baseline, one prompt.",
+    "S2: verdict kept, nothing uploaded or sent."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/website-opportunities-doors.test.mjs",
+    "code": "opportunities/route.js withHandoffLock, handoff.js terminal states"
+  },
+  "evidence": "Review 19/10/2026: no per-build guard; two presses made two chats rebuilding one demo; a re-press erased the verdict",
+  "fence": "Per-build advisory lock on the hand-off door",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs"
+    ],
+    "tests": [
+      "handoff: a second press while the first still runs is told so — one chat, one baseline, one prompt",
+      "handoff: a press after the QA verdict keeps it, uploads nothing and sends nothing"
+    ],
+    "needs": ["postgres"]
+  }
+}

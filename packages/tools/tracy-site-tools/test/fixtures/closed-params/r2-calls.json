@@ -1,0 +1,95 @@
+[
+  {
+    "src": "out-r2/wp-dmlj6g/C04#9",
+    "action": "content.list",
+    "params": {
+      "kind": "post",
+      "post_type": "page",
+      "limit": 200,
+      "language": "vi"
+    },
+    "answerChars": 7379
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#18",
+    "action": "content.list",
+    "params": {
+      "kind": "post",
+      "key": "slide-vi"
+    },
+    "answerChars": 11095
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#18",
+    "action": "content.list",
+    "params": {
+      "kind": "post",
+      "key": "contact-vi"
+    },
+    "answerChars": 11095
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C04#20",
+    "action": "content.list",
+    "params": {
+      "kind": "post",
+      "post_type": "page",
+      "limit": 200,
+      "lang": "vi",
+      "include_body": false
+    },
+    "answerChars": 7379
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C20#13",
+    "action": "content.list",
+    "params": {
+      "kind": "post",
+      "search": "550-67-89",
+      "include_body": false,
+      "limit": 50
+    },
+    "answerChars": 11095
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C24#10",
+    "action": "content.get",
+    "params": {
+      "kind": "post",
+      "id": 42,
+      "context": "edit"
+    },
+    "answerChars": 30205
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C28#7",
+    "action": "content.list",
+    "params": {
+      "kind": "post",
+      "search": "sales@northgate-ind.ru",
+      "limit": 50
+    },
+    "answerChars": 11095
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C28#7",
+    "action": "content.list",
+    "params": {
+      "kind": "post",
+      "search": "550-67-89",
+      "limit": 50
+    },
+    "answerChars": 11095
+  },
+  {
+    "src": "out-r2/wp-dmlj6g/C28#10",
+    "action": "content.list",
+    "params": {
+      "kind": "post",
+      "search": "northgate-ind.ru",
+      "limit": 50,
+      "include_body": true
+    },
+    "answerChars": 49875
+  }
+]

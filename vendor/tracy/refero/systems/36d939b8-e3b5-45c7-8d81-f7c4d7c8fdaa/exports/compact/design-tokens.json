@@ -1,0 +1,69 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#101010",
+      "$type": "color",
+      "$description": "Obsidian — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, text on dark fills — the default surface that 60%+ of the page lives on"
+    },
+    "carbon": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Carbon — Dark card surfaces for product mockups and the dark editorial band, barely distinguishable from Obsidian to create depth without color"
+    },
+    "mint-cream": {
+      "$value": "#e5ede4",
+      "$type": "color",
+      "$description": "Mint Cream — Light pastel surface tint, used sparingly for soft card backgrounds that need warmth without chromatic commitment"
+    },
+    "sage-mist": {
+      "$value": "#c7d8c5",
+      "$type": "color",
+      "$description": "Sage Mist — Near-gray green surface wash, appears as a muted canvas tint on light sections and soft card backgrounds"
+    },
+    "ash-gray": {
+      "$value": "#9b9b9b",
+      "$type": "color",
+      "$description": "Ash Gray — Muted helper text, secondary borders, inactive UI elements — handles every de-emphasized text or border role"
+    },
+    "lavender-mist": {
+      "$value": "#b8afda",
+      "$type": "color",
+      "$description": "Lavender Mist — Dominant chromatic accent, large section backgrounds, circle diagram fills, decorative borders — carries the brand's pastel identity and appears more than any other chromatic color"
+    },
+    "ember-orange": {
+      "$value": "#eb652b",
+      "$type": "color",
+      "$description": "Ember Orange — Orange wash for highlight backgrounds, decorative bands, and soft emphasis behind content."
+    },
+    "electric-yellow": {
+      "$value": "#f6f361",
+      "$type": "color",
+      "$description": "Electric Yellow — Secondary accent for borders, highlights, and decorative geometric elements — neon-charged against black to create energy"
+    }
+  },
+  "font": {
+    "abc-normal": {
+      "$value": "ABC Normal",
+      "$type": "fontFamily",
+      "$description": "Workhorse sans for body, nav, buttons, badges, and even large display sizes. The 300 weight is the signature — lightweight and editorial rather than the 600+ bold most SaaS sites use for headlines, giving Drop a quiet authority. Letter-spacing tightens aggressively at larger sizes (from -0.005em at 16px to -0.041em at 177px)."
+    },
+    "ivar-display": {
+      "$value": "Ivar Display",
+      "$type": "fontFamily",
+      "$description": "Reserved exclusively for the largest display headings — the 'OLD WORLD' / 'NEW WORLD' editorial moments. A serif with 0.78 line-height and -0.043em tracking at 169px creates slab-like density that reads as printed editorial rather than web type. Weight stays at 400 even at poster scale, trusting the size and serif personality to carry authority."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.usedrop.io",
+      "siteName": "Drop",
+      "extractedAt": "2026-06-03T20:22:36.477Z",
+      "variant": "compact"
+    }
+  }
+}

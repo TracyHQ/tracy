@@ -1,0 +1,3409 @@
+/* wp-ja-kinetic — article + listing chrome.
+ *
+ * The source's own single-article (`hx-article__*`) and blog-listing (`hx-blogmast`,
+ * `hx-blog`, `hx-bloglist`, `hx-blogrow`, `hx-blog-pagination`) chrome, ported from
+ * `css/template.css` (the general, page-independent rules — the same file
+ * `wp-ja-kinetic-sections.css` already ports its own selection from). `.hx-container`,
+ * `.hx-section`, `.hx-pad`, `.hx-grid-bg`, `.hx-eyebrow` and `.hx-btn` are already in
+ * that sheet and are not repeated here.
+ *
+ * D-11 targets the RUNNING page, not the bare shared chrome — so the two real category
+ * URLs on this site (`/product/blog`, `/pages/engineering`) are ported in full further
+ * down, each under its own dedicated template (`category-field-notes-from-the-on-call.html`,
+ * `category-engineering.html`) and its own CSS section: `css/page-221.css` (a "pixel-
+ * perfect overlay" layered on the blog chrome, scoped `body.item-221`) and
+ * `css/page-253.css` + a wholly separate PHP layout `category/thumbs.php` (scoped
+ * `body.item-253`, classes `hxcat-*`). `css/page-251.css` / `css/page-254.css` (the
+ * article-archive and single-author views) are NOT ported — out of the scope given for
+ * this pass (only `/product/blog` and `/pages/engineering` were named); the generic
+ * `author.html`/`date.html` templates still reuse the plain `.hx-blogmast`/`.hx-bloglist`
+ * chrome, the closest thing in scope for those two.
+ *
+ * The single-article chrome (masthead pill, byline box, breadcrumb colour, blockquote,
+ * checklist, hero image, related band) is not in template.css at all — it is
+ * `css/single-article.css` (407 lines), loaded unconditionally for every non-canvas
+ * article by that one PHP override (`html/com_content/article/default.php:104-111`,
+ * `addStyleSheet` on every render, not gated by Itemid like the page-*.css files
+ * above). Ported below under the same `.hx-article <selector>` prefix the source uses,
+ * which is what lets it out-specificity the generic `.hx-prose`/`.hx-eyebrow` rules
+ * from template.css / wp-ja-kinetic-sections.css without `!important` of its own.
+ *
+ * `.hx-h1` carries no rule anywhere in the source (breadcrumb, title and blogmast
+ * title all use it as a bare hook) — verified by grep across template.css,
+ * single-article.css and every `.scss` source; it renders unstyled on the running
+ * source, so no rule is added for it here. The breadcrumb's own inner list markup
+ * (`.hx-bc-home` / `.hx-bc-cat` / `.hx-bc-sep` / `.hx-bc-current`) IS styled in
+ * single-article.css, but the theme's `wp:breadcrumbs` block does not expose a
+ * className per segment (verified: it renders a bare `<ol><li><a>`/`<span
+ * aria-current>` with no per-item class hook) — the equivalent colour/spacing is
+ * reached below through that block's own generated structure instead (see the
+ * "breadcrumb inner" rule).
+ *
+ * `.hx-related` (single-article.css §13, an AR38 "related posts" card grid) is a
+ * dynamic block, `wp-ja-kinetic/related-posts` (`blocks/related-posts/render.php`) —
+ * it needs a second query scoped to "same category, excluding the current post,"
+ * the same selection rule as the source's own `default_related.php`.
+ *
+ * @package wp-ja-kinetic
+ */
+
+.hx-muted {
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------------------
+   SINGLE ARTICLE — masthead + prose column
+   template.css:21198-21470 (com_content override), single-article.css unchanged.
+   --------------------------------------------------------------------------- */
+.hx-article {
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  color: var(--text);
+}
+/* base masthead (template.css) — single-article.css below raises specificity with the
+   `.hx-article` ancestor prefix and wins on every property both sheets set. */
+.hx-article__head {
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+}
+.hx-article__head-inner {
+  max-width: 820px;
+}
+.hx-article__cat {
+  text-decoration: none;
+}
+.hx-article__title {
+  margin: 4px 0 0;
+}
+.hx-article__actions {
+  margin-top: 16px;
+}
+.hx-article__bodywrap {
+  padding-block: 56px;
+  /* neutralises the 16px "flow gap" WordPress's block-spacing preset adds between sibling
+     group blocks at this nesting depth — the source has no such gap. */
+  margin-top: 0 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   SINGLE ARTICLE — single-article.css (407 lines), loaded unconditionally for
+   every article by html/com_content/article/default.php:104-111. Overrides the
+   masthead/prose base above via the `.hx-article` ancestor prefix (see file
+   header). Section numbers match that file's own `── N. ──` comments.
+   --------------------------------------------------------------------------- */
+/* 2. masthead padding + radial gradient + grid */
+.hx-article .hx-article__head {
+  padding-top: 60px;
+  padding-bottom: 52px;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 160% 110% at 50% 0%, var(--kds-accent-059, var(--ds-c-accent, rgba(163, 230, 53, 0.059))) 0%, var(--elevated) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+  background-color: var(--bg);
+}
+/* dark Terminal endpoint (source: #161B18, the chrome's elevated surface, not --elevated) —
+   kept as the source's literal, the convention wp-ja-kinetic-sections.css uses for slots the
+   palette has no row for. */
+:root[data-theme="dark"] .hx-article .hx-article__head {
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 160% 110% at 50% 0%, var(--kds-accent-059, var(--ds-c-accent, rgba(163, 230, 53, 0.059))) 0%, var(--ds-c-surface, #161b18) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+/* 3. masthead inner: centred flex column */
+.hx-article .hx-article__head-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.hx-article .hx-article__breadcrumb,
+.hx-article .hx-article__cat,
+.hx-article .hx-article__title,
+.hx-article .hx-article__sub {
+  margin: 0;
+}
+/* 4. breadcrumb — rebuilt as a flat run of siblings matching the source's own shape exactly
+   (`single.html`), not the generic `wp:breadcrumbs` block's `<ol><li>` list. The `<p>` the
+   paragraph block forces around each static piece is dropped from the box model with
+   `display: contents` — same technique as `.hx-blogdate`/`.hxcat-bc` elsewhere in this file.
+   The CURRENT (title) crumb is truncated at 31 chars + "…" server-side, byte-identical to the
+   source's own `mb_substr` cut (`wp_ja_kinetic_truncate_article_breadcrumb()`,
+   inc/blog-dynamic.php) — no CSS truncation needed. */
+.hx-article .hx-article__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1;
+}
+/* page-article.html only (single.html's two static paragraphs are unwrapped at render by
+   inc/tag-parity.php): the two STATIC raw-HTML paragraphs (Home+sep, lone sep) — NOT `.hx-bc-current`
+   (`wp:post-title`'s own `<p>`): as a flex-item span, the source's own `.hx-bc-current`
+   computes `display: block` (CSS blockification of flex items), and `display:contents` here
+   would defeat that instead of reproducing it. */
+.hx-article .hx-article__breadcrumb p:not(.hx-bc-current) {
+  display: contents;
+}
+.hx-article .hx-article__breadcrumb .hx-bc-home {
+  color: var(--text);
+  text-decoration: none;
+}
+.hx-article .hx-article__breadcrumb .hx-bc-cat,
+.hx-article .hx-article__breadcrumb .hx-bc-sep,
+.hx-article .hx-article__breadcrumb .hx-bc-current {
+  color: var(--muted);
+  text-decoration: none;
+  margin: 0;
+}
+.hx-article .hx-article__breadcrumb a:hover {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+/* 5. eyebrow pill (overrides the plain-text .hx-eyebrow from wp-ja-kinetic-sections.css —
+   higher specificity via the `.hx-article` prefix, matching the source) */
+.hx-article .hx-article__cat {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background-color: var(--kds-accent-082, var(--ds-c-accent, rgba(163, 230, 53, 0.082))) !important;
+  border: 1px solid var(--kds-accent-250, var(--ds-c-accent, rgba(163, 230, 53, 0.25))) !important;
+  border-radius: 100px;
+  font-size: 11.5px !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1;
+}
+.hx-article .hx-article__cat::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+  flex-shrink: 0;
+}
+/* 6. title. `color` is not in single-article.css's own rule for this selector — the
+   source reaches it through a sitewide `h1, .h1, h2, .h2 … { color: var(--heading) }`
+   base-typography rule (template.css:19407-19411) that is not part of the article/
+   listing chrome and was not ported by any prior step (verified: no `h1` type selector
+   anywhere in wp-ja-kinetic.css or wp-ja-kinetic-sections.css). Measured on the running
+   WP page: without it this h1 inherits `.hx-article`'s own `color: var(--text)` instead
+   of `--heading` (rgb(70,81,75) vs the source's rgb(16,20,15)) — declared directly here
+   rather than left as a cross-file gap, since `.hx-article__title` is this file's own
+   element either way. */
+.hx-article .hx-article__title {
+  font-size: 44px !important;
+  text-align: center !important;
+  letter-spacing: -1.3px !important;
+  line-height: 1.1 !important;
+  max-width: 760px;
+  color: var(--heading);
+}
+/* 7. sub-title. `wp:post-excerpt`'s inner `<p class="wp-block-post-excerpt__excerpt">` is
+   collapsed at render (inc/tag-parity.php), so this is the source's single `p.hx-article__sub`. */
+.hx-article .hx-article__sub {
+  max-width: 600px;
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--text);
+}
+/* 8. author byline box */
+.hx-article .hx-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 22px;
+}
+.hx-article .hx-author__av {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--kds-accent-145, var(--ds-c-accent, rgba(163, 230, 53, 0.145)));
+  overflow: hidden;
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+.hx-article .hx-author__c {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hx-article .hx-author__name {
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--heading);
+}
+.hx-article .hx-author__meta {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--muted);
+  /* neutralises the 16px "flow gap" WordPress's block-spacing preset adds between this and
+     the sibling `.hx-author__name` block — the source has no such gap (custom block, one
+     text node, no sibling-gap concept). */
+  margin-top: 0 !important;
+}
+/* 9. hero image, inside the prose column (post-featured-image, className "item-image") */
+.hx-article .hx-prose .item-image {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 22px;
+}
+.hx-article .hx-prose .item-image img {
+  display: block;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: var(--ds-card-radius, 14px);
+  border: 1px solid var(--border);
+}
+/* 10c. body checklist — replaces the default disc bullets on a plain <ul> in the body */
+.hx-article .hx-prose .article-body ul {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hx-article .hx-prose .article-body ul > li {
+  position: relative;
+  margin: 0;
+  padding-left: 28px;
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.hx-article .hx-prose .article-body ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 18px;
+  height: 18px;
+  background-color: var(--primary);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 18px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 18px no-repeat;
+}
+/* 10b. blockquote — overrides the shared prose blockquote above (21px/400) to the
+   design's own spec (20px/600), same `.hx-article` specificity trick */
+.hx-article .hx-prose blockquote {
+  margin: 28px 0 !important;
+  padding: 4px 0 4px 22px !important;
+  border-left: 3px solid var(--primary) !important;
+  background: transparent !important;
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif) !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  letter-spacing: -0.3px !important;
+  color: var(--heading) !important;
+}
+.hx-article .hx-prose blockquote p {
+  margin: 0 !important;
+  font: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+}
+/* 10. section headings + body paragraph line-height */
+.hx-article .hx-prose .article-body p {
+  line-height: 1.75;
+}
+.hx-article .hx-prose h2,
+.hx-article .hx-prose h3 {
+  font-size: 24px !important;
+  letter-spacing: -0.5px !important;
+  /* Measured directly on the running source (not inferred from the cascade — an earlier pass
+     here reasoned from `.hx-prose .article-body {color: var(--text)}` and got this wrong):
+     `getComputedStyle(h2).color` on a live article is `rgb(16, 20, 15)` — the SAME value as
+     `--heading`, not `--text` (`rgb(70, 81, 75)`-ish). Some more specific/`!important` rule
+     this file did not need to locate wins that cascade fight on the source; pinned directly
+     here instead of relying on this theme's own base heading styles to reach it. */
+  color: var(--heading) !important;
+}
+/* 11. tags row */
+.hx-article .hx-prose .tags {
+  border-top: 1px solid var(--border);
+  padding-top: 24px !important;
+  margin-top: 0;
+}
+.hx-article .hx-prose .tags a {
+  background: transparent !important;
+  padding: 6px 12px !important;
+  font-weight: 400 !important;
+}
+
+/* 13. related posts (wp-ja-kinetic/related-posts) */
+.hx-article .hx-related {
+  background: var(--elevated);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 64px 0;
+  /* neutralises the 16px "flow gap" WordPress's block-spacing preset adds after the article
+     `<article>` block — the source has no such gap. */
+  margin-top: 0 !important;
+}
+:root[data-theme="dark"] .hx-article .hx-related {
+  background: var(--ds-c-surface, #161b18);
+}
+.hx-article .hx-related__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 28px;
+  max-width: 1240px;
+}
+.hx-article .hx-related__title {
+  margin: 0;
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--heading);
+}
+.hx-article .hx-related__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.hx-article .hx-related__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px;
+  border-radius: var(--ds-card-radius, 14px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+.hx-article .hx-related__card:hover {
+  border-color: var(--primary);
+}
+.hx-article .hx-related__tag {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+.hx-article .hx-related__ti {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--heading);
+}
+.hx-article .hx-related__m {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Source (css/template.css:21516-21524): from 860px down the article title steps to 38px / 1.08 / -1px before the 30px phone size
+   below; measured on the stand at 768 (source 38px, site 44px, a 15px taller masthead on every article). */
+@media (max-width: 860px) {
+  .hx-article .hx-article__title {
+    font-size: 38px !important;
+    line-height: 1.08 !important;
+    letter-spacing: -1px !important;
+  }
+}
+@media (max-width: 620px) {
+  .hx-article .hx-article__head {
+    padding-top: 40px;
+    padding-bottom: 34px;
+  }
+  .hx-article .hx-article__head-inner {
+    gap: 14px;
+  }
+  .hx-article .hx-article__cat {
+    font-size: 11px !important;
+  }
+  .hx-article .hx-article__sub {
+    font-size: 15px;
+  }
+  .hx-article .hx-prose .item-image img {
+    height: 200px;
+  }
+  .hx-article .hx-author,
+  .hx-article .hx-prose .item-image {
+    margin-bottom: 20px;
+  }
+  .hx-article .hx-prose h2,
+  .hx-article .hx-prose h3 {
+    font-size: 22px !important;
+  }
+  /* single-article.css §6 (mobile masthead h1) — carried here rather than left at the desktop
+     44px !important value above, which single/page-article both inherited unscoped. Measured
+     live on a single article at 390: 30px / 33.6px line-height (L-01). */
+  .hx-article .hx-article__title {
+    font-size: 30px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -1px !important;
+  }
+  .hx-article .hx-prose blockquote {
+    font-size: 18px !important;
+  }
+  .hx-article .hx-prose .tags {
+    padding-top: 20px !important;
+  }
+  .hx-article .hx-related {
+    padding: 40px 0;
+  }
+  .hx-article .hx-related__inner {
+    gap: 20px;
+  }
+  .hx-article .hx-related__title {
+    font-size: 22px;
+  }
+  .hx-article .hx-related__grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+.hx-prose {
+  max-width: 760px;
+  margin-inline: auto;
+}
+.hx-prose .article-body,
+.hx-prose .com-content-article__body {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text);
+}
+.hx-prose p {
+  margin: 0 0 1.25rem;
+}
+/* a block-theme "flow" layout preset zeroes the margin of a `.hx-prose`/`.article-body`
+   flow-container's own LAST child by default; the source keeps the normal 20px on the last
+   paragraph too (L-04) — restored here, scoped to the article body specifically. */
+.hx-article .hx-prose .article-body > p:last-child {
+  margin-bottom: 1.25rem !important;
+}
+/* the source's article body is `div.com-content-article__body.article-body[itemprop=articleBody]`
+   under `article.item-page`, and Joomla's `template.css` gives it `.item-page
+   [itemprop="articleBody"] { margin-top: 1rem; margin-bottom: 1rem }` as a plain block — its
+   last child's margin collapses through it. WordPress's post-content wrapper has no itemprop, is
+   `display: flow-root` (core `.wp-block-post-content`) and loses its bottom margin to the flow
+   layout's `margin-block-end: 0`, so the 16px under the body went missing on the article-view
+   Pages (`templates/page-article.html`, the only template carrying `item-page`). */
+.item-page .hx-prose > .article-body {
+  display: block;
+  margin-block: 1rem;
+}
+.hx-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--ds-card-radius, 12px);
+}
+.hx-prose .full_image,
+.hx-prose figure {
+  margin: 0 0 28px;
+}
+.hx-prose figcaption {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  font-family: "JetBrains Mono", monospace;
+}
+.hx-prose h2 {
+  font-size: 30px;
+  margin: 40px 0 14px;
+}
+.hx-prose h3 {
+  font-size: 22px;
+  margin: 32px 0 12px;
+}
+.hx-prose h4 {
+  font-size: 18px;
+  margin: 26px 0 10px;
+}
+/* the tag list's own base rules (template.css:704-709, 4798-4815, 13413-13429, 15569-15571):
+   the `ul.tags > li.list-inline-item > a.badge` markup is rebuilt byte for byte in
+   inc/tag-parity.php, so these apply as on the source — chip line-height 1 (26px tall), left
+   floats + an empty clearfix item inside the `.tags` flex row. Kept ahead of `.hx-prose li`
+   (template.css:21318) so that rule still wins the li margin, as in the source's cascade. */
+.list-inline-item {
+  display: inline-block;
+}
+.list-inline-item:not(:last-child) {
+  margin-right: 0.5rem;
+}
+.badge {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ds-c-accent-on, #fff);
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: var(--ds-pill-radius, 0.25rem);
+}
+.badge:empty {
+  display: none;
+}
+.tags {
+  display: block;
+}
+.tags::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+.tags > li {
+  float: left;
+  margin-right: 0.25rem;
+  line-height: 1;
+}
+.tags > li > a {
+  display: block;
+  padding: 0.3333333333rem 0.5rem;
+}
+.hx-prose ul,
+.hx-prose ol {
+  margin: 0 0 1.25rem;
+  padding-left: 1.3em;
+}
+.hx-prose li {
+  margin: 0 0 0.5rem;
+}
+.hx-prose li::marker {
+  color: var(--ds-c-accent-text, var(--primary));
+}
+.hx-prose a:not([class*="btn"]) {
+  color: var(--ds-c-accent-text, var(--primary));
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: color 0.15s, border-color 0.15s;
+}
+.hx-prose a:not([class*="btn"]):hover {
+  color: var(--ds-c-accent-text-hover, var(--primary-hover));
+  border-color: var(--primary);
+}
+.hx-prose a.btn,
+.hx-prose a[class*="btn-"] {
+  border-bottom: 0;
+}
+.hx-prose blockquote {
+  margin: 28px 0;
+  padding: 6px 0 6px 22px;
+  border-left: 3px solid var(--primary);
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 21px;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  color: var(--heading);
+}
+.hx-prose blockquote p {
+  margin: 0;
+}
+.hx-prose :not(pre) > code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.88em;
+  padding: 2px 6px;
+  border-radius: 6px; /* ds-keep: inline code chip of the code face */
+  border: 1px solid var(--border);
+  background: var(--elevated);
+  color: var(--ds-c-accent-text, var(--primary));
+}
+.hx-prose pre,
+.item-page pre {
+  background: var(--ds-c-ink, #0d1110);
+  color: var(--ds-c-on-ink, #c9d1ce);
+  border: 1px solid var(--ds-c-border, #232a27);
+  border-radius: var(--ds-card-radius, 12px);
+  padding: 18px 20px;
+  margin: 0 0 1.4rem;
+  overflow: auto;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+  box-shadow: var(--shadow);
+}
+.hx-prose pre code,
+.item-page pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  /* NOT "JetBrains Mono" — matches the source's own base `code, kbd, pre, samp` reset
+     (`template.css:379-384`, `--t4-font-monospace`), which sets `code`'s font-family DIRECTLY
+     (not inherited), so it wins over `.hx-prose pre`'s own JetBrains-Mono declaration even though
+     that rule is more specific — a directly-set property always beats an inherited one. Measured
+     live (L-03): code inside `pre` renders this stack on the source, not JetBrains Mono. */
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+.hx-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.4rem;
+  font-size: 15px;
+}
+.hx-prose th,
+.hx-prose td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+.hx-prose th {
+  color: var(--heading);
+  font-weight: 600;
+}
+.hx-prose .tags,
+.hx-article__head .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 16px 0;
+  padding: 0;
+}
+.hx-prose .tags .tag-list-item,
+.hx-article__head .tags .tag-list-item {
+  margin: 0;
+}
+.hx-prose .tags a,
+.hx-article__head .tags a {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: var(--ds-pill-radius, 999px);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  text-decoration: none;
+}
+.hx-prose .tags a:hover,
+.hx-article__head .tags a:hover {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+  border-color: var(--primary);
+}
+/* Source single-article.css §12: the Joomla info block and prev/next nav are
+   printed on every article (blocks/article-foot) and never shown. */
+.hx-article .hx-article__foot {
+  display: none !important;
+}
+.hx-article .hx-prose .pagenavigation {
+  display: none !important;
+}
+
+@media (max-width: 860px) {
+  .hx-blogmast__title {
+    font-size: 38px;
+    line-height: 1.08;
+    letter-spacing: -1px;
+  }
+}
+@media (max-width: 620px) {
+  .hx-article__head {
+    padding-block: 44px 28px;
+  }
+  .hx-article__bodywrap {
+    padding-block: 40px;
+  }
+  .hx-prose .article-body,
+  .hx-prose .com-content-article__body {
+    font-size: 16px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   LISTING — masthead, row list, pagination
+   template.css:19772-19825 (.hx-blog/.hx-blog-rail/.hx-blogrow base, _kinetic.scss)
+   + template.css:20990-21191 (com_content override) + template.css:21543-21550
+   (.hx-blog--norail). Reused as-is by the category/author/date templates: the
+   source has a bespoke design for the author archive and the date archive too
+   (page-254.css, page-251.css), but neither is in template.css — see file header.
+   --------------------------------------------------------------------------- */
+/* the listing wrapper's own family stack (template.css:20981 `.hx-content`) — every listing
+   element without a font-family of its own inherits this string, not the bare body family. */
+.hx-content {
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+}
+.hx-blogmast {
+  padding-block: 64px 40px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+}
+/* `color` here has the same source as `.hx-article__title` above (the sitewide h1
+   rule, not ported elsewhere) — declared directly for the same reason. */
+.hx-blogmast__title {
+  margin: 0;
+  color: var(--heading);
+}
+.hx-blogmast__desc {
+  margin-top: 16px;
+  max-width: 640px;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.55;
+}
+.hx-blogmast__desc p {
+  /* Source: 0 (audit row L-34) — the earlier 0.5rem bottom margin was a leftover default,
+     never matched against the source's own masthead description spacing. */
+  margin: 0;
+}
+@media (max-width: 760px) {
+  .hx-blogmast {
+    padding-block: 48px 28px;
+  }
+}
+
+.hx-blog {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+.hx-blog.hx-blog--norail {
+  grid-template-columns: 1fr !important;
+}
+.hx-blog.hx-blog--norail .hx-blog-rail {
+  display: none;
+}
+@media (max-width: 760px) {
+  .hx-blog {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* topics rail — base styling; wp-ja-kinetic/blog-rail is the only block that emits this markup */
+.hx-blog-rail {
+  position: sticky;
+  top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hx-rail-title {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.hx-railitem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--ds-card-radius, 8px);
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.hx-railitem:hover {
+  color: var(--heading);
+  background: var(--elevated);
+}
+.hx-railitem.is-active {
+  color: var(--ds-c-accent-text, var(--primary));
+  background: var(--elevated);
+  border-color: var(--border);
+}
+.hx-railcount {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+.hx-railitem.is-active .hx-railcount {
+  color: var(--ds-c-accent-text, var(--primary));
+}
+@media (max-width: 760px) {
+  .hx-blog-rail {
+    position: static;
+    flex-flow: wrap;
+    gap: 8px;
+  }
+}
+
+.hx-bloglist > .hx-blogrow:first-child {
+  border-top: 1px solid var(--border);
+}
+.hx-blogrow {
+  display: grid;
+  grid-template-columns: 54px 1fr 152px;
+  gap: 24px;
+  align-items: baseline;
+  padding: 26px 10px;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+/* The source's rows are direct children of `.hx-bloglist` (`category/blog.php`); the Query
+   Loop's `ul.wp-block-post-template > li` sit in between. `display: contents` drops their
+   boxes (and theme.json's blockGap between the `li`s); `list-style-type: disc` hands the rows
+   the value they inherit on the source (no marker renders — nothing here is a list item). */
+.hx-bloglist > .wp-block-post-template,
+.hx-bloglist > .wp-block-post-template > li {
+  display: contents;
+  list-style-type: disc;
+}
+.hx-blogrow:hover {
+  background: var(--elevated);
+}
+/* dark: a faint white wash over the chrome surface instead (page-221.css:112-114) */
+:root[data-theme="dark"] body.item-221 .hx-blogrow:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+.hx-blogrow:hover .hx-blogtitle {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+@media (max-width: 560px) {
+  .hx-blogrow {
+    grid-template-columns: 40px 1fr;
+  }
+  .hx-blogrow > div:last-child {
+    display: none !important;
+  }
+}
+
+/* the day/month post-date blocks render as the source's two bare spans inside
+   `time.hx-blogdate` (inner `<time>` unwrapped by `inc/blog-dynamic.php`), so each
+   span is itself the flex item, as on the source. */
+.hx-blogdate {
+  display: flex;
+  flex-direction: column;
+  font-family: "JetBrains Mono", monospace;
+  line-height: 1.1;
+  color: var(--muted);
+}
+.hx-blogdate__d {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--heading);
+}
+.hx-blogdate__m {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hx-blogmain {
+  min-width: 0;
+}
+.hx-blogtitle {
+  margin: 0;
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+  color: var(--heading);
+  transition: color 0.15s;
+}
+.hx-blogexcerpt,
+/* core/post-excerpt's own save markup wraps its text in a `<p class="wp-block-post-excerpt__
+   excerpt">` INSIDE the `<p class="hx-blogexcerpt">` this block's `className` attribute sets —
+   invalid `<p>`-in-`<p>` nesting, so the browser's HTML parser auto-closes the outer `<p>` the
+   instant it hits the inner one, making them SIBLINGS under `.hx-blogmain` rather than parent/
+   child (verified live 2026-09-23: `.hx-blogexcerpt`'s own `textContent` is empty; the real text
+   sits on the sibling `.wp-block-post-excerpt__excerpt`, which this typography never reached
+   before). Repeating the selector here, scoped to the still-intact ancestor, reaches the text
+   without touching the block's own markup. */
+.hx-blogmain .wp-block-post-excerpt__excerpt {
+  margin: 7px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.hx-blogmeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  text-align: right;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+}
+.hx-blogauthor {
+  color: var(--text);
+}
+.hx-blog-empty {
+  padding: 28px 0;
+}
+
+.hx-blog-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+/* the source's pager is `<ul class="pagination"><li class="page-item"><a class="page-link">`
+   (`css/page-221.css` `.hx-blog-pagination .pagination …`) — `wp-ja-kinetic/kinetic-pagination`
+   (`templates/*.html`) renders that exact same markup shape today. The rules below this comment
+   used to target `wp:query-pagination`'s core markup instead (`.page-numbers`/`.current`) from
+   before `kinetic-pagination` existed; that block is no longer used by any template in this
+   overlay (verified: no `wp:query-pagination` left in `templates/`), so those rules never match
+   anything live and are DEAD — kept only because `.hx-blogread`-adjacent selectors nearby still
+   reference `.page-numbers` in comments elsewhere; not worth a churn-risk deletion in a shared
+   file for an inert rule. The block actually rendered needs `.page-item`/`.page-link`, added here. */
+.hx-blog-pagination .pagination,
+.hxcat-pagination .pagination,
+.hx-arch-pagination .pagination {
+  display: flex;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+.hx-blog-pagination .pagination .page-link,
+.hxcat-pagination .pagination .page-link,
+.hx-arch-pagination .pagination .page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-btn-radius, 8px);
+  background: var(--surface);
+  color: var(--text);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  text-decoration: none;
+}
+.hx-blog-pagination .pagination .active .page-link,
+.hxcat-pagination .pagination .active .page-link,
+.hx-arch-pagination .pagination .active .page-link {
+  background: var(--primary);
+  color: var(--primary-ink);
+  border-color: var(--primary);
+}
+.hx-blog-pagination .pagination .page-link:hover,
+.hxcat-pagination .pagination .page-link:hover,
+.hx-arch-pagination .pagination .page-link:hover {
+  border-color: var(--primary);
+  color: var(--heading);
+}
+.hxcat-pagination .pagination .disabled .page-link,
+.hx-arch-pagination .pagination .disabled .page-link {
+  opacity: 0.4;
+  pointer-events: none;
+}
+/* The blog pager (blog, child-category and index archives) also inherits the source's base T4
+   pagination rules that the kinetic block above does not reset (`css/template.css`):
+   `.disabled > .page-link` no opacity (4770), `.page-link{position:relative}` (4736),
+   `.page-item:not(:first-child) .page-link{margin-left:-1px}` (4777), outer corners 4px
+   (14997-15004), `.pagination-wrap{margin-bottom:2rem}` (14088) plus `padding-bottom:2rem`
+   below 768px (14966-14981), and `.pagination-wrap ul li{display:inline-block}` (14100). */
+.hx-blog-pagination.pagination-wrap {
+  margin-bottom: 2rem;
+}
+@media (max-width: 767.98px) {
+  .hx-blog-pagination.pagination-wrap {
+    padding-bottom: 2rem;
+  }
+}
+.hx-blog-pagination .pagination .page-item {
+  display: inline-block;
+}
+.hx-blog-pagination .pagination .page-link {
+  position: relative;
+}
+.hx-blog-pagination .pagination .page-item:not(:first-child) .page-link {
+  margin-left: -1px;
+}
+.hx-blog-pagination .pagination .page-item:first-of-type .page-link {
+  border-radius: var(--ds-btn-radius, 0.25rem) 0 0 var(--ds-btn-radius, 0.25rem);
+}
+.hx-blog-pagination .pagination .page-item:last-of-type .page-link {
+  border-radius: 0 var(--ds-btn-radius, 0.25rem) var(--ds-btn-radius, 0.25rem) 0;
+}
+.hx-blog-pagination .pagination .disabled .page-link {
+  pointer-events: none;
+}
+.hx-blog-pagination .counter,
+.hxcat-pagination + .counter,
+.hx-arch-pagination .counter {
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ============================================================================
+   /product/blog — Itemid 221 live overlay, ported VERBATIM from css/page-221.css
+   (same `.item-221` selectors, unchanged) — a parallel body_class filter emits
+   the source's own `item-<Itemid>` class on the matching WordPress page (map
+   from page-map.json), so this file does not need a WP-specific selector.
+   D-11 targets the RUNNING page, and every reachable category URL on this site
+   carries a page-specific overlay (see the file-level note above) — this is
+   that overlay for the one category behind /product/blog. The featured-read
+   card, the topics rail and the "All articles // NN posts" ledger header all
+   need a live value or a second, exclusion-aware query no static template can
+   express — each is a dynamic block instead: `wp-ja-kinetic/field-notes-featured`,
+   `wp-ja-kinetic/blog-rail`, `wp-ja-kinetic/blog-ledger-header` (registered in
+   inc/extra.php, logic in inc/blog-dynamic.php). This section is their CSS.
+   ============================================================================ */
+/* the masthead ground: the page's elevated surface in light, the chrome's in dark
+   (page-221.css:9-18) */
+body.item-221 {
+  --blog-mast-end: var(--elevated);
+}
+:root[data-theme="dark"] body.item-221 {
+  --blog-mast-end: var(--chrome-elevated);
+}
+body.item-221 .hx-blogmast {
+  padding-block: 66px 58px !important;
+  background-color: var(--blog-mast-end) !important;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 140% 130% at 50% 0%, var(--kds-accent-059, var(--ds-c-accent, rgba(163, 230, 53, 0.059))) 0%, var(--blog-mast-end) 55%) !important;
+  background-size: 30px 30px, 30px 30px, 100% 100% !important;
+}
+body.item-221 .hx-blogmast .hx-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+body.item-221 .hx-blogmast .hx-eyebrow {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 5px 12px !important;
+  border-radius: var(--ds-pill-radius, 100px) !important;
+  background: var(--kds-accent-082, var(--ds-c-accent, rgba(163, 230, 53, 0.082))) !important;
+  border: 1px solid var(--kds-accent-251, var(--ds-c-accent, rgba(163, 230, 53, 0.251))) !important;
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 11.5px !important;
+  letter-spacing: 1.5px !important;
+  color: var(--ds-c-accent-text, var(--primary)) !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0 !important;
+}
+body.item-221 .hx-blogmast .hx-eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+body.item-221 .hx-blogmast__title {
+  font-size: 46px !important;
+  letter-spacing: -1.3px !important;
+  line-height: 1.08 !important;
+  margin: 0 !important;
+  max-width: 820px;
+}
+body.item-221 .hx-blogmast__desc {
+  margin-top: 0 !important;
+  font-size: 17px !important;
+  line-height: 1.55 !important;
+  max-width: 560px;
+}
+body.item-221 .hx-blog-section {
+  padding-block: 72px !important;
+}
+/* dark: the ledger area sits on the chrome's elevated surface (page-221.css:107-109) */
+:root[data-theme="dark"] body.item-221 .hx-blog-section {
+  background: var(--chrome-elevated) !important;
+}
+
+/* row list: date column becomes a decimal-leading-zero row counter */
+body.item-221 .hx-bloglist {
+  counter-reset: blog-row;
+}
+body.item-221 .hx-blogrow {
+  padding: 26px 0 !important;
+  counter-increment: blog-row;
+}
+body.item-221 .hx-blogdate {
+  justify-content: flex-start;
+}
+body.item-221 .hx-blogdate .wp-block-post-date {
+  display: none !important;
+}
+body.item-221 .hx-blogdate::before {
+  content: counter(blog-row, decimal-leading-zero);
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--muted);
+}
+body.item-221 .hx-blogtitle {
+  font-size: 21px !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+}
+body.item-221 .hx-blogexcerpt {
+  font-size: 14.5px !important;
+}
+body.item-221 .hx-blogcat {
+  display: block;
+  margin: 0 0 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+body.item-221 .hx-blogauthor,
+body.item-221 .hx-blogdatetxt {
+  color: var(--muted) !important;
+}
+
+/* topics strip — real subcategories (content.json: children of this category)
+   + a real `wp:tag-cloud` for the popular-tags half (no core block computes
+   "top tags of this category's articles" — sitewide popularity is the closest
+   available primitive). */
+body.item-221 .hx-blogtopics {
+  background: var(--elevated);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+:root[data-theme="dark"] body.item-221 .hx-blogtopics {
+  background: var(--chrome-elevated);
+}
+body.item-221 .hx-blogtopics .hx-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-block: 13px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+body.item-221 .hx-blogtopics .hx-container::-webkit-scrollbar {
+  display: none;
+}
+body.item-221 .hx-blogtopics__lbl {
+  flex: none;
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+body.item-221 .hx-blogtopics__list {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  list-style: none;
+}
+body.item-221 .hx-blogtopics__list li + li::before {
+  content: "\2022";
+  margin-right: 20px;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+body.item-221 .hx-blogtopics__chip {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+body.item-221 .hx-blogtopics__chip:hover {
+  color: var(--heading);
+}
+body.item-221 .hx-blogtopics__chip.is-active {
+  color: var(--ds-c-accent-text, var(--primary));
+}
+/* the tag-cloud block's own markup (`.tagcloud a`), styled to the same chip look */
+body.item-221 .hx-blogtopics__tags .wp-block-tag-cloud,
+body.item-221 .hx-blogtopics__tags a {
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 13px !important;
+  color: var(--text);
+  text-decoration: none;
+}
+body.item-221 .hx-blogtopics__tags a:hover {
+  color: var(--heading);
+}
+
+/* topics rail (wp-ja-kinetic/blog-rail) — typography tweaks + counts hidden, matching source */
+body.item-221 .hx-rail-title {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  letter-spacing: 1px !important;
+}
+body.item-221 .hx-railitem {
+  font-size: 14.5px !important;
+  font-weight: 400 !important;
+  color: var(--muted) !important;
+}
+body.item-221 .hx-railitem:hover {
+  color: var(--heading) !important;
+}
+body.item-221 .hx-railitem.is-active {
+  color: var(--ds-c-accent-text, var(--primary)) !important;
+  background: var(--kds-accent-082, var(--ds-c-accent, rgba(163, 230, 53, 0.082))) !important;
+  border-color: transparent !important;
+}
+body.item-221 .hx-railcount {
+  display: none !important;
+}
+body.item-221 .hx-blog {
+  gap: 40px !important;
+}
+
+/* ledger header (wp-ja-kinetic/blog-ledger-header) */
+body.item-221 .hx-bloglist__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+body.item-221 .hx-bloglist__title {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: var(--heading);
+}
+body.item-221 .hx-bloglist__count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+body.item-221 .hx-bloglist__head + .hx-blogrow,
+body.item-221 .hx-bloglist__head + .wp-block-post-template > li:first-child > .hx-blogrow {
+  border-top: none !important;
+}
+
+/* featured-read card (wp-ja-kinetic/field-notes-featured) */
+.hx-feat-section {
+  padding-block: 72px !important;
+}
+.hx-feat-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 28px;
+  margin-bottom: 24px;
+  border-top: 1px solid var(--border);
+}
+.hx-feat-head__l {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--heading);
+}
+.hx-feat-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+.hx-feat-head__r {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hx-featcard {
+  display: flex;
+  align-items: stretch;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 16px);
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color 0.15s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hx-featcard:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px -12px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+.hx-featcard__media {
+  flex: none;
+  width: 480px;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+  background: var(--elevated);
+  background-size: cover;
+  background-position: center;
+}
+:root[data-theme="dark"] .hx-featcard__media {
+  background-color: var(--ds-c-surface, #161B18);
+}
+.hx-featcard__sigil {
+  color: var(--ds-c-accent-text, var(--primary));
+}
+.hx-featcard__sigil svg {
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+.hx-featcard__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: 36px;
+}
+.hx-featcard__cat {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+.hx-featcard__title {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.21;
+  letter-spacing: -0.5px;
+  color: var(--heading);
+  transition: color 0.15s ease;
+}
+.hx-featcard:hover .hx-featcard__title {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+.hx-featcard__excerpt {
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 560px;
+}
+.hx-featcard__meta {
+  margin-top: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+@media (max-width: 991.98px) {
+  .hx-featcard {
+    flex-direction: column !important;
+  }
+  .hx-featcard__media {
+    width: 100% !important;
+    min-height: 170px !important;
+  }
+}
+@media (max-width: 760px) {
+  .hx-featcard {
+    flex-direction: column !important;
+  }
+  .hx-featcard__media {
+    width: 100% !important;
+    min-height: 150px !important;
+  }
+  .hx-featcard__body {
+    padding: 24px 20px !important;
+    gap: 10px !important;
+  }
+  .hx-featcard__title {
+    font-size: 22px !important;
+  }
+  .hx-feat-head {
+    display: none !important;
+  }
+  .hx-feat-section {
+    padding-block: 36px 0 !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  body.item-221 .hx-blog-rail {
+    display: none !important;
+  }
+  body.item-221 .hx-blog {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (max-width: 760px) {
+  body.item-221 .hx-blog-rail {
+    display: none !important;
+  }
+}
+
+@media (max-width: 860px) {
+  body.item-221 .hx-blogmast__title {
+    font-size: 38px !important;
+    letter-spacing: -1.1px !important;
+  }
+}
+@media (max-width: 760px) {
+  body.item-221 .hx-blogmast {
+    padding-block: 40px 36px !important;
+  }
+  body.item-221 .hx-blogmast .hx-container {
+    gap: 14px;
+  }
+  body.item-221 .hx-blogmast__title {
+    font-size: 32px !important;
+    letter-spacing: -1px !important;
+  }
+  body.item-221 .hx-blogmast__desc {
+    font-size: 15px !important;
+  }
+  body.item-221 .hx-blog-section {
+    padding-block: 48px !important;
+  }
+  body.item-221 .hx-bloglist > .hx-blogrow:first-child {
+    border-top: none !important;
+  }
+  body.item-221 .hx-blogrow {
+    border-top: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    grid-template-columns: 32px 1fr !important;
+    grid-template-areas: "num main" ". meta" !important;
+    column-gap: 16px !important;
+    row-gap: 8px !important;
+    align-items: start !important;
+  }
+  body.item-221 .hx-blogdate {
+    grid-area: num;
+  }
+  body.item-221 .hx-blogmain {
+    grid-area: main;
+  }
+  body.item-221 .hx-blogmeta {
+    grid-area: meta;
+  }
+  body.item-221 .hx-blogdate::before {
+    color: var(--ds-c-accent-text, var(--primary)) !important;
+  }
+  body.item-221 .hx-blogrow > .hx-blogmeta {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: wrap;
+    gap: 0 !important;
+    text-align: left !important;
+    font-size: 11.5px !important;
+  }
+  body.item-221 .hx-blogauthor::after,
+  body.item-221 .hx-blogdatetxt::after {
+    content: " \00b7 ";
+    white-space: pre;
+    color: var(--muted);
+  }
+  body.item-221 .hx-bloglist__head {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
+@media (max-width: 620px) {
+  body.item-221 .hx-blog-section {
+    padding-block: 40px !important;
+  }
+}
+
+/* ============================================================================
+   /pages/engineering — Itemid 253 live overlay, ported VERBATIM from
+   css/page-253.css (same `.item-253` selectors, unchanged — see the `item-221`
+   note above for why no WP-specific selector is needed) + `category/thumbs.php`
+   + `category/thumbs_item.php`. A distinct PHP layout in the source ("DISTINCT
+   from blog.php" per its own docblock), not a CSS variant of the blog chrome —
+   carried here as its own class family (`hxcat-*`). The sidebar's sibling-
+   category card is a dynamic block, `wp-ja-kinetic/category-siblings` — real
+   siblings, real live counts (`$term->count`), same as the source's
+   `$sib->getNumItems(true)`.
+   ============================================================================ */
+/* the masthead ground: the page's elevated surface in light, the chrome's in dark
+   (page-253.css:12-18) */
+body.item-253 {
+  --cat-mast-end: var(--elevated);
+}
+:root[data-theme="dark"] body.item-253 {
+  --cat-mast-end: var(--chrome-elevated);
+}
+body.item-253 .hxcat-mast {
+  padding: 60px 32px 52px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--cat-mast-end);
+  background-image: radial-gradient(ellipse 75% 60% at 50% 0%, color-mix(in srgb, var(--primary) 6%, transparent) 0%, var(--cat-mast-end) 55%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+body.item-253 .hxcat-mast__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  max-width: 1240px;
+  margin-inline: auto;
+}
+/* rebuilt as static markup (`category-engineering.html`): source's own classes
+   (`hxcat-bc__home`/`hxcat-bc__rest`/`hxcat-bc__crumb`, `category/thumbs.php:130-138`)
+   instead of the generic `wp:breadcrumbs` block's `<ol><li>` shape, since this template is
+   dedicated to one fixed category and the source's crumb text is a fixed "Blog" label, not
+   this category's real taxonomy ancestor. The paragraph block markup requires wraps its
+   content in a `<p>` the source doesn't have; dropped from the box model the same way
+   `.hx-blogdate .wp-block-post-date` is elsewhere in this file. */
+body.item-253 .hxcat-bc {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  line-height: 1.2;
+}
+body.item-253 .hxcat-bc p {
+  display: contents;
+}
+body.item-253 .hxcat-bc__home {
+  color: var(--text);
+  text-decoration: none;
+}
+body.item-253 .hxcat-bc__rest,
+body.item-253 .hxcat-bc__crumb {
+  color: var(--muted);
+  text-decoration: none;
+}
+body.item-253 .hxcat-bc__home:hover,
+body.item-253 .hxcat-bc__crumb:hover {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+body.item-253 .hxcat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  margin: 0;
+  padding: 5px 12px;
+  border-radius: var(--ds-pill-radius, 100px);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+  color: var(--ds-c-accent-text, var(--primary));
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+body.item-253 .hxcat-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+body.item-253 .hxcat-h1 {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 46px;
+  letter-spacing: -1.3px;
+  line-height: 1.08;
+  color: var(--heading);
+  margin: 0;
+  max-width: 820px;
+}
+body.item-253 .hxcat-sub {
+  font-size: 17px;
+  line-height: 1.588;
+  color: var(--text);
+  max-width: 600px;
+  margin: 0;
+}
+body.item-253 .hxcat-body {
+  padding: 56px 32px 72px;
+  background: var(--bg);
+}
+body.item-253 .hxcat-grid {
+  max-width: 1240px;
+  margin-inline: auto;
+  gap: 40px;
+  align-items: flex-start;
+}
+body.item-253 .hxcat-main {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+/* The source's rows are direct flex children of `.hxcat-main` (`category/thumbs.php`); the Query
+   Loop's own wrappers (`div.wp-block-query > ul.wp-block-post-template > li`) sit in between and
+   would space the rows by theme.json's 16px blockGap instead of the 18px flex gap. `display:
+   contents` drops their boxes so the rows lay out exactly as the source's; `list-style-type:
+   inherit` hands the rows the same inherited value the source's rows have (no marker renders —
+   no element here is a list item any more). */
+body.item-253 .hxcat-main > .wp-block-query,
+body.item-253 .hxcat-main .wp-block-post-template,
+body.item-253 .hxcat-main .wp-block-post-template > li {
+  display: contents;
+  list-style-type: inherit;
+}
+body.item-253 .hxcat-row {
+  display: flex;
+  align-items: stretch;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 14px);
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color 0.15s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+body.item-253 .hxcat-row:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px -12px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+body.item-253 .hxcat-row:hover .hxcat-row__title {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+body.item-253 .hxcat-row__cover {
+  flex: 0 0 200px;
+  width: 200px;
+  align-self: stretch;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+body.item-253 .hxcat-row__cover.is-empty {
+  background-image: radial-gradient(ellipse 60% 60% at 50% 40%, color-mix(in srgb, var(--primary) 11%, transparent) 0%, var(--cat-mast-end) 85%);
+}
+body.item-253 .hxcat-row__body {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px 24px;
+}
+body.item-253 .hxcat-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  color: var(--ds-c-accent-text, var(--primary));
+  text-transform: uppercase;
+}
+body.item-253 .hxcat-row__title {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.263;
+  color: var(--heading);
+  transition: color 0.15s ease;
+}
+body.item-253 .hxcat-row__excerpt,
+/* Same `<p>`-in-`<p>` auto-close as `.hx-blogexcerpt` above — the real text lands on
+   `.wp-block-post-excerpt__excerpt`, a sibling of the (now empty) classed wrapper, under the
+   still-intact `.hxcat-row__body` ancestor. */
+body.item-253 .hxcat-row__body .wp-block-post-excerpt__excerpt {
+  font-size: 14px;
+  line-height: 1.571;
+  color: var(--text);
+}
+body.item-253 .hxcat-row__meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+body.item-253 .hxcat-aside {
+  flex: 0 0 300px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+body.item-253 .hxcat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 14px);
+}
+body.item-253 .hxcat-card__h {
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+body.item-253 .hxcat-catlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+body.item-253 .hxcat-catrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 8px;
+  margin: -6px -8px;
+  border-radius: var(--ds-card-radius, 8px);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+body.item-253 .hxcat-catrow:hover {
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+body.item-253 .hxcat-catrow__n {
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  font-size: 14px;
+  color: var(--text);
+  transition: color 0.15s ease;
+}
+body.item-253 .hxcat-catrow:hover .hxcat-catrow__n {
+  color: var(--heading);
+}
+body.item-253 .hxcat-cloud .wp-block-tag-cloud,
+body.item-253 .hxcat-cloud a {
+  display: inline-flex !important;
+  padding: 5px 10px !important;
+  border: 1px solid var(--border);
+  border-radius: var(--ds-pill-radius, 100px);
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 12px !important;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+body.item-253 .hxcat-cloud a:hover {
+  border-color: var(--primary);
+  color: var(--ds-c-accent-text-hover, var(--primary));
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+body.item-253 .hxcat-pagination {
+  margin-top: 28px;
+}
+body.item-253 .hxcat-empty {
+  padding: 32px 0;
+}
+
+@media (max-width: 980px) {
+  body.item-253 .hxcat-grid {
+    flex-direction: column;
+    gap: 32px;
+  }
+  body.item-253 .hxcat-aside {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+}
+@media (max-width: 860px) {
+  body.item-253 .hxcat-h1 {
+    font-size: 38px;
+    letter-spacing: -1.1px;
+  }
+}
+@media (max-width: 760px) {
+  body.item-253 .hxcat-mast {
+    padding: 40px 20px 36px;
+  }
+  body.item-253 .hxcat-mast__inner {
+    gap: 14px;
+  }
+  body.item-253 .hxcat-h1 {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
+  body.item-253 .hxcat-sub {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  body.item-253 .hxcat-body {
+    padding: 48px 20px 56px;
+  }
+  body.item-253 .hxcat-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  body.item-253 .hxcat-row__cover {
+    flex: 0 0 170px;
+    width: 100%;
+    height: 170px;
+  }
+  body.item-253 .hxcat-row__body {
+    padding: 18px 20px;
+  }
+}
+@media (max-width: 620px) {
+  body.item-253 .hxcat-body {
+    padding: 40px 20px 48px;
+  }
+}
+
+/* ============================================================================
+   Date archive (WP core, any /YYYY/, /YYYY/MM/, /YYYY/MM/DD/ URL) — Itemid 251
+   live overlay, ported VERBATIM from css/page-251.css (same `.item-251`
+   selectors). Source: `com_content` archive view (`/product/article-archive`),
+   a full-width masthead over a 3-col body (BY MONTH rail · post-row list ·
+   TAGS cloud). `wp-ja-kinetic/archive-months` computes the real rail (own
+   $wpdb query, same data WordPress's native date archives are built from);
+   the row list reuses the inherited main query (already date-filtered by
+   WordPress itself on a real date-archive URL); TAGS is a real `wp:tag-cloud`.
+   ============================================================================ */
+body.item-251 .hx-archmast {
+  position: relative;
+  padding-block: 60px 52px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+  background-image: radial-gradient(ellipse 75% 60% at 50% 0%, color-mix(in srgb, var(--primary) 6%, transparent) 0%, transparent 60%),
+    linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
+}
+body.item-251 .hx-archmast__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+/* rebuilt as static markup (`date.html`): a fixed "Home / Blog / Archive" crumb
+   (`archive/default.php:100-104`, `.hx-bc-home`/`.hx-bc-tail` — ONE text node for the tail,
+   not per-segment `<li>`s), not the generic `wp:breadcrumbs` block's real date-archive
+   segments. The `<p>` the paragraph block forces is dropped with `display: contents`. */
+body.item-251 .hx-archmast__bc {
+  display: flex;
+  gap: 6px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+}
+body.item-251 .hx-archmast__bc p {
+  display: contents;
+}
+body.item-251 .hx-bc-home {
+  color: var(--text);
+  text-decoration: none;
+}
+body.item-251 .hx-bc-tail {
+  color: var(--muted);
+}
+body.item-251 .hx-bc-home:hover {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+body.item-251 .hx-archmast__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 5px 12px;
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  border-radius: var(--ds-pill-radius, 100px);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+/* `archive/default.php:107` — the pill's leading dot, present in the source's own markup
+   but missing from this file until now (measured "pill dot missing in WP"). */
+body.item-251 .hx-archmast__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+body.item-251 .hx-archmast__title {
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  margin: 0;
+  font-size: 46px;
+  line-height: 1.08;
+  letter-spacing: -1.3px;
+  color: var(--heading);
+}
+body.item-251 .hx-archmast__sub {
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  margin: 0;
+  max-width: 600px;
+  font-size: 17px;
+  line-height: 27px;
+  color: var(--text);
+}
+body.item-251 .hx-arch-section {
+  padding-block: 56px 72px !important;
+  margin-top: 0 !important;
+}
+body.item-251 .hx-arch-grid {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 240px;
+  align-items: start;
+  gap: 32px;
+}
+body.item-251 .hx-arch-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 14px);
+  /* neutralises the 16px WordPress flow-gap a later grid sibling can carry regardless of
+     the grid's own `gap` — the source's grid has no per-child margin. */
+  margin-top: 0 !important;
+}
+body.item-251 .hx-arch-rail__h {
+  margin: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+body.item-251 .hx-monthrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+body.item-251 .hx-monthrow__m {
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 13.5px;
+  color: var(--text);
+  transition: color 0.15s;
+}
+body.item-251 .hx-monthrow__c {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+body.item-251 .hx-monthrow:hover .hx-monthrow__m {
+  color: var(--heading);
+}
+body.item-251 .hx-monthrow.is-active .hx-monthrow__m {
+  color: var(--ds-c-accent-text, var(--primary));
+  font-weight: 500;
+}
+body.item-251 .hx-monthrow.is-active .hx-monthrow__c {
+  color: var(--ds-c-accent-text, var(--primary));
+}
+body.item-251 .hx-arch-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  margin-top: 0 !important;
+}
+body.item-251 .hx-archrow {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 12px);
+  transition: border-color 0.15s;
+}
+body.item-251 .hx-archrow:hover {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+}
+/* whole row is a link in the source; core/group has no href attribute
+   (verified — see the single-article note above), so the title link is
+   stretched over the row instead. */
+body.item-251 .hx-archrow .wp-block-post-title > a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+body.item-251 .hx-archrow__tc {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+body.item-251 .hx-archrow__t {
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--heading);
+}
+body.item-251 .hx-archrow:hover .hx-archrow__t {
+  color: var(--heading);
+}
+body.item-251 .hx-archrow__m {
+  align-items: center;
+  gap: 6px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+body.item-251 .hx-archrow__cat {
+  color: var(--muted);
+}
+body.item-251 .hx-archrow__arr {
+  flex-shrink: 0;
+  margin: 0;
+  color: var(--muted);
+  transition: color 0.15s, transform 0.15s;
+  line-height: 1;
+}
+body.item-251 .hx-archrow:hover .hx-archrow__arr {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+  transform: translateX(2px);
+}
+body.item-251 .hx-arch-empty {
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 15px;
+  color: var(--muted);
+  margin: 0;
+}
+body.item-251 .hx-tagcloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 0 !important;
+}
+body.item-251 .hx-tagchip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+body.item-251 .hx-tagchip:hover {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+  color: var(--heading);
+}
+body.item-251 .hx-arch-pagination {
+  margin-top: 24px;
+}
+/* The source prints the pager only when there is a second page
+   (`html/com_content/archive/default_items.php:51` `pagesTotal > 1`); the template's group stays in
+   the markup with nothing inside, and its margin alone pushed the stacked Tags rail 24px down at 390. */
+.hx-arch-list .hx-arch-pagination:not(:has(*)) {
+  display: none;
+}
+@media (max-width: 980px) {
+  body.item-251 .hx-arch-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+@media (max-width: 620px) {
+  body.item-251 .hx-archmast {
+    padding-block: 44px 38px;
+  }
+  body.item-251 .hx-archmast__title {
+    font-size: 30px;
+    letter-spacing: -0.8px;
+  }
+  body.item-251 .hx-archmast__sub {
+    font-size: 15px;
+    line-height: 24px;
+  }
+  body.item-251 .hx-arch-section {
+    padding-block: 40px 56px !important;
+  }
+}
+
+/* ============================================================================
+   Single-author archive (WP core, /author/<slug>/) — Itemid 254 live overlay,
+   ported VERBATIM from css/page-254.css (same `.item-254` selectors). Source:
+   `com_content` single-author view — masthead (breadcrumb, AUTHOR pill, name,
+   bio) over a 2-col body (identity aside + post cards).
+   `wp-ja-kinetic/author-identity` supplies the aside's real values (avatar,
+   name, published-post count, bio — `get_the_author_meta('description')`);
+   the masthead subtitle's tagline → bio → job-title fallback chain
+   (`author.php:50-53`) is wired through `wp_ja_kinetic_author_masthead_sub()`
+   in inc/blog-dynamic.php, reading user meta `wp_ja_kinetic_user_tagline` /
+   `wp_ja_kinetic_job_title` (`posts.contract.json` §authors) — empty until
+   the seeder writes them, same as every other seed-data field in this file.
+   ============================================================================ */
+/* page-254.css:12 — the archive wrapper's family stack, inherited by the whole view. */
+body.item-254 .hx-author {
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+}
+body.item-254 .hx-author__head {
+  padding-top: 60px;
+  padding-bottom: 52px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 75% 60% at 50% 0%, var(--kds-accent-059, var(--ds-c-accent, rgba(163, 230, 53, 0.059))) 0%, var(--elevated) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+/* page-254.css:29-35 — dark: the radial ends on the chrome's elevated surface */
+:root[data-theme="dark"] body.item-254 .hx-author__head {
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 75% 60% at 50% 0%, var(--kds-accent-059, var(--ds-c-accent, rgba(163, 230, 53, 0.059))) 0%, var(--ds-c-surface, #161B18) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+body.item-254 .hx-author__head-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+/* rebuilt as static markup + one dynamic block (`author.html`): the source's crumb is
+   "Home / Authors / {name}" (`hx-author__bc-home`/`-trail`/`-link`, `author.php:59-63`) — a
+   fixed "Authors" label the generic `wp:breadcrumbs` block cannot add (it has no author-
+   archive-specific segment at all). Reused verbatim by `tag.html`, whose masthead breadcrumb
+   carries the exact same class names (`com_tags/tag/default.php:38-41`). */
+.hx-author__bc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+}
+.hx-author__bc p {
+  display: contents;
+}
+.hx-author__bc-home {
+  color: var(--text);
+  text-decoration: none;
+}
+.hx-author__bc-trail,
+.hx-author__bc-link {
+  color: var(--muted);
+  text-decoration: none;
+}
+.hx-author__bc-home:hover,
+.hx-author__bc-link:hover {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+/* the dynamic last segment (`wp:post-author-name` on author.html) needs the same muted colour
+   as the rest of the trail — it is a sibling of the `.hx-author__bc-trail` span, not nested
+   inside it, so it is targeted directly. (tag.html's term name is moved into the span by
+   inc/tag-parity.php and inherits the colour from it.) */
+.hx-author__bc > .wp-block-post-author-name {
+  display: inline;
+  margin: 0;
+  font: inherit;
+  color: var(--muted);
+}
+body.item-254 .hx-au-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 5px 12px;
+  border-radius: var(--ds-pill-radius, 100px);
+  background: var(--kds-accent-080, var(--ds-c-accent, rgba(77, 124, 15, 0.08)));
+  border: 1px solid var(--kds-accent-280, var(--ds-c-accent, rgba(77, 124, 15, 0.28)));
+}
+body.item-254 .hx-au-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+body.item-254 .hx-au-pill__t {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+  line-height: 1;
+}
+body.item-254 .hx-author__title {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  margin: 0;
+  font-size: 46px;
+  line-height: 1.05;
+  letter-spacing: -1.3px;
+  text-align: center;
+  color: var(--heading);
+}
+body.item-254 .hx-author__sub {
+  margin: 0;
+  max-width: 600px;
+  font-size: 17px;
+  line-height: 27px;
+  text-align: center;
+  color: var(--text);
+}
+/* `margin-top: 0`: the flow layout of the wrapping `main` group adds its blockGap above this
+   second child; the source's section has no margin (`page-254.css:102`). */
+body.item-254 .hx-author__body {
+  margin-top: 0;
+  padding-block: 56px 72px;
+  background: var(--bg);
+}
+body.item-254 .hx-author__inner {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 40px;
+}
+body.item-254 .hx-auaside {
+  width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 16px);
+}
+body.item-254 .hx-auaside .hx-auav--lg {
+  width: 88px;
+  height: 88px;
+}
+body.item-254 .hx-auav {
+  border-radius: 50%;
+  background: var(--kds-accent-110, var(--ds-c-accent, rgba(77, 124, 15, 0.11)));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+/* page-254.css:10 — the avatar tint in dark (`--hx-au-avatar-bg`, inlined above) */
+:root[data-theme="dark"] body.item-254 .hx-auav {
+  background: var(--kds-accent-145, var(--ds-c-accent, rgba(163, 230, 53, 0.145)));
+}
+body.item-254 .hx-auav__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+body.item-254 .hx-auaside__nm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 0 14px;
+}
+body.item-254 .hx-auaside__n {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--heading);
+  text-align: center;
+}
+body.item-254 .hx-auaside__meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--muted);
+  text-align: center;
+}
+body.item-254 .hx-auaside__bio {
+  margin: 0;
+  width: 100%;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text);
+  text-align: center;
+}
+body.item-254 .hx-auposts {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+/* The source's cards are direct children of `.hx-auposts`; core/post-template always wraps them
+   in `ul > li`, so both drop out of the box model and the cards become the flex items. The
+   list-style reset core puts on the `ul` would otherwise be inherited by the cards. */
+body.item-254 .hx-auposts > .wp-block-post-template,
+body.item-254 .hx-auposts > .wp-block-post-template > li {
+  display: contents;
+  list-style-type: disc;
+}
+body.item-254 .hx-auposts__empty {
+  margin: 0;
+  color: var(--muted);
+}
+body.item-254 .hx-aupost {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 22px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 14px);
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+body.item-254 .hx-aupost:hover {
+  border-color: var(--primary);
+  background: var(--elevated);
+}
+body.item-254 .hx-aupost__tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+body.item-254 .hx-aupost__t {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  margin: 0;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--heading);
+  transition: color 0.15s;
+}
+body.item-254 .hx-aupost:hover .hx-aupost__t {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+body.item-254 .hx-aupost__e {
+  margin: 0;
+  width: 100%;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text);
+}
+/* One text run, "Jul 8 · 2 min", printed whole by `wp-ja-kinetic/post-readtime` (`dateFormat`). */
+body.item-254 .hx-aupost__m {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+@media (max-width: 860px) {
+  body.item-254 .hx-author__inner {
+    flex-direction: column;
+    gap: 28px;
+  }
+  body.item-254 .hx-auaside {
+    width: 100%;
+  }
+  body.item-254 .hx-author__title {
+    font-size: 36px;
+    letter-spacing: -1px;
+  }
+}
+@media (max-width: 620px) {
+  body.item-254 .hx-author__head {
+    padding-top: 44px;
+    padding-bottom: 28px;
+  }
+  body.item-254 .hx-author__body {
+    padding-block: 40px 52px;
+  }
+  body.item-254 .hx-author__sub {
+    font-size: 16px;
+  }
+}
+
+/* =============================================================================
+ * Generated directories — /product/authors, /product/all-categories, /pages/tags.
+ * These three source views list ENTITIES (authors, categories, tags), not articles, so they are
+ * not part of the blog/listing chrome above: each is its own dynamic block
+ * (blocks/authors-directory, blocks/categories-index, blocks/tags-cloud) on its own page template
+ * (page-authors.html, page-categories.html, page-tags.html). Ported from the source's own
+ * page-specific overlays, verbatim except the dark hook (html.t4-dark becomes
+ * :root[data-theme="dark"], matching the rest of this file). The single-tag view
+ * (body.item-231 .com-tags-tag, css/page-231.css section 6) is a different WordPress view
+ * (is_tag(), one tag's post list) with no page-map entry of its own and is not ported here.
+ * ============================================================================= */
+
+/* ---- Authors directory (.hx-authors — css/page-252.css; NOT Itemid-scoped in the source, loaded
+   for every render of the index) ---- */
+.hx-authors {
+  --hx-au-avatar-bg: var(--kds-accent-100, var(--ds-c-accent, rgba(77, 124, 15, 0.10)));
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  color: var(--text);
+}
+:root[data-theme="dark"] .hx-authors {
+  --hx-au-avatar-bg: var(--kds-accent-130, var(--ds-c-accent, rgba(163, 230, 53, 0.13)));
+}
+.t4-main-body:has(.hx-authors) {
+  padding-top: 0 !important;
+}
+.hx-authors__head {
+  padding-top: 66px;
+  padding-bottom: 58px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 75% 60% at 50% 0%, var(--kds-accent-059, var(--ds-c-accent, rgba(163, 230, 53, 0.059))) 0%, var(--elevated) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+:root[data-theme="dark"] .hx-authors__head {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 75% 60% at 50% 0%, var(--kds-accent-059, var(--ds-c-accent, rgba(163, 230, 53, 0.059))) 0%, var(--ds-c-surface, #161B18) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+.hx-authors__head-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.hx-au-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: var(--ds-pill-radius, 100px);
+  background: var(--kds-accent-080, var(--ds-c-accent, rgba(163, 230, 53, 0.08)));
+  border: 1px solid var(--kds-accent-250, var(--ds-c-accent, rgba(163, 230, 53, 0.25)));
+}
+:root:not([data-theme="dark"]) .hx-au-pill {
+  background: var(--kds-accent-080, var(--ds-c-accent, rgba(77, 124, 15, 0.08)));
+  border-color: var(--kds-accent-280, var(--ds-c-accent, rgba(77, 124, 15, 0.28)));
+}
+.hx-au-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+.hx-au-pill__t {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+  line-height: 1;
+}
+.hx-authors__title {
+  margin: 0;
+  max-width: 760px;
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 46px;
+  line-height: 50px;
+  font-weight: 700;
+  letter-spacing: -1.3px;
+  text-align: center;
+  color: var(--heading);
+}
+.hx-authors__sub {
+  margin: 0;
+  max-width: 600px;
+  font-size: 17px;
+  line-height: 27px;
+  text-align: center;
+  color: var(--text);
+}
+.hx-authors__body {
+  padding-block: 64px 80px;
+  background: var(--bg);
+}
+.hx-authors__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+.hx-aucard {
+  /* No colour is set for this class in the source's own page-252.css (verbatim above): it is an
+     unstyled <a>, so it inherits the source's sitewide base rule `a { color: var(--ds-c-accent-text, var(--primary)); }`
+     (css/template.css:19448-19451), which wp-ja-kinetic-sections.css's bridge now carries — no
+     local override needed here. Invisible on every descendant, which each carry their own
+     explicit colour already (.hx-aucard__n: var(--heading), .hx-aucard__c: var(--text)). */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 14px);
+  text-decoration: none;
+  transition: border-color .15s, background .15s;
+}
+.hx-aucard:hover {
+  border-color: var(--primary);
+  background: var(--elevated);
+}
+.hx-auav {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--hx-au-avatar-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.hx-auav__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.hx-aucard__nm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 0 8px;
+}
+.hx-aucard__n {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--heading);
+  text-align: center;
+}
+.hx-aucard:hover .hx-aucard__n {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+/* the job-title line — genuinely missing until now (`css/page-252.css`'s own `.hx-aucard__r`
+   rule); measured live against the source: mono 11.5px muted, centred, not the inherited
+   IBM-Plex/16px/left/primary-green it fell back to without this rule. */
+.hx-aucard__r {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--muted);
+  text-align: center;
+}
+.hx-aucard__c {
+  font-size: 13px;
+  color: var(--text);
+}
+@media (max-width: 991px) {
+  .hx-authors__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .hx-authors__head {
+    padding-top: 48px;
+    padding-bottom: 28px;
+  }
+  .hx-authors__title {
+    font-size: 34px;
+    line-height: 1.1;
+    letter-spacing: -1px;
+  }
+  .hx-authors__sub {
+    font-size: 16px;
+  }
+  .hx-authors__body {
+    padding-block: 44px 56px;
+  }
+}
+@media (max-width: 520px) {
+  .hx-authors__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Categories index (body.item-250 .hx-cats — css/page-250.css) ---- */
+body.item-250 {
+  --cats-mast-end: var(--elevated);
+  --cats-tile-bg: color-mix(in srgb, var(--ds-c-accent, #A3E635) 13%, transparent);
+  --cats-pill-bg: color-mix(in srgb, var(--ds-c-accent, #A3E635) 8%, transparent);
+  --cats-pill-bd: color-mix(in srgb, var(--ds-c-accent, #A3E635) 25%, transparent);
+  --cats-glow: color-mix(in srgb, var(--ds-c-accent, #A3E635) 6%, transparent);
+}
+:root[data-theme="dark"] body.item-250 {
+  --cats-mast-end: var(--chrome-elevated);
+}
+body.item-250 .t4-main-body {
+  padding-top: 0 !important;
+}
+body.item-250 .hx-cats-mast {
+  padding-block: 66px 58px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--cats-mast-end);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 150% 130% at 50% 0%, var(--cats-glow) 0%, var(--cats-mast-end) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+body.item-250 .hx-cats-mast .hx-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+body.item-250 .hx-cats-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 5px 12px;
+  border-radius: var(--ds-pill-radius, 100px);
+  background: var(--cats-pill-bg);
+  border: 1px solid var(--cats-pill-bd);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+body.item-250 .hx-cats-pill__dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+body.item-250 .hx-cats-title {
+  margin: 0;
+  max-width: 760px;
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: -1.3px;
+  line-height: 1.08;
+  color: var(--heading);
+}
+body.item-250 .hx-cats-sub {
+  margin: 0;
+  max-width: 600px;
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text);
+}
+body.item-250 .hx-cats-body {
+  background: var(--bg);
+  padding-block: 64px 80px;
+}
+body.item-250 .hx-cats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+body.item-250 .hx-cat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 26px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 14px);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color .15s ease, transform .2s ease, box-shadow .2s ease;
+}
+body.item-250 .hx-cat-card:hover,
+body.item-250 .hx-cat-card:focus-visible {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px -12px color-mix(in srgb, var(--primary) 40%, transparent);
+  outline: none;
+}
+body.item-250 .hx-cat-card:hover .hx-cat-name,
+body.item-250 .hx-cat-card:focus-visible .hx-cat-name {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+body.item-250 .hx-cat-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+body.item-250 .hx-cat-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--ds-card-radius, 11px);
+  background: var(--cats-tile-bg);
+}
+body.item-250 .hx-cat-ic {
+  width: 21px;
+  height: 21px;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+body.item-250 .hx-cat-count {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--muted);
+}
+body.item-250 .hx-cat-name {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--heading);
+  transition: color .15s ease;
+}
+body.item-250 .hx-cat-desc {
+  margin: 0;
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--text);
+}
+@media (max-width: 980px) {
+  body.item-250 .hx-cats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 620px) {
+  body.item-250 .hx-cats-grid {
+    grid-template-columns: 1fr;
+  }
+  body.item-250 .hx-cats-mast {
+    padding-block: 48px 40px;
+  }
+  body.item-250 .hx-cats-title {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
+  body.item-250 .hx-cats-sub {
+    font-size: 16px;
+  }
+  body.item-250 .hx-cats-body {
+    padding-block: 48px 56px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.item-250 .hx-cat-card,
+  body.item-250 .hx-cat-card * {
+    transition-duration: .01ms !important;
+  }
+  body.item-250 .hx-cat-card:hover,
+  body.item-250 .hx-cat-card:focus-visible {
+    transform: none;
+  }
+}
+
+/* ---- Tags cloud (body.item-231 .com-tags / .kinetic-tags-* — css/page-231.css sections 1-5;
+   section 6, the single-tag view, is a different WordPress view and is not ported here) ---- */
+body.item-231 .t4-main-body {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+body.item-231 .com-tags {
+  margin-top: 0 !important;
+}
+body.item-231 {
+  --p-a08: var(--kds-accent-082, var(--ds-c-accent, rgba(163, 230, 53, 0.082)));
+  --p-a25: var(--kds-accent-250, var(--ds-c-accent, rgba(163, 230, 53, 0.25)));
+}
+:root[data-theme="dark"] body.item-231 {
+  --p-a08: var(--kds-accent-082, var(--ds-c-accent, rgba(163, 230, 53, 0.082)));
+  --p-a25: var(--kds-accent-250, var(--ds-c-accent, rgba(163, 230, 53, 0.25)));
+}
+body.item-231 .com-tags__masthead {
+  padding: 66px 0 58px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  background:
+    radial-gradient(ellipse 150% 120% at 50% 0%, var(--kds-accent-059, var(--ds-c-accent, rgba(163, 230, 53, 0.059))) 0%, var(--ds-c-surface-warm, #F2F5EE) 55%),
+    linear-gradient(rgba(16, 20, 15, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 20, 15, 0.04) 1px, transparent 1px);
+  background-size: auto, 30px 30px, 30px 30px;
+}
+:root[data-theme="dark"] body.item-231 .com-tags__masthead {
+  background:
+    radial-gradient(ellipse 150% 120% at 50% 0%, var(--kds-accent-059, var(--ds-c-accent, rgba(163, 230, 53, 0.059))) 0%, var(--ds-c-surface, #161B18) 55%),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px) !important;
+  background-size: auto, 30px 30px, 30px 30px !important;
+}
+body.item-231 .kinetic-tags-mast-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+body.item-231 .kinetic-tags-eyebrow {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background: var(--kds-accent-078, var(--ds-c-accent, rgba(163, 230, 53, 0.078)));
+  border: 1px solid var(--kds-accent-251, var(--ds-c-accent, rgba(163, 230, 53, 0.251)));
+  border-radius: var(--ds-pill-radius, 100px);
+  font-size: 11.5px !important;
+  letter-spacing: 1.5px !important;
+  margin: 0;
+}
+body.item-231 .kinetic-tags-eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+body.item-231 .kinetic-tags-h1 {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 46px !important;
+  font-weight: 700;
+  letter-spacing: -1.3px;
+  line-height: 1.08;
+  color: var(--heading);
+  max-width: 760px;
+  margin: 0;
+}
+body.item-231 .kinetic-tags-sub {
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 600px;
+  margin: 0;
+  text-align: center;
+}
+body.item-231 .kinetic-tags-body {
+  background: var(--bg);
+  padding: 64px 0 80px !important;
+}
+body.item-231 .com-tags__cloud-wrap .hx-container {
+  display: block;
+  max-width: 1240px !important;
+  margin: 0 auto !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+body.item-231 .kinetic-tags-cloud-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-start;
+  align-items: center;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* `display`/`flex-direction`/`gap`/`max-width` come from the source's base (unscoped `.com-tags`)
+   com_tags stylesheet (`css/template.css`, "com_tags overrides" block, `.com-tags .com-tags__cloud-item`)
+   — page-231.css's own skin never redeclares them, so the base rule is still what the source page
+   actually applies. Without it the pill anchor's own `display: inline-flex` (below) stays
+   inline-flex instead of blockifying to `flex`, the way a flex item's inline-level display always
+   does per the CSS box-type rules — measured live 2026-09-22, `getComputedStyle` on the source's
+   pill reports `flex`, not `inline-flex`. */
+body.item-231 .com-tags__cloud-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 320px;
+  list-style: none;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body.item-231 .kinetic-tags-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--ds-pill-radius, 9999px);
+  background: var(--ds-c-surface, #FFFFFF);
+  border: 1px solid var(--ds-c-border, #E4E8E0);
+  text-decoration: none;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+body.item-231 .kinetic-tags-pill:hover,
+body.item-231 .kinetic-tags-pill:focus-visible {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 8%, var(--ds-c-surface, #FFFFFF));
+  text-decoration: none;
+  outline: none;
+}
+:root[data-theme="dark"] body.item-231 .kinetic-tags-pill {
+  background: var(--ds-c-surface, #121614) !important;
+  border-color: var(--ds-c-border-soft, #232A27) !important;
+}
+:root[data-theme="dark"] body.item-231 .kinetic-tags-pill:hover,
+:root[data-theme="dark"] body.item-231 .kinetic-tags-pill:focus-visible {
+  border-color: var(--primary) !important;
+  background: color-mix(in srgb, var(--primary) 10%, #121614) !important;
+  outline: none;
+}
+body.item-231 .com-tags__pill-label {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 14px !important;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: 0;
+}
+body.item-231 .com-tags__pill-count {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px !important;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+body.item-231 .kinetic-tags-cloud-list a.kinetic-tags-pill,
+body.item-231 .kinetic-tags-cloud-list a.kinetic-tags-pill:visited {
+  color: inherit;
+}
+body.item-231 .kinetic-tags-pill,
+body.item-231 .kinetic-tags-cloud-list a {
+  font-size: initial !important;
+}
+body.item-231 .com-tags__cloud-wrap .t4-section-inner {
+  max-width: none;
+  padding: 0;
+}
+@media (max-width: 767.98px) {
+  body.item-231 .com-tags__masthead {
+    padding: 44px 0 38px;
+  }
+  body.item-231 .kinetic-tags-mast-inner {
+    gap: 14px;
+  }
+  body.item-231 .kinetic-tags-eyebrow {
+    font-size: 11px !important;
+  }
+  body.item-231 .kinetic-tags-h1 {
+    font-size: 33px !important;
+    letter-spacing: -1px;
+    max-width: 100%;
+  }
+  body.item-231 .kinetic-tags-sub {
+    font-size: 15px;
+    max-width: 100%;
+  }
+  body.item-231 .kinetic-tags-body {
+    padding: 40px 0 64px !important;
+  }
+  body.item-231 .com-tags__cloud-wrap .hx-container {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  body.item-231 .kinetic-tags-pill {
+    padding: 10px 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.item-231 .kinetic-tags-pill {
+    transition-duration: .01ms !important;
+  }
+}
+
+/* ============================================================================
+   Single tag (com_tags, view=tag, `templates/tag.html`) — Itemid 231, the SAME menu item
+   the all-tags index above uses (`inc/item-ids.php`'s `is_tag()` branch); ported verbatim
+   from `css/page-231.css` §6 (`body.item-231 .com-tags-tag …`). `.hx-blogtitle` on the title
+   is the source's own second class (`com_tags/tag/default_items.php`); the item-231-scoped
+   `.com-tags__row-title` rule below out-specifies the plain `.hx-blogtitle` rule earlier in
+   this file, so the 18px/heading-colour value here wins, matching the source's own cascade.
+   ============================================================================ */
+/* margin-top 0: the source list sits flush under the masthead; the flow layout's block gap
+   (`:root :where(.is-layout-flow) > *`, spacing--4 = 16px) would push it down. */
+body.item-231 .com-tags-tag .com-tags__list-wrap {
+  margin-top: 0;
+  background: var(--bg);
+  padding: 56px 0 72px !important;
+}
+body.item-231 .com-tags-tag .com-tags__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+/* the row is a real `<a>` here too (inc/tag-parity.php rewrites the row group to the title's link). */
+body.item-231 .com-tags-tag .hx-tagcard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-pill-radius, 14px);
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+/* the Query Loop's own `ul.wp-block-post-template > li` sit between `.com-tags__rows` and the rows;
+   `display: contents` drops their boxes so the rows are the flex column's items, as on the source. */
+body.item-231 .com-tags-tag .com-tags__rows .wp-block-post-template,
+body.item-231 .com-tags-tag .com-tags__rows .wp-block-post-template > li {
+  display: contents;
+  list-style-type: inherit;
+}
+body.item-231 .com-tags-tag .hx-tagcard:hover {
+  border-color: var(--primary);
+  background: var(--elevated);
+}
+body.item-231 .com-tags-tag .hx-tagcard:hover .com-tags__row-title {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+body.item-231 .com-tags-tag .hx-tagcard:hover .com-tags__row-chevron {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+body.item-231 .com-tags-tag .com-tags__row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+body.item-231 .com-tags-tag .com-tags__row-eyebrow {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+body.item-231 .com-tags-tag .com-tags__row-title {
+  margin: 0;
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+  color: var(--heading);
+  transition: color 0.15s ease;
+}
+body.item-231 .com-tags-tag .com-tags__row-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 2px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.2px;
+  color: var(--muted);
+}
+body.item-231 .com-tags-tag .com-tags__row-dot {
+  margin: 0;
+}
+/* the source's tag breadcrumb carries its family as an inline style
+   (`style="…font-family:'JetBrains Mono',ui-monospace,monospace…"` on `nav.kinetic-tags-bc`), and its
+   result counter takes it from template.css:22979 `.com-tags .counter`. */
+.kinetic-tags-bc,
+.com-tags .counter {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+/* the crumb's home link and trail span sit directly in the flex `nav` (inc/tag-parity.php), so the
+   group's flow-layout block gap would push the trail 16px down; the source's inline style has
+   only the 6px flex gap. */
+.hx-author__bc.kinetic-tags-bc > * {
+  margin-block-start: 0;
+}
+body.item-231 .com-tags-tag .com-tags__row-chevron {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: var(--muted);
+  transition: color 0.15s ease;
+}
+body.item-231 .com-tags-tag .com-tags__row-chevron svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+@media (max-width: 767.98px) {
+  body.item-231 .com-tags-tag .com-tags__list-wrap {
+    padding: 40px 0 56px !important;
+  }
+  body.item-231 .com-tags-tag .hx-tagcard {
+    padding: 18px;
+    gap: 14px;
+  }
+  body.item-231 .com-tags-tag .com-tags__row-title {
+    font-size: 16.5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.item-231 .com-tags-tag .hx-tagcard,
+  body.item-231 .com-tags-tag .hx-tagcard * {
+    transition-duration: .01ms !important;
+  }
+}
+
+/* ============================================================================
+   LISTING ARCHIVES — run-3 fix round (owner: listings). Additive, own region.
+   Everything below fixes gaps the earlier item-XXX ports above did not cover:
+   the generic category.html (5 child categories), the tag/pagination base
+   style, and theme.json's global blockGap contaminating several listing rows.
+   ============================================================================ */
+
+/* Every row/card title below is `wp:post-title {"isLink":true}` — a heading wrapping its OWN
+   `<a>` — and every one of the classes on that heading sets `color` to `var(--heading)` (or, on
+   hover, `var(--primary)`) SOMEWHERE above in this file. None of that reaches the nested `<a>`:
+   this theme's shared `a { color: var(--ds-c-accent-text, var(--primary)); }` fallback (`wp-ja-kinetic-sections.css`,
+   deliberately a bare, lowest-specificity element selector so it never outranks a real pattern
+   rule) is still a rule DIRECTLY on the anchor — and a direct rule on an element always wins over
+   an inherited value from an ancestor, regardless of the ancestor rule's specificity. Measured
+   live 2026-09-22: every listing row/card title rendered green, never the source's dark heading
+   colour, on every page in this section (blog, all 6 categories, tag, author). `color: inherit`
+   on the anchor is the fix, not repeating the heading colour value — it also carries through the
+   existing `:hover` rules on the ancestor with no separate hover selector needed here. */
+.hx-blogtitle a,
+.hxcat-row__title a,
+.hx-aupost__t a,
+.hx-archrow__t a,
+.com-tags-tag .com-tags__row-title a {
+  color: inherit;
+}
+
+/* theme.json sets a non-zero default blockGap (see the `.acm-features-ledger`
+   note earlier in this file for the full mechanism) — every one of these
+   groups keeps `"layout":{"type":"default"}` in its block markup (required so
+   the block editor stays usable) while ALSO carrying its own explicit
+   flex/grid CSS above; the block-gap `:where()` rule still fires on top of
+   that, adding an unwanted margin-top no source rule asks for. A plain class
+   selector already outranks `:where()` regardless of source order, so a bare
+   `margin-top: 0` on each is enough — no `!important` needed. */
+.hx-blogtopics,
+.hx-feat-section,
+.hx-blog-section,
+.hx-bloglist,
+.hx-blogmain,
+.hx-blogmeta,
+.hx-blogdatetxt,
+.hx-blogdate__m,
+.hx-blogread,
+.hxcat-row__excerpt,
+.hxcat-row__body .wp-block-post-excerpt__excerpt,
+.hxcat-row__meta,
+.hx-aupost__e,
+.hx-aupost__m,
+.hx-auposts,
+.hxcat-body,
+.com-tags__items {
+  margin-top: 0;
+}
+
+/* .hx-blogtopics__chip (source: `category/blog.php:170`, `<a class="hx-blogtopics__chip">`) is
+   a block-level link in source (each chip on its own flex row via the parent `<ul>`'s
+   `display:flex` already ported above) — the ported `body.item-221 .hx-blogtopics__chip` rule
+   never set `display` at all, leaving the `<a>` at its inline default. */
+.hx-blogtopics__list li {
+  display: flex;
+  align-items: center;
+}
+.hx-blogtopics__chip {
+  display: block;
+}
+
+/* `.hx-feat-num` ("(01)") — the ported `.hx-feat-num` rule above never set
+   `font-weight`/`letter-spacing`, so both fall through to `.hx-feat-head__l`'s bold -0.5px
+   values (a shared ancestor rule, no explicit override on the child). Source: weight 400,
+   normal letter-spacing (`page-221.css` `.hx-feat-num`). */
+.hx-feat-num {
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+/* Engineering sidebar (category-siblings count + popular-tags cloud) — `page-253.css` carries
+   both; the ported `body.item-253` block above stopped one class short of each. */
+body.item-253 .hxcat-catrow__c {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+}
+body.item-253 .hxcat-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* The aside and the tags card are flow-layout groups, so theme.json's blockGap `:where()` rule
+   adds a margin-top on top of the source's own flex `gap` (page-253.css sets no margin). */
+body.item-253 .hxcat-card,
+body.item-253 .hxcat-cloud {
+  margin-top: 0;
+}
+
+/* Single-tag row meta (`.com-tags__row-meta`) — the ported `body.item-231 .com-tags-tag
+   .com-tags__row-meta` rule above carries every property from `page-231.css` EXCEPT
+   `line-height: 1`, so it falls through to the inherited ~1.55 body value (measured:
+   19.375px = 12.5px × 1.55, against the source's 12.5px = 12.5px × 1). */
+body.item-231 .com-tags-tag .com-tags__row-meta {
+  line-height: 1;
+}
+/* template.css:22847-22853 + 22885-22889 (`.com-tags .com-tags__row-date` / `__row-meta`), the base
+   rules page-231.css layers on top of. */
+.com-tags .com-tags__row-meta {
+  justify-self: end;
+  align-self: start;
+  padding-top: 2px;
+}
+/* margin-top 0: the meta group's flow layout block gap would push the date down. */
+.com-tags .com-tags__row-date {
+  margin-top: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.3px;
+  color: var(--muted);
+  padding-top: 2px;
+}
+
+/* Base pagination (`<ul class="pagination"><li class="page-item"><a class="page-link">`,
+   `wp-ja-kinetic/kinetic-pagination`'s own markup): the single-tag archive is the one listing
+   view that does NOT get the rounded 36px "kinetic" pager treatment (`.hx-blog-pagination
+   .pagination …` above) — the source leaves it on the T4 base theme's own Bootstrap-shaped
+   pagination (`templates/ja_kinetic/css/template.css:4710-4796`, plain `--t4-pagination-*`
+   custom properties; `.com-tags .pagination`'s own `--bs-pagination-*` override in
+   `page-231.css` never actually applies — mismatched variable NAMES, verified: the base rule
+   reads `--t4-pagination-*`, not `--bs-*`), which this overlay never ported since every OTHER
+   pagination instance goes through the kinetic-styled wrapper instead. Scoped to `.com-tags`
+   only — the `.hx-blog-pagination`/`.hxcat-pagination` wrappers keep the rounded style above,
+   which already out-specifies a bare `.pagination`/`.page-link` selector regardless of source
+   order (two classes beat one). */
+.com-tags .pagination {
+  display: flex;
+  margin: 1rem auto;
+  padding-left: 0;
+  list-style: none;
+}
+.com-tags .page-link {
+  position: relative;
+  display: block;
+  padding: 0.375rem 0.75rem;
+  margin-left: -1px;
+  font-size: 1rem;
+  color: var(--ds-c-accent-text, #0d6efd);
+  background-color: var(--ds-c-surface, #fff);
+  border: 1px solid var(--ds-c-border, #dee2e6);
+  border-radius: var(--ds-pill-radius, 0.25rem);
+  text-decoration: none;
+}
+.com-tags .page-item:first-child .page-link {
+  margin-left: 0;
+}
+.com-tags .page-link:hover {
+  z-index: 2;
+  color: var(--ds-c-accent-text-hover, rgb(10.4, 88, 202.4));
+  background-color: var(--ds-c-surface-warm, #e9ecef);
+}
+.com-tags .active > .page-link {
+  z-index: 3;
+  color: var(--ds-c-accent-on, #fff);
+  background-color: var(--ds-c-accent, #0d6efd);
+  border-color: var(--ds-c-accent, #0d6efd);
+}
+.com-tags .disabled > .page-link {
+  color: var(--ds-c-muted, #6c757d);
+  pointer-events: none;
+}
+/* source `img, svg { vertical-align: middle; }` (template.css); the parent theme's
+   `:where(.tracy) svg { display: block }` would otherwise stack the icon on its own line box. */
+.com-tags .hx-pag-ico {
+  display: inline;
+  vertical-align: middle;
+}
+/* template.css:22961-22983 (`.com-tags .com-tags-tag__pagination`, `.com-tags .counter`) plus the
+   counter's Bootstrap utilities: `.float-end` (6615), `.counter{margin-top:.5rem}` (11993), reboot's
+   `p{margin-bottom:1rem}`, `pt-3` = 1rem, `pe-2` = .5rem. The nav loses the flow layout's block gap. */
+.com-tags .com-tags-tag__pagination {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.com-tags .com-tags-tag__pagination .counter {
+  float: right;
+  margin: 0.5rem 0 1rem;
+  padding: 1rem 0.5rem 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.com-tags .com-tags-tag__pagination > nav {
+  margin-top: 0;
+}
+
+/* An article whose intro is bare text: the source prints it straight into the body — a line with the
+   body's own line height and no paragraph margin (`article/default.php:228`, `$item->text`); the
+   seeder wraps it in a paragraph, which the run's post-seed step marks `hx-intro-bare`. */
+/* (the article prose sets `.hx-article .hx-prose .article-body p { line-height: 1.75 }`, one step heavier) */
+.article-body > p.hx-intro-bare,
+.hx-article .hx-prose .article-body > p.hx-intro-bare {
+  margin: 0;
+  line-height: inherit;
+}
+
+/* Phones: the 12px text floor (RSP-01). The source sets its mono labels at 10-11.5px; on a phone (575.98px and below, where the source's own phone rules apply) every one of
+   them is raised to 12px. Generated from this file's own rules: keep it last, and regenerate it
+   when a label size changes. */
+@media (max-width: 575.98px) {
+  .hx-article .hx-author__meta,
+  .hx-article .hx-related__tag,
+  .hx-article .hx-related__m,
+  .hx-rail-title,
+  .hx-railcount,
+  .hx-blogdate__m,
+  body.item-221 .hx-blogcat,
+  body.item-221 .hx-blogtopics__lbl,
+  .hx-feat-head__r,
+  body.item-253 .hxcat-pill,
+  body.item-253 .hxcat-tag,
+  body.item-253 .hxcat-row__meta,
+  body.item-253 .hxcat-card__h,
+  body.item-251 .hx-archmast__pill,
+  body.item-251 .hx-arch-rail__h,
+  body.item-251 .hx-monthrow__c,
+  body.item-251 .hx-archrow__m,
+  body.item-251 .hx-tagchip,
+  body.item-254 .hx-au-pill__t,
+  .hx-au-pill__t,
+  .hx-aucard__r,
+  body.item-250 .hx-cats-pill,
+  body.item-231 .com-tags-tag .com-tags__row-eyebrow,
+  body.item-253 .hxcat-catrow__c {
+    font-size: 12px;
+  }
+  .hx-article .hx-article__cat,
+  body.item-221 .hx-blogmast .hx-eyebrow,
+  body.item-221 .hx-blogrow > .hx-blogmeta,
+  body.item-231 .kinetic-tags-eyebrow,
+  body.item-231 .com-tags__pill-count {
+    font-size: 12px !important;
+  }
+}

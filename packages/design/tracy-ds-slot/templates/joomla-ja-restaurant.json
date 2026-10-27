@@ -1,0 +1,877 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-restaurant",
+  "minVersion": {
+    "quickstart/ja-restaurant/j6": "1.0.4"
+  },
+  "maxVersion": {
+    "quickstart/ja-restaurant/j6": "1.0.6"
+  },
+  "maxVersionNote": "1.0.6 20/10/2026: built from 1.0.5 (release-batch.mjs --overlay); every role variable the template paints is read with its own value as the fallback (role scan 0 unresolved), Vietnamese pages use Saira Extra Condensed; unworn the page is the release's own (VERIFICATION.json: 0 computed differences, same pixels). 1.0.5 16/10/2026 (#1375): re-cut of 1.0.4 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "minVersionNote": "1.0.3 was released by another line (TCH #1175: its content contract, demo text) untokenized and with T3 dev mode on, after round 2 had built and measured its own 1.0.3; the tokenized build was redone from that released 1.0.3 and ships as 1.0.4 (RELEASE-DS-REBUILD.sh, TCH #1180)",
+  "release": "quickstart/ja-restaurant/j6@1.0.4",
+  "roles": {
+    "page": "body",
+    "display": "h1.hero-heading",
+    "heading": "h2.t3-section-title",
+    "body": "div.features-item-inner p",
+    "button-primary": "a.btn.btn-lg",
+    "input": "#email_field_548"
+  },
+  "discovered": {
+    "page": "body: the page colour #f4f2e7 (discover.mjs names div.t3-wrapper, whose own fill is the dark #3a352f under a full-height .container-hd painted #f4f2e7)",
+    "display": "largest heading near the top: 58px",
+    "displayFace": "Teko 300, tracking 0.103em",
+    "heading": "first section heading: 58px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(210, 74, 36)",
+    "input": "first text field"
+  },
+  "keepScopes": [],
+  "followRules": {
+    ".acm-features.style-1 .features-item.odd .features-item-inner": {
+      "color": "accent-on"
+    },
+    ".acm-features.style-1 .features-item.odd .features-item-inner a": {
+      "color": "accent-on"
+    },
+    ".acm-features.style-1 .features-item.odd .btn": {
+      "color": "accent-on",
+      "border-color": "accent-on"
+    },
+    ".tags .label-info": {
+      "color": "accent-on"
+    },
+    ".acm-container-tabs .container-tabs-nav .nav-tabs li.active a": {
+      "color": "accent-on"
+    },
+    ".acm-container-tabs .container-tabs-nav .nav-tabs li a.active": {
+      "color": "accent-on"
+    },
+    ".t3-module.module-primary a": {
+      "color": "accent-on"
+    },
+    ".acm-hero .hero-heading:before": {
+      "background-color": "surface"
+    },
+    ".dish-item .item-inner": {
+      "border-bottom-color": "border"
+    },
+    ".acm-slideshow .owl-carousel": {
+      "background-color": "ink"
+    },
+    ".acm-happyhours.style-2 .hp-info .hg-badge strong": {
+      "color": "accent-on"
+    },
+    ".acm-happyhours.style-2 .hp-brand": {
+      "border-bottom-color": "success"
+    },
+    ".acm-happyhours.style-3 .hp-link a": {
+      "background-color": "accent",
+      "color": "accent-on"
+    },
+    ".example-colors .color-brand-primary, .label-primary": {
+      "color": "accent-on!"
+    },
+    ".list-group-item.active .list-group-item-text": {
+      "color": "accent-on"
+    },
+    ".plain-style .box-contact.box-primary h3": {
+      "color": "accent-on",
+      "border-color": "accent-on"
+    },
+    ".plain-style .box-contact.box-primary a": {
+      "color": "accent-on"
+    },
+    ".items-row.cols-1 .info-article .article-aside .category-name a": {
+      "background-color": "accent",
+      "color": "accent-on"
+    },
+    ".items-row.cols-1 .info-article .article-aside .category-name a:is(:hover, :focus, :active)": {
+      "background-color": "accent-hover",
+      "color": "accent-on"
+    },
+    ".btn-inverse": {
+      "background-color": "fg",
+      "border-color": "fg",
+      "color": "bg"
+    },
+    ".btn-secondary, button.btn:not([class*=btn-])": {
+      "background-color": "surface",
+      "border-color": "border",
+      "color": "fg"
+    },
+    "a.btn.btn-default.btn-block.btn-lg": {
+      "background-color": "surface-warm",
+      "border-color": "surface-warm",
+      "color": "fg"
+    }
+  },
+  "followNote": "text the template sets white in one rule on an accent fill set in another (the 'Discover our story' box, the tag chips, the menu's active tab, the accent sidebar module's links): under a light accent it stayed white (1.94 under MotherDuck); it takes the accent's own text. The white cards (#ffffff: special offers, the menu panel) follow as surface (last palette), so their text and fill stay a pair. The yellow marker behind the welcome heading (.hero-heading:before, #ffd33d) takes the surface: the heading text follows the system, and light text on the yellow marker would not read 20/10/2026: the menu cards' dashed rule (#999999) takes the border, the slideshow's ground behind its slides the ink, Happy Hours' badge, brand rule and style-3 button the accent pair or the success colour, the contact page's accent box its text, the swatch and label-primary words and list-group-item-text the accent's own text 20/10/2026 (1.0.6, preview probe v10): the colour themes' category chip reads its brand colour as info and its words as info-text (the same colour): it takes the accent pair; Bootstrap 3's .btn-inverse reads the page colour as its fill and takes the text colour instead (the page's inverse); Joomla core's .btn-secondary and bare button.btn, which Bootstrap 3 leaves to the browser's button face (#6b6b6b under a dark system), take the surface and its text; the gallery's full-width View more bar takes the quiet raised surface; the accent contact box's links keep their colour rule, their 40% underline moved to sideRules",
+  "measureBlock": ["*opentable.com/*", "*otstatic.com/*"],
+  "measureNote": "the home page's reservation form is OpenTable's own widget, loaded by a parser-blocking script (//secure.opentable.com/frontdoor/…): while that host is slow the page stops at that line and a measure sees only the header and the slider (round 1, and 424 s for one load on 11/10/2026). The measuring browser fails it at once; the form paints with OpenTable's own stylesheet, so it would not follow a system anyway",
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#f4f2e7",
+    "--fg": "#3a352f",
+    "--fg-2": "#222222",
+    "--accent": "#d24a24",
+    "--accent-hover": "#913319",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#eeeeee",
+    "--muted": "#555555",
+    "--font-display": "\"Teko\", sans-serif",
+    "--font-body": "\"Noticia Text\", sans-serif",
+    "--surface-warm": "#3a352f"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#f4f2e7",
+      "fg": "#3a352f",
+      "fg-2": "#222222",
+      "accent": "#d24a24",
+      "accent-hover": "#913319",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#eeeeee",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#f4f2e7",
+      "surface-warm": "#3a352f"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "border-soft": "#e5e5e5",
+      "bg": "#eeeeee",
+      "surface-warm": "#333333",
+      "surface": "#f3f3f3",
+      "accent-hover": "#a63b1d",
+      "accent": "#bc4220",
+      "border": "#f7f7f7"
+    },
+    {
+      "bg": "#e6e6e6",
+      "border-soft": "#e0e0e0",
+      "surface-warm": "#2d2d2d",
+      "surface": "#f9f9f9",
+      "accent-hover": "#9e381b",
+      "border": "#ededed",
+      "accent": "#c54522"
+    },
+    {
+      "surface-warm": "#3a352f",
+      "bg": "#f2dede",
+      "border-soft": "#e0e2e3",
+      "surface": "#f5f2f8",
+      "accent-hover": "#8b211e",
+      "border": "#f4f2e7"
+    },
+    {
+      "bg": "#fcf8e3",
+      "surface-warm": "#342a3b",
+      "border-soft": "#e1e1e1",
+      "surface": "#f9f2f4",
+      "accent-hover": "#883017"
+    },
+    {
+      "bg": "#e8e8e8",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "bg": "#fff6df",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "bg": "#f0f0f0"
+    },
+    {
+      "surface": "#ffffff"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (71 line colours, 80 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-heading",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn:not(.btn-decor)", "a.btn.btn-lg:not(.btn-decor)"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-lg:not(.btn-default.btn-block)"],
+    "container": ["#t3-mainbody .container, .container"],
+    "bodyFace": ["body"],
+    "textFace": [
+      ":is(.navbar-default, .t3-topbar, .btn, .t3-copyright, .module-title, .nav-tabs > li > a, .acymailing_module .acymailing_mootoolsbutton a, .ja-gallery-list .btn-play, .article-content > dl.tabs h3 a, .acm-features.style-2 h3, .dish-item .dish-name, .acm-menu .style-1 .dish-item .dish-price)"
+    ],
+    "displayFace": [
+      ":is(.banner-bonus .price, .logout .page-header h1, .registration fieldset legend span, .profile legend, .profile-edit legend, div.finder .form-group label, div.finder .form-inline > label, .items-row.cols-1 .info-article .article-aside .category-name a, .acm-slideshow .item .slide-content, .style-2 .dish-item .dish-price, .style-3 .dish-item .dish-price, .acm-happyhours .hp-info .hg-badge, .acm-timeline .timeline-list .item-row .timeline-item .item-date)"
+    ],
+    "pill": [".label"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": ".t3-wrapper p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t3-wrapper p, .t3-wrapper li",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "t3-topbar-1",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 18 tried (byte 10031); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#e5e5e5",
+      "uses": 375,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 312,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f2e7",
+      "distance": 10
+    },
+    {
+      "hex": "#333333",
+      "uses": 246,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#3a352f",
+      "distance": 8
+    },
+    {
+      "hex": "#e6e6e6",
+      "uses": 214,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f2e7",
+      "distance": 18
+    },
+    {
+      "hex": "#e0e0e0",
+      "uses": 168,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 17
+    },
+    {
+      "hex": "#2d2d2d",
+      "uses": 128,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#3a352f",
+      "distance": 15
+    },
+    {
+      "hex": "#3a352f",
+      "uses": 124,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#3a352f",
+      "distance": 0
+    },
+    {
+      "hex": "#f2dede",
+      "uses": 112,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f2e7",
+      "distance": 22
+    },
+    {
+      "hex": "#f3f3f3",
+      "uses": 100,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 7
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 99,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f2e7",
+      "distance": 11
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 70,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#a63b1d",
+      "uses": 69,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#913319",
+      "distance": 23
+    },
+    {
+      "hex": "#9e381b",
+      "uses": 66,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#913319",
+      "distance": 14
+    },
+    {
+      "hex": "#342a3b",
+      "uses": 50,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#3a352f",
+      "distance": 17
+    },
+    {
+      "hex": "#bc4220",
+      "uses": 29,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#d24a24",
+      "distance": 24
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 28,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 24,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#f5f2f8",
+      "uses": 24,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 5
+    },
+    {
+      "hex": "#8b211e",
+      "uses": 20,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#913319",
+      "distance": 20
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 18,
+      "kind": "line",
+      "role": "border",
+      "near": "#eeeeee",
+      "distance": 16
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 14,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#e8e8e8",
+      "uses": 14,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f2e7",
+      "distance": 16
+    },
+    {
+      "hex": "#ededed",
+      "uses": 14,
+      "kind": "line",
+      "role": "border",
+      "near": "#eeeeee",
+      "distance": 2
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 14,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#fff6df",
+      "uses": 14,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f2e7",
+      "distance": 14
+    },
+    {
+      "hex": "#f4f2e7",
+      "uses": 12,
+      "kind": "line",
+      "role": "border",
+      "near": "#eeeeee",
+      "distance": 10
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 10,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f2e7",
+      "distance": 10
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#883017",
+      "uses": 4,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#913319",
+      "distance": 10
+    },
+    {
+      "hex": "#c54522",
+      "uses": 4,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#d24a24",
+      "distance": 14
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (heading and text kinds added: every visible heading and text element) on the tokenized 1.0.4 build (~/tracy-bench-work/release/ds-rebuild/rel/ja-restaurant/release, webroot sha256 a1fa6513..., the one RELEASE-DS-REBUILD.sh ships; tasks/evidence/ds-remeasure-4-2026-10-11/ja-restaurant-j6): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, no text under 4.5:1 worse than the template's own (lowest 4.85), 83% or more of the page follows, every contrast kind sampled in every view, dark and light screenshots looked at; nothing changed. The published 1.0.3 (another line's, untokenized) measured 4/12 (24% follows). Earlier: measured 11/10/2026 on the local build of ja-restaurant/j6 1.0.4, tokenized from the released 1.0.3 (tasks/evidence/ds-rebuild-collided-2026-10-11/ja-restaurant-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: accent-text, muted, body, heading, footer), 83% or more of the page follows; 1.0.4 ships T3 dev mode off (t3DevmodeOff, 5 styles, and its content contract's lock says so), so the page serves its tokenized css/ files; without a system 1.0.4 computes exactly what 1.0.3 (dev mode on) does: 0 differences on five pages at 1440 and 390, same pixels, 37/37 pages as released. Measured with OpenTable's form script blocked (measureBlock). Sites built from 1.0.3 or older ignore it",
+  "t3DevmodeOff": true,
+  "bands": {
+    ".t3-module.module.module-primary.no-padding": {
+      "ground": "#d24a24",
+      "texts": ["#f6dbd3", "#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".module-title span", ".module-ct", ".module-ct a"],
+      "paint": {
+        ".module-title span::after": {
+          "background-color": "text"
+        }
+      }
+    },
+    ".t3-mainnav": {
+      "ground": "#3a352f",
+      "texts": ["#ffffff"],
+      "kind": "ink",
+      "root": false,
+      "important": true,
+      "fill": true,
+      "words": [
+        ".navbar-nav.level0 > li > a",
+        ".navbar-nav.level0 > li > span",
+        ".t3-navbar-collapse .navbar-nav li > a",
+        ".t3-navbar-collapse .navbar-nav li > span"
+      ],
+      "paint": {
+        ".container": {
+          "background-color": "ground"
+        },
+        ".t3-navbar-collapse": {
+          "background-color": "ground"
+        },
+        ".t3-navbar, .navbar-nav > li.is-home, .t3-navbar-collapse .navbar-nav > li > a, .t3-navbar-collapse .navbar-nav > li > span": {
+          "border-color": "card"
+        },
+        ".navbar-nav.level0 > li > a .caret, .navbar-nav.level0 > li > span .caret, .t3-navbar-collapse .navbar-nav > li > a .caret": {
+          "border-top-color": "text"
+        },
+        ".navbar-nav.level0 > .active > a, .navbar-nav.level0 > .active > span, .t3-navbar-collapse .navbar-nav .open > a, .t3-navbar-collapse .navbar-nav .open > span, .t3-navbar-collapse .navbar-nav .active > a, .t3-navbar-collapse .navbar-nav .active > span": {
+          "color": "accent"
+        }
+      }
+    },
+    ".t3-footer": {
+      "ground": "#3a352f",
+      "texts": ["#ffffff"],
+      "kind": "ink",
+      "important": true,
+      "fill": true,
+      "words": [
+        ".module-title span",
+        ".mod-custom p",
+        ".t3-footnav .t3-module ul > li > a",
+        ".copyright small"
+      ],
+      "paint": {
+        ".t3-footnav .t3-module": {
+          "background-color": "ground"
+        },
+        ".module-title span::after": {
+          "background-color": "accent-fill"
+        },
+        ".mod-custom a, .highlight, .copyright a": {
+          "color": "accent"
+        }
+      }
+    },
+    ".module-dark": {
+      "ground": "#3a352f",
+      "texts": ["#ffffff"],
+      "kind": "ink",
+      "important": true,
+      "fill": true,
+      "words": [".module-title span", ".module-ct p", ".module-ct a"],
+      "paint": {
+        ".owl-controls .owl-buttons div": {
+          "border-color": "card"
+        }
+      }
+    },
+    ".jumbotron.jumbotron-primary": {
+      "ground": "#d24a24",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [":is(h1, p)"]
+    },
+    ".features-item.col-sm-6.even": {
+      "ground": "#3a352f",
+      "texts": ["#ffffff"],
+      "kind": "ink",
+      "root": false,
+      "important": true,
+      "fill": true,
+      "words": [".features-item-inner", ".features-item-inner h1", ".features-item-inner p"],
+      "paint": {
+        ".features-item-inner": {
+          "background-color": "ground"
+        },
+        ".btn-decor": {
+          "background-color": "ground"
+        }
+      }
+    }
+  },
+  "sideRules": {
+    "light": {
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-success .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-success .panel-heading .panel-title": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".panel-info .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-info .panel-heading .panel-title": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".panel-warning .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-warning .panel-heading .panel-title": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".panel-danger .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-danger .panel-heading .panel-title": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      "code, kbd, pre, samp": {
+        "font-family": "var(--ds-font-mono, monospace)"
+      },
+      ".table > :is(thead, tbody, tfoot) > tr > :is(td, th).success, .table > :is(thead, tbody, tfoot) > tr.success > :is(td, th), .table-hover > tbody > tr.success:hover > :is(td, th), .table-hover > tbody > tr > :is(td, th).success:hover": {
+        "background-color": "var(--ds-c-success-bg)",
+        "color": "var(--ds-c-success-text)"
+      },
+      ".table > :is(thead, tbody, tfoot) > tr > :is(td, th).info, .table > :is(thead, tbody, tfoot) > tr.info > :is(td, th), .table-hover > tbody > tr.info:hover > :is(td, th), .table-hover > tbody > tr > :is(td, th).info:hover": {
+        "background-color": "var(--ds-c-info-bg)",
+        "color": "var(--ds-c-info-text)"
+      },
+      ".banner-bonus ul li + li": {
+        "border-top-color": "color-mix(in srgb, var(--ds-c-accent) 30%, transparent)"
+      },
+      ".plain-style .box-contact.box-primary a": {
+        "border-bottom-color": "color-mix(in srgb, var(--ds-c-accent-on) 40%, transparent)"
+      },
+      ".acm-features.style-1 .features-item .features-item-inner": {
+        "container-type": "inline-size"
+      },
+      ".acm-features.style-1 .features-item h1": {
+        "font-size": "min(58px, 11cqi)"
+      },
+      ".nav-tabs > li > a": {
+        "border-radius": "var(--ds-btn-radius) var(--ds-btn-radius) 0 0"
+      },
+      ".acm-happyhours.style-1 .hp-desc, .acm-happyhours.style-1 .hp-desc p": {
+        "color": "#3a352f"
+      },
+      ".acm-container-tabs .container-tabs-nav .nav-tabs li a, .nav-pills li a, .list-group-item.active, .acm-happyhours .hp-link a": {
+        "border-radius": "var(--ds-btn-radius)"
+      }
+    },
+    "dark": {
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-success .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-success .panel-heading .panel-title": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".panel-info .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-info .panel-heading .panel-title": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".panel-warning .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-warning .panel-heading .panel-title": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".panel-danger .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-danger .panel-heading .panel-title": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      "code, kbd, pre, samp": {
+        "font-family": "var(--ds-font-mono, monospace)"
+      },
+      ".table > :is(thead, tbody, tfoot) > tr > :is(td, th).success, .table > :is(thead, tbody, tfoot) > tr.success > :is(td, th), .table-hover > tbody > tr.success:hover > :is(td, th), .table-hover > tbody > tr > :is(td, th).success:hover": {
+        "background-color": "var(--ds-c-success-bg)",
+        "color": "var(--ds-c-success-text)"
+      },
+      ".table > :is(thead, tbody, tfoot) > tr > :is(td, th).info, .table > :is(thead, tbody, tfoot) > tr.info > :is(td, th), .table-hover > tbody > tr.info:hover > :is(td, th), .table-hover > tbody > tr > :is(td, th).info:hover": {
+        "background-color": "var(--ds-c-info-bg)",
+        "color": "var(--ds-c-info-text)"
+      },
+      ".banner-bonus ul li + li": {
+        "border-top-color": "color-mix(in srgb, var(--ds-c-accent) 30%, transparent)"
+      },
+      ".plain-style .box-contact.box-primary a": {
+        "border-bottom-color": "color-mix(in srgb, var(--ds-c-accent-on) 40%, transparent)"
+      },
+      ".acm-features.style-1 .features-item .features-item-inner": {
+        "container-type": "inline-size"
+      },
+      ".acm-features.style-1 .features-item h1": {
+        "font-size": "min(58px, 11cqi)"
+      },
+      ".nav-tabs > li > a": {
+        "border-radius": "var(--ds-btn-radius) var(--ds-btn-radius) 0 0"
+      },
+      ".acm-happyhours.style-1 .hp-desc, .acm-happyhours.style-1 .hp-desc p": {
+        "color": "#3a352f"
+      },
+      ".acm-container-tabs .container-tabs-nav .nav-tabs li a, .nav-pills li a, .list-group-item.active, .acm-happyhours .hp-link a": {
+        "border-radius": "var(--ds-btn-radius)"
+      }
+    }
+  },
+  "sideNote": "Bootstrap 3's status components (alerts, panels, labels, the info button), whose literal pale grounds and status words no tokenizing reached (the release maps some of them to meta, muted and bg): they wear the system's status pairs, as JA Social II (the same T3 Bootstrap) does 20/10/2026 (1.0.6, preview probe v10): the table status rows (.success, .info) the release left literal take the status pairs; the accent-filled menu tabs, pills, active list item and the happy-hours links take the system's button corner; the offer list's dotted accent rule and the accent box's link underline are mixes of the accent and its text; the first feature box's heading is capped at 11% of its box (container units), so a wider face at the template's 58px keeps \"EXPERIENCE\" inside it",
+  "faceNote": "the template writes its faces by name rather than through a variable: Roboto Mono on the menu, the topbar's opening hours, module titles, tabs, buttons and the copyright; Noticia Text on the menu dishes and the special-offer titles; Teko on prices, badges, the slideshow words and the account legends. Under a system they stayed the template's beside the system's type (FONT-2 on every page, 20/10/2026): selectors.textFace takes the system's body face, selectors.displayFace its display face, the family only. The split buttons (.btn-decor) keep the template's type (buttonNote) 20/10/2026: the split buttons (.btn-decor) take the system's body family as well (FONT-2 on six pages); size, padding and tracking stay the template's",
+  "bandsNote": "blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent. 15/10/2026: the accent Categories module (#Mod97, .module-primary.no-padding, on the home page and the blog) kept its links white (the template's rgba(255, 255, 255, 0.8) on .t3-module.module-primary a): the page's followRule for them stops at the band's edge and the band repainted only its title, so under a light accent the four category links read 1.23-2.56:1 (Linear, Mailchimp, Spotify, MotherDuck, Moxie, Toggl Track; v9 measure, 12 of 34 home views and 2 of 8 blog views). The band's words now take the module's content and its links (.module-ct, .module-ct a): the words the system sets on the band's ground 20/10/2026 (1.0.5 measured at preview probe v10): the template paints its dark ink #3a352f as a literal on the main menu bar (.t3-mainnav .container, the phone menu .t3-navbar-collapse), the footer and its modules, the sidebar's dark module (.module-dark) and the second feature box (.acm-features.style-1 .features-item.even), with its second accent #ffd33d on the menu's active item and the footer's links and labels: they stayed brown and yellow under every system (ROLE-1 82% on Toggl Track, Mailchimp and Stripe at 390; ACCENT-LEAK and kept text on 24 of 28 pages). #3a352f is too grey for bands.mjs --fills, so the five are fills of kind ink drafted by hand from bands.mjs on the home page and /about-us: their words take the text the system sets on the worn ground, the yellow words its accent, the menu's lines its card step. The fills, not keepScopes: a kept band gives its inside back to the template (the testimonial name chip and the price tags kept #d24a24). The feature key names .col-sm-6 because the special-offer cards (.acm-features.style-2, white) are .features-item.even too. The accent jumbotron of the typography page is a brand fill, as on Purity III, so its Call to Action stands out on it",
+  "buttonNote": "the decorated buttons (.btn-decor: About Us, Learn more) are split buttons, a label box with 78px of right padding beside an arrow cell drawn on that padding: the system’s even padding, type and tracking put the label under the arrow cell, cut to ABOU and LEARN (visual review 14/10/2026). They keep the template’s padding, size and type (left out of selectors.button) and still take the system’s colours",
+  "literalsNote": "the first happy-hours description (.acm-happyhours.style-1 .hp-desc) keep the template's own #3a352f under every system: dark words with a white text shadow on a light photograph, which no system ground is under (preview probe v10 20/10/2026: the system's text read 1.68:1 on the photo under Moxie)"
+}

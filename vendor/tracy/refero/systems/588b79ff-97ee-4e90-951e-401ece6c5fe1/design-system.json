@@ -1,0 +1,253 @@
+{
+  "dos": [
+    "Use #321929 (Aubergine Ink) for all primary text, icons, and interactive borders — never substitute pure black",
+    "Use 9999px border-radius for every button, badge, and pill-shaped interactive element",
+    "Use #e0dddf (Warm Linen) for all structural borders — cards, dividers, image edges, nav separators",
+    "Keep section vertical gaps at 48px to maintain editorial breathing room between content bands",
+    "Use Neue Haas Grotesk weight 400 at 14-15px for all body and UI text — the single weight is the system's voice",
+    "Apply the brand-tinted shadow (rgba(50,25,41,0.15) 0px 2px 10px) only to primary pill action buttons — nowhere else",
+    "Let product and lifestyle photography fill the visual hierarchy; keep UI chrome to hairlines and small type"
+  ],
+  "donts": [
+    "Don't introduce any chromatic color beyond Aubergine Ink — the monochrome system is the brand identity",
+    "Don't use filled buttons with solid backgrounds — actions are always outlined or ghost",
+    "Don't add drop shadows to cards, images, or content blocks — use 1px Warm Linen borders for structure",
+    "Don't use letter-spacing greater than 0.01em — tracking stays nearly flat across the type system",
+    "Don't use type sizes below 11px or above 28px in the core type system — the scale is deliberately compact",
+    "Don't differentiate cards from the page using background color contrast — both are Soft White, separated only by borders",
+    "Don't use decorative gradients, color washes, or background tints — the system is flat and achromatic"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#321929",
+      "name": "Aubergine Ink",
+      "role": "Primary text, icons, outlined action borders, badges, links — a warm near-black that gives the monochrome system its only chromatic voice without ever feeling colored",
+      "group": "brand"
+    },
+    {
+      "hex": "#e0dddf",
+      "name": "Warm Linen",
+      "role": "Structural borders on cards, dividers, image edges, nav, lists — the single most-used color in the system defines every edge between surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Soft White",
+      "role": "Page background, card surfaces, nav fill, badge fills — the canvas on which everything sits",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d1d1f",
+      "name": "Charcoal",
+      "role": "Input field borders, image container borders, secondary structural edges where slightly more weight is needed than Warm Linen",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Icon fills, SVG strokes, link text in decorative contexts — used sparingly where absolute contrast is required",
+      "group": "neutral"
+    },
+    {
+      "hex": "#636363",
+      "name": "Smoke Gray",
+      "role": "Secondary muted text, price labels, helper copy — sits behind Aubergine Ink in the text hierarchy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#141414",
+      "name": "Ink",
+      "role": "Monochrome icon fills, brand marks, and high-contrast graphic details. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6f6d6b",
+      "name": "Stone",
+      "role": "Card body text, descriptive copy — a warm gray that reads as natural on the white canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0f0f0",
+      "name": "Pale Mist",
+      "role": "Subtle background fills and dividers where Warm Linen would be too warm — a cool counterpoint for nested surfaces",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed hero with overlaid minimal navigation, followed by a 6-column product grid at max-width 1200px, then a 3-column editorial/lifestyle grid. Sections are separated by 48px vertical gaps on a continuous white canvas — no alternating background bands, no color-coded sections. The page reads as a single editorial spread: hero image, product row, lifestyle row, footer. Navigation is a single top bar with centered logo and split left/right category links. The product grid is the densest layout element (6 columns at 1200px), while editorial sections breathe with larger images and more spacing. Overall density is compact but not crowded — the 4-10px element gaps create tight internal rhythm while 48px section gaps provide visual punctuation.",
+  "imagery": "Full-bleed lifestyle and interior photography is the primary visual content. Hero images are large-format still-life compositions — folded striped towels on ornate wooden armoires, natural light, warm earth tones. Product photography uses clean white or neutral backgrounds with soft shadows, showing textiles flat or gently draped. Editorial grid images mix portrait, detail, and still-life crops at consistent scale. The color palette across photography stays in muted, natural tones — whites, creams, dusty plums, warm woods, soft greens — harmonizing with the near-monochrome UI. No illustrations, no abstract graphics, no icons beyond minimal functional UI markers. Photography occupies the majority of visual real estate; text and chrome recede.",
+  "similar": [
+    {
+      "why": "Same near-monochrome palette with a single warm dark accent, compact editorial type scale, and hairline-driven card structure for a textile-first catalog",
+      "business": "Tekla"
+    },
+    {
+      "why": "Danish design restraint with pill-shaped actions, minimal UI chrome, and full-bleed lifestyle photography as the primary visual content",
+      "business": "Hay"
+    },
+    {
+      "why": "Editorial luxury home goods with compact sans-serif type, hairline borders, and a single warm dark ink color replacing pure black",
+      "business": "Toast"
+    },
+    {
+      "why": "Curated catalog aesthetic with near-monochrome interface, warm dark text color, and lifestyle photography carrying all visual weight",
+      "business": "The Citizenry"
+    },
+    {
+      "why": "Nordic minimalism with the same flat surface approach, single-weight sans-serif typography, and the philosophy that the product should be the hero",
+      "business": "Menu Space"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "3.5px",
+      "badges": "9999px",
+      "buttons": "9999px",
+      "image-containers": "40px"
+    },
+    "elementGap": "4px",
+    "sectionGap": "48px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Primary page background — all content sits directly on Soft White"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Surface",
+      "level": 1,
+      "purpose": "Product cards and content blocks share the page background; separation is achieved exclusively through Warm Linen hairlines, never fill contrast"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(50, 25, 41, 0.15) 0px 2px 10px 0px",
+      "element": "Pill Action Button"
+    }
+  ],
+  "northStar": "editorial linen closet behind museum glass",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.08
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.1
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.11
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.38,
+      "letterSpacing": 0.13
+    },
+    {
+      "role": "heading-sm",
+      "size": 22,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.15
+    },
+    {
+      "role": "heading",
+      "size": 28,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Action Button",
+      "role": "Primary interactive element for CTAs, add-to-cart, navigation actions",
+      "description": "Outlined pill with 9999px border-radius, 1px border in #321929 (Aubergine Ink), text in #321929 at 14px Neue Haas Grotesk weight 400, 16px vertical padding, 24px horizontal padding, white fill, and the signature brand-tinted shadow: rgba(50,25,41,0.15) 0px 2px 10px 0px. The shadow color is literally the brand color at 15% opacity — the only shadow in the entire system."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Secondary navigation, inline links, category names",
+      "description": "No border, no background. Text only in #321929 at 14px Neue Haas Grotesk weight 400. Underline appears on hover. Sits in the same text color as the pill button to maintain a single interactive voice."
+    },
+    {
+      "name": "Product Card",
+      "role": "Display individual products in grid layouts",
+      "description": "White surface with no fill, 1px border in #e0dddf (Warm Linen), 16px padding. Product image fills the card top with no radius. Product name in 14px Neue Haas Grotesk weight 400, #321929. Price in 14px, #636363 (Smoke Gray). No buttons, no badges inside the card — interaction lives on the image or in the card-level action."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation with logo, categories, account actions",
+      "description": "Full-width white bar with Warm Linen bottom border (1px). Logo centered, category links left-aligned and right-aligned. Nav text in 14px Neue Haas Grotesk weight 400, #321929. Nav container has 3.5px border-radius. Tight 2px row gap between nav items. No background color change on scroll."
+    },
+    {
+      "name": "Category Badge",
+      "role": "Small labels for product categories, tags, or status indicators",
+      "description": "Pill shape with 9999px radius, 1px vertical padding, 5px horizontal padding, 1px border in #321929. Text in 11px Neue Haas Grotesk weight 400, #321929. Minimal visual weight — designed to be whispered, not shouted."
+    },
+    {
+      "name": "Newsletter Input",
+      "role": "Email capture in footer or inline sections",
+      "description": "Flat rectangular field with 1px border in #1d1d1f (Charcoal), 0px radius (no rounding on inputs), 16px vertical padding, 12px horizontal padding. Placeholder text in #636363, 16px Neue Haas Grotesk weight 400. No focus ring color is defined — focus state should use a 1px Aubergine Ink border."
+    },
+    {
+      "name": "Rounded Image Container",
+      "role": "Display large editorial or lifestyle photography with soft edges",
+      "description": "Image with 40px border-radius, no border, no shadow. Used for featured editorial content where the rounded corners soften the otherwise sharp, hairline-driven system. The 40px radius is the largest corner radius in the system and is reserved for image treatments only."
+    },
+    {
+      "name": "Section Header",
+      "role": "Title or label introducing a content section",
+      "description": "Small label text in 14px Neue Haas Grotesk weight 400, #321929, with generous 48px bottom margin. No decorative elements — the section title is a line of text, not a banner. May be left-aligned or centered depending on the grid."
+    },
+    {
+      "name": "Product Grid Item",
+      "role": "Single cell in the multi-column product grid",
+      "description": "Full-bleed product image on white background, product name directly below in 14px #321929, price in 14px #636363. 10-12px column gap between items. No card chrome — the image itself defines the cell boundary."
+    },
+    {
+      "name": "Editorial Content Block",
+      "role": "Large lifestyle or blog content section",
+      "description": "Full-bleed or wide-canvas image with optional 40px radius, paired with a text block. Text uses 18px Neue Haas Grotesk weight 400 for body and 22px for subheadings, all in #321929. The block breathes with 48px vertical padding and sits between the product grid and the footer."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Workhorse sans for all UI text: body, nav, product names, prices, badges, inputs, buttons. The single weight (400) with near-zero tracking (0.007em) creates a calm, evenly-spaced rhythm that never competes with photography. Sizes are deliberately compact (body at 14-15px), giving the system an editorial density rather than a marketing scale.",
+      "sizes": "11px, 14px, 15px, 16px, 18px, 22px",
+      "family": "Neue Haas Grotesk",
+      "weight": "400",
+      "lineHeight": "1.00, 1.30, 1.38, 1.50, 1.70",
+      "substitute": "Neue Haas Unica, Inter, or Helvetica Now Display",
+      "letterSpacing": "0.007em across all sizes"
+    },
+    {
+      "role": "Custom display face reserved for the brand wordmark and signature headings only. The single-weight, single-size deployment suggests a refined serif or humanist display cut meant to act as a logo-like anchor — never used for body or UI text.",
+      "sizes": "28px",
+      "family": "Bongusta",
+      "weight": "500",
+      "lineHeight": "1.50",
+      "substitute": "Cormorant Garamond, GT Sectra, or Italiana",
+      "letterSpacing": "normal"
+    }
+  ],
+  "description": "Bongusta operates as a quiet, editorial luxury system: warm white canvas, deep aubergine ink replacing pure black, and a single humanist sans-serif carrying all typography at compact sizes. The near-monochrome palette deliberately steps back so textile photography and interior still-lifes carry the visual weight — the UI is the gallery wall, never the artwork. Structure is built from warm linen hairlines rather than elevation, with pill-shaped actions carrying the only brand-tinted shadow in the entire system. The result reads like a curated museum catalog: dense with product, restrained in chrome, and confident enough to let the objects speak.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #321929 (Aubergine Ink)\n- background: #ffffff (Soft White)\n- border: #e0dddf (Warm Linen)\n- accent / icon: #321929 (Aubergine Ink)\n- muted text: #636363 (Smoke Gray)\n- primary action: #321929 (outlined action border)\n\n**Example Component Prompts**\n\n1. Create a product card: Soft White (#ffffff) fill, 1px Warm Linen (#e0dddf) border, 16px padding, no shadow. Product image fills top edge-to-edge. Product name in Neue Haas Grotesk 14px weight 400, #321929. Price below in 14px, #636363. 10px gap between image and text.\n\n2. Create a pill action button: 9999px border-radius, 1px #321929 border, #321929 text in Neue Haas Grotesk 14px weight 400, 16px vertical padding, 24px horizontal padding, white fill, shadow rgba(50,25,41,0.15) 0px 2px 10px 0px.\n\n3. Create a navigation bar: full-width Soft White (#ffffff) fill, 1px Warm Linen (#e0dddf) bottom border, centered logo, category links left and right in Neue Haas Grotesk 14px weight 400, #321929, 2px gap between items, 3.5px radius on the nav container.\n\n4. Create a newsletter input: 1px Charcoal (#1d1d1f) border, 0px radius, 16px vertical padding, 12px horizontal padding, placeholder text in #636363, 16px Neue Haas Grotesk weight 400. On focus, border becomes 1px Aubergine Ink (#321929).\n\n5. Create a category badge: 9999px border-radius, 1px vertical padding, 5px horizontal padding, 1px #321929 border, text in 11px Neue Haas Grotesk weight 400, #321929. No fill, no shadow."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is deliberately suppressed. The system has exactly one shadow in its entire vocabulary — a soft, brand-tinted glow on the pill action button. All other surface separation is achieved through 1px Warm Linen hairlines (#e0dddf). Cards, images, and content blocks sit flush on the white canvas. This creates a flat, editorial page where the only thing that lifts off the surface is the call to action, and even it lifts by only 2px with a 10px blur. The shadow color is literally the brand plum (#321929) at 15% opacity, so even elevation feels on-brand."
+}

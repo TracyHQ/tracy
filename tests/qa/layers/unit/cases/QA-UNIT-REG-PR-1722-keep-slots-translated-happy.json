@@ -1,0 +1,92 @@
+{
+  "id": "QA-UNIT-REG-PR-1722-keep-slots-translated-happy",
+  "itemIds": ["regression:REG-PR-1722-keep-slots-translated"],
+  "requirement": "Joomla site written in another language: every keep slot a visitor reads is translated, a heading split into styled pieces as one phrase (JA Boxing 1.0.4 Vietnamese: THE WORKOUT, Our Classes, Join over 100k…)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1722-keep-slots-translated.json",
+    "ref": "PR #1722 (fix); fix evidence: accept-boxing-104-vi.tracy.site, acceptance scan 25/10/2026 (VI class A list)",
+    "invariant": "S1: every keep text slot with letters that is not a fact, a template string, a user or a site setting is written with words other than its English sample; THE|WORKOUT, Our| Classes , Join over |100k| of inspiring creatives and Sign up for the |Boxing| newsletter are each asked as one phrase S2: all three tests pass",
+    "productSources": [
+      "apps/tracy-web/src/lib/contracts.js:244",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:772",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:494",
+      "apps/tracy-web/src/sites/brief-engines/keep-words.js:65",
+      "apps/tracy-web/src/sites/brief-engines/pictures.js:63",
+      "apps/tracy-web/src/sites/brief-normalize.js:403",
+      "apps/tracy-web/src/sites/route.js:730"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contract-copy.js:42 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:25 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:43 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-blog-articles.js:115 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:54 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:55 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-languages.js:247 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-site-strings.js:35 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:814 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:361 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:367 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:368 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:392 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:25 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:3063 readFileSync() with a computed path",
+      "apps/tracy-web/test/keep-words.test.mjs:12 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "JA Boxing 1.0.4 in Vietnamese",
+    "the pieces of one styled heading",
+    "an answer keeps each piece",
+    "a phrase whose answer cannot be used"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1722-keep-slots-translated"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1722-keep-slots-translated",
+    "pr": 1722,
+    "kind": "fix",
+    "area": "site-creation/brief",
+    "file": "tests/regression/cases/REG-PR-1722-keep-slots-translated.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern=JA Boxing 1.0.4 in Vietnamese|the pieces of one styled heading|an answer keeps each piece|a phrase whose answer cannot be used",
+    "apps/tracy-web/test/brief-joomla.test.mjs",
+    "apps/tracy-web/test/keep-words.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "JA Boxing 1.0.4 in Vietnamese",
+    "the pieces of one styled heading",
+    "an answer keeps each piece",
+    "a phrase whose answer cannot be used"
+  ],
+  "timeoutS": 600
+}

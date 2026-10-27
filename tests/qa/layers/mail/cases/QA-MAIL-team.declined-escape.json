@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.declined-escape",
+  "itemIds": [
+    "letter:team.declined:en",
+    "letter:team.declined:vi",
+    "letter:team.declined:de",
+    "letter:team.declined:it",
+    "letter:team.declined:fr",
+    "letter:team.declined:nl",
+    "letter:team.declined:zh",
+    "letter:team.declined:es"
+  ],
+  "requirement": "team.declined: markup in user-supplied text is escaped in HTML",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "hostile",
+    "invariant": "a letter must not carry live markup from a person-supplied name, quote or site address"
+  },
+  "edgeTags": ["escape"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.escape#team.declined:"],
+  "redProof": null,
+  "legacyIds": []
+}

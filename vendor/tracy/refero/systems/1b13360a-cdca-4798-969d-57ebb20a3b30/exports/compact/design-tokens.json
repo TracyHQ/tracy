@@ -1,0 +1,69 @@
+{
+  "color": {
+    "warm-paper": {
+      "$value": "#f5f5f3",
+      "$type": "color",
+      "$description": "Warm Paper — Page background, card surfaces, text on dark elements — the warm off-white that replaces pure white and gives the entire site its analog, paper-like quality"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, hairline borders, decorative line illustrations, icon strokes — the dominant neutral that carries nearly all UI information"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Offset hard-shadow borders on cards and buttons, secondary text, surface backgrounds for inverted elements"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Elevated card surfaces, button text on dark fills, subtle highlights"
+    },
+    "dusty-sky": {
+      "$value": "#81aed9",
+      "$type": "color",
+      "$description": "Dusty Sky — Decorative card borders, input borders, link borders, blue brand stroke — muted and desaturated so it reads as ink wash rather than digital blue"
+    },
+    "cobalt-wash": {
+      "$value": "#55a1ea",
+      "$type": "color",
+      "$description": "Cobalt Wash — Brighter blue accent for interactive borders and link states when more chromatic presence is needed than the dusty default"
+    },
+    "coral-link": {
+      "$value": "#ff8562",
+      "$type": "color",
+      "$description": "Coral Link — Inline link text color — the single warm chromatic note in the entire system, used sparingly to mark navigable text"
+    }
+  },
+  "font": {
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "System serif fallback at body size — appears as a safety net for Simeiz when custom font fails to load"
+    },
+    "simeiz": {
+      "$value": "Simeiz",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif — the signature typeface. Used at 80px for hero statements, 46–48px for section titles, 24–30px for sub-headings, 16–18px for emphasis in body. Weight 300 creates thin elegant strokes; weight 400 for italic emphasis on emotional words like 'unique' and 'they are'. Free substitute: Playfair Display or DM Serif Display for the italic play, though Simeiz's high contrast is distinctive."
+    },
+    "manrope": {
+      "$value": "Manrope",
+      "$type": "fontFamily",
+      "$description": "Body, UI labels, button text, captions — handles everything functional. Tighter letter-spacing at -0.036em is the only tracked value in the system and gives a contemporary geometric counterpoint to the editorial serif headlines."
+    },
+    "suisse-intl": {
+      "$value": "Suisse Intl",
+      "$type": "fontFamily",
+      "$description": "Suisse Intl — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://dyotanya.com/en",
+      "siteName": "Dyotanya",
+      "extractedAt": "2026-06-03T17:38:38.584Z",
+      "variant": "compact"
+    }
+  }
+}

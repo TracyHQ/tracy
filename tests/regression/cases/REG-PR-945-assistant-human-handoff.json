@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-945-assistant-human-handoff",
+  "kind": "feat",
+  "title": "Talk to a person: one CS Telegram topic per customer (reopened when they ask again), staff text and photos reach that account only, the model is silent meanwhile, and the conversation survives until cleared",
+  "pr": 945,
+  "area": "assistant/handoff",
+  "cms": ["any"],
+  "needs": ["node", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: TEST_DATABASE_URL=postgres://tracy:tracy@127.0.0.1:51730/postgres node --test --test-reporter=tap apps/tracy-web/test/assistant-support.test.mjs packages/ui/tracy-assistant/test/chat.test.mjs (any Postgres whose user may create schemas; this one is the local stand's). Telegram and the artifact store are in-process fakes.",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail', '# skipped' lines and the result of each case whose name starts with: \"a handoff opens one topic\"; \"while a person holds it the model is silent\"; \"a staff reply reaches the right account\"; \"only the configured chat, an open topic, and a person\"; \"a staff photo is kept in the store\"; \"Resolved returns to the AI\"; \"a topic deleted in Telegram is replaced\"; \"clearing during a handoff\"; \"the webhook relays only with the exact secret\"; \"the conversation survives the page\"; \"listedHref rebuilds\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# skipped 0', and '# pass' equal to '# tests' (at least 28): the database cases ran, none skipped.",
+    "Every named case is 'ok': one topic per handoff, named after the customer, whose summary holds only that customer's data; asking again reopens the same topic (reopenTopic, summary starting 'The customer asked for a person again'), and a deleted topic is replaced by a new one; the model is not called in waiting_human or human; a staff message reaches only the account bound to its (chat, topic), never from another chat, a bot, a sender_chat, a closed or unknown topic, and a redelivered message lands once; a photo is served to its own account (200 image/jpeg), 404 to another, 401 without a session; Resolved and clearing note the reason, close the topic and stop relaying; customer text queued but unsent at clear is never sent; the webhook answers 404 without the exact secret even with a valid cookie; a restore returns every turn and a stale conversation id is 409; only listed link addresses become links."
+  ],
+  "selectors": {
+    "doors": "/api/assistant/conversation, /api/assistant/handoff, /api/assistant/handoff/end, /api/assistant/conversation/clear, /api/assistant/attachments/:id, /api/assistant/telegram/webhook",
+    "service": "createSupport in apps/tracy-web/src/assistant/support.js (open, receive, drain, end, clear)",
+    "rows": "assistant_conversation, assistant_handoff, assistant_outbox, assistant_turn (role staff), assistant_attachment"
+  },
+  "evidence": "PR #945, 05-06/10/2026: also run by hand on the local stand with the CS bot tracy_cs_dev_bot in polling mode: topic 18 created, staff text and a photo shown in the panel with an unread badge, a PDF answered with the 'Only text and photos' note, Resolved closed the topic, and asking again reopened topic 18.",
+  "fence": "A staff message is relayed only through the open handoff bound to its Telegram (chat, topic); the database state, not the model, decides who answers.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/assistant-support.test.mjs",
+      "packages/ui/tracy-assistant/test/chat.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a handoff opens one topic",
+      "while a person holds it the model is silent",
+      "a staff reply reaches the right account",
+      "only the configured chat, an open topic, and a person",
+      "a staff photo is kept in the store",
+      "Resolved returns to the AI",
+      "a topic deleted in Telegram is replaced",
+      "clearing during a handoff",
+      "the webhook relays only with the exact secret",
+      "the conversation survives the page",
+      "listedHref rebuilds"
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"tracy-header","area":"header"} /-->
+<!-- wp:group {"tagName":"main","className":"tracy-main tracy-listing tracy-search","layout":{"type":"default"}} -->
+<main class="wp-block-group tracy-main tracy-listing tracy-search">
+<!-- wp:group {"className":"tracy-crumbs","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-crumbs">
+<!-- wp:group {"className":"tracy-container","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-container">
+<!-- wp:breadcrumbs {"prefersTaxonomy":true,"showHomeItem":true,"showCurrentItem":true,"separator":"/"} /-->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"tracy-container","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-container">
+<!-- wp:query {"queryId":1,"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"className":"tracy-query tracy-results","layout":{"type":"default"}} -->
+<div class="wp-block-query tracy-query tracy-results">
+<!-- wp:group {"className":"tracy-listing__head","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-listing__head">
+<!-- wp:query-title {"type":"search","level":1,"className":"tracy-display","showSearchTerm":false} /-->
+<!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Keyword","buttonText":"Search","className":"tracy-listing__search"} /-->
+<!-- wp:query-total {"displayType":"total-results","className":"tracy-listing__count tracy-search__count"} /-->
+</div>
+<!-- /wp:group -->
+<!-- wp:columns {"className":"tracy-split tracy-split--listing","style":{"spacing":{"blockGap":{"left":"3.5rem"}}}} -->
+<div class="wp-block-columns tracy-split tracy-split--listing">
+<!-- wp:column {"className":"tracy-split__main"} -->
+<div class="wp-block-column tracy-split__main">
+<!-- wp:post-template {"className":"tracy-results__list","layout":{"type":"default"}} -->
+<!-- wp:group {"tagName":"article","className":"tracy-result","layout":{"type":"default"}} -->
+<article class="wp-block-group tracy-result">
+<!-- wp:post-terms {"term":"category","className":"tracy-result__kind tracy-news-card__eyebrow"} /-->
+<!-- wp:post-title {"level":2,"isLink":true,"className":"tracy-result__title"} /-->
+<!-- wp:post-excerpt {"excerptLength":30,"className":"tracy-result__text"} /-->
+<!-- wp:post-date {"format":"j M Y","className":"tracy-result__meta tracy-news-card__date"} /-->
+</article>
+<!-- /wp:group -->
+<!-- /wp:post-template -->
+<!-- wp:query-no-results -->
+<!-- wp:pattern {"slug":"wp-tracy-business/empty-search"} /-->
+<!-- /wp:query-no-results -->
+<!-- wp:query-pagination {"className":"tracy-pagination","layout":{"type":"flex"}} -->
+<!-- wp:query-pagination-previous /-->
+<!-- wp:query-pagination-numbers /-->
+<!-- wp:query-pagination-next /-->
+<!-- /wp:query-pagination -->
+</div>
+<!-- /wp:column -->
+<!-- wp:column {"width":"340px","className":"tracy-split__aside"} -->
+<div class="wp-block-column tracy-split__aside" style="flex-basis:340px">
+<!-- wp:template-part {"slug":"sidebar-search","tagName":"aside","className":"tracy-aside","area":"uncategorized"} /-->
+</div>
+<!-- /wp:column -->
+</div>
+<!-- /wp:columns -->
+</div>
+<!-- /wp:query -->
+</div>
+<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"tracy-footer","area":"footer"} /-->

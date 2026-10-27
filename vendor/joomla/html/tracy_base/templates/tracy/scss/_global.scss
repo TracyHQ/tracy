@@ -1,0 +1,102 @@
+// ------------------------------------
+// Core Styles
+// ------------------------------------
+
+// Body
+// -------------------------
+html {
+  font-size: $font-size-root;
+  //-webkit-font-smoothing: antialiased;
+}
+
+
+body {
+  font-weight: $font-weight-base;
+}
+
+
+// Links
+// -------------------------
+a {
+  color: $link-color;
+  text-decoration: $link-decoration;
+
+  &:hover, &:focus, &:active {
+    color: $link-hover-color;
+  }
+}
+
+
+// Images
+// -------------------------
+img {
+  @include img-fluid;
+}
+
+
+// Forms
+// -------------------------
+
+// Legacy Joomla! Form Elements
+.control-group {
+  //@extend .form-group;
+}
+
+.inputbox {
+  //@extend .form-control;
+}
+
+input[type=radio],
+input[type=checkbox] {
+
+  &.inputbox,
+  &.form-control {
+    width: auto;
+  }
+}
+
+.radio,
+.checkbox {
+  //@extend .form-check;
+  input[type=radio],
+  input[type=checkbox] {
+    margin-right: $spacer-xs;
+  }
+}
+
+label.radio,
+label.checkbox {
+  //@extend .form-check-inline;
+}
+
+
+//
+// MISC.
+// --------------------------------------------------
+
+hr {
+}
+
+/* IcoMoon Conversion */
+[class^="icon-"].input-group-text,
+[class*=" icon-"].input-group-text {
+  width: auto;
+  height: auto;
+}
+
+[class^="icon-"].fa::before,
+[class*=" icon-"].fa::before {
+  font-family: FontAwesome;
+}
+
+// Reset sticky on mobile
+.t4-sticky {
+  @include media-breakpoint-down(sm) {
+    position: relative !important;
+    top: auto !important;
+  }
+}
+
+.clearfix {
+  @include clearfix;
+}

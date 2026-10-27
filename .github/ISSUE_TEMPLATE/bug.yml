@@ -1,0 +1,62 @@
+name: Bug report
+description: Something in Tracy does not work as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Security problems go through private reporting instead (see SECURITY.md), never a public issue.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you saw, including any error text or screenshot.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open ...
+        2. Click ...
+        3. See ...
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where
+      options:
+        - Web app
+        - Desktop app
+        - Local stand (deploy/compose.yml)
+        - Build, tests or tooling
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: cms
+    attributes:
+      label: Site platform (if a site is involved)
+      options:
+        - Not site-specific
+        - WordPress
+        - Joomla
+        - EmDash
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: The desktop app version, or the commit you built from.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, browser, Node and Docker versions — whatever applies.

@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1589-add-site-stepped-pages",
+  "kind": "feat",
+  "title": "Add site keeps choices through separate create and import pages, preview selection and Review edits",
+  "pr": 1589,
+  "area": "add-site/stepped-pages",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the create navigation unit tests for the approved order, supported design systems, entry points and returning to Review after an edit.",
+    "Run the real browser Add site wizard and create platform suites, including address-first import detection, Back, grouped customization, thumbnail loading and popup preview."
+  ],
+  "expect": [
+    "Create visits Platform, Starting design, optional Design system, Site address, Customize and Review while preserving entered choices.",
+    "Import detects the entered address before confirming the platform, validates each page and keeps both Back navigation and Review edits working.",
+    "The gallery requests thumbnails and its preview remains inside the wizard, pages only filtered designs, selects a design and closes on Use."
+  ],
+  "selectors": {
+    "step": "[data-wizard-current]",
+    "navigation": "[data-wizard-goto], [data-wizard-continue]"
+  },
+  "fence": "Navigation state and real rendered controls preserve page order and request payloads across both Add site branches.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=60000",
+      "packages/site/tracy-add-site/test/create-navigation.test.mjs",
+      "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs",
+      "packages/site/tracy-add-site/test/e2e/create-platform-ui.test.mjs"
+    ],
+    "tests": [
+      "ordinary Continue advances once and a review edit returns directly to Review",
+      "import pages validate detection, method selection, Back and Review edits",
+      "bare entry starts with Adding, choice cards advance, and Back keeps the platform",
+      "the starting gallery requests thumbnails without loading a full desktop shot",
+      "Open preview stays in the wizard, frames the demo and Use selects and closes",
+      "preview pager walks only the filtered designs and selection stays on step three"
+    ]
+  }
+}

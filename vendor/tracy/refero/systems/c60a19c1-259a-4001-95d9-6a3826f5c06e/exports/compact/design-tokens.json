@@ -1,0 +1,109 @@
+{
+  "color": {
+    "forest-floor": {
+      "$value": "#0e231c",
+      "$type": "color",
+      "$description": "Forest Floor — Hero section background, dark nav background — the deepest surface in the system; white text reads at 16.5:1 against it"
+    },
+    "canopy-shadow": {
+      "$value": "#1a3029",
+      "$type": "color",
+      "$description": "Canopy Shadow — Secondary dark surface, used as an elevated dark card or section band within the dark-mode hero zone"
+    },
+    "pine-border": {
+      "$value": "#233630",
+      "$type": "color",
+      "$description": "Pine Border — Subtle dividers within dark sections — barely distinct from the background, read more as inset lines than separators"
+    },
+    "slate-ink": {
+      "$value": "#313942",
+      "$type": "color",
+      "$description": "Slate Ink — Default body text, icons, borders on light sections — the near-black that does almost all the work in the light zone"
+    },
+    "ash": {
+      "$value": "#656a75",
+      "$type": "color",
+      "$description": "Ash — Secondary body text, captions, subdued labels on light backgrounds"
+    },
+    "mist": {
+      "$value": "#c3cecb",
+      "$type": "color",
+      "$description": "Mist — Tertiary text, placeholder text, decorative borders"
+    },
+    "fog": {
+      "$value": "#879b93",
+      "$type": "color",
+      "$description": "Fog — Subdued body copy and metadata within dark sections"
+    },
+    "parchment": {
+      "$value": "#f4f7f2",
+      "$type": "color",
+      "$description": "Parchment — Page background, section alternates — a barely-warm white that keeps the canvas from feeling sterile"
+    },
+    "dew": {
+      "$value": "#e4ebe2",
+      "$type": "color",
+      "$description": "Dew — Card borders, image frames, soft dividers on light surfaces"
+    },
+    "sprout": {
+      "$value": "#27ae60",
+      "$type": "color",
+      "$description": "Sprout — Primary CTA buttons, active badges, success states — the one green that appears in both dark and light zones, making every interactive element identifiable at a glance"
+    },
+    "sage-whisper": {
+      "$value": "#defaca",
+      "$type": "color",
+      "$description": "Sage Whisper — Accent text within dark hero section — used on word-level highlights inside headlines (e.g. 'Level up' in a contrasting tone), gives the dark hero warmth without switching to orange or gold"
+    },
+    "mint-card": {
+      "$value": "#edf9f2",
+      "$type": "color",
+      "$description": "Mint Card — Light product card background (the Postcards feature card), a near-white tinted with the same green family as the primary brand"
+    },
+    "iris": {
+      "$value": "#5c51e0",
+      "$type": "color",
+      "$description": "Iris — Accent word highlights in light-section headings ('beautiful' in 'Simple products for beautiful designs') — appears word-level only, never as a background"
+    },
+    "sky-link": {
+      "$value": "#186bff",
+      "$type": "color",
+      "$description": "Sky Link — Inline links and secondary interactive elements in list contexts"
+    },
+    "tangerine-cta": {
+      "$value": "#ff5722",
+      "$type": "color",
+      "$description": "Tangerine CTA — Article category badges — vivid orange tags on blog/article cards for visual taxonomy"
+    },
+    "amber-nav": {
+      "$value": "#f49a40",
+      "$type": "color",
+      "$description": "Amber Nav — Sign Up button in the navigation bar — the only warm-hued button; its contrast against the dark nav makes it pop without using the primary green"
+    },
+    "azure-action": {
+      "$value": "#2f80ed",
+      "$type": "color",
+      "$description": "Azure Action — Icon fill and secondary action states — appears in product UI screenshots and icon illustrations"
+    },
+    "lavender-tint": {
+      "$value": "#f1ebff",
+      "$type": "color",
+      "$description": "Lavender Tint — Light violet background tint on select feature sections"
+    }
+  },
+  "font": {
+    "intervariable": {
+      "$value": "InterVariable",
+      "$type": "fontFamily",
+      "$description": "The sole typeface for the entire system. Display sizes (48–57px) use weight 700 with tight negative tracking (-0.028em to -0.022em), creating dense, confident headlines. Body text (14–16px) uses weight 400 at 1.5–1.6 leading. Weight 600 handles subheadings and UI labels. The five OpenType features (cv03, cv04, cv06, cv09, ss03) distinguish this from stock Inter — alternate letterforms on 'a', 'g', and 'l' give the text a slightly more geometric feel than default Inter."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://designmodo.com",
+      "siteName": "Designmodo",
+      "extractedAt": "2026-04-11T19:25:33.174Z",
+      "variant": "compact"
+    }
+  }
+}

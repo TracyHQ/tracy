@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1407-ds-check-runner-loads-in-image",
+  "kind": "fix",
+  "title": "The Design system check runner loads in the tracy-web image, and a crashed check names its error on /ops",
+  "pr": 1407,
+  "area": "design-system/readiness",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Scan every module under apps/tracy-web/src for a relative import that resolves outside the app.",
+    "S2: Rebuild the image layout (apps/tracy-web src + package.json, ds-slot src and templates under src/ds-slot) in a temporary folder and run both readiness check-runner.mjs on an empty folder.",
+    "S3: Give childErrorOf the stderr of a crashed child (stack, then 'Node.js v24.22.0')."
+  ],
+  "expect": [
+    "S1: no import leaves apps/tracy-web.",
+    "S2: each runner exits 2 with its own refusal; no ERR_MODULE_NOT_FOUND.",
+    "S3: the reason is the 'Error [ERR_MODULE_NOT_FOUND]: Cannot find module ...' line, not the Node.js version."
+  ],
+  "selectors": {
+    "tool": "scripts/test/tracy-web-image-imports.test.mjs",
+    "evidence": "apps/tracy-web/test/design-system-readiness.test.mjs"
+  },
+  "evidence": "dev /api/ops/quickstarts 16/10/2026 10:24Z: every release ds-error 'Node.js v24.22.0'; reproduced in an image-shaped folder",
+  "fence": "tracy-web module graph and the readiness child process; no stand, no Postgres",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/test/tracy-web-image-imports.test.mjs",
+      "apps/tracy-web/test/design-system-readiness.test.mjs"
+    ]
+  }
+}

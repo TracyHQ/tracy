@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1134-ds-contracts-batch5",
+  "kind": "feat",
+  "title": "Batch 5 of the JA Joomla j6 slot contracts: all eleven templates carry a contract; JA Civica, JA Conference, JA Diner and JA Ego are offered after measuring every heading and text, the other seven say why not",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, read templates/joomla-{ja-comics,ja-conf,ja-diner,ja-educatsy,ja-ego,ja-eventcamp,ja-fit}.json through loadContract: template key, ready, readyNote, minVersion, contrast, templateVars, paletteBands.",
+    "S2: Build the module sheet (joomlaSlot) for joomla-ja-eventcamp (Moxie) and joomla-ja-educatsy (MotherDuck).",
+    "S3: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs ja-conf --port 53295 --cdp 9795 --evidence <tmp> (release restored in Docker, stylesheets tokenized, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-batch5.mjs"
+  ],
+  "expect": [
+    "S1: each contract's template is joomla/<slug> (left out, each re-measured and offered by round 3: JA Comics, Educatsy, Eventcamp and Fit, REG-PR-1134-ds-contracts-r3e; JA Coach and Colab, REG-PR-1134-ds-contracts-r3d; JA Civica and Company, REG-PR-1134-ds-contracts-r3a); exactly ja-conf, ja-diner and ja-ego are ready; each ready one names minVersion (conf 1.0.2, diner 1.0.1, ego 1.0.1); every readyNote names tasks/evidence/ds-contracts-batch5-2026-10-11/<slug>-j6; every contract judges heading and text contrast; Ego maps --body-headings-color to the system.",
+    "S2: Eventcamp's light T4 palette band (.t4-palette-light) takes the worn surface, its text the text colour and its links the readable accent; Educatsy's active menu link takes the readable accent with !important.",
+    "S3: verdicts 12/12, controls 0,0,0,0, no text under 4.5:1 worse than the template's own, lowest page share following >= 0.5."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-*.json ready, readyNote, minVersion, contrast.heading, contrast.text, templateVars, paletteBands, accentTextImportant"
+  },
+  "evidence": "tasks/evidence/ds-contracts-batch5-2026-10-11/README.md: per-template measure (every heading and text judged), screenshots checked by eye, the four re-releases verified from their own zip.",
+  "fence": "which batch-5 templates are offered and the contract fields and emitter rules that made them pass; not the six not offered (their causes are recorded, not fixed) nor the release upload (RELEASE-DS-BATCH5.sh, a person runs it)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-batch5.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

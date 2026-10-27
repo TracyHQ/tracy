@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-hot-coral: #ff4f40;
+  --color-midnight-ink: #091723;
+  --color-deep-navy: #112231;
+  --color-page-mist: #f2f8f3;
+  --color-pure-white: #ffffff;
+  --color-soft-mint: #e3ebe4;
+  --color-fog: #b5b9bd;
+  --color-steel: #6b747b;
+  --color-ash: #75817e;
+  --color-slate-button: #3b4c54;
+  --color-pure-black: #000000;
+
+  /* Typography */
+  --font-monzosanstext: 'MonzoSansText', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-monzosansdisplay: 'MonzoSansDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

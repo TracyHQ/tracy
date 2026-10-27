@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-evergreen-gallery: #1c3c27;
+  --color-frost-white: #fffffd;
+  --color-pewter-mist: #dfe2e5;
+  --color-onyx: #000000;
+  --color-bone: #fffcda;
+  --color-ink-shadow: #0e1e14;
+  --color-marquee-cobalt: #447cf0;
+  --color-ember-lacquer: #c72a00;
+
+  /* Typography — Font Families */
+  --font-chalet-londonsixty: 'Chalet-LondonSixty', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-chalet-newyorksixty: 'Chalet-NewYorkSixty', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-supremell-bold: 'SupremeLL-Bold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-supremell-boldflat: 'SupremeLL-BoldFlat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

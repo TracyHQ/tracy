@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7421c174-a1b1-4695-a9e7-a82dc6f5ea3b",
+  "status": "complete",
+  "name": "RainbowKit",
+  "url": "https://styles.refero.design/style/7421c174-a1b1-4695-a9e7-a82dc6f5ea3b",
+  "sourceWebsite": "https://www.rainbowkit.com",
+  "extractedAt": "2026-06-03T21:09:42.622Z",
+  "capturedAt": "2026-10-08T05:13:27.096809+00:00",
+  "theme": "dark",
+  "industry": "crypto",
+  "description": "Neon wallet modal floating in a black void — the blue-to-violet aurora glows through the dark.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ec754bf3-49e0-4e7d-906e-9bd77a297cf2.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e88c6a67536569e61a7bae7acac153ba56c3b5ca8ff29bc26775da41677cae76",
+      "bytes": 24618
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8925fd4a5e94e626c7a4806300a1cc088edfff539973a780e0eb0d4fffbafa49",
+      "bytes": 92696
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e2fafa4f5842c7ca5d5e448bafea95c92164bd0e4a21a42eb4a02666c2aa3ca3",
+      "bytes": 19674
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "58b126c69b82e50aa2de71778a008d367afa3afbaca2fca6ff36877270af3f72",
+      "bytes": 15039
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0e629aebd43b24dd93b7b06cd93d30e04b1b9d30e7b2e7619441be5c3143b64f",
+      "bytes": 14619
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "86d5fa4ec0694e1c6a1500acde5a013923bd9a490f7cad85c0a9a74ff549505f",
+      "bytes": 4761
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "edb5771902d3dea8b4e5263f68ae00509f71bb9c7d2154d221e9ade03988c7d1",
+      "bytes": 1032
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c9f2f66647152a9cfceeaee94db8dc64b86513854d153704e1058f19290f83aa",
+      "bytes": 1145
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c5b91f99e8fcfd198ef1e306199f710f4d6dbfc6d815b1a69d0f062a2fd464be",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "cdd3fa2deca7c9b835065ec211d02dad1f4f1c606eff98d4261065f48a1e26fe",
+      "bytes": 48596
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "89f6d63f586c81992c507defdabce7fa32c1bf74c846ccbfbacf4210d098185b",
+      "bytes": 25203
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "282f8b4ac82d15c3022f826c05dce2323432b62a234cb696d7f0b24d1d05d495",
+      "bytes": 61099
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "83b53784f33f52d45f5b9d556f48a1f05017fb4c9f873bbd29d7c664ff5bffd9",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b6a6db32e7107beac38f59092fcbbf7781bd62f18e9d79fd85f65c8ca234dfd5",
+      "bytes": 2558
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b2d018a2d85c526b104645604e6819f86d0b6601ca6abdbfdf30e5492b9290ef",
+      "bytes": 3409
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+    "1680693c-aed8-47e8-917a-04eb89497b09",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "29392960-0acf-4891-ad33-28a72f6a9b75",
+    "4ce66adb-ed8b-4e71-8066-15d92c4d2be0",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "68c15685-5db9-4869-b71d-27240568c9d8",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "6d9b6fe6-51f4-4978-82dd-a791c28db5cf",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "7421c174-a1b1-4695-a9e7-a82dc6f5ea3b",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "a74d60e1-0a09-48a1-8721-13f1f45727f1",
+    "bc4fb98b-37ec-480a-b7a9-acd197cbebb9",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "e80231a2-e4d6-406a-a2c9-2e6109679690",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344"
+  ]
+}

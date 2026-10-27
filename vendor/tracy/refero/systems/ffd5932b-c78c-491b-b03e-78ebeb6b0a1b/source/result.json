@@ -1,0 +1,968 @@
+{
+  "meta": {
+    "url": "https://www.basha-franklin.com",
+    "siteName": "Basha-Franklin",
+    "extractedAt": "2026-09-20T19:28:01.432Z",
+    "durationMs": 66688,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "elementCount": 368,
+    "telemetry": {
+      "enrichment": {
+        "componentHtmlStatus": "pending",
+        "attempts": 0
+      }
+    }
+  },
+  "raw": {
+    "colors": {
+      "tokens": [
+        {
+          "hex": "#e5c0a4",
+          "oklch": {
+            "c": 0.05686930393090688,
+            "h": 58.99564121821103,
+            "l": 0.8327668650710743
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 9,
+          "confidence": 1,
+          "prominence": 4305218.810974021,
+          "properties": [
+            "backgroundColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 8,
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#f4ede6",
+          "oklch": {
+            "c": 0.012042844408517848,
+            "h": 67.6811755178306,
+            "l": 0.9496311305137967
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 3487658,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#722706",
+          "oklch": {
+            "c": 0.11338720190089184,
+            "h": 40.25472372255108,
+            "l": 0.3813865783439415
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 1296000,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#001060",
+          "oklch": {
+            "c": 0.1390695639995112,
+            "h": 263.95838738491824,
+            "l": 0.24207642609907648
+          },
+          "contexts": [
+            "footer"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 1036800,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "footer/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#000000",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0
+          },
+          "contexts": [
+            "button",
+            "other",
+            "icon",
+            "heading",
+            "nav",
+            "link"
+          ],
+          "frequency": 105,
+          "confidence": 1,
+          "prominence": 521420.56314910244,
+          "properties": [
+            "color",
+            "backgroundColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "icon/fill": 8,
+            "nav/color": 10,
+            "link/color": 2,
+            "other/fill": 59,
+            "other/color": 16,
+            "button/color": 2,
+            "heading/color": 4,
+            "other/backgroundColor": 4
+          }
+        },
+        {
+          "hex": "#c49760",
+          "oklch": {
+            "c": 0.08999564633771795,
+            "h": 71.09631292784749,
+            "l": 0.7065982014953367
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "confidence": 1,
+          "prominence": 347886.589208288,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 2
+          }
+        },
+        {
+          "hex": "#7c3420",
+          "oklch": {
+            "c": 0.1055721983248938,
+            "h": 36.38032051202534,
+            "l": 0.4204082894158828
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 267345,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#eddbcc",
+          "oklch": {
+            "c": 0.028375785433768203,
+            "h": 62.28971758287339,
+            "l": 0.9019651991430702
+          },
+          "contexts": [
+            "heading",
+            "link",
+            "body",
+            "other",
+            "input",
+            "button"
+          ],
+          "frequency": 173,
+          "confidence": 1,
+          "prominence": 220333.4563076099,
+          "properties": [
+            "color",
+            "borderColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "body/color": 2,
+            "link/color": 2,
+            "other/fill": 165,
+            "input/color": 1,
+            "button/color": 1,
+            "heading/color": 1,
+            "other/borderColor": 1
+          }
+        },
+        {
+          "hex": "#d6a891",
+          "oklch": {
+            "c": 0.0631699886095007,
+            "h": 47.87852831893139,
+            "l": 0.7677352327046334
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 191749,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#c58e86",
+          "oklch": {
+            "c": 0.06854080850991857,
+            "h": 28.233251490717333,
+            "l": 0.6981199961784555
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 137122,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#ffffff",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 1.0000000000000002
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "confidence": 1,
+          "prominence": 82164.45603738473,
+          "properties": [
+            "backgroundColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 1,
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#34483f",
+          "oklch": {
+            "c": 0.029491489473173833,
+            "h": 165.463361687493,
+            "l": 0.38169301616915735
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 68017,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 1
+          }
+        }
+      ],
+      "isDarkMode": false,
+      "colorfulness": 0.055614910242353564,
+      "contrastPairs": [
+        {
+          "level": "AAA",
+          "ratio": 21,
+          "background": "#ffffff",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 18.1,
+          "background": "#f4ede6",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 16.89,
+          "background": "#ffffff",
+          "foreground": "#001060"
+        },
+        {
+          "level": "AAA",
+          "ratio": 15.61,
+          "background": "#000000",
+          "foreground": "#eddbcc"
+        },
+        {
+          "level": "AAA",
+          "ratio": 14.56,
+          "background": "#f4ede6",
+          "foreground": "#001060"
+        },
+        {
+          "level": "AAA",
+          "ratio": 12.55,
+          "background": "#001060",
+          "foreground": "#eddbcc"
+        },
+        {
+          "level": "AAA",
+          "ratio": 12.41,
+          "background": "#e5c0a4",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 10.46,
+          "background": "#ffffff",
+          "foreground": "#722706"
+        },
+        {
+          "level": "AAA",
+          "ratio": 9.98,
+          "background": "#e5c0a4",
+          "foreground": "#001060"
+        },
+        {
+          "level": "AAA",
+          "ratio": 9.87,
+          "background": "#d6a891",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 9.79,
+          "background": "#ffffff",
+          "foreground": "#34483f"
+        },
+        {
+          "level": "AAA",
+          "ratio": 9.01,
+          "background": "#f4ede6",
+          "foreground": "#722706"
+        },
+        {
+          "level": "AAA",
+          "ratio": 8.86,
+          "background": "#ffffff",
+          "foreground": "#7c3420"
+        },
+        {
+          "level": "AAA",
+          "ratio": 8.44,
+          "background": "#f4ede6",
+          "foreground": "#34483f"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.94,
+          "background": "#c49760",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.94,
+          "background": "#d6a891",
+          "foreground": "#001060"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.77,
+          "background": "#722706",
+          "foreground": "#eddbcc"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.64,
+          "background": "#f4ede6",
+          "foreground": "#7c3420"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.59,
+          "background": "#c58e86",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.28,
+          "background": "#34483f",
+          "foreground": "#eddbcc"
+        }
+      ]
+    },
+    "shapes": {
+      "radii": [],
+      "shadows": []
+    },
+    "spacing": {
+      "tokens": [
+        {
+          "value": 9,
+          "contexts": [
+            "other",
+            "nav",
+            "footer"
+          ],
+          "frequency": 21,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "marginTop",
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other",
+            "rowGap|nav",
+            "columnGap|nav",
+            "marginTop|other",
+            "paddingTop|other",
+            "marginTop|footer"
+          ]
+        },
+        {
+          "value": 12,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 14,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 12,
+          "properties": [
+            "marginRight",
+            "marginLeft",
+            "rowGap",
+            "columnGap",
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|other",
+            "marginLeft|other",
+            "rowGap|other",
+            "columnGap|other",
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 18,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 22,
+          "contexts": [
+            "nav",
+            "other"
+          ],
+          "frequency": 7,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|nav",
+            "columnGap|nav",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 25,
+          "contexts": [
+            "other",
+            "nav"
+          ],
+          "frequency": 12,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|other",
+            "paddingLeft|other",
+            "marginRight|nav",
+            "marginLeft|nav",
+            "marginRight|other",
+            "marginLeft|other"
+          ]
+        },
+        {
+          "value": 36,
+          "contexts": [
+            "nav",
+            "other"
+          ],
+          "frequency": 7,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "rowGap|nav",
+            "columnGap|nav",
+            "marginTop|other"
+          ]
+        },
+        {
+          "value": 72,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 4,
+          "properties": [
+            "marginBottom",
+            "paddingBottom",
+            "rowGap"
+          ],
+          "propertyContextPairs": [
+            "marginBottom|other",
+            "paddingBottom|other",
+            "rowGap|other"
+          ]
+        },
+        {
+          "value": 93,
+          "contexts": [
+            "footer"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|footer",
+            "columnGap|footer"
+          ]
+        },
+        {
+          "value": 176,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 1,
+          "properties": [
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "marginTop|nav"
+          ]
+        }
+      ],
+      "density": "comfortable",
+      "baseUnit": 4
+    },
+    "gradients": [],
+    "typography": {
+      "fonts": [
+        {
+          "family": "STKBureau-Sans",
+          "source": "custom",
+          "weights": [
+            400
+          ],
+          "frequency": 109,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "STKBureau-Serif",
+          "source": "custom",
+          "weights": [
+            400
+          ],
+          "frequency": 25,
+          "fontFeatureSettings": []
+        }
+      ],
+      "scale": {
+        "base": 16,
+        "name": "Minor Second",
+        "ratio": 1.067,
+        "confidence": 1
+      },
+      "steps": [
+        {
+          "size": 12,
+          "family": "STKBureau-Sans",
+          "weight": 400,
+          "contexts": [
+            "heading",
+            "other",
+            "link",
+            "body"
+          ],
+          "frequency": 15,
+          "lineHeight": 1.3,
+          "letterSpacing": 0.04,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 12,
+          "family": "STKBureau-Sans",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "body",
+            "link"
+          ],
+          "frequency": 3,
+          "lineHeight": 1.2,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "STKBureau-Sans",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "heading",
+            "link",
+            "icon",
+            "nav",
+            "image",
+            "card",
+            "footer"
+          ],
+          "frequency": 81,
+          "lineHeight": 1.2,
+          "letterSpacing": -0.01,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "STKBureau-Sans",
+          "weight": 400,
+          "contexts": [
+            "button",
+            "other",
+            "input"
+          ],
+          "frequency": 10,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 29,
+          "family": "STKBureau-Serif",
+          "weight": 400,
+          "contexts": [
+            "nav",
+            "other",
+            "heading",
+            "link"
+          ],
+          "frequency": 25,
+          "lineHeight": 1.19,
+          "letterSpacing": -0.02,
+          "textTransform": "none"
+        }
+      ]
+    }
+  },
+  "designSystem": {
+    "dos": [
+      "Use Plaster Canvas #f4ede6 as the primary page field and Gallery White #ffffff only for the masthead or bright structural planes.",
+      "Set section eyebrows and compact links in 12px uppercase STKBureau-Sans, 15.6px line height, and +0.48px letter spacing.",
+      "Set editorial navigation and lead statements in 29px STKBureau-Serif, 34.2px line height, and -0.576px letter spacing.",
+      "Keep buttons, inputs, cards, links, and images at 0px radius.",
+      "Use 1px Ink #000000 grid rules to divide project columns and preserve 0px padding inside project tiles.",
+      "Use 9px for close label-and-control relationships, 36px for navigation group separation, and 93px between major footer groups.",
+      "Use Reception Navy #001060 with Footer Cream #eddbcc for footer surfaces and controls."
+    ],
+    "donts": [
+      "Do not add rounded corners, pill controls, or card shadows; every captured component uses 0px radius and no box-shadow.",
+      "Do not place project photography inside white cards with internal padding; use raw rectangular images with 0px card padding.",
+      "Do not use bold weights for navigation, captions, or labels; retain weight 400 across both type families.",
+      "Do not replace the +0.48px tracked uppercase sans labels with sentence-case body UI.",
+      "Do not use a saturated filled conversion button; public controls are transparent with Ink #000000 or Footer Cream #eddbcc text and rules.",
+      "Do not introduce gradients or multicolor interface accents.",
+      "Do not use Terracotta Wash #e5c0a4 as a general button fill; reserve it for large warm feature surfaces or decorative fills."
+    ],
+    "theme": "light",
+    "colors": [
+      {
+        "hex": "#f4ede6",
+        "name": "Plaster Canvas",
+        "role": "Page backgrounds and project-index field",
+        "group": "neutral"
+      },
+      {
+        "hex": "#ffffff",
+        "name": "Gallery White",
+        "role": "Masthead surface and bright interface plane",
+        "group": "neutral"
+      },
+      {
+        "hex": "#000000",
+        "name": "Ink",
+        "role": "Headings, project captions, navigation, icons, hairline rules, and transparent text controls",
+        "group": "neutral"
+      },
+      {
+        "hex": "#eddbcc",
+        "name": "Footer Cream",
+        "role": "Footer copy, newsletter field treatment, and light arrow controls on navy — an aged-paper contrast against the dark endcap",
+        "group": "neutral"
+      },
+      {
+        "hex": "#001060",
+        "name": "Reception Navy",
+        "role": "Footer background and high-contrast closing surface — the single saturated architectural block in the composition",
+        "group": "brand"
+      },
+      {
+        "hex": "#e5c0a4",
+        "name": "Terracotta Wash",
+        "role": "Large warm feature surface and decorative graphic fill",
+        "group": "accent"
+      }
+    ],
+    "layout": "The page begins with a thin Gallery White masthead spanning the viewport, with a centered wordmark, menu trigger at left, and social links at right. The opening project presentation is full-bleed photography directly below the header; subsequent content shifts onto a Plaster Canvas #f4ede6 portfolio index structured by continuous vertical and horizontal Ink rules. The work area uses an asymmetric three-column mosaic: text occupies grid cells above or beside raw rectangular images, and tile dimensions vary rather than resolving into equal cards. Sections flow without alternating color bands until a large Reception Navy #001060 footer endcap, where newsletter content is centered or broadly spaced and legal details sit low at the edges. The visual density is spacious at section scale but compact within captions, utility controls, and grid seams.",
+    "imagery": "Architecture and interior photography are the principal visual language. Images are large, high-resolution project documentation rather than lifestyle scenes: lobby interiors, workplace rooms, stairwells, and building exteriors appear in natural material palettes with daylight, warm timber, stone, and occasional vivid interior color. Photography is contained in sharp-cornered rectangular cells, cropped edge-to-edge without masks, overlays, frames, or shadow. The page is image-heavy in the portfolio areas, with small caption text serving as the only interface layer over or beneath the visual work; iconography is limited to tiny monochrome utility and social marks.",
+    "similar": [
+      {
+        "why": "Architecture-led portfolio composition with restrained serif editorial language and large project photography.",
+        "business": "David Chipperfield Architects"
+      },
+      {
+        "why": "Uses a work-first index where imagery, terse captions, and uncompromising grid structure carry the page.",
+        "business": "Pentagram"
+      },
+      {
+        "why": "Shares sharp-cornered architectural imagery and a sparse, typographic project-presentation approach.",
+        "business": "Studio Gang"
+      },
+      {
+        "why": "Similar reliance on rectilinear image grids, compact annotation-like labels, and black rules as layout structure.",
+        "business": "OMA"
+      }
+    ],
+    "spacing": {
+      "radius": {
+        "cards": "0px",
+        "links": "0px",
+        "images": "0px",
+        "inputs": "0px",
+        "buttons": "0px"
+      },
+      "elementGap": "9px",
+      "sectionGap": "93px",
+      "cardPadding": "0px",
+      "pageMaxWidth": null
+    },
+    "industry": "agency",
+    "surfaces": [
+      {
+        "hex": "#f4ede6",
+        "name": "Plaster Canvas",
+        "level": 0,
+        "purpose": "Primary content field for the portfolio grid."
+      },
+      {
+        "hex": "#ffffff",
+        "name": "Gallery White",
+        "level": 1,
+        "purpose": "Masthead and bright structural surface."
+      },
+      {
+        "hex": "#e5c0a4",
+        "name": "Terracotta Wash",
+        "level": 2,
+        "purpose": "Warm feature panel and decorative graphic surface."
+      },
+      {
+        "hex": "#001060",
+        "name": "Reception Navy",
+        "level": 3,
+        "purpose": "Footer endcap and dark contrast surface."
+      }
+    ],
+    "northStar": "gallery grid beneath a white lintel. Use a warm #f4ede6 field, hairline black structure, and photograph-led asymmetric columns that read like a printed architectural portfolio.",
+    "typeScale": [
+      {
+        "role": "eyebrow",
+        "size": 12,
+        "family": "STKBureau-Sans",
+        "weight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": 0.48
+      },
+      {
+        "role": "caption",
+        "size": 12,
+        "family": "STKBureau-Sans",
+        "weight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": -0.144
+      },
+      {
+        "role": "utility",
+        "size": 14,
+        "family": "STKBureau-Sans",
+        "weight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": -0.14
+      },
+      {
+        "role": "icon-control",
+        "size": 14,
+        "family": "STKBureau-Sans",
+        "weight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": 0
+      },
+      {
+        "role": "editorial-display",
+        "size": 29,
+        "family": "STKBureau-Serif",
+        "weight": 400,
+        "lineHeight": 1.19,
+        "letterSpacing": -0.58
+      }
+    ],
+    "components": [
+      {
+        "name": "White Masthead",
+        "role": "Persistent public site header",
+        "description": "Use a Gallery White #ffffff horizontal bar with a centered black wordmark, a left-aligned menu control, and small right-aligned social icons. Keep every element square-edged; use Ink #000000 and 14px STKBureau-Sans at weight 400 for utility controls."
+      },
+      {
+        "name": "Hamburger Menu Control",
+        "role": "Global navigation trigger",
+        "description": "Render as a transparent Ink #000000 text/icon button with 0px radius, 0px padding, and no filled background. Use 14px STKBureau-Sans weight 400; do not turn it into a rounded icon container."
+      },
+      {
+        "name": "Expanded Editorial Navigation",
+        "role": "Large-format site navigation",
+        "description": "Set navigation destinations in Ink #000000, 29px STKBureau-Serif weight 400, 34.2px line height, and -0.576px tracking. Separate groups with 22px or 36px gaps; retain a warm Plaster Canvas #f4ede6 field and square geometry."
+      },
+      {
+        "name": "Tracked Section Eyebrow",
+        "role": "Section title and utility link",
+        "description": "Use Ink #000000 uppercase STKBureau-Sans at 12px, weight 400, 15.6px line height, and +0.48px tracking. Apply the same treatment to compact links prefixed by a plus sign."
+      },
+      {
+        "name": "Editorial Serif Statement",
+        "role": "Prominent descriptive copy",
+        "description": "Set in STKBureau-Serif at 29px, weight 400, 34.2px line height, and -0.576px tracking. Use Ink #000000 on Plaster Canvas #f4ede6 or Footer Cream #eddbcc on Reception Navy #001060."
+      },
+      {
+        "name": "Project Image Tile",
+        "role": "Portfolio project link",
+        "description": "Use a raw-edge rectangular photograph with 0px radius, no shadow, no panel background, and 0px card padding. Pair it with an Ink #000000 project caption beneath; keep the image and caption inside a ruled grid cell rather than a floating card."
+      },
+      {
+        "name": "Project Mosaic Grid",
+        "role": "Featured-work content arrangement",
+        "description": "Compose unequal-width project tiles across a three-column editorial grid with 1px Ink #000000 dividers and 9px, 22px, or 36px internal gaps. Do not normalize image heights; preserve varied large and small photographic crops."
+      },
+      {
+        "name": "Inline Plus Link",
+        "role": "Textual discovery control",
+        "description": "Use a transparent background, 0px border radius, 0px padding, and Ink #000000 text in 12px uppercase STKBureau-Sans with +0.48px tracking. Prefix the label with a literal plus sign rather than adding a separate filled icon."
+      },
+      {
+        "name": "Navy Footer Endcap",
+        "role": "Newsletter and legal footer surface",
+        "description": "Use a full-width Reception Navy #001060 panel with Footer Cream #eddbcc typography. Space primary footer groups by 93px; set labels in 12px uppercase STKBureau-Sans with +0.48px tracking and legal text in 12px STKBureau-Sans with -0.144px tracking."
+      },
+      {
+        "name": "Footer Newsletter Field",
+        "role": "Email capture input",
+        "description": "Use a transparent Reception Navy #001060 background, Footer Cream #eddbcc text, a 1px Footer Cream #eddbcc rule, 0px radius, and 0px padding. Pair it with a transparent 14px STKBureau-Sans arrow button in Footer Cream #eddbcc."
+      }
+    ],
+    "typography": [
+      {
+        "role": "All compact interface language: uppercase section labels, utility links, project captions, footer details, controls, and menu glyphs. The +0.48px tracked 12px uppercase treatment makes labels read as measured architectural annotation rather than navigation chrome.",
+        "sizes": "12px, 14px",
+        "family": "STKBureau-Sans",
+        "weight": "400",
+        "lineHeight": "1.20, 1.30",
+        "substitute": "Arial, Helvetica, sans-serif",
+        "letterSpacing": "-0.144px at 12px, -0.14px at 14px, and +0.48px at 12px"
+      },
+      {
+        "role": "Editorial statements and expanded navigation links. Its modest 29px scale and tightened tracking make the serif feel like a composed printed line, not a conventional oversized display headline.",
+        "sizes": "29px",
+        "family": "STKBureau-Serif",
+        "weight": "400",
+        "lineHeight": "1.19",
+        "substitute": "Cormorant Garamond, Georgia, serif",
+        "letterSpacing": "-0.58px at 29px"
+      }
+    ],
+    "description": "Basha-Franklin — gallery grid beneath a white lintel. The site treats architecture photography as the dominant interface material: oversized, uncropped rectangular project images sit inside a fine ruled grid on a warm plaster canvas. Typography is deliberately split between small, tracked sans-serif labels and a single large, softly tightened serif voice; this makes navigation and descriptive statements feel like exhibition captions rather than marketing modules. A saturated navy footer interrupts the pale field as a dense endcap, carrying the pale cream type and newsletter controls.",
+    "customSections": [
+      {
+        "title": "Agent Prompt Guide",
+        "content": "Quick Color Reference:\n- Plaster Canvas: #f4ede6 — Page backgrounds and project-index field\n- Gallery White: #ffffff — Masthead surface and bright interface plane\n- Ink: #000000 — Headings, project captions, navigation, icons, hairline rules, and transparent text controls\n- Footer Cream: #eddbcc — Footer copy, newsletter field treatment, and light arrow controls on navy — an aged-paper contrast against the dark endcap\n- Reception Navy: #001060 — Footer background and high-contrast closing surface — the single saturated architectural block in the composition\n- Terracotta Wash: #e5c0a4 — Large warm feature surface and decorative graphic fill\n\nCreate a white masthead with a centered black Basha-Franklin wordmark, left hamburger, and right social marks; use Ink text, 0px radii, and 14px STKBureau-Sans weight 400.\nCreate an asymmetric three-column portfolio mosaic on Plaster Canvas with 1px Ink rules, raw-edge architecture photographs, and captions set in 12px STKBureau-Sans weight 400.\nCreate an editorial navigation panel on Plaster Canvas using stacked Ink links in 29px STKBureau-Serif, 34.2px line height, and -0.576px tracking.\nCreate a Reception Navy footer with a Footer Cream newsletter statement in 29px STKBureau-Serif and a transparent, 1px Footer Cream underlined email field.\nCreate a compact discovery link using a plus-sign prefix, Ink text, and 12px uppercase STKBureau-Sans with +0.48px tracking; use no filled background or rounded container."
+      }
+    ],
+    "elevationPhilosophy": "Use ruled boundaries, image edges, and field changes instead of elevation. Cards and project tiles remain flush with their background at 0px radius and box-shadow: none."
+  },
+  "screenshot": {
+    "url": "https://images.refero.design/styles/refero.design/image/e106d239-739d-4cd2-8548-016753620242.jpg",
+    "thumbnail": "https://images.refero.design/styles/refero.design/image/3777fea5-95af-4e66-8412-a26b527aec0a.jpg"
+  }
+}

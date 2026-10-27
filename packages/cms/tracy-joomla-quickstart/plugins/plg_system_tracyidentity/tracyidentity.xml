@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="system" method="upgrade">
+    <name>plg_system_tracyidentity</name>
+    <author>Tracy</author>
+    <creationDate>2026-09</creationDate>
+    <copyright>(C) 2026 Tracy</copyright>
+    <license>GPL-2.0-or-later</license>
+    <version>1.0.1</version>
+    <description><![CDATA[
+        Reads the site's identity (name, contact, social links) from the "[Tracy] Site identity"
+        module and shows it wherever a page says {site.name}, {contact.email} and the like, and in
+        the page title. Edit the module to change them everywhere at once.
+    ]]></description>
+    <namespace path="src">Tracy\Plugin\System\TracyIdentity</namespace>
+    <files>
+        <folder plugin="tracyidentity">services</folder>
+        <folder>src</folder>
+    </files>
+</extension>

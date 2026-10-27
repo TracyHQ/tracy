@@ -1,0 +1,102 @@
+html.t4-dark,
+html.t4-dark[data-style=terminal] {
+  --bg:#0A0D0C;
+  --surface:#121614;
+  --elevated:#0F1311;
+  --bg-rgb:10,13,12;
+  --text-rgb:154,166,161;
+  --text:#9AA6A1;
+  --heading:#F2F5F3;
+  --muted:#5F6B66;
+  --border:#232A27;
+  --primary:#A3E635;
+  --primary-ink:#0A0D0C;
+  --primary-hover:#BCF25A;
+  --accent:#65A30D;
+  --grid:rgba(255,255,255,.035);
+  --shadow:0 20px 50px -18px rgba(0,0,0,.6);
+  --logo:#A3E635;
+  --body-bg-color:var(--bg);
+  --body-text-color:var(--text);
+  --body-link-color:var(--primary);
+  --body-link-hover-color:var(--primary-hover);
+  --color-primary:var(--primary);
+  --color-secondary:var(--accent);
+  --color-light:var(--elevated);
+}
+
+html.t4-dark[data-style=blueprint] {
+  --bg:#0B0D14;
+  --surface:#12141E;
+  --elevated:#161925;
+  --bg-rgb:11,13,20;
+  --text-rgb:154,161,179;
+  --text:#9AA1B3;
+  --heading:#EEF0F6;
+  --muted:#646B7D;
+  --border:#242838;
+  --primary:#6366F1;
+  --primary-ink:#FFFFFF;
+  --primary-hover:#7C7EF5;
+  --accent:#A78BFA;
+  --grid:rgba(99,102,241,.08);
+  --shadow:0 20px 50px -18px rgba(0,0,0,.55);
+  --logo:#7C7EF5;
+  --body-bg-color:var(--bg);
+  --body-text-color:var(--text);
+  --body-link-color:var(--primary);
+  --body-link-hover-color:var(--primary-hover);
+  --color-primary:var(--primary);
+  --color-secondary:var(--accent);
+  --color-light:var(--elevated);
+}
+
+html.t4-dark[data-style=signal] {
+  --bg:#0A0F1A;
+  --surface:#0F1626;
+  --elevated:#121A2C;
+  --bg-rgb:10,15,26;
+  --text-rgb:147,160,184;
+  --text:#93A0B8;
+  --heading:#EAF1FB;
+  --muted:#566179;
+  --border:#1E2A41;
+  --primary:#22D3EE;
+  --primary-ink:#04141A;
+  --primary-hover:#56E0F4;
+  --accent:#818CF8;
+  --grid:rgba(34,211,238,.06);
+  --shadow:0 20px 50px -18px rgba(0,0,0,.6);
+  --logo:#22D3EE;
+  --body-bg-color:var(--bg);
+  --body-text-color:var(--text);
+  --body-link-color:var(--primary);
+  --body-link-hover-color:var(--primary-hover);
+  --color-primary:var(--primary);
+  --color-secondary:var(--accent);
+  --color-light:var(--elevated);
+}
+
+html.t4-dark {
+  --chrome-bg:#0A0D0C;
+  --chrome-surface:#121614;
+  --chrome-elevated:#161B18;
+  --chrome-border:#232A27;
+  --chrome-text:#9AA6A1;
+  --chrome-heading:#F2F5F3;
+  --chrome-muted:#5F6B66;
+}
+
+html:not(.t4-dark) .hx-codepanel__body {
+  color: #2A322E;
+}
+
+html:not(.t4-dark)[data-style=blueprint] .hx-codepanel__body {
+  color: #2A2E3A;
+}
+
+html:not(.t4-dark)[data-style=signal] .hx-codepanel__body {
+  color: #21303F;
+}
+
+/*# sourceMappingURL=darkmode.css.map */

@@ -1,0 +1,5005 @@
+{
+  "_note": "Forms plugin definitions built from the source contact/newsletter copy; created by tools/seed-apply.mjs forms. The newsletter confirmation line is not in the source (content-gaps G28). File attachments are not in the form: EmDash 0.37's plugin route only parses JSON and the plugin client switches to multipart when a file field exists, which fails with 400 (content-gaps G19). The forms of the 38 other locales (29/09/2026): names, the newsletter field and button come from the same locale's seed text (contact title, news_page newsletter_*); the other strings were translated by Claude for this change and have not been read by a native speaker; an independent review pass (29/09/2026, three reviewers over 38 locales, same model family, not native speakers) corrected 22 strings in 17 locales.",
+  "forms": [
+    {
+      "name": "Contact (EN)",
+      "slug": "quote-request-en",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-en",
+              "type": "text",
+              "label": "Full name",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Ivan Petrov"
+            },
+            {
+              "id": "company-en",
+              "type": "text",
+              "label": "Company",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Company"
+            },
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Email"
+            },
+            {
+              "id": "phone-en",
+              "type": "tel",
+              "label": "Phone",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Phone"
+            },
+            {
+              "id": "type-en",
+              "type": "radio",
+              "label": "Request type",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Construction quote",
+                  "value": "Construction quote"
+                },
+                {
+                  "label": "Site survey",
+                  "value": "Site survey"
+                },
+                {
+                  "label": "Maintenance",
+                  "value": "Maintenance"
+                },
+                {
+                  "label": "Partnership / supplier",
+                  "value": "Partnership / supplier"
+                }
+              ]
+            },
+            {
+              "id": "description-en",
+              "type": "textarea",
+              "label": "Project description",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Location, floor area, expected start date…"
+            },
+            {
+              "id": "consent-en",
+              "type": "checkbox",
+              "label": "I consent to the processing of personal data under Federal Law 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Success — Your quote request has been sent.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Send request",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Get our industry brief every two weeks (EN)",
+      "slug": "newsletter-en",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Work email",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Work email"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Thank you for your submission.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Subscribe",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Контакты (RU)",
+      "slug": "quote-request-ru",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-ru",
+              "type": "text",
+              "label": "Имя и фамилия",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Имя"
+            },
+            {
+              "id": "company-ru",
+              "type": "text",
+              "label": "Компания",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Компания"
+            },
+            {
+              "id": "email-ru",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Email"
+            },
+            {
+              "id": "phone-ru",
+              "type": "tel",
+              "label": "Телефон",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Телефон"
+            },
+            {
+              "id": "type-ru",
+              "type": "radio",
+              "label": "Тип обращения",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Смета на строительство",
+                  "value": "Смета на строительство"
+                },
+                {
+                  "label": "Выезд на площадку",
+                  "value": "Выезд на площадку"
+                },
+                {
+                  "label": "Эксплуатация",
+                  "value": "Эксплуатация"
+                },
+                {
+                  "label": "Партнёрство / поставки",
+                  "value": "Партнёрство / поставки"
+                }
+              ]
+            },
+            {
+              "id": "description-ru",
+              "type": "textarea",
+              "label": "Описание объекта",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Регион, площадь, планируемый срок начала работ…"
+            },
+            {
+              "id": "consent-ru",
+              "type": "checkbox",
+              "label": "Согласен на обработку персональных данных по 152-ФЗ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Успешно — Запрос на смету отправлен.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Отправить запрос",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Отраслевой дайджест раз в две недели (RU)",
+      "slug": "newsletter-ru",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-ru",
+              "type": "email",
+              "label": "Рабочая почта",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Рабочая почта"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Спасибо, вы подписаны.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Подписаться",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontak (AF)",
+      "slug": "quote-request-af",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-af",
+              "type": "text",
+              "label": "Volle naam",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Naam"
+            },
+            {
+              "id": "company-af",
+              "type": "text",
+              "label": "Maatskappy",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Maatskappy"
+            },
+            {
+              "id": "email-af",
+              "type": "email",
+              "label": "E-pos",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-pos"
+            },
+            {
+              "id": "phone-af",
+              "type": "tel",
+              "label": "Telefoon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefoon"
+            },
+            {
+              "id": "type-af",
+              "type": "radio",
+              "label": "Tipe versoek",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Konstruksiekwotasie",
+                  "value": "Konstruksiekwotasie"
+                },
+                {
+                  "label": "Terreinopname",
+                  "value": "Terreinopname"
+                },
+                {
+                  "label": "Instandhouding",
+                  "value": "Instandhouding"
+                },
+                {
+                  "label": "Vennootskap / verskaffer",
+                  "value": "Vennootskap / verskaffer"
+                }
+              ]
+            },
+            {
+              "id": "description-af",
+              "type": "textarea",
+              "label": "Projekbeskrywing",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Ligging, vloeroppervlak, verwagte begindatum…"
+            },
+            {
+              "id": "consent-af",
+              "type": "checkbox",
+              "label": "Ek stem in tot die verwerking van persoonlike data ingevolge Federale Wet 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Sukses — U kwotasieversoek is gestuur.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Stuur versoek",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Ontvang ons bedryfsopsomming elke twee weke (AF)",
+      "slug": "newsletter-af",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-af",
+              "type": "email",
+              "label": "Werk-e-pos",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Werk-e-pos"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Dankie vir u inskrywing.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Skryf in",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Кантакты (BE)",
+      "slug": "quote-request-be",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-be",
+              "type": "text",
+              "label": "Прозвішча і імя",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Імя"
+            },
+            {
+              "id": "company-be",
+              "type": "text",
+              "label": "Кампанія",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Кампанія"
+            },
+            {
+              "id": "email-be",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Email"
+            },
+            {
+              "id": "phone-be",
+              "type": "tel",
+              "label": "Тэлефон",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Тэлефон"
+            },
+            {
+              "id": "type-be",
+              "type": "radio",
+              "label": "Тып звароту",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Каштарыс на будаўніцтва",
+                  "value": "Каштарыс на будаўніцтва"
+                },
+                {
+                  "label": "Агляд аб’екта",
+                  "value": "Агляд аб’екта"
+                },
+                {
+                  "label": "Абслугоўванне",
+                  "value": "Абслугоўванне"
+                },
+                {
+                  "label": "Партнёрства / пастаўшчык",
+                  "value": "Партнёрства / пастаўшчык"
+                }
+              ]
+            },
+            {
+              "id": "description-be",
+              "type": "textarea",
+              "label": "Апісанне аб’екта",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Месцазнаходжанне, плошча, меркаваны тэрмін пачатку работ…"
+            },
+            {
+              "id": "consent-be",
+              "type": "checkbox",
+              "label": "Згодзен на апрацоўку персанальных даных паводле Федэральнага закона 152-ФЗ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Паспяхова — запыт на каштарыс адпраўлены.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Адправіць запыт",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Атрымлівайце наш галіновы агляд раз на два тыдні (BE)",
+      "slug": "newsletter-be",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-be",
+              "type": "email",
+              "label": "Працоўная пошта",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Працоўная пошта"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Дзякуй за вашу заяўку.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Падпісацца",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Контакти (BG)",
+      "slug": "quote-request-bg",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-bg",
+              "type": "text",
+              "label": "Име и фамилия",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Име"
+            },
+            {
+              "id": "company-bg",
+              "type": "text",
+              "label": "Компания",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Компания"
+            },
+            {
+              "id": "email-bg",
+              "type": "email",
+              "label": "Имейл",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Имейл"
+            },
+            {
+              "id": "phone-bg",
+              "type": "tel",
+              "label": "Телефон",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Телефон"
+            },
+            {
+              "id": "type-bg",
+              "type": "radio",
+              "label": "Тип запитване",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Оферта за строителство",
+                  "value": "Оферта за строителство"
+                },
+                {
+                  "label": "Оглед на обекта",
+                  "value": "Оглед на обекта"
+                },
+                {
+                  "label": "Поддръжка",
+                  "value": "Поддръжка"
+                },
+                {
+                  "label": "Партньорство / доставчик",
+                  "value": "Партньорство / доставчик"
+                }
+              ]
+            },
+            {
+              "id": "description-bg",
+              "type": "textarea",
+              "label": "Описание на проекта",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Местоположение, застроена площ, очаквана начална дата…"
+            },
+            {
+              "id": "consent-bg",
+              "type": "checkbox",
+              "label": "Съгласен съм с обработването на лични данни съгласно Федерален закон 152-ФЗ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Успешно — Вашето запитване за оферта е изпратено.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Изпратете запитване",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Получавайте нашия бранш бюлетин на всеки две седмици (BG)",
+      "slug": "newsletter-bg",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-bg",
+              "type": "email",
+              "label": "Служебен имейл",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Служебен имейл"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Благодарим Ви за изпратената заявка.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Абонирайте се",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Contacte (CA)",
+      "slug": "quote-request-ca",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-ca",
+              "type": "text",
+              "label": "Nom i cognoms",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Nom"
+            },
+            {
+              "id": "company-ca",
+              "type": "text",
+              "label": "Empresa",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Empresa"
+            },
+            {
+              "id": "email-ca",
+              "type": "email",
+              "label": "Correu electrònic",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Correu electrònic"
+            },
+            {
+              "id": "phone-ca",
+              "type": "tel",
+              "label": "Telèfon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telèfon"
+            },
+            {
+              "id": "type-ca",
+              "type": "radio",
+              "label": "Tipus de sol·licitud",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Pressupost de construcció",
+                  "value": "Pressupost de construcció"
+                },
+                {
+                  "label": "Visita a l'obra",
+                  "value": "Visita a l'obra"
+                },
+                {
+                  "label": "Manteniment",
+                  "value": "Manteniment"
+                },
+                {
+                  "label": "Col·laboració / proveïdor",
+                  "value": "Col·laboració / proveïdor"
+                }
+              ]
+            },
+            {
+              "id": "description-ca",
+              "type": "textarea",
+              "label": "Descripció del projecte",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Ubicació, superfície, data d'inici prevista…"
+            },
+            {
+              "id": "consent-ca",
+              "type": "checkbox",
+              "label": "Accepto el tractament de dades personals d'acord amb la Llei federal 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Fet — La vostra sol·licitud de pressupost s'ha enviat.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Envia la sol·licitud",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Rep el nostre butlletí del sector cada dues setmanes (CA)",
+      "slug": "newsletter-ca",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-ca",
+              "type": "email",
+              "label": "Correu professional",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Correu professional"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Gràcies per la vostra inscripció.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Subscriu-te",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakt (CS)",
+      "slug": "quote-request-cs",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-cs",
+              "type": "text",
+              "label": "Jméno a příjmení",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Jméno"
+            },
+            {
+              "id": "company-cs",
+              "type": "text",
+              "label": "Společnost",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Společnost"
+            },
+            {
+              "id": "email-cs",
+              "type": "email",
+              "label": "E-mail",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-mail"
+            },
+            {
+              "id": "phone-cs",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-cs",
+              "type": "radio",
+              "label": "Typ poptávky",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Nabídka na stavbu",
+                  "value": "Nabídka na stavbu"
+                },
+                {
+                  "label": "Prohlídka staveniště",
+                  "value": "Prohlídka staveniště"
+                },
+                {
+                  "label": "Údržba",
+                  "value": "Údržba"
+                },
+                {
+                  "label": "Partnerství / dodavatel",
+                  "value": "Partnerství / dodavatel"
+                }
+              ]
+            },
+            {
+              "id": "description-cs",
+              "type": "textarea",
+              "label": "Popis projektu",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Místo, podlahová plocha, předpokládaný termín zahájení…"
+            },
+            {
+              "id": "consent-cs",
+              "type": "checkbox",
+              "label": "Souhlasím se zpracováním osobních údajů podle federálního zákona 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Hotovo — Vaše poptávka byla odeslána.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Odeslat poptávku",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Odebírejte náš oborový přehled jednou za dva týdny (CS)",
+      "slug": "newsletter-cs",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-cs",
+              "type": "email",
+              "label": "Pracovní e-mail",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Pracovní e-mail"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Děkujeme za přihlášení.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Odebírat",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Cyswllt (CY)",
+      "slug": "quote-request-cy",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-cy",
+              "type": "text",
+              "label": "Enw llawn",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Enw"
+            },
+            {
+              "id": "company-cy",
+              "type": "text",
+              "label": "Cwmni",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Cwmni"
+            },
+            {
+              "id": "email-cy",
+              "type": "email",
+              "label": "E-bost",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-bost"
+            },
+            {
+              "id": "phone-cy",
+              "type": "tel",
+              "label": "Ffôn",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Ffôn"
+            },
+            {
+              "id": "type-cy",
+              "type": "radio",
+              "label": "Math o gais",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Dyfynbris adeiladu",
+                  "value": "Dyfynbris adeiladu"
+                },
+                {
+                  "label": "Arolwg safle",
+                  "value": "Arolwg safle"
+                },
+                {
+                  "label": "Cynnal a chadw",
+                  "value": "Cynnal a chadw"
+                },
+                {
+                  "label": "Partneriaeth / cyflenwr",
+                  "value": "Partneriaeth / cyflenwr"
+                }
+              ]
+            },
+            {
+              "id": "description-cy",
+              "type": "textarea",
+              "label": "Disgrifiad o'r prosiect",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Lleoliad, arwynebedd llawr, dyddiad dechrau disgwyliedig…"
+            },
+            {
+              "id": "consent-cy",
+              "type": "checkbox",
+              "label": "Rwy'n cydsynio i brosesu data personol o dan Gyfraith Ffederal 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Llwyddiant — Mae eich cais am ddyfynbris wedi'i anfon.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Anfon cais",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Cael ein crynodeb diwydiant bob pythefnos (CY)",
+      "slug": "newsletter-cy",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-cy",
+              "type": "email",
+              "label": "E-bost gwaith",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "E-bost gwaith"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Diolch am eich cyflwyniad.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Tanysgrifio",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakt (DA)",
+      "slug": "quote-request-da",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-da",
+              "type": "text",
+              "label": "Fulde navn",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Navn"
+            },
+            {
+              "id": "company-da",
+              "type": "text",
+              "label": "Virksomhed",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Virksomhed"
+            },
+            {
+              "id": "email-da",
+              "type": "email",
+              "label": "E-mail",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-mail"
+            },
+            {
+              "id": "phone-da",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-da",
+              "type": "radio",
+              "label": "Type henvendelse",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Tilbud på byggeri",
+                  "value": "Tilbud på byggeri"
+                },
+                {
+                  "label": "Besigtigelse",
+                  "value": "Besigtigelse"
+                },
+                {
+                  "label": "Vedligeholdelse",
+                  "value": "Vedligeholdelse"
+                },
+                {
+                  "label": "Partnerskab / leverandør",
+                  "value": "Partnerskab / leverandør"
+                }
+              ]
+            },
+            {
+              "id": "description-da",
+              "type": "textarea",
+              "label": "Projektbeskrivelse",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Placering, etageareal, forventet startdato…"
+            },
+            {
+              "id": "consent-da",
+              "type": "checkbox",
+              "label": "Jeg giver samtykke til behandling af personoplysninger i henhold til den føderale lov 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Tak — Din tilbudsforespørgsel er sendt.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Send forespørgsel",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Få vores branchebrief hver anden uge (DA)",
+      "slug": "newsletter-da",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-da",
+              "type": "email",
+              "label": "Arbejds-e-mail",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Arbejds-e-mail"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Tak for din tilmelding.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Tilmeld",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakt (DE)",
+      "slug": "quote-request-de",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-de",
+              "type": "text",
+              "label": "Vollständiger Name",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Name"
+            },
+            {
+              "id": "company-de",
+              "type": "text",
+              "label": "Unternehmen",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Unternehmen"
+            },
+            {
+              "id": "email-de",
+              "type": "email",
+              "label": "E-Mail",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-Mail"
+            },
+            {
+              "id": "phone-de",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-de",
+              "type": "radio",
+              "label": "Art der Anfrage",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Bauangebot",
+                  "value": "Bauangebot"
+                },
+                {
+                  "label": "Baustellenbesichtigung",
+                  "value": "Baustellenbesichtigung"
+                },
+                {
+                  "label": "Wartung",
+                  "value": "Wartung"
+                },
+                {
+                  "label": "Partnerschaft / Lieferant",
+                  "value": "Partnerschaft / Lieferant"
+                }
+              ]
+            },
+            {
+              "id": "description-de",
+              "type": "textarea",
+              "label": "Projektbeschreibung",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Standort, Grundfläche, geplanter Baubeginn…"
+            },
+            {
+              "id": "consent-de",
+              "type": "checkbox",
+              "label": "Ich willige in die Verarbeitung personenbezogener Daten gemäß dem Bundesgesetz 152-FZ ein.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Vielen Dank — Ihre Angebotsanfrage wurde gesendet.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Anfrage senden",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Erhalten Sie alle zwei Wochen unser Branchen-Update (DE)",
+      "slug": "newsletter-de",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-de",
+              "type": "email",
+              "label": "Geschäftliche E-Mail",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Geschäftliche E-Mail"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Vielen Dank für Ihre Anmeldung.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Abonnieren",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Επικοινωνία (EL)",
+      "slug": "quote-request-el",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-el",
+              "type": "text",
+              "label": "Ονοματεπώνυμο",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Όνομα"
+            },
+            {
+              "id": "company-el",
+              "type": "text",
+              "label": "Εταιρεία",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Εταιρεία"
+            },
+            {
+              "id": "email-el",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Email"
+            },
+            {
+              "id": "phone-el",
+              "type": "tel",
+              "label": "Τηλέφωνο",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Τηλέφωνο"
+            },
+            {
+              "id": "type-el",
+              "type": "radio",
+              "label": "Τύπος αιτήματος",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Προσφορά κατασκευής",
+                  "value": "Προσφορά κατασκευής"
+                },
+                {
+                  "label": "Αυτοψία εργοταξίου",
+                  "value": "Αυτοψία εργοταξίου"
+                },
+                {
+                  "label": "Συντήρηση",
+                  "value": "Συντήρηση"
+                },
+                {
+                  "label": "Συνεργασία / προμηθευτής",
+                  "value": "Συνεργασία / προμηθευτής"
+                }
+              ]
+            },
+            {
+              "id": "description-el",
+              "type": "textarea",
+              "label": "Περιγραφή έργου",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Τοποθεσία, εμβαδόν, αναμενόμενη ημερομηνία έναρξης…"
+            },
+            {
+              "id": "consent-el",
+              "type": "checkbox",
+              "label": "Συναινώ στην επεξεργασία προσωπικών δεδομένων σύμφωνα με τον Ομοσπονδιακό Νόμο 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Επιτυχία — Το αίτημα προσφοράς σας στάλθηκε.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Αποστολή αιτήματος",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Λάβετε την ενημέρωση κλάδου κάθε δύο εβδομάδες (EL)",
+      "slug": "newsletter-el",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-el",
+              "type": "email",
+              "label": "Εργασιακό email",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Εργασιακό email"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Σας ευχαριστούμε για την εγγραφή σας.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Εγγραφή",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Contacto (ES)",
+      "slug": "quote-request-es",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-es",
+              "type": "text",
+              "label": "Nombre completo",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Nombre"
+            },
+            {
+              "id": "company-es",
+              "type": "text",
+              "label": "Empresa",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Empresa"
+            },
+            {
+              "id": "email-es",
+              "type": "email",
+              "label": "Correo electrónico",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Correo electrónico"
+            },
+            {
+              "id": "phone-es",
+              "type": "tel",
+              "label": "Teléfono",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Teléfono"
+            },
+            {
+              "id": "type-es",
+              "type": "radio",
+              "label": "Tipo de solicitud",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Presupuesto de obra",
+                  "value": "Presupuesto de obra"
+                },
+                {
+                  "label": "Visita técnica",
+                  "value": "Visita técnica"
+                },
+                {
+                  "label": "Mantenimiento",
+                  "value": "Mantenimiento"
+                },
+                {
+                  "label": "Colaboración / proveedor",
+                  "value": "Colaboración / proveedor"
+                }
+              ]
+            },
+            {
+              "id": "description-es",
+              "type": "textarea",
+              "label": "Descripción del proyecto",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Ubicación, superficie, fecha prevista de inicio…"
+            },
+            {
+              "id": "consent-es",
+              "type": "checkbox",
+              "label": "Acepto el tratamiento de mis datos personales conforme a la Ley Federal 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Listo — Su solicitud de presupuesto se ha enviado.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Enviar solicitud",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Reciba nuestro boletín del sector cada dos semanas (ES)",
+      "slug": "newsletter-es",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-es",
+              "type": "email",
+              "label": "Correo laboral",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Correo laboral"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Gracias por su suscripción.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Suscribirse",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakt (ET)",
+      "slug": "quote-request-et",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-et",
+              "type": "text",
+              "label": "Täisnimi",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Nimi"
+            },
+            {
+              "id": "company-et",
+              "type": "text",
+              "label": "Ettevõte",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Ettevõte"
+            },
+            {
+              "id": "email-et",
+              "type": "email",
+              "label": "E-post",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-post"
+            },
+            {
+              "id": "phone-et",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-et",
+              "type": "radio",
+              "label": "Päringu tüüp",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Ehitushinnapakkumine",
+                  "value": "Ehitushinnapakkumine"
+                },
+                {
+                  "label": "Objekti ülevaatus",
+                  "value": "Objekti ülevaatus"
+                },
+                {
+                  "label": "Hooldus",
+                  "value": "Hooldus"
+                },
+                {
+                  "label": "Koostöö / tarnija",
+                  "value": "Koostöö / tarnija"
+                }
+              ]
+            },
+            {
+              "id": "description-et",
+              "type": "textarea",
+              "label": "Projekti kirjeldus",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Asukoht, pind, eeldatav alguskuupäev…"
+            },
+            {
+              "id": "consent-et",
+              "type": "checkbox",
+              "label": "Nõustun isikuandmete töötlemisega föderaalseaduse 152-FZ alusel.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Õnnestus — Teie hinnapäring on saadetud.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Saada päring",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Saage meie valdkonna ülevaade iga kahe nädala tagant (ET)",
+      "slug": "newsletter-et",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-et",
+              "type": "email",
+              "label": "Tööalane e-post",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Tööalane e-post"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Täname registreerumast.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Telli",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Yhteystiedot (FI)",
+      "slug": "quote-request-fi",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-fi",
+              "type": "text",
+              "label": "Koko nimi",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Nimi"
+            },
+            {
+              "id": "company-fi",
+              "type": "text",
+              "label": "Yritys",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Yritys"
+            },
+            {
+              "id": "email-fi",
+              "type": "email",
+              "label": "Sähköposti",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Sähköposti"
+            },
+            {
+              "id": "phone-fi",
+              "type": "tel",
+              "label": "Puhelin",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Puhelin"
+            },
+            {
+              "id": "type-fi",
+              "type": "radio",
+              "label": "Yhteydenoton tyyppi",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Rakennustarjous",
+                  "value": "Rakennustarjous"
+                },
+                {
+                  "label": "Työmaakatselmus",
+                  "value": "Työmaakatselmus"
+                },
+                {
+                  "label": "Kunnossapito",
+                  "value": "Kunnossapito"
+                },
+                {
+                  "label": "Kumppanuus / toimittaja",
+                  "value": "Kumppanuus / toimittaja"
+                }
+              ]
+            },
+            {
+              "id": "description-fi",
+              "type": "textarea",
+              "label": "Hankkeen kuvaus",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Sijainti, kerrosala, arvioitu aloituspäivä…"
+            },
+            {
+              "id": "consent-fi",
+              "type": "checkbox",
+              "label": "Hyväksyn henkilötietojen käsittelyn liittovaltion lain 152-FZ mukaisesti.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Valmis — Tarjouspyyntösi on lähetetty.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Lähetä pyyntö",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Alan katsauksemme joka toinen viikko (FI)",
+      "slug": "newsletter-fi",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-fi",
+              "type": "email",
+              "label": "Työsähköposti",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Työsähköposti"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Kiitos tilauksestasi.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Tilaa",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Contact (FR)",
+      "slug": "quote-request-fr",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-fr",
+              "type": "text",
+              "label": "Nom complet",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Nom"
+            },
+            {
+              "id": "company-fr",
+              "type": "text",
+              "label": "Entreprise",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Entreprise"
+            },
+            {
+              "id": "email-fr",
+              "type": "email",
+              "label": "E-mail",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-mail"
+            },
+            {
+              "id": "phone-fr",
+              "type": "tel",
+              "label": "Téléphone",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Téléphone"
+            },
+            {
+              "id": "type-fr",
+              "type": "radio",
+              "label": "Type de demande",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Devis de construction",
+                  "value": "Devis de construction"
+                },
+                {
+                  "label": "Visite de site",
+                  "value": "Visite de site"
+                },
+                {
+                  "label": "Maintenance",
+                  "value": "Maintenance"
+                },
+                {
+                  "label": "Partenariat / fournisseur",
+                  "value": "Partenariat / fournisseur"
+                }
+              ]
+            },
+            {
+              "id": "description-fr",
+              "type": "textarea",
+              "label": "Description du projet",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Emplacement, surface, date de démarrage prévue…"
+            },
+            {
+              "id": "consent-fr",
+              "type": "checkbox",
+              "label": "J'accepte le traitement de mes données personnelles conformément à la loi fédérale 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Merci — Votre demande de devis a été envoyée.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Envoyer la demande",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Recevez notre synthèse sectorielle toutes les deux semaines (FR)",
+      "slug": "newsletter-fr",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-fr",
+              "type": "email",
+              "label": "E-mail professionnel",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "E-mail professionnel"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Merci pour votre inscription.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "S'abonner",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Teagmháil (GA)",
+      "slug": "quote-request-ga",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-ga",
+              "type": "text",
+              "label": "Ainm iomlán",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Ainm"
+            },
+            {
+              "id": "company-ga",
+              "type": "text",
+              "label": "Comhlacht",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Comhlacht"
+            },
+            {
+              "id": "email-ga",
+              "type": "email",
+              "label": "Ríomhphost",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Ríomhphost"
+            },
+            {
+              "id": "phone-ga",
+              "type": "tel",
+              "label": "Fón",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Fón"
+            },
+            {
+              "id": "type-ga",
+              "type": "radio",
+              "label": "Cineál iarratais",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Luachan tógála",
+                  "value": "Luachan tógála"
+                },
+                {
+                  "label": "Suirbhé láithreáin",
+                  "value": "Suirbhé láithreáin"
+                },
+                {
+                  "label": "Cothabháil",
+                  "value": "Cothabháil"
+                },
+                {
+                  "label": "Comhpháirtíocht / soláthraí",
+                  "value": "Comhpháirtíocht / soláthraí"
+                }
+              ]
+            },
+            {
+              "id": "description-ga",
+              "type": "textarea",
+              "label": "Cur síos ar an tionscadal",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Suíomh, achar urláir, dáta tosaithe measta…"
+            },
+            {
+              "id": "consent-ga",
+              "type": "checkbox",
+              "label": "Toilím le próiseáil sonraí pearsanta faoin Dlí Cónaidhme 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "D'éirigh leis — Seoladh d'iarratas ar luachan.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Seol iarratas",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Faigh ár n-achoimre tionscail gach coicís (GA)",
+      "slug": "newsletter-ga",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-ga",
+              "type": "email",
+              "label": "Ríomhphost oibre",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Ríomhphost oibre"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Go raibh maith agat as clárú.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Liostáil",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakt (HR)",
+      "slug": "quote-request-hr",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-hr",
+              "type": "text",
+              "label": "Ime i prezime",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Ime"
+            },
+            {
+              "id": "company-hr",
+              "type": "text",
+              "label": "Tvrtka",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Tvrtka"
+            },
+            {
+              "id": "email-hr",
+              "type": "email",
+              "label": "E-pošta",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-pošta"
+            },
+            {
+              "id": "phone-hr",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-hr",
+              "type": "radio",
+              "label": "Vrsta upita",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Ponuda za gradnju",
+                  "value": "Ponuda za gradnju"
+                },
+                {
+                  "label": "Obilazak terena",
+                  "value": "Obilazak terena"
+                },
+                {
+                  "label": "Održavanje",
+                  "value": "Održavanje"
+                },
+                {
+                  "label": "Partnerstvo / dobavljač",
+                  "value": "Partnerstvo / dobavljač"
+                }
+              ]
+            },
+            {
+              "id": "description-hr",
+              "type": "textarea",
+              "label": "Opis projekta",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Lokacija, površina, očekivani datum početka…"
+            },
+            {
+              "id": "consent-hr",
+              "type": "checkbox",
+              "label": "Pristajem na obradu osobnih podataka prema Saveznom zakonu 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Uspješno — Vaš upit za ponudu je poslan.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Pošaljite upit",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Primajte naš pregled struke svaka dva tjedna (HR)",
+      "slug": "newsletter-hr",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-hr",
+              "type": "email",
+              "label": "Poslovni e-mail",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Poslovni e-mail"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Hvala na prijavi.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Pretplatite se",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kapcsolat (HU)",
+      "slug": "quote-request-hu",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-hu",
+              "type": "text",
+              "label": "Teljes név",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Név"
+            },
+            {
+              "id": "company-hu",
+              "type": "text",
+              "label": "Cég",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Cég"
+            },
+            {
+              "id": "email-hu",
+              "type": "email",
+              "label": "E-mail",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-mail"
+            },
+            {
+              "id": "phone-hu",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-hu",
+              "type": "radio",
+              "label": "Megkeresés típusa",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Építési árajánlat",
+                  "value": "Építési árajánlat"
+                },
+                {
+                  "label": "Helyszíni felmérés",
+                  "value": "Helyszíni felmérés"
+                },
+                {
+                  "label": "Karbantartás",
+                  "value": "Karbantartás"
+                },
+                {
+                  "label": "Partnerség / beszállító",
+                  "value": "Partnerség / beszállító"
+                }
+              ]
+            },
+            {
+              "id": "description-hu",
+              "type": "textarea",
+              "label": "Projekt leírása",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Helyszín, alapterület, tervezett kezdési időpont…"
+            },
+            {
+              "id": "consent-hu",
+              "type": "checkbox",
+              "label": "Hozzájárulok személyes adataim kezeléséhez a 152-FZ szövetségi törvény szerint.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Sikeres — Árajánlatkérését elküldte.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Kérés elküldése",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Iratkozzon fel kéthetente megjelenő iparági összefoglalónkra (HU)",
+      "slug": "newsletter-hu",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-hu",
+              "type": "email",
+              "label": "Munkahelyi e-mail",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Munkahelyi e-mail"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Köszönjük a feliratkozást.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Feliratkozás",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Contatti (IT)",
+      "slug": "quote-request-it",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-it",
+              "type": "text",
+              "label": "Nome e cognome",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Nome"
+            },
+            {
+              "id": "company-it",
+              "type": "text",
+              "label": "Azienda",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Azienda"
+            },
+            {
+              "id": "email-it",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Email"
+            },
+            {
+              "id": "phone-it",
+              "type": "tel",
+              "label": "Telefono",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefono"
+            },
+            {
+              "id": "type-it",
+              "type": "radio",
+              "label": "Tipo di richiesta",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Preventivo di costruzione",
+                  "value": "Preventivo di costruzione"
+                },
+                {
+                  "label": "Sopralluogo",
+                  "value": "Sopralluogo"
+                },
+                {
+                  "label": "Manutenzione",
+                  "value": "Manutenzione"
+                },
+                {
+                  "label": "Partnership / fornitore",
+                  "value": "Partnership / fornitore"
+                }
+              ]
+            },
+            {
+              "id": "description-it",
+              "type": "textarea",
+              "label": "Descrizione del progetto",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Località, superficie, data di inizio prevista…"
+            },
+            {
+              "id": "consent-it",
+              "type": "checkbox",
+              "label": "Acconsento al trattamento dei dati personali ai sensi della Legge federale 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Fatto — La sua richiesta di preventivo è stata inviata.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Invii la richiesta",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Riceva il nostro bollettino di settore ogni due settimane (IT)",
+      "slug": "newsletter-it",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-it",
+              "type": "email",
+              "label": "Email aziendale",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Email aziendale"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Grazie per la sua iscrizione.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Si iscriva",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "お問い合わせ (JA)",
+      "slug": "quote-request-ja",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-ja",
+              "type": "text",
+              "label": "氏名",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "氏名"
+            },
+            {
+              "id": "company-ja",
+              "type": "text",
+              "label": "会社名",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "会社名"
+            },
+            {
+              "id": "email-ja",
+              "type": "email",
+              "label": "メールアドレス",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "メールアドレス"
+            },
+            {
+              "id": "phone-ja",
+              "type": "tel",
+              "label": "電話番号",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "電話番号"
+            },
+            {
+              "id": "type-ja",
+              "type": "radio",
+              "label": "お問い合わせ種別",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "建設見積もり",
+                  "value": "建設見積もり"
+                },
+                {
+                  "label": "現地調査",
+                  "value": "現地調査"
+                },
+                {
+                  "label": "保守・メンテナンス",
+                  "value": "保守・メンテナンス"
+                },
+                {
+                  "label": "協業・仕入先",
+                  "value": "協業・仕入先"
+                }
+              ]
+            },
+            {
+              "id": "description-ja",
+              "type": "textarea",
+              "label": "プロジェクト概要",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "所在地、延床面積、着工予定日…"
+            },
+            {
+              "id": "consent-ja",
+              "type": "checkbox",
+              "label": "連邦法152-FZに基づく個人情報の取り扱いに同意します。",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "送信完了 — お見積もりのご依頼を送信しました。",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "依頼を送信",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "業界ブリーフィングを2週間ごとにお届け (JA)",
+      "slug": "newsletter-ja",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-ja",
+              "type": "email",
+              "label": "会社メールアドレス",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "会社メールアドレス"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "ご登録ありがとうございます。",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "購読する",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "კონტაქტი (KA)",
+      "slug": "quote-request-ka",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-ka",
+              "type": "text",
+              "label": "სახელი და გვარი",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "სახელი"
+            },
+            {
+              "id": "company-ka",
+              "type": "text",
+              "label": "კომპანია",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "კომპანია"
+            },
+            {
+              "id": "email-ka",
+              "type": "email",
+              "label": "ელფოსტა",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "ელფოსტა"
+            },
+            {
+              "id": "phone-ka",
+              "type": "tel",
+              "label": "ტელეფონი",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "ტელეფონი"
+            },
+            {
+              "id": "type-ka",
+              "type": "radio",
+              "label": "მოთხოვნის ტიპი",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "სამშენებლო ფასის შეთავაზება",
+                  "value": "სამშენებლო ფასის შეთავაზება"
+                },
+                {
+                  "label": "ობიექტის დათვალიერება",
+                  "value": "ობიექტის დათვალიერება"
+                },
+                {
+                  "label": "ტექნიკური მომსახურება",
+                  "value": "ტექნიკური მომსახურება"
+                },
+                {
+                  "label": "პარტნიორობა / მომწოდებელი",
+                  "value": "პარტნიორობა / მომწოდებელი"
+                }
+              ]
+            },
+            {
+              "id": "description-ka",
+              "type": "textarea",
+              "label": "პროექტის აღწერა",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "მდებარეობა, ფართობი, სამუშაოს დაწყების სავარაუდო თარიღი…"
+            },
+            {
+              "id": "consent-ka",
+              "type": "checkbox",
+              "label": "ვეთანხმები პერსონალური მონაცემების დამუშავებას ფედერალური კანონის 152-FZ შესაბამისად.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "წარმატებით — თქვენი მოთხოვნა ფასის შეთავაზებაზე გაიგზავნა.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "მოთხოვნის გაგზავნა",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "მიიღეთ ჩვენი დარგობრივი მიმოხილვა ორ კვირაში ერთხელ (KA)",
+      "slug": "newsletter-ka",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-ka",
+              "type": "email",
+              "label": "სამუშაო ელფოსტა",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "სამუშაო ელფოსტა"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "გმადლობთ რეგისტრაციისთვის.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "გამოწერა",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "ຕິດຕໍ່ (LO)",
+      "slug": "quote-request-lo",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-lo",
+              "type": "text",
+              "label": "ຊື່ ແລະ ນາມສະກຸນ",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "ຊື່"
+            },
+            {
+              "id": "company-lo",
+              "type": "text",
+              "label": "ບໍລິສັດ",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "ບໍລິສັດ"
+            },
+            {
+              "id": "email-lo",
+              "type": "email",
+              "label": "ອີເມວ",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "ອີເມວ"
+            },
+            {
+              "id": "phone-lo",
+              "type": "tel",
+              "label": "ໂທລະສັບ",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "ໂທລະສັບ"
+            },
+            {
+              "id": "type-lo",
+              "type": "radio",
+              "label": "ປະເພດຄຳຮ້ອງ",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "ໃບສະເໜີລາຄາກໍ່ສ້າງ",
+                  "value": "ໃບສະເໜີລາຄາກໍ່ສ້າງ"
+                },
+                {
+                  "label": "ສຳຫຼວດສະຖານທີ່",
+                  "value": "ສຳຫຼວດສະຖານທີ່"
+                },
+                {
+                  "label": "ບຳລຸງຮັກສາ",
+                  "value": "ບຳລຸງຮັກສາ"
+                },
+                {
+                  "label": "ຄູ່ຮ່ວມງານ / ຜູ້ສະໜອງ",
+                  "value": "ຄູ່ຮ່ວມງານ / ຜູ້ສະໜອງ"
+                }
+              ]
+            },
+            {
+              "id": "description-lo",
+              "type": "textarea",
+              "label": "ລາຍລະອຽດໂຄງການ",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "ສະຖານທີ່, ເນື້ອທີ່, ວັນທີຄາດວ່າຈະເລີ່ມ…"
+            },
+            {
+              "id": "consent-lo",
+              "type": "checkbox",
+              "label": "ຂ້າພະເຈົ້າຍິນຍອມໃຫ້ປະມວນຜົນຂໍ້ມູນສ່ວນບຸກຄົນຕາມກົດໝາຍລັດຖະບານກາງ 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "ສຳເລັດ — ຄຳຮ້ອງຂໍໃບສະເໜີລາຄາຂອງທ່ານຖືກສົ່ງແລ້ວ.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "ສົ່ງຄຳຮ້ອງ",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "ຮັບຂໍ້ມູນສະຫຼຸບອຸດສາຫະກຳຂອງພວກເຮົາທຸກສອງອາທິດ (LO)",
+      "slug": "newsletter-lo",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-lo",
+              "type": "email",
+              "label": "ອີເມວບໍລິສັດ",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "ອີເມວບໍລິສັດ"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "ຂອບໃຈທີ່ລົງທະບຽນ.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "ສະໝັກຮັບຂ່າວ",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontaktai (LT)",
+      "slug": "quote-request-lt",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-lt",
+              "type": "text",
+              "label": "Vardas ir pavardė",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Vardas"
+            },
+            {
+              "id": "company-lt",
+              "type": "text",
+              "label": "Įmonė",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Įmonė"
+            },
+            {
+              "id": "email-lt",
+              "type": "email",
+              "label": "El. paštas",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "El. paštas"
+            },
+            {
+              "id": "phone-lt",
+              "type": "tel",
+              "label": "Telefonas",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefonas"
+            },
+            {
+              "id": "type-lt",
+              "type": "radio",
+              "label": "Užklausos tipas",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Statybos pasiūlymas",
+                  "value": "Statybos pasiūlymas"
+                },
+                {
+                  "label": "Objekto apžiūra",
+                  "value": "Objekto apžiūra"
+                },
+                {
+                  "label": "Priežiūra",
+                  "value": "Priežiūra"
+                },
+                {
+                  "label": "Partnerystė / tiekėjas",
+                  "value": "Partnerystė / tiekėjas"
+                }
+              ]
+            },
+            {
+              "id": "description-lt",
+              "type": "textarea",
+              "label": "Projekto aprašymas",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Vieta, plotas, numatoma pradžios data…"
+            },
+            {
+              "id": "consent-lt",
+              "type": "checkbox",
+              "label": "Sutinku, kad mano asmens duomenys būtų tvarkomi pagal federalinį įstatymą 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Pavyko — Jūsų pasiūlymo užklausa išsiųsta.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Siųsti užklausą",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Gaukite mūsų pramonės apžvalgą kas dvi savaites (LT)",
+      "slug": "newsletter-lt",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-lt",
+              "type": "email",
+              "label": "Darbinis el. paštas",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Darbinis el. paštas"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Dėkojame, kad užsiprenumeravote.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Prenumeruoti",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakti (LV)",
+      "slug": "quote-request-lv",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-lv",
+              "type": "text",
+              "label": "Vārds un uzvārds",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Vārds"
+            },
+            {
+              "id": "company-lv",
+              "type": "text",
+              "label": "Uzņēmums",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Uzņēmums"
+            },
+            {
+              "id": "email-lv",
+              "type": "email",
+              "label": "E-pasts",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-pasts"
+            },
+            {
+              "id": "phone-lv",
+              "type": "tel",
+              "label": "Tālrunis",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Tālrunis"
+            },
+            {
+              "id": "type-lv",
+              "type": "radio",
+              "label": "Pieprasījuma veids",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Būvniecības piedāvājums",
+                  "value": "Būvniecības piedāvājums"
+                },
+                {
+                  "label": "Objekta apsekošana",
+                  "value": "Objekta apsekošana"
+                },
+                {
+                  "label": "Apkope",
+                  "value": "Apkope"
+                },
+                {
+                  "label": "Partnerība / piegādātājs",
+                  "value": "Partnerība / piegādātājs"
+                }
+              ]
+            },
+            {
+              "id": "description-lv",
+              "type": "textarea",
+              "label": "Projekta apraksts",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Atrašanās vieta, platība, plānotais sākuma datums…"
+            },
+            {
+              "id": "consent-lv",
+              "type": "checkbox",
+              "label": "Piekrītu personas datu apstrādei saskaņā ar federālo likumu 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Izdevās — Jūsu piedāvājuma pieprasījums ir nosūtīts.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Nosūtīt pieprasījumu",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Saņemiet mūsu nozares apskatu ik pēc divām nedēļām (LV)",
+      "slug": "newsletter-lv",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-lv",
+              "type": "email",
+              "label": "Darba e-pasts",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Darba e-pasts"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Paldies par pierakstīšanos.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Abonēt",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Hubungi (MS)",
+      "slug": "quote-request-ms",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-ms",
+              "type": "text",
+              "label": "Nama penuh",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Nama"
+            },
+            {
+              "id": "company-ms",
+              "type": "text",
+              "label": "Syarikat",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Syarikat"
+            },
+            {
+              "id": "email-ms",
+              "type": "email",
+              "label": "E-mel",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-mel"
+            },
+            {
+              "id": "phone-ms",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-ms",
+              "type": "radio",
+              "label": "Jenis permintaan",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Sebut harga pembinaan",
+                  "value": "Sebut harga pembinaan"
+                },
+                {
+                  "label": "Tinjauan tapak",
+                  "value": "Tinjauan tapak"
+                },
+                {
+                  "label": "Penyelenggaraan",
+                  "value": "Penyelenggaraan"
+                },
+                {
+                  "label": "Perkongsian / pembekal",
+                  "value": "Perkongsian / pembekal"
+                }
+              ]
+            },
+            {
+              "id": "description-ms",
+              "type": "textarea",
+              "label": "Penerangan projek",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Lokasi, keluasan lantai, tarikh jangkaan mula…"
+            },
+            {
+              "id": "consent-ms",
+              "type": "checkbox",
+              "label": "Saya bersetuju dengan pemprosesan data peribadi di bawah Undang-undang Persekutuan 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Berjaya — Permintaan sebut harga anda telah dihantar.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Hantar permintaan",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Dapatkan Ringkasan Industri Kami Setiap Dua Minggu (MS)",
+      "slug": "newsletter-ms",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-ms",
+              "type": "email",
+              "label": "E-mel Kerja",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "E-mel Kerja"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Terima kasih atas pendaftaran anda.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Langgan",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakt (NB)",
+      "slug": "quote-request-nb",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-nb",
+              "type": "text",
+              "label": "Fullt navn",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Navn"
+            },
+            {
+              "id": "company-nb",
+              "type": "text",
+              "label": "Firma",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Firma"
+            },
+            {
+              "id": "email-nb",
+              "type": "email",
+              "label": "E-post",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-post"
+            },
+            {
+              "id": "phone-nb",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-nb",
+              "type": "radio",
+              "label": "Type henvendelse",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Pristilbud på bygg",
+                  "value": "Pristilbud på bygg"
+                },
+                {
+                  "label": "Befaring",
+                  "value": "Befaring"
+                },
+                {
+                  "label": "Vedlikehold",
+                  "value": "Vedlikehold"
+                },
+                {
+                  "label": "Partnerskap / leverandør",
+                  "value": "Partnerskap / leverandør"
+                }
+              ]
+            },
+            {
+              "id": "description-nb",
+              "type": "textarea",
+              "label": "Prosjektbeskrivelse",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Beliggenhet, bruttoareal, forventet oppstart…"
+            },
+            {
+              "id": "consent-nb",
+              "type": "checkbox",
+              "label": "Jeg samtykker til behandling av personopplysninger i henhold til føderal lov 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Sendt — Forespørselen din om pristilbud er sendt.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Send forespørsel",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Få vårt bransjenotat hver 14. dag (NB)",
+      "slug": "newsletter-nb",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-nb",
+              "type": "email",
+              "label": "Jobb-e-post",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Jobb-e-post"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Takk for påmeldingen.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Abonner",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Contact (NL)",
+      "slug": "quote-request-nl",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-nl",
+              "type": "text",
+              "label": "Volledige naam",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Naam"
+            },
+            {
+              "id": "company-nl",
+              "type": "text",
+              "label": "Bedrijf",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Bedrijf"
+            },
+            {
+              "id": "email-nl",
+              "type": "email",
+              "label": "E-mail",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-mail"
+            },
+            {
+              "id": "phone-nl",
+              "type": "tel",
+              "label": "Telefoon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefoon"
+            },
+            {
+              "id": "type-nl",
+              "type": "radio",
+              "label": "Soort aanvraag",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Bouwofferte",
+                  "value": "Bouwofferte"
+                },
+                {
+                  "label": "Locatiebezoek",
+                  "value": "Locatiebezoek"
+                },
+                {
+                  "label": "Onderhoud",
+                  "value": "Onderhoud"
+                },
+                {
+                  "label": "Partnerschap / leverancier",
+                  "value": "Partnerschap / leverancier"
+                }
+              ]
+            },
+            {
+              "id": "description-nl",
+              "type": "textarea",
+              "label": "Projectomschrijving",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Locatie, vloeroppervlak, verwachte startdatum…"
+            },
+            {
+              "id": "consent-nl",
+              "type": "checkbox",
+              "label": "Ik ga akkoord met de verwerking van persoonsgegevens volgens de federale wet 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Gelukt — Uw offerteaanvraag is verzonden.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Aanvraag versturen",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Ontvang onze sectorupdate elke twee weken (NL)",
+      "slug": "newsletter-nl",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-nl",
+              "type": "email",
+              "label": "Werk-e-mailadres",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Werk-e-mailadres"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Bedankt voor uw aanmelding.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Abonneren",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakt (PL)",
+      "slug": "quote-request-pl",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-pl",
+              "type": "text",
+              "label": "Imię i nazwisko",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Imię"
+            },
+            {
+              "id": "company-pl",
+              "type": "text",
+              "label": "Firma",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Firma"
+            },
+            {
+              "id": "email-pl",
+              "type": "email",
+              "label": "E-mail",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-mail"
+            },
+            {
+              "id": "phone-pl",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-pl",
+              "type": "radio",
+              "label": "Rodzaj zapytania",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Wycena budowy",
+                  "value": "Wycena budowy"
+                },
+                {
+                  "label": "Wizja lokalna",
+                  "value": "Wizja lokalna"
+                },
+                {
+                  "label": "Konserwacja",
+                  "value": "Konserwacja"
+                },
+                {
+                  "label": "Partnerstwo / dostawca",
+                  "value": "Partnerstwo / dostawca"
+                }
+              ]
+            },
+            {
+              "id": "description-pl",
+              "type": "textarea",
+              "label": "Opis projektu",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Lokalizacja, powierzchnia, planowany termin rozpoczęcia…"
+            },
+            {
+              "id": "consent-pl",
+              "type": "checkbox",
+              "label": "Wyrażam zgodę na przetwarzanie danych osobowych zgodnie z ustawą federalną 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Gotowe — Twoje zapytanie ofertowe zostało wysłane.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Wyślij zapytanie",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Otrzymuj nasz branżowy przegląd co dwa tygodnie (PL)",
+      "slug": "newsletter-pl",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-pl",
+              "type": "email",
+              "label": "Służbowy e-mail",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Służbowy e-mail"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Dziękujemy za zapisanie się.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Subskrybuj",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Contato (PT)",
+      "slug": "quote-request-pt",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-pt",
+              "type": "text",
+              "label": "Nome completo",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Nome"
+            },
+            {
+              "id": "company-pt",
+              "type": "text",
+              "label": "Empresa",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Empresa"
+            },
+            {
+              "id": "email-pt",
+              "type": "email",
+              "label": "E-mail",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-mail"
+            },
+            {
+              "id": "phone-pt",
+              "type": "tel",
+              "label": "Telefone",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefone"
+            },
+            {
+              "id": "type-pt",
+              "type": "radio",
+              "label": "Tipo de solicitação",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Orçamento de obra",
+                  "value": "Orçamento de obra"
+                },
+                {
+                  "label": "Visita técnica",
+                  "value": "Visita técnica"
+                },
+                {
+                  "label": "Manutenção",
+                  "value": "Manutenção"
+                },
+                {
+                  "label": "Parceria / fornecedor",
+                  "value": "Parceria / fornecedor"
+                }
+              ]
+            },
+            {
+              "id": "description-pt",
+              "type": "textarea",
+              "label": "Descrição do projeto",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Localização, área construída, data prevista de início…"
+            },
+            {
+              "id": "consent-pt",
+              "type": "checkbox",
+              "label": "Concordo com o tratamento de dados pessoais nos termos da Lei Federal 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Sucesso — Sua solicitação de orçamento foi enviada.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Enviar solicitação",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Receba nosso boletim do setor a cada duas semanas (PT)",
+      "slug": "newsletter-pt",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-pt",
+              "type": "email",
+              "label": "E-mail corporativo",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "E-mail corporativo"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Obrigado pela sua inscrição.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Inscrever-se",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Contact (RO)",
+      "slug": "quote-request-ro",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-ro",
+              "type": "text",
+              "label": "Nume complet",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Nume"
+            },
+            {
+              "id": "company-ro",
+              "type": "text",
+              "label": "Companie",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Companie"
+            },
+            {
+              "id": "email-ro",
+              "type": "email",
+              "label": "E-mail",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-mail"
+            },
+            {
+              "id": "phone-ro",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-ro",
+              "type": "radio",
+              "label": "Tipul solicitării",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Ofertă de construcție",
+                  "value": "Ofertă de construcție"
+                },
+                {
+                  "label": "Vizită la teren",
+                  "value": "Vizită la teren"
+                },
+                {
+                  "label": "Întreținere",
+                  "value": "Întreținere"
+                },
+                {
+                  "label": "Parteneriat / furnizor",
+                  "value": "Parteneriat / furnizor"
+                }
+              ]
+            },
+            {
+              "id": "description-ro",
+              "type": "textarea",
+              "label": "Descrierea proiectului",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Locație, suprafață, data estimată de începere…"
+            },
+            {
+              "id": "consent-ro",
+              "type": "checkbox",
+              "label": "Sunt de acord cu prelucrarea datelor personale conform Legii federale 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Succes — Solicitarea dumneavoastră de ofertă a fost trimisă.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Trimiteți solicitarea",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Primiți buletinul nostru de sector la fiecare două săptămâni (RO)",
+      "slug": "newsletter-ro",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-ro",
+              "type": "email",
+              "label": "E-mail de serviciu",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "E-mail de serviciu"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Vă mulțumim pentru abonare.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Abonare",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakt (SK)",
+      "slug": "quote-request-sk",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-sk",
+              "type": "text",
+              "label": "Meno a priezvisko",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Meno"
+            },
+            {
+              "id": "company-sk",
+              "type": "text",
+              "label": "Spoločnosť",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Spoločnosť"
+            },
+            {
+              "id": "email-sk",
+              "type": "email",
+              "label": "E-mail",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-mail"
+            },
+            {
+              "id": "phone-sk",
+              "type": "tel",
+              "label": "Telefón",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefón"
+            },
+            {
+              "id": "type-sk",
+              "type": "radio",
+              "label": "Typ dopytu",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Ponuka na stavbu",
+                  "value": "Ponuka na stavbu"
+                },
+                {
+                  "label": "Obhliadka lokality",
+                  "value": "Obhliadka lokality"
+                },
+                {
+                  "label": "Údržba",
+                  "value": "Údržba"
+                },
+                {
+                  "label": "Partnerstvo / dodávateľ",
+                  "value": "Partnerstvo / dodávateľ"
+                }
+              ]
+            },
+            {
+              "id": "description-sk",
+              "type": "textarea",
+              "label": "Popis projektu",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Lokalita, podlahová plocha, predpokladaný termín začatia…"
+            },
+            {
+              "id": "consent-sk",
+              "type": "checkbox",
+              "label": "Súhlasím so spracovaním osobných údajov podľa federálneho zákona 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Hotovo — Váš dopyt bol odoslaný.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Odoslať dopyt",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Získajte náš odvetvový prehľad každé dva týždne (SK)",
+      "slug": "newsletter-sk",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-sk",
+              "type": "email",
+              "label": "Pracovný e-mail",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Pracovný e-mail"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Ďakujeme za prihlásenie.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Odoberať",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakt (SL)",
+      "slug": "quote-request-sl",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-sl",
+              "type": "text",
+              "label": "Ime in priimek",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Ime"
+            },
+            {
+              "id": "company-sl",
+              "type": "text",
+              "label": "Podjetje",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Podjetje"
+            },
+            {
+              "id": "email-sl",
+              "type": "email",
+              "label": "E-pošta",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-pošta"
+            },
+            {
+              "id": "phone-sl",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-sl",
+              "type": "radio",
+              "label": "Vrsta povpraševanja",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Ponudba za gradnjo",
+                  "value": "Ponudba za gradnjo"
+                },
+                {
+                  "label": "Ogled lokacije",
+                  "value": "Ogled lokacije"
+                },
+                {
+                  "label": "Vzdrževanje",
+                  "value": "Vzdrževanje"
+                },
+                {
+                  "label": "Partnerstvo / dobavitelj",
+                  "value": "Partnerstvo / dobavitelj"
+                }
+              ]
+            },
+            {
+              "id": "description-sl",
+              "type": "textarea",
+              "label": "Opis projekta",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Lokacija, površina, predvideni datum začetka…"
+            },
+            {
+              "id": "consent-sl",
+              "type": "checkbox",
+              "label": "Strinjam se z obdelavo osebnih podatkov v skladu z zveznim zakonom 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Uspešno — Vaše povpraševanje za ponudbo je poslano.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Pošljite povpraševanje",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Prejemajte naš panožni pregled vsaka dva tedna (SL)",
+      "slug": "newsletter-sl",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-sl",
+              "type": "email",
+              "label": "Poslovni e-naslov",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Poslovni e-naslov"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Hvala za prijavo.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Naročite se",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Контакт (SR)",
+      "slug": "quote-request-sr",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-sr",
+              "type": "text",
+              "label": "Име и презиме",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Име"
+            },
+            {
+              "id": "company-sr",
+              "type": "text",
+              "label": "Компанија",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Компанија"
+            },
+            {
+              "id": "email-sr",
+              "type": "email",
+              "label": "Имејл",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Имејл"
+            },
+            {
+              "id": "phone-sr",
+              "type": "tel",
+              "label": "Телефон",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Телефон"
+            },
+            {
+              "id": "type-sr",
+              "type": "radio",
+              "label": "Врста упита",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Понуда за градњу",
+                  "value": "Понуда за градњу"
+                },
+                {
+                  "label": "Обилазак терена",
+                  "value": "Обилазак терена"
+                },
+                {
+                  "label": "Одржавање",
+                  "value": "Одржавање"
+                },
+                {
+                  "label": "Партнерство / добављач",
+                  "value": "Партнерство / добављач"
+                }
+              ]
+            },
+            {
+              "id": "description-sr",
+              "type": "textarea",
+              "label": "Опис пројекта",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Локација, површина, очекивани датум почетка…"
+            },
+            {
+              "id": "consent-sr",
+              "type": "checkbox",
+              "label": "Сагласан сам са обрадом личних података према Савезном закону 152-ФЗ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Успешно — Ваш упит за понуду је послат.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Пошаљите упит",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Добијајте наш преглед индустрије сваке две недеље (SR)",
+      "slug": "newsletter-sr",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-sr",
+              "type": "email",
+              "label": "Пословни имејл",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Пословни имејл"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Хвала на пријави.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Пријавите се",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Kontakt (SV)",
+      "slug": "quote-request-sv",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-sv",
+              "type": "text",
+              "label": "Fullständigt namn",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Namn"
+            },
+            {
+              "id": "company-sv",
+              "type": "text",
+              "label": "Företag",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Företag"
+            },
+            {
+              "id": "email-sv",
+              "type": "email",
+              "label": "E-post",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-post"
+            },
+            {
+              "id": "phone-sv",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-sv",
+              "type": "radio",
+              "label": "Typ av förfrågan",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Byggoffert",
+                  "value": "Byggoffert"
+                },
+                {
+                  "label": "Platsbesiktning",
+                  "value": "Platsbesiktning"
+                },
+                {
+                  "label": "Underhåll",
+                  "value": "Underhåll"
+                },
+                {
+                  "label": "Partnerskap / leverantör",
+                  "value": "Partnerskap / leverantör"
+                }
+              ]
+            },
+            {
+              "id": "description-sv",
+              "type": "textarea",
+              "label": "Projektbeskrivning",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Plats, golvyta, förväntat startdatum…"
+            },
+            {
+              "id": "consent-sv",
+              "type": "checkbox",
+              "label": "Jag samtycker till behandling av personuppgifter enligt federal lag 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Klart — Din offertförfrågan har skickats.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Skicka förfrågan",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Få vårt branschbrev varannan vecka (SV)",
+      "slug": "newsletter-sv",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-sv",
+              "type": "email",
+              "label": "Arbetsmejl",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Arbetsmejl"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Tack för din anmälan.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Prenumerera",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "தொடர்பு (TA)",
+      "slug": "quote-request-ta",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-ta",
+              "type": "text",
+              "label": "முழுப் பெயர்",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "பெயர்"
+            },
+            {
+              "id": "company-ta",
+              "type": "text",
+              "label": "நிறுவனம்",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "நிறுவனம்"
+            },
+            {
+              "id": "email-ta",
+              "type": "email",
+              "label": "மின்னஞ்சல்",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "மின்னஞ்சல்"
+            },
+            {
+              "id": "phone-ta",
+              "type": "tel",
+              "label": "தொலைபேசி",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "தொலைபேசி"
+            },
+            {
+              "id": "type-ta",
+              "type": "radio",
+              "label": "கோரிக்கை வகை",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "கட்டுமான விலைமதிப்பீடு",
+                  "value": "கட்டுமான விலைமதிப்பீடு"
+                },
+                {
+                  "label": "தள ஆய்வு",
+                  "value": "தள ஆய்வு"
+                },
+                {
+                  "label": "பராமரிப்பு",
+                  "value": "பராமரிப்பு"
+                },
+                {
+                  "label": "கூட்டாண்மை / விநியோகஸ்தர்",
+                  "value": "கூட்டாண்மை / விநியோகஸ்தர்"
+                }
+              ]
+            },
+            {
+              "id": "description-ta",
+              "type": "textarea",
+              "label": "திட்ட விவரம்",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "இருப்பிடம், தரைப்பரப்பு, எதிர்பார்க்கப்படும் தொடக்கத் தேதி…"
+            },
+            {
+              "id": "consent-ta",
+              "type": "checkbox",
+              "label": "கூட்டாட்சி சட்டம் 152-FZ-இன் கீழ் தனிப்பட்ட தரவைச் செயலாக்க ஒப்புக்கொள்கிறேன்.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "வெற்றி — உங்கள் விலைமதிப்பீட்டுக் கோரிக்கை அனுப்பப்பட்டது.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "கோரிக்கையை அனுப்பு",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "ஒவ்வொரு இரண்டு வாரங்களுக்கும் எங்கள் தொழில் சுருக்கத்தைப் பெறுங்கள் (TA)",
+      "slug": "newsletter-ta",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-ta",
+              "type": "email",
+              "label": "பணி மின்னஞ்சல்",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "பணி மின்னஞ்சல்"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "பதிவு செய்ததற்கு நன்றி.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "குழுசேரவும்",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "ติดต่อเรา (TH)",
+      "slug": "quote-request-th",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-th",
+              "type": "text",
+              "label": "ชื่อ-นามสกุล",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "ชื่อ"
+            },
+            {
+              "id": "company-th",
+              "type": "text",
+              "label": "บริษัท",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "บริษัท"
+            },
+            {
+              "id": "email-th",
+              "type": "email",
+              "label": "อีเมล",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "อีเมล"
+            },
+            {
+              "id": "phone-th",
+              "type": "tel",
+              "label": "โทรศัพท์",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "โทรศัพท์"
+            },
+            {
+              "id": "type-th",
+              "type": "radio",
+              "label": "ประเภทคำขอ",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "ใบเสนอราคางานก่อสร้าง",
+                  "value": "ใบเสนอราคางานก่อสร้าง"
+                },
+                {
+                  "label": "สำรวจพื้นที่",
+                  "value": "สำรวจพื้นที่"
+                },
+                {
+                  "label": "งานบำรุงรักษา",
+                  "value": "งานบำรุงรักษา"
+                },
+                {
+                  "label": "พันธมิตร / ผู้จัดหา",
+                  "value": "พันธมิตร / ผู้จัดหา"
+                }
+              ]
+            },
+            {
+              "id": "description-th",
+              "type": "textarea",
+              "label": "รายละเอียดโครงการ",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "ที่ตั้ง พื้นที่ใช้สอย วันที่คาดว่าจะเริ่มงาน…"
+            },
+            {
+              "id": "consent-th",
+              "type": "checkbox",
+              "label": "ข้าพเจ้ายินยอมให้ประมวลผลข้อมูลส่วนบุคคลตามกฎหมายสหพันธรัฐ 152-FZ",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "สำเร็จ — ส่งคำขอใบเสนอราคาของคุณแล้ว",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "ส่งคำขอ",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "รับสรุปข่าวอุตสาหกรรมของเราทุกสองสัปดาห์ (TH)",
+      "slug": "newsletter-th",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-th",
+              "type": "email",
+              "label": "อีเมลที่ทำงาน",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "อีเมลที่ทำงาน"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "ขอบคุณที่สมัครรับข่าวสาร",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "สมัครรับข่าวสาร",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "İletişim (TR)",
+      "slug": "quote-request-tr",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-tr",
+              "type": "text",
+              "label": "Ad soyad",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Ad"
+            },
+            {
+              "id": "company-tr",
+              "type": "text",
+              "label": "Şirket",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Şirket"
+            },
+            {
+              "id": "email-tr",
+              "type": "email",
+              "label": "E-posta",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "E-posta"
+            },
+            {
+              "id": "phone-tr",
+              "type": "tel",
+              "label": "Telefon",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Telefon"
+            },
+            {
+              "id": "type-tr",
+              "type": "radio",
+              "label": "Talep türü",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "İnşaat teklifi",
+                  "value": "İnşaat teklifi"
+                },
+                {
+                  "label": "Saha keşfi",
+                  "value": "Saha keşfi"
+                },
+                {
+                  "label": "Bakım",
+                  "value": "Bakım"
+                },
+                {
+                  "label": "İş ortaklığı / tedarikçi",
+                  "value": "İş ortaklığı / tedarikçi"
+                }
+              ]
+            },
+            {
+              "id": "description-tr",
+              "type": "textarea",
+              "label": "Proje açıklaması",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Konum, kapalı alan, planlanan başlangıç tarihi…"
+            },
+            {
+              "id": "consent-tr",
+              "type": "checkbox",
+              "label": "Kişisel verilerimin 152-FZ sayılı Federal Yasa kapsamında işlenmesini kabul ediyorum.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Başarılı — Teklif talebiniz gönderildi.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Talebi gönder",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "İki haftada bir sektör özetimizi alın (TR)",
+      "slug": "newsletter-tr",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-tr",
+              "type": "email",
+              "label": "İş e-postası",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "İş e-postası"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Kaydınız için teşekkür ederiz.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Abone olun",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Контакти (UK)",
+      "slug": "quote-request-uk",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-uk",
+              "type": "text",
+              "label": "Прізвище та ім’я",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Ім’я"
+            },
+            {
+              "id": "company-uk",
+              "type": "text",
+              "label": "Компанія",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Компанія"
+            },
+            {
+              "id": "email-uk",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Email"
+            },
+            {
+              "id": "phone-uk",
+              "type": "tel",
+              "label": "Телефон",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Телефон"
+            },
+            {
+              "id": "type-uk",
+              "type": "radio",
+              "label": "Тип звернення",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Кошторис на будівництво",
+                  "value": "Кошторис на будівництво"
+                },
+                {
+                  "label": "Виїзд на об’єкт",
+                  "value": "Виїзд на об’єкт"
+                },
+                {
+                  "label": "Обслуговування",
+                  "value": "Обслуговування"
+                },
+                {
+                  "label": "Партнерство / постачальник",
+                  "value": "Партнерство / постачальник"
+                }
+              ]
+            },
+            {
+              "id": "description-uk",
+              "type": "textarea",
+              "label": "Опис об’єкта",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Місцезнаходження, площа, запланований термін початку робіт…"
+            },
+            {
+              "id": "consent-uk",
+              "type": "checkbox",
+              "label": "Погоджуюся на обробку персональних даних відповідно до Федерального закону 152-ФЗ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Успішно — Запит на кошторис надіслано.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Надіслати запит",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Отримуйте галузевий огляд що два тижні (UK)",
+      "slug": "newsletter-uk",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-uk",
+              "type": "email",
+              "label": "Робоча електронна пошта",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Робоча електронна пошта"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Дякуємо за підписку.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Підписатися",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Liên hệ (VI)",
+      "slug": "quote-request-vi",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-vi",
+              "type": "text",
+              "label": "Họ và tên",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Tên"
+            },
+            {
+              "id": "company-vi",
+              "type": "text",
+              "label": "Công ty",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "Công ty"
+            },
+            {
+              "id": "email-vi",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Email"
+            },
+            {
+              "id": "phone-vi",
+              "type": "tel",
+              "label": "Điện thoại",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Điện thoại"
+            },
+            {
+              "id": "type-vi",
+              "type": "radio",
+              "label": "Loại yêu cầu",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "Báo giá xây dựng",
+                  "value": "Báo giá xây dựng"
+                },
+                {
+                  "label": "Khảo sát hiện trường",
+                  "value": "Khảo sát hiện trường"
+                },
+                {
+                  "label": "Bảo trì",
+                  "value": "Bảo trì"
+                },
+                {
+                  "label": "Hợp tác / nhà cung cấp",
+                  "value": "Hợp tác / nhà cung cấp"
+                }
+              ]
+            },
+            {
+              "id": "description-vi",
+              "type": "textarea",
+              "label": "Mô tả dự án",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "Địa điểm, diện tích sàn, ngày dự kiến khởi công…"
+            },
+            {
+              "id": "consent-vi",
+              "type": "checkbox",
+              "label": "Tôi đồng ý cho xử lý dữ liệu cá nhân theo Luật Liên bang 152-FZ.",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Thành công — Yêu cầu báo giá của bạn đã được gửi.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Gửi yêu cầu",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Nhận bản tin ngành của chúng tôi hai tuần một lần (VI)",
+      "slug": "newsletter-vi",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-vi",
+              "type": "email",
+              "label": "Email công việc",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Email công việc"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Cảm ơn bạn đã đăng ký.",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Đăng ký",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "联系我们 (ZH)",
+      "slug": "quote-request-zh",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-zh",
+              "type": "text",
+              "label": "姓名",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "姓名"
+            },
+            {
+              "id": "company-zh",
+              "type": "text",
+              "label": "公司",
+              "name": "company",
+              "required": false,
+              "width": "half",
+              "placeholder": "公司"
+            },
+            {
+              "id": "email-zh",
+              "type": "email",
+              "label": "电子邮箱",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "电子邮箱"
+            },
+            {
+              "id": "phone-zh",
+              "type": "tel",
+              "label": "电话",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "电话"
+            },
+            {
+              "id": "type-zh",
+              "type": "radio",
+              "label": "咨询类型",
+              "name": "type",
+              "required": true,
+              "width": "full",
+              "options": [
+                {
+                  "label": "施工报价",
+                  "value": "施工报价"
+                },
+                {
+                  "label": "现场勘察",
+                  "value": "现场勘察"
+                },
+                {
+                  "label": "维护保养",
+                  "value": "维护保养"
+                },
+                {
+                  "label": "合作 / 供应商",
+                  "value": "合作 / 供应商"
+                }
+              ]
+            },
+            {
+              "id": "description-zh",
+              "type": "textarea",
+              "label": "项目描述",
+              "name": "description",
+              "required": true,
+              "width": "full",
+              "placeholder": "地点、建筑面积、预计开工日期…"
+            },
+            {
+              "id": "consent-zh",
+              "type": "checkbox",
+              "label": "我同意根据联邦法律 152-FZ 对我的个人数据进行处理。",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "提交成功 — 您的报价请求已发送。",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "发送请求",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "每两周获取行业简报 (ZH)",
+      "slug": "newsletter-zh",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "email-zh",
+              "type": "email",
+              "label": "工作邮箱",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "工作邮箱"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "感谢您的订阅。",
+        "notifyEmails": ["sales@northgate-ind.ru"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "订阅",
+        "retentionDays": 0
+      }
+    }
+  ]
+}

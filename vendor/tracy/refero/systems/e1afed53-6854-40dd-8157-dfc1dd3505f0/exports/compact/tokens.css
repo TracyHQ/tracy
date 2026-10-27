@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-cream-paper: #f5f4f0;
+  --color-pure-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-charcoal: #222222;
+  --color-slate: #333333;
+  --color-fog: #dddfe2;
+  --color-mint-splash: #99ffcc;
+  --color-plum-ink: #160042;
+  --color-aubergine: #26153f;
+  --color-sky-pop: #7bbbff;
+  --color-bubblegum: #ff99cc;
+  --color-peach-pop: #ffcc99;
+
+  /* Typography — Font Families */
+  --font-recoleta: 'Recoleta', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-lota-grotes-que-alt: 'Lota Grotes Que Alt', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "515da65c-f9e3-4296-a05d-0d921f5cdab1",
+  "status": "complete",
+  "name": "Leandra-isler",
+  "url": "https://styles.refero.design/style/515da65c-f9e3-4296-a05d-0d921f5cdab1",
+  "sourceWebsite": "https://www.leandra-isler.ch",
+  "extractedAt": "2026-06-03T17:59:59.853Z",
+  "capturedAt": "2026-10-08T05:11:34.972042+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "dried botanicals pressed into warm vellum — calm, tactile, editorial, almost reverent.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6b9e1439-7aad-466a-9a73-0dce38c8117c.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4bc4755a-26c2-4365-b670-e91c25ebea3a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ce021ca5-4391-4e9f-89d5-0437ffd99420.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c52fef36-b0bc-4f8c-9770-a31d1857ff0a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5cc6d14c-86f2-4e8f-a589-6c683ce14d18.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f73f407cfc4f6e6fd58f0d5af375ee10f794d7ab8dcd9cabd3f7bb798c4e27c1",
+      "bytes": 19153
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "73cf3c5a993a07b46d03d65a71a996162ed37ecabc0e709d5659f92b9134263f",
+      "bytes": 184931
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "27dc77cf616d27b52d9abcc32a4577222dbf688205edadc7fe9205fd50d85533",
+      "bytes": 16358
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3eb68dee89fd6565c42aa474327ba9ec875d571f82a74444311b5ccc4a882501",
+      "bytes": 10948
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "26dc1e91dce9228374d4dc9421d16f35248806128ef2f4564b065dbae173ce34",
+      "bytes": 12840
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c7fdd191dd4f92bb65ec3fd6467bc75a84db69a46157aed66eff3f913a8bf2c0",
+      "bytes": 2395
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e76f8b6810b0150091288c330909a1b96edb0ee77ade023388611ba143e96b3f",
+      "bytes": 412
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "02addc8aeed453a9ee9cbd868239da20e1ad3abac89d197a76511e1e8697237e",
+      "bytes": 429
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a846db939efc24d66b0ec3699ddef3c7c6d800c48d2b8be9b1f61458e32988f5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "366c51fa45633c6f33367213122dae61fe97e2261c82878caf3f63e1cfddad5e",
+      "bytes": 42833
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "65737cb806c900bc9e743e3cfbf7d896173c7b1eb69af7a84521fd332e7bc2e4",
+      "bytes": 22564
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3bdcd6257a23e3cf66d4f052e22b3f1243e1b4db769438f908c2079227578ee3",
+      "bytes": 43102
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "0b1189debac2d1f200dd64d91ffa7b1c125a8455fd876c0911977c89a0120c01",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e88d5210e2dd4b3477ded0eebad92dd2408a9eecb1cb58cb0d3cd4f6a264c03d",
+      "bytes": 1349
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "91efc09bcf4b5ba3a267c271887a303522736aa144b9ec3332886823fce93054",
+      "bytes": 1752
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "01d6013d-a176-4a22-b7dd-fbd113592956",
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "312423bf-72ea-42fb-b8f5-ab0104e778f3",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "329075e8-97ed-4722-8952-d9bf001de233",
+    "3f56ea4d-ed9d-4a36-8fb5-a801519ef80b",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "4e616d96-14ea-43d6-9662-0ad3fa19ef7c",
+    "515da65c-f9e3-4296-a05d-0d921f5cdab1",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "9501cfdc-3eb3-4b64-90f6-9afdded48945",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "ded6d7c4-2801-45f4-8b8a-089f1b37842d",
+    "e8eda526-d686-4e45-a60d-61b6503a8eda",
+    "f1a690c7-234d-4ee9-9806-5790934e7043"
+  ]
+}

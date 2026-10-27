@@ -1,0 +1,51 @@
+{
+  "name": "@tracy/dsh-brand",
+  "version": "0.2.22",
+  "description": "Tracy's coat for the dsh Web client: mark and wordmark in the brand slots, the Tracy palette on dsh's theme service, tab title and favicon, and the Primary color and font rows in General settings.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node scripts/gen-palette.mjs && node scripts/build-client.mjs && node scripts/build-host.mjs",
+    "check": "node scripts/build-client.mjs --check && node scripts/build-host.mjs --check",
+    "test": "node --test test/*.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/brand/tracy-brand"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.3"
+  },
+  "devDependencies": {
+    "@tracy/core": "workspace:^",
+    "@tracy/ui": "workspace:^",
+    "@types/react": "^19.2.0",
+    "esbuild": "^0.25.0",
+    "react": "^19.2.0",
+    "typescript": "^5.9.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-theme",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-locale"
+      ],
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "license": "MIT"
+}

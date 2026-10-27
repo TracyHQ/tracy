@@ -1,0 +1,94 @@
+{
+  "color": {
+    "bear-red": {
+      "$value": "#dd4c4f",
+      "$type": "color",
+      "$description": "Bear Red — Logo mark, link color, Pro badge fill, decorative underline on hero copy — the single chromatic voice in an otherwise achromatic system"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Icon fills, graphic strokes, max-contrast emphasis"
+    },
+    "graphite": {
+      "$value": "#444444",
+      "$type": "color",
+      "$description": "Graphite — Primary body and heading text, nav links — the dominant typographic color across the entire page"
+    },
+    "ash-gray": {
+      "$value": "#888888",
+      "$type": "color",
+      "$description": "Ash Gray — Muted body text, secondary labels, icon strokes"
+    },
+    "stone-border": {
+      "$value": "#d5d6d9",
+      "$type": "color",
+      "$description": "Stone Border — Hairline borders on inputs, dividers, card edges"
+    },
+    "fog": {
+      "$value": "#e6e7eb",
+      "$type": "color",
+      "$description": "Fog — Subtle fills, decorative stroke elements, pricing card backgrounds"
+    },
+    "mist": {
+      "$value": "#f3f5f7",
+      "$type": "color",
+      "$description": "Mist — Page sections, soft surface lifts, alternating band backgrounds"
+    },
+    "linen-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Linen White — Page canvas, card surfaces, input backgrounds, nav background"
+    },
+    "marker-lime": {
+      "$value": "#d3ffa4",
+      "$type": "color",
+      "$description": "Marker Lime — Highlight wash behind emphasized words (like a real highlighter stroke on text)"
+    },
+    "tag-indigo": {
+      "$value": "#456aa3",
+      "$type": "color",
+      "$description": "Tag Indigo — Note tag color in product preview, heading accent variant"
+    },
+    "tag-forest": {
+      "$value": "#2b6451",
+      "$type": "color",
+      "$description": "Tag Forest — Note tag color in product preview, heading accent variant"
+    },
+    "tag-plum": {
+      "$value": "#884aa8",
+      "$type": "color",
+      "$description": "Tag Plum — Note tag color in product preview, heading accent variant"
+    },
+    "warning-amber": {
+      "$value": "#fcb827",
+      "$type": "color",
+      "$description": "Warning Amber — Yellow supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "info-sky": {
+      "$value": "#44a2e5",
+      "$type": "color",
+      "$description": "Info Sky — Blue supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "bearsans": {
+      "$value": "bearsans",
+      "$type": "fontFamily",
+      "$description": "Body text, navigation, buttons, pricing lists, inputs, footnotes. Weight 700 is reserved for emphasis (feature names, Pro plan title); weight 400 carries everything else. Carries a uniform +0.031em tracking that gives the body a slightly airy, typeset feel."
+    },
+    "bearsansheadline": {
+      "$value": "bearsansheadline",
+      "$type": "fontFamily",
+      "$description": "Display headlines only — the singular 400 weight is the signature: no bold marketing-shout headlines, just quiet, confident regular weight at 42–51px. Creates the 'handwritten note on good paper' mood."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bear.app",
+      "siteName": "Bear Markdown Notes",
+      "extractedAt": "2026-06-03T18:23:11.861Z",
+      "variant": "compact"
+    }
+  }
+}

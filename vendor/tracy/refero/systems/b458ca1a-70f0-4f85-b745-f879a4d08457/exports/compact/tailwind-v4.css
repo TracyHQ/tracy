@@ -1,0 +1,22 @@
+@theme {
+  /* Colors */
+  --color-void-black: #020204;
+  --color-pure-black: #000000;
+  --color-carbon: #636363;
+  --color-slate: #888888;
+  --color-silver: #c6c6c6;
+  --color-soft-graphite: #575757;
+  --color-paper-white: #ffffff;
+  --color-bone: #f8f8f8;
+  --color-linen: #efefef;
+  --color-lime-wash: #f2fcb3;
+  --color-saffron: #ffdc5c;
+  --color-spectrum-marquee: #FA3D1D;
+
+  /* Typography */
+  --font-exposure-variable: 'Exposure Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-exposure-var: 'Exposure VAR', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-oracle: 'ABC Oracle', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-oracle-triple: 'ABC Oracle Triple', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-favorit-mono: 'ABC Favorit Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

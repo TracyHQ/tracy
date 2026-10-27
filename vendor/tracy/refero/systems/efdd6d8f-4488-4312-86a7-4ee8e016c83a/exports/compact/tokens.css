@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-strava-orange: #fc5200;
+  --color-link-blue: #0060d0;
+  --color-paper-white: #ffffff;
+  --color-warm-linen: #f9f8f5;
+  --color-ink-black: #000000;
+  --color-graphite: #21211f;
+  --color-charcoal: #43423f;
+  --color-pewter: #64635e;
+  --color-bone: #e0e0de;
+
+  /* Typography — Font Families */
+  --font-boathouse: 'Boathouse', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,60 @@
+{
+  "id": "QA-UNIT-REG-PR-1512-voice-confirm-answer-happy",
+  "itemIds": ["regression:REG-PR-1512-voice-confirm-answer"],
+  "requirement": "A spoken clear yes or no answers Tracy's confirm- card in any interface language (first or second option); other words ask the same card again; plan approval by voice reads only verified locales' narrowed phrases",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1512-voice-confirm-answer.json",
+    "ref": "PR #1512 (fix); fix evidence: Local stand 20/10/2026: Joomla dsl4mo by Voice, a confirm- card with English options was read aloud, the spoken 'Đồng ý.' matched no option, and the agent opened a card of its own (screens in ~/tracy-bench-work/voice-mode/runs-1480). Council a6-codex D4, D5.1.",
+    "invariant": "Exit 0, 0 failures. spokenAnswer on a confirm- card with options 'Yes, go ahead'/'No, keep it': 'Đồng ý.' selects 'Yes, go ahead', 'Không.' selects 'No, keep it'; 'Ừ.', 'Ok.' and 'Không giữ lại.' return null (asked again, nothing sent); a card whose id does not start with confirm- keeps the words as custom; 'Huỷ.', 'Cancel.', '取消。' select 'No, keep it' and never stop the turn (with no confirm- card, 'Cancel.' still stops it); '是的。' to the card is answered after the usual wait, not the unfinished-sentence wait; an unmatched answer re-reads the card followed by 'Please say yes or no.'; a yes (or the go-ahead label) begun during the card's reading or in its tail, or 'Yes or no.' right after '…Please say yes or no.', answers nothing and says nothing (asked once more after a silence; dropped again, 'I could not hear your answer clearly. Please answer on screen.' is said once and nothing more is asked), while 'Yes.' said after the reading and a quiet moment answers; 'No.', 'Huỷ.', 'Không.' said right after the line, or during the reading, answer 'No, keep it' at once. isPlanApproval: 'Approuver ce plan', 'Plan genehmigen.', 'Tôi không duyệt kế hoạch này.', 'Don’t approve the plan.', 'Approve this plan?' are false; planChange('Change the plan to') and planChange('Pas het plan aan.') are 'what'; PLAN_VOICE_LOCALES is empty and voice-mode sends a plan to the chat when the interface locale is not in it.",
+    "productSources": [
+      "packages/ui/tracy-chat-input/src/client/strings.ts:6",
+      "packages/ui/tracy-chat-input/src/client/voice-answer.mjs:66",
+      "packages/ui/tracy-chat-input/src/client/voice-mode.mjs:338",
+      "packages/ui/tracy-chat-input/src/client/voice-speak-text.mjs:190",
+      "packages/ui/tracy-chat-input/src/client/voice-turn-taking.mjs:558"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-chat-input/test/voice-mode.test.mjs:2194 import '../../../core/tracy-core/src/ui-switches/catalogue.json' does not resolve to a source file",
+      "packages/ui/tracy-chat-input/test/voice-turn-taking.test.mjs:585 readFileSync() with a computed path",
+      "packages/ui/tracy-chat-input/test/voice-turn-taking.test.mjs:614 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1512-voice-confirm-answer.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1512-voice-confirm-answer"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-chat-input", "tracy-chat-input"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1512-voice-confirm-answer",
+    "pr": 1512,
+    "kind": "fix",
+    "area": "voice/answer",
+    "file": "tests/regression/cases/REG-PR-1512-voice-confirm-answer.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-chat-input/test/voice-turn-taking.test.mjs",
+    "packages/ui/tracy-chat-input/test/voice-answer.test.mjs",
+    "packages/ui/tracy-chat-input/test/voice-mode.test.mjs",
+    "packages/ui/tracy-chat-input/test/voice-speak-text.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

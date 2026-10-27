@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1342-joomla-agent-link-sef",
+  "kind": "fix",
+  "title": "A Joomla page.create reply uses the new menu item's URL and keeps its path when the home read is stale",
+  "pr": 1342,
+  "area": "site-tools/page-create",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "From the repository root run: pnpm --filter @tracy/dsh-site-tools exec node --test test/page-create.test.mjs",
+    "Read the result of the named Joomla routing test and the suite fail count."
+  ],
+  "expect": [
+    "The Joomla routing test passes: when an older menu item has the same label, page.create accepts the new item's absolute same-site href https://example.com/index.php/common-questions and verifies /index.php/common-questions.",
+    "The Joomla stale-home test passes: when the home read lacks the new item, page.create retains /en/common-questions and verifies that path.",
+    "The test suite exits 0 with 0 failures."
+  ],
+  "selectors": {
+    "test": "Joomla: the reported page path follows the new menu item href when labels repeat and SEF rewriting is off",
+    "source": "packages/tools/tracy-site-tools/src/host/page-create.mjs:joomlaMenuHref"
+  },
+  "evidence": "Issue #1302: on Joomla with URL rewriting off, the agent returned a bare SEF path that 404ed while the site's menu link using /index.php/<slug> returned 200.",
+  "fence": "The page-create host flow and its rendered-menu href selection over an injected Joomla page reader. Not exercised: a live Joomla site's anonymous HTTP route behavior.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/page-create.test.mjs"],
+    "cwd": "packages/tools/tracy-site-tools",
+    "tests": [
+      "Joomla: the reported page path follows an absolute same-site menu href when labels repeat and SEF rewriting is off",
+      "Joomla: a missing new menu item in the home read does not discard its created path"
+    ]
+  }
+}

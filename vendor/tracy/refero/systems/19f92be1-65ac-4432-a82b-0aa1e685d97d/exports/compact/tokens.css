@@ -1,0 +1,18 @@
+:root {
+  /* Colors */
+  --color-sst-ink: #303055;
+  --color-code-plum: #8844ae;
+  --color-code-cobalt: #3b61b0;
+  --color-code-teal: #096e72;
+  --color-code-rust: #984e4d;
+  --color-slate: #403f53;
+  --color-fog: #767682;
+  --color-mist: #a8a8b0;
+  --color-obsidian: #111111;
+  --color-lavender-mist: #e8e8f2;
+  --color-paper: #ffffff;
+
+  /* Typography — Font Families */
+  --font-ibm-plex-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-rubik-variable: 'Rubik Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

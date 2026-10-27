@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-pure-white: #ffffff;
+  --color-carbon-black: #000000;
+  --color-charcoal-shale: #101010;
+  --color-signal-red: #ff2936;
+
+  /* Typography — Font Families */
+  --font-editorial-new: 'Editorial New', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-tt-firs-neue: 'TT Firs Neue', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-altform: 'Altform', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wasted-year: 'Wasted Year', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

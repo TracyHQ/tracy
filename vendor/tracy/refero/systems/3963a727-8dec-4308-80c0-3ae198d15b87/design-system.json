@@ -1,0 +1,302 @@
+{
+  "dos": [
+    "Use Season Mix weight 550 for all display headlines at 48px+ — never bold, never light",
+    "Set primary CTA background to Highlighter (#f8ff2c) with black text — no border, no shadow needed",
+    "Default card radius to 8px across all components — consistency is the design",
+    "Use Flint (#e5e7eb) for all hairline borders at 1px — structural grid, not decoration",
+    "Set page canvas to Limestone (#ccc9c6) and cards to Paper (#f7f5f2) for the warm-on-warm layering effect",
+    "Use negative letter-spacing (-0.01em) on all Season Mix and Abc Diatype sizes; positive tracking (0.009–0.014em) on Soehne and Founders Grotesk Mono",
+    "Maintain 80px minimum between major sections — the whitespace is the luxury"
+  ],
+  "donts": [
+    "Never add box-shadows — the design system is intentionally flat, borders and color contrast do all the work",
+    "Never use the chartreuse accent on anything other than primary CTAs and the Apollo star logo — it loses impact if diluted",
+    "Never use cool grays (blue-tinted) — the palette is warm: Limestone, Marble, Pebble, Graphite",
+    "Never bold display headlines — Season Mix weight 550 is the maximum, the restraint is the signature",
+    "Never use #3f3653 violet for body text or UI — it's reserved for display heading accents only",
+    "Never add gradients — the system is deliberately flat and editorial",
+    "Never use border-radius larger than 12px — the design is precise, not soft and bubbly"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1a1a1a",
+      "name": "Charcoal",
+      "role": "Primary body text and input values — softer than pure black for extended reading",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Onyx",
+      "role": "Headlines, high-contrast text, icon strokes, and button text on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ccc9c6",
+      "name": "Limestone",
+      "role": "Page canvas and footer background — warm gray that prevents the UI from feeling sterile",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f5f2",
+      "name": "Marble",
+      "role": "Card surfaces and button backgrounds — warm cream that lifts cards off the limestone canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Elevated card surfaces and overlay panels — pure white for contrast against the warm canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Flint",
+      "role": "Hairline borders, input outlines, divider lines — the structural grid of the entire interface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#47423d",
+      "name": "Graphite",
+      "role": "Decorative SVG fills, secondary icon strokes — warm dark that matches the palette's earthiness",
+      "group": "neutral"
+    },
+    {
+      "hex": "#736f6c",
+      "name": "Pebble",
+      "role": "Secondary body text, muted descriptions, and inactive link states",
+      "group": "neutral"
+    },
+    {
+      "hex": "#94918e",
+      "name": "Ash",
+      "role": "Subtle borders for less prominent structural elements",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3f3653",
+      "name": "Twilight Indigo",
+      "role": "Display heading accent — muted violet that signals editorial personality without breaking the monochromatic discipline",
+      "group": "brand"
+    },
+    {
+      "hex": "#f8ff2c",
+      "name": "Highlighter",
+      "role": "Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#ebf212",
+      "name": "Volt",
+      "role": "Alternate CTA background variant — slightly warmer yellow-green used on specific button instances",
+      "group": "brand"
+    }
+  ],
+  "imagery": "Product UI screenshots are the primary visual content — shown in the hero card and feature sections as actual product mockups (AI prompt interface, contact lists, sequence builders). Company logos in the social proof bar are rendered flat in dark gray or black with no styling treatment. The overall visual language is text-dominant with product screenshots as supporting evidence, not lifestyle photography or abstract graphics. Iconography is minimal and line-based, rendered in black or Graphite.",
+  "similar": [
+    {
+      "why": "Same warm neutral canvas with a single vivid accent color (Clay uses orange) and editorial display typography for headlines",
+      "business": "Clay"
+    },
+    {
+      "why": "Similar light-mode B2B tool with warm grays, flat surfaces, and restrained color usage that lets one accent do the work",
+      "business": "Attio"
+    },
+    {
+      "why": "Sales tool with bright accent buttons on neutral backgrounds and clean borderless card layouts",
+      "business": "Lemlist"
+    },
+    {
+      "why": "Same flat design philosophy with no shadows, hairline borders, and monochrome-first palette where color is rationed to actions",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "8px",
+      "images": "12px",
+      "buttons": "8px",
+      "small-elements": "4px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ccc9c6",
+      "name": "Limestone Canvas",
+      "level": 0,
+      "purpose": "Page background and footer — warm gray that prevents sterile white-page feel"
+    },
+    {
+      "hex": "#f7f5f2",
+      "name": "Marble Card",
+      "level": 1,
+      "purpose": "Card surfaces and secondary buttons — warm cream that lifts content off the canvas"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper Surface",
+      "level": 2,
+      "purpose": "Elevated cards, input fields, and overlay panels — maximum contrast for interactive elements"
+    },
+    {
+      "hex": "#f8ff2c",
+      "name": "Highlighter Accent",
+      "level": 3,
+      "purpose": "Primary action surfaces — the only chromatic layer in the stack"
+    }
+  ],
+  "northStar": "Sun-baked limestone with highlighter-pen accents — editorial warmth over corporate coldness",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1.05,
+      "letterSpacing": -0.56
+    },
+    {
+      "role": "display",
+      "size": 88,
+      "lineHeight": 1,
+      "letterSpacing": -0.88
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Hero and form submission actions",
+      "description": "Filled chartreuse background (#f8ff2c or #ebf212), black text, 8px border-radius, 16px vertical / 24px horizontal padding. Soehne 16px weight 400. Sits against any neutral surface — the chartreuse is loud enough to demand attention without needing elevation or borders."
+    },
+    {
+      "name": "Ghost Outline Button",
+      "role": "Secondary actions and SSO login options",
+      "description": "Transparent background, 1px Flint (#e5e7eb) border, black text, 8px radius, 16px/24px padding. Used for 'Sign up with Google/Microsoft' and similar secondary paths."
+    },
+    {
+      "name": "Nav Text Link",
+      "role": "Top navigation items",
+      "description": "No background, Soehne 16px weight 400, Charcoal (#1a1a1a) text. No underline, no hover background — the simplicity of the nav mirrors the overall editorial restraint."
+    },
+    {
+      "name": "Demo Button (Nav)",
+      "role": "High-intent navigation CTA",
+      "description": "Outlined with 1px black border, transparent background, black text, 8px radius. Subtly differentiates from the primary 'Sign up for free' without competing with it."
+    },
+    {
+      "name": "Hero Card",
+      "role": "Product preview container in the hero section",
+      "description": "White (#ffffff) surface on the warm Limestone canvas, no shadow, no border, appears to float purely through color contrast. Contains the AI product UI mockup."
+    },
+    {
+      "name": "Content Card",
+      "role": "Feature blocks, FAQ items, and content containers",
+      "description": "White or Marble (#f7f5f2) background, 8px radius, 24px internal padding. Separated by whitespace, not borders or shadows."
+    },
+    {
+      "name": "FAQ Accordion Row",
+      "role": "Expandable question/answer items",
+      "description": "Transparent background, top/bottom 1px Flint (#e5e7eb) border, no radius. Question text in Soehne 16px, plus icon on the right. Spacious vertical padding (~24px) for touch targets."
+    },
+    {
+      "name": "Email Input",
+      "role": "Email capture in hero form",
+      "description": "White background, 1px Flint border, 8px radius, generous padding. Placeholder in Pebble (#736f6c). No focus ring glow — focus state should be a border color shift to black."
+    },
+    {
+      "name": "Logo Bar",
+      "role": "Social proof — company logos",
+      "description": "Single horizontal row, logos rendered in Graphite (#47423d) or black, no card containers or dividers. Clean, typeset, editorial."
+    },
+    {
+      "name": "Testimonial Block",
+      "role": "Large pull-quote with attribution",
+      "description": "Season Mix display weight at heading-lg/display size for the quote, Soehne 14–16px for attribution below. No quotation marks — the typography IS the emphasis."
+    },
+    {
+      "name": "Cookie Consent Banner",
+      "role": "GDPR/privacy notice overlay",
+      "description": "White surface with subtle border, rounded corners, positioned bottom-center. Contains text, privacy link, and three text buttons (More choices, Reject all, Accept all) in Soehne."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display headlines at 48–88px. Weight 550 is the signature choice — not bold, not light, a medium that feels confident and editorial. Line-height locked near 1.0 creates dense, magazine-style headline blocks. The slight negative tracking (-0.01em) tightens the display into a cohesive statement.",
+      "sizes": "48px, 56px, 64px, 72px, 88px",
+      "family": "Season Mix",
+      "weight": "550",
+      "lineHeight": "1.00–1.10",
+      "substitute": "GT Sectra, Söhne Breit, or Tiempos Headline",
+      "letterSpacing": "-0.01em"
+    },
+    {
+      "role": "Body text, hero subcopy, input values, and primary UI text. The workhorse — appears in every context. Slightly positive letter-spacing (0.009em) gives it an open, modern feel despite being a neo-grotesque.",
+      "sizes": "16px, 18px",
+      "family": "Soehne",
+      "weight": "400",
+      "lineHeight": "1.00–1.50",
+      "substitute": "Inter, Söhne, or General Sans",
+      "letterSpacing": "0.0090em"
+    },
+    {
+      "role": "Secondary UI text, nav links, icon labels, and small body copy. Weight 700 for emphasis in compact contexts. Negative tracking (-0.01em) tightens small sizes for legibility.",
+      "sizes": "12px, 14px, 16px, 20px, 24px",
+      "family": "Abc Diatype",
+      "weight": "400, 700",
+      "lineHeight": "1.20–1.30",
+      "substitute": "Inter, Söhne, or ABC Diatype (available via Dinamo)",
+      "letterSpacing": "-0.01em"
+    },
+    {
+      "role": "Captions, metadata, eyebrow labels, and data annotations. Slightly positive tracking (0.012–0.014em) keeps monospaced text from feeling cramped at small sizes.",
+      "sizes": "12px, 14px",
+      "family": "Founders Grotesk Mono",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "JetBrains Mono, IBM Plex Mono, or Berkeley Mono",
+      "letterSpacing": "0.0120em, 0.0140em"
+    }
+  ],
+  "description": "Apollo's visual language is a sun-baked editorial workspace: warm limestone canvas, cream card surfaces, and a single electric yellow-green that functions like a highlighter on paper. The design is deliberately flat — no shadows, no gradients, just clean borders and generous whitespace. Typography does the heavy lifting: a confident medium-weight display serif (Season Mix at 550) commands headlines while a workhorse neo-grotesque (Soehne) handles everything else. Color is rationed aggressively: pages read almost monochrome with the vivid chartreuse appearing only on primary actions and the Apollo star logo, making those moments feel switched on. The overall impression is a premium B2B tool that doesn't try to look like a B2B tool — closer to a design magazine layout than a SaaS dashboard.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- background: #ccc9c6 (Limestone canvas)\n- card surface: #f7f5f2 (Marble)\n- text: #1a1a1a (Charcoal body) / #000000 (Onyx headlines)\n- border: #e5e7eb (Flint hairline)\n- accent: #3f3653 (Twilight Indigo, display only)\n- primary action: #ebf212 (filled action)\n\nExample Component Prompts:\n\n1. Create a Primary Action Button: #ebf212 background, #000000 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. Create a FAQ accordion: White background, each row separated by 1px #e5e7eb top/bottom borders, no radius. Question text in Soehne 16px #1a1a1a, plus icon right-aligned in #000000. 24px vertical padding per row.\n\n3. Create a content card: #f7f5f2 background, 8px radius, 24px padding. Heading in Season Mix 48px weight 550, #1a1a1a. Body in Soehne 16px, #47423d. No shadow, no border.\n\n4. Create a logo bar: Single horizontal row, logos in #47423d, no card containers, no dividers, 40px gap between logos. Eyebrow label above in Founders Grotesk Mono 12px, uppercase, #736f6c.\n\n5. Create a testimonial block: Season Mix 64px weight 550 for the quote, #1a1a1a. Attribution below in Soehne 14px, #736f6c. No quotation marks, no decorative elements — let the type do the work."
+    }
+  ],
+  "elevationPhilosophy": "Apollo's design system intentionally avoids box-shadows entirely. Depth and hierarchy are achieved through a warm-on-warm color stacking system (Limestone → Marble → Paper) and consistent 1px hairline borders in Flint. This creates an editorial, print-inspired feel where components sit flat against the page like elements on a magazine layout, rather than floating as material-design cards. The flatness is deliberate — it signals confidence and premium restraint."
+}

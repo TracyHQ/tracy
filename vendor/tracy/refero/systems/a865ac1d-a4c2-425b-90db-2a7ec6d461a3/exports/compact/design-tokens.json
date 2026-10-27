@@ -1,0 +1,64 @@
+{
+  "color": {
+    "electric-cobalt": {
+      "$value": "#1673ff",
+      "$type": "color",
+      "$description": "Electric Cobalt — Full-bleed hero backgrounds, section anchors — the single saturated chord of the system, reserved for the opening band and any screen that needs to shout over the cream"
+    },
+    "coffee-bean": {
+      "$value": "#3d2800",
+      "$type": "color",
+      "$description": "Coffee Bean — Dark schedule bands, body text on cream, logo lockup wordmark — a warm near-black that reads as ink, not charcoal"
+    },
+    "tangerine-burn": {
+      "$value": "#ff7b02",
+      "$type": "color",
+      "$description": "Tangerine Burn — Sunburst illustration accent, flower petal rays — the warm counterweight to cobalt, appears only inside the hero graphic"
+    },
+    "eggshell-cream": {
+      "$value": "#fbf5e7",
+      "$type": "color",
+      "$description": "Eggshell Cream — Page canvas, card surfaces, sponsor grid background, section fills — the warm default that replaces white everywhere"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary body text, logo monogram strokes, illustration line work, hairline dividers, iconography"
+    },
+    "pale-ash": {
+      "$value": "#c4c4c4",
+      "$type": "color",
+      "$description": "Pale Ash — Secondary surface tint, disabled or inactive background fills, tertiary section background when cream needs a sibling"
+    },
+    "mocha": {
+      "$value": "#604106",
+      "$type": "color",
+      "$description": "Mocha — Yellow supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "rst-reactor": {
+      "$value": "RST Reactor",
+      "$type": "fontFamily",
+      "$description": "Primary display and body face across the entire system. Drives the 172px hero headline, 64px section headings, 14-17px body, and 10-12px tracked eyebrows. Its brutal tracking swing — from -0.06em on display to +0.05em on micro text — IS the brand's typographic signature. Use for everything except rare utility contexts."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Long-form body fallback. Used for extended paragraphs where RST Reactor's geometric character would compete with readability. Quiet, neutral, disappears into the page."
+    },
+    "system-sans-serif": {
+      "$value": "System sans-serif",
+      "$type": "fontFamily",
+      "$description": "Micro utility text — timestamps, badges, and any element too small for RST Reactor to retain character"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://superlocaldesign.com",
+      "siteName": "Superlocal",
+      "extractedAt": "2026-06-03T18:15:58.107Z",
+      "variant": "compact"
+    }
+  }
+}

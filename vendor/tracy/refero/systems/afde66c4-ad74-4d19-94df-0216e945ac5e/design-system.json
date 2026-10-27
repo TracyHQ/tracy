@@ -1,0 +1,308 @@
+{
+  "dos": [
+    "Use #262626 as the only filled button background — it is the single visual anchor in the monochrome system",
+    "Apply -0.025em letter-spacing to every text element at every size, from 12px captions up to 48px displays",
+    "Use #ededed for all structural dividers, card borders, and input outlines at 1px",
+    "Set card radii to 14px, button radii to 4px, and badge radii to 9999px — these three radii define the visual language",
+    "Limit the chromatic surface tint (#ecfdf5) to success/popular badges only; never apply it to large surfaces",
+    "Keep shadows to the two soft levels: the diffuse card shadow (lab 0.1 25px 50px -12px) and the button micro-shadow (oklab 0.05 1px 2px)",
+    "Maintain 80–160px section padding to preserve the editorial breathing room"
+  ],
+  "donts": [
+    "Don't introduce a brand color accent — the absence of color IS the brand",
+    "Don't use radii outside the 4 / 8 / 14 / 18 / 9999px scale; no 6px or 12px intermediate values",
+    "Don't add drop shadows heavier than the documented card shadow — anything more theatrical breaks the paper-grain feel",
+    "Don't pair Inter with a second typeface for display use — the single-family commitment is structural",
+    "Don't use #ffffff for text on white surfaces, and don't use #ededed for body text — both will fail contrast",
+    "Don't apply gradients — the system is committed to flat, unshaded fills",
+    "Don't use colored status indicators on the marketing site; restrict color to badges and the pricing 'Popular' highlight"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#262626",
+      "name": "Ink",
+      "role": "High-contrast neutral action fill for primary buttons on light surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure Paper",
+      "role": "Card surfaces, elevated panels, content backgrounds — the base canvas color sits one step brighter than the page",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ededed",
+      "name": "Soft Mist",
+      "role": "Hairline borders, input outlines, dividers, subtle panel fills — the structural glue that separates regions without lines shouting",
+      "group": "neutral"
+    },
+    {
+      "hex": "#171717",
+      "name": "Charcoal",
+      "role": "Secondary dark surface (pricing card, alternate hero), occasional dark fills where deeper weight is needed than Ink",
+      "group": "neutral"
+    },
+    {
+      "hex": "#686868",
+      "name": "Ash",
+      "role": "Secondary body text, nav links, supporting copy — the first step down from primary text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#515151",
+      "name": "Slate",
+      "role": "Tertiary text, icon strokes on light backgrounds, muted metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#737373",
+      "name": "Muted",
+      "role": "Helper text, caption-level copy, secondary icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#929292",
+      "name": "Fog",
+      "role": "Placeholder text, disabled labels, very low-emphasis text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cbcbcb",
+      "name": "Chalk",
+      "role": "Shadow residue on dark buttons, ultra-low-contrast surface markers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ecfdf5",
+      "name": "Mint Whisper",
+      "role": "Primary page canvas and white card surfaces. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    }
+  ],
+  "imagery": "Imagery is almost entirely absent from the marketing surface. The hero relies on typography alone, and the single visual asset is a full product screenshot of the dashboard embedded in a framed card. No photography, no illustration, no decorative graphics, no icon system beyond simple monoline check marks and the X-mark wordmark. When competitor logos appear, they are rendered in #929292 to dissolve into the monochrome field rather than stand out as colorful brand marks.",
+  "similar": [
+    {
+      "why": "Same commitment to a single sans-serif at tight tracking, hairline borders, and a near-absence of decorative color — Linear's UI is also a typographic system with grayscale as its base",
+      "business": "Linear"
+    },
+    {
+      "why": "Direct competitor in the same product category; shares the feature-feedback dashboard chrome, the pill-shaped badges, and the monochrome data-table aesthetic",
+      "business": "Canny"
+    },
+    {
+      "why": "Same editorial-product sensibility: black-and-white marketing pages, large display headlines, generous section padding, and a single typeface carrying all hierarchy",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same typeset-document philosophy — Inter throughout, tight tracking, no illustrative atmosphere, hairline rules separating content blocks, and an almost total commitment to grayscale",
+      "business": "Read.cv"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "14px",
+      "badges": "9999px",
+      "images": "8px",
+      "inputs": "4px",
+      "buttons": "4px",
+      "largePanels": "18px"
+    },
+    "elementGap": "16-20px",
+    "sectionGap": "120-160px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "The base background; everything else sits on this white field"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Surface",
+      "level": 1,
+      "purpose": "Same hex as canvas but lifted by a 1px #ededed border and a 14–18px radius"
+    },
+    {
+      "hex": "#171717",
+      "name": "Highlighted Surface",
+      "level": 2,
+      "purpose": "Dark inverse used for the 'Popular' pricing tier to break the white field"
+    },
+    {
+      "hex": "#ecfdf5",
+      "name": "Accent Wash",
+      "level": 3,
+      "purpose": "Mint tint applied only to small badge fills (Save 20%, Popular Option)"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "inset 0 0 0 1px oklab(0.999 0 0 / 0.16), 0 1px 2px oklab(0.269 0 0 / 0.24)",
+      "element": "Dark filled button"
+    },
+    {
+      "style": "0 25px 50px -12px lab(0 0 0 / 0.1)",
+      "element": "Product mockup frame"
+    },
+    {
+      "style": "0 1px 3px lab(0 0 0 / 0.05), 0 1px 2px -1px lab(0 0 0 / 0.05)",
+      "element": "Generic card / elevated panel"
+    }
+  ],
+  "northStar": "Ink on cold-pressed paper. The interface reads as a meticulously typeset monograph — black ink, white stock, hairline rules, and the softest possible shadows to suggest depth.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.3
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.35
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.56,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.63,
+      "letterSpacing": -0.45
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.5
+    },
+    {
+      "role": "heading",
+      "size": 24,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.6
+    },
+    {
+      "role": "heading-lg",
+      "size": 30,
+      "lineHeight": 1.38,
+      "letterSpacing": -0.75
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.11,
+      "letterSpacing": -1.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Navigation Bar",
+      "role": "Site-wide header",
+      "description": "Full-width white bar, 64px tall, 1px bottom border in #ededed. Logo left (24px square X-mark), center nav links at 14px Inter 500 in #686868 with #262626 on hover, right cluster holds a ghost 'Sign In' link and a dark filled 'Get Started' button. No drop shadow — just the border."
+    },
+    {
+      "name": "Dark Filled Action Button",
+      "role": "Primary CTA",
+      "description": "Background #262626, text #ffffff, 14px Inter 500. Padding 10px 20px. Radius 4px. Subtle inset highlight (oklab 0.16 inset 1px) plus a soft 0.05 alpha 1px drop shadow to register the surface. This is the only button style that carries visual weight on the page."
+    },
+    {
+      "name": "Ghost Outline Action Button",
+      "role": "Secondary action",
+      "description": "Transparent background, 1px border in #ededed, text #262626, 14px Inter 500. Same 10px 20px padding and 4px radius as the filled variant. Used for 'Watch Demo' and similar non-primary actions."
+    },
+    {
+      "name": "Pricing Tier Card",
+      "role": "Pricing display (Free, Hobby, Pro)",
+      "description": "White surface, 1px border in #ededed, radius 14px, padding 32px. Tier name at 24px Inter 600 #262626, price at 36px Inter 600 #262626 with '/ month' in 14px #686868. Feature list uses 14px body text with 8px row gap and small dark check icons."
+    },
+    {
+      "name": "Highlighted Pricing Card (Hobby)",
+      "role": "Featured/Recommended tier",
+      "description": "Same structure as standard pricing card but with a dark surface (background #171717, text #ffffff, subtext #cbcbcb) and a 'Popular Option' pill badge floating above the card. The dark surface breaks the all-white field to draw the eye."
+    },
+    {
+      "name": "Pill Badge",
+      "role": "Status / label / tag",
+      "description": "Fully rounded (9999px), padding 4px 12px, 12px Inter 500. Default variant: light gray fill (#ededed) with #262626 text. Highlight variant for 'Popular Option' or 'Save 20%': #ecfdf5 fill with green-tinted text."
+    },
+    {
+      "name": "Pricing Toggle",
+      "role": "Billing period switcher",
+      "description": "Segmented control, 40px tall, radius 4px, 1px border in #ededed. Active segment filled #262626 with #ffffff text; inactive segment is transparent with #686868 text. A small 'Save 20%' pill in green floats above the active option."
+    },
+    {
+      "name": "Hero Section",
+      "role": "Above-the-fold introduction",
+      "description": "Centered single-column, max-width 720px, 80–120px vertical padding. Headline at 48px Inter 600 in #262626 with -1.2px tracking, line-height 1.11. Subtext at 18px Inter 400 in #686868. Two-button row: filled primary + ghost secondary. 'No credit card required' microcopy at 12px below."
+    },
+    {
+      "name": "Product Mockup Frame",
+      "role": "Embedded dashboard screenshot",
+      "description": "White surface, 1px border in #ededed, radius 18px, large diffuse shadow (lab 0.1 0px 25px 50px -12px). Mockup fills the inner area with 8px corner rounding on the UI chrome. Floats below the hero as the visual proof point."
+    },
+    {
+      "name": "Tab Group",
+      "role": "Section switcher (used in product mockup)",
+      "description": "Horizontal pill cluster, 36px tall, radius 4px, 1px border #ededed. Active tab: #ededed fill, #262626 text. Inactive: transparent, #686868 text. Items separated by 4px gaps."
+    },
+    {
+      "name": "Logo Bar",
+      "role": "Social proof / 'teams switching from'",
+      "description": "Single horizontal row, centered, with competitor wordmarks rendered in #929292 (desaturated) to integrate with the monochrome system. 80–100px vertical padding above and below."
+    },
+    {
+      "name": "Two-Column Feature Section",
+      "role": "Asymmetric content layout",
+      "description": "Left column: large headline at 30–36px Inter 600 #262626. Right column: 18px Inter 400 body text in #686868. Column gap 80–120px. No card, no background — just two text columns on the white canvas."
+    },
+    {
+      "name": "Feature Checklist Item",
+      "role": "Bullet item in pricing cards",
+      "description": "14px Inter 400 in #262626, preceded by a 16px circular check icon in #262626. 8px row gap between items."
+    },
+    {
+      "name": "Chat Bubble (bottom-right)",
+      "role": "Floating support widget",
+      "description": "32px circle, #262626 background, white speech-bubble icon. Fixed position, sits above all content with a small bottom-right offset."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The sole typeface. Weight 600 reserved for section labels and small UI controls; weight 500 for nav and secondary buttons; weight 400 for body and most copy. The system commits to one family rather than pairing a display serif — a deliberate editorial choice that keeps the visual signal monochrome.",
+      "sizes": "12px, 13px, 14px, 16px, 18px, 20px, 24px, 30px, 36px, 48px",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.20–1.63",
+      "substitute": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+      "letterSpacing": "-0.025em applied at every size (≈-0.3px at 12px up to -1.2px at 48px)",
+      "fontFeatureSettings": "\"cv11\", \"ss01\""
+    }
+  ],
+  "description": "Audyr uses a typeset-document language: white paper canvas, black ink text, and the faintest gray rules separating content blocks. The entire interface is intentionally near-monochrome — no brand color accent, no decorative gradients, no illustrated atmosphere — so the product's promise of clarity becomes the page's visual promise too. Typography carries all hierarchy through a single sans-serif (Inter) at three weights and tight -0.025em tracking that compresses letterforms into confident, compact blocks at every scale. Components are quietly constructed with hairline borders in #ededed, 4–8px radii on interactive elements, and shadows so subtle they read as paper grain rather than elevation. The system feels editorial — closer to a beautifully set technical brief than a typical SaaS landing page.",
+  "customSections": [
+    {
+      "title": "Monochrome Brand Discipline",
+      "content": "Audyr's defining design choice is the absence of color. There is no primary brand color, no accent hue, no logo tint beyond near-black. This is unusual for a SaaS product and is the visual manifestation of the product's positioning ('know exactly what to build next' = clarity, signal-to-noise). When a designer must add color, the only sanctioned uses are: the dark filled button (#262626), the dark pricing card (#171717), and the mint accent (#ecfdf5) on small positive badges. Every other surface and text element stays in the gray scale."
+    },
+    {
+      "title": "Type as the Only Ornament",
+      "content": "Because there is no color or imagery to carry visual interest, Inter typography is doing the work of decoration. Three observations a designer should internalize: (1) the uniform -0.025em tracking is applied at every size, so a caption and a display heading share the same optical compression ratio — this is what makes the system feel cohesive, not just consistent. (2) Line-height tightens as size increases (1.56 at 16px body → 1.11 at 48px display), so large headlines sit dense and confident. (3) Weight 600 is used sparingly — only for headlines, section labels, and the tier price — which makes every bold element feel intentional."
+    },
+    {
+      "title": "Agent Prompt Guide",
+      "content": "primary action: #262626 (filled action)\nCreate a Primary Action Button: #262626 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is used as a whisper, not a declaration. The system prefers 1px hairline borders in #ededed to separate surfaces and only calls on shadows for two specific moments: the hero product mockup (a single large diffuse shadow that makes the dashboard feel like a physical card on paper) and filled buttons (a near-invisible inset highlight + 1px drop to register the dark surface). All other elements are flat. This restraint is what gives Audyr its editorial, document-like quality."
+}

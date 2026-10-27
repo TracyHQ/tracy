@@ -1,0 +1,55 @@
+# Postgres and the standalone server. From this folder, with settings in `.env` (copy `.env.example`):
+#   docker compose up -d --build
+# The port (HOST_PORT, default 8080) is published on this machine's loopback only; put a TLS proxy in front to
+# reach it from elsewhere.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: wo
+      POSTGRES_PASSWORD: wo
+      POSTGRES_DB: wo
+    volumes:
+      - wo-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wo -d wo"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  app:
+    build:
+      context: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://wo:wo@db:5432/wo
+      PORT: "8080"
+      # Inside a container the caller is never on loopback, so the token is required.
+      OPERATOR_TOKEN: ${OPERATOR_TOKEN:?set OPERATOR_TOKEN (at least 24 characters)}
+      OPERATOR_EMAIL: ${OPERATOR_EMAIL:-operator@localhost}
+      OPERATOR_NAME: ${OPERATOR_NAME:-}
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:${HOST_PORT:-8080}}
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+      SKIP_MIGRATIONS: ${SKIP_MIGRATIONS:-0}
+      GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY:-}
+      OVERPASS_URL: ${OVERPASS_URL:-}
+      APIFY_TOKEN: ${APIFY_TOKEN:-}
+      SERPAPI_API_KEY: ${SERPAPI_API_KEY:-}
+      FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY:-}
+      JINA_API_KEY: ${JINA_API_KEY:-}
+      RAPIDAPI_KEY: ${RAPIDAPI_KEY:-}
+      SCRAPECREATORS_API_KEY: ${SCRAPECREATORS_API_KEY:-}
+      LITESCRAPE_API_KEY: ${LITESCRAPE_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      TRACY_URL: ${TRACY_URL:-https://cowork.tracy.ai}
+      TRACY_API_URL: ${TRACY_API_URL:-}
+    volumes:
+      - wo-files:/data
+    ports:
+      - "127.0.0.1:${HOST_PORT:-8080}:8080"
+
+volumes:
+  wo-db:
+  wo-files:

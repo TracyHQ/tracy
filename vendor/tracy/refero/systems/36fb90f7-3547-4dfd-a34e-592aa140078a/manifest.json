@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "36fb90f7-3547-4dfd-a34e-592aa140078a",
+  "status": "complete",
+  "name": "Halfhelix",
+  "url": "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
+  "sourceWebsite": "https://www.halfhelix.com",
+  "extractedAt": "2026-06-03T20:49:44.145Z",
+  "capturedAt": "2026-10-08T05:10:17.830052+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Gallery wall on white marble — restrained, text-led, photographic",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d1fb67ce-4dd5-4e57-ab5a-6413e9f696e1.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "fa96a7a6074650071053ebaf0e9a1c90e55e2624322640e75212c37574d6deaa",
+      "bytes": 19039
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7bccc54f6a61796f9aa631980bb5b953a199bdb11c410a3e6b70b1b756f52a71",
+      "bytes": 109960
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a88920cef4e1b67d164cb1c997256dbe11356642aa941fbbac31c1d1f36a610f",
+      "bytes": 16170
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3b5e29c14abf182b23a8682f2ddfaecf5bd57d51578712e75b5b9f3799a09901",
+      "bytes": 8116
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "121bab71dc0013487a1513f9ea5011601820911fc5cc41a1c54b3444d21c0c68",
+      "bytes": 12124
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "77161d3b20802f445a85d96f18db16986d1dbf72a267d768812d80d64a6ea4c8",
+      "bytes": 2480
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1639f4c783bdb0ac8c5a905ec6b9799a33f65b0b8363ba99cdc550e1d3aaa93a",
+      "bytes": 449
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0e7afe82946c3c694331e0a56f57a8fcc5e3836700849c39d96232e96d171161",
+      "bytes": 466
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "cf5d2d261712bde3fb0f090dc9f477f010725a07a1f12d63e95975872253dffa",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3db8df4e0df20f1d9885480f017101ca2341af46ac04e1f36b58d969ed83c2e0",
+      "bytes": 42589
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "eae3a4779b74770a5c30dc897a741e0ee0ecbac587ddd6f90feee2acfdb34c9c",
+      "bytes": 22247
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d5c349caf2788cf3add16510bd876abfc7605a1f862e2a1bee882ba4dfb62e5b",
+      "bytes": 46545
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2bc4ee37d8221683d57ebecbe4fd8ffd961c9bd632403fb9d4fb9e37c9b18573",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "bf1e160e9da355bb3a06bd5fc227b2ebb7ba085188e93f0b31a6ecca3de0b40b",
+      "bytes": 1571
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0ad476ad72a1f30682be6eccf9f2defdaa493c765b48bc90bf56fa5cfda3fd8e",
+      "bytes": 2085
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "58a36cba-3fc4-48fa-a7d9-7f14592b7857",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "73359194-de93-436e-af53-81d4029f5e7a",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "ab1b113a-ed21-4512-acc2-d10c8927c410",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

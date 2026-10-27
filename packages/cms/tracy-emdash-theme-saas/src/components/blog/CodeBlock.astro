@@ -1,0 +1,35 @@
+---
+// Portable Text `code` block as the design's dark code panel (dark in both themes).
+interface Props {
+  node: { code?: string; language?: string }
+}
+const { node } = Astro.props
+---
+
+{
+	node?.code && (
+		<div class="k-panel code">
+			<pre><code>{node.code}</code></pre>
+		</div>
+	)
+}
+
+<style>
+	.code {
+		margin: 0 0 22px;
+	}
+	pre {
+		margin: 0;
+		padding: 18px 20px;
+		overflow-x: auto;
+		font-family: var(--font-mono);
+		font-size: 13.5px;
+		line-height: 1.6;
+		/* Body code reads brighter than panel chrome: the source sets #C9D1CE on this panel in all
+		   three directions and both themes, so tint the panel text toward white rather than fix a hex. */
+		color: color-mix(in srgb, var(--k-panel-text) 53%, #fff);
+	}
+	code {
+		font: inherit;
+	}
+</style>

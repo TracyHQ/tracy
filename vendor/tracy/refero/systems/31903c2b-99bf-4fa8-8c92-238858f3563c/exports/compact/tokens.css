@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-charcoal-ink: #3f3f3f;
+  --color-paper-white: #ffffff;
+  --color-stone-veil: #d3cec5;
+  --color-sumi-black: #030302;
+  --color-ash: #686867;
+  --color-pebble: #acacac;
+  --color-lampblack: #000000;
+
+  /* Typography — Font Families */
+  --font-graphik: 'Graphik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gt-standard-mono: 'GT Standard Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

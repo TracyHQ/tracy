@@ -1,0 +1,79 @@
+{
+  "color": {
+    "cobalt-signal": {
+      "$value": "#002fff",
+      "$type": "color",
+      "$description": "Cobalt Signal — Violet action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text on cobalt fill, heading text on dark sections"
+    },
+    "graphite": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Graphite — Primary body text, heading text, hairline borders, icon strokes — the workhorse near-black that carries UI structure"
+    },
+    "carbon": {
+      "$value": "#070707",
+      "$type": "color",
+      "$description": "Carbon — Deepest text, dark gradient anchor points, near-black accents where maximum contrast is needed"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Absolute black for borders, icons, and the film-strip frame effect — appears most in structural borders rather than type"
+    },
+    "fog": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Fog — Soft card surface lift, input fields, subtle background differentiation from pure white canvas"
+    },
+    "mist": {
+      "$value": "#b9b9b9",
+      "$type": "color",
+      "$description": "Mist — Light surface wash, disabled or decorative backgrounds"
+    },
+    "dove": {
+      "$value": "#c3c3c3",
+      "$type": "color",
+      "$description": "Dove — Mid-neutral border for tertiary dividers"
+    },
+    "iron": {
+      "$value": "#696969",
+      "$type": "color",
+      "$description": "Iron — Muted body copy, secondary borders, placeholder text — the dominant mid-gray carrying prose-level hierarchy"
+    },
+    "cobalt-mist": {
+      "$value": "#00368c",
+      "$type": "color",
+      "$description": "Cobalt Mist — Atmospheric radial gradient anchor (mid-stop) for the hero blue vignette"
+    }
+  },
+  "font": {
+    "itc-garamond-std-light-narrow": {
+      "$value": "ITC Garamond Std Light Narrow",
+      "$type": "fontFamily",
+      "$description": "Editorial serif — deployed for the brand-defining typographic moments: the 'Analogue aF-1' wordmark, the nostalgic pull-quote ('Remember when every shot was a moment to cherish?'), and section-level statements. Light weight at large sizes is deliberately anti-luxury-tech; a Garamond at 64px weight 400 whispers where most product pages shout with bold sans. Narrow variant tightens the serif into modern proportions."
+    },
+    "graphik-medium": {
+      "$value": "Graphik Medium",
+      "$type": "fontFamily",
+      "$description": "Geometric sans for all functional UI: navigation, buttons, input fields, captions, body labels, and the massive 150px display headline. Single weight (400) at every size creates a remarkably consistent voice — no bold/light toggle. The 150px instance is the 'af-1' hero display. Extremely tight tracking (-0.067em at the largest size) pushes the geometric forms into near-architectural density."
+    },
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://af1.analogueshop.com",
+      "siteName": "Analogue aF-1",
+      "extractedAt": "2026-06-03T21:18:03.325Z",
+      "variant": "compact"
+    }
+  }
+}

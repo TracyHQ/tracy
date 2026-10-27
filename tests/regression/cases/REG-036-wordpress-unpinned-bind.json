@@ -1,0 +1,32 @@
+{
+  "id": "REG-036",
+  "kind": "fix",
+  "title": "A WordPress quickstart whose release pins no Claude Cowork plugin is bound to its contract through the latest plugin; a bind that cannot be made never stops the provision",
+  "pr": 837,
+  "area": "fleet/provision-wordpress",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs packages/fleet/tracy-fleet-operation/test/import-content-identity.test.mjs",
+    "S2: Read the pass/fail counts and the test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'a release that pins no plugin is bound through the latest one; a bind it cannot make never stops the provision' passes: after a bind the marker names the installed plugin in coworkContractVersion (the floor when the version cannot be read) and the reader is asked once, after the bind; after a refused bind the provision still hands the site over, the marker is unchanged, the contract setting is deleted and the reader is still asked once; a reader that fails does not stop the provision.",
+    "'🔒 wordpress sealed quickstart that pins no plugin: the site is opted in too' passes: the whole post-up of that road ends with rc 0, one bind, and exactly one content.identity call that comes after the bind."
+  ],
+  "selectors": {
+    "helper": "tracy_wp_bind_latest in packages/fleet/tracy-fleet-operation/scripts/provision/platform/wordpress.sh"
+  },
+  "evidence": "Dev provision log of the JA Kinetic WordPress demo (03/10/2026): 'pins no Claude Cowork plugin', marker ja-kinetic/wp7/1.0.2, option claude_cowork_contract absent. Local stands restored from the six released WordPress ports with plugin 0.17.3 (04/10/2026): five bind (inspect bound, 5-24 entities, option+bind+inspect 0.87-1.03 s), JA Essence 1.0.3 is refused against profile 1.0.2 (a slot the release no longer has).",
+  "fence": "The helper's three outcomes (bound, refused, version unreadable) on the function text itself with the provision's helpers stubbed; the full provision on a host is measured on the dev surface after deploy",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/import-content-identity.test.mjs"
+    ]
+  }
+}

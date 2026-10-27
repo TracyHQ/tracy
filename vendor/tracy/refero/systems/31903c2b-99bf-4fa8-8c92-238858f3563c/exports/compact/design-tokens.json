@@ -1,0 +1,64 @@
+{
+  "color": {
+    "charcoal-ink": {
+      "$value": "#3f3f3f",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary text, default borders, link underlines, icon strokes — the workhorse gray that carries almost every label and divider in the system"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, nav background, card surfaces, button text — the absolute ground of the interface"
+    },
+    "stone-veil": {
+      "$value": "#d3cec5",
+      "$type": "color",
+      "$description": "Stone Veil — Hairline borders, inset focus rings, soft separator lines — the warm gray that makes every edge feel like a seam in paper or stone, not a UI stroke"
+    },
+    "sumi-black": {
+      "$value": "#030302",
+      "$type": "color",
+      "$description": "Sumi Black — Filled button backgrounds, active state borders, highest-emphasis text — the near-black ink, warmer than pure black, used when a control must be pressed or selected"
+    },
+    "ash": {
+      "$value": "#686867",
+      "$type": "color",
+      "$description": "Ash — Secondary text, muted metadata, tertiary borders — used for captions, helper copy, and inactive states where Charcoal would be too heavy"
+    },
+    "pebble": {
+      "$value": "#acacac",
+      "$type": "color",
+      "$description": "Pebble — Lightest separator, disabled borders, placeholder strokes — the quietest gray, visible only when something must be outlined but not announced"
+    },
+    "lampblack": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Lampblack — Occasional deep text and body borders — reserved for the few headings and rules that need absolute black, used sparingly to avoid competing with Sumi"
+    }
+  },
+  "font": {
+    "graphik": {
+      "$value": "Graphik",
+      "$type": "fontFamily",
+      "$description": "Primary interface face — navigation, body copy, links, headings, product names. Weight 400 is the default for almost all text; weight 600 appears only on section titles and emphasized labels. The signature is restraint: the largest size on site is 20px, forcing a small, intimate reading experience that mirrors the brand's contemplative tone. No display weights, no italic, no dramatic scale jumps."
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Button and chip labels — a slightly different rhythm from Graphik, used specifically on interactive controls to give them their own voice without adding color or weight"
+    },
+    "gt-standard-mono": {
+      "$value": "GT Standard Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced accent for product codes, SKUs, or small numeric metadata — appears sparingly as a technical whisper against the proportional Graphik"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://walden.us",
+      "siteName": "Walden",
+      "extractedAt": "2026-06-03T19:29:21.907Z",
+      "variant": "compact"
+    }
+  }
+}

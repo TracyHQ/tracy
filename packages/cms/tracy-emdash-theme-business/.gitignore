@@ -1,0 +1,15 @@
+# Runtime state of a site instance -- never source.
+node_modules/
+dist/
+.astro/
+data/
+uploads/
+.emdash/types.ts
+.env
+.env.*
+!.env.example
+*.token
+# Local evidence of runs (screenshots, receipts with ids) lives under tasks/ or outside the repo.
+evidence/
+backups/
+.teamshare/

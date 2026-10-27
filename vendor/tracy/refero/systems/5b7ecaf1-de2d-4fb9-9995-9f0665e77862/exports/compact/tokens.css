@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-paper-white: #ffffff;
+  --color-carbon: #111111;
+  --color-graphite: #1c1c1c;
+  --color-smoke: #454545;
+  --color-ash: #575757;
+  --color-near-black: #050505;
+
+  /* Typography — Font Families */
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-raveo-variable-variable: 'Raveo Variable Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-sans-serif: 'System Sans-Serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter-display: 'Inter Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

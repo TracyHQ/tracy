@@ -1,0 +1,24 @@
+# build output
+dist/
+
+# dependencies
+node_modules/
+
+# astro
+.astro/
+.emdash/migrations.json
+
+# local data
+data.db
+data.db-*
+uploads/
+
+# logs
+npm-debug.log*
+
+# environment variables
+.env
+.env.local
+
+# macOS
+.DS_Store

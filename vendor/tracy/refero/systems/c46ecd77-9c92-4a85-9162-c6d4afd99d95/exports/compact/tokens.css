@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-parchment-rose: #f8f5f5;
+  --color-specimen-white: #ffffff;
+  --color-ink-brown: #443235;
+  --color-walnut: #654a4e;
+  --color-charcoal: #2e2c2c;
+  --color-hairline-ash: #cfc6c7;
+  --color-dusty-rose: #916a70;
+
+  /* Typography — Font Families */
+  --font-domainetext: 'DomaineText', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dia: 'Dia', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-domainedisplaynarrow: 'DomaineDisplayNarrow', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+  "status": "complete",
+  "name": "Face Formula",
+  "url": "https://styles.refero.design/style/78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+  "sourceWebsite": "https://faceformula.com",
+  "extractedAt": "2026-06-03T18:52:54.465Z",
+  "capturedAt": "2026-10-08T05:13:41.250552+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Nordic editorial portrait. A quiet Scandinavian magazine spread where the model's gaze and a 120px condensed-serif masthead do all the talking against walls of cool mist.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/bf185026-823f-4b6d-bf49-e31b1156cf35.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/6d72f5c0-0cfa-4758-8a28-0c517af2d8b4.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e51da3d2-8a2b-477d-b794-df4e5e74901b.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/8af70e83-a301-4f9b-9521-b835135696f3.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a6937c47-a3bd-4b38-87e3-ae1db6d3dba0.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "52d71e91e1bb79faa21015fb38aa28b0d90dfebae1c4627674aeb94e8e5430bf",
+      "bytes": 21366
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6069c9a8032b6885a9e046747c7a2b962b6ea2ad0f8539bd82f769655f28eac6",
+      "bytes": 148518
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f958d1b6829d137ed999d90194c674259490fc7f2731ba00fabfbf2b2a4545ee",
+      "bytes": 18491
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2aa3e029970edfd7bb48b69f53504fa7afd59e41a1ec14df44b95582cd3a93d4",
+      "bytes": 8101
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "55ffb98c52068d23851222b9278e134403a49d57ddb59ede3f51c96a1b56cc48",
+      "bytes": 14269
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e7ed32b39647400e7d1245c9695b544f32eb8914c6e1c0ee9c8f80ea726e6a8a",
+      "bytes": 2874
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "82f44b6626f6f9a107e8288da845feba3dc95c2947127f29a922b016b0c5fbdb",
+      "bytes": 561
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "60de9446e3de4b239e29e8ad10631897622d9e2a5582898883ebddaf63514ea3",
+      "bytes": 578
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "194b34730713328c44898c057237ba1a4a4ff2f8acbc23142519667757a80d57",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "cb2c3ae78ee3c096a4cfce324142568c8accf1f82fd40181fd9d210c79ec7d1d",
+      "bytes": 44451
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a3a5abdfc93c9f19b13f1d6cb77a3ba4ff366f518009028ee4e0c49cae132858",
+      "bytes": 22946
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6ce94595d68b5ffe9ad7f2e87a40a49d0f9c3865efb005c4e690740f19c5cbc6",
+      "bytes": 41381
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "060acfa56c8c04e6361fc6951a9b3010af23e81d52e8fed6ec98526cd015519f",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a5a3165f62958c722eb05f7232605531d9e483958d951849a406b55e387b35e7",
+      "bytes": 1317
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3b426897ccef46410960209a508be5d6d1a9c7a50d979539907a1b84bd53fb6c",
+      "bytes": 1819
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2fd71e12-12fc-4346-8281-52afe12bb951",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "a4dcee26-dd31-415a-ac99-64299959e7f1",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f1a690c7-234d-4ee9-9806-5790934e7043"
+  ]
+}

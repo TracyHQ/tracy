@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-pulse-violet: #4a53ff;
+  --color-obsidian: #000000;
+  --color-carbon: #191919;
+  --color-paper-white: #ffffff;
+  --color-lab-mist: #f3f5f9;
+  --color-hairline: #e5e7eb;
+  --color-fog-gray: #808080;
+  --color-ash: #999999;
+
+  /* Typography — Font Families */
+  --font-proxima-nova: 'Proxima Nova', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

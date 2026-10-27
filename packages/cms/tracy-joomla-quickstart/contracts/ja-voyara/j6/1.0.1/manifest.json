@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-voyara/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_voyara",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-voyara/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "platformVersion": "6.1.2",
+    "template": "ja_voyara",
+    "parts": {
+      "webroot": {
+        "file": "ja-voyara-j6-webroot-1.0.1.tar.gz",
+        "bytes": 195132197,
+        "sha256": "a292f0c160d53a14d45bf8e69471e58d062c4bb1c6a0c7b9e2debecb57f8da7d",
+        "url": "http://192.168.100.175:5178/ja-voyara-j6-webroot-1.0.1.tar.gz"
+      },
+      "database": {
+        "file": "ja-voyara-j6-database-1.0.1.sql.gz",
+        "bytes": 358777,
+        "sha256": "ea94cf7dcfb61fbb0f8ec36d8322666c64af656acc2473d8c46bb4a46c052c7a",
+        "url": "http://192.168.100.175:5178/ja-voyara-j6-database-1.0.1.sql.gz"
+      }
+    }
+  },
+  "receiverVersion": "0.16.1",
+  "mode": "content-only"
+}

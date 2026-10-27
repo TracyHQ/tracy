@@ -1,0 +1,74 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, heading fills, primary borders, and the structural ink color across all UI surfaces"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Default page canvas, card surfaces, button text on dark fills, and outlined-button fills"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Filled primary action background, hard offset shadow color, and high-contrast icon fills"
+    },
+    "cream-paper": {
+      "$value": "#fff6ec",
+      "$type": "color",
+      "$description": "Cream Paper — Warm hero band, footer surface, and the signature alternate canvas that gives Coda its editorial mood"
+    },
+    "ash-border": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Ash Border — Hairline borders, card edges, and subtle dividers separating surfaces from canvas"
+    },
+    "graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text, muted helper text, and low-emphasis metadata"
+    },
+    "smoke": {
+      "$value": "#8e8e8e",
+      "$type": "color",
+      "$description": "Smoke — Tertiary text, placeholder text, disabled labels, and nav item resting state"
+    },
+    "slate-button": {
+      "$value": "#444444",
+      "$type": "color",
+      "$description": "Slate Button — Secondary button borders and mid-weight icon strokes"
+    },
+    "ember-orange": {
+      "$value": "#ee5a29",
+      "$type": "color",
+      "$description": "Ember Orange — Sole chromatic accent — heading highlights, section eyebrow text, decorative underlines, and brand-mark punctuation. The single warm note against an otherwise black-and-cream system"
+    }
+  },
+  "font": {
+    "calibre-r": {
+      "$value": "Calibre-R",
+      "$type": "fontFamily",
+      "$description": "Display and section headlines. Custom geometric 700-weight face with extremely tight tracking that compresses letterforms into dense blocks of ink. The heavy + tight combination is Coda's signature — headlines feel carved rather than written. Substitute: Manrope 800 or DM Sans 800 with -0.03em tracking."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All UI text: body copy, nav links, buttons, labels, captions. Inter carries the entire functional layer; its near-default weights and tracking let the Calibre headlines lead."
+    },
+    "tiempos-headline": {
+      "$value": "Tiempos-Headline",
+      "$type": "fontFamily",
+      "$description": "Occasional editorial subheading in a light serif weight — the soft counterpoint to Calibre's blocky display. Used sparingly for emphasis rather than hierarchy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://coda.io",
+      "siteName": "Coda",
+      "extractedAt": "2026-06-03T19:31:52.708Z",
+      "variant": "compact"
+    }
+  }
+}

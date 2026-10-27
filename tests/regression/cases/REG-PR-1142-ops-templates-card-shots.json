@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1142-ops-templates-card-shots",
+  "kind": "fix",
+  "title": "Ops template doors key pictures, checks, uploads, captures and Save by the customer card id (cardIdOf), not the release install file's template",
+  "pr": 1142,
+  "area": "ops/templates",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL pointing at a test Postgres, run: node --test --test-reporter=tap apps/tracy-web/test/quickstart-releases.test.mjs apps/tracy-web/test/ops-quickstarts.test.mjs",
+    "S2: Read the exit code and the fail/skipped counts."
+  ],
+  "expect": [
+    "The run exits 0 with 0 failures and 0 skipped tests.",
+    "cardIdOf: tracy-base/wp7 (install file template 'tracy-base') is keyed by the card 'tracy'; a release with no card falls back to its install file template.",
+    "The admin keys tracy-base/wp7 pictures by the card 'tracy': no 'pictures are not on this server' warning on the row or the detail, and each GET /api/ops/quickstarts row carries cardTemplate.",
+    "Save, Generate and Capture on such a release write under the customer card id, never under the install file template."
+  ],
+  "selectors": {
+    "helper": "apps/tracy-web/src/lib/quickstart-releases.js cardIdOf",
+    "doors": "apps/tracy-web/src/ops/quickstarts.js",
+    "list_door": "GET /api/ops/quickstarts (cardTemplate)",
+    "screen": "packages/web/tracy-harness/src/cms/Quickstarts.tsx"
+  },
+  "evidence": "10/10/2026: the WordPress chip of Tracy Base on /ops/cms/templates?template=tracy showed broken pictures and a 'holds no picture' line because it asked /api/templates/tracy-base/shots/.",
+  "fence": "Server doors with the picture store and GitHub doubled. Not exercised: real GitHub release writes, demo capture on a live site, the rendered page.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/quickstart-releases.test.mjs",
+      "apps/tracy-web/test/ops-quickstarts.test.mjs"
+    ],
+    "needs": ["postgres"]
+  }
+}

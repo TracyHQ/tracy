@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-kinetic/j6/1.0.0",
+  "platform": "joomla",
+  "template": "ja_kinetic",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-kinetic/j6",
+    "version": "1.0.0",
+    "platform": "joomla",
+    "platformVersion": "6.1.2",
+    "template": "ja_kinetic",
+    "parts": {
+      "webroot": {
+        "file": "ja-kinetic-j6-webroot-1.0.0.tar.gz",
+        "bytes": 68573401,
+        "sha256": "ac724d7461c2c30067c50bb8d803c25301b319e95dfa1f4be810709e198b46d4",
+        "url": "http://192.168.100.175:5178/ja-kinetic-j6-webroot-1.0.0.tar.gz"
+      },
+      "database": {
+        "file": "ja-kinetic-j6-database-1.0.0.sql.gz",
+        "bytes": 385146,
+        "sha256": "9122e84fad42b1f32371ef5249e8f745683a27bd416eb2cdc59b5fe2bca3cb10",
+        "url": "http://192.168.100.175:5178/ja-kinetic-j6-database-1.0.0.sql.gz"
+      }
+    }
+  },
+  "receiverVersion": "0.16.1",
+  "mode": "content-only"
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-restaurant/j6/1.0.4",
+  "platform": "joomla",
+  "template": "ja_restaurant",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-restaurant",
+    "id": "quickstart/ja-restaurant/j6",
+    "version": "1.0.4",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_restaurant",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-restaurant-j6-webroot-1.0.4.tar.gz",
+        "bytes": 50136454,
+        "sha256": "a1fa6513d16241a77c3da66a85233596972aa56675a2dcbc283decd73a972367"
+      },
+      "database": {
+        "file": "ja-restaurant-j6-database-1.0.4.sql.gz",
+        "bytes": 173840,
+        "sha256": "63ca734d8b88074edf459b1900d08d0d2d80eb607ee969656946d802b1af6dca"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-11T13:19:49.407Z",
+    "builtFrom": {
+      "from": "quickstart/ja-restaurant/j6@1.0.3",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*); T3 dev mode off (5 template styles)"
+    },
+    "release": "quickstart/ja-restaurant/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.17",
+  "mode": "content-recommendation"
+}

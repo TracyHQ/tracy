@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "031302e5-3269-4735-ab56-d4c7d02edc01",
+  "status": "complete",
+  "name": "ProtoPie",
+  "url": "https://styles.refero.design/style/031302e5-3269-4735-ab56-d4c7d02edc01",
+  "sourceWebsite": "https://protopie.io",
+  "extractedAt": "2026-06-03T20:40:15.784Z",
+  "capturedAt": "2026-10-08T05:07:50.511357+00:00",
+  "theme": "light",
+  "industry": "devtools",
+  "description": "sunlit prototyping workshop with violet ink — a designer's clean white drafting table where one electric purple pencil marks every interactive idea.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/badc5cba-03f1-4563-b6fa-a8f0918d64c2.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c03f202885274908b26883cd4a3de1ece20b929129e4558162bbebc05a8259ca",
+      "bytes": 25428
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7c96dd26d98268ea6aa82f900c0ee8d3f8e5fcb3b66236a951ac51f09a9c1fdc",
+      "bytes": 91204
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "11d9818024b798a773e36d22abe58aa111e3f5b8255fa17c8d80ae605a771219",
+      "bytes": 21055
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "591fe2f0def68e9fefde89836eaa1810006b39665ef6f63f5e3651c3da30a11d",
+      "bytes": 14047
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5ecbdbc96a23022c8832bd379888a58d9cc7d3335326dea36094e4559be8159c",
+      "bytes": 14403
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2df8999acc44328a614789cc7d83005b4d313738a2afcd1a67dc1d76ea749cc0",
+      "bytes": 3620
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ff649cfa2ec689213e549e2e428634e7dd57cf2f9fd0a9f2e41c5ac2bc27d359",
+      "bytes": 729
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "874e48c6b243071824350e172c822571881c1447fe5c7b9784666520879ed531",
+      "bytes": 1018
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "34018d788a4fe3097407f76852ad3d68b0f19bcdc3710a1869cb5e32674f44f5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "78d8e5aacc3ac25f23bed055d5d09c805e2c78847a724836a27330304662923c",
+      "bytes": 47556
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "620821c189b9c7f0963baa5d0b907f782a44d6f9a8ddc91181f573b0542fee18",
+      "bytes": 24305
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5b9870ab9812a074d05b03836335e32c6981552e7f89a9547c01a13aba1d89e7",
+      "bytes": 51658
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "56d8dab61fe73c8e0392f78a0786b9d006ba7ee4c522503d20fadb2d377afad2",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a6cdecf9846257a6575fbd2ee05aea8fef5e16cf805799e9f09a63ba9c87044e",
+      "bytes": 2006
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4ebe51bcd66c8b59fa1c11ee9754d20871074a604c4333a1c96f117815bd0379",
+      "bytes": 2944
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031302e5-3269-4735-ab56-d4c7d02edc01",
+    "155dbf6e-1187-424e-9ce8-59ffecff7e6b",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "409d92b9-00a8-4e21-a430-ab95ea48204f",
+    "4caadb3c-3865-4a4d-9e1a-46478ac71078",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "5fd3b3b4-02ab-456a-87aa-e4395636b671",
+    "71c21f97-ba85-4439-b259-198a66f4b3d2",
+    "7be94705-3666-4fb1-a389-0cfd7cb223cd",
+    "8e9e585f-5ad4-4273-8418-e1f82cdb51cf",
+    "989d8d71-c161-4410-8157-ad6ade0bd4be",
+    "bf5616e4-7bd1-40ce-8b2d-aae84c2e4ebd",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "da332394-784c-4df2-9e66-c3f7b1d28f28",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

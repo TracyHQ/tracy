@@ -1,0 +1,348 @@
+{
+  "dos": [
+    "Use Unica77 weight 400 for all body, nav, caption, and button text — reserve weight 700 for card titles and section labels only.",
+    "Use 9999px border-radius for every button, tag, and pill-shaped control — Cohere's interface never uses sharp or moderately rounded buttons.",
+    "Use 22px border-radius for every card, image, and content surface — this is the signature softness of the system.",
+    "Center the hero headline at CohereText 60-72px / line-height 1.00 with -0.0200em tracking — never left-align the primary statement.",
+    "Keep the chromatic gradient (coral → violet → blue) confined to photography washes and decorative overlays; UI controls stay monochrome.",
+    "Use 1px solid #e5e7eb hairlines for all card and divider borders — never use drop shadows to separate surfaces.",
+    "Maintain 80px vertical rhythm between major sections; cards within a section use 16-24px gaps."
+  ],
+  "donts": [
+    "Do not apply the signature gradient to buttons, links, or any interactive control — it belongs only in imagery.",
+    "Do not use drop shadows on cards or panels — Cohere separates surfaces with hairline borders and background contrast, never elevation.",
+    "Do not use colors from the gradient as text fills — #ff7759, #7670c5, and #4c6ee6 are never used for UI text or icons.",
+    "Do not set type below 12px or above 72px — the system has no use for oversize or micro type.",
+    "Do not use left-aligned hero headlines — Cohere's editorial voice requires centered display text.",
+    "Do not introduce new border-radius values; use 4px for small UI, 8px for nav elements, 22px for cards, 9999px for pills — that's the complete set.",
+    "Do not use a colored CTA button — the primary action is always #17171c fill with white text; secondary actions are underline links."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas White",
+      "role": "Primary page background, card surfaces, button text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0eee9",
+      "name": "Soft Cream",
+      "role": "Subtle warm surface variant for alternating sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Hairline Mist",
+      "role": "Default borders, dividers, card outlines, input strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d9dd",
+      "name": "Silver Rule",
+      "role": "Secondary borders, nav dividers, subtle separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#93939f",
+      "name": "Fog",
+      "role": "Muted body text, helper text, secondary labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#75758a",
+      "name": "Slate Caption",
+      "role": "Nav text, subdued annotations, breadcrumb-style labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#616161",
+      "name": "Graphite Body",
+      "role": "Tertiary body text, metadata, timestamps",
+      "group": "neutral"
+    },
+    {
+      "hex": "#212121",
+      "name": "Press Black",
+      "role": "Primary text, heading fill, icon stroke — the workhorse dark",
+      "group": "neutral"
+    },
+    {
+      "hex": "#17171c",
+      "name": "Inkwell",
+      "role": "Dark surfaces, filled pill buttons, footer background, code panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2e2e2e",
+      "name": "Charcoal Depth",
+      "role": "Deepest surface accent, overlay tint, code block background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ff7759",
+      "name": "Coral Glow",
+      "role": "Decorative gradient stop — appears only in photography washes and ornamental highlights, never on UI controls",
+      "group": "accent",
+      "gradient": "linear-gradient(to right, #ff7759, #7670c5, #4c6ee6)"
+    },
+    {
+      "hex": "#7670c5",
+      "name": "Iris Wash",
+      "role": "Decorative gradient midstop — transitional violet in the signature warm-to-cool sweep",
+      "group": "accent"
+    },
+    {
+      "hex": "#4c6ee6",
+      "name": "Signal Blue",
+      "role": "Decorative gradient endpoint — cool terminal in the signature gradient, also a faint illustration accent",
+      "group": "accent"
+    },
+    {
+      "hex": "#f0dff3",
+      "name": "Lilac Mist",
+      "role": "Soft highlight wash, gradient surface tint for feature cards",
+      "group": "accent"
+    },
+    {
+      "hex": "#d18ee2",
+      "name": "Orchid",
+      "role": "Mid-saturation accent in decorative washes and tag backgrounds",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width ~1200px centered, with full-bleed sections alternating between white and cream backgrounds. Hero is centered text stack: display headline → subtitle → primary pill + underline link, with no hero image. Below the hero, a two-column image card row (product screenshot left, lifestyle photo right) with 16-24px gap. Trust logo strip follows as a single centered row. Feature section uses a 3-column icon block layout (Security / Deployment / Customization). Footer is a full-bleed dark band with a 5-column link grid plus a newsletter column on the left. Navigation is a minimal top bar — logo left, centered links, ghost button + dark pill right. Vertical rhythm uses 80px between major sections, 24-32px card padding internally.",
+  "imagery": "Photography is editorial and human — full-bleed lifestyle shots of people in workspaces, a woman in a green silk blouse at a laptop, intimate product close-ups. Images are treated with a soft chromatic gradient wash (coral → violet → blue) that bleeds across the surface, giving every photograph a Cohere-specific warmth. Cards use 22px rounding and often contain dark code panels or AI response overlays inset on top of the image. No flat illustration system — the brand relies on photography and typographic emphasis rather than drawn graphics. Icons are minimal thin-line strokes, monochrome, 1.5px weight.",
+  "similar": [
+    {
+      "why": "Same minimalist monochrome interface with a single custom typeface and pill-shaped dark CTAs on white canvases",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar editorial approach to an AI brand — restrained palette, large display headlines, hairline borders, and photography-driven hero sections",
+      "business": "Anthropic"
+    },
+    {
+      "why": "Shared pill-button geometry and the practice of letting a soft cream or warm-gray surface variant create section breaks without heavy contrast",
+      "business": "Notion"
+    },
+    {
+      "why": "Same monospaced micro-type accent, hairline #e5e7eb borders, and dark filled button as the only primary action",
+      "business": "Vercel"
+    },
+    {
+      "why": "Similar gradient-as-illustration philosophy — chromatic color confined to decorative washes and imagery, never on functional UI",
+      "business": "Stripe"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "22px",
+      "images": "22px",
+      "buttons": "9999px",
+      "small_ui": "4px",
+      "nav_elements": "8px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Base page background, the default surface for all content"
+    },
+    {
+      "hex": "#f0eee9",
+      "name": "Warm Cream",
+      "level": 2,
+      "purpose": "Alternate section background for visual separation without contrast"
+    },
+    {
+      "hex": "#f0dff3",
+      "name": "Lilac Wash",
+      "level": 3,
+      "purpose": "Soft chromatic surface for feature cards and decorative blocks"
+    },
+    {
+      "hex": "#17171c",
+      "name": "Code Panel",
+      "level": 4,
+      "purpose": "Dark inset surface for code snippets, AI response previews, and the dark pill button"
+    },
+    {
+      "hex": "#17171c",
+      "name": "Footer",
+      "level": 5,
+      "purpose": "Full-bleed dark surface for site footer"
+    }
+  ],
+  "northStar": "Editorial monograph on cream paper — every screen is a spread, not a dashboard.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.16
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.18
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.24
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1,
+      "letterSpacing": -1.44
+    }
+  ],
+  "components": [
+    {
+      "name": "Dark Pill Primary Button",
+      "role": "Primary action — the only filled button in the system",
+      "description": "Filled #17171c pill at 9999px border-radius. White (#ffffff) Unica77 16px weight 400 text. Horizontal padding 24px, vertical padding 12px. No visible border, no shadow — the solid dark fill on white canvas is the entire visual signal. Single CTA instance per viewport region."
+    },
+    {
+      "name": "Underline Text Link",
+      "role": "Secondary action / navigation affordance",
+      "description": "Inherits text color #212121, Unica77 16px weight 400. 1px solid underline at #212121 offset 4px below baseline. No background, no border, no padding. Sits inline with body text or as a standalone secondary CTA beside the dark pill."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Tertiary nav-level action (e.g. 'Sign in')",
+      "description": "Transparent background, #212121 Unica77 14px weight 400 text, no border, 8px vertical / 12px horizontal padding. Becomes a filled #17171c pill when converted to a CTA (see Dark Pill Primary Button)."
+    },
+    {
+      "name": "Feature Image Card",
+      "role": "Large media-forward content card used in product showcase sections",
+      "description": "22px border-radius on all four corners. Full-bleed image or gradient wash filling the card; no visible border. Internal overlay panels (for code snippets or quotes) sit on #17171c with white text. Card-to-card gap: 16-24px."
+    },
+    {
+      "name": "Outlined Content Card",
+      "role": "Compact card for feature lists, product specs, pricing tiers",
+      "description": "White (#ffffff) surface, 1px solid #e5e7eb border, 22px border-radius. Internal padding 24-32px. Headings at Unica77 24px weight 700 #212121. No shadow — the hairline border is the only edge treatment."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "White background, sits directly on canvas with no shadow or border. Logo left, nav links center, ghost button + dark pill right. Nav links at Unica77 14px weight 400 #212121 with 8px vertical / 16px horizontal padding and 8px border-radius on hover backgrounds. Vertically centered at ~64px height."
+    },
+    {
+      "name": "Trust Logo Strip",
+      "role": "Social proof — 'Trusted by' brand row",
+      "description": "Section heading in Unica77 16px weight 400 #212121 centered above. Brand logos rendered in monochrome #212121 on white, evenly distributed in a single row with 40-60px gaps. No card containers, no borders — logos float on the canvas."
+    },
+    {
+      "name": "Feature Icon Block",
+      "role": "Three-up value proposition (Security / Deployment / Customization)",
+      "description": "Stacked layout: thin-line icon at 48-64px in #212121 stroke, 16px gap to label below. Label in Unica77 18px weight 400 #212121. No background, no card, no border — the icon and label sit directly on the white canvas."
+    },
+    {
+      "name": "Code Snippet Panel",
+      "role": "Embedded code or AI response preview within cards",
+      "description": "Dark #17171c background, 12px border-radius, white #ffffff Unica77 14px text. Internal padding 16-24px. Often appears as an inset overlay on top of a larger image card."
+    },
+    {
+      "name": "Footer Multi-Column",
+      "role": "Site-wide footer with link groups and newsletter",
+      "description": "Dark #17171c background spanning full width. Column headers in white Unica77 16px weight 700 with a small arrow glyph. Link items in white Unica77 14px weight 400 with 12px vertical spacing. Newsletter input: transparent background, 1px solid white bottom border, white placeholder text, arrow submit icon. Social icons bottom-right as 20px monochrome white strokes."
+    },
+    {
+      "name": "Newsletter Input",
+      "role": "Email capture in footer",
+      "description": "Transparent background, no surrounding box. Single 1px solid #ffffff bottom border. Placeholder text 'Enter your email' at Unica77 14px weight 400 white. Submit arrow → icon to the right, 16px width, white stroke."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Page-opening statement",
+      "description": "CohereText weight 400 at 60-72px, line-height 1.00, letter-spacing -0.0200em, color #212121. Centered on the canvas. The tight stacking and display weight create a print-poster presence — no decoration, no underline, no color."
+    },
+    {
+      "name": "Gradient Photography Wash",
+      "role": "Decorative hero image treatment",
+      "description": "Full-bleed editorial photograph with a soft coral→violet→blue gradient overlay (linear-gradient to right, #ff7759 → #7670c5 → #4c6ee6). 22px border-radius when used as a contained card. Functions as brand expression, not interface."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary UI and body typeface — weight 400 for body, captions, buttons, and nav; weight 700 for subheadings and card titles. The custom geometric-humanist forms give Cohere a distinctive editorial warmth that system sans-serifs cannot replicate. Letter-spacing -0.0100em across all sizes tightens the rhythm and keeps the display sizes from feeling airy.",
+      "sizes": "12, 14, 16, 18, 24, 32, 48",
+      "family": "Unica77",
+      "weight": "400, 700",
+      "lineHeight": "1.20, 1.30, 1.40, 1.50",
+      "substitute": "Inter, Söhne, or DM Sans",
+      "letterSpacing": "-0.0100em"
+    },
+    {
+      "role": "Display-only face for the hero headline. Line-height locked at 1.00 and tracking at -0.0200em create a monumental, tightly-stacked wordmark presence — the first thing a visitor reads sits at this scale. Reserved exclusively for the largest statement on each page; never used below 48px.",
+      "sizes": "60, 72",
+      "family": "CohereText",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "GT Sectra Display or Tiempos Headline",
+      "letterSpacing": "-0.0200em"
+    },
+    {
+      "role": "Monospaced accent for version tags, code-like metadata, and micro-labels in the nav. The 8px size with 0.0200em tracking gives a technical, almost stamped quality that contrasts the editorial serif-adjacent primary face.",
+      "sizes": "8, 14",
+      "family": "CohereMono",
+      "weight": "400",
+      "lineHeight": "1.40",
+      "substitute": "JetBrains Mono or IBM Plex Mono",
+      "letterSpacing": "0.0200em"
+    }
+  ],
+  "description": "Cohere reads as an editorial product monograph: a cream-white canvas, near-black typography, and pill-shaped dark CTAs carry the entire hierarchy without ornament. The signature is restraint — one tri-color gradient (coral → violet → blue) appears only inside photography and decorative washes, never on UI controls, so the interface stays monochrome while imagery supplies chromatic warmth. Typography does the heavy lifting: Unica77 at every UI role with tight negative tracking, and a wider CohereText display face for hero headlines, creating editorial authority rather than SaaS density. Components are minimal and confident — 22px rounded image cards, hairline #e5e7eb borders, dark filled actions — letting photography, code snippets, and copy carry the narrative weight.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #212121\n- background: #ffffff\n- border: #e5e7eb\n- accent: #ff7759 (decorative gradient only, not for UI)\n- primary action: no distinct CTA color\n\nExample Component Prompts:\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n2. Create a hero headline: centered on white canvas, CohereText 72px weight 400, color #212121, line-height 1.00, letter-spacing -1.44px. One statement, no decoration.\n3. Create a feature image card: 22px border-radius, full-bleed photograph, dark #17171c code panel inset at 24px padding with white 14px Unica77 text, 12px border-radius on the code panel.\n4. Create an outlined content card: white background, 1px solid #e5e7eb border, 22px border-radius, 32px internal padding, heading in Unica77 24px weight 700 #212121, body in Unica77 16px weight 400 #212121.\n5. Create a top navigation bar: white background, no border, logo at left, three nav links centered in Unica77 14px #212121 with 8px vertical padding, ghost 'Sign in' button and a #17171c dark pill 'Request a demo' button on the right."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Cohere has exactly one signature gradient: linear-gradient(to right, #ff7759, #7670c5, #4c6ee6). It appears only as an overlay on photography and as a faint background wash on ornamental sections. The gradient flows warm-to-cool (coral → violet → blue) and is never used on interactive elements. A second decorative variant applies the same stops at 78° for diagonal compositions. Keep this gradient as a brand expression, not a UI accent."
+    },
+    {
+      "title": "Monochrome Discipline",
+      "content": "The interface is 99% achromatic. The five chromatic colors detected (#f0dff3, #d18ee2, #4c6ee6, #ff7759, and the mid violet) all appear in nav-adjacent or illustration contexts with very low frequency. The design rule is absolute: no chromatic color touches any text, button, border, or icon. Color exists in Cohere's world as photographic atmosphere, not as interface signal."
+    }
+  ],
+  "elevationPhilosophy": "Cohere deliberately avoids drop shadows as a separation mechanism. Surface hierarchy is communicated through background color shifts (white → cream → lilac → ink) and 1px hairline borders at #e5e7eb. The only dark surface that 'elevates' visually is the #17171c code panel or button, which achieves prominence through tonal contrast rather than shadow."
+}

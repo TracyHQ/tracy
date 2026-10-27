@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1403-placing-while-recording",
+  "kind": "fix",
+  "title": "While Apply places the words on a site whose host still records its starting point, the build console says \"Placing your text and pictures on the site\" instead of the host's last step",
+  "pr": 1403,
+  "area": "add-site/brief-status",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Poll the build job while the host answers running at its baseline step and the brief is placing the words; then while it is not placing.",
+    "S2: briefs.placing on a site whose words are being placed, on a site with no brief, and once the work settled."
+  ],
+  "expect": [
+    "S1: running with step \"placing your text and pictures on the site\"; then the host's own step \"baseline\"; nothing handed over before the host is done.",
+    "S2: the placing step; null; null."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/{route.js,brief-build.js}",
+    "dom": ""
+  },
+  "evidence": "Stand acceptance 16/10/2026 (branch images, Dutch Joomla deschaar1610b): the brief placed its words from ~395 s to ~600 s (applyMs 120 s) while the console showed \"Recording a starting point\": the poll named the brief's step only once the host job was done",
+  "fence": "Only while the words are placed (state applying); the host's step otherwise",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-timeout=600000",
+      "apps/tracy-web/test/brief-build.test.mjs",
+      "apps/tracy-web/test/sites-route.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "job poll: words placed while the host still records its starting point are named instead of the host step",
+      "a poll after the handover only says \"working\", and is silent for a site that was never handed over"
+    ]
+  }
+}

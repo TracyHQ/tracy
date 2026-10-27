@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-bone-canvas: #fcfbf8;
+  --color-charcoal-ink: #001011;
+  --color-smoke-veil: #0f1e1f;
+  --color-ash-layer: #ededea;
+  --color-mist-border: #c1c4c2;
+  --color-ember: #fd5321;
+  --color-signal-blue: #007aff;
+
+  /* Typography — Font Families */
+  --font-aeonikpro: 'AeonikPro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dotconnect: 'DotConnect', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

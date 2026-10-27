@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "cc20715c-e9ab-42a7-a34b-d43d76677219",
+  "status": "complete",
+  "name": "Prismic",
+  "url": "https://styles.refero.design/style/cc20715c-e9ab-42a7-a34b-d43d76677219",
+  "sourceWebsite": "https://prismic.io",
+  "extractedAt": "2026-06-03T20:03:47.833Z",
+  "capturedAt": "2026-10-08T05:17:34.761400+00:00",
+  "theme": "light",
+  "industry": "devtools",
+  "description": "Isometric workshop on white paper — a clean editorial canvas where vivid 3D devices float beside pastel mood-board cards and one charcoal workshop band anchors the floor.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ccf50034-e47b-4fbf-ba92-3a43280c758a.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/9b9da03b-3244-4565-bbff-3ac1cd01adec.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a1401b12-7cbd-4405-894b-458a75997dc1.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/323511b4-2dbb-461d-b940-b6b209fe63cc.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5275820c-1db6-4d66-9a86-2cd2e8e148e1.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ce327617332121c6d8a848f5991f288674352aee61841b9cccf04c2e957e974d",
+      "bytes": 24870
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "45e213dc9665330bfba1372e0921d14bacd8800f7da0429654d43be7552941e0",
+      "bytes": 111976
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c9462d68d21d31fa31f902f107d4b8adba7370699d7b516510f6933b9380c828",
+      "bytes": 21514
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "5219572141c38a9af5c2aeb328ec43c01469c2bb80a022136cbe52c45d7bf04a",
+      "bytes": 13345
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "211bce43d2abb8f625ec8f2a1395eb518e5c99f17a0018716eac68715ebbf5da",
+      "bytes": 14779
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "13bf755714ada08015a2beefb15a34da1421df93012f7343ec3c1851df93d15e",
+      "bytes": 5393
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "74255d5578e776d98beac648bc16a83983a162a774da6b150ad83d1e7f6c13d8",
+      "bytes": 1165
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "43183b55f3e042c08a4acf4bf7407f9390ff7f36c161edd5dd7c90ba2057f9e8",
+      "bytes": 1182
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7a0042fac97fbf44b50035f390c6418c6d772364370847ca91b2680df9806403",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "be18352463faf65914d2d960e5aa92c7c4203258f36245e91a515822196e388a",
+      "bytes": 49625
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c9395fc4457b508bc2a6115951ce92a9b289fd08c52eb39fa6fc14a77f421aeb",
+      "bytes": 26135
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7734e56018feafa39bc005ad92ab931ec259bfa8876dd00b172bece2091e498c",
+      "bytes": 61977
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f5efc32f5cc019236c3203300e23378d8dd9f51551cfb76881d026ee1c9d24bd",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a25714d5938ca4634f3f234e012f1e887d590866d5171577f478098336f9c47a",
+      "bytes": 2175
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "fbabb18f71f8138ad5a382fd86fb54e69ae1c490ee60f1d7ea5ae300b682bc5c",
+      "bytes": 2836
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "30a8b128-a5bb-4d86-85eb-743b78091596",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "4caadb3c-3865-4a4d-9e1a-46478ac71078",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "7f9eabb2-3f76-477d-849f-e868e698f421",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "8e9e585f-5ad4-4273-8418-e1f82cdb51cf",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "ab1e41e9-7d21-4762-b498-51b8c63ae7ce",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "b5ca4e9a-2322-4796-b4c5-3b3bf194821f",
+    "cc20715c-e9ab-42a7-a34b-d43d76677219",
+    "d51a3a30-965c-427e-9e40-ff177786889f"
+  ]
+}

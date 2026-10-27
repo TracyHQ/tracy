@@ -1,0 +1,108 @@
+---
+/**
+ * Marketing samples: /marketing (every sample as a card with a live preview) and /marketing/{key}
+ * (one sample, tall frame). Source: the `marketing-samples` ACM module -- eyebrow / heading / lead /
+ * note / labels and the sample list are fields of the singleton `marketing`; the six documents are
+ * static files under public/marketing/ (DECISIONS D10). A key that is not in the list is a 404.
+ */
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import AppearanceSwitch from '@/components/site/AppearanceSwitch.astro'
+import SampleFrame from '@/components/site/SampleFrame.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  sample?: string
+}
+const { chrome, locale, sample } = Astro.props
+const { site } = chrome
+const { entry } = await getEmDashEntry('marketing', 'marketing', { locale })
+const m = (entry?.data ?? {}) as Record<string, any>
+type Sample = { key: string; title: string; description?: string }
+const samples: Sample[] = ((m.samples ?? []) as Sample[]).filter((s) => s?.key && /^[a-z0-9-]+$/.test(s.key))
+const current = sample ? samples.find((s) => s.key === sample) : undefined
+if (!entry || (sample && !current)) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const ROOT = '/marketing'
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'marketing', entry)
+const $site = stampFor(Astro.request, 'site', site)
+// A sample's title falls back to its key: only a set title is the field.
+const sampleTitle = (s: Sample) => (s.title ? $page('samples.title') : $page('samples.key'))
+// Static documents live next to the routes: /marketing/<key>-<theme>.html (public/marketing/).
+const BASE = `${ROOT}/`
+// Server-side pick honours the preview's `?theme=` (as Base.astro does); the client script then
+// follows the live html[data-theme].
+const theme = Astro.url.searchParams.get('theme') === 'dark' ? 'dark' : 'light'
+const rootMenuLabel = chrome.resourcesDesign.find((i) => i.url === href(locale, ROOT))?.label
+const rootLabel = rootMenuLabel ?? m.title
+// A menu label is not a Content API record.
+const rootStamp = rootMenuLabel == null ? $page('title') : {}
+const path = current ? `${ROOT}/${current.key}` : ROOT
+const crumbs = [
+  { label: site.breadcrumb_home, url: href(locale, '/'), stamp: $site('breadcrumb_home') },
+  ...(current
+    ? [
+        { label: rootLabel, url: href(locale, ROOT), stamp: rootStamp },
+        { label: current.title || current.key, stamp: sampleTitle(current) }
+      ]
+    : [{ label: rootLabel, stamp: rootStamp }])
+]
+---
+
+<Base chrome={chrome} title={current ? current.title || current.key : m.title} description={current ? current.description : m.lead} currentPath={ROOT} content={{ collection: "marketing", id: entry.data.id, slug: "marketing", toPath: () => path }}>
+	<Breadcrumb items={crumbs} />
+	<main id="main" class="wrap pb-[var(--band-y)] pt-10">
+		<PageOwner stamp={$page} />
+		{current ? (
+			<article {...$page.block("samples")}>
+				<header class="mb-8 max-w-[720px]">
+					<h1 class="h-hero" {...sampleTitle(current)}>{current.title || current.key}</h1>
+					{current.description && <p class="lead mt-4" {...$page("samples.description")}>{current.description}</p>}
+				</header>
+				<div class="mb-4 flex flex-wrap items-center justify-between gap-4 border-t border-line-soft pt-4">
+					<a class="text-[14px]" href={href(locale, ROOT)} {...rootStamp}>{rootLabel}</a>
+					<AppearanceSwitch label={m.appearance_label} lightLabel={m.light_label} darkLabel={m.dark_label} stamp={$page} fields={{ label: "appearance_label", lightLabel: "light_label", darkLabel: "dark_label" }} />
+				</div>
+				<SampleFrame sampleKey={current.key} title={current.title || current.key} base={BASE} theme={theme} openLabel={m.open_label} downloadLabel={m.download_label} size="full" />
+				{m.note && <p class="mt-6 text-[13px] text-fg-meta" {...$page("note")}>{m.note}</p>}
+			</article>
+		) : (
+			<>
+				<header class="mb-10 max-w-[720px]">
+					{m.eyebrow && <span class="eyebrow eyebrow--acm text-fg-meta" {...$page("eyebrow")}>{m.eyebrow}</span>}
+					{m.heading && <h1 class="h-hero" {...$page("heading")}>{m.heading}</h1>}
+					{m.lead && <p class="marketing-lead lead mt-4" {...$page("lead")}>{m.lead}</p>}
+				</header>
+				<div class="mb-8 flex flex-wrap items-center justify-between gap-4 border-t border-line-soft pt-4">
+					<nav class="flex flex-wrap gap-x-5 gap-y-2 text-[15px]" aria-label={m.heading || m.title}>
+						{samples.map((s) => (
+							<a href={href(locale, `${ROOT}/${s.key}`)} class="text-fg hover:text-accent" {...sampleTitle(s)}>{s.title || s.key}</a>
+						))}
+					</nav>
+					<AppearanceSwitch label={m.appearance_label} lightLabel={m.light_label} darkLabel={m.dark_label} stamp={$page} fields={{ label: "appearance_label", lightLabel: "light_label", darkLabel: "dark_label" }} />
+				</div>
+				<ul class="grid grid-cols-1 gap-8 md:grid-cols-2" role="list">
+					{samples.map((s) => (
+						<li class="card flex flex-col gap-4 p-5" id={s.key} {...$page.block("samples")}>
+							<div>
+								<h2 class="h-card"><a class="text-fg hover:text-accent" href={href(locale, `${ROOT}/${s.key}`)} {...sampleTitle(s)}>{s.title || s.key}</a></h2>
+								{s.description && <p class="mt-2 text-[15px] text-fg-muted" {...$page("samples.description")}>{s.description}</p>}
+							</div>
+							<SampleFrame sampleKey={s.key} title={s.title || s.key} base={BASE} theme={theme} openLabel={m.open_label} downloadLabel={m.download_label} />
+						</li>
+					))}
+				</ul>
+				{m.note && <p class="mt-8 text-[13px] text-fg-meta" {...$page("note")}>{m.note}</p>}
+			</>
+		)}
+	</main>
+</Base>

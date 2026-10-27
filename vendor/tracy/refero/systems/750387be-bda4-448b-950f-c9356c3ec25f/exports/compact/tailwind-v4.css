@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-bone-white: #fafafb;
+  --color-graphite-ink: #2c2c2b;
+  --color-deep-coal: #1f1f1f;
+  --color-obsidian: #111111;
+  --color-press-black: #080808;
+  --color-stone: #70706f;
+  --color-fog: #cbcbcb;
+  --color-ash-gray: #e3e3e3;
+  --color-cloud: #ededed;
+  --color-slate: #444444;
+
+  /* Typography */
+  --font-gestura-custom-serif: 'Gestura (custom serif)', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

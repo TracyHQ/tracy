@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1479-voice-hold-and-rescue",
+  "kind": "fix",
+  "title": "A slow VoiceStudio never ends the session for held speech, and a language rescue replays before live audio",
+  "pr": 1479,
+  "area": "voice/relay",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: speech while VoiceStudio finishes a phrase overflows its hold.",
+    "S2: through the real relay on a slow VoiceStudio.",
+    "S3: a rescue on the profile path with live frames before session_started."
+  ],
+  "expect": [
+    "S1: bounded memory, no provider failure, newest audio kept in order.",
+    "S2: both phrases kept; ends stopped, settled false.",
+    "S3: replay first, then live frames in order."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/speech-voicestudio-hold.test.mjs, apps/tracy-web/test/speech-relay.test.mjs",
+    "code": "lib/speech-voicestudio.js held PCM, speech/relay.js replaying"
+  },
+  "evidence": "Review 19/10/2026: queue_overflow ended the session as provider; after a rescue live frames could reach the service ahead of the replay",
+  "fence": "Held audio is bounded and never a provider failure; a replay is never overtaken",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/speech-voicestudio-hold.test.mjs",
+      "apps/tracy-web/test/speech-relay.test.mjs"
+    ],
+    "tests": [
+      "VoiceStudio: speech while the server finishes a phrase is held within its bound; the session never fails for it",
+      "voice relay: a session on a slow VoiceStudio outlives a full hold, keeps both phrases, and ends unsettled — never as provider",
+      "a reopened session gets the replayed phrase before any live frame, also when audio waits for the service to start"
+    ]
+  }
+}

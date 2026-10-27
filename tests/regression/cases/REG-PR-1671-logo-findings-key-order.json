@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1671-logo-findings-key-order",
+  "kind": "fix",
+  "title": "Logo findings read back from jsonb with reordered keys count as the same findings, so a Retry that finds nothing new keeps the logo research",
+  "pr": 1671,
+  "area": "website-opportunities/place-logo",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: compare logo findings with a candidate against the same findings whose object keys come back in another order (as jsonb returns them) and a different clock.",
+    "S2: compare them against findings with another status."
+  ],
+  "expect": ["S1: sameLogoFindings is true.", "S2: sameLogoFindings is false."],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities/place-logo.js",
+    "dom": ""
+  },
+  "evidence": "e2e dev 24/10/2026: a Retry that changed nothing still wrote new logo research because JSON.stringify compared a fresh object with one read back from jsonb",
+  "fence": "sameLogoFindings compares a key-sorted canonical form",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-logo-findings-key-order.test.mjs"
+    ],
+    "tests": ["the same logo findings read back from jsonb with keys reordered are the same findings"]
+  }
+}

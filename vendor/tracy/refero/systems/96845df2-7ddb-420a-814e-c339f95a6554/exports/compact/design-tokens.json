@@ -1,0 +1,79 @@
+{
+  "color": {
+    "cream-canvas": {
+      "$value": "#fff8e6",
+      "$type": "color",
+      "$description": "Cream Canvas — Page background, hero and section canvas — the warm off-white that replaces pure white and gives the interface its gallery-mat quality"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Product card surfaces, input fields, secondary navigation bar — the brighter white that sits on top of the cream canvas"
+    },
+    "charcoal-ink": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary text, headings, product names, body copy — the dominant text color across the entire interface"
+    },
+    "graphite-body": {
+      "$value": "#555555",
+      "$type": "color",
+      "$description": "Graphite Body — Secondary body text, descriptions, paragraph copy — a softer dark gray for long-form reading"
+    },
+    "silver-mute": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Silver Mute — Tertiary text, helper labels, placeholder text, muted icons"
+    },
+    "border-gray": {
+      "$value": "#ebebeb",
+      "$type": "color",
+      "$description": "Border Gray — Hairline dividers, input borders, card separators, section rules — the 1px line that defines structure without weight"
+    },
+    "rule-gray": {
+      "$value": "#dadada",
+      "$type": "color",
+      "$description": "Rule Gray — Slightly stronger borders for emphasis, secondary hairline dividers"
+    },
+    "lintel-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Lintel Black — Top header bar background, dark surface anchor — the solid black band that frames every page"
+    },
+    "signal-blue": {
+      "$value": "#0066cc",
+      "$type": "color",
+      "$description": "Signal Blue — Announcement bar background, price text, inline links, the brand's only chromatic interface surface — carries informational weight across the site"
+    },
+    "link-blue": {
+      "$value": "#149ecc",
+      "$type": "color",
+      "$description": "Link Blue — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "promotional-green": {
+      "$value": "#79b928",
+      "$type": "color",
+      "$description": "Promotional Green — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ember-brown": {
+      "$value": "#ac5d00",
+      "$type": "color",
+      "$description": "Ember Brown — Orange supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "dysonfutura": {
+      "$value": "DysonFutura",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire interface. Weight 300 for display and headings — the whisper-weight is a signature anti-convention choice; most premium brands push to 600-700 for authority, Dyson lets engineering speak quietly. Weight 400 for body, product names, and UI labels. Weight 500 reserved for button text and emphasis. The geometric Futura skeleton (perfect circles, monoline strokes) reinforces the precision-instrument brand identity."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://dyson.com",
+      "siteName": "Dyson",
+      "extractedAt": "2026-06-03T18:17:14.628Z",
+      "variant": "compact"
+    }
+  }
+}

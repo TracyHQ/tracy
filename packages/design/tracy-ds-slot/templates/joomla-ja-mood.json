@@ -1,0 +1,562 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-mood",
+  "minVersion": {
+    "quickstart/ja-mood/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-mood/j6": "1.0.4"
+  },
+  "maxVersionNote": "1.0.4 19/10/2026 (dot 3): the stylesheets read the design system role variables (role-scan.mjs --write + flags settled, design-system-roles.json clean); unworn the page is 1.0.3's own (release-batch verify: 0 computed differences desktop and phone, 0 pages differ). 1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-mood/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "display": "h1.hero-heading",
+    "body": "p.hero-intro",
+    "button-primary": "ul.nav.nav-tabs li a",
+    "card": "div.article-video",
+    "section": "#Mod94",
+    "input": "#modlgn-username"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 48px",
+    "displayFace": "Rubik 300, tracking 0.01em",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(71, 67, 216)",
+    "card": "repeated rounded box ×30",
+    "section": "first padded full-width section, padding-top 96px",
+    "input": "first text field"
+  },
+  "keepScopes": [".ja-topbar", ".t3-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#f4f5f6",
+    "--fg": "#666666",
+    "--fg-2": "#182024",
+    "--accent": "#4743d8",
+    "--accent-hover": "#2723ab",
+    "--surface": "#f4f5f6",
+    "--meta": "#999999",
+    "--success": "#06b06d",
+    "--warn": "#ff6464",
+    "--danger": "#d9534f",
+    "--border": "#e8e9e9",
+    "--muted": "#555555",
+    "--font-display": "\"Rubik\", sans-serif",
+    "--font-body": "\"Rubik\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#4743d8"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#f4f5f6",
+      "fg": "#666666",
+      "fg-2": "#182024",
+      "accent": "#4743d8",
+      "accent-hover": "#2723ab",
+      "surface": "#f4f5f6",
+      "meta": "#999999",
+      "success": "#06b06d",
+      "warn": "#ff6464",
+      "danger": "#d9534f",
+      "border": "#e8e9e9",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#f4f5f6",
+      "fg-2": "#182024",
+      "accent": "#4743d8",
+      "accent-on": "#ffffff",
+      "surface": "#ffffff",
+      "surface-warm": "#4743d8"
+    },
+    {
+      "accent": "#4743d8"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "bg": "#eaebec",
+      "warn": "#ff5f5f",
+      "accent-hover": "#2c28c0",
+      "surface-warm": "#5350db",
+      "border": "#e5e5e5",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "bg": "#f5f6f7",
+      "warn": "#ff7373",
+      "accent-hover": "#2522a3",
+      "border": "#dddee0",
+      "surface-warm": "#3f3bd6"
+    },
+    {
+      "bg": "#fcf8e3",
+      "border": "#e0e2e3",
+      "warn": "#ff5a5a"
+    },
+    {
+      "bg": "#f9f9f9",
+      "border": "#e3e3e3"
+    },
+    {
+      "bg": "#e7e9ec",
+      "border": "#ebebeb"
+    },
+    {
+      "bg": "#f7f8f8",
+      "border": "#dbdddd"
+    },
+    {
+      "bg": "#f8f8f8"
+    },
+    {
+      "bg": "#eeeeee"
+    },
+    {
+      "bg": "#eaf5ff"
+    },
+    {
+      "bg": "#e8e9e9"
+    },
+    {
+      "bg": "#e9ebed"
+    },
+    {
+      "bg": "#e8e8e8"
+    },
+    {
+      "bg": "#f9f2f4"
+    },
+    {
+      "bg": "#f7f7f7"
+    },
+    {
+      "bg": "#f0f0f0"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (57 line colours, 97 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-heading",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn:not(.btn-play)", ".nav-tabs > li > a"],
+    "buttonPrimary": [".btn-primary", ".nav-tabs > li.active > a", "a.btn.btn-secondary", "li.btn-secondary"],
+    "card": ["div.article-video", ".card"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Mod94"],
+    "bodyFace": ["body"],
+    "groundPicture": [".nav-tabs > li.active > a", ".btn-primary"],
+    "eyebrow": [".badge"],
+    "cardLike": [".article-video"],
+    "pill": [".badge"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
+    "muted": "body p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "body :is(p, li)",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "head-right",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "head-right is rendered by all three layouts of the quickstart (header.php for default and home, header-home.php for social-home: the login, registration, profile and reminder pages); topbar-right, found first by pass-joomla.mjs on the home page (byte 3886), is not rendered by social-home, so a site worn through it showed those pages in the template's own look (PREVIEW-PARITY NOT_WORN, 19/10/2026)"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eaebec",
+      "uses": 416,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 17
+    },
+    {
+      "hex": "#ff5f5f",
+      "uses": 184,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ff6464",
+      "distance": 7
+    },
+    {
+      "hex": "#f5f6f7",
+      "uses": 105,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 2
+    },
+    {
+      "hex": "#2c28c0",
+      "uses": 94,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#2723ab",
+      "distance": 22
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 64,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 21
+    },
+    {
+      "hex": "#5350db",
+      "uses": 42,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#4743d8",
+      "distance": 18
+    },
+    {
+      "hex": "#ff7373",
+      "uses": 42,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ff6464",
+      "distance": 21
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 40,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 7
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 40,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e9e9",
+      "distance": 6
+    },
+    {
+      "hex": "#2522a3",
+      "uses": 26,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#2723ab",
+      "distance": 8
+    },
+    {
+      "hex": "#e7e9ec",
+      "uses": 24,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 20
+    },
+    {
+      "hex": "#f7f8f8",
+      "uses": 24,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 5
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 16,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 5
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 16,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 12
+    },
+    {
+      "hex": "#dddee0",
+      "uses": 16,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e9e9",
+      "distance": 18
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 16,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e9e9",
+      "distance": 12
+    },
+    {
+      "hex": "#eaf5ff",
+      "uses": 16,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 13
+    },
+    {
+      "hex": "#e8e9e9",
+      "uses": 16,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 21
+    },
+    {
+      "hex": "#e9ebed",
+      "uses": 16,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 17
+    },
+    {
+      "hex": "#e8e8e8",
+      "uses": 9,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 23
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 8,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 6
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 8,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e9e9",
+      "distance": 10
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 8,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 4
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 8,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e9e9",
+      "distance": 4
+    },
+    {
+      "hex": "#dbdddd",
+      "uses": 8,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e9e9",
+      "distance": 21
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 8,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 9
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 8,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#3f3bd6",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#4743d8",
+      "distance": 11
+    },
+    {
+      "hex": "#ff5a5a",
+      "uses": 6,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ff6464",
+      "distance": 14
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on a stand built from the published 1.0.1 its minVersion names (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-mood-j6): first 4/12 then 6/12, fixed in the contract with no new release: the button selectors no longer name every link (each text link was painted as a filled button), the active tab and the primary button drop their half-literal gradient (groundPicture), the masthead mask keeps its released text (keepColors), and the brand band and the phone header darken the accent end of their gradient under white words (sideRules; seen by eye, the probe judged neither); then 12/12, controls 0, kept 0, no text worse than the template's own (the lowest, 2.41:1, is the template's own footer link), 83% or more of the page follows; checked by eye on all four systems, desktop and phone; earlier: measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-mood-j6): default unchanged, no text made less readable than the template's own under the systems tried, 96% or more of the page follows Re-verified 12/10/2026 on the unified probe (fix/ds-remeasure) on quickstart/ja-mood/j6 1.0.1: before, its muted and body kinds measured nothing (the home page has no #t3-mainbody or .t3-sl); they now read the whole page, with heading and text added. After: 12/12, controls 0, regressed 0, every kind sampled in every view, 83-100% follows; the lowest running text (2.43-2.48) is the template's own grey, the same under the default (tasks/evidence/ds-reverify-c-2026-10-12/ja-mood)",
+  "groundNote": "the active tab is drawn with a gradient whose top stop is the template literal #5c58dc and whose bottom stop is the accent: under a worn system the accent-on text sat on the half that did not follow (Toggl Track, black on the purple stop: 4.37:1 on phone, round-3 probe 11/10/2026). The picture gives way (selectors.groundPicture) and the tab is the plain accent under the accent text; the primary button (.btn-primary, LOG IN) is drawn with the same gradient under the accent text: its picture gives way too",
+  "keepColors": {
+    ".t3-masthead-mask": "rgb(102, 102, 102)"
+  },
+  "keepColorsNote": "the masthead mask inherits the page text (#666666); kept as released so the kept band is unchanged (round-3 probe 11/10/2026)",
+  "buttonNote": "selectors.button/buttonPrimary no longer name every link (a): the draft painted each text link (Forgot Password?, the track titles, the logo word) as a filled accent button under every system (seen by eye 11/10/2026, round-3 re-measure). They name the buttons and the playlist tabs, the template's own primary button (roles['button-primary']): every tab takes the system's button shape, the active one its fill",
+  "sideRules": {
+    "light": {
+      "li.btn-secondary a": {
+        "color": "inherit"
+      },
+      ".t3-sections .t3-module.mod-bg-brand-primary": {
+        "background-image": "linear-gradient(to bottom, color-mix(in srgb, var(--ds-c-accent) 50%, #000) 0%, color-mix(in srgb, var(--ds-c-accent) 30%, #000) 100%)"
+      },
+      ".t3-wrapper": {
+        "--ds-mood-accent": "var(--ds-c-accent)"
+      },
+      ".t3-header": {
+        "--ds-c-accent": "color-mix(in srgb, var(--ds-mood-accent) 45%, #000)"
+      },
+      ".t3-header *": {
+        "--ds-c-accent": "var(--ds-mood-accent)"
+      },
+      ".t3-sections .t3-module.mod-bg-brand-primary svg": {
+        "fill": "color-mix(in srgb, var(--ds-c-accent) 50%, #000)"
+      },
+      ".t3-masthead .t3-masthead-mask": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 70%, #000) !important"
+      },
+      "div.t3-masthead .ja-masthead": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 70%, #000) !important"
+      }
+    },
+    "dark": {
+      "li.btn-secondary a": {
+        "color": "inherit"
+      },
+      ".t3-sections .t3-module.mod-bg-brand-primary": {
+        "background-image": "linear-gradient(to bottom, color-mix(in srgb, var(--ds-c-accent) 50%, #000) 0%, color-mix(in srgb, var(--ds-c-accent) 30%, #000) 100%)"
+      },
+      ".t3-wrapper": {
+        "--ds-mood-accent": "var(--ds-c-accent)"
+      },
+      ".t3-header": {
+        "--ds-c-accent": "color-mix(in srgb, var(--ds-mood-accent) 45%, #000)"
+      },
+      ".t3-header *": {
+        "--ds-c-accent": "var(--ds-mood-accent)"
+      },
+      ".t3-sections .t3-module.mod-bg-brand-primary svg": {
+        "fill": "color-mix(in srgb, var(--ds-c-accent) 50%, #000)"
+      },
+      ".t3-masthead .t3-masthead-mask": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 70%, #000) !important"
+      },
+      "div.t3-masthead .ja-masthead": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 70%, #000) !important"
+      },
+      "body:not(.has-masthead) .t3-header .logo-img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      }
+    }
+  },
+  "bandNote": "the brand band under the trending list (.mod-bg-brand-primary, NEVER STOP LISTENING in white) and the header bar wherever it is filled (.t3-header: on the phone, and once the page scrolls) are a gradient from the template literal #5c58dc to the accent: a light system accent lightened their lower half behind the white words (the band: Moxie 3.05:1, MotherDuck 2.89:1, Toggl Track 3.37:1 at its last line against 5.4-6.0:1 in the template; the phone header SIGN IN about 2:1 under MotherDuck; read off the screenshots by eye 11/10/2026, the probe judged neither). The band's lower stop takes the accent mixed 45% toward black (sideRules, both sides; a white accent still reads 4.7:1 under white), as JA Mono's hero; the header cannot be given a background of its own (the template fills it only below 992px or once affixed), so the header alone reads the accent mixed 45% toward black through --ds-c-accent and every element inside it gets the accent back (--ds-mood-accent, saved on .t3-wrapper)",
+  "contrastNote": "re-verified 12/10/2026 on the unified probe: the home page has no #t3-mainbody and no .t3-sl paragraph, so muted and body measured nothing (the ready rule needs samples in every view) — both now read the whole page, with the page-wide heading and text kinds of the remeasure-1 rule",
+  "bands": {
+    ".ja-topbar": {
+      "ground": "#182024",
+      "texts": [],
+      "important": true
+    },
+    ".t3-footer": {
+      "ground": "#182024",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".module small a": {
+          "color": "accent"
+        },
+        ".copyright .nav li.active a": {
+          "background-color": "accent"
+        },
+        ".copyright .nav li.active span": {
+          "background-color": "accent"
+        },
+        ".logo-image a:hover": {
+          "color": "accent"
+        },
+        ".logo-image a:focus": {
+          "color": "accent"
+        },
+        ".poweredby a:hover": {
+          "color": "accent"
+        },
+        ".poweredby a:focus": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t3-masthead-mask": {
+      "ground": "#4743d8",
+      "texts": ["#ffffff"],
+      "important": true,
+      "kind": "brand"
+    },
+    ".t3-header": {
+      "ground": "#4743d8",
+      "texts": ["#ffffff"],
+      "kind": "brand",
+      "repaint": true,
+      "gradient": true,
+      "fill": true,
+      "important": true,
+      "media": "(max-width: 991px)"
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "sideNote": "15/10/2026 (look review v8): the menu’s “Creat Account” item is an li.btn-secondary whose li holds the green fill: it is a primary button of the list now (li.btn-secondary) and its link takes the li’s words. the brand module gradient starts from the system accent, not the template purple #5c58dc it kept under every system (library matrix, 14/10/2026)",
+  "followRules": {
+    ".t3-sections .module-title::before": {
+      "border-bottom-color": "accent"
+    },
+    ".owl-prev, .owl-next": {
+      "border-color": "border",
+      "color": "muted"
+    },
+    ".video-list .owl-dot span": {
+      "border-color": "border"
+    },
+    ".ja-video-list .btn-play": {
+      "border-color": "accent"
+    },
+    ".field-media-preview": {
+      "background-color": "surface"
+    }
+  },
+  "sideRulesNote": "visual review 14/10/2026: the hero’s photo is tinted by its mask (.t3-masthead .t3-masthead-mask: an inline background-color #4743d8 multiplied over the photo), a kept picture band that stayed the template purple under every system; it is no longer kept (it holds no words) and takes the accent at 70% in black, !important over the inline style, so the hero takes the system’s hue and its white words still read. The NEVER STOP LISTENING band’s gradient started at the bare accent, its white words on the light end under Mailchimp and Linear: it now runs from the accent at 50% to 30% in black, and its wave (svg) fills with the start colour",
+  "followNote": "the section titles’ triangle pointer (.t3-sections .module-title::before, a bottom border in the template’s green) takes the accent, and the header’s CREATE ACCOUNT (a.btn.btn-secondary, a green gradient) is a primary button of the system (selectors.buttonPrimary), visual review 14/10/2026",
+  "contractNotes1317": "13/10/2026 (#1317): the masthead mask (.t3-masthead-mask, the template purple under its photo) was kept as a picture band, and where the photo does not cover it on a phone 24% of the first screen stayed purple under BMW and Moxie; worn as a brand band its colour follows the system accent and the photo still sits on top. The carousel arrows and the inverse buttons follow. Second run (21:46): the inverse button rule did not land on its fill (its own #3a3a3a stayed while the words took the page colour, 1.66:1 under Spotify) and changed no follow; it is dropped, the button keeps its own pair as in the first run. Round 4 (14/10): on a phone the header is the template's purple gradient (.has-masthead .t3-header under 992px, its first stop a literal #5c58dc): 12% of the first screen stayed purple under every system; it is a gradient fill band there, wearing the system's gradient and its words. The 60 video thumbnails' play rings (.ja-video-list .btn-play, white) take the accent: under Moxie they were 60 of the 94 left paints. The video carousel dots are painted on their span. Repainting the main menu links with the system text was tried and dropped: the menu sits on the masthead photo on a desktop, and the text colour read 1.0:1 on it under BMW.",
+  "dot3Note": "19/10/2026 (dot 3, 1.0.4 reads the role variables): the hero's video play link (.btn-play, an icon and a word with no padding) keeps the template's size, out of selectors.button (CLIP-1, icon off centre); the carousel arrows' ring takes the border role, not muted (harsh under Moxie); the footer's active copyright tab is painted with the accent pair inside the kept footer band (it kept the template purple, ACCENT-LEAK); the inner pages' masthead colour (an inline style from the template style's mastheadbgcolor) takes the accent at 70% in black like the home hero's mask, white words still read; the dark logo on the light header of pages without a masthead is inverted under a dark system (sideRules.dark: selectors.inkImages stop at the header band's edge, IDENT-2 on the reminder page). Joomla's media field preview on the registration page (.field-media-preview, a #f2f2f2 box from Joomla's own stylesheet) takes the card surface (a light glare block under Moxie, TPL-1). The kept footer's logo and Powered by links (image and hidden text) hover in the footer band's accent, not the template's #2723ab (forced-hover sweep)."
+}

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Primary text, icon strokes, hairline borders, inverted pill highlights. The single light color in the system — it does all the foreground work against the black canvas"
+    },
+    "obsidian": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, section backgrounds, inverse surface for pills and inputs. Never pure #000 — the slight warmth keeps the surface from feeling harsh"
+    },
+    "lifted-charcoal": {
+      "$value": "#3b3b3b",
+      "$type": "color",
+      "$description": "Lifted Charcoal — Card and elevated panel surfaces. One step lighter than the canvas, giving containment without resorting to shadows"
+    },
+    "smoke": {
+      "$value": "#606060",
+      "$type": "color",
+      "$description": "Smoke — Muted helper text, inactive nav labels, secondary dividers, tag outlines. Quiet enough to recede behind the white content layer"
+    },
+    "spectrum-beam": {
+      "$value": "#004eff",
+      "$type": "color",
+      "$description": "Spectrum Beam — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "cambon": {
+      "$value": "Cambon",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headings. Used in italic for hero statements like 'Wir transformieren' / 'Experiences' at 68–92px. The italic cut is the brand's signature — a serif whisper that anchors the otherwise typographically quiet page. At body sizes (22px) it appears for pull quotes and lede paragraphs. Substitute: Editorial New, Source Serif 4, or Tiempos Text."
+    },
+    "universalsans": {
+      "$value": "UniversalSans",
+      "$type": "fontFamily",
+      "$description": "Body copy, UI labels, navigation, buttons, and supplementary headings. The workhorse — appears at 20px for paragraph text, 22px for slightly emphasized body, 36–42px for sub-section headings, and 68–92px for sans-serif display moments that contrast with Cambon's serif headlines. Weight stays at 400 throughout; hierarchy is built through size and tracking, not weight. Substitute: Inter, Söhne, or Suisse Int'l."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://becklyn.com",
+      "siteName": "Becklyn",
+      "extractedAt": "2026-06-03T22:03:28.258Z",
+      "variant": "compact"
+    }
+  }
+}

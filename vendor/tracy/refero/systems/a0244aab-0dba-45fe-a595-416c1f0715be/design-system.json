@@ -1,0 +1,406 @@
+{
+  "dos": [
+    "Use Tobias at weight 100 for all display and hero headlines — never substitute a bold serif; the thinness is the brand.",
+    "Set filled CTA backgrounds to #333333 (Obsidian) with white text and 4px radius — this is the system’s only action color.",
+    "Define card and section separators with 1px solid #dbdbdb borders, not shadows — borders are the depth mechanism.",
+    "Place the 9-stop rainbow gradient as a 3px hairline at the absolute top of every page, flush to the viewport edge.",
+    "Pair Diatype body text (weight 400) with Tobias headlines (weight 100) — the weight contrast is the editorial system’s engine.",
+    "Reserve chromatic colors (Signal Green, Ember Orange, Iris Blue, Marigold) for icons, badges, and small status indicators — never as large fills.",
+    "Use uppercase ui-sans-serif at 11–12px with 0.05em tracking for all section eyebrows (THE PROBLEM, THE SOLUTION)."
+  ],
+  "donts": [
+    "Do not bolden or weight-shift Tobias headlines above 100 — the hairline is the entire point.",
+    "Do not use chromatic fills for primary buttons — the CTA must stay neutral #333333, letting type carry the emphasis.",
+    "Do not stack drop shadows to create card depth — use a 1px #dbdbdb border instead, or nothing at all.",
+    "Do not use the chromatic accents (orange, green, violet, red) as large background areas — they belong inside icons and small tags only.",
+    "Do not set body text below 14px or above 18px in Diatype — the 14–18px range is the reading zone.",
+    "Do not replace the rainbow ribbon with a single-color or duotone bar — the full spectrum is the signature.",
+    "Do not introduce a second serif or competing display face — Tobias owns the editorial space exclusively."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page and card surfaces, button text on dark fills, inverse text on black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dbdbdb",
+      "name": "Ash Gray",
+      "role": "Default hairline borders, dividers between sections, the most-used neutral border",
+      "group": "neutral"
+    },
+    {
+      "hex": "#242424",
+      "name": "Carbon",
+      "role": "Navigation borders, deep surface tone, alt black for softer contrast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#545454",
+      "name": "Graphite",
+      "role": "Body text, icon strokes, secondary text, muted UI labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#969696",
+      "name": "Smoke",
+      "role": "Tertiary text, placeholder labels, disabled icon outlines, decorative dot fields",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7a7a7a",
+      "name": "Slate",
+      "role": "Muted helper text, subtle borders, supporting metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e7e7e7",
+      "name": "Bone",
+      "role": "Light borders, subtle surface separators, ghost button outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#414141",
+      "name": "Iron",
+      "role": "Icon strokes, dark borders, button shadows, dense text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Obsidian",
+      "role": "Filled button background — the system’s only CTA fill, paired with white text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f1f1f1",
+      "name": "Mist",
+      "role": "Subtle elevated surfaces, off-white section bands, card hover wash",
+      "group": "neutral"
+    },
+    {
+      "hex": "#121212",
+      "name": "Cinder",
+      "role": "Deepest text and badge backgrounds, near-black accent",
+      "group": "neutral"
+    },
+    {
+      "hex": "#009966",
+      "name": "Signal Green",
+      "role": "Green outline accent for tags, dividers, and focused UI edges",
+      "group": "accent"
+    },
+    {
+      "hex": "#00bc7d",
+      "name": "Spring Mint",
+      "role": "Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content",
+      "group": "accent"
+    },
+    {
+      "hex": "#00d492",
+      "name": "Fern",
+      "role": "Soft badge backgrounds, callout fills, gradient end-stop",
+      "group": "accent"
+    },
+    {
+      "hex": "#e17100",
+      "name": "Ember Orange",
+      "role": "Icon strokes and feature-card illustrations — the warmest functional accent in iconography",
+      "group": "accent"
+    },
+    {
+      "hex": "#fe9a00",
+      "name": "Marigold",
+      "role": "Vivid icon fills, alert-tinged highlights, gradient mid-stop; The signature top-of-page gradient hairline — 9-stop spectrum from maroon through amber, green, indigo, to sky",
+      "group": "accent",
+      "gradient": "linear-gradient(90deg, rgb(51, 15, 31) 0%, rgb(200, 50, 40) 12.56%, rgb(251, 136, 65) 25.06%, rgb(211, 221, 146) 37.56%, rgb(89, 130, 79) 50.06%, rgb(0, 36, 20) 62.06%, rgb(0, 20, 61) 74.06%, rgb(40, 116, 215) 86.06%, rgb(153, 194, 255) 97.06%)"
+    },
+    {
+      "hex": "#ffb900",
+      "name": "Amber",
+      "role": "Tag/badge backgrounds, warm highlight washes, featured callout fills",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff6467",
+      "name": "Coral",
+      "role": "Red outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#155dfc",
+      "name": "Iris Blue",
+      "role": "Link and icon accent — the only saturated blue, used sparingly for emphasis strokes",
+      "group": "brand"
+    }
+  ],
+  "layout": "Max-width 1200px centered content column on a full-bleed white canvas. The hero uses a two-column split: left half holds the eyebrow + display headline + body text + dual CTAs (filled + ghost), right half holds a large halftone illustration. Section rhythm is a repeating pattern of (1) a thin #dbdbdb horizontal divider, (2) a centered single-column statement section with oversized Tobias headline, (3) a 3-column card grid for features, (4) a two-column split (text + isometric illustration) for solution sections. Section gaps are 80px with comfortable internal padding. Navigation is a single thin top bar — logo left, links center, utility actions + CTA right — sitting directly below the 3px rainbow ribbon. A persistent floating 'Agent view' button sits bottom-right at 16px inset. The page alternates between full-width sections and contained 1200px content, with no sidebar or off-canvas pattern.",
+  "imagery": "Imagery is sparse and editorial. The dominant visual motif is the halftone dot illustration — vector shapes (often animals, abstract organic forms, or geographic silhouettes) rendered as a field of small dots in #545454 to #969696, sitting on the white canvas with no container, no background, no frame. These illustrations function as atmospheric scale-anchors next to hero text, not as explanatory diagrams. Product moments use minimal isometric layered illustrations in pastel tints (lavender, butter, cream) with tiny label chips. Photography is absent — there are no human or product photos. Logos in the social-proof cloud are rendered in flat grayscale (#545454) at equal visual weight. Icon style is thin-stroke (1.5–2px) line icons, often in Ember Orange or Iris Blue, used at 20–24px inside feature cards. The overall image-to-text ratio is low — text and typography dominate, with illustration providing occasional relief.",
+  "similar": [
+    {
+      "why": "Same restrained monochromatic canvas, hairline border depth model, and a single dark filled CTA — the shared DNA is borders-not-shadows and editorial type restraint.",
+      "business": "Linear"
+    },
+    {
+      "why": "Same gradient-ribbon signature (Stripe’s mesh gradients, Speakeasy’s top rainbow hairline) and the same combination of massive thin-serif headlines with monochrome supporting UI.",
+      "business": "Stripe"
+    },
+    {
+      "why": "Same near-zero color palette, oversized hairline type for hero statements, and halftone/dot-field illustrations as decorative scale-anchors beside text.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same editorial-broadsheet atmosphere — white canvas, weight-100 serif at huge sizes, chromatic accents rationed to icons and small tags only.",
+      "business": "Resend"
+    },
+    {
+      "why": "Same dark filled button as the only CTA color, thin 1px borders on all surfaces, and 4–8px small radii for a flat product feel.",
+      "business": "Cursor"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "4px",
+      "cards": "8px",
+      "badges": "4px",
+      "buttons": "4px"
+    },
+    "elementGap": "6px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Default page background — pure white, no off-white tint"
+    },
+    {
+      "hex": "#f1f1f1",
+      "name": "Raised",
+      "level": 1,
+      "purpose": "Subtle elevated sections, card hover wash, secondary background bands"
+    },
+    {
+      "hex": "#dbdbdb",
+      "name": "Divider",
+      "level": 2,
+      "purpose": "Hairline border tone that also reads as a subtle gray band in some sections"
+    },
+    {
+      "hex": "#ffb900",
+      "name": "Accent Wash",
+      "level": 3,
+      "purpose": "Highlight backgrounds, tag fills, callout panels"
+    },
+    {
+      "hex": "#333333",
+      "name": "Inverse",
+      "level": 4,
+      "purpose": "CTA button surface — the only dark fill in the system"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgb(65, 65, 65) 0px 2px 1px 0px inset, rgba(0, 0, 0, 0.05) 0px -2px 1px 0px inset",
+      "element": "Button (filled)"
+    },
+    {
+      "style": "rgb(255, 255, 255) 0px 2px 1px 0px inset, rgba(0, 0, 0, 0.1) 0px -2px 1px 0px inset",
+      "element": "Button (light)"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+      "element": "Floating Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "element": "Subtle Surface"
+    }
+  ],
+  "northStar": "Editorial broadsheet on a white field with a rainbow ribbon",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.43,
+      "letterSpacing": 0.05
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.03
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.75,
+      "letterSpacing": 0.03
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.6,
+      "letterSpacing": 0.02
+    },
+    {
+      "role": "heading-sm",
+      "size": 23,
+      "lineHeight": 1.38,
+      "letterSpacing": 0.02
+    },
+    {
+      "role": "heading",
+      "size": 38,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.76
+    },
+    {
+      "role": "heading-lg",
+      "size": 51,
+      "lineHeight": 1.2,
+      "letterSpacing": -2.04
+    },
+    {
+      "role": "display",
+      "size": 67,
+      "lineHeight": 1.1,
+      "letterSpacing": -2.68
+    }
+  ],
+  "components": [
+    {
+      "name": "Filled Dark Button",
+      "role": "Primary action — used for the highest-priority CTA on each page",
+      "description": "Background #333333 (Obsidian), text #ffffff, border 1px solid #333333, border-radius 4px, padding 10px 16px, font 14px ui-sans-serif weight 500, uppercase tracking. Inset shadow (rgb(65,65,65) 0 2px 1px inset / rgba(0,0,0,0.05) 0 -2px 1px inset) gives a pressed-paper tactile feel."
+    },
+    {
+      "name": "Outlined Ghost Button",
+      "role": "Secondary action — paired alongside the filled CTA",
+      "description": "Background transparent, text #333333, border 1px solid #333333, border-radius 4px, padding 10px 16px, font 14px ui-sans-serif weight 500, uppercase tracking. Light inset highlight (rgb(255,255,255) 0 2px 1px inset / rgba(0,0,0,0.1) 0 -2px 1px inset)."
+    },
+    {
+      "name": "Top Nav Link",
+      "role": "Primary navigation items",
+      "description": "Font 14px ui-sans-serif weight 500, color #242424, no underline. Chevron dropdown indicator in #545454. Active/hover state transitions to underline or weight shift — no color change."
+    },
+    {
+      "name": "Top Nav Pill Button",
+      "role": "Header CTA — Book a Demo",
+      "description": "Same as Filled Dark Button but in the header context, slightly smaller scale: 12–14px text, 4px radius, 8px 16px padding."
+    },
+    {
+      "name": "NEW Badge",
+      "role": "Editorial flag on inline announcement links",
+      "description": "Inline label, font 10–11px ui-sans-serif weight 600 uppercase, 0.05em tracking, border 1px solid #dbdbdb, border-radius 4px, padding 2px 6px, text #242424, background #ffffff. Sits inside a pill-shaped announcement row with border #dbdbdb and 4px radius."
+    },
+    {
+      "name": "Announcement Pill",
+      "role": "Inline editorial callout above the hero",
+      "description": "Full-width inline row, 1px #dbdbdb border, 4px radius, white background, contains a NEW badge + short text link + chevron arrow. Padding 8px 12px. Font 13px ui-sans-serif."
+    },
+    {
+      "name": "Section Eyebrow Label",
+      "role": "All-caps micro-label above section headlines (e.g. “THE PROBLEM”)",
+      "description": "Font 11–12px ui-sans-serif weight 500, uppercase, 0.05em letter-spacing, color #545454, centered or left-aligned depending on section."
+    },
+    {
+      "name": "Display Headline",
+      "role": "Hero and major section headlines",
+      "description": "Tobias weight 100, 51–67px (hero can reach 140px), line-height 1.10–1.20, letter-spacing -0.04em, color #000000. This is the signature element — paper-thin serif strokes at massive scale."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Three-column grid card for product features",
+      "description": "Background #ffffff, border 1px solid #dbdbdb, border-radius 8px, padding 24px, optional subtle shadow. Contains a small orange icon at top (Iris Blue or Ember Orange stroke 1.5–2px), 18px Diatype subhead, 14–16px body text in #545454."
+    },
+    {
+      "name": "Logo Cloud Cell",
+      "role": "Customer/partner logo display in a row",
+      "description": "No container — logos float on #ffffff canvas in a single horizontal row, grayscale treatment (color #545454 to #969696), equal spacing 32–48px gap, aligned to a shared baseline."
+    },
+    {
+      "name": "Halftone Illustration",
+      "role": "Decorative dotted/halftone graphic element",
+      "description": "Vector illustration rendered as a halftone dot field in #545454 or #969696, used as a large visual element beside hero text or between sections. No container — the dot field IS the shape (animals, abstract patterns)."
+    },
+    {
+      "name": "Stacked 3D Layer Diagram",
+      "role": "Isometric stacked-layer illustration in the solution section",
+      "description": "Three or more isometric rectangular layers, each in a different pastel tint (lavender, butter yellow, white), with small icon + uppercase label on each layer face. No border, no shadow — the layers sit on the white canvas with very soft 5–10% tinted fills."
+    },
+    {
+      "name": "Rainbow Ribbon Bar",
+      "role": "The signature 3px-tall gradient hairline at the very top of every page",
+      "description": "Full viewport width, 3px height, 9-stop linear gradient (maroon → red → amber → yellow-green → green → deep green → indigo → blue → sky blue). No padding, no margin. Sits flush against the top of the viewport above the nav."
+    },
+    {
+      "name": "Agent View FAB",
+      "role": "Floating action button — bottom-right persistent chat trigger",
+      "description": "Background #ffffff, border 1px solid #dbdbdb, border-radius 9999px, padding 8px 14px, font 12px ui-sans-serif weight 500, fixed bottom-right 16px 16px, subtle drop shadow rgba(0,0,0,0.1) 0 4px 6px. Contains a small icon + 'Agent view' label."
+    }
+  ],
+  "typography": [
+    {
+      "role": "UI chrome — nav labels, buttons, badges, table data, form fields. Renders as a system font (San Francisco / Segoe UI / Roboto fallback). Small sizes (9–13px) handle the dense secondary UI; 16–18px for button text. Wide tracking (0.05em) on uppercase micro-labels like “THE PROBLEM”.",
+      "sizes": "9px, 10px, 11px, 12px, 13px, 14px, 16px, 18px",
+      "family": "ui-sans-serif (system)",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.43–1.75",
+      "substitute": "System UI sans (San Francisco / Segoe / Roboto)",
+      "letterSpacing": "0.0030em body, 0.0500em uppercase micro-labels",
+      "fontFeatureSettings": "\"calt\", \"rlig\", \"ss01\""
+    },
+    {
+      "role": "Display and headline serif — used at massive sizes (up to 140px) for hero statements, section openers, and oversized editorial moments. The weight-100 thinness is the brand’s single most distinctive choice; it makes headlines feel engraved rather than printed. No system font replicates this — substitute with a hairline serif (e.g. “Tobias”, “GT Super”, or “Fraunces 100”).",
+      "sizes": "20px, 38px, 51px, 67px, 140px",
+      "family": "Tobias",
+      "weight": "100",
+      "lineHeight": "1.00–1.40",
+      "substitute": "GT Super Thin, Fraunces 100, or any high-contrast hairline serif",
+      "letterSpacing": "-0.0400em at 51–140px, -0.0200em at 38px",
+      "fontFeatureSettings": "\"calt\", \"rlig\", \"ss01\""
+    },
+    {
+      "role": "Primary body and subheading sans — compact, neutral, engineered for reading. Weight 300 for lighter pull-quotes, 400 for body, 500 for subhead emphasis. The slight contrast with Tobias gives the editorial pairing its rhythm. Substitute with Inter, Söhne, or Geist.",
+      "sizes": "14px, 16px, 18px, 23px, 26px",
+      "family": "Diatype",
+      "weight": "300, 400, 500",
+      "lineHeight": "1.29–1.75",
+      "substitute": "Inter, Söhne, or Geist",
+      "letterSpacing": "0.0020em at 14–26px",
+      "fontFeatureSettings": "\"calt\", \"rlig\", \"ss01\""
+    },
+    {
+      "role": "speakeasyAscii — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "speakeasyAscii",
+      "weight": "400",
+      "lineHeight": "1.5",
+      "fontFeatureSettings": "\"calt\", \"rlig\", \"ss01\""
+    }
+  ],
+  "description": "Speakeasy is a near-monochromatic editorial system built on a vast white canvas, with one extraordinary move: a custom serif (Tobias) rendered at weight 100, stretched to 140px headlines that whisper rather than announce. The interface feels like a high-end print magazine that accidentally became a product page — generous breathing room, hairline dividers, flat surfaces, and a single vibrant gradient hairline at the page's top edge that acts as a signature ribbon. Color is rationed like ink: black and a warm gray scale do nearly all the work, while small chromatic accents (green, orange, yellow, violet, red) appear as functional punctuation inside icons, badges, and feature illustrations. Components are deliberately flat — borders over shadows, small radii, compact spacing — letting the type and the top rainbow gradient do the brand-building.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Primary text: #000000\n- Background: #ffffff\n- Border: #dbdbdb\n- Muted text: #545454\n- Filled button: #333333 (white text)\n- primary action: #333333 (filled action)\n\n**3-5 Example Component Prompts**\n\n1. **Hero section**: White background (#ffffff). Centered or left-aligned 67px Tobias weight 100 headline in #000000, letter-spacing -2.68px. Body subtext in 16px Diatype weight 400, color #545454. Filled dark button (#333333, white text, 4px radius, 10px 16px padding, 14px ui-sans-serif weight 500 uppercase) paired with an outlined ghost button (#333333 border, transparent fill, same dimensions). A 1px #dbdbdb border announcement pill sits above the headline containing a NEW badge.\n\n2. **Feature card grid**: Three equal columns, 24px gap, 24px card padding. Each card: white #ffffff background, 1px #dbdbdb border, 8px radius. Top contains a 24px line icon in Ember Orange (#e17100) stroke 1.5px. Subhead in 18px Diatype weight 500 #000000, body in 16px Diatype weight 400 #545454. No shadow.\n\n3. **Section eyebrow + display headline**: Centered stack. Eyebrow: 12px ui-sans-serif weight 500 uppercase, 0.05em tracking, #545454. Headline: 51px Tobias weight 100, -2.04px letter-spacing, #000000, line-height 1.20. Body below: 16px Diatype weight 400 #545454, max-width 640px.\n\n4. **Logo cloud row**: Full-width band, 1px #dbdbdb top and bottom borders, white #ffffff background. 8 logos in a single horizontal row, grayscale (#545454), 48px gap, vertically centered, no captions.\n\n5. **Stacked layer diagram**: Right column of a two-column section. 4 isometric rectangular layers, each rotated -15deg on Y-axis, stacked vertically with 8px gap. Layer fills: #ede9fe, #fef3c7, #ffffff, #f1f1f1. Each layer face has a 10px uppercase label in #545454 and a 14px icon. No border, no shadow on the diagram."
+    },
+    {
+      "title": "Type Pairing Logic",
+      "content": "The Tobias + Diatype pairing is engineered around weight inversion: headlines go ultra-thin (100) while body stays mid-weight (400), producing maximum contrast at minimum visual cost. Subheadings in Diatype (weight 500) act as a bridge. The third tier — ui-sans-serif for all chrome (nav, buttons, badges, eyebrows) — stays in the 400–500 range, so it never competes with the editorial type. Letter-spacing follows size: -0.04em at 51px+ for Tobias, 0.02–0.03em at body sizes, 0.05em on uppercase micro-labels. The font-feature-settings (“calt”, “rlig”, “ss01”) are shared across all three families, suggesting a unified stylistic set that governs ligatures and alternate glyphs — these should be carried into any substitute font."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is almost extinct in this system. Surfaces are defined by hairline #dbdbdb borders rather than drop shadows. The only consistent shadow use is a subtle 1px inset highlight on filled buttons to give them a tactile pressed-paper feel, and an occasional card lift for popovers. Depth comes from typography scale and white space, not from stacked z-layers."
+}

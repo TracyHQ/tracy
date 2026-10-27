@@ -1,0 +1,827 @@
+{
+  "meta": {
+    "url": "https://azak.co",
+    "siteName": "AZAK",
+    "extractedAt": "2026-09-20T19:24:35.459Z",
+    "durationMs": 58777,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "elementCount": 144,
+    "telemetry": {
+      "enrichment": {
+        "componentHtmlStatus": "pending",
+        "attempts": 0
+      }
+    }
+  },
+  "raw": {
+    "colors": {
+      "tokens": [
+        {
+          "hex": "#f8f7f3",
+          "oklch": {
+            "c": 0.005400033271902558,
+            "h": 95.09907840394148,
+            "l": 0.9757953731749175
+          },
+          "contexts": [
+            "link",
+            "body",
+            "heading",
+            "hero",
+            "button",
+            "other"
+          ],
+          "frequency": 50,
+          "confidence": 1,
+          "prominence": 62487437.56715799,
+          "properties": [
+            "color",
+            "backgroundColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "body/color": 17,
+            "link/color": 2,
+            "other/fill": 8,
+            "other/color": 6,
+            "button/color": 6,
+            "heading/color": 3,
+            "hero/backgroundColor": 1,
+            "other/backgroundColor": 7
+          }
+        },
+        {
+          "hex": "#121211",
+          "oklch": {
+            "c": 0.002006513292268531,
+            "h": 106.59753396272468,
+            "l": 0.18178654405772054
+          },
+          "contexts": [
+            "heading",
+            "body",
+            "hero",
+            "other",
+            "footer"
+          ],
+          "frequency": 15,
+          "confidence": 1,
+          "prominence": 5184000,
+          "properties": [
+            "color",
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "body/color": 2,
+            "other/color": 6,
+            "heading/color": 3,
+            "hero/backgroundColor": 1,
+            "other/backgroundColor": 2,
+            "footer/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#3a4a49",
+          "oklch": {
+            "c": 0.020359953916982206,
+            "h": 191.65380012460338,
+            "l": 0.39497826730979957
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 648000,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#85837e",
+          "oklch": {
+            "c": 0.0078085000944977225,
+            "h": 88.67456560445125,
+            "l": 0.6101801849714052
+          },
+          "contexts": [
+            "other",
+            "body"
+          ],
+          "frequency": 6,
+          "confidence": 1,
+          "prominence": 41894.15750186563,
+          "properties": [
+            "color"
+          ],
+          "usageCounts": {
+            "body/color": 1,
+            "other/color": 5
+          }
+        }
+      ],
+      "isDarkMode": true,
+      "colorfulness": 0.01378792482969686,
+      "contrastPairs": [
+        {
+          "level": "AAA",
+          "ratio": 17.49,
+          "background": "#121211",
+          "foreground": "#f8f7f3"
+        },
+        {
+          "level": "AAA",
+          "ratio": 8.68,
+          "background": "#3a4a49",
+          "foreground": "#f8f7f3"
+        },
+        {
+          "level": "AA",
+          "ratio": 4.95,
+          "background": "#121211",
+          "foreground": "#85837e"
+        },
+        {
+          "level": "fail",
+          "ratio": 3.53,
+          "background": "#f8f7f3",
+          "foreground": "#85837e"
+        },
+        {
+          "level": "fail",
+          "ratio": 2.46,
+          "background": "#3a4a49",
+          "foreground": "#85837e"
+        },
+        {
+          "level": "fail",
+          "ratio": 2.01,
+          "background": "#3a4a49",
+          "foreground": "#121211"
+        }
+      ]
+    },
+    "shapes": {
+      "radii": [],
+      "shadows": []
+    },
+    "spacing": {
+      "tokens": [
+        {
+          "value": 3,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 2,
+          "properties": [
+            "marginTop",
+            "marginBottom"
+          ],
+          "propertyContextPairs": [
+            "marginTop|link",
+            "marginBottom|link"
+          ]
+        },
+        {
+          "value": 4,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 14,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|link",
+            "columnGap|link"
+          ]
+        },
+        {
+          "value": 6,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 2,
+          "properties": [
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "columnGap|link"
+          ]
+        },
+        {
+          "value": 8,
+          "contexts": [
+            "other",
+            "body"
+          ],
+          "frequency": 8,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other",
+            "marginTop|body"
+          ]
+        },
+        {
+          "value": 17,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 4,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|link",
+            "columnGap|link"
+          ]
+        },
+        {
+          "value": 18,
+          "contexts": [
+            "other",
+            "link",
+            "button",
+            "body"
+          ],
+          "frequency": 54,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|other",
+            "paddingLeft|other",
+            "paddingRight|link",
+            "paddingLeft|link",
+            "paddingTop|button",
+            "paddingRight|button",
+            "paddingLeft|button",
+            "paddingBottom|body"
+          ]
+        },
+        {
+          "value": 30,
+          "contexts": [
+            "footer"
+          ],
+          "frequency": 1,
+          "properties": [
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingBottom|footer"
+          ]
+        },
+        {
+          "value": 36,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 3,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 68,
+          "contexts": [
+            "footer"
+          ],
+          "frequency": 1,
+          "properties": [
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|footer"
+          ]
+        },
+        {
+          "value": 72,
+          "contexts": [
+            "hero",
+            "other"
+          ],
+          "frequency": 4,
+          "properties": [
+            "paddingBottom",
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "paddingBottom|hero",
+            "paddingTop|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 144,
+          "contexts": [
+            "hero",
+            "other"
+          ],
+          "frequency": 4,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|hero",
+            "paddingTop|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 230,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 3,
+          "properties": [
+            "marginBottom"
+          ],
+          "propertyContextPairs": [
+            "marginBottom|other"
+          ]
+        }
+      ],
+      "density": "comfortable",
+      "baseUnit": 6
+    },
+    "gradients": [],
+    "typography": {
+      "fonts": [
+        {
+          "family": "FT Aktual",
+          "source": "custom",
+          "weights": [
+            300,
+            400,
+            500
+          ],
+          "frequency": 136,
+          "fontFeatureSettings": []
+        }
+      ],
+      "scale": {
+        "base": 14,
+        "name": "Minor Third",
+        "ratio": 1.2,
+        "confidence": 1
+      },
+      "steps": [
+        {
+          "size": 10,
+          "family": "FT Aktual",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.3,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 11,
+          "family": "FT Aktual",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.99,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "FT Aktual",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "link",
+            "body"
+          ],
+          "frequency": 12,
+          "lineHeight": 1.3,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "FT Aktual",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.59,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "FT Aktual",
+          "weight": 400,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "FT Aktual",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "FT Aktual",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "link",
+            "body",
+            "image",
+            "hero",
+            "footer"
+          ],
+          "frequency": 74,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "FT Aktual",
+          "weight": 400,
+          "contexts": [
+            "button",
+            "other"
+          ],
+          "frequency": 19,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "FT Aktual",
+          "weight": 500,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 6,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "FT Aktual",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.3,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 20,
+          "family": "FT Aktual",
+          "weight": 300,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 3.33,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 30,
+          "family": "FT Aktual",
+          "weight": 300,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 7,
+          "lineHeight": 1.1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 30,
+          "family": "FT Aktual",
+          "weight": 300,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 1,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 45,
+          "family": "FT Aktual",
+          "weight": 300,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 4,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 68,
+          "family": "FT Aktual",
+          "weight": 300,
+          "contexts": [
+            "link",
+            "heading"
+          ],
+          "frequency": 4,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        }
+      ]
+    }
+  },
+  "designSystem": {
+    "dos": [
+      "Use #121211 as the dominant field and reserve #f8f7f3 for text, pale product stages, and hairline rules.",
+      "Set principal statements in FT Aktual weight 300 at 45px/45px.",
+      "Use FT Aktual 16px/22.4px weight 400 for global navigation and standard explanatory copy.",
+      "Keep all observed text controls square at 0px radius.",
+      "Build feature-selector tiles with 18px left/right padding, 18px top padding, 0px bottom padding, and a #f8f7f3 top border.",
+      "Use 144px vertical section padding for major narrative transitions and 72px for tighter dark-section spacing.",
+      "Use #85837e only for secondary content on #121211; do not place it as small text on #f8f7f3."
+    ],
+    "donts": [
+      "Do not introduce saturated interface accents, gradients, or colored button fills.",
+      "Do not use bold display headings; keep primary display copy at FT Aktual weight 300.",
+      "Do not round buttons, tiles, image frames, tags, or navigation controls beyond the observed 0px radius.",
+      "Do not turn the exploration link into a filled #f8f7f3 button.",
+      "Do not place feature content inside raised cards or add shadowed panels.",
+      "Do not use #85837e as a primary heading or navigation color.",
+      "Do not fill the open central space of dark editorial sections with extra cards, statistics, or ornamental graphics."
+    ],
+    "theme": "dark",
+    "colors": [
+      {
+        "hex": "#f8f7f3",
+        "name": "Ultra Light Azak Grey",
+        "role": "Light editorial canvas, reversed text, navigation text, feature-tile text, and fine underlines",
+        "group": "neutral"
+      },
+      {
+        "hex": "#121211",
+        "name": "Dark Azak Black",
+        "role": "Primary page field, dark section surface, dark text on the pale product stage, and footer base",
+        "group": "neutral"
+      },
+      {
+        "hex": "#85837e",
+        "name": "Medium Azak Grey",
+        "role": "Secondary explanatory copy, inactive feature labels, metadata, and legal text",
+        "group": "neutral"
+      },
+      {
+        "hex": "#3a4a49",
+        "name": "Terrain Slate",
+        "role": "Contained product-render backdrop and muted dark visual surface",
+        "group": "neutral"
+      }
+    ],
+    "layout": "The page is a full-bleed vertical narrative with a compact dark header, then a screen-dominant photographic hero carrying its headline at the lower left. A pale split section follows, with a large contained product render on the left and a generous empty text field on the right; later sections return to near-black editorial bands. Dark sections use asymmetric title-left/support-copy-right placement and large vacant space before a six-column horizontal feature-selector row anchored at the bottom. Navigation is a minimal top bar with a left wordmark and widely separated text links; content is spacious, with major section padding around 144px and no visible card grid or boxed dashboard layout.",
+    "imagery": "Imagery is sparse but dominant: full-bleed, dark, low-key field photography establishes the opening atmosphere, while later sections use large contained photorealistic 3D product renders against a muted blue-green ground. The wheel render is treated as an engineering specimen with ample surrounding negative space, not as a floating UI illustration. Photography and renders occupy more visual space than text, but they remain subdued under dark overlays or restrained studio lighting; visible interface iconography is effectively absent.",
+    "similar": [
+      {
+        "why": "Shares dark, terrain-led automotive imagery and restrained large type that lets vehicle hardware carry the color.",
+        "business": "Rivian"
+      },
+      {
+        "why": "Shares an industrial mobility focus, expansive product-render staging, and sparse technical presentation.",
+        "business": "Canoo"
+      },
+      {
+        "why": "Shares pale product-specification stages, low-weight sans display typography, and minimal navigation.",
+        "business": "Polestar"
+      },
+      {
+        "why": "Shares the use of empty space, unboxed text controls, and product-as-specimen composition rather than conventional card UI.",
+        "business": "Nothing"
+      }
+    ],
+    "spacing": {
+      "radius": {
+        "links": "0px",
+        "buttons": "0px"
+      },
+      "elementGap": "4px",
+      "sectionGap": "144px",
+      "cardPadding": "18px",
+      "pageMaxWidth": null
+    },
+    "industry": "other",
+    "surfaces": [
+      {
+        "hex": "#121211",
+        "name": "Dark Azak Black",
+        "level": 0,
+        "purpose": "Primary page canvas, hero veil, editorial sections, and footer."
+      },
+      {
+        "hex": "#3a4a49",
+        "name": "Terrain Slate",
+        "level": 1,
+        "purpose": "Product-render field within otherwise dark compositions."
+      },
+      {
+        "hex": "#f8f7f3",
+        "name": "Ultra Light Azak Grey",
+        "level": 2,
+        "purpose": "Pale product specification stage and high-contrast reversed text."
+      }
+    ],
+    "northStar": "expedition vehicle in twilight. Build pages as a sequence of stark technical exhibits: black field, pale specification sheet, then a rendered mobility system.",
+    "typeScale": [
+      {
+        "role": "microcopy",
+        "size": 10,
+        "family": "FT Aktual",
+        "weight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": 0
+      },
+      {
+        "role": "caption",
+        "size": 14,
+        "family": "FT Aktual",
+        "weight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": 0
+      },
+      {
+        "role": "body",
+        "size": 16,
+        "family": "FT Aktual",
+        "weight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": 0
+      },
+      {
+        "role": "feature-tile",
+        "size": 16,
+        "family": "FT Aktual",
+        "weight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": 0
+      },
+      {
+        "role": "body-strong",
+        "size": 16,
+        "family": "FT Aktual",
+        "weight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": 0
+      },
+      {
+        "role": "product-support",
+        "size": 20,
+        "family": "FT Aktual",
+        "weight": 300,
+        "lineHeight": 3.33,
+        "letterSpacing": 0
+      },
+      {
+        "role": "section-intro",
+        "size": 30,
+        "family": "FT Aktual",
+        "weight": 300,
+        "lineHeight": 1.1,
+        "letterSpacing": 0
+      },
+      {
+        "role": "display",
+        "size": 45,
+        "family": "FT Aktual",
+        "weight": 300,
+        "lineHeight": 1,
+        "letterSpacing": 0
+      },
+      {
+        "role": "product-code",
+        "size": 68,
+        "family": "FT Aktual",
+        "weight": 300,
+        "lineHeight": 1,
+        "letterSpacing": 0
+      }
+    ],
+    "components": [
+      {
+        "name": "Transparent Site Header",
+        "role": "Persistent top navigation over a dark hero image.",
+        "description": "Use a #121211 header field with #f8f7f3 wordmark and 16px/22.4px FT Aktual weight 400 navigation. Keep links unboxed, with 18px horizontal internal spacing and 4px to 17px local gaps."
+      },
+      {
+        "name": "Hero Image Field",
+        "role": "Full-bleed opening statement over a darkened expedition or vehicle photograph.",
+        "description": "Place image content beneath a near-black #121211 veil so #f8f7f3 display text stays dominant. Set the headline in FT Aktual 300, 45px/45px; position a small underlined text link nearby rather than a filled control."
+      },
+      {
+        "name": "Underlined Exploration Link",
+        "role": "Low-weight navigation from hero or editorial content.",
+        "description": "Render as #f8f7f3 text on #121211 with no fill, no radius, and a 1px #f8f7f3 bottom rule. Use 3px vertical spacing between the text and underline."
+      },
+      {
+        "name": "Split Product Introduction",
+        "role": "Product reveal pairing a contained render with a pale specification statement.",
+        "description": "Divide the section into equal visual halves: a Terrain Slate #3a4a49 render field at left and an Ultra Light Azak Grey #f8f7f3 text field at right. Use Dark Azak Black #121211 for the 30px weight-300 statement and Medium Azak Grey #85837e for its supporting phrase."
+      },
+      {
+        "name": "Product Series Marker",
+        "role": "Oversized product-code treatment within a pale product section.",
+        "description": "Set the product identifier in Dark Azak Black #121211 using FT Aktual 300 at 68px/68px. Pair secondary product-status text in 20px weight 300, retaining the sparse pale #f8f7f3 surface."
+      },
+      {
+        "name": "Black Editorial Feature Section",
+        "role": "Long-form engineering proposition with large title and restrained supporting copy.",
+        "description": "Use a #121211 full-width field with #f8f7f3 45px/45px weight-300 heading at the upper left. Place 16px/22.4px weight-400 explanatory copy in a separate upper-right column; leave the central field intentionally open."
+      },
+      {
+        "name": "Feature Selector Tile",
+        "role": "Horizontal set of selectable engineering propositions.",
+        "description": "Use transparent background, 0px radius, 18px left/right padding, 18px top padding, and 0px bottom padding. Draw a 1px top border in #f8f7f3; set active title and description in #f8f7f3, while inactive tiles use #85837e."
+      },
+      {
+        "name": "Feature Tile Copy Stack",
+        "role": "Two-line label and explanation inside the selector tile.",
+        "description": "Set the title in FT Aktual 16px weight 400 and the supporting line below with an 8px internal gap. Keep the stack left aligned and constrain it to the tile column; do not add icon containers or colored state fills."
+      },
+      {
+        "name": "Minimal Legal Footer",
+        "role": "Terminal information strip after the page narrative.",
+        "description": "Use Dark Azak Black #121211 with 68px top padding and 30px bottom padding. Set legal and secondary links in Medium Azak Grey #85837e, retaining #f8f7f3 only for priority footer navigation."
+      }
+    ],
+    "typography": [
+      {
+        "role": "The sole interface and display family. Weight 300 at 45px/45px carries all large statements with an unusually whisper-light technical tone; 68px/68px identifies product series, while 16px weight 400 carries navigation and body copy.",
+        "sizes": "10px, 11px, 14px, 16px, 20px, 30px, 45px, 68px",
+        "family": "FT Aktual",
+        "weight": "300, 400, 500",
+        "lineHeight": "1.00, 1.10, 1.20, 1.30, 1.40, 1.59, 1.99",
+        "substitute": "Arial, Helvetica Neue, sans-serif",
+        "letterSpacing": "normal"
+      }
+    ],
+    "description": "AZAK — expedition vehicle in twilight. The interface alternates between near-black field sections and an almost-paper-white product stage, using full-bleed engineering imagery as the main visual material rather than decorative UI. FT Aktual at weight 300 keeps large statements quiet and technical, while hairline rules, flush edges, and borderless controls make the page feel like a product dossier rather than a sales landing page. Color is nearly absent from the interface; the ochre wheel hardware and muted blue-green image environments carry the visual warmth.",
+    "customSections": [
+      {
+        "title": "Agent Prompt Guide",
+        "content": "Quick Color Reference:\n- Ultra Light Azak Grey: #f8f7f3 — Light editorial canvas, reversed text, navigation text, feature-tile text, and fine underlines\n- Dark Azak Black: #121211 — Primary page field, dark section surface, dark text on the pale product stage, and footer base\n- Medium Azak Grey: #85837e — Secondary explanatory copy, inactive feature labels, metadata, and legal text\n- Terrain Slate: #3a4a49 — Contained product-render backdrop and muted dark visual surface\n\nCreate a full-bleed dark hero using Dark Azak Black #121211 over a low-key off-road mobility photograph; set the lower-left statement in FT Aktual weight 300, 45px/45px, Ultra Light Azak Grey #f8f7f3, with a #f8f7f3 underlined text link.\nCreate a split product reveal: Terrain Slate #3a4a49 on the left containing a large photorealistic wheel render, Ultra Light Azak Grey #f8f7f3 on the right with a Dark Azak Black #121211 FT Aktual weight-300 30px statement and Medium Azak Grey #85837e supporting text.\nCreate a pale product-series panel with a Dark Azak Black #121211 code in FT Aktual weight 300, 68px/68px and a smaller FT Aktual weight-300 20px future-product label.\nCreate a Dark Azak Black #121211 engineering section with a #f8f7f3 FT Aktual weight-300 45px/45px heading, a small upper-right #f8f7f3 explanatory paragraph, and six transparent 0px-radius feature tiles aligned along the bottom with #f8f7f3 top rules.\nCreate a feature tile with 18px horizontal and 18px top padding, 0px bottom padding, a 1px Ultra Light Azak Grey #f8f7f3 top border, and FT Aktual 16px weight-400 copy; use Medium Azak Grey #85837e for inactive tiles."
+      }
+    ],
+    "elevationPhilosophy": "Interface layers stay flat: separation comes from full-bleed surface changes, image contrast, and 1px rules rather than box shadows, floating cards, or inset depth."
+  },
+  "screenshot": {
+    "url": "https://images.refero.design/styles/refero.design/image/c7e18ba5-1921-412c-8a6b-14604e9bc664.jpg",
+    "thumbnail": "https://images.refero.design/styles/refero.design/image/34abc57b-62d6-43c3-af36-6202054f8b6c.jpg"
+  }
+}

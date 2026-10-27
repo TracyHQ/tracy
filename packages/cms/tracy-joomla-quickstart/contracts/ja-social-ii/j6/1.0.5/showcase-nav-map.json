@@ -1,0 +1,571 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v2",
+  "profileVersion": "1.0.0",
+  "contract": "ja-social-ii/j6/1.0.5",
+  "baseHash": "4e38f45304d7b543748e38ea1102cf600a982b27527750a833931a5d6b53e26c",
+  "baseFiles": {
+    "manifest.json": "0cc8560f5076a87775f9e6086022286e39bb08a4f5855c2eb99483f4e36a9c74",
+    "content-map.json": "be4574da1e01dc248e420cfcb163df4ac8a6c865cb1584d296209ec3332d9ce4",
+    "presentation-lock.json": "68005e34fb97f1021cd7763ca37010bf0ee0421616ddcd5bb7a8cb25eb738e87"
+  },
+  "inputs": {},
+  "decisionsHash": "14ca02ec0f3c8976db797fb106e08819c69887b6c1d8dcd72396798240672107",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-133",
+      "identity": {
+        "path": "new-features",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Error page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-134",
+      "identity": {
+        "path": "offline-page",
+        "menutype": "joomla-pages",
+        "language": "*"
+      },
+      "label": "Offline page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-168",
+      "identity": {
+        "path": "typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-174",
+      "identity": {
+        "path": "pages/colors",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Colors",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Colors\" lists the template's colour variants of the home page"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-175",
+      "identity": {
+        "path": "pages/colors/default-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Default Color",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Colors\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-176",
+      "identity": {
+        "path": "pages/colors/purple-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Purple Color",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Colors\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-177",
+      "identity": {
+        "path": "pages/colors/violet-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Violet Color",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Colors\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-178",
+      "identity": {
+        "path": "pages/layouts",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Layouts",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Layouts\" lists the template's sidebar layout samples"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-179",
+      "identity": {
+        "path": "pages/layouts/content-right-sidebar",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Content + Right Sidebar",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Layouts\" lists the template's sidebar layout samples)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-180",
+      "identity": {
+        "path": "pages/layouts/left-sidebar-content",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Left Sidebar + Content",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Layouts\" lists the template's sidebar layout samples)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-181",
+      "identity": {
+        "path": "pages/layouts/no-sidebar",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "No Sidebar",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Layouts\" lists the template's sidebar layout samples"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-9",
+      "identity": {
+        "title": "Ja_Social_II - Default",
+        "template": "ja_social_ii",
+        "client_id": "0"
+      },
+      "label": "Ja_Social_II - Default · Pages · column 178",
+      "style": {
+        "id": 9,
+        "template": "ja_social_ii"
+      },
+      "menutype": "mainmenu",
+      "item": 164,
+      "column": 178,
+      "path": "mm_config.mainmenu.item-164.sub.rows[item=178]",
+      "before": "97fc6f43d85e5fd291bdbadbaf62503fad04f28efc951e3b161af26064fc4412",
+      "after": "2fe63f3b947e382d718b560d1d21b083cdbac3c4fead60220d8c0bbb783f288f",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-178 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-9",
+      "identity": {
+        "title": "Ja_Social_II - Default",
+        "template": "ja_social_ii",
+        "client_id": "0"
+      },
+      "label": "Ja_Social_II - Default · Pages · column 174",
+      "style": {
+        "id": 9,
+        "template": "ja_social_ii"
+      },
+      "menutype": "mainmenu",
+      "item": 164,
+      "column": 174,
+      "path": "mm_config.mainmenu.item-164.sub.rows[item=174]",
+      "before": "2fe63f3b947e382d718b560d1d21b083cdbac3c4fead60220d8c0bbb783f288f",
+      "after": "681ec3c7dd2a9709f9738bde3f0ec9e1b1d0304275a846274154e4ec272bbb1f",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-174 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "Ja_Social_II - Features Intro",
+        "template": "ja_social_ii",
+        "client_id": "0"
+      },
+      "label": "Ja_Social_II - Features Intro · Pages · column 178",
+      "style": {
+        "id": 10,
+        "template": "ja_social_ii"
+      },
+      "menutype": "mainmenu",
+      "item": 164,
+      "column": 178,
+      "path": "mm_config.mainmenu.item-164.sub.rows[item=178]",
+      "before": "7e13be3c5d76b77229afb5f23c3ef8440d3ad2d7f561e77ff405df2b119c8806",
+      "after": "35e720d6e2fbe3562fde134a159bdd9b459f9ba6e19b2a784510d454b486b0fb",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-178 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "Ja_Social_II - Features Intro",
+        "template": "ja_social_ii",
+        "client_id": "0"
+      },
+      "label": "Ja_Social_II - Features Intro · Pages · column 174",
+      "style": {
+        "id": 10,
+        "template": "ja_social_ii"
+      },
+      "menutype": "mainmenu",
+      "item": 164,
+      "column": 174,
+      "path": "mm_config.mainmenu.item-164.sub.rows[item=174]",
+      "before": "35e720d6e2fbe3562fde134a159bdd9b459f9ba6e19b2a784510d454b486b0fb",
+      "after": "97c8de83bc3f4cb98a021630a11c0cd44e4155947c2ff8abca521fd3846765be",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-174 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-11",
+      "identity": {
+        "title": "Ja_Social_II - Purple",
+        "template": "ja_social_ii",
+        "client_id": "0"
+      },
+      "label": "Ja_Social_II - Purple · Pages · column 178",
+      "style": {
+        "id": 11,
+        "template": "ja_social_ii"
+      },
+      "menutype": "mainmenu",
+      "item": 164,
+      "column": 178,
+      "path": "mm_config.mainmenu.item-164.sub.rows[item=178]",
+      "before": "e82c6fe2e6b1b974e39892939779617d6564f715a35ac52985413dc68eb871ac",
+      "after": "2b843e78442efbbc8119cd47094de043f9d6f28ecf52164a1b346747d3878cbb",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-178 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-11",
+      "identity": {
+        "title": "Ja_Social_II - Purple",
+        "template": "ja_social_ii",
+        "client_id": "0"
+      },
+      "label": "Ja_Social_II - Purple · Pages · column 174",
+      "style": {
+        "id": 11,
+        "template": "ja_social_ii"
+      },
+      "menutype": "mainmenu",
+      "item": 164,
+      "column": 174,
+      "path": "mm_config.mainmenu.item-164.sub.rows[item=174]",
+      "before": "2b843e78442efbbc8119cd47094de043f9d6f28ecf52164a1b346747d3878cbb",
+      "after": "7308e7b3e20101327be15916d69a361f40d6c662dc12e2114dbb76febf974dfa",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-174 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "Ja_Social_II - Violet",
+        "template": "ja_social_ii",
+        "client_id": "0"
+      },
+      "label": "Ja_Social_II - Violet · Pages · column 178",
+      "style": {
+        "id": 12,
+        "template": "ja_social_ii"
+      },
+      "menutype": "mainmenu",
+      "item": 164,
+      "column": 178,
+      "path": "mm_config.mainmenu.item-164.sub.rows[item=178]",
+      "before": "3315d0fd312be79322791fe7358860e9ac101be2914a1592222050c29b17826f",
+      "after": "fefd48159af7128076c936256ce30c2144b1e79c411de58fb9baadbfa1ebc068",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-178 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "Ja_Social_II - Violet",
+        "template": "ja_social_ii",
+        "client_id": "0"
+      },
+      "label": "Ja_Social_II - Violet · Pages · column 174",
+      "style": {
+        "id": 12,
+        "template": "ja_social_ii"
+      },
+      "menutype": "mainmenu",
+      "item": 164,
+      "column": 174,
+      "path": "mm_config.mainmenu.item-164.sub.rows[item=174]",
+      "before": "fefd48159af7128076c936256ce30c2144b1e79c411de58fb9baadbfa1ebc068",
+      "after": "de845c3f036dea3cbb0bb2b9ccf34c8f3ca3233b5417cc977e91c67d3bb5aea6",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-174 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-130",
+      "label": "Login page",
+      "where": "joomla-pages/als-login-page",
+      "rule": "keep.decision",
+      "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Registration page",
+      "where": "joomla-pages/als-registration-page",
+      "rule": "keep.decision",
+      "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+    },
+    {
+      "key": "menuItem-135",
+      "label": "Jomsocial Component",
+      "where": "component-support/jomsocial-component",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-136",
+      "label": "EasySocial Component",
+      "where": "component-support/easysocial-component",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-137",
+      "label": "JA Extensions Manager",
+      "where": "component-support/2015-07-27-06-53-45",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-138",
+      "label": "K2 Component",
+      "where": "component-support/2015-07-27-06-55-57",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-141",
+      "label": "Music",
+      "where": "tags/music",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tag): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-142",
+      "label": "Social",
+      "where": "tags/social",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tag): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-143",
+      "label": "Singer",
+      "where": "tags/singer",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tag): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-144",
+      "label": "Favorite",
+      "where": "tags/favorite",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tag): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-164",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-169",
+      "label": "Joomla! pages",
+      "where": "mainmenu/pages/joomla-pages",
+      "rule": "keep.holds-kept-entry",
+      "reason": "a sample-pages heading that holds menuItem-170, which stays"
+    },
+    {
+      "key": "menuItem-170",
+      "label": "Login page",
+      "where": "mainmenu/pages/joomla-pages/login-page",
+      "rule": "keep.decision",
+      "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+    },
+    {
+      "key": "menuItem-171",
+      "label": "Registration",
+      "where": "mainmenu/pages/joomla-pages/registration",
+      "rule": "keep.decision",
+      "reason": "PO decision: login and registration are real features of this design and stay in the menu"
+    },
+    {
+      "key": "menuItem-245",
+      "label": "About us",
+      "where": "typo-pages/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-246",
+      "label": "Pricing Table",
+      "where": "typo-pages/pricint-table",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-247",
+      "label": "Single article",
+      "where": "typo-pages/single-article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-248",
+      "label": "Support page",
+      "where": "typo-pages/support-page",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-253",
+      "label": "Contact Us",
+      "where": "mainmenu/contact-us",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-254",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-256",
+      "label": "News",
+      "where": "mainmenu/news",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-257",
+      "label": "All Category",
+      "where": "mainmenu/news/all-category",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-258",
+      "label": "Featured Articles",
+      "where": "mainmenu/news/featured-articles",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-259",
+      "label": "Tags page",
+      "where": "mainmenu/news/tags-page",
+      "rule": "keep.functional-default",
+      "reason": "opens com_tags (view=tags): a working feature stays unless decided"
+    },
+    {
+      "key": "module-114",
+      "label": "Joomla! Pages",
+      "where": "mod_menu@footer-2",
+      "rule": "keep.default",
+      "reason": "renders joomla-pages: 2 entries stay"
+    },
+    {
+      "key": "module-115",
+      "label": "Component support",
+      "where": "mod_menu@footer-3",
+      "rule": "keep.default",
+      "reason": "renders component-support: 4 entries stay"
+    },
+    {
+      "key": "module-131",
+      "label": "Off Canvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 10 entries stay"
+    },
+    {
+      "key": "module-189",
+      "label": "Typo Pages",
+      "where": "mod_menu@footer-1",
+      "rule": "keep.default",
+      "reason": "renders typo-pages: 5 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-249",
+      "label": "Sample product page",
+      "where": "typo-pages/product-detail",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Sample product page\" names a showcase branch"
+    }
+  ],
+  "counts": {
+    "menuItems": 11,
+    "modules": 0,
+    "megaColumns": 8,
+    "kept": 28,
+    "unresolved": 1
+  }
+}

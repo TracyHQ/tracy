@@ -1,0 +1,34 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — All text, thin dividers, image overlays, wordmark fill, and the sole stroke color for outlined controls. Maximum contrast against paper"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, all surface backgrounds, inverted text on dark photographic plates, scroll indicator wells"
+    }
+  },
+  "font": {
+    "favorit-times": {
+      "$value": "Favorit Times",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headlines only. The wordmark 'Favorit' and section titles live here. Set at sizes between 44px and 179px, always weight 400, always with negative tracking that tightens proportionally with size. A single weight at display size is the signature: no bold, no italic — authority comes from scale and the serif's contrast, not from weight."
+    },
+    "twklausanne": {
+      "$value": "TWKLausanne",
+      "$type": "fontFamily",
+      "$description": "Utility and body voice — navigation labels, scroll indicators, list items, body copy, and the rare button. Also handles oversized sans display work in the 135–189px range where the serif would feel wrong. Tracking loosens as size shrinks: -0.025em at display, -0.017em at mid, -0.010em at body. A single weight across the entire scale keeps the sans disciplined and the serif dramatic by contrast."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://favorit.studio",
+      "siteName": "Favorit Studio",
+      "extractedAt": "2026-06-03T20:40:42.473Z",
+      "variant": "compact"
+    }
+  }
+}

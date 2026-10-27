@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-vivid-indigo: #494bcb;
+  --color-midnight-ink: #08093f;
+  --color-soft-violet: #8a8ac6;
+  --color-pale-lavender: #9f7ad0;
+  --color-sunlit-yellow: #ffde87;
+  --color-pale-lilac: #eaeaf7;
+  --color-pure-white: #ffffff;
+  --color-frost-gray: #f6f6fa;
+  --color-slate: #686878;
+  --color-graphite: #222222;
+  --color-ash: #333333;
+  --color-stone: #6d737d;
+  --color-fog: #aaaab0;
+
+  /* Typography — Font Families */
+  --font-satoshi: 'Satoshi', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

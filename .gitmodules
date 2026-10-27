@@ -1,0 +1,4 @@
+[submodule "vendor/tracy/deepseek-harness"]
+	path = vendor/tracy/deepseek-harness
+	url = https://github.com/TracyHQ/tracy-dsh.git
+	ignore = untracked

@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-signal-orange: #ff4f00;
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-raw-linen: #ebe9e3;
+  --color-faint-stone: #767676;
+
+  /* Typography — Font Families */
+  --font-moderat: 'Moderat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

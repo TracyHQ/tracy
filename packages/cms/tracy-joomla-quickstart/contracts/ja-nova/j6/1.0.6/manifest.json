@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-nova/j6/1.0.6",
+  "platform": "joomla",
+  "template": "ja_nova",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-nova",
+    "id": "quickstart/ja-nova/j6",
+    "version": "1.0.6",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_nova",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-nova-j6-webroot-1.0.6.tar.gz",
+        "bytes": 55824029,
+        "sha256": "24734ad3e847ecd9415e2d1fb5919bb82be504edab538a084eff03a4ba744a5c"
+      },
+      "database": {
+        "file": "ja-nova-j6-database-1.0.6.sql.gz",
+        "bytes": 90481,
+        "sha256": "982b553e18ca009559a8bd4102f05f2cc08b9f5a761d66ad0f134804803df680"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T09:33:48.886Z",
+    "builtFrom": {
+      "site": "nova-j6-g2",
+      "tag": "quickstart/ja-nova/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-nova/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.21",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,21 @@
+{
+	"name": "@emdash-cms/discord-bot",
+	"version": "0.0.1",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy",
+		"cf-typegen": "wrangler types",
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit",
+		"register-commands": "node --env-file=.env scripts/register-commands.mjs",
+		"backfill": "node --env-file=.env scripts/backfill-contributors.mjs"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-plugin": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:",
+		"wrangler": "catalog:"
+	}
+}

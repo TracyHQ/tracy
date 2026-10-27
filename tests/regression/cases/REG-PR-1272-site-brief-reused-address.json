@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1272-site-brief-reused-address",
+  "kind": "fix",
+  "title": "A site made again under a deleted site's address is written from its own Customize answers, and never answers the deleted site's brief",
+  "pr": 1272,
+  "area": "add-site/apply",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "With TEST_DATABASE_URL set as in the tracy-web suite, from apps/tracy-web run: node --test --test-reporter=tap test/brief-build.test.mjs",
+    "Read the ok/not ok line of the two tests named in run.tests, and the fail count."
+  ],
+  "expect": [
+    "'a site deleted and made again under the same address is written from its own answers, not the deleted site's' is ok: after createSite → start(About 'Repro One') → applied → deleteSite → createSite → start(About 'Repro Two'), start answers {started: true}, the engine is called twice, its second call reads 'Repro Two', and briefOf returns the 'Repro Two' brief.",
+    "'a site made again with no brief under a deleted site's address answers no brief at all' is ok: gate answers {open: false, step: null} with no state, and briefOf returns null.",
+    "Every other test of brief-build.test.mjs stays ok (a second press of the same build is still one piece of work)."
+  ],
+  "selectors": {
+    "store": "putBrief, briefOf, markProvisioned and CURRENT in apps/tracy-web/src/sites/brief-store.js",
+    "assistant": "buildProgress in apps/tracy-web/src/assistant/readers.js"
+  },
+  "evidence": "Site questions check, local stand on develop, 12/10/2026 (EmDash Tracy Business 1.7.16, real doors): name 'Repro One' → <title> 'Repro One'; DELETE left the site_brief row; same address with name 'Repro Two' → <title> 'Home — Northgate Industrial' (the template's own) while the job answered briefState applied with round one's notes and row created_at.",
+  "fence": "The real brief runner and store over a scratch Postgres schema with engine and normalize doubles; the site row written and deleted with the real store functions. Not exercised: a running CMS and the HTTP doors (covered by the local-stand repro in the PR).",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/brief-build.test.mjs"],
+    "cwd": "apps/tracy-web",
+    "needs": ["postgres"],
+    "tests": [
+      "a site deleted and made again under the same address is written from its own answers, not the deleted site's",
+      "a site made again with no brief under a deleted site's address answers no brief at all"
+    ]
+  }
+}

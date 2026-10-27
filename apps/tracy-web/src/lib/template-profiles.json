@@ -1,0 +1,3531 @@
+{
+  "$comment": "How each released template takes a customer brand: logos (pair | dark | single), brandReady, faviconReady and placement hints. One row per release version; field meanings in template-profiles.js. Values come from the 07/10/2026 research (plan tasks/plan-ten-logo-favicon.md T01); a field listed in `unverified` was not proven on a live site. The design-templates gate requires an exact row for every release on Design inspiration.",
+  "releases": {
+    "quickstart/ja-boxing/j6": {
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-170.1",
+        "frame": { "width": 195, "height": 56 },
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
+        },
+        "note": "Template ja_boxing (T4): the default profile has site_logo (images/joomlart/logo/item-2.png, a dark wordmark with red gloves) and site_logo_dark (item-1.png, a white wordmark), printed as a .d-light/.d-dark pair; the page opens in dark mode (body.dark-active, header ground rgb(18,17,17), item-1 at 195 x 56) and the visitor toggle shows item-2 on white. The footer module 170 (mod_custom Logo Footer, position footinfo-1) shows item-1 at 175 x 50 on rgb(31,30,30) in both modes. The CSS caps the header logo at 56px (40px on mobile), so no logoHeight. The only icon link is templates/ja_boxing/favicon.ico (other_faviconFile empty). Measured on a stand from the 1.0.3 installer (24/10/2026), whose rebuilds since 1.0.1 change no logo file, logo layout or logo rule; the brand writer and favicon proof was not run, hence unverified."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-170.1",
+        "frame": { "width": 195, "height": 56 },
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
+        },
+        "note": "Same logos and content as 1.0.1; only the template's stylesheets (they read a worn design system with the template's own colours as fallback) and one script changed (release-joomla.mjs); no logo file, logo layout or logo rule."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-170.1",
+        "frame": { "width": 195, "height": 56 },
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
+        },
+        "note": "Same logos as 1.0.2; no logo file, logo layout or stylesheet changed: T4 2.6.4, the TITLE copy fix in the demo content, PHP warning fixes in the learning, featured and related-items layouts, and the play and map button words through language keys."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-170.1",
+        "frame": { "width": 195, "height": 56 },
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
+        },
+        "note": "Same logos as 1.0.3; no logo file, logo layout or stylesheet changed: four template overrides take image alt text from the article (the error page icon is marked decorative, the category and related-items lists), and js/template.js reads ?theme=dark|light for Tracy's template preview."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-170.1",
+        "frame": { "width": 195, "height": 56 },
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
+        },
+        "note": "Same logos as 1.0.4; no logo file, logo layout or logo rule changed: one stylesheet rule hides a footer column that holds no module (ja-products #52)."
+      }
+    },
+    "quickstart/ja-diner/j6": {
+      "1.0.1": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "Template ja_diner: one image logo in every style (Default, Red, Pink, Blue, Green; logoimage empty, so the template's own images/logo.png, a dark 128 x 80 picture centred under the menu bar on the light page), no dark mode, and no CSS rule holds an uploaded logo to a height, so the writer scales it to 80; the header shows the style's logoimage when logotype is image, and the plugin's favicon is the only icon. Proven on the 1.0.2 installer release (its stylesheet-only rebuild: the two installers differ only in ten template.css files, where each change wraps the same value in var(--ds-\u2026, <value>) and none is on a logo rule) restored with Claude Cowork for Joomla 0.24.43 (20/10/2026) with a test logo written into all five styles as the brand writer does (enable_logoimage_sm off) and a test favicon in tracy-favicon.json: 21 menu pages answer 200 with the test logo in the header and one icon link, the test one; the six pages for signed-in visitors answer 303 to the login page."
+      },
+      "1.0.2": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "Same logos and content as 1.0.1; only the template's stylesheets changed: they read the worn design system (var(--ds-c-<role>, <its own colour>)), so with no system worn every page computes as on 1.0.1. The 1.0.1 row was measured on this release."
+      },
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "Same logos as 1.0.2; no logo file or logo rule changed, and the template reads every design-system role variable with its own value as the fallback (role scan 0 unresolved), Vietnamese pages use Alegreya in place of Eczar, and the footer module's words come from language keys; the database changes only the demo content (distinct publish_up and created for the 27 published articles, the buttons of modules 121 and 122 lead to Reservation and Contact Us). Unworn the default page computes as on 1.0.2 (VERIFICATION.json: 0 differences; only the moving Gallery carousel differs in the screenshots). The brand writer and favicon proof was not re-run on this release."
+      },
+      "1.0.4": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "Same logos and content as 1.0.3; only eleven bootstrap.css files changed: the badge of a status panel heading reads the status text role as its ground (fallbacks unchanged). No logo file or logo rule changed. Unworn the default page computes as on 1.0.3 (VERIFICATION.json: 0 differences). The brand writer and favicon proof was not re-run on this release."
+      }
+    },
+    "quickstart/ja-directory/j6": {
+      "1.0.0": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 50
+      },
+      "1.0.1": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 50,
+        "note": "Same logo and content as 1.0.0; only the template's stylesheets changed: they read a worn design system (var(--ds-c-<role>, <its own colour>)), so a site wearing none looks exactly as 1.0.0 (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.2": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 50,
+        "note": "Template ja_directory 2.1.1: the header shows the style's logoimage when logotype is image (both styles, Default and Feature), the articles' structured-data publisher logo follows it, and the plugin's favicon is the only icon; proven on site directory-j6-g2-verify 12/10/2026 with a test logo and favicon written as the brand writer does (15 menu pages and 15 articles: one icon link, the test logo in the header, no demo logo or favicon; K2 is not installed in this quickstart). Demo: Sign Up buttons lead to the Register page, the app, team and slide buttons to Contact Us and About Us, distinct article dates, two trashed ACM modules removed."
+      },
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 50,
+        "note": "Same logos and content as 1.0.2; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.2 (tracy-ds-slot release-joomla.mjs --move-only)."
+      }
+    },
+    "quickstart/ja-donate/j6": {
+      "1.0.0": {
+        "logos": "dark",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 48,
+        "unverified": ["logos"]
+      },
+      "1.0.1": {
+        "logos": "dark",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 48,
+        "unverified": ["logos"],
+        "note": "Same logo and content as 1.0.0; only the template's error page changed (ja_donate 2.2.1), so a missing or unticked page answers 404 instead of 500."
+      },
+      "1.0.2": {
+        "logos": "dark",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 48,
+        "unverified": ["logos"],
+        "note": "Same logo and content as 1.0.1; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look)."
+      },
+      "1.0.3": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 48,
+        "unverified": ["logos"],
+        "note": "Same logo as 1.0.2; ja_donate 2.2.2 (TPL_ keys for footer and donation-form words, Bitter and Paytone One for Vietnamese pages). Proven on site donate-j6-g2-verify (12/10/2026, Claude Cowork 0.24.20): a test logo written into all four styles shows in the header of 10 pages, and the test favicon is the one icon link."
+      },
+      "1.0.4": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 48,
+        "unverified": ["logos"],
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed, tokenized again with today's slot contract (words on the accent read accent-on: TDSR CSS-2, 13/10/2026), so with no design system worn it looks exactly as 1.0.3 (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.5": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 48,
+        "unverified": ["logos"],
+        "note": "Same logos and content as 1.0.4; only the override html/mod_articles_category/articles.php changed (repaired by tracy-ds-slot release-joomla.mjs, TDSR 13/10/2026): the content map is the same bytes, the presentation lock differs in that one file, and the release's VERIFICATION.json measures 0 computed differences in the default look on 29/29 pages. Claude Cowork for Joomla 0.24.26 carries it."
+      },
+      "1.0.6": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 48,
+        "unverified": ["logos"],
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.5 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.7": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 48,
+        "unverified": ["logos"],
+        "note": "Same logos as 1.0.6; the template's stylesheets read the design system role variables with its own values as fallback (role scan clean, design-system-roles.json ships), Tagged Items answers on Joomla 6, the footer subscribe control is 24px with its arrow drawn by its cell, the passkey icon is sized, and the Donate - Green/Orange slideshow plays the template's live video (module-91, 19/10/2026)."
+      }
+    },
+    "quickstart/ja-diner/wp7": {
+      "1.0.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "note": "Theme wp-ja-diner 1.0.0 (port of JA Diner 1.0.4), measured on the 21/10/2026 pack and its theme: the header carries two Site Logo blocks, jd-logo--light (site_logo, the source's logo.png, 128 x 80) and jd-logo--dark (tracy_logo_dark, unset in the pack), swapped by data-theme and by prefers-color-scheme when no theme is saved; inc/brand-logo.php prints the site name as text in either spot while its option is empty, so the dark mode shows the name until a dark-ground logo is given (D-34); the footer shows no logo and names the site through {site.title}; site_icon is unset in the pack and core's favicon output is untouched."
+      },
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "note": "Same logos and content as 1.0.0; only the theme's home stylesheet changed: the Subscribe band's photograph is declared as a picture to readers of computed styles (an empty gradient layer), nothing is painted differently."
+      }
+    },
+    "quickstart/ja-essence/j6": {
+      "1.0.0": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Dark mode inverts every logo and replaces the home-4 one; the template must be released again."
+      },
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "logoHeight": 40,
+        "note": "site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The footer image slot holds one logo for both modes. Its CSS lets a header logo reach 100px (img.logo-img max-height), so the logo is made 40px tall like the demo one."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "logoHeight": 40,
+        "note": "site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The footer image slot holds the site_logo file, which the template's Custom module layout pairs with site_logo_dark the same way. Its CSS lets a header logo reach 100px (img.logo-img max-height), so the logo is made 40px tall like the demo one."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "logoHeight": 40,
+        "note": "Same logos and content as 1.0.2 (ja_essence 1.3.2: interface words in the language file, the gallery slider time a number field). site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The footer image slot holds the site_logo file, which the template's Custom module layout pairs with site_logo_dark the same way. Its CSS lets a header logo reach 100px (img.logo-img max-height), so the logo is made 40px tall like the demo one."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "logoHeight": 40,
+        "note": "Same logos and content slots as 1.0.3 (ja_essence 1.3.3, with the agent docs of the template and of mod_ja_acm). site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The footer image slot holds the site_logo file, which the template's Custom module layout pairs with site_logo_dark the same way. Its CSS lets a header logo reach 100px (img.logo-img max-height), so the logo is made 40px tall like the demo one."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "logoHeight": 40,
+        "note": "Same logos and content slots as 1.0.4 (ja_essence 1.3.4: a page in Vietnamese draws its headings and menu in Be Vietnam Pro, css/language-fonts.css). site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The footer image slot holds the site_logo file, which the template's Custom module layout pairs with site_logo_dark the same way. Its CSS lets a header logo reach 100px (img.logo-img max-height), so the logo is made 40px tall like the demo one."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "logoHeight": 40,
+        "note": "Same logos and content as 1.0.5; same site and database, and its stylesheets read a worn design system (var(--ds-c-<role>, <its own colour>)), so with no system chosen it looks exactly as 1.0.5. site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The footer image slot holds the site_logo file, which the template's Custom module layout pairs with site_logo_dark the same way. Its CSS lets a header logo reach 100px (img.logo-img max-height), so the logo is made 40px tall like the demo one."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "logoHeight": 40,
+        "note": "Same logos and template as 1.0.6; the demo's articles of one category have distinct dates and the module dates follow the language pack."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "logoHeight": 40,
+        "note": "Same logos and content as 1.0.7; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.7 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.9": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "logoHeight": 40,
+        "note": "Same logos and content as 1.0.8; only the template's stylesheets changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/ja-products ds-b2-fin-essence, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.8 (release-batch.mjs verify: 0 computed differences)."
+      },
+      "1.0.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-4"],
+        "footerSlot": "module-121.1",
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "logoHeight": 40,
+        "note": "Same logos and content as 1.0.9; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.9."
+      }
+    },
+    "quickstart/ja-essence/wp7": {
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Core Site Logo in the footer only; the header keeps the name as text. Dark mode inverts the footer logo until the theme is released again."
+      },
+      "1.0.9": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Header keeps the Site Title (Q9); the footer logo is a light/dark Site Logo pair (no inverted picture since theme 1.0.9), the name as text where either is missing."
+      },
+      "1.0.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Same logo places as 1.0.9; the footer Site Logo blocks no longer sync the site icon (shouldSyncIcon false, theme 1.0.10)."
+      },
+      "1.0.11": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Same logo places as 1.0.10; every Site Logo's alternative text is the site name (theme 1.0.11), and the dark logo picture (attachment 307) carries no alternative text of its own."
+      },
+      "1.0.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Same logo places as 1.0.11; theme 1.0.12 finds the home 2 category tiles by slug, so a site whose categories are translated keeps their pictures, and the words the blocks carry (By, Read more, Search, Menu, the header buttons, the dark switch, the copy box) follow the site language."
+      },
+      "1.0.13": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Same logo places as 1.0.12; theme 1.0.13 sets the \"By\" before an author name from PHP in the site language (no visitor words left in CSS content), and its block-word filter takes every spelling of \"Read more\" and \"By\"."
+      },
+      "1.0.14": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Same logo places as 1.0.13; theme 1.0.14 says the subscribe form's \"Leave this empty\" hint and the pagination's accessible name \"Pagination\" through its text domain, so they follow the site language."
+      },
+      "1.0.15": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Same logo places as 1.0.14; theme 1.0.15 writes the example words of the smart-search help (\"this and that\", \"this -that\") in each bundled language, not in English inside a translated sentence."
+      },
+      "1.0.16": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Same logo places as 1.0.15; theme 1.0.16 ships Be Vietnam Pro and a Vietnamese cut of Noto Serif, and a page in Vietnamese draws every heading, menu and button in Be Vietnam Pro (Jost has no Vietnamese letters)."
+      },
+      "1.0.17": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Same logo places as 1.0.16; theme 1.0.17 drops the English date formats of its date blocks and PHP dates, so dates follow the site's date format."
+      },
+      "1.0.18": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Same files and database as 1.0.17; the webroot archive is re-cut with every file 0644 and every directory 0755 (the 1.0.17 archive held 0600/0700 members, so the web container could not read wp-load.php)."
+      },
+      "1.0.19": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Logos and database as 1.0.18 (header, footer and the brand logo files unchanged; measured from the release archive 19/10). Theme 1.0.21 reads every design-system role variable with the template's own value as the fallback (role scan 0 unresolved, design-system-roles.json on the release); unworn, every page computes as with theme 1.0.20."
+      },
+      "1.0.20": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 132,
+          "height": 40
+        },
+        "note": "Logos and database as 1.0.19 (nothing in the content changed; measured from the release archive 21/10). Theme 1.0.22: five outline-button text colours on the typography page read --ds-c-on-ink instead of a ground role (TEXT-1); unworn, every page computes as with theme 1.0.21."
+      }
+    },
+    "quickstart/ja-fresco/j6": {
+      "1.0.1": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Template ja_fresco: one site profile (default) whose site_logo is a white 721 x 371 picture on the near-black header (the whole site is dark, with no light mode), held by the template's CSS to 60 px high, and the plugin's favicon is the only icon. Proven on the 1.0.2 installer release (its stylesheet-only rebuild: the two installers differ only in css/template.css, where each change wraps the same value in var(--ds-\u2026, <value>) and none is on a logo rule) restored with Claude Cowork for Joomla 0.24.43 (20/10/2026) with a test logo and favicon written into the profile through template.siteSettings as the brand writer does: 20 menu pages answer 200 with the test logo in the header and one icon link, the test one; the profile page answers 303 to the login form. Left: the three Happy Hour modules on the Offer page (module-169/170/171) show the demo logo as a content image slot, not a logo spot."
+      },
+      "1.0.2": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos and content as 1.0.1; only the template's stylesheets changed: they read the worn design system (var(--ds-c-<role>, <its own colour>)), so with no system worn every page computes as on 1.0.1. The 1.0.1 row was measured on this release."
+      },
+      "1.0.3": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos as 1.0.2; the template reads every design-system role variable with its own value as the fallback (role scan 0 unresolved), three interface words go through the template language file, and the gallery, testimonials and text-slider timings are number fields (no text slot); the database changes only demo content: the publish dates of nine blog articles, so they no longer tie, and the demo links that led to # (twelve buttons, the footer Book button, the Happy Hours Join links and the Reservation Policy menu item) now lead to Menu, Contact or Chiefs by their words."
+      },
+      "1.0.4": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos and content as 1.0.3; only css/template.css and its SCSS source changed: inside a status fill (.bg-success, .bg-info, .bg-warning, .bg-danger) the headings read the text role the fill re-points (var(--ds-c-fg)) instead of the page ground, a rule that applies only while a design system is worn, so with no system worn every page computes as on 1.0.3."
+      }
+    },
+    "quickstart/ja-impact/j6": {
+      "1.0.0": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "Blog", "home-magz"],
+        "footerSlot": "module-117.2",
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "unverified": ["logos"],
+        "logoHeight": 123,
+        "note": "Logo on navy in both modes; whether the white sticky bar shows the logo was not measured. Readiness proven on its group representative JA Vega j6 (site tamq-7q-g-vega, 08/10/2026). Its CSS caps the header logo only under .logo-control (a small logo), so the logo is made 123px tall like the demo one (426 x 123)."
+      },
+      "1.0.1": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "Blog", "home-magz"],
+        "footerSlot": "module-117.2",
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "unverified": ["logos"],
+        "logoHeight": 123,
+        "note": "Same logo and content as 1.0.0; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). Logo on navy in both modes; whether the white sticky bar shows the logo was not measured. Readiness proven on its group representative JA Vega j6 (site tamq-7q-g-vega, 08/10/2026). Its CSS caps the header logo only under .logo-control (a small logo), so the logo is made 123px tall like the demo one (426 x 123)."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "Blog", "home-magz"],
+        "footerSlot": "module-117.2",
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "logoHeight": 123,
+        "note": "Same logo spots and content as 1.0.1, plus a dark-mode logo place: every site profile has site_logo_dark, and html/layouts/t4/element/logo.php and html/mod_custom/default.php (the footer image slot holds the site_logo file) print site_logo and site_logo_dark as a .d-light/.d-dark pair when a dark logo is set (proven on site impact-j6-g2, 12/10/2026); with none, site_logo shows in both modes. The header top band and the footer are navy (--color-primary, palette blue) in both modes and the sticky bar keeps the navy band around the logo, so every spot takes the dark-background logo. Its CSS caps the header logo only under .logo-control (a small logo), so the logo is made 123px tall like the demo one (426 x 123).",
+        "darkSpots": {
+          "profiles": ["default", "Blog", "home-magz"],
+          "footer": true,
+          "proof": "images/joomlart/logo/logo.png is a light logo drawn on the navy header top band and footer, which css/darkmode.css keeps navy (--color-primary, palette blue) in dark mode"
+        }
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "Blog", "home-magz"],
+        "footerSlot": "module-117.2",
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "logoHeight": 123,
+        "darkSpots": {
+          "profiles": ["default", "Blog", "home-magz"],
+          "footer": true,
+          "proof": "images/joomlart/logo/logo.png is a light logo drawn on the navy header top band and footer, which css/darkmode.css keeps navy (--color-primary, palette blue) in dark mode"
+        },
+        "note": "Same logos and content as 1.0.2; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.2 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "Blog", "home-magz"],
+        "footerSlot": "module-117.2",
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "logoHeight": 123,
+        "darkSpots": {
+          "profiles": ["default", "Blog", "home-magz"],
+          "footer": true,
+          "proof": "images/joomlart/logo/logo.png is a light logo drawn on the navy header top band and footer, which css/darkmode.css keeps navy (--color-primary, palette blue) in dark mode"
+        },
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets and one module layout changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/ja-products ds-b2-fin-impact, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.3 (release-batch.mjs verify: 0 computed differences)."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "Blog", "home-magz"],
+        "footerSlot": "module-117.2",
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "logoHeight": 123,
+        "darkSpots": {
+          "profiles": ["default", "Blog", "home-magz"],
+          "footer": true,
+          "proof": "images/joomlart/logo/logo.png is a light logo drawn on the navy header top band and footer, which css/darkmode.css keeps navy (--color-primary, palette blue) in dark mode"
+        },
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.4."
+      }
+    },
+    "quickstart/ja-fresco/wp7": {
+      "1.0.0": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 117,
+          "height": 60
+        },
+        "darkLogo": true,
+        "note": "Core Site Logo in the header, a dark-background spot (tracy-logo-dark, option tracy_logo_dark): the source has one dark design, so the bar is dark in both modes; with no dark logo it shows the site name as text (721x371 source drawn 60px high)."
+      },
+      "1.0.1": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 117,
+          "height": 60
+        },
+        "darkLogo": true,
+        "note": "Same logos and theme as 1.0.0; only the database changed: the Typography page's demo card button points to the Contact page instead of #."
+      }
+    },
+    "quickstart/ja-impact/wp7": {
+      "1.0.6": {
+        "logos": "dark",
+        "brandReady": false,
+        "faviconReady": true,
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "note": "Three hard-coded Image blocks (header, drawer, footer), all on navy in both modes."
+      },
+      "1.0.7": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "note": "Site Logo blocks in the header, drawer and footer (theme 1.0.7), all on navy in both modes; no logo shows the site name as text."
+      },
+      "1.0.8": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "note": "Site Logo blocks in the header, drawer and footer (theme 1.0.9) are dark-background spots (tracy-logo-dark, option tracy_logo_dark): all sit on the navy bar in both modes; with no dark logo each shows the site name in white.",
+        "darkLogo": true
+      },
+      "1.0.9": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "note": "Same files and database as 1.0.8; the webroot archive is re-cut with every file 0644 and every directory 0755 (the 1.0.8 archive held 0600/0700 members, so the web container could not read wp-load.php).",
+        "darkLogo": true
+      },
+      "1.0.10": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "note": "Logos and database as 1.0.9 (header, footer and the brand logo files unchanged in the archive, 19/10/2026). Theme 1.0.13 reads every design-system role variable with the template's own value as the fallback (role scan 0 unresolved, design-system-roles.json on the release); unworn, every page computes as with theme 1.0.12.",
+        "darkLogo": true
+      },
+      "1.0.11": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 426,
+          "height": 123
+        },
+        "note": "Logos and database as 1.0.10 (nothing in the content changed; measured from the release archive 21/10). Theme 1.0.14: the outline-light button text colour reads --ds-c-on-ink instead of a ground role (TEXT-1); unworn, every page computes as with theme 1.0.13.",
+        "darkLogo": true
+      }
+    },
+    "quickstart/ja-kinetic/j6": {
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "footerSlot": "module-221.8",
+        "logoHeight": 40,
+        "note": "site_logo is empty, so the header shows an SVG glyph and the site name."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "site_logo and site_logo_dark swap with .d-light/.d-dark in the header, the off-canvas and the footer brand (acm/social reads the site profile); no logo, or no dark logo in dark mode, shows the Kinetic glyph and the name."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). site_logo and site_logo_dark swap with .d-light/.d-dark in the header, the off-canvas and the footer brand (acm/social reads the site profile); no logo, or no dark logo in dark mode, shows the Kinetic glyph and the name."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "Same logos as 1.0.4 (template 1.0.3): site_logo and site_logo_dark swap with .d-light/.d-dark in the header, the off-canvas drawer (now the same logo element as the header, html/layouts/t4/block/kinetic-header.html) and the footer brand (acm/social reads the site profile); no logo, or no dark logo in dark mode, shows the Kinetic glyph and the name. The error page prints the Site profile's logo or name, the site's main menu and its footer modules instead of a fixed demo copy."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed, tokenized again with today's slot contract (words on the accent read accent-on: TDSR CSS-2, 13/10/2026), so with no design system worn it looks exactly as 1.0.5 (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.6 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "Same logos and content as 1.0.6; measured on the 1.0.8 pack (scripts/template-customization-question-readiness.mjs, 0 must-fix): the template's stylesheets read the standard role variables at the source (JoomlArt-Products/ja-products feat/ds-role-variables, laid over the 1.0.6 pair and tokenized by tracy-ds-slot release-joomla.mjs), so with no design system worn it looks exactly as 1.0.6; 1.0.7 (#1375, cut but not uploaded) is skipped (16/10/2026, feat/ds-role-variables). Claude Cowork for Joomla 0.24.33 carries the 1.0.8 profile."
+      },
+      "1.0.9": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "Same logos and content as 1.0.8; one stylesheet changed at the source: the Integrations call bar (page-219.css) reads the page ground role instead of the ink role (JoomlArt-Products/ja-products feat/ds-dot3-a2, design system dot 3, 19/10/2026), so the slot contract no longer patches it (joomla-ja-kinetic-source); with no design system worn it looks exactly as 1.0.8 (release VERIFICATION.json: 0 computed differences)."
+      },
+      "1.0.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "Same logos and content as 1.0.9; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.9."
+      }
+    },
+    "quickstart/ja-kinetic/wp7": {
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": true,
+        "note": "Header and footer draw an inline SVG mark; the header flips light/dark. The theme favicon shows only while no site icon is set."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Site Logo pairs beside the Site Title in the header and the footer (theme 1.1.9); the header flips light/dark."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Logos as 1.0.7 (Site Logo pairs beside the Site Title in the header and the footer); theme 1.1.13: interface words through the text domain, Vietnamese font cuts, dates in the site's format, the error page wears the site's footer."
+      },
+      "1.0.9": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Same files and database as 1.0.8; the webroot archive is re-cut with every file 0644 and every directory 0755 (the 1.0.8 archive held 0600/0700 members, so the web container could not read wp-load.php)."
+      },
+      "1.0.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Logos as 1.0.9 (Site Logo pairs beside the Site Title in the header and the footer; the header flips light/dark; parts/header.html, parts/footer.html and inc/brand-logo.php byte-identical to theme 1.1.15, measured from the release archive 16/10). Theme 1.1.17 reads every design-system role variable with the template's own value as the fallback (role scan 0 unresolved, design-system-roles.json on the release); the header, footer and drawer logo and the wordmarks follow a worn system. Database as 1.0.9."
+      },
+      "1.0.11": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Database and content as 1.0.10; theme 1.1.18 (design system dot 3, 19/10/2026): two stylesheets read at the source the roles the slot contract patched for 1.0.10 (the Integrations call bar, the FAQ support and About values bands, the About journey labels) and the call buttons' focus rings read the focus-ring role; parts/header.html, parts/footer.html and inc/brand-logo.php unchanged, so logos as 1.0.10. With no design system worn it looks exactly as 1.0.10 (0 computed differences over 62 page views, light and dark)."
+      },
+      "1.0.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Database as 1.0.11; theme 1.1.19 (after dot 3, 20/10/2026): the Integrations page's ten mark pictures are drawn inline on every page view and read the accent role, and the ten uploaded SVG files paint in currentColor with no colour of their own (PIC-1); the hero terminal, the KineticQL code panel and the bento telemetry chart print a hidden drawn twin that the slot contract shows while a system is worn; parts/header.html, parts/footer.html and inc/brand-logo.php unchanged, so logos as 1.0.11. With no design system worn it looks exactly as 1.0.11."
+      }
+    },
+    "quickstart/ja-mood/j6": {
+      "1.0.0": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "unverified": ["logos"],
+        "note": "Six template styles, one of them Home Dark."
+      },
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "unverified": ["logos"],
+        "note": "Same logos and content as 1.0.0; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). Six template styles, one of them Home Dark."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Template ja_mood 2.1.1: the header and footer (always dark or brand-coloured) show the style's logo (logoimage_dark when set, else logoimage), every style carries logoimage_dark, and the plugin's favicon is the only icon; proven on site mood-j6-g2-verify 12/10/2026 with a test logo and favicon written as the brand writer does (21 menu pages and 63 articles: one icon link, the test logo in the header, no demo logo or template favicon). Vietnamese pages draw Rubik text in Be Vietnam Pro.",
+        "darkSpots": {
+          "header": true,
+          "proof": "header and footer bands brand-coloured or dark in all six styles; demo logo images/logo.png is white"
+        }
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "darkSpots": {
+          "header": true,
+          "proof": "header and footer bands brand-coloured or dark in all six styles; demo logo images/logo.png is white"
+        },
+        "note": "Same logos and content as 1.0.2; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.2 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "darkSpots": {
+          "header": true,
+          "proof": "header and footer bands brand-coloured or dark in all six styles; demo logo images/logo.png is white"
+        },
+        "note": "Same logos and content as 1.0.3; only the template (ja_mood) changed: every stylesheet reads the design system role variables with the template's own value as fallback (role scan clean, design-system-roles.json ships), and the social-home fade reads the ink role; release-batch verify: 0 computed differences, desktop and phone, 19/10/2026."
+      }
+    },
+    "quickstart/ja-morgan/j6": {
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "note": "Text logo in four template styles; dark mode only recolours the text."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Text logo Morgan. by default (Q8); a logo given turns every style to logotype image, and the template param logoimage_dark replaces it on a dark page, else dark mode shows the name."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.2; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). Text logo Morgan. by default (Q8); a logo given turns every style to logotype image, and the template param logoimage_dark replaces it on a dark page, else dark mode shows the name."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). Text logo Morgan. by default (Q8); a logo given turns every style to logotype image, and the template param logoimage_dark replaces it on a dark page, else dark mode shows the name."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos as 1.0.4; template ja_morgan 2.3.5: the error page needs no T3 constant, the footer and latest-news words go through the template language file, dates follow the language pack; demo buttons lead to real pages and the articles of one category have distinct dates."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.5 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: they read the design-system role variables (batch 2, 16/10/2026), so with no design system worn it looks exactly as 1.0.6 (release-batch.mjs verify: 0 differences)."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.7; template ja_morgan: the Joomla 3 system stylesheet is linked only where the file exists (Joomla 4 and later ship none, the fixed link answered 404) and the PT Root UI faces list the WOFF files the template ships (the EOT/TTF/SVG links answered 404); PREV-1 on dev, 18/10/2026. The same family draws the Vietnamese letters PT Root UI lacks from Be Vietnam Pro faces limited by unicode-range (LANG-2), never downloaded by a page without them. With no design system worn the page looks as 1.0.7 (release-batch verify)."
+      },
+      "1.0.9": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.8; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.8."
+      }
+    },
+    "quickstart/ja-morgan/wp7": {
+      "1.1.10": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": true,
+        "note": "Header logo is a text paragraph; dark mode and two home styles put it on a dark header."
+      },
+      "1.1.11": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "A light/dark Site Logo pair in the header (dark: dark mode and home styles 3 and 4); without a logo the name in Morgan text style (Q8)."
+      },
+      "1.1.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "A light/dark Site Logo pair in the header (dark: dark mode and home styles 3 and 4); without a logo the name in Morgan text style (Q8). 1.1.12 is 1.1.11 with wp-config.php from the 1.1.8 release (HTTPS behind the proxy, utf8mb4); theme and database byte-identical."
+      },
+      "1.1.13": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Same logo setup as 1.1.12 (light/dark Site Logo pair, the name in Morgan's text style without a logo); theme 1.1.15: words through the text domain, the site's date format, Be Vietnam Pro on Vietnamese pages, real button links."
+      },
+      "1.1.14": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Same files and database as 1.1.13; the webroot archive is re-cut with every file 0644 and every directory 0755 (the 1.1.13 archive held 0600/0700 members, so the web container could not read wp-load.php)."
+      },
+      "1.1.15": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Same logo setup as 1.1.14; theme 1.1.19: the demo site is named Morgan (blogname, D-81), so the text logo reads \"Morgan.\", and the Twitter links of the top bar and footer draw the bird (service twitter, also in the two database template parts)."
+      },
+      "1.1.16": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Same logo setup as 1.1.15; theme 1.1.20 reads the design-system role variables (design-system-roles.json ships, VARS-1), and the 14 headings and paragraphs that name Morgan outside a slot are named blocks with text slots (\"Purchase Morgan\" writes the site name as {site.title}, ABOUT-3)."
+      }
+    },
+    "quickstart/ja-nova/j6": {
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-132.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer item-2.png lum 163, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 161,
+          "height": 49
+        },
+        "note": "site_logo and site_logo_dark already swap with .d-light/.d-dark; light and dark logo and favicon measured on site tamq-7q-novajo2 (08/10/2026)."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-132.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer item-2.png lum 163, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 161,
+          "height": 49
+        },
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). site_logo and site_logo_dark already swap with .d-light/.d-dark; light and dark logo and favicon measured on site tamq-7q-novajo2 (08/10/2026)."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-132.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer item-2.png lum 163, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 161,
+          "height": 49
+        },
+        "note": "Template 1.2.6: same logo spots as 1.0.5. site_logo and site_logo_dark swap as a .d-light/.d-dark pair in the header (html/layouts/t4/element/logo.php); the footer (module 132, a Custom module) sits on the #212529 band in both modes and shows the dark-background logo, and html/mod_custom/default.php prints site_logo_dark in place of a footer picture that is the light site_logo. The header CSS lets a logo reach 56 px, so the logo is made 49 px tall like the demo item-1.png (161 x 49). Light and dark logo and favicon measured on site tamq-7q-novajo2 (08/10/2026).",
+        "logoHeight": 49
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-132.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer item-2.png lum 163, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 161,
+          "height": 49
+        },
+        "logoHeight": 49,
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.6 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-132.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer item-2.png lum 163, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 161,
+          "height": 49
+        },
+        "logoHeight": 49,
+        "note": "Same logos and content as 1.0.7; the database is 1.0.7's, byte for byte (sha256 982b553e...), and the logo code is the same. Only the template's stylesheets changed: they read the standard role variables (ja-products ds-b2-fin-nova, tokenized by tracy-ds-slot release-batch build), so with no design system worn the page is the same as 1.0.7 (verify: 0 computed differences, 17/10/2026, feat/ds-role-vars-batch2)."
+      },
+      "1.0.9": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-132.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer item-2.png lum 163, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 161,
+          "height": 49
+        },
+        "logoHeight": 49,
+        "note": "Same logos and content as 1.0.8; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.8."
+      }
+    },
+    "quickstart/ja-nova/wp7": {
+      "1.1.9": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": true,
+        "frame": {
+          "width": 162,
+          "height": 48
+        },
+        "note": "Hard-coded Image blocks, a light and a dark one swapped by CSS."
+      },
+      "1.1.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 162,
+          "height": 48
+        },
+        "note": "Site Logo blocks (theme 1.1.10): the light spots read site_logo, the dark ones and the footer tracy_logo_dark; an empty spot shows the site name as text."
+      },
+      "1.1.11": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 162,
+          "height": 48
+        },
+        "note": "Same logo places as 1.1.10 (theme 1.1.13); dates follow the site format, interface words go through the text domain, Vietnamese pages use Be Vietnam Pro, buttons lead to real pages."
+      },
+      "1.1.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 162,
+          "height": 48
+        },
+        "note": "Same files and database as 1.1.11; the webroot archive is re-cut with every file 0644 and every directory 0755 (the 1.1.11 archive held 0600/0700 members, so the web container could not read wp-load.php)."
+      },
+      "1.1.13": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 162,
+          "height": 48
+        },
+        "note": "Logos and database as 1.1.12 (header, footer and the brand logo files unchanged in the archive, 19/10/2026). Theme 1.1.17 reads every design-system role variable with the template's own value as the fallback (role scan 0 unresolved, design-system-roles.json on the release); unworn, every page computes as with theme 1.1.16."
+      }
+    },
+    "quickstart/ja-phio/j6": {
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t4",
+        "profiles": ["default", "home-2"],
+        "darkSpots": {
+          "profiles": ["home-2"],
+          "proof": "home-2 logo-2.png lum 243"
+        }
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2"],
+        "darkSpots": {
+          "profiles": ["home-2"],
+          "proof": "home-2 logo-2.png lum 243"
+        },
+        "frame": {
+          "width": 98,
+          "height": 49
+        },
+        "note": "site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The home-2 header is dark in both modes."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2"],
+        "darkSpots": {
+          "profiles": ["home-2"],
+          "proof": "home-2 logo-2.png lum 243"
+        },
+        "frame": {
+          "width": 98,
+          "height": 49
+        },
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The home-2 header is dark in both modes."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2"],
+        "darkSpots": {
+          "profiles": ["home-2"],
+          "proof": "home-2 logo-2.png lum 243"
+        },
+        "frame": {
+          "width": 98,
+          "height": 49
+        },
+        "note": "Template ja_phio 1.3.3: same logos, logo frame and stylesheets as 1.0.4. Interface words of the related-items, category-module and theme-toggle layouts go through TPL_ keys, the ACM timing fields are numbers, two demo buttons lead to Contact and Services, the home menu item no longer carries its own link-preview words, and the tied article dates of each category are made distinct. site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The home-2 header is dark in both modes."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2"],
+        "darkSpots": {
+          "profiles": ["home-2"],
+          "proof": "home-2 logo-2.png lum 243"
+        },
+        "frame": {
+          "width": 98,
+          "height": 49
+        },
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.5 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2"],
+        "darkSpots": {
+          "profiles": ["home-2"],
+          "proof": "home-2 logo-2.png lum 243"
+        },
+        "frame": {
+          "width": 98,
+          "height": 49
+        },
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: colours, corners and fonts read the design-system role variables (--ds-*), each falling back to the template's own value, so with no design system worn it looks exactly as 1.0.6 (batch 2, 16/10/2026)."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2"],
+        "darkSpots": {
+          "profiles": ["home-2"],
+          "proof": "home-2 logo-2.png lum 243"
+        },
+        "frame": {
+          "width": 98,
+          "height": 49
+        },
+        "note": "Same logos and content as 1.0.7; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.7."
+      }
+    },
+    "quickstart/ja-podcast/j6": {
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-98.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer Logo-light.png lum 186, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 193,
+          "height": 48
+        },
+        "note": "site_logo, site_logo_dark and two small variants already swap with .d-light/.d-dark; logo pair and favicon measured on the inner pages of site tamq-7q-g-podcast and on the group representative JA Nova j6 (08/10/2026)."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-98.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer Logo-light.png lum 186, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 193,
+          "height": 48
+        },
+        "note": "Same logos and content as 1.0.1; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). site_logo, site_logo_dark and two small variants already swap with .d-light/.d-dark; logo pair and favicon measured on the inner pages of site tamq-7q-g-podcast and on the group representative JA Nova j6 (08/10/2026)."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-98.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer Logo-light.png lum 186, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 193,
+          "height": 48
+        },
+        "note": "Same logos and content as 1.0.2, with real links on the demo buttons. ja_podcast 1.2.1 adds a Custom module layout (html/mod_custom/default.php): the footer logo module, on a footer that is dark in both modes, prints the Site setting Logo Dark Image (site_logo_dark) in place of the site or demo logo picture, so a logo set in the template settings reaches the footer too; a picture Tracy writes into the footer slot is printed as written. site_logo, site_logo_dark and two small variants already swap with .d-light/.d-dark; logo pair and favicon measured on the inner pages of site tamq-7q-g-podcast and on the group representative JA Nova j6 (08/10/2026)."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-98.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer Logo-light.png lum 186, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 193,
+          "height": 48
+        },
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed, tokenized again with today's slot contract (words on the accent read accent-on: TDSR CSS-2, 13/10/2026), so with no design system worn it looks exactly as 1.0.3 (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-98.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer Logo-light.png lum 186, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 193,
+          "height": 48
+        },
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.4 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-98.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer Logo-light.png lum 186, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 193,
+          "height": 48
+        },
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/ja-products ds-b2-fin-podcast, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.5 (release-batch.mjs verify: 0 computed differences)."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-98.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer Logo-light.png lum 186, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 193,
+          "height": 48
+        },
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.6."
+      }
+    },
+    "quickstart/ja-prodex/j6": {
+      "1.0.0": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-122.0",
+        "frame": {
+          "width": 223,
+          "height": 48
+        },
+        "note": "One logo in the header, the off-canvas and the footer slot, and the favicon, measured on site tamq-7q-g-prodex (08/10/2026)."
+      },
+      "1.0.1": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-122.0",
+        "frame": {
+          "width": 223,
+          "height": 48
+        },
+        "note": "Same logo and content as 1.0.0; only the template's stylesheets changed: they read a worn design system (var(--ds-c-<role>, <its own colour>)), so a site wearing none looks exactly as 1.0.0 (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.2": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-122.0",
+        "frame": {
+          "width": 223,
+          "height": 48
+        },
+        "note": "Same logo as 1.0.1; template 1.1.1 adds the missing TPL_ language keys and real button links, and the logo size hint matches the 223x48 file (logoHeight 48).",
+        "logoHeight": 48
+      },
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-122.0",
+        "frame": {
+          "width": 223,
+          "height": 48
+        },
+        "logoHeight": 48,
+        "note": "Same logos and content as 1.0.2; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.2 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.4": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-122.0",
+        "frame": {
+          "width": 223,
+          "height": 48
+        },
+        "logoHeight": 48,
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed: they read the design-system role variables (role scan, VARS-1, 19/10/2026), each falling back to the value 1.0.3 paints, so with no design system worn it looks exactly as 1.0.3."
+      },
+      "1.0.5": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-122.0",
+        "frame": {
+          "width": 223,
+          "height": 48
+        },
+        "logoHeight": 48,
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.4."
+      }
+    },
+    "quickstart/ja-rent/j6": {
+      "1.0.0": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 17
+      },
+      "1.0.1": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 17,
+        "note": "Same logo and content as 1.0.0; only the template's error page changed (ja_rent 2.2.1), so a missing page answers 404 instead of 500."
+      },
+      "1.0.2": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 17,
+        "note": "Same logo and content as 1.0.1; only the template's stylesheets changed: they read a worn design system (var(--ds-c-<role>, <its own colour>)), so a site wearing none looks exactly as 1.0.1 (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 17,
+        "note": "Single image logo in every style (17 px), as 1.0.2; proven on the restored 1.0.3 with Claude Cowork 0.24.20: a written logo shows in the header of all 24 menu pages and 32 articles and on the 404 page, the article publisher logo follows it, and the written favicon is the only icon. ja_rent 2.2.2 also sends the car list, footer and login words through TPL_ keys and prints no PHP warning; demo buttons and the Explore search link lead to real pages; the blog menu item carries its category's title."
+      },
+      "1.0.4": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 17,
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.3 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.5": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 17,
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: every colour, corner and font that plays a role reads its design-system role variable with its own value as the fallback (role scan clean, design-system-roles.json in the release), including the green, orange and yellow colour themes and the RTL build, so with no design system worn it looks exactly as 1.0.4 (release-batch verify)."
+      }
+    },
+    "quickstart/ja-resort/j6": {
+      "1.0.1": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "logoHeight": 48,
+        "note": "One logo key (site_logo) shown in the header (#294138), the footnav (#122223) and the off-canvas, its dark-mode switch off and dark mode leaving the logo alone, so only the dark-background logo ever shows: read from the 1.0.1 release (etc/site/default.json, etc/layout, css/darkmode.css) and seen on site tamq-9j-res (08/10/2026), where a pair's light logo was collected and never used. Readiness proven on its group representative JA Vega j6 (site tamq-7q-g-vega). Its CSS caps the header logo only below 992px, so the logo is made 48px tall like the demo one (168 x 48)."
+      },
+      "1.0.2": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "logoHeight": 48,
+        "note": "Same logos and content as 1.0.1; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). One logo key (site_logo) shown in the header (#294138), the footnav (#122223) and the off-canvas, its dark-mode switch off and dark mode leaving the logo alone, so only the dark-background logo ever shows (read from 1.0.1, seen on site tamq-9j-res, 08/10/2026). Readiness proven on its group representative JA Vega j6 (site tamq-7q-g-vega). Its CSS caps the header logo only below 992px, so the logo is made 48px tall like the demo one (168 x 48)."
+      },
+      "1.0.3": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "logoHeight": 48,
+        "note": "Same logos as 1.0.2 (one logo key site_logo in the header, footnav and off-canvas, dark-mode switch off, so only the dark-background logo shows; read from 1.0.1, seen on site tamq-9j-res, 08/10/2026; readiness proven on group representative JA Vega j6). 1.0.3 re-cuts the installer release as a webroot + database pack for Template Customization Question Readiness (ja_resort 2.3.3: Vietnamese faces, TPL_ keys, ACM field types; demo: button destinations, distinct article dates); the logo and favicon code is unchanged. Its CSS caps the header logo only below 992px, so the logo is made 48px tall like the demo one (168 x 48)."
+      },
+      "1.0.4": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "logoHeight": 48,
+        "note": "Same logo spots, content and database as 1.0.3; css/language-fonts.css also re-sets for Vietnamese every rule of css/tpl/theme.tpl.css that prints the heading or body font into a selector (12/10/2026)."
+      },
+      "1.0.7": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "logoHeight": 48,
+        "note": "Same logos and content as 1.0.6; same database (1.0.6 is 1.0.4's template with T4 2.6.3 and new agent docs); the template reads every design-system role variable with its own value as the fallback (role scan 0 unresolved, design-system-roles.json on the release), verified from its own archive against 1.0.6: 0 computed differences, same pixels (19/10/2026)."
+      },
+      "1.0.8": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "logoHeight": 48,
+        "note": "Same logos and content as 1.0.7; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.7."
+      },
+      "1.0.5": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "logoHeight": 48,
+        "note": "As 1.0.4; T4 2.6.3 activates jquery before jquery-noconflict. Exactly two framework files changed, all other file bodies and database unchanged. Runtime order and public pages verified on a clean restore."
+      },
+      "1.0.6": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "logoHeight": 48,
+        "note": "As 1.0.5; ships current root and component agent documentation for T4, ACM and JA Resort. The archive keeps the verified jQuery-before-noConflict fix."
+      }
+    },
+    "quickstart/ja-restaurant/j6": {
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 110,
+        "note": "Template ja_restaurant: one image logo in every style (Default, Blue, Green, Pink, Purple), each a dark 178 x 110 picture on the light header, and no CSS rule holds an uploaded logo to a height, so the writer scales it to 110; the header shows the style's logoimage when logotype is image, and the plugin's favicon is the only icon. Proven on the restored 1.0.5 (built from this release by release-joomla.mjs: the same template files but the stylesheets, the same logo files, the same style parameters but devmode) with Claude Cowork for Joomla 0.24.46 (20/10/2026) with a test logo written into all five styles as the brand writer does (enable_logoimage_sm off) and a test favicon in tracy-favicon.json: 30 menu pages answer 200 with the test logo in the header and one icon link, the test one. Left: the T3 article author block (plugins/system/t3/base-bs3 info_block/author.php, no template override) still prints the template's images/logo.png as the hidden structured-data publisher logo."
+      },
+      "1.0.4": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 110,
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed (tokenized to read the worn design system, tracy-ds-slot release-joomla.mjs) and T3 dev mode is off in the five styles, so the logo files and every other style parameter are the same bytes."
+      },
+      "1.0.5": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 110,
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed (tokenized again, tracy-ds-slot release-joomla.mjs): the database is the same bytes as 1.0.4. The brand writer and favicon proof in the 1.0.3 row was measured on this release."
+      },
+      "1.0.6": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 110,
+        "note": "Same logos as 1.0.5; the template reads every design-system role variable with its own value as the fallback (role scan 0 unresolved), Vietnamese pages use Saira Extra Condensed, and the error, offline, gallery and footer layouts are fixed; the database changes only the demo content (the OpenTable restaurant id cleared, sample text without entities, 21 article publish dates)."
+      }
+    },
+    "quickstart/ja-restaurant/wp7": {
+      "1.0.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 178,
+          "height": 110
+        },
+        "note": "Theme wp-ja-restaurant 1.0.0 (port of JA Restaurant 1.0.6), measured on the 21/10/2026 pack and its theme: the header carries two Site Logo blocks, jr-logo--light (site_logo, the source's logo.png, 178 x 110, attachment 137) and jr-logo--dark (tracy_logo_dark, unset in the pack), swapped by data-theme and by prefers-color-scheme when no theme is saved; inc/brand-logo.php prints the site name as text in either spot while its option is empty, so the dark mode shows the name until a dark-ground logo is given (D-08); CSS holds a header logo picture at 178 px wide, height auto; the footer shows no logo and names the site through {site.title}; site_icon is unset in the pack and core's favicon output is untouched."
+      },
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 178,
+          "height": 110
+        },
+        "note": "Same logos and content as 1.0.0; only the template's stylesheets changed: under a design system the welcome heading's accent bar reads the page colour, so the heading reads wherever it meets the bar (D-30)."
+      }
+    },
+    "quickstart/ja-resume/j6": {
+      "1.0.0": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 48
+      },
+      "1.0.1": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 48,
+        "note": "Same logo and content as 1.0.0; only the template's stylesheets changed: they read a worn design system (var(--ds-c-<role>, <its own colour>)), so a site wearing none looks exactly as 1.0.0 (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.2": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "logoHeight": 48,
+        "note": "The same installer as 1.0.1 (same bytes): released again only so its content contract names T3 dev mode off, as its database does (the 1.0.1 contract pinned it on, so the first bind warned of drift in every template style)."
+      },
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 48,
+        "note": "Template ja_resume 2.1.1: the header shows the style's logoimage when logotype is image (all 8 styles), the articles' structured-data publisher logo follows it, and the plugin's favicon is the only icon; proven on site resume-j6-g2-verify 12/10/2026 with a test logo and favicon written as the brand writer does (one icon link, the test logo in the header, no demo logo or template favicon on 30 menu pages and 350 articles). Text logo CV by default. Demo: the CV buttons lead to the Contact section, empty and trashed buttons removed, imported Pinterest and JoomlArt links absolute, the Vimeo articles' Chinese, Japanese and Korean lines in English."
+      },
+      "1.0.4": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 48,
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.3 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.5": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 48,
+        "note": "Same logos and content as 1.0.4; one menu setting changed: the Social Feed lists its articles newest first instead of in a new random order on every load (release-joomla.mjs --replace, menuItem-131 params orderby_sec). The template's stylesheets read the standard role variables (ja-products ds-b2-fin-resume), so with no design system worn the page looks as 1.0.4 (release-batch verify: 0 computed differences, 17/10/2026)."
+      },
+      "1.0.6": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 48,
+        "note": "Same logos and content as 1.0.5; template ja_resume: the Joomla 3 system stylesheet (media/system/css/system.css) and the offline page's general.css are linked only where the file exists (Joomla 4 and later ship neither, the fixed link answered 404); PREV-1 on dev, 18/10/2026. With no design system worn the page looks as 1.0.5 (release-batch verify)."
+      },
+      "1.0.7": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "logoHeight": 48,
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.6."
+      }
+    },
+    "quickstart/ja-sensei/j6": {
+      "1.0.0": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "footerSlot": "module-108.2",
+        "darkSpots": {
+          "header": true,
+          "proof": "header images/logo.png lum 255, footer others/logo.png lum 52"
+        },
+        "frame": {
+          "width": 81,
+          "height": 23
+        },
+        "logoHeight": 23,
+        "note": "Dark header, light footer."
+      },
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "footerSlot": "module-108.2",
+        "darkSpots": {
+          "header": true,
+          "proof": "header images/logo.png lum 255, footer others/logo.png lum 52"
+        },
+        "frame": {
+          "width": 81,
+          "height": 23
+        },
+        "logoHeight": 23,
+        "note": "Same logo and content as 1.0.0; only the template's stylesheets changed: they read a worn design system (var(--ds-c-<role>, <its own colour>)), so a site wearing none looks exactly as 1.0.0 (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "footerSlot": "module-108.2",
+        "darkSpots": {
+          "header": true,
+          "proof": "header images/logo.png lum 255, footer others/logo.png lum 52"
+        },
+        "frame": {
+          "width": 81,
+          "height": 23
+        },
+        "logoHeight": 23,
+        "note": "The same installer as 1.0.1 (same bytes): released again only so its content contract names T3 dev mode off, as its database does (the 1.0.1 contract pinned it on, so the first bind warned of drift in every template style)."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "footerSlot": "module-108.2",
+        "darkSpots": {
+          "header": true,
+          "proof": "header images/logo.png lum 255, footer others/logo.png lum 52"
+        },
+        "frame": {
+          "width": 81,
+          "height": 23
+        },
+        "logoHeight": 23,
+        "note": "Template ja_sensei 2.2.2: the dark header shows the style's logo (logoimage_dark when set, else logoimage), the footer logo is the footerSlot, and the plugin's favicon is the only icon; proven on site sensei-j6-g2-verify 12/10/2026 with a test logo pair and favicon written as the brand writer does (header logo-dark, footer logo-light, one icon link, no demo logo on 20 menu pages). Vietnamese pages draw HKGrotesk text in Hanken Grotesk."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "footerSlot": "module-108.2",
+        "darkSpots": {
+          "header": true,
+          "proof": "header images/logo.png lum 255, footer others/logo.png lum 52"
+        },
+        "frame": {
+          "width": 81,
+          "height": 23
+        },
+        "logoHeight": 23,
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.3 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "footerSlot": "module-108.2",
+        "darkSpots": {
+          "header": true,
+          "proof": "header images/logo.png lum 255, footer others/logo.png lum 52"
+        },
+        "frame": {
+          "width": 81,
+          "height": 23
+        },
+        "logoHeight": 23,
+        "note": "Same logos and content as 1.0.4; the database is 1.0.4's, byte for byte, and the logo code is the same (measured on the 1.0.5 pack: scripts/template-customization-question-readiness.mjs). Only the template's stylesheets changed: they read the standard role variables (ja-products ds-batch2-lane-A 423b83846, tokenized by tracy-ds-slot release-batch build), so with no design system worn the page is the same as 1.0.4 (verify: 0 computed differences, 16/10/2026, feat/ds-role-vars-batch2)."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "footerSlot": "module-108.2",
+        "darkSpots": {
+          "header": true,
+          "proof": "header images/logo.png lum 255, footer others/logo.png lum 52"
+        },
+        "frame": {
+          "width": 81,
+          "height": 23
+        },
+        "logoHeight": 23,
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.5."
+      }
+    },
+    "quickstart/ja-seven/j6": {
+      "1.0.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-3", "home-4"],
+        "footerSlot": "module-128.0",
+        "darkSpots": {
+          "profiles": ["home-4"],
+          "proof": "home-4 logo-4.png lum 255"
+        },
+        "frame": {
+          "width": 161,
+          "height": 29
+        },
+        "note": "Readiness proven on its group representatives JA Vega j6 and JA Prodex j6 (sites tamq-7q-g-vega, tamq-7q-g-prodex, 08/10/2026)."
+      },
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-3", "home-4"],
+        "footerSlot": "module-128.0",
+        "darkSpots": {
+          "profiles": ["home-4"],
+          "proof": "home-4 logo-4.png lum 255"
+        },
+        "frame": {
+          "width": 161,
+          "height": 29
+        },
+        "note": "Same logo and content as 1.0.0; only the template's stylesheets changed: they read a worn design system (var(--ds-c-<role>, <its own colour>)), so a site wearing none looks exactly as 1.0.0 (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-3", "home-4"],
+        "footerSlot": "module-128.0",
+        "darkSpots": {
+          "profiles": ["home-4"],
+          "proof": "home-4 logo-4.png lum 255"
+        },
+        "frame": {
+          "width": 161,
+          "height": 29
+        },
+        "note": "Same logos as 1.0.1; the header logo prints at its own size (no desktop CSS rule holds it), so the place is the demo logo-1.png height, 29 px. ja_seven 1.3.1: video-dialog close label and opening-hours words through TPL_ keys, ACM timings as number fields; demo: blog-layout menu items named Style 1/2/3 and Blog, home-3 Portfolio item named Work, real links on the pricing buttons, empty team and client buttons removed, distinct article dates, the Our blog date in the language pack's format.",
+        "logoHeight": 29
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-3", "home-4"],
+        "footerSlot": "module-128.0",
+        "darkSpots": {
+          "profiles": ["home-4"],
+          "proof": "home-4 logo-4.png lum 255"
+        },
+        "frame": {
+          "width": 161,
+          "height": 29
+        },
+        "logoHeight": 29,
+        "note": "Same logos and content as 1.0.2; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.2 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-3", "home-4"],
+        "footerSlot": "module-128.0",
+        "darkSpots": {
+          "profiles": ["home-4"],
+          "proof": "home-4 logo-4.png lum 255"
+        },
+        "frame": {
+          "width": 161,
+          "height": 29
+        },
+        "logoHeight": 29,
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed: colours, corners and fonts read the design-system role variables (--ds-*), each falling back to the template's own value, so with no design system worn it looks exactly as 1.0.3 (batch 2, 16/10/2026)."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-3", "home-4"],
+        "footerSlot": "module-128.0",
+        "darkSpots": {
+          "profiles": ["home-4"],
+          "proof": "home-4 logo-4.png lum 255"
+        },
+        "frame": {
+          "width": 161,
+          "height": 29
+        },
+        "logoHeight": 29,
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.4."
+      }
+    },
+    "quickstart/ja-smallbiz/j6": {
+      "1.0.0": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": false,
+        "framework": "t3",
+        "note": "The logo shows in all four template styles (site tamq-7q-g-smallbiz, 08/10/2026). The plugin favicon link is printed before the template favicon.ico link, and which one the browser tab shows was not verified."
+      },
+      "1.0.1": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": false,
+        "framework": "t3",
+        "note": "Same logo and content as 1.0.0; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). The logo shows in all four template styles (site tamq-7q-g-smallbiz, 08/10/2026). The plugin favicon link is printed before the template favicon.ico link, and which one the browser tab shows was not verified."
+      },
+      "1.0.2": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Template ja_smallbiz 2.2.1: the header shows the style's logoimage when logotype is image (all four styles, Default, Car, Gym and Wedding, whose demo logos are all 144 x 32), the articles' structured-data publisher logo follows it, and the plugin's favicon is the only icon; proven on site smallbiz-j6-g2-verify 12/10/2026 with a test logo and favicon written as the brand writer does (one icon link, the test logo in the header, no demo logo or template favicon on 25 menu pages and 40 articles). The template CSS does not hold the header logo, so the row holds the customer's logo to the demo height (logoHeight 32, frame 144 x 32). Menu item 123 is now Blog Layout.",
+        "frame": {
+          "width": 144,
+          "height": 32
+        },
+        "logoHeight": 32
+      },
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 144,
+          "height": 32
+        },
+        "logoHeight": 32,
+        "note": "Same logos and content as 1.0.2; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.2 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.4": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 144,
+          "height": 32
+        },
+        "logoHeight": 32,
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed: they read the design-system role variables (role scan, VARS-1, 19/10/2026), each falling back to the value 1.0.3 paints, so with no design system worn it looks exactly as 1.0.3."
+      }
+    },
+    "quickstart/ja-social-ii/j6": {
+      "1.0.0": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3"
+      },
+      "1.0.1": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3"
+      },
+      "1.0.2": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "note": "Same logo and content as 1.0.1; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look)."
+      },
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "As 1.0.2; the header shows the customer's logo in all four template styles and the Claude Cowork favicon replaces the template icon, proven on the restored 1.0.3 site with plugin 0.24.20 (12/10/2026, 12 pages); the footer and slideshow words go through TPL_ keys, and the demo's buttons and cards link to published pages."
+      },
+      "1.0.4": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.3 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.5": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.4; template ja_social_ii: its stylesheets read every design-system role variable (role scan 0 unresolved, VARS-1, dot 3, 19/10/2026) and the Tagged Items override no longer calls formbehavior.chosen (Joomla 5 and later have no chosen preset: the page answered 500). With no design system worn every page looks as 1.0.4 (release-batch verify: 0 computed differences desktop and phone; Tagged Items now answers 200)."
+      }
+    },
+    "quickstart/ja-spa/j6": {
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "logo-light"],
+        "darkSpots": {
+          "profiles": ["logo-light"],
+          "proof": "logo-light profile: both of its logos are logo-light.png, lum 255"
+        },
+        "note": "site_logo_2 is the logo shown while the overlay menu is open; the light logo, the dark one in the open overlay and the favicon measured on site tamq-7q-g-spa (08/10/2026)."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "logo-light"],
+        "darkSpots": {
+          "profiles": ["logo-light"],
+          "proof": "logo-light profile: both of its logos are logo-light.png, lum 255"
+        },
+        "note": "Same logos and content as 1.0.1; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). site_logo_2 is the logo shown while the overlay menu is open; the light logo, the dark one in the open overlay and the favicon measured on site tamq-7q-g-spa (08/10/2026)."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "logo-light"],
+        "footerSlot": "module-119.2",
+        "frame": {
+          "width": 80,
+          "height": 84
+        },
+        "darkSpots": {
+          "profiles": ["logo-light"],
+          "proof": "logo-light profile: both of its logos are logo-light.png, lum 255"
+        },
+        "note": "Template ja_spa 2.2.3: the header prints site_logo and, while the overlay menu or search is open, site_logo_2 (a dark-background key); the logo-light profile (style Home Navbar Standard) shows logo-light.png in both, so both of its keys take the dark-background logo. The Logo Footer module (119, position logo, printed by the home-standard layout footer) shows the light-background demo logo logo-color.png and is the footer slot; every demo logo is 80 x 84, the frame. Proven on site spa-j6-g2-verify 12/10/2026 with test logos and favicon written as the brand writer does (both site profiles in local/etc/site, module 119 slot): one icon link (the test favicon), the test logos in the header and the home-standard footer, no demo logo on 28 menu pages and 30 articles. Vietnamese pages draw Marcellus headings in Gideon Roman and the Sacramento section signatures in Allura."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "logo-light"],
+        "footerSlot": "module-119.2",
+        "frame": {
+          "width": 80,
+          "height": 84
+        },
+        "darkSpots": {
+          "profiles": ["logo-light"],
+          "proof": "logo-light profile: both of its logos are logo-light.png, lum 255"
+        },
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.5 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "logo-light"],
+        "footerSlot": "module-119.2",
+        "frame": {
+          "width": 80,
+          "height": 84
+        },
+        "darkSpots": {
+          "profiles": ["logo-light"],
+          "proof": "logo-light profile: both of its logos are logo-light.png, lum 255"
+        },
+        "note": "Same logos and content as 1.0.6; the database is 1.0.6's and the logo code is the same. Only the template's stylesheets changed: they read the standard role variables (ja-products ds-b2-fin-spa, tokenized by tracy-ds-slot release-batch build), so with no design system worn the page is the same as 1.0.6 (verify: 0 computed differences, 16/10/2026)."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "logo-light"],
+        "footerSlot": "module-119.2",
+        "frame": {
+          "width": 80,
+          "height": 84
+        },
+        "darkSpots": {
+          "profiles": ["logo-light"],
+          "proof": "logo-light profile: both of its logos are logo-light.png, lum 255"
+        },
+        "note": "Same logos and content as 1.0.7; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.7."
+      }
+    },
+    "quickstart/ja-space/j6": {
+      "1.0.2": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3"
+      },
+      "1.0.3": {
+        "logos": "single",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t3",
+        "note": "Same logo and content as 1.0.2; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look)."
+      },
+      "1.0.4": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Template ja_space 2.2.1: the header shows the style's logoimage when logotype is image (both styles, Default and Light), the articles' structured-data publisher logo follows it, and the plugin's favicon is the only icon; proven on site space-j6-g2 12/10/2026 with a test logo and favicon written as the brand writer does (one icon link, the test logo in the header, no demo logo or favicon on 23 menu pages and 22 articles). Vietnamese pages draw Metropolis text in Be Vietnam Pro."
+      },
+      "1.0.5": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.4 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.6": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: they read every design-system role variable (role scan 0 unresolved, VARS-1, dot 3, 19/10/2026), so with no design system worn the page looks exactly as 1.0.5 (release-batch verify: 0 computed differences desktop and phone)."
+      },
+      "1.0.7": {
+        "logos": "single",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.6."
+      }
+    },
+    "quickstart/ja-symphony/j6": {
+      "1.0.0": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Readiness proven on its group representative JA Vega j6 (site tamq-7q-g-vega, 08/10/2026)."
+      },
+      "1.0.1": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos and content as 1.0.0; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). Readiness proven on its group representative JA Vega j6 (site tamq-7q-g-vega, 08/10/2026)."
+      },
+      "1.0.2": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos as 1.0.1; template 2.1.3 routes its footer and media player words through TPL_ keys, adds the T4 error-page keys and Vietnamese replacement fonts (Be Vietnam Pro, Dancing Script under :lang(vi)); the demo gives tied articles distinct dates and titles the blog menu items as their category. Readiness proven on its group representative JA Vega j6 (site tamq-7q-g-vega, 08/10/2026)."
+      },
+      "1.0.3": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos and content as 1.0.2; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.2 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.4": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed: every value reads the design system role variables with the template's own as fallback (role scan clean, design-system-roles.json ships; release-batch verify: 0 computed differences, same pixels, 19/10/2026)."
+      },
+      "1.0.5": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.4."
+      }
+    },
+    "quickstart/ja-tour/j6": {
+      "1.0.0": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "unverified": ["logos"],
+        "note": "Readiness proven on its group representative JA Vega j6 (site tamq-7q-g-vega, 08/10/2026). The home page title is empty, so the tab reads Home."
+      },
+      "1.0.1": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "unverified": ["logos"],
+        "note": "Same logo and content as 1.0.0; only the template's stylesheets changed: they read a worn design system (var(--ds-c-<role>, <its own colour>)), so a site wearing none looks exactly as 1.0.0 (tracy-ds-slot release-joomla.mjs)."
+      },
+      "1.0.2": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "unverified": ["logos"],
+        "note": "Same logo and content as 1.0.1. The demo logo images/joomlart/logo/logo.png is 188 x 56 and the template lets an uploaded logo reach 150 px, so the row holds the customer's logo to the demo height (logoHeight 56, frame 188 x 56). Menu items Travel and Tours now carry their categories' titles; Vietnamese headings draw in Source Serif 4 (css/language-fonts.css).",
+        "logoHeight": 56,
+        "frame": {
+          "width": 188,
+          "height": 56
+        }
+      },
+      "1.0.3": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "unverified": ["logos"],
+        "logoHeight": 56,
+        "frame": {
+          "width": 188,
+          "height": 56
+        },
+        "note": "Same logos and content as 1.0.2; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.2 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.4": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "unverified": ["logos"],
+        "logoHeight": 56,
+        "frame": {
+          "width": 188,
+          "height": 56
+        },
+        "note": "Same logos and content as 1.0.3; the template's stylesheets read the standard role variables at the source (JoomlArt-Products/ja-products ds-b2-fin-tour, laid over the 1.0.3 pair and tokenized by tracy-ds-slot release-joomla.mjs), so with no design system worn it looks exactly as 1.0.3 (VERIFICATION.json: 0 computed differences, desktop and phone)."
+      },
+      "1.0.5": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "unverified": ["logos"],
+        "logoHeight": 56,
+        "frame": {
+          "width": 188,
+          "height": 56
+        },
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.4."
+      }
+    },
+    "quickstart/ja-trip/j6": {
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t4",
+        "profiles": ["default"]
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 156,
+          "height": 48
+        },
+        "note": "site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 156,
+          "height": 48
+        },
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 156,
+          "height": 48
+        },
+        "note": "Same logos as 1.0.4 (site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode). Template 1.2.4: interface words through TPL_ keys, Vietnamese pages draw text in Be Vietnam Pro and script titles in Dancing Script (css/language-fonts.css), the gallery speed is no text slot, demo buttons lead to About and Contact, tied article dates made distinct."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 156,
+          "height": 48
+        },
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.5 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 156,
+          "height": 48
+        },
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/ja-products ds-b2-fin-trip, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.6 (release-batch.mjs verify: 0 computed differences); the JA Google Map blocks on the tour pages and Contact are a street map picture linked to Google Maps instead of Google's error box (the demo's API key belongs to JoomlArt's demo domain)."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 156,
+          "height": 48
+        },
+        "note": "Same logos and content as 1.0.7; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.7."
+      }
+    },
+    "quickstart/ja-vega/j6": {
+      "1.0.3": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-124.2",
+        "frame": {
+          "width": 165,
+          "height": 54
+        },
+        "note": "The header is dark in both modes on every page and the footer slot is dark: only the dark-background logo ever shows (site tamq-7q-g-vega, 08/10/2026, light and dark mode, desktop and 390 px)."
+      },
+      "1.0.4": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-124.2",
+        "frame": {
+          "width": 165,
+          "height": 54
+        },
+        "note": "Same logo and content as 1.0.3; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). The header is dark in both modes on every page and the footer slot is dark: only the dark-background logo ever shows (site tamq-7q-g-vega, 08/10/2026, light and dark mode, desktop and 390 px)."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "note": "Template 1.2.6: the header (dark in both modes) prints Logo Image (site_logo) and, when set, Logo Dark Image (site_logo_dark) as a .d-light/.d-dark pair (html/layouts/t4/element/logo.php, css/logo-pair.css), so the layout reads as a pair whose only spot, the default profile header, is dark. The Footer Logo module (124) is unpublished on every page, so the row names no footer slot; the frame is the header demo logo item-1.png (139 x 60). Proved on site vega-j6-g2-verify restored from the 1.0.5 pack (12/10/2026): a logo and favicon written as the template.siteSettings door writes them (local/etc/site/default.json, the dark-background logo in site_logo and site_logo_dark) show in the header and as the favicon on home, About Us, Services, Portfolio, Contact and News, with no demo logo left; a different Logo Dark Image prints the .d-light/.d-dark pair and css/logo-pair.css is served. The 404 page keeps the template favicon.ico, as in 1.0.4.",
+        "darkSpots": {
+          "profiles": ["default"],
+          "proof": "default site_logo item-1.png lum 196"
+        }
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "darkSpots": {
+          "profiles": ["default"],
+          "proof": "default site_logo item-1.png lum 196"
+        },
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.5 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "darkSpots": {
+          "profiles": ["default"],
+          "proof": "default site_logo item-1.png lum 196"
+        },
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed (the database and the logo code are 1.0.6's): they read the standard design-system role variables (colours, corners, faces) with the template's own values as fallback (JoomlArt-Products/ja-products ds-b2-fin-vega, tokenized by tracy-ds-slot release-batch build), so with no design system worn the page is the same as 1.0.6 (release-batch.mjs verify: 0 computed differences, 16/10/2026, batch 2)."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "darkSpots": {
+          "profiles": ["default"],
+          "proof": "default site_logo item-1.png lum 196"
+        },
+        "note": "Same logos and content as 1.0.7; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.7."
+      }
+    },
+    "quickstart/ja-vega/wp7": {
+      "1.1.11": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "note": "Core Site Logo on a black header in both modes; no Site Title fallback."
+      },
+      "1.1.12": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "note": "Core Site Logo on a black header in both modes; since theme 1.1.12 no logo shows the site name as text."
+      },
+      "1.1.13": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "note": "Both header logo spots (bar and phone drawer) sit on the black bar in both modes: since theme 1.1.16 they are dark spots showing tracy_logo_dark, or the site name as text.",
+        "darkLogo": true
+      },
+      "1.1.14": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "note": "Same files and database as 1.1.13; the webroot archive is re-cut with every file 0644 and every directory 0755 (the 1.1.13 archive held 0600/0700 members, so the web container could not read wp-load.php).",
+        "darkLogo": true
+      },
+      "1.1.15": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "note": "Same logos and content as 1.1.14; only the theme changed: wp-ja-vega 1.1.17 (released 13/10/2026) replaces 1.1.16, whose inc/extra.php printed four lines of PHP before <?php on every page. Same files and database as 1.1.13; the webroot archive is re-cut with every file 0644 and every directory 0755 (the 1.1.13 archive held 0600/0700 members, so the web container could not read wp-load.php).",
+        "darkLogo": true
+      },
+      "1.1.16": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "frame": {
+          "width": 139,
+          "height": 60
+        },
+        "note": "Logos and database as 1.1.15 (header, footer and the brand logo files unchanged in the archive, 19/10/2026). Theme 1.1.20 reads every design-system role variable with the template's own value as the fallback (role scan 0 unresolved, design-system-roles.json on the release); unworn, every page computes as with theme 1.1.19.",
+        "darkLogo": true
+      }
+    },
+    "quickstart/ja-vital/j6": {
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-118.2",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer logo-footer.png lum 255"
+        },
+        "frame": {
+          "width": 160,
+          "height": 47
+        },
+        "note": "Dark mode replaces the logo with the demo one by CSS; the template must be released again."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-118.2",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer logo-footer.png lum 255"
+        },
+        "frame": {
+          "width": 160,
+          "height": 47
+        },
+        "note": "site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The footer logo sits on a dark band in both modes."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-118.2",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer logo-footer.png lum 255"
+        },
+        "frame": {
+          "width": 160,
+          "height": 47
+        },
+        "note": "Same logos and content as 1.0.2; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The footer logo sits on a dark band in both modes."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-118.2",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer logo-footer.png lum 255"
+        },
+        "frame": {
+          "width": 160,
+          "height": 47
+        },
+        "note": "Same logos as 1.0.3. The theme toggle words go through TPL_JA_VITAL_THEME_TOGGLE_* keys, the four Learn More buttons of the services tabs and the four of the about tabs lead to Our Services, the Category Blog sample menu item is titled Blog like its category, articles of one category have distinct dates and ordering, and the Our Blogs module dates use DATE_FORMAT_LC3. site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The footer logo sits on a dark band in both modes."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-118.2",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer logo-footer.png lum 255"
+        },
+        "frame": {
+          "width": 160,
+          "height": 47
+        },
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.4 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-118.2",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer logo-footer.png lum 255"
+        },
+        "frame": {
+          "width": 160,
+          "height": 47
+        },
+        "note": "Same logos and content as 1.0.5; the template's stylesheets read the standard role variables at the source (JoomlArt-Products/ja-products ds-batch2-lane-B, laid over the 1.0.5 pair and tokenized by tracy-ds-slot release-joomla.mjs), so with no design system worn it looks exactly as 1.0.5 (VERIFICATION.json: 0 computed differences, desktop and phone)."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-118.2",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer logo-footer.png lum 255"
+        },
+        "frame": {
+          "width": 160,
+          "height": 47
+        },
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.6."
+      }
+    },
+    "quickstart/ja-vogue/j6": {
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t4",
+        "profiles": ["default", "home-2", "home-6"],
+        "footerSlot": "module-126.1",
+        "darkSpots": {
+          "profiles": ["home-6"],
+          "proof": "home-6 item-3.svg is white (research section 2A)"
+        },
+        "note": "Dark mode inverts the logo."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2", "home-6"],
+        "footerSlot": "module-126.1",
+        "darkSpots": {
+          "profiles": ["home-6"],
+          "proof": "home-6 item-3.svg is white (research section 2A)"
+        },
+        "frame": {
+          "width": 80,
+          "height": 30
+        },
+        "note": "site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The home-6 header is dark in both modes."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2", "home-6"],
+        "footerSlot": "module-126.1",
+        "darkSpots": {
+          "profiles": ["home-6"],
+          "proof": "home-6 item-3.svg is white (research section 2A)"
+        },
+        "frame": {
+          "width": 80,
+          "height": 30
+        },
+        "note": "site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The home-6 header is dark in both modes. The footer image slot holds the site_logo file, which the template's Custom module layout pairs with site_logo_dark the same way."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2", "home-6"],
+        "footerSlot": "module-126.1",
+        "darkSpots": {
+          "profiles": ["home-6"],
+          "proof": "home-6 item-3.svg is white (research section 2A)"
+        },
+        "frame": {
+          "width": 80,
+          "height": 30
+        },
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The home-6 header is dark in both modes. The footer image slot holds the site_logo file, which the template's Custom module layout pairs with site_logo_dark the same way."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2", "home-6"],
+        "footerSlot": "module-126.1",
+        "darkSpots": {
+          "profiles": ["home-6"],
+          "proof": "home-6 item-3.svg is white (research section 2A)"
+        },
+        "frame": {
+          "width": 79,
+          "height": 19
+        },
+        "note": "Same logos as 1.0.4. T4 prints an SVG logo at its own size (no width/height from getimagesize), so the demo header logo shows 79 x 19 although css/template.css lets an uploaded logo reach 30 px: the frame is the demo logo's 79 x 19 and logoHeight 19 holds a customer's logo to it. site_logo and site_logo_dark swap with .d-light/.d-dark in the header and off-canvas; no dark logo shows the name in dark mode. The home-6 header is dark in both modes. The footer image slot holds the site_logo file, which the template's Custom module layout pairs with site_logo_dark the same way.",
+        "logoHeight": 19
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2", "home-6"],
+        "footerSlot": "module-126.1",
+        "darkSpots": {
+          "profiles": ["home-6"],
+          "proof": "home-6 item-3.svg is white (research section 2A)"
+        },
+        "frame": {
+          "width": 79,
+          "height": 19
+        },
+        "logoHeight": 19,
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.5 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2", "home-6"],
+        "footerSlot": "module-126.1",
+        "darkSpots": {
+          "profiles": ["home-6"],
+          "proof": "home-6 item-3.svg is white (research section 2A)"
+        },
+        "frame": {
+          "width": 79,
+          "height": 19
+        },
+        "logoHeight": 19,
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: colours, corners and fonts read the design-system role variables (--ds-*), each falling back to the template's own value, so with no design system worn it looks exactly as 1.0.6 (batch 2, 16/10/2026)."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "home-2", "home-6"],
+        "footerSlot": "module-126.1",
+        "darkSpots": {
+          "profiles": ["home-6"],
+          "proof": "home-6 item-3.svg is white (research section 2A)"
+        },
+        "frame": {
+          "width": 79,
+          "height": 19
+        },
+        "logoHeight": 19,
+        "note": "Same logos and content as 1.0.7; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.7."
+      }
+    },
+    "quickstart/ja-voyara/j6": {
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t4",
+        "profiles": ["default"],
+        "logoHeight": 40,
+        "note": "The footer brand is hard-coded in the footer-brand ACM."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "site_logo and site_logo_dark swap with .d-light/.d-dark in the header, the drawer and the footer brand (acm/footer-brand now reads the site profile and the site name); no logo, or no dark logo in dark mode, shows the compass tile and the name."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos and content as 1.0.4; only the template's stylesheets changed, which read a worn design system with the template's own colours as fallback (release-joomla.mjs; the release's VERIFICATION.json measures 0 computed differences in the default look). site_logo and site_logo_dark swap with .d-light/.d-dark in the header, the drawer and the footer brand (acm/footer-brand now reads the site profile and the site name); no logo, or no dark logo in dark mode, shows the compass tile and the name."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Template 1.0.3, same logo spots as 1.0.5: site_logo and site_logo_dark swap with .d-light/.d-dark in the header (html/layouts/t4/element/logo.php), the drawer and the footer brand (acm/footer-brand reads the site profile and the site name); no logo, or no dark logo in dark mode, shows the compass tile and the name. T4 prints other_faviconFile; error.php and offline.php now print it too and show the profile's site_name as text. Proven on site voyara-j6-g2-verify (12/10/2026): a test logo pair, name and favicon written to local/etc/site/default.json showed on all 55 menu pages and 237 articles (one icon link each, the test favicon) and the 404 page carried the test name and favicon. The demo shows no logo picture (site_logo empty), so the logo size is measured on a built site."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Template 1.0.4, same logo spots as 1.0.7 (site_logo and site_logo_dark swap with .d-light/.d-dark in the header, the drawer and the footer brand; error.php and offline.php print the favicon and the site name). Quickstart 1.0.8 = the 1.0.7 pair with template 1.0.4 laid over the webroot (the block layouts print the words their module fields hold instead of demo copy written in the layouts) and six module rows of the database given those words; css files byte-identical to 1.0.7; captured 13/10/2026 (readiness, TracyHQ/tch#1318). Claude Cowork for Joomla 0.24.27 carries it."
+      },
+      "1.0.9": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos and content as 1.0.8; only the template's stylesheets changed: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text, #1375, 16/10/2026), so with no design system worn it looks exactly as 1.0.8 (tracy-ds-slot release-joomla.mjs --move-only)."
+      },
+      "1.0.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos and content as 1.0.9; only the template's stylesheets changed: colours, corners and fonts read the design-system role variables (--ds-*), each falling back to the template's own value, so with no design system worn it looks exactly as 1.0.9 (batch 2, 17/10/2026)."
+      },
+      "1.0.11": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos and content as 1.0.10; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.10."
+      }
+    },
+    "tracy-base/emdash-0.x": {
+      "0.4.0": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "note": "The header follows the toggle and the visitor operating system; the theme hard-codes /favicon.svg."
+      },
+      "0.5.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "settings.logo in the light header, site.logo_dark in the dark one (toggle and visitor system); the template icon only while settings.favicon is empty."
+      },
+      "0.5.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 0.5.0 and lists sharp as a direct dependency, so /_image answers 200 webp instead of 500 MissingSharp (TCH #1182). Nothing else changes."
+      },
+      "0.5.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 0.5.1; only seed/personalize.json changes (Template Customization Question Readiness): every page translates its own labels, the demo name is declared, and the demo headings, leads, cards, services, articles and team profiles are rewritten for the customer. tracy_setting.json lists its language (en)."
+      },
+      "0.5.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 0.5.2; only tools/personalize.mjs changes (TCH #1297), the one tool the three EmDash themes ship: with Name left blank the description is still written and a root in another language still translated, and a demo brochure button goes when the customer unticked the contact page. No file under src/ changes."
+      },
+      "0.5.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 0.5.3 plus the two-mode design-system slot (TCH #1315, #1318 ported from Tracy Business EmDash): lib/ds-slot.ts reads the sheet's mode line, Base.astro opens the page on the system's side of light with the visitor's switch kept (the other side derived from the system), and a choice made while a system is worn is stored under tracy-base-theme@<id> so taking the system off opens the template again (UNDO-1). Nothing under seed/ or tools/ changes."
+      },
+      "0.5.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 0.5.4; every colour, corner and face of the stylesheets reads its design-system role variable with the template's own value as the fallback (var(--ds-*, <own>), role scan 0 unresolved, design-system-roles.json on the release), so a worn system reaches the theme without template patches (slot contract emdash-base-roles). The logo and favicon spots, seed/ and tools/ (but for the release step) are unchanged."
+      },
+      "0.5.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 0.5.5; under a worn system the call band's button is drawn in the band's words on the dark side, the dark side's scene band takes the quiet raised ground, the call capsule's text column leaves room for a wider face, the swatch tiles' rule sits on their label (the same pixels), and the worn-only shades are defined only while a system is worn (DEF-1). Without a system only the swatch rule moves element (pixel-identical)."
+      }
+    },
+    "tracy-apple/j6": {
+      "1.3.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "apple", "airbnb"],
+        "frame": {
+          "width": 150,
+          "height": 32
+        },
+        "logoHeight": 32,
+        "note": "Tracy Apple Joomla 1.3.0 (T4 template tracy, site profiles default, apple and airbnb): the header logo is the profile's site_logo, the plugin's favicon is the only icon, and the 150 x 32 demo logo is not held to its height in CSS, so the writer scales an uploaded logo to 32 px (measured on the published 1.3.0 pack with scripts/template-customization-question-readiness.mjs, 17/10/2026: REL-3, FAV-1, LOGO-1, LOGO-3, STAB-1 pass). LOGO-2 is still open in the template: no profile has a site_logo_dark key, so dark mode shows the light-background logo."
+      },
+      "1.3.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "apple", "airbnb"],
+        "frame": {
+          "width": 150,
+          "height": 32
+        },
+        "logoHeight": 32,
+        "note": "Same logos and content as 1.3.0; the database is 1.3.0's, byte for byte, and the logo code is the same (measured on the 1.3.1 pack: scripts/template-customization-question-readiness.mjs, 17/10/2026, the same brand results as 1.3.0, LOGO-2 still open in the template). Only the template's stylesheets changed: they read the worn design system (--ds-c-*, tracy-ds-slot release-joomla.mjs, feat/ds-role-vars-batch2)."
+      }
+    },
+    "tracy-base/j6": {
+      "1.0.1": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t4",
+        "profiles": ["default", "base", "airbnb"],
+        "logoHeight": 40
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "base", "airbnb"],
+        "note": "The inline SVG wordmark follows the theme; an uploaded bitmap logo is a site_logo / site_logo_dark pair (.d-light/.d-dark) in the header and drawer, and no dark logo shows the name in dark mode."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "base", "airbnb"],
+        "note": "Tracy Base Joomla 1.0.3: the header logo is held to the 32 px of the demo logo in CSS (no logoHeight), the tab bodies are plain-text slots, and the chrome words go through TPL_ keys; otherwise as 1.0.2."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "base", "airbnb"],
+        "note": "Same logos and content as 1.0.3; the same logo code (measured on the 1.0.4 pack: scripts/template-customization-question-readiness.mjs, 0 must-fix); the template's stylesheets read the standard role variables at the source (template-patches/tracy-base, tokenized by tracy-ds-slot release-joomla.mjs), but for two demo edits in the database: the social proof kicker reads the readable accent, the team avatars carry their own names' initials (16/10/2026, feat/ds-role-variables). Claude Cowork for Joomla 0.24.33 carries the 1.0.4 profile."
+      },
+      "1.0.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default", "base", "airbnb"],
+        "note": "Same logos and content as 1.0.4; the database is 1.0.4's, byte for byte; the same logo code (measured on the 1.0.5 pack: scripts/template-customization-question-readiness.mjs, 0 must-fix). Only the template's stylesheets changed: text the template painted with its accent fill (links, read-more, hover and focus colours, 47 declarations in seven scss partials) reads the readable accent (var(--ds-c-accent-text, var(--accent))), and T4's text-only link, nav and pagination colours take it at the tokenize step; with no system chosen the page is the same (16/10/2026, feat/ds-role-variables). Claude Cowork for Joomla 0.24.35 carries the 1.0.5 profile."
+      }
+    },
+    "tracy-base/wp7": {
+      "1.1.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "note": "Core Site Logo in the header; the header follows the dark/light toggle."
+      },
+      "1.1.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Two Site Logo blocks swapped by the theme toggle (theme 1.1.5): site_logo on the light header, tracy_logo_dark on the dark one; the Site Title always prints the name beside them."
+      },
+      "1.1.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Same two Site Logo blocks swapped by the theme toggle as 1.1.2 (theme 1.1.6); interface words through the theme's text domain, an error page without the demo name, contact buttons with a destination and live links in place of dead demo ones."
+      },
+      "1.1.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Same files and database as 1.1.3; the webroot archive is re-cut with every file 0644 and every directory 0755 (the 1.1.3 archive held 0600/0700 members, so the web container could not read wp-load.php)."
+      },
+      "1.1.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "The same two Site Logo blocks swapped by the theme toggle as 1.1.4 (header template part in the database: two tracy-logo-bare Site Logo blocks and the Site Title, measured from the release archive 16/10). Theme 1.1.8 reads every design-system role variable with the template's own value as the fallback (role scan 0 unresolved, design-system-roles.json on the release); the demo content follows the approved Joomla source: header panels Service, Resources and Company, no footer Pages column or copyright line, the contact form with a Subject field, /resources/search published."
+      },
+      "1.1.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Theme 1.1.7 allows a personalized brand to shrink and wrap on mobile; the menu remains reachable. Archive has canonical root ownership and 0644/0755 modes. Clean Linux restore and public menu interaction measured at 320, 390, 768 and 1440 px."
+      }
+    },
+    "tracy-business/emdash-0.x": {
+      "1.6.0": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "note": "The footer is always dark; the theme hard-codes /favicon.svg (the demo NG mark)."
+      },
+      "1.7.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "settings.logo in the light header, site.logo_dark in the dark header and the always-dark footer; the NG icon only while settings.favicon is empty."
+      },
+      "1.7.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.0; its personalize tool writes the menu and the chrome labels in the language the site is written in."
+      },
+      "1.7.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.1; a page the customer unticked takes its home block, the buttons and links that led to it and its child pages (404) with it, except a child a kept page still lists (Investors' disclosures), the Marketing Kit mockups included, and its personalize tool leaves no template English on a site written in another language."
+      },
+      "1.7.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.2; a link into a cut demo row is taken out instead of leading to Contact, the Investors page drops the demo company's figures and contact, the Terms and Privacy bodies, the popular searches and the social line are written for the business, the 404 suggests the site's own pages, and seed/site-model.json declares all 40 locales."
+      },
+      "1.7.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.3; the home tab names the business alone once the customer gave a name (NAME-1), every other page keeps the page title before the name."
+      },
+      "1.7.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.4; a link to the home, about, careers or projects page previews the customer's share card made from their logo instead of the hero picture (D5); an article or a project keeps its own picture."
+      },
+      "1.7.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.5; the hero call to action reads the worn design system's button padding (--ds-btn-pad-x, --ds-btn-pad-y) like every other primary button, with its label centred beside the outline button, and is 28 x 15 px when the site wears none (TCH #1100)."
+      },
+      "1.7.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.6; an unticked News page takes every post with it, the kit's subscribe card carries its own words, the contact page hides an empty branches or social card, and the footer keeps the template credit."
+      },
+      "1.7.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.7; the top-bar language switcher names the language the page is shown in, the demo's social buttons stay with their links emptied (K6) and are drawn as plain words, and the footer's closing line is written for the contact page it opens."
+      },
+      "1.7.9": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.8; every language of the seed keeps no English line, English date or word glued to a link, the form plugin and the search results speak the page's language, and the personalize tool says in its report when the media map is missing."
+      },
+      "1.7.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.9; every font is also cut in the Vietnamese subset, and the kit pages' colour names, position notes and file lines are in the page's language."
+      },
+      "1.7.11": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.10; a label the model gives back in the template's words is asked again and named in the report, and the Vietnamese and Tamil contact rows write the Lipetsk branch in their own words."
+      },
+      "1.7.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.11; a label the model gives back half translated, a common word of English left in it, is asked again and named in the report."
+      },
+      "1.7.13": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.12; FULL keeps the template's Terms and Privacy with only the demo company's name swapped, a capitalised address's common nouns are translated, and one page keeps one name across menu, footer and links."
+      },
+      "1.7.14": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.13; an open role the model does not write for the customer's trade, after being told why, has its title and type emptied, never another company's job."
+      },
+      "1.7.15": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.14; the shadcn parts no page draws (checkbox, four dropdown-menu parts, input, textarea) read the design-system slot's radius and the hero call to action has no `!` before its 15px label, so a new site's first site.rebuild names no class the customer never wrote. A site wearing no system looks exactly as on 1.7.14."
+      },
+      "1.7.16": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.15 and lists sharp as a direct dependency, so /_image answers 200 webp instead of 500 MissingSharp (TCH #1182). Nothing else changes."
+      },
+      "1.7.17": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.16; only tools/personalize.mjs changes (TCH #1297): with Name left blank the description is still written and a root in another language still translated, and the demo brochure button goes when the customer unticked the contact page instead of leading to a 404. No file under src/ changes."
+      },
+      "1.7.18": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.17 plus the two-mode design-system slot (TCH #1315, #1321): lib/ds-slot.ts reads the sheet's mode line and Base.astro opens the page on the system's side of light with the visitor's switch kept, the other side derived from the system. Nothing under seed/ or tools/ changes."
+      },
+      "1.7.19": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.18; opening on a worn system's own mode no longer stores the visitor's light/dark choice, and a choice the visitor makes while a system is worn is stored under that system's key (ngi-theme@<id>), so taking the system off opens the site as the template again (ADR 0031 decision 12, UNDO-1, TCH #1318). Only Base.astro and Topbar.astro change; nothing under seed/ or tools/."
+      },
+      "1.7.20": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.19; every colour, corner and face of the stylesheets reads its design-system role variable with the template's own value as the fallback (var(--ds-*, <own>), role scan 0 unresolved, design-system-roles.json on the release), so a worn system reaches the theme without template patches (slot contract emdash-tracy-business-roles). The logo and favicon spots, seed/ and tools/personalize.mjs are unchanged: the brand marks' words read the on-ink and accent-on roles."
+      },
+      "1.7.21": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.20; the band's divider and its call links' underline (--tb-ds-on-forest-line) mix 60% of the band's words instead of 45%, so under a worn system they read at least as well as the template's own pair (2.44:1 under Spotify and 2.52:1 under Moxie on 1.7.20, CON-1). Only src/styles/tokens.css changes; nothing changes without a system."
+      },
+      "1.7.22": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.21; under a worn system the call buttons on the accent band are the accent button (the turned-over light fill was glare on a dark page), the forest-filled Subscribe and News search buttons wear the accent, the joined search buttons keep their field's outer corners, the kit swatches show the roles they name, the dark side's ink bands take the quiet raised ground, and the worn-only shades are defined only while a system is worn (DEF-1). No computed style changes without a system (9.67M values, 23 pages, 1440 and 390, light and dark)."
+      },
+      "1.7.23": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.7.22; the four places the slot contract patched for 1.7.20-1.7.22 read their role at the source while a system is worn (kit form step labels and region arrow: meta; the empty filled marks of the kit form, search filter and kit slides: fg; the header call to action: accent-text with bg words; the header search button: the button corner), and astro 7.2.8, @astrojs/node 11.1.3, sharp 0.35.5 (security fixes). Without a system: 11.9M computed values over 23 pages, 1440 and 390, light and dark, every screenshot identical to 1.7.22."
+      }
+    },
+    "tracy-business/j6": {
+      "1.2.0": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "framework": "t4",
+        "profiles": ["tracy-business"],
+        "note": "Monogram and name lockup from the identity module; an uploaded site_logo wins in the header."
+      },
+      "1.2.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["tracy-business"],
+        "note": "An uploaded bitmap logo is a site_logo / site_logo_dark pair (.d-light/.d-dark) in the header, and the footer (dark in both modes) shows site_logo_dark; no dark logo shows the monogram and name lockup in dark mode."
+      },
+      "1.2.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["tracy-business"],
+        "note": "As 1.2.1 (the same header, footer and logo code); template 1.0.1 prints the chrome words through TPL_ keys, the sample slide deck draws its words from the language files, Archivo and Newsreader carry their Vietnamese cut, and the demo buttons and dates are fixed for the readiness check."
+      },
+      "1.2.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["tracy-business"],
+        "note": "Same logos and content as 1.2.2; the same header, footer, logo code, content map and database: only three template stylesheets changed (css/template.css, css/styles/tracy-business.css, scss/_tracy-business-chrome.scss: the topbar contacts wrap on a phone), tokenized again by tracy-ds-slot release-joomla.mjs on 13/10/2026 (readiness, TracyHQ/tch#1318); the release VERIFICATION-1.2.3.json measures the default look as released. Claude Cowork for Joomla 0.24.27 carries the 1.2.3 profile."
+      },
+      "1.2.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["tracy-business"],
+        "note": "Same logos and content as 1.2.3; the same logo code (measured on the 1.2.4 pack: scripts/template-customization-question-readiness.mjs, 0 must-fix); the template's stylesheets read the standard role variables at the source (template-patches/tracy_business, tokenized by tracy-ds-slot release-joomla.mjs: 50 Bootstrap/T4 literals), four Northgate pictures trimmed of a dark strip, same database (16/10/2026, feat/ds-role-variables). Claude Cowork for Joomla 0.24.33 carries the 1.2.4 profile."
+      },
+      "1.2.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["tracy-business"],
+        "note": "Same logos and content as 1.2.4; the same logo code (measured on the 1.2.5 pack: scripts/template-customization-question-readiness.mjs, 0 must-fix); the Add site preview repaired under a design system: buttons filled in the text colour read the system's text and page colours, a button that follows its field takes the field's corner, the style guide and marketing kit swatches of the template's own palette draw through their roles, same database (16/10/2026, feat/ds-role-variables). The 1.2.5 profile rides on Claude Cowork for Joomla 0.24.35 with Tracy Base 1.0.5 (not released yet); the quickstarts pin stays on 1.2.4 until it is."
+      },
+      "1.2.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["tracy-business"],
+        "note": "Same logos and content as 1.2.5; same database; one template rule changed at the source (template-patches/tracy_business): the footer link's hover underline reads the worn system's accent taken on the root (--tb-ds-accent) instead of the template's orange, so the slot contract no longer patches it (joomla-tracy-business-source; design system dot 3, 19/10/2026). With no design system worn it looks exactly as 1.2.5."
+      }
+    },
+    "tracy-business/wp7": {
+      "1.3.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "unverified": ["logos"],
+        "note": "The theme reads the logo from option tracy_site_identity site.logo; whether the header changes colour in dark mode was not measured."
+      },
+      "1.3.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "The theme reads site.logo from tracy_site_identity on the light header and tracy_logo_dark on the dark one (#15181A, measured 08/10); the monogram and the Site Title stand in for a missing logo."
+      },
+      "1.3.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Brand rows as 1.3.4 (same header, footer and logo code); theme 1.1.8 prints the fixed words of the sidebars and templates through the text domain, and buttons lead to real pages."
+      },
+      "1.3.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Same files and database as 1.3.5; the webroot archive is re-cut with every file 0644 and every directory 0755 (the 1.3.5 archive held 0600/0700 members, so the web container could not read wp-load.php)."
+      },
+      "1.3.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Database as 1.3.6; theme 1.1.9 reads every design-system role variable, and inc/identity.php fills a missing name, monogram (initials of the name) and logo from the site title and the uploaded site logo (header, footer and brand-logo.php unchanged, measured from the release archive 15/10)."
+      },
+      "1.3.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "note": "Brand rows as 1.3.7 (header, footer, brand-logo.php and inc/identity.php fallbacks unchanged; measured from the release archive 16/10). Theme 1.1.10 reads every design-system role variable with the template's own value as the fallback (role scan 0 unresolved, design-system-roles.json on the release); the header and footer logo follow a worn system alike; the news index head and lead are two self-closing patterns, and the Contact card goes when every row is empty. Database as 1.3.7."
+      }
+    },
+    "tracy-saas/emdash-0.x": {
+      "1.3.0": {
+        "logos": "pair",
+        "brandReady": false,
+        "faviconReady": false,
+        "note": "Two of three styles default to dark; the theme hard-codes /favicon.svg."
+      },
+      "1.4.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "settings.logo in the light theme, social/footer-brand logo_dark in the dark one, header and footer; the template icon only while settings.favicon is empty."
+      },
+      "1.4.1": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.0; its personalize tool keeps a page the customer ticked (Pricing) that the template's hide rule would take off, and writes the menu and the chrome labels in the language the site is written in."
+      },
+      "1.4.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.1; a page the customer unticked takes the buttons and links that led to it and its children (the blog's posts and list views answer 404) with it, except a child a kept page still lists (Engineering's posts, the category views of All categories), and its personalize tool and label map leave no template English (page headings and titles, forms) on a site written in another language."
+      },
+      "1.4.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.2; a Testimonials, Features ledger or Clients section whose items are empty is not drawn, so a site whose facts were removed leaves no empty frame."
+      },
+      "1.4.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.3; the footer copyright keeps the template's wording (\"\u00a9 {year} {name}. All rights reserved.\", in the edition's own language) with only the name and year changed."
+      },
+      "1.4.5": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.4; the footer's social icons are the customer's profiles, or the demo's icons with their links emptied (K6), drawn without a link."
+      },
+      "1.4.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.5; the contact form's own words (honeypot label, Previous / Next) are in the page's language, not English."
+      },
+      "1.4.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.6; every font is also cut in the Vietnamese subset, so a site written in Vietnamese draws its letters in the template's fonts."
+      },
+      "1.4.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.7; a label the model gives back in the template's words is asked again and named in the report."
+      },
+      "1.4.9": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.8; a label the model gives back half translated, a common word of English left in it, is asked again and named in the report."
+      },
+      "1.4.10": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.9; a capitalised address's common nouns are translated, and one page keeps one name across menu, footer and links."
+      },
+      "1.4.11": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.10; the first release that reads the design-system slot (src/lib/ds-slot.ts reads data/ds-slot.css per request; every --k-* colour reads var(--ds-c-<role>, <its own hex>)), so the Design system button can dress it. A site wearing no system looks exactly as on 1.4.10."
+      },
+      "1.4.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.11 (built, never served: superseded before its switch) and lists sharp as a direct dependency, so /_image answers 200 webp instead of 500 MissingSharp (TCH #1182). Nothing else changes. The first Tracy SaaS release that reads the design-system slot."
+      },
+      "1.4.13": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.12; only tools/personalize.mjs changes (TCH #1297): with Name left blank the description is still written and a root in another language still translated, and a demo brochure button goes when the customer unticked the contact page. No file under src/ changes."
+      },
+      "1.4.14": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.4.13 plus the two-mode design-system slot (TCH #1315, #1318 ported from Tracy Business EmDash): lib/ds-slot.ts reads the sheet's mode line, Base.astro opens the page on the system's side of light with the visitor's switch kept (the other side derived from the system), and a choice made while a system is worn is stored under kinetic-theme@<id> so taking the system off opens the template again (UNDO-1). Nothing under seed/ or tools/ changes."
+      }
+    }
+  }
+}

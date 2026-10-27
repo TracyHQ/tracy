@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "scope": "pilot",
+  "expectedCases": 8,
+  "observedCases": 8,
+  "contractCases": 632,
+  "scopePages": ["/", "/resources/style-guide"],
+  "elements": 352,
+  "properties": 1232,
+  "missing": [],
+  "findings": [],
+  "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee"
+}

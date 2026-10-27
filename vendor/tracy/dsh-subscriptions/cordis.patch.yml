@@ -1,0 +1,8 @@
+# dsh-subscriptions bundle layer.
+#
+# `name` must stay the full npm package name: the client-modules registry
+# resolves the browser bundle by the loader entry name.
+- insert:
+    - id: dsh-subscriptions
+      name: '@goodandready/dsh-subscriptions'
+      config: {}

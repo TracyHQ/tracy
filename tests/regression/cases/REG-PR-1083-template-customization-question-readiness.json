@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1083-template-customization-question-readiness",
+  "kind": "feat",
+  "title": "Template Customization Question Readiness reads a release and judges each rule: golden templates pass, a missing declaration fails, the table stays readable",
+  "pr": 1083,
+  "area": "templates/readiness",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test --test-reporter=tap apps/tracy-web/test/template-customization-question-readiness-runner.test.mjs apps/tracy-web/test/template-customization-question-readiness-c.test.mjs from the repository root.",
+    "S2: The runner tests build gallery card tags, the asset cache and the Markdown result table from fixtures; the c tests run the ABOUT rules on the golden templates' declarations and on a contract missing a demo company name."
+  ],
+  "expect": [
+    "S1: every named test reports ok.",
+    "S2: the golden three pass ABOUT-3 on their declared demoCompanyNames; a demo name the declared list misses fails, and so does a contract declaring none; a tag that is not a release tag never reaches gh; a cell never breaks the table."
+  ],
+  "selectors": {
+    "module": "apps/tracy-web/src/lib/template-customization-question-readiness/",
+    "tests": "apps/tracy-web/test/template-customization-question-readiness-{runner,c}.test.mjs"
+  },
+  "evidence": "Spec tasks/spec-template-customization-question-readiness.md and ADR 0029 (#1013): 29 rules a template must meet after Customize your site; result on 38 templates in tasks/bang-chung/template-customization-question-readiness/.",
+  "fence": "The rule registry and readers of the readiness check, and the runner that turns reports into the result table.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/template-customization-question-readiness-runner.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-c.test.mjs"
+    ],
+    "tests": [
+      "the tag of a gallery card is the release tag templateCards wrote, local packs left out",
+      "a tag that is not a release tag never reaches gh",
+      "the table has a column per rule id the reports carry, a later rule included",
+      "a cell never breaks the Markdown table",
+      "ABOUT-3: the golden three pass on their declared demoCompanyNames",
+      "ABOUT-3: a demo name the declared list misses fails, and so does a contract declaring none"
+    ]
+  }
+}

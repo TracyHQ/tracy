@@ -1,0 +1,9 @@
+# The client bundle and the dictionaries are read by Node and shipped as-is;
+# keep LF in the working tree so a checkout on Windows does not change bytes
+# the build then rewrites.
+* text=auto eol=lf
+*.json text eol=lf
+*.mjs text eol=lf
+*.js text eol=lf
+*.yml text eol=lf
+*.md text eol=lf

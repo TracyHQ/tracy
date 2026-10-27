@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.invite_declined-repeat",
+  "itemIds": [
+    "letter:team.invite_declined:en",
+    "letter:team.invite_declined:vi",
+    "letter:team.invite_declined:de",
+    "letter:team.invite_declined:it",
+    "letter:team.invite_declined:fr",
+    "letter:team.invite_declined:nl",
+    "letter:team.invite_declined:zh",
+    "letter:team.invite_declined:es"
+  ],
+  "requirement": "team.invite_declined renders identically twice and leaves its input unchanged",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 7",
+    "invariant": "a held or retried letter is rendered again at send time and must read the same"
+  },
+  "edgeTags": ["repeat"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.repeat#team.invite_declined:"],
+  "redProof": null,
+  "legacyIds": []
+}

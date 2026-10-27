@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6248749d-b440-4561-b4d7-2d39c0fd4fd3",
+  "status": "complete",
+  "name": "Metamask",
+  "url": "https://styles.refero.design/style/6248749d-b440-4561-b4d7-2d39c0fd4fd3",
+  "sourceWebsite": "https://metamask.io",
+  "extractedAt": "2026-06-03T20:14:06.637Z",
+  "capturedAt": "2026-10-08T05:12:25.316271+00:00",
+  "theme": "light",
+  "industry": "crypto",
+  "description": "Warm peach workshop with giant purple type — cozy, loud headlines, quiet controls.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6a8b3829-9bc3-4a12-a44b-aa6676fb9484.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a49ffce7f0970352746657d81c2a79d0dde52c2226f58653974d5b89aef66d11",
+      "bytes": 21032
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2a8e9e7cae4c0248b79c4b4ef3bd714da5a2a8f71d92e75c7110f56e53546bc3",
+      "bytes": 54594
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "2e7f82d53ea0f7253821a6a920a78415c756a3568b3ed0f1378a8ae5c3b6c9fd",
+      "bytes": 16854
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "4f1ecb1d55e181c9e66493a82cd2b5de4a35eb52eee5f047df156b268f8ab4b5",
+      "bytes": 17603
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8bddc16135757747ea6b0ee15da25352c8f66c222a85c64831726e0a1d2673fc",
+      "bytes": 12149
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a2813c0743a1176655cc02ed5d672c4ca29724b822e2fd92051f03fd7a845641",
+      "bytes": 4619
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3f4dae051fe7beae3a39d01b7aca7b6800dd35d4411b163a4216b64cd679d66c",
+      "bytes": 946
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "48891ba9c183e39438eb2d45d8b2bbdfbb978004619baadbb8afbf79810718b5",
+      "bytes": 963
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "577a6224fabb412a6c57160cd696400703c15433c7dc53d17b02f4eb51658091",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "435777b0b94f2c055e5452bf4760953bbfe7569902dcc3178bcb996296e97caf",
+      "bytes": 46026
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "92b03f1869252129881f5a12dc20888cde2b18e1a4ad30f345f15fa63ab88ca9",
+      "bytes": 24520
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a7d42219bedf5c3f4f301855cd081d87ea059072a60795bbd5ea94b0f19e08d6",
+      "bytes": 64296
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "938ffeeba36922ad00e2878e1671fb259e9f99804ec6251f2f5b39af817dcebd",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "978bca1da1f76cf14c388f24eb3fd918ceb740eedb02d7f361150f3a3e3ed752",
+      "bytes": 2517
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "03b899c3af523a85ad0a04c10b3b2b1b1c47156d71d7390201fa5e8c4eb65a86",
+      "bytes": 3089
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "1a03b8d7-9204-4c16-ad3c-16306f99fba9",
+    "1e675740-7935-4a49-b4c8-e5aa9fda06dd",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "6248749d-b440-4561-b4d7-2d39c0fd4fd3",
+    "6b2777fd-7021-4a96-add3-ec4a32374214",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "a26f1a4d-758c-4df0-a61e-88a7ca0931ce",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-926-wp-replace-identity-tokens",
+  "kind": "fix",
+  "title": "A footer or header line that prints a site identity token ({site.legalName}, {contact.phone}) is changed by content.replace in one call: the line around the token is written, the token kept where the new words still show it, and words that ARE the identity value answer SITE_IDENTITY with the one call that sets it, never NOT_EDITABLE with no way forward",
+  "pr": 926,
+  "area": "site-tools/replace/wordpress",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/replace-wordpress.test.mjs packages/tools/tracy-site-tools/test/replace-road.test.mjs",
+    "S2: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "'a footer line printing the legal name through a token: written in one call, and the receipt says it no longer follows the identity' passes: one content.update of the footer part, the line holds the new words, the other line that prints the legal name keeps its token, a note says the first no longer follows the identity, and the tracy_site_identity option is untouched.",
+    "'a word beside a token is changed and the token stays: the line still follows the identity' passes: the written line still reads {site.legalName} and no note says otherwise.",
+    "'words that are the legal name itself' and 'a phone a header line prints through a token' pass: code SITE_IDENTITY, nothing written, next names content.contract {operation:\"apply\", changes:{\"identity.legalName\":\"<new>\"}} (identity.contact.phone for a phone), never 'that is an answer'.",
+    "'on a site without the contract door the identity answer names the option write and carries the identity' and 'no identity option: token lines are read as stored, as before' pass; the road test 'a WordPress site with the contract door' passes."
+  ],
+  "selectors": {
+    "answer": "content.replace answer fields code, token, field, value, slot, next",
+    "fixture": "packages/tools/tracy-site-tools/test/fixtures/replace/fake-wordpress.mjs tokenSite / TOKEN_PAGES"
+  },
+  "evidence": "Flow D bench 05/10/2026, benchwpapply02 M-L1-copyright: content.replace {find:'© Golden Crust Bakery'} answered NOT_EDITABLE because footer part 81 prints ©&nbsp;{site.legalName}; the agent then ran 6 greps and read 15k characters of PHP (17 calls in 11 steps; Joomla's engine, which reads tokens, took 2).",
+  "fence": "Mechanism only: the WordPress replace engine over the package's fake component. Not covered: a live site's identity option (the theme's own render of the tokens is claude-cowork's), and the model's choice of words.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/replace-wordpress.test.mjs",
+      "packages/tools/tracy-site-tools/test/replace-road.test.mjs"
+    ]
+  }
+}

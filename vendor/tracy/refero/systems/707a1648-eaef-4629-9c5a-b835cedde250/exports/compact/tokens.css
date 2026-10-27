@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-cream-paper: #fff9f0;
+  --color-midnight-ink: #000609;
+  --color-signal-blue: #0a65db;
+  --color-ember-red: #ee4623;
+  --color-saffron-yellow: #ffd23f;
+  --color-blush-pink: #f4c6c6;
+
+  /* Typography — Font Families */
+  --font-degular-display: 'degular-display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-usual: 'usual', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1258-ds-bands",
+  "kind": "feat",
+  "title": "A kept band wears the worn system's ground with every word of the band still readable; the Design system cards are the site wearing each system",
+  "pr": 1258,
+  "area": "design-system/bands",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/design/tracy-ds-slot/test/bands.test.mjs packages/design/tracy-ds-slot/test/components.test.mjs packages/design/tracy-ds-slot/test/cms.test.mjs packages/design/tracy-ds-slot/test/slot.test.mjs.",
+    "S2: Run node --test apps/tracy-web/test/ds-preview.test.mjs apps/tracy-web/test/design-system-door.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes, including a band ground chosen so each band text reads at 4.5:1 or the template's own level, fill entries outside kept bands, and labels filled with the accent taking readable words.",
+    "S2: every test passes: ?tracy_ds_preview=<id> answers the site's page wearing the system, no-store and noindex, writing nothing to the site."
+  ],
+  "selectors": {
+    "emitter": "packages/design/tracy-ds-slot/src/bands.mjs",
+    "contract": "packages/design/tracy-ds-slot/templates/*.json bands",
+    "preview": "apps/tracy-web/src/bar/ds-preview.js"
+  },
+  "evidence": "Before this change a kept band kept the template's whole look under every system: about 90% of the first screen of WordPress Tracy Business looked unchanged after Apply",
+  "fence": "A band's words keep their colours; only the ground and the template's accent inside it change, and a band with no readable ground stays as it was",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/design/tracy-ds-slot/test/bands.test.mjs",
+      "packages/design/tracy-ds-slot/test/components.test.mjs",
+      "packages/design/tracy-ds-slot/test/cms.test.mjs",
+      "packages/design/tracy-ds-slot/test/slot.test.mjs",
+      "apps/tracy-web/test/ds-preview.test.mjs",
+      "apps/tracy-web/test/design-system-door.test.mjs"
+    ]
+  }
+}

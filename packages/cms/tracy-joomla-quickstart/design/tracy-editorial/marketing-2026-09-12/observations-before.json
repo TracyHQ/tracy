@@ -1,0 +1,4154 @@
+[
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "/resources/marketing-samples",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T11:19:49.411Z",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "width": 1440,
+    "height": 900,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "22px",
+              "paddingRight": "22px",
+              "height": "80px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": []
+      },
+      {
+        "id": "display",
+        "elements": []
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": []
+      },
+      {
+        "id": "compact-card",
+        "elements": []
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": []
+      },
+      {
+        "id": "body-copy",
+        "elements": []
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      }
+    ],
+    "coverageCount": 0,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "/resources/marketing-samples",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T11:19:50.204Z",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "width": 1440,
+    "height": 900,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "22px",
+              "paddingRight": "22px",
+              "height": "80px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": []
+      },
+      {
+        "id": "display",
+        "elements": []
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": []
+      },
+      {
+        "id": "compact-card",
+        "elements": []
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": []
+      },
+      {
+        "id": "body-copy",
+        "elements": []
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      }
+    ],
+    "coverageCount": 0,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "/resources/marketing-samples",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T11:19:50.983Z",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "width": 390,
+    "height": 844,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "16px",
+              "paddingRight": "16px",
+              "height": "48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": []
+      },
+      {
+        "id": "display",
+        "elements": []
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": []
+      },
+      {
+        "id": "compact-card",
+        "elements": []
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": []
+      },
+      {
+        "id": "body-copy",
+        "elements": []
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      }
+    ],
+    "coverageCount": 0,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "/resources/marketing-samples",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T11:19:51.789Z",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "width": 390,
+    "height": 844,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "16px",
+              "paddingRight": "16px",
+              "height": "48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": []
+      },
+      {
+        "id": "display",
+        "elements": []
+      },
+      {
+        "id": "page-title",
+        "elements": []
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": []
+      },
+      {
+        "id": "compact-card",
+        "elements": []
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": []
+      },
+      {
+        "id": "body-copy",
+        "elements": []
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      }
+    ],
+    "coverageCount": 0,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/newsletter",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T11:19:52.224Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "37.76px",
+              "letterSpacing": "-0.48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/newsletter",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T11:19:52.692Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "37.76px",
+              "letterSpacing": "-0.48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/newsletter",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T11:19:53.124Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "37.76px",
+              "letterSpacing": "-0.48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/newsletter",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T11:19:53.541Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "37.76px",
+              "letterSpacing": "-0.48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "-0.22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/email",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T11:19:53.990Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "36.8px",
+              "letterSpacing": "-0.64px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/email",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T11:19:54.403Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "36.8px",
+              "letterSpacing": "-0.64px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/email",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T11:19:54.816Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "36.8px",
+              "letterSpacing": "-0.64px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/email",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T11:19:55.234Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "36.8px",
+              "letterSpacing": "-0.64px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "22px",
+              "fontWeight": "600",
+              "lineHeight": "27.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/poster",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T11:19:55.676Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "28.7122px",
+              "fontWeight": "600",
+              "lineHeight": "29.5736px",
+              "letterSpacing": "-0.717806px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": []
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 1,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/poster",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T11:19:56.100Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "28.7122px",
+              "fontWeight": "600",
+              "lineHeight": "29.5736px",
+              "letterSpacing": "-0.717806px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": []
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 1,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/poster",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T11:19:56.523Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "23.3363px",
+              "fontWeight": "600",
+              "lineHeight": "24.0363px",
+              "letterSpacing": "-0.583406px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": []
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 1,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/poster",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T11:19:56.941Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "23.3363px",
+              "fontWeight": "600",
+              "lineHeight": "24.0363px",
+              "letterSpacing": "-0.583406px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": []
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 1,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T11:19:57.619Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "94.572px",
+              "fontWeight": "600",
+              "lineHeight": "97.4092px",
+              "letterSpacing": "-2.3643px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(7) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(11) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "24.282px",
+              "fontWeight": "600",
+              "lineHeight": "29.1384px",
+              "letterSpacing": "-0.24282px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "24.282px",
+              "fontWeight": "600",
+              "lineHeight": "29.1384px",
+              "letterSpacing": "-0.24282px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "24.282px",
+              "fontWeight": "600",
+              "lineHeight": "29.1384px",
+              "letterSpacing": "-0.24282px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 21,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T11:19:58.287Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "94.572px",
+              "fontWeight": "600",
+              "lineHeight": "97.4092px",
+              "letterSpacing": "-2.3643px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(7) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(11) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "56.232px",
+              "fontWeight": "600",
+              "lineHeight": "61.8552px",
+              "letterSpacing": "-1.12464px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26.838px",
+              "fontWeight": "600",
+              "lineHeight": "32.2056px",
+              "letterSpacing": "-0.26838px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "24.282px",
+              "fontWeight": "600",
+              "lineHeight": "29.1384px",
+              "letterSpacing": "-0.24282px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "24.282px",
+              "fontWeight": "600",
+              "lineHeight": "29.1384px",
+              "letterSpacing": "-0.24282px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "24.282px",
+              "fontWeight": "600",
+              "lineHeight": "29.1384px",
+              "letterSpacing": "-0.24282px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 21,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T11:19:58.711Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "40px",
+              "fontWeight": "600",
+              "lineHeight": "41.2px",
+              "letterSpacing": "-1px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(7) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(11) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "16px",
+              "fontWeight": "600",
+              "lineHeight": "19.2px",
+              "letterSpacing": "-0.16px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "16px",
+              "fontWeight": "600",
+              "lineHeight": "19.2px",
+              "letterSpacing": "-0.16px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "16px",
+              "fontWeight": "600",
+              "lineHeight": "19.2px",
+              "letterSpacing": "-0.16px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 21,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T11:19:59.142Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "40px",
+              "fontWeight": "600",
+              "lineHeight": "41.2px",
+              "letterSpacing": "-1px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(7) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(11) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "28.6px",
+              "letterSpacing": "-0.52px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "17px",
+              "fontWeight": "600",
+              "lineHeight": "20.4px",
+              "letterSpacing": "-0.17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "16px",
+              "fontWeight": "600",
+              "lineHeight": "19.2px",
+              "letterSpacing": "-0.16px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "16px",
+              "fontWeight": "600",
+              "lineHeight": "19.2px",
+              "letterSpacing": "-0.16px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "16px",
+              "fontWeight": "600",
+              "lineHeight": "19.2px",
+              "letterSpacing": "-0.16px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 21,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/form",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T11:19:59.568Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "42px",
+              "fontWeight": "600",
+              "lineHeight": "45.36px",
+              "letterSpacing": "-0.84px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "-0.39px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/form",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T11:19:59.985Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "42px",
+              "fontWeight": "600",
+              "lineHeight": "45.36px",
+              "letterSpacing": "-0.84px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "-0.39px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/form",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T11:20:00.410Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "28px",
+              "fontWeight": "600",
+              "lineHeight": "30.24px",
+              "letterSpacing": "-0.56px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "-0.39px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/form",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T11:20:00.824Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "28px",
+              "fontWeight": "600",
+              "lineHeight": "30.24px",
+              "letterSpacing": "-0.56px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "-0.39px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/typography",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T11:20:01.250Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > header:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "38px",
+              "fontWeight": "600",
+              "lineHeight": "47.5px",
+              "letterSpacing": "-0.76px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "38px",
+              "fontWeight": "600",
+              "lineHeight": "47.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(3) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "40px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 9,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/typography",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T11:20:01.691Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > header:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "38px",
+              "fontWeight": "600",
+              "lineHeight": "47.5px",
+              "letterSpacing": "-0.76px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "38px",
+              "fontWeight": "600",
+              "lineHeight": "47.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(3) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "40px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 9,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/typography",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T11:20:02.158Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(56, 56, 58)",
+              "backgroundColor": "rgb(246, 246, 246)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > header:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "38px",
+              "fontWeight": "600",
+              "lineHeight": "47.5px",
+              "letterSpacing": "-0.76px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "38px",
+              "fontWeight": "600",
+              "lineHeight": "47.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(3) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "40px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 9,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d",
+    "page": "marketing/typography",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T11:20:02.593Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "unknown",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "",
+      "--fg": "",
+      "--surface": "",
+      "--muted": "",
+      "--border": "",
+      "--accent": "",
+      "--accent-on": "",
+      "--space-4": "",
+      "--space-6": "",
+      "--space-8": "",
+      "--container-max": "",
+      "--text-base": "",
+      "--text-4xl": "",
+      "--leading-body": "",
+      "--radius-md": ""
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "22px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(220, 220, 220)",
+              "backgroundColor": "rgb(29, 29, 29)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h1",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > header:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "38px",
+              "fontWeight": "600",
+              "lineHeight": "47.5px",
+              "letterSpacing": "-0.76px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "38px",
+              "fontWeight": "600",
+              "lineHeight": "47.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h2",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(3) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "32px",
+              "fontWeight": "600",
+              "lineHeight": "40px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-h3",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", ui-sans-serif, system-ui, sans-serif, \"SF Pro Text\", ui-sans-serif, system-ui, sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+              "fontSize": "26px",
+              "fontWeight": "600",
+              "lineHeight": "32.5px",
+              "letterSpacing": "normal"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 9,
+    "unclassified": []
+  }
+]

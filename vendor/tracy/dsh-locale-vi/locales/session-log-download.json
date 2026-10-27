@@ -1,0 +1,13 @@
+{
+  "dialog.close": "Đóng",
+  "dialog.commandFailed": "Không khởi động được việc xuất phiên.",
+  "dialog.errorTitle": "Xuất phiên thất bại",
+  "dialog.preparingDescription": "Đang tạo tệp ZIP gồm phiên này, các phiên con và tệp đính kèm.",
+  "dialog.preparingTitle": "Đang xuất phiên",
+  "dialog.successDescription": "Trình duyệt đang tải tệp ZIP của phiên.",
+  "dialog.successTitle": "Đã bắt đầu tải phiên",
+  "header.action": "Bản ghi phiên",
+  "header.more": "Thao tác khác",
+  "menu.download": "Tải nhật ký phiên",
+  "menu.feedback": "Phản hồi"
+}

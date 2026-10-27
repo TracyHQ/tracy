@@ -1,0 +1,20 @@
+{
+  "action.dislike": "Mala respuesta",
+  "action.dislikeActive": "Quitar valoración",
+  "action.like": "Buena respuesta",
+  "action.likeActive": "Quitar valoración",
+  "category.desktop-app": "Aplicación de escritorio",
+  "category.general": "General",
+  "category.other": "Otro",
+  "category.product-feature": "Función del producto",
+  "category.web-app": "Aplicación web",
+  "dialog.categories": "Categorías de comentarios (seleccione varias)",
+  "dialog.detail": "Detalles de los comentarios",
+  "dialog.hint": "Añada detalles para ayudarnos a mejorar.",
+  "dialog.title": "Enviar comentarios",
+  "error.conflict": "Estos comentarios cambiaron en otro lugar; se muestra el estado más reciente",
+  "error.generic": "No se pudieron guardar los comentarios",
+  "error.load": "No se pudieron cargar los comentarios",
+  "error.noteTooLarge": "La descripción es demasiado larga; acórtela y vuelva a enviarla",
+  "toast.recorded": "Gracias por sus comentarios"
+}

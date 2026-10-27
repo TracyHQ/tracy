@@ -1,0 +1,70 @@
+{
+  "id": "REG-PR-1289-ci-turbo-plan-hash",
+  "kind": "fix",
+  "title": "Tracy CI Turbo: the plan job and the rows compute the same task hashes, and a suite read outside its task's inputs turns turbo-config red",
+  "pr": 1289,
+  "area": "ci/turbo",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From an installed TCH checkout (pnpm install done, so node_modules/.bin/turbo exists) run: node --test --test-reporter=tap scripts/test/ci-turbo-trace.test.mjs scripts/test/ci-turbo-setup.test.mjs scripts/test/ci-turbo-hashes.test.mjs scripts/test/ci-turbo-rows.test.mjs scripts/test/ci-turbo-inputs.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Tracer: a file read through a named import (import { readFileSync } from 'node:fs') under a real node --test run is in the trace; so are the reads of a child killed before it could exit, and the repository paths on the command line of a child the tracer cannot enter (a program that is not node, or a node child given its own env, which the tracer leaves untouched).",
+    "Generator: a command that does not start, exits non-zero, runs past its limit, leaves no trace or a trace without its test files is refused; a read outside the inputs, a hashed file git ignores and a task Turbo does not list are problems for root, package, interop and vendor tasks; a read of a file git ignores passes only when GENERATED declares it and every declared source is an input of the task, and a read of git's own directory never passes.",
+    "Real Turbo on a fixture repository carrying the real root turbo.json: an edit of .github/workflows/tracy-ci.yml or deploy/.env.example changes the hash of //#test:ci:scripts; a tree with node_modules, .turbo logs and vendor/tracy/dsh-passwords/dist (what a bootstrapped row has) hashes every task as the clean tree does; a source, build script or package.json of dsh-passwords still changes the hash; a tree without the dsh submodule hashes every task differently and its dry run is refused.",
+    "Comparison: equal hashes pass; a different hash, a missing task, an unknown task or another commit are red; a different cache answer is reported and is not a failure; a row's record is evidence only when it holds exactly the tasks the row was scheduled, each once, each with HIT or MISS.",
+    "Workflow: plan fetches the dsh submodule before the dry run, publishes TURBO_DRY on the last line after turbo-verify --plan, removes the deploy key with always(); the checks row compares every task hash and each Turbo row its own.",
+    "Cacheable Turbo tasks run their suite once with input auditing; a red test or an uncovered read fails without producing a green cache entry. Cache hits skip both; changing the auditor invalidates the result. Release and fallback retain full audits."
+  ],
+  "selectors": {
+    "tracer": "scripts/ci/trace-reads.mjs syncBuiltinESMExports()",
+    "generator": "scripts/ci/turbo-setup.mjs runTraced, coverageProblems, OUTPUTS, EXCLUDE",
+    "comparison": "scripts/ci/turbo-verify.mjs buildManifest, compare, judgeRun",
+    "workflow": ".github/workflows/tracy-ci.yml job plan steps turbo-dsh and turbo; job build-check steps 'Compare every Turbo task hash with the plan job's' and 'Compare this row's task hashes with the plan job's'"
+  },
+  "evidence": "12/10/2026: 12 Tracy CI runs on pull requests into develop logged 'turbo-cached: 0 of 47 test tasks are in the remote cache' while their rows were served from it (run 38316914525, tests packages: 27 of 39 cached); on one machine and one commit a clean checkout and a bootstrapped one differed in 47 of 47 task hashes (no dsh submodule), then in 2 of 47 (vendor/tracy/dsh-passwords/dist/client.js). Appending a line to .github/workflows/tracy-ci.yml or deploy/.env.example changed 0 of 47 hashes although 14 files under scripts/test read them: the read tracer wrapped fs.<name> without synchronising the named ESM exports.",
+  "fence": "A Turbo test row is skipped only on a hash the rows themselves would compute, and a test result is reused only while every file its suite reads is unchanged.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/test/ci-turbo-trace.test.mjs",
+      "scripts/test/ci-turbo-setup.test.mjs",
+      "scripts/test/ci-turbo-hashes.test.mjs",
+      "scripts/test/ci-turbo-rows.test.mjs",
+      "scripts/test/ci-turbo-inputs.test.mjs"
+    ],
+    "tests": [
+      "reads through NAMED fs imports are recorded under node --test",
+      "a child process is followed: a kill before it could exit; one the tracer cannot enter leaves its command line",
+      "runTraced: a command that exits non-zero is refused",
+      "runTraced: no trace, an empty trace and a trace without the test files are refused",
+      "coverage: a read outside the inputs is a problem for root, package and extra tasks alike",
+      "coverage: a hashed file git ignores is one problem per directory; an undeclared ignored read is a problem",
+      "the committed configuration is the generated one for every current owner",
+      "a workflow or env-example edit changes exactly the tasks whose inputs name it",
+      "what only a bootstrapped row has changes no hash: plan and row agree on every task",
+      "each declared entry, present or absent, changes no hash",
+      "sources, build scripts and dependency pins of an excluded output still change the hash",
+      "a checkout without the submodule hashes every task differently, and its dry run is refused",
+      "compare: equal hashes pass; a different hash, a missing task, an unknown task or another commit fail",
+      "compare: a different cache answer is reported with its reason, never as a hash failure",
+      "plan hashes the tree the rows hash",
+      "plan fails closed",
+      "every run compares the hashes",
+      "classifyReads: an ignored read passes only through a declared entry whose every source is an input",
+      "classifyReads: every other ignored read, and git's own directory, is uncovered",
+      "compare: a row record is whole or it is not evidence",
+      "judgeRun: plan, checks and one whole record per row that ran",
+      "classifyReads: no directory is approved by its name",
+      "every declared ignored path is ignored by git, names sources git tracks, and is out of every hash",
+      "classifyReads: a declared machine-only DIRECTORY: each probed path passes only while absent"
+    ],
+    "timeout_s": 300
+  }
+}

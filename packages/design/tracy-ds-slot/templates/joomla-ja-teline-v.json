@@ -1,0 +1,270 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-teline-v",
+  "release": "quickstart/ja-teline-v/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "body": "div.magazine-category div.magazine-item-ct p",
+    "button-primary": "div.magazine-section-tools a.btn",
+    "input": "#mod-finder-searchword240"
+  },
+  "discovered": {
+    "page": "body",
+    "body": "running text of the category lists",
+    "button-primary": "first filled, coloured call to action: rgb(204, 0, 0)",
+    "input": "first text field"
+  },
+  "keepScopes": [".t3-footer", ".videos-featured", ".banner"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#333333",
+    "--fg-2": "#333333",
+    "--accent": "#cc0000",
+    "--accent-hover": "#cc0000",
+    "--surface": "#f8f8f8",
+    "--meta": "#999999",
+    "--success": "#669900",
+    "--warn": "#ff8800",
+    "--danger": "#cc0000",
+    "--border": "#e5e5e5",
+    "--muted": "#666666",
+    "--font-display": "\"Roboto Slab\", sans-serif",
+    "--font-body": "\"Roboto\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#f8f8f8"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "accent": "#cc0000",
+      "accent-hover": "#cc0000",
+      "surface": "#f8f8f8",
+      "meta": "#999999",
+      "success": "#669900",
+      "warn": "#ff8800",
+      "danger": "#cc0000",
+      "border": "#e5e5e5",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#333333",
+      "fg-2": "#333333",
+      "accent": "#cc0000",
+      "accent-on": "#ffffff",
+      "surface-warm": "#f8f8f8"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#f2f2f2",
+      "border": "#d8d8d8"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border": "#e0e2e3"
+    },
+    {
+      "surface": "#f9f9f9"
+    },
+    {
+      "surface": "#eeeeee"
+    },
+    {
+      "surface": "#e5e5e5"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (71 line colours, 76 text colours seen)",
+  "selectors": {
+    "heading": [],
+    "button": [".btn:not(.typo-tools .btn)", "a.btn:not(.typo-tools .btn)"],
+    "buttonPrimary": [".btn-primary", "a.btn:not(.typo-tools .btn)"],
+    "container": ["#t3-mainbody .container, .container"],
+    "bodyFace": ["body"],
+    "body": ["body", ".magazine-item-ct p"],
+    "onAccent": [
+      ".magazine-category-title.cat-red a",
+      ".magazine-featured-leading .magazine-section-heading h4"
+    ],
+    "themeToggle": "[data-tracy-theme-toggle]",
+    "pill": [".label"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": ".t3-wrapper p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t3-wrapper p, .t3-wrapper li",
+    "heading": ".t3-wrapper :is(h1, h2, h3, h4)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar-l",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 26 tried (byte 9223); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#f2f2f2",
+      "uses": 26,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f8f8",
+      "distance": 10
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 14,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f8f8",
+      "distance": 21
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f8f8",
+      "distance": 2
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f8f8",
+      "distance": 17
+    },
+    {
+      "hex": "#d8d8d8",
+      "uses": 4,
+      "kind": "line",
+      "role": "border",
+      "near": "#e5e5e5",
+      "distance": 23
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 4,
+      "kind": "line",
+      "role": "border",
+      "near": "#e5e5e5",
+      "distance": 6
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on the 1.0.1 release build itself (stand.mjs --from-dir ~/tracy-bench-work/release/ds-r2a/ja-teline-v/release; tasks/evidence/ds-remeasure-5-2026-10-11/ja-teline-v): 12/12 with Moxie, MotherDuck, Toggl Track, Apple, controls 0 differences, no text made less readable than the template's own, 78%–96% of the page follows; checked by eye under Moxie and Toggl Track (dark), MotherDuck and Apple (light). Round 2 measured 1.0.0 tokenized in place (headings on the accent through selectors.onAccent, logo inverted under a dark system, the template's own dark mode left to it through tokenScope). The re-measure found the phone header's small logo (.logo-img-sm) black on the dark header under Moxie and Toggl Track: inverted like .logo-img (sideRules). The \"In the spotlight\" label (white on a translucent strip over the featured photo) is now read off the photograph (flow.mjs: an <img> under a text is a picture); before, it was read against the grey box behind the photo (1.26 default, 1.09 Apple). A site still on 1.0.0 wearing a system was not measured. Re-measured 12/10/2026 with the unified probe (fix/ds-reverify-d) on the published 1.0.1: the featured carousel's article meta (.magazine-carousel .magazine-item-main .article-aside, the template's #999 on the photo's dark mask beside the white titles) took each system's muted colour, 2.07–3.5:1 where the template reads 4.1–7; sideRules now keep it #999999 under both sides; then 12/12, controls 0 differences, 77%–96% of the page follows, no text made less readable than the template's own (tasks/evidence/ds-reverify-d-2026-10-12/ja-teline-v)",
+  "contrastNote": "every text of the page's wrapper (a home page built of modules has no #t3-mainbody), each judged against itself on the default page (batch 2's flow.mjs)",
+  "keepDefaults": {
+    "--body-text-color": "#333333"
+  },
+  "keepNote": "the dark footer, the dark Hot Videos band and the Subscribe banner keep the template colours (white text on their own grounds)",
+  "selectorsNote": "the magazine sets its running text (.magazine-item-ct p) to 300 itself: the body face rule names it. No heading size rule: the magazine has no large section titles, its h2 are the category labels and article titles, which keep the template sizes; 14/10/2026 (visual review, an article page): the article’s Typography rail (.article-tools .typo-tools) is four bare icon controls (a.btn holding only an fa icon: smaller/bigger font, previous/next face), 22px round in the template; the button and primary-button selectors named every a.btn, so they took the system’s accent fill, padding and size and swelled into pills on two rows (Moxie, Stripe). They are kept out of both (:not(.typo-tools .btn)): they keep the template’s size, their icons the page text",
+  "keepText": [".t3-footer", ".videos-featured", ".banner"],
+  "sideRules": {
+    "dark": {
+      ".logo-img-sm": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".magazine-category-title": {
+        "background-image": "none",
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".magazine-carousel .magazine-item-main .article-aside": {
+        "color": "#999999"
+      },
+      ".logo-img:not([src*=\"logo_white\"])": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      }
+    },
+    "light": {
+      ".magazine-carousel .magazine-item-main .article-aside": {
+        "color": "#999999"
+      }
+    }
+  },
+  "sideNote": "under a dark worn page: the black-and-red logo (drawn for the white page) is inverted with its hue kept, and the category title rails drop their opaque light stripe picture for the worn surface",
+  "onAccentNote": "the red category titles and the lead block heading set white text on the accent fill from rules of their own: onAccent gives them the accent's text colour",
+  "minVersion": {
+    "quickstart/ja-teline-v/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-teline-v/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "tokenScope": ":root:not([data-theme=\"dark\"])",
+  "darkNote": "the template has its own dark mode (css/darkmode.css under html[data-theme=dark], chosen pre-paint by the visitor's OS or its sun/moon switch, painted through --dm-* and literal pairs). A worn system defines --ds-c-* only outside it (tokenScope :root:not([data-theme=dark])), so a visitor in dark mode sees the template's own dark mode with the system's faces and sizes, every tokenized rule falling back to its own colour; the switch stays. Measured 11/10/2026 by injecting each of the four systems into the dark-mode page (desktop and phone): no text worse than the template's own dark mode; remapping --dm-* to the system instead left white-on-light texts (its literal pairs), so it was not taken. The slot's primary-button fill has no colour there (the grid/list switch shows unfilled)",
+  "bands": {
+    ".t3-footer": {
+      "ground": "#111111",
+      "texts": ["#999999", "#ffffff", "#e5e5e5"],
+      "root": false,
+      "paint": {
+        ".container": {
+          "background-color": "ground"
+        },
+        ".t3-spotlight .t3-module": {
+          "background-color": "ground"
+        },
+        ".logo::after": {
+          "border-right-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".videos-featured": {
+      "ground": "#000000",
+      "texts": [],
+      "root": false,
+      "paint": {
+        ".player-wrap": {
+          "background-color": "ground"
+        },
+        ".player-wrap div": {
+          "background-color": "ground"
+        },
+        ".ja-video": {
+          "background-color": "ground"
+        },
+        ".col": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".banner": {
+      "ground": "#ffffff",
+      "texts": [],
+      "picture": true,
+      "paint": {
+        ".module-title": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "literalsNote": "#999999: the magazine carousel bylines sit on its photo, in the template’s own grey",
+  "reviewV8Note": "15/10/2026 (look review v8): the dark-side logo invert reached the white logo picture of the dark headers and footer: it now inverts only the dark-ink pictures; the footer columns paint the old footer ground (#111) and take the band ground"
+}

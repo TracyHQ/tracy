@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-charcoal: #141414;
+  --color-paper-white: #ffffff;
+  --color-bone: #efefef;
+  --color-smoke: #cecece;
+  --color-ash: #b2b2b2;
+  --color-pewter: #999999;
+  --color-iron: #777777;
+  --color-graphite: #5e5e5e;
+  --color-onyx: #1f1f1f;
+
+  /* Typography — Font Families */
+  --font-helvetica-now-display: 'Helvetica Now Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

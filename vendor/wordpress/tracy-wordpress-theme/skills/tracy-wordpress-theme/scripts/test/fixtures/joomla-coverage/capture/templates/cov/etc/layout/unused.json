@@ -1,0 +1,15 @@
+{
+  "layout": {
+    "sections": [
+      {
+        "name": "Main",
+        "contents": [
+          {
+            "type": "component",
+            "name": ""
+          }
+        ]
+      }
+    ]
+  }
+}

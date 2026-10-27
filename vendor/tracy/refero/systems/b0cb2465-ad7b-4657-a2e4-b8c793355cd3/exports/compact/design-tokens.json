@@ -1,0 +1,99 @@
+{
+  "color": {
+    "uniswap-pink": {
+      "$value": "#ff37c7",
+      "$type": "color",
+      "$description": "Uniswap Pink — Primary brand mark, filled CTA buttons, active nav indicator, and the only chromatic color an interface should use — saturated hot-pink against a white canvas creates instant focal hierarchy without darkening the page"
+    },
+    "midnight-ink": {
+      "$value": "#131313",
+      "$type": "color",
+      "$description": "Midnight Ink — Dark borders and separators for elevated surfaces and inverted UI."
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, input fields, and text on pink buttons — the structural base everything sits on"
+    },
+    "carbon": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Carbon — Secondary structural border and text variant used in nav and button outlines where slightly softer than Midnight Ink is desired"
+    },
+    "slate": {
+      "$value": "#6a6a6a",
+      "$type": "color",
+      "$description": "Slate — Dark borders and separators for elevated surfaces and inverted UI."
+    },
+    "ash": {
+      "$value": "#acacac",
+      "$type": "color",
+      "$description": "Ash — Disabled states, placeholder text, hairline icon borders, and the lightest visible UI elements"
+    },
+    "frost": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Frost — Disabled button borders and the faintest possible surface separation"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "blush-mist": {
+      "$value": "#fef4ff",
+      "$type": "color",
+      "$description": "Blush Mist — Primary page canvas and white card surfaces. Do not promote it to the primary CTA color"
+    },
+    "ember": {
+      "$value": "#ff4d00",
+      "$type": "color",
+      "$description": "Ember — Orange decorative accent for icons, marks, and small graphic details"
+    },
+    "iris": {
+      "$value": "#8251fb",
+      "$type": "color",
+      "$description": "Iris — Token/asset category color for violet-branded assets and decorative purple orbs"
+    },
+    "magenta": {
+      "$value": "#f50db4",
+      "$type": "color",
+      "$description": "Magenta — Token/asset category color for pink-branded assets and decorative orbs (a slightly different pink from the brand)"
+    },
+    "sky": {
+      "$value": "#2abdff",
+      "$type": "color",
+      "$description": "Sky — Token/asset category color for blue-branded assets and decorative orbs"
+    },
+    "mint": {
+      "$value": "#00c3a0",
+      "$type": "color",
+      "$description": "Mint — Token/asset category color for teal-branded assets and decorative orbs"
+    },
+    "crimson": {
+      "$value": "#e01a2b",
+      "$type": "color",
+      "$description": "Crimson — Red decorative accent for icons, marks, and small graphic details. Use as a supporting accent, not as a status color"
+    },
+    "forest": {
+      "$value": "#0c8911",
+      "$type": "color",
+      "$description": "Forest — Green decorative accent for icons, marks, and small graphic details. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "basel": {
+      "$value": "Basel",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across every UI surface. The unusual mid-weights (485, 535) are the signature: Basel avoids the standard 400/500/600 ladder and instead calibrates precise intermediate weights, which is why body text and headings feel more like a continuous gradient than discrete steps. The geometric construction with tight -0.02em tracking across all sizes produces a slightly compressed, clinical-financial tone — readable but never decorative. For open-source replacement use Inter at 400/500/550, or DM Sans at 400/500/550."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://app.uniswap.org",
+      "siteName": "Uniswap",
+      "extractedAt": "2026-06-03T21:04:44.163Z",
+      "variant": "compact"
+    }
+  }
+}

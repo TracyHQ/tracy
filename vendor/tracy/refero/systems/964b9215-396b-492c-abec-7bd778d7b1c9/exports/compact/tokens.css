@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-ink: #111111;
+  --color-pure-white: #ffffff;
+  --color-mist-border: #e9eaeb;
+  --color-cream-surface: #f3efeb;
+  --color-tan-divider: #d8d3cc;
+  --color-warm-subtle: #615e5b;
+  --color-mid-gray: #888888;
+  --color-pure-black: #000000;
+  --color-obsidian: #1e1e1d;
+
+  /* Typography — Font Families */
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

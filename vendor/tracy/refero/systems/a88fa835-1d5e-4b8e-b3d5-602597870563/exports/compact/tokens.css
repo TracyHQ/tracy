@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-void-black: #060606;
+  --color-graphite-surface: #141414;
+  --color-smoke-border: #202020;
+  --color-iron-mute: #595959;
+  --color-ash-gray: #989898;
+  --color-silver-whisper: #b4b4b4;
+  --color-paper-white: #ffffff;
+  --color-signal-yellow: #ffe800;
+
+  /* Typography — Font Families */
+  --font-gtkotoheim: 'gtKotoheim', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtkotoheimcondensed: 'gtKotoheimCondensed', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

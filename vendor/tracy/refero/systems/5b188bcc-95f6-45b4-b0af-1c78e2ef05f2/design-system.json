@@ -1,0 +1,288 @@
+{
+  "dos": [
+    "Use the purple-to-indigo gradient (#6c00f6 → #4f46e5) for the single most important action on any screen — never apply it to more than one CTA per view.",
+    "Set card radius to 20px and use the 24px diffuse soft shadow on every elevated surface to maintain a single, consistent depth language.",
+    "Pair every primary CTA with a ghost 'Read docs →' style secondary link in Midnight Slate so the purple gradient stays scarce and high-signal.",
+    "Use Inter weight 700 at 32–52px for section and hero headlines; weight 600 at 18–20px for card titles; weight 400 at 14–16px for body.",
+    "Place a small purple pill tag above every feature card heading to establish a consistent eyebrow pattern across pages.",
+    "Use 40–64px vertical section gaps and 8px between sibling elements to keep the layout feeling comfortable and confident, never cramped.",
+    "Reserve green (#00d492), blue (#51a2ff), and pink (#fb64b6) for product mockup illustrations only — never in chrome, borders, or text."
+  ],
+  "donts": [
+    "Don't apply the purple gradient to secondary buttons, badges, or icons — it dilutes the primary action's weight.",
+    "Don't use #000000 for body text or borders; use Midnight Slate (#0f172b) for text and Silver (#e5e7eb) for borders to keep the system feeling soft rather than harsh.",
+    "Don't introduce new border radii — cards are 20px, buttons are 8px, and tags are 4px. Mixing values breaks the geometry.",
+    "Don't use bold or heavy drop shadows on buttons, inputs, or icons; depth is reserved for full cards.",
+    "Don't decorate with gradients on cards or backgrounds outside the brand gradient and the dark testimonial band — flat surfaces keep the system readable.",
+    "Don't place chromatic text in green/blue/pink over white; these colors are illustration-only and don't meet body-text contrast expectations.",
+    "Don't stretch the CTA button full-width on hero screens — let it sit at its natural width beside a ghost link to preserve the visual rhythm of action + alternative."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#6c00f6",
+      "name": "Electric Iris",
+      "role": "Violet text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color",
+      "group": "brand",
+      "gradient": "linear-gradient(to right, #6c00f6 0%, #4f46e5 100%)"
+    },
+    {
+      "hex": "#7f22fe",
+      "name": "Bright Violet",
+      "role": "Violet text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#4f46e5",
+      "name": "Indigo Drift",
+      "role": "Gradient terminus — pairs with Electric Iris to create the right-leaning purple-to-indigo gradient on CTAs and hero accents",
+      "group": "brand"
+    },
+    {
+      "hex": "#0f172b",
+      "name": "Midnight Slate",
+      "role": "Primary text, dark surface fills, logo mark, and icon strokes — the heaviest neutral in the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d293d",
+      "name": "Graphite",
+      "role": "Dark UI borders, secondary dark surfaces, and high-contrast dividers where a softer gray reads too faint",
+      "group": "neutral"
+    },
+    {
+      "hex": "#020618",
+      "name": "Ash",
+      "role": "Near-black button text and icon glyphs — used as the foreground on filled purple CTAs to maximize contrast without true black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#90a1b9",
+      "name": "Fog",
+      "role": "Muted helper text, nav icons, and low-emphasis stroke work — the bridge between white canvas and primary text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Silver",
+      "role": "Default hairline border, card dividers, and the most common neutral surface tone — carries the structural skeleton of every layout",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f1f5f9",
+      "name": "Mist",
+      "role": "Subtle surface tint for alt-row cards, input backgrounds, and section bands that need a whisper of separation from the white canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White",
+      "role": "Page canvas, card surface, and button text on purple fills — the bright base everything floats on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#00d492",
+      "name": "Spearmint",
+      "role": "Decorative product-mockup accent — used in illustrations, code editor UI, and inline highlights inside screenshots, not in chrome",
+      "group": "accent"
+    },
+    {
+      "hex": "#51a2ff",
+      "name": "Sky Pop",
+      "role": "Decorative product-mockup accent — appears in wallet/payment UI illustrations to signal connected or live data states",
+      "group": "accent"
+    },
+    {
+      "hex": "#fb64b6",
+      "name": "Bubblegum",
+      "role": "Decorative product-mockup accent — pink wash on feature-card backgrounds and illustration shadows to add warmth to the otherwise cool palette",
+      "group": "accent"
+    }
+  ],
+  "layout": "Pages use a centered max-width 1200px content column with generous outer gutters. The hero is a centered text stack (headline → subtext → CTA + ghost link) with a mockup cluster beneath. Below the hero, a full-bleed light-gray band holds a single-row logo strip. Content sections alternate between white and soft-mist backgrounds, separated by 64px vertical rhythm. Feature spotlights are 2-column (text left, mockup right) inside a single rounded card. The solutions grid is a 4-column equal-width tile row on desktop, collapsing to stacked cards on mobile. The testimonial band is a full-bleed dark card that breaks the light rhythm. Navigation is a single white sticky-feeling top bar with a left logo lockup, centered text nav with dropdown chevrons, and right-side Docs link + Dashboard CTA.",
+  "imagery": "Imagery is dominated by layered product UI mockups (sign-in panels, payment search bars, code editors) that sit on white canvas with a soft purple-to-pink decorative blob behind them. No lifestyle photography, no abstract 3D renders — the product IS the hero. Decorative SVG accents in green, blue, and pink float around mockup clusters to add color energy without competing with the purple brand. Icons are line-style at a consistent stroke weight, monochrome on outlined containers, or chromatically filled when used as section eyebrows. The dark testimonial band uses only a wordmark — no headshots.",
+  "similar": [
+    {
+      "why": "Same developer-platform positioning with a dominant single-accent purple on near-monochrome white surfaces, Inter-style sans-serif, and 4-column solution grids.",
+      "business": "Alchemy"
+    },
+    {
+      "why": "Same light-mode API/SDK product aesthetic, Inter typography, purple-forward brand color, and 20px-radius card grids with soft shadows.",
+      "business": "Thirdweb"
+    },
+    {
+      "why": "Same generous whitespace rhythm, hairline #e5e7eb borders, rounded cards with diffuse shadows, and disciplined single-accent brand color used only on primary actions.",
+      "business": "Stripe"
+    },
+    {
+      "why": "Same crypto-developer-tool visual language — light canvas, purple brand, Inter type, 4-column solution tile grid, and product mockups instead of lifestyle photography.",
+      "business": "Moralis"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "4px",
+      "cards": "20px",
+      "buttons": "8px",
+      "containers": "24px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "64px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "crypto",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Default page background"
+    },
+    {
+      "hex": "#f1f5f9",
+      "name": "Soft Band",
+      "level": 2,
+      "purpose": "Logo bar and low-contrast section bands"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 3,
+      "purpose": "Feature and solution tile surfaces, distinguished from canvas by shadow + border"
+    },
+    {
+      "hex": "#321e48",
+      "name": "Testimonial",
+      "level": 4,
+      "purpose": "Dark purple band for customer quotes"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "oklab(0.554391 -0.00887066 -0.039739 / 0.1) 0px 0px 24px 0px",
+      "element": "Feature spotlight card"
+    },
+    {
+      "style": "oklab(0.554391 -0.00887066 -0.039739 / 0.1) 0px 0px 24px 0px",
+      "element": "Solution tile card"
+    }
+  ],
+  "northStar": "API console on soft daylight — the interface is the product, and purple is the only power color.",
+  "typeScale": [
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "display",
+      "size": 52,
+      "lineHeight": 1.1
+    }
+  ],
+  "components": [
+    {
+      "name": "Purple Gradient CTA",
+      "role": "Primary action button on hero sections, nav, and key conversion moments.",
+      "description": "Filled with the brand gradient (#6c00f6 → #4f46e5), white text at Inter 16/600, horizontal padding 16px, vertical padding 8–10px, 8px radius. Pill-like but not fully rounded — the 8px corner keeps it feeling structural rather than playful."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Secondary action that lives next to a primary CTA without competing visually.",
+      "description": "No background or border. Inter 16/500 text in #0f172b with a trailing → arrow chevron in Electric Iris. Pair with a filled CTA when offering a docs/learn-more alternative."
+    },
+    {
+      "name": "Logo Bar",
+      "role": "Social-proof band of partner/brand logos between the hero and first content block.",
+      "description": "Centered row of monochrome gray logos on a light gray (#f1f5f9) band, separated by even horizontal spacing. Logos share a consistent optical weight; no logos in color."
+    },
+    {
+      "name": "Feature Spotlight Card",
+      "role": "Hero-sized card that introduces a product pillar with a product mockup.",
+      "description": "White card, 20px radius, 24px soft shadow (oklab at 0.1 opacity, 0px 0px 24px). Left column holds a small purple pill tag, a 20px weight-600 heading, a body paragraph, and a row of two text-link CTAs. Right column holds a product mockup or illustration, often backed by a decorative pink-to-purple gradient blob."
+    },
+    {
+      "name": "Solution Tile Card",
+      "role": "Compact 4-column grid card for the 'Solutions' section.",
+      "description": "White card, 20px radius, 24px shadow, 20px padding. Stack: outlined icon in a square container, 18px weight-600 title, 2–3 lines of body copy, then a full-width purple filled button at the bottom labeled 'Explore'. Buttons span the card width — each tile reads as a complete mini-page."
+    },
+    {
+      "name": "Outlined Icon Container",
+      "role": "Visual anchor at the top of every solution tile.",
+      "description": "Soft square (8px radius) with a 1px border in #e5e7eb, holding a single-line icon in #0f172b. Consistent 40×40 footprint; icons are line-style at 1.5px stroke."
+    },
+    {
+      "name": "Purple Pill Tag",
+      "role": "Category label that introduces each feature spotlight card.",
+      "description": "Light purple tinted background (rgba of #7f22fe at low opacity), 4px radius, 8px horizontal padding, 6px vertical padding, Inter 12/500 text in #7f22fe. Sits above card headlines like a section eyebrow."
+    },
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page purple band for acquisition news and promos.",
+      "description": "Solid #6c00f6 background, white Inter 14/500 text centered, with an underlined 'Learn more' link. Full-bleed across the viewport, 40px tall."
+    },
+    {
+      "name": "Top Navigation",
+      "role": "Primary site navigation.",
+      "description": "White background, 64–72px tall, sticky-feeling. Left: purple '≡ sequence' logo lockup plus a small 'a polygon company' sublabel. Center: text nav with #0f172b Inter 14/500 items and dropdown chevrons. Right: a ghost 'Docs' text link and a filled purple-gradient 'Dashboard' CTA button, 8px radius."
+    },
+    {
+      "name": "Dark Testimonial Banner",
+      "role": "Full-bleed dark band for customer quotes between content sections.",
+      "description": "Deep purple gradient background (rgb(50,30,72) → rgb(28,16,43)), rounded corners on the container, 20px radius. White quote text at Inter 18/400 with the brand logo bottom-right."
+    },
+    {
+      "name": "Hero Mockup Cluster",
+      "role": "Visual element directly under the hero headline — layered product UI mockups.",
+      "description": "Three overlapping product cards (sign-in dialog, payment search, and a code/query panel) sitting on a white canvas with soft purple/pink decorative blobs behind. Each mockup card is white with a 12–16px radius, thin border in #e5e7eb, and a small drop shadow. Purple/pink SVG accents float around the cluster as atmosphere."
+    },
+    {
+      "name": "Partner Logo Lockup",
+      "role": "Wordmark + 'a polygon company' sublabel in the nav.",
+      "description": "Purple (#6c00f6) 'sequence' wordmark in Inter 16/700 preceded by a 4-bar mark icon. Sublabel 'a polygon company' in #90a1b9 Inter 12/500 sits immediately to the right."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single-family type system. Weight 700 carries hero and section headlines at 32–52px, weight 600 handles subheadings and card titles at 18–20px, weight 500–600 sets buttons and nav links, and weight 400 runs body and helper copy at 14–16px. Inter is chosen for its developer-tools neutrality — humanist but precise — letting the purple brand color do the expressive work instead of the typeface.",
+      "sizes": "14, 15, 16, 18, 20, 32, 52",
+      "family": "Inter",
+      "weight": "400 / 500 / 600 / 700",
+      "lineHeight": "1.10, 1.20, 1.25, 1.30, 1.40, 1.50, 1.71, 2.00",
+      "substitute": "Inter (Google) — system fallback to -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    }
+  ],
+  "description": "Sequence presents a light, developer-first visual language built on white surfaces, a confident sans-serif type system, and a single dominant purple that acts as the only serious brand signal on the page. The aesthetic reads like a modern API platform — generous whitespace, compact card grids, hairline borders, and soft elevation rather than heavy shadows or dark mode theatrics. Color is rationed: pages stay largely monochromatic, with purple reserved for primary actions, the logo, and a signature gradient that powers hero treatments and the dashboard call-to-action. Decorative accents in green, blue, and pink appear inside product illustrations and mockups, not in the chrome — they signal 'crypto-native' without competing with the brand. Components are flat and functional, leaning on geometry (8px button radius, 20px card radius, 24px soft shadow) rather than decoration to create rhythm and trust.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- background: #ffffff\n- surface / soft band: #f1f5f9\n- text: #0f172b\n- muted text: #90a1b9\n- border: #e5e7eb\n- accent (brand purple): #6c00f6\n- primary action: no distinct CTA color\n\nExample Component Prompts:\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n2. Solution tile card — white surface, 20px radius, 24px soft shadow, 20px padding. Top: 40×40 outlined icon container (1px #e5e7eb border, 8px radius, line icon in #0f172b). Middle: 18px Inter 600 title in #0f172b, then 14px Inter 400 body in #0f172b at 80% opacity. Bottom: full-width purple-gradient 'Explore' button (8px radius, 16px/600 Inter, white text).\n3. Feature spotlight card — white surface, 20px radius, 24px soft shadow, 40px padding. Left column: 4px-radius purple pill tag (rgba of #7f22fe at 12%, #7f22fe text, 12px/500 Inter), 20px Inter 600 heading, 16px Inter 400 body, then two ghost text links ('For Ecosystems →', 'For Developers →') in #0f172b Inter 500. Right column: layered product UI mockup on a soft pink-to-purple decorative blob.\n4. Purple pill tag — rgba(#7f22fe, 0.12) background, 4px radius, 8px horizontal × 6px vertical padding, 12px Inter 500 in #7f22fe, used as a category eyebrow above card headings.\n5. Dark testimonial band — deep purple gradient background (linear-gradient(to right bottom, rgb(50,30,72), rgb(28,16,43))), 20px radius, 48px padding. White 18px Inter 400 quote text, with a partner wordmark bottom-right in white."
+    },
+    {
+      "title": "Color Discipline",
+      "content": "The chromatic palette (purple, green, blue, pink) is rationed by context. Purple is the only brand color that ever touches chrome — buttons, logo, gradients, pill tags. Green, blue, and pink are illustration-only: they live inside product mockup screenshots, code editor UI, and decorative SVG accents around hero clusters. They never appear as button fills, borders, or text on real UI surfaces. This is what gives the purple gradient its scarcity and punch — if every accent were used everywhere, the brand color would lose its signaling power."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is a single soft, diffuse 24px shadow at 10% opacity — the same token on every elevated surface. There are no drop shadows on buttons, inputs, or icons; depth is created only by lifting cards off the white canvas. The effect is quiet and paper-like rather than skeuomorphic."
+}

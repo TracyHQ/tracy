@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><title>Site identity</title><fields name="site-identity">
+<fieldset name="brand" label="TPL_TRACY_IDENTITY_BRAND">
+<field name="site-name" type="text" label="TPL_TRACY_IDENTITY_SITE_NAME" default="" />
+<field name="legal-name" type="text" label="TPL_TRACY_IDENTITY_LEGAL_NAME" default="" />
+<field name="slogan" type="text" label="TPL_TRACY_IDENTITY_SLOGAN" default="" />
+<field name="monogram" type="text" label="TPL_TRACY_IDENTITY_MONOGRAM" default="" />
+</fieldset>
+<fieldset name="contact" label="TPL_TRACY_IDENTITY_CONTACT">
+<field name="email" type="email" label="TPL_TRACY_IDENTITY_EMAIL" default="" />
+<field name="phone" type="text" label="TPL_TRACY_IDENTITY_PHONE" default="" />
+<field name="address" type="textarea" label="TPL_TRACY_IDENTITY_ADDRESS" default="" />
+<field name="hours" type="text" label="TPL_TRACY_IDENTITY_HOURS" default="" />
+</fieldset>
+<fieldset name="social" label="TPL_TRACY_IDENTITY_SOCIAL">
+<field name="facebook" type="url" label="Facebook" default="" />
+<field name="instagram" type="url" label="Instagram" default="" />
+<field name="linkedin" type="url" label="LinkedIn" default="" />
+<field name="tiktok" type="url" label="TikTok" default="" />
+<field name="youtube" type="url" label="YouTube" default="" />
+</fieldset>
+</fields></form>

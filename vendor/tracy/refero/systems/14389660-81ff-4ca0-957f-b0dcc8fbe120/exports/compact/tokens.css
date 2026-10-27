@@ -1,0 +1,23 @@
+:root {
+  /* Colors */
+  --color-kraken-violet: #7132f5;
+  --color-deep-iris: #2e3350;
+  --color-midnight-ink: #202333;
+  --color-ink-black: #101114;
+  --color-pure-white: #ffffff;
+  --color-linen-mist: #f6f5f9;
+  --color-fog-border: #d4d4dc;
+  --color-steel-slate: #686b82;
+  --color-ash: #9497a9;
+  --color-graphite: #484b5e;
+  --color-lilac-wash: #e4dcf9;
+  --color-bull-green: #08844f;
+  --color-mint-badge: #d2e7e1;
+  --color-bear-red: #d11d45;
+  --color-forest-seal: #026b3f;
+
+  /* Typography — Font Families */
+  --font-kraken-product: 'Kraken-Product', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-kraken-brand: 'Kraken-Brand', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

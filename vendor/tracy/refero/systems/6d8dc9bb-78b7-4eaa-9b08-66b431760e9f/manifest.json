@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6d8dc9bb-78b7-4eaa-9b08-66b431760e9f",
+  "status": "complete",
+  "name": "Tilda",
+  "url": "https://styles.refero.design/style/6d8dc9bb-78b7-4eaa-9b08-66b431760e9f",
+  "sourceWebsite": "https://tilda.cc",
+  "extractedAt": "2026-06-03T20:47:44.810Z",
+  "capturedAt": "2026-10-08T05:13:01.536130+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Paper sketchbook with coral crayon",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4b7575b2-89eb-4798-9921-5f6efcd7eb64.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6867d82ff4c4a42bae2ec27ce903053931688051a617d5b28d17d13832bbb7dc",
+      "bytes": 18698
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1965909e6a63a99e1fb012d2439458b7dfd82341f7f08ba3bcea73b1d238f5e4",
+      "bytes": 141385
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "439b0f275b2e9341832e7abf7667332c66e9e015e4d171e471949ee49a0345a2",
+      "bytes": 15163
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3bc73f133473897184320c5e75c818cb4492b43d5232c6fb039a7a2d9a93ac2f",
+      "bytes": 21121
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "03635ef8c1ac5a2d5f1dd0cfed76a17d7828ea5af5fc9b75421bcebd32a5feba",
+      "bytes": 11642
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "878f4fff297733071d985c04f037d102baf911efa970ded5948bd69cd37efe36",
+      "bytes": 2855
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4ffbfb3645a37efeb60053d5c5dd3685ef355355c6d40644876fd4ee5ee387fc",
+      "bytes": 670
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f550214be4aba2d061be1b3f8c0f88ef347acd30d7c86a9ac63e137d7b89cf4e",
+      "bytes": 687
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ec343488e6397dc7d7473470388135915f3712021375f8c7fb473550020d42c5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1b960b34d8edfb23c72b6ab2227fbade3f5b622188e3f2d1499060921cc7b3e3",
+      "bytes": 42182
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1229821bc384f7d72f1d012a04f866a5516614db9006624e915e611841a9f3fc",
+      "bytes": 22131
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "84514c36085f4d9af3280a16c50fc0bc6f98de7af6fd4b904bba1c3c14cc48ed",
+      "bytes": 55984
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "57e50ac99d277edfa6406d84c1b7bb02317c29121c9b7f655a4ab2de0c00f71c",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d083faee31d4ab5373eeec8a46a7feada9b116a6d2064581a1e6c8da9757f25d",
+      "bytes": 1635
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4c5dc21bd738b130ef08ca4c496fba03ad9dd85712b3a9f6bc43276d950e307d",
+      "bytes": 2285
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "155dbf6e-1187-424e-9ce8-59ffecff7e6b",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "4caadb3c-3865-4a4d-9e1a-46478ac71078",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "51752cfb-4fd4-464f-8b78-ecbc813830e1",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "6b2a0513-df80-4140-87a8-38b1fef34313",
+    "6d8dc9bb-78b7-4eaa-9b08-66b431760e9f",
+    "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "989d8d71-c161-4410-8157-ad6ade0bd4be",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fabacd2a-acb6-46c4-939c-4a464df15440",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

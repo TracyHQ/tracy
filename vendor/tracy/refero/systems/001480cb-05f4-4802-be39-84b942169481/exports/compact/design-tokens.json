@@ -1,0 +1,79 @@
+{
+  "color": {
+    "parchment-cream": {
+      "$value": "#faf2ec",
+      "$type": "color",
+      "$description": "Parchment Cream — Page canvas — the warm, paper-like surface that everything sits on; cards and buttons float above it as white or charcoal"
+    },
+    "warm-ink": {
+      "$value": "#1b1917",
+      "$type": "color",
+      "$description": "Warm Ink — Primary text and headline color — a near-black with a brown undertone that harmonizes with the cream canvas instead of fighting it"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Secondary text, icon strokes, and heavy dark surfaces (filled dark buttons, logo marks); used sparingly so Warm Ink remains the default reading color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, input fields, and dark-on-light icon fills — the only true white in the system, reserved for elements that must lift off the cream"
+    },
+    "mist-gray": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Mist Gray — Section dividers, subtle background bands, and inactive surface washes"
+    },
+    "ash": {
+      "$value": "#8f8f8f",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, tertiary metadata, and disabled labels"
+    },
+    "slate-lavender": {
+      "$value": "#9894a8",
+      "$type": "color",
+      "$description": "Slate Lavender — Default link color, hairline borders, tag outlines, and decorative strokes — the most-used chromatic neutral; soft enough to never compete with the blue accent"
+    },
+    "iron": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Iron — Input field text and dark-mode form borders on light surfaces"
+    },
+    "periwinkle": {
+      "$value": "#4b72f3",
+      "$type": "color",
+      "$description": "Periwinkle — Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "deep-violet": {
+      "$value": "#2b3ea7",
+      "$type": "color",
+      "$description": "Deep Violet — Violet outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "nineties": {
+      "$value": "Nineties",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headlines — a custom high-contrast serif with vintage-magazine DNA. Used at 80px for hero statements, 48px for section headlines, and 28px for sub-headlines. Its old-style serifs and tight 1.08 line-height create a printed-page rhythm that is the single most distinctive choice in the system. Substitute: DM Serif Display, Playfair Display, or Recoleta."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, UI controls, navigation, buttons, and small headings. Weight 550 (Inter's semibold) is used for emphasized text and button labels — heavier than typical body weight but lighter than a full 600, giving the UI a slightly lighter touch than standard Inter implementations. Always rendered with OpenType features cv02, cv03, cv04, cv06, cv11 for the alternate character set that gives the text its slightly geometric, brand-tuned feel."
+    },
+    "apple-system-system-ui": {
+      "$value": "-apple-system / system-ui",
+      "$type": "fontFamily",
+      "$description": "Fallback and OS-native rendering for icons, system messages, and any element where a neutral sans is acceptable. Acts as the safety net so the system never breaks if Inter fails to load."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.pampam.city",
+      "siteName": "pampam.city",
+      "extractedAt": "2026-06-03T18:39:34.594Z",
+      "variant": "compact"
+    }
+  }
+}

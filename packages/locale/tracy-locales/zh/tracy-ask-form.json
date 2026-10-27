@@ -1,0 +1,20 @@
+{
+  "action.decide": "替我决定",
+  "action.followUp": "先再问我几个问题",
+  "action.submit": "发送回答",
+  "ask.languagePlaceholder": "选择语言…",
+  "ask.other": "其他",
+  "ask.otherPlaceholder": "或输入您自己的回答",
+  "ask.recommended": "推荐",
+  "ask.rewrite": "AI 改写",
+  "ask.rewriteFailed": "改写失败，请重试。",
+  "ask.rewriteUndo": "撤销",
+  "ask.rewriting": "正在改写…",
+  "empty.title": "没有待回答的问题",
+  "error.answer": "您的回答未能送达 agent，请重试。",
+  "pane.lead": "Tracy 需要你的回答才能继续",
+  "pointer.many": "右侧面板中有 {count} 个问题在等待",
+  "pointer.one": "右侧面板中有一个问题在等待",
+  "pointer.open": "打开",
+  "tab.title": "问题"
+}

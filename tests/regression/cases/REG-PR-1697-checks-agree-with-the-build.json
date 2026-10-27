@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1697-checks-agree-with-the-build",
+  "kind": "fix",
+  "title": "A demo build's checks no longer fail what the build was asked to do, the picture to replace is named where it lives, a map link to the template's street fails, and the logo is the business's own and stays transparent",
+  "pr": 1697,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["em", "wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: compareAgentInventory on a WordPress post whose tag \"Fish\" is renamed (among its relations and in its own data), a header part without its last newline, an EmDash key set null, a slide picture written without its wp-image class; then a post given more tags, a lost block and a lost figure.",
+    "S2: picturesWhere on a no-demo-pictures finding with wp-image-35 on /about-us, the file on two pages' records; banner-1.jpg beside a record whose anchor reads acm-text-banner-130.",
+    "S3: checkCtaReal on site-search links worded \"Special orders\"; checkFactsFromBrief on \"03 2014-2017\" and on map links searching the template's street, the held street and a place name.",
+    "S4: cutForPlace with keepAlpha on a transparent logo, an opaque photo carrying an alpha channel; chooseLogo on q-on-the-go-logo.png (larger) and q-patisserie.png with the place's name.",
+    "S5: the WordPress inventory read twice — a sidebar part from the theme file, then stored by the build (id 511) with the two term rows WordPress files it under; then one post filed under one more category; then a starting inventory read without the site's own rows told apart.",
+    "S6: checkNoDemoWords on the template's short lines \"Bar & Restaurant\", \"Our Bakery\", \"Mon - Fri\", \"Est. 1982\" kept as they were, with research that says \"restaurants\" and \"the restaurant\"."
+  ],
+  "expect": [
+    "S1: the renamed tag, the newline, the null key and the class-less picture pass; more tags, the lost block and the lost figure fail.",
+    "S2: the finding names the /about-us record and the block numbered as content.get {outline:true} numbers it; banner-1 is named in no record (no `in`), its sized copy rest-1-768x384 is.",
+    "S3: search links pass; the timeline years are no phone; only the template street's map link fails (kind map).",
+    "S4: the logo stays PNG with a clear corner, the photo is a JPEG; the logo naming the place is chosen.",
+    "S5: the stored part and its two rows pass; the extra category fails; the older starting read still compares every row (the two rows fail there, the unchanged site passes).",
+    "S6: \"bar & restaurant\" and \"est. 1982\" fail; \"Our Bakery\" and \"Mon - Fri\" pass."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/agent-demo-inventory.js apps/tracy-host/src/demo-qa.js apps/tracy-host/src/demo-qa-browser.js apps/tracy-web/src/lib/picture-cut.js packages/wo/website-opportunities/src/place-logo.js apps/tracy-host/src/demo-qa.js",
+    "dom": ""
+  },
+  "fence": "relationCopy tags_input; withoutNulls; picturesWhere; SEARCH_PARAM; ADDRESS_TEXT maps; cutForPlace keepAlpha demoTransparency; chooseLogo namesPlace; tags_input in post data; template file/source; taxonomyRelations own rows; short blocks judged word by word (foreignWord, SMALL_WORDS)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-web/test/picture-cut.test.mjs",
+      "apps/tracy-web/test/opportunities-place-logo.test.mjs"
+    ],
+    "tests": [
+      "a WordPress tag renamed is the same tag; a post given more tags differs",
+      "WordPress: a template part the build stores is the same part, and the rows WordPress files it under are not the site’s relations",
+      "blank space around and between tags is no structure; a lost block still is",
+      "a key holding null is a key left out; a key holding a value is not",
+      "a WordPress picture written without its wp-image class is the same picture; a lost figure is not",
+      "picturesWhere names the record and the WordPress block of each template picture, numbered as the outline is",
+      "cta-real: a link searching this site is a search suggestion, a booking word or not; off the site it is not",
+      "facts-from-brief: a map link searching another street fails; the held street, a place name or no address held do not",
+      "keepAlpha keeps a transparent logo transparent (PNG); without it the cut stays a JPEG",
+      "a logo naming the place wins over a larger sister brand, read or unread",
+      "no-demo-words: a short template heading with a word that is neither the brief’s nor the site’s furniture is copy left"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1026-defer-redesign-tools",
+  "kind": "feat",
+  "title": "A site conversation is sent the redesign/build tools only once that road starts, and has them by the next step after its trigger",
+  "pr": 1026,
+  "area": "agent/tools",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/deferred-tools.test.mjs packages/tools/tracy-site-tools/test/surface-listener.test.mjs",
+    "S2: Record the exit code and the result of each named test."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Every known surface (WordPress open/sealed/bound, Joomla open/sealed, EmDash) is made without tracy_brand, tracy_design_library, tracy_design_copy, tracy_design_propose and the WordPress/Joomla build tools, except tracy_site_build_joomla where the sealed Joomla tracy_site names it.",
+    "The design skill loaded, an answer naming a deferred tool, or the Design inspiration / Build tab's words in each of the 8 interface languages lift the tools before the next step; an ordinary edit lifts none; a resumed conversation keeps every tool it was already sent.",
+    "On dsh's own ToolRuntime the lifted tools join the agent's view, and dsh's addition-only projection keeps the first declarations unchanged and sends the new ones deferLoading with their tool-addition block."
+  ],
+  "selectors": {
+    "module": "packages/tools/tracy-site-tools/src/host/deferred-tools.mjs",
+    "listener": "agent/created, agent/inbox/inserted, tools/result in packages/tools/tracy-site-tools/src/host/index.ts"
+  },
+  "evidence": "harness-opt profile 09/10/2026 §1/§6 candidate 4: 0 calls of these tools in 341 bench turns of editing; ~3.9k (all CMS) to ~8.5k (WordPress, open Joomla) characters of schema on every step.",
+  "fence": "agent/created defers by restriction; triggers lift by the restriction's own disposer before the step that needs the tool; nothing is ever removed or re-described.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/deferred-tools.test.mjs",
+      "packages/tools/tracy-site-tools/test/surface-listener.test.mjs"
+    ],
+    "tests": [
+      "🔒 every interface language",
+      "🔒 on dsh’s own registry",
+      "🔒 every known surface is made without the deferred tools",
+      "🔒 a deferred tool is there by the next step",
+      "🔒 a resumed conversation keeps every tool"
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "color": {
+    "mint-signal": {
+      "$value": "#00caa0",
+      "$type": "color",
+      "$description": "Mint Signal — Primary CTA fill, active nav indicator, link accent on dark — vivid teal against white creates the only chromatic punctuation in the system"
+    },
+    "graphite": {
+      "$value": "#2c2d30",
+      "$type": "color",
+      "$description": "Graphite — Primary text, heading strokes, icon fills, button borders — the near-black workhorse, kept slightly warm to avoid a cold digital feel"
+    },
+    "carbon-black": {
+      "$value": "#211d1d",
+      "$type": "color",
+      "$description": "Carbon Black — Body text at high contrast, deep surface text — warmer alternative to Graphite for long-form copy"
+    },
+    "slate-mid": {
+      "$value": "#808183",
+      "$type": "color",
+      "$description": "Slate Mid — Secondary text, helper copy, muted borders — sits between Graphite and Silver for tertiary hierarchy"
+    },
+    "silver": {
+      "$value": "#afafaf",
+      "$type": "color",
+      "$description": "Silver — Hairline borders, dividers, disabled states, icon outlines — the workhorse neutral border, freq=808 makes it the most-used color in the system"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surface, input field, filled-on-accent button text"
+    },
+    "peach-wash": {
+      "$value": "#ffe4d6",
+      "$type": "color",
+      "$description": "Peach Wash — Supporting palette color for small decorative accents when the core palette needs contrast."
+    },
+    "lavender-wash": {
+      "$value": "#e8e0ff",
+      "$type": "color",
+      "$description": "Lavender Wash — Supporting palette color for small decorative accents when the core palette needs contrast."
+    },
+    "mint-wash": {
+      "$value": "#d4f5e8",
+      "$type": "color",
+      "$description": "Mint Wash — Supporting palette color for small decorative accents when the core palette needs contrast."
+    },
+    "periwinkle-wash": {
+      "$value": "#dde7f7",
+      "$type": "color",
+      "$description": "Periwinkle Wash — Supporting palette color for small decorative accents when the core palette needs contrast."
+    }
+  },
+  "font": {
+    "saans": {
+      "$value": "Saans",
+      "$type": "fontFamily",
+      "$description": "Primary display and heading face. Custom humanist sans with the ss01 stylistic set active across the entire site. Used at 46px for hero headlines (lineHeight 1.20), 28px for section titles, 26px for card headings, and 16–21px for UI labels. The positive +0.015em tracking on display sizes is an anti-convention — most crypto brands tighten display, but Saans loosens it, giving headlines a slightly architectural, blueprint-like cadence."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary body and UI face. Handles all long-form copy, table cells, nav links, button text, and form labels. The cv11 alternates and the aggressive negative tracking on larger sizes make Inter feel custom-tuned for the protocol's data-dense areas. The 0.88 lineHeight on certain 14–15px contexts suggests inline icon+label rows."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://lens.xyz",
+      "siteName": "Lens",
+      "extractedAt": "2026-06-03T18:56:37.360Z",
+      "variant": "compact"
+    }
+  }
+}

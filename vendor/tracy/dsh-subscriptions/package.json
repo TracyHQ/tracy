@@ -1,0 +1,75 @@
+{
+  "name": "@goodandready/dsh-subscriptions",
+  "version": "0.6.60-tracy.6",
+  "description": "Use ChatGPT Codex, Claude, Grok, Antigravity, Kimi, GLM, Cursor, Kiro, Copilot, Qwen, ERNIE, Spark, JetBrains, Perplexity, Replit, and Cody subscriptions as DeepSeek Harness LLM providers via OAuth.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "lib/",
+    "cordis.patch.yml",
+    "README.md",
+    "README.ru.md",
+    "README.zh.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "oauth",
+    "chatgpt",
+    "claude",
+    "grok"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GooDAnDReaDY/dsh-subscriptions.git"
+  },
+  "homepage": "https://github.com/GooDAnDReaDY/dsh-subscriptions",
+  "bugs": {
+    "url": "https://github.com/GooDAnDReaDY/dsh-subscriptions/issues"
+  },
+  "scripts": {
+    "test": "eslint lib/ test/ && node --import ./test/_setup.mjs --test test/*.test.mjs",
+    "typecheck": "tsc -p tsconfig.checkjs.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-credentials": "^0.2.0-rc.2-tracy.26",
+    "@deepseek-ai/dsh-host-webserver": "^0.2.0-rc.2-tracy.26",
+    "@deepseek-ai/dsh-llm": "^0.2.0-rc.2-tracy.26",
+    "@deepseek-ai/dsh-settings": "^0.2.0-rc.2-tracy.26",
+    "@deepseek-ai/schemastery": "^3.18.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "socks": "^2.8.9",
+    "undici": "^8.10.1"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-llm": "^0.2.0-rc.2-tracy.26",
+    "@types/node": "^22.20.2",
+    "typescript": "^7.0.2"
+  }
+}

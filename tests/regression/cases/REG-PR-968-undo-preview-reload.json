@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-968-undo-preview-reload",
+  "kind": "fix",
+  "title": "An undo pressed within a minute of the turn still reloads the site preview; the turn's own late reload request is still absorbed",
+  "pr": 968,
+  "area": "chat/turn-undo",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node tests/regression/scripts/REG-PR-968-undo-preview-reload.mjs",
+    "S2: Read its ok / not ok lines."
+  ],
+  "expect": [
+    "Exit 0, no failing test in vendor/tracy/dsh-better-sidebar/tests/refresh-progress.spec.ts.",
+    "'an undo inside the absorb window reloads the page' passes.",
+    "'a plain request inside the same window is still absorbed' passes.",
+    "'the absorb slot survives an undo' passes.",
+    "The at-work, hidden-tab and open-comment-box undo tests pass."
+  ],
+  "selectors": {
+    "function": "vendor/tracy/dsh-better-sidebar/src/client/refresh-progress.ts reload-request {fresh}",
+    "caller": "packages/ui/tracy-chat-input/src/client/index.tsx reloadPreviews mode 'undo'"
+  },
+  "evidence": "Measured on cowork.tracy.site 06/10/2026 (tbaudit0930): Undo pressed ~60 s after the turn left the preview on the old heading while the site was undone (apply.revert ok); an Undo pressed 78 s after reloaded it. ABSORB_MS is 60 000.",
+  "fence": "The reducer's absorb slot is for the turn's own duplicate request only; a request marked fresh (mode 'undo') reloads and leaves the slot in place.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-968-undo-preview-reload.mjs"]
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "tracy-readiness-severity/v1",
+  "about": "How a failing rule of the Template Customization Question Readiness check weighs on the Road to live step Customize your site. must-fix: the customer answers one of the 7 questions and the site does not change, or breaks; it holds Publish. worth-fixing: the answer works but leaves a small leftover; it only warns. question: the Customize your site question the rule is about. text: the one plain line /ops shows when the rule fails. reason: why the rule is in its group, from the spec (tasks/spec-template-customization-question-readiness.md). Edit this file to move a rule; no code change is needed.",
+  "rules": {
+    "REL-2": {
+      "group": "must-fix",
+      "question": "Pages",
+      "text": "Some pages are missing from the list, so the customer cannot remove them.",
+      "reason": "A page the Pages question does not list stays on the site whatever the customer unticks."
+    },
+    "REL-3": {
+      "group": "must-fix",
+      "question": "Logo",
+      "text": "It asks for the wrong kind of logo, so the uploaded logo misses its place.",
+      "reason": "A light or dark logo the question never asks for is never written to the site."
+    },
+    "NAME-1": {
+      "group": "must-fix",
+      "question": "Business name",
+      "text": "The home page tab keeps the demo name.",
+      "reason": "The business name answer does not reach the home page title."
+    },
+    "NAME-2": {
+      "group": "must-fix",
+      "question": "Business name",
+      "text": "Inner page tabs keep the demo name.",
+      "reason": "The business name answer does not reach the title of inner pages."
+    },
+    "FAV-1": {
+      "group": "must-fix",
+      "question": "Favicon",
+      "text": "The tab does not show the uploaded icon alone.",
+      "reason": "The favicon answer is not applied, or the demo icon still shows beside it."
+    },
+    "LOGO-1": {
+      "group": "must-fix",
+      "question": "Logo",
+      "text": "Some pages keep the demo logo.",
+      "reason": "The logo answer is not applied everywhere the demo logo sits."
+    },
+    "LOGO-2": {
+      "group": "must-fix",
+      "question": "Logo",
+      "text": "Dark mode shows the wrong logo or recolours it.",
+      "reason": "The dark logo answer is not applied, or the template paints over it."
+    },
+    "LOGO-3": {
+      "group": "must-fix",
+      "question": "Logo",
+      "text": "The uploaded logo does not fit: the header grows or covers the menu.",
+      "reason": "The spec counts a swollen header or a logo over the menu as a broken page."
+    },
+    "NAME-3": {
+      "group": "must-fix",
+      "question": "Business name",
+      "text": "The copyright line keeps the demo name.",
+      "reason": "The business name answer does not reach the copyright line of every page."
+    },
+    "NAME-4": {
+      "group": "must-fix",
+      "question": "Business name",
+      "text": "Characters like & or accents come out wrong.",
+      "reason": "The business name shows, but not as the customer typed it."
+    },
+    "ABOUT-1": {
+      "group": "must-fix",
+      "question": "About",
+      "text": "The home heading does not take the description.",
+      "reason": "The about answer has no place to land on the home page."
+    },
+    "ABOUT-2": {
+      "group": "must-fix",
+      "question": "About",
+      "text": "Pages keep paragraphs about the demo business.",
+      "reason": "Whole paragraphs of another business remain once the customer describes theirs."
+    },
+    "ABOUT-3": {
+      "group": "must-fix",
+      "question": "Business name",
+      "text": "The demo company name stays in the text.",
+      "reason": "The template does not declare its demo company name, so Tracy cannot rename it."
+    },
+    "HIDDEN-1": {
+      "group": "worth-fixing",
+      "question": "Business name",
+      "text": "The 404, search, Terms or Privacy pages keep demo facts.",
+      "reason": "Pages off the menu keep demo words; the main pages still change."
+    },
+    "SHARE-1": {
+      "group": "worth-fixing",
+      "question": "Business name",
+      "text": "A shared link previews demo words.",
+      "reason": "Only the link preview keeps demo text; the site itself changes."
+    },
+    "STAB-1": {
+      "group": "must-fix",
+      "question": "All questions",
+      "text": "The build does not finish in one press, or an answer has no place.",
+      "reason": "A build that fails, or an answer Tracy cannot write, breaks the whole sheet."
+    },
+    "STAB-2": {
+      "group": "must-fix",
+      "question": "All questions",
+      "text": "A page shows a technical error.",
+      "reason": "A page with an error is a broken site."
+    },
+    "STAB-6": {
+      "group": "must-fix",
+      "question": "All questions",
+      "text": "Tracy cannot edit the site right after the build.",
+      "reason": "A site Tracy cannot edit breaks every change the customer asks for next."
+    },
+    "STAB-7": {
+      "group": "must-fix",
+      "question": "All questions",
+      "text": "Machine text like null or {contact.tel} shows on a page.",
+      "reason": "Raw placeholders on a page read as a broken site."
+    },
+    "PAGE-1": {
+      "group": "must-fix",
+      "question": "Pages",
+      "text": "A page the customer unticked still opens.",
+      "reason": "The Pages answer is ignored for that page."
+    },
+    "PAGE-2": {
+      "group": "must-fix",
+      "question": "Pages",
+      "text": "A kept page breaks or loses its own content.",
+      "reason": "Keeping a page must never break it."
+    },
+    "PAGE-4": {
+      "group": "must-fix",
+      "question": "Pages",
+      "text": "Links lead to removed pages or to error pages.",
+      "reason": "A dead link after the Pages answer is a broken site."
+    },
+    "PAGE-5": {
+      "group": "worth-fixing",
+      "question": "Pages",
+      "text": "Some buttons lead to a page their words do not name.",
+      "reason": "The button still leads somewhere; only its target is off."
+    },
+    "PAGE-7": {
+      "group": "worth-fixing",
+      "question": "Pages",
+      "text": "Articles of an unticked page still open.",
+      "reason": "The unticked page is gone; only articles under it remain reachable."
+    },
+    "PAGE-8": {
+      "group": "worth-fixing",
+      "question": "Pages",
+      "text": "Search engines may still see pages that are not public.",
+      "reason": "Visitors do not see it; only the sitemap or index rules lag behind."
+    },
+    "LANG-1": {
+      "group": "worth-fixing",
+      "question": "Site language",
+      "text": "The page tells browsers the wrong language.",
+      "reason": "The words change; only the page's language tag is off."
+    },
+    "LANG-2": {
+      "group": "must-fix",
+      "question": "Site language",
+      "text": "Some words stay in another language.",
+      "reason": "The language answer is not applied to every word the visitor reads."
+    },
+    "LANG-3": {
+      "group": "must-fix",
+      "question": "Site language",
+      "text": "Words in another writing system remain.",
+      "reason": "Text the visitor cannot read is left on the page."
+    },
+    "LANG-5": {
+      "group": "must-fix",
+      "question": "Site language",
+      "text": "The site keeps more than one language.",
+      "reason": "The language answer does not make the site one language."
+    },
+    "LANG-6": {
+      "group": "worth-fixing",
+      "question": "Site language",
+      "text": "Dates keep the English format.",
+      "reason": "The words change; only the date order or month names stay English."
+    }
+  }
+}

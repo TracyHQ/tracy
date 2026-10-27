@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.edit_access_answered-unsubscribe",
+  "itemIds": [
+    "letter:team.edit_access_answered:en",
+    "letter:team.edit_access_answered:vi",
+    "letter:team.edit_access_answered:de",
+    "letter:team.edit_access_answered:it",
+    "letter:team.edit_access_answered:fr",
+    "letter:team.edit_access_answered:nl",
+    "letter:team.edit_access_answered:zh",
+    "letter:team.edit_access_answered:es"
+  ],
+  "requirement": "team.edit_access_answered: carries a working one-click unsubscribe for its own group, none in the locked group",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "groups",
+    "invariant": "RFC 8058 headers for switchable groups only"
+  },
+  "edgeTags": ["unsubscribe"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.unsubscribe-header#team.edit_access_answered:"],
+  "redProof": null,
+  "legacyIds": []
+}

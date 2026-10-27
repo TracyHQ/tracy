@@ -1,0 +1,329 @@
+{
+  "dos": [
+    "Use #11a8ff exclusively for filled CTA buttons — no other UI element gets a chromatic fill color",
+    "Apply letter-spacing -1.40px at 56px and -0.48px at 40px for all display and section headings using Inter",
+    "Render card borders via 3-layer shadow stack (rgba(0,0,0,0.06) 0px 0px 0px 1px ...) rather than explicit border-color properties",
+    "Use 9999px radius for all tag/pill/chip components and category labels; use 12px for cards and primary buttons",
+    "Highlight key statistics or phrases inline with #fbefaf background at the span level — apply only once per hero to preserve impact",
+    "Maintain grayscale(1) filter on partner/social proof logos and product screenshots in secondary contexts",
+    "Keep category accent colors (#01ca45, #a050ff) to border-only usage on tags — never fill a UI surface with them"
+  ],
+  "donts": [
+    "Never add a second chromatic action color — #11a8ff is the only CTA fill; competing colors collapse the hierarchy",
+    "Do not use weight below 400 for body text or above 700 for any text — the weight range 400–700 is the entire system",
+    "Avoid explicit border declarations for cards — the shadow-as-border technique (0.06 opacity ring) is what keeps surfaces integrated, not separated",
+    "Never use #a0a0a0 or #5c5c5c for headings — these are strictly secondary body and label colors",
+    "Do not center-align body paragraphs — left-aligned text with 16px subheading baseline is the consistent content pattern",
+    "Avoid gradients in UI components — the sky gradient (#cfeeff → #41baff) is decorative-only behind highlighted phrases, not a button or card treatment",
+    "Do not apply backdrop-filter blur outside the navigation bar — it appears only on the sticky nav at scroll"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Pure Canvas",
+      "role": "Page background, card surfaces, button fills for secondary actions",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Fog Surface",
+      "role": "Alternate card background, subtle section differentiator",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cdcdcd",
+      "name": "Ash Border",
+      "role": "All UI borders — inputs, cards, dividers, icon rings — at 1px solid",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ebebeb",
+      "name": "Stone Divider",
+      "role": "Tag backgrounds ('Within 47 seconds:' highlight pill), section background bands",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5c5c5c",
+      "name": "Graphite Body",
+      "role": "Secondary body text, nav labels, subtext",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a0a0a0",
+      "name": "Silver Muted",
+      "role": "Placeholder text, icon strokes, de-emphasized UI labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Primary",
+      "role": "Primary headings, body text, icon fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2e2e2e",
+      "name": "Charcoal Dark",
+      "role": "Dark bordered UI elements, elevated stroke contexts",
+      "group": "neutral"
+    },
+    {
+      "hex": "#11a8ff",
+      "name": "Sky Action",
+      "role": "CTA buttons ('Get started', 'Start free trial'), active nav highlight, brand accent — the sole chromatic action color on an otherwise monochrome page",
+      "group": "brand"
+    },
+    {
+      "hex": "#cfeeff",
+      "name": "Sky Pale",
+      "role": "Highlight backgrounds behind key phrases ('in just 7 days'), decorative gradient start — sky tint without saturation",
+      "group": "brand",
+      "gradient": "linear-gradient(to right top, #cfeeff, #41baff)"
+    },
+    {
+      "hex": "#f6a6a6",
+      "name": "Amie Pink",
+      "role": "Brand token from CSS custom properties; decorative accent for soft highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#01ca45",
+      "name": "Mint Active",
+      "role": "Observed in icon fill, icon color, other fill.",
+      "group": "accent"
+    },
+    {
+      "hex": "#a050ff",
+      "name": "Violet Tag",
+      "role": "'Shareable Pages' feature label, tag borders for feature category chips",
+      "group": "accent"
+    },
+    {
+      "hex": "#fbefaf",
+      "name": "Amber Highlight",
+      "role": "Text highlight background behind 'without a bot' in hero headline — single warm note in a cool palette",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width ~1200px centered on a white full-bleed canvas. Navigation is a minimal top bar with logo + 3 links + 2 button actions. Hero section is split: left-aligned headline block with two CTAs stacked beside a large product screenshot card that extends below the fold. Below hero: logo strip (full-bleed scrolling), then a large centered headline section with tight paragraph text and a single CTA. Feature sections use alternating or stacked card grids — 2-3 column — with cards at equal height. No visible dividers between sections; spacing alone creates rhythm (estimated 80px section gaps). The page is long (~14000px) with many stacked feature blocks. Dense content areas use 8px element gaps; section transitions use 80px. Sticky nav collapses at scroll via backdrop blur.",
+  "imagery": "Visuals are dominated by product UI screenshots — the app's own interface rendered at realistic scale inside rounded-top cards. No lifestyle photography, no people, no abstract 3D renders. Screenshots are full-color and detailed, showing the actual sidebar+content layout of the product. Outside screenshots, the page is pure text and UI components. The one decorative graphic element is a handwritten-style annotation ('These companies have 10+ Amie users') suggesting authenticity. Icons are filled and outlined variants in a single stroke weight, monochromatic except for the category-colored variants (Mint #01ca45, Violet #a050ff). Overall: text-dominant, image-sparse — the product screenshot IS the hero visual, not a supporting element.",
+  "similar": [
+    {
+      "why": "Same mono-typographic (Inter only), near-zero-chroma interface with a single accent color on action elements",
+      "business": "Notion"
+    },
+    {
+      "why": "Shared tight negative letter-spacing on display headings and hairline-shadow card borders creating floating-flush surfaces",
+      "business": "Linear"
+    },
+    {
+      "why": "Single electric accent CTA on white, productivity-app product screenshot as hero visual, minimal nav",
+      "business": "Superhuman"
+    },
+    {
+      "why": "Calendar/productivity SaaS, white-dominant UI with #cdcdcd border system and green calendar accent icons",
+      "business": "Cron (Notion Calendar)"
+    },
+    {
+      "why": "All-Inter light-mode productivity tool with amber/warm highlight accents against achromatic body and shadow-as-border card technique",
+      "business": "Craft"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "12px",
+      "chips": "9999px",
+      "badges": "4px",
+      "inputs": "8px",
+      "modals": "16px",
+      "buttons": "12px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Root page background"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Card Surface",
+      "level": 1,
+      "purpose": "Feature cards and alternate section fills"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Raised Card",
+      "level": 2,
+      "purpose": "Elevated white cards with layered 0.06 opacity shadow stack creating 1px border illusion"
+    },
+    {
+      "hex": "#ebebeb",
+      "name": "Highlight Band",
+      "level": 3,
+      "purpose": "Inline highlight pills, calendar day chips, section accent backgrounds"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0,0,0,0.06) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 1px 1px -0.5px, rgba(0,0,0,0.06) 0px 3px 3px -1.5px",
+      "element": "Feature Card"
+    },
+    {
+      "style": "rgba(0,0,0,0.05) 0px 0px 0px 1px inset",
+      "element": "Input Field (inset)"
+    },
+    {
+      "style": "rgba(0,0,0,0.1) 0px 1px 3px 0px, rgba(0,0,0,0.1) 0px 1px 2px -1px",
+      "element": "Dropdown / Popover"
+    }
+  ],
+  "northStar": "Sunlit productivity dashboard — a workspace where everything is white, flat, and purposeful, with one electric-blue switch that turns things on.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.75
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.14,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "display",
+      "size": 56,
+      "lineHeight": 1,
+      "letterSpacing": -1.4
+    }
+  ],
+  "components": [
+    {
+      "html": "<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'); :root { --color-pure-canvas: #ffffff; --color-fog-surface: #fafafa; --color-ash-border: #cdcdcd; --color-stone-divider: #ebebeb; --color-graphite-body: #5c5c5c; --color-silver-muted: #a0a0a0; --color-ink-primary: #000000; --color-sky-action: #11a8ff; --color-amber-highlight: #fbefaf; --color-mint-active: #01ca45; --color-violet-tag: #a050ff; --font-inter: 'Inter', sans-serif; --shadow-subtle-2: rgba(0,0,0,0.06) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 1px 1px -0.5px, rgba(0,0,0,0.06) 0px 3px 3px -1.5px; } </style><div style='font-family: var(--font-inter); background: var(--color-pure-canvas); padding: 48px 40px; width: 600px; box-sizing: border-box; display: flex; flex-direction: column; gap: 32px;'><div style='display: flex; flex-direction: column; gap: 12px;'><p style='font-family: var(--font-inter); font-size: 12px; font-weight: 500; color: var(--color-silver-muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 0;'>Primary Action</p><div style='display: flex; align-items: center; gap: 12px; flex-wrap: wrap;'><button style='font-family: var(--font-inter); font-size: 14px; font-weight: 600; color: #ffffff; background: var(--color-sky-action); border: none; border-radius: 12px; padding: 12px 28px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; line-height: 1;'>Get started</button><button style='font-family: var(--font-inter); font-size: 14px; font-weight: 500; color: var(--color-graphite-body); background: var(--color-pure-canvas); border: none; border-radius: 12px; padding: 12px 28px; cursor: pointer; box-shadow: rgba(0,0,0,0.06) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 1px 1px -0.5px; display: inline-flex; align-items: center; gap: 8px; line-height: 1;'><svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='8' cy='8' r='6.5' stroke='#a0a0a0' stroke-width='1.2'/><circle cx='8' cy='8' r='2' fill='#a0a0a0'/></svg>Request a demo</button></div></div><div style='width: 100%; height: 1px; background: var(--color-stone-divider);'></div><div style='display: flex; flex-direction: column; gap: 12px;'><p style='font-family: var(--font-inter); font-size: 12px; font-weight: 500; color: var(--color-silver-muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 0;'>Button States</p><div style='display: flex; align-items: center; gap: 12px; flex-wrap: wrap;'><button style='font-family: var(--font-inter); font-size: 14px; font-weight: 600; color: #ffffff; background: var(--color-sky-action); border: none; border-radius: 12px; padding: 12px 28px; cursor: pointer; line-height: 1; opacity: 1;'>Start free trial</button><button style='font-family: var(--font-inter); font-size: 14px; font-weight: 600; color: #ffffff; background: var(--color-sky-action); border: none; border-radius: 12px; padding: 12px 28px; cursor: pointer; line-height: 1; opacity: 0.5;'>Disabled</button></div></div><div style='width: 100%; height: 1px; background: var(--color-stone-divider);'></div><div style='display: flex; flex-direction: column; gap: 12px;'><p style='font-family: var(--font-inter); font-size: 12px; font-weight: 500; color: var(--color-silver-muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 0;'>Category Tags</p><div style='display: flex; align-items: center; gap: 8px; flex-wrap: wrap;'><span style='font-family: var(--font-inter); font-size: 13px; font-weight: 500; color: var(--color-mint-active); background: transparent; border: 1px solid var(--color-mint-active); border-radius: 9999px; padding: 4px 12px; display: inline-block;'>Meeting Notes</span><span style='font-family: var(--font-inter); font-size: 13px; font-weight: 500; color: var(--color-violet-tag); background: transparent; border: 1px solid var(--color-violet-tag); border-radius: 9999px; padding: 4px 12px; display: inline-block;'>Shareable Pages</span><span style='font-family: var(--font-inter); font-size: 13px; font-weight: 500; color: var(--color-graphite-body); background: transparent; border: 1px solid var(--color-ash-border); border-radius: 9999px; padding: 4px 12px; display: inline-block;'>Action Items</span><span style='font-family: var(--font-inter); font-size: 13px; font-weight: 500; color: var(--color-sky-action); background: transparent; border: 1px solid var(--color-sky-action); border-radius: 9999px; padding: 4px 12px; display: inline-block;'>AI Summary</span></div></div></div>",
+      "name": "CTA Button Group",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'); :root { --color-pure-canvas: #ffffff; --color-fog-surface: #fafafa; --color-ash-border: #cdcdcd; --color-stone-divider: #ebebeb; --color-graphite-body: #5c5c5c; --color-silver-muted: #a0a0a0; --color-ink-primary: #000000; --color-sky-action: #11a8ff; --color-mint-active: #01ca45; --color-violet-tag: #a050ff; --font-inter: 'Inter', sans-serif; } </style><div style='font-family: var(--font-inter); background: var(--color-fog-surface); padding: 32px; width: 600px; box-sizing: border-box;'><div style='background: var(--color-pure-canvas); border-radius: 12px; box-shadow: rgba(0,0,0,0.06) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 1px 1px -0.5px, rgba(0,0,0,0.06) 0px 3px 3px -1.5px; overflow: hidden;'><div style='padding: 20px 20px 0 20px; display: flex; align-items: center; justify-content: space-between;'><div style='display: flex; align-items: center; gap: 8px;'><div style='width: 8px; height: 8px; border-radius: 9999px; background: var(--color-sky-action);'></div><span style='font-family: var(--font-inter); font-size: 13px; font-weight: 500; color: var(--color-graphite-body);'>Week Kickoff</span></div><div style='display: flex; align-items: center; gap: 6px;'><span style='font-family: var(--font-inter); font-size: 12px; color: var(--color-silver-muted);'>Updated 49 minutes ago</span><button style='font-family: var(--font-inter); font-size: 13px; font-weight: 500; color: #ffffff; background: var(--color-sky-action); border: none; border-radius: 8px; padding: 5px 12px; cursor: pointer;'>Share</button></div></div><div style='padding: 16px 20px 20px 20px;'><h2 style='font-family: var(--font-inter); font-size: 20px; font-weight: 700; color: var(--color-ink-primary); margin: 0 0 8px 0; letter-spacing: -0.3px;'>Week Kickoff</h2><p style='font-family: var(--font-inter); font-size: 13px; font-weight: 400; color: var(--color-graphite-body); margin: 0 0 20px 0; line-height: 1.6;'>Strong MRR growth of 13–18% month-over-month with successful free tier discontinuation. Three-month strategy focuses on user reactivation, product launch, and establishing sustainable growth channels.</p><div style='margin-bottom: 16px;'><p style='font-family: var(--font-inter); font-size: 12px; font-weight: 600; color: var(--color-silver-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 10px 0;'>Timeline</p><div style='display: flex; flex-direction: column; gap: 0;'><div style='display: flex; align-items: flex-start; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--color-stone-divider);'><div style='display: flex; align-items: flex-start; gap: 10px;'><div style='width: 6px; height: 6px; border-radius: 9999px; background: var(--color-silver-muted); margin-top: 5px; flex-shrink: 0;'></div><span style='font-family: var(--font-inter); font-size: 13px; color: var(--color-ink-primary); line-height: 1.5;'>MRR growth reaches 12.5% ($1.3M) despite forex impact</span></div><span style='font-family: var(--font-inter); font-size: 12px; color: var(--color-silver-muted); white-space: nowrap; margin-left: 12px; padding-top: 2px;'>Mar 24, 16:45</span></div><div style='display: flex; align-items: flex-start; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--color-stone-divider);'><div style='display: flex; align-items: flex-start; gap: 10px;'><div style='width: 6px; height: 6px; border-radius: 9999px; background: var(--color-silver-muted); margin-top: 5px; flex-shrink: 0;'></div><span style='font-family: var(--font-inter); font-size: 13px; color: var(--color-ink-primary); line-height: 1.5;'>Weekly metrics show growing signups with 7.5% conversion rate</span></div><span style='font-family: var(--font-inter); font-size: 12px; color: var(--color-silver-muted); white-space: nowrap; margin-left: 12px; padding-top: 2px;'>Mar 17, 17:00</span></div><div style='display: flex; align-items: flex-start; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--color-stone-divider);'><div style='display: flex; align-items: flex-start; gap: 10px;'><div style='width: 6px; height: 6px; border-radius: 9999px; background: var(--color-silver-muted); margin-top: 5px; flex-shrink: 0;'></div><span style='font-family: var(--font-inter); font-size: 13px; color: var(--color-ink-primary); line-height: 1.5;'>AI feature retention: AI notes users retain at 66%, AI chat users at 92%</span></div><span style='font-family: var(--font-inter); font-size: 12px; color: var(--color-silver-muted); white-space: nowrap; margin-left: 12px; padding-top: 2px;'>Mar 17, 17:00</span></div><div style='display: flex; align-items: flex-start; justify-content: space-between; padding: 10px 0;'><div style='display: flex; align-items: flex-start; gap: 10px;'><div style='width: 6px; height: 6px; border-radius: 9999px; background: var(--color-silver-muted); margin-top: 5px; flex-shrink: 0;'></div><span style='font-family: var(--font-inter); font-size: 13px; color: var(--color-ink-primary); line-height: 1.5;'>Current MRR reaches 1.15M EUR with 2% growth in March</span></div><span style='font-family: var(--font-inter); font-size: 12px; color: var(--color-silver-muted); white-space: nowrap; margin-left: 12px; padding-top: 2px;'>Mar 3, 16:45</span></div></div></div><div style='background: var(--color-fog-surface); border-radius: 8px; padding: 14px 16px; margin-top: 4px;'><div style='display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;'><div style='display: flex; align-items: center; gap: 6px;'><div style='width: 14px; height: 14px; border-radius: 3px; background: var(--color-sky-action); display: flex; align-items: center; justify-content: center;'><svg width='8' height='8' viewBox='0 0 8 8' fill='none'><rect x='1' y='3' width='6' height='1' fill='white'/><rect x='3' y='1' width='1' height='6' fill='white'/></svg></div><span style='font-family: var(--font-inter); font-size: 13px; font-weight: 600; color: var(--color-ink-primary);'>Email</span></div><div style='display: flex; align-items: center; gap: 8px;'><span style='font-family: var(--font-inter); font-size: 12px; color: var(--color-silver-muted);'>Send email</span><svg width='12' height='12' viewBox='0 0 12 12' fill='none'><path d='M2 2L10 2M10 2L10 10M10 2L2 10' stroke='#a0a0a0' stroke-width='1.5' stroke-linecap='round'/></svg></div></div><div style='display: flex; flex-direction: column; gap: 6px;'><div style='display: flex; gap: 12px;'><span style='font-family: var(--font-inter); font-size: 12px; color: var(--color-silver-muted); width: 48px; flex-shrink: 0;'>To</span><span style='font-family: var(--font-inter); font-size: 12px; color: var(--color-ink-primary);'>team@amie.so</span></div><div style='display: flex; gap: 12px;'><span style='font-family: var(--font-inter); font-size: 12px; color: var(--color-silver-muted); width: 48px; flex-shrink: 0;'>Subject</span><span style='font-family: var(--font-inter); font-size: 12px; color: var(--color-ink-primary);'>product tier changes - important update</span></div><div style='font-family: var(--font-inter); font-size: 12px; color: var(--color-graphite-body); margin-top: 4px; line-height: 1.6;'>hey team<br><br>wanted to share some important changes we're making to our product tiers</div></div></div></div></div></div>",
+      "name": "Meeting Summary Card",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'); :root { --color-pure-canvas: #ffffff; --color-fog-surface: #fafafa; --color-ash-border: #cdcdcd; --color-stone-divider: #ebebeb; --color-graphite-body: #5c5c5c; --color-silver-muted: #a0a0a0; --color-ink-primary: #000000; --color-sky-action: #11a8ff; --color-amber-highlight: #fbefaf; --color-mint-active: #01ca45; --color-violet-tag: #a050ff; --font-inter: 'Inter', sans-serif; } </style><div style='font-family: var(--font-inter); background: var(--color-fog-surface); padding: 48px 40px; width: 600px; box-sizing: border-box;'><div style='display: flex; flex-direction: column; gap: 24px;'><div><span style='display: inline-block; font-family: var(--font-inter); font-size: 15px; font-weight: 600; color: var(--color-ink-primary); background: var(--color-stone-divider); border-radius: 9999px; padding: 6px 16px; margin-bottom: 16px;'>Within 47 seconds:</span><h2 style='font-family: var(--font-inter); font-size: 36px; font-weight: 700; color: var(--color-ink-primary); margin: 0; line-height: 1.1; letter-spacing: -0.8px;'>Share summary. Keep CRM updated. Plan action items. Schedule next meeting.</h2></div><div style='display: flex; gap: 12px; flex-wrap: wrap;'><div style='background: var(--color-pure-canvas); border-radius: 12px; box-shadow: rgba(0,0,0,0.06) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 1px 1px -0.5px, rgba(0,0,0,0.06) 0px 3px 3px -1.5px; padding: 20px; flex: 1; min-width: 140px;'><div style='display: flex; align-items: center; gap: 8px; margin-bottom: 8px;'><div style='width: 8px; height: 8px; border-radius: 9999px; background: var(--color-mint-active);'></div><span style='font-family: var(--font-inter); font-size: 12px; font-weight: 500; color: var(--color-silver-muted); text-transform: uppercase; letter-spacing: 0.06em;'>AI Notes</span></div><p style='font-family: var(--font-inter); font-size: 32px; font-weight: 700; color: var(--color-ink-primary); margin: 0 0 4px 0; letter-spacing: -0.8px;'>66%</p><p style='font-family: var(--font-inter); font-size: 13px; color: var(--color-graphite-body); margin: 0; line-height: 1.5;'>user retention rate</p></div><div style='background: var(--color-pure-canvas); border-radius: 12px; box-shadow: rgba(0,0,0,0.06) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 1px 1px -0.5px, rgba(0,0,0,0.06) 0px 3px 3px -1.5px; padding: 20px; flex: 1; min-width: 140px;'><div style='display: flex; align-items: center; gap: 8px; margin-bottom: 8px;'><div style='width: 8px; height: 8px; border-radius: 9999px; background: var(--color-sky-action);'></div><span style='font-family: var(--font-inter); font-size: 12px; font-weight: 500; color: var(--color-silver-muted); text-transform: uppercase; letter-spacing: 0.06em;'>AI Chat</span></div><p style='font-family: var(--font-inter); font-size: 32px; font-weight: 700; color: var(--color-ink-primary); margin: 0 0 4px 0; letter-spacing: -0.8px;'>92%</p><p style='font-family: var(--font-inter); font-size: 13px; color: var(--color-graphite-body); margin: 0; line-height: 1.5;'>user retention rate</p></div><div style='background: var(--color-pure-canvas); border-radius: 12px; box-shadow: rgba(0,0,0,0.06) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 1px 1px -0.5px, rgba(0,0,0,0.06) 0px 3px 3px -1.5px; padding: 20px; flex: 1; min-width: 140px;'><div style='display: flex; align-items: center; gap: 8px; margin-bottom: 8px;'><div style='width: 8px; height: 8px; border-radius: 9999px; background: var(--color-violet-tag);'></div><span style='font-family: var(--font-inter); font-size: 12px; font-weight: 500; color: var(--color-silver-muted); text-transform: uppercase; letter-spacing: 0.06em;'>MRR Growth</span></div><p style='font-family: var(--font-inter); font-size: 32px; font-weight: 700; color: var(--color-ink-primary); margin: 0 0 4px 0; letter-spacing: -0.8px;'>18%</p><p style='font-family: var(--font-inter); font-size: 13px; color: var(--color-graphite-body); margin: 0; line-height: 1.5;'>month-over-month</p></div></div><div style='padding-top: 4px;'><button style='font-family: var(--font-inter); font-size: 14px; font-weight: 600; color: #ffffff; background: var(--color-sky-action); border: none; border-radius: 12px; padding: 12px 28px; cursor: pointer; display: inline-block;'>Get started</button></div></div></div>",
+      "name": "Stat Highlight Block",
+      "role": "",
+      "description": ""
+    },
+    {
+      "name": "Primary CTA Button",
+      "role": "Main conversion actions — 'Get started', 'Start free trial'",
+      "description": "Background #11a8ff, white text (#ffffff), 12px radius, 12px top/bottom padding, 28px left/right padding. Font Inter weight 600, 14px. No border. On dark sections, same treatment. The only filled chromatic button in the system."
+    },
+    {
+      "name": "Ghost Secondary Button",
+      "role": "'Request a demo' and secondary actions paired beside primary CTA",
+      "description": "Background #ffffff, text #5c5c5c, 12px radius, 12px/28px padding, 1px border #cdcdcd via shadow: rgba(0,0,0,0.06) 0px 0px 0px 1px. Inter weight 500, 14px. Sits beside primary CTA to create a binary choice."
+    },
+    {
+      "name": "Text / Nav Ghost Button",
+      "role": "Navigation links and low-priority actions like 'Features', 'Pricing', 'Login'",
+      "description": "Transparent background, text #000000 or #5c5c5c, no border radius (0px), 20px padding all sides. Inter weight 400–500, 14px. Appears in nav bar and inline contexts."
+    },
+    {
+      "name": "Small Outline Button",
+      "role": "Compact in-UI actions within product preview areas",
+      "description": "Transparent background, black text, 8px radius, 6px/10px padding. 1px border via #cdcdcd. Inter weight 500, 13px. Used inside the product screenshot cards."
+    },
+    {
+      "name": "Feature Card (White)",
+      "role": "Primary content cards showcasing product features",
+      "description": "Background #ffffff, 12px radius, no explicit padding (content determines), shadow: rgba(0,0,0,0.06) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 1px 1px -0.5px, rgba(0,0,0,0.06) 0px 3px 3px -1.5px. The hairline shadow perimeter acts as a 1px border."
+    },
+    {
+      "name": "Feature Card (Off-White)",
+      "role": "Secondary feature cards with subtle background differentiation",
+      "description": "Background #fafafa, 12px radius, same 3-layer shadow as white card variant. Padding 0 — inner content uses its own spacing."
+    },
+    {
+      "name": "Highlight Chip",
+      "role": "Inline text emphasis tags like 'Within 47 seconds:' label",
+      "description": "Background #ebebeb, 16px radius, 8px/16px padding, no shadow. Inter weight 600, 14–16px, text #000000. Used to isolate a key statistic or phrase visually."
+    },
+    {
+      "name": "Category Tag (Pill)",
+      "role": "Feature category labels — 'Meeting Notes', 'Shareable Pages'",
+      "description": "9999px radius (full pill), background transparent or tinted per category, 1px border in category accent color (#01ca45 for Meeting Notes, #a050ff for Shareable Pages). Inter weight 500, 13px."
+    },
+    {
+      "name": "Inline Text Highlight",
+      "role": "Hero headline word-level emphasis like 'without a bot'",
+      "description": "Background #fbefaf (amber), applied as backgroundColor to a span within the heading. No border, no radius. Creates a single warm contrast moment in an otherwise cool monochrome headline."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-fixed site navigation",
+      "description": "Background #ffffff with backdrop-filter blur(16px) when scrolled. Height ~60px, max-width 1200px centered. Logo left, nav links center (Inter 14px weight 500, color #000000), 'Login' as text link, 'Get started' as sky-blue filled button (12px radius, #11a8ff) right-aligned. Border-bottom 1px #cdcdcd."
+    },
+    {
+      "name": "Product Preview Card",
+      "role": "Large screenshot/demo card in hero section",
+      "description": "Background #ffffff, radius 12px 12px 0px 0px (top-rounded, bottom flush), no shadow on outer container. Contains a full-bleed UI screenshot. Width spans most of content column. Topped with a grayscale(1) filter-treated inner UI, then full-color on hover/active."
+    },
+    {
+      "name": "Social Proof Logo Strip",
+      "role": "'Trusted by teams at' company logos",
+      "description": "Logos rendered at grayscale(1), horizontally scrolling via 'scrollX' animation (70s linear). No card container — logos sit directly on white page background. Inter caption 12px #5c5c5c for label text."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single typeface for all contexts — headlines to captions. Weight 700 at 56px for hero display, 600 at 40px for section headings, 400–500 for body and UI. The -0.025em tracking at large sizes (≈-1.4px at 56px, ≈-0.48px at 40px) compresses headlines into tight confident blocks. No decorative or serif counterpart — mono-typographic system.",
+      "sizes": "12px, 13px, 14px, 16px, 20px, 40px, 56px",
+      "family": "Inter",
+      "weight": "400, 500, 550, 600, 700",
+      "lineHeight": "1.00–1.75 (display: 1.00–1.14, body: 1.50–1.75)",
+      "substitute": "Inter (Google Fonts)",
+      "letterSpacing": "-1.40px at 56px (-0.025em), -0.48px at 40px (-0.012em), normal at 16px and below",
+      "fontFeatureSettings": "normal"
+    },
+    {
+      "role": "Inter var — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "Inter var",
+      "weight": "400",
+      "lineHeight": "1.75"
+    }
+  ],
+  "description": "Amie feels like a well-lit productivity workspace — bright white surfaces, almost clinical in their restraint, punctuated by a single electric sky-blue (#11a8ff) that fires only when action is required. The page is overwhelmingly neutral — 98% achromatic — making every chromatic moment (the amber highlight on 'without a bot', the green calendar icon, the violet tag) feel intentional rather than decorative. Inter at tight negative letter-spacing (-0.025em at display sizes) condenses headlines into confident blocks without weight extremes — weight 700 at 56px reads assertive but not aggressive. Cards use hairline 1px borders via layered near-invisible shadows rather than visible strokes, giving product UI previews the appearance of floating slightly off the page. The ghost 'Request a demo' button beside the filled CTA creates a paired choice architecture that recurs throughout the page.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (primary): #000000\n- text (secondary): #5c5c5c\n- background: #ffffff\n- border: #cdcdcd (1px solid)\n- accent / highlight band: #ebebeb\n- primary action: #11a8ff (filled action)\n\n**Example Component Prompts**\n\n1. **Hero Section**: White (#ffffff) background. Left-aligned headline at 56px Inter weight 700, #000000, letter-spacing -1.40px, line-height 1.00. Wrap one phrase (e.g. 'without a bot') in an inline span with background #fbefaf, no radius. Below headline: paired buttons — filled (#11a8ff background, #ffffff text, 12px radius, 12px/28px padding, Inter 600 14px) and ghost (#ffffff background, #5c5c5c text, 1px border #cdcdcd, same radius and padding). Right side: product screenshot inside a white card with radius 12px 12px 0px 0px and 3-layer shadow rgba(0,0,0,0.06).\n\n2. **Feature Card Grid**: 3-column grid, 8px gap. Each card: background #ffffff, 12px radius, shadow rgba(0,0,0,0.06) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 1px 1px -0.5px, rgba(0,0,0,0.06) 0px 3px 3px -1.5px. Card heading Inter 20px weight 600 #000000. Body text Inter 14px weight 400 #5c5c5c, line-height 1.75.\n\n3. **Navigation Bar**: White background, backdrop-filter blur(16px), 1px bottom border #cdcdcd. Logo (16px square icon) left. Center: 'Features' and 'Pricing' as transparent buttons, Inter 14px weight 500, #000000, 0px radius, 20px padding. Right: 'Login' text link #000000, then 'Get started' button #11a8ff fill, #ffffff text, 12px radius, 12px/28px padding.\n\n4. **Category Tag Pill**: Full pill radius 9999px, transparent background, 1px border in category color (#01ca45 for Meeting Notes, #a050ff for Shareable Pages). Text in matching color, Inter 13px weight 500, 6px/12px padding.\n\n5. **Section Stat Highlight**: Centered heading at 40px Inter weight 700 #000000 letter-spacing -0.48px. Wrap leading stat phrase in a span with background #ebebeb, 16px radius, 8px/16px padding. Rest of headline plain black. Single 'Get started' button (#11a8ff, 12px radius) below at 24px margin-top."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Two gradients, both sky-blue family, used decoratively only:\n1. **Sky Wash**: linear-gradient(to right top, #cfeeff, #41baff) — used as background tint behind highlighted phrases or feature sections. Never on buttons or cards.\n2. **Blue Depth**: linear-gradient(to right top, #11a8ff, #41baff) — denser sky gradient for branded decorative blocks. Both share the same directional angle (top-right). Do not introduce gradients in other hue families."
+    }
+  ],
+  "elevationPhilosophy": "Shadows at opacity 0.06 serve as borders, not depth indicators — the 3-layer card shadow (0px ring + 1px lift + 3px blur) creates a hairline perimeter that reads as a crisp 1px stroke at normal viewing. Cards feel flush against the page, not floating above it. True depth (dropdowns) escalates to 0.1 opacity but stays short-range."
+}

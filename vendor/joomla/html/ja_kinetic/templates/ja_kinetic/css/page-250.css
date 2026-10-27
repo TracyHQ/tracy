@@ -1,0 +1,225 @@
+/* ============================================================================
+   page-250.css — "All Categories" index (Itemid 250, com_content=categories)
+   Pixel-perfect overlay for the Pencil "Page/Categories" frame (XKWaX).
+   Scope: body.item-250 — loaded LAST via index.php filemtime loop.
+   Shared template.css / darkmode.css are READ-ONLY; everything here.
+   All colour/type route through design tokens → light + dark + the three
+   directions (terminal/blueprint/signal) resolve automatically.
+   Axes: light/dark × desktop (≥768px) / tablet / mobile (≤620px).
+   ============================================================================ */
+
+/* ── Page-level tokens ────────────────────────────────────────────────────── */
+body.item-250 {
+  --cats-mast-end:  var(--elevated);
+  /* design-system §A: tile / pill / glow tints are FIXED brand lime in BOTH
+     themes — routing them through var(--primary) re-tints them olive in light.
+     Pin to fixed #A3E635; the pill TEXT still flips via var(--primary) below. */
+  --cats-tile-bg:   color-mix(in srgb, #A3E635 13%, transparent);
+  --cats-pill-bg:   color-mix(in srgb, #A3E635 8%,  transparent);
+  --cats-pill-bd:   color-mix(in srgb, #A3E635 25%, transparent);
+  --cats-glow:      color-mix(in srgb, #A3E635 6%,  transparent);
+}
+html.t4-dark body.item-250 {
+  --cats-mast-end:  var(--chrome-elevated);
+}
+
+/* 0. STRUCTURAL — strip the T4 .t4-main-body top padding so the masthead band
+   sits flush under the sticky nav (P58 STICKY-HEADER-CONTENT-GAP). */
+body.item-250 .t4-main-body { padding-top: 0 !important; }
+
+/* ============================================================================
+   MASTHEAD — .hx-cats-mast
+   ============================================================================ */
+body.item-250 .hx-cats-mast {
+  padding-block: 66px 58px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--cats-mast-end);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 150% 130% at 50% 0%, var(--cats-glow) 0%, var(--cats-mast-end) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+
+body.item-250 .hx-cats-mast .hx-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+/* Eyebrow → mono BLOG pill with dot */
+body.item-250 .hx-cats-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 5px 12px;
+  border-radius: 100px;
+  background: var(--cats-pill-bg);
+  border: 1px solid var(--cats-pill-bd);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+body.item-250 .hx-cats-pill__dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+/* Title */
+body.item-250 .hx-cats-title {
+  margin: 0;
+  max-width: 760px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: -1.3px;
+  line-height: 1.08;
+  color: var(--heading);
+}
+
+/* Subtitle */
+body.item-250 .hx-cats-sub {
+  margin: 0;
+  max-width: 600px;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* ============================================================================
+   BODY — .hx-cats-body
+   ============================================================================ */
+body.item-250 .hx-cats-body {
+  background: var(--bg);
+  padding-block: 64px 80px;
+}
+
+/* ============================================================================
+   CARD GRID — .hx-cats-grid
+   ============================================================================ */
+body.item-250 .hx-cats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+/* ── Card : whole-card link ──────────────────────────────────────────────── */
+/* MICRO-INTERACTION: CARD gesture (3a) — neutral border → primary border +
+   2px lift + soft shadow on hover/focus; card title color-shifts (3c). */
+body.item-250 .hx-cat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 26px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color .15s ease, transform .2s ease, box-shadow .2s ease;
+}
+body.item-250 .hx-cat-card:hover,
+body.item-250 .hx-cat-card:focus-visible {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px -12px color-mix(in srgb, var(--primary) 40%, transparent);
+  outline: none;
+}
+body.item-250 .hx-cat-card:hover .hx-cat-name,
+body.item-250 .hx-cat-card:focus-visible .hx-cat-name {
+  color: var(--primary);
+}
+
+/* Header row: tile left, count right */
+body.item-250 .hx-cat-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+body.item-250 .hx-cat-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: var(--cats-tile-bg);
+}
+body.item-250 .hx-cat-ic {
+  width: 21px;
+  height: 21px;
+  color: var(--primary);
+}
+
+body.item-250 .hx-cat-count {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--muted);
+}
+
+body.item-250 .hx-cat-name {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--heading);
+  transition: color .15s ease;
+}
+
+body.item-250 .hx-cat-desc {
+  margin: 0;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+body.item-250 .hx-cats-empty { padding: 40px 0; }
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+/* Tablet : 2 columns */
+@media (max-width: 980px) {
+  body.item-250 .hx-cats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Mobile : 1 column + smaller masthead title */
+@media (max-width: 620px) {
+  body.item-250 .hx-cats-grid { grid-template-columns: 1fr; }
+  body.item-250 .hx-cats-mast { padding-block: 48px 40px; }
+  body.item-250 .hx-cats-title { font-size: 32px; letter-spacing: -1px; }
+  body.item-250 .hx-cats-sub { font-size: 16px; }
+  body.item-250 .hx-cats-body { padding-block: 48px 56px; }
+}
+
+/* ============================================================================
+   MICRO-INTERACTIONS — reduced-motion guard (build-docs/micro-interactions.md §4)
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  body.item-250 .hx-cat-card,
+  body.item-250 .hx-cat-card * {
+    transition-duration: .01ms !important;
+  }
+  body.item-250 .hx-cat-card:hover,
+  body.item-250 .hx-cat-card:focus-visible {
+    transform: none;
+  }
+}

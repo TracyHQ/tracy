@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "9836e7c2-ac8e-453d-bdef-2677eb078d59",
+  "status": "complete",
+  "name": "Busy Bee Honey",
+  "url": "https://styles.refero.design/style/9836e7c2-ac8e-453d-bdef-2677eb078d59",
+  "sourceWebsite": "https://www.busybeehoney.com",
+  "extractedAt": "2026-06-03T19:30:10.367Z",
+  "capturedAt": "2026-10-08T05:15:12.241728+00:00",
+  "theme": "mixed",
+  "industry": "ecommerce",
+  "description": "painted barn-side honey label — dark cocoa, gold, and blue stacked like a vintage billboard. Two sentence grounding: massive condensed serif display type bleeds edge-to-edge against solid color bands, and the bear-bottle product sits centered and unframed like the hero of a roadside sign.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d35e8666-c196-45f5-8c16-36b3e7b79b5f.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/f9b0a76a-84c6-464d-9a4c-b13e2e494c8f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/1c76b158-5455-4073-9d91-a689a629984c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/57770c40-e2a4-45d8-8152-706d9fc91fe0.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5181f789-3312-40e6-9b27-f7959042ecb3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7ee6d856e845f8e36ca7c145eb303c6cc27992817354f23638f8a13f4423abc0",
+      "bytes": 21855
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d42e970157d44e88cecbee2a4eddd8c5e76aa5449609957ac1ec574a5ea00e46",
+      "bytes": 106136
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "7e4a6305c6b0db76fab2ff3879337ec456888780ae3b76cec5383abcacc809de",
+      "bytes": 17591
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "cfee9a505d318bcbe192ae1aca61c8e6affeb69906136cef4c867a1be7febc76",
+      "bytes": 10630
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "693a7b2d8b0b930fde713e57ad7d9ac725ef2a7bdd45825918566d55f6318f86",
+      "bytes": 13688
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "cd44ab7acad8161405c6100446deeb711b9d729dfbe6c88c630f6cb3714541b2",
+      "bytes": 3698
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "cace6d26f34543283a61ac06ee0e269ed795c542cc05b550a9f2e470f08ad50b",
+      "bytes": 1050
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "fe45704acb6331473b38e17e69b5c5333f2849e8e58c65b398c2c842646b7b99",
+      "bytes": 1067
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3084f189fb5cfb3cd44c5232f951686eed1de3b54c73173f298926ae1a6311b2",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "92613e2dfb8b135c22a2309273fe601e45f73e9aad32399c010b6b38f73a6cec",
+      "bytes": 44950
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "be090470d385543aaafc65dc95a75b193c228ac566603972663ac96c5bfe8664",
+      "bytes": 23526
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ff29d3163216dbba26e7bcccc4661895bedefcb36be086f2f852a81453fd3f06",
+      "bytes": 43890
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "fa39651a9fc560ddd4ce779254f6e4b992b1a7f613290ca469f8ae22a96375e3",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "21965835636dfc09aa76ab428b9daaa849659fd77725c5459fa68c2a6317d04f",
+      "bytes": 1919
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4d1e867a5e6c40429b6e11e950e3351df5ff7536f97ae83361ba1e51ee13db5d",
+      "bytes": 2412
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "26dac924-d1c8-4097-af0f-0417ccb12128",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "5cc6e3be-1cbd-4d09-9958-9cb82b2487db",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "84a0fc5e-3610-4c10-a922-7848daa68b92",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "8e1c35bf-f0e8-4889-b869-d9883bb76767",
+    "9836e7c2-ac8e-453d-bdef-2677eb078d59",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "db451eca-8de6-43a9-a5d5-35271befdffd",
+    "f32595cf-478e-4ccd-8722-0daffa693d76",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6",
+    "fb812ddb-d7c0-4540-82d7-1562dff16f09"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tch:qa:schema:layer-result:1",
+  "title": "Tracy QA layer result list (value returned by a layer's run())",
+  "type": "array",
+  "items": { "$ref": "#/$defs/caseResult" },
+  "$defs": {
+    "caseResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "verdict", "reason", "assertionIds", "evidence", "durationMs", "redProof"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "verdict": { "enum": ["PASS", "FAIL", "ENV", "PENDING"] },
+        "reason": { "type": "string" },
+        "assertionIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "evidence": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "durationMs": { "type": "number", "minimum": 0 },
+        "redProof": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/redProof" }]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "verdict": { "enum": ["FAIL", "ENV", "PENDING"] } },
+            "required": ["verdict"]
+          },
+          "then": { "properties": { "reason": { "minLength": 1 } } }
+        }
+      ]
+    },
+    "redProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ref", "assertionId", "log"],
+      "properties": {
+        "kind": { "enum": ["commit", "mutation"] },
+        "ref": { "type": "string", "minLength": 1 },
+        "assertionId": { "type": "string", "minLength": 1 },
+        "log": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

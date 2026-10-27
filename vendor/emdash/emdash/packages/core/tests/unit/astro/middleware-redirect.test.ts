@@ -1,0 +1,522 @@
+/**
+ * Regression tests for issue #808: redirect middleware silently no-oped for
+ * unauthenticated public visitors because `locals.emdash.db` is intentionally
+ * absent on the public-visitor branch of runtime init. The fix routes the
+ * lookup through `getDb()` (ALS-aware, falls back to singleton).
+ */
+import type { Kysely } from "kysely";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("astro:middleware", () => ({
+	defineMiddleware: (handler: unknown) => handler,
+}));
+
+const { getDbMock } = vi.hoisted(() => ({
+	getDbMock: vi.fn(),
+}));
+
+vi.mock("../../../src/loader.js", () => ({
+	getDb: getDbMock,
+}));
+
+import { onRequest } from "../../../src/astro/middleware/redirect.js";
+import { RedirectRepository } from "../../../src/database/repositories/redirect.js";
+import type { Database } from "../../../src/database/types.js";
+import { waitForDeferredTasks } from "../../../src/deferred-tasks.js";
+import { publishRedirectArtifacts } from "../../../src/redirects/artifacts.js";
+import { invalidateRedirectCache } from "../../../src/redirects/cache.js";
+import { setupTestDatabase, teardownTestDatabase } from "../../utils/test-db.js";
+
+type MiddlewareContext = Parameters<typeof onRequest>[0];
+
+interface BuildContextOpts {
+	pathname: string;
+	emdashDb?: unknown;
+}
+
+function buildContext({ pathname, emdashDb }: BuildContextOpts): {
+	context: MiddlewareContext;
+	redirect: ReturnType<typeof vi.fn>;
+	cache: { set: ReturnType<typeof vi.fn> };
+} {
+	const redirect = vi.fn(
+		(location: string, status: number) =>
+			new Response(null, { status, headers: { Location: location } }),
+	);
+	const url = new URL(`https://example.com${pathname}`);
+	const locals = emdashDb !== undefined ? { emdash: { db: emdashDb } } : {};
+	const cache = { set: vi.fn() };
+	const ctx = {
+		url,
+		request: new Request(url.toString()),
+		locals,
+		redirect,
+		cache,
+	};
+	// eslint-disable-next-line typescript/no-unsafe-type-assertion -- minimal Astro-shaped object for the middleware under test
+	return { context: ctx as unknown as MiddlewareContext, redirect, cache };
+}
+
+describe("redirect middleware — issue #808", () => {
+	let db: Kysely<Database>;
+
+	beforeEach(async () => {
+		invalidateRedirectCache();
+		db = await setupTestDatabase();
+		const repo = new RedirectRepository(db);
+		await repo.create({ source: "/old", destination: "/new", type: 301 });
+		await repo.create({
+			source: "/legacy/[slug]",
+			destination: "/posts/[slug]",
+			type: 301,
+			isPattern: true,
+		});
+		getDbMock.mockReset();
+		getDbMock.mockResolvedValue(db);
+	});
+
+	afterEach(async () => {
+		await teardownTestDatabase(db);
+	});
+
+	async function runMiddleware(
+		context: MiddlewareContext,
+		next: () => Promise<Response>,
+	): Promise<Response> {
+		const result = await onRequest(context, next);
+		if (!(result instanceof Response)) {
+			throw new Error("Middleware returned void; expected a Response");
+		}
+		return result;
+	}
+
+	it("fires for an unauthenticated visitor on a public path (no locals.emdash.db)", async () => {
+		const { context, redirect } = buildContext({ pathname: "/old" });
+
+		const next = vi.fn(async () => new Response("not found", { status: 404 }));
+		const response = await runMiddleware(context, next);
+
+		expect(getDbMock).toHaveBeenCalledTimes(1);
+		expect(redirect).toHaveBeenCalledWith("/new", 301);
+		expect(response.status).toBe(301);
+		expect(response.headers.get("Location")).toBe("/new");
+		expect(next).not.toHaveBeenCalled();
+	});
+
+	it("fires pattern matches for unauthenticated visitors", async () => {
+		const { context, redirect } = buildContext({ pathname: "/legacy/hello" });
+
+		const next = vi.fn(async () => new Response("not found", { status: 404 }));
+		const response = await runMiddleware(context, next);
+
+		expect(redirect).toHaveBeenCalledWith("/posts/hello", 301);
+		expect(response.status).toBe(301);
+	});
+
+	it("still uses locals.emdash.db when present (authenticated/edit-mode/preview path)", async () => {
+		const { context, redirect } = buildContext({ pathname: "/old", emdashDb: db });
+
+		const next = vi.fn(async () => new Response("not found", { status: 404 }));
+		const response = await runMiddleware(context, next);
+
+		// When locals.emdash.db is provided, getDb() must not be called.
+		expect(getDbMock).not.toHaveBeenCalled();
+		expect(redirect).toHaveBeenCalledWith("/new", 301);
+		expect(response.status).toBe(301);
+	});
+
+	it("skips silently when no database is available at all", async () => {
+		getDbMock.mockRejectedValueOnce(new Error("EmDash database not configured"));
+		const { context, redirect } = buildContext({ pathname: "/old" });
+
+		const next = vi.fn(async () => new Response("ok"));
+		const response = await runMiddleware(context, next);
+
+		expect(redirect).not.toHaveBeenCalled();
+		expect(next).toHaveBeenCalledTimes(1);
+		expect(response.status).toBe(200);
+	});
+
+	it("loads published redirects in one query and reuses them across requests", async () => {
+		await publishRedirectArtifacts(db);
+		const findAllEnabled = vi.spyOn(RedirectRepository.prototype, "findAllEnabled");
+		let selects = 0;
+		getDbMock.mockResolvedValue(
+			db.withPlugin({
+				transformQuery(args) {
+					if (args.node.kind === "SelectQueryNode") selects++;
+					return args.node;
+				},
+				async transformResult(args) {
+					return args.result;
+				},
+			}),
+		);
+
+		try {
+			const first = buildContext({ pathname: "/old" });
+			const r1 = await runMiddleware(
+				first.context,
+				vi.fn(async () => new Response("not found", { status: 404 })),
+			);
+			expect(r1.status).toBe(301);
+			expect(selects).toBe(1);
+
+			const second = buildContext({ pathname: "/legacy/hello" });
+			const r2 = await runMiddleware(
+				second.context,
+				vi.fn(async () => new Response("not found", { status: 404 })),
+			);
+			expect(r2.status).toBe(301);
+			expect(second.redirect).toHaveBeenCalledWith("/posts/hello", 301);
+
+			const third = buildContext({ pathname: "/nope" });
+			await runMiddleware(
+				third.context,
+				vi.fn(async () => new Response("not found", { status: 404 })),
+			);
+
+			await waitForDeferredTasks();
+			expect(selects).toBe(1);
+			expect(findAllEnabled).not.toHaveBeenCalled();
+		} finally {
+			findAllEnabled.mockRestore();
+		}
+	});
+
+	it("picks up redirects another Worker isolate published once the cache expires", async () => {
+		vi.useFakeTimers({ now: new Date("2026-01-01T00:00:00Z"), toFake: ["Date"] });
+		try {
+			await publishRedirectArtifacts(db);
+			const repo = new RedirectRepository(db);
+
+			const first = buildContext({ pathname: "/old" });
+			await runMiddleware(
+				first.context,
+				vi.fn(async () => new Response("not found", { status: 404 })),
+			);
+			expect(first.redirect).toHaveBeenCalledWith("/new", 301);
+
+			const existing = await repo.findBySource("/old");
+			expect(existing).not.toBeNull();
+			await repo.update(existing!.id, { destination: "/newer" });
+			await publishRedirectArtifacts(db);
+
+			vi.advanceTimersByTime(29_999);
+			const stillCached = buildContext({ pathname: "/old" });
+			await runMiddleware(
+				stillCached.context,
+				vi.fn(async () => new Response("not found", { status: 404 })),
+			);
+			expect(stillCached.redirect).toHaveBeenCalledWith("/new", 301);
+
+			vi.advanceTimersByTime(1);
+			const expired = buildContext({ pathname: "/old" });
+			await runMiddleware(
+				expired.context,
+				vi.fn(async () => new Response("not found", { status: 404 })),
+			);
+			expect(expired.redirect).toHaveBeenCalledWith("/new", 301);
+			await waitForDeferredTasks();
+
+			const refreshed = buildContext({ pathname: "/old" });
+			await runMiddleware(
+				refreshed.context,
+				vi.fn(async () => new Response("not found", { status: 404 })),
+			);
+			expect(refreshed.redirect).toHaveBeenCalledWith("/newer", 301);
+		} finally {
+			vi.useRealTimers();
+		}
+	});
+
+	it("does not intercept /_emdash routes", async () => {
+		const { context, redirect } = buildContext({ pathname: "/_emdash/admin" });
+
+		const next = vi.fn(async () => new Response("ok"));
+		await runMiddleware(context, next);
+
+		expect(getDbMock).not.toHaveBeenCalled();
+		expect(redirect).not.toHaveBeenCalled();
+		expect(next).toHaveBeenCalledTimes(1);
+	});
+});
+
+describe("redirect middleware — 404 logging attributes misses to the requested path", () => {
+	let db: Kysely<Database>;
+
+	beforeEach(async () => {
+		invalidateRedirectCache();
+		db = await setupTestDatabase();
+		getDbMock.mockReset();
+		getDbMock.mockResolvedValue(db);
+	});
+
+	afterEach(async () => {
+		await teardownTestDatabase(db);
+	});
+
+	it("logs an unmatched path exactly once", async () => {
+		const log404 = vi.spyOn(RedirectRepository.prototype, "log404");
+		const { context } = buildContext({ pathname: "/no-such-page" });
+		const next = vi.fn(async () => new Response("not found", { status: 404 }));
+		await onRequest(context, next);
+
+		expect(log404).toHaveBeenCalledTimes(1);
+		expect(log404).toHaveBeenCalledWith(expect.objectContaining({ path: "/no-such-page" }));
+		// Await the fire-and-forget write before reading the table.
+		await log404.mock.results[0]!.value;
+		const rows = await db.selectFrom("_emdash_404_log").select("path").execute();
+		expect(rows.map((r) => r.path)).toEqual(["/no-such-page"]);
+		log404.mockRestore();
+	});
+
+	it("logs a content miss under its real path across the redirect-to-/404 flow", async () => {
+		// A site that answers a content miss with Astro.redirect("/404") sends a
+		// 302 first; the browser then requests /404, which renders with status 404.
+		const log404 = vi.spyOn(RedirectRepository.prototype, "log404");
+
+		const miss = buildContext({ pathname: "/posts/deleted-post" });
+		const redirectNext = vi.fn(
+			async () => new Response(null, { status: 302, headers: { Location: "/404" } }),
+		);
+		await onRequest(miss.context, redirectNext);
+
+		const errorPage = buildContext({ pathname: "/404" });
+		const errorNext = vi.fn(async () => new Response("not found", { status: 404 }));
+		await onRequest(errorPage.context, errorNext);
+
+		expect(log404).toHaveBeenCalledTimes(1);
+		expect(log404).toHaveBeenCalledWith(expect.objectContaining({ path: "/posts/deleted-post" }));
+		await log404.mock.results[0]!.value;
+		const rows = await db.selectFrom("_emdash_404_log").select("path").execute();
+		expect(rows.map((r) => r.path)).toEqual(["/posts/deleted-post"]);
+		log404.mockRestore();
+	});
+
+	it("keeps 404 responses out of the route cache", async () => {
+		const miss = buildContext({ pathname: "/posts/deleted-post" });
+		await onRequest(miss.context, async () => new Response("not found", { status: 404 }));
+		expect(miss.cache.set).toHaveBeenCalledWith(false);
+
+		const hit = buildContext({ pathname: "/posts/live-post" });
+		await onRequest(hit.context, async () => new Response("ok", { status: 200 }));
+		expect(hit.cache.set).not.toHaveBeenCalled();
+	});
+
+	it("does not log ordinary redirects", async () => {
+		const log404 = vi.spyOn(RedirectRepository.prototype, "log404");
+		const { context } = buildContext({ pathname: "/moved" });
+		const next = vi.fn(
+			async () => new Response(null, { status: 302, headers: { Location: "/new-home" } }),
+		);
+		await onRequest(context, next);
+
+		expect(log404).not.toHaveBeenCalled();
+		log404.mockRestore();
+	});
+
+	it("does not log the site's own /404 error page render", async () => {
+		const log404 = vi.spyOn(RedirectRepository.prototype, "log404");
+		for (const pathname of ["/404", "/404/"]) {
+			const { context } = buildContext({ pathname });
+			const next = vi.fn(async () => new Response("not found", { status: 404 }));
+			await onRequest(context, next);
+		}
+
+		expect(log404).not.toHaveBeenCalled();
+		const rows = await db.selectFrom("_emdash_404_log").select("path").execute();
+		expect(rows).toEqual([]);
+		log404.mockRestore();
+	});
+});
+
+describe("redirect middleware — trailing-slash normalisation (issue #1271)", () => {
+	let db: Kysely<Database>;
+
+	beforeEach(async () => {
+		invalidateRedirectCache();
+		db = await setupTestDatabase();
+		getDbMock.mockReset();
+		getDbMock.mockResolvedValue(db);
+	});
+
+	afterEach(async () => {
+		await teardownTestDatabase(db);
+	});
+
+	async function runMiddleware(
+		context: MiddlewareContext,
+		next: () => Promise<Response>,
+	): Promise<Response> {
+		const result = await onRequest(context, next);
+		if (!(result instanceof Response)) {
+			throw new Error("Middleware returned void; expected a Response");
+		}
+		return result;
+	}
+
+	it("matches an unslashed request when the redirect source has a trailing slash", async () => {
+		const repo = new RedirectRepository(db);
+		await repo.create({ source: "/test-3/", destination: "/", type: 301 });
+
+		const { context, redirect } = buildContext({ pathname: "/test-3" });
+		const next = vi.fn(async () => new Response("not found", { status: 404 }));
+		const response = await runMiddleware(context, next);
+
+		expect(redirect).toHaveBeenCalledWith("/", 301);
+		expect(response.status).toBe(301);
+		expect(response.headers.get("Location")).toBe("/");
+		expect(next).not.toHaveBeenCalled();
+	});
+
+	it("matches a slashed request when the redirect source has no trailing slash", async () => {
+		const repo = new RedirectRepository(db);
+		await repo.create({ source: "/test-3", destination: "/", type: 301 });
+
+		const { context, redirect } = buildContext({ pathname: "/test-3/" });
+		const next = vi.fn(async () => new Response("not found", { status: 404 }));
+		const response = await runMiddleware(context, next);
+
+		expect(redirect).toHaveBeenCalledWith("/", 301);
+		expect(response.status).toBe(301);
+		expect(response.headers.get("Location")).toBe("/");
+		expect(next).not.toHaveBeenCalled();
+	});
+
+	it("prefers an exact match over the alternate slash form", async () => {
+		const repo = new RedirectRepository(db);
+		await repo.create({ source: "/old", destination: "/new", type: 301 });
+		await repo.create({ source: "/old/", destination: "/newer", type: 301 });
+
+		const { context: ctx1, redirect: redirect1 } = buildContext({ pathname: "/old" });
+		const next1 = vi.fn(async () => new Response("not found", { status: 404 }));
+		const r1 = await runMiddleware(ctx1, next1);
+		expect(redirect1).toHaveBeenCalledWith("/new", 301);
+		expect(r1.headers.get("Location")).toBe("/new");
+
+		const { context: ctx2, redirect: redirect2 } = buildContext({ pathname: "/old/" });
+		const next2 = vi.fn(async () => new Response("not found", { status: 404 }));
+		const r2 = await runMiddleware(ctx2, next2);
+		expect(redirect2).toHaveBeenCalledWith("/newer", 301);
+		expect(r2.headers.get("Location")).toBe("/newer");
+	});
+});
+
+describe("redirect middleware — only redirects to site-relative paths", () => {
+	let db: Kysely<Database>;
+	let warn: ReturnType<typeof vi.spyOn>;
+
+	beforeEach(async () => {
+		invalidateRedirectCache();
+		db = await setupTestDatabase();
+		getDbMock.mockReset();
+		getDbMock.mockResolvedValue(db);
+		warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+	});
+
+	afterEach(async () => {
+		warn.mockRestore();
+		await teardownTestDatabase(db);
+	});
+
+	async function runMiddleware(
+		context: MiddlewareContext,
+		next: () => Promise<Response>,
+	): Promise<Response> {
+		const result = await onRequest(context, next);
+		if (!(result instanceof Response)) {
+			throw new Error("Middleware returned void; expected a Response");
+		}
+		return result;
+	}
+
+	it.each([
+		"https://evil.example",
+		"http:/evil.example",
+		"javascript:alert(1)",
+		"evil.example/path",
+		"//evil.example",
+		"/\\evil.example",
+		"/\t/evil.example",
+		"/\n/evil.example",
+		"/ok\r\nSet-Cookie: a=b",
+		"/\u007f/evil.example",
+	])("skips a stored exact rule whose destination is %j", async (destination) => {
+		const repo = new RedirectRepository(db);
+		const rule = await repo.create({ source: "/away", destination, type: 301 });
+
+		const { context, redirect } = buildContext({ pathname: "/away" });
+		const next = vi.fn(async () => new Response("ok"));
+		const response = await runMiddleware(context, next);
+
+		expect(redirect).not.toHaveBeenCalled();
+		expect(next).toHaveBeenCalledTimes(1);
+		expect(response.status).toBe(200);
+		expect((await repo.findById(rule.id))?.hits).toBe(0);
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining(rule.id));
+	});
+
+	it("skips a stored pattern rule that resolves to an external URL", async () => {
+		const repo = new RedirectRepository(db);
+		await repo.create({
+			source: "/out/[slug]",
+			destination: "https://evil.example/[slug]",
+			type: 302,
+			isPattern: true,
+		});
+
+		const { context, redirect } = buildContext({ pathname: "/out/page" });
+		const next = vi.fn(async () => new Response("ok"));
+		const response = await runMiddleware(context, next);
+
+		expect(redirect).not.toHaveBeenCalled();
+		expect(response.status).toBe(200);
+	});
+
+	it("skips a pattern rule whose captured path makes the destination protocol-relative", async () => {
+		const repo = new RedirectRepository(db);
+		await repo.create({
+			source: "/go/[...rest]",
+			destination: "/[...rest]",
+			type: 301,
+			isPattern: true,
+		});
+
+		const { context, redirect } = buildContext({ pathname: "/go//evil.example" });
+		const next = vi.fn(async () => new Response("ok"));
+		await runMiddleware(context, next);
+
+		expect(redirect).not.toHaveBeenCalled();
+		expect(next).toHaveBeenCalledTimes(1);
+	});
+
+	it("still redirects to site-relative paths with a query string and fragment", async () => {
+		const repo = new RedirectRepository(db);
+		await repo.create({ source: "/find", destination: "/search?q=a%20b#results", type: 302 });
+
+		const { context, redirect } = buildContext({ pathname: "/find" });
+		const next = vi.fn(async () => new Response("ok"));
+		const response = await runMiddleware(context, next);
+
+		expect(redirect).toHaveBeenCalledWith("/search?q=a%20b#results", 302);
+		expect(response.status).toBe(302);
+	});
+
+	it("ignores a stored pattern rule whose source is not a valid pattern", async () => {
+		const repo = new RedirectRepository(db);
+		await repo.create({
+			source: "/[a][b][c]",
+			destination: "/elsewhere",
+			type: 301,
+			isPattern: true,
+		});
+
+		const { context, redirect } = buildContext({ pathname: "/abc" });
+		const next = vi.fn(async () => new Response("ok"));
+		const response = await runMiddleware(context, next);
+
+		expect(redirect).not.toHaveBeenCalled();
+		expect(response.status).toBe(200);
+	});
+});

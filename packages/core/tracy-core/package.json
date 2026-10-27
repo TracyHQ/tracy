@@ -1,0 +1,57 @@
+{
+  "name": "@tracy/core",
+  "version": "0.1.0",
+  "description": "Screens shared by every Tracy surface: the Cowork pane and the site drawer",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./team": "./src/team/index.ts",
+    "./team/face": "./src/team/face.tsx",
+    "./team/address-face": "./src/team/address-face.mjs",
+    "./site-tabs": "./src/site-tabs/index.ts",
+    "./site-tabs/popover": "./src/site-tabs/Popover.tsx",
+    "./wizard-shell": "./src/wizard-shell/index.ts",
+    "./template-picker": "./src/template-picker/index.mjs",
+    "./tab-link": "./src/tab-link/index.ts",
+    "./seat": "./src/seat/index.mjs",
+    "./seat/viewer": "./src/seat/viewer.tsx",
+    "./session": "./src/session/index.mjs",
+    "./hello": "./src/hello/index.mjs",
+    "./language": "./src/language/index.mjs",
+    "./interface-languages": "./src/interface-languages/index.mjs",
+    "./interface-languages/react": "./src/interface-languages/react.mjs",
+    "./interface-languages/resolve": "./src/interface-languages/resolve.mjs",
+    "./config": "./src/config/index.mjs",
+    "./site-dir": "./src/site-dir/index.mjs",
+    "./lease": "./src/lease/index.mjs",
+    "./preview": "./src/preview/index.mjs",
+    "./ui-switches": "./src/ui-switches/index.mjs",
+    "./input-activity": "./src/input-activity/index.mjs",
+    "./input-activity/react": "./src/input-activity/react.mjs",
+    "./site-key": "./src/site-key/index.mjs",
+    "./web-path": "./src/web-path/index.mjs",
+    "./mention": "./src/mention/index.mjs",
+    "./turn-undo": "./src/turn-undo/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@tracy/i18n": "workspace:^",
+    "@tracy/ui": "workspace:^",
+    "lucide-react": "^0.525.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "typescript": "^5.9.3"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/core/tracy-core"
+  }
+}

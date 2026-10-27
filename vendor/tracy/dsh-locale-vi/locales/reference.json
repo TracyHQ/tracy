@@ -1,0 +1,13 @@
+{
+  "candidate.noCwd": "(không có thư mục làm việc)",
+  "crumb.root": "Không gian làm việc",
+  "section.files": "Tệp và thư mục",
+  "section.sessions": "Phiên",
+  "section.subagents": "Agent con",
+  "time.days": "{n} ngày",
+  "time.hours": "{n} giờ",
+  "time.minutes": "{n} phút",
+  "time.months": "{n} tháng",
+  "time.now": "vừa xong",
+  "time.years": "{n} năm"
+}

@@ -1,0 +1,24 @@
+@theme {
+  /* Colors */
+  --color-void: #000000;
+  --color-bone: #ffffff;
+  --color-charcoal: #1d1a1a;
+  --color-ink: #111212;
+  --color-graphite: #3d3d3d;
+  --color-mist: #d9d9d9;
+  --color-parchment: #f3f3ef;
+  --color-neon-magenta: #fc74dd;
+  --color-ember-dot: #ff4c33;
+  --color-deep-violet: #122d8b;
+
+  /* Typography */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ozik-black: 'OZIK Black', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-basis-grotesque-pro: 'Basis Grotesque Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-martian-mono: 'Martian Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-martian-mono-std-xlt-extra-light: 'Martian Mono Std xLt Extra-light', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-martian-mono-std-xlt: 'Martian Mono Std xLt', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-martian-mono-nr-xlt: 'Martian Mono Nr xLt', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-martian-mono-extra-light: 'Martian Mono Extra-light', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-martian-mono-extralight: 'Martian Mono ExtraLight', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

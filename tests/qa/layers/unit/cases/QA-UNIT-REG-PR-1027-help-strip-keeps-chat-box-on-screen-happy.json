@@ -1,0 +1,73 @@
+{
+  "id": "QA-UNIT-REG-PR-1027-help-strip-keeps-chat-box-on-screen-happy",
+  "itemIds": ["regression:REG-PR-1027-help-strip-keeps-chat-box-on-screen"],
+  "requirement": "On the start screen the Help strip gives back the room the chat box needs, so the box is not pushed below the window edge, and the strip keeps its newest row in view without moving a reader who scrolled up",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1027-help-strip-keeps-chat-box-on-screen.json",
+    "ref": "PR #1027 (fix); fix evidence: Found 08/10/2026 while opening a screenshot of the focus fix: with two Help answers on an 800 px window the chat box sat 44 px below the window edge. Evidence: tasks/bang-chung/lan-4-dock-giu-o-chat/KET-QUA.md. Regression of this fix, found on the stand 09/10/2026 (owner, right sidebar collapsed, two /help answers): at 1000x600 the strip loaded at scrollTop 0 of 358 with the newest answer cut off; scrolled to the bottom by hand, shrinking the window by 20 px sent it back to 0; on a 390x844 phone a bare /help added its four questions at y=963-991 while the strip ended at y=638. Cause: fitDock measured without the cap (the browser clamps scrollTop to 0) and the follow-to-bottom was a passive effect whose 'at bottom' mark the measure's scroll event cleared. Fixed in #1100 (branch fix/followups-p1-help); the five browser cases are red on 977cbb3e6 and green with the fix; pictures in tasks/evidence/followups-2026-10-10/p1-help/.",
+    "invariant": "S1 exits 0 with '# fail 0'; the named cases are 'ok'. The strip gives back exactly the overflow of the scrolling column, never goes below 96 px, and leaves a strip that already fits without any limit; a strip at its end stays at its end across a refit, any other strip keeps its scrollTop. S1, browser: restored answers at 1000x600 open with the strip scrolled to its end (the newest answer ends inside the strip, the chat box on screen); a strip scrolled to its end stays there when the window shrinks by 20 px and grows back by 60 px, and gives back / takes back room each time; on a 390x844 phone a bare /help leaves all four suggested questions inside the strip with the strip at its end; an answer streamed in leaves the strip at its end; a reader scrolled to scrollTop 60 keeps scrollTop 60 when a row is added below and when the window shrinks by 20 px, and is not pulled down to the new row. No page error. S3: at 700, 800 and 900 px the chat box is fully on screen with no overflow (before: 143 px past the scroll box at 800 px, 253 px at 600 px); at 600 px the strip is at its 96 px minimum and the box is reachable by scrolling; the newest answer stays in view in the strip.",
+    "productSources": [
+      "packages/ui/tracy-assistant/src/client/dock-fit.ts:24",
+      "packages/ui/tracy-assistant/src/client/help.ts:493"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-assistant/test/e2e/help-strip-scroll.test.mjs:169 readFileSync() with a computed path",
+      "packages/ui/tracy-assistant/test/e2e/help-strip-scroll.test.mjs:38 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "dock-fit: the strip gives back exactly what the column overflows by",
+    "dock-fit: fitDock clears the old cap, measures with the natural height, then sets the new one",
+    "dock-fit: fitDock keeps a strip at its end at its end, and any other strip where it was",
+    "restored answers open with the newest one in view (1000x600)",
+    "a strip at its bottom stays at its bottom when the window shrinks by 20 px and grows back",
+    "on a phone a bare /help puts its four questions inside the strip (390x844)",
+    "an answer streaming in keeps its newest line in view",
+    "a person who scrolled up keeps their place when a row is added and when the window shrinks"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1027-help-strip-keeps-chat-box-on-screen"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-assistant", "tracy-assistant"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1027-help-strip-keeps-chat-box-on-screen",
+    "pr": 1027,
+    "kind": "fix",
+    "area": "assistant",
+    "file": "tests/regression/cases/REG-PR-1027-help-strip-keeps-chat-box-on-screen.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-assistant/test/dock-fit.test.mjs",
+    "packages/ui/tracy-assistant/test/help.test.mjs",
+    "packages/ui/tracy-assistant/test/e2e/help-strip-scroll.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "dock-fit: the strip gives back exactly what the column overflows by",
+    "dock-fit: fitDock clears the old cap, measures with the natural height, then sets the new one",
+    "dock-fit: fitDock keeps a strip at its end at its end, and any other strip where it was",
+    "restored answers open with the newest one in view (1000x600)",
+    "a strip at its bottom stays at its bottom when the window shrinks by 20 px and grows back",
+    "on a phone a bare /help puts its four questions inside the strip (390x844)",
+    "an answer streaming in keeps its newest line in view",
+    "a person who scrolled up keeps their place when a row is added and when the window shrinks"
+  ],
+  "timeoutS": 600
+}

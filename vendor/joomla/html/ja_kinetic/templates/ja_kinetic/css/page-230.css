@@ -1,0 +1,12 @@
+/* =============================================================================
+ * ja_kinetic — Single Article (Itemid=230)
+ *
+ * The single-article VIEW design now lives in ONE shared, view-scoped stylesheet
+ * — `css/single-article.css` (scoped to `.hx-article`) — loaded by the article
+ * override (html/com_content/article/default.php) for EVERY non-canvas article,
+ * so every blog post renders the .pen "Page/Article" design, not just this demo
+ * article. Nothing item-230-specific remains here (the tags-below-body ordering
+ * is a DB attrib on article 75, not CSS). Kept as an intentionally empty overlay
+ * so index.php's per-Itemid loader has a target and future item-230-only tweaks
+ * have a home.
+ * ============================================================================= */

@@ -1,0 +1,242 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "title": "Webflow",
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "var(--wp--preset--color--surface)"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "#080808"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "#363636"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "#5a5a5a"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "#ababab"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "#d8d8d8"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "#ebebeb"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#146ef5"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "#0055d4"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "color-mix(in oklab, var(--wp--preset--color--accent), black 14%)"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "#00d722"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "#ffae13"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "#ee1d36"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "\"WF Visual Sans Variable\", \"Inter\", Arial, system-ui, sans-serif"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "\"WF Visual Sans Variable\", \"Inter\", Arial, system-ui, sans-serif"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "\"Inconsolata\", ui-monospace, \"SF Mono\", Menlo, Monaco, Consolas, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "12px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "14px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "16px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "20px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "24px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "32px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "56px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "80px"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "1200px",
+      "wideSize": "1200px"
+    },
+    "custom": {
+      "leading": {
+        "body": "1.6",
+        "tight": "1.04"
+      },
+      "tracking": {
+        "display": "-0.01em"
+      },
+      "sectionY": {
+        "desktop": "96px",
+        "tablet": "64px",
+        "phone": "48px"
+      },
+      "radius": {
+        "sm": "4px",
+        "md": "4px",
+        "lg": "8px",
+        "pill": "9999px"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0px 84px 24px rgba(0, 0, 0, 0),\n    0px 54px 22px rgba(0, 0, 0, 0.01),\n    0px 30px 18px rgba(0, 0, 0, 0.04),\n    0px 13px 13px rgba(0, 0, 0, 0.08),\n    0px 3px 7px rgba(0, 0, 0, 0.09)"
+      },
+      "focusRing": "0 0 0 3px color-mix(in oklab, var(--wp--preset--color--accent), transparent 70%)",
+      "motion": {
+        "fast": "150ms",
+        "base": "200ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.2, 0, 0, 1)"
+      },
+      "container": {
+        "max": "1200px",
+        "gutterDesktop": "24px",
+        "gutterTablet": "16px",
+        "gutterPhone": "12px"
+      },
+      "tracy": {
+        "inspiration": "webflow"
+      }
+    }
+  }
+}

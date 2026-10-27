@@ -1,0 +1,117 @@
+---
+/**
+ * Design system kit: /design-system (overview of all three parts) and /design-system/{typography,
+ * colour,spacing} (one part each). Source: the four Joomla articles Style guide / Typography /
+ * Colors / Spacing, whose hand-written swatch HTML is replaced by components that read tokens.css
+ * (DECISIONS D9). The words -- titles, intros, the type specimen -- are fields of the singleton
+ * `design_system`; the swatches and scales are static from the tokens.
+ */
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import TypeSpecimen from '@/components/site/TypeSpecimen.astro'
+import Swatches from '@/components/site/Swatches.astro'
+import SpacingScale from '@/components/site/SpacingScale.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+
+type Section = 'typography' | 'colour' | 'spacing'
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  section?: Section
+}
+const { chrome, locale, section } = Astro.props
+const { site } = chrome
+const { entry } = await getEmDashEntry('design_system', 'design_system', { locale })
+if (!entry || (section && !['typography', 'colour', 'spacing'].includes(section))) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const d = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'design_system', entry)
+const $site = stampFor(Astro.request, 'site', site)
+const ROOT = '/design-system'
+const parts: Array<{ key: Section; title: string; intro: string }> = [
+  { key: 'typography', title: d.typography_title, intro: d.typography_intro },
+  { key: 'colour', title: d.colour_title, intro: d.colour_intro },
+  { key: 'spacing', title: d.spacing_title, intro: d.spacing_intro }
+]
+const current = section ? parts.find((p) => p.key === section) : undefined
+const rootMenuLabel = chrome.resourcesDesign.find((i) => i.url === href(locale, ROOT))?.label
+const rootLabel = rootMenuLabel ?? d.title
+const pageTitle = current?.title || d.title
+const pageIntro = current ? current.intro : d.intro
+// Which field each printed value was read from; a menu label is not a Content API record.
+const rootStamp = rootMenuLabel == null ? $page('title') : {}
+const titleStamp = $page(current?.title ? `${current.key}_title` : 'title')
+const introStamp = $page(current ? `${current.key}_intro` : 'intro')
+const path = section ? `${ROOT}/${section}` : ROOT
+const crumbs = [
+  { label: site.breadcrumb_home, url: href(locale, '/'), stamp: $site('breadcrumb_home') },
+  ...(current
+    ? [
+        { label: rootLabel, url: href(locale, ROOT), stamp: rootStamp },
+        { label: current.title || current.key, stamp: current.title ? $page(`${current.key}_title`) : {} }
+      ]
+    : [{ label: rootLabel, stamp: rootStamp }])
+]
+---
+
+<Base chrome={chrome} title={pageTitle} description={pageIntro} currentPath={ROOT} content={{ collection: "design_system", id: entry.data.id, slug: "design_system", toPath: () => path }}>
+	<Breadcrumb items={crumbs} />
+	<main id="main" class="wrap pb-[var(--band-y)] pt-10">
+		<PageOwner stamp={$page} />
+		<div class="mx-auto max-w-[720px]">
+			<header class="mb-12">
+				{pageTitle && <h1 class="h-page h-page--kit" {...titleStamp}>{pageTitle}</h1>}
+				{pageIntro && <p class="lead mt-4" {...introStamp}>{pageIntro}</p>}
+			</header>
+			{!current && (
+				<nav class="mb-12 flex flex-wrap gap-2" aria-label={d.title}>
+					{parts.filter((p) => p.title).map((p) => (
+						<a class="btn btn-secondary btn-sm" href={href(locale, `${ROOT}/${p.key}`)} {...$page(`${p.key}_title`)}>{p.title}</a>
+					))}
+				</nav>
+			)}
+			<div class="flex flex-col gap-16">
+				{(!section || section === "typography") && (
+					<section id="typography">
+						{!current && (
+							<div class="mb-8">
+								{d.typography_title && <h2 class="h-section"><a class="text-fg hover:text-accent" href={href(locale, `${ROOT}/typography`)} {...$page("typography_title")}>{d.typography_title}</a></h2>}
+								{d.typography_intro && <p class="mt-2 text-fg-muted" {...$page("typography_intro")}>{d.typography_intro}</p>}
+							</div>
+						)}
+						<TypeSpecimen eyebrow={d.specimen_eyebrow} heading={d.specimen_heading} lede={d.specimen_lede} body={d.specimen_body} stamp={$page} fields={{ eyebrow: "specimen_eyebrow", heading: "specimen_heading", lede: "specimen_lede", body: "specimen_body" }} />
+					</section>
+				)}
+				{(!section || section === "colour") && (
+					<section id="colour">
+						{!current && (
+							<div class="mb-8">
+								{d.colour_title && <h2 class="h-section"><a class="text-fg hover:text-accent" href={href(locale, `${ROOT}/colour`)} {...$page("colour_title")}>{d.colour_title}</a></h2>}
+								{d.colour_intro && <p class="mt-2 text-fg-muted" {...$page("colour_intro")}>{d.colour_intro}</p>}
+							</div>
+						)}
+						<Swatches />
+					</section>
+				)}
+				{(!section || section === "spacing") && (
+					<section id="spacing">
+						{!current && (
+							<div class="mb-8">
+								{d.spacing_title && <h2 class="h-section"><a class="text-fg hover:text-accent" href={href(locale, `${ROOT}/spacing`)} {...$page("spacing_title")}>{d.spacing_title}</a></h2>}
+								{d.spacing_intro && <p class="mt-2 text-fg-muted" {...$page("spacing_intro")}>{d.spacing_intro}</p>}
+							</div>
+						)}
+						<SpacingScale />
+					</section>
+				)}
+			</div>
+		</div>
+	</main>
+</Base>

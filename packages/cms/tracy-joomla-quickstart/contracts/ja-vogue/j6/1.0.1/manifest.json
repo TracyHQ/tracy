@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-vogue/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_vogue",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-vogue",
+    "id": "quickstart/ja-vogue/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_vogue",
+    "parts": {
+      "installer": {
+        "file": "ja-vogue-j6-quickstart-1.0.1.zip",
+        "bytes": 87187805,
+        "sha256": "0c2e23f5874ab4db6942b3ff694bf0f32f8a91ead4f256a7e3ccb99e520dec2d"
+      }
+    },
+    "release": "quickstart/ja-vogue/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

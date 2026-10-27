@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-ink-black: #1f1c1b;
+  --color-paper-white: #ffffff;
+  --color-canvas-cream: #ebe9e1;
+  --color-linen: #f5f4f0;
+  --color-stone: #a69b92;
+  --color-hairline: #d9d6ce;
+  --color-espresso: #2d2724;
+  --color-charcoal: #000000;
+  --color-cobblestone: #c7c1b7;
+  --color-highlighter-orange: #ff7714;
+
+  /* Typography */
+  --font-exposure30: 'Exposure30', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

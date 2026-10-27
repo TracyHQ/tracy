@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1203-onboard-close-inside-dialog",
+  "kind": "fix",
+  "title": "The Getting started dialog keeps its Close (x) and Hide buttons inside the card at 360 and 390 px",
+  "pr": 1203,
+  "area": "ui/onboard",
+  "cms": ["any"],
+  "needs": ["viewport:360"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run packages/ui/tracy-onboard/test/e2e/top-row-fits.test.mjs with CHROME_CDP=http://127.0.0.1:9222 (chrome-watch): it renders the real OnboardView with the real stylesheet at 360, 390 and 1440 px, first run and reopened from the menu, and measures .tv-ob-close and .tv-ob-hide against .tv-ob-dialog.",
+    "S2 (stand, optional): sign in as a brand-new account at 360x800 and read the boxes of .tv-ob-close and .tv-ob-dialog."
+  ],
+  "expect": [
+    "S1: all six tests pass: Close ends at least 8 px inside the dialog's right edge and inside the viewport; Hide starts inside the dialog.",
+    "S2: .tv-ob-close right edge <= .tv-ob-dialog right edge."
+  ],
+  "selectors": {
+    "dialog": ".tv-ob-dialog",
+    "close": ".tv-ob-close[data-action=close]",
+    "hide": ".tv-ob-hide[data-action=hide-menu]"
+  },
+  "evidence": "Dev 12/10/2026 (develop e5ea4dd849) at 360 px: .tv-ob-close at x=371..397, dialog 24..336, viewport 360.",
+  "fence": "tracy-onboard onboard.css: below 620 px .tv-ob-hide-label is hidden, the button keeps aria-label and title",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "--test-reporter=tap",
+      "packages/ui/tracy-onboard/test/e2e/top-row-fits.test.mjs"
+    ],
+    "needs": ["chrome"],
+    "tests": ["at 360px", "at 390px", "at 1440px"],
+    "timeout_s": 300
+  }
+}

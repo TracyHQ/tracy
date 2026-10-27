@@ -1,0 +1,69 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Paper — Page background, card surfaces, inverted-section type — the cream-white ground that all dark type sits on"
+    },
+    "hairline": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Hairline — Card and tile borders — only visible against Paper"
+    },
+    "midstone": {
+      "$value": "#9f9f9f",
+      "$type": "color",
+      "$description": "Midstone — Nav borders, muted borders, light decorative borders on dark sections"
+    },
+    "ash": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Ash — Secondary borders, muted UI text, low-emphasis dividers"
+    },
+    "pebble": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Pebble — Inactive nav text and borders"
+    },
+    "sepia": {
+      "$value": "#3e3b36",
+      "$type": "color",
+      "$description": "Sepia — Strong borders, secondary heading text — the warm-brown near-black that flanks Headline Ink"
+    },
+    "headline-ink": {
+      "$value": "#2a2722",
+      "$type": "color",
+      "$description": "Headline Ink — Primary text, body ink, dominant borders, nav rules — warm near-black that carries every word on the page"
+    }
+  },
+  "font": {
+    "neue-montreal": {
+      "$value": "Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "All UI, body, nav, and small labels at 12–32px. Weight 400 for body, 700 for nav items and labels. -0.01em tracking is hairline-tight even at body sizes — the type is condensed, not airy"
+    },
+    "louize-display": {
+      "$value": "Louize Display",
+      "$type": "fontFamily",
+      "$description": "Editorial display serif for headlines, section titles, and the centered prose blocks in dark sections. The high-contrast, narrow-serif italics mixed with the roman create the broadside feel. 77px is the standard section hero, 116–132px is the marquee headline"
+    },
+    "louize": {
+      "$value": "Louize",
+      "$type": "fontFamily",
+      "$description": "Secondary serif for short editorial copy and link text alongside Louize Display"
+    },
+    "manuka": {
+      "$value": "Manuka",
+      "$type": "fontFamily",
+      "$description": "Ultra-condensed display sans stamped at near-architectural scale (226–371px) for section mastheads like SELECTED WORKS. 0.75 line-height locks the glyphs into a tight horizontal slab that spans edge-to-edge. Only ever used white-on-ink or ink-on-paper, always in one weight, always uppercase"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://henry.codes",
+      "siteName": "Henry",
+      "extractedAt": "2026-06-03T18:12:39.112Z",
+      "variant": "compact"
+    }
+  }
+}

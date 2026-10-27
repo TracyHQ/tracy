@@ -1,0 +1,24 @@
+[
+  {
+    "slug": "getting-started",
+    "version": "0.5.0",
+    "highlight": "Getting started on first launch: pick the AI account you already pay for (tools found on this computer come first), choose light or dark, and turn on a notice for when the agent finishes. Reopen it any time from Help.",
+    "recordedAt": "2026-10-11T10:53:26.318Z",
+    "capturedWith": "Tracy Cowork 0.5.1 test build (80aae97d3f, TRACY_DESKTOP_ALLOW_CDP=1) on macOS against a local server running the 0.5 product (815e98867c); DevTools protocol screencast at 12 fps, cropped to the dialog; pnpm docs:media add: ffmpeg 9.0.2 libx264 crf 26, gifski 1.34.0, cwebp 1.5.0",
+    "files": {
+      "mp4": "/changelog/0.5/getting-started.mp4",
+      "gif": "/changelog/0.5/getting-started.gif",
+      "poster": "/changelog/0.5/posters/getting-started.jpg"
+    }
+  },
+  {
+    "slug": "ai-accounts",
+    "version": "0.5.0",
+    "highlight": "Settings › AI accounts can now connect GitHub Copilot and Grok, next to Claude and ChatGPT.",
+    "recordedAt": "2026-10-11T10:53:26.448Z",
+    "capturedWith": "Tracy Cowork 0.5.1 test build (80aae97d3f, TRACY_DESKTOP_ALLOW_CDP=1) on macOS against a local server running the 0.5 product (815e98867c); DevTools protocol screencast at 12 fps, cropped to the dialog; pnpm docs:media add: ffmpeg 9.0.2 libx264 crf 26, gifski 1.34.0, cwebp 1.5.0",
+    "files": {
+      "image": "/changelog/0.5/ai-accounts.webp"
+    }
+  }
+]

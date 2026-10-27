@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-vogue/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_vogue",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-vogue",
+    "id": "quickstart/ja-vogue/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_vogue",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-vogue-j6-webroot-1.0.3.tar.gz",
+        "bytes": 78852176,
+        "sha256": "b37521141b5665dbf3471a7d0eb0e89e667641b42f0c57971bc8ca4bcebc2526"
+      },
+      "database": {
+        "file": "ja-vogue-j6-database-1.0.3.sql.gz",
+        "bytes": 109691,
+        "sha256": "e466941a349d93bfda0d6b02a45a2c374fe43a077ac914e23a19559b1806f2d2"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-08T06:12:24.153Z",
+    "builtFrom": {
+      "site": "rvog",
+      "tag": "quickstart/ja-vogue/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-vogue/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.0",
+  "mode": "content-recommendation"
+}

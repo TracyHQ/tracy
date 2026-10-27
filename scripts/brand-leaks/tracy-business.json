@@ -1,0 +1,16 @@
+{
+  "$comment": "What a visitor of a site built from Tracy Business (any CMS) must never read: the demo company's name in every script it ships, and the rest of its identity — domain, hotline, address, registration numbers. Read by scripts/brand-leaks.py --identity. The Joomla build's own list (packages/cms/tracy-joomla-quickstart/identity/tracy-business-j6.json) is a token map for the archive; this is the acceptance list for the site.",
+  "words": [
+    "Northgate",
+    "NORTHGATE",
+    "Northgate Industrial",
+    "Норткейт",
+    "ノースゲート",
+    "northgate-ind.ru",
+    "8 800 550-67-89",
+    "Vorsino Industrial Park",
+    "INN 4003",
+    "OGRN 10440",
+    "SRO admission No. 214"
+  ]
+}

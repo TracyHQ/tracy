@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1094-seat-sidebar-git-off",
+  "kind": "fix",
+  "title": "A seat's page never asks the sidebar for git status (no 403 in its console) and the gate still refuses git.* to a seat",
+  "pr": 1094,
+  "area": "auth/dsh-passwords/sidebar-git",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: Run vendor/tracy/dsh-passwords test/tracy/seat-sidebar-git.test.ts."],
+  "expect": [
+    "S1: the seat page head carries __TRACY_SIDEBAR_GIT__=\"off\", the owner page does not; a seat's /sidebar/api/git.status is 403 and nothing reaches dsh."
+  ],
+  "selectors": {
+    "flag": "globalThis.__TRACY_SIDEBAR_GIT__",
+    "door": "/sidebar/api/git.status"
+  },
+  "evidence": "Stand acm round 3, 09/10/2026: 403 /sidebar/api/git.status x2 on a seat's Files tab.",
+  "fence": "Gate flag S17 and route rule R5. The sidebar side (no request when flagged) is covered by the fork's vitest git-status-forbidden.spec.tsx.",
+  "run": {
+    "cwd": "vendor/tracy/dsh-passwords",
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "test/tracy/seat-sidebar-git.test.ts"
+    ],
+    "tests": [
+      "S17: a seat page turns the sidebar git status off; the owner page does not",
+      "S17: the gate still refuses git.status to a seat, and nothing reaches dsh"
+    ]
+  }
+}

@@ -1,0 +1,6827 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "tracy-business/wp7/1.3.8",
+  "baseHash": "fb9e8f467766ffe23a83e86d92de3589cc34fbf7c8a7e6475b1e1afddede60a3",
+  "baseFiles": {
+    "manifest.json": "bf6714ba62c0f9c6a1abcb6002baa1d3b4af6379a2006a371c802694b63fdbc3",
+    "content-map.json": "baa2ac7679c0940c259a62ba26940c13ff0d1f207bd1347b35c0ae7448974cb0",
+    "presentation-lock.json": "c96583d3e124f130deda7ae763f546072eb8ddc1aebcc9cc2d946a2e97377016"
+  },
+  "inputs": {
+    "navigation-source.json": "2b50ff7139adba30d06b7994a03e2ee56dbd559b9b9f79443ae4013ef295bd49",
+    "inventory.json": "6b386b19b9b5308a3f6dd651a8cac792e07ecf366f6a6f4f05ab574b57938b8c"
+  },
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "templatePart.removeBlock",
+      "templatePart": {
+        "id": 80,
+        "slug": "header"
+      },
+      "label": "Style guide",
+      "block": {
+        "name": "core/list-item",
+        "contains": "<a href=\"/style-guide/\">"
+      },
+      "rule": "hide.kit-screen",
+      "reason": "\"Style guide\" is one of the template's own screens",
+      "key": "templatePart-80",
+      "before": "16f8b693eb3d7c1dc1c18e538cd251b46e13a07621da6658337f707b2ccbf7bc",
+      "after": "db465aca4148fb15b8c04cfdaf53a168ff9b7e42a3e70fe8fe96cfd1807ab952"
+    }
+  ],
+  "finals": [
+    {
+      "key": "templatePart-80",
+      "before": "16f8b693eb3d7c1dc1c18e538cd251b46e13a07621da6658337f707b2ccbf7bc",
+      "after": "db465aca4148fb15b8c04cfdaf53a168ff9b7e42a3e70fe8fe96cfd1807ab952"
+    }
+  ],
+  "kept": [
+    {
+      "key": "navigation-68",
+      "where": "wp_navigation 68 (tracy)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 42,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-68",
+      "where": "wp_navigation 68 (tracy)",
+      "label": "About",
+      "path": [
+        "About"
+      ],
+      "pageId": 37,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-68",
+      "where": "wp_navigation 68 (tracy)",
+      "label": "Services",
+      "path": [
+        "Services"
+      ],
+      "pageId": 48,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-68",
+      "where": "wp_navigation 68 (tracy)",
+      "label": "Projects",
+      "path": [
+        "Projects"
+      ],
+      "pageId": 46,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-68",
+      "where": "wp_navigation 68 (tracy)",
+      "label": "News",
+      "path": [
+        "News"
+      ],
+      "pageId": 51,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-68",
+      "where": "wp_navigation 68 (tracy)",
+      "label": "Contact",
+      "path": [
+        "Contact"
+      ],
+      "pageId": 39,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-69",
+      "where": "wp_navigation 69 (topbar)",
+      "label": "Careers",
+      "path": [
+        "Careers"
+      ],
+      "pageId": 38,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-69",
+      "where": "wp_navigation 69 (topbar)",
+      "label": "Investors",
+      "path": [
+        "Investors"
+      ],
+      "pageId": 43,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-70",
+      "where": "wp_navigation 70 (footer-company)",
+      "label": "About us",
+      "path": [
+        "About us"
+      ],
+      "pageId": 37,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-70",
+      "where": "wp_navigation 70 (footer-company)",
+      "label": "Projects",
+      "path": [
+        "Projects"
+      ],
+      "pageId": 46,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-70",
+      "where": "wp_navigation 70 (footer-company)",
+      "label": "News",
+      "path": [
+        "News"
+      ],
+      "pageId": 51,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-70",
+      "where": "wp_navigation 70 (footer-company)",
+      "label": "Careers",
+      "path": [
+        "Careers"
+      ],
+      "pageId": 38,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-70",
+      "where": "wp_navigation 70 (footer-company)",
+      "label": "Investor relations",
+      "path": [
+        "Investor relations"
+      ],
+      "pageId": 43,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-71",
+      "where": "wp_navigation 71 (footer-contact)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 39,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-72",
+      "where": "wp_navigation 72 (tracy-ru)",
+      "label": "Главная",
+      "path": [
+        "Главная"
+      ],
+      "pageId": 47,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-72",
+      "where": "wp_navigation 72 (tracy-ru)",
+      "label": "О компании",
+      "path": [
+        "О компании"
+      ],
+      "pageId": 54,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-72",
+      "where": "wp_navigation 72 (tracy-ru)",
+      "label": "Услуги",
+      "path": [
+        "Услуги"
+      ],
+      "pageId": 63,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-72",
+      "where": "wp_navigation 72 (tracy-ru)",
+      "label": "Проекты",
+      "path": [
+        "Проекты"
+      ],
+      "pageId": 62,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-72",
+      "where": "wp_navigation 72 (tracy-ru)",
+      "label": "Новости",
+      "path": [
+        "Новости"
+      ],
+      "pageId": 66,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-72",
+      "where": "wp_navigation 72 (tracy-ru)",
+      "label": "Контакты",
+      "path": [
+        "Контакты"
+      ],
+      "pageId": 56,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-73",
+      "where": "wp_navigation 73 (topbar-ru)",
+      "label": "Вакансии",
+      "path": [
+        "Вакансии"
+      ],
+      "pageId": 55,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-73",
+      "where": "wp_navigation 73 (topbar-ru)",
+      "label": "Акционерам",
+      "path": [
+        "Акционерам"
+      ],
+      "pageId": 59,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-194",
+      "where": "wp_navigation 194 (footer-company-ru)",
+      "label": "О компании",
+      "path": [
+        "О компании"
+      ],
+      "pageId": 54,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-194",
+      "where": "wp_navigation 194 (footer-company-ru)",
+      "label": "Объекты",
+      "path": [
+        "Объекты"
+      ],
+      "pageId": 62,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-194",
+      "where": "wp_navigation 194 (footer-company-ru)",
+      "label": "Новости",
+      "path": [
+        "Новости"
+      ],
+      "pageId": 66,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-194",
+      "where": "wp_navigation 194 (footer-company-ru)",
+      "label": "Вакансии",
+      "path": [
+        "Вакансии"
+      ],
+      "pageId": 55,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-194",
+      "where": "wp_navigation 194 (footer-company-ru)",
+      "label": "Акционерам",
+      "path": [
+        "Акционерам"
+      ],
+      "pageId": 59,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-195",
+      "where": "wp_navigation 195 (footer-contact-ru)",
+      "label": "Записаться на выезд",
+      "path": [
+        "Записаться на выезд"
+      ],
+      "pageId": 56,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-561",
+      "where": "wp_navigation 561 (footer-contact-de)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 553,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-562",
+      "where": "wp_navigation 562 (footer-company-de)",
+      "label": "Über uns",
+      "path": [
+        "Über uns"
+      ],
+      "pageId": 555,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-562",
+      "where": "wp_navigation 562 (footer-company-de)",
+      "label": "Projekte",
+      "path": [
+        "Projekte"
+      ],
+      "pageId": 546,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-562",
+      "where": "wp_navigation 562 (footer-company-de)",
+      "label": "News",
+      "path": [
+        "News"
+      ],
+      "pageId": 542,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-562",
+      "where": "wp_navigation 562 (footer-company-de)",
+      "label": "Karriere",
+      "path": [
+        "Karriere"
+      ],
+      "pageId": 554,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-562",
+      "where": "wp_navigation 562 (footer-company-de)",
+      "label": "Investor Relations",
+      "path": [
+        "Investor Relations"
+      ],
+      "pageId": 549,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-563",
+      "where": "wp_navigation 563 (topbar-de)",
+      "label": "Karriere",
+      "path": [
+        "Karriere"
+      ],
+      "pageId": 554,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-563",
+      "where": "wp_navigation 563 (topbar-de)",
+      "label": "Investoren",
+      "path": [
+        "Investoren"
+      ],
+      "pageId": 549,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-564",
+      "where": "wp_navigation 564 (tracy-de)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 575,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-564",
+      "where": "wp_navigation 564 (tracy-de)",
+      "label": "Über uns",
+      "path": [
+        "Über uns"
+      ],
+      "pageId": 555,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-564",
+      "where": "wp_navigation 564 (tracy-de)",
+      "label": "Leistungen",
+      "path": [
+        "Leistungen"
+      ],
+      "pageId": 545,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-564",
+      "where": "wp_navigation 564 (tracy-de)",
+      "label": "Projekte",
+      "path": [
+        "Projekte"
+      ],
+      "pageId": 546,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-564",
+      "where": "wp_navigation 564 (tracy-de)",
+      "label": "News",
+      "path": [
+        "News"
+      ],
+      "pageId": 542,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-564",
+      "where": "wp_navigation 564 (tracy-de)",
+      "label": "Kontakt",
+      "path": [
+        "Kontakt"
+      ],
+      "pageId": 553,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-611",
+      "where": "wp_navigation 611 (footer-contact-af)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 603,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-612",
+      "where": "wp_navigation 612 (footer-company-af)",
+      "label": "Oor ons",
+      "path": [
+        "Oor ons"
+      ],
+      "pageId": 605,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-612",
+      "where": "wp_navigation 612 (footer-company-af)",
+      "label": "Projekte",
+      "path": [
+        "Projekte"
+      ],
+      "pageId": 596,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-612",
+      "where": "wp_navigation 612 (footer-company-af)",
+      "label": "Nuus",
+      "path": [
+        "Nuus"
+      ],
+      "pageId": 592,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-612",
+      "where": "wp_navigation 612 (footer-company-af)",
+      "label": "Loopbane",
+      "path": [
+        "Loopbane"
+      ],
+      "pageId": 604,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-612",
+      "where": "wp_navigation 612 (footer-company-af)",
+      "label": "Beleggersverhoudinge",
+      "path": [
+        "Beleggersverhoudinge"
+      ],
+      "pageId": 599,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-613",
+      "where": "wp_navigation 613 (topbar-af)",
+      "label": "Loopbane",
+      "path": [
+        "Loopbane"
+      ],
+      "pageId": 604,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-613",
+      "where": "wp_navigation 613 (topbar-af)",
+      "label": "Beleggers",
+      "path": [
+        "Beleggers"
+      ],
+      "pageId": 599,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-614",
+      "where": "wp_navigation 614 (tracy-af)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 600,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-614",
+      "where": "wp_navigation 614 (tracy-af)",
+      "label": "Oor ons",
+      "path": [
+        "Oor ons"
+      ],
+      "pageId": 605,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-614",
+      "where": "wp_navigation 614 (tracy-af)",
+      "label": "Dienste",
+      "path": [
+        "Dienste"
+      ],
+      "pageId": 595,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-614",
+      "where": "wp_navigation 614 (tracy-af)",
+      "label": "Projekte",
+      "path": [
+        "Projekte"
+      ],
+      "pageId": 596,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-614",
+      "where": "wp_navigation 614 (tracy-af)",
+      "label": "Nuus",
+      "path": [
+        "Nuus"
+      ],
+      "pageId": 592,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-614",
+      "where": "wp_navigation 614 (tracy-af)",
+      "label": "Kontak",
+      "path": [
+        "Kontak"
+      ],
+      "pageId": 603,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-636",
+      "where": "wp_navigation 636 (footer-contact-be)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 628,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-637",
+      "where": "wp_navigation 637 (footer-company-be)",
+      "label": "Пра нас",
+      "path": [
+        "Пра нас"
+      ],
+      "pageId": 630,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-637",
+      "where": "wp_navigation 637 (footer-company-be)",
+      "label": "Праекты",
+      "path": [
+        "Праекты"
+      ],
+      "pageId": 621,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-637",
+      "where": "wp_navigation 637 (footer-company-be)",
+      "label": "Навіны",
+      "path": [
+        "Навіны"
+      ],
+      "pageId": 617,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-637",
+      "where": "wp_navigation 637 (footer-company-be)",
+      "label": "Вакансіі",
+      "path": [
+        "Вакансіі"
+      ],
+      "pageId": 629,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-637",
+      "where": "wp_navigation 637 (footer-company-be)",
+      "label": "Адносіны з інвестарамі",
+      "path": [
+        "Адносіны з інвестарамі"
+      ],
+      "pageId": 624,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-638",
+      "where": "wp_navigation 638 (topbar-be)",
+      "label": "Вакансіі",
+      "path": [
+        "Вакансіі"
+      ],
+      "pageId": 629,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-638",
+      "where": "wp_navigation 638 (topbar-be)",
+      "label": "Інвестарам",
+      "path": [
+        "Інвестарам"
+      ],
+      "pageId": 624,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-639",
+      "where": "wp_navigation 639 (tracy-be)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 625,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-639",
+      "where": "wp_navigation 639 (tracy-be)",
+      "label": "Пра нас",
+      "path": [
+        "Пра нас"
+      ],
+      "pageId": 630,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-639",
+      "where": "wp_navigation 639 (tracy-be)",
+      "label": "Паслугі",
+      "path": [
+        "Паслугі"
+      ],
+      "pageId": 620,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-639",
+      "where": "wp_navigation 639 (tracy-be)",
+      "label": "Праекты",
+      "path": [
+        "Праекты"
+      ],
+      "pageId": 621,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-639",
+      "where": "wp_navigation 639 (tracy-be)",
+      "label": "Навіны",
+      "path": [
+        "Навіны"
+      ],
+      "pageId": 617,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-639",
+      "where": "wp_navigation 639 (tracy-be)",
+      "label": "Кантакты",
+      "path": [
+        "Кантакты"
+      ],
+      "pageId": 628,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-661",
+      "where": "wp_navigation 661 (footer-contact-bg)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 653,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-662",
+      "where": "wp_navigation 662 (footer-company-bg)",
+      "label": "За нас",
+      "path": [
+        "За нас"
+      ],
+      "pageId": 655,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-662",
+      "where": "wp_navigation 662 (footer-company-bg)",
+      "label": "Проекти",
+      "path": [
+        "Проекти"
+      ],
+      "pageId": 646,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-662",
+      "where": "wp_navigation 662 (footer-company-bg)",
+      "label": "Новини",
+      "path": [
+        "Новини"
+      ],
+      "pageId": 642,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-662",
+      "where": "wp_navigation 662 (footer-company-bg)",
+      "label": "Кариери",
+      "path": [
+        "Кариери"
+      ],
+      "pageId": 654,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-662",
+      "where": "wp_navigation 662 (footer-company-bg)",
+      "label": "Връзки с инвеститорите",
+      "path": [
+        "Връзки с инвеститорите"
+      ],
+      "pageId": 649,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-663",
+      "where": "wp_navigation 663 (topbar-bg)",
+      "label": "Кариери",
+      "path": [
+        "Кариери"
+      ],
+      "pageId": 654,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-663",
+      "where": "wp_navigation 663 (topbar-bg)",
+      "label": "Инвеститори",
+      "path": [
+        "Инвеститори"
+      ],
+      "pageId": 649,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-664",
+      "where": "wp_navigation 664 (tracy-bg)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 650,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-664",
+      "where": "wp_navigation 664 (tracy-bg)",
+      "label": "За нас",
+      "path": [
+        "За нас"
+      ],
+      "pageId": 655,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-664",
+      "where": "wp_navigation 664 (tracy-bg)",
+      "label": "Услуги",
+      "path": [
+        "Услуги"
+      ],
+      "pageId": 645,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-664",
+      "where": "wp_navigation 664 (tracy-bg)",
+      "label": "Проекти",
+      "path": [
+        "Проекти"
+      ],
+      "pageId": 646,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-664",
+      "where": "wp_navigation 664 (tracy-bg)",
+      "label": "Новини",
+      "path": [
+        "Новини"
+      ],
+      "pageId": 642,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-664",
+      "where": "wp_navigation 664 (tracy-bg)",
+      "label": "Контакти",
+      "path": [
+        "Контакти"
+      ],
+      "pageId": 653,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-686",
+      "where": "wp_navigation 686 (footer-contact-ca)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 678,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-687",
+      "where": "wp_navigation 687 (footer-company-ca)",
+      "label": "Sobre nosaltres",
+      "path": [
+        "Sobre nosaltres"
+      ],
+      "pageId": 680,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-687",
+      "where": "wp_navigation 687 (footer-company-ca)",
+      "label": "Projectes",
+      "path": [
+        "Projectes"
+      ],
+      "pageId": 671,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-687",
+      "where": "wp_navigation 687 (footer-company-ca)",
+      "label": "Notícies",
+      "path": [
+        "Notícies"
+      ],
+      "pageId": 667,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-687",
+      "where": "wp_navigation 687 (footer-company-ca)",
+      "label": "Feina",
+      "path": [
+        "Feina"
+      ],
+      "pageId": 679,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-687",
+      "where": "wp_navigation 687 (footer-company-ca)",
+      "label": "Relacions amb inversors",
+      "path": [
+        "Relacions amb inversors"
+      ],
+      "pageId": 674,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-688",
+      "where": "wp_navigation 688 (topbar-ca)",
+      "label": "Feina",
+      "path": [
+        "Feina"
+      ],
+      "pageId": 679,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-688",
+      "where": "wp_navigation 688 (topbar-ca)",
+      "label": "Inversors",
+      "path": [
+        "Inversors"
+      ],
+      "pageId": 674,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-689",
+      "where": "wp_navigation 689 (tracy-ca)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 675,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-689",
+      "where": "wp_navigation 689 (tracy-ca)",
+      "label": "Sobre nosaltres",
+      "path": [
+        "Sobre nosaltres"
+      ],
+      "pageId": 680,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-689",
+      "where": "wp_navigation 689 (tracy-ca)",
+      "label": "Serveis",
+      "path": [
+        "Serveis"
+      ],
+      "pageId": 670,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-689",
+      "where": "wp_navigation 689 (tracy-ca)",
+      "label": "Projectes",
+      "path": [
+        "Projectes"
+      ],
+      "pageId": 671,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-689",
+      "where": "wp_navigation 689 (tracy-ca)",
+      "label": "Notícies",
+      "path": [
+        "Notícies"
+      ],
+      "pageId": 667,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-689",
+      "where": "wp_navigation 689 (tracy-ca)",
+      "label": "Contacte",
+      "path": [
+        "Contacte"
+      ],
+      "pageId": 678,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-711",
+      "where": "wp_navigation 711 (footer-contact-cs)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 703,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-712",
+      "where": "wp_navigation 712 (footer-company-cs)",
+      "label": "O nás",
+      "path": [
+        "O nás"
+      ],
+      "pageId": 705,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-712",
+      "where": "wp_navigation 712 (footer-company-cs)",
+      "label": "Projekty",
+      "path": [
+        "Projekty"
+      ],
+      "pageId": 696,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-712",
+      "where": "wp_navigation 712 (footer-company-cs)",
+      "label": "Novinky",
+      "path": [
+        "Novinky"
+      ],
+      "pageId": 692,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-712",
+      "where": "wp_navigation 712 (footer-company-cs)",
+      "label": "Kariéra",
+      "path": [
+        "Kariéra"
+      ],
+      "pageId": 704,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-712",
+      "where": "wp_navigation 712 (footer-company-cs)",
+      "label": "Vztahy s investory",
+      "path": [
+        "Vztahy s investory"
+      ],
+      "pageId": 699,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-713",
+      "where": "wp_navigation 713 (topbar-cs)",
+      "label": "Kariéra",
+      "path": [
+        "Kariéra"
+      ],
+      "pageId": 704,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-713",
+      "where": "wp_navigation 713 (topbar-cs)",
+      "label": "Investoři",
+      "path": [
+        "Investoři"
+      ],
+      "pageId": 699,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-714",
+      "where": "wp_navigation 714 (tracy-cs)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 700,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-714",
+      "where": "wp_navigation 714 (tracy-cs)",
+      "label": "O nás",
+      "path": [
+        "O nás"
+      ],
+      "pageId": 705,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-714",
+      "where": "wp_navigation 714 (tracy-cs)",
+      "label": "Služby",
+      "path": [
+        "Služby"
+      ],
+      "pageId": 695,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-714",
+      "where": "wp_navigation 714 (tracy-cs)",
+      "label": "Projekty",
+      "path": [
+        "Projekty"
+      ],
+      "pageId": 696,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-714",
+      "where": "wp_navigation 714 (tracy-cs)",
+      "label": "Novinky",
+      "path": [
+        "Novinky"
+      ],
+      "pageId": 692,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-714",
+      "where": "wp_navigation 714 (tracy-cs)",
+      "label": "Kontakt",
+      "path": [
+        "Kontakt"
+      ],
+      "pageId": 703,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-736",
+      "where": "wp_navigation 736 (footer-contact-cy)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 728,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-737",
+      "where": "wp_navigation 737 (footer-company-cy)",
+      "label": "Amdanom ni",
+      "path": [
+        "Amdanom ni"
+      ],
+      "pageId": 730,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-737",
+      "where": "wp_navigation 737 (footer-company-cy)",
+      "label": "Prosiectau",
+      "path": [
+        "Prosiectau"
+      ],
+      "pageId": 721,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-737",
+      "where": "wp_navigation 737 (footer-company-cy)",
+      "label": "Newyddion",
+      "path": [
+        "Newyddion"
+      ],
+      "pageId": 717,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-737",
+      "where": "wp_navigation 737 (footer-company-cy)",
+      "label": "Gyrfaoedd",
+      "path": [
+        "Gyrfaoedd"
+      ],
+      "pageId": 729,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-737",
+      "where": "wp_navigation 737 (footer-company-cy)",
+      "label": "Cysylltiadau buddsoddwyr",
+      "path": [
+        "Cysylltiadau buddsoddwyr"
+      ],
+      "pageId": 724,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-738",
+      "where": "wp_navigation 738 (topbar-cy)",
+      "label": "Gyrfaoedd",
+      "path": [
+        "Gyrfaoedd"
+      ],
+      "pageId": 729,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-738",
+      "where": "wp_navigation 738 (topbar-cy)",
+      "label": "Buddsoddwyr",
+      "path": [
+        "Buddsoddwyr"
+      ],
+      "pageId": 724,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-739",
+      "where": "wp_navigation 739 (tracy-cy)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 725,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-739",
+      "where": "wp_navigation 739 (tracy-cy)",
+      "label": "Amdanom",
+      "path": [
+        "Amdanom"
+      ],
+      "pageId": 730,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-739",
+      "where": "wp_navigation 739 (tracy-cy)",
+      "label": "Gwasanaethau",
+      "path": [
+        "Gwasanaethau"
+      ],
+      "pageId": 720,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-739",
+      "where": "wp_navigation 739 (tracy-cy)",
+      "label": "Prosiectau",
+      "path": [
+        "Prosiectau"
+      ],
+      "pageId": 721,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-739",
+      "where": "wp_navigation 739 (tracy-cy)",
+      "label": "Newyddion",
+      "path": [
+        "Newyddion"
+      ],
+      "pageId": 717,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-739",
+      "where": "wp_navigation 739 (tracy-cy)",
+      "label": "Cyswllt",
+      "path": [
+        "Cyswllt"
+      ],
+      "pageId": 728,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-761",
+      "where": "wp_navigation 761 (footer-contact-da)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 753,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-762",
+      "where": "wp_navigation 762 (footer-company-da)",
+      "label": "Om os",
+      "path": [
+        "Om os"
+      ],
+      "pageId": 755,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-762",
+      "where": "wp_navigation 762 (footer-company-da)",
+      "label": "Projekter",
+      "path": [
+        "Projekter"
+      ],
+      "pageId": 746,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-762",
+      "where": "wp_navigation 762 (footer-company-da)",
+      "label": "Nyheder",
+      "path": [
+        "Nyheder"
+      ],
+      "pageId": 742,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-762",
+      "where": "wp_navigation 762 (footer-company-da)",
+      "label": "Karriere",
+      "path": [
+        "Karriere"
+      ],
+      "pageId": 754,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-762",
+      "where": "wp_navigation 762 (footer-company-da)",
+      "label": "Investorrelationer",
+      "path": [
+        "Investorrelationer"
+      ],
+      "pageId": 749,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-763",
+      "where": "wp_navigation 763 (topbar-da)",
+      "label": "Karriere",
+      "path": [
+        "Karriere"
+      ],
+      "pageId": 754,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-763",
+      "where": "wp_navigation 763 (topbar-da)",
+      "label": "Investorer",
+      "path": [
+        "Investorer"
+      ],
+      "pageId": 749,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-764",
+      "where": "wp_navigation 764 (tracy-da)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 750,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-764",
+      "where": "wp_navigation 764 (tracy-da)",
+      "label": "Om os",
+      "path": [
+        "Om os"
+      ],
+      "pageId": 755,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-764",
+      "where": "wp_navigation 764 (tracy-da)",
+      "label": "Ydelser",
+      "path": [
+        "Ydelser"
+      ],
+      "pageId": 745,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-764",
+      "where": "wp_navigation 764 (tracy-da)",
+      "label": "Projekter",
+      "path": [
+        "Projekter"
+      ],
+      "pageId": 746,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-764",
+      "where": "wp_navigation 764 (tracy-da)",
+      "label": "Nyheder",
+      "path": [
+        "Nyheder"
+      ],
+      "pageId": 742,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-764",
+      "where": "wp_navigation 764 (tracy-da)",
+      "label": "Kontakt",
+      "path": [
+        "Kontakt"
+      ],
+      "pageId": 753,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-787",
+      "where": "wp_navigation 787 (footer-contact-el)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 779,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-788",
+      "where": "wp_navigation 788 (footer-company-el)",
+      "label": "Σχετικά με εμάς",
+      "path": [
+        "Σχετικά με εμάς"
+      ],
+      "pageId": 781,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-788",
+      "where": "wp_navigation 788 (footer-company-el)",
+      "label": "Έργα",
+      "path": [
+        "Έργα"
+      ],
+      "pageId": 772,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-788",
+      "where": "wp_navigation 788 (footer-company-el)",
+      "label": "Νέα",
+      "path": [
+        "Νέα"
+      ],
+      "pageId": 768,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-788",
+      "where": "wp_navigation 788 (footer-company-el)",
+      "label": "Καριέρα",
+      "path": [
+        "Καριέρα"
+      ],
+      "pageId": 780,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-788",
+      "where": "wp_navigation 788 (footer-company-el)",
+      "label": "Σχέσεις επενδυτών",
+      "path": [
+        "Σχέσεις επενδυτών"
+      ],
+      "pageId": 775,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-789",
+      "where": "wp_navigation 789 (topbar-el)",
+      "label": "Καριέρα",
+      "path": [
+        "Καριέρα"
+      ],
+      "pageId": 780,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-789",
+      "where": "wp_navigation 789 (topbar-el)",
+      "label": "Επενδυτές",
+      "path": [
+        "Επενδυτές"
+      ],
+      "pageId": 775,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-790",
+      "where": "wp_navigation 790 (tracy-el)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 776,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-790",
+      "where": "wp_navigation 790 (tracy-el)",
+      "label": "Σχετικά",
+      "path": [
+        "Σχετικά"
+      ],
+      "pageId": 781,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-790",
+      "where": "wp_navigation 790 (tracy-el)",
+      "label": "Υπηρεσίες",
+      "path": [
+        "Υπηρεσίες"
+      ],
+      "pageId": 771,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-790",
+      "where": "wp_navigation 790 (tracy-el)",
+      "label": "Έργα",
+      "path": [
+        "Έργα"
+      ],
+      "pageId": 772,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-790",
+      "where": "wp_navigation 790 (tracy-el)",
+      "label": "Νέα",
+      "path": [
+        "Νέα"
+      ],
+      "pageId": 768,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-790",
+      "where": "wp_navigation 790 (tracy-el)",
+      "label": "Επικοινωνία",
+      "path": [
+        "Επικοινωνία"
+      ],
+      "pageId": 779,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-812",
+      "where": "wp_navigation 812 (footer-contact-es)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 804,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-813",
+      "where": "wp_navigation 813 (footer-company-es)",
+      "label": "Sobre nosotros",
+      "path": [
+        "Sobre nosotros"
+      ],
+      "pageId": 806,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-813",
+      "where": "wp_navigation 813 (footer-company-es)",
+      "label": "Proyectos",
+      "path": [
+        "Proyectos"
+      ],
+      "pageId": 797,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-813",
+      "where": "wp_navigation 813 (footer-company-es)",
+      "label": "Noticias",
+      "path": [
+        "Noticias"
+      ],
+      "pageId": 793,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-813",
+      "where": "wp_navigation 813 (footer-company-es)",
+      "label": "Empleo",
+      "path": [
+        "Empleo"
+      ],
+      "pageId": 805,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-813",
+      "where": "wp_navigation 813 (footer-company-es)",
+      "label": "Relación con inversores",
+      "path": [
+        "Relación con inversores"
+      ],
+      "pageId": 800,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-814",
+      "where": "wp_navigation 814 (topbar-es)",
+      "label": "Empleo",
+      "path": [
+        "Empleo"
+      ],
+      "pageId": 805,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-814",
+      "where": "wp_navigation 814 (topbar-es)",
+      "label": "Inversores",
+      "path": [
+        "Inversores"
+      ],
+      "pageId": 800,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-815",
+      "where": "wp_navigation 815 (tracy-es)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 801,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-815",
+      "where": "wp_navigation 815 (tracy-es)",
+      "label": "Nosotros",
+      "path": [
+        "Nosotros"
+      ],
+      "pageId": 806,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-815",
+      "where": "wp_navigation 815 (tracy-es)",
+      "label": "Servicios",
+      "path": [
+        "Servicios"
+      ],
+      "pageId": 796,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-815",
+      "where": "wp_navigation 815 (tracy-es)",
+      "label": "Proyectos",
+      "path": [
+        "Proyectos"
+      ],
+      "pageId": 797,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-815",
+      "where": "wp_navigation 815 (tracy-es)",
+      "label": "Noticias",
+      "path": [
+        "Noticias"
+      ],
+      "pageId": 793,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-815",
+      "where": "wp_navigation 815 (tracy-es)",
+      "label": "Contacto",
+      "path": [
+        "Contacto"
+      ],
+      "pageId": 804,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-837",
+      "where": "wp_navigation 837 (footer-contact-et)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 829,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-838",
+      "where": "wp_navigation 838 (footer-company-et)",
+      "label": "Meist",
+      "path": [
+        "Meist"
+      ],
+      "pageId": 831,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-838",
+      "where": "wp_navigation 838 (footer-company-et)",
+      "label": "Projektid",
+      "path": [
+        "Projektid"
+      ],
+      "pageId": 822,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-838",
+      "where": "wp_navigation 838 (footer-company-et)",
+      "label": "Uudised",
+      "path": [
+        "Uudised"
+      ],
+      "pageId": 818,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-838",
+      "where": "wp_navigation 838 (footer-company-et)",
+      "label": "Karjäär",
+      "path": [
+        "Karjäär"
+      ],
+      "pageId": 830,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-838",
+      "where": "wp_navigation 838 (footer-company-et)",
+      "label": "Investorsuhted",
+      "path": [
+        "Investorsuhted"
+      ],
+      "pageId": 825,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-839",
+      "where": "wp_navigation 839 (topbar-et)",
+      "label": "Karjäär",
+      "path": [
+        "Karjäär"
+      ],
+      "pageId": 830,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-839",
+      "where": "wp_navigation 839 (topbar-et)",
+      "label": "Investorid",
+      "path": [
+        "Investorid"
+      ],
+      "pageId": 825,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-840",
+      "where": "wp_navigation 840 (tracy-et)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 826,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-840",
+      "where": "wp_navigation 840 (tracy-et)",
+      "label": "Meist",
+      "path": [
+        "Meist"
+      ],
+      "pageId": 831,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-840",
+      "where": "wp_navigation 840 (tracy-et)",
+      "label": "Teenused",
+      "path": [
+        "Teenused"
+      ],
+      "pageId": 821,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-840",
+      "where": "wp_navigation 840 (tracy-et)",
+      "label": "Projektid",
+      "path": [
+        "Projektid"
+      ],
+      "pageId": 822,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-840",
+      "where": "wp_navigation 840 (tracy-et)",
+      "label": "Uudised",
+      "path": [
+        "Uudised"
+      ],
+      "pageId": 818,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-840",
+      "where": "wp_navigation 840 (tracy-et)",
+      "label": "Kontakt",
+      "path": [
+        "Kontakt"
+      ],
+      "pageId": 829,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-862",
+      "where": "wp_navigation 862 (footer-contact-fi)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 854,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-863",
+      "where": "wp_navigation 863 (footer-company-fi)",
+      "label": "Meistä",
+      "path": [
+        "Meistä"
+      ],
+      "pageId": 856,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-863",
+      "where": "wp_navigation 863 (footer-company-fi)",
+      "label": "Projektit",
+      "path": [
+        "Projektit"
+      ],
+      "pageId": 847,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-863",
+      "where": "wp_navigation 863 (footer-company-fi)",
+      "label": "Uutiset",
+      "path": [
+        "Uutiset"
+      ],
+      "pageId": 843,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-863",
+      "where": "wp_navigation 863 (footer-company-fi)",
+      "label": "Ura",
+      "path": [
+        "Ura"
+      ],
+      "pageId": 855,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-863",
+      "where": "wp_navigation 863 (footer-company-fi)",
+      "label": "Sijoittajasuhteet",
+      "path": [
+        "Sijoittajasuhteet"
+      ],
+      "pageId": 850,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-864",
+      "where": "wp_navigation 864 (topbar-fi)",
+      "label": "Ura",
+      "path": [
+        "Ura"
+      ],
+      "pageId": 855,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-864",
+      "where": "wp_navigation 864 (topbar-fi)",
+      "label": "Sijoittajille",
+      "path": [
+        "Sijoittajille"
+      ],
+      "pageId": 850,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-865",
+      "where": "wp_navigation 865 (tracy-fi)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 851,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-865",
+      "where": "wp_navigation 865 (tracy-fi)",
+      "label": "Meistä",
+      "path": [
+        "Meistä"
+      ],
+      "pageId": 856,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-865",
+      "where": "wp_navigation 865 (tracy-fi)",
+      "label": "Palvelut",
+      "path": [
+        "Palvelut"
+      ],
+      "pageId": 846,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-865",
+      "where": "wp_navigation 865 (tracy-fi)",
+      "label": "Projektit",
+      "path": [
+        "Projektit"
+      ],
+      "pageId": 847,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-865",
+      "where": "wp_navigation 865 (tracy-fi)",
+      "label": "Uutiset",
+      "path": [
+        "Uutiset"
+      ],
+      "pageId": 843,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-865",
+      "where": "wp_navigation 865 (tracy-fi)",
+      "label": "Yhteystiedot",
+      "path": [
+        "Yhteystiedot"
+      ],
+      "pageId": 854,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-887",
+      "where": "wp_navigation 887 (footer-contact-fr)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 879,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-888",
+      "where": "wp_navigation 888 (footer-company-fr)",
+      "label": "À propos de nous",
+      "path": [
+        "À propos de nous"
+      ],
+      "pageId": 881,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-888",
+      "where": "wp_navigation 888 (footer-company-fr)",
+      "label": "Projets",
+      "path": [
+        "Projets"
+      ],
+      "pageId": 872,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-888",
+      "where": "wp_navigation 888 (footer-company-fr)",
+      "label": "Actualités",
+      "path": [
+        "Actualités"
+      ],
+      "pageId": 868,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-888",
+      "where": "wp_navigation 888 (footer-company-fr)",
+      "label": "Carrières",
+      "path": [
+        "Carrières"
+      ],
+      "pageId": 880,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-888",
+      "where": "wp_navigation 888 (footer-company-fr)",
+      "label": "Relations investisseurs",
+      "path": [
+        "Relations investisseurs"
+      ],
+      "pageId": 875,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-889",
+      "where": "wp_navigation 889 (topbar-fr)",
+      "label": "Carrières",
+      "path": [
+        "Carrières"
+      ],
+      "pageId": 880,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-889",
+      "where": "wp_navigation 889 (topbar-fr)",
+      "label": "Investisseurs",
+      "path": [
+        "Investisseurs"
+      ],
+      "pageId": 875,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-890",
+      "where": "wp_navigation 890 (tracy-fr)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 876,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-890",
+      "where": "wp_navigation 890 (tracy-fr)",
+      "label": "À propos",
+      "path": [
+        "À propos"
+      ],
+      "pageId": 881,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-890",
+      "where": "wp_navigation 890 (tracy-fr)",
+      "label": "Services",
+      "path": [
+        "Services"
+      ],
+      "pageId": 871,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-890",
+      "where": "wp_navigation 890 (tracy-fr)",
+      "label": "Projets",
+      "path": [
+        "Projets"
+      ],
+      "pageId": 872,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-890",
+      "where": "wp_navigation 890 (tracy-fr)",
+      "label": "Actualités",
+      "path": [
+        "Actualités"
+      ],
+      "pageId": 868,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-890",
+      "where": "wp_navigation 890 (tracy-fr)",
+      "label": "Contact",
+      "path": [
+        "Contact"
+      ],
+      "pageId": 879,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-912",
+      "where": "wp_navigation 912 (footer-contact-hr)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 904,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-913",
+      "where": "wp_navigation 913 (footer-company-hr)",
+      "label": "O nama",
+      "path": [
+        "O nama"
+      ],
+      "pageId": 906,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-913",
+      "where": "wp_navigation 913 (footer-company-hr)",
+      "label": "Projekti",
+      "path": [
+        "Projekti"
+      ],
+      "pageId": 897,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-913",
+      "where": "wp_navigation 913 (footer-company-hr)",
+      "label": "Novosti",
+      "path": [
+        "Novosti"
+      ],
+      "pageId": 893,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-913",
+      "where": "wp_navigation 913 (footer-company-hr)",
+      "label": "Karijere",
+      "path": [
+        "Karijere"
+      ],
+      "pageId": 905,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-913",
+      "where": "wp_navigation 913 (footer-company-hr)",
+      "label": "Odnosi s investitorima",
+      "path": [
+        "Odnosi s investitorima"
+      ],
+      "pageId": 900,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-914",
+      "where": "wp_navigation 914 (topbar-hr)",
+      "label": "Karijere",
+      "path": [
+        "Karijere"
+      ],
+      "pageId": 905,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-914",
+      "where": "wp_navigation 914 (topbar-hr)",
+      "label": "Investitori",
+      "path": [
+        "Investitori"
+      ],
+      "pageId": 900,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-915",
+      "where": "wp_navigation 915 (tracy-hr)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 901,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-915",
+      "where": "wp_navigation 915 (tracy-hr)",
+      "label": "O nama",
+      "path": [
+        "O nama"
+      ],
+      "pageId": 906,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-915",
+      "where": "wp_navigation 915 (tracy-hr)",
+      "label": "Usluge",
+      "path": [
+        "Usluge"
+      ],
+      "pageId": 896,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-915",
+      "where": "wp_navigation 915 (tracy-hr)",
+      "label": "Projekti",
+      "path": [
+        "Projekti"
+      ],
+      "pageId": 897,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-915",
+      "where": "wp_navigation 915 (tracy-hr)",
+      "label": "Novosti",
+      "path": [
+        "Novosti"
+      ],
+      "pageId": 893,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-915",
+      "where": "wp_navigation 915 (tracy-hr)",
+      "label": "Kontakt",
+      "path": [
+        "Kontakt"
+      ],
+      "pageId": 904,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-937",
+      "where": "wp_navigation 937 (footer-contact-hu)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 929,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-938",
+      "where": "wp_navigation 938 (footer-company-hu)",
+      "label": "Rólunk",
+      "path": [
+        "Rólunk"
+      ],
+      "pageId": 931,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-938",
+      "where": "wp_navigation 938 (footer-company-hu)",
+      "label": "Projektek",
+      "path": [
+        "Projektek"
+      ],
+      "pageId": 922,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-938",
+      "where": "wp_navigation 938 (footer-company-hu)",
+      "label": "Hírek",
+      "path": [
+        "Hírek"
+      ],
+      "pageId": 918,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-938",
+      "where": "wp_navigation 938 (footer-company-hu)",
+      "label": "Karrier",
+      "path": [
+        "Karrier"
+      ],
+      "pageId": 930,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-938",
+      "where": "wp_navigation 938 (footer-company-hu)",
+      "label": "Befektetői kapcsolatok",
+      "path": [
+        "Befektetői kapcsolatok"
+      ],
+      "pageId": 925,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-939",
+      "where": "wp_navigation 939 (topbar-hu)",
+      "label": "Karrier",
+      "path": [
+        "Karrier"
+      ],
+      "pageId": 930,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-939",
+      "where": "wp_navigation 939 (topbar-hu)",
+      "label": "Befektetők",
+      "path": [
+        "Befektetők"
+      ],
+      "pageId": 925,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-940",
+      "where": "wp_navigation 940 (tracy-hu)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 926,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-940",
+      "where": "wp_navigation 940 (tracy-hu)",
+      "label": "Rólunk",
+      "path": [
+        "Rólunk"
+      ],
+      "pageId": 931,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-940",
+      "where": "wp_navigation 940 (tracy-hu)",
+      "label": "Szolgáltatások",
+      "path": [
+        "Szolgáltatások"
+      ],
+      "pageId": 921,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-940",
+      "where": "wp_navigation 940 (tracy-hu)",
+      "label": "Projektek",
+      "path": [
+        "Projektek"
+      ],
+      "pageId": 922,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-940",
+      "where": "wp_navigation 940 (tracy-hu)",
+      "label": "Hírek",
+      "path": [
+        "Hírek"
+      ],
+      "pageId": 918,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-940",
+      "where": "wp_navigation 940 (tracy-hu)",
+      "label": "Kapcsolat",
+      "path": [
+        "Kapcsolat"
+      ],
+      "pageId": 929,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-962",
+      "where": "wp_navigation 962 (footer-contact-it)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 954,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-963",
+      "where": "wp_navigation 963 (footer-company-it)",
+      "label": "Chi siamo",
+      "path": [
+        "Chi siamo"
+      ],
+      "pageId": 956,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-963",
+      "where": "wp_navigation 963 (footer-company-it)",
+      "label": "Progetti",
+      "path": [
+        "Progetti"
+      ],
+      "pageId": 947,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-963",
+      "where": "wp_navigation 963 (footer-company-it)",
+      "label": "Notizie",
+      "path": [
+        "Notizie"
+      ],
+      "pageId": 943,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-963",
+      "where": "wp_navigation 963 (footer-company-it)",
+      "label": "Lavora con noi",
+      "path": [
+        "Lavora con noi"
+      ],
+      "pageId": 955,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-963",
+      "where": "wp_navigation 963 (footer-company-it)",
+      "label": "Relazioni con gli investitori",
+      "path": [
+        "Relazioni con gli investitori"
+      ],
+      "pageId": 950,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-964",
+      "where": "wp_navigation 964 (topbar-it)",
+      "label": "Lavora con noi",
+      "path": [
+        "Lavora con noi"
+      ],
+      "pageId": 955,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-964",
+      "where": "wp_navigation 964 (topbar-it)",
+      "label": "Investitori",
+      "path": [
+        "Investitori"
+      ],
+      "pageId": 950,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-965",
+      "where": "wp_navigation 965 (tracy-it)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 951,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-965",
+      "where": "wp_navigation 965 (tracy-it)",
+      "label": "Chi siamo",
+      "path": [
+        "Chi siamo"
+      ],
+      "pageId": 956,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-965",
+      "where": "wp_navigation 965 (tracy-it)",
+      "label": "Servizi",
+      "path": [
+        "Servizi"
+      ],
+      "pageId": 946,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-965",
+      "where": "wp_navigation 965 (tracy-it)",
+      "label": "Progetti",
+      "path": [
+        "Progetti"
+      ],
+      "pageId": 947,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-965",
+      "where": "wp_navigation 965 (tracy-it)",
+      "label": "Notizie",
+      "path": [
+        "Notizie"
+      ],
+      "pageId": 943,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-965",
+      "where": "wp_navigation 965 (tracy-it)",
+      "label": "Contatti",
+      "path": [
+        "Contatti"
+      ],
+      "pageId": 954,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-987",
+      "where": "wp_navigation 987 (footer-contact-ja)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 979,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-988",
+      "where": "wp_navigation 988 (footer-company-ja)",
+      "label": "会社概要",
+      "path": [
+        "会社概要"
+      ],
+      "pageId": 981,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-988",
+      "where": "wp_navigation 988 (footer-company-ja)",
+      "label": "プロジェクト",
+      "path": [
+        "プロジェクト"
+      ],
+      "pageId": 972,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-988",
+      "where": "wp_navigation 988 (footer-company-ja)",
+      "label": "ニュース",
+      "path": [
+        "ニュース"
+      ],
+      "pageId": 968,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-988",
+      "where": "wp_navigation 988 (footer-company-ja)",
+      "label": "採用情報",
+      "path": [
+        "採用情報"
+      ],
+      "pageId": 980,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-988",
+      "where": "wp_navigation 988 (footer-company-ja)",
+      "label": "投資家向け情報（IR）",
+      "path": [
+        "投資家向け情報（IR）"
+      ],
+      "pageId": 975,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-989",
+      "where": "wp_navigation 989 (topbar-ja)",
+      "label": "採用情報",
+      "path": [
+        "採用情報"
+      ],
+      "pageId": 980,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-989",
+      "where": "wp_navigation 989 (topbar-ja)",
+      "label": "投資家情報",
+      "path": [
+        "投資家情報"
+      ],
+      "pageId": 975,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-990",
+      "where": "wp_navigation 990 (tracy-ja)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 976,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-990",
+      "where": "wp_navigation 990 (tracy-ja)",
+      "label": "会社概要",
+      "path": [
+        "会社概要"
+      ],
+      "pageId": 981,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-990",
+      "where": "wp_navigation 990 (tracy-ja)",
+      "label": "サービス",
+      "path": [
+        "サービス"
+      ],
+      "pageId": 971,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-990",
+      "where": "wp_navigation 990 (tracy-ja)",
+      "label": "プロジェクト",
+      "path": [
+        "プロジェクト"
+      ],
+      "pageId": 972,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-990",
+      "where": "wp_navigation 990 (tracy-ja)",
+      "label": "ニュース",
+      "path": [
+        "ニュース"
+      ],
+      "pageId": 968,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-990",
+      "where": "wp_navigation 990 (tracy-ja)",
+      "label": "お問い合わせ",
+      "path": [
+        "お問い合わせ"
+      ],
+      "pageId": 979,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1012",
+      "where": "wp_navigation 1012 (footer-contact-ka)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1004,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1013",
+      "where": "wp_navigation 1013 (footer-company-ka)",
+      "label": "ჩვენს შესახებ",
+      "path": [
+        "ჩვენს შესახებ"
+      ],
+      "pageId": 1006,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1013",
+      "where": "wp_navigation 1013 (footer-company-ka)",
+      "label": "პროექტები",
+      "path": [
+        "პროექტები"
+      ],
+      "pageId": 997,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1013",
+      "where": "wp_navigation 1013 (footer-company-ka)",
+      "label": "სიახლეები",
+      "path": [
+        "სიახლეები"
+      ],
+      "pageId": 993,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1013",
+      "where": "wp_navigation 1013 (footer-company-ka)",
+      "label": "კარიერა",
+      "path": [
+        "კარიერა"
+      ],
+      "pageId": 1005,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1013",
+      "where": "wp_navigation 1013 (footer-company-ka)",
+      "label": "ურთიერთობები ინვესტორებთან",
+      "path": [
+        "ურთიერთობები ინვესტორებთან"
+      ],
+      "pageId": 1000,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1014",
+      "where": "wp_navigation 1014 (topbar-ka)",
+      "label": "კარიერა",
+      "path": [
+        "კარიერა"
+      ],
+      "pageId": 1005,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1014",
+      "where": "wp_navigation 1014 (topbar-ka)",
+      "label": "ინვესტორები",
+      "path": [
+        "ინვესტორები"
+      ],
+      "pageId": 1000,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1015",
+      "where": "wp_navigation 1015 (tracy-ka)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1001,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1015",
+      "where": "wp_navigation 1015 (tracy-ka)",
+      "label": "შესახებ",
+      "path": [
+        "შესახებ"
+      ],
+      "pageId": 1006,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1015",
+      "where": "wp_navigation 1015 (tracy-ka)",
+      "label": "სერვისები",
+      "path": [
+        "სერვისები"
+      ],
+      "pageId": 996,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1015",
+      "where": "wp_navigation 1015 (tracy-ka)",
+      "label": "პროექტები",
+      "path": [
+        "პროექტები"
+      ],
+      "pageId": 997,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1015",
+      "where": "wp_navigation 1015 (tracy-ka)",
+      "label": "სიახლეები",
+      "path": [
+        "სიახლეები"
+      ],
+      "pageId": 993,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1015",
+      "where": "wp_navigation 1015 (tracy-ka)",
+      "label": "კონტაქტი",
+      "path": [
+        "კონტაქტი"
+      ],
+      "pageId": 1004,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1037",
+      "where": "wp_navigation 1037 (footer-contact-lo)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1029,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1038",
+      "where": "wp_navigation 1038 (footer-company-lo)",
+      "label": "ກ່ຽວກັບພວກເຮົາ",
+      "path": [
+        "ກ່ຽວກັບພວກເຮົາ"
+      ],
+      "pageId": 1031,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1038",
+      "where": "wp_navigation 1038 (footer-company-lo)",
+      "label": "ໂຄງການ",
+      "path": [
+        "ໂຄງການ"
+      ],
+      "pageId": 1022,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1038",
+      "where": "wp_navigation 1038 (footer-company-lo)",
+      "label": "ຂ່າວສານ",
+      "path": [
+        "ຂ່າວສານ"
+      ],
+      "pageId": 1018,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1038",
+      "where": "wp_navigation 1038 (footer-company-lo)",
+      "label": "ສະໝັກງານ",
+      "path": [
+        "ສະໝັກງານ"
+      ],
+      "pageId": 1030,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1038",
+      "where": "wp_navigation 1038 (footer-company-lo)",
+      "label": "ນັກລົງທຶນສຳພັນ",
+      "path": [
+        "ນັກລົງທຶນສຳພັນ"
+      ],
+      "pageId": 1025,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1039",
+      "where": "wp_navigation 1039 (topbar-lo)",
+      "label": "ສະໝັກງານ",
+      "path": [
+        "ສະໝັກງານ"
+      ],
+      "pageId": 1030,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1039",
+      "where": "wp_navigation 1039 (topbar-lo)",
+      "label": "ນັກລົງທຶນ",
+      "path": [
+        "ນັກລົງທຶນ"
+      ],
+      "pageId": 1025,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1040",
+      "where": "wp_navigation 1040 (tracy-lo)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1026,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1040",
+      "where": "wp_navigation 1040 (tracy-lo)",
+      "label": "ກ່ຽວກັບພວກເຮົາ",
+      "path": [
+        "ກ່ຽວກັບພວກເຮົາ"
+      ],
+      "pageId": 1031,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1040",
+      "where": "wp_navigation 1040 (tracy-lo)",
+      "label": "ບໍລິການ",
+      "path": [
+        "ບໍລິການ"
+      ],
+      "pageId": 1021,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1040",
+      "where": "wp_navigation 1040 (tracy-lo)",
+      "label": "ໂຄງການ",
+      "path": [
+        "ໂຄງການ"
+      ],
+      "pageId": 1022,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1040",
+      "where": "wp_navigation 1040 (tracy-lo)",
+      "label": "ຂ່າວສານ",
+      "path": [
+        "ຂ່າວສານ"
+      ],
+      "pageId": 1018,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1040",
+      "where": "wp_navigation 1040 (tracy-lo)",
+      "label": "ຕິດຕໍ່",
+      "path": [
+        "ຕິດຕໍ່"
+      ],
+      "pageId": 1029,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1512",
+      "where": "wp_navigation 1512 (footer-contact-lt)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1504,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1513",
+      "where": "wp_navigation 1513 (footer-company-lt)",
+      "label": "Apie mus",
+      "path": [
+        "Apie mus"
+      ],
+      "pageId": 1506,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1513",
+      "where": "wp_navigation 1513 (footer-company-lt)",
+      "label": "Projektai",
+      "path": [
+        "Projektai"
+      ],
+      "pageId": 1497,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1513",
+      "where": "wp_navigation 1513 (footer-company-lt)",
+      "label": "Naujienos",
+      "path": [
+        "Naujienos"
+      ],
+      "pageId": 1493,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1513",
+      "where": "wp_navigation 1513 (footer-company-lt)",
+      "label": "Karjera",
+      "path": [
+        "Karjera"
+      ],
+      "pageId": 1505,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1513",
+      "where": "wp_navigation 1513 (footer-company-lt)",
+      "label": "Ryšiai su investuotojais",
+      "path": [
+        "Ryšiai su investuotojais"
+      ],
+      "pageId": 1500,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1514",
+      "where": "wp_navigation 1514 (topbar-lt)",
+      "label": "Karjera",
+      "path": [
+        "Karjera"
+      ],
+      "pageId": 1505,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1514",
+      "where": "wp_navigation 1514 (topbar-lt)",
+      "label": "Investuotojai",
+      "path": [
+        "Investuotojai"
+      ],
+      "pageId": 1500,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1515",
+      "where": "wp_navigation 1515 (tracy-lt)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1501,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1515",
+      "where": "wp_navigation 1515 (tracy-lt)",
+      "label": "Apie mus",
+      "path": [
+        "Apie mus"
+      ],
+      "pageId": 1506,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1515",
+      "where": "wp_navigation 1515 (tracy-lt)",
+      "label": "Paslaugos",
+      "path": [
+        "Paslaugos"
+      ],
+      "pageId": 1496,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1515",
+      "where": "wp_navigation 1515 (tracy-lt)",
+      "label": "Projektai",
+      "path": [
+        "Projektai"
+      ],
+      "pageId": 1497,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1515",
+      "where": "wp_navigation 1515 (tracy-lt)",
+      "label": "Naujienos",
+      "path": [
+        "Naujienos"
+      ],
+      "pageId": 1493,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1515",
+      "where": "wp_navigation 1515 (tracy-lt)",
+      "label": "Kontaktai",
+      "path": [
+        "Kontaktai"
+      ],
+      "pageId": 1504,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1557",
+      "where": "wp_navigation 1557 (footer-contact-lv)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1529,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1558",
+      "where": "wp_navigation 1558 (footer-company-lv)",
+      "label": "Par mums",
+      "path": [
+        "Par mums"
+      ],
+      "pageId": 1531,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1558",
+      "where": "wp_navigation 1558 (footer-company-lv)",
+      "label": "Projekti",
+      "path": [
+        "Projekti"
+      ],
+      "pageId": 1522,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1558",
+      "where": "wp_navigation 1558 (footer-company-lv)",
+      "label": "Ziņas",
+      "path": [
+        "Ziņas"
+      ],
+      "pageId": 1518,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1558",
+      "where": "wp_navigation 1558 (footer-company-lv)",
+      "label": "Karjera",
+      "path": [
+        "Karjera"
+      ],
+      "pageId": 1530,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1558",
+      "where": "wp_navigation 1558 (footer-company-lv)",
+      "label": "Attiecības ar investoriem",
+      "path": [
+        "Attiecības ar investoriem"
+      ],
+      "pageId": 1525,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1559",
+      "where": "wp_navigation 1559 (topbar-lv)",
+      "label": "Karjera",
+      "path": [
+        "Karjera"
+      ],
+      "pageId": 1530,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1559",
+      "where": "wp_navigation 1559 (topbar-lv)",
+      "label": "Investoriem",
+      "path": [
+        "Investoriem"
+      ],
+      "pageId": 1525,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1560",
+      "where": "wp_navigation 1560 (tracy-lv)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1526,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1560",
+      "where": "wp_navigation 1560 (tracy-lv)",
+      "label": "Par mums",
+      "path": [
+        "Par mums"
+      ],
+      "pageId": 1531,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1560",
+      "where": "wp_navigation 1560 (tracy-lv)",
+      "label": "Pakalpojumi",
+      "path": [
+        "Pakalpojumi"
+      ],
+      "pageId": 1521,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1560",
+      "where": "wp_navigation 1560 (tracy-lv)",
+      "label": "Projekti",
+      "path": [
+        "Projekti"
+      ],
+      "pageId": 1522,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1560",
+      "where": "wp_navigation 1560 (tracy-lv)",
+      "label": "Ziņas",
+      "path": [
+        "Ziņas"
+      ],
+      "pageId": 1518,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1560",
+      "where": "wp_navigation 1560 (tracy-lv)",
+      "label": "Kontakti",
+      "path": [
+        "Kontakti"
+      ],
+      "pageId": 1529,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1582",
+      "where": "wp_navigation 1582 (footer-contact-ms)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1574,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1583",
+      "where": "wp_navigation 1583 (footer-company-ms)",
+      "label": "Tentang Kami",
+      "path": [
+        "Tentang Kami"
+      ],
+      "pageId": 1576,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1583",
+      "where": "wp_navigation 1583 (footer-company-ms)",
+      "label": "Projek",
+      "path": [
+        "Projek"
+      ],
+      "pageId": 1567,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1583",
+      "where": "wp_navigation 1583 (footer-company-ms)",
+      "label": "Berita",
+      "path": [
+        "Berita"
+      ],
+      "pageId": 1563,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1583",
+      "where": "wp_navigation 1583 (footer-company-ms)",
+      "label": "Kerjaya",
+      "path": [
+        "Kerjaya"
+      ],
+      "pageId": 1575,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1583",
+      "where": "wp_navigation 1583 (footer-company-ms)",
+      "label": "Perhubungan Pelabur",
+      "path": [
+        "Perhubungan Pelabur"
+      ],
+      "pageId": 1570,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1584",
+      "where": "wp_navigation 1584 (topbar-ms)",
+      "label": "Kerjaya",
+      "path": [
+        "Kerjaya"
+      ],
+      "pageId": 1575,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1584",
+      "where": "wp_navigation 1584 (topbar-ms)",
+      "label": "Pelabur",
+      "path": [
+        "Pelabur"
+      ],
+      "pageId": 1570,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1585",
+      "where": "wp_navigation 1585 (tracy-ms)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1571,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1585",
+      "where": "wp_navigation 1585 (tracy-ms)",
+      "label": "Tentang Kami",
+      "path": [
+        "Tentang Kami"
+      ],
+      "pageId": 1576,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1585",
+      "where": "wp_navigation 1585 (tracy-ms)",
+      "label": "Perkhidmatan",
+      "path": [
+        "Perkhidmatan"
+      ],
+      "pageId": 1566,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1585",
+      "where": "wp_navigation 1585 (tracy-ms)",
+      "label": "Projek",
+      "path": [
+        "Projek"
+      ],
+      "pageId": 1567,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1585",
+      "where": "wp_navigation 1585 (tracy-ms)",
+      "label": "Berita",
+      "path": [
+        "Berita"
+      ],
+      "pageId": 1563,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1585",
+      "where": "wp_navigation 1585 (tracy-ms)",
+      "label": "Hubungi",
+      "path": [
+        "Hubungi"
+      ],
+      "pageId": 1574,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1607",
+      "where": "wp_navigation 1607 (footer-contact-nb)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1599,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1608",
+      "where": "wp_navigation 1608 (footer-company-nb)",
+      "label": "Om oss",
+      "path": [
+        "Om oss"
+      ],
+      "pageId": 1601,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1608",
+      "where": "wp_navigation 1608 (footer-company-nb)",
+      "label": "Prosjekter",
+      "path": [
+        "Prosjekter"
+      ],
+      "pageId": 1592,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1608",
+      "where": "wp_navigation 1608 (footer-company-nb)",
+      "label": "Nyheter",
+      "path": [
+        "Nyheter"
+      ],
+      "pageId": 1588,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1608",
+      "where": "wp_navigation 1608 (footer-company-nb)",
+      "label": "Karriere",
+      "path": [
+        "Karriere"
+      ],
+      "pageId": 1600,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1608",
+      "where": "wp_navigation 1608 (footer-company-nb)",
+      "label": "Investorkontakt",
+      "path": [
+        "Investorkontakt"
+      ],
+      "pageId": 1595,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1609",
+      "where": "wp_navigation 1609 (topbar-nb)",
+      "label": "Karriere",
+      "path": [
+        "Karriere"
+      ],
+      "pageId": 1600,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1609",
+      "where": "wp_navigation 1609 (topbar-nb)",
+      "label": "Investorer",
+      "path": [
+        "Investorer"
+      ],
+      "pageId": 1595,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1610",
+      "where": "wp_navigation 1610 (tracy-nb)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1596,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1610",
+      "where": "wp_navigation 1610 (tracy-nb)",
+      "label": "Om oss",
+      "path": [
+        "Om oss"
+      ],
+      "pageId": 1601,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1610",
+      "where": "wp_navigation 1610 (tracy-nb)",
+      "label": "Tjenester",
+      "path": [
+        "Tjenester"
+      ],
+      "pageId": 1591,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1610",
+      "where": "wp_navigation 1610 (tracy-nb)",
+      "label": "Prosjekter",
+      "path": [
+        "Prosjekter"
+      ],
+      "pageId": 1592,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1610",
+      "where": "wp_navigation 1610 (tracy-nb)",
+      "label": "Nyheter",
+      "path": [
+        "Nyheter"
+      ],
+      "pageId": 1588,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1610",
+      "where": "wp_navigation 1610 (tracy-nb)",
+      "label": "Kontakt",
+      "path": [
+        "Kontakt"
+      ],
+      "pageId": 1599,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1632",
+      "where": "wp_navigation 1632 (footer-contact-nl)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1624,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1633",
+      "where": "wp_navigation 1633 (footer-company-nl)",
+      "label": "Over ons",
+      "path": [
+        "Over ons"
+      ],
+      "pageId": 1626,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1633",
+      "where": "wp_navigation 1633 (footer-company-nl)",
+      "label": "Projecten",
+      "path": [
+        "Projecten"
+      ],
+      "pageId": 1617,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1633",
+      "where": "wp_navigation 1633 (footer-company-nl)",
+      "label": "Nieuws",
+      "path": [
+        "Nieuws"
+      ],
+      "pageId": 1613,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1633",
+      "where": "wp_navigation 1633 (footer-company-nl)",
+      "label": "Vacatures",
+      "path": [
+        "Vacatures"
+      ],
+      "pageId": 1625,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1633",
+      "where": "wp_navigation 1633 (footer-company-nl)",
+      "label": "Investor relations",
+      "path": [
+        "Investor relations"
+      ],
+      "pageId": 1620,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1634",
+      "where": "wp_navigation 1634 (topbar-nl)",
+      "label": "Vacatures",
+      "path": [
+        "Vacatures"
+      ],
+      "pageId": 1625,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1634",
+      "where": "wp_navigation 1634 (topbar-nl)",
+      "label": "Investeerders",
+      "path": [
+        "Investeerders"
+      ],
+      "pageId": 1620,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1635",
+      "where": "wp_navigation 1635 (tracy-nl)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1621,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1635",
+      "where": "wp_navigation 1635 (tracy-nl)",
+      "label": "Over ons",
+      "path": [
+        "Over ons"
+      ],
+      "pageId": 1626,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1635",
+      "where": "wp_navigation 1635 (tracy-nl)",
+      "label": "Diensten",
+      "path": [
+        "Diensten"
+      ],
+      "pageId": 1616,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1635",
+      "where": "wp_navigation 1635 (tracy-nl)",
+      "label": "Projecten",
+      "path": [
+        "Projecten"
+      ],
+      "pageId": 1617,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1635",
+      "where": "wp_navigation 1635 (tracy-nl)",
+      "label": "Nieuws",
+      "path": [
+        "Nieuws"
+      ],
+      "pageId": 1613,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1635",
+      "where": "wp_navigation 1635 (tracy-nl)",
+      "label": "Contact",
+      "path": [
+        "Contact"
+      ],
+      "pageId": 1624,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1657",
+      "where": "wp_navigation 1657 (footer-contact-pl)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1649,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1658",
+      "where": "wp_navigation 1658 (footer-company-pl)",
+      "label": "O nas",
+      "path": [
+        "O nas"
+      ],
+      "pageId": 1651,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1658",
+      "where": "wp_navigation 1658 (footer-company-pl)",
+      "label": "Projekty",
+      "path": [
+        "Projekty"
+      ],
+      "pageId": 1642,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1658",
+      "where": "wp_navigation 1658 (footer-company-pl)",
+      "label": "Aktualności",
+      "path": [
+        "Aktualności"
+      ],
+      "pageId": 1638,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1658",
+      "where": "wp_navigation 1658 (footer-company-pl)",
+      "label": "Kariera",
+      "path": [
+        "Kariera"
+      ],
+      "pageId": 1650,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1658",
+      "where": "wp_navigation 1658 (footer-company-pl)",
+      "label": "Relacje inwestorskie",
+      "path": [
+        "Relacje inwestorskie"
+      ],
+      "pageId": 1645,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1659",
+      "where": "wp_navigation 1659 (topbar-pl)",
+      "label": "Kariera",
+      "path": [
+        "Kariera"
+      ],
+      "pageId": 1650,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1659",
+      "where": "wp_navigation 1659 (topbar-pl)",
+      "label": "Inwestorzy",
+      "path": [
+        "Inwestorzy"
+      ],
+      "pageId": 1645,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1660",
+      "where": "wp_navigation 1660 (tracy-pl)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1646,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1660",
+      "where": "wp_navigation 1660 (tracy-pl)",
+      "label": "O nas",
+      "path": [
+        "O nas"
+      ],
+      "pageId": 1651,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1660",
+      "where": "wp_navigation 1660 (tracy-pl)",
+      "label": "Usługi",
+      "path": [
+        "Usługi"
+      ],
+      "pageId": 1641,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1660",
+      "where": "wp_navigation 1660 (tracy-pl)",
+      "label": "Projekty",
+      "path": [
+        "Projekty"
+      ],
+      "pageId": 1642,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1660",
+      "where": "wp_navigation 1660 (tracy-pl)",
+      "label": "Aktualności",
+      "path": [
+        "Aktualności"
+      ],
+      "pageId": 1638,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1660",
+      "where": "wp_navigation 1660 (tracy-pl)",
+      "label": "Kontakt",
+      "path": [
+        "Kontakt"
+      ],
+      "pageId": 1649,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1682",
+      "where": "wp_navigation 1682 (footer-contact-pt-br)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1674,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1683",
+      "where": "wp_navigation 1683 (footer-company-pt-br)",
+      "label": "Sobre nós",
+      "path": [
+        "Sobre nós"
+      ],
+      "pageId": 1676,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1683",
+      "where": "wp_navigation 1683 (footer-company-pt-br)",
+      "label": "Projetos",
+      "path": [
+        "Projetos"
+      ],
+      "pageId": 1667,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1683",
+      "where": "wp_navigation 1683 (footer-company-pt-br)",
+      "label": "Notícias",
+      "path": [
+        "Notícias"
+      ],
+      "pageId": 1663,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1683",
+      "where": "wp_navigation 1683 (footer-company-pt-br)",
+      "label": "Carreiras",
+      "path": [
+        "Carreiras"
+      ],
+      "pageId": 1675,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1683",
+      "where": "wp_navigation 1683 (footer-company-pt-br)",
+      "label": "Relações com investidores",
+      "path": [
+        "Relações com investidores"
+      ],
+      "pageId": 1670,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1684",
+      "where": "wp_navigation 1684 (topbar-pt-br)",
+      "label": "Carreiras",
+      "path": [
+        "Carreiras"
+      ],
+      "pageId": 1675,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1684",
+      "where": "wp_navigation 1684 (topbar-pt-br)",
+      "label": "Investidores",
+      "path": [
+        "Investidores"
+      ],
+      "pageId": 1670,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1685",
+      "where": "wp_navigation 1685 (tracy-pt-br)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1671,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1685",
+      "where": "wp_navigation 1685 (tracy-pt-br)",
+      "label": "Sobre",
+      "path": [
+        "Sobre"
+      ],
+      "pageId": 1676,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1685",
+      "where": "wp_navigation 1685 (tracy-pt-br)",
+      "label": "Serviços",
+      "path": [
+        "Serviços"
+      ],
+      "pageId": 1666,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1685",
+      "where": "wp_navigation 1685 (tracy-pt-br)",
+      "label": "Projetos",
+      "path": [
+        "Projetos"
+      ],
+      "pageId": 1667,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1685",
+      "where": "wp_navigation 1685 (tracy-pt-br)",
+      "label": "Notícias",
+      "path": [
+        "Notícias"
+      ],
+      "pageId": 1663,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1685",
+      "where": "wp_navigation 1685 (tracy-pt-br)",
+      "label": "Contato",
+      "path": [
+        "Contato"
+      ],
+      "pageId": 1674,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1707",
+      "where": "wp_navigation 1707 (footer-contact-pt-pt)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1699,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1708",
+      "where": "wp_navigation 1708 (footer-company-pt-pt)",
+      "label": "Sobre nós",
+      "path": [
+        "Sobre nós"
+      ],
+      "pageId": 1701,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1708",
+      "where": "wp_navigation 1708 (footer-company-pt-pt)",
+      "label": "Projetos",
+      "path": [
+        "Projetos"
+      ],
+      "pageId": 1692,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1708",
+      "where": "wp_navigation 1708 (footer-company-pt-pt)",
+      "label": "Notícias",
+      "path": [
+        "Notícias"
+      ],
+      "pageId": 1688,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1708",
+      "where": "wp_navigation 1708 (footer-company-pt-pt)",
+      "label": "Carreiras",
+      "path": [
+        "Carreiras"
+      ],
+      "pageId": 1700,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1708",
+      "where": "wp_navigation 1708 (footer-company-pt-pt)",
+      "label": "Relações com investidores",
+      "path": [
+        "Relações com investidores"
+      ],
+      "pageId": 1695,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1709",
+      "where": "wp_navigation 1709 (topbar-pt-pt)",
+      "label": "Carreiras",
+      "path": [
+        "Carreiras"
+      ],
+      "pageId": 1700,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1709",
+      "where": "wp_navigation 1709 (topbar-pt-pt)",
+      "label": "Investidores",
+      "path": [
+        "Investidores"
+      ],
+      "pageId": 1695,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1710",
+      "where": "wp_navigation 1710 (tracy-pt-pt)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1696,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1710",
+      "where": "wp_navigation 1710 (tracy-pt-pt)",
+      "label": "Sobre",
+      "path": [
+        "Sobre"
+      ],
+      "pageId": 1701,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1710",
+      "where": "wp_navigation 1710 (tracy-pt-pt)",
+      "label": "Serviços",
+      "path": [
+        "Serviços"
+      ],
+      "pageId": 1691,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1710",
+      "where": "wp_navigation 1710 (tracy-pt-pt)",
+      "label": "Projetos",
+      "path": [
+        "Projetos"
+      ],
+      "pageId": 1692,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1710",
+      "where": "wp_navigation 1710 (tracy-pt-pt)",
+      "label": "Notícias",
+      "path": [
+        "Notícias"
+      ],
+      "pageId": 1688,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1710",
+      "where": "wp_navigation 1710 (tracy-pt-pt)",
+      "label": "Contacto",
+      "path": [
+        "Contacto"
+      ],
+      "pageId": 1699,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1732",
+      "where": "wp_navigation 1732 (footer-contact-ro)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1724,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1733",
+      "where": "wp_navigation 1733 (footer-company-ro)",
+      "label": "Despre noi",
+      "path": [
+        "Despre noi"
+      ],
+      "pageId": 1726,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1733",
+      "where": "wp_navigation 1733 (footer-company-ro)",
+      "label": "Proiecte",
+      "path": [
+        "Proiecte"
+      ],
+      "pageId": 1717,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1733",
+      "where": "wp_navigation 1733 (footer-company-ro)",
+      "label": "Știri",
+      "path": [
+        "Știri"
+      ],
+      "pageId": 1713,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1733",
+      "where": "wp_navigation 1733 (footer-company-ro)",
+      "label": "Cariere",
+      "path": [
+        "Cariere"
+      ],
+      "pageId": 1725,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1733",
+      "where": "wp_navigation 1733 (footer-company-ro)",
+      "label": "Relații cu investitorii",
+      "path": [
+        "Relații cu investitorii"
+      ],
+      "pageId": 1720,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1734",
+      "where": "wp_navigation 1734 (topbar-ro)",
+      "label": "Cariere",
+      "path": [
+        "Cariere"
+      ],
+      "pageId": 1725,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1734",
+      "where": "wp_navigation 1734 (topbar-ro)",
+      "label": "Investitori",
+      "path": [
+        "Investitori"
+      ],
+      "pageId": 1720,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1735",
+      "where": "wp_navigation 1735 (tracy-ro)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1721,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1735",
+      "where": "wp_navigation 1735 (tracy-ro)",
+      "label": "Despre noi",
+      "path": [
+        "Despre noi"
+      ],
+      "pageId": 1726,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1735",
+      "where": "wp_navigation 1735 (tracy-ro)",
+      "label": "Servicii",
+      "path": [
+        "Servicii"
+      ],
+      "pageId": 1716,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1735",
+      "where": "wp_navigation 1735 (tracy-ro)",
+      "label": "Proiecte",
+      "path": [
+        "Proiecte"
+      ],
+      "pageId": 1717,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1735",
+      "where": "wp_navigation 1735 (tracy-ro)",
+      "label": "Știri",
+      "path": [
+        "Știri"
+      ],
+      "pageId": 1713,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1735",
+      "where": "wp_navigation 1735 (tracy-ro)",
+      "label": "Contact",
+      "path": [
+        "Contact"
+      ],
+      "pageId": 1724,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1757",
+      "where": "wp_navigation 1757 (footer-contact-sk)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1749,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1758",
+      "where": "wp_navigation 1758 (footer-company-sk)",
+      "label": "O nás",
+      "path": [
+        "O nás"
+      ],
+      "pageId": 1751,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1758",
+      "where": "wp_navigation 1758 (footer-company-sk)",
+      "label": "Projekty",
+      "path": [
+        "Projekty"
+      ],
+      "pageId": 1742,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1758",
+      "where": "wp_navigation 1758 (footer-company-sk)",
+      "label": "Novinky",
+      "path": [
+        "Novinky"
+      ],
+      "pageId": 1738,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1758",
+      "where": "wp_navigation 1758 (footer-company-sk)",
+      "label": "Kariéra",
+      "path": [
+        "Kariéra"
+      ],
+      "pageId": 1750,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1758",
+      "where": "wp_navigation 1758 (footer-company-sk)",
+      "label": "Vzťahy s investormi",
+      "path": [
+        "Vzťahy s investormi"
+      ],
+      "pageId": 1745,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1759",
+      "where": "wp_navigation 1759 (topbar-sk)",
+      "label": "Kariéra",
+      "path": [
+        "Kariéra"
+      ],
+      "pageId": 1750,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1759",
+      "where": "wp_navigation 1759 (topbar-sk)",
+      "label": "Investori",
+      "path": [
+        "Investori"
+      ],
+      "pageId": 1745,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1760",
+      "where": "wp_navigation 1760 (tracy-sk)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1746,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1760",
+      "where": "wp_navigation 1760 (tracy-sk)",
+      "label": "O nás",
+      "path": [
+        "O nás"
+      ],
+      "pageId": 1751,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1760",
+      "where": "wp_navigation 1760 (tracy-sk)",
+      "label": "Služby",
+      "path": [
+        "Služby"
+      ],
+      "pageId": 1741,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1760",
+      "where": "wp_navigation 1760 (tracy-sk)",
+      "label": "Projekty",
+      "path": [
+        "Projekty"
+      ],
+      "pageId": 1742,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1760",
+      "where": "wp_navigation 1760 (tracy-sk)",
+      "label": "Novinky",
+      "path": [
+        "Novinky"
+      ],
+      "pageId": 1738,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1760",
+      "where": "wp_navigation 1760 (tracy-sk)",
+      "label": "Kontakt",
+      "path": [
+        "Kontakt"
+      ],
+      "pageId": 1749,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1782",
+      "where": "wp_navigation 1782 (footer-contact-sl)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1774,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1783",
+      "where": "wp_navigation 1783 (footer-company-sl)",
+      "label": "O nas",
+      "path": [
+        "O nas"
+      ],
+      "pageId": 1776,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1783",
+      "where": "wp_navigation 1783 (footer-company-sl)",
+      "label": "Projekti",
+      "path": [
+        "Projekti"
+      ],
+      "pageId": 1767,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1783",
+      "where": "wp_navigation 1783 (footer-company-sl)",
+      "label": "Novice",
+      "path": [
+        "Novice"
+      ],
+      "pageId": 1763,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1783",
+      "where": "wp_navigation 1783 (footer-company-sl)",
+      "label": "Zaposlitev",
+      "path": [
+        "Zaposlitev"
+      ],
+      "pageId": 1775,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1783",
+      "where": "wp_navigation 1783 (footer-company-sl)",
+      "label": "Odnosi z vlagatelji",
+      "path": [
+        "Odnosi z vlagatelji"
+      ],
+      "pageId": 1770,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1784",
+      "where": "wp_navigation 1784 (topbar-sl)",
+      "label": "Zaposlitev",
+      "path": [
+        "Zaposlitev"
+      ],
+      "pageId": 1775,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1784",
+      "where": "wp_navigation 1784 (topbar-sl)",
+      "label": "Vlagatelji",
+      "path": [
+        "Vlagatelji"
+      ],
+      "pageId": 1770,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1785",
+      "where": "wp_navigation 1785 (tracy-sl)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1771,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1785",
+      "where": "wp_navigation 1785 (tracy-sl)",
+      "label": "O nas",
+      "path": [
+        "O nas"
+      ],
+      "pageId": 1776,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1785",
+      "where": "wp_navigation 1785 (tracy-sl)",
+      "label": "Storitve",
+      "path": [
+        "Storitve"
+      ],
+      "pageId": 1766,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1785",
+      "where": "wp_navigation 1785 (tracy-sl)",
+      "label": "Projekti",
+      "path": [
+        "Projekti"
+      ],
+      "pageId": 1767,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1785",
+      "where": "wp_navigation 1785 (tracy-sl)",
+      "label": "Novice",
+      "path": [
+        "Novice"
+      ],
+      "pageId": 1763,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1785",
+      "where": "wp_navigation 1785 (tracy-sl)",
+      "label": "Kontakt",
+      "path": [
+        "Kontakt"
+      ],
+      "pageId": 1774,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1807",
+      "where": "wp_navigation 1807 (footer-contact-sr)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1799,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1808",
+      "where": "wp_navigation 1808 (footer-company-sr)",
+      "label": "О нама",
+      "path": [
+        "О нама"
+      ],
+      "pageId": 1801,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1808",
+      "where": "wp_navigation 1808 (footer-company-sr)",
+      "label": "Пројекти",
+      "path": [
+        "Пројекти"
+      ],
+      "pageId": 1792,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1808",
+      "where": "wp_navigation 1808 (footer-company-sr)",
+      "label": "Вести",
+      "path": [
+        "Вести"
+      ],
+      "pageId": 1788,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1808",
+      "where": "wp_navigation 1808 (footer-company-sr)",
+      "label": "Запошљавање",
+      "path": [
+        "Запошљавање"
+      ],
+      "pageId": 1800,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1808",
+      "where": "wp_navigation 1808 (footer-company-sr)",
+      "label": "Односи с инвеститорима",
+      "path": [
+        "Односи с инвеститорима"
+      ],
+      "pageId": 1795,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1809",
+      "where": "wp_navigation 1809 (topbar-sr)",
+      "label": "Запошљавање",
+      "path": [
+        "Запошљавање"
+      ],
+      "pageId": 1800,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1809",
+      "where": "wp_navigation 1809 (topbar-sr)",
+      "label": "Инвеститори",
+      "path": [
+        "Инвеститори"
+      ],
+      "pageId": 1795,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1810",
+      "where": "wp_navigation 1810 (tracy-sr)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1796,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1810",
+      "where": "wp_navigation 1810 (tracy-sr)",
+      "label": "О нама",
+      "path": [
+        "О нама"
+      ],
+      "pageId": 1801,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1810",
+      "where": "wp_navigation 1810 (tracy-sr)",
+      "label": "Услуге",
+      "path": [
+        "Услуге"
+      ],
+      "pageId": 1791,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1810",
+      "where": "wp_navigation 1810 (tracy-sr)",
+      "label": "Пројекти",
+      "path": [
+        "Пројекти"
+      ],
+      "pageId": 1792,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1810",
+      "where": "wp_navigation 1810 (tracy-sr)",
+      "label": "Вести",
+      "path": [
+        "Вести"
+      ],
+      "pageId": 1788,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1810",
+      "where": "wp_navigation 1810 (tracy-sr)",
+      "label": "Контакт",
+      "path": [
+        "Контакт"
+      ],
+      "pageId": 1799,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1832",
+      "where": "wp_navigation 1832 (footer-contact-sv)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1824,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1833",
+      "where": "wp_navigation 1833 (footer-company-sv)",
+      "label": "Om oss",
+      "path": [
+        "Om oss"
+      ],
+      "pageId": 1826,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1833",
+      "where": "wp_navigation 1833 (footer-company-sv)",
+      "label": "Projekt",
+      "path": [
+        "Projekt"
+      ],
+      "pageId": 1817,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1833",
+      "where": "wp_navigation 1833 (footer-company-sv)",
+      "label": "Nyheter",
+      "path": [
+        "Nyheter"
+      ],
+      "pageId": 1813,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1833",
+      "where": "wp_navigation 1833 (footer-company-sv)",
+      "label": "Karriär",
+      "path": [
+        "Karriär"
+      ],
+      "pageId": 1825,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1833",
+      "where": "wp_navigation 1833 (footer-company-sv)",
+      "label": "Investerarrelationer",
+      "path": [
+        "Investerarrelationer"
+      ],
+      "pageId": 1820,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1834",
+      "where": "wp_navigation 1834 (topbar-sv)",
+      "label": "Karriär",
+      "path": [
+        "Karriär"
+      ],
+      "pageId": 1825,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1834",
+      "where": "wp_navigation 1834 (topbar-sv)",
+      "label": "Investerare",
+      "path": [
+        "Investerare"
+      ],
+      "pageId": 1820,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1835",
+      "where": "wp_navigation 1835 (tracy-sv)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1821,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1835",
+      "where": "wp_navigation 1835 (tracy-sv)",
+      "label": "Om oss",
+      "path": [
+        "Om oss"
+      ],
+      "pageId": 1826,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1835",
+      "where": "wp_navigation 1835 (tracy-sv)",
+      "label": "Tjänster",
+      "path": [
+        "Tjänster"
+      ],
+      "pageId": 1816,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1835",
+      "where": "wp_navigation 1835 (tracy-sv)",
+      "label": "Projekt",
+      "path": [
+        "Projekt"
+      ],
+      "pageId": 1817,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1835",
+      "where": "wp_navigation 1835 (tracy-sv)",
+      "label": "Nyheter",
+      "path": [
+        "Nyheter"
+      ],
+      "pageId": 1813,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1835",
+      "where": "wp_navigation 1835 (tracy-sv)",
+      "label": "Kontakt",
+      "path": [
+        "Kontakt"
+      ],
+      "pageId": 1824,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1857",
+      "where": "wp_navigation 1857 (footer-contact-ta)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1849,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1858",
+      "where": "wp_navigation 1858 (footer-company-ta)",
+      "label": "எங்களைப் பற்றி",
+      "path": [
+        "எங்களைப் பற்றி"
+      ],
+      "pageId": 1851,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1858",
+      "where": "wp_navigation 1858 (footer-company-ta)",
+      "label": "திட்டங்கள்",
+      "path": [
+        "திட்டங்கள்"
+      ],
+      "pageId": 1842,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1858",
+      "where": "wp_navigation 1858 (footer-company-ta)",
+      "label": "செய்திகள்",
+      "path": [
+        "செய்திகள்"
+      ],
+      "pageId": 1838,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1858",
+      "where": "wp_navigation 1858 (footer-company-ta)",
+      "label": "வேலை வாய்ப்புகள்",
+      "path": [
+        "வேலை வாய்ப்புகள்"
+      ],
+      "pageId": 1850,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1858",
+      "where": "wp_navigation 1858 (footer-company-ta)",
+      "label": "முதலீட்டாளர் உறவுகள்",
+      "path": [
+        "முதலீட்டாளர் உறவுகள்"
+      ],
+      "pageId": 1845,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1859",
+      "where": "wp_navigation 1859 (topbar-ta)",
+      "label": "வேலை வாய்ப்புகள்",
+      "path": [
+        "வேலை வாய்ப்புகள்"
+      ],
+      "pageId": 1850,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1859",
+      "where": "wp_navigation 1859 (topbar-ta)",
+      "label": "முதலீட்டாளர்கள்",
+      "path": [
+        "முதலீட்டாளர்கள்"
+      ],
+      "pageId": 1845,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1860",
+      "where": "wp_navigation 1860 (tracy-ta)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1846,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1860",
+      "where": "wp_navigation 1860 (tracy-ta)",
+      "label": "எங்களைப் பற்றி",
+      "path": [
+        "எங்களைப் பற்றி"
+      ],
+      "pageId": 1851,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1860",
+      "where": "wp_navigation 1860 (tracy-ta)",
+      "label": "சேவைகள்",
+      "path": [
+        "சேவைகள்"
+      ],
+      "pageId": 1841,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1860",
+      "where": "wp_navigation 1860 (tracy-ta)",
+      "label": "திட்டங்கள்",
+      "path": [
+        "திட்டங்கள்"
+      ],
+      "pageId": 1842,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1860",
+      "where": "wp_navigation 1860 (tracy-ta)",
+      "label": "செய்திகள்",
+      "path": [
+        "செய்திகள்"
+      ],
+      "pageId": 1838,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1860",
+      "where": "wp_navigation 1860 (tracy-ta)",
+      "label": "தொடர்பு",
+      "path": [
+        "தொடர்பு"
+      ],
+      "pageId": 1849,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1882",
+      "where": "wp_navigation 1882 (footer-contact-th)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1874,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1883",
+      "where": "wp_navigation 1883 (footer-company-th)",
+      "label": "เกี่ยวกับเรา",
+      "path": [
+        "เกี่ยวกับเรา"
+      ],
+      "pageId": 1876,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1883",
+      "where": "wp_navigation 1883 (footer-company-th)",
+      "label": "โครงการ",
+      "path": [
+        "โครงการ"
+      ],
+      "pageId": 1867,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1883",
+      "where": "wp_navigation 1883 (footer-company-th)",
+      "label": "ข่าวสาร",
+      "path": [
+        "ข่าวสาร"
+      ],
+      "pageId": 1863,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1883",
+      "where": "wp_navigation 1883 (footer-company-th)",
+      "label": "ร่วมงานกับเรา",
+      "path": [
+        "ร่วมงานกับเรา"
+      ],
+      "pageId": 1875,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1883",
+      "where": "wp_navigation 1883 (footer-company-th)",
+      "label": "นักลงทุนสัมพันธ์",
+      "path": [
+        "นักลงทุนสัมพันธ์"
+      ],
+      "pageId": 1870,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1884",
+      "where": "wp_navigation 1884 (topbar-th)",
+      "label": "ร่วมงานกับเรา",
+      "path": [
+        "ร่วมงานกับเรา"
+      ],
+      "pageId": 1875,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1884",
+      "where": "wp_navigation 1884 (topbar-th)",
+      "label": "นักลงทุน",
+      "path": [
+        "นักลงทุน"
+      ],
+      "pageId": 1870,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1885",
+      "where": "wp_navigation 1885 (tracy-th)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1871,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1885",
+      "where": "wp_navigation 1885 (tracy-th)",
+      "label": "เกี่ยวกับเรา",
+      "path": [
+        "เกี่ยวกับเรา"
+      ],
+      "pageId": 1876,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1885",
+      "where": "wp_navigation 1885 (tracy-th)",
+      "label": "บริการ",
+      "path": [
+        "บริการ"
+      ],
+      "pageId": 1866,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1885",
+      "where": "wp_navigation 1885 (tracy-th)",
+      "label": "โครงการ",
+      "path": [
+        "โครงการ"
+      ],
+      "pageId": 1867,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1885",
+      "where": "wp_navigation 1885 (tracy-th)",
+      "label": "ข่าวสาร",
+      "path": [
+        "ข่าวสาร"
+      ],
+      "pageId": 1863,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1885",
+      "where": "wp_navigation 1885 (tracy-th)",
+      "label": "ติดต่อเรา",
+      "path": [
+        "ติดต่อเรา"
+      ],
+      "pageId": 1874,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1907",
+      "where": "wp_navigation 1907 (footer-contact-tr)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1899,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1908",
+      "where": "wp_navigation 1908 (footer-company-tr)",
+      "label": "Hakkımızda",
+      "path": [
+        "Hakkımızda"
+      ],
+      "pageId": 1901,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1908",
+      "where": "wp_navigation 1908 (footer-company-tr)",
+      "label": "Projeler",
+      "path": [
+        "Projeler"
+      ],
+      "pageId": 1892,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1908",
+      "where": "wp_navigation 1908 (footer-company-tr)",
+      "label": "Haberler",
+      "path": [
+        "Haberler"
+      ],
+      "pageId": 1888,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1908",
+      "where": "wp_navigation 1908 (footer-company-tr)",
+      "label": "Kariyer",
+      "path": [
+        "Kariyer"
+      ],
+      "pageId": 1900,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1908",
+      "where": "wp_navigation 1908 (footer-company-tr)",
+      "label": "Yatırımcı ilişkileri",
+      "path": [
+        "Yatırımcı ilişkileri"
+      ],
+      "pageId": 1895,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1909",
+      "where": "wp_navigation 1909 (topbar-tr)",
+      "label": "Kariyer",
+      "path": [
+        "Kariyer"
+      ],
+      "pageId": 1900,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1909",
+      "where": "wp_navigation 1909 (topbar-tr)",
+      "label": "Yatırımcılar",
+      "path": [
+        "Yatırımcılar"
+      ],
+      "pageId": 1895,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1910",
+      "where": "wp_navigation 1910 (tracy-tr)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1896,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1910",
+      "where": "wp_navigation 1910 (tracy-tr)",
+      "label": "Hakkımızda",
+      "path": [
+        "Hakkımızda"
+      ],
+      "pageId": 1901,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1910",
+      "where": "wp_navigation 1910 (tracy-tr)",
+      "label": "Hizmetler",
+      "path": [
+        "Hizmetler"
+      ],
+      "pageId": 1891,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1910",
+      "where": "wp_navigation 1910 (tracy-tr)",
+      "label": "Projeler",
+      "path": [
+        "Projeler"
+      ],
+      "pageId": 1892,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1910",
+      "where": "wp_navigation 1910 (tracy-tr)",
+      "label": "Haberler",
+      "path": [
+        "Haberler"
+      ],
+      "pageId": 1888,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1910",
+      "where": "wp_navigation 1910 (tracy-tr)",
+      "label": "İletişim",
+      "path": [
+        "İletişim"
+      ],
+      "pageId": 1899,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1932",
+      "where": "wp_navigation 1932 (footer-contact-uk)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1924,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1933",
+      "where": "wp_navigation 1933 (footer-company-uk)",
+      "label": "Про нас",
+      "path": [
+        "Про нас"
+      ],
+      "pageId": 1926,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1933",
+      "where": "wp_navigation 1933 (footer-company-uk)",
+      "label": "Проєкти",
+      "path": [
+        "Проєкти"
+      ],
+      "pageId": 1917,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1933",
+      "where": "wp_navigation 1933 (footer-company-uk)",
+      "label": "Новини",
+      "path": [
+        "Новини"
+      ],
+      "pageId": 1913,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1933",
+      "where": "wp_navigation 1933 (footer-company-uk)",
+      "label": "Кар'єра",
+      "path": [
+        "Кар'єра"
+      ],
+      "pageId": 1925,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1933",
+      "where": "wp_navigation 1933 (footer-company-uk)",
+      "label": "Відносини з інвесторами",
+      "path": [
+        "Відносини з інвесторами"
+      ],
+      "pageId": 1920,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1934",
+      "where": "wp_navigation 1934 (topbar-uk)",
+      "label": "Кар'єра",
+      "path": [
+        "Кар'єра"
+      ],
+      "pageId": 1925,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1934",
+      "where": "wp_navigation 1934 (topbar-uk)",
+      "label": "Інвесторам",
+      "path": [
+        "Інвесторам"
+      ],
+      "pageId": 1920,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1935",
+      "where": "wp_navigation 1935 (tracy-uk)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1921,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1935",
+      "where": "wp_navigation 1935 (tracy-uk)",
+      "label": "Про нас",
+      "path": [
+        "Про нас"
+      ],
+      "pageId": 1926,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1935",
+      "where": "wp_navigation 1935 (tracy-uk)",
+      "label": "Послуги",
+      "path": [
+        "Послуги"
+      ],
+      "pageId": 1916,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1935",
+      "where": "wp_navigation 1935 (tracy-uk)",
+      "label": "Проєкти",
+      "path": [
+        "Проєкти"
+      ],
+      "pageId": 1917,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1935",
+      "where": "wp_navigation 1935 (tracy-uk)",
+      "label": "Новини",
+      "path": [
+        "Новини"
+      ],
+      "pageId": 1913,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1935",
+      "where": "wp_navigation 1935 (tracy-uk)",
+      "label": "Контакти",
+      "path": [
+        "Контакти"
+      ],
+      "pageId": 1924,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1957",
+      "where": "wp_navigation 1957 (footer-contact-vi)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1949,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1958",
+      "where": "wp_navigation 1958 (footer-company-vi)",
+      "label": "Về chúng tôi",
+      "path": [
+        "Về chúng tôi"
+      ],
+      "pageId": 1951,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1958",
+      "where": "wp_navigation 1958 (footer-company-vi)",
+      "label": "Dự án",
+      "path": [
+        "Dự án"
+      ],
+      "pageId": 1942,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1958",
+      "where": "wp_navigation 1958 (footer-company-vi)",
+      "label": "Tin tức",
+      "path": [
+        "Tin tức"
+      ],
+      "pageId": 1938,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1958",
+      "where": "wp_navigation 1958 (footer-company-vi)",
+      "label": "Tuyển dụng",
+      "path": [
+        "Tuyển dụng"
+      ],
+      "pageId": 1950,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1958",
+      "where": "wp_navigation 1958 (footer-company-vi)",
+      "label": "Quan hệ nhà đầu tư",
+      "path": [
+        "Quan hệ nhà đầu tư"
+      ],
+      "pageId": 1945,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1959",
+      "where": "wp_navigation 1959 (topbar-vi)",
+      "label": "Tuyển dụng",
+      "path": [
+        "Tuyển dụng"
+      ],
+      "pageId": 1950,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1959",
+      "where": "wp_navigation 1959 (topbar-vi)",
+      "label": "Nhà đầu tư",
+      "path": [
+        "Nhà đầu tư"
+      ],
+      "pageId": 1945,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1960",
+      "where": "wp_navigation 1960 (tracy-vi)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1946,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1960",
+      "where": "wp_navigation 1960 (tracy-vi)",
+      "label": "Giới thiệu",
+      "path": [
+        "Giới thiệu"
+      ],
+      "pageId": 1951,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1960",
+      "where": "wp_navigation 1960 (tracy-vi)",
+      "label": "Dịch vụ",
+      "path": [
+        "Dịch vụ"
+      ],
+      "pageId": 1941,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1960",
+      "where": "wp_navigation 1960 (tracy-vi)",
+      "label": "Dự án",
+      "path": [
+        "Dự án"
+      ],
+      "pageId": 1942,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1960",
+      "where": "wp_navigation 1960 (tracy-vi)",
+      "label": "Tin tức",
+      "path": [
+        "Tin tức"
+      ],
+      "pageId": 1938,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1960",
+      "where": "wp_navigation 1960 (tracy-vi)",
+      "label": "Liên hệ",
+      "path": [
+        "Liên hệ"
+      ],
+      "pageId": 1949,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1982",
+      "where": "wp_navigation 1982 (footer-contact-zh-cn)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1974,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1983",
+      "where": "wp_navigation 1983 (footer-company-zh-cn)",
+      "label": "关于我们",
+      "path": [
+        "关于我们"
+      ],
+      "pageId": 1976,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1983",
+      "where": "wp_navigation 1983 (footer-company-zh-cn)",
+      "label": "项目",
+      "path": [
+        "项目"
+      ],
+      "pageId": 1967,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1983",
+      "where": "wp_navigation 1983 (footer-company-zh-cn)",
+      "label": "新闻",
+      "path": [
+        "新闻"
+      ],
+      "pageId": 1963,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1983",
+      "where": "wp_navigation 1983 (footer-company-zh-cn)",
+      "label": "招聘",
+      "path": [
+        "招聘"
+      ],
+      "pageId": 1975,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1983",
+      "where": "wp_navigation 1983 (footer-company-zh-cn)",
+      "label": "投资者关系",
+      "path": [
+        "投资者关系"
+      ],
+      "pageId": 1970,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1984",
+      "where": "wp_navigation 1984 (topbar-zh-cn)",
+      "label": "招聘",
+      "path": [
+        "招聘"
+      ],
+      "pageId": 1975,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1984",
+      "where": "wp_navigation 1984 (topbar-zh-cn)",
+      "label": "投资者关系",
+      "path": [
+        "投资者关系"
+      ],
+      "pageId": 1970,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1985",
+      "where": "wp_navigation 1985 (tracy-zh-cn)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1971,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1985",
+      "where": "wp_navigation 1985 (tracy-zh-cn)",
+      "label": "关于我们",
+      "path": [
+        "关于我们"
+      ],
+      "pageId": 1976,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1985",
+      "where": "wp_navigation 1985 (tracy-zh-cn)",
+      "label": "服务",
+      "path": [
+        "服务"
+      ],
+      "pageId": 1966,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1985",
+      "where": "wp_navigation 1985 (tracy-zh-cn)",
+      "label": "项目",
+      "path": [
+        "项目"
+      ],
+      "pageId": 1967,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1985",
+      "where": "wp_navigation 1985 (tracy-zh-cn)",
+      "label": "新闻",
+      "path": [
+        "新闻"
+      ],
+      "pageId": 1963,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-1985",
+      "where": "wp_navigation 1985 (tracy-zh-cn)",
+      "label": "联系我们",
+      "path": [
+        "联系我们"
+      ],
+      "pageId": 1974,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2007",
+      "where": "wp_navigation 2007 (footer-contact-zh-tw)",
+      "label": "Book a site survey",
+      "path": [
+        "Book a site survey"
+      ],
+      "pageId": 1999,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2008",
+      "where": "wp_navigation 2008 (footer-company-zh-tw)",
+      "label": "關於我們",
+      "path": [
+        "關於我們"
+      ],
+      "pageId": 2001,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2008",
+      "where": "wp_navigation 2008 (footer-company-zh-tw)",
+      "label": "專案",
+      "path": [
+        "專案"
+      ],
+      "pageId": 1992,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2008",
+      "where": "wp_navigation 2008 (footer-company-zh-tw)",
+      "label": "新聞",
+      "path": [
+        "新聞"
+      ],
+      "pageId": 1988,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2008",
+      "where": "wp_navigation 2008 (footer-company-zh-tw)",
+      "label": "徵才",
+      "path": [
+        "徵才"
+      ],
+      "pageId": 2000,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2008",
+      "where": "wp_navigation 2008 (footer-company-zh-tw)",
+      "label": "投資人關係",
+      "path": [
+        "投資人關係"
+      ],
+      "pageId": 1995,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2009",
+      "where": "wp_navigation 2009 (topbar-zh-tw)",
+      "label": "徵才",
+      "path": [
+        "徵才"
+      ],
+      "pageId": 2000,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2009",
+      "where": "wp_navigation 2009 (topbar-zh-tw)",
+      "label": "投資人",
+      "path": [
+        "投資人"
+      ],
+      "pageId": 1995,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2010",
+      "where": "wp_navigation 2010 (tracy-zh-tw)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 1996,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2010",
+      "where": "wp_navigation 2010 (tracy-zh-tw)",
+      "label": "關於我們",
+      "path": [
+        "關於我們"
+      ],
+      "pageId": 2001,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2010",
+      "where": "wp_navigation 2010 (tracy-zh-tw)",
+      "label": "服務",
+      "path": [
+        "服務"
+      ],
+      "pageId": 1991,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2010",
+      "where": "wp_navigation 2010 (tracy-zh-tw)",
+      "label": "專案",
+      "path": [
+        "專案"
+      ],
+      "pageId": 1992,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2010",
+      "where": "wp_navigation 2010 (tracy-zh-tw)",
+      "label": "新聞",
+      "path": [
+        "新聞"
+      ],
+      "pageId": 1988,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2010",
+      "where": "wp_navigation 2010 (tracy-zh-tw)",
+      "label": "聯絡我們",
+      "path": [
+        "聯絡我們"
+      ],
+      "pageId": 1999,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2052",
+      "where": "wp_navigation 2052 (footer-legal)",
+      "label": "Sitemap",
+      "path": [
+        "Sitemap"
+      ],
+      "pageId": 2011,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2053",
+      "where": "wp_navigation 2053 (footer-legal-ru)",
+      "label": "Карта сайта",
+      "path": [
+        "Карта сайта"
+      ],
+      "pageId": 2012,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2054",
+      "where": "wp_navigation 2054 (footer-legal-de)",
+      "label": "Sitemap",
+      "path": [
+        "Sitemap"
+      ],
+      "pageId": 2013,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2055",
+      "where": "wp_navigation 2055 (footer-legal-af)",
+      "label": "Werfkaart",
+      "path": [
+        "Werfkaart"
+      ],
+      "pageId": 2014,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2056",
+      "where": "wp_navigation 2056 (footer-legal-be)",
+      "label": "Карта сайта",
+      "path": [
+        "Карта сайта"
+      ],
+      "pageId": 2015,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2057",
+      "where": "wp_navigation 2057 (footer-legal-bg)",
+      "label": "Карта на сайта",
+      "path": [
+        "Карта на сайта"
+      ],
+      "pageId": 2016,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2058",
+      "where": "wp_navigation 2058 (footer-legal-ca)",
+      "label": "Mapa del lloc",
+      "path": [
+        "Mapa del lloc"
+      ],
+      "pageId": 2017,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2059",
+      "where": "wp_navigation 2059 (footer-legal-cs)",
+      "label": "Mapa webu",
+      "path": [
+        "Mapa webu"
+      ],
+      "pageId": 2018,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2060",
+      "where": "wp_navigation 2060 (footer-legal-cy)",
+      "label": "Map y wefan",
+      "path": [
+        "Map y wefan"
+      ],
+      "pageId": 2019,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2061",
+      "where": "wp_navigation 2061 (footer-legal-da)",
+      "label": "Sitekort",
+      "path": [
+        "Sitekort"
+      ],
+      "pageId": 2020,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2062",
+      "where": "wp_navigation 2062 (footer-legal-el)",
+      "label": "Χάρτης ιστότοπου",
+      "path": [
+        "Χάρτης ιστότοπου"
+      ],
+      "pageId": 2021,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2063",
+      "where": "wp_navigation 2063 (footer-legal-es)",
+      "label": "Mapa del sitio",
+      "path": [
+        "Mapa del sitio"
+      ],
+      "pageId": 2022,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2064",
+      "where": "wp_navigation 2064 (footer-legal-et)",
+      "label": "Saidikaart",
+      "path": [
+        "Saidikaart"
+      ],
+      "pageId": 2023,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2065",
+      "where": "wp_navigation 2065 (footer-legal-fi)",
+      "label": "Sivukartta",
+      "path": [
+        "Sivukartta"
+      ],
+      "pageId": 2024,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2066",
+      "where": "wp_navigation 2066 (footer-legal-fr)",
+      "label": "Plan du site",
+      "path": [
+        "Plan du site"
+      ],
+      "pageId": 2025,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2067",
+      "where": "wp_navigation 2067 (footer-legal-hr)",
+      "label": "Mapa stranice",
+      "path": [
+        "Mapa stranice"
+      ],
+      "pageId": 2026,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2068",
+      "where": "wp_navigation 2068 (footer-legal-hu)",
+      "label": "Oldaltérkép",
+      "path": [
+        "Oldaltérkép"
+      ],
+      "pageId": 2027,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2069",
+      "where": "wp_navigation 2069 (footer-legal-it)",
+      "label": "Mappa del sito",
+      "path": [
+        "Mappa del sito"
+      ],
+      "pageId": 2028,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2070",
+      "where": "wp_navigation 2070 (footer-legal-ja)",
+      "label": "サイトマップ",
+      "path": [
+        "サイトマップ"
+      ],
+      "pageId": 2029,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2071",
+      "where": "wp_navigation 2071 (footer-legal-ka)",
+      "label": "საიტის რუკა",
+      "path": [
+        "საიტის რუკა"
+      ],
+      "pageId": 2030,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2072",
+      "where": "wp_navigation 2072 (footer-legal-lo)",
+      "label": "ແຜນຜັງເວັບໄຊທ໌",
+      "path": [
+        "ແຜນຜັງເວັບໄຊທ໌"
+      ],
+      "pageId": 2031,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2073",
+      "where": "wp_navigation 2073 (footer-legal-lt)",
+      "label": "Svetainės žemėlapis",
+      "path": [
+        "Svetainės žemėlapis"
+      ],
+      "pageId": 2032,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2074",
+      "where": "wp_navigation 2074 (footer-legal-lv)",
+      "label": "Vietnes karte",
+      "path": [
+        "Vietnes karte"
+      ],
+      "pageId": 2033,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2075",
+      "where": "wp_navigation 2075 (footer-legal-ms)",
+      "label": "Peta Laman",
+      "path": [
+        "Peta Laman"
+      ],
+      "pageId": 2034,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2076",
+      "where": "wp_navigation 2076 (footer-legal-nb)",
+      "label": "Nettstedskart",
+      "path": [
+        "Nettstedskart"
+      ],
+      "pageId": 2035,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2077",
+      "where": "wp_navigation 2077 (footer-legal-nl)",
+      "label": "Sitemap",
+      "path": [
+        "Sitemap"
+      ],
+      "pageId": 2036,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2078",
+      "where": "wp_navigation 2078 (footer-legal-pl)",
+      "label": "Mapa strony",
+      "path": [
+        "Mapa strony"
+      ],
+      "pageId": 2037,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2079",
+      "where": "wp_navigation 2079 (footer-legal-pt-br)",
+      "label": "Mapa do site",
+      "path": [
+        "Mapa do site"
+      ],
+      "pageId": 2038,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2080",
+      "where": "wp_navigation 2080 (footer-legal-pt-pt)",
+      "label": "Mapa do site",
+      "path": [
+        "Mapa do site"
+      ],
+      "pageId": 2039,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2081",
+      "where": "wp_navigation 2081 (footer-legal-ro)",
+      "label": "Hartă site",
+      "path": [
+        "Hartă site"
+      ],
+      "pageId": 2040,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2082",
+      "where": "wp_navigation 2082 (footer-legal-sk)",
+      "label": "Mapa stránky",
+      "path": [
+        "Mapa stránky"
+      ],
+      "pageId": 2041,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2083",
+      "where": "wp_navigation 2083 (footer-legal-sl)",
+      "label": "Zemljevid strani",
+      "path": [
+        "Zemljevid strani"
+      ],
+      "pageId": 2042,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2084",
+      "where": "wp_navigation 2084 (footer-legal-sr)",
+      "label": "Мапа сајта",
+      "path": [
+        "Мапа сајта"
+      ],
+      "pageId": 2043,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2085",
+      "where": "wp_navigation 2085 (footer-legal-sv)",
+      "label": "Webbplatskarta",
+      "path": [
+        "Webbplatskarta"
+      ],
+      "pageId": 2044,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2086",
+      "where": "wp_navigation 2086 (footer-legal-ta)",
+      "label": "தள வரைபடம்",
+      "path": [
+        "தள வரைபடம்"
+      ],
+      "pageId": 2045,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2087",
+      "where": "wp_navigation 2087 (footer-legal-th)",
+      "label": "แผนผังเว็บไซต์",
+      "path": [
+        "แผนผังเว็บไซต์"
+      ],
+      "pageId": 2046,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2088",
+      "where": "wp_navigation 2088 (footer-legal-tr)",
+      "label": "Site Haritası",
+      "path": [
+        "Site Haritası"
+      ],
+      "pageId": 2047,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2089",
+      "where": "wp_navigation 2089 (footer-legal-uk)",
+      "label": "Карта сайту",
+      "path": [
+        "Карта сайту"
+      ],
+      "pageId": 2048,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2090",
+      "where": "wp_navigation 2090 (footer-legal-vi)",
+      "label": "Sơ đồ trang",
+      "path": [
+        "Sơ đồ trang"
+      ],
+      "pageId": 2049,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2091",
+      "where": "wp_navigation 2091 (footer-legal-zh-cn)",
+      "label": "网站地图",
+      "path": [
+        "网站地图"
+      ],
+      "pageId": 2050,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-2092",
+      "where": "wp_navigation 2092 (footer-legal-zh-tw)",
+      "label": "網站地圖",
+      "path": [
+        "網站地圖"
+      ],
+      "pageId": 2051,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "templatePart-80",
+      "where": "template part 80 (header)",
+      "label": "header",
+      "path": [],
+      "pageId": null,
+      "rule": "unresolved.header-navigation",
+      "reason": "header header (80) has a navigation with no ref and no entries: WordPress falls back to another menu (the release's own markup; no operation here changes it)"
+    }
+  ],
+  "counts": {
+    "links": 0,
+    "templateParts": 1,
+    "kept": 615,
+    "unresolved": 1
+  }
+}

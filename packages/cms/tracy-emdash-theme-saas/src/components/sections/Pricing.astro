@@ -1,0 +1,313 @@
+---
+/**
+ * Plan cards + the "every plan includes" strip. `features` is one feature per line; `popular` is a
+ * text flag — "1"/"true" highlights the plan, and any other non-empty value is ALSO printed as its
+ * badge, so the badge wording stays content rather than template.
+ */
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import Col from './c/Col.astro'
+import RuledHead from './c/RuledHead.astro'
+import { stampFor, type Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  narrow?: boolean
+}
+const { data, narrow = false } = Astro.props
+
+const lines = (value: unknown) =>
+  String(value ?? '')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+
+function popularity(value: unknown): { on: boolean; badge: string } {
+  const raw = String(value ?? '').trim()
+  const flag = raw.toLowerCase()
+  if (!raw || flag === '0' || flag === 'false' || flag === 'no') return { on: false, badge: '' }
+  if (flag === '1' || flag === 'true' || flag === 'yes') return { on: true, badge: '' }
+  return { on: true, badge: raw }
+}
+
+const plans = (Array.isArray(data.items) ? data.items : [])
+  .filter((plan: any) => plan && (plan.name || plan.price))
+  .map((plan: any) => ({ ...plan, pop: popularity(plan.popular), featureList: lines(plan.features) }))
+const hasHead = Boolean(data.eyebrow || data.title || data.meta)
+const hasIncludes = Boolean(data.inc_title || data.inc_desc || data.inc_cta_label)
+
+// The includes line is a "·"-separated list. Each item keeps its trailing separator and never breaks
+// inside, so a wrapped line can't start with a bare separator (lens N-bd3e79).
+const incItems = String(data.inc_desc ?? '')
+  .trim()
+  .split(/\s+([·•|])\s+/)
+  .reduce<Array<{ text: string; sep: string }>>((acc, part, i) => {
+    if (i % 2 === 0) acc.push({ text: part, sep: '' })
+    else acc[acc.length - 1].sep = part
+    return acc
+  }, [])
+  .filter((item) => item.text)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'pricing', null)
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [
+  data.inc_cta_link,
+  ...plans.map((p: any) => p.cta_link)
+])
+---
+
+{
+	(hasHead || plans.length > 0 || hasIncludes) && (
+		<section class="k-section pricing" {...s()}>
+			<Col narrow={narrow}>
+				{hasHead && <RuledHead index={data.eyebrow} title={data.title} meta={data.meta} marks={{ index: s('eyebrow'), title: s('title'), meta: s('meta') }} />}
+				{plans.length > 0 && (
+					<div class="plans">
+						{plans.map((plan: any) => (
+							<article class:list={['plan', { 'is-popular': plan.pop.on }]} {...s.block('items')}>
+								{plan.pop.badge && <span class="badge" {...s('items.popular')}>{plan.pop.badge}</span>}
+								{plan.name && <h3 class="name" {...s('items.name')}>{plan.name}</h3>}
+								{plan.desc && <p class="desc" {...s('items.desc')}>{plan.desc}</p>}
+								{(plan.price || plan.period) && (
+									<p class="price">
+										{plan.price && <span class="amount" {...s('items.price')}>{plan.price}</span>}
+										{plan.period && <span class="period" {...s('items.period')}>{plan.period}</span>}
+									</p>
+								)}
+								{plan.cta_label && live(plan.cta_link) && (
+									<a class="k-btn k-btn-primary cta" href={plan.cta_link || '#'} {...s('items.cta_label')}>
+										{plan.cta_label}
+									</a>
+								)}
+								{plan.featureList.length > 0 && (
+									<ul class="features" {...s('items.features')}>
+										{plan.featureList.map((feature: string) => (
+											<li>
+												<span class="check">
+													<Icon name="check" size={17} strokeWidth={2.2} />
+												</span>
+												<span>{feature}</span>
+											</li>
+										))}
+									</ul>
+								)}
+							</article>
+						))}
+					</div>
+				)}
+				{hasIncludes && (
+					<div class="includes">
+						<div class="inc-text">
+							{data.inc_title && <p class="inc-title" {...s('inc_title')}>{data.inc_title}</p>}
+							{incItems.length > 0 && (
+								<p class="inc-desc" {...s('inc_desc')}>
+									{incItems.map((item, i) => (
+										<>
+											<span class="inc-item">
+												{item.text}
+												{item.sep && ` ${item.sep}`}
+											</span>
+											{i < incItems.length - 1 && ' '}
+										</>
+									))}
+								</p>
+							)}
+						</div>
+						{data.inc_cta_label && live(data.inc_cta_link) && (
+							<a class="inc-btn" href={data.inc_cta_link || '#'} {...s('inc_cta_label')}>
+								{data.inc_cta_label}
+							</a>
+						)}
+					</div>
+				)}
+			</Col>
+		</section>
+	)
+}
+
+<style>
+	/* Plans followed by the comparison table read as one block on the source: the includes box sits
+	   ~64px above the matrix rule, not two stacked section paddings (lens N-e08af9). The matrix side
+	   sets its top padding. */
+	.pricing:has(+ :global(.k-section.matrix)) {
+		padding-bottom: 0;
+	}
+	.plans {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+		gap: 20px;
+		align-items: stretch;
+	}
+	.plan {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		padding: 30px 26px;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: var(--radius-card);
+		box-shadow: var(--k-shadow);
+	}
+	/* Highlighted plan: primary hairline and a faint glow from the top edge. */
+	.plan.is-popular {
+		border-color: var(--k-primary);
+		background-image: radial-gradient(
+			at 50% 0%,
+			color-mix(in srgb, var(--k-primary) 9%, transparent) 0%,
+			transparent 70%
+		);
+	}
+	.badge {
+		position: absolute;
+		top: -11px;
+		left: 26px;
+		padding: 4px 10px;
+		border-radius: 100px;
+		background: var(--k-primary-fill);
+		color: var(--k-primary-ink);
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		line-height: 1.7;
+		font-weight: 700;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+	.name {
+		margin: 0 0 6px;
+		font-family: var(--font-heading);
+		font-size: 20px;
+		line-height: 1.7;
+		font-weight: 700;
+		color: var(--k-heading);
+	}
+	.desc {
+		margin: 0 0 18px;
+		font-size: 13.5px;
+		line-height: 1.75;
+		color: var(--k-muted);
+		text-wrap: pretty;
+	}
+	/* If amount and unit don't fit side by side, the unit drops below as one line instead of breaking. */
+	.price {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		column-gap: 4px;
+		margin: 0 0 22px;
+	}
+	.amount {
+		font-family: var(--font-heading);
+		font-size: 40px;
+		line-height: 1;
+		font-weight: 700;
+		letter-spacing: -1.5px;
+		color: var(--k-heading);
+	}
+	/* The unit sits on the amount's baseline and stays on one line (lens N-24b52d). */
+	.period {
+		padding-top: 18px;
+		font-family: var(--font-mono);
+		font-size: 13px;
+		line-height: 1.7;
+		color: var(--k-muted);
+		white-space: nowrap;
+	}
+	.cta {
+		width: 100%;
+		min-height: 40px;
+		margin: 0 0 22px;
+		padding: 12px;
+		border-radius: var(--radius-ghost);
+		font-size: 14.5px;
+		white-space: normal;
+		text-align: center;
+	}
+	.features {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.features li {
+		display: flex;
+		gap: 9px;
+		font-size: 16px;
+		line-height: 1.5;
+		color: var(--k-text);
+		text-wrap: pretty;
+	}
+	.check {
+		flex-shrink: 0;
+		display: inline-flex;
+		margin-top: 3px;
+		color: var(--k-primary);
+	}
+	.includes {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 20px;
+		margin-top: 28px;
+		padding: 32px;
+		background: var(--k-elevated);
+		border: 1px solid var(--k-border);
+		border-radius: var(--radius-card);
+	}
+	.inc-text {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		min-width: 0;
+	}
+	.inc-title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 20px;
+		line-height: 1.7;
+		font-weight: 700;
+		color: var(--k-heading);
+	}
+	.inc-desc {
+		margin: 0;
+		font-size: 14.5px;
+		line-height: 1.65;
+		color: var(--k-text);
+	}
+	.inc-item {
+		white-space: nowrap;
+	}
+	.inc-btn {
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		padding: 12px 20px;
+		border: 1px solid var(--k-border);
+		border-radius: var(--radius-ghost);
+		background: var(--k-surface);
+		color: var(--k-heading);
+		font-size: 14.5px;
+		line-height: 1.7;
+		font-weight: 600;
+		white-space: nowrap;
+		transition: border-color 0.15s;
+	}
+	.inc-btn:hover {
+		border-color: var(--k-primary);
+	}
+	@media (max-width: 767px) {
+		.includes {
+			flex-direction: column;
+			align-items: flex-start;
+			padding: 22px;
+		}
+	}
+</style>

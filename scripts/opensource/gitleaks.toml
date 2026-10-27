@@ -1,0 +1,36 @@
+# gitleaks rules for the open-source scan: the default rule set, minus generic-api-key matches in
+# named generated data files whose shape is a digest or a content key. Each allowlist below needs
+# BOTH a listed path and the exact shape (condition AND), so a credential pasted anywhere else, or
+# in another shape, still matches. A test placeholder is cleared in public-tree.json by the sha256
+# of its value, never here.
+title = "tch open-source scan"
+
+[extend]
+useDefault = true
+
+# Same id as the default rule: these allowlists are merged into it.
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "sha256 of each packaged file in a released quickstart's presentation lock"
+condition = "AND"
+paths = ['''(^|/)packages/cms/tracy-(joomla|wordpress)-quickstart/contracts/[^/]+/(j6|wp7)/[^/]+/presentation-lock\.json$''']
+regexTarget = "secret"
+regexes = ['''^[0-9a-f]{64}$''']
+
+[[rules.allowlists]]
+description = "Content keys (one JSON key/value per line) in generated quickstart maps, EmDash seeds and site fixtures"
+condition = "AND"
+paths = [
+  '''(^|/)packages/cms/tracy-wordpress-quickstart/contracts/[^/]+/wp7/[^/]+/(showcase-nav-map|content-map)\.json$''',
+  '''(^|/)packages/cms/tracy-emdash-theme-business/seed/seed\.json$''',
+  '''(^|/)vendor/emdash/emdash-theme-(bravada|tracy-coral|tracy-editorial)/seed/seed\.json$''',
+  '''(^|/)packages/tools/tracy-site-tools/test/fixtures/(replace/emdash/site|emdash/business-en|emdash/kit-slides-v6)\.json$''',
+]
+regexTarget = "line"
+regexes = ['''^\s*"(_key|key|storageKey)"\s*:\s*"[^"]*",?\s*$''']
+
+[[rules.allowlists]]
+description = "CSS selectors and declarations"
+paths = ['''\.css$''']

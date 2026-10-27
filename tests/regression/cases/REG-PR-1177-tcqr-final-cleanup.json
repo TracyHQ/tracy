@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1177-tcqr-final-cleanup",
+  "kind": "fix",
+  "title": "The final decisions after g65 hold: FULL WordPress and Joomla demo posts are translated only (each distinct text once, lorem kept, English sites untouched, the WordPress blog in a few model calls), menu items into a renamed blog category take its new name, the readiness checks accept L3/L5 and demo-mirrored titles and check L1, EmDash vacancies are never another company's job (Tracy Business EmDash 1.7.14 pinned), and Road to live's Polish step words its pages file truthfully",
+  "pr": 1177,
+  "area": "sites/brief",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/{brief-wordpress,brief-wp-posts,joomla-blog-translate,joomla-demo-articles,joomla-blog-categories,blog-truthful-g64,brief-emdash}.test.mjs (translate-only posts with disobedient translators and out-of-credit models, 46-post call count, L1 menus, the emptied-entry note).",
+    "S2: node --test the EmDash themes' tests/personalize-rewrite-trade.test.mjs (Business, SaaS, Base and the kit) and Business's personalize-keeps-structure test.",
+    "S3: node --test scripts/test/template-customization-question-readiness-built-site.test.mjs and apps/tracy-web/test/template-customization-question-readiness-category-menus.test.mjs.",
+    "S4: node --test packages/web/tracy-harness/test/{problem-guides,template-presses}.test.mjs.",
+    "S5: read both quickstarts.json: the tracy-business/emdash entry.",
+    "S6: confirm the removed blog rewrite modules are gone from apps/tracy-web/src/sites/brief-engines."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped or cancelled.",
+    "S2: every test passes, none skipped or cancelled.",
+    "S3: every test passes, none skipped or cancelled.",
+    "S4: every test passes, none skipped or cancelled.",
+    "S5: tracy-business/emdash 1.7.14, source and state files named for that version with a GitHub asset id.",
+    "S6: blog-plan.js, post-title-stage.js, blog-name-once.js and joomla-article-titles.js do not exist; blog-translate.js and joomla-menu-categories.js do."
+  ],
+  "selectors": {
+    "tests": "tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs",
+    "blog": "apps/tracy-web/src/sites/brief-engines/blog-translate.js, wp-posts.js, joomla.js",
+    "menus": "apps/tracy-web/src/sites/brief-engines/joomla-menu-categories.js, wp-residue.js relabelCategories",
+    "checks": "scripts/lib/template-customization-question-readiness-built-site/, apps/tracy-web/src/lib/template-customization-question-readiness/readers/category-menu-labels.js",
+    "emdash": "tools/personalize.mjs of the EmDash themes and the kit; seed/personalize.json of Tracy Business",
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy",
+    "road": "packages/web/tracy-harness/src/cms/problem-guides.ts"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-12-tcqr-final-cleanup.md",
+  "fence": "The WordPress and Joomla FULL blog translation and its build report, the menu entries into renamed categories, the readiness checks of 12/10, the EmDash vacancy rewrite fallback, the Business 1.7.14 pin, and the Road to live Polish wording.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs"],
+    "needs": []
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1016-help-verification-fixes",
+  "kind": "fix",
+  "title": "A dsh notice is readable, the chat box keeps focus after '/help <question>', and Help answers about Stop and long requests without claiming to see live state",
+  "pr": 1016,
+  "area": "assistant",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/assistant.test.mjs packages/ui/tracy-assistant/test/help.test.mjs packages/ui/tracy-assistant/test/chat.test.mjs",
+    "S2: Record the exit code and the result of the cases named: \"Help prompt: knows the Stop square of the chat box and never claims to see whether a task is running\"; \"Help prompt: answers stay short even when asked for everything, so they fit the output limit\".",
+    "S3: node scripts/build-api-spec.mjs is not needed. Run: pnpm exec tsx scripts/check-dsh-tokens.ts && pnpm exec tsx scripts/check-bundles.ts and read that packages/brand/tracy-brand/src/client/generated.ts no longer maps --dsw-alias-toast-bg to var(--popover).",
+    "S4 (stand, tasks/bang-chung/lan-3-kiem-lai-day-du/): dsh native + tracy-web + real models, dsh built from fork 0.2.0-rc.2-tracy.24. Attach a file to the chat box, type '/help hi there', Enter: the notice \"/help does not accept attachments; remove them first\" has dark text on a dark surface (readable: computed colour differs from its background). Then type '/help what is a Diff?', Enter, and without clicking type more: the keystrokes land in the chat box. Any other argued slash line the catalog handles (not only /help) behaves the same.",
+    "S5 (fork, vendor/tracy/deepseek-harness): ./node_modules/.bin/vitest run packages/client/ui-conversation packages/client/ui-commands - 46 files, 702 tests green, among them the three cases of \"an argued line a command handles returns the keyboard to the composer\" (focus returns; a control the person moved to keeps it; a composer that never had it does not grab it)."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'; both prompt cases are 'ok'. The prompt states that the send arrow turns into a red Stop square while Tracy works, forbids saying that a task is or is not running, and asks for answers under about 250 words even for 'everything'.",
+    "S3: both gates pass and the generated brand tokens no longer set --dsw-alias-toast-bg (dsh's own dark toast surface stays, so its white label is readable).",
+    "S4: the toast's text colour and its background colour differ; after '/help <question>' the active element is the chat box (data-composer-input) and typing continues in it without a click, with no frame-loop workaround left in the plugin.",
+    "S5: the fork specs exit 0; the first of the three focus cases is red on fork 0.2.0-rc.2-tracy.23 and green on tracy.24."
+  ],
+  "selectors": {
+    "toast": "[role=alert] (dsh Toast)",
+    "chatBox": "[data-composer-input=true]",
+    "bridge": "packages/ui/tracy-ui/src/dsh-bridge.css",
+    "prompt": "apps/tracy-web/src/assistant/prompt.js"
+  },
+  "evidence": "Found 07/10/2026 while running the remaining cases of tasks/todo-lenh-help.md on a real stack: tasks/bang-chung/lan-3-kiem-lai-day-du/KET-QUA.md (23/23 + 21/21 + 18/18 + 6/6 + 42 agent cases; unit suites 69/69).",
+  "fence": "Help still cannot stop or change anything; it only tells the person where the Stop square is, and it never states whether a task is running because it only has records of past turns.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/assistant.test.mjs",
+      "packages/ui/tracy-assistant/test/help.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "Help prompt: knows the Stop square of the chat box and never claims to see whether a task is running",
+      "Help prompt: answers stay short even when asked for everything, so they fit the output limit"
+    ]
+  }
+}

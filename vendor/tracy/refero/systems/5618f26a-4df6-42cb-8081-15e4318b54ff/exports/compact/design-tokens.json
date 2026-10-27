@@ -1,0 +1,99 @@
+{
+  "color": {
+    "cyan-signal": {
+      "$value": "#00affa",
+      "$type": "color",
+      "$description": "Cyan Signal — Blue accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "cream-paper": {
+      "$value": "#f7f7f1",
+      "$type": "color",
+      "$description": "Cream Paper — Page canvas, section backgrounds, soft card surfaces — the warm off-white ground everything sits on"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Inset cards, modal surfaces, inverse button text, nav background"
+    },
+    "stone-gray": {
+      "$value": "#dcdcd4",
+      "$type": "color",
+      "$description": "Stone Gray — Subtle accent surfaces, inset focus rings, warm shadow tints"
+    },
+    "graphite": {
+      "$value": "#404040",
+      "$type": "color",
+      "$description": "Graphite — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "mid-ink": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Mid Ink — Button text and border on dark surfaces, icon stroke"
+    },
+    "charcoal": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Charcoal — Headline text alternative, deep emphasis borders"
+    },
+    "pewter": {
+      "$value": "#7f7f7f",
+      "$type": "color",
+      "$description": "Pewter — Secondary body text, muted helper text, inactive state text"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — SVG illustration linework, deepest icon fills"
+    },
+    "midnight-violet": {
+      "$value": "#1e2554",
+      "$type": "color",
+      "$description": "Midnight Violet — Illustration primary — the dominant dark shape color in cubist murals"
+    },
+    "deep-iris": {
+      "$value": "#2c2a6c",
+      "$type": "color",
+      "$description": "Deep Iris — Illustration mid-tone — secondary dark purple in mural compositions"
+    },
+    "coral-burst": {
+      "$value": "#ff5d43",
+      "$type": "color",
+      "$description": "Coral Burst — Illustration warm accent — orange-red shape fills in murals"
+    },
+    "aqua-glow": {
+      "$value": "#38dede",
+      "$type": "color",
+      "$description": "Aqua Glow — Illustration cool accent and icon highlight — teal punctuation in murals"
+    },
+    "vivid-amethyst": {
+      "$value": "#9164fa",
+      "$type": "color",
+      "$description": "Vivid Amethyst — Illustration bright accent — saturated purple shape fills"
+    },
+    "blush": {
+      "$value": "#f8b3b8",
+      "$type": "color",
+      "$description": "Blush — Illustration soft accent — pink shape fills for warmth in murals"
+    }
+  },
+  "font": {
+    "dropmarkrealhead": {
+      "$value": "DropmarkRealHead",
+      "$type": "fontFamily",
+      "$description": "Display and section headings only — used at 60px for hero, 40px for section titles, 24px for sub-section headings. Medium weight is deliberate; avoids the heavy 700 convention to keep headlines calm and editorial rather than assertive."
+    },
+    "dropmarkrealtext": {
+      "$value": "DropmarkRealText",
+      "$type": "fontFamily",
+      "$description": "Body, buttons, nav, list, footer, supporting UI. 400 for body and links, 600 for emphasized sub-labels and button text, 700 reserved for occasional inline emphasis. Functions as the working sans — every non-heading element uses it."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://dropmark.com",
+      "siteName": "Dropmark",
+      "extractedAt": "2026-06-03T20:03:45.682Z",
+      "variant": "compact"
+    }
+  }
+}

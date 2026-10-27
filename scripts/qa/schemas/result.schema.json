@@ -1,0 +1,50 @@
+{
+  "$comment": "What a test-writing lane leaves in its test folder as result.json (plan §4.7). One entry per case of the plan, written or not. The sha256 values are re-checked by the intake before any rerun.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pr", "lane", "cases"],
+  "properties": {
+    "pr": { "type": "string", "pattern": "^(pr[0-9]+|calib-(true|false))$" },
+    "lane": { "type": "string", "enum": ["sonnet", "sol"] },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["caseId", "file", "expectedFrom", "level", "before"],
+        "properties": {
+          "caseId": { "type": "string", "pattern": "^(pr[0-9]+|calib-(true|false))-k[0-9]+$" },
+          "file": {
+            "type": ["string", "null"],
+            "pattern": "^(pr[0-9]+|calib-(true|false))-k[0-9]+\\.test\\.mjs$"
+          },
+          "expectedFrom": { "type": "string", "minLength": 1 },
+          "level": { "type": "string", "enum": ["stand", "code"] },
+          "before": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["outcome", "message", "testSha256", "libSha256", "preconditions"],
+            "properties": {
+              "outcome": { "type": "string", "enum": ["pass", "fail", "error", "not-written", "skipped"] },
+              "message": { "type": "string" },
+              "testSha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+              "libSha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+              "preconditions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["name", "ok"],
+                  "properties": {
+                    "name": { "type": "string", "minLength": 1 },
+                    "ok": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

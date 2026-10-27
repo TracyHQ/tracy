@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-porcelain-canvas: #ffffff;
+  --color-bone: #fcfaee;
+  --color-obsidian: #191817;
+  --color-pure-ink: #000000;
+  --color-graphite: #555555;
+  --color-mist: #e5e5e5;
+  --color-ultramarine-velvet: #060daa;
+
+  /* Typography — Font Families */
+  --font-beosupreme: 'BeoSupreme', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-object-fit-cover-object-position-center: 'object-fit: cover; object-position: center;', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

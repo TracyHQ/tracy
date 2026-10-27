@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-sunrise-coral: #fc5f2b;
+  --color-coral-glow: #ff8b64;
+  --gradient-coral-glow: linear-gradient(88deg, rgb(252, 95, 43), rgb(255, 139, 100) 90%, rgb(255, 255, 255));
+  --color-carbon-black: #18181b;
+  --color-pure-black: #000000;
+  --color-zinc-gray: #71717a;
+  --color-ash-gray: #a1a1aa;
+  --color-mist-gray: #e4e4e7;
+  --color-fog-gray: #f4f4f5;
+  --color-paper-white: #ffffff;
+
+  /* Typography — Font Families */
+  --font-nb-international-pro: 'NB International Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-nb-international-mono-pro: 'NB International Mono Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

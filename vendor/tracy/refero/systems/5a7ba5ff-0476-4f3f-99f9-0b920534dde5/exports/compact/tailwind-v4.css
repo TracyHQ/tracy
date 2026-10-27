@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-oxblood: #472425;
+  --color-paper-white: #ffffff;
+  --color-carbon-black: #000000;
+  --color-graphite: #121212;
+  --color-ash: #999999;
+  --color-crimson: #e73737;
+
+  /* Typography */
+  --font-neue-haas-display: 'Neue Haas Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sfuidisplay: 'SFUIDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

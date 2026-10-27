@@ -1,0 +1,14 @@
+.signal-growth-funnel { width: 100%; border-collapse: collapse; font-size: 14px; }
+.signal-growth-funnel th, .signal-growth-funnel td { padding: 12px 16px; border-bottom: 1px solid var(--border); text-align: right; font-weight: 400; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.signal-growth-funnel th:first-child { text-align: left; }
+.signal-growth-funnel thead { color: var(--muted-foreground); }
+.signal-growth-funnel tbody th { font-weight: 500; }
+.signal-growth-timing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 20px; }
+.signal-growth-timing > div { padding: 16px; border: 1px solid var(--border); border-radius: 8px; }
+.signal-growth-timing h3, .signal-growth-timing p { margin: 0 0 8px; font-size: 14px; color: var(--muted-foreground); font-weight: 400; }
+.signal-growth-timing strong { display: block; margin: 8px 0; font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.signal-growth-activity { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.signal-growth-activity select { min-height: 36px; background: var(--card); color: var(--foreground); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font: inherit; }
+.signal-growth-activity select:hover { background: var(--muted); }
+.signal-growth-activity select:focus-visible { outline: none; border-color: var(--ring); }
+@media (max-width: 700px) { .signal-growth-timing { grid-template-columns: 1fr; } }

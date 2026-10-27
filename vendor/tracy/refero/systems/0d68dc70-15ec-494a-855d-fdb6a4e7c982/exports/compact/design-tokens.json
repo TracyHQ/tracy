@@ -1,0 +1,64 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, hero field, all large surface areas — the dominant ground that makes every other element read as signal"
+    },
+    "bone-white": {
+      "$value": "#eaeaea",
+      "$type": "color",
+      "$description": "Bone White — Primary body text, paragraph copy, bio blocks, nav labels — slightly off-white so it never feels clinical against the pure black field"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Headline text, hero display type, the loudest typographic register — pure white reserved for the largest voices on the page"
+    },
+    "ash": {
+      "$value": "#878787",
+      "$type": "color",
+      "$description": "Ash — Secondary heading text, muted labels, supportive metadata — the middle gray that lets a subhead recede behind a headline"
+    },
+    "iron-gray": {
+      "$value": "#1e1e1e",
+      "$type": "color",
+      "$description": "Iron Gray — Subtle hairline dividers and section separators — barely one step off the canvas, used only when a line needs to exist without announcing itself"
+    },
+    "graphite": {
+      "$value": "#373737",
+      "$type": "color",
+      "$description": "Graphite — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "signal-lime": {
+      "$value": "#86ff00",
+      "$type": "color",
+      "$description": "Signal Lime — Signature accent: the oversized hero disc, focal point punctuation, and any single high-attention graphic — a single neon-lime shape per screen, never decorative repetition"
+    },
+    "cobalt-bar": {
+      "$value": "#1a3cff",
+      "$type": "color",
+      "$description": "Cobalt Bar — Active header band and focus state for the top navigation — replaces the black header on scroll/hover to mark the system is now engaged"
+    }
+  },
+  "font": {
+    "neue-haas-grotesk": {
+      "$value": "Neue Haas Grotesk",
+      "$type": "fontFamily",
+      "$description": "The only voice on the site. Used for hero display (71px), section headlines (31px), subheads (23–26px), and body copy (18–19px). The signature is a single weight — 400 only — across every size; bold is never used. This monoweight discipline is the typographic equivalent of the black canvas: everything that would normally shout is forced to speak at the same volume, and the hierarchy comes purely from scale and line-height, never from weight contrast."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Secondary fine-print and small image captions. The serif appears only at 13px, creating an editorial footnote register that contrasts the grotesque's modern authority with a quiet traditionalist voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://danilorodrigues.com",
+      "siteName": "Danilo Rodrigues",
+      "extractedAt": "2026-06-03T20:29:10.776Z",
+      "variant": "compact"
+    }
+  }
+}

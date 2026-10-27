@@ -1,0 +1,54 @@
+{
+  "color": {
+    "ember-red": {
+      "$value": "#ee3a49",
+      "$type": "color",
+      "$description": "Ember Red — Wordmark, navigation text, kicker labels, and the single chromatic accent that makes the otherwise monochrome system read as a brand. The warmth against pure black and white creates editorial urgency without tipping into alarm"
+    },
+    "hyper-green": {
+      "$value": "#0fa64b",
+      "$type": "color",
+      "$description": "Hyper Green — Reserved for the rotating circular brand badge and high-prominence brand moments. A single saturated spot of color in an otherwise achromatic system — used sparingly so it lands as identity, not decoration"
+    },
+    "signal-blue": {
+      "$value": "#007bff",
+      "$type": "color",
+      "$description": "Signal Blue — Outlined/ghost action border, image frame accent, and link underline. Functions as the system's cool counterweight to the warm Ember Red — used for bordered interactive elements rather than filled buttons"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas in the hero, primary text color in light sections, and the dominant border color across all UI elements. Carries the heaviest weight in the system — defines edges, type, and spatial structure"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Hairline borders, dividers, input outlines, and card edges on light surfaces."
+    },
+    "graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Graphite — Secondary navigation text and border color for tertiary UI elements. The middle tone that prevents the black/white binary from feeling stark in repetitive nav and list contexts"
+    }
+  },
+  "font": {
+    "aeonik": {
+      "$value": "Aeonik",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all display, heading, and body text. Weight 300 at 75–90px with line-heights near 0.90–1.00 creates the system's signature sculptural headlines — letterforms lock together through aggressive negative tracking (-0.053em) rather than spacing. Mid-weight 400–500 handles body and UI at 19–20px with 1.45–1.70 line-height for generous readability."
+    },
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "System fallback for nav items, footer micro-copy, and supporting UI text where the custom Aeonik isn't loaded. Carries no distinctive role — purely a graceful degradation layer."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://hypertria.com",
+      "siteName": "Hyper Tria",
+      "extractedAt": "2026-06-03T20:42:45.387Z",
+      "variant": "compact"
+    }
+  }
+}

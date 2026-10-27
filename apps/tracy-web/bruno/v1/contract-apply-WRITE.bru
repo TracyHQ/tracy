@@ -1,0 +1,38 @@
+meta {
+  name: contract apply WRITE
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/v1/sites/{{site}}/contract/apply
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "apply_id": "contract-bruno-1",
+    "changes": { "{{slotKey}}": "Fresh bread every morning" }
+  }
+}
+
+headers {
+  If-Match: "{{contentId}}:{{contentRevision}}"
+  Idempotency-Key: bruno-contract-1
+}
+
+vars:pre-request {
+  slotKey: hero.0
+}
+
+docs {
+  # WRITES: change a slot through the content contract
+
+  `content.contract {operation: "apply"}` on a quickstart-built site. `If-Match` carries the
+  revision of the content the change is based on as `"<contentId>:<revision>"` — "one content"
+  saves both as `contentId` and `contentRevision`; a moved content answers `409` with
+  `errors[].code = REVISION_STALE`. `Idempotency-Key` is the plugin's `request_id`: a retry with
+  the same value answers the stored result. Set `slotKey` in the Vars tab to a slot key
+  `contract/inspect` lists.
+}

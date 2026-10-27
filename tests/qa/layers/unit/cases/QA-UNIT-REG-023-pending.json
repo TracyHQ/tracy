@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-023-pending",
+  "itemIds": ["regression:REG-023"],
+  "requirement": "JA Kinetic wp7: author, Features rows, 390 overflow, mega panels, tablet header and drawer, footer links, eyebrow tags, leftovers, timeline and 404 band behave like the source",
+  "oracle": {
+    "source": "tests/regression/cases/REG-023-ja-kinetic-wp7-audit-fixes.json",
+    "ref": "PR #823 (fix); fix evidence: Independent audit 03/10/2026; measure115 on 1.1.4 vs 1.1.5 (tasks/ja-kinetic-wp7/release/measure115-before-1.1.4.json, measure115-after-1.1.5.json); 9/9 on 1.1.5 bound to the theme zip (tasks/ja-kinetic-wp7/release/BROWSER.json)",
+    "invariant": "measure115: 9/9 checks pass. author, features, overflow, mega, tablet, footer, eyebrow, comments, timeline404: each PASS with a non-zero examined count.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-023"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-023",
+    "pr": 823,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-kinetic",
+    "file": "tests/regression/cases/REG-023-ja-kinetic-wp7-audit-fixes.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

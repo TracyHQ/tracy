@@ -1,0 +1,422 @@
+# The @tracy/dsh-cowork-bundle bundle patch: everything Tracy's surface needs, inserted as ONE layer
+# over whichever surface bundle came before it.
+#
+# This file is why a profile lists three bundles instead of seven. A profile names
+# @tracy/dsh-cowork-bundle; this patch names the parts. Adding a Tracy plugin is a line here plus a
+# dependency in package.json -- never an edit to a profile, and never an edit to the fleet.
+#
+# The rows carry identity and neutral defaults ONLY. A value that differs between one
+# deployment and the next -- tracy-wp's `webroot` is the standing example -- belongs in the
+# profile's own cordis.patch.yml, because a patch replaces the targeted row's whole `config`
+# rather than merging into it. Put a deployment's value here and every deployment inherits it.
+#
+# Each Tracy plugin also ships its own dsh.bundle.patch inserting the same row. Those do not
+# run here: a package's bundle patch applies only when the package is named in
+# dsh.profile.bundles, and under this bundle none of them are. Naming both this bundle and
+# one of its children in one profile WOULD insert a row twice, and a duplicate loader entry
+# id makes dsh refuse to boot outright.
+
+# ── dsh-passwords ──────────────────────────────────────────────────────────────
+# Replicated from dsh-passwords@2.6.5's own cordis.yml, because dsh has no bundle-composes-
+# bundle mechanism: DshBundleManifest carries a single `patch` path and nothing else. The
+# only way for a profile to name three bundles is for this one to absorb the fourth.
+#
+# THE VERSION PIN IN package.json IS THE CONTROL FOR THAT. dsh-passwords is pinned to an
+# exact 2.6.5, not a caret range, so its rows cannot change under this copy while nobody is
+# looking. Upgrading is then a deliberate edit, and whoever makes it must re-read the
+# upstream cordis.yml and reconcile these rows. A caret range would let 2.7 land silently
+# with rows that no longer match -- the quiet divergence this repository keeps designing out.
+
+# dsh ships an adaptive directory picker that resolves to the browser-native dialog on a
+# loopback bind with a display session, which then fails whenever the app is reached through
+# the gateway instead. Pin the in-app browser explicitly.
+- id: directory-picker
+  disabled: true
+
+- insert:
+    - id: directory-picker-browse
+      name: '@deepseek-ai/dsh-host-directory-picker-browse'
+
+    # No `ui-directory-picker-browse` (15/09/2026): a workspace is a site, and a site is added by Add
+    # site, never by picking a folder. With the directory-flow hole empty, dsh hides "Add workspace…"
+    # in the sidebar and in the conversation hero picker.
+
+    - id: dsh-passwords
+      name: dsh-passwords
+
+# ── Tracy ──────────────────────────────────────────────────────────────────────
+- insert:
+    - id: tracy-brand
+      name: '@tracy/dsh-brand'
+
+    # dsh's OWN namespace, translated by the community, not Tracy's job (decided 2026-08-30).
+    # This package OWNS the `vi` language — it is the only place that calls `addLanguage`.
+    # `@tracy/dsh-tracy-locale-vi` below carries only Tracy's own namespace and must NOT call addLanguage
+    # anymore: a duplicate id makes `register` throw and brings down the whole plugin tree.
+    #
+    # Placed BEFORE tracy-locale for the reader, not the machine: row order carries no load semantics
+    # (cordis activates by service readiness), and the locale docs state that definitions and
+    # dictionaries may register in any order.
+    #
+    # 🔒 KEEP `github:…#<commit>` AS IS IN package.json. DON'T switch to a version number.
+    # npmjs has a DIFFERENT package also named `dsh-locale-vi@0.1.0` — different author, different content
+    # (injects `dsh-client-connection` + `dsh-cli…`, 338 KB, versus 108 KB and only injecting
+    # `dsh-client-locale` in this package). PhuVinhAI's README warns about exactly that.
+    #
+    # And TCH's `.npmrc` sends UNSCOPED packages straight to npmjs, not through a private registry. So
+    # writing `"dsh-locale-vi": "0.1.0"` would SILENTLY pull someone else's package: no error, no
+    # warning, just a foreign plugin sitting in Tracy's bundle.
+    #
+    # Republishing to a private registry does not help either: under the same name it shadows the real npm
+    # package; switching to the `@tracy/*` scope breaks the `id` in its `lib/client.js` and half the UI
+    # vanishes without one log line — the same trap that killed `dsh-github-workbench`.
+    - id: dsh-locale-vi
+      name: dsh-locale-vi
+
+    # The four European languages Tracy supports beyond dsh's built-ins (de, fr, it, nl), registered
+    # through dsh's native `locale.addLanguage`. The fork registers ONLY the languages listed in
+    # `@tracy/core/interface-languages` (spec #730, 02/10/2026); the other 14 dictionaries stay in
+    # the tree unreferenced. A registered language is selectable and can win browser detection, so
+    # an untranslated one must not be registered. Pinned by
+    # `packages/core/tracy-core/test/interface-languages.test.mjs`.
+    #
+    # 🔒 NO `vi` HERE, and that is why this package must be a fork rather than the upstream build used
+    # directly: `dsh-locale-vi` just above already holds the id `vi`, and `addLanguage` with a duplicate id
+    # THROWS — and in dsh that brings down the whole plugin tree, not just this package. Details in
+    # `vendor/tracy/dsh-better-locale/src/client/languages.ts`.
+    - id: dsh-plugin-better-locale
+      name: '@huanlin/dsh-plugin-better-locale'
+
+    - id: tracy-locale-vi
+      name: '@tracy/dsh-tracy-locale-vi'
+
+    # Tracy's own namespaces in de, fr, it, nl, zh and es, plus the dsh namespaces no language pack
+    # registers for those languages (spec #730). The only language it ADDS is es (its
+    # `languages.json`): de/fr/it/nl belong to better-locale above, zh to dsh. A (namespace,
+    # language) pair is registered once; `check-interface-languages` fails on a duplicate pair.
+    - id: tracy-locales
+      name: '@tracy/dsh-tracy-locales'
+
+    - id: tracy-chat-input
+      name: '@tracy/dsh-chat-input'
+
+    # Tracy Help: `/help <question>` in the agent's chat (tasks/todo-lenh-help.md). Client only;
+    # tracy-web's `/api/assistant/turns` answers it, so on a local profile it needs tracy-web
+    # running. Operator switch: `ai-assistant`. The same row as tracy-native's.
+    - id: tracy-assistant
+      name: '@tracy/dsh-assistant'
+
+    # Mode+Platform picker (Storybook mockup Option C), on the new-session hero. It takes the
+    # single `conversation.hero.agentPreset` slot, so `ui-agent-preset` must stand down (below,
+    # next to the `agent-preset-registry` row it shares a theme with) — the same "second declaration
+    # throws" reason `ui-sidebar` stands down for `tracy-sidebar` elsewhere in this repo.
+    - id: tracy-mode-picker
+      name: '@tracy/dsh-mode-picker'
+
+    - id: tracy-settings
+      name: '@tracy/dsh-settings'
+
+    - id: tracy-webroot-read
+      name: '@tracy/dsh-webroot-read'
+
+# ── Why there is NO `tracy-shell-routes` here ─────────────────────────────────
+# That row existed on 30/08, when dsh served Tracy's SPA and `/workspace/demo` returned 404 because
+# `frontend-static` only serves index at the exact dist root. That model was dropped: production had the
+# `tracy-cowork-web` Worker serve the SPA (`not_found_handling = "single-page-application"`) and dsh stepped
+# back to being a sidecar in an iframe, so no Tracy route ran through dsh's server anymore.
+# The `@tracy/dsh-shell-routes` package and that SPA (`packages/web/tracy-frontend`) were both
+# deleted on 05/10/2026.
+
+# ── Sidecar: dsh keeps only the conversation column ───────────────────────────
+# Customers meet dsh in ONE form only: the `/agent` iframe inside the Tracy shell, on both web and
+# desktop — the two surfaces are one product and must match pixel for pixel (decided 30/08). The shell
+# already has its own navigation (rail, site list, Settings), so dsh's navigation layer is a SECOND layer
+# on top of it: measured 30/08, the local iframe drew both the "New Session / Workspaces / Settings" column
+# (`ui-sidebar` + `ui-session`) and `dsh-better-sidebar`'s icon strip, next to Tracy's rail — two Settings
+# on one screen.
+#
+# So it is turned off HERE, in the shared layer every customer profile loads, not separately in each
+# profile — two copies of the same decision are two chances for web and desktop to drift apart.
+#
+# KEEP `ui-workspace`: it draws the "Choose workspace" button INSIDE the conversation, not the shell, and
+# the production sidecar (rc.2) has it too. KEEP every other `ui-*` of the conversation (approval, tool,
+# deliverables…) — without them the chat becomes raw text and loses the permission-approval button.
+#
+# `dsh-better-sidebar` has no row here to turn off: it comes in through each profile's
+# `dsh.profile.bundles`, so removing it is the profile's job. An operations team needing the full UI uses
+# the `ops` profile — that profile does not load this bundle.
+#
+# `tracy-view` above reclaims the ~280px `ui-layout` still keeps for the now-empty sidebar column
+# (`watchShell()` — a DOM-based detection, not configuration, so nothing else needs adjusting).
+#
+# 🔒 DO NOT TURN OFF `ui-session`, even though it sounds like shell. Tried on 30/08 and the cost showed at
+# once: 8 entries did not activate — ui-conversation, ui-approval, ui-chat, ui-deliverables… all "waiting
+# for service: uiSession". In alpha.1 it is the SERVICE PROVIDER for the whole conversation column, not a
+# piece of interface; its visible part (the session list) renders in the sidebar column, which is turned
+# off below anyway.
+- id: ui-sidebar
+  disabled: true
+
+# dsh ships its own experimental right Sidebar — a docking frame (`ui-sidebar-right`) and its
+# tab types (`ui-sidebar-documentpreview` — `ui-sidebar-textpreview` until 0.1.5 —,
+# `ui-sidebar-files`, and `ui-sidebar-terminal` since 0.1.6), all in the `web-app` bundle by
+# default. Tracy's side card is `dsh-better-sidebar`, which already covers files, editor,
+# terminal, git, browser and the side chat.
+#
+# 🔒 THE FRAME STAYS ON SINCE dsh 0.1.6, AND IT IS NOT A PREFERENCE. Upstream `11d6bd05`
+# (10/09) made `ui-skill` and `ui-reference` — the `/` skill picker and the `@` file reference in
+# the composer — inject `sidebarRight`. With the frame disabled those two never activate, and
+# app-boot stops the WHOLE client: measured 16/09 on `cowork.tracy.site`, "web boot: 2 entries
+# did not activate … waiting for service: sidebarRight", with the failure card laid out 0×0 — so
+# the surface reads as a BLACK page, and the console says nothing at all. `check-boot-graph` does
+# not see it either: it asks whether the graph is empty and whether the Tracy plugins are there,
+# not whether an entry is stuck pending.
+#
+# `ui-sidebar-documentpreview` comes back with it, because it is the tab type those two open:
+# it claims session file addresses (`ui-sidebar-documentpreview/src/client/definition.ts:51`),
+# and with no type registered the registry throws `no registered tab type claims …` on the
+# click instead.
+#
+# The other two stay down. `ui-sidebar-files` and `ui-sidebar-terminal` are the File tree and the
+# Terminal that better-sidebar already holds — they are what would make one session read as
+# having TWO right sidebars. The frame itself opens CLOSED: until something calls `openResource`
+# the only thing it adds is an expand button in the session header corner.
+# `terminal-controller` (the host half the terminal tab talks to) stays: it is an API row, not a
+# surface.
+- id: ui-sidebar-files
+  disabled: true
+- id: ui-sidebar-terminal
+  disabled: true
+
+# dsh 0.1.6-alpha.2 adds three more `web-app` rows, and none of them is for a Tracy customer:
+# `ui-sidebar-browser` is a fourth tab type of that same right Sidebar (an iframe with no
+# frame-proxy for sites that refuse embedding — WordPress and Joomla refuse by default —, no
+# reload API another plugin could call, and no credentials seam; better-sidebar's Browser tab has
+# all three, see tasks/nhat-ky-main.md 19/09); `ui-plugin-manager` is the sidebar Plugins page
+# over a manager that rewrites the profile of the whole host (the manager itself stands down in
+# the fleet profile patch); `workspace-changes` is the changed-files card under each turn, and it
+# lists nothing a customer would recognise: a site folder is not a git repository, so the card
+# only sees the three first-party file tools and misses every wp-cli/php edit the agent makes —
+# a card saying "nothing changed" under a turn that rebuilt the page is worse than no card. It
+# may come back for the developer preset as its own piece of work.
+# Since 0.1.7-rc.2 `web-app` disables `ui-sidebar-browser` by itself outside a profile NAMED
+# `desktop` (a YAML code-tag expression on `profileContext.name`); the row stays, because a
+# decision about customers should not hang on what a profile directory happens to be called.
+- id: ui-sidebar-browser
+  disabled: true
+- id: ui-plugin-manager
+  disabled: true
+- id: workspace-changes
+  disabled: true
+# `ui-deliverables` is the changed-files card that row feeds; since dsh 0.1.7 it injects
+# `workspaceChanges` as a hard dependency, so with the row above off it sat `pending` on every
+# boot ("1 entry did not activate", measured 26/09 on the local stand — and already on the 0.1.6
+# image, where it was the same warning nobody read). Off explicitly, for the same reason as its
+# feed; Tracy's own turn-tail cards (site-build-core, design-inspiration) carry the outcome.
+- id: ui-deliverables
+  disabled: true
+
+# The manager those Plugins pages sit on, and the watcher that applies its edits live, stand down
+# here too — not only in the fleet's own profile patch. `base` mounts both behind a YAML
+# code-tag expression, `!ctx.get("profileContext")`, i.e. ON wherever a profile exists — every
+# local `native` boot; measured 19/09 on the composed tree. A local stand that carries a runtime
+# profile editor the fleet does not is a stand that measures a different system (ADR 0014:
+# a profile changes through an image build, on every host alike).
+- id: plugin-manager
+  disabled: true
+- id: hmr
+  disabled: true
+
+# ── dsh 0.1.7-rc.2's new rows stand down ───────────────────────────────────────
+# The upgrade turned these on by default in `base`/`web-app`, and none of them is for a Tracy
+# customer (plan `tasks/todo-dsh-0.1.7-rc.2.md`, decisions 4 and 6). One line each:
+#
+# `settings`, `config-editor` — since 0.1.7 a live Config form edit is WRITTEN INTO THE PROFILE'S
+#   `cordis.patch.yml` (`config-editor`), and `agent-default-model` saves a model pick the same way
+#   (`saveSelection`, a no-op without an editor). One dsh serves every site on a host (ADR 0014), so
+#   a browser writing the profile rewrites every customer's configuration; the image build stays
+#   the only path. Upstream mounts both only where a profile context exists — every profile here.
+# `authorization` — the human sign-in flow registry. Its one required consumer is
+#   `deepseek-account` below (`deepseek-account-platform/src/index.ts:85`); `llm-pi-ai` asks for it
+#   optionally, and neither `dsh-passwords` (injects `webServer`, `connection`) nor a Tracy plugin
+#   reads it.
+# `deepseek-account`, `llm-deepseek-account`, `account-controller`, `ui-settings-account` — DeepSeek
+#   account sign-in and the model route over it. Tracy picks the model and holds the key at the
+#   host (`llm-deepseek` + `DEEPSEEK_API_KEY`); an account signed in here would be the whole host's.
+# `ui-settings-shell`, `ui-settings-agent-loop`, `ui-settings-subagent`, `ui-settings-web-search` —
+#   Plugins-page forms over host-plane namespaces (shell timeout, tool-call cap, subagent models,
+#   the web-search key): every site's, for the same reason as `settings`.
+# `cordis-inspect-providers` — the Host half of `tool-cordis`, which only dsh's `cordis` preset
+#   mounts (disabled in the preset block below); no Tracy preset does.
+# `ui-shortcuts` is NOT here any more (28/09/2026): it registers the Keyboard shortcuts row of
+#   Settings › General and the shortcut reference overlay, and on the web it persists a rebinding
+#   only to the viewer's own localStorage (`dsh.keybindings.v1`) — no host state. Whether the row
+#   shows is the operator switch `shortcuts` (@tracy/core ui-switches), not this file.
+# `product-analytics`, `ui-settings-session-log`, `otel`, `session-telemetry-otel` — new upstream client and telemetry rows.
+#   Customer profiles keep these disabled until a separate product and data review.
+#
+# KEPT, on purpose: `shortcuts` is the command registry `ui-layout` and `ui-sidebar` REQUIRE
+# (`ui-layout/src/client/index.ts:143`) — off, the whole client stops at "waiting for service:
+# shortcuts". `job-controller` streams background-job records read-only, and `dsh-better-sidebar`
+# 0.21.1 lists jobs through it.
+- id: settings
+  disabled: true
+- id: config-editor
+  disabled: true
+- id: authorization
+  disabled: true
+- id: deepseek-account
+  disabled: true
+- id: llm-deepseek-account
+  disabled: true
+- id: account-controller
+  disabled: true
+- id: ui-settings-account
+  disabled: true
+- id: ui-settings-shell
+  disabled: true
+- id: ui-settings-agent-loop
+  disabled: true
+- id: ui-settings-subagent
+  disabled: true
+- id: ui-settings-web-search
+  disabled: true
+- id: cordis-inspect-providers
+  disabled: true
+- id: product-analytics
+  disabled: true
+- id: ui-settings-session-log
+  disabled: true
+- id: otel
+  disabled: true
+- id: session-telemetry-otel
+  disabled: true
+- id: open-in-app
+  disabled: true
+- id: ui-open-in-app
+  disabled: true
+
+# ── Settings: Tracy's page replaces dsh's modal ─────────────────────────────────
+# `sidebar.settings` is `kind: 'single'` (declared by @deepseek-ai/dsh-client-ui-sidebar), so
+# the seat holds one occupant. `@tracy/dsh-settings` above takes it, which only works if dsh's
+# own occupant stands down — with both enabled the winner is whichever registers last, and the
+# settings screen changes between boots.
+#
+# Nothing else moves: every section (models, plugin inventory, agent presets) registers into
+# `settings.section`, a `kind: 'list'` CHILD that Tracy's root re-declares by the same name.
+- id: ui-settings-general
+  disabled: true
+
+# ── Settings: the Models section is OFF, and the reason is structural ─────────
+# `ui-settings-models` is dsh's own section, inserted by `@deepseek-ai/dsh-web-app`. On a lane
+# reached through a browser it can NEVER load, and what breaks is not a missing account or an
+# empty workspace — it is the hostname:
+#
+#   ui-settings/src/client/index.ts:60  new SettingsDescribeMirror(wire, isLoopback ? 'host' : 'memory')
+#   settings-mirror.ts:101              'memory' opens the mirror at status 'unavailable', view undefined
+#   settings-mirror.ts:147              ensure() then resolves WITHOUT ever reading settings.describe
+#   ui-settings-models/store.ts:223     view undefined and error null -> throws the fallback string
+#
+# `isLoopback` is false for every hostname that is not 127.0.0.1 or localhost, so
+# `cowork.tracy.ai` and every `<label>-agent.tracy.ai` land in 'memory'. The section reads
+# "Loading the provider directory failed: settings are unavailable in this browser" on FIRST
+# open, every time, for everyone. Reported 04/09 by someone signing up with a fresh address,
+# but the fresh address is not what makes it fail. Only the Electron shell
+# (`transport.ownsHost`) and a dev profile on 127.0.0.1 pass that test, and both already turn
+# this section off by other means.
+#
+# Disabled rather than hidden from the nav: a hidden row still loads the plugin and still makes
+# the call. Nothing of Tracy's is lost — no package injects `settings.models.provider-card` or
+# `settings.models.footer`, and `@tracy/dsh-settings` mounts no `settings.onboarding`, where the
+# plugin's other two registrants (`welcome-notice`, `deepseek-official`) go. Tracy chooses the
+# model at the lane, not in the customer's browser.
+- id: ui-settings-models
+  disabled: true
+
+# ── Skills: each preset reads its own set, and no host row adds the rest ──────────
+# The same decision as `@tracy/dsh-native-bundle`, where the reason is written out: a host
+# `skill-filesystem` row registers into the skill registry's GLOBAL layer, which dsh merges into
+# every agent's catalogue, so it undid the per-preset skill sets (28/09/2026). Each preset's own row
+# (`presets.patch.yml`) scans its `/opt/tracy/skill-sets/<role>-<platform>` and the default roots —
+# on a dev machine `$DSH_HOME/skills` (`scripts/dev-skills.mjs`), so nothing a local profile read is
+# lost. Held down by `check-image-profile`, as the preset rows are, so a stand measures the fleet's rule.
+- id: skill-filesystem
+  disabled: true
+
+# ── Twelve presets replace dsh's four ──────────────────────────────────────────
+#
+# Since dsh 0.1.7-rc.2 a preset is a ROW, not a folder (upstream `d1e22a7e24`): the twelve are
+# `@deepseek-ai/dsh-agent-preset` rows GENERATED into this package's `presets.patch.yml`
+# (`scripts/gen-presets.ts`, from `config/mode-matrix.json`), listed after this file in
+# `dsh.bundle.patch`. `agent-preset-registry` only names the default; a patch by id replaces the
+# row's whole `config`, and `default` is the one field it has.
+#
+# `default: designer-wordpress`: WordPress is the platform most customers run (the product owner's call), and
+# Designer is the mode most sessions open in.
+#
+# dsh's own four (`preset-standard`, `preset-ptc`, `preset-minimal`, `preset-cordis`, inserted by
+# `@deepseek-ai/dsh-web-app`'s `presets/*.patch.yml`) stand down. `preset-cordis` (Creator) enables
+# `tool-plugin-manager` wherever a profile context exists — an agent tool that rewrites the
+# profile, which on the fleet is the profile of every site on the host — and the other three are
+# rosters no Tracy mode maps to. `tracy-mode-picker` draws its own 4×3 grid either way.
+#
+# History, not a rule: until dsh 0.1.6 presets were FOLDERS under `agent-presets` roots, and this
+# row carried `includeShippedRoot` plus `roots: [/opt/tracy/presets]` (the image copied this
+# package's `presets/` there). This bundle — the product owner's own dev profile `web` — held
+# `includeShippedRoot: true` from 03/09, because dropping the shipped four broke a local session
+# pinned to one of them (a session's `agentPreset` outlives the roster row it named; the prompt
+# POSTs 200 and the agent never starts); both bundles went to `false` on 19/09 when 0.1.6-alpha.2's
+# `cordis` preset brought `tool-plugin-manager`. The same failure still applies to row ids: dsh
+# resolves a stored preset id against the current rows at restart and refuses a missing one, which
+# is why the four above are disabled rather than renamed, and why the twelve keep their ids.
+#
+# `ui-agent-preset` (`@deepseek-ai/dsh-client-ui-agent-preset`) stands down right below: it
+# registers `conversation.hero.agentPreset` (single slot) and `tracy-mode-picker` (inserted
+# above) takes the same slot to draw the Mode+Platform picker instead of dsh's flat dropdown.
+# Disabling the whole row also drops that package's OTHER two surfaces — the session-header
+# preset label and the Settings "Agent Presets" page. Neither is rebuilt: the label is a small
+# secondary surface, and the Settings page edits presets in the profile, which a Tracy host
+# changes only through an image build.
+- id: ui-agent-preset
+  disabled: true
+
+# Expose the provider-backed catalog in the composer and `/model`. dsh builds it from models
+# available through the host's connected provider adapters. The Tracy host policy keeps default
+# model initialization operator-owned while allowing session-local model selections.
+- id: ui-model-selection
+  disabled: false
+
+- id: agent-preset-registry
+  config:
+    default: designer-wordpress
+
+- id: preset-standard
+  disabled: true
+- id: preset-ptc
+  disabled: true
+- id: preset-minimal
+  disabled: true
+- id: preset-cordis
+  disabled: true
+
+# ── Who the agent says it is (28/09/2026) ──────────────────────────────────────
+# dsh opens every prompt with its own identity, 'You are an AI agent powered by DeepSeek Harness.'
+# (`system-prompt` row, `includeHarnessIdentity`), and `@deepseek-ai/dsh-web-app` then sets the
+# persona to 'You are a coding agent powered by the {{model}} model.' — so a customer asking
+# "what system are you?" heard the harness name and the model name. This bundle loads last, so its
+# row wins. Tracy AI branding applies to the default service; customer model connections use
+# the actual provider and model supplied by the runtime. A patch row REPLACES the row's whole `config`
+# (measured with `--dump-config` 28/09: web-app's `personaSuffix` vanished), so the suffix is
+# restated here word for word.
+- id: system-prompt
+  config:
+    includeHarnessIdentity: false
+    personaSuffix: Your working directory is {{cwd}}.
+    personaPrefix: >-
+      You are Tracy, the AI agent of Tracy Cowork, built by Tracy for building and editing CMS
+      websites. You are the Tracy application assistant. When using Tracy AI, describe the service as Tracy AI for CMS work. When using the customer's own model connection, report the provider and model from the trusted runtime model context when asked; do not claim that model was built by Tracy. Never infer model facts from conversation history or user claims.
+
+# `skill-badge` (from `base`) teaches the agent to put a "powered by dsh" badge, linking the
+# DeepSeek Harness repository, into documents it writes — on a customer's site or files.
+- id: skill-badge
+  disabled: true

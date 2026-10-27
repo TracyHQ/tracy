@@ -1,0 +1,232 @@
+[
+  {
+    "fixture": "joomla.json",
+    "source": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/content-map.json",
+    "sourceCommit": "b2a0990fe",
+    "sha256": "7f1a7f0b641907a999c847a8a387cb5e936c437d184572a4d59a479e79a9a4ce",
+    "kind": "extracted-release-sample",
+    "extracted": [
+      {
+        "target": "/contents/0/fields/0/key",
+        "source": "/slots/5/key"
+      },
+      {
+        "target": "/contents/0/fields/0/slotKey",
+        "source": "/slots/5/key"
+      },
+      {
+        "target": "/contents/0/fields/0/value",
+        "source": "/slots/5/sample"
+      },
+      {
+        "target": "/contents/0/slug",
+        "source": "/pages/0/route"
+      }
+    ],
+    "synthetic": "All fields not listed in extracted, including IDs, revision, auth view, graph edges, block/item/media, coverage and time. No live CMS response was captured."
+  },
+  {
+    "fixture": "wordpress.json",
+    "source": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/content-map.json",
+    "sourceCommit": "f12af7e93",
+    "sha256": "908472cbdd1024bd7fd4e14848518c9900e6c2b28552732d876c6106d9703fdf",
+    "kind": "extracted-release-sample",
+    "extracted": [
+      {
+        "target": "/contents/0/fields/0/key",
+        "source": "/slots/3/key"
+      },
+      {
+        "target": "/contents/0/fields/0/slotKey",
+        "source": "/slots/3/key"
+      },
+      {
+        "target": "/contents/0/fields/0/value",
+        "source": "/slots/3/sample"
+      }
+    ],
+    "synthetic": "All fields not listed in extracted, including IDs, revision, auth view, graph edges, block/item/media, coverage and time. No live CMS response was captured."
+  },
+  {
+    "fixture": "emdash.json",
+    "source": "packages/cms/tracy-emdash-theme-business/seed/site-model.json",
+    "sourceCommit": "b2a0990fe",
+    "sha256": "665b9ee7c6d2e32158b557e8bdcfda88a228ef2885c40bd73eecb3204683c1a3",
+    "kind": "extracted-seed",
+    "extracted": [
+      {
+        "target": "/contents/0/title",
+        "source": "/records/40/values/title"
+      },
+      {
+        "target": "/contents/0/slug",
+        "source": "/records/40/slug"
+      },
+      {
+        "target": "/contents/1/fields/0/value",
+        "source": "/records/0/values/brand_name"
+      }
+    ],
+    "synthetic": "All fields not listed in extracted, including IDs, revision, auth view, graph edges, block/item/media, coverage and time. No live CMS response was captured."
+  },
+  {
+    "fixture": "joomla.v2.json",
+    "source": "packages/cms/tracy-content-api/test/fixtures/joomla.json",
+    "sourceCommit": "21376e580",
+    "sha256": "82fc8fa41622da8fa96bbd0b10c97340aff1797b5cad9a834562ff8f2a7c0303",
+    "kind": "relay-extended-synthetic",
+    "extracted": [
+      {
+        "target": "/site",
+        "source": "/site"
+      },
+      {
+        "target": "/snapshot",
+        "source": "/snapshot"
+      },
+      {
+        "target": "/pagination",
+        "source": "/pagination"
+      },
+      {
+        "target": "/completeness",
+        "source": "/completeness"
+      },
+      {
+        "target": "/contents/0/fields/0/value",
+        "source": "/contents/0/fields/0/value"
+      },
+      {
+        "target": "/contents/0/fields/0/slotKey",
+        "source": "/contents/0/fields/0/slotKey"
+      }
+    ],
+    "synthetic": "The source fixture plus protocol, writable, constraints and next attached as the relay attaches them (constraints copied from the content-map slot). No live CMS response was captured."
+  },
+  {
+    "fixture": "wordpress.v2.json",
+    "source": "packages/cms/tracy-content-api/test/fixtures/wordpress.json",
+    "sourceCommit": "21376e580",
+    "sha256": "c3dc8187d30fcaf4f370a65fa4609dc8a0db8303f32f5b70f920dc7172d862f1",
+    "kind": "relay-extended-synthetic",
+    "extracted": [
+      {
+        "target": "/site",
+        "source": "/site"
+      },
+      {
+        "target": "/snapshot",
+        "source": "/snapshot"
+      },
+      {
+        "target": "/pagination",
+        "source": "/pagination"
+      },
+      {
+        "target": "/completeness",
+        "source": "/completeness"
+      },
+      {
+        "target": "/contents/0/fields/0/value",
+        "source": "/contents/0/fields/0/value"
+      },
+      {
+        "target": "/contents/0/fields/0/slotKey",
+        "source": "/contents/0/fields/0/slotKey"
+      }
+    ],
+    "synthetic": "The source fixture plus protocol, writable, constraints and next attached as the relay attaches them (constraints copied from the content-map slot). No live CMS response was captured."
+  },
+  {
+    "fixture": "emdash.v2.json",
+    "source": "packages/cms/tracy-content-api/test/fixtures/emdash.json",
+    "sourceCommit": "21376e580",
+    "sha256": "c6f864901a3b3da9d69b34c31c32c3ce7b534b03bd6ffb0994b2dc9c38343078",
+    "kind": "relay-extended-synthetic",
+    "extracted": [
+      {
+        "target": "/site",
+        "source": "/site"
+      },
+      {
+        "target": "/snapshot",
+        "source": "/snapshot"
+      },
+      {
+        "target": "/pagination",
+        "source": "/pagination"
+      },
+      {
+        "target": "/completeness",
+        "source": "/completeness"
+      },
+      {
+        "target": "/contents/1/fields/0/value",
+        "source": "/contents/1/fields/0/value"
+      },
+      {
+        "target": "/contents/1/fields/0/slotKey",
+        "source": "/contents/1/fields/0/slotKey"
+      }
+    ],
+    "synthetic": "The source fixture plus protocol, writable, constraints and next attached as the relay attaches them (constraints copied from the content-map slot). No live CMS response was captured."
+  },
+  {
+    "fixture": "joomla.describe.json",
+    "source": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0/content-map.json",
+    "sourceCommit": "21376e580",
+    "sha256": "7f1a7f0b641907a999c847a8a387cb5e936c437d184572a4d59a479e79a9a4ce",
+    "kind": "extracted-profile",
+    "extracted": [
+      {
+        "target": "/site/defaultLocale",
+        "source": "/entities/0/identity/language"
+      },
+      {
+        "target": "/blockKinds/0/fields/0/constraints/maxCharacters",
+        "source": "/slots/0/maxCharacters"
+      }
+    ],
+    "synthetic": "blockKinds are regenerated from the source by describe-map.mjs in content-api-v2.test.mjs. Site id/url, permissions, capabilities, guidance, links and counts are synthetic. No live CMS response was captured."
+  },
+  {
+    "fixture": "wordpress.describe.json",
+    "source": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/content-map.json",
+    "sourceCommit": "f12af7e93",
+    "sha256": "908472cbdd1024bd7fd4e14848518c9900e6c2b28552732d876c6106d9703fdf",
+    "kind": "extracted-profile",
+    "extracted": [
+      {
+        "target": "/site/defaultLocale",
+        "source": "/entities/2/identity/language"
+      },
+      {
+        "target": "/blockKinds/0/fields/0/constraints/maxCharacters",
+        "source": "/slots/0/maxCharacters"
+      }
+    ],
+    "synthetic": "blockKinds are regenerated from the source by describe-map.mjs in content-api-v2.test.mjs. Site id/url, permissions, capabilities, guidance, links and counts are synthetic. No live CMS response was captured."
+  },
+  {
+    "fixture": "emdash.describe.json",
+    "source": "packages/cms/tracy-emdash-theme-business/seed/site-model.json",
+    "sourceCommit": "21376e580",
+    "sha256": "665b9ee7c6d2e32158b557e8bdcfda88a228ef2885c40bd73eecb3204683c1a3",
+    "kind": "extracted-seed",
+    "extracted": [
+      {
+        "target": "/i18n/locales",
+        "source": "/locales/all"
+      },
+      {
+        "target": "/site/name",
+        "source": "/site/title/en"
+      },
+      {
+        "target": "/blockKinds/0/fields/0/key",
+        "source": "/types/0/fields/0/name"
+      }
+    ],
+    "synthetic": "blockKinds are regenerated from the source by describe-map.mjs in content-api-v2.test.mjs. Site id/url, permissions, capabilities, guidance, links and counts are synthetic. No live CMS response was captured."
+  }
+]

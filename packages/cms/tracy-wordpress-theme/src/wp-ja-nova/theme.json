@@ -1,0 +1,429 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "useRootPaddingAwareAlignments": false,
+    "layout": {
+      "contentSize": "1376px",
+      "wideSize": "1376px"
+    },
+    "color": {
+      "defaultPalette": false,
+      "defaultGradients": false,
+      "defaultDuotone": false,
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "var(--ds-c-bg, #ffffff)"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "var(--ds-c-surface, #f7f7f7)"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "var(--ds-c-ink, #212529)"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "var(--ds-c-fg, #131515b3)"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "var(--ds-c-heading, #333333)"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "var(--ds-c-muted, #6e6e73)"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "var(--ds-c-meta, #86868b)"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "var(--ds-c-border, #0000001a)"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "var(--ds-c-border-soft, #e8e8ed)"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "var(--ds-c-accent, #5e48db)"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "var(--ds-c-accent-on, #ffffff)"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "var(--ds-c-accent-hover, #3014cc)"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "var(--ds-c-accent-active, #371bd3)"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "var(--ds-c-success, #16a34a)"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "var(--ds-c-warn, #eab308)"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "var(--ds-c-danger, #dc2626)"
+        }
+      ]
+    },
+    "typography": {
+      "fluid": false,
+      "defaultFontSizes": false,
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "var(--ds-font-display, \"Golos Text\")"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "var(--ds-font-body, \"Golos Text\")"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "\"SF Mono\", ui-monospace, \"JetBrains Mono\", Menlo, Monaco, Consolas, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "12px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "16px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "16px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "20px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "40px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "28px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "32px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "40px"
+        }
+      ]
+    },
+    "spacing": {
+      "units": [
+        "px",
+        "rem",
+        "em",
+        "%",
+        "vw",
+        "vh"
+      ],
+      "defaultSpacingSizes": false,
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "2px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "4px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "6px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "8px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "10px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "12px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "16px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "24px"
+        }
+      ]
+    },
+    "custom": {
+      "leading": {
+        "body": "1.47",
+        "tight": "1.05"
+      },
+      "tracking": {
+        "display": "0"
+      },
+      "sectionY": {
+        "desktop": "128px",
+        "tablet": "64px",
+        "phone": "32px"
+      },
+      "radius": {
+        "sm": "var(--ds-input-radius, 16px)",
+        "md": "var(--ds-btn-radius, 16px)",
+        "lg": "var(--ds-card-radius, 16px)",
+        "pill": "var(--ds-pill-radius, 980px)"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0 12px 32px rgba(0, 0, 0, 0.08) /* ds-keep: shadow depth, not a colour role */"
+      },
+      "focusRing": "0 0 0 4px var(--ds-c-focus-ring, color-mix(in oklab, var(--wp--preset--color--accent), transparent 65%))",
+      "motion": {
+        "fast": "150ms",
+        "base": "220ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.28, 0, 0.22, 1)"
+      },
+      "container": {
+        "max": "1376px",
+        "gutterDesktop": "16px",
+        "gutterTablet": "18px",
+        "gutterPhone": "16px"
+      },
+      "tracy": {
+        "inspiration": "wp-ja-nova"
+      }
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var:preset|color|bg",
+      "text": "var:preset|color|fg"
+    },
+    "typography": {
+      "fontFamily": "var:preset|font-family|body",
+      "fontSize": "var:preset|font-size|base",
+      "lineHeight": "var(--wp--custom--leading--body)"
+    },
+    "spacing": {
+      "padding": {
+        "top": "0",
+        "right": "0",
+        "bottom": "0",
+        "left": "0"
+      },
+      "blockGap": "var:preset|spacing|4"
+    },
+    "elements": {
+      "heading": {
+        "typography": {
+          "fontFamily": "var:preset|font-family|display",
+          "lineHeight": "var(--wp--custom--leading--tight)",
+          "letterSpacing": "var(--wp--custom--tracking--display)"
+        },
+        "color": {
+          "text": "var:preset|color|fg"
+        }
+      },
+      "h1": {
+        "typography": {
+          "fontSize": "var:preset|font-size|xxxl"
+        }
+      },
+      "h2": {
+        "typography": {
+          "fontSize": "var:preset|font-size|xxl"
+        }
+      },
+      "h3": {
+        "typography": {
+          "fontSize": "var:preset|font-size|xl"
+        }
+      },
+      "link": {
+        "color": {
+          "text": "var:preset|color|fg"
+        },
+        ":hover": {
+          "color": {
+            "text": "var:preset|color|accent"
+          }
+        }
+      },
+      "button": {
+        "color": {
+          "background": "var:preset|color|accent",
+          "text": "var:preset|color|accent-on"
+        },
+        "border": {
+          "radius": "var(--wp--custom--radius--md)"
+        },
+        "typography": {
+          "fontWeight": "600"
+        },
+        ":hover": {
+          "color": {
+            "background": "var:preset|color|accent-hover",
+            "text": "var:preset|color|accent-on"
+          }
+        }
+      }
+    },
+    "css": "/* wp-ja-nova: dark mode. The source (JA Nova, Joomla 6 T4) follows the OS until the visitor picks: its head script sets html[data-theme] from prefers-color-scheme, the .t4-theme-toggle button switches it (css/darkmode.css, js/darkmode.js). Here every colour preset carries both halves through light-dark(): light = tokens.css (measured 29/09 on :8271), dark = the source's --dm-* block (css/darkmode.css: bg #14171c, band #1a1e25, surface #1e232b, border #2e353f, text #c2c9d2, heading #eef1f6, muted #8b94a0, link #9d8cff, link hover #b6a9ff; the primary #5e48db is kept), each read back as computed style in the design contract (desktop-dark). The footer band is #212529 in light and the page background in dark, as measured. No attribute = auto, the OS decides; assets/js/wp-ja-nova-dark.js writes data-theme light|dark from the tracy_theme cookie before the first paint. */ :root{color-scheme:light dark;--wp--preset--color--bg:light-dark(var(--ds-c-bg, #ffffff),var(--ds-c-bg, #14171c));--wp--preset--color--surface:light-dark(var(--ds-c-surface, #f7f7f7),var(--ds-c-surface, #1a1e25));--wp--preset--color--surface-warm:light-dark(var(--ds-c-ink, #212529),var(--ds-c-ink, #14171c));--wp--preset--color--fg:light-dark(var(--ds-c-fg, rgba(19,21,21,0.7)),var(--ds-c-fg, #c2c9d2));--wp--preset--color--fg-2:light-dark(var(--ds-c-heading, #333333),var(--ds-c-heading, #eef1f6));--wp--preset--color--muted:light-dark(var(--ds-c-muted, #6c757d),var(--ds-c-muted, #8b94a0));--wp--preset--color--meta:light-dark(var(--ds-c-meta, #6c757d),var(--ds-c-meta, #8b94a0));--wp--preset--color--border:light-dark(var(--ds-c-border, rgba(0,0,0,0.1)),var(--ds-c-border, #2e353f));--wp--preset--color--border-soft:light-dark(var(--ds-c-border-soft, rgba(0,0,0,0.1)),var(--ds-c-border-soft, #2e353f));--wp--preset--color--accent:light-dark(var(--ds-c-accent, #5e48db),var(--ds-c-accent, #5e48db));--wp--preset--color--accent-on:light-dark(var(--ds-c-accent-on, #ffffff),var(--ds-c-accent-on, #ffffff));--wp--preset--color--accent-hover:light-dark(var(--ds-c-accent-hover, #3014cc),var(--ds-c-accent-hover, #b6a9ff));--wp--preset--color--accent-active:light-dark(var(--ds-c-accent-active, #371bd3),var(--ds-c-accent-active, #9d8cff));}:root[data-theme=\"light\"]{color-scheme:light}:root[data-theme=\"dark\"]{color-scheme:dark}"
+  },
+  "customTemplates": [
+    {
+      "name": "landing",
+      "title": "Landing",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "fixture",
+      "title": "Design system page",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "artifact",
+      "title": "Design page (engine)",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "pricing",
+      "title": "Pricing",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-landing",
+      "title": "Landing (sections, no page title)",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-contact",
+      "title": "Contact",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-service",
+      "title": "Service (services menu beside the article)",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-login",
+      "title": "Sign-in form",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-register",
+      "title": "Registration form",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-account",
+      "title": "Account (visitors are sent to the sign-in page)",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "single-project",
+      "title": "Project (fields row, wide picture)",
+      "postTypes": [
+        "post"
+      ]
+    }
+  ],
+  "templateParts": [
+    {
+      "name": "header",
+      "title": "Header",
+      "area": "header"
+    },
+    {
+      "name": "footer",
+      "title": "Footer",
+      "area": "footer"
+    },
+    {
+      "name": "share",
+      "title": "Share links",
+      "area": "uncategorized"
+    }
+  ]
+}

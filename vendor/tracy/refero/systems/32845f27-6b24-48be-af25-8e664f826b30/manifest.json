@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "32845f27-6b24-48be-af25-8e664f826b30",
+  "status": "complete",
+  "name": "Parallel Web Systems",
+  "url": "https://styles.refero.design/style/32845f27-6b24-48be-af25-8e664f826b30",
+  "sourceWebsite": "https://parallel.ai",
+  "extractedAt": "2026-06-03T17:16:35.585Z",
+  "capturedAt": "2026-10-08T05:10:00.471659+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Engineering journal at dawn — a technical reading room where data streams replace photography and the type does the talking.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/bd47ce1e-1ba8-4d22-a0b7-78062f85e1fc.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/360995f2-8659-4fde-ab42-393cfae3ad0b.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/8c48ff4c-f6fd-4007-a1dd-b69b907a73b2.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/d6fbce99-1862-40e7-ad00-4826a00ffdfa.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/68e7715e-dab8-4188-8706-060d59c11475.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "05cbde45a2948cac68ec30dc750d99cd8cf4de13372c6361fc3c83684afb8eb2",
+      "bytes": 24461
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8ac23a745b5b0c0f995000cafea614f6261239016177a168cab8625933cc4114",
+      "bytes": 85494
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1afe5f67af085d0daf4bcdaa3886125d28a5449d312508085c4fb33e08734982",
+      "bytes": 22161
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "1c77c42b9d2e9210e8c756a518909584dad9f9a5ec72b1a90750c3a1314309bf",
+      "bytes": 11914
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7dab40149cdaea68f5df238700fd8edef245ed82850b74b63fb0ceda75c13836",
+      "bytes": 16594
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ac0bd4700d2f43f73ab0e68bcd1c33b8a43205355ad24006f3dde186caec78e7",
+      "bytes": 3860
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ffa2ac5c6ba2869a94144722199fde6469b40ec99e7f8a945994f50928981f0e",
+      "bytes": 645
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "17e4a6c3ad3bf55340966ebedb4cf419c5d5584f34e65f23200d1c5210f62fbb",
+      "bytes": 662
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ba768b7ba1556581a2c79391a381a607b59064fb4102ae718117b4175a6b2961",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "51e0a8295aee56e0523a6e01147067b4aaa5531b5ed3a9d6169d05f389707685",
+      "bytes": 48929
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "b63fc07a64a2c93cbeed40b33e3d4566c5c0b01e1bc8a6540fe37e4f27ec6269",
+      "bytes": 25501
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a77cfeccd7c4fdaa747780f86b23b82a483333804695b87277f64fe59ee4fcd2",
+      "bytes": 49234
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3774a576036ba8d65561ee463bb449535e5fc3f0276063a7f4200e5d23e8fb12",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9fa627032443885abc26c9814d815d2eb84c67bc140c68d7d910524d9f902a53",
+      "bytes": 1429
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7d8c8b7077097d23ecfa7269182d53ecd26cce23100ab0a8f1f9d68b31316d4e",
+      "bytes": 2015
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "32845f27-6b24-48be-af25-8e664f826b30",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "73cd9a6a-f861-4376-a3e1-e12f83c8960e",
+    "7f9eabb2-3f76-477d-849f-e868e698f421",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "a0244aab-0dba-45fe-a595-416c1f0715be",
+    "ae175f23-1ec7-47ea-9380-7bff7041028b",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "d9a60077-619a-4cb7-95ed-0c428c2b51ed",
+    "dc541737-8bf2-4b31-b729-0352f696e82f",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

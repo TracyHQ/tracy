@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-1384-visual-check",
+  "kind": "feat",
+  "title": "A turn that wrote the site is looked at before it closes: the page the customer had open is drawn again and compared with the picture from before the turn; only a confident not_shown or broken, with both pictures of the same page, steers one notice; every other outcome is skipped with its reason and makes no claim",
+  "pr": 1384,
+  "area": "harness/visual-check",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. Work in the TCH checkout at the commit under test, with its dependencies installed (pnpm install) and the deepseek-harness submodule initialised.",
+    "S2: From the checkout root run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/visual-check.test.mjs packages/tools/tracy-site-tools/test/visual-check-wiring.test.mjs — keep the ok/not ok lines and the exit code."
+  ],
+  "expect": [
+    "S2: every test named in run.tests reports ok. A confident not_shown or broken steers exactly one notice whose source producer is tracy-site-tools:visual-check, with the page now as an image only when the session model reads images; shown, cannot_tell, an unreadable answer and shadow mode steer nothing; no write, no before picture, a before or after page not loaded, a comment pinned on another page, no image model, a capture failure or one past the budget, no image store, and a thrown error are each skipped with their reason. Through the shipped lib/index.js: a page drawn while the customer writes, then a writing turn that stops, is drawn again in the same window, compared once, and steered once; the step the notice adds is not checked again; shadow, off, viewContext off and a turn that wrote nothing steer nothing; a failing model never throws into the turn.",
+    "Every command exits 0."
+  ],
+  "selectors": {
+    "check": "packages/tools/tracy-site-tools/src/host/visual-check.mjs (runVisualCheck, parseVerdict, checkNotice, commentPage, turnWrites, pickEyes)",
+    "wiring": "index.ts: turnAsks frozen in stepListener (views.take ready, takenAt before the turn), agent/turn-stopping listener (once per turn, agent.steer)",
+    "test": "packages/tools/tracy-site-tools/test/visual-check.test.mjs, packages/tools/tracy-site-tools/test/visual-check-wiring.test.mjs"
+  },
+  "fence": "Mechanism only: when the check runs, what it claims and what it steers. Not covered: whether the image model judges real pages well (a live measure on the stand, flaky by nature).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/visual-check.test.mjs",
+      "packages/tools/tracy-site-tools/test/visual-check-wiring.test.mjs"
+    ],
+    "tests": [
+      "visualCheckMode: on unless false or shadow",
+      "pageOf: one page per address — trailing slash, fragment and origin do not make another",
+      "commentPage: the page a comment turn was pinned on, read with the chat input’s own parser",
+      "turnWrites: only the calls of the last turn that changed the site",
+      "parseVerdict: the one JSON object, or nothing; a failure that points at nothing is cannot_tell",
+      "judgeMessage: both pictures, each named, and the reply given as a claim",
+      "checkNotice: a guess said as one, read before writing, honest even after \"done\"",
+      "🔒 a confident \"does not show\" steers ONE notice from this plugin, with the page now when the agent sees pictures",
+      "a text-only session is compared by the image model, and its notice carries no picture",
+      "shown, cannot tell, an unreadable answer and shadow mode: judged, no notice",
+      "🔒 no claim without both pictures of the right page, a write, a model or a picture now",
+      "the budget bounds the drawing: a page that does not draw in time is skipped, not waited for",
+      "🔒 never throws: a capture that throws is a skipped check",
+      "🔒 a confident \"does not show\" steers ONE notice, once per turn, after the page is drawn again",
+      "shown, shadow mode, a turn that wrote nothing: no notice",
+      "off: no listener work at all; viewContext off turns it off too",
+      "🔒 a model that fails never throws into the turn and steers nothing"
+    ]
+  }
+}

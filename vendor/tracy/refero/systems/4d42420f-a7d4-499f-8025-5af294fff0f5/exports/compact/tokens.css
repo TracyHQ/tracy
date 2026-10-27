@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-electric-grape: #5b00ed;
+  --gradient-electric-grape: linear-gradient(45deg, #e30ba6, #5b00ed);
+  --color-deep-concord: #3f0791;
+  --color-bubblegum-flash: #e30ba6;
+  --color-sky-scoop: #bfefff;
+  --gradient-sky-scoop: linear-gradient(0deg, #d4beff 50%, #bfedfe);
+  --color-lilac-aisle: #dad9ff;
+  --color-soft-grape: #cac4f4;
+  --color-marshmallow: #ffffff;
+  --color-midnight-cereal: #000000;
+
+  /* Typography — Font Families */
+  --font-poppins: 'Poppins', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mabry-pro: 'Mabry Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-font-awesome-5-pro: 'Font Awesome 5 Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

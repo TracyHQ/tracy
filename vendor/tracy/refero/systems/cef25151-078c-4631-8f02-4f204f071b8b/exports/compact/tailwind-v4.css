@@ -1,0 +1,9 @@
+@theme {
+  /* Colors */
+  --color-bone: #e7ecea;
+  --color-ink: #000000;
+  --color-paper-white: #ffffff;
+
+  /* Typography */
+  --font-space-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

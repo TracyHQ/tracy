@@ -1,0 +1,12 @@
+# Once an hour, a few minutes after the hour, and once at boot if an hour was missed.
+[Unit]
+Description=Tracy fleet: hourly site-folder sync
+
+[Timer]
+OnCalendar=hourly
+RandomizedDelaySec=5min
+Persistent=true
+Unit=tracy-site-sync.service
+
+[Install]
+WantedBy=timers.target

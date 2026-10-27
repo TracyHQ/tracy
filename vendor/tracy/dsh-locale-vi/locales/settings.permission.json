@@ -1,0 +1,11 @@
+{
+  "confirm.acknowledge": "Tôi đã hiểu rủi ro và vẫn muốn tiếp tục",
+  "confirm.cancel": "Huỷ",
+  "confirm.description": "Khi bật Full access, các phiên mới sẽ bớt các bước xác nhận và được trực tiếp thực hiện nhiều hành động hơn, kể cả thao tác nhạy cảm, sửa tệp hoặc chạy lệnh bên ngoài. Chỉ nên dùng khi bạn tin tưởng những công việc sắp tới.",
+  "confirm.enable": "Bật Full access",
+  "confirm.title": "Bật Full access?",
+  "description": "Chọn chế độ quyền mặc định cho phiên mới",
+  "loading": "Đang tải",
+  "title": "Quyền",
+  "unavailable": "Không khả dụng"
+}

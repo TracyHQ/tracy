@@ -1,0 +1,41 @@
+---
+title: Tracy Cowork — build and edit your website with AI
+description: Tracy Cowork builds and edits your WordPress, Joomla or EmDash website when you ask in a chat, shows every change it makes and lets you undo it.
+template: splash
+hero:
+  title: Tracy Cowork — build and edit your website with AI
+  tagline: Ask in a chat and Tracy makes the change on your real WordPress, Joomla or EmDash site — then shows you every change, so you can review it and undo it.
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: Get started
+      link: /get-started/
+      icon: right-arrow
+    - text: Download the app
+      link: /desktop/download/
+      icon: download
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+<CardGrid>
+  <Card title="Getting started" icon="rocket">
+    Sign in, add your first site and ask Tracy for a change. [Get started](/get-started/)
+  </Card>
+  <Card title="Desktop app" icon="laptop">
+    Tracy for macOS, Windows and Linux. It updates itself. [Download the app](/desktop/download/)
+  </Card>
+  <Card title="MCP Server" icon="puzzle">
+    Connect ChatGPT, Claude, Claude Code, Cursor or Codex to your Tracy website. [Set up MCP](/mcp/getting-started/)
+  </Card>
+  <Card title="Working with your site" icon="pencil">
+    Chat, comments on the page, Site changes, undo and backups. [Using Tracy](/using-tracy/)
+  </Card>
+  <Card title="Changelog" icon="document">
+    A dated record of what changed, and when: in [Tracy Cowork](/changelog/desktop/), on the web and in the app, and in the [API](/changelog/).
+  </Card>
+  <Card title="For developers & agents" icon="seti:json">
+    The Tracy API: read and change a Tracy-hosted site over HTTPS with a key bound to your seat. [API overview](/api/)
+  </Card>
+</CardGrid>

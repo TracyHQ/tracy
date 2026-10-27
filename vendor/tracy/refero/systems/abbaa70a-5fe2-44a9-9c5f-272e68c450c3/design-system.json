@@ -1,0 +1,368 @@
+{
+  "dos": [
+    "Use 2px border-radius on all cards, inputs, images, and containers — pill shapes (9999px) are reserved exclusively for buttons",
+    "Use weight 475 for all text including 96px display headlines — never bold above 600 except for 20px subheadings",
+    "Use 1px solid #ebebeb hairline borders for card edges and dividers — never thicker",
+    "Color individual words in display headlines using #863d1c (orange), #123a88 (blue), #41a251 (green), #b52473 (pink) — words stay inline, never separate blocks",
+    "Use #abffae exclusively for primary CTA fills and focus glow rings — never as body text or background tint",
+    "Use 24px for element gaps, 32px for card padding, 96px for section vertical gaps — the 4px base unit scales through these three tiers",
+    "Use #fffcf6 as the default light surface; alternate to #032125 for dark sections; tint with #e2f4ff, #fdf0e9, or #eafde8 for semantic accent bands",
+    "Use 4px colored focus glow rings (0px 0px 0px 4px) for interactive focus states instead of outline or shadow changes"
+  ],
+  "donts": [
+    "Never use drop shadows for elevation — depth comes from colored 4px glow rings only",
+    "Never use bold weights above 600 for display or heading text — the signature is the calm 475 voice",
+    "Never use corner radius above 2px on non-button elements — sharp-cornered cards define this system",
+    "Never use #0000ee or default browser blue for links — links use #032125 or #a1c2c6",
+    "Never place #abffae on white or light backgrounds without sufficient contrast — it is a glow color, not a fill",
+    "Never use more than 4 columns in content grids — the system favors generous spacing over density",
+    "Never use the heading accent colors (#863d1c, #123a88, etc.) for UI chrome — they exist only for inline keyword coloring in display text"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#00191c",
+      "name": "Spruce Abyss",
+      "role": "Deepest background — footer canvas, dramatic section breaks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#032125",
+      "name": "Spruce 900",
+      "role": "Primary dark surface — headers, hero, main navigation background; dominant text color on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0b363b",
+      "name": "Spruce 700",
+      "role": "Primary CTA fill on dark backgrounds, elevated card surfaces, border accent",
+      "group": "brand"
+    },
+    {
+      "hex": "#437278",
+      "name": "Spruce 500",
+      "role": "Muted teal accent — illustration fills, secondary icon color",
+      "group": "accent"
+    },
+    {
+      "hex": "#a1c2c6",
+      "name": "Spruce 200",
+      "role": "Decorative stroke, muted link text, icon outlines on dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#354d51",
+      "name": "Spruce Mist",
+      "role": "Body text on light surfaces, secondary heading color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ebebeb",
+      "name": "Charcoal 100",
+      "role": "Hairline borders, dividers, subtle separators across the interface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Charcoal Mist",
+      "role": "Alternate section background, subtle card backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fffcf6",
+      "name": "Cream Warm",
+      "role": "Primary light surface — content sections, card backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Elevated card surface, button text on dark fills, content blocks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#abffae",
+      "name": "Verdant 300",
+      "role": "Interactive glow — CTA button fill, focus ring halo, active state border; vivid green signals action without aggression",
+      "group": "brand"
+    },
+    {
+      "hex": "#eafde8",
+      "name": "Verdant Whisper",
+      "role": "Primary page canvas and white card surfaces. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#123a88",
+      "name": "Wave 700",
+      "role": "Violet text accent for links, tags, and emphasized short phrases.",
+      "group": "accent"
+    },
+    {
+      "hex": "#0a6de6",
+      "name": "Wave 500",
+      "role": "Heading accent color for keyword highlights in display text",
+      "group": "accent"
+    },
+    {
+      "hex": "#e2f4ff",
+      "name": "Wave Frost",
+      "role": "Hairline borders, dividers, input outlines, and card edges on light surfaces. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#863d1c",
+      "name": "Zest 700",
+      "role": "Orange text accent for links, tags, and emphasized short phrases.",
+      "group": "accent"
+    },
+    {
+      "hex": "#fdf0e9",
+      "name": "Zest Blush",
+      "role": "Hairline borders, dividers, input outlines, and card edges on light surfaces. Use as a supporting accent, not as a status color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#83611c",
+      "name": "Mustard 700",
+      "role": "Yellow text accent for links, tags, and emphasized short phrases.",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed sections that alternate between dark Spruce 900 (#032125) and warm cream (#fffcf6) backgrounds. Hero is left-aligned text block occupying ~40% width with product screenshot occupying right ~60%, set against photographic backdrop. Content sections use centered 1200px max-width containers with 96px vertical section gaps. Trust strip uses horizontal marquee of monochrome logos. Footer is full-bleed dark with 4-column grid of links. Navigation is a 64px-tall sticky top bar with logo left, centered nav items, and sign-in + CTA cluster right. Key sections are full-viewport-width colored bands rather than card grids.",
+  "imagery": "Warm interior photography with greenery as the backdrop for the hero product preview — a person working at a desk with potted plants, soft natural light, slightly desaturated warm tones. Product screenshots are presented raw without device frames or shadows, blending directly into the photographic background. The brand mark uses a geometric double-chevron arrow symbol in Spruce 900. No illustrations — the visual language is photography + product UI + typography-driven keyword coloring in headings. Logo strip is monochrome black marks on white. The overall density is moderate: generous whitespace in hero, information-dense footer with 4-column link structure.",
+  "similar": [
+    {
+      "why": "Same near-uniform medium weight custom typeface, dark primary surface with cream/warm light alternation, hairline 1px borders, minimal corner radii, generous vertical rhythm",
+      "business": "Linear"
+    },
+    {
+      "why": "Dark hero-to-light-section alternation with full-bleed bands, pill-shaped CTAs, subdued typography that lets color accents do the emotional work",
+      "business": "Vercel"
+    },
+    {
+      "why": "Warm cream surfaces paired with deep saturated dark sections, thin borders, near-flat elevation, editorial product photography in hero",
+      "business": "Attio"
+    },
+    {
+      "why": "Custom geometric sans at restrained weight, dark spruce-toned palette, glow-ring focus states instead of traditional shadows, monochrome logo strip trust section",
+      "business": "Resend"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "2px",
+      "cards": "2px",
+      "images": "6px",
+      "inputs": "2px",
+      "buttons": "9999px",
+      "default": "2px"
+    },
+    "elementGap": "24px",
+    "sectionGap": "96px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#00191c",
+      "name": "Spruce Abyss",
+      "level": 0,
+      "purpose": "Deepest canvas — footer and dramatic section breaks"
+    },
+    {
+      "hex": "#032125",
+      "name": "Spruce Dark",
+      "level": 1,
+      "purpose": "Primary background for headers, hero, and major sections"
+    },
+    {
+      "hex": "#0b363b",
+      "name": "Spruce Mid",
+      "level": 2,
+      "purpose": "Card surfaces, elevated panels, button fills on dark backgrounds"
+    },
+    {
+      "hex": "#fffcf6",
+      "name": "Cream Warm",
+      "level": 3,
+      "purpose": "Primary light surface for content sections, card backgrounds"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Charcoal Mist",
+      "level": 4,
+      "purpose": "Subtle alternating background tint"
+    },
+    {
+      "hex": "#fdf0e9",
+      "name": "Zest Blush",
+      "level": 5,
+      "purpose": "Warm accent wash for feature callouts"
+    },
+    {
+      "hex": "#eafde8",
+      "name": "Verdant Whisper",
+      "level": 6,
+      "purpose": "Soft green tint for success-related surfaces"
+    },
+    {
+      "hex": "#e2f4ff",
+      "name": "Wave Frost",
+      "level": 7,
+      "purpose": "Soft blue tint for info-related surfaces"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "level": 8,
+      "purpose": "Topmost surface — elevated cards, content blocks"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0px 0px 0px 4px oklch(0.9263 0.136 145.2) — 4px Verdant glow ring",
+      "element": "Primary Pill Button (focus)"
+    },
+    {
+      "style": "0px 0px 0px 4px oklch(0.97 0 0) — 4px white glow ring",
+      "element": "Secondary Button (focus)"
+    },
+    {
+      "style": "0px 0px 0px 4px oklch(0.3068 0.046 206.34) — 4px Spruce glow ring",
+      "element": "Dark Section Button (focus)"
+    }
+  ],
+  "northStar": "dark spruce forest meeting cream paper",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.38,
+      "letterSpacing": 0.2
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.38,
+      "letterSpacing": 0.21
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.13,
+      "letterSpacing": 0.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.13,
+      "letterSpacing": 0.19
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.13,
+      "letterSpacing": 0.21
+    },
+    {
+      "role": "heading-lg",
+      "size": 40,
+      "lineHeight": 1.13,
+      "letterSpacing": 0.2
+    },
+    {
+      "role": "display",
+      "size": 96,
+      "lineHeight": 1,
+      "letterSpacing": 0.19
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Pill Button",
+      "role": "Main CTA — 'Get started'",
+      "description": "Pill shape (9999px radius), Verdant 300 (#abffae) background, Spruce 900 (#032125) text at 16px weight 475, padding 8px 20px, 4px Verdant glow shadow ring on hover/focus"
+    },
+    {
+      "name": "Secondary Outline Button",
+      "role": "Secondary CTA — 'Book a demo'",
+      "description": "Pill shape (9999px radius), transparent background, Spruce 900 (#032125) text at 16px weight 475, 1px Spruce 700 (#0b363b) border, padding 8px 20px"
+    },
+    {
+      "name": "Ghost Navigation Button",
+      "role": "Nav item with dropdown",
+      "description": "Transparent background, Spruce 900 text at 16px weight 475, no border, padding 0 16px, chevron indicator"
+    },
+    {
+      "name": "Small Tag Button",
+      "role": "'New' badge, 'case study' link",
+      "description": "2px radius, subtle background tint, Mustard 700 (#83611c) text at 12-14px weight 475, padding 4px 8px"
+    },
+    {
+      "name": "Content Card",
+      "role": "Feature card, platform overview tile",
+      "description": "32px padding all sides, Pure White (#ffffff) background, 1px Charcoal 100 (#ebebeb) hairline border, 2px corner radius, no shadow"
+    },
+    {
+      "name": "Dark Section Card",
+      "role": "Card on dark spruce background",
+      "description": "32px padding, Spruce 700 (#0b363b) background, 1px Spruce 700 border, 2px radius, Spruce 200 (#a1c2c6) body text"
+    },
+    {
+      "name": "Tinted Feature Surface",
+      "role": "Section background with soft color wash",
+      "description": "Full-bleed tinted background — Wave Frost (#e2f4ff), Zest Blush (#fdf0e9), or Verdant Whisper (#eafde8), 2px radius containers inside, generous 96px vertical padding"
+    },
+    {
+      "name": "Footer Column",
+      "role": "Footer link column",
+      "description": "4-column grid on Spruce Abyss (#00191c) background, white heading text at 16px weight 600, Spruce 200 (#a1c2c6) link text at 14px, 24px row gap"
+    },
+    {
+      "name": "Logo Strip Card",
+      "role": "Customer logo in trust strip",
+      "description": "Pure White background, 1px Charcoal 100 border, 2px radius, logo centered, no padding variation; arranged in horizontal marquee"
+    },
+    {
+      "name": "Heading with Keyword Accent",
+      "role": "Display headline with colored words",
+      "description": "96px Saans weight 475, Spruce 900 base text with individual words in Zest 700 ('messaging'), Wave 700 ('AI'), Wave 500 ('AI'), Verdant 600 ('data'), Nova 500 ('customers') — words stay inline, color creates semantic meaning"
+    },
+    {
+      "name": "Trust Indicator Row",
+      "role": "Social proof list — '14-day free trial'",
+      "description": "Inline list with checkmark icon (Verdant 300), Spruce 900 text at 14px, separated by 16px gaps, no bullet markers"
+    },
+    {
+      "name": "Interactive Product Preview",
+      "role": "Hero product screenshot",
+      "description": "Large product UI screenshot with browser chrome, set against a warm interior photography background with green plant, no border or shadow — raw edges blending into scene"
+    },
+    {
+      "name": "Status Badge",
+      "role": "'All Systems Operational' indicator",
+      "description": "Small green dot (2px radius circle, Verdant 300 fill) beside white text at 12px weight 500"
+    }
+  ],
+  "typography": [
+    {
+      "role": "Custom display + body typeface used for everything. Weight 475 dominates — a near-medium voice that feels calm and confident rather than aggressive.",
+      "sizes": "10px, 12px, 14px, 16px, 18px, 20px, 24px, 30px, 40px, 48px, 96px",
+      "family": "Saans",
+      "weight": "475, 500, 600, 700",
+      "lineHeight": "1.00 (display), 1.13 (headings), 1.38 (body)",
+      "substitute": "Inter, Helvetica Neue, Arial",
+      "letterSpacing": "0.0020em at 96px, 0.0040em at 48px, 0.0050em at 40px, 0.0070em at 30px, 0.0080em at 24px, 0.0100em at 20px, 0.0110em at 18px, 0.0130em at 16px, 0.0140em at 14px, 0.0170em at 12px, 0.0200em at 10px"
+    }
+  ],
+  "description": "Customer.io uses a deep forest palette anchored in near-black spruce greens, creating a page that feels like dark pine on warm paper. Typography is custom Saans at near-uniform weight 475 — an unusual medium-light voice that avoids the typical SaaS shout of bold headings, instead making 96px display text feel architectural and quietly authoritative. Color appears sparingly as functional punctuation: a vivid verdant green glow marks interactive elements, while warm cream surfaces and soft blue washes tint alternate sections. The system is built on thin 1px borders, minimal elevation, pill-shaped primary buttons, and 2px corner radii everywhere else — a flat, almost editorial product surface.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (primary): #032125\n- text (secondary): #354d51\n- text (muted/link): #a1c2c6\n- background (light): #fffcf6\n- background (dark): #032125\n- border (hairline): #ebebeb\n- accent (highlight keywords in headings): #863d1c\n- primary action: #0b363b (filled action)\n\n**Example Component Prompts**\n\n1. **Hero headline**: Render at 96px Saans weight 475, line-height 1.0, color #032125, letter-spacing 0.0020em. Use the word 'messaging' in #863d1c and 'AI' in #123a88 as inline accent colors within the same line.\n\n2. Create a Primary Action Button: #0b363b background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n3. **Dark section card**: Background #0b363b, 32px padding all sides, 2px corner radius, 1px #0b363b border, body text #a1c2c6 at 16px weight 475, heading in white at 24px weight 475.\n\n4. **Trust indicator row**: Three inline items at 14px weight 475 in #032125, each preceded by a small #abffae checkmark icon, separated by 24px gap, no dividers.\n\n5. **Tinted feature section**: Full-bleed #e2f4ff background, 96px vertical padding, centered 1200px content container, heading at 40px weight 475 in #032125, 3-column grid of feature items below with 2px-radius white cards inside."
+    }
+  ],
+  "elevationPhilosophy": "No traditional drop shadows. Elevation is expressed exclusively through 4px colored glow rings around focused interactive elements — Verdant green for primary CTAs, white for secondary CTAs on dark surfaces, Spruce for dark-surface buttons. Surfaces are flat; depth comes from color contrast and hairline borders, not shadow stacking."
+}

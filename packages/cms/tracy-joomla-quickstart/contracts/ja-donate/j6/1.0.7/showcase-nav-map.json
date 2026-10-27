@@ -1,0 +1,440 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v2",
+  "profileVersion": "1.0.0",
+  "contract": "ja-donate/j6/1.0.7",
+  "baseHash": "44ff2b847b154278ac1ac325ea7056f6d0a17927923839c09dac7e830e55a1ba",
+  "baseFiles": {
+    "manifest.json": "f1e83deba56f7f66207ecd55d02212ca92d687ad62b081044e37f0b7ebf695f7",
+    "content-map.json": "446cd56dbe9605c2e9848dc285f819aed75a6740193e7581c0b9071872978f1f",
+    "presentation-lock.json": "29e2c2a0595b00994fe540d6a34d8c58ad42a9633d1fa4ecf371a0537b6e1e40"
+  },
+  "inputs": {},
+  "decisionsHash": "b5e0a85fd837e95ffaca6e3c4ece5b6eee6ed495eec103598c2a6b700ba35119",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-101",
+      "identity": {
+        "path": "home/donate-orange",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Donate - Orange",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-128",
+      "identity": {
+        "path": "pages/joomla-content",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Joomla Content",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-129",
+      "identity": {
+        "path": "pages/joomla-content/all-categories",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "All Categories",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-130",
+      "identity": {
+        "path": "pages/joomla-content/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-131",
+      "identity": {
+        "path": "pages/joomla-content/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-132",
+      "identity": {
+        "path": "pages/other-pages/error-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-133",
+      "identity": {
+        "path": "pages/other-pages/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-150",
+      "identity": {
+        "path": "pages/joomla-content/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-151",
+      "identity": {
+        "path": "home/donate-green",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Donate - Green",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-153",
+      "identity": {
+        "path": "home/homeless-red",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Homeless - Red",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-9",
+      "identity": {
+        "title": "ja_donate - Orange",
+        "template": "ja_donate",
+        "client_id": "0"
+      },
+      "label": "ja_donate - Orange · Pages · column 128",
+      "style": {
+        "id": 9,
+        "template": "ja_donate"
+      },
+      "menutype": "mainmenu",
+      "item": 117,
+      "column": 128,
+      "path": "mm_config.mainmenu.item-117.sub.rows[item=128]",
+      "before": "09f6a2b54d1b5e24949d31d914ac497b2b7f77bd82d45f5227d6b9e0934e1ff3",
+      "after": "664ffcb3be1f6593316178c5a5a4e1a9bad11f943b1d08a9019dea7a3de20765",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-128 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "ja_donate - Green",
+        "template": "ja_donate",
+        "client_id": "0"
+      },
+      "label": "ja_donate - Green · Pages · column 128",
+      "style": {
+        "id": 10,
+        "template": "ja_donate"
+      },
+      "menutype": "mainmenu",
+      "item": 117,
+      "column": 128,
+      "path": "mm_config.mainmenu.item-117.sub.rows[item=128]",
+      "before": "62c95b1ff46f1777def72e785ed93f3c3598b0470146062bfeafa1a56cdebd5d",
+      "after": "55a337e0aad2b5694529ed710441684329bdbe9f186b15c636403b6f76059fb7",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-128 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-11",
+      "identity": {
+        "title": "ja_donate - Blue",
+        "template": "ja_donate",
+        "client_id": "0"
+      },
+      "label": "ja_donate - Blue · Pages · column 128",
+      "style": {
+        "id": 11,
+        "template": "ja_donate"
+      },
+      "menutype": "mainmenu",
+      "item": 117,
+      "column": 128,
+      "path": "mm_config.mainmenu.item-117.sub.rows[item=128]",
+      "before": "fea6930e8bd81e0b1e3a8dc2cd3fff4e0803b48784db432dc44b0f71a5afff15",
+      "after": "a72de4f5016ddd938f0b1e07624117de469b55cdeec850c568fbb6a8f70089a1",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-128 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "ja_donate - Red",
+        "template": "ja_donate",
+        "client_id": "0"
+      },
+      "label": "ja_donate - Red · Pages · column 128",
+      "style": {
+        "id": 12,
+        "template": "ja_donate"
+      },
+      "menutype": "mainmenu",
+      "item": 117,
+      "column": 128,
+      "path": "mm_config.mainmenu.item-117.sub.rows[item=128]",
+      "before": "44dd4fd51967e4879bae6deb7f558656c8a82e8621c6755b3801905e6afc00b6",
+      "after": "b93e73849c3d96fc07887f504e557226cd99825de1d1522ef520b282bc449b19",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-128 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-102",
+      "label": "Login",
+      "where": "menu-topbar/login-topbar",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Careers",
+      "where": "menu-topbar/careers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Volunteer",
+      "where": "menu-topbar/volunteer",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-105",
+      "label": "Donate Now!",
+      "where": "head-action/donate-now",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "About Us",
+      "where": "mainmenu/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Contact Us",
+      "where": "mainmenu/contact-us",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "Blog",
+      "where": "mainmenu/our-blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-118",
+      "label": "Login",
+      "where": "mainmenu/pages/j-pages/login",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-119",
+      "label": "Registration",
+      "where": "mainmenu/pages/j-pages/registration",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-120",
+      "label": "User Profile",
+      "where": "mainmenu/pages/j-pages/user-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-121",
+      "label": "Edit User Profile",
+      "where": "mainmenu/pages/j-pages/edit-user-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-123",
+      "label": "Smart Search",
+      "where": "mainmenu/pages/other-pages/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-127",
+      "label": "Other Pages",
+      "where": "mainmenu/pages/other-pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-152",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "module-89",
+      "label": "Menu Topbar",
+      "where": "mod_menu@topbar-right",
+      "rule": "keep.default",
+      "reason": "renders menu-topbar: 3 entries stay"
+    },
+    {
+      "key": "module-90",
+      "label": "Head Action",
+      "where": "mod_menu@navbar-action",
+      "rule": "keep.default",
+      "reason": "renders head-action: 1 entry stays"
+    },
+    {
+      "key": "module-105",
+      "label": "Menu Footer",
+      "where": "mod_menu@menu-footer",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 5 entries stay"
+    },
+    {
+      "key": "module-125",
+      "label": "Main menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 12 entries stay"
+    },
+    {
+      "key": "module-126",
+      "label": "Head Action",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders head-action: 1 entry stays"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-118",
+      "label": "Login",
+      "where": "mainmenu/pages/j-pages/login",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_users (view=login) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "menuItem-119",
+      "label": "Registration",
+      "where": "mainmenu/pages/j-pages/registration",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_users (view=registration) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "menuItem-120",
+      "label": "User Profile",
+      "where": "mainmenu/pages/j-pages/user-profile",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_users (view=profile) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "menuItem-121",
+      "label": "Edit User Profile",
+      "where": "mainmenu/pages/j-pages/edit-user-profile",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_users (view=profile) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "menuItem-126",
+      "label": "J! Pages",
+      "where": "mainmenu/pages/j-pages",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-118, which stays"
+    }
+  ],
+  "counts": {
+    "menuItems": 10,
+    "modules": 0,
+    "megaColumns": 4,
+    "kept": 20,
+    "unresolved": 5
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": 3,
+  "settings": {
+    "color": {
+      "palette": [
+        { "slug": "bg", "name": "Background", "color": "#fff" },
+        { "slug": "fg", "name": "Text", "color": "#111" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [{ "slug": "body", "name": "Body", "fontFamily": "system-ui" }],
+      "fontSizes": [{ "slug": "base", "size": "1rem" }]
+    },
+    "spacing": { "spacingSizes": [{ "slug": "1", "size": "1rem" }] },
+    "layout": { "contentSize": "960px" }
+  },
+  "customTemplates": [{ "name": "page-landing", "title": "Landing", "postTypes": ["page"] }],
+  "templateParts": [{ "name": "header", "title": "Header", "area": "header" }]
+}

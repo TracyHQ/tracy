@@ -1,0 +1,51 @@
+{
+  "id": "REG-PR-1747-mail-domain-forget-token-clock",
+  "kind": "fix",
+  "title": "A site cannot claim the MAIL_FROM domain; a torn-down import is forgotten by its add-site host, handover line included; link rounds expire by the app clock",
+  "pr": 1747,
+  "area": "web/site-mail + web/sites-delete + site/add-site-host + web/identity",
+  "cms": ["any"],
+  "needs": ["postgres:TEST_DATABASE_URL"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/site-mail-domains.test.mjs — POST a site mail domain equal to (or under) the domain of MAIL_FROM",
+    "S2: node --test apps/tracy-web/test/sites-route.test.mjs apps/tracy-web/test/import-remove.test.mjs — DELETE a finished import and a built site",
+    "S3: node --test packages/site/tracy-add-site/test/site-hold.test.mjs — hold then forget a site with a handover line",
+    "S4: node --test apps/tracy-web/test/identity-store.test.mjs — approve/deny a link whose expiry is past by the app clock but not by Postgres now()"
+  ],
+  "expect": [
+    "S1: tracy.ai and Mail.Tracy.AI answer 400 DOMAIN_NOT_ALLOWED with no Resend call; shop.test is added; a row owning tracy.ai is never deleted",
+    "S2: a finished import deleted gets hold, forget, release at its add-site host after the row is gone; a built site gets no hold-door call; a host that hangs or throws never fails or holds the delete past 30 s",
+    "S3: the hold names the handover dump key; forget drops the site's handovers.json line and keeps other sites' lines; after release the same site starts again at once",
+    "S4: approveLink and denyLink answer false and the round stays pending; a round inside its window is approved"
+  ],
+  "selectors": {
+    "seam": "tracyDomain (mail/site-mail/domains.js); forgetImportAtHost (sites/import-remove.js), closeBook (sites/route.js); forgetSiteRuns -> forgetHandover (tracy-add-site host/run.ts); approveLink/denyLink now (identity/store.js)"
+  },
+  "evidence": "review of fix/mail-domain-forget-token-clock, 25/10/2026: the MAIL_FROM domain was not in tracyDomain; forgetSiteRuns left handovers.json; approveLink/denyLink compared expires_at with Postgres now() and went red under scripts/run-clock-shift.mjs",
+  "fence": "only finished imports (origin 'migrated') are forgotten at the host; built sites keep their plain teardown",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-mail-domains.test.mjs",
+      "apps/tracy-web/test/sites-route.test.mjs",
+      "apps/tracy-web/test/import-remove.test.mjs",
+      "packages/site/tracy-add-site/test/site-hold.test.mjs",
+      "apps/tracy-web/test/identity-store.test.mjs"
+    ],
+    "tests": [
+      "tracyDomain: the domain of MAIL_FROM is Tracy's too; console mail adds none",
+      "the domain Tracy's system mail leaves from is refused to a site, and never deleted",
+      "DELETE /api/sites/:key: a finished import torn down asks its add-site host to forget the read; a built site does not",
+      "DELETE /api/sites/:key on a finished import keeps the plain teardown; its add-site host forgets the read after",
+      "forget takes the site’s runs, cursor, code and handover line; the hold named the store keys and stays as a tombstone",
+      "pgIdentityStore: a link round expires by the app clock, not the database clock",
+      "forgetImportAtHost: a host that hangs or a call that throws never holds or fails the delete",
+      "a finished import deleted by the site delete: forget then release, and the same address starts again at once"
+    ],
+    "timeout_s": 600,
+    "needs": ["postgres"]
+  }
+}

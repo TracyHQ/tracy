@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-1686-wo-ops-place-principal-happy",
+  "itemIds": ["regression:REG-PR-1686-wo-ops-place-principal"],
+  "requirement": "Refresh and Research again on /ops name the operator through the host's principalOf and work on a database without Tracy's account table",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1686-wo-ops-place-principal.json",
+    "ref": "PR #1686 (fix); fix evidence: Before the fix both looked up 'select id from account where lower(email) = ...' and failed with relation \"account\" does not exist",
+    "invariant": "S1: both queue a run with started_by = operator and started_by_account_id = the named principal. S2: started_by_account_id is null. S3: the usage test passes.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/lib/ops-usage-research.js:36",
+      "apps/tracy-web/src/lib/wo-principal.js:8",
+      "packages/wo/website-opportunities/src/menu-photo-reading.js:15",
+      "packages/wo/website-opportunities/src/schema/index.js:67",
+      "packages/wo/website-opportunities/src/wo-places-store.js:271"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/db/index.js:52 readFile() with a computed path",
+      "apps/tracy-web/test/wo-research-usage.test.mjs:359 readFileSync() with a computed path",
+      "packages/wo/website-opportunities/src/schema/index.js:28 readFile() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "Refresh pressed on /ops is paid by the operator the host names",
+    "Research again pressed on /ops is paid by the operator the host names",
+    "an operator the host does not know is recorded without a principal"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1686-wo-ops-place-principal"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/wo/website-opportunities", "website-opportunities"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1686-wo-ops-place-principal",
+    "pr": 1686,
+    "kind": "fix",
+    "area": "website-opportunities/ops-places",
+    "file": "tests/regression/cases/REG-PR-1686-wo-ops-place-principal.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/wo/website-opportunities/test/place-ops-principal.test.mjs",
+    "apps/tracy-web/test/wo-research-usage.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "Refresh pressed on /ops is paid by the operator the host names",
+    "Research again pressed on /ops is paid by the operator the host names",
+    "an operator the host does not know is recorded without a principal"
+  ],
+  "timeoutS": 600
+}

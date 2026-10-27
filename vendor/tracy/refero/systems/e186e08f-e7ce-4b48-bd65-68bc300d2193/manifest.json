@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e186e08f-e7ce-4b48-bd65-68bc300d2193",
+  "status": "complete",
+  "name": "ldd",
+  "url": "https://styles.refero.design/style/e186e08f-e7ce-4b48-bd65-68bc300d2193",
+  "sourceWebsite": "https://lorenzodaldosso.it",
+  "extractedAt": "2026-06-03T16:54:51.128Z",
+  "capturedAt": "2026-10-08T05:18:30.955308+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Dot-matrix broadsheet on cream paper — a single sheet of warm stock, overprinted once with massive black type and nothing else.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6b4ac45e-0b0e-4b12-8451-95dfaa1bc988.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "0bdab7d12c36a2cf781bdc8ddf732ee5986145e5271778abd02460b9759496f2",
+      "bytes": 17150
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "90935ae65226ec21e7112c5b4629a7d159819fcf4519eac85556add7c45c2e52",
+      "bytes": 73208
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1d681995cceab52d76202b5e868b66c9dfdf801bc21cf38afebb294615d8cd0b",
+      "bytes": 15069
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "546fd133093351da653c0dd6ba4c5c15f24b08214c35a49b031a5b6d3be14760",
+      "bytes": 4803
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6789b4c887f80d531996aa1a9a16616c5c52873390134fbce5edd35ea6fb4c66",
+      "bytes": 11920
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "b26a1d4da5baf7a1b0073237f9c13f2871f765e9ef16b78bb0b396467df6a00e",
+      "bytes": 2135
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3acd115123608d4f8956d58873d73e2bb537a6d2e99345827f9bb7a7995653d8",
+      "bytes": 387
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f1ad4fc0c46bcf3c81047e1b766c215ade5b550cc090c2385bd297690655dd1e",
+      "bytes": 404
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "bfc311c702382aa3466188c7212f5b66f9fffb1bbd0c20a5a09411c6739b8f88",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ce8738fcbb8e94116f9b1243c0fa2c10a2cb11f49d5ef8531263734d9f1e9041",
+      "bytes": 38402
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e7bd0e9d038bee9e3568387f1f7d8a98b7a0762d9e9fb374c48c7e74296ed664",
+      "bytes": 19655
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "af9d48d6719f40c3db6d67d63aea0a00cae388b6842ae739808c75398469b08d",
+      "bytes": 22139
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3000474303fae55becea260f2e84edadf58aa3614b94f5af4a5fb8f33c36b1d6",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "11744e0bb292831a88acbeed6934055cb1b91d5dc994ba9c983d4649a121dd62",
+      "bytes": 763
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "2c70cc9658ea0127f5d082c7451b6a555a317f6370bb079d3280fbd7d65b9ab6",
+      "bytes": 1131
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "47b15ce2-34c8-46e3-b2de-f7eed0b6a3b9",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "565bfc50-3a19-4224-9a4c-125edaeb7bef",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "a21cf7a4-80e0-4f4a-9297-823a5180c2d3",
+    "bb63a015-b018-4bd9-be66-0973ac6be753",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e186e08f-e7ce-4b48-bd65-68bc300d2193",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "ec17bdec-c8fa-4221-abd6-da717bf38d96",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318"
+  ]
+}

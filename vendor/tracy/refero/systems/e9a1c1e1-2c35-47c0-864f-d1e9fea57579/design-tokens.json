@@ -1,0 +1,369 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#f7f6f5",
+      "$type": "color",
+      "$description": "Paper — Page background, navigation bar, footer background"
+    },
+    "carbon": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Carbon — Primary text, dark buttons, outlines, dark iconography, and dark feature surfaces"
+    },
+    "tile-gray": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Tile Gray — Logo tiles, integration cards, pale product modules"
+    },
+    "mist": {
+      "$value": "#e7e7e7",
+      "$type": "color",
+      "$description": "Mist — Inverse text on dark surfaces and subdued pale interface areas"
+    },
+    "graphite": {
+      "$value": "#1f1f1f",
+      "$type": "color",
+      "$description": "Graphite — Dark bento-card surfaces"
+    },
+    "steel": {
+      "$value": "#7d7d7d",
+      "$type": "color",
+      "$description": "Steel — Eyebrows, muted labels, and monochrome partner marks"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Text and icons on Carbon or Electric Blue controls"
+    },
+    "electric-blue": {
+      "$value": "#2200ff",
+      "$type": "color",
+      "$description": "Electric Blue — Highlighted headline words, inline product links, selected icon strokes, and rare filled controls — the hard violet-blue creates a technical interruption in the otherwise grayscale system"
+    }
+  },
+  "font": {
+    "nbinternationalpro": {
+      "$value": "nbInternationalPro",
+      "$type": "fontFamily",
+      "$description": "The sole interface and display family: 400 handles compact navigation, links, and reading text; 500 carries headings from 24px through the 70px hero. The 64px and 70px displays use -2.56px and -2.816px tracking respectively; the 24px subheads use -0.48px. This compressed display tracking makes the large statements feel engineered rather than promotional."
+    },
+    "geistmono": {
+      "$value": "geistMono",
+      "$type": "fontFamily",
+      "$description": "Sparse code-like and product-detail text inside technical interface content; use it only where a software artifact needs a distinct machine-readable texture."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "11px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 11px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "11px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 11px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.35,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "15px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 15px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "geistMono",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 15px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 15px"
+    },
+    "base-5": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-5 at 16px"
+    },
+    "base-6": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-6 at 16px"
+    },
+    "base-7": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-7 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "17px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 17px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "21px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 21px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 1.27,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "26px",
+        "fontWeight": 500,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 26px"
+    },
+    "2xl-3": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "27px",
+        "fontWeight": 500,
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-3 at 27px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "64px",
+        "fontWeight": 500,
+        "lineHeight": 1.16,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 64px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "nbInternationalPro",
+        "fontSize": "70px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 70px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "36": {
+      "$value": "36px",
+      "$type": "dimension",
+      "$description": "Spacing 36px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    },
+    "72": {
+      "$value": "72px",
+      "$type": "dimension",
+      "$description": "Spacing 72px"
+    },
+    "108": {
+      "$value": "108px",
+      "$type": "dimension",
+      "$description": "Spacing 108px"
+    },
+    "180": {
+      "$value": "180px",
+      "$type": "dimension",
+      "$description": "Spacing 180px"
+    },
+    "216": {
+      "$value": "216px",
+      "$type": "dimension",
+      "$description": "Spacing 216px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "sm": {
+      "$value": "2px",
+      "$type": "dimension",
+      "$description": "Border radius sm"
+    },
+    "md": {
+      "$value": "5px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    },
+    "lg": {
+      "$value": "7.2px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "lg-2": {
+      "$value": "10px",
+      "$type": "dimension",
+      "$description": "Border radius lg-2"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "full": {
+      "$value": "200px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    }
+  },
+  "surface": {
+    "paper": {
+      "$value": "#f7f6f5",
+      "$type": "color",
+      "$description": "Surface level 0: Page canvas, header, and footer"
+    },
+    "tile-gray": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Surface level 1: Pale cards, logo containers, and integration modules"
+    },
+    "mist": {
+      "$value": "#e7e7e7",
+      "$type": "color",
+      "$description": "Surface level 2: Light inverse text and subdued interface treatment"
+    },
+    "graphite": {
+      "$value": "#1f1f1f",
+      "$type": "color",
+      "$description": "Surface level 3: Dark bento feature panels"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://devin.ai",
+      "siteName": "Devin",
+      "extractedAt": "2026-09-20T22:02:07.054Z",
+      "variant": "extended"
+    }
+  }
+}

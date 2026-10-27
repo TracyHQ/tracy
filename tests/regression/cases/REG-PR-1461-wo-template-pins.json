@@ -1,0 +1,90 @@
+{
+  "id": "REG-PR-1461-wo-template-pins",
+  "kind": "feat",
+  "title": "Website Opportunities template pins are read on the server: a demo build naming only its CMS takes the /ops/wo pin of that CMS (Tracy Base by default), a pin no longer offered falls back to the restaurant fit or is refused under the strict policy, a requested template of another CMS is refused 400, the /ops/wo Default CMS is what Settings offers accounts with none, and GET /api/ops/wo says whether each pin is offered; a build the host could not finish reads failed with the host's reason and builds again in place through its failed demo action, the same CMS and template on a live demo is refused 409 BUILD_EXISTS before any charge, a brief run lost on restart settles at start; QA rediscovers nav, footer and sitemap every round, skips drafts, and flags empty picture frames, hidden placed pictures and quoted Google reviews, which are neither site content nor facts",
+  "pr": 1461,
+  "area": "website-opportunities",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: POST /api/website-opportunities/:id/demo/build naming only the CMS (joomla) while Design inspiration offers tracy-base/j6, with nothing saved on /ops/wo, then with joomla pinned to tracy-business/j6.",
+    "S2: the same press while the pin is not offered, under the default policy and under strict.",
+    "S3: the same press naming {quickstart: 'tracy-base/wp7', design: 'tracy'} for a Joomla account, and a template no card offers.",
+    "S4: /ops/wo Default CMS is wordpress and the account has chosen no CMS: read Settings, then build on wordpress and on emdash.",
+    "S5: GET /api/ops/wo with tracy-base/j6 unpublished from the shelf, tracy-base/wp7 shown and no EmDash release.",
+    "S6: PUT /api/ops/wo/settings with tag pins and templatePinPolicy strict, then with a slug, a three-part tag, an unknown CMS, or the old policy refuse.",
+    "S7: GET /api/website-opportunities/revisions/:revId of a revision of 'Pho Ba', then again with a site labelled pho-ba on the deployment; POST …/revisions/:revId/build with no label, with a blank one, with 'my-pho' and with 'Bad name!'; POST …/:id/demo/build with label 42; a refused auto-named build that the demo worker retries after somebody took its name.",
+    "S8: a build whose site job the host reports failed, retried through its failed demo action (retryOf); the same CMS and template pressed under a new requestId while the first demo is live, then another template, then the same choice once the first demo failed; a build stuck in requesting past 10 minutes; a brief run whose process died before the web restarted.",
+    "S9: a QA round on a site whose nav changed after the repair, with a drafted page redirecting home, a footer-only and a sitemap-only page, an empty gallery frame, a placed picture inside a closed <details>, and a paragraph copying eight words of a Google review; a brief whose stored markdown still carries reviews is handed off. A Joomla build whose plan keeps /menu/simple-menu while home's nav shows only the alias /index.php/menu; a plan page that 404s; a build marked deleted on a revision."
+  ],
+  "expect": [
+    "S1: 202; the demo action's choice is template {quickstart: 'tracy-base/j6', design: 'tracy', version: '1.4.0', reason: 'pinned'}; then tracy-business/j6 with reason pinned.",
+    "S2: default: the choice is ja-restaurant with reason 'pin-missing:tracy-base/j6;restaurant-match'; strict: 409 TEMPLATE_PIN_UNAVAILABLE {pin: 'tracy-base/j6', cms: 'joomla'} and no wo_demo_action row (nothing charged).",
+    "S3: 400 INVALID_TEMPLATE both times and no wo_demo_action row; a template offered for Joomla is reason requested.",
+    "S4: GET settings says wordpress; a wordpress build takes tracy-base/wp7; an emdash build reads cms emdash, cmsSource account, template tracy-base/emdash-0.x.",
+    "S5: templateStatuses joomla found true offered false, wordpress found true offered true, emdash found false offered false.",
+    "S6: 200 with the pins saved (an empty pin reads as the default) and the policy strict; 400 INVALID_PINNED_TEMPLATE or INVALID_TEMPLATE_PIN_POLICY for each junk value.",
+    "S7: suggestedLabel pho-ba, then pho-ba-2; the build without a label (or blank) asks the create door for pho-ba-2 and answers build.label pho-ba-2; my-pho is sent as typed; Bad name! is refused INVALID_LABEL on the build and 42 answers 400 INVALID_LABEL at the demo door; the worker's retry asks the create door again for the same build with the name it chose first. siteLabelFor(\"Nhan's Kitchen\", {cms: 'joomla', suffix: 'base'}) is nhans-kitchen-j-base.",
+    "S8: GET build reads failed with receipt.failure {code: PROVISION_FAILED, reason}; the retry through the failed action asks the create door again with the same buildId and name and reads done; the same choice again answers 409 BUILD_EXISTS with the live build, no second demo action and no second site; another template builds a second demo of the same brief; once the first demo failed the same choice builds again; the stuck one reads failed REQUEST_LOST; the dead run settles within the first tick with timings.lost LOST_ON_RESTART instead of after 4 minutes.",
+    "S9: round 2 reads the new nav; the drafted page is visited, not judged twice as home; footer and sitemap pages are judged; no-empty-picture-slots, placed-pictures-visible and no-google-review-quoted fail with page and selector; the hand-off prompt carries no Google review text; a plan row without a path is listed under unmatched, never a PAGE_PLAN_MISSING. The plan's kept pages are read (Joomla at /index.php/<route>) and judged — template prices on Simple Menu are flagged by facts-from-brief as sample content; a plan page that 404s is visited from plan, not judged, and reads PAGE_PLAN_MISSING; a deleted build does not answer BUILD_EXISTS."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/revisions.js, apps/tracy-web/src/opportunities-build/route.js, apps/tracy-web/src/lib/wo-ops.js, packages/web/tracy-harness/src/Wo.tsx, packages/web/tracy-harness/src/wo-api.ts, apps/tracy-web/src/opportunities-build/builds.js, packages/wo/website-opportunities/domain/site-label.mjs, packages/site/tracy-website-opportunities/src/client/detail.tsx, apps/tracy-web/src/sites/brief-build.js, apps/tracy-web/src/opportunities-build/demo-qa.js, apps/tracy-host/src/demo-qa.js, apps/tracy-host/src/demo-qa-browser.js, apps/tracy-web/src/opportunities-build/handoff.js, packages/wo/website-opportunities/domain/brief.mjs, packages/wo/website-opportunities/domain/agent-prompt.mjs",
+    "dom": ""
+  },
+  "evidence": "Stand wo2 runs 1–3 (Tracy Base × wp7/j6/emdash, Opal Moon Bistro, 19/10/2026 09:29–10:42Z): tasks/evidence-wo-per-template/README.md, wordpress-base.md (L1–L5), joomla-base.md (J1–J5), emdash-base.md (E1–E4)",
+  "fence": "chooseTemplate takes the CMS pin and its policy and answers {refusal} for a requested card not offered on that CMS or a pin not offered under strict; createRevision rolls back on a refusal and resolves the CMS through resolveRevisionCms (account, else /ops/wo defaultCms); normalizeWoOpsSettings reads a non-tag pin as the default and refuse as strict; parseWoOpsSettingsInput refuses non-tag pins and unknown policies; readWoTemplateStatuses reports offered from templateCards(readReleases); startBuild asks for the body label, else the row's earlier label, else suggestedLabel (siteLabelFor + nextSiteLabel over site, directory_site, label_registry and site_name), and stores it on wo_build.label",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs",
+      "apps/tracy-web/test/ops-wo.test.mjs",
+      "packages/wo/website-opportunities/test/domain-site-label.test.mjs",
+      "apps/tracy-web/test/website-opportunities-demo-qa.test.mjs",
+      "apps/tracy-web/test/brief-build.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "packages/wo/website-opportunities/test/domain-agent-prompt.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief.test.mjs"
+    ],
+    "tests": [
+      "pins: a build naming only its CMS takes the CMS pin saved on /ops/wo",
+      "pins: an operator pin on /ops/wo wins over the default pin",
+      "pins: a pin no longer offered falls back to the restaurant fit and says why",
+      "pins: a pin no longer offered under the strict policy is refused 409 before any work or charge",
+      "pins: a requested template of another CMS, or not offered, is refused 400",
+      "pins: the /ops/wo Default CMS is what Settings offers an account with none; each CMS builds on its pin",
+      "GET /api/ops/wo says per CMS pin whether Design inspiration still offers it",
+      "settings pins: a release tag and the strict policy are saved; a junk tag or policy is refused 400",
+      "settings pins: the new defaults are Tracy Base; slugs and policies saved before #1436 read as today",
+      "build: no label → the server names the site after the place, and a taken name gets -2",
+      "build: a label sent is kept, a retry without one keeps the first choice, a bad one is refused",
+      "siteLabelFor turns a place name into a site label: no accents, lower case, single hyphens",
+      "siteLabelFor adds the CMS short name and a suffix when asked",
+      "siteLabelFor keeps room for \"-NN\": the name part stops at 55, the whole label below 63",
+      "nextSiteLabel answers the base when free, else the first free -2, -3…",
+      "pagePlanMissing: a page the build kept that the site does not reach fails PAGE_PLAN_MISSING; soft shapes; none without a plan",
+      "briefOf: Google reviews are not facts — their words never reach the judge, the rest of the brief does",
+      "a process that starts settles at once the open rows a dead process left",
+      "runDemoQa: discovery is nav, then footer and sitemap; a page that lands on home or a footer/sitemap 404 is visited, not judged",
+      "runDemoQa: a nav link that lands on home (a drafted page) is not judged as a second home",
+      "no-empty-picture-slots: a picture frame that shows no picture fails, with its page and selector",
+      "placed-pictures-visible: a picture Tracy placed that no page shows (hidden block, closed details) fails; one shown anywhere, on a phone or in a carousel does not",
+      "no-google-review-quoted: eight words in a row from a Google review fail (case, spacing and punctuation aside); seven do not",
+      "build: a provision the host failed reads failed with the host reason, and the same requestId builds it again",
+      "build: one live demo per (brief, choice) — the same CMS and template again is refused BUILD_EXISTS before any charge",
+      "build: only requesting, provisioning and done are live — a build in any other state (deleted) does not block a rebuild",
+      "runDemoQa: the pages a build kept are read beside what nav finds — on Joomla under /index.php; one that 404s is visited, not judged",
+      "demoQaBody: the plan widens the page cap past the nav cap, up to a ceiling",
+      "a build with a page plan: the host is asked to read every kept page with a path, beside what nav finds"
+    ]
+  },
+  "history": [
+    "24/10/2026: 4a446e83c4 (23/10/2026) moved the CMS and template from the brief to the build, and c6f2705627 (24/10/2026) moved the pin tests to the demo build door: pins are read when a demo action is accepted, a strict refusal leaves no wo_demo_action row, and one live demo is kept per (brief, choice) instead of per revision. S1–S4, S7 and S8 follow; the four renamed tests are named in run.tests. The fence text names the functions as PR 1461 wrote them.",
+    "24/10/2026: b87ed343b5 (23/10/2026) retries a failed build through the demo action that made it (retryOf), not by pressing the same requestId again; S8 follows.",
+    "24/10/2026: 754d4ebc04 (23/10/2026) makes facts-from-brief fail only facts that contradict the research and flag the others as sample content; the Simple Menu prices in S9 are now sample content."
+  ]
+}

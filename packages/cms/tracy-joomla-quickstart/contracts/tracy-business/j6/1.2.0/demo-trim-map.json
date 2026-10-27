@@ -1,0 +1,723 @@
+{
+  "schemaVersion": "tracy-quickstart-demo-trim/v1",
+  "extensionVersion": "1.0.0",
+  "contract": "tracy-business/j6/1.2.0",
+  "baseHash": "d2f043d20deb6510aeb1f3867641d579801d499f60c67c72eb3efd3c747171b5",
+  "baseFiles": {
+    "manifest.json": "8a027d2d0b67cfea1d3213e20d828380511d8d8ce396756ecf2f63619e4626d7",
+    "content-map.json": "7f1a7f0b641907a999c847a8a387cb5e936c437d184572a4d59a479e79a9a4ce",
+    "presentation-lock.json": "9bf6afbe55baca6c9499730397a9d6c42baa0cb595776b652a2e997bb382a355"
+  },
+  "kept": [
+    {
+      "key": "article-555",
+      "reason": "page: menuItem-600 opens it"
+    },
+    {
+      "key": "article-556",
+      "reason": "page: menuItem-601 opens it"
+    },
+    {
+      "key": "article-562",
+      "reason": "page: menuItem-607 opens it"
+    },
+    {
+      "key": "article-563",
+      "reason": "page: menuItem-609 opens it"
+    },
+    {
+      "key": "article-564",
+      "reason": "page: menuItem-611 opens it"
+    },
+    {
+      "key": "article-565",
+      "reason": "page: menuItem-613 opens it"
+    },
+    {
+      "key": "article-566",
+      "reason": "page: menuItem-615 opens it"
+    },
+    {
+      "key": "article-557",
+      "reason": "page: menuItem-618 opens it"
+    },
+    {
+      "key": "article-558",
+      "reason": "page: menuItem-619 opens it"
+    },
+    {
+      "key": "article-559",
+      "reason": "page: menuItem-629 opens it"
+    },
+    {
+      "key": "article-560",
+      "reason": "page: menuItem-630 opens it"
+    },
+    {
+      "key": "article-561",
+      "reason": "page: menuItem-631 opens it"
+    },
+    {
+      "key": "article-576",
+      "reason": "page: menuItem-633 opens it"
+    },
+    {
+      "key": "article-577",
+      "reason": "page: menuItem-634 opens it"
+    },
+    {
+      "key": "article-583",
+      "reason": "page: menuItem-640 opens it"
+    },
+    {
+      "key": "article-584",
+      "reason": "page: menuItem-642 opens it"
+    },
+    {
+      "key": "article-585",
+      "reason": "page: menuItem-644 opens it"
+    },
+    {
+      "key": "article-586",
+      "reason": "page: menuItem-646 opens it"
+    },
+    {
+      "key": "article-587",
+      "reason": "page: menuItem-648 opens it"
+    },
+    {
+      "key": "article-578",
+      "reason": "page: menuItem-651 opens it"
+    },
+    {
+      "key": "article-579",
+      "reason": "page: menuItem-652 opens it"
+    },
+    {
+      "key": "article-580",
+      "reason": "page: menuItem-662 opens it"
+    },
+    {
+      "key": "article-581",
+      "reason": "page: menuItem-663 opens it"
+    },
+    {
+      "key": "article-582",
+      "reason": "page: menuItem-664 opens it"
+    }
+  ],
+  "hide": [
+    {
+      "key": "menuItem-602",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-projects); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-603",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-news); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-635",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-projects); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-636",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-news); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-695",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-vacancies); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-696",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-vacancies); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-697",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-vacancies); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-698",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-vacancies); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-699",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-vacancies); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-700",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-vacancies); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-701",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-vacancies); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-702",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-vacancies); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-703",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-vacancies); every one it lists is hidden"
+    },
+    {
+      "key": "menuItem-704",
+      "kind": "menuItem",
+      "field": "published",
+      "from": "1",
+      "to": "0",
+      "reason": "lists articles (view=category, layout=tb-vacancies); every one it lists is hidden"
+    },
+    {
+      "key": "article-546",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-547",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-548",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-549",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-550",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-551",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-552",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-553",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-554",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-567",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-568",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-569",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-570",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-571",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-572",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-573",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-574",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-575",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-658",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-659",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-660",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-661",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-662",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-663",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-664",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-665",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-666",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-667",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-668",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-669",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-694",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-695",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-696",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-697",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-698",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-699",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-700",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-701",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-726",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-727",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-728",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-729",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-730",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-731",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-732",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-733",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-734",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-735",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-736",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-737",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-738",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-739",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-740",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-741",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-742",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-743",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-744",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-745",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-746",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-747",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-748",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    },
+    {
+      "key": "article-749",
+      "kind": "article",
+      "field": "state",
+      "from": "1",
+      "to": "0",
+      "reason": "demo content: no menu item opens it as a page"
+    }
+  ],
+  "counts": {
+    "menuItem": 14,
+    "article": 62
+  }
+}

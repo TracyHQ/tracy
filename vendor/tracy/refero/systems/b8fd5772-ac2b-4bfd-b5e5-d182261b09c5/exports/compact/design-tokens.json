@@ -1,0 +1,79 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, nav text, body copy, image borders, dominant foreground on white canvas"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page background, image backgrounds, the base surface every section sits on"
+    },
+    "stone-border": {
+      "$value": "#d8d4cf",
+      "$type": "color",
+      "$description": "Stone Border — Warm hairline dividers, image borders, subtle structural lines — the only neutral that carries a paper-warm tint"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Icon fills, absolute contrast moments in illustration shadows"
+    },
+    "stamp-blue": {
+      "$value": "#0000ff",
+      "$type": "color",
+      "$description": "Stamp Blue — DT logo badge fill and link/nav border — a pure, unmoderated blue that acts as the only brand mark, used sparingly as a square stamp in the header"
+    },
+    "indigo-link": {
+      "$value": "#555abf",
+      "$type": "color",
+      "$description": "Indigo Link — Underlined link text and link borders throughout body copy and project entries — the workhorse interactive color"
+    },
+    "navy-deep": {
+      "$value": "#000080",
+      "$type": "color",
+      "$description": "Navy Deep — Drop shadow tone beneath illustration blocks — the darkest blue in the gradient stack"
+    },
+    "cobalt-mid": {
+      "$value": "#276baa",
+      "$type": "color",
+      "$description": "Cobalt Mid — Mid-tone blue in the Stripe illustration gradient stack"
+    },
+    "sky-bright": {
+      "$value": "#2181c2",
+      "$type": "color",
+      "$description": "Sky Bright — Brighter blue in the Stripe illustration gradient, adjacent to the mid-tone"
+    },
+    "amber-flow": {
+      "$value": "#fcd669",
+      "$type": "color",
+      "$description": "Amber Flow — Yellow stroke for the flowing curved arrows in the Stripe illustration"
+    },
+    "tangerine-arc": {
+      "$value": "#f79a59",
+      "$type": "color",
+      "$description": "Tangerine Arc — Orange stroke for the secondary flowing arrows in the Stripe illustration"
+    },
+    "ember-link": {
+      "$value": "#eb5e28",
+      "$type": "color",
+      "$description": "Ember Link — Rare warm-orange link variant for cross-section references"
+    }
+  },
+  "font": {
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "Entire site — system stack used unapologetically as the brand voice. Body text at 400, section headings at 700 large, inline emphasis at 600. The refusal to load a webfont is the signature: the portfolio reads like a native document, not a designed artifact."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://destroytoday.com",
+      "siteName": "destroytoday.com",
+      "extractedAt": "2026-06-03T18:52:26.754Z",
+      "variant": "compact"
+    }
+  }
+}

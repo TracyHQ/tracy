@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-ink-black: #191919;
+  --color-bone-canvas: #efedea;
+  --color-stone-veil: #e3e1de;
+
+  /* Typography — Font Families */
+  --font-nhm: 'nhm', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-psl: 'psl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-psr: 'psr', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-kumbh-sans: 'Kumbh Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,19 @@
+{
+  "about": "C45 (PR1 bench, 25/09/2026, benchwp01): 'rename About to Our story, and the menu too'. The model sent the Header menu (wp_navigation post 68) with every block delimiter retyped '} />' for '} /-->'; the body had no '-->' at all, WordPress parsed it to no blocks and the header fell back to another menu, while the length-only check called it verified.",
+  "read": {
+    "src": "out-after-pr1/benchwp01/C45#23",
+    "kind": "post",
+    "id": 68,
+    "title": "Header",
+    "post_type": "wp_navigation",
+    "body": "<!-- wp:navigation-link {\"label\":\"Home\",\"type\":\"page\",\"id\":42,\"url\":\"http://benchwp01.tracy.test:51710/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"About\",\"type\":\"page\",\"id\":37,\"url\":\"http://benchwp01.tracy.test:51710/about/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Services\",\"type\":\"page\",\"id\":48,\"url\":\"http://benchwp01.tracy.test:51710/services/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Projects\",\"type\":\"page\",\"id\":46,\"url\":\"http://benchwp01.tracy.test:51710/projects/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"News\",\"type\":\"page\",\"id\":51,\"url\":\"http://benchwp01.tracy.test:51710/news/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact\",\"type\":\"page\",\"id\":39,\"url\":\"http://benchwp01.tracy.test:51710/contact/\",\"kind\":\"post-type\"} /-->"
+  },
+  "sent": {
+    "src": "out-after-pr1/benchwp01/C45#30",
+    "body": "<!-- wp:navigation-link {\"label\":\"Home\",\"type\":\"page\",\"id\":42,\"url\":\"http://benchwp01.tracy.test:51710/\",\"kind\":\"post-type\"} />\n<!-- wp:navigation-link {\"label\":\"Our story\",\"type\":\"page\",\"id\":37,\"url\":\"http://benchwp01.tracy.test:51710/about/\",\"kind\":\"post-type\"} />\n<!-- wp:navigation-link {\"label\":\"Services\",\"type\":\"page\",\"id\":48,\"url\":\"http://benchwp01.tracy.test:51710/services/\",\"kind\":\"post-type\"} />\n<!-- wp:navigation-link {\"label\":\"Projects\",\"type\":\"page\",\"id\":46,\"url\":\"http://benchwp01.tracy.test:51710/projects/\",\"kind\":\"post-type\"} />\n<!-- wp:navigation-link {\"label\":\"News\",\"type\":\"page\",\"id\":51,\"url\":\"http://benchwp01.tracy.test:51710/news/\",\"kind\":\"post-type\"} />\n<!-- wp:navigation-link {\"label\":\"Contact\",\"type\":\"page\",\"id\":39,\"url\":\"http://benchwp01.tracy.test:51710/contact/\",\"kind\":\"post-type\"} />"
+  },
+  "before": {
+    "src": "out-before/benchwp01/C45#56",
+    "body": "<!-- wp:navigation-link {\"label\":\"Home\",\"type\":\"page\",\"id\":42,\"url\":\"http://benchwp01.tracy.test:51710/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Our story\",\"type\":\"page\",\"id\":37,\"url\":\"http://benchwp01.tracy.test:51710/about/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Services\",\"type\":\"page\",\"id\":48,\"url\":\"http://benchwp01.tracy.test:51710/services/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Projects\",\"type\":\"page\",\"id\":46,\"url\":\"http://benchwp01.tracy.test:51710/projects/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"News\",\"type\":\"page\",\"id\":51,\"url\":\"http://benchwp01.tracy.test:51710/news/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact\",\"type\":\"page\",\"id\":39,\"url\":\"http://benchwp01.tracy.test:51710/contact/\",\"kind\":\"post-type\"} /-->"
+  }
+}

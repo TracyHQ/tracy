@@ -1,0 +1,2270 @@
+{
+  "meta": {
+    "url": "https://hey.com",
+    "siteName": "HEY",
+    "extractedAt": "2026-09-24T17:39:03.126Z",
+    "durationMs": 65838,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "elementCount": 367,
+    "telemetry": {
+      "enrichment": {
+        "componentHtmlStatus": "pending",
+        "attempts": 0
+      }
+    }
+  },
+  "raw": {
+    "colors": {
+      "tokens": [
+        {
+          "hex": "#f9f7f5",
+          "oklch": {
+            "c": 0.0034180924208069463,
+            "h": 67.78315864646544,
+            "l": 0.9771124200383824
+          },
+          "contexts": [
+            "card"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 9073681,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "card/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#ffffff",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 1.0000000000000002
+          },
+          "contexts": [
+            "nav",
+            "button",
+            "card",
+            "body",
+            "other",
+            "heading"
+          ],
+          "frequency": 31,
+          "confidence": 1,
+          "prominence": 7706855,
+          "properties": [
+            "backgroundColor",
+            "color"
+          ],
+          "usageCounts": {
+            "nav/color": 2,
+            "body/color": 4,
+            "other/color": 3,
+            "button/color": 5,
+            "heading/color": 2,
+            "nav/backgroundColor": 1,
+            "card/backgroundColor": 3,
+            "other/backgroundColor": 2,
+            "button/backgroundColor": 9
+          }
+        },
+        {
+          "hex": "#d3d2d6",
+          "oklch": {
+            "c": 0.006442029665524931,
+            "h": 300.10417714156006,
+            "l": 0.864989864784094
+          },
+          "contexts": [
+            "nav",
+            "card",
+            "other",
+            "heading",
+            "button"
+          ],
+          "frequency": 24,
+          "confidence": 1,
+          "prominence": 7157905.259089257,
+          "properties": [
+            "boxShadow"
+          ],
+          "usageCounts": {
+            "nav/boxShadow": 1,
+            "card/boxShadow": 3,
+            "other/boxShadow": 2,
+            "button/boxShadow": 9,
+            "heading/boxShadow": 9
+          }
+        },
+        {
+          "hex": "#bdbbc2",
+          "oklch": {
+            "c": 0.009872763224855809,
+            "h": 300.02110028973425,
+            "l": 0.7955221645643599
+          },
+          "contexts": [
+            "nav",
+            "card",
+            "button",
+            "other"
+          ],
+          "frequency": 14,
+          "confidence": 1,
+          "prominence": 6021967.864243698,
+          "properties": [
+            "boxShadow"
+          ],
+          "usageCounts": {
+            "nav/boxShadow": 1,
+            "card/boxShadow": 3,
+            "other/boxShadow": 1,
+            "button/boxShadow": 9
+          }
+        },
+        {
+          "hex": "#5522fa",
+          "oklch": {
+            "c": 0.2804294373189563,
+            "h": 279.7040339031386,
+            "l": 0.49753919602645386
+          },
+          "contexts": [
+            "link",
+            "other",
+            "heading",
+            "button"
+          ],
+          "frequency": 42,
+          "confidence": 1,
+          "prominence": 4664525.708437017,
+          "properties": [
+            "color",
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "link/color": 8,
+            "button/color": 31,
+            "heading/color": 2,
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#a7a4ad",
+          "oklch": {
+            "c": 0.013482916546276003,
+            "h": 299.9172816511556,
+            "l": 0.7245201649581406
+          },
+          "contexts": [
+            "nav",
+            "card",
+            "other"
+          ],
+          "frequency": 6,
+          "confidence": 1,
+          "prominence": 4327175.463566852,
+          "properties": [
+            "boxShadow"
+          ],
+          "usageCounts": {
+            "nav/boxShadow": 1,
+            "card/boxShadow": 3,
+            "other/boxShadow": 2
+          }
+        },
+        {
+          "hex": "#918e99",
+          "oklch": {
+            "c": 0.017316256171659262,
+            "h": 299.7838225660395,
+            "l": 0.6517586040676628
+          },
+          "contexts": [
+            "nav",
+            "card",
+            "other"
+          ],
+          "frequency": 5,
+          "confidence": 1,
+          "prominence": 3984386.234699069,
+          "properties": [
+            "boxShadow"
+          ],
+          "usageCounts": {
+            "nav/boxShadow": 1,
+            "card/boxShadow": 3,
+            "other/boxShadow": 1
+          }
+        },
+        {
+          "hex": "#7b7785",
+          "oklch": {
+            "c": 0.021435423375037958,
+            "h": 299.60586891413135,
+            "l": 0.5769446616883005
+          },
+          "contexts": [
+            "nav",
+            "card",
+            "other"
+          ],
+          "frequency": 5,
+          "confidence": 1,
+          "prominence": 3423108.156992483,
+          "properties": [
+            "boxShadow"
+          ],
+          "usageCounts": {
+            "nav/boxShadow": 1,
+            "card/boxShadow": 2,
+            "other/boxShadow": 2
+          }
+        },
+        {
+          "hex": "#000000",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0
+          },
+          "contexts": [
+            "button",
+            "icon"
+          ],
+          "frequency": 9,
+          "confidence": 1,
+          "prominence": 1300916.8708793144,
+          "properties": [
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "icon/fill": 8,
+            "button/color": 1
+          }
+        },
+        {
+          "hex": "#231c33",
+          "oklch": {
+            "c": 0.04365073792164605,
+            "h": 297.09428900515763,
+            "l": 0.2463553852127952
+          },
+          "contexts": [
+            "nav",
+            "button",
+            "other",
+            "heading",
+            "body",
+            "input"
+          ],
+          "frequency": 121,
+          "confidence": 1,
+          "prominence": 1173602.5455815364,
+          "properties": [
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "nav/color": 7,
+            "body/color": 39,
+            "other/fill": 7,
+            "input/color": 2,
+            "other/color": 45,
+            "button/color": 10,
+            "heading/color": 11
+          }
+        },
+        {
+          "hex": "#b3f4e0",
+          "oklch": {
+            "c": 0.07076411940051694,
+            "h": 173.68171605080002,
+            "l": 0.9180440808962765
+          },
+          "contexts": [
+            "button"
+          ],
+          "frequency": 31,
+          "confidence": 1,
+          "prominence": 62500,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "button/backgroundColor": 31
+          }
+        },
+        {
+          "hex": "#edeae6",
+          "oklch": {
+            "c": 0.006271546643297673,
+            "h": 75.40512239622558,
+            "l": 0.9382567187808868
+          },
+          "contexts": [
+            "button",
+            "body"
+          ],
+          "frequency": 2,
+          "confidence": 1,
+          "prominence": 54294.47542470392,
+          "properties": [
+            "backgroundColor",
+            "color"
+          ],
+          "usageCounts": {
+            "body/color": 1,
+            "button/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#fff5ca",
+          "oklch": {
+            "c": 0.056543559058631974,
+            "h": 96.41625362754625,
+            "l": 0.9672933236790575
+          },
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 25203,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "body/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#736c83",
+          "oklch": {
+            "c": 0.036237757059956015,
+            "h": 299.10969354024945,
+            "l": 0.5458511820798467
+          },
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 4626,
+          "properties": [
+            "color"
+          ],
+          "usageCounts": {
+            "body/color": 1
+          }
+        },
+        {
+          "hex": "#1d2d35",
+          "oklch": {
+            "c": 0.025862061456186188,
+            "h": 230.445270679048,
+            "l": 0.2865929512803567
+          },
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 735,
+          "properties": [
+            "fill"
+          ],
+          "usageCounts": {
+            "nav/fill": 1
+          }
+        }
+      ],
+      "isDarkMode": false,
+      "colorfulness": 0.1834487149728375,
+      "contrastPairs": [
+        {
+          "level": "AAA",
+          "ratio": 21,
+          "background": "#ffffff",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 19.65,
+          "background": "#f9f7f5",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 19.17,
+          "background": "#fff5ca",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 17.51,
+          "background": "#edeae6",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 16.93,
+          "background": "#b3f4e0",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 16.34,
+          "background": "#ffffff",
+          "foreground": "#231c33"
+        },
+        {
+          "level": "AAA",
+          "ratio": 15.29,
+          "background": "#f9f7f5",
+          "foreground": "#231c33"
+        },
+        {
+          "level": "AAA",
+          "ratio": 14.91,
+          "background": "#fff5ca",
+          "foreground": "#231c33"
+        },
+        {
+          "level": "AAA",
+          "ratio": 14.2,
+          "background": "#ffffff",
+          "foreground": "#1d2d35"
+        },
+        {
+          "level": "AAA",
+          "ratio": 13.96,
+          "background": "#d3d2d6",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 13.62,
+          "background": "#edeae6",
+          "foreground": "#231c33"
+        },
+        {
+          "level": "AAA",
+          "ratio": 13.29,
+          "background": "#f9f7f5",
+          "foreground": "#1d2d35"
+        },
+        {
+          "level": "AAA",
+          "ratio": 13.17,
+          "background": "#b3f4e0",
+          "foreground": "#231c33"
+        },
+        {
+          "level": "AAA",
+          "ratio": 12.96,
+          "background": "#fff5ca",
+          "foreground": "#1d2d35"
+        },
+        {
+          "level": "AAA",
+          "ratio": 11.84,
+          "background": "#edeae6",
+          "foreground": "#1d2d35"
+        },
+        {
+          "level": "AAA",
+          "ratio": 11.45,
+          "background": "#b3f4e0",
+          "foreground": "#1d2d35"
+        },
+        {
+          "level": "AAA",
+          "ratio": 11.05,
+          "background": "#bdbbc2",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 10.86,
+          "background": "#d3d2d6",
+          "foreground": "#231c33"
+        },
+        {
+          "level": "AAA",
+          "ratio": 9.44,
+          "background": "#d3d2d6",
+          "foreground": "#1d2d35"
+        },
+        {
+          "level": "AAA",
+          "ratio": 8.6,
+          "background": "#bdbbc2",
+          "foreground": "#231c33"
+        }
+      ]
+    },
+    "shapes": {
+      "radii": [
+        {
+          "value": 43.68,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 31
+        },
+        {
+          "value": 25.6,
+          "contexts": [
+            "nav",
+            "card",
+            "heading",
+            "other"
+          ],
+          "frequency": 15
+        },
+        {
+          "value": 20.88,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 9
+        },
+        {
+          "value": 9999,
+          "contexts": [
+            "image"
+          ],
+          "frequency": 9
+        },
+        {
+          "value": 74.8,
+          "contexts": [
+            "button",
+            "other"
+          ],
+          "frequency": 4
+        },
+        {
+          "value": 57.2,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 3
+        },
+        {
+          "value": 38.4,
+          "contexts": [
+            "card",
+            "nav"
+          ],
+          "frequency": 2
+        },
+        {
+          "value": 2.4,
+          "contexts": [
+            "card"
+          ],
+          "frequency": 1
+        },
+        {
+          "value": 4.8,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1
+        },
+        {
+          "value": 54.4,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1
+        }
+      ],
+      "shadows": []
+    },
+    "spacing": {
+      "tokens": [
+        {
+          "value": 1,
+          "contexts": [
+            "nav",
+            "body",
+            "other"
+          ],
+          "frequency": 13,
+          "properties": [
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|nav",
+            "paddingTop|body",
+            "paddingTop|other"
+          ]
+        },
+        {
+          "value": 2,
+          "contexts": [
+            "nav",
+            "heading",
+            "other",
+            "link"
+          ],
+          "frequency": 9,
+          "properties": [
+            "paddingBottom",
+            "paddingRight",
+            "paddingLeft",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingBottom|nav",
+            "paddingRight|heading",
+            "paddingLeft|heading",
+            "paddingBottom|other",
+            "marginLeft|link"
+          ]
+        },
+        {
+          "value": 3,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 18,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 4,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 45,
+          "properties": [
+            "paddingTop",
+            "paddingBottom",
+            "paddingLeft",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|button",
+            "paddingBottom|button",
+            "paddingLeft|button",
+            "rowGap|button",
+            "columnGap|button"
+          ]
+        },
+        {
+          "value": 7,
+          "contexts": [
+            "nav",
+            "body",
+            "list",
+            "other"
+          ],
+          "frequency": 11,
+          "properties": [
+            "marginTop",
+            "paddingRight",
+            "paddingLeft",
+            "paddingBottom",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "marginTop|nav",
+            "paddingRight|nav",
+            "paddingLeft|nav",
+            "paddingBottom|body",
+            "columnGap|list",
+            "paddingRight|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 8,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 6,
+          "properties": [
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingBottom|nav"
+          ]
+        },
+        {
+          "value": 9,
+          "contexts": [
+            "body",
+            "list"
+          ],
+          "frequency": 2,
+          "properties": [
+            "paddingTop",
+            "rowGap"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|body",
+            "rowGap|list"
+          ]
+        },
+        {
+          "value": 10,
+          "contexts": [
+            "nav",
+            "card",
+            "other",
+            "button"
+          ],
+          "frequency": 42,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "paddingBottom",
+            "paddingTop",
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "rowGap|nav",
+            "columnGap|nav",
+            "paddingBottom|card",
+            "rowGap|other",
+            "columnGap|other",
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other",
+            "paddingBottom|button"
+          ]
+        },
+        {
+          "value": 11,
+          "contexts": [
+            "nav",
+            "heading"
+          ],
+          "frequency": 12,
+          "properties": [
+            "paddingTop",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|nav",
+            "rowGap|heading",
+            "columnGap|heading"
+          ]
+        },
+        {
+          "value": 12,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 31,
+          "properties": [
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|button"
+          ]
+        },
+        {
+          "value": 13,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 16,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 9,
+          "properties": [
+            "paddingRight"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|button"
+          ]
+        },
+        {
+          "value": 17,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 6,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|button",
+            "paddingBottom|button"
+          ]
+        },
+        {
+          "value": 18,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 2,
+          "properties": [
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|body",
+            "paddingLeft|body"
+          ]
+        },
+        {
+          "value": 19,
+          "contexts": [
+            "nav",
+            "footer",
+            "other",
+            "button"
+          ],
+          "frequency": 68,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "rowGap|nav",
+            "columnGap|nav",
+            "rowGap|footer",
+            "columnGap|footer",
+            "rowGap|other",
+            "columnGap|other",
+            "paddingRight|button",
+            "paddingLeft|button"
+          ]
+        },
+        {
+          "value": 21,
+          "contexts": [
+            "nav",
+            "button",
+            "heading"
+          ],
+          "frequency": 26,
+          "properties": [
+            "paddingLeft",
+            "paddingRight",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingLeft|nav",
+            "paddingRight|nav",
+            "paddingRight|button",
+            "paddingLeft|button",
+            "rowGap|heading",
+            "columnGap|heading"
+          ]
+        },
+        {
+          "value": 22,
+          "contexts": [
+            "input"
+          ],
+          "frequency": 2,
+          "properties": [
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingLeft|input"
+          ]
+        },
+        {
+          "value": 24,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 6,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|button",
+            "paddingBottom|button"
+          ]
+        },
+        {
+          "value": 26,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 10,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 27,
+          "contexts": [
+            "heading",
+            "body"
+          ],
+          "frequency": 4,
+          "properties": [
+            "paddingTop",
+            "paddingRight"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|heading",
+            "paddingRight|body"
+          ]
+        },
+        {
+          "value": 30,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 5,
+          "properties": [
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|button",
+            "paddingLeft|button"
+          ]
+        },
+        {
+          "value": 32,
+          "contexts": [
+            "card",
+            "other",
+            "footer"
+          ],
+          "frequency": 10,
+          "properties": [
+            "marginRight",
+            "marginLeft",
+            "paddingRight",
+            "paddingLeft",
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "marginRight|card",
+            "marginLeft|card",
+            "paddingRight|other",
+            "paddingLeft|other",
+            "paddingTop|other",
+            "paddingBottom|other",
+            "paddingRight|footer",
+            "paddingLeft|footer",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 34,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 12,
+          "properties": [
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "marginTop|body"
+          ]
+        },
+        {
+          "value": 38,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 40,
+          "contexts": [
+            "card",
+            "other"
+          ],
+          "frequency": 19,
+          "properties": [
+            "paddingTop",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|card",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 41,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 10,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|other",
+            "marginLeft|other"
+          ]
+        },
+        {
+          "value": 44,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|other",
+            "marginLeft|other"
+          ]
+        },
+        {
+          "value": 45,
+          "contexts": [
+            "other",
+            "heading",
+            "footer"
+          ],
+          "frequency": 101,
+          "properties": [
+            "paddingTop",
+            "paddingRight",
+            "paddingLeft",
+            "marginBottom",
+            "rowGap",
+            "columnGap",
+            "marginTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingLeft|other",
+            "marginBottom|other",
+            "rowGap|other",
+            "columnGap|other",
+            "marginTop|other",
+            "paddingTop|heading",
+            "paddingRight|heading",
+            "paddingBottom|heading",
+            "paddingLeft|heading",
+            "rowGap|footer",
+            "columnGap|footer"
+          ]
+        },
+        {
+          "value": 54,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|nav",
+            "columnGap|nav"
+          ]
+        },
+        {
+          "value": 64,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 38,
+          "properties": [
+            "marginTop",
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "marginTop|other",
+            "paddingRight|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 72,
+          "contexts": [
+            "card"
+          ],
+          "frequency": 1,
+          "properties": [
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "marginTop|card"
+          ]
+        },
+        {
+          "value": 76,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|other",
+            "marginLeft|other"
+          ]
+        },
+        {
+          "value": 90,
+          "contexts": [
+            "card"
+          ],
+          "frequency": 2,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|card",
+            "paddingBottom|card"
+          ]
+        },
+        {
+          "value": 92,
+          "contexts": [
+            "footer"
+          ],
+          "frequency": 2,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|footer",
+            "marginLeft|footer"
+          ]
+        },
+        {
+          "value": 96,
+          "contexts": [
+            "other",
+            "card"
+          ],
+          "frequency": 4,
+          "properties": [
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|other",
+            "paddingLeft|other",
+            "paddingRight|card",
+            "paddingLeft|card"
+          ]
+        },
+        {
+          "value": 109,
+          "contexts": [
+            "footer"
+          ],
+          "frequency": 1,
+          "properties": [
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|footer"
+          ]
+        },
+        {
+          "value": 124,
+          "contexts": [
+            "card"
+          ],
+          "frequency": 2,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|card",
+            "marginLeft|card"
+          ]
+        },
+        {
+          "value": 128,
+          "contexts": [
+            "other",
+            "footer"
+          ],
+          "frequency": 3,
+          "properties": [
+            "marginBottom",
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "marginBottom|other",
+            "marginTop|footer",
+            "marginBottom|footer"
+          ]
+        },
+        {
+          "value": 137,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|other",
+            "marginLeft|other"
+          ]
+        },
+        {
+          "value": 150,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 156,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|other",
+            "marginLeft|other"
+          ]
+        },
+        {
+          "value": 160,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 5,
+          "properties": [
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "marginTop|other"
+          ]
+        },
+        {
+          "value": 209,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|other",
+            "marginLeft|other"
+          ]
+        },
+        {
+          "value": 233,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 14,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|other",
+            "marginLeft|other"
+          ]
+        }
+      ],
+      "density": "comfortable",
+      "baseUnit": 4
+    },
+    "gradients": [
+      {
+        "type": "linear",
+        "value": "linear-gradient(135deg, rgb(85, 34, 250) 0px, rgb(236, 133, 128) 100%)",
+        "colors": [
+          "rgb(85, 34, 250)",
+          "rgb(236, 133, 128)"
+        ],
+        "frequency": 9
+      },
+      {
+        "type": "linear",
+        "value": "linear-gradient(135deg, rgb(182, 219, 255) 0px, rgb(238, 248, 255) 100%)",
+        "colors": [
+          "rgb(182, 219, 255)",
+          "rgb(238, 248, 255)"
+        ],
+        "frequency": 9
+      },
+      {
+        "type": "linear",
+        "value": "linear-gradient(135deg, rgb(249, 92, 92) 0px, rgb(236, 133, 128) 100%)",
+        "colors": [
+          "rgb(249, 92, 92)",
+          "rgb(236, 133, 128)"
+        ],
+        "frequency": 4
+      },
+      {
+        "type": "linear",
+        "value": "linear-gradient(135deg, rgb(85, 34, 250) 0px, rgb(0, 116, 228) 100%)",
+        "colors": [
+          "rgb(85, 34, 250)",
+          "rgb(0, 116, 228)"
+        ],
+        "frequency": 1
+      },
+      {
+        "type": "linear",
+        "value": "linear-gradient(135deg, rgb(95, 221, 197) 0px, rgb(182, 219, 255) 100%)",
+        "colors": [
+          "rgb(95, 221, 197)",
+          "rgb(182, 219, 255)"
+        ],
+        "frequency": 1
+      },
+      {
+        "type": "linear",
+        "value": "linear-gradient(135deg, rgb(236, 133, 128) 0px, rgb(249, 92, 92) 100%)",
+        "colors": [
+          "rgb(236, 133, 128)",
+          "rgb(249, 92, 92)"
+        ],
+        "frequency": 1
+      }
+    ],
+    "typography": {
+      "fonts": [
+        {
+          "family": "Moniker",
+          "source": "custom",
+          "weights": [
+            400,
+            500,
+            700
+          ],
+          "frequency": 338,
+          "fontFeatureSettings": [
+            "\"case\", \"liga\"",
+            "\"c2sc\", \"smcp\""
+          ]
+        },
+        {
+          "family": "Really Sans Large",
+          "source": "custom",
+          "weights": [
+            850,
+            900
+          ],
+          "frequency": 14,
+          "fontFeatureSettings": [
+            "\"case\", \"liga\", \"ss04\""
+          ]
+        },
+        {
+          "family": "Shantell Sans",
+          "source": "custom",
+          "weights": [
+            400,
+            900
+          ],
+          "frequency": 2,
+          "fontFeatureSettings": [
+            "\"case\", \"liga\", \"ss04\"",
+            "\"case\", \"liga\""
+          ]
+        }
+      ],
+      "scale": {
+        "base": 15,
+        "name": "Minor Third",
+        "ratio": 1.2,
+        "confidence": 1
+      },
+      "steps": [
+        {
+          "size": 14,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "other",
+            "button",
+            "image",
+            "icon",
+            "body"
+          ],
+          "frequency": 45,
+          "lineHeight": 1,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "nav",
+            "other"
+          ],
+          "frequency": 4,
+          "lineHeight": 1,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 18,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 3,
+          "lineHeight": 1.2,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 18,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.2,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 18,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 9,
+          "lineHeight": 1.45,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 18,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 5,
+          "lineHeight": 1.45,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 18,
+          "family": "Moniker",
+          "weight": 700,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 9,
+          "lineHeight": 1.45,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 20,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 3,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 20,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 21,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.019,
+          "textTransform": "none"
+        },
+        {
+          "size": 21,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "nav",
+            "button"
+          ],
+          "frequency": 37,
+          "lineHeight": 1,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 21,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "button",
+            "nav",
+            "body"
+          ],
+          "frequency": 6,
+          "lineHeight": 1,
+          "letterSpacing": -0.017,
+          "textTransform": "none"
+        },
+        {
+          "size": 21,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 21,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "list"
+          ],
+          "frequency": 32,
+          "lineHeight": 1,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 21,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "body",
+            "link",
+            "icon"
+          ],
+          "frequency": 14,
+          "lineHeight": 1.6,
+          "letterSpacing": -0.019,
+          "textTransform": "none"
+        },
+        {
+          "size": 21,
+          "family": "Moniker",
+          "weight": 700,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 4,
+          "lineHeight": 1.6,
+          "letterSpacing": -0.019,
+          "textTransform": "none"
+        },
+        {
+          "size": 21,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 4,
+          "lineHeight": 1.6,
+          "letterSpacing": -0.019,
+          "textTransform": "none"
+        },
+        {
+          "size": 24,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "card",
+            "body"
+          ],
+          "frequency": 14,
+          "lineHeight": 1.45,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 24,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "input"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.8,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 24,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 24,
+          "family": "Moniker",
+          "weight": 700,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 27,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "button",
+            "body"
+          ],
+          "frequency": 6,
+          "lineHeight": 1,
+          "letterSpacing": -0.017,
+          "textTransform": "none"
+        },
+        {
+          "size": 27,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "body",
+            "other"
+          ],
+          "frequency": 12,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 27,
+          "family": "Shantell Sans",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 1,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 27,
+          "family": "Moniker",
+          "weight": 700,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 9,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 27,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 32,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "nav",
+            "other",
+            "card",
+            "heading",
+            "footer",
+            "image"
+          ],
+          "frequency": 104,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 32,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 1,
+          "lineHeight": 1,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 32,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 32,
+          "family": "Moniker",
+          "weight": 400,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 3,
+          "lineHeight": 1,
+          "letterSpacing": -0.008,
+          "textTransform": "none"
+        },
+        {
+          "size": 32,
+          "family": "Moniker",
+          "weight": 700,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 32,
+          "family": "Moniker",
+          "weight": 500,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": -0.012,
+          "textTransform": "none"
+        },
+        {
+          "size": 40,
+          "family": "Really Sans Large",
+          "weight": 850,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 40,
+          "family": "Really Sans Large",
+          "weight": 900,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 48,
+          "family": "Really Sans Large",
+          "weight": 850,
+          "contexts": [
+            "heading",
+            "other"
+          ],
+          "frequency": 9,
+          "lineHeight": 1.1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 83,
+          "family": "Really Sans Large",
+          "weight": 900,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 83,
+          "family": "Shantell Sans",
+          "weight": 900,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 1,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        }
+      ]
+    }
+  },
+  "designSystem": {
+    "dos": [
+      "Use Paper #f9f7f5 as the page canvas and White Sheet #ffffff for floating panels.",
+      "Set major display headlines in Really Sans Large at 83px/900/1.10 and section headlines at 48px/850/1.10.",
+      "Use Moniker with negative tracking between -0.012em and -0.019em for navigation, body copy, buttons, and links.",
+      "Use Mint Note #b3f4e0 with Blurple #5522fa text for repeated filled conversion controls at a 43.68px radius.",
+      "Use the 135deg #5522fa-to-#ec8580 gradient only for high-visibility promotional pills, expressive display type, and product-media washes.",
+      "Give main white cards a 25.6px radius and the layered Ink shadow rather than a thin neutral border.",
+      "Use 10–12px gaps for tight navigation and control groups, 19px for local component spacing, and 45px between major content blocks."
+    ],
+    "donts": [
+      "Do not use pure black for interface text; use Ink #231c33.",
+      "Do not replace the warm Paper #f9f7f5 canvas with cool gray or bright white.",
+      "Do not use sharp corners for navigation, hero media, testimonial cards, or public buttons; use their 38.4px, 25.6px, and 43.68px radii.",
+      "Do not use Blurple #5522fa as a universal filled button color; the repeated filled action treatment is Mint Note #b3f4e0.",
+      "Do not apply Shantell Sans to paragraphs, navigation, or button labels; restrict it to short handwritten interruptions.",
+      "Do not flatten major panels with 1px gray outlines; use the multi-layer Ink shadow on White Sheet surfaces.",
+      "Do not make long-form editorial cards rounded like product panels; use the 2.4px letter-card radius and 90px by 96px padding."
+    ],
+    "theme": "light",
+    "colors": [
+      {
+        "hex": "#231c33",
+        "name": "Ink",
+        "role": "Headlines, navigation, body copy, input text, play-control text, and dark button labels",
+        "group": "neutral"
+      },
+      {
+        "hex": "#f9f7f5",
+        "name": "Paper",
+        "role": "Warm page canvas and large paper-like content sections",
+        "group": "neutral"
+      },
+      {
+        "hex": "#ffffff",
+        "name": "White Sheet",
+        "role": "Floating navigation, hero panels, cards, video controls, and reversed text",
+        "group": "neutral"
+      },
+      {
+        "hex": "#736c83",
+        "name": "Quiet Gray",
+        "role": "Fine-print helper copy and low-emphasis supporting text",
+        "group": "neutral"
+      },
+      {
+        "hex": "#5522fa",
+        "name": "Blurple",
+        "role": "Links, emphasized headings, illustrated interface details, and the violet edge of expressive promotional gradients",
+        "group": "brand",
+        "gradient": "linear-gradient(135deg, #5522fa 0%, #ec8580 100%)"
+      },
+      {
+        "hex": "#b3f4e0",
+        "name": "Mint Note",
+        "role": "Filled primary action backgrounds — mint against Ink labels keeps repeated conversion controls playful rather than forceful",
+        "group": "brand"
+      },
+      {
+        "hex": "#ec8580",
+        "name": "Salmon Glow",
+        "role": "Warm gradient endpoint for promotional surfaces and colorful product demonstrations",
+        "group": "accent",
+        "gradient": "linear-gradient(135deg, #f95c5c 0%, #ec8580 100%)"
+      },
+      {
+        "hex": "#b6dbff",
+        "name": "Sky Wash",
+        "role": "Testimonial-card and soft interface background washes",
+        "group": "accent",
+        "gradient": "linear-gradient(135deg, #b6dbff 0%, #eef8ff 100%)"
+      },
+      {
+        "hex": "#fff5ca",
+        "name": "Canary Note",
+        "role": "Occasional warm highlighted surface behind short content moments",
+        "group": "accent"
+      },
+      {
+        "hex": "#edeae6",
+        "name": "Stone",
+        "role": "Subdued neutral fills and secondary quiet surfaces",
+        "group": "neutral"
+      }
+    ],
+    "layout": "The page uses a warm Paper canvas with a floating capsule navigation bar near the top and large White Sheet panels suspended beneath it. The opening sequence is centered: review snippets, an oversized display headline, a two-line bold supporting statement, a conversion control, and a wide rounded product-video frame. Subsequent sections alternate centered editorial headings with clustered Sky Wash testimonial cards, then transition into a tall, narrow paper-letter composition with generous internal margins. The rhythm is spacious between major blocks but dense inside navigation and message cards; a persistent gradient promotional pill can sit over the lower-right edge of content.",
+    "imagery": "The visual language is product- and artifact-led rather than photographic. Wide contained product screenshots are softened beneath violet-to-salmon overlays and topped with a centered white play pill; testimonial content appears as overlapping pastel message cards with small circular portraits. Long editorial content becomes a stark white letter sheet with a faint offset page behind it. Icons are mostly compact mono Ink marks, while the HEY hand symbol and occasional Shantell handwriting provide the only deliberately hand-drawn note. Visuals occupy large horizontal bands, but every image remains subordinate to oversized text and paper surfaces.",
+    "similar": [
+      {
+        "why": "Shares 37signals-style conversational editorial copy, warm paper surfaces, and blunt Ink typography.",
+        "business": "Basecamp"
+      },
+      {
+        "why": "Uses oversized friendly display type and occasional handwritten or playful visual interruptions around product messaging.",
+        "business": "Mailchimp"
+      },
+      {
+        "why": "Pairs large expressive headlines with colorful gradient product imagery and rounded content containers.",
+        "business": "Dropbox"
+      },
+      {
+        "why": "Also frames email as a premium product experience through concentrated product demonstrations and prominent conversion controls.",
+        "business": "Superhuman"
+      }
+    ],
+    "spacing": {
+      "radius": {
+        "cards": "25.6px",
+        "pills": "74.8px",
+        "images": "9999px",
+        "inputs": "0px",
+        "buttons": "43.68px",
+        "navigation": "38.4px",
+        "letter-card": "2.4px"
+      },
+      "elementGap": "19px",
+      "sectionGap": "45px",
+      "cardPadding": "19px",
+      "pageMaxWidth": null
+    },
+    "industry": "productivity",
+    "surfaces": [
+      {
+        "hex": "#f9f7f5",
+        "name": "Paper Canvas",
+        "level": 0,
+        "purpose": "Warm full-page background and editorial section field."
+      },
+      {
+        "hex": "#ffffff",
+        "name": "White Sheet",
+        "level": 1,
+        "purpose": "Navigation, hero panels, cards, letter pages, and media controls."
+      },
+      {
+        "hex": "#fff5ca",
+        "name": "Canary Highlight",
+        "level": 2,
+        "purpose": "Occasional highlighted content surface."
+      },
+      {
+        "hex": "#b3f4e0",
+        "name": "Mint Action Surface",
+        "level": 3,
+        "purpose": "Filled public conversion controls."
+      }
+    ],
+    "elevation": [
+      {
+        "style": "0 0 0 1px rgba(35,28,51,0.02), 0 3.2px 19.2px -6.4px rgba(35,28,51,0.2), 0 6.4px 32px -12.8px rgba(35,28,51,0.3), 0 6.4px 6.4px -12.8px rgba(35,28,51,0.4), 0 12.8px 12.8px -19.2px rgba(35,28,51,0.5), 0 19.2px 19.2px -25.6px rgba(35,28,51,0.6)",
+        "element": "Floating Capsule Navigation"
+      },
+      {
+        "style": "0 0 0 1px rgba(35,28,51,0.02), 0 6.4px 51.2px -25.6px rgba(35,28,51,0.2), 0 12.8px 76.8px -32px rgba(35,28,51,0.3), 0 12.8px 25.6px -38.4px rgba(35,28,51,0.4), 0 25.6px 38.4px -51.2px rgba(35,28,51,0.5), 0 38.4px 51.2px -64px rgba(35,28,51,0.6)",
+        "element": "Hero Paper Panel"
+      },
+      {
+        "style": "0 3.2px 38.4px -6.4px rgba(35,28,51,0.2), 0 6.4px 51.2px -12.8px rgba(35,28,51,0.3), 0 6.4px 25.6px -12.8px rgba(35,28,51,0.4), 0 12.8px 32px -19.2px rgba(35,28,51,0.5), 0 19.2px 38.4px -25.6px rgba(35,28,51,0.6)",
+        "element": "Product Video Frame"
+      }
+    ],
+    "northStar": "sunlit letters on a desk. White rounded panels, paper-like backgrounds, and handwritten marks sit above soft violet-and-salmon color washes.",
+    "typeScale": [
+      {
+        "role": "fine-print",
+        "size": 18,
+        "family": "Moniker",
+        "weight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": -0.216
+      },
+      {
+        "role": "body",
+        "size": 21,
+        "family": "Moniker",
+        "weight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": -0.399
+      },
+      {
+        "role": "letter-body",
+        "size": 24,
+        "family": "Moniker",
+        "weight": 400,
+        "lineHeight": 1.45,
+        "letterSpacing": -0.288
+      },
+      {
+        "role": "handwritten-note",
+        "size": 27,
+        "family": "Shantell Sans",
+        "weight": 400,
+        "lineHeight": 1,
+        "letterSpacing": -0.324
+      },
+      {
+        "role": "link-large",
+        "size": 32,
+        "family": "Moniker",
+        "weight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": -0.384
+      },
+      {
+        "role": "heading-support",
+        "size": 40,
+        "family": "Really Sans Large",
+        "weight": 850,
+        "lineHeight": 1.2,
+        "letterSpacing": 0
+      },
+      {
+        "role": "heading-accent",
+        "size": 40,
+        "family": "Really Sans Large",
+        "weight": 900,
+        "lineHeight": 1.1,
+        "letterSpacing": 0
+      },
+      {
+        "role": "section-heading",
+        "size": 48,
+        "family": "Really Sans Large",
+        "weight": 850,
+        "lineHeight": 1.1,
+        "letterSpacing": 0
+      },
+      {
+        "role": "display",
+        "size": 83,
+        "family": "Really Sans Large",
+        "weight": 900,
+        "lineHeight": 1.1,
+        "letterSpacing": 0
+      },
+      {
+        "role": "display-handwritten",
+        "size": 83,
+        "family": "Shantell Sans",
+        "weight": 900,
+        "lineHeight": 1,
+        "letterSpacing": 0
+      }
+    ],
+    "components": [
+      {
+        "name": "Floating Capsule Navigation",
+        "role": "Public top navigation",
+        "description": "Use a White Sheet horizontal capsule with a 38.4px radius, Ink Moniker links at 20.8px/500, and the ink-tinted navigation shadow. Keep internal item gaps in the 10–11px range; place the compact sign-in control and prominent conversion control at the right edge."
+      },
+      {
+        "name": "Mint Primary Action",
+        "role": "Repeated filled conversion button",
+        "description": "Fill with Mint Note #b3f4e0, set Blurple #5522fa text and border, use a 43.68px radius, and apply 12.48px 18.72px 10.4px padding. Use Moniker 500 text; do not convert this treatment to a violet fill."
+      },
+      {
+        "name": "White Play Control",
+        "role": "Video-overlay control",
+        "description": "Use a White Sheet #ffffff pill with Ink #231c33 text, 20.88px radius, and 4.32px top/bottom with 15.84px right and 4.32px left padding for the icon-leading compact version. Give it the play shadow: 0 3.2px 6.4px -3.2px rgba(35,28,51,0.2), 0 6.4px 12.8px -6.4px rgba(35,28,51,0.4), 0 9.6px 19.2px -9.6px rgba(35,28,51,0.6)."
+      },
+      {
+        "name": "Gradient Promotional Pill",
+        "role": "High-visibility public conversion control",
+        "description": "Use the 135deg Blurple-to-Salmon Glow gradient with white Moniker 500 text. Set a 57.2px radius with 16.64px vertical and 21.32px horizontal padding; the larger floating version uses a 74.8px radius with 23.8px 29.92px padding."
+      },
+      {
+        "name": "New Navigation Marker",
+        "role": "Small announcement label",
+        "description": "Use a coral-to-salmon 135deg gradient chip with White Sheet text in Moniker 16px/500, tight 1–4px padding, and a fully pill-shaped silhouette."
+      },
+      {
+        "name": "Hero Paper Panel",
+        "role": "Opening content container",
+        "description": "Place the display stack on White Sheet #ffffff inside a 25.6px rounded panel with the deep card shadow. Set the display headline in Really Sans Large 83.2px/900/91.52px in Ink, allowing Blurple-to-Salmon treatment on selected words and Shantell Sans 83.2px/900 for the handwritten plus sign."
+      },
+      {
+        "name": "Product Video Frame",
+        "role": "Product demonstration media",
+        "description": "Use a 25.6px top-rounded White Sheet media frame with no internal padding and the card shadow. Cover the product capture with a 135deg Blurple #5522fa to Salmon Glow #ec8580 translucent wash, then center the White Play Control."
+      },
+      {
+        "name": "Sky Testimonial Card",
+        "role": "Social-proof message tile",
+        "description": "Use a soft 135deg Sky Wash background, 25.6px rounded corners, Ink body text, and a small circular 9999px author avatar that overlaps the top edge. Set quote copy in Moniker with 21px/400/1.60 for reading text; reserve 10px gaps for compact metadata."
+      },
+      {
+        "name": "Paper Letter Card",
+        "role": "Long-form editorial message",
+        "description": "Use a White Sheet page with a nearly square 2.4px radius, 90px vertical and 96px horizontal padding, and the layered card shadow. Set letter copy in Ink Moniker 24px/400/1.45 with generous paragraph separation rather than decorative rules."
+      },
+      {
+        "name": "Understated Text Input",
+        "role": "Inline form field",
+        "description": "Use transparent fill, Ink #231c33 text and border, a 0px radius, and 21.6px left padding. Keep the field visually linear; do not place it in a rounded gray box."
+      },
+      {
+        "name": "Fine Print",
+        "role": "Supporting conversion note",
+        "description": "Set in Quiet Gray #736c83 Moniker 17.6px/400/21.12px with -0.22px tracking. Position immediately beneath a public conversion control with a small vertical gap."
+      }
+    ],
+    "typography": [
+      {
+        "role": "Display and section headlines. The 850–900 weight is intentionally oversized and soft-edged; authority comes from chunky letterforms rather than tight, technical type.",
+        "sizes": "40px, 48px, 83px",
+        "family": "Really Sans Large",
+        "weight": "850, 900",
+        "lineHeight": "1.10, 1.20",
+        "substitute": "Nunito Sans Black",
+        "letterSpacing": "normal",
+        "fontFeatureSettings": "\"case\", \"liga\", \"ss04\""
+      },
+      {
+        "role": "Navigation, buttons, long-form letter copy, labels, links, testimonials, and UI controls. Its slightly condensed negative tracking lets conversational copy remain compact beside oversized display type.",
+        "sizes": "14px, 16px, 18px, 20px, 21px, 24px, 27px, 32px",
+        "family": "Moniker",
+        "weight": "400, 500, 700",
+        "lineHeight": "1.00, 1.20, 1.40, 1.45, 1.60, 1.80",
+        "substitute": "DM Sans",
+        "letterSpacing": "-0.40px at 21px, -0.32px at 27px, -0.38px at 32px; generally -0.012em to -0.019em",
+        "fontFeatureSettings": "\"case\", \"liga\"; \"c2sc\", \"smcp\""
+      },
+      {
+        "role": "Handwritten interjections, especially a single symbolic character inside a display headline. Use sparingly as an imperfect human interruption within the otherwise heavy sans system.",
+        "sizes": "27px, 83px",
+        "family": "Shantell Sans",
+        "weight": "400, 900",
+        "lineHeight": "1.00",
+        "substitute": "Caveat",
+        "letterSpacing": "-0.32px at 27px; -1.00px at 83px",
+        "fontFeatureSettings": "\"case\", \"liga\", \"ss04\""
+      }
+    ],
+    "description": "HEY treats the page as a stack of tactile paper objects floating over a warm off-white field. Giant, almost cartoon-heavy Really Sans headlines use violet-to-salmon color as an occasional burst, while dense Moniker text keeps navigation, messages, and interface copy compact and human. The recurring 25.6px rounded white panel, soft ink-tinted shadow, handwritten Shantell interruption, and pastel gradient product imagery make email feel personal rather than corporate.",
+    "customSections": [
+      {
+        "title": "Agent Prompt Guide",
+        "content": "Quick Color Reference:\n- Ink: #231c33 — Headlines, navigation, body copy, input text, play-control text, and dark button labels\n- Paper: #f9f7f5 — Warm page canvas and large paper-like content sections\n- White Sheet: #ffffff — Floating navigation, hero panels, cards, video controls, and reversed text\n- Quiet Gray: #736c83 — Fine-print helper copy and low-emphasis supporting text\n- Blurple: linear-gradient(135deg, #5522fa 0%, #ec8580 100%) — Links, emphasized headings, illustrated interface details, and the violet edge of expressive promotional gradients\n- Mint Note: #b3f4e0 — Filled primary action backgrounds — mint against Ink labels keeps repeated conversion controls playful rather than forceful\n- Salmon Glow: linear-gradient(135deg, #f95c5c 0%, #ec8580 100%) — Warm gradient endpoint for promotional surfaces and colorful product demonstrations\n- Sky Wash: linear-gradient(135deg, #b6dbff 0%, #eef8ff 100%) — Testimonial-card and soft interface background washes\n- Canary Note: #fff5ca — Occasional warm highlighted surface behind short content moments\n- Stone: #edeae6 — Subdued neutral fills and secondary quiet surfaces\n\nCreate a centered hero on Paper #f9f7f5 inside a White Sheet #ffffff panel with a 25.6px radius and layered Ink shadow; set the headline in Really Sans Large 83.2px, weight 900, 91.52px line-height, using Ink #231c33 with a single Shantell Sans 83.2px handwritten symbol.\nCreate a Mint Primary Action using Mint Note #b3f4e0, Blurple #5522fa Moniker 27.2px weight 500 text, 43.68px radius, and 12.48px 18.72px 10.4px padding; place Quiet Gray #736c83 Moniker 17.6px helper text beneath it.\nCreate a product video frame on White Sheet #ffffff with 25.6px top corners, a 135deg Blurple #5522fa to Salmon Glow #ec8580 media wash, and a centered white play pill with Ink Moniker 20.8px weight 500 text.\nCreate a Sky Testimonial Card with the Sky Wash gradient, 25.6px corners, an overlapping circular avatar, and Ink #231c33 Moniker 21px/400/1.60 quote text.\nCreate a Paper Letter Card with White Sheet #ffffff, 2.4px radius, 90px vertical and 96px horizontal padding, layered Ink shadow, and Ink Moniker 24px/400/1.45 body copy."
+      }
+    ]
+  },
+  "screenshot": {
+    "url": "https://images.refero.design/styles/refero.design/image/875758b4-06ce-4b2a-a0df-1564d1fb8b14.jpg",
+    "thumbnail": "https://images.refero.design/styles/refero.design/image/1fca66a7-9b4b-4621-bf2c-d493d7e291ab.jpg"
+  }
+}

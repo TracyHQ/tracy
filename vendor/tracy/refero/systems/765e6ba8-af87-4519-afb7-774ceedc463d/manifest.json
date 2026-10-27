@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "765e6ba8-af87-4519-afb7-774ceedc463d",
+  "status": "complete",
+  "name": "Aplós",
+  "url": "https://styles.refero.design/style/765e6ba8-af87-4519-afb7-774ceedc463d",
+  "sourceWebsite": "https://aplos.world",
+  "extractedAt": "2026-06-03T19:41:10.534Z",
+  "capturedAt": "2026-10-08T05:13:34.419352+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Old-world apothecary at dusk",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8ee2bf02-0a4a-4e1a-8490-91b59a37a8cc.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d1e2f755-6aa2-4e88-9e2f-7085f4850793.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/4f0064f0-2f20-40d2-be72-897b45c694a5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/441ec3d8-4207-481e-9bae-4b03288d2e99.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/eb121d99-089b-4ca2-a946-f73b2f1bf5db.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c91e74ba46c71c03ca27ac561eeb743a7a62534808b7ed5138367d26498e9a2e",
+      "bytes": 17306
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "e3abbce38a3b2f9f1837b4c9b6d7d341c023fb013d90390a000fd2f4d7f46ec0",
+      "bytes": 127610
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c38ea03be60c9f3087a56a226b9c4b85bcd6551c5913369678d7cf34ec3cfc67",
+      "bytes": 14868
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a61d21be2599594d2179617ba8ba5683740c2fef9fee38c688a42a9300a908dd",
+      "bytes": 4983
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ea43a85fa5ff824239adb309fbc6b4c57963ec63070caa09407bde5c5b075a12",
+      "bytes": 10561
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7e778803c4b673cacead6fc878bf2932b26fb9a2da2801ac57c6c99dbc692f29",
+      "bytes": 2244
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "5fd02a55af5b7a43c9343988bc157f1d885d248a58b79bfe5b1222c15de7bd1d",
+      "bytes": 492
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "1f3c4f6e47a276772b8e5004d705ba554456a59a66d35a364bf5826cc06be0df",
+      "bytes": 509
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3d6b62696fcf43d766ed8d4ff1a1ad5f8baccbe8e1c54bd6f187e02a3d74d246",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "de1c969ed9ad043287108a99b21c582288c97b9f3d4cfb5ca40e4780ef40c0fb",
+      "bytes": 40372
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "921379c0daa948af26d5aa82bf94707790f70198d1ae73925ee01234748b9f85",
+      "bytes": 20851
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c76d17e3ae7438811d2fdcac6880cac1d7d67245c1b814055b821c6fa2433c36",
+      "bytes": 29511
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a420e6b59ffcca8f143b6e4edc05158547d28b5a77d5d878357cd6cfce897137",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ff39081dc6524bf4a6a46954a6669c8be00252affe6e00f37f4795b581d18d88",
+      "bytes": 1280
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d75c527e639086734a67bd5d8c0e3d9fa64a9fa5db28d0fdcc73926b6a3d1eb8",
+      "bytes": 1748
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "21b71be3-78a0-4681-a5b9-64cc4b40eb67",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "24c0de95-295d-42aa-8240-4e36683cf35b",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "6a5f9438-7ae6-4743-a0bd-f9087d467eff",
+    "76483bd1-37d3-4fb9-889b-aecf27b08b83",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "ded6d7c4-2801-45f4-8b8a-089f1b37842d",
+    "f1a690c7-234d-4ee9-9806-5790934e7043"
+  ]
+}

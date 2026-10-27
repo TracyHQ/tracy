@@ -1,0 +1,64 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary canvas, all text on dark surfaces, inverted button text"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "gallery-gray": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Gallery Gray — Secondary surface for section bands, footer background washes"
+    },
+    "plinth-gray": {
+      "$value": "#d4d4d4",
+      "$type": "color",
+      "$description": "Plinth Gray — Tertiary surface, alternating section rhythm dividers"
+    },
+    "carbon-black": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Carbon Black — Dark section background for content blocks (writing index, project list) — near-black avoids the harshness of pure #000"
+    },
+    "slate-black": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Slate Black — Secondary dark surface for stacked dark sections"
+    },
+    "concrete": {
+      "$value": "#a3a3a3",
+      "$type": "color",
+      "$description": "Concrete — Muted helper text, metadata dates, tertiary annotations on white"
+    },
+    "stone": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Stone — Secondary muted text, labels, non-active annotations"
+    },
+    "graphite": {
+      "$value": "#525252",
+      "$type": "color",
+      "$description": "Graphite — Strongest muted text before full black, subtle emphasis"
+    }
+  },
+  "font": {
+    "abc-oracle": {
+      "$value": "ABC Oracle",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for all text — headlines, body, labels, metadata, navigation. The signature choice is using a single 14px size across the entire site: hierarchy comes from weight contrast (400 for body, 500 for titles and active items) and whitespace, never from size. This anti-hierarchical approach treats all information as equally important, like gallery wall text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://linusrogge.com",
+      "siteName": "Linus Rogge",
+      "extractedAt": "2026-06-03T16:30:04.560Z",
+      "variant": "compact"
+    }
+  }
+}

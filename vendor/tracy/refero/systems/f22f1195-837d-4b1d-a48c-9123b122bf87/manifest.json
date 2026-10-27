@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "f22f1195-837d-4b1d-a48c-9123b122bf87",
+  "status": "complete",
+  "name": "Kindsight",
+  "url": "https://styles.refero.design/style/f22f1195-837d-4b1d-a48c-9123b122bf87",
+  "sourceWebsite": "https://kindsight.io",
+  "extractedAt": "2026-06-03T19:56:07.105Z",
+  "capturedAt": "2026-10-08T05:19:24.548026+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Sunlit field journal at dusk — an earthy, editorial calm built from cream paper, olive ink, and a single flash of chartreuse highlight.\n\nKindsight feels like a sustainably-printed nonprofit annual report: warm cream backgrounds, near-black text with a green undertone, a deep olive hero panel, and terracotta as the only shout. The single chartreuse accent is used sparingly — as underline punctuation on italic display words, badge fills, and illustrative highlights — never as a functional color. Display type in Times Now at weights 200-300 with tight tracking reads like editorial cover typography, not SaaS headlines.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/df98235d-4d6d-47f0-9ede-b51499b5ad57.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/31303c50-ea88-4ac7-845c-cef87219a1eb.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e0b249d1-1648-4bec-9b59-cef5ccdd5b6c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/ee08da77-b779-4af2-98a6-3e3fda54be31.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e86d3090-600a-4b8c-9e60-043c9e6c90d3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ab4db3462931a5943eb8963791ea7506eaf309b542afeb9a922cd7b6467d105b",
+      "bytes": 25426
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8fc8403468adde5db0da04f0599643377ac2eb71c1ad63b1d3888e50b7b20358",
+      "bytes": 149707
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "9595d7543ff0c26662d27836389a89ed6041ea2f3b345842aec6dd242c95ce24",
+      "bytes": 21439
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "dd84b405606feae65bda2feee16162c593c55ae699ca88d0a7d95e1844083e0a",
+      "bytes": 14623
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "3e62c704cf348c911d67dc9fb603b10eac5e159ccac3955d49fababa915a4f86",
+      "bytes": 16202
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "dd777eacfc72e4402bfa919f06c9b484d66fa5d0127614582d30fc4581c3b0b5",
+      "bytes": 3428
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "996ed81b492948f5a2cffb5ef2ab28ad0209f990d2b9faa45a295318c8abd723",
+      "bytes": 669
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "dbe4508560d15e8e872da8ed2ec7fc943084da4b307c2d27e54eb30bfa5429b7",
+      "bytes": 686
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "14c03976c041ac37849a4429093d9de90c59b2dde0310c7939d7ff5c521b901d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "c8d70ec1be98cb217e33b90571531cf6d674a0489822bd0f8b6ff638269b52e0",
+      "bytes": 48928
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "4ba2ccf3297d516b56520aa92070c41d82c4cd34ad8ec7f20055d47ae474a708",
+      "bytes": 25888
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "47633bd610433221423a4c06cc22b8b524b3959c16fb55ff870ce28ac66a929a",
+      "bytes": 60436
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "1e24a41a007c3eff6959536a4c9053f3dbd14fdf2e57ef344d1b64b37968a03d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "49eae2e9886066b44a9f82962eb9cbe6c472c99acdd1fe8c8a4136b046133ec2",
+      "bytes": 1987
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "bcec2b3eb5f7d6a02cc179de5ca02beae15f6efed26c730572e8aa8b1b937522",
+      "bytes": 2624
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "2230ba53-445e-411d-b483-16410a072639",
+    "24d3b281-04a6-4cc7-8a74-634b08472291",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3e100552-a8ad-4179-b89a-6aa5113b92e1",
+    "4d832c12-dd14-45b0-bba7-2d3bc25d8264",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "5bfe6c1d-1b15-4f8d-b0c9-677a33291c5d",
+    "7479c233-6fee-468b-af95-9169d01a293e",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "7f7d24b9-6878-4548-82ca-a26bbf7a6f2c",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9be20798-843b-424c-bc87-192edc0cce22",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "ca9bff3b-d488-46e5-8a32-2d858bb5eed2",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "e8589e7c-5ba9-4923-aa7f-0f1bf0d679be",
+    "f22f1195-837d-4b1d-a48c-9123b122bf87",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fb812ddb-d7c0-4540-82d7-1562dff16f09"
+  ]
+}

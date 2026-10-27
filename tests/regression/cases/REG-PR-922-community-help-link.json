@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-922-community-help-link",
+  "kind": "feat",
+  "title": "The Tracy community on Discord is one press away: a Community row above Settings in the left column, and a floating Need help? pill in the conversation that opens a panel with Open Discord and can be hidden per browser, after which the row stays",
+  "pr": 922,
+  "area": "ui/sidebar/community",
+  "cms": ["any"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup (tests/regression/common-dev.md on cowork.tracy.site, or README.md for a local stand). Browser: a NEW context signed in with any seat; open O and wait until the left column renders (`.tsb-root`). Before anything else run localStorage.removeItem('tracy.help-button.hidden') and reload.",
+    "S2: GET /api/ui with the same cookie; record HIDDEN = its `hidden` array. If it contains 'community-link' or 'help-button', note which and expect that piece to be absent in S3/S4 instead of present.",
+    "S3: Read whether `.tsb-community` exists in the rail (it must not: the row moved into the account menu, PR #1082). Press `[data-tracy-account-trigger]`; in the `[role=menu]` panel read `[data-menu-item=community]`: whether it exists, and whether it is the last row. Press it while intercepting window.open (replace window.open with a recorder before pressing): record the URL and target passed. Press Escape if the menu is still open.",
+    "S4: Read `.tch-help-pill`. Record its bounding box and the bounding box of the composer (the element `[data-slot=\"conversation.composer\"]` or, as dsh renders it display:contents, its first child with a non-zero box). Press the pill; read `.tch-help-panel` and `.tch-help-go` (href, target, rel). Press Escape; read whether `.tch-help-panel` is gone.",
+    "S5: Press the pill again, then press `.tch-help-hide`. Read localStorage 'tracy.help-button.hidden', whether `.tch-help-note` is shown, and the class list of `[data-tracy-account-trigger]`. Wait 4 s; read whether `.tch-help-pill` exists. Reload, wait for `.tsb-root`; read again whether `.tch-help-pill` exists, then open the account menu and read whether `[data-menu-item=community]` exists.",
+    "S6: Clean up: localStorage.removeItem('tracy.help-button.hidden'). Close only the context this case opened."
+  ],
+  "expect": [
+    "S3: no `.tsb-community` in the rail; the account menu has `[data-menu-item=community]` as its last row; pressing it calls window.open with 'https://discord.gg/BM9TMRcEBb' and target '_blank'.",
+    "S4: `.tch-help-pill` exists and does not overlap the composer box (its bottom edge is above the composer's top, or it sits in the column's bottom corner when the composer is centred). The panel opens with `.tch-help-go` href = 'https://discord.gg/BM9TMRcEBb', target '_blank', rel containing 'noopener'; Escape closes it.",
+    "S5: after Hide, localStorage 'tracy.help-button.hidden' = '1', `.tch-help-note` is shown, `[data-tracy-account-trigger]` carries `tsb-community-flash`; after 4 s no `.tch-help-pill`; after reload still no `.tch-help-pill` while the account menu still has `[data-menu-item=community]`.",
+    "A piece listed in HIDDEN (S2) is absent instead, and nothing else changes."
+  ],
+  "selectors": {
+    "row": "[data-menu-item=community] in the account menu (slot settings.menu.item, id community, @tracy/dsh-sidebar); before #1082 it was .tsb-community in sidebar.footer.action",
+    "pill": ".tch-help-pill inside .tch-help (slot conversation.input.dock, id tracy-help); panel .tch-help-panel, link .tch-help-go, hide .tch-help-hide, note .tch-help-note",
+    "storage": "localStorage key tracy.help-button.hidden",
+    "switches": "community-link, help-button in packages/core/tracy-core/src/ui-switches/catalogue.json; GET /api/ui field hidden",
+    "flash": "tsb-community-flash on [data-tracy-account-trigger]"
+  },
+  "evidence": "05/10/2026: customers need one place to ask questions, report bugs and share feedback with the team and each other. Variant chosen on two HTML mock pages (option E floating pill + option A footer row): the pill sits in the chat column, not the screen corner, because the screen corner is the site preview where a site's own chat widget lives (measured overlap on the mock).",
+  "fence": "Mechanism only: what the two slot occupants draw, where the pill is placed, the panel, and the per-browser hide. Not covered: Discord itself (the invite link is not opened), and per-account hiding (by design the hide lives in localStorage).",
+  "run": {
+    "cmd": [
+      "../../node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "playwright.config.mjs",
+      "specs/REG-PR-922-community-help-link.spec.mjs"
+    ],
+    "cwd": "tests/regression",
+    "needs": ["stand", "chrome"]
+  }
+}

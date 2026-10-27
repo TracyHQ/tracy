@@ -1,0 +1,350 @@
+{
+  "dos": [
+    "Use SF Pro Rounded at weights 600-900 for all visible type; the rounded letterforms are the brand voice and a sharp sans-serif breaks the personality",
+    "Set display headlines at 56px or larger with -0.028em to -0.03em tracking — anything smaller loses the candy-wall effect",
+    "Use only Tangerine (#ff8a00) and Hot Pink (#ff54bb) as filled button backgrounds; never use the near-black or gray as a button fill",
+    "Apply 40-50px pill radius to all interactive elements — buttons, nav links, toasts, and download CTAs should all read as pebbles",
+    "Let the multi-stop Prism Wash gradient breathe as a full-bleed section background at 100% viewport width; never crop it into a contained box",
+    "Pair every CTA with a white-tile rainbow icon on the right side — the icon is a brand mark, not decoration",
+    "Use 32px corner radii for all device frames, cards, and large illustration containers — this radius is the visual signature separating Rainbow from typical 8-12px rounded SaaS"
+  ],
+  "donts": [
+    "Do not introduce a new accent color outside the tangerine/pink/coral/sky-tint system — the palette is intentionally narrow",
+    "Do not use flat drop shadows on cards; depth must come from inset white highlights or pastel gradient washes, not outer shadows",
+    "Do not set body text below 16px or above 20px in the rounded family — the type scale jumps from 20px straight to 32px+ for emphasis",
+    "Do not use sharp corners on anything user-facing — minimum 10px radius on icons, 32px on all frames",
+    "Do not place the rainbow logo on a chromatic background without a white container tile — the logo needs a white stage",
+    "Do not stack more than two filled CTA buttons in a row; Tangerine and Hot Pink are the only allowed duo",
+    "Do not use thin 1px borders for separation — prefer Cloud Gray surface shifts or generous whitespace gaps of 48px+",
+    "Do not let gradients resolve to hard color blocks; every gradient should dissolve to white or Cloud Gray at one edge"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#0f101a",
+      "name": "Ink Black",
+      "role": "Primary text, headings, iconography, dark surface anchors — the single high-contrast ink that drives every readable element",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Page canvas, card surfaces, button text on chromatic fills, inset highlight wash",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f1f3f6",
+      "name": "Cloud Gray",
+      "role": "Soft surface wash for alternating bands and section backgrounds, secondary card fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c7c7c7",
+      "name": "Mist Gray",
+      "role": "Inset shadow color for glassy device-frame depth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b8b8b8",
+      "name": "Pebble Gray",
+      "role": "Muted surface for neutral feature phone frames and de-emphasized panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#777885",
+      "name": "Stone",
+      "role": "Secondary body text, helper labels, quiet UI annotations — a near-gray that recedes without vanishing",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "True Black",
+      "role": "Deepest dark fill for illustration cores, icon glyphs, and shadow bases on device renders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ff8a00",
+      "name": "Tangerine",
+      "role": "Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#ff54bb",
+      "name": "Hot Pink",
+      "role": "Red supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#99eeff",
+      "name": "Sky Tint",
+      "role": "Decorative accent wash, soft highlight blocks in feature sections, illustration glow companion",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff8465",
+      "name": "Coral Edge",
+      "role": "Warm accent stroke and text highlight — used sparingly as a coral border or inline emphasis; Orange-to-pink gradient for diagonal brand ribbons, feature section backdrops, and decorative dividers",
+      "group": "accent",
+      "gradient": "linear-gradient(270deg, #ff8465 0%, #ff62a3 100%)"
+    },
+    {
+      "hex": "#94ffe8",
+      "name": "Cotton Sky",
+      "role": "Radial mint-to-lavender gradient anchoring product showcase sections — dissolves into Cloud Gray at the edges",
+      "group": "accent",
+      "gradient": "radial-gradient(94.9% 94.9% at 50% 100%, #94ffe8 0%, #e9e2f6 35%, #f1f3f6 100%)"
+    },
+    {
+      "hex": "#a1cbfd",
+      "name": "Lavender Mist",
+      "role": "Radial blue-to-lavender gradient for hero atmosphere and soft section transitions",
+      "group": "accent",
+      "gradient": "radial-gradient(100% 100% at 50% 100%, #a1cbfd 0%, #e0e5ff 33%, #f1f3f6 100%)"
+    },
+    {
+      "hex": "#75e6ff",
+      "name": "Prism Wash",
+      "role": "Full multi-stop rainbow linear gradient — the signature 9-stop sweep used in feature bands and illustration environments",
+      "group": "accent",
+      "gradient": "linear-gradient(180deg, #75e6ff 0%, #fff0f0 8%, #fef0ff 14%, #fff7f0 21%, #eeebff 29%, #f6ebff 37%, #ffffff 47%, #e5f1ff 67%, #ffffff 100%)"
+    }
+  ],
+  "layout": "Full-bleed page with no persistent sidebar. The hero is a centered headline-over-gradient layout with floating 3D illustrations on the left and a product mockup on the right, against a sky-blue atmosphere with cloud shapes. The Download CTA pair (Tangerine + Hot Pink) sits centered below the headline. The second section flips to a split layout: extension window mockup left, mobile phone mockup right, both anchored on a soft lavender-to-white radial gradient, with a small floating network-switch toast on the far left. The third section is a horizontal row of 5 feature phone cards, each in a different solid color (Cloud Gray, Stone, Pebble, Tangerine, Ink Black), 32px radii, evenly spaced. Navigation is a minimal transparent top bar with a right-aligned white pill Download button. Section rhythm is: hero (sky blue) → product showcase (lavender gradient) → feature cards (Cloud Gray) → likely text sections below at 80px vertical gaps.",
+  "imagery": "Rainbow's visual language is dominated by 3D-rendered rainbow illustrations — glossy dimensional arc shapes with five smooth color bands (magenta, orange, yellow, green, blue) lit with specular highlights. These appear as hero mascots at 60-80% screen height and as small companion icons inside white rounded tiles on CTA buttons. Supplementary 3D elements include a Saturn-style ringed orb and a few yellow 4-point sparkle stars scattered as atmosphere. Product screenshots appear inside phone and browser-extension device frames with 32px corner radii. No photography, no flat illustration, no real human imagery — the entire visual system is synthetic 3D candy and product UI mockups floating on pastel gradient skies.",
+  "similar": [
+    {
+      "why": "Same crypto-wallet palette of pastel gradient skies and candy-saturated accent buttons, though Magic Eden leans more purple",
+      "business": "Magic Eden"
+    },
+    {
+      "why": "Similar playful rounded typography and bright chromatic CTA buttons against clean white surfaces",
+      "business": "Phantom Wallet"
+    },
+    {
+      "why": "Same multi-hue pastel gradient section transitions and rounded display-type attitude",
+      "business": "LottieFiles"
+    },
+    {
+      "why": "Shared visual DNA of candy-bright accent colors on white surfaces, though Uniswap uses a more restrained pink-only system",
+      "business": "Uniswap"
+    },
+    {
+      "why": "Both treat crypto as approachable and colorful rather than dark-and-technical, with large rounded display type and pill-shaped CTAs",
+      "business": "Coinbase"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "32px",
+      "icons": "10px",
+      "pills": "50px",
+      "buttons": "40px",
+      "maxRadius": "100px",
+      "deviceFrames": "32px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "crypto",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Sky Canvas",
+      "level": 0,
+      "purpose": "Base page background — pure white anchors every section"
+    },
+    {
+      "hex": "#f1f3f6",
+      "name": "Cloud Surface",
+      "level": 1,
+      "purpose": "Alternating section wash, secondary card fill, card on light backgrounds"
+    },
+    {
+      "hex": "#e9e2f6",
+      "name": "Pastel Gradient Atmosphere",
+      "level": 2,
+      "purpose": "Full-bleed section backdrop — radial lavender/mint dissolving into white"
+    },
+    {
+      "hex": "#ff8a00",
+      "name": "Feature Color Block",
+      "level": 3,
+      "purpose": "Feature card fill when a specific feature must pop — used on tangerine and pink accent cards"
+    }
+  ],
+  "northStar": "rainbow candy floating on cotton-candy sky",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "body-lg",
+      "size": 20,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.031
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.031
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.031
+    },
+    {
+      "role": "heading",
+      "size": 42,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.031
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.028
+    },
+    {
+      "role": "display",
+      "size": 100,
+      "lineHeight": 1,
+      "letterSpacing": -0.03
+    }
+  ],
+  "components": [
+    {
+      "name": "Tangerine CTA Button",
+      "role": "Primary action on light backgrounds",
+      "description": "Filled #ff8a00 with white SF Pro Rounded Bold 16px text (-0.01em tracking). 40-50px pill radius, ~16px 24px padding. Pairs with a small white-tile icon containing a rainbow illustration on the right."
+    },
+    {
+      "name": "Hot Pink CTA Button",
+      "role": "Companion primary action — download prompts, paired with tangerine",
+      "description": "Filled #ff54bb with white SF Pro Rounded Bold 16px text. Same 40-50px pill radius and 16px 24px padding as tangerine. Always appears as a duo with the tangerine button for the two download paths."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-of-page sticky header",
+      "description": "Transparent over hero sky background. Logo (rainbow icon tile) left, nav links (Get Support, Updates, Learn, Twitter icon) center-right, white pill Download button far right with 9999px radius and 12px 20px padding."
+    },
+    {
+      "name": "Ghost Download Button (Nav)",
+      "role": "Secondary nav action — contrast to flat nav links",
+      "description": "White fill, Ink Black text, fully rounded pill, SF Pro Rounded Bold 14-16px. The only filled button in the nav, drawing the eye to the download entry point."
+    },
+    {
+      "name": "Device Frame Card",
+      "role": "Feature illustration container — phone and extension mockups",
+      "description": "32px corner radius, Cloud Gray (#f1f3f6) or feature-specific solid fill, no border. Inset white highlight via rgba(255,255,255,0.32) 0px 5px 32px 12px inset shadow for glassy depth. Phone frames use a darker outline (#0f101a or #000000) for silhouette."
+    },
+    {
+      "name": "Feature Phone Card (Color Variant)",
+      "role": "Product showcase card in feature grid",
+      "description": "Each card uses a unique solid color fill — Cloud Gray, Stone, Pebble, Tangerine, Ink Black — with a phone mockup floating on top. 24-32px radius, no border, 48-60px internal padding. The card color is the identity signal; the phone is the content."
+    },
+    {
+      "name": "Rainbow Icon Tile",
+      "role": "Brand mark and inline CTA companion",
+      "description": "White rounded square (16-20px radius) containing a small multi-color rainbow illustration. Appears inside CTA buttons and as the nav logo. The rainbow illustration is always the same 5-band arc: red, orange, yellow, green, blue/purple."
+    },
+    {
+      "name": "3D Rainbow Illustration",
+      "role": "Hero mascot and decorative atmosphere",
+      "description": "Dimensional 5-band rainbow arc with glossy 3D shading — magenta, orange, yellow, green, blue bands rendered with specular highlights. Appears as a large floating element in the hero (60-80% screen height) and as smaller inline companions. One variant includes a planet ring (Saturn-like orb)."
+    },
+    {
+      "name": "Network Status Toast",
+      "role": "Inline notification — network switch confirmation",
+      "description": "White pill with 16px radius, 12-16px padding. Contains a small colored circle icon (Optimism = #ff5050 red), Ink Black bold label, and gray subtext. Floats with soft drop shadow, not a sharp border."
+    },
+    {
+      "name": "Sparkle Accent",
+      "role": "Decorative illustration element in hero",
+      "description": "Yellow 4-pointed star with soft outer glow, ~32-48px. Appears as 2-3 scattered elements around hero illustrations to add sparkle atmosphere. Solid #fae300 fill with no stroke."
+    },
+    {
+      "name": "Gradient Section Backdrop",
+      "role": "Full-bleed atmospheric divider between content sections",
+      "description": "Radial gradient anchored at bottom center — typically mint or sky-blue dissolving through lavender into Cloud Gray at the top edge. No hard edges; the gradient carries the section transition. Width = 100vw, height = 80-120% of viewport."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Display headlines — the chunky, ultra-rounded Black weight at 80-100px is the signature; tight -0.03em tracking compresses the letterforms into a friendly wall of candy",
+      "sizes": "16px, 20px, 24px, 32px, 36px, 42px, 56px, 80px, 96px, 100px",
+      "family": "SF Pro Rounded",
+      "weight": "900 (Black)",
+      "lineHeight": "1.00, 1.10, 1.20",
+      "substitute": "Nunito (900) or Quicksand (700) rounded display substitute",
+      "letterSpacing": "-0.03em to -0.02em"
+    },
+    {
+      "role": "Hero-level headings and large buttons — the 56px tier carries section openers, the 36px tier carries card titles",
+      "sizes": "",
+      "family": "SF Pro Rounded",
+      "weight": "800 (Heavy)",
+      "lineHeight": "1.10–1.20",
+      "substitute": "Nunito (800) or Quicksand (700)",
+      "letterSpacing": "-0.028em at 56px, -0.018em at 36px"
+    },
+    {
+      "role": "Subheadings, navigation, and emphasized body — the 42px tier carries panel headings, 20-24px carries inline emphasis",
+      "sizes": "",
+      "family": "SF Pro Rounded",
+      "weight": "600 (Semibold)",
+      "lineHeight": "1.00–1.20",
+      "substitute": "Nunito (600) or Quicksand (500)",
+      "letterSpacing": "-0.031em"
+    },
+    {
+      "role": "Body text at standard reading sizes — the everyday voice, used in paragraph copy and list items",
+      "sizes": "",
+      "family": "SF Pro Rounded",
+      "weight": "500 (Medium)",
+      "lineHeight": "",
+      "substitute": "Nunito (500) or Quicksand (500)"
+    },
+    {
+      "role": "Button labels and emphasized inline links — 16px is the standard action-label size, tight -0.01em tracking",
+      "sizes": "",
+      "family": "SF Pro Rounded",
+      "weight": "700 (Bold)",
+      "lineHeight": "",
+      "substitute": "Nunito (700) or Quicksand (600)",
+      "letterSpacing": "-0.01em"
+    }
+  ],
+  "description": "Rainbow uses a sky-bright, toy-store visual language: pillowy rounded letterforms, candy-saturated accents, and 3D rainbow mascots floating against pastel sky backgrounds. The system is light-mode with a near-black (#0f101a) for all type and iconography, keeping a single high-contrast ink against airy white and lavender surfaces. Two chromatic CTAs — tangerine orange (#ff8a00) and hot pink (#ff54bb) — carry every primary action, paired with full-bleed multi-hue gradients in feature sections that dissolve mint, coral, lavender, and sky-blue into white. Components lean playful and chunky: 40-50px pill radii on buttons, 32px corner radii on device frames, heavy rounded display type at 80-100px with tight -0.03em tracking. The rule is bold-but-soft: large confident shapes, rounded edges everywhere, no harsh shadows or fine borders — depth comes from inset highlights and pastel washes rather than elevation.",
+  "components-add": "N/A",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #0f101a\n- background: #ffffff\n- surface: #f1f3f6\n- border: #777885\n- accent: #ff54bb\n- primary action: no distinct CTA color\n\n3 Example Component Prompts:\n1. Create a hero section: white (#ffffff) base with a sky-blue (#a1cbfd) to lavender (#e0e5ff) radial gradient backdrop fading into Cloud Gray. Centered headline at 100px SF Pro Rounded weight 900, #0f101a, letter-spacing -0.03em, line-height 1.0. Subheadline at 20px weight 500 #0f101a. Below, two side-by-side filled pill buttons: Tangerine #ff8a00 and Hot Pink #ff54bb, both 40px radius, white text 16px weight 700, 16px 24px padding, each with a white rounded tile containing a rainbow icon on the right side.\n2. Create a feature phone card: 32px corner radius, Tangerine #ff8a00 solid fill, 60px internal padding. Inside, a phone mockup at 50% card width with a 32px corner radius, no border, floating centered. Below the phone, a label in 16px SF Pro Rounded weight 600, white text, centered.\n3. Create a network-switch toast: white (#ffffff) pill, 16px radius, 12px 20px padding, soft drop shadow rgba(0,0,0,0.08). Contains a small 24px circle in #ff5050 (Optimism red), then 16px bold #0f101a label, then 14px medium #777885 subtext. Floats above content with 16px gap from edges."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Rainbow's gradients are signature atmosphere, not decoration. Three gradient families are at work:\n\n1. Section Atmosphere — radial gradients anchored at bottom-center, starting from a pastel hue (mint #94ffe8, sky #a1cbfd) and dissolving through lavender into Cloud Gray. These carry section transitions and are always full-bleed.\n\n2. The Prism Sweep — a 9-stop linear gradient from sky-blue through warm pinks, yellows, and lavenders back to white. Used as full-bleed feature-section backgrounds. The hue journey is the brand identity in gradient form.\n\n3. Brand Ribbon — the 270deg coral-to-pink (#ff8465 → #ff62a3) diagonal gradient, used for accent strips, decorative borders, and warm emphasis surfaces.\n\nRules: gradients always resolve to white or Cloud Gray at one edge — never to a hard color stop. Never tile or contain a gradient in a box; always full-bleed or in large 32px+ radius shapes."
+    }
+  ],
+  "elevationPhilosophy": "Rainbow deliberately avoids outer drop shadows. Depth is created three ways: (1) inset white highlight rgba(255,255,255,0.32) 0px 5px 32px 12px on glassy device frames to simulate internal light, (2) pastel gradient washes that make a surface feel atmospheric rather than flat, and (3) 32-50px corner radii that make shapes read as inflated pillows rather than rigid boxes. The system trusts soft edges and color over shadow to communicate hierarchy."
+}

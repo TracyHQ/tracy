@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-charcoal: #131313;
+  --color-onyx: #000000;
+  --color-paper: #ffffff;
+  --color-iron: #313131;
+  --color-graphite: #272727;
+  --color-fog: #949494;
+  --color-mist: #e9e9e9;
+  --color-silver: #c9c9c9;
+  --color-signal-mint: #3cffd0;
+  --color-ultraviolet: #5200ff;
+  --color-heat-red: #ff3d00;
+  --color-forest: #309875;
+
+  /* Typography — Font Families */
+  --font-manuka: 'Manuka', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-poly-sans: 'Poly Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-fk-roman-standard: 'Fk Roman Standard', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-poly-sans-mono: 'Poly Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

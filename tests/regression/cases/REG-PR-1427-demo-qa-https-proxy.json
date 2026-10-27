@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1427-demo-qa-https-proxy",
+  "kind": "fix",
+  "title": "Demo QA preserves HTTPS visitor identity while reading the Docker HTTP backend",
+  "pr": 1427,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Read the public HTTPS alias through an HTTP backend that redirects unless proxy identity is correct."
+  ],
+  "expect": [
+    "Home loads without a canonical redirect loop.",
+    "Each alias hop refreshes forwarded host, scheme and port while preserving the path and query."
+  ],
+  "selectors": { "file": "apps/tracy-host/src/demo-qa-browser.js" },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=serveFrom",
+      "apps/tracy-host/test/demo-qa-browser.test.mjs"
+    ],
+    "needs": []
+  }
+}

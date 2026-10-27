@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6bd8007f-01bc-46cc-8599-b396a39c1474",
+  "status": "complete",
+  "name": "Unicorn Studio",
+  "url": "https://styles.refero.design/style/6bd8007f-01bc-46cc-8599-b396a39c1474",
+  "sourceWebsite": "https://www.unicorn.studio",
+  "extractedAt": "2026-06-03T20:12:22.803Z",
+  "capturedAt": "2026-10-08T05:12:55.754835+00:00",
+  "theme": "dark",
+  "industry": "design",
+  "description": "aurora behind smoked glass — a black velvet void pierced by prismatic violet light, with type that breathes quietly beside it",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c987911d-9569-4359-8337-144228c85a8f.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "13d25c73b49c9def2c4d6a302bf7381be0ccb9ff854a694566ad7a913660993e",
+      "bytes": 21839
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f5c0fd5cb6e2cdd12c663155b6cf754043cabe97d31de92acb6a8510102169b0",
+      "bytes": 96381
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d7b4b4db7e8fba3c540b377b4c88a1880d56f70c9de232b993e6cfa403547b25",
+      "bytes": 17822
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "8fc86619e7cef0c745ee61606d7ae5ff69a44ed5f47725e3e2ccb6573e6db21a",
+      "bytes": 11984
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b58eff5fc51473d80c7666af6a0b05bcdfa7d53a49abeea5c41f68502caa7253",
+      "bytes": 13060
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8be55233162e7486d3f77aeeb306e2570901968e28a0907a13413bdf6a8b11f6",
+      "bytes": 3737
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d9630dfb0a110228915033f1bd299621b1a1a1153a9369327cbd31a956867753",
+      "bytes": 767
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7c146a8cec223b3eea9d9230894101b353e293eda92457ace0a814b62101edeb",
+      "bytes": 875
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "1bb66f6e5ef1dbe9ab97e186313965a7afc3f8b597d0a4bc5a103fe69a0fa6f6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "6e8d37e9684c7fc0e0cd97cf68a3af1a9fe994013d015fcec844c2d14fd4078b",
+      "bytes": 46019
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9b8821f99552ad34f06dca09ed0d2c7ea3600178ebd425558626dcab5cead6c8",
+      "bytes": 24153
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1d6af77d1901f1252d551801236ab6b77d861bc27f7c7d09ca86b53afbab1ff4",
+      "bytes": 53177
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4175b3defb7ccbb5674894db3edbcdf52b5c9649a14a3e9ed6e3e1a7f3d0594c",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6ad28e9f55f258eb87d5f9c4129be3e091be0d6fc6420a553ce1c8232e0288fe",
+      "bytes": 2006
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a3f2e4b434da214356a4d3036ed469e87c556ea1730b2e92b667853090bfefd6",
+      "bytes": 2602
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d914ef0-fa84-4c60-a9aa-cef0b5eb6e5d",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "606d4af9-9d8c-41ea-a122-f515f38f20e5",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "8875b14e-c59a-492f-8780-8027a480f21c",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "98a1ad40-90e2-4665-b49f-e5ffd4d4b90b",
+    "b8a8976c-52d9-4ebb-95ea-4c40f4a9acab",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "d5ed8712-0e42-4c6c-83b1-b3d7f27d1d10",
+    "e5f5f8cf-e68d-4ed1-bbf5-6b67569af648",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

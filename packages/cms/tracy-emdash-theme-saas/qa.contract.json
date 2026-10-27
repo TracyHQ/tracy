@@ -1,0 +1,5575 @@
+{
+  "schemaVersion": 1,
+  "id": "tracy-saas",
+  "revision": 8,
+  "pending": [],
+  "locales": ["en"],
+  "defaultLocale": "en",
+  "source": {
+    "reference": "JA Kinetic Joomla 6 quickstart 1.0.0 (ja-kinetic-j6-quickstart-1.0.0.zip, sha256 e08d46fd…402ce36, DECISIONS D1) run locally; same-origin crawl of 60 page URLs (maxPages 60, 2026-09-15T18:30:43.807Z) saved as HTML + assets, crawl.json maps URL → file",
+    "files": [
+      {
+        "path": "crawl.json",
+        "sha256": "sha256:93ec70137a26560244da0e3b06fa35f943548998219a3d9598d591cd8fccec99",
+        "disposition": "excluded",
+        "reason": "crawl manifest (URL → saved file), metadata of the copy rather than a page of the source"
+      },
+      {
+        "path": "images/blog/automatic-incident-timeline.jpg",
+        "sha256": "sha256:7d0e8010c82f566d42c6449c7c0fa2f8de991d33739cc4e84f19b04663917e27",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/blog/continuous-profiling-intro.jpg",
+        "sha256": "sha256:bb98a6fa13e3f8103474c5dfc2d4ff4b4e11e212a88e48a2f5b06f7bf120f86d",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/blog/detecting-slow-leaks.jpg",
+        "sha256": "sha256:c0bb927a48d2b72a0d474cbd181652b0e3ebb26ba95ed4b6ddb99554594d1eab",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/integrations/icon-bell.svg",
+        "sha256": "sha256:f4a39c8a7cf81f20ebfef4f0eb807dc8377c574abb37f0c82ac02a10b6c18435",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/integrations/icon-chart.svg",
+        "sha256": "sha256:b41eb3a24fab5cbe9e0ace757e89a15cfd2bffb4229b366d5b2427e70fd562af",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/integrations/icon-cloud.svg",
+        "sha256": "sha256:23e050cc4655e1e3c494d66dcac3e02aee38ad853c89f1e3099baf03e50ef2ee",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/integrations/icon-code.svg",
+        "sha256": "sha256:b87d4b7518e1b55aeea5b9b423f7de552a5365848b7f9c754e6fce57164b7953",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/integrations/icon-container.svg",
+        "sha256": "sha256:51559fe3298b39165dd8f46ffc8d5dad23d9438c8632a729ee1c6ce0e29a622b",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/integrations/icon-git.svg",
+        "sha256": "sha256:461009de482e3d76d69027bb41ace158092820a490a5170ca3c533580ed57e5c",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/integrations/icon-message.svg",
+        "sha256": "sha256:f121d70f35c4d783e4cc59fac7677591a77c49fa71e098e283606c3cde3f3201",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/integrations/icon-server.svg",
+        "sha256": "sha256:a45d05c84304baa2e0c2cb3b4972b4d3add0cfa5db2eec8f214427a4b1670fe6",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/integrations/icon-ticket.svg",
+        "sha256": "sha256:a1675e1ece58890abd11481880d30bf248cbce9af926592ae45c8894432d241e",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/integrations/icon-webhook.svg",
+        "sha256": "sha256:2f47f527ed369081a3283d4d3bd968652274dc03b8651d18561958b34d53c47d",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/kinetic/article-kineticql-hero.png",
+        "sha256": "sha256:9a655b5dd25ffc0f9c2db1e643d670f691f20cd238c94c2f56b55c99ed0cf869",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/kinetic/bento-telemetry-chart.webp",
+        "sha256": "sha256:2b2adf087009ca76fa9e2a9c16178ab15500dbacf78b1d538af8c568420fd322",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/kinetic/hero-terminal-panel-blueprint.webp",
+        "sha256": "sha256:c90ed5036faae28c388b72a71482104947069b0352baabcd0cc8048537f6f390",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/kinetic/hero-terminal-panel-signal.webp",
+        "sha256": "sha256:6560a2d7285eb5e710a14bb53b79cba0759bb2846fb6be225baba59564d140f4",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/kinetic/hero-terminal-panel-terminal.webp",
+        "sha256": "sha256:052677312dc20a8e17ca8c0429420558b9f81cf693e21a5312229d9decb9c121",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/kinetic/kineticql-code-panel-blueprint.webp",
+        "sha256": "sha256:767899724083386db464b4b39c0df41be285aa5c7c0fe18c24c090d4b7e4d346",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/kinetic/kineticql-code-panel-signal.webp",
+        "sha256": "sha256:1bdf715310f6de32958e4b0cfac4c39b16ba45c95c0884b78148034649fe11b5",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/kinetic/kineticql-code-panel-terminal.webp",
+        "sha256": "sha256:f41a46f4a0030a2d861ebef8d6a9c8cab6a7b42a55d2130ef2fca1676ebabec6",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/people/arjun-mehta.jpg",
+        "sha256": "sha256:a634d4f02fe5b77804943c1d74b8d70e35ffe26454e0e9af9717432a2c72bfde",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/people/dana-whitfield.jpg",
+        "sha256": "sha256:791318b57c88a811fc57cf44f1f71200af6c41ad17a41c330c49ed6052c50801",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/people/lena-park.jpg",
+        "sha256": "sha256:d8dab29a5736d5c2b0084d720d3db02c785560071609be501541922928fdf831",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/people/marcus-lee.jpg",
+        "sha256": "sha256:6cff624a3918ef93fa859e2c4cdb4634ceca702242654071804da9fbf0b617bc",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/people/priya-raman.jpg",
+        "sha256": "sha256:f07b84f12ef125cbb837a7bd64da401992f5f62bd55fee10d01cd3dcc8abae80",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/people/sofia-alvarez.jpg",
+        "sha256": "sha256:1468690451b81be74fdf90ee11d190bb1d226560f532cf4a883b50fc5dfaebcc",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/people/tomas-rivera.jpg",
+        "sha256": "sha256:60c2053e9aa4900708d262ddb15313d1f5b9e5daad2c0f6ace8c41f4fd78a015",
+        "disposition": "asset"
+      },
+      {
+        "path": "index.html",
+        "sha256": "sha256:c7ab847ba2b0512697833f6261ec4239a53c246ede5d1018c17f1dbc7e91a23b",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/company/about/index.html",
+        "sha256": "sha256:d91da55388245c154d24d745c4c6ae26663ec997c7caede4c8e9a6fa8c10c631",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/company/contact/index.html",
+        "sha256": "sha256:517438036ad818576e1afc361ba5bc91d6e22336f9c5a92bfd0c6b920f2bd7f1",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/company/team/index.html",
+        "sha256": "sha256:7233bcd723880d927b4532e934d1d0ccd2f1f332780bfd9c0872782fedab8ee6",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/home-menu/home-blueprint/index.html",
+        "sha256": "sha256:45b3624cccae6b2c63c0ab91690d9b6c74008af639fd762f0108d2a6214ff984",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/home-menu/home-signal/index.html",
+        "sha256": "sha256:2c236e204ef29ebb98cf7c9cf68f4fb15b8f71382f6d1ad06916d12ac758b93a",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/index.php/product/authors/author/priya.raman/index.html",
+        "sha256": "sha256:c903b98aaac5343d9af1a5fe2c6da5242f5c80800c0b23796a419605a8ad8d16",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/engineering/index.html",
+        "sha256": "sha256:9ccbb015e5b1c09269cffe76cd2aee13f3ce86598822d648d1fc39622baa3d8e",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/helixql/index.html",
+        "sha256": "sha256:92db45c894093e89f843b318da0eb785d1f85fc9c034d15bad95583c72bf8715",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/landing/index.html",
+        "sha256": "sha256:69e48b4b36e2c61a76c458a75b4643b6471ad01771a5f04e9c1ce2666f664d59",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/login/index.html",
+        "sha256": "sha256:b2c25a821e166746c319e37ddac569dc57879c854eff2f2076cdce2e0fb2130c",
+        "disposition": "excluded",
+        "reason": "Joomla account page (com_users): not built, the route answers 404 (DECISIONS D8, content-gaps G1)"
+      },
+      {
+        "path": "index.php/pages/register/index.html",
+        "sha256": "sha256:c10671ca71353f8294a3c2847c891f7bbca4d82866a783564f7edc9193556446",
+        "disposition": "excluded",
+        "reason": "Joomla account page (com_users): not built, the route answers 404 (DECISIONS D8, content-gaps G1)"
+      },
+      {
+        "path": "index.php/pages/remind/index.html",
+        "sha256": "sha256:62d49697bbdef7dc351f69b816848f7d37afdc2acc114a6974b4276a4c29fa54",
+        "disposition": "excluded",
+        "reason": "Joomla account page (com_users): not built, the route answers 404 (DECISIONS D8, content-gaps G1)"
+      },
+      {
+        "path": "index.php/pages/reset/index.html",
+        "sha256": "sha256:c0e672bb2710429c38623c6624f7c6d94f12e36fb09f7cee982513d6e81df7f5",
+        "disposition": "excluded",
+        "reason": "Joomla account page (com_users): not built, the route answers 404 (DECISIONS D8, content-gaps G1)"
+      },
+      {
+        "path": "index.php/pages/search/index.html",
+        "sha256": "sha256:ffa02bdd07931f8d1e9222dc3f73d1d6fb26e7845080b64bcf1a6c31c537a7a1",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/tags/alerting/index.html",
+        "sha256": "sha256:0f8a60c5c931483d1ccf462ca881225fe9088a8ee50d23166d0f125616240830",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/tags/cost/index.html",
+        "sha256": "sha256:93a2f2989b52e4a33a2312c439d3074d96ca02476d85a8d636c6ddf632823161",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/tags/dashboards/index.html",
+        "sha256": "sha256:be39928f4f2522e6187c5213a78d99f39e79a9c2fc7e08f4058b7d364ec630ad",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/tags/incident/index.html",
+        "sha256": "sha256:90d820118b5791619695ec19a9352ad62fae32f2816290ac966e420ed542a8cb",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/tags/index.html",
+        "sha256": "sha256:d145ad2286961374ee9b4bb80c7c91e86dba4d0840d514afdb0098bb7de089c3",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/tags/latency/index.html",
+        "sha256": "sha256:2b4a089949cf9280d71b67a5e320b8fde4d388829ac351681d333de9a29167d6",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/tags/metrics/index.html",
+        "sha256": "sha256:af3fb6a30afa55baef1da839b7d23efe5fee4b444a455e67bf7fa379850b4cf8",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/tags/slo/index.html",
+        "sha256": "sha256:35aa7d63560087f15b751eaaf03c0ac4e7ba1b948145446bbbbab4c1d3e90bf5",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/tags/tracing/index.html",
+        "sha256": "sha256:5bb58ea60b21bd64c841d05aa165621e7ded28d1ad0894296a04b1609a6dbed0",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pricing/index.html",
+        "sha256": "sha256:c4ee065c517c12133ea53c58a828dd9363783dd1df48067e9cb4a9ad102ba1d9",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/privacy-policy/index.html",
+        "sha256": "sha256:e09544910f7ae1f80a2069d6e7ca63fe80975614a672c9e03a34bf1dd0b26b22",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/all-categories/index.html",
+        "sha256": "sha256:7c9611ad61e6d94712a25d63dcc53f627dae41ba72d8d77fe8928eb8f4ff01a9",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/article-archive/index.html",
+        "sha256": "sha256:5b2642208d35263ea661c0b22526e7a13e9dc923dbe756059f0cb7e2757439e7",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/authors/index.html",
+        "sha256": "sha256:57c16729466376c6c56fded0bb0e3df5e482a1d029d2756ac00fbbe5a6a78a71",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/134-continuous-profiling-intro/index.html",
+        "sha256": "sha256:25bddd83f68c3297ff72626dcc2627cbd3a0a47b0b6e5a7823994accdc23a20e",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/135-detecting-slow-leaks/index.html",
+        "sha256": "sha256:305484d41c322eb00769145208ddc4187bed6b6603ab71c19ed47380cd86c9df",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/136-automatic-incident-timeline/index.html",
+        "sha256": "sha256:8c6d98c56c74159bb2de19aeac498370bd2efd3c564fe0b3f9a40fa9e26c48bf",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/163-reading-the-timeline-back-how-we-rebuilt-an-incident-from-raw-traces/index.html",
+        "sha256": "sha256:696e6b9b6a57bfbd46f9a49c68ee8c1da4f095690355a8da7ed5a36f741897a6",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/164-five-minutes-to-mitigate-the-anatomy-of-a-fast-recovery/index.html",
+        "sha256": "sha256:1e77e31eff88ee9e415d4bd5f3ae6da9f44cc461f32e9eef9dd5d58869e62ac5",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/165-what-i-wish-someone-told-me-before-my-first-on-call-shift/index.html",
+        "sha256": "sha256:01957ddf839fea7e2bffce0054758e524265e4c0bfbee654cbd447e98b9fdc13",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/30-incident-retros/index.html",
+        "sha256": "sha256:1f5a320f5790bb808c4149d935827e22987958daca6830522c4c041234be2b24",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/31-product/index.html",
+        "sha256": "sha256:80abbb5389f3345dd30e4b8ae09c019b5f1d11901eefc5aa671bd83f4d15c312",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/32-tutorials/index.html",
+        "sha256": "sha256:c0584a9bb83e89fc91ce27f1fb72976df2d381479961c2b3524c202c1e56dc14",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/33-practice/index.html",
+        "sha256": "sha256:547651e4e5fb21de9c86a1020ed340cb577eda2ccc01019c1be1ae2202ecf5fe",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/34-culture/index.html",
+        "sha256": "sha256:60bae5bb7b7bafcdba95404a93da50516d84a77bd9658a3109dd892999244034",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/index.html",
+        "sha256": "sha256:e52b24ea741644b1d0ff2201b4dc60c6e79bf47828fd50143f690135dad3a531",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/blog/page-2/index.html",
+        "sha256": "sha256:46bf96d6f87100177311ce7ff3d4e28a592c0b1261a78b34d704640ef72821d2",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/changelog/index.html",
+        "sha256": "sha256:2a88cd70a6b9ebc6639b42c668560a2dbfa9a42738a0cf472615cde535de7e29",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/faq/index.html",
+        "sha256": "sha256:ff6d1f387113e99c9670188cfaa7956a1c2aa51f0ec7d319e63307c6ff1ae24f",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/features/index.html",
+        "sha256": "sha256:00ba81a2530d5d2247406ff0a291b80c181bff8e116ee9b4f0c310ce973590ec",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/product/integrations/index.html",
+        "sha256": "sha256:178d8b22919b9949d7044031f970dd9d2651a12619b7753f11516b29644cdac9",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/terms-of-service/index.html",
+        "sha256": "sha256:d29a54c70574b6c6bf7252c1b75474a43bfbb952d83842ab1b365a7f9b60c3dd",
+        "disposition": "converted"
+      },
+      {
+        "path": "media/com_acym/css/fonts/acymicon.svg",
+        "sha256": "sha256:c1517345b7347aedb7b09c247bf8af65bd699a433e47afb633af12f185007c64",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_acym/css/fonts/acymicon.ttf",
+        "sha256": "sha256:5704bb91a1565963c2e6db60bec527f88ea3bcb89a35b27eaa5b6a2c701e3f7c",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_acym/css/fonts/acymicon.woff",
+        "sha256": "sha256:13fe9ac8ec7ac204d630d4e827af4a4dd5a92f73eb00191156071d048dae3055",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_acym/css/module.min.css",
+        "sha256": "sha256:0cf604cecf69b3bed6295eb121fd9e821d6a8e33848e06b1fa346e2912f95900",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_acym/js/module.min.js",
+        "sha256": "sha256:810043ff82feb7fb3f83142f3a9b88b9b3eb6c4bfcb750ef20e2377259fbb98b",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_finder/css/finder.min.css",
+        "sha256": "sha256:0376f10fb61436bda3ba56b432ee050ba691a3483118ab57aa7dc07eb42ea4cd",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_finder/js/finder.min.js",
+        "sha256": "sha256:a3ccb2cd02bb4362be9d0b1f737aec5f7304af71730a1e4017ba003854fce5d6",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/core.min.js",
+        "sha256": "sha256:045181e3f5ea2f3afd09831dd18ea871b8a98fcb8cb3233af395fe123bdd3934",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/fields/passwordstrength.min.js",
+        "sha256": "sha256:f3526e53069cd5519812df6efbb9d0cf2b33334f1eafe71fb2c8fa1218c694b4",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/fields/passwordview.min.js",
+        "sha256": "sha256:1ba2fcc7648c62b2c7cf2d539092cec381ee03631114f3e5a851b398a2c8ff25",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/fields/validate.min.js",
+        "sha256": "sha256:2eb3c772ac894af82059fcf115b2ee545599cacf490eae2826c6e71a069c1f37",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/joomla-hidden-mail.min.js",
+        "sha256": "sha256:1aacba2d5d0e5f070a52691efbf51b7183bba1fe42c6569ed5f2025c6e409f19",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/keepalive.min.js",
+        "sha256": "sha256:983c4e677c121da92edce183d530881200e0ce545ddca1174bdb3eedb7588619",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/messages.min.js",
+        "sha256": "sha256:09426cb3251a9408374f3f37bb5ec75a921c2e71d8717a83e7ab0acf16addf0a",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/author/default.jpg",
+        "sha256": "sha256:eb760767256b89d9392974d95a1710dea3794c9c61ff0f5cd870074b98f2fe01",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/css/33.css",
+        "sha256": "sha256:6877a96513d39f5f22d1b1a040f7828ebc1a36b460e006a63110754aded76531",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/css/34.css",
+        "sha256": "sha256:6877a96513d39f5f22d1b1a040f7828ebc1a36b460e006a63110754aded76531",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/css/35.css",
+        "sha256": "sha256:6877a96513d39f5f22d1b1a040f7828ebc1a36b460e006a63110754aded76531",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/css/36-sub.css",
+        "sha256": "sha256:30978c89e791ad499adf3520497a65232813e7782101ed88f84f26fc3517ef03",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/css/36.css",
+        "sha256": "sha256:30978c89e791ad499adf3520497a65232813e7782101ed88f84f26fc3517ef03",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/css/37.css",
+        "sha256": "sha256:6c9be8cf058918156f5e98ae2e79c0885a1e846e90a74b5fdddf8066ce35eed9",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/awesomplete/css/awesomplete.css",
+        "sha256": "sha256:8570c166966479f18cd0be77bb56947a3abc05b914257698134e652274b5ffa8",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/awesomplete/js/awesomplete.min.js",
+        "sha256": "sha256:b88cd20ce7955245180991050108b764c14a17986e7eae2daee92273eb7f75df",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/bootstrap/js/collapse.min.js",
+        "sha256": "sha256:cf9de80f69ca7fb0965323fb377b2424b59d4ab961f5a7802e537c7effb98320",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/bootstrap/js/dropdown.min.js",
+        "sha256": "sha256:c5d8353d52ebbf41bba3c66d69981ca111fee195d1ef3ec50054d79c2abde84d",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/bootstrap/js/modal.min.js",
+        "sha256": "sha256:1a9326b0065dc08763f2323553814ef6f716c5948055f8d177d976eae684b9c1",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/joomla-custom-elements/css/joomla-alert.min.css",
+        "sha256": "sha256:df8eb5ad4051778586df18f3e6a7d3368820b8e8134751fa5ac845cead9318cb",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/jquery/js/jquery-noconflict.min.js",
+        "sha256": "sha256:b7bbe381cf509577690654422e09b73e9fdbb0b70d47028146147da7a7a0c5fa",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/jquery/js/jquery.min.js",
+        "sha256": "sha256:fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/jquery-migrate/js/jquery-migrate.min.js",
+        "sha256": "sha256:6fa409c2c72c30d7e21c407339c5a4802c3334660d9b1dc5e3ea2752bb6a4b62",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/js/base.js",
+        "sha256": "sha256:0d1893eac8932853ed74e078c00512bfe45c94c6154c8ff05d5a72928d765d29",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/js/megamenu.js",
+        "sha256": "sha256:b9bc549c518ba7938c99aec0765d1281ecaa15b09c07899ba4395c4ea92bc977",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome/css/font-awesome.min.css",
+        "sha256": "sha256:799aeb25cc0373fdee0e1b1db7ad6c2f6a0e058dfadaa3379689f583213190bd",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.svg",
+        "sha256": "sha256:ad6157926c1622ba4e1d03d478f1541368524bfc46f51e42fe0d945f7ef323e4",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.ttf",
+        "sha256": "sha256:aa58f33f239a0fb02f5c7a6c45c043d7a9ac9a093335806694ecd6d4edc0d6a8",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.woff",
+        "sha256": "sha256:ba0c59deb5450f5cb41b3f93609ee2d0d995415877ddfa223e8a8a7533474f07",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.woff2",
+        "sha256": "sha256:2adefcbc041e7d18fcf2d417879dc5a09997aa64d675b7a3c4b6ce33da13f3fe",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/css/all.min.css",
+        "sha256": "sha256:3b961e8e82f12168fd8e04ab46f9b596aae9c7fa0ac8066112176957f336114b",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.ttf",
+        "sha256": "sha256:cda59d6efffa685830fd95b55f64ae9cb51279cd34b2410b69f84c7ec30157d9",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.woff",
+        "sha256": "sha256:f9217f66874b0c01cd8c10b6a295dbc4f609acb6f5adc41c37da46641b57eb02",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.woff2",
+        "sha256": "sha256:8ea8791754915a898a3100e63e32978a6d1763be6df8e73a39d3a90d691cdeef",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.ttf",
+        "sha256": "sha256:e8711bbb871afd8e9dea60e16d30f00c7e4837bbc9807065017475b849fa2313",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.woff",
+        "sha256": "sha256:cb9e9e693192413cde2b1f21c1dc1d44b6fe7b27cc2b458e8b359d18f9ff8f4e",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.woff2",
+        "sha256": "sha256:e42a88444448ac3d60549cc7c1ff2c8a9cac721034c073d80a14a44e79730cca",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.ttf",
+        "sha256": "sha256:af6397503fcefbd613976c21ad5c1e37298c18bbe07d096db03ccd3af6e05ba8",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.woff",
+        "sha256": "sha256:3f6d3488cf65374f6f676c315340b0ac2be832bd55240c809448e36ef9b96326",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.woff2",
+        "sha256": "sha256:9834b82ad26e2a37583d22676a12dd2eb0fe7c80356a2114d0db1aa8b3899537",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/accordion/css/style.css",
+        "sha256": "sha256:ad8d2e03398356739986b070f5d8c3526da3d43baa724f8606f01f1749e8b14d",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/bento/css/style.css",
+        "sha256": "sha256:e464600180118a9e77fd94dbed00a4eef366c36f061c2defd0c49d8caa0c9db2",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/clients/css/style.css",
+        "sha256": "sha256:6ed498e7ea489c39c941d85b9222fe0ec870296f97139b332706e5b083a0836d",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/cta/css/style.css",
+        "sha256": "sha256:7e0f7dae31fc2138e883692a9da4f3da056905bed08cc08f2b1e7351e697f7d3",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/faq-support/css/style.css",
+        "sha256": "sha256:9f579996ef45e645792dc21df1298177788b6b483247789717e97686687e2426",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/features-intro/css/style.css",
+        "sha256": "sha256:b402dadc23babe4d2003ec067c8edd59ef8c6cc105429fe2a170fdc8ac9cf935",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/features-ledger/css/style.css",
+        "sha256": "sha256:78f87ccf9bc70cf14af381cd2c2bb32348b7f2c3943c0e640f21f177e5a7c7ff",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/footerlegal/css/style.css",
+        "sha256": "sha256:f413950ad4829717ddc4b6f1e48f2831a5b3caca26b215e5a48e19c1bda356dc",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/header-cta/css/style.css",
+        "sha256": "sha256:337112dfd1e7111a141bc9eed86c61054094ae796a449191b360879ca9a0c123",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/hero/css/style.css",
+        "sha256": "sha256:07dce09602bf4b22b1196d9d0903a3ce68cf2b91cf1674af8ccf1122393b1a8f",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/incident-timeline/css/style.css",
+        "sha256": "sha256:8f55afb26540c7b64a9f607fcc13601700c50b69a4ac080b6b2a50704fb266a9",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/kineticql-split/css/style.css",
+        "sha256": "sha256:1ecbebcbc9c86d9c02c26cf91af0d9dbbef04cb33ca95b1927ba4a03c1236143",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/page-masthead/css/style.css",
+        "sha256": "sha256:b55762129316d412417fbb7b57db0eb5ab2623ef3329f5fbbbfc90a53410b992",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/pricing/css/style.css",
+        "sha256": "sha256:ce02a52a29ac72899e7c7bdc008b7c4dbcb2efb5b2ab2025126a6e9da50dd376",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/pricing-matrix/css/style.css",
+        "sha256": "sha256:e5376f42d07900da7fbfaac6b8284573e632eee7751a2346c8a49cf1fd5b1329",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/prose-quote/css/style.css",
+        "sha256": "sha256:4c2bd790501199df1638a07068f48efcef313a2bd919b38639e49b513a2d9b31",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/social/css/style.css",
+        "sha256": "sha256:d9166851b4f311b3555e1b153d3bec5f5ee56be946189af00a1abac54e621b9c",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/teams/css/style.css",
+        "sha256": "sha256:850f10d0113175d2481557ed06d101fb0bcd1808cf3cd22e0c717922f72798b7",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/acm/testimonials/css/style.css",
+        "sha256": "sha256:9ff58359ca82b74ed1fb560cf95e2d6c6575ce6d3e5484cde2362a822b72bf67",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/darkmode.css",
+        "sha256": "sha256:6818058185aa6664974045ea7d2159c67cfa0a3c7e068ec2f54f7eed913320ea",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/extras/com_docman.css",
+        "sha256": "sha256:0130ef2d3b9e8947558cad7f3ef9c7a0a0bb72ff4f54686c42f7f4ffdaff02fd",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/extras/com_easyblog.css",
+        "sha256": "sha256:f27a8ffa58d6f468014302c25a90800c4dc6a9bc7e8be8c6656d0b2715ac515b",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/extras/com_easydiscuss.css",
+        "sha256": "sha256:027fd1b01ac797256aab36f3d96efaae145944abf28752c2ab36c9aaf84f987c",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/extras/com_jomsocial.css",
+        "sha256": "sha256:37ae4fc781e390b4c84017866506d0f2b877d83235661b6ee1040efb2ec7057b",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/extras/com_kunena.css",
+        "sha256": "sha256:57fae514818d69a15183441e4df24af5b35a0aadf18b331ffe018e7207a40810",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/extras/com_virtuemart.css",
+        "sha256": "sha256:d725bde45fb418782680db07f49e54552514d330bf57508a69ff020642625829",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-215.css",
+        "sha256": "sha256:4ff3343655b2e6f790ff03834df3449e663eb65b981e4e61bfb447aa5e0b6b74",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-216.css",
+        "sha256": "sha256:39c6047ba4d5d4fb0da0b2810ba008cebd4867b6c24d402c42bd1c2a0d91eb29",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-218.css",
+        "sha256": "sha256:787682bd6ceed93cc625c0b26057294e6fdbaf2cb568b47673c6cec9c250393f",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-219.css",
+        "sha256": "sha256:aa9f9d17b176bbf2b21559f7b0f0d68b17a60087b5e0d9543c53eb1b62712a1a",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-220.css",
+        "sha256": "sha256:0bcf0c5328faf6dc5adf67e7d3d3ae951d9e9f51e47a14b865bdcdd9b9bd9b17",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-221.css",
+        "sha256": "sha256:922bf677742f270d6c2bf6b26435ff53b0c44af798daf6bd555c6830494e69ee",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-222.css",
+        "sha256": "sha256:b14eb52cd4bb0c24ded82d656e347b2cac8dff1693c7c6178d5ca55a6ed4d839",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-223.css",
+        "sha256": "sha256:2bd1640f7c5eda02cb0835b16ea4f6a9804226cad8d42ee53bfabc71da082543",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-225.css",
+        "sha256": "sha256:b7d00ba7e860437de819457490e1f7ac934a2d79371317bf6c67fb1a96c204ae",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-226.css",
+        "sha256": "sha256:c15e59df29d1dda5551f7b2d876aecc19666562e13bf256c5d267862002165ed",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-227.css",
+        "sha256": "sha256:ceb27c08c580d1da24fc8f17f9c112a7953f22fd0e9d24c6c636eaf071c58df6",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-230.css",
+        "sha256": "sha256:4075a34eef1769293d5f828e0d33e45f26887f6c9361f161605c73befef84126",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-231.css",
+        "sha256": "sha256:a1c0caef22f71acd44c2625e0abc3763375bb785094db60bc7b5941b34c00bc1",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-232.css",
+        "sha256": "sha256:8c5cee3e93ee9a2757fcf1fcb602930de70e37d23aa678908975da4c27faa049",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-233.css",
+        "sha256": "sha256:3bcd9e5ff0d08ab18949d6ec418fe259a72e2833dd3b2cbe5f130ef8e64eb586",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-234.css",
+        "sha256": "sha256:3b2d4f4d08d7c710c6ff8de898a23c86a14a5e7c7c45deff6d074b3972db227d",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-236.css",
+        "sha256": "sha256:00af9c0eac8653813f5a8b1895c08b9e3a2530414e0f843e74482735d10b6689",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-237.css",
+        "sha256": "sha256:127f4287b393f3314fc4afcf42ea586efdbae62375cc2a5a6d4f0f6e78b270ee",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-250.css",
+        "sha256": "sha256:238d5b40bc2f38665e527393c98d9ce78748f1de9e67998a42c08a7bfd6ed1e6",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-251.css",
+        "sha256": "sha256:9821a53a630af9375ff96968298b30ebb4c2904e2f33319f34d67fbb988f4564",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-252.css",
+        "sha256": "sha256:2fea7cf41ad7253a19c1d20a10615ae4e6a4cacbdde667c99a9dcef39859cda5",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-253.css",
+        "sha256": "sha256:2d08b4369c4015bd442f523f9c7c137d59e245babe5033245c416fa91c4cf8ea",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/page-254.css",
+        "sha256": "sha256:036b46e97dad7185c8fdd11ed972e59db19d2dc40336da985bf6c8934579cc77",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/single-article.css",
+        "sha256": "sha256:2ff958a00a9a051c905ac94ffac5a3b0db801175fc1f868f9d0937182c85410b",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/css/template.css",
+        "sha256": "sha256:1bcaa2c5371f8e310d492fd1b48126146a64c93fc5db58d0985174ccee222f2c",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/favicon.ico",
+        "sha256": "sha256:7bd9b59d14b126e8c5abcb1c89b60c79e2b2e17c15745fe8d385204d87c40765",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/html/com_users/auth-fix.css",
+        "sha256": "sha256:f43e121749baa53de0052328aa9421d3c686af8e0b4d5f97273eb7ddfc0ab84b",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/images/ic-left.png",
+        "sha256": "sha256:b8c3713807915fde4b036d084b1fd52e3874452fe18f4d9570f07dbc2bf634d1",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/images/ic-right.png",
+        "sha256": "sha256:f3ba0a8537d89148be5aeb093f066b7812e2caa5e8919470562ac01f374df3d5",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/images/minus.png",
+        "sha256": "sha256:8068e212616a5d1212477e2026a6ec5783eacca469b8763c338d9294144185c9",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/images/plus.png",
+        "sha256": "sha256:efe2476adddaf2eae2c2a3b56383773c22ce317cd12d26caba8943fd06d1ad75",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/images/star-fill.svg",
+        "sha256": "sha256:6cfc1599f154036ebea2cec2ab1c80e0c400b84359816644035954cae70b7626",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/images/star.svg",
+        "sha256": "sha256:b78774a0671fde853becd6fe56f234b53c1e6a5318352fe4c1fd64117b6b7cc8",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/images/vm-lowstock.png",
+        "sha256": "sha256:886e433aefdc1deff570f239c56220157e733f8e99008b5c06cbc6cc284b780d",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/images/vm-normalstock.png",
+        "sha256": "sha256:627d3468310a9484ba16dccb5fcce0f3579284612288ab1fd3529cd0de6f9968",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/images/vm-nostock.png",
+        "sha256": "sha256:bc72fad11112a8f6a8c17fdc21cda1ab1cadc6e264e59106ecec38a9a870f449",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/js/darkmode.js",
+        "sha256": "sha256:dc4fdb29960e790d136d65a26f4ffd9b254554d72a5392efa712166be0d28d21",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_kinetic/js/template.js",
+        "sha256": "sha256:8375eba7e78386c2e16141174b12bc7e6735fbc94f5396e048d31aec2f30abed",
+        "disposition": "asset"
+      }
+    ],
+    "kind": "url",
+    "parity": "two-sided"
+  },
+  "variants": [
+    {
+      "id": "1440-light",
+      "width": 1440,
+      "height": 1000,
+      "theme": "light",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "1440-dark",
+      "width": 1440,
+      "height": 1000,
+      "theme": "dark",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "768-light",
+      "width": 768,
+      "height": 1024,
+      "theme": "light",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "768-dark",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "390-light",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "390-dark",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "reducedMotion": "reduce"
+    }
+  ],
+  "design": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": "light",
+        "dark": "dark"
+      },
+      "storageKey": "kinetic-theme"
+    },
+    "rules": [
+      {
+        "id": "body-font",
+        "selector": "body",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "16px"
+          },
+          "1440-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "16px"
+          },
+          "768-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "16px"
+          },
+          "768-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "16px"
+          },
+          "390-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "16px"
+          },
+          "390-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "16px"
+          }
+        }
+      },
+      {
+        "id": "surface-terminal",
+        "selector": "body",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "background-color": "rgb(251, 252, 250)",
+            "color": "rgb(70, 81, 75)"
+          },
+          "1440-dark": {
+            "background-color": "rgb(10, 13, 12)",
+            "color": "rgb(154, 166, 161)"
+          },
+          "768-light": {
+            "background-color": "rgb(251, 252, 250)",
+            "color": "rgb(70, 81, 75)"
+          },
+          "768-dark": {
+            "background-color": "rgb(10, 13, 12)",
+            "color": "rgb(154, 166, 161)"
+          },
+          "390-light": {
+            "background-color": "rgb(251, 252, 250)",
+            "color": "rgb(70, 81, 75)"
+          },
+          "390-dark": {
+            "background-color": "rgb(10, 13, 12)",
+            "color": "rgb(154, 166, 161)"
+          }
+        }
+      },
+      {
+        "id": "surface-blueprint",
+        "selector": "body",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "background-color": "rgb(250, 250, 251)",
+            "color": "rgb(87, 96, 110)"
+          },
+          "1440-dark": {
+            "background-color": "rgb(11, 13, 20)",
+            "color": "rgb(154, 161, 179)"
+          },
+          "768-light": {
+            "background-color": "rgb(250, 250, 251)",
+            "color": "rgb(87, 96, 110)"
+          },
+          "768-dark": {
+            "background-color": "rgb(11, 13, 20)",
+            "color": "rgb(154, 161, 179)"
+          },
+          "390-light": {
+            "background-color": "rgb(250, 250, 251)",
+            "color": "rgb(87, 96, 110)"
+          },
+          "390-dark": {
+            "background-color": "rgb(11, 13, 20)",
+            "color": "rgb(154, 161, 179)"
+          }
+        }
+      },
+      {
+        "id": "surface-signal",
+        "selector": "body",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "background-color": "rgb(247, 250, 252)",
+            "color": "rgb(65, 80, 106)"
+          },
+          "1440-dark": {
+            "background-color": "rgb(10, 15, 26)",
+            "color": "rgb(147, 160, 184)"
+          },
+          "768-light": {
+            "background-color": "rgb(247, 250, 252)",
+            "color": "rgb(65, 80, 106)"
+          },
+          "768-dark": {
+            "background-color": "rgb(10, 15, 26)",
+            "color": "rgb(147, 160, 184)"
+          },
+          "390-light": {
+            "background-color": "rgb(247, 250, 252)",
+            "color": "rgb(65, 80, 106)"
+          },
+          "390-dark": {
+            "background-color": "rgb(10, 15, 26)",
+            "color": "rgb(147, 160, 184)"
+          }
+        }
+      },
+      {
+        "id": "footer-terminal",
+        "selector": "footer.k-footer",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "background-color": "rgb(242, 245, 238)",
+            "border-top-color": "rgb(228, 232, 224)",
+            "border-top-width": "1px"
+          },
+          "1440-dark": {
+            "background-color": "rgb(15, 19, 17)",
+            "border-top-color": "rgb(35, 42, 39)",
+            "border-top-width": "1px"
+          },
+          "768-light": {
+            "background-color": "rgb(242, 245, 238)",
+            "border-top-color": "rgb(228, 232, 224)",
+            "border-top-width": "1px"
+          },
+          "768-dark": {
+            "background-color": "rgb(15, 19, 17)",
+            "border-top-color": "rgb(35, 42, 39)",
+            "border-top-width": "1px"
+          },
+          "390-light": {
+            "background-color": "rgb(242, 245, 238)",
+            "border-top-color": "rgb(228, 232, 224)",
+            "border-top-width": "1px"
+          },
+          "390-dark": {
+            "background-color": "rgb(15, 19, 17)",
+            "border-top-color": "rgb(35, 42, 39)",
+            "border-top-width": "1px"
+          }
+        }
+      },
+      {
+        "id": "footer-blueprint",
+        "selector": "footer.k-footer",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "background-color": "rgb(243, 244, 248)",
+            "border-top-color": "rgb(228, 231, 236)",
+            "border-top-width": "1px"
+          },
+          "1440-dark": {
+            "background-color": "rgb(22, 25, 37)",
+            "border-top-color": "rgb(36, 40, 56)",
+            "border-top-width": "1px"
+          },
+          "768-light": {
+            "background-color": "rgb(243, 244, 248)",
+            "border-top-color": "rgb(228, 231, 236)",
+            "border-top-width": "1px"
+          },
+          "768-dark": {
+            "background-color": "rgb(22, 25, 37)",
+            "border-top-color": "rgb(36, 40, 56)",
+            "border-top-width": "1px"
+          },
+          "390-light": {
+            "background-color": "rgb(243, 244, 248)",
+            "border-top-color": "rgb(228, 231, 236)",
+            "border-top-width": "1px"
+          },
+          "390-dark": {
+            "background-color": "rgb(22, 25, 37)",
+            "border-top-color": "rgb(36, 40, 56)",
+            "border-top-width": "1px"
+          }
+        }
+      },
+      {
+        "id": "footer-signal",
+        "selector": "footer.k-footer",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "background-color": "rgb(237, 243, 248)",
+            "border-top-color": "rgb(219, 229, 238)",
+            "border-top-width": "1px"
+          },
+          "1440-dark": {
+            "background-color": "rgb(18, 26, 44)",
+            "border-top-color": "rgb(30, 42, 65)",
+            "border-top-width": "1px"
+          },
+          "768-light": {
+            "background-color": "rgb(237, 243, 248)",
+            "border-top-color": "rgb(219, 229, 238)",
+            "border-top-width": "1px"
+          },
+          "768-dark": {
+            "background-color": "rgb(18, 26, 44)",
+            "border-top-color": "rgb(30, 42, 65)",
+            "border-top-width": "1px"
+          },
+          "390-light": {
+            "background-color": "rgb(237, 243, 248)",
+            "border-top-color": "rgb(219, 229, 238)",
+            "border-top-width": "1px"
+          },
+          "390-dark": {
+            "background-color": "rgb(18, 26, 44)",
+            "border-top-color": "rgb(30, 42, 65)",
+            "border-top-width": "1px"
+          }
+        }
+      },
+      {
+        "id": "btn-primary-terminal",
+        "selector": "header .k-header-cta",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(77, 124, 15)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "1440-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(163, 230, 53)",
+            "color": "rgb(10, 13, 12)"
+          },
+          "768-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(77, 124, 15)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "768-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(163, 230, 53)",
+            "color": "rgb(10, 13, 12)"
+          },
+          "390-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(77, 124, 15)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "390-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(163, 230, 53)",
+            "color": "rgb(10, 13, 12)"
+          }
+        }
+      },
+      {
+        "id": "btn-primary-blueprint",
+        "selector": "header .k-header-cta",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(79, 70, 229)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "1440-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(99, 102, 241)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "768-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(79, 70, 229)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "768-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(99, 102, 241)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "390-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(79, 70, 229)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "390-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(99, 102, 241)",
+            "color": "rgb(255, 255, 255)"
+          }
+        }
+      },
+      {
+        "id": "btn-primary-signal",
+        "selector": "header .k-header-cta",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(8, 145, 178)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "1440-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(34, 211, 238)",
+            "color": "rgb(4, 20, 26)"
+          },
+          "768-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(8, 145, 178)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "768-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(34, 211, 238)",
+            "color": "rgb(4, 20, 26)"
+          },
+          "390-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(8, 145, 178)",
+            "color": "rgb(255, 255, 255)"
+          },
+          "390-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "font-weight": "600",
+            "border-top-left-radius": "8px",
+            "height": "33px",
+            "background-color": "rgb(34, 211, 238)",
+            "color": "rgb(4, 20, 26)"
+          }
+        }
+      },
+      {
+        "id": "container",
+        "selector": "header.k-header .k-header-row",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "max-width": "1240px",
+            "padding-left": "32px",
+            "padding-right": "32px"
+          },
+          "1440-dark": {
+            "max-width": "1240px",
+            "padding-left": "32px",
+            "padding-right": "32px"
+          },
+          "768-light": {
+            "max-width": "1240px",
+            "padding-left": "32px",
+            "padding-right": "32px"
+          },
+          "768-dark": {
+            "max-width": "1240px",
+            "padding-left": "32px",
+            "padding-right": "32px"
+          },
+          "390-light": {
+            "max-width": "1240px",
+            "padding-left": "20px",
+            "padding-right": "20px"
+          },
+          "390-dark": {
+            "max-width": "1240px",
+            "padding-left": "20px",
+            "padding-right": "20px"
+          }
+        }
+      },
+      {
+        "id": "nav-link",
+        "selector": "header .k-nav-link",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "padding-left": "12px",
+            "border-top-left-radius": "8px"
+          },
+          "1440-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "padding-left": "12px",
+            "border-top-left-radius": "8px"
+          },
+          "768-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "padding-left": "12px",
+            "border-top-left-radius": "8px"
+          },
+          "768-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "padding-left": "12px",
+            "border-top-left-radius": "8px"
+          },
+          "390-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "padding-left": "12px",
+            "border-top-left-radius": "8px"
+          },
+          "390-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "14px",
+            "padding-left": "12px",
+            "border-top-left-radius": "8px"
+          }
+        }
+      },
+      {
+        "id": "h1-hero",
+        "selector": "main .hero-title",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "52px",
+            "line-height": "54.08px",
+            "letter-spacing": "-1.5px"
+          },
+          "1440-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "52px",
+            "line-height": "54.08px",
+            "letter-spacing": "-1.5px"
+          },
+          "768-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700"
+          },
+          "768-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700"
+          },
+          "390-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700"
+          },
+          "390-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700"
+          }
+        }
+      },
+      {
+        "id": "h1-any",
+        "selector": "main h1",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700"
+          },
+          "1440-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700"
+          },
+          "768-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700"
+          },
+          "768-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700"
+          },
+          "390-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700"
+          },
+          "390-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700"
+          }
+        }
+      },
+      {
+        "id": "h2-bento",
+        "selector": "main .bento-title",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "38px",
+            "line-height": "41.04px",
+            "letter-spacing": "-1px"
+          },
+          "1440-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "38px",
+            "line-height": "41.04px",
+            "letter-spacing": "-1px"
+          },
+          "768-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "38px",
+            "line-height": "41.04px",
+            "letter-spacing": "-1px"
+          },
+          "768-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "38px",
+            "line-height": "41.04px",
+            "letter-spacing": "-1px"
+          },
+          "390-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "27px",
+            "line-height": "29.16px",
+            "letter-spacing": "-1px"
+          },
+          "390-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "27px",
+            "line-height": "29.16px",
+            "letter-spacing": "-1px"
+          }
+        }
+      },
+      {
+        "id": "h2-split",
+        "selector": "main .split-title",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "34px",
+            "line-height": "38.08px",
+            "letter-spacing": "-0.8px"
+          },
+          "1440-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "34px",
+            "line-height": "38.08px",
+            "letter-spacing": "-0.8px"
+          },
+          "768-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "30px",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.8px"
+          },
+          "768-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "30px",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.8px"
+          },
+          "390-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "27px",
+            "line-height": "30.24px",
+            "letter-spacing": "-0.8px"
+          },
+          "390-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "27px",
+            "line-height": "30.24px",
+            "letter-spacing": "-0.8px"
+          }
+        }
+      },
+      {
+        "id": "h2-timeline",
+        "selector": "main .tl:not(.is-narrow) .tl-title",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "34px",
+            "line-height": "37.4px",
+            "letter-spacing": "-0.8px"
+          },
+          "1440-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "34px",
+            "line-height": "37.4px",
+            "letter-spacing": "-0.8px"
+          },
+          "768-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "34px",
+            "line-height": "37.4px",
+            "letter-spacing": "-0.8px"
+          },
+          "768-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "34px",
+            "line-height": "37.4px",
+            "letter-spacing": "-0.8px"
+          },
+          "390-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "26px",
+            "line-height": "28.6px",
+            "letter-spacing": "-0.5px"
+          },
+          "390-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "26px",
+            "line-height": "28.6px",
+            "letter-spacing": "-0.5px"
+          }
+        }
+      },
+      {
+        "id": "h2-ledger",
+        "selector": "main .fl:not(.is-narrow) .k-h2",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "38px",
+            "line-height": "41.04px",
+            "letter-spacing": "-1px"
+          },
+          "1440-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "38px",
+            "line-height": "41.04px",
+            "letter-spacing": "-1px"
+          },
+          "768-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "38px",
+            "line-height": "41.04px",
+            "letter-spacing": "-1px"
+          },
+          "768-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "38px",
+            "line-height": "41.04px",
+            "letter-spacing": "-1px"
+          },
+          "390-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "27px",
+            "line-height": "29.16px",
+            "letter-spacing": "-0.6px"
+          },
+          "390-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "27px",
+            "line-height": "29.16px",
+            "letter-spacing": "-0.6px"
+          }
+        }
+      },
+      {
+        "id": "h2-narrow",
+        "selector": "main .is-narrow .k-h2",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "24px",
+            "letter-spacing": "-0.5px"
+          },
+          "1440-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "24px",
+            "letter-spacing": "-0.5px"
+          },
+          "768-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "24px",
+            "letter-spacing": "-0.5px"
+          },
+          "768-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "24px",
+            "letter-spacing": "-0.5px"
+          },
+          "390-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "22px",
+            "letter-spacing": "-0.5px"
+          },
+          "390-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "22px",
+            "letter-spacing": "-0.5px"
+          }
+        }
+      },
+      {
+        "id": "h2-any",
+        "selector": "main h2",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "Space Grotesk"
+          },
+          "1440-dark": {
+            "font-family": "Space Grotesk"
+          },
+          "768-light": {
+            "font-family": "Space Grotesk"
+          },
+          "768-dark": {
+            "font-family": "Space Grotesk"
+          },
+          "390-light": {
+            "font-family": "Space Grotesk"
+          },
+          "390-dark": {
+            "font-family": "Space Grotesk"
+          }
+        }
+      },
+      {
+        "id": "eyebrow",
+        "selector": "main .k-eyebrow",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase"
+          },
+          "1440-dark": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase"
+          },
+          "768-light": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase"
+          },
+          "768-dark": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase"
+          },
+          "390-light": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase"
+          },
+          "390-dark": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase"
+          }
+        }
+      },
+      {
+        "id": "eyebrow-12",
+        "selector": "main .cta-eyebrow, main .bento-eyebrow, main .split-eyebrow, main .tl-eyebrow, main section.t .k-eyebrow, main .matrix .k-eyebrow",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-size": "12px",
+            "letter-spacing": "2px"
+          },
+          "1440-dark": {
+            "font-size": "12px",
+            "letter-spacing": "2px"
+          },
+          "768-light": {
+            "font-family": "JetBrains Mono"
+          },
+          "768-dark": {
+            "font-family": "JetBrains Mono"
+          },
+          "390-light": {
+            "font-family": "JetBrains Mono"
+          },
+          "390-dark": {
+            "font-family": "JetBrains Mono"
+          }
+        }
+      },
+      {
+        "id": "eyebrow-12-5",
+        "selector": "main .hero-eyebrow, main .fl-eyebrow, main .acc .k-eyebrow, main .teams .k-eyebrow",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-size": "12.5px",
+            "letter-spacing": "2px"
+          },
+          "1440-dark": {
+            "font-size": "12.5px",
+            "letter-spacing": "2px"
+          },
+          "768-light": {
+            "font-family": "JetBrains Mono"
+          },
+          "768-dark": {
+            "font-family": "JetBrains Mono"
+          },
+          "390-light": {
+            "font-family": "JetBrains Mono"
+          },
+          "390-dark": {
+            "font-family": "JetBrains Mono"
+          }
+        }
+      },
+      {
+        "id": "mast-eyebrow",
+        "selector": "main .pm-eyebrow",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase",
+            "font-size": "12.5px",
+            "letter-spacing": "2px"
+          },
+          "1440-dark": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase",
+            "font-size": "12.5px",
+            "letter-spacing": "2px"
+          },
+          "768-light": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase"
+          },
+          "768-dark": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase"
+          },
+          "390-light": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase"
+          },
+          "390-dark": {
+            "font-family": "JetBrains Mono",
+            "text-transform": "uppercase"
+          }
+        }
+      },
+      {
+        "id": "mast-title-framed",
+        "selector": "main .pm.is-narrow .pm-title",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "46px",
+            "line-height": "49.68px",
+            "letter-spacing": "-1.3px"
+          },
+          "1440-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "46px",
+            "line-height": "49.68px",
+            "letter-spacing": "-1.3px"
+          },
+          "768-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "38px",
+            "line-height": "41.04px",
+            "letter-spacing": "-1px"
+          },
+          "768-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "38px",
+            "line-height": "41.04px",
+            "letter-spacing": "-1px"
+          },
+          "390-light": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "32px",
+            "line-height": "34.56px",
+            "letter-spacing": "-1px"
+          },
+          "390-dark": {
+            "font-family": "Space Grotesk",
+            "font-weight": "700",
+            "font-size": "32px",
+            "line-height": "34.56px",
+            "letter-spacing": "-1px"
+          }
+        }
+      },
+      {
+        "id": "mast-sub-framed",
+        "selector": "main .pm.is-narrow .pm-sub",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-size": "17px",
+            "line-height": "29.75px"
+          },
+          "1440-dark": {
+            "font-size": "17px",
+            "line-height": "29.75px"
+          },
+          "768-light": {
+            "font-size": "17px",
+            "line-height": "29.75px"
+          },
+          "768-dark": {
+            "font-size": "17px",
+            "line-height": "29.75px"
+          },
+          "390-light": {
+            "font-size": "16px",
+            "line-height": "28px"
+          },
+          "390-dark": {
+            "font-size": "16px",
+            "line-height": "28px"
+          }
+        }
+      },
+      {
+        "id": "sub",
+        "selector": "main .k-sub",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "17px",
+            "max-width": "460px"
+          },
+          "1440-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-size": "17px",
+            "max-width": "460px"
+          },
+          "768-light": {
+            "font-family": "IBM Plex Sans"
+          },
+          "768-dark": {
+            "font-family": "IBM Plex Sans"
+          },
+          "390-light": {
+            "font-family": "IBM Plex Sans"
+          },
+          "390-dark": {
+            "font-family": "IBM Plex Sans"
+          }
+        }
+      },
+      {
+        "id": "btn-any",
+        "selector": "main .k-btn:not(.k-btn-ghost):not(.split-cta)",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "IBM Plex Sans",
+            "font-weight": "600"
+          },
+          "1440-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-weight": "600"
+          },
+          "768-light": {
+            "font-family": "IBM Plex Sans",
+            "font-weight": "600"
+          },
+          "768-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-weight": "600"
+          },
+          "390-light": {
+            "font-family": "IBM Plex Sans",
+            "font-weight": "600"
+          },
+          "390-dark": {
+            "font-family": "IBM Plex Sans",
+            "font-weight": "600"
+          }
+        }
+      },
+      {
+        "id": "btn-mono",
+        "selector": "main .split-cta",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "500"
+          },
+          "1440-dark": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "500"
+          },
+          "768-light": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "500"
+          },
+          "768-dark": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "500"
+          },
+          "390-light": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "500"
+          },
+          "390-dark": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "500"
+          }
+        }
+      },
+      {
+        "id": "btn-ghost",
+        "selector": "main .k-btn-ghost",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "600",
+            "border-top-left-radius": "9px"
+          },
+          "1440-dark": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "600",
+            "border-top-left-radius": "9px"
+          },
+          "768-light": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "600",
+            "border-top-left-radius": "9px"
+          },
+          "768-dark": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "600",
+            "border-top-left-radius": "9px"
+          },
+          "390-light": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "600",
+            "border-top-left-radius": "9px"
+          },
+          "390-dark": {
+            "font-family": "JetBrains Mono",
+            "font-weight": "600",
+            "border-top-left-radius": "9px"
+          }
+        }
+      },
+      {
+        "id": "card",
+        "selector": "main .k-card",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "border-top-width": "1px"
+          },
+          "1440-dark": {
+            "border-top-width": "1px"
+          },
+          "768-light": {
+            "border-top-width": "1px"
+          },
+          "768-dark": {
+            "border-top-width": "1px"
+          },
+          "390-light": {
+            "border-top-width": "1px"
+          },
+          "390-dark": {
+            "border-top-width": "1px"
+          }
+        }
+      },
+      {
+        "id": "card-16",
+        "selector": "main .k-card.tile, main .k-card.t-card, main .k-card.fl-list",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "border-top-left-radius": "16px"
+          },
+          "1440-dark": {
+            "border-top-left-radius": "16px"
+          },
+          "768-light": {
+            "border-top-left-radius": "16px"
+          },
+          "768-dark": {
+            "border-top-left-radius": "16px"
+          },
+          "390-light": {
+            "border-top-left-radius": "16px"
+          },
+          "390-dark": {
+            "border-top-left-radius": "16px"
+          }
+        }
+      },
+      {
+        "id": "card-14",
+        "selector": "main .k-card.fi-card",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "border-top-left-radius": "14px"
+          },
+          "1440-dark": {
+            "border-top-left-radius": "14px"
+          },
+          "768-light": {
+            "border-top-left-radius": "14px"
+          },
+          "768-dark": {
+            "border-top-left-radius": "14px"
+          },
+          "390-light": {
+            "border-top-left-radius": "14px"
+          },
+          "390-dark": {
+            "border-top-left-radius": "14px"
+          }
+        }
+      },
+      {
+        "id": "card-12",
+        "selector": "main .k-card.integ-card, main .k-card.fl-stat",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "border-top-left-radius": "12px"
+          },
+          "1440-dark": {
+            "border-top-left-radius": "12px"
+          },
+          "768-light": {
+            "border-top-left-radius": "12px"
+          },
+          "768-dark": {
+            "border-top-left-radius": "12px"
+          },
+          "390-light": {
+            "border-top-left-radius": "12px"
+          },
+          "390-dark": {
+            "border-top-left-radius": "12px"
+          }
+        }
+      },
+      {
+        "id": "footer-link",
+        "selector": "footer .k-footer-col a",
+        "source": "index.html",
+        "optional": true,
+        "styles": {
+          "1440-light": {
+            "font-family": "IBM Plex Sans"
+          },
+          "1440-dark": {
+            "font-family": "IBM Plex Sans"
+          },
+          "768-light": {
+            "font-family": "IBM Plex Sans"
+          },
+          "768-dark": {
+            "font-family": "IBM Plex Sans"
+          },
+          "390-light": {
+            "font-family": "IBM Plex Sans"
+          },
+          "390-dark": {
+            "font-family": "IBM Plex Sans"
+          }
+        }
+      }
+    ],
+    "coverage": [
+      {
+        "selector": "main h1",
+        "properties": ["font-family", "font-weight"]
+      },
+      {
+        "selector": "main h2",
+        "properties": ["font-family"]
+      },
+      {
+        "selector": "main .k-eyebrow",
+        "properties": ["font-family", "text-transform"]
+      },
+      {
+        "selector": "main .k-btn",
+        "properties": ["font-family", "font-weight"]
+      },
+      {
+        "selector": "main .k-card",
+        "properties": ["border-top-width"]
+      },
+      {
+        "selector": "header .k-nav-link",
+        "properties": ["font-size"]
+      },
+      {
+        "selector": "footer .k-footer-col a",
+        "properties": ["font-family"]
+      }
+    ],
+    "parity": {
+      "properties": [
+        "color",
+        "background-color",
+        "font-family",
+        "font-size",
+        "font-weight",
+        "letter-spacing",
+        "line-height",
+        "padding-top",
+        "padding-left",
+        "border-top-left-radius",
+        "border-top-color",
+        "border-top-width"
+      ],
+      "hexTolerance": 8,
+      "pxTolerance": 0.5,
+      "sourceTheme": [
+        {
+          "selector": "html",
+          "attribute": "class",
+          "values": {
+            "light": "j6",
+            "dark": "j6 t4-dark"
+          }
+        },
+        {
+          "selector": "html",
+          "attribute": "data-theme",
+          "values": {
+            "light": "light",
+            "dark": "dark"
+          }
+        },
+        {
+          "selector": "html",
+          "attribute": "data-bs-theme",
+          "values": {
+            "light": "light",
+            "dark": "dark"
+          }
+        }
+      ],
+      "selectors": {
+        "h1": {
+          "content": "h1"
+        },
+        "lede": {
+          "content": "lede"
+        },
+        "heroCta": {
+          "site": "main .hero .k-btn-primary",
+          "source": ".acm-hero-copy .hx-btn--primary"
+        },
+        "eyebrow": {
+          "site": "main .hero .k-eyebrow",
+          "source": ".acm-hero-copy .hx-eyebrow"
+        },
+        "bentoH2": {
+          "site": "main .bento-title",
+          "source": ".acm-bento-title"
+        },
+        "splitH2": {
+          "site": "main .split-title",
+          "source": ".acm-split-title"
+        },
+        "timelineH2": {
+          "site": "main .tl-title",
+          "source": ".acm-incident-head .hx-h2"
+        },
+        "mastEyebrow": {
+          "site": "main .pm-eyebrow",
+          "source": ".hx-mast-head .hx-eyebrow"
+        },
+        "navLink": {
+          "site": "header .k-nav-link:visible",
+          "source": "#t4-megamenu-mainmenu .nav-link"
+        },
+        "headerCta": {
+          "site": "header .k-header-cta:visible",
+          "source": ".kinetic-header .hx-cta-pill"
+        },
+        "wordmark": {
+          "site": "header .k-wordmark",
+          "source": ".kinetic-logo-text"
+        },
+        "footer": {
+          "site": "footer.k-footer",
+          "source": "footer.kinetic-footer"
+        },
+        "footerLink": {
+          "site": "footer .k-footer-col a",
+          "source": ".hx-foot-col a"
+        },
+        "footerHeading": {
+          "site": "footer .k-footer-heading",
+          "source": ".hx-foot-col h3"
+        }
+      }
+    },
+    "images": {
+      "scope": "main",
+      "sourceSlot": null,
+      "placeholder": null
+    },
+    "exceptions": [
+      {
+        "kind": "scan:bright-border",
+        "match": "^article\\.plan\\.is-popular$",
+        "reason": "popular plan card: primary border marks the recommended plan (source div.hx-card.hx-plan, dark); a state accent in both themes, not a leaked light border",
+        "decision": "tasks/emdash-ja-kinetic/DECISIONS.md D29"
+      },
+      {
+        "kind": "scan:bright-border",
+        "match": "^span\\.box\\.current$",
+        "reason": "current page in the pagination: primary border marks the page shown (source a.page-link, dark); a state accent in both themes, not a leaked light border",
+        "decision": "tasks/emdash-ja-kinetic/DECISIONS.md D29"
+      },
+      {
+        "kind": "scan:bright-border",
+        "match": "^a\\.active$",
+        "reason": "selected tag chip on tag pages: primary border marks the active filter; a state accent in both themes, not a leaked light border",
+        "decision": "tasks/emdash-ja-kinetic/DECISIONS.md D29"
+      }
+    ]
+  },
+  "interactions": {
+    "megamenu": {
+      "trigger": "header .k-mega > ul > li:nth-child(2) > button[aria-expanded]",
+      "panel": "header .k-mega-wrap:not([hidden]) .k-mega-panel",
+      "link": "header .k-mega-wrap:not([hidden]) a.k-mega-link",
+      "open": "hover"
+    },
+    "drawer": {
+      "trigger": "header button[aria-haspopup=\"dialog\"]",
+      "panel": ".k-drawer-root:not([hidden]) .k-drawer",
+      "link": ".k-drawer-root:not([hidden]) a.k-drawer-row",
+      "open": "click"
+    }
+  },
+  "fonts": {
+    "selectors": ["h1", "h2", "h3", "p", "a", "button", "input", "label", "code"],
+    "platform": "macOS (Chrome); Space Grotesk + IBM Plex Sans + JetBrains Mono, self-hosted",
+    "allowed": {
+      "en": ["Space Grotesk", "Space Grotesk Light", "IBM Plex Sans", "JetBrains Mono", ".SF NS", "Menlo"]
+    }
+  },
+  "pages": [
+    {
+      "id": "home",
+      "path": "/",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "bento",
+          "clients",
+          "cta",
+          "features_ledger",
+          "footerlegal",
+          "header_cta",
+          "hero",
+          "incident_timeline",
+          "kineticql_split",
+          "newsletter",
+          "pages",
+          "social",
+          "testimonials"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal",
+        "h1-hero"
+      ],
+      "parity": [
+        "navLink",
+        "headerCta",
+        "wordmark",
+        "footer",
+        "footerLink",
+        "footerHeading",
+        "h1",
+        "lede",
+        "heroCta",
+        "eyebrow",
+        "bentoH2",
+        "splitH2",
+        "timelineH2"
+      ],
+      "layout": "home",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main .hero-title",
+          "source": "index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.title",
+          "attribute": "text",
+          "expected": "Ship fast. Sleep through the night."
+        },
+        {
+          "id": "lede",
+          "selector": "main .hero-sub",
+          "source": "index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.sub",
+          "attribute": "text",
+          "expected": "Helix unifies metrics, logs and traces into one on-call workflow — so you find the failing span before your users do."
+        },
+        {
+          "id": "cta",
+          "selector": "main .hero .k-btn-primary",
+          "source": "index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.cta1_label",
+          "attribute": "text",
+          "expected": "Start free"
+        }
+      ]
+    },
+    {
+      "id": "home-blueprint",
+      "path": "/home-menu/home-blueprint",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/home-menu/home-blueprint/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "bento",
+          "clients",
+          "cta",
+          "features_ledger",
+          "footerlegal",
+          "header_cta",
+          "hero",
+          "incident_timeline",
+          "kineticql_split",
+          "newsletter",
+          "pages",
+          "social",
+          "testimonials"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-blueprint",
+        "footer-blueprint",
+        "btn-primary-blueprint",
+        "h1-hero"
+      ],
+      "parity": [
+        "navLink",
+        "headerCta",
+        "wordmark",
+        "footer",
+        "footerLink",
+        "footerHeading",
+        "h1",
+        "lede",
+        "heroCta",
+        "eyebrow",
+        "bentoH2",
+        "splitH2",
+        "timelineH2"
+      ],
+      "layout": "home",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/home-menu/home-blueprint/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main .hero-title",
+          "source": "index.php/home-menu/home-blueprint/index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.title",
+          "attribute": "text",
+          "expected": "Ship fast. Sleep through the night."
+        },
+        {
+          "id": "lede",
+          "selector": "main .hero-sub",
+          "source": "index.php/home-menu/home-blueprint/index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.sub",
+          "attribute": "text",
+          "expected": "Helix unifies metrics, logs and traces into one on-call workflow — so you find the failing span before your users do."
+        },
+        {
+          "id": "cta",
+          "selector": "main .hero .k-btn-primary",
+          "source": "index.php/home-menu/home-blueprint/index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.cta1_label",
+          "attribute": "text",
+          "expected": "Start free"
+        }
+      ]
+    },
+    {
+      "id": "home-signal",
+      "path": "/home-menu/home-signal",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/home-menu/home-signal/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "bento",
+          "clients",
+          "cta",
+          "features_ledger",
+          "footerlegal",
+          "header_cta",
+          "hero",
+          "incident_timeline",
+          "kineticql_split",
+          "newsletter",
+          "pages",
+          "social",
+          "testimonials"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-signal",
+        "footer-signal",
+        "btn-primary-signal",
+        "h1-hero"
+      ],
+      "parity": [
+        "navLink",
+        "headerCta",
+        "wordmark",
+        "footer",
+        "footerLink",
+        "footerHeading",
+        "h1",
+        "lede",
+        "heroCta",
+        "eyebrow",
+        "bentoH2",
+        "splitH2",
+        "timelineH2"
+      ],
+      "layout": "home",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/home-menu/home-signal/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main .hero-title",
+          "source": "index.php/home-menu/home-signal/index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.title",
+          "attribute": "text",
+          "expected": "Ship fast. Sleep through the night."
+        },
+        {
+          "id": "lede",
+          "selector": "main .hero-sub",
+          "source": "index.php/home-menu/home-signal/index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.sub",
+          "attribute": "text",
+          "expected": "Helix unifies metrics, logs and traces into one on-call workflow — so you find the failing span before your users do."
+        },
+        {
+          "id": "cta",
+          "selector": "main .hero .k-btn-primary",
+          "source": "index.php/home-menu/home-signal/index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.cta1_label",
+          "attribute": "text",
+          "expected": "Start free"
+        }
+      ]
+    },
+    {
+      "id": "features",
+      "path": "/product/features",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/product/features/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "cta",
+          "features_intro",
+          "features_ledger",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "page_masthead",
+          "pages",
+          "social"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal",
+        "mast-eyebrow",
+        "mast-title-framed",
+        "mast-sub-framed"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "lede"],
+      "layout": "inner",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/features/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "title",
+          "selector": "main .page-title",
+          "source": "index.php/product/features/index.html",
+          "owner": "field",
+          "binding": "pages.features.title",
+          "attribute": "text",
+          "expected": "Features"
+        },
+        {
+          "id": "heading",
+          "selector": "main .pm-title",
+          "source": "index.php/product/features/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.title",
+          "attribute": "text",
+          "expected": "Everything you need to debug in production"
+        },
+        {
+          "id": "lede",
+          "selector": "main .pm-sub",
+          "source": "index.php/product/features/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.sub",
+          "attribute": "text",
+          "expected": "One pipeline for logs, metrics and traces — with the query speed and alerting your on-call rotation actually deserves."
+        }
+      ]
+    },
+    {
+      "id": "integrations",
+      "path": "/product/integrations",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/product/integrations/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "clients",
+          "cta",
+          "features_intro",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "page_masthead",
+          "pages",
+          "social"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal",
+        "mast-eyebrow",
+        "mast-title-framed",
+        "mast-sub-framed"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading"],
+      "layout": "inner",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/integrations/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "title",
+          "selector": "main .page-title",
+          "source": "index.php/product/integrations/index.html",
+          "owner": "field",
+          "binding": "pages.integrations.title",
+          "attribute": "text",
+          "expected": "Integrations"
+        },
+        {
+          "id": "heading",
+          "selector": "main .pm-title",
+          "source": "index.php/product/integrations/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.title",
+          "attribute": "text",
+          "expected": "Connect the tools you already run"
+        },
+        {
+          "id": "sub",
+          "selector": "main .pm-sub",
+          "source": "index.php/product/integrations/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.sub",
+          "attribute": "text",
+          "expected": "Ship telemetry from any language, cloud or framework. OpenTelemetry-native, with 80+ first-party connectors."
+        }
+      ]
+    },
+    {
+      "id": "changelog",
+      "path": "/product/changelog",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/product/changelog/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "cta",
+          "footerlegal",
+          "header_cta",
+          "incident_timeline",
+          "newsletter",
+          "page_masthead",
+          "pages",
+          "social"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal",
+        "mast-eyebrow",
+        "mast-title-framed",
+        "mast-sub-framed"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading"],
+      "layout": "inner",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/changelog/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "title",
+          "selector": "main .page-title",
+          "source": "index.php/product/changelog/index.html",
+          "owner": "field",
+          "binding": "pages.changelog.title",
+          "attribute": "text",
+          "expected": "Changelog"
+        },
+        {
+          "id": "heading",
+          "selector": "main .pm-title",
+          "source": "index.php/product/changelog/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.title",
+          "attribute": "text",
+          "expected": "What’s new in Helix"
+        },
+        {
+          "id": "sub",
+          "selector": "main .pm-sub",
+          "source": "index.php/product/changelog/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.sub",
+          "attribute": "text",
+          "expected": "Every release, fix and improvement. Shipping continuously, documented honestly."
+        }
+      ]
+    },
+    {
+      "id": "faq",
+      "path": "/product/faq",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/product/faq/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "accordion",
+          "cta",
+          "faq_support",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "page_masthead",
+          "pages",
+          "social"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal",
+        "mast-eyebrow",
+        "mast-title-framed",
+        "mast-sub-framed"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading"],
+      "layout": "inner",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/faq/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "title",
+          "selector": "main .page-title",
+          "source": "index.php/product/faq/index.html",
+          "owner": "field",
+          "binding": "pages.faq.title",
+          "attribute": "text",
+          "expected": "FAQ"
+        },
+        {
+          "id": "heading",
+          "selector": "main .pm-title",
+          "source": "index.php/product/faq/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.title",
+          "attribute": "text",
+          "expected": "Frequently asked questions"
+        },
+        {
+          "id": "sub",
+          "selector": "main .pm-sub",
+          "source": "index.php/product/faq/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.sub",
+          "attribute": "text",
+          "expected": "Everything about plans, data, security and getting started."
+        }
+      ]
+    },
+    {
+      "id": "pricing",
+      "path": "/pricing",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/pricing/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "accordion",
+          "cta",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "page_masthead",
+          "pages",
+          "pricing",
+          "pricing_matrix",
+          "social"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal",
+        "mast-eyebrow",
+        "mast-title-framed",
+        "mast-sub-framed"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "lede"],
+      "layout": "inner",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pricing/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "title",
+          "selector": "main .page-title",
+          "source": "index.php/pricing/index.html",
+          "owner": "field",
+          "binding": "pages.pricing.title",
+          "attribute": "text",
+          "expected": "Pricing"
+        },
+        {
+          "id": "heading",
+          "selector": "main .pm-title",
+          "source": "index.php/pricing/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.title",
+          "attribute": "text",
+          "expected": "Simple, usage-based pricing"
+        },
+        {
+          "id": "lede",
+          "selector": "main .pm-sub",
+          "source": "index.php/pricing/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.sub",
+          "attribute": "text",
+          "expected": "Start free. Scale when you need to. Pay for what you query, never for seats you forgot about."
+        }
+      ]
+    },
+    {
+      "id": "about",
+      "path": "/company/about",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/company/about/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "cta",
+          "features_intro",
+          "features_ledger",
+          "footerlegal",
+          "header_cta",
+          "incident_timeline",
+          "newsletter",
+          "page_masthead",
+          "pages",
+          "prose_quote",
+          "social",
+          "teams"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal",
+        "mast-eyebrow",
+        "mast-title-framed",
+        "mast-sub-framed"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "lede"],
+      "layout": "inner",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/company/about/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "title",
+          "selector": "main .page-title",
+          "source": "index.php/company/about/index.html",
+          "owner": "field",
+          "binding": "pages.about.title",
+          "attribute": "text",
+          "expected": "About Helix"
+        },
+        {
+          "id": "heading",
+          "selector": "main .pm-title",
+          "source": "index.php/company/about/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.title",
+          "attribute": "text",
+          "expected": "We were tired of being woken up at 3am"
+        },
+        {
+          "id": "lede",
+          "selector": "main .pm-sub",
+          "source": "index.php/company/about/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.sub",
+          "attribute": "text",
+          "expected": "Helix is built by on-call engineers for on-call engineers."
+        }
+      ]
+    },
+    {
+      "id": "team",
+      "path": "/company/team",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/company/team/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "cta",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "page_masthead",
+          "pages",
+          "social",
+          "teams"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal",
+        "mast-eyebrow",
+        "mast-title-framed",
+        "mast-sub-framed"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "lede"],
+      "layout": "inner",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/company/team/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "title",
+          "selector": "main .page-title",
+          "source": "index.php/company/team/index.html",
+          "owner": "field",
+          "binding": "pages.team.title",
+          "attribute": "text",
+          "expected": "Our Team"
+        },
+        {
+          "id": "heading",
+          "selector": "main .pm-title",
+          "source": "index.php/company/team/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.title",
+          "attribute": "text",
+          "expected": "The people behind Helix"
+        },
+        {
+          "id": "lede",
+          "selector": "main .pm-sub",
+          "source": "index.php/company/team/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.sub",
+          "attribute": "text",
+          "expected": "A small, senior team of engineers, designers and operators who have all carried the pager."
+        }
+      ]
+    },
+    {
+      "id": "landing",
+      "path": "/pages/landing",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/pages/landing/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "bento",
+          "clients",
+          "cta",
+          "features_ledger",
+          "footerlegal",
+          "header_cta",
+          "hero",
+          "newsletter",
+          "pages",
+          "social",
+          "testimonials"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal",
+        "h1-hero"
+      ],
+      "parity": [
+        "navLink",
+        "headerCta",
+        "wordmark",
+        "footer",
+        "footerLink",
+        "footerHeading",
+        "h1",
+        "lede",
+        "heroCta",
+        "eyebrow",
+        "bentoH2",
+        "splitH2",
+        "timelineH2"
+      ],
+      "layout": "landing",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pages/landing/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main .hero-title",
+          "source": "index.php/pages/landing/index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.title",
+          "attribute": "text",
+          "expected": "Ship fast. Sleep through the night."
+        },
+        {
+          "id": "lede",
+          "selector": "main .hero-sub",
+          "source": "index.php/pages/landing/index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.sub",
+          "attribute": "text",
+          "expected": "Helix unifies metrics, logs and traces into one on-call workflow — so you find the failing span before your users do."
+        },
+        {
+          "id": "cta",
+          "selector": "main .hero .k-btn-primary",
+          "source": "index.php/pages/landing/index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.cta1_label",
+          "attribute": "text",
+          "expected": "Start free"
+        },
+        {
+          "id": "cta-href",
+          "selector": "main .hero .k-btn-primary",
+          "source": "index.php/pages/landing/index.html",
+          "owner": "field",
+          "binding": "hero.<entry>.cta1_link",
+          "attribute": "href",
+          "expected": "#"
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "path": "/company/contact",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/company/contact/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Sections.astro",
+        "collections": [
+          "contact_block",
+          "cta",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "page_masthead",
+          "pages",
+          "social"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal",
+        "mast-eyebrow"
+      ],
+      "parity": [
+        "navLink",
+        "headerCta",
+        "wordmark",
+        "footer",
+        "footerLink",
+        "footerHeading",
+        "h1",
+        "lede",
+        "mastEyebrow"
+      ],
+      "layout": "contact",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/company/contact/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/company/contact/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.title",
+          "attribute": "text",
+          "expected": "Talk to the Helix team"
+        },
+        {
+          "id": "lede",
+          "selector": "main .pm-sub",
+          "source": "index.php/company/contact/index.html",
+          "owner": "field",
+          "binding": "page_masthead.<entry>.sub",
+          "attribute": "text",
+          "expected": "Questions about the platform, pricing or migration? We reply within one business day."
+        }
+      ]
+    },
+    {
+      "id": "blog",
+      "path": "/product/blog",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/product/blog/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Blog.astro",
+        "collections": [
+          "cta",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "pages",
+          "posts",
+          "social",
+          "writers"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "list",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/blog/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/product/blog/index.html",
+          "owner": "field",
+          "binding": "pages.blog.title → category term label",
+          "attribute": "text",
+          "expected": "Field notes from the on-call"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/product/blog/index.html",
+          "owner": "field",
+          "binding": "taxonomy category description (D22)",
+          "attribute": "text",
+          "expected": "Engineering deep-dives, incident retros and observability practice from the Helix team."
+        }
+      ]
+    },
+    {
+      "id": "blog-page-2",
+      "path": "/product/blog?page=2",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/product/blog/page-2/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Blog.astro",
+        "collections": [
+          "cta",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "pages",
+          "posts",
+          "social",
+          "writers"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "list",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/blog/page-2/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/product/blog/page-2/index.html",
+          "owner": "field",
+          "binding": "pages.blog.title → category term label",
+          "attribute": "text",
+          "expected": "Field notes from the on-call"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/product/blog/page-2/index.html",
+          "owner": "field",
+          "binding": "taxonomy category description (D22)",
+          "attribute": "text",
+          "expected": "Engineering deep-dives, incident retros and observability practice from the Helix team."
+        }
+      ]
+    },
+    {
+      "id": "category",
+      "path": "/product/blog/category/incident-retros",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": [
+        "index.php/product/blog/30-incident-retros/index.html",
+        "index.php/product/blog/31-product/index.html",
+        "index.php/product/blog/32-tutorials/index.html",
+        "index.php/product/blog/33-practice/index.html",
+        "index.php/product/blog/34-culture/index.html"
+      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Blog.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "list",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/blog/30-incident-retros/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/product/blog/30-incident-retros/index.html",
+          "owner": "derived",
+          "binding": "taxonomy category term label",
+          "attribute": "text",
+          "expected": "Incident retros"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/product/blog/30-incident-retros/index.html",
+          "owner": "derived",
+          "binding": "taxonomy category description (D22)",
+          "attribute": "text",
+          "expected": "Post-mortems and what we learned."
+        }
+      ]
+    },
+    {
+      "id": "tag",
+      "path": "/product/blog/tag/incident",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": [
+        "index.php/pages/tags/incident/index.html",
+        "index.php/pages/tags/alerting/index.html",
+        "index.php/pages/tags/cost/index.html",
+        "index.php/pages/tags/latency/index.html",
+        "index.php/pages/tags/dashboards/index.html",
+        "index.php/pages/tags/tracing/index.html"
+      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Blog.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "list",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pages/tags/incident/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/pages/tags/incident/index.html",
+          "owner": "derived",
+          "binding": "\"Tagged: \" + taxonomy tag term label",
+          "attribute": "text",
+          "expected": "Tagged: incident"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/pages/tags/incident/index.html",
+          "owner": "derived",
+          "binding": "taxonomy tag description",
+          "attribute": "text",
+          "expected": "Incident response, retros and the messy reality of being on-call."
+        }
+      ]
+    },
+    {
+      "id": "tag-slo",
+      "path": "/product/blog/tag/slo",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/pages/tags/slo/index.html"],
+      "variants": ["1440-light", "1440-dark"],
+      "render": {
+        "view": "src/views/Blog.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default", "megamenu"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "list",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pages/tags/slo/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/pages/tags/slo/index.html",
+          "owner": "derived",
+          "binding": "\"Tagged: \" + taxonomy tag term label",
+          "attribute": "text",
+          "expected": "Tagged: slo"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/pages/tags/slo/index.html",
+          "owner": "derived",
+          "binding": "taxonomy tag description",
+          "attribute": "text",
+          "expected": "Service level objectives, error budgets and measuring what users actually feel."
+        }
+      ]
+    },
+    {
+      "id": "tag-metrics",
+      "path": "/product/blog/tag/metrics",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/pages/tags/metrics/index.html"],
+      "variants": ["768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Blog.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default", "drawer"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "list",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pages/tags/metrics/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/pages/tags/metrics/index.html",
+          "owner": "derived",
+          "binding": "\"Tagged: \" + taxonomy tag term label",
+          "attribute": "text",
+          "expected": "Tagged: metrics"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/pages/tags/metrics/index.html",
+          "owner": "derived",
+          "binding": "taxonomy tag description",
+          "attribute": "text",
+          "expected": "Metrics, cardinality and querying time-series without melting the database."
+        }
+      ]
+    },
+    {
+      "id": "engineering",
+      "path": "/pages/engineering",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/pages/engineering/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Blog.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "list",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pages/engineering/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/pages/engineering/index.html",
+          "owner": "field",
+          "binding": "pages.engineering.title",
+          "attribute": "text",
+          "expected": "Engineering"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/pages/engineering/index.html",
+          "owner": "field",
+          "binding": "taxonomy category description (D22)",
+          "attribute": "text",
+          "expected": "Posts on performance, tracing, query internals and running Helix at scale."
+        }
+      ]
+    },
+    {
+      "id": "author-posts",
+      "path": "/product/authors/priya-raman",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/index.php/product/authors/author/priya.raman/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Blog.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "list",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/index.php/product/authors/author/priya.raman/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/index.php/product/authors/author/priya.raman/index.html",
+          "owner": "derived",
+          "binding": "writers.<entry>.name",
+          "attribute": "text",
+          "expected": "Priya Raman"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/index.php/product/authors/author/priya.raman/index.html",
+          "owner": "field",
+          "binding": "writers.<entry>.tagline (D24)",
+          "attribute": "text",
+          "expected": "Staff SRE. Writes about incident response, tracing and the tail latencies nobody watches."
+        }
+      ]
+    },
+    {
+      "id": "article",
+      "path": "/product/blog/automatic-incident-timeline",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": [
+        "index.php/product/blog/136-automatic-incident-timeline/index.html",
+        "index.php/product/blog/134-continuous-profiling-intro/index.html",
+        "index.php/product/blog/135-detecting-slow-leaks/index.html",
+        "index.php/product/blog/163-reading-the-timeline-back-how-we-rebuilt-an-incident-from-raw-traces/index.html",
+        "index.php/product/blog/164-five-minutes-to-mitigate-the-anatomy-of-a-fast-recovery/index.html",
+        "index.php/product/blog/165-what-i-wish-someone-told-me-before-my-first-on-call-shift/index.html"
+      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Article.astro",
+        "collections": [
+          "cta",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "pages",
+          "posts",
+          "social",
+          "writers"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "detail",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/blog/136-automatic-incident-timeline/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/product/blog/136-automatic-incident-timeline/index.html",
+          "owner": "field",
+          "binding": "posts.<slug>.title",
+          "attribute": "text",
+          "expected": "Building an incident timeline automatically from telemetry"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/product/blog/136-automatic-incident-timeline/index.html",
+          "owner": "field",
+          "binding": "posts.<slug>.excerpt",
+          "attribute": "text",
+          "expected": "The most tedious part of any postmortem is reconstructing what happened when. Your telemetry already knows. The timeline can assemble itself while you focus on why."
+        }
+      ]
+    },
+    {
+      "id": "helixql",
+      "path": "/pages/helixql",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/pages/helixql/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Article.astro",
+        "collections": [
+          "cta",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "pages",
+          "posts",
+          "social",
+          "writers"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "detail",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pages/helixql/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/pages/helixql/index.html",
+          "owner": "field",
+          "binding": "posts.<slug>.title",
+          "attribute": "text",
+          "expected": "How HelixQL plans a query across three signal types"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/pages/helixql/index.html",
+          "owner": "field",
+          "binding": "pages.helixql.sub (D24)",
+          "attribute": "text",
+          "expected": "One query language across metrics, logs, and traces — no context-switching, no four dashboards open at 3am."
+        }
+      ]
+    },
+    {
+      "id": "all-categories",
+      "path": "/product/all-categories",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/product/all-categories/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Terms.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "terms",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/all-categories/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/product/all-categories/index.html",
+          "owner": "field",
+          "binding": "pages.all-categories.title",
+          "attribute": "text",
+          "expected": "All Categories"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/product/all-categories/index.html",
+          "owner": "field",
+          "binding": "pages.all-categories.sub (D24)",
+          "attribute": "text",
+          "expected": "Browse every topic we write about, from incident retros to product tutorials."
+        }
+      ]
+    },
+    {
+      "id": "tags",
+      "path": "/pages/tags",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/pages/tags/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Terms.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "terms",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pages/tags/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/pages/tags/index.html",
+          "owner": "field",
+          "binding": "pages.tags.heading (D24)",
+          "attribute": "text",
+          "expected": "Browse by tag"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/pages/tags/index.html",
+          "owner": "field",
+          "binding": "pages.tags.sub (D24)",
+          "attribute": "text",
+          "expected": "Find posts by the topics that matter to your stack."
+        }
+      ]
+    },
+    {
+      "id": "archive",
+      "path": "/product/article-archive",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/product/article-archive/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Archive.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "archive",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/article-archive/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/product/article-archive/index.html",
+          "owner": "field",
+          "binding": "pages.article-archive.heading (D24)",
+          "attribute": "text",
+          "expected": "Article archive"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/product/article-archive/index.html",
+          "owner": "field",
+          "binding": "pages.article-archive.sub (D24)",
+          "attribute": "text",
+          "expected": "Everything we have published, organised by month."
+        }
+      ]
+    },
+    {
+      "id": "writers",
+      "path": "/product/authors",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/product/authors/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Authors.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "writers",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/product/authors/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/product/authors/index.html",
+          "owner": "field",
+          "binding": "pages.writers.heading (D24)",
+          "attribute": "text",
+          "expected": "Our writers"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/product/authors/index.html",
+          "owner": "field",
+          "binding": "pages.writers.sub (D24)",
+          "attribute": "text",
+          "expected": "The engineers and operators behind the Kinetic blog."
+        }
+      ]
+    },
+    {
+      "id": "author",
+      "path": "/pages/author",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/index.php/product/authors/author/priya.raman/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Authors.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "author",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/index.php/product/authors/author/priya.raman/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/index.php/product/authors/author/priya.raman/index.html",
+          "owner": "derived",
+          "binding": "writers.<entry>.name",
+          "attribute": "text",
+          "expected": "Priya Raman"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/index.php/product/authors/author/priya.raman/index.html",
+          "owner": "field",
+          "binding": "writers.<entry>.tagline (D24)",
+          "attribute": "text",
+          "expected": "Staff SRE. Writes about incident response, tracing and the tail latencies nobody watches."
+        }
+      ]
+    },
+    {
+      "id": "search",
+      "path": "/pages/search",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/pages/search/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Search.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "posts", "social", "writers"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "search",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pages/search/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/pages/search/index.html",
+          "owner": "field",
+          "binding": "pages.search.heading (D24)",
+          "attribute": "text",
+          "expected": "Search Helix"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/pages/search/index.html",
+          "owner": "field",
+          "binding": "pages.search.sub (D24)",
+          "attribute": "text",
+          "expected": "Find docs, blog posts and changelog entries in one place."
+        }
+      ]
+    },
+    {
+      "id": "privacy",
+      "path": "/privacy-policy",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/privacy-policy/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Legal.astro",
+        "collections": [
+          "cta",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "pages",
+          "posts",
+          "social",
+          "writers"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "legal",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/privacy-policy/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/privacy-policy/index.html",
+          "owner": "field",
+          "binding": "pages.privacy.title",
+          "attribute": "text",
+          "expected": "Privacy Policy"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/privacy-policy/index.html",
+          "owner": "field",
+          "binding": "pages.privacy.sub (D24)",
+          "attribute": "text",
+          "expected": "How Helix collects, uses, and protects your data."
+        }
+      ]
+    },
+    {
+      "id": "terms-of-service",
+      "path": "/terms-of-service",
+      "locale": "en",
+      "status": 200,
+      "identity": "main h1",
+      "source": ["index.php/terms-of-service/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/Legal.astro",
+        "collections": [
+          "cta",
+          "footerlegal",
+          "header_cta",
+          "newsletter",
+          "pages",
+          "posts",
+          "social",
+          "writers"
+        ]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading", "h1", "lede"],
+      "layout": "legal",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/terms-of-service/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        },
+        {
+          "id": "h1",
+          "selector": "main h1",
+          "source": "index.php/terms-of-service/index.html",
+          "owner": "field",
+          "binding": "pages.terms-of-service.title",
+          "attribute": "text",
+          "expected": "Terms of Service"
+        },
+        {
+          "id": "lede",
+          "selector": "main .mast .sub",
+          "source": "index.php/terms-of-service/index.html",
+          "owner": "field",
+          "binding": "pages.terms-of-service.sub (D24)",
+          "attribute": "text",
+          "expected": "The terms governing your use of the Helix platform."
+        }
+      ]
+    },
+    {
+      "id": "not-found",
+      "path": "/404",
+      "locale": "en",
+      "status": 404,
+      "identity": "main h1",
+      "source": ["index.php/pricing/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/NotFound.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "social"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading"],
+      "images": "placeholders",
+      "layout": "notfound",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pricing/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        }
+      ]
+    },
+    {
+      "id": "unknown-route",
+      "path": "/product/blog/nope",
+      "locale": "en",
+      "status": 404,
+      "identity": "main h1",
+      "source": ["index.php/pricing/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/NotFound.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "social"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading"],
+      "images": "placeholders",
+      "layout": "notfound",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pricing/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        }
+      ]
+    },
+    {
+      "id": "account-login",
+      "path": "/pages/login",
+      "locale": "en",
+      "status": 404,
+      "identity": "main h1",
+      "source": ["index.php/pricing/index.html"],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "render": {
+        "view": "src/views/NotFound.astro",
+        "collections": ["footerlegal", "header_cta", "newsletter", "pages", "social"]
+      },
+      "states": ["default"],
+      "rules": [
+        "body-font",
+        "container",
+        "nav-link",
+        "h1-any",
+        "h2-bento",
+        "h2-split",
+        "h2-timeline",
+        "h2-ledger",
+        "h2-narrow",
+        "h2-any",
+        "eyebrow",
+        "eyebrow-12",
+        "eyebrow-12-5",
+        "sub",
+        "btn-any",
+        "btn-mono",
+        "btn-ghost",
+        "card",
+        "card-16",
+        "card-14",
+        "card-12",
+        "footer-link",
+        "surface-terminal",
+        "footer-terminal",
+        "btn-primary-terminal"
+      ],
+      "parity": ["navLink", "headerCta", "wordmark", "footer", "footerLink", "footerHeading"],
+      "images": "placeholders",
+      "layout": "notfound",
+      "content": [
+        {
+          "id": "wordmark",
+          "selector": "header .k-wordmark",
+          "source": "index.php/pricing/index.html",
+          "owner": "setting",
+          "binding": "settings.title",
+          "attribute": "text",
+          "expected": "Kinetic"
+        }
+      ]
+    }
+  ],
+  "reviews": {
+    "build": {
+      "mode": "required"
+    },
+    "security": {
+      "mode": "required"
+    },
+    "visual-review": {
+      "mode": "required"
+    },
+    "font-review": {
+      "mode": "required"
+    },
+    "viewing-contexts": {
+      "mode": "required"
+    },
+    "editability": {
+      "mode": "required"
+    },
+    "forms": {
+      "mode": "required"
+    },
+    "recovery": {
+      "mode": "required"
+    },
+    "clean-install": {
+      "mode": "required"
+    },
+    "independent": {
+      "mode": "required"
+    }
+  },
+  "capabilities": ["forms", "search", "seo", "media"],
+  "distribution": {
+    "include": [
+      "package.json",
+      "pnpm-lock.yaml",
+      "pnpm-workspace.yaml",
+      "template.config.json",
+      "astro.config.mjs",
+      "tsconfig.json",
+      "components.json",
+      "emdash-env.d.ts",
+      ".env.example",
+      "public",
+      "seed",
+      "src",
+      "tools",
+      "ingest",
+      "contract",
+      "tests",
+      "docs",
+      "README.md",
+      "AGENTS.md",
+      "PROVENANCE.md",
+      "LICENSE",
+      "Dockerfile"
+    ],
+    "required": [
+      "package.json",
+      "pnpm-lock.yaml",
+      "template.config.json",
+      "README.md",
+      "AGENTS.md",
+      "PROVENANCE.md",
+      "LICENSE",
+      "public/favicon.svg",
+      "contract/validate.mjs",
+      "ingest/normalize-joomla-model.mjs",
+      "tools/qa.mjs",
+      "tools/qa-contract.mjs",
+      "tools/distribution.mjs",
+      "tools/qa-receipt.mjs",
+      "tools/admin-session.mjs",
+      "tools/admin-roundtrip.mjs",
+      "tools/recovery-check.mjs",
+      "tools/clean-install.sh",
+      "tools/forms.json",
+      "seed/seed.json",
+      "seed/media-map.json",
+      "seed/field-map.json",
+      "seed/media/blog/alert-fatigue.jpg",
+      "seed/media/blog/alert-routing-with-helixql.jpg",
+      "seed/media/blog/automatic-incident-timeline.jpg",
+      "seed/media/blog/better-runbooks.jpg",
+      "seed/media/blog/blameless-postmortem-playbook.jpg",
+      "seed/media/blog/capacity-planning-from-telemetry.jpg",
+      "seed/media/blog/cardinality-budgets.jpg",
+      "seed/media/blog/changelog-routing.jpg",
+      "seed/media/blog/cli-dashboards.jpg",
+      "seed/media/blog/continuous-profiling-intro.jpg",
+      "seed/media/blog/correlating-logs-and-traces.jpg",
+      "seed/media/blog/cutting-p95-by-40-a-checkout-api-retro.jpg",
+      "seed/media/blog/dashboards-as-code.jpg",
+      "seed/media/blog/detecting-slow-leaks.jpg",
+      "seed/media/blog/error-budgets-without-the-politics.jpg",
+      "seed/media/blog/exemplars-metrics-to-traces.jpg",
+      "seed/media/blog/first-helixql.jpg",
+      "seed/media/blog/five-minute-mttr.jpg",
+      "seed/media/blog/from-zero-to-dashboards-in-five-minutes.jpg",
+      "seed/media/blog/golden-signals-plus-one.jpg",
+      "seed/media/blog/high-cardinality-metrics.jpg",
+      "seed/media/blog/how-helixql-plans-a-query.jpg",
+      "seed/media/blog/ingest-latency.jpg",
+      "seed/media/blog/instrumenting-a-monolith.jpg",
+      "seed/media/blog/introducing-tail-based-sampling-for-traces.jpg",
+      "seed/media/blog/observability-cost-model.jpg",
+      "seed/media/blog/on-call-handoff-checklist.jpg",
+      "seed/media/blog/on-call-rotations-that-do-not-burn-people-out.jpg",
+      "seed/media/blog/on-call-without-the-dread.jpg",
+      "seed/media/blog/opentelemetry-tradeoffs.jpg",
+      "seed/media/blog/p99-latency-trap.jpg",
+      "seed/media/blog/readable-postmortems.jpg",
+      "seed/media/blog/reducing-pager-volume.jpg",
+      "seed/media/blog/slos-without-meetings.jpg",
+      "seed/media/blog/smart-log-sampling.jpg",
+      "seed/media/blog/smarter-alert-routing-quieter-pagers.jpg",
+      "seed/media/blog/structured-logs.jpg",
+      "seed/media/blog/surviving-a-retry-storm.jpg",
+      "seed/media/blog/tail-based-sampling-without-the-storage-bill.jpg",
+      "seed/media/blog/the-anatomy-of-a-five-minute-mttr.jpg",
+      "seed/media/blog/the-slo-that-finally-stuck.jpg",
+      "seed/media/blog/trace-based-testing.jpg",
+      "seed/media/blog/tracing-across-async-boundaries.jpg",
+      "seed/media/blog/unified-telemetry.jpg",
+      "seed/media/blog/what-carrying-the-pager-taught-us-about-product.jpg",
+      "seed/media/blog/writing-your-first-helixql-query.jpg",
+      "seed/media/kinetic/bento-telemetry-chart.webp",
+      "seed/media/kinetic/hero-terminal-panel-blueprint.webp",
+      "seed/media/kinetic/hero-terminal-panel-signal.webp",
+      "seed/media/kinetic/hero-terminal-panel-terminal.webp",
+      "seed/media/kinetic/kineticql-code-panel-blueprint.webp",
+      "seed/media/kinetic/kineticql-code-panel-signal.webp",
+      "seed/media/kinetic/kineticql-code-panel-terminal.webp",
+      "seed/media/people/arjun-mehta.jpg",
+      "seed/media/people/dana-whitfield.jpg",
+      "seed/media/people/lena-park.jpg",
+      "seed/media/people/marcus-lee.jpg",
+      "seed/media/people/priya-raman.jpg",
+      "seed/media/people/sofia-alvarez.jpg",
+      "seed/media/people/tomas-rivera.jpg"
+    ]
+  },
+  "layouts": [
+    {
+      "id": "home",
+      "family": "home",
+      "view": "src/views/Sections.astro",
+      "representative": "home",
+      "pages": ["home", "home-blueprint", "home-signal"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "inner",
+      "family": "inner",
+      "view": "src/views/Sections.astro",
+      "representative": "pricing",
+      "pages": ["features", "integrations", "changelog", "faq", "pricing", "about", "team"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "landing",
+      "family": "landing",
+      "view": "src/views/Sections.astro",
+      "representative": "landing",
+      "pages": ["landing"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "contact",
+      "family": "contact",
+      "view": "src/views/Sections.astro",
+      "representative": "contact",
+      "pages": ["contact"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "list",
+      "family": "list",
+      "view": "src/views/Blog.astro",
+      "representative": "blog",
+      "pages": [
+        "blog",
+        "blog-page-2",
+        "category",
+        "tag",
+        "tag-slo",
+        "tag-metrics",
+        "engineering",
+        "author-posts"
+      ],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "detail",
+      "family": "detail",
+      "view": "src/views/Article.astro",
+      "representative": "article",
+      "pages": ["article", "helixql"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "terms",
+      "family": "terms",
+      "view": "src/views/Terms.astro",
+      "representative": "all-categories",
+      "pages": ["all-categories", "tags"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "archive",
+      "family": "archive",
+      "view": "src/views/Archive.astro",
+      "representative": "archive",
+      "pages": ["archive"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "writers",
+      "family": "author",
+      "view": "src/views/Authors.astro",
+      "representative": "writers",
+      "pages": ["writers"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "author",
+      "family": "author",
+      "view": "src/views/Authors.astro",
+      "representative": "author",
+      "pages": ["author"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "search",
+      "family": "search",
+      "view": "src/views/Search.astro",
+      "representative": "search",
+      "pages": ["search"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "legal",
+      "family": "legal",
+      "view": "src/views/Legal.astro",
+      "representative": "privacy",
+      "pages": ["privacy", "terms-of-service"],
+      "states": ["default"],
+      "hasSource": true
+    },
+    {
+      "id": "notfound",
+      "family": "notfound",
+      "view": "src/views/NotFound.astro",
+      "representative": "not-found",
+      "pages": ["not-found", "unknown-route", "account-login"],
+      "states": ["default"],
+      "hasSource": false
+    }
+  ],
+  "visual": {
+    "stages": [
+      {
+        "id": "light-desktop",
+        "variants": ["1440-light"]
+      },
+      {
+        "id": "light-responsive",
+        "variants": ["768-light", "390-light"]
+      },
+      {
+        "id": "dark-desktop",
+        "variants": ["1440-dark"]
+      },
+      {
+        "id": "dark-responsive",
+        "variants": ["768-dark", "390-dark"]
+      }
+    ],
+    "shots": [
+      {
+        "stages": ["light-desktop"],
+        "side": "site",
+        "locales": ["en"],
+        "consumers": ["layout", "typography", "color", "images", "interaction"]
+      },
+      {
+        "stages": ["light-responsive"],
+        "side": "site",
+        "locales": ["en"],
+        "consumers": ["layout", "typography", "images"]
+      },
+      {
+        "stages": ["dark-desktop"],
+        "side": "site",
+        "locales": ["en"],
+        "consumers": ["color", "layout"]
+      },
+      {
+        "stages": ["dark-responsive"],
+        "side": "site",
+        "locales": ["en"],
+        "consumers": ["layout", "color"]
+      },
+      {
+        "stages": ["light-desktop", "light-responsive"],
+        "side": "source",
+        "locales": ["en"],
+        "consumers": ["layout", "typography", "images"],
+        "ownSourceOnly": true
+      }
+    ],
+    "fastGate": {
+      "add": [
+        {
+          "page": "tag-slo",
+          "reason": "carries the megamenu state (1440 only: the menu exists at ≥ 992px)"
+        },
+        {
+          "page": "tag-metrics",
+          "reason": "carries the drawer state (768 and 390 only: the drawer exists below 992px)"
+        }
+      ]
+    },
+    "renderInputs": [
+      "src/styles/**",
+      "src/layouts/**",
+      "src/components/**",
+      "src/lib/**",
+      "astro.config.mjs",
+      "template.config.json",
+      "package.json",
+      "public/**"
+    ]
+  }
+}

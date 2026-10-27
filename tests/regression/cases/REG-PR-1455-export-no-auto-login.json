@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1455-export-no-auto-login",
+  "kind": "fix",
+  "title": "Export as ZIP leaves out what only Tracy's proxy makes safe: header sign-in (WordPress tracy-access, Joomla tracyaccess), the Claude Cowork plugin whose token Tracy holds, and on EmDash the relay digest and Tracy's agent user and keys",
+  "pr": 1455,
+  "area": "site-backup/export-zip",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/backup-export.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with one of the run.tests entries."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests'.",
+    "WordPress: wp-content/mu-plugins/tracy-access.php and wp-content/plugins/claude-cowork/ are in the backup tag's tree but not in webroot.tar; a customer's own must-use plugin and a look-alike plugin folder (claude-cowork-notes) stay; manifest.json scope.tracySignInFilesLeftOut is 1 and scope.claudeCoworkFilesLeftOut is 2; the README has 'Signing in on the new host' and 'The Claude Cowork connection' sections.",
+    "Joomla: plugins/system/tracyaccess/ and the Claude Cowork component and plugins (components/com_claudecowork/, administrator/components/com_claudecowork/, plugins/system/claudecoworkapi/, plugins/system/claudecoworkupdate/) are left out of webroot.tar while look-alike folders and the package's other plugins stay; scope.tracySignInFilesLeftOut is 3 and scope.claudeCoworkFilesLeftOut is 4 in the test; db.sql.gz is byte for byte the backup's dump; the README names the left-out folders and says the database rows remain.",
+    "EmDash: tracy-content-relay.sha256 is left out of app.tar (scope.tracyRelayFilesLeftOut 1); in db.sqlite.gz the tracy-agent@tracy.ai user is disabled, every credential it owns, selected by user id, is deleted, including its tracy-agent / tracy-content-read API tokens and a sign-in link issued to its address before the account existed (scope.tracyAgentDisabled 1, tracyCredentialsRemoved 4), while the owner's rows stay, including owner tokens named tracy-agent and tracy-content-read; no deleted token hash remains in the bytes; tracy_setting.json and SHA256SUMS hash the changed members; a database that cannot be changed is refused with TRACY_ACCESS_NOT_REMOVED."
+  ],
+  "selectors": {
+    "export": "packages/fleet/tracy-fleet-operation/scripts/lib/export-package.py (TRACY_ONLY, tracy_only, rewrite_archive, drop_tracy_only, remove_tracy_agent, sign_in_section, EMDASH_ACCESS_SECTION)"
+  },
+  "evidence": "19/10/2026, Docker, each site exported with export-package.py and installed on a plain host by the README's steps. WordPress 6 (tracy-access mu-plugin, claude-cowork 0.18.18 active) and Joomla 5.4 (pkg_claudecowork 0.24.38): before the fix a cookie-less request with X-Tracy-Email: stranger@evil.test, X-Tracy-Tier: editor, X-Tracy-Role: owner reached the dashboard and created that user as administrator / Super Users, and the old Claude Cowork token answered site.stats / site.counts with 200 ok; after the fix the header request got 302 to wp-login.php / the Joomla login form, no user was created, the token got 400 (WordPress admin-ajax) / 404 'Component not found' and 403 (Joomla front and administrator), the home page answered 200, password sign-in reached the dashboard, and no PHP errors were logged with the rows left enabled (WordPress deactivates the missing plugin when Plugins is opened). EmDash 0.37 built with the app's own Dockerfile: before the fix the old agent token listed admin users (200), read drafts and created an entry (201), and the relay token read published content (200); after the fix all of them got 401, the relay digest file was absent and forged x-tracy-* headers still got 401 as before.",
+  "fence": "Only Tracy-only paths are left out of the archives. The WordPress and Joomla dumps are not rewritten (their option and #__extensions rows stay and fail closed without files); the EmDash SQLite copy is changed only for Tracy's agent user and the two Tracy token names.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/backup-export.test.mjs"
+    ],
+    "tests": [
+      "export-package: EmDash includes app, database, uploads and its Node-host README",
+      "export-package: Joomla leaves out the tracyaccess plugin and Claude Cowork, files and folders, and counts them",
+      "export: a full WordPress point becomes one zip"
+    ]
+  }
+}

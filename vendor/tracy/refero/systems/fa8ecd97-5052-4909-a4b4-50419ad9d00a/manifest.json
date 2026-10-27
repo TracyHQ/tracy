@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+  "status": "complete",
+  "name": "Specify",
+  "url": "https://styles.refero.design/style/fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+  "sourceWebsite": "https://specifyapp.com",
+  "extractedAt": "2026-06-03T18:41:53.827Z",
+  "capturedAt": "2026-10-08T05:19:50.486575+00:00",
+  "theme": "mixed",
+  "industry": "design",
+  "description": "Black studio wall with neon violet sign",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/21afc0c9-51f6-4db0-8c81-178faa43e095.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/6bb31eb0-89bc-442d-a75b-d11f28de0a5f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/599b7472-3b28-48a0-a55d-701f5eac67c5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/e87790c7-cb6c-4368-8100-bd0de707a64e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/05051667-6582-4dac-8053-0ffd1b206abc.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "40148bf3d2c4f4bf2825e0d03b9347887b08a5ff2515a27352d07edbaf9b68cf",
+      "bytes": 23680
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6ec4f742af6c8f837cdd62640256e6feea39a3599d395e210a0a898448addba9",
+      "bytes": 73965
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "dcb9665834e1aadeb46d1f7108e346e10b6853ff9493270d96b117a6c1c877f2",
+      "bytes": 17714
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "09204c6a3ca038ab96e7e0eee12f25403f3d756eaf9b5bf3b62597df4f40a026",
+      "bytes": 16457
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "df4924bee149b58e37fe539dd6fe9f353617f8766c5424fc61e885e86dbd7fd6",
+      "bytes": 13038
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "db6e147ed215f0ca6459eec6a1c4122a36b1dbfff8b8b24c4e6d694eb31fe7f3",
+      "bytes": 5239
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "cb2c54896f8a7ad167661cc834a4bcfeb331e372c6131a64ca464bd6a84d485e",
+      "bytes": 1218
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "45964bb1d11c493b301614504d9a245e824900d39351b216ed911f0cd3643f07",
+      "bytes": 1235
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "025aff955ac80e056b2fb2a1d5eb0fc50596c7855f9d2f2f7489945384546fa1",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d3a0b773d27d6ce0ed9b84f7d7a57da38156f287af238df9ebf14ce80b424f52",
+      "bytes": 48134
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "cdfdb4102e0c2640484eafd1ce83e958da84fc75ee9c31ef1f52085f13e89e8e",
+      "bytes": 25718
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1c7b7cb91f321f198c4a933f7adaa35bc5ddb8189290c16228d1018790ddedd3",
+      "bytes": 68173
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "14717a2600f96659b7392a6b009e0ade61a7859519cbc177673ca0c24672c17d",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "3ef245b0a7bb579b813f40d4bb85d005382639334bf68a2362511bcc33f29336",
+      "bytes": 2916
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ae860955dde89d4e85359a8e7c4cb2d8b62dca1a4ee86589ffe0311b091c7402",
+      "bytes": 3513
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "0d914ef0-fa84-4c60-a9aa-cef0b5eb6e5d",
+    "2e24c0ca-dd46-4519-b66e-cc03701d3b8c",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "41547c7a-3bbe-49f0-95d6-9701c9df9a5e",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "77b723ca-9583-4349-9b5e-2ef8b4fde002",
+    "7bbbf1bc-e375-4200-8d71-e373a3c78654",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "8e9e585f-5ad4-4273-8418-e1f82cdb51cf",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "c8c22958-ec50-47f1-aedc-a131d7aeb442",
+    "d577e44e-bc63-4cbe-b759-25262d089b95",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

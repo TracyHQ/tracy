@@ -1,0 +1,15 @@
+{
+  "source": "quickstart/ja-voyara/j6@1.0.8 https://ja-voyara-joomla.tracy.site/",
+  "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (Moxie)",
+  "scheme": "light",
+  "capturedAt": "2026-10-14",
+  "note": "clean: nothing waits for a script",
+  "plain": {
+    "hidden": [],
+    "total": 0
+  },
+  "worn": {
+    "hidden": [],
+    "total": 0
+  }
+}

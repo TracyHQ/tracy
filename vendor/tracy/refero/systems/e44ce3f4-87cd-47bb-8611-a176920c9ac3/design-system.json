@@ -1,0 +1,374 @@
+{
+  "dos": [
+    "Use Paper White #ffffff as the primary canvas and Soft Canvas #f9f9f9 only for quiet grouped regions.",
+    "Set major page statements in Gt Alpina Standard at 64px, weight 300, with 69.12px line-height.",
+    "Use Abacaxilatinweb at 18px / 27px for reading copy and at 16px / 21.12px for navigation.",
+    "Use 1px Rule Gray #d9d9d9 dividers for accordion rows, lists, and quiet structural boundaries.",
+    "Use 999px radius for navigation chips and transparent outline pills; use 8px radius for pale cyan and mint filled controls.",
+    "Keep standard cards at 16px radius with 32px padding and no shadow.",
+    "Reserve #5077ff, #ff7b1b, #00b595, and #a545e0 for climate-system classification rather than general decoration."
+  ],
+  "donts": [
+    "Do not use heavy shadows; dark, white, and #f9f9f9 cards have box-shadow: none.",
+    "Do not round environmental imagery; hero visuals use 0px image radius and full-bleed raw edges.",
+    "Do not use Mint Wash #dbffe7 as every page’s default filled action; restrict it to status and implementation filters.",
+    "Do not replace 1px #d9d9d9 rules with thick separators or dark enclosing borders.",
+    "Do not set large display headings in the sans family; use the Gt Alpina Standard 300 treatment for 30px, 38px, and 64px editorial headings.",
+    "Do not add gradients to category surfaces or image overlays.",
+    "Do not compress section rhythm below the 64px section gap or reduce standard card padding below 32px."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas, hero surfaces, light cards",
+      "group": "neutral"
+    },
+    {
+      "hex": "#181b22",
+      "name": "Editorial Ink",
+      "role": "Headlines, body text, navigation, icons, dark card surfaces, and 1px control outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f9f9f9",
+      "name": "Soft Canvas",
+      "role": "Alternate section backgrounds and rounded quiet panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Washed Gray",
+      "role": "Light neutral action fill for buttons on dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d9d9",
+      "name": "Rule Gray",
+      "role": "1px dividers, list separators, and understated outlined-control borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1f232d",
+      "name": "Charcoal Surface",
+      "role": "Dark informational cards with white text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8b8d90",
+      "name": "Muted Steel",
+      "role": "Secondary text on dark cards",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dff9ff",
+      "name": "Cyan Wash",
+      "role": "Pale cyan category chips and highlighted institution controls — an icy marker within the otherwise paper-white document",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dbffe7",
+      "name": "Mint Wash",
+      "role": "Gray action color for filled buttons, selected navigation states, and focused conversion moments",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4098ff",
+      "name": "Climate Blue",
+      "role": "Text links, selection highlight, and blue environmental-image treatment",
+      "group": "brand"
+    },
+    {
+      "hex": "#00b595",
+      "name": "Land Teal",
+      "role": "Land-use system labels and coded graphic blocks",
+      "group": "accent"
+    },
+    {
+      "hex": "#5077ff",
+      "name": "Community Violet",
+      "role": "Community-emissions system labels and coded graphic blocks",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff7b1b",
+      "name": "Market Orange",
+      "role": "Emissions-trading system labels and coded graphic blocks",
+      "group": "accent"
+    },
+    {
+      "hex": "#a545e0",
+      "name": "Cross-Action Purple",
+      "role": "Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color",
+      "group": "accent"
+    },
+    {
+      "hex": "#f8e645",
+      "name": "Signal Yellow",
+      "role": "Feature-card surface for a single high-attention content grouping",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page is an expansive white editorial document with a compact top navigation bar: a black linked-ring logo at the far left, a small route switch beside it, and category pills aligned across the remaining header. The hero is text-first rather than split: a large left-aligned serif statement occupies a deep white field, followed by a full-width blue-and-white environmental image. Introductory copy returns to a narrow left reading column, while later index sections use a two-column composition with a large serif title at left and a ruled accordion list at right. Sections remain seamless on white rather than alternating dense bands; 64px and larger empty intervals create the rhythm, with pale cyan and mint chips acting as contained functional highlights.",
+  "imagery": "Imagery is sparse and atmospheric rather than product-oriented. The main visual is a full-width environmental photograph or textured aerial scene rendered in an aggressively reduced blue-and-white duotone, with grainy water or terrain detail becoming an abstract climate map; it has raw square edges and occupies the full visual width beneath the hero. Icons are monochrome Editorial Ink line marks, including thin plus signs and chevrons. The page is text-dominant: photography functions as a single thematic interruption between editorial text fields rather than a repeated card illustration system.",
+  "similar": [
+    {
+      "why": "Shares the Icelandic public-information context, restrained white document surfaces, and policy-led navigation.",
+      "business": "The Government of Iceland"
+    },
+    {
+      "why": "Shares oversized literary serif headlines set against sparse editorial whitespace and environmental imagery.",
+      "business": "The New York Times Climate"
+    },
+    {
+      "why": "Shares climate-data categorization and a text-first research-publication structure.",
+      "business": "Carbon Brief"
+    },
+    {
+      "why": "Shares direct public-service information architecture, high-contrast ink typography, and rule-based content grouping.",
+      "business": "GOV.UK"
+    },
+    {
+      "why": "Shares a restrained document canvas where saturated color is reserved for data-system classification.",
+      "business": "Our World in Data"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "pills": "999px",
+      "images": "0px",
+      "buttons": "8px",
+      "navigation": "999px",
+      "featureCards": "32px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64px",
+    "cardPadding": "32px",
+    "pageMaxWidth": null
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 0,
+      "purpose": "Page canvas, hero, and default reading surface"
+    },
+    {
+      "hex": "#f9f9f9",
+      "name": "Soft Canvas",
+      "level": 1,
+      "purpose": "Quiet large panels and alternate content regions"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Washed Gray",
+      "level": 2,
+      "purpose": "Subtle utility and inactive-control surfaces"
+    },
+    {
+      "hex": "#dff9ff",
+      "name": "Cyan Wash",
+      "level": 3,
+      "purpose": "Highlighted institution labels and cyan content markers"
+    },
+    {
+      "hex": "#1f232d",
+      "name": "Charcoal Surface",
+      "level": 4,
+      "purpose": "High-contrast data-card surface"
+    }
+  ],
+  "northStar": "climate atlas in winter light. Build pages as an airy document landscape where serif headlines, category-coded data, and icy image treatments punctuate broad white fields.",
+  "typeScale": [
+    {
+      "role": "meta-label",
+      "size": 14,
+      "family": "Abacaxilatinweb",
+      "weight": 400,
+      "lineHeight": 1.32,
+      "letterSpacing": 0
+    },
+    {
+      "role": "nav",
+      "size": 16,
+      "family": "Abacaxilatin",
+      "weight": 400,
+      "lineHeight": 1.32,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "family": "Abacaxilatinweb",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-count",
+      "size": 18,
+      "family": "Abacaxilatin",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "eyebrow-heading",
+      "size": 20,
+      "family": "Abacaxilatinweb",
+      "weight": 400,
+      "lineHeight": 1.08,
+      "letterSpacing": 0
+    },
+    {
+      "role": "system-heading",
+      "size": 26,
+      "family": "Abacaxilatinweb",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "section-heading-small",
+      "size": 30,
+      "family": "Gt Alpina Standard",
+      "weight": 300,
+      "lineHeight": 1.32,
+      "letterSpacing": 0
+    },
+    {
+      "role": "section-heading",
+      "size": 38,
+      "family": "Gt Alpina Standard",
+      "weight": 300,
+      "lineHeight": 1.32,
+      "letterSpacing": 0
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "family": "Gt Alpina Standard",
+      "weight": 300,
+      "lineHeight": 1.08,
+      "letterSpacing": 0
+    },
+    {
+      "role": "data-display",
+      "size": 80,
+      "family": "Abacaxilatinweb",
+      "weight": 400,
+      "lineHeight": 1,
+      "letterSpacing": -2.96
+    }
+  ],
+  "components": [
+    {
+      "name": "Global Pill Navigation",
+      "role": "Top-level page and category navigation",
+      "description": "Use Abacaxilatin at 16px / 21.12px, weight 400, in Editorial Ink. Each category item sits in a 999px-radius pill with rgba(186, 186, 186, 0.16) fill; the compact navigation rhythm uses 8px gaps and 10px vertical padding."
+    },
+    {
+      "name": "Text Navigation Link",
+      "role": "Secondary header route",
+      "description": "Set in Editorial Ink with the 16px Abacaxilatinweb navigation treatment. Use a quiet #f5f5f5 rounded backing only where a route needs active-state containment; keep the route pair separated by 8px."
+    },
+    {
+      "name": "Hero Editorial Heading",
+      "role": "Opening statement",
+      "description": "Use Gt Alpina Standard at 64px, weight 300, 69.12px line-height, in Editorial Ink. Place the statement in a broad white field with large open space below before the image begins."
+    },
+    {
+      "name": "Blue Environmental Hero Image",
+      "role": "Full-width visual break beneath the opening statement",
+      "description": "Use a raw-edge, square-cornered photographic or environmental texture treated almost entirely in Climate Blue #4098ff and Paper White #ffffff. Do not place it in a card, add a shadow, or round its corners."
+    },
+    {
+      "name": "Editorial Intro Block",
+      "role": "Section lead and explanatory copy",
+      "description": "Pair a 20px Abacaxilatinweb eyebrow at 21.6px line-height with 18px Abacaxilatinweb body copy at 27px line-height, both in Editorial Ink. Separate paragraphs by 32px and let the text occupy a deliberately restrained reading column."
+    },
+    {
+      "name": "System Accordion Row",
+      "role": "Expandable climate-system category",
+      "description": "Use a 1px top divider in Rule Gray #d9d9d9, a 26px Abacaxilatinweb label at 39px line-height, and an Editorial Ink plus icon aligned at the far edge. Keep each row on a white surface with 24px vertical spacing; render its superscript-like count at 18px / 27px."
+    },
+    {
+      "name": "All-Items Text Link",
+      "role": "Compact continuation link below an accordion group",
+      "description": "Set in Abacaxilatinweb at 14px, weight 500, 27.02px line-height, Editorial Ink, followed by a small right chevron. Do not use a filled container."
+    },
+    {
+      "name": "Cyan Institution Chip",
+      "role": "Responsible-ministry filter or linked label",
+      "description": "Use Cyan Wash #dff9ff with Editorial Ink text, 8px radius, and 16px 24px padding. Keep the label in the 18px / 27px Abacaxilatinweb treatment and place chips above or alongside a 1px Rule Gray divider."
+    },
+    {
+      "name": "Mint Status Button",
+      "role": "Implementation-status filter",
+      "description": "Use Mint Wash #dbffe7 with Editorial Ink text, 8px radius, and 16px 24px padding. Use this filled treatment for status groups such as progress states; do not reuse it as the universal site action."
+    },
+    {
+      "name": "Transparent Outline Pill",
+      "role": "Inline filter and low-emphasis control",
+      "description": "Use a transparent background, 1px solid Editorial Ink border, 999px radius, and horizontal 16px padding. Keep vertical padding at 0px and use compact Abacaxilatinweb text."
+    },
+    {
+      "name": "Dark Data Card",
+      "role": "High-contrast statistical or grouped content module",
+      "description": "Use Charcoal Surface #1f232d, 16px radius, no shadow, and 32px padding on every side. Set primary content in Paper White and supporting text in Muted Steel #8b8d90."
+    },
+    {
+      "name": "White Data Card",
+      "role": "Contained informational module",
+      "description": "Use Paper White, 16px radius, no shadow, 32px top/right/left padding, and 16px bottom padding. Use Editorial Ink text and Rule Gray dividers where internal rows need separation."
+    },
+    {
+      "name": "Large Quiet Panel",
+      "role": "Grouped background container",
+      "description": "Use Soft Canvas #f9f9f9 with a 32px radius and no box shadow. Keep the panel minimally framed; its distinction comes from the surface shift rather than borders or elevation."
+    },
+    {
+      "name": "System Color Marker",
+      "role": "Category identification in charts, labels, and summary blocks",
+      "description": "Assign one solid coded surface per system: Community Violet #5077ff, Market Orange #ff7b1b, Land Teal #00b595, or Cross-Action Purple #a545e0. Keep surrounding typography Editorial Ink and avoid gradients."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and sectional headings. Weight 300 at 64px makes climate-policy headlines feel literary and measured rather than institutional; reserve it for large statements and major section names.",
+      "sizes": "30px, 38px, 56px, 64px",
+      "family": "Gt Alpina Standard",
+      "weight": "300, 400",
+      "lineHeight": "1.08, 1.32",
+      "substitute": "Cormorant Garamond"
+    },
+    {
+      "role": "Primary sans for navigation, long-form body copy, labels, links, controls, numeric content, and occasional condensed display figures. Its 18px / 1.5 body setting gives dense Icelandic text room without weakening the page’s compact control language.",
+      "sizes": "14px, 16px, 18px, 20px, 22px, 26px, 36px, 40px, 44px, 80px",
+      "family": "Abacaxilatinweb",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.00, 1.08, 1.32, 1.35, 1.50, 1.69, 1.93",
+      "substitute": "Inter",
+      "letterSpacing": "-6px at 80px (-0.075em) and -2.96px at 80px (-0.037em); normal tracking at measured body, navigation, and heading steps"
+    },
+    {
+      "role": "Navigation and compact inline metadata, including 16px / 1.32 navigation labels and 18px / 1.5 counts.",
+      "sizes": "16px, 18px",
+      "family": "Abacaxilatin",
+      "weight": "400",
+      "lineHeight": "1.32, 1.50",
+      "substitute": "Inter"
+    }
+  ],
+  "description": "Co2.is frames public climate-policy information as a quiet editorial archive: expansive white space, hairline rules, and low-contrast pill navigation leave room for oversized, whisper-weight serif statements. A near-black editorial ink carries all reading and controls, while pale cyan and mint blocks mark filters and responsible bodies rather than turning the interface into a brightly branded dashboard. Saturated blue, teal, violet, orange, and yellow appear as a compact classification language for climate systems, with a high-contrast blue-and-white environmental image providing the hero’s only large visual interruption.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Paper White: #ffffff — Page canvas, hero surfaces, light cards\n- Editorial Ink: #181b22 — Headlines, body text, navigation, icons, dark card surfaces, and 1px control outlines\n- Soft Canvas: #f9f9f9 — Alternate section backgrounds and rounded quiet panels\n- Washed Gray: #f5f5f5 — Light neutral action fill for buttons on dark surfaces\n- Rule Gray: #d9d9d9 — 1px dividers, list separators, and understated outlined-control borders\n- Charcoal Surface: #1f232d — Dark informational cards with white text\n- Muted Steel: #8b8d90 — Secondary text on dark cards\n- Cyan Wash: #dff9ff — Pale cyan category chips and highlighted institution controls — an icy marker within the otherwise paper-white document\n- Mint Wash: #dbffe7 — Gray action color for filled buttons, selected navigation states, and focused conversion moments\n- Climate Blue: #4098ff — Text links, selection highlight, and blue environmental-image treatment\n- Land Teal: #00b595 — Land-use system labels and coded graphic blocks\n- Community Violet: #5077ff — Community-emissions system labels and coded graphic blocks\n- Market Orange: #ff7b1b — Emissions-trading system labels and coded graphic blocks\n- Cross-Action Purple: #a545e0 — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color\n- Signal Yellow: #f8e645 — Feature-card surface for a single high-attention content grouping\n\nCreate a white editorial hero with a left-aligned Gt Alpina Standard headline at 64px, weight 300, 69.12px line-height in Editorial Ink; leave a deep blank field beneath it before a square-cornered Climate Blue and Paper White environmental image.\nCreate a two-column index section on Paper White: a 38px, weight-300 Gt Alpina Standard title at left and four white accordion rows at right with 1px Rule Gray top rules, 26px Abacaxilatinweb labels, 18px counts, and thin Editorial Ink plus icons.\nCreate a responsible-body filter group with 8px-radius Cyan Wash chips, Editorial Ink 18px / 27px labels, 16px 24px padding, and Rule Gray dividers between the surrounding content rows.\nCreate a dark data card using Charcoal Surface, 16px radius, no shadow, and 32px padding; use Paper White for main text and Muted Steel for secondary details."
+    }
+  ],
+  "elevationPhilosophy": "Surfaces are separated by paper-white space, #f9f9f9 tonal shifts, 1px #d9d9d9 rules, and 16px or 32px corner geometry. Cards intentionally use no shadow."
+}

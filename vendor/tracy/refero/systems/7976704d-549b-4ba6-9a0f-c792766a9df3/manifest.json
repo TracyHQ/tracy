@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7976704d-549b-4ba6-9a0f-c792766a9df3",
+  "status": "complete",
+  "name": "Osmo",
+  "url": "https://styles.refero.design/style/7976704d-549b-4ba6-9a0f-c792766a9df3",
+  "sourceWebsite": "https://www.osmo.supply",
+  "extractedAt": "2026-06-03T19:59:03.587Z",
+  "capturedAt": "2026-10-08T05:13:45.796905+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "developer museum on concrete gray",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f6d826b9-bab8-43f0-85f3-4ba7821ba93b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/37ad58a2-de7d-4545-b769-f27f9c88bb27.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a85d52af-8036-41cd-9163-21ed6f88626d.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/20331730-a22b-43bd-89ff-5ad015e92a99.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e6b083b2-17a5-4e7d-b1d2-0e778c8788ba.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "57696e442b8034c7a8c71674399df71be8f8507550ba025ccd43fbae8a224053",
+      "bytes": 23513
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6e2720acba5474492a3ed18cf32460772dfe1252bb81f1920560bf589910a0a9",
+      "bytes": 107849
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8adb639a9733a4982ee0d5687cb83abe2cdbda483f19167d63b0d15583c937ec",
+      "bytes": 18811
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "cd172ee1fc2897b9570b9234c547294ff7095e283888c777da0b666e99d8dcd5",
+      "bytes": 18843
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "08351e4d1b453342e96ef05ce923e7db498f06a06813400ccb2aad8b696fcf0b",
+      "bytes": 13746
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9cf4577cc72cc8db9cdf6c1762beff16d097929a45fa4a3359805b436120a6bb",
+      "bytes": 3798
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a8d91fdcaf03a7f029b05b97fe85938d5056b78c21bd96f5b4ade6fb08b744d1",
+      "bytes": 993
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "71ded27ce6ba22f004652341a23bfbf53b20146f7793281f12a78a242897c39f",
+      "bytes": 1010
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "0c000f267789266f42beed15b72dcf88ba46d9bd599e49ab110f2359a4816fbc",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "052b251d09113681bd7120d5fc9c8e5e04553209d216b833b078ae5bfb5abc98",
+      "bytes": 48645
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "07baf7f4c5ba364e7ec3b523e197d1a5f4699b27545c494b60a2fa3e18dbbe62",
+      "bytes": 25884
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8b666ee96dfd33ce6f8a36b9ec6dba75b3735ed34520c1c224e30590b5abaa9c",
+      "bytes": 76058
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8d15055a180e60cb3ab671bd170b288b06cd82b445d73eaf9fe7d04fc991690b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7d815cea7376b4b1b1eabb871528b7a7c0832cdb37b353d913944f1bde43f681",
+      "bytes": 2443
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "8339ce5abc75a9f75264b2d1e10a604465ebfc3c57aa92bbe45824b1708f4927",
+      "bytes": 3091
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "1e675740-7935-4a49-b4c8-e5aa9fda06dd",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "7976704d-549b-4ba6-9a0f-c792766a9df3",
+    "8512e28d-5385-4c20-a336-214568c4370c",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "a26f1a4d-758c-4df0-a61e-88a7ca0931ce",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "dbc5ecba-7309-456f-93b4-4356c6b0d293",
+    "ee403055-480e-4bd4-9216-07c9ae2dde2e",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

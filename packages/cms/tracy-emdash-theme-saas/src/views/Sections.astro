@@ -1,0 +1,48 @@
+---
+/**
+ * A composed page: renders the page's ordered sections, each with the component of its collection.
+ * Unknown collections are skipped rather than guessed at — a section type without a component is a
+ * build gap, and it shows as a missing block in visual QA instead of as invented markup.
+ *
+ * Inner pages (`view: page`) use the source's article frame (DECISIONS D18): a title band, the sections
+ * inside a 760px column, then the site-wide article call to action (`cta/article-cta`, the Joomla module
+ * assigned to every article view).
+ */
+import Base from '@/layouts/Base.astro'
+import type { Chrome } from '@/lib/chrome'
+import { loadSection, type ComposedPage } from '@/lib/sections'
+import { SECTION_COMPONENTS } from '@/components/sections/registry'
+import PageHead from '@/views/partials/PageHead.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import { stampFor, stampsFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  page: ComposedPage
+}
+const { chrome, page } = Astro.props
+const framed = page.view === 'page'
+const ARTICLE_CTA = 'article-cta'
+const articleCta = framed ? await loadSection(chrome.locale, 'cta', ARTICLE_CTA) : null
+const first = page.sections[0]?.data
+const description = first?.sub ?? null
+const Cta = SECTION_COMPONENTS.cta
+// Provenance stamps (`src/lib/stamps.ts`): the page entry owns the page, each section stamps its own
+// entry and fields. Empty on an ordinary request.
+const $page = stampFor(Astro.request, 'pages', { slug: page.slug, data: { id: page.id } })
+const $ = stampsFor(Astro.request)
+---
+
+<Base chrome={chrome} title={page.path === '/' ? '' : page.title} description={description} currentPath={page.path} style={page.style}>
+	<PageOwner stamp={$page} />
+	{framed && <PageHead title={page.title} stamp={$page} />}
+	<div class:list={[{ 'k-narrow': framed }]}>
+		{
+			page.sections.map((section, index) => {
+				const Component = SECTION_COMPONENTS[section.collection]
+				return Component ? <Component data={section.data} index={index} style={page.style} narrow={framed} stamp={$(section.collection, { slug: section.entry, data: section.data })} /> : null
+			})
+		}
+	</div>
+	{articleCta && Cta && <Cta data={articleCta} index={page.sections.length} style={page.style} stamp={$('cta', { slug: ARTICLE_CTA, data: articleCta })} />}
+</Base>

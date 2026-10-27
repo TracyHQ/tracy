@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-ember-orange: #f53900;
+  --color-peach-wash: #ffe0d6;
+  --color-snow-canvas: #fffafa;
+  --color-ink-black: #040101;
+  --color-fog-gray: #827e7e;
+  --color-smoke-gray: #4d4b4b;
+  --color-ash-border: #e5e5e5;
+  --color-pebble-gray: #c0bcbc;
+
+  /* Typography */
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

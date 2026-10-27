@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-parchment: #dbdad7;
+  --color-paper: #ffffff;
+  --color-sand: #e6e4e0;
+  --color-ink: #121212;
+  --color-smoke: #616161;
+  --color-charcoal: #18181b;
+  --color-moss: #4caf50;
+
+  /* Typography */
+  --font-hedvig-letters-sans: 'Hedvig Letters Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-hedvig-letters-serif: 'Hedvig Letters Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}

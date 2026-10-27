@@ -1,0 +1,407 @@
+{
+  "dos": [
+    "Use 18–32px border-radius on all card surfaces — sharp corners break the soft-furniture feel",
+    "Use 100px+ radius for all interactive elements (links, tags, buttons) to maintain the pill vocabulary",
+    "Apply the inverse tracking curve: Neue Montreal at 8–12px needs 0.05–0.2em letter-spacing, Graphik at 31px needs -0.013em",
+    "Keep chromatic colors to single-pixel punctuation — one dot, one border, one gradient card per region",
+    "Use the Coral-to-Amber gradient on at most one card per page; the rest of the system stays cool",
+    "Place widgets and embeds in the right column with 24px padding and 18px radius — never let them touch the page edge",
+    "Pair a 4px colored dot with Neue Montreal tracked labels to build tagged-list patterns"
+  ],
+  "donts": [
+    "Don't fill buttons with chromatic colors — the system uses outlined and pill links, not filled CTAs",
+    "Don't use shadows deeper than 3px blur — elevation should whisper, not announce",
+    "Don't apply the cream (#fff9ed) or gradient surface to more than one element per view",
+    "Don't use sharp 0–4px radii on card surfaces — reserve those for icons and small UI only",
+    "Don't break the two-column rhythm: manifesto left, widgets right, never full-width text blocks",
+    "Don't use system fonts for body copy — the custom geometric sans-serifs are the voice",
+    "Don't use black (#000000) for body text — reserve it for headings and strong borders, use Graphite (#333333) for running text"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#6366f1",
+      "name": "Iris Glow",
+      "role": "Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis.",
+      "group": "brand"
+    },
+    {
+      "hex": "#1685c7",
+      "name": "Signal Blue",
+      "role": "Blue accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#e92f48",
+      "name": "Ember Red",
+      "role": "Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff4141",
+      "name": "Coral Pulse",
+      "role": "Gradient start and secondary accent — used sparingly on warm cards and the pink-orange wash",
+      "group": "accent",
+      "gradient": "linear-gradient(16deg, rgb(255, 77, 121), rgb(255, 128, 64) 85%)"
+    },
+    {
+      "hex": "#ff8040",
+      "name": "Sunset Amber",
+      "role": "Gradient end — the warm terminal of the coral-to-orange wash used on featured cards",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink",
+      "role": "Headings, strong borders, icon fills — the heaviest text weight and the sharpest structural lines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Graphite",
+      "role": "Primary body text and the workhorse border color — appears more than any other color, forming the connective tissue of the layout",
+      "group": "neutral"
+    },
+    {
+      "hex": "#707070",
+      "name": "Slate",
+      "role": "Secondary headings and muted borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6b7280",
+      "name": "Cool Gray",
+      "role": "Body and helper text where lower contrast is acceptable",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7e8389",
+      "name": "Steel",
+      "role": "Subtle text and quiet borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#949494",
+      "name": "Fog",
+      "role": "Tertiary text and disabled-leaning borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dedee0",
+      "name": "Pearl",
+      "role": "Hairline borders, icon containers, and link outlines that need to recede",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cccccf",
+      "name": "Mist",
+      "role": "Soft surface tints and the lightest structural dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Card surfaces and elevated content — sits one step above the page canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f7f9",
+      "name": "Linen",
+      "role": "Page canvas and the base of the surface stack",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2f2f2",
+      "name": "Ash",
+      "role": "Secondary surface for nested elements and subtle backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fff9ed",
+      "name": "Cream",
+      "role": "Warm accent card surface — the only place the system breaks from cool neutrals",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eff0ff",
+      "name": "Lavender Mist",
+      "role": "Active and hover wash — the soft halo behind selected links and cards",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f8c1c8",
+      "name": "Rose Glow",
+      "role": "Tinted shadow color for warm cards — a blush offset shadow that ties to the coral accent",
+      "group": "neutral"
+    }
+  ],
+  "layout": "The page uses a two-column grid at max-width 1200px, centered on the Linen (#f7f7f9) canvas. The left column (~40%) holds long-form manifesto text in a single vertical stack of declarative statements, with no card surface — text floats directly on the canvas. The right column (~60%) holds a masonry-like stack of widget cards of varying heights: Notion workspace previews, app icon rows, phone mockups, avatar cards, and one warm gradient card. Navigation is a single pill-shaped capsule centered at the top of the page with 230px radius. A 'Look around...' prompt sits in the top-right corner. The rhythm is consistent: 24px gap between widgets in the right column, breathing room around the left column text, and a max of 24px section padding. The overall density is compact but never cramped — cards have generous internal padding (24px) while the gaps between them stay tight.",
+  "imagery": "The visual language is embed-driven rather than illustrated: product screenshots from native apps (Notion, iPhone, Figma, Word), colorful third-party app icons, real photography (a coastal landscape photo appears in the widget grid), and the Twitter blue checkmark badge. All images sit inside white cards with 12px radius and soft 1–2px shadows. No custom illustration system, no abstract graphics, no 3D renders. The philosophy is: show the real tools, not representations of them. Full-bleed photography is rare; most visuals are contained within card boundaries at 4–12px radius. The color treatment of native app icons is left untouched — the violet Notion, red Figma, and blue Word marks provide the only multicolor moments in an otherwise neutral system.",
+  "similar": [
+    {
+      "why": "Same personal-workspace aesthetic: two-column layout with manifesto-style left text, widget/embed right column, generous rounded corners on cards, and near-monochrome palette with a single warm accent card",
+      "business": "Read.cv"
+    },
+    {
+      "why": "Similar compact grid of link cards with pill-shaped interactive elements, soft shadows, and the 'embed your real tools' philosophy of showing native app icons rather than custom illustrations",
+      "business": "Bento.me"
+    },
+    {
+      "why": "Same restrained typography, generous whitespace, and the discipline of using color only as functional punctuation rather than decorative fills",
+      "business": "Are.na"
+    },
+    {
+      "why": "Shares the custom geometric sans-serif typography approach and the use of subtle 1–3px shadows on elevated surfaces rather than dramatic elevation",
+      "business": "Linear"
+    },
+    {
+      "why": "The widget-embed card pattern directly mirrors Notion's embed blocks — white surface, 18px radius, soft dual-layer shadow, small tracked label header",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "18px",
+      "icons": "4px",
+      "images": "12px",
+      "inputs": "12px",
+      "buttons": "100px",
+      "navPill": "230px",
+      "widgets": "32px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "24px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#f7f7f9",
+      "name": "Linen Canvas",
+      "level": 0,
+      "purpose": "Page background — the cool paper the whole layout sits on"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper Card",
+      "level": 1,
+      "purpose": "Primary card surface for widget and embed containers"
+    },
+    {
+      "hex": "#fff9ed",
+      "name": "Cream Card",
+      "level": 2,
+      "purpose": "Warm accent surface for one featured card per page"
+    },
+    {
+      "hex": "#f2f2f2",
+      "name": "Ash Surface",
+      "level": 3,
+      "purpose": "Nested element backgrounds inside cards"
+    },
+    {
+      "hex": "#eff0ff",
+      "name": "Lavender Wash",
+      "level": 4,
+      "purpose": "Active state and hover halo"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.25) 0px 1px 2px 0px",
+      "element": "Embedded images and screenshots"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.06) 0px 1px 2px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px",
+      "element": "Widget cards"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.25) 0px 1px 3px 0px",
+      "element": "Link chips with border"
+    },
+    {
+      "style": "Box shadow tinted with #f8c1c8 for a blush offset",
+      "element": "Tinted warm card"
+    }
+  ],
+  "northStar": "Moleskine notebook in cool morning light — a personal workspace where widgets float like sticky notes on warm paper.",
+  "typeScale": [
+    {
+      "role": "label-sm",
+      "size": 10,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.75
+    },
+    {
+      "role": "label",
+      "size": 12,
+      "lineHeight": 1.25,
+      "letterSpacing": 0.6
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.38,
+      "letterSpacing": 0.1
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.25,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading",
+      "size": 31,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "display",
+      "size": 40,
+      "lineHeight": 1.67,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "White capsule with 230px border-radius floating at the top center. Contains 4 nav links in a single horizontal row. Background #ffffff, no visible border, subtle shadow rgba(0,0,0,0.06) 0px 1px 2px. Height ~48px, padding 6px vertical."
+    },
+    {
+      "name": "Nav Link with Status Dot",
+      "role": "Active navigation item indicator",
+      "description": "Graphik 14px weight 500, color #333333. When active, a 6px Ember Red (#e92f48) dot sits to the left of the label with 6px margin. The active 'Work' item in the screenshot shows this pattern — the dot is the only color in the nav."
+    },
+    {
+      "name": "Manifesto Card",
+      "role": "Long-form statement block on the left column",
+      "description": "No visible card surface — text sits directly on the Linen canvas. Maison Neue 14px line-height 1.67, color #333333. The pattern is short declarative statements, each on its own line, creating vertical rhythm. Asterisk-prefixed footnotes in 12px at the bottom."
+    },
+    {
+      "name": "Widget Embed Card",
+      "role": "Container for third-party app embeds (Notion, Twitter, etc.)",
+      "description": "White #ffffff surface, 18px border-radius, 24px padding. Contains a small label header in Neue Montreal 12px with 0.05em tracking, followed by the embed content. Soft dual-layer shadow rgba(0,0,0,0.06) 0px 1px 2px, rgba(0,0,0,0.1) 0px 1px 3px."
+    },
+    {
+      "name": "Avatar Profile Card",
+      "role": "Social identity display (Twitter handle, etc.)",
+      "description": "White surface, 18px radius, 24px padding. Contains 40px circular avatar on the left, display name in Graphik 16px weight 600, handle in Graphik 14px weight 400 color #707070. A small action link (Twitter icon or 'Read mid tweets') sits at the bottom with an arrow."
+    },
+    {
+      "name": "Gradient Feature Card",
+      "role": "Single warm-accent card that breaks the monochrome system",
+      "description": "Coral Pulse to Sunset Amber gradient (16deg, #ff4d79 → #ff8040), 18px radius, 24px padding. White text. Graphik 20px weight 600 for the title, 16px weight 400 for body. One per page maximum — the warm hit that earns the rest being cool."
+    },
+    {
+      "name": "App Icon Row",
+      "role": "Horizontal scroll of app/product icons",
+      "description": "Series of 40–48px square icons (4px radius) in a horizontal row with 8px gaps. Each icon is the native brand mark — colorful, not custom-styled. Sits inside a Widget Embed Card."
+    },
+    {
+      "name": "Phone Mockup Card",
+      "role": "iPhone screenshot embed",
+      "description": "White surface, 12px radius, contains a phone-shaped image with its own internal radius. The phone image has rgba(0,0,0,0.25) 0px 1px 2px shadow. Sits inside a Widget Embed Card with 24px padding."
+    },
+    {
+      "name": "Pill Link Chip",
+      "role": "Inline link with chromatic border",
+      "description": "100px border-radius, Signal Blue (#1685c7) or Iris Glow (#6366f1) border 1px, transparent background, Graphik 14px weight 500 in the matching color. 8px 14px padding. Shadow rgba(0,0,0,0.25) 0px 1px 3px for subtle depth."
+    },
+    {
+      "name": "Schedule Bar",
+      "role": "Availability sharing widget",
+      "description": "White card, 18px radius, contains stacked time-zone rows in Graphik 14px. The primary 'Create new reply with availability' action is a full-width pill in the Coral Pulse gradient with white text, 100px radius, 14px 20px padding."
+    },
+    {
+      "name": "Color Swatch Row",
+      "role": "Multi-color tag/label row",
+      "description": "Horizontal row of 8px-radius pill chips, each with a different pastel background (pink, yellow, green, blue, purple). Neue Montreal 12px label text, 100px radius, 6px 12px padding. Functions as category filters or status tags."
+    },
+    {
+      "name": "Tracked Label",
+      "role": "Small section header or metadata tag",
+      "description": "Neue Montreal 12px weight 500, letter-spacing 0.05em, color #707070. Often paired with a 4px colored dot prefix (violet, green, orange, red) to create a tagged-list pattern."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary body and UI text. Weight 400 for running copy, 600 for emphasis. The 40px size anchors the manifesto headlines. Substitutes: Inter, Söhne, General Sans",
+      "sizes": "12px, 14px, 40px",
+      "family": "Maison Neue",
+      "weight": "400, 600",
+      "lineHeight": "1.00, 1.43, 1.67",
+      "substitute": "Inter",
+      "letterSpacing": "0.007em consistently",
+      "fontFeatureSettings": "\"ss01\" on, \"cv11\" on"
+    },
+    {
+      "role": "Links, buttons, card titles, and section headings. The workhorse for anything interactive or navigational. Substitutes: Inter, Untitled Sans, Söhne",
+      "sizes": "14px, 16px, 20px, 31px",
+      "family": "Graphik",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.25, 1.38, 1.43, 1.50",
+      "substitute": "Inter",
+      "letterSpacing": "-0.013em at 31px, positive 0.005–0.014em at smaller sizes — headlines tighten, body loosens"
+    },
+    {
+      "role": "Micro-labels, tags, metadata, and tracked-out captions. The wide tracking at small sizes is the signature move — it makes 8–12px text feel like printed stationery, not UI chrome. Substitutes: Neue Haas Grotesk, Inter Tight, Monument Grotesk",
+      "sizes": "8px, 10px, 12px, 14px, 16px, 18px, 20px, 22px, 24px, 26px",
+      "family": "Neue Montreal",
+      "weight": "400, 500",
+      "lineHeight": "1.00, 1.11, 1.13, 1.20, 1.25, 1.45, 1.67",
+      "substitute": "Inter Tight",
+      "letterSpacing": "0.2em at 8px → 0.05em at 26px — inverse tracking curve where the smallest labels are widest"
+    },
+    {
+      "role": "System font fallback for native-feeling status bar text and a few embedded contexts. Rarely the primary face.",
+      "sizes": "8px, 11px, 16px",
+      "family": "SF Pro Display",
+      "weight": "400, 600",
+      "lineHeight": "0.75, 1.40, 1.63, 1.82",
+      "substitute": "SF Pro Display",
+      "letterSpacing": "-0.0040em, 0.0130em, 0.0180em"
+    },
+    {
+      "role": "Twitter embed text — appears only inside embedded tweet widgets, never used for first-party content",
+      "sizes": "16px, 17px, 24px",
+      "family": "Chirp",
+      "weight": "400, 700",
+      "lineHeight": "1.20, 1.35, 1.40",
+      "substitute": "Chirp"
+    },
+    {
+      "role": "Display/decorative accent — used at most three times on the page for a single moment of personality. The 38px size is the signature flourish.",
+      "sizes": "15px, 16px, 38px",
+      "family": "Bluu suuperstar",
+      "weight": "700",
+      "lineHeight": "1.00, 1.33",
+      "substitute": "Recoleta"
+    }
+  ],
+  "description": "Marco's site reads like a personal workspace laid out on cool paper: a near-white canvas, furniture-soft cards, and dense but breathable type that feels like a Moleskine spread in morning light. The layout is a disciplined two-column grid — a long-form manifesto on the left, a stack of embedded widgets, app screenshots, and avatar cards on the right — held together by generous rounded corners and whisper-light shadows. Color is rationed: 99% of the page is neutral, with violet and coral-pink appearing only as tiny functional punctuation for active links, the 'Work' status dot, and one warm gradient card. Typography is the main voice — three custom geometric sans-serifs (Maison Neue, Graphik, Neue Montreal) layered with careful tracking shifts, wide on micro-labels and tightening on larger display sizes.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #333333 (Graphite for body), #000000 (Ink for headings)\n- background: #f7f7f9 (Linen canvas), #ffffff (Paper cards)\n- border: #333333 (structural), #dedee0 (Pearl, hairline), #1685c7 (Signal Blue, link)\n- accent: #6366f1 (Iris Glow, active states)\n- status dot: #e92f48 (Ember Red)\n- primary action: #1685c7 (outlined action border)\n\n## Example Component Prompts\n\n1. **Manifesto Statement Block**: Linen canvas (#f7f7f9), no card. Maison Neue 14px weight 400, line-height 1.67, color #333333. Stack of short declarative statements, each on its own line, 8px vertical gap between lines. Optional 12px footnote in #707070 with asterisk prefix.\n\n2. **Widget Embed Card**: White surface (#ffffff), 18px border-radius, 24px padding, shadow rgba(0,0,0,0.06) 0px 1px 2px + rgba(0,0,0,0.1) 0px 1px 3px. Neue Montreal 12px label header with 0.05em tracking and a 4px Iris Glow dot prefix. Embed content sits below the label with 14px gap.\n\n3. **Pill Link Chip**: Transparent background, 100px border-radius, Signal Blue (#1685c7) or Iris Glow (#6366f1) 1px border, Graphik 14px weight 500 text in the matching color, 8px 14px padding, shadow rgba(0,0,0,0.25) 0px 1px 3px.\n\n4. **Gradient Feature Card**: Coral-to-Amber gradient (linear-gradient(16deg, #ff4d79, #ff8040 85%)), 18px border-radius, 24px padding. Graphik 20px weight 600 white title, Graphik 16px weight 400 white body. One per page maximum.\n\n5. **Tracked Label with Status Dot**: 4px circular dot in a chromatic color (Iris Glow, emerald, orange, Ember Red) followed by 6px gap, then Neue Montreal 12px weight 500 text in #707070 with 0.05em letter-spacing. Used as a inline metadata tag or section header."
+    },
+    {
+      "title": "Tracking Philosophy",
+      "content": "The type system inverts the usual tracking relationship: micro-labels (8–12px) are set with extreme positive tracking (0.05–0.2em) to feel like printed stationery, while display sizes (31px+) tighten with negative tracking (-0.013em) for optical density. This is the opposite of most modern SaaS interfaces, where large text gets looser tracking. The result is that small text feels deliberate and crafted, while large text feels controlled and architectural. Never apply the same letter-spacing value across the type scale — each role has its own tracking curve."
+    }
+  ]
+}

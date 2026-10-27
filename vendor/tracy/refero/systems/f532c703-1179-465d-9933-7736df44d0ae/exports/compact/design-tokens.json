@@ -1,0 +1,89 @@
+{
+  "color": {
+    "iris-spark": {
+      "$value": "#a381ff",
+      "$type": "color",
+      "$description": "Iris Spark — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "indigo-edge": {
+      "$value": "#776cff",
+      "$type": "color",
+      "$description": "Indigo Edge — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "mauve-veil": {
+      "$value": "#725d91",
+      "$type": "color",
+      "$description": "Mauve Veil — Headings, body text on dark, and muted link text — a desaturated violet that keeps the page tonally unified with the accent while letting content recede"
+    },
+    "lilac-ash": {
+      "$value": "#b6a9c6",
+      "$type": "color",
+      "$description": "Lilac Ash — Secondary body copy, helper text, subtle link variants on dark — the lightest purple-tinted neutral, bridging the gap between mauve headings and white labels"
+    },
+    "deep-amethyst": {
+      "$value": "#330066",
+      "$type": "color",
+      "$description": "Deep Amethyst — Dark-mode link variant, decorative deep-violet wash — used at low prominence for links on lighter surfaces within the footer band"
+    },
+    "obsidian-canvas": {
+      "$value": "#1e1e1e",
+      "$type": "color",
+      "$description": "Obsidian Canvas — Page background, section canvas, input fields, dark surface base — the dominant near-black that everything else floats on"
+    },
+    "carbon-layer": {
+      "$value": "#383838",
+      "$type": "color",
+      "$description": "Carbon Layer — Elevated card surface, image borders, list-item dividers — one step lighter than the canvas for subtle layering without shadows"
+    },
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Hero overlay, deepest contrast surface, text-shadow reservoir — pure black for cinematic hero grading and maximum text contrast"
+    },
+    "bone": {
+      "$value": "#e5e7e6",
+      "$type": "color",
+      "$description": "Bone — Primary light text on dark surfaces — the dominant body and label color, nearly white but warmed off pure to sit comfortably on near-black"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Headlines, logo, pure-contrast text, button labels on violet fills — reserved for highest-emphasis copy where absolute white reads correctly"
+    },
+    "pewter": {
+      "$value": "#bbbbbb",
+      "$type": "color",
+      "$description": "Pewter — Secondary body text, muted labels, low-emphasis copy — sits between Bone headings and darker supporting text for a clear hierarchy"
+    },
+    "graphite": {
+      "$value": "#888888",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text, disabled states, footer micro-copy — the deepest readable gray, used when content should be present but invisible"
+    }
+  },
+  "font": {
+    "archivo": {
+      "$value": "Archivo",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all interface text — geometric sans-serif with a slightly condensed, editorial feel. Weights 400 for body, 600 for subheads and nav, 700 for display headlines. Display sizes (40–72px) use tight line-heights (0.98–1.07) so multi-line headlines stack as compact editorial blocks rather than airy marketing copy."
+    },
+    "figtree": {
+      "$value": "Figtree",
+      "$type": "fontFamily",
+      "$description": "Button labels and small-caps CTAs — a slightly softer, rounder sans-serif that warms the button type. Use only for interactive labels at 14–16px where the geometric Archivo reads too clinical."
+    },
+    "clarkson": {
+      "$value": "Clarkson",
+      "$type": "fontFamily",
+      "$description": "Sparingly used serif/display accent for editorial pull-quotes or section eyebrows — brings a magazine-voice contrast to the otherwise all-sans interface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://stability.ai",
+      "siteName": "Stability AI",
+      "extractedAt": "2026-06-03T19:17:58.311Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#15171a",
+      "$type": "color",
+      "$description": "Ink Black — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on dark fills"
+    },
+    "mist-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Mist Gray — Hairline borders, subtle dividers, ghost surfaces — the dominant neutral that softens the white-on-white hierarchy"
+    },
+    "slate-veil": {
+      "$value": "#94a3b8",
+      "$type": "color",
+      "$description": "Slate Veil — Muted body text, secondary metadata, nav placeholders — desaturated blue-gray reads as informational without competing with headlines"
+    },
+    "graphite": {
+      "$value": "#64748b",
+      "$type": "color",
+      "$description": "Graphite — Body text on light backgrounds, supporting copy, link underlines"
+    },
+    "charcoal": {
+      "$value": "#334155",
+      "$type": "color",
+      "$description": "Charcoal — Emphasized body text, sub-labels, card headings on light surfaces"
+    },
+    "deep-forest": {
+      "$value": "#112220",
+      "$type": "color",
+      "$description": "Deep Forest — Headline color on white — the darkest near-black used for display copy, warmer than #15171a"
+    },
+    "carbon": {
+      "$value": "#1f2937",
+      "$type": "color",
+      "$description": "Carbon — Heavy borders on cards and dashboard panels — the border workhorse for dark UI elements"
+    },
+    "smoke": {
+      "$value": "#cbd5e1",
+      "$type": "color",
+      "$description": "Smoke — Icon strokes, secondary borders, disabled state outlines"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Maximum-contrast text on light, SVG fill for logos and icons"
+    },
+    "voltage-lime": {
+      "$value": "#d1ff19",
+      "$type": "color",
+      "$description": "Voltage Lime — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "moss": {
+      "$value": "#1a2e05",
+      "$type": "color",
+      "$description": "Moss — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "lime-highlight": {
+      "$value": "#bef264",
+      "$type": "color",
+      "$description": "Lime Highlight — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "amber-pulse": {
+      "$value": "#fec137",
+      "$type": "color",
+      "$description": "Amber Pulse — Yellow supporting accent for decorative details and low-frequency emphasis."
+    }
+  },
+  "font": {
+    "interdisplay": {
+      "$value": "InterDisplay",
+      "$type": "fontFamily",
+      "$description": "All display headlines, hero copy, section titles, link emphasis. Sizes scale aggressively from 18px subheads to 96px hero — the range itself is the brand. Weight 600 dominates at display sizes; 700 is reserved for the largest hero."
+    },
+    "intervariable": {
+      "$value": "InterVariable",
+      "$type": "fontFamily",
+      "$description": "Body copy, nav items, button labels, list text, captions, table data. Weight 400 is the default; 500 for emphasized inline text; 600 for button labels and active nav. Never used above 15px — the hierarchy jumps from 15px body to 18px subhead, leaving a clear gap between reading text and display."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ghost.org",
+      "siteName": "Ghost",
+      "extractedAt": "2026-06-03T19:27:27.517Z",
+      "variant": "compact"
+    }
+  }
+}

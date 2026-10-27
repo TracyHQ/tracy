@@ -1,0 +1,211 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Cancel a superseded PR run (it is on a stale commit); never cancel a
+# push run — it is already producing the post-merge signal. The mount job
+# boots a real DSH + Chromium, so the savings matter there most.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Tests run git log against this repository and need the full history.
+          fetch-depth: 0
+      # pnpm version is pinned via packageManager in package.json; the action
+      # reads it from there (specifying both makes action-setup fail on
+      # purpose with ERR_PNPM_BAD_PM_VERSION).
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      # The plugin's git revert/cherry-pick spawn git without setting an
+      # identity (deliberate, see tests/smoke.spec.ts) and rely on ambient
+      # config; the runner has none by default.
+      - name: Configure git identity for tests
+        run: |
+          git config --global user.name "dsh-better-sidebar-ci"
+          git config --global user.email "ci@dsh.invalid"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Lint
+        run: pnpm lint
+      - name: Test
+        run: pnpm test
+      - name: Build
+        run: pnpm build
+      # The consumer-facing declaration surface guard: a browser-only plugin
+      # (no @types/node, skipLibCheck: false) must type-check against the
+      # shipped lib/types. Runs AFTER build (it reads the built output).
+      - name: Check consumer type surface
+        run: pnpm check:consumer-types
+
+  # Windows parity lane for the pure-logic suite. The codebase carries real
+  # win32 branches (shell parsing, WSL path projection, the PowerShell
+  # installer) that mock-injection tests alone cannot validate — this lane
+  # runs the same typecheck / test / build / consumer-type-surface steps on
+  # a real Windows runtime. The plugin-mount lane (real DSH + Playwright
+  # Chromium) stays ubuntu-only and is deliberately NOT mirrored here.
+  ci-windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        # The runner ships Git Bash: multi-line steps and
+        # scripts/check-consumer-types.sh work verbatim.
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Tests run git log against this repository and need the full history.
+          fetch-depth: 0
+      # pnpm version is pinned via packageManager in package.json; the action
+      # reads it from there (specifying both makes action-setup fail on
+      # purpose with ERR_PNPM_BAD_PM_VERSION).
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      # Same rationale as the ci job: smoke tests spawn git without an
+      # identity and rely on ambient config, which the runner lacks.
+      - name: Configure git identity for tests
+        run: |
+          git config --global user.name "dsh-better-sidebar-ci"
+          git config --global user.email "ci@dsh.invalid"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Lint
+        run: pnpm lint
+      # `test:windows` runs the whole suite in ONE fork (`--maxWorkers=1`),
+      # not `pnpm test`'s unbounded pool. Two distinct Windows-only failures
+      # motivated it, both recorded in docs/plans/2026-09-10-dsh-0.1.5-rc.2-adaptation.md:
+      #
+      #   1. Six red runs were real 5000 ms vitest timeouts in specs that
+      #      really start a process (tests/agent-pty:71/:106,
+      #      tests/install-powershell:105 — a cold powershell.exe start
+      #      measured 12.1 s, tests/git.spec.ts:85 at 9.6 s). The suite now
+      #      declares its own budgets (global testTimeout 15 s, 30 s in the
+      #      two heaviest describes), and serial execution stops the
+      #      process-spawning specs starving each other on a 2-core runner.
+      #   2. Four runs died at teardown with `[vitest-pool]: Worker forks
+      #      emitted error / Worker exited unexpectedly` while reporting
+      #      N-1 of N files passed and zero FAIL lines — a worker recycling
+      #      race, not a test failure. It survived --maxWorkers=2, so the
+      #      lane now recycles nothing at all.
+      #
+      # No retries: they would hide a real regression instead of removing the
+      # race. The cost is wall-clock (the Windows step runs several minutes
+      # against a 30-minute job budget), not signal.
+      - name: Test
+        run: pnpm test:windows
+      - name: Build
+        run: pnpm build
+      - name: Check consumer type surface
+        run: pnpm check:consumer-types
+
+  # Pack the plugin as an npm tarball, mount it into a REAL DSH instance
+  # through the official `dsh plugin --profile web add` channel, and render
+  # the DSH web UI headlessly (Playwright Chromium) to prove the plugin
+  # mounts without crashing the shell. Drives `pnpm test:mount`, which boots
+  # a keyless `dsh web` against a scratch profile and sweeps every built-in
+  # sidebar tab. No API key needed — the whole lane is deterministic.
+  plugin-mount:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # CI runs must never report to the production telemetry endpoint baked
+    # into the DSH composition (same guard DSH's own CI uses).
+    env:
+      DSH_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v7
+
+      # pnpm version is pinned via packageManager in package.json; the action
+      # reads it from there (specifying both makes action-setup fail on
+      # purpose with ERR_PNPM_BAD_PM_VERSION).
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Pin the DSH CLI the lane mounts into; the profile's bundle stack
+      # (dsh-base / dsh-web-app) resolves from this installation. Keep in
+      # step with the plugin's @deepseek-ai/* peer range when bumping.
+      # Write an EXACT version, never a dist-tag: when 0.1.7-rc.1 shipped, the
+      # npm `alpha` tag still meant 0.1.7-alpha.2, rc.1 went out on `next`, and
+      # `latest` was still the 0.1.5 line — `@alpha` would mount a host this
+      # plugin no longer supports. The 0.2.0 line repeats the pattern: its
+      # first candidate is `next` while `latest` is still 0.1.7-rc.2.
+      # The lanes speak the slash-only RPC dialect
+      # (tests/e2e/host-protocol.ts).
+      #
+      # The larger heap is the fix for one of the two ways this step used to
+      # die (runs 34490912649 and 34363627184 on the alpha line): the pinned
+      # version's TRANSITIVES are declared as floating `^` ranges, so while
+      # upstream publishes a prerelease in stages (0.1.5-rc.2 went out
+      # 14:43-14:57 on 2026-09-10) npm resolved a mixed peer graph —
+      # 3062 ERESOLVE lines, then "Ineffective mark-compacts near heap limit"
+      # (exit 134). The other failure mode was a hard ETARGET on a sibling
+      # package that appeared minutes later; pinning a version that is fully
+      # published (not mid-flight) is the fix for that one.
+      #
+      # Peer resolution stays ON: `--legacy-peer-deps` was tried in the first
+      # cut of this fix and made the install broken rather than robust — it
+      # skips exactly the peers a global install has to supply, and
+      # @deepseek-ai/dsh-app-boot requires `@deepseek-ai/cordis-plugin-group`
+      # (a peer, not a dependency) at boot, so the CLI died with
+      # ERR_MODULE_NOT_FOUND before the smoke could even start. Verified
+      # locally that the plain install resolves it.
+      - name: Install dsh CLI (pinned)
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: npm install -g @deepseek-ai/dsh@0.2.0-rc.1
+
+      # lib/ is gitignored; the tarball is produced from this build.
+      - name: Build and pack the npm tarball
+        run: pnpm build && pnpm pack
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Mount + headless-render smoke
+        run: pnpm test:mount
+
+      # Aggregate double-mount regression: a fixture aggregate bundle mounts
+      # dsh-better-sidebar under its own entry id BEFORE the plugin's bundle
+      # row; the plugin must back off (no duplicate /sidebar/api, boot OK).
+      # Uses the pinned DSH CLI installed above.
+      - name: Aggregate double-mount regression
+        env:
+          DSH_CMD: dsh
+        run: pnpm test:mount:aggregate
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore

@@ -1,0 +1,24 @@
+meta {
+  name: one content
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}/contents/{{contentId}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  const body = res.body || {};
+  if (Array.isArray(body.contents) && body.contents[0] && body.contents[0].revision)
+    bru.setVar("contentRevision", body.contents[0].revision);
+}
+
+docs {
+  # One content in full
+
+  Reads the content "pages" saved as `contentId`: fields, blocks, `native` records, and its
+  `revision` in `contents[0].revision` — the value `If-Match` on `contract/apply` checks.
+}

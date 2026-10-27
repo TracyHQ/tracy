@@ -1,0 +1,124 @@
+{
+  "color": {
+    "void-canvas": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Canvas — Page background, hero backdrop, product mockup canvas"
+    },
+    "obsidian-surface": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Obsidian Surface — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "carbon-layer": {
+      "$value": "#141716",
+      "$type": "color",
+      "$description": "Carbon Layer — Secondary surface level, nested panels, code editor background"
+    },
+    "graphite-panel": {
+      "$value": "#21222b",
+      "$type": "color",
+      "$description": "Graphite Panel — Product UI inner panels, inbox sidebar, tabbed editor frames"
+    },
+    "ash-border": {
+      "$value": "#272626",
+      "$type": "color",
+      "$description": "Ash Border — Hairline 1px borders on cards, inputs, dividers — the only visible separation in a no-shadow system"
+    },
+    "steel-text": {
+      "$value": "#918d8d",
+      "$type": "color",
+      "$description": "Steel Text — Muted body text, secondary labels, nav items, partner logo washes"
+    },
+    "fog-text": {
+      "$value": "#a3a3a3",
+      "$type": "color",
+      "$description": "Fog Text — Helper text, icon strokes, tertiary metadata"
+    },
+    "smoke-divider": {
+      "$value": "#424242",
+      "$type": "color",
+      "$description": "Smoke Divider — Deeper dividers, inactive tab underlines, icon outlines at rest"
+    },
+    "bone-text": {
+      "$value": "#edecee",
+      "$type": "color",
+      "$description": "Bone Text — Primary body text at 400 weight, the high-contrast default on void canvas"
+    },
+    "pure-light": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure Light — Headlines at full weight, button text on dark fills, emphasis runs"
+    },
+    "plasma-violet": {
+      "$value": "#9f8dfc",
+      "$type": "color",
+      "$description": "Plasma Violet — Primary brand accent — underlines, brand glow, active states, the signature chromatic note"
+    },
+    "ultraviolet": {
+      "$value": "#bf7af0",
+      "$type": "color",
+      "$description": "Ultraviolet — Secondary brand violet, code syntax keywords, badge fills, gradient partner with Plasma Violet"
+    },
+    "wisteria": {
+      "$value": "#a667ff",
+      "$type": "color",
+      "$description": "Wisteria — Deeper violet for hover states, brand gradients, emphasis borders"
+    },
+    "ember-pink": {
+      "$value": "#f76e99",
+      "$type": "color",
+      "$description": "Ember Pink — Red supporting accent for decorative details and low-frequency emphasis; The signature magenta smoke texture erupting behind the hero product mockup — radial wash from #f76e99 through pinks to deep crimson"
+    },
+    "circuit-teal": {
+      "$value": "#00c1d6",
+      "$type": "color",
+      "$description": "Circuit Teal — Code syntax strings, live cursors in multiplayer UI, data-viz highlights"
+    },
+    "mint-pulse": {
+      "$value": "#6cefce",
+      "$type": "color",
+      "$description": "Mint Pulse — Teal supporting accent for decorative details and low-frequency emphasis"
+    },
+    "mint-whisper": {
+      "$value": "#70e1c8",
+      "$type": "color",
+      "$description": "Mint Whisper — Softer teal for secondary presence states, comment thread highlights"
+    },
+    "electric-blue": {
+      "$value": "#0090ff",
+      "$type": "color",
+      "$description": "Electric Blue — Code syntax types, link accents, comment thread timestamp markers"
+    },
+    "sky-pulse": {
+      "$value": "#34a7ff",
+      "$type": "color",
+      "$description": "Sky Pulse — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "cloud-mist": {
+      "$value": "#ebf6ff",
+      "$type": "color",
+      "$description": "Cloud Mist — Near-white blue tint used in shadow glows behind key elements"
+    }
+  },
+  "font": {
+    "suisse-intl": {
+      "$value": "Suisse Int'l",
+      "$type": "fontFamily",
+      "$description": "The sole interface typeface. All UI text, headings, nav, buttons, labels. 64px headlines use -0.02em tracking to tighten the Swiss grotesque rhythm; micro-text (10-12px) uses positive 0.01-0.025em tracking for legibility. The 1.0 line-height on display sizes is a signature choice — text feels compressed against the void."
+    },
+    "jetbrains-mono": {
+      "$value": "JetBrains Mono",
+      "$type": "fontFamily",
+      "$description": "Code blocks only. 14px body, 10px annotations. 0.025em positive tracking gives monospace text air without feeling scattered."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://liveblocks.io",
+      "siteName": "Liveblocks",
+      "extractedAt": "2026-06-03T18:39:31.908Z",
+      "variant": "compact"
+    }
+  }
+}

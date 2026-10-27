@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0ecfea58-c1f3-4671-806d-5ae0eb779f38",
+  "status": "complete",
+  "name": "VISIONNAIRE",
+  "url": "https://styles.refero.design/style/0ecfea58-c1f3-4671-806d-5ae0eb779f38",
+  "sourceWebsite": "https://vision-naire.com",
+  "extractedAt": "2026-06-03T21:42:12.556Z",
+  "capturedAt": "2026-10-08T05:08:14.647589+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Editorial streetwear gallery on bone-white. The brand behaves like a printed lookbook: flat white canvas, sharp black ink, and a single warm cream panel used as a colour-block stage for product or wordmark.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d1a2cc4a-a3c0-43b0-aae4-b3d069d168d7.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a9eacc8d358242bad189597432da35f90a3a1d9a77c7ff148158646a6b8a5919",
+      "bytes": 18322
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "894c91b872191c10aab49ae187d98467170c06ac9ed8c5ae50cda69dc7c45c10",
+      "bytes": 159414
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e656abb57bf6172afebd1473d47ebd28a8354e617aa725b4319bfc442c813697",
+      "bytes": 15621
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "669212f1d0ef634ee007b6b6ca679df6279fc750c13a37a33f9fe1f7910e8520",
+      "bytes": 11504
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "bd932312e9ebcd3bc908a0052b9da7f6887fbe6a97e3ff19390455e8088e5d86",
+      "bytes": 12120
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "374f964e9312d1b97842d52f8fe95aaf5cd5050d69420a10e1ffc32ae4bc84ce",
+      "bytes": 1951
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d78e2c9bc39c6879ec04ae69ad9f3d5dc499d1354c74c6ba977a4f9a87c18717",
+      "bytes": 366
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f191a64fc067d1c6d368b73c3bad3a3f2c4ebb54696cb6a687b44d31455a41d9",
+      "bytes": 383
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "01a42f6bf42aea9b89516fa5a772c200c1f9f0385e0860f29af9997f7cac70ef",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b9f0910e4217151c2a601e117b473634991c4a4772751e60ba946d4030bf9f9b",
+      "bytes": 40301
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8ca9a431efe906b7327bc698e70ca902d37befc659c7cd99600329f51a953cc2",
+      "bytes": 20764
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ba568f70dbc960f145751846ab4172cf96fa2895ed6a98411d59157228619845",
+      "bytes": 39115
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e1b16fde5bbdbb6a93b8d92a3305da43fa191cbfe2f90f52b6c2a6343e46d66c",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b8517357d5aba2f217eedd71fc4846a48b85d7f18ba4143ad9302d8734578414",
+      "bytes": 1359
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "81ef6484d7246e6d8f582e64e4d34d40fd889f23692c6e0272a51e75386f5ad5",
+      "bytes": 1857
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ecfea58-c1f3-4671-806d-5ae0eb779f38",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "234e9a17-236d-4446-9d58-f83f6806d012",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2fd71e12-12fc-4346-8281-52afe12bb951",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "643f90ba-dc30-428b-a145-26f02fe70551",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "759c0588-ea22-44c1-a1cf-42cb81eb6cb0",
+    "76bfda6b-125f-4d9b-96c0-356de1e9fc10",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f401f04f-c45b-4261-9441-f502c6569a29"
+  ]
+}

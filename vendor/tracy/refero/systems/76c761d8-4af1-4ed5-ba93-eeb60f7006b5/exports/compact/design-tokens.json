@@ -1,0 +1,74 @@
+{
+  "color": {
+    "cocoa-ink": {
+      "$value": "#200e0e",
+      "$type": "color",
+      "$description": "Cocoa Ink — Primary text, filled action buttons, card text, icon strokes, card borders — warm near-black replaces pure black throughout, giving every label a roasted, tactile quality"
+    },
+    "signal-red": {
+      "$value": "#ed212d",
+      "$type": "color",
+      "$description": "Signal Red — Red decorative accent for icons, marks, and small graphic details."
+    },
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, nav text, button labels on dark surfaces — the neutral base all warm tones sit on"
+    },
+    "blush-cream": {
+      "$value": "#f8f0ec",
+      "$type": "color",
+      "$description": "Blush Cream — Card surfaces, soft elevated sections, product detail backgrounds — the warm secondary layer beneath the white canvas"
+    },
+    "rose-stone": {
+      "$value": "#f3e7e2",
+      "$type": "color",
+      "$description": "Rose Stone — Badge backgrounds, subtle card elevation, border tints on light cards — a step warmer than Blush Cream for tag/label contexts"
+    },
+    "apricot-wash": {
+      "$value": "#fde3d6",
+      "$type": "color",
+      "$description": "Apricot Wash — Decorative illustration panels, soft highlight washes on icons and product imagery backgrounds"
+    },
+    "warm-gray": {
+      "$value": "#d2cfcf",
+      "$type": "color",
+      "$description": "Warm Gray — Hairline borders, dividers, input field outlines on neutral surfaces"
+    },
+    "deep-espresso": {
+      "$value": "#202020",
+      "$type": "color",
+      "$description": "Deep Espresso — Secondary card backgrounds for dark product variants — used sparingly as a near-black with slight warmth"
+    },
+    "sage-mist": {
+      "$value": "#9ac9b5",
+      "$type": "color",
+      "$description": "Sage Mist — Product color swatch — specific earplug variant color, not a system-wide token"
+    },
+    "dusty-rose": {
+      "$value": "#dbb0b3",
+      "$type": "color",
+      "$description": "Dusty Rose — Product color swatch — specific earplug variant color, not a system-wide token"
+    }
+  },
+  "font": {
+    "antarctica": {
+      "$value": "Antarctica",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all UI: navigation, buttons, product cards, body, and display headlines. Custom geometric sans with slight warmth in the terminals. Medium-weight (545) is the workhorse for body and UI; 600 carries CTAs and product names; 400 appears in secondary metadata. Headlines compress with -0.02em tracking to feel editorial rather than airy."
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "GTStandard-M — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.alpinehearingprotection.com",
+      "siteName": "Alpine Hearing Protection",
+      "extractedAt": "2026-06-03T21:52:56.971Z",
+      "variant": "compact"
+    }
+  }
+}

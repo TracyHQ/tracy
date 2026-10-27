@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-893-teardown-dir-that-will-not-go-keeps-network-steps",
+  "kind": "fix",
+  "title": "A private directory teardown cannot remove no longer stops it before the site's SMTP rule, network and job records",
+  "pr": 893,
+  "area": "fleet/teardown",
+  "cms": ["any"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"a private directory that will not go at first is tried once more after a short wait, and the teardown finishes\"; \"a private directory that never goes: the steps after it still run, and the teardown fails naming it\"; \"the site's own network goes with it, and only that one; a network still in use is a teardown that did not finish\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 23).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): a directory that will not go at first is tried once more after a short wait and the teardown finishes; one that never goes is reported with rm's reason, steps 4 (subnet SMTP rule), 4b (network) and 5 still run, and the run exits 1 naming what is left instead of torn_down=1; the site's own network still goes and only that one."
+  ],
+  "selectors": {
+    "script": "remove_path and steps 3-5 of packages/fleet/tracy-fleet-operation/scripts/provision/teardown.sh",
+    "verdict": "'!! teardown of <label> did not finish' line instead of TRACY_RESULT torn_down=1"
+  },
+  "evidence": "05/10/2026, twice: deleting a site whose install had failed stopped at teardown step 3 (bare rm -rf under set -e: 'Directory not empty' on webroot-baseline.git), so its SMTP rule, its <label>_default network and /24 and its private directory all stayed on the host (ledger L14b, reproduced 1/1). Red 6c8278be0 (exit 1 at step 3, no iptables call, network left), fix 57f76e126.",
+  "fence": "Step 1c still proves the volumes gone before any directory is removed; a path that stays makes the teardown fail loudly after the later steps ran, so running it again finishes the job.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs"
+    ],
+    "tests": [
+      "a private directory that will not go at first is tried once more after a short wait, and the teardown finishes",
+      "a private directory that never goes: the steps after it still run, and the teardown fails naming it",
+      "the site's own network goes with it, and only that one; a network still in use is a teardown that did not finish"
+    ]
+  }
+}

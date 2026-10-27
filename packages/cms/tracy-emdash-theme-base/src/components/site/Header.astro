@@ -1,0 +1,206 @@
+---
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { islandMarks, stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import Logo from '@/components/site/Logo.astro'
+import { ui } from '@/lib/ui'
+import MegaMenu from '@/components/islands/MegaMenu'
+import MobileNav from '@/components/islands/MobileNav'
+
+interface Props {
+  chrome: Chrome
+  currentPath: string
+}
+const { chrome, currentPath } = Astro.props
+const { site, locale } = chrome
+// The template's own words and dates, in the site's language (`src/lib/ui.ts`).
+const { tag, w } = ui(locale)
+// Provenance stamps of the site chrome's fields (`src/lib/stamps.ts`); empty on an ordinary request.
+// The islands get theirs through `islandMarks`, which adds no prop at all on an ordinary request.
+const s = stampFor(Astro.request, 'site', site)
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const contactUrl = site.contact_url || href(locale, '/contact')
+const live = await liveLinks(Astro.request, locale, [contactUrl])
+// A field read with a fallback (`?? ''`) is stamped only when it is set: the fallback is not the field.
+const sIf = (key: string) => (site[key] ? s(key) : {})
+const isActive = (url: string) =>
+  url === '/' ? currentPath === '/' : currentPath === url || currentPath.startsWith(`${url}/`)
+const sectionOf: Record<string, string[]> = {
+  '/services': ['/services'],
+  '/blog': [
+    '/blog',
+    '/design-system',
+    '/help',
+    '/contact',
+    '/search',
+    '/marketing',
+    '/landing',
+    '/home-2',
+    '/onepage'
+  ],
+  '/about': ['/about', '/team', '/careers']
+}
+const activeTop = (url: string) => (sectionOf[url] ?? [url]).some(isActive)
+const feature = (k: 'service' | 'resources') => {
+  const src = mediaUrl(site[`mega_${k}_image`])
+  return {
+    eyebrow: site[`mega_${k}_eyebrow`] ?? '',
+    title: site[`mega_${k}_heading`] ?? '',
+    text: site[`mega_${k}_text`] ?? '',
+    action: site[`mega_${k}_action`] ?? '',
+    url: site[`mega_${k}_url`] || '#',
+    src,
+    alt: site[`mega_${k}_image_alt`] ?? '',
+    ...islandMarks({
+      eyebrow: sIf(`mega_${k}_eyebrow`),
+      title: sIf(`mega_${k}_heading`),
+      text: sIf(`mega_${k}_text`),
+      action: sIf(`mega_${k}_action`),
+      image: src ? s(`mega_${k}_image`) : {}
+    })
+  }
+}
+// Menus are not Content API records: their links carry no stamp, only the column title does.
+const links = (l: { label: string; url: string }[]) => l.map((i) => ({ label: i.label, url: i.url }))
+const column = (key: string, l: { label: string; url: string }[]) => ({
+  title: site[key],
+  links: links(l),
+  ...islandMarks({ title: sIf(key) })
+})
+const panels = {
+  service: {
+    kind: 'service' as const,
+    columns: [column('mega_service_title', chrome.service)],
+    feature: feature('service')
+  },
+  resources: {
+    kind: 'resources' as const,
+    columns: [
+      column('mega_read_title', chrome.resourcesRead),
+      column('mega_design_title', chrome.resourcesDesign),
+      column('mega_help_title', chrome.resourcesHelp)
+    ],
+    feature: feature('resources'),
+    latestTitle: site.mega_latest_title,
+    latest: chrome.recentPosts.map((p) => {
+      const $p = stampFor(Astro.request, 'posts', p.entry)
+      return {
+        title: p.title,
+        date: formatDate(p.date, tag),
+        url: p.url,
+        ...islandMarks({ item: $p(), title: $p('title') })
+      }
+    }),
+    searchLabel: site.mega_search_label,
+    searchUrl: href(locale, '/search'),
+    ...islandMarks({ latestTitle: sIf('mega_latest_title'), searchLabel: sIf('mega_search_label') })
+  },
+  company: {
+    kind: 'company' as const,
+    columns: [column('mega_company_title', chrome.company)],
+    teamTitle: site.mega_team_heading,
+    team: chrome.team.map((t) => {
+      const $t = stampFor(Astro.request, 'people', t.entry)
+      const src = mediaUrl(t.image)
+      return {
+        name: t.name,
+        role: t.role,
+        url: t.url,
+        src,
+        ...islandMarks({ item: $t(), name: $t('name'), role: $t('role'), image: src ? $t('image') : {} })
+      }
+    }),
+    teamAllLabel: site.mega_team_all_label,
+    teamAllUrl: href(locale, '/team'),
+    ...islandMarks({ teamTitle: sIf('mega_team_heading'), teamAllLabel: sIf('mega_team_all_label') })
+  }
+}
+// The source's primary menu: Home · Product · Service ▾ · Pricing · Resources ▾ · Company ▾.
+const primary = chrome.primary.map((i) => {
+  const mega =
+    i.url === '/services'
+      ? panels.service
+      : i.url === '/blog'
+        ? panels.resources
+        : i.url === '/about'
+          ? panels.company
+          : null
+  return { ...i, mega, active: activeTop(i.url) }
+})
+// The drawer lists the mega columns flat, with no parent item for Apply to drop: a link into an unticked page or its
+// child goes here too, and a group left empty goes with it (TCH #1013).
+const groupLinks = [
+  chrome.service,
+  chrome.resourcesRead,
+  chrome.resourcesDesign,
+  chrome.resourcesHelp,
+  chrome.company
+]
+const liveGroup = await liveLinks(
+  Astro.request,
+  locale,
+  groupLinks.flat().map((l) => l.url)
+)
+const mobileGroups = [
+  column('mega_service_title', chrome.service),
+  column('mega_read_title', chrome.resourcesRead),
+  column('mega_design_title', chrome.resourcesDesign),
+  column('mega_help_title', chrome.resourcesHelp),
+  column('mega_company_title', chrome.company)
+]
+  .map((g) => ({ ...g, links: g.links.filter((l) => liveGroup(l.url)) }))
+  .filter((g) => g.links.length > 0)
+const mobileMarks = islandMarks({ label: sIf('menu_label'), contactLabel: sIf('contact_label') })
+---
+
+<header class="sticky top-0 z-40 border-b border-line-soft bg-bg/80 backdrop-blur-xl backdrop-saturate-150">
+	<div class="wrap flex h-20 items-center justify-between gap-4">
+		<a href={href(locale, "/")} class="min-w-0 flex-1 text-fg hover:text-fg" aria-label={site.brand_name}>
+			<Logo name={site.brand_name} stamp={s("brand_name")} logoDark={site.logo_dark} />
+			<span class="sr-only" {...s("brand_tagline")}>{site.brand_tagline}</span>
+		</a>
+		<nav class="hidden items-center lg:flex" aria-label={w.primary}>
+			{primary.map((i) => i.mega ? <MegaMenu client:load label={i.label} url={i.url} active={i.active} panel={i.mega} /> : <a href={i.url} class="nav-link" aria-current={i.active ? "page" : undefined}>{i.label}</a>)}
+		</nav>
+		<div class="flex shrink-0 items-center gap-3">
+			{live(contactUrl) && <a href={contactUrl} class="btn btn-primary hidden sm:inline-flex" {...s("contact_label")}>{site.contact_label}</a>}
+			<button type="button" class="theme-toggle flex h-11 w-11 items-center justify-center rounded-full text-fg hover:bg-surface" data-tracy-theme-toggle aria-label={`${site.theme_dark_label} / ${site.theme_light_label}`} aria-pressed="false" title={site.theme_dark_label}>
+				<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" /></svg>
+			</button>
+			<MobileNav client:load label={site.menu_label} closeLabel={w.close} primary={primary.map((i) => ({ label: i.label, url: i.mega ? undefined : i.url }))} groups={mobileGroups} contactLabel={site.contact_label} contactUrl={live(contactUrl) ? contactUrl : ""} {...mobileMarks} />
+		</div>
+	</div>
+</header>
+<style>
+  /* The source header keeps its accent fill on hover in both themes. */
+  header .btn-primary:hover {
+    background: var(--color-accent);
+  }
+</style>
+<script>
+	// The toggle flips the attribute and remembers the choice; the head script restores it.
+	// Only a click stores a choice. While a design system is worn the key is that system's own
+	// ("tracy-base-theme@<id>", the id the slot's <style data-ds> names, read the same way by Base.astro's
+	// pre-paint script), so a choice made under a system leaves with it (UNDO-1).
+	const ds = document.getElementById('tracy-ds-slot')?.getAttribute('data-ds')
+	const KEY = ds && document.documentElement.hasAttribute('data-ds-worn') ? `tracy-base-theme@${ds}` : 'tracy-base-theme'
+	const root = document.documentElement
+	const sync = () => {
+		const dark = root.getAttribute('data-theme') === 'dark'
+		document.querySelectorAll('[data-tracy-theme-toggle]').forEach((b) => b.setAttribute('aria-pressed', dark ? 'true' : 'false'))
+	}
+	document.querySelectorAll('[data-tracy-theme-toggle]').forEach((b) =>
+		b.addEventListener('click', () => {
+			const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+			if (next === 'dark') root.setAttribute('data-theme', 'dark')
+			else root.removeAttribute('data-theme')
+			try {
+				localStorage.setItem(KEY, next)
+			} catch {}
+			sync()
+		})
+	)
+	sync()
+</script>

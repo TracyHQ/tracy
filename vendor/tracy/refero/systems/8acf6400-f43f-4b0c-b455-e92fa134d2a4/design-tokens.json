@@ -1,0 +1,579 @@
+{
+  "color": {
+    "baba-red": {
+      "$value": "#bc2823",
+      "$type": "color",
+      "$description": "Baba Red — Large campaign bands, footer surfaces, branded links, icons, and red-on-white labels — the deep warm red establishes the site’s continuous care-setting atmosphere; Layer behind large red campaign panels and animated care-plan scenes"
+    },
+    "signal-red": {
+      "$value": "#ea1111",
+      "$type": "color",
+      "$description": "Signal Red — Filled conversion controls on light navigation and cream surfaces — the brighter red reads as a precise interruption within the warmer red system"
+    },
+    "red-light": {
+      "$value": "#cc5c56",
+      "$type": "color",
+      "$description": "Red Light — Lighter red panel illumination and gradient endpoint within red feature sections"
+    },
+    "cream-paper": {
+      "$value": "#faf9f1",
+      "$type": "color",
+      "$description": "Cream Paper — Page backgrounds, pale outlined controls, and light-on-dark typography"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Cards, light navigation controls, image badges, and high-contrast text on red surfaces"
+    },
+    "ink": {
+      "$value": "#2a1d18",
+      "$type": "color",
+      "$description": "Ink — Primary dark headings, body copy, dark controls, and dark feature-card surfaces"
+    },
+    "soft-ink": {
+      "$value": "#3e312c",
+      "$type": "color",
+      "$description": "Soft Ink — Long-form body copy and secondary explanatory text"
+    },
+    "warm-gray": {
+      "$value": "#645953",
+      "$type": "color",
+      "$description": "Warm Gray — Muted supporting copy and low-emphasis labels"
+    },
+    "paper-divider": {
+      "$value": "#ede7e2",
+      "$type": "color",
+      "$description": "Paper Divider — Hairline accordion rules, quiet control borders, and light-surface separation"
+    },
+    "blush": {
+      "$value": "#f8e2db",
+      "$type": "color",
+      "$description": "Blush — Soft feature-card surfaces and calm transitional blocks between cream content sections"
+    }
+  },
+  "font": {
+    "shne": {
+      "$value": "Söhne",
+      "$type": "fontFamily",
+      "$description": "Display headings, section titles, large statistics, care-plan labels, and image-overlay badges. The 600 display treatment uses -2.04px tracking at 68px, -1.68px at 56px, and -0.72px at 36px; this compression gives the oversized language its compact, direct silhouette."
+    },
+    "atkinson-hyperlegible-next": {
+      "$value": "Atkinson Hyperlegible Next",
+      "$type": "fontFamily",
+      "$description": "Navigation, controls, FAQ copy, labels, body text, and small step indicators. Its accessible letterforms remain deliberately plain beside Söhne’s compressed headings; use 500 for buttons and compact labels, 600 for numbered steps."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "10px",
+        "fontWeight": 600,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 10px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "Söhne",
+        "fontSize": "11px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 11px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "Söhne",
+        "fontSize": "11px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 11px"
+    },
+    "xs-4": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "12px",
+        "fontWeight": 600,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-4 at 12px"
+    },
+    "xs-5": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.38,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-5 at 12px"
+    },
+    "xs-6": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-6 at 12px"
+    },
+    "xs-7": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.63,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-7 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Söhne",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Söhne",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 13px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "13px",
+        "fontWeight": 500,
+        "lineHeight": 1.25,
+        "letterSpacing": "0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 13px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.38,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "15px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.63,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 15px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.15,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "base-5": {
+      "$value": {
+        "fontFamily": "Söhne",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-5 at 16px"
+    },
+    "base-6": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.63,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-6 at 16px"
+    },
+    "base-7": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-7 at 16px"
+    },
+    "base-8": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-8 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "17px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 17px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.35,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Atkinson Hyperlegible Next",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Söhne",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.015em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "Söhne",
+        "fontSize": "36px",
+        "fontWeight": 600,
+        "lineHeight": 1.15,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 36px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Söhne",
+        "fontSize": "54px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 54px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Söhne",
+        "fontSize": "56px",
+        "fontWeight": 600,
+        "lineHeight": 1.05,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 56px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "Söhne",
+        "fontSize": "68px",
+        "fontWeight": 600,
+        "lineHeight": 1,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 68px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "36": {
+      "$value": "36px",
+      "$type": "dimension",
+      "$description": "Spacing 36px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "56": {
+      "$value": "56px",
+      "$type": "dimension",
+      "$description": "Spacing 56px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "72": {
+      "$value": "72px",
+      "$type": "dimension",
+      "$description": "Spacing 72px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "88": {
+      "$value": "88px",
+      "$type": "dimension",
+      "$description": "Spacing 88px"
+    },
+    "128": {
+      "$value": "128px",
+      "$type": "dimension",
+      "$description": "Spacing 128px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "md": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    },
+    "xl": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "3xl": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "3xl-2": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-2"
+    },
+    "full": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    }
+  },
+  "shadow": {
+    "subtle": {
+      "$value": "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    },
+    "xl": {
+      "$value": "rgba(42, 29, 24, 0.16) 0px 12px 30px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl"
+    },
+    "xl-2": {
+      "$value": "rgba(0, 0, 0, 0.28) 0px 22px 70px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl-2"
+    },
+    "xl-3": {
+      "$value": "rgba(61, 0, 23, 0.45) 0px 32px 64px -16px",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl-3"
+    },
+    "xl-4": {
+      "$value": "rgba(61, 0, 23, 0.45) 0px 18px 40px -18px",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl-4"
+    }
+  },
+  "surface": {
+    "cream-paper": {
+      "$value": "#faf9f1",
+      "$type": "color",
+      "$description": "Surface level 0: Default page canvas and FAQ background."
+    },
+    "white-card": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 1: Content cards, light controls, and contained media support."
+    },
+    "blush-panel": {
+      "$value": "#f8e2db",
+      "$type": "color",
+      "$description": "Surface level 2: Large editorial statement panels and soft feature surfaces."
+    },
+    "baba-red-field": {
+      "$value": "#bc2823",
+      "$type": "color",
+      "$description": "Surface level 3: Hero, process sections, and footer."
+    },
+    "ink-surface": {
+      "$value": "#2a1d18",
+      "$type": "color",
+      "$description": "Surface level 4: Dark utility controls and occasional high-contrast surfaces."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.callbaba.com",
+      "siteName": "Baba",
+      "extractedAt": "2026-09-20T19:26:49.571Z",
+      "variant": "extended"
+    }
+  }
+}

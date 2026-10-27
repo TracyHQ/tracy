@@ -1,0 +1,44 @@
+{
+  "color": {
+    "vellum": {
+      "$value": "#e8e7e3",
+      "$type": "color",
+      "$description": "Vellum — Page background, table row base, card surfaces — warm off-white reads as paper, not screen"
+    },
+    "parchment": {
+      "$value": "#dddbd5",
+      "$type": "color",
+      "$description": "Parchment — Alternating table rows, subtle surface lift one step above the canvas"
+    },
+    "india-ink": {
+      "$value": "#050200",
+      "$type": "color",
+      "$description": "India Ink — Body text, hairline borders, wireframe strokes, icon strokes — the only high-contrast tone in the system"
+    },
+    "graphite": {
+      "$value": "#747472",
+      "$type": "color",
+      "$description": "Graphite — Muted secondary text, disabled icon strokes, de-emphasized metadata"
+    }
+  },
+  "font": {
+    "sohne-buch": {
+      "$value": "Sohne Buch",
+      "$type": "fontFamily",
+      "$description": "All interface and editorial text — headlines, body, table cells, labels. Used at one weight (400) across all roles; the single weight plus generous letter-spacing carries the quiet authority instead of bold/regular contrast"
+    },
+    "myfont": {
+      "$value": "myFont",
+      "$type": "fontFamily",
+      "$description": "Icon glyph set — arrows, external-link markers, theme toggle, search, moon/sun. The 1.0 line-height confirms this is a pictogram face, not running text"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.driesbos.com",
+      "siteName": "Dries Bos",
+      "extractedAt": "2026-06-03T17:05:22.539Z",
+      "variant": "compact"
+    }
+  }
+}

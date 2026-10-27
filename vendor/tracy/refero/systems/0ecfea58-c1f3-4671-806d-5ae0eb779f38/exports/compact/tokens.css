@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-bone-white: #ffffff;
+  --color-vellum-cream: #f7f5e8;
+  --color-charcoal: #231f20;
+  --color-pewter: #888888;
+  --color-dahlen-rust: #b94e3a;
+
+  /* Typography — Font Families */
+  --font-pp-neue-montreal: 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

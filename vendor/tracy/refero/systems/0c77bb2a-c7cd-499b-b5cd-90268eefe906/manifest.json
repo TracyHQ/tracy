@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0c77bb2a-c7cd-499b-b5cd-90268eefe906",
+  "status": "complete",
+  "name": "Fly.io",
+  "url": "https://styles.refero.design/style/0c77bb2a-c7cd-499b-b5cd-90268eefe906",
+  "sourceWebsite": "https://fly.io",
+  "extractedAt": "2026-06-03T17:10:23.751Z",
+  "capturedAt": "2026-10-08T05:08:09.432051+00:00",
+  "theme": "light",
+  "industry": "devtools",
+  "description": "surrealist cloud atlas in violet ink",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d5d3ab31-5235-4d2f-bffd-40d9ae29e79e.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c6e73827-9289-4223-bcac-53defa3202f7.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f9435059-5c24-4830-bf95-67a47f503335.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6138124a-5e75-471e-afaa-7d3a5c59ed6b.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/da11ffab-9706-4e94-8021-cf637b8c958b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d77252ccf0e1410aa9982f579d930e66986567211dace8517fa99a583662150f",
+      "bytes": 23443
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ca10a8fa0300ece8e84f2be490b479200202c9202fcda1f7d127f9abd23f0aec",
+      "bytes": 213803
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c794f21aab7d582203d018e942ebbafb060873e840a96a27fda3c2937d760e89",
+      "bytes": 18813
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "112a275c7286abe2a8125037723e78db51ab001aec3e3ceda8820105e7d3ed8a",
+      "bytes": 12592
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "389e688aebb9f114cceaa82fde1ca8cbf8415d657830db782faa050e1eaf520d",
+      "bytes": 13287
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e1023d91fee4e33434df254d6668a82ce4745bed3a030f402df42b107abadad6",
+      "bytes": 4001
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "50c8ffa5d70d291da3bf54a424ea1b3b78dfb2e96e37b25d34bb0b37e08b0460",
+      "bytes": 703
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "b8bf1a1a9f47eac52905b8645168e86c9cc8c695868e4cb3b8f4c6a7167674d8",
+      "bytes": 889
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "12f665c1feaccb0c28d8726845f8108e8f5a7233b1e72efe6697542259d73f28",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "28e662679cd96b73fd8cdddbd241428fa841cb43e15d474c7852ad955a2c3c8a",
+      "bytes": 47387
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6edca4d9a4f12a05db376d6e3d76c827a96bbbe7fbe33ef01b5b60a3de55ccfb",
+      "bytes": 24797
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "46dec3e1b4565284c2dc77f7c75386ee2b99c2a1acb21d9047d9f4eb0a40fa1a",
+      "bytes": 52816
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "0968b69b994c08a540f82d81e7915b8fd38cebb561d6305462d637fe7ecc159a",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "757c4844fd959f775c433c24fba235e997e097c6a8d9fdc4efc5e2cb94832116",
+      "bytes": 2022
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7439593f7585162121b6fb72681340b073e7dbf2a9f6c70e21bb6478a01aea78",
+      "bytes": 2798
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "03b3d707-2a30-4f53-a524-347d1b70eb2c",
+    "0c77bb2a-c7cd-499b-b5cd-90268eefe906",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1ae4bcfe-c613-42fc-aab7-f9583381e7cc",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "34baa524-5d5b-4165-bbab-d01f05e6d6b9",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4e1ac04c-02ae-41cf-b588-3f6226a882f8",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "da332394-784c-4df2-9e66-c3f7b1d28f28",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "f532c703-1179-465d-9933-7736df44d0ae",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

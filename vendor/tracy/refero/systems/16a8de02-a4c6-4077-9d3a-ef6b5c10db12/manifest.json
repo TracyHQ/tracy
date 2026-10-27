@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+  "status": "complete",
+  "name": "Intra",
+  "url": "https://styles.refero.design/style/16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+  "sourceWebsite": "https://intracbr.com.au",
+  "extractedAt": "2026-06-03T19:21:52.602Z",
+  "capturedAt": "2026-10-08T05:08:40.796612+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "white-walled gallery placard with one giant black eye",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e226f08f-a2c7-43ac-bcfc-e21cf42bc010.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/7b719747-c8d7-4a71-9b7a-f9fceea2e5f1.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/205eafbf-5507-4574-a46a-ca21b088c4f9.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/31e7992d-672d-46d8-b48e-ed1eace6813f.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/7d803848-aa02-4ef6-8384-a29073d54bc5.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2c1a29fd690caea77a2e9218a9a94d91f64d1a9d8326a0568e17f88073ee6b39",
+      "bytes": 16301
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7d1f1a7d13fe640f039d85824180d932b3cc7263239b0496468a48f424e9ce71",
+      "bytes": 150304
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d40888f9a3a3d359643ae98be4484da53acccd1a185386a389b005941408bfaf",
+      "bytes": 14304
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2420fb930762fe3a0eabafb5f27cd8abaf2b1adf5d266e11c36af13f8ee74375",
+      "bytes": 5082
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "639589022926cae806786ae2999616aff02bae44b33d686b0c59b140044ee9be",
+      "bytes": 10718
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "5ea8010b8d94730fbb23450024077c3543825777a38cd3d8e9b1d84a273d889d",
+      "bytes": 1840
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4b29c00cab8cbbf150ca013b944f50c9f85e0052b274ea4da0b9dbad56be85ab",
+      "bytes": 423
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "cb3a5a22ebf9a3631d30910d02c6aadc6bc0616140708545fef357619a69fb88",
+      "bytes": 440
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d4e347863c64450cccd7b67d7e4b6f2cd09cd7468ec9e692d42ebdf68af85ee5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "c6fca8c9224d0d66f2560a0d9e44aff1afa8fe28c8b605eb7d9a3323bf39a58d",
+      "bytes": 38789
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "d281ad26005c7bd9999211514634a3361b0702028c3474fefa2d134bcdf3061f",
+      "bytes": 20164
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "16a5cc9cbf9cadd8a3d022f468ac91ee57005bae06a33142e193d1dd98c0abe5",
+      "bytes": 26271
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b4b048bbe9a3917b897b07dcf809956ca22ca83c9dedfdfcc089a797aa457c14",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4a25c33e063c4633796ce314ba5b2aea80fb9257ffcc5f536e31d72cd2d42170",
+      "bytes": 844
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "bce98b2d1ed6f5a105d4c8ef081f06aa977e10bc6907b9d03caa85104b673368",
+      "bytes": 1203
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "ab1b113a-ed21-4512-acc2-d10c8927c410",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "f1a690c7-234d-4ee9-9806-5790934e7043"
+  ]
+}

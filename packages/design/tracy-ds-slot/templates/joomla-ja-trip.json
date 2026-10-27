@@ -1,0 +1,289 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-trip",
+  "minVersion": {
+    "quickstart/ja-trip/j6": "1.0.4"
+  },
+  "maxVersion": {
+    "quickstart/ja-trip/j6": "1.0.8"
+  },
+  "maxVersionNote": "1.0.8 21/10/2026 (TEXT-1 batch 3): built from 1.0.7 (release-batch.mjs --overlay); only css/template.css, css/darkmode.css differ (and their SCSS/LESS sources): text that read a ground role (TEXT-1) now reads its text role with its own colour as the fallback, and words on a status fill pair with it (page-colour words on the status text shade, or the status text on its pale fill); unworn the page is the release's own (VERIFICATION.json). 1.0.6 16/10/2026 (#1375): re-cut of 1.0.5 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-trip/j6@1.0.3",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "body": "div.info-desc p",
+    "button-primary": "a.btn.btn-primary",
+    "card": "div.mod-tour-list.row div.col div.item-inner.tour-item",
+    "container": "div.container-fluid.container-md",
+    "section": "#Mod126",
+    "input": "#mod-finder-searchword113"
+  },
+  "discovered": {
+    "page": "body",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(255, 107, 0)",
+    "card": "repeated rounded box ×5",
+    "container": "first content container, max-width 1320px",
+    "section": "first padded full-width section, padding-top 128px",
+    "input": "first text field"
+  },
+  "keepScopes": [".t4-topbar", ".cta-wrap"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#585c63",
+    "--fg-2": "#212529",
+    "--accent": "#ff6b00",
+    "--accent-hover": "#df5e00",
+    "--surface": "#f8f5f0",
+    "--surface-warm": "#ffffff",
+    "--meta": "#585c63",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#ef4444",
+    "--border": "#e9ecef",
+    "--muted": "#666666",
+    "--font-display": "\"DM Sans\", sans-serif",
+    "--font-body": "\"DM Sans\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#585c63",
+      "fg-2": "#212529",
+      "accent": "#ff6b00",
+      "accent-hover": "#df5e00",
+      "surface": "#f8f5f0",
+      "surface-warm": "#ffffff",
+      "meta": "#585c63",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#ef4444",
+      "border": "#dddddd",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#585c63",
+      "fg-2": "#ff6b00",
+      "accent": "#ff6b00",
+      "accent-on": "#ffffff",
+      "border": "#e9ecef",
+      "surface-warm": "#f8f5f0"
+    },
+    {
+      "accent": "#ff6b00"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "fg-2": "#212529",
+      "fg": "#495057",
+      "bg": "#f8f9fa",
+      "border-soft": "#dee2e6",
+      "border": "#e9ecef"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (54 line colours, 57 text colours seen)",
+  "selectors": {
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn:not(.mod-finder__search > [type=submit])", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary:not(.mod-finder__search > [type=submit])", "a.btn.btn-primary"],
+    "card": ["div.item-inner.tour-item", ".card"],
+    "container": [".t4-section .container", "div.container-fluid.container-md"],
+    "section": ["#Mod126"],
+    "bodyFace": ["body"],
+    "cardLike": [".info-article", ".features-item"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "div.info-desc p, .features-item .item-inner p, p.mod-articles-category-introtext",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 19 tried (byte 6194); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#212529",
+      "uses": 25,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#212529",
+      "distance": 0
+    },
+    {
+      "hex": "#495057",
+      "uses": 10,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#585c63",
+      "distance": 23
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#ffffff",
+      "distance": 10
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 7,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border",
+      "near": "#e9ecef",
+      "distance": 0
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#585c63",
+    "--body-link-color": "#ff6b00",
+    "--body-link-hover-color": "#df5e00",
+    "--color-primary": "#ff6b00",
+    "--color-secondary": "#111111",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#ef4444",
+    "--color-light": "#f8f5f0",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#111111",
+    "--mainnav-link-color": "#111111",
+    "--mainnav-link-hover-color": "#ff6b00",
+    "--mainnav-link-active-color": "#df5e00",
+    "--footer-bg-color": "#ffffff",
+    "--footer-text-color": "#585c63",
+    "--footer-link-color": "#585c63",
+    "--footer-link-hover-color": "#ff6b00",
+    "--heading-color": "#111111"
+  },
+  "templateVars": {
+    "--heading-color": "var(--ds-c-fg-2)"
+  },
+  "templateVarsNote": "the template's own heading colour (css/tpl/theme.tpl.css :root --heading-color: #111, which T4 copies into media/t4/css) paints the tour titles (.heading-link) and other titles: the system's heading colour",
+  "followRules": {
+    ".t4-footer .link-border": {
+      "color": "accent-text"
+    },
+    ".mod-list-layout-1 .item-highlight .content-inner .heading-link": {
+      "color": "fg-2"
+    },
+    ".mod-list-layout-1 .item-highlight .content-inner p": {
+      "color": "fg-2"
+    },
+    ".categories-module.mod-slide .item-inner a": {
+      "color": "fg-2"
+    },
+    ".categories-tour .categories-tour-inner li.active a": {
+      "color": "accent-on"
+    }
+  },
+  "followNote": "the footer's e-mail link (.link-border) sets --footer-link-color to the template's --color-primary, the accent: the readable accent instead (MotherDuck's light blue on the white footer 1.94:1, the template's own orange 2.86:1); 15/10/2026 (v11 final measure, w15-v11-jo-d/ja-trip-j6, 23/34): since textOrder (13/10/2026) this template's strongest ink is fg-2 (its own #212529 headings over its #585c63 text), so the system's strongest ink is worn as --ds-c-fg-2 and its softer text as --ds-c-fg; the release tokenized the category links (.categories-module a) as var(--ds-c-fg, #212529). Three words on the template's translucent white panels over a photo fell under it: (1) the destination slider's titles (.categories-module.mod-slide .item-inner a, rgba(255,255,255,.7) panel, read #b6bdb6 desktop / #d6d2cd phone) took the system's softer text: Airbnb #595959 3.64, MotherDuck #676665 2.98 / 3.81, Toggl Track #705e78 3.06 / 3.92, Voiceflow 4.13, Mailchimp 3.79, Pitch 3.48 / 4.45, Stripe 4.05, Apple 4.00, where the template's #212529 reads 8.2; (2) the blog lead panel's intro (.mod-list-layout-1 .item-highlight .content-inner p, rgba(255,255,255,.8), read #e1dcdc on the phone): MotherDuck 4.23, Toggl Track 4.42, the template's #585c63 4.97; (3) its title rule above (12/10/2026) named fg for the system's text colour, which is now the softer ink (MotherDuck #676665 4.22 on #e1dcdc). The words on those veiled photos take the strongest ink (fg-2): on #b6bdb6 6.11 (MotherDuck) to 10.94, on #e1dcdc 8.64 to 15.47 under the twelve light systems of the fifteen; under a dark system the panels take the worn page (sideRules dark) and the strongest ink is its lightest. The tour category tabs' active tab (.categories-tour .categories-tour-inner li.active a, /index.php/listings/categories/france) is the template's literal white on its accent fill (var(--color-primary)): Moxie 2.26 (template's white on its orange 2.86); its words take accent-on: 4.52 (Voiceflow) to 21 under the fifteen, Moxie 9.28",
+  "modes": true,
+  "modesNote": "the template has a light/dark switch (the moon button in the header; js/darkmode.js and the pre-paint resolver in index.php set data-theme light|dark on html, and t4-dark on the dark side; css/darkmode.css paints the dark side under html[data-theme=dark] / html.t4-dark): the module sheet writes the system's own side under the template's matching mode and the other side derived from it (src/derive.mjs, src/sides.mjs), and does not hide the switch (MODE-2). Without it the Add site preview offered no Light | Dark for JA Trip (MODE-3, local /ops 16/10/2026)",
+  "modesAuto": false,
+  "modesAutoNote": "the pre-paint resolver in index.php always sets data-theme (light or dark, from the stored choice or the OS) before the page paints, so no 'auto' state is left: the OS-dark copy is not written, as for JA Kinetic",
+  "ready": true,
+  "readyNote": "measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-trip-j6): default unchanged, no text made less readable than the template's own under the systems tried, 79% or more of the page follows. Re-measured 11/10/2026 with the per-element probe on quickstart/ja-trip/j6 1.0.4 (published, its minVersion; tasks/evidence/ds-remeasure-5-2026-10-11/ja-trip): 12/12 with Moxie, MotherDuck, Toggl Track, Apple, controls 0 differences, no text made less readable than the template's own, 97%–99% of the page follows; checked by eye under Moxie and Toggl Track (dark), MotherDuck and Apple (light). Before the fixes 6/12: the tour titles (.heading-link) kept the template's #111 heading colour on dark cards (Moxie 1.08, Toggl Track 1.13; templateVars --heading-color), the footer e-mail link took MotherDuck's light blue on white (1.94; followRules), the destination slider's titles turned light on its translucent white panel (Moxie 1.41, Toggl Track 1.33; sideRules), and contrast kind body found no element (now the feature and article texts). By eye: the logo's black name on a dark header and the blog's lead panel, both fixed through sideRules dark. Re-measured 12/10/2026 with the unified probe after its veil and img-under rules (fix/ds-reverify-d, probe of ca0e8f1c7) on the published 1.0.4: the blog highlight card's title (.content-inner .heading-link, #111 on the card's 80% white veil over its photo, 15:1) took the system's --heading-color = fg-2, which MotherDuck sets lighter than its text (#676665, 4.44:1) and Toggl Track pink (3.98:1); followRules now give it the system's text colour (fg): 9.08 MotherDuck, 5.31 Toggl Track; then 12/12, controls 0 differences, 98%–100% of the page follows (tasks/evidence/ds-reverify-d-2026-10-12/ja-trip)",
+  "sideRules": {
+    "dark": {
+      ".categories-module.mod-slide .item-wrap .item-inner": {
+        "background-color": "color-mix(in srgb, var(--ds-c-bg) 70%, transparent)"
+      },
+      ".d-light .logo-img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".mod-list-layout-1 .item-highlight .item-article .article-content .content-inner": {
+        "background-color": "color-mix(in srgb, var(--ds-c-bg) 80%, transparent)"
+      },
+      ".acm-cta.style-1 .cta-wrap": {
+        "--heading-color": "#ffffff"
+      },
+      "a.ms-1:is(:hover, :focus), a.heading-link:is(:hover, :focus), body a:not([class*=btn], .nav-link, .dropdown-item, .logo, .page-link):is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      "a.ms-1:is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p), a.heading-link:is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p), body a:not([class*=btn], .nav-link, .dropdown-item, .logo, .page-link):is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      },
+      "button.btn-outline-light.text-black-50:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      }
+    },
+    "light": {
+      ".acm-cta.style-1 .cta-wrap": {
+        "--heading-color": "#ffffff"
+      },
+      "a.ms-1:is(:hover, :focus), a.heading-link:is(:hover, :focus), body a:not([class*=btn], .nav-link, .dropdown-item, .logo, .page-link):is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      "a.ms-1:is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p), a.heading-link:is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p), body a:not([class*=btn], .nav-link, .dropdown-item, .logo, .page-link):is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      },
+      "button.btn-outline-light.text-black-50:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      }
+    }
+  },
+  "sideNote": "the destination slider's title panel is the template's translucent white (rgba(255,255,255,.7)) over the photo, and its title links take the system's text colour: under a dark system the panel takes the worn page at the same opacity, so a light title does not sit on a whitish panel (Moxie 1.41, Toggl Track 1.33); the blog's lead article panel (rgba(255,255,255,.8) over its photo) the same way at 80%, seen by eye under Moxie (cream title on the white panel; the probe read that title against the photograph); the logo picture (item-1.svg, the same file in the template's light and dark slots) draws its \"JA Trip\" name in near-black for the white header: under a dark system it is inverted with its hue kept, as JA Teline V's; only the light-scheme picture (.d-light): since modes (16/10/2026) the dark side is the template's own dark scheme, which shows its light logo-dark/item-1.svg (.d-dark), and inverting that one made the logo vanish (IDENT-2, Moxie and Figma dark)",
+  "bands": {
+    ".t4-topbar": {
+      "ground": "#212529",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".ms-1": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".cta-wrap": {
+      "ground": "#000000",
+      "texts": ["#cccccc", "#ffffff"],
+      "paint": {
+        ".sub-title": {
+          "color": "accent"
+        }
+      },
+      "picture": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; visual review 14/10/2026: the call band .acm-cta.style-1 .cta-wrap (home section 4, and the same module under the category listings, /index.php/listings/categories/france) is a photo (.cta-bg at 50% over the block’s #000) under white words and a white .btn-light “Book Now”; it was no band, so the general light-button rule gave the button the system’s surface — under a dark system a dark fill under its own black label on the dark photo. Now a picture band: the photo and its white words stay, its button wears the band’s pair judged on the photo; the call band’s title reads --heading-color, which the template sets white on its module (.acm-cta.style-1 { --heading-color: #fff }); a kept band resets the template variables to their page values (keepDefaults --heading-color #111111) on the band itself, below that module, so the title went #111 on the photo: on both sides the band gives the template’s own white back (literalsNote); ACCENT-LEAK 18/10/2026: the band’s line above the title (.sub-title.text-primary, “With up to 15% Off”) kept the template’s orange inside the kept band (the slot gives the template’s --ds-c-* back there), so it is painted with the system’s accent, readable on the photo",
+  "selectorsNote": "visual review 14/10/2026: the finder module’s submit (.mod-finder__search > [type=submit]) is the template’s invisible hit area over the search field (font-size 0, transparent, no border, absolute; the hero form’s rule pads it 8px 16px): as a .btn/.btn-primary it took the system’s fill and padding, an empty coloured stub at the end of the hero search field under 7 systems. It is kept out of the button selectors",
+  "literalsNote": "#ffffff: the title of the call band .acm-cta.style-1 .cta-wrap is the template’s own white on its photo (the module sets --heading-color: #fff), given back inside the kept band on both sides",
+  "hoverNote": "21/10/2026 (HOVER-2, TEXT-1 batch 3): the header 'Book now' link, the listing titles (.heading-link) and the plain links (category names, tags) read one role at rest and on hover under some systems (Moxie, 5fd3), so hover and focus also underline; buttons, menu items and the logo keep their own states. The same underline is written on the link's inner words (span, strong, em, b, small, headings, p): the probe reads the cue on the element that holds the words, and an underline set on the link alone does not change that element's computed style. The typography page's 'Light' outline button (btn-outline-light, words forced black at 50%) reads one state at rest and on hover under Moxie dark, so it underlines as well."
+}

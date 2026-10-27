@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "tracy-content/v1",
+  "view": "authenticated",
+  "site": {
+    "id": "s-fixture-wordpress",
+    "name": null,
+    "url": "https://example.invalid",
+    "defaultLocale": "en-GB",
+    "locales": ["en-GB"]
+  },
+  "provenance": null,
+  "protocol": {
+    "selected": "tracy-content/v1",
+    "relayExtensions": ["writable", "constraints", "next", "protocol"],
+    "cowork": {
+      "kind": "wordpress",
+      "capability": "v1"
+    }
+  },
+  "snapshot": {
+    "revision": "synthetic-snapshot-1",
+    "readAt": "2026-09-25T10:00:00Z"
+  },
+  "pagination": {
+    "limit": 30,
+    "nextCursor": null,
+    "total": 2
+  },
+  "completeness": {
+    "scope": "mapped-content",
+    "status": "partial",
+    "unresolved": [
+      {
+        "code": "FIXTURE_NOT_LIVE",
+        "message": "Seed/profile values; synthetic graph, not a CMS response."
+      }
+    ]
+  },
+  "contents": [
+    {
+      "id": "c-example-page",
+      "type": "page",
+      "title": null,
+      "slug": null,
+      "url": null,
+      "locale": "en-GB",
+      "translationGroupId": null,
+      "summary": null,
+      "publishedAt": null,
+      "createdAt": null,
+      "updatedAt": null,
+      "revision": "synthetic-revision-1",
+      "detailState": "complete",
+      "writable": null,
+      "bodyHtml": null,
+      "tags": [],
+      "fields": [
+        {
+          "key": "home.hero.heading",
+          "type": "text",
+          "value": "Building the groundwork for next-generation plants",
+          "slotKey": "home.hero.heading",
+          "semanticKey": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 100,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          },
+          "next": {
+            "tool": "tracy_site",
+            "action": "content.contract",
+            "operation": "apply",
+            "changes": {
+              "home.hero.heading": null
+            }
+          }
+        }
+      ],
+      "blocks": [
+        {
+          "id": "b-shared",
+          "key": "b-shared",
+          "role": null,
+          "position": 0,
+          "sharedContentId": "c-example-shared",
+          "visibility": "unknown",
+          "fields": [],
+          "items": [],
+          "writable": null
+        },
+        {
+          "id": "b-list",
+          "key": "b-list",
+          "role": null,
+          "position": 1,
+          "sharedContentId": null,
+          "visibility": "unknown",
+          "fields": [],
+          "items": [
+            {
+              "id": "i-example",
+              "position": 0,
+              "fields": [
+                {
+                  "key": "caption",
+                  "type": "text",
+                  "value": "Synthetic card",
+                  "slotKey": null,
+                  "semanticKey": null,
+                  "writable": null,
+                  "constraints": null,
+                  "next": null
+                }
+              ],
+              "contentId": null
+            }
+          ],
+          "writable": null
+        }
+      ],
+      "images": [
+        {
+          "id": "m-example",
+          "src": "/media/example.png",
+          "alt": null,
+          "width": null,
+          "height": null,
+          "usages": [
+            {
+              "contentId": "c-example-page",
+              "blockId": "b-list",
+              "itemId": "i-example"
+            }
+          ]
+        }
+      ],
+      "relations": [],
+      "links": {
+        "self": "/content.json?id=c-example-page"
+      },
+      "publication": {
+        "status": "unknown",
+        "valueSource": "unknown",
+        "scheduledAt": null
+      }
+    },
+    {
+      "id": "c-example-shared",
+      "type": "shared",
+      "title": null,
+      "slug": null,
+      "url": null,
+      "locale": null,
+      "translationGroupId": null,
+      "summary": null,
+      "publishedAt": null,
+      "createdAt": null,
+      "updatedAt": null,
+      "revision": "synthetic-revision-1",
+      "detailState": "complete",
+      "writable": null,
+      "bodyHtml": null,
+      "tags": [],
+      "fields": [],
+      "blocks": [],
+      "images": [],
+      "relations": [],
+      "links": {
+        "self": "/content.json?id=c-example-shared"
+      },
+      "publication": {
+        "status": "unknown",
+        "valueSource": "unknown",
+        "scheduledAt": null
+      }
+    }
+  ]
+}

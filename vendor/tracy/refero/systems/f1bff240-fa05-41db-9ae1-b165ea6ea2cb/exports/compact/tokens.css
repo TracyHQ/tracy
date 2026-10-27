@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-canvas-white: #ffffff;
+  --color-soft-cream: #f0eee9;
+  --color-hairline-mist: #e5e7eb;
+  --color-silver-rule: #d9d9dd;
+  --color-fog: #93939f;
+  --color-slate-caption: #75758a;
+  --color-graphite-body: #616161;
+  --color-press-black: #212121;
+  --color-inkwell: #17171c;
+  --color-charcoal-depth: #2e2e2e;
+  --color-coral-glow: #ff7759;
+  --gradient-coral-glow: linear-gradient(to right, #ff7759, #7670c5, #4c6ee6);
+  --color-iris-wash: #7670c5;
+  --color-signal-blue: #4c6ee6;
+  --color-lilac-mist: #f0dff3;
+  --color-orchid: #d18ee2;
+
+  /* Typography — Font Families */
+  --font-unica77: 'Unica77', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-coheretext: 'CohereText', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-coheremono: 'CohereMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

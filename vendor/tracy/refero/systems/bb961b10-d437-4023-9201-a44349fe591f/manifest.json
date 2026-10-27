@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "bb961b10-d437-4023-9201-a44349fe591f",
+  "status": "complete",
+  "name": "Anacuna",
+  "url": "https://styles.refero.design/style/bb961b10-d437-4023-9201-a44349fe591f",
+  "sourceWebsite": "https://anacuna.com",
+  "extractedAt": "2026-06-03T21:04:13.667Z",
+  "capturedAt": "2026-10-08T05:16:46.138415+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Oversized broadsheet with blush punctuation — a page where type IS the design and the single pink pill is the only color the eye can find.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c1c1b67f-dca3-474c-ac1e-cffeefd45478.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/763fc8d0-c6bc-4c0d-80dd-a4858bcbebad.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/5a9d41ac-10f2-42a8-a02d-c2656d44bc20.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/47a44536-c12d-4630-a025-e757919ad2fd.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/3bdc1b03-08f1-4c74-a39f-a4a21325be69.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3fa62911a4ca4b1d4f4a22e04d2bd32dc64f01b3ee9efa70a614e3d8cb165117",
+      "bytes": 13571
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a2fce01e87cc130ab5618ae55d4c46bcd98ece95480d9c3f00073bb7be2604fa",
+      "bytes": 145167
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "bd7a9b06dd41520ffcbe431a6436f921e7724b4172ae9a1e9807219c40822da0",
+      "bytes": 11709
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "899b2182c1e4262657d005780cd5bdbeeaff530764e590a4fe2c94b7d2a5010a",
+      "bytes": 4523
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6581c1ea271309424953f1b8fd76e054d764eafd65fd59176e96782950f6fa53",
+      "bytes": 9263
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e8049290021abed7d5c4e22c280bcea0b4965322ee8c00a0fb73de65f0a7451b",
+      "bytes": 1395
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d22a30eaf63d4dcce65737545b2f1150687a38feac696d6d3a4b44cb9af5f0bc",
+      "bytes": 299
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "dd1efb713c8cda24f2f6c09eec6f297520ddbc003aa5feda4435a260eb2892a1",
+      "bytes": 316
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "45f68eacc695e308fa5c4e365cd8ac75d7c27e0fb4261423755832a80323f16d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "41d015b598b50c4ba83091f16428aa5ffc7ccb3cf2e8c907f626418ae33a401a",
+      "bytes": 36751
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "559a3d89ae2d8cc05741ac874d046f8da393c0544b9d89d3df9a7b185dac9d09",
+      "bytes": 19385
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "eea3634ea176f37b55c48cc64e3e7b3c16d51a4b4faa3980faf06bcc67772cb3",
+      "bytes": 21765
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "51ee10947b02b4842ce9c3db7c53bba71b3bc787d3f2acd06dd29cf8a03dc46d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "fec3a93056e855f092318141143e41041c31b2d7529b701ae8e7e1b0b06191f9",
+      "bytes": 714
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4700c1edd8fa3dc4ffab4774b7e0888e97d521a9c9cd3e1b481d3fe6b6b9e37a",
+      "bytes": 1090
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "47b15ce2-34c8-46e3-b2de-f7eed0b6a3b9",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "5e9409c4-d130-42f3-b224-5bd66cdfbe28",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6262b0bb-ea6f-481b-b706-65df29507b6c",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb961b10-d437-4023-9201-a44349fe591f",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "ec17bdec-c8fa-4221-abd6-da717bf38d96",
+    "f40e6a6c-1704-407a-b21b-6141fb90adfe",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

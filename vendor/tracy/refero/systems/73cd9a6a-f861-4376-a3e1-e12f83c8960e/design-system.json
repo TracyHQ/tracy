@@ -1,0 +1,466 @@
+{
+  "dos": [
+    "Use Atacama VAR for every display heading 44px and above at weight 317–370 with -0.06em tracking — the whisper-weight serif is the system's defining typographic choice",
+    "Use 4px border-radius on all buttons, cards, badges, and inputs; reserve 100px only for tabs and step pills",
+    "Pair every status badge as a dark saturated text + matching 1px border on a light pastel wash — never invert this (no dark fills with light text)",
+    "Apply the white 24px inner-glow (rgb(255,255,255) 0 0 24px inset) on any product mockup card — this is the signature elevation",
+    "Enable tabular numerals (tnum) on PP Neue Montreal for all numeric data in tables and stat blocks",
+    "Use #0a33ff sparingly — one accent per surface, only on the Enrich action, active tab, active step, and selected row check",
+    "Use letter-spacing 0.14–0.15em on all 12px PP Neue Montreal 500 eyebrow labels above section headings"
+  ],
+  "donts": [
+    "Don't use rounded pill buttons on cards or actions — 4px corners are the system geometry, pills are reserved for tabs and step indicators",
+    "Don't use drop shadows for depth — depth comes from the white inner-glow and the blue 135deg gradient backdrop, not from elevation",
+    "Don't use #0a33ff as a filled CTA background on landing sections — reserve it for in-product actions and active states only",
+    "Don't use emoji or filled multicolor icons — icons are thin-stroke outlined SVGs in #080b12 or #6c6d73",
+    "Don't center-align body text or section content — the layout rhythm is left-aligned with an asymmetric image companion",
+    "Don't introduce new saturated colors — the only chromatic channels are #0a33ff and the six dark-ink badge colors; everything else stays in warm and cool grays",
+    "Don't use auto-animation or scroll-triggered effects — the system has no motion personality and relies on static composition",
+    "Don't set display headings in PP Neue Montreal or Inter — the Atacama VAR serif is mandatory for any text 44px or larger"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#080b12",
+      "name": "Midnight Ink",
+      "role": "Primary text, hero background, card borders, table rules — the structural near-black that anchors both dark and light regions",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page background, card surfaces, inverted button fill in dark hero",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f6f7f8",
+      "name": "Fog",
+      "role": "Subtle surface lift for secondary panels, table zebra rows, input wells",
+      "group": "neutral"
+    },
+    {
+      "hex": "#edeef1",
+      "name": "Pearl",
+      "role": "Quiet button backgrounds, nested surface tint",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d9d9",
+      "name": "Stone",
+      "role": "Table column dividers, neutral hairline borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dbdbee",
+      "name": "Lavender Mist",
+      "role": "Tinted table surface and the dominant data-grid border — a barely-violet line that sets the product interface apart from generic grays",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b5b9c4",
+      "name": "Mist",
+      "role": "Light borders on secondary controls, list separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9898ae",
+      "name": "Pewter",
+      "role": "Medium cool border for outlined buttons and inputs",
+      "group": "neutral"
+    },
+    {
+      "hex": "#848a9c",
+      "name": "Steel",
+      "role": "Cool gray border used at extremely high frequency (392) — the workhorse rule-line color for structural divisions",
+      "group": "neutral"
+    },
+    {
+      "hex": "#acacae",
+      "name": "Smoke",
+      "role": "Icon stroke and muted body text on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9d9ea1",
+      "name": "Ash",
+      "role": "Muted icons, placeholder text, inactive controls",
+      "group": "neutral"
+    },
+    {
+      "hex": "#606167",
+      "name": "Iron",
+      "role": "Body text secondary level, icon stroke weight",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6c6d73",
+      "name": "Graphite",
+      "role": "Tertiary body text, supporting metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4f535e",
+      "name": "Slate",
+      "role": "Strong secondary borders, card outline emphasis, footer text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2b2b2c",
+      "name": "Charcoal",
+      "role": "Deep text for body emphasis on light backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0a33ff",
+      "name": "Electric Iris",
+      "role": "Brand accent — active tab indicator, step pill, the Enrich action, selected row check, brand wordmark dot — the single chromatic punctuation across an otherwise neutral system",
+      "group": "brand"
+    },
+    {
+      "hex": "#7f90ce",
+      "name": "Periwinkle",
+      "role": "Muted action fill, secondary blue surfaces, desaturated hover state for the brand blue",
+      "group": "brand"
+    },
+    {
+      "hex": "#010b18",
+      "name": "Hero Dawn",
+      "role": "Hero gradient terminus — the deepest point of the dark-to-light blue backdrop",
+      "group": "brand",
+      "gradient": "linear-gradient(180deg, #010b18 0%, #010818 16%, #103b91 49%, #4c7de8 78%, #bad0ff 97%)"
+    },
+    {
+      "hex": "#e2efff",
+      "name": "Sky Whisper",
+      "role": "Info badge background wash",
+      "group": "semantic"
+    },
+    {
+      "hex": "#061353",
+      "name": "Sapphire Ink",
+      "role": "Info badge dark text and border",
+      "group": "semantic"
+    },
+    {
+      "hex": "#e4f3e2",
+      "name": "Mint Whisper",
+      "role": "Success badge background wash",
+      "group": "semantic"
+    },
+    {
+      "hex": "#03350f",
+      "name": "Forest Ink",
+      "role": "Green state accent for badges, validation surfaces, and short status labels.",
+      "group": "semantic"
+    },
+    {
+      "hex": "#d6ffe0",
+      "name": "Sprout Whisper",
+      "role": "Light success badge alternative background",
+      "group": "semantic"
+    },
+    {
+      "hex": "#faeed1",
+      "name": "Saffron Whisper",
+      "role": "Warning badge background wash",
+      "group": "semantic"
+    },
+    {
+      "hex": "#423301",
+      "name": "Amber Ink",
+      "role": "Warning badge dark text and border",
+      "group": "semantic"
+    },
+    {
+      "hex": "#ffe6f7",
+      "name": "Blossom Whisper",
+      "role": "Pink/magenta tag badge background — category label",
+      "group": "semantic"
+    },
+    {
+      "hex": "#600537",
+      "name": "Mulberry Ink",
+      "role": "Pink/magenta tag badge dark text and border",
+      "group": "semantic"
+    },
+    {
+      "hex": "#21034d",
+      "name": "Plum Ink",
+      "role": "Deep violet tag badge dark text and border — alternative category color",
+      "group": "semantic"
+    },
+    {
+      "hex": "#580101",
+      "name": "Crimson Ink",
+      "role": "Red state accent for badges, validation surfaces, and short status labels.",
+      "group": "semantic"
+    },
+    {
+      "hex": "#fee8dd",
+      "name": "Apricot Whisper",
+      "role": "Orange/copper tag badge background",
+      "group": "semantic"
+    },
+    {
+      "hex": "#581c01",
+      "name": "Russet Ink",
+      "role": "Orange/copper tag badge dark text and border",
+      "group": "semantic"
+    }
+  ],
+  "layout": "The page uses a max-width 1200px contained layout with sections separated by 80px vertical gaps. The hero is full-bleed #080b12 with left-aligned content (headline left, subhead and CTAs below), transitioning via a tabbed data table that bleeds edge-to-edge. Body sections follow a strict alternating rhythm: text-left/image-right ('The Old Way') then image-left/text-right ('With Paradigm'), each anchored by a 44–54px Atacama VAR heading, a 12px all-caps eyebrow above, and 4 short list items below. The trust logo bar is a centered single row on a #f6f7f8 band. The step section is a centered headline over a horizontal row of three step pills. Navigation is a minimal top bar: brand mark left, four nav items center, 'Log in' text and 'Request a demo' outlined button right. The entire system is grid-disciplined — no masonry, no overlapping panels, no asymmetric experimental compositions.",
+  "imagery": "Imagery is product-led, not lifestyle. The page embeds actual screenshots of the data table and enriched company profile inside card frames, with the signature white inner-glow making them feel like frosted screens. No photography of people, no abstract 3D renders, no stock illustrations. The brand mark is a small dark square with a centered glyph. Icons throughout are thin-stroke outlined SVGs (stroke weight ~1.5px), monochrome in #080b12 or #6c6d73. Trust logos are rendered as monochrome vector marks in #080b12. Visual density is low — text and data structures carry the page, with imagery playing a supporting evidence role rather than a decorative one.",
+  "similar": [
+    {
+      "why": "Same dark-hero-into-light-body structure, 4px geometry, hairline borders, and single-accent-color discipline",
+      "business": "Linear"
+    },
+    {
+      "why": "Data-table-dense interfaces with tabular numerals and pastel status badges for row-level categorization",
+      "business": "Retool"
+    },
+    {
+      "why": "Editorial serif display headings paired against a workhorse sans, the research-publication voice in a product interface",
+      "business": "Anthropic"
+    },
+    {
+      "why": "Restrained neutral palette with one vivid accent, sharp 4px corners, and a preference for inner glow over drop shadow",
+      "business": "Vercel"
+    },
+    {
+      "why": "Comfortable light density, #f6f7f8 quiet surfaces, and minimal decorative chrome — content and tables are the design",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tabs": "100px",
+      "cards": "4px",
+      "badges": "4px",
+      "buttons": "4px",
+      "feature-cards": "16px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 0,
+      "purpose": "Default page background and primary card surface"
+    },
+    {
+      "hex": "#f6f7f8",
+      "name": "Fog",
+      "level": 1,
+      "purpose": "Quiet lift for trust bars, footer bands, and secondary panels"
+    },
+    {
+      "hex": "#dbdbee",
+      "name": "Lavender Mist",
+      "level": 2,
+      "purpose": "Tinted surface for the data table interior — the barely-violet tint signals 'this is a data environment' without being decorative"
+    },
+    {
+      "hex": "#080b12",
+      "name": "Midnight",
+      "level": 3,
+      "purpose": "Hero and dark section backgrounds — anchors the system's most dramatic moments"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgb(255, 255, 255) 0px 0px 24px 0px inset",
+      "element": "Product Mockup Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.06) 0px 1px 3px 0px",
+      "element": "Standard Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.04) 0px 1px 3px 0px",
+      "element": "Badge"
+    },
+    {
+      "style": "rgba(76, 120, 250, 0.14) 0px 0px 0px 3px",
+      "element": "Focus Ring"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.09) 0px 4px 40px 0px",
+      "element": "Elevated Feature Card"
+    }
+  ],
+  "northStar": "midnight lab notebook opening to daylight — a dark first screen cracks into a bright, data-rich scroll.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.16
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.18
+    },
+    {
+      "role": "heading-sm",
+      "size": 21,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.21
+    },
+    {
+      "role": "heading-lg",
+      "size": 44,
+      "lineHeight": 1.1,
+      "letterSpacing": -2.64
+    },
+    {
+      "role": "display",
+      "size": 54,
+      "lineHeight": 1,
+      "letterSpacing": -2.7
+    }
+  ],
+  "components": [
+    {
+      "name": "Dark Hero Section",
+      "role": "Opening viewport with product proof",
+      "description": "Full-bleed #080b12 background, 1200px inner content. Left-aligned: 54px Atacama VAR display headline in #ffffff, 18px PP Neue Montreal subhead in #4f535e-equivalent muted gray. Two CTAs side by side — white filled 'Request a demo →' and ghost 'Try now'. Below the fold, a tabs row (Deal Sourcing active) and the data table mockup bleeds edge-to-edge with a slight #dbdbee tint on the table surface."
+    },
+    {
+      "name": "Hero Primary Button",
+      "role": "Primary action in the dark hero",
+      "description": "Filled white (#ffffff) background, #080b12 text, 4px radius, weight 450 PP Neue Montreal at 14px, 8px vertical / 16px horizontal padding, optional right arrow (→). Tracking -0.01em. Sits against the dark hero so the inversion does the heavy lifting — no shadow, no border."
+    },
+    {
+      "name": "Hero Secondary Button",
+      "role": "Secondary action in the dark hero",
+      "description": "Transparent fill, #ffffff text, 4px radius, weight 450 PP Neue Montreal at 14px, 8px vertical / 16px horizontal padding. The lighter visual weight makes it read as the low-commitment companion to the filled primary."
+    },
+    {
+      "name": "Blue Accent Button",
+      "role": "Sole chromatic action in the system (Enrich, Step pills)",
+      "description": "Filled #0a33ff background, #ffffff text, 4px radius, weight 500 PP Neue Montreal at 13–14px, 6px vertical / 12px horizontal padding. Used for the 'Enrich' action on data tables and the active step indicator. Restrict to one per surface — this is the system's only saturated fill."
+    },
+    {
+      "name": "Section Heading",
+      "role": "Display heading on light body sections",
+      "description": "Atacama VAR weight 317–370 at 44–54px, color #080b12, letter-spacing -0.06em to -0.05em, line-height 1.0–1.1. The unusually light weight for such a large size is the anti-convention choice — most sites use 600–700 here, the whisper-weight creates authority through restraint."
+    },
+    {
+      "name": "Eyebrow Label",
+      "role": "All-caps pre-headline label above section titles",
+      "description": "PP Neue Montreal weight 500, 12px, letter-spacing 0.14em, color #6c6d73. Sits 16–24px above the section heading, creating a two-step vertical entry into each section."
+    },
+    {
+      "name": "Problem List Item",
+      "role": "X-marked list in 'The Old Way' section",
+      "description": "Thin gray X glyph in #848a9c, 16px PP Neue Montreal body 400 in #2b2b2c, 8px vertical gap between items. The cross icon is rendered as a simple SVG, not emoji — stroke weight ~1.5px."
+    },
+    {
+      "name": "Solution List Item",
+      "role": "Checkmarked list in 'With Paradigm' section",
+      "description": "Check glyph in #0a33ff, 16px PP Neue Montreal body 400 in #2b2c2c, 8px vertical gap. The shift from gray X to blue ✓ is the entire visual argument of the section."
+    },
+    {
+      "name": "Category Tag Badge",
+      "role": "Inline categorization label in data tables",
+      "description": "4px radius, 2px vertical / 8px horizontal padding. Background is a light pastel wash (#ffe6f7, #e2efff, #e4f3e2, #faeed1) and text+border is the matching dark ink (#600537, #061353, #03350f, #423301). 12px PP Neue Montreal 500. The two-color badge (dark text on pastel fill) is the only color-expression channel in the system."
+    },
+    {
+      "name": "Status Fit Pill",
+      "role": "Deal fit indicator (Highest / High / Low)",
+      "description": "4px radius, 4px vertical / 8px horizontal padding, 12px PP Neue Montreal 500. 'Highest' and 'High' use the Forest Ink (#03350f) text on a soft border; 'Low' uses Crimson Ink (#580101). The pill is intentionally quieter than a full badge — it sits inline in a dense data row."
+    },
+    {
+      "name": "Tabs Row",
+      "role": "Category navigation above the data table",
+      "description": "100px radius pills on a transparent bar. Inactive tab: 14px PP Neue Montreal 450 in #6c6d73 with a 1px #b5b9c4 hairline border. Active tab: same dimensions but #080b12 text with a #080b12 1px border and a white #ffffff fill background. The pill shape is the only break from the system's 4px geometry."
+    },
+    {
+      "name": "Data Table",
+      "role": "Primary product interface",
+      "description": "Full-width table on #ffffff surface with #dbdbee 1px row dividers (46+ uses confirm this is the intentional tinted rule). Header row in 13px PP Neue Montreal 500 #6c6d73, body cells in 14px 400 #080b12 with tabular numerals (tnum). Row height ~44px, cell padding 9–12px vertical. First column uses a #0a33ff square checkbox in the selected row."
+    },
+    {
+      "name": "Step Indicator",
+      "role": "Sequential step pills in 'Encode your best thinking' section",
+      "description": "100px radius. Active step: filled #0a33ff with #ffffff 'Step 1' label. Inactive steps: #ffffff fill with 1px #b5b9c4 border and #2b2b2c text. 13px PP Neue Montreal 500, 6px vertical / 12px horizontal padding. The active state is the only place outside the hero where #0a33ff appears as a fill."
+    },
+    {
+      "name": "Product Mockup Card",
+      "role": "Screenshot of the product embedded in body sections",
+      "description": "#ffffff surface, 4px radius, the signature elevation: rgb(255,255,255) 0 0 24px inset — a white inner glow that makes the card appear to sit on a soft light source from within. Often paired with the 135deg subtle blue gradient (rgb(123,149,196) → rgb(223,236,255)) as the card backdrop, giving product mockups a frosted-screen quality."
+    },
+    {
+      "name": "Trust Logo Bar",
+      "role": "Social proof strip of client logos",
+      "description": "Light #f6f7f8 band, centered. Eyebrow text 'Trusted by 10,000+ decision makers...' in 14px PP Neue Montreal 400 #6c6d73. Logos are monochrome #080b12, rendered at uniform ~24px height, spaced 64–80px apart in a single horizontal row."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display serif for all section and hero headlines 44px and above — the editorial weight 317–370 reads as research-journal rather than marketing, and the -0.06em tracking tightens the wide capitals into a confident mass",
+      "sizes": "44px, 48px, 54px",
+      "family": "Atacama VAR",
+      "weight": "317, 370, 400",
+      "lineHeight": "1.0–1.2",
+      "substitute": "Tiempos Text, Lora, or Source Serif Pro",
+      "letterSpacing": "-0.06em at 44–48px, -0.05em at 54px"
+    },
+    {
+      "role": "Workhorse UI font — body copy, buttons, nav, badges, table cells, and pre-headline labels. The 450 weight (a rare half-step) is the default for interactive elements, sitting between regular and medium for restraint",
+      "sizes": "12px, 13px, 14px, 15px, 16px, 17px, 18px, 21px, 22px, 160px",
+      "family": "PP Neue Montreal",
+      "weight": "400, 450, 500",
+      "lineHeight": "1.2–1.6",
+      "substitute": "Inter, Söhne, or General Sans",
+      "letterSpacing": "-0.01em body, 0.14–0.15em on all-caps eyebrow labels (THE OLD WAY, WITH PARADIGM)",
+      "fontFeatureSettings": "\"tnum\" on, \"ss01\" off"
+    },
+    {
+      "role": "Secondary UI text — tight table cells, micro-labels, and dense numerical columns where PP Neue Montreal is swapped for the slightly narrower Inter to save horizontal space",
+      "sizes": "9px, 10px, 11px, 12px, 13px, 14px, 15px",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.2–1.6",
+      "substitute": "Inter (already Google Fonts)",
+      "letterSpacing": "-0.006em to -0.02em body, 0.02em eyebrow"
+    },
+    {
+      "role": "Rarely used body fallback, appears in micro-copy where 0.08em letter-spacing creates a quiet institutional voice",
+      "sizes": "14px",
+      "family": "Suisse Intl",
+      "weight": "400",
+      "lineHeight": "1.2",
+      "substitute": "Söhne or Inter",
+      "letterSpacing": "0.0100em, 0.0800em"
+    }
+  ],
+  "description": "Paradigm opens in a dark observatory atmosphere — near-black canvas, white serif display type, and a live data table that already proves the product — then dissolves into a daylight research interface of white paper, soft tinted surfaces, and pastel status badges. The signature move is the Atacama VAR serif at 44–54px with -0.06em tracking, paired against a workhorse PP Neue Montreal that carries the entire UI at 14–22px with tabular numerals. Color is rationed: one vivid blue (#0a33ff) punctuates the brand through active states and step indicators, status is communicated through six dark-ink + pastel-wash badge pairs (forest, sapphire, mulberry, amber, crimson, plum), and the rest of the system lives in carefully tuned warm and cool grays. Components feel like research instruments — 4px corners, hairline borders, a signature white inner-glow on product mockup cards, and almost no drop shadows.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #080b12\n- background: #ffffff\n- surface tint: #f6f7f8\n- border (table/data): #dbdbee\n- border (neutral): #b5b9c4\n- accent: #0a33ff\n- primary action: #7f90ce (filled action)\n\n**3-5 Example Component Prompts**\n\n1. Create a Primary Action Button: #7f90ce background, #020202 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Data Table Row** — Full-width table on #ffffff, 1px #dbdbee row dividers, ~44px row height, 12px cell padding vertical. Header: 13px PP Neue Montreal weight 500, #6c6d73, tnum enabled. Body cell: 14px weight 400, #080b12. Status cell uses a 4px-radius pill: 4px 8px padding, 12px weight 500, Forest Ink #03350f text with 1px #03350f border for 'Highest'/'High', Crimson Ink #580101 for 'Low'. Right-edge cell holds a filled #0a33ff Enrich button: 4px radius, 6px 12px padding, 13px weight 500, #ffffff text.\n\n3. **Section with Eyebrow + Heading + Checklist** — Light #ffffff background, max-width 1200px. Eyebrow: 12px PP Neue Montreal weight 500, letter-spacing 0.14em, #6c6d73, 24px below sits a 48px Atacama VAR weight 370 heading in #080b12, letter-spacing -2.88px, line-height 1.1. Below: 4 list items with 8px row gap, each 16px PP Neue Montreal weight 400 in #2b2b2c. List marker is an SVG check in #0a33ff (stroke 1.5px) for solution sections, or a thin X in #848a9c for problem sections.\n\n4. **Product Mockup Card** — 4px radius, #ffffff surface, shadow stack: rgb(255,255,255) 0 0 24px inset (signature inner glow). Optional backdrop uses linear-gradient(135deg, #7b95c4, #dfecff) at low opacity. Card holds a product screenshot filling the interior with 16px inset padding around it. To the right or left of the card, a 44px Atacama VAR section heading and 4-item check list, separated by 64px horizontal gap.\n\n5. **Trust Logo Bar** — #f6f7f8 full-width band, 48px vertical padding. Center-aligned eyebrow: 14px PP Neue Montreal weight 400, #6c6d73. Single horizontal row of 5 logos below, each rendered as monochrome #080b12 SVG at uniform 24px height, 72px column gap between logos, centered as a group."
+    }
+  ],
+  "elevationPhilosophy": "Shadows are rationed. The dominant elevation is an inner white glow on product mockup cards — 98 uses confirm it as the signature treatment — which makes screenshots appear to sit on a soft internal light source rather than float above the page. Standard cards get a barely-there 1px/3px drop shadow, and badges an even softer 4% black. No element receives a heavy drop shadow; depth comes from the inner glow and the 135deg blue gradient backdrop, not from elevation."
+}

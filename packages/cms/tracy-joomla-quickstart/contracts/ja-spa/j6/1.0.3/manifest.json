@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-spa/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_spa",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-spa",
+    "id": "quickstart/ja-spa/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_spa",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-spa-j6-webroot-1.0.3.tar.gz",
+        "bytes": 42773337,
+        "sha256": "4fabe6261b92de40c7a2e9f05355447e524c8070378172d478c3053c24d0a1af"
+      },
+      "database": {
+        "file": "ja-spa-j6-database-1.0.3.sql.gz",
+        "bytes": 80368,
+        "sha256": "9a7f10966e49c987f5eb4baa100330bcece46cba488057ec834a6053ca810195"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-10T11:48:55.000Z",
+    "builtFrom": {
+      "from": "quickstart/ja-spa/j6@1.0.2",
+      "by": "tracy contract profile built from the release archives; the release manifest of this version is not retained",
+      "change": "ja_spa 2.2.0 -> 2.2.1 (templateDetails.xml, etc/theme/default.json); no other payload change"
+    },
+    "release": "quickstart/ja-spa/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.16",
+  "mode": "content-recommendation"
+}

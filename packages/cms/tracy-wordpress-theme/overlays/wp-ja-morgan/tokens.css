@@ -1,0 +1,130 @@
+/* tokens.css — written by scripts/theme-tokens.mjs of the tracy-wordpress-theme skill.
+ * Design contract: tasks/ja-morgan-wp7/design-contract.json (id wp-ja-morgan, revision 1), variant desktop-light.
+ * Fallback: vendor/tracy/od-design-system/systems/apple/tokens.css.
+ *
+ * 33 tokens MEASURED from the contract, 23 taken from the fallback — the block at the
+ * end says which is which. A fallback value is a guess standing in until a rule measures it.
+ * Schema: the 56 custom properties the theme generator accepts (TOKEN_NAMES in its build.mjs).
+ */
+
+:root {
+  --bg:                        #ffffff; /* measured */
+  --surface:                   #111111; /* measured */
+  --surface-warm:              #111111; /* measured */
+  --fg:                        #777777; /* measured */
+  --fg-2:                      #333333; /* measured */
+  --muted:                     #6e6e73; /* fallback */
+  --meta:                      #86868b; /* fallback */
+  --border:                    #eaeaea; /* measured */
+  --border-soft:               #e8e8ed; /* fallback */
+  --accent:                    #d93030; /* measured */
+  --accent-on:                 #d93030; /* measured */
+  --accent-hover:              #0077ed; /* fallback */
+  --accent-active:             #0066cc; /* fallback */
+  --success:                   #16a34a; /* fallback */
+  --warn:                      #eab308; /* fallback */
+  --danger:                    #dc2626; /* fallback */
+  --font-display:              PTRootUI, Helvetica, Arial, sans-serif; /* measured */
+  --font-body:                 PTRootUI, Helvetica, Arial, sans-serif; /* measured */
+  --font-mono:                 "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Monaco, Consolas, monospace; /* fallback */
+  --text-xs:                   12px; /* fallback */
+  --text-sm:                   13px; /* measured */
+  --text-base:                 16px; /* measured */
+  --text-lg:                   16px; /* measured */
+  --text-xl:                   20px; /* measured */
+  --text-2xl:                  24px; /* measured */
+  --text-3xl:                  36px; /* measured */
+  --text-4xl:                  60px; /* measured */
+  --leading-body:              1.56; /* measured */
+  --leading-tight:             1.25; /* measured */
+  --tracking-display:          -0.01em; /* measured */
+  --space-1:                   5px; /* measured */
+  --space-2:                   10px; /* measured */
+  --space-3:                   15px; /* measured */
+  --space-4:                   20px; /* measured */
+  --space-5:                   25px; /* measured */
+  --space-6:                   30px; /* measured */
+  --space-8:                   40px; /* measured */
+  --space-12:                  60px; /* measured */
+  --radius-sm:                 8px; /* fallback */
+  --radius-md:                 4px; /* measured */
+  --radius-lg:                 18px; /* fallback */
+  --radius-pill:               980px; /* fallback */
+  --elev-flat:                 none; /* fallback */
+  --elev-ring:                 0 0 0 1px var(--border); /* fallback */
+  --elev-raised:               0 12px 32px rgba(0, 0, 0, 0.08); /* fallback */
+  --focus-ring:                0 0 0 4px color-mix(in oklab, var(--accent), transparent 65%); /* fallback */
+  --motion-fast:               150ms; /* fallback */
+  --motion-base:               220ms; /* fallback */
+  --ease-standard:             cubic-bezier(0.28, 0, 0.22, 1); /* fallback */
+  --section-y-desktop:         150px; /* measured */
+  --section-y-tablet:          64px; /* fallback */
+  --section-y-phone:           60px; /* measured */
+  --container-max:             1024px; /* fallback */
+  --container-gutter-desktop:  15px; /* measured */
+  --container-gutter-tablet:   18px; /* fallback */
+  --container-gutter-phone:    15px; /* measured */
+}
+
+/* Provenance — every token once; "measured" came from a contract rule or its token map,
+ * "fallback" from the fallback file and is a GUESS until a rule measures it.
+ *
+ * measured (33):
+ *   --bg                        rule body-colors (body) backgroundColor
+ *   --surface                   rule footer-band (.t3-footer) backgroundColor
+ *   --surface-warm              rule footer-band (.t3-footer) backgroundColor
+ *   --fg                        rule body-colors (body) color
+ *   --fg-2                      rule heading-h1 (.item-page h1) color
+ *   --border                    rule form-input (form input[type=password].form-control) borderTopColor
+ *   --accent                    rule btn-primary (.item-page .btn.btn-primary) backgroundColor
+ *   --accent-on                 rule link-color (.item-page p a:not(.btn)) color
+ *   --font-display              rule heading-h1 (.item-page h1) fontFamily
+ *   --font-body                 rule body-type (body) fontFamily
+ *   --text-sm                   rule heading-h6 (.item-page h6) fontSize
+ *   --text-base                 rule body-type (body) fontSize
+ *   --text-lg                   rule heading-h5 (.item-page h5) fontSize
+ *   --text-xl                   rule heading-h4 (.item-page h4) fontSize
+ *   --text-2xl                  rule heading-h3 (.item-page h3) fontSize
+ *   --text-3xl                  rule heading-h2 (.item-page h2) fontSize
+ *   --text-4xl                  rule heading-h1 (.item-page h1) fontSize
+ *   --leading-body              rule body-type (body) lineHeight
+ *   --leading-tight             rule heading-h1 (.item-page h1) lineHeight
+ *   --tracking-display          rule heading-h1 (.item-page h1) letterSpacing
+ *   --space-1                   spacing scale: unit 5px from 15px, 20px, 30px, 150px (rules btn-primary, section-rhythm, container), ×1
+ *   --space-2                   spacing scale: unit 5px from 15px, 20px, 30px, 150px (rules btn-primary, section-rhythm, container), ×2
+ *   --space-3                   spacing scale: unit 5px from 15px, 20px, 30px, 150px (rules btn-primary, section-rhythm, container), ×3
+ *   --space-4                   spacing scale: unit 5px from 15px, 20px, 30px, 150px (rules btn-primary, section-rhythm, container), ×4
+ *   --space-5                   spacing scale: unit 5px from 15px, 20px, 30px, 150px (rules btn-primary, section-rhythm, container), ×5
+ *   --space-6                   spacing scale: unit 5px from 15px, 20px, 30px, 150px (rules btn-primary, section-rhythm, container), ×6
+ *   --space-8                   spacing scale: unit 5px from 15px, 20px, 30px, 150px (rules btn-primary, section-rhythm, container), ×8
+ *   --space-12                  spacing scale: unit 5px from 15px, 20px, 30px, 150px (rules btn-primary, section-rhythm, container), ×12
+ *   --radius-md                 rule btn-primary (.item-page .btn.btn-primary) borderRadius
+ *   --section-y-desktop         rule section-rhythm (.t3-section.padding-top.padding-bottom) paddingTop
+ *   --section-y-phone           rule section-rhythm (.t3-section.padding-top.padding-bottom) paddingTop at mobile-light
+ *   --container-gutter-desktop  rule container (.t3-mainbody.container) paddingLeft
+ *   --container-gutter-phone    rule container (.t3-mainbody.container) paddingLeft at mobile-light
+ * fallback (23):
+ *   --muted                     apple/tokens.css
+ *   --meta                      apple/tokens.css
+ *   --border-soft               apple/tokens.css
+ *   --accent-hover              apple/tokens.css
+ *   --accent-active             apple/tokens.css
+ *   --success                   apple/tokens.css
+ *   --warn                      apple/tokens.css
+ *   --danger                    apple/tokens.css
+ *   --font-mono                 apple/tokens.css
+ *   --text-xs                   apple/tokens.css
+ *   --radius-sm                 apple/tokens.css
+ *   --radius-lg                 apple/tokens.css
+ *   --radius-pill               apple/tokens.css
+ *   --elev-flat                 apple/tokens.css
+ *   --elev-ring                 apple/tokens.css
+ *   --elev-raised               apple/tokens.css
+ *   --focus-ring                apple/tokens.css
+ *   --motion-fast               apple/tokens.css
+ *   --motion-base               apple/tokens.css
+ *   --ease-standard             apple/tokens.css
+ *   --section-y-tablet          apple/tokens.css
+ *   --container-max             apple/tokens.css
+ *   --container-gutter-tablet   apple/tokens.css
+ */

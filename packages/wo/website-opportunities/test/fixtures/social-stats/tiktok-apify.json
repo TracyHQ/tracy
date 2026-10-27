@@ -1,0 +1,74 @@
+[
+  {
+    "input": "@brindledeli",
+    "username": "brindledeli",
+    "userId": "6791898425841258549",
+    "profileUrl": "https://www.tiktok.com/@brindledeli",
+    "followerCount": 164,
+    "videoCount": 35,
+    "isPrivate": false,
+    "note": "the profile screen could not be fetched \u2014 counts came from the account lookup, so bio and verified are missing",
+    "recentVideos": [
+      {
+        "videoId": "7536974860814292249",
+        "createdAt": "2021-10-25T01:31:27.000Z",
+        "isPinned": true
+      },
+      {
+        "videoId": "7422843523376779424",
+        "createdAt": "2021-11-03T05:20:23.000Z",
+        "isPinned": true
+      },
+      {
+        "videoId": "7184029800417412332",
+        "createdAt": "2026-06-29T01:58:22.000Z",
+        "isPinned": false
+      },
+      {
+        "videoId": "7021655762467796405",
+        "createdAt": "2026-03-11T02:50:48.000Z",
+        "isPinned": false
+      },
+      {
+        "videoId": "7276601812701758997",
+        "createdAt": "2026-03-11T02:34:24.000Z",
+        "isPinned": false
+      },
+      {
+        "videoId": "7038434843545023197",
+        "createdAt": "2026-02-27T01:43:33.000Z",
+        "isPinned": false
+      },
+      {
+        "videoId": "7729701813151199531",
+        "createdAt": "2026-02-20T04:31:35.000Z",
+        "isPinned": false
+      },
+      {
+        "videoId": "7218448034911569919",
+        "createdAt": "2026-02-20T03:58:56.000Z",
+        "isPinned": false
+      },
+      {
+        "videoId": "7374805258298955897",
+        "createdAt": "2025-08-07T05:48:16.000Z",
+        "isPinned": false
+      },
+      {
+        "videoId": "7797094946488308812",
+        "createdAt": "2024-11-27T02:42:59.000Z",
+        "isPinned": false
+      }
+    ]
+  },
+  {
+    "input": "@chefexample",
+    "username": "chefexample",
+    "note": "account not found \u2014 nothing charged"
+  },
+  {
+    "input": "@wosocialnonexistent20261020",
+    "username": "wosocialnonexistent20261020",
+    "note": "account not found \u2014 nothing charged"
+  }
+]

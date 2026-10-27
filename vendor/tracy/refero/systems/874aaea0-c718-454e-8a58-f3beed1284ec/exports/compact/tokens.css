@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-cream-canvas: #f8f7f5;
+  --color-pure-paper: #ffffff;
+  --color-linen-border: #e3dfd5;
+  --color-stone-mist: #d5d2cd;
+  --color-warm-ash: #aca89f;
+  --color-driftwood: #8f897e;
+  --color-bark: #61594a;
+  --color-espresso: #261b07;
+  --color-amber-signal: #f9a600;
+  --color-burnished-gold: #e89b01;
+  --color-terracotta: #f0624f;
+  --color-wisteria: #d5befa;
+  --color-honey-wash: #f8da9d;
+
+  /* Typography — Font Families */
+  --font-interphases-pro-variable: 'Interphases Pro Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

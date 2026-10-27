@@ -1,0 +1,245 @@
+{
+  "dos": [
+    "Set every text element to weight 400 — no bold, no semi-bold. Hierarchy comes from size and letter-spacing, never weight.",
+    "Use Violet Ink (#3502ff) only for the active nav pill and one primary brand mark per page. Never as a button background fill on other surfaces.",
+    "Pair Scope (sans) for headings/nav with Signifier (serif/italic) for body — and mix roman and italic within a single display sentence to create typographic music.",
+    "Apply 12px radius to every interactive element: nav pills, buttons, cards. The consistency is the design.",
+    "Set all text on Paper White (#ffffff) and use Lavender Wash (#c2b3ff) only for full-bleed accent card fills, never as a text background or row striping.",
+    "Use 1px hairline borders (Mist Gray #d4d6dd or Ink Black #000000) instead of shadows for separation. The one permitted shadow is the violet-tinted rgba(53,2,255,0.1) on active nav.",
+    "Keep section gaps at 64px and let the page breathe with generous left/right margins — the compact padding applies inside components, not between them."
+  ],
+  "donts": [
+    "Don't introduce any weight other than 400. No 500, 600, 700. The system has one voice.",
+    "Don't use Violet Ink (#3502ff) as a filled button background for general CTAs — the active nav pill is the only place that fill appears.",
+    "Don't add drop shadows beyond the single violet-tinted nav shadow. Cards and panels must rely on hairline borders for definition.",
+    "Don't center the hero headline. It is always left-aligned, magazine-style. Centering kills the editorial voice.",
+    "Don't use rounded radii above 12px. The page is crisp and architectural, not soft or playful.",
+    "Don't introduce additional accent colors. The palette is black, white, gray, and three violets — that is the entire chromatic vocabulary.",
+    "Don't use negative letter-spacing. All type uses positive tracking (0.02em–0.036em); tight tracking belongs to a different design system."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page background, card surfaces, nav backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "All text, hairline borders, dividers, list separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d4d6dd",
+      "name": "Mist Gray",
+      "role": "Secondary borders, card outlines, inactive dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3502ff",
+      "name": "Violet Ink",
+      "role": "Violet outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#c2b3ff",
+      "name": "Lavender Wash",
+      "role": "Accent card surfaces, large decorative blocks, soft section backgrounds",
+      "group": "accent"
+    },
+    {
+      "hex": "#d7ccff",
+      "name": "Lavender Whisper",
+      "role": "Outlined nav pill border, ghost button border — violet at a quarter saturation so inactive actions whisper rather than shout",
+      "group": "accent"
+    },
+    {
+      "hex": "#5d35ff",
+      "name": "Deep Iris",
+      "role": "Violet text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color",
+      "group": "brand"
+    }
+  ],
+  "layout": "Page model is max-width contained (~1400px), left-aligned editorial rather than centered marketing. The hero is a typographic block on the left, not a full-bleed image or split layout. Below the hero, a 3-column grid mixes white project cards with lavender accent blocks — at least one lavender fill per row creates visual rhythm. Sections are separated by generous 64px gaps on Paper White. The nav strip is a horizontal pill row at the page bottom (not the top), with the active pill filled violet and the rest ghost-outlined. A year index (01–09) and social footer close the page. No sidebar, no sticky header, no mega-menu — the structure is closer to a print layout than a web app.",
+  "imagery": "Imagery is project-driven and editorial: architectural and product photography, mostly daytime and natural-light, presented as tight crops without lifestyle context. The featured project card arranges images in a 2×2 grid like a magazine layout. A yellow accent block appears in one section (likely a project hero), and lavender blocks serve as decorative color washes rather than image containers. The page is text-dominant overall — images support the work, they don't replace it.",
+  "similar": [
+    {
+      "why": "Same editorial restraint, single-weight typography, and rationed color — both feel like quiet broadsheets rather than product pages",
+      "business": "Are.na"
+    },
+    {
+      "why": "Personal portfolio with a single accent color, hairline borders instead of shadows, and display type that mixes weights and styles within a single sentence",
+      "business": "Hicksdesign"
+    },
+    {
+      "why": "Compact dense layout, violet-adjacent accent palette, and a nav system that lives at the bottom rather than the top",
+      "business": "Rauno Freiberg"
+    },
+    {
+      "why": "Magazine-spread layout, literary type pairing, and a near-achromatic palette with one chromatic brand mark",
+      "business": "Frank Chimero"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "12px",
+      "cards": "12px",
+      "small": "3.5px",
+      "buttons": "12px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "64px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1400px"
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 0,
+      "purpose": "Default page background, primary content canvas"
+    },
+    {
+      "hex": "#c2b3ff",
+      "name": "Lavender Block",
+      "level": 1,
+      "purpose": "Accent card surface, decorative color blocks, featured item wash"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Ground",
+      "level": 2,
+      "purpose": "Footer band, nav strip — dark reverse for terminal UI"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(53, 2, 255, 0.1) 0px 1px 4px 2px",
+      "element": "Active Nav Pill"
+    }
+  ],
+  "northStar": "Literary broadsheet on white paper. A single weight-400 display headline sets the tone — roman and italic interleave in one breath, all type shares one weight, and a rationed violet ink punctuates an otherwise achromatic page.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.47
+    },
+    {
+      "role": "body-sm",
+      "size": 15,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.3
+    },
+    {
+      "role": "body",
+      "size": 17,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.34
+    },
+    {
+      "role": "subheading",
+      "size": 22,
+      "lineHeight": 1.1,
+      "letterSpacing": 0.44
+    },
+    {
+      "role": "heading",
+      "size": 25,
+      "lineHeight": 1.1,
+      "letterSpacing": 0.5
+    },
+    {
+      "role": "display",
+      "size": 42,
+      "lineHeight": 1,
+      "letterSpacing": 0.84
+    }
+  ],
+  "components": [
+    {
+      "name": "Editorial Display Headline",
+      "role": "Hero section typographic statement",
+      "description": "42px Scope weight 400 in roman and italic alternation within a single sentence, letter-spacing 0.02em, color Ink Black on Paper White. The signature move: words like 'is a' and 'for' and 'and' drop to italic Signifier while content words stay roman Scope. Left-aligned, never centered. Padding 20px below to first paragraph."
+    },
+    {
+      "name": "Active Nav Pill",
+      "role": "Current page indicator in nav strip",
+      "description": "12px radius, fill #3502ff (Violet Ink), text 13px Scope weight 400, color #ffffff, padding 6px 14px, letter-spacing 0.036em. The single bold chromatic element on the page; it earns its color by marking where the user is."
+    },
+    {
+      "name": "Inactive Nav Pill",
+      "role": "Secondary nav item",
+      "description": "12px radius, transparent fill, 1px border #d7ccff (Lavender Whisper), text 13px Scope weight 400 in Ink Black, padding 6px 14px, letter-spacing 0.036em. Ghost outlined — quiet, recedes behind the active pill."
+    },
+    {
+      "name": "Project Card (White)",
+      "role": "Default project entry card",
+      "description": "12px radius, #ffffff fill, 1px hairline border in Mist Gray (#d4d6dd), 16px padding. Project image fills top, title and meta in Signifier 15–16px Ink Black. No shadow; the border does the elevation."
+    },
+    {
+      "name": "Project Card (Lavender Fill)",
+      "role": "Accent surface card, featured grid slot",
+      "description": "12px radius, solid #c2b3ff (Lavender Wash) fill, no border, 16px padding. Functions as a color block in the grid — same dimensions as white cards but inverted into a decorative accent. Use sparingly: one per row maximum."
+    },
+    {
+      "name": "Body Paragraph",
+      "role": "Hero description, long-form copy",
+      "description": "Signifier 17–18px weight 400, line-height 1.2, letter-spacing 0.02em, Ink Black on Paper White. Centered or left-aligned in a ~640px column. No bold, no italic emphasis inline — emphasis comes from the surrounding type hierarchy, not weight."
+    },
+    {
+      "name": "Feature Card (Magazine Layout)",
+      "role": "Large project showcase with typography and image grid",
+      "description": "12px radius, white surface with hairline Mist Gray border, internal layout: oversized dotted/display title (Scope 25–42px), body subhead in Signifier, 2×2 image thumbnail grid below. Treats the project as a magazine spread rather than a tile."
+    },
+    {
+      "name": "Year Index List",
+      "role": "Chronological project timeline in footer",
+      "description": "Horizontal row of 2-digit year labels (01, 02, 03 … 09), each 14px Scope weight 400, letter-spacing 0.036em, Ink Black, separated by 16px gaps. The current year highlights in Violet Ink. Functions as both navigation and archive."
+    },
+    {
+      "name": "Footer Link Group",
+      "role": "Social and contact links",
+      "description": "Inline group of 11–15px Signifier links, 15px padding-right between items, Ink Black, 1px hairline divider above. Links transition to Deep Iris (#5d35ff) on hover — the only place Deep Iris appears."
+    },
+    {
+      "name": "Inline Text Link",
+      "role": "Inline reference links within body copy",
+      "description": "Signifier at body size, Ink Black with 1px underline, 15px padding-right when grouped. Underline is the only link treatment — no color shift in resting state; color arrives on hover via Deep Iris."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display, headings, nav, buttons — carries the entire structural and interactive voice. Only weight 400 exists; the font does not push louder, it stays calm even at 42px because letter-spacing opens up around it. Nav and buttons stay at 13–14px; the hero display reaches 42px.",
+      "sizes": "13px, 14px, 17px, 22px, 42px",
+      "family": "Scope",
+      "weight": "400",
+      "lineHeight": "1.00–1.20",
+      "substitute": "Inter, Söhne, Neue Haas Grotesk",
+      "letterSpacing": "0.02em at 17–22px, 0.036em at 13–14px",
+      "fontFeatureSettings": "\"ss01\" on, \"cv01\" on, \"tnum\" on"
+    },
+    {
+      "role": "Body copy, links, list items, footer, long-form paragraphs — the reading voice. Slightly larger minimum (15px) than Scope at 13px, and the only font that appears in the hero italic (the headline mixes roman Scope with italic Signifier). Rationed at 400; weight 400 at 42px is an editorial choice, not a limitation.",
+      "sizes": "15px, 16px, 18px, 22px, 25px, 42px",
+      "family": "Signifier",
+      "weight": "400",
+      "lineHeight": "1.00–1.20",
+      "substitute": "Source Serif Pro, Tiempos Text, Söhne Mono",
+      "letterSpacing": "0.02em",
+      "fontFeatureSettings": "\"kern\" on, \"liga\" on, \"onum\" on"
+    }
+  ],
+  "description": "A literary editorial portfolio rendered as a typographic broadsheet on white paper. The page reads like a magazine spread: a single weight-400 display headline mixes roman and italic to create rhythm without resorting to bold, every paragraph earns its place, and the entire chromatic system is reduced to a single violet ink. The brand violet (#3502ff) is rationed — appearing only as the active nav pill, an active border accent, and a single deep text link — while a softer lavender wash (#c2b3ff) provides surface variety on accent cards. Spacing is compact and the grid is opinionated, with hard-edged 12px radii everywhere and almost no shadow depth. The visual system rewards restraint: negative space, type weight, and a single accent color do the work that color, elevation, and decoration do elsewhere.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #000000 (Ink Black)\n- background: #ffffff (Paper White)\n- border: #d4d6dd (Mist Gray) for secondary, #000000 for structural\n- accent surface: #c2b3ff (Lavender Wash)\n- accent border (ghost): #d7ccff (Lavender Whisper)\n- primary action: #d7ccff (outlined action border)\n- hover/secondary accent: #5d35ff (Deep Iris)\n\n**Example Component Prompts**\n\n1. Build a hero display headline at 42px on white. Mix Scope weight 400 roman with Signifier italic weight 400 in the same sentence (e.g. 'JONAS PELZER is a DESIGNER for WEBSITES and DIGITAL PRODUCTS'). Letter-spacing 0.02em, Ink Black (#000000), left-aligned, max-width 900px. Body paragraph below in Signifier 18px line-height 1.2, same color, max-width 640px.\n\n2. Build a nav strip with 5 pill buttons in a horizontal row. The first is the active state: 12px radius, fill #3502ff, white Scope 13px weight 400 text, 6px 14px padding, letter-spacing 0.036em, with the single permitted shadow rgba(53,2,255,0.1) 0px 1px 4px 2px. The remaining four are ghost: 12px radius, transparent fill, 1px border #d7ccff, Ink Black Scope 13px text, same padding.\n\n3. Build a 3-column project card grid. Column 1: lavender accent card, 12px radius, #c2b3ff fill, no text, 16px padding — pure color block. Column 2: white feature card with 1px Mist Gray border, 12px radius, 16px padding, Scope 25px display title + Signifier 15px meta + 2×2 image grid below. Column 3: another lavender accent card matching column 1. 16px gap between columns.\n\n4. Build a year index list as a single horizontal row: '01  02  03  04  05  06  07  08  09' in Scope 14px weight 400, letter-spacing 0.036em, Ink Black, 16px gap between items. Highlight the current year (08) in Violet Ink #3502ff. 1px Ink Black hairline above the row as divider.\n\n5. Build a footer link group: horizontal inline list of 4–6 social links (ABOUT, AWARDS, CAREER, CONTACT) in Signifier 15px weight 400, Ink Black, 15px padding-right between items, separated from content above by a 1px Mist Gray border. No background fill, no icons — text only."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is nearly absent by design. The single permitted shadow is the violet-tinted glow on the active nav pill, which subtly tints every elevated element on-brand. All other separation is achieved through 1px hairline borders in Mist Gray or Ink Black. This keeps the page feeling like printed paper rather than a digital product surface."
+}

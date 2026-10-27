@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4406799b-1586-4d84-aac9-e6acdee0f679",
+  "status": "complete",
+  "name": "Redis Agency",
+  "url": "https://styles.refero.design/style/4406799b-1586-4d84-aac9-e6acdee0f679",
+  "sourceWebsite": "https://www.redis.agency",
+  "extractedAt": "2026-06-03T19:41:59.796Z",
+  "capturedAt": "2026-10-08T05:10:57.534223+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "After-hours editorial atelier — a pitch-black gallery where serif type and a single red radish do all the brand work.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0c66f894-717e-4db3-8da7-eab25db8d806.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bb964c3d8bd66f2a18232d4af40d2bd83fb4127cb08bb7c4c0983e546c177298",
+      "bytes": 20078
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "3f3b8e4245f300f36807aa50b76be4a7e0f256168c581fe624113122a2df9f7b",
+      "bytes": 95974
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "68e21d10b992698afcb9650d1c322616e587a056ee1e224af780c8c11b68aeb8",
+      "bytes": 16544
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c45c485c64e6c6530747fdca38fdc3a92521444ba5f6e55a3ab50f7ac5d7501d",
+      "bytes": 7924
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "33313b49c341551d77d2e6306df00a95557a7b60dfc35ded40630ad49af0b35e",
+      "bytes": 11905
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "fccd841cb29b203a5b38a50c5492840487d7b04deb120f533f7ba7137a8d8c04",
+      "bytes": 2533
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a2d5a41b3bf7f15f7037f6dd93121189a7fc91b1d5ee0c31239856503ab51211",
+      "bytes": 605
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "63576bcb8d1071088c3f55b3da40acbab4658693e86501580d319177e24c5f24",
+      "bytes": 622
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "74d0d9c00ba37780e49c668a08a9ad98bbbe94ffd0c6e626c04a8126c98139c1",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "82ec9287e6e7e0a8b50653a1846c73656fac2c73169eb48181a43943085876d5",
+      "bytes": 40457
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8f8cceae86af4312a11801422d967792c4294517f33aaeda88e35e40cb231bbb",
+      "bytes": 20645
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "29abbb4d7689de6644258313999d6993a319a3efab4c392197a842bb1d50af02",
+      "bytes": 35666
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "29ed243490e4171720164a86f123c6581e09fe6a0da25ca1bfc84d992e6f8d2e",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2455bd9066321b0a54f7aa509ed5ec714a65fc8c51ce81ce97e8c89d8f746080",
+      "bytes": 1594
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "bac0fd0780fd5d2cac3adb36d8e4986acfeb2a3e8008623da5a90ce68148dcc0",
+      "bytes": 2023
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "3389358b-68b2-4fca-82a8-52c07b3a3475",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4406799b-1586-4d84-aac9-e6acdee0f679",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "6eb778ca-6808-4cc6-ac8a-7beea5a25c36",
+    "8e26bf8a-44b8-4fe1-9b4b-188dd5827c0f",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c0a3f588-74b7-4fad-b557-1fc7cd7bd777",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

@@ -1,0 +1,52 @@
+@import "tailwindcss";
+@source "./";
+
+/* 🔒 THREE LEVELS, NOT TWO — this file lives in `packages/dev/tracy-design/src/`, so it must go back through
+   `src` → `tracy-design` → `dev` to reach `packages/`.
+
+   It used to declare `../../ui/tracy-ui/src`, i.e. `packages/dev/ui/tracy-ui/src` — a folder that
+   DOES NOT EXIST. Tailwind says nothing when `@source` points at nothing: it just scans less.
+   Consequence measured 30/08: every class that appears only inside `@tracy/ui` components and not
+   in the design bench's `src/` was NOT generated. `.ring-1` is the example — not a single
+   rule in the whole stylesheet, so `Card` lost its border and looked blended into the background.
+
+   This is Tailwind's worst failure mode: the build succeeds, most of the UI is right (because almost
+   every class also appears in the design bench's code), and only the library's pure components
+   silently lose their style. There is no error to look for.
+
+   The old SPA (`packages/web/tracy-frontend`, since deleted) used the same depth, three levels. */
+@source "../../../ui/tracy-ui/src";
+/* 🔒 THE BENCH RENDERS `@tracy/harness-web` COMPONENTS, SO IT MUST SCAN THEM.
+   Without this line, classes that appear only in that package are not generated: the HTML carries the right class,
+   the CSS has no rule, and the screen is wrong with no error. Measured 03/09: `w-[13rem]` on Matrix's Source
+   column had no effect, so `truncate` did not cut and the table overflowed its card. */
+@source "../../../web/tracy-harness/src";
+
+/* 🔒 SOURCES OF MODE-B PLUGINS — so Storybook can render the REAL PRODUCT SURFACE.
+   `Screens/In dsh` imports components of the four plugins running in the dsh page directly. They are built
+   with Tailwind utilities on `@tracy/ui`, but in the shipped build that CSS is generated per plugin by
+   `scripts/build-client.mjs` and injected into `lib/client.js` through `define`. There is no such step here,
+   so the bench's Tailwind must see their code itself — otherwise classes that exist only in a plugin and
+   not in the bench's `src/` are NOT generated, and the component renders bare.
+   Same trap as measured 30/08 with `@tracy/ui` (see the comment just above), only a different folder. */
+@source "../../../ui/tracy-sidebar/src/client";
+@source "../../../ui/tracy-settings/src/client";
+@source "../../../site/tracy-my-sites/src/client";
+@source "../../../site/tracy-add-site/src/client";
+@source "../../../site/tracy-site-tabs/src/client";
+@source "../../../design/tracy-design-inspiration/src/client";
+@source "../../../site/tracy-site-build-core/src/client";
+@source "../../../site/tracy-site-build-wordpress/src/client";
+@source "../../../design/tracy-brand-engine/src/client";
+/* The screens the three site tabs are made of, and the team book they share with My Sites. */
+@source "../../../core/tracy-core/src";
+
+@import "@tracy/ui/tokens.css";
+
+/* The design bench does NOT load `@tracy/ui/dsh-bridge.css`: there is no dsh here, and a design system
+   must stand on its own. The bridge lives only in the page dsh serves. */
+
+/* Theme toggled by class (KitBar), not by the operating system. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html, body, #root { height: 100%; }

@@ -1,0 +1,82 @@
+{
+  "en": {
+    "rating": "{platform} rating",
+    "reviewCount": "{platform} reviews",
+    "followers": "{platform} followers",
+    "likes": "{platform} likes",
+    "subscribers": "{platform} subscribers",
+    "posts": "{platform} posts"
+  },
+  "vi": {
+    "rating": "Điểm trên {platform}",
+    "reviewCount": "Đánh giá trên {platform}",
+    "followers": "Người theo dõi trên {platform}",
+    "likes": "Lượt thích trên {platform}",
+    "subscribers": "Người đăng ký trên {platform}",
+    "posts": "Bài đăng trên {platform}"
+  },
+  "de": {
+    "rating": "{platform}-Bewertung",
+    "reviewCount": "{platform}-Rezensionen",
+    "followers": "{platform}-Follower",
+    "likes": "{platform}-Likes",
+    "subscribers": "{platform}-Abonnenten",
+    "posts": "{platform}-Beiträge"
+  },
+  "it": {
+    "rating": "Valutazione su {platform}",
+    "reviewCount": "Recensioni su {platform}",
+    "followers": "Follower su {platform}",
+    "likes": "Mi piace su {platform}",
+    "subscribers": "Iscritti su {platform}",
+    "posts": "Post su {platform}"
+  },
+  "fr": {
+    "rating": "Note sur {platform}",
+    "reviewCount": "Avis sur {platform}",
+    "followers": "Abonnés sur {platform}",
+    "likes": "J’aime sur {platform}",
+    "subscribers": "Abonnés sur {platform}",
+    "posts": "Publications sur {platform}"
+  },
+  "nl": {
+    "rating": "Beoordeling op {platform}",
+    "reviewCount": "Reviews op {platform}",
+    "followers": "Volgers op {platform}",
+    "likes": "Likes op {platform}",
+    "subscribers": "Abonnees op {platform}",
+    "posts": "Berichten op {platform}"
+  },
+  "zh": {
+    "rating": "{platform} 评分",
+    "reviewCount": "{platform} 评价",
+    "followers": "{platform} 粉丝",
+    "likes": "{platform} 点赞",
+    "subscribers": "{platform} 订阅者",
+    "posts": "{platform} 帖子"
+  },
+  "es": {
+    "rating": "Valoración en {platform}",
+    "reviewCount": "Reseñas en {platform}",
+    "followers": "Seguidores en {platform}",
+    "likes": "Me gusta en {platform}",
+    "subscribers": "Suscriptores en {platform}",
+    "posts": "Publicaciones en {platform}"
+  },
+  "ja": {
+    "rating": "{platform}の評価",
+    "reviewCount": "{platform}のレビュー",
+    "followers": "{platform}のフォロワー",
+    "likes": "{platform}のいいね",
+    "subscribers": "{platform}の登録者",
+    "posts": "{platform}の投稿"
+  },
+  "ar": {
+    "rating": "تقييم {platform}",
+    "reviewCount": "مراجعات {platform}",
+    "followers": "متابعو {platform}",
+    "likes": "إعجابات {platform}",
+    "subscribers": "مشتركو {platform}",
+    "posts": "منشورات {platform}"
+  }
+}

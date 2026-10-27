@@ -1,0 +1,44 @@
+{
+  "color": {
+    "gallery-cream": {
+      "$value": "#f5f6ee",
+      "$type": "color",
+      "$description": "Gallery Cream — Page canvas and base surface — a warm off-white that flatters glazed ceramics more than pure white would"
+    },
+    "ink": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Ink — Primary text, hairline borders, card outlines, icon strokes — the entire structural skeleton runs through this one near-black"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Product image backgrounds, occasional inverse surface when a card needs to sit forward of the cream canvas"
+    },
+    "fog": {
+      "$value": "#a1a19c",
+      "$type": "color",
+      "$description": "Fog — Muted secondary borders and low-priority text — used when Ink would be too heavy for a structural divider"
+    },
+    "lampblack": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Lampblack — Reserved for the rare filled element (active nav background, weight anchors) — used sparingly so Ink remains the default voice"
+    }
+  },
+  "font": {
+    "twk-lausanne": {
+      "$value": "TWK Lausanne",
+      "$type": "fontFamily",
+      "$description": "Sole typeface — handles everything from micro-labels to 120px editorial display. Weight 300 carries display and large headings (whisper-thin Swiss grotesque that lets the ceramics dominate), weight 400–500 for body and UI, weight 600–700 reserved for active states and filter labels. The tight letter-spacing (-0.04em at display, -0.02em at body) is signature: characters nestle together, giving even 11px labels a compressed, considered feel rather than airy defaults."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.palmer-dinnerware.com",
+      "siteName": "Palmer",
+      "extractedAt": "2026-06-03T19:46:36.187Z",
+      "variant": "compact"
+    }
+  }
+}

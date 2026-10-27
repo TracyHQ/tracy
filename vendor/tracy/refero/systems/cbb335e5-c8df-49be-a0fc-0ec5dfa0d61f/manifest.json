@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+  "status": "complete",
+  "name": "Lattice",
+  "url": "https://styles.refero.design/style/cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+  "sourceWebsite": "https://lattice.com",
+  "extractedAt": "2026-06-03T18:31:35.840Z",
+  "capturedAt": "2026-10-08T05:17:33.867154+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Botanical field journal on warm parchment — a quiet cream canvas where dark forest ink does the speaking and pastel specimen cards provide the color.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e3350b48-5ec6-4c24-8438-53d393026a77.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/1b4e8877-324d-4cbc-8c64-86aded1d9a15.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/18f9dfa1-1878-4089-b470-5bb2eab122ff.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/76352c49-93bb-4e4b-9300-84b5213341a6.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/18e84d53-5cb3-4ed5-b66a-17f80016be53.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "65adf4695de21ea913554e368816adff1162bbda5cdc06dc04f70893c538e423",
+      "bytes": 25199
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "26d81934bd03c5b98e87f6881bcaab875c663c99e151fefbf6783aa9b5d5fae5",
+      "bytes": 80914
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "5f98f2778c01ba5db352b5d9c6a51a1076a85ec4f2b7a6d511ed798e81db073f",
+      "bytes": 22103
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f5bc251e8d30dfa66535e2b13280c70fd968e82947c06928a34acba78c40a361",
+      "bytes": 17170
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "feb787e939fc3c9cec0467fe09d5eec9fde556f42ded392fa762afc835ac7237",
+      "bytes": 16027
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "13e29c727ab48f1a5421cca1d9024f0422283045f7f54ae29d9423ae1c3d3d1d",
+      "bytes": 6407
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "aba735cbb2ab1cb1655f79e8e1b56350badf0280dde1d4d43c3d47eba579b50a",
+      "bytes": 852
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "bd4e968a58fcb0e1aea8894e2b23d9c32fcc74daa715763ffb15004cc00c951f",
+      "bytes": 990
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "fef1855ec390aaeb2cfb3b365079826d6c18070661e45a25e983f2527217d01f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e2354f006b24fb13a4930a95163c7d6174399ce2a716a762b819875aa1145112",
+      "bytes": 51358
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5d5298eeb7537aa3f2ab94e17bd15a9a145cd70c05da14b93afe9b4e62db89ce",
+      "bytes": 27371
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "02a8dc7cac94df0168d9f8c75a3e316e29163967af6907bfcd45964bc83506d1",
+      "bytes": 81715
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "47f0d89f61439457040288df37b7b016fd102d17c8f070e014c4bad4c26c90c1",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ac1dc56f365f1a02a87efc00570b66a38896599a09a3710734d2a9851da3d424",
+      "bytes": 2078
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "256f8d8d781ae0b1b75915bc52e43a195db1ae2522ca2b915b6cae5be4b6a3a9",
+      "bytes": 2772
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "9501cfdc-3eb3-4b64-90f6-9afdded48945",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b5ca4e9a-2322-4796-b4c5-3b3bf194821f",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "d7fb1721-1878-4cbb-a24b-051800557c75",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

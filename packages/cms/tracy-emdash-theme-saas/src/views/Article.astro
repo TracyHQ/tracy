@@ -1,0 +1,275 @@
+---
+/**
+ * A post: article head, byline, cover, Portable Text body, tags, related posts of the same category,
+ * then the blog CTA. With `page` (a pages entry shown as a document) it renders that page's own body.
+ * An unknown slug answers 404.
+ */
+import Base from '@/layouts/Base.astro'
+import NotFound from '@/views/NotFound.astro'
+import { SECTION_COMPONENTS } from '@/components/sections/registry'
+import Masthead from '@/components/blog/Masthead.astro'
+import Prose from '@/components/blog/Prose.astro'
+import Avatar from '@/components/blog/Avatar.astro'
+import Chips from '@/components/blog/Chips.astro'
+import StaticPage from '@/components/blog/StaticPage.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import { stampFor, stampsFor } from '@/lib/stamps'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import type { ComposedPage } from '@/lib/sections'
+import { authorPath, categoryPath, dateLong, findPost, loadBlogCta, postPath, tagPath } from '@/lib/posts'
+import { ui } from '@/lib/ui'
+import { fillWords } from '@/lib/ui-words'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path: string
+  slug?: string
+  page?: ComposedPage
+}
+const { chrome, locale, path, slug, page } = Astro.props
+// The template's own words, in the site's language (`src/lib/ui.ts`).
+const { tag, w } = ui(locale)
+// The router gets the 404 status from viewFound() (same lookup); a miss renders the 404 view here.
+const { posts, post } = page ? { posts: [], post: undefined } : await findPost(locale, slug)
+// With the blog unticked, a post a kept page still lists renders (TCH #1013, `src/lib/listed-children.ts`); its links
+// into the blog family are drawn only while their target is reachable. With the blog on, every one of them is live.
+const live = await liveLinks(Astro.request, locale, [
+  ...(post?.category ? [categoryPath(post.category.slug)] : []),
+  ...(post?.author ? [authorPath(post.authorSlug)] : []),
+  ...(post?.tags ?? []).map((t) => tagPath(t.slug)),
+  ...posts.map((p) => postPath(p.slug))
+])
+const related = post?.category
+  ? posts
+      .filter((p) => p.id !== post.id && p.category?.slug === post.category?.slug && live(postPath(p.slug)))
+      .slice(0, 3)
+  : []
+const categoryUrl =
+  post?.category && live(categoryPath(post.category.slug))
+    ? href(locale, categoryPath(post.category.slug))
+    : null
+const authorUrl =
+  post?.author && live(authorPath(post.authorSlug)) ? href(locale, authorPath(post.authorSlug)) : null
+const tagItems = (post?.tags ?? []).filter((t) => live(tagPath(t.slug)))
+const cta = post ? await loadBlogCta(locale) : null
+// Provenance stamps (`src/lib/stamps.ts`): the post owns the page and stamps its own fields; related
+// posts and the CTA sections stamp their own entries. Empty on an ordinary request.
+const $post = stampFor(Astro.request, 'posts', post)
+const $ = stampsFor(Astro.request)
+const crumbs = post
+  ? [
+      { label: w.home, href: href(locale, '/') },
+      ...(post.category ? [{ label: post.category.label, href: categoryUrl ?? undefined }] : []),
+      { label: post.title }
+    ].filter((c) => !c.href || live(c.href))
+  : []
+---
+
+{
+	page ? (
+		<StaticPage chrome={chrome} locale={locale} path={path} page={page} />
+	) : !post ? (
+		<NotFound chrome={chrome} locale={locale} path={path} />
+	) : (
+		<Base
+			chrome={chrome}
+			title={post.title}
+			description={post.excerpt}
+			image={post.cover}
+			currentPath={path}
+			type="article"
+			content={{ collection: 'posts', id: post.id, slug: post.slug, toPath: postPath }}
+		>
+			<PageOwner stamp={$post} />
+			<Masthead
+				size="article"
+				narrow
+				title={post.title}
+				sub={post.excerpt}
+				marks={{ title: $post('title'), sub: $post('excerpt') }}
+				eyebrow={post.category?.label}
+				eyebrowHref={categoryUrl}
+				crumbs={crumbs}
+				crumbsLabel={w.breadcrumb}
+			/>
+			<section class="wrap">
+				<div class="k-container">
+					<article class="post">
+						{post.author && (
+							<div class="byline">
+								<Avatar name={post.author} size={44} />
+								<div class="by-text">
+									{authorUrl ? (
+										<a class="by-name" href={authorUrl} {...$post('author')}>
+											{post.author}
+										</a>
+									) : (
+										<span class="by-name" {...$post('author')}>
+											{post.author}
+										</span>
+									)}
+									<span class="by-meta">{[post.authorRole, dateLong(post.date, false, tag), fillWords(w.minRead, { n: post.minutes })].filter(Boolean).join(' · ')}</span>
+								</div>
+							</div>
+						)}
+						{post.cover && (
+							<figure class="cover">
+								<img src={post.cover} alt={post.coverAlt} width="1200" height="800" decoding="async" {...$post('cover')} />
+							</figure>
+						)}
+						<Prose value={post.body} stamp={$post} field="body" />
+						{tagItems.length > 0 && (
+							<div class="tags">
+								<Chips items={tagItems.map((t) => ({ label: t.label, href: href(locale, tagPath(t.slug)) }))} />
+							</div>
+						)}
+					</article>
+				</div>
+			</section>
+			{related.length > 0 && (
+				<section class="related">
+					<div class="k-container">
+						<h2 class="related-h">{w.relatedPosts}</h2>
+						<div class="related-grid">
+							{related.map((r) => (
+								<a class="rel" href={href(locale, postPath(r.slug))} {...$('posts', r)()}>
+									{r.category && <span class="rel-tag">{r.category.label}</span>}
+									<span class="rel-title" {...$('posts', r)('title')}>{r.title}</span>
+									<span class="rel-meta">{[dateLong(r.date, true, tag), fillWords(w.minRead, { n: r.minutes })].filter(Boolean).join(' · ')}</span>
+								</a>
+							))}
+						</div>
+					</div>
+				</section>
+			)}
+			{cta?.sections.map((s, i) => {
+				const Component = SECTION_COMPONENTS[s.collection]
+				return Component ? <Component data={s.data} index={i} style={cta.style} stamp={$(s.collection, { slug: s.entry, data: s.data })} /> : null
+			})}
+		</Base>
+	)
+}
+
+<style>
+	.wrap {
+		padding: 56px 0;
+	}
+	.post {
+		max-width: 760px;
+		margin-inline: auto;
+	}
+	.byline {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 22px;
+	}
+	.by-text {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-width: 0;
+	}
+	.by-name {
+		font-size: 14px;
+		line-height: 1.55;
+		font-weight: 600;
+		color: var(--k-heading);
+	}
+	.by-name:hover {
+		color: var(--k-primary);
+	}
+	.by-meta {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		line-height: 1.55;
+		color: var(--k-muted);
+	}
+	.cover {
+		margin: 0 0 38px;
+		aspect-ratio: 760 / 300;
+		overflow: hidden;
+		background: var(--k-elevated);
+		border: 1px solid var(--k-border);
+		border-radius: 14px;
+	}
+	.cover img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.tags {
+		margin-top: 28px;
+		padding-top: 20px;
+		border-top: 1px solid var(--k-border);
+	}
+	.related {
+		padding: 64px 0;
+		background: var(--k-elevated);
+		border-block: 1px solid var(--k-border);
+	}
+	.related-h {
+		margin: 0 0 28px;
+		font-family: var(--font-heading);
+		font-size: 24px;
+		line-height: 1.1;
+		letter-spacing: -0.5px;
+		font-weight: 700;
+		color: var(--k-heading);
+	}
+	.related-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 18px;
+	}
+	.rel {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 22px;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 14px;
+		transition: border-color 0.15s;
+	}
+	.rel:hover {
+		border-color: color-mix(in srgb, var(--k-primary) 45%, var(--k-border));
+	}
+	.rel-tag {
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-primary);
+	}
+	.rel-title {
+		font-family: var(--font-heading);
+		font-size: 16px;
+		line-height: 1.25;
+		font-weight: 600;
+		color: var(--k-heading);
+	}
+	.rel-meta {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--k-muted);
+	}
+	@media (max-width: 767px) {
+		.wrap {
+			padding: 40px 0;
+		}
+		.cover {
+			margin-bottom: 28px;
+		}
+		.related {
+			padding: 40px 0;
+		}
+		.related-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

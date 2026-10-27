@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1653-sidebar-relative-file-link-downloads",
+  "kind": "fix",
+  "title": "A file the agent links in the chat by a path relative to the conversation folder downloads from the side panel; a relative path out of the folder is still refused",
+  "pr": 1653,
+  "area": "sidebar/download",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run vendor/tracy/dsh-better-sidebar tests/file-download.spec.ts with vitest: /sidebar/file?…&path=template.zip&download=1 for a session whose folder holds template.zip; then path=../secret.zip; plus the download-cap and saveDownload cases of -tracy.92."
+  ],
+  "expect": [
+    "S1: the relative path answers 200 with the file's bytes; ../secret.zip answers 403 forbidden; every case of the file passes."
+  ],
+  "selectors": {
+    "files": "vendor/tracy/dsh-better-sidebar/src/index.ts (/sidebar/file route)"
+  },
+  "evidence": "cowork.tracy.site 23/10/2026: the agent's link tracy_business-template.zip opened the side panel's Download pane; /sidebar/file answered 400 {\"code\":\"fs-error\",\"message\":\"\\\"tracy_business-template.zip\\\" is not an absolute path\"} (beta bug B6, the file.json download).",
+  "fence": "a relative path is joined onto the session cwd and then passes the same ensureWorkspacePath fence as an absolute one",
+  "run": {
+    "cmd": ["npx", "vitest", "run", "tests/file-download.spec.ts"],
+    "cwd": "vendor/tracy/dsh-better-sidebar",
+    "timeout_s": 300
+  }
+}

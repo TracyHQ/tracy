@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e67ac20e-6497-4756-b7e2-17859a794fb6",
+  "status": "complete",
+  "name": "Silencio",
+  "url": "https://styles.refero.design/style/e67ac20e-6497-4756-b7e2-17859a794fb6",
+  "sourceWebsite": "https://silencio.es",
+  "extractedAt": "2026-06-03T17:34:46.576Z",
+  "capturedAt": "2026-10-08T05:18:45.110265+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "white room with floating artifacts. A warm-paper gallery vitrine where every element earns its space against negative volume, and silence is a deliberate design material.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d1fe25bd-e0e7-4844-bae7-bdc7e6a1e995.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/38f5a95f-8963-4f31-8893-1bdea6e10f90.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/08962566-b8d9-40be-8b6a-64a29b82ed0c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/aaf8a36b-60cc-4a8f-96e3-6d0982069736.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/9989e010-dc7b-4de2-a434-17c39d068363.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b6cc56d7091bff0f587250443ac5a34dc97421187ce4a274906dfac75243168b",
+      "bytes": 16966
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "29f757bf95da8b5b1bd82d77066232b33d77117709dc8fc6d895b07f6937df5d",
+      "bytes": 26262
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f92bb1a398b8be64807830b09501743b0d68f30e0bb5286581680a912957cc73",
+      "bytes": 14022
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b4872ec0f2f8d1676e37d62eeb6bd0046b580f62d60df34589d82b72515bfa60",
+      "bytes": 11578
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "27104372da702ac410be4a05ca5a100c3f55bfc685bc4025e488e869e3ab1785",
+      "bytes": 10248
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "90042d494e345f9d2a8038d695d2c432b3dec8a599dc8f01595661a031da2b87",
+      "bytes": 1979
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f76418334a06003b99e6b7fd10bbf2cc2579fb0dc3fea0b5bad9e7493642d267",
+      "bytes": 511
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "21fa59395f5b042ebe0ddc5b06b1955b5ee90b401c0718ca778e993040652573",
+      "bytes": 528
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "eea90a5c94e22be28825bf7f0b665aae7715828d9ec5b32bd060b75c03b704a8",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "2718927153c22ba25e6fe324a42d38a5f995694e83d3a2b6ab23f91186221881",
+      "bytes": 39367
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8cde9391e958ce5cdf0834c4ea374cc7788bb77914771e7d5bda649202d2d072",
+      "bytes": 19891
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "15b04999db2f21792fd57ccb012926f853b18a3c5d42489c73c60cba1abf2fc6",
+      "bytes": 30555
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "fb1bdebda3914eac003a4c6731475e6f7fe1f53e15c09b14b7b99a3c83788a22",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2cb36297ba3b60109c982eeb93bd98f898d63eb1287af0e65bb08b784404ad6a",
+      "bytes": 1192
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d92ee41a86cd076c7c9bef51eb0d454f53dc7113e373af1af38a88fa7ce7efcc",
+      "bytes": 1709
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "17824ea8-ac7d-42ca-97e2-9bf92ebea7e1",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "3240fdc0-ffea-4054-a996-a5f6b942eff0",
+    "36ab47c3-3d47-42a5-af2e-1760bc348bcd",
+    "3b742f76-25ad-446c-a942-09b09b93f6a3",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "44a6d2a5-16ef-42cd-a69c-33a7af16638d",
+    "58a36cba-3fc4-48fa-a7d9-7f14592b7857",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "9fe18d8b-58b7-404d-bcc6-9e8a73b8862c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "d7096101-d33c-43b8-8b0b-d9dfff802db2",
+    "e67ac20e-6497-4756-b7e2-17859a794fb6",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268"
+  ]
+}

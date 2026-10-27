@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Carousel Style 1</title>
+  <fields name="carousel">
+    <fieldset name="band" label="TPL_TRACY_ACM_CAROUSEL_BAND_LABEL">
+      <field name="eyebrow" type="text" default="" label="TPL_TRACY_ACM_CAROUSEL_EYEBROW_LABEL" />
+      <field name="heading" type="text" default="" label="TPL_TRACY_ACM_CAROUSEL_HEADING_LABEL" />
+      <field name="intro" type="textarea" rows="2" default="" label="TPL_TRACY_ACM_CAROUSEL_INTRO_LABEL" />
+      <field name="ground" type="list" default="canvas" label="TPL_TRACY_ACM_CAROUSEL_GROUND_LABEL">
+        <option value="canvas">TPL_TRACY_ACM_GROUND_CANVAS</option>
+        <option value="warm">TPL_TRACY_ACM_GROUND_WARM</option>
+        <option value="gray">TPL_TRACY_ACM_GROUND_GRAY</option>
+      </field>
+      <field name="per-view" type="list" default="3" label="TPL_TRACY_ACM_CAROUSEL_PERVIEW_LABEL">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </field>
+    </fieldset>
+    <fieldset multiple="1" name="slides" label="TPL_TRACY_ACM_CAROUSEL_SLIDES_LABEL">
+      <fields name="slide" multiple="1" label="TPL_TRACY_ACM_CAROUSEL_SLIDE_LABEL">
+        <field name="slide-image" type="media" default="" label="TPL_TRACY_ACM_CAROUSEL_IMAGE_LABEL" />
+        <field name="slide-kicker" type="text" default="" label="TPL_TRACY_ACM_CAROUSEL_KICKER_LABEL" />
+        <field name="slide-title" type="text" default="" label="TPL_TRACY_ACM_CAROUSEL_TITLE_LABEL" />
+        <field name="slide-text" type="textarea" rows="3" default="" label="TPL_TRACY_ACM_CAROUSEL_TEXT_LABEL" />
+        <field name="slide-link" type="text" default="" label="TPL_TRACY_ACM_CAROUSEL_LINK_LABEL" />
+        <field name="slide-link-text" type="text" default="" label="TPL_TRACY_ACM_CAROUSEL_LINKTEXT_LABEL" />
+      </fields>
+    </fieldset>
+  </fields>
+</form>

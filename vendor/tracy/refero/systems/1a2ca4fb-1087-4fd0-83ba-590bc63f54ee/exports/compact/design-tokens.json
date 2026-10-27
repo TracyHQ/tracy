@@ -1,0 +1,54 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, full-bleed background, link text — the default surface for every screen; nothing sits on a lighter background"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Display type, body text, button fills, hairline borders — the only ink color, used at full saturation with zero tints"
+    },
+    "concrete": {
+      "$value": "#c4c4c4",
+      "$type": "color",
+      "$description": "Concrete — Secondary borders, muted list rules, subdued dividers — the single mid-tone for de-emphasized structure"
+    },
+    "charcoal": {
+      "$value": "#363636",
+      "$type": "color",
+      "$description": "Charcoal — Elevated nav surfaces and secondary panels — the only step off pure black for distinct UI layers"
+    }
+  },
+  "font": {
+    "monospace": {
+      "$value": "monospace",
+      "$type": "fontFamily",
+      "$description": "Small technical UI text — system monospace at fixed 13px for tags, metadata, or any content that needs a typewriter feel against the sans-serif body"
+    },
+    "anton": {
+      "$value": "Anton",
+      "$type": "fontFamily",
+      "$description": "Display and orbital type — the only voice for headings, hero text, and the signature circular compositions. Anton's condensed grotesque geometry lets words like 'BELIEVE' and 'THINKING' become architectural forms; the heavy 500 weight at 90–150px is the design's entire visual identity"
+    },
+    "montserrat": {
+      "$value": "Montserrat",
+      "$type": "fontFamily",
+      "$description": "Body copy, navigation, button labels, list items, subheadings. The 2.78 line-height on the 18px size signals intentional airy rhythm in body blocks; 600 weight reserved for nav emphasis and small heading accents"
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.regisgrumberg.com",
+      "siteName": "Regisgrumberg",
+      "extractedAt": "2026-06-03T21:14:35.192Z",
+      "variant": "compact"
+    }
+  }
+}

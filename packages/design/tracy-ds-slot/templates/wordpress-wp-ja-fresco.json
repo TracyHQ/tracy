@@ -1,0 +1,391 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "wordpress-tracy-base",
+  "template": "wordpress/wp-ja-fresco",
+  "minVersion": {
+    "wp-ja-fresco": "1.0.0"
+  },
+  "maxVersion": {
+    "wp-ja-fresco": "1.0.0"
+  },
+  "maxVersionNote": "1.0.0 21/10/2026: first cut of the theme, a port of the JA Fresco Joomla (T4) quickstart. Measured with the 15 featured systems; the photo bands keep their dark veils through bands with vars and paint (D-34), the status components and mastheads follow Joomla JA Fresco 1.0.4 (followRules, sideRules). Not yet measured on a packed release: the gd.css tail is not in the zip.",
+  "release": "quickstart/ja-fresco/wp7",
+  "baseTokensFile": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-fresco/tokens.css",
+  "roles": {
+    "page": "body.home.wp-singular",
+    "display": "h1.wp-block-heading.hero-title",
+    "heading": "h2.wp-block-heading.main-title",
+    "body": "p.dish-description",
+    "button-primary": "div.wp-block-button.btn-primary > a.wp-block-button__link.wp-element-button",
+    "card": "div.wp-block-group.features-item",
+    "container": "div.wp-block-group.hero-content",
+    "section": "#acm-features-intro-114"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 90px",
+    "displayFace": "Playfair Display 400, tracking 0em",
+    "heading": "first section heading: 46px",
+    "body": "first body paragraph",
+    "container": "first content container, max-width 1320px",
+    "section": "first padded full-width section, padding-top 128px"
+  },
+  "discoveredNote": "21/10/2026: roles read by scripts/discover.mjs off the theme's build stand (wp-ja-fresco 1.0.0, home page), not off a released quickstart; button-primary and card were not found by discover and were named by hand from the home page's markup (the hero's filled button, the five feature cards). Painted on the home page: page #0a0b0a, surface #1b1a1c, text #ffffff, accent #e6c9a2",
+  "followRules": {
+    "ul.pagination .page-link:hover, ul.pagination .page-link:focus, ul.pagination .page-link:active": {
+      "background-color": "accent",
+      "border-color": "accent",
+      "color": "accent-on"
+    },
+    ".tracy .btn-success, .tracy .btn-success:hover, .tracy .btn-success:focus, .tracy .btn-success:active": {
+      "background-color": "surface!",
+      "border-color": "success!",
+      "color": "success-text!"
+    },
+    ".tracy .badge.bg-success, .tracy .progress-bar.bg-success, .tracy .card-header.bg-success, .tracy .card.bg-success": {
+      "background-color": "surface!",
+      "border-color": "success!",
+      "color": "success-text!"
+    },
+    ".tracy .btn-danger, .tracy .btn-danger:hover, .tracy .btn-danger:focus, .tracy .btn-danger:active": {
+      "background-color": "surface!",
+      "border-color": "danger!",
+      "color": "danger-text!"
+    },
+    ".tracy .badge.bg-danger, .tracy .progress-bar.bg-danger, .tracy .card-header.bg-danger, .tracy .card.bg-danger": {
+      "background-color": "surface!",
+      "border-color": "danger!",
+      "color": "danger-text!"
+    },
+    ".tracy .btn-warning, .tracy .btn-warning:hover, .tracy .btn-warning:focus, .tracy .btn-warning:active": {
+      "background-color": "surface!",
+      "border-color": "warn!",
+      "color": "warn-text!"
+    },
+    ".tracy .badge.bg-warning, .tracy .progress-bar.bg-warning, .tracy .card-header.bg-warning, .tracy .card.bg-warning": {
+      "background-color": "surface!",
+      "border-color": "warn!",
+      "color": "warn-text!"
+    },
+    ".tracy .btn-secondary, .tracy .btn-secondary:hover, .tracy .btn-secondary:focus, .tracy .btn-secondary:active": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .badge.bg-secondary, .tracy .progress-bar.bg-secondary, .tracy .card-header.bg-secondary, .tracy .card.bg-secondary": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .btn-info, .tracy .btn-info:hover, .tracy .btn-info:focus, .tracy .btn-info:active": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .badge.bg-info, .tracy .progress-bar.bg-info, .tracy .card-header.bg-info, .tracy .card.bg-info": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .btn-light, .tracy .btn-light:hover, .tracy .btn-light:focus, .tracy .btn-light:active": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .badge.bg-light, .tracy .progress-bar.bg-light, .tracy .card-header.bg-light, .tracy .card.bg-light": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .btn-dark, .tracy .btn-dark:hover, .tracy .btn-dark:focus, .tracy .btn-dark:active": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .badge.bg-dark, .tracy .progress-bar.bg-dark, .tracy .card-header.bg-dark, .tracy .card.bg-dark": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .btn-primary, .tracy .btn-primary:hover, .tracy .btn-primary:focus, .tracy .btn-primary:active": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .badge.bg-primary, .tracy .progress-bar.bg-primary, .tracy .card-header.bg-primary, .tracy .card.bg-primary": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .card[class*=\"bg-\"] :is(.card-title, .card-text), .tracy .alert-dark": {
+      "color": "fg!"
+    },
+    ".tracy .btn-outline-light": {
+      "color": "fg!",
+      "border-color": "fg!"
+    },
+    ".tracy .btn-outline-success, .tracy .btn-outline-success:hover, .tracy .btn-outline-success:focus, .tracy .btn-outline-success:active": {
+      "background-color": "surface!",
+      "border-color": "success!",
+      "color": "success-text!"
+    },
+    ".tracy .text-success": {
+      "color": "success-text!"
+    },
+    ".tracy .btn-outline-danger, .tracy .btn-outline-danger:hover, .tracy .btn-outline-danger:focus, .tracy .btn-outline-danger:active": {
+      "background-color": "surface!",
+      "border-color": "danger!",
+      "color": "danger-text!"
+    },
+    ".tracy .text-danger": {
+      "color": "danger-text!"
+    },
+    ".tracy .btn-outline-warning, .tracy .btn-outline-warning:hover, .tracy .btn-outline-warning:focus, .tracy .btn-outline-warning:active": {
+      "background-color": "surface!",
+      "border-color": "warn!",
+      "color": "warn-text!"
+    },
+    ".tracy .text-warning": {
+      "color": "warn-text!"
+    },
+    ".tracy .btn-outline-info, .tracy .btn-outline-info:hover, .tracy .btn-outline-info:focus, .tracy .btn-outline-info:active": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .btn-outline-secondary, .tracy .btn-outline-secondary:hover, .tracy .btn-outline-secondary:focus, .tracy .btn-outline-secondary:active": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy .btn-outline-primary, .tracy .btn-outline-primary:hover, .tracy .btn-outline-primary:focus, .tracy .btn-outline-primary:active": {
+      "background-color": "surface!",
+      "border-color": "accent!",
+      "color": "accent-text!"
+    },
+    ".tracy .text-primary": {
+      "color": "accent-text!"
+    },
+    ".tracy .pagination .active > .page-link, .tracy .pagination .page-link.active": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".tracy .card :is(.card-title, .card-text)": {
+      "color": "fg!"
+    },
+    ".tracy .alert-dark, .tracy .alert-dark :is(p, a)": {
+      "color": "fg!"
+    },
+    ".tracy .alert-dark": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    },
+    ".tracy input.wpcf7-submit": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".tracy .text-info, .tracy .text-secondary": {
+      "color": "fg!"
+    },
+    ".tracy .category-name.wp-block-post-terms a": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "accent-text!"
+    },
+    ".tracy .btn-outline-dark, .tracy .btn-outline-dark:hover, .tracy .btn-outline-dark:focus, .tracy .btn-outline-dark:active": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "fg!"
+    }
+  },
+  "followNote": "21/10/2026 (Fresco Joomla 1.0.4, ec1c95f833): the pagination's hover, focus and pressed states take the accent fill and its words, as the template fills them with its primary colour: a framework rule on the surface would otherwise outweigh the template's state rule and the link would look the same under the pointer as at rest (HOVER-2). The Joomla contract's dark-band paint rules (HIER-2) have no counterpart here: this contract keeps no band, so the testimonial and ink features headings already take the system's heading colour.",
+  "selectors": {
+    "display": "h1.wp-block-heading.hero-title",
+    "heading": ["main h2.wp-block-heading"],
+    "button": [".tracy .wp-block-button__link", ".tracy .wpcf7-submit", ".tracy button.btn"],
+    "buttonPrimary": [
+      ".tracy .btn-primary > .wp-block-button__link",
+      ".tracy a.btn.btn-primary",
+      ".tracy button.btn.btn-primary"
+    ],
+    "card": [".tracy .features-item"]
+  },
+  "selectorsNote": "Fresco's own markup, as JA Restaurant did (D-34): the base selectors name .tracy-display and .tracy-card, which this theme never prints, so no system reached its display line, section titles, primary button or cards. The body role reads a menu dish's description (p.dish-description), not the 300-weight lead paragraph above it, as on the Joomla release.",
+  "ready": true,
+  "readyNote": "measured 22/10/2026 (second pass) on the release of 1.0.0 (release folder restored on a stand of its own, release-measure.mjs: flow.mjs with the 15 featured systems, native and derived side, then the preview on 22 pages at light and dark under the two preview systems; design-system-measurement.json of 1.0.0): TDSR 47 PASS, 0 FAIL, 0 must-fix. HIER-2 was the one rule left: the dark ink bands (.acm-hero, .acm-features.style-1, .acm-testimonial) painted their words with one rule over h1-h6 and the paragraphs (colour text-2) and a second over h1-h6 only (colour text); the first names a:not(...) in its list, so its specificity outweighed the second and a band heading took the quiet text-2 where the same headings outside a band took the heading colour (About Restaurant, HOW TO FIND US? under Moxie and Figma, dark). The first rule no longer lists h1-h6, so the second one wins on them. LAYOUT-3 and ICON-1 are answered from this contract (sideRules), LAYOUT-1 from the theme (gd.css): tasks/ja-fresco-wp7/STATUS.md. Release 1.0.1 (database only, same theme) clears the Customize rule PAGE-5: the Go somewhere button of the typography page now points to /contact. Re-measured 22/10/2026 on the release folder of 1.0.1 (design-system-measurement.json of 1.0.1): TDSR 47 PASS, 0 FAIL.",
+  "keepScopes": [".acm-hero", ".acm-features", ".acm-testimonial"],
+  "bands": {
+    ".acm-hero": {
+      "ground": "#0a0b0a",
+      "texts": ["#cecece", "#ffffff"],
+      "kind": "ink",
+      "repaint": true,
+      "vars": {
+        "--jf-bg": "ground",
+        "--wp--preset--color--bg": "ground",
+        "--jf-heading": "text",
+        "--wp--preset--color--fg-2": "text",
+        "--jf-text": "text-2",
+        "--wp--preset--color--fg": "text-2"
+      },
+      "important": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ":is(p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      }
+    },
+    ".acm-features.style-1": {
+      "ground": "#0a0b0a",
+      "texts": ["#ffffff", "#cecece"],
+      "kind": "ink",
+      "repaint": true,
+      "vars": {
+        "--jf-bg": "ground",
+        "--wp--preset--color--bg": "ground",
+        "--jf-heading": "text",
+        "--wp--preset--color--fg-2": "text",
+        "--jf-text": "text-2",
+        "--wp--preset--color--fg": "text-2"
+      },
+      "important": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ":is(p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      }
+    },
+    ".acm-testimonial": {
+      "ground": "#1b1a1c",
+      "texts": ["#ffffff"],
+      "kind": "ink",
+      "repaint": true,
+      "vars": {
+        "--jf-bg": "ground",
+        "--wp--preset--color--bg": "ground",
+        "--jf-heading": "text",
+        "--wp--preset--color--fg-2": "text",
+        "--jf-text": "text-2",
+        "--wp--preset--color--fg": "text-2",
+        "--jf-surface": "ground",
+        "--wp--preset--color--surface": "ground"
+      },
+      "important": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ":is(p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      }
+    },
+    ".acm-features.style-2": {
+      "ground": "#e6c9a2",
+      "texts": [],
+      "kind": "brand",
+      "repaint": true,
+      "important": true,
+      "vars": {
+        "--jf-accent": "ground",
+        "--wp--preset--color--accent": "ground",
+        "--jf-accent-on": "text",
+        "--jf-heading": "text",
+        "--wp--preset--color--fg-2": "text",
+        "--jf-text": "text",
+        "--wp--preset--color--fg": "text",
+        "--jf-surface": "card",
+        "--wp--preset--color--surface": "card",
+        "--jf-bg": "ground",
+        "--wp--preset--color--bg": "ground"
+      },
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text"
+        },
+        ":is(h1, h2, h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      }
+    }
+  },
+  "sideRules": {
+    "light": {
+      "img.custom-logo": {
+        "filter": "invert(1)"
+      },
+      ".wp-block-button:is(.btn, .btn-primary)": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".acm-teams.style-1 .member-social .wp-social-link.wp-social-link": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".category-name.wp-block-post-terms a": {
+        "border-radius": "var(--ds-btn-radius)",
+        "border": "1px solid var(--ds-c-border)"
+      },
+      ".tracy [class*=\"btn-outline-\"]": {
+        "background-image": "none"
+      },
+      ".ja-masthead:has(.wp-block-cover__image-background).wp-block-cover::before": {
+        "background": "linear-gradient(rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%)"
+      },
+      ".ja-masthead:has(.wp-block-cover__image-background) :is(.ja-masthead-title, .ja-masthead-description, .ja-masthead-description p)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".ja-masthead.wp-block-cover:not(:has(.wp-block-cover__image-background))": {
+        "background-color": "var(--ds-c-bg)"
+      },
+      ".ja-masthead:not(:has(.wp-block-cover__image-background)) .wp-block-cover__background": {
+        "display": "none"
+      },
+      ".jf-authors .author-socials .wp-social-link.wp-social-link": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".bd-example.gap-1:not(.align-items-center)": {
+        "column-gap": "0 !important",
+        "row-gap": "0.5rem !important"
+      }
+    },
+    "dark": {
+      ".wp-block-button:is(.btn, .btn-primary)": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".category-name.wp-block-post-terms a": {
+        "border-radius": "var(--ds-btn-radius)",
+        "border": "1px solid var(--ds-c-border)"
+      },
+      ".tracy [class*=\"btn-outline-\"]": {
+        "background-image": "none"
+      },
+      ".bd-example.gap-1:not(.align-items-center)": {
+        "column-gap": "0 !important",
+        "row-gap": "0.5rem !important"
+      }
+    }
+  },
+  "sideRulesNote": "mirrors joomla-ja-fresco sideRules: under a light system a masthead that has a photo keeps a dark veil and its words take the page colour, and the logo made for the dark page is inverted; a masthead with no photo is a cover whose core black ground showed under a light system (the page-coloured title on black, EMPTY-1/CON-2), so it takes the page colour instead"
+}

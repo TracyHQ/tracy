@@ -1,0 +1,255 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "minVersion": {
+    "quickstart/gavick-gk-archi/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/gavick-gk-archi/j6": "1.0.1"
+  },
+  "applies": "a GavickPro Gavern (gk_*) quickstart: the same site module as the JA families, in the earliest position its layout renders. Gavern has no runtime colour variables: its compiled stylesheets read the slot once tokenized (a JoomlArt re-release), and the slot's own selector rules do the rest",
+  "tokenScope": ":root",
+  "runtime": {},
+  "selectors": {
+    "headingsAll": [":is(h1, h2, h3, h4)"],
+    "display": "h1",
+    "body": ["body"],
+    "themeToggle": "[data-tracy-theme-toggle]",
+    "displaySize": "h1.heading",
+    "heading": ["#gkBg h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "bodyFace": ["body"]
+  },
+  "specificity": "Rules are prefixed :root×6 (0,6,0): above every template rule, below an element's own inline style.",
+  "extraPalettes": [
+    {
+      "bg": "#f8f7f7",
+      "fg": "#404040",
+      "fg-2": "#292524",
+      "accent": "#c7624c",
+      "accent-hover": "#272727",
+      "meta": "#78716c",
+      "border": "#e9e8e8",
+      "muted": "#636565",
+      "surface": "#f8f7f7"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#f8f7f7",
+      "fg": "#404040",
+      "fg-2": "#292524",
+      "surface-warm": "#171717"
+    },
+    {
+      "surface-warm": "#171717",
+      "border": "#dddddd",
+      "accent-hover": "#292524",
+      "bg": "#f2f2f2",
+      "border-soft": "#eeeeee"
+    },
+    {
+      "accent-hover": "#333333",
+      "surface-warm": "#111111",
+      "bg": "#f5f5f5",
+      "border": "#e5e5e5"
+    },
+    {
+      "accent-hover": "#222222",
+      "surface-warm": "#151515",
+      "bg": "#f9f9f9"
+    },
+    {
+      "bg": "#fcf8e3"
+    }
+  ],
+  "genericTokens": false,
+  "genericNote": "the slot writes no short token names (--bg, --accent…) here; everything reads --ds-c-*",
+  "classifyText": true,
+  "template": "joomla/gk-archi",
+  "release": "quickstart/gavick-gk-archi/j6@1.0.1",
+  "roles": {
+    "page": "#gkTemplateTop",
+    "display": "h1.heading",
+    "heading": "h2.cta-title.col-lg-6",
+    "body": "#gkMainbodyWrap p:not(.lead)"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 90px",
+    "displayFace": "Satoshi 400, tracking -0.02em",
+    "heading": "first section heading: 36px",
+    "body": "first body paragraph that is not a lead (p.lead is the template’s light intro text)"
+  },
+  "keepScopes": ["#gkMainbodyTop", ".gk-modules-block"],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on quickstart/gavick-gk-archi/j6 1.0.0 with its stylesheets tokenized as 1.0.1 ships them (tasks/evidence/ds-contracts-gk-2026-10-11): 12/12, controls 0 differences, no text made less readable than the template's own under the four systems tried, 88%–100% of the page follows; the 1.0.1 build itself (restored from its zip) measured the same: 12/12; Gavern's own widths and section paddings stay the template's (a system's container width broke its phone layout, its section rhythm put the services heading under the hero picture), and its hero heading breaks long words (breakWords) so a wide system face does not push the phone page sideways. The page colours follow only from 1.0.1 (~/tracy-bench-work/RELEASE-DS-GAVICK.sh, not yet uploaded); minVersion keeps 1.0.0 sites out (TEMPLATE_NEEDS_UPDATE)",
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "pairVarFill": true,
+  "baseTokens": {
+    "--bg": "#f8f7f7",
+    "--fg": "#404040",
+    "--fg-2": "#292524",
+    "--accent": "#c7624c",
+    "--accent-hover": "#272727",
+    "--meta": "#78716c",
+    "--border": "#e9e8e8",
+    "--muted": "#636565",
+    "--surface": "#f8f7f7",
+    "--font-display": "\"Satoshi\", sans-serif",
+    "--font-body": "\"Satoshi\", sans-serif",
+    "--surface-warm": "#171717"
+  },
+  "darkTokens": {},
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (64 line colours, 115 text colours seen)",
+  "contrast": {
+    "accent-text": "#gkPageContent a:not([class*=btn]):not(:has(img))",
+    "muted": "#gkBg p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#gkPageContent p, #gkPageContent li",
+    "heading": "#gkBg :is(h1, h2, h3, h4)",
+    "logo": ".gkLogo",
+    "footer": "#gkFooter a, #gkFooterNavWrap a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "header",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 25 tried (byte 8255); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#171717",
+      "uses": 64,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#171717",
+      "distance": 0
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 26,
+      "kind": "line",
+      "role": "border",
+      "near": "#e9e8e8",
+      "distance": 20
+    },
+    {
+      "hex": "#292524",
+      "uses": 21,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#272727",
+      "distance": 4
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 20,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f8f7f7",
+      "distance": 9
+    },
+    {
+      "hex": "#333333",
+      "uses": 19,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#272727",
+      "distance": 21
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 16,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#111111",
+      "uses": 13,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#171717",
+      "distance": 10
+    },
+    {
+      "hex": "#f5f5f5",
+      "uses": 12,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f8f7f7",
+      "distance": 4
+    },
+    {
+      "hex": "#222222",
+      "uses": 7,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#272727",
+      "distance": 9
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#e9e8e8",
+      "distance": 6
+    },
+    {
+      "hex": "#151515",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#171717",
+      "distance": 3
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 5,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f8f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f8f7f7",
+      "distance": 20
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "keepColors": {
+    "#gkMainbodyTop": "rgb(233, 232, 232)",
+    ".gk-modules-block": "rgb(255, 255, 255)"
+  },
+  "alphaVars": ["fg-50"],
+  "breakWords": ["h1.heading"],
+  "licence": "gk_archi 1.2.0 (GavickPro, templateDetails.xml: \"Copyright (C) 2007 - 2022 GavickPro. All rights reserved.\", <license> empty). GavickPro's template business belongs to JoomlArt since October 2017, JoomlArt publishes this quickstart itself (JoomlArt-Products/ja-products): re-releasing it with tokenized stylesheets is JoomlArt's call, taken by David (product owner, 11/10/2026), who runs the release",
+  "bands": {
+    "#gkMainbodyTop": {
+      "ground": "#171717",
+      "texts": ["#ffffff", "#e9e8e8"],
+      "picture": true,
+      "paint": {
+        ".sub-heading": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".gk-modules-block": {
+      "ground": "#171717",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours"
+}

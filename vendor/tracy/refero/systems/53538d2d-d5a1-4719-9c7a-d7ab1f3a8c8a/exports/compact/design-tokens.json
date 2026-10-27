@@ -1,0 +1,59 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Ink — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "notebook-cream": {
+      "$value": "#ede7e2",
+      "$type": "color",
+      "$description": "Notebook Cream — Page canvas for body sections, feature row backgrounds — warm off-white that softens white cards and reads as paper stock"
+    },
+    "olive-ink": {
+      "$value": "#37352f",
+      "$type": "color",
+      "$description": "Olive Ink — Secondary near-black surface — warmer than Ink, used as a fill on the logo grid tiles and nav background accent"
+    },
+    "highlight-lime": {
+      "$value": "#f5ff7d",
+      "$type": "color",
+      "$description": "Highlight Lime — Hero section background, full-bleed color punctuation — the single saturated surface color; never use for text, borders, or buttons"
+    },
+    "lavender-wash": {
+      "$value": "#e2d8ff",
+      "$type": "color",
+      "$description": "Lavender Wash — Accent section background — soft violet surface for variety beats between white and lime sections"
+    },
+    "periwinkle-wash": {
+      "$value": "#c3d5fc",
+      "$type": "color",
+      "$description": "Periwinkle Wash — Accent section background — cool blue surface paired with Lavender Wash for tonal variety in content sections"
+    }
+  },
+  "font": {
+    "poppins": {
+      "$value": "Poppins",
+      "$type": "fontFamily",
+      "$description": "Display and section headings — used uppercase at 600 weight, tight 1.20 line-height creates an editorial stack; substitute: Montserrat or Inter at the same weights"
+    },
+    "montserrat": {
+      "$value": "Montserrat",
+      "$type": "fontFamily",
+      "$description": "Body, navigation, links, card text, captions, footer — the workhorse; 17px at 400 weight is the default reading size with comfortable 1.50 leading; substitute: Inter or DM Sans"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.getrepeat.io",
+      "siteName": "Repeat",
+      "extractedAt": "2026-06-03T22:04:27.043Z",
+      "variant": "compact"
+    }
+  }
+}

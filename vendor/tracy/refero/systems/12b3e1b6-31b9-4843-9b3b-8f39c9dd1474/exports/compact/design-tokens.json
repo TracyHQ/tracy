@@ -1,0 +1,54 @@
+{
+  "color": {
+    "gallery-plate": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Gallery Plate — Primary canvas and hairline dividers — the infinite gray field that hosts floating objects and borders nearly every surface in the system"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Primary text, icon strokes, and the dark pill in the nav bar — the only true black in the system, used for type and high-contrast marks"
+    },
+    "chalk": {
+      "$value": "#f4f4f4",
+      "$type": "color",
+      "$description": "Chalk — Elevated surface above the canvas — cards, panels, and lighter button fills that need to lift off the gray field"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Inset surfaces and inverse text on dark fills — the cleanest white available for maximum contrast pop"
+    },
+    "concrete": {
+      "$value": "#dedede",
+      "$type": "color",
+      "$description": "Concrete — Tertiary surface and muted button fill — one step darker than Chalk, used where a surface needs weight without drama"
+    },
+    "voltage-lime": {
+      "$value": "#e2ff70",
+      "$type": "color",
+      "$description": "Voltage Lime — Primary action fill and highlight accent — the only chromatic button/link background in the system, applied to the Menu pill and active link states to switch a control on"
+    },
+    "oxide-brown": {
+      "$value": "#68340e",
+      "$type": "color",
+      "$description": "Oxide Brown — Decorative content accent — appears inside imagery and printed artifacts (labels, type on objects); not a UI color but a recurring editorial note"
+    }
+  },
+  "font": {
+    "abcmonumentgrotesk": {
+      "$value": "ABCMonumentGrotesk",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all UI — body, labels, nav, headings, buttons, icons, links. The single medium weight with uniformly negative tracking (~-0.48px) gives every label a compressed, display-poster feel regardless of size. Avoid pairing with a secondary face; the constraint IS the identity."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://twomuch.studio",
+      "siteName": "TWOMUCH.STUDIO",
+      "extractedAt": "2026-06-03T19:15:21.377Z",
+      "variant": "compact"
+    }
+  }
+}

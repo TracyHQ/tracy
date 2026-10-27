@@ -1,0 +1,125 @@
+---
+title: Sections
+description: Create reusable Portable Text blocks and insert independent copies into content.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+Sections are reusable groups of Portable Text blocks. Editors can insert them into any Portable Text field, then change the inserted blocks without changing the source section.
+
+Use sections for repeatable starting points such as a call to action, an author biography, or a standard notice. Use a [widget area](/guides/widgets/) when one centrally managed value should update everywhere it appears.
+
+## Create a section
+
+Create and manage sections in **Sections** in the EmDash admin.
+
+<Steps>
+
+1. Click **New section** and enter a title, slug, and optional description.
+
+2. Add the content that editors should receive when they insert the section.
+
+3. Add search keywords for terms that editors may use when looking for the section.
+
+4. Save the section.
+
+</Steps>
+
+Section slugs contain lowercase letters, numbers, and hyphens. The slug identifies the section in templates and in the API; it is not a public page URL.
+
+## Insert a section into content
+
+<Steps>
+
+1. Put the cursor in a Portable Text field and type `/section`.
+
+2. Search for the section by title, description, or keyword.
+
+3. Select the section to insert its blocks at the cursor.
+
+4. Edit the inserted content as needed, then save the entry.
+
+</Steps>
+
+The editor copies the section's Portable Text into the entry. Later edits to the library section do not change copies that have already been inserted.
+
+## Provide sections in a seed file
+
+A theme or starter can provide sections in its seed file. Give every Portable Text block and span a stable `_key`, as in other seeded content.
+
+The following seed file adds a newsletter section:
+
+```json title=".emdash/seed.json"
+{
+  "version": "1",
+  "sections": [
+    {
+      "slug": "newsletter-signup",
+      "title": "Newsletter signup",
+      "description": "A short newsletter call to action",
+      "keywords": ["newsletter", "subscribe", "email"],
+      "source": "theme",
+      "content": [
+        {
+          "_type": "block",
+          "_key": "newsletter-heading",
+          "style": "h3",
+          "children": [
+            {
+              "_type": "span",
+              "_key": "newsletter-heading-text",
+              "text": "Receive new articles by email"
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "_key": "newsletter-body",
+          "style": "normal",
+          "children": [
+            {
+              "_type": "span",
+              "_key": "newsletter-body-text",
+              "text": "Subscribe for occasional updates."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+Run `emdash seed --validate` before applying a hand-written seed file. See [Seed Files](/themes/seed-files/) for application and conflict-handling options.
+
+Theme-provided sections use the `theme` source. Sections created in the admin use `user`, and WordPress reusable blocks imported by EmDash use `import`. See [Content Import](/migration/content-import/) for the import workflow.
+
+## Render a section in a template
+
+Most sites render section content as part of the entry into which it was copied. To render the current library value directly, fetch the section by slug and pass its content to `PortableText`.
+
+The following component renders a centrally queried newsletter section:
+
+```astro title="src/components/NewsletterSection.astro"
+---
+import { getSection } from "emdash";
+import { PortableText } from "emdash/ui";
+
+const section = await getSection("newsletter-signup");
+---
+
+{section && (
+  <aside aria-label={section.title}>
+    <PortableText value={section.content} />
+  </aside>
+)}
+```
+
+This direct rendering path reads the library value on every render, so a later edit to the section affects every place that uses this component.
+
+<Aside type="tip">
+	Use the direct rendering path only when synchronized output is the intended behavior. Inserting a
+	section in the editor is the better fit when each entry needs its own editable copy.
+</Aside>
+
+The [runtime API reference](/reference/api/#sections) documents section queries and pagination. For programmatic changes, authenticate with a Bearer token and add `X-EmDash-Request: 1` to every state-changing request. See the [section endpoints](/reference/rest-api/#section-endpoints) for request bodies and responses.

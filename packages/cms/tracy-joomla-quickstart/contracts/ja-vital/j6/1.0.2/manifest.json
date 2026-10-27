@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-vital/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_vital",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-vital",
+    "id": "quickstart/ja-vital/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_vital",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-vital-j6-webroot-1.0.2.tar.gz",
+        "bytes": 49889395,
+        "sha256": "e573f1dcddbb59d3e69243e82c1eb826a84dfb16625e1e9b1f297b6092b3e294"
+      },
+      "database": {
+        "file": "ja-vital-j6-database-1.0.2.sql.gz",
+        "bytes": 127314,
+        "sha256": "9399870320e4e71a33195be6fb0c924895c1a3f8a720f66183fbf4c3f2bc4985"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-07T20:33:27.863Z",
+    "builtFrom": {
+      "site": "vit",
+      "tag": "quickstart/ja-vital/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-vital/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.0",
+  "mode": "content-recommendation"
+}

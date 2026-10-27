@@ -1,0 +1,438 @@
+/* Scene 8 "Publish" (publish-scene.js). Copied verbatim from tch origin/develop, scoped to .hs-win .stp:
+   - the wizard shell: packages/core/tracy-core/src/wizard-shell/root-css.ts, wizard-css.ts, create-step-css.ts
+   - the Publish rules: packages/site/tracy-site-tabs/src/client/site-tabs-rules.css lines 155-294, 678-778, 807-821
+     (777d51c3ff "redesign Publish as a step wizard" and its follow-ups). */
+/* Scoped stand-in for the three preflight rules @tracy/ui relies on. dsh's base.css is not a
+   reset: it only re-applies font-family to form controls. Under this root only, never global. */
+.hs-win .stp .tas-root, .hs-win .stp .tas-root *, .hs-win .stp .tas-root *::before, .hs-win .stp .tas-root *::after { box-sizing: border-box; }
+/* UA pins form-control text to black; the outline Button and Input expect to inherit it. */
+.hs-win .stp .tas-root button, .hs-win .stp .tas-root input { font: inherit; color: inherit; }
+.hs-win .stp .tas-root button[data-slot="button"].text-primary-foreground { color: var(--primary-foreground); }
+.hs-win .stp .tas-root button:not(:disabled), .hs-win .stp .tas-root label:has([role="radio"], .hs-win .stp [role="checkbox"]) { cursor: pointer; }
+/* Every stage uses the panel's normal --card surface, matching the inner content of
+   tracy-my-sites and tracy-inbox. There is no raised card, tinted ground or centring spacer.
+   The root is the size container, so its children follow panel width even on standalone build
+   and ready screens. Form content is readable at 720px; wizard chrome and gallery are wider. */
+.hs-win .stp .tas-root {
+  container-type: inline-size;
+  min-width: 0;
+  width: 100%;
+  padding: 24px 0;
+  background-color: var(--card);
+}
+.hs-win .stp .tas-root > * { width: calc(100% - 32px); max-width: 720px; margin-inline: 16px; }
+@container (min-width: 600px) {
+  .hs-win .stp .tas-root > * { width: calc(100% - 48px); margin-inline: 24px; }
+}
+@container (min-width: 900px) {
+  .hs-win .stp .tas-root > * { width: calc(100% - 64px); margin-inline: 32px; }
+}
+
+
+/* The panel is the scroller. A short step fills it; a long step grows without a nested scroll box. */
+.hs-win .stp .tas-root.tas-wizard-card { display: flex; flex-direction: column; gap: 0; min-width: 0; height: auto; min-height: 100%; overflow: visible; padding-block: 24px 0; border: 0; border-radius: 0; box-shadow: none; }
+/* Import keeps an existing stage wrapper around its wizard; only the inner root owns gutters. */
+.hs-win .stp .tas-root:has(> .tas-root.tas-wizard-card) { padding: 0; }
+.hs-win .stp .tas-root > .tas-root.tas-wizard-card { width: 100%; max-width: none; margin: 0; }
+.hs-win .stp .tas-wizard-card > * { max-width: none; }
+.hs-win .stp .tas-wizard-steps { flex: none; }
+.hs-win .stp .tas-wizard-segments { display: flex; gap: 4px; width: 100%; }
+.hs-win .stp .tas-wizard-segment { box-sizing: border-box; display: flex; align-items: center; flex: 1; min-width: 0; height: 16px; margin: 0; padding: 6px 0; border: 0; border-radius: 999px; background: transparent; box-shadow: none; }
+.hs-win .stp .tas-wizard-segment > span { display: block; flex: 1; height: 4px; border-radius: 999px; background: color-mix(in oklab, var(--foreground) 10%, transparent); }
+/* :where keeps the real specificity (wizard-css.ts:14-15), so a done or current segment stays filled in dark. */
+:where(:root[data-theme="dark"]) .hs-win .stp .tas-wizard-segment > span { background: color-mix(in oklab, var(--foreground) 14%, transparent); }
+.hs-win .stp .tas-wizard-segment[data-active] > span { background: var(--primary); }
+.hs-win .stp .tas-wizard-segment:enabled { cursor: pointer; }
+.hs-win .stp .tas-wizard-segment:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
+/* The button adds 6px below the visible bar; 4px more makes the metadata gap 10px. */
+.hs-win .stp .tas-wizard-position { display: flex; align-items: baseline; gap: 8px; margin-top: 4px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.hs-win .stp .tas-wizard-position b { font-weight: 500; color: var(--foreground); }
+.hs-win .stp .tas-wizard-body { flex: 1 0 auto; min-width: 0; padding-block: 18px 24px; }
+.hs-win .stp .tas-wizard-body > * { min-width: 0; width: 100%; max-width: 720px; }
+.hs-win .stp .tas-wizard-card[data-wizard-step="design"] .tas-wizard-inline,
+.hs-win .stp .tas-wizard-card[data-wizard-step="system"] .tas-wizard-inline { max-width: none; }
+.hs-win .stp .tas-wizard-head { margin-bottom: 20px; }
+.hs-win .stp .tas-wizard-title { margin: 0; font-size: 20px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; color: var(--foreground); }
+.hs-win .stp .tas-wizard-title:focus { outline: none; }
+.hs-win .stp .tas-wizard-desc { margin: 6px 0 0; font-size: 13px; line-height: 1.45; color: var(--muted-foreground); }
+.hs-win .stp .tas-wizard-card > .tas-wizard-footer { position: sticky; bottom: 0; z-index: 4; flex: none; display: flex; align-items: center; gap: 8px; width: 100%; margin: auto 0 0; padding: 14px 16px 16px; border-top: 1px solid var(--border); background: var(--card); }
+.hs-win .stp .tas-wizard-footer [data-slot="button"] { min-width: 0; white-space: nowrap; }
+@container (min-width: 600px) {
+  .hs-win .stp .tas-wizard-card > .tas-wizard-footer { padding-inline: 24px; }
+}
+@container (min-width: 900px) {
+  .hs-win .stp .tas-wizard-card > .tas-wizard-footer { padding-inline: 32px; }
+}
+@container (max-width: 479px) {
+  .hs-win .stp .tas-wizard-footer [data-slot="button"] { flex-shrink: 1; padding-inline: 10px; }
+  .hs-win .stp .tas-wizard-card > .tas-wizard-footer, .hs-win .stp .tas-wizard-footer .tas-wizard-answered { font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.hs-win .stp .tas-wizard-actions { gap: 4px; }
+}
+.hs-win .stp .tas-wizard-answered { font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.hs-win .stp .tas-wizard-actions { min-width: 0; margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.hs-win .stp .tas-wizard-inline [data-ask-layout="sections"] { padding: 0; }
+.hs-win .stp .tas-wizard-inline .tas-ds-body { overflow: visible; padding: 8px 0 0; }
+.hs-win .stp .tas-wizard-inline .tas-ds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.hs-win .stp .tas-wizard-inline .tas-ds-card > span:first-child { width: 100%; height: auto; aspect-ratio: 16 / 10; }
+.hs-win .stp .tas-wizard-inline .tas-ds-card [title] { font-size: 13px; font-weight: 500; line-height: 18px; }
+.hs-win .stp .tas-wizard-inline .tas-ds-card [title] + span { font-size: 12px; line-height: 16px; }
+.hs-win .stp .tas-gallery-preview button:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
+.hs-win .stp .tas-wizard-inline .tas-ds-dot { width: 10px; height: 10px; }
+.hs-win .stp .tas-wizard-inline [data-design-system-filter] [data-slot="input-group"] { min-width: 200px; }
+.hs-win .stp .tas-wizard-inline .tas-ds-tools { padding: 0 0 8px; background: var(--card); }
+/* Approved Customize and Review use the same readable content width and heading rhythm. */
+.hs-win .stp .tas-wizard-card:is([data-wizard-step="customize"], [data-wizard-step="review"]) .tas-wizard-body > * { max-width: 760px; }
+.hs-win .stp .tas-wizard-card:is([data-wizard-step="customize"], [data-wizard-step="review"]) .tas-wizard-head { margin-bottom: 22px; }
+.hs-win .stp .tas-wizard-card:is([data-wizard-step="customize"], [data-wizard-step="review"]) .tas-wizard-desc { margin-top: 4px; line-height: 19px; }
+.hs-win .stp .tas-wizard-card:is([data-wizard-step="customize"], [data-wizard-step="review"]) .tas-wizard-footer [data-slot="button"],
+.hs-win .stp .tas-create-actions [data-slot="button"] { height: 36px; border-radius: 8px; }
+@container (max-width: 479px) {
+  .hs-win .stp .tas-wizard-answered { max-width: 90px; }
+}
+.hs-win .stp .tas-wizard-count { margin: 18px 0 0; font-size: 12px; color: var(--muted-foreground); }
+
+
+/* The last segment reflects creation; completed form segments keep their normal fill. */
+.hs-win .stp .tas-root .tas-wizard-segment[data-step-state="running"] > span { animation: tas-create-pulse 2.4s ease-in-out infinite; }
+.hs-win .stp .tas-root .tas-wizard-segment[data-step-state="failed"] > span { background: var(--destructive); }
+@media (prefers-reduced-motion: reduce) { .hs-win .stp .tas-root .tas-wizard-segment[data-step-state="running"] > span { animation: none; } }
+/* The default matches wizard body text; Settings scales the whole Create step together. */
+.hs-win .stp .tas-create-step, .hs-win .stp .tas-create-problem { --tas-create-font: var(--dsh-content-font-size, 14px); min-width: 0; font-size: var(--tas-create-font); line-height: calc(var(--tas-create-font) * 20 / 14); }
+.hs-win .stp .tas-create-step { padding-top: 2px; }
+.hs-win .stp .tas-create-step .tas-wizard-title { font-size: calc(var(--tas-create-font) * 20 / 14); }
+.hs-win .stp .tas-create-step .tas-wizard-desc { font-size: var(--tas-create-font); line-height: inherit; overflow-wrap: anywhere; }
+.hs-win .stp .tas-create-checklist { display: flex; flex-direction: column; gap: 0; list-style: none; margin: 20px 0 16px; padding: 0; }
+.hs-win .stp .tas-create-checklist li { position: relative; display: flex; align-items: center; gap: 10px; min-height: calc(var(--tas-create-font) * 34 / 14); padding-bottom: 8px; font-size: inherit; line-height: inherit; color: var(--muted-foreground); }
+.hs-win .stp .tas-create-checklist li:last-child { padding-bottom: 0; }
+.hs-win .stp .tas-create-checklist li:not(:last-child)::after { position: absolute; content: ''; left: calc(var(--tas-create-font) * 10 / 14 - .5px); top: calc(var(--tas-create-font) * 22 / 14); bottom: 2px; width: 1px; background: var(--border); }
+.hs-win .stp .tas-create-checklist [data-milestone="running"] { color: var(--foreground); }
+.hs-win .stp .tas-create-marker { display: flex; align-items: center; justify-content: center; flex: none; width: calc(var(--tas-create-font) * 20 / 14); height: calc(var(--tas-create-font) * 20 / 14); color: var(--primary); }
+.hs-win .stp .tas-create-marker svg { width: calc(var(--tas-create-font) * 16 / 14); height: calc(var(--tas-create-font) * 16 / 14); }
+.hs-win .stp .tas-create-checklist [data-milestone="done"] .tas-create-marker { border-radius: 50%; color: var(--primary-foreground); background: var(--primary); }
+.hs-win .stp .tas-create-checklist [data-milestone="done"] .tas-create-marker svg { width: calc(var(--tas-create-font) * 12 / 14); height: calc(var(--tas-create-font) * 12 / 14); }
+.hs-win .stp .tas-create-checklist [data-milestone="failed"] .tas-create-marker { color: var(--destructive); }
+.hs-win .stp .tas-create-status { display: flex; align-items: flex-start; gap: 9px; margin: 10px 0 0; font-size: inherit; font-weight: 400; line-height: inherit; color: var(--muted-foreground); }
+.hs-win .stp .tas-create-status-copy { min-width: 0; }
+.hs-win .stp .tas-create-status-copy > strong { display: block; color: var(--foreground); font-weight: 500; }
+.hs-win .stp .tas-create-explanation { display: block; }
+.hs-win .stp .tas-create-live { width: 6px; height: 6px; flex: none; margin-top: calc(var(--tas-create-font) * 7 / 14); border-radius: 50%; background: var(--primary); animation: tas-create-pulse 2.4s ease-in-out infinite; }
+@keyframes tas-create-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .hs-win .stp .tas-create-live { animation: none; } }
+/* Reuse Customize's shared Alert. There is no second guidance box inside it. */
+.hs-win .stp .tas-create-notice { margin-top: 16px; font-size: inherit; line-height: inherit; }
+.hs-win .stp .tas-create-notice [data-slot="alert-description"] { gap: 6px; min-width: 0; font-size: inherit; line-height: inherit; }
+.hs-win .stp .tas-create-notice .tas-create-status { margin: 0; color: var(--foreground); }
+.hs-win .stp .tas-create-notice[data-severity="error"] .tas-create-status { color: var(--destructive); }
+.hs-win .stp .tas-create-notice > svg { width: calc(var(--tas-create-font) * 16 / 14); height: calc(var(--tas-create-font) * 16 / 14); }
+.hs-win .stp .tas-create-guidance { margin: 0; font-size: inherit; line-height: inherit; color: var(--muted-foreground); overflow-wrap: anywhere; }
+.hs-win .stp ol.tas-create-guidance { padding-left: 1.5em; }
+.hs-win .stp .tas-create-guidance li + li { margin-top: 4px; }
+/* Large Button sizing is shared with the final wizard pages; outline matches Customize/Review. */
+.hs-win .stp .tas-create-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 20px; }
+.hs-win .stp .tas-create-actions:empty { display: none; }
+.hs-win .stp .tas-create-actions [data-slot="button"], .hs-win .stp .tas-create-technical [data-slot="button"] { font: inherit; min-height: calc(var(--tas-create-font) * 36 / 14); height: auto; }
+.hs-win .stp .tas-create-actions [data-slot="button"].bg-primary { color: var(--primary-foreground); }
+.hs-win .stp .tas-create-actions [data-slot="button"].border-border, .hs-win .stp .tas-create-technical [data-slot="button"] { border-color: var(--border); background: transparent; color: var(--foreground); }
+.hs-win .stp .tas-create-actions [data-slot="button"].border-border:hover, .hs-win .stp .tas-create-technical [data-slot="button"]:hover { background: var(--muted); }
+.hs-win .stp .tas-create-actions [data-slot="button"] svg { width: calc(var(--tas-create-font) * 16 / 14); height: calc(var(--tas-create-font) * 16 / 14); }
+.hs-win .stp .tas-create-actions a[data-slot="button"] { text-decoration: none; }
+.hs-win .stp .tas-create-technical { margin-top: 16px; font-size: inherit; line-height: inherit; color: var(--muted-foreground); }
+.hs-win .stp .tas-create-technical summary { width: fit-content; cursor: pointer; }
+.hs-win .stp .tas-create-technical summary:hover { color: var(--foreground); }
+.hs-win .stp .tas-create-technical pre { max-width: 100%; max-height: 240px; overflow: auto; margin: 8px 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: inherit; line-height: inherit; color: var(--muted-foreground); }
+.hs-win .stp .tas-create-technical summary:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
+
+.hs-win .stp .tv-site-head { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.hs-win .stp .tv-site-head-tile { display: grid; flex: none; place-items: center; width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 4%, var(--card)); }
+.hs-win .stp .tv-site-head-logo { width: 22px; height: 22px; }
+.hs-win .stp .tv-site-head-text { flex: 1; min-width: 0; }
+.hs-win .stp .tv-site-head-name { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--foreground); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hs-win .stp .tv-site-head-line { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; min-width: 0; }
+.hs-win .stp .tv-site-head-line .tv-site-head-name { min-width: 0; }
+.hs-win .stp .tv-site-head-status { display: flex; flex: none; }
+/* Draft / Publishing… / Live: dot and word. The word carries the state; the colour only repeats it.
+   The same rules as the My Sites row's chip (`tracy-my-sites` `styles.ts`). */
+.hs-win .stp .tv-status-chip { flex-shrink: 0; gap: 6px; }
+.hs-win .stp .tv-status-chip[data-status="live"] { border-color: color-mix(in oklab, var(--success) 50%, transparent); background-color: color-mix(in oklab, var(--success) 10%, transparent); }
+.hs-win .stp .tv-status-chip[data-status="publishing"] { border-color: color-mix(in oklab, var(--primary) 40%, transparent); background-color: color-mix(in oklab, var(--primary) 10%, transparent); }
+.hs-win .stp .tv-status-dot { width: 6px; height: 6px; border-radius: 9999px; background-color: var(--muted-foreground); }
+.hs-win .stp .tv-status-chip[data-status="live"] .tv-status-dot { background-color: var(--success); }
+.hs-win .stp .tv-status-chip[data-status="publishing"] .tv-status-dot { background-color: var(--primary); animation: tv-status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes tv-status-pulse { 50% { opacity: 0.5; } }
+.hs-win .stp .tv-site-head-sub { font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.hs-win .stp .tv-site-head-actions { display: flex; flex: none; flex-wrap: wrap; gap: 6px; }
+/* The two buttons are links: no preflight here, so the browser's underline and link blue are undone. */
+.hs-win .stp .tv-site-head-actions a { text-decoration: none; }
+.hs-win .stp .tv-site-head-actions a.tv-site-head-outline { color: var(--foreground); }
+/* Section heading in the Inbox's style: 14/20 semibold, a count pill after it. */
+.hs-win .stp .tv-site-sec { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--foreground); }
+.hs-win .stp .tv-site-domains { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.hs-win .stp .tv-domain-title { margin: 0; border-radius: 4px; outline: none; }
+/* Focus is one 1px stroke that changes colour, never a halo (DESIGN.md §5). */
+.hs-win .stp .tv-domain-title:focus-visible,
+.hs-win .stp .tv-domain-card h3:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
+.hs-win .stp .tv-domain-card { border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.hs-win .stp .tv-domain-card-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 14px; }
+.hs-win .stp .tv-domain-card-head { display: grid; gap: 2px; }
+.hs-win .stp .tv-domain-card-head h3 { margin: 0; font-size: 12px; line-height: 17px; font-weight: 400; color: var(--muted-foreground); }
+.hs-win .stp .tv-domain-lead { margin: 0; font-size: 13px; line-height: 18px; color: var(--foreground); overflow-wrap: anywhere; }
+/* One line when it fits; otherwise the action drops under the address, at the right. The row keeps
+   the height of its button, so the working line that replaces the button moves nothing. */
+.hs-win .stp .tv-domain-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; min-height: 28px; }
+/* The address never shrinks beside the actions: when the two do not fit one line the actions wrap
+   under it, and the address breaks (after a dot) only when it is wider than the whole card. */
+.hs-win .stp .tv-domain-address { display: flex; flex: none; align-items: center; gap: 4px; min-width: 0; max-width: 100%; }
+.hs-win .stp .tv-domain-actions { display: flex; flex: 1 1 auto; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 8px; min-width: 0; min-height: 28px; }
+.hs-win .stp .tv-domain-action { display: flex; align-items: center; min-height: 28px; margin-left: auto; }
+.hs-win .stp .tv-host { min-width: 0; overflow-x: auto; }
+.hs-win .stp .tv-mono { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 13px; line-height: 18px; color: var(--foreground); }
+.hs-win .stp .tv-nowrap { white-space: nowrap; }
+.hs-win .stp .tv-copy { display: flex; flex: none; align-items: center; gap: 4px; }
+.hs-win .stp .tv-copy-button { color: var(--muted-foreground); }
+.hs-win .stp .tv-copy-done { color: var(--success); }
+/* The word floats above the icon and reserves no width, so saying "Copied" moves nothing. */
+.hs-win .stp .tv-copy { position: relative; }
+.hs-win .stp .tv-copy-said { position: absolute; bottom: calc(100% + 2px); left: 50%; transform: translateX(-50%); padding: 2px 6px; border-radius: 6px; background: var(--popover, var(--card)); border: 1px solid var(--border); font-size: 12px; line-height: 17px; white-space: nowrap; color: var(--muted-foreground); pointer-events: none; }
+.hs-win .stp .tv-copy-said:empty { display: none; }
+.hs-win .stp .tv-domain-working { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.hs-win .stp .tv-spinner { flex: none; width: 14px; height: 14px; }
+.hs-win .stp .tv-domain-draft { color: var(--destructive); }
+.hs-win .stp .tv-domain-draft:hover { background-color: color-mix(in oklab, var(--destructive) 10%, transparent); color: var(--destructive); }
+.hs-win .stp .tv-domain-note { margin: 0; font-size: 12px; line-height: 17px; color: var(--muted-foreground); overflow-wrap: anywhere; }
+.hs-win .stp .tv-domain-note-alert { color: var(--destructive); }
+.hs-win .stp .tv-domain-failed { display: grid; gap: 2px; font-size: 12px; line-height: 17px; }
+.hs-win .stp .tv-domain-failed-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; }
+.hs-win .stp .tv-domain-failed-line p { margin: 0; color: var(--destructive); overflow-wrap: anywhere; }
+.hs-win .stp .tv-domain-details { display: grid; gap: 2px; color: var(--muted-foreground); overflow-wrap: anywhere; }
+.hs-win .stp .tv-domain-details p { margin: 0; }
+.hs-win .stp .tv-link { height: auto; padding: 0; border-radius: 4px; font-size: 12px; line-height: 17px; font-weight: 400; }
+.hs-win .stp .tv-link-quiet { color: var(--muted-foreground); }
+.hs-win .stp .tv-link:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
+/* A spinner or a pulsing dot that keeps turning is motion nobody asked for. */
+@media (prefers-reduced-motion: reduce) {
+  .hs-win .stp .tv-spinner,
+  .hs-win .stp .tv-status-chip[data-status="publishing"] .tv-status-dot { animation: none; }
+}
+.hs-win .stp .tv-site-rows { margin: 0; padding: 0; list-style: none; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+.hs-win .stp .tv-site-row { display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 9px 10px 9px 14px; }
+.hs-win .stp .tv-site-row + .tv-site-row { border-top: 1px solid var(--border); }
+.hs-win .stp .tv-site-row:hover { background: color-mix(in oklab, var(--foreground) 5%, var(--card)); }
+.hs-win .stp .tv-site-row-label { flex: 0 1 190px; min-width: 96px; font-size: 13px; line-height: 18px; color: var(--muted-foreground); }
+.hs-win .stp .tv-site-row-value { flex: 1; min-width: 0; font-size: 13px; line-height: 18px; color: var(--foreground); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hs-win .stp .tv-site-row-link { display: inline-grid; flex: none; place-items: center; width: 22px; height: 22px; border-radius: 6px; color: var(--muted-foreground); opacity: 0; }
+.hs-win .stp .tv-site-row:hover .tv-site-row-link,
+.hs-win .stp .tv-site-row-link:focus-visible { opacity: 1; }
+.hs-win .stp a.tv-site-row-link:hover { color: var(--foreground); }
+.hs-win .stp .tv-site-row-link:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; }
+.hs-win .stp .tv-site-settings-error { padding: 0 0 8px; font-size: 13px; color: var(--muted-foreground); }
+.hs-win .stp .tv-site-address-form { display: grid; gap: 8px; }
+.hs-win .stp .tv-site-address-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.hs-win .stp .tv-site-address-help { margin: 0; font-size: 12px; color: var(--muted-foreground); }
+.hs-win .stp .tv-site-address-error { color: var(--destructive); font-size: 13px; }
+/* A domain of the customer's own (`OwnDomainCard`): the name and its one-word state, the DNS records
+   to create with what the last lookup found under each, and its actions. Same card as the address. */
+.hs-win .stp .tv-own-domain-entry { display: flex; }
+/* The server refuses to check DNS for, or reserve again, a domain while the switch is off: no button that can only fail. */
+.hs-win .stp .tv-own-domain-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
+.hs-win .stp .tv-own-domain-head h3 { margin: 0; min-width: 0; font-size: 13px; line-height: 18px; font-weight: 500; color: var(--foreground); }
+.hs-win .stp .tv-domain-chip[data-domain-chip="live"],
+.hs-win .stp .tv-domain-chip[data-domain-chip="verified"] { border-color: color-mix(in oklab, var(--success) 50%, transparent); background-color: color-mix(in oklab, var(--success) 10%, transparent); }
+.hs-win .stp .tv-domain-chip[data-domain-chip="live"] .tv-status-dot,
+.hs-win .stp .tv-domain-chip[data-domain-chip="verified"] .tv-status-dot { background-color: var(--success); }
+.hs-win .stp .tv-domain-chip[data-domain-chip="wrong"],
+.hs-win .stp .tv-domain-chip[data-domain-chip="failed"],
+.hs-win .stp .tv-domain-chip[data-domain-chip="cleanup"] { border-color: color-mix(in oklab, var(--destructive) 50%, transparent); background-color: color-mix(in oklab, var(--destructive) 10%, transparent); }
+.hs-win .stp .tv-domain-chip[data-domain-chip="wrong"] .tv-status-dot,
+.hs-win .stp .tv-domain-chip[data-domain-chip="failed"] .tv-status-dot,
+.hs-win .stp .tv-domain-chip[data-domain-chip="cleanup"] .tv-status-dot { background-color: var(--destructive); }
+.hs-win .stp .tv-domain-chip[data-domain-chip="connecting"],
+.hs-win .stp .tv-domain-chip[data-domain-chip="removing"] { border-color: color-mix(in oklab, var(--primary) 40%, transparent); background-color: color-mix(in oklab, var(--primary) 10%, transparent); }
+.hs-win .stp .tv-domain-chip[data-domain-chip="connecting"] .tv-status-dot,
+.hs-win .stp .tv-domain-chip[data-domain-chip="removing"] .tv-status-dot { background-color: var(--primary); }
+.hs-win .stp .tv-domain-records { display: grid; gap: 8px; }
+.hs-win .stp .tv-domain-record { display: grid; gap: 4px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; line-height: 17px; overflow-wrap: anywhere; }
+.hs-win .stp .tv-domain-record[data-check="wrong"] { border-color: color-mix(in oklab, var(--destructive) 50%, var(--border)); }
+.hs-win .stp .tv-domain-record-title { margin: 0; font-weight: 500; color: var(--foreground); }
+/* One rhythm for the three rows: a line of 18px inside 3px above and below is 24px, the height of
+   the copy button, so a row with a button is no taller than one without. Label and value are the
+   same size and sit on one baseline (the grid aligns each row by its first line), so a value that
+   wraps keeps its label beside its first line. The label carries no padding of its own: where the
+   two fonts place their baselines a pixel apart, it moves inside the row instead of making a row
+   with a monospace value taller than one without. */
+.hs-win .stp .tv-domain-record dl { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 0 12px; margin: 0; }
+.hs-win .stp .tv-domain-record dt { line-height: 18px; color: var(--muted-foreground); }
+.hs-win .stp .tv-domain-record dd { margin: 0; min-width: 0; padding-block: 3px; line-height: 18px; color: var(--foreground); }
+.hs-win .stp .tv-domain-record .tv-mono { font-size: 12px; line-height: 18px; }
+/* A value with its copy button right after it: the text takes what it needs and wraps inside the
+   box when it is longer; the button stays on the text's first line. */
+.hs-win .stp .tv-domain-record dd.tv-domain-record-value { display: flex; align-items: flex-start; gap: 4px; padding-block: 0; }
+.hs-win .stp .tv-domain-record-value > :first-child { flex: 0 1 auto; min-width: 0; padding-block: 3px; }
+.hs-win .stp .tv-domain-record-value > .tv-copy { height: 24px; }
+.hs-win .stp .tv-domain-found { margin: 0; color: var(--muted-foreground); }
+.hs-win .stp .tv-domain-found[data-found="ok"] { color: var(--success); }
+.hs-win .stp .tv-domain-found[data-found="wrong"] { color: var(--destructive); }
+.hs-win .stp .tv-own-domain-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.hs-win .stp .tv-own-domain-actions .tv-domain-draft { margin-left: auto; }
+.hs-win .stp .tv-site-address-pending { margin-top: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; overflow-wrap: anywhere; }
+.hs-win .stp .tv-site-address-pending h3 { margin: 0; font-size: 13px; }
+.hs-win .stp .tv-site-address-pending dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; }
+.hs-win .stp .tv-site-address-pending dt { color: var(--muted-foreground); }
+.hs-win .stp .tv-site-address-pending dd { margin: 0; }
+
+/* The Publish tab (23/10/2026): a stepped wizard on the Add site shell (`.tas-root.tas-wizard-card`,
+   rules from `@tracy/core/wizard-shell`), filling the panel under the sticky tab header so its
+   footer sticks to the panel's bottom. No centred card: the wizard is the page, as in Add site. */
+.hs-win .stp[data-tab-kind="publish"] > .tv-pub-wizard { flex: 1 0 auto; }
+.hs-win .stp .tv-pub-wizard .tas-wizard-steps { margin-top: 0; }
+.hs-win .stp .tv-pub-step { display: grid; gap: 14px; }
+.hs-win .stp .tv-pub-step > .tas-wizard-head { margin-bottom: 4px; }
+.hs-win .stp .tv-pub-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
+.hs-win .stp .tv-pub-card-head h3 { margin: 0; font-size: 12px; line-height: 17px; font-weight: 400; color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-addr { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.hs-win .stp .tv-pub-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; min-width: 0; padding: 6px 6px 6px 12px; border: 1px solid var(--input); border-radius: 10px; background: var(--card); }
+.hs-win .stp .tv-pub-bar-lk { display: flex; flex: 1 1 100%; align-items: center; gap: 8px; min-width: 0; color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-bar-lk > svg { width: 14px; height: 14px; flex: none; }
+.hs-win .stp .tv-pub-url { display: flex; flex: 0 1 auto; align-items: baseline; min-width: 0; }
+.hs-win .stp .tv-pub-url .tv-host { font-size: 14px; line-height: 20px; white-space: nowrap; }
+.hs-win .stp .tv-pub-sfx { flex: none; color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-url > .tv-pub-sfx { font-size: 14px; line-height: 20px; }
+.hs-win .stp .tv-pub-name { color: var(--foreground); }
+.hs-win .stp .tv-pub-bar-lk > .tv-copy { margin-left: -2px; }
+.hs-win .stp .tv-pub-bar > .tv-pub-change { margin-left: auto; }
+.hs-win .stp .tv-pub-change { height: 28px; gap: 6px; padding: 0 10px; color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-change:hover { color: var(--foreground); }
+.hs-win .stp .tv-pub-change svg { width: 14px; height: 14px; }
+@container (min-width: 480px) {
+  .hs-win .stp .tv-pub-bar-lk { flex: 1 1 0; }
+}
+.hs-win .stp .tv-pub-side { justify-content: flex-start; min-height: 0; }
+.hs-win .stp .tv-pub-lead-sep { color: var(--muted-foreground); white-space: pre-wrap; }
+.hs-win .stp .tv-pub-back-draft { display: inline; padding: 0; border: 0; background: none; font: inherit; color: var(--muted-foreground); white-space: nowrap; cursor: pointer; border-radius: 2px; }
+.hs-win .stp .tv-pub-back-draft:hover, .hs-win .stp .tv-pub-back-draft:focus-visible { color: var(--foreground); text-decoration: underline; text-underline-offset: 2px; }
+.hs-win .stp .tv-pub-back-draft:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.hs-win .stp .tv-pub-callout { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; padding: 10px 12px; border-radius: 8px; background: color-mix(in oklab, var(--foreground) 7%, var(--card)); font-size: 13px; line-height: 20px; }
+.hs-win .stp .tv-pub-callout > svg { width: 14px; height: 14px; flex: none; margin-top: 3px; color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-callout > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hs-win .stp .tv-pub-callout b { font-weight: 600; color: var(--foreground); }
+.hs-win .stp .tv-pub-callout span { color: var(--muted-foreground); }
+/* Variant B (24/10/2026): no bordered card and no box inside a box anywhere in the wizard.
+   Structure is spacing, small muted labels, and hairlines only where a list needs them. A status is
+   a slim strip tinted by its tone, without border: the tone is mixed into the ground, the icon at
+   the start takes the tone, a bold line and the words follow, then any action. */
+.hs-win .stp .tv-pub-strip { --tv-strip-tone: var(--muted-foreground); --tv-strip-mix: 12%; display: flex; align-items: flex-start; gap: 8px; margin: 0; padding: 8px 12px; border: 0; border-radius: 8px; background: color-mix(in oklab, var(--tv-strip-tone) var(--tv-strip-mix), transparent); font-size: 13px; line-height: 20px; font-weight: 400; color: var(--foreground); overflow-wrap: anywhere; }
+.hs-win .stp .tv-pub-strip[data-severity="warning"] { --tv-strip-tone: var(--warning); --tv-strip-mix: 14%; }
+.hs-win .stp .tv-pub-strip[data-severity="error"] { --tv-strip-tone: var(--destructive); --tv-strip-mix: 11%; }
+.hs-win .stp .tv-pub-strip[data-severity="success"] { --tv-strip-tone: var(--success); --tv-strip-mix: 12%; }
+/* Waiting is neutral ground with the primary spinner: a terracotta tint reads as an error in dark. */
+.hs-win .stp .tv-pub-strip[data-severity="waiting"] { --tv-strip-tone: var(--foreground); --tv-strip-mix: 6%; }
+.hs-win .stp .tv-pub-strip[data-severity="waiting"] > [data-slot="spinner"] { color: var(--primary); }
+.hs-win .stp .tv-pub-strip[data-severity="info"] { --tv-strip-tone: var(--foreground); --tv-strip-mix: 6%; }
+.hs-win .stp .tv-pub-strip > svg,
+.hs-win .stp .tv-pub-strip > [data-slot="spinner"] { width: 14px; height: 14px; flex: none; margin-top: 3px; color: var(--tv-strip-tone); }
+.hs-win .stp .tv-pub-strip[data-severity="info"] > svg { color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-strip > .tas-create-live { margin: 7px 4px 0; }
+.hs-win .stp .tv-pub-strip > span { min-width: 0; }
+.hs-win .stp .tv-pub-strip-body { display: grid; gap: 2px; flex: 1 1 auto; min-width: 0; }
+.hs-win .stp .tv-pub-strip-body p { margin: 0; }
+.hs-win .stp .tv-pub-strip-title { font-weight: 600; color: var(--foreground); }
+.hs-win .stp .tv-pub-strip-title ~ p { color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-strip .tv-pub-small { color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-strip .tv-pub-list { margin: 2px 0 0; }
+.hs-win .stp .tv-pub-notice-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+/* Older lines that became strips keep their hooks; the strip's type wins over theirs. */
+.hs-win .stp .tv-pub-strip.tv-domain-note,
+.hs-win .stp .tv-pub-strip.tv-domain-working,
+.hs-win .stp .tv-pub-strip.tv-site-address-error { font-size: 13px; line-height: 20px; color: var(--foreground); }
+.hs-win .stp .tv-pub-strip.tv-domain-failed { display: flex; font-size: 13px; line-height: 20px; }
+.hs-win .stp .tv-pub-strip .tv-domain-failed-line p { color: var(--foreground); }
+.hs-win .stp .tv-pub-strip .tv-domain-failed-line .tv-link { height: 20px; font-size: 13px; }
+.hs-win .stp .tv-pub-strip .tv-domain-details { margin-top: 2px; font-size: 12px; line-height: 17px; }
+.hs-win .stp .tv-pub-alert { color: var(--destructive); }
+.hs-win .stp .tv-pub-label { font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+
+/* A value the customer copies sits in the address bar's own shape: the value in monospace, its copy
+   button right after it. */
+.hs-win .stp .tv-pub-install { display: grid; gap: 6px; }
+.hs-win .stp .tv-pub-install-code { font-size: 15px; line-height: 20px; letter-spacing: 0.14em; color: var(--foreground); }
+
+/* The own domain, unboxed: its name and chip, the line under them, each record as a small heading
+   over its rows, then the notes as one compact list. Two domains are parted by a hairline. */
+.hs-win .stp .tv-pub-step .tv-domain-card { border: 0; border-radius: 0; background: none; }
+.hs-win .stp .tv-pub-step .tv-domain-card-body { gap: 12px; padding: 0; }
+.hs-win .stp .tv-pub-step .tv-own-domain + .tv-own-domain { padding-top: 20px; border-top: 1px solid var(--border); }
+.hs-win .stp .tv-pub-step .tv-own-domain-head h3 { font-size: 14px; line-height: 20px; }
+.hs-win .stp .tv-pub-step .tv-domain-records { gap: 16px; margin-top: 2px; }
+.hs-win .stp .tv-pub-step .tv-domain-record { gap: 6px; padding: 0; border: 0; border-radius: 0; }
+.hs-win .stp .tv-pub-step .tv-domain-record-title { font-size: 13px; line-height: 18px; font-weight: 600; }
+.hs-win .stp .tv-pub-step .tv-domain-record dl { gap: 6px 12px; }
+/* Every row is as tall as the bar, so the three keep one rhythm: the type sits on a bar's inset
+   with no border to draw, the name and the value in the bar itself. */
+.hs-win .stp .tv-pub-step .tv-domain-record dd { padding: 2px 4px 2px 10px; border: 1px solid transparent; border-radius: 8px; }
+.hs-win .stp .tv-pub-step .tv-domain-record dd.tv-domain-record-plain { padding-block: 5px; }
+.hs-win .stp .tv-pub-step .tv-domain-record dd.tv-pub-value { border-color: var(--input); background: var(--card); }
+.hs-win .stp .tv-pub-step .tv-domain-found { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-step .tv-domain-found > svg { width: 13px; height: 13px; flex: none; margin-top: 2px; }
+.hs-win .stp .tv-pub-step .tv-domain-found[data-found="ok"] { color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-step .tv-domain-found[data-found="ok"] > svg { color: var(--success); }
+.hs-win .stp .tv-pub-step .tv-domain-found[data-found="wrong"] { color: var(--destructive); }
+.hs-win .stp .tv-domain-notes { display: grid; gap: 3px; margin: 0; }
+.hs-win .stp .tv-domain-notes > p { position: relative; padding-left: 12px; }
+.hs-win .stp .tv-domain-notes > p::before { position: absolute; top: 7px; left: 2px; width: 3px; height: 3px; border-radius: 50%; background: currentColor; content: ""; opacity: 0.7; }
+.hs-win .stp .tv-pub-step .tv-own-domain-actions { margin-top: 2px; }
+.hs-win .stp .tv-pub-step .tv-own-domain-actions .tv-domain-draft { margin-left: 0; }
+.hs-win .stp .tv-pub-field-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.hs-win .stp .tv-pub-field-row > [data-slot="input"], .hs-win .stp .tv-pub-field-row > input { flex: 1 1 220px; min-width: 0; }
+.hs-win .stp .tv-own-domain-entry > .tv-pub-form { flex: 1 1 auto; min-width: 0; }
+.hs-win .stp .tv-pub-line { margin: 0; font-size: 13px; line-height: 1.45; color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-small { margin: 0; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-checklist { margin: 4px 0; }
+.hs-win .stp .tv-pub-checklist li[data-milestone="pending"] { color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-list { display: grid; gap: 4px; margin: 6px 0 0; padding: 0; list-style: none; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-code { display: grid; gap: 8px; }
+.hs-win .stp .tv-pub-code-line { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted-foreground); }
+.hs-win .stp .tv-pub-code-error { color: var(--destructive); }
+@container (max-width: 479px) {
+  .hs-win .stp .tv-pub-step { gap: 12px; }
+  .hs-win .stp .tv-pub-field-row > [data-slot="button"] { flex: 1 1 100%; }
+}
+
+/* Popup-only: what Tailwind utilities, the @tracy/ui components and a browser reset give the real page. */
+.hs-win .stp-publish { --pub-scroll: 0px; }
+.hs-win .stp-publish button { margin: 0; font: inherit; }
+.hs-win .stp-publish .tas-root.tas-wizard-card.stp-wizard { flex: 1; min-height: 0; height: auto; display: flex; flex-direction: column; padding-bottom: 0; overflow: hidden; }
+/* The real panel scrolls the whole wizard card (root-css.ts: the panel is the scroller), so the step bar and
+   "Step N of 3" scroll away with the page; the card clips at the tab header and the footer stays on top. */
+.hs-win .stp-publish .tas-wizard-body { flex: 1 1 auto; min-height: 0; overflow: visible; }
+.hs-win .stp-publish .tas-wizard-steps,
+.hs-win .stp-publish .tas-wizard-body > .tas-create-step { transform: translateY(calc(-1 * var(--pub-scroll))); }
+.hs-win .stp-publish .tas-wizard-card > .tas-wizard-footer { position: relative; }
+/* The primary button keeps its own text colour (root-css.ts WIZARD_ROOT_BUTTON_CSS). */
+.hs-win .stp .tas-root .stp-btn:not(.is-outline):not(.is-ghost) { color: var(--primary-foreground); }
+/* KindStep: RadioGroup gap-2 and ChoiceOption (tch site-build-core ask-form/primitives.tsx:84-110), RadioGroupItem (tracy-ui radio-group.tsx). */
+.hs-win .stp-publish .stp-kinds { display: grid; gap: 8px; }
+.hs-win .stp-publish .stp-choice { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--card-foreground); }
+.hs-win .stp-publish .stp-choice[data-selected="1"] { border-color: var(--primary); }
+.hs-win .stp-publish .stp-choice.is-hover { background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
+.hs-win .stp-publish .stp-radio { position: relative; flex: none; width: 16px; height: 16px; margin-top: 2px; border: 1px solid var(--input); border-radius: 999px; }
+:root[data-theme="dark"] .hs-win .stp-publish .stp-radio { background: color-mix(in oklab, var(--input) 30%, transparent); }
+.hs-win .stp-publish .stp-choice[data-selected="1"] .stp-radio { border-color: var(--primary); }
+.hs-win .stp-publish .stp-choice[data-selected="1"] .stp-radio::after { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 999px; background: var(--primary); }
+.hs-win .stp-publish .stp-choice-text { display: flex; flex-direction: column; min-width: 0; }
+.hs-win .stp-publish .stp-choice-title { font-size: 14px; line-height: 20px; font-weight: 500; }
+.hs-win .stp-publish .stp-choice-desc { margin-top: 2px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.hs-win .stp-publish .stp-choice-hint { display: flex; align-items: flex-start; gap: 6px; margin-top: 8px; padding: 6px 10px; border-radius: 8px; background: color-mix(in oklab, var(--card-foreground) 7%, var(--card)); color: var(--card-foreground); font-size: 12px; line-height: 16px; }
+.hs-win .stp-publish .stp-choice-hint svg { width: 14px; height: 14px; margin-top: 1px; color: var(--muted-foreground); }
+.hs-win .stp-publish .stp-choice-hint b { font-weight: 600; }
+/* Input (tracy-ui input.tsx): h-8 rounded-lg border-input px-2.5 text-sm, ring border on focus. */
+.hs-win .stp-publish .stp-input { display: flex; align-items: center; flex: 1 1 220px; min-width: 0; height: 32px; padding: 0 10px; border: 1px solid var(--input); border-radius: 10px; font-size: 14px; line-height: 20px; color: var(--foreground); }
+:root[data-theme="dark"] .hs-win .stp-publish .stp-input { background: color-mix(in oklab, var(--input) 30%, transparent); }
+.hs-win .stp-publish .stp-input.is-focus { border-color: var(--ring); }
+.hs-win .stp-publish .stp-caret { width: 1px; height: 16px; margin-left: 1px; background: var(--foreground); }
+.hs-win .stp-publish .tv-pub-form label { font-size: 14px; line-height: 20px; font-weight: 500; }
+/* The icon-xs ghost copy button and the Spinner. */
+.hs-win .stp-publish .tv-copy-button { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0; border: 1px solid transparent; border-radius: 8px; background: none; }
+.hs-win .stp-publish .tv-copy-button svg { width: 12px; height: 12px; }
+.hs-win .stp-publish .tv-spinner, .hs-win .stp-publish .tv-pub-strip > svg { width: 14px; height: 14px; }
+.hs-win .stp-publish .tv-pub-strip[data-severity="waiting"] > .tv-spinner { color: var(--primary); }
+.hs-win .stp-publish .tv-domain-found svg { stroke-width: 2; }
+.hs-win .stp-publish .tv-pub-step [data-row-hidden] { display: none; }

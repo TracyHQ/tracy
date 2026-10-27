@@ -1,0 +1,103 @@
+---
+import { getEmDashCollection, getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import StatsGrid from '@/components/site/StatsGrid.astro'
+import NumberedList from '@/components/site/NumberedList.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor, stampsFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const { entry } = await getEmDashEntry('services_page', 'services', { locale })
+if (!entry) return Astro.rewrite(href(locale, '/404'))
+const s = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'services_page', entry)
+const $site = stampFor(Astro.request, 'site', site)
+// A button into an unticked page goes on its own; its section stays (TCH #1013, `src/lib/link-gate.ts`).
+const ctaUrl = s.cta_url || href(locale, '/contact')
+const ctaAltUrl = s.cta_alt_url || href(locale, '/projects')
+const live = await liveLinks(Astro.request, locale, [ctaUrl, ctaAltUrl])
+const $ = stampsFor(Astro.request)
+const { entries: services } = await getEmDashCollection('services', {
+  locale,
+  status: 'published',
+  orderBy: { sort: 'asc' },
+  limit: 50
+})
+---
+
+<Base chrome={chrome} title={s.breadcrumb || s.title} description={s.lede} currentPath="/services" content={{ collection: "services_page", id: entry.data.id, slug: "services", toPath: () => "/services" }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={[{ label: site.home_label, url: href(locale, "/"), stamp: $site("home_label") }, { label: s.breadcrumb, stamp: $page("breadcrumb") }]} />
+		<section class="container-site pb-10 pt-16">
+			<h1 class="h-page mb-5 max-w-[34em]" {...$page("title")}>{s.title}</h1>
+			<p class="max-w-[44em] text-[17.5px] leading-[1.68] text-fg-2" {...$page("lede")}>{s.lede}</p>
+		</section>
+		<StatsGrid stats={s.stats} size={32} stamp={$page} field="stats" />
+
+		<section class="band-paper2">
+			<div class="container-site py-16">
+				<h2 class="h-section mb-[26px]" {...$page("services_title")}>{s.services_title}</h2>
+				<div class="grid-lines grid-cols-[repeat(auto-fit,minmax(310px,1fr))]">
+					{services.map((sv: any) => (
+						<div class="flex flex-col gap-3.5 p-7" {...$('services', sv)()}>
+							<div class="font-serif text-[23px] leading-[1.2]"><a href={href(locale, `/services/${sv.slug}`)} class="text-fg hover:text-forest-text" {...$('services', sv)("title")}>{sv.data.title}</a></div>
+							<p class="text-[15.5px] leading-[1.62] text-fg-muted" {...$('services', sv)("description")}>{sv.data.description}</p>
+							<div>
+								<div class="mb-[9px] text-[11.5px] font-bold uppercase tracking-[.14em] text-forest-text" {...$page("includes_label")}>{s.includes_label}</div>
+								{(sv.data.includes ?? []).map((i: any) => (
+									<div class="grid grid-cols-[18px_1fr] gap-[9px] py-[5px] text-[14.5px] leading-[1.5] text-fg-2" {...$('services', sv).block("includes")}><span class="text-signal-text">·</span><span {...$('services', sv)("includes.item")}>{i.item}</span></div>
+								))}
+							</div>
+							<div class="mt-auto border-t border-line pt-3 text-[13.5px] font-semibold text-forest-text" {...$('services', sv)("term")}>{sv.data.term}</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-14 py-[72px]">
+			<div>
+				<h2 class="h-section-sm mb-5" {...$page("process_title")}>{s.process_title}</h2>
+				<NumberedList items={s.process} stamp={$page} field="process" />
+			</div>
+			{(s.pricing ?? []).length > 0 && (
+			<div>
+				<h2 class="h-section-sm mb-3" {...$page("pricing_title")}>{s.pricing_title}</h2>
+				<p class="mb-[18px] text-[14.5px] leading-[1.6] text-fg-meta" {...$page("pricing_text")}>{s.pricing_text}</p>
+				<div class="border border-line">
+					{(s.pricing ?? []).map((pr: any) => (
+						<div class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-[18px] border-b border-line-soft px-5 py-[17px] last:border-b-0" {...$page.block("pricing")}>
+							<div><div class="text-[16px] font-semibold" {...$page("pricing.title")}>{pr.title}</div><div class="mt-1 text-[13.5px] text-fg-meta" {...$page("pricing.text")}>{pr.text}</div></div>
+							<div class="whitespace-nowrap text-[16px] font-semibold text-forest-text" {...$page("pricing.value")}>{pr.value}</div>
+						</div>
+					))}
+				</div>
+			</div>
+			)}
+		</section>
+
+		<section class="band-ink">
+			<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-center gap-10 py-[60px]">
+				<div>
+					<h2 class="h-section-sm mb-3 text-[color:var(--ds-c-on-ink,#F5F3EE)]" {...$page("cta_title")}>{s.cta_title}</h2>
+					<p class="max-w-[38em] text-[16.5px] leading-[1.65] text-on-ink-muted" {...$page("cta_text")}>{s.cta_text}</p>
+				</div>
+				<div class="flex flex-wrap items-center gap-3.5">
+					{live(ctaUrl) && <a href={ctaUrl} class="btn-primary" {...$page("cta_button")}>{s.cta_button}</a>}
+					{live(ctaAltUrl) && <a href={ctaAltUrl} class="border-b border-on-forest-line pb-0.5 text-[15px] font-semibold text-[color:var(--ds-c-on-ink,#F5F3EE)] hover:text-[color:var(--ds-c-on-ink,var(--color-white))]" {...$page("cta_alt_label")}>{s.cta_alt_label}</a>}
+				</div>
+			</div>
+		</section>
+	</main>
+</Base>

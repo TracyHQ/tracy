@@ -1,0 +1,74 @@
+{
+  "color": {
+    "vellum": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Vellum — Page canvas, hairline dividers, link underlines, card-edge borders — the warm-gray field that holds all content"
+    },
+    "ink-black": {
+      "$value": "#111827",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, nav links, body copy — the default reading color"
+    },
+    "graphite": {
+      "$value": "#374151",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text, list items, supporting copy — one step lighter than primary ink"
+    },
+    "charcoal": {
+      "$value": "#2a2a28",
+      "$type": "color",
+      "$description": "Charcoal — Headings and editorial emphasis — slightly warm dark for serif display"
+    },
+    "stone": {
+      "$value": "#717272",
+      "$type": "color",
+      "$description": "Stone — Tertiary text, icon fills, meta labels"
+    },
+    "pebble": {
+      "$value": "#909191",
+      "$type": "color",
+      "$description": "Pebble — Muted body text, image captions, fine print"
+    },
+    "ash": {
+      "$value": "#c4c6c8",
+      "$type": "color",
+      "$description": "Ash — Rarely-used border, subtle structural separator"
+    },
+    "slate": {
+      "$value": "#7b7c7c",
+      "$type": "color",
+      "$description": "Slate — Subdued heading variant, de-emphasized titles"
+    },
+    "pressed-ink": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Pressed Ink — Primary action button fill — the only dark surface on the canvas, creating the only moment of visual weight"
+    },
+    "midnight": {
+      "$value": "#1a202c",
+      "$type": "color",
+      "$description": "Midnight — Secondary dark surface, alternate button fill"
+    }
+  },
+  "font": {
+    "degular": {
+      "$value": "Degular",
+      "$type": "fontFamily",
+      "$description": "UI and body sans — navigation, buttons, body copy, metadata, links, tags, resumé dates. Carries all functional text. Weights step from 400 body to 700 for emphasis in headings and dates."
+    },
+    "blanco": {
+      "$value": "Blanco",
+      "$type": "fontFamily",
+      "$description": "Editorial serif — hero headline, resumé role titles, section headings, and any text that should read as 'published' rather than 'navigational'. Single weight 400, letting size and the serif's own authority carry hierarchy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.daniel.pizza",
+      "siteName": "Daniël van der Winden",
+      "extractedAt": "2026-06-03T19:27:22.172Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,326 @@
+{
+  "kind": "gradient-stop",
+  "about": "Probe data cut from real Add site previews (preview-check.mjs, the detector's own probe on the plain and the worn page). broken: only the entries the detector flags and their plain twins; clean: the whole probe of a page with none. Regenerate by re-running the probe; never edit values by hand.",
+  "broken": [
+    {
+      "source": "quickstart/ja-trip/j6@1.0.5 (https://ja-trip-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#198754",
+        "#fd7e14",
+        "#ef4444",
+        "#ffffff",
+        "#585c63",
+        "#ff6b00",
+        "#df5e00",
+        "#111111",
+        "#0dcaf0",
+        "#f8f5f0",
+        "#212529"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:4/div:2/div:1/div:1/div:1/div:1/div:1/h3:1",
+            "at": "h3.section-title.h3.text-gradient",
+            "area": 40880,
+            "clip": true,
+            "stops": [
+              { "r": 132, "g": 172, "b": 251, "a": 1 },
+              { "r": 0, "g": 175, "b": 250, "a": 1 },
+              { "r": 1, "g": 144, "b": 205, "a": 1 },
+              { "r": 118, "g": 74, "b": 218, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1",
+            "at": "div.sub-title.font-special-family.h3",
+            "area": 17220,
+            "clip": true,
+            "stops": [
+              { "r": 132, "g": 172, "b": 251, "a": 1 },
+              { "r": 0, "g": 175, "b": 250, "a": 1 },
+              { "r": 1, "g": 144, "b": 205, "a": 1 },
+              { "r": 118, "g": 74, "b": 218, "a": 1 }
+            ]
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:4/div:2/div:1/div:1/div:1/div:1/div:1/h3:1",
+            "at": "h3.section-title.h3.text-gradient",
+            "area": 45080,
+            "clip": true,
+            "stops": [
+              { "r": 255, "g": 107, "b": 0, "a": 1 },
+              { "r": 0, "g": 175, "b": 250, "a": 1 },
+              { "r": 1, "g": 144, "b": 205, "a": 1 },
+              { "r": 118, "g": 74, "b": 218, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1",
+            "at": "div.sub-title.font-special-family.h3",
+            "area": 17220,
+            "clip": true,
+            "stops": [
+              { "r": 255, "g": 107, "b": 0, "a": 1 },
+              { "r": 0, "g": 175, "b": 250, "a": 1 },
+              { "r": 1, "g": 144, "b": 205, "a": 1 },
+              { "r": 118, "g": 74, "b": 218, "a": 1 }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-space/j6@1.0.4 (https://ja-space-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#5cb85c",
+        "#f0ad4e",
+        "#d9534f"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/div:1/div:1/h1:1",
+            "at": "h1.ja-animate",
+            "area": 53936,
+            "clip": true,
+            "stops": [{ "r": 74, "g": 202, "b": 255, "a": 1 }, { "r": 33, "g": 214, "b": 191, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1::before",
+            "at": "div.features-item.ja-animate::before",
+            "area": 171797,
+            "clip": false,
+            "stops": [{ "r": 132, "g": 172, "b": 251, "a": 1 }, { "r": 245, "g": 93, "b": 89, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/span:1::before",
+            "at": "span.icon.ion-ios-aperture::before",
+            "area": 7584,
+            "clip": true,
+            "stops": [{ "r": 132, "g": 172, "b": 251, "a": 1 }, { "r": 245, "g": 93, "b": 89, "a": 1 }]
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/div:1/div:1/h1:1",
+            "at": "h1.ja-animate",
+            "area": 154659,
+            "clip": true,
+            "stops": [{ "r": 74, "g": 202, "b": 255, "a": 1 }, { "r": 33, "g": 214, "b": 191, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1::before",
+            "at": "div.features-item.ja-animate::before",
+            "area": 186900,
+            "clip": false,
+            "stops": [{ "r": 253, "g": 125, "b": 87, "a": 1 }, { "r": 245, "g": 93, "b": 89, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/span:1::before",
+            "at": "span.icon.ion-ios-aperture::before",
+            "area": 7584,
+            "clip": true,
+            "stops": [{ "r": 253, "g": 125, "b": 87, "a": 1 }, { "r": 245, "g": 93, "b": 89, "a": 1 }]
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-sensei/j6@1.0.3 (https://ja-sensei-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#4bd173",
+        "#f0ad4e",
+        "#d9534f",
+        "#69747f",
+        "#955cf0"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:2/div:1/div:1",
+            "at": "div.acm-features.style-1",
+            "area": 1475280,
+            "clip": false,
+            "stops": [{ "r": 97, "g": 30, "b": 235, "a": 1 }, { "r": 156, "g": 79, "b": 240, "a": 1 }]
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:2/div:1/div:1",
+            "at": "div.acm-features.style-1",
+            "area": 1548000,
+            "clip": false,
+            "stops": [{ "r": 97, "g": 30, "b": 235, "a": 1 }, { "r": 156, "g": 79, "b": 240, "a": 1 }]
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-mood/j6@1.0.2 (https://ja-mood-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#06b06d",
+        "#ff6464",
+        "#d9534f",
+        "#6381bc",
+        "#5c58dc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/header:1/div:2/div:1/ul:1/li:1/a:1",
+            "at": "a.btn.btn-secondary",
+            "area": 6206,
+            "clip": false,
+            "stops": [{ "r": 7, "g": 201, "b": 124, "a": 1 }, { "r": 6, "g": 176, "b": 109, "a": 1 }]
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/header:1/div:2/div:1/ul:1/li:1/a:1",
+            "at": "a.btn.btn-secondary",
+            "area": 3962,
+            "clip": false,
+            "stops": [{ "r": 7, "g": 201, "b": 124, "a": 1 }, { "r": 6, "g": 176, "b": 109, "a": 1 }]
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-tour/j6@1.0.2 (https://ja-tour-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, captured 14/10/2026 with preview-check.mjs",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc",
+        "#28a745",
+        "#f68c05",
+        "#dc2626",
+        "#ffffff",
+        "#696f8d",
+        "#007bff",
+        "#0056b3",
+        "#30408d",
+        "#17a2b8",
+        "#dc3545",
+        "#f0f3ff",
+        "#212529",
+        "#6c757d",
+        "#cbdcfd"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:4/div:2/div:1/div:1/div:2/div:1/div:1/div:2/div:1/div:1::before",
+            "at": "div.info-article-wrap::before",
+            "area": 203500,
+            "clip": false,
+            "stops": [{ "r": 0, "g": 0, "b": 0, "a": 0 }, { "r": 0, "g": 0, "b": 0, "a": 0.6 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:2/div:1/div:1/div:2/div:1/div:1/div:3/div:1/div:1::before",
+            "at": "div.info-article-wrap::before",
+            "area": 203500,
+            "clip": false,
+            "stops": [{ "r": 0, "g": 0, "b": 0, "a": 0 }, { "r": 0, "g": 0, "b": 0, "a": 0.6 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:2/div:1/div:1/div:2/div:1/div:1/div:4/div:1/div:1::before",
+            "at": "div.info-article-wrap::before",
+            "area": 203500,
+            "clip": false,
+            "stops": [{ "r": 0, "g": 0, "b": 0, "a": 0 }, { "r": 0, "g": 0, "b": 0, "a": 0.6 }]
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:4/div:2/div:1/div:1/div:2/div:1/div:1/div:2/div:1/div:1::before",
+            "at": "div.info-article-wrap::before",
+            "area": 209000,
+            "clip": false,
+            "stops": [{ "r": 0, "g": 0, "b": 0, "a": 0 }, { "r": 0, "g": 0, "b": 0, "a": 0.6 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:2/div:1/div:1/div:2/div:1/div:1/div:3/div:1/div:1::before",
+            "at": "div.info-article-wrap::before",
+            "area": 209000,
+            "clip": false,
+            "stops": [{ "r": 0, "g": 0, "b": 0, "a": 0 }, { "r": 0, "g": 0, "b": 0, "a": 0.6 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:2/div:1/div:1/div:2/div:1/div:1/div:4/div:1/div:1::before",
+            "at": "div.info-article-wrap::before",
+            "area": 209000,
+            "clip": false,
+            "stops": [{ "r": 0, "g": 0, "b": 0, "a": 0 }, { "r": 0, "g": 0, "b": 0, "a": 0.6 }]
+          }
+        ]
+      }
+    }
+  ]
+}

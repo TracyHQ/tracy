@@ -1,0 +1,74 @@
+{
+  "color": {
+    "graphite-ink": {
+      "$value": "#1b1b1b",
+      "$type": "color",
+      "$description": "Graphite Ink — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "marble": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Marble — Card surfaces, elevated panels, nav background, button text on dark fills. The brightest layer in the system"
+    },
+    "drafting-gray": {
+      "$value": "#eaeaea",
+      "$type": "color",
+      "$description": "Drafting Gray — Page canvas and section backgrounds. The second surface tier beneath white cards — the tone of the drafting table itself"
+    },
+    "steel": {
+      "$value": "#60646c",
+      "$type": "color",
+      "$description": "Steel — Secondary body text, subtext, helper copy. Carries information density without competing with primary headings"
+    },
+    "ash": {
+      "$value": "#7c7c7c",
+      "$type": "color",
+      "$description": "Ash — Muted tertiary text and less-emphasized metadata. Used where information recedes"
+    },
+    "hairline": {
+      "$value": "#e0e1e6",
+      "$type": "color",
+      "$description": "Hairline — 1px borders, card outlines, divider rules. The system's structural lines — cool-tinted to read as architectural, not decorative"
+    },
+    "mint-signal": {
+      "$value": "#00f2e6",
+      "$type": "color",
+      "$description": "Mint Signal — Saturated cyan-mint used inside product UI mockups and integration icon tiles. Not an interface accent — it is product-content color bleeding into marketing surfaces"
+    },
+    "moss": {
+      "$value": "#8dc63f",
+      "$type": "color",
+      "$description": "Moss — Secondary chromatic accent appearing in product screenshot data and integration tiles. Sits next to Mint Signal in the same icon/system cluster"
+    },
+    "sky": {
+      "$value": "#00b9f1",
+      "$type": "color",
+      "$description": "Sky — Tertiary accent in product UI and integration iconography. Completes the cool triad (mint, moss, sky) that defines the brand's chromatic fingerprint within screenshots"
+    },
+    "forest-to-deep-gradient": {
+      "$value": "#19a05f",
+      "$type": "color",
+      "$description": "Forest-to-Deep Gradient — Announcement bar gradient spanning green (#19a05f) into deep teal (#0d7f8c). Sole place the interface shows color — the only banner-style element on the site"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Sole typeface. Display uses weight 600 at 90px with -0.05em tracking (about -4.5px) — headline authority through geometric compression rather than heaviness. Headings at 40px use weight 500 with -0.025em tracking for a slightly looser, more editorial register. Body at 16px stays at weight 400 with normal tracking. The 13/14px sizes handle UI chrome and captions. No system fonts, no second family — Inter is the brand."
+    },
+    "sans-custom-utility": {
+      "$value": "sans (custom utility)",
+      "$type": "fontFamily",
+      "$description": "Rare fallback utility class. Treat as Inter — likely a Tailwind 'sans' alias that resolved to a custom stack. Do not introduce as a distinct type family in output."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://grafbase.com",
+      "siteName": "Grafbase",
+      "extractedAt": "2026-06-03T16:06:30.182Z",
+      "variant": "compact"
+    }
+  }
+}

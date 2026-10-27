@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-courtroom-ink: #121719;
+  --color-lectern-surface: #222729;
+  --color-document-drawer: #2b3133;
+  --color-manuscript-white: #ffffff;
+  --color-parchment: #f1f3f4;
+  --color-ashen-type: #909394;
+  --color-smoke: #acaeaf;
+  --color-coral-verdict: #f94d1e;
+  --color-indigo-statute: #7834b5;
+  --color-cyan-margin: #029cff;
+
+  /* Typography — Font Families */
+  --font-arizona-mix: 'Arizona Mix', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-soehne: 'Soehne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

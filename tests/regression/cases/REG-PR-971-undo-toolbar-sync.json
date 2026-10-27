@@ -1,0 +1,51 @@
+{
+  "id": "REG-PR-971-undo-toolbar-sync",
+  "kind": "feat",
+  "title": "The preview toolbar offers Undo for the chat's latest request through the turn engine, an undo in any door updates the chat card, Site changes and the toolbar on the same page, and a Site changes chat row whose request was undone says Undone",
+  "pr": 971,
+  "area": "chat/undo",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/ui/tracy-chat-input/test/undo-toolbar.test.mjs packages/ui/tracy-chat-input/test/turn-undo-sync.test.mjs packages/core/tracy-core/test/site-changes-undo-request.test.mjs",
+    "S2: Read the result of each test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'ready: the latest turn undoable, with the confirm card in the card’s words' passes.",
+    "'blocked: the warning title, the card’s sentence for the first reason, and Open Site changes' passes.",
+    "'hidden: EmDash, no site, or a turns door that does not answer' passes.",
+    "'wired: confirm runs the card’s engine for the latest turn, says working, then the notice once' passes.",
+    "'an undo of a chat this page read: that chat reads again; others and other sites do not' passes.",
+    "'a request the engine undid: one \"Undone\" label in place of the files status, no undo button' passes.",
+    "'an undo said by another door of this site: the list and the engine read again, no echo' passes."
+  ],
+  "selectors": {
+    "stateEvent": "window CustomEvent tracy:undo-toolbar-state",
+    "pressEvent": "window CustomEvent tracy:undo-toolbar-press",
+    "syncEvent": "window CustomEvent tracy:turn-undone",
+    "view": "vendor/tracy/dsh-better-sidebar/src/client/UndoToolbarButton.tsx, packages/ui/tracy-chat-input/src/client/undo-toolbar.mjs, packages/core/tracy-core/src/site-tabs/ActivityEventRow.tsx"
+  },
+  "evidence": "Measured 06/10/2026 on cowork.tracy.site after #970: undoing a request in Site changes left the chat card offering Undo until a reload, and a content-undone chat row in Site changes carried no undone label.",
+  "fence": "Every door undoes through the same undoTurn and announces it once; the fork only draws what Tracy publishes.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-chat-input/test/undo-toolbar.test.mjs",
+      "packages/ui/tracy-chat-input/test/turn-undo-sync.test.mjs",
+      "packages/core/tracy-core/test/site-changes-undo-request.test.mjs"
+    ],
+    "tests": [
+      "ready: the latest turn undoable, with the confirm card in the card",
+      "blocked: the warning title, the card",
+      "hidden: EmDash, no site, or a turns door that does not answer",
+      "wired: confirm runs the card",
+      "an undo of a chat this page read: that chat reads again; others and other sites do not",
+      "a request the engine undid: one \"Undone\" label in place of the files status, no undo button",
+      "an undo said by another door of this site: the list and the engine read again, no echo"
+    ]
+  }
+}

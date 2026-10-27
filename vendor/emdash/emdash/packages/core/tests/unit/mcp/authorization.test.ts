@@ -1,0 +1,1438 @@
+/**
+ * MCP Authorization Tests
+ *
+ * Verifies that MCP tools enforce ownership checks and role requirements,
+ * mirroring the REST API's authorization patterns.
+ *
+ * Tests use the MCP Client/Server SDK with InMemoryTransport, injecting
+ * authInfo to simulate different users and roles.
+ */
+
+import { Role } from "@emdash-cms/auth";
+import type { RoleLevel } from "@emdash-cms/auth";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import type { Kysely } from "kysely";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { z } from "zod";
+
+import type { EmDashHandlers } from "../../../src/astro/types.js";
+import type { Database } from "../../../src/database/types.js";
+import { createMcpServer, type PluginMcpRegistration } from "../../../src/mcp/server.js";
+import type { RouteCallerInput } from "../../../src/plugins/routes.js";
+import { setupTestDatabase, teardownTestDatabase } from "../../utils/test-db.js";
+
+// ---------------------------------------------------------------------------
+// Test constants
+// ---------------------------------------------------------------------------
+
+const INSUFFICIENT_PERMISSIONS_RE = /Insufficient permissions/i;
+const INSUFFICIENT_SCOPE_RE = /Insufficient scope/i;
+
+const AUTHOR_USER_ID = "user_author";
+const OTHER_USER_ID = "user_other";
+const ADMIN_USER_ID = "user_admin";
+const CONTENT_ID = "01CONTENT";
+/** Any string passes the schema; the mocked handlers never compare it with a revision. */
+const STUB_REV = "c3R1Yi1yZXY=";
+const CONTENT_SLUG = "test-post";
+const REVISION_ID = "01REVISION";
+const MEDIA_ID = "01MEDIA";
+
+// ---------------------------------------------------------------------------
+// Mock EmDashHandlers
+// ---------------------------------------------------------------------------
+
+let db: Kysely<Database>;
+
+beforeAll(async () => {
+	db = await setupTestDatabase();
+});
+
+afterAll(async () => {
+	await teardownTestDatabase(db);
+});
+
+/** Create a minimal mock EmDashHandlers that returns content owned by `ownerId`. */
+function createMockHandlers(ownerId: string = AUTHOR_USER_ID): EmDashHandlers {
+	const contentItem = {
+		id: CONTENT_ID,
+		slug: "test-post",
+		authorId: ownerId,
+		status: "draft",
+		title: "Test",
+		createdAt: new Date().toISOString(),
+		updatedAt: new Date().toISOString(),
+	};
+
+	const mediaItem = {
+		id: MEDIA_ID,
+		filename: "test.png",
+		authorId: ownerId,
+		mimeType: "image/png",
+		size: 1024,
+	};
+
+	return {
+		db,
+		invalidateUrlPatternCache: vi.fn(),
+		handleContentGet: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: contentItem, _rev: "rev1" },
+		}),
+		handleContentGetIncludingTrashed: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: { ...contentItem, status: "trashed" } },
+		}),
+		handleContentList: vi.fn().mockResolvedValue({
+			success: true,
+			data: { items: [contentItem] },
+		}),
+		handleContentCreate: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: contentItem },
+		}),
+		handleContentUpdate: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: contentItem },
+		}),
+		handleContentDelete: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: contentItem },
+		}),
+		handleContentRestore: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: contentItem },
+		}),
+		handleContentPermanentDelete: vi.fn().mockResolvedValue({
+			success: true,
+			data: { deleted: true },
+		}),
+		handleContentPublish: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: { ...contentItem, status: "published" } },
+		}),
+		handleContentUnpublish: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: contentItem },
+		}),
+		handleContentSchedule: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: { ...contentItem, status: "scheduled" } },
+		}),
+		handleContentCompare: vi.fn().mockResolvedValue({
+			success: true,
+			data: { live: null, draft: contentItem, hasChanges: false },
+		}),
+		handleContentDiscardDraft: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: contentItem },
+		}),
+		handleContentListTrashed: vi.fn().mockResolvedValue({
+			success: true,
+			data: { items: [] },
+		}),
+		handleContentDuplicate: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: contentItem },
+		}),
+		handleContentTranslations: vi.fn().mockResolvedValue({
+			success: true,
+			data: { translations: [] },
+		}),
+		handleMediaGet: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: mediaItem },
+		}),
+		handleMediaList: vi.fn().mockResolvedValue({
+			success: true,
+			data: { items: [mediaItem] },
+		}),
+		handleMediaUpdate: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: mediaItem },
+		}),
+		handleMediaDelete: vi.fn().mockResolvedValue({
+			success: true,
+			data: { deleted: true },
+		}),
+		handleRevisionList: vi.fn().mockResolvedValue({
+			success: true,
+			data: { items: [] },
+		}),
+		handleRevisionGet: vi.fn().mockResolvedValue({
+			success: true,
+			data: {
+				item: {
+					id: REVISION_ID,
+					collection: "post",
+					entryId: CONTENT_ID,
+					authorId: ownerId,
+					data: {},
+				},
+			},
+		}),
+		handleRevisionRestore: vi.fn().mockResolvedValue({
+			success: true,
+			data: { item: contentItem },
+		}),
+	} as unknown as EmDashHandlers;
+}
+
+// ---------------------------------------------------------------------------
+// Transport helper
+//
+// InMemoryTransport supports passing authInfo on send(). We create a
+// subclass that automatically injects authInfo on every message sent from
+// the client side, simulating the HTTP transport's auth injection.
+// ---------------------------------------------------------------------------
+
+class AuthInjectingTransport extends InMemoryTransport {
+	constructor(private authInfo: Record<string, unknown>) {
+		super();
+	}
+
+	override async send(
+		message: Parameters<InMemoryTransport["send"]>[0],
+		options?: Parameters<InMemoryTransport["send"]>[1],
+	): Promise<void> {
+		const existingExtra =
+			options?.authInfo && typeof options.authInfo === "object" && "extra" in options.authInfo
+				? (options.authInfo.extra as Record<string, unknown>)
+				: {};
+		return super.send(message, {
+			...options,
+			authInfo: {
+				token: "",
+				clientId: "test",
+				scopes: [],
+				...options?.authInfo,
+				extra: {
+					...this.authInfo,
+					...existingExtra,
+				},
+			},
+		});
+	}
+}
+
+/**
+ * Create a linked transport pair where the client side injects authInfo.
+ */
+function createAuthenticatedPair(authInfo: {
+	emdash: EmDashHandlers;
+	userId: string;
+	userRole: RoleLevel;
+	user: RouteCallerInput;
+	tokenScopes?: string[];
+	cache?: { enabled: boolean; invalidate: (options: { tags: string[] }) => Promise<void> };
+}): [AuthInjectingTransport, InMemoryTransport] {
+	const clientTransport = new AuthInjectingTransport(authInfo);
+	const serverTransport = new InMemoryTransport();
+	// Link them (accessing private field)
+	(clientTransport as unknown as Record<string, unknown>)._otherTransport = serverTransport;
+	(serverTransport as unknown as Record<string, unknown>)._otherTransport = clientTransport;
+	return [clientTransport, serverTransport];
+}
+
+// ---------------------------------------------------------------------------
+// Test setup
+// ---------------------------------------------------------------------------
+
+/** Write tools read the site write fence, so the handlers need a migrated database. */
+let fenceDb: Kysely<Database>;
+
+beforeAll(async () => {
+	fenceDb = await setupTestDatabase();
+});
+
+afterAll(async () => {
+	await teardownTestDatabase(fenceDb);
+});
+
+async function setupMcpPair(opts: {
+	userId: string;
+	userRole: RoleLevel;
+	handlers?: EmDashHandlers;
+	tokenScopes?: string[];
+	pluginTools?: PluginMcpRegistration[];
+	user?: RouteCallerInput;
+	cache?: { enabled: boolean; invalidate: (options: { tags: string[] }) => Promise<void> };
+}): Promise<{ client: Client; cleanup: () => Promise<void> }> {
+	const handlers = { ...(opts.handlers ?? createMockHandlers()), db: fenceDb };
+	const server = createMcpServer(
+		opts.pluginTools,
+		new Request("https://example.com/_emdash/api/mcp", { method: "POST" }),
+	);
+	const [clientTransport, serverTransport] = createAuthenticatedPair({
+		emdash: handlers,
+		userId: opts.userId,
+		userRole: opts.userRole,
+		user: opts.user ?? {
+			id: opts.userId,
+			email: `${opts.userId}@example.com`,
+			name: null,
+			role: opts.userRole,
+			createdAt: "2026-01-01T00:00:00.000Z",
+		},
+		tokenScopes: opts.tokenScopes,
+		cache: opts.cache,
+	});
+
+	const client = new Client({ name: "test", version: "1.0" });
+
+	await server.connect(serverTransport);
+	await client.connect(clientTransport);
+
+	return {
+		client,
+		cleanup: async () => {
+			await client.close();
+			await server.close();
+		},
+	};
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+describe("MCP Authorization", () => {
+	let client: Client;
+	let cleanup: () => Promise<void>;
+
+	afterEach(async () => {
+		if (cleanup) await cleanup();
+	});
+
+	describe("plugin-declared tools", () => {
+		const pluginTool: PluginMcpRegistration = {
+			pluginId: "calendar",
+			name: "createEvent",
+			description: "Create a calendar event.",
+			route: "events/create",
+			permission: "content:create",
+			destructive: false,
+			inputSchema: z.object({ title: z.string() }),
+			outputSchema: z.object({ id: z.string() }),
+		};
+
+		it("does not let the legacy admin scope bypass plugin-tool scope", async () => {
+			const handlers = createMockHandlers();
+			handlers.handlePluginMcpDenied = vi.fn().mockResolvedValue(undefined);
+			handlers.handlePluginMcpTool = vi.fn().mockResolvedValue({
+				success: true,
+				data: { id: "event-1" },
+			});
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.ADMIN,
+				tokenScopes: ["admin"],
+				handlers,
+				pluginTools: [pluginTool],
+			}));
+
+			const result = await client.callTool({
+				name: "calendar__createEvent",
+				arguments: { title: "Launch" },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(result.content).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({ text: expect.stringMatching(INSUFFICIENT_SCOPE_RE) }),
+				]),
+			);
+			expect(handlers.handlePluginMcpTool).not.toHaveBeenCalled();
+		});
+
+		it("dispatches with a plugin-specific scope and returns structured output", async () => {
+			const handlers = createMockHandlers();
+			const caller: RouteCallerInput = {
+				id: AUTHOR_USER_ID,
+				email: "author@example.com",
+				name: "Author",
+				role: Role.CONTRIBUTOR,
+				createdAt: "2026-01-01T00:00:00.000Z",
+			};
+			handlers.handlePluginMcpTool = vi.fn().mockResolvedValue({
+				success: true,
+				data: { id: "event-1" },
+			});
+			const invalidate = vi.fn().mockResolvedValue(undefined);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.CONTRIBUTOR,
+				tokenScopes: ["mcp:tools:calendar"],
+				user: caller,
+				handlers,
+				pluginTools: [pluginTool],
+				cache: { enabled: true, invalidate },
+			}));
+
+			const listed = await client.listTools();
+			expect(listed.tools.map((tool) => tool.name)).toContain("calendar__createEvent");
+			const result = await client.callTool({
+				name: "calendar__createEvent",
+				arguments: { title: "Launch" },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(result.structuredContent).toEqual({ id: "event-1" });
+			expect(handlers.handlePluginMcpTool).toHaveBeenCalledWith(
+				"calendar",
+				"createEvent",
+				"events/create",
+				{ title: "Launch" },
+				AUTHOR_USER_ID,
+				expect.any(Request),
+				caller,
+				expect.any(Function),
+			);
+			const invalidateContentCache = vi.mocked(handlers.handlePluginMcpTool).mock.calls[0]?.[7];
+			await invalidateContentCache?.(["posts", "post-1"]);
+			expect(invalidate).toHaveBeenCalledWith({ tags: ["posts", "post-1"] });
+		});
+
+		it("still enforces the route permission", async () => {
+			const handlers = createMockHandlers();
+			handlers.handlePluginMcpDenied = vi.fn().mockResolvedValue(undefined);
+			handlers.handlePluginMcpTool = vi.fn();
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.SUBSCRIBER,
+				tokenScopes: ["mcp:tools"],
+				handlers,
+				pluginTools: [pluginTool],
+			}));
+
+			const result = await client.callTool({
+				name: "calendar__createEvent",
+				arguments: { title: "Launch" },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handlePluginMcpTool).not.toHaveBeenCalled();
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// Ownership checks: CONTRIBUTOR cannot modify others' content
+	// -----------------------------------------------------------------------
+
+	describe("content ownership enforcement", () => {
+		it("CONTRIBUTOR cannot update another user's content", async () => {
+			// Content owned by AUTHOR_USER_ID, caller is OTHER_USER_ID with CONTRIBUTOR role
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.CONTRIBUTOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_update",
+				arguments: {
+					collection: "post",
+					id: CONTENT_ID,
+					data: { title: "Hacked" },
+					_rev: STUB_REV,
+				},
+			});
+
+			// CONTRIBUTOR role is below AUTHOR minimum
+			expect(result.isError).toBe(true);
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toMatch(INSUFFICIENT_PERMISSIONS_RE);
+		});
+
+		it("AUTHOR can update their own content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_update",
+				arguments: {
+					collection: "post",
+					id: CONTENT_ID,
+					data: { title: "My update" },
+					_rev: STUB_REV,
+				},
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleContentUpdate).toHaveBeenCalled();
+		});
+
+		it("AUTHOR cannot update another user's content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_update",
+				arguments: {
+					collection: "post",
+					id: CONTENT_ID,
+					data: { title: "Hacked" },
+					_rev: STUB_REV,
+				},
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleContentUpdate).not.toHaveBeenCalled();
+		});
+
+		it("EDITOR can update any user's content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.EDITOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_update",
+				arguments: {
+					collection: "post",
+					id: CONTENT_ID,
+					data: { title: "Editor update" },
+					_rev: STUB_REV,
+				},
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleContentUpdate).toHaveBeenCalled();
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// content_delete ownership
+	// -----------------------------------------------------------------------
+
+	describe("content_delete ownership", () => {
+		it("AUTHOR can delete their own content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_delete",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleContentDelete).toHaveBeenCalled();
+		});
+
+		it("AUTHOR cannot delete another user's content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_delete",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleContentDelete).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("content_duplicate ownership", () => {
+		it("CONTRIBUTOR cannot duplicate another user's content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.CONTRIBUTOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_duplicate",
+				arguments: { collection: "post", id: "test-post" },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleContentDuplicate).not.toHaveBeenCalled();
+		});
+
+		it("AUTHOR cannot duplicate another user's content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_duplicate",
+				arguments: { collection: "post", id: "test-post" },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleContentDuplicate).not.toHaveBeenCalled();
+		});
+
+		it("AUTHOR duplicates their own content as its author", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_duplicate",
+				arguments: { collection: "post", id: "test-post" },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleContentDuplicate).toHaveBeenCalledWith(
+				"post",
+				CONTENT_ID,
+				AUTHOR_USER_ID,
+			);
+		});
+
+		it("EDITOR can duplicate any user's content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.EDITOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_duplicate",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleContentDuplicate).toHaveBeenCalledWith(
+				"post",
+				CONTENT_ID,
+				OTHER_USER_ID,
+			);
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// content_permanent_delete: ADMIN only
+	// -----------------------------------------------------------------------
+
+	describe("content_permanent_delete requires ADMIN", () => {
+		it("EDITOR cannot permanently delete content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.EDITOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_permanent_delete",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleContentPermanentDelete).not.toHaveBeenCalled();
+		});
+
+		it("ADMIN can permanently delete content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.ADMIN,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_permanent_delete",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleContentPermanentDelete).toHaveBeenCalled();
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// content_publish ownership
+	// -----------------------------------------------------------------------
+
+	describe("content_publish ownership", () => {
+		it("AUTHOR can publish their own content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_publish",
+				arguments: { collection: "post", id: CONTENT_ID, _rev: STUB_REV },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleContentPublish).toHaveBeenCalled();
+		});
+
+		it("AUTHOR cannot publish another user's content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_publish",
+				arguments: { collection: "post", id: CONTENT_ID, _rev: STUB_REV },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleContentPublish).not.toHaveBeenCalled();
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// content_restore ownership
+	// -----------------------------------------------------------------------
+
+	describe("content_restore ownership", () => {
+		it("AUTHOR cannot restore another user's trashed content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_restore",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleContentRestore).not.toHaveBeenCalled();
+		});
+
+		it("EDITOR can restore any user's trashed content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.EDITOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_restore",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleContentRestore).toHaveBeenCalled();
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// revision_restore ownership
+	// -----------------------------------------------------------------------
+
+	describe("revision_restore ownership", () => {
+		it("AUTHOR cannot restore revision on another user's content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "revision_restore",
+				arguments: { revisionId: REVISION_ID },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleRevisionRestore).not.toHaveBeenCalled();
+		});
+
+		it("EDITOR can restore revision on any content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.EDITOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "revision_restore",
+				arguments: { revisionId: REVISION_ID },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleRevisionRestore).toHaveBeenCalled();
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// Media ownership
+	// -----------------------------------------------------------------------
+
+	describe("media ownership enforcement", () => {
+		it("AUTHOR can update their own media", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "media_update",
+				arguments: { id: MEDIA_ID, alt: "Updated alt" },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleMediaUpdate).toHaveBeenCalled();
+		});
+
+		it("AUTHOR cannot update another user's media", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "media_update",
+				arguments: { id: MEDIA_ID, alt: "Hacked" },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleMediaUpdate).not.toHaveBeenCalled();
+		});
+
+		it("AUTHOR cannot delete another user's media", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "media_delete",
+				arguments: { id: MEDIA_ID },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleMediaDelete).not.toHaveBeenCalled();
+		});
+
+		it("EDITOR can delete any user's media", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.EDITOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "media_delete",
+				arguments: { id: MEDIA_ID },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleMediaDelete).toHaveBeenCalled();
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// media_upload guards
+	// -----------------------------------------------------------------------
+
+	describe("media_upload guards", () => {
+		const uploadArgs = {
+			filename: "x.png",
+			base64: "aGVsbG8=",
+			contentType: "image/png",
+		};
+
+		it("SUBSCRIBER cannot upload media", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.SUBSCRIBER,
+				handlers,
+			}));
+
+			const result = await client.callTool({ name: "media_upload", arguments: uploadArgs });
+
+			expect(result.isError).toBe(true);
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toMatch(INSUFFICIENT_PERMISSIONS_RE);
+		});
+
+		it("rejects media_upload without media:write scope", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.ADMIN,
+				handlers,
+				tokenScopes: ["media:read"],
+			}));
+
+			const result = await client.callTool({ name: "media_upload", arguments: uploadArgs });
+
+			expect(result.isError).toBe(true);
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toMatch(INSUFFICIENT_SCOPE_RE);
+		});
+
+		it("returns NO_STORAGE when storage is not configured", async () => {
+			// createMockHandlers has no storage adapter attached
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.CONTRIBUTOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({ name: "media_upload", arguments: uploadArgs });
+
+			expect(result.isError).toBe(true);
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toContain("NO_STORAGE");
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// Token scope enforcement
+	// -----------------------------------------------------------------------
+
+	describe("token scope enforcement", () => {
+		it("rejects content_update without content:write scope", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.ADMIN,
+				handlers,
+				tokenScopes: ["content:read"],
+			}));
+
+			const result = await client.callTool({
+				name: "content_update",
+				arguments: {
+					collection: "post",
+					id: CONTENT_ID,
+					data: { title: "No scope" },
+					_rev: STUB_REV,
+				},
+			});
+
+			expect(result.isError).toBe(true);
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toMatch(INSUFFICIENT_SCOPE_RE);
+		});
+
+		it("allows content_update with content:write scope", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+				tokenScopes: ["content:read", "content:write"],
+			}));
+
+			const result = await client.callTool({
+				name: "content_update",
+				arguments: {
+					collection: "post",
+					id: CONTENT_ID,
+					data: { title: "Valid scope" },
+					_rev: STUB_REV,
+				},
+			});
+
+			expect(result.isError).toBeFalsy();
+		});
+
+		it("session auth (no tokenScopes) allows all scopes", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+				// No tokenScopes = session auth
+			}));
+
+			const result = await client.callTool({
+				name: "content_update",
+				arguments: {
+					collection: "post",
+					id: CONTENT_ID,
+					data: { title: "Session auth" },
+					_rev: STUB_REV,
+				},
+			});
+
+			expect(result.isError).toBeFalsy();
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// content_schedule ownership
+	// -----------------------------------------------------------------------
+
+	describe("content_schedule ownership", () => {
+		it("AUTHOR cannot schedule another user's content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_schedule",
+				arguments: {
+					collection: "post",
+					id: CONTENT_ID,
+					scheduledAt: "2030-01-01T00:00:00Z",
+					_rev: STUB_REV,
+				},
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleContentSchedule).not.toHaveBeenCalled();
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// content_unpublish ownership
+	// -----------------------------------------------------------------------
+
+	describe("content_unpublish ownership", () => {
+		it("AUTHOR cannot unpublish another user's content", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_unpublish",
+				arguments: { collection: "post", id: CONTENT_ID, _rev: STUB_REV },
+			});
+
+			expect(result.isError).toBe(true);
+			expect(handlers.handleContentUnpublish).not.toHaveBeenCalled();
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// resolvedId: slug -> ULID resolution before handler calls
+	// -----------------------------------------------------------------------
+
+	describe("resolvedId passthrough", () => {
+		it("content_restore passes resolvedId (not slug) to handler", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_restore",
+				arguments: { collection: "post", id: CONTENT_SLUG },
+			});
+
+			expect(result.isError).toBeFalsy();
+			// The mock returns item.id = CONTENT_ID. The tool should resolve
+			// the slug to CONTENT_ID via extractContentId and pass that to the handler.
+			expect(handlers.handleContentRestore).toHaveBeenCalledWith("post", CONTENT_ID);
+		});
+
+		it("content_discard_draft passes resolvedId (not slug) to handler", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_discard_draft",
+				arguments: { collection: "post", id: CONTENT_SLUG, _rev: STUB_REV },
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleContentDiscardDraft).toHaveBeenCalledWith("post", CONTENT_ID, {
+				_rev: STUB_REV,
+			});
+		});
+
+		it("content_update passes resolvedId (not slug) to handler", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_update",
+				arguments: {
+					collection: "post",
+					id: CONTENT_SLUG,
+					data: { title: "Updated" },
+					_rev: STUB_REV,
+				},
+			});
+
+			expect(result.isError).toBeFalsy();
+			expect(handlers.handleContentUpdate).toHaveBeenCalledWith(
+				"post",
+				CONTENT_ID,
+				expect.objectContaining({ data: { title: "Updated" } }),
+			);
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// extractContentAuthorId: missing authorId
+	// -----------------------------------------------------------------------
+
+	describe("missing authorId handling", () => {
+		// Content with null/missing authorId (e.g. seed-imported rows) must be
+		// editable by anyone with `*:edit_any` and rejected for actors with only
+		// `*:edit_own` — without leaking internal "authorId" wording.
+		const contentWithoutAuthor = {
+			id: CONTENT_ID,
+			slug: "imported-post",
+			status: "draft",
+			title: "Imported",
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString(),
+			// no authorId
+		};
+
+		it("ADMIN succeeds on content with null authorId", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			handlers.handleContentGet = vi.fn().mockResolvedValue({
+				success: true,
+				data: { item: contentWithoutAuthor },
+			});
+
+			({ client, cleanup } = await setupMcpPair({
+				userId: ADMIN_USER_ID,
+				userRole: Role.ADMIN,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_update",
+				arguments: {
+					collection: "post",
+					id: CONTENT_ID,
+					data: { title: "ok" },
+					_rev: STUB_REV,
+				},
+			});
+
+			expect(result.isError).toBeFalsy();
+		});
+
+		it("AUTHOR denied on content with null authorId (clean permission error)", async () => {
+			const handlers = createMockHandlers(AUTHOR_USER_ID);
+			handlers.handleContentGet = vi.fn().mockResolvedValue({
+				success: true,
+				data: { item: contentWithoutAuthor },
+			});
+
+			({ client, cleanup } = await setupMcpPair({
+				userId: AUTHOR_USER_ID,
+				userRole: Role.AUTHOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_update",
+				arguments: {
+					collection: "post",
+					id: CONTENT_ID,
+					data: { title: "Should fail" },
+					_rev: STUB_REV,
+				},
+			});
+
+			expect(result.isError).toBe(true);
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toMatch(INSUFFICIENT_PERMISSIONS_RE);
+			expect(text).not.toMatch(/authorId/);
+		});
+	});
+
+	// -----------------------------------------------------------------------
+	// Draft visibility — SUBSCRIBER must not see non-published content
+	// -----------------------------------------------------------------------
+
+	describe("draft visibility", () => {
+		it("forces status=published on content_list for SUBSCRIBER", async () => {
+			const handlers = createMockHandlers();
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.SUBSCRIBER,
+				handlers,
+			}));
+
+			await client.callTool({
+				name: "content_list",
+				arguments: { collection: "post" },
+			});
+
+			expect(handlers.handleContentList).toHaveBeenCalledWith(
+				"post",
+				expect.objectContaining({ status: "published" }),
+			);
+		});
+
+		it("ignores caller-supplied status=draft from SUBSCRIBER on content_list", async () => {
+			const handlers = createMockHandlers();
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.SUBSCRIBER,
+				handlers,
+			}));
+
+			await client.callTool({
+				name: "content_list",
+				arguments: { collection: "post", status: "draft" },
+			});
+
+			// Even though caller asked for "draft", route forces "published"
+			expect(handlers.handleContentList).toHaveBeenCalledWith(
+				"post",
+				expect.objectContaining({ status: "published" }),
+			);
+		});
+
+		it("respects caller-supplied status filter for CONTRIBUTOR on content_list", async () => {
+			const handlers = createMockHandlers();
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.CONTRIBUTOR,
+				handlers,
+			}));
+
+			await client.callTool({
+				name: "content_list",
+				arguments: { collection: "post", status: "draft" },
+			});
+
+			expect(handlers.handleContentList).toHaveBeenCalledWith(
+				"post",
+				expect.objectContaining({ status: "draft" }),
+			);
+		});
+
+		it("hides draft items from SUBSCRIBER on content_get", async () => {
+			// Default mock returns status: "draft"
+			const handlers = createMockHandlers();
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.SUBSCRIBER,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_get",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBe(true);
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toMatch(/not found/i);
+		});
+
+		it("allows SUBSCRIBER to read published items via content_get", async () => {
+			const handlers = createMockHandlers();
+			// Override to return published content
+			handlers.handleContentGet = vi.fn().mockResolvedValue({
+				success: true,
+				data: {
+					item: {
+						id: CONTENT_ID,
+						slug: CONTENT_SLUG,
+						authorId: AUTHOR_USER_ID,
+						status: "published",
+					},
+					_rev: "rev1",
+				},
+			});
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.SUBSCRIBER,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_get",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBeFalsy();
+		});
+
+		it("allows CONTRIBUTOR to read drafts via content_get", async () => {
+			const handlers = createMockHandlers();
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.CONTRIBUTOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_get",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBeFalsy();
+		});
+
+		it("denies SUBSCRIBER on content_compare", async () => {
+			const handlers = createMockHandlers();
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.SUBSCRIBER,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_compare",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBe(true);
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toMatch(INSUFFICIENT_PERMISSIONS_RE);
+			expect(handlers.handleContentCompare).not.toHaveBeenCalled();
+		});
+
+		it("denies SUBSCRIBER on content_list_trashed", async () => {
+			const handlers = createMockHandlers();
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.SUBSCRIBER,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_list_trashed",
+				arguments: { collection: "post" },
+			});
+
+			expect(result.isError).toBe(true);
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toMatch(INSUFFICIENT_PERMISSIONS_RE);
+			expect(handlers.handleContentListTrashed).not.toHaveBeenCalled();
+		});
+
+		it("denies SUBSCRIBER on revision_list", async () => {
+			const handlers = createMockHandlers();
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.SUBSCRIBER,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "revision_list",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBe(true);
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toMatch(INSUFFICIENT_PERMISSIONS_RE);
+			expect(handlers.handleRevisionList).not.toHaveBeenCalled();
+		});
+
+		it("filters non-published translations for SUBSCRIBER", async () => {
+			const handlers = createMockHandlers();
+			handlers.handleContentTranslations = vi.fn().mockResolvedValue({
+				success: true,
+				data: {
+					translationGroup: "tg-1",
+					translations: [
+						{ id: "t-en", locale: "en", slug: "p", status: "published", updatedAt: "" },
+						{ id: "t-fr", locale: "fr", slug: "p", status: "draft", updatedAt: "" },
+					],
+				},
+			});
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.SUBSCRIBER,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_translations",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBeFalsy();
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toContain("t-en");
+			expect(text).not.toContain("t-fr");
+		});
+
+		it("allows CONTRIBUTOR to see all translations", async () => {
+			const handlers = createMockHandlers();
+			handlers.handleContentTranslations = vi.fn().mockResolvedValue({
+				success: true,
+				data: {
+					translationGroup: "tg-1",
+					translations: [
+						{ id: "t-en", locale: "en", slug: "p", status: "published", updatedAt: "" },
+						{ id: "t-fr", locale: "fr", slug: "p", status: "draft", updatedAt: "" },
+					],
+				},
+			});
+			({ client, cleanup } = await setupMcpPair({
+				userId: OTHER_USER_ID,
+				userRole: Role.CONTRIBUTOR,
+				handlers,
+			}));
+
+			const result = await client.callTool({
+				name: "content_translations",
+				arguments: { collection: "post", id: CONTENT_ID },
+			});
+
+			expect(result.isError).toBeFalsy();
+			const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+			expect(text).toContain("t-en");
+			expect(text).toContain("t-fr");
+		});
+	});
+});

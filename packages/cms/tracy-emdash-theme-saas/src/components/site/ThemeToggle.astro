@@ -1,0 +1,72 @@
+---
+/**
+ * Light/dark switch. Base.astro applies the saved theme before paint; this button flips
+ * html[data-theme] and remembers the choice in localStorage['kinetic-theme'] (or 'kinetic-theme@<id>'
+ * while a design system is worn).
+ * The label is template chrome (no CMS field): it names the control, not the content.
+ */
+interface Props {
+  class?: string
+  /** The control's name in the site's language; English when not given. */
+  label?: string
+}
+const { class: className, label = 'Dark mode' } = Astro.props
+---
+
+<button type="button" class:list={["k-theme-toggle", className]} data-theme-toggle aria-label={label} aria-pressed="false">
+	<svg class="k-theme-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path></svg>
+	<svg class="k-theme-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+</button>
+
+<script>
+	// Only a click stores a choice. While a design system is worn the key is that system's own
+	// ("kinetic-theme@<id>", read the same way by Base.astro's pre-paint script), so a choice made under a
+	// system leaves with it (UNDO-1).
+	const ds = document.getElementById('tracy-ds-slot')?.getAttribute('data-ds')
+	const KEY = ds && document.documentElement.hasAttribute('data-ds-worn') ? `kinetic-theme@${ds}` : 'kinetic-theme'
+	const root = document.documentElement
+	const sync = () => {
+		const dark = root.dataset.theme === 'dark'
+		for (const b of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) b.setAttribute('aria-pressed', String(dark))
+	}
+	for (const b of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+		b.addEventListener('click', () => {
+			const next = root.dataset.theme === 'dark' ? 'light' : 'dark'
+			root.dataset.theme = next
+			try {
+				localStorage.setItem(KEY, next)
+			} catch {}
+			sync()
+		})
+	}
+	sync()
+</script>
+
+<style>
+	.k-theme-toggle {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex: none;
+		width: 36px;
+		height: 36px;
+		border: 1px solid var(--k-border);
+		border-radius: 9px;
+		background: var(--k-surface);
+		color: var(--k-text);
+		cursor: pointer;
+		transition: border-color 0.15s, color 0.15s;
+	}
+	.k-theme-toggle:hover {
+		border-color: var(--k-primary);
+		color: var(--k-heading);
+	}
+	/* The icon shows the theme that is ON, as the source does (DECISIONS D36): sun in light, moon in dark. */
+	.k-theme-moon,
+	:global(html[data-theme="dark"]) .k-theme-sun {
+		display: none;
+	}
+	:global(html[data-theme="dark"]) .k-theme-moon {
+		display: block;
+	}
+</style>

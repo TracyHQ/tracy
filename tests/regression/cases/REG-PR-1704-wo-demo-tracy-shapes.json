@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1704-wo-demo-tracy-shapes",
+  "kind": "fix",
+  "title": "The open WO server reads Tracy /v1/demos answers ({demo, demos}) and refusals ({error}): a sent demo leaves submitting, the limit notice names live/limit",
+  "pr": 1704,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/tracy-builder",
+  "steps": [
+    "S1: Run the package builder suite against the fake Tracy that answers in Tracy’s real shapes, and the build card view-model suite."
+  ],
+  "expect": [
+    "S1: both suites pass with 0 failed/skipped; the send test reaches queued and keeps {live:1, limit:20}; the limit test carries DEMO_LIMIT_REACHED with its numbers; a failed card names Tracy’s code."
+  ],
+  "selectors": {
+    "door": "POST /api/website-opportunities/:id/tracy/demo (packages/wo/website-opportunities/src/plugins/builders/tracy.js)",
+    "fake": "packages/wo/website-opportunities/test/tracy-fake.mjs",
+    "tool": "tests/regression/scripts/REG-PR-1704-wo-demo-tracy-shapes.mjs"
+  },
+  "evidence": "Stranger run 24/10/2026: demo e7f79589 stayed submitting on develop, re-sent every 30 s",
+  "fence": "The tracy builder’s parsing of /v1/demos answers; does not call a real Tracy",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1704-wo-demo-tracy-shapes.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

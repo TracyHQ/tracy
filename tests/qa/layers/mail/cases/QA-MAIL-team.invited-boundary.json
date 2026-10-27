@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.invited-boundary",
+  "itemIds": [
+    "direct:team.invited:en",
+    "direct:team.invited:vi",
+    "direct:team.invited:de",
+    "direct:team.invited:it",
+    "direct:team.invited:fr",
+    "direct:team.invited:nl",
+    "direct:team.invited:zh",
+    "direct:team.invited:es"
+  ],
+  "requirement": "the invitation letter (T1) stays well-formed for very long names and long site lists",
+  "oracle": {
+    "source": "RFC 5322 section 2.2.3",
+    "ref": "RFC 5322 section 2.2.3",
+    "invariant": "subject has no CR/LF; HTML complete"
+  },
+  "edgeTags": ["boundary"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.boundary:team.invited"],
+  "redProof": null,
+  "legacyIds": []
+}

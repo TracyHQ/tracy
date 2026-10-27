@@ -1,0 +1,59 @@
+{
+  "id": "REG-PR-1484-import-firewall-pacing",
+  "kind": "fix",
+  "title": "An import paces its engine calls about a second apart, honours Retry-After, reads 5000 rows a page, and a host that starts refusing Tracy's connection partway through stops the run as blocked_by_host after three refusals, with a sentence that asks to retry in a few hours, then contact Tracy support, and names no address",
+  "pr": 1484,
+  "area": "add-site/import",
+  "cms": ["wp", "jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Start a throwaway PostgreSQL and export TEST_DATABASE_URL to it.",
+    "S2: From the TCH checkout run: node --test --test-reporter=tap packages/site/tracy-add-site/test/site-link-pacing.test.mjs packages/site/tracy-add-site/test/export-site-limits.test.mjs apps/tracy-web/test/beta-operation-signal.test.mjs",
+    "S3: Read the exit code, the `# fail` line, and the `ok` line of every test named in run.tests."
+  ],
+  "expect": [
+    "Exit code 0 and `# fail 0`.",
+    "Pacing (site-link-pacing): consecutive engine calls are at least a second apart and db.dump asks for 5000 rows; a 503 or 429 with Retry-After (seconds or an HTTP date) makes the next call wait that long, capped, and an unreadable value is ignored; (export-site-limits) a site that fails above a page size still halves the page until it fits and the dump is whole.",
+    "Ban (site-link-pacing): once the site has answered in the run, three consecutive refused connections stop it as blocked_by_host with check connection_refused_after_progress, not the whole retry ladder; refusals at every address (an AggregateError cause) count the same; a refusal before the site ever answered keeps the old path; one refusal followed by answers is a blip and the dump completes.",
+    "Ban memory (site-link-pacing): after a ban, the next run's sign-in page refused, plain or at every address, on WordPress and Joomla, is blocked_by_host with check connection_refused_after_ban and no new sign-in; without an earlier ban the same refusal is still unreachable.",
+    "One reading of a fetch error (site-link-pacing): the diagnostic's error code and the Joomla TLS check look inside an AggregateError too.",
+    "No address (site-link-pacing): no run state, refusal, diagnostic or customer sentence carries an IPv4 or IPv6 address; the English sentence says the host refused partway through, then to try the import again in a few hours, then to contact Tracy support, and promises no resume.",
+    "Closed sets (beta-operation-signal): the web accepts the two new diagnostic checks, the same set the worker writes."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-add-site/src/host/site-link.ts, packages/site/tracy-add-site/src/host/error-code.mjs, packages/site/tracy-add-site/src/host/export.ts, packages/site/tracy-add-site/src/host/run.ts, packages/site/tracy-add-site/src/host/diagnostic.mjs, apps/tracy-web/src/lib/import-diagnostic.js",
+    "refusals": "IMPORT_ERRORS in packages/site/tracy-add-site/src/client/refusal.tsx"
+  },
+  "evidence": "Before the fix an import fired engine calls back to back with 2000-row pages and ignored Retry-After; a host firewall that started refusing Tracy's connection partway through was retried down the whole ladder, then read as a lost connection, and the next attempt's refused sign-in read as a wrong address. This case pins the behaviour with the tests below.",
+  "fence": "The real SiteLink, export, sign-in and run modules against a fake engine and fake WordPress and Joomla answers with mocked timers and refused connections, and the real import-result door against PostgreSQL. Not shown: a real host firewall, how long a real temporary ban lasts, a real customer site.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/site-link-pacing.test.mjs",
+      "packages/site/tracy-add-site/test/export-site-limits.test.mjs",
+      "apps/tracy-web/test/beta-operation-signal.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "engine calls are paced: at least a second between consecutive calls, 5000 rows a page",
+      "a 503 with Retry-After: the next call waits it out, longer than the ladder would",
+      "a 429 with Retry-After as an HTTP date is honoured too",
+      "refused after the site answered: blocked_by_host after three attempts, not the whole ladder",
+      "refused at every address after the site answered (AggregateError): blocked_by_host too",
+      "one reading of a fetch error: diagnostics and the TLS check look inside an AggregateError",
+      "refused before the site ever answered: the old path — the full ladder, then the fetch error",
+      "one refused call, then answers: a blip, retried, and the dump completes",
+      "retryAfterMs reads seconds and HTTP dates, caps them, and ignores the unreadable",
+      "a run banned partway through stops with blocked_by_host, no address, and no new sign-in",
+      "a sign-in page refused with no ban before is still unreachable",
+      "after a ban, a sign-in refused at every address (AggregateError) is still the ban, on both platforms",
+      "the customer sentence for blocked_by_host says wait a few hours, then Tracy support, and names no address",
+      "a site that answers 500 above 1250 rows: the page halves until it fits, and the dump is whole",
+      "a site that answers 500 to every page, past every retry, is site_resource_limit",
+      "an import diagnostic keeps only values from closed sets, the same ones the worker writes"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1707-wo-demo-place-photo-uri",
+  "kind": "fix",
+  "title": "A Places photo goes to Tracy as its public photoUri (key only in a header to Google), never as a resource name or with the key",
+  "pr": 1707,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/tracy-builder",
+  "steps": ["S1: Run the package builder suite against the fake Tracy and a stubbed Places media answer."],
+  "expect": [
+    "S1: the suite passes; the photo test sends the website photo and the stubbed photoUri, and the body holds neither the key nor google-places:."
+  ],
+  "selectors": {
+    "function": "placePhotoUri in packages/wo/website-opportunities/domain/gplaces-details.mjs",
+    "door": "POST /api/website-opportunities/:id/tracy/demo",
+    "tool": "tests/regression/scripts/REG-PR-1707-wo-demo-place-photo-uri.mjs"
+  },
+  "evidence": "Stranger run 25/10/2026: demo 02c17715 (Google photos only) sent 0 photos",
+  "fence": "Places photo addresses in the demo request",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1707-wo-demo-place-photo-uri.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

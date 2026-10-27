@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1534-import-slim-cowork-package",
+  "kind": "fix",
+  "title": "Importing a Joomla site whose host takes 2 MB per upload installs Claude Cowork: the upload road carries the release package without the quickstart contracts (436 KB, not 63 MB)",
+  "pr": 1534,
+  "area": "import/joomla",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/site/tracy-add-site/test/slim-package.test.mjs packages/site/tracy-add-site/test/import-gates.test.mjs"
+  ],
+  "expect": [
+    "S1: every test passes; a release-shaped package over a 2 MB upload limit is installed over the upload road, the file sent is under 2 MB and holds no administrator/lib/contracts/ entry, the engine and the receiver-wide JSON are kept"
+  ],
+  "selectors": { "host": "tracy-add-site joomla.ts installCowork, slim-package.ts packageForImport" },
+  "evidence": "tasks/evidence/import-slim-package/",
+  "fence": "An import never sends a customer's Joomla site the quickstart contracts it does not read, and never changes another byte of the release package",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/site/tracy-add-site/test/slim-package.test.mjs",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs"
+    ]
+  }
+}

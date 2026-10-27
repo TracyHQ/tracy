@@ -1,0 +1,96 @@
+{
+  "id": "QA-UNIT-REG-PR-1740-look-set-template-custom-css-happy",
+  "itemIds": ["regression:REG-PR-1740-look-set-template-custom-css"],
+  "requirement": "look.set on Joomla T4 writes the template's own local/css/custom.css (never a plugin or lightbox icon sheet loaded after the winner) and treats a header menu link as site-wide",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1740-look-set-template-custom-css.json",
+    "ref": "PR #1740 (fix); fix evidence: Dev turns on 25/10/2026: 4 of 6 look edits went into fontello.css or got a home-page-only scope, and the agent then rewrote them by hand in local/css/custom.css (~20 to 30 s per turn)",
+    "invariant": "S1: the rule lands in templates/ja_boxing/local/css/custom.css (created when missing, removed by its undo), made more specific than the winner; fontello.css is untouched. S2: describeTarget reports the link as site chrome; one site-wide rule with no page class, and the every-page question is asked before the write.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/lib/index.js:45749",
+      "packages/tools/tracy-site-tools/src/host/exec.mjs:673",
+      "packages/tools/tracy-site-tools/src/host/look-set.mjs:424",
+      "packages/tools/tracy-site-tools/src/host/look-style.mjs:210",
+      "packages/tools/tracy-site-tools/src/host/look-undo.mjs:130",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:994"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/tools/tracy-site-tools/lib/index.js:11629 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11743 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11771 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11836 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11856 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11859 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:16457 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:17322 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:17541 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:18346 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:2481 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:44607 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:44784 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:9961 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:9972 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:9975 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1178 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1792 execFile() runs a computed command",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1792 execFile() runs computed arguments",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1846 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1961 execFile() runs a computed command",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:1961 execFile() runs computed arguments",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:301 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:341 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs:644 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-style.test.mjs:1440 execFile() runs a computed command",
+      "packages/tools/tracy-site-tools/test/look-style.test.mjs:1440 execFile() runs computed arguments",
+      "packages/tools/tracy-site-tools/test/look-style.test.mjs:37 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "🔒 Joomla T4: a look goes into the template’s local/css/custom.css",
+    "🔒 Joomla T4: no custom.css yet",
+    "🔒 Joomla T4: a template that ships css/custom.css",
+    "🔒 Joomla T4: a header menu link is the same on every page",
+    "🔒 describeTarget (look.set): T4 puts its header inside <main>"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1740-look-set-template-custom-css"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1740-look-set-template-custom-css",
+    "pr": 1740,
+    "kind": "fix",
+    "area": "site-tools/look-set",
+    "file": "tests/regression/cases/REG-PR-1740-look-set-template-custom-css.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/look-set.test.mjs",
+    "packages/tools/tracy-site-tools/test/look-style.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "🔒 Joomla T4: a look goes into the template’s local/css/custom.css",
+    "🔒 Joomla T4: no custom.css yet",
+    "🔒 Joomla T4: a template that ships css/custom.css",
+    "🔒 Joomla T4: a header menu link is the same on every page",
+    "🔒 describeTarget (look.set): T4 puts its header inside <main>"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,3684 @@
+{
+  "kind": "heading-quiet",
+  "about": "Probe data cut from real Add site previews (preview-check.mjs PREVIEW_DATA=1, the detector's own probe on the plain and the worn page, scripts off as in the preview frame). Regenerate by re-running the probe; never edit values by hand.",
+  "broken": [
+    {
+      "source": "quickstart/ja-phio/j6@1.0.5 (https://ja-phio-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#858273",
+        "#b7b39f",
+        "#1a1a1a",
+        "#f4efd4",
+        "#7a786a",
+        "#000000",
+        "#060605",
+        "#93b6fb",
+        "#868474",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1",
+              "at": "div",
+              "text": "Brand",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 120
+            },
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:2",
+              "at": "div",
+              "text": "Experience",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 120
+            },
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:3",
+              "at": "div",
+              "text": "Studio",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 120
+            },
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:2/div:1/span:1",
+              "at": "span",
+              "text": "Let’s bring your ideas to life.",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.stats-item-counter.h2",
+              "text": "3.5k",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:2/div:1/div:1",
+              "at": "div.stats-item-counter.h2",
+              "text": "16",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:3/div:1/div:1",
+              "at": "div.stats-item-counter.h2",
+              "text": "08+",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:4/div:1/div:1",
+              "at": "div.stats-item-counter.h2",
+              "text": "1.4k",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "The work I did for",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/h3:1/span:1/span:1",
+              "at": "span.text-highlight",
+              "text": "client",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:2/div:2",
+              "at": "div.testimonial-desc.h3",
+              "text": "I’ve had nothing but the best interactio",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.has-arrow",
+              "text": "Phio creatives. You should join us.",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 43
+            }
+          ],
+          "body": {
+            "#000000": {
+              "fg": "#f4efd4",
+              "chars": 317
+            },
+            "#1a1a1a": {
+              "fg": "#868474",
+              "chars": 329
+            }
+          }
+        }
+      },
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1",
+              "at": "div",
+              "text": "Brand",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 120
+            },
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:2",
+              "at": "div",
+              "text": "Experience",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 120
+            },
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:3",
+              "at": "div",
+              "text": "Studio",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 120
+            },
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:2/div:1/span:1",
+              "at": "span",
+              "text": "Let’s bring your ideas to life.",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.stats-item-counter.h2",
+              "text": "3.5k",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:2/div:1/div:1",
+              "at": "div.stats-item-counter.h2",
+              "text": "16",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:3/div:1/div:1",
+              "at": "div.stats-item-counter.h2",
+              "text": "08+",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:4/div:1/div:1",
+              "at": "div.stats-item-counter.h2",
+              "text": "1.4k",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "The work I did for",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/h3:1/span:1/span:1",
+              "at": "span.text-highlight",
+              "text": "client",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 56
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:2/div:2",
+              "at": "div.testimonial-desc.h3",
+              "text": "I’ve had nothing but the best interactio",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.has-arrow",
+              "text": "Phio creatives. You should join us.",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 56
+            }
+          ],
+          "body": {
+            "#ffffff": {
+              "fg": "#4f4f4f",
+              "chars": 646
+            }
+          }
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-prodex/j6@1.0.2 (https://ja-prodex-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#93b6fb",
+        "#858273",
+        "#1a1a1a",
+        "#b7b39f",
+        "#060605",
+        "#84acfb",
+        "#9fbefc",
+        "#000000",
+        "#868474",
+        "#7a786a"
+      ],
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.feature-title.h1",
+              "text": "Take control of your notes and schedule ",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 72
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "Everything you need to grow your team fa",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Work from anywhere",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1",
+              "at": "div.h2.text-primary",
+              "text": "+194%",
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Take notes effortlessly",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:1",
+              "at": "div.h2.text-primary",
+              "text": "+2.7%",
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Find things fast",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:1/div:2/div:1",
+              "at": "div.h2.text-primary",
+              "text": "+12%",
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.hero-title.h2",
+              "text": "Everything you need to grow your team fa",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "How it works",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Interactive human resource workflow.",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Innovatively built for recruiters and ap",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:3/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Flexible, automated rewards",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:4/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Integrates with your existing tools",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:5/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Management and performance tools",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.section-title.h2",
+              "text": "A modern stack for modern companies",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Security first",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Team collaboration",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Omnichannel support",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.cta-title",
+              "text": "Get started now",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "We will be there for you every time of t",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 48
+            }
+          ],
+          "body": {
+            "#1a1a1a": {
+              "fg": "#f4efd4",
+              "chars": 777
+            },
+            "#000000": {
+              "fg": "#f4efd4",
+              "chars": 1768
+            },
+            "#f4efd4": {
+              "fg": "#000000",
+              "chars": 492
+            }
+          }
+        }
+      },
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.feature-title.h1",
+              "text": "Take control of your notes and schedule ",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 236,
+                "g": 242,
+                "b": 255,
+                "a": 1
+              },
+              "size": 72
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "Everything you need to grow your team fa",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 236,
+                "g": 242,
+                "b": 255,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Work from anywhere",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1",
+              "at": "div.h2.text-primary",
+              "text": "+194%",
+              "fg": {
+                "r": 81,
+                "g": 55,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Take notes effortlessly",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:2/div:1",
+              "at": "div.h2.text-primary",
+              "text": "+2.7%",
+              "fg": {
+                "r": 81,
+                "g": 55,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Find things fast",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:1/div:2/div:1",
+              "at": "div.h2.text-primary",
+              "text": "+12%",
+              "fg": {
+                "r": 81,
+                "g": 55,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.hero-title.h2",
+              "text": "Everything you need to grow your team fa",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 81,
+                "g": 55,
+                "b": 255,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "How it works",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 236,
+                "g": 242,
+                "b": 255,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Interactive human resource workflow.",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 236,
+                "g": 242,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Innovatively built for recruiters and ap",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 236,
+                "g": 242,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:3/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Flexible, automated rewards",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 236,
+                "g": 242,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:4/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Integrates with your existing tools",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 236,
+                "g": 242,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:5/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Management and performance tools",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 236,
+                "g": 242,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.section-title.h2",
+              "text": "A modern stack for modern companies",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Security first",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Team collaboration",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Omnichannel support",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 33,
+                "g": 37,
+                "b": 41,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.cta-title",
+              "text": "Get started now",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "We will be there for you every time of t",
+              "fg": {
+                "r": 25,
+                "g": 34,
+                "b": 39,
+                "a": 1
+              },
+              "ground": {
+                "r": 236,
+                "g": 242,
+                "b": 255,
+                "a": 1
+              },
+              "size": 48
+            }
+          ],
+          "body": {
+            "#192227": {
+              "fg": "#ffffff",
+              "chars": 49
+            },
+            "#ecf2ff": {
+              "fg": "#4b4a51",
+              "chars": 1768
+            },
+            "#ffffff": {
+              "fg": "#4b4a51",
+              "chars": 777
+            },
+            "#212529": {
+              "fg": "#ffffff",
+              "chars": 492
+            }
+          }
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-podcast/j6@1.0.4 (https://ja-podcast-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#868474",
+        "#000000",
+        "#858273",
+        "#f4efd4",
+        "#060605",
+        "#1a1a1a",
+        "#84acfb",
+        "#b7b39f",
+        "#93b6fb",
+        "#9fbefc",
+        "#7a786a"
+      ],
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "main:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/h1:1",
+              "at": "h1",
+              "text": "A Online Radio To Inspiring",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 55
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/h1:1/span:1",
+              "at": "span",
+              "text": "Everyone",
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 55
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.clients-title.h2",
+              "text": "Listen Our Podcast On",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 36
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:4/div:1/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "Discover your favorite podcast lorem",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/h1:1",
+              "at": "h1",
+              "text": "Ease of creating and listening to podcas",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 55
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:6/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "Below are the categories",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.cta-title",
+              "text": "A online radio to inspiring everyone",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:8/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "Meet our host",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.h1",
+              "text": "Our listener say",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/div:1/h2:1",
+              "at": "h2",
+              "text": "77M",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/div:2/h2:1",
+              "at": "h2",
+              "text": "87k+",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/div:3/h2:1",
+              "at": "h2",
+              "text": "4k+",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "Subscribe for the new episodes",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:11/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.mt-0.txt-lead",
+              "text": "We collaborate with ambitious brands and",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 43
+            }
+          ],
+          "body": {
+            "#000000": {
+              "fg": "#f4efd4",
+              "chars": 818
+            },
+            "#84acfb": {
+              "fg": "#000000",
+              "chars": 170
+            },
+            "#1a1a1a": {
+              "fg": "#868474",
+              "chars": 131
+            }
+          }
+        }
+      },
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "main:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/h1:1",
+              "at": "h1",
+              "text": "A Online Radio To Inspiring",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 24,
+                "g": 29,
+                "b": 36,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/h1:1/span:1",
+              "at": "span",
+              "text": "Everyone",
+              "fg": {
+                "r": 254,
+                "g": 217,
+                "b": 15,
+                "a": 1
+              },
+              "ground": {
+                "r": 24,
+                "g": 29,
+                "b": 36,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.clients-title.h2",
+              "text": "Listen Our Podcast On",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 24,
+                "g": 29,
+                "b": 36,
+                "a": 1
+              },
+              "size": 36
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:4/div:1/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "Discover your favorite podcast lorem",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 24,
+                "g": 29,
+                "b": 36,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/h1:1",
+              "at": "h1",
+              "text": "Ease of creating and listening to podcas",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 24,
+                "g": 29,
+                "b": 36,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:6/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "Below are the categories",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.cta-title",
+              "text": "A online radio to inspiring everyone",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 141,
+                "g": 83,
+                "b": 255,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:8/div:1/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "Meet our host",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.h1",
+              "text": "Our listener say",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 24,
+                "g": 29,
+                "b": 36,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/div:1/h2:1",
+              "at": "h2",
+              "text": "77M",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 24,
+                "g": 29,
+                "b": 36,
+                "a": 1
+              },
+              "size": 36
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/div:2/h2:1",
+              "at": "h2",
+              "text": "87k+",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 24,
+                "g": 29,
+                "b": 36,
+                "a": 1
+              },
+              "size": 36
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/div:3/h2:1",
+              "at": "h2",
+              "text": "4k+",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 24,
+                "g": 29,
+                "b": 36,
+                "a": 1
+              },
+              "size": 36
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/h3:1/span:1",
+              "at": "span",
+              "text": "Subscribe for the new episodes",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 19,
+                "g": 23,
+                "b": 29,
+                "a": 1
+              },
+              "size": 52
+            },
+            {
+              "path": "main:1/div:1/div:1/div:1/div:11/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.mt-0.txt-lead",
+              "text": "We collaborate with ambitious brands and",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 24,
+                "g": 29,
+                "b": 36,
+                "a": 1
+              },
+              "size": 36
+            }
+          ],
+          "body": {
+            "#181d24": {
+              "fg": "#ffffff",
+              "chars": 1032
+            },
+            "#8d53ff": {
+              "fg": "#ffffff",
+              "chars": 170
+            },
+            "#13171d": {
+              "fg": "#ffffff",
+              "chars": 109
+            }
+          }
+        }
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-voyara/j6@1.0.8 (https://ja-voyara-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#b7b39f",
+        "#000000",
+        "#858273",
+        "#1a1a1a",
+        "#f4efd4",
+        "#93b6fb",
+        "#060605",
+        "#7a786a",
+        "#868474",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/h1:1",
+              "at": "h1.acm-hero-title",
+              "text": "Find the trip you'll talk about for year",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 55
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "Travel that's planned like you live ther",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:1/h3:1",
+              "at": "h3",
+              "text": "Hand-built itineraries",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 19
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:2/h3:1",
+              "at": "h3",
+              "text": "Vetted partners only",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 19
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:3/h3:1",
+              "at": "h3",
+              "text": "Real humans, 24/7",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 19
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "Trips our travellers can't stop raving a",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2",
+              "text": "One trip designer, from first idea to fi",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.acm-stat-value",
+              "text": "80+",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:2/div:1",
+              "at": "div.acm-stat-value",
+              "text": "12,000+",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:3/div:1",
+              "at": "div.acm-stat-value",
+              "text": "240",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:4/div:1",
+              "at": "div.acm-stat-value",
+              "text": "4.9/5",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "The trips speak for themselves",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-cta-title",
+              "text": "Your next great story starts with one co",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              },
+              "size": 43
+            }
+          ],
+          "body": {
+            "#000000": {
+              "fg": "#858273",
+              "chars": 346
+            },
+            "#1a1a1a": {
+              "fg": "#858273",
+              "chars": 410
+            },
+            "#060605": {
+              "fg": "#858273",
+              "chars": 183
+            }
+          }
+        }
+      },
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/h1:1",
+              "at": "h1.acm-hero-title",
+              "text": "Find the trip you'll talk about for year",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 250,
+                "g": 246,
+                "b": 240,
+                "a": 1
+              },
+              "size": 66
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "Travel that's planned like you live ther",
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "ground": {
+                "r": 250,
+                "g": 246,
+                "b": 240,
+                "a": 1
+              },
+              "size": 40
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:1/h3:1",
+              "at": "h3",
+              "text": "Hand-built itineraries",
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 19
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:2/h3:1",
+              "at": "h3",
+              "text": "Vetted partners only",
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 19
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:3/h3:1",
+              "at": "h3",
+              "text": "Real humans, 24/7",
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 19
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "Trips our travellers can't stop raving a",
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "ground": {
+                "r": 242,
+                "g": 235,
+                "b": 225,
+                "a": 1
+              },
+              "size": 40
+            },
+            {
+              "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2",
+              "text": "One trip designer, from first idea to fi",
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "ground": {
+                "r": 250,
+                "g": 246,
+                "b": 240,
+                "a": 1
+              },
+              "size": 38
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.acm-stat-value",
+              "text": "80+",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 31,
+                "g": 111,
+                "b": 107,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:2/div:1",
+              "at": "div.acm-stat-value",
+              "text": "12,000+",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 31,
+                "g": 111,
+                "b": 107,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:3/div:1",
+              "at": "div.acm-stat-value",
+              "text": "240",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 31,
+                "g": 111,
+                "b": 107,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:4/div:1",
+              "at": "div.acm-stat-value",
+              "text": "4.9/5",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 31,
+                "g": 111,
+                "b": 107,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "The trips speak for themselves",
+              "fg": {
+                "r": 26,
+                "g": 21,
+                "b": 18,
+                "a": 1
+              },
+              "ground": {
+                "r": 242,
+                "g": 235,
+                "b": 225,
+                "a": 1
+              },
+              "size": 40
+            },
+            {
+              "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-cta-title",
+              "text": "Your next great story starts with one co",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 242,
+                "g": 235,
+                "b": 225,
+                "a": 1
+              },
+              "size": 44
+            }
+          ],
+          "body": {
+            "#faf6f0": {
+              "fg": "#8a7e72",
+              "chars": 346
+            },
+            "#ffffff": {
+              "fg": "#8a7e72",
+              "chars": 410
+            },
+            "#1f6f6b": {
+              "fg": "#ffffff",
+              "chars": 44
+            },
+            "#f2ebe1": {
+              "fg": "#8a7e72",
+              "chars": 231
+            }
+          }
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-nova/j6@1.0.6 (https://ja-nova-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#1a1a1a",
+        "#858273",
+        "#b7b39f",
+        "#868474",
+        "#7a786a",
+        "#000000",
+        "#060605",
+        "#93b6fb",
+        "#f4efd4",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hero-title",
+              "text": "world-class animations that help you",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 55
+            },
+            {
+              "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:1",
+              "at": "span.text-green",
+              "text": "We make",
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 55
+            },
+            {
+              "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:2",
+              "at": "span.text-purple",
+              "text": "grow faster",
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 55
+            },
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "The just apparatus you'll at any point n",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+              "at": "span.text-cyan.text-icon-1.align-icon-right",
+              "text": "investigation",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.h2.main-title.my-0",
+              "text": "the products your customers want",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+              "at": "span.text-red",
+              "text": "Start building",
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.cta-title.h1",
+              "text": "the voice and grit behind your knowledge",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:1",
+              "at": "span.text-yellow.text-icon-2",
+              "text": "Share",
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:2",
+              "at": "span.text-purple.text-icon-3.align-icon-right",
+              "text": "greatest works,",
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "The just apparatus you'll at any point n",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+              "at": "span.text-red.text-icon-4.align-icon-right",
+              "text": "investigation",
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.teams-desc.h2",
+              "text": "This is why industry our team is",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.text-black.align-icon-right.text-icon-1",
+              "text": "so famous!",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "Preparing for your success trusted sourc",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+              "at": "span.text-purple.align-icon-right.text-icon-3",
+              "text": "IT services",
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 43
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.h2.main-title.my-0",
+              "text": "Over finished work and still counting",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+              "at": "span.text-green",
+              "text": "1200+",
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.h2.text-purple",
+              "text": "35k",
+              "fg": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/span:1",
+              "at": "span.h2.text-cyan",
+              "text": "36k",
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:1/span:1",
+              "at": "span.h2.text-orange",
+              "text": "119",
+              "fg": {
+                "r": 253,
+                "g": 126,
+                "b": 20,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/div:1/div:4/div:1/div:1/span:1",
+              "at": "span.h2.text-red",
+              "text": "220+",
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.h2.main-title.my-0",
+              "text": "We give a plan to the application",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+              "at": "span.text-red.text-icon-4.align-icon-right",
+              "text": "great assessing",
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.pricing-plan-price.h2.text-yellow",
+              "text": "$19.50",
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.h2.main-title.my-0",
+              "text": "Latest news from us",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:13/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.accordion-title.h2",
+              "text": "Frequently asked",
+              "fg": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:13/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.text-red",
+              "text": "questions",
+              "fg": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:14/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h4:1",
+              "at": "h4.cta-desc.h2",
+              "text": "If you want to talk!",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:14/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h4:1/span:1",
+              "at": "span.text-cyan",
+              "text": "We are here",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              },
+              "size": 32
+            }
+          ],
+          "body": {
+            "#84acfb": {
+              "fg": "#000000",
+              "chars": 344
+            },
+            "#1a1a1a": {
+              "fg": "#f4efd4",
+              "chars": 869
+            },
+            "#000000": {
+              "fg": "#f4efd4",
+              "chars": 863
+            }
+          }
+        }
+      },
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hero-title",
+              "text": "world-class animations that help you",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 40
+            },
+            {
+              "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:1",
+              "at": "span.text-green",
+              "text": "We make",
+              "fg": {
+                "r": 4,
+                "g": 173,
+                "b": 104,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 40
+            },
+            {
+              "path": "div:2/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1/span:2",
+              "at": "span.text-purple",
+              "text": "grow faster",
+              "fg": {
+                "r": 94,
+                "g": 72,
+                "b": 219,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 40
+            },
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "The just apparatus you'll at any point n",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 94,
+                "g": 72,
+                "b": 219,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+              "at": "span.text-cyan.text-icon-1.align-icon-right",
+              "text": "investigation",
+              "fg": {
+                "r": 45,
+                "g": 195,
+                "b": 245,
+                "a": 1
+              },
+              "ground": {
+                "r": 94,
+                "g": 72,
+                "b": 219,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.h2.main-title.my-0",
+              "text": "the products your customers want",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+              "at": "span.text-red",
+              "text": "Start building",
+              "fg": {
+                "r": 239,
+                "g": 56,
+                "b": 103,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.cta-title.h1",
+              "text": "the voice and grit behind your knowledge",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 239,
+                "g": 237,
+                "b": 252,
+                "a": 1
+              },
+              "size": 40
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:1",
+              "at": "span.text-yellow.text-icon-2",
+              "text": "Share",
+              "fg": {
+                "r": 248,
+                "g": 171,
+                "b": 17,
+                "a": 1
+              },
+              "ground": {
+                "r": 239,
+                "g": 237,
+                "b": 252,
+                "a": 1
+              },
+              "size": 40
+            },
+            {
+              "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h2:1/span:2",
+              "at": "span.text-purple.text-icon-3.align-icon-right",
+              "text": "greatest works,",
+              "fg": {
+                "r": 94,
+                "g": 72,
+                "b": 219,
+                "a": 1
+              },
+              "ground": {
+                "r": 239,
+                "g": 237,
+                "b": 252,
+                "a": 1
+              },
+              "size": 40
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "The just apparatus you'll at any point n",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:7/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+              "at": "span.text-red.text-icon-4.align-icon-right",
+              "text": "investigation",
+              "fg": {
+                "r": 239,
+                "g": 56,
+                "b": 103,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.teams-desc.h2",
+              "text": "This is why industry our team is",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 248,
+                "g": 171,
+                "b": 17,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.text-black.align-icon-right.text-icon-1",
+              "text": "so famous!",
+              "fg": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "ground": {
+                "r": 248,
+                "g": 171,
+                "b": 17,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1",
+              "at": "h2",
+              "text": "Preparing for your success trusted sourc",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/h2:1/span:1",
+              "at": "span.text-purple.align-icon-right.text-icon-3",
+              "text": "IT services",
+              "fg": {
+                "r": 94,
+                "g": 72,
+                "b": 219,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.h2.main-title.my-0",
+              "text": "Over finished work and still counting",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 230,
+                "g": 246,
+                "b": 240,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+              "at": "span.text-green",
+              "text": "1200+",
+              "fg": {
+                "r": 4,
+                "g": 173,
+                "b": 104,
+                "a": 1
+              },
+              "ground": {
+                "r": 230,
+                "g": 246,
+                "b": 240,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.h2.text-purple",
+              "text": "35k",
+              "fg": {
+                "r": 94,
+                "g": 72,
+                "b": 219,
+                "a": 1
+              },
+              "ground": {
+                "r": 247,
+                "g": 247,
+                "b": 247,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/span:1",
+              "at": "span.h2.text-cyan",
+              "text": "36k",
+              "fg": {
+                "r": 45,
+                "g": 195,
+                "b": 245,
+                "a": 1
+              },
+              "ground": {
+                "r": 247,
+                "g": 247,
+                "b": 247,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/div:1/div:3/div:1/div:1/span:1",
+              "at": "span.h2.text-orange",
+              "text": "119",
+              "fg": {
+                "r": 253,
+                "g": 126,
+                "b": 20,
+                "a": 1
+              },
+              "ground": {
+                "r": 247,
+                "g": 247,
+                "b": 247,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:2/div:1/div:1/div:1/div:4/div:1/div:1/span:1",
+              "at": "span.h2.text-red",
+              "text": "220+",
+              "fg": {
+                "r": 239,
+                "g": 56,
+                "b": 103,
+                "a": 1
+              },
+              "ground": {
+                "r": 247,
+                "g": 247,
+                "b": 247,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.h2.main-title.my-0",
+              "text": "We give a plan to the application",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/span:1/span:1",
+              "at": "span.text-red.text-icon-4.align-icon-right",
+              "text": "great assessing",
+              "fg": {
+                "r": 239,
+                "g": 56,
+                "b": 103,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.pricing-plan-price.h2.text-yellow",
+              "text": "$19.50",
+              "fg": {
+                "r": 248,
+                "g": 171,
+                "b": 17,
+                "a": 1
+              },
+              "ground": {
+                "r": 247,
+                "g": 247,
+                "b": 247,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:12/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.h2.main-title.my-0",
+              "text": "Latest news from us",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 4,
+                "g": 173,
+                "b": 104,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:13/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1",
+              "at": "div.accordion-title.h2",
+              "text": "Frequently asked",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:13/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/span:1",
+              "at": "span.text-red",
+              "text": "questions",
+              "fg": {
+                "r": 239,
+                "g": 56,
+                "b": 103,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:14/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h4:1",
+              "at": "h4.cta-desc.h2",
+              "text": "If you want to talk!",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 94,
+                "g": 72,
+                "b": 219,
+                "a": 1
+              },
+              "size": 32
+            },
+            {
+              "path": "div:2/div:1/div:1/div:14/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h4:1/span:1",
+              "at": "span.text-cyan",
+              "text": "We are here",
+              "fg": {
+                "r": 45,
+                "g": 195,
+                "b": 245,
+                "a": 1
+              },
+              "ground": {
+                "r": 94,
+                "g": 72,
+                "b": 219,
+                "a": 1
+              },
+              "size": 32
+            }
+          ],
+          "body": {
+            "#5e48db": {
+              "fg": "#ffffff",
+              "chars": 344
+            },
+            "#f7f7f7": {
+              "fg": "#131515",
+              "chars": 601
+            },
+            "#ffffff": {
+              "fg": "#131515",
+              "chars": 863
+            },
+            "#efedfc": {
+              "fg": "#131515",
+              "chars": 268
+            },
+            "#04ad68": {
+              "fg": "#ffffff",
+              "chars": 98
+            },
+            "#212529": {
+              "fg": "#ffffff",
+              "chars": 153
+            }
+          }
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-morgan/j6@1.0.5 (https://ja-morgan-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#1a1a1a",
+        "#868474",
+        "#858273",
+        "#7a786a",
+        "#b7b39f",
+        "#060605",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:1/div:1/div:3/div:1/div:1/h1:1",
+              "at": "h1",
+              "text": "Joomla Template for Business Websites",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 55
+            },
+            {
+              "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Check Out All The Pages",
+              "fg": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "ground": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1",
+              "text": "Your Great-Looking Website Starts Right ",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 27,
+                "g": 48,
+                "b": 96,
+                "a": 1
+              },
+              "size": 55
+            }
+          ],
+          "body": {
+            "#000000": {
+              "fg": "#f4efd4",
+              "chars": 614
+            }
+          }
+        }
+      },
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:1/div:1/div:3/div:1/div:1/h1:1",
+              "at": "h1",
+              "text": "Joomla Template for Business Websites",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 60
+            },
+            {
+              "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/h3:1",
+              "at": "h3",
+              "text": "Check Out All The Pages",
+              "fg": {
+                "r": 51,
+                "g": 51,
+                "b": 51,
+                "a": 1
+              },
+              "ground": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "size": 48
+            },
+            {
+              "path": "div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1",
+              "text": "Your Great-Looking Website Starts Right ",
+              "fg": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "ground": {
+                "r": 27,
+                "g": 48,
+                "b": 96,
+                "a": 1
+              },
+              "size": 60
+            }
+          ],
+          "body": {
+            "#ffffff": {
+              "fg": "#777777",
+              "chars": 588
+            }
+          }
+        }
+      }
+    }
+  ]
+}

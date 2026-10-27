@@ -1,0 +1,57 @@
+{
+  "id": "QA-UNIT-REG-PR-1479-picture-draw-deadline-happy",
+  "itemIds": ["regression:REG-PR-1479-picture-draw-deadline"],
+  "requirement": "A picture model that never answers costs a place its drawing at the Apply's deadline, never the Apply its words",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1479-picture-draw-deadline.json",
+    "ref": "PR #1479 (fix); fix evidence: Review 19/10/2026: drawForPlace called the seeder's chat (240 s x 3 tries) with no race while the Apply's words wait for its pictures under a 180 s deadline (#1367 symptom on opportunity demos)",
+    "invariant": "S1: shapeReal resolves in under 10 s, notes 'a picture could not be drawn: the picture took too long', and no shaped place has receipt.kind 'drawn'. S2: drawForPlace rejects with 'the picture took too long' in under 5 s.",
+    "productSources": [
+      "apps/tracy-web/src/lib/picture-draw.js:54",
+      "apps/tracy-web/src/sites/brief-engines/real-pictures.js:60"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a picture model that never answers costs the place its drawing, never the Apply its words",
+    "a model that never answers is given up at the signal, not waited on through its own retries"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1479-picture-draw-deadline"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1479-picture-draw-deadline",
+    "pr": 1479,
+    "kind": "fix",
+    "area": "site-brief/pictures",
+    "file": "tests/regression/cases/REG-PR-1479-picture-draw-deadline.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/brief-real-pictures.test.mjs",
+    "apps/tracy-web/test/picture-draw.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a picture model that never answers costs the place its drawing, never the Apply its words",
+    "a model that never answers is given up at the signal, not waited on through its own retries"
+  ],
+  "timeoutS": 600
+}

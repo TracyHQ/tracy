@@ -1,0 +1,17 @@
+{
+  "busy": "La vista previa de Office está ocupada. Inténtelo de nuevo en breve.",
+  "changed": "El archivo cambió mientras se leía. Vuelva a abrir la vista previa.",
+  "closeDetails": "Cerrar detalles de fuentes",
+  "failed": "La conversión de Office no produjo un PDF utilizable. Compruebe el archivo e inténtelo de nuevo.",
+  "invalid": "No se puede previsualizar este archivo de Office. Puede estar dañado, protegido con contraseña o tener una extensión incorrecta.",
+  "loading": "Renderizando documento...",
+  "missingFontsCount": "Fuentes: {count}",
+  "missingFontsDescription": "Estas fuentes no están disponibles para esta vista previa. El texto y el diseño pueden diferir del documento original.",
+  "missingFontsTitle": "Fuentes que faltan",
+  "retry": "Reintentar",
+  "timeout": "Se agotó el tiempo de la conversión de Office. Inténtelo de nuevo.",
+  "title": "Documento de Office",
+  "tooLarge": "El archivo de Office o el PDF convertido supera el límite de tamaño de la vista previa. Reduzca el tamaño del archivo o ajuste la configuración de la vista previa.",
+  "unavailable": "Las vistas previas de Office no están disponibles. Active el servicio de vista previa de documentos en el equipo que ejecuta Tracy Cowork.",
+  "viewMissingFonts": "Fuentes que faltan: {count}. Haga clic para verlas."
+}

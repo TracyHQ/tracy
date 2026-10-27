@@ -1,0 +1,79 @@
+{
+  "color": {
+    "cream-blush": {
+      "$value": "#ffe9ce",
+      "$type": "color",
+      "$description": "Cream Blush — Page canvas, hero background — the warm off-white that everything else sticks to"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Speech bubble fills, text on saturated color blocks, card reverse"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, hero wordmark, sticker outlines, all display typography"
+    },
+    "slate-gray": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Slate Gray — Secondary body text, link underline, muted helper copy"
+    },
+    "near-black": {
+      "$value": "#101010",
+      "$type": "color",
+      "$description": "Near Black — Input text and input border — the UI control ink"
+    },
+    "mist-gray": {
+      "$value": "#dddddd",
+      "$type": "color",
+      "$description": "Mist Gray — Disabled button fill, low-emphasis surface"
+    },
+    "pale-gray": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Pale Gray — Inactive link border, disabled underline"
+    },
+    "electric-violet": {
+      "$value": "#8a53ff",
+      "$type": "color",
+      "$description": "Electric Violet — Section color blocks, circular badge fills, sticker bursts — the cool anchor of the palette"
+    },
+    "coral-blaze": {
+      "$value": "#fd4b38",
+      "$type": "color",
+      "$description": "Coral Blaze — Starburst stickers, red section blocks, urgent decorative shouts"
+    },
+    "sunburst-yellow": {
+      "$value": "#ffd80c",
+      "$type": "color",
+      "$description": "Sunburst Yellow — Sticker fills, section blocks, and the only shadow color in the system (2px solid ring around active controls)"
+    },
+    "lime-spark": {
+      "$value": "#3ccb09",
+      "$type": "color",
+      "$description": "Lime Spark — Round sticker badges and pill tags — the fresh-pop accent in sticker compositions"
+    },
+    "deep-indigo": {
+      "$value": "#0500a3",
+      "$type": "color",
+      "$description": "Deep Indigo — Inverted heading text on light cards and accent text inside color blocks — the cool counterweight to Coral Blaze"
+    }
+  },
+  "font": {
+    "fictional": {
+      "$value": "Fictional",
+      "$type": "fontFamily",
+      "$description": "The only typeface. Body, display, and UI voice. The five-weight family (Light through UltraBold) maps to a single size-and-voice axis: bigger and bolder is the entire hierarchy. The whisper-light 300 is reserved for captioning the type itself; UltraBold 800 owns the hero wordmark and sticker shouts."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://fictional-typeface.com",
+      "siteName": "Fictional",
+      "extractedAt": "2026-06-03T15:04:26.450Z",
+      "variant": "compact"
+    }
+  }
+}

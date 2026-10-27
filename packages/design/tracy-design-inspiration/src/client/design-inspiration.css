@@ -1,0 +1,43 @@
+/* Tailwind source for the design inspirations tab. Same recipe as tracy-site-tabs/src/client/site-tabs.css:
+   theme + utilities only, NO preflight — this tab lives inside dsh's page (CLAUDE.md LAW #4). */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@tracy/ui/tokens.css';
+@source './';
+@source '../../../../ui/tracy-ui/src';
+@source '../../../../core/tracy-core/src';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS — so a compound
+   icon from @tracy/ui/icons (light + dark twin) swaps with the host's theme. */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* Mode B has no preflight: the UA still paints buttons grey with black text and form controls in
+   their own font. Scoped to this plugin's root and placed in `base`, so every utility class on a
+   `@tracy/ui` component still wins. */
+@layer base {
+  .tracy-design-inspiration button, .tracy-design-inspiration input, .tracy-design-inspiration select { background-color: transparent; color: inherit; font: inherit; border-width: 0; padding: 0; }
+  .tracy-design-inspiration * { box-sizing: border-box; }
+}
+
+/* 🔒 NOT A UTILITY, ON PURPOSE. Six Tracy plugins each inject their own Tailwind sheet into dsh's
+   page, and a sheet injected later wins ties. `pl-8` on a CommandItem lost to `.px-2` from a
+   sibling's sheet (measured on the lucaswp lane 06/09 09:50: padding-left 8px, not 32px) — twMerge
+   keeps `px-2` beside `pl-8` because they are different groups, and the sibling's `.px-2` is
+   declared after this plugin's `.pl-8`. Unlayered and scoped, this rule beats every layered
+   utility from every sheet, whatever the injection order. */
+.tracy-design-inspiration .tdi-indent { padding-left: calc(var(--spacing) * 8); }
+
+/* Focus is the same crisp 1px stroke the Add site tab settled on (15/09): no 3px halo. The ring is a
+   box-shadow, so this is the one property to clear; the border-color swap to --ring stays. Unlayered
+   on purpose: it must win over the utilities layer. */
+.tracy-design-inspiration input:focus-visible,
+.tracy-design-inspiration [data-slot='input-group']:has([data-slot='input-group-control']:focus-visible) {
+  box-shadow: none;
+}
+
+/* The running site's Design system tab (DesignSystemGrid.tsx): its cards are the gallery's, drawn with utilities. The
+   one rule here is the worn system's terracotta stroke, unlayered and scoped: as a bare utility it would lose to another
+   plugin's later `.border-border` on the same card (DESIGN.md section 3.1). Hover and focus keep their stroke through
+   their own variants, which outrank a bare class. */
+.tracy-design-inspiration [data-worn-card="true"] { border-color: var(--primary); }

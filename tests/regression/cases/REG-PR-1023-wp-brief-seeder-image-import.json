@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1023-wp-brief-seeder-image-import",
+  "kind": "fix",
+  "title": "Every seeder module tracy-web loads imports from the image layout, so WordPress briefs no longer fail at prepare",
+  "pr": 1023,
+  "area": "site-build/brief",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test scripts/test/tracy-web-seeder-image.test.mjs: it copies packages/cms/tracy-seeder/src alone into a temporary src/seeder (the apps/tracy-web/Dockerfile COPY line, which it also asserts) and imports each name in SEEDER_MODULES of apps/tracy-web/src/lib/seeder.js in a fresh Node process.",
+    "S2: Run node --test --test-name-pattern='without the language catalogue' packages/cms/tracy-seeder/test/wordpress-contract-door.test.mjs: the seeder src is copied with wordpress-language-packs.json removed, the door is imported and setWordPressLocale is called for vi-vn."
+  ],
+  "expect": [
+    "S1: every module loads, wordpress-contract-door included (no ERR_MODULE_NOT_FOUND).",
+    "S2: the door imports; setWordPressLocale returns status none, makes no door call, and warns that WordPress could not be told to speak vi-vn."
+  ],
+  "selectors": {
+    "files": "scripts/test/tracy-web-seeder-image.test.mjs, packages/cms/tracy-seeder/test/wordpress-contract-door.test.mjs",
+    "loader": "apps/tracy-web/src/lib/seeder.js SEEDER_MODULES"
+  },
+  "evidence": "Since PR 1019 every WordPress brief on cowork.tracy.site failed: wordpress-contract-door imported ../../tracy-wordpress-quickstart/language-packs.json, which the tracy-web image does not carry (ERR_MODULE_NOT_FOUND at prepare).",
+  "fence": "The seeder's runtime modules may not import outside their own src directory; a catalogue that cannot be read costs only the language step.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "scripts/test/tracy-web-seeder-image.test.mjs",
+      "packages/cms/tracy-seeder/test/wordpress-contract-door.test.mjs"
+    ]
+  }
+}

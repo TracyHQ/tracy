@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1501-ds-preview-door-own-404",
+  "kind": "fix",
+  "title": "The /ops preview-door probe does not fail PREV-1 on a stylesheet the demo itself has not got (JA T3 /templates/system/css/system.css on Joomla 6); real door failures still fail",
+  "pr": 1501,
+  "area": "design-system/readiness",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the door-health unit tests: a page linking a stylesheet the asset door answers 404 DEMO_UNREADABLE, a 502 door, a 404 NOT_FOUND door, and a page where no asset loads."
+  ],
+  "expect": [
+    "S1: the dead link is kept as missing and not failed; the 502, NOT_FOUND and all-missing cases fail."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1501-ds-preview-door-own-404.mjs",
+    "evidence": "apps/tracy-web/test/preview-door-health.test.mjs"
+  },
+  "evidence": "Unit tests of lib/preview-door-health.js",
+  "fence": "The /ops door probe only; does not touch the asset door or a stand",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1501-ds-preview-door-own-404.mjs"],
+    "timeout_s": 300
+  }
+}

@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-iris-blue: #3161df;
+  --gradient-iris-blue: radial-gradient(335.69% 99.21% at 57.77% 0px, rgb(0, 89, 255) 0px, rgba(129, 118, 255, 0.73) 36.5%, rgba(255, 225, 66, 0) 75.65%, rgba(72, 132, 239, 0) 100%);
+  --color-cobalt: #3e79ea;
+  --gradient-cobalt: linear-gradient(rgb(88, 151, 247) 0px, rgb(56, 114, 230) 100%);
+  --color-sky-glow: #3e9ed0;
+  --color-mint-pulse: #89ecb0;
+  --color-midnight-iris: #2c65d3;
+  --color-ink: #272c30;
+  --color-pure-white: #ffffff;
+  --color-lavender-mist: #f0f5fe;
+  --color-pale-slate: #e3e8ea;
+  --color-dove-gray: #a6b4ba;
+  --color-iron: #526068;
+  --color-graphite: #60737a;
+  --color-slate-mist: #7b8e95;
+
+  /* Typography — Font Families */
+  --font-selecta: 'Selecta', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-intl: 'Suisse Intl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-geist-sans: 'Geist Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

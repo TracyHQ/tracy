@@ -1,0 +1,166 @@
+/* Preserve the founder's native app coordinates and fit the complete window. */
+:root { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #fff; }
+:root[data-theme="dark"] body { background: #171717; }
+.hero-showcase { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; transform: none; }
+.hs-tabs, .hs-note, .hs-bar { display: none; }
+.hs-stage { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; border: 0; border-radius: 0; box-shadow: none; }
+.hs-win { width: 1280px; height: 696px; transform-origin: 0 0; }
+.hs-screen { top: 0; }
+.is-seeking *, .is-still * { animation-duration: 0s !important; transition: none !important; }
+.is-still .hs-cursor { opacity: 0 !important; }
+
+.hs-win .welcome-raster-comma { position: absolute; font-family: Arial, sans-serif; pointer-events: none; text-align: left; }
+
+/* Collapsed app navigation. Chat stays readable at 300px; the preview grows. */
+.hs-win .hs3-side,
+.hs-win [data-hs4-l="side"],
+.hs-win .welcome-hidden-sidebar,
+.hs-win .hs5-left,
+.hs-win .welcome-hidden-raster { display: none !important; }
+.hs-win .hs3-chat { left: 0; }
+.hs-win .hs3-pane,
+.hs-win .hs5-pane { left: 300px; width: 980px; }
+.hs-win .hs2-panel { left: 300px; width: 980px; }
+.hs-win .hs2-panel > .hs2-scr { width: 980px; }
+.hs-win .welcome-kinetic { transform: scale(1.4010007148); transform-origin: 0 0; }
+.hs-win .hs3-cbox { left: 23.82px !important; top: 266px !important; }
+.hs-win .hs3-pin { left: 23.82px; top: 260px; }
+.hs-win .welcome-ownership-chat .hs3-hdr-tools,
+.hs-win .welcome-ownership-chat .hs3-tabs { display: none; }
+.hs-win .hs5-view { width: 980px; }
+.hs-win .hs5-full { left: auto; right: 42px; }
+.hs-win .hs5-side { left: auto; right: 6px; }
+.hs-win .hs5-menu { left: auto; right: 25px; }
+.hs-win .hs5-tabmenu,
+.hs-win .hs5-tabhl { transform: translateX(-280.5px); }
+.hs-win .hs5-view[data-v="browser"] > .hs5-browser-toolbar { width: 980px; object-fit: fill; }
+.hs-win .welcome-sites,
+.hs-win .welcome-changes { color: var(--a-fg); background: var(--a-bg); font-size: 14px; line-height: 20px; }
+.hs-win .welcome-sites header,
+.hs-win .welcome-changes header { height: 53px; padding: 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--a-border); }
+.hs-win .welcome-sites header strong { font-size: 16px; }
+.hs-win .welcome-sites header > span,
+.hs-win .welcome-changes header > span { padding: 5px 12px; border-radius: 8px; background: var(--a-primary); color: var(--a-on-primary); }
+.hs-win .welcome-sites table { margin: 12px; width: calc(100% - 24px); border-spacing: 0; border: 1px solid var(--a-border); border-radius: 8px; overflow: hidden; table-layout: auto; }
+.hs-win .welcome-sites th,
+.hs-win .welcome-sites td { height: 45px; padding: 0 12px; border-bottom: 1px solid var(--a-border); text-align: left; white-space: nowrap; }
+.hs-win .welcome-sites th { height: 32px; color: var(--a-muted); font-size: 13px; font-weight: 500; }
+.hs-win .welcome-sites td:first-child { width: 45%; }
+.hs-win .welcome-sites td:last-child { width: 28px; padding: 0 14px 0 0; }
+.hs-win .welcome-sites tr:last-child td { border-bottom: 0; }
+.hs-win .welcome-sites tr.is-current { background: var(--a-muted-bg); }
+.hs-win .welcome-sites small { display: inline-flex; padding: 1px 6px; font-size: 12px; border: 1px solid var(--a-border); border-radius: 8px; white-space: nowrap; }
+.hs-win .welcome-sites small.live { color: #319d79; background: #319d7910; border-color: #319d7950; }
+.hs-win .welcome-sites .welcome-owner { background: var(--a-primary); color: var(--a-on-primary); border-color: transparent; }
+.hs-win .welcome-sites .welcome-cms { color: #3782a8; }
+.hs-win .welcome-row-more { display: grid; place-items: center; width: 28px; height: 28px; }
+.hs-win .welcome-changes-in { padding: 12px; }
+.hs-win .welcome-changes-tools { display: flex; justify-content: space-between; color: var(--a-muted); }
+.hs-win .welcome-changes-tools span { color: var(--a-fg); }
+.hs-win .welcome-changes table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+.hs-win .welcome-changes :is(th,td) { padding: 8px 0; text-align: left; font-size: 13px; font-weight: 400; }
+.hs-win .welcome-changes th { color: var(--a-muted); }
+.hs-win .welcome-changes td:first-child { width: 45%; }
+.hs-win .welcome-changes td small { display: block; color: var(--a-muted); font-size: 12px; }
+.hs-win .welcome-backup { background: #bf5b3d0b; outline: 1px solid #bf5b3d50; }
+.hs-win .welcome-changes p { color: var(--a-muted); font-size: 12px; margin: 8px 0; }
+.hs-win .hs3-frame { width: 979.5px; }
+/* Invisible replay layers must not intercept hit tests on visible controls. */
+.hs-win .hs5-view:not(.is-on),
+.hs-win .hs5-view:not(.is-on) *,
+.hs-win .hs5-menu:not(.is-on),
+.hs-win .hs5-menu:not(.is-on) *,
+.hs-win .hs5-tabmenu:not(.is-on),
+.hs-win .hs5-tabhl:not(.is-on) { pointer-events: none; }
+.hs-win .hs4-l, .hs-win .hs2-n { pointer-events: none; }
+.hs-win .hs4-l > *, .hs-win .hs2-n[data-k], .hs-win .hs2-t { pointer-events: auto; }
+.hs-win [data-hs4="out-me"] { pointer-events: auto; z-index: 3; }
+.hs-win .hs5-wpbar > span { pointer-events: none; }
+
+/* Source website captures include pale pixels outside their rounded corners.
+   Clip those pixels so the theme-aware website backing paints every corner. */
+.hs-win .welcome-kinetic-image { border-radius: 6px; }
+/* Keep the iframe canvas in the same theme as its body during clipping/loading. */
+:root[data-theme="dark"],
+:root[data-theme="dark"] body { background: #171717; }
+/* Editor preview backing follows the app theme; website content paints above it. */
+.hs-win .hs3-frame { background: var(--a-bg); }
+
+/* Web DockKit chrome: the desktop-only bottom inset does not apply here. */
+.hs-win [data-welcome-tab-strip] {
+  --welcome-tab-surface: oklch(.975 .003 85);
+  --welcome-tab-primary: oklch(.145 0 0);
+  --welcome-tab-secondary: oklch(.556 0 0);
+  --welcome-tab-active: rgb(241, 243, 245);
+  --welcome-tab-hover: oklch(.97 0 0);
+  --welcome-tab-rule: oklch(.87 0 0);
+  position: absolute; inset: 0 0 auto; display: flex; flex: none; gap: 4px;
+  align-items: center; box-sizing: border-box; height: 38px !important;
+  padding: 10px 6px 0 10px; border: 0; background: var(--welcome-tab-surface);
+  font-family: -apple-system, system-ui, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px; line-height: 1; color: var(--welcome-tab-secondary);
+}
+:root[data-theme="dark"] .hs-win [data-welcome-tab-strip] {
+  --welcome-tab-surface: oklch(.178 .003 85);
+  --welcome-tab-primary: oklch(.985 0 0);
+  --welcome-tab-secondary: oklch(.708 0 0);
+  --welcome-tab-active: rgb(44, 44, 46);
+  --welcome-tab-hover: oklch(.269 0 0);
+  --welcome-tab-rule: rgb(51, 51, 51);
+}
+.hs-win [data-welcome-tab-run] { display: flex; flex: 0 1 auto; align-items: center; min-width: 0; overflow: hidden; }
+.hs-win [data-welcome-tab] {
+  position: relative; display: flex; flex: 0 1 auto; align-items: center;
+  box-sizing: content-box; min-width: 80px; max-width: 170px; height: 28px;
+  padding: 0 10px; border-radius: 8px; white-space: nowrap; color: var(--welcome-tab-secondary);
+}
+.hs-win [data-welcome-tab][aria-selected="true"] { background: var(--welcome-tab-active); color: var(--welcome-tab-primary); }
+.hs-win [data-welcome-tab-title] { display: flex; flex: 1 1 auto; gap: 5px; align-items: center; min-width: 0; overflow: hidden; line-height: 1.4; }
+.hs-win [data-welcome-tab-label] { flex: none; }
+.hs-win [data-welcome-tab-clipped] { mask-image: linear-gradient(to right, black calc(100% - 16px), transparent); }
+.hs-win [data-welcome-tab][aria-selected="true"] [data-welcome-tab-title],
+.hs-win [data-welcome-tab]:hover [data-welcome-tab-title] { mask-image: linear-gradient(to right, black calc(100% - 30px), transparent calc(100% - 14px)); }
+.hs-win [data-welcome-tab-quiet], .hs-win [data-welcome-tab-quiet]:hover { background: transparent !important; color: var(--welcome-tab-primary); }
+.hs-win [data-welcome-tab][data-welcome-tab-quiet] [data-welcome-tab-title] { mask-image: none; }
+.hs-win [data-welcome-tab][data-welcome-tab-quiet] [data-welcome-tab-clipped] { mask-image: linear-gradient(to right, black calc(100% - 16px), transparent); }
+.hs-win [data-welcome-tab-icon] { display: inline-flex; flex: 0 0 14px; width: 14px; height: 14px; }
+.hs-win [data-welcome-tab-icon] :is(img, svg) { position: static; display: block; width: 14px; height: 14px; object-fit: contain; }
+.hs-win [data-welcome-site-switch] { display: inline-flex; flex: 0 0 18px; align-items: center; justify-content: center; width: 18px; height: 18px; padding: 2px; }
+.hs-win [data-welcome-site-switch] svg { width: 14px; height: 14px; }
+.hs-win [data-welcome-tab-strip] button { display: flex; flex: none; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--welcome-tab-secondary); }
+.hs-win [data-welcome-tab-strip] button:hover { background: var(--welcome-tab-hover); color: var(--welcome-tab-primary); }
+.hs-win [data-welcome-tab-strip] button svg { width: 14px; height: 14px; }
+.hs-win [data-welcome-tab-strip] [data-welcome-tab-close] { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; opacity: 0; pointer-events: none; }
+.hs-win [data-welcome-tab][aria-selected="true"] [data-welcome-tab-close],
+.hs-win [data-welcome-tab]:hover [data-welcome-tab-close],
+.hs-win [data-welcome-tab]:focus-within [data-welcome-tab-close] { opacity: 1; pointer-events: auto; }
+.hs-win [data-welcome-tab-slot] { display: flex; flex: none; align-items: center; justify-content: center; width: 10px; height: 28px; }
+.hs-win [data-welcome-tab-slot]::before { content: ""; width: .5px; height: 14px; background: var(--welcome-tab-rule); }
+.hs-win [aria-selected="true"] + [data-welcome-tab-slot]::before,
+.hs-win [data-welcome-tab-slot]:has(+ [aria-selected="true"])::before { background: transparent; }
+.hs-win [data-welcome-tab-fill] { flex: 1 1 0; min-width: 0; }
+.hs-win [data-welcome-tab-chrome] { display: flex; flex: none; gap: 8px; align-items: center; height: 28px; margin-left: 4px; }
+.hs-win [data-welcome-tab-chrome] > button { position: static; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; }
+.hs-win [data-welcome-tab-chrome] .hs3-ico,
+.hs-win [data-welcome-tab-strip] [data-welcome-tab-split] svg { width: 15px; height: 15px; }
+.hs-win .hs5-bar { height: 38px; }
+.hs-win .hs5-bar > :is(.hs5-tabs, .hs5-full, .hs5-side) { display: none; }
+.hs-win .hs5-body { height: 658px; }
+.hs-win .hs3-bar { top: 38px; }
+.hs-win .hs3-frame { top: 83px; height: 613px; }
+/* Team's captured icon retains its old absolute coordinates unless cleared. */
+.hs-win [data-welcome-tab-icon] svg { left: auto; top: auto; }
+.hs-win [data-welcome-add-tab] svg { width: 15px !important; height: 15px !important; }
+.hs-win .hs3-prog { top: 81px; }
+
+.hs-win [data-welcome-tab-chrome] > button:last-child svg { transform: scaleX(-1); }
+/* Preserve the favicon selector consumed by conversation-header.js. */
+.hs-win [data-welcome-tab-icon].hs3-tab { position: static; top: auto; left: auto; padding: 0; gap: 0; }
+.hs-win [data-welcome-tab-strip] button[data-welcome-site-switch] { flex: 0 0 18px; width: 18px; height: 18px; padding: 2px; }
+.hs-win [data-welcome-tab-strip] button[data-welcome-site-switch] svg { width: 14px; height: 14px; }
+.hs-win [data-welcome-tab]:not([aria-selected="true"]):hover { background: var(--welcome-tab-hover); }
+.hs-win [data-welcome-tab]:focus-within [data-welcome-tab-title] { mask-image: linear-gradient(to right, black calc(100% - 30px), transparent calc(100% - 14px)); }
+.hs-win [data-welcome-tab][data-welcome-tab-quiet]:focus-within [data-welcome-tab-title] { mask-image: none; }
+.hs-win [data-welcome-tab][data-welcome-tab-quiet]:focus-within [data-welcome-tab-clipped] { mask-image: linear-gradient(to right, black calc(100% - 16px), transparent); }

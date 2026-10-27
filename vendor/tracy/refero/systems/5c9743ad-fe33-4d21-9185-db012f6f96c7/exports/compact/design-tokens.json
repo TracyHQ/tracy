@@ -1,0 +1,39 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, background of all surfaces, inner counter of the ring forms — the negative space that gives the black marks their mass"
+    },
+    "graphite-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Graphite Ink — Primary mark fill, text, and the large circular ring forms. The sole chromatic-payload element in the system"
+    },
+    "fog-hairline": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Fog Hairline — Hairline borders, structural dividers, and subtle separator rules at 1px. The only gray in the palette and it never fills — it only divides"
+    }
+  },
+  "font": {
+    "alpha": {
+      "$value": "Alpha",
+      "$type": "fontFamily",
+      "$description": "Primary face for nav, body, and display. Used at 16px for navigation labels and links (lineHeight 1.50), 29px for mid-scale headings, and 60px for the display headline (lineHeight 1.00 — headline sits tight on its baseline). The signature move is running 60px display text at weight 400, which reads as architectural line-drawing rather than shouted headline"
+    },
+    "takt": {
+      "$value": "Takt",
+      "$type": "fontFamily",
+      "$description": "Secondary face for body copy and 36px subheadings. Tight lineHeight (1.10–1.11) at all sizes gives it a compact, editorial-block feel — runs in long stacked paragraphs where Alpha would feel too austere. Weight 400 is the ONLY weight in the entire system"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://co-projects.xyz",
+      "siteName": "Co Projects",
+      "extractedAt": "2026-06-03T20:14:53.934Z",
+      "variant": "compact"
+    }
+  }
+}

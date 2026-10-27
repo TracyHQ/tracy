@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1082-seat-theme-language-persist",
+  "kind": "fix",
+  "title": "A seat's Appearance and Language choices survive a reload and send no settings/mutate (they were 403 and lost on reload); the owner keeps host persistence",
+  "pr": 1082,
+  "area": "ui/settings/account-menu",
+  "cms": ["any"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup. Browser: a NEW context with seat A's cookie, colorScheme light, 1280x800; record every request whose URL contains settings/mutate and every 403 response from here on. Open O/<site> and wait for `.tsb-root` and `[data-tracy-account-trigger]`. Read globalThis.__TRACY_SETTINGS_PERSISTENCE__.",
+    "S2: Open the account menu, hover `[data-menu-item=appearance]` 400 ms, press `[data-menu-item=theme-dark]`. Read the body background's luminance (convert the computed colour through a 1px canvas). Reload, wait as in S1, read it again, and the localStorage keys containing 'theme'.",
+    "S3: Open Settings (`[data-menu-item=settings]`), press the Language select (`button.ts-select`) in General, press the menuitemradio 'Tiếng Việt'. Close Settings, reload, wait, open Settings again and read the `.ts-nav` texts.",
+    "S4: Read the recorded settings/mutate requests and 403 responses of S2–S3.",
+    "S5: Restore: Language → the first menuitemradio (Follow device); Appearance → `[data-menu-item=theme-system]`. Reload; open Settings and read the `.ts-nav` texts and the text of General (`.ts-content`).",
+    "S6: In vendor/tracy/dsh-passwords run `node --import tsx --test test/tracy/seat-settings-persistence.test.ts` (the owner's page: on a Tracy stand every browser behind the gate is a seat, so the owner's host mode is judged by the gateway test)."
+  ],
+  "expect": [
+    "S1: __TRACY_SETTINGS_PERSISTENCE__ = 'memory' on the seat's page.",
+    "S2: luminance < 0.3 right after Dark and still < 0.3 after the reload.",
+    "S3: after the reload the nav contains 'Tài khoản AI'.",
+    "S4: no settings/mutate request at all and no 403 response.",
+    "S5: the nav contains General, Account, AI accounts, Notifications; General shows Language and Appearance.",
+    "S6: the test exits 0 (seat page memory, owner page host, the seat's settings/mutate still 403 at the gate)."
+  ],
+  "selectors": {
+    "flag": "globalThis.__TRACY_SETTINGS_PERSISTENCE__ (vendor/tracy/dsh-passwords src/tracy/seat-settings.ts SEAT_PAGE_HEAD, hook H16)",
+    "menu": "[data-tracy-account-trigger]; [data-menu-item=appearance|theme-dark|theme-system|settings]",
+    "settings": "[role=dialog][data-shortcut-modal=settings]; .ts-nav; .ts-row-title; button.ts-select",
+    "doors": "POST <site>/api/settings/mutate (must not be called by a seat)"
+  },
+  "evidence": "Stand acm 09/10/2026 (round 1, tasks/evidence/account-menu/stand/probe-theme-*.out): settings/mutate ns ui-theme answered 403 for a seat from the account menu and from Settings › General, and the theme was light again after a reload; the shared stand without the menu did the same. Fix: dsh-passwords 2.7.7-tracy.6 hook H16 (tasks/evidence/account-menu/theme-persist/).",
+  "fence": "Mechanism only: where a seat's page keeps its theme and locale (the gateway's page flag and dsh's memory persistence), that no host write is attempted, and that Tracy's own Settings sections stay. The owner's host persistence is judged by the gateway test, not on the stand.",
+  "run": {
+    "cmd": [
+      "../../node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "playwright.config.mjs",
+      "specs/REG-PR-1082-seat-theme-language-persist.spec.mjs"
+    ],
+    "cwd": "tests/regression",
+    "needs": ["stand", "chrome"]
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c1052d8d-3663-46a4-a882-e50d9b8a1166",
+  "status": "complete",
+  "name": "Joby Aviation",
+  "url": "https://styles.refero.design/style/c1052d8d-3663-46a4-a882-e50d9b8a1166",
+  "sourceWebsite": "https://www.jobyaviation.com",
+  "extractedAt": "2026-06-03T18:57:55.678Z",
+  "capturedAt": "2026-10-08T05:17:03.185878+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Golden hour cockpit over a sleeping city — every screen is a window seat.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e0c1e9c3-ebfd-4dcb-92d5-cd40dd43e3e6.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1b0e387b2f09b2f3cca30c96099d9e84ee4d0a79b4dde4886f8aa29c8bfd83f5",
+      "bytes": 23657
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fb20f62f6bae29e1ccc7aa3597007046d173f10507907efcb13db7c47d41a037",
+      "bytes": 121366
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6753a23cc58b6edf474fbf7316a90358d63b843a5bbab0c8497d3d6d7000e420",
+      "bytes": 20063
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e693e945cdad0a36c288100e0e9654329beb6eb6d79ee1ef4cd990cc3da90798",
+      "bytes": 12304
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c4f3bf48075aea7bcccf0cd1f26839096e54a6f39bc346052f3e127ad851133b",
+      "bytes": 14304
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e80d20b3db28c4dfc6728cc070a457baffdd781f85cd6ced02feead38883916e",
+      "bytes": 3978
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "02ace7f8f89447f074cb20ffc1fec90c16d9488e070785ef55b366afc53cdad1",
+      "bytes": 887
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2bc4cc87c7b02b72d261ee937d66f1048ca318f4f62d27d33839e962c9ffee80",
+      "bytes": 904
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a19b8eda74fadeee96834d4ce237d1503e6d44fd36091f910ce0367643f3e28e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ee78b25605743a6f749c70d6b10151236947aff202cec46e4ad35d0ca76ade8a",
+      "bytes": 46376
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "7385c44279439b85a73112235d26528e7a3dad9668877ac048dcec6cf5210ad8",
+      "bytes": 23988
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "047eab16cd3ca369b98c2ec591f2b7d321b0ddc2fc996b33ce91a05de6a995b3",
+      "bytes": 48190
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "bd4c99e5db3f2152971fb63f0e05238bffb7fba0d79f0b53b82063aa6bf45596",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "42cd486cfcadb6d4ebadf3b66c2b8d7f43748e31f285bb96a537e73ad04d02a1",
+      "bytes": 1947
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "627db8b03716d8143c9e0a4287091ec865069c745425ce1c5e665e84d4ae751b",
+      "bytes": 2586
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "13b74e34-b824-4d1d-bd2c-bb9bfbc2d6e1",
+    "2186dddd-60ee-4898-b11d-88483daf477e",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "4a248569-2b5a-4416-bb2a-c78890218b9f",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "7aa1dbff-f5f1-4a64-9dba-f4caad7f1ebf",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "bf523387-03fc-4243-86ca-25af34daa0ce",
+    "c1052d8d-3663-46a4-a882-e50d9b8a1166",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d3289fe7-a85e-42d8-96b7-eb7faa62a104",
+    "e85a82b1-c70e-42de-8c42-4bd95dd5e047",
+    "f11750fc-d7c0-4d26-b32a-3b1d2098ae34",
+    "f532c703-1179-465d-9933-7736df44d0ae",
+    "f61cf515-ccd5-4494-bdd1-be9fe4d7258c",
+    "fdcd4cbb-4db6-4138-9cfd-964795f1e1d6",
+    "fe7b8533-f56b-46bd-8713-f18886a1e986"
+  ]
+}

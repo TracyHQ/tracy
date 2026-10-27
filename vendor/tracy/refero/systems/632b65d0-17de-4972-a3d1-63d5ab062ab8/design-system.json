@@ -1,0 +1,341 @@
+{
+  "dos": [
+    "Use #b296f8 as the only chromatic fill for action buttons; pair with #ffffff text and 10px radius.",
+    "Set display headings in Suisse Intl 900 at 48–72px with -0.025em letter-spacing and line-height 1.00–1.11; the weight 900 is non-negotiable for the brand voice.",
+    "Give every card the violet-tinted shadow rgba(178,150,248,0.20) 0px 25px 50px -12px — the glow is the elevation system, not a generic gray drop-shadow.",
+    "Use the badge family with transparent fill, 1px saturated border, desaturated pastel text, 12px text, 0.20em letter-spacing, and 10px radius — keep all four color families (green/blue/violet/pink) in active rotation.",
+    "Use the single 10px radius uniformly across cards, buttons, badges, and nav; do not introduce secondary radii.",
+    "Keep the canvas at #000000 and elevated surfaces at #0f0f13; use #292929 and #1d1d1d as the only border tones.",
+    "Track body text at 0.05em and small labels/badges at 0.20em; tighten display type to -0.025em — the three tracking values form a recognizable rhythm."
+  ],
+  "donts": [
+    "Do not introduce a second accent color — the brand is monochromatic dark with one violet signal.",
+    "Do not use weight 400–600 for display headings; the 900 weight at large sizes is the signature.",
+    "Do not apply neutral gray drop-shadows to cards; the violet-tinted shadow is the only elevation pattern.",
+    "Do not use radii other than 10px; the system has one radius and it must remain singular.",
+    "Do not place light text on light badge fills or dark text on dark borders — the badge pattern is always: dark saturated border + desaturated pastel text.",
+    "Do not use #ffffff for body copy; reserve it for display headings and brand marks only. Body uses #e6e6e6.",
+    "Do not soften the section gap below 48px; the compact-but-breathing rhythm is part of the identity."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Void Black",
+      "role": "Page canvas, hero backgrounds, deepest surface — the obsidian backdrop against which the brand violet glows",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0f0f13",
+      "name": "Obsidian Surface",
+      "role": "Elevated card surfaces, button fills for neutral/ghost controls, hero overlays",
+      "group": "neutral"
+    },
+    {
+      "hex": "#292929",
+      "name": "Carbon Border",
+      "role": "Hairline borders across cards, nav, body, links, and lists — the structural grid in a single near-black tone",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d1d1d",
+      "name": "Graphite Card Edge",
+      "role": "Card-specific border tone, one step lighter than Carbon to create layered card edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2a2a36",
+      "name": "Ash Mist",
+      "role": "Subtle violet-tinted dark border for sections and footer dividers — the only near-gray with hue",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6e6e6",
+      "name": "Platinum Text",
+      "role": "Primary body and UI text, nav links, card text, icon strokes — soft white for long-form reading on black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Foil Highlight",
+      "role": "Display headings, brand mark, button labels on dark — pure white reserved for the loudest type moments",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9e9e9e",
+      "name": "Steel Muted",
+      "role": "Muted helper text, secondary list items, dimmed icon strokes — quiet copy in the body",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b296f8",
+      "name": "Portal Violet",
+      "role": "Primary action buttons, icon strokes, accent text, shadow tint — the singular brand signal; lavender that reads as dimensional energy",
+      "group": "brand"
+    },
+    {
+      "hex": "#594b7c",
+      "name": "Wisteria",
+      "role": "Muted violet border for accent rules and decorative dividers",
+      "group": "brand"
+    },
+    {
+      "hex": "#4b3f71",
+      "name": "Indigo Plum",
+      "role": "Violet badge border for category tags in the violet family",
+      "group": "accent"
+    },
+    {
+      "hex": "#ede9fe",
+      "name": "Lavender Mist",
+      "role": "Violet badge text fill — desaturated lavender for readable on-dark violet tag content",
+      "group": "accent"
+    },
+    {
+      "hex": "#571c60",
+      "name": "Fuchsia Ink",
+      "role": "Pink/magenta badge border for editorial or community-event categories",
+      "group": "accent"
+    },
+    {
+      "hex": "#0e4f26",
+      "name": "Verdant Edge",
+      "role": "Green outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#dcfce7",
+      "name": "Mint Whisper",
+      "role": "Success badge text — soft mint for green category labels on dark",
+      "group": "semantic"
+    },
+    {
+      "hex": "#264264",
+      "name": "Cobalt Vein",
+      "role": "Blue outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#06425d",
+      "name": "Deep Tide",
+      "role": "Blue outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#dbeafe",
+      "name": "Ice Blue",
+      "role": "Info badge text — desaturated sky for blue category labels on dark",
+      "group": "semantic"
+    }
+  ],
+  "layout": "Full-bleed dark canvas with a max-width 1200px content container. The hero is a full-viewport-height illustrated scene with an overlaid text block in the upper-left area containing eyebrow, headline, subtext, and two CTAs (filled violet + ghost). Below the hero, the body lives in 48px-rhythm sections: a 3-column feature card grid with 16px gaps, then likely alternating text-and-image rows. Navigation is a top bar with logo left, links center, and a contact CTA right. An announcement bar sits above the nav. The layout alternates between image-rich (hero) and text-rich (sections) blocks, using generous 48px vertical breathing room between sections to keep the compact density from feeling cramped.",
+  "imagery": "Imagery is hero-driven and full-bleed: a cinematic, anime/comic-style illustration of a dimensional portal — a hexagonal violet-and-white vortex tearing through an urban alleyway, with a silhouetted figure at its base. Illustrations are atmospheric, not product-screenshots; the portal itself is the recurring visual motif. Card imagery inside content sections shows tool interfaces, creator workflow scenes, and team/collaboration moments in the same painterly violet-and-indigo palette. Iconography is line-based, stroked in #b296f8 or #e6e6e6 with consistent thin-to-medium stroke weight. The page is image-heavy in the hero and image-light in the body sections, where 3-column feature cards with illustrations carry the visual weight.",
+  "similar": [
+    {
+      "why": "Same dark canvas + single vivid accent signal + heavy display weight for AI-product marketing pages",
+      "business": "Runway"
+    },
+    {
+      "why": "Same full-bleed cinematic hero illustration and violet-leaning generative-AI palette",
+      "business": "Stability AI"
+    },
+    {
+      "why": "Same theatrical dark-mode design language where the product imagery IS the hero and text stays quiet",
+      "business": "Midjourney"
+    },
+    {
+      "why": "Same gaming/AI crossover vibe with violet dimensional branding and dark technical surfaces",
+      "business": "Inworld AI"
+    },
+    {
+      "why": "Same compact dark UI with a single lavender accent, weight-900 display type, and 10px-radius component family",
+      "business": "Decart"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "10px",
+      "cards": "10px",
+      "badges": "10px",
+      "inputs": "10px",
+      "buttons": "10px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "48px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Void",
+      "level": 0,
+      "purpose": "Page canvas and hero backgrounds"
+    },
+    {
+      "hex": "#0f0f13",
+      "name": "Obsidian",
+      "level": 1,
+      "purpose": "Elevated cards, button fills, hero overlays"
+    },
+    {
+      "hex": "#1d1d1d",
+      "name": "Carbon Edge",
+      "level": 2,
+      "purpose": "Card border layer, creating perceptible card edges on the void"
+    },
+    {
+      "hex": "#b296f8",
+      "name": "Portal Glow",
+      "level": 3,
+      "purpose": "Brand accent surface — action buttons and the violet shadow halo around cards"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(178, 150, 248, 0.2) 0px 25px 50px -12px",
+      "element": "Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "element": "Button"
+    }
+  ],
+  "northStar": "violet singularity tearing through obsidian — a heavy, weight-900 headline, #b296f8 glow, and a 10px corner in the dark.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.2
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": 0.05
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.05
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.56,
+      "letterSpacing": 0.05
+    },
+    {
+      "role": "heading-sm",
+      "size": 36,
+      "lineHeight": 1.11,
+      "letterSpacing": -0.025
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1.11,
+      "letterSpacing": -0.025
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1,
+      "letterSpacing": -0.025
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Action Button",
+      "role": "Filled violet CTA — the only chromatic button",
+      "description": "Background #b296f8, text #ffffff, Suisse Intl 500 at 14px, padding 16px 24px, radius 10px, subtle rgba(0,0,0,0.05) 0px 1px 2px 0px shadow. The lavender fill against the obsidian canvas is the brand's single most recognizable moment."
+    },
+    {
+      "name": "Ghost Button",
+      "role": "Secondary action on dark hero/sections",
+      "description": "Transparent background, 1px border in #292929, text #e6e6e6, Suisse Intl 500 at 14px, padding 16px 24px, radius 10px. Reads as a quieter alternative that respects the violet primary."
+    },
+    {
+      "name": "Nav Link",
+      "role": "Top-bar navigation item",
+      "description": "Suisse Intl 400 at 14px, color #e6e6e6, no underline, 10px radius reserved for any pill-style link. Spacing 8px between items."
+    },
+    {
+      "name": "Brand Mark",
+      "role": "Logo in header",
+      "description": "White mark on dark header, 10px radius container, paired with 'Portal' wordmark in Foil Highlight #ffffff, weight 600."
+    },
+    {
+      "name": "Announcement Bar",
+      "role": "Slim banner above header",
+      "description": "Full-width dark band (#0f0f13), body text in #e6e6e6 at 14px, optional close icon, 8px vertical padding."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Three-column 'What We Do' card with image and copy",
+      "description": "Background #0f0f13, 1px border in #1d1d1d, radius 10px, padding 16px, violet-tinted shadow rgba(178,150,248,0.20) 0px 25px 50px -12px. Image fills the top edge with no separate radius (image corners are clipped by card radius). Title in Suisse Intl 600 at 18px #ffffff, body in 400 at 16px #e6e6e6."
+    },
+    {
+      "name": "Card with Glow",
+      "role": "Same as Feature Card — the shadow is the differentiator",
+      "description": "Identical dimensions to Feature Card, defined by the violet-tinted shadow rather than any visual border treatment. The glow makes the card feel like it is emitting portal energy."
+    },
+    {
+      "name": "Hero Overlay Card",
+      "role": "Text box layered over hero image",
+      "description": "Semi-transparent panel containing hero headline and CTAs, 10px radius, no border. Sits on the hero illustration with the dark hero image as background."
+    },
+    {
+      "name": "Success Badge",
+      "role": "Live/active/shipped status tag",
+      "description": "Transparent fill, 1px border #0e4f26, text #dcfce7, Suisse Intl 500 at 12px, letter-spacing 0.20em, padding 2px 10px, radius 10px. Deep-green border + mint text reads as a quiet 'shipped' state."
+    },
+    {
+      "name": "Info Badge",
+      "role": "Data/system/category tag — blue family",
+      "description": "Transparent fill, 1px border #264264, text #dbeafe, Suisse Intl 500 at 12px, letter-spacing 0.20em, padding 2px 10px, radius 10px. Alternate variant uses #06425d border for deeper-blue categories."
+    },
+    {
+      "name": "Violet Badge",
+      "role": "Brand-aligned category tag",
+      "description": "Transparent fill, 1px border #4b3f71, text #ede9fe, Suisse Intl 500 at 12px, letter-spacing 0.20em, padding 2px 10px, radius 10px. Echoes the brand violet at lower saturation for taxonomy without competing with the primary."
+    },
+    {
+      "name": "Pink Badge",
+      "role": "Editorial/community-event tag",
+      "description": "Transparent fill, 1px border #571c60, text #ede9fe, Suisse Intl 500 at 12px, letter-spacing 0.20em, padding 2px 10px, radius 10px. Magenta signals a different category without breaking the system."
+    },
+    {
+      "name": "Section Eyebrow Label",
+      "role": "All-caps label above section heading (e.g. 'WHAT WE DO')",
+      "description": "Suisse Intl 500 at 12px, letter-spacing 0.20em, color #9e9e9e. Wide tracking on muted text creates a clear hierarchy entry point."
+    },
+    {
+      "name": "Display Heading",
+      "role": "Hero and section titles",
+      "description": "Suisse Intl 900 at 48–72px, color #ffffff, letter-spacing -0.025em, line-height 1.00–1.11. The 900 weight is the voice — it does not whisper."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Sole typeface. Weight 900 at 72px/48px for display and section headings is the signature — the brand does not whisper at scale, it announces. Weight 600 for sub-headings and nav, weight 500 for emphasized body, weight 400 for body and supporting copy. The lineHeight 1.00–1.11 at display sizes is unusually tight and signals confidence; body sits at 1.43–1.56 for compact reading. Letter-spacing tracks the hierarchy: -0.025em pulls display tight, 0.05em relaxes body, 0.20em stretches labels and badges wide.",
+      "sizes": "12px, 14px, 16px, 18px, 36px, 48px, 72px",
+      "family": "Suisse Intl",
+      "weight": "400, 500, 600, 900",
+      "lineHeight": "1.00, 1.11, 1.33, 1.43, 1.50, 1.56",
+      "substitute": "Inter (closest free analog with similar geometric grotesque proportions) or Space Grotesk",
+      "letterSpacing": "-0.025em at 72px/48px display, 0.05em at 16px/18px body, 0.20em at 12px labels and badges"
+    }
+  ],
+  "description": "Portal is a dark-mode gaming/AI brand system built around a single vivid violet accent that reads as a dimensional energy source cutting through obsidian surfaces. The visual logic is theatrical: nearly-black canvas (#000000), near-black surface layers (#0f0f13, #1d1d1d), hairline charcoal borders (#292929), and one vivid lavender (#b296f8) that appears as a portal-glow on icons, strokes, button fills, and shadow tints. Typography is heavily weighted (Suisse Intl 900) for display headlines — the voice is monumental, not quiet — paired with compact body text in the 400/500 range. Components share a single 10px radius and gain dimensionality from violet-tinted shadows (rgba(178,150,248,0.20) 0px 25px 50px -12px) rather than neutral elevation, making even flat cards feel like they emit light. Badge variants encode status through saturated border + desaturated fill pairs (green, blue, violet, pink), giving multi-category taxonomy without diluting the brand violet.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- canvas: #000000\n- elevated surface: #0f0f13\n- border: #292929 / #1d1d1d\n- text primary: #e6e6e6\n- heading/brand: #ffffff\n- muted text: #9e9e9e\n- accent / primary action: #b296f8 (filled action)\n\n**Example Component Prompts**\n\n1. Create a Primary Action Button: #b296f8 background, #0f0f13 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Feature card grid**: Three-column row, 16px gap. Each card: background #0f0f13, 1px border #1d1d1d, radius 10px, shadow rgba(178,150,248,0.20) 0px 25px 50px -12px, padding 16px. Image flush to top edge, clipped by card radius. Title in weight 600 at 18px, #ffffff. Body in 400 at 16px, #e6e6e6.\n\n3. **Status badge row**: Badge component with transparent fill, 1px border #0e4f26, text #dcfce7, 12px weight 500, letter-spacing 0.20em, padding 2px 10px, radius 10px. Pair an info badge (#264264 border / #dbeafe text), a violet badge (#4b3f71 / #ede9fe), and a pink badge (#571c60 / #ede9fe) side by side with 8px gaps.\n\n4. **Section with eyebrow**: 48px top margin. Eyebrow 'WHAT WE DO' in 12px weight 500, letter-spacing 0.20em, #9e9e9e. Heading in 48px weight 900, #ffffff, letter-spacing -0.025em, line-height 1.11. Body paragraph in 16px weight 400, #e6e6e6, max-width 720px.\n\n5. **Outlined action in footer or utility bar**: 1px border #b296f8, text #b296f8, transparent background, 14px weight 500, padding 16px 24px, radius 10px. Use for tertiary violet-tinted actions where a filled button would be too heavy."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is colored, not gray. Cards gain dimensionality from a violet-tinted shadow (rgba(178,150,248,0.20) 0px 25px 50px -12px) that echoes the brand accent — the design does not borrow neutral drop-shadow conventions from generic SaaS. The portal violet literally radiates beneath every card. Buttons are nearly flat with a barely-perceptible 1px shadow, letting the violet fill do the visual work."
+}

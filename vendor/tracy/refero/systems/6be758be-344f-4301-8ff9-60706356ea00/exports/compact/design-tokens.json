@@ -1,0 +1,34 @@
+{
+  "color": {
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, card surfaces, heading text on dark sections, overlaid text on photography"
+    },
+    "lamp-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Lamp Black — Primary text, display wordmarks, full-bleed dark section backgrounds, hairlines, border rules, button borders"
+    },
+    "fog": {
+      "$value": "#ababab",
+      "$type": "color",
+      "$description": "Fog — Muted secondary text, inactive link borders, de-emphasized helper text"
+    }
+  },
+  "font": {
+    "basegrotesk": {
+      "$value": "BaseGrotesk",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for everything — navigation, body copy, buttons, and the 60–65px display wordmark. Weight 300 carries body and large display copy, 500 is reserved for active states and emphasis, 700 appears in button labels and the page title. Custom grotesque with squared geometry; substitute with Inter or Neue Haas Grotesk."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.basedesign.com",
+      "siteName": "Base Design",
+      "extractedAt": "2026-06-03T22:36:15.188Z",
+      "variant": "compact"
+    }
+  }
+}

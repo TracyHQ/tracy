@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1471-develop-sign-in-member-label",
+  "kind": "fix",
+  "title": "Open sign-in admits everyone while a JoomlArt member is labelled for /ops and keeps their marketing source",
+  "pr": 1471,
+  "area": "identity/sign-in",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set, sign in by email code as an address aMember reports as a member (gate off and legacy BETA_GATE=on), twice.",
+    "S2: Sign in through the Google callback as a member and as a non-member.",
+    "S3: Ask for a code with utm fields, verify it after BETA_GATE flips."
+  ],
+  "expect": [
+    "S1: every verify is 200, no beta_login_job row, one account.first_sign_in signal labelled 'JoomlArt member' with plan 10, exactly one aMember call across both sign-ins, the code never in the signal.",
+    "S2: both are admitted; the member is 'JoomlArt member', the non-member 'gate off'.",
+    "S3: 200, the signal keeps the marketing source and carries the member label."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/beta-operation-signal.test.mjs, apps/tracy-web/test/sign-in-source.test.mjs",
+    "code": "apps/tracy-web/src/lib/beta-access.js label(), apps/tracy-web/src/identity/route.js verify"
+  },
+  "evidence": "develop red since #1466 (run 39252256196): four tests expected 'gate off' for a member after #1457 started labelling members with the gate open",
+  "fence": "The open gate never refuses anyone and the membership lookup only labels: a member reads 'JoomlArt member', a non-member 'gate off', the source survives",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/beta-operation-signal.test.mjs",
+      "apps/tracy-web/test/sign-in-source.test.mjs"
+    ],
+    "tests": [
+      "public email sign-in: no queued check, one cached lookup labels the member, one first-sign-in signal",
+      "Google callback admits non-members and records the provider once",
+      "legacy gate on: public sign-in preserves the marketing source without a queued membership check",
+      "a code keeps its marketing source when legacy BETA_GATE changes between request and verification"
+    ]
+  }
+}

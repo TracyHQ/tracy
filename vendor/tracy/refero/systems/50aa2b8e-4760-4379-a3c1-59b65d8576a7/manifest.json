@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "50aa2b8e-4760-4379-a3c1-59b65d8576a7",
+  "status": "complete",
+  "name": "v0 by Vercel",
+  "url": "https://styles.refero.design/style/50aa2b8e-4760-4379-a3c1-59b65d8576a7",
+  "sourceWebsite": "https://v0.dev",
+  "extractedAt": "2026-04-11T17:39:37.040Z",
+  "capturedAt": "2026-10-08T05:11:34.544522+00:00",
+  "theme": "light",
+  "industry": null,
+  "description": "A Machinist's Blueprint. Precision and function are paramount, with every element serving a clear purpose on a clean, technical surface.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e4e584e7-154b-4dda-80cd-1107ae74d063.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/202fdc61-8134-4994-9791-0499b4e5da6f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/c3acc096-621e-4f47-b23e-67aec6778767.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/5976b4e0-597a-466c-9146-9463f72eb575.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/94c7d37e-3b10-4329-89b0-f454a7bb5699.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c4c15c5c4818cec365f6bc9605acb1b4ab865553919ef14387006bedece0b227",
+      "bytes": 13643
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fe8a3197fe75f98946fb0193d08f3e73f2d487cf8c0d898d4e265248f8c066d4",
+      "bytes": 93420
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ac3d7afad3e7723ce0b3087598009b94768c5f3d0b33c6ab174bd4a7f625df79",
+      "bytes": 26603
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "86ef4484e26ab161ca37b2e5c500f529cf1935c83c6db7fa4dc4272e042de49e",
+      "bytes": 9095
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "679c9b96abcaebd3b65a977702b25c3808d53765a5b4f1df2f95ca9c4d4ddd6d",
+      "bytes": 6991
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e63630b5329930e59b07b36ce7fae7c76b3ac988ea39642b290da275428eb693",
+      "bytes": 1876
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f9735b487756c6cae90958113ce931031bfae396807d119af31bfd8085e20203",
+      "bytes": 456
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "ae8a1df3e5befee8b1371c31707b09e7b9c9836b01615a700462d1124dd66558",
+      "bytes": 473
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "052f3bae876543a42afbdfd5735ab7f0b32f37456024b111e5b8774838e0605b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "630a4e9a88aaa7062c60f3d2c3514f6e10d90039869c9a95b8606c306368814f",
+      "bytes": 43267
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "771b8e735f24fbe8189b74d786c57cda5bb7536aa35ab096b4fdaf601a619965",
+      "bytes": 22047
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "dbd81bd4ccbfce6ea2f2e24ec600448a3a3e30ef6f7d7c3e9613737eb6f442d8",
+      "bytes": 46808
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "12ffb1cf4e1a297ec7641f921add9bfdb8b9c334a19dc9fc9b9a2f2639a43935",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "8407a7090144c8555f360375364022ff165dc0dc5f8f121dc6806f91dfce01a3",
+      "bytes": 1808
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0aa4981d9d019fba844af6b1095bee3d05d5182061519b760d3fee0c62281bd7",
+      "bytes": 2181
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "50aa2b8e-4760-4379-a3c1-59b65d8576a7",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "6323a42b-3b47-4774-92e4-15651a9ba2ac",
+    "7eed2626-ab11-472c-b04a-603476ff8957",
+    "7f9eabb2-3f76-477d-849f-e868e698f421",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "ea8a4150-e062-4c0e-94ca-668a3033eb63",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f24daf3a-d43f-4dec-85a9-8ac1d5148a03",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

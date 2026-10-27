@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1134-ds-contracts-r3d",
+  "kind": "feat",
+  "title": "Round 3 of the JA Joomla j6 slot contracts (r3d): JA Coach, JA Colab, JA Candidate and JA Cityguide, not ready in round 1, wear a design system from their 1.0.1 re-release",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/contracts.test.mjs test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{coach,colab,candidate,cityguide}.json through loadContract; build the Toggl Track module sheet for JA Coach and JA Colab (joomlaSlot).",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template:'ja_<name>'}), {key:'quickstart/ja-<name>/j6', version}) for each, at 1.0.1 and at 1.0.0.",
+    "S4: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs ja-coach --port 53745 --cdp 9876 --evidence <tmp> (release restored in Docker, stylesheets tokenized, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-r3d.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: all four ready, minVersion {'quickstart/ja-<name>/j6': '1.0.1'}, a readyNote naming tasks/evidence/ds-contracts-r3d-2026-10-11/ja-<name>-j6, heading and text probes, no t4SiteCss; JA Coach templateVars['--color-secondary'] = var(--ds-c-accent-text) and keepDefaults['--headings-color'] = #212121; JA Colab keeps .bg-dark with keepDefaultsYield; JA Candidate keepGround ['#t4-section-2'] and every container selector skips .t4-hero; JA Cityguide t3DevmodeOff true; Coach's sheet sets --color-secondary:var(--ds-c-accent-text), Colab's inverts .features-item .img-icon img on a dark system.",
+    "S3: at 1.0.1 {contract:'joomla-ja-<name>'}; at 1.0.0 reason TEMPLATE_NEEDS_UPDATE.",
+    "S4: verdicts 12/12, controls 0,0,0,0, no text under 4.5:1 worse than the template's own, lowest page share following ≥ 0.5."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-{coach,colab,candidate,cityguide}.json ready, minVersion, templateVars, keepScopes, keepDefaults, keepDefaultsYield, keepGround, keepText, keepColors, followRules, sideRules, selectors.onAccent, selectors.container, t3DevmodeOff"
+  },
+  "evidence": "tasks/evidence/ds-contracts-r3d-2026-10-11/README.md: each template measured on 1.0.0 tokenized in place and on its 1.0.1 build stood up from its own zip; desktop and phone screenshots checked by eye.",
+  "fence": "which r3d templates are offered and the contract fields that made them pass; not the release upload (RELEASE-DS-R3D.sh, a person runs it)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-r3d.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

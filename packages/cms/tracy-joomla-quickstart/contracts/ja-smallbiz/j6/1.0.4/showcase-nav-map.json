@@ -1,0 +1,642 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v2",
+  "profileVersion": "1.0.0",
+  "contract": "ja-smallbiz/j6/1.0.4",
+  "baseHash": "2cfe5ddc3cdde150508a09a01c0242c9691e58cecd99b0f4ecd16167c759fa4c",
+  "baseFiles": {
+    "manifest.json": "13b4ed0772a97016cfd15f58688ca2eaebc9bbe19277116b737d2761377cbd7a",
+    "content-map.json": "922a38c792455da137090448c938b41f75ece338f0d8ef7aebe06b2a79b0a359",
+    "presentation-lock.json": "94d7c9886e2a92d3a1c60323ba88c9eb54eab0db5a868b188c2e558988d503c3"
+  },
+  "inputs": {},
+  "decisionsHash": "7c16856e074ebf4f21c16c2e1ecb1286b09b3f057885b5065fd5db9fc47cbd3b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-104",
+      "identity": {
+        "path": "pages/joomla-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "J! Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-105",
+      "identity": {
+        "path": "pages/joomla-page/login",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Login",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-106",
+      "identity": {
+        "path": "pages/joomla-page/registration",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Registration",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-113",
+      "identity": {
+        "path": "home/car-services",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Car Services",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-114",
+      "identity": {
+        "path": "pages/joomla-page/user-profile",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "User profile",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-118",
+      "identity": {
+        "path": "home/home-gym",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Gym",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-119",
+      "identity": {
+        "path": "pages/other-pages/404-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "404 Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"404 Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-120",
+      "identity": {
+        "path": "pages/other-pages/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-121",
+      "identity": {
+        "path": "pages/joomla-content",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Joomla Content",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-122",
+      "identity": {
+        "path": "pages/joomla-content/all-categories",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "All Categories",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-123",
+      "identity": {
+        "path": "pages/joomla-content/category-blog",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Blog Layout",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-124",
+      "identity": {
+        "path": "pages/joomla-content/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-126",
+      "identity": {
+        "path": "pages/joomla-page/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-127",
+      "identity": {
+        "path": "pages/joomla-content/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-128",
+      "identity": {
+        "path": "pages/joomla-content/all-categories/sample-category-1",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Sample Category 1",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-129",
+      "identity": {
+        "path": "pages/joomla-content/all-categories/sample-category-2",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Sample Category 2",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-130",
+      "identity": {
+        "path": "pages/joomla-content/all-categories/sample-category-3",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Sample Category 3",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-131",
+      "identity": {
+        "path": "pages/joomla-content/all-categories/sample-category-4",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Sample Category 4",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-132",
+      "identity": {
+        "path": "home/home-wedding",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home - Wedding",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "ja_smallbiz - Default",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Default · Home",
+      "style": {
+        "id": 10,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "5dc20ae4fc40e2388e35373b1f74247830da60aeb1ca2951b3af913b6a407518",
+      "after": "a1644f844e3979130f16b4a24fc54117e68b1f29b223117e919c5221efba3d44",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "ja_smallbiz - Default",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Default · Pages · column 104",
+      "style": {
+        "id": 10,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 103,
+      "column": 104,
+      "path": "mm_config.mainmenu.item-103.sub.rows[item=104]",
+      "before": "a1644f844e3979130f16b4a24fc54117e68b1f29b223117e919c5221efba3d44",
+      "after": "fe60182b1e52b9082aba92bb1d77287765bf55a54aa0846d8ef5e5ffc41afdc7",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-104 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "ja_smallbiz - Default",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Default · Pages · column 121",
+      "style": {
+        "id": 10,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 103,
+      "column": 121,
+      "path": "mm_config.mainmenu.item-103.sub.rows[item=121]",
+      "before": "fe60182b1e52b9082aba92bb1d77287765bf55a54aa0846d8ef5e5ffc41afdc7",
+      "after": "d24ee28dec5537e70a2fddec6cc72c54bbddf818e11f6404819975eb68b68069",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-121 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-11",
+      "identity": {
+        "title": "ja_smallbiz - Car",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Car · Home",
+      "style": {
+        "id": 11,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "f2695279635569da1bb05d572b483a610c2a647ecfd307510544ab8f1c4e660d",
+      "after": "6183779f74dbc6dc7771b851808144aaa696ed25fcb37630367c020420fe30ef",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-11",
+      "identity": {
+        "title": "ja_smallbiz - Car",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Car · Pages · column 104",
+      "style": {
+        "id": 11,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 103,
+      "column": 104,
+      "path": "mm_config.mainmenu.item-103.sub.rows[item=104]",
+      "before": "6183779f74dbc6dc7771b851808144aaa696ed25fcb37630367c020420fe30ef",
+      "after": "2eb7aa33a1b4888d888eb4e0bc7825857c1944dc8e90a462a2a3b7b5d6c69c4d",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-104 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-11",
+      "identity": {
+        "title": "ja_smallbiz - Car",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Car · Pages · column 121",
+      "style": {
+        "id": 11,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 103,
+      "column": 121,
+      "path": "mm_config.mainmenu.item-103.sub.rows[item=121]",
+      "before": "2eb7aa33a1b4888d888eb4e0bc7825857c1944dc8e90a462a2a3b7b5d6c69c4d",
+      "after": "99dae2715d4fb276e5117c9a728fff2f258d923350e53c704b25dc311c7a9f3d",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-121 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "ja_smallbiz - Gym",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Gym · Home",
+      "style": {
+        "id": 12,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "b088f1be686e794ec335f406eb98356f2f04a0e43f24eb77fea1f7ed9cb4cde1",
+      "after": "ce41a9b555b1e48e4191809d99d77e7e68dd7943a091f3db72908fe66d501c22",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "ja_smallbiz - Gym",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Gym · Pages · column 104",
+      "style": {
+        "id": 12,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 103,
+      "column": 104,
+      "path": "mm_config.mainmenu.item-103.sub.rows[item=104]",
+      "before": "ce41a9b555b1e48e4191809d99d77e7e68dd7943a091f3db72908fe66d501c22",
+      "after": "a67b3dae5e38599c71a9442168be52d3419c183b50eba19bf0ad29cc1f9c9310",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-104 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "ja_smallbiz - Gym",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Gym · Pages · column 121",
+      "style": {
+        "id": 12,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 103,
+      "column": 121,
+      "path": "mm_config.mainmenu.item-103.sub.rows[item=121]",
+      "before": "a67b3dae5e38599c71a9442168be52d3419c183b50eba19bf0ad29cc1f9c9310",
+      "after": "90d41ea5d56c96a7a4035547c10dd8fa06395fd3d7134423b84df3afe9906669",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-121 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-13",
+      "identity": {
+        "title": "ja_smallbiz - Wedding",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Wedding · Home",
+      "style": {
+        "id": 13,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "59861d81b5ec74849216be412d5bf16836bebb9e42712d455867301d760e0562",
+      "after": "911247aa819dc6c922509ed598c4d5edd7b0e58966f902bbb0294f644a9e37a7",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-13",
+      "identity": {
+        "title": "ja_smallbiz - Wedding",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Wedding · Pages · column 104",
+      "style": {
+        "id": 13,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 103,
+      "column": 104,
+      "path": "mm_config.mainmenu.item-103.sub.rows[item=104]",
+      "before": "911247aa819dc6c922509ed598c4d5edd7b0e58966f902bbb0294f644a9e37a7",
+      "after": "cc40d12c93d5006ec4c53b52ff16a519a9b3625af74a3bc325f811cbde8a9052",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-104 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-13",
+      "identity": {
+        "title": "ja_smallbiz - Wedding",
+        "template": "ja_smallbiz",
+        "client_id": "0"
+      },
+      "label": "ja_smallbiz - Wedding · Pages · column 121",
+      "style": {
+        "id": 13,
+        "template": "ja_smallbiz"
+      },
+      "menutype": "mainmenu",
+      "item": 103,
+      "column": 121,
+      "path": "mm_config.mainmenu.item-103.sub.rows[item=121]",
+      "before": "cc40d12c93d5006ec4c53b52ff16a519a9b3625af74a3bc325f811cbde8a9052",
+      "after": "49161d9c2c9d527cbd2387cda38d518878fef65bbcdb5f1c7f341e06c24eefa2",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-121 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Contact us",
+      "where": "mainmenu/contact-us",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "Blog",
+      "where": "mainmenu/blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-109",
+      "label": "About us",
+      "where": "mainmenu/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-112",
+      "label": "List view",
+      "where": "mainmenu/blog/list-view",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-115",
+      "label": "Other Pages",
+      "where": "mainmenu/pages/other-pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Smart search",
+      "where": "mainmenu/pages/other-pages/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-125",
+      "label": "Grid view",
+      "where": "mainmenu/blog/grid-view",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-120",
+      "label": "Menu Offcanvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 9 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 19,
+    "modules": 0,
+    "megaSubs": 4,
+    "megaColumns": 8,
+    "kept": 10,
+    "unresolved": 0
+  }
+}

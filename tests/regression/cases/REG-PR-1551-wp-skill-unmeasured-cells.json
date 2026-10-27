@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1551-wp-skill-unmeasured-cells",
+  "kind": "fix",
+  "title": "WordPress skill gates never pass a cell nobody measured: a declared no-dark source closes dark cells only on a fresh contract with a light pass in the same run, a sweep that read no cell exits non-zero even with no route, and release refuses such a sweep",
+  "pr": 1551,
+  "area": "wordpress-skill/visual-qa",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme run: npm ci, then node --test --test-reporter=tap scripts/test/group-verdict.test.mjs scripts/test/quickstart-release.test.mjs scripts/test/site-sweep-behaviour.test.mjs scripts/test/visual-contract.test.mjs",
+    "S2: Read the result of each test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'a dark axis whose source has no dark of its own is closed only by the contract's source.darkDerived' passes.",
+    "'behaviour pass: dark cells the sweep closed on the source's declared lack of dark pass only with the contract's source.darkDerived' passes.",
+    "'behaviour pass: a sweep that read no cell of the behaviour checks is refused' passes.",
+    "'a sweep that measured no cell never exits 0, even with no route at all' passes.",
+    "'the page-map's declaration that the source has no dark of its own is carried as source.darkDerived' passes.",
+    "'source.darkDerived stands only on a contract fresh for the spec-pack being read' passes."
+  ],
+  "selectors": {
+    "function": "scripts/visual/site-sweep.mjs runSweep exit; scripts/visual/group-verdict.mjs; scripts/quickstart/release.mjs behaviour pass; scripts/visual/contract.mjs source.darkDerived",
+    "test": "scripts/test/{group-verdict,quickstart-release,site-sweep-behaviour,visual-contract}.test.mjs"
+  },
+  "evidence": "JA Restaurant WP release (21/10/2026): dark cells of a source with no dark switch stayed owed forever (S-32/S-40), and the first repair let a dark-only or zero-route sweep that measured nothing exit 0.",
+  "fence": "The skill's sweep exit code, group verdict and release gate decisions for unmeasured and declared-not-owed cells. Pure node tests plus a local test server; no stand, no model.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/test/group-verdict.test.mjs",
+      "scripts/test/quickstart-release.test.mjs",
+      "scripts/test/site-sweep-behaviour.test.mjs",
+      "scripts/test/visual-contract.test.mjs"
+    ],
+    "cwd": "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme",
+    "tests": [
+      "a dark axis whose source has no dark of its own is closed only by",
+      "behaviour pass: dark cells the sweep closed on the source",
+      "behaviour pass: a sweep that read no cell of the behaviour checks is refused",
+      "a sweep that measured no cell never exits 0",
+      "the page-map's declaration that the source has no dark of its own",
+      "source.darkDerived stands only on a contract fresh"
+    ]
+  }
+}

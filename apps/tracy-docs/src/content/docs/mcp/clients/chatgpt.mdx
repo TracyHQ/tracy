@@ -1,0 +1,52 @@
+---
+title: Connect ChatGPT
+description: Connect ChatGPT to one Tracy website and verify your first tool call.
+---
+
+import { Aside, CardGrid, LinkCard, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+Use your ChatGPT account to work with a site connected to Tracy. The website access comes from your Tracy account.
+
+## Before you start
+
+Complete the [account and site prerequisites](/mcp/getting-started/#what-you-need). Custom connection options depend on your ChatGPT account and workspace policy.
+
+<Aside type="note" title="Listing availability">
+A submission under review is not a public listing. If Tracy is not available in your directory, use the custom connection option only if your account offers it. Do not install a similarly named plugin from an unrelated publisher.
+</Aside>
+
+## Add Tracy
+
+<Steps>
+
+1. Open the Plugins Directory and choose Tracy when its listing is available. For a custom connection, use [OpenAI's connection guide](https://developers.openai.com/plugins/deploy/connect-chatgpt) and enter the MCP URL below.
+2. Choose OAuth authentication. If the setup asks for a predefined client ID, use `tracy-chatgpt`; it is a public client and does not need a client secret.
+3. Start the connection and sign in on **cowork.tracy.ai**.
+4. Check that the consent page identifies **ChatGPT**, with callback host **chatgpt.com**. Choose your website and select **Connect**.
+5. Return to ChatGPT and enable Tracy for your conversation.
+
+</Steps>
+
+```text wrap title="MCP server URL"
+https://cowork.tracy.ai/mcp
+```
+
+## Verify the connection
+
+```text wrap title="First prompt"
+Use Tracy to show which website is connected, then list its pages.
+Do not edit anything yet.
+```
+
+Check that the tool result identifies the website you selected. Then open [Working with your site](/mcp/working-with-your-site/) for an edit-and-undo workflow.
+
+## If setup fails
+
+- **Tracy is absent from the directory:** directory publication and server availability are separate. Check whether your account offers custom connections.
+- **No website to choose:** accept your invitation and check that your role is Editor or Owner.
+- **Callback or client error:** use the supported connection method; do not substitute a different client's identity. See [OAuth details](/mcp/reference/).
+- **Not live in the publishing portal:** this does not by itself show that your MCP endpoint is offline. Verify an authenticated tool call separately.
+
+## Disconnect
+
+Remove the connection in ChatGPT and revoke its corresponding key in Tracy. [Revocation steps](/mcp/permissions/#disconnect-and-revoke).

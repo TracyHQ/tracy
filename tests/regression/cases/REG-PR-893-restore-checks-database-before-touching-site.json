@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-893-restore-checks-database-before-touching-site",
+  "kind": "fix",
+  "title": "A restore asks for its database before it stops the site or swaps the webroot",
+  "pr": 893,
+  "area": "fleet/restore",
+  "cms": ["wp", "jo"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/db-ready.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"restore: a database that never comes up stops the restore before the site is touched\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 8).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): restore.sh starts the db service and waits for it ('==> checking the database') right after the snapshot is fetched and DB_PASSWORD read; a database that never comes up ends the run there, before the web container is stopped, the webroot replaced or the image changed."
+  ],
+  "selectors": {
+    "script": "packages/fleet/tracy-fleet-operation/scripts/provision/restore.sh ('==> checking the database', before step 2)",
+    "wait": "tracy_db_wait_ready in packages/fleet/tracy-fleet-operation/scripts/lib/db-ready.sh"
+  },
+  "evidence": "Review of the L13 fix, 05/10/2026: restore.sh waited for the database only at step 5, after step 2 had stopped the web container, step 3 replaced the webroot and step 4 changed the image, so a database that never came up (a password the volume does not know, a server that will not start) left a half-restored site serving nothing. Red d77ed59de, fix 7a21045f0.",
+  "fence": "A restore that cannot reach its database changes nothing on the site and says why; step 5 still waits again before the DROP.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/db-ready.test.mjs"
+    ],
+    "tests": ["restore: a database that never comes up stops the restore before the site is touched"]
+  }
+}

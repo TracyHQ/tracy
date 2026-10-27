@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resume/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_resume",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resume",
+    "id": "quickstart/ja-resume/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_resume",
+    "parts": {
+      "installer": {
+        "file": "ja-resume-j6-quickstart-1.0.1.zip",
+        "bytes": 77235082,
+        "sha256": "0c87e44ca5090b48cf28186cd653210172b21171026fe58b015cbaba4fc2af8d"
+      }
+    },
+    "release": "quickstart/ja-resume/j6",
+    "repository": "JoomlArt-Products/ja-products",
+    "createdAt": "2026-10-11T15:07:22.904Z",
+    "builtFrom": {
+      "from": "quickstart/ja-resume/j6@1.0.1",
+      "by": "ds-rebuild lock-fix-release.mjs (TCH #1180)",
+      "change": "the installer of 1.0.1, same bytes; its content contract's lock names T3 dev mode off in the 8 template styles, as the installer's database does"
+    }
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

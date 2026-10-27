@@ -1,0 +1,59 @@
+{
+  "color": {
+    "cooperative-green": {
+      "$value": "#44d991",
+      "$type": "color",
+      "$description": "Cooperative Green — Hero panel fill, primary stat block, decorative dot overlays — the loudest brand voice; the color that makes the page feel activated"
+    },
+    "civic-blue": {
+      "$value": "#4c92e9",
+      "$type": "color",
+      "$description": "Civic Blue — News card surfaces, secondary stat blocks — chromatic but cooler, reserved for media/content contexts rather than primary brand expression"
+    },
+    "sunset-coral": {
+      "$value": "#ff6a51",
+      "$type": "color",
+      "$description": "Sunset Coral — Accent stat block only — appears once as data emphasis, treated as a single-note punctuation rather than a system color"
+    },
+    "mint-whisper": {
+      "$value": "#eaf9f2",
+      "$type": "color",
+      "$description": "Mint Whisper — Card and nav surface tint — a barely-there green echo of the hero green, softens white space without breaking the light theme"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, pill button fill, all borders and dividers — does the structural work of the system, the only color used for controls"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, text on filled buttons, image surfaces"
+    },
+    "steel-gray": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Steel Gray — Muted helper text, secondary nav borders — the only mid-gray in the system, used sparingly for de-emphasis"
+    }
+  },
+  "font": {
+    "athletics": {
+      "$value": "Athletics",
+      "$type": "fontFamily",
+      "$description": "Display and badge type — used for hero headlines (48–78px), card labels, and uppercase tags. The wide letter-spacing (0.04em) is a French institutional signature that turns every headline into a civic declaration. Custom face; substitute with Archivo Black, Anton, or Druk for similar uppercase weight and tracking, or with a wide-tracked geometric like Bebas Neue for closer feel."
+    },
+    "manrope": {
+      "$value": "Manrope",
+      "$type": "fontFamily",
+      "$description": "Body, navigation, button labels, and small text — the working font. Slightly opened tracking (0.01–0.011em) is a subtle departure from default; it keeps dense French text feeling breathable without becoming display-like. Pairs cleanly with Athletics because both share geometric, humanist proportions."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://cqcm.coop",
+      "siteName": "CQCM",
+      "extractedAt": "2026-06-03T19:59:10.801Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,2503 @@
+[
+  {
+    "area": "live",
+    "assertionIds": ["catalogue.live-releases-read"],
+    "dimensions": {
+      "assertion": "catalogue.live-releases-read",
+      "inventoryTags": [
+        "quickstart/ja-conf/j6",
+        "quickstart/ja-directory/j6",
+        "quickstart/ja-donate/j6",
+        "quickstart/ja-essence/j6",
+        "quickstart/ja-essence/wp7",
+        "quickstart/ja-impact/j6",
+        "quickstart/ja-impact/wp7",
+        "quickstart/ja-kinetic/j6",
+        "quickstart/ja-kinetic/wp7",
+        "quickstart/ja-mood/j6",
+        "quickstart/ja-morgan/j6",
+        "quickstart/ja-morgan/wp7",
+        "quickstart/ja-nova/j6",
+        "quickstart/ja-nova/wp7",
+        "quickstart/ja-phio/j6",
+        "quickstart/ja-podcast/j6",
+        "quickstart/ja-prodex/j6",
+        "quickstart/ja-rent/j6",
+        "quickstart/ja-resort/j6",
+        "quickstart/ja-resume/j6",
+        "quickstart/ja-sensei/j6",
+        "quickstart/ja-seven/j6",
+        "quickstart/ja-smallbiz/j6",
+        "quickstart/ja-social-ii/j6",
+        "quickstart/ja-spa/j6",
+        "quickstart/ja-space/j6",
+        "quickstart/ja-symphony/j6",
+        "quickstart/ja-tour/j6",
+        "quickstart/ja-trip/j6",
+        "quickstart/ja-vega/j6",
+        "quickstart/ja-vega/wp7",
+        "quickstart/ja-vital/j6",
+        "quickstart/ja-vogue/j6",
+        "quickstart/ja-voyara/j6",
+        "tracy-airbnb/j6",
+        "tracy-apple/j6",
+        "tracy-base/j6",
+        "tracy-base/wp7",
+        "tracy-business/j6",
+        "tracy-business/wp7"
+      ],
+      "variant": "ja-products"
+    },
+    "edgeTags": ["happy", "boundary"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": [],
+    "id": "QA-CMS-ja-products-happy-catalogue",
+    "itemIds": ["live:ja-products-releases"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the releases repository is the source of truth of the catalogue",
+      "ref": "Acceptance (the screen lists every release GitHub has) | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "The live release catalogue is read to its end and compared with the releases this repo has contracts for.",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-conf/j6/1.0.1",
+      "variant": "quickstart:ja-conf:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-conf:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-conf:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-directory/j6/1.0.0",
+      "variant": "quickstart:ja-directory:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-directory:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-directory:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-donate/j6/1.0.0",
+      "variant": "quickstart:ja-donate:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-donate:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-donate:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-donate/j6/1.0.1",
+      "variant": "quickstart:ja-donate:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-donate:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-donate:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-essence/j6/1.0.0",
+      "variant": "quickstart:ja-essence:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-essence:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-essence:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-essence/j6/1.0.1",
+      "variant": "quickstart:ja-essence:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-essence:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-essence:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-essence/j6/1.0.2",
+      "variant": "quickstart:ja-essence:j6@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-essence:j6@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-essence:j6@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-essence/wp7/1.0.2",
+      "variant": "quickstart:ja-essence:wp7@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-essence:wp7@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-essence:wp7@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-essence/wp7/1.0.3",
+      "variant": "quickstart:ja-essence:wp7@1.0.3"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-essence:wp7@1.0.3-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-essence:wp7@1.0.3"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-essence/wp7/1.0.9",
+      "variant": "quickstart:ja-essence:wp7@1.0.9"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-essence:wp7@1.0.9-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-essence:wp7@1.0.9"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-impact/j6/1.0.0",
+      "variant": "quickstart:ja-impact:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-impact:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-impact:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-impact/wp7/1.0.3",
+      "variant": "quickstart:ja-impact:wp7@1.0.3"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-impact:wp7@1.0.3-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-impact:wp7@1.0.3"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-impact/wp7/1.0.7",
+      "variant": "quickstart:ja-impact:wp7@1.0.7"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-impact:wp7@1.0.7-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-impact:wp7@1.0.7"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.0",
+      "variant": "quickstart:ja-kinetic:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-kinetic:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-kinetic:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.2",
+      "variant": "quickstart:ja-kinetic:j6@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-kinetic:j6@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-kinetic:j6@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-kinetic/j6/1.0.3",
+      "variant": "quickstart:ja-kinetic:j6@1.0.3"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-kinetic:j6@1.0.3-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-kinetic:j6@1.0.3"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-kinetic/wp7/1.0.2",
+      "variant": "quickstart:ja-kinetic:wp7@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-kinetic:wp7@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-kinetic:wp7@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-kinetic/wp7/1.0.7",
+      "variant": "quickstart:ja-kinetic:wp7@1.0.7"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-kinetic:wp7@1.0.7-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-kinetic:wp7@1.0.7"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-mood/j6/1.0.0",
+      "variant": "quickstart:ja-mood:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-mood:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-mood:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-morgan/j6/1.0.1",
+      "variant": "quickstart:ja-morgan:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-morgan:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-morgan:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-morgan/j6/1.0.2",
+      "variant": "quickstart:ja-morgan:j6@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-morgan:j6@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-morgan:j6@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-morgan/wp7/1.1.11",
+      "variant": "quickstart:ja-morgan:wp7@1.1.11"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-morgan:wp7@1.1.11-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-morgan:wp7@1.1.11"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-morgan/wp7/1.1.12",
+      "variant": "quickstart:ja-morgan:wp7@1.1.12"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-morgan:wp7@1.1.12-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-morgan:wp7@1.1.12"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-morgan/wp7/1.1.3",
+      "variant": "quickstart:ja-morgan:wp7@1.1.3"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-morgan:wp7@1.1.3-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-morgan:wp7@1.1.3"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-nova/j6/1.0.4",
+      "variant": "quickstart:ja-nova:j6@1.0.4"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-nova:j6@1.0.4-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-nova:j6@1.0.4"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-nova/wp7/1.1.10",
+      "variant": "quickstart:ja-nova:wp7@1.1.10"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-nova:wp7@1.1.10-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-nova:wp7@1.1.10"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-nova/wp7/1.1.3",
+      "variant": "quickstart:ja-nova:wp7@1.1.3"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-nova:wp7@1.1.3-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-nova:wp7@1.1.3"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-phio/j6/1.0.2",
+      "variant": "quickstart:ja-phio:j6@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-phio:j6@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-phio:j6@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-phio/j6/1.0.3",
+      "variant": "quickstart:ja-phio:j6@1.0.3"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-phio:j6@1.0.3-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-phio:j6@1.0.3"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-podcast/j6/1.0.1",
+      "variant": "quickstart:ja-podcast:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-podcast:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-podcast:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-prodex/j6/1.0.0",
+      "variant": "quickstart:ja-prodex:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-prodex:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-prodex:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-rent/j6/1.0.0",
+      "variant": "quickstart:ja-rent:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-rent:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-rent:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-rent/j6/1.0.1",
+      "variant": "quickstart:ja-rent:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-rent:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-rent:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-resort/j6/1.0.1",
+      "variant": "quickstart:ja-resort:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-resort:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-resort:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-resume/j6/1.0.0",
+      "variant": "quickstart:ja-resume:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-resume:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-resume:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-sensei/j6/1.0.0",
+      "variant": "quickstart:ja-sensei:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-sensei:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-sensei:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-seven/j6/1.0.0",
+      "variant": "quickstart:ja-seven:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-seven:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-seven:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-smallbiz/j6/1.0.0",
+      "variant": "quickstart:ja-smallbiz:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-smallbiz:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-smallbiz:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-social-ii/j6/1.0.0",
+      "variant": "quickstart:ja-social-ii:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-social-ii:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-social-ii:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-social-ii/j6/1.0.1",
+      "variant": "quickstart:ja-social-ii:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-social-ii:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-social-ii:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-spa/j6/1.0.1",
+      "variant": "quickstart:ja-spa:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-spa:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-spa:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-space/j6/1.0.2",
+      "variant": "quickstart:ja-space:j6@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-space:j6@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-space:j6@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-symphony/j6/1.0.0",
+      "variant": "quickstart:ja-symphony:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-symphony:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-symphony:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-tour/j6/1.0.0",
+      "variant": "quickstart:ja-tour:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-tour:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-tour:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-trip/j6/1.0.2",
+      "variant": "quickstart:ja-trip:j6@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-trip:j6@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-trip:j6@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-trip/j6/1.0.3",
+      "variant": "quickstart:ja-trip:j6@1.0.3"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-trip:j6@1.0.3-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-trip:j6@1.0.3"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-vega/j6/1.0.3",
+      "variant": "quickstart:ja-vega:j6@1.0.3"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-vega:j6@1.0.3-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-vega:j6@1.0.3"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-vega/wp7/1.1.12",
+      "variant": "quickstart:ja-vega:wp7@1.1.12"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-vega:wp7@1.1.12-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-vega:wp7@1.1.12"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/ja-vega/wp7/1.1.4",
+      "variant": "quickstart:ja-vega:wp7@1.1.4"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-vega:wp7@1.1.4-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-vega:wp7@1.1.4"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-vital/j6/1.0.1",
+      "variant": "quickstart:ja-vital:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-vital:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-vital:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-vital/j6/1.0.2",
+      "variant": "quickstart:ja-vital:j6@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-vital:j6@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-vital:j6@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-vogue/j6/1.0.1",
+      "variant": "quickstart:ja-vogue:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-vogue:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-vogue:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-vogue/j6/1.0.2",
+      "variant": "quickstart:ja-vogue:j6@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-vogue:j6@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-vogue:j6@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-vogue/j6/1.0.3",
+      "variant": "quickstart:ja-vogue:j6@1.0.3"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-vogue:j6@1.0.3-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-vogue:j6@1.0.3"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.1",
+      "variant": "quickstart:ja-voyara:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-voyara:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-voyara:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.2",
+      "variant": "quickstart:ja-voyara:j6@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-voyara:j6@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-voyara:j6@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.3",
+      "variant": "quickstart:ja-voyara:j6@1.0.3"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-voyara:j6@1.0.3-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-voyara:j6@1.0.3"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.4",
+      "variant": "quickstart:ja-voyara:j6@1.0.4"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-quickstart:ja-voyara:j6@1.0.4-missing-asset-live-pins",
+    "itemIds": ["release:quickstart:ja-voyara:j6@1.0.4"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-airbnb/j6/1.0.0",
+      "variant": "tracy-airbnb:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-airbnb:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-airbnb:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-airbnb/j6/1.1.0",
+      "variant": "tracy-airbnb:j6@1.1.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-airbnb:j6@1.1.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-airbnb:j6@1.1.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-airbnb/j6/1.2.0",
+      "variant": "tracy-airbnb:j6@1.2.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-airbnb:j6@1.2.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-airbnb:j6@1.2.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-apple/j6/1.1.0",
+      "variant": "tracy-apple:j6@1.1.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-apple:j6@1.1.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-apple:j6@1.1.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-apple/j6/1.2.0",
+      "variant": "tracy-apple:j6@1.2.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-apple:j6@1.2.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-apple:j6@1.2.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-apple/j6/1.3.0",
+      "variant": "tracy-apple:j6@1.3.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-apple:j6@1.3.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-apple:j6@1.3.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-base/j6/1.0.1",
+      "variant": "tracy-base:j6@1.0.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-base:j6@1.0.1-missing-asset-live-pins",
+    "itemIds": ["release:tracy-base:j6@1.0.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-base/j6/1.0.2",
+      "variant": "tracy-base:j6@1.0.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-base:j6@1.0.2-missing-asset-live-pins",
+    "itemIds": ["release:tracy-base:j6@1.0.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-base/wp7/1.0.0",
+      "variant": "tracy-base:wp7@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-base:wp7@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-base:wp7@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-base/wp7/1.1.0",
+      "variant": "tracy-base:wp7@1.1.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-base:wp7@1.1.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-base:wp7@1.1.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-base/wp7/1.1.1",
+      "variant": "tracy-base:wp7@1.1.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-base:wp7@1.1.1-missing-asset-live-pins",
+    "itemIds": ["release:tracy-base:wp7@1.1.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-base/wp7/1.1.2",
+      "variant": "tracy-base:wp7@1.1.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-base:wp7@1.1.2-missing-asset-live-pins",
+    "itemIds": ["release:tracy-base:wp7@1.1.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.0.0",
+      "variant": "tracy-business:j6@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:j6@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:j6@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.1.0",
+      "variant": "tracy-business:j6@1.1.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:j6@1.1.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:j6@1.1.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.0",
+      "variant": "tracy-business:j6@1.2.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:j6@1.2.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:j6@1.2.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-joomla-quickstart/contracts/tracy-business/j6/1.2.1",
+      "variant": "tracy-business:j6@1.2.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:j6@1.2.1-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:j6@1.2.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.0.0",
+      "variant": "tracy-business:wp7@1.0.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:wp7@1.0.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:wp7@1.0.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0",
+      "variant": "tracy-business:wp7@1.1.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:wp7@1.1.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:wp7@1.1.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0",
+      "variant": "tracy-business:wp7@1.2.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:wp7@1.2.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:wp7@1.2.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0",
+      "variant": "tracy-business:wp7@1.3.0"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:wp7@1.3.0-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:wp7@1.3.0"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1",
+      "variant": "tracy-business:wp7@1.3.1"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:wp7@1.3.1-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:wp7@1.3.1"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2",
+      "variant": "tracy-business:wp7@1.3.2"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:wp7@1.3.2-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:wp7@1.3.2"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  },
+  {
+    "area": "live",
+    "assertionIds": ["release.live-pins-match-github"],
+    "dimensions": {
+      "assertion": "release.live-pins-match-github",
+      "dir": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.4",
+      "variant": "tracy-business:wp7@1.3.4"
+    },
+    "edgeTags": ["missing-asset", "bad-hash"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": false,
+      "reads": ["https://api.github.com (JoomlArt-Products/ja-products releases)"],
+      "writes": []
+    },
+    "fixtures": ["mutation:pin-corrupted-live"],
+    "id": "QA-CMS-tracy-business:wp7@1.3.4-missing-asset-live-pins",
+    "itemIds": ["release:tracy-business:wp7@1.3.4"],
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the pin in the release setting is checked against the asset list and the bytes; a release that declares a wrong hash but downloads is a FAIL",
+      "ref": "§3 and Consequences | docs/adr/0017-github-release-is-quickstart-source-of-truth.md@sha256:e77c24b00a2c",
+      "source": "docs/adr/0017-github-release-is-quickstart-source-of-truth.md"
+    },
+    "prerequisites": ["net:github", "creds:releases-token"],
+    "redProof": null,
+    "requirement": "Each pinned part of the release exists on the GitHub release with the pinned size and sha256 (GitHub's own digest, or the downloaded bytes when it states none).",
+    "targets": ["local", "dev", "prod"]
+  }
+]

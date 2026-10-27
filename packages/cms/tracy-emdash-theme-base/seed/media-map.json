@@ -1,0 +1,814 @@
+{
+	"generatedAt": "2026-09-15T21:01:23.621Z",
+	"source": "vendor/joomla/html/tracy_base",
+	"items": [
+		{
+			"key": "images/tracy-demo/studio-workspace",
+			"file": "images/tracy-demo/studio-workspace.png",
+			"alt": "Illustrative studio workspace with website concepts on desktop and laptop screens",
+			"mime": "image/png",
+			"targets": [
+				{
+					"collection": "services",
+					"slug": "website-strategy",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "services",
+					"slug": "event-invitation-emails-best-practices-and-examples-you-can-steal",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "abb-group-develops-rpa-solutions-for-construction",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "draas-vs-disaster-recovery-which-one-is-right-for-you",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "site",
+					"slug": "site",
+					"locale": "en",
+					"path": "mega_service_image"
+				},
+				{
+					"collection": "onepage",
+					"slug": "onepage",
+					"locale": "en",
+					"path": "hero_image"
+				},
+				{
+					"collection": "landing",
+					"slug": "landing",
+					"locale": "en",
+					"path": "hero_image"
+				}
+			],
+			"sha256": "0ec09d69134bd6f87b0b1fa8c27624457293651ac777595ba7396550e3beab7c",
+			"copied": "media/images/tracy-demo/studio-workspace.png"
+		},
+		{
+			"key": "images/tracy-base/chapter-precision",
+			"file": "images/tracy-base/chapter-precision.jpg",
+			"alt": "Website design palette and visual system demonstration",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "services",
+					"slug": "brand-and-interface-design",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "landing",
+					"slug": "landing",
+					"locale": "en",
+					"path": "chapter1_image"
+				},
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "chapter1_image"
+				}
+			],
+			"sha256": "1245a449e4bc5b8c99c40ba08ec2c895e509bac303788acf3aedae5bf310d4c1",
+			"copied": "media/images/tracy-base/chapter-precision.jpg"
+		},
+		{
+			"key": "images/tracy-base/chapter-depth",
+			"file": "images/tracy-base/chapter-depth.jpg",
+			"alt": "Website design palette and visual system demonstration",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "services",
+					"slug": "website-development",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "landing",
+					"slug": "landing",
+					"locale": "en",
+					"path": "chapter2_image"
+				},
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "chapter2_image"
+				}
+			],
+			"sha256": "ebb10f5ba52fc8789e5debae57108112583ae2a8bf5479e4240891a302b83591",
+			"copied": "media/images/tracy-base/chapter-depth.jpg"
+		},
+		{
+			"key": "images/tracy-base/chapter-material",
+			"file": "images/tracy-base/chapter-material.jpg",
+			"alt": "Website design palette and visual system demonstration",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "services",
+					"slug": "content-and-photography",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "home_2",
+					"slug": "home_2",
+					"locale": "en",
+					"path": "chapter_image"
+				}
+			],
+			"sha256": "7c3839e274c7c6e02c7d0f6296eb292314e8cc31c908f0a6e24fc8538f630c91",
+			"copied": "media/images/tracy-base/chapter-material.jpg"
+		},
+		{
+			"key": "images/demo/blog/blog-15",
+			"file": "images/demo/blog/blog-15.jpg",
+			"alt": "Sample image",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "services",
+					"slug": "22-sure-fire-headline-formulas-that-work",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "93972e762c0f13f8471ba1c720780ba1e47501c813c9a75e9bc7fdcadb2b326b",
+			"copied": "media/images/demo/blog/blog-15.jpg"
+		},
+		{
+			"key": "images/demo/members/mem-1",
+			"file": "images/demo/members/mem-1.jpg",
+			"alt": "Illustrative portrait for the fictional studio team",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "people",
+					"slug": "how-to-curabitur-tempus-lacus-id-orci-feugiat",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "onepage",
+					"slug": "onepage",
+					"locale": "en",
+					"path": "team_members[0].image"
+				},
+				{
+					"collection": "home_2",
+					"slug": "home_2",
+					"locale": "en",
+					"path": "team_members[0].image"
+				},
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "team_members[0].image"
+				}
+			],
+			"sha256": "73b1e6530d44d158360aa68f1f0f4dbe8931633333fd7d758039a1a5ccc4bd72",
+			"copied": "media/images/demo/members/mem-1.jpg"
+		},
+		{
+			"key": "images/demo/members/mem-2",
+			"file": "images/demo/members/mem-2.jpg",
+			"alt": "Illustrative portrait for the fictional studio team",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "people",
+					"slug": "create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "onepage",
+					"slug": "onepage",
+					"locale": "en",
+					"path": "team_members[1].image"
+				},
+				{
+					"collection": "home_2",
+					"slug": "home_2",
+					"locale": "en",
+					"path": "team_members[1].image"
+				},
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "team_members[1].image"
+				}
+			],
+			"sha256": "849439a9480751cf17fd5ac7528ff8bf127a8fef0bc97655bdc0a1ac1f0f9b63",
+			"copied": "media/images/demo/members/mem-2.jpg"
+		},
+		{
+			"key": "images/demo/members/mem-3",
+			"file": "images/demo/members/mem-3.jpg",
+			"alt": "Illustrative portrait for the fictional studio team",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "people",
+					"slug": "unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "onepage",
+					"slug": "onepage",
+					"locale": "en",
+					"path": "team_members[2].image"
+				},
+				{
+					"collection": "home_2",
+					"slug": "home_2",
+					"locale": "en",
+					"path": "team_members[2].image"
+				},
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "team_members[2].image"
+				}
+			],
+			"sha256": "38a3ec8616cf4de97e885dc175f30214b01e010672b456f4ca6b4835c93e68fd",
+			"copied": "media/images/demo/members/mem-3.jpg"
+		},
+		{
+			"key": "images/demo/members/mem-4",
+			"file": "images/demo/members/mem-4.jpg",
+			"alt": "Illustrative portrait for the fictional studio team",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "people",
+					"slug": "save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "onepage",
+					"slug": "onepage",
+					"locale": "en",
+					"path": "team_members[3].image"
+				},
+				{
+					"collection": "home_2",
+					"slug": "home_2",
+					"locale": "en",
+					"path": "team_members[3].image"
+				},
+				{
+					"collection": "about",
+					"slug": "about",
+					"locale": "en",
+					"path": "team_members[3].image"
+				}
+			],
+			"sha256": "665790629ba6a46a86f94338cc9fc03c65f6fcffe03840a3b20e42f1c4ccd8a1",
+			"copied": "media/images/demo/members/mem-4.jpg"
+		},
+		{
+			"key": "images/demo/blog/blog-10",
+			"file": "images/demo/blog/blog-10.jpg",
+			"alt": "Planning ideas on a wall of project notes",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-much-money-do-youtubers-make",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-to-write-bullet-points-people-actually-want-to-read-22",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "a49eca167649ce2aadabe3bb54424df11441cc04b3a3dda0dc39b0354d80ca15",
+			"copied": "media/images/demo/blog/blog-10.jpg"
+		},
+		{
+			"key": "images/demo/blog/blog-12",
+			"file": "images/demo/blog/blog-12.jpg",
+			"alt": "Website design workspace with sketches and screens",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "21-useful-keyboard-shortcuts-for-writers",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "want-new-customers-faster-avoid-this-rookie-marketing-habit",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-next-gen-embedded-analytics-power-data-driven-action",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "uk-government-approves-44bn-o2-virgin-media-merger",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "opinion-the-future-of-the-city-is-smart-and-sustainable",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "donec-vitae-efficitur-erat-at-sodales-sem",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "site",
+					"slug": "site",
+					"locale": "en",
+					"path": "mega_resources_image"
+				}
+			],
+			"sha256": "7e2d75d744962b76cec9c1acf8ad5b0c5b37ced0a8d172253a0cd5e1665a9e19",
+			"copied": "media/images/demo/blog/blog-12.jpg"
+		},
+		{
+			"key": "images/demo/blog/blog-6",
+			"file": "images/demo/blog/blog-6.jpg",
+			"alt": "A reader reviewing content on a laptop",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-to-write-like-hemingway",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-to-write-bullet-points-people-actually-want-to-read",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "liverpool-trials-free-5g-to-help-monitor-health-conditions",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "5c0e133e4293f40c36870d5e7bb5c91b7ec0671e12c1b26988b4a6787a64bb33",
+			"copied": "media/images/demo/blog/blog-6.jpg"
+		},
+		{
+			"key": "images/demo/blog/blog-4",
+			"file": "images/demo/blog/blog-4.jpg",
+			"alt": "A thank-you card resting on a gift box",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "why-being-naive-can-make-your-fortune",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "b3d1d8563ce86db2fd8cac80ed63044ff83e6eee1d70fca3d0c4b85d7f398f1a",
+			"copied": "media/images/demo/blog/blog-4.jpg"
+		},
+		{
+			"key": "images/demo/magz/magz-3",
+			"file": "images/demo/magz/magz-3.jpg",
+			"alt": "Working at a desktop and laptop workstation",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-to-expand-the-cloud-native-technology-workforce",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "why-china-is-cracking-down-on-crypto-mining-and-trading",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "c01ec30239f74e5544dead561c9cdea7226d96d00c3bdefe60a9938fd610fb93",
+			"copied": "media/images/demo/magz/magz-3.jpg"
+		},
+		{
+			"key": "images/demo/magz/magz-10",
+			"file": "images/demo/magz/magz-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "471073c7a5c3b69788d7fa7464dfa380b1e149bed75056371deb88e0da6daf20",
+			"copied": "media/images/demo/magz/magz-10.jpg"
+		},
+		{
+			"key": "images/demo/magz/magz-13",
+			"file": "images/demo/magz/magz-13.jpg",
+			"alt": "Hard drive used to illustrate website backup storage",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "five-steps-to-creating-a-post-pandemic-workplace",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "7709882b95ba891391cfe086f33f4b76e94bed0597bc809f392700be5824e2d8",
+			"copied": "media/images/demo/magz/magz-13.jpg"
+		},
+		{
+			"key": "images/demo/magz/magz-9",
+			"file": "images/demo/magz/magz-9.jpg",
+			"alt": "Data charts on a computer display",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "becoming-more-human-in-a-hyper-connected-world",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "include-nunc-eget-mauris-a-urna-viverra-rutrum",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "a44fc5732bcd5fb0f403f148e1817d9a439bfcc8a1caf729e031395ecb7f9d49",
+			"copied": "media/images/demo/magz/magz-9.jpg"
+		},
+		{
+			"key": "images/demo/magz/magz-2",
+			"file": "images/demo/magz/magz-2.jpg",
+			"alt": "Sample image",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-to-curabitur-tempus-lacus-id-orci-feugiat",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "96a39a534446b71dd70ab5d569fbb6cd6c0a3a6927cb9866f91ecf44a3893e2f",
+			"copied": "media/images/demo/magz/magz-2.jpg"
+		},
+		{
+			"key": "images/demo/misc/sam-3",
+			"file": "images/demo/misc/sam-3.jpg",
+			"alt": "A laptop on a desk beside a window",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "df41bd20048a2e689d6f7c674fa0fa3edce02c36985285f4470708a7eeff050f",
+			"copied": "media/images/demo/misc/sam-3.jpg"
+		},
+		{
+			"key": "images/demo/misc/sam-9",
+			"file": "images/demo/misc/sam-9.jpg",
+			"alt": "Sample demo image",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "create-curabitur-tempus-lacus-id-orci-feugiat",
+					"locale": "en",
+					"path": "image"
+				},
+				{
+					"collection": "posts",
+					"slug": "quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "dbba0a7722b67496570cf7e657b3c50a2de9bb4981bb4d34533667c2dc4708f3",
+			"copied": "media/images/demo/misc/sam-9.jpg"
+		},
+		{
+			"key": "images/demo/misc/sam-4",
+			"file": "images/demo/misc/sam-4.jpg",
+			"alt": "Colleagues working together in a studio",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "vivamus-maximus-ante-in-ligula-egestas-fringilla",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "8c4366d63f1f4369f2670250ed70fe56e1542fe4259b786755ce46111a699576",
+			"copied": "media/images/demo/misc/sam-4.jpg"
+		},
+		{
+			"key": "images/demo/misc/sam-7",
+			"file": "images/demo/misc/sam-7.jpg",
+			"alt": "Demo image",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "create-more-elit-nisi-egestas-vel-vestibulum-ut",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "c9b466ae2099a1c0523a34c7df204c8c40d9d8bcc609b7e3407e3deb640afbce",
+			"copied": "media/images/demo/misc/sam-7.jpg"
+		},
+		{
+			"key": "images/demo/misc/sam-6",
+			"file": "images/demo/misc/sam-6.jpg",
+			"alt": "Demo image",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "b1b3878c24796f421ad05f2c7149b2052a2cb7742b1a58b316c5131a5b5cd9fa",
+			"copied": "media/images/demo/misc/sam-6.jpg"
+		},
+		{
+			"key": "images/demo/misc/sam-8",
+			"file": "images/demo/misc/sam-8.jpg",
+			"alt": "Demo image",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu-studio-life",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "c8610fb99c9c84105ba700eabedfac3237abbb7b980b4cec915e6651e6072451",
+			"copied": "media/images/demo/misc/sam-8.jpg"
+		},
+		{
+			"key": "images/demo/misc/sam-16",
+			"file": "images/demo/misc/sam-16.jpg",
+			"alt": "Demo image",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "create-more-elit-nisi-egestas-vel-vestibulum-ut-studio-life",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "473f782b62ba9799b2366dd7c4b6073864d38cfe3429c12314d016357fd3713b",
+			"copied": "media/images/demo/misc/sam-16.jpg"
+		},
+		{
+			"key": "images/demo/misc/sam-15",
+			"file": "images/demo/misc/sam-15.jpg",
+			"alt": "Sample image",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "vivamus-maximus-ante-in-ligula-egestas-fringilla-studio-life",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "5290d2d7e7a299adcd26c7564166e92c0ccfc1da524049585877051028db9e14",
+			"copied": "media/images/demo/misc/sam-15.jpg"
+		},
+		{
+			"key": "images/demo/misc/sam-14",
+			"file": "images/demo/misc/sam-14.jpg",
+			"alt": "Sample demo image",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "create-curabitur-tempus-lacus-id-orci-feugiat-studio-life",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "56c601e92f3cc8a9eec8e51a790a17dbcf309b5683ca55bc7492dbb1760cc711",
+			"copied": "media/images/demo/misc/sam-14.jpg"
+		},
+		{
+			"key": "images/demo/misc/sam-13",
+			"file": "images/demo/misc/sam-13.jpg",
+			"alt": "Sample image",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+					"locale": "en",
+					"path": "image"
+				}
+			],
+			"sha256": "8cf4dac3e61daf8002972a232c5a7c1da7b5adb9f95b3d51318e63433ec879dc",
+			"copied": "media/images/demo/misc/sam-13.jpg"
+		},
+		{
+			"key": "images/tracy-base/mark-1",
+			"file": "images/tracy-base/mark-1.png",
+			"alt": "Northwind",
+			"mime": "image/png",
+			"targets": [
+				{
+					"collection": "landing",
+					"slug": "landing",
+					"locale": "en",
+					"path": "clients_marks[0].image"
+				}
+			],
+			"sha256": "2e9e9f201539600f9250bb7f7cb9fbb5594ce4336578d99b1a8b3a811ec7c06f",
+			"copied": "media/images/tracy-base/mark-1.png"
+		},
+		{
+			"key": "images/tracy-base/mark-2",
+			"file": "images/tracy-base/mark-2.png",
+			"alt": "Halcyon",
+			"mime": "image/png",
+			"targets": [
+				{
+					"collection": "landing",
+					"slug": "landing",
+					"locale": "en",
+					"path": "clients_marks[1].image"
+				}
+			],
+			"sha256": "f10544fd366040689f4ceb6de68542558ae09bbd9e9435373d2e22690e9b1cfe",
+			"copied": "media/images/tracy-base/mark-2.png"
+		},
+		{
+			"key": "images/tracy-base/mark-3",
+			"file": "images/tracy-base/mark-3.png",
+			"alt": "Meridian",
+			"mime": "image/png",
+			"targets": [
+				{
+					"collection": "landing",
+					"slug": "landing",
+					"locale": "en",
+					"path": "clients_marks[2].image"
+				}
+			],
+			"sha256": "34e030023c71e18f9817f5992648e2a31bf79ce5ce24a979fbe75ed406504cbc",
+			"copied": "media/images/tracy-base/mark-3.png"
+		},
+		{
+			"key": "images/tracy-base/mark-4",
+			"file": "images/tracy-base/mark-4.png",
+			"alt": "Lumen",
+			"mime": "image/png",
+			"targets": [
+				{
+					"collection": "landing",
+					"slug": "landing",
+					"locale": "en",
+					"path": "clients_marks[3].image"
+				}
+			],
+			"sha256": "92f479ac0b47f322958ee1a6e9cfd09b5abf61dcf635c7837828cfa71d68ceaa",
+			"copied": "media/images/tracy-base/mark-4.png"
+		},
+		{
+			"key": "images/tracy-base/mark-5",
+			"file": "images/tracy-base/mark-5.png",
+			"alt": "Atlas Works",
+			"mime": "image/png",
+			"targets": [
+				{
+					"collection": "landing",
+					"slug": "landing",
+					"locale": "en",
+					"path": "clients_marks[4].image"
+				}
+			],
+			"sha256": "2e9e9f201539600f9250bb7f7cb9fbb5594ce4336578d99b1a8b3a811ec7c06f",
+			"copied": "media/images/tracy-base/mark-5.png"
+		},
+		{
+			"key": "images/tracy-base/mark-6",
+			"file": "images/tracy-base/mark-6.png",
+			"alt": "Fieldstone",
+			"mime": "image/png",
+			"targets": [
+				{
+					"collection": "landing",
+					"slug": "landing",
+					"locale": "en",
+					"path": "clients_marks[5].image"
+				}
+			],
+			"sha256": "f10544fd366040689f4ceb6de68542558ae09bbd9e9435373d2e22690e9b1cfe",
+			"copied": "media/images/tracy-base/mark-6.png"
+		}
+	]
+}

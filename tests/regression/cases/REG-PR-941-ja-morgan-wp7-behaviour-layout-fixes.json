@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-941-ja-morgan-wp7-behaviour-layout-fixes",
+  "kind": "fix",
+  "title": "JA Morgan wp7 1.1.8: field focus, forms, sidebar drawer, fixed widgets and the header and footer icons behave and look like the Joomla source",
+  "pr": 941,
+  "area": "wordpress-theme/wp-ja-morgan",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-morgan theme under test (local stand restored from the quickstart pack) and the Joomla source (local stand built from the released Joomla quickstart of JA Morgan (ja-morgan.zip, Joomla 5 with a mariadb database, table prefix tr_), with its web fonts: body font-family must resolve to PTRootUI).",
+    "S2: From the TCH checkout run: node vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/visual/site-sweep.mjs --site <site> --source <source> --run-root tasks/ja-morgan-wp7 --zip <theme.zip> --baseline <sweep of the 1.1.7 restore> --baseline-version 1.1.7 --out <dir> (all ten checks are the default; about 5 minutes; do not run it while measure115 or measure116 use the same stand).",
+    "S3: Run, one after the other and on a quiet stand with tools/stand-mail-capture.php installed as a must-use plugin: node tasks/ja-morgan-wp7/tools/measure115.mjs --site <site> --source <source> --wp \"<wp-cli runner>\" --out <dir> and node tasks/ja-morgan-wp7/tools/measure116.mjs --site <site> --wp \"<wp-cli runner>\" --out <dir> (the regression group; about 8 minutes and 1 minute); remove the must-use plugin and uploads/mail-capture.jsonl afterwards."
+  ],
+  "expect": [
+    "site-sweep: TOTAL 10 of 10 checks pass (overflow, scheme, background, header, chips, fixed-widgets, icons, forms, text, first-interaction) with 0 defects on every route x width x scheme; the groups the dossier records in review.config.json sweep.accept (D-53, D-57, D-58, D-61, D-63, D-64, D-67, D-68, D-73, D-74) are listed as not counted, and the 25 icons-unpairable cases are covered by the not-measurable row measured by hand (icons-hand-measure.txt).",
+    "The same sweep on the 1.1.7 restore passes 2 of 10 (scheme, header, chips, fixed-widgets, icons, forms, text and first-interaction fail).",
+    "measure115 (14 browser checks of 1.1.5, including the contact form) passes 14/14 and measure116 (contact handler, mail catcher) passes 6/6."
+  ],
+  "selectors": {
+    "tool": "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/visual/site-sweep.mjs",
+    "evidence": "tasks/ja-morgan-wp7/release/fix-measure.json"
+  },
+  "evidence": "Sweeps of 05/10/2026 against a local copy of the Joomla source (web fonts loaded): baseline on the 1.1.7 restore passed 2 of 10 checks; 1.1.8 on the clean restore passes 10 of 10 (tasks/ja-morgan-wp7/release/fix-measure.json, bound to wp-ja-morgan-1.1.8.zip)",
+  "fence": "Browser-measured behaviour of the shipped theme against the source; differences recorded as decisions in DECISIONS.md are not asserted to zero"
+}

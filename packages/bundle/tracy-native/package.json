@@ -1,0 +1,61 @@
+{
+  "name": "@tracy/dsh-native-bundle",
+  "version": "0.9.7",
+  "description": "The Tracy layer for a profile where dsh itself is the shell, not a sidecar in someone else's",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./presets.patch.yml": "./presets.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "presets.patch.yml"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": [
+        "./cordis.patch.yml",
+        "./presets.patch.yml"
+      ],
+      "profileDependencies": {
+        "dsh-locale-vi": "0.1.0-tracy.14",
+        "dsh-passwords": "2.7.7-tracy.19",
+        "dsh-better-sidebar": "0.24.1-tracy.96"
+      }
+    }
+  },
+  "dependencies": {
+    "@huanlin/dsh-plugin-better-locale": "0.3.0-tracy.13",
+    "@tracy/dsh-add-site": "workspace:^",
+    "@tracy/dsh-ask-form": "workspace:^",
+    "@tracy/dsh-assistant": "workspace:^",
+    "@tracy/dsh-brand": "workspace:^",
+    "@tracy/dsh-brand-engine": "workspace:^",
+    "@tracy/dsh-chat-input": "workspace:^",
+    "@tracy/dsh-sandbox-docker": "workspace:^",
+    "@tracy/dsh-subprocess-docker": "workspace:^",
+    "@tracy/dsh-design-inspiration": "workspace:^",
+    "@tracy/dsh-inbox": "workspace:^",
+    "@tracy/dsh-mode-picker": "workspace:^",
+    "@tracy/dsh-model-plan": "workspace:^",
+    "@tracy/dsh-my-sites": "workspace:^",
+    "@tracy/dsh-onboard": "workspace:^",
+    "@tracy/dsh-settings": "workspace:^",
+    "@tracy/dsh-sidebar": "workspace:^",
+    "@tracy/dsh-site-build-emdash": "workspace:^",
+    "@tracy/dsh-site-build-joomla": "workspace:^",
+    "@tracy/dsh-site-build-wordpress": "workspace:^",
+    "@tracy/dsh-site-tabs": "workspace:^",
+    "@tracy/dsh-site-tools": "workspace:^",
+    "@tracy/dsh-tab-link": "workspace:^",
+    "@tracy/dsh-tracy-locale-vi": "workspace:^",
+    "@tracy/dsh-tracy-locales": "workspace:^",
+    "@tracy/dsh-webroot-read": "workspace:^",
+    "@tracy/dsh-website-opportunities": "workspace:^",
+    "dsh-locale-vi": "0.1.0-tracy.14",
+    "dsh-passwords": "2.7.7-tracy.19",
+    "dsh-better-sidebar": "0.24.1-tracy.96"
+  }
+}

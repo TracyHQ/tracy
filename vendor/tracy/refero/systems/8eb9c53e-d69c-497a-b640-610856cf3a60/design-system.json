@@ -1,0 +1,276 @@
+{
+  "dos": [
+    "Use weight 400 for all headings — never bold. Scale and tracking carry hierarchy, not weight.",
+    "Separate every section with a 1px #212121 hairline rule. No background color shifts between sections.",
+    "Use 9999px radius only on filled white pill buttons. Everything else stays at 4px or 8px.",
+    "Set display type at 63px Aeonik weight 400 with letter-spacing -0.69px. This is the voice of the system.",
+    "Use #6f6759 Compass Gold exclusively for icon strokes — never for text or backgrounds.",
+    "Apply a Pulse Green (#98ff38) dot only for live/active status indicators like availability counts.",
+    "Keep all body text in #9c9c9c Smoke. Never use pure #808080 — the slight warm tilt matters."
+  ],
+  "donts": [
+    "Never add drop shadows. Elevation comes from hairline borders and color contrast alone.",
+    "Never use bold or semibold weight on display type. Weight 400 at 63px IS the headline.",
+    "Never use a colored fill behind text. The canvas stays Obsidian or Carbon throughout.",
+    "Never use fully rounded corners on cards. 8px maximum — the system is architectural, not soft.",
+    "Never place icons in any color other than Compass Gold or Chalk. No blue, no green, no multicolor.",
+    "Never use photography as hero or section content. Dot-maps, icons, and type are the only visuals.",
+    "Never break the 1200px content column. Full-bleed is reserved for the canvas and the dot-map graphic."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#101010",
+      "name": "Obsidian",
+      "role": "Page canvas, full-bleed dark background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#080808",
+      "name": "Carbon",
+      "role": "Deepest surface level, hero band, and overlay backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f3f3f3",
+      "name": "Chalk",
+      "role": "Primary text, headings, and body copy on dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9c9c9c",
+      "name": "Smoke",
+      "role": "Secondary muted text, captions, helper labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c1c1c1",
+      "name": "Ash",
+      "role": "Mid-weight borders, subtle dividers, tertiary text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#212121",
+      "name": "Graphite",
+      "role": "Primary 1px border color for cards, grids, and section dividers — the structural line work",
+      "group": "neutral"
+    },
+    {
+      "hex": "#474747",
+      "name": "Iron",
+      "role": "Secondary border and stroke detail",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Signal White",
+      "role": "Filled pill buttons (LET'S CHAT, START NOW), inverted text on light surfaces, icon strokes — the single high-contrast action color",
+      "group": "brand"
+    },
+    {
+      "hex": "#6f6759",
+      "name": "Compass Gold",
+      "role": "Outlined icon strokes in service and portfolio sections — warm metallic against the cool dark",
+      "group": "accent"
+    },
+    {
+      "hex": "#3b3d45",
+      "name": "Card Slate",
+      "role": "Card and panel border accent on elevated sections",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed Obsidian canvas, content constrained to a 1200px max-width centered column. Hero is a centered headline stack with a dot-map world graphic spanning the full viewport width below. Sections are separated exclusively by 1px Graphite horizontal dividers — no alternating bands, no background shifts. The services section uses a 2×2 grid inside a bordered frame. The 'Why Hyperstudio?' block is a narrow centered column. Navigation is a transparent top bar with no sticky behavior visible. Spacing is generous — 120–210px between sections — creating a slow, editorial vertical rhythm rather than a dense product layout.",
+  "imagery": "Near-zero photography. The only imagery is the dot-matrix world map on the hero — white circular dots on black forming continents through density alone. No product shots, no team photos, no client logos as photography. Icons are the only recurring graphic motif: thin 1.5px outlined strokes in Compass Gold or Chalk, geometric and minimal (pen, book, monitor, waveform). The visual system treats whitespace and type as the primary content; imagery is decorative atmosphere, not explanatory.",
+  "similar": [
+    {
+      "why": "Same near-black canvas with large-weight-400 type and the world-is-our-canvas dot/illustration energy",
+      "business": "Resn"
+    },
+    {
+      "why": "Dark-mode studio site with oversized quiet headlines, minimal UI chrome, and editorial section spacing",
+      "business": "Active Theory"
+    },
+    {
+      "why": "Obsidian background, Aeonik-adjacent geometric sans, ghost-outline buttons, and the 'wireframe in light' visual philosophy",
+      "business": "Locomotive (studio)"
+    },
+    {
+      "why": "Editorial typography discipline — weight 400 at 63px, aggressive negative tracking, sections divided by hairline rules rather than color bands",
+      "business": "Pentagram"
+    },
+    {
+      "why": "Dark agency site with single-color icon system, generous section gaps, and type as the dominant visual element",
+      "business": "Ueno"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "4px",
+      "cards": "8px",
+      "icons": "99px",
+      "buttons": "9999px (pills)"
+    },
+    "elementGap": "20-24px",
+    "sectionGap": "120-210px",
+    "cardPadding": "32-48px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#101010",
+      "name": "Obsidian Canvas",
+      "level": 0,
+      "purpose": "Base page background — the default state"
+    },
+    {
+      "hex": "#080808",
+      "name": "Carbon Depth",
+      "level": 1,
+      "purpose": "Hero band, card surface elevation, overlay depth"
+    },
+    {
+      "hex": "#212121",
+      "name": "Hairline Grid",
+      "level": 2,
+      "purpose": "1px border lines that define cards, sections, and structure"
+    }
+  ],
+  "northStar": "blueprint scratched into obsidian. Type and hairline borders carve white space from pure black, with the occasional gold compass-mark to show the way.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 2.69
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading-xs",
+      "size": 18,
+      "lineHeight": 1.31
+    },
+    {
+      "role": "subheading",
+      "size": 21,
+      "lineHeight": 0.95
+    },
+    {
+      "role": "heading-sm",
+      "size": 23,
+      "lineHeight": 1.07
+    },
+    {
+      "role": "heading",
+      "size": 34,
+      "lineHeight": 1.03
+    },
+    {
+      "role": "heading-lg",
+      "size": 44,
+      "lineHeight": 1.07,
+      "letterSpacing": -0.31
+    },
+    {
+      "role": "display",
+      "size": 63,
+      "lineHeight": 1.05,
+      "letterSpacing": -0.69
+    }
+  ],
+  "components": [
+    {
+      "name": "White Pill Button (Primary Action)",
+      "role": "Filled button for highest-priority CTAs like START NOW and LET'S CHAT",
+      "description": "Solid white (#ffffff) fill, Obsidian (#101010) text, 9999px border-radius, 12px 24px padding, Aeonik 14px weight 400 uppercase. Small icon or arrow glyph right-aligned. No shadow — contrast alone creates elevation."
+    },
+    {
+      "name": "Ghost Outline Button (Secondary)",
+      "role": "Secondary CTA placed beside primary actions",
+      "description": "Transparent background, 1px white (#ffffff) border, white text, 8px radius (not fully pill), 10px 20px padding, Aeonik 14px weight 400 uppercase. Used for VIEW WORK and similar secondary flows."
+    },
+    {
+      "name": "Status Badge (Pill)",
+      "role": "Inline availability/scarcity indicator (e.g. '2/5 SPOTS LEFT FOR JULY')",
+      "description": "Dark card background (#1a1a1a), 1px Graphite (#212121) border, 4px radius, 8px 14px padding. Small Pulse Green (#98ff38) dot prefix. Text in Aeonik 12px weight 400, Smoke (#9c9c9c) color, uppercase tracking."
+    },
+    {
+      "name": "Service Card (2×2 Grid Cell)",
+      "role": "Displays a single service offering in the services section",
+      "description": "Transparent background, 1px Graphite (#212121) border on bottom and sides (no top border to merge with section divider). Compass Gold (#6f6759) outlined icon at top-left, 32px. Heading in Aeonik 14px weight 400 uppercase Chalk (#f3f3f3), body in Aeonik 14px weight 400 Smoke (#9c9c9c). 48px padding all sides."
+    },
+    {
+      "name": "Portfolio Card",
+      "role": "Showcases a client project thumbnail in the portfolio grid",
+      "description": "No background fill, 1px Graphite (#212121) border or divider line, 8px radius. Small outlined client icon centered, client name in Aeonik 16px weight 400 Chalk, category label in Input 13px uppercase Smoke. Tight vertical padding 24px."
+    },
+    {
+      "name": "Section Divider Line",
+      "role": "Separates page sections horizontally",
+      "description": "1px solid Graphite (#212121) stroke spanning full content width. The single most repeated visual element — it IS the page structure. No gradients, no fades, no decorative breaks."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent site header with brand, nav links, and CTA",
+      "description": "Transparent background floating over Obsidian canvas. Left: 'Hyperstudio' wordmark in Aeonik 18px weight 400 Chalk. Center-left: nav links (SERVICES, PORTFOLIO, PROCESS) in Aeonik 14px weight 400 uppercase Smoke with 24px gaps. Right: outlined 'LET'S CHAT' pill button. 1px Graphite bottom border."
+    },
+    {
+      "name": "Headline Display Block",
+      "role": "Hero and section opener typography",
+      "description": "Aeonik 63px weight 400 Chalk (#f3f3f3), line-height 1.05, letter-spacing -0.69px. Centered or left-aligned. No color, no decoration — the size and tracking do all the work. Followed by a compact sub-headline in Aeonik 21px weight 400 Smoke."
+    },
+    {
+      "name": "Dot-Map World Graphic",
+      "role": "Decorative hero visual — a pixelated globe rendered in white dots",
+      "description": "Full-width illustration of a world map composed of small white (#f3f3f3) circular dots on the Obsidian canvas. No stroke, no fill — just dot density defining continents. Serves as atmospheric proof of global reach without literal photography."
+    },
+    {
+      "name": "Manifesto Text Block",
+      "role": "Centered narrative text in the 'Why Hyperstudio?' section",
+      "description": "Max-width 600px centered. Aeonik 23px weight 400 Chalk for the section title, Aeonik 16px weight 400 Smoke for body paragraphs, generous 24px line-height. Ghost outline 'READ MANIFESTO' button below."
+    },
+    {
+      "name": "Outlined Icon Set",
+      "role": "All UI icons across the page",
+      "description": "1.5px stroke, no fill, Compass Gold (#6f6759) or Chalk (#f3f3f3) color, 24–32px size. Geometric and minimal — pen nib, open book, monitor, waveform. The gold tint against black gives them a compass-rose quality."
+    },
+    {
+      "name": "Footer / Bottom Bar",
+      "role": "Closes the page with contact or site info",
+      "description": "1px Graphite top border, transparent background. Small Aeonik 14px Chalk text for email (hello@hyperstudio.org), Input 13px Smoke for secondary links. No background fill, no padding beyond 32px vertical."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface for everything — display headlines, body, buttons, links. Weight 400 across all sizes is signature: no bold shouting, authority through scale and tracking alone.",
+      "sizes": "13px, 14px, 16px, 17px, 18px, 21px, 23px, 34px, 44px, 63px",
+      "family": "Aeonik",
+      "weight": "400, 700",
+      "lineHeight": "0.95–1.43 (tight at display sizes, breathing at body)",
+      "substitute": "Inter, Satoshi, or General Sans",
+      "letterSpacing": "-0.0110em at 63px, -0.0070em at 44px, default at body",
+      "fontFeatureSettings": "'ss01' on, 'cv11' on"
+    },
+    {
+      "role": "Secondary typeface for meta text, labels, and small captions. Tighter tracking (-0.037em at 8px, -0.022em at 18px) gives it a utilitarian, almost monospace feel — used for status pills, section metadata, and fine print.",
+      "sizes": "8px, 13px, 14px, 16px, 17px, 18px",
+      "family": "Input",
+      "weight": "400",
+      "lineHeight": "1.20–1.54",
+      "substitute": "IBM Plex Mono, JetBrains Mono, or Space Mono",
+      "letterSpacing": "-0.0370em, -0.0220em"
+    }
+  ],
+  "description": "Hyperstudio runs on a near-black canvas where everything is carved out by light. The aesthetic is editorial-tech: a deep matte black background (#101010), crisp off-white type (#f3f3f3), hairline 1px borders (#212121), and the occasional warm gold or signal-green dot for punctuation. Typography does the heavy lifting — oversized 400-weight headlines with aggressive negative tracking create a quiet, confident voice, never shouting. Components are reduced to their skeleton: outlined buttons, ghost pills, thin dividers, no shadows, no fills beyond a single white pill for primary actions. The whole system feels like a wireframe rendered in light on obsidian — restrained, precise, and deliberate.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "primary action: no distinct CTA color\n## Quick Color Reference\n- Canvas: #101010\n- Primary text: #f3f3f3\n- Muted text: #9c9c9c\n- Border: #212121\n- Icon stroke: #6f6759\n- Primary action (filled pill): #ffffff background with #101010 text\n\n## Example Component Prompts\n1. **Hero headline block**: Obsidian (#101010) background. Headline at 63px Aeonik weight 400, color #f3f3f3, letter-spacing -0.69px, line-height 1.05. Below it a filled white pill button (#ffffff fill, #101010 text, 9999px radius, 12px 24px padding, Aeonik 14px uppercase) labeled 'START NOW ↗'.\n\n2. **Service grid cell**: Transparent background, 1px bottom border in #212121. Compass Gold (#6f6759) outlined icon at 32px top-left. Heading in Aeonik 14px weight 400 uppercase #f3f3f3, 16px margin-top. Body in Aeonik 14px #9c9c9c, 8px line-height increase.\n\n3. **Status pill badge**: Background #1a1a1a, 1px #212121 border, 4px radius, 8px 14px padding. Pulse Green (#98ff38) 6px dot prefix. Text in Aeonik 12px uppercase #9c9c9c, letter-spacing 0.5px.\n\n4. **Section divider**: Full-width 1px solid #212121 line, 0 margin top and bottom — the line IS the layout.\n\n5. **Manifesto block**: Centered, max-width 600px. Title at 23px Aeonik weight 400 #f3f3f3. Body at 16px Aeonik weight 400 #9c9c9c, line-height 1.5. Ghost outline button below: transparent fill, 1px #ffffff border, 8px radius, #ffffff text, Aeonik 14px uppercase."
+    }
+  ],
+  "elevationPhilosophy": "No drop shadows. Elevation is achieved through a single mechanism: hairline 1px Graphite (#212121) borders that trace the perimeter of every container. The only 'lift' on the page is a white-filled pill button — and that lift comes from color contrast, not shadow. This keeps the system flat, architectural, and fast."
+}

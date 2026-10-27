@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "tracy-design-inspiration/v1",
+  "template": "tracy-base",
+  "provider": "JoomlArt",
+  "category": "Professional & Corporate",
+  "blurb": "A web design and development agency site describing its strategy, design, development, and website care services.",
+  "image": "tracy-base-home-1440.png",
+  "nav": "top-left",
+  "hero": "split",
+  "dark": true,
+  "layouts": [
+    {
+      "key": "home",
+      "path": "/",
+      "label": "Home",
+      "shots": {
+        "mobile": "tracy-base-home-390.png",
+        "desktop": "tracy-base-home-1440.png"
+      }
+    },
+    {
+      "key": "product",
+      "label": "Product",
+      "path": "/product",
+      "shots": {
+        "desktop": "tracy-base-product-1440.png",
+        "mobile": "tracy-base-product-390.png"
+      }
+    },
+    {
+      "key": "services",
+      "label": "Service",
+      "path": "/services",
+      "shots": {
+        "desktop": "tracy-base-services-1440.png",
+        "mobile": "tracy-base-services-390.png"
+      }
+    },
+    {
+      "key": "pricing",
+      "label": "Pricing",
+      "path": "/pricing",
+      "shots": {
+        "desktop": "tracy-base-pricing-1440.png",
+        "mobile": "tracy-base-pricing-390.png"
+      }
+    }
+  ]
+}

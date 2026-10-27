@@ -1,0 +1,104 @@
+---
+/**
+ * The onepage's own anchored header (the source's `navigation-onepage` bar): brand, in-page
+ * anchors, the site's contact pill and the theme toggle. Mobile keeps brand + toggle + a native
+ * `<details>` menu of the same anchors. Rendered under `Base bare`, so the theme-toggle script
+ * of the shared Header is repeated here with the same storage key.
+ */
+import Logo from '@/components/site/Logo.astro'
+import type { Attrs } from '@/lib/stamps'
+import { DEFAULT_LOCALE } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+
+interface Props {
+  brand: string
+  sub?: string
+  homeUrl: string
+  items: Array<{ label: string; anchor: string }>
+  toggleLabel?: string
+  contactLabel?: string
+  contactUrl?: string
+  menuLabel?: string
+  /**
+   * Provenance stamps (`src/lib/stamps.ts`) of the fields each prop is read from; `item` is the
+   * stamp of one link's label, the same for every row of the repeater.
+   */
+  marks?: Partial<Record<'brand' | 'sub' | 'item' | 'contactLabel', Attrs>>
+  /** The site entry's `logo_dark` image value (the customer's dark-background logo), if any. */
+  logoDark?: unknown
+}
+const {
+  brand,
+  sub = '',
+  homeUrl,
+  items,
+  toggleLabel = '',
+  contactLabel = '',
+  contactUrl = '',
+  menuLabel = '',
+  marks = {},
+  logoDark
+} = Astro.props
+const links = items.filter((i) => i.label && i.anchor)
+---
+
+<header class="sticky top-0 z-40 border-b border-line-soft bg-bg/80 backdrop-blur-xl backdrop-saturate-150">
+	<div class="wrap flex h-20 items-center justify-between gap-4">
+		<a href={homeUrl} class="min-w-0 flex-1 text-fg hover:text-fg" aria-label={brand}>
+			<Logo name={brand} stamp={marks.brand} logoDark={logoDark} />
+			{sub && <span class="sr-only" {...marks.sub}>{sub}</span>}
+		</a>
+		{links.length > 0 && (
+			<nav class="hidden items-center lg:flex" aria-label={ui(DEFAULT_LOCALE).w.onepageNav}>
+				{links.map((i) => <a href={i.anchor} class="nav-link" {...marks.item}>{i.label}</a>)}
+			</nav>
+		)}
+		<div class="flex shrink-0 items-center gap-3">
+			{contactLabel && contactUrl && <a href={contactUrl} class="btn btn-primary hidden lg:inline-flex" {...marks.contactLabel}>{contactLabel}</a>}
+			<button type="button" class="flex h-11 w-11 items-center justify-center rounded-full text-fg hover:bg-surface" data-tracy-theme-toggle aria-label={toggleLabel || undefined} aria-pressed="false">
+				<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" /></svg>
+			</button>
+			{links.length > 0 && (
+				<details class="relative lg:hidden" data-onepage-menu>
+					<summary class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-full text-fg hover:bg-surface" aria-label={menuLabel || undefined}>
+						<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+					</summary>
+					<div class="absolute right-0 top-[calc(100%+8px)] min-w-[220px] rounded-[var(--ds-card-radius,18px)] border border-line-soft bg-bg p-2 shadow-raised">
+						{links.map((i) => <a href={i.anchor} class="block rounded-[var(--ds-card-radius,12px)] px-4 py-2.5 text-[15px] text-fg hover:bg-surface" {...marks.item}>{i.label}</a>)}
+						{contactLabel && contactUrl && <a href={contactUrl} class="mt-1 block rounded-[var(--ds-card-radius,12px)] px-4 py-2.5 text-[15px] font-medium text-accent hover:bg-surface" {...marks.contactLabel}>{contactLabel}</a>}
+					</div>
+				</details>
+			)}
+		</div>
+	</div>
+</header>
+<script>
+	// Same behaviour and storage key as the shared Header: flip the attribute, remember the choice;
+	// the head script in Base restores it before first paint.
+	// Only a click stores a choice. While a design system is worn the key is that system's own
+	// ("tracy-base-theme@<id>", the id the slot's <style data-ds> names, read the same way by Base.astro's
+	// pre-paint script), so a choice made under a system leaves with it (UNDO-1).
+	const ds = document.getElementById('tracy-ds-slot')?.getAttribute('data-ds')
+	const KEY = ds && document.documentElement.hasAttribute('data-ds-worn') ? `tracy-base-theme@${ds}` : 'tracy-base-theme'
+	const root = document.documentElement
+	const sync = () => {
+		const dark = root.getAttribute('data-theme') === 'dark'
+		document.querySelectorAll('[data-tracy-theme-toggle]').forEach((b) => b.setAttribute('aria-pressed', dark ? 'true' : 'false'))
+	}
+	document.querySelectorAll('[data-tracy-theme-toggle]').forEach((b) =>
+		b.addEventListener('click', () => {
+			const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+			if (next === 'dark') root.setAttribute('data-theme', 'dark')
+			else root.removeAttribute('data-theme')
+			try {
+				localStorage.setItem(KEY, next)
+			} catch {}
+			sync()
+		})
+	)
+	sync()
+	// The mobile menu closes itself once an anchor is chosen.
+	document.querySelectorAll<HTMLDetailsElement>('[data-onepage-menu]').forEach((d) =>
+		d.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => d.removeAttribute('open')))
+	)
+</script>

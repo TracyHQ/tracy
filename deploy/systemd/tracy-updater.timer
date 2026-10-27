@@ -1,0 +1,10 @@
+[Unit]
+Description=Tracy shard: look for new tags every 5 min (the heartbeat also starts it at once)
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target

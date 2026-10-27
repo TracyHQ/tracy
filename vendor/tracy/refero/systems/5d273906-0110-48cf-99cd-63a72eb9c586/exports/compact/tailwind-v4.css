@@ -1,0 +1,20 @@
+@theme {
+  /* Colors */
+  --color-ember-orange: #ff7817;
+  --color-vellum: #ffffff;
+  --color-obsidian: #18181b;
+  --color-onyx: #09090b;
+  --color-graphite: #000000;
+  --color-pebble: #e5e7eb;
+  --color-bone: #ebebeb;
+  --color-slate: #71717a;
+  --color-mist: #a1a1aa;
+
+  /* Typography */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ogg-text-light: 'Ogg Text Light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pp-supply-mono: 'PP Supply Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-pp-supply-mono-regular: 'PP Supply Mono Regular', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-pp-supply-mono-medium: 'PP Supply Mono Medium', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

@@ -1,0 +1,385 @@
+{
+  "dos": [
+    "Use #6a5ed9 exclusively for the primary CTA — never repurpose it for icons, headings, or decoration; its scarcity is what makes it feel like an action",
+    "Use Inter Variable for all body, nav, button, and heading text; reserve DM Mono strictly for uppercase eyebrows, technical labels, and micro-copy",
+    "Set buttons and cards to 12px radius; use 8px for inputs and nav items; use 9999px only for true pill tags and status badges",
+    "Set hero headlines to 48–60px weight 700 in Zinc 900; center the headline, subtitle, and CTA vertically with generous 64–96px section gaps above and below",
+    "Pair every section with a DM Mono uppercase eyebrow in a brand accent color (green, blue, or orange) — this is the signature move that signals devtool credibility",
+    "Anchor light sections on #fafafa canvas with #ffffff card surfaces and #e4e4e7 hairline borders; do not introduce new background colors without a structural role",
+    "Use the dark band (#18181b) sparingly — once per page — to make surrounding light sections feel brighter by contrast",
+    "Reference exact token values (colors, radii, spacing) from this spec when generating new components; do not estimate or interpolate"
+  ],
+  "donts": [
+    "Do not use #3f71d4, #db5434, #1bb152, or other brand accents as button fills — they are decorative, not action colors",
+    "Do not apply heavy drop shadows to standard cards; use 1px borders and subtle 0 1px 3px shadows, reserving 0 25px 50px shadow for hero-level elevation only",
+    "Do not mix Inter and DM Mono in the same sentence or label — DM Mono is for standalone labels and eyebrows only",
+    "Do not center-align body copy or feature descriptions — keep body text left-aligned for readability, reserving center alignment for hero and section intros",
+    "Do not introduce a new accent color outside the four-color brand palette (violet, blue, orange, green)",
+    "Do not use #27272a for decorative text on light backgrounds where #71717a secondary text would suffice; reserve Zinc 800 for headings and primary copy",
+    "Do not stack multiple colored gradients in the same view; one gradient or color-wash per section maximum",
+    "Do not use border-radius above 12px for functional components (buttons, inputs, cards) — 16–24px should only appear on oversized feature cards or decorative frames"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#6a5ed9",
+      "name": "Iris",
+      "role": "Primary action — CTA buttons, filled links, active nav states",
+      "group": "brand"
+    },
+    {
+      "hex": "#3f71d4",
+      "name": "Cobalt",
+      "role": "Brand accent — icons, heading highlights, link hover; the most-used chromatic color in illustrations and product chrome",
+      "group": "brand"
+    },
+    {
+      "hex": "#db5434",
+      "name": "Coral",
+      "role": "Brand accent — headings, product-screenshot strokes, decorative highlights; warm counterweight to the cool blues and violets",
+      "group": "brand"
+    },
+    {
+      "hex": "#1bb152",
+      "name": "Sprout",
+      "role": "Green text accent for links, tags, and emphasized short phrases",
+      "group": "brand"
+    },
+    {
+      "hex": "#16a34a",
+      "name": "Emerald",
+      "role": "Green text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#22c55e",
+      "name": "Mint",
+      "role": "Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#4ade80",
+      "name": "Lime",
+      "role": "Green text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#ef4444",
+      "name": "Crimson",
+      "role": "Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffb929",
+      "name": "Saffron",
+      "role": "Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Zinc 50",
+      "role": "Page background, hero canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f4f4f5",
+      "name": "Zinc 100",
+      "role": "Subtle section backgrounds, footer strips, surface wash",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e4e4e7",
+      "name": "Zinc 200",
+      "role": "Hairline borders, dividers, card outlines, input borders — the most-used neutral, structural backbone of every component",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d4d4d8",
+      "name": "Zinc 300",
+      "role": "Muted borders, disabled strokes, secondary dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a1a1aa",
+      "name": "Zinc 400",
+      "role": "Muted icon fills, placeholder text, tertiary text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#71717a",
+      "name": "Zinc 500",
+      "role": "Secondary text, caption text, helper copy, muted nav links",
+      "group": "neutral"
+    },
+    {
+      "hex": "#52525b",
+      "name": "Zinc 600",
+      "role": "Card outlines, emphasized borders, tertiary surface strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3f3f46",
+      "name": "Zinc 700",
+      "role": "Body text accent, medium-emphasis text, card inner surfaces on dark sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#27272a",
+      "name": "Zinc 800",
+      "role": "Primary text color, heading text, dark card surfaces, dark band backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#18181b",
+      "name": "Zinc 900",
+      "role": "Deepest dark — dark section canvases, near-black surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White",
+      "role": "Card surfaces, button text on dark, raised content backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dcfce7",
+      "name": "Mint Wash",
+      "role": "Gray wash for highlight backgrounds, decorative bands, and soft emphasis behind content",
+      "group": "accent"
+    },
+    {
+      "hex": "#fdc75c",
+      "name": "Saffron Wash",
+      "role": "Warm section background, decorative wash",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width ~1200px centered content area with generous side padding. Hero is a centered vertical stack: nav bar → DM Mono eyebrow pill → large display headline → subtitle → single violet CTA → free-trial micro-copy → product screenshot frame. The page alternates between light and dark bands in a consistent rhythm: light hero → light product showcase → light trusted-by logo strip → dark 'Built for developers' feature band. Each band is separated by 64–96px vertical padding, with seamless flow (no dividers between bands). Feature sections inside the dark band use centered 2-column or 3-column card grids. The overall density is spacious and breathing — sections rarely compete for attention, and the single dark band creates a strong rhythm reset mid-page. Navigation is a clean top bar with logo left, links center, CTA right; sticky on scroll with a subtle border.",
+  "imagery": "Product screenshots dominate the visual language: full macOS window captures with menu bars, code editors, and colorful gradient wallpapers (green-to-coral, violet-to-blue) serve as the primary 'hero images'. These are always contained within a rounded frame (8–12px radius), never full-bleed. Illustration style is minimal — small line-art character mascots (the cartoon gnome/bird figures flanking the Linux announcement pill) and simple folder/file-tree icons in the dark section. No lifestyle photography, no stock imagery. The dark 'Built for developers' section uses a subtle radial-line concentric-circle motif behind the UI card, giving depth without illustration. Icon style: thin-stroke outlined icons in brand accent colors (violet, blue, green), consistent 1.5–2px stroke weight. Imagery is decorative-atmosphere and product-showcase — it sells the product, not the brand.",
+  "similar": [
+    {
+      "why": "Same devtool sensibility — zinc neutrals, single accent color for CTAs, generous whitespace, mono labels for technical identity",
+      "business": "Linear"
+    },
+    {
+      "why": "Dark-band rhythm device, minimal bordered cards, 8–12px radius, Inter Variable as primary typeface with mono accents",
+      "business": "Vercel"
+    },
+    {
+      "why": "Purple primary CTA on light surfaces, multi-color accent palette used as decoration, section-eyebrow pattern above headings",
+      "business": "GitLab"
+    },
+    {
+      "why": "Devtool brand that uses colorful gradient product screenshots as hero imagery, clean white canvas, confident single-color CTA",
+      "business": "CodeSandbox"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "4-8px",
+      "tags": "9999px",
+      "cards": "8-12px",
+      "links": "4px",
+      "inputs": "8px",
+      "buttons": "12px",
+      "large-cards": "16-24px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "64-96px",
+    "cardPadding": "16-24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#fafafa",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background, hero and feature sections"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Raised product cards, inner content blocks"
+    },
+    {
+      "hex": "#f4f4f5",
+      "name": "Wash",
+      "level": 2,
+      "purpose": "Subtle alternating section background, footer strip"
+    },
+    {
+      "hex": "#18181b",
+      "name": "Dark Band",
+      "level": 3,
+      "purpose": "Dark feature section (e.g. 'Built for developers')"
+    },
+    {
+      "hex": "#dcfce7",
+      "name": "Color Wash",
+      "level": 4,
+      "purpose": "Decorative green section background for variety"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.1)",
+      "element": "Card"
+    },
+    {
+      "style": "0 0 0 1px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.05)",
+      "element": "Bordered card"
+    },
+    {
+      "style": "0 25px 50px -12px rgba(0,0,0,0.25)",
+      "element": "Elevated card / modal"
+    },
+    {
+      "style": "0 0 0 1px rgba(0,0,0,0.75)",
+      "element": "Heavy-outlined card"
+    },
+    {
+      "style": "0 0 0 1px rgba(0,0,0,0.05), 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)",
+      "element": "Sticky nav"
+    }
+  ],
+  "northStar": "Developer pair-programming workshop — clean white surfaces, one violet CTA, playful multi-color accents, and a dark band that makes the light sections breathe.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.6
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.63
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.43
+    },
+    {
+      "role": "heading",
+      "size": 24,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading-lg",
+      "size": 36,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.14
+    },
+    {
+      "role": "display-lg",
+      "size": 60,
+      "lineHeight": 1
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Main action button",
+      "description": "Filled violet (#6a5ed9) button with white text, 12px radius, padding 12px 24px. Inter Variable 16px weight 500. Used for 'Start your free trial' and primary conversion actions."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Secondary navigation action",
+      "description": "Transparent background, Zinc 800 text, no border, 4–8px radius. Used for 'Log in' and similar low-emphasis nav items."
+    },
+    {
+      "name": "Outlined Button",
+      "role": "Secondary action",
+      "description": "White background, 1px Zinc 200 border, Zinc 800 text, 12px radius, 12px 24px padding. Used for 'Sign up' and tertiary actions in nav."
+    },
+    {
+      "name": "Pill Tag",
+      "role": "Label or badge",
+      "description": "Full 9999px radius, small padding 4px 12px, Inter or DM Mono 12–13px text. Used for status indicators and category pills."
+    },
+    {
+      "name": "Mono Section Eyebrow",
+      "role": "Category label above headings",
+      "description": "DM Mono 11–13px weight 500, letter-spacing 0.05em–0.1em, uppercase, in a brand accent color (green for 'WORKFLOW'). Sits centered above section headings."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Content card for feature sections",
+      "description": "White or Zinc 100 surface, 1px Zinc 200 border, 8–12px radius, 16–24px padding. Optional 0 25px 50px -12px shadow for elevated variants. Contains icon, heading, and body copy."
+    },
+    {
+      "name": "Logo Strip Row",
+      "role": "Social proof / trusted-by section",
+      "description": "Horizontal row of grayscale partner logos at single opacity, spaced 48–80px apart, centered, under a small DM Mono eyebrow label. Logos desaturated to Zinc 500 to reduce visual competition."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Primary page headline",
+      "description": "Inter Variable 48–60px weight 700, Zinc 900, centered, tight line-height 1.0–1.14. The hero signature is centered text + subtitle + single violet CTA on a clean white canvas."
+    },
+    {
+      "name": "Product Screenshot Frame",
+      "role": "App preview image",
+      "description": "Rounded 8–12px radius, optional subtle shadow, displayed full-bleed or contained within a gradient or solid backdrop. The product screenshot itself includes colorful macOS window chrome."
+    },
+    {
+      "name": "Dark Feature Card",
+      "role": "Card on dark band sections",
+      "description": "Zinc 800 or near-black surface, 1px subtle border, 8–12px radius. Contains folder/file-tree UI or feature illustrations. Used inside the dark 'Built for developers' section."
+    },
+    {
+      "name": "Nav Bar",
+      "role": "Top navigation",
+      "description": "Horizontal bar, white or transparent background, 1px Zinc 200 bottom border. Logo left, nav links center or right, CTA right. Sticky on scroll with subtle shadow. Height 56–64px."
+    },
+    {
+      "name": "Footer",
+      "role": "Site footer",
+      "description": "Zinc 100 background, 1px Zinc 200 top border, multi-column link layout, small Inter 13–14px text in Zinc 500. Centered logo above link grid."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary UI and heading typeface. Inter carries all functional text: body copy at 16px/400, nav at 14px/500, subheadings at 18–20px/600, and large display headlines at 48–60px/700. The custom font features (cv05, cv06, ss01) refine the alternate glyphs and tabular figures — a devtool-grade choice that signals engineering precision. Weight 700 is reserved for the hero headline; weight 500 dominates nav and buttons; weight 400 carries body copy.",
+      "sizes": "12, 13, 14, 16, 18, 20, 24, 36, 48, 60",
+      "family": "Inter Variable",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.00–1.63",
+      "substitute": "Inter",
+      "fontFeatureSettings": "\"cv05\", \"cv06\", \"ss01\""
+    },
+    {
+      "role": "Monospace label and eyebrow typeface. DM Mono appears in small all-caps section tags (e.g. 'WORKFLOW'), nav micro-labels, and technical micro-copy. Letter-spacing opens up to 0.05em–0.1em at smaller sizes, which is the mono-label signature: tight tracking would look cramped, the extra air gives labels a 'badge' presence. Custom features (ss03, ss04, ss05) activate stylistic alternates for the mono character set.",
+      "sizes": "11, 12, 13, 14, 16",
+      "family": "DM Mono",
+      "weight": "400, 500",
+      "lineHeight": "1.33–1.63",
+      "substitute": "JetBrains Mono",
+      "letterSpacing": "0.05em–0.1em at 11–14px",
+      "fontFeatureSettings": "\"ss03\", \"ss04\", \"ss05\""
+    }
+  ],
+  "description": "Tuple's design language is a developer's pair-programming workshop: bright, airy light surfaces with a single confident violet CTA that makes the primary action unmistakable. The visual identity leans on a four-color accent palette — violet, blue, orange, green — used sparingly as headings, icons, and the product-screenshot wallpapers, while the structural UI stays zinc-neutral and quiet. Typography pairs Inter Variable for everything functional with DM Mono for small all-caps labels and section eyebrows, which is a signature devtool move: mono labels say 'this is a product built by engineers' without resorting to skeuomorphism. Components are mostly flat and bordered rather than heavily shadowed, with a mix of 8px and 12px radii giving cards a modern-but-not-too-soft feel. The page alternates between generous white space sections and one dramatic dark band, creating rhythm without monotony.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Text: #27272a (primary), #71717a (secondary), #a1a1aa (muted)\n- Background: #fafafa (page), #ffffff (card), #f4f4f5 (wash), #18181b (dark band)\n- Border: #e4e4e7 (hairline), #d4d4d8 (muted), #52525b (emphasized)\n- Accent: #3f71d4 (blue), #db5434 (orange), #1bb152 (green)\n- primary action: #6a5ed9 (filled action)\n\n**3-5 Example Component Prompts**\n\n1. *Create a hero section:* Background #fafafa. Centered DM Mono eyebrow pill in #1bb152 (13px, letter-spacing 0.1em, uppercase, 4px 12px padding, 9999px radius). Headline 'Headline here' at 48px Inter Variable weight 700, #27272a, line-height 1.14. Subtitle at 18px Inter weight 400, #71717a, max-width 640px. Violet CTA button (#6a5ed9 fill, white text, Inter 16px weight 500, 12px radius, 12px 24px padding). Section padding 96px top/bottom.\n\n2. *Create a feature card:* White background, 1px #e4e4e7 border, 12px radius, 24px padding. Small brand-color icon (32px, #3f71d4 stroke). Heading 'Feature title' at 20px Inter weight 600, #27272a. Body copy at 16px Inter weight 400, #71717a, line-height 1.63.\n\n3. *Create a dark feature band:* Background #18181b, 96px vertical padding. Centered DM Mono eyebrow in #4ade80 ('WORKFLOW', 13px, 0.1em letter-spacing, uppercase). Heading at 36px Inter weight 700, #ffffff. Content card with #27272a surface, 1px #3f3f46 border, 12px radius, containing a file-tree UI with folder icons in #3f71d4 and #1bb152.\n\n4. *Create a trusted-by logo strip:* Background #fafafa. Centered DM Mono eyebrow 'TRUSTED BY THOUSANDS OF TEAMS' in #71717a (12px, 0.1em letter-spacing, uppercase, #1bb152 word). Below: single horizontal row of 5–6 grayscale partner logos spaced 64px apart, all desaturated to #71717a opacity.\n\n5. *Create a product screenshot frame:* Rounded container at 12px radius with 0 25px 50px -12px rgba(0,0,0,0.25) shadow. Inside: a macOS window screenshot showing a code editor over a green-to-coral gradient wallpaper. Frame max-width 900px, centered, with 64px section padding above and below."
+    },
+    {
+      "title": "Signature Choices",
+      "content": "**Four-color accent palette, not one.** Most brands commit to a single accent color. Tuple uses four — violet, blue, orange, green — but enforces a strict rule: violet is action, the other three are decoration. This lets the CTA stay singular and urgent while giving illustrations, product chrome, and section eyebrows a playful multi-color personality.\n\n**Mono eyebrows above every section.** A DM Mono uppercase label in a brand accent color sits above section headings throughout the site. This is the strongest 'devtool identity' signal: it borrows the terminal/CLI aesthetic without being a code block, and it creates consistent vertical rhythm across sections.\n\n**Dark band as rhythm device.** Most of the page is light. One dark band appears mid-page (the 'Built for developers' section), creating a dramatic contrast reset that makes the surrounding light sections feel brighter. The dark band also hosts the most technical UI (file tree, folder icons), reinforcing the 'product for engineers' message.\n\n**Zinc-based neutral scale.** Tuple avoids blue-tinted or warm-tinted grays — the neutrals are true zinc (cool but achromatic). This keeps the four accent colors visually pure; warm grays would muddy the coral and saffron, cool grays would fight the cobalt and iris."
+    }
+  ]
+}

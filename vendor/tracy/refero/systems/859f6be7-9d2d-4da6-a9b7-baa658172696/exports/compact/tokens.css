@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-ink: #292929;
+  --color-paper: #ffffff;
+  --color-carbon: #000000;
+
+  /* Typography — Font Families */
+  --font-nh: 'NH', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-s-condensed: 'S-Condensed', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ev: 'EV', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-s-works: 'S-Works', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

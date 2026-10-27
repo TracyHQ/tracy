@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "80164adf-a898-4f7c-bce7-12f3f62e1649",
+  "status": "complete",
+  "name": "Ferrari",
+  "url": "https://styles.refero.design/style/80164adf-a898-4f7c-bce7-12f3f62e1649",
+  "sourceWebsite": "https://ferrari.com",
+  "extractedAt": "2026-07-03T03:38:44.685Z",
+  "capturedAt": "2026-10-08T05:14:06.769984+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "cavallino rampante on black marble. Black voids punctuated by singular Ferrari red, white uppercase tracking, and full-bleed cinematic photography.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3db622e1-4f52-4a5f-a883-e64882ce672b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/6b155171-8e1d-4f22-82dc-7f91d6ae39f2.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/3f60e8b3-b6bd-43ed-9e27-6be163c48ab8.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3c24893c-da6f-4b0d-8e41-015f1a43b42a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/7b8ceaa4-f9c1-43a9-8030-71de18b93589.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3297eefe81c0f979b9bcbe6db478c46ff998d08008221bf0b327ae370017418a",
+      "bytes": 18900
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1386648dada390e809a88ff34c86bd95202e959b5c618738a809499c9feb1c91",
+      "bytes": 66585
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d35769136196dae921702b4f77b95db6e763af0bf974a08f42c4169173bbf731",
+      "bytes": 16797
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a0a9880960cf7c6bade9da241f14bba1746d63686987c558670ac2853459ce49",
+      "bytes": 8443
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "1352be165f5fb852801d5050f7b104d8efa77dda727562d6776ab8e45749e72d",
+      "bytes": 11420
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "57a805fc898e71f8482e4519f8d3aaea8f2a5bccd516c9a58f89dba78b7b031b",
+      "bytes": 2933
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a44eb165f44a7668dfc95eefe1f7f24e1bbbb1ecf631c9a06d88a1cba5a528c2",
+      "bytes": 644
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "696868d81396d96d18149a3c19ea4e584432d9c5f7b68cdeb94f46ddd1b538bc",
+      "bytes": 661
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8accefa06628f7571ba6aa206ec0ce46c5ce42ab93672e53b4de81c00fda205f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b2ea6829244600338ad64b7b6d41e20cf7158de0cf305ec6511649c2d08b33d5",
+      "bytes": 41231
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "31cc710c0de59e2e621af0f62b729e428c96bb80de9a7988e84408807d8991b2",
+      "bytes": 21387
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "df9d9b889a7aebeb3a486dd66626fede2b29f5761642cff32249ee32cd180e64",
+      "bytes": 39452
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "dc7d57391affc67b658b7f98bbaf9cc7ca614f49bb9993172a03d6ee81f3de91",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b56d00e44cdf3fb8e49ef455919553dcd982fc8d5f83e5831957b265e98183b1",
+      "bytes": 1234
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "846c1609c93992b29f6417db8dcbabc832afd30f60ea32d4030143547f4c15c9",
+      "bytes": 1803
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1bd3b2ba-9ad9-44ed-9130-03f9d94de821",
+    "242db326-a6f3-482a-b12e-5e7f8af94981",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "7266b546-2fb0-465c-acd6-79001c39829a",
+    "80164adf-a898-4f7c-bce7-12f3f62e1649",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b8899cbd-e2ca-4069-83cf-d8f8b0d71100",
+    "bf523387-03fc-4243-86ca-25af34daa0ce",
+    "c9c5be5a-aaa1-4338-9681-8378d2e24fbd",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "f61cf515-ccd5-4494-bdd1-be9fe4d7258c"
+  ]
+}

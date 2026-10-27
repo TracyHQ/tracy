@@ -1,0 +1,281 @@
+---
+title: Choose media storage
+description: Choose and configure R2, S3-compatible, or local media storage for EmDash.
+---
+
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Choose one storage adapter for uploaded media. A database backup contains media metadata, not the stored files, so back up the storage backend separately.
+
+## Overview
+
+| Storage        | Use it when                                                   | Signed uploads |
+| -------------- | ------------------------------------------------------------- | -------------- |
+| **R2 binding** | The site runs on Cloudflare Workers                            | No             |
+| **S3**         | A Node.js site uses AWS S3, R2's S3 API, MinIO, or compatible storage | Yes      |
+| **Local**      | A Node.js site has one writable persistent volume              | No             |
+
+## Cloudflare R2 binding
+
+Use the R2 binding adapter on Cloudflare Workers. The binding supplies access at runtime, so the site does not need R2 access keys.
+
+```js title="astro.config.mjs"
+import emdash from "emdash/astro";
+import { r2 } from "@emdash-cms/cloudflare";
+
+export default defineConfig({
+	integrations: [
+		emdash({
+			storage: r2({ binding: "MEDIA" }),
+		}),
+	],
+});
+```
+
+### Configuration
+
+| Option      | Type     | Description                           |
+| ----------- | -------- | ------------------------------------- |
+| `binding`   | `string` | R2 binding name from `wrangler.jsonc` |
+| `publicUrl` | `string` | Optional public URL for the bucket    |
+
+### Setup
+
+Add the R2 binding to your Wrangler configuration:
+
+<Tabs>
+  <TabItem label="wrangler.jsonc">
+    ```jsonc
+    {
+      "r2_buckets": [
+        {
+          "binding": "MEDIA",
+          "bucket_name": "emdash-media"
+        }
+      ]
+    }
+    ```
+  </TabItem>
+  <TabItem label="wrangler.toml">
+    ```toml
+    [[r2_buckets]]
+    binding = "MEDIA"
+    bucket_name = "emdash-media"
+    ```
+  </TabItem>
+</Tabs>
+
+### Public access
+
+To serve media from a public bucket, connect a [custom domain](https://developers.cloudflare.com/r2/buckets/public-buckets/#custom-domains) with the Cloudflare API, then set its origin as `publicUrl`. Cloudflare's `r2.dev` development URL is rate-limited and is not intended for production traffic.
+
+```js
+storage: r2({
+	binding: "MEDIA",
+	publicUrl: "https://media.example.com",
+});
+```
+
+If the same bucket stores automatic JSON backups, a public bucket origin can expose objects under `backups/`. Use a private bucket and EmDash's media route, or restrict the public origin to media objects. See [Backups](/guides/backups/#automatic-backups-to-storage).
+
+<Aside type="note">
+	R2 bindings do not support signed upload URLs. If you need direct client uploads, use the S3
+	adapter with R2 credentials instead.
+</Aside>
+
+## S3-compatible storage
+
+The S3 adapter works on Node.js with Cloudflare R2's S3 API, AWS S3, MinIO, and compatible services.
+
+<Aside type="caution" title="Install the AWS SDK first">
+	EmDash uses the AWS SDK at runtime for the S3 adapter but does not bundle it — core is
+	deliberately SDK-agnostic so R2-only and local-only deployments stay lean. Install the SDK
+	in your project before using `s3()`:
+
+    ```sh
+    pnpm add @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
+    ```
+
+    If you skip this step, `astro build` will fail with `Rollup failed to resolve import
+    "@aws-sdk/client-s3"`. The R2 binding adapter (`r2()`) and local adapter do not need the
+    SDK and are unaffected.
+
+</Aside>
+
+The following configuration resolves the endpoint, bucket, credentials, region, and optional public URL from `S3_*` variables when the Node.js process starts:
+
+```js title="astro.config.mjs"
+import emdash, { s3 } from "emdash/astro";
+
+export default defineConfig({
+	integrations: [
+		emdash({
+			storage: s3(),
+		}),
+	],
+});
+```
+
+### Configuration
+
+| Option            | Type     | Required | Description                    |
+| ----------------- | -------- | -------- | ------------------------------ |
+| `endpoint`        | `string` | yes      | S3 endpoint URL                |
+| `bucket`          | `string` | yes      | Bucket name                    |
+| `accessKeyId`     | `string` | no\*     | Access key                     |
+| `secretAccessKey` | `string` | no\*     | Secret key                     |
+| `region`          | `string` | no       | Region (default: `"auto"`)     |
+| `publicUrl`       | `string` | no       | Optional CDN or public URL     |
+
+\* Both `accessKeyId` and `secretAccessKey` must be provided together, or both omitted.
+
+### Resolving S3 config from environment variables
+
+Any field omitted from `s3({...})` is read from the matching `S3_*` environment variable
+when the process starts. This lets you build a container image once and inject credentials
+at boot without a rebuild. Explicit values in `s3({...})` always take precedence over
+environment variables.
+
+| Environment variable   | Field             | Notes                              |
+| ---------------------- | ----------------- | ---------------------------------- |
+| `S3_ENDPOINT`          | `endpoint`        | Must be a valid `http`/`https` URL |
+| `S3_BUCKET`            | `bucket`          |                                    |
+| `S3_ACCESS_KEY_ID`     | `accessKeyId`     |                                    |
+| `S3_SECRET_ACCESS_KEY` | `secretAccessKey` |                                    |
+| `S3_REGION`            | `region`          | Defaults to `"auto"`               |
+| `S3_PUBLIC_URL`        | `publicUrl`       | Optional CDN prefix                |
+
+Environment variables are read from `process.env` when the process starts. This is a
+Node-only feature.
+
+Calling `s3()` with no arguments reads every field from the `S3_*` environment variables:
+
+```js title="astro.config.mjs — runtime environment variable example"
+import emdash, { s3 } from "emdash/astro";
+
+export default defineConfig({
+	integrations: [
+		emdash({
+			// s3() with no args: all fields from S3_* environment variables
+			storage: s3(),
+
+			// Or mix: override one field, rest from environment
+			// storage: s3({ publicUrl: "https://cdn.example.com" }),
+		}),
+	],
+});
+```
+
+<Aside type="caution" title="Do not put Worker secrets in Astro config">
+	The S3 adapter resolves `S3_*` variables from `process.env` at Node.js runtime. It does not resolve Worker bindings from `cloudflare:workers`. Do not inject S3 credentials into `astro.config.mjs` during a Worker build because Vite can embed them in the server bundle. Use the R2 binding adapter on Workers.
+</Aside>
+
+### R2 via S3 API
+
+Use the S3 adapter on Node.js when direct signed uploads to R2 are required. Create scoped R2 API credentials with the Cloudflare API or CLI, then set the following runtime variables:
+
+```dotenv title=".env.example"
+S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+S3_BUCKET=emdash-media
+S3_ACCESS_KEY_ID=<r2-access-key-id>
+S3_SECRET_ACCESS_KEY=<r2-secret-access-key>
+S3_REGION=auto
+S3_PUBLIC_URL=https://media.example.com
+```
+
+Keep the real values in the Node.js hosting platform's secret manager. The public URL is optional and does not replace the S3 API endpoint used for uploads.
+
+### MinIO
+
+Point the same runtime variables at MinIO. Set `S3_ENDPOINT` to the MinIO API origin, `S3_BUCKET` to the bucket name, and the two credential variables to a scoped MinIO access key. Set `S3_PUBLIC_URL` only when that origin serves the bucket's objects publicly.
+
+## Local filesystem
+
+Use local storage for development or a single Node.js server with a persistent disk. Files are stored in a directory on that disk.
+
+```js title="astro.config.mjs"
+import emdash, { local } from "emdash/astro";
+
+export default defineConfig({
+	integrations: [
+		emdash({
+			storage: local({
+				directory: "./uploads",
+				baseUrl: "/_emdash/api/media/file",
+			}),
+		}),
+	],
+});
+```
+
+### Configuration
+
+| Option      | Type     | Description                     |
+| ----------- | -------- | ------------------------------- |
+| `directory` | `string` | Directory path for file storage |
+| `baseUrl`   | `string` | Base URL for serving files      |
+
+The `baseUrl` should match EmDash's media file endpoint (`/_emdash/api/media/file`) unless you configure a custom static file server.
+
+<Aside type="caution">
+	Local storage does not support signed upload URLs. Files are uploaded through the server, which
+	may be slower for large files.
+</Aside>
+
+## Use separate storage for separate environments
+
+The following configuration uses a local directory during development and R2 in the Cloudflare production build:
+
+```js title="astro.config.mjs"
+import emdash, { local } from "emdash/astro";
+import { r2 } from "@emdash-cms/cloudflare";
+
+const storage = import.meta.env.PROD
+	? r2({ binding: "MEDIA" })
+	: local({
+			directory: "./uploads",
+			baseUrl: "/_emdash/api/media/file",
+		});
+
+export default defineConfig({
+	integrations: [emdash({ storage })],
+});
+```
+
+## Signed uploads
+
+The S3 adapter supports signed upload URLs, allowing clients to upload directly to storage without passing through your server. This improves performance for large files.
+
+Signed uploads are automatic when using the S3 adapter. The admin interface uses them when available.
+
+Adapters that support signed uploads:
+
+- **S3** (including R2 via S3 API)
+
+Adapters that do not support signed uploads:
+
+- **R2 binding** (use S3 adapter with R2 credentials instead)
+- **Local**
+
+## Storage interface
+
+All storage adapters implement the same interface:
+
+```typescript
+interface Storage {
+	upload(options: {
+		key: string;
+		body: Buffer | Uint8Array | ReadableStream;
+		contentType: string;
+	}): Promise<UploadResult>;
+
+	download(key: string): Promise<DownloadResult>;
+	delete(key: string): Promise<void>;
+	exists(key: string): Promise<boolean>;
+	list(options?: ListOptions): Promise<ListResult>;
+	getSignedUploadUrl(options: SignedUploadOptions): Promise<SignedUploadUrl>;
+	getPublicUrl(key: string): string;
+}
+```
+
+This consistency allows switching storage backends without changing application code.

@@ -1,0 +1,299 @@
+{
+  "dos": [
+    "Set display headlines at 225px Roobert weight 400 and let them own the viewport — never crowd them with subheads or CTAs",
+    "Use the 75px pill radius exclusively for buttons and tags — keep all other elements (cards, images, inputs) at 0px radius for sharp editorial contrast",
+    "Reserve color for one iridescent hero backdrop per page — keep all interface text, borders, and fills strictly in the black/white/gray scale",
+    "Use weight 300 at 78px for manifesto and atmospheric headlines to create whisper authority — never push above weight 400 at this scale",
+    "Set line-height to 0.70–0.76 on display sizes above 78px to let lines lock together as typographic art objects",
+    "Apply cubic-bezier(0.19, 1, 0.22, 1) easing to transform and color transitions with durations of 0.8–1.25s for patient, gliding motion",
+    "Keep all interactive text links at 0px radius with no underlines — let spacing, color, and context signal affordance"
+  ],
+  "donts": [
+    "Never introduce a chromatic UI color — black, white, and gray are the interface palette; the iridescent gradient is media only",
+    "Never use box-shadow or elevation on cards, buttons, or images — the system relies on flat surfaces and hairline 1px borders",
+    "Never set border-radius between 1px and 74px — the system jumps from sharp 0px to full 75px pill, no intermediate rounding",
+    "Never use bold or heavy weights (600+) above 45px — large sizes should whisper at 300 or speak at 400, never shout",
+    "Never center-align body copy in address blocks, lists, or project descriptions — left-align with 8–14px line gaps for editorial flow",
+    "Never add gradients to buttons, badges, or UI controls — gradients belong only in the hero atmospheric media",
+    "Never use Raleway for body or navigation — it is a heading accent only, and even there it appears sparingly",
+    "Never fill the canvas with imagery — the system is text-dominant with one hero-sized visual gesture per page"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "role": "Primary text, SVG strokes, overlay fills — pure black carries all foreground information and graphic marks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Light text on dark surfaces, inverse labels, and high-contrast captions. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#181818",
+      "name": "Inkstone",
+      "role": "Footer body copy and secondary headings — softened black for long-form reading blocks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6d6d6d",
+      "name": "Felt Gray",
+      "role": "Muted helper text, address blocks, legal copy — quiet annotations that recede without disappearing",
+      "group": "neutral"
+    },
+    {
+      "hex": "#636363",
+      "name": "Slate Pill",
+      "role": "Filled neutral button background — the only solid fill used for actions like Accept",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9a9a9a",
+      "name": "Ash Mist",
+      "role": "Mid-tone neutral for disabled or low-contrast surfaces in the surface stack",
+      "group": "neutral"
+    },
+    {
+      "hex": "#808080",
+      "name": "Pewter",
+      "role": "Secondary mid-tone neutral for hover or muted state layers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a02d25",
+      "name": "Iridescent Fade",
+      "role": "Chromatic accent appearing only inside the hero gradient wash — molten oxblood anchor of the iridescent atmosphere, not used in interface controls",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, rgb(160, 224, 171), rgb(255, 172, 46) 50%, rgb(165, 45, 37))"
+    }
+  ],
+  "layout": "Layout is max-width contained at 1078px, centered, with full-bleed dark hero sections breaking the container. The hero is full-viewport: centered monumental headline (Un i ted, Unbound) floating over iridescent media, minimal navigation floating at top, single rotating badge at bottom-left. Body sections follow a spacious editorial rhythm — generous 46px section gaps create breathing room between blocks, alternating between white and dark (black with white type) bands. Content arrangement is asymmetric: text-left/image-right and image-left/text-right alternations dominate, with no centered stacks outside the hero. Card grids appear as single-column project lists rather than multi-column grids — each project gets the full width with its image and title. Navigation is a transparent top bar with logo left, locale center, menu right — no sticky color shift, no shadow, just invisible persistence. The footer is a compact three-column address block (Tokyo, Saigon, London) with quiet 11px copy. Overall: editorial magazine pacing in a digital frame.",
+  "imagery": "Imagery is theatrical and singular: one massive iridescent fluid texture dominates the hero — organic greens dissolving through amber into oxblood like oil on water or molten glass. It reads as full-bleed atmospheric media, possibly video or shader-driven canvas, and occupies the entire viewport as a singular sensory moment rather than a repeated pattern. Project showcases use contained editorial photography (tight product crops, campaign stills) presented without frames or borders — the image is the content. No illustration, no icons beyond tiny UI glyphs, no decorative shapes. Iconography is minimal or absent; the rotating circular text badge functions as the system's only typographic ornament. Overall density: text-dominant with one hero-sized visual gesture, then long quiet editorial stretches of typography and product imagery.",
+  "similar": [
+    {
+      "why": "Same liquid iridescent hero treatment behind monochrome editorial typography and full-pill ghost buttons",
+      "business": "Resn"
+    },
+    {
+      "why": "Same immersive full-bleed dark hero with single monumental headline and restrained monochrome chrome around it",
+      "business": "Active Theory"
+    },
+    {
+      "why": "Same editorial agency rhythm — oversized whisper-weight headlines, generous 46px+ section gaps, and zero shadow elevation",
+      "business": "Locomotive"
+    },
+    {
+      "why": "Same austere black-and-white editorial system with sharp 0px corners and custom geometric sans (Roobert echoing Pentagram's house faces)",
+      "business": "Pentagram"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "75px",
+      "cards": "0px",
+      "images": "0px",
+      "inputs": "0px",
+      "buttons": "75px"
+    },
+    "elementGap": "14px",
+    "sectionGap": "46px",
+    "cardPadding": "34px",
+    "pageMaxWidth": "1078px"
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 1,
+      "purpose": "Primary canvas — most sections sit on pure white"
+    },
+    {
+      "hex": "#636363",
+      "name": "Slate Pill",
+      "level": 2,
+      "purpose": "Filled button surface for cookie consent and neutral actions"
+    },
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "level": 3,
+      "purpose": "Dark overlay and inverse section — full-bleed dark bands behind iridescent media"
+    },
+    {
+      "hex": "#9a9a9a",
+      "name": "Ash Mist",
+      "level": 4,
+      "purpose": "Quiet mid-tone layer for inset panels or disabled zones"
+    }
+  ],
+  "northStar": "Liquid iridescence behind editorial silence — a monochrome editorial gallery floating on molten light.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.19,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.15,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.21,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 39,
+      "lineHeight": 1.19,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading-lg",
+      "size": 45,
+      "lineHeight": 1.15,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-sm",
+      "size": 54,
+      "lineHeight": 1.39,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading",
+      "size": 78,
+      "lineHeight": 1.1,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-lg",
+      "size": 94,
+      "lineHeight": 0.76,
+      "letterSpacing": 0
+    },
+    {
+      "role": "display",
+      "size": 225,
+      "lineHeight": 1.25,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Ghost Pill Button (Dark Surface)",
+      "role": "Primary action button used over iridescent or dark hero media",
+      "description": "Transparent background, 1px solid rgba(255,255,255,0.3) border, #ffffff text, 75px border-radius (full pill), 11px vertical and 33px horizontal padding, Roobert 16px weight 400. The translucent border dissolves into the iridescent background while the pill silhouette stays unmistakable."
+    },
+    {
+      "name": "Ghost Pill Button (Light Surface)",
+      "role": "Secondary action on white or light gray sections",
+      "description": "Transparent background, 1px solid #000000 border, #000000 text, 75px border-radius, 11px vertical and 33px horizontal padding, Roobert 16px weight 400. Mirrors the dark-surface variant — same geometry, inverted palette."
+    },
+    {
+      "name": "Filled Neutral Pill",
+      "role": "Cookie consent and utilitarian confirmations",
+      "description": "rgba(55,55,55,0.78) background (functionally Slate Pill #636363), #ffffff text, 1px solid #ffffff border, 75px border-radius, 11px vertical and 33px horizontal padding. The only solid-filled action in the system — used sparingly for compliance and consent, never for primary marketing CTAs."
+    },
+    {
+      "name": "Underline-Free Text Link",
+      "role": "Inline navigation, menu items, language switcher, footer links",
+      "description": "No background, no border, 0px radius. Roobert 12–16px weight 400, color shifts between #ffffff (on dark) and #000000 (on light). Underlines are absent — context and weight set the link apart from body copy. Generous line-height (1.36 at 11px, 1.19 at 12px) keeps stacked menus airy."
+    },
+    {
+      "name": "Hero Display Headline",
+      "role": "Full-viewport editorial title",
+      "description": "Roobert 225px weight 400, line-height 1.25, #ffffff over iridescent dark media. Letter-spacing normal. The headline is the hero — no subhead, no CTA, just one monumental phrase centered in the viewport breathing against fluid light."
+    },
+    {
+      "name": "Section Heading (Whisper Weight)",
+      "role": "Atmospheric headline for manifesto or feature sections",
+      "description": "Roobert 78px weight 300, line-height 1.10. The 300-weight at this scale is anti-convention — most sites push 600–700 here. The whisper weight lets the headline feel like it is being spoken, not shouted, giving the editorial chamber its hushed authority."
+    },
+    {
+      "name": "Section Heading (Anchor Weight)",
+      "role": "Bold editorial divider or statement",
+      "description": "Roobert 94px weight 400, line-height 0.76. The tight line-height (0.76) is dramatic — text lines almost touch, creating a dense typographic block that reads as art object. Used for large statement moments where the text itself is visual."
+    },
+    {
+      "name": "Project Card / List Row",
+      "role": "Featured work entry — paired image and title",
+      "description": "Transparent background, 0px border-radius, no shadow. Image bleeds full-width within the 1078px container; title sits below in Roobert 16–18px weight 400. No card chrome — the card is content, not a container. Spacing between rows controlled by 14–46px gaps depending on section density."
+    },
+    {
+      "name": "Language Switcher",
+      "role": "Top-bar locale selector (EN / VN / 中文)",
+      "description": "Three inline text links in Roobert 12px weight 400, color #ffffff or #000000 depending on surface, 0px radius, separated by visual whitespace rather than dividers. Active locale carries the same color but slightly heavier visual weight through spacing alone."
+    },
+    {
+      "name": "Rotating Scroll Indicator",
+      "role": "Bottom-left circular badge prompting downward exploration",
+      "description": "Circular SVG badge with text tracing the circumference ('SCROLL DOWN · SCROLL DOWN'), rotating continuously at slow tempo. Sits at 0,0 of the bottom-left corner with small offset. Ink black stroke on transparent fill — a typographic punctuation mark, not a button."
+    },
+    {
+      "name": "Footer Address Block",
+      "role": "Studio contact information",
+      "description": "Roobert 11px weight 400 line-height 1.36, #6d6d6d Felt Gray text. Tight 8px top margins between lines create a compact address stack that recedes into the page. No dividers or labels — the muted gray does the work."
+    },
+    {
+      "name": "Cookie Banner",
+      "role": "Compliance notice with single accept action",
+      "description": "Fixed bottom bar, rgba(55,55,55,0.78) Slate Pill background, white body text in system-ui 9–16px, paired with Filled Neutral Pill 'Accept' button. Minimal copy, single action, no settings — the banner respects attention by asking for nothing beyond consent."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent header with logo, locale, and menu",
+      "description": "Fixed transparent header 66px tall. Logo wordmark top-left (Roobert 16px weight 400 'monopo saigon'), language switcher centered, menu stack right-aligned (WORK / MANIFESTO / SAIGON SOULS / TEAM / CONTACT at 11–12px weight 400). No background fill — the header is invisible until content scrolls behind it."
+    },
+    {
+      "name": "Iridescent Hero Backdrop",
+      "role": "Atmospheric media behind hero headlines",
+      "description": "Full-viewport organic gradient or video: soft sage green (rgb 160,224,171) dissolving through molten amber (rgb 255,172,46) into deep oxblood (rgb 165,45,37). Applied as a flowing, liquid texture — never as a flat gradient. This is the only chromatic surface in the entire system and exists only behind text, never as UI fill."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface across all interface text, navigation, hero headlines, body, lists, and footers. The custom sans carries geometric clarity with humanist warmth; its wide weight range (300 whisper through 600 anchor) lets the system breathe from monumental 225px headlines down to 11px labels",
+      "sizes": "11px, 12px, 16px, 18px, 29px, 30px, 39px, 45px, 54px, 78px, 94px, 225px",
+      "family": "Roobert",
+      "weight": "300, 400, 600",
+      "lineHeight": "0.70–2.34 (tight 0.70–0.76 on display sizes, generous 1.58 on body)",
+      "substitute": "Inter or Söhne — both share Roobert's geometric-humanist balance and clean aperture"
+    },
+    {
+      "role": "Reserved for specific heading contexts where a slightly more elegant, narrower sans introduces contrast — appears sparingly as a counterpoint to Roobert's bolder presence",
+      "sizes": "54px",
+      "family": "Raleway",
+      "weight": "400",
+      "lineHeight": "1.39",
+      "substitute": "Montserrat or Jost"
+    },
+    {
+      "role": "Micro UI labels, cookie banner body, fine print — browser default fallback ensuring legibility at the smallest scale without committing to a custom face",
+      "sizes": "9px, 16px",
+      "family": "system-ui",
+      "weight": "400",
+      "lineHeight": "1.15–1.32"
+    }
+  ],
+  "description": "Monopo Saigon runs on radical monochrome discipline: pure black and white with whisper-thin grays, wrapped around massive Roobert typography that breathes across full-bleed canvases. The signature contrast lives between austere editorial restraint (sharp 0px corners on navigation and text links, generous whitespace, 4px-based rhythm) and a single expressive gesture — full-pill 75px-radius buttons that float like liquid over imagery. Hero environments lean into iridescent, fluid, chromatic atmospheres (greens dissolving into amber into deep oxblood) while the interface itself never picks up a hue, creating the feeling of a black-and-white editorial gallery floating on a river of liquid light. Type sets the temperature: weight 300 at 78px whispers, weight 400 at 225px fills the viewport, and weight 400 at 11px labels everything else with confident minimalism. Motion is expressive but patient — cubic-bezier(0.19, 1, 0.22, 1) ease curves stretching up to 1.25s transform transitions, letting elements glide rather than snap.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text primary: #000000\n- text muted: #6d6d6d\n- background: #ffffff\n- dark overlay / inverse section: #000000\n- border (light surface): #000000\n- border (dark surface): rgba(255,255,255,0.3)\n- accent: none — the only chromatic color is the iridescent hero gradient, which is media only\n- primary action: no distinct CTA color\n\n**3 Example Component Prompts**\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. Build a project list row: transparent background, 0px radius, no shadow. Full-bleed image at the top within the 1078px container, sharp corners. Project title below in Roobert 16px weight 400, color #000000. 46px gap to the next row. No card chrome, no borders, no padding around the content itself.\n\n3. Build a Ghost Pill Button on a light surface: transparent background, 1px solid #000000 border, 75px border-radius, 11px padding-top and padding-bottom, 33px padding-left and padding-right. Label in Roobert 16px weight 400, color #000000. No hover fill — animate border opacity and letter-spacing on transition with cubic-bezier(0.19, 1, 0.22, 1) over 0.8s."
+    },
+    {
+      "title": "Motion Personality",
+      "content": "Motion is expressive but unhurried — the system treats transitions as slow camera moves rather than UI snaps. The signature curve is cubic-bezier(0.19, 1, 0.22, 1) (a gentle ease-out) applied to transform, color, and opacity at 0.8s and 1.25s durations. Shorter easing uses plain 'ease' at 0.4s for color and opacity micro-transitions. A rotating animation runs continuously on the scroll-indicator badge at slow tempo. Transforms dominate over positional animation — elements glide, slide, and reveal through transform rather than repositioning layout. The 1.25s duration on transforms (69 occurrences) signals that the studio prefers patience over responsiveness; nothing should feel abrupt. Border transitions (6 occurrences) and flex-basis shifts are rare and reserved for layout reveals, not micro-interactions."
+    }
+  ],
+  "elevationPhilosophy": "The system deliberately avoids shadow elevation. Surfaces are distinguished by color inversion (white to black bands) and hairline 1px borders rather than stacked shadows. The lone 'elevation' gesture is the translucent slate pill on the cookie banner, which uses background opacity rather than shadow to separate from content."
+}

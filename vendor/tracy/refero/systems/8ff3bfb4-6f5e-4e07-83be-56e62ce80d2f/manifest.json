@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8ff3bfb4-6f5e-4e07-83be-56e62ce80d2f",
+  "status": "complete",
+  "name": "Pinterest",
+  "url": "https://styles.refero.design/style/8ff3bfb4-6f5e-4e07-83be-56e62ce80d2f",
+  "sourceWebsite": "https://pinterest.com",
+  "extractedAt": "2026-06-03T17:55:58.808Z",
+  "capturedAt": "2026-10-08T05:14:50.528943+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "A pinboard under warm gallery light — white walls, one bold red thumbtack, everything else quietly waiting to be discovered.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8546852a-ce79-4dba-a2a4-e58b81aa0d31.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a701683fd0a71a78e20db84c7dcb7835fb2e7c502f5a622e8ce933c49f33aabe",
+      "bytes": 18514
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a5c3e2b92bd75428e35291ea74285ab4a4aeaef0dedd05960443b9f4dc5f016a",
+      "bytes": 90735
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "2f0cce54f2042375f8ae6120f8050ab8c9dfa01fbd5e612b5b7a757b6f7a7794",
+      "bytes": 15672
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "bad74afd7d59981f317422bbedfc1ec31eb5b1c1fb331e1911bde7ba2efd5993",
+      "bytes": 10218
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "fede994ce0f053abeceaa05fec2838fbe2cd7d2abf0ed4d2ad6ad7265e2070f3",
+      "bytes": 12040
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ae29ee4cd0af05f20ff6b910759d550810885870d986ce66ee2518b29defe0c7",
+      "bytes": 2703
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "50349d1c9821f5848ceab312e6ec11919d2c27d2ccc206076bede72298112ba7",
+      "bytes": 505
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "1ef3f778333b75ccfd1a3605fbf7c92233b9eb61e7f065e8918f24ab9428ca9f",
+      "bytes": 522
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "0d0f8635dbc5e4b5b654a89f2115e8826bed0d617c0fd62812f245ea172312fe",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f35c0afd09768e5033f3797572652ca1228249c4ce66c7d87ec6a33e58488661",
+      "bytes": 42530
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f4b8886c4a0ec217b77926a14ea8f75284972ab875c528bc002920c4aa8a8efc",
+      "bytes": 21898
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b989885b8a2d2bfa1f378b191def78f8e6ef9a753bd09620fe5de9320d6d18c8",
+      "bytes": 38469
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "465134434f287eadf4302d86b62f184d7f808cbe16e48293994e32556ea23e75",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d5f1da11acf9b9f6206e2faa026e18e12c62274af073d776fd6a33aae5a6db48",
+      "bytes": 1662
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b99b6530b8503e4e3f9e575f0b9da6447511ab79b8cd68570002da7f44d52f9d",
+      "bytes": 2288
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "2cfd1a08-e5b1-4bd8-9270-29aa08f80aa0",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "542453bb-1895-45fe-95c9-66dbacbf1b08",
+    "653b7b25-f610-4a46-90e1-e3eed98b1f24",
+    "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "754ad72f-9abd-43df-ac72-c6abf2036ed4",
+    "80392d80-3970-46f0-a7ed-f213f316c933",
+    "8ff3bfb4-6f5e-4e07-83be-56e62ce80d2f",
+    "989d8d71-c161-4410-8157-ad6ade0bd4be",
+    "9afa0254-423b-4354-a852-8894c33d2e6b",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "b8ce0a90-40c6-4518-940c-8c97ccf9c1a0",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "bea59438-bb4f-47ea-9484-f41caf6eb685",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

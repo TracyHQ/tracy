@@ -1,0 +1,56 @@
+{
+  "id": "REG-032",
+  "kind": "fix",
+  "title": "A press that takes something down asks first and names it (version remove, demo Redeploy/Update/Move, Delete set, Unpublish), and a refusal, a dropped request or an unconfirmed answer is shown instead of swallowed",
+  "pr": 836,
+  "area": "destructive-confirm",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-timeout=30000 --test-concurrency=1 packages/design/tracy-design-inspiration/test/destructive-confirm.test.mjs packages/web/tracy-harness/test/destructive-confirm.test.mjs",
+    "S2: Read the exit code, the pass/fail/skipped counts and the tests named below."
+  ],
+  "expect": [
+    "Exit code 0, 0 failures, 0 skipped.",
+    "'F-S5-007: the remove control is a native button that is always drawn and names the version' passes: the X of a version tile is a <button type=button> whose aria-label holds the version title, with no `hidden` class, no `group-hover:` class and no tabindex=-1.",
+    "'F-S5-007: the first press only asks, naming the version; the second sends one DELETE for it' passes: 0 DELETEs after one press, the control then shows the title; exactly 1 DELETE for that inspiration, chip and version after the second.",
+    "'F-S5-007: leaving the control, another tile, another chip or another inspiration starts over' passes: 0 DELETEs after each of them.",
+    "'F-S5-007: a refusal is shown …' and 'a dropped request or an answer that does not confirm …' pass: one [data-remove-failed] alert naming the version for 401/403/404/409/500/502, a rejected fetch, an empty body, broken JSON, null, a wrong shape and {ok:false}; the tile stays, no [data-failed], no second DELETE.",
+    "'F-S5-007: pressing again while a removal is running sends nothing more' and 'an answer that lands after the inspiration changed, or after close, touches nothing' pass: 1 DELETE; no alert and no lock on the other inspiration.",
+    "'F-S8-005: Redeploy, Update, Move and an install over a recorded demo ask first and name the demo' passes: onPress is not called by the first press, the button then names the address (and the release for Update, the server for Move), and the title announces a teardown only for a live copy or a move; the second press calls it once. 'a first install where there is no demo is still one press' passes.",
+    "'F-S8-005: a refused, dropped or jobless install is printed and no job is followed' passes: for 401/403/404/409/502, a rejected fetch and a 202 with no, non-string, empty or unreadable jobId there is one POST /api/ops/demos/install, a printed error and 0 requests to /api/ops/demos/job.",
+    "'F-S8-005: pressing again while the install is being sent sends nothing more' and 'an answer that lands after another server was opened is not followed on its rows' pass.",
+    "'F-S8-006: Unpublish asks first and names the card; the second press unpublishes exactly that release' passes: 0 DELETEs after one press; one DELETE /api/ops/quickstart/inspiration?tag=<encoded tag> after the second.",
+    "'F-S8-006: a refused, dropped or unconfirmed Unpublish …' passes: a printed sentence, onChanged not called, the form still on screen, the control enabled again, no retry.",
+    "'F-S5-007: only the host’s own two no-write codes read as refused; any other answer may have removed it', 'a well-formed re-read is drawn …' and 'a re-read that is not this inspiration’s copy is not drawn …' pass: only 404 NO_SUCH_VERSION and 500 NOT_WRITTEN print the refusal; any other 4xx or 5xx prints the not-confirmed sentence; a 200 re-read that is {}, null, a list, not JSON, names another inspiration, or has any field of the copy contract of the wrong type (a version title that is an object, slots that are not text, …) leaves the tiles and the alert as they were.",
+    "'F-S8-005: on a server Tracy only records, an install that would replace what is served asks first' and 'on the Demos screen a served demo of a record server is replaced only on the second press' pass: with `deployed: null` and Override ticked the first press sends nothing whatever the server said about the address (served, free when read, or not answered); only Override off is one press. 'a record server’s presence answer that is not a list of names is not read as \"serves nothing\"' and 'an address that read as free is still replaced only on the second press' pass.",
+    "'F-S8-005: only a refusal its own door makes before it starts anything reads as certain; any other answer may have started' passes: the host's 4xx handed back after the row was claimed, and a code at a status its door never sends, print the may-or-may-not sentence; 'a listing of the server that was left does not replace the rows of the one on screen' and 'until the picked server’s own listing arrives, the rows of the last one cannot be pressed' pass.",
+    "'F-S8-006: only the card door’s own refusal reads as certain; any other answer says the card may be unpublished', 'a read of the release that was left does not fill the sheet of the one on screen' and 'an Unpublish confirmed after another quickstart was opened re-reads the one on screen, not the old one' pass.",
+    "'class:malformed-error-response:decoder', ':demo-install', ':demo-remove', ':demo-presence' and ':unpublish' pass: a failed answer whose error, reason, detail, next or problems is an object, a list, a number, true, null, blank text or an object with a non-callable toString, or whose body is null, a list, a number, text, not JSON, cut short or unreadable, still prints one sentence (the HTTP status when no text field is usable, never `[object Object]`), with one request and no retry, the control enabled again and what was on screen kept; a 403 whose body is `null`, not JSON or unreadable is not read as the guard's bodiless 403.",
+    "'class:malformed-error-response:delete-version' and ':dropped-read' pass: a version removal, a demo listing, a Design inspiration sheet read and a quickstart list read whose fetch rejects with an object whose toString is not callable, or with an Error whose message is not text, still print one sentence (never an exception inside the failure branch), and the remove control is enabled again.",
+    "'class:stale-confirmation-context:demo-install' and ':demo-remove' pass: a row read again under another address or label while its button was asking withdraws the question; the next press is a first press that names the new address, and only the press after it sends anything."
+  ],
+  "selectors": {
+    "versionTile": "[data-version]",
+    "versionRemoveArmed": "[data-version] > button[data-armed]",
+    "versionRemoveFailed": "[data-remove-failed]",
+    "versionDoor": "DELETE /api/tracy-design-inspiration/copy/:id/pages/:chip/versions/:vid -> {ok:true}",
+    "demoInstallDoor": "POST /api/ops/demos/install -> {jobId}",
+    "demoRemoveDoor": "DELETE /api/ops/demos?tag= -> {jobId}",
+    "unpublishDoor": "DELETE /api/ops/quickstart/inspiration?tag= -> {ok:true}",
+    "tests": "packages/design/tracy-design-inspiration/test/destructive-confirm.test.mjs, packages/web/tracy-harness/test/destructive-confirm.test.mjs"
+  },
+  "evidence": "Issue #800 (F-S5-007, F-S8-005, F-S8-006): the version-remove X was `hidden … group-hover:grid`, sent its DELETE on one press and returned silently on failure; Redeploy, Update and Move started a teardown on one press; Delete set and Unpublish sent their DELETE on one press.",
+  "fence": "The two-press arm of each control (keyed to what it was asked about, withdrawn on blur), the in-flight lock, and the rule that only the door's own confirmation ({ok:true}, or a string jobId) counts as done. Mounted with react-dom on linkedom with a fetch fixture: no lane, no tracy-web, no host, no GitHub; no real keyboard, touch or CSS is measured. The question-set Delete control went with the /ops question-set editor, removed 10/10/2026.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=30000",
+      "--test-concurrency=1",
+      "packages/design/tracy-design-inspiration/test/destructive-confirm.test.mjs",
+      "packages/web/tracy-harness/test/destructive-confirm.test.mjs"
+    ]
+  }
+}

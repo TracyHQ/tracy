@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-paper: #ffffff;
+  --color-ink: #151515;
+  --color-graphite: #424242;
+  --color-steel: #706f6f;
+  --color-rule-gray: #dcdcdc;
+  --color-edge-gray: #cbcac8;
+  --color-ice-panel: #f0f8f9;
+  --color-forest-ledger: #0c221d;
+  --color-plum-ledger: #543b4e;
+  --color-network-green: #29735c;
+  --color-mint-subscription: #bae0cf;
+  --color-ledger-brown: #7b5953;
+
+  /* Typography — Font Families */
+  --font-mt-neue-display: 'mt-neue-display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mt-neue-text: 'mt-neue-text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mt-sans: 'mt-sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mt-mono: 'mt-mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

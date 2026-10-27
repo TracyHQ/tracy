@@ -1,0 +1,286 @@
+{
+  "dos": [
+    "Use #eeebea as the page canvas — never default to #ffffff for full-page backgrounds",
+    "Use Inter 300-400 for all headlines; reserve 500-600 for UI labels and buttons only",
+    "Set border-radius to 16px for all cards, nav bars, and image containers",
+    "Use Signal Red (#d04841) on at most one element per row — it should feel like punctuation, not decoration",
+    "Apply the signature shadow rgba(24,23,23,0.02) 0px 4px 8px 0px for all card elevation",
+    "Use MDIO (or Space Grotesk 500 + 0.05em tracking) for all small uppercase eyebrow labels and category tags",
+    "Maintain 80-96px vertical section gaps to keep the system breathable"
+  ],
+  "donts": [
+    "Don't use pure #000 for text or buttons — always #181717",
+    "Don't use bright blue, green, or purple for CTAs — those colors are reserved for product UI screenshots only",
+    "Don't apply bold (700+) weights to display headlines — the 300 weight is the signature",
+    "Don't use sharp 0px or 4px radii on cards — minimum is 8px for buttons, 16px for everything else",
+    "Don't add heavy drop shadows (10%+ opacity) — the system relies on near-invisible elevation",
+    "Don't alternate dark/light section bands — stay on the Bone canvas with white cards lifted from it",
+    "Don't use more than one accent color per page — Signal Red is the only chromatic voice"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#181717",
+      "name": "Ink",
+      "role": "Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eeebea",
+      "name": "Bone",
+      "role": "Page canvas and section backgrounds — the warm off-white ground that sets the whole system apart from stark-white SaaS",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Card surfaces, product UI panels, testimonial tiles, integration logos — lifted off the Bone canvas to create depth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2e2d2d",
+      "name": "Graphite",
+      "role": "Secondary borders, body text dividers, nav rules — one step lighter than Ink for layered information",
+      "group": "neutral"
+    },
+    {
+      "hex": "#575555",
+      "name": "Charcoal",
+      "role": "Muted body text, helper labels, subtle borders — the middle gray for de-emphasized content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#706e6d",
+      "name": "Ash",
+      "role": "Tertiary borders, caption text — the quietest gray, used where structure must recede",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f5f4",
+      "name": "Linen",
+      "role": "Elevated surface tint, nav background variant — sits between Bone and Paper for subtle layering",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d5d3d2",
+      "name": "Mist",
+      "role": "Shadow color base, very light dividers — the tonal anchor for the 2% opacity shadow system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d04841",
+      "name": "Signal Red",
+      "role": "Brand accent for highlighted feature cards, active nav indicators, and emphasis strokes — used in 5% of the interface to make the other 95% feel intentional",
+      "group": "brand"
+    },
+    {
+      "hex": "#5a82de",
+      "name": "Network Blue",
+      "role": "Decorative product-screenshot gradient — warm red against matte black creates urgency without aggression; blue is reserved for inside-the-product imagery, never for UI controls",
+      "group": "accent",
+      "gradient": "linear-gradient(in oklab, #5a82de 0px, #324994 100%)"
+    }
+  ],
+  "layout": "Max-width 1200px centered with generous side padding. The hero is centered text-only over the Bone canvas with no image, followed by a 5-column horizontal feature row where the first cell is a red-filled card and the remaining four are text-only. Product showcases are full-width white panels with 32px+ border-radius, bleeding close to the viewport edges. Sections are separated by 80-96px vertical gaps on the same Bone canvas — no dark/light alternation. The stats row is a 3-column centered grid, testimonials a 3-column card row with edge cards peeking, and integrations an 8-column dense logo grid. Navigation is a single top bar, no sidebar.",
+  "imagery": "Imagery is product-led and tightly cropped: large white panels showing the Tailscale desktop app with a red header bar, inbox, and status panel. Integration logos appear in a dense 8-column grid, each in its native brand color, framed by white tiles. Photography is absent — the system communicates through UI screenshots, partner logos, and developer avatars rather than lifestyle or abstract imagery. Illustrations are not used.",
+  "similar": [
+    {
+      "why": "Same light-mode discipline with a single accent color, generous spacing, and Inter-based typography at controlled weights — though Linear runs cooler and more purple, Tailscale runs warmer and more red",
+      "business": "Linear"
+    },
+    {
+      "why": "Same near-black (#000/#111) text system, black-filled CTAs, and a single accent color used sparingly — Vercel uses orange/blue, Tailscale uses red, but the restraint discipline is identical",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same infrastructure-devtools audience and same approach of using a warm canvas + single brand accent + Inter for body — Cloudflare leans more orange, Tailscale leans more red, but the 'paper-grounded' canvas strategy is shared",
+      "business": "Cloudflare"
+    },
+    {
+      "why": "Same cream/off-white canvas discipline and generous 16px radii on cards — both reject the stark-white SaaS default in favor of a warmer, more document-like ground",
+      "business": "Plausible Analytics"
+    },
+    {
+      "why": "Same developer-tool audience with warm off-white canvas, Inter typography, and 16px+ card radii — the 'engineer's notebook' visual metaphor is nearly identical",
+      "business": "Fly.io"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "16px",
+      "pill": "9999px",
+      "cards": "16px",
+      "images": "16px",
+      "buttons": "8px",
+      "hero-cards": "32px"
+    },
+    "elementGap": "12-16px",
+    "sectionGap": "80-96px",
+    "cardPadding": "24-32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#eeebea",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background and section bands — the warm off-white ground"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Surface",
+      "level": 1,
+      "purpose": "Cards, product UI panels, testimonial tiles — lifted off canvas"
+    },
+    {
+      "hex": "#f7f5f4",
+      "name": "Elevated",
+      "level": 2,
+      "purpose": "Nav background variant and subtle elevation tint"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(24, 23, 23, 0.02) 0px 4px 8px 0px",
+      "element": "Cards, nav, buttons, product showcases"
+    },
+    {
+      "style": "rgba(24, 23, 23, 0.16) 0px 4px 16px 0px",
+      "element": "Hover state on nav and primary buttons"
+    }
+  ],
+  "northStar": "Engineer's whiteboard on cream paper. A warm off-white canvas with a single red marker stroke, soft 16px corners, and Inter at whisper weights — the visual language of infrastructure documentation that respects the reader.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.6
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.64
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1.2,
+      "letterSpacing": -1.92
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Navigation Bar",
+      "role": "Sticky header with logo, centered nav links, and right-aligned login + CTA",
+      "description": "Background #f7f5f4 or transparent over Bone canvas. Logo mark (Tailscale dots) at left in #181717, 12px. Nav links in Inter 500/14px #181717, separated by subtle 1px Graphite dividers. Right side: 'Login' as ghost text link and 'Get started' as Ink-filled button. Height ~64px, full-width with inner max-width 1200px padding. Bottom border 1px #eeebea."
+    },
+    {
+      "name": "Primary CTA Button (Filled)",
+      "role": "The main action button — dark filled with white text",
+      "description": "Background #181717, text #ffffff, Inter 500/14px. Border-radius 8px. Padding 10px 18px. Subtle box-shadow: rgba(24,23,23,0.02) 0px 4px 8px 0px. No hover lift — the button stays flat and grounded."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Secondary action paired with a primary CTA",
+      "description": "Text only, no background, Inter 500/14px #181717 with underline on hover. Padding 10px 12px. Sits beside the filled CTA at equal weight, differentiated only by fill."
+    },
+    {
+      "name": "Hero Section",
+      "role": "First viewport — large centered headline over Bone canvas",
+      "description": "Centered layout, max-width ~900px. Headline Inter 300/64px #181717 letter-spacing -1.92px, line-height 1.2. Subtext Inter 400/16px #575555, max-width 640px, centered. CTA pair (filled + ghost) below at 24px gap. 96px vertical padding top and bottom."
+    },
+    {
+      "name": "Feature Highlight Card (Red)",
+      "role": "First card in a horizontal feature row — full-color accent",
+      "description": "Background #d04841, text #ffffff, border-radius 16px, padding 24px. Small Inter 500/12px uppercase eyebrow at top, Inter 500/20px title, Inter 400/14px description. White outline icon top-left. This is the only place Signal Red fills a surface."
+    },
+    {
+      "name": "Feature Card (Text-Only)",
+      "role": "Secondary items in the feature row — quiet companions to the red card",
+      "description": "No background fill (sits on Bone canvas). Small outlined icon in #181717 at 20px, 8px below the icon a Inter 500/20px title in #181717, 8px below that Inter 400/14px description in #575555. Generous 32px gap between cards in the row."
+    },
+    {
+      "name": "Product Showcase Card",
+      "role": "Large white panel containing a product UI screenshot",
+      "description": "Background #ffffff, border-radius 16px (or 32px for hero-tier showcases), padding 0 (image bleeds to edges), box-shadow rgba(24,23,23,0.02) 0px 4px 8px 0px. Sits inside a Bone canvas section. Product UI inside often shows a red header bar (#d04841) and a blue gradient (#5a82de → #324994) on a secondary panel."
+    },
+    {
+      "name": "Stat Block",
+      "role": "Three-column social proof — company logo + large number",
+      "description": "Centered in each column. Company logo at top (16px tall, original brand color). Below: Inter 300/48px #181717 number (e.g. '1,000+'). No card wrapper, no border — sits directly on Bone canvas with 32px column gap."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Developer quote with avatar, name, handle, and X icon",
+      "description": "Background #ffffff, border-radius 16px, padding 24px. Avatar 40px circle top-left, name in Inter 500/14px #181717 and handle in Inter 400/12px #575555 beside it. X (Twitter) icon top-right in #181717. Quote text Inter 400/14px #181717 below, line-height 1.5. Subtle shadow rgba(24,23,23,0.02) 0px 4px 8px 0px."
+    },
+    {
+      "name": "Integration Logo Tile",
+      "role": "Grid cell showing a third-party product logo",
+      "description": "Background #ffffff, border-radius 16px, padding 24px, centered logo at 32px. No border, just the subtle shadow. Arranged in a 8-column grid with 8px gap. Logos keep their original brand colors — the tiles are the only place non-system colors appear."
+    },
+    {
+      "name": "Footer Link Column",
+      "role": "Site footer with grouped links",
+      "description": "Section heading in Inter 500/12px #181717 with 0.05em tracking (MDIO-style). Links below in Inter 400/14px #575555, 12px row gap. No dividers between groups. Footer sits on Bone canvas."
+    },
+    {
+      "name": "Section Heading (Centered)",
+      "role": "Inter 300 headline introducing each major section",
+      "description": "Inter 300/48px #181717, letter-spacing -0.96px, centered, max-width 700px. Followed by 24px gap, then Inter 400/16px #575555 subtext. 64px top padding from previous section."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary workhorse — body text at 400/16px, UI at 500/14px, and headlines at 300/48-64px. The light-weight headlines are a signature anti-convention choice: most infra brands shout with 700+, Tailscale whispers with 300, creating authority through restraint rather than volume.",
+      "sizes": "12, 14, 16, 20, 32, 48, 64",
+      "family": "Inter",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.2-1.5",
+      "substitute": "Inter (Google Fonts) or IBM Plex Sans",
+      "letterSpacing": "-0.30px at 12px, -0.30px at 14px, -0.30px at 16px, -0.40px at 20px, -0.96px at 48px, -1.92px at 64px"
+    },
+    {
+      "role": "Branded labels and eyebrows — appears on small caps tags, nav items, and category markers with 0.043-0.050em positive tracking. The wide letter-spacing transforms tiny text into technical insignia rather than body copy. This is the system's 'voice' font.",
+      "sizes": "12, 14, 20",
+      "family": "MDIO",
+      "weight": "500",
+      "lineHeight": "1.2-1.5",
+      "substitute": "Space Grotesk 500 with letter-spacing: 0.05em, or DM Sans 500 with letter-spacing: 0.05em",
+      "letterSpacing": "0.0430em, 0.0500em"
+    }
+  ],
+  "description": "Tailscale's visual system is a warm, paper-grounded infrastructure UI that treats network security as approachable rather than intimidating. A cream canvas (#eeebea) replaces the typical stark white SaaS background, and a single Signal Red (#d04841) acts as rare punctuation against a near-black (#181717) text and border system. Typography stays conversational — Inter at light weights (300-400) for headlines rather than the usual bold-shout, and a custom geometric (MDIO) reserved for small technical labels with wide tracking. Components are soft and rounded (16px is the dominant radius for cards, nav, images, and buttons), shadows are barely perceptible (2% black at 4px blur), and the overall feel is a confident engineer's notebook rather than a corporate dashboard.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #181717\n- background: #eeebea (canvas) / #ffffff (cards)\n- border: #2e2d2d\n- accent: #d04841\n- primary action: #d04841 (filled action)\n\n**Example Component Prompts**\n\n1. Create a Primary Action Button: #d04841 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Feature row card (text-only)**: Transparent background on #eeebea canvas. 20px outlined icon in #181717 at top. 8px gap, then Inter 500/20px #181717 title. 8px gap, then Inter 400/14px #575555 description. No border, no shadow. 32px gap to next card.\n\n3. **Feature highlight card (red)**: Background #d04841, text #ffffff, 16px radius, 24px padding. White outline icon (20px) top-left. Inter 500/12px eyebrow with 0.05em tracking, 8px gap, Inter 500/20px title, 8px gap, Inter 400/14px description.\n\n4. **Testimonial card**: Background #ffffff, 16px radius, 24px padding, shadow rgba(24,23,23,0.02) 0px 4px 8px 0px. 40px circular avatar top-left, beside it Inter 500/14px #181717 name and Inter 400/12px #575555 handle. X icon (16px) top-right in #181717. Quote Inter 400/14px #181717 line-height 1.5 below, 16px gap from header.\n\n5. **Product showcase panel**: Background #ffffff, 16px radius, 0px padding (image bleeds), shadow rgba(24,23,23,0.02) 0px 4px 8px 0px. Inside: desktop UI screenshot with red #d04841 header bar, white content area, and a secondary blue panel showing #5a82de → #324994 gradient. Sits on #eeebea canvas section with 80px gap above and below."
+    }
+  ],
+  "elevationPhilosophy": "The system uses whisper-thin shadows at 2% opacity to separate white surfaces from the Bone canvas. Elevation is structural, not decorative — cards lift off the page just enough to read as 'on top' without entering skeuomorphic territory. The slightly darker 16% shadow appears only on interactive hover, signaling 'this element responds to you' without resorting to color shifts."
+}

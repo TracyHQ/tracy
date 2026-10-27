@@ -1,0 +1,23 @@
+{
+  "id": "REG-PR-1704-wo-demo-fill-null-profile",
+  "kind": "fix",
+  "title": "The quickstart fill reads no reviews from a revision frozen without a profile instead of throwing reading googlePlace",
+  "pr": 1704,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "sites/brief-engines",
+  "steps": ["S1: Run the quickstart-first brief suite, which calls quickstartReviews(null)."],
+  "expect": ["S1: the suite passes; quickstartReviews(null) is []."],
+  "selectors": {
+    "function": "quickstartReviews in apps/tracy-web/src/sites/brief-engines/quickstart-reviews.js",
+    "tool": "tests/regression/scripts/REG-PR-1704-wo-demo-fill-null-profile.mjs"
+  },
+  "evidence": "Stranger run 24/10/2026: demo d0d8e6fe SITE_FILL_FAILED, log [brief] charming-apartament.tracy.site: Cannot read properties of null (reading 'googlePlace')",
+  "fence": "Null profile guard of the quickstart fill",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1704-wo-demo-fill-null-profile.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

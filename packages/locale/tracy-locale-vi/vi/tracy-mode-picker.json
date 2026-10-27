@@ -1,0 +1,15 @@
+{
+  "group.mode": "Chế độ",
+  "group.platform": "Nền tảng",
+  "role.designer": "Nhà thiết kế",
+  "role.developer": "Lập trình viên",
+  "role.writer": "Người viết",
+  "role.seo-geo": "SEO/GEO",
+  "noDescription": "Không có mô tả",
+  "seatHint": "Chế độ và nền tảng cho session tiếp theo",
+  "switchRefused": "{name} bị từ chối: {reason}",
+  "lockedHint": "Session này đã có lịch sử. Chế độ và nền tảng chỉ đổi được cho session mới",
+  "platform.adds": "thêm {tools} tool · {skills} skill",
+  "platform.nothingYet": "chưa thêm gì: agent chạy đúng theo chế độ của nó",
+  "platform.siteRuns": "site này chạy {platform}"
+}

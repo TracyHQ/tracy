@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-893-joomla-menu-orphans-and-dead-link-entries",
+  "kind": "fix",
+  "title": "Joomla Apply tidy-up: entries under an entry taken off go with it, and a link entry into a path no entry answers goes",
+  "pr": 893,
+  "area": "tracy-web/brief-engines/joomla-tidy",
+  "cms": ["jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-joomla.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines, and whether these tests are 'ok': 'the pages under a menu heading that is off go with it, in one transaction, whatever the planner retitled them; a home entry never', 'a page under an entry the demo trim took off before Apply goes too, and so does an alias that leads to it', 'a link entry into a path of the site that no entry answers goes; one into a live page, another site or a file stays', 'a link entry is left when the site will not say which prefixes its languages route on, and that is said'."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 59); the four named tests are 'ok' (since TCH #1013, PR #1040, the judge takes no entry off: a heading is off because the customer unticked it or it was off already)."
+  ],
+  "selectors": {
+    "tidy": "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js (orphanedMenuItems, deadLinkMenuItems, strandedMenuItems)",
+    "engine": "apps/tracy-web/src/sites/brief-engines/joomla.js (tidy-up: hiding = unpicked ∪ dead links ∪ stranded ∪ orphaned; takeLinksOff)"
+  },
+  "evidence": "05/10/2026 local stand, final check: a two-language Tracy Business j6 site made with Apply showed 6 dead links in its main menu (/en and /vi marketing-kit/slide, marketing-kit/styleguide, this-page-does-not-exist): the judge took off the heading 606 but its children 613/615 (retitled 'Home', 'Bread' by the planner) stayed published under it, and url entry 617 (retitled 'About') led to a path no entry answers. The previous check's 0 dead links depended on the model hiding them (ledger L30).",
+  "fence": "Only entries under one taken off, and url entries into in-site paths that cannot route, are added to what the tidy-up takes off; never a home entry or a system menu, never a language the site does not serve.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-joomla.test.mjs"],
+    "tests": [
+      "the pages under a menu heading that is off go with it, in one transaction, whatever the planner retitled them; a home entry never",
+      "a page under an entry the demo trim took off before Apply goes too, and so does an alias that leads to it",
+      "a link entry into a path of the site that no entry answers goes; one into a live page, another site or a file stays",
+      "a link entry is left when the site will not say which prefixes its languages route on, and that is said"
+    ]
+  }
+}

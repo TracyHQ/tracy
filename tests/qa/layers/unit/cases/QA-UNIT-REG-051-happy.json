@@ -1,0 +1,51 @@
+{
+  "id": "QA-UNIT-REG-051-happy",
+  "itemIds": ["regression:REG-051"],
+  "requirement": "One control, one action: Revoke / Cancel invitation / Decline request are stored and recorded as themselves, and a role change leaves a record (the question-generation Retry half was removed with the generator, 10/10/2026)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-051-one-control-one-action.json",
+    "ref": "PR #847 (fix); fix evidence: Issue #792 (QA audit, re-verified on develop f9c734938): three labels over one bodyless DELETE that wrote revoked_at for all of them; no opsFor.record in the DELETE and PATCH handlers; Retry called press(view.job.mode) with the set and feedback on screen. Replayed on base cb76d6c6d with these same test files: the cases named above fail there. Review follow-up: a body that was sent with a key beside kind was still accepted, and the fields of a press were judged after being cut or defaulted; replayed on the tree as it was before that fix, those cases fail there by assertion. Compatibility (v1 is not broken): a DELETE with no body and a press naming only a mode are still answered with the meaning they had on the base, and are stored as the act that ran; a client loaded before this change can therefore still send an inferred removal, which is closed for every client built from this change on.",
+    "invariant": "The command exits 0 with '# fail 0' and '# skipped 0'. seat-actions: 'DELETE {kind: cancel_invite} stores cancel_invite, answers it, and closes the seat' and its revoke and decline_request siblings pass: the row carries removal_kind = the kind sent, revoked_at is set, declined_at stays null, the answer is {revoked: true, kind}. seat-actions: 'an explicit kind that does not match the row is refused and nothing is written' passes: 409 {code: 'SEAT_STATE_CHANGED', kind: <the kind the row calls for>}, no UPDATE, no ops_signal row. seat-actions: 'a successful revoke records team.revoke with the actor, the site and the target' and its two siblings pass, and 'a role change records team.role_change with the role it left and the role it took' passes; 'an unchanged role, an invalid role and a refused change record nothing' passes. seat-actions: 'DELETE with no body (an older tab) runs the act the row calls for, revoke, and stores it as that' and its siblings (no body and content-length: 0; each for revoke, cancel_invite and decline_request) pass: 200 {revoked: true, kind: <the kind the row calls for>}, removal_kind is that kind, one ops_signal row team.<kind>. 'DELETE with empty object is refused where the row calls for revoke: nothing removed, recorded or synced' and its siblings (a whitespace body, a single space, a newline, a declared length with nothing in it, a chunked body with nothing in it, a kind beside another key, a kind under another name; each for the three kinds) pass: a body that was sent, even one holding nothing, is not the bodyless call: 400 {code: 'INVALID_REQUEST'}, no UPDATE, no ops_signal row, no seat_sync row. seat-actions: 'a tab that names its act is told when the row has moved on; a bodyless one keeps its v1 meaning' passes: an invitation accepted while the dialog was open answers 409 {code: 'SEAT_STATE_CHANGED', kind: 'revoke'} to {kind: 'cancel_invite'} and keeps revoked_at null; a body without a known kind answers 400; the bodyless call of an older tab answers 200 and is stored and recorded as revoke (known, accepted limit of v1 compatibility). team-actions: 'action.cancelInvite: the confirm step names that act and the write sends {kind: cancel_invite}' and its two siblings pass: one DELETE whose JSON body is exactly {kind}.",
+    "productSources": [
+      "apps/tracy-web/src/config.js:1141",
+      "apps/tracy-web/src/lib/i18n/index.js:31",
+      "apps/tracy-web/src/lib/ops-signal.js:242",
+      "apps/tracy-web/src/lib/session.js:101",
+      "apps/tracy-web/src/lib/team-invite.js:23",
+      "apps/tracy-web/src/seats/pages.js:104",
+      "apps/tracy-web/src/seats/route.js:470",
+      "apps/tracy-web/src/seats/store.js:21",
+      "packages/core/tracy-core/src/team/roster.ts:239"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-051.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-051"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-051",
+    "pr": 847,
+    "kind": "fix",
+    "area": "team/seat-actions",
+    "file": "tests/regression/cases/REG-051-one-control-one-action.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-051.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

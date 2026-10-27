@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1427-agent-demo-chat-navigation",
+  "kind": "fix",
+  "title": "Ask Tracy prepares the new session and sends a native user brief before provision",
+  "pr": 1427,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run deterministic demo chat navigation tests."],
+  "expect": [
+    "An accepted action waits for its real server-created chat, then opens once.",
+    "Leaving the screen or cancelling an in-flight read prevents navigation.",
+    "Another action, old workflow or unsafe destination never opens.",
+    "Retry preserves the conversation and bulk opens one accepted demo.",
+    "New client-send actions prepare an exact session before installing CMS and submit through the native composer.",
+    "Reload, uncertainty and two tabs reuse the winning native request ID; no backend prompt is sent.",
+    "The queued demo can reopen its existing chat without creating another build."
+  ],
+  "selectors": {
+    "file": "vendor/tracy/tracy-website-opportunities/src/client/demo-chat.ts"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/site/tracy-website-opportunities/test/client-demo-chat.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-demo-send.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-opportunity-row.test.mjs"
+    ],
+    "needs": []
+  }
+}

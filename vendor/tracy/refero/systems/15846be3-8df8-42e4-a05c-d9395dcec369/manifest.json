@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "15846be3-8df8-42e4-a05c-d9395dcec369",
+  "status": "complete",
+  "name": "Arva",
+  "url": "https://styles.refero.design/style/15846be3-8df8-42e4-a05c-d9395dcec369",
+  "sourceWebsite": "https://arva.com",
+  "extractedAt": "2026-06-03T17:31:24.019Z",
+  "capturedAt": "2026-10-08T05:08:37.662569+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Pastoral editorial magazine spread on a cream field",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/aac1dd89-8207-46ea-925e-90db5c205488.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/0d146da1-b05a-4b66-9145-7d81f455a0c7.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/7e961931-df84-4929-94d0-c75bd9a55e5c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c53574eb-576c-46fd-9831-d3982e91ccce.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/49974cde-c407-4c34-906a-b78fe5b36120.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5b9a191d5f201a57095fb83b01a97895de374d89d56746bd46a2130dfe239e2d",
+      "bytes": 24262
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "282f01f0ffa2e7553c472075508860919154d89a7bda1f28015fe455b5776e5a",
+      "bytes": 273687
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3dc59573adf76ec5dd8160e7e8e47a70aec7787ddbe756ad04b766c24890c89e",
+      "bytes": 19416
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c02a8505f84e6c1584635b9aa07fc5def0f3368a36df066c6a956c16777be812",
+      "bytes": 20751
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "9c5618a9e2862d19a6de898224b288260be8f2c8817cb07f755811929169f599",
+      "bytes": 12842
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "441947eeebbfa7bf37421473baf33b5d26f85864b075b934a0de34fc4f4ed419",
+      "bytes": 4088
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "5bb2f1eafe067c816c40ee50e9f62c13464d34db491c2486d42a62d2040c6588",
+      "bytes": 1148
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4c7fa53a1a2af45dc18e3c308efc462da5f6581089342fc73a0dae5265926ef6",
+      "bytes": 1165
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4572eb7ee78b36de03e14c3baf33843c0a4925fbc17ad81a15ba7a6460e047c8",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1d38409a1dcff4451658b3e8dff855268abdd8544f57dc7d68a4ca22b1eab9cf",
+      "bytes": 48494
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c0109425aae61a26ba7da88cda3de67c527e92c071660a1e92606f5d1cc68c43",
+      "bytes": 25551
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "90d1f081a0395a47bec50a9cbfcf721cb44f53dab994205be1b328557ded5120",
+      "bytes": 67327
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "90a5e03a49ade6d78f6734e0dfa682d5052ce2a540540d9d6fe960ddb057ee03",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4a89c463b1bc1d9bdf6f928f23eceaff3a37fcb385c57157da6753da1daaef41",
+      "bytes": 2476
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "522279659fbae53a6c1053ec984f8f3cc9804dd47c607e92b78f18fee5f0035e",
+      "bytes": 3181
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "15846be3-8df8-42e4-a05c-d9395dcec369",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "4a248569-2b5a-4416-bb2a-c78890218b9f",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+    "515da65c-f9e3-4296-a05d-0d921f5cdab1",
+    "51734338-9046-47eb-a595-77ffa37b4725",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "ca93daf1-daf3-41b7-8248-8f63082761e8",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d2e327b2-1181-4203-82a6-2dc15a72078a",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f3c955e4-0fea-462d-b05f-868552e9628c"
+  ]
+}

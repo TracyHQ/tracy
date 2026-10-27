@@ -1,0 +1,41 @@
+---
+title: "Tracy Cowork — AI でウェブサイトを作成・編集"
+description: "Tracy Cowork は、チャットで頼むだけで WordPress・Joomla・EmDash のウェブサイトを作成・編集し、すべての変更を表示して元に戻せるようにします。"
+template: splash
+hero:
+  title: "Tracy Cowork — AI でウェブサイトを作成・編集"
+  tagline: "チャットで頼むだけで、Tracy が実際の WordPress・Joomla・EmDash サイトを変更します。すべての変更が表示されるので、確認して元に戻せます。"
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: "はじめに"
+      link: /ja/get-started/
+      icon: right-arrow
+    - text: "アプリをダウンロード"
+      link: /ja/desktop/download/
+      icon: download
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+<CardGrid>
+  <Card title="はじめに" icon="rocket">
+    サインインして最初のサイトを追加し、Tracy に変更を頼みましょう。 [はじめに](/ja/get-started/)
+  </Card>
+  <Card title="デスクトップアプリ" icon="laptop">
+    macOS・Windows・Linux 向けの Tracy。自動で更新されます。 [アプリをダウンロード](/ja/desktop/download/)
+  </Card>
+  <Card title="MCP Server" icon="puzzle">
+    ChatGPT、Claude、Claude Code、Cursor、Codex を Tracy のサイトに接続できます。 [MCP を設定](/ja/mcp/getting-started/)
+  </Card>
+  <Card title="サイトでの作業" icon="pencil">
+    チャット、ページへのコメント、Site changes、元に戻す操作、Backup。 [Tracy の使い方](/ja/using-tracy/)
+  </Card>
+  <Card title="変更履歴" icon="document">
+    何がいつ変わったかを日付つきで記録しています。[Tracy Cowork](/ja/changelog/desktop/)（Web とアプリ）と [API](/ja/changelog/) の変更履歴です。
+  </Card>
+  <Card title="開発者とエージェント向け" icon="seti:json">
+    Tracy API：ご自身のシートに紐づいたキーで、Tracy がホストするサイトを HTTPS 経由で読み取り、変更します。 [API の概要](/ja/api/)
+  </Card>
+</CardGrid>

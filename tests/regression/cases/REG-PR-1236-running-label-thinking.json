@@ -1,0 +1,23 @@
+{
+  "id": "REG-PR-1236-running-label-thinking",
+  "kind": "fix",
+  "title": "The running status under the chat says Thinking, never the DeepSeek 'Deep diving' pun or name, in every interface language",
+  "pr": 1236,
+  "area": "chat/running-status",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test, with the submodule checked out: node tests/regression/scripts/REG-PR-1236-running-label-thinking.mjs"
+  ],
+  "expect": [
+    "Every line is ok: the fork's English chat.deepDiving / chat.deepDivingFor are 'Thinking' / 'Thinking for {duration} ···' and zh is 思考中; no source or built bundle of the vi, de, fr, it, nl, zh-TW/HK/MO and es packs says Deep diving, 深度求索, lặn sâu, đào sâu, Tiefensuche, approfondi, Diep aan het graven or en profundidad for either key (pre-fix: 'Deep diving for 6s ···' on cowork.tracy.site, 12/10/2026).",
+    "The fork's package.json version is a plain 0.2.0-rc.N-tracy.M that passes vendor/tracy/dsh-passwords/src/tracy/dsh-runtime.ts TRACY_DSH_RE (0.2.0-rc.2-tracy.43 passes; the first cut 0.2.0-rc.2-tracy.40.1 failed, and on prod 12/10/2026 the dsh container refused to start with 'Unsupported or invalid DSH version 0.2.0-rc.2-tracy.40.1' and the deploy rolled back; build metadata such as +thinking is refused by the dsh build itself)."
+  ],
+  "selectors": {},
+  "evidence": "Screenshot 12/10/2026 14:32 on cowork.tracy.site: the running status read 'Deep diving for 6s ···'.",
+  "fence": "vendor/tracy/deepseek-harness/packages/client/ui-chat/src/client/locale.ts and the three language packs' chat dictionaries.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1236-running-label-thinking.mjs"]
+  }
+}

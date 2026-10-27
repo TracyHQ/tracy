@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-vellum: #f6f6f4;
+  --color-paper: #ffffff;
+  --color-ink: #000000;
+  --color-carbon: #2c2c26;
+  --color-ash: #d0d0c8;
+  --color-olive-char: #57584b;
+  --color-lichen: #6d6e5e;
+  --color-sage: #979886;
+  --color-moss: #aaab9c;
+  --color-bone: #e8e7d9;
+  --color-highlighter-yellow: #fff347;
+  --color-khaki-olive: #aaa674;
+
+  /* Typography — Font Families */
+  --font-serif-custom-resembles-a-high-contrast-modern-editorial-serif-like-reckless-neue-gt-sectra-or-pp-editorial-new: 'Serif (custom — resembles a high-contrast modern editorial serif like Reckless Neue, GT Sectra, or PP Editorial New)', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono-custom-clean-geometric-monospace: 'Mono (custom — clean geometric monospace)', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

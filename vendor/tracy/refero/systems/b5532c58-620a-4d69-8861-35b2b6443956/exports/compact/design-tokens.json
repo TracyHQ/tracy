@@ -1,0 +1,74 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#f5f4f2",
+      "$type": "color",
+      "$description": "Bone — Primary canvas, page background, section surfaces — warm off-white replaces pure white to give every page a printed, slightly weathered feel"
+    },
+    "ink": {
+      "$value": "#151515",
+      "$type": "color",
+      "$description": "Ink — High-contrast neutral action fill for primary buttons on light surfaces."
+    },
+    "ash": {
+      "$value": "#ebe9e6",
+      "$type": "color",
+      "$description": "Ash — Secondary surface, input fills, subtle dividers, disabled states — one step darker than Bone, used to separate zones without introducing color"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, elevated panels, reverse text on dark images — true white reserved for surface lift against the warm canvas"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Link borders, input borders, maximum-contrast accents where Ink is too soft"
+    },
+    "smoke": {
+      "$value": "#8a8a8a",
+      "$type": "color",
+      "$description": "Smoke — Muted helper text, input border default state, low-emphasis dividers"
+    },
+    "fog": {
+      "$value": "#929292",
+      "$type": "color",
+      "$description": "Fog — Mid-tone panel surface for subdued dark UI layers and secondary containers. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "twk-lausanne": {
+      "$value": "TWK Lausanne",
+      "$type": "fontFamily",
+      "$description": "Body, UI, captions, links, buttons, table cells, lists — the workhorse at 13–18px weight 300–400; weight 700 used sparingly for section heads; tracking near 0 at body sizes opens to 0.06–0.075em at 11–13px for micro-labels"
+    },
+    "molitor": {
+      "$value": "Molitor",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines only — oversized (75–250px) with line-height 0.85, negative tracking at -0.02em at display sizes, positive tracking 0.021–0.037em at smaller sizes; the signature voice, used for 1–3 word emotional statements"
+    },
+    "garaje": {
+      "$value": "Garaje",
+      "$type": "fontFamily",
+      "$description": "All-caps category labels, tags, and small display micro-copy — wide tracking 0.044–0.053em gives a stamped, industrial quality to product names, status labels, and nav items"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "GTStandard-M — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://escape.cafe",
+      "siteName": "Escape Coffee Company",
+      "extractedAt": "2026-06-03T21:24:15.747Z",
+      "variant": "compact"
+    }
+  }
+}

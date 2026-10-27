@@ -1,0 +1,59 @@
+{
+  "id": "QA-UNIT-REG-PR-1157-dependency-fixed-releases-happy",
+  "itemIds": ["regression:REG-PR-1157-dependency-fixed-releases"],
+  "requirement": "No lockfile resolves a dependency to a release inside a published vulnerable range that has a fix",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1157-dependency-fixed-releases.json",
+    "ref": "PR #1157 (fix); fix evidence: Measured 11/10/2026 on origin/develop cea616de1: the root lockfile carried 50 advisories and apps/tracy-web's lockfile 14; after this change 11 and 1, the remainder having no fixed release or needing a major upgrade. PR #1160 (11/10/2026) extended the case to the two vendor trees the dsh image installs from their own lockfiles: dsh-better-sidebar 5 advisory packages -> 1 (katex, major), dsh-passwords 13 -> 0.",
+    "invariant": "All four lines report ok: no lockfile resolves undici, qs, compression, proxy-addr, sharp, dompurify, the MCP SDKs, brace-expansion, fast-uri, fflate, ip-address, http-cache-semantics, source-map-js, pnpm or @ai-sdk/provider-utils to a release inside its fixed vulnerable range (pre-fix: each reports not ok and lists the package at its vulnerable release, e.g. undici@7.29.0, sharp@0.35.4, proxy-addr@2.0.7 in the root lockfile; dompurify@3.4.14 in dsh-better-sidebar; @modelcontextprotocol/client@2.0.0 in dsh-passwords).",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1157-dependency-fixed-releases.mjs:53 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1157-dependency-fixed-releases.mjs:58 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "pnpm-lock.yaml resolves no release",
+    "apps/tracy-web/pnpm-lock.yaml resolves no release",
+    "vendor/tracy/dsh-better-sidebar/pnpm-lock.yaml resolves no release",
+    "vendor/tracy/dsh-passwords/npm-shrinkwrap.json resolves no release"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1157-dependency-fixed-releases"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1157-dependency-fixed-releases",
+    "pr": 1157,
+    "kind": "fix",
+    "area": "deps",
+    "file": "tests/regression/cases/REG-PR-1157-dependency-fixed-releases.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/regression/scripts/REG-PR-1157-dependency-fixed-releases.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "pnpm-lock.yaml resolves no release",
+    "apps/tracy-web/pnpm-lock.yaml resolves no release",
+    "vendor/tracy/dsh-better-sidebar/pnpm-lock.yaml resolves no release",
+    "vendor/tracy/dsh-passwords/npm-shrinkwrap.json resolves no release"
+  ],
+  "timeoutS": 600
+}

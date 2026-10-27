@@ -1,0 +1,72 @@
+{
+  "id": "QA-UNIT-REG-PR-1166-onboard-connect-now-done-happy",
+  "itemIds": ["regression:REG-PR-1166-onboard-connect-now-done"],
+  "requirement": "Desktop first-run: Connect now on the AI-account step turns the step Done in place (browser and device sign-ins)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1166-onboard-connect-now-done.json",
+    "ref": "PR #1166 (feat); fix evidence: none recorded",
+    "invariant": "stepsDone: the AI step is done exactly when an account is connected. Connect now: the caught callback connects and the step turns Done without closing the screen; a device sign-in shows the code, polls, then answers the status. The connect panel shows idle (Connect now), pending (browser/device) and connected states; no connected account leaves the step not done.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-model-plan/test/connect.test.mjs:33 require() with a computed specifier",
+      "packages/ui/tracy-onboard/test/flow.test.mjs:31 require() with a computed specifier",
+      "packages/ui/tracy-onboard/test/mount.test.mjs:89 require() with a computed specifier",
+      "packages/ui/tracy-onboard/test/steps-render.test.mjs:71 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "stepsDone: signed in always",
+    "Connect now: the vendor page opens through the app",
+    "no connected account: the AI step is not done",
+    "the Done / Not done chip and the checklist follow each step",
+    "connect panel A idle",
+    "connect panel B pending (device)",
+    "connect panel C connected",
+    "a device sign-in shows the code, polls until confirmed"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1166-onboard-connect-now-done"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-onboard", "tracy-onboard"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1166-onboard-connect-now-done",
+    "pr": 1166,
+    "kind": "feat",
+    "area": "desktop/onboard",
+    "file": "tests/regression/cases/REG-PR-1166-onboard-connect-now-done.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-onboard/test/flow.test.mjs",
+    "packages/ui/tracy-onboard/test/mount.test.mjs",
+    "packages/ui/tracy-onboard/test/steps-render.test.mjs",
+    "packages/ui/tracy-model-plan/test/connect.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "stepsDone: signed in always",
+    "Connect now: the vendor page opens through the app",
+    "no connected account: the AI step is not done",
+    "the Done / Not done chip and the checklist follow each step",
+    "connect panel A idle",
+    "connect panel B pending (device)",
+    "connect panel C connected",
+    "a device sign-in shows the code, polls until confirmed"
+  ],
+  "timeoutS": 180
+}

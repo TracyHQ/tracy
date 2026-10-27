@@ -1,0 +1,426 @@
+{
+  "dos": [
+    "Use #059669 as the single filled CTA color for the page's primary action verb; reserve Onyx #18181b for the secondary 'neutral' action and Violet #9333ea for enterprise-tier actions",
+    "Set all body, subhead, and display text at negative letter-spacing between -0.4px and -0.66px — the tight tracking is what makes the system read as a data console rather than editorial",
+    "Separate cards and panels with 1px #e5e7eb borders and 0–1px subtle shadows; reserve the rgba(0,0,0,0.1) 10-15px shadow for hover and the floating hero card only",
+    "Differentiate categorical icons by hue (green = monitoring, violet = discovery, blue = API, pink = audience) and back them with 40px circular tinted disks from the Lilac/Mint/Sky Wash palette",
+    "Keep page background at #ffffff and apply tinted washes (#ecfdf5, #eff6ff, #f3e8ff) only as 100px-ish callout blocks behind positive, info, or premium messaging",
+    "Cap content at 1200px max-width with 32px gutter; use 64px vertical gap between major sections and 24px between card grid rows",
+    "Use radius 9999px exclusively for pills, tags, badges, and the logo lockup — never for cards, inputs, or buttons"
+  ],
+  "donts": [
+    "Don't introduce new saturated accent colors beyond the green/violet/blue/pink/teal set — the system has exactly five categorical hues and they are already mapped to specific roles",
+    "Don't use 700-weight for anything other than the display hero (60px), large section titles (36px), and price numerals — heavy weight on body text breaks the console feel",
+    "Don't apply gradients, drop shadows beyond the listed tokens, or blur effects — the design is deliberately flat and border-driven",
+    "Don't use warm grays or off-white backgrounds; the canvas must be pure #ffffff and the only tinted surfaces are the three semantic washes",
+    "Don't set border-radius above 16px on cards or inputs; the 12px max is what gives components their crisp, dashboard-like profile",
+    "Don't place more than one emerald CTA on the same row; if multiple actions are needed, the secondary must be Ghost (white fill, #e5e7eb border) or Black (Onyx fill)",
+    "Don't add decorative imagery, illustrations, or background patterns to the main page sections — the system communicates entirely through type, color-coded icons, and feed-row data"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#059669",
+      "name": "Emerald Signal",
+      "role": "Green action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "brand"
+    },
+    {
+      "hex": "#10b981",
+      "name": "Mint Pulse",
+      "role": "Secondary green for iconography, category tags, and decorative emphasis where a lighter hue is needed",
+      "group": "brand"
+    },
+    {
+      "hex": "#18181b",
+      "name": "Onyx Ink",
+      "role": "Primary text, dark CTA fill, logo wordmark, elevated headings — the near-black that anchors every screen",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure Canvas",
+      "role": "Page background, card surfaces, button text on dark fills, input fields",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f4f4f5",
+      "name": "Fog",
+      "role": "Subtle surface lift for muted cards, table headers, tag backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#71717a",
+      "name": "Slate Whisper",
+      "role": "Muted helper text, link color in body copy, caption-level metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#52525b",
+      "name": "Graphite",
+      "role": "Secondary body text, table cell text, secondary nav items",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a1a1aa",
+      "name": "Zinc Veil",
+      "role": "Tertiary text, disabled controls, icon strokes at low contrast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3f3f46",
+      "name": "Charcoal",
+      "role": "Strong secondary text, button label on light fills, table emphasis",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Ash Border",
+      "role": "Universal hairline border — the dominant structural divider between cards, inputs, table rows, and sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d4d4d8",
+      "name": "Silver Trace",
+      "role": "Secondary border on links and lighter dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9333ea",
+      "name": "Violet Tier",
+      "role": "Advanced-plan CTA fill, Partnership/Discovery category icon, premium-tier accent — second tier-color signal",
+      "group": "accent"
+    },
+    {
+      "hex": "#4f46e5",
+      "name": "Indigo Spark",
+      "role": "Alternate violet for iconography and link emphasis where a cooler purple reads better",
+      "group": "accent"
+    },
+    {
+      "hex": "#ec4899",
+      "name": "Pink Pulse",
+      "role": "Audience Intelligence category icon, decorative accent strokes",
+      "group": "accent"
+    },
+    {
+      "hex": "#2563eb",
+      "name": "Cobalt Signal",
+      "role": "API & Data Platform category icon, link emphasis in body copy",
+      "group": "accent"
+    },
+    {
+      "hex": "#60a5fa",
+      "name": "Sky Veil",
+      "role": "Lighter blue for iconography and secondary accent strokes",
+      "group": "accent"
+    },
+    {
+      "hex": "#14b8a6",
+      "name": "Teal Trace",
+      "role": "Iconography accent, decorative stroke on category visuals",
+      "group": "accent"
+    },
+    {
+      "hex": "#d1fae5",
+      "name": "Sprout Wash",
+      "role": "Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#b91c1c",
+      "name": "Crimson Ink",
+      "role": "Red text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#db2777",
+      "name": "Rose Blush",
+      "role": "Red text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#16a34a",
+      "name": "Forest Verdant",
+      "role": "Green text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#eab308",
+      "name": "Marigold Spark",
+      "role": "Ideas nav marker, small highlight tokens, feature-flag dots",
+      "group": "accent"
+    },
+    {
+      "hex": "#ecfdf5",
+      "name": "Mint Mist",
+      "role": "Primary page canvas and white card surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eff6ff",
+      "name": "Sky Mist",
+      "role": "Soft blue-tint surface wash behind informational callouts",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f3e8ff",
+      "name": "Lilac Mist",
+      "role": "Soft violet-tint surface wash behind premium-tier highlights",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered layout with 32px outer gutters. The hero follows a centered-stacked text pattern: 60px display headline, 18px subhead, side-by-side primary + ghost CTAs, a single trust line, then a horizontal stat row. Below the hero, a full-bleed product surface (the Live Intelligence card) is the first thing the user sees — it overlaps the visual flow between hero and feature blocks. Section rhythm is a single alternating pattern of white-background sections separated by 64px vertical gaps; no dark/light band alternation. Content arrangement is centered-stacks for hero and pricing, 3-column equal grids for use-case and pricing cards, 4-column grid for feature category cards, and 2-column image+text alternation is not used — Podscan stays single-column or symmetric-grid throughout. The database search bar is a centered contained block (roughly 800px wide) sitting on a faint bordered card. Navigation is a single sticky 64px top bar with a right-aligned black pill CTA; there is no sidebar or mega-menu.",
+  "imagery": "The site is imagery-light by design — no hero photograph, no product screenshots, no decorative illustration. The visual centerpieces are the Live Intelligence feed rows (real brand logos cropped to 32px squares inside cards) and a small set of 24–40px category icons rendered as flat filled glyphs inside circular tinted disks. Icon style is flat, single-weight, mono-glyph with no outlines; categorical color (green/violet/blue/pink) does the differentiation work. The only atmospheric element is the floating hero card which sits on a soft 25px-50px black-tinted shadow, giving the product preview a slight 'lifted' feel against the otherwise flat canvas. The aesthetic is best described as a screenshot-first interface — the data IS the hero, not a stylized image of the data.",
+  "similar": [
+    {
+      "why": "Same social/listening intelligence layout pattern — centered hero, live feed preview card, three-tier pricing with a green Most-Popular highlight",
+      "business": "Brand24"
+    },
+    {
+      "why": "Identical emerald-as-CTA color discipline on a white canvas, with 3-column use-case cards and a border-driven flat component system",
+      "business": "Mention"
+    },
+    {
+      "why": "Same Inter Tight headline treatment with tight -0.5px tracking, dark-on-light primary buttons paired with ghost secondaries, and a hairline-border card aesthetic",
+      "business": "Linear"
+    },
+    {
+      "why": "Same data-intelligence console rhythm — white canvas, single green primary action, categorical icon colors, and pricing tiers distinguished by CTA hue",
+      "business": "Pinecone"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "12px",
+      "pills": "9999px",
+      "badges": "9999px",
+      "inputs": "12px",
+      "buttons": "8px",
+      "largeCards": "16px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Pure Canvas",
+      "level": 0,
+      "purpose": "Default page background — the system sits on white, never off-white or warm cream"
+    },
+    {
+      "hex": "#f4f4f5",
+      "name": "Fog Plate",
+      "level": 1,
+      "purpose": "First surface lift for table headers, muted background panels, and tag clusters"
+    },
+    {
+      "hex": "#ecfdf5",
+      "name": "Mint Wash",
+      "level": 2,
+      "purpose": "Tinted success-positive callout surfaces, paired with green text and Sprout Wash badges"
+    },
+    {
+      "hex": "#eff6ff",
+      "name": "Sky Wash",
+      "level": 2,
+      "purpose": "Tinted informational callout surfaces paired with blue accents"
+    },
+    {
+      "hex": "#f3e8ff",
+      "name": "Lilac Wash",
+      "level": 2,
+      "purpose": "Tinted premium-tier callout surfaces paired with violet accents"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
+      "element": "Subtle Card / Inline Element"
+    },
+    {
+      "style": "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -4px rgba(0, 0, 0, 0.1)",
+      "element": "Raised Card / Button Hover"
+    },
+    {
+      "style": "0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px -1px rgba(0, 0, 0, 0.1)",
+      "element": "Nav Bar / Sticky Header"
+    },
+    {
+      "style": "0px 10px 15px -3px rgba(5, 150, 105, 0.2), 0px 4px 6px -4px rgba(5, 150, 105, 0.2)",
+      "element": "Primary Green CTA Hover"
+    },
+    {
+      "style": "0px 25px 50px -12px rgba(0, 0, 0, 0.25)",
+      "element": "Floating Hero Card"
+    }
+  ],
+  "northStar": "Green-lit podcast radar on white paper — a quiet instrument panel where one emerald signal cuts through grayscale data.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.41
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.39
+    },
+    {
+      "role": "heading-lg",
+      "size": 36,
+      "lineHeight": 1.11,
+      "letterSpacing": -0.47
+    },
+    {
+      "role": "display",
+      "size": 60,
+      "lineHeight": 1,
+      "letterSpacing": -0.66
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Green CTA Button",
+      "role": "The dominant action verb — used for trial starts, monitor activations, and search submissions",
+      "description": "Fill #059669, white text at 14px weight 600, padding 10px 20px, radius 8px, no border. On hover, gains a tinted green shadow at rgba(5,150,105,0.2) spread 15px. Sits with white text (not green text) — the dark-on-green contrast carries weight at 14px."
+    },
+    {
+      "name": "Black Onyx CTA Button",
+      "role": "Secondary primary action — used in nav (Try Free) and as the Premium tier CTA",
+      "description": "Fill #18181b, white text at 14px weight 600, padding 10px 20px, radius 8px. Functions as the neutral authority action when green is reserved for a higher-priority verb on the same screen."
+    },
+    {
+      "name": "Violet Tier CTA Button",
+      "role": "Differentiates the Advanced/Enterprise pricing tier from other plans on the same page",
+      "description": "Fill #9333ea, white text at 14px weight 600, padding 10px 20px, radius 8px. The single violet CTA on the pricing page — color itself communicates the tier above the price label."
+    },
+    {
+      "name": "Ghost / Outline Button",
+      "role": "Secondary supporting action that pairs with a filled CTA on the same row",
+      "description": "Fill #ffffff, 1px solid #e5e7eb border, text #18181b at 14px weight 600, padding 10px 20px, radius 8px. Used for 'See how it works' beside the green Start CTA."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Sticky top-level navigation on all pages",
+      "description": "White background, 1px bottom border #e5e7eb, height 64px, horizontal padding 32px. Nav items at 14px weight 500 in #52525b, with the active/hover state at #18181b. Far-right contains a pill-shaped black 'Try Free' button with radius 9999px. Uses the subtle nav shadow 0px 1px 3px rgba(0,0,0,0.1) when sticky."
+    },
+    {
+      "name": "Logo Wordmark Badge",
+      "role": "Brand mark in the top-left of the navigation",
+      "description": "Pill-shaped container with #18181b fill, white 'podscan' wordmark, padding roughly 6px 14px, radius 9999px. The pill is the only dark element in the header besides the CTA button."
+    },
+    {
+      "name": "Live Intelligence Feed Card",
+      "role": "The hero product surface — a real-time list of brand mentions, the system's primary value proof",
+      "description": "White card, radius 12px, 1px #e5e7eb border, padding 16px, with an internal tab row at the top (Live Intelligence active, MCP for AI Agents and REST API inactive). Each row is 56–64px tall, contains a 32px square brand avatar, 2-line mention preview, timestamp at 12px in #71717a, and a sentiment badge aligned right. Tabs use a 2px emerald underline on the active tab."
+    },
+    {
+      "name": "Sentiment Badge",
+      "role": "Color-coded classification chip on every feed row",
+      "description": "Pill shape (radius 9999px), padding 2px 10px, 12px weight 500 text. Variants: Neutral — #f4f4f5 background, #52525b text; Positive — #d1fae5 background, #16a34a text; Negative — light rose background with #b91c1c text. Color is the only state differentiator — no icon inside."
+    },
+    {
+      "name": "Hero Stat Line",
+      "role": "Triple-metric trust strip below the primary CTAs",
+      "description": "Single horizontal row of three items separated by generous horizontal space, each item: a small 16px emerald green icon followed by a bold value (e.g. 4.6M+) in #18181b at 14px weight 600 and a muted descriptor in #52525b at 14px weight 400. No card or background — sits directly on the canvas."
+    },
+    {
+      "name": "Use Case Card",
+      "role": "Top-of-funnel audience-segmentation cards (PR / Brand / Marketer)",
+      "description": "White card, 1px #e5e7eb border, radius 8px, padding 20px. Left-aligned 24px emerald icon in a soft square, bold label at 14px weight 600 in #18181b, one-line descriptor at 13px in #71717a. Cards sit in a 3-column grid with 16px gaps."
+    },
+    {
+      "name": "Database Search Bar",
+      "role": "Full-width search input for the episode database",
+      "description": "Container is a single rounded input with radius 12px, 1px #e5e7eb border, padding 4px 4px 4px 16px. Inner text input is flush, 16px weight 400 in #18181b with placeholder in #a1a1aa. Trailing 36px square black submit button with white 'Search →' at 14px weight 600. Search-icon glyph sits inside the input at 16px in #71717a."
+    },
+    {
+      "name": "Feature Category Card",
+      "role": "Four-card grid linking to the core product surfaces (Brand Monitoring, Partnership Discovery, API & Data, Audience Intelligence)",
+      "description": "White card, 1px #e5e7eb border, radius 12px, padding 32px vertical / 24px horizontal, centered content. Top: 40px circular icon disk tinted in the category color (green, violet, blue, pink) with white glyph. Title at 18px weight 600 in #18181b below."
+    },
+    {
+      "name": "Pricing Tier Card",
+      "role": "Three-tier pricing comparison surface",
+      "description": "White card, radius 12px, 1px #e5e7eb border, padding 32px. Contains a category-tinted square icon (24px) top-left, tier name at 18px weight 600, large price at 36px weight 700 in #18181b with '/mo' at 14px in #71717a, billing-period subtext in #52525b. Feature list uses 14px weight 400 in #18181b with green check marks. The Professional card adds a 2px #059669 border and a 'Most Popular' emerald pill at the top-right edge."
+    },
+    {
+      "name": "Most Popular Pill Badge",
+      "role": "Tier-selection indicator floating on the recommended plan",
+      "description": "Emerald #059669 fill, white text at 12px weight 600, padding 4px 12px, radius 9999px, positioned overlapping the top border of the Professional pricing card."
+    },
+    {
+      "name": "Text Input / Search Field",
+      "role": "Form input baseline for any text entry",
+      "description": "1px #e5e7eb border, radius 12px, padding 12px 16px, 14px weight 400 text in #18181b, placeholder in #a1a1aa. On focus the border shifts to #059669 with a subtle green-tinted ring; no box-shadow otherwise."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and heading family — 60px weight 700 for hero headlines, 36px weight 700 for section titles, 24–30px weight 600 for subheadings. The compressed Inter Tight cuts width at every size, giving headlines a dense, data-screen weight rather than airy editorial feel. The 60px display sits at near-unity line-height (1.00), so it functions as a single stacked statement.",
+      "sizes": "14, 20, 24, 30, 36, 60",
+      "family": "Inter Tight",
+      "weight": "400, 600, 700",
+      "lineHeight": "1.00, 1.11, 1.20, 1.33, 1.40, 1.43",
+      "substitute": "Inter Tight (closest free) → Inter, then system-ui sans-serif",
+      "letterSpacing": "-0.029em at 14px (-0.41px), -0.025em at 20px (-0.5px), -0.020em at 24px (-0.48px), -0.017em at 30px (-0.51px), -0.013em at 36px (-0.47px), -0.011em at 60px (-0.66px)"
+    },
+    {
+      "role": "Workhorse body and UI family — 16px/1.50 weight 400 for paragraphs, 14px/1.43 weight 500 for labels and button text, 12px/1.33 weight 500 for caption and metadata, 18–20px weight 600 for emphasized body. Weight 600 carries nav and in-text emphasis; 700 is reserved for short uppercase-style labels. Negative tracking applied at every size keeps the system reading tight and tabular even in running text.",
+      "sizes": "12, 14, 16, 18, 20, 30",
+      "family": "ui-sans-serif (system stack)",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.20, 1.33, 1.38, 1.40, 1.43, 1.50, 1.56",
+      "substitute": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+      "letterSpacing": "-0.0330em, -0.0290em, -0.0250em, -0.0220em, -0.0200em, -0.0130em"
+    },
+    {
+      "role": "Inline code, transcript snippets, and tabular timestamps in feed cards — rendered at 12px with the same -0.033em tracking as UI text so monospace blocks sit flush with surrounding copy.",
+      "sizes": "12",
+      "family": "ui-monospace (system stack)",
+      "weight": "400",
+      "lineHeight": "1.33",
+      "substitute": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+      "letterSpacing": "-0.0330em"
+    }
+  ],
+  "description": "Podscan.fm reads as a modern data-intelligence console on a crisp white canvas: monochrome foundation, one vivid emerald green as the single navigational north star, and a disciplined palette of categorical colors (violet, pink, blue, teal) used only to differentiate adjacent use-cases or pricing tiers. Typography is a system sans rendered tight — negative tracking at every size creates a compressed, data-display rhythm rather than editorial looseness. Components are flat, lightly bordered, rounded at 8–12px, and rely on hairline #e5e7eb dividers more than shadow for separation. Sentiment badges, colored icon disks, and tier-distinct CTA fills (black, green, violet) carry the color load, so a new page should feel mostly grayscale with green as the verb-action color and secondary hues appearing only as small functional punctuation.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Background: #ffffff\n- Surface lift: #f4f4f5\n- Text primary: #18181b\n- Text muted: #71717a\n- Border: #e5e7eb\n- Accent / brand: #059669 (emerald — also the primary action)\n- Secondary action: #18181b (black onyx)\n- Tier action: #9333ea (violet, Advanced plan only)\n- primary action: #059669 (filled action)\n\n## Example Component Prompts\n\n1. **Primary CTA Button** — Fill #059669, white text at 14px weight 600 ui-sans-serif, padding 10px 20px, radius 8px. On hover, drop shadow 0px 10px 15px -3px rgba(5,150,105,0.2). Used for 'Start free trial', 'Start monitoring free', 'Search'.\n\n2. **Hero Headline Block** — White canvas. Headline 60px Inter Tight weight 700 #18181b, letter-spacing -0.66px, line-height 1.0, centered, max-width 720px. Subhead 18px ui-sans-serif weight 400 #52525b, line-height 1.5, max-width 560px. Below: 14px trust line in #71717a.\n\n3. **Live Intelligence Feed Card** — White surface, radius 12px, 1px #e5e7eb border, padding 16px. Top tab row: 'Live Intelligence' active with 2px #059669 underline, two inactive tabs at 14px weight 500 #52525b. Feed rows: 32px square brand avatar, two-line mention at 14px weight 400 #18181b, 12px timestamp in #71717a, and a sentiment pill badge aligned right (Neutral #f4f4f5/#52525b, Positive #d1fae5/#16a34a, Negative light-rose/#b91c1c). 56px row height with 1px #f4f4f5 internal divider.\n\n4. **Pricing Tier Card** — White card, radius 12px, padding 32px, 1px #e5e7eb border. Top-left: 24px category icon in a 40px tinted square. Tier name 18px weight 600 #18181b. Price 36px weight 700 #18181b with '/mo' 14px #71717a. Feature list 14px #18181b with green #059669 check marks. The recommended plan adds a 2px #059669 border and a 'Most Popular' emerald pill (#059669 fill, white 12px weight 600, radius 9999px) overlapping the top edge.\n\n5. **Feature Category Card (4-up grid)** — White card, 1px #e5e7eb border, radius 12px, padding 32px top/bottom and 24px sides, centered. 40px circular icon disk in category tint (green #d1fae5, violet #f3e8ff, blue #dbeafe, pink #fce7f3) with a 20px white glyph. Title 18px weight 600 #18181b. Grid: 4 equal columns at 1200px max-width with 16px gaps."
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "color": {
+    "parchment-stone": {
+      "$value": "#dfe0db",
+      "$type": "color",
+      "$description": "Parchment Stone — Primary page canvas — the warm stone-gray ground that replaces clinical white throughout the entire site"
+    },
+    "bone-white": {
+      "$value": "#eeefea",
+      "$type": "color",
+      "$description": "Bone White — Elevated card and section surface, one step lighter than the canvas"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Nav background, pill button fills, card surfaces needing maximum contrast against the stone canvas"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Primary text, hairline borders, icon strokes — the dominant ink of the system"
+    },
+    "graphite": {
+      "$value": "#3c3c3b",
+      "$type": "color",
+      "$description": "Graphite — Nav text, secondary text where pure black feels too heavy"
+    },
+    "ash": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Ash — Muted body text, inactive states, dividers and borders at lower hierarchy"
+    },
+    "inkstone": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Inkstone — Deep surface for inverted sections and dark text on light cream backgrounds"
+    },
+    "oxblood": {
+      "$value": "#66040c",
+      "$type": "color",
+      "$description": "Oxblood — Red accent for outlined action borders, linked labels, and lightweight interactive emphasis."
+    },
+    "olive-khaki": {
+      "$value": "#9a9260",
+      "$type": "color",
+      "$description": "Olive Khaki — Secondary accent for borders and subdued interactive elements where oxblood would overpower"
+    },
+    "sage-stone": {
+      "$value": "#c1c19f",
+      "$type": "color",
+      "$description": "Sage Stone — Earthy neutral surface for product swatches and muted backgrounds — sits between canvas and accent"
+    },
+    "buttercream": {
+      "$value": "#f7dc99",
+      "$type": "color",
+      "$description": "Buttercream — Soft champagne surface for the announcement bar and decorative letterform washes"
+    },
+    "pale-buttercream": {
+      "$value": "#f8e9ac",
+      "$type": "color",
+      "$description": "Pale Buttercream — Lightest cream tint for subtle washes and hover states on yellow surfaces"
+    },
+    "cobalt-outline": {
+      "$value": "#007aff",
+      "$type": "color",
+      "$description": "Cobalt Outline — Outlined action border only — the one break in the earth-tone palette, used for ghost pill buttons that need to read as interactive without filling"
+    }
+  },
+  "font": {
+    "signifier": {
+      "$value": "Signifier",
+      "$type": "fontFamily",
+      "$description": "Primary serif for all body text, headlines, nav links, and product names. Used at 14px for UI labels and body, 18px for reading copy and about-section paragraphs, 24px for subheadings and feature titles. The single typeface carrying the entire brand voice — its humanist warmth prevents the editorial layout from feeling cold or corporate"
+    },
+    "pitch": {
+      "$value": "Pitch",
+      "$type": "fontFamily",
+      "$description": "Monospace micro-label for announcement bar text, footer notes, and editorial captions. The wide tracking (0.064em) gives it an almost architectural, typeset feel — it reads as 'this is a label, not a sentence'. Bold weight 700 for emphasis within labels"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback for icon glyphs and button icons only — not used for prose"
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "Secondary body face appearing in isolated content blocks — same humanist register as Signifier but used for distinction in long-form passages"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://advenedesign.com",
+      "siteName": "Advene",
+      "extractedAt": "2026-06-03T19:11:34.012Z",
+      "variant": "compact"
+    }
+  }
+}

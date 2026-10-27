@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+  "status": "complete",
+  "name": "Astro",
+  "url": "https://styles.refero.design/style/e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+  "sourceWebsite": "https://astro.build",
+  "extractedAt": "2026-06-03T20:12:17.798Z",
+  "capturedAt": "2026-10-08T05:18:58.116510+00:00",
+  "theme": "dark",
+  "industry": "devtools",
+  "description": "Deep space mission control with a single purple nebula glow",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/eb8a15e9-6299-49fc-bd0b-95582fcfaea1.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ecb4859d-7d10-40a2-8756-bf9f06df9d5e.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/69eae8a0-918d-44c5-aed4-36ca1b52d615.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a7f50124-13c5-4b3f-acaf-6a4abef39886.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/01af1277-ba6a-4a47-ba98-e689fe734c2c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a50f6cb7863f389a2a6dfb97820bd4b49be404ff6fa1cfa45104cbbf0c5e855e",
+      "bytes": 22521
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6543817a3fae96eb4daaf71e25a56d40eb4e137e0cfd32847bdf7e184a7c5123",
+      "bytes": 100593
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1d228ef05af2d143c84a2866b547ef820250547a1ac3cb66a4d22ec9b101c82e",
+      "bytes": 18505
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "5a299e75a17dc51f8dcaec4ab7cdc1fd16838c71e21c2cdb8ee45240716d82bb",
+      "bytes": 14184
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7ef68118bb5908d33b15ca41311f525ecddfbde539d985ca6ed0355b52064d6e",
+      "bytes": 13763
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f1edc3902d67ef9b4b26025251eba8e514e2b88d8eaa76b7da520f7a8a5dcda6",
+      "bytes": 5549
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ac56d09a3a8d2257812cb4e92787da01340d96ae5e511f82670203451b554ece",
+      "bytes": 1162
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3042a6d2e7f16bb10124caa6a76872fb8dcaac68a65bea5bf7b026396450b77c",
+      "bytes": 1367
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b058b58f5c9f444e7d105c60b0f82d2c68b5137cf9706cf485e61c7ee26d7268",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f3d18742cb1775c8f82502869ea9ce62c05a91ae13299631cdb99a86b52be921",
+      "bytes": 47673
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "038afd50cf67768d125d4d9d911144e2b9ded560ea0729c1a63270a8395f9b50",
+      "bytes": 24910
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f122853da25ece2395955d5a2d95ed49c3a212c2b1520a5d5fb27222f4cbe753",
+      "bytes": 55847
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f44cf202e81ae5f31150b6c8d22caee25cd8533ee1ced1f9cbf977b031f31c5e",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ee3fd41a87323cd278a84265ac6cee5a6d50c2cd67b27bdc953e62da48e6b6eb",
+      "bytes": 2063
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "da6c0eb78dc857a1d99ae7fb2ba3917ec4de8f02995f1647a3cdfa7ba5349bfc",
+      "bytes": 2911
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "225059ac-0450-49d3-b2b7-d0e98b7ae938",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "6f3652cf-583f-411d-a117-3a03f6342917",
+    "78558b01-c101-4b8e-8401-db91269b1150",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "ad98aac8-347c-47da-91c5-9c020febeb92",
+    "bc4fb98b-37ec-480a-b7a9-acd197cbebb9",
+    "c3ceca5c-d329-4559-b947-016172941ba2",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "d5307f56-76de-4d13-9741-f969c42e9aa5",
+    "dd89ce6c-f0aa-4ca8-bd63-19dcd81920a7",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

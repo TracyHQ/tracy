@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "40154dc4-e681-4df9-be01-a6681d5887a6",
+  "status": "complete",
+  "name": "V–A–C",
+  "url": "https://styles.refero.design/style/40154dc4-e681-4df9-be01-a6681d5887a6",
+  "sourceWebsite": "https://v-a-c.org/en",
+  "extractedAt": "2026-06-03T21:42:36.352Z",
+  "capturedAt": "2026-10-08T05:10:45.571359+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "Gallery wall on a drafting table. The starkness of a printed exhibition catalog where every margin, weight, and registration mark is deliberate.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/9b92cd4d-c7b9-4134-aafe-eacee90f7e92.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "23818fcac987d545b90be8ef199b503cd76030a2830fd258f2ed388e3d23869e",
+      "bytes": 16894
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "e0f2ce6a06a82c013125100093da4a40dac7db31cf8ee86e57f008011bf20a8d",
+      "bytes": 195412
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ba2921ab6132352207b24fc65fcb6f16b7054a31efbaf97b48771652a1b463d5",
+      "bytes": 14455
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0a3a25569b4301e71a394df2ea947a13732543902abde56c21af6a229e55893c",
+      "bytes": 5354
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "bce1a2b020f87544b3312f3200e26c0b8136bd0d6ef5270aff2ae391bd4bbe07",
+      "bytes": 11384
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "089b521434f7287657f511f7773501e926676bff6c2f2fcedcb6b26363f5ee48",
+      "bytes": 1759
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d7c81c26be0e3dc2d335e096471e1282bfabda5642e5b259b86e2aa6202b8ed8",
+      "bytes": 414
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2f4fb4aa2bae5cf17300951205c8b617e772b24b5c3afb9ef5c0e0683608babc",
+      "bytes": 431
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "bd51a88f709a5d76b52287375cab8908fa117d6f60a333628407fad0092fb78d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "48d9b499a8c10643fcc8c128bd7f959cdcfbc39b1686cacf526cd98b88604b05",
+      "bytes": 38006
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6d21439ba27edba9959f25789a147381503f9461af540f9e267ca7fd781d3b05",
+      "bytes": 19333
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ef69002eb5c188bcb8b4b607ed8583b4ab89cb68f9a06bc49fe34dc82b160945",
+      "bytes": 26737
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d8f32c2b3bd67c85de36c30fd1bb6b95d824d75827bd887429856b4a26d2b180",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "cb3e2bd812099b30a229619c055710b47cddafdef05953ee5bbbba30f23f29a3",
+      "bytes": 835
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "45d603099d6eebabe96c13d9a8ca14261677c1cb010207496c4a6c10c15824d4",
+      "bytes": 1245
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "1c2d4a33-7ee4-4b61-a77e-dab91631d19b",
+    "348c83bc-bed3-4562-841a-26a30ee19a9b",
+    "40154dc4-e681-4df9-be01-a6681d5887a6",
+    "40a590a3-1f0d-41ab-9c39-30adf86dd400",
+    "5acff005-1871-4237-bc25-cdddf50edc70",
+    "5c9743ad-fe33-4d21-9185-db012f6f96c7",
+    "5d79f0c2-526e-4c37-b780-08404f60839b",
+    "667c59e3-aaba-46e8-a2b3-255254328b6e",
+    "73359194-de93-436e-af53-81d4029f5e7a",
+    "7d66c966-6cee-4c82-b2e4-2bf1ca7b2ccd",
+    "81507860-e43d-4c50-b371-7267af9a914b",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b634cbce-b4db-44a6-b2a4-b58d9d2fe93d",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "c8ca6c83-3197-4b19-af1c-b29d6f829c5f",
+    "f654d52c-42de-4f3b-a377-9287b1536ad0"
+  ]
+}

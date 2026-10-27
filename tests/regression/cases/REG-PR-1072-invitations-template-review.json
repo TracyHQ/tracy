@@ -1,0 +1,54 @@
+{
+  "id": "REG-PR-1072-invitations-template-review",
+  "kind": "feat",
+  "title": "Invitation group templates persist and generate reviewable drafts without overwriting approved emails",
+  "pr": 1072,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the real PostgreSQL sandbox route tests and template renderer tests against an isolated test database.",
+    "Run the mounted Invitations screen and navigation tests with synthetic API responses."
+  ],
+  "expect": [
+    "Five groups keep independent immutable template versions; a fresh route read returns persisted content and preview is read-only.",
+    "Missing required templates reject generation atomically; preview and generated drafts use the same renderer.",
+    "Default generation preserves customized and approved snapshots; explicit replacement clears approval and blocked or attempted recipients cannot be overwritten.",
+    "Linked-identity suppression prevents generation, customization and approval across campaigns.",
+    "Saving group two retains selection; generation opens Review emails filtered to that group.",
+    "Failed saves and cancelled navigation preserve unsaved edits; confirmed reload of the selected campaign discards them consistently.",
+    "Review lists drafts, Conversations lists messages, and Import describes recipient CSV rather than templates."
+  ],
+  "selectors": {
+    "content": "/api/ops/invitations/:id/content",
+    "preview": "/api/ops/invitations/:id/content-preview",
+    "generate": "/api/ops/invitations/:id/generate"
+  },
+  "fence": "Real database route persistence plus deterministic mounted UI; no production mailbox, real customer data or shared QA database.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/invitations-sandbox.test.mjs",
+      "apps/tracy-web/test/invitations-content.test.mjs",
+      "packages/web/tracy-harness/test/invitations-flow.test.mjs",
+      "packages/web/tracy-harness/test/navigation-guard.test.mjs"
+    ],
+    "tests": [
+      "group content versions survive fresh route reads without changing existing snapshots",
+      "content versions persist independently across five groups and preview is read-only",
+      "generation requires assigned content atomically and uses the preview renderer",
+      "template edits and default generation preserve approved custom drafts; explicit replacement resets approval",
+      "regeneration and customization leave blocked recipients and any attempted snapshot untouched",
+      "individual customization and approval reject program suppression without writing the campaign",
+      "saving group two keeps its selection and generation posts that group then opens Review emails",
+      "unsaved edits block approval and sandbox, survive a failed save, and cancel tab navigation",
+      "reopening the current campaign discards template edits only after confirmation",
+      "Review lists drafts, Conversations lists recorded messages, and Import describes recipients",
+      "cancelled Back restores its history position without a second confirmation"
+    ]
+  }
+}

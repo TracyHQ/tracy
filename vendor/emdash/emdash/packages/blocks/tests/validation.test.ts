@@ -1,0 +1,1382 @@
+import { describe, expect, it } from "vitest";
+
+import {
+	isSafePluginPagePath,
+	validateBlockResponse,
+	validateBlocks,
+	validateContentEditorActionResponse,
+	validateContentEditorPanelInteraction,
+	validateEditorDraftPatchEffect,
+} from "../src/validation.js";
+
+describe("isSafePluginPagePath", () => {
+	it("accepts the native plugin root without accepting an empty declaration", () => {
+		expect(isSafePluginPagePath("/")).toBe(true);
+		expect(isSafePluginPagePath("")).toBe(false);
+	});
+});
+
+describe("validateBlocks", () => {
+	// ── Valid blocks ─────────────────────────────────────────────────────────
+
+	describe("valid blocks", () => {
+		it("header", () => {
+			const result = validateBlocks([{ type: "header", text: "Hello" }]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("section", () => {
+			const result = validateBlocks([{ type: "section", text: "Body text" }]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("divider", () => {
+			const result = validateBlocks([{ type: "divider" }]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("fields", () => {
+			const result = validateBlocks([
+				{
+					type: "fields",
+					fields: [{ label: "Status", value: "Active" }],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("table", () => {
+			const result = validateBlocks([
+				{
+					type: "table",
+					columns: [{ key: "name", label: "Name" }],
+					rows: [{ name: "Alice" }],
+					page_action_id: "load_page",
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("actions", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [{ type: "button", action_id: "btn1", label: "Click me" }],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("stats", () => {
+			const result = validateBlocks([
+				{
+					type: "stats",
+					items: [{ label: "Users", value: 42 }],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("form", () => {
+			const result = validateBlocks([
+				{
+					type: "form",
+					fields: [{ type: "text_input", action_id: "name", label: "Name" }],
+					submit: { label: "Save", action_id: "save" },
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("image", () => {
+			const result = validateBlocks([
+				{ type: "image", url: "https://example.com/img.png", alt: "Photo" },
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("context", () => {
+			const result = validateBlocks([{ type: "context", text: "Last updated 5m ago" }]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("columns", () => {
+			const result = validateBlocks([
+				{
+					type: "columns",
+					columns: [[{ type: "header", text: "Left" }], [{ type: "header", text: "Right" }]],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("empty (minimal)", () => {
+			const result = validateBlocks([{ type: "empty", title: "No items" }]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("empty (full)", () => {
+			const result = validateBlocks([
+				{
+					type: "empty",
+					title: "No webhooks yet",
+					description: "Create your first webhook to receive notifications.",
+					command_line: "emdash webhooks create",
+					size: "lg",
+					actions: [
+						{ type: "button", action_id: "create", label: "Create webhook", style: "primary" },
+						{ type: "button", action_id: "import", label: "Import" },
+					],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("accordion", () => {
+			const result = validateBlocks([
+				{
+					type: "accordion",
+					label: "Advanced settings",
+					default_open: false,
+					blocks: [{ type: "section", text: "Hidden content" }, { type: "divider" }],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("accordion with empty blocks array", () => {
+			const result = validateBlocks([{ type: "accordion", label: "Empty", blocks: [] }]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("tab", () => {
+			const result = validateBlocks([
+				{
+					type: "tab",
+					panels: [{ label: "Overview", blocks: [{ type: "section", text: "Summary" }] }],
+					default_tab: 0,
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it.each([
+			[{ type: "tab", panels: [] }, "blocks[0].panels"],
+			[
+				{
+					type: "tab",
+					panels: [{ label: "Overview", blocks: [] }],
+					default_tab: -1,
+				},
+				"blocks[0].default_tab",
+			],
+			[
+				{
+					type: "tab",
+					panels: [{ label: "Overview", blocks: [] }],
+					default_tab: 1,
+				},
+				"blocks[0].default_tab",
+			],
+		])("rejects a tab that cannot render an initial panel", (block, errorPath) => {
+			const result = validateBlocks([block]);
+			expect(result.valid).toBe(false);
+			expect(result.errors).toEqual(
+				expect.arrayContaining([expect.objectContaining({ path: errorPath })]),
+			);
+		});
+
+		it("repeater", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "repeater",
+							action_id: "faqs",
+							label: "FAQs",
+							item_label: "FAQ",
+							min_items: 1,
+							max_items: 5,
+							fields: [
+								{ type: "text_input", action_id: "question", label: "Question" },
+								{ type: "text_input", action_id: "answer", label: "Answer", multiline: true },
+							],
+							initial_value: [{ question: "Q1", answer: "A1" }],
+						},
+					],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("media_picker (minimal)", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [{ type: "media_picker", action_id: "hero", label: "Hero" }],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("media_picker (with options)", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "media_picker",
+							action_id: "hero",
+							label: "Hero",
+							mime_type_filter: "image/",
+							initial_value: "/_emdash/api/media/file/abc.png",
+							placeholder: "Pick a hero image",
+						},
+					],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("media_picker (specific subtype)", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "media_picker",
+							action_id: "logo",
+							label: "Logo",
+							mime_type_filter: "image/svg+xml",
+						},
+					],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+	});
+
+	// ── Invalid blocks ───────────────────────────────────────────────────────
+
+	describe("invalid blocks", () => {
+		it("not an array", () => {
+			const result = validateBlocks("not an array");
+			expect(result.valid).toBe(false);
+			expect(result.errors).toEqual([{ path: "blocks", message: "Blocks must be an array" }]);
+		});
+
+		it("block without type", () => {
+			const result = validateBlocks([{ text: "hello" }]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].type");
+			expect(result.errors[0]!.message).toContain("Unknown block type");
+		});
+
+		it("block with unknown type", () => {
+			const result = validateBlocks([{ type: "foobar" }]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].type");
+			expect(result.errors[0]!.message).toContain("Unknown block type 'foobar'");
+		});
+
+		it("header missing text", () => {
+			const result = validateBlocks([{ type: "header" }]);
+			expect(result.valid).toBe(false);
+			expect(result.errors).toEqual([
+				{
+					path: "blocks[0].text",
+					message: "Required field 'text' must be a string",
+				},
+			]);
+		});
+
+		it("section missing text", () => {
+			const result = validateBlocks([{ type: "section" }]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].text");
+		});
+
+		it("table missing required fields", () => {
+			const result = validateBlocks([{ type: "table" }]);
+			expect(result.valid).toBe(false);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].columns");
+			expect(paths).toContain("blocks[0].rows");
+			expect(paths).toContain("blocks[0].page_action_id");
+		});
+
+		it("table column missing key or label", () => {
+			const result = validateBlocks([
+				{
+					type: "table",
+					columns: [{ format: "text" }],
+					rows: [],
+					page_action_id: "p",
+				},
+			]);
+			expect(result.valid).toBe(false);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].columns[0].key");
+			expect(paths).toContain("blocks[0].columns[0].label");
+		});
+
+		it("table column with invalid format", () => {
+			const result = validateBlocks([
+				{
+					type: "table",
+					columns: [{ key: "k", label: "K", format: "html" }],
+					rows: [],
+					page_action_id: "p",
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].columns[0].format");
+			expect(result.errors[0]!.message).toContain("format");
+		});
+
+		it("form missing fields or submit", () => {
+			const result = validateBlocks([{ type: "form" }]);
+			expect(result.valid).toBe(false);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].fields");
+			expect(paths).toContain("blocks[0].submit");
+		});
+
+		it("form submit missing action_id", () => {
+			const result = validateBlocks([
+				{
+					type: "form",
+					fields: [],
+					submit: { label: "Save" },
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].submit.action_id");
+		});
+
+		it("actions with invalid elements", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [{ type: "invalid_type" }],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].type");
+			expect(result.errors[0]!.message).toContain("Unknown element type");
+		});
+
+		it("select with empty options array", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "select",
+							action_id: "sel",
+							label: "Pick",
+							options: [],
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].options");
+			expect(result.errors[0]!.message).toContain("must not be empty");
+		});
+
+		it("select option missing label/value", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "select",
+							action_id: "sel",
+							label: "Pick",
+							options: [{ foo: "bar" }],
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].elements[0].options[0].label");
+			expect(paths).toContain("blocks[0].elements[0].options[0].value");
+		});
+
+		it("button with invalid style", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "button",
+							action_id: "btn",
+							label: "Go",
+							style: "bold",
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].style");
+		});
+
+		it("confirm dialog missing required fields", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "button",
+							action_id: "btn",
+							label: "Delete",
+							confirm: {},
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].elements[0].confirm.title");
+			expect(paths).toContain("blocks[0].elements[0].confirm.text");
+			expect(paths).toContain("blocks[0].elements[0].confirm.confirm");
+			expect(paths).toContain("blocks[0].elements[0].confirm.deny");
+		});
+
+		it("image missing url or alt", () => {
+			const result = validateBlocks([{ type: "image" }]);
+			expect(result.valid).toBe(false);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].url");
+			expect(paths).toContain("blocks[0].alt");
+		});
+
+		it("columns with less than 2 arrays", () => {
+			const result = validateBlocks([
+				{
+					type: "columns",
+					columns: [[{ type: "divider" }]],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].columns");
+			expect(result.errors[0]!.message).toContain("2-3 column arrays");
+		});
+
+		it("columns with more than 3 arrays", () => {
+			const result = validateBlocks([
+				{
+					type: "columns",
+					columns: [
+						[{ type: "divider" }],
+						[{ type: "divider" }],
+						[{ type: "divider" }],
+						[{ type: "divider" }],
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.message).toContain("2-3 column arrays");
+		});
+
+		it("columns with invalid nested blocks reports correct path", () => {
+			const result = validateBlocks([
+				{
+					type: "columns",
+					columns: [
+						[{ type: "header", text: "OK" }],
+						[{ type: "header" }], // missing text
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].columns[1][0].text");
+		});
+
+		it("empty missing title", () => {
+			const result = validateBlocks([{ type: "empty" }]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].title");
+		});
+
+		it("empty with invalid size", () => {
+			const result = validateBlocks([{ type: "empty", title: "X", size: "huge" }]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].size");
+		});
+
+		it("empty with non-array actions", () => {
+			const result = validateBlocks([{ type: "empty", title: "X", actions: "nope" }]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].actions");
+		});
+
+		it("empty with invalid action element reports correct path", () => {
+			const result = validateBlocks([
+				{
+					type: "empty",
+					title: "X",
+					actions: [{ type: "button", action_id: "go", label: "Go", style: "neon" }],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].actions[0].style");
+		});
+
+		it("accordion missing label", () => {
+			const result = validateBlocks([{ type: "accordion", blocks: [] }]);
+			expect(result.valid).toBe(false);
+			expect(result.errors.map((e) => e.path)).toContain("blocks[0].label");
+		});
+
+		it("accordion with invalid nested blocks reports correct path", () => {
+			const result = validateBlocks([
+				{
+					type: "accordion",
+					label: "Wrap",
+					blocks: [{ type: "header" }],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].blocks[0].text");
+		});
+
+		it("accordion with non-boolean default_open", () => {
+			const result = validateBlocks([
+				{ type: "accordion", label: "Wrap", blocks: [], default_open: "yes" },
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].default_open");
+		});
+
+		it("stats item missing label or value", () => {
+			const result = validateBlocks([
+				{
+					type: "stats",
+					items: [{ description: "desc" }],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].items[0].label");
+			expect(paths).toContain("blocks[0].items[0].value");
+		});
+
+		it("stats item with invalid trend", () => {
+			const result = validateBlocks([
+				{
+					type: "stats",
+					items: [{ label: "Users", value: 10, trend: "sideways" }],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].items[0].trend");
+		});
+
+		it("repeater with empty fields array", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [{ type: "repeater", action_id: "items", label: "Items", fields: [] }],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].fields");
+			expect(result.errors[0]!.message).toContain("must not be empty");
+		});
+
+		it("repeater with disallowed sub-field type", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "repeater",
+							action_id: "items",
+							label: "Items",
+							fields: [
+								{
+									type: "checkbox",
+									action_id: "opts",
+									label: "Opts",
+									options: [{ label: "A", value: "a" }],
+								},
+							],
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].elements[0].fields[0].type");
+			expect(
+				result.errors.find((e) => e.path === "blocks[0].elements[0].fields[0].type")!.message,
+			).toContain("not allowed");
+		});
+
+		it("repeater with non-integer min_items / max_items", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "repeater",
+							action_id: "items",
+							label: "Items",
+							fields: [{ type: "text_input", action_id: "q", label: "Q" }],
+							min_items: 1.5,
+							max_items: -2,
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].elements[0].min_items");
+			expect(paths).toContain("blocks[0].elements[0].max_items");
+		});
+
+		it("repeater with min_items greater than max_items", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "repeater",
+							action_id: "items",
+							label: "Items",
+							fields: [{ type: "text_input", action_id: "q", label: "Q" }],
+							min_items: 5,
+							max_items: 2,
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].min_items");
+			expect(result.errors[0]!.message).toContain("less than or equal to 'max_items'");
+		});
+
+		it("repeater initial_value not an array", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "repeater",
+							action_id: "items",
+							label: "Items",
+							fields: [{ type: "text_input", action_id: "q", label: "Q" }],
+							initial_value: "not-an-array",
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].initial_value");
+			expect(result.errors[0]!.message).toContain("must be an array");
+		});
+
+		it("repeater initial_value entry not an object", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "repeater",
+							action_id: "items",
+							label: "Items",
+							fields: [{ type: "text_input", action_id: "q", label: "Q" }],
+							initial_value: [{ q: "ok" }, "bad", null],
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].elements[0].initial_value[1]");
+			expect(paths).toContain("blocks[0].elements[0].initial_value[2]");
+		});
+
+		it("form field with invalid condition (no eq/neq)", () => {
+			const result = validateBlocks([
+				{
+					type: "form",
+					fields: [
+						{
+							type: "text_input",
+							action_id: "name",
+							label: "Name",
+							condition: { field: "toggle" },
+						},
+					],
+					submit: { label: "Save", action_id: "save" },
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].fields[0].condition");
+			expect(result.errors[0]!.message).toContain("either 'eq' or 'neq'");
+		});
+
+		it("media_picker mime_type_filter must be a string", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{ type: "media_picker", action_id: "hero", label: "Hero", mime_type_filter: 42 },
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].mime_type_filter");
+			expect(result.errors[0]!.message).toContain("must be a string");
+		});
+
+		it("media_picker mime_type_filter rejects missing slash", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{ type: "media_picker", action_id: "hero", label: "Hero", mime_type_filter: "image" },
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].mime_type_filter");
+			expect(result.errors[0]!.message).toContain("image MIME type or prefix");
+		});
+
+		it("media_picker mime_type_filter rejects non-image type", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{ type: "media_picker", action_id: "v", label: "Video", mime_type_filter: "video/" },
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].mime_type_filter");
+		});
+
+		it("media_picker mime_type_filter rejects wildcard", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "media_picker",
+							action_id: "hero",
+							label: "Hero",
+							mime_type_filter: "image/*",
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].mime_type_filter");
+		});
+
+		it("media_picker initial_value must be a string", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "media_picker",
+							action_id: "hero",
+							label: "Hero",
+							initial_value: 42,
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].initial_value");
+			expect(result.errors[0]!.message).toContain("must be a string");
+		});
+
+		it("media_picker placeholder must be a string", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "media_picker",
+							action_id: "hero",
+							label: "Hero",
+							placeholder: false,
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].elements[0].placeholder");
+			expect(result.errors[0]!.message).toContain("must be a string");
+		});
+	});
+
+	// ── Edge cases ───────────────────────────────────────────────────────────
+
+	describe("edge cases", () => {
+		it("empty blocks array is valid", () => {
+			const result = validateBlocks([]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("deeply nested columns validate recursively", () => {
+			const result = validateBlocks([
+				{
+					type: "columns",
+					columns: [
+						[
+							{
+								type: "columns",
+								columns: [
+									[{ type: "header", text: "Deep left" }],
+									[{ type: "header" }], // missing text
+								],
+							},
+						],
+						[{ type: "divider" }],
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]!.path).toBe("blocks[0].columns[0][0].columns[1][0].text");
+		});
+
+		it("multiple errors in one block are all reported", () => {
+			const result = validateBlocks([
+				{
+					type: "table",
+					columns: [{ format: "invalid" }], // missing key, label, bad format
+					rows: "not an array",
+					// missing page_action_id
+				},
+			]);
+			expect(result.valid).toBe(false);
+			// Should have errors for key, label, format, rows, and page_action_id
+			expect(result.errors.length).toBeGreaterThanOrEqual(4);
+			const paths = result.errors.map((e) => e.path);
+			expect(paths).toContain("blocks[0].columns[0].key");
+			expect(paths).toContain("blocks[0].columns[0].label");
+			expect(paths).toContain("blocks[0].columns[0].format");
+			expect(paths).toContain("blocks[0].rows");
+			expect(paths).toContain("blocks[0].page_action_id");
+		});
+	});
+
+	describe("host browser policy", () => {
+		const policy = {
+			allowedImageHosts: ["images.example.com", "*.cdn.example.com"],
+			pluginPagePaths: ["/settings"],
+		};
+
+		it("accepts declared links and approved image resources", () => {
+			const result = validateBlockResponse(
+				{
+					blocks: [
+						{ type: "image", url: "https://images.example.com/report.png", alt: "Report" },
+						{
+							type: "actions",
+							elements: [
+								{
+									type: "link",
+									label: "Settings",
+									target: { kind: "plugin-page", path: "/settings" },
+								},
+								{
+									type: "link",
+									label: "Documentation",
+									target: { kind: "external", url: "https://docs.example.com" },
+								},
+							],
+						},
+					],
+					toast: { type: "success", message: "Loaded" },
+				},
+				policy,
+			);
+
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("normalizes plugin-page paths and validates links nested in tab panels", () => {
+			const result = validateBlockResponse(
+				{
+					blocks: [
+						{
+							type: "tab",
+							panels: [
+								{
+									label: "Configuration",
+									blocks: [
+										{
+											type: "actions",
+											elements: [
+												{
+													type: "link",
+													label: "Settings",
+													target: { kind: "plugin-page", path: "settings" },
+												},
+											],
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+				{ pluginPagePaths: ["settings"] },
+			);
+
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("accepts HTTPS images under an unrestricted browser policy", () => {
+			expect(
+				validateBlockResponse(
+					{
+						blocks: [
+							{ type: "image", url: "https://assets.example.test/report.png", alt: "Report" },
+						],
+					},
+					{ allowedImageHosts: ["*"], pluginPagePaths: [] },
+				),
+			).toEqual({ valid: true, errors: [] });
+		});
+
+		it("matches wildcard image hosts using the sandbox network-host rules", () => {
+			for (const url of [
+				"https://cdn.example.com/report.png",
+				"https://assets.cdn.example.com/report.png",
+			]) {
+				expect(
+					validateBlockResponse(
+						{ blocks: [{ type: "image", url, alt: "Report" }] },
+						{ allowedImageHosts: ["*.cdn.example.com"], pluginPagePaths: [] },
+					),
+				).toEqual({ valid: true, errors: [] });
+			}
+		});
+
+		it.each([
+			["unapproved image host", { type: "image", url: "https://tracker.test/pixel", alt: "" }],
+			[
+				"unapproved chart image",
+				{
+					type: "chart",
+					config: {
+						chart_type: "custom",
+						options: {
+							series: [{ type: "scatter", symbol: "image://https://tracker.test/pixel" }],
+						},
+					},
+				},
+			],
+			[
+				"undeclared plugin page",
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "link",
+							label: "Secret",
+							target: { kind: "plugin-page", path: "/secret" },
+						},
+					],
+				},
+			],
+			[
+				"active external protocol",
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "link",
+							label: "Run",
+							target: { kind: "external", url: "javascript:alert(1)" },
+						},
+					],
+				},
+			],
+		])("rejects %s", (_label, block) => {
+			const result = validateBlockResponse({ blocks: [block] }, policy);
+			expect(result.valid).toBe(false);
+		});
+
+		it("rejects encoded traversal in plugin-page links", () => {
+			const result = validateBlockResponse(
+				{
+					blocks: [
+						{
+							type: "actions",
+							elements: [
+								{
+									type: "link",
+									label: "Escape",
+									target: { kind: "plugin-page", path: "/%2e%2e/%2e%2e/settings" },
+								},
+							],
+						},
+					],
+				},
+				{ pluginPagePaths: ["/%2e%2e/%2e%2e/settings"] },
+			);
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({ path: "blocks[0].elements[0].target.path" }),
+				]),
+			);
+		});
+
+		it("rejects links in form fields and links carrying action ids", () => {
+			const result = validateBlocks([
+				{
+					type: "form",
+					fields: [
+						{
+							type: "link",
+							label: "Not a field",
+							action_id: "escape",
+							target: { kind: "external", url: "https://example.com" },
+						},
+					],
+					submit: { label: "Save", action_id: "save" },
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors.map((error) => error.path)).toEqual(
+				expect.arrayContaining(["blocks[0].fields[0].action_id", "blocks[0].fields[0].type"]),
+			);
+		});
+
+		it("accepts buttons, links, and menus in table element cells", () => {
+			const result = validateBlocks([
+				{
+					type: "table",
+					page_action_id: "page",
+					columns: [
+						{ key: "title", label: "Title" },
+						{ key: "action", label: "Actions", format: "element" },
+					],
+					rows: [
+						{
+							title: "Hello",
+							action: {
+								type: "menu",
+								action_id: "translate",
+								label: "Translate",
+								items: [{ label: "French", value: "fr" }],
+							},
+						},
+						{
+							title: "About",
+							action: {
+								type: "link",
+								label: "Open",
+								target: { kind: "external", url: "https://example.com" },
+							},
+						},
+						{ title: "Empty" },
+					],
+				},
+			]);
+			expect(result).toEqual({ valid: true, errors: [] });
+		});
+
+		it("rejects table element cells that are not buttons, links, or menus", () => {
+			const result = validateBlocks([
+				{
+					type: "table",
+					page_action_id: "page",
+					columns: [{ key: "action", label: "Actions", format: "element" }],
+					rows: [
+						{ action: { type: "text_input", action_id: "name", label: "Name" } },
+						{ action: "Open" },
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors.map((error) => error.path)).toEqual([
+				"blocks[0].rows[0].action",
+				"blocks[0].rows[1].action",
+			]);
+		});
+
+		it("applies the response policy to links inside table element cells", () => {
+			const result = validateBlockResponse(
+				{
+					blocks: [
+						{
+							type: "table",
+							page_action_id: "page",
+							columns: [{ key: "action", label: "Actions", format: "element" }],
+							rows: [
+								{
+									action: {
+										type: "link",
+										label: "Open",
+										target: { kind: "plugin-page", path: "/undeclared" },
+									},
+								},
+							],
+						},
+					],
+				},
+				{ pluginPagePaths: ["/settings"] },
+			);
+			expect(result.valid).toBe(false);
+			expect(result.errors.map((error) => error.path)).toEqual([
+				"blocks[0].rows[0].action.target.path",
+			]);
+		});
+
+		it("rejects duplicate menu item values", () => {
+			const result = validateBlocks([
+				{
+					type: "actions",
+					elements: [
+						{
+							type: "menu",
+							action_id: "translate",
+							label: "Translate",
+							items: [
+								{ label: "French", value: "fr" },
+								{ label: "French (Canada)", value: "fr" },
+							],
+						},
+					],
+				},
+			]);
+			expect(result.valid).toBe(false);
+			expect(result.errors.map((error) => error.path)).toEqual([
+				"blocks[0].elements[0].items[1].value",
+			]);
+		});
+
+		it("rejects menus without items and menus in form fields", () => {
+			const empty = validateBlocks([
+				{
+					type: "actions",
+					elements: [{ type: "menu", action_id: "translate", label: "Translate", items: [] }],
+				},
+			]);
+			expect(empty.valid).toBe(false);
+			expect(empty.errors.map((error) => error.path)).toEqual(["blocks[0].elements[0].items"]);
+
+			const inForm = validateBlocks([
+				{
+					type: "form",
+					fields: [
+						{
+							type: "menu",
+							action_id: "translate",
+							label: "Translate",
+							items: [{ label: "French", value: "fr" }],
+						},
+					],
+					submit: { label: "Save", action_id: "save" },
+				},
+			]);
+			expect(inForm.valid).toBe(false);
+			expect(inForm.errors.map((error) => error.path)).toEqual(["blocks[0].fields[0].type"]);
+		});
+
+		it("rejects deeply nested responses without recursing on the host stack", () => {
+			let nested: unknown = { type: "context", text: "end" };
+			for (let i = 0; i < 5_000; i++) {
+				nested = { type: "accordion", label: `Level ${i}`, blocks: [nested] };
+			}
+
+			const result = validateBlockResponse({ blocks: [nested] }, policy);
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]?.message).toContain("maximum depth");
+		});
+
+		it("bounds response arrays, strings, and validation errors", () => {
+			const wide = validateBlockResponse(
+				{ blocks: Array.from({ length: 1_001 }, () => ({ type: "divider" })) },
+				policy,
+			);
+			expect(wide.errors[0]?.message).toContain("maximum length");
+
+			const longString = validateBlockResponse(
+				{ blocks: [{ type: "context", text: "x".repeat(64 * 1024 + 1) }] },
+				policy,
+			);
+			expect(longString.errors[0]?.message).toContain("String exceeds maximum size");
+			const longUtf8String = validateBlockResponse(
+				{ blocks: [{ type: "context", text: "€".repeat(30_000) }] },
+				policy,
+			);
+			expect(longUtf8String.errors[0]?.message).toContain("String exceeds maximum size");
+			const oversizedKey = validateBlockResponse(
+				{ blocks: [], ["x".repeat(64 * 1024 + 1)]: true },
+				policy,
+			);
+			expect(oversizedKey.errors[0]?.message).toContain("Property name exceeds maximum size");
+
+			const largeResponse = validateBlockResponse(
+				{
+					blocks: Array.from({ length: 900 }, (_, index) => ({
+						type: "context",
+						text: `${index}:${"x".repeat(400)}`,
+					})),
+				},
+				policy,
+			);
+			expect(largeResponse.errors[0]?.message).toContain("maximum size");
+
+			const primitiveHeavy = validateBlockResponse(
+				{
+					blocks: [
+						{
+							type: "chart",
+							config: {
+								chart_type: "custom",
+								options: {
+									series: Array.from({ length: 1_000 }, () =>
+										Array(1_000).fill(Number.MAX_SAFE_INTEGER),
+									),
+								},
+							},
+						},
+					],
+				},
+				policy,
+			);
+			expect(primitiveHeavy.errors[0]?.message).toContain("maximum node count");
+
+			const malformed = validateBlockResponse(
+				{ blocks: Array.from({ length: 100 }, () => ({ type: "unknown" })) },
+				policy,
+			);
+			expect(malformed.errors).toHaveLength(50);
+		});
+	});
+});
+
+describe("validateContentEditorActionResponse", () => {
+	const policy = { pluginPagePaths: ["/reports"] };
+
+	it("accepts one bounded host effect and an optional toast", () => {
+		expect(
+			validateContentEditorActionResponse(
+				{
+					patch: {
+						type: "editor-draft-patch",
+						operations: [{ op: "set", field: "title", value: "Translated" }],
+					},
+				},
+				policy,
+			),
+		).toEqual({ valid: true, errors: [] });
+		expect(
+			validateContentEditorActionResponse(
+				{ refresh: true, toast: { message: "Entry updated", type: "success" } },
+				policy,
+			),
+		).toEqual({ valid: true, errors: [] });
+		expect(
+			validateContentEditorActionResponse(
+				{ navigate: { kind: "plugin-page", path: "/reports" } },
+				policy,
+			),
+		).toEqual({ valid: true, errors: [] });
+	});
+
+	it.each([
+		["false refresh", { refresh: false }],
+		["multiple terminal effects", { refresh: true, navigate: { kind: "plugin-settings" } }],
+		["unknown command", { reload: true }],
+		["undeclared plugin page", { navigate: { kind: "plugin-page", path: "/secret" } }],
+		["active external URL", { navigate: { kind: "external", url: "javascript:alert(1)" } }],
+	])("rejects %s", (_label, response) => {
+		expect(validateContentEditorActionResponse(response, policy).valid).toBe(false);
+	});
+
+	it("applies the shared response bounds", () => {
+		const result = validateContentEditorActionResponse(
+			{ toast: { message: "x".repeat(64 * 1024 + 1), type: "info" } },
+			policy,
+		);
+		expect(result.valid).toBe(false);
+		expect(result.errors[0]?.message).toContain("maximum size");
+	});
+});
+
+describe("validateEditorDraftPatchEffect", () => {
+	it("accepts unique whole-field set and clear operations", () => {
+		expect(
+			validateEditorDraftPatchEffect({
+				type: "editor-draft-patch",
+				operations: [
+					{ op: "set", field: "title", value: "Translated" },
+					{ op: "clear", field: "excerpt" },
+				],
+			}),
+		).toEqual({ valid: true, errors: [] });
+	});
+
+	it.each([
+		["unknown operation", [{ op: "merge", field: "title", value: "x" }]],
+		[
+			"duplicate field",
+			[
+				{ op: "clear", field: "title" },
+				{ op: "clear", field: "title" },
+			],
+		],
+		["system field", [{ op: "clear", field: "_rev" }]],
+		["extra clear value", [{ op: "clear", field: "title", value: "x" }]],
+	])("rejects %s", (_label, operations) => {
+		expect(validateEditorDraftPatchEffect({ type: "editor-draft-patch", operations }).valid).toBe(
+			false,
+		);
+	});
+
+	it("rejects operation-count and decoded-byte limits", () => {
+		expect(
+			validateEditorDraftPatchEffect({
+				type: "editor-draft-patch",
+				operations: Array.from({ length: 33 }, (_, index) => ({
+					op: "set",
+					field: `field_${index}`,
+					value: index,
+				})),
+			}).valid,
+		).toBe(false);
+		expect(
+			validateEditorDraftPatchEffect({
+				type: "editor-draft-patch",
+				operations: [{ op: "set", field: "body", value: "x".repeat(192 * 1024) }],
+			}).valid,
+		).toBe(false);
+	});
+});
+
+describe("validateContentEditorPanelInteraction", () => {
+	it.each([
+		{ type: "panel_load" },
+		{ type: "block_action", action_id: "refresh", value: 1 },
+		{ type: "form_submit", action_id: "save", values: { enabled: true } },
+	])("accepts bounded editor interactions", (interaction) => {
+		expect(validateContentEditorPanelInteraction(interaction)).toEqual({ valid: true, errors: [] });
+	});
+
+	it.each([
+		{ type: "panel_load", entry: { id: "forged" } },
+		{ type: "block_action", action_id: "" },
+		{ type: "form_submit", action_id: "save", values: [] },
+		{ type: "page_load", page: "/forged" },
+	])("rejects malformed or host-owned fields", (interaction) => {
+		expect(validateContentEditorPanelInteraction(interaction).valid).toBe(false);
+	});
+});

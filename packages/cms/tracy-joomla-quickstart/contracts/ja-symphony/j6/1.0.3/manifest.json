@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-symphony/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_symphony",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-symphony",
+    "id": "quickstart/ja-symphony/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_symphony",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-symphony-j6-webroot-1.0.3.tar.gz",
+        "bytes": 47277739,
+        "sha256": "51951157dab01e6d41b8cf9a17323316dbc276f425fe103acdf8e32d6ea35e4f"
+      },
+      "database": {
+        "file": "ja-symphony-j6-database-1.0.3.sql.gz",
+        "bytes": 82202,
+        "sha256": "30c92a64b77649d769979a198c45e6cdd6ae948390fb76151703085e6c3bedd8"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-15T17:04:26.582Z",
+    "builtFrom": {
+      "from": "quickstart/ja-symphony/j6@1.0.2",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-symphony/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

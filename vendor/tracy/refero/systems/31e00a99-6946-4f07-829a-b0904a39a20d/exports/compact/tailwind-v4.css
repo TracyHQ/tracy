@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-caution-yellow: #fff313;
+  --color-midnight-steel: #000000;
+  --color-industrial-white: #eeeeee;
+  --color-carbon: #333333;
+  --color-gunmetal: #4b4b4b;
+  --color-aluminum: #afafaf;
+
+  /* Typography */
+  --font-univers-next-pro: 'Univers Next Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,343 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-company",
+  "release": "quickstart/ja-company/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "display": "div.swiper-slide.swiper-slide-active div.item div.slider-content.container div.slider-content-inner h1.item-title.ja-animation",
+    "heading": "h2.acm-features-title",
+    "body": "div.swiper-slide.swiper-slide-active div.item div.slider-content.container div.slider-content-inner p.hidden-xs.item-desc",
+    "section": "div.acm-features.style-1"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 36px",
+    "displayFace": "Libre Franklin 300, tracking 0em",
+    "heading": "first section heading: 23px",
+    "body": "first body paragraph",
+    "section": "first padded full-width section, padding-top 96px",
+    "displayPhone": "the same heading at 390 on the published release: 16px"
+  },
+  "keepScopes": [".t3-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#666666",
+    "--fg-2": "#2d2d2d",
+    "--accent": "#234269",
+    "--accent-hover": "#f87831",
+    "--surface": "#fbfbfb",
+    "--meta": "#9e9e9e",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#eeeeee",
+    "--muted": "#555555",
+    "--font-display": "\"Libre Franklin\", sans-serif",
+    "--font-body": "\"Libre Franklin\", sans-serif",
+    "--surface-warm": "#fbfbfb"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#666666",
+      "fg-2": "#2d2d2d",
+      "accent": "#234269",
+      "accent-hover": "#f87831",
+      "surface": "#fbfbfb",
+      "meta": "#9e9e9e",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#eeeeee",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#666666",
+      "fg-2": "#234269",
+      "surface-warm": "#fbfbfb"
+    },
+    {
+      "accent": "#234269"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#eeeeee",
+      "border-soft": "#e5e5e5",
+      "danger": "#ee5e52",
+      "accent": "#294e7c",
+      "accent-active": "#0057c1",
+      "accent-hover": "#f87932"
+    },
+    {
+      "surface": "#f7f7f7",
+      "border-soft": "#ebebeb",
+      "accent": "#1d3656"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border-soft": "#e1e1e1"
+    },
+    {
+      "border-soft": "#e0e2e3",
+      "surface": "#f9f2f4"
+    },
+    {
+      "border-soft": "#e3e3e3",
+      "surface": "#f0f0f0"
+    },
+    {
+      "border-soft": "#e5e7eb",
+      "surface": "#f3f3f3"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (66 line colours, 87 text colours seen)",
+  "selectors": {
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["div.acm-features.style-1"],
+    "bodyFace": ["body"],
+    "inkImages": [".logo-image img.logo-img"],
+    "eyebrow": [".label-small", ".hidden-xs"],
+    "cardLike": [".contact-item"],
+    "pill": [".label-highlight"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
+    "muted": ".acm-features p, .box-contact p",
+    "body": ".acm-features p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar-left",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 24 tried (byte 5765); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 212,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fbfbfb",
+      "distance": 23
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 140,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fbfbfb",
+      "distance": 7
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 50,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fbfbfb",
+      "distance": 3
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 48,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 30,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 24,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 20,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#ee5e52",
+      "uses": 18,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#d9534f",
+      "distance": 24
+    },
+    {
+      "hex": "#294e7c",
+      "uses": 12,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#234269",
+      "distance": 23
+    },
+    {
+      "hex": "#0057c1",
+      "uses": 12,
+      "kind": "line",
+      "role": "accent-active",
+      "near": "#0066cc",
+      "distance": 19
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fbfbfb",
+      "distance": 12
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 12
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fbfbfb",
+      "distance": 19
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#1d3656",
+      "uses": 8,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#234269",
+      "distance": 23
+    },
+    {
+      "hex": "#f3f3f3",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fbfbfb",
+      "distance": 14
+    },
+    {
+      "hex": "#f87932",
+      "uses": 4,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#f87831",
+      "distance": 1
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the 1.0.1 release build itself (~/tracy-bench-work/release/ds-r3a/ja-company/release, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-company-j6 — 6/12 (the rest miss on type sizes or button shape against the system, not on reading), controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 78% or more of the page follows, checked by eye on the four systems' screenshots; the hero slider's eyebrow on the slide photo read 1.3–1.4:1 under MotherDuck and Apple with the earlier contract — fixed by sideRules.light. Earlier: measured 11/10/2026 on the release build 1.0.1 itself (stand.mjs --from-dir, tasks/evidence/ds-contracts-r3a-2026-10-11/ja-company-j6): controls 0 differences before and after, 0 texts (every heading and text element, desktop and phone) less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple, 78-97% of the page follows, carousels stopped on their first slide (measureStill, so the batch-5 1.14 that came and went with the slider is gone for its cause: the system's display size pushed the hero title out of its fixed-height slide); dark and light screenshots looked at: menu bar text on the accent, the wordmark inverted on dark headers, the features slider's arrows no longer over its intro. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-company 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 6/12 verdicts (the six failed are the display type-size role only under Moxie, MotherDuck and Toggl Track, as before), controls 0 differences, no text below 4.5:1 worse than the template's own, 78-97% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-company-j6",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples); block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026",
+  "displayNote": "no displaySize: the hero title sits in a slider of fixed height, and the system's display size (MotherDuck 11/10/2026) pushed it out of its slide on the phone and over the buttons on the desktop; the hero keeps the template's size, the face and weight follow",
+  "measureStill": true,
+  "measureStillNote": "its hero slider autoplays: each step measured another photo under the same white title (1.14 on the phone in two runs of three, batch 5); flow.mjs stops it on its first slide",
+  "followRules": {
+    ".t3-mainnav .navbar-nav.level0 :is(a, span.separator):not(.dropdown-menu *)": {
+      "color": "accent-on"
+    },
+    ".sp-quote .sp-quote-ct": {
+      "background-color": "surface"
+    }
+  },
+  "followNote": "the main menu bar is filled with the accent (.t3-mainnav .t3-navbar, a gradient of its own colour that follows the system): its top-level items, white on the template's navy, take the accent's own text colour (white stayed on MotherDuck's light blue, 1.91:1); the dropdowns keep their own; 15/10/2026 (v10, /index.php/about-us, Moxie desktop): the quote card laid over the office photo (.sp-quote .sp-quote-ct) is var(--ds-c-surface) on a phone but a literal white at 95% from 992px (template.css), and its words follow the page: Moxie's grey #858273 on the white card, 3.85:1 (h4) and 3.54-3.65:1 (p), where the template reads 5.3-5.7:1 and the phone's surface card 4.51:1. The card takes the system's surface at every width",
+  "sideRules": {
+    "light": {
+      ".acm-features.style-1 .owl-controls": {
+        "position": "static"
+      },
+      ".slideshow .slider-content-inner .label-small": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".acm-cta.style-1": {
+        "background-color": "var(--ds-c-accent)",
+        "background-blend-mode": "luminosity"
+      }
+    },
+    "dark": {
+      ".acm-features.style-1 .owl-controls": {
+        "position": "static"
+      },
+      ".acm-cta.style-1": {
+        "background-color": "var(--ds-c-accent)",
+        "background-blend-mode": "luminosity"
+      }
+    }
+  },
+  "sideRulesNote": "the same on both sides, so under every system: the features slider's arrows sit at a fixed spot in the intro column (.owl-controls absolute, left -31%, as low as the cards are tall); a system's heading and body faces make that intro taller and the arrows covered its words (Moxie: \"Services\", MotherDuck: the intro text, 11/10/2026). Under a system they flow below the cards instead; the hero slider's eyebrow (.slideshow .slider-content-inner .label-small) sits on the slide photo beside the template's white title: a light system's readable accent is dark (#4b6d85 under MotherDuck, #036ed8 under Apple, 1.3–1.4:1 on the photo), so on a light system it takes the system page colour like the title beside it (re-measure 11/10/2026)",
+  "inkNote": "the header wordmark is a dark-ink picture (logo.png, navy \"COMPANY\") made for a light header: under a dark system's header it is shown inverted with its hues kept (selectors.inkImages); seen 11/10/2026 nearly invisible on Moxie's and Toggl Track's black/plum headers",
+  "minVersion": {
+    "quickstart/ja-company/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-company/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "minVersionNote": "1.0.1 = 1.0.0 with its stylesheets tokenized (release-batch.mjs build, zip sha256 4e272dfbf81d05608fe98025640668d28a3d7277d62d793bc0ebafde2cffd637, built 11/10 in batch 5 from this contract's palettes, verified 0 computed differences and 36/36 pages as released); not yet published: ~/tracy-bench-work/RELEASE-DS-R3A.sh",
+  "bands": {
+    ".t3-footer": {
+      "ground": "#2d2d2d",
+      "texts": ["#aaaaaa", "#ffffff", "#d0d0d0"],
+      "important": true,
+      "paint": {
+        ".t3-footnav .t3-module": {
+          "background-color": "ground"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "sideNote": "the call-to-action band (.acm-cta.style-1) is a flat orange picture (bg-cta.jpg) under white words: it keeps the picture’s light and dark (its words read as released) and takes the system accent’s hue through background-blend-mode: luminosity (visual review 14/10/2026: it stayed the template orange beside every system)",
+  "reviewV8Note": "15/10/2026 (look review v8): the footer modules paint the footer’s own grey (#2d2d2d) as a literal, so under every system each module stood as a grey block of its own height on the worn footer: they take the band’s ground"
+}

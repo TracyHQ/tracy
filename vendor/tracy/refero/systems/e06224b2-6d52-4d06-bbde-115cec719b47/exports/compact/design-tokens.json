@@ -1,0 +1,69 @@
+{
+  "color": {
+    "ember-signal": {
+      "$value": "#ff4d00",
+      "$type": "color",
+      "$description": "Ember Signal — Active nav state only — appears on a single interactive element as a hot indicator, never used for buttons or CTAs; its rarity is the feature"
+    },
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page background, button fill, SVG fills — absolute black, not near-black"
+    },
+    "chalk": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Chalk — Primary text, nav labels, button text, body copy"
+    },
+    "fog": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Fog — Border color across nav, cards, buttons, logo grid dividers — the structural skeleton visible against black"
+    },
+    "ash": {
+      "$value": "#c4c4c4",
+      "$type": "color",
+      "$description": "Ash — Secondary text, subheadings, de-emphasized body copy, SVG fills"
+    },
+    "graphite": {
+      "$value": "#757575",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text, muted labels, icon fills"
+    },
+    "carbon": {
+      "$value": "#454545",
+      "$type": "color",
+      "$description": "Carbon — Card/tile border color — used on logo grid cells to define structure without brightness"
+    },
+    "obsidian": {
+      "$value": "#2e2e2",
+      "$type": "color",
+      "$description": "Obsidian — Subtle element backgrounds, hover states, SVG fills"
+    },
+    "cinder": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Cinder — Input backgrounds, input borders — the only surface that differs from absolute black"
+    },
+    "smudge": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Smudge — SVG illustration fills, decorative icon tones"
+    }
+  },
+  "font": {
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Single font family across all type — nav, body, display, headings, labels. The 87px weight-600 headline at 0.89 line-height is the system's signature: text taller than its own cap-height spacing, letters colliding at scale. -0.04em letter-spacing at display sizes crushes the tracking until characters nearly touch. 'ss01' feature flag activates alternate glyph forms distinct to Geist. Using one face for everything from 12px captions to 87px display creates a monolithic typographic voice — zero genre-mixing."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://basement.studio",
+      "siteName": "basement.studio",
+      "extractedAt": "2026-04-11T22:15:28.353Z",
+      "variant": "compact"
+    }
+  }
+}

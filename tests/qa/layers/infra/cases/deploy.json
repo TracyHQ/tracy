@@ -1,0 +1,71 @@
+[
+  {
+    "id": "QA-INFRA-check-local-stand-probe",
+    "itemIds": ["script:deploy/scripts/check-local.sh"],
+    "requirement": "deploy/scripts/check-local.sh reports every service of the local compose stack and fails when one is down",
+    "oracle": {
+      "source": "SYSTEM.md",
+      "ref": "stand-lifecycle",
+      "invariant": "a site provisions to ready, goes live and back to draft, is torn down leaving nothing, and a backup restores both file bytes and database rows"
+    },
+    "edgeTags": ["dependency-failure"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-deploy-host-dsh-same-tag",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/dsh/deploy-host-dsh.sh"],
+    "requirement": "deploy-host-dsh.sh does nothing to the host when tag, running image and compose hash are unchanged, and deploys when any of the three moved",
+    "oracle": {
+      "source": "deploy/scripts/deploy-tracy-stack.sh",
+      "ref": "deploy-drain",
+      "invariant": "while a deploy waits to replace tracy-host, no new job is accepted (HOST_UPDATING); a marker left by a dead deploy must not block new sites for good"
+    },
+    "edgeTags": ["idempotent", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-deploy-stack-same-tag-and-rollback",
+    "itemIds": ["script:deploy/scripts/deploy-tracy-stack.sh"],
+    "requirement": "deploy-tracy-stack.sh: a same-tag deploy keeps the rollback target, a failed health check puts the previous tag back, and the drain marker is cleared on exit",
+    "oracle": {
+      "source": "deploy/scripts/deploy-tracy-stack.sh",
+      "ref": "deploy-drain",
+      "invariant": "while a deploy waits to replace tracy-host, no new job is accepted (HOST_UPDATING); a marker left by a dead deploy must not block new sites for good"
+    },
+    "edgeTags": ["idempotent", "rollback", "version-mismatch", "partial-failure"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  }
+]

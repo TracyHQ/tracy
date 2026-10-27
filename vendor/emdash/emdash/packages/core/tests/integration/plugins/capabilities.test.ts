@@ -1,0 +1,1843 @@
+/**
+ * Capability Enforcement Integration Tests (v2)
+ *
+ * Tests the capability-based access gating in the v2 plugin context.
+ * v2 always enforces capabilities - there's no "trusted mode" bypass.
+ *
+ */
+
+import { Kysely, SqliteDialect, sql } from "kysely";
+import type {
+	PluginTransformQueryArgs,
+	PluginTransformResultArgs,
+	QueryResult,
+	RootOperationNode,
+	UnknownRow,
+} from "kysely";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+
+import { NodeSqliteCompatDatabase as Database } from "#node-sqlite";
+
+import { runMigrations } from "../../../src/database/migrations/runner.js";
+import { ContentRepository } from "../../../src/database/repositories/content.js";
+import { OptionsRepository } from "../../../src/database/repositories/options.js";
+import { RedirectRepository } from "../../../src/database/repositories/redirect.js";
+import { RevisionRepository } from "../../../src/database/repositories/revision.js";
+import { UserRepository } from "../../../src/database/repositories/user.js";
+import type { Database as DbSchema } from "../../../src/database/types.js";
+import { setI18nConfig } from "../../../src/i18n/config.js";
+import {
+	PluginContextFactory,
+	createContentAccess,
+	createContentAccessWithWrite,
+	createRedirectAccess,
+	createSchemaAccess,
+	createTaxonomyAccess,
+	createTaxonomyAccessWithWrite,
+	createHttpAccess,
+	createUnrestrictedHttpAccess,
+	createBlockedHttpAccess,
+	createLogAccess,
+	createStorageAccess,
+	createKVAccess,
+	createSiteInfo,
+	createUrlHelper,
+	createUserAccess,
+	RedirectAccessError,
+} from "../../../src/plugins/context.js";
+import type { PluginCommentStatus, ResolvedPlugin } from "../../../src/plugins/types.js";
+import { SchemaRegistry } from "../../../src/schema/registry.js";
+
+// Test regex patterns
+const NOT_ALLOWED_FETCH_REGEX = /not allowed to fetch from host/;
+const NO_ALLOWED_FETCH_REGEX = /not allowed to fetch/;
+const NO_NETWORK_FETCH_REGEX = /does not have the "network:request" capability/;
+const SEO_NOT_ENABLED_REGEX = /does not have SEO enabled/;
+
+/**
+ * Create a minimal resolved plugin for testing
+ */
+function createTestPlugin(overrides: Partial<ResolvedPlugin> = {}): ResolvedPlugin {
+	return {
+		id: "test-plugin",
+		version: "1.0.0",
+		capabilities: [],
+		allowedHosts: [],
+		storage: {},
+		admin: {
+			pages: [],
+			widgets: [],
+			fieldWidgets: {},
+		},
+		hooks: {},
+		routes: {},
+		settings: undefined,
+		...overrides,
+	};
+}
+
+/**
+ * Minimal in-memory Storage backend for media write tests.
+ * Records uploaded keys so tests can assert bytes were persisted.
+ */
+function createFakeStorage() {
+	const uploads = new Map<string, Uint8Array>();
+	return {
+		uploads,
+		async upload(options: { key: string; body: Uint8Array; contentType: string }) {
+			uploads.set(options.key, options.body);
+			return { key: options.key, size: options.body.byteLength };
+		},
+		async download() {
+			throw new Error("not implemented");
+		},
+		async delete(key: string) {
+			uploads.delete(key);
+		},
+		async exists(key: string) {
+			return uploads.has(key);
+		},
+		async list() {
+			return { items: [] };
+		},
+		async getSignedUploadUrl(options: { key: string }) {
+			return {
+				url: `https://signed.example.com/${options.key}`,
+				method: "PUT" as const,
+				headers: {},
+				expiresAt: new Date(Date.now() + 3600_000).toISOString(),
+			};
+		},
+		getPublicUrl(key: string) {
+			return `/media/${key}`;
+		},
+	};
+}
+
+describe("Capability Enforcement Integration (v2)", () => {
+	let db: Kysely<DbSchema>;
+	let sqliteDb: Database;
+
+	beforeEach(async () => {
+		// Create in-memory SQLite database
+		sqliteDb = new Database(":memory:");
+
+		db = new Kysely<DbSchema>({
+			dialect: new SqliteDialect({
+				database: sqliteDb,
+			}),
+		});
+
+		// Run migrations
+		await runMigrations(db);
+
+		// Create test content table with actual field columns (not JSON data column)
+		// The ContentRepository expects real columns for each field
+		await sql`
+			CREATE TABLE IF NOT EXISTS ec_posts (
+				id TEXT PRIMARY KEY,
+				slug TEXT,
+				status TEXT DEFAULT 'draft',
+				author_id TEXT,
+				primary_byline_id TEXT,
+				created_at TEXT DEFAULT (datetime('now')),
+				updated_at TEXT DEFAULT (datetime('now')),
+				published_at TEXT,
+				scheduled_at TEXT,
+				deleted_at TEXT,
+				version INTEGER DEFAULT 1,
+				locale TEXT NOT NULL DEFAULT 'en',
+				translation_group TEXT,
+				title TEXT,
+				content TEXT,
+				UNIQUE(slug, locale)
+			)
+		`.execute(db);
+
+		// Insert test content with actual column values
+		await sql`
+			INSERT INTO ec_posts (id, slug, status, title, content, locale, translation_group)
+			VALUES 
+				('post-1', 'hello-world', 'published', 'Hello World', 'Content 1', 'en', 'post-1'),
+				('post-2', 'second-post', 'draft', 'Second Post', 'Content 2', 'en', 'post-2')
+		`.execute(db);
+	});
+
+	afterEach(async () => {
+		vi.unstubAllEnvs();
+		vi.restoreAllMocks();
+		setI18nConfig(null);
+		await db.destroy();
+		sqliteDb.close();
+	});
+
+	describe("Content Access", () => {
+		describe("createContentAccess (read-only)", () => {
+			it("returns safe identity and locale siblings", async () => {
+				await sql`
+					UPDATE ec_posts
+					SET author_id = 'author-1', version = 4
+					WHERE id = 'post-1'
+				`.execute(db);
+				await sql`
+					INSERT INTO ec_posts (id, slug, status, title, content, locale, translation_group)
+					VALUES ('post-fr', 'bonjour', 'draft', 'Bonjour', 'Contenu', 'fr', 'post-1')
+				`.execute(db);
+				const access = createContentAccess(db);
+
+				expect(await access.get("posts", "post-1")).toMatchObject({
+					authorId: "author-1",
+					translationGroup: "post-1",
+					version: 4,
+				});
+				expect(await access.getTranslations!("posts", "post-1")).toEqual({
+					translationGroup: "post-1",
+					translations: [
+						expect.objectContaining({ id: "post-1", locale: "en", status: "published" }),
+						expect.objectContaining({ id: "post-fr", locale: "fr", status: "draft" }),
+					],
+				});
+			});
+
+			it("resolves only routable published public URLs", async () => {
+				const registry = new SchemaRegistry(db);
+				await registry.createCollection({
+					slug: "articles",
+					label: "Articles",
+					urlPattern: "/journal/{slug}",
+				});
+				const article = await new ContentRepository(db).create({
+					type: "articles",
+					slug: "hello",
+					status: "published",
+					locale: "fr",
+					data: {},
+				});
+				setI18nConfig({
+					defaultLocale: "en",
+					locales: ["en", "fr"],
+					prefixDefaultLocale: false,
+				});
+				const access = createContentAccess(db, {
+					site: {
+						name: "Test",
+						url: "https://example.test",
+						locale: "en",
+						trailingSlash: "always",
+					},
+				});
+
+				expect(await access.getPublicUrl!("articles", article.id)).toBe(
+					"https://example.test/fr/journal/hello/",
+				);
+				await new ContentRepository(db).update("articles", article.id, { status: "draft" });
+				expect(await access.getPublicUrl!("articles", article.id)).toBeNull();
+			});
+
+			it("keeps revision history behind the separate access surface", async () => {
+				const revision = await new RevisionRepository(db).create({
+					collection: "posts",
+					entryId: "post-1",
+					data: { title: "Removed value" },
+					authorId: "revision-author",
+				});
+				const ordinary = createContentAccess(db);
+				const history = createContentAccess(db, { revisions: true });
+
+				expect(ordinary.listRevisions).toBeUndefined();
+				expect(await history.listRevisions!("posts", "post-1")).toEqual([
+					expect.objectContaining({ id: revision.id, data: { title: "Removed value" } }),
+				]);
+				expect((await history.listRevisions!("posts", "post-1"))[0]).not.toHaveProperty("authorId");
+				expect(await history.getRevision!("posts", "post-2", revision.id)).toBeNull();
+				await new ContentRepository(db).delete("posts", "post-1");
+				expect(await history.listRevisions!("posts", "post-1")).toEqual([]);
+				expect(await history.getRevision!("posts", "post-1", revision.id)).toBeNull();
+			});
+
+			it("defaults invalid revision limits at the access and repository boundaries", async () => {
+				const revisions = new RevisionRepository(db);
+				await revisions.create({
+					collection: "posts",
+					entryId: "post-1",
+					data: { title: "Older" },
+				});
+				await revisions.create({
+					collection: "posts",
+					entryId: "post-1",
+					data: { title: "Newer" },
+				});
+				const history = createContentAccess(db, { revisions: true });
+
+				await expect(
+					history.listRevisions!("posts", "post-1", { limit: "invalid" as never }),
+				).resolves.toHaveLength(2);
+				await expect(
+					revisions.findVisibleByEntry("posts", "post-1", { limit: Number.NaN }),
+				).resolves.toHaveLength(2);
+				await expect(
+					history.listRevisions!("posts", "post-1", { limit: 1.5 }),
+				).resolves.toHaveLength(1);
+				await expect(
+					revisions.findVisibleByEntry("posts", "post-1", { limit: 1.5 }),
+				).resolves.toHaveLength(1);
+				await expect(history.listRevisions!("posts", "post-1", { limit: 0 })).resolves.toHaveLength(
+					1,
+				);
+				await expect(
+					revisions.findVisibleByEntry("posts", "post-1", { limit: 0 }),
+				).resolves.toHaveLength(1);
+			});
+			it("can read content by ID", async () => {
+				const access = createContentAccess(db);
+				const post = await access.get("posts", "post-1");
+
+				expect(post).not.toBeNull();
+				expect(post!.id).toBe("post-1");
+				expect(post!.data.title).toBe("Hello World");
+			});
+
+			it("can list content", async () => {
+				const access = createContentAccess(db);
+				const result = await access.list("posts");
+
+				expect(result.items).toHaveLength(2);
+				expect(result.hasMore).toBe(false);
+			});
+
+			it("includes the scheduled publication time", async () => {
+				await sql`
+					UPDATE ec_posts
+					SET status = 'scheduled', scheduled_at = '2026-12-01T12:00:00.000Z'
+					WHERE id = 'post-1'
+				`.execute(db);
+				const access = createContentAccess(db);
+				const result = await access.list("posts");
+
+				expect(result.items.find((item) => item.id === "post-1")?.scheduledAt).toBe(
+					"2026-12-01T12:00:00.000Z",
+				);
+				expect((await access.get("posts", "post-1"))?.scheduledAt).toBe("2026-12-01T12:00:00.000Z");
+			});
+
+			it("narrows list results by where.status", async () => {
+				const access = createContentAccess(db);
+				const result = await access.list("posts", { where: { status: "published" } });
+
+				expect(result.items).toHaveLength(1);
+				expect(result.items[0]!.id).toBe("post-1");
+				expect(result.items[0]!.status).toBe("published");
+			});
+
+			it("narrows list results by where.locale", async () => {
+				await sql`
+					INSERT INTO ec_posts (id, slug, status, title, content, locale, translation_group)
+					VALUES ('post-3', 'bonjour', 'published', 'Bonjour', 'Contenu', 'fr', 'post-3')
+				`.execute(db);
+				const access = createContentAccess(db);
+				const result = await access.list("posts", { where: { locale: "fr" } });
+
+				expect(result.items).toHaveLength(1);
+				expect(result.items[0]!.id).toBe("post-3");
+			});
+
+			it("combines where.status and where.locale", async () => {
+				await sql`
+					INSERT INTO ec_posts (id, slug, status, title, content, locale, translation_group)
+					VALUES
+						('post-3', 'bonjour',  'published', 'Bonjour',  'Contenu', 'fr', 'post-3'),
+						('post-4', 'brouillon', 'draft',    'Brouillon', 'WIP',     'fr', 'post-4')
+				`.execute(db);
+				const access = createContentAccess(db);
+				const result = await access.list("posts", {
+					where: { status: "published", locale: "fr" },
+				});
+
+				expect(result.items).toHaveLength(1);
+				expect(result.items[0]!.id).toBe("post-3");
+			});
+
+			it("paginates consistently with where filters", async () => {
+				// Three more published posts so the total published count is 4.
+				// A limit of 2 should yield two pages: [2, 2] — never drafts.
+				await sql`
+					INSERT INTO ec_posts (id, slug, status, title, content, locale, translation_group)
+					VALUES
+						('post-3', 'a', 'published', 'A', 'a', 'en', 'post-3'),
+						('post-4', 'b', 'published', 'B', 'b', 'en', 'post-4'),
+						('post-5', 'c', 'published', 'C', 'c', 'en', 'post-5')
+				`.execute(db);
+				const access = createContentAccess(db);
+
+				const page1 = await access.list("posts", {
+					limit: 2,
+					where: { status: "published" },
+				});
+				expect(page1.items).toHaveLength(2);
+				expect(page1.hasMore).toBe(true);
+				for (const item of page1.items) expect(item.status).toBe("published");
+
+				const page2 = await access.list("posts", {
+					limit: 2,
+					cursor: page1.cursor,
+					where: { status: "published" },
+				});
+				expect(page2.items).toHaveLength(2);
+				expect(page2.hasMore).toBe(false);
+				for (const item of page2.items) expect(item.status).toBe("published");
+
+				// No overlap between pages
+				const ids = new Set([...page1.items, ...page2.items].map((i) => i.id));
+				expect(ids.size).toBe(4);
+				// Drafts never surface
+				expect(ids.has("post-2")).toBe(false);
+			});
+
+			it("returns null for non-existent content", async () => {
+				const access = createContentAccess(db);
+				const post = await access.get("posts", "non-existent");
+				expect(post).toBeNull();
+			});
+		});
+
+		describe("taxonomy read access", () => {
+			beforeEach(async () => {
+				// Migrations seed the default `category`/`tag` defs — clear them
+				// so the assertions below only see the fixtures.
+				await sql`DELETE FROM _emdash_taxonomy_defs`.execute(db);
+				await sql`
+					INSERT INTO _emdash_taxonomy_defs (id, name, label, label_singular, hierarchical, collections, locale, translation_group)
+					VALUES
+						('def-genre', 'genre', 'Genres', 'Genre', 1, '["posts"]', 'en', 'def-genre'),
+						('def-topic', 'topic', 'Topics', 'Topic', 0, '["posts"]', 'en', 'def-topic')
+				`.execute(db);
+				await sql`
+					INSERT INTO taxonomies (id, name, slug, label, parent_id, data, locale, translation_group)
+					VALUES
+						('term-news', 'genre', 'news', 'News', NULL, NULL, 'en', 'term-news'),
+						('term-sub', 'genre', 'sub-news', 'Sub News', 'term-news', NULL, 'en', 'term-sub'),
+						('term-news-fr', 'genre', 'actualites', 'Actualités', NULL, NULL, 'fr', 'term-news'),
+						('term-ai', 'topic', 'ai', 'AI', NULL, '{"description":"Artificial intelligence"}', 'en', 'term-ai')
+				`.execute(db);
+				// The pivot stores the term's translation_group, so one
+				// assignment spans every locale of the term.
+				await sql`
+					INSERT INTO content_taxonomies (collection, entry_id, taxonomy_id)
+					VALUES
+						('posts', 'post-1', 'term-news'),
+						('posts', 'post-1', 'term-ai')
+				`.execute(db);
+			});
+
+			it("lists taxonomy definitions", async () => {
+				const access = createTaxonomyAccess(db);
+				const defs = await access.getAll();
+
+				expect(defs).toHaveLength(2);
+				const category = defs.find((d) => d.name === "genre");
+				expect(category).toMatchObject({
+					label: "Genres",
+					labelSingular: "Genre",
+					hierarchical: true,
+					collections: ["posts"],
+					locale: "en",
+				});
+				const tag = defs.find((d) => d.name === "topic");
+				expect(tag?.hierarchical).toBe(false);
+			});
+
+			it("filters taxonomy definitions by locale", async () => {
+				const access = createTaxonomyAccess(db);
+				const defs = await access.getAll({ locale: "fr" });
+				expect(defs).toHaveLength(0);
+			});
+
+			it("lists terms of a taxonomy", async () => {
+				const access = createTaxonomyAccess(db);
+				const terms = await access.getTerms("genre");
+
+				expect(terms.map((t) => t.slug)).toEqual(["actualites", "news", "sub-news"]);
+				const sub = terms.find((t) => t.slug === "sub-news");
+				expect(sub).toMatchObject({
+					taxonomy: "genre",
+					label: "Sub News",
+					parentId: "term-news",
+					locale: "en",
+					translationGroup: "term-sub",
+				});
+			});
+
+			it("scopes terms to a locale", async () => {
+				const access = createTaxonomyAccess(db);
+				const terms = await access.getTerms("genre", { locale: "en" });
+				expect(terms.map((t) => t.slug)).toEqual(["news", "sub-news"]);
+			});
+
+			it("parses term data JSON", async () => {
+				const access = createTaxonomyAccess(db);
+				const terms = await access.getTerms("topic");
+
+				expect(terms).toHaveLength(1);
+				expect(terms[0]!.data).toEqual({ description: "Artificial intelligence" });
+			});
+
+			it("returns an empty list for an unknown taxonomy", async () => {
+				const access = createTaxonomyAccess(db);
+				const terms = await access.getTerms("nonexistent");
+				expect(terms).toEqual([]);
+			});
+
+			it("returns terms assigned to an entry", async () => {
+				const access = createTaxonomyAccess(db);
+				const terms = await access.getEntryTerms("posts", "post-1", { locale: "en" });
+
+				expect(terms.map((t) => t.slug).toSorted()).toEqual(["ai", "news"]);
+			});
+
+			it("scopes entry terms to one taxonomy", async () => {
+				const access = createTaxonomyAccess(db);
+				const terms = await access.getEntryTerms("posts", "post-1", {
+					taxonomy: "genre",
+					locale: "en",
+				});
+
+				expect(terms).toHaveLength(1);
+				expect(terms[0]!.slug).toBe("news");
+			});
+
+			it("resolves entry terms into the requested locale", async () => {
+				// The assignment points at the term's translation_group, so
+				// asking for 'fr' surfaces the French translation of the term.
+				const access = createTaxonomyAccess(db);
+				const terms = await access.getEntryTerms("posts", "post-1", {
+					taxonomy: "genre",
+					locale: "fr",
+				});
+
+				expect(terms).toHaveLength(1);
+				expect(terms[0]!.slug).toBe("actualites");
+			});
+
+			it("is exposed on the context only with taxonomies:read", async () => {
+				const factory = new PluginContextFactory({ db });
+
+				const withCap = factory.createContext(
+					createTestPlugin({ id: "tax-reader", capabilities: ["taxonomies:read"] }),
+				);
+				expect(withCap.taxonomies).toBeDefined();
+				const defs = await withCap.taxonomies!.getAll();
+				expect(defs).toHaveLength(2);
+
+				// content:read alone does NOT grant taxonomy access...
+				const contentOnly = factory.createContext(
+					createTestPlugin({ id: "content-reader", capabilities: ["content:read"] }),
+				);
+				expect(contentOnly.taxonomies).toBeUndefined();
+				expect(contentOnly.content).toBeDefined();
+
+				// ...and taxonomies:read alone does not grant content access.
+				const taxOnly = factory.createContext(
+					createTestPlugin({ id: "tax-only", capabilities: ["taxonomies:read"] }),
+				);
+				expect(taxOnly.content).toBeUndefined();
+			});
+
+			it("creates terms and rejects parents from another taxonomy", async () => {
+				const access = createTaxonomyAccessWithWrite(db);
+				const created = await access.createTerm("genre", {
+					label: "Reviews",
+					parentId: "term-news",
+				});
+
+				expect(created).toMatchObject({
+					taxonomy: "genre",
+					slug: "reviews",
+					parentId: "term-news",
+					locale: "en",
+				});
+				await expect(
+					access.createTerm("topic", { label: "Models", parentId: "term-news" }),
+				).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+				await expect(
+					access.createTerm("topic", { label: "Flat child", parentId: "term-ai" }),
+				).rejects.toMatchObject({
+					code: "VALIDATION_ERROR",
+					message: "Taxonomy 'topic' is not hierarchical and cannot have parent terms",
+				});
+			});
+
+			it("allows only one concurrent translation per term group and locale", async () => {
+				setI18nConfig({ defaultLocale: "en", locales: ["en", "fr"] });
+				const access = createTaxonomyAccessWithWrite(db);
+
+				const results = await Promise.allSettled([
+					access.createTerm("genre", {
+						label: "Sous-actualités",
+						slug: "sous-actualites",
+						locale: "FR",
+						translationOf: "term-sub",
+					}),
+					access.createTerm("genre", {
+						label: "Actualités secondaires",
+						slug: "actualites-secondaires",
+						locale: "fr",
+						translationOf: "term-sub",
+					}),
+				]);
+
+				expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
+				expect(results.filter((result) => result.status === "rejected")).toHaveLength(1);
+				const rejected = results.find((result) => result.status === "rejected");
+				expect(rejected?.status === "rejected" ? rejected.reason : null).toMatchObject({
+					message: "Term translation already exists for locale 'fr'",
+				});
+				expect(
+					(await access.getTerms("genre", { locale: "fr" })).filter(
+						(term) => term.translationGroup === "term-sub",
+					),
+				).toHaveLength(1);
+			});
+
+			it("applies concurrent assignment additions as set deltas", async () => {
+				await sql`DELETE FROM content_taxonomies`.execute(db);
+				const access = createTaxonomyAccessWithWrite(db);
+
+				await Promise.all([
+					access.addEntryTerms("posts", "post-1", "genre", ["term-news"]),
+					access.addEntryTerms("posts", "post-1", "genre", ["term-sub"]),
+				]);
+
+				const assigned = await access.getEntryTerms("posts", "post-1", {
+					taxonomy: "genre",
+					locale: "en",
+				});
+				expect(assigned.map((term) => term.id).toSorted()).toEqual(["term-news", "term-sub"]);
+			});
+
+			it("removes only named term groups and validates attachment and ownership", async () => {
+				const access = createTaxonomyAccessWithWrite(db);
+				await access.removeEntryTerms("posts", "post-1", "genre", ["term-news-fr"]);
+				expect(
+					(await access.getEntryTerms("posts", "post-1", { locale: "en" })).map((term) => term.id),
+				).toEqual(["term-ai"]);
+
+				await expect(
+					access.addEntryTerms("posts", "post-1", "genre", ["term-ai"]),
+				).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+				await sql`UPDATE _emdash_taxonomy_defs SET collections = '[]' WHERE name = 'genre'`.execute(
+					db,
+				);
+				await expect(
+					access.addEntryTerms("posts", "post-1", "genre", ["term-news"]),
+				).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+			});
+
+			it("exposes taxonomy mutations only with taxonomies:write", () => {
+				const factory = new PluginContextFactory({ db });
+				const reader = factory.createContext(
+					createTestPlugin({ id: "tax-reader", capabilities: ["taxonomies:read"] }),
+				);
+				const writer = factory.createContext(
+					createTestPlugin({ id: "tax-writer", capabilities: ["taxonomies:write"] }),
+				);
+
+				expect(reader.taxonomies?.createTerm).toBeUndefined();
+				expect(writer.taxonomies?.createTerm).toBeTypeOf("function");
+				expect(writer.taxonomies?.getAll).toBeTypeOf("function");
+			});
+		});
+
+		describe("createContentAccessWithWrite", () => {
+			it("includes read methods", async () => {
+				const access = createContentAccessWithWrite(db);
+
+				expect(typeof access.get).toBe("function");
+				expect(typeof access.list).toBe("function");
+			});
+
+			it("includes write methods", async () => {
+				const access = createContentAccessWithWrite(db);
+
+				expect(typeof access.create).toBe("function");
+				expect(typeof access.update).toBe("function");
+				expect(typeof access.delete).toBe("function");
+			});
+
+			it("can create new content", async () => {
+				const access = createContentAccessWithWrite(db);
+
+				const created = await access.create("posts", {
+					title: "New Post",
+					content: "New content",
+				});
+
+				expect(created.id).toBeDefined();
+				expect(created.data.title).toBe("New Post");
+
+				// Verify it was created
+				const found = await access.get("posts", created.id);
+				expect(found).not.toBeNull();
+			});
+
+			it("persists an explicit locale using the configured casing", async () => {
+				setI18nConfig({ defaultLocale: "en", locales: ["en", "zh-TW"] });
+				const access = createContentAccessWithWrite(db);
+
+				const created = await access.create("posts", { title: "繁體中文" }, { locale: "zh-tw" });
+
+				expect(created.locale).toBe("zh-TW");
+				await expect(access.list("posts", { where: { locale: "zh-TW" } })).resolves.toMatchObject({
+					items: [expect.objectContaining({ id: created.id, locale: "zh-TW" })],
+				});
+			});
+
+			it("uses the configured default locale when locale is omitted", async () => {
+				setI18nConfig({ defaultLocale: "ja", locales: ["ja", "en"] });
+				const access = createContentAccessWithWrite(db);
+
+				const created = await access.create("posts", { title: "日本語" });
+
+				expect(created.locale).toBe("ja");
+			});
+
+			it("uses a non-English default on single-locale sites", async () => {
+				setI18nConfig({ defaultLocale: "fr", locales: ["fr"] });
+				const access = createContentAccessWithWrite(db);
+
+				const created = await access.create("posts", { title: "Français" });
+
+				expect(created.locale).toBe("fr");
+			});
+
+			it("retains the en fallback when i18n is not configured", async () => {
+				const access = createContentAccessWithWrite(db);
+
+				const created = await access.create("posts", { title: "English" });
+
+				expect(created.locale).toBe("en");
+			});
+
+			it("persists a valid explicit locale when i18n is not configured", async () => {
+				const access = createContentAccessWithWrite(db);
+
+				const created = await access.create("posts", { title: "日本語" }, { locale: "ja" });
+
+				expect(created.locale).toBe("ja");
+			});
+
+			it("rejects malformed and unconfigured explicit locales", async () => {
+				setI18nConfig({ defaultLocale: "en", locales: ["en", "fr"] });
+				const access = createContentAccessWithWrite(db);
+
+				await expect(
+					access.create("posts", { title: "Malformed" }, { locale: "en_US" }),
+				).rejects.toThrow(/invalid locale code/i);
+				await expect(
+					access.create("posts", { title: "Unknown" }, { locale: "de" }),
+				).rejects.toThrow(/not configured/i);
+			});
+
+			it("runs the content-write fence before a runtime-backed create", async () => {
+				const access = createContentAccessWithWrite(
+					db,
+					async () => {
+						throw new Error("write fenced");
+					},
+					undefined,
+					async () => {
+						throw new Error("runtime callback reached");
+					},
+				);
+
+				await expect(access.create("posts", { title: "Blocked" })).rejects.toThrow("write fenced");
+			});
+		});
+
+		describe("SEO panel integration", () => {
+			beforeEach(async () => {
+				// Register the "posts" collection with SEO enabled so the plugin
+				// content API routes `seo` writes to the core SEO panel.
+				await sql`
+					INSERT INTO _emdash_collections (slug, label, label_singular, has_seo)
+					VALUES ('posts', 'Posts', 'Post', 1)
+				`.execute(db);
+			});
+
+			it("returns seo defaults from get() for SEO-enabled collections", async () => {
+				const access = createContentAccess(db);
+				const post = await access.get("posts", "post-1");
+
+				expect(post).not.toBeNull();
+				expect(post!.seo).toEqual({
+					title: null,
+					description: null,
+					image: null,
+					canonical: null,
+					noIndex: false,
+				});
+			});
+
+			it("omits seo from get() for collections without SEO enabled", async () => {
+				// Reset has_seo on posts so it behaves like a non-SEO collection
+				await db
+					.updateTable("_emdash_collections")
+					.set({ has_seo: 0 })
+					.where("slug", "=", "posts")
+					.execute();
+
+				const access = createContentAccess(db);
+				const post = await access.get("posts", "post-1");
+
+				expect(post).not.toBeNull();
+				expect(post!.seo).toBeUndefined();
+			});
+
+			it("update() routes `seo` to the SEO panel instead of failing on missing column", async () => {
+				const access = createContentAccessWithWrite(db);
+
+				// Regression for #374: previously this threw
+				// "SQLite error: no such column: seo"
+				const updated = await access.update("posts", "post-1", {
+					seo: {
+						title: "Custom SEO Title",
+						description: "A better meta description",
+						canonical: "https://example.com/canonical",
+						noIndex: false,
+					},
+				});
+
+				expect(updated.seo).toEqual({
+					title: "Custom SEO Title",
+					description: "A better meta description",
+					image: null,
+					canonical: "https://example.com/canonical",
+					noIndex: false,
+				});
+
+				// Verify it persisted via a subsequent read
+				const fresh = await access.get("posts", "post-1");
+				expect(fresh!.seo?.title).toBe("Custom SEO Title");
+				expect(fresh!.seo?.description).toBe("A better meta description");
+			});
+
+			it("update() accepts field updates alongside seo in a single call", async () => {
+				const access = createContentAccessWithWrite(db);
+
+				const updated = await access.update("posts", "post-1", {
+					title: "Updated Title",
+					seo: {
+						title: "SEO Title",
+						description: "SEO Description",
+					},
+				});
+
+				expect(updated.data.title).toBe("Updated Title");
+				expect(updated.seo?.title).toBe("SEO Title");
+				expect(updated.seo?.description).toBe("SEO Description");
+			});
+
+			it("update() only overwrites explicitly-set seo fields (partial updates)", async () => {
+				const access = createContentAccessWithWrite(db);
+
+				await access.update("posts", "post-1", {
+					seo: { title: "Initial Title", description: "Initial Description" },
+				});
+
+				const updated = await access.update("posts", "post-1", {
+					seo: { title: "Updated Title" },
+				});
+
+				expect(updated.seo?.title).toBe("Updated Title");
+				// description must not be clobbered by a partial update
+				expect(updated.seo?.description).toBe("Initial Description");
+			});
+
+			it("create() routes `seo` to the SEO panel", async () => {
+				const access = createContentAccessWithWrite(db);
+
+				const created = await access.create("posts", {
+					title: "New Post",
+					content: "Body",
+					seo: {
+						title: "Brand New SEO",
+						description: "New Description",
+					},
+				});
+
+				expect(created.data.title).toBe("New Post");
+				expect(created.seo?.title).toBe("Brand New SEO");
+				expect(created.seo?.description).toBe("New Description");
+
+				const fresh = await access.get("posts", created.id);
+				expect(fresh!.seo?.title).toBe("Brand New SEO");
+			});
+
+			it("update() throws when seo is provided on a collection without SEO enabled", async () => {
+				// Disable SEO on posts
+				await db
+					.updateTable("_emdash_collections")
+					.set({ has_seo: 0 })
+					.where("slug", "=", "posts")
+					.execute();
+
+				const access = createContentAccessWithWrite(db);
+
+				await expect(
+					access.update("posts", "post-1", {
+						seo: { title: "Won't work" },
+					}),
+				).rejects.toThrow(SEO_NOT_ENABLED_REGEX);
+			});
+
+			it("list() hydrates seo for each item in SEO-enabled collections", async () => {
+				const access = createContentAccessWithWrite(db);
+
+				await access.update("posts", "post-1", {
+					seo: { title: "Post One SEO" },
+				});
+				await access.update("posts", "post-2", {
+					seo: { title: "Post Two SEO" },
+				});
+
+				const result = await access.list("posts");
+				expect(result.items).toHaveLength(2);
+
+				const byId = new Map(result.items.map((i) => [i.id, i]));
+				expect(byId.get("post-1")?.seo?.title).toBe("Post One SEO");
+				expect(byId.get("post-2")?.seo?.title).toBe("Post Two SEO");
+			});
+		});
+	});
+
+	describe("Redirect Access", () => {
+		it("paginates reads and returns versioned single rules", async () => {
+			const access = createRedirectAccess(db, true);
+			const first = await access.create({ source: "/old-a", destination: "/new-a" });
+			await access.create({ source: "/old-b", destination: "/new-b", type: 308 });
+
+			const page = await access.list({ limit: 1 });
+			expect(page.items).toHaveLength(1);
+			expect(page.hasMore).toBe(true);
+			expect(page.cursor).toBeDefined();
+			await expect(access.get(first.redirect.id)).resolves.toEqual(first);
+		});
+
+		it("reads redirect fields and their revision in one database snapshot", async () => {
+			const writer = createRedirectAccess(db, true);
+			const created = await writer.create({ source: "/snapshot", destination: "/target" });
+			let queryCount = 0;
+			const countedDb = db.withPlugin({
+				transformQuery(args: PluginTransformQueryArgs): RootOperationNode {
+					queryCount++;
+					return args.node;
+				},
+				transformResult(args: PluginTransformResultArgs): Promise<QueryResult<UnknownRow>> {
+					return Promise.resolve(args.result);
+				},
+			});
+
+			await expect(createRedirectAccess(countedDb).get(created.redirect.id)).resolves.toEqual(
+				created,
+			);
+			expect(queryCount).toBe(1);
+		});
+
+		it("uses an opaque precondition for concurrent updates", async () => {
+			const access = createRedirectAccess(db, true);
+			const created = await access.create({ source: "/before", destination: "/after" });
+			const results = await Promise.allSettled([
+				access.update(created.redirect.id, { destination: "/winner-a", _rev: created._rev }),
+				access.update(created.redirect.id, { destination: "/winner-b", _rev: created._rev }),
+			]);
+
+			expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
+			const rejected = results.find((result) => result.status === "rejected");
+			expect(rejected).toMatchObject({
+				status: "rejected",
+				reason: expect.objectContaining({ code: "CONFLICT" }),
+			});
+		});
+
+		it("rejects stale deletes without removing the current rule", async () => {
+			const access = createRedirectAccess(db, true);
+			const created = await access.create({ source: "/stale", destination: "/current" });
+			const updated = await access.update(created.redirect.id, {
+				destination: "/new-current",
+				_rev: created._rev,
+			});
+
+			await expect(
+				access.delete(created.redirect.id, { _rev: created._rev }),
+			).rejects.toMatchObject({
+				code: "CONFLICT",
+			});
+			await expect(access.get(created.redirect.id)).resolves.toEqual(updated);
+		});
+
+		it("does not treat visitor hit tracking as a configuration conflict", async () => {
+			const access = createRedirectAccess(db, true);
+			const created = await access.create({ source: "/popular", destination: "/target" });
+			await new RedirectRepository(db).recordHit(created.redirect.id);
+
+			await expect(
+				access.update(created.redirect.id, {
+					destination: "/new-target",
+					_rev: created._rev,
+				}),
+			).resolves.toMatchObject({ redirect: { destination: "/new-target", hits: 1 } });
+		});
+
+		it("preserves terminal, pattern, duplicate, self-loop, and multi-hop-loop validation", async () => {
+			const access = createRedirectAccess(db, true);
+			const terminal = await access.create({ source: "/gone", type: 410 });
+			expect(terminal.redirect.destination).toBe("");
+			await expect(
+				access.create({ source: "/posts/[slug]", destination: "/archive/[missing]" }),
+			).rejects.toBeInstanceOf(RedirectAccessError);
+			await access.create({ source: "/a", destination: "/b" });
+			await access.create({ source: "/b", destination: "/c" });
+			await expect(access.create({ source: "/c", destination: "/a" })).rejects.toMatchObject({
+				code: "VALIDATION_ERROR",
+			});
+			await expect(access.create({ source: "/a", destination: "/other" })).rejects.toMatchObject({
+				code: "CONFLICT",
+			});
+			await expect(access.create({ source: "/self", destination: "/self" })).rejects.toMatchObject({
+				code: "VALIDATION_ERROR",
+			});
+		});
+
+		it("does not let plugins set the host-owned automatic marker", async () => {
+			const access = createRedirectAccess(db, true);
+			await expect(
+				access.create({ source: "/manual", destination: "/target", auto: true } as never),
+			).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+		});
+
+		it("denies writes through read-only access", async () => {
+			const access = createRedirectAccess(db);
+			expect("create" in access).toBe(false);
+			expect("update" in access).toBe(false);
+			expect("delete" in access).toBe(false);
+		});
+	});
+
+	describe("schema read access", () => {
+		it("lists collections and fields without internal identifiers", async () => {
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({ slug: "notes", label: "Notes", hidden: true });
+			await registry.createField("notes", {
+				slug: "summary",
+				label: "Summary",
+				type: "string",
+				indexed: true,
+			});
+
+			const notes = (await createSchemaAccess(db).listCollections()).find(
+				(collection) => collection.slug === "notes",
+			);
+			expect(notes).toMatchObject({
+				label: "Notes",
+				hidden: true,
+				fields: [expect.objectContaining({ slug: "summary", indexed: true })],
+			});
+			expect(notes).not.toHaveProperty("id");
+			expect(notes!.fields[0]).not.toHaveProperty("collectionId");
+			expect(notes!.fields[0]).not.toHaveProperty("columnType");
+		});
+	});
+
+	describe("HTTP Access", () => {
+		describe("createHttpAccess (with host restrictions)", () => {
+			it("allows requests to allowed hosts", async () => {
+				const http = createHttpAccess("test-plugin", ["example.com"]);
+
+				// We can't actually make the request in tests, but we can verify
+				// the function doesn't throw for allowed hosts
+				expect(typeof http.fetch).toBe("function");
+			});
+
+			it("blocks requests to non-allowed hosts", async () => {
+				const http = createHttpAccess("test-plugin", ["example.com"]);
+
+				await expect(http.fetch("https://evil.com/api")).rejects.toThrow(NOT_ALLOWED_FETCH_REGEX);
+			});
+
+			it("supports wildcard host patterns", { timeout: 15000 }, async () => {
+				const http = createHttpAccess("test-plugin", ["*.example.com"]);
+
+				// Should not throw for subdomains
+				// (Can't test actual fetch, but verify pattern matching logic)
+				await expect(http.fetch("https://api.example.com/test")).rejects.not.toThrow(
+					NO_ALLOWED_FETCH_REGEX,
+				);
+			});
+		});
+
+		describe("createBlockedHttpAccess", () => {
+			it("always throws", async () => {
+				const http = createBlockedHttpAccess("no-network-plugin");
+
+				await expect(http.fetch("https://example.com")).rejects.toThrow(NO_NETWORK_FETCH_REGEX);
+			});
+		});
+
+		describe("createUnrestrictedHttpAccess", () => {
+			it("returns an HttpAccess with a fetch function", () => {
+				const http = createUnrestrictedHttpAccess("unrestricted-plugin");
+				expect(typeof http.fetch).toBe("function");
+			});
+
+			it("does not throw for any host", async () => {
+				const http = createUnrestrictedHttpAccess("unrestricted-plugin");
+				// Can't make a real request in tests, but verify it doesn't throw a
+				// host-validation error — it will throw a network error instead.
+				await expect(http.fetch("https://any-host-at-all.example.com/test")).rejects.not.toThrow(
+					NOT_ALLOWED_FETCH_REGEX,
+				);
+			});
+		});
+	});
+
+	describe("Storage Access", () => {
+		it("creates collection accessors from config", () => {
+			const storage = createStorageAccess(db, "test-plugin", {
+				events: { indexes: ["type"] },
+				cache: { indexes: ["key"] },
+			});
+
+			expect(storage.events).toBeDefined();
+			expect(storage.cache).toBeDefined();
+		});
+
+		it("provides full StorageCollection API", () => {
+			const storage = createStorageAccess(db, "test-plugin", {
+				items: { indexes: [] },
+			});
+
+			const collection = storage.items;
+			expect(typeof collection.get).toBe("function");
+			expect(typeof collection.put).toBe("function");
+			expect(typeof collection.delete).toBe("function");
+			expect(typeof collection.exists).toBe("function");
+			expect(typeof collection.getMany).toBe("function");
+			expect(typeof collection.putMany).toBe("function");
+			expect(typeof collection.deleteMany).toBe("function");
+			expect(typeof collection.query).toBe("function");
+			expect(typeof collection.count).toBe("function");
+		});
+
+		it("isolates storage between plugins", async () => {
+			const storage1 = createStorageAccess(db, "plugin-1", {
+				items: { indexes: [] },
+			});
+			const storage2 = createStorageAccess(db, "plugin-2", {
+				items: { indexes: [] },
+			});
+
+			await storage1.items.put("doc-1", { value: "from plugin 1" });
+
+			// Plugin 2 should not see plugin 1's data
+			const fromPlugin2 = await storage2.items.get("doc-1");
+			expect(fromPlugin2).toBeNull();
+
+			// Plugin 1 should still see its data
+			const fromPlugin1 = await storage1.items.get("doc-1");
+			expect(fromPlugin1).toEqual({ value: "from plugin 1" });
+		});
+	});
+
+	describe("KV Access", () => {
+		it("prefixes keys with plugin ID", async () => {
+			const optionsRepo = new OptionsRepository(db);
+			const kv = createKVAccess(optionsRepo, "test-plugin");
+
+			await kv.set("my-key", { foo: "bar" });
+
+			// Verify the key is prefixed in the database
+			const rawValue = await optionsRepo.get("plugin:test-plugin:my-key");
+			expect(rawValue).toEqual({ foo: "bar" });
+		});
+
+		it("isolates KV between plugins", async () => {
+			const optionsRepo = new OptionsRepository(db);
+			const kv1 = createKVAccess(optionsRepo, "plugin-1");
+			const kv2 = createKVAccess(optionsRepo, "plugin-2");
+
+			await kv1.set("shared-key", "value from 1");
+			await kv2.set("shared-key", "value from 2");
+
+			expect(await kv1.get("shared-key")).toBe("value from 1");
+			expect(await kv2.get("shared-key")).toBe("value from 2");
+		});
+
+		it("supports listing keys with prefix", async () => {
+			const optionsRepo = new OptionsRepository(db);
+			const kv = createKVAccess(optionsRepo, "test-plugin");
+
+			await kv.set("settings:theme", "dark");
+			await kv.set("settings:lang", "en");
+			await kv.set("cache:user-1", { name: "John" });
+
+			const settings = await kv.list("settings:");
+			expect(settings).toHaveLength(2);
+			expect(settings.map((s) => s.key).toSorted()).toEqual(["settings:lang", "settings:theme"]);
+		});
+	});
+
+	describe("Log Access", () => {
+		it("prefixes messages with plugin ID", () => {
+			const log = createLogAccess("test-plugin");
+
+			// These just verify the methods exist and don't throw
+			expect(() => log.debug("test message")).not.toThrow();
+			expect(() => log.info("test message", { extra: "data" })).not.toThrow();
+			expect(() => log.warn("test warning")).not.toThrow();
+			expect(() => log.error("test error")).not.toThrow();
+		});
+	});
+
+	describe("PluginContextFactory", () => {
+		it("provides encrypted settings without granting another plugin authority", async () => {
+			vi.stubEnv(
+				"EMDASH_ENCRYPTION_KEY",
+				"emdash_enc_v1_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+			);
+			const factory = new PluginContextFactory({ db });
+			const ctx = factory.createContext(
+				createTestPlugin({
+					id: "settings-owner",
+					admin: {
+						settingsSchema: { apiKey: { type: "secret", label: "API key" } },
+					},
+				}),
+			);
+
+			await ctx.settings.set("apiKey", "native-secret");
+			await expect(ctx.settings.get("apiKey")).resolves.toBe("native-secret");
+			await expect(ctx.kv.get("settings:apiKey")).resolves.toBe("native-secret");
+			const raw = await new OptionsRepository(db).get("plugin:settings-owner:settings:apiKey");
+			expect(JSON.stringify(raw)).not.toContain("native-secret");
+			const errorLog = vi.spyOn(console, "error").mockImplementation(() => undefined);
+			ctx.log.error("credential=native-secret", { nested: { token: "native-secret" } });
+			expect(JSON.stringify(errorLog.mock.calls)).toContain("[REDACTED]");
+			expect(JSON.stringify(errorLog.mock.calls)).not.toContain("native-secret");
+
+			const other = factory.createContext(
+				createTestPlugin({
+					id: "other-plugin",
+					admin: {
+						settingsSchema: { apiKey: { type: "secret", label: "API key" } },
+					},
+				}),
+			);
+			await expect(other.settings.get("apiKey")).resolves.toBeNull();
+		});
+
+		it("gates schema and revision history independently", () => {
+			const factory = new PluginContextFactory({ db });
+			const ordinary = factory.createContext(createTestPlugin({ capabilities: ["content:read"] }));
+			const discovery = factory.createContext(
+				createTestPlugin({
+					capabilities: ["schema:read", "content:revisions:read", "content:read"],
+				}),
+			);
+
+			expect(ordinary.schema).toBeUndefined();
+			expect(ordinary.content?.listRevisions).toBeUndefined();
+			expect(discovery.schema).toBeDefined();
+			expect(discovery.content?.listRevisions).toBeTypeOf("function");
+		});
+		it("creates context with capability-gated access", () => {
+			const factory = new PluginContextFactory({ db });
+
+			const readOnlyPlugin = createTestPlugin({
+				id: "reader",
+				capabilities: ["content:read"],
+			});
+
+			const ctx = factory.createContext(readOnlyPlugin);
+
+			// Content should be read-only (no create/update/delete)
+			expect(ctx.content).toBeDefined();
+			expect(typeof ctx.content!.get).toBe("function");
+			expect(typeof ctx.content!.list).toBe("function");
+			expect("create" in ctx.content!).toBe(false);
+		});
+
+		it("provides undefined content for plugins without capability", () => {
+			const factory = new PluginContextFactory({ db });
+
+			const noContentPlugin = createTestPlugin({
+				id: "no-content",
+				capabilities: ["network:request"],
+			});
+
+			const ctx = factory.createContext(noContentPlugin);
+			expect(ctx.content).toBeUndefined();
+		});
+
+		it("provides redirect reads only with explicit redirect authority", () => {
+			const factory = new PluginContextFactory({ db });
+			const none = factory.createContext(createTestPlugin({ capabilities: ["content:write"] }));
+			const reader = factory.createContext(createTestPlugin({ capabilities: ["redirects:read"] }));
+
+			expect(none.redirects).toBeUndefined();
+			expect(reader.redirects).toBeDefined();
+			expect(typeof reader.redirects!.list).toBe("function");
+			expect(typeof reader.redirects!.get).toBe("function");
+			expect("create" in reader.redirects!).toBe(false);
+		});
+
+		it("provides redirect mutations only when redirects:write is declared", async () => {
+			const factory = new PluginContextFactory({ db });
+			const reader = factory.createContext(createTestPlugin({ capabilities: ["redirects:read"] }));
+			const writer = factory.createContext(
+				createTestPlugin({ capabilities: ["redirects:write", "redirects:read"] }),
+			);
+
+			expect("create" in reader.redirects!).toBe(false);
+			await expect(
+				writer.redirects!.create!({ source: "/writer", destination: "/allowed" }),
+			).resolves.toMatchObject({ redirect: { source: "/writer" } });
+		});
+
+		it("provides http for plugins with network:fetch", () => {
+			const factory = new PluginContextFactory({ db });
+
+			const networkPlugin = createTestPlugin({
+				id: "network",
+				capabilities: ["network:request"],
+				allowedHosts: ["api.example.com"],
+			});
+
+			const ctx = factory.createContext(networkPlugin);
+			expect(ctx.http).toBeDefined();
+			expect(typeof ctx.http!.fetch).toBe("function");
+		});
+
+		it("provides undefined http for plugins without capability", () => {
+			const factory = new PluginContextFactory({ db });
+
+			const noNetworkPlugin = createTestPlugin({
+				id: "no-network",
+				capabilities: [],
+			});
+
+			const ctx = factory.createContext(noNetworkPlugin);
+			expect(ctx.http).toBeUndefined();
+		});
+
+		it("provides unrestricted http for plugins with network:fetch:any", () => {
+			const factory = new PluginContextFactory({ db });
+
+			const plugin = createTestPlugin({
+				id: "unrestricted-network",
+				capabilities: ["network:request:unrestricted", "network:request"],
+			});
+
+			const ctx = factory.createContext(plugin);
+			expect(ctx.http).toBeDefined();
+			expect(typeof ctx.http!.fetch).toBe("function");
+		});
+
+		it("prefers network:fetch:any over network:fetch when both present", async () => {
+			const factory = new PluginContextFactory({ db });
+
+			const plugin = createTestPlugin({
+				id: "both-fetch",
+				capabilities: ["network:request", "network:request:unrestricted"],
+				allowedHosts: ["restricted.example.com"],
+			});
+
+			const ctx = factory.createContext(plugin);
+			expect(ctx.http).toBeDefined();
+			// With network:fetch:any, arbitrary hosts should not throw a host validation error
+			await expect(ctx.http!.fetch("https://unrestricted.example.com/test")).rejects.not.toThrow(
+				NOT_ALLOWED_FETCH_REGEX,
+			);
+		});
+
+		it("always provides kv, storage, and log", () => {
+			const factory = new PluginContextFactory({ db });
+
+			const minimalPlugin = createTestPlugin({
+				id: "minimal",
+				capabilities: [],
+				storage: {
+					items: { indexes: [] },
+				},
+			});
+
+			const ctx = factory.createContext(minimalPlugin);
+
+			expect(ctx.kv).toBeDefined();
+			expect(ctx.storage).toBeDefined();
+			expect(ctx.storage.items).toBeDefined();
+			expect(ctx.log).toBeDefined();
+		});
+
+		it("provides write:content access with create/update/delete", () => {
+			const factory = new PluginContextFactory({ db });
+
+			const writePlugin = createTestPlugin({
+				id: "writer",
+				capabilities: ["content:write"],
+			});
+
+			const ctx = factory.createContext(writePlugin);
+
+			expect(ctx.content).toBeDefined();
+			expect("create" in ctx.content!).toBe(true);
+			expect("update" in ctx.content!).toBe(true);
+			expect("delete" in ctx.content!).toBe(true);
+		});
+
+		it("gates publication and restore actions independently", async () => {
+			const versioned = {
+				item: {
+					id: "entry-1",
+					type: "posts",
+					slug: "entry-1",
+					status: "draft",
+					locale: "en",
+					data: {},
+					createdAt: "2030-01-01T00:00:00.000Z",
+					updatedAt: "2030-01-01T00:00:00.000Z",
+					publishedAt: null,
+				},
+				_rev: "revision-1",
+			};
+			const contentActions = {
+				flush: vi.fn().mockResolvedValue(undefined),
+				getVersioned: vi.fn().mockResolvedValue(versioned),
+				publish: vi.fn().mockResolvedValue(versioned),
+				unpublish: vi.fn().mockResolvedValue(versioned),
+				schedule: vi.fn().mockResolvedValue(versioned),
+				unschedule: vi.fn().mockResolvedValue(versioned),
+				getTrashedVersioned: vi.fn().mockResolvedValue(versioned),
+				restore: vi.fn().mockResolvedValue(versioned),
+			};
+			const factory = new PluginContextFactory({ db, contentActions });
+			const publisher = factory.createContext(
+				createTestPlugin({ id: "publisher", capabilities: ["content:publish"] }),
+			);
+			const restorer = factory.createContext(
+				createTestPlugin({ id: "restorer", capabilities: ["content:restore"] }),
+			);
+
+			expect(publisher.content).toBeDefined();
+			expect("get" in publisher.content!).toBe(true);
+			expect("publish" in publisher.content!).toBe(true);
+			expect("restore" in publisher.content!).toBe(false);
+			expect(restorer.content).toBeDefined();
+			expect("get" in restorer.content!).toBe(true);
+			expect("restore" in restorer.content!).toBe(true);
+			await expect(restorer.content!.get("posts", "entry-1")).rejects.toThrow(
+				"Missing capability: content:read",
+			);
+
+			if (!publisher.content || !("publish" in publisher.content))
+				throw new Error("missing publish");
+			await publisher.content.publish("posts", "entry-1", { _rev: "revision-1" });
+			expect(contentActions.publish).toHaveBeenCalledWith("publisher", "posts", "entry-1", {
+				_rev: "revision-1",
+			});
+		});
+
+		it("always provides site info", () => {
+			const factory = new PluginContextFactory({ db });
+
+			const plugin = createTestPlugin({ id: "site-test", capabilities: [] });
+			const ctx = factory.createContext(plugin);
+
+			expect(ctx.site).toBeDefined();
+			expect(typeof ctx.site.name).toBe("string");
+			expect(typeof ctx.site.url).toBe("string");
+			expect(typeof ctx.site.locale).toBe("string");
+		});
+
+		it("always provides url() helper", () => {
+			const factory = new PluginContextFactory({
+				db,
+				siteInfo: { siteUrl: "https://example.com" },
+			});
+
+			const plugin = createTestPlugin({ id: "url-test", capabilities: [] });
+			const ctx = factory.createContext(plugin);
+
+			expect(typeof ctx.url).toBe("function");
+			expect(ctx.url("/posts")).toBe("https://example.com/posts");
+		});
+
+		it("provides users for plugins with read:users", () => {
+			const factory = new PluginContextFactory({ db });
+
+			const plugin = createTestPlugin({
+				id: "user-reader",
+				capabilities: ["users:read"],
+			});
+
+			const ctx = factory.createContext(plugin);
+			expect(ctx.users).toBeDefined();
+			expect(typeof ctx.users!.get).toBe("function");
+			expect(typeof ctx.users!.getByEmail).toBe("function");
+			expect(typeof ctx.users!.list).toBe("function");
+		});
+
+		it("provides undefined users for plugins without read:users", () => {
+			const factory = new PluginContextFactory({ db });
+
+			const plugin = createTestPlugin({
+				id: "no-users",
+				capabilities: [],
+			});
+
+			const ctx = factory.createContext(plugin);
+			expect(ctx.users).toBeUndefined();
+		});
+
+		it("gates native comment reads and moderation independently", async () => {
+			const moderate = vi.fn(
+				async (_pluginId: string, id: string, status: PluginCommentStatus) => ({
+					id,
+					collection: "posts",
+					contentId: "post-1",
+					parentId: null,
+					authorName: "Reader",
+					authorEmail: "reader@example.com",
+					body: "Hello",
+					status,
+					ipHash: null,
+					userAgent: null,
+					moderationMetadata: null,
+					createdAt: "2026-01-01T00:00:00.000Z",
+					updatedAt: "2026-01-01T00:00:01.000Z",
+				}),
+			);
+			const factory = new PluginContextFactory({ db, commentModerate: moderate });
+			expect(factory.createContext(createTestPlugin()).comments).toBeUndefined();
+			const read = factory.createContext(
+				createTestPlugin({ capabilities: ["comments:read"] }),
+			).comments;
+			expect(read).toBeDefined();
+			expect(read?.setStatus).toBeUndefined();
+			const writable = factory.createContext(
+				createTestPlugin({ id: "moderator", capabilities: ["comments:moderate", "comments:read"] }),
+			).comments;
+			await writable?.setStatus?.("comment-1", "approved", { expectedStatus: "pending" });
+			expect(moderate).toHaveBeenCalledWith("moderator", "comment-1", "approved", "pending");
+		});
+
+		it("provides writable media (upload) for media:write when storage is configured", () => {
+			// Regression: the runtime threads `storage` but never `getUploadUrl`,
+			// so media:write plugins silently fell through to read-only media with
+			// no upload(). Storage is all upload() needs.
+			// eslint-disable-next-line typescript/no-unsafe-type-assertion -- minimal fake Storage for test
+			const storage = createFakeStorage() as never;
+			const factory = new PluginContextFactory({ db, storage });
+
+			const plugin = createTestPlugin({
+				id: "media-writer",
+				capabilities: ["media:write"],
+			});
+
+			const ctx = factory.createContext(plugin);
+			expect(ctx.media).toBeDefined();
+			expect(typeof ctx.media!.upload).toBe("function");
+			expect(typeof ctx.media!.getUploadUrl).toBe("function");
+			expect(typeof ctx.media!.get).toBe("function");
+		});
+
+		it("media:write upload() persists bytes to storage and creates a media record", async () => {
+			const fakeStorage = createFakeStorage();
+			// eslint-disable-next-line typescript/no-unsafe-type-assertion -- minimal fake Storage for test
+			const factory = new PluginContextFactory({ db, storage: fakeStorage as never });
+
+			const plugin = createTestPlugin({
+				id: "media-writer-2",
+				capabilities: ["media:write"],
+			});
+
+			const ctx = factory.createContext(plugin);
+			const bytes = new Uint8Array([1, 2, 3, 4]).buffer;
+			const result = await ctx.media!.upload!("logo.png", "image/png", bytes);
+
+			expect(result.mediaId).toBeTruthy();
+			expect(result.storageKey).toMatch(/\.png$/);
+			expect(fakeStorage.uploads.has(result.storageKey)).toBe(true);
+
+			// The media record is retrievable via the read surface.
+			const fetched = await ctx.media!.get(result.mediaId);
+			expect(fetched?.filename).toBe("logo.png");
+		});
+
+		it("warns and stays read-only for media:write when no storage is configured", () => {
+			const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+			try {
+				const factory = new PluginContextFactory({ db });
+
+				const plugin = createTestPlugin({
+					id: "media-writer-no-storage",
+					capabilities: ["media:write", "media:read"],
+				});
+
+				const ctx = factory.createContext(plugin);
+				// Re-create the context: hooks/routes do this on every invocation,
+				// so the warning must not fire again for the same plugin.
+				factory.createContext(plugin);
+
+				// Read access still works, but write is unavailable.
+				expect(ctx.media).toBeDefined();
+				expect(typeof ctx.media!.get).toBe("function");
+				expect(ctx.media!.upload).toBeUndefined();
+
+				// The author gets a signal rather than silent degradation — but
+				// only once per factory, not on every context creation.
+				expect(warnSpy).toHaveBeenCalledTimes(1);
+				expect(String(warnSpy.mock.calls[0]?.[1])).toContain("media:write");
+			} finally {
+				warnSpy.mockRestore();
+			}
+		});
+	});
+
+	describe("Site Info", () => {
+		it("creates site info with all options", () => {
+			const info = createSiteInfo({
+				siteName: "My Site",
+				siteUrl: "https://example.com/",
+				locale: "fr",
+				trailingSlash: "never",
+			});
+
+			expect(info.name).toBe("My Site");
+			expect(info.url).toBe("https://example.com"); // trailing slash stripped
+			expect(info.locale).toBe("fr");
+			expect(info.trailingSlash).toBe("never");
+		});
+
+		it("uses defaults for missing values", () => {
+			const info = createSiteInfo({});
+
+			expect(info.name).toBe("");
+			expect(info.url).toBe("");
+			expect(info.locale).toBe("en");
+			expect(info.trailingSlash).toBe("ignore"); // Astro's default
+		});
+
+		it("strips trailing slash from URL", () => {
+			const info = createSiteInfo({ siteUrl: "https://example.com/" });
+			expect(info.url).toBe("https://example.com");
+		});
+	});
+
+	describe("URL Helper", () => {
+		it("creates absolute URLs from paths", () => {
+			const url = createUrlHelper("https://example.com");
+			expect(url("/posts")).toBe("https://example.com/posts");
+			expect(url("/")).toBe("https://example.com/");
+		});
+
+		it("strips trailing slash from base URL", () => {
+			const url = createUrlHelper("https://example.com/");
+			expect(url("/posts")).toBe("https://example.com/posts");
+		});
+
+		it("throws for paths not starting with /", () => {
+			const url = createUrlHelper("https://example.com");
+			expect(() => url("posts")).toThrow('URL path must start with "/"');
+		});
+
+		it("works with empty base URL", () => {
+			const url = createUrlHelper("");
+			expect(url("/posts")).toBe("/posts");
+		});
+
+		it("rejects protocol-relative paths (//)", () => {
+			const url = createUrlHelper("https://example.com");
+			expect(() => url("//evil.com")).toThrow("protocol-relative");
+		});
+
+		it("rejects protocol-relative paths with empty base URL", () => {
+			const url = createUrlHelper("");
+			expect(() => url("//evil.com/path")).toThrow("protocol-relative");
+		});
+	});
+
+	describe("User Access", () => {
+		let userRepo: UserRepository;
+
+		beforeEach(async () => {
+			userRepo = new UserRepository(db);
+
+			// Create test users with all 5 role levels
+			await userRepo.create({ email: "admin@test.com", name: "Admin User", role: "admin" });
+			await userRepo.create({ email: "editor@test.com", name: "Editor User", role: "editor" });
+			await userRepo.create({ email: "author@test.com", name: "Author User", role: "author" });
+			await userRepo.create({
+				email: "contrib@test.com",
+				name: "Contributor User",
+				role: "contributor",
+			});
+			await userRepo.create({
+				email: "sub@test.com",
+				name: "Subscriber User",
+				role: "subscriber",
+			});
+		});
+
+		it("gets user by ID", async () => {
+			const user = await userRepo.findByEmail("admin@test.com");
+			const access = createUserAccess(db);
+
+			const result = await access.get(user!.id);
+			expect(result).not.toBeNull();
+			expect(result!.email).toBe("admin@test.com");
+			expect(result!.name).toBe("Admin User");
+			expect(result!.role).toBe(50); // admin = 50
+		});
+
+		it("gets user by email", async () => {
+			const access = createUserAccess(db);
+
+			const result = await access.getByEmail("editor@test.com");
+			expect(result).not.toBeNull();
+			expect(result!.email).toBe("editor@test.com");
+			expect(result!.role).toBe(40); // editor = 40
+		});
+
+		it("returns null for non-existent user", async () => {
+			const access = createUserAccess(db);
+
+			expect(await access.get("non-existent")).toBeNull();
+			expect(await access.getByEmail("nobody@test.com")).toBeNull();
+		});
+
+		it("lists users", async () => {
+			const access = createUserAccess(db);
+
+			const result = await access.list();
+			expect(result.items).toHaveLength(5);
+			// All users should have role as number
+			for (const user of result.items) {
+				expect(typeof user.role).toBe("number");
+			}
+		});
+
+		it("excludes sensitive fields", async () => {
+			const access = createUserAccess(db);
+
+			const result = await access.list();
+			for (const user of result.items) {
+				// UserInfo should only have: id, email, name, role, createdAt
+				const keys = Object.keys(user);
+				expect(keys).toContain("id");
+				expect(keys).toContain("email");
+				expect(keys).toContain("name");
+				expect(keys).toContain("role");
+				expect(keys).toContain("createdAt");
+				// Should NOT have sensitive fields
+				expect(keys).not.toContain("avatarUrl");
+				expect(keys).not.toContain("emailVerified");
+				expect(keys).not.toContain("data");
+				expect(keys).not.toContain("password_hash");
+			}
+		});
+
+		it("converts role strings to numeric levels", async () => {
+			const access = createUserAccess(db);
+
+			const admin = await access.getByEmail("admin@test.com");
+			const editor = await access.getByEmail("editor@test.com");
+			const subscriber = await access.getByEmail("sub@test.com");
+
+			expect(admin!.role).toBe(50);
+			expect(editor!.role).toBe(40);
+			expect(subscriber!.role).toBe(10);
+		});
+
+		it("respects limit on list", async () => {
+			const access = createUserAccess(db);
+
+			const result = await access.list({ limit: 2 });
+			expect(result.items).toHaveLength(2);
+			expect(result.nextCursor).toBeDefined();
+		});
+
+		it("clamps limit to maximum of 100", async () => {
+			const access = createUserAccess(db);
+
+			// Should not throw for large limits — just clamp
+			const result = await access.list({ limit: 500 });
+			expect(result.items).toHaveLength(5);
+		});
+
+		it("clamps negative limit to minimum of 1", async () => {
+			const access = createUserAccess(db);
+
+			// Negative limit should be clamped to 1, not passed through
+			const result = await access.list({ limit: -999 });
+			expect(result.items).toHaveLength(1);
+		});
+
+		it("preserves contributor (20) and author (30) roles", async () => {
+			// beforeEach creates users via UserRepository with all 5 roles.
+			// Verify that contributor (20) and author (30) survive the round-trip.
+			const access = createUserAccess(db);
+
+			const contributor = await access.getByEmail("contrib@test.com");
+			expect(contributor).not.toBeNull();
+			expect(contributor!.role).toBe(20);
+
+			const author = await access.getByEmail("author@test.com");
+			expect(author).not.toBeNull();
+			expect(author!.role).toBe(30);
+		});
+
+		it("filters users by exact role number", async () => {
+			// beforeEach creates one user per role level (10, 20, 30, 40, 50)
+			const access = createUserAccess(db);
+
+			const contributors = await access.list({ role: 20 });
+			expect(contributors.items).toHaveLength(1);
+			expect(contributors.items[0]!.email).toBe("contrib@test.com");
+			expect(contributors.items[0]!.role).toBe(20);
+
+			const authors = await access.list({ role: 30 });
+			expect(authors.items).toHaveLength(1);
+			expect(authors.items[0]!.email).toBe("author@test.com");
+			expect(authors.items[0]!.role).toBe(30);
+
+			const admins = await access.list({ role: 50 });
+			expect(admins.items).toHaveLength(1);
+			expect(admins.items[0]!.email).toBe("admin@test.com");
+		});
+
+		it("supports cursor-based pagination", async () => {
+			const access = createUserAccess(db);
+			const seen = new Set<string>();
+
+			// Page through all 5 users one at a time
+			let cursor: string | undefined;
+			let pageCount = 0;
+			// eslint-disable-next-line no-constant-condition
+			while (true) {
+				const page = await access.list({ limit: 1, cursor });
+				if (page.items.length === 0) break;
+
+				expect(page.items).toHaveLength(1);
+				const userId = page.items[0]!.id;
+				expect(seen.has(userId)).toBe(false); // no duplicates
+				seen.add(userId);
+				pageCount++;
+
+				if (!page.nextCursor) break; // last page
+				cursor = page.nextCursor;
+			}
+
+			expect(seen.size).toBe(5);
+			expect(pageCount).toBe(5);
+		});
+	});
+});

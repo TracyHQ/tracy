@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "fd2e0187-e67b-4869-8cfd-9de9e58d2868",
+  "status": "complete",
+  "name": "Eclipse",
+  "url": "https://styles.refero.design/style/fd2e0187-e67b-4869-8cfd-9de9e58d2868",
+  "sourceWebsite": "https://www.eclipse.builders",
+  "extractedAt": "2026-06-03T19:07:57.859Z",
+  "capturedAt": "2026-10-08T05:19:57.329684+00:00",
+  "theme": "mixed",
+  "industry": "crypto",
+  "description": "Cel-shaded neon comic strip — think Akira signage rendered as a finance terminal.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/478989f2-2dec-4aa5-b33f-c2c06e727865.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/0f409302-55ad-4e00-aeff-a9738653d2da.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/4cc77491-b9a7-42eb-acb5-fe971ffe6bf8.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b5772fae-1ff5-4dea-a71e-233246cd9cac.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4acd6578-3127-48d2-88d2-6caea5f3dfe8.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e0a8e265bf49c8c41ca0770796a093b8afe6bfc060ed0d2901bd109ebe9d217b",
+      "bytes": 19695
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7bc6530502a0009d17ceb51130f0d723bc13823910911e3eec99996035fb6378",
+      "bytes": 118627
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "616a9df7dd87118826ee299a1ad030113f10a49649469bdff141b1f1fa47d889",
+      "bytes": 15474
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b47f4d8050cd61c2a11ca2b7af56eab6778e6b0633484e5c23690d9a0f2aa370",
+      "bytes": 13947
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "45de5f8f10643290734f792669a037d82312526a6dd91c5897749cc7432977ea",
+      "bytes": 11470
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "30430894fae9d1dedb59ea78777142a698dd763f01504883fa0da8afccb59db8",
+      "bytes": 2549
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "53eb4eca5f43fe37a3dea73fdbe61cfa085244af48c41e9e1c506e2dabc4303c",
+      "bytes": 683
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "670f66ea75f02d12d4fd7cc055e2831c01333e77eef1a4c13997d34c84ab414c",
+      "bytes": 700
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4864bb0b2a799e84009184b5b6bdad89366240ce5467ec2150e49c1042b06243",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4f6019f687305128d29a6b5e125b11fa57a41d7ef8fb101dd10230f5b95d8733",
+      "bytes": 43056
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "bc8ac37a57d197177145b2d687b3b0943326248a9570130cfc0f2197d32e5ba4",
+      "bytes": 22457
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e8b98b579f7955c699201863f3e4e0a0668c1d6a1db7f64a9c3b1d72d40d43cc",
+      "bytes": 42149
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "02f999fb314b06c0174916dc8768adf3b987f73f486ff5ab2127509f9fe7112b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "8493c0dd862c198b9e1ae7bafc4443720c0705ea561c470ffb7d5961224e6772",
+      "bytes": 1785
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "852e4a7780298e9fadc864f6e45bfa1c0a9b7d2c3fa19dd82e3478bcd1ef3608",
+      "bytes": 2361
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "109e52eb-e70f-493e-9527-84d672b00c7b",
+    "11fed738-a5b5-4509-b4e2-3295ceab3604",
+    "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "227ff379-9b46-44fc-8ff1-37e0472239a6",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "530eb4cf-7e75-4833-95c9-746818050db7",
+    "54bfd692-3299-48ab-8cf5-784e632227b1",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "5d273906-0110-48cf-99cd-63a72eb9c586",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "7c38e84b-aea0-4c8f-b3e9-60b994ee6c6b",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a79b6a74-6b67-4c9f-9d69-bff80869b943",
+    "a8c07777-ae41-4b69-9aa7-b05700ff7a14",
+    "af3641fb-7d3c-40f4-aba1-42770dfaf091",
+    "c01ccb7b-46c9-487c-8a4e-0e9d6627f0d6",
+    "c55d2f24-deb1-44c1-9846-66a3523beb29",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "fd2e0187-e67b-4869-8cfd-9de9e58d2868"
+  ]
+}

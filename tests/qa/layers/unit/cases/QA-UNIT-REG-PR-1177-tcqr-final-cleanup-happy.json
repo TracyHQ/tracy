@@ -1,0 +1,60 @@
+{
+  "id": "QA-UNIT-REG-PR-1177-tcqr-final-cleanup-happy",
+  "itemIds": ["regression:REG-PR-1177-tcqr-final-cleanup"],
+  "requirement": "The final decisions after g65 hold: FULL WordPress and Joomla demo posts are translated only (each distinct text once, lorem kept, English sites untouched, the WordPress blog in a few model calls), menu items into a renamed blog category take its new name, the readiness checks accept L3/L5 and demo-mirrored titles and check L1, EmDash vacancies are never another company's job (Tracy Business EmDash 1.7.14 pinned), and Road to live's Polish step words its pages file truthfully",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1177-tcqr-final-cleanup.json",
+    "ref": "PR #1177 (fix); fix evidence: tasks/nhat-ky/2026-10-12-tcqr-final-cleanup.md",
+    "invariant": "S1: every test passes, none skipped or cancelled. S2: every test passes, none skipped or cancelled. S3: every test passes, none skipped or cancelled. S4: every test passes, none skipped or cancelled. S5: tracy-business/emdash 1.7.14, source and state files named for that version with a GitHub asset id. S6: blog-plan.js, post-title-stage.js, blog-name-once.js and joomla-article-titles.js do not exist; blog-translate.js and joomla-menu-categories.js do.",
+    "productSources": [
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "scripts/lib/template-customization-question-readiness-built-site/audit.mjs:65",
+      "scripts/lib/template-customization-question-readiness-built-site/content.mjs:21",
+      "scripts/lib/template-customization-question-readiness-built-site/dates-and-styles.mjs:60",
+      "scripts/lib/template-customization-question-readiness-built-site/labels.mjs:75",
+      "scripts/lib/template-customization-question-readiness-built-site/menus.mjs:52",
+      "scripts/lib/template-customization-question-readiness-built-site/text.mjs:147"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/web/tracy-harness/test/problem-guides.test.mjs:39 import() with a computed specifier",
+      "packages/web/tracy-harness/test/support/ops-i18n-esbuild.mjs:22 readFileSync() with a computed path",
+      "scripts/test/template-customization-question-readiness-built-site.test.mjs:42 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs:21 spawnSync() runs a computed path",
+      "tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs:37 spawnSync() passes packages/cms/tracy-emdash-theme-business/tests/personalize-keeps-structure.test.mjs to node; not proven to run it",
+      "tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs:37 spawnSync() passes vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/scripts/tests/personalize-rewrite-trade.test.mjs to node; not proven to run it",
+      "tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs:37 spawnSync() runs a computed path",
+      "tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs:49 spawnSync() runs a computed path",
+      "tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs:69 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1177-tcqr-final-cleanup.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1177-tcqr-final-cleanup"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1177-tcqr-final-cleanup",
+    "pr": 1177,
+    "kind": "fix",
+    "area": "sites/brief",
+    "file": "tests/regression/cases/REG-PR-1177-tcqr-final-cleanup.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "03e0e30c-4c0f-4879-948a-9b501e530207",
+  "status": "complete",
+  "name": "Grafana Labs",
+  "url": "https://styles.refero.design/style/03e0e30c-4c0f-4879-948a-9b501e530207",
+  "sourceWebsite": "https://grafana.com",
+  "extractedAt": "2026-09-24T17:37:42.631Z",
+  "capturedAt": "2026-10-08T05:07:53.681171+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Sunrise signal control room. Pair a quiet gray-white workspace with a broad four-color horizon gradient and exact blue interface signals.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/60e80158-85bc-4295-ba81-603628556a91.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "132c973ae873c455ab60f46601905946a8b08613b47096e8a13b92f9d4ea1167",
+      "bytes": 22499
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f19fc5be2117525f1742b78ed2d1cb3bda8aa6611911b6a7fd865d939450e064",
+      "bytes": 117922
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e5cd62ff943e8df8a5f8009236d801f760f0d99bb592057a6c267cd19e7e5a3a",
+      "bytes": 18148
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "517da1d7a40462e0e3370a2dd3fa63621e1e93cfc125457cd8613c3cfaa4ebd9",
+      "bytes": 17887
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "46d40e5e158b9d73af7b94af9fc5cc1da34dba2a709f83fa5c886ff53dcbd682",
+      "bytes": 11990
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e793eeb778aeb54c2a5747fbc7d54799915282981d8692db742ed51fc39f6cfd",
+      "bytes": 3951
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "bb59ffdfd45984eeb3d7f847d4e28b7b56242b2663dbc0db5b9c09220966042d",
+      "bytes": 837
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e6301857aac6929883847066294114ba5bc5ec1145367db32231aa41e59fce87",
+      "bytes": 954
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "189e3795d29833ec2049777dccb2fca9111bb625f88f6db19dc71e2150afe1fe",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d792932baff7035a80fc0603c7ca13c5dc88b40c90481b123a57272d1115285e",
+      "bytes": 45980
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "209dccf342226dd58f0e3c9e6e288a142067170108801cb3a1ceb6439ead87e8",
+      "bytes": 24551
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a04fc650ccdab44ac9f704c285b376569d5a78048630432be2ded44f465f9f96",
+      "bytes": 65963
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "bcfaf0bb7c39fcfcfd0aaa83365c566e14456f2975f5c9ad91dcc5eb48cf35f0",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b0bc2f368bcc492ff17094f3b85afca2c02cab6037bd5de079a832999d664678",
+      "bytes": 2414
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "916af54f72a19fd45f61feddaef48a4fe32cf8ec437113af7ec72d265bb50933",
+      "bytes": 3239
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "03e0e30c-4c0f-4879-948a-9b501e530207",
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "1ae4bcfe-c613-42fc-aab7-f9583381e7cc",
+    "1c1d3939-8d82-4907-aa3c-c9b2fcfbab4f",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "7368cfab-6313-4e50-97e5-c3318c52e7fe",
+    "7479c233-6fee-468b-af95-9169d01a293e",
+    "7f9eabb2-3f76-477d-849f-e868e698f421",
+    "972925c4-0caa-4dc2-9c00-798b5be0ad70",
+    "a6d39bad-6e32-462e-afce-67c9cb76cf40",
+    "c08ebca5-87d4-4c19-a5d7-ae5e670dae11",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "d271a6c4-942f-4abf-a3de-66795f15f031",
+    "dbc5ecba-7309-456f-93b4-4356c6b0d293",
+    "e7876363-181a-44a9-9e5c-2255cf98aea5",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

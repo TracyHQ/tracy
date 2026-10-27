@@ -1,0 +1,88 @@
+---
+/**
+ * /team/<slug> — one profile (source: com_content article in the People category, `tracy-article`
+ * with a captioned portrait and a Previous/Next pager). Name is the heading, role sits under it,
+ * then the portrait with `image_caption`, the excerpt and the Portable Text body. Previous/Next
+ * walk the published people in `sort` order.
+ */
+import { getEmDashCollection, getEmDashEntry } from 'emdash'
+import { PortableText } from 'emdash/ui'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import Photo from '@/components/site/Photo.astro'
+import ArticleH2 from '@/components/site/ArticleH2.astro'
+import BodyImage from '@/components/site/BodyImage.astro'
+import type { Chrome } from '@/lib/chrome'
+import { childLive } from '@/lib/link-gate'
+import { href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { stampFor, stampsFor } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+}
+const { chrome, locale, slug } = Astro.props
+const { site } = chrome
+const [{ entry }, pageRes, { entries }] = await Promise.all([
+  getEmDashEntry('people', slug, { locale }),
+  getEmDashEntry('team', 'team', { locale }),
+  getEmDashCollection('people', { locale, status: 'published', limit: 100 } as any)
+])
+// A child goes with its list page: Team unticked, its items answer 404 like the list, unless a page the customer kept still lists it (TCH #1013).
+const reachable = await childLive(Astro.request, locale, `/team/${slug}`)
+if (!entry || entry.data.status !== 'published' || !reachable) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const p = entry.data as Record<string, any>
+const page = (pageRes.entry?.data ?? {}) as Record<string, any>
+const name = p.name || p.title
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'people', entry)
+const $tp = stampFor(Astro.request, 'team', pageRes.entry)
+const $site = stampFor(Astro.request, 'site', site)
+const $ = stampsFor(Astro.request)
+// `name` prints the display name when set, else the required `title`.
+const nameField = (x: { data: Record<string, any> }) => (x.data.name ? 'name' : 'title')
+const body = p.content ?? []
+const all = (entries as any[])
+  .map((e) => ({ slug: e.slug as string, data: e.data as Record<string, any> }))
+  .sort((a, b) => (a.data.sort ?? 0) - (b.data.sort ?? 0))
+const idx = all.findIndex((x) => x.slug === slug)
+const prev = idx > 0 ? all[idx - 1] : undefined
+const next = idx >= 0 ? all[idx + 1] : undefined
+const label = (x: { data: Record<string, any> }) => x.data.name || x.data.title
+---
+
+<Base chrome={chrome} title={p.title} description={p.excerpt} image={mediaUrl(p.image)} currentPath="/team" content={{ collection: "people", id: entry.data.id, slug, toPath: (x) => `/team/${x}` }}>
+	<Breadcrumb items={[{ label: site.breadcrumb_home, url: href(locale, "/"), stamp: $site("breadcrumb_home") }, ...(page.title ? [{ label: page.title, url: href(locale, "/team"), stamp: $tp("title") }] : []), { label: name, stamp: $page(nameField(entry)) }]} />
+	<main id="main" class="wrap pb-[var(--band-y)] pt-10">
+		<PageOwner stamp={$page} />
+		<article class="mx-auto max-w-[720px]">
+			<header class="mb-6">
+				<h1 class="h-article" {...$page(nameField(entry))}>{name}</h1>
+				{p.role && <p class="lead mt-3" {...$page("role")}>{p.role}</p>}
+			</header>
+			{p.image && (
+				<figure class="mb-8">
+					<Photo image={p.image} stamp={$page("image")} alt={p.image_alt} class="aspect-square rounded-[var(--ds-card-radius,18px)]" width={1200} height={1200} priority />
+					{p.image_caption && <figcaption class="meta mt-3 text-center" {...$page("image_caption")}>{p.image_caption}</figcaption>}
+				</figure>
+			)}
+			{p.excerpt && <p class="lead mb-6 text-fg" {...$page("excerpt")}>{p.excerpt}</p>}
+			<div class="prose-article" {...$page("content")}>
+				<PortableText value={body} components={{ block: { h2: ArticleH2 }, type: { image: BodyImage } }} />
+			</div>
+			{(prev || next) && (
+				<nav class="mt-10 grid gap-4 border-t border-line-soft pt-6 md:grid-cols-2" aria-label={ui(locale).w.adjacentProfiles}>
+					{prev ? <a href={href(locale, `/team/${prev.slug}`)} class="group" {...$("people", prev)()}><span class="meta block" {...$site("prev_label")}>{site.prev_label}</span><span class="text-[17px] font-semibold text-fg group-hover:text-accent" {...$("people", prev)(nameField(prev))}>{label(prev)}</span></a> : <span></span>}
+					{next && <a href={href(locale, `/team/${next.slug}`)} class="group text-right" {...$("people", next)()}><span class="meta block" {...$site("next_label")}>{site.next_label}</span><span class="text-[17px] font-semibold text-fg group-hover:text-accent" {...$("people", next)(nameField(next))}>{label(next)}</span></a>}
+				</nav>
+			)}
+		</article>
+	</main>
+</Base>

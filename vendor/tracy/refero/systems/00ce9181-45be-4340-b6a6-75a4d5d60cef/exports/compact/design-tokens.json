@@ -1,0 +1,94 @@
+{
+  "color": {
+    "porcelain": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Porcelain — Page canvas, card surfaces, button text on dark fills — the dominant neutral that lets photography carry all chromatic weight"
+    },
+    "charcoal": {
+      "$value": "#1d1d1d",
+      "$type": "color",
+      "$description": "Charcoal — Primary text, filled primary action buttons, active nav — a soft black that reads warm rather than digital"
+    },
+    "hairline": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Hairline — Dividers, card borders, input outlines, image frame edges — the structural skeleton of every section"
+    },
+    "smoke": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Smoke — Secondary body text, button borders, subtle metadata — a middle gray that recedes behind primary copy"
+    },
+    "ash": {
+      "$value": "#a3a3a3",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, disabled state, muted helper copy — the quietest text tier"
+    },
+    "mist": {
+      "$value": "#f3f4f6",
+      "$type": "color",
+      "$description": "Mist — Soft card backgrounds, subtle alternating bands — provides the only tonal step between white surface and white surface"
+    },
+    "graphite": {
+      "$value": "#5e5e5e",
+      "$type": "color",
+      "$description": "Graphite — Body section background, mid-tier surface for inset panels"
+    },
+    "bone": {
+      "$value": "#cacaca",
+      "$type": "color",
+      "$description": "Bone — Faint dividers, disabled borders, focus halos at rest"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Icon fills, high-contrast graphic marks — reserved for SVG iconography only"
+    },
+    "slate": {
+      "$value": "#6b7280",
+      "$type": "color",
+      "$description": "Slate — Input field borders at rest — the one input-state neutral"
+    },
+    "moss": {
+      "$value": "#569d5f",
+      "$type": "color",
+      "$description": "Moss — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    },
+    "signal-blue": {
+      "$value": "#2563eb",
+      "$type": "color",
+      "$description": "Signal Blue — Info state, focused input highlight — the only chromatic functional signal in the system"
+    }
+  },
+  "font": {
+    "suisseintl": {
+      "$value": "SuisseIntl",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across every UI surface. SuisseIntl is a Swiss-geometric grotesque with squared terminals and optical precision; its cold neutrality is the counterweight to Cowboy's warm lifestyle photography. Use weight 500 for navigation and UI labels, 600 for emphasis and button text, 400 for body and editorial copy. The extreme type scale (100px display) with -0.025em tracking is signature — headlines feel cut, not typed."
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "Oversized monospaced display mark used as a graphic element — the only departure from SuisseIntl, lending a technical/spec-sheet accent to counter the humanist photography"
+    },
+    "intercom-sans": {
+      "$value": "Intercom Sans",
+      "$type": "fontFamily",
+      "$description": "Reserved for the Intercom chat widget — not a design system font, do not propagate"
+    },
+    "intercom-font": {
+      "$value": "intercom-font",
+      "$type": "fontFamily",
+      "$description": "intercom-font — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://cowboy.com",
+      "siteName": "Cowboy",
+      "extractedAt": "2026-06-03T18:56:05.727Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,343 @@
+{
+  "dos": [
+    "Use 9999px radius for all pill buttons, nav items, and tag badges",
+    "Use 30px radius for the hero search bar — this generous rounding is a signature",
+    "Pair 60px Gambarino headlines with 18px Switzer weight 400 subheads in #5b6882",
+    "Apply the sky gradient only to full-bleed hero or section backgrounds — never to cards",
+    "Use #009afc exclusively for filled primary CTAs; never for decorative fills, icons, or text",
+    "Keep card elevation at a single hairline shadow: rgba(0,0,0,0.05) 0px 1px 2px",
+    "Use Tanker at 16-19px with +0.05em tracking for small all-caps section markers"
+  ],
+  "donts": [
+    "Don't use #009afc for anything other than filled primary action buttons",
+    "Don't apply Gambarino to body copy, buttons, or UI labels — it is headline-only",
+    "Don't use font weights above 500 — Switzer and Gambarino cap at 500",
+    "Don't apply shadows heavier than rgba(0,0,0,0.1) — the system stays whisper-light",
+    "Don't use sharp corners (radius < 8px) on interactive elements",
+    "Don't use the sky gradient on card or panel surfaces — reserve it for atmospheric backdrops",
+    "Don't place #006dc8 text on #ffffff smaller than 14px — it falls below 4.5:1 contrast at smaller sizes"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#009afc",
+      "name": "Surf Blue",
+      "role": "Primary CTA fill, focused interactive state — the only vivid color in the system, reserved for actions that complete a task",
+      "group": "brand"
+    },
+    {
+      "hex": "#006dc8",
+      "name": "Deep Current",
+      "role": "Inset button highlight, pressed state, button shadow tint — creates the lifted feel under filled CTAs",
+      "group": "brand"
+    },
+    {
+      "hex": "#cfe9fd",
+      "name": "Sky Wash",
+      "role": "Pill badges (Open Source tag), outlined action borders, soft highlight washes — the cool whisper of brand blue on neutral surfaces",
+      "group": "brand",
+      "gradient": "linear-gradient(180deg, #4a9eff 0%, #7bb8ff 50%, #a8d5ff 100%)"
+    },
+    {
+      "hex": "#a8d5ff",
+      "name": "Sky Veil",
+      "role": "Hero background gradient bottom stop — fades the sky into white at the page floor",
+      "group": "brand",
+      "gradient": "linear-gradient(180deg, #4a9eff 0%, #7bb8ff 50%, #a8d5ff 100%)"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink",
+      "role": "Headlines, primary body text, icon strokes — the typographic anchor of every screen",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Card surfaces, search bar, button text, inverted surfaces — the floating layer above Mist Gray",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f3f4f6",
+      "name": "Mist",
+      "role": "Page canvas, recessed card backgrounds — the air that everything floats on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Hairline",
+      "role": "Borders, dividers, input outlines — the structural skeleton holding the airy layout together",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d1d1d1",
+      "name": "Stone",
+      "role": "Subtle outer shadows on elevated cards — softer than Hairline, only for depth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5b6882",
+      "name": "Slate Blue",
+      "role": "Secondary text, metadata, icon strokes, muted labels — the only chromatic neutral, gives UI text a cool undertone that matches the sky",
+      "group": "neutral"
+    },
+    {
+      "hex": "#808080",
+      "name": "Silver",
+      "role": "Tertiary helper text, disabled links — the quietest voice in the system",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered content within a full-bleed sky gradient hero. Hero is a single centered column: announcement pill → 60px serif headline → 18px subhead → large rounded search bar → download button, with floating preview cards arranged asymmetrically around the hero at slight angles (z-pattern reading flow). Section transitions are seamless — the sky gradient fades to white, then Mist Gray (#f3f4f6) sections alternate with white card blocks at 64px gaps. No sidebar, no mega-menu. Navigation is a single transparent top bar that becomes a white surface on scroll. Content density stays low — one idea per screen, generous breathing room, cards never appear in grids tighter than 2-up.",
+  "imagery": "Imagery is sparse, contained, and floaty. The hero scatters 4-5 cards at slight angles around a centered search bar: a blue book cover, a notebook entry card, a hand holding colorful pills (lifestyle product shot), and a data visualization card. Treatment: each visual is wrapped in its own rounded card (12-16px radius) with the standard 5% shadow, tilted -3° to +3° to suggest they're drifting. Photography is bright, high-key, and tightly cropped on objects — no environmental context, the object IS the hero. No illustrations or abstract graphics; the sky gradient does the atmospheric work. Icons throughout the UI are 1.5-2px stroke line icons in #5b6882, mono-weight, no fills.",
+  "similar": [
+    {
+      "why": "Same airy editorial density — serif headlines floating above a light canvas with rounded cards orbiting the focal element",
+      "business": "Are.na"
+    },
+    {
+      "why": "Same pill-shaped controls, single vivid blue accent, and generous radius on the primary interaction surface",
+      "business": "Readwise Reader"
+    },
+    {
+      "why": "Same low-contrast neutral system (#e5e7eb borders, #f3f4f6 surfaces) and restrained single-accent color discipline",
+      "business": "Notion"
+    },
+    {
+      "why": "Same whisper-light shadow approach (5% opacity, 1-2px blur) and pill-button geometry",
+      "business": "Linear"
+    },
+    {
+      "why": "Same typographic confidence pairing a serif voice with a geometric sans for UI, and the same contemplative, low-density layout",
+      "business": "Obsidian"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "12px or 16px",
+      "badges": "9999px",
+      "inputs": "16px",
+      "buttons": "9999px (pill) or 16px (rounded rect)",
+      "searchBar": "30px",
+      "largeCards": "42px"
+    },
+    "elementGap": "12-16px",
+    "sectionGap": "64px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#a8d5ff",
+      "name": "Sky Canvas",
+      "level": 1,
+      "purpose": "Hero full-bleed gradient backdrop — the atmospheric base layer"
+    },
+    {
+      "hex": "#f3f4f6",
+      "name": "Mist Ground",
+      "level": 2,
+      "purpose": "Page background below the hero and inside recessed panels"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 3,
+      "purpose": "Cards, search bar, nav, floating content previews"
+    },
+    {
+      "hex": "#009afc",
+      "name": "Surf Blue Surface",
+      "level": 4,
+      "purpose": "Filled CTA buttons — the only chromatic surface"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "element": "Floating content card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "element": "Hero search bar"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+      "element": "Primary CTA button (filled)"
+    },
+    {
+      "style": "rgb(0, 109, 200) 0px -4px 0px 0px inset",
+      "element": "Primary CTA button (inset highlight)"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.1) 0px 2px 4px -2px",
+      "element": "Secondary button"
+    }
+  ],
+  "northStar": "Open notebook floating in a clear blue sky. A serif headline drifts above a pill-shaped search bar while tilted content cards orbit like ideas in a thought bubble.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.108
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.126
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.144
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.45,
+      "letterSpacing": -0.162
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.36
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.11,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "display",
+      "size": 60,
+      "lineHeight": 1,
+      "letterSpacing": -0.6
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent header across all pages",
+      "description": "Transparent over the hero sky gradient. Logo (pink-to-orange gradient diamond) + wordmark on the left, nav links (Switzer 14px/500) in the center, GitHub star count pill (#ffffff background, 9999px radius, 1px #e5e7eb border) on the right. Height ~64px, no background fill until scroll."
+    },
+    {
+      "name": "Announcement Pill Badge",
+      "role": "Hero status callout (e.g. 'Now Open Source')",
+      "description": "Inline pill with #cfe9fd background, 1px #cfe9fd border, 9999px radius, 6px 12px padding. Label text at 14px Switzer weight 500 in #006dc8. Preceded by a small dot indicator in #009afc. Sits inline with supporting copy."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Primary page-level statement",
+      "description": "60px Gambarino weight 400, #000000, letter-spacing -0.6px, line-height 1.00. Centered above the search bar. The serif is the page's emotional anchor — it carries voice while the Switzer UI stays neutral."
+    },
+    {
+      "name": "Hero Subhead",
+      "role": "Supporting copy beneath the headline",
+      "description": "18px Switzer weight 400, #5b6882, line-height 1.45, letter-spacing -0.162px. Centered, max-width ~640px. Lighter weight and cool gray distinguish it from the headline without needing a size jump."
+    },
+    {
+      "name": "Hero Search Bar",
+      "role": "Primary interaction surface — the hero CTA",
+      "description": "White card (#ffffff), 30px border-radius, padding 16px 20px, shadow rgba(0,0,0,0.05) 0px 1px 2px. Contains: left-side tab segmented control (Web Search | Notebook) with a small icon for each, placeholder text in #808080 at 16px Switzer, and a filled Surf Blue Create Note button anchored to the right (16px radius, white text, 12px 24px padding, the full button shadow stack)."
+    },
+    {
+      "name": "Segmented Tab Control",
+      "role": "Mode switcher inside the search bar",
+      "description": "Two segments side by side, no visible container. Each segment: 14px Switzer weight 500, #5b6882 inactive / #000000 active, paired with a 16px line icon. Active segment carries a subtle visual weight shift (color + weight bump), not a background fill — the bar itself provides the container."
+    },
+    {
+      "name": "Primary CTA Button (Filled)",
+      "role": "Single dominant action per screen",
+      "description": "#009afc background, white text, 16px border-radius, 12px 24px padding, 16px Switzer weight 500. Shadow: rgba(0,0,0,0.1) 0px 10px 15px -3px + rgba(0,0,0,0.1) 0px 4px 6px -4px, plus rgb(0,109,200) 0px -4px 0px 0px inset for the lifted-from-below effect. The inset blue is the signature — it makes the button feel pressed up from the surface rather than glued on."
+    },
+    {
+      "name": "Large Download Button",
+      "role": "Hero secondary action",
+      "description": "Same Surf Blue fill as the primary CTA but larger: 18px Switzer weight 500, 16px 32px padding, 16px radius. Shadow stack rgba(0,0,0,0.1) 0px 4px 6px -1px + rgba(0,0,0,0.1) 0px 2px 4px -2px. Sits centered below the search bar with ~24px gap."
+    },
+    {
+      "name": "Outlined Pill Badge",
+      "role": "Tags, status labels, category markers",
+      "description": "9999px radius, 1px #cfe9fd border, transparent or #cfe9fd background at 30% opacity, text 14px Switzer weight 500 in #006dc8, 6px 12px padding. Soft, cool, secondary to the filled button — used for categorical metadata, not actions."
+    },
+    {
+      "name": "Floating Content Card",
+      "role": "Preview of notebook entries, saved pages, bookmarks",
+      "description": "White card (#ffffff), 12-16px border-radius, 16px padding, 1px #e5e7eb border, shadow rgba(0,0,0,0.05) 0px 1px 2px. Title at 16px Switzer weight 500 #000000, metadata rows at 14px Switzer weight 400 #5b6882, link text at 14px #006dc8 with underline. Slight rotation (-3° to +3°) in the hero creates the floating-cumulus effect."
+    },
+    {
+      "name": "Book Cover Card",
+      "role": "Physical-product or book-style previews",
+      "description": "16px radius, shadow rgba(0,0,0,0.1) 0px 10px 15px -3px, no border. Contains a full-bleed image (book cover or product shot) with a slight perspective tilt. Used in the hero to break the all-digital card pattern with a tactile object."
+    },
+    {
+      "name": "Recessed Card Surface",
+      "role": "Secondary content blocks, metadata panels",
+      "description": "#f3f4f6 background, 16px border-radius, 16px padding, 1px #e5e7eb border, no shadow. Sits one level below Paper cards — used for grouping secondary information that should not compete with the primary content."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary UI typeface — nav, body, buttons, cards, metadata, badge labels. A geometric sans that stays neutral so the Gambarino serif and Tanker display can carry personality. Caps at weight 500 by convention; the system never goes bold.",
+      "sizes": "12, 14, 15, 16, 17, 18, 20, 60",
+      "family": "Switzer",
+      "weight": "400, 500",
+      "lineHeight": "1.00, 1.11, 1.20, 1.40, 1.43, 1.45, 1.50, 1.56, 1.60",
+      "substitute": "Inter, Geist, Manrope",
+      "letterSpacing": "-0.0090em"
+    },
+    {
+      "role": "Hero headlines (36-60px) and editorial subheads — a modern serif with high contrast strokes that gives the page a literary, considered voice. The serif/sans split is the system's signature typographic move.",
+      "sizes": "16, 18, 20, 36, 40, 48, 60",
+      "family": "Gambarino",
+      "weight": "400, 500",
+      "lineHeight": "1.00, 1.11, 1.20, 1.40, 1.50, 1.56",
+      "substitute": "Fraunces, Source Serif Pro, Lora",
+      "letterSpacing": "-0.0100em"
+    },
+    {
+      "role": "Small all-caps display accent — appears in compact tags and section eyebrows at 16-19px with +0.05em tracking. Tanker is the system's editorial punctuation, used sparingly to mark transitions and categories without competing with Gambarino.",
+      "sizes": "16, 19",
+      "family": "Tanker",
+      "weight": "400",
+      "lineHeight": "1.30, 1.50",
+      "substitute": "Bebas Neue, Anton, Oswald",
+      "letterSpacing": "0.0500em"
+    },
+    {
+      "role": "Inter — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "Inter",
+      "weight": "500",
+      "lineHeight": "1.5",
+      "letterSpacing": "-0.009"
+    }
+  ],
+  "description": "Deta Surf treats the web like a cumulus notebook — a pale blue sky gradient carries the hero, content cards tilt and float at the edges, and the interface itself feels weightless. The signature typographic tension sits between Gambarino serif headlines and Switzer geometric sans: the words feel handwritten, the UI feels engineered. Tanker appears sparingly as an all-caps accent (16-19px, +0.05em tracking) on tags and small display elements, breaking the otherwise clean system with a crafted, editorial touch. Components hover rather than sit: cards carry a single hairline shadow at 5% opacity, filled buttons gain depth from a #006dc8 inset highlight, and the single brand blue (#009afc) appears only where the user must act. The whole system breathes — 8px base, generous 32px section gaps, 30px rounded hero search bar, and pill-shaped controls everywhere signal a contemplative, low-friction product.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #000000\n- background: #f3f4f6\n- card surface: #ffffff\n- border: #e5e7eb\n- secondary text: #5b6882\n- accent (pill/badge): #cfe9fd\n- primary action: #009afc (filled action)\n\n**Example Component Prompts**\n\n1. *Hero Search Bar.* White card (#ffffff), 30px border-radius, 16px 20px padding, shadow rgba(0,0,0,0.05) 0px 1px 2px. Inside: segmented tabs at 14px Switzer weight 500 (#5b6882 inactive, #000000 active) with 16px line icons. Placeholder at 16px Switzer weight 400 in #808080. Filled Create Note button anchored right: #009afc background, white text, 16px radius, 12px 24px padding, 16px Switzer weight 500, shadow rgba(0,0,0,0.1) 0px 10px 15px -3px + rgba(0,0,0,0.1) 0px 4px 6px -4px + rgb(0,109,200) 0px -4px 0px 0px inset.\n\n2. *Hero Section.* Full-bleed background: linear-gradient(180deg, #4a9eff 0%, #7bb8ff 50%, #a8d5ff 100%). Centered max-width 640px content stack. Announcement pill first: #cfe9fd background, 9999px radius, 14px Switzer weight 500 #006dc8, 6px 12px padding. Headline: 60px Gambarino weight 400, #000000, letter-spacing -0.6px, line-height 1.00. Subhead: 18px Switzer weight 400, #5b6882, line-height 1.45. Then the search bar (prompt 1). 64px vertical gaps between elements.\n\n3. *Floating Content Card.* White surface, 12px radius, 16px padding, 1px #e5e7eb border, shadow rgba(0,0,0,0.05) 0px 1px 2px. Title at 16px Switzer weight 500 #000000. Metadata rows at 14px Switzer weight 400 #5b6882. Optional link at 14px #006dc8 underlined. Apply a slight rotation (-3° to +3°) to suggest floating.\n\n4. *Outlined Pill Badge.* 9999px radius, 1px #cfe9fd border, #cfe9fd background, 14px Switzer weight 500 in #006dc8, 6px 12px padding. For categorical tags and status labels only — never for actionable items.\n\n5. *Top Nav Bar.* Transparent background, 64px height. Left: logo (gradient diamond) + wordmark in 16px Switzer weight 500 #000000. Center/right: nav links at 14px Switzer weight 500 #5b6882. Far right: GitHub star count pill — #ffffff background, 9999px radius, 1px #e5e7eb border, 14px Switzer weight 500 #000000, 6px 12px padding."
+    },
+    {
+      "title": "Elevation Philosophy",
+      "content": "Surfaces float, they don't stack. Every card carries exactly one shadow: rgba(0,0,0,0.05) 0px 1px 2px — a whisper of depth, not a platform. Buttons earn their lift through a compound shadow plus a colored inset (rgb(0,109,200) 0px -4px 0px 0px inset) that pushes the surface up from below rather than dropping a shadow onto it. Never layer shadows, never use heavy blurs, never use dark drop shadows at >10% opacity. The page should feel like everything is resting on the same altitude."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Two gradients carry meaning: the sky gradient (rgb(74,158,255) → rgb(123,184,255) → rgb(168,213,255), vertical) is reserved for hero and atmospheric full-bleed sections only, and a deeper navy gradient (rgb(26,42,58) → rgb(58,90,122), 135deg) is reserved for dark contrast sections or footer. No gradient ever touches a card surface, button, or input — gradients are environmental, never component-level."
+    }
+  ]
+}

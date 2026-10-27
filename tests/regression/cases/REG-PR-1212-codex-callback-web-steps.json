@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1212-codex-callback-web-steps",
+  "kind": "feat",
+  "title": "A browser sign-in in Settings › AI accounts says, before the sign-in page opens, that the browser will show a cannot-be-reached page and that its address is what to paste",
+  "pr": 1212,
+  "area": "settings/ai-accounts",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-model-plan accounts-pane tests (node:test, jsdom page, fake /api/seat-plan doors): pick ChatGPT Codex, press Connect now, read the panel."
+  ],
+  "expect": [
+    "The panel title is 'Waiting for ChatGPT Codex…' and Cancel stays in the panel row.",
+    "Under it, ol[data-steps='browser-callback'] holds three li in the order open, refused, copy; the 'Open sign-in page' link (data-action='reopen', href = the authorize URL) sits inside step 1.",
+    "Step 2 says the browser will show a page that cannot be reached (localhost refused to connect) and that this is expected.",
+    "Step 3 holds an aria-hidden address-bar drawing whose text contains localhost:1455/auth/callback?code=….",
+    "Every step comes before the paste box (form.tv-ob-paste); the pasted address still goes to connect/complete and connects the account."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-model-plan/test/accounts-pane.test.mjs"
+    ],
+    "tests": [
+      "a browser sign-in says what happens before the page opens: three steps in order, the refused page announced, then the paste box",
+      "a browser sign-in opens the page and offers the callback URL field; the pasted URL completes it",
+      "a wrong callback URL shows its error in the panel with Try again, and Try again starts that vendor again"
+    ],
+    "timeout_s": 180
+  },
+  "fence": "the order of the browser-sign-in panel: what the browser will show is said before the person opens the page, and the paste box comes after every step",
+  "selectors": {
+    "panel": ".tv-ob-connect[data-connect='pending']",
+    "steps": "ol[data-steps='browser-callback'] > li[data-step]",
+    "link": "a[data-action='reopen']",
+    "illustration": "[data-illustration='address-bar']",
+    "paste": "input[data-action='callback-url']"
+  }
+}

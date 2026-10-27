@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Email sample — a template list on the left and one branded system mail in an envelope frame</title>
+  <fields name="tb-kit-email">
+    <fieldset name="list" label="Template list">
+      <field name="list-title" type="text" label="List heading (small caps)" />
+    </fieldset>
+    <fieldset name="templates" label="Templates" multiple="1">
+      <field name="tpl-title" type="text" label="Template name" />
+      <field name="tpl-desc" type="text" label="One line" />
+    </fieldset>
+    <fieldset name="envelope" label="Envelope">
+      <field name="from" type="text" label="From line" />
+      <field name="to" type="text" label="To line" />
+      <field name="subject" type="text" label="Subject line" />
+      <field name="brand" type="text" label="Wordmark" default="{site.name}" />
+      <field name="brand-mark" type="text" label="Mark letters" default="{site.monogram}" />
+      <field name="greeting" type="text" label="Greeting" />
+      <field name="body" type="textarea" rows="4" label="First paragraph" />
+      <field name="meta-title" type="text" label="Details table heading" />
+      <field name="btn-text" type="text" label="Button text" />
+      <field name="foot" type="textarea" rows="2" label="Footer line" />
+    </fieldset>
+    <fieldset name="details" label="Details rows" multiple="1">
+      <field name="meta-key" type="text" label="Label" />
+      <field name="meta-value" type="text" label="Value" />
+    </fieldset>
+  </fields>
+</form>

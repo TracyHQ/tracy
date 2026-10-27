@@ -1,0 +1,163 @@
+{
+  "app": {
+    "addSite": "Thêm site",
+    "collapse": "Thu gọn thanh bên",
+    "expand": "Mở rộng thanh bên",
+    "inbox": "Hộp thư",
+    "launchpad": "Launchpad",
+    "loading": "Đang tải…",
+    "signInUnavailable": "Bề mặt này chưa có đường đăng nhập.",
+    "switchWorkspace": "Đổi workspace",
+    "workspace": "Sitespace",
+    "workspaces": "Sitespaces",
+    "yourWorkspace": "Workspace của bạn"
+  },
+  "common": {
+    "add": "Thêm site",
+    "cancel": "Huỷ",
+    "close": "Đóng",
+    "collapse": "Thu gọn",
+    "comingSoon": "Sắp có",
+    "copy": "Chép địa chỉ",
+    "expand": "Mở rộng",
+    "open": "Mở",
+    "settings": "Cài đặt",
+    "signIn": "Đăng nhập",
+    "signOut": "Đăng xuất",
+    "tryAgain": "Thử lại",
+    "chat": "Chat"
+  },
+  "home": {
+    "account": "Tài khoản",
+    "empty": {
+      "body": "Site nào bạn được mời sẽ hiện ở đây.",
+      "title": "Chưa có site nào"
+    },
+    "error": {
+      "body": "Kiểm tra kết nối rồi thử lại.",
+      "title": "Không tải được danh sách site."
+    },
+    "noAgent": "Agent của site này chưa được nối vào cowork.tracy.ai.",
+    "role": {
+      "admin": "Admin",
+      "developer": "Developer",
+      "editor": "Editor",
+      "owner": "Owner"
+    },
+    "status": {
+      "invite": "Lời mời",
+      "invitedBy": "{{name}} đã mời bạn",
+      "invitedByTeam": "Đội của bạn đã mời bạn",
+      "requested": "Đã xin vào",
+      "waiting": "Đang chờ admin duyệt yêu cầu của bạn",
+      "working": "Đang làm việc trên site này"
+    },
+    "subtitle": "Chọn một site để làm việc cùng agent của nó.",
+    "title": "Site của bạn"
+  },
+  "settings": {
+    "account": "Cài đặt người dùng",
+    "appearance": "Giao diện",
+    "email": "Email",
+    "emailNote": "Ở đây không tạo tài khoản — bạn đăng nhập bằng ghế đội của bạn cấp.",
+    "language": "Ngôn ngữ",
+    "preferences": "Tuỳ chọn",
+    "signOutConfirm": "Bạn chắc muốn đăng xuất? Muốn vào lại, bạn sẽ cần mã gửi tới email của ghế.",
+    "sites": "Site",
+    "theme": "Theme",
+    "themeDark": "Tối",
+    "themeLight": "Sáng",
+    "themeSystem": "Theo hệ thống",
+    "title": "Cài đặt"
+  },
+  "site": {
+    "addresses": "Địa chỉ của site này",
+    "agent": "Agent của site",
+    "agentPane": "agent",
+    "back": "Về danh sách site",
+    "bridge": {
+      "off": "Chưa nối cầu trang",
+      "on": "Đã nối cầu trang"
+    },
+    "changes": {
+      "apply": "Áp lên live site",
+      "copyFrom": "Bản sao lúc: {{when}}",
+      "count_one": "{{count}} thay đổi",
+      "count_other": "{{count}} thay đổi",
+      "filesChanged_one": "{{count}} file đổi trên bản Preview",
+      "filesChanged_other": "{{count}} file đổi trên bản Preview",
+      "noBaseline": "Site này chưa có mốc nào để so.",
+      "noBaselineWhy": "Dựng mốc phải quét cả site trên một máy mà mọi site dùng chung.",
+      "nothing": "Không có gì đổi kể từ Release gần nhất.",
+      "recordFailed": "Không ghi lại được các thay đổi.",
+      "recordedNothing": "Không còn gì để ghi.",
+      "recorded_one": "Đã ghi {{count}} thay đổi.",
+      "recorded_other": "Đã ghi {{count}} thay đổi.",
+      "recording": "Đang ghi…",
+      "refresh": "Làm mới danh sách thay đổi",
+      "revert": "Đưa site về đúng đây",
+      "unavailable": "Không hỏi được bản sao của site trên fleet."
+    },
+    "changesAndHistory": "Thay đổi & Lịch sử",
+    "context": {
+      "copy": "Chép để gửi vào chat",
+      "dismiss": "Bỏ qua",
+      "nothingOverflows": "Không phần tử nào tràn khỏi khung chứa.",
+      "overflow": "Quét tràn khung",
+      "overflowList": "Các phần tử tràn khỏi khung chứa, nặng nhất trước:",
+      "picked": "Phần tử đã chọn",
+      "pointedAt": "Phần tử người dùng trỏ vào:"
+    },
+    "doorLive": "Live site",
+    "doorPreview": "Preview",
+    "drawer": {
+      "close": "Đóng bảng trạng thái site",
+      "title": "Trạng thái site"
+    },
+    "editing": "đang sửa",
+    "fleetSilent": "Fleet không trả lời.",
+    "fleetUnreachable": "Không hỏi được fleet",
+    "general": {
+      "addresses": "Địa chỉ",
+      "agentNameNote": "Cũng là tên của agent trên site.",
+      "liveSite": "Live site",
+      "notYours": "Site này không có trong danh sách của bạn.",
+      "role": "Vai của bạn",
+      "roleNote": "Ghế của bạn trên site này.",
+      "thisSite": "Site này",
+      "tracyCopy": "Bản sao của Tracy"
+    },
+    "hideChanges": "Ẩn thay đổi",
+    "history": {
+      "dateUnknown": "không rõ ngày",
+      "hoursAgo": "{{count}} giờ trước",
+      "justNow": "vừa xong",
+      "latest": "Mới nhất",
+      "minutesAgo": "{{count}} phút trước",
+      "none": "Chưa có Release nào. Một Release chờ ai đó đặt tên cho một trạng thái; site này chưa có trạng thái nào được đặt tên.",
+      "unavailable": "Không đọc được lịch sử của site.",
+      "unversioned": "Site này chưa được quản lý phiên bản."
+    },
+    "historyBack": "Lùi",
+    "historyForward": "Tới",
+    "noAddress": "Site này chưa có địa chỉ nào để hiện.",
+    "openInBrowser": "Mở trong trình duyệt",
+    "openInNewTab": "Mở site trong tab mới",
+    "otherWorkspace": "Site này nằm ở workspace khác.",
+    "preview": "Preview site",
+    "record": "Ghi lại",
+    "refresh": "Nạp lại",
+    "reload": "Nạp lại khung site",
+    "showChanges": "Hiện thay đổi",
+    "sitePane": "live site",
+    "switchTo": "Chuyển sang {{name}}",
+    "tab": {
+      "changes": "Thay đổi",
+      "files": "File",
+      "history": "Lịch sử",
+      "scan": "Quét"
+    },
+    "thatWorkspace": "workspace đó",
+    "toggleTools": "Bật tắt khung công cụ"
+  }
+}

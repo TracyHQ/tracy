@@ -1,0 +1,23 @@
+:root {
+  /* Colors */
+  --color-aubergine-ink: #1b0624;
+  --color-espresso: #160f0c;
+  --color-warm-ash: #766a7c;
+  --color-graphite: #444444;
+  --color-stone: #898683;
+  --color-onyx: #0d0d0d;
+  --color-smoke: #1a1816;
+  --color-charcoal: #292421;
+  --color-paper-white: #ffffff;
+  --color-linen: #f7f7f5;
+  --color-bone: #edece7;
+  --color-mist: #eeeeee;
+
+  /* Typography — Font Families */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gt-america: 'GT America', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gt-america-regular: 'GT America Regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gt-america-trial-rg: 'GT America Trial Rg', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gt-america-trial-md: 'GT America Trial Md', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

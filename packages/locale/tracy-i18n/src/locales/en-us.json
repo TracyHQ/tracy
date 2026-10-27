@@ -1,0 +1,163 @@
+{
+  "app": {
+    "addSite": "Add site",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
+    "inbox": "Inbox",
+    "launchpad": "Launchpad",
+    "loading": "Loading…",
+    "signInUnavailable": "Sign in is not available on this surface yet.",
+    "switchWorkspace": "Switch workspace",
+    "workspace": "Sitespace",
+    "workspaces": "Sitespaces",
+    "yourWorkspace": "Your workspace"
+  },
+  "common": {
+    "add": "Add site",
+    "cancel": "Cancel",
+    "close": "Close",
+    "collapse": "Collapse",
+    "comingSoon": "Coming soon",
+    "copy": "Copy address",
+    "expand": "Expand",
+    "open": "Open",
+    "settings": "Settings",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "tryAgain": "Try again",
+    "chat": "Chat"
+  },
+  "home": {
+    "account": "Account",
+    "empty": {
+      "body": "Sites you're invited to show up here.",
+      "title": "No sites yet"
+    },
+    "error": {
+      "body": "Check your connection and try again.",
+      "title": "Could not load your sites."
+    },
+    "noAgent": "This site's agent is not wired into cowork.tracy.ai yet.",
+    "role": {
+      "admin": "Admin",
+      "developer": "Developer",
+      "editor": "Editor",
+      "owner": "Owner"
+    },
+    "status": {
+      "invite": "Invite",
+      "invitedBy": "Invited by {{name}}",
+      "invitedByTeam": "Invited by your team",
+      "requested": "Requested",
+      "waiting": "Waiting for an admin to approve your request",
+      "working": "Working on this site"
+    },
+    "subtitle": "Choose a site to work on with its agent.",
+    "title": "Your sites"
+  },
+  "settings": {
+    "account": "User settings",
+    "appearance": "Appearance",
+    "email": "Email",
+    "emailNote": "No account is created here — you sign in with the seat your team gave you.",
+    "language": "Language",
+    "preferences": "Preferences",
+    "signOutConfirm": "Are you sure you want to sign out? You'll need your seat's email code to get back in.",
+    "sites": "Sites",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "themeSystem": "System",
+    "title": "Settings"
+  },
+  "site": {
+    "addresses": "This site's addresses",
+    "agent": "Site agent",
+    "agentPane": "agent",
+    "back": "Back to your sites",
+    "bridge": {
+      "off": "Page bridge not present",
+      "on": "Page bridge connected"
+    },
+    "changes": {
+      "apply": "Apply to live site",
+      "copyFrom": "Copy from: {{when}}",
+      "count_one": "{{count}} change",
+      "count_other": "{{count}} changes",
+      "filesChanged_one": "{{count}} file changed on the Preview",
+      "filesChanged_other": "{{count}} files changed on the Preview",
+      "noBaseline": "This site has no baseline to diff against yet.",
+      "noBaselineWhy": "Building one walks the whole site on a machine every site shares.",
+      "nothing": "Nothing changed since the last Release.",
+      "recordFailed": "Could not record the changes.",
+      "recordedNothing": "Nothing left to record.",
+      "recorded_one": "Recorded {{count}} change.",
+      "recorded_other": "Recorded {{count}} changes.",
+      "recording": "Recording…",
+      "refresh": "Refresh changes",
+      "revert": "Take the site back to here",
+      "unavailable": "The site's copy on the fleet could not be asked."
+    },
+    "changesAndHistory": "Changes & History",
+    "context": {
+      "copy": "Copy for chat",
+      "dismiss": "Dismiss",
+      "nothingOverflows": "Nothing overflows its container.",
+      "overflow": "Overflow scan",
+      "overflowList": "Elements overflowing their container, worst first:",
+      "picked": "Picked element",
+      "pointedAt": "Element the user pointed at:"
+    },
+    "doorLive": "Live site",
+    "doorPreview": "Preview",
+    "drawer": {
+      "close": "Close the site state panel",
+      "title": "Site state"
+    },
+    "editing": "editing",
+    "fleetSilent": "The fleet did not answer.",
+    "fleetUnreachable": "Could not ask the fleet",
+    "general": {
+      "addresses": "Addresses",
+      "agentNameNote": "Also the site agent's name.",
+      "liveSite": "Live site",
+      "notYours": "This site is not in your list.",
+      "role": "Your role",
+      "roleNote": "Your seat on this site.",
+      "thisSite": "This site",
+      "tracyCopy": "Tracy's copy"
+    },
+    "hideChanges": "Hide changes",
+    "history": {
+      "dateUnknown": "date unknown",
+      "hoursAgo": "{{count}}h ago",
+      "justNow": "just now",
+      "latest": "Latest",
+      "minutesAgo": "{{count}} min ago",
+      "none": "No Releases yet. A Release waits for a person to name a state; this site has no state named.",
+      "unavailable": "The site's history could not be read.",
+      "unversioned": "This site is not under version control yet."
+    },
+    "historyBack": "Back",
+    "historyForward": "Forward",
+    "noAddress": "This site has no address to show yet.",
+    "openInBrowser": "Open in browser",
+    "openInNewTab": "Open the site in a new tab",
+    "otherWorkspace": "This site is in another workspace.",
+    "preview": "Site preview",
+    "record": "Record",
+    "refresh": "Refresh",
+    "reload": "Reload the site pane",
+    "showChanges": "Show changes",
+    "sitePane": "live site",
+    "switchTo": "Switch to {{name}}",
+    "tab": {
+      "changes": "Changes",
+      "files": "Files",
+      "history": "History",
+      "scan": "Scan"
+    },
+    "thatWorkspace": "that workspace",
+    "toggleTools": "Toggle tool pane"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e9f07a27-bdd4-4f6a-8132-329d014aa5f4",
+  "status": "complete",
+  "name": "The online bank",
+  "url": "https://styles.refero.design/style/e9f07a27-bdd4-4f6a-8132-329d014aa5f4",
+  "sourceWebsite": "https://n26.com",
+  "extractedAt": "2026-06-03T18:35:03.395Z",
+  "capturedAt": "2026-10-08T05:19:00.703494+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Digital vault in deep ocean teal — a bank that earns calm through quiet white space and a single confident color.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/67a899b8-e029-4e86-8ad3-0e9dd9fe8d67.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5f800714-60ec-476f-89ab-f646c7040a5d.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/0a666c56-0c8e-42d3-8549-321a4af14c54.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/2b64eaa2-2756-40de-83c1-93f4d369fc18.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/567a545e-c264-4e8f-90ea-d896cf363a04.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "223ee68f9c620e3120dbf50c390e8ab4175d18684848c88c7d3a3276c5085868",
+      "bytes": 18811
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4a4044da84b5aff16743b768419fce77eabb54e85765ebd02f9fed2fd22e1f53",
+      "bytes": 102963
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b5cd39544ffaa5fe6e0df0d4fcf9665fea36d6b7e2fe00454477d6995742349f",
+      "bytes": 15383
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "aea0e82ee6ff9041df344d34292593489d34d2713f47c03b992a41fc0e6fa165",
+      "bytes": 11971
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e58488d0cbe318d4def4b967065b91d166d8a501e86edb2ac8e34dd4e7d7db7c",
+      "bytes": 11735
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4653f250529d15e95e53fc528e6c98ecdfa904af5e6d1e53f2014f3396b3690e",
+      "bytes": 3345
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "250ab32d87545df908b66e5bdc26b3c5c4722dd471a6e6f79616fe5bcf2fd020",
+      "bytes": 569
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4c316b139cba58ff066e1f2944455bb5a6e5a08af5329979e0e2cf346e634e31",
+      "bytes": 586
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "692bc0d60fd44899729ad06e16d240d6efe0785946146970ae83968582eeb9e4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e136c2b5d398af344b9edb39088c8840629675c9fdd4555c9eae1c7d6a02fb55",
+      "bytes": 41869
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "692fa82e337beb85b5f3e7f7a3facb15b5f4e125432f3c21f4e5331a7eae1159",
+      "bytes": 21473
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "800c7671e702d080da819a27ec58db6fdc8a326699b0b907699918c8927e9f62",
+      "bytes": 37370
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "190cb7669d48af06596a0d45b7756c7865add14e16cedc10bd42544a66de58ea",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5de75967ae12c2355b559fddf019756ea9877b6bf75346dd358046e5851c8913",
+      "bytes": 1616
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "8b2b688f346c1e6987db9b23edf5263c605633f83cdf6cf00643feb49c431e5d",
+      "bytes": 2192
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "1f32d914-6fdd-4692-b4fc-fcee2c414766",
+    "2c05cf8d-97c5-4f35-96ef-eb53fc03ea81",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "48ae4f04-21cb-4ab3-8752-33b626a48c95",
+    "49dba9e1-0d9d-4997-805a-bfea7525252d",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "722f32e7-8217-4808-843d-b454eea7320a",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "a0cb71ee-c2f2-4c37-a527-9e8ff0a0b312",
+    "a3161c3c-26d4-425b-aaa3-4fc3f06b77ee",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "c25e8eb5-634d-4aca-b30b-d8ba5a50dc5a",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "e8a1d114-6924-4f03-acd2-996dd30f15a6",
+    "e9f07a27-bdd4-4f6a-8132-329d014aa5f4",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "f1a2100a-7cda-4787-b8af-5c5edcfcdff0"
+  ]
+}

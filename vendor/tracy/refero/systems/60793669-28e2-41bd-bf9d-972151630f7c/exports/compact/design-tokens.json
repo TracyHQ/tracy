@@ -1,0 +1,54 @@
+{
+  "color": {
+    "absolute-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Absolute Canvas — Page background, floating toolbars, elevated panel bases"
+    },
+    "structural-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Structural Ink — Primary typography, global solid button backgrounds, outlined button strokes"
+    },
+    "graphite-metadata": {
+      "$value": "#595959",
+      "$type": "color",
+      "$description": "Graphite Metadata — Secondary author text, localized component subtext, placeholder values"
+    },
+    "boundary-frame": {
+      "$value": "#e2e2e2",
+      "$type": "color",
+      "$description": "Boundary Frame — Subtle hair-line dividers and inactive input field bounds"
+    },
+    "context-action-violet": {
+      "$value": "#4d49fc",
+      "$type": "color",
+      "$description": "Context Action Violet — Localized primary CTA within utility panels—a singular interruptive color defining the focal execution point"
+    },
+    "angular-teal": {
+      "$value": "#33dfdf",
+      "$type": "color",
+      "$description": "Angular Teal — Decorative sweeps, loading indicators, and active cursor visuals"
+    }
+  },
+  "font": {
+    "figmasans": {
+      "$value": "figmaSans",
+      "$type": "fontFamily",
+      "$description": "Universal workhorse driving everything from display headers to navigational labels. Defines personality through varying optical negative tracking."
+    },
+    "figmamono": {
+      "$value": "figmaMono",
+      "$type": "fontFamily",
+      "$description": "Micro-labels, coordinate tracking, and technical subtext functioning as UI chrome rather than content."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://figma.com",
+      "siteName": "Figma",
+      "extractedAt": "2026-04-28T22:02:49.564Z",
+      "variant": "compact"
+    }
+  }
+}

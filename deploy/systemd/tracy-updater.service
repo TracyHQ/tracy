@@ -1,0 +1,12 @@
+[Unit]
+Description=Tracy shard: run the tags the master runs (tracy-updater.sh)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/tracy-fleet/stack/tracy-updater.sh
+# deploy-tracy-stack.sh drains up to 600 s, deploy-host-dsh.sh up to 1200 s, plus pulls; a changed
+# web/IMAGE_TAGS adds the site image builds (build-app-images.yml gives them 120 min).
+TimeoutStartSec=3h
+Nice=5

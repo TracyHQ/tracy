@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1100-p4-joomla-page-style",
+  "kind": "fix",
+  "title": "Joomla page.create gives the new page's menu item the template style the site's own article pages wear, and a page whose words do not show is never reported as shown",
+  "pr": 1100,
+  "area": "site-tools/page-create",
+  "cms": ["jo"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/page-create.test.mjs",
+    "S2: Record the exit code, the '# pass', '# fail', '# skipped' lines and the result of the two Joomla tests named below."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# skipped 0'.",
+    "'Joomla: the menu item wears the style the site’s article pages wear, never a default home layout that prints no article' is ok: on a site whose DEFAULT style is a home layout (no component), the new menu item is written with template_style_id 14 (the style About us and Contact wear, the home page skipped), the page renders its article body, and verified is ['shown on /en/common-questions', 'its menu link shows on /en/ at desktop 1440 and phone 390'] (the menu line since REG-PR-1100-p4-wp-menu-link-visible).",
+    "'Joomla: a page whose words do not show is never \"shown\" on its menu link, and the receipt does not call it live' is ok: when every article page wears the default, no template_style_id is written, verified[0] is the bodyHidden sentence (not 'shown on'), and next is the receiptHidden sentence, without the word 'live'."
+  ],
+  "selectors": {
+    "action": "tracy_site page.create {title, body, menu:{after}}",
+    "write": "content.update {kind:'menuItem', id:0, fields:{…, template_style_id}}",
+    "answer": "verified[], next"
+  },
+  "evidence": "dskeepjo (tracy-base j6, T4), 10/10/2026: 'Tạo thêm một trang Dịch vụ có ba mục … và thêm trang này vào menu chính' made menu item 347 with template_style_id 0; Joomla rendered /dich-vu in the default style 110 'Tracy — base · Home' (body class layout-home, no itemprop=articleBody, none of the article's words), while the call reported 'shown on /dich-vu' because the new menu link carries the title.",
+  "fence": "Mechanism only, over the open Joomla component fake with a home-layout default style: the style chosen for the menu item and the body check of verifyPage. Not covered: a live T4 site's layouts.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/page-create.test.mjs"
+    ],
+    "tests": [
+      "Joomla: the menu item wears the style the site’s article pages wear, never a default home layout that prints no article",
+      "Joomla: a page whose words do not show is never \"shown\" on its menu link, and the receipt does not call it live"
+    ]
+  }
+}

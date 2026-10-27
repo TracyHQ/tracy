@@ -1,0 +1,22 @@
+@theme {
+  /* Colors */
+  --color-graphite-1000: #18181a;
+  --color-white: #ffffff;
+  --color-graphite-800: #454549;
+  --color-graphite-900: #2f2f31;
+  --color-graphite-100: #e6e6e8;
+  --color-graphite-200: #cfcfd1;
+  --color-graphite-300: #b7b7bb;
+  --color-graphite-600: #707077;
+  --color-chrome-lavender: #efecff;
+  --color-mist: #d6e3e8;
+  --color-kagi-violet: #6c5edc;
+  --color-lavender-panel: #c9c1ff;
+  --color-sunlit-gold: #ffb319;
+  --color-soft-apricot: #ffe1a4;
+
+  /* Typography */
+  --font-lufga: 'Lufga', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-ui: 'system-ui', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

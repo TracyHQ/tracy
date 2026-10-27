@@ -1,0 +1,30 @@
+{
+  "upstream": { "repo": "slywalker2006/dsh-passwords", "commit": "d9a327c", "tag": "v2.7.7" },
+  "snapshot": "upstream-snapshot.sha256",
+  "pristine": ".upstream-pristine",
+  "tracyDirs": ["src/tracy/", "src/client/tracy/", "src/locales/", "test/tracy/"],
+  "hooks": {
+    "src/gateway.ts": { "maxAdded": 80, "maxRemoved": 30, "maxHunkAdded": 14, "allow": ["tracy", "policy"] },
+    "src/proxy.ts":   { "maxAdded": 120, "maxRemoved": 23, "maxHunkAdded": 16, "allow": ["tracy", "policy"] },
+    "src/cli.ts":     { "maxAdded": 40, "maxRemoved": 6, "maxHunkAdded": 14, "allow": ["tracy", "Tracy", "MCP_TRACY_FLEET", "fleetGuard"] },
+    "src/plugin.ts":  { "maxAdded": 26, "maxRemoved": 5, "maxHunkAdded": 8, "allow": ["tracy", "Tracy", "38"] },
+    "src/config.ts":  { "maxAdded": 14, "maxRemoved": 2, "maxHunkAdded": 6, "allow": ["tracy"] },
+    "src/auth.ts":    { "maxAdded": 2, "maxRemoved": 1, "maxHunkAdded": 1, "allow": ["tracy"] },
+    "src/db.ts":      { "maxAdded": 4, "maxRemoved": 0, "maxHunkAdded": 2, "allow": ["tracy"] },
+    "src/admin.ts":   { "maxAdded": 4, "maxRemoved": 0, "maxHunkAdded": 2, "allow": ["tracy"] },
+    "src/client/locales.ts": {"maxAdded": 4, "maxRemoved": 0, "maxHunkAdded": 4, "allow": ["tracy", "Tracy"]},
+    "src/client/api.ts": {"maxAdded": 3, "maxRemoved": 2, "maxHunkAdded": 1, "allow": ["dshUrl"]},
+    "src/client/card.tsx": {"maxAdded": 7, "maxRemoved": 6, "maxHunkAdded": 2, "allow": ["dshUrl"]},
+    "src/client/chat.tsx": {"maxAdded": 11, "maxRemoved": 9, "maxHunkAdded": 2, "allow": ["dshUrl", "tracy", "Tracy"]},
+    "src/client/file-download.ts": {"maxAdded": 3, "maxRemoved": 2, "maxHunkAdded": 1, "allow": ["dshUrl"]},
+    "src/client/index.tsx": {"maxAdded": 3, "maxRemoved": 2, "maxHunkAdded": 1, "allow": ["dshUrl"]},
+    "src/client/picker-delete.ts": {"maxAdded": 4, "maxRemoved": 2, "maxHunkAdded": 1, "allow": ["dshUrl", "dshPathOf"]},
+    "src/client/token.tsx": {"maxAdded": 3, "maxRemoved": 2, "maxHunkAdded": 1, "allow": ["dshUrl"]}
+  },
+  "exceptions": {
+    "src/patch.ts": "dsh patch anchors follow the dsh Tracy runs (ADR 0027 §7)",
+    "src/i18n.ts": "8 gateway languages and Tracy wording (I1, I2) — until H9 moves them behind the layer",
+    "package.json": "version, test scripts (test:tracy / test:upstream), workspace name"
+  },
+  "forbiddenImports": [{ "module": "test/tracy/upstream-policy-preload", "notUnder": ["src/"] }]
+}

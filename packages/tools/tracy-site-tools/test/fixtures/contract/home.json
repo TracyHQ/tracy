@@ -1,0 +1,2584 @@
+{
+  "src": "j-1ibzqi content.contract inspect, 24/09 ($S/structure/inspect.json): every slot of the home page",
+  "answer": {
+    "ok": true,
+    "contract": "tracy-business/j6/1.1.0",
+    "revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+    "languages": [],
+    "job": null,
+    "switcher": null,
+    "demoTrim": null,
+    "slots": [
+      {
+        "key": "module-428.0",
+        "entity": "module-428",
+        "type": "url",
+        "label": "[Tracy Business] Topbar - Contacts (en)",
+        "current": "tel:88005506790",
+        "sample": "tel:88005506790",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-428.1",
+        "entity": "module-428",
+        "type": "text",
+        "label": "[Tracy Business] Topbar - Contacts (en)",
+        "current": "Hotline: 8 800 550-67-90",
+        "sample": "Hotline: 8 800 550-67-90",
+        "maxCharacters": 68,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-428.2",
+        "entity": "module-428",
+        "type": "url",
+        "label": "[Tracy Business] Topbar - Contacts (en)",
+        "current": "mailto:info@northgate-ind.ru",
+        "sample": "mailto:info@northgate-ind.ru",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-428.3",
+        "entity": "module-428",
+        "type": "text",
+        "label": "[Tracy Business] Topbar - Contacts (en)",
+        "current": "info@northgate-ind.ru",
+        "sample": "info@northgate-ind.ru",
+        "maxCharacters": 62,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-428.4",
+        "entity": "module-428",
+        "type": "text",
+        "label": "[Tracy Business] Topbar - Contacts (en)",
+        "current": "Vorsino Industrial Park, Kaluga Region",
+        "sample": "Vorsino Industrial Park, Kaluga Region",
+        "maxCharacters": 96,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-430.0",
+        "entity": "module-430",
+        "type": "text",
+        "label": "[Tracy Business] Header - Quote CTA (en) / text",
+        "current": "Request a quote",
+        "sample": "Request a quote",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-430.1",
+        "entity": "module-430",
+        "type": "url",
+        "label": "[Tracy Business] Header - Quote CTA (en) / link",
+        "current": "index.php?Itemid=604",
+        "sample": "index.php?Itemid=604",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-432.0",
+        "entity": "module-432",
+        "type": "text",
+        "label": "[Tracy Business] Off-canvas - Quote CTA (en) / text",
+        "current": "Request a quote",
+        "sample": "Request a quote",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-432.1",
+        "entity": "module-432",
+        "type": "url",
+        "label": "[Tracy Business] Off-canvas - Quote CTA (en) / link",
+        "current": "index.php?Itemid=604",
+        "sample": "index.php?Itemid=604",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-434.0",
+        "entity": "module-434",
+        "type": "text",
+        "label": "[Tracy Business] Menu - News & updates (en) / all-text",
+        "current": "All resources →",
+        "sample": "All resources →",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-435.0",
+        "entity": "module-435",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (en)",
+        "current": "NG",
+        "sample": "NG",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-435.1",
+        "entity": "module-435",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (en)",
+        "current": "NORTHGATE",
+        "sample": "NORTHGATE",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-435.2",
+        "entity": "module-435",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (en)",
+        "current": "Northgate Industrial JSC. Design–build main contractor for industrial facilities in Russia since 2004.",
+        "sample": "Northgate Industrial JSC. Design–build main contractor for industrial facilities in Russia since 2004.",
+        "maxCharacters": 224,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-435.3",
+        "entity": "module-435",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (en)",
+        "current": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO admission No. 214",
+        "sample": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO admission No. 214",
+        "maxCharacters": 138,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-435.4",
+        "entity": "module-435",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (en)",
+        "current": "Vorsino Industrial Park, plot 12, Kaluga Region",
+        "sample": "Vorsino Industrial Park, plot 12, Kaluga Region",
+        "maxCharacters": 114,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.0",
+        "entity": "module-438",
+        "type": "text",
+        "label": "Contact / phone",
+        "current": "8 800 550-67-90",
+        "sample": "8 800 550-67-90",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.1",
+        "entity": "module-438",
+        "type": "text",
+        "label": "Contact / email",
+        "current": "sales@northgate-ind.ru",
+        "sample": "sales@northgate-ind.ru",
+        "maxCharacters": 64,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.2",
+        "entity": "module-438",
+        "type": "text",
+        "label": "Contact / hours",
+        "current": "Mon–Fri, 9:00–18:00 (MSK)",
+        "sample": "Mon–Fri, 9:00–18:00 (MSK)",
+        "maxCharacters": 70,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.3",
+        "entity": "module-438",
+        "type": "text",
+        "label": "Contact / cta-text",
+        "current": "Book a site survey →",
+        "sample": "Book a site survey →",
+        "maxCharacters": 60,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.4",
+        "entity": "module-438",
+        "type": "url",
+        "label": "Contact / cta-link",
+        "current": "index.php?Itemid=604",
+        "sample": "index.php?Itemid=604",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.5",
+        "entity": "module-438",
+        "type": "text",
+        "label": "Contact / social-label",
+        "current": "Telegram",
+        "sample": "Telegram",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.6",
+        "entity": "module-438",
+        "type": "text",
+        "label": "Contact / social-label",
+        "current": "VK",
+        "sample": "VK",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.7",
+        "entity": "module-438",
+        "type": "text",
+        "label": "Contact / social-label",
+        "current": "LinkedIn",
+        "sample": "LinkedIn",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.8",
+        "entity": "module-438",
+        "type": "text",
+        "label": "Contact / social-label",
+        "current": "YouTube",
+        "sample": "YouTube",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.9",
+        "entity": "module-438",
+        "type": "text",
+        "label": "Contact / social-label",
+        "current": "Dzen",
+        "sample": "Dzen",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.10",
+        "entity": "module-438",
+        "type": "text",
+        "label": "Contact / social-label",
+        "current": "hh.ru",
+        "sample": "hh.ru",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.11",
+        "entity": "module-438",
+        "type": "url",
+        "label": "Contact / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.12",
+        "entity": "module-438",
+        "type": "url",
+        "label": "Contact / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.13",
+        "entity": "module-438",
+        "type": "url",
+        "label": "Contact / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.14",
+        "entity": "module-438",
+        "type": "url",
+        "label": "Contact / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.15",
+        "entity": "module-438",
+        "type": "url",
+        "label": "Contact / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-438.16",
+        "entity": "module-438",
+        "type": "url",
+        "label": "Contact / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-439.0",
+        "entity": "module-439",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Copyright (en)",
+        "current": "© 2026 Northgate Industrial JSC. Template running on Joomla 5.",
+        "sample": "© 2026 Northgate Industrial JSC. Template running on Joomla 5.",
+        "maxCharacters": 144,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.0",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / eyebrow",
+        "current": "Established 2004",
+        "sample": "Established 2004",
+        "maxCharacters": 52,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.1",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / title",
+        "current": "Toyota Hanoi Motors",
+        "sample": "Building the groundwork for",
+        "maxCharacters": 74,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.2",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / title-accent",
+        "current": "— your authorised Toyota dealer",
+        "sample": "next-generation plants",
+        "maxCharacters": 64,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.3",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / lead",
+        "current": "Authorised Toyota dealer in Hanoi: new cars, servicing and test drives.",
+        "sample": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "maxCharacters": 326,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.4",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / btn-1-text",
+        "current": "View new cars",
+        "sample": "See our capabilities",
+        "maxCharacters": 60,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.5",
+        "entity": "module-441",
+        "type": "url",
+        "label": "[Tracy Business] Home - Hero (en) / btn-1-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.6",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / btn-2-text",
+        "current": "Download company profile (PDF)",
+        "sample": "Download company profile (PDF)",
+        "maxCharacters": 80,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.7",
+        "entity": "module-441",
+        "type": "url",
+        "label": "[Tracy Business] Home - Hero (en) / btn-2-link",
+        "current": "images/northgate/decks/en/corporate-2026.pdf",
+        "sample": "images/northgate/decks/en/corporate-2026.pdf",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.8",
+        "entity": "module-441",
+        "type": "image",
+        "label": "[Tracy Business] Home - Hero (en) / image",
+        "current": "images/northgate/hero-ru.png",
+        "sample": "images/northgate/hero-ru.png",
+        "maxCharacters": 255,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.9",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / image-alt",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.10",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-value",
+        "current": "380+",
+        "sample": "380+",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.11",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-value",
+        "current": "1.2M m²",
+        "sample": "1.2M m²",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.12",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-value",
+        "current": "22 years",
+        "sample": "22 years",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.13",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-value",
+        "current": "0",
+        "sample": "0",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.14",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-label",
+        "current": "Projects delivered",
+        "sample": "Projects delivered",
+        "maxCharacters": 56,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.15",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-label",
+        "current": "Built area",
+        "sample": "Built area",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.16",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-label",
+        "current": "Industry experience",
+        "sample": "Industry experience",
+        "maxCharacters": 58,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.17",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-label",
+        "current": "Serious incidents in 2025",
+        "sample": "Serious incidents in 2025",
+        "maxCharacters": 70,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.0",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / eyebrow",
+        "current": "What we do",
+        "sample": "What we do",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.1",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / title",
+        "current": "Four core service lines",
+        "sample": "Four core service lines",
+        "maxCharacters": 66,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.2",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / all-text",
+        "current": "All services →",
+        "sample": "All services →",
+        "maxCharacters": 48,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.3",
+        "entity": "module-442",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (en) / all-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.4",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-title",
+        "current": "Industrial park infrastructure",
+        "sample": "Industrial park infrastructure",
+        "maxCharacters": 80,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.5",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-title",
+        "current": "Pre-engineered buildings",
+        "sample": "Pre-engineered buildings",
+        "maxCharacters": 68,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.6",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-title",
+        "current": "M&E engineering",
+        "sample": "M&E engineering",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.7",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-title",
+        "current": "Maintenance & retrofit",
+        "sample": "Maintenance & retrofit",
+        "maxCharacters": 64,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.8",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-desc",
+        "current": "Earthworks, internal roads, water supply and wastewater treatment, turnkey.",
+        "sample": "Earthworks, internal roads, water supply and wastewater treatment, turnkey.",
+        "maxCharacters": 170,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.9",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-desc",
+        "current": "Structural design, fabrication and erection of steel frames spanning up to 45 m.",
+        "sample": "Structural design, fabrication and erection of steel frames spanning up to 45 m.",
+        "maxCharacters": 180,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.10",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-desc",
+        "current": "Substations, compressed air, HVAC and fire protection to NFPA standards.",
+        "sample": "Substations, compressed air, HVAC and fire protection to NFPA standards.",
+        "maxCharacters": 164,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.11",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-desc",
+        "current": "Long-term maintenance contracts and capacity upgrades on live production lines.",
+        "sample": "Long-term maintenance contracts and capacity upgrades on live production lines.",
+        "maxCharacters": 178,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.12",
+        "entity": "module-442",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (en) / item-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.13",
+        "entity": "module-442",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (en) / item-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.14",
+        "entity": "module-442",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (en) / item-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.15",
+        "entity": "module-442",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (en) / item-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-443.0",
+        "entity": "module-443",
+        "type": "text",
+        "label": "[Tracy Business] Home - Selected projects (en) / title",
+        "current": "Selected projects",
+        "sample": "Selected projects",
+        "maxCharacters": 54,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-443.1",
+        "entity": "module-443",
+        "type": "text",
+        "label": "[Tracy Business] Home - Selected projects (en) / all-text",
+        "current": "All projects →",
+        "sample": "All projects →",
+        "maxCharacters": 48,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-443.2",
+        "entity": "module-443",
+        "type": "text",
+        "label": "[Tracy Business] Home - Selected projects (en) / case-text",
+        "current": "Read the case study →",
+        "sample": "Read the case study →",
+        "maxCharacters": 62,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-444.0",
+        "entity": "module-444",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (en) / eyebrow",
+        "current": "Why Northgate",
+        "sample": "Why Northgate",
+        "maxCharacters": 46,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-444.1",
+        "entity": "module-444",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (en) / title",
+        "current": "One accountable partner from drawing to handover",
+        "sample": "One accountable partner from drawing to handover",
+        "maxCharacters": 116,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-444.2",
+        "entity": "module-444",
+        "type": "image",
+        "label": "[Tracy Business] Home - Why Northgate (en) / image",
+        "current": "images/northgate/team-crew.png",
+        "sample": "images/northgate/team-crew.png",
+        "maxCharacters": 255,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-444.3",
+        "entity": "module-444",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (en) / image-alt",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-444.4",
+        "entity": "module-444",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (en) / item-title",
+        "current": "In-house design team of 34 engineers",
+        "sample": "In-house design team of 34 engineers",
+        "maxCharacters": 92,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-444.5",
+        "entity": "module-444",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (en) / item-title",
+        "current": "ISO 9001 & ISO 45001 certified",
+        "sample": "ISO 9001 & ISO 45001 certified",
+        "maxCharacters": 80,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-444.6",
+        "entity": "module-444",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (en) / item-title",
+        "current": "Schedule backed by a bank guarantee",
+        "sample": "Schedule backed by a bank guarantee",
+        "maxCharacters": 90,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-444.7",
+        "entity": "module-444",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (en) / item-desc",
+        "current": "Drawing revision cycles cut to under 48 hours.",
+        "sample": "Drawing revision cycles cut to under 48 hours.",
+        "maxCharacters": 112,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-444.8",
+        "entity": "module-444",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (en) / item-desc",
+        "current": "Safety procedures independently audited every six months.",
+        "sample": "Safety procedures independently audited every six months.",
+        "maxCharacters": 134,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-444.9",
+        "entity": "module-444",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (en) / item-desc",
+        "current": "Performance guarantees issued on every contract above RUB 150M.",
+        "sample": "Performance guarantees issued on every contract above RUB 150M.",
+        "maxCharacters": 146,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-445.0",
+        "entity": "module-445",
+        "type": "text",
+        "label": "[Tracy Business] Home - CTA band (en) / title",
+        "current": "Need a budget estimate for an upcoming build?",
+        "sample": "Need a budget estimate for an upcoming build?",
+        "maxCharacters": 110,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-445.1",
+        "entity": "module-445",
+        "type": "text",
+        "label": "[Tracy Business] Home - CTA band (en) / desc",
+        "current": "Send us concept drawings and we return a preliminary quantity take-off within five working days.",
+        "sample": "Send us concept drawings and we return a preliminary quantity take-off within five working days.",
+        "maxCharacters": 212,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-445.2",
+        "entity": "module-445",
+        "type": "text",
+        "label": "[Tracy Business] Home - CTA band (en) / btn-text",
+        "current": "Talk to our sales team",
+        "sample": "Talk to our sales team",
+        "maxCharacters": 64,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-445.3",
+        "entity": "module-445",
+        "type": "url",
+        "label": "[Tracy Business] Home - CTA band (en) / btn-link",
+        "current": "index.php?Itemid=604",
+        "sample": "index.php?Itemid=604",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-446.0",
+        "entity": "module-446",
+        "type": "text",
+        "label": "[Tracy Business] Home - News (en) / title",
+        "current": "News & disclosures",
+        "sample": "News & disclosures",
+        "maxCharacters": 56,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-446.1",
+        "entity": "module-446",
+        "type": "text",
+        "label": "[Tracy Business] Home - News (en) / all-text",
+        "current": "View all →",
+        "sample": "View all →",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-447.0",
+        "entity": "module-447",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (en) / title",
+        "current": "Clients we have built for",
+        "sample": "Clients we have built for",
+        "maxCharacters": 70,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-447.1",
+        "entity": "module-447",
+        "type": "image",
+        "label": "[Tracy Business] Home - Clients (en) / logo",
+        "current": "images/northgate/logo-ru-1.png",
+        "sample": "images/northgate/logo-ru-1.png",
+        "maxCharacters": 255,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-447.2",
+        "entity": "module-447",
+        "type": "image",
+        "label": "[Tracy Business] Home - Clients (en) / logo",
+        "current": "images/northgate/logo-ru-2.png",
+        "sample": "images/northgate/logo-ru-2.png",
+        "maxCharacters": 255,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-447.3",
+        "entity": "module-447",
+        "type": "image",
+        "label": "[Tracy Business] Home - Clients (en) / logo",
+        "current": "images/northgate/logo-ru-3.png",
+        "sample": "images/northgate/logo-ru-3.png",
+        "maxCharacters": 255,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-447.4",
+        "entity": "module-447",
+        "type": "image",
+        "label": "[Tracy Business] Home - Clients (en) / logo",
+        "current": "images/northgate/logo-ru-4.png",
+        "sample": "images/northgate/logo-ru-4.png",
+        "maxCharacters": 255,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-447.5",
+        "entity": "module-447",
+        "type": "image",
+        "label": "[Tracy Business] Home - Clients (en) / logo",
+        "current": "images/northgate/logo-ru-5.png",
+        "sample": "images/northgate/logo-ru-5.png",
+        "maxCharacters": 255,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-447.6",
+        "entity": "module-447",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (en) / logo-alt",
+        "current": "ЭЛЕКТРА",
+        "sample": "ЭЛЕКТРА",
+        "maxCharacters": 40,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-447.7",
+        "entity": "module-447",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (en) / logo-alt",
+        "current": "ВОЛГАМАШ",
+        "sample": "ВОЛГАМАШ",
+        "maxCharacters": 40,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-447.8",
+        "entity": "module-447",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (en) / logo-alt",
+        "current": "СЕВЕРСТРОЙ",
+        "sample": "СЕВЕРСТРОЙ",
+        "maxCharacters": 40,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-447.9",
+        "entity": "module-447",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (en) / logo-alt",
+        "current": "АГРОТЕХ",
+        "sample": "АГРОТЕХ",
+        "maxCharacters": 40,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-447.10",
+        "entity": "module-447",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (en) / logo-alt",
+        "current": "НОВОПАК",
+        "sample": "НОВОПАК",
+        "maxCharacters": 40,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-448.0",
+        "entity": "module-448",
+        "type": "url",
+        "label": "[Tracy Business] Topbar - Contacts (ru)",
+        "current": "tel:88005506790",
+        "sample": "tel:88005506790",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-448.1",
+        "entity": "module-448",
+        "type": "text",
+        "label": "[Tracy Business] Topbar - Contacts (ru)",
+        "current": "Горячая линия: 8 800 550-67-90",
+        "sample": "Горячая линия: 8 800 550-67-90",
+        "maxCharacters": 80,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-448.2",
+        "entity": "module-448",
+        "type": "url",
+        "label": "[Tracy Business] Topbar - Contacts (ru)",
+        "current": "mailto:info@northgate-ind.ru",
+        "sample": "mailto:info@northgate-ind.ru",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-448.3",
+        "entity": "module-448",
+        "type": "text",
+        "label": "[Tracy Business] Topbar - Contacts (ru)",
+        "current": "info@northgate-ind.ru",
+        "sample": "info@northgate-ind.ru",
+        "maxCharacters": 62,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-448.4",
+        "entity": "module-448",
+        "type": "text",
+        "label": "[Tracy Business] Topbar - Contacts (ru)",
+        "current": "Индустриальный парк «Ворсино», Калужская обл.",
+        "sample": "Индустриальный парк «Ворсино», Калужская обл.",
+        "maxCharacters": 110,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-450.0",
+        "entity": "module-450",
+        "type": "text",
+        "label": "[Tracy Business] Header - Quote CTA (ru) / text",
+        "current": "Запросить смету",
+        "sample": "Запросить смету",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-450.1",
+        "entity": "module-450",
+        "type": "url",
+        "label": "[Tracy Business] Header - Quote CTA (ru) / link",
+        "current": "index.php?Itemid=637",
+        "sample": "index.php?Itemid=637",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-452.0",
+        "entity": "module-452",
+        "type": "text",
+        "label": "[Tracy Business] Off-canvas - Quote CTA (ru) / text",
+        "current": "Запросить смету",
+        "sample": "Запросить смету",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-452.1",
+        "entity": "module-452",
+        "type": "url",
+        "label": "[Tracy Business] Off-canvas - Quote CTA (ru) / link",
+        "current": "index.php?Itemid=637",
+        "sample": "index.php?Itemid=637",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-454.0",
+        "entity": "module-454",
+        "type": "text",
+        "label": "[Tracy Business] Menu - News & updates (ru) / all-text",
+        "current": "Все материалы →",
+        "sample": "Все материалы →",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-455.0",
+        "entity": "module-455",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (ru)",
+        "current": "NG",
+        "sample": "NG",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-455.1",
+        "entity": "module-455",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (ru)",
+        "current": "NORTHGATE",
+        "sample": "NORTHGATE",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-455.2",
+        "entity": "module-455",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (ru)",
+        "current": "АО «Норткейт Индастриал». Генподряд «проектирование — строительство» промышленных объектов с 2004 года.",
+        "sample": "АО «Норткейт Индастриал». Генподряд «проектирование — строительство» промышленных объектов с 2004 года.",
+        "maxCharacters": 226,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-455.3",
+        "entity": "module-455",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (ru)",
+        "current": "ИНН 4003xxxxxx · ОГРН 10440xxxxxxxx · Допуск СРО № 214",
+        "sample": "ИНН 4003xxxxxx · ОГРН 10440xxxxxxxx · Допуск СРО № 214",
+        "maxCharacters": 128,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-455.4",
+        "entity": "module-455",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (ru)",
+        "current": "ИП «Ворсино», участок 12, Калужская область",
+        "sample": "ИП «Ворсино», участок 12, Калужская область",
+        "maxCharacters": 106,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.0",
+        "entity": "module-458",
+        "type": "text",
+        "label": "Контакты / phone",
+        "current": "8 800 550-67-90",
+        "sample": "8 800 550-67-90",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.1",
+        "entity": "module-458",
+        "type": "text",
+        "label": "Контакты / email",
+        "current": "sales@northgate-ind.ru",
+        "sample": "sales@northgate-ind.ru",
+        "maxCharacters": 64,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.2",
+        "entity": "module-458",
+        "type": "text",
+        "label": "Контакты / hours",
+        "current": "Пн–Пт, 9:00–18:00 (МСК)",
+        "sample": "Пн–Пт, 9:00–18:00 (МСК)",
+        "maxCharacters": 66,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.3",
+        "entity": "module-458",
+        "type": "text",
+        "label": "Контакты / cta-text",
+        "current": "Записаться на выезд →",
+        "sample": "Записаться на выезд →",
+        "maxCharacters": 62,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.4",
+        "entity": "module-458",
+        "type": "url",
+        "label": "Контакты / cta-link",
+        "current": "index.php?Itemid=637",
+        "sample": "index.php?Itemid=637",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.5",
+        "entity": "module-458",
+        "type": "text",
+        "label": "Контакты / social-label",
+        "current": "Telegram",
+        "sample": "Telegram",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.6",
+        "entity": "module-458",
+        "type": "text",
+        "label": "Контакты / social-label",
+        "current": "VK",
+        "sample": "VK",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.7",
+        "entity": "module-458",
+        "type": "text",
+        "label": "Контакты / social-label",
+        "current": "LinkedIn",
+        "sample": "LinkedIn",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.8",
+        "entity": "module-458",
+        "type": "text",
+        "label": "Контакты / social-label",
+        "current": "YouTube",
+        "sample": "YouTube",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.9",
+        "entity": "module-458",
+        "type": "text",
+        "label": "Контакты / social-label",
+        "current": "Дзен",
+        "sample": "Дзен",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.10",
+        "entity": "module-458",
+        "type": "text",
+        "label": "Контакты / social-label",
+        "current": "hh.ru",
+        "sample": "hh.ru",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.11",
+        "entity": "module-458",
+        "type": "url",
+        "label": "Контакты / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.12",
+        "entity": "module-458",
+        "type": "url",
+        "label": "Контакты / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.13",
+        "entity": "module-458",
+        "type": "url",
+        "label": "Контакты / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.14",
+        "entity": "module-458",
+        "type": "url",
+        "label": "Контакты / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.15",
+        "entity": "module-458",
+        "type": "url",
+        "label": "Контакты / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-458.16",
+        "entity": "module-458",
+        "type": "url",
+        "label": "Контакты / social-url",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-459.0",
+        "entity": "module-459",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Copyright (ru)",
+        "current": "© 2026 АО «Норткейт Индастриал». Шаблон работает на Joomla 5.",
+        "sample": "© 2026 АО «Норткейт Индастриал». Шаблон работает на Joomla 5.",
+        "maxCharacters": 142,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.0",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / eyebrow",
+        "current": "Работаем с 2004 года",
+        "sample": "Работаем с 2004 года",
+        "maxCharacters": 60,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.1",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / title",
+        "current": "Строим основание для",
+        "sample": "Строим основание для",
+        "maxCharacters": 60,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.2",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / title-accent",
+        "current": "заводов нового поколения",
+        "sample": "заводов нового поколения",
+        "maxCharacters": 68,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.3",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / lead",
+        "current": "Генподряд «проектирование — строительство»: инфраструктура индустриальных парков, производственные корпуса и инженерные системы в 14 регионах Центрального и Приволжского округов.",
+        "sample": "Генподряд «проектирование — строительство»: инфраструктура индустриальных парков, производственные корпуса и инженерные системы в 14 регионах Центрального и Приволжского округов.",
+        "maxCharacters": 376,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.4",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / btn-1-text",
+        "current": "Наши компетенции",
+        "sample": "Наши компетенции",
+        "maxCharacters": 52,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.5",
+        "entity": "module-461",
+        "type": "url",
+        "label": "[Tracy Business] Home - Hero (ru) / btn-1-link",
+        "current": "index.php?Itemid=634",
+        "sample": "index.php?Itemid=634",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.6",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / btn-2-text",
+        "current": "Скачать презентацию компании (PDF)",
+        "sample": "Скачать презентацию компании (PDF)",
+        "maxCharacters": 88,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.7",
+        "entity": "module-461",
+        "type": "url",
+        "label": "[Tracy Business] Home - Hero (ru) / btn-2-link",
+        "current": "images/northgate/decks/ru/corporate-2026.pdf",
+        "sample": "images/northgate/decks/ru/corporate-2026.pdf",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.8",
+        "entity": "module-461",
+        "type": "image",
+        "label": "[Tracy Business] Home - Hero (ru) / image",
+        "current": "images/northgate/hero-ru.png",
+        "sample": "images/northgate/hero-ru.png",
+        "maxCharacters": 255,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.9",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / image-alt",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.10",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / stat-value",
+        "current": "380+",
+        "sample": "380+",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.11",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / stat-value",
+        "current": "1,2 млн м²",
+        "sample": "1,2 млн м²",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.12",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / stat-value",
+        "current": "22 года",
+        "sample": "22 года",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.13",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / stat-value",
+        "current": "0",
+        "sample": "0",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.14",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / stat-label",
+        "current": "Сданных объектов",
+        "sample": "Сданных объектов",
+        "maxCharacters": 52,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.15",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / stat-label",
+        "current": "Построенная площадь",
+        "sample": "Построенная площадь",
+        "maxCharacters": 58,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.16",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / stat-label",
+        "current": "Опыта в отрасли",
+        "sample": "Опыта в отрасли",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-461.17",
+        "entity": "module-461",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (ru) / stat-label",
+        "current": "Тяжёлых происшествий в 2025",
+        "sample": "Тяжёлых происшествий в 2025",
+        "maxCharacters": 74,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.0",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / eyebrow",
+        "current": "Чем мы занимаемся",
+        "sample": "Чем мы занимаемся",
+        "maxCharacters": 54,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.1",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / title",
+        "current": "Четыре основных направления",
+        "sample": "Четыре основных направления",
+        "maxCharacters": 74,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.2",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / all-text",
+        "current": "Все услуги →",
+        "sample": "Все услуги →",
+        "maxCharacters": 44,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.3",
+        "entity": "module-462",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (ru) / all-link",
+        "current": "index.php?Itemid=634",
+        "sample": "index.php?Itemid=634",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.4",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / item-title",
+        "current": "Инфраструктура индустриальных парков",
+        "sample": "Инфраструктура индустриальных парков",
+        "maxCharacters": 92,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.5",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / item-title",
+        "current": "Быстровозводимые корпуса",
+        "sample": "Быстровозводимые корпуса",
+        "maxCharacters": 68,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.6",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / item-title",
+        "current": "Инженерные системы (ОВиК, ЭОМ)",
+        "sample": "Инженерные системы (ОВиК, ЭОМ)",
+        "maxCharacters": 80,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.7",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / item-title",
+        "current": "Эксплуатация и реконструкция",
+        "sample": "Эксплуатация и реконструкция",
+        "maxCharacters": 76,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.8",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / item-desc",
+        "current": "Вертикальная планировка, внутриплощадочные дороги, сети ВК и очистные сооружения под ключ.",
+        "sample": "Вертикальная планировка, внутриплощадочные дороги, сети ВК и очистные сооружения под ключ.",
+        "maxCharacters": 200,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.9",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / item-desc",
+        "current": "КМ и КМД, изготовление и монтаж стальных каркасов пролётом до 45 м.",
+        "sample": "КМ и КМД, изготовление и монтаж стальных каркасов пролётом до 45 м.",
+        "maxCharacters": 154,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.10",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / item-desc",
+        "current": "Трансформаторные подстанции, компрессорные, вентиляция и пожаротушение по СП 484 и ГОСТ.",
+        "sample": "Трансформаторные подстанции, компрессорные, вентиляция и пожаротушение по СП 484 и ГОСТ.",
+        "maxCharacters": 196,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.11",
+        "entity": "module-462",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (ru) / item-desc",
+        "current": "Долгосрочные договоры на обслуживание и увеличение мощности действующих линий.",
+        "sample": "Долгосрочные договоры на обслуживание и увеличение мощности действующих линий.",
+        "maxCharacters": 176,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.12",
+        "entity": "module-462",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (ru) / item-link",
+        "current": "index.php?Itemid=634",
+        "sample": "index.php?Itemid=634",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.13",
+        "entity": "module-462",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (ru) / item-link",
+        "current": "index.php?Itemid=634",
+        "sample": "index.php?Itemid=634",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.14",
+        "entity": "module-462",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (ru) / item-link",
+        "current": "index.php?Itemid=634",
+        "sample": "index.php?Itemid=634",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-462.15",
+        "entity": "module-462",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (ru) / item-link",
+        "current": "index.php?Itemid=634",
+        "sample": "index.php?Itemid=634",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-463.0",
+        "entity": "module-463",
+        "type": "text",
+        "label": "[Tracy Business] Home - Selected projects (ru) / title",
+        "current": "Избранные объекты",
+        "sample": "Избранные объекты",
+        "maxCharacters": 54,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-463.1",
+        "entity": "module-463",
+        "type": "text",
+        "label": "[Tracy Business] Home - Selected projects (ru) / all-text",
+        "current": "Все объекты →",
+        "sample": "Все объекты →",
+        "maxCharacters": 46,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-463.2",
+        "entity": "module-463",
+        "type": "text",
+        "label": "[Tracy Business] Home - Selected projects (ru) / case-text",
+        "current": "Смотреть кейс →",
+        "sample": "Смотреть кейс →",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-464.0",
+        "entity": "module-464",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (ru) / eyebrow",
+        "current": "Почему «Норткейт»",
+        "sample": "Почему «Норткейт»",
+        "maxCharacters": 54,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-464.1",
+        "entity": "module-464",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (ru) / title",
+        "current": "Один ответственный подрядчик — от эскиза до акта КС-14",
+        "sample": "Один ответственный подрядчик — от эскиза до акта КС-14",
+        "maxCharacters": 128,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-464.2",
+        "entity": "module-464",
+        "type": "image",
+        "label": "[Tracy Business] Home - Why Northgate (ru) / image",
+        "current": "images/northgate/team-crew.png",
+        "sample": "images/northgate/team-crew.png",
+        "maxCharacters": 255,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-464.3",
+        "entity": "module-464",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (ru) / image-alt",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-464.4",
+        "entity": "module-464",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (ru) / item-title",
+        "current": "Собственное проектное бюро: 34 инженера",
+        "sample": "Собственное проектное бюро: 34 инженера",
+        "maxCharacters": 98,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-464.5",
+        "entity": "module-464",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (ru) / item-title",
+        "current": "ISO 9001, ISO 45001, допуски СРО",
+        "sample": "ISO 9001, ISO 45001, допуски СРО",
+        "maxCharacters": 84,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-464.6",
+        "entity": "module-464",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (ru) / item-title",
+        "current": "Сроки под банковскую гарантию",
+        "sample": "Сроки под банковскую гарантию",
+        "maxCharacters": 78,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-464.7",
+        "entity": "module-464",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (ru) / item-desc",
+        "current": "Цикл согласования правок в рабочей документации — до 48 часов.",
+        "sample": "Цикл согласования правок в рабочей документации — до 48 часов.",
+        "maxCharacters": 144,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-464.8",
+        "entity": "module-464",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (ru) / item-desc",
+        "current": "Независимый аудит процедур охраны труда каждые полгода.",
+        "sample": "Независимый аудит процедур охраны труда каждые полгода.",
+        "maxCharacters": 130,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-464.9",
+        "entity": "module-464",
+        "type": "text",
+        "label": "[Tracy Business] Home - Why Northgate (ru) / item-desc",
+        "current": "Гарантия исполнения по каждому контракту дороже 150 млн ₽.",
+        "sample": "Гарантия исполнения по каждому контракту дороже 150 млн ₽.",
+        "maxCharacters": 136,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-465.0",
+        "entity": "module-465",
+        "type": "text",
+        "label": "[Tracy Business] Home - CTA band (ru) / title",
+        "current": "Нужна смета по объекту, который скоро в работу?",
+        "sample": "Нужна смета по объекту, который скоро в работу?",
+        "maxCharacters": 114,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-465.1",
+        "entity": "module-465",
+        "type": "text",
+        "label": "[Tracy Business] Home - CTA band (ru) / desc",
+        "current": "Пришлите эскизный проект — предварительные объёмы и ВОР вернём за пять рабочих дней.",
+        "sample": "Пришлите эскизный проект — предварительные объёмы и ВОР вернём за пять рабочих дней.",
+        "maxCharacters": 188,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-465.2",
+        "entity": "module-465",
+        "type": "text",
+        "label": "[Tracy Business] Home - CTA band (ru) / btn-text",
+        "current": "Связаться с отделом продаж",
+        "sample": "Связаться с отделом продаж",
+        "maxCharacters": 72,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-465.3",
+        "entity": "module-465",
+        "type": "url",
+        "label": "[Tracy Business] Home - CTA band (ru) / btn-link",
+        "current": "index.php?Itemid=637",
+        "sample": "index.php?Itemid=637",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-466.0",
+        "entity": "module-466",
+        "type": "text",
+        "label": "[Tracy Business] Home - News (ru) / title",
+        "current": "Новости и раскрытие информации",
+        "sample": "Новости и раскрытие информации",
+        "maxCharacters": 80,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-466.1",
+        "entity": "module-466",
+        "type": "text",
+        "label": "[Tracy Business] Home - News (ru) / all-text",
+        "current": "Смотреть все →",
+        "sample": "Смотреть все →",
+        "maxCharacters": 48,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-467.0",
+        "entity": "module-467",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (ru) / title",
+        "current": "Заказчики, для которых мы строили",
+        "sample": "Заказчики, для которых мы строили",
+        "maxCharacters": 86,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-467.1",
+        "entity": "module-467",
+        "type": "image",
+        "label": "[Tracy Business] Home - Clients (ru) / logo",
+        "current": "images/northgate/logo-ru-1.png",
+        "sample": "images/northgate/logo-ru-1.png",
+        "maxCharacters": 255,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-467.2",
+        "entity": "module-467",
+        "type": "image",
+        "label": "[Tracy Business] Home - Clients (ru) / logo",
+        "current": "images/northgate/logo-ru-2.png",
+        "sample": "images/northgate/logo-ru-2.png",
+        "maxCharacters": 255,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-467.3",
+        "entity": "module-467",
+        "type": "image",
+        "label": "[Tracy Business] Home - Clients (ru) / logo",
+        "current": "images/northgate/logo-ru-3.png",
+        "sample": "images/northgate/logo-ru-3.png",
+        "maxCharacters": 255,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-467.4",
+        "entity": "module-467",
+        "type": "image",
+        "label": "[Tracy Business] Home - Clients (ru) / logo",
+        "current": "images/northgate/logo-ru-4.png",
+        "sample": "images/northgate/logo-ru-4.png",
+        "maxCharacters": 255,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-467.5",
+        "entity": "module-467",
+        "type": "image",
+        "label": "[Tracy Business] Home - Clients (ru) / logo",
+        "current": "images/northgate/logo-ru-5.png",
+        "sample": "images/northgate/logo-ru-5.png",
+        "maxCharacters": 255,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-467.6",
+        "entity": "module-467",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (ru) / logo-alt",
+        "current": "ЭЛЕКТРА",
+        "sample": "ЭЛЕКТРА",
+        "maxCharacters": 40,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-467.7",
+        "entity": "module-467",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (ru) / logo-alt",
+        "current": "ВОЛГАМАШ",
+        "sample": "ВОЛГАМАШ",
+        "maxCharacters": 40,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-467.8",
+        "entity": "module-467",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (ru) / logo-alt",
+        "current": "СЕВЕРСТРОЙ",
+        "sample": "СЕВЕРСТРОЙ",
+        "maxCharacters": 40,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-467.9",
+        "entity": "module-467",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (ru) / logo-alt",
+        "current": "АГРОТЕХ",
+        "sample": "АГРОТЕХ",
+        "maxCharacters": 40,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-467.10",
+        "entity": "module-467",
+        "type": "text",
+        "label": "[Tracy Business] Home - Clients (ru) / logo-alt",
+        "current": "НОВОПАК",
+        "sample": "НОВОПАК",
+        "maxCharacters": 40,
+        "requiresEvidence": true
+      },
+      {
+        "key": "module-816.0",
+        "entity": "module-816",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (en) / title",
+        "current": "We could not find that page",
+        "sample": "We could not find that page",
+        "maxCharacters": 74,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.1",
+        "entity": "module-816",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (en) / text",
+        "current": "The link may have changed or the content has been archived. Try a search, or pick one of the sections on the right.",
+        "sample": "The link may have changed or the content has been archived. Try a search, or pick one of the sections on the right.",
+        "maxCharacters": 250,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.2",
+        "entity": "module-816",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (en) / placeholder",
+        "current": "Search this website…",
+        "sample": "Search this website…",
+        "maxCharacters": 60,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.3",
+        "entity": "module-816",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (en) / button",
+        "current": "Search",
+        "sample": "Search",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.4",
+        "entity": "module-816",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (en) / back",
+        "current": "← Back to home",
+        "sample": "← Back to home",
+        "maxCharacters": 48,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.5",
+        "entity": "module-816",
+        "type": "url",
+        "label": "[Tracy Business] 404 - Error page (en) / back-link",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.6",
+        "entity": "module-816",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (en) / sug-title",
+        "current": "You may be looking for",
+        "sample": "You may be looking for",
+        "maxCharacters": 64,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.7",
+        "entity": "module-816",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (en) / row-title",
+        "current": "Capability statement 2026",
+        "sample": "Capability statement 2026",
+        "maxCharacters": 70,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.8",
+        "entity": "module-816",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (en) / row-title",
+        "current": "Completed project index",
+        "sample": "Completed project index",
+        "maxCharacters": 66,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.9",
+        "entity": "module-816",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (en) / row-title",
+        "current": "Maintenance service rates",
+        "sample": "Maintenance service rates",
+        "maxCharacters": 70,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.10",
+        "entity": "module-816",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (en) / row-title",
+        "current": "Site engineer vacancies",
+        "sample": "Site engineer vacancies",
+        "maxCharacters": 66,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.11",
+        "entity": "module-816",
+        "type": "url",
+        "label": "[Tracy Business] 404 - Error page (en) / row-link",
+        "current": "index.php?Itemid=613",
+        "sample": "index.php?Itemid=613",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.12",
+        "entity": "module-816",
+        "type": "url",
+        "label": "[Tracy Business] 404 - Error page (en) / row-link",
+        "current": "index.php?Itemid=602",
+        "sample": "index.php?Itemid=602",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.13",
+        "entity": "module-816",
+        "type": "url",
+        "label": "[Tracy Business] 404 - Error page (en) / row-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-816.14",
+        "entity": "module-816",
+        "type": "url",
+        "label": "[Tracy Business] 404 - Error page (en) / row-link",
+        "current": "index.php?Itemid=618",
+        "sample": "index.php?Itemid=618",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.0",
+        "entity": "module-830",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (ru) / title",
+        "current": "Такая страница не найдена",
+        "sample": "Такая страница не найдена",
+        "maxCharacters": 70,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.1",
+        "entity": "module-830",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (ru) / text",
+        "current": "Возможно, ссылка изменилась или материал перенесён в архив. Попробуйте поиск или выберите раздел справа.",
+        "sample": "Возможно, ссылка изменилась или материал перенесён в архив. Попробуйте поиск или выберите раздел справа.",
+        "maxCharacters": 228,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.2",
+        "entity": "module-830",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (ru) / placeholder",
+        "current": "Поиск по сайту…",
+        "sample": "Поиск по сайту…",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.3",
+        "entity": "module-830",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (ru) / button",
+        "current": "Найти",
+        "sample": "Найти",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.4",
+        "entity": "module-830",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (ru) / back",
+        "current": "← На главную",
+        "sample": "← На главную",
+        "maxCharacters": 44,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.5",
+        "entity": "module-830",
+        "type": "url",
+        "label": "[Tracy Business] 404 - Error page (ru) / back-link",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.6",
+        "entity": "module-830",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (ru) / sug-title",
+        "current": "Возможно, вы искали",
+        "sample": "Возможно, вы искали",
+        "maxCharacters": 58,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.7",
+        "entity": "module-830",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (ru) / row-title",
+        "current": "Презентация компетенций, 2026",
+        "sample": "Презентация компетенций, 2026",
+        "maxCharacters": 78,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.8",
+        "entity": "module-830",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (ru) / row-title",
+        "current": "Каталог сданных объектов",
+        "sample": "Каталог сданных объектов",
+        "maxCharacters": 68,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.9",
+        "entity": "module-830",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (ru) / row-title",
+        "current": "Тарифы на эксплуатацию",
+        "sample": "Тарифы на эксплуатацию",
+        "maxCharacters": 64,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.10",
+        "entity": "module-830",
+        "type": "text",
+        "label": "[Tracy Business] 404 - Error page (ru) / row-title",
+        "current": "Вакансии инженеров ПТО",
+        "sample": "Вакансии инженеров ПТО",
+        "maxCharacters": 64,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.11",
+        "entity": "module-830",
+        "type": "url",
+        "label": "[Tracy Business] 404 - Error page (ru) / row-link",
+        "current": "index.php?Itemid=646",
+        "sample": "index.php?Itemid=646",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.12",
+        "entity": "module-830",
+        "type": "url",
+        "label": "[Tracy Business] 404 - Error page (ru) / row-link",
+        "current": "index.php?Itemid=635",
+        "sample": "index.php?Itemid=635",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.13",
+        "entity": "module-830",
+        "type": "url",
+        "label": "[Tracy Business] 404 - Error page (ru) / row-link",
+        "current": "index.php?Itemid=634",
+        "sample": "index.php?Itemid=634",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-830.14",
+        "entity": "module-830",
+        "type": "url",
+        "label": "[Tracy Business] 404 - Error page (ru) / row-link",
+        "current": "index.php?Itemid=651",
+        "sample": "index.php?Itemid=651",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "menuItem-599.0",
+        "entity": "menuItem-599",
+        "type": "text",
+        "label": "Home",
+        "current": "Home",
+        "sample": "Home",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "menuItem-632.0",
+        "entity": "menuItem-632",
+        "type": "text",
+        "label": "Главная",
+        "current": "Главная",
+        "sample": "Главная",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      }
+    ],
+    "pages": [
+      {
+        "entity": "menuItem-599",
+        "route": "home",
+        "assignedModules": [
+          {
+            "entity": "module-425",
+            "position": "language-switcher"
+          },
+          {
+            "entity": "module-427",
+            "position": "search"
+          },
+          {
+            "entity": "module-428",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-429",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-430",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-431",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-432",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-433",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-434",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-435",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-436",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-437",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-438",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-439",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-440",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-441",
+            "position": "banner"
+          },
+          {
+            "entity": "module-442",
+            "position": "top-a"
+          },
+          {
+            "entity": "module-443",
+            "position": "top-b"
+          },
+          {
+            "entity": "module-444",
+            "position": "top-c"
+          },
+          {
+            "entity": "module-445",
+            "position": "top-d"
+          },
+          {
+            "entity": "module-446",
+            "position": "bottom-a"
+          },
+          {
+            "entity": "module-447",
+            "position": "bottom-b"
+          },
+          {
+            "entity": "module-448",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-449",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-450",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-451",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-452",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-453",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-454",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-455",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-456",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-457",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-458",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-459",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-460",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-816",
+            "position": "error-page"
+          },
+          {
+            "entity": "module-830",
+            "position": "error-page"
+          }
+        ]
+      },
+      {
+        "entity": "menuItem-632",
+        "route": "home",
+        "assignedModules": [
+          {
+            "entity": "module-425",
+            "position": "language-switcher"
+          },
+          {
+            "entity": "module-427",
+            "position": "search"
+          },
+          {
+            "entity": "module-428",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-429",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-430",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-431",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-432",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-433",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-434",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-435",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-436",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-437",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-438",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-439",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-440",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-448",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-449",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-450",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-451",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-452",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-453",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-454",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-455",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-456",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-457",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-458",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-459",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-460",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-461",
+            "position": "banner"
+          },
+          {
+            "entity": "module-462",
+            "position": "top-a"
+          },
+          {
+            "entity": "module-463",
+            "position": "top-b"
+          },
+          {
+            "entity": "module-464",
+            "position": "top-c"
+          },
+          {
+            "entity": "module-465",
+            "position": "top-d"
+          },
+          {
+            "entity": "module-466",
+            "position": "bottom-a"
+          },
+          {
+            "entity": "module-467",
+            "position": "bottom-b"
+          },
+          {
+            "entity": "module-816",
+            "position": "error-page"
+          },
+          {
+            "entity": "module-830",
+            "position": "error-page"
+          }
+        ]
+      }
+    ]
+  }
+}

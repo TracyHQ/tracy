@@ -1,0 +1,31 @@
+---
+import { getPublishedDates } from "../../query.js";
+import { groupEntriesByPublishedAt } from "../../widgets/archives.js";
+
+interface Props {
+	type?: "monthly" | "yearly";
+	limit?: number;
+}
+
+const { type = "monthly", limit = 12 } = Astro.props;
+
+const { dates } = await getPublishedDates("posts");
+
+const archiveList = groupEntriesByPublishedAt(
+	dates.map((publishedAt) => ({ data: { publishedAt } })),
+	{ type, limit },
+);
+---
+
+<ul class="widget-archives">
+	{
+		archiveList.map((archive) => (
+			<li>
+				<a href={archive.url} class="widget-archives__link">
+					{archive.label}
+				</a>
+				<span class="widget-archives__count">({archive.count})</span>
+			</li>
+		))
+	}
+</ul>

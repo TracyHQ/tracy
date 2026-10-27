@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1134-ds-panel-library",
+  "kind": "fix",
+  "title": "The Design system panel lists the design systems its door applies while the gallery's design-systems switch is off (production's state), and its cards are not dimmed under Coming soon",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/design-system-library-door.test.mjs — tracy-web's GET /api/design-system/library offers every gate-passing Refero system to a signed-in seat; read apps/tracy-web/src/sites/design-system-library-doors.js (no gallery switch read), packages/design/tracy-design-inspiration/src/client/useDesignSystemSources.ts and DesignSystemTab.tsx (the tab lists fetchLibrary's rows, not the gallery catalog), and the committed lib/client.js. Until feat/design-system-ui (12/10/2026) the panel read the gallery catalog with ?systems=all; the library is now Refero-only and served by tracy-web, so S1 guards that read instead.",
+    "S2: node --test test/gallery.test.mjs test/routes.test.mjs test/design-system-library.test.mjs (cwd packages/design/tracy-design-inspiration) — the catalog door on a fake Tracy answering {shown:false}: without a query no design system; parseRoute maps only systems=all.",
+    "S3: import systemOf from src/client/design-system-library.mjs and build a row from {platforms: []}; read src/client/DesignSystemGrid.tsx.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-panel-library.mjs"
+  ],
+  "expect": [
+    "S1: the library door test 'library: every Refero system that passes the gate, nothing else, in one shape' and the signed-out refusal pass; the door's code reads no design-systems/ui switch; useSystemLibrary calls fetchLibrary(), DesignSystemTab uses useSystemLibrary() and no longer calls fetchCatalog(; the committed lib/client.js carries '/api/design-system/library'.",
+    "S2: GET …/catalog (no query) still lists no design system while the switch is off and a silent Tracy is off; parseRoute returns { kind: 'catalog' } for any other value of systems; fetchLibrary keeps only Refero rows.",
+    "S3: systemOf returns a row without a platforms key, and the panel grid has no Coming soon badge, so no card is drawn dimmed under Coming soon."
+  ],
+  "selectors": {
+    "door": "apps/tracy-web/src/sites/design-system-library-doors.js GET /api/design-system/library; packages/design/tracy-design-inspiration/src/host/gallery.mjs parseRoute (catalog, systems: 'all')",
+    "page": "src/client/design-system-library.mjs fetchLibrary, systemOf; src/client/useDesignSystemSources.ts useSystemLibrary; src/client/DesignSystemTab.tsx; src/client/DesignSystemGrid.tsx"
+  },
+  "evidence": "tasks/evidence/ds-walkthrough-2026-10-11/README.md — A-wordpress/bug1-panel-empty-before-fix.png (before), A-wordpress/10-panel-open.png (after), 11/10/2026 on the local stand rebuilt from feat/ds-walkthrough.",
+  "fence": "The gallery switch itself (/ops › Design templates) is not pressed here: the gallery door is driven by a fake Tracy answering both values, and the library door by fakes of the offered list and the sign-in check. The panel on a real dsh page is in the evidence (taken before the Refero-only library).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-panel-library.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

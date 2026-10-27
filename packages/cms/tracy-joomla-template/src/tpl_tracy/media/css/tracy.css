@@ -1,0 +1,617 @@
+/* tpl_tracy — component styles, written once against the 56 OpenDesign token names.
+ * No :root here on purpose: the design system's own file (media/css/inspirations/<id>.css) is
+ * the single source of every colour, font, size, radius and shadow. Structure lives in layout.css. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Links: bare in chrome and sections (the WordPress theme's global styles do the same), underlined
+   inside running text, where nothing else tells a link from a word. */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tracy-prose a:not([class]) {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--accent), transparent 30%);
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  text-decoration-color: var(--accent);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  margin: 0 0 var(--space-4);
+  color: var(--fg);
+}
+
+h1 {
+  font-size: var(--text-3xl);
+}
+
+h2 {
+  font-size: var(--text-2xl);
+}
+
+h3 {
+  font-size: var(--text-xl);
+}
+
+p {
+  margin: 0 0 var(--space-4);
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+/* Layout primitives */
+
+.tracy-container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-gutter-desktop);
+}
+
+.tracy-section {
+  padding-block: var(--section-y-desktop);
+}
+
+.tracy-skip {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  z-index: 100;
+}
+
+.tracy-skip:focus {
+  inset-inline-start: var(--space-4);
+  top: var(--space-4);
+  width: auto;
+  height: auto;
+  clip-path: none;
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elev-raised);
+}
+
+/* Type roles */
+
+.tracy-display {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  margin: 0 0 var(--space-5);
+}
+
+.tracy-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--meta);
+  margin: 0 0 var(--space-3);
+}
+
+.tracy-lead {
+  font-size: var(--text-lg);
+  color: var(--fg-2);
+  max-width: 60ch;
+  margin: 0 0 var(--space-6);
+}
+
+.tracy-meta {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.tracy-meta__sep {
+  margin-inline: var(--space-2);
+}
+
+.tracy-muted {
+  color: var(--muted);
+}
+
+/* Buttons */
+
+/* A plain .tracy-btn element: a <button>, or a link outside a button block. The section
+   library's button blocks carry tracy-btn on their wrapper div too, for the modifiers —
+   excluded here, or the wrapper would draw a second box around the link styled below. */
+.tracy-btn:not(.wp-block-button) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--elev-flat);
+  transition:
+    background var(--motion-base) var(--ease-standard),
+    box-shadow var(--motion-base) var(--ease-standard),
+    transform var(--motion-fast) var(--ease-standard);
+}
+
+.tracy-btn:not(.wp-block-button):hover {
+  box-shadow: var(--elev-raised);
+}
+
+.tracy-btn:not(.wp-block-button):active {
+  transform: translateY(1px);
+}
+
+.tracy-btn--primary:not(.wp-block-button) {
+  background: var(--accent);
+  color: var(--accent-on);
+  border-color: var(--accent);
+}
+
+.tracy-btn--primary:not(.wp-block-button):hover {
+  background: var(--accent-hover);
+}
+
+.tracy-btn--primary:not(.wp-block-button):active {
+  background: var(--accent-active);
+}
+
+.tracy-btn--ghost:not(.wp-block-button) {
+  background: transparent;
+}
+
+/* The section library's buttons are WordPress button blocks: a wrapper div carrying tracy-btn
+   and its modifier, and inside it the link. The link gets the button's shape here; the wrapper's
+   modifier rules (sections.css) colour it. */
+.wp-block-button__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: var(--accent-on);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--elev-flat);
+  transition:
+    background var(--motion-base) var(--ease-standard),
+    box-shadow var(--motion-base) var(--ease-standard);
+}
+
+.wp-block-button__link:hover {
+  box-shadow: var(--elev-raised);
+}
+
+.is-style-outline .wp-block-button__link,
+.tracy-btn--ghost .wp-block-button__link {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--border);
+}
+
+.tracy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+/* Header and menu */
+
+.tracy-header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.tracy-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  min-height: calc(var(--space-12) + var(--space-4));
+}
+
+.tracy-brand {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: var(--tracking-display);
+}
+
+.tracy-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.tracy-menu a,
+.tracy-menu .separator,
+.tracy-menu .heading {
+  display: inline-block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--fg-2);
+  transition: background var(--motion-fast) var(--ease-standard);
+}
+
+.tracy-menu a:hover {
+  background: color-mix(in oklab, var(--accent), transparent 80%);
+  color: var(--fg);
+}
+
+.tracy-menu__item.is-active > a,
+.tracy-menu__item.is-current > a {
+  color: var(--fg);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.tracy-menu__sub {
+  list-style: none;
+  margin: 0;
+  padding-inline-start: var(--space-4);
+}
+
+.tracy-nav-toggle {
+  display: none;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Hero (structure per variant in layout.css) */
+
+.tracy-hero {
+  padding-block: var(--section-y-desktop);
+  background: var(--bg);
+}
+
+.tracy-hero__inner {
+  display: grid;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+.tracy-hero__media {
+  margin: 0;
+}
+
+.tracy-hero__media img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-raised);
+}
+
+/* Cards and grid */
+
+.tracy-card {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-ring);
+  overflow: hidden;
+  transition: box-shadow var(--motion-base) var(--ease-standard);
+}
+
+.tracy-card:hover {
+  box-shadow: var(--elev-raised);
+}
+
+.tracy-card__media img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.tracy-card__body,
+.tracy-module {
+  padding: var(--space-5);
+}
+
+.tracy-card__title {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+}
+
+.tracy-card__title a {
+  text-decoration: none;
+}
+
+.tracy-card__text {
+  color: var(--fg-2);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+.tracy-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+/* Listing, article, pricing */
+
+.tracy-listing,
+.tracy-article,
+.tracy-page,
+.tracy-pricing-page {
+  padding-block: var(--section-y-desktop);
+}
+
+.tracy-listing__head,
+.tracy-page__head,
+.tracy-pricing-page__head {
+  margin-bottom: var(--space-8);
+}
+
+.tracy-article {
+  max-width: min(var(--container-max), 72ch);
+}
+
+.tracy-article__head {
+  margin-bottom: var(--space-8);
+}
+
+.tracy-article__media {
+  margin: 0 0 var(--space-8);
+}
+
+.tracy-article__media img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+.tracy-article__media figcaption {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  margin-top: var(--space-2);
+}
+
+.tracy-prose > p:first-child {
+  font-size: var(--text-lg);
+  color: var(--fg-2);
+}
+
+.tracy-prose img {
+  border-radius: var(--radius-md);
+}
+
+.tracy-links {
+  margin: var(--space-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tracy-pagination {
+  margin-top: var(--space-8);
+}
+
+.tracy-pagination ul {
+  display: flex;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+}
+
+.tracy-pagination a,
+.tracy-pagination .page-link {
+  display: inline-block;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+}
+
+table.tracy-pricing {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+table.tracy-pricing th,
+table.tracy-pricing td {
+  padding: var(--space-4) var(--space-5);
+  text-align: start;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+
+table.tracy-pricing thead th {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+}
+
+table.tracy-pricing thead th small {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--muted);
+  margin-top: var(--space-1);
+}
+
+table.tracy-pricing tbody th {
+  font-weight: 500;
+  color: var(--fg-2);
+}
+
+table.tracy-pricing tr:last-child th,
+table.tracy-pricing tr:last-child td {
+  border-bottom: 0;
+}
+
+table.tracy-pricing .is-hot {
+  background: color-mix(in oklab, var(--accent), var(--surface) 85%);
+  box-shadow: inset 2px 0 0 var(--accent), inset -2px 0 0 var(--accent);
+}
+
+table.tracy-pricing thead .is-hot {
+  box-shadow: inset 2px 2px 0 var(--accent), inset -2px 0 0 var(--accent);
+}
+
+/* Footer and sidebar */
+
+.tracy-footer {
+  border-top: 1px solid var(--border-soft);
+  padding-block: var(--space-8);
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+.tracy-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.tracy-footer__modules {
+  display: grid;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.tracy-footer__brand {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.tracy-footer__note {
+  margin: 0;
+}
+
+.tracy-sidebar {
+  padding-block: var(--space-8);
+}
+
+.tracy-sidebar .tracy-container {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* System messages from Joomla */
+
+#system-message-container:has(.alert) {
+  padding-block: var(--space-4);
+}
+
+.alert {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+/* Responsive tokens */
+
+@media (max-width: 1024px) {
+  .tracy-container {
+    padding-inline: var(--container-gutter-tablet);
+  }
+
+  .tracy-section,
+  .tracy-hero,
+  .tracy-listing,
+  .tracy-article,
+  .tracy-pricing-page {
+    padding-block: var(--section-y-tablet);
+  }
+
+  .tracy-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .tracy-container {
+    padding-inline: var(--container-gutter-phone);
+  }
+
+  .tracy-section,
+  .tracy-hero,
+  .tracy-listing,
+  .tracy-article,
+  .tracy-pricing-page {
+    padding-block: var(--section-y-phone);
+  }
+
+  .tracy-display {
+    font-size: var(--text-3xl);
+  }
+
+  .tracy-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  table.tracy-pricing {
+    display: block;
+    overflow-x: auto;
+  }
+}

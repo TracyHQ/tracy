@@ -1,0 +1,36 @@
+/* Tailwind source for the ask form tab. Same recipe as tracy-add-site/src/client/add-site.css:
+   theme + utilities only, NO preflight — this tab lives inside dsh's page. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@tracy/ui/tokens.css';
+@source './';
+/* The form itself is core's (shared with the "Tell Tracy about your site" popup); scan it there. */
+@source '../../../../site/tracy-site-build-core/src/client/ask-form';
+@source '../../../../site/tracy-site-build-core/src/client/LanguageBox.tsx';
+@source '../../../tracy-ui/src';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS. */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* The Questions pane (the shared form's list layout): a question reads as a heading, a picked option
+   is tinted, and the typed answer looks like a box to type in rather than a disabled one. */
+.tracy-ask-form [data-ask-variant='list'] [data-ask-item] > div > label {
+  font-size: 15px;
+  font-weight: 600;
+}
+.tracy-ask-form [data-ask-variant='list'] label[data-selected='1'] {
+  background: color-mix(in oklab, var(--primary) 8%, var(--card));
+}
+.tracy-ask-form [data-ask-variant='list'] [data-ask-item] input:not([type='radio']):not([type='checkbox']):not([type='hidden']),
+.tracy-ask-form [data-ask-variant='list'] [data-ask-item] textarea {
+  background: var(--card);
+}
+
+/* While a question waits in this conversation, dsh's running clock ("Thinking for 1m 15s") is not
+   drawn: Tracy is not working, it waits for the person, and the pointer card above the chat box and
+   dsh's "Waiting for your action" already say so (Akemi 21/10/2026). The clock returns once the
+   question is answered and the card goes. */
+[data-conversation-scroll]:has([data-tracy-ask-pointer]) [data-chat-running] {
+  display: none;
+}

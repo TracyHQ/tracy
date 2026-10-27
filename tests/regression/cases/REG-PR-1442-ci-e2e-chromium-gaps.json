@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1442-ci-e2e-chromium-gaps",
+  "kind": "feat",
+  "title": "Tracy CI on a pull request into develop: without ci:e2e no browser starts (the EmDash rows follow the label, the two design-inspiration browser tests live under test/e2e), and release pull requests, the nightly and manual runs are unchanged",
+  "pr": 1442,
+  "area": "ci/opt-in",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From an installed TCH checkout run: node --test --test-reporter=tap scripts/test/ci-plan.test.mjs scripts/test/ci-test-scope.test.mjs",
+    "S2: Record the exit code, the '# pass' and '# fail' lines and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "A pull request into develop that touches an EmDash theme and carries no ci:e2e label has no tests emdash-* row; the row is recorded in leftOut with label ci:e2e and wouldRun true, the scope is partial:db+e2e, and the notice names the label.",
+    "The same pull request with ci:e2e gets only the row of the theme it touched; with unreadable labels it keeps the row and leaves nothing out.",
+    "Pull requests into main and staging, workflow_dispatch and schedule run every EmDash row and the e2e row, labels or no labels, and leave nothing out.",
+    "A change that touches no theme records no EmDash row as left out."
+  ],
+  "selectors": {
+    "planner": "scripts/ci/plan-ci.mjs planMatrix leftOut, isEmdashRow",
+    "scope": "scripts/ci/test-scope.mjs testScope e2eLeftOut",
+    "browser-files": "packages/design/tracy-design-inspiration/test/e2e/template-body*.test.mjs"
+  },
+  "fence": "A pull request into develop starts a browser only when it carries the label ci:e2e; every other event still runs every row.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/test/ci-plan.test.mjs",
+      "scripts/test/ci-test-scope.test.mjs"
+    ],
+    "tests": [
+      "without ci:e2e a pull request into develop that touches a theme gets no EmDash row",
+      "with ci:e2e the EmDash row of the touched theme runs, and only that one",
+      "a theme that is not touched leaves no trace in leftOut: nothing was lost",
+      "an EmDash theme PR with unreadable labels keeps the row: nothing is opted out",
+      "release pull requests, the nightly and manual runs still run every EmDash row without a label",
+      "the opt-in applies when the planner would have run every row, except for the unreadable cases"
+    ],
+    "timeout_s": 300
+  }
+}

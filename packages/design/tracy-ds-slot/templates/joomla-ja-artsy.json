@@ -1,0 +1,293 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-artsy",
+  "release": "quickstart/ja-artsy/j6@1.0.0",
+  "roles": {
+    "page": "body.site-home.navigation-default",
+    "display": "h1.slide-title.mt-0",
+    "heading": "h2.h1.font-heading-family",
+    "body": "p",
+    "container": "div.container",
+    "section": "#t4-section-1"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 70px",
+    "displayFace": "Butler 400, tracking 0em",
+    "heading": "first section heading: 70px",
+    "body": "first body paragraph",
+    "container": "first content container, max-width 1250px",
+    "section": "first padded full-width section, padding-top 60px"
+  },
+  "keepScopes": [
+    ".t4-palette-primary",
+    "#myvideo-0",
+    "#myvideo-99",
+    ".bg-primary",
+    ".map-directions",
+    ".bg-secondary",
+    "#t4-section-6",
+    ".info"
+  ],
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#343434",
+    "--fg-2": "#001659",
+    "--accent": "#ff5e14",
+    "--accent-hover": "#db5e04",
+    "--surface": "#f8f9fa",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#eef2fb",
+    "--muted": "#6f6f6f",
+    "--font-display": "\"Butler\", sans-serif",
+    "--font-body": "\"Work Sans\", sans-serif",
+    "--surface-warm": "#fff7f3"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#343434",
+      "fg-2": "#212529",
+      "accent": "#ff5e14",
+      "accent-hover": "#db5e04",
+      "surface": "#f8f9fa",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#eef2fb",
+      "muted": "#6f6f6f"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#343434",
+      "fg-2": "#001659",
+      "surface-warm": "#fff7f3"
+    },
+    {
+      "accent": "#001659"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#eef2fb",
+      "border-soft": "#dddddd",
+      "warn": "#fdce03"
+    },
+    {
+      "surface": "#f2f2f2"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (83 line colours, 111 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.slide-title.mt-0",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["#t4-section-1"],
+    "bodyFace": ["body"],
+    "inkImages": [".navbar-brand .logo-img", ".acm-features .img-icon img"],
+    "eyebrow": [".sub-title"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section p, .t4-section li",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 17 tried (byte 4255); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eef2fb",
+      "uses": 41,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 12
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 22
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 12
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 4,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "templateVars": {
+    "--gray_bg": "var(--ds-c-bg)",
+    "--heading_color": "var(--ds-c-fg-2)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#343434",
+    "--body-link-color": "#ff5e14",
+    "--body-link-hover-color": "#db5e04",
+    "--color-primary": "#ff5e14",
+    "--color-secondary": "#001659",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--gray_bg": "#fff",
+    "--heading_color": "#001659"
+  },
+  "keepNote": "kept after measuring 11/10/2026 (text in them read worse than the template's own under a system): #myvideo-0, #myvideo-99, .bg-primary, .map-directions, .bg-secondary, #t4-section-6, .info; each keeps the text colour its released page computed (keepColors, read 11/10/2026)",
+  "alphaVars": ["fg-30", "fg-50", "fg-60", "fg-70", "fg-80", "fg-90"],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-artsy/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip: tasks/evidence/ds-contracts-r3b-2026-10-11/templates/ja-artsy-j6): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 81% or more of the page follows; round 1's last worse text, the active menu link T4 writes #ff5e14 !important from its mainnav palette (2.68 under MotherDuck), takes the system's readable accent (followRules, !important); kept bands keep their own text colour (keepColors: the orange directions panel's dark text had followed the page); the navy wordmark and service icons are inverted with their hues kept on a dark system; checked by eye on the four systems' screenshots, desktop and phone. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 82% or more of the page follows, every contrast kind sampled at 1440 and 390; checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-artsy-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-artsy 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 82-93% of the page follows, every kind sampled (the white Services menu item straddling the light/dark hero split is the template's own default); MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-artsy-j6",
+  "keepColors": {
+    "#myvideo-0": "rgb(255, 255, 255)",
+    "#myvideo-99": "rgb(255, 255, 255)",
+    ".bg-primary": "rgb(255, 255, 255)",
+    ".map-directions": "rgb(52, 52, 52)",
+    ".bg-secondary": "rgb(255, 255, 255)",
+    "#t4-section-6": "rgb(255, 255, 255)",
+    ".info": "rgb(52, 52, 52)",
+    ".t4-palette-primary": "rgb(255, 255, 255)"
+  },
+  "followRules": {
+    "body:not(:has(.t4-masthead)) .t4-palette-mainnav .navbar-nav > li.active > a": {
+      "color": "accent-text!"
+    },
+    "body:not(:has(.t4-masthead)) .t4-palette-mainnav .navbar-nav > li.show > a": {
+      "color": "accent-text!"
+    },
+    ".acm-pricing.style-1 .content-inner .col-header .title h5": {
+      "color": "fg-2"
+    },
+    ".acm-pricing.style-1 .content-inner .col-header .price-sale h2": {
+      "color": "accent-text"
+    },
+    ".acm-pricing.style-1 .content-inner .btn.second": {
+      "background-color": "fg-2!",
+      "border-color": "fg-2!",
+      "color": "bg!"
+    },
+    ".acm-features.style-5 .content-left .ps-left .btn": {
+      "background-color": "fg-2!",
+      "border-color": "fg-2!",
+      "color": "bg!"
+    }
+  },
+  "followNote": "T4 writes the main menu's active and open link colour (#ff5e14) !important into its generated pattern CSS (media/t4/css, from the mainnav palette): on a light system's tinted page that orange read 2.68:1 under MotherDuck where the template's own reads 3.06 on white; it takes the system's readable accent, !important; 15/10/2026 (v10 inner measure, /index.php/services): on the inner pages the header is laid over the navy masthead photo (.t4-masthead, which no system repaints), where the readable accent made for the page read 2.59:1 under Stripe (#533afd on #061b59; the template's orange 5.15:1): the two active/open rules hold on pages without that masthead only (body:not(:has(.t4-masthead))), and over the photo the active link keeps the orange T4 draws for it. The services page shows three more parts T4 writes from css/tpl/theme.tpl.css as literals: the pricing plan names (navy) and prices (orange) take the template's ink role (fg-2, its strongest text) and the readable accent; the featured plans' buttons (.btn.second) and the orange block's button (.acm-features.style-5 .content-left .ps-left .btn) are filled navy !important while their words took the accent's own text (black on #001659 under Moxie, 1.26:1, the template's white 16.68:1): both wear the template's ink pair, the system's strongest text as the fill and its page as the words (fg-2 on bg 4.53:1 or more across the 1334 systems; fg-2 on the surface 4.54:1 or more)",
+  "inkNote": "the wordmark and the service icons are images drawn in the template's navy for its light page: shown inverted with their hues kept on a dark system's page",
+  "minVersion": {
+    "quickstart/ja-artsy/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-artsy/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".map-directions": {
+      "ground": "#ff5e14",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    "#t4-section-6": {
+      "ground": "#001659",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".section-title span": {
+          "color": "accent"
+        },
+        ".testimonial-name": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".info": {
+      "ground": "#001659",
+      "texts": ["#ffffff", "#667b9c"],
+      "paint": {
+        ".link-form": {
+          "color": "accent"
+        },
+        ".link-gray span": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".bg-secondary": {
+      "ground": "#001659",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        ".ft-content::before": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".features-item.bg-secondary": {
+      "ground": "#001659",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".link-white", ".ft-content div"]
+    },
+    ".t4-palette-primary": {
+      "ground": "#ff5e14",
+      "texts": ["#ffffff"],
+      "important": true,
+      "paint": {
+        ".text-mask": {
+          "color": "text"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 15/10/2026 (v10 inner measure, /index.php/services): the orange stats band was keyed by its layout place, .t4-section-3, which T4 names after the section's name: on the services layout .t4-section-3 is the white pricing section, so under every system that section was worn as the orange band (Moxie: #1a1a1a, Stripe: #533afd) while its words stayed the template's (the plan labels #6f6f6f on #533afd 1.23:1, the title navy on #1a1a1a 1.04:1). The band is keyed by what makes it the band, T4's primary palette class on the home's section-3 (.t4-palette-primary, the same element there, used by no other section or content of the template); the pricing section follows the page"
+}

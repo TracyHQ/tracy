@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "13d6fc89-eba2-4724-ac37-20f4f2e5efec",
+  "status": "complete",
+  "name": "Factory",
+  "url": "https://styles.refero.design/style/13d6fc89-eba2-4724-ac37-20f4f2e5efec",
+  "sourceWebsite": "https://factory.ai",
+  "extractedAt": "2026-07-03T03:18:23.580Z",
+  "capturedAt": "2026-10-08T05:08:30.374902+00:00",
+  "theme": "dark",
+  "industry": "ai",
+  "description": "Terminal war room at midnight. Factory is a stark black control surface where a single white card lands like a flashlit dispatch — the only object in the room is the work itself.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/184848aa-3d4b-45af-a7e4-d5083c86e11d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/9eaec8ef-95e6-40ef-b752-2d655d1dc8c1.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/06a249a2-3abc-46e0-a8f1-c9ec5e227270.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/5f549df2-68fd-40b5-9061-19ed52da3077.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e957aaf5-e24a-40ed-8be6-53673b3b54c4.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "100b961b46d534c01820f87947aae154833efde9565a314ba2fbfed2616dbbcd",
+      "bytes": 19812
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1f431bcec97b5bcdf4ea87e8863bec5e5d41b29086ced212c76fefee95b3b87b",
+      "bytes": 124324
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1a7c24698c6632c4c7855b55872cde72c01a3594669959650c4df994aea7c527",
+      "bytes": 17425
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e9c899921bbbfb3d9a17c7f52e776a2a74968358ade5d18f0b2aa87d0c5b0e24",
+      "bytes": 7771
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "fe5f21a7b1163c5a92d3946efdc77aeb37701c7d9ce56fd64b8e03ff87badb77",
+      "bytes": 12523
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "11da2e5e9f57193ed3541763c77871ee40143846bb1da4c0658b2c56e4b04912",
+      "bytes": 2809
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ae09d0f8284848cf48e2e1ea48cf6697ba6f06b69fdffc69f4ec72c98bb662d3",
+      "bytes": 578
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9426f8b5b83445ec055e14c943aa9e6d2b066b2c1abf2fc87edf54726a158d61",
+      "bytes": 595
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8ac9f7479785bbee61c70741743e66be9317d4d356664f8c2c3862c215f413bf",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "0a201f69e6b667d53c7d6213863a361fc932a4f9123e1b4a3d62838ca3e44f8c",
+      "bytes": 44724
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0dce10e2edefa319a6a3f8b80564d670f320135c44fda8c63609db3927393b27",
+      "bytes": 23530
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "17e6e6ef5a4143589745c5439787f6d35073d96c22fd8142e5659448f5bc5d48",
+      "bytes": 43809
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "37c201ff9dad65dcce0e21da4d2a4befb66d420c5f609cb6c826f3390a32733b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4c9a63a4b1580134a2b749166350f2ed726140486138f2a6847e873959edbc5f",
+      "bytes": 1333
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c2bcd749c8d288bdce3b6f00a44016d1ccb8dd52931820909024c99212812acb",
+      "bytes": 1858
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "13d6fc89-eba2-4724-ac37-20f4f2e5efec",
+    "1c1d3939-8d82-4907-aa3c-c9b2fcfbab4f",
+    "2cfb738d-6c44-4628-a2f5-e9c9fc92a0ca",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "48971df7-919d-453c-9d0b-4600cd24c583",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "720c9806-2d70-4dd1-9a19-12efd71fc742",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "d271a6c4-942f-4abf-a3de-66795f15f031",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

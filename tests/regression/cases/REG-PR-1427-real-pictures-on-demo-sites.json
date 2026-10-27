@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-1427-real-pictures-on-demo-sites",
+  "kind": "feat",
+  "title": "Website Opportunities puts the restaurant's own photographs into the demo pictures' places when the site is built: labelled once by a vision model, matched to the content contract's slots by role/page/shape, cut to the demo file the site serves without upscaling, written with the words; an empty hero is extended from a real photo; demo pictures never stay in content slots; the hand-off gives the agent only what is left",
+  "pr": 1427,
+  "area": "website-opportunities/pictures",
+  "cms": ["jo", "wp"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test vendor/tracy/tracy-website-opportunities/test/domain-pictures-slot-map.test.mjs vendor/tracy/tracy-website-opportunities/test/domain-pictures-labels.test.mjs vendor/tracy/tracy-website-opportunities/test/domain-pictures-placement.test.mjs vendor/tracy/tracy-website-opportunities/test/domain-pictures-precision.test.mjs",
+    "S2: With TEST_DATABASE_URL set to a scratch Postgres run: node --test apps/tracy-web/test/brief-real-pictures.test.mjs apps/tracy-web/test/picture-cut.test.mjs apps/tracy-web/test/picture-vision.test.mjs apps/tracy-web/test/picture-draw.test.mjs apps/tracy-web/test/website-opportunities-site-pictures.test.mjs apps/tracy-web/test/website-opportunities-handoff-pictures.test.mjs apps/tracy-web/test/website-opportunities-doors.test.mjs",
+    "S3: Read the exit code and the fail/skipped counts of each run.",
+    "S4: Run node --test apps/tracy-web/test/wo-picture-settings.test.mjs and, on scratch Postgres, wo-quality-revisions.test.mjs and wo-quality-editorial.test.mjs; the handoff door suite also covers frozen caps of 6 and 26.",
+    "S6: Run design-system-site-readers.test.mjs and website-opportunities-site-content.test.mjs on scratch Postgres to check local asset routing and retry fences.",
+    "S7: Run brief-quickstart-first.test.mjs and website-opportunities-demo-runner.test.mjs: source shortage across WordPress, Joomla and EmDash produces fitting source variants, preserving pixels, CSS, provenance and needs-review.",
+    "S8: Retry an expired quickstart quality run with a caller-bound action window; verify the original frozen deadline and cumulative attempt/repair limits remain unchanged.",
+    "S9: Native EmDash capability preflight, optional declared logo text fallback, verified photo-stage resume and untouched-copy/exact-key-set fences are covered by brief-quickstart-first.test.mjs.",
+    "S10: Filled-stage Retry checks copyHash, exact structure and identity before skipping model/photo work; taxonomy seed labels/descriptions use conditional metadata writes and readback without changing routes or associations.",
+    "S11: run the actual template-picker browser test at 1440/390 and the demo action/revision/runner tests; cancel makes no build call, CMS+quickstart are explicit, defaults cannot replace the choice, replay/Retry retain the frozen release and invalid bulk charges nothing."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures and 0 skipped tests.",
+    "S1: the placement of the labelled fixture (48 photographs of two restaurants, hand labels in test/fixtures/pictures/labelled-pictures.json) is deterministic — the same input gives byte-identical plans — and never assigns a photo labelled menu-board/poster/collage to a hero, slideshow, banner or background group, never a non-food photo to a dish group, and never any photo to a NEVER group (logo, map, avatar, icon, decor, alpha cut-out).",
+    "S2: brief-real-pictures: with providedMediaIds in the brief the Joomla engine calls no drawing model, places pictures through shapeAssigned(plan) with a crop whose aspect is within 0.005 of the demo file's and a scale ≤ 1.25, names uploads by the hash of the cut bytes, writes slot values in the same apply as the words, and records plan + receipts in wo_build.pictures; a second run with the same plan uploads nothing again.",
+    "S2: picture-draw: an empty hero group is extended from a real photo through the image door with origin 'outpainted', at most 3 drawn pictures per site, and nothing is drawn for dish, people or logo groups; without an image door the group gets a brand-colour placeholder, never the demo file.",
+    "S2: handoff-pictures: POST …/builds/:id/handoff answers 409 SITE_NOT_READY until site_brief is applied, then offers only unused clean photographs (no collage/text-heavy), largest first, and lists the demo files outside the contract (report.demoOutside) in the agent prompt.",
+    "S2: site-pictures reader: media of another account, media not in the revision's manifest, or media not 'stored' are refused (null), so the sites/ engine never reads another customer's pictures.",
+    "S4: picture policy freezes before ordinary/editorial model work; disabling curation prevents provider lookup and calls; a ten-picture cap stays ten across retries; handoff uploads exactly its frozen 6 or 26 pictures even after settings change. Real-only and outpaint-only cannot dispatch scene generation. Editorial always observes and retains its 24-picture fence. Metered invocation overrides bypass generic billing, do not mutate defaults, and propagate Stop/uncertain work in strict mode without caching labels.",
+    "S5: quickstart inventory discovers WordPress custom types, theme-file templates and declared settings without sending configuration to the model; numeric fields retain storage types, responsive/lazy/CSS images retain layout, review provenance is provider-specific, and missing identity/brand/coverage cannot report completion even in manual review mode.",
+    "S6: public local asset URLs are read through the site container with paths and queries preserved; remote public origins remain unchanged. A queued retry sharing a failed original build request owns the quickstart fence; cancellation and a different revision remain blocked.",
+    "S7: strict-first variant planning is deterministic and balances source clusters, never relaxes subject or resolution constraints; identical derivative bytes upload once while every reference is patched/read back. Variant receipts finish as needs-review without chat or Outreach.",
+    "S8: accepted_at fixes the retry deadline; stale/superseded/foreign/cancelled actions cannot renew it. Old/uncertain provider attempts block; live parallel attempts of this action proceed. No new intent or allowance is created.",
+    "S9: vanilla receivers are refused before upload; source logo roles alone cannot authorize required/undeclared fields. Retry never adopts editor text or missing records, and only resumes verified photo snapshots.",
+    "Technical numbers require trusted frozen-record metadata, remain unchanged and never waive factual semantic roles; alt prefix normalization is auditable and preserves the original paid input hash.",
+    "S10: Edited or missing records and uncertain mutations are refused. Human term edits, missing CAS, missing mutation receipts and association drift cannot pass. Verified term receipts resume without another model call or write.",
+    "S11: popup uses the existing gallery/preview; no Add site/chat/design-choice write. Fresh single and bulk requests require a valid CMS/template selection; exact release identity survives database serialization and retries."
+  ],
+  "selectors": {
+    "engine": "apps/tracy-web/src/sites/brief-engines/real-pictures.js (shapeAssigned, providedPictures)",
+    "planner": "vendor/tracy/tracy-website-opportunities/domain/pictures/{slot-map,picture-labels,placement}.mjs",
+    "reader": "apps/tracy-web/src/opportunities/site-pictures.js injected from app.js",
+    "doors": "POST /api/website-opportunities/revisions/:id/build (providedMediaIds), POST/GET /api/website-opportunities/builds/:id/handoff",
+    "storage": "migration 126: wo_media.caption/alt/dhash/labels, wo_build.pictures"
+  },
+  "evidence": "18/10/2026: photographs must fit the layout and the content and the site must look as good as the quickstart demo; council review (Codex gpt-6-astra + Gemini) in tasks/council-wo-pictures-2026-10-18.md; measurements on stand wo in tasks/evidence-wo-pictures.md (Fern Station 7/7 groups real, Marigold 3 real + 2 outpainted, vision precision 0.83 on 48 hand-labelled photos).",
+  "fence": "Unit and door tests over fixtures and a scratch database; the vision and image models are doubles. Not exercised here: a running CMS, the real DeepSeek/OpenRouter calls, the agent's pass over demo pictures outside the contract.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1427-real-pictures-on-demo-sites.mjs"],
+    "needs": ["postgres"]
+  }
+}

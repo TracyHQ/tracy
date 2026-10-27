@@ -1,0 +1,48 @@
+{
+  "id": "QA-UNIT-REG-191-happy",
+  "itemIds": ["regression:REG-191"],
+  "requirement": "Small defects of #811: Account says a failed read is a failure, a failed poster stops pulsing, the Account switch warns about Sign out, and the Ops rail links the API reference",
+  "oracle": {
+    "source": "tests/regression/cases/REG-191-small-qa-defects.json",
+    "ref": "PR #910 (fix); fix evidence: Issue #811 (F-S2-021, F-S5-014, F-S5-012, F-S2-011, F-S8-022); tasks/nhat-ky/2026-10-04-811-p3-small.md holds the red-on-base and green-on-branch counts.",
+    "invariant": "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled. Every 'a failed read is said as a failure, not as signed out' test passes: a rejected request, an error status, an empty, HTML or malformed body, and an `email` that is missing, empty or not a string each show `state.failed` with an `action.retry` button and never `account.anonymous`. 'the door’s own signed-out answer (200, email: null) still reads as not signed in', 'a usable address shows the account and Sign out' and the three 'Try again' tests pass: only `email: null` on a 200 is signed out, and a retry asks `/auth/me` again and settles from the new answer. 'a poster that fails to load stops pulsing and leaves the no-picture ground, no broken image', 'the failure stays through a redraw with the same address', 'a new poster address after a failure is asked for, pulses and can load' and 'a new poster address that fails too ends on the no-picture ground' pass: after `error` on the poster there is no `img` and no `[data-poster-loading]` in the card. 'the preview’s live demo frame sends no referrer and is not sandboxed' passes: the frame's `referrerpolicy` is `no-referrer` and it has no `sandbox` attribute. 'the Ops rail carries exactly one link to the staff API reference, labelled API', 'a plain press on the API link is left to the browser: the SPA neither cancels it nor routes' and 'a modifier press on the API link stays a real link too' pass: one rail anchor has `href=\"/ops/api\"`, a press on it is not cancelled and writes no history entry. 'User Interface warns that Account off leaves no Sign out' and 'every switch that can take away the only Sign out says so before it is turned off' pass: `tracy-account` and `settings-button` both carry the warning in the exported catalogue, and /ops prints it while the switch is off. S3 exits 0 in the three packages: each committed lib/client.js is the build of its source.",
+    "productSources": ["packages/site/tracy-my-sites/src/client/index.tsx:1"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/core/tracy-core/test/ui-switches.test.mjs:286 import '../src/ui-switches/catalogue.json' does not resolve to a source file",
+      "packages/core/tracy-core/test/ui-switches.test.mjs:305 import '../src/ui-switches/catalogue.json' does not resolve to a source file",
+      "packages/design/tracy-design-inspiration/test/poster-failure.test.mjs:125 require() with a computed specifier",
+      "packages/web/tracy-harness/test/support/ops-i18n-esbuild.mjs:22 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-191.mjs:69 spawnSync() runs a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-191.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-191"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-191",
+    "pr": 910,
+    "kind": "fix",
+    "area": "web/settings",
+    "file": "tests/regression/cases/REG-191-small-qa-defects.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-191.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

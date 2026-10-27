@@ -1,0 +1,331 @@
+{
+  "dos": [
+    "Use 9999px radius for every button, nav item, and tag — the pill is the system's only shape signature",
+    "Set headlines at 72–100px with -0.025em tracking; body text stays at 14–16px with normal tracking",
+    "Communicate structure with 1px #e5e7eb borders, not shadows or filled panels",
+    "Let product photography supply all chromatic contrast; keep UI surfaces achromatic",
+    "Default button background to #1d1d1d with #ffffff text — this is the primary action, there is no chromatic CTA color",
+    "Use the 8px radius on all cards, images, inputs, and containers — never use 4px or 12px",
+    "Anchor every section to a single editorial headline at display scale; the type is the section, not a label"
+  ],
+  "donts": [
+    "Do not introduce a chromatic primary action color — the filled button is always #1d1d1d",
+    "Do not use drop shadows on cards, nav, or content blocks; shadows break the editorial flatness",
+    "Do not set headlines below 36px when they carry section meaning — Cowboy's hierarchy is extreme",
+    "Do not use 4px or 6px radii on cards or images; the system speaks in 8px and 9999px only",
+    "Do not pair positive letter-spacing with SuisseIntl — tracking is always neutral or negative",
+    "Do not use color as decoration on UI chrome; reserve #569d5f and #2563eb exclusively for semantic states",
+    "Do not fill backgrounds with #f3f4f6 on hero or product sections; white is the only canvas for the bicycle"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Porcelain",
+      "role": "Page canvas, card surfaces, button text on dark fills — the dominant neutral that lets photography carry all chromatic weight",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d1d1d",
+      "name": "Charcoal",
+      "role": "Primary text, filled primary action buttons, active nav — a soft black that reads warm rather than digital",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Hairline",
+      "role": "Dividers, card borders, input outlines, image frame edges — the structural skeleton of every section",
+      "group": "neutral"
+    },
+    {
+      "hex": "#737373",
+      "name": "Smoke",
+      "role": "Secondary body text, button borders, subtle metadata — a middle gray that recedes behind primary copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a3a3a3",
+      "name": "Ash",
+      "role": "Tertiary text, disabled state, muted helper copy — the quietest text tier",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f3f4f6",
+      "name": "Mist",
+      "role": "Soft card backgrounds, subtle alternating bands — provides the only tonal step between white surface and white surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5e5e5e",
+      "name": "Graphite",
+      "role": "Body section background, mid-tier surface for inset panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cacaca",
+      "name": "Bone",
+      "role": "Faint dividers, disabled borders, focus halos at rest",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Onyx",
+      "role": "Icon fills, high-contrast graphic marks — reserved for SVG iconography only",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6b7280",
+      "name": "Slate",
+      "role": "Input field borders at rest — the one input-state neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#569d5f",
+      "name": "Moss",
+      "role": "Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#2563eb",
+      "name": "Signal Blue",
+      "role": "Info state, focused input highlight — the only chromatic functional signal in the system",
+      "group": "semantic"
+    }
+  ],
+  "layout": "Full-bleed hero with a dark photo overlay and a single left-aligned headline plus pill CTA. Below the fold, the layout shifts to a max-width 1440px centered column on a pure white canvas, with sections separated by generous 80px vertical breathing room rather than dividers. Content alternates between full-width product showcases and 3-column card grids (press logos, awards, features). Text is consistently left-aligned; the only centered blocks are editorial display headlines. Navigation is a minimal top bar with pill nav items, a centered wordmark, and a right-aligned account + primary CTA cluster. A floating chat launcher sits fixed in the lower-right.",
+  "imagery": "Imagery is the system's primary color source and is treated as hero content. Product photography is shot on white seamless or in soft natural European street settings (Parisian stone facades, misty mornings), always in motion or mid-action — no static product-on-white catalog shots except in configurator contexts. The hero is always full-bleed video or photograph with a dark scrim. Press logos retain their native brand colors and are the only tolerated chromatic UI noise. No illustration, no 3D renders, no iconographic decoration — the system is photo-only.",
+  "similar": [
+    {
+      "why": "Same premium e-bike category with near-monochrome product photography on white, oversized editorial headlines, and pill-shaped navigation — Cowboy's most direct visual sibling",
+      "business": "VanMoof"
+    },
+    {
+      "why": "Shared Swiss-grotesque typography obsession, pill controls, hairline borders, and a near-total absence of decorative color on the product page",
+      "business": "Teenage Engineering"
+    },
+    {
+      "why": "Same editorial restraint — porcelain white canvas, oversized serif-adjacent type, hairline structure, and letting product photography supply all warmth",
+      "business": "Aesop"
+    },
+    {
+      "why": "Same Scandinavian-adjacent minimalism with full-bleed lifestyle photography, dark hero scrims, and pill CTA buttons on achromatic UI",
+      "business": "Volvo"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "8px",
+      "images": "8px",
+      "inputs": "8px",
+      "buttons": "9999px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "48px",
+    "pageMaxWidth": "1440px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — the default for every section except hero overlays"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Product cards, press logo tiles — visually identical to canvas, defined only by hairline border"
+    },
+    {
+      "hex": "#f3f4f6",
+      "name": "Inset",
+      "level": 2,
+      "purpose": "Subtle alternating bands and feature panel backgrounds"
+    },
+    {
+      "hex": "#1d1d1d",
+      "name": "Hero Overlay",
+      "level": 3,
+      "purpose": "Full-bleed photography with dark scrim for white reverse-out headlines"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.06) 0px 1px 6px 0px, rgba(0, 0, 0, 0.16) 0px 2px 32px 0px",
+      "element": "Floating chat button"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.1) 0px 2px 4px -2px",
+      "element": "Feature card"
+    }
+  ],
+  "northStar": "Belgian bicycle gallery in porcelain white. A showroom where matte surfaces, oversized editorial type, and near-zero decoration force the eye onto the machine and the message.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.3
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.36
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.05
+    },
+    {
+      "role": "heading-lg",
+      "size": 44,
+      "lineHeight": 1.05,
+      "letterSpacing": -0.88
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1,
+      "letterSpacing": -1.8
+    },
+    {
+      "role": "display-xl",
+      "size": 100,
+      "lineHeight": 0.9,
+      "letterSpacing": -2.5
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Action Button",
+      "role": "Main CTA — 'Discover Cruiser', 'Book a test ride'",
+      "description": "Filled pill (#1d1d1d background, #ffffff text), 9999px radius, 12px 24px padding, SuisseIntl 500 at 16px. No border, no shadow. On hover, background lightens slightly toward #5e5e5e."
+    },
+    {
+      "name": "Secondary Outlined Button",
+      "role": "Supporting CTA — 'Continue' in locale dialog",
+      "description": "Pill shape with #1d1d1d border at 1px, transparent fill, #1d1d1d text, 9999px radius, 12px 24px padding, 16px weight 500."
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Inline dismiss or skip — 'No thanks'",
+      "description": "No background, no border, #1d1d1d underlined text at 16px weight 500, inline alignment. Sits adjacent to a filled primary."
+    },
+    {
+      "name": "Navigation Pill",
+      "role": "Top nav items — E-bikes, AdaptivePower, Connect, Leasing",
+      "description": "Transparent fill, #1d1d1d text at 16px weight 500, 9999px radius, 8px 16px padding. Active state uses a subtle #f3f4f6 background fill."
+    },
+    {
+      "name": "Tab Switcher Pill",
+      "role": "Product variant toggle — Cruiser / Cruiser ST",
+      "description": "Segmented pill control with 8px radius overall, individual segments 9999px. Active segment is #1d1d1d fill with white text; inactive is transparent with #737373 text."
+    },
+    {
+      "name": "Hero Section",
+      "role": "Full-viewport opening screen",
+      "description": "Full-bleed video or photograph, dark scrim overlay (rgba 0,0,0,0.3–0.4), left-aligned white headline at 72–100px SuisseIntl weight 500, letter-spacing -0.025em. Single white pill CTA bottom-left. No gradient, no decorative chrome — the image does the work."
+    },
+    {
+      "name": "Product Showcase Card",
+      "role": "Bicycle product detail — 'The easy-rider'",
+      "description": "White background, 8px radius optional, full-width product photo centered, 24px padding around image, 36–44px heading in #1d1d1d above, variant switcher in upper-right corner. No card border, no shadow — image floats on white."
+    },
+    {
+      "name": "Press Logo Tile",
+      "role": "Award and publication credentialling — red dot, Verge, TIME, GQ, Frandroid",
+      "description": "White background, 8px radius, 1px #e5e7eb border, 48px vertical padding, centered logo at native color (logos retain their brand colors — this is the only place the system tolerates chromatic noise)."
+    },
+    {
+      "name": "Feature Row Card",
+      "role": "Award or feature highlight — 'Award-winning design'",
+      "description": "Transparent or #1d1d1d background, 48px padding, 16–18px weight 500 label in #ffffff or #1d1d1d, 13–14px weight 400 descriptor below in same color at reduced opacity. Icon or mark at left, text right."
+    },
+    {
+      "name": "Locale Dialog",
+      "role": "Geo-detection overlay — 'Looks like you're in Spain'",
+      "description": "White card with 8px radius, 24px padding, 16px heading, 14px body text, filled primary button + ghost link inline. Appears as a small floating card in the upper-left viewport, not a modal."
+    },
+    {
+      "name": "Carousel Arrow Button",
+      "role": "Product gallery navigation",
+      "description": "Square 40×40 control, 8px radius, 1px #e5e7eb border, #1d1d1d chevron icon at 16px. Transparent fill, no shadow."
+    },
+    {
+      "name": "Sticky Announcement Bar",
+      "role": "Top-of-page notification — 'Cowboy is back. Learn more'",
+      "description": "#1d1d1d full-width strip, 32px height, white 14px text centered, with a linked 'Learn more' in white weight 500 and a dismiss × in white at far right."
+    },
+    {
+      "name": "Editorial Display Headline",
+      "role": "Section opener — 'Power so natural, you're always in flow.'",
+      "description": "SuisseIntl weight 500 at 72–100px, #1d1d1d, centered or left-aligned, letter-spacing -0.025em, line-height 0.90–1.00. May use a gradient-to-white mask on the last word to create a fade-out punctuation effect — this is a signature Cowboy device."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface across every UI surface. SuisseIntl is a Swiss-geometric grotesque with squared terminals and optical precision; its cold neutrality is the counterweight to Cowboy's warm lifestyle photography. Use weight 500 for navigation and UI labels, 600 for emphasis and button text, 400 for body and editorial copy. The extreme type scale (100px display) with -0.025em tracking is signature — headlines feel cut, not typed.",
+      "sizes": "12, 13, 14, 16, 18, 20, 24, 36, 42, 44, 46, 52, 72, 100",
+      "family": "SuisseIntl",
+      "weight": "400, 500, 600",
+      "lineHeight": "0.90–1.50 (display: 0.90–1.00, headings: 1.05–1.25, body: 1.47–1.50)",
+      "substitute": "Inter, General Sans, or Space Grotesk",
+      "letterSpacing": "-0.0250em at display sizes (72–100px), -0.0200em at 42–52px, -0.0150em at 18–24px, normal at body sizes"
+    },
+    {
+      "role": "Oversized monospaced display mark used as a graphic element — the only departure from SuisseIntl, lending a technical/spec-sheet accent to counter the humanist photography",
+      "sizes": "64",
+      "family": "ui-monospace",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "JetBrains Mono, IBM Plex Mono"
+    },
+    {
+      "role": "Reserved for the Intercom chat widget — not a design system font, do not propagate",
+      "sizes": "16",
+      "family": "Intercom Sans",
+      "weight": "400",
+      "lineHeight": "1.50",
+      "substitute": "n/a"
+    },
+    {
+      "role": "intercom-font — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "intercom-font",
+      "weight": "400",
+      "lineHeight": "1.5"
+    }
+  ],
+  "description": "Cowboy's visual system is editorial restraint taken to its logical extreme: a near-monochrome canvas where the only chromatic signal comes from product photography and press logos. SuisseIntl at near-poster sizes (72–100px) with aggressive negative tracking gives every headline a magazine-cover gravity, while 8px radii and 9999px pill buttons keep the chrome physically quiet. Surfaces are white porcelain; structure is communicated through hairline #e5e7eb borders rather than shadows or filled panels. The interface is designed to disappear so the bicycle — and the word — can carry the room.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #1d1d1d (primary), #737373 (secondary), #a3a3a3 (tertiary)\n- background: #ffffff (canvas), #f3f4f6 (inset)\n- border: #e5e7eb (hairline), #cacaca (faint)\n- primary action: #1d1d1d (filled action)\n- accent: none — the system is achromatic; #2563eb is info state only, #569d5f is success state only\n\n**Example Component Prompts**\n\n1. *Build a hero section.* Full-bleed image with rgba(0,0,0,0.35) scrim. Headline 'Riding reinvented' in SuisseIntl 500 at 100px, #ffffff, letter-spacing -2.5px, line-height 0.90, left-aligned in the left third. Subtext 'Meet the e-bike that thinks for itself.' in 18px weight 400, #ffffff at 80% opacity. primary action: #1d1d1d (filled action)\n\n2. *Build a press logo row.* White background, 1440px max-width, 5-column grid with 24px gaps. Each tile: white fill, 1px #e5e7eb border, 8px radius, 48px vertical padding, logo image centered at native color, 14px caption below in #737373.\n\n3. *Build a product showcase card.* White background, no border, no shadow. Section heading in SuisseIntl 500 at 44px, #1d1d1d, left-aligned at 48px from left edge. Product image centered below at full content width, 8px radius. Variant switcher (pill segmented control) in upper-right: 8px container radius, active segment #1d1d1d with white text at 14px, inactive transparent with #737373 text.\n\n4. *Build a feature row item.* Transparent or #1d1d1d background, 48px padding, 16px label in SuisseIntl 500 #ffffff (or #1d1d1d on light), 13px descriptor in same color at 70% opacity, arranged in a 3-column grid with 24px gaps.\n\n5. Create a Primary Action Button: #1d1d1d background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA."
+    },
+    {
+      "title": "Editorial Type Philosophy",
+      "content": "Cowboy treats headlines as architectural elements, not labels. The 72–100px range with -0.025em tracking and tight 0.90–1.00 line-height means a single headline can occupy a full viewport height. A signature device: the last word of a display headline fades to white via a CSS mask-gradient, creating a trailing silence. This is the system's only typographic flourish — it signals continuation without adding a period. When building new sections, default to one display headline per section, left or center aligned, and let the body copy recede to 16–18px in #737373."
+    }
+  ],
+  "elevationPhilosophy": "The system avoids shadow as a structural device — almost no element in the main interface casts a drop shadow. Elevation is communicated through hairline #e5e7eb borders and surface color stepping, keeping the visual field flat and editorial. Shadows appear only on transient floating UI (chat launcher) and occasionally on feature cards that need to lift off a patterned background."
+}

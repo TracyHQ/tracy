@@ -1,0 +1,48 @@
+{
+  "id": "QA-UNIT-REG-PR-998-add-site-questions-sheet-happy",
+  "itemIds": ["regression:REG-PR-998-add-site-questions-sheet"],
+  "requirement": "Add site asks the template's questions in an optional \"Customize your site\" card and sheet; Create site is never blocked and sends the answers, or no brief",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-998-add-site-questions-sheet.json",
+    "ref": "PR #998 (feat); fix evidence: 07/10/2026, option C of the site questions redesign: the popup after Create site read as a blocking step; questions move into an optional card before Create site.",
+    "invariant": "Every run exits 0 with 0 failures and 0 skipped tests. No popup opens on Create site: the form shows [data-questions-card] under the template card and the site address, above Create site, reading '4 questions' and 'Receive a site tailored to you.' (three single lines and no answers on the card since #1001) Pressing the card draws [data-questions-sheet=\"1\"] on the bottom edge of the panel; the required Sector question is first with a Recommended tag; Done, the X, a click on [data-questions-scrim=\"1\"] and Escape each close it, keep the answers and give focus back to the card. Create site with answers sends brief = {answers: {name, about, sector}, questionnaire: <64 hex>}; with nothing answered (or only spaces) the POST /api/sites body has no brief. A 503 from GET /api/sites/questions shows [data-questions-card=\"failed\"] with Try again, and Create site still posts without a brief; a template whose platform entry says apply:false shows no card. Changing template keeps the answers the new set still asks (same id, value still offered), drops the rest, and the sheet (not the card, since #1001) reads 'Answers kept for this design: 1. Answers that no longer apply: 1.'",
+    "productSources": ["packages/site/tracy-add-site/src/client/site-brief.mjs:247"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:28 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:42 execFileSync() passes packages/site/tracy-add-site/src/client/add-site.css to node; not proven to run it",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:640 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:65 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:83 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-998-add-site-questions-sheet.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-998-add-site-questions-sheet"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-998-add-site-questions-sheet",
+    "pr": 998,
+    "kind": "feat",
+    "area": "add-site/questions",
+    "file": "tests/regression/cases/REG-PR-998-add-site-questions-sheet.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-998-add-site-questions-sheet.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

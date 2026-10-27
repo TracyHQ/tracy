@@ -1,0 +1,797 @@
+/**
+ * Plugin Routes Tests
+ *
+ * Tests the v2 route system for:
+ * - Route registration and invocation
+ * - Input validation with Zod schemas
+ * - Error handling (PluginRouteError)
+ * - Route registry management
+ */
+
+import { describe, it, expect, vi } from "vitest";
+import { z } from "zod";
+
+import type { PluginContextFactoryOptions } from "../../../src/plugins/context.js";
+import { EmailPipeline } from "../../../src/plugins/email.js";
+import { HookPipeline } from "../../../src/plugins/hooks.js";
+import {
+	parseRouteInput,
+	PluginRouteHandler,
+	PluginRouteRegistry,
+	PluginRouteError,
+	createRouteRegistry,
+	pluginPublicRouteAcknowledgementSchema,
+	toRouteCallerInfo,
+} from "../../../src/plugins/routes.js";
+import type { ResolvedPlugin } from "../../../src/plugins/types.js";
+
+/**
+ * Create a minimal resolved plugin for testing
+ */
+function createTestPlugin(overrides: Partial<ResolvedPlugin> = {}): ResolvedPlugin {
+	return {
+		id: overrides.id ?? "test-plugin",
+		version: "1.0.0",
+		capabilities: [],
+		allowedHosts: [],
+		storage: {},
+		admin: {
+			pages: [],
+			widgets: [],
+			fieldWidgets: {},
+		},
+		hooks: {},
+		routes: {},
+		...overrides,
+	};
+}
+
+/**
+ * Create mock factory options (routes need DB for context)
+ */
+function createMockFactoryOptions(): PluginContextFactoryOptions {
+	return {
+		db: {} as any, // Mock DB - routes will fail if they try to use DB features
+	};
+}
+
+describe("PluginRouteError", () => {
+	describe("constructor", () => {
+		it("creates error with code, message, and status", () => {
+			const error = new PluginRouteError("TEST_ERROR", "Test message", 400);
+
+			expect(error.code).toBe("TEST_ERROR");
+			expect(error.message).toBe("Test message");
+			expect(error.status).toBe(400);
+			expect(error.name).toBe("PluginRouteError");
+		});
+
+		it("defaults status to 400", () => {
+			const error = new PluginRouteError("TEST_ERROR", "Test message");
+			expect(error.status).toBe(400);
+		});
+
+		it("stores optional details", () => {
+			const details = { field: "email", issue: "invalid" };
+			const error = new PluginRouteError("VALIDATION_ERROR", "Invalid input", 400, details);
+
+			expect(error.details).toEqual(details);
+		});
+	});
+
+	describe("static factory methods", () => {
+		it("badRequest creates 400 error", () => {
+			const error = PluginRouteError.badRequest("Bad data", { foo: "bar" });
+
+			expect(error.code).toBe("BAD_REQUEST");
+			expect(error.status).toBe(400);
+			expect(error.message).toBe("Bad data");
+			expect(error.details).toEqual({ foo: "bar" });
+		});
+
+		it("unauthorized creates 401 error", () => {
+			const error = PluginRouteError.unauthorized();
+
+			expect(error.code).toBe("UNAUTHORIZED");
+			expect(error.status).toBe(401);
+			expect(error.message).toBe("Unauthorized");
+		});
+
+		it("forbidden creates 403 error", () => {
+			const error = PluginRouteError.forbidden("Access denied");
+
+			expect(error.code).toBe("FORBIDDEN");
+			expect(error.status).toBe(403);
+			expect(error.message).toBe("Access denied");
+		});
+
+		it("notFound creates 404 error", () => {
+			const error = PluginRouteError.notFound("Resource not found");
+
+			expect(error.code).toBe("NOT_FOUND");
+			expect(error.status).toBe(404);
+			expect(error.message).toBe("Resource not found");
+		});
+
+		it("conflict creates 409 error", () => {
+			const error = PluginRouteError.conflict("Already exists", { id: "123" });
+
+			expect(error.code).toBe("CONFLICT");
+			expect(error.status).toBe(409);
+			expect(error.message).toBe("Already exists");
+			expect(error.details).toEqual({ id: "123" });
+		});
+
+		it("internal creates 500 error", () => {
+			const error = PluginRouteError.internal("Something broke");
+
+			expect(error.code).toBe("INTERNAL_ERROR");
+			expect(error.status).toBe(500);
+			expect(error.message).toBe("Something broke");
+		});
+	});
+});
+
+describe("public route acknowledgement", () => {
+	it("accepts every route-name set allowed by the manifest contract", () => {
+		const routes = Array.from({ length: 101 }, (_, index) =>
+			index === 0 ? "a".repeat(257) : `route-${index}`,
+		);
+		expect(pluginPublicRouteAcknowledgementSchema.parse(routes)).toEqual(routes);
+	});
+});
+
+describe("toRouteCallerInfo", () => {
+	it("maps the host user to the plugin-facing UserInfo shape", () => {
+		const info = toRouteCallerInfo({
+			id: "u1",
+			email: "a@b.c",
+			name: null,
+			role: 4,
+			createdAt: new Date("2026-01-02T03:04:05.000Z"),
+		});
+
+		expect(info).toEqual({
+			id: "u1",
+			email: "a@b.c",
+			name: null,
+			role: 4,
+			createdAt: "2026-01-02T03:04:05.000Z",
+		});
+	});
+
+	it("passes string createdAt through and strips extra fields", () => {
+		// Extra host-side fields (avatarUrl, data, …) must not leak to plugins.
+		const hostUser = {
+			id: "u1",
+			email: "a@b.c",
+			name: "A",
+			role: 2,
+			createdAt: "2026-01-01T00:00:00.000Z",
+			avatarUrl: "https://x/y.png",
+			data: { secret: true },
+		};
+		const info = toRouteCallerInfo(hostUser);
+
+		expect(info).toEqual({
+			id: "u1",
+			email: "a@b.c",
+			name: "A",
+			role: 2,
+			createdAt: "2026-01-01T00:00:00.000Z",
+		});
+	});
+});
+
+describe("PluginRouteHandler", () => {
+	describe("getRouteMeta", () => {
+		it("returns null for non-existent route", () => {
+			const plugin = createTestPlugin();
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			expect(handler.getRouteMeta("non-existent")).toBeNull();
+		});
+
+		it("returns { public: false } for route without public flag", () => {
+			const plugin = createTestPlugin({
+				routes: {
+					sync: { handler: vi.fn() },
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const meta = handler.getRouteMeta("sync");
+			expect(meta).toEqual({ public: false });
+		});
+
+		it("returns { public: true } for route with public: true", () => {
+			const plugin = createTestPlugin({
+				routes: {
+					submit: { public: true, handler: vi.fn() },
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const meta = handler.getRouteMeta("submit");
+			expect(meta).toEqual({ public: true });
+		});
+
+		it("returns { public: false } for route with public: false", () => {
+			const plugin = createTestPlugin({
+				routes: {
+					admin: { public: false, handler: vi.fn() },
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const meta = handler.getRouteMeta("admin");
+			expect(meta).toEqual({ public: false });
+		});
+
+		it("exposes cacheControl for public routes", () => {
+			const plugin = createTestPlugin({
+				routes: {
+					catalog: { public: true, cacheControl: "public, max-age=60", handler: vi.fn() },
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			expect(handler.getRouteMeta("catalog")).toEqual({
+				public: true,
+				cacheControl: "public, max-age=60",
+			});
+		});
+
+		it("never exposes cacheControl for private routes", () => {
+			// Private responses are per-user; a route that sets both flags must
+			// not become cacheable.
+			const plugin = createTestPlugin({
+				routes: {
+					admin: { cacheControl: "public, max-age=60", handler: vi.fn() },
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			expect(handler.getRouteMeta("admin")).toEqual({ public: false });
+		});
+
+		it("exposes declared method, request, and response policy", () => {
+			const plugin = createTestPlugin({
+				routes: {
+					webhook: {
+						public: true,
+						methods: ["POST"],
+						request: {
+							body: "bytes",
+							maxBytes: 4096,
+							headers: ["x-signature"],
+						},
+						response: "raw",
+						handler: vi.fn(),
+					},
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			expect(handler.getRouteMeta("webhook")).toEqual({
+				public: true,
+				methods: ["POST"],
+				request: { body: "bytes", maxBytes: 4096, headers: ["x-signature"] },
+				response: "raw",
+			});
+		});
+	});
+
+	describe("getRouteNames", () => {
+		it("returns empty array for plugin with no routes", () => {
+			const plugin = createTestPlugin();
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			expect(handler.getRouteNames()).toEqual([]);
+		});
+
+		it("returns all route names", () => {
+			const plugin = createTestPlugin({
+				routes: {
+					sync: { handler: vi.fn() },
+					webhook: { handler: vi.fn() },
+					"batch-process": { handler: vi.fn() },
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const names = handler.getRouteNames();
+			expect(names).toContain("sync");
+			expect(names).toContain("webhook");
+			expect(names).toContain("batch-process");
+			expect(names).toHaveLength(3);
+		});
+	});
+
+	describe("hasRoute", () => {
+		it("returns false for non-existent route", () => {
+			const plugin = createTestPlugin();
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			expect(handler.hasRoute("non-existent")).toBe(false);
+		});
+
+		it("returns true for existing route", () => {
+			const plugin = createTestPlugin({
+				routes: {
+					sync: { handler: vi.fn() },
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			expect(handler.hasRoute("sync")).toBe(true);
+		});
+	});
+
+	describe("invoke", () => {
+		it("returns 404 for non-existent route", async () => {
+			const plugin = createTestPlugin();
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const result = await handler.invoke("non-existent", {
+				request: new Request("http://test.com"),
+			});
+
+			expect(result.success).toBe(false);
+			expect(result.status).toBe(404);
+			expect(result.error?.code).toBe("ROUTE_NOT_FOUND");
+		});
+
+		it("validates input with Zod schema", async () => {
+			const plugin = createTestPlugin({
+				routes: {
+					create: {
+						input: z.object({
+							name: z.string().min(1),
+							email: z.email(),
+						}),
+						handler: vi.fn(),
+					},
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			// Invalid input
+			const result = await handler.invoke("create", {
+				request: new Request("http://test.com"),
+				body: { name: "", email: "not-an-email" },
+			});
+
+			expect(result.success).toBe(false);
+			expect(result.status).toBe(400);
+			expect(result.error?.code).toBe("VALIDATION_ERROR");
+		});
+
+		it("handles PluginRouteError from handler", async () => {
+			const plugin = createTestPlugin({
+				routes: {
+					fail: {
+						handler: async () => {
+							throw PluginRouteError.forbidden("No access");
+						},
+					},
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const result = await handler.invoke("fail", {
+				request: new Request("http://test.com"),
+			});
+
+			expect(result.success).toBe(false);
+			expect(result.status).toBe(403);
+			expect(result.error?.code).toBe("FORBIDDEN");
+			expect(result.error?.message).toBe("No access");
+		});
+
+		it("handles unknown errors from handler", async () => {
+			const plugin = createTestPlugin({
+				routes: {
+					crash: {
+						handler: async () => {
+							throw new Error("Unexpected error");
+						},
+					},
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const result = await handler.invoke("crash", {
+				request: new Request("http://test.com"),
+			});
+
+			expect(result.success).toBe(false);
+			expect(result.status).toBe(500);
+			expect(result.error?.code).toBe("INTERNAL_ERROR");
+			expect(result.error?.message).toBe("An internal error occurred");
+		});
+
+		it("includes ctx.email when email pipeline is configured", async () => {
+			const hookPipeline = new HookPipeline([], createMockFactoryOptions());
+			hookPipeline.setExclusiveSelection("email:deliver", "provider");
+			const emailPipeline = new EmailPipeline(hookPipeline);
+
+			const plugin = createTestPlugin({
+				capabilities: ["email:send"],
+				routes: {
+					checkEmail: {
+						handler: async (ctx) => ({
+							hasEmail: !!ctx.email,
+							hasSend: typeof ctx.email?.send === "function",
+						}),
+					},
+				},
+			});
+
+			const handler = new PluginRouteHandler(plugin, {
+				...createMockFactoryOptions(),
+				emailPipeline,
+			});
+
+			const result = await handler.invoke("checkEmail", {
+				request: new Request("http://test.com"),
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data).toEqual({ hasEmail: true, hasSend: true });
+		});
+
+		it("exposes the authenticated caller as ctx.user", async () => {
+			const plugin = createTestPlugin({
+				routes: {
+					whoami: {
+						handler: async (ctx) => ({ user: ctx.user ?? null }),
+					},
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const caller = {
+				id: "user-1",
+				email: "author@example.com",
+				name: "Author",
+				role: 2,
+				createdAt: "2026-01-01T00:00:00.000Z",
+			};
+			const result = await handler.invoke("whoami", {
+				request: new Request("http://test.com/whoami"),
+				user: caller,
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data).toEqual({ user: caller });
+		});
+
+		it("leaves ctx.user undefined when no caller is provided", async () => {
+			const plugin = createTestPlugin({
+				routes: {
+					whoami: {
+						handler: async (ctx) => ({ user: ctx.user ?? null }),
+					},
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const result = await handler.invoke("whoami", {
+				request: new Request("http://test.com/whoami"),
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data).toEqual({ user: null });
+		});
+
+		it("surfaces an actionable error when a handler reads the consumed request body (#1293)", async () => {
+			// EmDash parses the body once and exposes it as ctx.input; the same
+			// Request is then handed to the handler with its stream already spent.
+			// A handler that instinctively calls ctx.request.json() should get a
+			// message pointing at ctx.input, not the runtime's opaque
+			// "body already read" error.
+			const bodyMethods = ["json", "text", "arrayBuffer", "formData", "blob"] as const;
+			const plugin = createTestPlugin({
+				routes: {
+					echo: {
+						handler: async (ctx) => {
+							const errors: Record<string, string> = {};
+							for (const method of bodyMethods) {
+								try {
+									// eslint-disable-next-line @typescript-eslint/no-explicit-any
+									await (ctx.request as any)[method]();
+									errors[method] = "NO_ERROR";
+								} catch (e) {
+									errors[method] = (e as Error).message;
+								}
+							}
+							return { errors, input: ctx.input };
+						},
+					},
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const result = await handler.invoke("echo", {
+				request: new Request("http://test.com/echo", {
+					method: "POST",
+					headers: { "content-type": "application/json" },
+					body: JSON.stringify({ hello: "world" }),
+				}),
+				body: { hello: "world" },
+			});
+
+			expect(result.success).toBe(true);
+			const data = result.data as { errors: Record<string, string>; input: unknown };
+			for (const method of bodyMethods) {
+				expect(data.errors[method]).toContain("ctx.input");
+				expect(data.errors[method]).toContain("[emdash]");
+			}
+			// The parsed body is still available as ctx.input.
+			expect(data.input).toEqual({ hello: "world" });
+		});
+
+		it("passes request url, method, and headers through the body guard (#1293)", async () => {
+			// The guard must not interfere with non-body members — notably the
+			// `headers.forEach` the sandbox-entry adapter relies on.
+			const plugin = createTestPlugin({
+				routes: {
+					meta: {
+						handler: async (ctx) => {
+							const collected: Record<string, string> = {};
+							ctx.request.headers.forEach((value, name) => {
+								collected[name] = value;
+							});
+							return {
+								url: ctx.request.url,
+								method: ctx.request.method,
+								contentType: ctx.request.headers.get("content-type"),
+								forEachSawContentType: collected["content-type"] === "application/json",
+							};
+						},
+					},
+				},
+			});
+			const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+
+			const result = await handler.invoke("meta", {
+				request: new Request("http://test.com/meta", {
+					method: "POST",
+					headers: { "content-type": "application/json" },
+					body: "{}",
+				}),
+				body: {},
+			});
+
+			expect(result.success).toBe(true);
+			expect(result.data).toEqual({
+				url: "http://test.com/meta",
+				method: "POST",
+				contentType: "application/json",
+				forEachSawContentType: true,
+			});
+		});
+	});
+});
+
+describe("PluginRouteRegistry", () => {
+	describe("register/unregister", () => {
+		it("registers a plugin", () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+			const plugin = createTestPlugin({
+				id: "my-plugin",
+				routes: { sync: { handler: vi.fn() } },
+			});
+
+			registry.register(plugin);
+
+			expect(registry.getPluginIds()).toContain("my-plugin");
+		});
+
+		it("unregisters a plugin", () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+			const plugin = createTestPlugin({ id: "my-plugin" });
+
+			registry.register(plugin);
+			registry.unregister("my-plugin");
+
+			expect(registry.getPluginIds()).not.toContain("my-plugin");
+		});
+	});
+
+	describe("getPluginIds", () => {
+		it("returns empty array initially", () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+			expect(registry.getPluginIds()).toEqual([]);
+		});
+
+		it("returns all registered plugin IDs", () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+
+			registry.register(createTestPlugin({ id: "plugin-a" }));
+			registry.register(createTestPlugin({ id: "plugin-b" }));
+			registry.register(createTestPlugin({ id: "plugin-c" }));
+
+			const ids = registry.getPluginIds();
+			expect(ids).toContain("plugin-a");
+			expect(ids).toContain("plugin-b");
+			expect(ids).toContain("plugin-c");
+		});
+	});
+
+	describe("getRoutes", () => {
+		it("returns empty array for non-existent plugin", () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+			expect(registry.getRoutes("non-existent")).toEqual([]);
+		});
+
+		it("returns route names for registered plugin", () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+			const plugin = createTestPlugin({
+				id: "my-plugin",
+				routes: {
+					sync: { handler: vi.fn() },
+					import: { handler: vi.fn() },
+				},
+			});
+
+			registry.register(plugin);
+			const routes = registry.getRoutes("my-plugin");
+
+			expect(routes).toContain("sync");
+			expect(routes).toContain("import");
+		});
+	});
+
+	describe("getRouteMeta", () => {
+		it("returns null for non-existent plugin", () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+			expect(registry.getRouteMeta("non-existent", "sync")).toBeNull();
+		});
+
+		it("returns null for non-existent route on registered plugin", () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+			const plugin = createTestPlugin({
+				id: "my-plugin",
+				routes: { sync: { handler: vi.fn() } },
+			});
+			registry.register(plugin);
+
+			expect(registry.getRouteMeta("my-plugin", "non-existent")).toBeNull();
+		});
+
+		it("returns metadata for existing route", () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+			const plugin = createTestPlugin({
+				id: "my-plugin",
+				routes: {
+					sync: { handler: vi.fn() },
+					submit: { public: true, handler: vi.fn() },
+				},
+			});
+			registry.register(plugin);
+
+			expect(registry.getRouteMeta("my-plugin", "sync")).toEqual({ public: false });
+			expect(registry.getRouteMeta("my-plugin", "submit")).toEqual({ public: true });
+		});
+	});
+
+	describe("invoke", () => {
+		it("returns 404 for non-existent plugin", async () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+
+			const result = await registry.invoke("non-existent", "sync", {
+				request: new Request("http://test.com"),
+			});
+
+			expect(result.success).toBe(false);
+			expect(result.status).toBe(404);
+			expect(result.error?.code).toBe("PLUGIN_NOT_FOUND");
+		});
+
+		it("delegates to plugin handler", async () => {
+			const registry = new PluginRouteRegistry(createMockFactoryOptions());
+			const plugin = createTestPlugin({
+				id: "my-plugin",
+				routes: {
+					status: {
+						handler: async () => ({ healthy: true }),
+					},
+				},
+			});
+
+			registry.register(plugin);
+
+			// This will fail because handler tries to create context with mock DB
+			// But we can verify it attempts to invoke
+			const result = await registry.invoke("my-plugin", "non-existent", {
+				request: new Request("http://test.com"),
+			});
+
+			expect(result.success).toBe(false);
+			expect(result.error?.code).toBe("ROUTE_NOT_FOUND");
+		});
+	});
+});
+
+describe("createRouteRegistry helper", () => {
+	it("creates a PluginRouteRegistry instance", () => {
+		const registry = createRouteRegistry(createMockFactoryOptions());
+		expect(registry).toBeInstanceOf(PluginRouteRegistry);
+	});
+});
+
+describe("parseRouteInput (#2146)", () => {
+	it("parses the query string for GET requests", async () => {
+		const input = await parseRouteInput(
+			new Request("http://test.com/plugins/p/search?limit=20&q=hello", { method: "GET" }),
+		);
+		expect(input).toEqual({ limit: "20", q: "hello" });
+	});
+
+	it("parses the query string for HEAD and DELETE requests", async () => {
+		expect(
+			await parseRouteInput(new Request("http://test.com/x?id=7", { method: "HEAD" })),
+		).toEqual({ id: "7" });
+		expect(
+			await parseRouteInput(new Request("http://test.com/x?id=7", { method: "DELETE" })),
+		).toEqual({ id: "7" });
+	});
+
+	it("collapses a repeated query key into an array", async () => {
+		const input = await parseRouteInput(
+			new Request("http://test.com/x?tag=a&tag=b&one=z", { method: "GET" }),
+		);
+		expect(input).toEqual({ tag: ["a", "b"], one: "z" });
+	});
+
+	it("returns an empty object for a GET with no query params", async () => {
+		expect(await parseRouteInput(new Request("http://test.com/x", { method: "GET" }))).toEqual({});
+	});
+
+	it("parses the JSON body for POST/PUT/PATCH", async () => {
+		for (const method of ["POST", "PUT", "PATCH"]) {
+			const input = await parseRouteInput(
+				new Request("http://test.com/x?ignored=1", {
+					method,
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ name: "Ada" }),
+				}),
+			);
+			expect(input).toEqual({ name: "Ada" });
+		}
+	});
+
+	it("returns undefined for a body method with no/invalid JSON", async () => {
+		expect(
+			await parseRouteInput(new Request("http://test.com/x", { method: "POST" })),
+		).toBeUndefined();
+	});
+
+	it("lets a GET route with an input schema validate query params end to end", async () => {
+		const plugin = createTestPlugin({
+			routes: {
+				search: {
+					input: z.object({
+						limit: z.coerce.number().min(1).default(50),
+						q: z.string().optional(),
+					}),
+					handler: async (ctx) => ({ received: ctx.input }),
+				},
+			},
+		});
+		const handler = new PluginRouteHandler(plugin, createMockFactoryOptions());
+		const request = new Request("http://test.com/plugins/p/search?limit=20&q=hello", {
+			method: "GET",
+		});
+
+		const result = await handler.invoke("search", {
+			request,
+			body: await parseRouteInput(request),
+		});
+
+		expect(result.success).toBe(true);
+		expect(result.data).toEqual({ received: { limit: 20, q: "hello" } });
+	});
+});

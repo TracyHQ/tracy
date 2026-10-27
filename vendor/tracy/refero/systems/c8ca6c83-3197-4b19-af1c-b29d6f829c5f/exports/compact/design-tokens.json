@@ -1,0 +1,44 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page background, image wells, card surfaces inside embedded UI captures"
+    },
+    "pencil-gray": {
+      "$value": "#ebebeb",
+      "$type": "color",
+      "$description": "Pencil Gray — Hairline borders, panel dividers, card edges, button borders, the dominant structural line of the entire system"
+    },
+    "graphite": {
+      "$value": "#a8a8a8",
+      "$type": "color",
+      "$description": "Graphite — Image captions, subdued headings, section labels, timestamp/location metadata"
+    },
+    "smoke": {
+      "$value": "#8e8e8e",
+      "$type": "color",
+      "$description": "Smoke — Body helper text, secondary metadata, low-emphasis descriptors"
+    },
+    "ink-black": {
+      "$value": "#252525",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, nav labels, the sidebar bio copy, button text — near-black rather than pure black keeps the system off the contrast ceiling and into a softer editorial register"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All UI text — sidebar bio, nav tabs, image captions, button labels. Inter is the safe system-substitute choice; the original is likely a neo-grotesque like Söhne, GT America, or Untitled Sans at a small optical size, tracking slightly tight."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://dzrgo.com",
+      "siteName": "Dul Zorigoo",
+      "extractedAt": "2026-06-03T17:22:00.899Z",
+      "variant": "compact"
+    }
+  }
+}

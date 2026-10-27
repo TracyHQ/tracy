@@ -1,0 +1,42 @@
+{
+  "id": "REG-053",
+  "kind": "fix",
+  "title": "Tracy's own EmDash delete is one Chat row in Site changes; EmDash's anonymous delete rows for it never show as Unknown",
+  "pr": 856,
+  "area": "site-changes/record",
+  "cms": ["em"],
+  "needs": ["stand", "site:em", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), PG, WEB, DSH, A and seat A's cookie COOKIE_A, pq (SELECT/WITH only). Case variables: KEY and LABEL = site key and container prefix of an EmDash site where seat A is owner, built from a release whose @emdash-cms/plugin-audit-log is >= 0.2.2 (check: docker exec $LABEL-web-1 grep '\"version\"' /app/node_modules/@emdash-cms/plugin-audit-log/package.json; lower → BLOCKED note audit-log-too-old). LIB_SRC = packages/tools/tracy-site-tools/lib/index.js of THIS checkout (the commit under test); HARNESS = tasks/evidence/emdash-attribution/act-as-person.mjs of this checkout. On the shared stand (ORIGIN http://tracy.test:8080): PG=tracy-postgres-1, WEB=tracy-tracy-web-1, DSH=tracy-dsh; mint COOKIE_A inside $WEB with /opt/tracy-web/src/lib/session.js mintSession(A, SESSION_SECRET.split(\",\")[0]) (SESSION_SECRET is in $WEB env; never print it); the measured site is KEY=c1em1004.tracy.test, LABEL=c1em1004, A=emattr-a@example.test.",
+    "Check the web build: docker exec $WEB grep -c 'notTracyOwnCmsDelete' /opt/tracy-web/src/sites/activity-source.js must print >= 1 and docker exec $WEB grep -c 'WRITE_TARGET_IDS_MAX' /opt/tracy-web/src/sites/route.js must print >= 1; otherwise stop with BLOCKED note web-older-than-this-fix.",
+    "Copy the lib under test beside the live one, never over it: docker cp $LIB_SRC $DSH:/desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.reg053.js and docker cp $HARNESS $DSH:/tmp/act-as-person.mjs. Remove both at the end of the case, whatever the verdict.",
+    "Define em() { docker exec -w /app $LABEL-web-1 node -e 'const D=require(\"better-sqlite3\");console.log(JSON.stringify(new D(\"/app/data/data.db\",{readonly:true}).prepare(process.argv[1]).all()))' \"$1\"; } (read-only).",
+    "Fixture: ENTRY = id from em \"select p.id from ec_posts p where p.deleted_at is null and p.locale='en' and (select count(*) from ec_posts q where q.slug=p.slug and q.deleted_at is null) >= 2 order by p.id desc limit 1\"; empty → BLOCKED note no-multilanguage-post. ROWS = the number from em \"select count(*) n from ec_posts q where q.slug=(select slug from ec_posts where id='$ENTRY') and q.deleted_at is null\".",
+    "Before: POST $O/api/sites/$KEY/cms-log/pull (cookie A, Origin $O, Content-Type application/json, body {}), then U0 = counts.unknown of GET $O/api/sites/$KEY/activity?version=2&filter=all&limit=1 (cookie A). Set W0=$(pq \"select coalesce(max(id),0) from site_write where site_key='$KEY'\").",
+    "The delete, as seat A's own conversation would make it (the question it asks is answered 'go ahead' by the harness through the same listener a click reaches): docker exec -e SESSION=session-reg053-$(date +%s) $DSH node /tmp/act-as-person.mjs /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.reg053.js $LABEL $A '[{\"tool\":\"content_delete\",\"arguments\":{\"collection\":\"posts\",\"id\":\"'$ENTRY'\"}}]' and keep its stdout line (the tool's answer).",
+    "Wait 6 s (the collector settles rows younger than 5 s), then POST $O/api/sites/$KEY/cms-log/pull as above (repeat once after 6 s if 'pulled' is 0).",
+    "Read pq \"select id, action, outcome, via, actor, target->>'kind', target->>'id', jsonb_array_length(target->'ids') from site_write where site_key='$KEY' and id > $W0 order by id\" and pq \"select count(*), count(cms_actor) from site_cms_change where site_key='$KEY' and source='emdash-audit-log' and op='delete' and resource_type='posts' and resource_id = any(array(select jsonb_array_elements_text(target->'ids') from site_write where site_key='$KEY' and id > $W0))\".",
+    "After: GET $O/api/sites/$KEY/activity?version=2&filter=all&limit=100 (cookie A; follow nextCursor, at most 5 pages) and GET $O/api/sites/$KEY/cms-log?limit=100 (cookie A)."
+  ],
+  "expect": [
+    "The web build checks print >= 1, and the harness answer has ok:true and removed {languages: ROWS, of: ROWS}.",
+    "site_write gained exactly one row: action 'content_delete', outcome 'ok', via 'emdash-mcp', actor A, target kind 'posts', target id ENTRY, and jsonb_array_length(target->'ids') = ROWS (before the fix: target {kind, id} only, no ids — one of ROWS EmDash rows could match).",
+    "site_cms_change holds ROWS delete rows for those ids, every one with cms_actor null (EmDash 1.0.1 logs deletes with no user).",
+    "counts.unknown after = U0 (before the fix on a 40-language entry: U0 + 39, measured on c1em1004 04/10 with the develop lib).",
+    "No V2 item has evidence.cmsRecordRef naming any of those delete rows ('emdash-audit-log:<cursor_key>'), and the cms-log door lists none of them.",
+    "Exactly one V2 item for the delete: kind 'writes' (or the turn), origin.source 'chat', description.params.op 'delete', description.params.type 'post', description.params.id ENTRY.",
+    "index.reg053.js and /tmp/act-as-person.mjs are gone from $DSH at the end."
+  ],
+  "selectors": {
+    "harness": "tasks/evidence/emdash-attribution/act-as-person.mjs — tracy_emdash calls as one person, signed with MCP_TRACY_ACTOR_SECRET, delete question answered through tools/result",
+    "changedDoor": "POST /api/sites/:key/changed body {tool:'content_delete', via:'emdash-mcp', target:{kind, id, ids[]}}",
+    "writeRecord": "site_write.target jsonb {kind, id, ids}",
+    "cmsLog": "site_cms_change(source='emdash-audit-log', op='delete', resource_type, resource_id, cms_actor)",
+    "rule": "notTracyOwnCmsDelete in apps/tracy-web/src/sites/activity-source.js (V2 list + counts, V1 list, cms-log door)",
+    "activityApi": "GET /api/sites/:key/activity?version=2 → counts{unknown}, items[].origin.source, items[].evidence.cmsRecordRef, items[].description.params",
+    "pullDoor": "POST /api/sites/:key/cms-log/pull"
+  },
+  "evidence": "tasks/evidence/emdash-attribution/findings.md and tasks/evidence/emdash-attribution/fresh-site-c1em1004.md; tests: apps/tracy-web/test/activity-source.test.mjs (C1), apps/tracy-web/test/component.test.mjs (/changed ids), packages/tools/tracy-site-tools/test/handler.test.mjs (C1).",
+  "fence": "tracy_emdash reports the collection and the ULID of every row a delete removed (REMOVED_ROWS, not in the model's answer); /changed keeps them as site_write.target.ids; a CMS delete row with no account is left out of every Site changes read when successful Tracy deletes of that site + collection + row id are at least as many — by id, never by time; more CMS rows than Tracy deletes keep all of them unknown."
+}

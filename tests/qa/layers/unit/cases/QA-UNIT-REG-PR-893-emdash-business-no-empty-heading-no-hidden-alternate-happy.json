@@ -1,0 +1,56 @@
+{
+  "id": "QA-UNIT-REG-PR-893-emdash-business-no-empty-heading-no-hidden-alternate-happy",
+  "itemIds": ["regression:REG-PR-893-emdash-business-no-empty-heading-no-hidden-alternate"],
+  "requirement": "Tracy Business EmDash templates: no heading over nothing and no hreflang alternate in a language the site does not serve",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-emdash-business-no-empty-heading-no-hidden-alternate.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026 local stand, Tracy Business EmDash after Apply: pages named alternates in hidden languages (ledger L18), the Resources panel and Sitemap kept a 'Marketing Kit' heading over nothing once the kit pages were hidden (L20), and with no demo post left (L21) Home drew its news heading over an empty grid. Red 471b886d4, fix 39e00ffd3 (reaches customers with the next template release).",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 4). Every named case is 'ok' (none 'not ok', none '# SKIP'): Base.astro names a translation as alternate only when chrome.locales holds its locale; ResourcesMenu draws the kit column only when the kit menu has a link; the sitemap page drops groups with no link; Home draws its news section only when there is a post.",
+    "productSources": ["packages/cms/tracy-emdash-theme-business/src/components/islands/ResourcesMenu.tsx:1"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a content page names a translation as its alternate only in a language the site serves (L18)",
+    "the Resources panel draws its kit column only when the kit menu has a link (L20)",
+    "the sitemap page draws a group only when it has a link (L20, L21)",
+    "the home page draws its news block only when there is a post to show (L21)"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-emdash-business-no-empty-heading-no-hidden-alternate"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/cms/tracy-emdash-theme-business", "tracy-emdash-theme-business"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-emdash-business-no-empty-heading-no-hidden-alternate",
+    "pr": 893,
+    "kind": "fix",
+    "area": "emdash-theme-business/templates",
+    "file": "tests/regression/cases/REG-PR-893-emdash-business-no-empty-heading-no-hidden-alternate.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/cms/tracy-emdash-theme-business/tests/apply-leftovers.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a content page names a translation as its alternate only in a language the site serves (L18)",
+    "the Resources panel draws its kit column only when the kit menu has a link (L20)",
+    "the sitemap page draws a group only when it has a link (L20, L21)",
+    "the home page draws its news block only when there is a post to show (L21)"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-fresco/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_fresco",
+  "quickstart": {
+    "product": "ja-fresco",
+    "platform": "joomla",
+    "version": "1.0.2",
+    "cms": {
+      "version": "6.1.1"
+    },
+    "template": "ja_fresco",
+    "parts": {
+      "installer": {
+        "file": "ja-fresco-j6-quickstart-1.0.2.zip",
+        "bytes": 59733808,
+        "sha256": "f5f81d371576772e42ff7d65a1e9a3498f384ccfd386a73453361c2d0beca171"
+      }
+    },
+    "createdAt": "2026-10-15T16:53:29.718Z",
+    "builtFrom": {
+      "from": "quickstart/ja-fresco/j6@1.0.1",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-fresco/j6"
+  },
+  "coworkContractVersion": "0.24.43",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-ink-black: #1e1e1e;
+  --color-paper-white: #ffffff;
+  --color-warm-cream: #fbf9f3;
+  --color-pure-black: #000000;
+
+  /* Typography — Font Families */
+  --font-cardinal-fruit: 'Cardinal Fruit', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-soehne-breit-buch: 'Soehne Breit Buch', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-soehne-mono-buch: 'Soehne Mono Buch', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

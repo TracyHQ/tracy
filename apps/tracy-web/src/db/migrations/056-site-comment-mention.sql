@@ -1,0 +1,11 @@
+-- WHO A COMMENT MENTIONS (spec #809 case C1, 03/10/2026).
+--
+-- `@` in the comment box opens a picker of the people who hold a seat on the site; picking one puts
+-- `@name` in the words AND names that person's account here. A typed `@name` nobody picked is plain
+-- text and names nobody. The server keeps only ids that hold a live seat on the site at the moment
+-- of the write (`sites/comment-notify.js`), so an id from a stale roster or another site is dropped,
+-- never stored.
+--
+-- An edit replaces the list; only the ids it ADDS are notified (the rest were told when they were
+-- first named). Empty for every comment written before this column.
+alter table site_comment add column if not exists mentions uuid[] not null default '{}';

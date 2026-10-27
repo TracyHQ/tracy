@@ -1,0 +1,59 @@
+{
+  "styles": {
+    "css": "/* wp-ja-morgan: dark mode. The source (JA Morgan, Joomla 6 T3) follows the OS until the visitor picks: its pre-paint script sets html[data-theme] from localStorage or prefers-color-scheme (tpls/blocks/head-prepaint.php), and css/darkmode.css scopes the dark look under html[data-theme=\"dark\"]. Here every colour preset carries both halves through light-dark(): light = tokens.css (measured 29/09 on :8281), dark = the computed values of the source in dark (body #0f1320 / #a7b0c2, headings #f2f4f8, accent --ja-accent #e0463f, declared per mode because the design contract reads it as a resolved colour, form surfaces #1a2032, borders #2a3247, navy re-tint #6f8fd6). The footer band is #111111 in both modes, as measured. No attribute = auto, the OS decides; assets/js/wp-ja-morgan-dark.js writes data-theme light|dark from the tracy_theme cookie before the first paint. */ :root{color-scheme:light dark;--ja-accent:var(--ds-c-accent, #d93030);--wp--preset--color--bg:light-dark(var(--ds-c-bg, #ffffff),var(--ds-c-bg, #0f1320));--wp--preset--color--surface:light-dark(var(--ds-c-surface, #f6f7fb),var(--ds-c-surface, #1a2032));--wp--preset--color--surface-warm:light-dark(var(--ds-c-ink, #111111),var(--ds-c-ink, #111111));--wp--preset--color--fg:light-dark(var(--ds-c-fg, #777777),var(--ds-c-fg, #a7b0c2));--wp--preset--color--fg-2:light-dark(var(--ds-c-heading, #333333),var(--ds-c-heading, #f2f4f8));--wp--preset--color--muted:light-dark(var(--ds-c-muted, #777777),var(--ds-c-muted, #8b93a4));--wp--preset--color--border:light-dark(var(--ds-c-border, #eaeaea),var(--ds-c-border, #2a3247));--wp--preset--color--border-soft:light-dark(var(--ds-c-border-soft, #eaeaea),var(--ds-c-border-soft, #2a3247));--wp--preset--color--accent:light-dark(var(--ds-c-accent, #d93030),var(--ds-c-accent, #e0463f));--wp--preset--color--accent-on:light-dark(var(--ds-c-accent-on, #ffffff),var(--ds-c-accent-on, #ffffff));--wp--preset--color--accent-hover:light-dark(var(--ds-c-accent-hover, #b22323),var(--ds-c-accent-hover, #f06b64));--wp--preset--color--accent-active:light-dark(var(--ds-c-accent-active, #b22323),var(--ds-c-accent-active, #e0463f));}:root[data-theme=\"light\"]{color-scheme:light}:root[data-theme=\"dark\"]{color-scheme:dark;--ja-accent:var(--ds-c-accent, #e0463f)}@media (prefers-color-scheme:dark){:root:not([data-theme=\"light\"]){--ja-accent:var(--ds-c-accent, #e0463f)}}"
+  },
+  "templateParts": [
+    {
+      "name": "header",
+      "title": "Header",
+      "area": "header"
+    },
+    {
+      "name": "footer",
+      "title": "Footer",
+      "area": "footer"
+    },
+    {
+      "name": "footer-hs3",
+      "title": "Footer (Home Style 3)",
+      "area": "footer"
+    },
+    {
+      "name": "footer-hs4",
+      "title": "Footer (Home Style 4)",
+      "area": "footer"
+    },
+    {
+      "name": "sidebar",
+      "title": "Sidebar",
+      "area": "uncategorized"
+    },
+    {
+      "name": "search-description",
+      "title": "Search page description",
+      "area": "uncategorized"
+    },
+    {
+      "name": "search-form",
+      "title": "Search page form and tips",
+      "area": "uncategorized"
+    }
+  ],
+  "customTemplates": [
+    {
+      "name": "page-landing",
+      "title": "Landing (sections only)",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-masthead",
+      "title": "Page with masthead",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-masthead-sidebar",
+      "title": "Page with masthead and sidebar",
+      "postTypes": ["page"]
+    }
+  ]
+}

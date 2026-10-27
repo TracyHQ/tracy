@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1366-voice-chat-language",
+  "kind": "feat",
+  "title": "Voice input and replies follow the conversation's main language: a Vietnamese chat's hint reaches the speech service (a request that switches to English is kept whole), speech in another language reopens the session without it, words on screen never vanish at a switch, and the agent replies in the main language unless a message is entirely in another",
+  "pr": 1366,
+  "area": "chat/voice",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout (dependencies installed, a Chrome or Playwright Chromium available) run: node --test --test-timeout=180000 packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs packages/ui/tracy-chat-input/test/voice-language.test.mjs packages/ui/tracy-chat-input/test/voice-link.test.mjs apps/tracy-web/test/speech-relay.test.mjs packages/core/tracy-core/test/language.test.mjs packages/tools/tracy-site-tools/test/reply-language.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'a Vietnamese chat: its language rides the socket, and a phrase restarted at an English word keeps the Vietnamese' passes: the page opens the socket with language=vi, the service is asked with language_code=vi, and after Done the draft reads 'Đổi màu nền trang chủ sang xanh đậm. And add a contact button under the headline.'",
+    "'a hinted session that hears speech with no word is reopened without the hint, the phrase replayed' and 'a hinted phrase that comes back empty after speech is replayed without the hint, also after stop' pass.",
+    "'a phrase the service starts again where the language switched keeps the words already shown' passes.",
+    "'the reply language of a chat: its main language, unless the latest message is clearly another' and 'a conversation keeps its main language for a mixed or unsure message, and follows a message plainly in another' pass."
+  ],
+  "selectors": {
+    "socket": "GET /api/speech/stream?language=<code> (WebSocket)",
+    "hint": "packages/ui/tracy-chat-input/src/client/voice-language.mjs voiceHint",
+    "relay": "apps/tracy-web/src/speech/relay.js HINT_LANGUAGES, rescue, isRestart, afterKept",
+    "reply": "@tracy/core/language chatReplyLanguage; tracy-site-tools prompter.mjs replyLanguageRule, chatMainLanguage",
+    "test": "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs"
+  },
+  "evidence": "15/10/2026: voice sentences that mix languages, and a main language set by the chat's opening message; replies in the main language unless the message is entirely another, STT hinted with a rescue when nothing comes back, real time. Live ElevenLabs measurements and screenshots: tasks/evidence/voice-language-2026-10-15/.",
+  "fence": "relay.js admit (?language= kept only when in HINT_LANGUAGES) and the run's rescue / restart keeping; chatReplyLanguage in packages/core/tracy-core/src/language/index.mjs",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=180000",
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-language.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-link.test.mjs",
+      "apps/tracy-web/test/speech-relay.test.mjs",
+      "packages/core/tracy-core/test/language.test.mjs",
+      "packages/tools/tracy-site-tools/test/reply-language.test.mjs"
+    ],
+    "tests": [
+      "a Vietnamese chat: its language rides the socket, and a phrase restarted at an English word keeps the Vietnamese",
+      "an English chat names English; the relay keeps no hint it was not measured to help with",
+      "the hint: the chat’s language, else — no clear message yet — the interface’s",
+      "the chat’s language reaches the service only where it was measured to help (vi)",
+      "a hinted session that hears speech with no word is reopened without the hint, the phrase replayed",
+      "a hinted phrase that comes back empty after speech is replayed without the hint, also after stop",
+      "a phrase the service starts again where the language switched keeps the words already shown",
+      "unhinted, a restart that shares no word is the service taking back a wrong guess: not kept",
+      "the reply language of a chat: its main language, unless the latest message is clearly another",
+      "a conversation keeps its main language for a mixed or unsure message, and follows a message plainly in another"
+    ]
+  }
+}

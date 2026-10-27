@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-944-ja-kinetic-wp7-contact-recipient",
+  "kind": "fix",
+  "title": "JA Kinetic wp7: the Contact form delivers to tracy_contact_to, else the public contact address, else the administrator's address, and the page never prints admin_email or the recipient",
+  "pr": 944,
+  "area": "wordpress-theme/wp-ja-kinetic",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site restored from the quickstart pack with the wp-ja-kinetic theme under test, no tracy_contact_to and no tracy_site_identity option, admin_email = a mailbox of the stand; wp_mail routed to a mail catcher (an SMTP sink, or a pre_wp_mail logger).",
+    "S2: GET the Contact page, then POST the form (wp_ja_kinetic_contact=1, the page's wp_ja_kinetic_nonce, a name, an email, a message).",
+    "S3: Run: wp option update tracy_contact_to owner@stand.test, then repeat S2.",
+    "S4: Read the catcher and the page after each submit."
+  ],
+  "expect": [
+    "S2: the page shows the success notice \"Thank you for your email.\"; exactly one mail is captured, addressed to the stand's admin_email; the Contact page body shows no mailbox.",
+    "S3: the page shows the success notice; exactly one mail is captured, addressed to owner@stand.test and none to admin_email; neither admin_email nor owner@stand.test is printed on the page.",
+    "Package test: node --test packages/cms/tracy-wordpress-theme/test/wp-ja-kinetic.test.mjs passes (recipient order, fallback to admin_email, invalid admin_email sends nothing and shows the existing error)."
+  ],
+  "selectors": {
+    "handler": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-kinetic/inc/contact.php wp_ja_kinetic_contact_recipient()",
+    "evidence": "tasks/ja-kinetic-wp7/DECISIONS.md D-59"
+  },
+  "evidence": "05/10/2026 on a restore of the 1.0.4 pack with theme 1.1.6 (sha256 36942e19bf29): demo state -> one mail to admin_email; tracy_contact_to set -> one mail to it, none to admin_email (captured headers in the run's NOTES).",
+  "fence": "Delivery of the Contact form on the shipped theme; a missing recipient must never turn into a failed send."
+}

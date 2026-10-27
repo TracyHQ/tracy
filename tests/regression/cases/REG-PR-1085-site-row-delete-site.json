@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1085-site-row-delete-site",
+  "kind": "feat",
+  "title": "On a site page the dsh sidebar group reads \"Site\" and the site row's menu offers My sites' Leave site / Delete site… instead of dsh's Rename / Delete workspace; a site seat cannot rename or delete its root /site/<label> workspace",
+  "pr": 1085,
+  "area": "site/my-sites/site-row-menu",
+  "cms": ["wp"],
+  "needs": ["stand", "seat:owner", "seat:editor"],
+  "flaky_model": false,
+  "steps": [
+    "S1: chrome-watch --status (start it with chrome-watch if it is not up). From the repo root at the commit under test, with the stand built from that commit: node tasks/evidence/site-row-delete-site/accept.mjs --setup --destructive (TRACY_STAND = the stand's origin, TRACY_STAND_ENV = its .env with SESSION_SECRET, TRACY_STAND_PROJECT = its compose project; on a stand that runs beside another one, TRACY_STAND_SITE_A / TRACY_STAND_SITE_B = labels no other stand on the machine uses, since site containers are named <label>-web-1 machine-wide — srd-test-a/srd-test-b below stand for those labels). --setup makes sure WordPress sites srd-test-a and srd-test-b exist (owner srd-owner@example.test, created through POST /api/sites when missing) and that srd-editor@example.test holds an accepted editor seat on both (POST /api/team/invite + POST /api/sites/:key/accept).",
+    "S2: (d) as the owner, open <stand>/new/, expand the left sidebar, read the group label; if a workspace row exists, open its \"…\" menu.",
+    "S3: (c) as the editor, open <stand>/<srd-test-b key>/, read the site row's workspaceId, and from the page send POST /<key>/api/workspace/rename {type:'client-request', method:'workspace/rename', payload:{args:{request:{workspaceId, title:<same title>}}}} and the same envelope for workspace/delete; then directoryPicker/createDirectory {path:'/site/srd-test-b', name:'srd-sub'}, workspace/create {request:{path:'/site/srd-test-b/srd-sub'}}, and rename (same title) + delete of that subfolder workspace in the same page.",
+    "S4: (b, menu) as the editor on srd-test-b: read the group label, open the site row's \"…\" menu, open Leave site and cancel.",
+    "S5: (a) as the owner on srd-test-a: read the group label, open the site row's \"…\" menu, choose Delete site…, check the confirm button is disabled, type Delete, confirm; wait for the page to leave the site; GET /api/sites as the owner.",
+    "S6: (b, leave — last) as the editor on srd-test-b: open Leave site again and confirm; GET /api/sites as the editor.",
+    "S7: Read summary.json and errors-summary.json in the run folder the script prints."
+  ],
+  "expect": [
+    "The script exits 0 and prints no 'not ok' line; the only allowed 'skip' is (d)'s menu half when the owner has no workspace row on /new/.",
+    "(d) /new/ group label is exactly 'Workspaces'; a workspace row there (when present) has menu items Rename and Delete workspace and no Leave site / Delete site….",
+    "(c) root /site/srd-test-b workspace/rename and workspace/delete answer HTTP 403; the subfolder workspace/create answers 200 with result.ok, and its rename and delete answer non-403 with result.ok true.",
+    "(b) on srd-test-b the editor sees group label 'Site' and a site-row menu of exactly one item, 'Leave site' (no Delete site…, no Rename, no Delete workspace); Leave site opens a dialog with a 'Leave the team' button; after confirming, /api/sites for the editor no longer holds srd-test-b as accepted and the page leaves /srd-test-b.tracy.test.",
+    "(a) on srd-test-a the owner sees group label 'Site' and exactly the menu items 'Leave site' (or 'Leave site · last Owner', greyed, when the owner is the last one) and 'Delete site…' and neither 'Rename' nor 'Delete workspace'; Delete site… opens the dialog titled 'Delete <site> from Tracy' with input #tracy-delete-name and a 'Delete' button that is disabled until 'Delete' is typed; after confirming, the page URL leaves /srd-test-a.tracy.test within 120 s and /api/sites for the owner no longer lists srd-test-a.tracy.test.",
+    "errors-summary.json pageErrorsDuringRun holds no HTTP 4xx/5xx and no exception from a page this run opened (check (c)'s own RPC 403s are excluded as ownProbe). Allowed: net::ERR_INCOMPLETE_CHUNKED_ENCODING on <site>/plugins/events (the EventSource cut when site A is deleted or site B is left), and entries from tabs another run left open before the stand was rebuilt (chrome-watch matches by URL, so an old /new/ tab still on the previous bundle shows up under /new/)."
+  ],
+  "selectors": {
+    "groupLabel": "[class*='sectionLabel'] (dsh ui-workspace section label); /new/ without a row: the sidebar placeholder heading",
+    "workspaceRow": "[data-row-key^='workspace:'] (id after the prefix)",
+    "rowMenuButton": "button[aria-label^='Workspace actions'] inside the row",
+    "rowMenuItems": "[role='menu'] [role='menuitem']",
+    "deleteDialog": "[role='dialog'] with input #tracy-delete-name and button 'Delete'",
+    "leaveDialog": "[role='dialog'] with button 'Leave the team'",
+    "rpcDoor": "POST /<siteKey>/api/workspace/{rename,delete,create}, /<siteKey>/api/directoryPicker/createDirectory (client-request envelope)",
+    "sitesDoor": "GET /api/sites"
+  },
+  "evidence": "tasks/evidence/site-row-delete-site/runs/baseline-2026-10-09-old-behaviour-dry — the same script on the stand before the change (dsh-passwords 2.7.7-tracy.5): group label 'Workspaces', site-row menu ['Rename', 'Delete workspace'] for both owner and editor.",
+  "fence": "dsh fork ui-workspace: slot sidebar.workspaces.workspace.menu.item + sidebar.workspaces.section.label; @tracy/dsh-my-sites site-row-menu (Leave/Delete site on the row of the page's own site only, Delete for an accepted owner only); dsh-passwords gateway: a box-scoped seat may not workspace/delete|remove|rename the workspace whose path is exactly a granted folder.",
+  "run": {
+    "cmd": ["node", "tasks/evidence/site-row-delete-site/accept.mjs", "--setup", "--destructive"],
+    "needs": ["stand", "chrome"]
+  }
+}

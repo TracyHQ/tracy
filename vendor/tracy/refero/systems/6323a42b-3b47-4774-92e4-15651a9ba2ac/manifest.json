@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6323a42b-3b47-4774-92e4-15651a9ba2ac",
+  "status": "complete",
+  "name": "Rive",
+  "url": "https://styles.refero.design/style/6323a42b-3b47-4774-92e4-15651a9ba2ac",
+  "sourceWebsite": "https://rive.app",
+  "extractedAt": "2026-04-11T17:42:27.457Z",
+  "capturedAt": "2026-10-08T05:12:29.352947+00:00",
+  "theme": "dark",
+  "industry": null,
+  "description": "Precision Night Vision. The interface is a specialized lens, cutting through darkness to focus on technical details with absolute clarity.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/9fdc4048-68a8-4284-b8ee-c7078194f7c3.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/3bc6c632-1ded-4337-bee0-5a92c02fd855.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/dfe45b03-989c-4931-8d33-9322b0720899.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/2efdff24-4bb3-4153-94bf-97fcb7ebf592.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/f595fcb0-fec1-466b-9e3d-4d5777614dc3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "613ad60caa19b58bd4d7f4f69568bb3938d51d410851e0169330eab9af28fa33",
+      "bytes": 14018
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d9bcd955a8c0218c8badbfc502ebc9645adfa41b62127bdc972f8584e7a6959b",
+      "bytes": 54845
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e1981ed99d244a420cbdead543fc7dd26345b95749b447d16c945eeb70cbdc8c",
+      "bytes": 19864
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "cc6f40f909ecf23d5d8c1a1a5a78d10c9f810f75b90949fcc47c828349745eff",
+      "bytes": 9943
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6089acf7ec7557ca5ae3ce09e21bc1c1d169e3174c6ecbb0d1fc485c0b186b84",
+      "bytes": 7655
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "90ccc4b1463c07930e1bcb61f92962f60efbc351cc56b8e3d11bed9af494ec88",
+      "bytes": 2298
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "82c7661cd10f89b4ff859f1087bbe0685654d745cb46ee829ccb5bdfc9991ccd",
+      "bytes": 677
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7e8e53427dde931f015d21e36f5283dd84481ecde84b1b87fa1bfd5f4dd7678d",
+      "bytes": 694
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5ba7255597ed5ba000197945d27a0754d432078843939e8b41f9a927963bb740",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "9f584d6af809ef18506191e475898339cdb52106cb8efd8f2965ae9406297e11",
+      "bytes": 42306
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5d65400feb8ff51bf0fedfbfd8dd17085a1b4f6062403e94811973469854db4e",
+      "bytes": 21232
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b671b8656291427bd3701a57ef167a4d34e291c916b68f9db9b22168b62733e9",
+      "bytes": 38767
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4805317b89417656338047ac93778af89ce70043ff2343fac7b7efa6620507c7",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5fa6020210a011cb7d981f6db82dd408f6791dfe272c727e14e5de4aff6668b5",
+      "bytes": 1501
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "452cbd819fa1ba0c06fc9382b1916c8743f33c91300df35133a34d3308bd4a49",
+      "bytes": 1953
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "09b5a06b-29dc-4d17-8722-d29bd93010c8",
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "0d914ef0-fa84-4c60-a9aa-cef0b5eb6e5d",
+    "108e2695-6970-47d5-b5b0-eea8fc34e048",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "50aa2b8e-4760-4379-a3c1-59b65d8576a7",
+    "6323a42b-3b47-4774-92e4-15651a9ba2ac",
+    "6f3652cf-583f-411d-a117-3a03f6342917",
+    "6f9452a4-3b64-4c6f-a05e-528d7a586f24",
+    "78558b01-c101-4b8e-8401-db91269b1150",
+    "90ce5883-bb24-4466-93f7-801cd617b0d1",
+    "a5cc9b0f-d274-458a-b990-d18482b70838",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "cb6e4ab0-b8fe-45b0-bd22-6339b073e26d",
+    "cc38369a-41e3-4bcd-b619-230ccffe7e8e",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

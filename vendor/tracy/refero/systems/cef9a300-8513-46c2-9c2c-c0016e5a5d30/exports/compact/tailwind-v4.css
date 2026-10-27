@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-void-black: #000000;
+  --color-bone-cream: #ebe4d8;
+  --color-ash-taupe: #c3bdb3;
+  --color-alarm-red: #ff4034;
+
+  /* Typography */
+  --font-spektra: 'Spektra', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helvetica-neue-lt: 'Helvetica Neue LT', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

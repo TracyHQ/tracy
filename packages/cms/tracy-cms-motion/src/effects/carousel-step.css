@@ -1,0 +1,17 @@
+/*
+ * carousel-step — the timing of one step, and the class the theme lays the carousel out under.
+ *
+ * The runtime adds `tracy-motion-carousel-step` to a `tracy-motion-carousel` once it has taken it
+ * over, reads the two variables below off it, and moves the track with the Web Animations API, so
+ * the one property that changes (`transform`, on the track) is never written by a stylesheet and
+ * never lands in the markup as an inline style. How the slides sit — a row, how many to a view,
+ * the gap — is layout, which this library may not write (its gate allows `transform`, `opacity`,
+ * `filter`, `translate`, `scale` and `rotate` only). The theme lays the slides out in a row inside
+ * `.tracy-motion-track` and clips the row under this class; without the runtime its own fallback
+ * (a row a visitor can scroll) stays usable. Under reduced motion the runtime steps with no slide.
+ */
+
+.tracy-motion-carousel-step {
+  --tracy-motion-dur: 400ms;
+  --tracy-motion-ease: ease;
+}

@@ -1,0 +1,157 @@
+# packages/tools/tracy-subprocess-docker/dev/compose.yml
+# TRACY_SITES_ROOT must be absolute: <worktree>/tch/sites. The site folder is mounted at the SAME
+# path the harness sees it under on the fleet (/site/<label>), so cwd needs no translation there.
+services:
+  # ── The docker socket, narrowed — the SAME boundary the fleet runs ─────────────────────────
+  #
+  # Since 06/09 this dev cluster matches `packages/fleet/tracy-fleet-operation/dsh/host-dsh.yml`:
+  # dsh holds NO docker socket and talks to haproxy on an internal network instead. The rules are
+  # one file, shared with the fleet by relative path — a second copy would drift, and the drift
+  # would only show on the day dev allows something production refuses.
+  #
+  # What it allows: the seven requests `docker exec … <label>-web-1 …` makes. Everything else is
+  # a 403, `POST /containers/create` included — which is what a socket mount cannot refuse.
+  docker-proxy:
+    # Pinned by tag AND digest, like the fleet's: the whole point of this container is which
+    # requests it refuses, and a tag is a name its owner can move.
+    image: haproxy:3.0-alpine@sha256:34cc7d1f6142464d7d2b73e2a1eef7392556dbf304160aef543e513cfd9e5162
+    container_name: tracy-docker-proxy
+    restart: unless-stopped
+    # Docker Desktop presents the socket as root:root, so uid 0 it is — and everything below
+    # narrows what root inside THIS container is worth: no capabilities, a read-only filesystem,
+    # no route off the internal network, and one mount.
+    user: '0:0'
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    read_only: true
+    tmpfs: [/run]
+    volumes:
+      # Read-only on the bind: it stops nothing an API caller can do, but it does stop this
+      # container from replacing the socket file.
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../../../fleet/tracy-fleet-operation/dsh/docker-proxy.haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    healthcheck:
+      # GET /_ping is one of the seven allowed requests, so a healthy answer proves the config
+      # parsed AND the socket is reachable — not merely that a process is running.
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://127.0.0.1:2375/_ping']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    # No `ports:`. A published 2375 on the host would be the docker daemon, unauthenticated, on a
+    # port — the very thing this container exists to prevent.
+    networks: [docker-api]
+
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: wp
+      MARIADB_USER: wp
+      MARIADB_PASSWORD: wp
+  web:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    container_name: wpdemo-web-1
+    depends_on: [db]
+    # web-clone's Chromium runs with no `--disable-dev-shm-usage` of its own, and Docker's default
+    # 64 MB /dev/shm is a real-page crash waiting to happen (SIGBUS, reported as "Renderer process
+    # crashed") — see render-compose.sh's `tracy_web_confinement`, the fleet's equivalent of this.
+    shm_size: 512m
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: wp
+      WORDPRESS_DB_NAME: wp
+    ports:
+      - '127.0.0.1:51780:80'
+    volumes:
+      - ${TRACY_SITES_ROOT}/wpdemo/.webroot:/var/www/html
+      - ${TRACY_SITES_ROOT}/wpdemo:/site/wpdemo
+      - ${TRACY_SITES_ROOT}/wpdemo/.webroot:/site/wpdemo/.webroot
+
+  # One dsh for every site on this host. It talks to the site containers through the docker-proxy
+  # above — never a socket of its own — and sees every site folder because /site is the PARENT
+  # directory, so a site added later shows up there with no restart.
+  dsh:
+    build:
+      context: ../../../..
+      dockerfile: packages/fleet/tracy-fleet-operation/dsh/Dockerfile
+      # The context carries no .git, so the commit that stamps dsh's client artifacts has to be
+      # handed in. Required, with no default: a stale sha is invisible once the image is built.
+      args:
+        DSH_COMMIT: "${DSH_COMMIT:?export DSH_COMMIT=$(git ls-tree HEAD vendor/tracy/deepseek-harness | awk '{print $3}')}"
+        # The group that owns a docker socket INSIDE the container. Since the proxy landed there
+        # is no socket to reach, so this group buys nothing here and stays only because the image
+        # is the fleet's and a Linux host may still mount one; on Docker Desktop the value would
+        # be 0 (root:root 0660), which is precisely the concession the proxy makes unnecessary.
+        DOCKER_GID: "${DOCKER_GID:-0}"
+    image: tracy/dsh:dev
+    container_name: tracy-dsh
+    depends_on:
+      # `service_healthy`, not the default `service_started`: the proxy answering /_ping is what
+      # says the config parsed and the socket is reachable. Starting dsh before that gives an
+      # agent a first command that fails for a reason nothing logs.
+      docker-proxy:
+        condition: service_healthy
+    environment:
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      # The provider's daemon. Not DOCKER_HOST: only `@tracy/dsh-subprocess-docker` may choose the
+      # daemon, and it tombstones every ambient DOCKER_* on the CLI it spawns, so a shell inside
+      # this container finds no daemon at all.
+      TRACY_DOCKER_HOST: tcp://docker-proxy:2375
+      # The addresses a BROWSER will send. The published port is 51790 here; dsh itself listens on
+      # 51700 inside and `dsh-passwords` proxies to it from 8080, and the entrypoint adds both
+      # loopback forms on its own.
+      DSH_TRUSTED_HOSTS: 127.0.0.1:51790,localhost:51790
+      # The model, which the IMAGE deliberately does not choose (see the file's own header).
+      DSH_PATCH: /desk-home/dev-model.patch.yml
+      # 🔒 THE GATEWAY'S ENV FILE MOVES INTO THE DATA DIRECTORY, and it has to be this way round.
+      # That file holds `MCP_DB_ENC_KEY` — the key the platform database is encrypted with — and
+      # `MCP_DB_PATH`, which the entrypoint writes as `/desk-home/dsh-passwords-data/platform.db`.
+      # Persist the database WITHOUT the env and a recreate generates a fresh key for a database it
+      # can no longer read; persist neither and the owner account is gone every time. One volume
+      # holds both, so they can only ever travel together. (A single FILE cannot be a named volume,
+      # which is why the file moves to the directory rather than the directory to the file.)
+      DSH_PASSWORDS_ENV_FILE: /desk-home/dsh-passwords-data/dsh-passwords.env
+    volumes:
+      # 🔒 NO /var/run/docker.sock. That mount was unrestricted control of the host's daemon —
+      # anyone reaching it could start a privileged container with `/` bind-mounted. It is
+      # replaced by the docker-proxy service, and adding it back here would silently undo the
+      # whole boundary while every measurement below still passed.
+      - ${TRACY_SITES_ROOT}:/site
+      - ./dev-model.patch.yml:/desk-home/dev-model.patch.yml:ro
+      - dsh-sessions:/desk-home/sessions
+      - dsh-storages:/desk-home/storages
+      # The gateway's own state: `platform.db` (the owner account, its password hash, the seat
+      # book) and — through DSH_PASSWORDS_ENV_FILE above — the env file whose key decrypts it.
+      # Without this, `docker compose up -d dsh` after a rebuild silently starts the platform
+      # UNINITIALISED again: the login page goes back to `首次配置` and the account the tester made
+      # ten minutes ago is gone with a setup key that no longer exists. Task 1 lost it twice.
+      #
+      # ⚠ ONE SUBDIRECTORY, NOT `/desk-home`. The image carries its whole profile there
+      # (`profiles/native/node_modules`, ~400 MB of it), so a volume over the parent would mask it
+      # — the entrypoint's own guard fails the boot with that exact message rather than letting dsh
+      # come up with an empty plugin graph. The fleet mounts all of /desk-home because
+      # `host-dsh-init.sh` seeds the profile into the host directory first; this cluster has no
+      # such step, and does not need one.
+      - dsh-passwords:/desk-home/dsh-passwords-data
+    # 8080 is `dsh-passwords`, the front door. dsh's own port is never published: reaching it
+    # directly walks past the seat door and the password door alike.
+    ports:
+      - '127.0.0.1:51790:8080'
+    # Both: `docker-api` to reach the proxy, `default` for the model provider and git remotes.
+    # The default route comes from `default` — `docker-api` has no gateway at all.
+    networks: [docker-api, default]
+
+networks:
+  # dsh and the proxy, and nothing else. `internal: true` gives this network no gateway, so the
+  # proxy — the one container here holding a docker socket — cannot reach the internet at all.
+  docker-api:
+    internal: true
+
+volumes:
+  dsh-sessions:
+  dsh-storages:
+  dsh-passwords:

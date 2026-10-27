@@ -1,0 +1,419 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-alumni",
+  "release": "quickstart/ja-alumni/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "display": "h1.item-title",
+    "heading": "h2.hero-heading",
+    "body": "p.event-introtext",
+    "button-primary": "a.facebook-block",
+    "section": "div.acm-spotlight"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 60px",
+    "displayFace": "Frank Ruhl Libre 700, tracking 0em",
+    "heading": "first section heading: 32px",
+    "body": "running text: the events list introduction (the first paragraph probed was the hero line, whose weight the template sets itself)",
+    "button-primary": "first filled, coloured call to action: rgb(59, 89, 153)",
+    "section": "first padded full-width section, padding-top 66px"
+  },
+  "keepScopes": [
+    ".t3-topbar",
+    ".t3-footer",
+    ".features-item-inner",
+    ".google-plus-block",
+    ".cta-showcase-item",
+    ".acm-stats",
+    ".acm-slideshow",
+    ".t3-header"
+  ],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#666666",
+    "--fg-2": "#222222",
+    "--accent": "#a22631",
+    "--accent-hover": "#64171e",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#eeeeee",
+    "--muted": "#555555",
+    "--font-display": "\"Frank Ruhl Libre\", sans-serif",
+    "--font-body": "\"Libre Franklin\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#222c54"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#666666",
+      "fg-2": "#222222",
+      "accent": "#a22631",
+      "accent-hover": "#64171e",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#eeeeee",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#666666",
+      "muted": "#999999",
+      "fg-2": "#222222",
+      "accent": "#3b5999",
+      "accent-on": "#ffffff",
+      "surface-warm": "#222c54"
+    },
+    {
+      "accent": "#222c54"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#eeeeee",
+      "border-soft": "#e4e4e4",
+      "accent-hover": "#781c25",
+      "danger": "#dd4b39",
+      "accent": "#ac2925"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border-soft": "#e5e5e5",
+      "accent-hover": "#791c25",
+      "accent": "#ae2322"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border-soft": "#e1e1e1",
+      "accent-hover": "#701a22"
+    },
+    {
+      "border-soft": "#e0e2e3",
+      "surface": "#f9f2f4"
+    },
+    {
+      "border-soft": "#ebebeb",
+      "surface": "#eaeaea"
+    },
+    {
+      "border-soft": "#e3e3e3",
+      "surface": "#f4f4f4"
+    },
+    {
+      "surface": "#f8f8f8",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "surface": "#f0f0f0"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (64 line colours, 78 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.item-title",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.facebook-block"],
+    "buttonPrimary": [".btn-primary", "a.facebook-block"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["div.acm-spotlight"],
+    "bodyFace": ["body"],
+    "inkImages": ["img[src*=\"hero/Sign.png\"]"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": ".t3-wrapper p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t3-wrapper p, .t3-wrapper li",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 37 tried (byte 5673); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 392,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 110,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 101,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#e4e4e4",
+      "uses": 90,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 11
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 68,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#781c25",
+      "uses": 53,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#64171e",
+      "distance": 22
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 34,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 28,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#dd4b39",
+      "uses": 20,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#d9534f",
+      "distance": 24
+    },
+    {
+      "hex": "#791c25",
+      "uses": 18,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#64171e",
+      "distance": 23
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 15,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 14,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#ac2925",
+      "uses": 14,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#a22631",
+      "distance": 16
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 14,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 12
+    },
+    {
+      "hex": "#eaeaea",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 23
+    },
+    {
+      "hex": "#f4f4f4",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 5
+    },
+    {
+      "hex": "#701a22",
+      "uses": 9,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#64171e",
+      "distance": 13
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 2
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 12
+    },
+    {
+      "hex": "#ae2322",
+      "uses": 5,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#a22631",
+      "distance": 19
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 5,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepNote": "kept after measuring 11/10/2026 (text in them read worse than the template's own under a system): .features-item-inner, .google-plus-block, .cta-showcase-item, .acm-stats; .acm-slideshow kept after the eye check of 11/10/2026: its navy mask (90%) under white text turned each light system’s accent (Moxie, MotherDuck), and the text on the photo is not judged by the contrast probe; .t3-header kept after the eye check of 11/10/2026 (re-measure): on the phone it is a solid bar painted with the accent (navy #222c54 tokenized as accent) under the template's white logo image, which stood on light blue or pink under Moxie, MotherDuck and Toggl Track; kept, it stays the navy of the kept slideshow below it",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the tokenized build of quickstart/ja-alumni/j6@1.0.0 (tasks/evidence/ds-contracts-batch2-2026-10-11/templates/ja-alumni-j6): 12/12, default unchanged (controls 0 · 0 · 0 · 0), no text made less readable than the template's own under the systems tried (every text of each kind judged against itself), 54% or more of the page follows; bands kept: .features-item-inner, .google-plus-block, .cta-showcase-item, .acm-stats; worn by ja-alumni 1.0.1 (the stylesheet re-release). Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 54% or more of the page follows, every contrast kind sampled at 1440 and 390; the signature picture (name and title drawn in it) is inverted on a dark system (selectors.inkImages), the phone header bar painted with the accent under the white logo is kept (keepScopes .t3-header), the Facebook pill's icon takes the accent's own text colour; checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-alumni-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-alumni 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 54-63% of the page follows (the navy and red bands are kept), every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-alumni-j6",
+  "keepDefaults": {},
+  "keepColors": {
+    ".t3-topbar": "rgb(102, 102, 102)",
+    ".t3-footer": "rgb(255, 255, 255)",
+    ".features-item-inner": "rgb(102, 102, 102)",
+    ".google-plus-block": "rgb(255, 255, 255)",
+    ".cta-showcase-item": "rgb(255, 255, 255)",
+    ".acm-stats": "rgb(255, 255, 255)",
+    ".acm-slideshow": "rgb(102, 102, 102)",
+    ".t3-header": "rgb(102, 102, 102)"
+  },
+  "minVersion": {
+    "quickstart/ja-alumni/j6": "1.0.1"
+  },
+  "followRules": {
+    ".facebook-block i": {
+      "color": "accent-on"
+    },
+    ".leader .leader-content :is(h1, h2, h3, h4, h5, h6, a, .readmore)": {
+      "color": "accent-on"
+    },
+    ".t3-masthead .ja-masthead .ja-masthead-detail :is(.ja-masthead-title, .ja-masthead-description)": {
+      "color": "accent-on"
+    }
+  },
+  "followRulesNote": "the Facebook counter pill takes the accent as a button (selectors.button): its icon glyph, white in the template (.fa), takes the accent's own text colour like the pill's text",
+  "maxVersion": {
+    "quickstart/ja-alumni/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".t3-topbar": {
+      "ground": "#a22631",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".t3-footer": {
+      "ground": "#222c54",
+      "texts": ["#ffffff", "#a7abbb"],
+      "important": true
+    },
+    ".cta-showcase-item": {
+      "ground": "#222c54",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".acm-stats": {
+      "ground": "#a22631",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".t3-header": {
+      "ground": "#222c54",
+      "texts": ["#ffffff"],
+      "kind": "ink",
+      "media": "(max-width: 991px)",
+      "important": true
+    },
+    ".features-item-inner": {
+      "ground": "#222c54",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    ".google-plus-block": {
+      "ground": "#dd4b39",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".acm-slideshow": {
+      "ground": "#333333",
+      "texts": ["#ffffff", "#d6d6d6"],
+      "picture": true,
+      "important": true
+    },
+    ".acm-features.style-1": {
+      "ground": "#222c54",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".features-content h3", ".features-content p"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "followNote": "15/10/2026 (final measure, the course page): the profile card (.leader) is the accent with the accent's own words, but its title is a literal white and its read-more took the page's accent text: white on Moxie's light accent 2.26:1, the read-more 1:1 under Moxie and Stripe; both take the accent's own text colour; 15/10/2026 (final measure, inner pages): the title band (.ja-masthead) is the accent laid at 89% over a photo while its title is a literal white: white on Moxie's light accent, 2.23:1; the title and its description take the accent's own text colour"
+}

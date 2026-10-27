@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+  "status": "complete",
+  "name": "Officevibe",
+  "url": "https://styles.refero.design/style/ced1c98f-d489-48f7-a01f-1fa59a07b706",
+  "sourceWebsite": "https://officevibe.com",
+  "extractedAt": "2026-06-03T15:05:52.842Z",
+  "capturedAt": "2026-10-08T05:17:41.416001+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Editorial journal on warm cream paper. Think a thoughtful HR essay rendered as a product — serif italics whispering through a modern blue interface.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/90dba4bb-0474-43e9-b859-cfb62989635e.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d30e17a3-5241-481a-95de-f58ab0724b32.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/6e36a883-2576-4254-8fc1-ecbe3d7be820.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/d5eeb495-6484-4007-8043-0adc28d1ae75.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c8dd7d9a-649c-4a62-a474-819d05d73546.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "84b2730d4e6b6c2d447b6af3425a0beb8f8c91b113daa264e930f01d1fbeeb71",
+      "bytes": 20628
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "03826ffb007e8adf41b5aebb8027cce1b722a2aaa2786938abb333edcb292ae5",
+      "bytes": 109076
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e09c3bd71c46c86eef23937b0ca6153c24fe351763a147c4249472a1d82ac2ff",
+      "bytes": 16871
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "dd9b476bb8412f85080f8a5c5106a9b8312c1e00fffb17d84afc97fcc694b1a4",
+      "bytes": 12707
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "2301483fda27ff4836a562bac88fef36e46b9611b904743db2ff89f5151cde98",
+      "bytes": 12743
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "65d6e86eb64b200bd2fc61f43e72d951781b3de88dac5e5dd011a3fa7a77f0af",
+      "bytes": 3583
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f40a6140df6124a554ef7ca68fd1d62b3efa06ba0e84ef5b03577044996df7fe",
+      "bytes": 751
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "32006bb3a282834b425f3b10a0ea5690ce2801d5e6bccd48c73e9088d9693f1c",
+      "bytes": 768
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c4b0c9f41afbfbfe73c976404cf2b727b0f78374951f58c579d1e13c8dd7140b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "607c0ab75b588b71ff937c8ba9ef4f54ff6a0a2d64b20833e9b4baa29e06aefd",
+      "bytes": 44032
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1654689ab04ad2fb4c78a396e06af1cc88dd6ba5073df8318291fc8f0b96f5f8",
+      "bytes": 22634
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "35dcde8ddcbb8a9968cc0fe4593da578d26c4779515ab72965540eb15424644a",
+      "bytes": 44619
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3aefedbe8bda9f28cf757426a6ae4e863d05a236622b873d05e33e32e177c6d0",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "8707f2cc3c4d758032d645be4b176689b9611be5f8b185cbf4b187913bf39151",
+      "bytes": 1884
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "fa147e5a1d71bdece9725f38628513785fc13f927f4e2fa271569f2e754a46ff",
+      "bytes": 2404
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "03b3d707-2a30-4f53-a524-347d1b70eb2c",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "24d3b281-04a6-4cc7-8a74-634b08472291",
+    "2b41e7c4-1e8c-4ea2-a87f-51e24c57886e",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "5af6b791-6cad-4497-9e94-ace28e4fbd51",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "71451d9e-9a8a-4858-9a91-fbe44047e110",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

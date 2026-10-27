@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-ice-cyan: #d7f3f5;
+  --color-void: #020203;
+  --color-carbon: #111314;
+
+  /* Typography */
+  --font-suisseintl: 'SuisseIntl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-intl: 'Suisse Int'l', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

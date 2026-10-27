@@ -1,0 +1,371 @@
+{
+  "dos": [
+    "Use #ffffff as the default canvas and #18181b for all large light-theme headings.",
+    "Set hero display copy in Neo Grotesk Medium 80px/64px, weight 400, with -3.2px tracking.",
+    "Set major section displays in Neo Grotesk Medium 56px/56px with -2.24px tracking.",
+    "Use #94faf0 only for filled conversion controls, selected markers, and small live-route accents.",
+    "Use 16px radius for visual cards and large aqua or translucent buttons.",
+    "Use 12px radius with 8px 16px padding for compact #27272a and #bff660 header or utility buttons.",
+    "Build small interface rhythm from 4px, 8px, 16px, 24px, and 32px gaps."
+  ],
+  "donts": [
+    "Do not use #94faf0 as a page background or broad section fill.",
+    "Do not round cards beyond the 16px card radius or turn every control into a 1000px pill.",
+    "Do not use #bff660 for sales conversion controls; keep it on documentation and developer routes.",
+    "Do not set display headlines in Inter; reserve Neo Grotesk Medium for the 32px, 56px, and 80px display scale.",
+    "Do not loosen display tracking to normal; keep Neo Grotesk headings between -0.96px and -3.2px tracking.",
+    "Do not replace fine #d4d4d8 construction lines with heavy borders.",
+    "Do not add saturated color to body copy, navigation, or broad card surfaces."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page backgrounds, light cards, navigation surfaces, and white text on graphite panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#18181b",
+      "name": "Ink",
+      "role": "Display headings, primary text, logo marks, dark page bands, and high-contrast icons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#27272a",
+      "name": "Graphite",
+      "role": "Dark cards, code panels, dark utility buttons, and contained product demonstrations",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f4f4f5",
+      "name": "Cloud",
+      "role": "Muted section surfaces and pale technical-card backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d4d4d8",
+      "name": "Steel",
+      "role": "Hairline separators, diagram outlines, and subdued borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#71717a",
+      "name": "Slate",
+      "role": "Navigation labels, long-form supporting copy, inactive tabs, and secondary icons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3f3f46",
+      "name": "Charcoal",
+      "role": "Emphasized body copy and dense explanatory labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#94faf0",
+      "name": "Aqua Relay",
+      "role": "Filled conversion buttons, selected use-case markers, and small product-diagram highlights — the cool signal that makes a workflow feel live",
+      "group": "brand"
+    },
+    {
+      "hex": "#d4f796",
+      "name": "Lime Notice",
+      "role": "Full-width announcement strips and occasional lightweight promotional controls — a broad highlighter wash above the restrained header",
+      "group": "accent"
+    },
+    {
+      "hex": "#bff660",
+      "name": "Volt Lime",
+      "role": "Developer-oriented filled buttons and compact product highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#07cddf",
+      "name": "Signal Sweep",
+      "role": "Rare horizontal technical accent for connector lines and illustrated signal paths",
+      "group": "accent",
+      "gradient": "linear-gradient(90deg, #07cddf 52%, #9eed15 100%)"
+    }
+  ],
+  "layout": "A narrow lime announcement strip sits above a white public navigation bar with the logo at left, compact link groups through the center, and paired utility/conversion controls at right. The opening uses an asymmetric two-column composition: a large left-aligned display headline, support copy, inline capability row, and paired actions face a contained layered payment-diagram visual on the right. A full-width graphite divider transitions into centered, left-aligned editorial sections; use-case intros combine a large title with split explanatory copy and a horizontal category row, followed by alternating text-led feature blocks and overlapping code or product-diagram cards. The page is text-dominant outside its contained technical visuals, with substantial white fields around each section and dense 8px-level internal UI spacing.",
+  "imagery": "Visuals are contained product illustrations rather than photography: white or pale-gray technical sheets overlap at slight angles, carry faint construction-line borders, and cast restrained soft shadows. A dark central payment tile, miniature code windows, thin route lines, and tiny multicolor partner marks explain the product without becoming full-bleed artwork. Icons are compact, mostly monochrome dark glyphs with occasional aqua tiles; imagery occupies one side of split feature compositions while text remains the dominant mass.",
+  "similar": [
+    {
+      "why": "Payment-infrastructure diagrams, contained code surfaces, and bright accent controls on a white technical canvas.",
+      "business": "Stripe"
+    },
+    {
+      "why": "Dense financial-systems messaging paired with restrained technical illustration and graphite implementation panels.",
+      "business": "Modern Treasury"
+    },
+    {
+      "why": "Monochrome interface foundation, near-black feature bands, tightly spaced navigation, and code-forward presentation.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Graphic product diagrams and vivid functional accent colors used sparingly against predominantly neutral surfaces.",
+      "business": "PostHog"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "links": "4px",
+      "pills": "1000px",
+      "images": "1000px",
+      "buttons": "12px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "40px",
+    "cardPadding": "16px",
+    "pageMaxWidth": null
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper Canvas",
+      "level": 0,
+      "purpose": "Default page field, header, hero, and light content regions."
+    },
+    {
+      "hex": "#f4f4f5",
+      "name": "Cloud Surface",
+      "level": 1,
+      "purpose": "Subdued cards and alternate technical surfaces."
+    },
+    {
+      "hex": "#27272a",
+      "name": "Graphite Panel",
+      "level": 2,
+      "purpose": "Code blocks, dark cards, and contained product detail."
+    },
+    {
+      "hex": "#18181b",
+      "name": "Ink Band",
+      "level": 3,
+      "purpose": "Full-width dark transitions and inverse editorial sections."
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 0 0 1px rgba(0, 0, 0, 0.08), 0 0.602187px 2.28831px -1.25px rgba(0, 0, 0, 0.18), 0 2.28853px 8.69643px -2.5px rgba(0, 0, 0, 0.16), 0 10px 38px -3.75px rgba(0, 0, 0, 0.06)",
+      "element": "Cloud Product Card"
+    },
+    {
+      "style": "0 0.602187px 2.52919px -1.25px rgba(0, 0, 0, 0.18), 0 2.28853px 9.61184px -2.5px rgba(0, 0, 0, 0.16), 0 10px 42px -3.75px rgba(0, 0, 0, 0.06)",
+      "element": "Graphite Product Card"
+    },
+    {
+      "style": "0 2.76726px 2.21381px rgba(0, 0, 0, 0.02), 0 6.6501px 5.32008px rgba(0, 0, 0, 0.03)",
+      "element": "White Technical Card"
+    }
+  ],
+  "northStar": "payment rails in a drafting studio. White technical paper, stacked translucent transaction layers, and one switched-on aqua control define the visual direction.",
+  "typeScale": [
+    {
+      "role": "nav",
+      "size": 14,
+      "family": "Inter",
+      "weight": 500,
+      "lineHeight": 1,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "family": "Inter",
+      "weight": 500,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.098
+    },
+    {
+      "role": "body-compact",
+      "size": 14,
+      "family": "Inter",
+      "weight": 500,
+      "lineHeight": 1.14,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "button-label",
+      "size": 14,
+      "family": "Inter",
+      "weight": 500,
+      "lineHeight": 1,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "technical-label",
+      "size": 14,
+      "family": "Chivo Mono",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "feature-heading",
+      "size": 32,
+      "family": "Neo Grotesk Medium",
+      "weight": 500,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "testimonial",
+      "size": 32,
+      "family": "Inter",
+      "weight": 500,
+      "lineHeight": 1.3,
+      "letterSpacing": -1.28
+    },
+    {
+      "role": "display-section",
+      "size": 56,
+      "family": "Neo Grotesk Medium",
+      "weight": 400,
+      "lineHeight": 1,
+      "letterSpacing": -2.24
+    },
+    {
+      "role": "display-section-inverse",
+      "size": 56,
+      "family": "Neo Grotesk Medium",
+      "weight": 500,
+      "lineHeight": 1,
+      "letterSpacing": -2.24
+    },
+    {
+      "role": "display-hero",
+      "size": 80,
+      "family": "Neo Grotesk Medium",
+      "weight": 400,
+      "lineHeight": 0.8,
+      "letterSpacing": -3.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Lime Announcement Strip",
+      "role": "Site-wide release notice above the main navigation.",
+      "description": "Use a full-width #d4f796 bar with square 0px corners, 8px vertical and 16px horizontal padding. Set the message in 14px/21px Inter 500, #18181b at 80% opacity, centered as one compact line."
+    },
+    {
+      "name": "Public Navigation Bar",
+      "role": "White top navigation with logo, grouped links, and conversion controls.",
+      "description": "Place on #ffffff with 14px Inter 500 labels in #71717a; use 16px gaps between utility controls and 24px grouping gaps. Keep the logo and icons in #18181b, use 4px rounding only for small link-focus treatments, and separate from following dark content with a 1px #d4d4d8 rule."
+    },
+    {
+      "name": "Graphite Header Button",
+      "role": "Compact high-emphasis conversion control in public navigation.",
+      "description": "Use #27272a fill, white 14px Inter 500 text, 12px radius, and 8px 16px padding. Add the observed inset edge: 0 0 0 2px rgba(255, 255, 255, 0.13) inset."
+    },
+    {
+      "name": "Aqua Conversion Button",
+      "role": "Large filled conversion control for light sections.",
+      "description": "Use #94faf0 fill with #18181b 14px Inter 500 text, 16px radius, and 12px 16px 12px 22px padding. Reserve 8px between label and a directional arrow icon."
+    },
+    {
+      "name": "Translucent Secondary Button",
+      "role": "Paired secondary control on dark surfaces.",
+      "description": "Use rgba(255, 255, 255, 0.1) fill with white 14px Inter 500 text, 16px radius, and 12px 22px padding. Apply 0 0 0 2px rgba(255, 255, 255, 0.13) inset rather than an opaque border."
+    },
+    {
+      "name": "Volt Documentation Button",
+      "role": "Developer-path filled control.",
+      "description": "Use #bff660 fill, #18181b 14px Inter 500 text, 12px radius, and 8px 16px padding; do not reuse it for general sales conversion."
+    },
+    {
+      "name": "Hero Capability Row",
+      "role": "Inline proof-point list below hero support copy.",
+      "description": "Set three compact items in a horizontal row with 16px gaps. Pair each label with a 12px dark square icon tile and use 14px Inter 500 in #18181b; keep icon-to-label spacing at 8px."
+    },
+    {
+      "name": "Use-Case Filter Row",
+      "role": "Inline category selector beneath a section introduction.",
+      "description": "Use 14px Inter 500 labels with 16px gaps and 8px icon-to-label spacing. Mark the selected item with a small #94faf0 filled icon tile; render unselected labels and icons in #71717a."
+    },
+    {
+      "name": "Layered Payment Diagram",
+      "role": "Hero and feature visual for payment-routing concepts.",
+      "description": "Build contained, overlapping white and #f4f4f5 sheets with 16px corners, thin #d4d4d8 outlines, and sparse technical labels. Float a #27272a central tile above the sheets; use #94faf0 and #bff660 only as tiny route, icon, or partner-logo signals."
+    },
+    {
+      "name": "Cloud Product Card",
+      "role": "Light contained product or workflow preview.",
+      "description": "Use #f4f4f5 with 16px radius and the Cloud Product Card elevation stack. Keep outer shell padding at 0px; place visual layers edge-to-edge within the rounded frame."
+    },
+    {
+      "name": "Graphite Code Card",
+      "role": "Dark implementation preview and technical proof block.",
+      "description": "Use #27272a with 16px radius and the Graphite Product Card elevation stack. Set code in 14px/21px Chivo Mono or Kode Mono; use white for core syntax and reserve colored syntax accents for code content only."
+    },
+    {
+      "name": "Inverse Testimonial Panel",
+      "role": "Dark customer-proof section.",
+      "description": "Use an #18181b band with white 56px Neo Grotesk Medium heading and a 32px/41.6px Inter 500 quote at rgba(255, 255, 255, 0.5). Keep cards within the band at #27272a and 16px radius."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px, 14px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Display and section headlines. The -0.04em tracking and 0.8 line-height at 80px deliberately pack words into a dense payment-infrastructure voice rather than a spacious editorial headline.",
+      "sizes": "32px, 56px, 64px, 80px",
+      "family": "Neo Grotesk Medium",
+      "weight": "400, 500",
+      "lineHeight": "0.80, 0.90, 1.00, 1.20",
+      "substitute": "Arial Narrow, Helvetica Neue",
+      "letterSpacing": "-3.2px at 80px; -2.24px at 56px; -0.96px at 32px"
+    },
+    {
+      "role": "Occasional compact 32px feature headings requiring a firmer silhouette than the Medium display face.",
+      "sizes": "32px",
+      "family": "Neo Grotesk Bold",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "Arial Bold, Helvetica Neue Bold",
+      "letterSpacing": "-0.32px at 32px"
+    },
+    {
+      "role": "Navigation, buttons, labels, body copy, and large testimonial copy. At 14px it stays compact and firm; at 32px it serves as a softer, lower-contrast quote treatment on dark panels.",
+      "sizes": "14px, 16px, 18px, 24px, 32px",
+      "family": "Inter",
+      "weight": "500, 600, 700",
+      "lineHeight": "1.00, 1.14, 1.20, 1.30, 1.40, 1.50",
+      "substitute": "system-ui, Arial, sans-serif",
+      "letterSpacing": "-1.28px at 32px; -0.32px at 16px; -0.14px at 14px",
+      "fontFeatureSettings": "\"salt\"; \"cv10\", \"cv11\", \"cv12\", \"cv13\", \"salt\", \"ss01\", \"ss02\", \"ss03\", \"ss04\"; \"salt\", \"ss01\", \"ss03\", \"ss04\", \"tnum\""
+    },
+    {
+      "role": "Technical metadata, code-adjacent labels, and small implementation details.",
+      "sizes": "14px",
+      "family": "Chivo Mono",
+      "weight": "400",
+      "lineHeight": "1.50",
+      "substitute": "IBM Plex Mono, ui-monospace, monospace",
+      "letterSpacing": "normal"
+    },
+    {
+      "role": "Code samples and microscopic diagram annotations, introducing an explicitly technical layer beneath the grotesk marketing typography.",
+      "sizes": "8px, 12px, 14px, 16px",
+      "family": "Kode Mono",
+      "weight": "400, 600",
+      "lineHeight": "0.90, 1.00, 1.20",
+      "substitute": "JetBrains Mono, ui-monospace, monospace",
+      "letterSpacing": "-0.32px at 16px; 0.24px at 12px"
+    }
+  ],
+  "description": "Basis Theory — payment rails in a drafting studio. The interface is a bright white working canvas interrupted by graphite product panels, with electric aqua and acid-lime controls used as precise operational signals rather than ambient decoration. Enormous, tightly tracked Neo Grotesk headlines create compressed, mechanical urgency; compact Inter navigation and explanatory copy keep the surrounding system quiet. Product diagrams float as layered white technical sheets with faint gray construction lines, while dark cards frame code, customer proof, and implementation detail.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Paper: #ffffff — Page backgrounds, light cards, navigation surfaces, and white text on graphite panels\n- Ink: #18181b — Display headings, primary text, logo marks, dark page bands, and high-contrast icons\n- Graphite: #27272a — Dark cards, code panels, dark utility buttons, and contained product demonstrations\n- Cloud: #f4f4f5 — Muted section surfaces and pale technical-card backgrounds\n- Steel: #d4d4d8 — Hairline separators, diagram outlines, and subdued borders\n- Slate: #71717a — Navigation labels, long-form supporting copy, inactive tabs, and secondary icons\n- Charcoal: #3f3f46 — Emphasized body copy and dense explanatory labels\n- Aqua Relay: #94faf0 — Filled conversion buttons, selected use-case markers, and small product-diagram highlights — the cool signal that makes a workflow feel live\n- Lime Notice: #d4f796 — Full-width announcement strips and occasional lightweight promotional controls — a broad highlighter wash above the restrained header\n- Volt Lime: #bff660 — Developer-oriented filled buttons and compact product highlights\n- Signal Sweep: linear-gradient(90deg, #07cddf 52%, #9eed15 100%) — Rare horizontal technical accent for connector lines and illustrated signal paths\n\nCreate a white two-column payment-platform hero: left content uses #18181b Neo Grotesk Medium 80px/64px weight 400 with -3.2px tracking, 14px Inter supporting copy in #71717a, and an #94faf0 conversion button at 16px radius; right side is a layered #ffffff and #f4f4f5 payment diagram with #d4d4d8 outlines.\nCreate a #18181b implementation section with a 56px/56px Neo Grotesk Medium weight 500 white heading, a #27272a 16px code card, and 14px/21px Chivo Mono code labels.\nCreate a use-case introduction on #ffffff with a 56px/56px Neo Grotesk Medium weight 400 #18181b heading, split #3f3f46 and #71717a explanatory paragraphs, then a 14px Inter category row whose selected icon tile is #94faf0.\nCreate a dark testimonial panel on #18181b with a white 56px Neo Grotesk Medium section heading and a 32px/41.6px Inter 500 quote in rgba(255, 255, 255, 0.5).\nCreate a compact public header beneath a #d4f796 announcement strip: use #71717a 14px Inter navigation labels, a #27272a 12px-radius button with white text, and #ffffff as the navigation surface."
+    }
+  ]
+}

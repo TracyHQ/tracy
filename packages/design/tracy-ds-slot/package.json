@@ -1,0 +1,24 @@
+{
+  "name": "@tracy/ds-slot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The design-system slot: one profile per design system (Refero or OpenDesign, read-only sources), the CSS each CMS template wears it with, and the role probe that proves the site does",
+  "license": "MIT",
+  "exports": {
+    "./normalise": "./src/normalise.mjs",
+    "./emit": "./src/emit.mjs",
+    "./probe": "./src/probe.mjs",
+    "./measurement": "./src/measurement.mjs",
+    "./role-variables": "./src/role-variables.mjs",
+    "./package.json": "./package.json",
+    "./wordpress": "./src/wordpress.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/design/tracy-ds-slot"
+  },
+  "dependencies": {
+    "@tracy/wordpress-theme": "workspace:*"
+  }
+}

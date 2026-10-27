@@ -1,0 +1,242 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "title": "Canva",
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#f4f5f7"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "var(--wp--preset--color--surface)"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "#0e1318"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "#3c4043"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "#5f6368"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "#9aa0a6"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "#e1e3e6"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "var(--wp--preset--color--border)"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#7d2ae8"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "#6815d4"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "color-mix(in oklab, var(--wp--preset--color--accent), black 14%)"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "#00b894"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "#ffb020"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "#ff5757"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "\"Canva Sans\", \"YS Text\", system-ui, -apple-system, sans-serif"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "\"Canva Sans\", \"YS Text\", system-ui, -apple-system, sans-serif"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "\"JetBrains Mono\", ui-monospace, Menlo, Consolas, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "11px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "12px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "14px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "16px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "18px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "24px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "36px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "64px"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "1320px",
+      "wideSize": "1320px"
+    },
+    "custom": {
+      "leading": {
+        "body": "1.5",
+        "tight": "1.15"
+      },
+      "tracking": {
+        "display": "-0.02em"
+      },
+      "sectionY": {
+        "desktop": "96px",
+        "tablet": "64px",
+        "phone": "48px"
+      },
+      "radius": {
+        "sm": "8px",
+        "md": "12px",
+        "lg": "16px",
+        "pill": "9999px"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0 2px 8px rgba(0, 0, 0, 0.06)"
+      },
+      "focusRing": "0 0 0 3px rgba(125, 42, 232, 0.16)",
+      "motion": {
+        "fast": "180ms",
+        "base": "280ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.4, 0, 0.2, 1)"
+      },
+      "container": {
+        "max": "1320px",
+        "gutterDesktop": "32px",
+        "gutterTablet": "24px",
+        "gutterPhone": "16px"
+      },
+      "tracy": {
+        "inspiration": "canva"
+      }
+    }
+  }
+}

@@ -1,0 +1,468 @@
+/**
+ * Cloudflare-specific types for sandbox runner
+ */
+
+import type { D1Database, R2Bucket } from "@cloudflare/workers-types";
+import type {
+	BylineInfo,
+	BylineListOptions,
+	EntryBylineCredits,
+	ConditionalDeleteResult,
+	ConditionalWriteResult,
+	ContentCreateOptions,
+	ContentListOptions,
+	ContentRevisionInfo,
+	ContentTranslationSummary,
+	CollectionSchemaInfo,
+	CronTaskInfo,
+	CommentListOptions,
+	CommentCountOptions,
+	PluginComment,
+	PluginCommentStatus,
+	PaginatedResult,
+	RedirectCreateInput,
+	RedirectInfo,
+	RedirectListOptions,
+	RedirectUpdateInput,
+	PluginHttpResponseWire,
+	UpdateIfArgs,
+	UpdateIfResult,
+	VersionedRedirect,
+	VersionedValue,
+	VersionedContentItem,
+} from "emdash";
+
+/**
+ * Environment bindings required for sandbox runner.
+ * These must be configured in wrangler.jsonc.
+ */
+export interface CloudflareSandboxEnv {
+	/** Worker Loader binding for spawning plugin isolates */
+	LOADER?: WorkerLoader;
+	/** D1 database for plugin storage and bridge operations */
+	DB: D1Database;
+	/** R2 bucket for plugin code storage (optional if loading from config) */
+	PLUGINS?: R2Bucket;
+}
+
+/**
+ * Worker Loader binding type.
+ * This is the API provided by Cloudflare's Worker Loader feature.
+ */
+export interface WorkerLoader {
+	/**
+	 * Get or create a dynamic worker instance.
+	 *
+	 * @param name - Unique identifier for this worker instance
+	 * @param config - Configuration function returning worker setup
+	 * @returns A stub to interact with the dynamic worker
+	 */
+	get(name: string, config: () => WorkerLoaderConfig | Promise<WorkerLoaderConfig>): WorkerStub;
+}
+
+/**
+ * Configuration for a dynamically loaded worker.
+ */
+export interface WorkerLoaderConfig {
+	/** Compatibility date for the worker */
+	compatibilityDate?: string;
+	/** Name of the main module (must be in modules) */
+	mainModule: string;
+	/** Map of module names to their code */
+	modules: Record<string, string | { js: string }>;
+	/** Environment bindings to pass to the worker */
+	env?: Record<string, unknown>;
+	/**
+	 * Outbound fetch handler.
+	 * Set to null to block all network access.
+	 * Set to a service binding to intercept/proxy requests.
+	 */
+	globalOutbound?: null | object;
+	/**
+	 * Resource limits enforced at the V8 isolate level.
+	 * Analogous to Workers for Platforms custom limits.
+	 */
+	limits?: WorkerLoaderLimits;
+}
+
+/**
+ * Resource limits for a dynamically loaded worker.
+ * Enforced by the Worker Loader runtime at the V8 isolate level.
+ */
+export interface WorkerLoaderLimits {
+	/** Maximum CPU time in milliseconds per invocation */
+	cpuMs?: number;
+	/** Maximum number of subrequests (fetch/service-binding calls) per invocation */
+	subRequests?: number;
+}
+
+/**
+ * Stub returned by Worker Loader for interacting with dynamic workers.
+ */
+export interface WorkerStub {
+	/**
+	 * Get the default entrypoint (fetch handler).
+	 */
+	fetch(request: Request): Promise<Response>;
+
+	/**
+	 * Get a named entrypoint class instance for RPC.
+	 */
+	getEntrypoint<T = unknown>(name?: string): T;
+}
+
+/**
+ * Plugin manifest - loaded from manifest.json in plugin bundle.
+ */
+export interface LoadedPluginManifest {
+	id: string;
+	version: string;
+	capabilities: string[];
+	allowedHosts: string[];
+	storage: Record<string, { indexes: Array<string | string[]> }>;
+	hooks: string[];
+	routes: string[];
+}
+
+/**
+ * Content item shape returned by bridge content operations.
+ * Matches core's ContentItem from plugins/types.ts.
+ */
+interface BridgeContentItem {
+	id: string;
+	type: string;
+	slug: string | null;
+	status: string;
+	locale: string | null;
+	data: Record<string, unknown>;
+	seo?: {
+		title: string | null;
+		description: string | null;
+		image: string | null;
+		canonical: string | null;
+		noIndex: boolean;
+	};
+	createdAt: string;
+	updatedAt: string;
+	publishedAt: string | null;
+	scheduledAt?: string | null;
+}
+
+/**
+ * Taxonomy definition shape returned by bridge taxonomy operations.
+ * Matches core's TaxonomyDefInfo from plugins/types.ts.
+ */
+interface BridgeTaxonomyDef {
+	name: string;
+	label: string;
+	labelSingular: string | null;
+	hierarchical: boolean;
+	collections: string[];
+	locale: string;
+}
+
+/**
+ * Taxonomy term shape returned by bridge taxonomy operations.
+ * Matches core's TaxonomyTermInfo from plugins/types.ts.
+ */
+interface BridgeTaxonomyTerm {
+	id: string;
+	taxonomy: string;
+	slug: string;
+	label: string;
+	parentId: string | null;
+	data: Record<string, unknown> | null;
+	locale: string;
+	translationGroup: string | null;
+}
+
+/**
+ * Media item shape returned by bridge media operations.
+ * Matches core's MediaItem from plugins/types.ts.
+ */
+interface BridgeMediaItem {
+	id: string;
+	filename: string;
+	mimeType: string;
+	size: number | null;
+	url: string;
+	createdAt: string;
+	width?: number | null;
+	height?: number | null;
+	alt?: string | null;
+	caption?: string | null;
+	focalX?: number | null;
+	focalY?: number | null;
+	blurhash?: string | null;
+	dominantColor?: string | null;
+	folderId?: string | null;
+	status?: "ready";
+}
+
+export interface StorageSerializationFailureDetails {
+	name: "StorageSerializationError";
+	code: "STORAGE_SERIALIZATION_FAILURE";
+	retryable: true;
+	sqlState?: "40001" | "40P01";
+	message: string;
+}
+
+export type StorageUpdateIfResponse =
+	| UpdateIfResult<unknown>
+	| { __emdashStorageError: StorageSerializationFailureDetails };
+
+export type RedirectBridgeResult<T> =
+	| { ok: true; value: T }
+	| { ok: false; error: { code: string; message: string } };
+
+/**
+ * Type for the PluginBridge binding passed to sandboxed workers.
+ * This is the RPC interface exposed by PluginBridge WorkerEntrypoint.
+ */
+export interface PluginBridgeBinding {
+	// KV
+	kvGet(key: string): Promise<unknown>;
+	kvSet(key: string, value: unknown): Promise<void>;
+	kvGetVersioned(key: string): Promise<VersionedValue | null>;
+	kvCompareAndSet(
+		key: string,
+		expectedRevision: string | null,
+		value: unknown,
+	): Promise<ConditionalWriteResult>;
+	kvCompareAndDelete(key: string, expectedRevision: string): Promise<ConditionalDeleteResult>;
+	kvDelete(key: string): Promise<boolean>;
+	kvList(prefix?: string): Promise<Array<{ key: string; value: unknown }>>;
+	// Settings
+	settingsGet(key: string): Promise<unknown>;
+	settingsSet(key: string, value: unknown): Promise<void>;
+	settingsGetVersioned(key: string): Promise<VersionedValue | null>;
+	settingsCompareAndSet(
+		key: string,
+		expectedRevision: string | null,
+		value: unknown,
+	): Promise<ConditionalWriteResult>;
+	settingsCompareAndDelete(key: string, expectedRevision: string): Promise<ConditionalDeleteResult>;
+	settingsDelete(key: string): Promise<boolean>;
+	settingsList(prefix?: string): Promise<Array<{ key: string; value: unknown }>>;
+	// Storage
+	storageGet(collection: string, id: string): Promise<unknown>;
+	storagePut(collection: string, id: string, data: unknown): Promise<void>;
+	storageGetVersioned(collection: string, id: string): Promise<VersionedValue | null>;
+	storageCompareAndSet(
+		collection: string,
+		id: string,
+		expectedRevision: string | null,
+		data: unknown,
+	): Promise<ConditionalWriteResult>;
+	storageCompareAndDelete(
+		collection: string,
+		id: string,
+		expectedRevision: string,
+	): Promise<ConditionalDeleteResult>;
+	storageUpdateIf(
+		collection: string,
+		id: string,
+		args: UpdateIfArgs<unknown>,
+	): Promise<StorageUpdateIfResponse>;
+	storageDelete(collection: string, id: string): Promise<boolean>;
+	storageQuery(
+		collection: string,
+		opts?: { limit?: number; cursor?: string },
+	): Promise<{ items: Array<{ id: string; data: unknown }>; hasMore: boolean; cursor?: string }>;
+	storageCount(collection: string): Promise<number>;
+	storageGetMany(collection: string, ids: string[]): Promise<Map<string, unknown>>;
+	storagePutMany(collection: string, items: Array<{ id: string; data: unknown }>): Promise<void>;
+	storageDeleteMany(collection: string, ids: string[]): Promise<number>;
+	// Content
+	contentGet(collection: string, id: string): Promise<BridgeContentItem | null>;
+	contentList(
+		collection: string,
+		opts?: ContentListOptions,
+	): Promise<{ items: BridgeContentItem[]; cursor?: string; hasMore: boolean }>;
+	contentCreate(
+		collection: string,
+		data: Record<string, unknown>,
+		options?: ContentCreateOptions,
+		originHook?: string,
+	): Promise<
+		| BridgeContentItem
+		| {
+				__emdashContentCreateError: true;
+				error: {
+					code: "CONFLICT" | "NOT_FOUND" | "SAVE_REJECTED" | "VALIDATION_ERROR";
+					message: string;
+				};
+		  }
+	>;
+	contentUpdate(
+		collection: string,
+		id: string,
+		data: Record<string, unknown>,
+	): Promise<BridgeContentItem>;
+	contentDelete(collection: string, id: string): Promise<boolean>;
+	// Comments
+	commentGet(id: string): Promise<PluginComment | null>;
+	commentList(opts?: CommentListOptions): Promise<{
+		items: PluginComment[];
+		cursor?: string;
+		hasMore: boolean;
+	}>;
+	commentCount(opts?: CommentCountOptions): Promise<number>;
+	commentSetStatus(
+		id: string,
+		status: PluginCommentStatus,
+		expectedStatus: PluginCommentStatus,
+	): Promise<
+		| PluginComment
+		| {
+				__emdashCommentError: {
+					code:
+						| "COMMENT_STATUS_CONFLICT"
+						| "COMMENT_MODERATION_IN_PROGRESS"
+						| "COMMENT_STATUS_INVALID";
+					message: string;
+					currentStatus?: string;
+				};
+		  }
+	>;
+	contentTranslations(
+		collection: string,
+		id: string,
+	): Promise<{ translationGroup: string; translations: ContentTranslationSummary[] }>;
+	contentPublicUrl(collection: string, id: string): Promise<string | null>;
+	contentListRevisions(
+		collection: string,
+		id: string,
+		options?: { limit?: number },
+	): Promise<ContentRevisionInfo[]>;
+	contentGetRevision(
+		collection: string,
+		id: string,
+		revisionId: string,
+	): Promise<ContentRevisionInfo | null>;
+	schemaListCollections(): Promise<CollectionSchemaInfo[]>;
+	schemaGetCollection(slug: string): Promise<CollectionSchemaInfo | null>;
+	contentGetVersioned(collection: string, id: string): Promise<VersionedContentItem | null>;
+	contentPublish(
+		collection: string,
+		id: string,
+		revision: string,
+		invocationId?: string,
+	): Promise<VersionedContentItem>;
+	contentUnpublish(
+		collection: string,
+		id: string,
+		revision: string,
+		invocationId?: string,
+	): Promise<VersionedContentItem>;
+	contentSchedule(
+		collection: string,
+		id: string,
+		scheduledAt: string,
+		revision: string,
+		invocationId?: string,
+	): Promise<VersionedContentItem>;
+	contentUnschedule(
+		collection: string,
+		id: string,
+		revision: string,
+		invocationId?: string,
+	): Promise<VersionedContentItem>;
+	contentGetTrashedVersioned(collection: string, id: string): Promise<VersionedContentItem | null>;
+	contentRestore(
+		collection: string,
+		id: string,
+		revision: string,
+		invocationId?: string,
+	): Promise<VersionedContentItem>;
+	// Taxonomies
+	taxonomyList(opts?: { locale?: string }): Promise<BridgeTaxonomyDef[]>;
+	taxonomyTerms(taxonomy: string, opts?: { locale?: string }): Promise<BridgeTaxonomyTerm[]>;
+	taxonomyEntryTerms(
+		collection: string,
+		entryId: string,
+		opts?: { taxonomy?: string; locale?: string },
+	): Promise<BridgeTaxonomyTerm[]>;
+	// Bylines
+	bylineGet(id: string): Promise<BylineInfo | null>;
+	bylineList(opts?: BylineListOptions): Promise<PaginatedResult<BylineInfo>>;
+	bylineEntriesBylines(collection: string, entryIds: string[]): Promise<EntryBylineCredits[]>;
+	taxonomyCreateTerm(
+		taxonomy: string,
+		input: {
+			label: string;
+			slug?: string;
+			parentId?: string | null;
+			description?: string;
+			locale?: string;
+			translationOf?: string;
+		},
+	): Promise<BridgeTaxonomyTerm>;
+	taxonomyAddEntryTerms(
+		collection: string,
+		entryId: string,
+		taxonomy: string,
+		termIds: string[],
+	): Promise<BridgeTaxonomyTerm[]>;
+	taxonomyRemoveEntryTerms(
+		collection: string,
+		entryId: string,
+		taxonomy: string,
+		termIds: string[],
+	): Promise<BridgeTaxonomyTerm[]>;
+	// Redirects
+	redirectList(
+		opts?: RedirectListOptions,
+	): Promise<RedirectBridgeResult<PaginatedResult<RedirectInfo>>>;
+	redirectGet(id: string): Promise<RedirectBridgeResult<VersionedRedirect | null>>;
+	redirectCreate(input: RedirectCreateInput): Promise<RedirectBridgeResult<VersionedRedirect>>;
+	redirectUpdate(
+		id: string,
+		input: RedirectUpdateInput & { _rev: string },
+	): Promise<RedirectBridgeResult<VersionedRedirect>>;
+	redirectDelete(id: string, revision: string): Promise<RedirectBridgeResult<boolean>>;
+	// Media
+	mediaGet(id: string): Promise<BridgeMediaItem | null>;
+	mediaList(opts?: {
+		limit?: number;
+		cursor?: string;
+		mimeType?: string;
+	}): Promise<{ items: BridgeMediaItem[]; cursor?: string; hasMore: boolean }>;
+	mediaReadBytes(
+		id: string,
+		maxBytes?: number,
+	): Promise<{
+		bytes: Uint8Array;
+		filename: string;
+		mimeType: string;
+		size: number;
+		contentHash?: string;
+	}>;
+	mediaUpdateMetadata(id: string, patch: unknown): Promise<BridgeMediaItem>;
+	mediaUpload(
+		filename: string,
+		contentType: string,
+		bytes: ArrayBuffer,
+	): Promise<{ mediaId: string; storageKey: string; url: string }>;
+	mediaDelete(id: string): Promise<boolean>;
+	// Network
+	httpFetch(url: string, init?: RequestInit): Promise<PluginHttpResponseWire>;
+	// Email
+	emailSend(message: {
+		to: string;
+		cc?: string[];
+		replyTo?: string;
+		subject: string;
+		text: string;
+		html?: string;
+	}): Promise<void>;
+	// Cron
+	cronSchedule(
+		name: string,
+		opts: { schedule: string; data?: Record<string, unknown> },
+	): Promise<void>;
+	cronCancel(name: string): Promise<void>;
+	cronList(): Promise<CronTaskInfo[]>;
+	// Logging
+	log(level: "debug" | "info" | "warn" | "error", msg: string, data?: unknown): void;
+}

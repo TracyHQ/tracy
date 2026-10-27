@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "tracy-brand-facts/wordpress/v1",
+  "tag": "quickstart/ja-diner/wp7",
+  "version": "1.0.0",
+  "themeFiles": "b22dccd44a444007dcf6f02694095e5d2f85bb30b29e5611254c58a9f552d3f0",
+  "measuredAt": "2026-10-22T15:48:15.177Z",
+  "measuredBy": "tdsr brand-facts.mjs (home page, 1440 px, light scheme)",
+  "facts": {
+    "spots": [
+      {
+        "where": "header jd-logo.jd-logo--dark.wp-block-site-logo",
+        "option": "tracy_logo_dark"
+      },
+      {
+        "where": "header jd-logo.jd-logo--light.wp-block-site-logo",
+        "option": "site_logo"
+      }
+    ],
+    "logos": "pair",
+    "brandReady": true,
+    "darkLogo": true,
+    "nameFallback": true,
+    "faviconReady": true,
+    "favicons": 2,
+    "frame": {
+      "width": 128,
+      "height": 80
+    },
+    "heightHeld": false
+  }
+}

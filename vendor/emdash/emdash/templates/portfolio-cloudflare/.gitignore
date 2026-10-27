@@ -1,0 +1,29 @@
+# build output
+dist/
+
+# dependencies
+node_modules/
+
+# astro
+.astro/
+.emdash/migrations.json
+
+# local data
+data.db
+data.db-*
+uploads/
+.wrangler/
+
+# logs
+npm-debug.log*
+
+# environment variables
+.env
+.env.local
+
+# Wrangler local secrets
+.dev.vars
+.dev.vars.*
+
+# macOS
+.DS_Store

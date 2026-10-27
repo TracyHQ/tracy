@@ -1,0 +1,39 @@
+{
+  "color": {
+    "pledge-mint": {
+      "$value": "#c7ffcd",
+      "$type": "color",
+      "$description": "Pledge Mint — Page canvas, full-bleed section backgrounds, the site's only color. Washes the entire light theme"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — All text, all borders, all filled elements, icon strokes, footer background, the black showcase band. The structural dark"
+    },
+    "carbon": {
+      "$value": "#101010",
+      "$type": "color",
+      "$description": "Carbon — Input field borders and input text — functionally identical to Ink Black, kept as a token for form-state flexibility"
+    }
+  },
+  "font": {
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for everything readable. Weight 300 carries the massive 288px display headlines — the light weight at extreme size lets the letters breathe inside the locked -0.03em tracking. Weight 400 handles body copy at 13–14px and short uppercase labels. 28px serves as a mid-tier subhead. The 0.80 line-height on the display is critical: it stacks the giant letters tight enough to read as a single graphic block."
+    },
+    "good-glyphs": {
+      "$value": "good-glyphs",
+      "$type": "fontFamily",
+      "$description": "The actual product — the dingbat glyphs themselves rendered at full display scale. Only ever appears inside the black showcase band as proof that the font works at intended size. Not used for UI text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://goodglyphs.com",
+      "siteName": "Good Glyphs",
+      "extractedAt": "2026-06-03T18:37:47.037Z",
+      "variant": "compact"
+    }
+  }
+}

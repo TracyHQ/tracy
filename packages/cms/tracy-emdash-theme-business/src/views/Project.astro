@@ -1,0 +1,114 @@
+---
+import { getEmDashCollection, getEmDashEntry, getEntryTerms } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Photo from '@/components/site/Photo.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor, stampsFor } from '@/lib/stamps'
+import { childLive, liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+}
+const { chrome, locale, slug } = Astro.props
+const { site } = chrome
+const slots = Object.fromEntries(((site.slots ?? []) as any[]).map((s) => [s.key, s.text]))
+const [{ entry }, pageRes] = await Promise.all([
+  getEmDashEntry('projects', slug, { locale }),
+  getEmDashEntry('projects_page', 'projects', { locale })
+])
+// A child goes with its list page: Projects unticked, /projects/<slug> answers 404 like /projects, unless a page the customer kept still lists it (TCH #1013).
+const reachable = await childLive(Astro.request, locale, `/projects/${slug}`)
+if (!entry || entry.data.status !== 'published' || !reachable) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const pr = entry.data as Record<string, any>
+const pp = (pageRes.entry?.data ?? {}) as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'projects', entry)
+const $pp = stampFor(Astro.request, 'projects_page', pageRes.entry)
+const $site = stampFor(Astro.request, 'site', site)
+// A button into an unticked page goes on its own; its section stays (TCH #1013, `src/lib/link-gate.ts`).
+const ctaUrl = pp.cta_url || href(locale, '/contact')
+const live = await liveLinks(Astro.request, locale, [ctaUrl])
+const $ = stampsFor(Astro.request)
+const [sectorTerms, { entries: others }] = await Promise.all([
+  getEntryTerms('projects', entry.data.id, 'sector', { locale }),
+  getEmDashCollection('projects', { locale, status: 'published', orderBy: { sort: 'asc' }, limit: 5 })
+])
+const sector = sectorTerms[0]
+const next = others.filter((o: any) => o.data.id !== entry.data.id).slice(0, 4)
+const hasDetail = pr.facts?.length || pr.scope?.length || pr.gallery?.length || pr.quote
+---
+
+<Base chrome={chrome} title={pr.title} description={pr.lede || pr.summary} image={mediaUrl(pr.image)} currentPath="/projects" content={{ collection: "projects", id: entry.data.id, slug, toPath: (s) => `/projects/${s}` }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={[{ label: site.home_label, url: href(locale, "/"), stamp: $site("home_label") }, { label: pp.breadcrumb ?? "", url: href(locale, "/projects"), stamp: $pp("breadcrumb") }, { label: pr.type_label || sector?.label || pr.title, stamp: pr.type_label ? $page("type_label") : sector ? {} : $page("title") }]} />
+		<section class="band-ink">
+			<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-12 py-16">
+				<div>
+					<div class="eyebrow mb-4" {...(pr.type_label ? $page("type_label") : {})}>{pr.type_label || sector?.label}</div>
+					<h1 class="h-page mb-5" {...$page("title")}>{pr.title}</h1>
+					<p class="max-w-[40em] text-[17.5px] leading-[1.65] text-on-ink-muted" {...$page(pr.lede ? "lede" : "summary")}>{pr.lede || pr.summary}</p>
+				</div>
+				<Photo image={pr.image} stamp={$page("image")} alt={pr.title} placeholder={slots.project} class="h-[clamp(260px,32vw,380px)] min-w-0 !border-0" priority />
+			</div>
+			{(pr.facts?.length ?? 0) > 0 && (
+				<div class="border-t border-on-ink-line">
+					<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))]">
+						{pr.facts.map((f: any) => <div class="border-r border-on-ink-line px-5 py-[22px]" {...$page.block("facts")}><div class="text-[12px] uppercase tracking-[.12em] text-on-ink-meta" {...$page("facts.key")}>{f.key}</div><div class="mt-1.5 text-[17px] font-semibold" {...$page("facts.value")}>{f.value}</div></div>)}
+					</div>
+				</div>
+			)}
+		</section>
+
+		{hasDetail && (
+			<section class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-14 py-[72px]">
+				<div>
+					{pr.scope_title && <h2 class="h-section mb-5" {...$page("scope_title")}>{pr.scope_title}</h2>}
+					{(pr.scope ?? []).map((s: any) => <div class="grid grid-cols-[26px_1fr] gap-3 border-b border-line-soft py-[13px] text-[16.5px] leading-[1.6] text-fg-body" {...$page.block("scope")}><span class="font-serif text-forest-text">→</span><span {...$page("scope.item")}>{s.item}</span></div>)}
+				</div>
+				<div>
+					{pr.quote && (
+						<blockquote class="mb-7 border-l-[3px] border-signal bg-paper-2 px-7 py-[26px]">
+							<p class="mb-3.5 font-serif text-[23px] leading-[1.45] text-fg" {...$page("quote")}>{pr.quote}</p>
+							<div class="text-[13.5px] text-fg-meta" {...$page("quote_by")}>{pr.quote_by}</div>
+						</blockquote>
+					)}
+					{live(ctaUrl) && <a href={ctaUrl} class="btn-primary" {...(pr.cta_label ? $page("cta_label") : $pp("cta_button"))}>{pr.cta_label || pp.cta_button}</a>}
+				</div>
+			</section>
+		)}
+
+		{(pr.gallery?.length ?? 0) > 0 && (
+			<section class="band-paper2">
+				<div class="container-site py-16">
+					<h2 class="h-section-sm mb-7" {...$page("gallery_title")}>{pr.gallery_title}</h2>
+					<div class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
+						{pr.gallery.map((g: any) => <div {...$page.block("gallery")}><Photo image={g.image} stamp={$page("gallery.image")} alt={g.caption} placeholder={slots.project} class="h-[210px]" /><div class="mt-2 text-[13px] text-fg-meta" {...$page("gallery.caption")}>{g.caption}</div></div>)}
+					</div>
+				</div>
+			</section>
+		)}
+
+		<section class="container-site py-16">
+			<h2 class="h-section-sm mb-6 border-b border-line pb-4" {...(pr.next_title ? $page("next_title") : $pp("grid_title"))}>{pr.next_title || pp.grid_title}</h2>
+			<div class="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-6">
+				{next.map((o: any) => (
+					<a href={href(locale, `/projects/${o.slug}`)} class="block text-fg hover:text-forest-text" {...$("projects", o)()}>
+						<Photo image={o.data.image} stamp={$('projects', o)("image")} alt={o.data.title} placeholder=" " class="mb-3 h-[150px]" />
+						<div class="text-[16px] font-semibold leading-[1.35] text-fg" {...$('projects', o)("title")}>{o.data.title}</div>
+						{o.data.card_tag && <div class="mt-1 text-[13px] text-fg-meta" {...$('projects', o)("card_tag")}>{o.data.card_tag}</div>}
+					</a>
+				))}
+			</div>
+		</section>
+	</main>
+</Base>

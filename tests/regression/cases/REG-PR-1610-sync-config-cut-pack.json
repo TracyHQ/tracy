@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1610-sync-config-cut-pack",
+  "kind": "feat",
+  "title": "A changed configuration.php on the live site comes in a pack cut to it, with the other changes read alone; an engine that cannot cut a pack still reads the whole tree",
+  "pr": 1610,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test --test-name-pattern=\"configuration.php\" packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs"
+  ],
+  "expect": [
+    "S1: with files_pack in info the read stays incremental and asks files.pack for configuration.php alone; without it the whole tree is packed"
+  ],
+  "selectors": {
+    "host": "live-pull.mjs pullWebroot packPaths pullFiles paths"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-22-sync-config-cut-pack.md",
+  "fence": "A changed Global Configuration never makes a sync read the whole live site when the engine can cut a pack",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=configuration.php",
+      "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs"
+    ]
+  }
+}

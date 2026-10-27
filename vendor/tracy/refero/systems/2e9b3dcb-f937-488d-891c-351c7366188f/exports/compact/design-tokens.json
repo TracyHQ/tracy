@@ -1,0 +1,94 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, navigation surface, inputs, light cards, and high-contrast text on dark surfaces"
+    },
+    "ink": {
+      "$value": "#151515",
+      "$type": "color",
+      "$description": "Ink — Display text, headings, filled public buttons, dark rules, and inline control outlines"
+    },
+    "graphite": {
+      "$value": "#424242",
+      "$type": "color",
+      "$description": "Graphite — Secondary body copy and dense explanatory text"
+    },
+    "steel": {
+      "$value": "#706f6f",
+      "$type": "color",
+      "$description": "Steel — Muted metadata and low-emphasis supporting copy"
+    },
+    "rule-gray": {
+      "$value": "#dcdcdc",
+      "$type": "color",
+      "$description": "Rule Gray — Hairline dividers, grid rules, and low-emphasis structural borders"
+    },
+    "edge-gray": {
+      "$value": "#cbcac8",
+      "$type": "color",
+      "$description": "Edge Gray — Slightly stronger container and content-section borders"
+    },
+    "ice-panel": {
+      "$value": "#f0f8f9",
+      "$type": "color",
+      "$description": "Ice Panel — Contained story cards, problem/solution panels, and cool product-demonstration surfaces"
+    },
+    "forest-ledger": {
+      "$value": "#0c221d",
+      "$type": "color",
+      "$description": "Forest Ledger — Footer and full-width closing surfaces"
+    },
+    "plum-ledger": {
+      "$value": "#543b4e",
+      "$type": "color",
+      "$description": "Plum Ledger — Dark editorial/product cards and contrasting feature blocks"
+    },
+    "network-green": {
+      "$value": "#29735c",
+      "$type": "color",
+      "$description": "Network Green — Logo mark, payment-rail connector lines, and small solution markers — a restrained institutional green that makes the diagrams feel like live infrastructure"
+    },
+    "mint-subscription": {
+      "$value": "#bae0cf",
+      "$type": "color",
+      "$description": "Mint Subscription — Newsletter subscribe fill and bordered mint controls — the lone pale color action within the dark footer"
+    },
+    "ledger-brown": {
+      "$value": "#7b5953",
+      "$type": "color",
+      "$description": "Ledger Brown — Monospace problem labels and compact technical annotations"
+    }
+  },
+  "font": {
+    "mt-neue-display": {
+      "$value": "mt-neue-display",
+      "$type": "fontFamily",
+      "$description": "Hero and major section headings. The 450 weight keeps 71px headlines broad and quiet rather than bold; it makes financial infrastructure feel measured instead of promotional."
+    },
+    "mt-neue-text": {
+      "$value": "mt-neue-text",
+      "$type": "fontFamily",
+      "$description": "Product narrative headings and feature titles. Use the text cut for tighter, more practical statements below display-scale hierarchy."
+    },
+    "mt-sans": {
+      "$value": "mt-sans",
+      "$type": "fontFamily",
+      "$description": "Navigation, body copy, links, inputs, buttons, footer lists, and card UI. Use 330 for subdued footer links, 360 for body paragraphs, 500 for navigation, and 600 for controls."
+    },
+    "mt-mono": {
+      "$value": "mt-mono",
+      "$type": "fontFamily",
+      "$description": "Technical eyebrow labels and diagram annotations; the monospace treatment turns short labels into ledger metadata rather than conventional marketing eyebrows."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://moderntreasury.com",
+      "siteName": "Modern Treasury",
+      "extractedAt": "2026-09-24T17:42:35.263Z",
+      "variant": "compact"
+    }
+  }
+}

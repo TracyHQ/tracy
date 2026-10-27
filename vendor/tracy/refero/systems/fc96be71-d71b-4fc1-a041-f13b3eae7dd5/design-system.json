@@ -1,0 +1,315 @@
+{
+  "dos": [
+    "Use Inter weight 700 at 50–72px for all page-level headlines with tracking between -1.65px and -2.23px — the tight negative tracking is what makes display type feel engraved.",
+    "Use #0f68ea Signal Blue exclusively for the primary action button and active nav states; never as a background fill for cards or decorative blocks.",
+    "Apply 100px border-radius to all buttons and tags — pill geometry is a signature element, not optional rounding.",
+    "Use #ffcb00 Highlight only for novelty or status badges (≤1% of screen area); warm punctuation, not surface fill.",
+    "Stack surfaces as #ffffff (base) → #f0f2f4 (elevated) → #0f68ea (brand) to maintain a clear elevation hierarchy without relying on heavy shadows.",
+    "Maintain generous section gaps of 80px between major page sections; the spacious density is what gives the white canvas room to breathe.",
+    "Use #1d1d1f Ink for all text and icon strokes — never #000000, the slight warmth reads as printed rather than digital."
+  ],
+  "donts": [
+    "Do not use #0f68ea as a text color for body copy or headings; it is an action color, not a typographic color.",
+    "Do not apply gradients anywhere in the system — the blueprint aesthetic depends on flat, matte surfaces.",
+    "Do not add decorative shadows beyond rgba(0,0,0,0.06) 0px 8px 48px 0px; heavier shadows break the lightweight feel.",
+    "Do not use square or low-radius buttons (under 50px); the pill shape is non-negotiable.",
+    "Do not introduce additional accent hues (greens, purples, reds) — the system is bichromatic plus yellow, and adding colors dilutes the brand.",
+    "Do not use #ffffff borders on white surfaces; borders must be at least #f0f2f4 to remain visible.",
+    "Do not set display type below weight 600 or above 72px without a specific reason — the 700/72px combination is the signature lockup."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1d1d1f",
+      "name": "Ink",
+      "role": "Primary text, icon strokes, dark button fills — a slightly warm near-black chosen over pure black to feel printed rather than digital",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White",
+      "role": "Page background, card surfaces, button text on dark fills, all input fields",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0f2f4",
+      "name": "Mist",
+      "role": "Subtle surface elevation, inactive button fills, secondary card backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e6e8",
+      "name": "Fog",
+      "role": "Hairline borders, subtle dividers, section separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Carbon",
+      "role": "Navigation borders, pure-black accents where maximum contrast is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Slate",
+      "role": "Muted helper text, secondary image borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#00051a",
+      "name": "Midnight",
+      "role": "Violet action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0f68ea",
+      "name": "Signal Blue",
+      "role": "Primary CTA fill and outline, active nav accent, the single chromatic action color in the system",
+      "group": "brand"
+    },
+    {
+      "hex": "#007aff",
+      "name": "Link Blue",
+      "role": "Hyperlink color, icon stroke accent — Apple-system blue used for inline text links and interactive iconography",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffcb00",
+      "name": "Highlight",
+      "role": "Yellow action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "accent"
+    },
+    {
+      "hex": "#000a3b",
+      "name": "Deep Navy",
+      "role": "Rare dark surface for featured cards or hero blocks — a near-black with depth",
+      "group": "brand"
+    }
+  ],
+  "layout": "Max-width 1200px centered container, generous 80px section gaps. The hero is a centered text stack (badge → headline → subhead → video) on a white canvas, with the video framed in a full-width #0f68ea blue band that breaks out of the max-width constraint. Below the hero: a centered button pair (outline pills) on white space, followed by a social proof section with a centered 43px headline and a 3-row logo cloud grid. Navigation is a top-fixed bar with horizontal text links and a right-aligned dark pill CTA. The rhythm is vertical and stack-based — no sidebar, no asymmetric split layouts, just centered blocks with breathing room.",
+  "imagery": "Photography is minimal — the design relies on product UI screenshots embedded in a video demo rather than lifestyle or property photography. The video player and product interface captures do the visual storytelling. The logo cloud uses brand-colored wordmarks in muted neutral pill containers, letting each partner's identity contribute a small chromatic moment without overwhelming the page. Icons are stroke-based, minimal, and rendered in #1d1d1f — small, functional, never decorative. The overall visual language is UI-first: screens, dashboards, and plan viewers, not photography.",
+  "similar": [
+    {
+      "why": "Same white-canvas approach with a single vivid blue accent and bold display type for a map/data product",
+      "business": "Mapbox"
+    },
+    {
+      "why": "Pill-shaped buttons, clean white surface stack, and aggressive negative tracking on display type",
+      "business": "Figma"
+    },
+    {
+      "why": "Spacious layout, Inter typeface, near-black text (#1d1d1f family), and minimal shadow usage for a product UI feel",
+      "business": "Linear"
+    },
+    {
+      "why": "Near-monochrome palette with one chromatic action color and pill geometry on all interactive elements",
+      "business": "Arc browser"
+    },
+    {
+      "why": "Centered hero stacks, generous section gaps, Inter at extreme sizes with tight tracking, and flat matte surfaces",
+      "business": "Vercel"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "46.8px",
+      "cards": "28.8px",
+      "badges": "100px",
+      "inputs": "18px",
+      "buttons": "100px"
+    },
+    "elementGap": "14px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Primary page background — the white drafting paper"
+    },
+    {
+      "hex": "#f0f2f4",
+      "name": "Surface",
+      "level": 1,
+      "purpose": "Card backgrounds, logo containers, inactive button fills — subtle elevation above canvas"
+    },
+    {
+      "hex": "#0f68ea",
+      "name": "Brand Surface",
+      "level": 2,
+      "purpose": "Video frame, hero accent panel — the only chromatic surface"
+    },
+    {
+      "hex": "#000a3b",
+      "name": "Dark Surface",
+      "level": 3,
+      "purpose": "Rare deep accent for featured cards or contrast sections"
+    },
+    {
+      "hex": "#ffcb00",
+      "name": "Accent Surface",
+      "level": 4,
+      "purpose": "Novelty badges, status indicators — warm highlight puncturing the cool palette"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.06) 0px 8px 48px 0px",
+      "element": "Primary CTA Button"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.06) 0px 8px 48px 0px",
+      "element": "Elevated Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.06) 0px 8px 48px 0px",
+      "element": "Hero Video Frame"
+    }
+  ],
+  "northStar": "Blueprint on white drafting table — an interactive property plan rendered on pristine paper, with one blue pen and one yellow highlighter for emphasis.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.98
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.6,
+      "letterSpacing": -1.07
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.55,
+      "letterSpacing": -1.17
+    },
+    {
+      "role": "subheading",
+      "size": 22,
+      "lineHeight": 1.3,
+      "letterSpacing": -1.32
+    },
+    {
+      "role": "heading-sm",
+      "size": 29,
+      "lineHeight": 1.25,
+      "letterSpacing": -1.28
+    },
+    {
+      "role": "heading",
+      "size": 43,
+      "lineHeight": 1.15,
+      "letterSpacing": -1.55
+    },
+    {
+      "role": "heading-lg",
+      "size": 50,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.65
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1,
+      "letterSpacing": -2.23
+    },
+    {
+      "role": "display-xl",
+      "size": 144,
+      "lineHeight": 0.9,
+      "letterSpacing": -3.89
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Pill Button",
+      "role": "Main call-to-action — the single filled blue button",
+      "description": "Filled with #0f68ea (Signal Blue), white text at 16px Inter weight 500–600, fully rounded at 100px radius, padding 20px 22px. Sits prominently in nav and hero. One soft shadow at rgba(0,0,0,0.06) 0px 8px 48px 0px gives it lift without heaviness."
+    },
+    {
+      "name": "Dark Pill Button",
+      "role": "Secondary navigation CTA in header",
+      "description": "Dark fill (#1d1d1f Ink), white text, 100px radius, 22px padding horizontal, 20px vertical. Used for nav-level actions like \"Free trial\" where the blue would compete with primary content CTAs."
+    },
+    {
+      "name": "Outline Pill Button",
+      "role": "Tertiary or paired action",
+      "description": "Transparent fill, 1px border in #1d1d1f or #ffffff, matching text color, 100px radius, 22px padding. Used for \"See what's new\" and \"Book a demo\" paired beneath hero video."
+    },
+    {
+      "name": "New Badge",
+      "role": "Novelty indicator on features or announcements",
+      "description": "Yellow fill (#ffcb00 Highlight), dark text (#1d1d1f) at 14px Inter weight 500, fully rounded pill (100px), padding 2px 10px. Appears as warm punctuation next to feature names like \"Redesigned Editor\"."
+    },
+    {
+      "name": "Hero Section",
+      "role": "First-screen value proposition",
+      "description": "White canvas, centered headline at 72px Inter weight 700 with -2.23px tracking, #1d1d1f color. Subhead at 18px in #1d1d1f or muted gray. Below: a 16:9 video embed with a solid blue (#0f68ea) background frame and white play button."
+    },
+    {
+      "name": "Video Embed Frame",
+      "role": "Product demonstration container",
+      "description": "Full-bleed #0f68ea blue background panel containing the video player. The blue frame makes the video the page's visual anchor and reinforces the brand color as action-driven."
+    },
+    {
+      "name": "Trust Headline",
+      "role": "Social proof section title",
+      "description": "Centered at 43px Inter weight 600, #1d1d1f, -1.55px tracking, with two lines: \"Trusted by successful developers, property owners & marketing teams alike.\""
+    },
+    {
+      "name": "Logo Cloud",
+      "role": "Client/partner logos grid",
+      "description": "Logos displayed in 3-row grids of 6–7 columns, each logo in a #f0f2f4 (Mist) pill-shaped container with 18px radius. Logos rendered in their native brand colors to add visual variety while the neutral containers keep rhythm consistent."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Site-wide header",
+      "description": "White background, 64–80px tall. Left: blue diamond logo + \"Planpoint\" wordmark in #1d1d1f. Center-left: text nav links in 16px Inter weight 500, #1d1d1f. Right: language flag icon, \"Support\", \"Login\" text links, then dark pill CTA \"Free trial\" with right-arrow icon."
+    },
+    {
+      "name": "Card Surface",
+      "role": "Content containers, logo tiles, feature blocks",
+      "description": "White (#ffffff) or Mist (#f0f2f4) background, 28.8px border radius, 24px padding. Optional 1px border in #f0f2f4 or #e5e6e8. Soft shadow at rgba(0,0,0,0.06) 0px 8px 48px 0px for elevation when needed."
+    },
+    {
+      "name": "Input Field",
+      "role": "Form text inputs (not visible in screenshots but implied by system)",
+      "description": "White fill, 1px border in #e5e6e8 (Fog), 18px radius, 16px Inter placeholder text in #333333. Focus state: border shifts to #0f68ea Signal Blue."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Universal typeface for everything — nav, body, headings, display. Inter's geometric neutrality and broad weight range let the system scale from 14px captions to 144px display numbers without switching families. Display sizes at weight 600–700 with tight negative tracking create the site's architectural authority — headlines feel engraved, not styled.",
+      "sizes": "14, 16, 18, 22, 23, 29, 32, 43, 50, 72, 144",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.50, 1.55, 1.60 for body; 1.10–1.30 for headings; 0.90–1.00 for display",
+      "substitute": "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+      "letterSpacing": "-0.07em at 14px, -0.06em at 22px, -0.044em at 29px, -0.036em at 43px, -0.031em at 72px, -0.027em at 144px — aggressive negative tracking at all sizes, compressing the geometric forms for density and modernity",
+      "fontFeatureSettings": "\"cv11\", \"ss01\""
+    },
+    {
+      "role": "Minor fallback for badge and link rendering where system speed matters over Inter's polish",
+      "sizes": "14",
+      "family": "system-ui",
+      "weight": "500",
+      "lineHeight": "1.50",
+      "substitute": "-apple-system, BlinkMacSystemFont, Segoe UI",
+      "letterSpacing": "-0.0410em"
+    }
+  ],
+  "description": "Planpoint uses a clean, white-canvas real estate blueprint aesthetic: generous whitespace, pill-shaped components, and bold confident display type that reads like a property floor plan drafted on quality paper. The interface is nearly monochromatic — near-black text (#1d1d1f) and white surfaces carry the entire structural weight — with a single vivid blue (#0f68ea) reserved exclusively for the primary action and a warm yellow (#ffcb00) that appears only as novelty punctuation. Components stay light and soft: large pill radii, one barely-there drop shadow at 6% opacity, and no decorative gradients or skeuomorphism. Typography is the dominant design element: Inter at extreme sizes (50–72px headlines, 144px display) with tight negative tracking gives the page architectural authority, while body text sits at a comfortable 16–18px with generous line height.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- background: #ffffff\n- surface: #f0f2f4\n- text: #1d1d1f\n- border: #e5e6e8\n- accent: #0f68ea (Signal Blue)\n- badge: #ffcb00 (Highlight)\n- primary action: #0f68ea (filled action)\n\n**Example Component Prompts**\n\n1. Create a hero section: white (#ffffff) background. Centered \"New\" badge — yellow (#ffcb00) pill fill, #1d1d1f text at 14px Inter weight 500, 100px radius, 2px 10px padding. Headline at 72px Inter weight 700, #1d1d1f, letter-spacing -2.23px. Subhead at 18px Inter weight 400, #1d1d1f, line-height 1.55. Below: a full-width blue (#0f68ea) band containing a 16:9 video player with a centered white play button.\n\n2. Create a primary CTA button: #0f68ea fill, white text, 16px Inter weight 600, 100px border-radius, 20px 22px padding, soft shadow rgba(0,0,0,0.06) 0px 8px 48px 0px.\n\n3. Create a logo cloud row: 6–7 items in a horizontal grid, each logo inside a #f0f2f4 pill container with 18px border-radius and 14px padding. Logos centered, rendered at native colors.\n\n4. Create a top navigation bar: white background, 72px height. Left: blue diamond logo glyph + \"Planpoint\" wordmark in #1d1d1f. Center: 16px Inter weight 500 nav links in #1d1d1f. Right: \"Support\" and \"Login\" text links, then a dark (#1d1d1f) pill button \"Free trial\" with white text, 100px radius, 20px 22px padding, and a right-arrow icon.\n\n5. Create a trust headline section: centered 43px Inter weight 600, #1d1d1f, letter-spacing -1.55px, line-height 1.15. Two lines of text on white background with 80px vertical padding above and below."
+    }
+  ]
+}

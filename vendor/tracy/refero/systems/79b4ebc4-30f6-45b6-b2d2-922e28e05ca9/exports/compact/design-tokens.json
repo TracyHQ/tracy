@@ -1,0 +1,79 @@
+{
+  "color": {
+    "peach-paper": {
+      "$value": "#f6e0db",
+      "$type": "color",
+      "$description": "Peach Paper — Page canvas — the warm pastel ground that makes every black border and colored accent pop"
+    },
+    "charcoal-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary text, hairlines, card borders, nav outlines — the structural skeleton at 1400+ border occurrences"
+    },
+    "snow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Snow — Primary page canvas and white card surfaces. Do not promote it to the primary CTA color"
+    },
+    "ember-orange": {
+      "$value": "#ef724f",
+      "$type": "color",
+      "$description": "Ember Orange — Decorative accent and warm card surfaces — a crayon-orange that carries the most frequency of any chromatic color across the UI"
+    },
+    "magenta-pop": {
+      "$value": "#981082",
+      "$type": "color",
+      "$description": "Magenta Pop — Decorative accent, nav highlight, and vivid card fills — a saturated fuchsia used as bold punctuation on the peach canvas"
+    },
+    "sunbeam-yellow": {
+      "$value": "#e7db4c",
+      "$type": "color",
+      "$description": "Sunbeam Yellow — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    },
+    "mint-wash": {
+      "$value": "#ace2df",
+      "$type": "color",
+      "$description": "Mint Wash — Decorative accent and soft card surface — a desaturated teal that cools the warm palette without breaking its energy"
+    },
+    "powder-blue": {
+      "$value": "#84bfff",
+      "$type": "color",
+      "$description": "Powder Blue — Decorative accent and card surface — a mid-saturation sky blue appearing in the largest non-black count (60 fills), used for illustration washes"
+    },
+    "lilac-tint": {
+      "$value": "#e69dff",
+      "$type": "color",
+      "$description": "Lilac Tint — Decorative accent and card surface — a soft pastel pink-violet that lightens the magenta without competing"
+    },
+    "lime-zest": {
+      "$value": "#6ed311",
+      "$type": "color",
+      "$description": "Lime Zest — Decorative accent — high-chroma green used sparingly as playful punctuation among illustrations"
+    },
+    "cobalt-spark": {
+      "$value": "#5196ff",
+      "$type": "color",
+      "$description": "Cobalt Spark — Decorative accent — a single vivid blue dot in the illustration palette"
+    }
+  },
+  "font": {
+    "alfa-slab-one": {
+      "$value": "Alfa Slab One",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headlines — a single-weight chunky slab serif that carries the entire brand voice; the 46px size with tight 1.09 leading is the signature 'shouting headline' treatment, while 16px serves emphasized inline text"
+    },
+    "manrope": {
+      "$value": "Manrope",
+      "$type": "fontFamily",
+      "$description": "UI text, navigation, body copy, and large display alternates — geometric sans used for everything that isn't an Alfa Slab headline; weight 500 for nav labels, 700-800 for emphasized UI text, 400 for body; the 120px extreme is a secondary display tier"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://lpalo.com",
+      "siteName": "Lpalo",
+      "extractedAt": "2026-06-03T16:55:13.807Z",
+      "variant": "compact"
+    }
+  }
+}

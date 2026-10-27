@@ -1,0 +1,300 @@
+{
+  "dos": [
+    "Use Inter for all functional text. Reserve Gambetta italic for at most one word per headline, always in the most semantically loaded position.",
+    "Use 9999px border-radius (1584px token) for all buttons, tags, and pill-shaped controls. This is the site's most repeated shape — deviation breaks identity.",
+    "Use 24px border-radius for all card surfaces — feature cards, stat panels, and content containers.",
+    "Let Electric Blue (#5196fe) own the brand expression: filled CTAs, full-bleed feature sections, icon accents. Don't dilute it with secondary chromatic colors.",
+    "Use Ember Orange (#f9754e) at most once per page, and only for a single high-stakes conversion CTA. The scarcity is what makes it convert.",
+    "Use warm neutrals (Parchment #f2f1ec, Sand #e1dfd8) for surfaces that need softness. The page is a white paper, not a white screen — warm tones prevent sterility.",
+    "Track headlines tight: -0.06em at 48px, -0.10em at 64px, -0.03em at 32px. Inter at large sizes needs aggressive negative tracking to feel confident."
+  ],
+  "donts": [
+    "Don't add a second italic serif word or use Gambetta outside the hero. The signature is restraint, not decoration.",
+    "Don't use square or 4-8px border-radius on primary surfaces. The 24px card and 9999px pill are non-negotiable identity markers.",
+    "Don't apply drop shadows to feature cards on the blue section. They lift purely by color contrast — adding shadows breaks the flat, confident tone.",
+    "Don't use pure black (#000000) for text. Ink Black (#1b1d20) carries a subtle warmth that pure black flattens.",
+    "Don't introduce additional accent hues (green, purple, red) for status states. If state colors are needed, use opacity shifts of the existing palette or restrict to inline icons.",
+    "Don't use a full-width gradient background on any section. Gradients appear only on the product card visual — not as page-level treatment.",
+    "Don't center-align body paragraphs longer than two lines. Parker is left-aligned and confident; centering is reserved for hero headlines and stat numbers."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#5196fe",
+      "name": "Electric Blue",
+      "role": "Primary brand color — filled CTAs, full-bleed feature section background, icon accents, the credit card product visual's gradient. Carries 80% of brand recognition",
+      "group": "brand"
+    },
+    {
+      "hex": "#f9754e",
+      "name": "Ember Orange",
+      "role": "Orange action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "accent"
+    },
+    {
+      "hex": "#1b1d20",
+      "name": "Ink Black",
+      "role": "Primary text, dark card surfaces (the credit card mockup, the dark feature section), heavy borders. Not pure black — sits slightly warm",
+      "group": "neutral"
+    },
+    {
+      "hex": "#101828",
+      "name": "Midnight",
+      "role": "Secondary text and dark borders when Ink Black feels too heavy in tight contexts",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Primary canvas, card surfaces, button text, input fills — the bright default that lets blue and orange speak",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2f1ec",
+      "name": "Parchment",
+      "role": "Warm card surface alternative — used when a card needs to feel softer than pure white, typically for feature blocks or stat panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e1dfd8",
+      "name": "Sand",
+      "role": "Warm hairline border, parchment-adjacent dividers, subtle card outlines that need warmth without darkness",
+      "group": "neutral"
+    },
+    {
+      "hex": "#27272a",
+      "name": "Graphite",
+      "role": "Border color for dark elements, secondary dividers on dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6e6e6e",
+      "name": "Steel",
+      "role": "Muted helper text, quiet borders, icon strokes that need to recede",
+      "group": "neutral"
+    },
+    {
+      "hex": "#797876",
+      "name": "Ash",
+      "role": "Muted text and borders on warm surfaces, slightly lighter than Steel for secondary hierarchy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a3a3a3",
+      "name": "Fog",
+      "role": "Input default border — the resting state before focus activates the Electric Blue ring",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Layout is max-width 1200px centered with generous outer padding. The page rhythm is: full-bleed Electric Blue announcement bar → sticky white header with horizontal nav → two-column hero (text-left, credit card visual-right) on white → four-column stat row with vertical dividers → dark Ink Black section with centered headline → Electric Blue full-bleed feature section with 3-column card grid → additional content sections. Sections alternate between white, dark, and blue backgrounds to create vertical rhythm without relying on visual dividers. Cards are always 24px radius, buttons always pill-shaped. The grid is 12-column with 24px gutters; feature sections use 3-column card grids. Navigation is minimal top-bar only — no sidebar, no mega-menu. Density is comfortable: 64-80px between sections, 24px card padding, 8-16px element gaps.",
+  "imagery": "Imagery is dominated by the hero credit card product visual — a dark card with a blue-to-orange-to-coral gradient overlay, presented as the literal product being sold. Supporting visuals are abstract: blue gradient shapes behind feature cards, soft light-blue washes behind the product card. No photography, no lifestyle imagery, no human faces. Icon style is filled or stroked geometric marks in Electric Blue on white tile containers (12-16px radius). The visual language is product-centric and financial — the card IS the hero, the icons explain features, the abstract gradients add atmosphere without distraction.",
+  "similar": [
+    {
+      "why": "Same fintech audience, same blue-dominant color strategy, same full-bleed colored feature sections breaking up white canvas, same pill-button convention.",
+      "business": "Brex"
+    },
+    {
+      "why": "Same confident sans-serif body with tight tracking, same generous card radii, same single-accent-color approach with a warm secondary for key CTAs.",
+      "business": "Ramp"
+    },
+    {
+      "why": "Same warm-neutral surface treatment (parchment-like cards on white), same minimal iconography, same product-card-as-hero visual strategy.",
+      "business": "Mercury"
+    },
+    {
+      "why": "Same gradient-on-product-card visual signature (dark card with vivid gradient), same electric blue brand color, same dual-typeface display treatment.",
+      "business": "Pipe"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "24px",
+      "badges": "12.8px",
+      "inputs": "12.8px",
+      "buttons": "9999px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "64-80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 1,
+      "purpose": "Default page background — the white paper on which all other surfaces sit."
+    },
+    {
+      "hex": "#f2f1ec",
+      "name": "Soft Card",
+      "level": 2,
+      "purpose": "Warm alternative for stat panels and content blocks that need visual softness without a border."
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 3,
+      "purpose": "Feature cards, product cards, and content containers with 24px radius — sit on Parchment or Blue."
+    },
+    {
+      "hex": "#5196fe",
+      "name": "Brand Surface",
+      "level": 4,
+      "purpose": "Full-bleed feature section background that reverses the page to color — breaks white rhythm, re-establishes brand dominance."
+    },
+    {
+      "hex": "#1b1d20",
+      "name": "Dark Surface",
+      "level": 5,
+      "purpose": "Ink Black sections that create high-contrast rhythm breaks; the product card mockup and dark feature panels."
+    }
+  ],
+  "northStar": "Banker's ledger meets indie magazine — white paper, electric blue ink, one italic flourish that rewrites the headline.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.36
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.42,
+      "letterSpacing": -0.46
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.16,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1.13,
+      "letterSpacing": -2.88
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1.05,
+      "letterSpacing": -6.4
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Pill Button",
+      "role": "Main conversion action",
+      "description": "Electric Blue (#5196fe) fill, white text, 9999px border-radius, 16px 24px padding, Inter 500 at 16px. Used for the dominant action on a page — 'Get Started', 'Sign Up'. The pill shape (1584px radius) is the most repeated shape on the site."
+    },
+    {
+      "name": "Ember CTA Button",
+      "role": "High-stakes conversion accent",
+      "description": "Ember Orange (#f9754e) fill, white text, 9999px border-radius, 16px 24px padding. Used sparingly — at most once per page — to break the blue monotony on a critical conversion moment. The orange CTA in the hero email capture is the canonical example."
+    },
+    {
+      "name": "Ghost Pill Button",
+      "role": "Secondary navigation action",
+      "description": "Transparent fill, Ink Black (#1b1d20) 1px border, Ink Black text, 9999px border-radius, 16px 24px padding. Used for 'Sign In' in the header and other non-primary navigation actions."
+    },
+    {
+      "name": "Email Input",
+      "role": "Hero email capture and form fields",
+      "description": "White fill, Fog (#a3a3a3) 1px border, 12.8px border-radius, 16px vertical padding, Inter 400 at 16px. Focus state tightens to Electric Blue border. Always paired inline with a primary pill button."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Product capability showcase on blue background",
+      "description": "White fill, 24px border-radius, 24px padding. Contains a rounded-square Electric Blue icon at top-left, bold subheading (Inter 600, 18-20px, Ink Black), supporting body text (Inter 400, 16px, Steel). Lifts off the blue background purely by color contrast — no shadow."
+    },
+    {
+      "name": "Stat Block",
+      "role": "Quantitative proof points",
+      "description": "Large stat number in Inter 700 at 48-64px, Ink Black, with tight -0.06em tracking. Caption below in Inter 400 at 14px, Steel, with optional superscript footnote marker. Arranged in a 4-column row, separated by thin vertical dividers."
+    },
+    {
+      "name": "Announcement Banner",
+      "role": "Top-of-page funding/news strip",
+      "description": "Electric Blue (#5196fe) full-bleed bar, white text at 14px Inter 500, centered. Includes a 'Learn more' link (white, underlined) and a dismiss 'x' icon. 40-48px vertical height."
+    },
+    {
+      "name": "Credit Card Product Visual",
+      "role": "Hero showcase of the actual product",
+      "description": "Dark Ink Black card body with a multi-color gradient overlay (blue → orange → pink/coral). Realistic card proportions (~1.586:1 ratio), 20-24px border-radius, sits inside a light blue rounded container in the hero. This is the brand's most distinctive visual asset."
+    },
+    {
+      "name": "Dark Section Panel",
+      "role": "Contrast block between white sections",
+      "description": "Full-bleed Ink Black (#1b1d20) background, white text, 24px inner radius on contained content blocks. Used to create vertical rhythm breaks — the 'financial system wasn't built for internet businesses' section is the pattern."
+    },
+    {
+      "name": "Feature Icon Tile",
+      "role": "Icon-first category markers in feature cards",
+      "description": "Rounded square (12-16px radius) Electric Blue fill at low opacity or with the icon as Electric Blue stroke on white. Small (40-48px), sits above card title. Two-tone: blue icon container, darker blue or black glyph."
+    },
+    {
+      "name": "Navigation Header",
+      "role": "Sticky top navigation",
+      "description": "White background, Ink Black wordmark 'Parker' at 500 weight 20px, horizontal nav links (Home, Treasury, Cards, Bill Pay, Intelligence, Blog) in Inter 500 16px Steel. Ghost 'Sign In' pill button anchored right."
+    },
+    {
+      "name": "Tagline Badge",
+      "role": "Pre-headline context pill",
+      "description": "Ink Black (#1b1d20) fill, white text, 12.8px border-radius, 8px 12px padding, Inter 500 at 14px. Contains a small icon (e.g., business briefcase) before the text. Used above hero headlines to set context — 'Join +1000 scaling businesses'."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface for all functional UI: body, nav, buttons, labels, stats, card titles. Weight 600 for headings, 500 for sub-labels, 400 for body, 700 for stat numbers. The workhorse that does 95% of the work.",
+      "sizes": "14, 16, 18, 19, 20, 32, 48, 64",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.05–1.55",
+      "substitute": "DM Sans, IBM Plex Sans",
+      "letterSpacing": "-0.1000em, -0.0600em, -0.0300em, -0.0230em, -0.0200em, 0.0080em"
+    },
+    {
+      "role": "Italic display serif reserved for the single most important word in the hero headline — a deliberate voice break that turns a product descriptor into editorial copy. Used at most once per page.",
+      "sizes": "51, 64",
+      "family": "Gambetta",
+      "weight": "500",
+      "lineHeight": "1.05, 1.16",
+      "substitute": "Source Serif 4 Italic, Newsreader Italic",
+      "letterSpacing": "-0.04em at 51px, -0.08em at 64px"
+    },
+    {
+      "role": "system-ui — detected in extracted data but not described by AI",
+      "sizes": "14px, 16px",
+      "family": "system-ui",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.42, 1.5"
+    }
+  ],
+  "description": "Parker operates as a confident fintech command center: white parchment canvas, single electric-blue primary, and a quiet italic serif that interrupts the all-sans orthodoxy. The dual-typeface system — Inter for everything functional, Gambetta italic for a single word of emphasis — is the signature: a sans headline reads as utility, but 'Powers Your Growth' in italic serif turns the value prop into editorial copy. Components are generously rounded (24px cards, 9999px pills) giving the dense financial UI a soft, approachable feel. A full-bleed electric-blue feature section breaks the white rhythm and re-establishes the brand as the visual anchor. Color is used sparingly and functionally: blue for action and brand surfaces, orange for one conversion-critical CTA, warm parchment and sand for soft surfaces that keep the page from feeling sterile.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Text: #1b1d20\n- Background: #ffffff\n- Soft surface: #f2f1ec\n- Border: #e1dfd8\n- Accent / brand: #5196fe\n- primary action: #f9754e (filled action)\n\n**3 Example Component Prompts**\n\n1. *Hero announcement bar*: Full-bleed Electric Blue (#5196fe) strip, 44px tall, centered white text at Inter 500 14px. Include a 'Learn more here' link (white, underlined) mid-sentence and a white '×' dismiss icon at the right edge. Padding: 0 24px.\n\n2. *Feature card on blue section*: White card, 24px border-radius, 24px padding. Top: Electric Blue (#5196fe) icon container, 48×48px, 12px radius, with a white stroked icon glyph. Below: Inter 600 20px Ink Black (#1b1d20) subheading, then Inter 400 16px Steel (#6e6e6e) body text. No shadow — lift by color contrast alone.\n\n3. *Pill navigation button (ghost)*: Transparent fill, Ink Black (#1b1d20) 1px border, 9999px border-radius, 16px 24px padding. Text: Inter 500 16px Ink Black. Used for 'Sign In' style secondary nav actions in the header."
+    },
+    {
+      "title": "Type System Signature",
+      "content": "Parker's type system is a two-family composition, not a single-family hierarchy. Inter carries 95% of the work at all functional roles. Gambetta italic enters once — in the hero headline — to italicize a single word or short phrase that carries the value proposition ('Powers Your Growth'). The italic serif is not decorative; it's editorial. It signals that this is a company with a point of view, not a feature checklist. When generating new pages, default to Inter for everything; reach for Gambetta italic only for the single most important word in the single most important headline on the page."
+    }
+  ],
+  "elevationPhilosophy": "Parker avoids drop shadows as a default. Elevation is communicated through color contrast — white cards on Electric Blue, dark cards on white, Parchment blocks on white. The single shadow token (rgba(0,0,0,0.1) 0px 2px 10px 0px) is reserved for the occasional elevated card that needs physical lift, not decorative depth. The philosophy: this is a financial product, not a physical object — shadows imply weight, and weight implies friction."
+}

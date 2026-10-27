@@ -1,0 +1,21 @@
+-- Which toolset a conversation is holding, written where a QUERY can reach it.
+--
+-- 🔒 A WRONG PRESET WAS UNOBSERVABLE, AND THAT IS WHY IT LIVED FOR DAYS. `agent-preset/selected` is
+-- an event in `session.v3.jsonl.zstd` inside the dsh container, so the only way to answer "is this
+-- Joomla site being worked on with the Joomla preset?" was to copy that file out and read it.
+-- Measured 19/09 and again 20/09: a Joomla site ran a customer's whole conversation on
+-- `designer-wordpress` — the agent holding WordPress tools against a Joomla webroot — with no error,
+-- no log anyone reads, and nothing on screen. `site.platform` is in Postgres; the preset was not,
+-- so the two could never be compared.
+--
+-- Nullable on purpose: a lane running an older dsh image sends no preset header, and the door
+-- treats that as today's behaviour rather than refusing a customer over a deployment skew
+-- (`docs/references/build-only-on-change.md` — the two ship on different pipelines).
+alter table site_presence add column if not exists agent_preset text;
+
+-- The question this exists to make cheap: sites whose conversation holds the wrong CMS's tools.
+--
+--   select s.label, s.platform, p.agent_preset
+--     from site_presence p join site s on s.site_key = p.site_key
+--    where p.agent_preset is not null
+--      and p.agent_preset not like '%' || s.platform;

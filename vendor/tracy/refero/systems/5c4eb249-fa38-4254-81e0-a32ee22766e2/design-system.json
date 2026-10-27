@@ -1,0 +1,260 @@
+{
+  "dos": [
+    "Use #00df00 exclusively for purchase/buy actions — never for decoration, tags, or non-transactional UI",
+    "Set all text at -0.015em letter-spacing; the tight tracking is part of the system's visual identity, not optional",
+    "Keep card padding at 12px and element gaps at 8px or 4px — the compact density is intentional, not cramped",
+    "Use 9999px border-radius for all social actions (Follow) and 8px for transactional actions (Buy, Log In) — the radius difference signals intent",
+    "Reserve #ff00f0 for time-sensitive or live-status indicators (countdown timers, live auctions, real-time pulses)",
+    "Place all navigation icons in a persistent 56px left rail with no labels — icon-only navigation is part of the gallery-tool language",
+    "Use MonumentGrotesk weight 500 for all interactive elements and weight 410/450 for body metadata to create subtle hierarchy without weight contrast"
+  ],
+  "donts": [
+    "Don't add shadows to cards — surfaces sit flat against the canvas, elevation is expressed by background contrast only",
+    "Don't introduce additional accent colors beyond #00df00 and #ff00f0 — the two-color neon system is deliberately limited",
+    "Don't use weights above 600 — the type system is calibrated for label density, not editorial display",
+    "Don't center-align body text or card titles — left-align everything except hero headlines",
+    "Don't use border-radius values other than 8px (buttons/inputs), 12px (cards), or 9999px (pills) — mixing radii breaks the system",
+    "Don't add gradients to UI chrome — the gray gradient is reserved for skeleton/loading states only",
+    "Don't use color to indicate state on form inputs — use border color shift (#cacaca → #121212) instead of fills"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#121212",
+      "name": "Void Black",
+      "role": "Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4d4d4d",
+      "name": "Graphite",
+      "role": "Secondary text, body copy, icons, nav labels, metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#878787",
+      "name": "Fog Gray",
+      "role": "Muted helper text, tertiary metadata, inactive icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cacaca",
+      "name": "Ash",
+      "role": "Placeholder text, light borders, disabled strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6e6e6",
+      "name": "Hairline",
+      "role": "Input borders, dividers, subtle separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Canvas background, card surfaces, button text on dark fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#00df00",
+      "name": "Reactor Green",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#ff00f0",
+      "name": "Voltage Pink",
+      "role": "Secondary accent for live indicators, countdown timers, hot tags, creator highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Onyx",
+      "role": "Icon fills, logo mark, maximum-contrast text on light backgrounds",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Three-column desktop layout with a fixed 56px left icon rail, a fluid-width center feed (~600px content width), and a ~280px right discovery panel. The top bar is minimal: logo or search centered, auth actions right-aligned, no traditional nav links. The center feed is a single vertical column of full-width collectible cards stacking at 12–16px intervals. No hero section, no banner, no carousel — the feed IS the homepage. Navigation is icon-only and persistent. On mobile, the left rail and right panel collapse; the feed becomes the sole column. The overall density is gallery-tight: every pixel earns its place, breathing room is minimal, and visual hierarchy comes from image size and accent color rather than whitespace.",
+  "imagery": "The visual language is image-first: the product IS imagery. Collectible media (photography, 3D renders, digital art, fashion editorials) fills square or portrait cards at full bleed with no frame or padding. Images are presented raw and uncropped, treated as gallery objects rather than marketing content. The surrounding UI recedes into near-invisibility — grayscale chrome, no decorative graphics, no lifestyle photography, no illustration. The only non-photographic visuals are UI icons (thin-line, monochrome, ~20px) and a single sphere logo at top-left. The aesthetic borrows from contemporary art platforms: the object is the content, the frame is invisible.",
+  "similar": [
+    {
+      "why": "Same ultra-minimalist NFT marketplace aesthetic: flat cards, grayscale chrome, single vivid accent for buy actions, icon-only navigation",
+      "business": "Foundation"
+    },
+    {
+      "why": "Compact label-density typography, pill-shaped action buttons, near-monochrome palette with one neon accent for the primary transaction",
+      "business": "Sound.xyz"
+    },
+    {
+      "why": "Three-column social feed layout (nav rail + center feed + right discovery), tight typographic rhythm, and the deliberate use of one bright accent color against a grayscale field",
+      "business": "Farcaster / Warpcast"
+    },
+    {
+      "why": "Gallery-first content presentation: imagery fills frames edge-to-edge, UI chrome is nearly invisible, no decorative graphics or marketing visuals compete with the content",
+      "business": "Are.na"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "12px",
+      "pills": "9999px",
+      "badges": "999px",
+      "inputs": "8px",
+      "buttons": "8px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "24px",
+    "cardPadding": "12px",
+    "pageMaxWidth": null
+  },
+  "industry": "crypto",
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.05) 0px 5px 10px 0px, rgba(0, 0, 0, 0.07) 0px 15px 25px 0px",
+      "element": "QR Code Download Widget"
+    },
+    {
+      "style": "oklch(0.880331 0.276486 138.811 / 0.75) -4px 0px 8px 0px, oklch(0.880331 0.276486 138.811 / 0.97) 4px 0px 8px 0px",
+      "element": "Featured Element Glow (rare)"
+    }
+  ],
+  "northStar": "Neon gallery on graphite glass.\\n\\n{",
+  "surfaces\"": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background, base layer"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Surface",
+      "level": 1,
+      "purpose": "Feed cards and post containers, flat against canvas"
+    },
+    {
+      "hex": "#e6e6e6",
+      "name": "Divider",
+      "level": 2,
+      "purpose": "Hairline separators between feed items and form fields"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Muted Surface",
+      "level": 3,
+      "purpose": "Disabled states, placeholder fills (inferred)"
+    }
+  ],
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "body-sm",
+      "size": 13,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "body",
+      "size": 15,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading-sm",
+      "size": 17,
+      "lineHeight": 1.25
+    }
+  ],
+  "components": [
+    {
+      "name": "Buy Button (Primary Action)",
+      "role": "Purchase CTA on every collectible card",
+      "description": "Background #00df00, text #121212 at 15px MonumentGrotesk weight 500, padding 10px 16px, border-radius 8px. No shadow. The radioactive green is the only fill color in the system that isn't grayscale; it makes the transaction unmistakable against the monochrome feed. Letter-spacing -0.015em."
+    },
+    {
+      "name": "Sign Up Button (Dark Fill)",
+      "role": "Account creation in top-right header",
+      "description": "Background #121212, text #ffffff at 13px MonumentGrotesk weight 500, padding 8px 16px, border-radius 8px. The dark inverted counterpart to the green Buy button; serves the secondary auth action."
+    },
+    {
+      "name": "Log In Button (Ghost)",
+      "role": "Returning-user entry in top-right header",
+      "description": "Transparent background, text #121212 at 13px MonumentGrotesk weight 500, padding 8px 16px, no border, border-radius 8px. Sits to the left of the Sign Up button with minimal visual weight."
+    },
+    {
+      "name": "Follow Button (Pill Outline)",
+      "role": "Subscribe to a creator in the right rail",
+      "description": "Background #121212, text #ffffff at 13px MonumentGrotesk weight 500, padding 8px 16px, border-radius 9999px. Fully pill-shaped. Inverted dark fill against the white card."
+    },
+    {
+      "name": "Collectible Card (Feed Post)",
+      "role": "Primary content unit in the center feed",
+      "description": "Flat white surface, no shadow, border-radius 12px. Contains: creator header row (avatar 32px circular + name + timestamp), 1:1 or 4:5 media fill, action bar (heart, comment, share icons in #4d4d4d), title at 15px weight 500 #121212, Buy button right-aligned. Cards stack vertically with 12–16px gap; separated by #e6e6e6 hairlines."
+    },
+    {
+      "name": "Left Navigation Rail",
+      "role": "Persistent icon-based navigation column",
+      "description": "Fixed 56px-wide left column, icons only (no labels), vertically centered, 24px vertical gap between icons. Icon color #4d4d4d default, #121212 active. A circular avatar sits at the top; a hamburger menu at the bottom. Background white, no border."
+    },
+    {
+      "name": "Top Search Bar",
+      "role": "Global search/command input",
+      "description": "Centered in the top bar, ~480px wide, 8px border-radius, background #ffffff, border #e6e6e6 1px. Placeholder 'Search' in #cacaca. Left-aligned search icon in #878787. No visible focus ring — relies on border color shift."
+    },
+    {
+      "name": "Suggested Follows Panel",
+      "role": "Right-rail discovery unit",
+      "description": "Header 'Suggested follows' at 13px weight 600 #121212, three rows of avatar + username + Follow button. Avatars 40px circular. Buttons are dark pill (#121212 bg, white text, 9999px radius). No card container — sits directly on canvas with internal spacing."
+    },
+    {
+      "name": "Price/Timer Bar",
+      "role": "Live auction status on collectible cards",
+      "description": "Horizontal bar beneath media showing current bid in #121212 at 15px weight 500, countdown timer in #ff00f0 at 15px weight 500 (right-aligned). Thin #e6e6e6 top border separates from media."
+    },
+    {
+      "name": "QR Code CTA Widget",
+      "role": "App-download prompt overlay bottom-right",
+      "description": "Fixed position card, white background, 12px border-radius, 1px #e6e6e6 border. Contains a QR code, 'Get the App' header at 13px weight 600, 'Learn More' link in #4d4d4d. No shadow."
+    },
+    {
+      "name": "Comment Input Field",
+      "role": "Inline comment composer on each card",
+      "description": "Borderless or #e6e6e6 1px border, 8px border-radius, placeholder 'Add a comment...' in #cacaca at 15px. No visible label. Sits below the action bar with 8px gap."
+    },
+    {
+      "name": "Zora Logo Mark",
+      "role": "Brand identifier in bottom-left corner",
+      "description": "Wordmark 'Zora' in MonumentGrotesk weight 500 at 15px #4d4d4d. Unobtrusive, anchored to the page corner. No logo symbol — pure typographic mark."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Sole typeface across all UI: nav labels, body text, button text, metadata, card titles. The custom geometric grotesque's compressed forms and uniform 410–500 weights create a label-density voice rather than a reading voice; it treats copy as UI chrome, not as prose. No display-weight contrast is used — hierarchy is achieved through size and color, not weight amplitude.",
+      "sizes": "11px, 13px, 15px, 16px, 17px",
+      "family": "MonumentGrotesk",
+      "weight": "410, 450, 500, 600",
+      "lineHeight": "1.09–1.41",
+      "substitute": "Inter, Geist, or Space Grotesk at 400/500/600",
+      "letterSpacing": "-0.015em (consistent across all sizes — tight tracking reinforces the compact, utility-driven rhythm)",
+      "fontFeatureSettings": "\\\"ss01\\\" on, \\\"cv11\\\" on (if available in substitute)"
+    }
+  ],
+  "description": "Zora operates as a stark digital gallery: a near-monochrome canvas where only neon-grade color earns screen space. The interface is ruthlessly compact — 11–17px type, 4–8px gaps, pill-shaped controls — letting the artwork carry visual weight while the chrome recedes. MonumentGrotesk's geometric neutrality, set tight at -0.015em, reads more like UI labels than prose, reinforcing a tool-like, transactional posture. Color appears as deliberate shock: one radioactive green for purchase actions, one hot pink for secondary emphasis, and otherwise pure grayscale. Elevation is suppressed; cards sit flat with hairline edges rather than shadow stacks.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\\n- text: #121212\\n- background: #ffffff\\n- border: #e6e6e6\\n- accent: #ff00f0 (secondary, for live/timer states)\\n- primary action: no distinct CTA color"
+    },
+    {
+      "title": "Elevation Philosophy",
+      "content": "Zora deliberately suppresses elevation. Cards sit flush against the white canvas with zero shadow or border definition — their boundaries are implied by the media content and action bar, not by visual framing. The only shadows in the system appear on the QR download widget and on a rare green-glow effect (oklch green tinted shadow) on featured elements, both at extremely low frequency. This is a gallery-influenced choice: the artwork should feel mounted on a wall, not floating in a UI. Depth is communicated through z-index stacking and the fixed left rail's implied permanence, not through drop shadows."
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "color": {
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "obsidian": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Obsidian — Dark section backgrounds, footer, dark band surfaces"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Secondary headings, dark surface text, nav text on dark"
+    },
+    "iron": {
+      "$value": "#5a5a5a",
+      "$type": "color",
+      "$description": "Iron — Muted body copy, descriptions, helper text"
+    },
+    "slate": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Slate — Secondary body text, de-emphasized paragraphs"
+    },
+    "steel": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Steel — Placeholder text, disabled states, input borders"
+    },
+    "fog": {
+      "$value": "#a0a0a0",
+      "$type": "color",
+      "$description": "Fog — Light muted text, icon strokes, subtle borders"
+    },
+    "ash": {
+      "$value": "#bfbfbf",
+      "$type": "color",
+      "$description": "Ash — Light dividers, icon strokes on light surfaces, nav borders"
+    },
+    "mist": {
+      "$value": "#dedfe1",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, card outlines, subtle dividers across all surfaces"
+    },
+    "cloud": {
+      "$value": "#edeff2",
+      "$type": "color",
+      "$description": "Cloud — Page canvas, default body background behind content bands"
+    },
+    "paper": {
+      "$value": "#f7f8fa",
+      "$type": "color",
+      "$description": "Paper — Elevated card surface, subtle inset panels, light section background"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Card surfaces, input fields, highest elevation surface, text on dark"
+    },
+    "glacier-tint": {
+      "$value": "#e2e7fc",
+      "$type": "color",
+      "$description": "Glacier Tint — Soft accent wash, highlight background behind emphasis spans, subtle selected state"
+    },
+    "badge-slate": {
+      "$value": "#6f6f6f",
+      "$type": "color",
+      "$description": "Badge Slate — Badge text and small-tag foreground"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Entire interface — body copy, navigation, buttons, badges, cards, subheadings, UI labels"
+    },
+    "fraktion": {
+      "$value": "Fraktion",
+      "$type": "fontFamily",
+      "$description": "Hero display headline only — a single, custom, weight-700 face for the primary H1"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://glassnode.com",
+      "siteName": "Glassnode",
+      "extractedAt": "2026-06-03T17:44:52.271Z",
+      "variant": "compact"
+    }
+  }
+}

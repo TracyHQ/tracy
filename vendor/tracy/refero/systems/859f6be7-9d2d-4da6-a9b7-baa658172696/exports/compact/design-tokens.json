@@ -1,0 +1,49 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#292929",
+      "$type": "color",
+      "$description": "Ink — Primary text, heading color, link color, border strokes, surface blocks — the structural dark that replaces shadow everywhere in the system"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surface, input fill, inverse text — the dominant white ground"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — SVG illustration fills and input text — appears in decorative line-art and form value color"
+    }
+  },
+  "font": {
+    "nh": {
+      "$value": "NH",
+      "$type": "fontFamily",
+      "$description": "Primary type family for body copy, hero text, headings, and interactive labels"
+    },
+    "s-condensed": {
+      "$value": "S-Condensed",
+      "$type": "fontFamily",
+      "$description": "Utility face for uppercase labels, nav, tags, captions, and condensed body"
+    },
+    "ev": {
+      "$value": "EV",
+      "$type": "fontFamily",
+      "$description": "Special display accent"
+    },
+    "s-works": {
+      "$value": "S-Works",
+      "$type": "fontFamily",
+      "$description": "Reserved display heading"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://mono.frm.fm/en",
+      "siteName": "mono",
+      "extractedAt": "2026-07-03T03:42:01.498Z",
+      "variant": "compact"
+    }
+  }
+}

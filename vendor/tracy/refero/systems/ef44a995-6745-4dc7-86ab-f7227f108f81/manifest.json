@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ef44a995-6745-4dc7-86ab-f7227f108f81",
+  "status": "complete",
+  "name": "Mobbin",
+  "url": "https://styles.refero.design/style/ef44a995-6745-4dc7-86ab-f7227f108f81",
+  "sourceWebsite": "https://mobbin.com",
+  "extractedAt": "2026-04-11T20:15:52.900Z",
+  "capturedAt": "2026-10-08T05:19:14.916887+00:00",
+  "theme": "light",
+  "industry": null,
+  "description": "Grayscale specimen board — a printer's proof sheet where typographic weight IS color.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f15a0415-868b-46bb-bcee-3d1af5731684.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/891bf244-e8b6-44d1-9327-948239b6d1b9.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/60d4a04c-22de-4298-bfc6-586f5c660b36.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c55b9a26-df0d-4b13-bde3-6ef8ed210148.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/f4c3d6e7-13c1-426f-997e-19b8f81f1ca6.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ab1baed515f0faaef598cd4e5d2ab778c44b8b3b59b153137987633bcc1a5dc2",
+      "bytes": 19644
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "af0f4252b3daa5da61083d0434ecd433430728df08c00eed521d2b88ff791e6d",
+      "bytes": 64680
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "2f24b7f00e73f4a9ac805429a398e84a5a40252028d02b8cdfdc84f2b95dea06",
+      "bytes": 33089
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0be826b6f4ccc6570778603bee6f0bc2e4501ac561ce98645c035cb3a017c74d",
+      "bytes": 8250
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "a36625dd7c1ff69ff7fc3f1487a2bdb154bd59071c9bfed733a2a226aa89b0aa",
+      "bytes": 11796
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8de023be22148d41e890a1e69a394035a995453375c58838acbbdcc49f84ecce",
+      "bytes": 2140
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e983eb8c37620d6abca57237116c886e441a8ddb88faaf0a6753685580b914e2",
+      "bytes": 390
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "229ddee302fe56e1e9c03b8bb83813796009cc803cc5f55259da0e25f2716608",
+      "bytes": 407
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "debd1da327e5220bb8795159fb4d974c34c35578fda9965f06bd655666a6b2e6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5d8c976d46c478ddcd11cd396d604c43b78b69b7fdf64ea388120f9a7510b780",
+      "bytes": 49603
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c217461924090a9784a9cd3da89de6daa40423c40f282690b2a6837a0b4d2c21",
+      "bytes": 24990
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "bae1375495f42536bbb25bdc13e3523cdc024c8207e1525e9fffbf7e0e1ed22f",
+      "bytes": 49991
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "351dd698ace0c33012cc93087e2f75574a16587d96633267d4a0ee6cd1ee577d",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "29855ad84abc940bd1fb3c735a92917bb805ce1e7b9cae91590e33d105628287",
+      "bytes": 1411
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e23d1275adfe837025f10bca737b662edbd38b0f43664ff582afa6fd78410195",
+      "bytes": 2070
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "2e24c0ca-dd46-4519-b66e-cc03701d3b8c",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "519ca09b-9a85-4eec-8630-0d7aae5ac2da",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "5b7ecaf1-de2d-4fb9-9995-9f0665e77862",
+    "653b7b25-f610-4a46-90e1-e3eed98b1f24",
+    "667c59e3-aaba-46e8-a2b3-255254328b6e",
+    "71c21f97-ba85-4439-b259-198a66f4b3d2",
+    "8512e28d-5385-4c20-a336-214568c4370c",
+    "9afa0254-423b-4354-a852-8894c33d2e6b",
+    "a80cb179-2d90-4896-b52d-4e674b421498",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b8ce0a90-40c6-4518-940c-8c97ccf9c1a0",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ef44a995-6745-4dc7-86ab-f7227f108f81",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

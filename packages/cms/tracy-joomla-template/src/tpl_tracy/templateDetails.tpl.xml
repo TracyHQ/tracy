@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Hand-written source of templateDetails.xml. scripts/build.mjs fills @@VERSION@@ from package.json
+  and @@INSPIRATION_OPTIONS@@ with one <option> per vendored design system, then writes
+  templateDetails.xml next to this file. Edit THIS file; the generated one is overwritten.
+  The build excludes *.tpl.xml from the zip so Joomla's installer only ever sees one manifest.
+-->
+<extension type="template" client="site" method="upgrade">
+  <name>tpl_tracy</name>
+  <version>@@VERSION@@</version>
+  <creationDate>2026-09</creationDate>
+  <author>Tracy</author>
+  <authorUrl>https://tracy.ai</authorUrl>
+  <copyright>(C) 2026 Tracy. Design systems (C) OpenDesign contributors, Apache-2.0.</copyright>
+  <license>GPL-2.0-or-later</license>
+  <description>TPL_TRACY_XML_DESCRIPTION</description>
+  <inheritable>1</inheritable>
+  <files>
+    <filename>index.php</filename>
+    <filename>component.php</filename>
+    <filename>resolve.php</filename>
+    <filename>motion-head.php</filename>
+    <filename>templateDetails.xml</filename>
+    <filename>joomla.asset.json</filename>
+    <filename>inspirations.json</filename>
+    <!-- Joomla installs by this list: a file in the zip but not here never lands on the site. -->
+    <filename>AGENTS.md</filename>
+    <folder>html</folder>
+    <folder>sections</folder>
+  </files>
+  <media destination="templates/site/tpl_tracy" folder="media">
+    <folder>css</folder>
+    <folder>js</folder>
+    <folder>images</folder>
+  </media>
+  <!-- Where a site asks whether a newer template exists. Joomla records this address when the
+       template is INSTALLED, so a site installed before this line was added has no update site and
+       must be updated once by hand before it can update itself. -->
+  <updateservers>
+    <server type="extension" priority="1" name="Tracy template">https://raw.githubusercontent.com/TracyHQ/claude-cowork/main/joomla/template/update.xml</server>
+  </updateservers>
+  <positions>
+    <position>nav</position>
+    <position>hero-aside</position>
+    <position>sidebar</position>
+    <position>footer</position>
+    <position>debug</position>
+  </positions>
+  <languages folder="language">
+    <language tag="en-GB">en-GB/tpl_tpl_tracy.ini</language>
+    <language tag="en-GB">en-GB/tpl_tpl_tracy.sys.ini</language>
+  </languages>
+  <config>
+    <fields name="params">
+      <fieldset name="advanced">
+        <field name="inspiration" type="list" label="TPL_TRACY_INSPIRATION" description="TPL_TRACY_INSPIRATION_DESC" default="default">
+@@INSPIRATION_OPTIONS@@
+        </field>
+        <field name="nav" type="list" label="TPL_TRACY_NAV" description="TPL_TRACY_NAV_DESC" default="auto">
+          <option value="auto">TPL_TRACY_AUTO</option>
+          <option value="top-left">top-left</option>
+          <option value="top-centered">top-centered</option>
+          <option value="brand-centered">brand-centered</option>
+          <option value="sidebar">sidebar</option>
+          <option value="overlay">overlay</option>
+        </field>
+        <field name="hero" type="list" label="TPL_TRACY_HERO" description="TPL_TRACY_HERO_DESC" default="auto">
+          <option value="auto">TPL_TRACY_AUTO</option>
+          <option value="split">split</option>
+          <option value="centered">centered</option>
+          <option value="cover">cover</option>
+          <option value="stack">stack</option>
+        </field>
+        <!-- The motion effects this site has switched on, as the one JSON string the agent writes;
+             Joomla stores declared parameters only, so the field has to exist for the value to
+             survive. It stays a text field: an admin sees raw JSON, and hand-editing that into
+             something unparseable falls back to every effect off. -->
+        <field name="motion" type="text" label="TPL_TRACY_MOTION" description="TPL_TRACY_MOTION_DESC" default="" />
+      </fieldset>
+    </fields>
+  </config>
+</extension>

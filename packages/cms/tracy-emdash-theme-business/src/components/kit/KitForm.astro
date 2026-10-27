@@ -1,0 +1,35 @@
+---
+// Field-state library: a static sample (P5-G). Nothing here submits.
+const { sample: s } = Astro.props
+const steps = (s.steps ?? []).map((label: string, i: number) => ({ label, active: i === 1 }))
+const objs = (s.objs ?? []).map((label: string, i: number) => ({ label, active: i === 0 }))
+const checks = (s.checks ?? []).map((label: string, i: number) => ({ label, active: i === 0 }))
+const st = s.states ?? []
+---
+<div class="flex flex-wrap items-start gap-12">
+	<div class="min-w-0 flex-[2_1_500px] border border-line-card bg-card p-[34px]">
+		<div class="column-label mb-4 text-fg-meta">{s.stepsT}</div>
+		<div class="mb-[30px] grid grid-cols-3 gap-2">{steps.map((x: any) => <div class:list={["border-t-[3px] pt-2.5 text-[14px]", x.active ? "border-signal font-semibold text-fg" : "tb-meta-on-card border-line text-on-ink-meta"]}>{x.label}</div>)}</div>
+		<div class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-5">
+			<div><span class="field-label">{s.lObj}</span><div class="flex flex-wrap gap-2">{objs.map((o: any) => <span class:list={["inline-block px-3.5 py-[9px] text-[13.5px]", o.active ? "bg-forest font-semibold text-[color:var(--ds-c-on-accent-band,var(--color-white))]" : "border border-line text-fg-2"]}>{o.label}</span>)}</div></div>
+			<div><span class="field-label">{s.lArea}</span><input type="text" placeholder={s.pArea} class="field-input" readonly /></div>
+			<div><span class="field-label">{s.lRegion}</span><div class="flex items-center justify-between border border-line bg-paper px-[13px] py-3 text-[15px]">{(s.regions ?? [])[0]} <span class="tb-meta-on-card text-[11px] text-on-ink-meta">▼</span></div></div>
+			<div><span class="field-label">{s.lStart}</span><input type="text" placeholder={s.pStart} class="field-input" readonly /></div>
+		</div>
+		<div class="mt-6"><span class="field-label !mb-2.5">{s.lBudget} · {s.budget}</span><div class="relative h-1 bg-line"><div class="absolute inset-y-0 left-[18%] right-[42%] bg-forest"></div><div class="absolute -top-1.5 left-[18%] h-4 w-4 bg-signal"></div><div class="absolute -top-1.5 left-[56%] h-4 w-4 bg-signal"></div></div></div>
+		<div class="mt-7"><div class="column-label mb-3 text-fg-meta">{s.extrasT}</div><div class="flex flex-col gap-[11px]">{checks.map((c: any) => <span class="flex items-center gap-[11px] text-[15px]"><span class:list={["tb-mark inline-block h-[17px] w-[17px] shrink-0", c.active ? "bg-forest" : "border border-line-faint bg-card"]}></span>{c.label}</span>)}</div></div>
+		<div class="mt-8 flex flex-wrap gap-3.5"><span class="inline-block border border-line px-6 py-3.5 text-[15px] font-semibold text-fg-2">{s.back}</span><span class="btn-primary !py-3.5 !text-[15px]">{s.next}</span></div>
+	</div>
+	<div class="flex min-w-0 flex-[1_1_280px] flex-col gap-[26px]">
+		<div>
+			<div class="column-label mb-[18px] border-b border-line pb-3">{s.statesT}</div>
+			<div class="flex flex-col gap-4">
+				{st[0] && <div><div class="mb-1.5 text-[12.5px] text-fg-meta">{st[0].l}</div><input type="text" placeholder={st[0].v} class="field-input" readonly /></div>}
+				{st[1] && <div><div class="mb-1.5 text-[12.5px] text-fg-meta">{st[1].l}</div><input type="text" placeholder={st[1].v} class="field-input !border-forest-text !bg-card !outline !outline-2 !outline-focus-ring" readonly /></div>}
+				{st[2] && <div><div class="mb-1.5 text-[12.5px] text-fg-meta">{st[2].l}</div><input type="text" placeholder={st[2].v} class="field-input is-error" readonly /><div class="mt-1.5 text-[13px] text-error">{st[2].e}</div></div>}
+				{st[3] && <div><div class="mb-1.5 text-[12.5px] text-fg-meta">{st[3].l}</div><input type="text" placeholder={st[3].v} class="field-input !bg-chip-disabled !text-disabled-fg" disabled /></div>}
+			</div>
+		</div>
+		<div class="band-ink p-6"><div class="mb-2 font-serif text-[21px] leading-[1.25]">{s.callT}</div><p class="mb-4 text-[14.5px] leading-[1.6] text-on-ink-muted">{s.callP}</p><input type="tel" placeholder={s.callPh} aria-label={s.callT} class="mb-2.5 w-full rounded-[var(--ds-input-radius,0px)] border border-on-ink-line-2 bg-on-ink-line px-3 py-[11px] font-sans text-[14.5px] text-[color:var(--ds-c-on-ink,var(--color-white))] placeholder:text-on-ink-meta" readonly /><span class="btn-primary block w-full text-center !px-[22px] !py-3 !text-[14.5px]">{s.callBtn}</span></div>
+	</div>
+</div>

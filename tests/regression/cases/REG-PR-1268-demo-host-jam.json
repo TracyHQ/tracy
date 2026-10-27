@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1268-demo-host-jam",
+  "kind": "fix",
+  "title": "Work holding the heavy webroot lock runs at normal CPU priority, a queued Initial backup says it is waiting, and a demo site runs with a small Apache pool and small MariaDB buffers",
+  "pr": 1268,
+  "area": "fleet/provision",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test packages/fleet/tracy-fleet-operation/test/webroot-heavy-lock-priority.test.mjs packages/fleet/tracy-fleet-operation/test/webroot-heavy-lock-queue.test.mjs",
+    "S2: Run: node --test packages/fleet/tracy-fleet-operation/test/demo-site-limits.test.mjs",
+    "S3: Run: node --test --test-name-pattern=TRACY_DEMO_SITE apps/tracy-host/test/provision.test.mjs",
+    "S4: Read the exit code and the fail counts of each run."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures.",
+    "No code line of webroot-git.sh, webroot-backup.sh or webroot-pack.sh (the three scripts that take the heavy lock) runs under nice.",
+    "On Linux (taskset present): a baseline of 3000 files pinned to one core beside one busy normal-priority loop finishes in under 20 s (develop: killed at 30 s).",
+    "An Initial backup queued behind a held heavy lock prints 'waiting for another site's webroot baseline', then 'taking the Initial backup (ADR 0024)' once it has the lock.",
+    "A demo site's compose file mounts apache/tracy-demo-limits.conf (StartServers 1, MaxSpareServers 2, MaxRequestWorkers 6) and gives MariaDB --innodb-buffer-pool-size=16M --innodb-log-buffer-size=4M --aria-pagecache-buffer-size=8M --key-buffer-size=8M; a customer site gets none of them, and an install that is not a demo removes a leftover marker.",
+    "tracy-host passes TRACY_DEMO_SITE=1 to provision.sh only for demo: true."
+  ],
+  "selectors": {
+    "priority": "GENTLE in scripts/webroot/webroot-git.sh and webroot-backup.sh",
+    "backup_wait": "run_heavy in scripts/webroot/webroot-backup.sh",
+    "demo_limits": "tracy_write_demo_limits / tracy_is_demo_site in scripts/provision/render-compose.sh",
+    "host_flag": "runProvisionJob in apps/tracy-host/src/provision.js"
+  },
+  "evidence": "fleet01, 12/10/2026: ja-space held the heavy lock in 'building the webroot baseline' from 16:54Z to 17:40Z+ while ten installs waited; at 18:10Z 3.9 GB RAM, 32 MB available, 939 MB swap, load 18-22 on 2 cores, 184 apache2 (~3.4 GB) and 22 mariadbd (~2.3 GB). Lab (2 cores, real ja-space j6 webroot): baseline 2-3 s alone; beside 2 busy loops 6 s at nice 0, not done after 240 s at nice 19.",
+  "fence": "The real scripts on a throwaway stack. Not exercised: fleet01 itself, image pulls, docker compose up.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1268-demo-host-jam.mjs"],
+    "needs": []
+  }
+}

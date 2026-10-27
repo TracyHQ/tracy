@@ -1,0 +1,556 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-fit",
+  "release": "quickstart/ja-fit/j6@1.0.0",
+  "roles": {
+    "page": "div.t3-wrapper",
+    "display": "h1",
+    "heading": "h2.module-title",
+    "body": "div.feature-info p",
+    "button-primary": "#Section92 a.btn.btn-primary",
+    "section": "#Section120"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 84px",
+    "displayFace": "Barlow Semi Condensed 700, tracking 0em",
+    "heading": "first section heading: 56px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(221, 34, 34)",
+    "section": "first padded full-width section, padding-top 160px"
+  },
+  "keepScopes": [
+    ".special-module",
+    ".t3-slideshow",
+    "#Section94",
+    "#Section95",
+    "#Section96",
+    ".ja-masthead",
+    ".cta-showcase-item"
+  ],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#111111",
+    "--fg": "#bdbdbd",
+    "--fg-2": "#ffffff",
+    "--accent": "#dd2222",
+    "--accent-hover": "#9b1818",
+    "--surface": "#f7f7f7",
+    "--meta": "#9e9e9e",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#222222",
+    "--muted": "#666666",
+    "--font-display": "\"Barlow Semi Condensed\", sans-serif",
+    "--font-body": "\"Chivo\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#111111"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#111111",
+      "fg": "#bdbdbd",
+      "fg-2": "#ffffff",
+      "accent": "#dd2222",
+      "accent-hover": "#9b1818",
+      "surface": "#f7f7f7",
+      "meta": "#9e9e9e",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#222222",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#222222",
+      "fg": "#bdbdbd",
+      "fg-2": "#ffffff",
+      "accent": "#dd2222",
+      "accent-on": "#ffffff",
+      "surface-warm": "#111111"
+    },
+    {
+      "accent": "#dd2222"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#ffffff",
+      "border-soft": "#e5e5e5",
+      "bg": "#080808",
+      "border": "#2d2d2d",
+      "accent-hover": "#b11b1b",
+      "accent": "#c71f1f",
+      "accent-active": "#006edb"
+    },
+    {
+      "surface": "#f5f5f5",
+      "border": "#1f1f1f",
+      "accent-hover": "#8b211e",
+      "bg": "#1d1d1d",
+      "border-soft": "#e0e2e3"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border": "#232323",
+      "bg": "#1a1a1a",
+      "accent-hover": "#a81a1a",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "surface": "#eeeeee",
+      "border": "#151515",
+      "accent-hover": "#921616",
+      "border-soft": "#e3e3e3",
+      "bg": "#141414"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border": "#262626",
+      "border-soft": "#e1e1e1"
+    },
+    {
+      "surface": "#f0f0f0",
+      "border": "#202020",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "surface": "#f9f2f4"
+    },
+    {
+      "surface": "#f7f7f7"
+    },
+    {
+      "surface": "#f8f8f8"
+    },
+    {
+      "bg": "#000000"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (62 line colours, 79 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Section120"],
+    "bodyFace": ["body"],
+    "onAccent": ["#t3-mainnav .navbar-nav > li > a", "#t3-mainnav .navbar-nav > li > span"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
+    "muted": "#t3-mainbody p, .t3-section p:not([class*=hero]):not([class*=banner]):not([class*=slide]), .t3-sl p",
+    "body": "#t3-mainbody p, .t3-section p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar-left",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 23 tried (byte 3846); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 770,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 14
+    },
+    {
+      "hex": "#f5f5f5",
+      "uses": 286,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 232,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#080808",
+      "uses": 172,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#111111",
+      "distance": 16
+    },
+    {
+      "hex": "#2d2d2d",
+      "uses": 100,
+      "kind": "line",
+      "role": "border",
+      "near": "#222222",
+      "distance": 19
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 84,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#1f1f1f",
+      "uses": 72,
+      "kind": "line",
+      "role": "border",
+      "near": "#222222",
+      "distance": 5
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 68,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#b11b1b",
+      "uses": 66,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#9b1818",
+      "distance": 22
+    },
+    {
+      "hex": "#8b211e",
+      "uses": 40,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#9b1818",
+      "distance": 19
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 40,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#232323",
+      "uses": 32,
+      "kind": "line",
+      "role": "border",
+      "near": "#222222",
+      "distance": 2
+    },
+    {
+      "hex": "#1d1d1d",
+      "uses": 32,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#111111",
+      "distance": 21
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 28,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#1a1a1a",
+      "uses": 28,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#111111",
+      "distance": 16
+    },
+    {
+      "hex": "#151515",
+      "uses": 24,
+      "kind": "line",
+      "role": "border",
+      "near": "#222222",
+      "distance": 23
+    },
+    {
+      "hex": "#262626",
+      "uses": 22,
+      "kind": "line",
+      "role": "border",
+      "near": "#222222",
+      "distance": 7
+    },
+    {
+      "hex": "#a81a1a",
+      "uses": 18,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#9b1818",
+      "distance": 13
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 18,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 12
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 14,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 14,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 0
+    },
+    {
+      "hex": "#c71f1f",
+      "uses": 12,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#dd2222",
+      "distance": 22
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#921616",
+      "uses": 8,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#9b1818",
+      "distance": 9
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 2
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 12
+    },
+    {
+      "hex": "#202020",
+      "uses": 5,
+      "kind": "line",
+      "role": "border",
+      "near": "#222222",
+      "distance": 3
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 5,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#006edb",
+      "uses": 4,
+      "kind": "fill",
+      "role": "accent-active",
+      "near": "#0066cc",
+      "distance": 17
+    },
+    {
+      "hex": "#141414",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#111111",
+      "distance": 5
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-bg-color": "#111111"
+  },
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the published release 1.0.1 (quickstart/ja-fit/j6, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-fit-j6 — 12/12, controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 80% or more of the page follows, checked by eye on the four systems' screenshots; the eyebrow's highlighter bar (.sub-heading::after) now takes the worn surface through followRules — before it, the eyebrow read 1.07:1 on the worn accent under Moxie; the probe skips an invisible pseudo-element (opacity 0, a hover fill) and a bar that does not reach the text's middle. Earlier: measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-fit/j6 1.0.0 tokenized by release-batch.mjs, T3 dev mode already off in the release, stood up from its own zip: tasks/evidence/ds-contracts-r3e-2026-10-11/templates/ja-fit-j6): 12/12, every role verdict passes, controls 0 differences, no text made less readable than the template's own under the systems tried, 79% or more of the page follows; the photo bands are kept (keepNote); checked by eye on full-page screenshots under Apple (light) and Toggl Track (dark) and the four systems' flow screenshots",
+  "paletteNote": "#000000 paints its black bands (schedule, trainers) beside the #111111 page: a page fill too",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples); block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026",
+  "keepColors": {
+    ".special-module": "rgb(189, 189, 189)",
+    ".t3-slideshow": "rgb(189, 189, 189)",
+    "#Section94": "rgb(189, 189, 189)",
+    "#Section95": "rgb(189, 189, 189)",
+    "#Section96": "rgb(189, 189, 189)"
+  },
+  "keepGround": [".t3-slideshow"],
+  "keepNote": "a dark template whose photo bands carry white text on red or black overlays drawn into the pictures: the hero slider, the class strip (#Section94), the trainers (#Section95, red with a photo), the discount band (#Section96), the call to action (#Section98) and the special module keep the template's look and their #bdbdbd text (keepColors); the hero's photo is an <img> over the page ground, so it keeps the template's #111 ground under it (keepGround). Everything else — header, menu, the three class cards, the about block, the schedule, the blog and the footer — follows",
+  "onAccentNote": "the main menu bar is the accent (#dd2222) with white links from another rule: its top links take the accent's own text",
+  "rolesNote": "discovery took a link (div.category-name a) for the primary button and put every link under the button rules (selectors a): the button roles are now the outline .btn-primary (Book now), and the page is the .t3-wrapper that paints #111 (body carries a picture)",
+  "minVersion": {
+    "quickstart/ja-fit/j6": "1.0.1"
+  },
+  "followRules": {
+    ".sub-heading::after": {
+      "background-color": "surface"
+    }
+  },
+  "followNote": "the highlighter bar under each section eyebrow (.sub-heading::after, an 8 px accent stripe under the bottom of the words) takes the worn surface, as JA Diner's: the eyebrow's worn text on the worn accent read 1.07:1 under Moxie, 1.33:1 under Toggl Track, 2.1–3.0:1 under Apple and MotherDuck (re-measure of 11/10/2026)",
+  "maxVersion": {
+    "quickstart/ja-fit/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".special-module": {
+      "ground": "#ffffff",
+      "texts": ["#222222", "#9e9e9e", "#666666"],
+      "paint": {
+        ".image-wrap::before": {
+          "background-color": "accent-fill"
+        },
+        ".category-name a": {
+          "background-color": "accent-fill"
+        },
+        ".action": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t3-slideshow": {
+      "ground": "#111111",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        ".sub-heading::after": {
+          "background-color": "accent-fill"
+        },
+        ".title h1 i": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    "#Section94": {
+      "ground": "#111111",
+      "texts": ["#ffffff"],
+      "root": false,
+      "paint": {
+        ".t3-wrapper": {
+          "background-color": "ground"
+        }
+      },
+      "important": true,
+      "vars": {
+        "--fit-duotone": "accent-fill"
+      }
+    },
+    "#Section95": {
+      "ground": "#dd2222",
+      "texts": ["#ffffff", "#9e9e9e"],
+      "picture": true,
+      "important": true
+    },
+    "#Section96": {
+      "ground": "#dd2222",
+      "texts": ["#ffffff", "#f8d3d3"],
+      "root": false,
+      "paint": {
+        ".acm-features": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".wrap.navbar.navbar-default.t3-mainnav": {
+      "ground": "#dd2222",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".dropdown-toggle", ".nav li a"]
+    },
+    ".ja-masthead": {
+      "ground": "#dd2222",
+      "texts": ["#ffffff"],
+      "kind": "brand",
+      "important": true,
+      "paint": {
+        ".ja-masthead-title span": {
+          "color": "accent"
+        }
+      }
+    },
+    ".cta-showcase-item": {
+      "ground": "#dd2222",
+      "texts": ["#ffffff"],
+      "kind": "brand",
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the inner pages’ page-title band (.ja-masthead) and their call band above the footer (.cta-showcase-item, \"JOIN THIS MONTH\") are duotones: a photo multiplied over a fill, white words on it. The masthead’s fill followed the accent while its title took the page text (dark on a dark duotone under light systems), the call band’s fill is a literal #dd2222 that stayed the template red (visual review 14/10/2026). Both are bands that keep their white words and wear a ground of the system on which those words read (the accent, else its ink); the masthead’s accent word takes the accent made readable there. The home page’s class strip (#Section94 .features-img) is the same duotone over the accent: under a light accent its white labels sat on yellow (Mailchimp, Linear). Its fill is the band’s accent fill (a band variable, --fit-duotone) mixed 40% toward black (sideRules, both sides: a kept band resets the system’s roles, so the mix reads the band variable); 14/10/2026 (visual review, round 3): #Section98 was a band of its own (a picture band on the template red) around the call band .cta-showcase-item, the same 1440×176 box on every page: its rules, keyed by an id, outweighed the call band’s, so the button was judged on the template red (15% lighter) instead of the ground it sits on and came out a black fill on the near-black duotone under Moxie (label readable, shape lost). #Section98 is no longer a band; the call band alone wears the system, and its button is judged on its own worn ground",
+  "sideRules": {
+    "light": {
+      "#Section94 .features-img": {
+        "background-color": "color-mix(in srgb, var(--fit-duotone) 60%, #000) !important"
+      }
+    },
+    "dark": {
+      "#Section94 .features-img": {
+        "background-color": "color-mix(in srgb, var(--fit-duotone) 60%, #000) !important"
+      }
+    }
+  }
+}

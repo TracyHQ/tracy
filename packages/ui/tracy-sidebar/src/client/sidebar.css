@@ -1,0 +1,23 @@
+/* Tailwind source for the left column. Same recipe as tracy-settings/src/client/settings.css:
+   theme + utilities only, NO preflight — this column lives inside dsh's page. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@tracy/ui/tokens.css';
+@source './';
+@source '../../../tracy-ui/src';
+/* The Community row is a PopoverItem of the account menu. */
+@source '../../../../core/tracy-core/src/site-tabs/Popover.tsx';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS. Every Tracy sheet
+   shares one page and the same class names, so one sheet left on the OS default repaints the others'
+   elements too (measured 30/09: this sheet's dark:hidden hid My Sites' light CMS logo). */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* Mode B has no preflight: the UA still paints buttons grey with black text and form controls in
+   their own font. Scoped to this plugin's root and placed in `base`, so every utility class on a
+   `@tracy/ui` component still wins. */
+@layer base {
+  /* Settings mounts inside this column: keep its page out of the reset. */
+  .tsb-root button:not(.ts-overlay *), .tsb-root input:not(.ts-overlay *), .tsb-root select:not(.ts-overlay *) { background-color: transparent; color: inherit; font: inherit; border-width: 0; padding: 0; }
+}

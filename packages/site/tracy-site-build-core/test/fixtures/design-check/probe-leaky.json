@@ -1,0 +1,24 @@
+{
+  "href": "http://dsgn.tracy.test:8080/",
+  "seen": 44,
+  "samples": [
+    { "prop": "color", "value": "rgb(29, 29, 31)", "count": 20, "where": ["body", "p"] },
+    { "prop": "background-color", "value": "rgb(255, 255, 255)", "count": 12, "where": ["body"] },
+    {
+      "prop": "background-color",
+      "value": "rgb(221, 221, 221)",
+      "count": 6,
+      "where": [".tracy-seeded-grid>div"]
+    },
+    { "prop": "color", "value": "rgb(120, 200, 40)", "count": 1, "where": [".promo"] },
+    { "prop": "background-color", "value": "rgb(0, 140, 240)", "count": 2, "where": [".btn-alt"] },
+    {
+      "prop": "font-family",
+      "value": "\"SF Pro Text\", system-ui, sans-serif",
+      "count": 30,
+      "where": ["body"]
+    },
+    { "prop": "font-family", "value": "Arial, sans-serif", "count": 14, "where": ["#wpadminbar", ".legacy"] },
+    { "prop": "font-family", "value": "sans-serif", "count": 2, "where": [".fallback"] }
+  ]
+}

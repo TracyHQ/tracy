@@ -1,0 +1,29 @@
+{
+  "id": "REG-095",
+  "kind": "feat",
+  "title": "Ops › Needs attention lists every offered quickstart with a broken or missing piece, counts it on the rail, and explains why the standard questionnaire does not fit",
+  "pr": 896,
+  "area": "ops/attention",
+  "cms": ["jo", "wp", "em"],
+  "needs": ["postgres:TEST_DATABASE_URL", "browser:cdp-9222", "playwright", "harness:built"],
+  "flaky_model": false,
+  "steps": [
+    "From this checkout, build the /ops SPA: pnpm --filter @tracy/harness-web build.",
+    "Resolve Playwright's index.mjs under node_modules/.pnpm/playwright@*/node_modules/playwright. Use the running Chrome CDP endpoint at http://127.0.0.1:9222; do not restart or close the borrowed browser.",
+    "Run TEST_DATABASE_URL=<a Postgres the run may create a scratch schema in> PLAYWRIGHT_MODULE=<absolute index.mjs> EVIDENCE_DIR=/tmp/ops-attention-regression TEST_COMMIT=$(git rev-parse HEAD) node tasks/evidence/ops-admin-attention/verify.mjs. The script starts its own tracy-web on localhost against a scratch schema, seeds nine real develop quickstarts plus one unreadable release and one orphan demo (tasks/evidence/ops-admin-attention/fixture.json), signs in a tracy_admin owner, and drives /ops/attention.",
+    "Read checks.json in EVIDENCE_DIR and look at overview.png and ja-impact-analysis.png."
+  ],
+  "expect": [
+    "The script exits 0 and prints verdict PASS checks 37.",
+    "The rail badge [data-attention-count] equals the count GET /api/ops/attention answers, and every [data-attention-area] count equals the server's per-area count, for every CMS and for Joomla alone.",
+    "GET /api/ops/attention items carry only check, severity and params (no prose).",
+    "Opening JA Impact's standard-questions item reads GET /api/ops/attention/questionnaire?tag=quickstart/ja-impact/j6 and shows the uncovered roles and the pages question as having no effect; ja-restaurant shows the no-contract limit and tracy-base/wp7 the identity-only limit.",
+    "The Generate press reaches POST /api/ops/quickstart/questions/generate; a 503 is shown as an error, not a spinner. No pageerror and no console error."
+  ],
+  "selectors": {
+    "badge": "[data-attention-count]",
+    "area": "[data-attention-area]",
+    "item": "[data-check]"
+  },
+  "fence": "The report is computed from the deployment's own rows by the same rules the Quickstarts and Demos screens use (inspirationState, contractFor, questionsInUse); the API answers codes, the screen words them. The deployed tracy.site run is outside this case."
+}

@@ -1,0 +1,396 @@
+#!/bin/sh
+# Tracy's only reach into JoomlArt's demo server, and the whole of it.
+#
+# WHAT THIS IS. `demo.joomlart.com` is not a Tracy machine: 459 public demos on one CentOS 7 box
+# that JoomlArt runs, where every name is served by ONE nginx regex block (`~(?P<product_id>.+)
+# \.demo\.joomlart\.com`) pointing at the folder of the same name. Tracy needed a way to ask that
+# machine about a demo without holding a shell on it.
+#
+# 🔒 IT IS REACHED THROUGH A KEY THAT CANNOT DO ANYTHING ELSE. The authorized_keys line is
+#
+#   command="/usr/local/bin/tracy-demo-provision",no-port-forwarding,no-agent-forwarding,\
+#   no-X11-forwarding,no-pty ssh-ed25519 AAAA…
+#
+# so the key opens no shell, forwards nothing, and runs only this file. What the caller asked for
+# arrives in $SSH_ORIGINAL_COMMAND — as DATA, never as something to evaluate. If this key leaks,
+# the blast radius is the verbs below and nothing more. That property is the reason Tracy is
+# allowed on this machine at all; do not add a verb that takes a path, a command or a URL to run.
+#
+# ⚠ AND IT RUNS AS THE SITE USER, NOT ROOT. `site.demo.joomlart.com` (uid 1002) already owns
+# `/data/www/site.demo.joomlart.com/public_html` at 755. Running as root here would buy nothing and
+# put 459 customers' demos inside the reach of a bug in this file.
+#
+# Verbs, deliberately few:
+#   status <slug>   — is there a demo under this name, how big, when was it last touched
+#   list            — every demo folder this server serves
+#   install <slug> [banner-url]  — refuses if the name is taken
+#   replace <slug> [banner-url]  — installs OVER an existing demo, keeping the old one aside
+#
+# ⚠ TWO PACKAGE SHAPES, AND THE PACKAGE SAYS WHICH — not the caller. A Joomla quickstart is a ZIP
+# holding a webroot plus Joomla's own `installation/`; a captured site is a TAR holding
+# `webroot.tar.gz` and `database.sql.gz`. Sniffing what arrived is one fewer thing a caller can be
+# wrong about, and the two are told apart by a fact (is it a zip? does it carry the installer?)
+# rather than by a word that could disagree with the bytes behind it.
+#                   — build a demo here from a quickstart zip arriving ON STDIN, and optionally put
+#                     Tracy's banner in the template it renders. An ARGUMENT, not an environment
+#                     variable: `AcceptEnv` would mean editing their sshd for one string.
+#
+# 🔒 THE PACKAGE ARRIVES ON STDIN, AND THAT IS A SECURITY DECISION. Tracy holds the GitHub App key
+# that can read `ja-products`; this machine holds none and gains none. `install` takes a NAME and a
+# byte stream — never a URL, never a token, never a command. A verb that fetched a URL would turn
+# this key into a way to make the machine dial anywhere.
+#
+# `remove` is still absent on purpose: it is destructive, and nothing has asked for it. An absent
+# verb is refused out loud, which is better than a half-built one.
+#
+# ⚠ TWO WORDS, BECAUSE ONE OF THEM DESTROYS SOMETHING. `install` refuses a name that is taken —
+# these are 459 public demos belonging to somebody else, and "the command that rebuilt a live site
+# because a name collided" must not be a thing this file can do by accident. `replace` is the same
+# work said on purpose, and it is spelled differently so no malformed argument can turn one into
+# the other.
+#
+# 🔒 `replace` KEEPS THE OLD ONE, OUTSIDE THE DOCROOT. The webroot is MOVED to `$KEPT` — a sibling
+# of `public_html`, not a folder inside it — and the old database is left standing, so a
+# replacement that turns out wrong is a move back rather than a restore from a backup nobody took.
+#
+# ⚠ OUTSIDE MATTERS. That nginx block maps `<name>.demo.joomlart.com` to `public_html/<name>` with
+# no configuration at all, so a backup kept inside the docroot is a second copy of a customer's
+# demo answering on the public internet under a name nobody chose. Disk was measured first: 110 GB
+# free, a demo ~224 MB.
+set -eu
+
+ROOT=/data/www/site.demo.joomlart.com/public_html
+ZONE=demo.joomlart.com
+# ⚠ 8.3, NOT THE 8.1 THE WEB SERVER USES. Joomla 6's CLI refuses anything below 8.3.0 outright —
+# "your command line php needs to be version 8.3.0 or newer" — while the site itself is served by
+# the php81 pool this machine points its fastcgi at. Two PHPs, two jobs; taking the web one for
+# both is the mistake this line exists to prevent, and it cost a 77 MB upload to find.
+PHP=/data/webserver/php83/bin/php
+# Root-owned, group-readable by this user. Written once when this key was set up; the script never
+# parses another demo's `configuration.php` for credentials, which would couple every install to
+# whichever site happened to be read.
+DB_CNF=/etc/tracy/demo-db.cnf
+WORK=/tmp/tracy-demo-install
+# Beside the docroot, never in it — see the block above.
+KEPT=/data/www/site.demo.joomlart.com/_tracy-replaced
+
+# One token, one line, and nothing is evaluated: `set --` splits on IFS and that is all the parsing
+# this file does. `$SSH_ORIGINAL_COMMAND` is a string a remote party chose.
+set -- ${SSH_ORIGINAL_COMMAND:-}
+verb=${1:-}
+slug=${2:-}
+
+refuse() {
+  echo "refused: $1" >&2
+  exit 2
+}
+
+# The same shape Tracy's own `DEMO_LABEL` accepts, checked HERE TOO rather than trusted from the
+# caller: this file is the last thing standing between a remote string and a path on disk, and a
+# `..` reaching out of ROOT must be impossible even if every check on the other side is wrong.
+check_slug() {
+  case "$1" in
+    '') refuse "$verb needs a demo name" ;;
+    *[!a-z0-9-]*) refuse "a demo name is lower case, digits and dashes — got '$1'" ;;
+    -*) refuse "a demo name does not start with a dash — got '$1'" ;;
+  esac
+}
+
+# ⚠ A WORD THIS FILE DOES NOT USE IS A WORD THE CALLER BELIEVES IN. `status ja kinetic; rm -rf /`
+# splits into four tokens; nothing after the second is ever evaluated, but silently answering about
+# `ja` would tell a caller its request succeeded when the request it sent was not the one answered.
+# Counted PER VERB, because `list extra` puts the stray word where a name would go — a single
+# "no third argument" check reads right and lets that one through.
+want_args() {
+  want=$1
+  shift
+  [ "$#" -eq "$want" ] || refuse "$verb takes $((want - 1)) argument(s), and this sent $(($# - 1))"
+}
+
+case "$verb" in
+  status)
+    want_args 2 "$@"
+    check_slug "$slug"
+    dir=$ROOT/$slug
+    if [ ! -d "$dir" ]; then
+      echo "absent $slug"
+      exit 0
+    fi
+    # `du` on a 224 MB tree is a second; the screen asking this wants to know a demo is really
+    # there, not to wait. Size and mtime together answer "is this a live demo or an empty folder".
+    size=$(du -sm "$dir" 2>/dev/null | cut -f1)
+    touched=$(date -r "$dir" '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || echo unknown)
+    # Two spellings, and reading only one is how a demo reports `unknown` about a version that is
+    # written down right there. Joomla 3 keeps `const RELEASE = '3.9'`; Joomla 4 and up split it
+    # into `public const MAJOR_VERSION`/`MINOR_VERSION`. Measured 16/09 on this very server:
+    # ja-campaign is 3.9, ja-kinetic is 6.1 — one rule found the first and missed the second.
+    v=$dir/libraries/src/Version.php
+    joomla=$(sed -n "s/.*const RELEASE *= *'\([^']*\)'.*/\1/p" "$v" 2>/dev/null | head -1)
+    if [ -z "$joomla" ]; then
+      major=$(sed -n 's/.*const MAJOR_VERSION *= *\([0-9]*\).*/\1/p' "$v" 2>/dev/null | head -1)
+      minor=$(sed -n 's/.*const MINOR_VERSION *= *\([0-9]*\).*/\1/p' "$v" 2>/dev/null | head -1)
+      [ -n "$major" ] && joomla="$major${minor:+.$minor}"
+    fi
+    echo "present $slug https://$slug.$ZONE/ ${size:-?}MB $touched joomla=${joomla:-unknown}"
+    ;;
+  install | replace)
+    [ "$#" -eq 2 ] || [ "$#" -eq 3 ] || refuse "$verb takes a name and an optional banner url"
+    check_slug "$slug"
+    BANNER_URL=${3:-}
+    # https only, and no room for a space or a quote — this string is written into a PHP file that
+    # then runs on a public page. A url that cannot be checked is not written at all.
+    case "$BANNER_URL" in
+      '') : ;;
+      https://*[!a-zA-Z0-9:/?=._~-]*) refuse "the banner url has characters this will not write" ;;
+      https://*) : ;;
+      *) refuse "the banner url must be https" ;;
+    esac
+    dir=$ROOT/$slug
+    if [ "$verb" = install ]; then
+      [ ! -e "$dir" ] || refuse "$slug already exists here — install never overwrites a live demo; say replace to mean it"
+    fi
+    [ -r "$DB_CNF" ] || refuse "no database credentials on this machine ($DB_CNF)"
+
+    mkdir -p "$WORK"
+    archive=$WORK/$slug.$$.zip
+    trap 'rm -rf "$archive" "$WORK/$slug.$$.d"' EXIT INT TERM
+    echo "step receiving the package"
+    cat > "$archive"
+    bytes=$(wc -c < "$archive")
+    [ "$bytes" -gt 1048576 ] || refuse "the package is only ${bytes} bytes — that is not a quickstart"
+    echo "step received ${bytes} bytes"
+
+    # Unpacked BESIDE the docroot first, then moved into place in one step. A half-unzipped folder
+    # under ROOT is a half-site nginx would already be serving — the regex vhost needs no
+    # configuration to start answering for a name, which is exactly why this cannot land in pieces.
+    staging=$WORK/$slug.$$.d
+    rm -rf "$staging"; mkdir -p "$staging"
+    echo "step unpacking"
+    if unzip -tqq "$archive" >/dev/null 2>&1; then
+      shape=package
+      unzip -qq "$archive" -d "$staging" || refuse "the package would not unpack"
+    elif tar -tf "$archive" >/dev/null 2>&1; then
+      shape=capture
+      tar -xf "$archive" -C "$staging" 2>/dev/null || refuse "the package would not unpack"
+    else
+      refuse "the package is neither a zip nor a tar"
+    fi
+    rm -f "$archive"
+
+    top=$staging
+    if [ "$shape" = package ]; then
+      # Some packages hold the site at the top level, some inside one folder. Take whichever of the
+      # two actually carries Joomla's installer rather than guessing from the file list.
+      [ -f "$top/installation/joomla.php" ] || {
+        only=$(ls -1 "$staging" | head -2)
+        [ "$(echo "$only" | wc -l)" -eq 1 ] && [ -f "$staging/$only/installation/joomla.php" ] && top=$staging/$only
+      }
+      [ -f "$top/installation/joomla.php" ] || refuse "the package carries no installation/joomla.php"
+    else
+      [ -f "$staging/webroot.tar.gz" ] && [ -f "$staging/database.sql.gz" ] ||
+        refuse "a captured site needs webroot.tar.gz and database.sql.gz side by side"
+    fi
+
+    db=joom_tracy_$(od -An -N6 -tx1 /dev/urandom | tr -d ' \n')
+    echo "step creating the database"
+    mysql --defaults-file="$DB_CNF" -e "create database \`$db\` character set utf8mb4 collate utf8mb4_unicode_ci" ||
+      refuse "could not create the database"
+    dbuser=$(sed -n 's/^user *= *//p' "$DB_CNF" | head -1)
+    dbpass=$(sed -n 's/^password *= *//p' "$DB_CNF" | head -1)
+
+    if [ "$shape" = capture ]; then
+      # ── A captured site: a webroot as it stood, plus the database behind it ──────────────────
+      echo "step unpacking the webroot"
+      mkdir -p "$staging/site"
+      tar -xzf "$staging/webroot.tar.gz" -C "$staging/site" 2>/dev/null ||
+        refuse "the webroot would not unpack"
+      # Same two-shapes rule as above: the tar may hold the site at its root or inside one folder.
+      top=$staging/site
+      [ -f "$top/configuration.php" ] || {
+        only=$(ls -1 "$staging/site" | head -2)
+        [ "$(echo "$only" | wc -l)" -eq 1 ] && [ -f "$staging/site/$only/configuration.php" ] && top=$staging/site/$only
+      }
+      [ -f "$top/configuration.php" ] || refuse "the webroot carries no configuration.php"
+
+      echo "step loading the database"
+      # ⚠ MYSQL'S OWN WORDS. The installer branch above already learned this the expensive way: a
+      # refusal that says only "it would not load" costs a whole round trip — here a 56 MB upload —
+      # to discover nothing. MySQL says which statement it choked on, and that is the diagnosis.
+      # ⚠ THE SANDBOX LINE COMES OFF FIRST, AND IT IS A VERSION MISMATCH, NOT A BAD DUMP.
+      # MariaDB 11's `mariadb-dump` opens every file with
+      #
+      #     /*M!999999\- enable the sandbox mode */
+      #
+      # and only a client of its own generation reads that. This machine runs MariaDB **10.4**
+      # (measured 17/09: client 10.4.31, server 10.4.31-log), whose client takes the `\-` for one of
+      # its own backslash commands and stops on line 1 with `Unknown command '\-'` — before a single
+      # table is created. Dropping that one comment is the whole of the fix, and it is dropped by
+      # SHAPE rather than by line number so a dump that never carried it is untouched.
+      # ⚠ AND ONE COLLATION IS BROUGHT BACK A GENERATION, for the same version gap. Tracy captures
+      # on MariaDB 11, whose `utf8mb4_uca1400_ai_ci` does not exist on 10.4 — the load stopped at
+      # line 694 with `Unknown collation` (measured 17/09 on tracy-apple). This is NOT a semantic
+      # choice made here: the dump itself uses `utf8mb4_unicode_ci` in **30** places and the
+      # uca1400 one in exactly **one**, so the outlier is brought into line with the rest of the
+      # same file. If a future dump used it everywhere, this would be the wrong fix and the load
+      # would be better off refusing — which is why the substitution is NAMED in the output rather
+      # than done quietly.
+      if gunzip -c "$staging/database.sql.gz" | grep -q utf8mb4_uca1400; then
+        echo "step bringing utf8mb4_uca1400_ai_ci back to utf8mb4_unicode_ci — this server is MariaDB 10.4"
+      fi
+      if ! gunzip -c "$staging/database.sql.gz" |
+        sed -e '/^\/\*M!999999\\-/d' -e 's/utf8mb4_uca1400_ai_ci/utf8mb4_unicode_ci/g' |
+        mysql --defaults-file="$DB_CNF" "$db" 2> "$WORK/$slug.$$.sql.err"; then
+        echo "mysql said:" >&2
+        tail -5 "$WORK/$slug.$$.sql.err" >&2
+        rm -f "$WORK/$slug.$$.sql.err"
+        mysql --defaults-file="$DB_CNF" -e "drop database \`$db\`" 2>/dev/null
+        refuse "the database dump would not load"
+      fi
+      rm -f "$WORK/$slug.$$.sql.err"
+
+      # ⚠ THE PREFIX IS NOT TOUCHED. The dump created its tables under the prefix the capture had,
+      # and the `configuration.php` in the same tarball names that prefix — they already agree.
+      # Rewriting one of them is how a restored site answers a blank page with no error anywhere.
+      #
+      # 🔒 WHAT IS REWRITTEN IS THE ENVIRONMENT: the database this copy talks to, the two absolute
+      # paths from the machine it was captured on, and the ADDRESS. `live_site` and `force_ssl`
+      # matter more than they look — measured 17/09, a Tracy-built Joomla carries
+      # `force_ssl = 2` and its old `live_site`, so a copy left alone 301s every visitor to the
+      # address it used to have, on a certificate for a name this server does not serve.
+      echo "step pointing it at this server"
+      dbuser_esc=$(printf '%s' "$dbuser" | sed "s/[&/\\]/\\\\&/g")
+      dbpass_esc=$(printf '%s' "$dbpass" | sed "s/[&/\\]/\\\\&/g")
+      sed -i \
+        -e "s#\(public \$host *= *'\)[^']*#\1127.0.0.1#" \
+        -e "s#\(public \$user *= *'\)[^']*#\1$dbuser_esc#" \
+        -e "s#\(public \$password *= *'\)[^']*#\1$dbpass_esc#" \
+        -e "s#\(public \$db *= *'\)[^']*#\1$db#" \
+        -e "s#\(public \$log_path *= *'\)[^']*#\1$ROOT/$slug/administrator/logs#" \
+        -e "s#\(public \$tmp_path *= *'\)[^']*#\1$ROOT/$slug/tmp#" \
+        -e "s#\(public \$live_site *= *'\)[^']*#\1https://$slug.$ZONE#" \
+        -e "s#\(public \$force_ssl *= *\)[0-9]*#\10#" \
+        "$top/configuration.php" || refuse "could not point configuration.php at this server"
+      grep -q "public \$db *= *'$db'" "$top/configuration.php" ||
+        refuse "configuration.php still does not name this copy's database"
+
+      [ -f "$top/.htaccess" ] || { [ -f "$top/htaccess.txt" ] && cp "$top/htaccess.txt" "$top/.htaccess"; }
+    else
+    echo "step running Joomla's own installer"
+    # Measured on the fleet (platform/joomla.sh): the CLI loads `installation/sql/mysql/custom.sql`
+    # itself — that is JA's demo content — so nothing is loaded a second time here. `--db-prefix` is
+    # PASSED, never defaulted: the default is random per run, and a demo nobody can query later is
+    # a demo nobody can fix. `--db-pass` is passed even though the help calls it optional; under
+    # --no-interaction an absent one ends with "db-pass has been declared, but has not been given!".
+    adminpw=$(head -c 24 /dev/urandom | base64 | tr -d '+/=\n')
+    ( cd "$top" && "$PHP" installation/joomla.php install --no-interaction \
+        --site-name "$slug" \
+        --admin-user 'Tracy Agent' --admin-username tracyagent \
+        --admin-password "$adminpw" --admin-email "tracy-agent@$ZONE" \
+        --db-type mysqli --db-host 127.0.0.1 --db-user "$dbuser" --db-pass "$dbpass" \
+        --db-name "$db" --db-prefix tr_ ) > "$WORK/$slug.$$.out" 2>&1 || {
+      # ⚠ THE INSTALLER'S OWN WORDS, NOT A SUMMARY OF THEM. The first attempt at this verb sent
+      # that output to /dev/null and answered "the installer failed" — true, useless, and it cost a
+      # whole round trip with a 77 MB upload to learn nothing. Joomla's CLI says exactly what it
+      # refused; the last few lines are the entire diagnosis.
+      echo "installer said:" >&2
+      tail -12 "$WORK/$slug.$$.out" >&2
+      rm -f "$WORK/$slug.$$.out"
+      mysql --defaults-file="$DB_CNF" -e "drop database \`$db\`" 2>/dev/null
+      refuse "the installer failed"
+    }
+    rm -f "$WORK/$slug.$$.out"
+
+    [ -f "$top/configuration.php" ] || {
+      mysql --defaults-file="$DB_CNF" -e "drop database \`$db\`" 2>/dev/null
+      refuse "the installer reported success but wrote no configuration.php"; }
+
+    # The CLI removes this itself on a Stable release and KEEPS it on a development build; Joomla
+    # then redirects to a missing installer with a 500 rather than serving.
+    rm -rf "$top/installation"
+    # Joomla ships htaccess.txt and leaves the rename to a person. Without it SEF URLs never reach
+    # index.php — and every one of these demos uses them.
+    [ -f "$top/.htaccess" ] || { [ -f "$top/htaccess.txt" ] && cp "$top/htaccess.txt" "$top/.htaccess"; }
+    fi
+
+    if [ -e "$dir" ]; then
+      # Moved, never deleted. `mv` within one filesystem is atomic and instant whatever the demo
+      # weighs, so the window where the address serves nothing is the gap between these two lines.
+      kept=$KEPT/$slug.$(date +%Y%m%d-%H%M%S)
+      mkdir -p "$KEPT"
+      echo "step keeping the old $slug at $kept"
+      mv "$dir" "$kept" || refuse "could not move the old $slug aside — nothing was replaced"
+    fi
+
+    echo "step moving it into place"
+    mv "$top" "$dir" || refuse "could not move the site into the docroot"
+    trap - EXIT INT TERM
+    rm -rf "$staging"
+
+    # ⚠ WITHOUT THIS THE DEMO ANSWERS 200 AND IS BROKEN. The catch-all vhost runs every name
+    # through php81, and Joomla 6 refuses it — the page reads "Joomla: unsupported PHP version"
+    # while the status code says everything is fine. Measured 16/09 on this very install.
+    # ── The banner ────────────────────────────────────────────────────────────────────────────
+    #
+    # One line appended to the template's own `index.php`, which IS the page: Joomla includes it
+    # and its output is the document.
+    #
+    # ⚠ NOT ANCHORED ON `</body>`, AND THAT WAS MEASURED. The first attempt inserted before the
+    # last `</body>` of `index.php` — and for a T4 template there is none: T4 builds the whole
+    # document itself, so the file holds no closing tag at all (measured 16/09 on ja_kinetic; these
+    # 70 demos are a mix of T3, T4 and plain cassiopeia). Appending needs to know nothing about
+    # which framework renders, and the banner is `position: fixed`, so where it lands in the
+    # document does not change where it draws.
+    #
+    # THE TEMPLATE IS ASKED OF THE DATABASE, NEVER GUESSED FROM THE FOLDER. These sites ship two or
+    # three templates each and the home style decides which renders; writing into the wrong
+    # `index.php` puts the banner in a file nobody loads, and nothing would ever report it missing.
+    if [ -n "${BANNER_URL:-}" ]; then
+      # ⚠ THE PREFIX IS READ, NEVER ASSUMED. An installed site gets `tr_` because this file passed
+      # it; a RESTORED one keeps whatever the capture had — `qs_` on tracy-apple, measured 17/09 —
+      # and a hardcoded `tr_` there queries a table that does not exist. The failure is silent in
+      # the worst way: the query errors, `tpl` is empty, and the step reports "could not tell which
+      # template this site renders" as though the site were odd rather than the query wrong.
+      prefix=$(sed -n "s/.*\$dbprefix *= *'\([^']*\)'.*/\1/p" "$dir/configuration.php" | head -1)
+      tpl=$(mysql --defaults-file="$DB_CNF" -N -D "$db" \
+            -e "select template from ${prefix}template_styles where client_id = 0 and home = '1' limit 1" 2>/dev/null | head -1)
+      index=$dir/templates/$tpl/index.php
+      if [ -z "$tpl" ] || [ ! -f "$index" ]; then
+        echo "step could not tell which template this site renders — banner not written"
+      elif grep -q 'build-with-tracy-demo' "$index"; then
+        echo "step the banner is already in templates/$tpl"
+      else
+        cp -p "$index" "$index.before-tracy"
+        # `?>` first: a Joomla template file conventionally ends still inside PHP, and closing it
+        # is what makes the following line output rather than be read as code.
+        {
+          printf '\n?>\n'
+          printf '<!-- Tracy demo banner -->\n'
+          printf '<script async src="%s" data-template="%s" data-provider="JoomlArt" data-origin="https://cowork.tracy.ai"></script>\n' \
+            "$BANNER_URL" "$slug"
+        } >> "$index"
+        "$PHP" -l "$index" >/dev/null 2>&1 || {
+          mv "$index.before-tracy" "$index"
+          echo "step appending the banner broke templates/$tpl — put the original back, no banner"
+        }
+        grep -q 'build-with-tracy-demo' "$index" && echo "step banner written into templates/$tpl"
+      fi
+    fi
+
+    echo "step giving it a server block on php83"
+    sudo -n /usr/local/sbin/tracy-demo-vhost "$slug" || refuse "the site is installed but has no server block — it will answer with Joomla's PHP-version page"
+
+    echo "installed $slug https://$slug.$ZONE/ db=$db"
+    ;;
+  list)
+    want_args 1 "$@"
+    # Names only. The caller joins these against what it knows; this file does not know which of
+    # them Tracy cares about and must not pretend to.
+    ls -1 "$ROOT" 2>/dev/null | grep -E '^[a-z0-9][a-z0-9-]*$' || true
+    ;;
+  '')
+    refuse "this key runs one command; say status <slug>, list, install <slug> or replace <slug>"
+    ;;
+  *)
+    refuse "unknown verb '$verb' — this key knows status, list, install and replace"
+    ;;
+esac

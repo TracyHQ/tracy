@@ -1,0 +1,94 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#0f101a",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, headings, iconography, dark surface anchors — the single high-contrast ink that drives every readable element"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text on chromatic fills, inset highlight wash"
+    },
+    "cloud-gray": {
+      "$value": "#f1f3f6",
+      "$type": "color",
+      "$description": "Cloud Gray — Soft surface wash for alternating bands and section backgrounds, secondary card fills"
+    },
+    "mist-gray": {
+      "$value": "#c7c7c7",
+      "$type": "color",
+      "$description": "Mist Gray — Inset shadow color for glassy device-frame depth"
+    },
+    "pebble-gray": {
+      "$value": "#b8b8b8",
+      "$type": "color",
+      "$description": "Pebble Gray — Muted surface for neutral feature phone frames and de-emphasized panels"
+    },
+    "stone": {
+      "$value": "#777885",
+      "$type": "color",
+      "$description": "Stone — Secondary body text, helper labels, quiet UI annotations — a near-gray that recedes without vanishing"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Deepest dark fill for illustration cores, icon glyphs, and shadow bases on device renders"
+    },
+    "tangerine": {
+      "$value": "#ff8a00",
+      "$type": "color",
+      "$description": "Tangerine — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "hot-pink": {
+      "$value": "#ff54bb",
+      "$type": "color",
+      "$description": "Hot Pink — Red supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "sky-tint": {
+      "$value": "#99eeff",
+      "$type": "color",
+      "$description": "Sky Tint — Decorative accent wash, soft highlight blocks in feature sections, illustration glow companion"
+    },
+    "coral-edge": {
+      "$value": "#ff8465",
+      "$type": "color",
+      "$description": "Coral Edge — Warm accent stroke and text highlight — used sparingly as a coral border or inline emphasis; Orange-to-pink gradient for diagonal brand ribbons, feature section backdrops, and decorative dividers"
+    },
+    "cotton-sky": {
+      "$value": "#94ffe8",
+      "$type": "color",
+      "$description": "Cotton Sky — Radial mint-to-lavender gradient anchoring product showcase sections — dissolves into Cloud Gray at the edges"
+    },
+    "lavender-mist": {
+      "$value": "#a1cbfd",
+      "$type": "color",
+      "$description": "Lavender Mist — Radial blue-to-lavender gradient for hero atmosphere and soft section transitions"
+    },
+    "prism-wash": {
+      "$value": "#75e6ff",
+      "$type": "color",
+      "$description": "Prism Wash — Full multi-stop rainbow linear gradient — the signature 9-stop sweep used in feature bands and illustration environments"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "sf-pro-rounded": {
+      "$value": "SF Pro Rounded",
+      "$type": "fontFamily",
+      "$description": "Button labels and emphasized inline links — 16px is the standard action-label size, tight -0.01em tracking"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://rainbow.me",
+      "siteName": "Rainbow",
+      "extractedAt": "2026-06-03T17:54:14.046Z",
+      "variant": "compact"
+    }
+  }
+}

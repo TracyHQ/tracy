@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1240-readiness-lang2-leading-scopes",
+  "kind": "fix",
+  "title": "LANG-2 fonts pair html:lang(vi) body of a template's language-fonts.css with body of its other stylesheets",
+  "pr": 1240,
+  "area": "template-customization-question-readiness/rules",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run apps/tracy-web/test/template-customization-question-readiness-t3-stylesheets.test.mjs (JA Sensei language-fonts.css and offline.css, JA Mood stylesheets)."
+  ],
+  "expect": [
+    "S1: every test passes: html:lang(vi) body has the selector of body in offline.css, html:lang(vi) body h1 reads h1, and a scope inside a selector stays."
+  ],
+  "selectors": {
+    "tests": "apps/tracy-web/test/template-customization-question-readiness-t3-stylesheets.test.mjs"
+  },
+  "evidence": "12/10/2026: JA Donate, Mood, Nova, Sensei and Space with css/language-fonts.css failed LANG-2 because bareSelector stripped only one leading scope (measured by the Joomla agent); whole gallery before/after: no change",
+  "fence": "The font declaration reader, on stylesheets from the JA Sensei source",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "apps/tracy-web/test/template-customization-question-readiness-t3-stylesheets.test.mjs"
+    ]
+  }
+}

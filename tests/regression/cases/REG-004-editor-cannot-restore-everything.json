@@ -1,0 +1,48 @@
+{
+  "id": "REG-004",
+  "kind": "fix",
+  "title": "Editor cannot open Restore…: the one verb disabled with reason, door answers 403",
+  "pr": 747,
+  "area": "site-changes/restore-permissions",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner", "seat:editor"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup (tests/regression/README.md § Common setup): O, cookies of seats A (owner) and B (editor), api, pq, and one browser context per seat with {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}}; never close pages or contexts.",
+    "S2: Pick S where pq \"SELECT a.email, s.role FROM seat s JOIN account a ON a.id=s.account_id WHERE s.site_key='<S>' AND a.email IN ('<A>','<B>') ORDER BY 1\" returns A as owner and B as editor (scv2 stand: scv2jo.scv2.tracy.test); otherwise BLOCKED.",
+    "S3: Run api a POST /api/sites/<S>/backup '{\"title\":\"REG-004-point\",\"notes\":\"\"}'; record M = body.version.",
+    "S4: Run api b GET /api/sites/<S>/backups and api a GET /api/sites/<S>/backups; record each body.may.",
+    "S5: Set K = 'reg004-editor-' + unix seconds; run api b POST /api/sites/<S>/restore '{\"mode\":\"everything\",\"version\":<M>,\"idemKey\":\"<K>\",\"confirm\":\"restore\"}'; then pq \"select count(*) from site_operation where site_key='<S>' and idem_key='<K>'\".",
+    "S6: In B's context open Site changes for S (goto O/<S>; wait URL '/s/session-' and \"[contenteditable='true']\"; goto with tab=tracy:changes&site=<S>; wait '.tv-activity-v2' and until '.tv-activity-v2 [data-reading]' is absent); wait for \"li.tv-backup[data-backup='<M>']\" (≤60 s; if absent click '.tv-activity-v2 .tv-activity-more button' up to 10 times).",
+    "S7: Click \"li.tv-backup[data-backup='<M>'] button.tv-activity-event-main\" until its aria-expanded is 'true'; in \"li.tv-backup[data-backup='<M>'] [data-detail]\" record: restoreDisabled = [data-restore='backup'].disabled (EmDash: [data-restore='content']), restoreButtons = count of [data-restore], forbidden = textContent of each [data-forbidden].",
+    "S8: Click the detail's [data-restore] with {force:true}; wait 1500 ms; record document.querySelector(\"[role=dialog]\") === null.",
+    "S9: Click \"li.tv-backup[data-backup='<M>'] .tv-moment-menu button[aria-haspopup='menu']\"; record [...document.querySelectorAll('[role=menu] [role=menuitem]')].map(e => e.disabled); press Escape.",
+    "S10: In A's context repeat S6–S7 (no clicks on restore verbs); record restoreDisabled and the [data-forbidden] count.",
+    "S11: In A's context click the detail's [data-restore] (Everything is chosen first); wait for '[role=dialog] [data-confirm-word]'; record CONFIRM = [label text of '[role=dialog] [data-confirm-word]', document.activeElement's trimmed text, '[role=dialog] [data-confirm-everything]'.disabled]; fill it with 'Restore' and record ENABLED = !'[role=dialog] [data-confirm-everything]'.disabled; press Escape (never confirm)."
+  ],
+  "expect": [
+    "S3: HTTP 200, database.state 'full'.",
+    "S4: B's may == {\"restoreFiles\":false,\"restoreEverything\":false}; A's may == {\"restoreFiles\":true,\"restoreEverything\":true}.",
+    "S5: HTTP 403, body {\"code\":\"FORBIDDEN_WRITE\",\"toolset\":\"site\",\"role\":\"editor\"}; site_operation count == 0.",
+    "S7 (B): restoreDisabled == true; restoreButtons == 1 (one Restore…); WP/Joomla forbidden texts == ['Your role on this site can see backups but not put files back.', 'Only an owner or admin of this site can restore everything.'], EmDash one text (pre-fix: enabled, no [data-forbidden]).",
+    "S8: true — no restore dialog opened (pre-fix: the dialog opened and only refused after typing the site name and pressing).",
+    "S9: one menuitem, disabled == true.",
+    "S10 (A): restoreDisabled == false and [data-forbidden] count == 0.",
+    "S11 (A): CONFIRM deep-equals ['Type “Restore” to confirm', 'Cancel', true]; ENABLED === true (the word, not the site address, opens it)."
+  ],
+  "selectors": {
+    "list": ".tv-activity-v2",
+    "listReading": ".tv-activity-v2 [data-reading]",
+    "showMore": ".tv-activity-v2 .tv-activity-more button",
+    "backupRow": "li.tv-backup[data-backup='<M>']",
+    "rowToggle": "li.tv-backup[data-backup='<M>'] button.tv-activity-event-main",
+    "detail": "li.tv-backup[data-backup='<M>'] [data-detail]",
+    "forbiddenReason": "li.tv-backup[data-backup='<M>'] [data-detail] [data-forbidden]",
+    "rowMenuButton": "li.tv-backup[data-backup='<M>'] .tv-moment-menu button[aria-haspopup='menu']",
+    "menuItems": "[role=menu] [role=menuitem]",
+    "everythingDialogInput": "[role=dialog]",
+    "restore": "li.tv-backup[data-backup='<M>'] [data-detail] [data-restore='backup'] (EmDash: [data-restore='content'])"
+  },
+  "evidence": "tasks/evidence/site-changes-v2/qa/r1/bugs/QA-I14.md (fix b824a4162); the QA note is Studio-local (not in git), the fix commit is on develop",
+  "fence": "GET /api/sites/:key/backups returns may{restoreFiles: toolsets.code, restoreEverything: toolsets.site} from seatToolsets (apps/tracy-web/src/sites/route.js), and BackupRow.tsx disables the restore verbs with a [data-forbidden] reason; POST /restore still refuses with 403 FORBIDDEN_WRITE."
+}

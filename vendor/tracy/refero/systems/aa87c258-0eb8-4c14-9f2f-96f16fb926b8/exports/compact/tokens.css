@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-slate-ink: #1d2939;
+  --color-canvas-white: #ffffff;
+  --color-page-mist: #f9fafb;
+  --color-dust-border: #e4e7ec;
+  --color-graphite-text: #667085;
+  --color-midnight-heading: #101828;
+  --color-indigo-whisper: #1d2a53;
+  --color-amber-mark: #ffaa00;
+  --color-highlight-gradient: #ffcc34;
+  --gradient-highlight-gradient: linear-gradient(83deg, #ffcc34 0%, #ffaa00 100%);
+
+  /* Typography — Font Families */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-vela-sans: 'Vela Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-noto-sans: 'Noto Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter-gs-inter-2020-11: 'Inter (gs-inter-2020-11)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sf-pro-display: 'SF Pro Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "vermillion": {
+      "$value": "#ed2e38",
+      "$type": "color",
+      "$description": "Vermillion — Wordmark, link text, heading text, outlined-button borders — the single chromatic note in an otherwise neutral palette, used as outline and ink rather than flood fill to keep it editorial"
+    },
+    "blush-canvas": {
+      "$value": "#fcf0f3",
+      "$type": "color",
+      "$description": "Blush Canvas — Page background, input field fills — a barely-there warm pink that softens the white experience and gives the brand its sunlit, not sterile, identity"
+    },
+    "charcoal-ink": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal Ink — Body copy, paragraph text, default readable text — softer than pure black, lets the red feel like the only sharp edge on the page"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Button text and occasional thin button borders where a neutral-bordered variant is needed"
+    }
+  },
+  "font": {
+    "linotypehelveticaneueltstdlt": {
+      "$value": "LinotypeHelveticaNeueLTStdLt",
+      "$type": "fontFamily",
+      "$description": "Display headlines — the face is set at 80–110px with line-height compressed to 0.88–0.91, which crops ascenders/descenders and turns product names into poster-sized editorial typography. The light weight against the tight leading is the signature move: a whisper at billboard scale."
+    },
+    "linotypehelveticaneueltstdroman": {
+      "$value": "LinotypeHelveticaNeueLTStdRoman",
+      "$type": "fontFamily",
+      "$description": "Everything else: body, links, buttons, nav, subheadings, footer, list items. Single Roman weight, no bold variants — hierarchy is achieved by size, color (red vs charcoal), and case (uppercase for nav, sentence case for body)."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Rare system-font fallback for narrow button labels where the custom face is unavailable"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.diablaoutdoor.com/en",
+      "siteName": "Diabla",
+      "extractedAt": "2026-06-03T18:33:25.015Z",
+      "variant": "compact"
+    }
+  }
+}

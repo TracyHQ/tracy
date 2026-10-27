@@ -1,0 +1,174 @@
+/*
+  tracy-bridge.css — THE BRIDGE. Written once; every design system reuses it.
+
+  🔒 A SEPARATE FILE, AND THAT IS THE WHOLE POINT. The first attempt REPLACED
+  theme.css with this content and silently deleted the 88 rules upstream keeps
+  in that file beside its palette — the transparent header over a hero image,
+  the breakup-title letter animation, and 86 more. Symptom: the page title
+  rendered every letter twice and the header turned into a solid bar. Nothing
+  errored. A palette override belongs BESIDE the theme, never on top of it.
+
+  Upstream shipped this file as Bravada's own palette (teal/gold, © 2020–25 Cryout
+  Creations, GPL-3.0-or-later; port © 2026 vhs). Tracy replaces the VALUES and keeps
+  the SHAPE: every name below still exists, still means the same thing, and is now
+  expressed in the 56 OpenDesign token names that `styles/systems/<id>.css` defines.
+
+  Why a bridge instead of one file per system: this template speaks 37 names of its
+  own (11 shared with the blog template's defaults, 18 that are Bravada's alone —
+  --color-gold, --color-ribbon, six --tint-* bands). A design system speaks 56. The
+  translation between the two vocabularies is a property of the TEMPLATE, not of the
+  system, so it is written here once. Swapping systems then means swapping one
+  generated file — `styles/systems/<id>.css` — and nothing else.
+
+  🔒 NO color-scheme DECLARATION HERE. This file is unlayered so it beats the
+  @layer base defaults in tokens.css — which is exactly why a color-scheme line
+  would be poison: the footer switcher pins the scheme from INSIDE @layer base
+  (`:root.dark { color-scheme: dark }`), and an unlayered declaration outranks any
+  layer however specific the layered selector is. Measured 10/09: declaring it here
+  froze the site in light while the button still set class="dark" — no error, no
+  movement on screen.
+
+  🔒 EVERY VALUE IS A var(). A literal colour here is a colour that stops following
+  the design system, and nothing reports it.
+*/
+
+:root {
+	/* ─── Surfaces ─────────────────────────────────────────────────────
+	   Bravada alternates a tinted site background with white content cards.
+	   Apple's ladder is the same shape: white canvas, near-white shift, pale
+	   gray feature field — so the three map straight across. */
+	--color-bg: var(--bg);
+	--color-bg-subtle: var(--surface-warm);
+	--color-surface: var(--surface);
+
+	/* ─── Text ─────────────────────────────────────────────────────────
+	   The system's four-stop ramp lands on the template's four names. */
+	--color-text: var(--fg);
+	--color-text-secondary: var(--fg-2);
+	--color-muted: var(--meta);
+	--color-heading: var(--fg);
+	--color-menu-link: var(--fg-2);
+
+	--color-border: var(--border);
+	--color-border-subtle: var(--border-soft);
+
+	/* ─── The two accents ──────────────────────────────────────────────
+	   Bravada is a TWO-accent brand: gold for links and buttons, teal for
+	   hover and secondary marks. Most design systems are one-accent (Apple's
+	   DESIGN.md §7 says so outright: no second hue may compete with the blue).
+	   So accent2 is bound to the accent's own hover state rather than invented
+	   — the two-accent structure survives, the second hue does not. */
+	--color-brand: var(--accent);
+	--color-brand-hover: var(--accent-hover);
+	--color-brand-ring: var(--focus-ring);
+	--color-on-brand: var(--accent-on);
+
+	--color-gold: var(--accent); /* accent1 role */
+	--color-teal: var(--accent-hover); /* accent2 role */
+	--color-teal-solid: var(--accent);
+
+	/* ─── Chrome the template names on its own ─────────────────────────
+	   No design system has a "submenu" or "footer" token, so these are
+	   ROLES resolved from the ramp: the dropdown lifts onto the surface
+	   tier, and the dark footer band uses the ink end of the text ramp —
+	   which is how the systems themselves build a dark chapter. */
+	/* 🔒 AN INVERTED CHROME PANEL, NOT A SURFACE. Upstream painted the burger
+	   overlay and the dropdowns #066664 — Bravada's deep teal — and every label
+	   on them is white. Binding it to --surface made a LIGHT panel while the
+	   labels stayed white: white on #f5f5f7, unreadable, and only the hovered
+	   item showed because hover switches to the accent. Measured 10/09 from a
+	   screenshot, not from the markup — no gate sees a contrast collapse.
+	   So it takes the same shape as the footer band: dark in both modes. */
+	/* 🔒 --ink-band COMES FROM THE SYSTEM FILE, not from here. It is the role no
+	   design system names — ink that stays dark in either mode — and it cannot be
+	   derived from --fg/--bg: --fg inverts once a system gains a dark ramp, and a
+	   system WITHOUT one keeps --bg white, which turned the hero scrim into a white
+	   wash on airbnb. Each system states its own; the template only spends it. */
+	--color-submenu-bg: var(--ink-band);
+	--color-ribbon: var(--accent);
+	/* 🔒 THE FOOTER BAND IS DARK IN BOTH MODES, so it cannot simply BE --fg:
+	   the moment a system gains a dark ramp, --fg turns light and the band
+	   flips to a white slab under white text. light-dark() picks the role per
+	   mode and both halves stay tokens — in dark the band lifts onto the
+	   graphite tier instead of trying to out-black Absolute Black. */
+	--color-footer-bg: light-dark(var(--ink-band), var(--surface)); /* the band lifts onto graphite in dark, see --ink-band */
+	--color-footer-text: light-dark(var(--bg), var(--fg));
+	--color-footer-muted: var(--meta);
+
+	/* The signature highlighter strip: the accent at 40%, so it follows the
+	   system's hue instead of staying Bravada gold. The gradient formula is
+	   the template's, kept verbatim. */
+	--gold-strip: color-mix(in srgb, var(--accent) 40%, transparent);
+	--gold-scrim: linear-gradient(to bottom, var(--gold-strip) 0%, var(--gold-strip) 100%);
+
+	/* ─── Landing band tints ───────────────────────────────────────────
+	   Six bands that must stay DISTINGUISHABLE from each other and from the
+	   page, without introducing colour. Two tiers alternate, which is the
+	   binary section rhythm Apple's DESIGN.md §1 describes and most systems
+	   share. */
+	--tint-slider: var(--surface);
+	--tint-blocks1: var(--surface-warm);
+	--tint-boxes: var(--surface);
+	--tint-boxes-alt: var(--surface-warm);
+	--tint-warm: var(--surface);
+	--tint-cool: var(--surface-warm);
+
+	/* ─── Type ─────────────────────────────────────────────────────────
+	   The system names the families; src/design-system.json says which of
+	   them (if any) is a web font to fetch. Apple's are system faces, so
+	   that list is empty and nothing is downloaded. */
+	/* --font-body, --leading-tight, --radius-lg are the THREE names the two
+	   vocabularies happen to share, so the system's file already sets them and
+	   a line here would be `--x: var(--x)` — a cycle, which CSS drops silently.
+	   Left out on purpose; a generator must diff the two name sets, not guess. */
+	--font-heading: var(--font-display);
+	--font-weight-heading: 600;
+	--font-weight-display: 600;
+
+	--font-size-xs: var(--text-xs);
+	--font-size-sm: var(--text-sm);
+	--font-size-base: var(--text-base);
+	--font-size-lg: var(--text-lg);
+	--font-size-xl: var(--text-xl);
+	--font-size-2xl: var(--text-2xl);
+	--font-size-3xl: var(--text-3xl);
+	--font-size-4xl: var(--text-4xl);
+
+	--leading-normal: var(--leading-body);
+	--tracking-tight: var(--tracking-display);
+
+	/* ─── Metrics ──────────────────────────────────────────────────────── */
+	--radius: var(--radius-md);
+	/* The template calls its pill --radius-full; the systems call it --radius-pill.
+	   Without this line Apple's signature 980px capsule never reaches a pixel. */
+	--radius-full: var(--radius-pill);
+	--max-width: var(--container-max);
+
+	/* ─── Band rhythm ───────────────────────────────────────────────────
+	   The axis that was dead: every system states how much air a chapter
+	   breathes (apple 100/64/40, airbnb 64/48/32) and how wide the gutter
+	   runs (22/18/16 vs 40/24/16), and nothing in the template asked. These
+	   two names carry it, and the `-inside` wrappers of every landing band
+	   spend them. Breakpoints are the template's own — 900px and 640px are
+	   its two commonest, so the tiers land where its layout already turns. */
+	--band-y: var(--section-y-desktop);
+	--band-x: var(--container-gutter-desktop);
+	--transition-fast: var(--motion-fast) var(--ease-standard);
+	--transition-base: var(--motion-base) var(--ease-standard);
+	--shadow-sm: var(--elev-ring);
+	--shadow-lg: var(--elev-raised);
+}
+
+@media (max-width: 900px) {
+	:root {
+		--band-y: var(--section-y-tablet);
+		--band-x: var(--container-gutter-tablet);
+	}
+}
+
+@media (max-width: 640px) {
+	:root {
+		--band-y: var(--section-y-phone);
+		--band-x: var(--container-gutter-phone);
+	}
+}

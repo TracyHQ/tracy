@@ -1,0 +1,30 @@
+{
+  "id": "QA-MAIL-preference-group-join-requests-unsubscribe",
+  "itemIds": ["preference-group:join-requests"],
+  "requirement": "letters of group join-requests carry no unsubscribe header",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "groups",
+    "invariant": "RFC 8058 headers for switchable groups only"
+  },
+  "edgeTags": ["unsubscribe"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "mail.notify.unsubscribe-header#team.join_request:|team.join_answered:|team.edit_access_request:|team.edit_access_answered:"
+  ],
+  "redProof": null,
+  "legacyIds": []
+}

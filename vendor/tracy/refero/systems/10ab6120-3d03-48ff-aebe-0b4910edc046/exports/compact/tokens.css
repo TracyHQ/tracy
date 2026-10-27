@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-pulp-cream: #f6f4f2;
+  --color-graphite-veil: #e4e3e2;
+  --color-mid-ash: #8c8c8c;
+  --color-ink-black: #141414;
+  --color-charcoal-press: #232323;
+  --color-vapor: #ffffff;
+  --color-null: #000000;
+  --color-ember-diode: #e66f27;
+
+  /* Typography — Font Families */
+  --font-sl-regular-condensed-custom-superlative-condensed: 'SL-Regular-Condensed (custom: Superlative Condensed)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sl-light-custom-superlative-light: 'SL-Light (custom: Superlative Light)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sl-regular-custom-superlative-regular: 'SL-Regular (custom: Superlative Regular)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

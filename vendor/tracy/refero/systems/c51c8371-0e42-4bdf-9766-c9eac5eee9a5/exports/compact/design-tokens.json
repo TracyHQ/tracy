@@ -1,0 +1,64 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "mist": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Mist — Page canvas, subtle alternating section backgrounds, secondary surface tone behind cards"
+    },
+    "bone": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Bone — Hairline borders, dividers between stacked rows, FAQ item outlines, low-contrast separators"
+    },
+    "lavender-haze": {
+      "$value": "#c8d5f4",
+      "$type": "color",
+      "$description": "Lavender Haze — Soft atmospheric wash — appears only as a near-gray tinted background band near the hero, never as a functional UI color"
+    },
+    "graphite": {
+      "$value": "#767676",
+      "$type": "color",
+      "$description": "Graphite — Muted body text, metadata, helper copy — secondary reading layer under Ink headlines"
+    },
+    "slate": {
+      "$value": "#6e6e6e",
+      "$type": "color",
+      "$description": "Slate — Tertiary captions, press attribution, supplementary labels"
+    },
+    "hero-bloom": {
+      "$value": "#a5b1dd",
+      "$type": "color",
+      "$description": "Hero Bloom — Decorative atmospheric radial gradient — forest-green to lavender wash used only behind the hero media block, never repeated in components"
+    }
+  },
+  "font": {
+    "waldenburghf": {
+      "$value": "WaldenburgHF",
+      "$type": "fontFamily",
+      "$description": "Display and heading face — used exclusively at weight 700 across all heading levels (28/32/48px). This single-weight discipline is the signature: no light/medium variants, no italic. The fixed 1.10 leading and 0.01em tracking make headings sit close and tight, like editorial pull quotes."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, UI labels, navigation, button text, captions, footer. The 400/700 binary (no 500/600) keeps the system visually restrained — only two text voices exist. Body text reads at 16px/1.40, the standard comfortable reading rhythm; small UI labels drop to 14px/1.43 and 12px/1.60."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://elevenreader.io",
+      "siteName": "ElevenReader",
+      "extractedAt": "2026-06-03T19:24:02.439Z",
+      "variant": "compact"
+    }
+  }
+}

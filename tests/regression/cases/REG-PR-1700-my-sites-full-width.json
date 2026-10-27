@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1700-my-sites-full-width",
+  "kind": "feat",
+  "title": "My Sites: Your sites title row carries Add sites at the table's right edge, and the table fits the panel without sideways scroll",
+  "pr": 1700,
+  "area": "my-sites/layout",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run packages/site/tracy-my-sites/test/e2e/table-fits-panel.test.mjs (headless Chromium, the built My Sites bundle)."
+  ],
+  "expect": [
+    "S1: no sideways scroll at the panel width the frame opens My Sites at; Add sites sits on the title row at the table right edge, full width, and wraps without overflow when narrow."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-my-sites/src/client/index.tsx"
+  },
+  "fence": "Widths and edges are measured in the DOM",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=60000",
+      "packages/site/tracy-my-sites/test/e2e/table-fits-panel.test.mjs"
+    ],
+    "tests": [
+      "the table never scrolls sideways at the panel width the frame opens My Sites at",
+      "Add sites sits on the title row at the table right edge, full width, and wraps without overflow when narrow"
+    ]
+  }
+}

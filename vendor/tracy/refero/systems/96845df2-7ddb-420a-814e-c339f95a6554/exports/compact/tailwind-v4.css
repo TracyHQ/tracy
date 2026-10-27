@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-cream-canvas: #fff8e6;
+  --color-paper-white: #ffffff;
+  --color-charcoal-ink: #333333;
+  --color-graphite-body: #555555;
+  --color-silver-mute: #999999;
+  --color-border-gray: #ebebeb;
+  --color-rule-gray: #dadada;
+  --color-lintel-black: #000000;
+  --color-signal-blue: #0066cc;
+  --color-link-blue: #149ecc;
+  --color-promotional-green: #79b928;
+  --color-ember-brown: #ac5d00;
+
+  /* Typography */
+  --font-dysonfutura: 'DysonFutura', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

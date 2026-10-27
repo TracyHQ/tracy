@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1134-ds-remeasure-1",
+  "kind": "fix",
+  "title": "Fifteen ready JA Joomla j6 slot contracts (aiga to comics) re-measured on their 1.0.1 builds with the probe as it stands; what it found is fixed in the contracts and in flow.mjs",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs test/contracts.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{aiga,alpha,alumni,artsy,athena,beauty,blockk,boxing,campaign,candidate,cityguide,civica,coach,colab,comics}.json through loadContract; build the module sheets of Alpha, Alumni, Athena, Blockk, Comics (Moxie) and Beauty, Blockk, Campaign, Comics (MotherDuck, and Beauty under Moxie); read scripts/flow.mjs.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template:'ja_<name>'}), {key:'quickstart/ja-<name>/j6', version}) for each, at 1.0.1 and at 1.0.0.",
+    "S4: read tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-<name>-j6/summary.json for each.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-remeasure-1.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: all fifteen ready, minVersion {'quickstart/ja-<name>/j6': '1.0.1'}, readyNote naming tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-<name>-j6, contrast.heading body :is(h1 … .h4) and contrast.text body :is(p, li, a, span, …); Alpha's dark counter card takes fg as fill and bg as text; Alumni inverts img[src*=\"hero/Sign.png\"], keeps .t3-header and gives .facebook-block i the accent's text; Athena writes .acm-cta.style-1 .cta-inner in the accent's text; Beauty's active menu item takes color-mix(in srgb, var(--ds-c-accent) 55%, #fff)!important under a light system and nothing under a dark one; Campaign's numbered steps (.bg-primary.text-white.number) take accent-on !important and #t4-header .t4-brand the page ground; Colab keeps .horizontal-nav with rgb(33, 37, 41); Comics inverts .navbar-brand img; Blockk (.head-search:not(.search-expanded) …:not(:focus)) and Comics (.t4-header :is(.search, .form-search) …:not(:focus)) invert the closed header search under a dark system only; flow.mjs reads a masked ::before/::after as a shape and a text's own fill before what lies beneath it.",
+    "S3: at 1.0.1 {contract:'joomla-ja-<name>'}; at 1.0.0 reason TEMPLATE_NEEDS_UPDATE.",
+    "S4: controls [0,0,0,0], no text under 4.5:1 worse than the template's own, every contrast kind sampled, lowest page share following ≥ 0.5, and any failed verdict is a page-role miss only (page ground, or the kept primary button of JA Civica)."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-{aiga,alpha,alumni,artsy,athena,beauty,blockk,boxing,campaign,candidate,cityguide,civica,coach,colab,comics}.json ready, minVersion, contrast, followRules, sideRules, keepScopes, keepColors, selectors.inkImages, selectors.onAccent, sideRules"
+  },
+  "evidence": "tasks/evidence/ds-remeasure-1-2026-10-11/README.md: each template stood up from its own 1.0.1 zip (T4 caches cleared, pages warmed), four systems worn at 1440 and 390, desktop and phone screenshots checked by eye.",
+  "fence": "the readiness of these fifteen contracts and the two flow.mjs measuring rules; not the release upload (RELEASE-DS-*.sh, a person runs them)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-remeasure-1.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

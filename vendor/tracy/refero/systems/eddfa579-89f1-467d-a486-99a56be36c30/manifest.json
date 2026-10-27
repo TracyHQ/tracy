@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "eddfa579-89f1-467d-a486-99a56be36c30",
+  "status": "complete",
+  "name": "ExpressVPN",
+  "url": "https://styles.refero.design/style/eddfa579-89f1-467d-a486-99a56be36c30",
+  "sourceWebsite": "https://www.expressvpn.com",
+  "extractedAt": "2026-06-03T20:41:00.252Z",
+  "capturedAt": "2026-10-08T05:19:12.123779+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Fortress garden at dawn. A bright, spacious canopy of teal and ivory where dark navy anchors signal weight and warmth.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f13b7448-b464-423c-a608-d1cf7e970865.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "0c3d40ba755f6f27bfb24499498f023675ab45fd3547443c04832d4723d782fb",
+      "bytes": 23164
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "77b03c5924246502f7024721fad0c0029986674c2eaec9fd5dba617bb864b716",
+      "bytes": 124493
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c8b2000108aadb24d81edf2145da8b90d6eded0e8f2e021e7496247b6fc99e3a",
+      "bytes": 18885
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c576d12d3dfe293a0b02c6ec03a385fe429718e235c0fc8b306ca7c0bc0b9edd",
+      "bytes": 20097
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7ed88d095165e8a2e7e2042b4bcd65212a9d453fa27d8cb0df1b72c7a44b42ff",
+      "bytes": 14335
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "934dfd22127cd3c9fe78142521d8df902533264a4bc63cf1d91a723efb7ef4ee",
+      "bytes": 4588
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0304af2e3a134f6e759c4cc36c5ad0bfcbc65a82df13d5486039f64f932505cd",
+      "bytes": 935
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a3179b36debe559a4c72a37720d29740b58b69e7bda5c966e28b2cab4f674199",
+      "bytes": 1146
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9678f7e89051999a5419f1b7a4fe5a3a08652043656468977f4139148007502a",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f888a397e295efb2fcdf9f95f08aef6da4c6c710b989e24961b38178dd743ef1",
+      "bytes": 49183
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2ee3cb91fbc64f03677b16d15237f77bf2e79fb426f1640fc9e6d3406de2b9a2",
+      "bytes": 26002
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "037efde82cf32f0d559c8e1dcc67abaf6c995a84d1f72bb91743084ad36f3d02",
+      "bytes": 74181
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ea4f6c2964081f77fe2f45757e04e350ae21c3977183b94b0028aa6128f9e2dd",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "245db1be6a9dcf4ec5b0bb621b226e32a28edf9714601fda61e959928061e972",
+      "bytes": 2178
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9ac82a151be24ae6f97916be3dce1dec5b572934e997ee106914aab398408f1e",
+      "bytes": 2998
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "03dcd158-bc4d-447b-aaf2-8e522671a109",
+    "05a82625-786e-4343-a554-3ba8f4de23d7",
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "0ed40a3a-2541-4ffa-acdd-f1170858bc5d",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "3a398f82-579e-4ec4-a442-9962bf007edf",
+    "41c479a9-7b41-445b-9ea7-c7a6331828f0",
+    "4ce66adb-ed8b-4e71-8066-15d92c4d2be0",
+    "4fc7a535-3c99-4ffe-8365-7d025d33274e",
+    "722f32e7-8217-4808-843d-b454eea7320a",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "7bbbf1bc-e375-4200-8d71-e373a3c78654",
+    "802bdc0e-ec2e-4d2d-bf5d-de98c0899f66",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "cb6e4ab0-b8fe-45b0-bd22-6339b073e26d",
+    "da0bfca3-df1d-49d9-ae25-61d8f348426f",
+    "da6ad92d-4f29-4f92-a59a-3a46295d0d1c",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e9001d5a-504d-47ed-aef0-d0d35fa86418",
+    "eddfa579-89f1-467d-a486-99a56be36c30"
+  ]
+}

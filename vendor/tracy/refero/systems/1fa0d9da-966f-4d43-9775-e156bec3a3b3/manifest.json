@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1fa0d9da-966f-4d43-9775-e156bec3a3b3",
+  "status": "complete",
+  "name": "Eventbrite",
+  "url": "https://styles.refero.design/style/1fa0d9da-966f-4d43-9775-e156bec3a3b3",
+  "sourceWebsite": "https://www.eventbrite.com",
+  "extractedAt": "2026-06-03T18:25:04.245Z",
+  "capturedAt": "2026-10-08T05:09:13.452259+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "pillow-soft discovery wall with a single electric blue pulse",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/08c41b27-4919-484f-bb6b-393eca33d37b.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a4322be4255fa20c538aa077c28d328b382b198458f0fbc600f50abd82f6ffd2",
+      "bytes": 20207
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "82790e7e3901c6e3d529b678d636b73a5ab8778f5c7af2ce0af473f42dcc1121",
+      "bytes": 128391
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d65c675ea9e281d609f919c4df3eb923c19f6d967b4aa7efc7c52f774fb3a84c",
+      "bytes": 17635
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ad4b065fdf60439581ab046e2e7802e7c4a47433890780a110dbac7791e19262",
+      "bytes": 11693
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "17375130ce58022bc57e0507a21970315d456079117c4eec809fd18a6b62b734",
+      "bytes": 12794
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d4bc0e4287d7dd237a260846df253e69a22d10ed6551df72323cba77a3fa324f",
+      "bytes": 3306
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "856ec634917853a669c78fb79ccedd7f14d2d93192ea9f01bee54d5c5f2a3b34",
+      "bytes": 716
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4d03974cb15d0e85208bddd2bbfe15175b118cfd07fec795ec1ca2d664061e07",
+      "bytes": 733
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "db37ba03b3a7b5a50087c7583f8b2cc6883ce7a8053801b0353581d4b6ef0734",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1df6699860f86b59afddffeaa55d2fef60f968149445428b5a26f0918cafbb14",
+      "bytes": 46514
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "d590a5c72ae33475f94e97c8a60ac0396f9a97161971c9ff2dfdb7048c4c3853",
+      "bytes": 24947
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e403b4ef4cf2b2fdd8343e0dac5b361a9f6d76ae53e9561c4f7d296a8dd00392",
+      "bytes": 58448
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ce952844cf51cc3064d73b509ffe0304c0ddaf7e38cb66d6e3d71c2ebfdd23e7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1cada5f47674e25228f8c11ea1e2cfab513d317813c251731025b0fb42856342",
+      "bytes": 1446
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d0fee36fc8a773d42db78b4c446e392f08aa2c30c68255d3c127bf1aa5e95163",
+      "bytes": 2056
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1fa0d9da-966f-4d43-9775-e156bec3a3b3",
+    "240234ba-9cf5-4a91-b618-76963551d425",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "2b07d62c-d706-4c9d-a3fb-9c163da09f03",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "542d4d5c-fd8f-4a8b-a4f7-4694728f7e12",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "6db1057d-3457-4173-9184-df160415f060",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "786f99e5-8c40-4205-a878-bf006b330f4e",
+    "8512e28d-5385-4c20-a336-214568c4370c",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8caa5004-a8cc-4c7e-a2bb-00ff60618729",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "9946887b-ffa9-4276-af81-ae6352795afb",
+    "a6d39bad-6e32-462e-afce-67c9cb76cf40",
+    "a865ac1d-a4c2-425b-90db-2a7ec6d461a3",
+    "b8ce0a90-40c6-4518-940c-8c97ccf9c1a0",
+    "c8c22958-ec50-47f1-aedc-a131d7aeb442",
+    "f4af4c42-2cba-4aa6-8d06-2f728bce702d",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8"
+  ]
+}

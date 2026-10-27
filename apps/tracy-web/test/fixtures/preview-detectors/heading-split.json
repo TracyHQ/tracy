@@ -1,0 +1,1938 @@
+{
+  "about": "heading-split (HIER-2), 14/10/2026: JA Kinetic Joomla 1.0.6, Add site preview cut with preview-check.mjs PREVIEW_DATA=1. broken: the timeline heading in the text colour while its sibling headings take the heading colour (palette rule read through --heading classified as text); clean: the fixed preview (the heading role for rules read through a heading variable).",
+  "broken": [
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light | before the fix",
+      "systemColours": [
+        "#5d5b51",
+        "#000000",
+        "#69665b",
+        "#4e6594",
+        "#3d3c35",
+        "#e3dfc5",
+        "#6786c4",
+        "#4e6695",
+        "#eae5cc",
+        "#d2ceb6",
+        "#eee9cf",
+        "#f4efd4",
+        "#5b76ac",
+        "#5e75a1"
+      ],
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 244, "g": 239, "b": 212, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 244, "g": 239, "b": 212, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 0, "g": 0, "b": 0, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 244, "g": 239, "b": 212, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 244, "g": 239, "b": 212, "a": 1 }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:813be405-c2b9-41be-9864-7b53d66483dc light | before the fix",
+      "systemColours": [
+        "#76627d",
+        "#2c1338",
+        "#77647e",
+        "#975193",
+        "#604b68",
+        "#eee2eb",
+        "#c76bbe",
+        "#954f93",
+        "#f4e8f0",
+        "#dfd2dd",
+        "#f7ebf3",
+        "#fcf1f8",
+        "#000000",
+        "#af5ea7",
+        "#a15d9a"
+      ],
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 252, "g": 241, "b": 248, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 252, "g": 241, "b": 248, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 44, "g": 19, "b": 56, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 252, "g": 241, "b": 248, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 252, "g": 241, "b": 248, "a": 1 }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:f24daf3a-d43f-4dec-85a9-8ac1d5148a03 light | before the fix",
+      "systemColours": [
+        "#707070",
+        "#171717",
+        "#6f6f6f",
+        "#141414",
+        "#505050",
+        "#f3f3f3",
+        "#ffffff",
+        "#ebebeb",
+        "#f4f4f4",
+        "#fafafa",
+        "#121212"
+      ],
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 250, "g": 250, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 250, "g": 250, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 23, "g": 23, "b": 23, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 250, "g": 250, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 250, "g": 250, "b": 250, "a": 1 }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:1514a95f-878c-4d4d-bb14-99d1b83f6227 light | before the fix",
+      "systemColours": [
+        "#616161",
+        "#000000",
+        "#707070",
+        "#12823a",
+        "#404040",
+        "#ededed",
+        "#17a84b",
+        "#118039",
+        "#f5f5f5",
+        "#dbdbdb",
+        "#f9f9f9",
+        "#ffffff",
+        "#149442",
+        "#1b8843"
+      ],
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 0, "g": 0, "b": 0, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:5fd3b3b4-02ab-456a-87aa-e4395636b671 light | before the fix",
+      "systemColours": [
+        "#595959",
+        "#000000",
+        "#737373",
+        "#4440de",
+        "#404040",
+        "#808080",
+        "#4d49fc",
+        "#ffffff",
+        "#f9f9f9",
+        "#3c39c5"
+      ],
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 0, "g": 0, "b": 0, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 dark | before the fix",
+      "systemColours": [
+        "#858273",
+        "#f4efd4",
+        "#868474",
+        "#93b6fb",
+        "#b7b39f",
+        "#7a786a",
+        "#84acfb",
+        "#1a1a1a",
+        "#060605",
+        "#000000",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 22, "g": 27, "b": 24, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/h1:1",
+              "at": "h1.hx-h1",
+              "text": "Ship fast. Sleep through the night.",
+              "level": "1",
+              "fg": { "r": 183, "g": 179, "b": 159, "a": 1 },
+              "ground": { "r": 0, "g": 0, "b": 0, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 183, "g": 179, "b": 159, "a": 1 },
+              "ground": { "r": 0, "g": 0, "b": 0, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 183, "g": 179, "b": 159, "a": 1 },
+              "ground": { "r": 26, "g": 26, "b": 26, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 183, "g": 179, "b": 159, "a": 1 },
+              "ground": { "r": 26, "g": 26, "b": 26, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 183, "g": 179, "b": 159, "a": 1 },
+              "ground": { "r": 26, "g": 26, "b": 26, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 183, "g": 179, "b": 159, "a": 1 },
+              "ground": { "r": 26, "g": 26, "b": 26, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 183, "g": 179, "b": 159, "a": 1 },
+              "ground": { "r": 26, "g": 26, "b": 26, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 244, "g": 239, "b": 212, "a": 1 },
+              "ground": { "r": 26, "g": 26, "b": 26, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 183, "g": 179, "b": 159, "a": 1 },
+              "ground": { "r": 0, "g": 0, "b": 0, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 183, "g": 179, "b": 159, "a": 1 },
+              "ground": { "r": 6, "g": 6, "b": 5, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:9/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-cta-title",
+              "text": "Your next incident is coming. Be ready f",
+              "level": "2",
+              "fg": { "r": 183, "g": 179, "b": 159, "a": 1 },
+              "ground": { "r": 0, "g": 0, "b": 0, "a": 1 }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light | after the fix",
+      "systemColours": [
+        "#5d5b51",
+        "#000000",
+        "#69665b",
+        "#4e6594",
+        "#3d3c35",
+        "#e3dfc5",
+        "#6786c4",
+        "#4e6695",
+        "#eae5cc",
+        "#d2ceb6",
+        "#eee9cf",
+        "#f4efd4",
+        "#5b76ac",
+        "#5e75a1"
+      ],
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 244, "g": 239, "b": 212, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 234, "g": 229, "b": 204, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 238, "g": 233, "b": 207, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 244, "g": 239, "b": 212, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 61, "g": 60, "b": 53, "a": 1 },
+              "ground": { "r": 238, "g": 233, "b": 207, "a": 1 }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:813be405-c2b9-41be-9864-7b53d66483dc light | after the fix",
+      "systemColours": [
+        "#76627d",
+        "#2c1338",
+        "#77647e",
+        "#975193",
+        "#604b68",
+        "#eee2eb",
+        "#c76bbe",
+        "#954f93",
+        "#f4e8f0",
+        "#dfd2dd",
+        "#f7ebf3",
+        "#fcf1f8",
+        "#000000",
+        "#af5ea7",
+        "#a15d9a"
+      ],
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 252, "g": 241, "b": 248, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 244, "g": 232, "b": 240, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 247, "g": 235, "b": 243, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 252, "g": 241, "b": 248, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 96, "g": 75, "b": 104, "a": 1 },
+              "ground": { "r": 247, "g": 235, "b": 243, "a": 1 }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:f24daf3a-d43f-4dec-85a9-8ac1d5148a03 light | after the fix",
+      "systemColours": [
+        "#707070",
+        "#171717",
+        "#6f6f6f",
+        "#141414",
+        "#505050",
+        "#f3f3f3",
+        "#ffffff",
+        "#ebebeb",
+        "#f4f4f4",
+        "#fafafa",
+        "#121212"
+      ],
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 250, "g": 250, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 244, "g": 244, "b": 244, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 250, "g": 250, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 80, "g": 80, "b": 80, "a": 1 },
+              "ground": { "r": 244, "g": 244, "b": 244, "a": 1 }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:1514a95f-878c-4d4d-bb14-99d1b83f6227 light | after the fix",
+      "systemColours": [
+        "#616161",
+        "#000000",
+        "#707070",
+        "#12823a",
+        "#404040",
+        "#ededed",
+        "#17a84b",
+        "#118039",
+        "#f5f5f5",
+        "#dbdbdb",
+        "#f9f9f9",
+        "#ffffff",
+        "#149442",
+        "#1b8843"
+      ],
+      "plain": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 251, "g": 252, "b": 250, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 16, "g": 20, "b": 15, "a": 1 },
+              "ground": { "r": 242, "g": 245, "b": 238, "a": 1 }
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "headings": [
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:2/div:1/h2:1",
+              "at": "h2.acm-bento-title",
+              "text": "One platform for every signal",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Unified telemetry, one timeline",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:3/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Smart alerting",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:4/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Distributed tracing",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:5/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "Tiered retention",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/div:1/section:1/div:1/div:3/div:6/div:1/h3:1",
+              "at": "h3.acm-bento-tile-title",
+              "text": "SOC 2 & SSO",
+              "level": "3",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 245, "g": 245, "b": 245, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:5/div:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.hx-h2",
+              "text": "From alert to resolved in four moves",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 249, "g": 249, "b": 249, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:6/div:1/section:1/div:1/div:1/div:1/h2:1",
+              "at": "h2.acm-split-title",
+              "text": "Ask your telemetry anything",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 255, "g": 255, "b": 255, "a": 1 }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:2/h2:1",
+              "at": "h2.hx-h2",
+              "text": "Loved by engineers who carry the pager",
+              "level": "2",
+              "fg": { "r": 64, "g": 64, "b": 64, "a": 1 },
+              "ground": { "r": 249, "g": 249, "b": 249, "a": 1 }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

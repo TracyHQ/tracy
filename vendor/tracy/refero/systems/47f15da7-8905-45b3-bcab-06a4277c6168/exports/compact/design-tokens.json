@@ -1,0 +1,59 @@
+{
+  "color": {
+    "tiger-gold": {
+      "$value": "#faae33",
+      "$type": "color",
+      "$description": "Tiger Gold — Primary action, filled buttons, active nav, heading strokes, key icon accents — the only chromatic color permitted to leave the warm-brown monochrome and interrupt the page"
+    },
+    "ember-rust": {
+      "$value": "#823513",
+      "$type": "color",
+      "$description": "Ember Rust — Dominant page canvas and hero backdrop — the color that defines every viewport"
+    },
+    "saffron-glow": {
+      "$value": "#9f531b",
+      "$type": "color",
+      "$description": "Saffron Glow — Secondary heading accent, decorative borders, mid-tone text — a warm orange that softens Tiger Gold without competing"
+    },
+    "dark-spice": {
+      "$value": "#402011",
+      "$type": "color",
+      "$description": "Dark Spice — Card surfaces, input fields, badge fills, button ghost backgrounds, body text color — the workhorse dark-brown that lifts content off Ember Rust"
+    },
+    "charred-clove": {
+      "$value": "#281006",
+      "$type": "color",
+      "$description": "Charred Clove — Deepest surface — used for innermost cards, modal scrim, and the background behind the deepest contrast pairs"
+    },
+    "cardamom-brown": {
+      "$value": "#6b2e12",
+      "$type": "color",
+      "$description": "Cardamom Brown — Input borders, subtle dividers, muted inline elements — a step between Dark Spice and Ember Rust"
+    },
+    "chili-red": {
+      "$value": "#d1255c",
+      "$type": "color",
+      "$description": "Chili Red — Saturated accent reserved for badge fills and alert-level highlights — appears sparingly to signal heat"
+    }
+  },
+  "font": {
+    "salmond": {
+      "$value": "Salmond",
+      "$type": "fontFamily",
+      "$description": "Universal typeface: display headlines at 130–213px weight 700 with line-height clamped to 0.80–0.90 create the poster-scale hero, while the same family drops to 11–18px for nav, badges, and body. Negative tracking (-0.02em to -0.005em) tightens headlines; positive tracking (0.01–0.02em) opens small caps-style labels. This single-font-everywhere choice is the brand's strongest signature — there is no secondary display face to dilute it."
+    },
+    "graphikx": {
+      "$value": "Graphikx",
+      "$type": "fontFamily",
+      "$description": "Restricted to 13px weight 500 for body micro-copy, button labels, and inline meta where Salmond would feel too loud. Acts as a quiet functional voice against Salmond's shout."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.eathungrytiger.com",
+      "siteName": "Hungry Tiger",
+      "extractedAt": "2026-06-03T19:04:45.766Z",
+      "variant": "compact"
+    }
+  }
+}

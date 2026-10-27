@@ -1,0 +1,7 @@
+// Function, variables
+@import "vars";
+
+// For template rtl style
+.fa, .fab, .fal, .far, .fas{
+	transform: scale(-1,1);
+}

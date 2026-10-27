@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1097-help-about-notes-height",
+  "kind": "fix",
+  "title": "Settings › Help & about: the What's new box is as tall as short release notes and caps long ones at 150 px so they scroll",
+  "pr": 1097,
+  "area": "settings/help-about",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: Run the Help & about render and model suite of packages/ui/tracy-settings."],
+  "expect": [
+    "S1: notesBoxHeight answers null (no fixed height) for notes up to 150 px tall, 150 for longer ones, and 150 when nothing was measured yet; the rest of the Help & about suite stays green."
+  ],
+  "selectors": {
+    "section": ".ts-help-notes-box"
+  },
+  "fence": "The height rule is a pure function tested in process; the measured box in a real window is checked once on dev in the acceptance app.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "packages/ui/tracy-settings/test/help-about.test.mjs"],
+    "timeout_s": 120,
+    "tests": [
+      "the notes box fits short notes and caps long ones so they scroll",
+      "What’s new shows only with a waiting version and notes"
+    ]
+  }
+}

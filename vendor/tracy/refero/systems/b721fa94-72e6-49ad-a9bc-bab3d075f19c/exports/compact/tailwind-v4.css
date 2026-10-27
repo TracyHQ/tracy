@@ -1,0 +1,23 @@
+@theme {
+  /* Colors */
+  --color-void-black: #0b0e12;
+  --color-carbon: #181a1d;
+  --color-graphite: #1f2124;
+  --color-slate-base: #303235;
+  --color-fog: #5d5e61;
+  --color-steel: #818284;
+  --color-ash: #a3a4a5;
+  --color-silver: #bababb;
+  --color-bone: #dedede;
+  --color-phosphor-green: #00d892;
+  --color-deep-teal: #002923;
+  --color-emerald-depth: #005441;
+  --color-diagnostic-magenta: #9f3f53;
+  --color-syntax-violet: #c58aff;
+  --color-syntax-coral: #ff6285;
+  --color-syntax-forest: #006d4a;
+
+  /* Typography */
+  --font-suisseintl: 'SuisseIntl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gt-america-mono: 'GT America Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

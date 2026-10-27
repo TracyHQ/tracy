@@ -1,0 +1,93 @@
+{
+  "id": "QA-UNIT-REG-PR-1094-seat-sidebar-git-off-happy",
+  "itemIds": ["regression:REG-PR-1094-seat-sidebar-git-off"],
+  "requirement": "A seat's page never asks the sidebar for git status (no 403 in its console) and the gate still refuses git.* to a seat",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1094-seat-sidebar-git-off.json",
+    "ref": "PR #1094 (fix); fix evidence: Stand acm round 3, 09/10/2026: 403 /sidebar/api/git.status x2 on a seat's Files tab.",
+    "invariant": "S1: the seat page head carries __TRACY_SIDEBAR_GIT__=\"off\", the owner page does not; a seat's /sidebar/api/git.status is 403 and nothing reaches dsh.",
+    "productSources": [
+      "vendor/tracy/dsh-passwords/src/auth.ts:105",
+      "vendor/tracy/dsh-passwords/src/config.ts:80",
+      "vendor/tracy/dsh-passwords/src/db.ts:594",
+      "vendor/tracy/dsh-passwords/src/encrypt.ts:27",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:1352",
+      "vendor/tracy/dsh-passwords/src/tracy/persistence.ts:271",
+      "vendor/tracy/dsh-passwords/src/tracy/seat-book.ts:24"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "vendor/tracy/dsh-passwords/src/admin.ts:1086 openSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/admin.ts:296 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/admin.ts:494 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/admin.ts:696 openSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/admin.ts:720 createReadStream() with a computed path",
+      "vendor/tracy/dsh-passwords/src/config.ts:345 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:4238 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:4239 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:4247 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:4248 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:930 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:114 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:177 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:53 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:536 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:553 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:563 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:580 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:62 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:639 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:657 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:96 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/tracy/i18n/gateway-langs.ts:102 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/tracy/session-archive.ts:146 open() with a computed path",
+      "vendor/tracy/dsh-passwords/src/tracy/session-archive.ts:219 readFile() with a computed path",
+      "vendor/tracy/dsh-passwords/test/tracy/seat-sidebar-git.test.ts:20 spawn() runs a computed command",
+      "vendor/tracy/dsh-passwords/test/tracy/seat-sidebar-git.test.ts:20 spawn() runs computed arguments",
+      "vendor/tracy/dsh-passwords/test/tracy/seat-sidebar-git.test.ts:20 spawnSync() runs a computed command",
+      "vendor/tracy/dsh-passwords/test/tracy/seat-sidebar-git.test.ts:20 spawnSync() runs computed arguments"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "S17: a seat page turns the sidebar git status off; the owner page does not",
+    "S17: the gate still refuses git.status to a seat, and nothing reaches dsh"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1094-seat-sidebar-git-off"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "vendor/tracy/dsh-passwords", "dsh-passwords"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1094-seat-sidebar-git-off",
+    "pr": 1094,
+    "kind": "fix",
+    "area": "auth/dsh-passwords/sidebar-git",
+    "file": "tests/regression/cases/REG-PR-1094-seat-sidebar-git-off.json"
+  },
+  "command": [
+    "node",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "test/tracy/seat-sidebar-git.test.ts"
+  ],
+  "cwd": "vendor/tracy/dsh-passwords",
+  "needs": [],
+  "tests": [
+    "S17: a seat page turns the sidebar git status off; the owner page does not",
+    "S17: the gate still refuses git.status to a seat, and nothing reaches dsh"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "523d3e7b-b0a2-4979-a626-00f1487b6e4d",
+  "status": "complete",
+  "name": "Drepute",
+  "url": "https://styles.refero.design/style/523d3e7b-b0a2-4979-a626-00f1487b6e4d",
+  "sourceWebsite": "https://drepute.xyz",
+  "extractedAt": "2026-06-03T20:35:36.073Z",
+  "capturedAt": "2026-10-08T05:11:39.221557+00:00",
+  "theme": "dark",
+  "industry": "other",
+  "description": "midnight observatory over still water — a single sentence floats beneath a field of stars",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8f35f4a1-6453-436b-a15b-7d772178d555.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/24d72746-9bac-47f2-bfc8-0d94045f5cc0.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/0f99f9ab-bdce-406f-b934-84fae9fb65ae.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/bfda2a82-524d-48af-842f-aead165c0b11.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/70bb36dc-e92c-4b6b-82eb-8d6505a91e2b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f27ca423be08afb97b112dadadb693859fcde2930c7a14caf048e8b4bcad821e",
+      "bytes": 17562
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1738505b1e365575626c25196700b24917ec615983a97ac1889162586ec38219",
+      "bytes": 81061
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e4410d108df8fb2c1eea22dcdc0f10b683d26c264da2096ca542d05fc623d9e9",
+      "bytes": 14971
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "8e93c3b22d95b228856eb68b6cc75f6405f024da377720b7762853cf86291b33",
+      "bytes": 7206
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7589c46ebffe09fb658e0b8411d21ded9ebd46fc1cfee51a557f5e2ade2239ff",
+      "bytes": 10030
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c5fcc09e359d49764f9b588ffbfe533db60ee600fe8b99c9ba33b33310bbb834",
+      "bytes": 2718
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c23a6433d95c7ca354809dbd3c497f7f35e083ff8865e79798cbd1378bb2ef29",
+      "bytes": 926
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "20cbe76ffac27ca26f1ac5694564a4b1c3236695dc5c09489b296a176ff17581",
+      "bytes": 943
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a27a5e0b887c470e65132c9467e757b8ebca8c976b4dc2a69385eacc5d463cbb",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8078d6b4c6084c3e44bb2e6e6940709236b283b64ae7b44263ac57d2e8d23330",
+      "bytes": 41650
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "606cd5b8c26770c216a1b9eea01aa01da007983b756b7e03ae2d935afbae7354",
+      "bytes": 21599
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d45019247faa78e30521ec1ec5427b17e4e6a9ad8eab8b7a6d5285a623da9d54",
+      "bytes": 33227
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6822f7831df506b978c7a18dc1eff643551aae93fab54000f2b2d91e52f4262c",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d7394675e12fbadb570481b84423715007eac3d79298a2c11b2f8162bca045dd",
+      "bytes": 1513
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ca4689da9702d897aa2c4a5f5cfca56099489fc028bb507606f88e59b2cda917",
+      "bytes": 1971
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1bd3b2ba-9ad9-44ed-9130-03f9d94de821",
+    "2d4fc4ba-2ea4-465f-8644-f3ff5c6713a2",
+    "350b1557-56f0-4361-8c8b-b7a88081982b",
+    "3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "51752cfb-4fd4-464f-8b78-ecbc813830e1",
+    "523d3e7b-b0a2-4979-a626-00f1487b6e4d",
+    "606d4af9-9d8c-41ea-a122-f515f38f20e5",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "8401cb26-91a3-4b46-941e-1c75790821eb",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "b1e0a894-7440-44b8-9737-0ea4c988fc24",
+    "cb6e4ab0-b8fe-45b0-bd22-6339b073e26d",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138"
+  ]
+}

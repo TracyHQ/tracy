@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "59ac8248-1d64-4df3-92f1-919b50e05602",
+  "status": "complete",
+  "name": "Bento",
+  "url": "https://styles.refero.design/style/59ac8248-1d64-4df3-92f1-919b50e05602",
+  "sourceWebsite": "https://www.bento.me",
+  "extractedAt": "2026-06-03T18:13:57.754Z",
+  "capturedAt": "2026-10-08T05:11:53.427698+00:00",
+  "theme": "mixed",
+  "industry": "productivity",
+  "description": "bento lunchbox on sunlit linoleum. A grid of rounded, sticker-like cards in lime, lavender, cobalt, and maroon, each ringed with thick black ink, sitting on warm off-white linen beneath a confident geometric headline.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/48236527-c2a9-4deb-af06-cb6f1f62302a.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e45a4db1-2b03-43b1-9789-983396e636d8.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/9864d1a6-eedb-4526-b619-823e5c1f1919.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a6b62836-b8aa-4daa-8954-531a7c19dc88.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/2014b867-7ff5-4c94-a118-c0da53b9124d.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bca1692faf6d839c7d27cca5c9bb1dee25f3e8199d4e87fa970f5bf9b4114b7e",
+      "bytes": 25025
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "0f4e7ed783bedf838fadd12a7a72a2714ee84b77f6f63160fe637185ad2c9b63",
+      "bytes": 173898
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a54313db0ce2f71ffa9dfbd56fb2046cafa3e9ff4177d80548843063e46f64b7",
+      "bytes": 20668
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2c659b9f6b6994d4d92a77ff18795b91bae0538d80ebb0d9ab5641358200cb21",
+      "bytes": 15439
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "9c7af00b92b1c453a32719fd03607760382755264bceb17f92f65a9cb8804203",
+      "bytes": 15340
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9c21581199b7f1192f777dd049856a3c565fe5aafc0eafc7b5b2ce9449de0ddc",
+      "bytes": 5179
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "60dd744e3c689b71d8bfaf37eb51d14929a0c7b876b38210d280ef303a75049c",
+      "bytes": 1094
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4496960c9e7424d4b2f358081b8fa0370e109c3d31753eae41978878590e5fb7",
+      "bytes": 1111
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "fc4b094810f656167b281a3f32d7610014ec318354569ba763a84a9cfa6a2a99",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "c5eaf5364eef8d2fd44756494b0a31f64cc4fc5628fca6cbf3452a59b6d1b9db",
+      "bytes": 49335
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "52b754038d8af1923a61a5ffa48c0d0203ed7ef70bd3cd723b5e731ba5949aa5",
+      "bytes": 25793
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9b1021bb475bb27cf15763e8a166a2580e9292f7e5950be9f2bcc80b8357c203",
+      "bytes": 62098
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f2b8dd99a9d7ee78bb0b9a160b77c1b4c7e824cb641064300fab283cb62adfa7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b27d3dde4e0a9c105d1a5d8a908790efb9af1d65a395d67b6c933fc840d2171e",
+      "bytes": 2364
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f92b88072b55a03ab20b283fcaf06aa2adf4d416eab38a37075fea99a3ca99a2",
+      "bytes": 3144
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "59ac8248-1d64-4df3-92f1-919b50e05602",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "786f99e5-8c40-4205-a878-bf006b330f4e",
+    "88e9d606-7e8f-479c-9508-1b081e254ed9",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b04c379c-7c33-4d69-8882-8d85d7768654",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "e869e214-f672-4ac3-bfc2-bd25de7b003b",
+    "ebbfbc6a-988b-4f33-b261-d431b2327545",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

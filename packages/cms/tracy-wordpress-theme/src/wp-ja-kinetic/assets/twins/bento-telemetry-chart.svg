@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1114 282" font-family="'JetBrains Mono', ui-monospace, monospace">
+<rect x="0.5" y="0.5" width="1113" height="281" rx="22" fill="#161C18" stroke="#232824"/>
+<g font-size="20" fill="#6D7570"><text x="37" y="58">logs</text><text x="37" y="118">metrics</text><text x="37" y="178">traces</text></g>
+<g fill="#383F3D"><rect x="113" y="43" width="32" height="19" rx="5"/><rect x="153" y="43" width="56" height="19" rx="5"/><rect x="249" y="43" width="80" height="19" rx="5"/><rect x="337" y="43" width="40" height="19" rx="5"/><rect x="385" y="43" width="96" height="19" rx="5"/></g>
+<rect x="217" y="43" width="25" height="19" rx="5" style="fill:var(--ds-c-accent-on-ink,#A3E635)"/>
+<polyline points="152,120.5 240,116.5 334,118.5 428,106.5 520,112.5 612,98.5 706,104.5 798,94.5 890,102.5 984,92.5 1076,100.5" fill="none" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" style="stroke:var(--ds-c-accent-on-ink,#A3E635)"/>
+<rect x="137" y="157" width="400" height="10" rx="5" fill="#323C36"/>
+<rect x="137" y="175" width="280" height="10" rx="5" opacity="0.78" style="fill:var(--ds-c-accent-on-ink,#A3E635)"/>
+<rect x="137" y="193" width="180" height="10" rx="5" fill="#323C36"/>
+<text x="557" y="246" font-size="20" letter-spacing="2" fill="#6D7570" text-anchor="middle">14:32:07 · t=0 incident window</text>
+</svg>

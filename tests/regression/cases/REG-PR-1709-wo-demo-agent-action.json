@@ -1,0 +1,23 @@
+{
+  "id": "REG-PR-1709-wo-demo-agent-action",
+  "kind": "feat",
+  "title": "/v1/demos accepts the same agent-demo/1 + client-send/1 action Tracy’s Build demo makes, prepares its chat, and answers waiting-for-you → building → ready",
+  "pr": 1709,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/public-demos",
+  "steps": ["S1: Run the /v1/demos door suite on the test Postgres."],
+  "expect": ["S1: the suite passes; the agent-action and status tests pass."],
+  "selectors": {
+    "door": "POST/GET /v1/demos (apps/tracy-web/src/opportunities-build/public-demos.js)",
+    "tool": "tests/regression/scripts/REG-PR-1709-wo-demo-agent-action.mjs"
+  },
+  "evidence": "Stranger run 25/10/2026: three /v1/demos fills failed QUICKSTART_EDITORIAL_CLAIM while 22 internal agent demos reached done",
+  "fence": "Workflow and public status of an outside demo",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1709-wo-demo-agent-action.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

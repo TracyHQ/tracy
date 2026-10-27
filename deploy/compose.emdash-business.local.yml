@@ -1,0 +1,11 @@
+# Opt-in LOCAL baseline. Existing site compose files retain their pinned images.
+# Use after compose.yml and compose.macos.yml on macOS.
+services:
+  tracy-web:
+    volumes:
+      - ../apps/tracy-web/src/sites/resolver.js:/opt/tracy-web/src/sites/resolver.js:ro
+  tracy-host:
+    environment:
+      TRACY_EMDASH_IMAGE: tracy/web-emdash:business-0.1.0-local.8
+    volumes:
+      - ../packages/fleet/tracy-fleet-operation/scripts/provision/platform/emdash.sh:/opt/tracy-fleet/provision/platform/emdash.sh:ro

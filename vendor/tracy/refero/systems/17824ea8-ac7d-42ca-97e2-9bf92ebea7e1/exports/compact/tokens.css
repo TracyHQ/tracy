@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-graphite: #2d2d2d;
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-fog: #878887;
+  --color-periwinkle: #738ae5;
+
+  /* Typography — Font Families */
+  --font-gillsansnova-book: 'GillSansNova-Book', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gillsansnova-semibold: 'GillSansNova-SemiBold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-yu-gothic: '游ゴシック体 (Yu Gothic)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cezannepro-db: 'CezannePro-DB', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gillsansnova-medium: 'GillSansNova-Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

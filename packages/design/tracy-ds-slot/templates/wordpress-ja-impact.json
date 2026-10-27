@@ -1,0 +1,1136 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "wordpress-tracy-base",
+  "template": "wordpress/wp-ja-impact",
+  "minVersion": {
+    "wp-ja-impact": "1.0.8"
+  },
+  "maxVersion": {
+    "wp-ja-impact": "1.0.14"
+  },
+  "release": "quickstart/ja-impact/wp7",
+  "baseTokensFile": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-impact/tokens.css",
+  "roles": {
+    "page": "body.home.wp-singular",
+    "display": "h1.wp-block-heading.hero-title",
+    "heading": "h2.wp-block-heading.cta-highlight",
+    "body": "p.cta-desc.wp-block-paragraph",
+    "button-primary": "div.wp-block-buttons.acm-action div.wp-block-button.jim-btn a.wp-block-button__link.wp-element-button",
+    "container": "div.wp-block-group.acm-hero-item div.wp-block-group.jim-container",
+    "section": "#acm-features-133",
+    "input": "input.wpcf7-form-control.wpcf7-text"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 72px",
+    "displayFace": "Readex Pro 500, tracking -0.02em",
+    "heading": "first section heading: 40px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(12, 183, 109)",
+    "container": "first content container, max-width 1376px",
+    "section": "first padded full-width section, padding-top 128px",
+    "input": "first text field"
+  },
+  "keepScopes": [".jim-header__top", ".jim-footer__contact", ".jim-footer__nav", ".jim-footer__bar"],
+  "extraPalettes": [
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    }
+  ],
+  "selectors": {
+    "display": "h1.wp-block-heading.hero-title, .tracy-display",
+    "heading": ["main h2.wp-block-heading"],
+    "buttonPrimary": [".tracy a.wp-block-button__link.wp-element-button"],
+    "bodyFace": [
+      "body.tracy",
+      ".tracy p:not(:where([class*=\"brand\"], [class*=\"logo\"], .wp-block-site-title))",
+      ".tracy li"
+    ],
+    "container": [".tracy div.wp-block-group.jim-container"],
+    "section": [".tracy #acm-features-133"]
+  },
+  "templateVars": {
+    "--jim-heading": "var(--ds-c-fg-2)",
+    "--jim-text": "var(--ds-c-fg)",
+    "--jim-muted": "var(--ds-c-muted)",
+    "--jim-surface": "var(--ds-c-surface)",
+    "--jim-raised": "var(--ds-c-bg)",
+    "--jim-band": "var(--ds-c-surface-warm)",
+    "--jim-line": "var(--ds-c-border)",
+    "--jim-link": "var(--ds-c-fg-2)",
+    "--jim-eyebrow": "var(--ds-c-accent-text)",
+    "--jim-on-band": "var(--ds-c-bg)",
+    "--jim-on-band-muted": "color-mix(in srgb, var(--ds-c-bg) 85%, var(--ds-c-fg-2))",
+    "--jim-success": "var(--ds-c-accent)",
+    "--jim-raised-2": "var(--ds-c-surface)"
+  },
+  "templateVarsNote": "wp-ja-impact.css declares its colours once at :root as light-dark(<tokenized light>, <dark literal>) and the bands read --jim-*: a worn system sets html{color-scheme:dark} for a dark system, so the dark literals (#c2c9d6 text, #1e2a45 surface) painted instead of the system's, and --jim-primary (the navy band) was resolved at :root, so the kept header top and footer contact followed the system (re-measured 11/10/2026). Each --jim-* colour now names its role; the kept bands get the template's light values back (keepDefaults, light-dark() replaced by its light arm), and text on the navy band is the page colour",
+  "followRules": {
+    ".jim-art-main .jim-crumbs": {
+      "background-color": "surface"
+    },
+    ".jim-art__place, .jim-art__tag a": {
+      "color": "accent-text"
+    },
+    ".acm-features.style-2 .ft-item-detail:not(.bg-light):not(.bg-info) :is(.item-title, .item-des)": {
+      "color": "bg"
+    },
+    ".acm-features.style-2 .ft-item-detail.bg-info": {
+      "background-color": "accent"
+    },
+    ".acm-features.style-2 .ft-item-detail.bg-info :is(.item-title, .item-des)": {
+      "color": "accent-on"
+    },
+    ".acm-features.style-6 p.sub-title": {
+      "color": "accent-text"
+    },
+    ".wp-block-button.btn-success": {
+      "background-color": "accent"
+    },
+    ".acm-features.style-4 :is(.feature-title, .feature-tag)": {
+      "color": "on-ink"
+    },
+    ".acm-features:not(.style-4) .feature-tag:not(.bg-success *)": {
+      "color": "accent-text"
+    },
+    ".acm-features.style-4 .item-title.text-warning": {
+      "color": "accent-text"
+    },
+    ".acm-cta.style-1 .cta-highlight": {
+      "color": "accent-text"
+    },
+    ".jim-nav :is(.current-menu-item, .current-menu-ancestor) > .wp-block-navigation-item__content": {
+      "color": "accent-text"
+    },
+    ".style-events .jim-evt__date:not(.jim-evt__date--warning, .jim-evt__date--success, .jim-evt__date--primary)": {
+      "background-color": "bg"
+    },
+    ".style-events .jim-evt__date--primary :is(.jim-evt__day, .jim-evt__month)": {
+      "color": "bg"
+    },
+    ".style-news .jim-news__content:not(.jim-news__content--success, .jim-news__content--primary, .jim-news__content--warning, .jim-news__content--info) .jim-news__author": {
+      "color": "accent-text"
+    },
+    ".tracy-motion-dots .tracy-motion-dot": {
+      "background-color": "fg"
+    },
+    ".jim-side__list .numitems": {
+      "color": "accent-text"
+    },
+    ".jim-consent__star, label strong.red": {
+      "color": "danger-text"
+    },
+    ".acm-features.style-5 .item > .count-number": {
+      "color": "fg"
+    }
+  },
+  "followNote": "15/10/2026 (look review v8): on the article pages the breadcrumb band is filled with the line colour (--jim-line), cream under Moxie under the system’s pale words (1.82:1): it takes the surface; the place line (--jim-success) and the tags (warn) kept the template’s green and orange on the system’s page (2.5:1 under Stripe): they take the readable accent. the green subtitle (--jim-success #0cb76d, a literal also used as a fill) read 2.29:1 on MotherDuck's cream (2.62 on the template's white): it takes the readable accent. The species carousel's Take action buttons sit in a square wrapper painted the same green (div.wp-block-button.btn-success): under a system the link wore the accent and its radius while the green square showed at its corners (eye check, 11/10/2026); the wrapper takes the accent too. Re-measured 12/10/2026 with every heading and text judged: the rule is the light card's paragraph subtitle only (p.sub-title; the navy card's h6 subtitle keeps its green: as the accent it read 2.06:1); the eco-friendly band (.acm-features.style-4) is filled with the system's heading colour (--jim-primary), so its white title and green tag take the page colour (1.24-3.41:1 before); the events' date chips are a literal white holding the heading colour (2.11:1 under Moxie): they take the page ground; the green eyebrows, the news cards' author names (2.55:1 on the template's #fbfbfb card, 2.41 on Apple's grey), the current menu item, the orange stat number and the call-to-action highlight are the template's literal green and orange (2.62/2.47/2.38:1 on its white, worse on a tinted page): they take the readable accent 14/10/2026 (look review of the final measure, /about \"What makes us different?\"): the feature cards’ ground is --jim-primary = the system’s strong text (fg-2) while their words stay the template’s white: a cream card with white words under every dark system (1.02:1); the words take the page ground, which reads on the strong text on either side. The .bg-info card (\"Safe havens\") is the template’s literal #2970db: it takes the accent and the accent’s own text. 19/10/2026 (theme 1.0.13, emitter scoping every selector of a list since 808aceeedb): the news card filled with the accent (.jim-news__content--success) takes its words from the theme (accent-on): the side rules that gave every news author the readable accent and the coloured cards' titles white now leave that card alone (1.15-1.58:1 on Mailchimp's yellow and Linear's olive accent). 19/10/2026 (preview v10 on 1.0.10): the about page's step numbers (.count-number, the border colour in the template) read the body text under a system, never quieter than the words beside them (HIER-2: 2.3:1 on the dark side); the accent news-card words leave the blog view, whose cards are plain surfaces (CON-2 1.21:1); on the dark side the section titles keep the heading colour of their siblings and the ink feature card's words read on-ink (HIER-2 heading split).",
+  "sideRules": {
+    "dark": {
+      ".style-funds .jim-fund__title a": {
+        "color": "#ffffff"
+      },
+      ".style-news :is(.jim-news__content--primary, .jim-news__content--warning, .jim-news__content--info) .jim-news__title a": {
+        "color": "#ffffff"
+      },
+      ":is(.badge, .progress-bar, .card).bg-primary": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".card.bg-primary :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".btn-primary:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)",
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".btn-primary:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-accent-hover)",
+        "color": "var(--ds-c-accent-on)",
+        "border-color": "var(--ds-c-accent-hover)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-secondary": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".card.bg-secondary :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".btn-secondary:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".btn-secondary:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-success": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".card.bg-success :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".btn-success:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)"
+      },
+      ".btn-success:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-info": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".card.bg-info :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".btn-info:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)"
+      },
+      ".btn-info:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-warning": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".card.bg-warning :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".btn-warning:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)"
+      },
+      ".btn-warning:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-danger": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".card.bg-danger :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".btn-danger:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)"
+      },
+      ".btn-danger:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-light": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".card.bg-light :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".btn-light:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".btn-light:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-dark": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".card.bg-dark :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".btn-dark:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)",
+        "border-color": "var(--ds-c-ink)"
+      },
+      ".btn-dark:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)",
+        "border-color": "var(--ds-c-ink)"
+      },
+      ".btn-outline-primary:not(.wp-block-button)": {
+        "color": "var(--ds-c-accent-text)",
+        "border-color": "var(--ds-c-accent-text)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-primary:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-accent-text)",
+        "background-color": "var(--ds-c-accent-text)"
+      },
+      ".btn-outline-secondary:not(.wp-block-button)": {
+        "color": "var(--ds-c-muted)",
+        "border-color": "var(--ds-c-muted)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-secondary:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-muted)",
+        "background-color": "var(--ds-c-muted)"
+      },
+      ".btn-outline-success:not(.wp-block-button)": {
+        "color": "var(--ds-c-success-text)",
+        "border-color": "var(--ds-c-success-text)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-success:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-text)"
+      },
+      ".btn-outline-info:not(.wp-block-button)": {
+        "color": "var(--ds-c-info-text)",
+        "border-color": "var(--ds-c-info-text)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-info:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-text)"
+      },
+      ".btn-outline-warning:not(.wp-block-button)": {
+        "color": "var(--ds-c-warn-text)",
+        "border-color": "var(--ds-c-warn-text)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-warning:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-text)"
+      },
+      ".btn-outline-danger:not(.wp-block-button)": {
+        "color": "var(--ds-c-danger-text)",
+        "border-color": "var(--ds-c-danger-text)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-danger:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-text)"
+      },
+      ".btn-outline-dark:not(.wp-block-button)": {
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-fg)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-dark:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-fg)"
+      },
+      ".btn-outline-light:not(.wp-block-button)": {
+        "color": "var(--ds-c-muted)",
+        "border-color": "var(--ds-c-border)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-light:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)",
+        "background-color": "var(--ds-c-surface-warm)"
+      },
+      ".alert-primary": {
+        "color": "var(--ds-c-accent-text)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".alert-secondary": {
+        "color": "var(--ds-c-muted)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger)"
+      },
+      ".alert-light": {
+        "color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-surface)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".alert-dark": {
+        "color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-border-soft)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".btn:not(.wp-block-button), input.wpcf7-submit": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".badge.rounded-pill": {
+        "border-radius": "var(--ds-pill-radius)"
+      },
+      ":is(mark, .mark)": {
+        "background-color": "var(--ds-c-warn-bg)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".wp-block-button.btn": {
+        "background-color": "transparent",
+        "border-color": "transparent"
+      },
+      ".jim-band--primary": {
+        "background-color": "var(--ds-c-ink)",
+        "--jim-on-band": "var(--ds-c-on-ink)",
+        "--jim-on-band-muted": "color-mix(in srgb, var(--ds-c-on-ink) 85%, var(--ds-c-ink))"
+      },
+      ".jim-contactpage__map": {
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".jim-masthead__title": {
+        "color": "var(--ds-c-heading)"
+      },
+      ".jim-prose .well": {
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".jim-header .jim-donate": {
+        "align-items": "center",
+        "align-self": "center",
+        "height": "auto"
+      },
+      ".jim-header .jim-donate .wp-block-button__link": {
+        "height": "auto"
+      },
+      ".acm-features.style-2 .ft-item-detail.bg-primary :is(.item-title, .item-des)": {
+        "color": "var(--ds-c-on-ink) !important"
+      },
+      ".jim-news__content:not(.jim-news__content--success, .jim-news__content--primary, .jim-news__content--warning, .jim-news__content--info) .jim-news__author, .jim-news__by a, .jim-art__author a, .jim-gb--authors .jim-author__job, .acm-features .feature-tag:not(.style-4 *)": {
+        "color": "var(--ds-c-accent-text)"
+      },
+      ".jim-news__title a:hover, .jim-gb-tagged__title a:hover, .jim-gb-table__title a:hover, .jim-fund__title a:hover, .jim-evt__title a:hover, .jim-rel__title a:hover, .jim-info__tags a:hover, .jim-art__masthead .jim-breadcrumbs a:hover, .jim-footnav .wp-block-navigation-item__content:hover, .jim-footer__copy a:hover, .jim-theme-toggle:hover, .jim-nav .wp-block-navigation-item__content:hover, .jim-nav .wp-block-navigation-submenu:is(:hover, :focus-within) > .wp-block-navigation__submenu-icon, .acm-accordion .jim-acc__item:hover .jim-acc__q::before": {
+        "color": "var(--ds-c-accent-text-hover)"
+      },
+      ".btn-link": {
+        "color": "var(--ds-c-accent-text)"
+      },
+      ".form-control, .wpcf7-form-control:is(input:not([type=submit], [type=checkbox], [type=radio]), textarea, select), .wp-block-search__input": {
+        "background-color": "var(--ds-c-bg)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ":is(.form-control, .wpcf7-form-control, .wp-block-search__input):focus": {
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".acm-features.style-2 .ft-item-detail.bg-primary": {
+        "background-color": "var(--ds-c-ink)"
+      },
+      ".tracy-motion-dots .tracy-motion-dot[aria-current=true]": {
+        "background-color": "var(--ds-c-accent-text)"
+      },
+      ".acm-hero .sub-title, .style-funds .jim-fund__tag a": {
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".tracy-pager__link:not(.is-current *)": {
+        "background-color": "var(--ds-c-surface)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".tracy-pager__link:not(.is-current *):is(:hover, :focus-visible), .is-current .tracy-pager__link": {
+        "background-color": "var(--ds-c-accent)",
+        "border-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".style-funds .jim-fund__track": {
+        "background-color": "var(--ds-c-border)"
+      },
+      ".page-link": {
+        "background-color": "var(--ds-c-surface)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".page-item.active .page-link": {
+        "background-color": "var(--ds-c-accent)",
+        "border-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      "input.wpcf7-submit": {
+        "background-color": "var(--ds-c-accent)",
+        "border-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".required .star": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".jim-account-side .form-check-input:not(:checked), .jim-contactpage__main .wpcf7-list-item input[type=checkbox]:not(:checked)": {
+        "background-color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".style-events .jim-evt__date--warning": {
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".acm-features.style-3": {
+        "--g2-veil": "color-mix(in srgb, var(--ds-c-bg) 94%, transparent)"
+      },
+      ".jim-follow .wp-social-link a::before, .jim-contactpage__card .wp-social-link a::before": {
+        "color": "currentColor"
+      },
+      ".jim-follow .wp-social-link a, .jim-contactpage__card .wp-social-link a": {
+        "color": "var(--ds-c-fg-2)"
+      },
+      ".jim-follow .wp-social-link a": {
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".wp-block-social-link-anchor:is(:hover, :focus-visible)": {
+        "color": "var(--ds-c-accent-text) !important",
+        "text-decoration-line": "underline !important",
+        "opacity": "0.8"
+      },
+      ".style-news:not(.jim-gb--news) .jim-news__content--success :is(.jim-news__title a, .jim-news__date, .jim-news__by, .jim-news__author)": {
+        "color": "var(--ds-c-accent-on) !important"
+      }
+    },
+    "light": {
+      ":is(.badge, .progress-bar, .card).bg-primary": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".card.bg-primary :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".btn-primary:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)",
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".btn-primary:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-accent-hover)",
+        "color": "var(--ds-c-accent-on)",
+        "border-color": "var(--ds-c-accent-hover)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-secondary": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".card.bg-secondary :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".btn-secondary:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".btn-secondary:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-success": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".card.bg-success :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".btn-success:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)"
+      },
+      ".btn-success:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-info": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".card.bg-info :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".btn-info:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)"
+      },
+      ".btn-info:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-warning": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".card.bg-warning :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".btn-warning:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)"
+      },
+      ".btn-warning:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-danger": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".card.bg-danger :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".btn-danger:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)"
+      },
+      ".btn-danger:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-light": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".card.bg-light :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".btn-light:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".btn-light:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ":is(.badge, .progress-bar, .card).bg-dark": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".card.bg-dark :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".btn-dark:not(.wp-block-button)": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)",
+        "border-color": "var(--ds-c-ink)"
+      },
+      ".btn-dark:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)",
+        "border-color": "var(--ds-c-ink)"
+      },
+      ".btn-outline-primary:not(.wp-block-button)": {
+        "color": "var(--ds-c-accent-text)",
+        "border-color": "var(--ds-c-accent-text)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-primary:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-accent-text)",
+        "background-color": "var(--ds-c-accent-text)"
+      },
+      ".btn-outline-secondary:not(.wp-block-button)": {
+        "color": "var(--ds-c-muted)",
+        "border-color": "var(--ds-c-muted)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-secondary:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-muted)",
+        "background-color": "var(--ds-c-muted)"
+      },
+      ".btn-outline-success:not(.wp-block-button)": {
+        "color": "var(--ds-c-success-text)",
+        "border-color": "var(--ds-c-success-text)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-success:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-text)"
+      },
+      ".btn-outline-info:not(.wp-block-button)": {
+        "color": "var(--ds-c-info-text)",
+        "border-color": "var(--ds-c-info-text)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-info:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-text)"
+      },
+      ".btn-outline-warning:not(.wp-block-button)": {
+        "color": "var(--ds-c-warn-text)",
+        "border-color": "var(--ds-c-warn-text)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-warning:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-text)"
+      },
+      ".btn-outline-danger:not(.wp-block-button)": {
+        "color": "var(--ds-c-danger-text)",
+        "border-color": "var(--ds-c-danger-text)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-danger:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-text)"
+      },
+      ".btn-outline-dark:not(.wp-block-button)": {
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-fg)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-dark:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-fg)"
+      },
+      ".btn-outline-light:not(.wp-block-button)": {
+        "color": "var(--ds-c-muted)",
+        "border-color": "var(--ds-c-border)",
+        "background-color": "transparent"
+      },
+      ".btn-outline-light:not(.wp-block-button):is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)",
+        "background-color": "var(--ds-c-surface-warm)"
+      },
+      ".alert-primary": {
+        "color": "var(--ds-c-accent-text)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".alert-secondary": {
+        "color": "var(--ds-c-muted)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger)"
+      },
+      ".alert-light": {
+        "color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-surface)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".alert-dark": {
+        "color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-border-soft)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".btn:not(.wp-block-button), input.wpcf7-submit": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".badge.rounded-pill": {
+        "border-radius": "var(--ds-pill-radius)"
+      },
+      ":is(mark, .mark)": {
+        "background-color": "var(--ds-c-warn-bg)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".wp-block-button.btn": {
+        "background-color": "transparent",
+        "border-color": "transparent"
+      },
+      ".jim-band--primary": {
+        "background-color": "var(--ds-c-ink)",
+        "--jim-on-band": "var(--ds-c-on-ink)",
+        "--jim-on-band-muted": "color-mix(in srgb, var(--ds-c-on-ink) 85%, var(--ds-c-ink))"
+      },
+      ".jim-contactpage__map": {
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".jim-header .jim-donate": {
+        "align-items": "center",
+        "align-self": "center",
+        "height": "auto"
+      },
+      ".jim-header .jim-donate .wp-block-button__link": {
+        "height": "auto"
+      },
+      ".jim-gb-tagged__list li": {
+        "background-color": "var(--ds-c-bg)"
+      },
+      ".jim-news__content:not(.jim-news__content--success, .jim-news__content--primary, .jim-news__content--warning, .jim-news__content--info) .jim-news__author, .jim-news__by a, .jim-art__author a, .jim-gb--authors .jim-author__job, .acm-features .feature-tag:not(.style-4 *)": {
+        "color": "var(--ds-c-accent-text)"
+      },
+      ".jim-news__title a:hover, .jim-gb-tagged__title a:hover, .jim-gb-table__title a:hover, .jim-fund__title a:hover, .jim-evt__title a:hover, .jim-rel__title a:hover, .jim-info__tags a:hover, .jim-art__masthead .jim-breadcrumbs a:hover, .jim-footnav .wp-block-navigation-item__content:hover, .jim-footer__copy a:hover, .jim-theme-toggle:hover, .jim-nav .wp-block-navigation-item__content:hover, .jim-nav .wp-block-navigation-submenu:is(:hover, :focus-within) > .wp-block-navigation__submenu-icon, .acm-accordion .jim-acc__item:hover .jim-acc__q::before": {
+        "color": "var(--ds-c-accent-text-hover)"
+      },
+      ".btn-link": {
+        "color": "var(--ds-c-accent-text)"
+      },
+      ".form-control, .wpcf7-form-control:is(input:not([type=submit], [type=checkbox], [type=radio]), textarea, select), .wp-block-search__input": {
+        "background-color": "var(--ds-c-bg)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ":is(.form-control, .wpcf7-form-control, .wp-block-search__input):focus": {
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".acm-features.style-2 .ft-item-detail.bg-primary": {
+        "background-color": "var(--ds-c-ink)"
+      },
+      ".acm-features.style-2 .ft-item-detail.bg-primary :is(.item-title, .item-des)": {
+        "color": "var(--ds-c-on-ink) !important"
+      },
+      ".tracy-motion-dots .tracy-motion-dot[aria-current=true]": {
+        "background-color": "var(--ds-c-accent-text)"
+      },
+      ".acm-hero .sub-title, .style-funds .jim-fund__tag a": {
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".tracy-pager__link:not(.is-current *)": {
+        "background-color": "var(--ds-c-surface)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".tracy-pager__link:not(.is-current *):is(:hover, :focus-visible), .is-current .tracy-pager__link": {
+        "background-color": "var(--ds-c-accent)",
+        "border-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".style-funds .jim-fund__track": {
+        "background-color": "var(--ds-c-border)"
+      },
+      ".page-link": {
+        "background-color": "var(--ds-c-surface)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".page-item.active .page-link": {
+        "background-color": "var(--ds-c-accent)",
+        "border-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      "input.wpcf7-submit": {
+        "background-color": "var(--ds-c-accent)",
+        "border-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".required .star": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".jim-account-side .form-check-input:not(:checked), .jim-contactpage__main .wpcf7-list-item input[type=checkbox]:not(:checked)": {
+        "background-color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".jim-follow .wp-social-link a::before, .jim-contactpage__card .wp-social-link a::before": {
+        "color": "currentColor"
+      },
+      ".jim-follow .wp-social-link a, .jim-contactpage__card .wp-social-link a": {
+        "color": "var(--ds-c-fg-2)"
+      },
+      ".jim-follow .wp-social-link a": {
+        "background-color": "var(--ds-c-surface)"
+      },
+      ".wp-block-social-link-anchor:is(:hover, :focus-visible)": {
+        "color": "var(--ds-c-accent-text) !important",
+        "text-decoration-line": "underline !important",
+        "opacity": "0.8"
+      },
+      ".style-news:not(.jim-gb--news) .jim-news__content--success :is(.jim-news__title a, .jim-news__date, .jim-news__by, .jim-news__author)": {
+        "color": "var(--ds-c-accent-on) !important"
+      }
+    }
+  },
+  "sideNote": "under a dark worn page the features sections' white veil follows the page, so the species section's jungle photograph shows under its title, and the title in the system's heading colour read 4.38:1 there (Toggl Track's pink; re-measured 12/10/2026 with every heading and text judged): on a dark worn page the section titles take the system's text",
+  "contrast": {
+    "accent-text": "main .tracy-eyebrow, main a:not([class*=button]):not(:has(img))",
+    "muted": "main .has-muted-color, main .tracy-section__head p",
+    "body": "main p",
+    "card-text": "main .tracy-card p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "keepDefaults": {
+    "--wp--preset--color--bg": "#ffffff",
+    "--wp--preset--color--surface": "#fbfbfb",
+    "--wp--preset--color--surface-warm": "#fff9ef",
+    "--wp--preset--color--fg": "#495057",
+    "--wp--preset--color--fg-2": "#1d3677",
+    "--wp--preset--color--muted": "#6c757d",
+    "--wp--preset--color--meta": "#6c757d",
+    "--wp--preset--color--border": "#e9ecef",
+    "--wp--preset--color--border-soft": "#e8e8ed",
+    "--wp--preset--color--accent": "#0cb76d",
+    "--wp--preset--color--accent-on": "#ffffff",
+    "--wp--preset--color--accent-hover": "#0cb76d",
+    "--wp--preset--color--accent-active": "#0cb76d",
+    "--wp--preset--color--success": "#0cb76d",
+    "--wp--preset--color--warn": "#f48a29",
+    "--wp--preset--color--danger": "#dc3545",
+    "--jim-primary": "#1d3677",
+    "--jim-heading": "#1d3677",
+    "--jim-text": "#495057",
+    "--jim-muted": "#6c757d",
+    "--jim-surface": "#fbfbfb",
+    "--jim-raised": "#ffffff",
+    "--jim-band": "#fff9ef",
+    "--jim-line": "#e9ecef",
+    "--jim-link": "#1d3677",
+    "--jim-eyebrow": "#0cb76d",
+    "--jim-on-band": "#dee2e6",
+    "--jim-on-band-muted": "#ced4da"
+  },
+  "ready": true,
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-ja-impact): 12/12 on every release measured, controls 0 differences, lowest text 4.70:1, 89% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on theme 1.0.8 (its minVersion) over the ja-impact/wp7 1.0.7 content (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-ja-impact): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, kept bands unchanged, no text under 4.5:1 made worse than the template's own, 88-97% of the page follows, screenshots read by a person. The new probe first FAILED it 4/12: under a dark system the stylesheet's light-dark() colours took their dark arms (page text #c2c9d6, the kept bands followed), the green subtitle read 2.29:1 on MotherDuck's cream and the band text #dee2e6 sat on the system's light fills (1.20-2.62:1). Fixed by templateVars (each --jim-* colour names its role), keepDefaults without light-dark(), followRules, and the kept bands keeping the light scheme. First measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-impact-wp7)",
+  "maxVersionNote": "1.0.11 13/10/2026: the dark half of every light-dark() whose light half reads the slot reads it too (darkArms, feat/ds-every-template-3), so a dark system no longer shows the template's own dark colours; unworn, both halves compute what they did. 1.0.9 checked 12/10/2026 (published-templates-green): the same var(--ds-*) reads as 1.0.8 and tracy_apply_inspiration kept; every role class is still drawn by the theme or the demo; the theme change is words, dates, fonts and links, no colour 13/10/2026: 1.0.10 = 1.0.9 with the theme's other stylesheets tokenized (TDSR CSS-2, fix/tdsr-css2); measured with flow.mjs before release. 1.0.12 16/10/2026 (#1375): a status colour set as text (the shared sections' plan ticks and form notes, the theme's own .text-danger, .text-success and required marks) reads the readable shade the slot makes for the worn page (--ds-c-<status>-text); unworn, every value is the theme's own. 1.0.13 19/10/2026 (dot 3, feat/ds-dot3-a2): the theme reads every standard role variable itself (var(--ds-*, <its own value>), role scan 0 unresolved, design-system-roles.json on quickstart 1.0.10); unworn the same computed styles as 1.0.12; shipped in quickstart/ja-impact/wp7 1.0.10. 1.0.14 21/10/2026 (TEXT-1): the outline-light button text in assets/css/groups/ga.css reads --ds-c-on-ink instead of a ground role; unworn, the same computed styles on every page that carries it; shipped in quickstart/ja-impact/wp7 1.0.11.",
+  "bands": {
+    ".jim-header__top": {
+      "ground": "#1d3677",
+      "texts": ["#adb5bd", "#ffffff"],
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ".wp-block-social-link-anchor:is(:hover, :focus-visible), .wp-block-social-link-anchor:is(:hover, :focus-visible) .wp-block-social-link-label": {
+          "color": "text",
+          "background-color": "card"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      }
+    },
+    ".jim-footer__contact": {
+      "ground": "#1d3677",
+      "texts": ["#ffffff", "#ced4da"],
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ".wp-block-social-link-anchor:is(:hover, :focus-visible), .wp-block-social-link-anchor:is(:hover, :focus-visible) .wp-block-social-link-label": {
+          "color": "text",
+          "background-color": "card"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      }
+    },
+    ".jim-footer__nav": {
+      "ground": "#1d3677",
+      "texts": ["#ced4da", "#ffffff", "#dee2e6"],
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ".wp-block-social-link-anchor:is(:hover, :focus-visible), .wp-block-social-link-anchor:is(:hover, :focus-visible) .wp-block-social-link-label": {
+          "color": "text",
+          "background-color": "card"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      }
+    },
+    ".jim-footer__bar": {
+      "ground": "#1d3677",
+      "texts": ["#ced4da"],
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ".wp-block-social-link-anchor:is(:hover, :focus-visible), .wp-block-social-link-anchor:is(:hover, :focus-visible) .wp-block-social-link-label": {
+          "color": "text",
+          "background-color": "card"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      }
+    },
+    ".sub-feature": {
+      "ground": "#2e4c99",
+      "texts": ["#ffffff", "#dee2e6"],
+      "fill": true,
+      "kind": "brand",
+      "words": [".wp-block-heading", "p", ".sub-feature-desc"],
+      "important": true
+    },
+    ".acm-features.style-6": {
+      "ground": "#1d3677",
+      "texts": ["#ffffff"],
+      "fill": true,
+      "kind": "ink",
+      "dropPicture": true,
+      "words": [".title", ".lead", ".jim-progress__label", ".jim-progress__pct"],
+      "paint": {
+        ".sub-title": {
+          "color": "accent"
+        },
+        ".jim-progress::after": {
+          "background-color": "accent-fill"
+        },
+        ".jim-progress::before": {
+          "background-color": "card"
+        }
+      }
+    },
+    ".block-inner.bg-warning": {
+      "ground": "#f48a29",
+      "texts": ["#ffffff"],
+      "fill": true,
+      "kind": "brand",
+      "words": [".item-description"]
+    },
+    ".jim-evt--bg-success": {
+      "ground": "#0cb76d",
+      "texts": ["#ffffff"],
+      "fill": true,
+      "kind": "brand",
+      "words": [".jim-evt__title a", ".jim-evt__place", ".jim-evt__intro p"],
+      "important": true,
+      "paint": {
+        ".jim-evt__date": {
+          "background-color": "card"
+        },
+        ".jim-evt__date :is(.jim-evt__day, .jim-evt__month)": {
+          "color": "text"
+        }
+      }
+    },
+    ".jim-evt--bg-warning": {
+      "ground": "#f48a29",
+      "texts": ["#ffffff"],
+      "fill": true,
+      "kind": "brand",
+      "words": [".jim-evt__title a", ".jim-evt__place", ".jim-evt__intro p"],
+      "important": true,
+      "paint": {
+        ".jim-evt__date": {
+          "background-color": "card"
+        },
+        ".jim-evt__date :is(.jim-evt__day, .jim-evt__month)": {
+          "color": "text"
+        }
+      }
+    },
+    ".jim-evt--bg-info": {
+      "ground": "#2970db",
+      "texts": ["#ffffff"],
+      "fill": true,
+      "kind": "brand",
+      "words": [".jim-evt__title a", ".jim-evt__place", ".jim-evt__intro p"],
+      "important": true,
+      "paint": {
+        ".jim-evt__date": {
+          "background-color": "card"
+        },
+        ".jim-evt__date :is(.jim-evt__day, .jim-evt__month)": {
+          "color": "text"
+        }
+      }
+    },
+    ".jim-evt--bg-primary": {
+      "ground": "#1d3677",
+      "texts": ["#ffffff"],
+      "fill": true,
+      "kind": "ink",
+      "words": [".jim-evt__title a", ".jim-evt__place", ".jim-evt__intro p"],
+      "important": true,
+      "paint": {
+        ".jim-evt__date": {
+          "background-color": "card"
+        },
+        ".jim-evt__date :is(.jim-evt__day, .jim-evt__month)": {
+          "color": "text"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours 14/10/2026 (look review of the final measure): the header's top bar holds the logo, a picture with white lettering, so it stays dark under every system (kind ink: the system's strongest ink, lifted off a dark page) — as a brand band it took the accent, and the logo vanished on Mailchimp's yellow, Linear's lime and the near-white accents of Airbnb, Eddie and ElevenLabs' dark sides. The template's own coloured blocks (look review v6, 14/10/2026) stayed its colours under every system: the \"Helping hands\" panel (.acm-features.style-6) is a navy texture picture (g1-dt-bg.jpg, opaque) over --jim-primary, so it is an ink fill with the picture dropped (dropPicture), its green eyebrow and progress bars the band's accent; the \"Since 1980\" call (.block-inner.bg-warning, the system's warn colour behind white words) and the event cards painted green #0cb76d (and their primary, warning and info siblings) are fills whose words take what reads on the worn ground (important: the theme's dark rules paint the card words #eef1f6), which replaces the dark side's white for the green card's words",
+  "contractNotes1317": "13/10/2026 (#1317): the four navy bands kept their white and grey words (#ced4da, #dee2e6, #adb5bd: 190 left paints) while their ground followed, so the page followed 77% under Moxie; they repaint their words with the system text, as the Joomla twin. The mission block (.sub-feature, #2e4c99) is a brand fill as in the Joomla twin; the carousel dots follow the border. Second run (21:46): the mission text (p.sub-feature-desc) kept its white on the turned accent (1.92:1 under Spotify): the theme rule outweighs the fill words, so the fill paints with !important and names the class.",
+  "contractNotes1315": "14/10/2026 (#1315, two modes): once the dark side shows, the theme's own dark rules (g3.css, z-pilot.css: :root[data-theme='dark'] … .jim-evt__place, .jim-evt__title #eef1f6) paint the green event card's words and the coloured news cards' titles #eef1f6 on its literal #0cb76d, 2.32:1 against the template's own white 2.62:1 on every dark page: under a dark worn page they keep the template's white (the card's green is the template's, not the system's); the fund cards' titles on their photos likewise (#eef1f6 at 3.85-4.05:1 on the photo's grey, the template's white)",
+  "innerNote": "15/10/2026 (v10 inner measure, /water-treatment-projects/ 10/12): the sidebar's category counts (.jim-side__list .numitems, groups/gc.css) are a literal light-dark(#2970db, #c2c9d6) on the surface chip (--jim-raised-2): the template's info blue stayed on a light side, 3.74:1 on Moxie's derived cream surface #eae5cc, and its slate grey on a dark one. They take the readable accent (4.50:1 or more on the surface under all 1334 systems on both sides): 4.53:1 there.",
+  "keptButtons": {
+    ".block-inner.bg-warning": {
+      "ground": "#f48a29",
+      "buttons": ["a.wp-block-button__link.wp-element-button"]
+    }
+  },
+  "probe10Note": "19/10/2026 (dot 3, preview probe v10 on the published 1.0.9, Moxie + Figma, light + dark, 23 pages: 12 rules failing -> 0; contract only, no theme release). Bootstrap (ga.css, global body.tracy .btn-*/.alert-*/.bg-*/.badge): each takes the system's role, paired as the Joomla twin's shared block pairs them (primary accent/accent-on, status fills the status text shade under the page colour, alerts the status tint), .btn the system's corner; the block button wrappers that carry .btn classes (div.wp-block-button.btn) are left out and paint nothing (TPL-1, BTN-1, CON-2, border-colour, ACCENT-LEAK). Fields (form-control, Contact Form 7, the tag search) wear the page ground with the system's border (FORM-1). The navy --jim-primary band (.jim-band--primary) and the about page's navy cards are the system's ink with its on-ink words: a dark system made them a light glare block (TPL-1); the footer bands are ink too (their white logo sank into Moxie's light accent, IDENT-2). The header Donate now is the system's button at its own height, centred in its row (CLIP-1: the band stretched the pill to 65px). Hero kicker and fund tags on photographs read on-ink (status-hue, CON-2 photo-text); the progress track inside the navy panel is the band's card (SHAPE-1); the tagged list rows the page (GROUND-1); dark: the photo section title is white like its siblings, the masthead title the heading colour (HIER-2), the motion dots fg / accent-text (ICON-1). Forced-hover sweep (accent-leak.mjs --hover, Moxie, Figma, Mailchimp, Dribbble, light + dark): the template green (--jim-success) is its brand accent: it reads the system's accent; words drawn in it take accent-text / accent-text-hover; the dark side's literal navy grounds (--jim-raised-2, pager, page links, fund track, event dates, checkboxes, the photo veil) the system's roles; social marks the heading colour; required stars danger-text. 0 hover LEAK after. Left: the three feature icons (icon-1/2/3.png) stay the template's green PNG under Dribbble (rest, PIC): a picture, needs the theme (the Joomla twin draws them through an SVG filter); two Dribbble card shades (#252438) sit near the template navy by coincidence."
+}

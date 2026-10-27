@@ -1,0 +1,336 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page backgrounds, card surfaces, white secondary controls, and light text on dark badges"
+    },
+    "absolute-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Absolute Ink — Display headlines, high-emphasis body copy, and the dominant text treatment on white"
+    },
+    "graphite": {
+      "$value": "#161618",
+      "$type": "color",
+      "$description": "Graphite — Navigation text, secondary headings, dark outlines, icon strokes, and card-copy emphasis"
+    },
+    "soft-charcoal": {
+      "$value": "#6a6a6b",
+      "$type": "color",
+      "$description": "Soft Charcoal — Long-form supporting copy, feature descriptions, and restrained metadata"
+    },
+    "studio-black": {
+      "$value": "#0f0f12",
+      "$type": "color",
+      "$description": "Studio Black — Announcement badges and dark media or footer-like surfaces"
+    },
+    "electric-capture-blue": {
+      "$value": "#0d44e8",
+      "$type": "color",
+      "$description": "Electric Capture Blue — Filled purchase and exploration buttons, blue product accents, and selected emphasis — a sharply saturated blue breaks the otherwise monochrome Mac-workspace palette"
+    },
+    "electric-blue-sweep": {
+      "$value": "#174ef2",
+      "$type": "color",
+      "$description": "Electric Blue Sweep — Dark-section and wordmark-style accent gradient, extending Studio Black into a brighter blue edge"
+    }
+  },
+  "font": {
+    "google-sans-flex": {
+      "$value": "Google Sans Flex",
+      "$type": "fontFamily",
+      "$description": "The sole interface and editorial family: 600 at 60px/66px for the hero, 40px/48px for section headings, and 20px/28px for feature titles; 450 supports 18px/30px descriptive copy, while 550 handles compact labels and controls. The family’s flexible intermediary weights make text feel calibrated like a native macOS utility rather than split between a display face and a UI face."
+    }
+  },
+  "typography": {
+    "sm": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "13px",
+        "fontWeight": 550,
+        "lineHeight": 1.23,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "13px",
+        "fontWeight": 450,
+        "lineHeight": 1.23,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 13px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "14px",
+        "fontWeight": 550,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "14px",
+        "fontWeight": 450,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "15px",
+        "fontWeight": 550,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "15px",
+        "fontWeight": 450,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 15px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.15,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "18px",
+        "fontWeight": 450,
+        "lineHeight": 1.67,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "18px",
+        "fontWeight": 550,
+        "lineHeight": 1.67,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "20px",
+        "fontWeight": 600,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "40px",
+        "fontWeight": 600,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 40px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Google Sans Flex",
+        "fontSize": "60px",
+        "fontWeight": 600,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 60px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "36": {
+      "$value": "36px",
+      "$type": "dimension",
+      "$description": "Spacing 36px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "120": {
+      "$value": "120px",
+      "$type": "dimension",
+      "$description": "Spacing 120px"
+    },
+    "200": {
+      "$value": "200px",
+      "$type": "dimension",
+      "$description": "Spacing 200px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "xl": {
+      "$value": "14px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    },
+    "2xl": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "3xl": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "full": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "56px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    },
+    "full-3": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-3"
+    }
+  },
+  "shadow": {
+    "lg": {
+      "$value": "rgba(22, 22, 24, 0.02) 0px 7px 20px -8px, rgba(22, 22, 24, 0.02) 0px 29px 33px -4px, rgba(22, 22, 24, 0.05) 0px 22px 30px -8px, rgba(22, 22, 24, 0.06) 0px 0px 0px 1px",
+      "$type": "shadow",
+      "$description": "Shadow elevation lg"
+    },
+    "sm": {
+      "$value": "rgba(4, 24, 85, 0.28) 0px 2px 6px -1px, rgba(66, 174, 247, 0.48) 0px 6px 14px 0px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation sm"
+    },
+    "sm-2": {
+      "$value": "rgba(22, 22, 24, 0.2) 0px 2px 6px -1px, rgba(22, 22, 24, 0.16) 0px 0px 0px 1px",
+      "$type": "shadow",
+      "$description": "Shadow elevation sm-2"
+    },
+    "sm-3": {
+      "$value": "rgba(22, 22, 24, 0.5) 0px 0px 6px -2px, rgba(22, 22, 24, 0.25) 0px 6px 4px -2px",
+      "$type": "shadow",
+      "$description": "Shadow elevation sm-3"
+    }
+  },
+  "surface": {
+    "paper-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page field, navigation field, and the base behind spacious feature sections."
+    },
+    "lifted-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 1: Testimonial cards, white utility badges, and secondary button surfaces distinguished through outline and shadow."
+    },
+    "studio-surface": {
+      "$value": "#0f0f12",
+      "$type": "color",
+      "$description": "Surface level 2: Announcement badges, dark media overlays, and full-width dark product bands."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://cleanshot.com",
+      "siteName": "CleanShot X",
+      "extractedAt": "2026-09-24T17:35:16.141Z",
+      "variant": "extended"
+    }
+  }
+}

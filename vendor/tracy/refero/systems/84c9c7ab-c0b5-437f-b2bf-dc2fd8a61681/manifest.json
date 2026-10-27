@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+  "status": "complete",
+  "name": "Home",
+  "url": "https://styles.refero.design/style/84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+  "sourceWebsite": "https://www.savor.it",
+  "extractedAt": "2026-06-03T20:56:18.847Z",
+  "capturedAt": "2026-10-08T05:14:19.956119+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Botanical specimen on vellum — an oxblood-stamped plate of golden fat, edges sharp, paper warm, nothing rounded.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0f19306b-3b17-4c2a-b5bf-be09db353ebb.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5f62fd0ecad4c2b7b9e2e962647cb462a90739170c2d332212a6c61933c04ae2",
+      "bytes": 20227
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "60fa947e19acff173d3fe0ea3e9ffda51cf5900e79008184f52e4e7b3384a174",
+      "bytes": 7964
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c95b54d699bb92b6489862e2f253fe3547392a900ccd8bfda0e6f11a73084bd2",
+      "bytes": 17776
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3197fc1f4e9067ab720ed062c28c4dbff1020219d6a85579d97f9990b3667561",
+      "bytes": 7090
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "dc22e2a7c8ee53f4aa1424528f1988bca13e90d3c63f6962cab574b76168b1cf",
+      "bytes": 13302
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "93da5a55c2711ce87b60b09b75c5f8455789f468e7bcb2701f3b1450fb6edc1d",
+      "bytes": 2578
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c4e14c89a6b9d56cb893b97e57ff789bf870777cff5ca8c70b43ac7327ac989e",
+      "bytes": 518
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "13b78bf9bfdce8295d29c3de72aa561eaca804fbdb2e1f1daaf90c71ca4f9f9b",
+      "bytes": 535
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d2b027583474def12b110a133db854b1395ad59e97cfe5cbda83c0f1635f8887",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5cff9bc1bd518e759035e84338681b0e22d1be77c42a719b93d8217437ef89b2",
+      "bytes": 43564
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e8300031a1c984acc49d1bd4822fdefeb5d1af10f2cdd0b67ef4c2823726733d",
+      "bytes": 22691
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a5e1b908e705d137d9bea2901b1a5fd2cd38c27a8bbb13a557904d681d6494e4",
+      "bytes": 36237
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b826d2325904bdf8a128ef7c33b223941e8d75f713106a5acd1bb26893055e93",
+      "bytes": 472
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "27070fc23079e18710a1e83a7b1b2a900767da0c1f6208854fd841f8dd5cbe16",
+      "bytes": 1390
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "75728406e51f6566a67018f0fbac8cf328889df023ce7cc53e944dc4c0422f57",
+      "bytes": 1969
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1f9089e1-4170-482f-b988-afe1124a70a9",
+    "21b71be3-78a0-4681-a5b9-64cc4b40eb67",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "329075e8-97ed-4722-8952-d9bf001de233",
+    "515da65c-f9e3-4296-a05d-0d921f5cdab1",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "76483bd1-37d3-4fb9-889b-aecf27b08b83",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "9501cfdc-3eb3-4b64-90f6-9afdded48945",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "b753dfda-cbe1-41e4-b341-b98d69c8422f",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495"
+  ]
+}

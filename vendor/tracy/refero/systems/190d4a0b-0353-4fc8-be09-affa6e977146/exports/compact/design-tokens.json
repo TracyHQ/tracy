@@ -1,0 +1,39 @@
+{
+  "color": {
+    "onyx": {
+      "$value": "#0e0e00",
+      "$type": "color",
+      "$description": "Onyx — Full-bleed page background, navigation surface, product staging void — the entire canvas is one continuous dark field"
+    },
+    "paper-white": {
+      "$value": "#fefefe",
+      "$type": "color",
+      "$description": "Paper White — Display headlines, body text, navigation labels, archive list entries, locale switcher — the sole ink color across all UI layers"
+    },
+    "faint-white": {
+      "$value": "#2a2a2a",
+      "$type": "color",
+      "$description": "Faint White — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "ak": {
+      "$value": "ak",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse — nav, body, display headlines, archive list, labels, links. The extreme range from 12px to 216px in a single family, with weights 400 for quiet copy and 700 only for emphasis, defines the system's voice. Tight 0.80 line-height at 216px creates stacked text-blocks that read as architectural walls rather than sentences."
+    },
+    "gs": {
+      "$value": "gs",
+      "$type": "fontFamily",
+      "$description": "Editorial serif accent — used exclusively in the project archive list for project titles. At 72px it provides a high-contrast counterpoint to ak's geometric sans; at 12px it renders archive metadata with classical warmth. The two-font system is deliberately minimal: one sans does everything, one serif appears only where editorial gravitas is needed."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://offficestud.io",
+      "siteName": "OFFFICE :",
+      "extractedAt": "2026-06-03T19:58:32.706Z",
+      "variant": "compact"
+    }
+  }
+}

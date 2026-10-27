@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-893-emdash-hidden-languages-entries-unpublished",
+  "kind": "fix",
+  "title": "EmDash Apply: a language nobody chose leaves the site entry by entry after the hand-over, only when its chrome entry is off, counted and logged",
+  "pr": 893,
+  "area": "sites/apply/emdash",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-emdash.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"a language nobody chose comes off entry by entry, so no page names it in its hreflang links nor EmDash in its sitemap\"; \"the customer is not kept waiting for it: Apply hands the site over first, and the run’s end waits for the rest\"; \"what the clean-up did is counted, and said in one line per site when the run ends\"; \"a hidden language whose chrome entry is still published is left whole: the tool did not hide it, or someone switched it back on\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 29).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): after the tool runs, every seed entry of each hidden language (chrome excepted) is unpublished, never deleted, so no page names it in hreflang and the sitemap lists only chosen languages; Apply hands the site over first and dispose waits; a language whose chrome entry is still published is left whole; unpublished / failed / notReached / served are counted and one '[brief] <siteKey>: hidden languages after hand-over: …' line is logged per site."
+  ],
+  "selectors": {
+    "engine": "hideRest, eachAtOnce, dispose in apps/tracy-web/src/sites/brief-engines/emdash.js",
+    "log": "'[brief] <siteKey>: hidden languages after hand-over:'"
+  },
+  "evidence": "Ledger L18, 05/10/2026: after Apply in en + vi on Tracy Business EmDash (40 languages shipped) every content page declared 41 hreflang alternates and 78 alternate links on a 65-page crawl led to 404; the tool's --hide-chrome-only unpublished only each hidden language's `site` entry. Reds 464adeab3, 8ebeb03a3, ba6cd2f16; fixes 13575806a, 69b9c4fea, 9625e16b7.",
+  "fence": "A language the site still serves never loses a page; the customer does not wait for the clean-up; a failure after hand-over is said in the log, not lost.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-emdash.test.mjs"],
+    "tests": [
+      "a language nobody chose comes off entry by entry, so no page names it in its hreflang links nor EmDash in its sitemap",
+      "the customer is not kept waiting for it: Apply hands the site over first, and the run’s end waits for the rest",
+      "what the clean-up did is counted, and said in one line per site when the run ends",
+      "a hidden language whose chrome entry is still published is left whole: the tool did not hide it, or someone switched it back on"
+    ]
+  }
+}

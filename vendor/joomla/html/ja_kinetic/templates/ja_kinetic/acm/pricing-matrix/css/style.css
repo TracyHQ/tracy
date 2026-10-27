@@ -1,0 +1,128 @@
+/* Kinetic — Pricing-Matrix ACM block (self-contained, block-scoped).
+   The table grid (border-collapse, centered cells, first-col left, bottom
+   borders, responsive font/padding) is the GLOBAL `.hx-matrix` rule in
+   scss/_kinetic.scss — NOT redefined here. `.hx-section .hx-container .hx-pad
+   .hx-eyebrow .hx-check` are also global. This file only adds the section
+   head + the matrix head/cell/group-divider trim, all via design tokens so
+   light + dark + the 3 directions resolve automatically. */
+
+.acm-pricing-matrix {
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--text);
+}
+
+.acm-pricing-matrix .hx-section {
+  padding: 32px 0 80px;
+}
+
+/* ---- ruled section head: top hairline + "(02) / COMPARE PLANS" + title ---- */
+.acm-pricing-matrix .hx-pm-head {
+  margin-bottom: 20px;
+}
+.acm-pricing-matrix .hx-sec-rule {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 12px;
+}
+.acm-pricing-matrix .hx-eyebrow {
+  margin: 0 0 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.acm-pricing-matrix .hx-pm-title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  color: var(--heading);
+}
+.acm-pricing-matrix .hx-pm-sub {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* ---- surface card around the table (design Table: #121614 + 1px border + r16) ---- */
+.acm-pricing-matrix .hx-matrix-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.acm-pricing-matrix .hx-matrix {
+  width: 100%;
+  border-collapse: collapse;
+}
+.acm-pricing-matrix .hx-matrix thead tr {
+  background: var(--chrome-elevated, var(--elevated));
+}
+
+/* ---- table head (plan names) ---- */
+.acm-pricing-matrix .hx-matrix thead th {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--heading);
+}
+.acm-pricing-matrix .hx-matrix thead th.hx-pm-corner {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---- feature label (first col) ---- */
+.acm-pricing-matrix .hx-matrix tbody td,
+.acm-pricing-matrix .hx-matrix tbody th {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text);
+}
+.acm-pricing-matrix .hx-matrix .hx-pm-label {
+  font-weight: 500;
+  color: var(--heading);
+}
+
+/* ---- LIST ROW gesture: subtle bg tint on data-row hover (skip group dividers) ---- */
+.acm-pricing-matrix .hx-matrix tbody tr:not(.hx-pm-group) > * {
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.acm-pricing-matrix .hx-matrix tbody tr:not(.hx-pm-group):hover > * {
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+  border-color: var(--primary);
+}
+
+/* ---- group divider row (spans all columns) ---- */
+.acm-pricing-matrix .hx-pm-group td {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 30px;
+  padding-bottom: 12px;
+}
+
+/* ---- cell values ---- */
+.acm-pricing-matrix .hx-check {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+.acm-pricing-matrix .hx-pm-dash {
+  color: var(--muted);
+}
+.acm-pricing-matrix .hx-pm-cell {
+  color: var(--text);
+}

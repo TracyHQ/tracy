@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "tracy-brand-facts/wordpress/v1",
+  "tag": "quickstart/ja-restaurant/wp7",
+  "version": "1.0.0",
+  "themeFiles": "82758e111e4ab06f8be2dfbfbc851bcb34bfa4f2b21018900e76d048965a89e8",
+  "measuredAt": "2026-10-22T15:48:27.110Z",
+  "measuredBy": "tdsr brand-facts.mjs (home page, 1440 px, light scheme)",
+  "facts": {
+    "spots": [
+      {
+        "where": "header jr-logo.jr-logo--dark.wp-block-site-logo",
+        "option": "tracy_logo_dark"
+      },
+      {
+        "where": "header jr-logo.jr-logo--light.wp-block-site-logo",
+        "option": "site_logo"
+      }
+    ],
+    "logos": "pair",
+    "brandReady": true,
+    "darkLogo": true,
+    "nameFallback": true,
+    "faviconReady": true,
+    "favicons": 2,
+    "frame": {
+      "width": 178,
+      "height": 110
+    },
+    "heightHeld": false
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a5c06875-c374-4af3-923b-6e66a5d58493",
+  "status": "complete",
+  "name": "Basis Theory",
+  "url": "https://styles.refero.design/style/a5c06875-c374-4af3-923b-6e66a5d58493",
+  "sourceWebsite": "https://basistheory.com",
+  "extractedAt": "2026-09-20T19:28:17.333Z",
+  "capturedAt": "2026-10-08T05:15:41.394041+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "payment rails in a drafting studio. White technical paper, stacked translucent transaction layers, and one switched-on aqua control define the visual direction.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/19086222-2efa-4c61-a5ac-ab47a87d3ec7.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d27a8310-0d1e-4440-8c74-ec9777334b3f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ff25beba-61cc-43e9-8b37-a9cd3612ae51.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/dec0f4ba-c097-45b1-a9f3-e7dc12f9cdbb.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/3cfb3a78-a08f-4ac1-b66c-a2272d2c86e4.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8fd9822d2394ef617a85f6822e82c7d7e7e15209edb7e8dc2c7be68b9b258dcc",
+      "bytes": 23733
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "948192071f1bc5fe659d66ea17c4dc962b67f646d596d39e0979f248988f3670",
+      "bytes": 110798
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3a5120acd2f08e9474d030d826f9618101cdd4d1979d9e3b2a8056b28baf6a31",
+      "bytes": 18538
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "af7c895aca5708f3ebb6657621b144edc1f81c7c4b2b1f65932857b64a3f803d",
+      "bytes": 15231
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "61ef3befdcbf1c3d22e26b1d0ec3ebe3e1a50c337473210d3fb63596dd27a799",
+      "bytes": 12781
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "bfd8278e40ae445fd129f503515eaf9a6ff2038b7b6dd9eb2cfc05e9fcd6be8a",
+      "bytes": 3828
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1d8506f3f97e39d8e75e9c8ba83de311921433cc30290cea794864667cc3258c",
+      "bytes": 1087
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "b60e2777968298e68e4bb4fd7bd35db55bb9fbbe81d428c00d7b92e3989cf2ad",
+      "bytes": 1182
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "15f21a9e17f4569ae9c1b9bfd09bc23b27eccee06769e6d385e888833b260797",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "40386728899b81ef9237ceefb885375dcd8ec05693c385ae8055e8aa4e5010ca",
+      "bytes": 45347
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ef16bcde48a285b56a307aec09dafd293637eef55ce6857f2d36321d3a0c540c",
+      "bytes": 24296
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9466daa37b0ae17ffd282d92e7291a13983bffc7d8e1decd9c7f9cadf95e8514",
+      "bytes": 63031
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "37e05d568f8997360a68a284d7369859b004b6b5a22a8d48c03bc359654f51d7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e0e83ae792ae697bd4af4f586955eda01c331ac4b8eda09c11317e679212d833",
+      "bytes": 2745
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "65281f6d3901e329b395cea3aaffdc211671abd9fc11bb138caf96980c394e12",
+      "bytes": 3378
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "0c55e725-e933-41b6-9fb7-2505a6659ee5",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "1c1d3939-8d82-4907-aa3c-c9b2fcfbab4f",
+    "2e9b3dcb-f937-488d-891c-351c7366188f",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "73ec75d6-edec-4ed2-bc09-debb261b6ee0",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

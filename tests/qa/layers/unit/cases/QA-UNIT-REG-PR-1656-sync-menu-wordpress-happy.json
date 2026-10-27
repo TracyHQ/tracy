@@ -1,0 +1,46 @@
+{
+  "id": "QA-UNIT-REG-PR-1656-sync-menu-wordpress-happy",
+  "itemIds": ["regression:REG-PR-1656-sync-menu-wordpress"],
+  "requirement": "An imported WordPress site offers Sync from live in its More menu, like an imported Joomla site; EmDash and sites not imported do not",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1656-sync-menu-wordpress.json",
+    "ref": "PR #1656 (fix); fix evidence: tasks/nhat-ky/2026-10-24-sync-menu-wordpress.md",
+    "invariant": "S1: syncsFromLive is true for imported joomla and wordpress, false for emdash and for a site not imported",
+    "productSources": ["packages/site/tracy-my-sites/src/client/site-toolbar-state.ts:70"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1656-sync-menu-wordpress.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1656-sync-menu-wordpress"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-my-sites", "tracy-my-sites"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1656-sync-menu-wordpress",
+    "pr": 1656,
+    "kind": "fix",
+    "area": "sync/live",
+    "file": "tests/regression/cases/REG-PR-1656-sync-menu-wordpress.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/site/tracy-my-sites/test/site-toolbar-state.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

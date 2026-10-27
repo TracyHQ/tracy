@@ -1,0 +1,74 @@
+{
+  "color": {
+    "canvas-charcoal": {
+      "$value": "#27272a",
+      "$type": "color",
+      "$description": "Canvas Charcoal — Page background, primary canvas surface"
+    },
+    "elevated-ink": {
+      "$value": "#18181b",
+      "$type": "color",
+      "$description": "Elevated Ink — Card surfaces, product window backgrounds, logo tiles — one step deeper than canvas for contrast"
+    },
+    "slate-surface": {
+      "$value": "#343538",
+      "$type": "color",
+      "$description": "Slate Surface — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "deep-void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Deep Void — Nav fills, deepest surface tone, pure black accents"
+    },
+    "near-black": {
+      "$value": "#0c0c0e",
+      "$type": "color",
+      "$description": "Near Black — List borders, hairline dividers, subtle structural edges"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary text, icons, borders, high-contrast elements — the dominant interface color"
+    },
+    "fog-gray": {
+      "$value": "#a8afb7",
+      "$type": "color",
+      "$description": "Fog Gray — Muted body text, secondary headings, subtle borders — readable but recessive"
+    },
+    "mist-gray": {
+      "$value": "#dadee4",
+      "$type": "color",
+      "$description": "Mist Gray — Light borders, disabled-state text, very subtle dividers"
+    },
+    "dim-stone": {
+      "$value": "#8c8c8d",
+      "$type": "color",
+      "$description": "Dim Stone — Placeholder/disabled surfaces, inactive list backgrounds"
+    },
+    "signal-yellow": {
+      "$value": "#fde533",
+      "$type": "color",
+      "$description": "Signal Yellow — Yellow outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "suisse-international": {
+      "$value": "Suisse International",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI text, body, navigation, buttons, and most headings"
+    },
+    "suisse-works-book": {
+      "$value": "Suisse Works Book",
+      "$type": "fontFamily",
+      "$description": "Italic display emphasis in hero and section headlines"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.logo-archive.org",
+      "siteName": "LogoArchive",
+      "extractedAt": "2026-06-03T22:05:16.175Z",
+      "variant": "compact"
+    }
+  }
+}

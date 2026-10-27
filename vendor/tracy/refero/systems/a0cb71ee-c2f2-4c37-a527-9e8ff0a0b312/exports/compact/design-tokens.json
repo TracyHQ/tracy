@@ -1,0 +1,99 @@
+{
+  "color": {
+    "hero-violet": {
+      "$value": "#beaaff",
+      "$type": "color",
+      "$description": "Hero Violet — Hero section background, full-bleed brand wash — saturated lavender makes the page unmistakable from a thumbnail"
+    },
+    "card-lilac": {
+      "$value": "#e2d9ff",
+      "$type": "color",
+      "$description": "Card Lilac — Card and panel surfaces — desaturated companion to Hero Violet, used for elevated content blocks on the lighter canvas"
+    },
+    "bitcoin-orange": {
+      "$value": "#f97316",
+      "$type": "color",
+      "$description": "Bitcoin Orange — Accent for the Bitcoin currency icon and selective callouts — the only warm chromatic note in a cool palette, anchoring the crypto identity"
+    },
+    "warm-cream": {
+      "$value": "#fff7ed",
+      "$type": "color",
+      "$description": "Warm Cream — Footer band and warm transitions — breaks the lavender monotony with a peach-tinged neutral"
+    },
+    "lavender-mist": {
+      "$value": "#f7f2ff",
+      "$type": "color",
+      "$description": "Lavender Mist — Page canvas — the dominant background across most sections, a barely-there violet tint instead of pure white"
+    },
+    "off-white": {
+      "$value": "#f9fafb",
+      "$type": "color",
+      "$description": "Off-White — Footer base surface, light secondary backgrounds"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Button text, inverse surfaces, card highlights on colored backgrounds"
+    },
+    "ink-plum": {
+      "$value": "#2c232e",
+      "$type": "color",
+      "$description": "Ink Plum — Primary text, filled button backgrounds, dark borders — near-black with a violet undertone that keeps it on-palette"
+    },
+    "graphite": {
+      "$value": "#4b5563",
+      "$type": "color",
+      "$description": "Graphite — Secondary headings, link text, subdued body copy"
+    },
+    "slate": {
+      "$value": "#6b7280",
+      "$type": "color",
+      "$description": "Slate — Muted helper text, captions, tertiary metadata"
+    },
+    "steel": {
+      "$value": "#374151",
+      "$type": "color",
+      "$description": "Steel — Icon strokes, button text on light surfaces, mid-emphasis labels"
+    },
+    "mist": {
+      "$value": "#e2e8f0",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, dividers, input outlines — the universal 1px rule throughout the UI"
+    },
+    "fog": {
+      "$value": "#d1d5db",
+      "$type": "color",
+      "$description": "Fog — Button borders, disabled-state surfaces, secondary dividers"
+    },
+    "jet": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Jet — Maximum-contrast text, logo marks, hard-edge elements where Ink Plum feels too soft"
+    }
+  },
+  "font": {
+    "sharp-grotesk-bold": {
+      "$value": "Sharp Grotesk Bold",
+      "$type": "fontFamily",
+      "$description": "Display headlines for brand words ('NURI', 'BACK.') — extreme weight 900 with tight tracking creates a stencil/spray-paint impact that contrasts deliberately with the serif body of the same headline. At 118px it fills the hero column; the 0.018em positive tracking at that size is unusual and prevents the slabs from merging at extreme scale."
+    },
+    "harriet-display": {
+      "$value": "Harriet Display",
+      "$type": "fontFamily",
+      "$description": "Editorial serif used for headline companions ('BANK IS', 'One Tap. You're In.'), feature section headings, and the hero subhead — weight 300 at 50–62px is a restrained, magazine-display choice that creates tension with the 900-weight sans beside it. The 0.90 line-height at display sizes keeps stacked lines touching like fine print."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Workhorse for body, navigation, buttons, inputs, footer copy, card text — weight 400 for body, 500 for nav/links, 600 for subheadings and button labels. The tight 1.20–1.33 range for 20–32px sizes keeps mid-scale text compact and confident."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://nuri.com",
+      "siteName": "Nuri",
+      "extractedAt": "2026-06-03T20:42:32.900Z",
+      "variant": "compact"
+    }
+  }
+}

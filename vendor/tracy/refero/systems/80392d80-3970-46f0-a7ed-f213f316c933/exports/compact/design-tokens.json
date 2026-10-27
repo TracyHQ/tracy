@@ -1,0 +1,79 @@
+{
+  "color": {
+    "moss-green": {
+      "$value": "#38744d",
+      "$type": "color",
+      "$description": "Moss Green — Green outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "signal-cyan": {
+      "$value": "#00aaff",
+      "$type": "color",
+      "$description": "Signal Cyan — Blue outline accent for tags, dividers, and focused UI edges."
+    },
+    "ice-wash": {
+      "$value": "#e0f5ff",
+      "$type": "color",
+      "$description": "Ice Wash — Cool surface tint — content card backgrounds, highlight washes; a barely-there blue that hints at a Polaroid shadow without actually adding one"
+    },
+    "mint-whisper": {
+      "$value": "#cbffa6",
+      "$type": "color",
+      "$description": "Mint Whisper — Warm surface tint — secondary highlight washes, soft card fills; a pale chartreuse that pairs with Moss Green as a lighter sibling"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Primary text, structural borders, icon strokes — the dominant workhorse (870 uses); never softened to gray, always full ink"
+    },
+    "graphite": {
+      "$value": "#181816",
+      "$type": "color",
+      "$description": "Graphite — Heading text and icon fills — a near-black with the faintest warm shift, used where Pure Black would feel too clinical (display headings, filled icons)"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, text on dark fills — the gallery wall itself"
+    },
+    "bone": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Bone — Elevated surface, button backgrounds, subtle dividers — the off-white that lets buttons and cards sit forward without using shadow"
+    },
+    "stone": {
+      "$value": "#908f8e",
+      "$type": "color",
+      "$description": "Stone — Button borders, secondary borders — medium gray for outlined controls that need definition without weight"
+    },
+    "fog": {
+      "$value": "#a29e9c",
+      "$type": "color",
+      "$description": "Fog — Body borders, nav borders, muted body text — the most-used border gray (275 instances); creates the hairline-grid that organizes the page without drawing attention"
+    },
+    "slate": {
+      "$value": "#6a6967",
+      "$type": "color",
+      "$description": "Slate — Heading borders, link text, secondary headings — darker than Fog for moments that need more presence than a border but less than a heading"
+    }
+  },
+  "font": {
+    "control-upright": {
+      "$value": "Control Upright",
+      "$type": "fontFamily",
+      "$description": "Primary interface sans — headlines, nav, buttons, body, icons. A single-weight geometric sans that does all structural work. Signature choice: it carries the 142px display headline at weight 400 only, so the extreme size creates weight rather than the font face. The custom stylistic sets ss12 and ss09 are active — these likely adjust letterforms (apertures, terminals) to keep the geometric structure readable at small sizes and dramatic at large."
+    },
+    "times-new-roman": {
+      "$value": "Times New Roman",
+      "$type": "fontFamily",
+      "$description": "Literary counterpoint — body paragraphs, quotes, editorial text. The intentional clash: a contemporary geometric sans for headlines, a 1930s book serif for body. The serif makes long reads feel like a printed catalog page rather than a SaaS dashboard. ss12 is active, likely for old-style figures and ligatures."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sublime.app",
+      "siteName": "Sublime",
+      "extractedAt": "2026-06-03T22:02:57.107Z",
+      "variant": "compact"
+    }
+  }
+}

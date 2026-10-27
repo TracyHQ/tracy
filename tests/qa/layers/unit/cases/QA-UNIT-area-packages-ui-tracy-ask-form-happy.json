@@ -1,0 +1,38 @@
+{
+  "id": "QA-UNIT-area-packages-ui-tracy-ask-form-happy",
+  "itemIds": ["test-area:packages/ui/tracy-ask-form"],
+  "requirement": "Every existing node:test file of packages/ui/tracy-ask-form (1 files, via test:workers) passes with none skipped.",
+  "oracle": {
+    "source": "existing node:test suites of the area",
+    "ref": "scripts/check-tests.ts GROUPS test:workers; packages/ui/tracy-ask-form",
+    "invariant": "The suite is green with no skipped, todo or missing test; its pass says nothing about RED until a regression case proves one.",
+    "productSources": ["packages/ui/tracy-ask-form/src/client/ask-state.ts:160"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["node"],
+  "assertionIds": ["unit.packages-ui-tracy-ask-form.suite-green"],
+  "redProof": null,
+  "legacyIds": [],
+  "kind": "suite",
+  "area": "packages/ui/tracy-ask-form",
+  "areas": ["packages/ui/tracy-ask-form", "tracy-ask-form", "suites"],
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=120000",
+    "--test-force-exit",
+    "packages/ui/tracy-ask-form/test/ask-state.test.mjs"
+  ],
+  "files": ["packages/ui/tracy-ask-form/test/ask-state.test.mjs"],
+  "timeoutS": 3600
+}

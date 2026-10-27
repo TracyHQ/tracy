@@ -1,0 +1,89 @@
+{
+  "color": {
+    "parchment": {
+      "$value": "#fcfaf1",
+      "$type": "color",
+      "$description": "Parchment — Page canvas and card surfaces — warm off-white replaces pure #ffffff to keep the system grounded in an agricultural, paper-like register"
+    },
+    "bone": {
+      "$value": "#efe9e0",
+      "$type": "color",
+      "$description": "Bone — Secondary surface for footer, soft sections, and hairline borders that need separation from the parchment canvas without harsh contrast"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Elevated card and product-mockup surface — used sparingly to lift specific panels (like the Ledger screenshot) above the parchment base"
+    },
+    "loam": {
+      "$value": "#c7bcaf",
+      "$type": "color",
+      "$description": "Loam — Subtle dividers, card edges, and low-emphasis borders between the canvas and content blocks"
+    },
+    "bark": {
+      "$value": "#96897b",
+      "$type": "color",
+      "$description": "Bark — Muted helper text, metadata, and supporting labels where a softer voice is needed than primary body copy"
+    },
+    "saddle": {
+      "$value": "#50463c",
+      "$type": "color",
+      "$description": "Saddle — Secondary body text and subdued icon fills — a warm brown-gray that recedes without disappearing"
+    },
+    "ink": {
+      "$value": "#211b15",
+      "$type": "color",
+      "$description": "Ink — Primary text, heading strokes, and the dominant border color across the system. Warm near-black with a hint of umber keeps the interface from feeling clinical"
+    },
+    "charcoal-olive": {
+      "$value": "#252a23",
+      "$type": "color",
+      "$description": "Charcoal Olive — Dark mode–style panels, product UI containers, and high-emphasis icon fills — used when a section needs to invert the warm page into something product-focused"
+    },
+    "deep-olive": {
+      "$value": "#434f40",
+      "$type": "color",
+      "$description": "Deep Olive — Navigation borders, icon strokes, and the most-used neutral divider in the system — a moss-toned dark that reads as organic rather than industrial"
+    },
+    "sage": {
+      "$value": "#7a9779",
+      "$type": "color",
+      "$description": "Sage — Green accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "honey-amber": {
+      "$value": "#e8b672",
+      "$type": "color",
+      "$description": "Honey Amber — Primary action button fill — the system's singular chromatic accent for CTAs, earning attention through warmth rather than saturation"
+    },
+    "wheat": {
+      "$value": "#f0c891",
+      "$type": "color",
+      "$description": "Wheat — Lighter amber used for heading borders, icon accents, and subtle decorative strokes where honey would be too heavy"
+    }
+  },
+  "font": {
+    "lateral": {
+      "$value": "Lateral",
+      "$type": "fontFamily",
+      "$description": "Workhorse sans for body, nav, buttons, inputs, and secondary headings. Weight 400 for running text, 500 for buttons and emphasis. Custom letterforms give it subtle warmth a generic sans would miss — slightly humanist proportions rather than mechanical geometric."
+    },
+    "lateral-narrow": {
+      "$value": "Lateral Narrow",
+      "$type": "fontFamily",
+      "$description": "Condensed variant for tighter column headings and subhead text where horizontal space is constrained but body voice is still wanted."
+    },
+    "lateral-display": {
+      "$value": "Lateral Display",
+      "$type": "fontFamily",
+      "$description": "Hero and section display face. Used at weight 500 (not the default 700) for major headlines — this restraint is signature: the type whispers authority instead of shouting. Slight serif character in the terminals gives it an editorial, almost newspaper-headline feel that matches the agricultural brand voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ambrook.com",
+      "siteName": "Ambrook",
+      "extractedAt": "2026-06-03T20:05:27.377Z",
+      "variant": "compact"
+    }
+  }
+}

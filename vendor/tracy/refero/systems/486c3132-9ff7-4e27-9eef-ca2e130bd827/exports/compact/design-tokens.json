@@ -1,0 +1,39 @@
+{
+  "color": {
+    "grid-line": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Grid Line — Primary border between tiles and around media surfaces — the only structural divider in the system, doing the work of card outlines, section separators, and elevation simultaneously"
+    },
+    "body-text": {
+      "$value": "#d4d4d4",
+      "$type": "color",
+      "$description": "Body Text — Primary readable text — project names, bio copy, metadata labels"
+    },
+    "muted-text": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Muted Text — Secondary metadata, category tags, and the [link] indicator — recedes behind body text to create a two-tier reading hierarchy without changing weight"
+    },
+    "subtle-divider": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Subtle Divider — Low-contrast internal dividers and edge treatments — barely visible against the page background, used where a hairline would be too loud"
+    }
+  },
+  "font": {
+    "commit-mono": {
+      "$value": "Commit Mono",
+      "$type": "fontFamily",
+      "$description": "Used for every text element in the system — headings, body, metadata, links, tags. The entire UI is a single monospace family; there is no sans-serif counterpart."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.verse.sh",
+      "siteName": "Verse",
+      "extractedAt": "2026-06-03T21:29:46.159Z",
+      "variant": "compact"
+    }
+  }
+}

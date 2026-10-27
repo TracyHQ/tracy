@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "88e9d606-7e8f-479c-9508-1b081e254ed9",
+  "status": "complete",
+  "name": "Marco",
+  "url": "https://styles.refero.design/style/88e9d606-7e8f-479c-9508-1b081e254ed9",
+  "sourceWebsite": "https://www.marco.fyi",
+  "extractedAt": "2026-06-03T20:34:57.889Z",
+  "capturedAt": "2026-10-08T05:14:31.405088+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Moleskine notebook in cool morning light — a personal workspace where widgets float like sticky notes on warm paper.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/92082812-50b7-47a5-862f-6b3b1a1e95fa.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "148a93a0328e38e5a4e69a184f21f1a7c82db4aace642c8d5c10c3b40e057424",
+      "bytes": 27937
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2c3f4218b214d2cc435de3ba7a366913504bac3252c3a8c014b34697ced37bb1",
+      "bytes": 124052
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "7032683e966bc6595f30d485b56e242f6e05ead3dba5746986c34dda61adc4ec",
+      "bytes": 20656
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a0f3bd9da2f0a1e818c3ddc7de53b775a9f97187c91758734694a38fdf6b5374",
+      "bytes": 24531
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "1da5d88e6f0d05dc6498cba8ff8e44e54a95796c5d351c26b460f57f59395112",
+      "bytes": 14719
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "fc27e88c48c126a740ede7622d65e29bde9613a2fc012e12e71e019c03228720",
+      "bytes": 5382
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "083eae322b89bd6543577de665a4dfeebdf68d31588cb1fac0f80c0d7bdacf6c",
+      "bytes": 1356
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "b08580a9d9601f484b026de04967bac6f91e6e848e97d1fdea40f004cd8a4b2d",
+      "bytes": 1465
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b846bc5324452778aa9f6c65f0050a7461624232adaad9a4ec9cec421f4b1879",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a66e909894ed6dc93b572ca496594586710254bf64709d46a947721639ed6d97",
+      "bytes": 50177
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "932137c70a8aed67b3cf9fe421bdbc874d3a2c1f2d984b5c50afc7e94cd93b97",
+      "bytes": 26423
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1ad75f9eb9f6c95834feb94f5bb1ada37c36a4f31a835ce95a137f6fdf753718",
+      "bytes": 76184
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "fa5e0df82f8247ce0b3d62d97cf59dd769784c2a32672d9b9f9bb5f5b3a3dc3d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1ce72991e4c83a4bc19619f77274e917a5b4e6fa32896ea6e0005cb34a7b87a5",
+      "bytes": 3396
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7e9c125f974af6dd97a9173d8efda7774249cdf4d7c964397791df4be17e9a95",
+      "bytes": 4177
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "24d3b281-04a6-4cc7-8a74-634b08472291",
+    "2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+    "34788d94-1147-4d38-8df7-6f47ef7efb12",
+    "34c8dbee-f5d9-4495-a0e0-a25c6ca4b95b",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "51752cfb-4fd4-464f-8b78-ecbc813830e1",
+    "59ac8248-1d64-4df3-92f1-919b50e05602",
+    "5bfe6c1d-1b15-4f8d-b0c9-677a33291c5d",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "68d18deb-bb09-4258-8024-001af9c844c0",
+    "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+    "754ad72f-9abd-43df-ac72-c6abf2036ed4",
+    "88e9d606-7e8f-479c-9508-1b081e254ed9",
+    "8d4a4e15-31f1-4509-8d13-7746f85c20d7",
+    "9be20798-843b-424c-bc87-192edc0cce22",
+    "a521abb9-d84b-4870-b5a8-363be7c3f94a",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d6c2a911-45ed-4860-a992-43df22793c2a",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

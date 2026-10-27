@@ -1,0 +1,438 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-vega/wp7/1.1.16",
+  "baseHash": "388fe823855b71190feda1a5b6ce2c39c0eb56b76a03cf61bb6bfdcbf0ee88ae",
+  "baseFiles": {
+    "manifest.json": "4fe89f4a6a676c16d9913e22b136938e1c7b6683a719ea73bbc72224a36ef802",
+    "content-map.json": "95ba88dff23abe6cef2f4cc450f31e5c5ab39bce1b800c2ebf302927e8462305",
+    "presentation-lock.json": "a48547997a1ec34c3616a4b1435203499ff33cb9e368bce965523f9862185316"
+  },
+  "inputs": {
+    "navigation-source.json": "c10d688b1156bed487a7e6f8cc38798c946903ff4fa2813911fa6723efdfe7bc"
+  },
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 205,
+        "slug": "solutions"
+      },
+      "link": {
+        "label": "Typography",
+        "pageId": 177
+      },
+      "label": "Typography",
+      "path": [
+        "Typography"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Typography\" is one of the template's own screens",
+      "key": "navigation-205",
+      "before": "318e1e30a39d6415ec87835f095f69f7ed97df1b093ad4993c1d83e765111b36",
+      "after": "4c9678f4aef653171eec8ed72ef275f87dbd7dd47e36134e57707ef372c39525"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 205,
+        "slug": "solutions"
+      },
+      "link": {
+        "label": "Offline Pages",
+        "pageId": 179
+      },
+      "label": "Offline Pages",
+      "path": [
+        "Offline Pages"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Offline Pages\" is one of the template's own screens",
+      "key": "navigation-205",
+      "before": "4c9678f4aef653171eec8ed72ef275f87dbd7dd47e36134e57707ef372c39525",
+      "after": "36d218e95e2a746e7c05d514e4897884a5454bf3ecb0bf111fc23c54535cfbc8"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 205,
+        "slug": "solutions"
+      },
+      "link": {
+        "label": "Error Page",
+        "pageId": 172
+      },
+      "label": "Error Page",
+      "path": [
+        "Error Page"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Error Page\" is one of the template's own screens",
+      "key": "navigation-205",
+      "before": "36d218e95e2a746e7c05d514e4897884a5454bf3ecb0bf111fc23c54535cfbc8",
+      "after": "15db18a8edb74ebf9393070f1df7f657f4befbe372f27ecd274d143ff8d34a1f"
+    }
+  ],
+  "finals": [
+    {
+      "key": "navigation-205",
+      "before": "318e1e30a39d6415ec87835f095f69f7ed97df1b093ad4993c1d83e765111b36",
+      "after": "15db18a8edb74ebf9393070f1df7f657f4befbe372f27ecd274d143ff8d34a1f"
+    }
+  ],
+  "kept": [
+    {
+      "key": "navigation-203",
+      "where": "wp_navigation 203 (mainmenu)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 173,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-203",
+      "where": "wp_navigation 203 (mainmenu)",
+      "label": "About Us",
+      "path": [
+        "About Us"
+      ],
+      "pageId": 183,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-203",
+      "where": "wp_navigation 203 (mainmenu)",
+      "label": "News",
+      "path": [
+        "News"
+      ],
+      "pageId": 186,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-204",
+      "where": "wp_navigation 204 (explore)",
+      "label": "Login Form",
+      "path": [
+        "Login Form"
+      ],
+      "pageId": 174,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-204",
+      "where": "wp_navigation 204 (explore)",
+      "label": "Registration Form",
+      "path": [
+        "Registration Form"
+      ],
+      "pageId": 175,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-204",
+      "where": "wp_navigation 204 (explore)",
+      "label": "Profile",
+      "path": [
+        "Profile"
+      ],
+      "pageId": 176,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-205",
+      "where": "wp_navigation 205 (solutions)",
+      "label": "Smart Search",
+      "path": [
+        "Smart Search"
+      ],
+      "pageId": 185,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-205",
+      "where": "wp_navigation 205 (solutions)",
+      "label": "Author listing",
+      "path": [
+        "Author listing"
+      ],
+      "pageId": 187,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-206",
+      "where": "wp_navigation 206 (resources)",
+      "label": "Category Blog",
+      "path": [
+        "Category Blog"
+      ],
+      "pageId": 186,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-206",
+      "where": "wp_navigation 206 (resources)",
+      "label": "Featured Articles",
+      "path": [
+        "Featured Articles"
+      ],
+      "pageId": 180,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-206",
+      "where": "wp_navigation 206 (resources)",
+      "label": "Blog Detail",
+      "path": [
+        "Blog Detail"
+      ],
+      "pageId": 387,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-207",
+      "where": "wp_navigation 207 (join-us)",
+      "label": "Careers",
+      "path": [
+        "Careers"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-207",
+      "where": "wp_navigation 207 (join-us)",
+      "label": "Open Positions",
+      "path": [
+        "Open Positions"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-208",
+      "where": "wp_navigation 208 (industry-focus)",
+      "label": "Industry Manufacturing",
+      "path": [
+        "Industry Manufacturing"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-208",
+      "where": "wp_navigation 208 (industry-focus)",
+      "label": "Transportation Logistics",
+      "path": [
+        "Transportation Logistics"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-208",
+      "where": "wp_navigation 208 (industry-focus)",
+      "label": "Healthcare",
+      "path": [
+        "Healthcare"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-208",
+      "where": "wp_navigation 208 (industry-focus)",
+      "label": "Banks & Insurance",
+      "path": [
+        "Banks & Insurance"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-208",
+      "where": "wp_navigation 208 (industry-focus)",
+      "label": "Consulting Providers",
+      "path": [
+        "Consulting Providers"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-208",
+      "where": "wp_navigation 208 (industry-focus)",
+      "label": "Non Profit",
+      "path": [
+        "Non Profit"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 0",
+      "label": "Managed Services",
+      "path": [
+        "Managed Services"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 0",
+      "label": "Software Development",
+      "path": [
+        "Software Development"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 0",
+      "label": "Cloud Services",
+      "path": [
+        "Cloud Services"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 0",
+      "label": "App Development",
+      "path": [
+        "App Development"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 0",
+      "label": "IT Consultancy",
+      "path": [
+        "IT Consultancy"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 0",
+      "label": "Database Security",
+      "path": [
+        "Database Security"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 1",
+      "label": "Database Security",
+      "path": [
+        "Database Security"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 1",
+      "label": "IT Consultancy",
+      "path": [
+        "IT Consultancy"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 1",
+      "label": "App Development",
+      "path": [
+        "App Development"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 1",
+      "label": "Cloud Services",
+      "path": [
+        "Cloud Services"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 1",
+      "label": "Software Development",
+      "path": [
+        "Software Development"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-209",
+      "where": "template part 209 (header), inline navigation 1",
+      "label": "Managed Services",
+      "path": [
+        "Managed Services"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "links": 3,
+    "templateParts": 0,
+    "kept": 31,
+    "unresolved": 0
+  }
+}

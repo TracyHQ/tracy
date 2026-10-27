@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1450-wo-ops-address",
+  "kind": "feat",
+  "title": "/ops/wo keeps every view in the page address: Live Queue filters and the opened WO, Places tab, search, opened place and the Research caps dialog, and Settings as view=settings; a pasted link or F5 reopens the same screen and Back/Forward walks between views",
+  "pr": 1450,
+  "area": "website-opportunities/ops",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/web/tracy-harness run the test file named in run.cmd.",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures, 0 skipped.",
+    "A bare /ops/wo is the Live Queue with every default and writes nothing back.",
+    "A full queue address and a full Places address round-trip; stage is written as its digit.",
+    "Each view reads and writes only its own section; Settings writes only view=settings.",
+    "An invalid value drops only its own field; blank or over-long text is dropped; parameters /ops/wo does not own are kept."
+  ],
+  "selectors": {
+    "files": "packages/web/tracy-harness/src/wo-address.ts, packages/web/tracy-harness/src/use-wo-address.ts, packages/web/tracy-harness/src/Wo.tsx, packages/web/tracy-harness/src/WoPlaces.tsx, packages/web/tracy-harness/src/App.tsx"
+  },
+  "run": {
+    "cwd": "packages/web/tracy-harness",
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/wo-address.test.mjs"],
+    "tests": [
+      "a bare /ops/wo is the Live Queue",
+      "a full queue address round-trips",
+      "stage reads a digit",
+      "a Places address round-trips",
+      "each view reads and writes only its own section",
+      "defaults are not written",
+      "an invalid value drops only its own field",
+      "blank or over-long text is dropped",
+      "parameters this module does not own are kept"
+    ]
+  }
+}

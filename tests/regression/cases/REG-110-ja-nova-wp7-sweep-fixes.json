@@ -1,0 +1,27 @@
+{
+  "id": "REG-110",
+  "kind": "fix",
+  "pr": 908,
+  "title": "JA Nova wp7: a dark-OS visitor with no saved choice gets the whole page dark (typography cards), and the About Us expertise tag pills match the source in dark",
+  "area": "wordpress-theme/wp-ja-nova",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-nova theme under test (local stand from the quickstart pack, or its clean restore) and the Joomla source (local stand installed from the quickstart/ja-nova/j6 installer zip, web fonts loading).",
+    "S2: From the TCH checkout run: node vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/visual/site-sweep.mjs --site <site> --source <source> --run-root tasks/ja-nova-wp7 --zip <theme.zip> --baseline <sweep output of the previous version> --baseline-version <version> --out <dir>",
+    "S3: Then run: node tasks/ja-nova-wp7/tools/sweep-extra.mjs --site <site> --sweep <dir> --out <dir>/extra.json --merge --baseline-extra <extra.json of the previous version> --baseline-sweep <sweep output of the previous version> --measure <dir>/fix-measure.merged.json",
+    "S4: Read the final line of S3 and the check list of the merged measure."
+  ],
+  "expect": [
+    "site-sweep: no defect in overflow, scheme, background or header; the only owed case is chips that repeat a label in a section (the tool cannot pair them), which sweep-extra pairs by order.",
+    "sweep-extra: 'auto = chosen' reports 0 defect groups over 30 routes x 2 systems (a system with no saved choice looks exactly like the same choice saved, on every element); 'chips by order' reports 0 unmeasured and 0 defect rows.",
+    "merged measure: 6/6 checks pass (overflow, scheme, background, header, chips, auto-equals-chosen); the previous version passes 3/6 (typography cards white under a dark system, expertise tag pill background rgb(26,30,37) against the source's rgb(30,35,43))."
+  ],
+  "selectors": {
+    "tool": "tasks/ja-nova-wp7/tools/sweep-extra.mjs",
+    "evidence": "tasks/ja-nova-wp7/release/fix-measure.json"
+  },
+  "evidence": "Sweeps of 04/10/2026 against the local Joomla source stand: 1.1.5 had 1 scheme defect (/typography .card white, source rgb(30,35,43)), 119 element-colour groups differing between no choice and saved dark (all on /typography) and 8 chip rows; 1.1.6 has 0 (6/6 checks on the clean restore, bound to wp-ja-nova-1.1.6.zip 88c86b00; tasks/ja-nova-wp7/release/fix-measure.json)",
+  "fence": "Browser-measured behaviour of the shipped theme against the source; the tool fails closed on a crash, a deadline or a chip it cannot pair"
+}

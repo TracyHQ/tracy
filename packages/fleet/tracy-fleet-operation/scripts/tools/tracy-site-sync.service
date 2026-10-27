@@ -1,0 +1,19 @@
+# The hourly push of every lane's site folder to its team repo (sync-site-folders.sh).
+#
+# Installed on a fleet host next to tracy-hooks.service:
+#   cp tracy-site-sync.service tracy-site-sync.timer /etc/systemd/system/
+#   systemctl daemon-reload && systemctl enable --now tracy-site-sync.timer
+# Run it now: systemctl start tracy-site-sync.service. Read it: journalctl -u tracy-site-sync.
+[Unit]
+Description=Tracy fleet: push every lane's site folder to its team repo
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/tracy-fleet/tools/sync-site-folders.sh
+# push-site-folder.sh reads FLEET_RELAY_SECRET from /etc/tracy/hooks.env itself; nothing else is needed.
+# It writes /srv/tracy and .git inside it, so it runs as root like tracy-hooks does.
+NoNewPrivileges=yes
+ProtectHome=yes
+PrivateTmp=yes

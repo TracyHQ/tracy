@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1216-getting-started-help-row",
+  "kind": "feat",
+  "title": "Settings › Help & about has a Getting started row that always reopens the screen: ring + progress line, All set when done, a note when hidden from the account menu, Open",
+  "pr": 1216,
+  "area": "onboard/help-row",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-onboard help-row tests (node:test, jsdom page, fake account flags and status copy) and the tracy-settings Help & about tests (server render of the section with a recording renderSlot).",
+    "S2: the end-to-end form: open Settings › Help & about on the web or in the desktop app; the Getting started row sits after the update rows and before What's new; press Open; the Getting started screen opens with the eyebrow 'Getting started with Tracy Cowork'."
+  ],
+  "expect": [
+    "In progress (web, no AI account): .ts-help-row[data-help-item='getting-started'] with title 'Getting started', a decorative (aria-hidden) ring whose arc offset is C·(1−2/3), the line '2 of 3 setup steps complete.' and a button 'Open' wearing the class the section hands over.",
+    "Every step done: the ring shows a tick instead of the arc and the line reads 'All set. Open it again any time.'; the row stays.",
+    "Hidden from the account menu: the line ends with '· Hidden from the account menu' (the dot aria-hidden); the row stays.",
+    "Open opens the screen in reopened mode; Show in account menu there clears the note underneath without a reload.",
+    "Operator switch 'onboarding' off: no row. Through apply(): registered into settings.help.item with id tracy-onboard.getting-started, order 10, locale tracy-onboard.",
+    "Help & about renders settings.help.item once, after the update row and its switches and before the release notes (web: after the web line, before the links), handing over buttonClassName equal to the class of its own 'Check for updates' button."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-onboard/test/help-row.test.mjs",
+      "packages/ui/tracy-settings/test/help-about.test.mjs"
+    ],
+    "tests": [
+      "in progress: the section's row, the ring at 2 of 3, the line and an Open button with the section's class",
+      "every step done: a tick in the ring and \"All set. Open it again any time.\" — the row stays",
+      "hidden from the account menu: the line says so after a separator — the row stays",
+      "Open opens the screen in reopened mode; Show in account menu there clears the note underneath",
+      "the operator switched Getting started off: no row",
+      "through apply(): the row registers into settings.help.item after the updates",
+      "the help items sit after the update row and its switches, before the release notes",
+      "on the web the help items follow the web line, inside the first box, before the links",
+      "the section as registered renders the settings.help.item slot, handing over the button class"
+    ],
+    "timeout_s": 120
+  },
+  "fence": "tracy-settings never imports onboard: the row arrives through the settings.help.item slot it declares, and the operator's onboarding switch is the only thing that removes it",
+  "selectors": {
+    "row": "[data-help-item='getting-started']",
+    "hiddenNote": "[data-help-hidden]",
+    "open": "[data-help-item='getting-started'] .ts-help-actions button",
+    "ring": ".ts-help-status .tv-ob-ring[data-done]"
+  }
+}

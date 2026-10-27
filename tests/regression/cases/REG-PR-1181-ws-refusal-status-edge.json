@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1181-ws-refusal-status-edge",
+  "kind": "fix",
+  "title": "A refused or unreachable workspace WebSocket handshake is answered with its status, not a bare close the edge turns into 502",
+  "pr": 1181,
+  "area": "web/workspace-socket",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap apps/tracy-web/test/upgrade-listener.test.mjs",
+    "S2: Read the lines of the three tests whose names start with 'issue 888:'."
+  ],
+  "expect": [
+    "'issue 888: each refused handshake is answered with its status, never a bare close' reports ok: no database 503, no site 404, not signed in 401, no seat 403, token to re-mint 401, database failure 503, each with connection: close (pre-fix: socket.destroy() with no bytes).",
+    "'issue 888: dsh unreachable (a redeploy) answers 503 with retry-after, not a bare close' reports ok (pre-fix: the socket was destroyed with nothing written and the test timed out).",
+    "'issue 888: a refused socket that resets while its answer flushes is no uncaught error' reports ok: for each refusal, an `error` emitted on the socket after the listener returned does not throw and closes the socket (before review fix M1: the only `error` listener was taken off, and the emit threw ECONNRESET — an uncaught exception in tracy-web)."
+  ],
+  "selectors": {},
+  "evidence": "Measured 11/10/2026 on dev (tracy-dev, journalctl -u cloudflared): every failed wss://cowork.tracy.site/<site>/api/remote.mux was 'Unable to reach the origin service ... EOF' from 127.0.0.1:51710 (tracy-web), which the edge answers as 502 — a tab of a deleted site retrying every 14 s for an hour, and bursts at 13:26:09 exactly when tracy-dsh restarted for a deploy.",
+  "fence": "apps/tracy-web/src/workspace/upgrade.js answers every refusal through refuseUpgrade; apps/tracy-web/src/workspace/proxy.js forwardUpgrade answers 503 when dsh fails before the splice; refuseUpgrade keeps an `error` listener on the socket while its answer flushes.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/upgrade-listener.test.mjs"],
+    "tests": [
+      "issue 888: each refused handshake is answered with its status, never a bare close",
+      "issue 888: dsh unreachable (a redeploy) answers 503 with retry-after, not a bare close",
+      "issue 888: a refused socket that resets while its answer flushes is no uncaught error"
+    ]
+  }
+}

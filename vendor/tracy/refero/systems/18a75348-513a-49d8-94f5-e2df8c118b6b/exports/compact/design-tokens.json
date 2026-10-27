@@ -1,0 +1,109 @@
+{
+  "color": {
+    "signal-violet": {
+      "$value": "#7084ff",
+      "$type": "color",
+      "$description": "Signal Violet — Hero text accent, link underlines, icon glows, decorative gradient endpoint — the brand's chromatic signature; used as paint, not fill; Hero ambient washes, card glow halos, decorative background floods"
+    },
+    "voltage-blue": {
+      "$value": "#405bff",
+      "$type": "color",
+      "$description": "Voltage Blue — Violet outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "midnight-ink": {
+      "$value": "#0e0e0e",
+      "$type": "color",
+      "$description": "Midnight Ink — Page canvas, deepest background layer"
+    },
+    "carbon": {
+      "$value": "#191919",
+      "$type": "color",
+      "$description": "Carbon — Surface level 1 — nav pill, card backgrounds, button fills, footer"
+    },
+    "graphite": {
+      "$value": "#414042",
+      "$type": "color",
+      "$description": "Graphite — Surface level 2 — elevated panels, card borders, secondary surfaces"
+    },
+    "steel": {
+      "$value": "#58595b",
+      "$type": "color",
+      "$description": "Steel — Input borders, inactive form fields"
+    },
+    "slate": {
+      "$value": "#6d6e71",
+      "$type": "color",
+      "$description": "Slate — Muted helper text, disabled labels"
+    },
+    "fog": {
+      "$value": "#a7a9ac",
+      "$type": "color",
+      "$description": "Fog — Secondary text, subtle borders, placeholder copy"
+    },
+    "ash": {
+      "$value": "#d1d3d4",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, icon strokes, list dividers"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary text, heading fills, icon strokes, card backgrounds in product-screenshot panels"
+    },
+    "smoke": {
+      "$value": "#2c2c2c",
+      "$type": "color",
+      "$description": "Smoke — List dividers, row separators in dense tables"
+    },
+    "plasma-cyan": {
+      "$value": "#3dd6f5",
+      "$type": "color",
+      "$description": "Plasma Cyan — Secondary gradient endpoint — used sparingly in radial glows for atmospheric warmth"
+    }
+  },
+  "font": {
+    "bodyfont": {
+      "$value": "bodyFont",
+      "$type": "fontFamily",
+      "$description": "bodyFont — detected in extracted data but not described by AI"
+    },
+    "sohne-custom-grotesk": {
+      "$value": "Sohne / custom grotesk",
+      "$type": "fontFamily",
+      "$description": "Primary interface and display typeface. Weight 500 dominates headings — heavier than typical marketing sites (400-600) but lighter than editorial displays (700-800), landing in a confident middle register. The largest sizes (84-125px) carry very tight line-height (1.0-1.09), letting headlines stack as a solid block of type. Letter-spacing opens up to 0.129-0.167em on small uppercase labels (eyebrows, tags) but stays normal on body and display."
+    },
+    "sohne-mono-jetbrains-mono": {
+      "$value": "Sohne Mono / JetBrains Mono",
+      "$type": "fontFamily",
+      "$description": "Code snippets, SDK names, technical labels. Normal letter-spacing, 1.50-1.65 line-height for readability. Appears in the hero email input and the 'Copy, paste, go.' code block."
+    },
+    "monofont": {
+      "$value": "monoFont",
+      "$type": "fontFamily",
+      "$description": "monoFont — detected in extracted data but not described by AI"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Helvetica — detected in extracted data but not described by AI"
+    },
+    "headingfont1": {
+      "$value": "headingFont1",
+      "$type": "fontFamily",
+      "$description": "headingFont1 — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://launchdarkly.com",
+      "siteName": "LaunchDarkly",
+      "extractedAt": "2026-06-03T17:40:10.191Z",
+      "variant": "compact"
+    }
+  }
+}

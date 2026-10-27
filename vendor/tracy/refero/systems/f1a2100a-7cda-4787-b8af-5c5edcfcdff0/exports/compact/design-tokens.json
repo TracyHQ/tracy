@@ -1,0 +1,69 @@
+{
+  "color": {
+    "nubank-violet": {
+      "$value": "#820ad1",
+      "$type": "color",
+      "$description": "Nubank Violet — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-iris": {
+      "$value": "#290b4d",
+      "$type": "color",
+      "$description": "Deep Iris — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "dusty-violet": {
+      "$value": "#714f8f",
+      "$type": "color",
+      "$description": "Dusty Violet — Subtle violet washes, disabled violet states, muted brand backgrounds"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "snow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Snow — Card surfaces, input fills, text on dark backgrounds, page sections over the mist base"
+    },
+    "mist": {
+      "$value": "#f4f4f4",
+      "$type": "color",
+      "$description": "Mist — Page canvas, subtle section backgrounds, input field fills — the porcelain tone that defines the overall light theme"
+    },
+    "stone": {
+      "$value": "#a2a2a2",
+      "$type": "color",
+      "$description": "Stone — Secondary text, helper labels, placeholder text, icon strokes at rest"
+    },
+    "concrete": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Concrete — Hairline borders, dividers, subtle UI separators"
+    },
+    "smoke": {
+      "$value": "#777777",
+      "$type": "color",
+      "$description": "Smoke — Tertiary text, footer secondary lines, metadata"
+    },
+    "graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Graphite — Mid-neutral fills, muted backgrounds for nested sections"
+    }
+  },
+  "font": {
+    "graphik": {
+      "$value": "Graphik",
+      "$type": "fontFamily",
+      "$description": "All interface text — headings, body, buttons, inputs, navigation. The custom geometric sans with weights limited to 400-500 is deliberate: no bold ever appears, so weight contrast is replaced by size contrast, creating a system that whispers through scale rather than shouts through heaviness."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://nubank.com.br",
+      "siteName": "Somos incansáveis pra você não precisar ser | Nubank",
+      "extractedAt": "2026-06-03T18:47:44.875Z",
+      "variant": "compact"
+    }
+  }
+}

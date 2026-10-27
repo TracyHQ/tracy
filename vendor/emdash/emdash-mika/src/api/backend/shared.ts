@@ -1,0 +1,354 @@
+/**
+ * Clock, currency, and JSON-shape primitives shared across the backend modules: default currency
+ * resolution, ISO timestamp helpers, and the JSON child-extraction helpers used to parse provider
+ * webhook payloads and reconstruct DTOs from stored JSON.
+ */
+import { omitUndefined } from "../../internal/object";
+import type { MikaProviderLineItem, MikaProviderPaymentEvent } from "../../provider";
+import {
+  createCurrencyCode,
+  createISODateTime,
+  createMikaId,
+  createPriceId,
+  createSellableId,
+} from "../../types/primitives";
+import type {
+  CurrencyCode,
+  FulfillmentKind,
+  ISODateTime,
+  JsonObject,
+  JsonValue,
+  MikaId,
+  SubscriptionStatus,
+} from "../../types/primitives";
+import type { MoneyDTO } from "../types";
+import type { MikaBackendDefaults, MikaBackendDependencies } from "./ports";
+import type { MikaRequestContext } from "../context";
+import { mikaSafeReturnPath } from "../redirect-policy";
+
+const DEFAULT_BACKEND_CURRENCY = createCurrencyCode("EUR");
+
+/** Deterministic JSON stringify with sorted keys and dropped undefineds, for stable hashing. */
+export function stableJsonStringify(value: unknown): string {
+  return JSON.stringify(stableJsonValue(value));
+}
+
+function stableJsonValue(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(stableJsonValue);
+  }
+  if (value === null || typeof value !== "object") {
+    return value;
+  }
+
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter(([, child]) => child !== undefined)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, child]) => [key, stableJsonValue(child)]),
+  );
+}
+
+/** Safe same-origin return path resolved from a request-context candidate, falling back to `/`. */
+export function safeRequestReturnPath(
+  ctx: MikaRequestContext,
+  candidate?: string,
+  fallback = ctx.url ? `${ctx.url.pathname}${ctx.url.search}${ctx.url.hash}` : "/",
+): string {
+  return mikaSafeReturnPath(candidate ?? fallback, omitUndefined({ origin: ctx.url, fallback }));
+}
+
+export function defaultBackendCurrency(input: {
+  readonly defaults?: MikaBackendDefaults;
+}): CurrencyCode {
+  return input.defaults?.currency ?? DEFAULT_BACKEND_CURRENCY;
+}
+
+export function jsonObject(input: Record<string, JsonValue | undefined>): JsonObject {
+  return Object.fromEntries(
+    Object.entries(input).filter((entry): entry is [string, JsonValue] => entry[1] !== undefined),
+  ) as JsonObject;
+}
+
+export function moneyToJson(money: MoneyDTO): JsonObject {
+  return jsonObject({
+    amount: money.amount,
+    currency: money.currency,
+  });
+}
+
+export function providerLineToJson(line: MikaProviderLineItem): JsonObject {
+  return jsonObject({
+    sellableId: line.sellableId,
+    priceId: line.priceId,
+    contentRef: jsonObject({
+      collection: line.contentRef.collection,
+      id: line.contentRef.id,
+      locale: line.contentRef.locale,
+    }),
+    sku: line.sku,
+    title: line.title,
+    variantKey: line.variantKey,
+    variantOptions: line.variantOptions?.map((option) =>
+      jsonObject({
+        option: option.option,
+        value: option.value,
+        label: option.label,
+      }),
+    ),
+    providerProductId: line.providerProductId,
+    providerPriceId: line.providerPriceId,
+    quantity: line.quantity,
+    unitAmount: line.unitAmount,
+    currency: line.currency,
+    mode: line.mode,
+    fulfillmentKind: line.fulfillmentKind,
+    entitlementKey: line.entitlementKey,
+    metadata: line.metadata,
+  });
+}
+
+export function jsonChild(input: JsonObject, key: string): JsonObject | undefined {
+  const value = input[key];
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+    ? (value as JsonObject)
+    : undefined;
+}
+
+export function stringChild(input: JsonObject, key: string): string | undefined {
+  const value = input[key];
+  return typeof value === "string" ? value : undefined;
+}
+
+export function metadataString(metadata: JsonObject | undefined, key: string): string | undefined {
+  const value = metadata?.[key];
+
+  return typeof value === "string" ? value : undefined;
+}
+
+export function metadataMikaId(metadata: JsonObject | undefined, key: string): MikaId | undefined {
+  const value = metadataString(metadata, key);
+
+  return value ? createMikaId(value) : undefined;
+}
+
+export function booleanChild(input: JsonObject, key: string): boolean | undefined {
+  const value = input[key];
+  return typeof value === "boolean" ? value : undefined;
+}
+
+export function numberChild(input: JsonObject, key: string): number | undefined {
+  const value = input[key];
+  return typeof value === "number" ? value : undefined;
+}
+
+export function isoChild(input: JsonObject, key: string): ISODateTime | undefined {
+  const value = stringChild(input, key);
+  return value ? createISODateTime(value) : undefined;
+}
+
+export function customerChild(
+  input: JsonObject,
+  key: string,
+): MikaProviderPaymentEvent["customer"] | undefined {
+  const value = jsonChild(input, key);
+  if (!value) return undefined;
+
+  return omitUndefined({
+    email: stringChild(value, "email"),
+    name: stringChild(value, "name"),
+    company: stringChild(value, "company"),
+    vatId: stringChild(value, "vatId"),
+  });
+}
+
+function moneyChild(input: JsonObject, key: string): MoneyDTO | undefined {
+  const value = jsonChild(input, key);
+  const amount = value ? numberChild(value, "amount") : undefined;
+  const currency = value ? stringChild(value, "currency") : undefined;
+  if (amount === undefined || !currency) return undefined;
+
+  return { amount, currency: createCurrencyCode(currency) };
+}
+
+export function totalsChild(
+  input: JsonObject,
+  key: string,
+): MikaProviderPaymentEvent["totals"] | undefined {
+  const value = jsonChild(input, key);
+  if (!value) return undefined;
+
+  return omitUndefined({
+    subtotal: moneyChild(value, "subtotal"),
+    discount: moneyChild(value, "discount"),
+    tax: moneyChild(value, "tax"),
+    total: moneyChild(value, "total"),
+  });
+}
+
+function contentRefChild(
+  input: JsonObject,
+  key: string,
+): MikaProviderLineItem["contentRef"] | undefined {
+  const value = jsonChild(input, key);
+  const collection = value ? stringChild(value, "collection") : undefined;
+  const id = value ? stringChild(value, "id") : undefined;
+  if (!value || !collection || !id) return undefined;
+
+  return omitUndefined({ collection, id, locale: stringChild(value, "locale") });
+}
+
+function variantOptionChildren(
+  input: JsonObject,
+  key: string,
+): MikaProviderLineItem["variantOptions"] {
+  const value = input[key];
+  if (!Array.isArray(value)) return undefined;
+
+  return value.flatMap((item) => {
+    if (typeof item !== "object" || item === null || Array.isArray(item)) return [];
+
+    const option = item as JsonObject;
+    const optionName = stringChild(option, "option");
+    const optionValue = stringChild(option, "value");
+    if (!optionName || !optionValue) return [];
+
+    return [
+      omitUndefined({
+        option: optionName,
+        value: optionValue,
+        label: stringChild(option, "label"),
+      }),
+    ];
+  });
+}
+
+function priceIdChild(
+  input: JsonObject,
+  key: string,
+): ReturnType<typeof createPriceId> | undefined {
+  const value = stringChild(input, key);
+  return value ? createPriceId(value) : undefined;
+}
+
+const SUBSCRIPTION_STATUSES = [
+  "incomplete",
+  "trialing",
+  "active",
+  "past_due",
+  "cancel_at_period_end",
+  "cancelled",
+  "expired",
+] as const satisfies readonly SubscriptionStatus[];
+
+type AssertAllSubscriptionStatuses =
+  Exclude<SubscriptionStatus, (typeof SUBSCRIPTION_STATUSES)[number]> extends never ? true : never;
+const _assertAllSubscriptionStatuses: AssertAllSubscriptionStatuses = true;
+void _assertAllSubscriptionStatuses;
+
+export function isSubscriptionStatus(value: string | undefined): value is SubscriptionStatus {
+  return value !== undefined && (SUBSCRIPTION_STATUSES as readonly string[]).includes(value);
+}
+
+const FULFILLMENT_KINDS = [
+  "none",
+  "entitlement",
+  "download",
+  "license",
+  "external",
+] as const satisfies readonly FulfillmentKind[];
+
+type AssertAllFulfillmentKinds =
+  Exclude<FulfillmentKind, (typeof FULFILLMENT_KINDS)[number]> extends never ? true : never;
+const _assertAllFulfillmentKinds: AssertAllFulfillmentKinds = true;
+void _assertAllFulfillmentKinds;
+
+function isFulfillmentKind(value: string | undefined): value is FulfillmentKind {
+  return value !== undefined && (FULFILLMENT_KINDS as readonly string[]).includes(value);
+}
+
+/**
+ * Exhaustiveness guard for `switch`/`if` chains that cannot be table-driven (e.g. a `void` switch,
+ * where `noImplicitReturns` offers no protection). Passing a still-inhabited union member is a
+ * compile error (not assignable to `never`), turning a forgotten case into a build failure; if
+ * somehow reached at runtime it throws.
+ */
+export function assertNever(value: never): never {
+  throw new Error(`Unhandled value: ${JSON.stringify(value)}`);
+}
+
+export function providerLineChildren(
+  input: JsonObject,
+  key: string,
+): readonly MikaProviderLineItem[] {
+  const value = input[key];
+  if (!Array.isArray(value)) return [];
+
+  return value.flatMap((item) => {
+    if (typeof item !== "object" || item === null || Array.isArray(item)) return [];
+
+    const line = item as JsonObject;
+    const sellableId = stringChild(line, "sellableId");
+    const title = stringChild(line, "title");
+    const quantity = numberChild(line, "quantity");
+    const unitAmount = numberChild(line, "unitAmount");
+    const currency = stringChild(line, "currency");
+    const mode = stringChild(line, "mode");
+    const fulfillmentKind = stringChild(line, "fulfillmentKind");
+    if (
+      !sellableId ||
+      !title ||
+      quantity === undefined ||
+      unitAmount === undefined ||
+      !currency ||
+      (mode !== "payment" && mode !== "subscription") ||
+      !isFulfillmentKind(fulfillmentKind)
+    ) {
+      return [];
+    }
+
+    return [
+      omitUndefined({
+        sellableId: createSellableId(sellableId),
+        priceId: priceIdChild(line, "priceId"),
+        contentRef: contentRefChild(line, "contentRef") ?? { collection: "", id: "" },
+        sku: stringChild(line, "sku"),
+        title,
+        variantKey: stringChild(line, "variantKey"),
+        variantOptions: variantOptionChildren(line, "variantOptions"),
+        providerProductId: stringChild(line, "providerProductId"),
+        providerPriceId: stringChild(line, "providerPriceId"),
+        quantity,
+        unitAmount,
+        currency: createCurrencyCode(currency),
+        mode,
+        fulfillmentKind,
+        entitlementKey: stringChild(line, "entitlementKey"),
+        metadata: jsonChild(line, "metadata"),
+      }),
+    ];
+  });
+}
+
+export function moneyDTO(amount: number, currency: CurrencyCode): MoneyDTO {
+  return { amount, currency };
+}
+
+export function currentBackendISODateTime(
+  input: Pick<MikaBackendDependencies, "isoNow" | "now">,
+): ISODateTime {
+  return input.isoNow?.() ?? createISODateTime(input.now().toISOString());
+}
+
+export function addMilliseconds(value: ISODateTime, milliseconds: number): ISODateTime {
+  return createISODateTime(new Date(Date.parse(value) + milliseconds).toISOString());
+}
+
+/**
+ * Canonical pre-hash key for customer email lookups. Trims and lowercases here — backend
+ * functions are host-callable without schema parsing, and webhook emails come from provider
+ * events that never passed a trimming schema, so normalization cannot be left to callers.
+ */
+export function emailHashKey(email: string): string {
+  return `email:${email.trim().toLowerCase()}`;
+}

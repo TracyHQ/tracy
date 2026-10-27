@@ -1,0 +1,1043 @@
+{
+  "src": "r2 (25/09/2026), $S/specs/v2/v6-data/refusal-groups.json and after-refusals.json",
+  "groups": [
+    {
+      "tool": "tracy_site",
+      "code": "SITE_UNREACHABLE",
+      "count": 66,
+      "site": "wp-dmlj6g",
+      "message": "http://N.N.N.N/ did not answer (OCI runtime exec failed: exec failed: unable to start container process: exec: \"…\": executable file not found in $PATH)",
+      "args": {
+        "action": "page.text",
+        "params": {
+          "path": "/",
+          "maxChars": 600
+        }
+      },
+      "answer": {
+        "ok": false,
+        "code": "SITE_UNREACHABLE",
+        "error": "http://127.0.0.1/ did not answer (OCI runtime exec failed: exec failed: unable to start container process: exec: \"node\": executable file not found in $PATH)"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "bad_action",
+      "count": 50,
+      "site": "wp-dmlj6g",
+      "message": "unknown action: content.contract",
+      "args": {
+        "action": "content.contract",
+        "params": {
+          "operation": "inspect",
+          "page": "home",
+          "slots": "text"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "bad_action",
+        "message": "unknown action: content.contract"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "bad_params",
+      "count": 36,
+      "site": "wp-dmlj6g",
+      "message": "content.list serves kind \"…\" only; \"…\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts.",
+      "args": {
+        "action": "content.list",
+        "params": {
+          "kind": "page",
+          "limit": 50
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "bad_params",
+        "message": "content.list serves kind \"post\" only; \"page\" is not listed here. Read one with content.get {kind, id or key}, and use post_type to narrow posts."
+      }
+    },
+    {
+      "tool": "glob",
+      "code": "TEXT_ERROR",
+      "count": 27,
+      "site": "wp-dmlj6g",
+      "message": "Error: Only draft files in docs/agents are accessible; use tracy_site to read or change site content.",
+      "args": {
+        "pattern": "*",
+        "path": "/tmp/dsh-spill-zECItS/session-83465db787e8"
+      },
+      "answer": "Error: Only draft files in docs/agents are accessible; use tracy_site to read or change site content."
+    },
+    {
+      "tool": "tracy_site",
+      "code": "CONTENT_CONTRACT",
+      "count": 26,
+      "site": "wp-dmlj6g",
+      "message": "This site is a sealed quickstart; its files are not read from here.",
+      "args": {
+        "action": "content.find",
+        "params": {
+          "text": "Get a free quote"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "code": "CONTENT_CONTRACT",
+        "error": "This site is a sealed quickstart; its files are not read from here."
+      }
+    },
+    {
+      "tool": "grep",
+      "code": "TEXT_ERROR",
+      "count": 24,
+      "site": "wp-dmlj6g",
+      "message": "Error: grep could not start its search command (ripgrep launch failed)",
+      "args": {
+        "pattern": "INSERT INTO",
+        "path": "/tmp/dsh-spill-zECItS/session-83465db787e8/fbec27e80bfe-tracy_site.txt"
+      },
+      "answer": "Error: grep could not start its search command (ripgrep launch failed)"
+    },
+    {
+      "tool": "tracy_site",
+      "code": "not_found",
+      "count": 24,
+      "site": "wp-dmlj6g",
+      "message": "no post at id N, key \"…\"",
+      "args": {
+        "action": "content.get",
+        "params": {
+          "kind": "post",
+          "key": "contact-vi"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "not_found",
+        "message": "no post at id 0, key \"contact-vi\""
+      }
+    },
+    {
+      "tool": "read",
+      "code": "TEXT_ERROR",
+      "count": 23,
+      "site": "wp-dmlj6g",
+      "message": "Error: Only draft files in docs/agents are accessible; use tracy_site to read or change site content.",
+      "args": {
+        "file_path": "/site/wp-dmlj6g/.webroot/wp-config.php",
+        "limit": 5
+      },
+      "answer": "Error: Only draft files in docs/agents are accessible; use tracy_site to read or change site content."
+    },
+    {
+      "tool": "tracy_site",
+      "code": "bad_params",
+      "count": 14,
+      "site": "wp-dmlj6g",
+      "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem",
+      "args": null,
+      "answer": {
+        "ok": false,
+        "error": "bad_params",
+        "message": "kind must be one of: post, postmeta, option, templatePart, term, menuItem"
+      }
+    },
+    {
+      "tool": "grep",
+      "code": "TEXT_ERROR",
+      "count": 12,
+      "site": "ed-ivj9ni",
+      "message": "Error: subprocess-docker: grep path \"…\" (resolves to \"…\") is outside the session's site \"…\"",
+      "args": {
+        "pattern": "hero_title_[ab]",
+        "path": "/app"
+      },
+      "answer": "Error: subprocess-docker: grep path \"/app\" (resolves to \"/\") is outside the session's site \"/site/ed-ivj9ni\""
+    },
+    {
+      "tool": "grep",
+      "code": "TEXT_ERROR",
+      "count": 10,
+      "site": "wp-dmlj6g",
+      "message": "Error: Only draft files in docs/agents are accessible; use tracy_site to read or change site content.",
+      "args": {
+        "pattern": "services\\.item\\.2|post_content|content\\.update",
+        "path": "docs"
+      },
+      "answer": "Error: Only draft files in docs/agents are accessible; use tracy_site to read or change site content."
+    },
+    {
+      "tool": "tracy_emdash",
+      "code": "TOOL_FAILED",
+      "count": 8,
+      "site": "ed-ivj9ni",
+      "message": "[CONFLICT] Content changed while the operation was in progress",
+      "args": {
+        "arguments": {
+          "_rev": "MTM6MjAyNi0wOS0yNFQwNDozNjo0NS4wNDBa",
+          "collection": "home",
+          "id": "home",
+          "locale": "en"
+        },
+        "tool": "content_publish"
+      },
+      "answer": {
+        "ok": false,
+        "code": "TOOL_FAILED",
+        "error": "[CONFLICT] Content changed while the operation was in progress"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "bad_action",
+      "count": 7,
+      "site": "wp-dmlj6g",
+      "message": "unknown action: content.batch",
+      "args": {
+        "action": "content.batch",
+        "params": {}
+      },
+      "answer": {
+        "ok": false,
+        "error": "bad_action",
+        "message": "unknown action: content.batch"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "bad_params",
+      "count": 6,
+      "site": "wp-dmlj6g",
+      "message": "apply_id required",
+      "args": {
+        "action": "apply.list",
+        "params": {}
+      },
+      "answer": {
+        "ok": false,
+        "error": "bad_params",
+        "message": "apply_id required"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "BAD_ACTION",
+      "count": 6,
+      "site": "wp-dmlj6g",
+      "message": "unknown action \"…\"; one of: media.scan, media.draw, page.look, page.text, content.find, info, content.list, content.get, extension.list, plugin.list, theme.list",
+      "args": {
+        "action": "contract",
+        "params": {
+          "operation": "inspect"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "code": "BAD_ACTION",
+        "error": "unknown action \"contract\"; one of: media.scan, media.draw, page.look, page.text, content.find, info, content.list, content.get, extension.list, plugin.list, theme.list, db.tables, core.manifest, content.batch, content.contract, content.upda…"
+      }
+    },
+    {
+      "tool": "glob",
+      "code": "TEXT_ERROR",
+      "count": 6,
+      "site": "wp-dmlj6g",
+      "message": "Error: glob could not start its search command (ripgrep launch failed)",
+      "args": {
+        "pattern": "docs/agents/email-change/*"
+      },
+      "answer": "Error: glob could not start its search command (ripgrep launch failed)"
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 5,
+      "site": "wp-dmlj6g",
+      "message": "no writable field for kind post; given content; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post",
+      "args": null,
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post; given content; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input"
+      }
+    },
+    {
+      "tool": "read",
+      "code": "TEXT_ERROR",
+      "count": 5,
+      "site": "ed-ivj9ni",
+      "message": "Error: subprocess-docker: read file_path \"…\" (resolves to \"…\") is outside the session's site \"…\"",
+      "args": {
+        "file_path": "/app/src/pages/[...path].astro"
+      },
+      "answer": "Error: subprocess-docker: read file_path \"/app/src/pages/[...path].astro\" (resolves to \"/\") is outside the session's site \"/site/ed-ivj9ni\""
+    },
+    {
+      "tool": "tracy_site",
+      "code": "not_found",
+      "count": 4,
+      "site": "wp-dmlj6g",
+      "message": "no postmeta at id N, key \"…\"",
+      "args": {
+        "action": "content.get",
+        "params": {
+          "kind": "postmeta",
+          "id": 42
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "not_found",
+        "message": "no postmeta at id 42, key \"\""
+      }
+    },
+    {
+      "tool": "read",
+      "code": "TEXT_ERROR",
+      "count": 3,
+      "site": "wp-dmlj6g",
+      "message": "Error: cannot read \"…\": not found",
+      "args": {
+        "file_path": "/site/wp-dmlj6g/docs/agents/start-from.json"
+      },
+      "answer": "Error: cannot read \"/site/wp-dmlj6g/docs/agents/start-from.json\": not found"
+    },
+    {
+      "tool": "tracy_site",
+      "code": "content_only",
+      "count": 3,
+      "site": "j-1ibzqi",
+      "message": "This site is bound to a content-only quickstart contract",
+      "args": null,
+      "answer": {
+        "ok": false,
+        "error": "content_only",
+        "message": "This site is bound to a content-only quickstart contract"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "writer_busy",
+      "count": 3,
+      "site": "j-1ibzqi",
+      "message": "another writer is changing this site",
+      "args": null,
+      "answer": {
+        "ok": false,
+        "error": "writer_busy",
+        "message": "another writer is changing this site"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 2,
+      "site": "wp-dmlj6g",
+      "message": "no writable field for kind post; given hero.cta.N; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, p",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "kind": "post",
+          "id": 42,
+          "fields": {
+            "hero.cta.1": "Get a free quote"
+          },
+          "apply_id": "hero-cta-1"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post; given hero.cta.1; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "SITE_UNREACHABLE",
+      "count": 2,
+      "site": "wp-dmlj6g",
+      "message": "http://N.N.N.N/contact did not answer (OCI runtime exec failed: exec failed: unable to start container process: exec: \"…\": executable file not found in $PATH)",
+      "args": {
+        "action": "page.text",
+        "params": {
+          "path": "/contact",
+          "maxChars": 4000
+        }
+      },
+      "answer": {
+        "ok": false,
+        "code": "SITE_UNREACHABLE",
+        "error": "http://127.0.0.1/contact did not answer (OCI runtime exec failed: exec failed: unable to start container process: exec: \"node\": executable file not found in $PATH)"
+      }
+    },
+    {
+      "tool": "edit",
+      "code": "TEXT_ERROR",
+      "count": 2,
+      "site": "wp-dmlj6g",
+      "message": "Error: old_string was not found in \"…\"",
+      "args": {
+        "file_path": "docs/agents/email-change/header-80.txt",
+        "old_string": "mailto:info@northgate-ind.ru",
+        "new_string": "mailto:hello@example.vn"
+      },
+      "answer": "Error: old_string was not found in \"/site/wp-dmlj6g/docs/agents/email-change/header-80.txt\""
+    },
+    {
+      "tool": "tracy_site",
+      "code": "bad_params",
+      "count": 2,
+      "site": "wp-dmlj6g",
+      "message": "id or key required to name which templatePart to read",
+      "args": {
+        "action": "content.get",
+        "params": {
+          "kind": "templatePart",
+          "id": "wp-tracy-business//footer"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "bad_params",
+        "message": "id or key required to name which templatePart to read"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "bad_params",
+      "count": 2,
+      "site": "wp-dmlj6g",
+      "message": "fields required",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "kind": "templatePart",
+          "key": "footer",
+          "fields": {},
+          "apply_id": "probe-empty-fields"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "bad_params",
+        "message": "fields required"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "SITE_UNREACHABLE",
+      "count": 2,
+      "site": "wp-dmlj6g",
+      "message": "http://N.N.N.N/contact/ did not answer (OCI runtime exec failed: exec failed: unable to start container process: exec: \"…\": executable file not found in $PATH)",
+      "args": {
+        "action": "page.text",
+        "params": {
+          "path": "/contact/"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "code": "SITE_UNREACHABLE",
+        "error": "http://127.0.0.1/contact/ did not answer (OCI runtime exec failed: exec failed: unable to start container process: exec: \"node\": executable file not found in $PATH)"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "contract_failed",
+      "count": 2,
+      "site": "j-1ibzqi",
+      "message": "Unknown content slot or non-string value",
+      "args": {
+        "action": "content.contract",
+        "params": {
+          "operation": "apply",
+          "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+          "apply_id": "contract-warranty-probe",
+          "request_id": "warranty-page-probe",
+          "changes": {
+            "menuItem-705.0": "Warranty"
+          }
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "contract_failed",
+        "message": "Unknown content slot or non-string value"
+      }
+    },
+    {
+      "tool": "tracy_emdash",
+      "code": "TOOL_FAILED",
+      "count": 2,
+      "site": "ed-ivj9ni",
+      "message": "[NOT_FOUND] Menu 'main' not found",
+      "args": {
+        "tool": "menu_get",
+        "arguments": {
+          "name": "main"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "code": "TOOL_FAILED",
+        "error": "[NOT_FOUND] Menu 'main' not found"
+      }
+    },
+    {
+      "tool": "write",
+      "code": "TEXT_ERROR",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "Error: Only draft files in docs/agents are accessible; use tracy_site to read or change site content.",
+      "args": null,
+      "answer": "Error: Only draft files in docs/agents are accessible; use tracy_site to read or change site content."
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "no writable field for kind post; given bogus_probe_field; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "kind": "post",
+          "id": 39,
+          "fields": {
+            "bogus_probe_field": "x"
+          },
+          "apply_id": "probe-fields"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post; given bogus_probe_field; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "no writable field for kind post; given title, content, status; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, ",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "kind": "post",
+          "fields": {
+            "title": "Tracy benchmark news",
+            "content": "We have opened a new office in Da Nang.",
+            "status": "publish"
+          },
+          "apply_id": "post-tracy-benchmark-news"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post; given title, content, status; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "no writable field for kind post; given __probe__; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, po",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "kind": "post",
+          "id": 42,
+          "fields": {
+            "__probe__": ""
+          },
+          "apply_id": "probe-schema"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post; given __probe__; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "no writable field for kind post; given post_content_find, post_content_replace; allowed post_title, post_content, post_excerpt, post_status, post_name, post_par",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "apply_id": "phone-0909-fieldtest",
+          "fields": {
+            "post_content_find": "8 800 550-67-89",
+            "post_content_replace": "0909 123 456"
+          },
+          "id": 39,
+          "kind": "post"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post; given post_content_find, post_content_replace; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "postmeta needs a key, e.g. _yoast_wpseo_metadesc",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "kind": "postmeta",
+          "id": 81,
+          "fields": {
+            "tracy_probe": "probe"
+          },
+          "apply_id": "probe-address-door"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "postmeta needs a key, e.g. _yoast_wpseo_metadesc"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "templatePart needs a content field: the block markup to render",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "apply_id": "probe-fields",
+          "fields": {
+            "bogus_field": "x"
+          },
+          "key": "footer",
+          "kind": "templatePart"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "templatePart needs a content field: the block markup to render"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "no writable field for kind post; given services.item.N.title, services.item.N.text; allowed post_title, post_content, post_excerpt, post_status, post_name, post",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "kind": "post",
+          "id": 42,
+          "fields": {
+            "services.item.5.title": "Consulting",
+            "services.item.5.text": "Planning and feasibility studies before you build."
+          },
+          "apply_id": "svc-consulting",
+          "dry_run": true
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post; given services.item.5.title, services.item.5.text; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "no writable field for kind post; given nope; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_da",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "apply_id": "probe-not-a-write",
+          "fields": {
+            "nope": "x"
+          },
+          "id": 42,
+          "kind": "post"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post; given nope; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "no writable field for kind post; given contact.item.N.text; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, pos",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "kind": "post",
+          "id": 39,
+          "apply_id": "contact-hotline-0909",
+          "fields": {
+            "contact.item.2.text": "0909 123 456"
+          }
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post; given contact.item.2.text; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "write_failed",
+      "count": 1,
+      "site": "wp-dmlj6g",
+      "message": "no writable field for kind post; given hero.heading; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type,",
+      "args": {
+        "action": "content.update",
+        "params": {
+          "kind": "post",
+          "id": 42,
+          "apply_id": "hero-heading-1",
+          "fields": {
+            "hero.heading": "Built for the way you work"
+          }
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post; given hero.heading; allowed post_title, post_content, post_excerpt, post_status, post_name, post_parent, menu_order, post_type, post_date, post_category, tags_input"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "bad_params",
+      "count": 1,
+      "site": "j-1ibzqi",
+      "message": "id required",
+      "args": {
+        "action": "content.get",
+        "params": {
+          "kind": "extensionParams",
+          "id": "com_config"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "bad_params",
+        "message": "id required"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "bad_params",
+      "count": 1,
+      "site": "j-1ibzqi",
+      "message": "kind must be one of: article, category, tag, field, menuItem, menutype, redirect, banner, bannerClient, contact, newsfeed, language, articleAssociation, menuAss",
+      "args": {
+        "action": "content.list",
+        "params": {
+          "kind": "option",
+          "limit": 50
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "bad_params",
+        "message": "kind must be one of: article, category, tag, field, menuItem, menutype, redirect, banner, bannerClient, contact, newsfeed, language, articleAssociation, menuAssociation, moduleAssignment, languageFilter, module, templateStyle, user, extensi…"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "dump_failed",
+      "count": 1,
+      "site": "j-1ibzqi",
+      "message": "Table 'joomla.template_styles' doesn't exist",
+      "args": {
+        "action": "db.dump",
+        "params": {
+          "table": "template_styles"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "dump_failed",
+        "message": "Table 'joomla.template_styles' doesn't exist"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "dump_failed",
+      "count": 1,
+      "site": "j-1ibzqi",
+      "message": "Table 'joomla.modules' doesn't exist",
+      "args": {
+        "action": "db.dump",
+        "params": {
+          "table": "modules"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "dump_failed",
+        "message": "Table 'joomla.modules' doesn't exist"
+      }
+    },
+    {
+      "tool": "tracy_site_build_joomla",
+      "code": "An owned build and session are required to inspect this site.",
+      "count": 1,
+      "site": "j-1ibzqi",
+      "message": "",
+      "args": {
+        "action": "capabilities",
+        "capabilities": ["page.add", "content.create", "menu.add"]
+      },
+      "answer": {
+        "ok": false,
+        "error": "An owned build and session are required to inspect this site."
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "contract_failed",
+      "count": 1,
+      "site": "j-1ibzqi",
+      "message": "Content cannot remove an occupied slot: module-N.N",
+      "args": {
+        "action": "content.contract",
+        "params": {
+          "operation": "apply",
+          "expected_revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+          "apply_id": "contract-hero-btn2",
+          "request_id": "req-hero-btn2-remove-1",
+          "changes": {
+            "module-441.6": "",
+            "module-441.7": ""
+          }
+        }
+      },
+      "answer": {
+        "ok": false,
+        "error": "contract_failed",
+        "message": "Content cannot remove an occupied slot: module-441.6"
+      }
+    },
+    {
+      "tool": "tracy_site",
+      "code": "NO_FILE_LAYERS",
+      "count": 1,
+      "site": "ed-ivj9ni",
+      "message": "This site runs emdash, which keeps no words in files here.",
+      "args": {
+        "action": "content.find",
+        "params": {
+          "text": "See our work"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "code": "NO_FILE_LAYERS",
+        "error": "This site runs emdash, which keeps no words in files here."
+      }
+    },
+    {
+      "tool": "tracy_emdash",
+      "code": "BAD_CALL",
+      "count": 1,
+      "site": "ed-ivj9ni",
+      "message": "not an EmDash tool name: \"…\"",
+      "args": {
+        "arguments": {
+          "path": "/news",
+          "match": "Tracy benchmark news"
+        },
+        "tool": "page.text"
+      },
+      "answer": {
+        "ok": false,
+        "code": "BAD_CALL",
+        "error": "not an EmDash tool name: \"page.text\""
+      }
+    },
+    {
+      "tool": "glob",
+      "code": "TEXT_ERROR",
+      "count": 1,
+      "site": "ed-ivj9ni",
+      "message": "Error: subprocess-docker: glob path \"…\" (resolves to \"…\") is outside the session's site \"…\"",
+      "args": {
+        "path": "/app",
+        "pattern": "src/pages/**/*.astro"
+      },
+      "answer": "Error: subprocess-docker: glob path \"/app\" (resolves to \"/\") is outside the session's site \"/site/ed-ivj9ni\""
+    },
+    {
+      "tool": "tracy_site",
+      "code": "EMDASH_SITE",
+      "count": 1,
+      "site": "ed-ivj9ni",
+      "message": "This site runs EmDash, which has no Cowork component and needs none: it has its own admin API and MCP tools. Use the tracy_emdash tool ({list: true} first), not",
+      "args": {
+        "action": "apply.list",
+        "params": {
+          "apply_id": "home-hero-headline-2026-09-24"
+        }
+      },
+      "answer": {
+        "ok": false,
+        "code": "EMDASH_SITE",
+        "error": "This site runs EmDash, which has no Cowork component and needs none: it has its own admin API and MCP tools. Use the tracy_emdash tool ({list: true} first), not tracy_site."
+      }
+    },
+    {
+      "tool": "tracy_emdash",
+      "code": "TOOL_FAILED",
+      "count": 1,
+      "site": "ed-ivj9ni",
+      "message": "[NOT_FOUND] Content item not found: home",
+      "args": {
+        "arguments": {
+          "collection": "pages",
+          "id": "home",
+          "markdown": true
+        },
+        "tool": "content_get"
+      },
+      "answer": {
+        "ok": false,
+        "code": "TOOL_FAILED",
+        "error": "[NOT_FOUND] Content item not found: home"
+      }
+    }
+  ],
+  "rewrites": [
+    {
+      "group": "G1 page.text, node missing (70)",
+      "chars": 287,
+      "answer": {
+        "ok": false,
+        "code": "NO_BROWSER",
+        "error": "this site's container has neither curl nor node, so its pages cannot be read here",
+        "next": "Read the words through the content door instead: content.get {kind:\"post\", id} on WordPress, content.contract {operation:\"inspect\", match} on Joomla."
+      }
+    },
+    {
+      "group": "G2 content.contract on WordPress (50)",
+      "chars": 232,
+      "answer": {
+        "ok": false,
+        "code": "NOT_ON_THIS_PLATFORM",
+        "error": "content.contract is Joomla-only; this site runs WordPress",
+        "next": "Read with page.text {path, match}; change a page with content.update {kind:\"post\", id, fields:{post_content}}."
+      }
+    },
+    {
+      "group": "G3 content.list kind (36)",
+      "chars": 236,
+      "answer": {
+        "ok": false,
+        "error": "bad_params",
+        "message": "content.list kind must be \"post\", got \"page\"",
+        "next": "content.list {kind:\"post\", post_type:\"page\"}; option, postmeta and templatePart are read one at a time: content.get {kind, key}."
+      }
+    },
+    {
+      "group": "G7 not_found by key (24)",
+      "chars": 181,
+      "answer": {
+        "ok": false,
+        "error": "not_found",
+        "message": "no post with slug \"contact-vi\"",
+        "next": "content.list {kind:\"post\", post_type:\"page\", name:\"contact\"} finds the real slug and id."
+      }
+    },
+    {
+      "group": "G9 kind missing (14)",
+      "chars": 220,
+      "answer": {
+        "ok": false,
+        "error": "bad_params",
+        "message": "kind is required (post, postmeta, option, templatePart, term, menuItem); got none",
+        "next": "Same call with kind added: a page, a post or a wp_navigation menu is kind \"post\"."
+      }
+    },
+    {
+      "group": "G12 EmDash CONFLICT on publish (8)",
+      "chars": 290,
+      "answer": {
+        "ok": false,
+        "code": "TOOL_FAILED",
+        "emdash": "CONFLICT",
+        "error": "_rev is stale: your content_update gave the entry a new revision",
+        "next": "content_update {…, status:\"published\"} changes and publishes in one call; to publish now: content_get for the current _rev, then content_publish once."
+      }
+    },
+    {
+      "group": "G17/G41 field name (17)",
+      "chars": 288,
+      "answer": {
+        "ok": false,
+        "error": "write_failed",
+        "message": "no writable field for kind post: got hero.heading; allowed post_title, post_content, post_excerpt, post_status, post_name",
+        "next": "The words live inside post_content (block markup): send the whole post_content with only those words changed."
+      }
+    },
+    {
+      "group": "G22 writer_busy (3)",
+      "chars": 219,
+      "answer": {
+        "ok": false,
+        "error": "writer_busy",
+        "message": "another writer holds this site's lock",
+        "next": "Nothing was written. Make the same call once more in a few seconds, same apply_id; if it answers the same, tell the customer."
+      }
+    },
+    {
+      "group": "G26 templatePart by id (2)",
+      "chars": 184,
+      "answer": {
+        "ok": false,
+        "error": "bad_params",
+        "message": "templatePart is named by key (its slug), got id \"wp-tracy-business//footer\"",
+        "next": "content.get {kind:\"templatePart\", key:\"footer\"}"
+      }
+    },
+    {
+      "group": "G6 grep on the spill (23)",
+      "chars": 243,
+      "answer": {
+        "error": "grep path \"/tmp/dsh-spill-…\" is outside this site's folder; a sealed site searches docs/agents only",
+        "next": "read {file_path, offset, limit} pages the saved answer; better, narrow the call that produced it (match / slots / page)."
+      }
+    },
+    {
+      "group": "G8 read .webroot on sealed (23)",
+      "chars": 225,
+      "answer": {
+        "error": "read \".webroot/…\" is closed on this sealed site; only docs/agents is readable",
+        "next": "Words on a page: tracy_site page.text {path, match}; where they are stored: content.contract {operation:\"inspect\", match}."
+      }
+    }
+  ]
+}

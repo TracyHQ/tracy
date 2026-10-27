@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-ink: #000000;
+  --color-bone: #e7e7e7;
+  --color-charcoal: #121212;
+
+  /* Typography */
+  --font-adobe-garamond: 'Adobe Garamond', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-akzidenz-grotesk: 'Akzidenz Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

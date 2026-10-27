@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1034-seven-questions-phase-6-fixes",
+  "kind": "fix",
+  "title": "Seven default questions phase 6: a Joomla page the customer ticked stays when the demo trim took it off; pages at any menu depth are listed and kept or removed by path; uploaded logos on JA Essence, Resort and Impact j6 are capped at the demo logo's height; an unticked WordPress page leaves the navigation inside template parts and an emptied submenu goes; a Polylang site written in one other language names its source locale; the Tracy Business 1.3.4, Tracy Base 1.1.2 and JA Morgan 1.1.12 WordPress contracts are complete; an EmDash template hide rule yields to a kept page",
+  "pr": 1034,
+  "area": "add-site/questions",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-web/test/joomla-ticked-trimmed-page.test.mjs apps/tracy-web/test/joomla-nested-pages.test.mjs apps/tracy-web/test/brief-joomla.test.mjs apps/tracy-web/test/brief-brand-joomla.test.mjs",
+    "S2: Run: node --test apps/tracy-web/test/brief-wp-residue.test.mjs apps/tracy-web/test/brief-wordpress.test.mjs packages/cms/tracy-wordpress-quickstart/test/contract-entity-kinds.test.mjs packages/cms/tracy-seeder/test/wordpress-contract-door.test.mjs scripts/test/build-wordpress-editions.test.mjs",
+    "S3: Run: node --test apps/tracy-web/test/brief-emdash.test.mjs packages/cms/tracy-emdash-theme-base/tests/personalize-pages.test.mjs packages/cms/tracy-emdash-theme-business/tests/personalize-pages.test.mjs packages/cms/tracy-emdash-theme-saas/tests/personalize-pages.test.mjs",
+    "S4: Read the exit code and the fail/skipped counts of each run."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures and 0 skipped tests.",
+    "Joomla: a ticked page whose menu item the demo trim unpublished is published again, with its parent heading; unticking a child removes only that item, and a heading left without children goes too.",
+    "WordPress: an unticked page's link is removed from wp_navigation posts and from navigation written inside template parts, matched by page id or by this site's own path; a submenu that lost every link goes.",
+    "WordPress: a Polylang site written in one non-English language writes tracy_source_locale next to WPLANG; the 1.3.4 profile carries inventory, editions and demo-trim map, and a later release that drops an inventory is refused.",
+    "EmDash: the brief sends keepPages and personalize.mjs applies no template hide rule (REG-PR-1034-hide-only-unticked-pages)."
+  ],
+  "selectors": {
+    "joomla_pages": "apps/tracy-web/src/sites/brief-engines (Joomla clean-up step, page ids as menu paths)",
+    "wp_residue": "navWithout in apps/tracy-web/src/sites/brief-engines/wp-residue.js",
+    "wp_contracts": "packages/cms/tracy-wordpress-quickstart/contracts/{tracy-business/wp7/1.3.4,tracy-base/wp7/1.1.2,ja-morgan/wp7/1.1.12}",
+    "emdash_keep": "keepPages in apps/tracy-web/src/sites/brief-engines/emdash.js and tools/personalize.mjs of the three EmDash themes",
+    "profiles": "logoHeight in apps/tracy-web/src/lib/template-profiles.json"
+  },
+  "evidence": "08/10/2026: defects A-J measured on cowork.tracy.site after #1024 while re-checking the seven default questions (issue #1013 phase 6, plan tasks/plan-ten-logo-favicon.md).",
+  "fence": "Units over fake Apply doors and contract files. Not exercised here: a running Joomla or WordPress site, Claude Cowork WordPress 0.18.3, a released Tracy SaaS 1.4.1, the dev surface.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1034-seven-questions-phase-6-fixes.mjs"],
+    "needs": []
+  }
+}

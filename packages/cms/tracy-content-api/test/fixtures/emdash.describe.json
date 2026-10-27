@@ -1,0 +1,3176 @@
+{
+  "$comment": "Seed extraction, not a live response. blockKinds: packages/cms/tracy-content-api/describe-map.mjs emdashBlockKinds over seed/site-model.json: every type is a root kind, every group field also a nestable kind \"<type>.<field>\"; EmDash types map to v1 value types by EMDASH_FIELD_TYPES. No slot contract, so every writable is null and slot-write is not offered. types are the distinct types of seed/content-api-map.json collections; counts are unknown. Site id/url are synthetic.",
+  "schemaVersion": "tracy-content-describe/v1",
+  "view": "authenticated",
+  "site": {
+    "id": "s-fixture-emdash",
+    "name": "Northgate Industrial",
+    "url": "https://example.invalid",
+    "defaultLocale": "en",
+    "locales": ["en", "ru"]
+  },
+  "provenance": null,
+  "protocol": {
+    "selected": "tracy-content/v1",
+    "relayExtensions": ["writable", "constraints", "next", "protocol"],
+    "cowork": {
+      "kind": "emdash",
+      "capability": "v1"
+    }
+  },
+  "scope": "published",
+  "i18n": {
+    "mode": "entity",
+    "defaultLocale": "en",
+    "locales": [
+      "en",
+      "ru",
+      "vi",
+      "zh",
+      "af",
+      "be",
+      "bg",
+      "ca",
+      "cs",
+      "cy",
+      "da",
+      "de",
+      "el",
+      "es",
+      "et",
+      "fi",
+      "fr",
+      "ga",
+      "hr",
+      "hu",
+      "it",
+      "ja",
+      "ka",
+      "lo",
+      "lt",
+      "lv",
+      "ms",
+      "nb",
+      "nl",
+      "pl",
+      "pt",
+      "ro",
+      "sk",
+      "sl",
+      "sr",
+      "sv",
+      "ta",
+      "th",
+      "tr",
+      "uk"
+    ],
+    "fallback": null
+  },
+  "presentation": {
+    "state": "unlocked",
+    "reason": "content recommendation: keep the design of template tracy-business"
+  },
+  "permissions": {
+    "role": "owner",
+    "toolsets": {
+      "content": true,
+      "code": true,
+      "site": true,
+      "lifecycle": true
+    },
+    "read": true,
+    "apply": false,
+    "note": "Content is read-only here: this site has no slot contract to apply."
+  },
+  "types": [
+    {
+      "type": "shared",
+      "count": null
+    },
+    {
+      "type": "page",
+      "count": null
+    },
+    {
+      "type": "service",
+      "count": null
+    },
+    {
+      "type": "project",
+      "count": null
+    },
+    {
+      "type": "article",
+      "count": null
+    },
+    {
+      "type": "generic",
+      "count": null
+    }
+  ],
+  "blockKinds": [
+    {
+      "kind": "site",
+      "label": "Site chrome",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "brand_mark",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "brand_name",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "brand_sub",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "quote_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "quote_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "topbar_phone",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "topbar_email",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "topbar_address",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "home_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "resources_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "kit_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "recent_projects_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "news_column_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "resources_all_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "all_projects_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "all_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "theme_dark_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "theme_light_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "language_name",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "footer_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "footer_legal_1",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "footer_legal_2",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "footer_services_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "footer_company_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "footer_contact_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hotline",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "sales_email",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hours",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "footer_book_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "copyright",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "social",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "search_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "search_placeholder",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "search_button",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "search_next",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "search_results_line",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "search_filter_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "search_popular_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "search_popular",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "not_found_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "not_found_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "not_found_placeholder",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "not_found_back",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "not_found_suggestions_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "not_found_suggestions",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "slots",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "site.social",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "name",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "handle",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "site.search_popular",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "term",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "site.not_found_suggestions",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "site.slots",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "key",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "home",
+      "label": "Home page",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_badge",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_title_a",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_title_b",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_cta1_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_cta1_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_cta2_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_cta2_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "stats",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "services_eyebrow",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "services_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "services_all_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "services_all_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "services_items",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "projects_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "project_big",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "project_small_1",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "project_small_2",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "about_image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "why_eyebrow",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "why_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "why_items",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "band_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "band_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "band_button",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "band_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "news_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "news_all_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "clients_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "client_logos",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "home.stats",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "value",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "home.services_items",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "number",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "home.why_items",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "home.client_logos",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "logo",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "name",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "about",
+      "label": "About page",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "breadcrumb",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "lede",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "stats_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "stats",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "mission_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "mission_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "pillars",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "history_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "history",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "geo_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "geo_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "geo_list",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "map_image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "team_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "team",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cert_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "certs",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "safety_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "safety_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "safety_image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_button",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_alt_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_alt_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "about.stats",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "value",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "about.pillars",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "about.history",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "year",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "about.geo_list",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "city",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "role",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "about.team",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "name",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "role",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "photo",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "about.certs",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "services_page",
+      "label": "Services page",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "breadcrumb",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "lede",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "stats",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "services_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "includes_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "process_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "process",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "pricing_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "pricing_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "pricing",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_button",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_alt_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_alt_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "services_page.stats",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "value",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "services_page.process",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "number",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "services_page.pricing",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "value",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "services",
+      "label": "Services",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "description",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "includes",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "term",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "sort",
+          "type": "number",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "services.includes",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "item",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "projects_page",
+      "label": "Projects page",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "breadcrumb",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "lede",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured_project",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured_image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured_facts",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured_cta",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "grid_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "grid_text",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "view_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "sectors_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "sectors",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "how_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "how",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_button",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_alt_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_alt_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "projects_page.featured_facts",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "key",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "value",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "projects_page.sectors",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "sector",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "count",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "projects_page.how",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "number",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "projects",
+      "label": "Projects",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "card_tag",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "type_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "year",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "area",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "city",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "summary",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "lede",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "facts",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "scope_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "scope",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "gallery_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "gallery",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "quote",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "quote_by",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "next_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured",
+          "type": "boolean",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "sort",
+          "type": "number",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "projects.facts",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "key",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "value",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "projects.scope",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "item",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "projects.gallery",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "caption",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "news_page",
+      "label": "News page",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "breadcrumb",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "lede",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "count_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "page_meta",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "all_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "sidebar_search_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "sidebar_search_placeholder",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "categories_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "latest_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "newsletter_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "newsletter_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "newsletter_placeholder",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "newsletter_button",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "newsletter_form_id",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "tags_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "prev_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "next_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "related_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "toc_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "downloads_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "aside_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "aside_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "aside_button",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "aside_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "posts",
+      "label": "News",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "short_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "lede",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "excerpt",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured_image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "caption",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "author",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "author_role",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "date",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "reading_time",
+          "type": "number",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "content",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "downloads",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "toc",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "featured",
+          "type": "boolean",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "posts.downloads",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "format",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "posts.toc",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "careers",
+      "label": "Careers page",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "breadcrumb",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "lede",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hero_image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "stats",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "open_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "all_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "apply_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "more_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "benefits_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "benefits",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "process_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "steps",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "life_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "life",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "quote",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "quote_by",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_button",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "cta_mail",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "careers.stats",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "value",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "careers.benefits",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "careers.steps",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "number",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "careers.life",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "caption",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "vacancies",
+      "label": "Vacancies",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "city",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "type",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "pay",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "sort",
+          "type": "number",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "investors",
+      "label": "Investor relations page",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "breadcrumb",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "ticker",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "lede",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "quote",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "fin_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "fin_note",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "fin_headers",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "fin_rows",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "reports_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "reports",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "disclosures_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "dividends_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "dividends_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "dividends",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "calendar_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "calendar",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "governance_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "governance",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "contact_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "contact_name",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "contact_mail",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "contact_phone",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "subscribe_placeholder",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "subscribe_button",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "newsletter_form_id",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "investors.quote",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "key",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "value",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "investors.fin_headers",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "investors.fin_rows",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "metric",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "a",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "b",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "change",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "investors.reports",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "format",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "date",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "investors.dividends",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "period",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "value",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "status",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "investors.calendar",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "date",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "text",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "investors.governance",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "url",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "contact",
+      "label": "Contact page",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "lede",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "notice",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "form",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "form_id",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "reset_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hq_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hq_address_1",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hq_address_2",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hotline_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "sales_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "hours_label",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "map_image",
+          "type": "image",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "branches_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "branches",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "social_title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "social_text",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "contact.branches",
+      "label": null,
+      "root": false,
+      "nestable": true,
+      "fields": [
+        {
+          "key": "city",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "address",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    },
+    {
+      "kind": "pages",
+      "label": "Pages",
+      "root": true,
+      "nestable": false,
+      "fields": [
+        {
+          "key": "title",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "lede",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "content",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "template",
+          "type": "text",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        },
+        {
+          "key": "sample",
+          "type": "json",
+          "translatable": null,
+          "writable": null,
+          "constraints": null
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "ai.tracy.content.read",
+      "version": "1"
+    },
+    {
+      "name": "ai.tracy.content.describe",
+      "version": "1"
+    }
+  ],
+  "guidance": "Read content with content.read. This EmDash site offers no slot writes through the content contract; field writability is unknown.",
+  "links": {
+    "read": "/content.json",
+    "schema": "urn:tracy:content:v1"
+  }
+}

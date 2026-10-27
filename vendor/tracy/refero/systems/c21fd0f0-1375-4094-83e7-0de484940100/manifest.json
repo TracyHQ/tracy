@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c21fd0f0-1375-4094-83e7-0de484940100",
+  "status": "complete",
+  "name": "Obviously",
+  "url": "https://styles.refero.design/style/c21fd0f0-1375-4094-83e7-0de484940100",
+  "sourceWebsite": "https://www.obviously.ai",
+  "extractedAt": "2026-06-03T21:43:51.344Z",
+  "capturedAt": "2026-10-08T05:17:05.349189+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Whimsical claymation on white paper. Zams stages friendly geometric play-doh creatures on a clean, almost clinical white backdrop, letting one vivid violet do all the chromatic work and a warm serif handle the typographic warmth.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1fe16db0-a220-4395-ba42-c0e14c88f54c.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/36fe5920-f2b3-442a-abc8-5784dc19c3f6.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/904dd453-7c76-47cb-ba1c-c202a73c8343.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/781d6d52-cbdb-42e2-8444-9cec8d056bb2.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5d09c959-bee7-4196-acfc-8f6ccd87ba3e.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7c529a55fbab80ee6ee2508011a2b5536a42fdab2a8a7662d51968c143f0c930",
+      "bytes": 25220
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8c86697b5828d47d93f48f3205970cf003420e20d52b82ad63340fa7445bc4f2",
+      "bytes": 105024
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a929f9fe1850e8e701cb0c4e4558f07425835b36ffaf57de3d8e1d4dc9bec360",
+      "bytes": 21906
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0ecf33fb4183d03ca3e6c6050f8f21d7ff422f8c4b54c3e201f648944b790993",
+      "bytes": 13797
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "737b0e881532b89fd66f59febd015f1f3913121eef9d90671a0e3e0ed9b021c8",
+      "bytes": 17114
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2734529d3a4a90a767dcb0b52a91a859918353a82c2952945ea622d07be929da",
+      "bytes": 5065
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "acfd4f81b4aa4152717f2e8137b0729155bf384ef869af09bd02560418a0014b",
+      "bytes": 814
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "cf1aac32bd54b19c9184c0eb5c9c446f1b5c870b8d75250634f3d2429dfd15dc",
+      "bytes": 831
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "e6bae88cc58e5f1721792b169a4c641caa6aff6054acff71cfa22b5202df473d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e6dcd058705703f4f68dfa31165880cd230334c0eea05a1f7c9401374b1c7623",
+      "bytes": 49795
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0303846d119e95324b797abd0cfc1627f5557d2a32dd7f9a691cc77829f47ff7",
+      "bytes": 25778
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "16a9920fa0d56e9776bb390f6691daebd77c1261491ccadb67cc828c532358b1",
+      "bytes": 54893
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7500c985d774903ccca784b708ae83497f7b16d9906b5015c7602b5eeb3a4723",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b86034cff43e6cc5f8b4c98b9f98c03b4db70cc3e60328328e76b399f462245a",
+      "bytes": 1758
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "dc96b57fa167a28786beca1edb5a14aeee206a8732ebc7fb290db526e7c8efdd",
+      "bytes": 2334
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2186dddd-60ee-4898-b11d-88483daf477e",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b5ca4e9a-2322-4796-b4c5-3b3bf194821f",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "c21fd0f0-1375-4094-83e7-0de484940100",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d"
+  ]
+}

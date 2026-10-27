@@ -1,0 +1,10 @@
+:root {
+  /* Colors */
+  --color-walnut-ink: #403a34;
+  --color-linen-canvas: #f6f1eb;
+  --color-charcoal-note: #333333;
+  --color-slate-whisper: #555555;
+
+  /* Typography — Font Families */
+  --font-bwgradual: 'BwGradual', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

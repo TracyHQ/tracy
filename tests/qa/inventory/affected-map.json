@@ -1,0 +1,332 @@
+{
+  "schema": "tracy-qa-affected-map/v1",
+  "note": "Path glob -> layers that must run when that path changes. Selection (affected.mjs): the union of every matching specific rule; only when none matches, the matching fallback rule of the top-level directory; a path no rule matches is UNKNOWN and selects every layer. Which layer is chosen, and why, is printed per path. A rule is never a catch-all.",
+  "unknown": {
+    "layers": ["static", "unit", "api", "infra", "ui", "flows", "harness", "cms", "mail", "related"],
+    "reason": "A path no rule classifies runs everything; 'no related test' is never an answer (plan §5)."
+  },
+  "rules": [
+    {
+      "id": "session-seats-identity",
+      "globs": [
+        "apps/tracy-web/src/lib/session.js",
+        "apps/tracy-web/src/lib/seat-grant.js",
+        "apps/tracy-web/src/lib/role-policy.js",
+        "apps/tracy-web/src/seats/**",
+        "apps/tracy-web/src/identity/**",
+        "apps/tracy-web/src/lanes/**",
+        "packages/core/tracy-core/src/seat/**"
+      ],
+      "layers": ["api", "flows", "harness", "mail"],
+      "reason": "Session cookie, seats and sign-in are read by every surface and send the sign-in and invite mail (CLAUDE.md §3 blast map).",
+      "source": "plan §5 affected table row 1; CLAUDE.md §3"
+    },
+    {
+      "id": "tokens-ui-locale",
+      "globs": [
+        "packages/ui/**",
+        "packages/locale/**",
+        "packages/dev/tracy-design/**",
+        "packages/core/tracy-core/src/ui-switches/**",
+        "packages/core/tracy-core/src/interface-languages/**",
+        "apps/tracy-web/src/lib/i18n/**",
+        "apps/tracy-web/src/lib/page-shell*.js",
+        "docs/references/page-shell-tokens.md",
+        "DESIGN.md"
+      ],
+      "layers": ["ui", "flows"],
+      "reason": "tokens.css, shared components, switches and translations repaint every Tracy surface; the flows that cross those screens follow.",
+      "source": "plan §5 affected table row 2; CLAUDE.md §3 (tokens.css, vi/*.json)"
+    },
+    {
+      "id": "native-bundle-dsh-pin-passwords",
+      "globs": [
+        "packages/bundle/tracy-native/**",
+        "tch/profiles/**",
+        "tch/patches/**",
+        "vendor/tracy/deepseek-harness",
+        "vendor/tracy/deepseek-harness/**",
+        "vendor/tracy/dsh-passwords/**",
+        ".gitmodules"
+      ],
+      "layers": ["harness", "ui", "flows", "infra"],
+      "reason": "The native bundle is the only Tracy bundle every host loads; a dsh pin or dsh-passwords change moves sign-in and the whole client graph.",
+      "source": "plan §5 affected table row 3; CLAUDE.md §3"
+    },
+    {
+      "id": "fleet-host-dockerfile-deploy",
+      "globs": [
+        "packages/fleet/**",
+        "apps/tracy-host/**",
+        "**/Dockerfile",
+        "**/Dockerfile.*",
+        "deploy/**",
+        ".github/workflows/build-*.yml"
+      ],
+      "layers": ["infra", "cms", "flows"],
+      "reason": "One host serves every site: provisioning, images and compose decide whether a site builds, restores and answers.",
+      "source": "plan §5 affected table row 4; CLAUDE.md §3 (cordis.patch.yml of the fleet profile)"
+    },
+    {
+      "id": "cms-contract-release",
+      "globs": [
+        "apps/tracy-web/src/lib/quickstart-releases.js",
+        "apps/tracy-web/src/lib/release-assets.js",
+        "apps/tracy-web/src/lib/local-releases.js",
+        "apps/tracy-web/src/lib/contracts.js",
+        "apps/tracy-web/src/quickstarts.json",
+        "apps/tracy-web/src/ops/quickstart*.js",
+        "packages/cms/**",
+        "vendor/wordpress/**",
+        "vendor/joomla/**",
+        "vendor/emdash/**",
+        "docs/adr/0017-*",
+        "docs/adr/0022-*"
+      ],
+      "layers": ["cms", "related", "api", "harness", "flows"],
+      "reason": "A contract or release asset changes what the sites are built from, what the door answers, and what the agent may write.",
+      "source": "plan §5 affected table row 5; ADR 0017 (releases), ADR 0022 (content contract)"
+    },
+    {
+      "id": "qa-runner-schema",
+      "globs": [
+        "tests/qa/cli.mjs",
+        "tests/qa/contracts/**",
+        "tests/qa/lib/**",
+        "tests/qa/selftest/**",
+        "tests/qa/README.md"
+      ],
+      "layers": ["static", "unit", "api", "infra", "ui", "flows", "harness", "cms", "mail", "related"],
+      "extras": ["selftest"],
+      "reason": "The runner and the schemas are used by every layer's adapter; its selftest and each adapter must still pass.",
+      "source": "plan §5 affected table row 6"
+    },
+    {
+      "id": "qa-layer",
+      "globs": ["tests/qa/layers/static/**", "tests/qa/oracles/static/**", "tests/qa/fixtures/static/**"],
+      "layers": ["static"],
+      "reason": "Only that layer's own cases and oracles changed.",
+      "source": "plan §5 layout"
+    },
+    {
+      "id": "qa-layer-unit",
+      "globs": ["tests/qa/layers/unit/**", "tests/qa/oracles/unit/**", "tests/qa/fixtures/unit/**"],
+      "layers": ["unit"],
+      "reason": "Only that layer's own cases and oracles changed.",
+      "source": "plan §5 layout"
+    },
+    {
+      "id": "qa-layer-api",
+      "globs": ["tests/qa/layers/api/**", "tests/qa/oracles/api/**", "tests/qa/fixtures/api/**"],
+      "layers": ["api"],
+      "reason": "Only that layer's own cases and oracles changed.",
+      "source": "plan §5 layout"
+    },
+    {
+      "id": "qa-layer-infra",
+      "globs": ["tests/qa/layers/infra/**", "tests/qa/oracles/infra/**", "tests/qa/fixtures/infra/**"],
+      "layers": ["infra"],
+      "reason": "Only that layer's own cases and oracles changed.",
+      "source": "plan §5 layout"
+    },
+    {
+      "id": "qa-layer-ui",
+      "globs": ["tests/qa/layers/ui/**", "tests/qa/oracles/ui/**", "tests/qa/fixtures/ui/**"],
+      "layers": ["ui"],
+      "reason": "Only that layer's own cases and oracles changed.",
+      "source": "plan §5 layout"
+    },
+    {
+      "id": "qa-layer-flows",
+      "globs": ["tests/qa/layers/flows/**", "tests/qa/oracles/flows/**", "tests/qa/fixtures/flows/**"],
+      "layers": ["flows"],
+      "reason": "Only that layer's own cases and oracles changed.",
+      "source": "plan §5 layout"
+    },
+    {
+      "id": "qa-layer-harness",
+      "globs": ["tests/qa/layers/harness/**", "tests/qa/oracles/harness/**", "tests/qa/fixtures/harness/**"],
+      "layers": ["harness"],
+      "reason": "Only that layer's own cases and oracles changed.",
+      "source": "plan §5 layout"
+    },
+    {
+      "id": "qa-layer-cms",
+      "globs": ["tests/qa/layers/cms/**", "tests/qa/oracles/cms/**", "tests/qa/fixtures/cms/**"],
+      "layers": ["cms"],
+      "reason": "Only that layer's own cases and oracles changed.",
+      "source": "plan §5 layout"
+    },
+    {
+      "id": "qa-layer-mail",
+      "globs": ["tests/qa/layers/mail/**", "tests/qa/oracles/mail/**", "tests/qa/fixtures/mail/**"],
+      "layers": ["mail"],
+      "reason": "Only that layer's own cases and oracles changed.",
+      "source": "plan §5 layout"
+    },
+    {
+      "id": "qa-layer-related",
+      "globs": ["tests/qa/layers/related/**", "tests/qa/oracles/related/**", "tests/qa/fixtures/related/**"],
+      "layers": ["related"],
+      "reason": "Only that layer's own cases and oracles changed.",
+      "source": "plan §5 layout"
+    },
+    {
+      "id": "qa-inventory",
+      "globs": ["tests/qa/inventory/**", "tests/qa/docs/**"],
+      "layers": ["static"],
+      "extras": ["selftest"],
+      "reason": "The inventory feeds every layer's coverage numbers; its own selftest must run, and the static layer re-checks the sources it reads.",
+      "source": "task W1"
+    },
+    {
+      "id": "mail-and-notifications",
+      "globs": [
+        "apps/tracy-web/src/mail/**",
+        "apps/tracy-web/src/notifications/**",
+        "apps/tracy-web/src/beta/**"
+      ],
+      "layers": ["mail", "api", "flows"],
+      "reason": "Letters, transport and notification kinds; the doors that emit them and the flows that wait for them.",
+      "source": "SYSTEM.md mail section; apps/tracy-web/src/mail/letters/index.js"
+    },
+    {
+      "id": "agent-tools-and-fence",
+      "globs": [
+        "packages/tools/**",
+        "packages/web/tracy-harness/**",
+        "apps/tracy-web/src/api-reference/sources/agent-tools.json",
+        "config/mode-matrix.json",
+        "packages/bundle/tracy-cowork/**"
+      ],
+      "layers": ["harness", "infra"],
+      "reason": "Tool registrations, the FS_TOOL_ARGS fence and presets decide what an agent may touch on a site (ADR 0014 §3).",
+      "source": "CLAUDE.md §3 (route.mjs fence row)"
+    },
+    {
+      "id": "site-and-brand-plugins",
+      "globs": ["packages/site/**", "packages/design/**", "packages/brand/**", "packages/core/**"],
+      "layers": ["ui", "flows", "api"],
+      "reason": "Plugins draw the customer screens and call tracy-web doors.",
+      "source": "docs/references/directory-map.md plugin map"
+    },
+    {
+      "id": "web-doors",
+      "globs": ["apps/tracy-web/**"],
+      "layers": ["api", "flows", "ui"],
+      "reason": "Any other change to the web app can move a door, a server-rendered page or a flow through them.",
+      "source": "SYSTEM.md services",
+      "fallback": true
+    },
+    {
+      "id": "docs-site",
+      "globs": ["apps/tracy-docs/**"],
+      "layers": ["static", "api"],
+      "reason": "Public API docs are generated from, and must agree with, the API snapshot.",
+      "source": "CLAUDE.md §1 (tracy-docs)",
+      "fallback": true
+    },
+    {
+      "id": "packages-other",
+      "globs": ["packages/**"],
+      "layers": ["static", "unit", "harness", "ui", "flows"],
+      "reason": "An unclassified package: identity gates, its unit tests, and every layer that loads plugins.",
+      "source": "CLAUDE.md §2 rules 2-3",
+      "fallback": true
+    },
+    {
+      "id": "scripts-gates",
+      "globs": ["scripts/**"],
+      "layers": ["static", "infra"],
+      "reason": "Gates and bootstrap scripts: the gate itself, and the entrypoints infra calls.",
+      "source": "CLAUDE.md §1 scripts/",
+      "fallback": true
+    },
+    {
+      "id": "regression-and-e2e-tests",
+      "globs": ["tests/regression/**", "tests/e2e-dev/**"],
+      "layers": ["unit", "flows"],
+      "reason": "Existing regression cases and dev journeys that the unit and flows layers wrap.",
+      "source": "plan §4 unit and flows"
+    },
+    {
+      "id": "tests-other",
+      "globs": ["tests/**"],
+      "layers": ["unit", "static"],
+      "reason": "Other test trees.",
+      "source": "CLAUDE.md §1 tests",
+      "fallback": true
+    },
+    {
+      "id": "tch-home",
+      "globs": ["tch/**"],
+      "layers": ["harness", "infra"],
+      "reason": "$DSH_HOME: profiles and overlay patches decide what dsh loads.",
+      "source": "CLAUDE.md §1 tch/",
+      "fallback": true
+    },
+    {
+      "id": "vendor-other",
+      "globs": ["vendor/**"],
+      "layers": ["static", "harness"],
+      "reason": "Other people's code pinned in the tree: the pin gates, and what the harness loads from it.",
+      "source": "CLAUDE.md §2 rule 5; ADR 0006",
+      "fallback": true
+    },
+    {
+      "id": "docs-and-tasks",
+      "globs": ["docs/**", "tasks/**"],
+      "layers": ["static"],
+      "reason": "Documents are checked by the doc gates (links, index, language).",
+      "source": "CLAUDE.md §4 docs:check-links",
+      "fallback": true
+    },
+    {
+      "id": "ci-and-agents",
+      "globs": [".github/**", ".agents/**", ".claude/**", ".dev-logs/**", "gitpush-noti/**"],
+      "layers": ["static", "infra"],
+      "reason": "CI, skills mirror and local tooling: gates that guard them, and the pipelines infra relies on.",
+      "source": "CLAUDE.md §10 skills:check; §6 gates",
+      "fallback": true
+    },
+    {
+      "id": "root-toolchain",
+      "globs": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        ".npmrc",
+        ".node-version",
+        "tsconfig*.json",
+        "biome.jsonc",
+        ".oxlintrc.json",
+        ".editorconfig",
+        ".pre-commit-config.yaml"
+      ],
+      "layers": ["static", "unit", "api", "infra", "ui", "flows", "harness", "cms", "mail", "related"],
+      "reason": "The workspace definition and toolchain: .npmrc or the lockfile breaks every install (CLAUDE.md §3).",
+      "source": "CLAUDE.md §3 blast map (.npmrc row)"
+    },
+    {
+      "id": "root-git-and-env",
+      "globs": [".gitignore", ".gitmodules", ".dockerignore", ".env*"],
+      "layers": ["static", "infra"],
+      "reason": "What is tracked, built into an image, or configured per environment.",
+      "source": "CLAUDE.md §2 rule 1, §5"
+    },
+    {
+      "id": "root-run-scripts",
+      "globs": ["dev.sh", "run.sh"],
+      "layers": ["infra", "flows"],
+      "reason": "The local runners every dev surface starts from.",
+      "source": "CLAUDE.md §4"
+    },
+    {
+      "id": "root-docs",
+      "globs": ["*.md"],
+      "layers": ["static"],
+      "reason": "Root documents (CLAUDE.md, CONTEXT.md, SYSTEM.md, DESIGN.md) are read by the doc gates.",
+      "source": "CLAUDE.md §1"
+    }
+  ]
+}

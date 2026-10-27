@@ -1,0 +1,130 @@
+/* tokens.css — written by scripts/theme-tokens.mjs of the tracy-wordpress-theme skill.
+ * Design contract: tasks/wp-tracy-business/spec/design-contract.json (id northgate-industrial, revision 1), variant desktop-light.
+ * Fallback: vendor/tracy/od-design-system/systems/apple/tokens.css.
+ *
+ * 14 tokens MEASURED from the contract or a visual-qa round, 42 taken from the fallback — the block at the
+ * end says which is which. A fallback value is a guess standing in until a rule measures it.
+ * Schema: the 56 custom properties the theme generator accepts (TOKEN_NAMES in its build.mjs).
+ */
+
+:root {
+  --bg:                        #f5f3ee; /* measured */
+  --surface:                   #ffffff; /* source css */
+  --surface-warm:              #eceae4; /* source css */
+  --fg:                        #14171a; /* measured */
+  --fg-2:                      #3a3f43; /* source css */
+  --muted:                     #5a5952; /* measured 14/09 visual-qa: body grey of the source (rgb 90,89,82) */
+  --meta:                      #6b6a64; /* measured 14/09 visual-qa: caption grey of the source (rgb 107,106,100) */
+  --border:                    #dcd7cc; /* source css */
+  --border-soft:               #eceae4; /* source css */
+  --accent:                    #14483a; /* source css */
+  --accent-on:                 #ffffff; /* source css */
+  --accent-hover:              #0f3a2e; /* source css */
+  --accent-active:             #0b2c23; /* source css */
+  --success:                   #14483a; /* source css */
+  --warn:                      #da5a2a; /* source css */
+  --danger:                    #b23a1c; /* source css */
+  --font-display:              Newsreader, serif; /* measured */
+  --font-body:                 Archivo, system-ui, sans-serif; /* measured */
+  --font-mono:                 "SF Mono", Menlo, monospace; /* source css */
+  --text-xs:                   12px; /* source css */
+  --text-sm:                   14px; /* source css */
+  --text-base:                 16px; /* source css */
+  --text-lg:                   18px; /* source css */
+  --text-xl:                   22px; /* source css */
+  --text-2xl:                  28px; /* source css */
+  --text-3xl:                  40px; /* source css */
+  --text-4xl:                  64px; /* source css */
+  --leading-body:              1.6; /* source css */
+  --leading-tight:             1.02; /* source css */
+  --tracking-display:          -0.025em; /* source css */
+  --space-1:                   4px; /* fallback */
+  --space-2:                   8px; /* fallback */
+  --space-3:                   12px; /* fallback */
+  --space-4:                   16px; /* fallback */
+  --space-5:                   20px; /* fallback */
+  --space-6:                   24px; /* fallback */
+  --space-8:                   32px; /* fallback */
+  --space-12:                  48px; /* fallback */
+  --radius-sm:                 0px; /* source css */
+  --radius-md:                 0px; /* source css */
+  --radius-lg:                 0px; /* source css */
+  --radius-pill:               0px; /* source css */
+  --elev-flat:                 none; /* source css */
+  --elev-ring:                 0 0 0 1px var(--border); /* source css */
+  --elev-raised:               0 12px 32px rgba(20, 23, 26, 0.10); /* source css */
+  --focus-ring:                0 0 0 4px color-mix(in oklab, var(--accent), transparent 65%); /* fallback */
+  --motion-fast:               150ms; /* fallback */
+  --motion-base:               220ms; /* fallback */
+  --ease-standard:             cubic-bezier(0.28, 0, 0.22, 1); /* fallback */
+  --section-y-desktop:         88px; /* source css */
+  --section-y-tablet:          64px; /* source css */
+  --section-y-phone:           48px; /* source css */
+  --container-max:             1176px; /* measured 15/09 visual-qa (fast-5, N-c02e7a): every source container is `max-width: 1240px; padding: … 32px` under the source's own `* { box-sizing: border-box }`, so its CONTENT is 1176 (x 132→1308 at 1440) and the 32px gutter sits inside the 1240 box. 14/09 read the same declaration as content-box and shipped 1240 of content: every grid, hero and footer ran 64px wider than the source */
+  --container-gutter-desktop:  32px; /* measured 14/09 visual-qa: the source's inline container padding */
+  --container-gutter-tablet:   32px; /* measured 15/09 visual-qa (N-e7a132): the source has no media query — its 32px inline padding holds at every width */
+  --container-gutter-phone:    32px; /* measured 15/09 visual-qa (N-e7a132): 32px at 390 on every source page; 16px here put the home, news and article body 16px left of the fixture pages, which keep the source's inline 32px */
+}
+
+/* Provenance — every token once; "measured" came from a contract rule or its token map,
+ * "fallback" from the fallback file and is a GUESS until a rule measures it.
+ *
+ * measured (14):
+ *   --bg                        rule body-colors (body) backgroundColor
+ *   --fg                        rule body-colors (body) color
+ *   --accent                    rule primary-button (.wp-block-button__link, header a.button) backgroundColor
+ *   --accent-on                 rule primary-button (.wp-block-button__link, header a.button) color
+ *   --font-display              rule heading-1 (h1) fontFamily
+ *   --font-body                 contract tokens.desktop-light
+ *   --text-base                 contract tokens.desktop-light
+ *   --text-4xl                  rule heading-1 (h1) fontSize
+ *   --section-y-desktop         rule section-rhythm (main > section, main > .wp-block-group) paddingTop
+ *   --section-y-phone           rule section-rhythm (main > section, main > .wp-block-group) paddingTop at mobile-light
+ *   --container-max             contract tokens.desktop-light read 1240 (the box); visual-qa 15/09 corrected it to the 1176 content inside the source's border-box padding
+ *   --container-gutter-desktop  visual-qa 14/09, the source's inline container padding
+ *   --container-gutter-tablet   visual-qa 15/09, the same padding at every width (no media query in the source)
+ *   --container-gutter-phone    visual-qa 15/09, the same padding at 390
+ * fallback (42):
+ *   --surface                   apple/tokens.css
+ *   --surface-warm              apple/tokens.css
+ *   --fg-2                      apple/tokens.css
+ *   --muted                     apple/tokens.css
+ *   --meta                      apple/tokens.css
+ *   --border                    apple/tokens.css
+ *   --border-soft               apple/tokens.css
+ *   --accent-hover              apple/tokens.css
+ *   --accent-active             apple/tokens.css
+ *   --success                   apple/tokens.css
+ *   --warn                      apple/tokens.css
+ *   --danger                    apple/tokens.css
+ *   --font-mono                 apple/tokens.css
+ *   --text-xs                   apple/tokens.css
+ *   --text-sm                   apple/tokens.css
+ *   --text-lg                   apple/tokens.css
+ *   --text-xl                   apple/tokens.css
+ *   --text-2xl                  apple/tokens.css
+ *   --text-3xl                  apple/tokens.css
+ *   --leading-body              apple/tokens.css
+ *   --leading-tight             apple/tokens.css
+ *   --tracking-display          apple/tokens.css
+ *   --space-1                   apple/tokens.css
+ *   --space-2                   apple/tokens.css
+ *   --space-3                   apple/tokens.css
+ *   --space-4                   apple/tokens.css
+ *   --space-5                   apple/tokens.css
+ *   --space-6                   apple/tokens.css
+ *   --space-8                   apple/tokens.css
+ *   --space-12                  apple/tokens.css
+ *   --radius-sm                 apple/tokens.css
+ *   --radius-md                 apple/tokens.css
+ *   --radius-lg                 apple/tokens.css
+ *   --radius-pill               apple/tokens.css
+ *   --elev-flat                 apple/tokens.css
+ *   --elev-ring                 apple/tokens.css
+ *   --elev-raised               apple/tokens.css
+ *   --focus-ring                apple/tokens.css
+ *   --motion-fast               apple/tokens.css
+ *   --motion-base               apple/tokens.css
+ *   --ease-standard             apple/tokens.css
+ *   --section-y-tablet          apple/tokens.css
+ */

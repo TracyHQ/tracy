@@ -1,0 +1,59 @@
+{
+  "id": "QA-UNIT-REG-PR-1198-menu-ring-happy",
+  "itemIds": ["regression:REG-PR-1198-menu-ring"],
+  "requirement": "Account menu › Getting started: a progress ring and n/N count that follow the rail's rule, and the row leaves when every step is done or the account hid it",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1198-menu-ring.json",
+    "ref": "PR #1198 (feat); fix evidence: none recorded",
+    "invariant": "Web, no AI account: 2/3 (sign-in and appearance always done); desktop, no account, notifications off: 2/4. A connect published to the page copy moves the count to 3/4 without a reload; a disconnected row does not count; notifications turned on move it too. Every step done: no row. Hidden from the account menu: no row, whatever the count. Operator switch off: no row. No answer about the flags (no door): the row shows with the count it knows. The row's ring has stroke-dashoffset = C·(1−done/total).",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-onboard/test/menu-row.test.mjs:78 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the web with no AI account: 2/3 — sign-in and appearance are always done",
+    "the desktop app with no AI account and notifications off: 2/4",
+    "a connect published to the page copy moves the count to 3/4 without a reload; a disconnected row does not count",
+    "every step done: no row (web, an account connected)",
+    "hidden from the account menu: no row, whatever the count",
+    "the operator switched Getting started off: no row",
+    "through apply(): the real page copy — publishStatus from a connect moves the web row from 2/3 to gone"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1198-menu-ring"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-onboard", "tracy-onboard"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1198-menu-ring",
+    "pr": 1198,
+    "kind": "feat",
+    "area": "onboard/menu-row",
+    "file": "tests/regression/cases/REG-PR-1198-menu-ring.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "packages/ui/tracy-onboard/test/menu-row.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the web with no AI account: 2/3 — sign-in and appearance are always done",
+    "the desktop app with no AI account and notifications off: 2/4",
+    "a connect published to the page copy moves the count to 3/4 without a reload; a disconnected row does not count",
+    "every step done: no row (web, an account connected)",
+    "hidden from the account menu: no row, whatever the count",
+    "the operator switched Getting started off: no row",
+    "through apply(): the real page copy — publishStatus from a connect moves the web row from 2/3 to gone"
+  ],
+  "timeoutS": 120
+}

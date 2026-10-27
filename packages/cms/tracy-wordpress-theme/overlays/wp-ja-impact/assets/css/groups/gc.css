@@ -1,0 +1,520 @@
+/* wp-ja-impact, group gc: the single-article view (blog, donation and event layouts, the Blog Detail page).
+ * Every length below was read off the running source (JA Impact on Joomla, 8300, 01/10/2026) as computed
+ * style at 1440 px in light and dark (templates/ja_impact/html/com_content/article/*.php, css/template.css
+ * `.donation-detail`, `.event-detail`, `.pagenavigation`, `.article-tags-social`); the source's breakpoint
+ * (lg 992) is kept. Colours are the shared custom properties (--jim-*), which carry both modes. */
+
+/* ── Breadcrumb band and the page body ─────────────────────────────────────────────────────────── */
+
+body.tracy .jim-art-main .jim-crumbs {
+  background: var(--jim-line);
+  padding: 32.5px 0;
+  text-align: center;
+}
+body.tracy .jim-art-main .jim-crumbs .jim-breadcrumbs,
+body.tracy .jim-art-main .jim-crumbs .wp-block-breadcrumbs {
+  margin: 0;
+  font-size: 16px;
+  line-height: 25.6px;
+  color: var(--jim-text);
+}
+body.tracy .jim-art-main .jim-crumbs :is(ol, ul) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+body.tracy .jim-art-main .jim-crumbs a { color: var(--jim-text); text-decoration: none; }
+body.tracy .jim-art-main .jim-crumbs a:hover { color: var(--jim-link-hover); }
+
+/* The Blog Detail page keeps the masthead band of the source (the leaf picture, the title "Blog"). */
+body.tracy .jim-art__masthead {
+  background: url('../../img/gc-hero.jpg') center / cover no-repeat;
+}
+body.tracy .jim-art__masthead .jim-breadcrumbs { margin: 16px 0 0; color: #fff; text-align: center; } /* ds-keep: words on the photo under its dark veil: the picture keeps its tones under a system, so its words keep the template white */
+body.tracy .jim-art__masthead .jim-breadcrumbs :is(ol, ul) { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none; margin: 0; padding: 0; }
+body.tracy .jim-art__masthead .jim-breadcrumbs a { color: #fff; text-decoration: none; } /* ds-keep: words on the photo under its dark veil: the picture keeps its tones under a system, so its words keep the template white */
+body.tracy .jim-art__masthead .jim-breadcrumbs a:hover { color: var(--ds-c-accent-on-ink, var(--jim-success)); }
+
+/* ── Two columns: the article and its sidebar (source: col-md 2/3 and col-lg-4 with 32 px gutters) ─ */
+
+@media (min-width: 992px) {
+  body.tracy .jim-art__cols {
+    display: grid;
+    grid-template-columns: calc(66.6667% - 21.333px) 1fr;
+    column-gap: 64px;
+    align-items: start;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  body.tracy .jim-art__cols { grid-template-columns: 608px 1fr; column-gap: 32px; }
+}
+body.tracy .jim-art__cols > * { margin-block: 0; }
+@media (max-width: 991.98px) {
+  body.tracy .jim-art__cols { display: flex; flex-direction: column; gap: 32px; }
+}
+body.tracy .jim-art { min-width: 0; }
+
+/* ── The article ───────────────────────────────────────────────────────────────────────────────── */
+
+body.tracy .jim-art__image { margin: 0; }
+body.tracy .jim-art__image img {
+  display: block;
+  width: 100%;
+  border-radius: var(--ds-card-radius, 8px);
+  object-fit: cover;
+}
+body.tracy .jim-art--blog .jim-art__image img { height: auto; max-height: 568px; aspect-ratio: auto; }
+body.tracy .jim-art--donation .jim-art__image img { height: auto; aspect-ratio: 875 / 547; }
+body.tracy .jim-art__image--event { margin-bottom: 48px; }
+body.tracy .jim-art__image--event img { height: auto; aspect-ratio: 1344 / 673; }
+
+body.tracy .jim-art__meta {
+  margin: 16px 0 16px;
+  min-height: 19.2px;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+  line-height: 22.4px;
+}
+body.tracy .jim-art__meta > * { margin: 0; font-size: 14px; line-height: 16.8px; color: var(--jim-text); }
+body.tracy .jim-art__author a { color: var(--ds-c-accent-text, var(--jim-success)); text-decoration: none; }
+body.tracy .jim-art__author::before { content: '\2013'; margin-right: 8px; color: var(--jim-muted); }
+
+body.tracy .jim-art__title {
+  margin: 0 0 16px;
+  font-size: var(--jim-h2);
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--jim-heading);
+}
+body.tracy .jim-art--donation .jim-art__title,
+body.tracy .jim-art--event .jim-art__title { margin-bottom: 32px; }
+
+body.tracy .jim-art__body { margin: 32px 0 16px; }
+body.tracy .jim-art--event .jim-art__body { margin: 0 0 16px; }
+body.tracy .jim-art--donation .jim-art__body { margin: 48px 0 16px; }
+body.tracy .jim-art__body > * { margin-block: 0; }
+body.tracy .jim-art__body > :last-child { margin-bottom: 0; }
+body.tracy .jim-art__body p { margin: 0 0 16px; font-size: 16px; line-height: 25.6px; }
+body.tracy .jim-art__body :is(h3, .article-header) {
+  margin: 0 0 32px;
+  font-size: var(--jim-h3);
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--jim-heading);
+}
+body.tracy .jim-art__body :is(.mt-0, h3.mt-0) { margin-top: 0; }
+body.tracy .jim-art__body .mb-0 { margin-bottom: 0; }
+body.tracy .jim-art__body .mb-4 { margin-bottom: 24px; }
+body.tracy .jim-art__body .mb-5 { margin-bottom: 48px; }
+body.tracy .jim-art__body .mt-4 { margin-top: 24px; }
+body.tracy .jim-art__body .my-4 { margin-top: 24px; margin-bottom: 24px; }
+body.tracy .jim-art__body .my-5 { margin-top: 48px; margin-bottom: 48px; }
+body.tracy .jim-art__body .d-flex { display: flex; }
+body.tracy .jim-art__body img { max-width: 100%; height: auto; border-radius: var(--ds-card-radius, 8px); display: block; }
+
+/* The Bootstrap rows and columns the article text carries (img-gallery, list, col-*). */
+body.tracy .jim-art__body .row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+body.tracy .jim-art__body .row > * {
+  box-sizing: border-box;
+  flex: 0 0 100%;
+  max-width: 100%;
+  padding: 0 16px;
+  margin-block: 0;
+}
+body.tracy .jim-art__body .row :is(.wp-block-image, figure) { margin: 0 0 24px; }
+@media (min-width: 576px) { body.tracy .jim-art__body .row > .col-sm-6 { flex-basis: 50%; max-width: 50%; } }
+@media (min-width: 768px) { body.tracy .jim-art__body .row > .col-md-6 { flex-basis: 50%; max-width: 50%; } }
+@media (min-width: 992px) { body.tracy .jim-art__body .row > .col-lg-6 { flex-basis: 50%; max-width: 50%; } }
+body.tracy .jim-art--event .jim-art__body .row { margin: 24px -32px; }
+body.tracy .jim-art--event .jim-art__body .row > * { padding: 0 32px; }
+body.tracy .jim-art--event .jim-art__body .row.mb-4 { margin-bottom: 24px; }
+
+/* The quote band (Bootstrap alert-info of the source). */
+body.tracy .jim-art__body .alert {
+  box-sizing: border-box;
+  padding: 16px;
+  border: 1px solid var(--ds-c-info, light-dark(#2970db, #055160));
+  border-radius: var(--ds-card-radius, 8px);
+  background: var(--ds-c-info-bg, light-dark(#2970db, #032830));
+  color: var(--ds-c-info-text, light-dark(#fff, #6edff6));
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 32px 0;
+}
+body.tracy .jim-art__body .alert .h4 {
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ds-c-info-text, #fff);
+  margin: 0;
+}
+
+@media (min-width: 576px) {
+  body.tracy .jim-art__body .alert { padding: 48px; margin: 48px 0; }
+  body.tracy .jim-art__meta { margin-top: 48px; }
+  body.tracy .jim-art__body .alert .h4 { font-size: 20px; line-height: 24px; }
+}
+@media (min-width: 992px) {
+  body.tracy .jim-art__body .alert .h4 { font-size: var(--jim-h4); line-height: 28.8px; }
+}
+
+/* Event text: the tick list and the four service cards. */
+body.tracy .jim-art__body .list ul { list-style: none; margin: 0 0 16px; padding: 0; }
+body.tracy .jim-art__body .list ul li {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  margin: 0 0 12px;
+  color: var(--jim-heading);
+}
+body.tracy .jim-art__body .list ul li::before {
+  content: '\f00c';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 19.2px;
+  margin-right: 16px;
+}
+body.tracy .jim-art__body .list ul li p { margin: 0; }
+body.tracy .jim-art__body .list-service {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-radius: var(--ds-card-radius, 8px);
+}
+@media (min-width: 768px) { body.tracy .jim-art__body .list-service { grid-template-columns: repeat(2, 1fr); } }
+body.tracy .jim-art__body .list-service > * { margin-block: 0; }
+body.tracy .jim-art__body .service {
+  box-sizing: border-box;
+  gap: 16px;
+  padding: 32px;
+  background: var(--jim-raised);
+  box-shadow: 0 0 0 1px var(--jim-line);
+}
+@media (min-width: 768px) {
+  body.tracy .jim-art__body .service:nth-child(1) { border-top-left-radius: var(--ds-card-radius, 8px); }
+  body.tracy .jim-art__body .service:nth-child(2) { border-top-right-radius: var(--ds-card-radius, 8px); }
+  body.tracy .jim-art__body .service:nth-child(3) { border-bottom-left-radius: var(--ds-card-radius, 8px); }
+  body.tracy .jim-art__body .service:nth-child(4) { border-bottom-right-radius: var(--ds-card-radius, 8px); }
+}
+body.tracy .jim-art__body .service > * { margin-block: 0; }
+body.tracy .jim-art__body .service-image img { width: 48px; height: 48px; border-radius: 0; } /* ds-keep: the service icon picture, square on purpose */
+body.tracy .jim-art__body .service-content { flex: 1; }
+body.tracy .jim-art__body .service h4 { margin: 0 0 8px; font-size: var(--jim-h4); line-height: 1.2; font-weight: 500; letter-spacing: -0.01em; color: var(--jim-heading); }
+body.tracy .jim-art__body .service p { margin: 0; }
+body.tracy .jim-art__register { margin-top: 64px; }
+body.tracy .jim-art--event .jim-art__body .row :is(.wp-block-image, figure) { margin: 0; }
+
+/* ── Donation: the raised amount over the picture ──────────────────────────────────────────────── */
+
+body.tracy .jim-art__top { margin: 0 0 16px; align-items: center; }
+body.tracy .jim-art__top > * { margin: 0; }
+body.tracy .jim-art__tag a,
+body.tracy .jim-art__place {
+  font-size: 16px;
+  line-height: 25.6px;
+  letter-spacing: -0.01em;
+}
+body.tracy .jim-art__tag a { color: light-dark(var(--ds-c-warn-text, #f48a29), var(--ds-c-warn-text, #6f9bf0)); text-decoration: none; }
+body.tracy .jim-art__tag a::before {
+  content: '\f02e';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  margin-right: 4px;
+}
+body.tracy .jim-art__place { color: var(--ds-c-accent-text, var(--jim-success)); }
+body.tracy .jim-art__place::before {
+  content: '\f3c5';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  margin-right: 4px;
+}
+body.tracy .jim-art__figure { position: relative; }
+body.tracy .jim-art__figure::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--ds-card-radius, 8px);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4));
+  pointer-events: none;
+}
+body.tracy .jim-prog {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16px;
+}
+@media (min-width: 576px) { body.tracy .jim-prog { padding: 32px; } }
+@media (min-width: 992px) { body.tracy .jim-prog { padding: 64px; } }
+body.tracy .jim-prog__bar { position: relative; }
+body.tracy .jim-prog__pct {
+  position: absolute;
+  top: -32px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 27px;
+  color: #fff; /* ds-keep: words on the photo under its dark veil: the picture keeps its tones under a system, so its words keep the template white */
+  text-align: center;
+  transform: none;
+}
+@media (max-width: 575.98px) { body.tracy .jim-prog__pct { font-size: 16px; } }
+body.tracy .jim-prog__track {
+  display: flex;
+  height: 10px;
+  margin: 0 0 16px;
+  border-radius: var(--ds-pill-radius, 8px);
+  background: light-dark(var(--ds-c-surface-warm, #e9ecef), var(--ds-c-surface-warm, #1e2a45));
+  overflow: hidden;
+}
+body.tracy .jim-prog__fill { height: 100%; border-radius: var(--ds-pill-radius, 8px); background: var(--jim-success); }
+body.tracy .jim-prog__nums { gap: 16px; }
+body.tracy .jim-prog__num { display: flex; align-items: baseline; gap: 8px; }
+body.tracy .jim-prog__num > * { margin: 0; }
+body.tracy .jim-prog__value { font-size: var(--jim-h4); line-height: 1.2; font-weight: 500; letter-spacing: -0.01em; color: #fff; } /* ds-keep: words on the photo under its dark veil: the picture keeps its tones under a system, so its words keep the template white */
+body.tracy .jim-prog__label { font-size: 16px; line-height: 25.6px; color: #fff; } /* ds-keep: words on the photo under its dark veil: the picture keeps its tones under a system, so its words keep the template white */
+
+/* ── Tags, share buttons and previous / next ───────────────────────────────────────────────────── */
+
+body.tracy .jim-art__foot { margin: 64px 0; gap: 16px; align-items: center; }
+@media (max-width: 991.98px) { body.tracy .jim-art__foot { margin: 32px 0; } }
+body.tracy .jim-art__tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+body.tracy .jim-art__tags .wp-block-post-terms__separator { display: none; }
+/* Source: two col-md-6 columns with 16 px inner gutters, so the tags wrap at half the row less the gutter. */
+@media (min-width: 768px) { body.tracy .jim-art__foot { flex-wrap: nowrap; gap: 32px; } body.tracy .jim-art__foot > .jim-art__tags { flex: 0 0 calc(50% - 16px); } }
+body.tracy .jim-art__tags a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: var(--ds-pill-radius, 8px);
+  background: var(--jim-surface);
+  color: var(--jim-link);
+  font-size: 14px;
+  line-height: 16.8px;
+  text-align: center;
+  text-decoration: none;
+}
+body.tracy .jim-art__tags a:hover { color: var(--jim-link-hover); }
+body.tracy .jim-art__share { gap: 6px; margin: 0; }
+body.tracy .jim-art__share .wp-social-link { margin: 0; background: transparent; }
+body.tracy .jim-art__share .wp-social-link a {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--jim-surface);
+  border-radius: var(--ds-btn-radius, 8px);
+  background: var(--jim-surface);
+}
+body.tracy .jim-art__share .wp-social-link svg { width: 24px; height: 24px; fill: currentColor; }
+body.tracy .jim-art__share.wp-block-social-links .wp-social-link.wp-social-link-facebook a { color: #3b5997; }
+body.tracy .jim-art__share.wp-block-social-links .wp-social-link.wp-social-link-x a { color: #00acee; } /* ds-keep: the X (Twitter) brand colour */
+body.tracy .jim-art__share.wp-block-social-links .wp-social-link.wp-social-link-tumblr a { color: var(--ds-c-fg, light-dark(#35465c, #c2c9d6)); }
+body.tracy .jim-art__share.wp-block-social-links .wp-social-link.wp-social-link-whatsapp a { color: #25d366; }
+
+body.tracy .jim-art__pager {
+  gap: 0;
+  padding: 32px 0;
+  border-top: 1px solid var(--jim-line);
+  border-bottom: 1px solid var(--jim-line);
+}
+body.tracy .jim-art__pager > * { flex: 1 1 50%; display: flex; align-items: center; margin: 0; max-width: 50%; }
+body.tracy .jim-art__pager .wp-block-post-navigation-link a {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--jim-heading);
+  text-decoration: none;
+}
+body.tracy .jim-art__pager .post-navigation-link__title { font-size: var(--jim-h5); line-height: 1.5; }
+body.tracy .jim-art__pager .wp-block-post-navigation-link a:hover { color: var(--jim-link-hover); }
+body.tracy .jim-art__pager .post-navigation-link-previous { border-right: 1px solid var(--jim-line); justify-content: flex-start; }
+body.tracy .jim-art__pager .post-navigation-link-next { justify-content: flex-end; text-align: right; }
+body.tracy .jim-art__pager .post-navigation-link-previous a { margin: 0 32px 0 16px; }
+body.tracy .jim-art__pager .post-navigation-link-next a { margin: 0 16px 0 32px; }
+body.tracy .jim-art__pager .wp-block-post-navigation-link__arrow-previous,
+body.tracy .jim-art__pager .wp-block-post-navigation-link__arrow-next { margin: 0; color: var(--jim-heading); }
+@media (min-width: 1200px) { body.tracy .jim-art__pager { padding: 48px 0; } }
+
+/* ── Sidebar boxes (the source's Categories, Search, Recent posts and Tags modules) ────────────── */
+
+body.tracy .jim-side > * { margin-block: 0; }
+body.tracy .jim-side__box {
+  padding: 32px;
+  border: 1px solid var(--jim-line);
+  border-radius: var(--ds-card-radius, 8px);
+}
+body.tracy .jim-side__box + *,
+body.tracy .jim-side__search + * { margin-top: 32px; }
+body.tracy .jim-side__title {
+  margin: 0 0 32px;
+  font-size: var(--jim-h4);
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--jim-heading);
+}
+body.tracy .jim-side__list { list-style: none; margin: 0; padding: 0; }
+body.tracy .jim-side__list li + li { padding-top: 16px; }
+body.tracy .jim-side__list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--jim-link);
+  text-decoration: none;
+}
+body.tracy .jim-side__list a:hover { color: var(--jim-link-hover); }
+body.tracy .jim-side__list .numitems {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%; /* ds-keep: the round count badge, a circle */
+  background: var(--jim-raised-2);
+  color: var(--ds-c-accent-text, light-dark(#2970db, #c2c9d6));
+}
+body.tracy .jim-side__search .wp-block-search__inside-wrapper { border: 0; padding: 0; background: transparent; }
+body.tracy .jim-side__search .wp-block-search__input {
+  box-sizing: border-box;
+  height: 55.6px;
+  padding: 0 56px 0 16px;
+  border: 0;
+  border-radius: var(--ds-input-radius, 8px);
+  background: var(--jim-surface);
+  color: var(--jim-text);
+  font: inherit;
+  font-size: 14px;
+}
+body.tracy .jim-side__search .wp-block-search__button {
+  background: transparent;
+  color: var(--jim-heading);
+  border: 0;
+  padding: 0 16px;
+}
+body.tracy .jim-side__latest .wp-block-post-template { list-style: none; margin: 0; padding: 0; }
+body.tracy .jim-side__latest .wp-block-post-template > li {
+  margin: 0;
+  font-size: var(--jim-h5);
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--jim-heading);
+}
+body.tracy .jim-side__latest .wp-block-post-template > li + li { padding-top: 16px; }
+@media (min-width: 992px) { body.tracy .jim-side__latest .wp-block-post-template > li + li { padding-top: 32px; } }
+body.tracy .jim-side__item { gap: 16px; align-items: flex-start; }
+body.tracy .jim-side__item > * { margin: 0; }
+body.tracy .jim-side__thumb { flex: 0 0 120px; width: 120px; }
+body.tracy .jim-side__thumb img { display: block; width: 120px; height: 80px; border-radius: var(--ds-card-radius, 8px); object-fit: cover; }
+body.tracy .jim-side__post {
+  font-size: var(--jim-h5);
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--jim-heading);
+}
+body.tracy .jim-side__post { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+body.tracy .jim-side__post a { color: inherit; text-decoration: none; }
+body.tracy .jim-side__post a:hover { color: var(--jim-link-hover); }
+body.tracy .jim-side__tags .wp-block-tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+body.tracy .jim-side__tags .wp-block-tag-cloud li { margin: 0; }
+body.tracy .jim-side__tags .tag-cloud-link {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: var(--ds-pill-radius, 4px);
+  background: var(--jim-surface);
+  color: var(--jim-heading);
+  font-size: 14px !important;
+  line-height: 16.8px;
+  text-decoration: none;
+}
+body.tracy .jim-side__tags .tag-cloud-link:hover { color: var(--jim-link-hover); }
+
+/* ── Event: information card and call to action beside the text ────────────────────────────────── */
+
+body.tracy .jim-art__aside > * { margin-block: 0; }
+body.tracy .jim-info {
+  position: relative;
+  padding: 32px;
+  border-radius: var(--ds-card-radius, 8px);
+  background: var(--jim-primary) url('../../img/gc-dt-bg.jpg') center / cover no-repeat;
+}
+body.tracy .jim-info__item { gap: 16px; align-items: flex-start; }
+body.tracy .jim-info__item + .jim-info__item { margin-top: 32px; }
+body.tracy .jim-info__icon {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  color: var(--ds-c-accent-on-ink, var(--jim-success));
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 35.2px;
+  line-height: 35.2px;
+}
+body.tracy .jim-info__icon--calendar::before { content: '\f133'; }
+body.tracy .jim-info__icon--clock::before { content: '\f017'; }
+body.tracy .jim-info__icon--pin::before { content: '\f3c5'; }
+body.tracy .jim-info__icon--dollar::before { content: '\24'; }
+body.tracy .jim-info__icon--tags::before { content: '\f02c'; }
+body.tracy .jim-info__content { flex: 1; min-width: 0; }
+body.tracy .jim-info__content > * { margin-block: 0; }
+body.tracy .jim-info__label { margin: 0 0 8px; font-size: 16px; line-height: 25.6px; color: var(--jim-on-band-muted); }
+body.tracy .jim-info__value,
+body.tracy .jim-info__tags {
+  margin: 0;
+  font-size: var(--jim-h5);
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ds-c-on-ink, #fff);
+}
+body.tracy .jim-info__tags a { color: var(--ds-c-on-ink, #fff); text-decoration: none; }
+body.tracy .jim-info__tags a:hover { color: var(--ds-c-accent-on-ink, var(--jim-success)); }
+body.tracy .jim-cta {
+  margin-top: 32px;
+  padding: 64px 32px;
+  border-radius: var(--ds-card-radius, 8px);
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('../../img/gc-cta.jpg') center / cover no-repeat;
+  color: var(--jim-on-band-muted);
+}
+body.tracy .jim-cta > * { margin-block: 0; }
+body.tracy .jim-cta__title {
+  margin: 0 0 16px;
+  font-size: var(--jim-h3);
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #fff; /* ds-keep: words on the photo under its dark veil: the picture keeps its tones under a system, so its words keep the template white */
+}
+body.tracy .jim-cta__desc { margin: 0; font-size: 16px; line-height: 25.6px; color: var(--jim-on-band-muted); }
+body.tracy .jim-cta .cta-action { margin-top: 64px; }
+
+/* Blog Detail: the masthead title and the related-post card titles as the source draws them. */
+body.tracy .jim-art__masthead .jim-masthead__title { line-height: 44px; color: light-dark(#fff, #eef1f6); } /* ds-keep: words on the photo under its dark veil: the picture keeps its tones under a system, so its words keep the template white */
+@media (max-width: 991.98px) { body.tracy .jim-art__masthead .jim-masthead__title { line-height: 30.8px; } }
+body.tracy .jim-art-main .jim-rel__title,
+body.tracy .jim-art-main .jim-rel__title a { font-size: 16px; line-height: 1.3; color: var(--jim-link); }
+@media (min-width: 992px) {
+  body.tracy .jim-art-main .jim-rel__title,
+  body.tracy .jim-art-main .jim-rel__title a { font-size: 18px; }
+}
+@media (min-width: 1200px) {
+  body.tracy .jim-art-main .jim-rel__title,
+  body.tracy .jim-art-main .jim-rel__title a { font-size: var(--jim-h4); }
+}

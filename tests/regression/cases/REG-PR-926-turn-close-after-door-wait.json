@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-926-turn-close-after-door-wait",
+  "kind": "fix",
+  "title": "A chat turn whose moment or seal the host ends after the door stopped waiting is still closed with the commit, audited once, and has the seal's outside commits kept",
+  "pr": 926,
+  "area": "site-changes/turns",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Start a throwaway PostgreSQL (for example: docker run -d --rm --name reg926-pg -e POSTGRES_PASSWORD=t -p 127.0.0.1:55433:5432 postgres:16-alpine) and wait until pg_isready answers. A stand's own Postgres URL works too (the tests create and drop databases of their own).",
+    "S2: From the TCH checkout run: TEST_DATABASE_URL=postgres://postgres:t@127.0.0.1:55433/postgres node --test --test-reporter=tap --test-name-pattern='L31|turn|moment' apps/tracy-web/test/sites-route.test.mjs",
+    "S3: Run: TEST_DATABASE_URL=postgres://postgres:t@127.0.0.1:55433/postgres node --test --test-reporter=tap apps/tracy-web/test/door-follow-up.test.mjs",
+    "S4: Read the exit code and the `# pass`, `# fail`, `# skipped` and `# cancelled` lines of each run, the nine tests of S2 whose names start with 'L31:' and the five tests of S3, then stop the PostgreSQL container."
+  ],
+  "expect": [
+    "S2 and S3 each exit 0 with 0 failures, 0 skipped, 0 cancelled; all nine 'L31:' tests, every other turn/moment test and all five tests of door-follow-up.test.mjs pass.",
+    "'L31: a moment the host ends after the door stopped waiting …': POST /api/sites/:key/moment answers 202 FLEET_JOB_PENDING while the host job runs, the turn stays open with no head; once the host says done, settleDoorFollowUps closes it with head_sha = the host's sha, files 2, the reply and end reason sent, closed_at = the host's updatedAt for the job, and exactly one site.moment audit line — a third sweep changes nothing.",
+    "'L31: a moment the host fails …': a failure that is not about a busy site ('webroot repo not built yet') files no second job and closes no turn; a job still running after 24 h is given up, no turn closed, no audit line.",
+    "'L31: a moment that fails late because the site was busy …': after 'another webroot job holds this site; try again shortly' the sweep files exactly one more webroot-moment job with the same title, turn and label; when that one is done the turn closes with its sha and one audit line.",
+    "'L31: a site that stays busy …': at most two more moment jobs (three in all), then nothing is owed and the turn stays open.",
+    "'L31: a late moment of a turn that stopped twice …': the late first close adds its files (3 in all) but head_sha and reply stay those of the second close.",
+    "'L31: a seal the host ends after the door stopped waiting …': POST /turn answers unsealedStart: true; once the seal ends the sweep keeps its outside commits (the deploy and the seal rows in site_outside), unsealed_start stays true.",
+    "'L31: the moment door answers within its wait …': with the POST spending 9.8 s of the 10 and the polls hanging, the door answers 202 in under 1.5 s of real time.",
+    "'L31: a seal that ends after 12 s of the door's wait counts as late …': unsealedStart: true although the host would have said done; the sweep then keeps its 2 outside commits.",
+    "'L31: the follow-up is filed with the job …': while the door polls, site_job_follow_up already holds {door: 'moment', turn_id} joined to its job row; after the door finished, no row is left.",
+    "door-follow-up.test.mjs: the job row and its follow-up exist together; two followThrough calls racing (Promise.all) give one audit line and the files counted once; work that throws leaves the row owed and a second try does it; in the sweep such a row is tried again, then given up after FOLLOW_UP_MAX_MS with exactly one 'given up' line; a host answering status 0 is asked once per run while each row taken has its next_at pushed past the run's time.",
+    "Before the fix: at 832a24c20 the first five 'L31:' tests fail (502 instead of 202, settleDoorFollowUps missing, no owed row); at 59bbb0759 the closed_at check, the busy-site retry, the retry cap, the bounded wait (about 11.5 s of real time) and the 12 s seal tests fail, and three of the five door-follow-up tests fail."
+  ],
+  "selectors": {
+    "doors": "POST /api/sites/:key/moment, POST /api/sites/:key/turn (apps/tracy-web/src/sites/route.js runOwedJob)",
+    "sweep": "settleDoorFollowUps in apps/tracy-web/src/cron.js → settleFollowUps in apps/tracy-web/src/sites/door-follow-up.js",
+    "tables": "site_job_follow_up (attempts, next_at), job, site_turn (state, head_sha, files, reply, end_reason, closed_at, unsealed_start, close_filed_at), site_outside, audit action site.moment"
+  },
+  "evidence": "Local stand 05/10/2026: turn session-aa4ee53e-f675-4dfd-a86d-207aa5c97e05:1 on benchjoomlaapply01 reads stale with no head_sha while its moment job ffc52439e8d3 committed 2 files at dfd0eb19; its job row stayed 'running', last written 45 s after it was filed (the door's deadline). 192 webroot-moment and 32 webroot-seal-outside rows were left 'running' the same way; the host needed a median 89 s for a moment and 44 s for a seal.",
+  "fence": "Mechanism only: the doors and the sweep run under node --test against a fake host and a real PostgreSQL. Not covered: a real tracy-host or webroot (the busy-site texts are the ones webroot-git.sh and git print), the dsh turn book's handling of the 202 (turn-record.mjs reads any 2xx as recorded), the cron timer itself (the tests call the sweep), two real replicas, and the host-side cause of slow jobs.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-926-turn-close-after-door-wait.mjs"],
+    "needs": ["postgres"]
+  }
+}

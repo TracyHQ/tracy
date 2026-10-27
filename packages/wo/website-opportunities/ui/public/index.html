@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Website Opportunities</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./style.css" />
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main" data-t="app.skip">Skip to content</a>
+    <header class="top">
+      <div class="top-inner">
+        <a class="brand" href="#/find" data-t="app.title">Website Opportunities</a>
+        <nav aria-label="Main" data-t-aria="app.nav">
+          <ul class="nav">
+            <li><a href="#/find" data-nav="find" data-t="nav.find">Find</a></li>
+            <li><a href="#/list" data-nav="list" data-t="nav.list">My opportunities</a></li>
+            <li id="nav-operator" hidden><a href="#/operator" data-nav="operator" data-t="nav.operator">Operator</a></li>
+          </ul>
+        </nav>
+        <button type="button" class="link-button" id="token-button" hidden data-t="nav.token">Operator token</button>
+      </div>
+    </header>
+    <main id="main" tabindex="-1"></main>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

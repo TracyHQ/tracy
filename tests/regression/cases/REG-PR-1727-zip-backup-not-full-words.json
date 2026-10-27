@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1727-zip-backup-not-full-words",
+  "kind": "fix",
+  "title": "Publish › ZIP: a backup whose database copy did not finish (BACKUP_NOT_FULL) is said in two plain paragraphs, not the generic sentence with the code, and Try again makes a new backup",
+  "pr": 1727,
+  "area": "site-backup/export-zip",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Open the ZIP step of the Publish tab and press Prepare ZIP on a site whose export ends failed with error BACKUP_NOT_FULL.",
+    "S2: Read the error notice of the step.",
+    "S3: Press Try again."
+  ],
+  "expect": [
+    "S1: the step reaches stage 'failed' ([data-export-stage=\"failed\"]).",
+    "S2: [data-export-failed] holds two paragraphs: 'Tracy could not finish a full backup of your site, so the ZIP was not made. …' and 'Press Try again to make a new backup. …'; the text '(BACKUP_NOT_FULL)' does not appear.",
+    "S3: a second fresh backup is requested."
+  ],
+  "selectors": {
+    "files": "packages/core/tracy-core/src/site-tabs/publish/ZipStep.tsx, packages/site/tracy-site-tabs/src/client/strings.ts",
+    "dom": "[data-export-stage], [data-export-failed], [data-export-retry]",
+    "tool": "node --test DOM test of the ZIP step (jsdom)"
+  },
+  "evidence": "Before the fix the notice read 'The ZIP could not be prepared or downloaded (BACKUP_NOT_FULL).' (the new test failed on exactly that sentence)",
+  "fence": "The real ZIP step and its hook in jsdom with the export doors stubbed (export status answers failed BACKUP_NOT_FULL); English words of the plugin's own table",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs"
+    ],
+    "tests": [
+      "ZIP: a backup whose database copy did not finish says so in words, and Try again makes a new backup"
+    ]
+  }
+}

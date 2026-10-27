@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Team Style 1</title>
+  <fields name="team">
+    <fieldset name="band" label="TPL_TRACY_BASE_ACM_TEAM_BAND_LABEL">
+      <field
+        name="eyebrow"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TEAM_EYEBROW_LABEL"
+        description="TPL_TRACY_BASE_ACM_TEAM_EYEBROW_DESC"
+      />
+      <field
+        name="heading"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TEAM_HEADING_LABEL"
+        description="TPL_TRACY_BASE_ACM_TEAM_HEADING_DESC"
+      />
+      <field
+        name="columns"
+        type="list"
+        default="4"
+        label="TPL_TRACY_BASE_ACM_TEAM_COLUMNS_LABEL"
+        description="TPL_TRACY_BASE_ACM_TEAM_COLUMNS_DESC"
+      >
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </field>
+      <field
+        name="link-label"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TEAM_LINK_LABEL_LABEL"
+        description="TPL_TRACY_BASE_ACM_TEAM_LINK_LABEL_DESC"
+      />
+    </fieldset>
+    <fieldset name="members" label="TPL_TRACY_BASE_ACM_TEAM_MEMBERS_LABEL" multiple="1">
+      <field
+        name="member-portrait"
+        type="media"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TEAM_PORTRAIT_LABEL"
+        description="TPL_TRACY_BASE_ACM_TEAM_PORTRAIT_DESC"
+      />
+      <field
+        name="member-name"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TEAM_NAME_LABEL"
+        description="TPL_TRACY_BASE_ACM_TEAM_NAME_DESC"
+      />
+      <field
+        name="member-role"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TEAM_ROLE_LABEL"
+        description="TPL_TRACY_BASE_ACM_TEAM_ROLE_DESC"
+      />
+      <field
+        name="member-bio"
+        type="textarea"
+        default=""
+        rows="3"
+        label="TPL_TRACY_BASE_ACM_TEAM_BIO_LABEL"
+        description="TPL_TRACY_BASE_ACM_TEAM_BIO_DESC"
+      />
+      <field
+        name="member-link"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_TEAM_LINK_LABEL"
+        description="TPL_TRACY_BASE_ACM_TEAM_LINK_DESC"
+      />
+    </fieldset>
+  </fields>
+</form>

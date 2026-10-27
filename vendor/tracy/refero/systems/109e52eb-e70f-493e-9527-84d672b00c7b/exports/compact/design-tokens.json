@@ -1,0 +1,109 @@
+{
+  "color": {
+    "signal-orange": {
+      "$value": "#ff6314",
+      "$type": "color",
+      "$description": "Signal Orange — Orange action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "node-green": {
+      "$value": "#33ffac",
+      "$type": "color",
+      "$description": "Node Green — Category dot indicators, success-tinted badges — functions as a network-node status light, never as a full surface"
+    },
+    "node-violet": {
+      "$value": "#5b76ff",
+      "$type": "color",
+      "$description": "Node Violet — Category dot indicators and info-adjacent badges — part of the node-light spectrum for category encoding"
+    },
+    "node-magenta": {
+      "$value": "#ff2ad4",
+      "$type": "color",
+      "$description": "Node Magenta — Category dot indicators and accent badges — part of the node-light spectrum for category encoding"
+    },
+    "node-cyan": {
+      "$value": "#16c4ff",
+      "$type": "color",
+      "$description": "Node Cyan — Category dot indicators and accent badges — part of the node-light spectrum for category encoding"
+    },
+    "abyss": {
+      "$value": "#04070a",
+      "$type": "color",
+      "$description": "Abyss — Page canvas background, hero background, primary dark surface"
+    },
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Deepest layer beneath the canvas, SVG icon fills in nav and decorative contexts"
+    },
+    "obsidian": {
+      "$value": "#0f1214",
+      "$type": "color",
+      "$description": "Obsidian — Navigation bar background, link/button hover backgrounds — one step above the canvas"
+    },
+    "charcoal": {
+      "$value": "#1a1d1f",
+      "$type": "color",
+      "$description": "Charcoal — Card border lines, elevated surface borders, mid-tier separators on dark backgrounds"
+    },
+    "carbon": {
+      "$value": "#090c0f",
+      "$type": "color",
+      "$description": "Carbon — Card surface fill — sits between canvas and nav, gives cards a subtle lift without changing brightness dramatically"
+    },
+    "steel": {
+      "$value": "#676f7a",
+      "$type": "color",
+      "$description": "Steel — Muted helper text, secondary borders, nav dividers, badge outlines on dark backgrounds"
+    },
+    "cloud": {
+      "$value": "#c6ced7",
+      "$type": "color",
+      "$description": "Cloud — Card border accent on light sections, subtle elevated borders"
+    },
+    "mist": {
+      "$value": "#e1e6eb",
+      "$type": "color",
+      "$description": "Mist — Light-section dividers, input inset borders, faint borders on light surfaces"
+    },
+    "snow": {
+      "$value": "#f0f5fa",
+      "$type": "color",
+      "$description": "Snow — Secondary text, nav text, light body copy on dark surfaces — slightly cool-tinted near-white"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Primary headings, primary body text, high-contrast labels, icon strokes on dark surfaces"
+    }
+  },
+  "font": {
+    "clashgrotesk": {
+      "$value": "Clashgrotesk",
+      "$type": "fontFamily",
+      "$description": "Display and heading font — used for all headings, navigation, buttons, and links. The geometric, angular character of Clashgrotesk gives the interface an engineering/infrastructure feel; medium weight (500) carries most headings while 600 anchors the largest display sizes. Tight tracking at 0.033em tightens the geometric forms into a confident block."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body and hero paragraph text — used for descriptive copy, card body content, footer text. Inter's neutral clarity provides a calm counterpoint to Clashgrotesk's angular voice; 400 for body, 600 for emphasis within body contexts."
+    },
+    "dm-mono": {
+      "$value": "DM Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced technical labels, metadata, category tags, badge text, and inline code-like elements — stamps a developer/infrastructure credibility onto the interface. Used in nav badges, card category headers, and small status indicators."
+    },
+    "f77-minecraft": {
+      "$value": "F77 Minecraft",
+      "$type": "fontFamily",
+      "$description": "F77 Minecraft — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://axelar.network",
+      "siteName": "Axelar",
+      "extractedAt": "2026-06-03T20:53:02.326Z",
+      "variant": "compact"
+    }
+  }
+}

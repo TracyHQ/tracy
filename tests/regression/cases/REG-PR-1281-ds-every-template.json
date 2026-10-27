@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1281-ds-every-template",
+  "kind": "fix",
+  "title": "Every published WordPress and Joomla template wears the design system: button line with its padding, container off the window's edge, no fill drafted over the wrong box, faint blocks repainted",
+  "pr": 1281,
+  "area": "design-system/bands",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/design/tracy-ds-slot/test/*.test.mjs.",
+    "S2: Run node --test packages/cms/tracy-wordpress-theme/test/php-open-tag.test.mjs apps/tracy-web/test/design-system-door.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes, including BMW's button line height 1.2 beside its 14px padding, a container rule of min(system width, 100vw - 64px) past the phone with width auto only on a T3 template, and the words inside a box a band fills with its accent taking that fill's text colour.",
+    "S2: every test passes: every theme's functions.php and inc/*.php opens with <?php, and the JA Vega contract offers Design system up to 1.1.17."
+  ],
+  "selectors": {
+    "emitter": "packages/design/tracy-ds-slot/src/bands.mjs, src/tokens56.mjs, src/joomla.mjs, src/wordpress.mjs",
+    "drafter": "packages/design/tracy-ds-slot/scripts/bands.mjs",
+    "contract": "packages/design/tracy-ds-slot/templates/*.json"
+  },
+  "evidence": "Before this change JA Mood's phone header broke under BMW (a 60px button), JA Rent's whole page turned dark under every light system, JA Nova's purple blocks put white headings on white, and JA Vega 1.1.16 printed PHP as text on every page",
+  "fence": "A template's own words keep their colours; a block is repainted only when its own words read on the system ground; EmDash reads none of it",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/design/tracy-ds-slot/test/bands.test.mjs",
+      "packages/design/tracy-ds-slot/test/components.test.mjs",
+      "packages/design/tracy-ds-slot/test/cms.test.mjs",
+      "packages/design/tracy-ds-slot/test/layout.test.mjs",
+      "packages/cms/tracy-wordpress-theme/test/php-open-tag.test.mjs",
+      "apps/tracy-web/test/design-system-door.test.mjs"
+    ]
+  }
+}

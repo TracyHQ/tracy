@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "9c60e0a4-a702-49af-9fc1-52edbc9dd902",
+  "status": "complete",
+  "name": "The Fascination The Fascination",
+  "url": "https://styles.refero.design/style/9c60e0a4-a702-49af-9fc1-52edbc9dd902",
+  "sourceWebsite": "https://thefascination.com",
+  "extractedAt": "2026-06-03T21:54:22.676Z",
+  "capturedAt": "2026-10-08T05:15:18.477038+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "Sunday lifestyle magazine on cream paper. Warm off-white canvas, editorial photography grid, quiet sans-serif body type interrupted by handwritten script accents, with one vivid electric blue doing all the interactive work as link color and border accent — never as filled buttons.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4e912400-4313-497e-a5ca-40ec127bdfc4.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "cf91461e8f89f660cf7584314995e708394fdedc85a57840b79534e81b99a74d",
+      "bytes": 18049
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "10f1b8c12fc361eedb7aa4e3edcb0644bccc6d557b8b986177d2ceb5290c79c8",
+      "bytes": 153912
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "68ba74fed4dfd4b6da9beedd197cde5909ab89369c62aa1b6998c7ad62563aed",
+      "bytes": 15308
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0fda8c63b4d990622e741acb33720fda9faaee9b5fcb21bd346e5e82af0741e6",
+      "bytes": 10346
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5a826dd8101b4873d9cedcd81b760a9566fcc7e5e751fa5371a3933ff0cc0fec",
+      "bytes": 11406
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d4b8cf3a87fff4ce05a602eac9d67120d5ace9d6ed772216f759d9a410b90964",
+      "bytes": 3099
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a45666b7d429b868ba4a49bd29395e86ece23cc347709e4e8154a853fe256cec",
+      "bytes": 711
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "79be7b59fa9892d7410bd582327202d489eb555d77160b132aae6b7d09ac7855",
+      "bytes": 728
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6636229b9b0f4b495b81dc3c669bd2a03482d9dac5d09f70c7ab9b392d223e91",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "554830541cbc87891deaca00160d93a3450113bb412c22c72d7bcc4761d98df9",
+      "bytes": 41478
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3c4476fa7a53b98160bcfaf3afa9c30799301912b8f499f33bda5a038ff53f5f",
+      "bytes": 21614
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9377b4101969cb5edd41dc9273c7c65733266d4cfbee7920b3700b9602aa24ad",
+      "bytes": 43971
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7ee8178fd458c74d8b1c2aa1d2d11c90deef2c497e71e7be69adbeb628806321",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e48392535e535cfdbac66be6f6a5eab6cd60ce548927cf4b24b757a8bb1e8cc8",
+      "bytes": 1412
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "cce5588de2f04e3d77f84125c89f6d196310e790bdb7952017571d66e6b2fdba",
+      "bytes": 1887
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "34baa524-5d5b-4165-bbab-d01f05e6d6b9",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "8a3d3f72-9ef0-466d-adde-77189ddff797",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "9c60e0a4-a702-49af-9fc1-52edbc9dd902",
+    "ab650279-aa18-43e5-a998-34190d7bedc7",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "f4e1b510-6085-4fb8-8597-05d479d3c00c"
+  ]
+}

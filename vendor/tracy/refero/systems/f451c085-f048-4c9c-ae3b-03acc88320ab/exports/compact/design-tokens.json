@@ -1,0 +1,44 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Body text, nav links, icon strokes, and all hairline borders (1px rules under nav, around inputs, and between editorial blocks). The structural workhorse — 724 borderColor occurrences and 336 body borders show it carries the layout's edges"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, nav background, and ghost button fills. Everything floats on this surface; the entire interface is one flat sheet"
+    },
+    "soft-graphite": {
+      "$value": "#979797",
+      "$type": "color",
+      "$description": "Soft Graphite — Muted body text and secondary borders. 2.9:1 contrast against white means it is intentionally faint — used for helper copy and less critical dividers, never for primary content"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Icon strokes, fills, and button borders for secondary controls. Sits between ink-black and mid-gray, giving icons a softer presence than body text without losing legibility at 12.6:1"
+    }
+  },
+  "font": {
+    "messinasansweb": {
+      "$value": "MessinaSansWeb",
+      "$type": "fontFamily",
+      "$description": "Brand typeface — used for all headings, body copy, nav, and product descriptions. Custom geometric sans with tightened tracking (-0.0370em at display, -0.0300em at body) and moderate weight (400–500, never bold). The anti-conventional choice: running a custom sans at weight 400 for section headings instead of 600–700 — authority comes from the typeface's precision and the negative letter-spacing, not from weight."
+    },
+    "system-ui-sans-serif": {
+      "$value": "system-ui sans-serif",
+      "$type": "fontFamily",
+      "$description": "Utility text for small chrome — nav secondary items, footer micro-copy, minor UI labels. Deliberately reduced to two sizes and one weight; the system stack disappears so MessinaSans remains the voice of the brand."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://resident.co.nz",
+      "siteName": "Resident",
+      "extractedAt": "2026-06-03T19:07:07.606Z",
+      "variant": "compact"
+    }
+  }
+}

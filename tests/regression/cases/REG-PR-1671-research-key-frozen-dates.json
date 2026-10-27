@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1671-research-key-frozen-dates",
+  "kind": "fix",
+  "title": "A demo brief made from a frozen research read hashes like the live read, so it does not show research changed right after it is made",
+  "pr": 1671,
+  "area": "website-opportunities/revisions",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: research a place, freeze its research the way a demo action does, send it through JSON (as jsonb stores it), and hash it with researchKey.",
+    "S2: hash the live read with currentResearchKey.",
+    "S3: Retry one source that answers the same as before and hash the live read again.",
+    "S4: pass a Date to evidenceData."
+  ],
+  "expect": [
+    "S1/S2: the two hashes are equal.",
+    "S3: the hash is unchanged and no new snapshot is published.",
+    "S4: the ISO string comes back, not an empty object."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/agent-demo.js, apps/tracy-web/src/opportunities-build/revisions.js",
+    "dom": ""
+  },
+  "evidence": "e2e dev 24/10/2026: every agent demo brief showed research changed as soon as it was made; rawSources[].updated_at hashed as {} live and as an ISO string once frozen",
+  "fence": "researchKey reads no per-attempt timestamp and evidenceData keeps Dates as ISO strings",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-place-retry-source.test.mjs",
+      "apps/tracy-web/test/wo-research-key-dates.test.mjs"
+    ],
+    "tests": [
+      "a brief made from a frozen research read hashes like the live read it froze",
+      "a Retry whose source answers the same keeps the snapshot, the brief and the logo research",
+      "evidence keeps a Date as its ISO string, not an empty object"
+    ]
+  }
+}

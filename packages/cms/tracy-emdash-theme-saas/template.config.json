@@ -1,0 +1,73 @@
+{
+  "$comment": "Template identity and site-specific wiring read by the generic tools (tools/*.mjs, *.sh). Source: JA Kinetic Joomla 6 quickstart 1.0.0; demo content is Helix, a fictional observability product.",
+  "id": "tracy-saas",
+  "label": "Tracy SaaS",
+  "version": "1.4.14",
+  "locales": ["en"],
+  "defaultLocale": "en",
+  "site": {
+    "title": "Kinetic",
+    "tagline": "observability, reimagined"
+  },
+  "contentOrder": [
+    "header_cta",
+    "social",
+    "footerlegal",
+    "hero",
+    "clients",
+    "bento",
+    "incident_timeline",
+    "kineticql_split",
+    "features_ledger",
+    "features_intro",
+    "testimonials",
+    "cta",
+    "page_masthead",
+    "pricing",
+    "pricing_matrix",
+    "accordion",
+    "faq_support",
+    "prose_quote",
+    "teams",
+    "posts",
+    "pages"
+  ],
+  "forms": {
+    "file": "tools/forms.json",
+    "bindings": [
+      {
+        "form": "newsletter-{locale}",
+        "collection": "newsletter",
+        "slug": "footer-newsletter",
+        "field": "form_id"
+      },
+      {
+        "form": "contact-{locale}",
+        "collection": "contact_block",
+        "slug": "helix-support",
+        "field": "form_id"
+      }
+    ]
+  },
+  "mail": {
+    "fromEmail": "",
+    "fromName": ""
+  },
+  "audit": {
+    "indexable": ["^/(?!pages/search)(?!404$).*"],
+    "noindex": ["^/pages/search"],
+    "notFound": ["^/404$"],
+    "canonicalQuery": ["page"],
+    "unknownProbes": ["/product/blog/nope", "/product/blog/category/nope", "/pages/login"],
+    "alternates": "all-locales"
+  },
+  "qa": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": { "light": "light", "dark": "dark" },
+      "storageKey": "kinetic-theme"
+    },
+    "expectedStatus": { "/404": 404, "/pages/login": 404 }
+  }
+}

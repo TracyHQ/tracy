@@ -1,0 +1,35 @@
+{
+  "id": "REG-096",
+  "kind": "fix",
+  "title": "The bottom workbench's + › Browser opens the site itself: the tab in the bottom panel frames the site's home page, never an empty start screen, and the start screen's wording no longer mentions a sandbox",
+  "pr": 891,
+  "area": "sidebar/browser",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, DSH, A (owner) with cookie COOKIE_A. Case variable: KEY = a site key where A holds an accepted owner seat and whose home page answers 200 (prefer WordPress); HOME_HOST = the host part of that site's address from GET /api/sites (row.copyUrl), e.g. rc2wp01.rc2.tracy.test:31080.",
+    "Build check: docker exec $DSH grep -c 'siteHomeOf' /desk-home/profiles/native/node_modules/dsh-better-sidebar/lib/client.js must print a number >= 1, otherwise stop with BLOCKED note image-without-sidebar-tracy-74. Also docker exec $DSH grep -c 'sandbox mode' /desk-home/profiles/native/node_modules/dsh-better-sidebar/lib/client.js -> SANDBOX_WORDS (a number).",
+    "Browser as A: connect Playwright over CDP as the README says (never chromium.launch()); use the DEFAULT context; add cookie tracy_sess = COOKIE_A for COOKIE_DOMAIN; page.goto(ORIGIN + '/' + KEY + '/'); wait until document.title contains KEY or 12 s.",
+    "Open the bottom workbench: click the header button whose aria-label matches /bottom panel/i (it reads 'Expand bottom panel' when the panel is closed; if it reads 'Collapse bottom panel' the panel is already open — leave it). Wait 1.5 s; [data-dsh-bottom-panel] must exist -> PANEL_OPEN.",
+    "In [data-dsh-bottom-panel], click the button with aria-label 'New tab'; wait 1 s; MENU = the data-menu-item values of every [data-menu-item] on the page (must include 'tracy:browser'). Click [data-menu-item='tracy:browser'].",
+    "Poll (<= 15 s) until [data-dsh-bottom-panel] contains an <iframe> whose src is non-empty -> FRAME_SRC. Then read TEXT = innerText of [data-dsh-bottom-panel].",
+    "Record STILL_START = TEXT includes 'Enter a URL to start browsing'; SANDBOX_TEXT = /sandbox mode/i.test(TEXT); FRAME_HOST = new URL(FRAME_SRC).host."
+  ],
+  "expect": [
+    "Build check: siteHomeOf count >= 1; SANDBOX_WORDS === 0 (the wording left the bundle in every language).",
+    "PANEL_OPEN is true; MENU includes 'tracy:browser'.",
+    "FRAME_SRC is set within 15 s and FRAME_HOST === HOME_HOST (the bottom tab frames the site itself, through the same preview address the right pane uses).",
+    "STILL_START === false and SANDBOX_TEXT === false.",
+    "No page error or console.error on the dsh page whose message names dsh-better-sidebar or BrowserView (chrome-watch --errors --page KEY --json after the load); errors of the framed site's own origin are the site's, list them in the notes."
+  ],
+  "selectors": {
+    "sidebarBuild": "/desk-home/profiles/native/node_modules/dsh-better-sidebar/lib/client.js (dsh container)",
+    "panel": "[data-dsh-bottom-panel]",
+    "newTab": "button[aria-label='New tab'] inside the panel",
+    "menuItem": "[data-menu-item='tracy:browser']",
+    "frame": "[data-dsh-bottom-panel] iframe[src]"
+  },
+  "evidence": "tasks/evidence/dsh-0-2-0-rc-2/acceptance-ui-cms-0410.md §8 and round2-0410.md §F09: on the rc2 stand the bottom + opened tracy:browser with no address — an empty start screen reading 'Enter a URL to start browsing (sandbox mode)'.",
+  "fence": "dsh-better-sidebar 0.24.1-tracy.74: BrowserView asks the page's /api/sites once (siteHomeOf) and navigates an empty tab in a site workspace to the site's copyUrl; browserStart lost its sandbox parenthetical in every locale."
+}

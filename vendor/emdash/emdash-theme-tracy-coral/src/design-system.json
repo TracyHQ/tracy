@@ -1,0 +1,7 @@
+{
+  "id": "coral",
+  "label": "Coral",
+  "source": "vendor/tracy/od-design-system/systems/airbnb",
+  "fonts": [],
+  "fontsNote": "Both systems name faces no web font service carries (SF Pro; Airbnb Cereal VF), so nothing is fetched and the stack in the token file falls through. A system on a Google face would list it here, and Base.astro renders one <Font> per entry."
+}

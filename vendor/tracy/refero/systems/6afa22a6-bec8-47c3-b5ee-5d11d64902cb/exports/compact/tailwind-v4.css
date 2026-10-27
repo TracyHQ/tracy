@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-paper-white: #ffffff;
+  --color-ash-gray: #eeeeee;
+  --color-smoke: #888888;
+  --color-bone: #cacaca;
+
+  /* Typography */
+  --font-nb-international-web: 'NB International Web', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-nb-international-mono-web: 'NB International Mono Web', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

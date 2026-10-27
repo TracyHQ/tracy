@@ -1,0 +1,79 @@
+{
+  "color": {
+    "ice-white": {
+      "$value": "#d8eaff",
+      "$type": "color",
+      "$description": "Ice White — Primary text and dominant border color — cool blue-tinted white that doubles as hairline borders, card outlines, and link underlines, creating a wireframe-in-light effect across all surfaces"
+    },
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Deepest surface — page canvas and footer base"
+    },
+    "carbon": {
+      "$value": "#0d0d0f",
+      "$type": "color",
+      "$description": "Carbon — Card surface — sits one shade above void, used for elevated content blocks"
+    },
+    "graphite": {
+      "$value": "#232529",
+      "$type": "color",
+      "$description": "Graphite — Body background and footer border surface — mid-layer charcoal"
+    },
+    "slate": {
+      "$value": "#2b2f33",
+      "$type": "color",
+      "$description": "Slate — Card backgrounds and the most common elevated surface — the default panel"
+    },
+    "iron": {
+      "$value": "#41464c",
+      "$type": "color",
+      "$description": "Iron — Muted body text and subtle dividers — secondary text level"
+    },
+    "steel": {
+      "$value": "#565e66",
+      "$type": "color",
+      "$description": "Steel — Tertiary body text and low-emphasis borders"
+    },
+    "fog": {
+      "$value": "#6c757f",
+      "$type": "color",
+      "$description": "Fog — Helper text and low-contrast borders — the quietest readable neutral"
+    },
+    "iron-edge": {
+      "$value": "#565657",
+      "$type": "color",
+      "$description": "Iron Edge — Medium-contrast borders and link outlines"
+    },
+    "electric-cobalt": {
+      "$value": "#1f58f2",
+      "$type": "color",
+      "$description": "Electric Cobalt — Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "signal-orange": {
+      "$value": "#ff4105",
+      "$type": "color",
+      "$description": "Signal Orange — Orange outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "monument": {
+      "$value": "Monument",
+      "$type": "fontFamily",
+      "$description": "Display and heading type — custom geometric sans used exclusively at weight 400. Headlines reach 96px with line-height 1.00, letter-spacing -0.03em. This single-weight approach forces the type to command through size alone, not boldness — a whisper-loud philosophy. Body-level Monument at 16-24px handles secondary text and large UI labels."
+    },
+    "mono": {
+      "$value": "Mono",
+      "$type": "fontFamily",
+      "$description": "Micro-labels, nav items, and small-caps category tags — monospaced at 10-14px with extreme tracking (0.06-0.16em). The wide letter-spacing on uppercase labels creates a scientific-instrument read, like serial numbers on laboratory equipment."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://atlantic.vc",
+      "siteName": "Atlantic.vc",
+      "extractedAt": "2026-06-03T18:06:02.805Z",
+      "variant": "compact"
+    }
+  }
+}

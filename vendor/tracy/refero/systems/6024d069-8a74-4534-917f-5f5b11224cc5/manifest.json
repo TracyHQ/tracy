@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6024d069-8a74-4534-917f-5f5b11224cc5",
+  "status": "complete",
+  "name": "Getclockwise",
+  "url": "https://styles.refero.design/style/6024d069-8a74-4534-917f-5f5b11224cc5",
+  "sourceWebsite": "https://www.getclockwise.com",
+  "extractedAt": "2026-06-03T21:55:48.810Z",
+  "capturedAt": "2026-10-08T05:12:18.065305+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "monogrammed letterhead on cream paper — a warm, editorial announcement, not a product page",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/5b28e008-b5c7-4997-a759-840d66b71e96.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "31b4149ee2faefe10366ceabcd784c11c3b69f9d8528f83a188f6ca41d6c7a92",
+      "bytes": 15876
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "0033cb3bc47ba842a889684e2c4b140fdd3dc9495773fe7d4dfb7d2e4fcbbea4",
+      "bytes": 143706
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8f3a96232ec6542942dab663761a4e12d7c73bf20f09493d4053f210f8b078ee",
+      "bytes": 12858
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "21fa47266299f3409a3c290067defdf469d291b427d451d58d0b2d39e4c51a59",
+      "bytes": 7649
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f06138c01b139a5dc7b22cb8eef0ba020871c71290667725f5eda718bf5ac966",
+      "bytes": 9646
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8b0996fd3a5a6fe00e6f0591031b63723005572cb77c9a30c06cdc5596c522ca",
+      "bytes": 2628
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "00b9abdd6c7f3e6f288b529a431e8387f8de1c40e64081f950225c08073bae9a",
+      "bytes": 540
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "fbc37cd6e4d84eb526274587d0d256e01f40fa21f353de3c16b89c59b06940e3",
+      "bytes": 557
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "22863343c64e3c910bc02fecf4b74d20b0a139a9858e33826f47353664e38bbf",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "18d99df7c039be4f30d7c8500830a5249bca736abe2ae53d7fd272a851999e6f",
+      "bytes": 39137
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "030c848c6faa781cf8c60cd926a1c361d948526e9e0228534d51dbaa2848fa18",
+      "bytes": 20071
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1f7786946b19df34fdfbf0272d2d56bab46e83ca148b2fb47c4c4e9f4e3e6f13",
+      "bytes": 31565
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c39d41d14923b802dbc676f08b24c2b7544ff4c7de0cb9659be9fa532e584b78",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2ab74cd558aab884773a0b864e3cf247c8cd715ee8c002776d24d7da2cb94fd5",
+      "bytes": 1448
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "76d637372419eff1d1684304e462a62cd96e036ec67929cac55fc008ece50424",
+      "bytes": 2000
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "0f0d4cb7-5109-4e81-8c8d-f6bd0441b27c",
+    "12255b63-e506-4bc1-a4cd-d05487de32f3",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "28a7115a-bcf8-4b05-89a5-5290f5842a3c",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4d832c12-dd14-45b0-bba7-2d3bc25d8264",
+    "532b3211-cca9-4207-a11c-812cfabc1a73",
+    "5af6b791-6cad-4497-9e94-ace28e4fbd51",
+    "6024d069-8a74-4534-917f-5f5b11224cc5",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "71451d9e-9a8a-4858-9a91-fbe44047e110",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "e1497817-b9f1-4d7a-842f-58a08dd9e455",
+    "f1bff240-fa05-41db-9ae1-b165ea6ea2cb"
+  ]
+}

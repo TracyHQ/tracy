@@ -1,0 +1,49 @@
+{
+  "color": {
+    "ember": {
+      "$value": "#e2572c",
+      "$type": "color",
+      "$description": "Ember — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, full-bleed backgrounds, image surrounds"
+    },
+    "graphite": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Graphite — Card surfaces, elevated panels, the one step up from canvas"
+    },
+    "steel": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Steel — Muted body text, secondary labels, inactive UI — sits at AA contrast against Obsidian"
+    },
+    "fog": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Fog — Hairline borders on dark cards, light surface alternates if used"
+    },
+    "snow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Snow — Primary text and headings on dark, inverse text on light cards"
+    }
+  },
+  "font": {
+    "suisse": {
+      "$value": "Suisse",
+      "$type": "fontFamily",
+      "$description": "The only typeface. Single weight (400) used for everything from 10px micro-labels to 80px display headlines. The signature move is the display at 80px with a 0.70 line-height — headlines feel carved rather than set. Tracking is tight at display (-0.0070em) and slightly open (+0.0060em) at caption sizes for legibility."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://pipe.com",
+      "siteName": "Pipe",
+      "extractedAt": "2026-06-03T20:59:03.652Z",
+      "variant": "compact"
+    }
+  }
+}

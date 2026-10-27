@@ -1,0 +1,60 @@
+---
+/**
+ * The onepage's own footer (the source's `.op-footer`): wordmark, a row of in-page anchors, the
+ * page's note and credit lines, then the site-wide notice on its own rule.
+ */
+import type { Attrs } from '@/lib/stamps'
+import { DEFAULT_LOCALE } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+
+interface Props {
+  brand: string
+  brandUrl?: string
+  links: Array<{ label: string; anchor: string }>
+  note?: string
+  credit?: string
+  notice?: string
+  backToTop?: string
+  /**
+   * Provenance stamps (`src/lib/stamps.ts`) of the fields each prop is read from; `link` is the
+   * stamp of one link's label, the same for every row of the repeater.
+   */
+  marks?: Partial<Record<'brand' | 'link' | 'note' | 'credit' | 'notice' | 'backToTop', Attrs>>
+}
+const {
+  brand,
+  brandUrl = '#top',
+  links,
+  note = '',
+  credit = '',
+  notice = '',
+  backToTop = '',
+  marks = {}
+} = Astro.props
+const anchors = links.filter((l) => l.label && l.anchor)
+---
+
+<footer class="border-t border-line-soft">
+	<div class="wrap pb-10 pt-16">
+		{brand && <a href={brandUrl} class="inline-block text-[21px] font-semibold tracking-[-0.015em] text-fg hover:text-fg" {...marks.brand}>{brand}</a>}
+		{anchors.length > 0 && (
+			<nav class="mt-6 flex flex-wrap gap-x-6 gap-y-2" aria-label={ui(DEFAULT_LOCALE).w.onepageFooter}>
+				{anchors.map((l) => <a href={l.anchor} class="text-[14px] text-fg-muted hover:text-fg" {...marks.link}>{l.label}</a>)}
+			</nav>
+		)}
+		{(note || credit) && (
+			<div class="mt-8 flex flex-col gap-1.5 text-[12px] leading-[1.47] text-fg-meta">
+				{note && <p {...marks.note}>{note}</p>}
+				{credit && <p {...marks.credit}>{credit}</p>}
+			</div>
+		)}
+	</div>
+	{notice && (
+		<div class="border-t border-line-soft">
+			<div class="wrap py-6">
+				<p class="max-w-[520px] text-[12px] leading-[1.47] text-fg-muted" {...marks.notice}>{notice}</p>
+			</div>
+		</div>
+	)}
+	{backToTop && <a href="#top" class="sr-only" {...marks.backToTop}>{backToTop}</a>}
+</footer>

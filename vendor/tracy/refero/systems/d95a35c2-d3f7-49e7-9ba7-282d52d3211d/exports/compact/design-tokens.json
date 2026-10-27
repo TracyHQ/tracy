@@ -1,0 +1,89 @@
+{
+  "color": {
+    "vermillion-signal": {
+      "$value": "#e42b0c",
+      "$type": "color",
+      "$description": "Vermillion Signal — Orange action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Hairline borders, logo marks, high-contrast icon strokes, strong body emphasis"
+    },
+    "carbon": {
+      "$value": "#1f1f1f",
+      "$type": "color",
+      "$description": "Carbon — Dark card backgrounds, inverted feature panels, footer surface"
+    },
+    "slate-900": {
+      "$value": "#101828",
+      "$type": "color",
+      "$description": "Slate 900 — Display and heading text, hero headlines — the dominant typographic color"
+    },
+    "slate-700": {
+      "$value": "#364153",
+      "$type": "color",
+      "$description": "Slate 700 — Navigation text, active nav items, secondary headings"
+    },
+    "slate-600": {
+      "$value": "#4a5565",
+      "$type": "color",
+      "$description": "Slate 600 — Body copy, sub-text, icon strokes, eyebrow labels"
+    },
+    "steel": {
+      "$value": "#676767",
+      "$type": "color",
+      "$description": "Steel — Subdued heading text, testimonial attributions"
+    },
+    "iron": {
+      "$value": "#8a8a8a",
+      "$type": "color",
+      "$description": "Iron — Tertiary helper text, decorative dividers"
+    },
+    "mist": {
+      "$value": "#99a1af",
+      "$type": "color",
+      "$description": "Mist — Icon borders, muted labels, disabled states"
+    },
+    "cloud": {
+      "$value": "#d4d4d4",
+      "$type": "color",
+      "$description": "Cloud — Button borders, input borders, section dividers"
+    },
+    "frost": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Frost — Card hairline borders, subtle container edges"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, button text on dark fills, primary content canvas"
+    },
+    "vellum": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Vellum — Primary page canvas and white card surfaces."
+    }
+  },
+  "font": {
+    "telegraf": {
+      "$value": "telegraf",
+      "$type": "fontFamily",
+      "$description": "The workhorse grotesk used across every context: display, heading, body, nav, button, card, icon, input, footer. Tight tracking on large sizes (−0.025em to −0.03em) signals editorial confidence; expanded 0.025em on uppercase eyebrows gives the system its industrial-label voice. Weights 300–500 carry the personality — weight 700 appears sparingly for emphasis."
+    },
+    "moderngothic": {
+      "$value": "modernGothic",
+      "$type": "fontFamily",
+      "$description": "A geometric secondary used at a single 14px register for body and link contexts where a more humanist tone is desired. Carries the ss02 stylistic alternate for a distinctive lowercase 'a' and 'g'."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.orderful.com",
+      "siteName": "Orderful",
+      "extractedAt": "2026-06-03T16:41:38.493Z",
+      "variant": "compact"
+    }
+  }
+}

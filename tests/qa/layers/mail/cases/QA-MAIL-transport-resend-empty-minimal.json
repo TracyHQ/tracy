@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-transport-resend-empty-minimal",
+  "itemIds": ["transport:resend"],
+  "requirement": "a letter with no optional parts sends none of them",
+  "oracle": {
+    "source": "Resend API contract: POST https://api.resend.com/emails with Bearer key; Idempotency-Key header; RFC 8058 headers",
+    "ref": "Resend API contract: POST https://api.resend.com/emails with Bearer key; Idempotency-Key header; RFC 8058 headers",
+    "invariant": "fields pass through unchanged; the key travels only in the Authorization header"
+  },
+  "edgeTags": ["empty"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.transport.payload#no-key-no-ack"],
+  "redProof": null,
+  "legacyIds": []
+}

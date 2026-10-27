@@ -1,0 +1,145 @@
+{
+  "schema": "tracy-test-trust-cohort/v1",
+  "cohort": "auth",
+  "budgetSeconds": 1800,
+  "timeoutSeconds": 180,
+  "database": "postgres",
+  "tests": [
+    "apps/tracy-web/test/session.test.mjs",
+    "apps/tracy-web/test/identity.test.mjs",
+    "apps/tracy-web/test/identity-store.test.mjs",
+    "apps/tracy-web/test/lane-doors.test.mjs",
+    "apps/tracy-web/test/seats-route.test.mjs"
+  ],
+  "assets": [
+    "apps/tracy-web/src/db/migrations/",
+    "apps/tracy-web/src/lib/i18n/locales/",
+    "apps/tracy-web/src/mail/templates/",
+    "apps/tracy-web/src/questions/",
+    "apps/tracy-web/src/sites/where/",
+    "apps/tracy-web/src/design-templates.json",
+    "apps/tracy-web/src/lib/template-customization-question-readiness/rule-severity.json",
+    "packages/core/tracy-core/src/ui-switches/catalogue.json",
+    "packages/cms/tracy-joomla-quickstart/contracts/",
+    "packages/cms/tracy-wordpress-quickstart/contracts/"
+  ],
+  "computedImports": {
+    "apps/tracy-web/src/lib/content-api.js": [
+      "packages/cms/tracy-content-api/validate.mjs",
+      "packages/cms/tracy-content-api/describe-map.mjs"
+    ],
+    "apps/tracy-web/src/lib/seeder.js": [
+      "packages/cms/tracy-seeder/src/apply-joomla-contract.mjs",
+      "packages/cms/tracy-seeder/src/apply-joomla-demo-trim.mjs",
+      "packages/cms/tracy-seeder/src/apply-joomla-language.mjs",
+      "packages/cms/tracy-seeder/src/apply-wordpress-contract.mjs",
+      "packages/cms/tracy-seeder/src/locales.mjs",
+      "packages/cms/tracy-seeder/src/model.mjs",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs",
+      "packages/cms/tracy-seeder/src/plan-joomla-language.mjs",
+      "packages/cms/tracy-seeder/src/plan-wordpress-contract.mjs",
+      "packages/cms/tracy-seeder/src/shipped-translations.mjs",
+      "packages/cms/tracy-seeder/src/site-ops.mjs",
+      "packages/cms/tracy-seeder/src/template-buttons.mjs",
+      "packages/cms/tracy-seeder/src/tone.mjs",
+      "packages/cms/tracy-seeder/src/wordpress-contract-door.mjs"
+    ],
+    "apps/tracy-web/src/lib/ds-slot.js": [
+      "packages/design/tracy-ds-slot/src/library.mjs",
+      "packages/design/tracy-ds-slot/src/emit.mjs",
+      "packages/design/tracy-ds-slot/src/wordpress.mjs",
+      "packages/design/tracy-ds-slot/src/joomla.mjs",
+      "packages/design/tracy-ds-slot/src/normalise.mjs"
+    ]
+  },
+  "mutants": [
+    {
+      "id": "session-never-expires",
+      "description": "drop the expiry compare of the session token",
+      "behaviour": "a session cookie copied from a browser keeps signing its holder in after it has expired",
+      "file": "apps/tracy-web/src/lib/session.js",
+      "find": "if (typeof body.exp !== 'number' || body.exp * 1000 < now) return null",
+      "replace": "if (typeof body.exp !== 'number') return null"
+    },
+    {
+      "id": "session-signature-unchecked",
+      "description": "accept a session token whose HMAC does not verify",
+      "behaviour": "anyone can write a cookie for any address and be signed in as that person, with no secret",
+      "file": "apps/tracy-web/src/lib/session.js",
+      "find": "if (!ok) return null",
+      "replace": "if (false) return null"
+    },
+    {
+      "id": "verify-expired-code-accepted",
+      "description": "POST /verify no longer refuses a sign-in code past its expiry",
+      "behaviour": "a six-digit code found in an old mail still signs in, long after its window closed",
+      "file": "apps/tracy-web/src/identity/route.js",
+      "find": "if (!row || row.expiresAt < now()) {",
+      "replace": "if (!row) {"
+    },
+    {
+      "id": "verify-attempt-cap-off",
+      "description": "POST /verify no longer stops after MAX_ATTEMPTS wrong codes",
+      "behaviour": "an attacker can keep guessing the six digits of one code until one matches",
+      "file": "apps/tracy-web/src/identity/route.js",
+      "find": "if (attempts > MAX_ATTEMPTS) {",
+      "replace": "if (false) {"
+    },
+    {
+      "id": "link-approved-twice",
+      "description": "pgIdentityStore.approveLink no longer requires the round to be pending",
+      "behaviour": "a second browser holding the same link overwrites the address of a round already approved, so the device is signed in as somebody else",
+      "file": "apps/tracy-web/src/identity/store.js",
+      "find": "status = 'approved', approved_at = now()\n         where nonce_hash = $1 and status = 'pending' and expires_at > now()`",
+      "replace": "status = 'approved', approved_at = now()\n         where nonce_hash = $1 and expires_at > now()`"
+    },
+    {
+      "id": "link-approved-after-expiry",
+      "description": "pgIdentityStore.approveLink no longer requires the round to be unexpired",
+      "behaviour": "a sign-in link opened after its window still approves the round",
+      "file": "apps/tracy-web/src/identity/store.js",
+      "find": "status = 'approved', approved_at = now()\n         where nonce_hash = $1 and status = 'pending' and expires_at > now()`",
+      "replace": "status = 'approved', approved_at = now()\n         where nonce_hash = $1 and status = 'pending'`"
+    },
+    {
+      "id": "exchange-secret-unchecked",
+      "description": "POST /auth/link/:nonce/exchange no longer compares the client secret",
+      "behaviour": "whoever sees the nonce (it travels in a URL) collects the approved address without the secret only the lane holds",
+      "file": "apps/tracy-web/src/lanes/route.js",
+      "find": "if (row.clientSecretHash !== (await sha256Hex(clientSecret))) {",
+      "replace": "if (false) {"
+    },
+    {
+      "id": "exchange-unapproved-round",
+      "description": "POST /auth/link/:nonce/exchange no longer requires the round to be approved",
+      "behaviour": "a lane is answered for a round nobody approved in a browser",
+      "file": "apps/tracy-web/src/lanes/route.js",
+      "find": "row.expiresAt < now() || row.status !== 'approved' || row.email === ''",
+      "replace": "row.expiresAt < now() || row.email === ''"
+    },
+    {
+      "id": "exchange-expired-round",
+      "description": "POST /auth/link/:nonce/exchange no longer refuses a round past its expiry",
+      "behaviour": "an approved round that was never collected can be exchanged after its window closed",
+      "file": "apps/tracy-web/src/lanes/route.js",
+      "find": "row.expiresAt < now() || row.status !== 'approved' || row.email === ''",
+      "replace": "row.status !== 'approved' || row.email === ''"
+    },
+    {
+      "id": "seat-non-owner-manages",
+      "description": "the door that changes a role or removes a seat no longer requires the caller to be an Owner",
+      "behaviour": "an Editor of a site changes roles and takes other people off the team",
+      "file": "apps/tracy-web/src/seats/route.js",
+      "find": "an Owner's acts only.\n    if (!actingOwner(grant)) return json(c, { code: 'NOT_SITE_OWNER' }, 403)",
+      "replace": "an Owner's acts only.\n    if (false) return json(c, { code: 'NOT_SITE_OWNER' }, 403)"
+    },
+    {
+      "id": "seat-last-owner-removed",
+      "description": "removing a seat no longer refuses the last Owner of a site",
+      "behaviour": "a site is left with no Owner: nobody can manage its team any more",
+      "file": "apps/tracy-web/src/seats/route.js",
+      "find": "{ code: 'CANNOT_REVOKE_SELF' }, 403)\n      if (target.role === 'owner' && (await ownersOf(pool, siteKey)).length <= 1) {",
+      "replace": "{ code: 'CANNOT_REVOKE_SELF' }, 403)\n      if (false) {"
+    }
+  ]
+}

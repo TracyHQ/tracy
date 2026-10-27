@@ -1,0 +1,170 @@
+---
+/**
+ * Article archive: months rail (with counts), the posts of the chosen month (`?month=YYYY-MM`, all
+ * when absent), and the tag cloud. A month with no posts, or a page past the end, answers 404.
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import { stampFor } from '@/lib/stamps'
+import NotFound from '@/views/NotFound.astro'
+import Masthead from '@/components/blog/Masthead.astro'
+import Pagination from '@/components/blog/Pagination.astro'
+import PostCard from '@/components/blog/PostCard.astro'
+import Chips from '@/components/blog/Chips.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import type { ComposedPage } from '@/lib/sections'
+import { BLOG_PATH, countBy, loadTerms, monthLabel, pageHref, resolveArchive, tagPath } from '@/lib/posts'
+import { ui } from '@/lib/ui'
+import { fillWords, uiCount } from '@/lib/ui-words'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path: string
+  page: ComposedPage
+}
+const { chrome, locale, path, page } = Astro.props
+// The router gets the 404 status from viewFound() (same resolver); a miss renders the 404 view here.
+const { posts, months, month, list, pg } = await resolveArchive(locale, Astro.url)
+const tagCounts = countBy(posts, (p) => p.tags.map((t) => t.slug))
+const tags = pg
+  ? (await loadTerms(locale, 'tag'))
+      .filter((t) => tagCounts.get(t.slug))
+      .sort((a, b) => (tagCounts.get(b.slug) ?? 0) - (tagCounts.get(a.slug) ?? 0))
+  : []
+const base = href(locale, path)
+// The template's own words, in the site's language (`src/lib/ui.ts`).
+const { tag, w } = ui(locale)
+
+// Provenance stamps (`src/lib/stamps.ts`): the page entry owns the page and stamps its head. Empty on
+// an ordinary request.
+const $page = stampFor(Astro.request, 'pages', { slug: page.slug, data: { id: page.id } })
+const headMarks = { title: $page(page.heading ? 'heading' : 'title'), sub: $page('sub') }
+---
+
+{
+	!pg ? (
+		<NotFound chrome={chrome} locale={locale} path={path} />
+	) : (
+		<Base chrome={chrome} title={page.title} currentPath={path} style={page.style}>
+			<PageOwner stamp={$page} />
+			<Masthead
+				title={page.heading || page.title}
+				sub={page.sub}
+				marks={headMarks}
+				size="archive"
+				eyebrow={w.archive}
+				crumbsLabel={w.breadcrumb}
+				crumbs={[{ label: w.home, href: href(locale, '/') }, { label: w.blog, href: href(locale, BLOG_PATH) }, { label: page.heading || page.title }]}
+			/>
+			<section class="body">
+				<div class="k-container grid">
+					<aside class="rail months" aria-label={w.byMonth}>
+						<span class="rail-h">{w.byMonth}</span>
+						<a href={base} class:list={['month', { active: !month }]} aria-current={!month ? 'page' : undefined}>
+							<span>{w.allPosts}</span>
+							<span class="n">{posts.length}</span>
+						</a>
+						{[...months.entries()].map(([key, n]) => (
+							<a href={`${base}?month=${key}`} class:list={['month', { active: key === month }]} aria-current={key === month ? 'page' : undefined}>
+								<span>{monthLabel(key, tag)}</span>
+								<span class="n">{n}</span>
+							</a>
+						))}
+					</aside>
+					<div class="list">
+						<p class="list-head">
+							// {month ? monthLabel(month, tag) : w.allPosts} · {uiCount(tag, w.posts, list.length)}
+						</p>
+						{pg.slice.map((p) => (
+							<PostCard post={p} locale={locale} variant="archive" />
+						))}
+						<Pagination page={pg.page} pages={pg.pages} url={(n) => pageHref(Astro.url, n)} counter={fillWords(w.pageOf, { page: pg.page, pages: pg.pages })} window={7} locale={locale} />
+					</div>
+					{tags.length > 0 && (
+						<aside class="rail tags" aria-label={w.tags}>
+							<span class="rail-h">{w.tags}</span>
+							<Chips size="sm" items={tags.map((t) => ({ label: t.label, href: href(locale, tagPath(t.slug)) }))} />
+						</aside>
+					)}
+				</div>
+			</section>
+		</Base>
+	)
+}
+
+<style>
+	.body {
+		padding: 56px 0 72px;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: 220px minmax(0, 1fr) 240px;
+		gap: 32px;
+		align-items: start;
+	}
+	.rail {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 20px;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 14px;
+	}
+	.rail-h {
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.month {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		font-size: 13.5px;
+		line-height: 1.55;
+		font-weight: 500;
+		color: var(--k-text);
+	}
+	.month:hover,
+	.month.active {
+		color: var(--k-primary);
+	}
+	.n {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		font-weight: 400;
+		color: var(--k-muted);
+	}
+	.list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.list-head {
+		margin: 0 0 4px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		color: var(--k-muted);
+	}
+	@media (max-width: 1199px) {
+		.grid {
+			grid-template-columns: 220px minmax(0, 1fr);
+		}
+		.tags {
+			grid-column: 1 / -1;
+		}
+	}
+	@media (max-width: 767px) {
+		.body {
+			padding: 40px 0 56px;
+		}
+		.grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

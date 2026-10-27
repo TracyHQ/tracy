@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-lime-voltage: #b8ff65;
+  --color-obsidian: #000000;
+  --color-paper-white: #ffffff;
+  --color-fog-white: #f3f3f3;
+  --color-ash-border: #e2e2e2;
+  --color-smoke: #757575;
+
+  /* Typography — Font Families */
+  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

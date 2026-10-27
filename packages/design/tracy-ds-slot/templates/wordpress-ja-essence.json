@@ -1,0 +1,860 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "wordpress-tracy-base",
+  "template": "wordpress/wp-ja-essence",
+  "minVersion": {
+    "wp-ja-essence": "1.0.11"
+  },
+  "maxVersion": {
+    "wp-ja-essence": "1.0.22"
+  },
+  "maxVersionNote": "1.0.19 13/10/2026: the dark half of every light-dark() whose light half reads the slot reads it too (darkArms, feat/ds-every-template-3), so a dark system no longer shows the template's own dark colours; unworn, both halves compute what they did. 1.0.12 to 1.0.16 checked 11/10/2026 (ds-minversion-audit): the same 6 var(--ds-c- reads and tracy_apply_inspiration as 1.0.11; their css changes are words (CSS content) and fonts, no colour; 1.0.17 checked 12/10/2026 (published-templates-green): the same var(--ds-*) reads as 1.0.16 and tracy_apply_inspiration kept; every role class is still drawn by the theme or the demo; the theme change is words, dates, fonts and links, no colour 13/10/2026: 1.0.18 = 1.0.17 with the theme's other stylesheets tokenized (TDSR CSS-2, fix/tdsr-css2); measured with flow.mjs before release. 1.0.20 16/10/2026 (#1375): a status colour set as text (the shared sections' plan ticks and form notes, the theme's own .text-danger, .text-success and required marks) reads the readable shade the slot makes for the worn page (--ds-c-<status>-text); unworn, every value is the theme's own. 1.0.21 19/10/2026 (dot 3, feat/ds-dot3-a2): the theme reads every standard role variable itself (var(--ds-*, <its own value>), role scan 0 unresolved, design-system-roles.json on quickstart 1.0.19), unworn the same computed styles as 1.0.20 on 40 pages; shipped in quickstart/ja-essence/wp7 1.0.19. 1.0.22 21/10/2026 (TEXT-1): five outline-button text colours on the typography page (assets/css/je-detail.css) read --ds-c-on-ink instead of a ground role; unworn, the same computed styles on every page that carries them; shipped in quickstart/ja-essence/wp7 1.0.20.",
+  "release": "quickstart/ja-essence/wp7",
+  "baseTokensFile": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-essence/tokens.css",
+  "roles": {
+    "page": "body.home.wp-singular",
+    "heading": "h2.je-card__title.wp-block-post-title",
+    "body": "p.wp-block-post-excerpt__excerpt",
+    "button-primary": "div.wp-block-buttons.je-gallery__more div.wp-block-button.je-btn-primary a.wp-block-button__link.wp-element-button",
+    "container": "div.wp-block-group.je-container"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 32px",
+    "heading": "first section heading: 32px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(77, 107, 255)",
+    "container": "first content container, max-width 1164px"
+  },
+  "keepScopes": [],
+  "extraPalettes": [
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    }
+  ],
+  "selectors": {
+    "display": ".tracy-display",
+    "heading": ["main h2.wp-block-heading:not(.je-side *)", "main h2.je-card__title"],
+    "buttonPrimary": [".tracy a.wp-block-button__link.wp-element-button:not(.je-btn-dark *)"],
+    "bodyFace": [
+      "body.tracy",
+      ".tracy p:not(:where([class*=\"brand\"], [class*=\"logo\"], .wp-block-site-title))",
+      ".tracy li"
+    ],
+    "container": [".tracy div.wp-block-group.je-container"]
+  },
+  "displayNote": "no display role: the home has no hero title, and the largest heading near the top is a post card's title (32px, one of six). Re-measured 11/10/2026: as display, every card title took the system's display size (Moxie 55px, Toggl Track 60px) while the heading role, also a card title, wanted the heading size. The card titles are headings: they take the heading size with the section titles",
+  "selectorsNote": "19/10/2026 (theme 1.0.21): the primary button role leaves the footer's dark button (.je-btn-dark, Become a subscriber) to the theme, which now paints it from the ink and raised-ground roles itself: worn as the accent it was the lightest fill of the dark page (button-dark, BTN-1). Sidebar titles (14/10/2026, look review v6): the article page's sidebar widgets (.je-side: Follow us, Trending, the newsletter) title with the same h2.je-sec__title the sections use, which the template sets at 24px there against 40px for a section; under a system they took the section heading size (up to 50px in a 300px column). The heading role stops at .je-side.",
+  "followRules": {
+    ".je-side--news :is(p, a, label, span, small)": {
+      "color": "accent-on"
+    },
+    ".je-pagination__item:not(.is-active) .je-pagination__link": {
+      "color": "fg-2"
+    },
+    ".je-pagination__item.is-active .je-pagination__link": {
+      "color": "accent-on"
+    },
+    ".je-pagination__counter": {
+      "color": "fg-2"
+    },
+    ".wp-block-post-excerpt__more-link": {
+      "color": "fg-2"
+    },
+    ".wp-block-post-excerpt__more-text": {
+      "color": "fg-2"
+    },
+    ".je-badge a": {
+      "background-color": "bg",
+      "color": "fg-2"
+    },
+    ".je-drawer-toggle": {
+      "color": "fg"
+    },
+    ".wp-block-navigation-item__label": {
+      "color": "fg"
+    },
+    ".je-media-icon": {
+      "color": "accent-text"
+    },
+    ".je-footer .je-footer__small": {
+      "color": "fg"
+    },
+    ".je-contactcard .je-star, .je-acct__star, .je-acct__error": {
+      "color": "danger-text"
+    },
+    ".je-articlecard .area-blockquote .blockquote": {
+      "color": "accent-text"
+    },
+    ".je-side--num .je-mini--num::before": {
+      "color": "accent-text"
+    },
+    ".je-nav .current-menu-item > a, .je-nav .current-menu-item > a .wp-block-navigation-item__label": {
+      "color": "accent-text-hover!"
+    },
+    ".je-acct__links a:is(:hover, :focus)": {
+      "color": "accent-text-hover"
+    },
+    ":is(.je-acct, .je-contactcard, .je-sf, .je-taglist__filter) :is(input, textarea, select):focus": {
+      "border-color": "accent"
+    },
+    ".je-acct__btn--primary, .je-acct #wp-submit, .je-acct input.button-primary": {
+      "background-color": "accent",
+      "border-color": "accent",
+      "color": "accent-on"
+    },
+    ".je-acct__btn--danger": {
+      "background-color": "danger-text",
+      "border-color": "danger-text",
+      "color": "bg"
+    },
+    ".je-slug-category-style-2 .tracy-query .tracy-grid > li:first-child .tracy-card, .je-slug-category-style-3 .tracy-query .tracy-grid > li:nth-child(3) .tracy-card, .je-slug-category-style-4 .tracy-query .tracy-grid > li:nth-child(5) .tracy-card, .je-slug-home-4 .je-list--grid .je-list__items > li.je-highlight .je-card": {
+      "background-color": "ink",
+      "color": "on-ink"
+    },
+    ".je-gslider__arrow": {
+      "background-color": "surface",
+      "color": "fg"
+    },
+    ".je-share a, .je-author__social, .je-side--social .je-social__link .wp-block-button__link": {
+      "background-color": "accent"
+    },
+    ".je-pagenav a:is(:hover, :focus-visible)": {
+      "background-color": "accent",
+      "color": "accent-on"
+    },
+    ".je-pagenav a:is(:hover, :focus-visible) *": {
+      "color": "accent-on"
+    },
+    ".je-acct :is(input:not([type=checkbox], [type=radio], [type=submit], [type=button], [type=hidden]), textarea, select), .je-contactcard :is(input:not([type=submit]), textarea), .je-taglist__filter :is(input, select), .je-side--news input[type=email], .je-nl input[type=email]": {
+      "background-color": "bg",
+      "color": "fg",
+      "border-color": "border"
+    },
+    ".je-tag-chip": {
+      "background-color": "bg"
+    },
+    ".je-acct__eye": {
+      "background-color": "muted",
+      "color": "bg",
+      "border-color": "muted"
+    }
+  },
+  "followNote": "15/10/2026 (look review v8): the sidebar newsletter panel (.je-side--news, the accent with its own words) carries a consent line and a link written white: 2.26:1 on Moxie’s light accent; every word in the panel takes the accent’s own text. The current page's number keeps its accent fill and takes the text the system sets on its accent (accent-on): the rule for the other numbers had painted it the page text, so under Toggl Track it was pink on its own pink fill (1:1) and under Moxie light on light blue (1.96:1; re-measured 12/10/2026 with every heading and text judged). theme rules that paint literal colours the tokenizer left (wp-ja-essence.css: .je-pagination__link and __counter #000 on a 10% black chip, the cards' Read more #252424): under a dark system they stayed black on the dark page and cards (Moxie 1.00-1.12, Toggl Track 1.00-1.26, re-measured 11/10/2026); they take the system's text colour. 14/10/2026 (#1315, two modes): the category chip's link (.je-badge a) took the theme's own dark rule (:root[data-theme=dark] .je-lead__card .je-badge a, a light chip) once the dark side was shown, the system's light text on it at 1.06:1 under Spotify; it takes the page colour and the heading text, as the theme's light rule paints it 14/10/2026 (final measure): the footer's note under its button (je-detail.css .je-footer__small: light-dark(rgba(37, 36, 36, 0.7), #8c97a8), the theme's own text and dark muted written as literals) kept #8c97a8 on a system's dark side, 4.46:1 on Pitch's derived dark footer; it takes the system's text colour, as the theme's light half paints it 14/10/2026 (look review of the final measure): the category badge rule painted the post-terms WRAPPER (.je-badge, display:block) with the surface, a full-width bar across every hero card under all fifteen systems; the chip is .je-badge a, which has its own rule — the wrapper keeps no ground. The drawer toggle's three bars are spans in currentColor over a transparent button: the toggle takes the system's text as its colour, never as a fill (a fill drew a solid disc that hid the bars).",
+  "contrast": {
+    "accent-text": "main .tracy-eyebrow, main a:not([class*=button]):not(:has(img))",
+    "muted": "main .has-muted-color, main .tracy-section__head p",
+    "body": "main p",
+    "card-text": "main .tracy-card p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "sideRules": {
+    "dark": {
+      ".je-footer__logo--light": {
+        "display": "none !important"
+      },
+      ".je-footer__logo--dark": {
+        "display": "flex !important"
+      },
+      ".t4-typo-example .bg-primary": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".t4-typo-example .card.bg-primary :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".t4-typo-example .card.bg-primary": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-primary, .t4-typo-example button.btn.btn-primary, .t4-typo-example a.btn.btn-primary": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)",
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".t4-typo-example .btn-primary:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-accent-hover)",
+        "color": "var(--ds-c-accent-on)",
+        "border-color": "var(--ds-c-accent-hover)"
+      },
+      ".t4-typo-example .bg-secondary": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".t4-typo-example .card.bg-secondary :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".t4-typo-example .card.bg-secondary": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-secondary, .t4-typo-example button.btn.btn-secondary, .t4-typo-example a.btn.btn-secondary": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".t4-typo-example .btn-secondary:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".t4-typo-example .bg-success": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-success :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-success": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-success, .t4-typo-example button.btn.btn-success, .t4-typo-example a.btn.btn-success": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)"
+      },
+      ".t4-typo-example .btn-success:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)"
+      },
+      ".t4-typo-example .bg-info": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-info :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-info": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-info, .t4-typo-example button.btn.btn-info, .t4-typo-example a.btn.btn-info": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)"
+      },
+      ".t4-typo-example .btn-info:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)"
+      },
+      ".t4-typo-example .bg-warning": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-warning :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-warning": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-warning, .t4-typo-example button.btn.btn-warning, .t4-typo-example a.btn.btn-warning": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)"
+      },
+      ".t4-typo-example .btn-warning:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)"
+      },
+      ".t4-typo-example .bg-danger": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-danger :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-danger": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-danger, .t4-typo-example button.btn.btn-danger, .t4-typo-example a.btn.btn-danger": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)"
+      },
+      ".t4-typo-example .btn-danger:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)"
+      },
+      ".t4-typo-example .bg-light": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".t4-typo-example .card.bg-light :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".t4-typo-example .card.bg-light": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-light, .t4-typo-example button.btn.btn-light, .t4-typo-example a.btn.btn-light": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".t4-typo-example .btn-light:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".t4-typo-example .bg-dark": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".t4-typo-example .card.bg-dark :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".t4-typo-example .card.bg-dark": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-dark, .t4-typo-example button.btn.btn-dark, .t4-typo-example a.btn.btn-dark": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)",
+        "border-color": "var(--ds-c-ink)"
+      },
+      ".t4-typo-example .btn-dark:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)",
+        "border-color": "var(--ds-c-ink)"
+      },
+      ".t4-typo-example .btn-outline-primary, .t4-typo-example button.btn.btn-outline-primary": {
+        "color": "var(--ds-c-accent-text)",
+        "border-color": "var(--ds-c-accent-text)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-primary:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-accent-text)",
+        "background-color": "var(--ds-c-accent-text)"
+      },
+      ".t4-typo-example .btn-outline-secondary, .t4-typo-example button.btn.btn-outline-secondary": {
+        "color": "var(--ds-c-muted)",
+        "border-color": "var(--ds-c-muted)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-secondary:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-muted)",
+        "background-color": "var(--ds-c-muted)"
+      },
+      ".t4-typo-example .btn-outline-success, .t4-typo-example button.btn.btn-outline-success": {
+        "color": "var(--ds-c-success-text)",
+        "border-color": "var(--ds-c-success-text)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-success:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-text)"
+      },
+      ".t4-typo-example .btn-outline-info, .t4-typo-example button.btn.btn-outline-info": {
+        "color": "var(--ds-c-info-text)",
+        "border-color": "var(--ds-c-info-text)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-info:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-text)"
+      },
+      ".t4-typo-example .btn-outline-warning, .t4-typo-example button.btn.btn-outline-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "border-color": "var(--ds-c-warn-text)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-warning:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-text)"
+      },
+      ".t4-typo-example .btn-outline-danger, .t4-typo-example button.btn.btn-outline-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "border-color": "var(--ds-c-danger-text)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-danger:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-text)"
+      },
+      ".t4-typo-example .btn-outline-light, .t4-typo-example button.btn.btn-outline-light": {
+        "color": "var(--ds-c-muted)",
+        "border-color": "var(--ds-c-border)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-light:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)",
+        "background-color": "var(--ds-c-surface-warm)"
+      },
+      ".t4-typo-example .btn-outline-dark, .t4-typo-example button.btn.btn-outline-dark": {
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-fg)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-dark:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-fg)"
+      },
+      ".t4-typo-example .alert-primary": {
+        "color": "var(--ds-c-accent-text)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".t4-typo-example .alert-secondary": {
+        "color": "var(--ds-c-muted)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".t4-typo-example .alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success)"
+      },
+      ".t4-typo-example .alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info)"
+      },
+      ".t4-typo-example .alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn)"
+      },
+      ".t4-typo-example .alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger)"
+      },
+      ".t4-typo-example .alert-light": {
+        "color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-surface)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".t4-typo-example .alert-dark": {
+        "color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-border-soft)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".t4-typo-example .btn": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".t4-typo-example .badge.rounded-pill": {
+        "border-radius": "var(--ds-pill-radius)"
+      },
+      ".t4-typo-example :is(.alert, .card)": {
+        "border-radius": "var(--ds-card-radius)"
+      },
+      ".t4-typo-example .progress": {
+        "background-color": "var(--ds-c-surface-warm)"
+      },
+      ".je-acct__btn, .je-acct #wp-submit, input.wpcf7-submit, .je-acct input.button-primary": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".je-badge a, .je-authorlatest__cat a, .je-badge-static, .je-cattiles__name a, .wp-block-post-terms a, .tracy-eyebrow": {
+        "--je-cat": "currentColor",
+        "--je-cat-page": "currentColor"
+      },
+      ".je-card__tags a::before": {
+        "background-color": "currentColor"
+      },
+      ".je-header .je-social .wp-social-link a::before": {
+        "background-color": "currentColor"
+      },
+      ".t4-typo-example :is(mark, .mark)": {
+        "background-color": "var(--ds-c-warn-bg)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".je-share a::after, .je-side--social .je-social__link .wp-block-button__link::after": {
+        "background-color": "var(--ds-c-accent-on)"
+      },
+      ".je-author__ico": {
+        "background": "var(--ds-c-accent-on)"
+      }
+    },
+    "light": {
+      ".t4-typo-example .bg-primary": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".t4-typo-example .card.bg-primary :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".t4-typo-example .card.bg-primary": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-primary, .t4-typo-example button.btn.btn-primary, .t4-typo-example a.btn.btn-primary": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)",
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".t4-typo-example .btn-primary:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-accent-hover)",
+        "color": "var(--ds-c-accent-on)",
+        "border-color": "var(--ds-c-accent-hover)"
+      },
+      ".t4-typo-example .bg-secondary": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".t4-typo-example .card.bg-secondary :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".t4-typo-example .card.bg-secondary": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-secondary, .t4-typo-example button.btn.btn-secondary, .t4-typo-example a.btn.btn-secondary": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".t4-typo-example .btn-secondary:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".t4-typo-example .bg-success": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-success :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-success": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-success, .t4-typo-example button.btn.btn-success, .t4-typo-example a.btn.btn-success": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)"
+      },
+      ".t4-typo-example .btn-success:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-success-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)"
+      },
+      ".t4-typo-example .bg-info": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-info :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-info": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-info, .t4-typo-example button.btn.btn-info, .t4-typo-example a.btn.btn-info": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)"
+      },
+      ".t4-typo-example .btn-info:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-info-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)"
+      },
+      ".t4-typo-example .bg-warning": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-warning :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-warning": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-warning, .t4-typo-example button.btn.btn-warning, .t4-typo-example a.btn.btn-warning": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)"
+      },
+      ".t4-typo-example .btn-warning:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-warn-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)"
+      },
+      ".t4-typo-example .bg-danger": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-danger :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example .card.bg-danger": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-danger, .t4-typo-example button.btn.btn-danger, .t4-typo-example a.btn.btn-danger": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)"
+      },
+      ".t4-typo-example .btn-danger:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-danger-text)",
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)"
+      },
+      ".t4-typo-example .bg-light": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".t4-typo-example .card.bg-light :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".t4-typo-example .card.bg-light": {
+        "background-color": "var(--ds-c-surface-warm)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-light, .t4-typo-example button.btn.btn-light, .t4-typo-example a.btn.btn-light": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".t4-typo-example .btn-light:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".t4-typo-example .bg-dark": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".t4-typo-example .card.bg-dark :is(.card-header, .card-body, .card-title, .card-text, h5, p, small)": {
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".t4-typo-example .card.bg-dark": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)",
+        "border-color": "transparent"
+      },
+      ".t4-typo-example .btn-dark, .t4-typo-example button.btn.btn-dark, .t4-typo-example a.btn.btn-dark": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)",
+        "border-color": "var(--ds-c-ink)"
+      },
+      ".t4-typo-example .btn-dark:is(:hover, :focus-visible, :active)": {
+        "background-color": "var(--ds-c-ink)",
+        "color": "var(--ds-c-on-ink)",
+        "border-color": "var(--ds-c-ink)"
+      },
+      ".t4-typo-example .btn-outline-primary, .t4-typo-example button.btn.btn-outline-primary": {
+        "color": "var(--ds-c-accent-text)",
+        "border-color": "var(--ds-c-accent-text)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-primary:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-accent-text)",
+        "background-color": "var(--ds-c-accent-text)"
+      },
+      ".t4-typo-example .btn-outline-secondary, .t4-typo-example button.btn.btn-outline-secondary": {
+        "color": "var(--ds-c-muted)",
+        "border-color": "var(--ds-c-muted)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-secondary:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-muted)",
+        "background-color": "var(--ds-c-muted)"
+      },
+      ".t4-typo-example .btn-outline-success, .t4-typo-example button.btn.btn-outline-success": {
+        "color": "var(--ds-c-success-text)",
+        "border-color": "var(--ds-c-success-text)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-success:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-text)"
+      },
+      ".t4-typo-example .btn-outline-info, .t4-typo-example button.btn.btn-outline-info": {
+        "color": "var(--ds-c-info-text)",
+        "border-color": "var(--ds-c-info-text)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-info:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-text)"
+      },
+      ".t4-typo-example .btn-outline-warning, .t4-typo-example button.btn.btn-outline-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "border-color": "var(--ds-c-warn-text)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-warning:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-text)"
+      },
+      ".t4-typo-example .btn-outline-danger, .t4-typo-example button.btn.btn-outline-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "border-color": "var(--ds-c-danger-text)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-danger:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-text)"
+      },
+      ".t4-typo-example .btn-outline-light, .t4-typo-example button.btn.btn-outline-light": {
+        "color": "var(--ds-c-muted)",
+        "border-color": "var(--ds-c-border)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-light:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)",
+        "background-color": "var(--ds-c-surface-warm)"
+      },
+      ".t4-typo-example .btn-outline-dark, .t4-typo-example button.btn.btn-outline-dark": {
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-fg)",
+        "background-color": "transparent"
+      },
+      ".t4-typo-example .btn-outline-dark:is(:hover, :focus-visible, :active)": {
+        "color": "var(--ds-c-bg)",
+        "border-color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-fg)"
+      },
+      ".t4-typo-example .alert-primary": {
+        "color": "var(--ds-c-accent-text)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".t4-typo-example .alert-secondary": {
+        "color": "var(--ds-c-muted)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".t4-typo-example .alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success)"
+      },
+      ".t4-typo-example .alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info)"
+      },
+      ".t4-typo-example .alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn)"
+      },
+      ".t4-typo-example .alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger)"
+      },
+      ".t4-typo-example .alert-light": {
+        "color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-surface)",
+        "border-color": "var(--ds-c-border-soft)"
+      },
+      ".t4-typo-example .alert-dark": {
+        "color": "var(--ds-c-fg)",
+        "background-color": "var(--ds-c-border-soft)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".t4-typo-example .btn": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".t4-typo-example .badge.rounded-pill": {
+        "border-radius": "var(--ds-pill-radius)"
+      },
+      ".t4-typo-example :is(.alert, .card)": {
+        "border-radius": "var(--ds-card-radius)"
+      },
+      ".t4-typo-example .progress": {
+        "background-color": "var(--ds-c-surface-warm)"
+      },
+      ".je-acct__btn, .je-acct #wp-submit, input.wpcf7-submit, .je-acct input.button-primary": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".je-badge a, .je-authorlatest__cat a, .je-badge-static, .je-cattiles__name a, .wp-block-post-terms a, .tracy-eyebrow": {
+        "--je-cat": "currentColor",
+        "--je-cat-page": "currentColor"
+      },
+      ".je-card__tags a::before": {
+        "background-color": "currentColor"
+      },
+      ".je-header .je-social .wp-social-link a::before": {
+        "background-color": "currentColor"
+      },
+      "body:is(.je-slug-home-2, .je-slug-home-5)": {
+        "background-color": "var(--ds-c-bg)"
+      },
+      ".t4-typo-example :is(mark, .mark)": {
+        "background-color": "var(--ds-c-warn-bg)",
+        "color": "var(--ds-c-fg)"
+      },
+      ".je-share a::after, .je-side--social .je-social__link .wp-block-button__link::after": {
+        "background-color": "var(--ds-c-accent-on)"
+      },
+      ".je-author__ico": {
+        "background": "var(--ds-c-accent-on)"
+      }
+    }
+  },
+  "sideNote": "under a dark worn page the footer shows the theme's dark logo spot (.je-footer__logo--dark: the dark logo, or the site name as text when none is set), as the theme itself does under data-theme=dark (its own rules are !important, so these are too): its light Essence script logo sank into a dark system's footer (seen by eye 12/10/2026 under Toggl Track)",
+  "ready": true,
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-ja-essence): 12/12 on every release measured, controls 0 differences, lowest text 4.70:1, 81% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on theme 1.0.11 (its minVersion) over the ja-essence/wp7 1.0.16 content (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-ja-essence): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, lowest text 6.05:1, 81-95% of the page follows, screenshots read by a person. The new probe first found the pagination (#000) and the cards' Read more (#252424) black on a dark system's page (1.00-1.12:1): they take the system's text (followRules, now written by the WordPress variation too); and the heading role missed its size, because the card titles were the display role: they are headings now (displayNote). First measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-essence-wp7)",
+  "followRulesNote": "13/10/2026: the pagination and Read more were black (#000, #252424) on the template's page, its strongest ink; the worn texts follow the template's own order of strength (textOrder), where JA Essence's strongest is --fg-2, so they take fg-2 (under MotherDuck, fg read 4.01:1 on the pagination box).",
+  "contractNotes1317": "13/10/2026 (#1317): the category badges, the drawer toggle, the nav labels and the media icons kept the template ink and paper; they follow. The white post titles on the cover overlays (36 left paints under Moxie) are words on photos: the template design, not a contract fix.",
+  "paletteKeep": [
+    {
+      "selector": ".je-lead__card",
+      "reason": "the home hero card sits on its slide photo, which no system repaints: its title, meta and badge keep the template’s white over the photo (the palette read them as muted text and set the system’s grey on the photo, 1.03–1.4:1 under every system, look review v9 15/10/2026)"
+    },
+    {
+      "selector": ".je-lead__title",
+      "reason": "the home hero card sits on its slide photo, which no system repaints: its title, meta and badge keep the template’s white over the photo (the palette read them as muted text and set the system’s grey on the photo, 1.03–1.4:1 under every system, look review v9 15/10/2026)"
+    }
+  ],
+  "innerNote": "15/10/2026 (v10 inner measure, /contact 6/12): the contact card's required mark (.je-contactcard .je-star, je-detail.css light-dark(var(--ds-c-danger, #dc3545), var(--ds-c-danger, #ea868f))) sets words in the danger FILL, which the slot leaves the template's #dc2626 under every system: 4.35:1 on Moxie's black page, 4.17:1 on its derived cream, 3.60:1 on Stripe's derived navy (the template's own 4.83:1 on white). Status words take the status's own text shade (danger-text: the smallest move toward the system's ink that reads 4.5:1 on the page and the surface; 4.50:1 or more under all 1334 systems on both sides): 5.51, 4.97 and 5.24:1 there. The account form's required marks and error line (.je-acct__star, .je-acct__error, the same fill as words) take the same shade (not on a measured page).",
+  "probe10Note": "19/10/2026 (dot 3, preview probe v10 on the published 1.0.18, Moxie + Figma, light + dark, 33 pages: 8 rules failing -> 0). The style guide page (/typography/, .t4-typo-example) kept Bootstrap's literal fills, alerts, badges, cards and outline buttons: each now takes the system's role, paired as the Joomla twin's shared Bootstrap block pairs them (primary accent/accent-on, secondary and light the surface, status fills the status text shade under the page colour, alerts the status tint, dark the ink), and .btn the system's corner (TPL-1, BTN-1, CON-2, border-colour). Category dots (--je-cat, --je-cat-page and the tag dots' literal hues), the header social marks and the sidebar numbers kept the template's teal/purple/orange/blue: the dots and marks take their link's words colour (as the Joomla twin's carousel chips), the numbers the readable accent (ACCENT-LEAK, TPL-1 pseudo-colour). The media badges (.je-media-icon, #4d6bff in the release css) and the article pull quote (--accent as words, 2.87:1 on Moxie light) read accent-text; the submenu's current item (a literal !important light-dark #1a3eed/#7d93ff) reads accent-text-hover; the account links' hover accent-text-hover (HOVER-1). Account, contact, tag filter and newsletter fields wear the page ground with the system's border (FORM-1), their focus line the accent; the account and contact form buttons the system's button corner, the Cancel button the danger text shade under the page colour, the password eye a muted fill (Joomla twin). The dark highlight cards (category styles 2-4, Home 4: #1c1c1c) are the ink (GROUND-1); Home 2 and Home 5 paint their light page white: the system's page (GROUND-2 footer). Forced-hover sweep (accent-leak.mjs --hover, Moxie, Figma, Mailchimp, Dribbble, light + dark): the share and author social buttons (brand fills) and the pager hover (white words on Mailchimp's yellow) now wear the accent pair; 0 LEAK after."
+}

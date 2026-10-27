@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1493-wo-compose-links",
+  "kind": "feat",
+  "title": "Messages keep accents and line breaks in compose URLs; an unlimited cap is still tracked",
+  "pr": 1493,
+  "area": "website-opportunities/outreach-v3",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Build URIs from a message with accents, punctuation and line breaks; try chat URLs with a wrong host/credentials/script and a counter of 0."
+  ],
+  "expect": [
+    "Compose doors only create a draft message, which decodes back verbatim.",
+    "Chat accepts only known valid URLs; a cap of 0 does not block, and a batch over the cap is blocked.",
+    "Instagram/Facebook profiles are turned into the ig.me/m or m.me chat doors; existing chat routes stay as they are, and feature pages never become recipients."
+  ],
+  "selectors": {
+    "files": "vendor/tracy/tracy-website-opportunities/test/client-outreach.test.mjs"
+  },
+  "fence": "Durable receipts, fixed identities, site permissions, leases and the daily-cap transaction; URLs are compose/copy only.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-website-opportunities/test/client-outreach.test.mjs"
+    ],
+    "tests": [
+      "compose links preserve punctuation, accents and line breaks in the draft; none sends it",
+      "known other chats open their existing URL; invalid hosts, credentials and scripts are refused",
+      "daily usage disables a batch before it would exceed the cap; zero stays uncapped",
+      "Instagram and Facebook profile contacts open direct chat routes instead of profiles"
+    ]
+  }
+}

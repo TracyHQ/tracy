@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "scope": "entry-scalars",
+  "note": "Tracy Content API for Tracy SaaS. Pages are built from sections: each page keeps its path in data (urlField: path), and the section collections have no page of their own (urlPattern null; they reach a page through its sections repeater). The chrome is four entries (header CTA, footer brand, footer legal line, footer newsletter), all printed by src/lib/chrome.ts.",
+  "collections": {
+    "pages": {
+      "type": "page",
+      "urlPattern": null,
+      "urlField": "path"
+    },
+    "posts": {
+      "type": "article",
+      "urlPattern": "/product/blog/{slug}"
+    },
+    "hero": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "clients": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "bento": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "incident_timeline": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "kineticql_split": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "features_ledger": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "testimonials": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "cta": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "page_masthead": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "pricing": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "pricing_matrix": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "accordion": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "features_intro": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "prose_quote": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "teams": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "social": {
+      "type": "shared",
+      "urlPattern": null
+    },
+    "footerlegal": {
+      "type": "shared",
+      "urlPattern": null
+    },
+    "header_cta": {
+      "type": "shared",
+      "urlPattern": null
+    },
+    "faq_support": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "newsletter": {
+      "type": "shared",
+      "urlPattern": null
+    },
+    "writers": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "contact_block": {
+      "type": "generic",
+      "urlPattern": null
+    }
+  },
+  "chrome": [
+    {
+      "collection": "header_cta",
+      "slug": "global-header-cta"
+    },
+    {
+      "collection": "social",
+      "slug": "footer-brand"
+    },
+    {
+      "collection": "footerlegal",
+      "slug": "footer-copyright"
+    },
+    {
+      "collection": "newsletter",
+      "slug": "footer-newsletter"
+    }
+  ]
+}

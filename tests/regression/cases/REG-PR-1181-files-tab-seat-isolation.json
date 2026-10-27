@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1181-files-tab-seat-isolation",
+  "kind": "fix",
+  "title": "A seat of one site cannot list, read, write, rename, delete or upload into another site's webroot through the Files tab (fs.*)",
+  "pr": 1181,
+  "area": "seats/files-tab-isolation",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --import tsx --test scripts/test/seat-isolation-files-tab.test.ts (a /site/{alpha,beta,alphabeta} tree with symlinks from alpha into beta).",
+    "S2: Read the summary lines of the run."
+  ],
+  "expect": [
+    "S1: every gateway check denies a body naming a session the seat does not hold, on all eight fs.* routes; every plugin fence call aimed at beta (absolute path, '..', prefix sibling alphabeta, file and directory symlink, client cwd) throws forbidden 403; beta's files are unchanged.",
+    "S2: pass 6, fail 0."
+  ],
+  "selectors": {
+    "routes": "/sidebar/api/fs.{tree,trees,read,search,write,rename,remove,mkdir}, /sidebar/upload, /api/file",
+    "tool": "scripts/test/seat-isolation-files-tab.test.ts"
+  },
+  "evidence": "#811 F-S3-003 flagged the Files tab isolation as best-effort; tasks/evidence/tracy-site-bugs-1110/seat-isolation/README.md",
+  "fence": "dsh-passwords checkSeatBody (held session) plus dsh-better-sidebar path-security.ts / fs-operations.ts (session workspace root, realpath containment)",
+  "run": {
+    "cmd": ["node", "--import", "tsx", "--test", "scripts/test/seat-isolation-files-tab.test.ts"]
+  }
+}

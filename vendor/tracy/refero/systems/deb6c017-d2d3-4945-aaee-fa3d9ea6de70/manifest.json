@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "deb6c017-d2d3-4945-aaee-fa3d9ea6de70",
+  "status": "complete",
+  "name": "Strut",
+  "url": "https://styles.refero.design/style/deb6c017-d2d3-4945-aaee-fa3d9ea6de70",
+  "sourceWebsite": "https://strut.so",
+  "extractedAt": "2026-06-03T21:00:52.971Z",
+  "capturedAt": "2026-10-08T05:18:23.087717+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "editorial broadsheet on warm canvas — oversized serif-adjacent display type sitting on a cream paper field, marked only by a single amber highlighter and hairline rules.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/9c68cba1-1030-4503-b9a6-42cebedf1625.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "fc61a1aaa995342fd9b4a434a4ec49aa5bc7d525a7fd4c036b61e6cb3cd47e37",
+      "bytes": 21343
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "90ff38a831d4384132527b7dfc46ddeaaaaf844641667045f1ab801a0f204ef1",
+      "bytes": 146948
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "42db770b1061d8873ca32c76cf3f2d69daff7917cf8530076b83648a3c3b3f97",
+      "bytes": 17770
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f84c6a9bde70cba71260c32d503551cc91fd80f5902d4a323c37f2b2b5d52f24",
+      "bytes": 9872
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "23625c8405d7d5050a54cb336c7a072962e5ac82c88c464214447dbf80a953bb",
+      "bytes": 12827
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "09be704ce95534a4c3c85e8fec6e103024d739fdce76ee29e6beaf116f479a58",
+      "bytes": 2784
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ea1492d940ec94581d0440cb345c970a1ac847bbc88131e77c80027d91618f81",
+      "bytes": 556
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4a6564b8b8841fcb04216897114d1f5aa6baed33237547a36c9bb43aaab34948",
+      "bytes": 573
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8d460033c139a703b3dbbf9fc5d2751f6ea42f88c0e04deac412cc9d0ba8d2dd",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e61e0ab43175048d1fc77df3a4e666191264e418fff07b0bb280d12c7d9a3cbe",
+      "bytes": 44679
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "da8fa38cf535aabb93b24921ff8168ecc5b2a79aad6a4a2790baabc353860392",
+      "bytes": 23115
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "df260fdbecc75356e9f5b9b1ce854c0cbd5c81240c25bd1d612dfa109a21ee89",
+      "bytes": 43154
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "31eddc8477a35d9a0fcd005a84cec2e11baeebfcc54d130fdb89d653d5204d2d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5dcd5f79f6776973419414c217d013c4f6b078bebce9c4ca1ed87b22f64d87ab",
+      "bytes": 1730
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "8926ff02d7736edf2f7fe3ae7919e9e306fcd415ee4334813a2905ab886e60d1",
+      "bytes": 2283
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "03b3d707-2a30-4f53-a524-347d1b70eb2c",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "28a7115a-bcf8-4b05-89a5-5290f5842a3c",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "a0244aab-0dba-45fe-a595-416c1f0715be",
+    "a6950b49-8ce4-4330-9499-26ca08061599",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "cbd8a058-6ecb-4f1b-9b5a-2bf2597826ee",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "deb6c017-d2d3-4945-aaee-fa3d9ea6de70",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "lab-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Lab White — Page canvas, light content surfaces, reversed type, and sparse structural borders"
+    },
+    "figure-black": {
+      "$value": "#0c0c0c",
+      "$type": "color",
+      "$description": "Figure Black — Primary editorial text, dark pill button fill, navigation marks, and hairline action borders"
+    },
+    "absolute-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Absolute Black — Full-bleed dark media chapters, black hero surfaces, and form text"
+    },
+    "machine-gray": {
+      "$value": "#6d6d6d",
+      "$type": "color",
+      "$description": "Machine Gray — Technical measurements, secondary labels, muted navigation text, and subdued metadata"
+    },
+    "calibration-gray": {
+      "$value": "#cecece",
+      "$type": "color",
+      "$description": "Calibration Gray — 1px navigation separators and light technical rules"
+    }
+  },
+  "font": {
+    "pp-neue-machina-plain": {
+      "$value": "pp-neue-machina-plain",
+      "$type": "fontFamily",
+      "$description": "Uppercase navigation, technical figures, image-overlay headlines, and the 122px display title. Its monospaced-machine character turns labels and specifications into product instrumentation rather than conventional marketing type."
+    },
+    "neue-haas-grot-text": {
+      "$value": "neue-haas-grot-text",
+      "$type": "fontFamily",
+      "$description": "Body copy, contact fields, utility links, buttons, and small editorial headings. The slightly tightened grotesk keeps explanatory writing compact beside oversized technical display type."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.figure.ai/figure",
+      "siteName": "FigureAI",
+      "extractedAt": "2026-09-20T22:15:01.223Z",
+      "variant": "compact"
+    }
+  }
+}

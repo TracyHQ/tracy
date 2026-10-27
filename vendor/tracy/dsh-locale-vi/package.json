@@ -1,0 +1,52 @@
+{
+  "name": "dsh-locale-vi",
+  "version": "0.1.0-tracy.14",
+  "description": "Vietnamese language pack for the DSH web GUI: registers the `vi` locale and hand-written dictionaries for every mounted client plugin namespace",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PhuVinhAI/dsh-locale-vi.git"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "cordis-plugin",
+    "locale",
+    "i18n",
+    "vietnamese"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale"
+      ]
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "build": "node tools/build-client.mjs",
+    "scan": "node tools/scan-install.mjs",
+    "audit": "node tools/audit-locale.mjs",
+    "accept": "node tools/accept-baseline.mjs",
+    "test": "node tools/selftest.mjs",
+    "check": "node tools/selftest.mjs && node tools/scan-install.mjs && node tools/audit-locale.mjs"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "locales/",
+    "README.md",
+    "LICENSE"
+  ]
+}

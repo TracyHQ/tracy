@@ -1,0 +1,49 @@
+{
+  "id": "QA-UNIT-REG-PR-1145-desktop-onboarding-0-5-1-happy",
+  "itemIds": ["regression:REG-PR-1145-desktop-onboarding-0-5-1"],
+  "requirement": "First-run screen 0.5.1: Linux \"Open System Settings\" opens GNOME's panel or is hidden; a reopened screen shows the look step as done after a previous Done",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1145-desktop-onboarding-0-5-1.json",
+    "ref": "PR #1145 (fix); fix evidence: none recorded",
+    "invariant": "S1a/S1b exit 0 with 0 failures. S2 reports the bundle matches its source.",
+    "productSources": [
+      "packages/desktop/tracy-desktop/src/notify-bridge.js:33",
+      "packages/desktop/tracy-desktop/src/update-channels.js:10",
+      "packages/ui/tracy-onboard/scripts/build-client.mjs:11"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-onboard/test/flow.test.mjs:31 require() with a computed specifier",
+      "packages/ui/tracy-onboard/test/mount.test.mjs:89 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1145-desktop-onboarding-0-5-1.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1145-desktop-onboarding-0-5-1"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1145-desktop-onboarding-0-5-1",
+    "pr": 1145,
+    "kind": "fix",
+    "area": "desktop/onboarding",
+    "file": "tests/regression/cases/REG-PR-1145-desktop-onboarding-0-5-1.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1145-desktop-onboarding-0-5-1.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

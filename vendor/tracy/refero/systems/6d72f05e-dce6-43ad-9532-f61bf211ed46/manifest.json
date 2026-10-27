@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6d72f05e-dce6-43ad-9532-f61bf211ed46",
+  "status": "complete",
+  "name": "Dollar Shave Club",
+  "url": "https://styles.refero.design/style/6d72f05e-dce6-43ad-9532-f61bf211ed46",
+  "sourceWebsite": "https://www.dollarshaveclub.com",
+  "extractedAt": "2026-06-03T21:06:22.469Z",
+  "capturedAt": "2026-10-08T05:12:59.981728+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "Navy warehouse with a single orange flare",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3aef4e42-e5b7-4829-8155-a4891a989f1c.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ad0e28f240d310b403115d91ac3e35050a410f10546b8dfc3dfd835b55f037d8",
+      "bytes": 20801
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "416ca3356c3b790d0046abe6681166af99f432191c41d313b296060d92ec347e",
+      "bytes": 167817
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b971c616ef9b8a214832e592ef403c1bb4990fc9604af9915520209f4b8ddb58",
+      "bytes": 17127
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9cee92420df4b9c2644baa17a6822a312e324355a64700f47a11d0ecd537c182",
+      "bytes": 20790
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5d8cc2170f30f224c680ce26e5c57d5cae8f2d009045d5cf4d4fc1b06e50234b",
+      "bytes": 12494
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "46c32d8200c1470518c601df29f859dfb17bbafc5a11e6c513bce621e2beb68a",
+      "bytes": 3665
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f50a673215eed9ff7324b46d58152d0cdbc92cbaa482a1dc8fce2c9a9decfe8d",
+      "bytes": 934
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "29d9dee7311401801a6cba4ab26a2cece742d154e165af15bf45fa404e6527dc",
+      "bytes": 951
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "73fff728b30aec6a3ee24cfce0f6f6d8849a1ffc923f3b068fb5f1c5232b81fc",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "c863c2bb6e0e34d3eaaadf5d3902e8730839493140b62d651443495ab35d3023",
+      "bytes": 44060
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2e073b27cf56ab875e93292a197b622d4212e5c6378da5092c062ddba15676b6",
+      "bytes": 23448
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f25fbd001d6b15f113b0f84a200d97fdb8ee0549604a5dc07a4b3367a1a1da72",
+      "bytes": 63247
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "dee2e27d5425ef83fb2288580c69b727f5d1619020b65c577b993235e06611e7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "dac4d4ff2f7bfa481408b73bbfc1807fdb1b39716d8d8c7bcd3ed1196f95db0b",
+      "bytes": 2130
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ead51b65bea4e829ab6ea027f37795f0488db56530a337774d57193a96c776e9",
+      "bytes": 2786
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b742f76-25ad-446c-a942-09b09b93f6a3",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "604af0f7-b4c3-4921-93af-9da03df81493",
+    "606d4af9-9d8c-41ea-a122-f515f38f20e5",
+    "6a5f9438-7ae6-4743-a0bd-f9087d467eff",
+    "6d72f05e-dce6-43ad-9532-f61bf211ed46",
+    "722f32e7-8217-4808-843d-b454eea7320a",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d7a73e16-4b3e-4b9d-aef2-2c31a9db7457",
+    "d7fb1721-1878-4cbb-a24b-051800557c75",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "f212ff99-24fa-4646-a0f2-46a815736ecd",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

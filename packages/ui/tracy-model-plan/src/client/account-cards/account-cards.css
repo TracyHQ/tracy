@@ -1,0 +1,113 @@
+/* The AI-account cards and connect panel (`AccountCards.tsx`), shared by Settings › AI accounts and
+   the Getting started screen. The rules are the `.tv-ob-*` block of
+   packages/ui/tracy-onboard/src/client/onboard.css, moved here unchanged (class names included, so
+   the regression cases REG-PR-1166-* keep matching); the screen that imports them appends this file
+   to its own style tag (`@tracy/dsh-model-plan/account-cards.css`).
+
+   MODE B (DESIGN.md §0): inside dsh's page. No reset, no Tailwind, no rule on html/body. The tokens
+   live under `.tv-ac`, a root class the CALLER puts on its container; `.tv-onboard` declares the
+   same tokens, so the Getting started screen needs no second root. Values: dsh's `--dsw-alias-*`
+   with the light value of `@tracy/ui` tokens.css as fallback, so the cards follow dsh's theme. */
+
+.tv-ac {
+  --radius: 0.625rem;
+  --background: var(--dsw-alias-bg-base, oklch(1 0 0));
+  --foreground: var(--dsw-alias-label-primary, oklch(0.145 0 0));
+  --card: var(--dsw-alias-bg-layer-1, oklch(1 0 0));
+  --card-foreground: var(--dsw-alias-label-primary, oklch(0.145 0 0));
+  --primary: oklch(0.588 0.136 37.4); /* Tracy terracotta #bf5b3d, not mapped (tokens.css) */
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.588 0.136 37.4);
+  --muted: var(--dsw-alias-bg-layer-2, oklch(0.97 0 0));
+  --muted-foreground: var(--dsw-alias-label-tertiary, oklch(0.556 0 0));
+  --accent: var(--dsw-alias-bg-layer-2, oklch(0.97 0 0));
+  --border: var(--dsw-alias-border-l1, oklch(0.922 0 0));
+  --input: var(--dsw-alias-border-l2, oklch(0.922 0 0));
+  --success: var(--dsw-alias-state-success-primary, oklch(0.696 0.17 162.48));
+  /* No warning token in tokens.css; amber from the chart scale, as in the mock. */
+  --warning-border: oklch(0.769 0.188 70.08);
+  --destructive: oklch(0.577 0.245 27.325);
+}
+[data-ds-dark-theme] .tv-ac {
+  --warning-border: oklch(0.769 0.188 70.08 / 70%);
+}
+
+.tv-ac, .tv-ac * { box-sizing: border-box; }
+.tv-ac {
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+/* :where() keeps these at element weight, as the mock's bare `button` rule: every class below wins. */
+:where(.tv-ac) button { font: inherit; color: inherit; margin: 0; }
+.tv-ac :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+.tv-ob-stack { display: flex; flex-direction: column; gap: 14px; }
+.tv-ob-note { border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--muted-foreground); line-height: 1.5; }
+
+.tv-ob-section-head { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: var(--muted-foreground); margin-bottom: 12px; }
+.tv-ob-count { font-variant-numeric: tabular-nums; color: color-mix(in oklch, var(--muted-foreground) 70%, transparent); }
+.tv-ob-spinner { width: 11px; height: 11px; flex: none; border-radius: 50%; border: 1.5px solid var(--border); border-top-color: var(--muted-foreground); animation: tv-ob-spin .8s linear infinite; }
+@keyframes tv-ob-spin { to { transform: rotate(360deg); } }
+.tv-ob-text-btn { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; padding: 2px 4px;
+  font-size: 12px; font-weight: 500; color: var(--muted-foreground); cursor: pointer; border-radius: 4px; }
+.tv-ob-text-btn:hover { color: var(--foreground); }
+.tv-ob-text-btn:disabled { opacity: .5; cursor: default; }
+
+.tv-ob-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.tv-ob-agent { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 10px; text-align: left; cursor: pointer;
+  background: transparent; border: 1px solid var(--border); border-radius: 8px; transition: background .15s, border-color .15s; }
+.tv-ob-agent:hover { background: color-mix(in oklch, var(--accent) 60%, transparent); }
+.tv-ob-agent[aria-pressed="true"] { border-color: color-mix(in oklch, var(--foreground) 60%, transparent); background: var(--accent); }
+.tv-ob-agent-icon { width: 28px; height: 28px; flex: none; display: grid; place-items: center; border-radius: 6px; background: var(--muted); color: var(--foreground); }
+.tv-ob-agent-icon.tv-ob-letter, .tv-ob-agent-icon > .tv-ob-letter { font-size: 12px; font-weight: 600; color: var(--muted-foreground); }
+/* Tracy AI's card wears a T on the brand colour (the caller's `mark` returns `.tv-ob-mark-tracy`). */
+.tv-ob-agent-icon:has(> .tv-ob-mark-tracy) { background: var(--primary); color: var(--primary-foreground); }
+.tv-ob-mark-tracy { font-size: 13px; font-weight: 700; line-height: 1; }
+.tv-ob-agent-name { flex: 1; min-width: 0; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tv-ob-badge { flex: none; padding: 2px 6px; border-radius: 999px; font-size: 11px; font-weight: 500; color: var(--success);
+  border: 1px solid color-mix(in oklch, var(--success) 45%, transparent); background: color-mix(in oklch, var(--success) 10%, transparent); }
+/* Connected / Included: the muted badge; only Default wears the green one. */
+.tv-ob-badge.tv-ob-order { color: var(--muted-foreground); border-color: var(--border); background: transparent; font-variant-numeric: tabular-nums; }
+.tv-ob-check { width: 16px; height: 16px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--foreground); color: var(--background); }
+.tv-ob-disclosure { border: 0; background: none; padding: 0; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
+.tv-ob-disclosure:hover { color: var(--foreground); }
+.tv-ob-more { margin-top: 12px; }
+
+.tv-ob-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; border-radius: 7px; font-size: 13px; white-space: nowrap; }
+.tv-ob-btn-outline { border: 1px solid var(--border); background: color-mix(in oklch, var(--muted) 60%, transparent); padding: 6px 12px; color: var(--foreground); }
+.tv-ob-btn-outline:hover { background: var(--muted); }
+.tv-ob-btn-xs { padding: 4px 8px; font-size: 12px; }
+.tv-ob-btn-primary { border: 0; background: var(--primary); color: var(--primary-foreground); padding: 6px 16px; font-weight: 500; }
+.tv-ob-btn-primary:hover { background: color-mix(in oklch, var(--primary) 90%, black); }
+.tv-ob-btn-danger { border: 1px solid color-mix(in oklch, var(--destructive) 40%, transparent); background: transparent; color: var(--destructive); padding: 4px 8px; font-size: 12px; }
+.tv-ob-btn-danger:hover { background: color-mix(in oklch, var(--destructive) 8%, transparent); }
+.tv-ob-btn:disabled { cursor: not-allowed; opacity: .5; }
+
+/* The connect panel under the grid; "Show N more" sits under it. */
+.tv-ob-connect { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px;
+  background: color-mix(in oklch, var(--muted) 40%, transparent); }
+.tv-ob-connect[data-state="connected"] { border-color: color-mix(in oklch, var(--success) 45%, transparent); background: color-mix(in oklch, var(--success) 6%, transparent); }
+.tv-ob-connect[data-state="error"] { border-color: var(--warning-border); }
+.tv-ob-connect-row { display: flex; align-items: center; gap: 12px; }
+.tv-ob-connect-icon { width: 26px; height: 26px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--muted); color: var(--muted-foreground); }
+.tv-ob-connect[data-state="connected"] .tv-ob-connect-icon { background: var(--success); color: var(--primary-foreground); }
+.tv-ob-connect[data-state="error"] .tv-ob-connect-icon { background: color-mix(in oklch, var(--warning-border) 25%, transparent); color: var(--foreground); }
+.tv-ob-connect-icon svg { width: 13px; height: 13px; }
+.tv-ob-connect-text { flex: 1; min-width: 0; }
+.tv-ob-connect-title { font-size: 13px; font-weight: 600; }
+.tv-ob-connect-line { margin-top: 2px; font-size: 12px; color: var(--muted-foreground); line-height: 1.45; }
+.tv-ob-connect-actions { flex: none; display: flex; align-items: center; gap: 6px; }
+.tv-ob-connect-help { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; padding-left: 38px; font-size: 12px; color: var(--muted-foreground); }
+.tv-ob-link { border: 0; background: none; padding: 0; font-size: 12px; font-weight: 500; color: var(--muted-foreground); cursor: pointer;
+  text-decoration: underline; text-underline-offset: 2px; }
+.tv-ob-link:hover { color: var(--foreground); }
+.tv-ob-paste { display: flex; gap: 6px; padding-left: 38px; }
+.tv-ob-input { flex: 1; min-width: 0; height: 30px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--input);
+  background: var(--background); color: var(--foreground); font: inherit; font-size: 12px; }
+.tv-ob-device { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-left: 38px; }
+.tv-ob-code { padding: 4px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--background);
+  font: 600 18px/1.3 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .08em; user-select: all; }
+.tv-ob-connect + section > .tv-ob-disclosure { margin-top: 0; }

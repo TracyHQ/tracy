@@ -1,0 +1,236 @@
+---
+title: Settings
+description: Store encrypted sandboxed-plugin settings and edit them through a Block Kit page.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Sandboxed plugins store site-specific configuration through `ctx.settings`. A Block Kit admin page loads the current values, accepts changes, validates them, and writes them through the same plugin-scoped store. Fields declared with `type: "secret"` are encrypted before EmDash writes them to the database.
+
+## Read and write settings
+
+Every hook and route receives this settings interface on `ctx`:
+
+```typescript
+interface SettingsAccess {
+	get<T>(key: string): Promise<T | null>;
+	getVersioned<T>(key: string): Promise<{ value: T; revision: string } | null>;
+	compareAndSet(key: string, expectedRevision: string | null, value: unknown):
+		Promise<{ applied: true; revision: string } | { applied: false }>;
+	compareAndDelete(key: string, expectedRevision: string): Promise<{ applied: boolean }>;
+	set(key: string, value: unknown): Promise<void>;
+	delete(key: string): Promise<boolean>;
+	list(prefix?: string): Promise<Array<{ key: string; value: unknown }>>;
+}
+```
+
+Settings are namespaced by plugin. Two plugins can use the same key without reading or overwriting each other's values.
+
+When concurrent requests can change the same key, use [conditional writes](/plugins/creating-plugins/storage/#conditional-writes) to reject updates based on a stale revision. The same methods work in native plugins and sandboxed plugins.
+
+Use `ctx.kv` separately for internal state and cached values:
+
+| API | Purpose | Example |
+| --- | --- | --- |
+| `ctx.settings` | User-configurable values | `apiKey` |
+| `ctx.kv` with `state:` | Persistent internal state | `state:lastSync` |
+| `ctx.kv` with `cache:` | Reusable computed or remote data | `cache:feed` |
+
+The following calls cover the KV operations:
+
+```typescript
+const enabled = await ctx.settings.get<boolean>("enabled");
+await ctx.kv.set("state:lastSync", new Date().toISOString());
+const deleted = await ctx.kv.delete("cache:feed");
+const allSettings = await ctx.settings.list();
+```
+
+`get` returns `null` when the key does not exist. `list` returns keys without EmDash's internal plugin namespace prefix.
+
+Existing plugins can continue to read `ctx.kv.get("settings:<key>")`. The complete `settings:` KV alias remains supported throughout 1.x. Any removal in a later major version will include a deprecation period and migration guidance. New code should use `ctx.settings`.
+
+## Add a settings page
+
+Declare the page in `emdash-plugin.jsonc` so it appears in the plugin's admin navigation:
+
+```jsonc title="emdash-plugin.jsonc"
+"admin": {
+	"pages": [{ "path": "/settings", "label": "Settings", "icon": "settings" }],
+	"settingsSchema": {
+		"apiKey": { "type": "secret", "label": "API key" },
+		"enabled": { "type": "boolean", "label": "Enabled", "default": true },
+		"maxItems": { "type": "number", "label": "Max items", "default": 100 }
+	}
+}
+```
+
+The schema tells EmDash which values require encryption. A `secret_input` in Block Kit only masks browser input; it does not mark a stored value as secret by itself.
+
+`ctx.settings` needs no capability because the host fixes its namespace to the current plugin. Adding a settings field does not expand the plugin's `declaredAccess` or trigger capability re-consent. An administrator grants the plugin access to a credential by entering it in that plugin's settings form.
+
+The plugin must also provide a private route named `admin`. EmDash sends `page_load` when the page opens and `form_submit` when the user submits the form.
+
+Add `@emdash-cms/blocks` and `zod` to use the response type and validate interactions:
+
+```sh
+pnpm add @emdash-cms/blocks zod
+```
+
+The following route loads three values and writes only validated form fields:
+
+```typescript title="src/plugin.ts"
+import type { BlockResponse } from "@emdash-cms/blocks";
+import type { PluginContext, SandboxedPlugin } from "emdash/plugin";
+import { z } from "zod";
+
+const interactionSchema = z.discriminatedUnion("type", [
+	z.object({ type: z.literal("page_load"), page: z.string() }),
+	z.object({
+		type: z.literal("form_submit"),
+		action_id: z.string(),
+		block_id: z.string().optional(),
+		values: z.object({
+			apiKey: z.string().optional(),
+			enabled: z.boolean(),
+			maxItems: z.number().int().min(1).max(1000),
+		}),
+	}),
+	z.object({
+		type: z.literal("block_action"),
+		action_id: z.string(),
+		block_id: z.string().optional(),
+		value: z.unknown().optional(),
+	}),
+]);
+
+const plugin: SandboxedPlugin = {
+	routes: {
+		admin: {
+			handler: async (routeCtx, ctx) => {
+				const parsed = interactionSchema.safeParse(routeCtx.input);
+				if (!parsed.success) return { blocks: [] };
+				const interaction = parsed.data;
+
+				if (interaction.type === "page_load" && interaction.page === "/settings") {
+					return renderSettings(ctx);
+				}
+
+				if (interaction.type === "form_submit" && interaction.action_id === "save") {
+					await saveSettings(ctx, interaction.values);
+					return {
+						...(await renderSettings(ctx)),
+						toast: { message: "Settings saved", type: "success" },
+					};
+				}
+
+				return { blocks: [] };
+			},
+		},
+	},
+};
+
+export default plugin;
+
+async function renderSettings(ctx: PluginContext): Promise<BlockResponse> {
+	const apiKeyConfigured = (await ctx.settings.get<string>("apiKey")) !== null;
+	const enabled = (await ctx.settings.get<boolean>("enabled")) ?? true;
+	const maxItems = (await ctx.settings.get<number>("maxItems")) ?? 100;
+
+	return {
+		blocks: [
+			{ type: "header", text: "Plugin settings" },
+			{
+				type: "form",
+				block_id: "settings",
+				fields: [
+					{
+						type: "secret_input",
+						action_id: "apiKey",
+						label: "API key",
+						has_value: apiKeyConfigured,
+					},
+					{
+						type: "toggle",
+						action_id: "enabled",
+						label: "Enabled",
+						initial_value: enabled,
+					},
+					{
+						type: "number_input",
+						action_id: "maxItems",
+						label: "Max items",
+						min: 1,
+						max: 1000,
+						initial_value: maxItems,
+					},
+				],
+				submit: { label: "Save", action_id: "save" },
+			},
+		],
+	};
+}
+
+async function saveSettings(
+	ctx: PluginContext,
+	values: { apiKey?: string; enabled: boolean; maxItems: number },
+) {
+	if (values.apiKey) await ctx.settings.set("apiKey", values.apiKey);
+	await ctx.settings.set("enabled", values.enabled);
+	await ctx.settings.set("maxItems", values.maxItems);
+}
+```
+
+The submitted values omit the secret until the user edits it, and may contain an empty string if the user focuses and clears the field. `saveSettings` writes a new API key only when the submitted string is non-empty. The page uses `has_value` to show that a saved value exists without returning the value to the browser.
+
+[Block Kit](/plugins/creating-plugins/block-kit/) is the canonical reference for interactions, blocks, form elements, builders, and conditional fields.
+
+## Secret values
+
+<Aside type="caution" title="Keep the encryption key with your backups">
+	EmDash cannot decrypt a secret setting without the `EMDASH_ENCRYPTION_KEY` entry whose fingerprint
+	matches the stored envelope. Keep the complete key list in a separate secret-manager backup. A
+	database backup alone cannot recover encrypted plugin settings.
+</Aside>
+
+EmDash encrypts `secret` schema fields with AES-GCM. The authenticated data binds each value to its plugin ID and setting key, so copying an envelope to another plugin or key fails decryption. The first key in `EMDASH_ENCRYPTION_KEY` encrypts new writes; EmDash selects older keys by their fingerprint when reading. Missing, wrong, or tampered keys fail closed. Admin responses and host errors do not contain the plaintext. After a plugin reads or writes a secret, the host logger redacts the current and immediately previous exact value for that key from `ctx.log` messages and structured data.
+
+The plugin still receives the plaintext and can transform it or send it through declared network or email access. Review those capabilities before entering a credential, and never log derived or encoded secret material.
+
+Existing plaintext values remain readable. Save the value again to replace it with an encrypted envelope. If a secret must not be written to the EmDash database even in encrypted form, use a native plugin backed by a deployment secret or an external credential service. Sandboxed plugins cannot read the host process's environment or platform bindings.
+
+Provide a separate, deliberate action if users need to clear a secret. Treating an empty masked field as deletion can erase a working credential when a user saves an unrelated setting.
+
+## Default values and upgrades
+
+Apply defaults when reading a key so existing installations receive a new setting without a migration:
+
+```typescript
+const enabled = (await ctx.settings.get<boolean>("enabled")) ?? true;
+const maxItems = (await ctx.settings.get<number>("maxItems")) ?? 100;
+```
+
+You can persist initial values during installation:
+
+```typescript
+hooks: {
+	"plugin:install": async (_event, ctx) => {
+		await ctx.settings.set("enabled", true);
+		await ctx.settings.set("maxItems", 100);
+	},
+},
+```
+
+`plugin:install` runs only for a new installation. When a later release adds a setting, existing sites do not run it again. Keep the read-time fallback, or initialize the missing key idempotently during `plugin:activate`.
+
+## Choose KV or storage
+
+| Data | Use |
+| --- | --- |
+| Small user-configurable values | `ctx.settings` |
+| Small internal state or cursors | `ctx.kv` with a `state:` prefix |
+| Queryable records such as submissions or logs | A declared `ctx.storage` collection |
+| Content edited through the regular EmDash editor | A site content collection |
+
+KV supports direct key access and prefix listing, but it has no field queries or indexes. [Storage](/plugins/creating-plugins/storage/) provides document collections with indexed filtering, ordering, counting, and pagination.
+
+Native plugins can instead declare `admin.settingsSchema` inside `definePlugin()` and let EmDash generate the form. See [Your first native plugin](/plugins/creating-native-plugins/your-first-native-plugin/) for that format.

@@ -1,0 +1,22 @@
+# node
+node_modules/
+npm-debug.log*
+
+# macOS
+.DS_Store
+
+# build scratch — spec-packs and provisioned sites never belong in this repo
+*-spec/
+*-j6/
+.playwright-mcp/
+build-docs/
+
+# never
+.env
+.env.*
+!.env.example
+*.sql
+*.dump
+.build-credentials
+__pycache__/
+*.pyc

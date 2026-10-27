@@ -1,0 +1,471 @@
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/jost-400.woff2") format("woff2"); }
+/* Jost 500 is deliberately not declared: the source loads Jost at 400 only, so a 500 heading is drawn with the 400 face there; declaring the 500 face drew them heavier than the source. */
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/jost-600.woff2") format("woff2"); }
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/jost-700.woff2") format("woff2"); }
+@font-face { font-family: "Noto Serif"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/noto-serif-400.woff2") format("woff2"); }
+@font-face { font-family: "Noto Serif"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/noto-serif-700.woff2") format("woff2"); }
+/* Vietnamese (decision 6, 12/10/2026): Jost has no Vietnamese letters (no ă, đ, ơ, ư, ề…), so the browser drew them from another font, or Jost built "ề" out of "ê" and a loose grave. A page in Vietnamese therefore draws every heading and label in Be Vietnam Pro, a geometric sans close to Jost that has them (SIL OFL 1.1, cut to latin, latin-ext and vietnamese), through the --je-font-display slot every Jost rule reads. The body keeps Noto Serif: the latin cut above lacks the Vietnamese letters, so the same family's vietnamese cut is declared for those code points only. Keyed on the page language, so it holds on any host. */
+@font-face { font-family: "Be Vietnam Pro"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/be-vietnam-pro-400.woff2") format("woff2"); }
+@font-face { font-family: "Be Vietnam Pro"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/be-vietnam-pro-600.woff2") format("woff2"); }
+@font-face { font-family: "Be Vietnam Pro"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/be-vietnam-pro-700.woff2") format("woff2"); }
+@font-face { font-family: "Noto Serif"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/noto-serif-vietnamese-400.woff2") format("woff2"); unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB; }
+@font-face { font-family: "Noto Serif"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/noto-serif-vietnamese-700.woff2") format("woff2"); unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB; }
+html:lang(vi), html:lang(vi) body { --je-font-display: "Be Vietnam Pro"; --wp--preset--font-family--display: "Be Vietnam Pro", sans-serif; }
+/* Tints a worn design system derives from its roles: translucent words and rules on the accent panels (newsletter, Trending)
+ * and the primary alert ground of the typography page. Each reads its role WITHOUT a fallback, so with no design system the
+ * property is invalid at computed-value time and every reader falls back to the template's own value: the look does not change. */
+:root {
+  --je-accent-on-70: color-mix(in srgb, var(--ds-c-accent-on) 70%, transparent);
+  --je-accent-on-20: color-mix(in srgb, var(--ds-c-accent-on) 20%, transparent);
+  --je-accent-tint: color-mix(in srgb, var(--ds-c-accent) 18%, var(--ds-c-surface));
+}
+/* ds-not-used: --ds-c-disabled-bg, --ds-c-disabled-fg — the template dims a disabled control with opacity only (pager, slider arrows, page links); it paints no disabled ground or text colour */
+/* wp-ja-essence — JA Essence (Joomla 6 T4) as a block theme. Values are measured on the source
+ * (tasks/ja-essence-wp7/design-contract.json) and routed through theme.json presets; colours switch with
+ * light-dark() in theme.overlay.json. First cut: chrome, post cards, footer. */
+.je-container { max-width: 1164px; margin-inline: auto; padding-inline: 18px; box-sizing: border-box; }
+/* source Bootstrap container steps (540/720/960 below 1200), read from its compiled sheet */
+@media (min-width: 576px) { .je-container, .je-header__inner { max-width: 540px; } }
+@media (min-width: 768px) { .je-container, .je-header__inner { max-width: 720px; } }
+@media (min-width: 992px) { .je-container, .je-header__inner { max-width: 960px; } }
+@media (min-width: 1200px) { .je-container, .je-header__inner { max-width: 1164px; } }
+.je-narrow { max-width: 820px; margin-inline: auto; padding-inline: 18px; box-sizing: border-box; }
+.je-main { padding-bottom: 72px; }
+body { font-family: var(--ds-font-body, var(--wp--preset--font-family--body, "Noto Serif", serif)); background: var(--wp--preset--color--bg); color: var(--wp--preset--color--fg); }
+h1, h2, h3, h4, h5, h6 { font-family: var(--ds-font-display, var(--wp--preset--font-family--display, Jost, sans-serif)); font-weight: 400; line-height: 1.3; color: var(--wp--preset--color--fg-2); }
+a { color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); }
+
+/* header */
+.je-header__inner { max-width: 1164px; margin-inline: auto; padding-inline: 18px; box-sizing: border-box; }
+.je-header__top { display: flex; align-items: center; justify-content: space-between; padding: 28px 0; border-bottom: 1px solid var(--wp--preset--color--border); }
+.je-header__top > * { flex: 1 1 0; }
+.je-site-name { text-align: center; margin: 0; font-family: var(--ds-font-body, "Noto Serif", serif); font-size: 1.1rem; font-weight: 700; letter-spacing: .1em; }
+.je-site-name a { color: var(--wp--preset--color--fg-2); text-decoration: none; }
+.je-social { gap: 18px; }
+.je-header__bottom { display: flex; align-items: center; justify-content: space-between; min-height: 72px; border-bottom: 2px solid var(--wp--preset--color--fg-2); position: relative; }
+.je-header__tools { display: flex; align-items: center; gap: 12px; flex: 0 0 auto; }
+.je-header__bottom .je-nav { flex: 1 1 auto; }
+.je-nav a { font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); font-size: 18px; color: var(--wp--preset--color--fg-2); text-decoration: none; padding: 8px 20px; }
+.je-nav a:hover, .je-nav .current-menu-item > a { color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent-hover)); }
+.je-drawer-toggle, .je-theme-toggle, .je-drawer-close { background: none; border: 0; cursor: pointer; color: var(--wp--preset--color--fg-2); width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%; }
+.je-drawer-toggle { flex-direction: column; gap: 4px; }
+.je-drawer-toggle span { display: block; width: 20px; height: 2px; background: currentColor; }
+.je-tt-sun { display: none; }
+:root[data-theme="dark"] .je-tt-sun { display: block; }
+:root[data-theme="dark"] .je-tt-moon { display: none; }
+.je-btn-primary .wp-block-button__link { background: var(--wp--preset--color--accent); color: var(--wp--preset--color--accent-on); border-radius: var(--ds-btn-radius, 8px); font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); font-size: 18px; padding: 12px 24px; }
+.je-btn-dark .wp-block-button__link { background: light-dark(var(--ds-c-ink, #212529), var(--ds-c-surface-warm, #212529)); color: light-dark(var(--ds-c-on-ink, #fff), var(--ds-c-heading, #fff)); border-radius: var(--ds-btn-radius, 8px); width: 100%; text-align: center; }
+
+/* drawer */
+.je-drawer { position: fixed; inset: 0 auto 0 0; width: 300px; max-width: 86vw; background: var(--wp--preset--color--surface); transform: translateX(-100%); transition: transform .3s; z-index: 1000; padding: 0 20px; overflow-y: auto; }
+.je-drawer-open .je-drawer { transform: none; box-shadow: 0 1rem 3rem rgba(0,0,0,.175); }
+.je-drawer__head { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
+
+/* cards */
+.je-list__items { list-style: none; padding: 0; margin: 0; display: grid; gap: 36px; }
+.je-card { display: flex; gap: 27px; background: var(--wp--preset--color--surface); border-radius: var(--ds-card-radius, 16px); padding: 36px; }
+.je-card__img { flex: 0 0 160px; margin: 0; }
+.je-card__img img { width: 160px; height: 200px; object-fit: cover; border-radius: var(--ds-card-radius, 8px); }
+.je-card__body { flex: 1 1 auto; min-width: 0; }
+.je-card__title { font-size: 28px; margin: 12px 0; }
+.je-card__title a { color: var(--wp--preset--color--fg-2); text-decoration: none; }
+.je-badge a { display: inline-block; font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); font-size: 14px; padding: 2px 10px; border-radius: var(--ds-pill-radius, 8px); background: var(--wp--preset--color--bg); color: var(--wp--preset--color--fg-2); text-decoration: none; }
+.je-meta { font-size: 13px; gap: 8px; color: var(--wp--preset--color--muted); }
+.je-meta__author { font-weight: 700; }
+.je-card__excerpt { font-size: 14px; }
+.je-lead__items { gap: 32px; }
+.je-lead__card { border-radius: var(--ds-card-radius, 16px); text-align: center; }
+.je-lead__title a { color: #fff; text-decoration: none; } /* ds-keep: words on the photo under its dark veil: the picture keeps its tones under a system, so its words keep the template white */
+.je-choice__items { gap: 32px; margin-block: 54px; }
+.je-mini { display: flex; gap: 18px; align-items: flex-start; }
+.je-mini__img { flex: 0 0 105px; margin: 0; }
+.je-mini__img img { width: 105px; height: 105px; object-fit: cover; border-radius: var(--ds-card-radius, 8px); }
+.je-mini__title { font-size: 18px; margin: 0 0 8px; }
+.je-mini__title a { color: var(--wp--preset--color--fg-2); text-decoration: none; }
+.je-page__title { font-size: 40px; margin: 36px 0 18px; }
+.je-prose img { max-width: 100%; height: auto; }
+
+/* gallery strip */
+.je-gallery__row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.je-gallery__img img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
+.je-gallery__more { margin-top: 24px; }
+
+/* footer */
+.je-footer { background: var(--wp--preset--color--surface-warm); }
+.je-footer__inner { max-width: 1164px; margin-inline: auto; padding: 54px 18px 27px; box-sizing: border-box; }
+.je-footer__info { display: flex; justify-content: space-between; gap: 36px; }
+.je-footer__logo { margin: 0; font-size: 1.75rem; }
+.je-footer__action { width: 360px; max-width: 100%; text-align: center; }
+.je-footer__small, .je-footer__tagline { font-size: 13px; }
+.je-footer-nav { margin-top: 36px; }
+.je-footer-nav a { font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); font-size: 15px; line-height: 22.5px; color: var(--wp--preset--color--fg); text-decoration: none; padding: 8px 0; }
+.je-footer-nav .wp-block-navigation__container { gap: 36px; }
+.je-footer__copy { font-size: 12px; margin-top: 24px; }
+
+@media (max-width: 767px) {
+  .je-header__top .je-social, .je-header__top .je-subscribe { display: none; }
+  .je-card { flex-direction: column; padding: 18px; }
+  .je-card__img, .je-card__img img { width: 100%; flex-basis: auto; }
+  .je-footer__info { flex-direction: column; }
+  .je-header__bottom .je-nav { display: none; }
+  .je-gallery__row { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* sections (S-12): list modules as query-loop patterns */
+.je-sec__head--hidden { display: none; }
+.je-sec__desc:empty, .je-sec__title:empty { display: none; }
+.je-sec__head--center { text-align: center; }
+.je-sec__head--center .je-sec__title { display: inline-block; margin: 0; font-size: 24px; }
+.je-sec__desc { font-size: 13px; color: var(--wp--preset--color--muted); margin: 4px 0 0; }
+.je-sec--slide, .je-sec--choice, .je-sec--cats { max-width: 1164px; margin: 36px auto; padding-inline: 18px; box-sizing: border-box; }
+.je-lead--slide .je-lead__items { display: flex; gap: 32px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; list-style: none; padding: 0; margin: 0; }
+.je-lead--slide .je-lead__items::-webkit-scrollbar { display: none; }
+.je-lead--slide .je-lead__items > li { flex: 0 0 calc((100% - 64px) / 3); scroll-snap-align: start; }
+@media (max-width: 991px) { .je-lead--slide .je-lead__items > li { flex-basis: calc((100% - 32px) / 2); } }
+@media (max-width: 575px) { .je-lead--slide .je-lead__items > li { flex-basis: 100%; } }
+.je-choice .je-choice__items { gap: 32px; margin-block: 24px 0; }
+.je-vcard__img img { width: 100%; border-radius: var(--ds-card-radius, 8px); object-fit: cover; }
+.je-vcard__title { font-size: 18px; margin: 12px 0 6px; }
+.je-vcard__title a { color: var(--wp--preset--color--fg-2); text-decoration: none; }
+.je-sec--cards { max-width: 820px; margin: 36px auto; padding-inline: 18px; box-sizing: border-box; }
+.je-sec--more { max-width: 1164px; margin: 54px auto 0; padding-inline: 18px; box-sizing: border-box; }
+.je-more__items { gap: 24px; list-style: none; padding: 0; }
+.je-mini--wide .je-mini__img { flex-basis: 96px; }
+.je-mini--wide .je-mini__img img { width: 96px; height: 80px; }
+
+/* sidebar cards float to the right of the article (a layout of the source: article 2/3, sidebar 1/3) */
+.je-side--news { background: var(--wp--preset--color--accent); color: var(--wp--preset--color--accent-on); }
+.je-side--news .je-sec__title, .je-side--news .je-side__intro { color: var(--wp--preset--color--accent-on); }
+.je-tagcloud a { display: inline-block; margin: 0 8px 8px 0; font-size: 13px !important; color: var(--wp--preset--color--fg-2); text-decoration: none; }
+.je-prose > .je-side { float: right; width: 360px; clear: right; }
+@media (max-width: 767px) { .je-prose > .je-side { float: none; width: auto; } }
+.je-gallery, .je-sec--more { clear: both; }
+.je-prose:has(> :first-child:not(.je-side)):has(> .je-side) { display: grid; grid-template-columns: minmax(0, 1fr) 352px; column-gap: 36px; align-items: start; }
+.je-prose:has(> :first-child:not(.je-side)):has(> .je-side) > :first-child { grid-column: 1; grid-row: 1 / span 30; }
+.je-prose:has(> :first-child:not(.je-side)):has(> .je-side) > .je-side { grid-column: 2; float: none; width: auto; }
+.je-prose:has(> :first-child:not(.je-side)):has(> .je-side) > :not(:first-child):not(.je-side) { grid-column: 1 / -1; }
+@media (max-width: 991px) { .je-prose:has(> :first-child:not(.je-side)):has(> .je-side) { display: block; } }
+.je-prose > :not(.je-side):not(.wp-block-columns) { display: flow-root; }
+.je-narrow:has(> .je-prose > .je-side), .je-narrow:has(.je-prose > .je-side) { max-width: 1164px; }
+.je-prose img, .je-prose figure { max-width: 100%; height: auto; }
+
+/* measured against the source (pilot 1): type scale of the cards, excerpts and buttons */
+.je-sec__title { font-size: 24px; line-height: 1.3; }
+.je-lead__title { font-size: 24px; line-height: 1.3; }
+.wp-block-button__link { font-weight: 400; }
+.wp-block-post-excerpt__excerpt, .je-card__excerpt { font-size: 16px; line-height: 24px; color: var(--wp--preset--color--muted); }
+.tracy-card__title a, .tracy-card__title { color: var(--wp--preset--color--fg-2); }
+.tracy-card__eyebrow, .tracy-card__eyebrow a { font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); font-size: 15px; text-transform: none; letter-spacing: 0; }
+.wp-block-button .wp-block-button__link.wp-element-button { font-weight: 400; }
+.je-card__title { font-size: 24px; line-height: 1.3; }
+.wp-block-post-excerpt__excerpt, .je-card__excerpt { color: var(--ds-c-fg, light-dark(rgba(37, 36, 36, 0.7), rgb(194, 201, 214))); }
+.je-nav .wp-block-navigation__submenu-container a, .je-nav .wp-block-navigation__submenu-container .wp-block-navigation-item__label { font-size: 16px; line-height: 24px; color: var(--wp--preset--color--fg-2); }
+.tracy-card .wp-block-post-terms a, .tracy-card a[rel~="tag"], .tracy-card__eyebrow a, .tracy-card__eyebrow { font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif) !important; font-size: 15px; line-height: 22.5px; text-transform: none; letter-spacing: 0; }
+.tracy-card .wp-block-post-terms a { color: var(--wp--preset--color--fg-2); }
+/* the source's popular-tags links: serif 16px, no fill, 11px 16px (measured on category-style-4) */
+.je-tagcloud a.tag-cloud-link { background: transparent; color: var(--ds-c-fg, rgba(37, 36, 36, 0.7)) !important; border-radius: var(--ds-pill-radius, 8px); padding: 11px 16px; margin: 0; font-family: var(--ds-font-body, "Noto Serif", serif); font-size: 16px !important; line-height: 16px; }
+
+/* pilot batch 4: hero cards equal height with a readable byline, gallery strip is a 5-up slider row */
+.je-lead__items { align-items: stretch; }
+.je-lead__items > li { display: flex; }
+.je-lead__card { width: 100%; min-height: 232px !important; align-items: center; }
+.je-lead--slide .je-lead__card { min-height: 350px !important; }
+.je-lead__card .je-meta, .je-lead__card .je-meta a, .je-lead__card .je-meta__author, .je-lead__card .je-meta__date { color: #fff; font-size: 11px; } /* ds-keep: words on the photo under its dark veil: the picture keeps its tones under a system, so its words keep the template white */
+.je-lead__title { font-size: 24px; line-height: 1.3; }
+.je-lead__card .je-lead__title a { color: #fff; } /* ds-keep: words on the photo under its dark veil: the picture keeps its tones under a system, so its words keep the template white */
+.je-gallery__row { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: calc((100% - 48px) / 5); overflow-x: hidden; }
+@media (max-width: 767px) { .je-gallery__row { grid-auto-columns: calc((100% - 24px) / 3); } }
+.je-sec--minirow { max-width: 1164px; margin: 36px auto 0; padding: 0 18px 72px; border-bottom: 1px solid var(--ds-c-border-soft, rgba(0, 0, 0, 0.1)); box-sizing: border-box; }
+.je-minirow__items { gap: 36px; list-style: none; padding: 0; margin: 0; }
+.je-minirow .je-mini__title { font-size: 18px; line-height: 1.3; margin: 0 0 8px; }
+.je-minirow .je-meta__date { font-size: 14px; }
+.je-prose > .je-twocol:not(.je-side):not(.wp-block-columns), .je-twocol { display: grid; grid-template-columns: minmax(0, 1fr) 352px; column-gap: 36px; align-items: start; margin-top: 36px; }
+.je-twocol > .je-side { grid-column: 2; float: none; width: auto; margin-left: 0; }
+.je-twocol > :not(.je-side) { grid-column: 1; grid-row: 1 / span 30; }
+@media (max-width: 991px) { .je-prose > .je-twocol:not(.je-side):not(.wp-block-columns), .je-twocol { display: flex; flex-direction: column; align-items: stretch; } .je-twocol > :not(.je-side) { order: 0; } .je-twocol > .je-side { order: 1; } }
+.je-narrow:has(.je-twocol) { max-width: 1164px; }
+.je-list--warm .je-card { background: var(--ds-c-surface-warm, light-dark(#fdf6f2, #161b27)); }
+.je-search .wp-block-search__button { background: none; color: var(--wp--preset--color--fg-2); padding: 0; width: 38px; height: 38px; border-radius: 50%; }
+/* pilot batch 5: badge links are 16/24 serif on the source; the category chip links keep the body font */
+.je-badge a { font-size: 16px !important; line-height: 24px !important; }
+
+/* article pages: the source's intro picture on top, then the heading; Bootstrap rows kept in the article body */
+.je-page__hero { margin: 36px 0 0; }
+.je-page__hero img { width: 100%; height: auto; border-radius: var(--ds-card-radius, 8px); display: block; }
+.je-prose .row:has(> .col-lg-4) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 18px; }
+.je-prose .row:has(> .col-lg-6) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 18px; }
+.je-prose .row:has(> .col-lg-3) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 18px; }
+.je-prose .row > .item { margin: 0 0 24px; }
+.je-prose .row.my-4 { margin-left: 0; margin-right: 0; }
+@media (max-width: 991px) { .je-prose .row:has(> .col-lg-4), .je-prose .row:has(> .col-lg-6), .je-prose .row:has(> .col-lg-3) { grid-template-columns: 1fr; } }
+.je-articlecard { background: var(--wp--preset--color--surface); border-radius: var(--ds-card-radius, 16px); padding: 36px; box-sizing: border-box; }
+.je-articlecard .je-page__hero { margin: 0 0 18px; }
+.je-articlecard .je-page__title { margin: 12px 0 8px; font-size: 32px; line-height: 1.3; }
+.je-badge-static { display: inline-block; font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); margin: 0; padding: 0 8px; border-radius: var(--ds-pill-radius, 8px); background: var(--wp--preset--color--bg); font-size: 16px; line-height: 24px; color: var(--wp--preset--color--fg); }
+.je-badge-static::before { content: "•"; color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); margin-right: 4px; }
+.je-page--article { padding-top: 36px; }
+
+/* g1 chrome: flow-layout block gaps must not leak into the flex rows; source rows measured at 1440 (top row 36 padding, nav row 72 high, nav centred) */
+.je-header__top, .je-header__bottom, .je-header__tools { margin-block: 0; }
+.je-header__top > *, .je-header__bottom > *, .je-header__tools > * { margin-block: 0 !important; }
+.je-header__top { padding: 36px 0; }
+.je-header__bottom { display: grid; grid-template-columns: 1fr auto 1fr; min-height: 72px; }
+.je-header__bottom .je-nav { flex: none; justify-self: center; }
+.je-header__bottom .je-search { justify-self: end; }
+.je-subscribe .wp-block-button__link { line-height: 24px; display: inline-flex; align-items: center; gap: 8px; }
+.je-subscribe .wp-block-button__link::before { content: ""; width: 18px; height: 18px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 2 11 13M22 2l-7 20-4-9-9-4z'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 2 11 13M22 2l-7 20-4-9-9-4z'/%3E%3C/svg%3E") center / contain no-repeat; }
+.je-social .wp-social-link svg { width: 20px; height: 20px; }
+.je-social .wp-social-link { font-size: 20px; }
+.je-social .wp-social-link:hover, .je-social .wp-social-link a:hover { transform: none; }
+.je-social { gap: 12px; }
+
+/* g1: no flow margins inside the gallery row and the footer rows */
+.je-gallery__row > *, .je-footer__info > *, .je-footer__action > * { margin-block: 0 !important; }
+.je-footer__action { display: grid; gap: 12px; }
+.je-footer__logo, .je-footer__tagline { margin: 0 !important; }
+.je-footer .je-btn-dark .wp-block-button__link { font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); font-size: 18px; line-height: 24px; padding: 12px 24px; border: 0; }
+
+/* One-row header (the source's `t4-header-r`, every page of the default layout): name left, menu centred, theme
+   toggle, search and Subscribe right. The two-row header stays on the landing pages and the front page. The same
+   markup serves both: the two wrappers dissolve into one grid. */
+@media (min-width: 992px) {
+  body:not(.je-hdr-two) .je-header { background: var(--wp--preset--color--surface); }
+  body:not(.je-hdr-two) .je-header__inner { display: grid; grid-template-columns: auto 1fr auto auto auto; align-items: center; column-gap: 12px; min-height: 123px; }
+  body:not(.je-hdr-two) .je-header__top, body:not(.je-hdr-two) .je-header__bottom { display: contents; }
+  body:not(.je-hdr-two) .je-header .je-social, body:not(.je-hdr-two) .je-header .je-drawer-toggle { display: none; }
+  body:not(.je-hdr-two) .je-header .je-site-name { grid-area: 1 / 1; text-align: left; font-size: 14px; letter-spacing: .08em; }
+  body:not(.je-hdr-two) .je-header .je-nav { grid-area: 1 / 2; justify-self: center; }
+  body:not(.je-hdr-two) .je-header .je-header__tools { grid-area: 1 / 3; }
+  body:not(.je-hdr-two) .je-header .je-search { grid-area: 1 / 4; justify-self: end; }
+  body:not(.je-hdr-two) .je-header .je-subscribe { grid-area: 1 / 5; margin: 0; }
+  body:not(.je-hdr-two) .je-header .je-btn-primary .wp-block-button__link { font-size: 14px; padding: 8px 18px; }
+}
+
+/* Submenu panel as the source draws it: 274px wide, 18px/20px inner padding, dropped 37px below its item (an
+   invisible bridge keeps the hover alive across the gap). */
+.je-nav .wp-block-navigation__submenu-container { min-width: 274px !important; box-sizing: border-box; padding: 18px 20px; margin-top: 37px; }
+.je-nav .wp-block-navigation__submenu-container::before { content: ""; position: absolute; left: 0; right: 0; top: -37px; height: 37px; }
+/* "Pages" is a mega panel in the source: its second level prints as columns, each group's links listed under its name. */
+.je-nav .wp-block-navigation__submenu-container:has(.wp-block-navigation__submenu-container) { display: flex !important; flex-direction: row; gap: 36px; }
+.je-nav .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container { position: static !important; visibility: visible !important; opacity: 1 !important; height: auto !important; width: auto !important; min-width: 0 !important; margin: 0; padding: 8px 0 0; border: 0; box-shadow: none; background: none; overflow: visible; }
+.je-nav .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container::before { display: none; }
+.je-nav .wp-block-navigation__submenu-container .wp-block-navigation__submenu-icon { display: none; }
+.je-nav .wp-block-navigation__submenu-container > .has-child > .wp-block-navigation-item__content { font-weight: 500; }
+
+@media (max-width: 767px) { .je-lead__title { font-size: 22px; line-height: 28.6px; } }
+@media (max-width: 767px) { .je-card__title, .je-list-mini .wp-block-post-title, .je-minirow .wp-block-post-title { font-size: 22px; line-height: 28.6px; } }
+
+/* Menu as drawn by the source (slice 5): small triangle carets, round-cornered bordered panels, the "Pages" panel a
+   three-column mega panel centred under its item with the group names as column headings. */
+.je-nav .wp-block-navigation__submenu-icon svg { display: none; }
+.je-nav .wp-block-navigation__submenu-icon { margin-left: -14px; width: auto; height: auto; }
+.je-nav .wp-block-navigation__submenu-icon::after { content: ""; display: block; border: 4px solid transparent; border-top-color: currentColor; border-bottom-width: 0; }
+.je-nav .wp-block-navigation__submenu-container { border-radius: var(--ds-card-radius, 16px); border: 1px solid light-dark(var(--wp--preset--color--border), var(--ds-c-border, #2b3548)); background: light-dark(var(--wp--preset--color--surface), var(--ds-c-surface, #1a2130)); box-shadow: none; }
+.je-nav .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container a, .je-nav .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container .wp-block-navigation-item__label { font-size: 15px; line-height: 22.5px; }
+.je-nav .wp-block-navigation__submenu-container:has(.wp-block-navigation__submenu-container) { padding: 36px 36px 35.5px; left: calc(50% + 11px) !important; right: auto !important; transform: translateX(-50%); min-width: 0 !important; gap: 36px; }
+.je-nav .wp-block-navigation__submenu-container > .has-child { display: block !important; width: 151.4px; }
+.je-nav .wp-block-navigation__submenu-container > .has-child > .wp-block-navigation-item__content { font-weight: 500; text-transform: uppercase; font-size: 15px; line-height: 22.5px; padding: 0 !important; margin-bottom: 16px; border-bottom: 1px solid var(--wp--preset--color--border-soft); }
+.je-nav .wp-block-navigation__submenu-container > .has-child > .wp-block-navigation-item__content .wp-block-navigation-item__label { display: inline-block; padding-bottom: 8px; font-size: 15px; line-height: 22.5px; }
+.je-nav .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container a { padding: 8px 0 !important; }
+.je-nav .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container { padding: 0; }
+@media (min-width: 992px) {
+  body:not(.je-hdr-two) .je-header .je-nav { justify-self: end; margin-right: -4.4px; }
+  body:not(.je-hdr-two) .je-header .je-nav > .wp-block-navigation__container > li > a { font-size: 18px; }
+  body:not(.je-hdr-two) .je-header__inner { column-gap: 36px; }
+  body:not(.je-hdr-two) .je-header .je-subscribe .wp-block-button__link { flex-direction: row; gap: 8px; padding: 12px 24px; font-size: 18px; line-height: 24px; }
+}
+@media (min-width: 1200px) {
+  body:not(.je-hdr-two) .je-header .je-subscribe .wp-block-button__link { flex-direction: column; gap: 4px; padding: 12px 28px; }
+}
+
+/* Article and page bodies carry Bootstrap utility classes from the source; the type scale below is the one measured on /pages/j-pages/typography and the article pages (slice 6). */
+.wp-block-post-content h2:not(.je-card__title):not(.je-sec__title):not(.je-authorlatest__title):not(.je-written__title):not(.tracy-card__title):not(.tracy-eyebrow), .wp-block-post-content .h2 { font-size: 32px; line-height: 41.6px; }
+.wp-block-post-content .h3 { font-size: 24px; line-height: 31.2px; font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); color: var(--wp--preset--color--fg); }
+.wp-block-post-content .h6 { font-size: 14px; line-height: 18.2px; font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); color: var(--wp--preset--color--fg); }
+.wp-block-post-content [class*="display-"] { line-height: 1.3; }
+.wp-block-post-content .btn { font-size: 18px; line-height: 20.7px; }
+.wp-block-button .wp-block-button__link { line-height: 20.7px; }
+.je-sec__title { font-size: 40px; line-height: 52px; }
+@media (max-width: 767px) { .je-sec__title { font-size: 28px; line-height: 36px; } }
+
+/* dark: core paints every submenu surface white (higher specificity than the rule above) */
+.je-nav .wp-block-navigation__submenu-container { background-color: light-dark(var(--wp--preset--color--surface), var(--ds-c-surface, #1a2130)) !important; color: inherit; }
+.je-nav .wp-block-navigation__submenu-container .wp-block-navigation-item, .je-nav .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container { background-color: transparent !important; }
+:root[data-theme="dark"] .je-nav .wp-block-navigation__submenu-container a, :root[data-theme="dark"] .je-nav .wp-block-navigation__submenu-container .wp-block-navigation-item__label { color: var(--ds-c-fg, #c2c9d6); }
+:root[data-theme="dark"] .je-nav .wp-block-navigation__submenu-container > .has-child > .wp-block-navigation-item__content, :root[data-theme="dark"] .je-nav .wp-block-navigation__submenu-container > .has-child > .wp-block-navigation-item__content .wp-block-navigation-item__label { color: var(--ds-c-fg, #eef1f6); }
+
+/* dark: the lead-slider chips stay light, as on the source */
+:root[data-theme="dark"] .je-lead__card .je-badge a { background: var(--ds-c-bg, #f8f8ff); color: var(--ds-c-fg, #212529); }
+
+/* off-canvas drawer, as the source draws it: 300px panel from the right edge, a 56px band with the blue
+   "Sidebar Menu" label and a round close button, a Jost "Menu" heading, bold serif items on a 40px pitch with
+   the chevron in a 30px chip (measured on the source at 390). margin 0 beats the flow gap that pushed it 36px down. */
+.je-drawer { inset: 0 0 0 auto; margin: 0 !important; background: light-dark(var(--wp--preset--color--surface), var(--wp--preset--color--bg)); width: 300px; max-width: none; padding: 0; transform: translateX(100%); }
+.je-drawer__head { height: 56px; padding: 0 22px 0 36px; background: var(--wp--preset--color--bg); }
+.je-drawer__title { margin: 0; font-size: 16px; line-height: 24px; color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); }
+.je-drawer-close { width: 32px; height: 32px; background: light-dark(rgba(33,37,41,.08), rgba(238,241,246,.12)); font-size: 22px; }
+.je-drawer__menu { margin: 36px 0 0 !important; padding: 0 36px; font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); font-size: 24px; line-height: 31.2px; color: var(--wp--preset--color--fg-2); }
+.je-drawer-nav { padding: 6px 36px 36px; }
+.je-drawer-nav .wp-block-navigation__container { gap: 0; width: 100%; }
+.je-drawer-nav .wp-block-navigation-item { width: 100%; height: 40px; box-sizing: border-box; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.je-drawer-nav .wp-block-navigation-item__content, .je-drawer-nav .wp-block-navigation-item__label { font-weight: 600; font-size: 16px; line-height: 24px; color: var(--wp--preset--color--fg-2); }
+.je-drawer-nav .current-menu-item > .wp-block-navigation-item__content, .je-drawer-nav .current-menu-ancestor > .wp-block-navigation-item__content, .je-drawer-nav .current-menu-item > .wp-block-navigation-item__content .wp-block-navigation-item__label, .je-drawer-nav .current-menu-ancestor > .wp-block-navigation-item__content .wp-block-navigation-item__label { color: var(--ds-c-accent-text-hover, light-dark(rgb(26, 62, 237), rgb(125, 147, 255))); }
+.je-drawer-nav .wp-block-navigation__submenu-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin: 0; border-radius: var(--ds-btn-radius, 8px); background: var(--wp--preset--color--bg); }
+.je-drawer-nav .wp-block-navigation__submenu-icon svg { width: 12px; height: 12px; transform: rotate(-90deg); }
+.je-drawer > *, .je-drawer__head > * { margin-block: 0 !important; }
+.je-drawer__menu { margin-top: 36px !important; }
+.je-drawer-nav { margin-top: 0 !important; padding-top: 4.5px; }
+.je-drawer__head .je-theme-toggle { width: 20px; height: 20px; margin: 0 auto 0 2px !important; }
+.je-drawer__head .je-theme-toggle svg { width: 20px; height: 20px; }
+
+/* measured on the source at 390 only: sidebar section titles and article h2 carry a 31.2px line-height (desktop keeps 52px / 41.6px) */
+@media (max-width: 767px) { .je-side .je-sec__title { line-height: 31.2px; } h2.wp-block-heading.mt-5.mb-4 { font-size: 24px; line-height: 31.2px; } }
+#wp-skip-link { white-space: nowrap; }
+/* .wp-block-post-content h2 (0,1,1) beat the bare .je-sec__title rules above: sections live inside post content */
+.wp-block-post-content h2.je-sec__title, .wp-block-post-content h2.tracy-eyebrow { font-size: 40px; line-height: 52px; }
+.wp-block-post-content .je-side h2.je-sec__title { font-size: 24px; line-height: 31.2px; }
+@media (max-width: 767px) {
+	.wp-block-post-content h2.je-sec__title, .wp-block-post-content h2.tracy-eyebrow { font-size: 28px; line-height: 36px; }
+}
+
+/* the open panel marks the page being viewed in the accent colour, as the source's `current active` item does */
+.je-nav .wp-block-navigation__submenu-container .current-menu-item > a, .je-nav .wp-block-navigation__submenu-container .current-menu-item > a .wp-block-navigation-item__label { color: var(--ds-c-accent-text-hover, light-dark(rgb(26, 62, 237), rgb(125, 147, 255))) !important; }
+
+/* 1.0.1 — default-layout header below 992px: one 80px row as the source draws it (name left; theme toggle, search and the
+   hamburger right). The two-row header stays on the home and landing pages. */
+@media (max-width: 991px) {
+  body:not(.je-hdr-two) .je-header { background: var(--wp--preset--color--surface); }
+  body:not(.je-hdr-two) .je-header__inner { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; align-items: center; column-gap: 0; min-height: 80px; }
+  body:not(.je-hdr-two) .je-header__top, body:not(.je-hdr-two) .je-header__bottom, body:not(.je-hdr-two) .je-header__tools { display: contents; }
+  body:not(.je-hdr-two) .je-header .je-social, body:not(.je-hdr-two) .je-header .je-subscribe, body:not(.je-hdr-two) .je-header .je-nav { display: none; }
+  body:not(.je-hdr-two) .je-header .je-site-name { grid-column: 1; order: 0; text-align: left; font-size: 14px; letter-spacing: .08em; }
+  body:not(.je-hdr-two) .je-header .je-header__tools .je-theme-toggle { order: 1; }
+  body:not(.je-hdr-two) .je-header .je-search { order: 2; justify-self: end; }
+  body:not(.je-hdr-two) .je-header .je-drawer-toggle { order: 3; margin-right: -9px; }
+}
+
+/* 1.0.1 — the current section is blue on desktop as in the source: the item the visitor is on and the parent of the
+   page the visitor is on (Detail on /detail/layout-1), caret included. */
+.je-nav > .wp-block-navigation__container > .current-menu-item > a,
+.je-nav > .wp-block-navigation__container > .current-menu-ancestor > a,
+.je-nav > .wp-block-navigation__container > .current-menu-parent > a,
+.je-nav > .wp-block-navigation__container > .current-menu-ancestor > .wp-block-navigation__submenu-icon,
+.je-nav > .wp-block-navigation__container > .current-menu-parent > .wp-block-navigation__submenu-icon { color: var(--ds-c-accent-text-hover, light-dark(rgb(26, 62, 237), rgb(125, 147, 255))); }
+
+/* 1.0.1 — the caret is a real 24px button (touch target) and a click, a tap or the keyboard opens the panel (`.je-open`,
+   assets/js/wp-ja-essence.js) the way hover does. */
+.je-nav > .wp-block-navigation__container > .has-child > .wp-block-navigation__submenu-icon { display: inline-flex; align-items: center; justify-content: center; width: 24px; min-width: 24px; height: 24px; margin-left: -12px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; position: relative; z-index: 1; }
+.je-nav > .wp-block-navigation__container > .has-child > .wp-block-navigation__submenu-icon:focus-visible { outline: 2px solid currentColor; outline-offset: 0; border-radius: var(--ds-btn-radius, 4px); }
+.je-nav > .wp-block-navigation__container > li.je-open > .wp-block-navigation__submenu-container { visibility: visible !important; opacity: 1 !important; height: auto !important; width: auto !important; overflow: visible !important; }
+
+/* 1.0.1 — drawer submenus drill down as the source's do: choosing a parent replaces the list with its children under a
+   "back" row, three levels deep, in the colours of the drawer (light and dark). */
+.je-drawer-nav .wp-block-navigation__container { display: flex; flex-direction: column; align-items: stretch; }
+.je-drawer-nav .wp-block-navigation__submenu-container { display: none; position: static !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; min-width: 0 !important; height: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; border: 0 !important; border-radius: 0; box-shadow: none !important; background: transparent !important; transform: none !important; left: auto !important; right: auto !important; flex-direction: column; align-items: stretch; gap: 0; } /* ds-keep: submenu flush in the drawer, square on purpose */
+.je-drawer-nav li.wp-block-navigation-item { display: none; }
+.je-drawer-nav ul.je-d-cur > li.wp-block-navigation-item { display: flex; }
+.je-drawer-nav li.wp-block-navigation-item.je-d-path { display: block; height: auto; }
+.je-drawer-nav li.je-d-path > .wp-block-navigation-item__content, .je-drawer-nav li.je-d-path > .wp-block-navigation-submenu__toggle { display: none !important; }
+.je-drawer-nav li.je-d-path > .wp-block-navigation__submenu-container { display: flex; }
+.je-drawer-nav .wp-block-navigation__submenu-container .wp-block-navigation-item__content, .je-drawer-nav .wp-block-navigation__submenu-container .wp-block-navigation-item__label { color: var(--wp--preset--color--fg-2); }
+.je-drawer-nav .wp-block-navigation__submenu-container .current-menu-item > .wp-block-navigation-item__content, .je-drawer-nav .wp-block-navigation__submenu-container .current-menu-item > .wp-block-navigation-item__content .wp-block-navigation-item__label { color: var(--ds-c-accent-text-hover, light-dark(rgb(26, 62, 237), rgb(125, 147, 255))); }
+.je-drawer-nav .wp-block-navigation-submenu__toggle { border: 0; cursor: pointer; color: var(--wp--preset--color--fg-2); }
+.je-drawer-nav .je-drill-back, .je-drill-back { box-sizing: border-box; display: flex; align-items: center; gap: 8px; width: 100%; height: 40px; margin: 6px 0 0 !important; padding: 8px 16px; border: 1px solid var(--ds-c-border-soft, light-dark(rgba(0, 0, 0, 0.1), #2b3548)); border-radius: var(--ds-btn-radius, 8px); background: var(--wp--preset--color--bg); cursor: pointer; text-align: left; font: 600 14.4px/21.6px "Noto Serif", serif; text-transform: uppercase; color: var(--wp--preset--color--fg-2); }
+.je-drill-back[hidden] { display: none; }
+/* the chevron is a CSS shape (source: Font Awesome chevron-left, 8x12, #adb5bd), not a character in the text */
+.je-drill-arrow { position: relative; flex: none; width: 8px; height: 12px; }
+.je-drill-arrow::before { content: ""; position: absolute; top: 2px; left: 3px; width: 6px; height: 6px; border-left: 2px solid var(--ds-c-border, #adb5bd); border-bottom: 2px solid var(--ds-c-border, #adb5bd); transform: rotate(45deg); }
+.je-drawer-nav .wp-block-navigation-submenu__toggle:focus-visible, .je-drill-back:focus-visible { outline: 2px solid var(--ds-c-focus-ring, light-dark(rgb(26, 62, 237), rgb(125, 147, 255))); outline-offset: 2px; }
+
+/* 1.0.1 — the one-row header at 992-1199px: the menu steps down so the Subscribe button keeps one line (source: 140x48 at
+   y 37), and at 1200px+ its stacked variant is 69px tall with a 20px icon (source: y 27). */
+.je-subscribe .wp-block-button__link { white-space: nowrap; }
+@media (min-width: 992px) and (max-width: 1199px) {
+  body:not(.je-hdr-two) .je-header .je-subscribe .wp-block-button__link { padding: 11px 18px; }
+}
+@media (min-width: 1200px) {
+  body:not(.je-hdr-two) .je-header .je-subscribe .wp-block-button__link { padding: 11px 28px; line-height: 20.7px; }
+  body:not(.je-hdr-two) .je-header .je-subscribe .wp-block-button__link::before { width: 20px; height: 20px; }
+}
+/* the drilled list sits right under its back row */
+.je-drawer-nav > *, .je-drawer-nav .wp-block-navigation__container, .je-drawer-nav .wp-block-navigation__submenu-container { margin-block: 0 !important; }
+.je-drawer-nav .wp-block-navigation__container { padding: 0; }
+nav.je-drawer-nav { display: flex; flex-direction: column; align-items: stretch !important; gap: 0 !important; }
+
+/* 1.0.3 — the header's right-hand tools as the source places them (measured on /detail/layout-1 at 390, 768, 992+ and 1440).
+   The search icon is 20px, centred on the toggle's line; the theme toggle is 24px below 992px (38px from 992px) and the
+   items sit 11.2px apart; from 768px the row is 123px high and keeps the Subscribe button (140x48 at y 37). */
+.je-search { position: relative; }
+.je-search .wp-block-search__inside-wrapper { display: flex; align-items: center; }
+/* the opened field floats over the menu to the left of the icon (as the source's does) and never moves the tools */
+.je-header .je-search .wp-block-search__input { position: absolute; right: 100%; top: 50%; transform: translateY(-50%); z-index: 5; }
+.je-search .wp-block-search__button { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-height: 0; margin: 0; line-height: 1; }
+.je-search .wp-block-search__button svg { width: 20px; height: 20px; min-width: 20px; min-height: 20px; fill: none; }
+@media (max-width: 991px) {
+  body:not(.je-hdr-two) .je-header .je-header__tools .je-theme-toggle { width: 24px; height: 24px; margin-right: 11.1px; }
+  body:not(.je-hdr-two) .je-header .je-search .wp-block-search__button { width: 22px; height: 38px; border-radius: var(--ds-btn-radius, 0); }
+  body:not(.je-hdr-two) .je-header .je-search { margin-right: 1.1px; }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  body:not(.je-hdr-two) .je-header__inner { min-height: 123px; grid-template-columns: minmax(0, 1fr) auto auto auto auto; }
+  body:not(.je-hdr-two) .je-header .je-search { margin-right: 11.2px; }
+  body:not(.je-hdr-two) .je-header .je-subscribe { display: block; order: 3; margin: 0 1px 0 0; }
+  body:not(.je-hdr-two) .je-header .je-subscribe .wp-block-button__link { padding: 11px 18px; font-size: 18px; line-height: 24px; flex-direction: row; gap: 8px; }
+  body:not(.je-hdr-two) .je-header .je-drawer-toggle { order: 4; }
+}
+@media (min-width: 992px) {
+  body:not(.je-hdr-two) .je-header .je-search .wp-block-search__button { width: 38px; height: 38px; }
+  body:not(.je-hdr-two) .je-header .je-search { margin: 0 -12px 0 -18px; }
+}
+/* from 1400px the source centres its menu: "Contact" (a link padded 18px each side) ends 63px before the toggle */
+@media (min-width: 1400px) {
+  body:not(.je-hdr-two) .je-header .je-nav { margin-right: 3.5px; }
+  body:not(.je-hdr-two) .je-header .je-nav > .wp-block-navigation__container > li:last-child > a { padding: 8px 0 8px 18px; margin-left: 0; }
+}
+
+@media (max-width: 767px) { .je-trend .je-trend__title { font-size: 22px; line-height: 28.6px; } }
+
+/* 1.0.3 lens fixes — footer as the source draws it (measured at 1440 and 390): 72px band (36px below 768px), a 1164px-wide
+   info row of two 18px-padded columns (brand 1/3, action right), a hairline under it, the menu with no row gap and the
+   copyright at 14/21. The action column is as wide as its caption; the button fills it. */
+.je-footer { padding: 72px 0; }
+.je-footer__inner { padding: 0 18px; }
+.je-footer__info { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 0; margin: 0 -18px 36px; padding: 0 0 36px; border-bottom: 1px solid var(--ds-c-border-soft, rgba(0, 0, 0, 0.1)); }
+.je-footer__brand { box-sizing: border-box; padding: 18px; flex: 0 0 33.3333%; max-width: 33.3333%; }
+.je-footer__brand .je-footer__logo { margin: 0 0 16px !important; }
+.je-footer__action { box-sizing: content-box; width: max-content; max-width: calc(100% - 36px); margin: 0 0 0 auto !important; padding: 18px; text-align: center; display: block; }
+.je-footer__action .wp-block-buttons { display: block; margin: 0 0 8px !important; }
+.je-footer__action .wp-block-button { display: block; width: 100%; }
+.je-footer__action .wp-block-button__link { display: block; width: 100%; box-sizing: border-box; text-align: center; }
+.je-footer__small { margin: 0 !important; }
+.je-footer-nav { margin-top: 0; }
+.je-footer-nav .wp-block-navigation__container { gap: 0 36px; justify-content: center; }
+.je-footer__copy { font-size: 14px; line-height: 21px; margin: 16px 0 0; }
+@media (max-width: 991px) { .je-footer__brand { flex-basis: 50%; max-width: 50%; } }
+@media (max-width: 767px) {
+  .je-footer { padding: 36px 0; }
+  .je-footer__info { margin-bottom: 18px; padding-bottom: 18px; justify-content: center; }
+  .je-footer__brand { flex-basis: 100%; max-width: 100%; text-align: center; }
+  .je-footer__brand .wp-block-site-logo { display: flex; justify-content: center; }
+  .je-footer__action { margin: 0 auto !important; }
+  .je-footer__info { flex-direction: column; align-items: stretch; }
+  .je-footer__action { align-self: center; }
+}
+.je-footer__small, .je-footer__tagline { font-size: 14px; line-height: 21px; }
+.je-footer__info { margin-top: -17px !important; }
+.je-footer__small { display: block; }
+
+/* 1.0.7 — sub-level rows of the drawer as the source draws them: 16px regular, body grey, 12px padding, a hairline under each row; the
+   current one stays bold blue. */
+.je-drawer-nav .wp-block-navigation__submenu-container > .wp-block-navigation-item { height: 49px; padding: 0; border-bottom: 1px solid var(--ds-c-border-soft, light-dark(rgba(0, 0, 0, 0.1), #2b3548)); }
+.je-drawer-nav .wp-block-navigation__submenu-container > .wp-block-navigation-item > .wp-block-navigation-item__content { box-sizing: border-box; width: 100%; padding: 12px 0 !important; }
+.je-drawer-nav .wp-block-navigation__submenu-container .wp-block-navigation-item__content, .je-drawer-nav .wp-block-navigation__submenu-container .wp-block-navigation-item__label { font-weight: 400; color: var(--wp--preset--color--fg); }
+.je-drawer-nav .wp-block-navigation__submenu-container .current-menu-item > .wp-block-navigation-item__content, .je-drawer-nav .wp-block-navigation__submenu-container .current-menu-item > .wp-block-navigation-item__content .wp-block-navigation-item__label { font-weight: 600; color: var(--ds-c-accent-text-hover, light-dark(rgb(26, 62, 237), rgb(125, 147, 255))); }
+
+/* 1.0.7 — the open drawer pushes the page 300px to the left and dims what is left beside the panel (source: .c-offcanvas-content-wrap
+   translate3d(-300px), .c-offcanvas-bg rgba(0,0,0,.68)). The script moves the panel out of the header to the end of <body>, so it stays fixed while the page moves. */
+.wp-site-blocks { transition: transform 0.3s cubic-bezier(0.4, 0, 0.6, 1); }
+html.je-drawer-open .wp-site-blocks { transform: translateX(-300px); }
+html.je-drawer-open::after { content: ""; position: fixed; inset: 0; z-index: 999; background: rgba(0, 0, 0, 0.68); animation: je-drawer-dim 0.3s ease; }
+@keyframes je-drawer-dim { from { background: rgba(0, 0, 0, 0); } }
+@media (prefers-reduced-motion: reduce) { .wp-site-blocks { transition: none; } html.je-drawer-open::after { animation: none; } }

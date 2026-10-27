@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1193-changelog-0-6-media",
+  "kind": "fix",
+  "title": "The 0.6 changelog page has one still or clip under every Highlight, and a markdown link in a Highlight ships to the app as plain text",
+  "pr": 1193,
+  "area": "docs/changelog",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test on packages/desktop/tracy-desktop/test/release-notes-page.test.mjs (a markdown link in the notes ships as its text).",
+    "S2: Run node --test on apps/tracy-docs/test/changelog-desktop.test.mjs and apps/tracy-docs/test/media.test.mjs (the committed 0.6 page and its media under public/changelog/0.6/).",
+    "S3: Run the stable gate dry run script tasks/evidence/desktop-update-policy/media/0.6/check-stable-gate.mjs against the committed 0.6 page."
+  ],
+  "expect": [
+    "S1: releaseNotesFromPage turns `[docs.tracy.ai](https://docs.tracy.ai/)` into `docs.tracy.ai`, still drops media lines and the Desktop only badge; every other release-notes-page test stays green.",
+    "S2: every Highlight of 0.6.md has one media line; the four media files (two mp4+gif+poster sets, two webp stills) exist, fit the limits and have their media.json entry with provenance; no unused file.",
+    "S3: notesForRelease for variant stable, version 0.6.0 lists no uncovered Highlight."
+  ],
+  "selectors": {
+    "page": "apps/tracy-docs/src/content/docs/changelog/desktop/0.6.md, ## Highlights",
+    "media": "apps/tracy-docs/public/changelog/0.6/{quit-to-install,first-run-setup}.{mp4,gif}, posters/, whats-new.webp, docs-home.webp, media.json",
+    "notes": "packages/desktop/tracy-desktop/build/release-notes-page.mjs withoutLinks"
+  },
+  "fence": "withoutLinks runs only on the shipped notes (releaseNotesFromPage), after withoutBadge; the page keeps its links; the stable media gate reads the page as committed",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/desktop/tracy-desktop/test/release-notes-page.test.mjs",
+      "apps/tracy-docs/test/changelog-desktop.test.mjs",
+      "apps/tracy-docs/test/media.test.mjs"
+    ]
+  }
+}

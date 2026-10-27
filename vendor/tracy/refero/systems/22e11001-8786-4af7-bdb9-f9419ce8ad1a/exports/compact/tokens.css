@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-ink-black: #231f20;
+  --color-cream-paper: #f0ede7;
+  --color-pure-white: #ffffff;
+  --color-blast-red: #ff634b;
+  --color-true-black: #000000;
+
+  /* Typography — Font Families */
+  --font-neue-haas-grotesk-display: 'Neue Haas Grotesk Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtstandard-m: 'GTStandard-M', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

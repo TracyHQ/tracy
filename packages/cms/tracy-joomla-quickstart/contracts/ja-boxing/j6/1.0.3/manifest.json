@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-boxing/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_boxing",
+  "quickstart": {
+    "product": "ja-boxing",
+    "platform": "joomla",
+    "version": "1.0.3",
+    "cms": {
+      "version": "6.1.1"
+    },
+    "template": "ja_boxing",
+    "parts": {
+      "installer": {
+        "file": "ja-boxing-j6-quickstart-1.0.3.zip",
+        "bytes": 67417580,
+        "sha256": "d6f828864450ca980090b04b9e2a92d01ae712f294ac37f5ac333890c0ef7bc4"
+      }
+    },
+    "createdAt": "2026-10-24T15:22:47.230Z",
+    "builtFrom": {
+      "from": "quickstart/ja-boxing/j6@1.0.2",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 85 files replaced (language/en-GB/en-GB.tpl_ja_boxing.ini, modules/mod_ja_acm/AGENTS.md, modules/mod_ja_acm/CLAUDE.md, templates/ja_boxing/AGENTS.md, templates/ja_boxing/CLAUDE.md, templates/ja_boxing/error.php, templates/ja_boxing/offline.php, modules/mod_ja_acm/docs, plugins/system/t4, templates/ja_boxing/css, templates/ja_boxing/docs, templates/ja_boxing/html, templates/ja_boxing/scss, components/com_content/tmpl, templates/ja_boxing/images, templates/ja_boxing/language, templates/ja_boxing/acm); demo data: 7 statements appended; demo content: 32 edits (article-19, article-20, article-21, article-22, article-23, article-24, article-25, article-26, article-27, article-3, article-4, article-5, article-6, article-7, article-8, article-9, article-10, article-11, article-12, article-13, article-14, article-15, article-16, module-156, module-160, module-161, module-163, module-166, module-178, module-181, category-10, module-182); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-boxing/j6"
+  },
+  "coworkContractVersion": "0.24.60",
+  "mode": "content-recommendation"
+}

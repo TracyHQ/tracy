@@ -1,0 +1,14 @@
+{
+  "root": false,
+  "extends": "//",
+  "files": {
+    "includes": [
+      "**",
+      "!result.schema.json",
+      "!cross-audit-inventory.schema.json",
+      "!cross-audit-journeys.schema.json",
+      "!cross-audit-coverage.schema.json",
+      "!cross-audit-automation-run.schema.json"
+    ]
+  }
+}

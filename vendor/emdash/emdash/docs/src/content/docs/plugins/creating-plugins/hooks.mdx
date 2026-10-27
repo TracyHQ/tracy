@@ -1,0 +1,502 @@
+---
+title: Hooks
+description: Run code in response to content, media, lifecycle, and page-render events.
+---
+
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Hooks let plugins run code in response to events. All hooks receive an event object and the plugin context, and they're declared at plugin definition time — there's no dynamic registration at runtime.
+
+This page covers sandboxed plugins. Native plugins use the same hook names and event types, but they use the in-process hook pipeline and can additionally register `page:fragments`. Sandboxed save rejection and isolated-runner failure behavior are described below.
+
+## Hook signature
+
+Every hook handler takes two arguments:
+
+```typescript
+async (event, ctx) => ReturnType;
+```
+
+- `event` — data about what just happened (content being saved, media uploaded, lifecycle transition, etc.)
+- `ctx` — the [`PluginContext`](/plugins/creating-plugins/your-first-plugin/) with storage, KV, logging, and capability-gated APIs
+
+Assigning the definition to a `SandboxedPlugin`-typed constant infers `event` from the hook name (the full canonical event type) and `ctx` as `PluginContext`, so handlers need no parameter annotations. Export that constant as default. To reference an event type by name in a helper, import it from `emdash/plugin`.
+
+## Hook configuration
+
+A hook can be declared as a bare handler or wrapped in a config object. Prefer the bare form unless the plugin also supports deliberate in-process execution and needs the metadata described below.
+
+<Tabs>
+<TabItem label="Simple">
+```typescript
+hooks: {
+	"content:afterSave": async (event, ctx) => {
+		ctx.log.info("Content saved");
+	},
+},
+```
+</TabItem>
+<TabItem label="Full config">
+```typescript
+hooks: {
+	"content:afterSave": {
+		priority: 100,
+		timeout: 5000,
+		handler: async (event, ctx) => {
+			ctx.log.info("Content saved");
+		},
+	},
+},
+```
+</TabItem>
+</Tabs>
+
+### Configuration options
+
+| Option         | Type                    | Default   | Description                                                                                  |
+| -------------- | ----------------------- | --------- | -------------------------------------------------------------------------------------------- |
+| `priority`     | `number`                | `100`     | Execution order. Lower numbers run first.                                                    |
+| `timeout`      | `number`                | `5000`    | Maximum execution time in milliseconds.                                                      |
+| `exclusive`    | `boolean`               | `false`   | Only one plugin can be the active provider. Used for `email:deliver` and `comment:moderate`. |
+| `handler`      | `function`              | —         | The hook handler function. Required.                                                         |
+
+<Aside type="caution" title="Isolated runners use their own ordering and timeout">
+	The authoring type also accepts `dependencies` and `errorPolicy`, and the in-process adapter uses all
+	of these configuration fields. An isolated sandbox runner currently invokes sandboxed plugins in load
+	order and applies its per-invocation wall-time limit. Do not use hook metadata to coordinate two
+	sandboxed plugins or to recover from an isolated hook failure.
+</Aside>
+
+## Required capabilities
+
+Several hooks expose protected data or can change an operation. EmDash registers them only when the manifest declares the matching capability:
+
+| Hooks | Capability | Reason |
+| --- | --- | --- |
+| `content:beforeSave` | `content:write` | The hook can replace submitted content. |
+| `content:beforePublish`, `content:beforeSchedule`, `content:beforeUnpublish` | `hooks.content-policy:register` | The hooks can reject publication state changes. |
+| Other `content:*` hooks | `content:read` | Their events expose content or identify an entry. |
+| `media:beforeUpload` | `media:write` | The hook can replace upload metadata or stop the upload. |
+| `media:afterUpload` | `media:read` | Its event exposes the stored media item. |
+| `email:beforeSend`, `email:afterSend` | `hooks.email-events:register` | The hooks inspect email lifecycle events. |
+| `email:deliver` | `hooks.email-transport:register` | The hook becomes an email transport provider. |
+| All `comment:*` hooks | `users:read` | Comment events can contain author contact information and request metadata. |
+| `page:fragments` | `hooks.page-fragments:register` | The hook injects first-party page content and is native-only. |
+
+Lifecycle hooks, `cron`, and `page:metadata` have no registration capability. Declare the listed capability even when a hook only reads its event and does not call the matching `ctx` API. The declaration gives the operator an accurate consent prompt, gates the `ctx` API, and is required when the plugin runs in process. [Capabilities and security](/plugins/creating-plugins/capabilities/) explains the runtime effect.
+
+## Lifecycle hooks
+
+Run during plugin installation, activation, deactivation, and removal.
+
+### `plugin:install`
+
+Runs once when the plugin is first added to a site.
+
+This example assumes the manifest declares an `items` storage collection:
+
+```typescript
+"plugin:install": async (_event, ctx) => {
+	ctx.log.info("Installing plugin...");
+	await ctx.settings.set("enabled", true);
+	await ctx.storage.items.put("default", { name: "Default Item" });
+},
+```
+
+**Event:** `{}` — **Returns:** `Promise<void>`
+
+### `plugin:activate`
+
+Runs when the plugin is enabled (after install or when re-enabled).
+
+```typescript
+"plugin:activate": async (_event, ctx) => {
+	ctx.log.info("Plugin activated");
+},
+```
+
+**Event:** `{}` — **Returns:** `Promise<void>`
+
+### `plugin:deactivate`
+
+Runs when the plugin is disabled (but not removed).
+
+```typescript
+"plugin:deactivate": async (_event, ctx) => {
+	ctx.log.info("Plugin deactivated");
+},
+```
+
+**Event:** `{}` — **Returns:** `Promise<void>`
+
+### `plugin:uninstall`
+
+Runs when the plugin is removed from a site.
+
+```typescript
+"plugin:uninstall": async (event, ctx) => {
+	ctx.log.info("Uninstalling plugin...");
+	if (event.deleteData) {
+		while (true) {
+			const result = await ctx.storage.items.query({ limit: 100 });
+			if (result.items.length === 0) break;
+			await ctx.storage.items.deleteMany(result.items.map((item) => item.id));
+		}
+	}
+},
+```
+
+**Event:** `{ deleteData: boolean }` — **Returns:** `Promise<void>`
+
+<Aside type="caution">
+	Be conservative in `plugin:uninstall`. Default to preserving data — users may reinstall. Only delete when `event.deleteData` is `true`.
+</Aside>
+
+## Content hooks
+
+Run during create, update, and delete operations on site content.
+
+### `content:beforeSave`
+
+Runs before content is saved. Return modified content, a sandbox hook error result, or `void` to leave it unchanged.
+
+To reject a save from the sandbox, return a versioned hook result with a `SAVE_REJECTED` error. Set `reason` to plain text between 1 and 500 characters. EmDash identifies the plugin and shows the reason to the editor. Empty, overlong, malformed, and unknown error results fail the save with a generic hook error.
+
+```typescript
+"content:beforeSave": async (event, ctx) => {
+	const { content } = event;
+	if (typeof content.title !== "string" || content.title.trim() === "") {
+		return {
+			__emdashSandboxHookResult: true,
+			version: 1,
+			error: {
+				code: "SAVE_REJECTED",
+				reason: "Add a title before saving.",
+			},
+		};
+	}
+
+	content.title = content.title.trim();
+
+	return content;
+},
+```
+
+Do not put HTML in `reason`. The admin renders the value as text.
+
+From the host process, throw `ContentSaveRejectedError` (exported from `emdash`) instead. The API returns `SAVE_REJECTED` with your message. Any other exception from either execution mode fails the save with a generic `CONTENT_HOOK_ERROR` response.
+
+**Event:** `{ content, collection, isNew, id, actor }` — **Returns:** modified content, a sandbox hook error result, or `void`. On an update, `id` is the ID of the existing item and `content` holds only the submitted field values; load the stored item with `ctx.content.get(event.collection, event.id)`. The entry's slug is not part of `content`, and a `slug` key returned from the hook fails validation as an unknown field. Authenticated REST, visual editing, and MCP saves include `actor.id` and the numeric `actor.role`. Internal writes without an authenticated user omit `actor`.
+
+### `content:afterSave`
+
+Runs after content is successfully saved. Use for side effects like notifications, logging, or external syncs.
+
+```typescript
+"content:afterSave": async (event, ctx) => {
+	const contentId = String(event.content.id);
+	ctx.log.info(`${event.isNew ? "Created" : "Updated"} ${event.collection}/${contentId}`, {
+		actorId: event.actor?.id,
+	});
+
+	if (ctx.http) {
+		await ctx.http.fetch("https://api.example.com/webhook", {
+			method: "POST",
+			body: JSON.stringify({ event: "content:save", id: contentId }),
+		});
+	}
+},
+```
+
+**Event:** `{ content, collection, isNew, actor }` — **Returns:** `Promise<void>`. Authenticated saves include the same optional `actor` snapshot as `content:beforeSave`.
+
+### `content:beforeDelete`
+
+Runs before content is deleted. Return `false` to cancel; `true` or `void` allows it.
+
+```typescript
+"content:beforeDelete": async (event, ctx) => {
+	if (event.collection === "pages" && event.id === "home") {
+		ctx.log.warn("Cannot delete home page");
+		return false;
+	}
+	return true;
+},
+```
+
+**Event:** `{ id, collection, permanent: false }` — **Returns:** `boolean | void`
+
+This hook runs before an entry is moved to trash. Removing an entry permanently from trash does not run `content:beforeDelete` again.
+
+### `content:afterDelete`
+
+Runs after content is successfully deleted.
+
+```typescript
+"content:afterDelete": async (event, ctx) => {
+	await ctx.storage.cache.delete(`${event.collection}:${event.id}`);
+},
+```
+
+**Event:** `{ id, collection, permanent }` — **Returns:** `Promise<void>`. `permanent` is `false` when the entry was moved to trash and `true` when the entry was removed permanently.
+
+Declare `hooks.content-policy:register` to inspect and reject publication, scheduling, or unpublication without receiving content read, write, or publication-action access.
+
+Return `void` to allow the action or `{ cancel: true, reason }` to reject it. The reason must contain 1–500 plain-text characters. Invalid decisions and unexpected errors abort by default without exposing the exception. Explicit rejections return `PUBLISH_REJECTED`, `SCHEDULE_REJECTED`, or `UNPUBLISH_REJECTED`.
+
+All three events contain `{ content, collection, origin, actor? }`. `origin.source` is `api`, `mcp`, `visual-editor`, `plugin`, `scheduler`, or `system`; plugin origins also contain `pluginId`. Authenticated human actions include `actor.id`, numeric `actor.role`, and the matching `actor.source`. EmDash accepts the `visual-editor` origin only from the signed, short-lived action token embedded in an authenticated toolbar render; ordinary API requests cannot select their origin.
+
+Publish and schedule events expose the effective draft in `content.data` and the staged slug in `content.slug`. Unpublish events expose the currently live content that the action would remove.
+
+### `content:beforePublish`
+
+The following hook requires an approval marker before content can become live:
+
+```typescript title="src/plugin.ts"
+"content:beforePublish": async (event) => {
+	const data = event.content.data;
+	const approvalStatus =
+		typeof data === "object" && data !== null && "approval_status" in data
+			? data.approval_status
+			: undefined;
+	if (approvalStatus !== "approved") {
+		return { cancel: true, reason: "Approve this entry before publishing." };
+	}
+},
+```
+
+This hook runs before manual, MCP, plugin, system, and scheduled publication. Scheduled content is checked again when its publication time arrives. A scheduler rejection unschedules the entry, stores the public-safe reason, and lists the affected entry on the dashboard instead of retrying the same permanent rejection on every scheduler tick. A successful schedule, publish, or delete clears the record. An administrator can dismiss a stale record when the entry or policy plugin is no longer available.
+
+### `content:beforeSchedule`
+
+Runs before an entry receives a publication time. The event also contains `scheduledAt`.
+
+There is no `content:beforeUnschedule` hook. An administrator can always cancel a future publication.
+
+### `content:beforeUnpublish`
+
+Runs before live content is removed.
+
+### `content:afterPublish`
+
+Runs after content is promoted from draft to live. Requires `content:read` capability.
+
+**Event:** `{ content, collection }` — **Returns:** `Promise<void>`
+
+### `content:afterUnpublish`
+
+Runs after content is reverted from live to draft. Requires `content:read` capability.
+
+**Event:** `{ content, collection }` — **Returns:** `Promise<void>`
+
+### `content:afterRestore`
+
+Runs after trashed content is restored. Requires `content:read` capability.
+
+**Event:** `{ content, collection }` — **Returns:** `Promise<void>`
+
+### `content:afterSchedule`
+
+Runs after content is scheduled for future publishing. Requires `content:read` capability.
+
+**Event:** `{ content, collection }` — **Returns:** `Promise<void>`
+
+### `content:afterUnschedule`
+
+Runs after scheduled content is unscheduled. Requires `content:read` capability.
+
+**Event:** `{ content, collection }` — **Returns:** `Promise<void>`
+
+## Media hooks
+
+### `media:beforeUpload`
+
+Runs before a file is uploaded. Return modified file metadata or throw to cancel.
+
+```typescript
+"media:beforeUpload": async (event, ctx) => {
+	if (!event.file.type.startsWith("image/")) {
+		throw new Error("Only images are allowed");
+	}
+	if (event.file.size > 10 * 1024 * 1024) {
+		throw new Error("File too large");
+	}
+	return { ...event.file, name: `${Date.now()}-${event.file.name}` };
+},
+```
+
+**Event:** `{ file: { name, type, size } }` — **Returns:** modified file or `void`
+
+### `media:afterUpload`
+
+Runs after a file is successfully uploaded.
+
+**Event:** `{ media: { id, filename, mimeType, size, url, createdAt } }` — **Returns:** `Promise<void>`
+
+## Public-page hooks
+
+These let plugins contribute to rendered public pages. Templates opt in by including the `<EmDashHead>`, `<EmDashBodyStart>`, and `<EmDashBodyEnd>` components from `emdash/ui`.
+
+### `page:metadata`
+
+Contributes typed metadata to `<head>` — meta tags, OpenGraph properties, allowlisted `<link>` rels, and JSON-LD. **Available to both sandboxed and native plugins.** Core validates, deduplicates, and renders the contributions; plugins return structured data, never raw HTML.
+
+```typescript
+"page:metadata": async (event, ctx) => {
+	if (event.page.kind !== "content") return null;
+
+	return {
+		kind: "jsonld",
+		id: `schema:${event.page.content?.collection}:${event.page.content?.id}`,
+		graph: {
+			"@context": "https://schema.org",
+			"@type": "BlogPosting",
+			headline: event.page.pageTitle ?? event.page.title,
+			description: event.page.description,
+		},
+	};
+},
+```
+
+**Event:**
+
+```typescript
+{
+	page: {
+		url: string;
+		path: string;
+		locale: string | null;
+		kind: "content" | "custom";
+		pageType: string;
+		title: string | null;
+		pageTitle?: string | null;
+		description: string | null;
+		canonical: string | null;
+		image: string | null;
+		content?: { collection: string; id: string; slug: string | null };
+		seo?: {
+			ogTitle?: string | null;
+			ogDescription?: string | null;
+			ogImage?: string | null;
+			robots?: string | null;
+		};
+		articleMeta?: {
+			publishedTime?: string | null;
+			modifiedTime?: string | null;
+			author?: string | null;
+		};
+		siteName?: string;
+		breadcrumbs?: Array<{ name: string; url: string }>;
+		siteUrl?: string;
+	}
+}
+```
+
+**Returns:** `PageMetadataContribution | PageMetadataContribution[] | null`
+
+**Contribution kinds:**
+
+| Kind       | Renders                                            | Dedupe key                                            |
+| ---------- | -------------------------------------------------- | ----------------------------------------------------- |
+| `meta`     | `<meta name="..." content="...">`                  | `key` or `name`                                       |
+| `property` | `<meta property="..." content="...">`              | `key` or `property`                                   |
+| `link`     | `<link rel="<allowed value>" href="...">`           | canonical: singleton; alternate: `key` or `hreflang`  |
+| `jsonld`   | `<script type="application/ld+json">`              | `id` (if present)                                     |
+
+First contribution wins for any dedupe key. `<EmDashHead>` composes contributions in the order plugins → site settings → template-provided base metadata, so plugin contributions override everything below them. On content pages, the entry's SEO panel values are folded into the page context before the base metadata is generated — they replace the template-provided fields (and are what your hook sees on the page context), while plugin contributions still win via first-wins dedup. Link `rel` is restricted to a security-locked allowlist (`canonical`, `alternate`, `author`, `license`, `nlweb`, `site.standard.document`); `href` must be HTTP or HTTPS.
+
+### `page:fragments`
+
+Contributes raw HTML, scripts, or stylesheets to page insertion points. **Native plugins only.**
+
+Sandboxed plugins can't use this hook because its output runs as first-party code in the visitor's browser, outside any sandbox boundary. For sandbox-safe page contributions, use `page:metadata`. See [Native plugins: page fragments](/plugins/creating-native-plugins/page-fragments/) if you need this surface.
+
+## Hook execution order
+
+When a sandboxed-format plugin runs in process, hooks use the shared hook pipeline:
+
+1. Hooks with lower `priority` values run first.
+2. For equal priorities, hooks run in plugin registration order.
+3. Hooks with `dependencies` wait for those plugins to complete.
+
+```typescript
+// Plugin A
+"content:afterSave": { priority: 50, handler: async () => {} }
+
+// Plugin B
+"content:afterSave": { priority: 100, handler: async () => {} }
+
+// Plugin C
+"content:afterSave": {
+	priority: 200,
+	dependencies: ["plugin-a"],   // waits for A even if its priority would normally be later
+	handler: async () => {},
+}
+```
+
+An isolated sandbox runner invokes active sandboxed plugins in load order. Keep hooks independent: do not require one sandboxed plugin to run before another.
+
+## Error handling
+
+Sandboxed hook failures depend on when the hook runs:
+
+- A thrown `content:beforeSave` error fails the save with `CONTENT_HOOK_ERROR`. Return the documented `SAVE_REJECTED` envelope when the editor should see a specific validation reason.
+- Returning `false` from `content:beforeDelete` stops the move to trash. If that hook throws, EmDash logs the error and continues the deletion.
+- Content after-hooks run after the operation succeeds. Their errors are logged and cannot roll the operation back.
+- Lifecycle, media, email, and comment hooks follow the contract of their originating operation. Use the [Hook reference](/reference/hooks/) to check a specific return value before relying on failure behavior.
+
+An in-process plugin can use `errorPolicy: "abort"` or `"continue"` in the full config form. That setting is not a portable recovery control for an isolated sandboxed plugin.
+
+## Timeouts
+
+The in-process hook pipeline defaults to 5,000 ms and accepts a longer `timeout` in the full config form:
+
+```typescript
+"content:afterSave": {
+	timeout: 30000,
+	handler: async (event, ctx) => {
+		// Long-running operation
+	},
+},
+```
+
+<Aside type="caution">
+	Isolated runners use their own invocation limit instead of this hook value. The supplied Cloudflare
+	and Node.js runners default to 30 seconds of wall time, and the Cloudflare runner can stop work sooner
+	when it reaches its CPU or subrequest limit. See [Capabilities and
+	security](/plugins/creating-plugins/capabilities/).
+</Aside>
+
+## Hook reference
+
+| Hook                     | Trigger                       | Return                               | Exclusive |
+| ------------------------ | ----------------------------- | ------------------------------------ | --------- |
+| `plugin:install`         | First plugin installation     | `void`                               | No        |
+| `plugin:activate`        | Plugin enabled                | `void`                               | No        |
+| `plugin:deactivate`      | Plugin disabled               | `void`                               | No        |
+| `plugin:uninstall`       | Plugin removed                | `void`                               | No        |
+| `content:beforeSave`     | Before content save           | Modified content, rejection envelope, or `void` | No        |
+| `content:afterSave`      | After content save            | `void`                               | No        |
+| `content:beforeDelete`   | Before content moves to trash | `false` to cancel, else allow        | No        |
+| `content:afterDelete`    | After trash or permanent delete | `void`                             | No        |
+| `content:afterPublish`   | After content publish         | `void`                               | No        |
+| `content:afterUnpublish`  | After content unpublish       | `void`                               | No        |
+| `content:afterRestore`    | After content restore         | `void`                               | No        |
+| `content:afterSchedule`   | After content schedule        | `void`                               | No        |
+| `content:afterUnschedule` | After content unschedule      | `void`                               | No        |
+| `media:beforeUpload`      | Before file upload            | Modified file info or `void`         | No        |
+| `media:afterUpload`      | After file upload             | `void`                               | No        |
+| `cron`                   | Scheduled task fires          | `void`                               | No        |
+| `email:beforeSend`       | Before email delivery         | Modified message, `false`, or `void` | No        |
+| `email:deliver`          | Deliver email via transport   | `void`                               | Yes       |
+| `email:afterSend`        | After email delivery          | `void`                               | No        |
+| `comment:beforeCreate`   | Before comment stored         | Modified event, `false`, or `void`   | No        |
+| `comment:moderate`       | Decide comment status         | `{ status, reason? }`                | Yes       |
+| `comment:afterCreate`    | After comment stored          | `void`                               | No        |
+| `comment:afterModerate`  | Admin changes comment status  | `void`                               | No        |
+| `byline:afterSave`       | After byline saved            | `void`                               | No        |
+| `byline:afterDelete`     | After byline deleted          | `void`                               | No        |
+| `page:metadata`          | Page render                   | Contributions or `null`              | No        |
+| `page:fragments`         | Page render (native only)     | Contributions or `null`              | No        |
+
+See the [Hook Reference](/reference/hooks/) for complete event types and handler signatures.

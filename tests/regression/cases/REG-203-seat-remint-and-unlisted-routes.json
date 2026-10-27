@@ -1,0 +1,47 @@
+{
+  "id": "REG-203",
+  "kind": "fix",
+  "title": "dsh-passwords 2.7.7: minting a seat again keeps its open tabs working, and a seat's request to an unlisted route never reaches dsh",
+  "pr": 952,
+  "area": "dsh-passwords/seat",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In vendor/tracy/dsh-passwords run: npm ci",
+    "S2: In vendor/tracy/dsh-passwords run: node --import tsx --test --test-timeout=120000 test/tracy/seat-remint.test.ts test/tracy/seat-unknown-routes.test.ts test/tracy/request-path.test.ts; then node --import tsx --test test/tracy/seat-tool-guard.test.ts",
+    "S3: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "S2: 0 failures, 0 skipped.",
+    "'L1: minting the same seat again leaves its open tabs working (no 403 folderDenied)' passes.",
+    "'L1/V6: minting the seat with another role still drops its access snapshot at once' passes.",
+    "'L1: signing in again through the Tracy door leaves the open tabs working; a moved role does not' passes.",
+    "'L3/R12: a seat's request to an unlisted route is refused 403 at the gateway; dsh hears nothing' passes.",
+    "'L3/R12: every route the seat UI was measured to call still reaches dsh' and 'every route a loaded plugin's client calls for a seat still reaches dsh' pass.",
+    "'L3/R12: the gateway master keeps upstream behaviour: an unlisted route still reaches dsh' passes.",
+    "'L3/R12: dsh RPCs closed to seats answer empty at the gateway, not 403; dsh hears nothing' passes.",
+    "'L3/Q2: a bodyless POST to a listed plugin route reaches dsh; a non-JSON body is still refused' passes.",
+    "Native code writes re-read current seat permissions after approval; owned children cannot borrow an actor from rejected or unstamped input."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "vendor/tracy/dsh-passwords/test/tracy/seat-remint.test.ts",
+      "vendor/tracy/dsh-passwords/test/tracy/seat-unknown-routes.test.ts",
+      "vendor/tracy/dsh-passwords/test/tracy/request-path.test.ts",
+      "vendor/tracy/dsh-passwords/test/tracy/seat-tool-guard.test.ts"
+    ],
+    "needs": [],
+    "tests": [
+      "every code dispatch reads current authority; downgrade, ban and deletion deny before the body",
+      "real native tools refuse a downgraded seat after an extensible pre-execute allow and before the body",
+      "a resumed owned child accepts the current parent continuation but never an unstamped browser user"
+    ]
+  }
+}

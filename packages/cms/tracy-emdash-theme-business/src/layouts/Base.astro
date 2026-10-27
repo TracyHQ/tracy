@@ -1,0 +1,198 @@
+---
+import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from 'emdash/ui'
+import { createPublicPageContext } from 'emdash/page'
+import { getSiteSettings, getTranslations } from 'emdash'
+import { DEFAULT_LOCALE, LOCALES, href, isLocale, splitPath, type Locale } from '@/lib/i18n'
+import { ALTERNATES_KEY, HEAD_POLICY_KEY, type Alternate, type HeadPolicy } from '@/lib/hreflang'
+import { publicOrigin } from '@/lib/public-origin'
+import { displayLocaleOf } from '@/lib/display-locale'
+import { templateIconWanted } from '@/lib/brand'
+import { shareImageOf } from '@/lib/share-image'
+import { pageTitleOf, siteTitleOf } from '@/lib/page-title'
+import { readDsSlot } from '@/lib/ds-slot'
+import { Font } from 'astro:assets'
+import fonts from '@/fonts.json'
+import type { Chrome } from '@/lib/chrome'
+import Topbar from '@/components/site/Topbar.astro'
+import Header from '@/components/site/Header.astro'
+import Footer from '@/components/site/Footer.astro'
+// The only place the storefront stylesheet is imported (DECISIONS D6).
+import '@/styles/global.css'
+
+interface Props {
+  chrome: Chrome
+  title: string
+  description?: string | null
+  /** The page's own share picture (an article's, a project's): always previewed. */
+  image?: string | null
+  /** A decorative top picture: previewed only while the customer has no share card (`shareImageOf`, D5). */
+  heroImage?: string | null
+  /** Site-relative path (no locale prefix) of the current page. */
+  currentPath: string
+  resourcesActive?: boolean
+  content?: { collection: string; id: string; slug?: string | null; toPath: (slug: string) => string } | null
+  type?: 'website' | 'article'
+  robots?: string
+  /** Override the per-locale paths used for hreflang (site-relative, no locale prefix). */
+  alternates?: Partial<Record<Locale, string>> | null
+}
+const {
+  chrome,
+  title,
+  description = null,
+  image = null,
+  heroImage = null,
+  currentPath,
+  resourcesActive = false,
+  content = null,
+  type = 'website',
+  robots,
+  alternates: alternateOverride = null
+} = Astro.props
+const settings = await getSiteSettings()
+// The design-system slot: one file Tracy writes when the customer picks a system (lib/ds-slot.ts).
+const dsSlot = await readDsSlot()
+const siteTitle = siteTitleOf(settings.title)
+// The picture a shared link previews (TCH #1013, D5): the customer's card from their logo wins over a hero picture.
+const shareImage = shareImageOf(settings, { own: image, hero: heroImage })
+// The home tab names the business alone once the customer gave a name (NAME-1); every other page is "Page — Name".
+const fullTitle = pageTitleOf({ title, siteTitle, home: currentPath === '/' })
+// Canonical policy (tasks/emdash-northgate/DECISIONS.md D27): path + the query parameters that
+// change WHICH page is shown (`page`, and only when > 1). Filters, search terms and tracking
+// parameters (utm_*, fbclid…) are views of the canonical page and are dropped. The Search page
+// passes robots noindex and no canonical of its own.
+const CANONICAL_QUERY = ['page']
+const canonicalParams = new URLSearchParams()
+for (const k of CANONICAL_QUERY) {
+  const v = Astro.url.searchParams.get(k)
+  if (v && v !== '1') canonicalParams.set(k, v)
+}
+const canonicalSuffix = canonicalParams.toString() ? `?${canonicalParams}` : ''
+const origin = publicOrigin(Astro.url)
+const canonical = `${origin}${Astro.url.pathname}${canonicalSuffix}`
+// hreflang policy (D27): every indexable page names one URL per SERVED locale plus x-default (the
+// default locale's). Content pages point at the translation's real route; custom pages
+// (archives, sitemap) mirror their own path under each served locale's prefix; pagination is
+// kept. A hidden locale (one the customer did not choose) is never named: its URLs redirect.
+// noindex pages (search, 404) carry no alternates. Emitted by src/lib/hreflang.ts.
+const noindex = /noindex/.test(robots ?? '')
+const alternates: Alternate[] = []
+if (!noindex) {
+  const paths: Partial<Record<Locale, string>> = {}
+  if (alternateOverride) Object.assign(paths, alternateOverride)
+  else if (content) {
+    paths[chrome.locale] = content.slug ? content.toPath(content.slug) : splitPath(Astro.url.pathname).path
+    const { translations } = await getTranslations(content.collection, content.id)
+    // A published translation in a language the site no longer serves is not named either: Apply hides a language by
+    // its chrome entry first (`chrome.locales`) and takes its pages off after the hand-over.
+    for (const t of translations)
+      if (t.status === 'published' && t.slug && isLocale(t.locale) && chrome.locales.includes(t.locale))
+        paths[t.locale] = content.toPath(t.slug)
+  } else {
+    const own = splitPath(Astro.url.pathname).path
+    for (const l of chrome.locales) if (isLocale(l)) paths[l] = own
+  }
+  for (const l of LOCALES)
+    if (paths[l])
+      alternates.push({
+        hreflang: displayLocaleOf(l, LOCALES),
+        href: `${origin}${href(l, paths[l] as string)}${canonicalSuffix}`,
+        key: l
+      })
+  const xDefault =
+    alternates.find((a) => a.hreflang === displayLocaleOf(DEFAULT_LOCALE, LOCALES)) ?? alternates[0]
+  if (xDefault) alternates.push({ hreflang: 'x-default', href: xDefault.href })
+}
+const pageCtx = createPublicPageContext({
+  Astro,
+  kind: content ? 'content' : 'custom',
+  pageType: type,
+  title: fullTitle,
+  pageTitle: title,
+  description: description ?? undefined,
+  canonical,
+  // og:image must be absolute: platforms drop a relative URL silently (measured on the public host, 1.0.0).
+  image: shareImage ? new URL(shareImage, origin).href : undefined,
+  content: content ? { collection: content.collection, id: content.id, slug: content.slug } : undefined,
+  seo: { robots: robots ?? 'index, follow' },
+  siteName: siteTitle,
+  siteUrl: origin
+})
+;(pageCtx as unknown as Record<string, unknown>)[ALTERNATES_KEY] = alternates
+// What this layout decided for the head, kept so the plugin can restate it over the SEO panel (0.38+).
+const headPolicy: HeadPolicy = {
+  title: title ?? fullTitle,
+  description: description ?? undefined,
+  canonical,
+  image: shareImage ? new URL(shareImage, origin).href : undefined,
+  robots: robots ?? 'index, follow'
+}
+;(pageCtx as unknown as Record<string, unknown>)[HEAD_POLICY_KEY] = headPolicy
+---
+
+<!doctype html>
+<html lang={displayLocaleOf(chrome.locale, LOCALES)} data-ds-worn={dsSlot ? '' : undefined} data-theme={dsSlot?.mode === 'dark' ? 'dark' : undefined}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		{fonts.map((f) => <Font cssVariable={f.cssVariable as any} preload />)}
+		<title>{fullTitle}</title>
+		{/* The template's icon only while the customer has none: EmDashHead prints theirs from settings.favicon. */}
+		{templateIconWanted(settings) && <link rel="icon" href="/favicon.svg" type="image/svg+xml" />}
+		<EmDashHead page={pageCtx} />
+		{dsSlot?.fontsHref && <link rel="stylesheet" href={dsSlot.fontsHref} />}
+		{dsSlot && <style id="tracy-ds-slot" data-ds={dsSlot.id ?? ''} set:html={dsSlot.css} />}
+		<script is:inline>
+			// Restore the saved theme before first paint so a dark visitor never sees a light flash.
+			// `?theme=dark|light` on the URL wins for THIS page load without being saved: it is how a
+			// preview that frames the site (Tracy's Design inspiration) shows the theme it was asked
+			// for, from an origin that cannot reach this site's localStorage. A visitor's own choice
+			// stays what it was once the parameter is gone.
+			(function () {
+				try {
+					// A worn design system opens on its own side of light (the server set data-theme from the
+					// slot's mode); the visitor's switch still works, the other side being derived from the
+					// system (#1315). A choice made while a system is worn is stored under that system's own
+					// key ("ngi-theme@<id>", the id the slot's <style data-ds> names), so taking the system off
+					// gives the template's own default back, or the visitor's choice from before the system
+					// (ADR 0031 decision 12, UNDO-1). The toggle in Topbar.astro reads the same key.
+					const ds = document.getElementById("tracy-ds-slot")?.getAttribute("data-ds");
+					const key = ds ? "ngi-theme@" + ds : "ngi-theme";
+					const asked = new URLSearchParams(location.search).get("theme");
+					const t = asked === "dark" || asked === "light" ? asked : localStorage.getItem(key);
+					if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+					else if (t === "light") document.documentElement.removeAttribute("data-theme");
+				} catch (e) {}
+			})();
+		</script>
+	</head>
+	<body>
+		<EmDashBodyStart page={pageCtx} />
+		<script is:inline>
+			// When framed (Tracy's Design inspiration preview), tell the parent how tall this page
+			// is, so a frame that wants to grow to the page can. Sent to the frame-ancestor only —
+			// `*` would hand every page's height to any origin that managed to embed it, and the
+			// allowed ancestors are exactly what `TRACY_FRAME_ANCESTORS` names.
+			(function () {
+				if (window.parent === window) return;
+				const send = () => {
+					try {
+						window.parent.postMessage(
+							{ type: "tracy:frame-height", height: document.documentElement.scrollHeight },
+							document.referrer ? new URL(document.referrer).origin : "*"
+						);
+					} catch (e) {}
+				};
+				new ResizeObserver(send).observe(document.documentElement);
+				addEventListener("load", send);
+			})();
+		</script>
+		<div class="min-h-screen bg-paper">
+			<Topbar chrome={chrome} translationOf={content} />
+			<Header chrome={chrome} currentPath={currentPath} resourcesActive={resourcesActive} />
+			<slot />
+			<Footer chrome={chrome} />
+		</div>
+		<EmDashBodyEnd page={pageCtx} />
+	</body>
+</html>

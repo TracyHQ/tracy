@@ -1,0 +1,17 @@
+{
+  "name": "tracy-wordpress",
+  "owner": {
+    "name": "Tracy"
+  },
+  "metadata": {
+    "description": "Turn a running Joomla site, an HTML folder, a URL or a brief into a complete WordPress 7 site on a Tracy block theme: spec-pack, generated theme, seeded content, light and dark, verified by real render and content parity, packaged as a theme zip and a fleet quickstart.",
+    "version": "1.3.0"
+  },
+  "plugins": [
+    {
+      "name": "tracy-wordpress-theme",
+      "source": "./",
+      "description": "Turn a running Joomla site, an HTML folder, a URL or a brief into a complete WordPress 7 site on a Tracy block theme: spec-pack, generated theme, seeded content, light and dark, verified by real render and content parity, packaged as a theme zip and a fleet quickstart."
+    }
+  ]
+}

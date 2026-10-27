@@ -1,0 +1,94 @@
+//
+// T4 Components
+// ---------------------------------------------
+
+//
+// Banners
+.t4-banner {
+  text-align: center;
+  background: $gray-100;
+}
+
+// T4 Height Define
+@each $t4-nav-height-size, $value in $t4-nav-height-size {
+	.t4-nav-height-#{$t4-nav-height-size} {
+		.t4-megamenu {
+			.navbar-nav > li > a,
+			.navbar-nav > li > .nav-link {
+				height: $value;
+	      line-height: $value - ($t4-nav-link-padding-y * 2);
+	    }
+		}
+	}
+}
+
+// Align Main Menu
+.nav-align-left {
+  .t4-megamenu .navbar-nav > li {
+    > a,
+    > span {
+      padding-left: 0;
+      padding-right: 0;
+      margin-right: $t4-nav-link-padding-x * 2;
+    }
+  }
+
+  // Menu Toggle
+  .navbar-toggler,
+  .t4-offcanvas-toggle {
+    margin-right: $spacer;
+  }
+}
+
+
+//
+// Bootstraps Components
+// ---------------------------------------------
+
+// Button on Header
+.navbar-nav {
+	// Button Color
+	.btn-primary {
+		color: $white!important;
+	}
+
+	// Button Normal
+	.btn {
+		padding: $btn-padding-y $btn-padding-x!important;
+	}
+
+	// Button SM
+	.btn-sm {
+		padding: $btn-padding-y-sm $btn-padding-x-sm!important;
+	}
+
+	// Button SM
+	.btn-lg {
+		padding: $btn-padding-y-lg $btn-padding-x-lg!important;
+	}
+}
+
+// Class for collapse Menu
+.collapse-flex {
+  display: none;
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  .nav-breakpoint {
+    &#{"-"}#{$breakpoint} {
+      @include media-breakpoint-down($breakpoint) {
+        .collapse-flex {
+        	display: flex;
+        }
+
+        .collapse-space-between {
+        	justify-content: space-between!important;
+        }
+
+        .collapse-border-0 {
+        	border: 0!important;
+        }
+      }
+    }
+  }
+}

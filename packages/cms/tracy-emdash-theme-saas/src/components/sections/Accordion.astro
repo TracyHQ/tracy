@@ -1,0 +1,237 @@
+---
+/**
+ * Question list on native <details>/<summary> (keyboard and screen-reader support for free, no island).
+ * Two looks, chosen by the data rather than a setting: items that carry `group` labels render as
+ * grouped cards (the FAQ page); a flat list renders as ruled rows under a centred heading (pricing).
+ * An item's `group` starts a new group that runs until the next labelled item.
+ */
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import Col from './c/Col.astro'
+import { stampFor, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  narrow?: boolean
+}
+const { data, narrow = false } = Astro.props
+
+const text = (value: unknown) => String(value ?? '').trim()
+const items = (Array.isArray(data.items) ? data.items : []).filter((item: any) => item && text(item.q))
+const grouped = items.some((item: any) => text(item.group))
+
+const groups: Array<{ label: string; items: any[] }> = []
+for (const item of items) {
+  const label = text(item.group)
+  if (label || groups.length === 0) groups.push({ label, items: [] })
+  groups[groups.length - 1].items.push(item)
+}
+const paragraphs = (value: unknown) =>
+  text(value)
+    .split(/\n\s*\n|\r?\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+const hasHead = Boolean(data.eyebrow || data.title || data.sub)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'accordion', null)
+---
+
+{
+	items.length > 0 && (
+		<section class:list={['k-section', 'acc', grouped ? 'is-cards' : 'is-ruled']} {...s()}>
+			<Col narrow={narrow}>
+				{hasHead && (
+					<header class="head">
+						{data.eyebrow && <p class="k-eyebrow eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+						{data.title && <h2 class="title" {...s('title')}>{data.title}</h2>}
+						{data.sub && <p class="sub" {...s('sub')}>{data.sub}</p>}
+					</header>
+				)}
+				<div class="list">
+					{groups.map((group) => (
+						<div class="group">
+							{group.label && <p class="group-label" {...s('items.group')}>{group.label}</p>}
+							<div class="items">
+								{group.items.map((item) => (
+									<details class="item" {...s.block('items')}>
+										<summary class="q">
+											<span class="q-text" {...s('items.q')}>{item.q}</span>
+											<span class="ico">
+												<Icon name="chevron-down" size={grouped ? 20 : 18} strokeWidth={1.8} />
+											</span>
+										</summary>
+										{text(item.a) && (
+											<div class="a" {...s('items.a')}>
+												{paragraphs(item.a).map((p) => (
+													<p>{p}</p>
+												))}
+											</div>
+										)}
+									</details>
+								))}
+							</div>
+						</div>
+					))}
+				</div>
+			</Col>
+		</section>
+	)
+}
+
+<style>
+	.head {
+		max-width: 720px;
+		margin: 0 auto 40px;
+		text-align: center;
+	}
+	.eyebrow {
+		display: inline-block;
+		margin: 0 0 14px;
+	}
+	.title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 28px;
+		line-height: 1.08;
+		font-weight: 700;
+		letter-spacing: -0.6px;
+		color: var(--k-heading);
+	}
+	.sub {
+		margin: 12px auto 0;
+		max-width: 520px;
+		font-size: 16px;
+		line-height: 1.6;
+		color: var(--k-text);
+	}
+	.q {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 20px;
+		cursor: pointer;
+		list-style: none;
+		font-family: var(--font-heading);
+		font-weight: 600;
+		letter-spacing: -0.3px;
+		color: var(--k-heading);
+		transition:
+			color 0.15s,
+			background-color 0.15s;
+	}
+	.q::-webkit-details-marker {
+		display: none;
+	}
+	/* Question feedback measured on the source in both themes (lens N-dee1cd): primary text and a 6%
+	   primary tint on hover and keyboard focus; focus draws a 2px inset ring instead of the outline. */
+	.q:hover,
+	.q:focus-visible {
+		color: var(--k-primary);
+		background-color: color-mix(in srgb, var(--k-primary) 6%, transparent);
+	}
+	.q:focus-visible {
+		outline: none;
+		box-shadow: inset 0 0 0 2px var(--k-primary);
+	}
+	.ico {
+		flex-shrink: 0;
+		display: inline-flex;
+		color: var(--k-muted);
+		transition:
+			transform 0.2s ease,
+			color 0.15s;
+	}
+	.q:hover .ico,
+	.q:focus-visible .ico,
+	.item[open] .ico {
+		color: var(--k-primary);
+	}
+	.item[open] .ico {
+		transform: rotate(180deg);
+	}
+	.a {
+		color: var(--k-text);
+	}
+	.a p {
+		margin: 0;
+	}
+	.a p + p {
+		margin-top: 10px;
+	}
+
+	/* Flat list: hairline rows. */
+	.is-ruled .item {
+		border-bottom: 1px solid var(--k-border);
+	}
+	.is-ruled .group:first-child .item:first-child {
+		border-top: 1px solid var(--k-border);
+	}
+	.is-ruled .q {
+		padding: 20px 4px;
+		font-size: 18px;
+		line-height: 1.35;
+	}
+	/* On the source only the ruled list keeps an open question primary; open cards recolour the chevron. */
+	.is-ruled .item[open] .q {
+		color: var(--k-primary);
+	}
+	.is-ruled .a {
+		max-width: 630px;
+		padding: 0 4px 22px;
+		font-size: 15px;
+		line-height: 1.6;
+	}
+
+	/* Grouped list: mono group label + separate cards. */
+	.is-cards .group + .group {
+		margin-top: 30px;
+	}
+	.group-label {
+		margin: 0 0 10px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		line-height: 1.75;
+		letter-spacing: 1.8px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.is-cards .items {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+	.is-cards .item {
+		padding: 18px 20px;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 12px;
+		transition: border-color 0.15s;
+	}
+	.is-cards .item:hover,
+	.is-cards .item[open] {
+		border-color: color-mix(in srgb, var(--k-primary) 45%, var(--k-border));
+	}
+	.is-cards .q {
+		gap: 16px;
+		font-size: 15.5px;
+		line-height: 1.35;
+	}
+	.is-cards .a {
+		max-width: 609px;
+		padding-top: 14px;
+		font-size: 14.5px;
+		line-height: 1.65;
+	}
+
+	@media (max-width: 767px) {
+		.title {
+			font-size: 24px;
+		}
+		.is-ruled .q {
+			font-size: 16.5px;
+		}
+	}
+</style>

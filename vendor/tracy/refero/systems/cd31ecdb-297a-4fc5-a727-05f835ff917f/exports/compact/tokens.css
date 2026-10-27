@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-ink: #171717;
+  --color-paper: #ffffff;
+  --color-graphite-hairline: #e5e7eb;
+  --color-vellum: #f3f3f3;
+  --color-slate: #6f6f6f;
+  --color-pewter: #5e5e5e;
+  --color-ash: #a0a0a0;
+  --color-carbon: #222222;
+  --color-stone: #c7c7c7;
+  --color-cream-notice: #ffe9bf;
+
+  /* Typography — Font Families */
+  --font-monument-grotesk: 'Monument Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

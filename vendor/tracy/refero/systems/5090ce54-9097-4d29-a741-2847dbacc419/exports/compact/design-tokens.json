@@ -1,0 +1,44 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Obsidian — Page background, deep surface layer — the cavern floor of the design"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Dominant structural neutral — card borders, icon strokes, dividers, link underlines. Far more present than its visual weight suggests; carries 90% of the UI scaffolding"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Primary text, card border highlights, inverse surface moments — the only luminance in the system"
+    },
+    "ember": {
+      "$value": "#ffaa20",
+      "$type": "color",
+      "$description": "Ember — Accent signal color — App Store badge border, link underlines, the creature's eyes and highlights. Warm amber against graphite creates a firelight-in-darkness effect, not a CTA color"
+    },
+    "amber-glow": {
+      "$value": "#ff8800",
+      "$type": "color",
+      "$description": "Amber Glow — Filled button background — the single chromatic fill in the system. Deeper, more saturated than Ember; used sparingly to mark the one real interactive surface (App Store download)"
+    }
+  },
+  "font": {
+    "mija": {
+      "$value": "Mija",
+      "$type": "fontFamily",
+      "$description": "The only typeface. Display and body both drawn from this single family. Weight 100 is the brand's signature — used for the 'Chantlings' wordmark and headlines, creating an almost handwritten, incense-thin quality. Weight 300 handles body and UI text. The custom nature means no system-font fallback can match the optical contrast between its hairlines and thicker strokes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.iorama.studio/chantlings",
+      "siteName": "Chantlings",
+      "extractedAt": "2026-06-03T20:21:38.774Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "tracy-design-preview/v1",
+  "readAt": "2026-09-05T18:59:38Z",
+  "site": {
+    "name": "Tracy",
+    "url": "https://lucaswp.tracy.ai/",
+    "nav": ["Skills", "MCP Servers", "Learn", "Pricing"],
+    "eyebrow": "AI workstation for website operations",
+    "headline": "One desk for every site you run.",
+    "sub": "Tracy pairs an AI agent with each of your sites — armed with the skills of the teams who operate these platforms best. It reads, checks and proposes; you approve what ships.",
+    "cta": "Download for macOS & Windows",
+    "cta2": "Browse Skills & Bundles",
+    "image": null,
+    "imageSource": "none"
+  },
+  "pages": [
+    {
+      "path": "/",
+      "type": "home",
+      "label": "Home",
+      "data": {}
+    },
+    {
+      "path": "/skills/",
+      "type": "listing",
+      "label": "Skills",
+      "data": {
+        "title": "Claude Skills for the sites you run",
+        "items": [
+          {
+            "name": "WordPress",
+            "kind": "Skills",
+            "img": null
+          },
+          {
+            "name": "WooCommerce",
+            "kind": "Skills",
+            "img": null
+          },
+          {
+            "name": "Shopify",
+            "kind": "Skills",
+            "img": null
+          },
+          {
+            "name": "Joomla",
+            "kind": "Skills",
+            "img": null
+          }
+        ]
+      }
+    },
+    {
+      "path": "/mcp/",
+      "type": "listing",
+      "label": "MCP Servers",
+      "data": {
+        "title": "MCP servers for the sites you run",
+        "items": [
+          {
+            "name": "Shopify",
+            "kind": "MCP directory",
+            "img": null
+          },
+          {
+            "name": "WordPress",
+            "kind": "MCP directory",
+            "img": null
+          },
+          {
+            "name": "Joomla",
+            "kind": "MCP directory",
+            "img": null
+          }
+        ]
+      }
+    },
+    {
+      "path": "/pricing/",
+      "type": "pricing",
+      "label": "Pricing",
+      "data": {
+        "title": "Per person. Not per site.",
+        "plans": ["Monthly", "Yearly"],
+        "prices": ["$29", "$299"],
+        "hot": 1,
+        "rows": [
+          [
+            "Sites",
+            "Unlimited — Joomla, WordPress, WooCommerce, Shopify",
+            "Unlimited — Joomla, WordPress, WooCommerce, Shopify"
+          ],
+          ["Curated packs & skills", "All, registry updates included", "All, registry updates included"],
+          [
+            "Relay",
+            "Hosted platform relays — or self-host your own",
+            "Hosted platform relays — or self-host your own"
+          ],
+          ["Approval workflow", "Task log, memory per site", "Task log, memory per site"],
+          ["Billing", "Cancel anytime", "2 months free — effectively $24.92 per seat per month"]
+        ]
+      }
+    }
+  ],
+  "log": [],
+  "unmatched": [
+    {
+      "path": "/learn/",
+      "why": "a guides hub with no published articles yet — three link cards, not a list of items"
+    },
+    {
+      "path": "/download/",
+      "why": "an app download CTA page"
+    },
+    {
+      "path": "/install/",
+      "why": "a first-run install flow"
+    },
+    {
+      "path": "/skills/joomla/",
+      "why": "a skill/bundle detail page"
+    },
+    {
+      "path": "/skills/wordpress/",
+      "why": "a skill/bundle detail page"
+    },
+    {
+      "path": "/skills/woocommerce/",
+      "why": "a skill/bundle detail page"
+    },
+    {
+      "path": "/skills/shopify/",
+      "why": "a skill/bundle detail page"
+    },
+    {
+      "path": "/skills/seo/",
+      "why": "a skill/bundle detail page"
+    },
+    {
+      "path": "/skills/store/",
+      "why": "a skill/bundle detail page"
+    },
+    {
+      "path": "/mcp/joomla/",
+      "why": "a data-heavy MCP platform directory"
+    },
+    {
+      "path": "/mcp/wordpress/",
+      "why": "a data-heavy MCP platform directory"
+    },
+    {
+      "path": "/mcp/shopify/",
+      "why": "a data-heavy MCP platform directory"
+    },
+    {
+      "path": "/search/",
+      "why": "internal search"
+    },
+    {
+      "path": "/shop/",
+      "why": "a placeholder page — 'Great things are on the horizon'"
+    },
+    {
+      "path": "/sample-page/",
+      "why": "the WordPress sample page"
+    }
+  ],
+  "picks": [
+    {
+      "id": "refined",
+      "why": "Keeps today's clean, minimal spirit and only adds a refined serif so the page feels more elegant and relaxed."
+    },
+    {
+      "id": "vercel",
+      "why": "Tighter, more technical and developer-minded — precise Geist-style black and white, right for people who run websites."
+    },
+    {
+      "id": "linear-app",
+      "why": "Switches the mood to a dark background with a single purple — the feel of a serious AI tool, far from today's Apple look."
+    }
+  ]
+}

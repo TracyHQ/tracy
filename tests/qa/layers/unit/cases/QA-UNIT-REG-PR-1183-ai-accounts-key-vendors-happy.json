@@ -1,0 +1,88 @@
+{
+  "id": "QA-UNIT-REG-PR-1183-ai-accounts-key-vendors-happy",
+  "itemIds": ["regression:REG-PR-1183-ai-accounts-key-vendors"],
+  "requirement": "Settings › AI accounts connects Kimi, GLM and Qwen with a pasted API key: the broker proves the key on a cheap vendor door before sealing it, sorts refusals into key / plan / vendor, never keeps an unproven key, and tells the client each vendor's sign-in kind; the client draws the key row and maps the door's refusals",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1183-ai-accounts-key-vendors.json",
+    "ref": "PR #1183 (feat); fix evidence: none recorded",
+    "invariant": "0 failures. Every test named in run.tests reports ok.",
+    "productSources": [
+      "apps/tracy-web/src/seat-plan/providers.js:79",
+      "apps/tracy-web/src/seat-plan/wire/messages.js:14",
+      "apps/tracy-web/src/seat-plan/wire/vendors/glm.js:2",
+      "apps/tracy-web/src/seat-plan/wire/vendors/kimi.js:2",
+      "apps/tracy-web/src/seat-plan/wire/vendors/qwen.js:2",
+      "packages/ui/tracy-model-plan/src/client/plan-doors.ts:131"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-model-plan/test/account-key-row.test.mjs (argument) is not a file"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a good key is proven on /models and kept as a key blob with a hashed identity",
+    "a good key is proven on the quota door and kept as a key blob with a hashed identity",
+    "a rejected key is a key error",
+    "a rejected key is a key error, whether Z.ai says so in the status or only in the body",
+    "a key without a membership is a plan error, not a bad key",
+    "a key with no coding plan or balance is a plan error",
+    "a key whose account is out of quota or in arrears is a plan error",
+    "kimi down or slow is a vendor error",
+    "Z.ai down or slow is a vendor error",
+    "DashScope down or slow is a vendor error",
+    "another region is a second probe away: a Beijing key refused abroad is kept with the endpoint that took it",
+    "a key refused by both regions is a key error; any other answer is not",
+    "any 403 is an access refusal (plan), never a wrong key"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1183-ai-accounts-key-vendors"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1183-ai-accounts-key-vendors",
+    "pr": 1183,
+    "kind": "feat",
+    "area": "seat-plan/key",
+    "file": "tests/regression/cases/REG-PR-1183-ai-accounts-key-vendors.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/seat-plan-kimi.test.mjs",
+    "apps/tracy-web/test/seat-plan-glm.test.mjs",
+    "apps/tracy-web/test/seat-plan-qwen.test.mjs",
+    "packages/ui/tracy-model-plan/test/plan-doors.test.mjs",
+    "packages/ui/tracy-model-plan/test/account-key-row.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a good key is proven on /models and kept as a key blob with a hashed identity",
+    "a good key is proven on the quota door and kept as a key blob with a hashed identity",
+    "a rejected key is a key error",
+    "a rejected key is a key error, whether Z.ai says so in the status or only in the body",
+    "a key without a membership is a plan error, not a bad key",
+    "a key with no coding plan or balance is a plan error",
+    "a key whose account is out of quota or in arrears is a plan error",
+    "kimi down or slow is a vendor error",
+    "Z.ai down or slow is a vendor error",
+    "DashScope down or slow is a vendor error",
+    "another region is a second probe away: a Beijing key refused abroad is kept with the endpoint that took it",
+    "a key refused by both regions is a key error; any other answer is not",
+    "any 403 is an access refusal (plan), never a wrong key"
+  ],
+  "timeoutS": 600
+}

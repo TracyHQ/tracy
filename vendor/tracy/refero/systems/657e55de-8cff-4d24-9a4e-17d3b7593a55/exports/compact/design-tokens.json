@@ -1,0 +1,44 @@
+{
+  "color": {
+    "highlighter-yellow": {
+      "$value": "#fff824",
+      "$type": "color",
+      "$description": "Highlighter Yellow — Yellow supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ink": {
+      "$value": "#151515",
+      "$type": "color",
+      "$description": "Ink — Primary text, all borders and dividers, icons, nav links, button text — the near-black slightly softer than pure #000 used for most typographic and structural marks"
+    },
+    "canvas": {
+      "$value": "#f3f3f3",
+      "$type": "color",
+      "$description": "Canvas — Page background, the off-white ground that prevents the design from reading as stark white — a subtle warmth that lets the black feel printed rather than digital"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Icon fills, select structural marks, absolute contrast — used sparingly where maximum black is needed (SVG icon strokes, the heaviest emphasis)"
+    },
+    "paper": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Paper — Secondary surface tone, subtle differentiation beneath images or within contained blocks"
+    }
+  },
+  "font": {
+    "suisse": {
+      "$value": "Suisse",
+      "$type": "fontFamily",
+      "$description": "Sole typeface — used for everything from 8px micro-labels to 108px display headlines. The extreme negative letter-spacing (-0.04em at display, -0.01em at body) and ultra-tight line-heights (0.96 at 108px) are the signature: type set like printed Swiss editorial, not web type. Weight 400 carries body and most UI; weight 700 appears in nav, labels, and occasional emphasis. The tight leading on massive sizes makes headlines stack into a single visual mass — the word 'TOUCH' reads as a black slab, not four letters."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://traffic.productions",
+      "siteName": "Home",
+      "extractedAt": "2026-06-03T18:12:30.569Z",
+      "variant": "compact"
+    }
+  }
+}

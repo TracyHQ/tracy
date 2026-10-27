@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-tour/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_tour",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-tour",
+    "id": "quickstart/ja-tour/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_tour",
+    "parts": {
+      "installer": {
+        "file": "ja-tour-j6-quickstart-1.0.1.zip",
+        "bytes": 65424047,
+        "sha256": "1623ae8cdb2ba87790007440629a5f145ca6532700ea0c17281a295d8d804432"
+      }
+    },
+    "release": "quickstart/ja-tour/j6",
+    "repository": "JoomlArt-Products/ja-products",
+    "createdAt": "2026-10-10T22:04:55.966Z",
+    "builtFrom": {
+      "from": "quickstart/ja-tour/j6@1.0.0",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    }
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

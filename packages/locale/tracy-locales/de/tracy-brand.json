@@ -1,0 +1,20 @@
+{
+  "appearance.dark": "Dunkel",
+  "appearance.light": "Hell",
+  "appearance.system": "System",
+  "appearance.title": "Darstellung",
+  "font.code.description": "Codeblöcke und das Terminal",
+  "font.code.title": "Code-Schriftart",
+  "font.default": "Standard",
+  "font.global.description": "Text in der gesamten Oberfläche",
+  "font.global.title": "Globale Schriftart",
+  "fontSize.decrease": "Schrift verkleinern",
+  "fontSize.description": "Betrifft nur den Gesprächsinhalt",
+  "fontSize.increase": "Schrift vergrößern",
+  "fontSize.title": "Schriftgröße",
+  "hero.title": "Was möchten Sie heute ändern?",
+  "primary.description": "Akzent für Schaltflächen, Links und Auswahl",
+  "primary.hex": "Hex-Farbe",
+  "primary.swatch": "{color} verwenden",
+  "primary.title": "Primärfarbe"
+}

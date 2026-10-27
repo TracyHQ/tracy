@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-graphite: #999999;
+
+  /* Typography */
+  --font-diagramatika-text: 'Diagramatika Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-diagramatika-display: 'Diagramatika Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

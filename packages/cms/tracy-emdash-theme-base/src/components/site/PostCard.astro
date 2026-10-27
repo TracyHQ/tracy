@@ -1,0 +1,52 @@
+---
+/** The source's blog/services card: 16:10 image on top, title, meta row, excerpt, capsule "Read more". */
+import Photo from '@/components/site/Photo.astro'
+import Icon from '@/components/site/Icon.astro'
+import { formatDate, href, type Locale } from '@/lib/i18n'
+import type { PostCard as Post } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import { ui } from '@/lib/ui'
+import { liveLinks } from '@/lib/link-gate'
+interface Props {
+  post: Post
+  locale: Locale
+  site: Record<string, any>
+  base?: string
+  showMeta?: boolean
+  /** The collection `post` belongs to, for its provenance stamps (`src/lib/stamps.ts`). */
+  collection?: string
+}
+const { post, locale, site, base = '/blog', showMeta = true, collection = 'posts' } = Astro.props
+const d = post.data
+// The template's own words and dates, in the site's language (`src/lib/ui.ts`).
+const { tag, w } = ui(locale)
+const url = href(locale, `${base}/${post.slug}`)
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $p = stampFor(Astro.request, collection, post)
+const $site = stampFor(Astro.request, 'site', site)
+// A card on a kept page (Team's notes) with the blog unticked links its category and tags only while those lists are
+// reachable (TCH #1013, `src/lib/link-gate.ts`); with the blog on, every one of them is live.
+const categoryUrl = post.category ? `/blog/category/${post.category.slug}` : ''
+const live = await liveLinks(Astro.request, locale, [
+  categoryUrl,
+  ...(post.tags ?? []).map((t) => `/blog/tag/${t.slug}`)
+])
+const tagLinks = (post.tags ?? []).filter((t) => live(`/blog/tag/${t.slug}`))
+---
+
+<article class="card flex flex-col overflow-hidden" {...$p()}>
+	<a href={url} class="block" tabindex="-1" aria-hidden="true"><Photo image={d.image} stamp={$p("image")} alt={d.image_alt ?? ""} class="aspect-[16/10]" /></a>
+	<div class="flex flex-1 flex-col gap-3 p-6">
+		<h2 class="h-card-sm"><a href={url} class="text-fg hover:text-accent" {...$p("title")}>{d.title}</a></h2>
+		{showMeta && (
+			<div class="meta flex flex-wrap gap-x-4 gap-y-1">
+				{d.author && <span>{w.by} <b class="font-semibold text-fg-2" {...$p("author")}>{d.author}</b></span>}
+				{post.category && live(categoryUrl) && <span>{w.categoryLabel} <a href={href(locale, categoryUrl)} class="font-semibold text-fg-2 hover:text-accent hover:underline">{post.category.label}</a></span>}
+				{d.date && <span class="inline-flex items-center gap-1.5"><Icon name="calendar" size={14} class="text-fg-meta" />{formatDate(d.date, tag)}</span>}
+			</div>
+		)}
+		{tagLinks.length > 0 && <div class="flex flex-wrap gap-2">{tagLinks.map((t) => <a href={href(locale, `/blog/tag/${t.slug}`)} class="chip-outline hover:text-accent">{t.label}</a>)}</div>}
+		{d.excerpt && <p class="text-[17px] leading-[1.47] text-fg-2" {...$p("excerpt")}>{d.excerpt}</p>}
+		<a href={url} class="btn btn-xs mt-auto self-start px-0 text-accent hover:text-accent-hover" {...$site("read_more")}>{site.read_more}<span class="sr-only">: {d.title}</span></a>
+	</div>
+</article>

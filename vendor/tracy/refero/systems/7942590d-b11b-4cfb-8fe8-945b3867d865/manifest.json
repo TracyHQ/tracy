@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7942590d-b11b-4cfb-8fe8-945b3867d865",
+  "status": "complete",
+  "name": "Secure",
+  "url": "https://styles.refero.design/style/7942590d-b11b-4cfb-8fe8-945b3867d865",
+  "sourceWebsite": "https://whereby.com",
+  "extractedAt": "2026-06-03T21:20:55.656Z",
+  "capturedAt": "2026-10-08T05:13:44.816931+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "European café conversation in soft daylight — a warm, editorial take on video calling where serif headlines read like a thoughtful magazine spread rather than a tech product page.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1cbc5500-cc8f-41f8-956e-96b53345e1ee.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "da8475a928330062a5fa5db7082a11369c3cc4260e17f61f5d7d42b49c9f833f",
+      "bytes": 22109
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a5335280940a42b0b88b95e2f535ff0084cac00dec465763aa4c814486550351",
+      "bytes": 115294
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f932b95ed6d0cdfa4a23f52258559bc0878e04f9aa13c4a1e80d558a5a79ee68",
+      "bytes": 17710
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9c8c5071a43e4eb09782c92218b8b7be2a7c58229e7bcea54496ed4cd9347273",
+      "bytes": 11741
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b995f6cee05bfe377dc5ef92860758431807deeb6c29a9a6ee8cedadfadf146b",
+      "bytes": 12997
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "dab7d2124d57ee80da987a582cae3ed44ddfe6825529fd51c640e654ef395674",
+      "bytes": 3686
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7cea68e7b29601acaac3785afdadad929e865f807307343c9fea35325e128317",
+      "bytes": 1275
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9a2651d501d569497d6b0caf8034c3dfc6dbaf41c43dafb2e54a4ecb7575420b",
+      "bytes": 1292
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ca6e35a4013ad49c403e57a124ef4193bd9ad97eab340bf6b09c1a7c3f091d2d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "71c0766f2d98d0d1cd65a4ad7db904da425787f6b6d39dd81142ff18b08a28a6",
+      "bytes": 43270
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e8af4b8a3e596b32fec8fb310120a3233ffc6b30af1c87d55971b917a6e6950a",
+      "bytes": 22083
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3d7ddec95ec90d785124b1fc772bdd10c28ac907320d209513b75f2c2987e54b",
+      "bytes": 38055
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b7b322361cb815f6a1eecb4a85804fa0a343647c932ab27b9885aabb1857ebbc",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1f47b2e87e49d899d420d32224b17a5c12418aede6aa42eca42f909e1c01d585",
+      "bytes": 2236
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7ea53542b521cf5d0ccdc59db636efb2d003d4a153195141d223a1ccfd257295",
+      "bytes": 2798
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "28a7115a-bcf8-4b05-89a5-5290f5842a3c",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "6b2777fd-7021-4a96-add3-ec4a32374214",
+    "7942590d-b11b-4cfb-8fe8-945b3867d865",
+    "7bbbf1bc-e375-4200-8d71-e373a3c78654",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "c8c22958-ec50-47f1-aedc-a131d7aeb442",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4"
+  ]
+}

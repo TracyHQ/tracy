@@ -1,0 +1,243 @@
+/*
+ * Tracy — ACM block `carousel`
+ * ------------------------------------------------------------------------------------------------
+ * Self-contained and block-scoped to `.acm-carousel`; mod_ja_acm loads an ACM block's own
+ * css/style.css (ModJAACMHelper::addAssets), so this file is NOT imported into scss/_all.scss.
+ *
+ * Not one literal colour, size, space or radius appears below: every value reads a token, which is
+ * why the block needs no dark rules of its own — dark remaps the same names.
+ *
+ * The track is a real scroll container with scroll-snap. That is the whole mechanism: no transform
+ * maths, no slide index, no library. A trackpad, a touch screen, the scrollbar and the arrow keys
+ * drive it identically, and the two step buttons only call `scrollBy`.
+ */
+
+.acm-carousel {
+  padding-block: var(--tracy-band-y);
+  border: 0;
+}
+
+.acm-carousel--canvas { background: var(--bg); }
+.acm-carousel--warm   { background: var(--surface-warm); }
+.acm-carousel--gray   { background: var(--surface); }
+
+/* ── Head: text on the left, the two steps on the right ─────────────────────── */
+.acm-carousel .tracy-carousel__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-8);
+  margin-block-end: var(--space-12);
+}
+
+.acm-carousel .tracy-carousel__head-text { max-width: 52ch; }
+
+.acm-carousel .tracy-carousel__eyebrow {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tracy-quiet, var(--meta));
+}
+
+.acm-carousel .tracy-carousel__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+.acm-carousel .tracy-carousel__intro {
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-body);
+  color: var(--muted);
+}
+
+/* ── The two steps ──────────────────────────────────────────────────────────── */
+.acm-carousel .tracy-carousel__nav {
+  display: flex;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+}
+
+.acm-carousel .tracy-carousel__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 40px: a step control has to be comfortable to hit, and the scale jumps 32 → 48. */
+  inline-size: calc(var(--space-8) + var(--space-2));
+  block-size: calc(var(--space-8) + var(--space-2));
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+  transition: background var(--motion-fast) var(--ease-standard),
+              border-color var(--motion-fast) var(--ease-standard);
+}
+
+.acm-carousel .tracy-carousel__step:hover:not(:disabled) {
+  background: var(--surface);
+  border-color: var(--fg);
+}
+
+.acm-carousel .tracy-carousel__step:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* An end of the track is a fact, not an error: the control stays in place and stops responding. */
+.acm-carousel .tracy-carousel__step:disabled {
+  color: var(--meta);
+  border-color: var(--border-soft);
+  cursor: default;
+}
+
+/* ── The track ──────────────────────────────────────────────────────────────── */
+.acm-carousel .tracy-carousel__track {
+  display: flex;
+  /* Cards in a row start on one line. Measured without this: the first slide sat 8px above the
+     other two, because something upstream centres flex children and a taller card then rides up. */
+  align-items: start;
+  gap: var(--space-6);
+  margin: 0;
+  padding: 0 0 var(--space-4);
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  /* The scrollbar is the position indicator; it should not be furniture. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.acm-carousel .tracy-carousel__track:focus-visible {
+  outline: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--focus-ring);
+}
+
+.acm-carousel .tracy-carousel__slide {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  /* Three across at the default, and the gaps come out of the same sum so nothing overflows. */
+  inline-size: calc((100% - (var(--space-6) * 2)) / 3);
+  min-inline-size: 0;
+}
+
+.acm-carousel--per-2 .tracy-carousel__slide {
+  inline-size: calc((100% - var(--space-6)) / 2);
+}
+
+.acm-carousel--per-4 .tracy-carousel__slide {
+  inline-size: calc((100% - (var(--space-6) * 3)) / 4);
+}
+
+/* ── Slide contents ─────────────────────────────────────────────────────────── */
+.acm-carousel .tracy-carousel__media {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  aspect-ratio: 4 / 3;
+}
+
+.acm-carousel .tracy-carousel__media img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.acm-carousel .tracy-carousel__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.acm-carousel .tracy-carousel__kicker {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tracy-quiet, var(--meta));
+}
+
+.acm-carousel .tracy-carousel__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+.acm-carousel .tracy-carousel__text {
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--fg-2);
+}
+
+.acm-carousel .tracy-carousel__link {
+  align-self: flex-start;
+  margin-block-start: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.acm-carousel .tracy-carousel__link:hover { color: var(--accent-hover); }
+
+.acm-carousel .tracy-carousel__link:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 991.98px) {
+  .acm-carousel .tracy-carousel__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+    margin-block-end: var(--space-8);
+  }
+
+  .acm-carousel .tracy-carousel__slide,
+  .acm-carousel--per-2 .tracy-carousel__slide,
+  .acm-carousel--per-4 .tracy-carousel__slide {
+    inline-size: calc((100% - var(--space-6)) / 2);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .acm-carousel .tracy-carousel__heading { font-size: var(--text-xl); }
+  .acm-carousel .tracy-carousel__intro { font-size: var(--text-base); }
+
+  .acm-carousel .tracy-carousel__slide,
+  .acm-carousel--per-2 .tracy-carousel__slide,
+  .acm-carousel--per-4 .tracy-carousel__slide {
+    /* One slide fills the reading width, with the next one peeking to say the row continues. */
+    inline-size: 82%;
+  }
+}
+
+/* Someone who has asked for less motion still gets the scroll — it just arrives at once. */
+@media (prefers-reduced-motion: reduce) {
+  .acm-carousel .tracy-carousel__track { scroll-behavior: auto; }
+  .acm-carousel .tracy-carousel__step { transition: none; }
+}

@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-ink-black: #020108;
+  --color-charcoal: #333333;
+  --color-steel: #5d5c61;
+  --color-pewter: #818084;
+  --color-ash: #d7d7d6;
+  --color-canvas-white: #ffffff;
+  --color-paper: #f7f7f7;
+  --color-ember-orange: #fd7b03;
+  --gradient-ember-orange: linear-gradient(rgb(249, 74, 0), rgb(253, 123, 3));
+  --color-cobalt-drift: #3a54ff;
+  --gradient-cobalt-drift: linear-gradient(rgb(58, 84, 255), rgb(122, 103, 197) 23%, rgb(253, 123, 3));
+  --color-crimson-edge: #9a0101;
+  --gradient-crimson-edge: linear-gradient(rgb(154, 1, 1), rgb(253, 123, 3));
+  --color-teal-bridge: #48a3d1;
+  --gradient-teal-bridge: linear-gradient(rgb(72, 163, 209), rgb(253, 123, 3));
+
+  /* Typography — Font Families */
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sf-pro-display: 'SF Pro Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

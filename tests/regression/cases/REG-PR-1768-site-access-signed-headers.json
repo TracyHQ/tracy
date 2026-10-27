@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1768-site-access-signed-headers",
+  "kind": "fix",
+  "title": "A customer site's CMS trusts only a per-site HMAC-signed assertion, not bare x-tracy-* headers another site's container could send",
+  "pr": 1768,
+  "area": "fleet/site-access",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the Node signer against the shared vectors (packages/fleet/tracy-fleet-operation/test/access-signature.test.mjs).",
+    "S2: Run both PHP verifiers against every shared vector (access-signature-php.test.mjs).",
+    "S3: Run the WordPress verifier suite (wordpress-access.test.mjs): forged bare headers, an assertion under another site's key, a wrong-host/method/target/expired assertion, and a replayed nonce each sign nobody in and create no user; a real editor-tier seat reaches the admin."
+  ],
+  "expect": [
+    "S1: the signer reproduces every sign vector byte for byte (tests pass, 0 fail).",
+    "S2: each verifier returns the expected verdict for every verify vector (0 fail).",
+    "S3: every forged/cross-key/expired/replayed case signs nobody in and makes no user; the real seat is signed in as administrator; concurrent replay of one nonce is accepted at most once (0 fail)."
+  ],
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/{scripts/provision/access/**,test/access-signature*.mjs,test/wordpress-access.test.mjs,test/fixtures/access-signature-vectors.json}; apps/tracy-web/src/bar/site-access.js",
+    "tool": "tests/regression/scripts/REG-PR-1768-site-access-signed-headers.mjs"
+  },
+  "evidence": "Before this change, code running in one site's web container could POST to http://<otherLabel>-web-1/wp-admin/ (or /administrator/) with forged x-tracy-email/tier/role headers and be minted a WordPress administrator or Joomla Super User of the other site; measured on the local stand 2026-10-26 (attacker-before@evil.test became administrator of p0acc-wpb by DNS name and by IP, and Super Users of p0acc-jma).",
+  "fence": "Static suites under real PHP (local php or one container) and Node; no stand or network needed — the signer and both verifiers run against shared vectors and WordPress function stubs.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1768-site-access-signed-headers.mjs"]
+  }
+}

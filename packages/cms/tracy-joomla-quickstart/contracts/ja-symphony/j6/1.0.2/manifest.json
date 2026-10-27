@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-symphony/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_symphony",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-symphony",
+    "id": "quickstart/ja-symphony/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_symphony",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-symphony-j6-webroot-1.0.2.tar.gz",
+        "bytes": 46311198,
+        "sha256": "e47aff8d436e818859512792a55e50eff0d5421adddd5d2668cf6ec573260790"
+      },
+      "database": {
+        "file": "ja-symphony-j6-database-1.0.2.sql.gz",
+        "bytes": 82202,
+        "sha256": "30c92a64b77649d769979a198c45e6cdd6ae948390fb76151703085e6c3bedd8"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T10:44:50.716Z",
+    "builtFrom": {
+      "site": "asym-rp",
+      "tag": "local:ja-symphony-j6-1.0.2",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-symphony/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.21",
+  "mode": "content-recommendation"
+}

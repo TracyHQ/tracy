@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/blog-rail",
+  "version": "0.1.0",
+  "title": "Blog topics rail",
+  "category": "design",
+  "icon": "list-view",
+  "description": "The source's sticky topics rail on /product/blog (category/blog.php .hx-blog-rail): real child categories with real live counts.",
+  "textdomain": "wp-ja-kinetic",
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

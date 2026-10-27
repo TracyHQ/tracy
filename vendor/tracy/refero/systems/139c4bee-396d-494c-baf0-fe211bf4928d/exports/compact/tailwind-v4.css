@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-ink: #070707;
+  --color-paper: #ffffff;
+  --color-fog: #f2f2f2;
+  --color-stone: #a2a2a9;
+  --color-graphite: #797979;
+
+  /* Typography */
+  --font-bentonsans: 'BentonSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-aftenscreen: 'AftenScreen', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

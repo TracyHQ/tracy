@@ -1,0 +1,4 @@
+{
+  "$comment": "Newest contract versions that had no exact template-profiles.json row when the contract-pair rule came in (15/10/2026, scripts/check-design-templates.ts). Each one is a release a customer can pick whose brand row is inherited from an older version, or none. Measure the release, add its row, and remove the line here. The list only shrinks.",
+  "owed": ["quickstart/ja-conf/j6@1.0.3", "tracy-airbnb/j6@1.2.0"]
+}

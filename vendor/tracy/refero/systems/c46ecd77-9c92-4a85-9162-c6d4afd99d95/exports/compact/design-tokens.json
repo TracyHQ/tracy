@@ -1,0 +1,64 @@
+{
+  "color": {
+    "parchment-rose": {
+      "$value": "#f8f5f5",
+      "$type": "color",
+      "$description": "Parchment Rose — Page canvas and section backgrounds — the warm off-white ground that gives the whole system its dusty, paper-like atmosphere"
+    },
+    "specimen-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Specimen White — Card surfaces and image wells — clean white plates that sit on the parchment canvas, carrying typographic specimens and editorial imagery"
+    },
+    "ink-brown": {
+      "$value": "#443235",
+      "$type": "color",
+      "$description": "Ink Brown — Primary text, headlines, and dominant body copy — the warm near-black that reads as ink rather than pure black against the rose canvas"
+    },
+    "walnut": {
+      "$value": "#654a4e",
+      "$type": "color",
+      "$description": "Walnut — Navigation text, secondary links, and muted metadata — one step lighter than Ink Brown for hierarchy without leaving the brown family"
+    },
+    "charcoal": {
+      "$value": "#2e2c2c",
+      "$type": "color",
+      "$description": "Charcoal — Deepest neutral for in-image text and high-contrast moments where Ink Brown isn't dark enough"
+    },
+    "hairline-ash": {
+      "$value": "#cfc6c7",
+      "$type": "color",
+      "$description": "Hairline Ash — Subtle border on form inputs and fine dividers — a warm gray that stays in the brown family"
+    },
+    "dusty-rose": {
+      "$value": "#916a70",
+      "$type": "color",
+      "$description": "Dusty Rose — Red supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "domainetext": {
+      "$value": "DomaineText",
+      "$type": "fontFamily",
+      "$description": "Body text, navigation, links, and all running copy — a transitional serif that carries the editorial, printed-specimen feel. Its old-style figures (onum) and standard ligatures give body text a bookish quality."
+    },
+    "dia": {
+      "$value": "Dia",
+      "$type": "fontFamily",
+      "$description": "ALL-CAPS micro-labels: nav items, category badges, dates, font attributions, and section tags. The ultra-heavy weight plus tight tracking creates a compact, industrial counterpoint to the serif body — a signature pairing that makes even a date stamp feel designed."
+    },
+    "domainedisplaynarrow": {
+      "$value": "DomaineDisplayNarrow",
+      "$type": "fontFamily",
+      "$description": "Editorial headlines, article titles, and the site wordmark. The narrow proportions and high contrast give display type a fashion-magazine authority — it is the voice that announces, never explains."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://typewolf.com",
+      "siteName": "Typewolf",
+      "extractedAt": "2026-06-03T19:24:34.052Z",
+      "variant": "compact"
+    }
+  }
+}

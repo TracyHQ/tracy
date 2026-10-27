@@ -1,0 +1,98 @@
+---
+title: MCP Server
+description: Work on your Tracy website from your AI app. Read content, make focused edits, and undo supported changes.
+---
+
+import { Aside, CardGrid, LinkCard, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+Bring your website into the conversation. Tracy MCP connects your AI app to **one website you choose**, so you can find content, ask for an edit, and inspect the result without moving between admin screens.
+
+<CardGrid>
+  <LinkCard title="Connect your app" description="Start with your Tracy account, a website, and an AI app." href="/mcp/getting-started/" />
+  <LinkCard title="See what you can do" description="Try practical prompts for finding, editing, and restoring content." href="/mcp/examples/" />
+</CardGrid>
+
+## How it works
+
+<Steps>
+
+1. **Connect your AI app.** Sign in to Tracy and choose the website it can access.
+2. **Ask for a change.** The app reads the current content and uses Tracy's tools to make a supported edit.
+3. **Check the result.** Inspect the change receipt and read the content again. Request undo when the operation supports it.
+
+</Steps>
+
+Your AI app uses your account with that service. Your Tracy account determines which website it can reach. You do not share your Tracy password or a website administrator password in a chat.
+
+## What you can do
+
+- Find pages, published content, and supported records on the connected website.
+- Read a record and its current revision before making a focused edit.
+- Create, update, or trash records where the website supports that operation.
+- Inspect change receipts and undo supported steps.
+
+Tracy works with WordPress, Joomla, and EmDash. Available operations depend on the website's adapter and your permissions. This connection does not provide a shell, arbitrary file access, site provisioning, billing, or account administration.
+
+<Aside type="note" title="One connection, one website">
+The connection cannot expand your existing access. Choose a site where you have an accepted Editor or Owner role. See [Permissions & security](/mcp/permissions/) for access duration and revocation.
+</Aside>
+
+## Connection address
+
+```text
+https://cowork.tracy.ai/mcp
+```
+
+This address is for your AI app. Opening it in a browser can return **405 Method Not Allowed** because MCP clients connect using POST. The marketing website is `tracy.ai`; this documentation is at `docs.tracy.ai`.
+
+## Explore the guide
+
+<CardGrid>
+  <LinkCard title="Tools" description="Find the right tool and understand its inputs and results." href="/mcp/tools/" />
+  <LinkCard title="Working with your site" description="Read, edit, verify, and undo one change at a time." href="/mcp/working-with-your-site/" />
+  <LinkCard title="Troubleshooting" description="Resolve connection, permission, and revision errors." href="/mcp/troubleshooting/" />
+  <LinkCard title="Technical reference" description="MCP transport, OAuth discovery, and client requirements." href="/mcp/reference/" />
+</CardGrid>
+
+<details>
+<summary>Looking for a section from the previous guide?</summary>
+
+The sections from the original single-page guide now have dedicated pages:
+
+<h3 id="before-connecting">Before connecting</h3>
+
+[Prepare your account and site](/mcp/getting-started/#what-you-need).
+
+<h3 id="connect-from-chatgpt">Connect from ChatGPT</h3>
+
+[Follow the ChatGPT guide](/mcp/clients/chatgpt/).
+
+<h3 id="connect-from-claude">Connect from Claude</h3>
+
+[Follow the Claude guide](/mcp/clients/claude/).
+
+<h3 id="work-with-content">Work with content</h3>
+
+[Read, edit, and undo](/mcp/working-with-your-site/).
+
+<h3 id="permissions-and-disconnecting">Permissions and disconnecting</h3>
+
+[Manage connection access](/mcp/permissions/).
+
+<h3 id="tool-reference">Tool reference</h3>
+
+[Browse the tool catalogue](/mcp/tools/).
+
+<h3 id="technical-connection-details">Technical connection details</h3>
+
+[Read the protocol reference](/mcp/reference/).
+
+<h3 id="troubleshooting">Troubleshooting</h3>
+
+[Find a symptom and its next step](/mcp/troubleshooting/).
+
+<h3 id="support">Support</h3>
+
+[Contact Tracy with a redacted error report](/mcp/troubleshooting/#get-help).
+
+</details>

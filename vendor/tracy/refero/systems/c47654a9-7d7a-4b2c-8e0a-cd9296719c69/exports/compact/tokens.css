@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-pine-vellum: #143930;
+  --color-cedar-stroke: #456859;
+  --color-parchment: #f8f2de;
+  --color-aged-tan: #bead89;
+
+  /* Typography — Font Families */
+  --font-editorialold: 'EditorialOld', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wispy: 'Wispy', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-old-standard-tt: 'Old Standard TT', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gta: 'GTA', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-bodoni-classic-ornaments: 'bodoni-classic-ornaments', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-altesse-std-24pt: 'altesse-std-24pt', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

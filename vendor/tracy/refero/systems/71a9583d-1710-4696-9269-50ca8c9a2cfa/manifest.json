@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "71a9583d-1710-4696-9269-50ca8c9a2cfa",
+  "status": "complete",
+  "name": "SuperMush",
+  "url": "https://styles.refero.design/style/71a9583d-1710-4696-9269-50ca8c9a2cfa",
+  "sourceWebsite": "https://supermush.com",
+  "extractedAt": "2026-06-03T18:21:44.028Z",
+  "capturedAt": "2026-10-08T05:13:17.581060+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Sun-bleached skate ramp meets wellness billboard. Warm bone canvas, one electric blue action color, and full-bleed lifestyle photography that does the shouting.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8fef9d03-a728-4f40-8e7b-5ec5b04f61a5.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d87e21716b9c7d1378d1981efdec8fe3ba13986f0573b426867512a65d50b7df",
+      "bytes": 22050
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9fa3d83125e452146c64ed38a8dbe95c8ba57bad342263d086a28e5d512e7656",
+      "bytes": 193692
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d61b9d6e8c7098d59f5ac14a00dceba54d5f67ab5e7c4d6dd1bbe065c4111b4f",
+      "bytes": 18640
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2404708e2f7ea45f7a7117747de536564c9c9380e542d52f800888b78836fd31",
+      "bytes": 16682
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "faa3eb70d650f429eb2b9316e66c4bfdb71e48acfebfd32400bee23f860f8f41",
+      "bytes": 13970
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "59ec86db9aa4d069cce91a2f593308153a9187087c7e568d6de6b7b2fe9cd9e5",
+      "bytes": 3964
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0344b9e39a3871e2117d73d480fff75673c7b389788ecdffb776535d2f34666f",
+      "bytes": 768
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e5cd642f2f2f48f40605f0805ce4c6378b6b9fc4e7c6c6d48d8690f10936ee58",
+      "bytes": 785
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4257c2eb79a7a86068b0ba0ddeca318046cef674a71824d45b9f9782da3a0ddf",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a5531e4eae90d57ed0234722e52887e4c390261af78535262e077e4f2e449617",
+      "bytes": 47201
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "049847b24dd0f07c5c52912709530d18085f863df8bafda95a64ebecc92ba856",
+      "bytes": 24860
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "10852ceaceb8c150ebd94a1ec566958bf288a7e872f94f7fab7f165dd31918be",
+      "bytes": 62659
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "0a1551e81c8b39f791edbd1f5aa25da0b85d41e2551a9e135e0927e3ee806e8b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "55ec3c284b460ed79aa994d0360d45b69873f3548dbe7e75aa2288b37c7b906f",
+      "bytes": 1661
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "12eb76c4d320d9338f92077a194f3e181c0de2e33c1753866e86ea4786f08384",
+      "bytes": 2253
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "261a4ad3-e835-4f7a-beb7-72187f84d462",
+    "2c7a280c-7cc1-4766-b043-bc8bdd9b868c",
+    "418b374a-be64-44f0-b17e-1d45308c7e62",
+    "4d42420f-a7d4-499f-8025-5af294fff0f5",
+    "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+    "71a9583d-1710-4696-9269-50ca8c9a2cfa",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "8512e28d-5385-4c20-a336-214568c4370c",
+    "8b4a1a95-9dbf-4565-ace7-c4cf48eb028a",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "be17feca-c2bd-4e17-b4d2-ed3ae019a84c",
+    "cd723d5a-e7ea-4e4c-a3bb-6cf56e05057a",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d7a73e16-4b3e-4b9d-aef2-2c31a9db7457",
+    "d91841cf-c717-43ef-97a2-400778fa6e1a",
+    "db451eca-8de6-43a9-a5d5-35271befdffd",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

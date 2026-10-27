@@ -1,0 +1,74 @@
+{
+  "color": {
+    "analyst-yellow": {
+      "$value": "#FFCC00",
+      "$type": "color",
+      "$description": "Analyst Yellow — Announcement bar background only — saturated yellow on near-black text creates maximum urgency at minimal surface area, never used elsewhere so it retains its alarm-signal quality"
+    },
+    "orchid-cta": {
+      "$value": "#B074CE",
+      "$type": "color",
+      "$description": "Orchid CTA — Primary CTA buttons — warm violet against cream background reads as inviting rather than urgent, distinguishing CTAs from the aggressive red/orange typical of SaaS"
+    },
+    "brand-green": {
+      "$value": "#20A277",
+      "$type": "color",
+      "$description": "Brand Green — Finance category accent swatch — one of three role-coded indicator blocks (RevOps red, Founders navy, Finance green) flanking solution rows"
+    },
+    "glacier": {
+      "$value": "#2DCBDC",
+      "$type": "color",
+      "$description": "Glacier — Background decorative color block in hero, part of the floating pastel spreadsheet-cell visual language"
+    },
+    "midnight-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Midnight Ink — All headings, body text, borders, nav links, icons — full black with zero softening; the high contrast against cream is deliberately old-media, not SaaS-neutral"
+    },
+    "warm-cream": {
+      "$value": "#FAF9F5",
+      "$type": "color",
+      "$description": "Warm Cream — Page background, section backgrounds — the slight warm yellow tint separates this from clinical white and reinforces the paper/spreadsheet metaphor"
+    },
+    "cloud-white": {
+      "$value": "#FFFFFF",
+      "$type": "color",
+      "$description": "Cloud White — Button text on orchid CTAs, nav hover states, input field backgrounds"
+    },
+    "slate-body": {
+      "$value": "#646462",
+      "$type": "color",
+      "$description": "Slate Body — Body copy, nav secondary text, descriptive subtexts under headings"
+    },
+    "fog-border": {
+      "$value": "#CDCCC9",
+      "$type": "color",
+      "$description": "Fog Border — Nav dropdown shadows, subtle divider lines"
+    }
+  },
+  "font": {
+    "serrif-condensed": {
+      "$value": "Serrif Condensed",
+      "$type": "fontFamily",
+      "$description": "All display and section headings — single weight 400 across all sizes is the anti-convention choice; most SaaS headlines use 700-800, this regular-weight condensed serif whispers editorial authority. The 110px size is used only for hero display text."
+    },
+    "unica77": {
+      "$value": "Unica77",
+      "$type": "fontFamily",
+      "$description": "Every non-heading element: nav links, body copy, buttons, footer, input placeholder, labels. The negative letter-spacing at all sizes tightens an already compact grotesque into something UI-precise — a signature move that makes UI chrome feel considered rather than default."
+    },
+    "aeonik-fono": {
+      "$value": "Aeonik Fono",
+      "$type": "fontFamily",
+      "$description": "Fine-print body context — 13px utility text likely used for footnotes or micro-labels. Its presence alongside Unica77 suggests a tertiary voice for data footnotes or legal-adjacent content."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://equals.com",
+      "siteName": "Equals",
+      "extractedAt": "2026-04-11T19:03:11.531Z",
+      "variant": "compact"
+    }
+  }
+}

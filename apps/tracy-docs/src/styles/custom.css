@@ -1,0 +1,54 @@
+/*
+ * Tracy's accent on Starlight's own theme. Only the accent scale is changed: the system-wide
+ * primary is terracotta `#bf5b3d` (packages/ui/tracy-ui/src/tokens.css, 14/09/2026), and
+ * Starlight derives buttons, links and the active sidebar item from these three variables.
+ * Everything else — type, spacing, dark mode — stays Starlight's, so the site follows its upgrades.
+ */
+:root {
+  --sl-color-accent-low: #3b1a10;
+  --sl-color-accent: #bf5b3d;
+  --sl-color-accent-high: #f1c9b8;
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #f6e1d8;
+  --sl-color-accent: #a94b2f;
+  --sl-color-accent-high: #4a2013;
+}
+
+/* The embedded API reference (reference/index.mdx): as tall as the viewport allows, one border. */
+.tracy-reference-frame {
+  width: 100%;
+  height: calc(100vh - 6rem);
+  min-height: 32rem;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 0.5rem;
+  background: var(--sl-color-bg);
+}
+
+/*
+ * The image or short video under a changelog Highlight (`changelog/desktop/X.Y.md`; the one shape is
+ * in packages/desktop/tracy-desktop/build/release-notes-page.mjs): its own line under the bullet text,
+ * as wide as the column at most, one hairline border so a light screenshot does not melt into the
+ * page in the light theme.
+ */
+.sl-markdown-content li > img,
+.sl-markdown-content li > video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-block: 0.5rem 0.75rem;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 0.5rem;
+}
+
+/* Keep every client choice visible when navigating the quickstart on a narrow screen. */
+@media (max-width: 50rem) {
+  .tracy-mcp-client-tabs [role='tablist'] {
+    flex-wrap: wrap;
+  }
+
+  .tracy-mcp-client-tabs [role='tab'] {
+    white-space: nowrap;
+  }
+}

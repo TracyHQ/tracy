@@ -1,0 +1,4379 @@
+/**
+ * Sidebar styles. Per the DSH web-styling rules every visual value rides the
+ * theme: --dsw-alias-* semantic tokens for colors, --dsw-font-* typography
+ * roles (size paired with line-height), and --ds-* for motion. The chrome
+ * mirrors the native DSH sidebar: flat (NO box-shadows anywhere), the
+ * sidebar fill surface, hairline borders, and the 28/36px circular icon
+ * controls with hover fills. No static palette values, no color literals, no
+ * theme selectors — light/dark adaptation is the theme package's job.
+ */
+
+/* ── Shell ─────────────────────────────────────────────────────────────── */
+
+/* Skinning contract (token-driven): every surface here consumes DSH's
+   generic tokens (`--dsw-alias-*`), NEVER `--dsw-specific-sidebar-fill` —
+   skin systems override that token to restyle the APP's own left-nav column
+   (dsh-web-ui skins make it translucent glass or theme colors, Aqua makes it
+   transparent), and a panel consuming it would lose its fill or clash with
+   the label tokens. The panels use the generic card surface
+   `--dsw-alias-bg-layer-1`, which every dsh-web-ui skin overrides — so
+   switching skins in the dsh-web-ui skin center re-skins the sidebar panels
+   automatically (see AGENTS.md §8). */
+
+/* The unified panel host: a fixed, viewport-sized, click-transparent
+   containing block for every panel element. Panels are ABSOLUTE within it
+   (not fixed), so a desktop shell's intermediate wrapper transform can
+   never hijack their containing block — the host itself is the only fixed
+   element, appended directly to document.body. The layer sits at z-index 25:
+   above the app's shell overlay (AppFrame overlayLayer, 20) and in-flow
+   content, below DSH's ui-cordis dynamic-plugin panel (fixed, 30 — the
+   inventory/surfacing surface must never be hidden behind the workbench),
+   and below the app's overlay stack at 100+; each panel re-enables pointer
+   events on itself. Degraded mode ([data-dsh-panel-host-degraded]) covers
+   the rare shell that transforms <html>/<body> itself: the host becomes
+   absolute and the mount self-check pins it to the viewport every frame. */
+:global([data-dsh-panel-host]) {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  pointer-events: none;
+  /* Clip at the viewport edge: collapsed panels slide off-screen with
+     `transform: translate(102%)`, and a transformed element still
+     contributes to its ancestors' scrollable overflow — without this the
+     hidden panels extended the document's scrollable area, making the whole
+     page draggable left-right and up-down while any panel was collapsed.
+     The host is exactly viewport-sized (inset: 0), so the clip is invisible
+     until a panel slides in from the edge; internal scroll containers and
+     the app's fixed overlay stack are unaffected. `clip`, not `hidden`: a
+     hidden box stays a PROGRAMMATICALLY scrollable container, and a
+     scrollIntoView fired from panel content (the file tree's "Show in
+     folder" reveal) scrolled the host itself — shifting the whole panel,
+     tab bar included, out of the viewport with no way to scroll back.
+     The same class covers any scroll-into-view fixup — focus moving into
+     an off-viewport region, a nested iframe/workbench claiming focus
+     while it loads — so the guard belongs on the layer itself, not per
+     call site. The `hidden` declaration BEFORE `clip` is an old-engine
+     fallback, not dead style: engines without `clip` support (Safari < 16)
+     drop the `clip` line, which would leave this box `overflow: visible`
+     — no clipping at all, and the page-draggable regression above
+     returns. With `hidden` first those engines keep the clipping (plus
+     its pre-clip scrollability) while every clip-aware engine applies
+     the later `clip`. */
+  overflow: hidden;
+  overflow: clip;
+}
+
+/* Desktop drag regions ignore pointer-events: the shell's base stylesheet
+   makes every direct body child `no-drag`, and the plugin HOST is one — in
+   Electron that value also reaches the viewport-sized panel layer inside it
+   (#772's CDP reading; the browser engine used by the mount lane does not
+   propagate it, so the layer's own rule below is belt-and-braces), which is
+   what cancelled every window-drag strip beneath it once the shell
+   recomputed regions (window drags worked once, then stopped). Take the host
+   and layer out of the app-region computation; `!important` because the
+   shell's `body > :not(#root)` selector outranks ours. The panels themselves
+   stay no-drag so their controls keep receiving clicks.
+   The plugin's OTHER persistent viewport-sized body child — the mermaid zoom
+   modal — carries the same reset on its own rule further down, or opening a
+   diagram would blank window drag (and the macOS double-click-title zoom)
+   while it is up. It is a modal SCRIM, so it does get the reset even though
+   it is interactive: only its widgets (`<button>` …) need to stay no-drag,
+   and the residual is that its backdrop inside the shell's top drag band
+   starts a window drag instead of closing the modal — the deliberate trade
+   for keeping the window draggable while a diagram is enlarged.
+   Deliberately NOT applied to the other interactive popups (`.selectionPopup`
+   is a `<button>`; FloatingWindow / AnchoredPopover own pointer drags and are
+   not scrims): the shell's `:is(button, a, input, …)` rule already keeps those
+   no-drag, and `initial !important` would outrank it and start a window drag on
+   press instead — the click-swallow regression of issues #103/#111. */
+:global(html[data-platform] body > [data-dsh-better-sidebar]),
+:global([data-dsh-panel-host]) {
+  -webkit-app-region: initial !important;
+}
+
+:global([data-dsh-panel-host]) > * {
+  -webkit-app-region: no-drag;
+}
+
+:global([data-dsh-panel-host][data-dsh-panel-host-degraded]) {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* The closed-state affordance is the native rail icon control: a plain
+   28px circle (the app's icon-button size — the cluster must stay inside
+   the 34px tab-strip band so it never covers the pane headers below),
+   transparent fill, secondary ink; hover raises the fill. No border, no
+   shadow — the icon alone is the affordance. */
+.toggleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+  transition:
+    background var(--ds-transition-duration-slow) var(--ds-ease-in-out),
+    color var(--ds-transition-duration-slow) var(--ds-ease-in-out);
+}
+
+.toggleButton:hover:not(:disabled):not([aria-disabled='true']) {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.toggleButton:disabled,
+.toggleButton[aria-disabled='true'] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.panelBody {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+}
+
+/* ── Bottom panel ──────────────────────────────────────────────────────── */
+
+/* The bottom panel: an independent workbench at the bottom of the CENTER
+   column only (the Sidebar shell writes left/right inline: from the app's
+   own left sidebar to the right panel's left edge) — the sidebars never
+   give up any position. Same surface as the right panel, with a top
+   hairline instead of the left one. Host-internal z-index 40 mirrors the
+   right panel; the absolute global layer comes from the host (25), below
+   DSH's ui-cordis dynamic-plugin panel (30) so the cordis inventory
+   surface floats above the workbench, and below the app's overlay stack
+   (100+) so popups win over the workbench (issue #52). */
+.bottomPanel {
+  position: absolute;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  background: var(--dsw-alias-bg-layer-1);
+  border-top: 1px solid var(--dsw-alias-border-l2);
+  /* Re-enable interaction inside the click-transparent panel host. */
+  pointer-events: auto;
+  /* Bottom safe-area (notched phones); 0 on desktops. */
+  padding-bottom: env(safe-area-inset-bottom);
+  /* Expand/collapse slides the panel; height drags animate the height. */
+  transition:
+    transform var(--ds-transition-duration-slow) var(--ds-ease-in-out),
+    height var(--ds-transition-duration-slow) var(--ds-ease-in-out);
+}
+
+/* Collapsed: slid off-screen, interactive nothing, hidden after the slide. */
+.bottomPanelHidden {
+  transform: translateY(102%);
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    transform var(--ds-transition-duration-slow) var(--ds-ease-in-out),
+    height var(--ds-transition-duration-slow) var(--ds-ease-in-out),
+    visibility 0s linear var(--ds-transition-duration-slow);
+}
+
+/* Height drags write at pointer cadence; easing would detach the edge. */
+.bottomPanel[data-dragging] {
+  transition: none;
+}
+
+/* Layout isolation: panel-internal reflows (tabs, editors, terminals) never
+   leak into the app shell's layout, and the app shell's layout changes
+   never cascade through the panel subtree — the drag stays confined.
+   will-change: transform is only live while a drag is (the body attribute
+   toggles with the drag state), promoting the panels to their own layer
+   without paying the compositing cost at rest. */
+.bottomPanel {
+  contain: layout style;
+}
+
+body[data-dsh-sidebar-dragging] .panel,
+body[data-dsh-sidebar-dragging] .bottomPanel {
+  will-change: transform;
+}
+
+/* The bottom panel's height drag: the top edge strip (mirror of the right
+   panel's width strip), centered on the border like the width strip. */
+.bottomResize {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -4px;
+  height: 8px;
+  cursor: row-resize;
+  z-index: 2;
+  touch-action: none;
+}
+
+.bottomResizeActive {
+  background: var(--dsw-alias-interactive-bg-hover-accent);
+}
+
+/* The bottom panel's close control: the app's icon-button pattern (28px
+   circle), pinned to the tab strip's right end — one tap collapses the
+   panel. The tab strips below reserve its width so the + menu never hides
+   under it. */
+.bottomClose {
+  position: absolute;
+  top: 3px;
+  right: 6px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+  flex: none;
+}
+
+.bottomClose:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* The bottom panel's tab strips reserve the close control's width at their
+   right end, so the + menu never hides under it. */
+.bottomPanel .tabBar {
+  padding-right: 40px;
+}
+
+/* ── Desktop drag-region opt-out ──────────────────────────────────────── */
+
+/* Frameless desktop shells make the top strip of the web content draggable
+   (Electron `-webkit-app-region: drag`); pointer events over that strip are
+   swallowed as window drags unless the interactive element opts out
+   (issues #103/#111). The plugin's viewport-corner chrome must declare
+   `no-drag` itself — some shells (Tauri, older desktop builds, third-party
+   wrappers) have no blanket button rule. The property is a no-op in plain
+   browsers and in shells without drag regions — safe everywhere. */
+.toggleButton,
+.tabBar {
+  -webkit-app-region: no-drag;
+}
+
+/* ── Position compatibility mode (Windows native title bar) ────────────── */
+
+/* Windows frameless / hidden-title-bar windows draw the native caption
+   strip (minimize / maximize / close) at the window's top-right corner,
+   OVER the web content. When the user enables the "position compatibility"
+   pref, the Sidebar shell publishes the strip height as
+   `--dsh-title-bar-strip` plus `body[data-dsh-title-bar-compat]` for the
+   user's own CSS; the plugin's remaining chrome (the bottom workbench) sits
+   at the window's bottom and is never under the top strip. */
+/* Icon button: the app's own icon-button pattern (ui-workspace) — a 28px
+   circle, secondary label, hover fill; no border so the icon alone is the
+   affordance. */
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+  flex: none;
+}
+
+.iconButton:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.iconButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ── Workbench / split panes ───────────────────────────────────────────── */
+
+.workbench {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+}
+
+.split {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+}
+
+.splitRow {
+  flex-direction: row;
+}
+
+.splitCol {
+  flex-direction: column;
+}
+
+.splitChild {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+}
+
+.divider {
+  position: relative;
+  flex: none;
+  z-index: 3;
+  touch-action: none;
+}
+
+/* The hit area stays 7px wide enough to grab, but the visual is a 1px
+   hairline centered in it — a divider line, not a thick band. */
+.dividerRow::after,
+.dividerCol::after {
+  content: '';
+  position: absolute;
+  background: var(--dsw-alias-border-l2);
+  transition: background var(--ds-transition-duration-slow) var(--ds-ease-in-out);
+}
+
+.dividerRow {
+  width: 7px;
+  margin: 0 -2px;
+  cursor: col-resize;
+}
+
+.dividerRow::after {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.dividerCol {
+  height: 7px;
+  margin: -2px 0;
+  cursor: row-resize;
+}
+
+.dividerCol::after {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.divider:hover::after,
+.dividerActive::after {
+  background: var(--dsw-alias-interactive-bg-hover-accent);
+}
+
+.pane {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--dsw-alias-bg-base);
+}
+
+.paneDrop {
+  outline: 1px solid var(--dsw-alias-interactive-bg-hover-accent);
+  outline-offset: -1px;
+}
+
+/* VSCode-style drag-to-edge drop zones (25% edges, 50% center). */
+.dropOverlay {
+  position: absolute;
+  z-index: 6;
+  pointer-events: none;
+  background: var(--dsw-alias-interactive-bg-hover-accent);
+  opacity: 0.5;
+}
+
+.dropLeft {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 25%;
+}
+
+.dropRight {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 25%;
+}
+
+.dropUp {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 25%;
+}
+
+.dropDown {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25%;
+}
+
+.dropCenter {
+  left: 25%;
+  right: 25%;
+  top: 25%;
+  bottom: 25%;
+  background: transparent;
+  outline: 2px dashed var(--dsw-alias-interactive-bg-hover-accent);
+  outline-offset: -2px;
+}
+
+.paneContent {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* The native tab chip's glyph (drawn by the plugin inside the host's
+   `sidebar.right.pane.tab.title` slot, which is the chip's content): sized to
+   the text, aligned on its baseline box, and separated from the title the way
+   the workbench strip separates its own glyph from its label. */
+.chipIcon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 6px;
+  flex: none;
+}
+
+/* One tab's mounted content; inactive tabs stay mounted but hidden so
+   switching never tears down terminals/editors (state survives). */
+.paneTab {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.paneTabHidden {
+  display: none;
+}
+
+/* An empty pane's welcome cards: a responsive grid of openable types — as
+   many per row as the pane width allows; rows that cannot fit the pane
+   height are clipped (never scrolled or squeezed smaller).
+
+   The card itself mirrors DSH's OWN guide capsule (the built-in tab types'
+   entry box, `ui-sidebar-right`'s GuideBody / `ui-sidebar-terminal`'s
+   TerminalGuide): one hairline in the l4 weight, a 24px radius, the layer-1
+   fill and the 56px floor. The two surfaces are the same thing — "pick what
+   opens here" — so they must not read as two different design systems.
+   The column floor is wider than before because a 24px radius needs the
+   room; the vertical gap keeps the capsule proportions. */
+.paneEmptyCards {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  align-content: start;
+  gap: 12px;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.paneCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  min-width: 0;
+  min-height: 56px;
+  box-sizing: border-box;
+  padding: 14px 20px;
+  border: 0.5px solid var(--dsw-alias-border-l4);
+  border-radius: 24px;
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
+  /* The host capsule sets a raw `font-size: 15px` with no token behind it;
+     the ladder's nearest step is the 14px medium row, so the label reads at
+     the same weight as DSH's own entry without inventing a literal. */
+  font: var(--dsw-font-s-strong-14);
+  cursor: pointer;
+  text-align: left;
+}
+
+/* The glyph takes the host capsule's secondary ink; the label carries the
+   primary ink (same split as the host's guide entry). */
+.paneCard > svg {
+  flex: none;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.paneCard:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+  border-color: var(--dsw-alias-border-l4);
+}
+
+.paneCard:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ── Tab strip ─────────────────────────────────────────────────────────── */
+
+.tabBar {
+  flex: none;
+  display: flex;
+  align-items: stretch;
+  height: 34px;
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.tabBarDrop {
+  outline: 1px dashed var(--dsw-alias-interactive-bg-hover-accent);
+  outline-offset: -1px;
+}
+
+.tabList {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabList::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex: none;
+  max-width: 160px;
+  min-width: 64px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px 0 10px;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-label-secondary);
+  border-right: 1px solid var(--dsw-alias-border-l1);
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tab:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.tabActive {
+  color: var(--dsw-alias-label-primary);
+  /* Native selected fill (Rows .sessionRow.selected) — no underline, no shadow. */
+  background: var(--dsw-alias-interactive-bg-active);
+}
+
+.tabTitle {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* One tab's descriptor badge (a count capped at 99+, or a short text). */
+.tabBadge {
+  flex: none;
+  min-width: 16px;
+  height: 15px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font: var(--dsw-font-xxxs-strong-11);
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-brand-primary);
+}
+
+.tabClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--dsw-alias-label-tertiary);
+  cursor: pointer;
+  flex: none;
+}
+
+.tabClose:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.tabBarPlus {
+  flex: none;
+  align-self: center;
+  /* Adjacent to the rightmost tab; sticky so overflowing tab rows keep it
+     visible at the right edge of the scrollport. */
+  position: sticky;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin: 0 6px;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-tertiary);
+  cursor: pointer;
+}
+
+.tabBarPlus:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* ── Explorer ──────────────────────────────────────────────────────────── */
+
+.explorer {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.explorerHeader {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 36px;
+  padding: 0 8px 0 12px;
+}
+
+.explorerRoot {
+  font: var(--dsw-font-s-14);
+  color: var(--dsw-alias-label-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.explorerBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  /* Deep trees truncate their labels instead of scrolling horizontally. */
+  overflow-x: hidden;
+  padding: 4px 8px 8px;
+}
+
+/* One tree row: the plugin's native list rhythm (28px, radius 4, inset,
+   hover fill, 22px indent step, 12px ink) with a mount fade so expanding a
+   directory reveals its children gently (stable keys keep existing rows from
+   replaying it). */
+.explorerRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  /* border-box keeps the inline indent padding (depth * 22 + 6) INSIDE the
+     row's 100% width — without it deep rows overflow and force a horizontal
+     scrollbar on the tree body. */
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  height: 28px;
+  padding: 0 8px;
+  border: none;
+  background: transparent;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-label-primary);
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: 4px;
+  animation: dsh-row-in 150ms var(--ds-ease-in-out);
+}
+
+.explorerRow:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+/* A multi-selected row: the native selected fill plus the design's 2px
+   inset accent bar (a pseudo element, so metrics never shift between rows).
+   Distinct from the reveal tint below — a reveal is "here it is", a
+   selection is "this is the batch's member". */
+.explorerRowSelected {
+  background: var(--dsw-alias-interactive-bg-active);
+}
+
+.explorerRowSelected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--dsw-alias-state-business-primary);
+}
+
+/* Git-changed file names (VS Code's ink): the row keeps one class and the
+   tone arrives as a data attribute, so the mapping lives in one place. */
+.explorerGitName[data-git-tone='modified'] { color: var(--dsw-alias-state-warn-primary); }
+.explorerGitName[data-git-tone='added'] { color: var(--dsw-alias-state-success-primary); }
+.explorerGitName[data-git-tone='untracked'] { color: var(--dsw-alias-state-success-primary); }
+.explorerGitName[data-git-tone='deleted'] { color: var(--dsw-alias-state-error-primary); }
+.explorerGitName[data-git-tone='renamed'] { color: var(--dsw-alias-state-business-primary); }
+.explorerGitName[data-git-tone='copied'] { color: var(--dsw-alias-state-success-primary); }
+.explorerGitName[data-git-tone='conflict'] { color: var(--dsw-alias-state-error-primary); }
+
+/* A directory with a change anywhere below it: tinted, but never lettered
+   (the letter belongs to the file that actually changed). */
+.explorerDirChanged {
+  color: var(--dsw-alias-state-business-primary);
+}
+
+/* A "Show in folder" reveal highlight: the target row stays tinted until
+   the transient reveal set is cleared (a reload starts unhighlighted).
+   The DSH business-blue surface (the same source the host's nav items use
+   for their active accent) — a flat tint, deliberately no left bar. */
+.explorerRowRevealed {
+  background: var(--dsw-alias-state-business-tertiary);
+}
+
+/* Reveal sets usually list sibling files — consecutive tinted rows merge
+   into ONE rounded block: the touching edges square off, so a multi-file
+   highlight has no per-row radius notches. A solo revealed row (or the
+   first/last of a run) keeps its full radius. Rows are flat siblings in
+   the tree body (depth is inline padding), so the sibling combinator sees
+   every adjacency. */
+.explorerRowRevealed + .explorerRowRevealed {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.explorerRowRevealed:has(+ .explorerRowRevealed) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.explorerDir {
+  font: var(--dsw-font-xxs-strong-12);
+}
+
+.explorerHidden {
+  opacity: 0.45;
+}
+
+/* The link badge on symlink rows (folder and file rows alike). */
+.explorerSymlink {
+  flex: none;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+/* A symlink whose target is missing: error ink on the name (the row stays
+   clickable — the editor surfaces the read failure). */
+.explorerBroken .explorerName {
+  color: var(--dsw-alias-state-error-primary);
+}
+
+.explorerName {
+  /* min-width: 0 lets the flex item shrink below its content so the label
+     truncates with an ellipsis instead of widening the row. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Inline rename / new-folder editor ───────────────────────────────────
+   The level's top (or a row) swaps in a plain input (same row metrics: 28px
+   height, 6px gap, 12px type); only tokens, no hardcoded colors. */
+.explorerRenaming {
+  cursor: text;
+}
+
+.explorerRenameInput {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 22px;
+  padding: 0 6px;
+  border: 1px solid var(--dsw-alias-state-business-primary);
+  border-radius: 3px;
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-12);
+}
+
+.explorerRenameInput:focus {
+  outline: none;
+  border-color: var(--dsw-alias-state-business-primary);
+}
+
+/* The dismissable mutation-failure strip above the root row (rename/delete
+   refusals — raw server text, same policy as the fence notice). */
+.explorerActionError {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--dsw-alias-state-error-primary);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.explorerActionErrorText {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-state-error-primary);
+}
+
+/* The multi-selection bar: the LAST child of the tree's scroll container, so
+   it docks at the panel's bottom edge (sticky) and its appearance never
+   pushes the rows around the way a top bar did. Sticky (not absolute) keeps
+   it in flow: scrolled to the bottom it sits below the last row and covers
+   nothing, while mid-scroll it stays reachable. It WRAPS instead of
+   overflowing, so a narrow panel gets a second line of chips rather than a
+   clipped control or a horizontal scrollbar. 28px rhythm, token-only (§1). */
+.explorerSelectionBar {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 28px;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.explorerSelectionText {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: var(--dsw-font-xxs-strong-12);
+  color: var(--dsw-alias-label-secondary);
+}
+
+.explorerSelectionActions {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+  max-width: 72%;
+}
+
+/* The leading glyph of one "open in app" menu entry (the host's icon route
+   or a data URL). Fixed box: the menu's own icon slot sizing. */
+.explorerAppIcon {
+  display: block;
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+
+/* The tree parked while the search results panel owns the surface (the tree
+   must stay MOUNTED: its level cache is the whole point). */
+.explorerHiddenPane {
+  display: none;
+}
+
+/* The hover-revealed @-reference button at the row's far right (and the
+   transient "copied" label that replaces it after a copy). The only auto
+   margin in the row absorbs the filename's spare width, so a short name
+   cannot leave either affordance stranded in the middle. */
+.explorerRef,
+.explorerCopied {
+  margin-left: auto;
+}
+
+/* Hidden rows keep the name at full width; hovering or focusing the row
+   reveals the reference button. */
+.explorerRef {
+  flex: none;
+  display: none;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 999px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-tertiary);
+  font: var(--dsw-font-xxxs-strong-11);
+  cursor: pointer;
+}
+
+.explorerRef:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.explorerRow:hover .explorerRef,
+.explorerRow:focus-within .explorerRef {
+  display: inline-flex;
+}
+
+.explorerCopied {
+  flex: none;
+  font: var(--dsw-font-xxxs-11);
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.explorerError {
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-state-error-primary);
+  cursor: default;
+}
+
+/* Mount fade for tree rows (the app's session-row reveal). */
+@keyframes dsh-row-in {
+  from { opacity: 0; }
+}
+
+.explorerEmpty {
+  padding: 16px;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-label-tertiary);
+  text-align: center;
+}
+
+/* Drag a file/folder over a tree row: the target directory row takes the
+   accent-tinted fill and a dashed business edge (drops land inside it; file
+   rows target their parent directory). The zone frame around the whole tree
+   is the portaled .uploadDropZone. */
+.explorerRowDropTarget {
+  background: var(--dsw-alias-interactive-bg-hover-accent);
+  outline: 1px dashed var(--dsw-alias-state-business-primary);
+  outline-offset: -1px;
+}
+
+/* The drop mask: one pointer-inert scrim over the whole viewport, portaled
+   to document.body BELOW the zone frame — the panel-host float layer is
+   z-1000 (DSH's own page mask sits there too), so 1001/1002 keep this
+   transient surface on top. The mask is deliberately light: the conversation
+   column beneath it still takes drops into the chat natively, and the user
+   never loses sight of the tree. */
+.uploadDropMask {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--dsw-alias-bg-base) 62%, transparent);
+  animation: dsh-row-in 150ms var(--ds-ease-in-out);
+}
+
+/* The sidebar's drop surface: a pointer-inert frame portaled to
+   document.body, fixed over the explorer body's viewport rect. The hint pill
+   docks at the TOP edge of the zone (right under the search row, the first
+   thing the eye meets), leaving the rows — the actual drop targets —
+   aimable. */
+.uploadDropZone {
+  position: fixed;
+  z-index: 1002;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12px;
+  border: 2px dashed var(--dsw-alias-border-l2);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--dsw-alias-state-business-primary) 4%, transparent);
+  animation: dsh-row-in 150ms var(--ds-ease-in-out);
+}
+
+/* The zone's drop hero, docked at the TOP edge (right under the search
+   row, the first thing the eye meets): the tray illustration over the hint
+   pill — stacked so the rows below stay aimable. */
+.uploadDropHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding-top: 8px;
+}
+
+/* The drop art's two inks (the SVG strokes/fills take them via
+   currentColor): the accent for the rising arrow and the front card, a quiet
+   tint for the tray body and the back card, and the surface ink for the
+   motifs cut out of the cards. */
+.uploadDropArtPrimary {
+  color: var(--dsw-alias-state-business-primary);
+}
+
+.uploadDropArtAccent {
+  color: var(--dsw-alias-state-business-tertiary);
+}
+
+.uploadDropArtCut {
+  color: var(--dsw-alias-bg-layer-1);
+}
+
+.uploadDropZonePill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  height: 28px;
+  max-width: 100%;
+  padding: 0 12px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 999px;
+  background: var(--dsw-alias-bg-layer-1);
+  box-shadow: var(--dsw-shadow-lv2);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxxs-11);
+}
+
+.uploadDropZoneText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The left zone's invitation: centered in the viewport space beside the
+   tree (inline width = the zone's left edge), telling the user the dimmed
+   conversation column still accepts drops — into the chat, natively. */
+.uploadDropChatHint {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1003;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: dsh-row-in 150ms var(--ds-ease-in-out);
+}
+
+/* The invitation's content: the photo-cards illustration over the label. */
+.uploadDropChatCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  text-align: center;
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-strong-12);
+}
+
+/* Full-window upload progress: blurred scrim + card (same mask/backdrop
+   tokens as the repo's Modal primitive; absolute within the tree panel so it
+   never covers the conversation column). */
+.uploadOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dsw-alias-bg-mask-1);
+  backdrop-filter: var(--dsw-mask-blur);
+  animation: dsh-row-in 150ms var(--ds-ease-in-out);
+}
+
+.uploadOverlayCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 240px;
+  max-width: min(420px, calc(100% - 48px));
+  padding: 16px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-2);
+  box-shadow: var(--dsw-shadow-lv3);
+}
+
+.uploadOverlayTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: var(--dsw-font-xxs-strong-12);
+  color: var(--dsw-alias-label-primary);
+}
+
+.uploadOverlayTitle > svg {
+  flex: none;
+}
+
+.uploadOverlayTitle > span {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.uploadOverlayProgress {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--dsw-alias-border-l2);
+  overflow: hidden;
+}
+
+.uploadOverlayProgressFill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--dsw-alias-interactive-bg-hover-accent);
+  transition: width 150ms var(--ds-ease-in-out);
+}
+
+.uploadOverlayStatus {
+  min-height: 1em;
+  font: var(--dsw-font-xxxs-11);
+  font-variant-numeric: tabular-nums;
+  color: var(--dsw-alias-label-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.uploadOverlayCancel {
+  align-self: flex-end;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-strong-12);
+  cursor: pointer;
+}
+
+.uploadOverlayCancel:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+  border-color: var(--dsw-alias-border-l2);
+}
+
+.uploadOverlayCancel:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ── Editor ────────────────────────────────────────────────────────────── */
+
+.editor {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.editorHeader {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+}
+
+.editorTitle {
+  flex: 1;
+  min-width: 0;
+  font: var(--dsw-font-xxs-strong-12);
+  color: var(--dsw-alias-label-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Merged mode (the editorExplorer pref): the header's path input replaces
+   the plain title, and a toggleable file tree docks at the tab's right edge. */
+.editorPathInput {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 6px;
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-12);
+}
+
+.editorPathInput:focus {
+  outline: none;
+  border-color: var(--dsw-alias-border-l2);
+}
+
+/* The tree-panel toggle in the header: active = panel open (the selected
+   fill of the tab strip). */
+.editorTreeToggleActive {
+  color: var(--dsw-alias-label-primary);
+  background: var(--dsw-alias-interactive-bg-active);
+}
+
+.editorBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.editorMain {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The docked file tree: the wrapper owns the (drag-adjustable) width and
+   the hairline separation; the resize handle is a wider invisible strip on
+   its left edge with a hover affordance. */
+.editorTreeDock {
+  position: relative;
+  flex: none;
+  min-height: 0;
+  display: flex;
+  border-left: 1px solid var(--dsw-alias-border-l1);
+}
+
+.editorTreeResize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Inside the dock (left edge): pointer capture on the handle keeps the
+     drag alive even when the pointer leaves the strip. */
+  left: 0;
+  width: 6px;
+  cursor: col-resize;
+  touch-action: none;
+  z-index: 3;
+}
+
+.editorTreeResize:hover {
+  background: var(--dsw-alias-border-l2);
+}
+
+.editorTreePanel {
+  /* Relative so the upload overlay and drop pill can cover the tree exactly. */
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The tree panel's full-window form (the `full` prop): fill the tab body. */
+.editorTreePanelFull {
+  flex: 1;
+}
+
+.editorTreeSearch {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+}
+
+.editorSearchInput {
+  flex: 1;
+  min-width: 0;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 6px;
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-12);
+}
+
+.editorSearchInput:focus {
+  outline: none;
+  border-color: var(--dsw-alias-border-l2);
+}
+
+.editorSearchHint {
+  padding: 8px 12px;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.editorSearchResult {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 28px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-12);
+  line-height: 28px;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editorSearchResult:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.editorStatus {
+  font: var(--dsw-font-xxxs-11);
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.editorStatusError {
+  color: var(--dsw-alias-state-error-primary);
+}
+
+.dirtyDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--dsw-alias-state-warn-primary);
+  flex: none;
+}
+
+.editorPlaceholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-label-tertiary);
+  padding: 16px;
+  text-align: center;
+}
+
+/* The unregistered tab type shown by the orphaned-tab placeholder. */
+.orphanedType {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.7;
+  overflow-wrap: anywhere;
+}
+
+/* Binary / download-only files (legacy OLE .doc/.xls/.ppt, unknown binaries):
+   a centered notice plus a download link — the user always gets the file. */
+.editorBinary {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.editorBinaryNotice {
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.editorDownloadLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 6px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-strong-12);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background var(--ds-transition-duration-slow) var(--ds-ease-in-out),
+    border-color var(--ds-transition-duration-slow) var(--ds-ease-in-out);
+}
+
+.editorDownloadLink:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  border-color: var(--dsw-alias-border-l2);
+}
+
+.editorError {
+  padding: 12px 16px;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-state-error-primary);
+}
+
+.editorBanner {
+  flex: none;
+  padding: 4px 8px;
+  font: var(--dsw-font-xxxs-11);
+  color: var(--dsw-alias-state-warn-label);
+  background: var(--dsw-alias-state-warn-tertiary);
+}
+
+/* Live sandbox status row (HTML preview / browser tab): GREEN while the
+   sandbox is on (with the one-tap temporary unlock), RED while it is off
+   (global setting or temporary unlock) — the red state is the persistent
+   warning that the page runs on the GUI's own origin. */
+.sandboxStatus {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  font: var(--dsw-font-xxxs-11);
+}
+
+.sandboxStatusOn {
+  color: var(--dsw-alias-label-secondary);
+  background: var(--dsw-alias-bg-layer-1);
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+}
+
+.sandboxStatusOff {
+  color: var(--dsw-alias-state-error-primary);
+  background: color-mix(in srgb, var(--dsw-alias-state-error-primary) 10%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--dsw-alias-state-error-primary) 45%, transparent);
+}
+
+.sandboxDot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dsw-alias-state-success-primary);
+}
+
+.sandboxStatusOff .sandboxDot {
+  background: var(--dsw-alias-state-error-primary);
+}
+
+.sandboxStatusText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sandboxAction {
+  flex: none;
+  padding: 2px 8px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.sandboxAction:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+/* The HTML preview iframe: fills the editor body. Route-src (never srcdoc)
+   so the frame is cross-origin by construction even if the sandbox
+   attribute is ever dropped; sandboxed by default (see TextEditor). */
+.editorHtml {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border: none;
+  background: var(--dsw-alias-bg-base);
+}
+
+/* ── Browser tab ──────────────────────────────────────────────────────── */
+
+.browserSiteTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.browserSiteTrigger:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.browserSiteIcon {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.browserSiteMenu {
+  max-width: min(320px, calc(100vw - 24px));
+}
+
+.browserSiteMenuHost {
+  display: inline-flex;
+}
+
+.browserSiteIcon img {
+  display: block;
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+
+.browser {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The address bar, option A (Akemi, 01/10/2026; mockup "A · Address field holds the tools" + "Z1"):
+   two filled controls (the address field, the Interactive | Edit switch), everything else ghost,
+   every control 32 px high. The shades are the label colour mixed into the page, not dsh's light
+   aliases (blue-tinted at rest and on hover), so one rule is right in light and dark alike. */
+.browserBar {
+  --tb-fill: color-mix(in oklab, var(--dsw-alias-label-primary) 6%, transparent);
+  --tb-fill-hover: color-mix(in oklab, var(--dsw-alias-label-primary) 9%, transparent);
+  --tb-hover: color-mix(in oklab, var(--dsw-alias-label-primary) 8%, transparent);
+  --tb-line: color-mix(in oklab, var(--dsw-alias-label-primary) 14%, transparent);
+  --tb-muted: color-mix(in oklab, var(--dsw-alias-label-primary) 58%, transparent);
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+}
+
+/* Back, Forward and Refresh: ghost squares of the bar's height. */
+.browserBar > .iconButton,
+.browserBar > .refreshWrap > .iconButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--tb-muted);
+}
+
+.browserBar > .iconButton:hover:not(:disabled),
+.browserBar > .refreshWrap > .iconButton:hover:not(:disabled) {
+  background: var(--tb-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* Refresh's "New version ready" keeps its terracotta over the bar's ghost look. */
+.browserBar > .refreshWrap > .refreshReady,
+.browserBar > .refreshWrap > .refreshReady:hover:not(:disabled) {
+  background: var(--dsw-alias-brand-primary);
+  color: var(--dsw-alias-brand-primary-invert, #fff);
+}
+
+/* The address field: one filled box, no border; the address on the left, its tools trailing. */
+.browserField {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 32px;
+  padding: 0 3px 0 0;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: var(--tb-fill);
+}
+
+.browserField:hover {
+  background: var(--tb-fill-hover);
+}
+
+.browserField:focus-within {
+  background: var(--tb-fill);
+  box-shadow: inset 0 0 0 1px var(--tb-line);
+}
+
+/* Its tools: ghost squares a little smaller than the field. */
+.browserField .iconButton {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  color: var(--tb-muted);
+}
+
+.browserField .iconButton:hover:not(:disabled) {
+  background: var(--tb-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* The address itself: the input, with its resting look laid over it while it has no focus. */
+.browserAddress {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+}
+
+.browserInput {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 6px 0 10px;
+  border: none;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-12);
+  font-size: 13px;
+}
+
+.browserInput:focus {
+  outline: none;
+}
+
+.browserInput::placeholder {
+  color: var(--tb-muted);
+}
+
+/* At rest the input's own text is hidden under its resting look; it still takes the click. */
+.browserAddress[data-editing='false'] .browserInput {
+  color: transparent;
+}
+
+.browserAddressText {
+  position: absolute;
+  inset: 0 6px 0 10px;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  white-space: pre;
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-12);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+/* The path, muted; it is what gives way first (ellipsis). */
+.browserAddressRest {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--tb-muted);
+}
+
+.browserMessage {
+  flex: none;
+  padding: 4px 12px;
+  font: var(--dsw-font-xxxs-11);
+  color: var(--dsw-alias-state-warn-label);
+  background: var(--dsw-alias-state-warn-tertiary);
+}
+
+/* The loading line under the address bar: Chrome's tab spinner, drawn as a 2 px sweep. Present
+   at all times so the bar's height never changes; only its animation comes and goes. */
+.browserProgress {
+  flex: none;
+  height: 2px;
+  margin-top: -2px;
+  /* A faint track the whole width, and a sweep of the brand colour running along it. */
+  background-color: color-mix(in srgb, var(--dsw-alias-brand-primary) 22%, transparent);
+  background-image: linear-gradient(90deg, transparent 0%, var(--dsw-alias-brand-primary) 50%, transparent 100%);
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: tracy-browser-progress 1.1s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.browserProgress[data-loading='true'] {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+@keyframes tracy-browser-progress {
+  from { background-position: -40% 0; }
+  to { background-position: 140% 0; }
+}
+
+.browserFrame {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border: none;
+  background: var(--dsw-alias-bg-base);
+}
+
+.browserStart {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  font: var(--dsw-font-xs-13);
+  color: var(--dsw-alias-label-tertiary);
+}
+
+/* Embed-refusal panel (X-Frame-Options / frame-ancestors): replaces the
+   blank refused iframe with the reason + open-in-browser actions. */
+.browserBlocked {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px;
+  text-align: center;
+  color: var(--dsw-alias-state-warn-primary);
+}
+
+.browserBlockedTitle {
+  font: var(--dsw-font-xxs-strong-12);
+  color: var(--dsw-alias-label-primary);
+}
+
+.browserBlockedDesc {
+  max-width: 280px;
+  font: var(--dsw-font-xxxs-11);
+  color: var(--dsw-alias-label-secondary);
+}
+
+.browserBlockedActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.browserBlockedButton {
+  padding: 4px 12px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 6px;
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxxs-11);
+  cursor: pointer;
+}
+
+.browserBlockedButton:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+/* ── Edit mode (comment-to-edit; Tracy, 27/09/2026) ──────────────────────
+   Port of the cut-down drawing Mockups/Browser comment (Brian, 27/09 pm;
+   packages/dev/tracy-design/src/mockups/browser-comment.mock.stories.tsx)
+   to plain CSS on dsh tokens. The drawing's primary is dsh's
+   --dsw-alias-brand-primary; its popover surface is --dsw-alias-bg-layer-2
+   with the lv3 shadow. The picker's outline (dashed while pointing, solid
+   once picked) is drawn by the page inside the frame, not here. */
+
+/* The mode bar (Brian, 27/09 pm; option A, Akemi 01/10/2026): at the right end of the address bar
+   a quiet segmented control Interactive | Edit on the bar's fill; the selected segment is a raised
+   surface with a thin border (it used to be filled with the label colour, the loudest thing on the
+   bar). Then the Comments button. */
+.modeBar {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 2px;
+}
+
+/* The zoom chip (Z1): only away from 100 %, inside the address field — a small neutral chip with
+   the value; at 100 % the control is the field's magnifier icon (.iconButton). The list it opens
+   is dsh's Menu, unstyled here. */
+.zoomChip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  margin: 0 2px;
+  padding: 0 7px;
+  border: none;
+  border-radius: 6px;
+  background: var(--tb-line, transparent);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxxs-strong-11);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.zoomChip:hover {
+  background: color-mix(in oklab, var(--dsw-alias-label-primary) 20%, transparent);
+}
+
+.zoomChip:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--dsw-alias-brand-primary) 50%, transparent);
+  outline-offset: 1px;
+}
+
+.modeSegments {
+  flex: none;
+  display: inline-flex;
+  align-items: stretch;
+  gap: 2px;
+  height: 32px;
+  padding: 2px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: var(--tb-fill, transparent);
+}
+
+.modeSegment {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--tb-muted, var(--dsw-alias-label-secondary));
+  font: var(--dsw-font-xxs-strong-12);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.modeSegment:hover {
+  color: var(--dsw-alias-label-primary);
+}
+
+.modeSegmentOn,
+.modeSegmentOn:hover {
+  background: var(--dsw-alias-bg-layer-3);
+  color: var(--dsw-alias-label-primary);
+  box-shadow: 0 0 0 1px var(--tb-line, var(--dsw-alias-border-l2));
+}
+
+.modeSegmentUnavailable,
+.modeSegmentUnavailable:hover {
+  background: var(--dsw-alias-state-warn-tertiary);
+  color: var(--dsw-alias-state-warn-label);
+}
+
+.modeSegment:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--dsw-alias-brand-primary) 50%, transparent);
+  outline-offset: -2px;
+}
+
+/* The frame and the layer laid exactly over it. A zoomed frame keeps this
+   box as its layout box and is drawn at scale from the top centre
+   (BrowserView frameZoomStyle, the approved drawing's Zoomed75): below 100 %
+   on a neutral backdrop; above it the first view is the same top-centre crop,
+   and the stage's scroll box reaches the clipped edges (decision 6). */
+.browserStage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Fills the stage; scrolls only above 100 % (overflow is set inline by
+   ZoomStage). Its sibling, the comment layer, stays over the visible area. */
+.browserScroll {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The stage's size at or below 100 %; stage x f above it (canvasZoomStyle). */
+.browserCanvas {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.browserStageZoomed {
+  background: var(--dsw-alias-bg-document-preview);
+}
+
+.browserFrameZoomed {
+  box-shadow: 0 0 0 1px var(--dsw-alias-border-l1), 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.commentOverlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes tracy-comment-spin {
+  to { transform: rotate(360deg); }
+}
+
+.commentSpin {
+  flex: none;
+  animation: tracy-comment-spin 0.9s linear infinite;
+}
+
+/* "Click any block to leave a note or ask Tracy to edit · Esc to stop" at the bottom. */
+.commentHint {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* Border-box: the 12 px gutter holds on each side once the longer sentence wraps (320 px frame). */
+  box-sizing: border-box;
+  max-width: calc(100% - 24px);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--dsw-alias-label-primary);
+  color: var(--dsw-alias-bg-base);
+  font: var(--dsw-font-xxs-12);
+  white-space: nowrap;
+  box-shadow: var(--dsw-shadow-lv3);
+}
+
+.commentHintExit {
+  opacity: 0.6;
+}
+
+/*
+ * The note an Esc leaves when it takes the tab out of Edit, at the hint's spot and in its look. It holds,
+ * then fades over its last 0.4 s; 2 s in all, the same as EXIT_NOTE_MS in CommentLayer.tsx, which removes
+ * it. Reduced motion: no fade, it simply goes.
+ */
+.commentHintLeaving {
+  pointer-events: none;
+  animation: tracy-comment-hint-leave 2s linear forwards;
+}
+
+@keyframes tracy-comment-hint-leave {
+  0%, 80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .commentHintLeaving {
+    animation: none;
+  }
+}
+
+/* A compact frame (F13, 320 px): the short sentence, wrapping inside the frame instead of cut. */
+.commentHintCompact {
+  white-space: normal;
+  text-align: center;
+  border-radius: 12px;
+  width: max-content;
+}
+
+/*
+ * Edit is on but the page in the frame has no picker (TCH e2e v7 ADDR-9): said where the hint stands,
+ * with Reload. It wraps in any frame width instead of being cut.
+ */
+.commentUnavailable {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 10px;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: var(--dsw-alias-label-primary);
+  color: var(--dsw-alias-bg-base);
+  font: var(--dsw-font-xxs-12);
+  text-align: center;
+  pointer-events: auto;
+}
+
+.commentUnavailableReload {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* A send that failed after its popover closed, said at the top of the page for a few seconds. */
+.commentNotice {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  max-width: calc(100% - 24px);
+  padding: 6px 12px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-state-warn-label);
+  font: var(--dsw-font-xxs-12);
+  box-shadow: var(--dsw-shadow-lv3);
+}
+
+/* "Deleted · Undo" (Brian 29/09 22:45; 23:05: in the deleted message's spot in the thread card).
+   One line (round 5, acceptance v3 TH-8: it broke into "Deleted" / "·" / "Undo (5)"). */
+.threadDeleted {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding-bottom: 6px;
+  color: var(--dsw-alias-label-secondary);
+  font: var(--dsw-font-xxs-12);
+  white-space: nowrap;
+}
+
+.threadDeleted > * {
+  flex: none;
+}
+
+/* The notice in a message's spot stays one row, its words on the baseline. */
+.threadMessage.threadDeleted {
+  flex-direction: row;
+  align-items: baseline;
+}
+
+/* The countdown (Brian 23:20): a thin bar under the line, empty when the window ends — terracotta, the
+   same bar as the Comments list's deleted row (Akemi 01/10/2026). Tracy's token, its value as fallback. */
+.commentCountdown {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--primary, #bf5b3d);
+  transform-origin: left center;
+  animation-name: tracy-comment-countdown;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes tracy-comment-countdown {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+.commentNoticeDot {
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.commentUndo {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--primary, #bf5b3d);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.commentUndo:hover,
+.commentUndo:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* The popover: a text box, then close · Ask Tracy to edit ↵ (Enter sends, Shift+Enter is a new line). */
+.commentPopover {
+  position: absolute;
+  /* Above the author bubbles (3), as the stories stack popover z-30 over pin z-20. */
+  z-index: 4;
+  box-sizing: border-box;
+  max-height: calc(100% - 16px);
+  overflow: auto;
+  padding: 10px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+  box-shadow: var(--dsw-shadow-lv3);
+  font: var(--dsw-font-xxs-12);
+  text-align: left;
+  pointer-events: auto;
+  transition: border-color 0.12s ease-out;
+}
+
+.commentTextarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 60px;
+  padding: 8px 10px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-s-14);
+  /* It grows with its words (CommentLayer's useAutoGrow, up to 200 px, then scrolls inside): no handle. */
+  resize: none;
+  overflow-y: hidden;
+}
+
+/* Focus is one stroke, no halo (Akemi 29/09/2026, one stroke for every focus and selection): the chat
+   composer's focus colour, half the label colour over the field's own fill. Tracy declares it as
+   --tc-composer-focus-border on the composer only (tracy-brand styles.ts), so it is mixed here from the
+   same two dsh tokens that --foreground and --card resolve to. Right in light and dark alike. */
+.commentTextarea:focus {
+  outline: none;
+  border-color: color-mix(in oklab, var(--dsw-alias-label-primary) 50%, var(--dsw-alias-bg-layer-1));
+  box-shadow: none;
+}
+
+.commentError {
+  margin-top: 6px;
+  color: var(--dsw-alias-state-warn-label);
+  font: var(--dsw-font-xxxs-11);
+}
+
+/* Round 11 (V5-3): the box's comment was deleted elsewhere; its words stay. One plain, muted line. */
+.commentLost {
+  margin-top: 6px;
+  color: var(--dsw-alias-label-secondary);
+  font: var(--dsw-font-xxs-12);
+}
+
+/* The count near the limit (round 5, TH-2): muted from 90 %, the warning colour past the limit. */
+.commentCount {
+  margin-top: 4px;
+  color: var(--dsw-alias-label-secondary);
+  font: var(--dsw-font-xxxs-11);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.commentCountOver {
+  color: var(--dsw-alias-state-warn-label);
+  font-weight: 600;
+}
+
+.commentFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.commentFootEnd {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+/* Tracy's microphone (CommentVoice.tsx), inside the text field like the Reply box's paperclip: idle, one
+   round button at the field's bottom right (the Reply box: at its top, left of the paperclip), the words
+   kept clear of it; nothing when Tracy published none or voice is off. Listening, its row runs along the
+   field's bottom, under the words. */
+.commentField .commentVoice {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.commentVoice:empty {
+  display: none;
+}
+.commentField:has(.commentVoice:not(:empty)) .commentTextarea {
+  padding-right: 36px;
+}
+.threadField .commentVoice {
+  top: 4px;
+  bottom: auto;
+}
+.threadFieldClip .commentVoice {
+  right: 34px;
+}
+.threadFieldClip:has(.commentVoice:not(:empty)) .commentTextarea {
+  padding-right: 68px;
+}
+.commentField .commentVoice.commentVoiceOn {
+  top: auto;
+  right: 6px;
+  bottom: 6px;
+  left: 6px;
+}
+.commentField:has(.commentVoiceOn) .commentTextarea {
+  padding-right: 10px;
+  padding-bottom: 40px;
+}
+
+.commentClose {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+}
+
+.commentClose:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.commentSend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 8px;
+  background: var(--dsw-alias-brand-primary);
+  color: var(--dsw-alias-brand-primary-invert, #fff);
+  font: var(--dsw-font-xxs-strong-12);
+  cursor: pointer;
+}
+
+.commentSend:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--dsw-alias-brand-primary) 80%, transparent);
+}
+
+.commentSend:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Another comment is being edited. */
+.commentPinDim {
+  opacity: 0.4;
+}
+
+/* Interactive | Edit as icons only (compact). */
+.modeSegmentIcon {
+  padding: 0 7px;
+}
+
+/* The count (option A, Akemi 01/10/2026; grey since Lee 04/10/2026): the site's open comments in a
+   neutral disc — the chat column's muted fill and quiet text (Tracy's --muted / --muted-foreground are
+   these two aliases) — drawn only when there is at least one, no "0". */
+.commentsCount {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-tertiary);
+  font: var(--dsw-font-xxxs-strong-11);
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The unread dot (Lee 04/10/2026), the chat column's look: 7 px of terracotta on the count's top-right
+   corner, ringed in the bar's colour. CSS says nothing to a screen reader, so the count carries the
+   "N unread" tooltip and the button's name says it. */
+.commentsCount[data-dot]::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 7px;
+  height: 7px;
+  box-sizing: content-box;
+  border: 2px solid var(--dsw-alias-bg-base);
+  border-radius: 50%;
+  background: var(--dsw-alias-brand-primary);
+}
+
+/* Compact: over the icon button's top-right corner, inside the toolbar. The bar has 6 px above the
+   32 px button (padding), so 3 px up plus the 2 px ring stay in it (acceptance F17, 560/380/320 px). */
+.commentsCountCorner {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 16px;
+  box-shadow: 0 0 0 2px var(--dsw-alias-bg-base);
+}
+
+/* ── People comments (stage 6, 29/09/2026; stories PopoverTwoButtons… · ThreadCardSendToChat ·
+   ToolbarCommentsButton… · Refresh…) ──────────────────────────────────────────────────────── */
+
+/* The popover's header row: "Comment", muted, and the ✕ at the right (h-8). */
+.commentHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  margin: -4px -4px 4px 0;
+}
+
+.commentHeadTitle {
+  color: var(--dsw-alias-label-secondary);
+  font: var(--dsw-font-s-strong-14);
+}
+
+/* The path line under the head (Akemi's edit-mode review E2, 01/10/2026): "Section › Block › Heading",
+   one line, the current step tinted terracotta and semibold, the others muted buttons. Folded steps
+   become "…" (CommentPath.tsx measures them in the hidden copy below). */
+.commentPath {
+  position: relative;
+  overflow: hidden;
+  /* The first step's words line up with "Comment" above them (each step pads 6 px). */
+  margin: -2px 0 8px -6px;
+  --path-muted: color-mix(in oklab, var(--dsw-alias-label-primary) 60%, var(--dsw-alias-bg-layer-2));
+  --path-faint: color-mix(in oklab, var(--dsw-alias-label-primary) 38%, var(--dsw-alias-bg-layer-2));
+  --path-hover: color-mix(in oklab, var(--dsw-alias-label-primary) 8%, var(--dsw-alias-bg-layer-2));
+}
+
+.commentPathRow {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.commentPathCell {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.commentPathSep {
+  flex: none;
+  padding: 0 3px;
+  color: var(--path-faint);
+  font: var(--dsw-font-xxs-12);
+}
+
+.commentPathStep {
+  flex: none;
+  height: 22px;
+  padding: 0 6px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--path-muted);
+  font: var(--dsw-font-xxs-12);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.commentPathStep:hover:not(:disabled):not(.commentPathCurrent) {
+  background: var(--path-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.commentPathStep:disabled {
+  cursor: default;
+}
+
+.commentPathCurrent {
+  background: color-mix(in oklab, var(--dsw-alias-brand-primary) 16%, var(--dsw-alias-bg-layer-2));
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-12);
+  font-weight: 600;
+  cursor: default;
+}
+
+/* One stroke for focus, no halo (Akemi 29/09/2026); inset, so the clipped line keeps it whole. */
+.commentPathStep:focus-visible {
+  outline: 1px solid color-mix(in oklab, var(--dsw-alias-label-primary) 50%, var(--dsw-alias-bg-layer-2));
+  outline-offset: -1px;
+}
+
+.commentPathMeasure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: max-content;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Round 8: the picked element is hidden now (a hover menu closed, an offcanvas slid away) — the box
+   stays where it stood and names it, "Newsletter (hidden now)", muted and cut to one line. */
+.commentHiddenNote {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 8px;
+  overflow: hidden;
+  color: var(--dsw-alias-label-tertiary);
+  font: var(--dsw-font-xxs-12);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* verify6 L2: the name shortens, the "(hidden now)" words never do. */
+.hiddenNoteRow {
+  display: flex;
+  align-items: baseline;
+}
+
+.hiddenNoteName {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hiddenNoteFixed {
+  flex: none;
+  white-space: pre;
+}
+
+/* Typed words: the box keeps the brand line (the stories' border-primary/60). */
+.commentTextareaFilled {
+  border-color: color-mix(in srgb, var(--dsw-alias-brand-primary) 60%, transparent);
+}
+
+/* The Enter button's key, small and muted after its label (↵). */
+.commentKeyHint {
+  margin-left: 6px;
+  font: var(--dsw-font-xxxs-11);
+  opacity: 0.6;
+}
+
+/* The outline button: "Note for team", "Save", "Reply", "Resolve" (h-8, px-3, 13 px). */
+.commentSecondary {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-strong-12);
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.commentSecondary:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.commentSecondary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.commentFoot .commentSend {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* "Delete" in the edit popover: a small red link at the foot's left. */
+.commentDelete {
+  flex: none;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--dsw-alias-state-error-primary);
+  font: var(--dsw-font-xxs-12);
+  cursor: pointer;
+}
+
+.commentDelete:hover {
+  text-decoration: underline;
+}
+
+/* The author's bubble (Akemi 01/10/2026, edit-mode review §8): 26 px at full opacity, the initial
+   inside, one corner square pointing at its block (P1: in the left gutter, the top-right corner points
+   right at the block; inside the block, data-spot="inside", the top-left one), filled in the author's
+   colour (inline: the face the server gave them, `bubbleFace` — TCH `lib/person-face.js`). The ring sits on the
+   CUSTOMER's page, not on dsh's theme, so it is the same in light and dark: 2 px white, plus a 1 px
+   dark edge that keeps it visible on a white page (on a dark page the white does that). No shadow.
+   No z-index of its own (the overlay is the stacking context): the 38 px hit area below can then
+   paint under EVERY bubble, so in a fan a neighbour's hit area never takes a visible bubble's click.
+   Still under the shield (3) and the boxes (4), which come later or higher. */
+.commentAvatarPin {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 50% 0 50% 50%;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(0, 0, 0, 0.18);
+  color: var(--dsw-alias-brand-primary-invert, #fff);
+  font: var(--dsw-font-xxs-strong-12);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* No room in the gutter: inside the block's top-left corner, pointing at that corner. */
+.commentAvatarPin[data-spot='inside'] {
+  border-radius: 0 50% 50% 50%;
+}
+
+/* Its thread card is open: a 2 px white ring, then a 2 px brand ring outside it. One stroke, no glow. */
+.commentAvatarPin.commentPinActive {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--dsw-alias-brand-primary);
+}
+
+/* The invisible 38 px hit area: 6 px around the bubble, under every bubble (z-index -1 in the overlay). */
+.commentAvatarPin::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  z-index: -1;
+  border-radius: 50%;
+}
+
+/* "<name> · <n> comment(s)" on hover or keyboard focus, where it covers least of the pin's block (pinTipPlace):
+   left of the bubble in the gutter, else over it, else (at the frame's top) under it; above the other
+   bubbles of a fan. */
+.commentPinTip {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 8px);
+  z-index: 1;
+  display: none;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--dsw-alias-label-primary);
+  color: var(--dsw-alias-bg-layer-2);
+  font: var(--dsw-font-xxxs-11);
+  white-space: nowrap;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.commentPinTip[data-side='left'] {
+  right: calc(100% + 8px);
+  left: auto;
+}
+
+.commentPinTip[data-side='above'],
+.commentPinTip[data-side='below'] {
+  left: 0;
+  transform: none;
+}
+
+.commentPinTip[data-side='above'] {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+.commentPinTip[data-side='below'] {
+  top: calc(100% + 6px);
+}
+
+.commentPinTip[data-side='above'][data-align='end'],
+.commentPinTip[data-side='below'][data-align='end'] {
+  right: 0;
+  left: auto;
+}
+
+/* A grey pin's tooltip: its name line, then why its block is not outlined, a touch dimmer; it may wrap. */
+.commentPinTipGhost {
+  width: max-content;
+  max-width: 260px;
+  white-space: normal;
+}
+
+.commentPinTipNote {
+  display: block;
+  margin-top: 1px;
+  opacity: 0.8;
+}
+
+/* Shown only when the overlay says so (useTipOwner): one pin at a time, none while a card or popover is
+   open. Not :hover / :focus-visible, which kept a pin's tooltip up over its neighbour while its card was
+   open (dev 01/10/2026). */
+.commentPinTip[data-shown] {
+  display: block;
+}
+
+.commentAvatarPin:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--dsw-alias-brand-primary) 50%, transparent);
+  outline-offset: 2px;
+}
+
+/* The thread card (Akemi 01/10/2026, thread card redesign): three layers, each with its own padding —
+   the head over a divider, the messages, the composer under a divider. Round 5 (acceptance v3 TH-5): the
+   card never scrolls as a whole; its message list does (`.threadList`), so the head, the reply box and
+   its buttons stay in view however long the thread. Shades are mixes of the label colour over the
+   card's surface, not dsh's light aliases (tinted blue), so light and dark stay neutral. */
+.threadCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  --th-line: color-mix(in oklab, var(--dsw-alias-label-primary) 12%, var(--dsw-alias-bg-layer-2));
+  --th-muted: color-mix(in oklab, var(--dsw-alias-label-primary) 60%, var(--dsw-alias-bg-layer-2));
+  --th-hover: color-mix(in oklab, var(--dsw-alias-label-primary) 8%, var(--dsw-alias-bg-layer-2));
+}
+
+.threadCard > * {
+  flex: none;
+}
+
+/* Layer 1: "On <element>" · Resolve or the Resolved pill and Reopen · ✕. */
+.threadHead {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 6px 6px 6px 12px;
+  border-bottom: 1px solid var(--th-line);
+}
+
+/* A grey pin's thread card (Akemi 01/10/2026): the head's one-line note sits under it, over the divider. */
+.threadHead[data-has-note] {
+  border-bottom: none;
+}
+
+.threadGhostNote {
+  flex: none;
+  padding: 0 12px 7px;
+  border-bottom: 1px solid var(--th-line);
+  color: var(--th-muted);
+  font: var(--dsw-font-xxs-12);
+}
+
+.threadOn {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-right: 4px;
+  overflow: hidden;
+  color: var(--th-muted);
+  font: var(--dsw-font-xxs-12);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.threadOnName {
+  color: var(--dsw-alias-label-primary);
+  font-weight: 500;
+}
+
+/* A resolved thread: a small green pill ("Resolved by X" in its tooltip). */
+.threadResolvedPill {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-right: 2px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--dsw-alias-state-success-primary) 16%, var(--dsw-alias-bg-layer-2));
+  color: var(--dsw-alias-state-success-primary);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+/* Resolve (✓), Reopen and ✕: quiet 26 px icon buttons. */
+.threadHeadIcon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--th-muted);
+  cursor: pointer;
+}
+
+.threadHeadIcon:hover {
+  background: var(--th-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* One stroke for focus, no halo (Akemi 29/09/2026). */
+.threadHeadIcon:focus-visible,
+.threadMore:focus-visible {
+  outline: 1px solid color-mix(in oklab, var(--dsw-alias-label-primary) 50%, var(--dsw-alias-bg-layer-2));
+  outline-offset: 0;
+}
+
+/* Resolve keeps the success colour, at rest and on hover. */
+.threadHeadIcon.threadResolve,
+.threadHeadIcon.threadResolve:hover {
+  color: var(--dsw-alias-state-success-primary);
+}
+
+/* Layer 2: the messages, a thin line between two. */
+.threadCard > .threadList {
+  flex: 0 1 auto;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px 12px;
+}
+
+.threadList {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Round 6 (acceptance v4 thread): the reply a link or the Comments view revealed, where the card opened. */
+.threadMessage.threadFocus {
+  margin: 0 -6px;
+  padding-right: 6px;
+  padding-left: 6px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--dsw-alias-brand-primary) 10%, transparent);
+}
+
+/* A first message deleted under live replies (round 5, TH-4): "Comment deleted", muted. */
+.threadText.threadTombstone {
+  color: var(--dsw-alias-label-tertiary);
+  font-style: italic;
+}
+
+.threadCard .commentFoot {
+  margin-top: 0;
+}
+
+/* One message: the author's bubble, then name · time · ⋮, the words and the files under them. */
+.threadMessage {
+  position: relative;
+  display: flex;
+  gap: 9px;
+  padding: 8px 0;
+}
+
+.threadMessage + .threadMessage {
+  border-top: 1px solid color-mix(in oklab, var(--dsw-alias-label-primary) 7%, var(--dsw-alias-bg-layer-2));
+}
+
+/* A message continuing its author's run (Akemi 01/10/2026): no bubble, name or time row, its words
+   under the run's (24 px bubble + 9 px gap), tight to the message above, no line between them. Its ⋮
+   stands at the row's top right, over the reserved end of the words. */
+.threadMessage + .threadMessage.threadFollow {
+  border-top: none;
+}
+
+.threadMessage:has(+ .threadFollow) {
+  padding-bottom: 2px;
+}
+
+.threadMessage.threadFollow {
+  padding-top: 2px;
+  padding-left: 33px;
+}
+
+.threadMessage.threadFollow.threadFocus {
+  padding-left: 39px;
+}
+
+.threadFollow .threadMessageBody {
+  padding-right: 26px;
+}
+
+.threadFollow .threadMoreSlot {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+/* The author's 24 px bubble: the pin's initial in the pin's colour. */
+.threadAvatar {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: var(--dsw-alias-brand-primary-invert, #fff);
+  font: var(--dsw-font-xxxs-strong-11);
+  user-select: none;
+}
+
+.threadMessageBody {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.threadMessageHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 24px;
+}
+
+/* A long name gives way (ellipsis), never the time (round 5, TH-9: "22 / min / ago"). */
+.threadAuthor {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-strong-12);
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.threadAge {
+  flex: none;
+  color: var(--th-muted);
+  font: var(--dsw-font-xxs-12);
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+.threadText {
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-12);
+  font-size: 13px;
+  line-height: 1.35;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* An @mention in a thread message: the brand colour the chat column's Comments list uses for the same
+   words (TCH tracy-chat-input .tv-ci-mention). One rule for both themes: a little of the thread text colour
+   mixed in darkens it on a light card and lifts it on a dark one. */
+.threadMention {
+  color: color-mix(in oklab, var(--primary) 85%, var(--dsw-alias-label-primary));
+  font-weight: 500;
+}
+
+/* F14: ⋮ Copy link's "Link copied" under the ⋮, right-aligned so it stays inside the card. */
+.threadMoreSlot .copyLinkTip {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+/* dsh's Menu wraps its anchor: the slot ends the head row. The ⋮ shows on hover or focus only (always
+   with no hover, on touch), and while its menu or its "Link copied" is up. */
+.threadMoreSlot {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  margin-left: auto;
+  opacity: 0;
+}
+
+.threadMessage:hover .threadMoreSlot,
+.threadMessage:focus-within .threadMoreSlot,
+.threadMoreSlot:has([aria-expanded='true']),
+.threadMoreSlot:has(.copyLinkTip) {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .threadMoreSlot {
+    opacity: 1;
+  }
+}
+
+.threadMore {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--th-muted);
+  cursor: pointer;
+}
+
+.threadMore:hover,
+.threadMore[aria-expanded='true'] {
+  background: var(--th-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* While a box is open: catches the first click over the frame and the pins (under the box). */
+.commentShield {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: auto;
+  background: transparent;
+}
+
+/* A box that could not close (words typed): its own 1 px border turns the brand colour for FLASH_MS —
+   one stroke, no glow (Akemi 01/10/2026, review §8; was a 3 px halo pulse). An Esc, ✕, Interactive or
+   navigation also shows the "Press Esc again to discard" line; a click outside only this. */
+.commentFlash {
+  border-color: var(--dsw-alias-brand-primary);
+}
+
+/* "Press Esc again to discard": one muted line under the text field, inside the box. */
+.commentDiscardNote {
+  margin-top: 4px;
+  color: color-mix(in oklab, var(--dsw-alias-label-primary) 60%, var(--dsw-alias-bg-layer-2));
+  font: var(--dsw-font-xxxs-11);
+}
+
+.commentDiscardNoteIdle {
+  margin-top: 0;
+}
+
+/* A resolved thread, under its messages: what a reply does ("Resolved by X" is the pill's tooltip). */
+.threadReopenNote {
+  padding: 0 12px 8px;
+  color: var(--th-muted);
+  font: var(--dsw-font-xxs-12);
+}
+
+/* Layer 3: the composer under a divider — the reply field with the paperclip inside it at the right,
+   then "Reply" (ghost) and "Ask Tracy to edit ↵" (primary), right-aligned. */
+.threadCompose {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--th-line);
+}
+
+.threadCompose > .commentError,
+.threadCompose > .commentLost,
+.threadCompose > .commentCount {
+  margin-top: 0;
+}
+
+.threadReply {
+  min-height: 36px;
+}
+
+.threadFieldClip .commentTextarea {
+  padding-right: 36px;
+}
+
+.threadField .commentAttach {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--th-muted);
+}
+
+.threadField .commentAttach:hover {
+  background: var(--th-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.threadField .commentAttach:focus-visible {
+  outline: 1px solid color-mix(in oklab, var(--dsw-alias-label-primary) 50%, var(--dsw-alias-bg-layer-1));
+  outline-offset: 0;
+}
+
+/* "Reply" as a ghost button: no line, no fill until hovered. */
+.commentSecondary.threadGhost {
+  border-color: transparent;
+  background: transparent;
+}
+
+.commentSecondary.threadGhost:hover:not(:disabled) {
+  background: var(--th-hover);
+}
+
+/* "Comments" (rule 9; option A, 01/10/2026): a plain ghost button, the bar's height. */
+.commentsButton {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-strong-12);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.commentsButton:hover {
+  background: var(--tb-hover, var(--dsw-alias-interactive-bg-hover));
+}
+
+.commentsButton:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--dsw-alias-brand-primary) 50%, transparent);
+  outline-offset: -2px;
+}
+
+/* Compact: the icon alone, a square; the count as a corner badge. */
+.commentsButtonIcon {
+  justify-content: center;
+  width: 32px;
+  padding: 0;
+}
+
+/* Refresh with Tracy's progress: the chip under the button (dark, its arrow on the button's centre). */
+.refreshWrap {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+}
+
+.refreshReady,
+.refreshReady:hover:not(:disabled) {
+  background: var(--dsw-alias-brand-primary);
+  color: var(--dsw-alias-brand-primary-invert, #fff);
+}
+
+.refreshChip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -6px;
+  z-index: 20;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--dsw-alias-tooltip-bg);
+  color: var(--dsw-static-neutral-bluish-00);
+  font: var(--dsw-font-xxs-strong-12);
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: var(--dsw-shadow-lv3);
+}
+
+.refreshChip::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 16px;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* Undo (TCH #957, toolbar contract): the Comments button's ghost look, the bar's height. Colours are the
+   dsh aliases Tracy's own tokens resolve to (the skin contract, tests/theme.spec.ts), muted text as the
+   label colour mixed into the page (neutral in light and dark, unlike the blue-tinted tertiary alias),
+   and Tracy's --primary for the one filled action. Focus is one 1px stroke, never a halo (TCH DESIGN.md §5). */
+.undoWrap {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+}
+
+.undoButton {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-strong-12);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.undoButton:hover:not([aria-disabled='true']) {
+  background: var(--tb-hover, var(--dsw-alias-interactive-bg-hover));
+}
+
+.undoButton:focus-visible {
+  outline: 1px solid color-mix(in oklab, var(--dsw-alias-label-primary) 50%, transparent);
+  outline-offset: -1px;
+}
+
+/* Off and working: dimmed, inert (aria-disabled keeps the explaining tooltip). */
+.undoButton[aria-disabled='true'] {
+  color: color-mix(in oklab, var(--dsw-alias-label-primary) 58%, transparent);
+  cursor: default;
+}
+
+.undoButton[data-undo='off'] {
+  opacity: 0.6;
+}
+
+.undoButtonIcon {
+  justify-content: center;
+  width: 32px;
+  padding: 0;
+}
+
+/* Blocked: a small warning dot on the icon's top-right corner, ringed in the bar's colour. */
+.undoDot {
+  position: absolute;
+  top: 6px;
+  left: 17px;
+  width: 6px;
+  height: 6px;
+  box-sizing: content-box;
+  border: 2px solid var(--dsw-alias-bg-base);
+  border-radius: 50%;
+  background: var(--dsw-alias-state-warn-primary, #f59e0b);
+}
+
+/* The confirm and blocked cards (portaled by AnchoredPopover under the button). */
+.undoCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+  box-shadow: var(--dsw-shadow-lv3);
+  font: var(--dsw-font-xxs-12);
+}
+
+.undoCardTitle {
+  font: var(--dsw-font-xs-strong-13);
+}
+
+.undoCardQuote,
+.undoCardBody {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.undoCardQuote {
+  color: color-mix(in oklab, var(--dsw-alias-label-primary) 58%, transparent);
+}
+
+.undoCardActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.undoCardGhost,
+.undoCardPrimary,
+.undoToastAction {
+  height: 28px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  font: var(--dsw-font-xxs-strong-12);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.undoCardGhost,
+.undoToastAction {
+  border: 1px solid var(--dsw-alias-border-l1);
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+}
+
+.undoCardGhost:hover,
+.undoToastAction:hover {
+  background: color-mix(in oklab, var(--dsw-alias-label-primary) 8%, transparent);
+}
+
+.undoCardPrimary {
+  border: 1px solid transparent;
+  background: var(--primary, #bf5b3d);
+  color: var(--dsw-alias-brand-primary-invert, #fff);
+}
+
+.undoCardPrimary:hover {
+  background: color-mix(in oklab, var(--primary, #bf5b3d) 88%, var(--dsw-alias-label-primary));
+}
+
+.undoCardGhost:focus-visible,
+.undoToastAction:focus-visible {
+  outline: none;
+  border-color: color-mix(in oklab, var(--dsw-alias-label-primary) 50%, transparent);
+}
+
+.undoCardPrimary:focus-visible {
+  outline: none;
+  border-color: var(--dsw-alias-brand-primary-invert, #fff);
+}
+
+/* The one-time notice after an undo: under the button, right-aligned, dsh's floating surface. */
+.undoToast {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  max-width: 320px;
+  padding: 8px 8px 8px 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+  box-shadow: var(--dsw-shadow-lv3);
+  font: var(--dsw-font-xxs-12);
+}
+
+.undoToastText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The copy button in Go's slot, and its own "Link copied" bubble under it
+   (story ToolbarCopyLinkCopied) — dsh's tooltip look, shown for 1.5 s. */
+.copyLink {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+}
+
+.copyLinkTip {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  z-index: 20;
+  transform: translateX(-50%);
+  padding: 3px 7px;
+  border-radius: var(--dsw-radius-sm);
+  background: var(--dsw-alias-tooltip-bg);
+  color: var(--dsw-static-neutral-bluish-00);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.editorCm {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+.editorCmHidden {
+  display: none;
+}
+
+/* CodeMirror fills the pane; the theme supplies its own token palette
+   (a designed dark theme, same policy as the xterm palette). */
+.editorCm :global(.cm-editor) {
+  height: 100%;
+}
+
+/* Code lines get the same 12/16 inset as the markdown preview, so toggling
+   preview/edit never jumps the text's resting position. */
+.editorCm :global(.cm-scroller) {
+  padding: 12px 16px;
+}
+
+.editorCm :global(.cm-editor.cm-focused) {
+  outline: none;
+}
+
+/* Preview / edit segmented toggle (markdown and other previewable files). */
+.editorModeToggle {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 6px;
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.editorModeButton {
+  padding: 2px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--dsw-alias-label-tertiary);
+  font: var(--dsw-font-xxxs-11);
+  cursor: pointer;
+}
+
+.editorModeButton:hover {
+  color: var(--dsw-alias-label-primary);
+}
+
+.editorModeActive {
+  background: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-primary);
+}
+
+.editorMd {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 16px;
+  font: var(--dsw-font-xs-13);
+}
+
+/* The DSH CodeBlock banner is position:sticky (top:0, z-index:6) so a block
+   keeps its copy action reachable inside a per-message scroll container —
+   the right call in chat, where each block owns its scroll box. In the file
+   preview every fence shares one `.editorMd` scroll container, so that sticky
+   banner pins to the top of the viewport until the *whole block* scrolls
+   past, which reads as a floating header over the document. Neutralize the
+   stickiness here (bannerWrap is the first element child of `.md-code-block`;
+   mermaid mounts are excluded since their own chrome replaces the banner). */
+.editorMd :global(.md-code-block:not([data-mermaid-processed])) > :global(div):first-child {
+  position: static;
+  z-index: auto;
+}
+
+/* ── Mermaid diagram block (markdown preview, mermaid lazy chunk) ────────
+   Mirrors the md-code-block chrome the DSH CodeBlock renders, so a diagram
+   reads as a peer of the surrounding fences: hairline border, layer-2
+   header with the info string + copy action, layer-1 body. The SVG body is
+   static (no bindFunctions) and sanitized (no foreignObject/script/@attrs/
+   hrefs), so it carries no event surface beyond the copy button; the body
+   click opens the zoom modal on a sanitized clone. */
+
+.mermaidWrap {
+  margin: 6px 0;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 6px;
+  background: var(--dsw-alias-bg-layer-1);
+  overflow: hidden;
+}
+
+.mermaidHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.mermaidInfo {
+  font: var(--dsw-font-xxxs-strong-11);
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.mermaidCopy {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 6px;
+  height: 20px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  font: var(--dsw-font-xxxs-11);
+  cursor: pointer;
+}
+
+.mermaidCopy:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.mermaidBody {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  overflow: auto;
+  cursor: zoom-in;
+}
+
+.mermaidBody :global(svg) {
+  max-width: 100%;
+  height: auto;
+}
+
+.mermaidError {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+  color: var(--dsw-alias-state-error-primary);
+  font: var(--dsw-font-xxxs-11);
+}
+
+/* The diagram source shown under a render error (helps fixing the fence). */
+.mermaidCode {
+  margin: 0;
+  padding: 8px 10px;
+  overflow: auto;
+  font: var(--dsw-font-xxxs-11);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* The mermaid markdown container (single MarkdownText pass): a swapped
+   code block keeps its React-managed .md-code-block wrapper in the tree
+   (reconciliation safety), but the wrapper's own box is suppressed so only
+   the diagram chrome renders; the swapped-in host div flows as a block. */
+.mermaidMarkdown :global(.md-code-block[data-mermaid-processed]) {
+  display: contents;
+}
+
+/* ── Mermaid zoom modal (click-to-enlarge; portalled to document.body) ──
+   Fixed overlay above the DSH overlay stack (1000+), token-driven surface.
+   The stage centers the (sanitized, cloned) svg and the modal owns the
+   transform; the drag/zoom listeners live in the component, nothing here
+   targets global class names. */
+
+.mermaidModal {
+  position: fixed;
+  inset: 0;
+  /* Viewport-sized body child: the shell makes every direct body child
+     `no-drag` (`html[data-platform=darwin] body > :not(#root)`, an
+     id-bearing selector, hence `!important`), and app-region ignores
+     pointer-events — without this reset the open modal cancels every
+     window-drag strip under it plus the macOS double-click-title zoom.
+     Same contract as the panel host rule above; `initial` computes to the
+     neutral `none`, and the toolbar's buttons keep their own no-drag from
+     the shell's `:is(button, …)` rule. */
+  -webkit-app-region: initial !important;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--dsw-alias-bg-mask-1);
+  backdrop-filter: blur(2px);
+}
+
+.mermaidModalToolbar {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.mermaidModalButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xs-strong-13);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mermaidModalButton:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.mermaidModalStage {
+  width: 90vw;
+  height: 80vh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mermaidModalStage :global(svg) {
+  max-width: none;
+  max-height: none;
+  cursor: grab;
+  transform-origin: center center;
+  user-select: none;
+  -webkit-user-drag: none;
+  background: var(--dsw-alias-bg-layer-1);
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.mermaidModalStage :global(svg):active {
+  cursor: grabbing;
+}
+
+.mermaidModalHint {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--dsw-alias-label-tertiary);
+  font: var(--dsw-font-xxxs-11);
+  pointer-events: none;
+}
+
+/* The floating "add to conversation" button anchored above a text
+   selection in the preview/code viewers. Portalled to document.body and
+   position:fixed, so the editor's overflow clips cannot crop it; flat
+   chrome like the rest of the sidebar (hairline border, layer-2 fill,
+   hover fill — no shadow). */
+.selectionPopup {
+  position: fixed;
+  z-index: 60;
+  transform: translate(-50%, calc(-100% - 8px));
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 6px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxxs-strong-11);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.selectionPopup:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.editorPdf {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--dsw-alias-bg-base);
+}
+
+.editorPdfToolbar {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+}
+
+.editorPdfStage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.editorPdfFrame {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border: none;
+  background: var(--dsw-alias-bg-base);
+}
+
+.editorPdfFrameBlocked {
+  pointer-events: none;
+}
+
+.editorPdfDragShield {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: transparent;
+}
+
+.editorPdfDragShieldActive {
+  pointer-events: auto;
+}
+
+/* Tab drag must switch iframe hit-testing before the pointer can enter the
+   Chromium PDF browsing context. The body flag is set synchronously by the
+   drag source, avoiding React render timing entirely. */
+:global(body[data-dsh-tab-dragging]) .editorPdfFrame {
+  pointer-events: none !important;
+}
+
+:global(body[data-dsh-tab-dragging]) .editorPdfDragShield {
+  pointer-events: auto !important;
+}
+
+/* ── Crash containment ─────────────────────────────────────────────────── */
+
+.boundaryError {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 16px;
+  background: var(--dsw-alias-bg-layer-1);
+  border-left: 1px solid var(--dsw-alias-border-l2);
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-state-error-primary);
+  overflow: auto;
+}
+
+/* The retry pill of the crash UI: the per-tab RenderBoundary block and the
+   lazy-chunk load failure both render it, so the terminal-era name stays. */
+.terminalRetry {
+  flex: none;
+  padding: 1px 8px;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 999px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-secondary);
+  font: var(--dsw-font-xxxs-strong-11);
+  cursor: pointer;
+}
+
+.terminalRetry:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* The PER-TAB error strip: fills one tab's content area (unlike
+   .boundaryError, the full-height fixed rail for shell-level crashes), so a
+   crashing viewer/editor never hides the toggle cluster or the other tabs. */
+.tabBoundaryError {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 12px 16px;
+  overflow: auto;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-state-error-primary);
+}
+
+/* ── Native right-Sidebar tab-body host ──────────────────────────────────
+   DSH's native tab body host (`.paneBody` in dsh-client-ui-dockkit) is a
+   BLOCK scroller with a definite height, not a flex container — the host's
+   own tab bodies (TextPreview, FilesBody) declare `height: 100%` on their
+   root for exactly this reason. Our tab roots declare `flex: 1; min-height:
+   0`, which collapses to content height in that block host (the side-chat
+   composer would float mid-pane). A column flex host of `height: 100%`
+   restores the `flex: 1` semantics our tab roots rely on, and gives
+   third-party descriptors' components the same box inside the native pane.
+   The wrapper div carries `data-dsh-native-tab-host` so the e2e lane can
+   assert the fill (mirroring `data-dsh-better-sidebar`). */
+.nativeTabHost {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/* ── Diff tab (generic states + shell; the changes tab owns the rest in
+   changes.module.css, and the diff rows themselves live in
+   diff/diff.module.css) ────────────────────────────────────────────────── */
+
+.gitEmpty {
+  padding: 4px 12px 8px;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.gitPlaceholder {
+  padding: 16px;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-label-tertiary);
+  text-align: center;
+}
+
+.gitError {
+  padding: 8px 12px;
+  font: var(--dsw-font-xxs-12);
+  color: var(--dsw-alias-state-error-primary);
+  white-space: pre-wrap;
+}
+
+/* The diff tab (a change expanded from the changes tab's preview, like
+   VSCode's diff editor): header + scrollable diff body, no horizontal
+   panning; rows render through the shared diff module. */
+.gitDiffTab {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.gitDiffTabHeader {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 8px 0 12px;
+  border-bottom: 1px solid var(--dsw-alias-border-l1);
+}
+
+.gitDiffTabTitle {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: var(--dsw-font-xxs-strong-12);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* One aligned diff line: old gutter / new gutter / code. Lines WRAP instead
+   of scrolling horizontally (the tab-page rule: fill the width adaptively),
+   with the long-token fallback breaking anywhere a space never comes. */
+
+/* A history row: line 1 = hash + subject, line 2 = ref badges + author/date
+   (badges live on the second line so they never crowd the subject). */
+
+/* ── Shared interaction rules ──────────────────────────────────────────── */
+
+/* Keyboard focus stays visible on every interactive control (the styling
+   policy requires focus visibility; the accent token doubles as the ring). */
+.toggleButton:focus-visible,
+.bottomClose:focus-visible,
+.iconButton:focus-visible,
+.tab:focus-visible,
+.tabClose:focus-visible,
+.tabBarPlus:focus-visible,
+.paneCard:focus-visible,
+.explorerRow:focus-visible,
+.explorerRef:focus-visible,
+.terminalRetry:focus-visible,
+.editorModeButton:focus-visible,
+.editorDownloadLink:focus-visible,
+.editorPptxButton:focus-visible,
+.editorDocxZoomRange:focus-visible {
+  outline: 2px solid var(--dsw-alias-interactive-bg-hover-accent);
+  outline-offset: -1px;
+}
+
+/* Reduced motion: no slides, fades or color transitions. */
+@media (prefers-reduced-motion: reduce) {
+  .bottomPanel,
+  .bottomPanelHidden,
+  .toggleButton,
+  .tab,
+  .tabBarPlus,
+  .paneCard,
+  .explorerRow,
+  .divider,
+  .dividerRow::after,
+  .dividerCol::after {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ── Narrow (mobile) viewport ──────────────────────────────────────────── */
+
+/* Pairs with NARROW_MAX_WIDTH = 768 in src/client/breakpoints.ts: widths
+   strictly below 768px (i.e. max-width: 767px) get the phone-width tab
+   rhythm; the bottom workbench keeps its own geometry (it spans the center
+   column at every width). */
+@media (max-width: 767px) {
+  /* Narrower tabs: a phone-width drawer fits more open tabs before the
+     strip scrolls. */
+  .tab {
+    min-width: 48px;
+    max-width: 128px;
+  }
+}
+
+/* The file tree's plugin "open with" menu rows: the label area is a
+   BLOCK-level flex row that fills the primitives `.itemLabel` span (which is
+   itself `flex: 1` inside the row), so the trailing control — the pushpin on
+   submenu rows, the chevron on the submenu parent — docks at the row's far
+   right, exactly like the trailing check on selected rows of every other
+   menu. */
+.openWithLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.openWithName {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The trailing "expands into a submenu" chevron on the open-with parent row
+   (the primitives Menu renders no arrow for submenu parents). */
+.openWithChevron {
+  flex: none;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+/* The pushpin toggle on an "open with" submenu row: brand ink once the
+   target is pinned to the menu's top level. Sized for the compact menu's
+   26px rows (16px box, 12px glyph) — proportionate without overflowing. */
+.openWithPin {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  color: var(--dsw-alias-label-tertiary);
+  cursor: pointer;
+}
+
+.openWithPin:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.openWithPinActive {
+  color: var(--dsw-alias-state-business-primary);
+}
+
+/* ── Markdown preview: raw-HTML runs + table of contents ─────────────────
+   The HTML runs lifted out of the markdown source (MarkdownHtml.tsx) render
+   as sanitized block leaves; the TOC is a zero-height sticky bar keeping the
+   outline button pinned at the preview's top-right without consuming layout.
+   All visuals ride the alias tokens (skin system follows automatically). */
+
+/* A sanitized HTML run leaf (block-level box; content is DOMPurify output). */
+.editorHtmlBlock {
+  margin: 8px 0;
+}
+
+.editorHtmlBlock img,
+.editorHtmlBlock video {
+  max-width: 100%;
+}
+
+.editorHtmlBlock details {
+  margin: 4px 0;
+  padding: 4px 0;
+}
+
+.editorHtmlBlock summary {
+  cursor: pointer;
+}
+
+/* The zero-height sticky bar: occupies no layout, keeps the button visible
+   while the preview scrolls, and lets pointer events pass through the bar
+   itself (only the interactive children re-enable them). The bar's stacking
+   context also frames the outline panel, so its z-index must clear the DSH
+   CodeBlock banner (z-index:6) or the popover paints beneath a sticky fence
+   header. 7 sits just above that banner and below the portalled selection
+   popup (60) / mermaid modal (1000). */
+.tocBar {
+  position: sticky;
+  top: 0;
+  z-index: 7;
+  display: flex;
+  justify-content: flex-end;
+  height: 0;
+  pointer-events: none;
+}
+
+.tocButton {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin: 4px 2px 0 0;
+  padding: 0;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 6px;
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+}
+
+.tocButton:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* The outline popover, anchored under the button (the bar is the containing
+   block; its height is 0, so the panel drops below the pinned button row). */
+.tocPanel {
+  position: absolute;
+  top: 32px;
+  right: 2px;
+  display: flex;
+  flex-direction: column;
+  width: min(300px, 82%);
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-2);
+  box-shadow: var(--dsw-shadow-lv2);
+  pointer-events: auto;
+}
+
+.tocItem {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  font: var(--dsw-font-xxs-12);
+  text-align: left;
+  cursor: pointer;
+}
+
+.tocItem:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* Indent by heading level (h2 = one step, h3 = two steps…). */
+.tocItem[data-level='2'] { padding-left: 18px; }
+.tocItem[data-level='3'] { padding-left: 28px; }
+.tocItem[data-level='4'] { padding-left: 38px; }
+.tocItem[data-level='5'] { padding-left: 48px; }
+.tocItem[data-level='6'] { padding-left: 58px; }
+
+/* The tiny level number keeps deep outlines scannable. */
+.tocItemLevel {
+  flex: none;
+  font: var(--dsw-font-xxxs-11);
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.tocItemText {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The jumped-to heading flashes once (the class is added to the host-rendered
+   heading element by md-toc.tsx; @keyframes rides the CSS module). */
+@keyframes dsh-toc-flash {
+  0%, 60% { background: var(--dsw-alias-interactive-bg-hover); }
+  100% { background: transparent; }
+}
+
+.tocFlash {
+  animation: dsh-toc-flash 1.2s ease-out;
+  border-radius: 4px;
+}
+
+/* Files in a comment box (TCH attachments contract): the paperclip at the foot's left, the size of the
+   Page comment box's outline icon button in the stories (`size-7`), and the chips under the text. */
+.commentAttach {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-secondary);
+  cursor: pointer;
+}
+
+.commentAttach:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+/* The files of a box (Akemi 01/10, edit-mode review "attachments"): the chat composer's chips, copied
+   from TCH tracy-chat-input composer-styles.ts (.tv-chip): 30 px tall, 8 px corners, 1 px line, one
+   wrapping row; an image a 22 px thumbnail and its name, a file a 22 px type badge, its name and its
+   size; the 20 px ✕ inline at the end. Shades are mixes of the label colour over the box's own surface,
+   not dsh's light aliases (tinted blue), so light and dark stay neutral. */
+.attachChips {
+  --ca-line: color-mix(in oklab, var(--dsw-alias-label-primary) 14%, var(--dsw-alias-bg-layer-1));
+  --ca-muted: color-mix(in oklab, var(--dsw-alias-label-primary) 60%, var(--dsw-alias-bg-layer-1));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin-top: 6px;
+}
+
+.attachChip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+  box-sizing: border-box;
+  height: 30px;
+  max-width: 100%;
+  padding: 0 3px;
+  overflow: hidden;
+  border: 1px solid var(--ca-line);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-1);
+  color: var(--dsw-alias-label-primary);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.attachChipBody {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 1 auto;
+  min-width: 0;
+  height: 100%;
+  padding-right: 2px;
+}
+
+.attachThumb {
+  display: block;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  object-fit: cover;
+  background: color-mix(in oklab, var(--dsw-alias-label-primary) 10%, var(--dsw-alias-bg-layer-1));
+}
+
+.attachBadge {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--dsw-alias-label-primary) 10%, var(--dsw-alias-bg-layer-1));
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.attachName {
+  flex: 0 1 auto;
+  min-width: 24px;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachMeta {
+  flex: none;
+  white-space: nowrap;
+  color: var(--ca-muted);
+}
+
+/* A file the box refused: a red line, and the reason in place of its size. */
+.attachChip[data-state="error"] {
+  border-color: var(--dsw-alias-state-error-primary);
+}
+
+.attachChip[data-state="error"] .attachMeta {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--dsw-alias-state-error-primary);
+}
+
+.attachRemove {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  color: var(--ca-muted);
+  cursor: pointer;
+}
+
+.attachRemove:hover {
+  background: color-mix(in oklab, var(--dsw-alias-label-primary) 8%, transparent);
+  color: var(--dsw-alias-label-primary);
+}
+
+.attachRemove:focus-visible,
+.attachLink:focus-visible {
+  outline: 1px solid color-mix(in oklab, var(--dsw-alias-label-primary) 50%, var(--dsw-alias-bg-layer-1));
+  outline-offset: 1px;
+}
+
+/* A kept file in the thread card opens (an image) or downloads (any other file); no ✕. */
+.attachLink {
+  padding-right: 6px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.attachLink:hover {
+  border-color: color-mix(in oklab, var(--dsw-alias-label-primary) 28%, var(--dsw-alias-bg-layer-1));
+}
+
+/* The text area of a box; while files are dragged over the box, a drop zone covers it. */
+.commentField {
+  position: relative;
+}
+
+/* Tall enough for the zone's two lines, also over the thread card's one-line reply box. */
+.commentFieldDrop .commentTextarea {
+  min-height: 64px;
+}
+
+/* No ring around the box (one stroke, no halo): a 1.5 px dashed neutral line and a faint fill over the
+   text area, which says what the box takes and its cap per file. pointer-events: none keeps the drag on
+   the text area under it, where the box counts its enters and leaves. */
+.commentDropZone {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  border: 1.5px dashed color-mix(in oklab, var(--dsw-alias-label-primary) 40%, var(--dsw-alias-bg-layer-1));
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--dsw-alias-label-primary) 4%, var(--dsw-alias-bg-layer-1));
+  text-align: center;
+  pointer-events: none;
+}
+
+.commentDropTitle {
+  color: var(--dsw-alias-label-primary);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.commentDropDesc {
+  color: color-mix(in oklab, var(--dsw-alias-label-primary) 60%, var(--dsw-alias-bg-layer-1));
+  font-size: 11px;
+  line-height: 14px;
+}
+
+/* Read by screen readers, not drawn. */
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Over the page frame for the length of a file drag while a box is open: a drop here is ignored. */
+.commentDropCatch {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+/* With the paperclip at its left, the 340 px popover's foot keeps "Note for team" and "Ask Tracy to edit ↵"
+   on the paperclip's row (318 px inside): measured 01/10 in Chrome on macOS with 8 px padding, English
+   wants 286 px, and every shipped language 231-297 px, the translations shortened to fit. The edit
+   popover's foot (Delete · Save ↵ · Ask Tracy to edit) still wraps in fr, nl and ru, as it did before. */
+.commentFoot:has(> .commentAttach),
+.commentFoot:has(> .commentAttach) .commentFootEnd {
+  gap: 6px;
+}
+
+.commentFoot:has(> .commentAttach) .commentSecondary,
+.commentFoot:has(> .commentAttach) .commentSend {
+  padding: 0 8px;
+}
+
+/* The `@` picker under a comment box (TCH #809 C1, U6): in flow under the field, since the popover and
+   the thread card scroll inside and would clip a floating list. Rows: avatar, name over address, role
+   at the right; the active row a neutral tint of the card's own text over its own fill (no dsh hover
+   alias: it tints blue in light). The line under the rows says who can be named. */
+.mentionPicker {
+  margin-top: 6px;
+  border: 1px solid color-mix(in oklab, var(--dsw-alias-label-primary) 12%, var(--dsw-alias-bg-layer-2));
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-2);
+  overflow: hidden;
+}
+
+.mentionList {
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+}
+
+.mentionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mentionRow[data-active] {
+  background: color-mix(in oklab, var(--dsw-alias-label-primary) 8%, var(--dsw-alias-bg-layer-2));
+}
+
+.mentionAvatar {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: var(--dsw-alias-brand-primary-invert, #fff);
+  font: var(--dsw-font-xxxs-strong-11);
+  user-select: none;
+}
+
+.mentionWho {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mentionName,
+.mentionEmail {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mentionName {
+  color: var(--dsw-alias-label-primary);
+  font: var(--dsw-font-xxs-strong-12);
+}
+
+.mentionEmail,
+.mentionRole {
+  color: color-mix(in oklab, var(--dsw-alias-label-primary) 60%, var(--dsw-alias-bg-layer-2));
+  font: var(--dsw-font-xxxs-11);
+}
+
+.mentionRole {
+  flex: none;
+}
+
+.mentionEmpty {
+  padding: 8px 12px 4px;
+  color: color-mix(in oklab, var(--dsw-alias-label-primary) 60%, var(--dsw-alias-bg-layer-2));
+  font: var(--dsw-font-xxs-12);
+}
+
+.mentionHint {
+  padding: 6px 12px 8px;
+  border-top: 1px solid color-mix(in oklab, var(--dsw-alias-label-primary) 12%, var(--dsw-alias-bg-layer-2));
+  color: color-mix(in oklab, var(--dsw-alias-label-primary) 60%, var(--dsw-alias-bg-layer-2));
+  font: var(--dsw-font-xxxs-11);
+}
+
+.mentionEmpty + .mentionHint {
+  border-top: 0;
+}

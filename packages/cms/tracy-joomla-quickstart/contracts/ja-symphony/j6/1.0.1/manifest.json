@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-symphony/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_symphony",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-symphony",
+    "id": "quickstart/ja-symphony/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_symphony",
+    "parts": {
+      "installer": {
+        "file": "ja-symphony-j6-quickstart-1.0.1.zip",
+        "bytes": 54174326,
+        "sha256": "2a2c09b1589e2ca5296e70a2c4a3e2b8f4be65838ab113ae8bfa83a5b21c828c"
+      }
+    },
+    "release": "quickstart/ja-symphony/j6",
+    "repository": "JoomlArt-Products/ja-products",
+    "createdAt": "2026-10-11T05:20:22.096Z",
+    "builtFrom": {
+      "from": "quickstart/ja-symphony/j6@1.0.0",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    }
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

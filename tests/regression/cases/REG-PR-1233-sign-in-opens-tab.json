@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1233-sign-in-opens-tab",
+  "kind": "fix",
+  "title": "On the web a vendor sign-in (Connect now, Open sign-in page, the Security and key links) opens in a new browser tab with an address bar, never a popup window; in the desktop app it still opens in the person's browser",
+  "pr": 1233,
+  "area": "settings/ai-accounts",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-model-plan open-external tests (openExternal alone, jsdom page, window.open recorded) and the accounts-pane tests (jsdom page, fake /api/seat-plan doors; a window click listener records each anchor a click would follow as tab:, a held-back one as held:)."
+  ],
+  "expect": [
+    "openExternal(url) on the web never calls window.open: it appends one <a href=url target=_blank rel='noopener noreferrer'>, clicks it while attached, and removes it; in the desktop app it calls tracyDesktop.links.openExternal(url) and touches no anchor.",
+    "Connect now with a browser answer opens the authorize URL as one tab (tab:https://claude.ai/x), not window.open; the device panel's Open {vendor} button does the same.",
+    "The panel's Open sign-in page [data-action='reopen'], the ChatGPT Settings › Security link and Where to get a key have target _blank and rel 'noopener noreferrer'; on the web a click is not prevented (one tab: entry, nothing else opens); in the desktop app it is prevented and opened through the app's links (app: then held:)."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-model-plan/test/open-external.test.mjs",
+      "packages/ui/tracy-model-plan/test/accounts-pane.test.mjs"
+    ],
+    "tests": [
+      "on the web the page opens in a new tab through a clicked anchor, never window.open",
+      "in the desktop app the page opens through the app's links, with no anchor and no window.open",
+      "a browser sign-in opens the page and offers the callback URL field; the pasted URL completes it",
+      "a device sign-in shows its code in the picked card's panel, copyable, with the vendor's page a press away",
+      "in the desktop app the vendor's page opens through the app's links",
+      "on the web a browser sign-in's Open sign-in page is a plain new-tab link: the click is not held back and no popup opens",
+      "in the desktop app a browser sign-in's Open sign-in page opens through the app's links, the anchor held back",
+      "on the web ChatGPT Codex's Security settings link is a plain new-tab link: the click is not held back and no popup opens",
+      "in the desktop app ChatGPT Codex's Security settings link opens through the app's links, the anchor held back",
+      "on the web a key vendor's Where to get a key is a plain new-tab link: the click is not held back and no popup opens",
+      "in the desktop app a key vendor's Where to get a key opens through the app's links, the anchor held back"
+    ],
+    "timeout_s": 180
+  },
+  "evidence": "web cowork.tracy.site 12/10/2026 11:07 and 14:28: Connect Claude opened claude.ai in a popup window (no address bar, title 'Claude', Chrome's ⋮ menu) because openExternal / the pane's openBrowser called window.open(url, '_blank', 'noopener,noreferrer'); the sign-in ends on http://localhost:53692/callback?code=… which the person must copy from the address bar. Opened by hand in a tab (13:16 screenshot) it worked.",
+  "fence": "no window.open in the web path of tracy-model-plan's sign-in: openExternal clicks a throwaway anchor, and the panel's vendor links (VendorLink in AccountsPane.tsx) follow their own href on the web",
+  "selectors": {
+    "panel": ".tv-ob-connect",
+    "reopen": "a[data-action='reopen']",
+    "securityLink": "[data-hint='device-security'] a",
+    "keyLink": ".tv-ob-connect a.tv-ob-link"
+  }
+}

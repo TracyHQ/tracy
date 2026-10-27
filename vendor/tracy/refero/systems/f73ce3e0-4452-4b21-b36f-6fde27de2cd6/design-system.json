@@ -1,0 +1,374 @@
+{
+  "dos": [
+    "Use Deep Navy (#021422) for all primary filled buttons and primary text — it is the structural ink, not just a dark color",
+    "Use New Kansas for every heading 20px and above; the serif is the brand's editorial signature",
+    "Use 8px border-radius on all cards, buttons, and inputs as the default; only badges break to 3px and only specific decorative elements push to 12px or 20px",
+    "Reserve Vibrant Green (#00852e) exclusively for sale badges, discount pills, and success confirmations — never for body copy or decorative fills",
+    "Use Sky Wash (#91c3ff) as the chromatic border for outlined/ghost controls when a light blue accent is needed",
+    "Keep page chrome near-monochrome; let product imagery and the hero gradient carry all spectrum color",
+    "Use Montserrat with 0.10–0.13em letter-spacing for uppercase category labels and section eyebrows",
+    "Pair the sky-blue gradient hero wash only with product imagery or the hero mockup — never extend it into card or section backgrounds",
+    "Use 16px as the base spacing unit for card padding and element gaps; 48px for section separation",
+    "Use Inter with negative letter-spacing (-0.022em at 16px) for all UI body and link text to maintain screen-readable density"
+  ],
+  "donts": [
+    "Do not use pure black (#000000) for body text or icons — Deep Navy (#021422) and Charcoal (#262626) are the dark choices",
+    "Do not use the rainbow spectrum gradient on UI chrome, buttons, or non-product surfaces — it belongs only on product cards and the hero wash",
+    "Do not use Rift Soft for anything other than sale-badge and discount-pill text — it is a stamp face, not a body face",
+    "Do not create filled buttons in chromatic colors other than Deep Navy; the only secondary chromatic fill is the green badge",
+    "Do not use shadows for elevation; the design relies on hairline borders (#ccd2d7) and surface tint differences",
+    "Do not use radius values outside the established scale (3, 8, 12, 20, 32px) — consistency is what makes the system feel intentional",
+    "Do not center body copy or card content; left-align text blocks unless the section is a single centered statement",
+    "Do not add more than one filled primary button per viewport — secondary actions must be outlined or ghost variants",
+    "Do not mix New Kansas and Inter at the same size for the same role — New Kansas owns 20px+, Inter owns below",
+    "Do not use Warm Sand (#fff6ea) and Cloud (#f2f6ff) as full-page backgrounds; they are panel-only surface tints"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#021422",
+      "name": "Deep Navy",
+      "role": "Primary text, primary filled buttons, nav backgrounds, heading ink, footer surface — near-black that reads as ink rather than pure black, grounding the page while staying soft enough to pair with white",
+      "group": "brand"
+    },
+    {
+      "hex": "#00852e",
+      "name": "Vibrant Green",
+      "role": "Sale badges, discount pills, success indicators, single-use accents — the only vivid hue that touches the chrome; every other chromatic surface belongs to a product",
+      "group": "brand"
+    },
+    {
+      "hex": "#001f38",
+      "name": "Midnight Navy",
+      "role": "Secondary text emphasis, card border accent on hero product, heading hierarchy step below Deep Navy — slightly bluer for tonal variation without leaving the family",
+      "group": "accent"
+    },
+    {
+      "hex": "#91c3ff",
+      "name": "Sky Wash",
+      "role": "Outlined button borders, icon accents, link highlights — light blue that whispers rather than shouts, used for ghost controls that still need chromatic definition",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Snow",
+      "role": "Page canvas, card surface, button text on dark fills, badge text — the dominant background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2f6ff",
+      "name": "Cloud",
+      "role": "Cool-tinted surface for elevated cards, subtle wash behind testimonials, very-light-blue backdrop panels — the cool side of the surface stack",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fff6ea",
+      "name": "Warm Sand",
+      "role": "Warm-tinted surface for promotional or seasonal highlight cards, sale callout backgrounds — the warm counterpoint to Cloud",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ccd2d7",
+      "name": "Silver Mist",
+      "role": "Card borders, badge backgrounds, hairline dividers — the structural gray that separates white-on-white layers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6e8e9",
+      "name": "E6e8e9",
+      "role": "Navigation dividers, secondary hairline borders — slightly lighter than Silver Mist for less prominent edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#808f9c",
+      "name": "Iron Gray",
+      "role": "Muted card borders, secondary borders, de-emphasized card outlines — cool gray with a blue undertone",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6a7c89",
+      "name": "Slate",
+      "role": "Muted body text, helper text, de-emphasized metadata — readable but clearly secondary to Deep Navy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#67727a",
+      "name": "Graphite",
+      "role": "Heading sub-labels, nav secondary text, card meta text — middle gray for informational hierarchy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#262626",
+      "name": "Charcoal",
+      "role": "Icon fills, micro-typography, fine SVG strokes — soft black that never hits pure #000",
+      "group": "neutral"
+    },
+    {
+      "hex": "#724d99",
+      "name": "Spectrum Gradient",
+      "role": "Decorative product-spectrum gradient flowing violet → indigo → cyan → green → yellow → orange → red — used only in hero wash and product card colorways, never on UI chrome",
+      "group": "accent",
+      "gradient": "linear-gradient(90deg, rgba(114,77,153,0.05) 0%, rgba(58,61,138,0.05) 17%, rgba(2,175,224,0.05) 35%, rgba(95,183,62,0.05) 51%, rgba(255,237,0,0.05) 67%, rgba(237,116,43,0.05) 83%, rgba(222,39,53,0.05) 100%)"
+    }
+  ],
+  "layout": "The page model is max-width contained at ~1200px, centered, with the top announcement bar and footer as full-bleed bands. The hero is a split composition: text column left (occupying ~40% width) with a left-aligned headline stack and CTA, and a right-side floating 3D product mockup occupying the remaining ~60% over a sky-blue gradient that extends to the hero container edges. Sections below the hero follow a consistent rhythm: white canvas sections alternate with very-light tinted (Cloud) sections to create visual breathing. Product showcases use horizontal carousels with circular arrow controls top-right. The 'Feel the Difference' section returns to a split layout — centered text + CTA on the left, stacked testimonial chat bubbles on the right against a Cloud-tinted panel. Grids are predominantly 3–4 column card layouts for products. Navigation is a single sticky white bar with hairline bottom border, no mega-menu, no sidebar. Density is comfortable throughout with generous 48px+ section gaps.",
+  "imagery": "The visual language is dominated by product photography of physical bio-frequency patches rendered as saturated colored boxes — green, sky blue, deep navy, red — each labeled in white serif type on the box face. The hero features a 3D-illustrated mockup of these boxes stacked at angles on white pedestals against a soft sky-blue gradient, creating a product-as-architecture feel. The rainbow spectrum gradient appears as a faint decorative wash in the hero only. Testimonials use small circular avatar illustrations (flat, colored backgrounds, no photo realism). Social proof icons (star rating) are standard gold glyphs. The overall photographic style is high-key, studio-clean, and product-isolated: every object is shot on pure white or pure color, no lifestyle context, no human subjects — the patch is the hero. The sky-blue cloud-textured hero background is the only atmospheric/environmental image in the system.",
+  "similar": [
+    {
+      "why": "Same clinical-wellness visual register — light canvas, deep-navy ink for primary text and CTAs, and a single chromatic accent (green) reserved for promotional badges and confirmations",
+      "business": "Hims"
+    },
+    {
+      "why": "Editorial serif headlines paired with a clean white surface, narrow palette that lets product imagery carry all color, and uppercase tracked labels for section eyebrows",
+      "business": "Athletic Greens / AG1"
+    },
+    {
+      "why": "Minimalist supplement-brand language with a near-monochrome chrome, hairline borders, soft 8px corners, and a product carousel pattern that puts the colored product as the only chromatic element on each card",
+      "business": "Ritual"
+    },
+    {
+      "why": "Warm-meets-clinical wellness feel: light page with occasional cool tinted surface panels, serif display type, and restrained use of green for trust/sale signals",
+      "business": "Care/of"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "12px",
+      "tags": "3px",
+      "cards": "8px",
+      "pills": "20px",
+      "badges": "3px",
+      "inputs": "8px",
+      "buttons": "8px",
+      "hero-panels": "12px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "48px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — the dominant white that everything else floats on"
+    },
+    {
+      "hex": "#f2f6ff",
+      "name": "Cloud",
+      "level": 1,
+      "purpose": "Cool-tinted panel for testimonial sections, feature callouts, soft elevation without shadow"
+    },
+    {
+      "hex": "#fff6ea",
+      "name": "Warm Sand",
+      "level": 2,
+      "purpose": "Warm-tinted promotional or seasonal card surface — the warm counterpart to Cloud"
+    },
+    {
+      "hex": "#ffe9c9",
+      "name": "Cream Highlight",
+      "level": 3,
+      "purpose": "Accent surface for hero highlights or featured-product callouts (rarely used)"
+    }
+  ],
+  "northStar": "Skyborne apothecary on white marble — the dark navy ink is the mortar, the rainbow spectrum is the medicine.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.2,
+      "letterSpacing": 1.3
+    },
+    {
+      "role": "label",
+      "size": 12,
+      "lineHeight": 1.2,
+      "letterSpacing": 1.56
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.35
+    },
+    {
+      "role": "body-lg",
+      "size": 20,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.1
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.24
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.17,
+      "letterSpacing": -0.54
+    },
+    {
+      "role": "heading-lg",
+      "size": 44,
+      "lineHeight": 1.14,
+      "letterSpacing": -0.88
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.13,
+      "letterSpacing": -0.96
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Filled Button (Shop Patches)",
+      "role": "Primary CTA — high-contrast navy fill with white text, used once per section for the dominant action",
+      "description": "Deep Navy (#021422) background, white (#ffffff) text, 8px border-radius, 18px vertical padding, 24px horizontal padding. New Kansas weight 600, 14–16px, uppercase tracking 0.10em. No shadow. Sits as a solid block — the only filled button in the system."
+    },
+    {
+      "name": "Secondary Outlined Button (Shop Now)",
+      "role": "Secondary action — ghost variant for supporting CTAs",
+      "description": "Transparent background, 1px #021422 border, 8px radius, 16–18px padding, Deep Navy text. New Kansas weight 600 at 14px with uppercase 0.10em tracking. Used when a primary filled button already exists on the page."
+    },
+    {
+      "name": "Sky Ghost Button",
+      "role": "Tertiary action — light blue outlined variant for low-emphasis links-as-buttons",
+      "description": "Transparent fill, 1px Sky Wash (#91c3ff) border, 8px radius, 14–16px padding, Deep Navy text. Inter weight 500. The chromatic border signals interactivity without competing with the primary CTA."
+    },
+    {
+      "name": "Sale Badge (45% OFF)",
+      "role": "Promotional discount pill overlaid on product cards",
+      "description": "Vibrant Green (#00852e) background, white text, 3px border-radius (sharp-cornered rectangle, not pill), 3px vertical / 6px horizontal padding. Rift Soft weight 600, ~10–12px, uppercase 0.063em tracking. Sits top-left of product card. The sharp 3px corner distinguishes badges from all other rounded elements in the system."
+    },
+    {
+      "name": "Star Rating Row",
+      "role": "Social proof indicator — inline with customer count",
+      "description": "Five gold star icons (system default gold) at 12px, followed by Inter weight 400 at 13px in Slate (#6a7c89) for the count text. No container — floats inline with surrounding copy."
+    },
+    {
+      "name": "Product Card",
+      "role": "E-commerce product tile in carousels and grids",
+      "description": "White surface, 1px Silver Mist (#ccd2d7) border, 8px radius, 16px padding. Image area is the full-bleed colored product (green/blue/red variants). Product name in New Kansas weight 600 at 18px Deep Navy, variant label in Inter 14px Slate, price in New Kansas 16px Deep Navy with strikethrough original in Slate."
+    },
+    {
+      "name": "Hero Product Mockup Panel",
+      "role": "3D-illustrated product showcase floating in the hero",
+      "description": "Stacked colored product boxes (green, dark blue, red, sky blue) with white inner cards, 8px radius on each box, subtle 1px borders. No container — floats directly over the sky-blue gradient hero background."
+    },
+    {
+      "name": "Testimonial Chat Bubble",
+      "role": "Customer review rendered as a chat-message UI element",
+      "description": "White fill, 1px Silver Mist border, 16–20px radius (rounded but not pill), 12–16px padding. Inter weight 400 at 14px Deep Navy. Small circular avatar with colored background attached bottom-right. Two bubbles stacked on a Cloud (#f2f6ff) tinted background panel."
+    },
+    {
+      "name": "Sticky Cart Notification",
+      "role": "Bottom-left toast confirming a product was added",
+      "description": "White surface, 1px #ccd2d7 border, 8px radius, 12px padding. Contains small green shield icon, Inter 12px body text with linked product name in Vibrant Green. Slides in from left, persists in lower-left corner."
+    },
+    {
+      "name": "Top Announcement Bar",
+      "role": "Sitewide promo strip above the nav",
+      "description": "Deep Navy (#021422) background, white text, centered, 8–12px padding. Inter or Montserrat weight 600 at 12–14px, uppercase 0.10em tracking. The only full-bleed dark band on the page."
+    },
+    {
+      "name": "Section Header (Our Patches)",
+      "role": "Large editorial section title",
+      "description": "New Kansas weight 600 at 36–44px, Deep Navy (#021422), no eyebrow or subtitle unless paired with a carousel control. Left-aligned, generous space below before the grid begins."
+    },
+    {
+      "name": "Nav Header",
+      "role": "Sticky top navigation bar",
+      "description": "White background, 1px #e6e8e9 bottom border, 12px padding vertical. Logo (heart-icon + wordmark) left, nav links center (New Kansas or Inter 14–16px, Deep Navy), account/cart icons right. No drop shadow — a clean hairline separator defines the edge."
+    },
+    {
+      "name": "Footer",
+      "role": "Dark site footer with link columns and social icons",
+      "description": "Deep Navy (#021422) background, 40–48px vertical padding, 3–4 column link grid. Column headers in Montserrat 12px Vibrant Green, uppercase 0.10em. Links in Inter 14px white at 60% opacity. Social icons (Instagram, Facebook, TikTok, Pinterest) as white outlined glyphs, right-aligned."
+    },
+    {
+      "name": "Circular Stamp Badge",
+      "role": "Decorative approval/seal element in the 'Feel the Difference' section",
+      "description": "White or very-light fill, 1px Deep Navy border, circular shape with text wrapping the circumference (Rift Soft or Montserrat 10–12px uppercase). Centered above section heading, used as a trust-signal device."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Label, badge-support, and footer-typography family. Used for uppercase labels at 10–12px with wide tracking (0.10–0.13em), and for body copy that needs a geometric neutral tone. The wide letter-spacing on small sizes is the defining move for category labels and section eyebrows.",
+      "sizes": "10px, 12px, 14px, 15px, 16px, 20px",
+      "family": "Montserrat",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.14–1.80",
+      "substitute": "Montserrat, Work Sans, or Space Grotesk",
+      "letterSpacing": "0.10em at 10px, 0.13em at 12px"
+    },
+    {
+      "role": "Primary display and heading family — a custom serif with warmth and editorial credibility. Carries the 36–48px headlines, 20–28px subheads, and 16–20px emphasized body. The serif choice over a geometric sans is the brand's signature typographic decision: it reads apothecary and trustworthy rather than tech-SaaS. Weight 600 is the default for headlines; 500 for italic-feeling emphasis.",
+      "sizes": "14px, 15px, 16px, 18px, 20px, 22px, 24px, 28px, 32px, 36px, 44px, 48px",
+      "family": "New Kansas",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.00–2.00",
+      "substitute": "Fraunces, Playfair Display, or DM Serif Display",
+      "letterSpacing": "-0.02em at 48px, -0.01em at 24–32px, normal below 20px"
+    },
+    {
+      "role": "UI and body family for cards, navigation, links, and small functional text. Negative letter-spacing tightens at body sizes (-0.022em at 16px, -0.01em at 14px) for a clean, screen-optimized read. Stepping in where New Kansas would feel too editorial — tabs, micro-copy, card metadata.",
+      "sizes": "12px, 13px, 14px, 16px",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.00–1.33",
+      "substitute": "Inter, DM Sans, or system-ui",
+      "letterSpacing": "-0.022em at 16px, -0.01em at 14px, -0.008em at 12px"
+    },
+    {
+      "role": "Exclusive to sale-badge and discount-pill text. A condensed display face with 0.063em tracking that gives promotional copy a stamp-like, authoritative weight. Never used outside discount contexts — this is the badge voice, not the heading voice.",
+      "sizes": "16px",
+      "family": "Rift Soft",
+      "weight": "600",
+      "lineHeight": "1.00",
+      "substitute": "Bebas Neue, Oswald, or Anton",
+      "letterSpacing": "0.063em",
+      "fontFeatureSettings": "\"ss01\" on"
+    },
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "13px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.2"
+    }
+  ],
+  "description": "Vibrants reads as a bright, clinical wellness counter: white canvas, a deep-navy ink that does the heavy lifting for text and primary buttons, and a full-spectrum rainbow that lives only on the product surface. The visual grammar is deliberately quiet outside the hero and product imagery — almost monochrome structure with a single vivid green punctuating sales, badges, and confirmations. Headlines use a custom serif that leans editorial and trustworthy, while body copy and UI stay in geometric sans-serifs that feel pharmaceutical-precise. Components are flat with hairline borders, soft 8px corners, and minimal elevation; depth comes from color contrast and generous whitespace rather than shadow. The sky-blue gradient hero and floating product mockup set a calm, optimistic tone that the rest of the page sustains through airy spacing and restrained typography.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text (primary): #021422\n- background (canvas): #ffffff\n- border (hairline): #ccd2d7\n- accent: #91c3ff\n- sale/badge: #00852e\n- primary action: #00852e (filled action)\n\n3-5 Example Component Prompts:\n\n1. Build a hero section on a sky-blue gradient background (#c4e4fb to #f2f6ff). Left column: New Kansas weight 600, 48px, #021422, letter-spacing -0.02em headline. Below it, Inter 16px, #021422 body copy. Below that, a filled navy button (#021422 background, white text, 8px radius, 18px/24px padding, New Kansas 14px uppercase 0.10em). Right column: a floating arrangement of four colored product cards (green #00852e, navy #001f38, red #c43030, sky #4ba3d8) at slight angles, each with a white inner panel.\n\n2. Build a product card: white background, 1px #ccd2d7 border, 8px radius, 16px padding. A Vibrant Green (#00852e) sale badge with 3px radius, Rift Soft 12px uppercase 0.063em, white text sits top-left over the image. Product name in New Kansas 18px weight 600 #021422. Variant label in Inter 14px #6a7c89. Price in New Kansas 16px #021422 with strikethrough original in #6a7c89.\n\n3. Build a testimonial panel: #f2f6ff background, 20px radius, 24px padding. Two stacked white chat bubbles with 1px #ccd2d7 border, 16px radius, 16px padding, Inter 14px #021422 body text. Each bubble has a small circular avatar (32px, solid colored background) bottom-right.\n\n4. Build the sticky cart notification: white surface, 1px #ccd2d7 border, 8px radius, 12px padding. Green shield icon (16px) on the left, then Inter 12px text with the product name linked in #00852e. Positioned fixed bottom-left.\n\n5. Build a footer: #021422 background, 48px vertical padding, 4-column grid. Column headers in Montserrat 12px #00852e uppercase 0.13em. Links in Inter 14px white at 60% opacity, 8px row gap. Social icons (Instagram, Facebook, TikTok, Pinterest) as white 20px outlined glyphs in the rightmost column."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Two gradient families coexist but serve different purposes. The spectrum gradient (violet → indigo → cyan → green → yellow → orange → red at 5% opacity) appears exclusively in the hero as a faint atmospheric wash — it signals the product range's chromatic variety without ever overwhelming. The striped diagonal gradients (white-to-gray and #021422 alternating 6–8px bands) are decorative stripe patterns used as small accent details, not as backgrounds. A third sky-gradient (light blue #c4e4fb fading to white) appears behind the hero product mockup. No gradient should be applied to UI chrome, buttons, cards, or section backgrounds."
+    },
+    {
+      "title": "Iconography & Glyphs",
+      "content": "Icons are minimal and functional: line-based, 1.5px stroke, Deep Navy (#021422) or white-on-dark fill, at 16–20px sizes. The brand mark combines a stylized heart glyph with the wordmark 'Vibrants'. Social icons (Instagram, Facebook, TikTok, Pinterest) are standard platform glyphs rendered as white outlines on the dark footer. Star icons for ratings use default gold (#f5b500 range) at 12px. The circular stamp badge in the 'Feel the Difference' section uses a ring of text following a circular path, rendered in Rift Soft or Montserrat 10–12px uppercase. No icon set dominates — the system is restrained, using icons only where they carry functional weight (cart, account, navigation arrows, social platforms)."
+    }
+  ],
+  "elevationPhilosophy": "The design deliberately avoids drop shadows. Depth is constructed through three layered techniques: hairline 1px borders in Silver Mist (#ccd2d7) for card edges, surface tint shifts from white to Cloud (#f2f6ff) or Warm Sand (#fff6ea) for panel separation, and contrast between Deep Navy filled elements and white surfaces. This produces a flat, editorial, apothecary-counter feel where nothing floats — everything sits precisely on a plane. The single detected box-shadow is a 1px tinted hairline (#f2f6ff), not a true elevation effect."
+}

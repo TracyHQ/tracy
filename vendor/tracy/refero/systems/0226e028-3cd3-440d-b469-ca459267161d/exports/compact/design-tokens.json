@@ -1,0 +1,34 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#f0eeeb",
+      "$type": "color",
+      "$description": "Bone — Page background and primary canvas — a warm off-white that reads as paper rather than screen, the defining surface of the entire system"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, body copy, navigation, project metadata, 1px grid lines, image borders, and dark image treatments — the only non-canvas color"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, image backgrounds, and reverse-text blocks — white inserts on the warm canvas to isolate portfolio pieces"
+    }
+  },
+  "font": {
+    "grotesk": {
+      "$value": "Grotesk",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all UI — navigation, project metadata, and headlines. Used exclusively at weight 400 (no bold, no light), which is anti-convention for an agency portfolio; the regular weight whispers where competitors shout. Negative tracking tightens headlines at -0.02em while body sits at -0.005em, giving every line a printed-page density. The dlig feature enables discretionary ligatures for editorial flourish."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://grafik.co.nz",
+      "siteName": "Grafik",
+      "extractedAt": "2026-06-03T19:39:48.463Z",
+      "variant": "compact"
+    }
+  }
+}

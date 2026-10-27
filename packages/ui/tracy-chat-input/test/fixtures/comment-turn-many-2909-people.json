@@ -1,0 +1,237 @@
+[
+  {
+    "items": [
+      {
+        "n": 1,
+        "text": "Change to 'Building the groundwork for Russia's industry'",
+        "element": {
+          "url": "https://northgate.tracy.site/",
+          "selector": "main > section.hero h1",
+          "label": "Hero › heading",
+          "text": "Industrial construction, from design to handover",
+          "marks": ["post:12:home block:core/heading"]
+        },
+        "locate": {
+          "status": "resolved",
+          "levels": [
+            {
+              "kind": "field",
+              "id": "content_12#block_3/heading",
+              "label": "Hero › heading",
+              "writable": true
+            },
+            {
+              "kind": "record",
+              "id": "content_12",
+              "label": "page \"Home\"",
+              "writable": true
+            }
+          ]
+        }
+      },
+      {
+        "n": 2,
+        "text": "A construction site with modern machines",
+        "element": {
+          "url": "https://northgate.tracy.site/",
+          "selector": "main figure.wp-block-image > img",
+          "label": "news-1.png",
+          "text": "",
+          "marks": []
+        },
+        "locate": null
+      }
+    ],
+    "turn": "1. Change to 'Building the groundwork for Russia's industry'\n2. A construction site with modern machines\n\n```tracy-element\n<mentioned-element n=\"1\" url=\"https://northgate.tracy.site/\" selector=\"main &gt; section.hero h1\" status=\"resolved\" kind=\"field\" name=\"Hero › heading\" lang=\"en\">\ntext: Industrial construction, from design to handover\nmarks: post:12:home block:core/heading\nlevels:\n- field \"Hero › heading\" id=content_12#block_3/heading [picked]\n- record \"page \"Home\"\" id=content_12\n</mentioned-element>\n```\n```tracy-element\n<mentioned-element n=\"2\" url=\"https://northgate.tracy.site/\" selector=\"main figure.wp-block-image &gt; img\" status=\"unchecked\" name=\"news-1.png\" lang=\"en\">\n</mentioned-element>\n```\nThe elements above are numbered (n) like the comments before them: do every comment, by number; pass `comment: <n>` on every `tracy_site` or `tracy_emdash` call made for comment n, and one write that answers several comments carries `comment: [1, 2]`; if one cannot be done, say why and go on with the next; answer with a markdown list, one bullet per number (`- 1 ✓ …`, `- 3 ✗ … (reason)`). For each element: To change its words: `tracy_site` `content.replace` {find: its words as the text line shows them, replace, path: the url's path}, nothing read first. Anything else: start from its levels (ids included); with no levels, or if the site changed, call `tracy_site` `content.locate` {url, text, marks: the \"marks:\" values split at \" | \", never the selector}. Its look (colour, size, spacing, font): change it yourself — `page.look` {path, style} names its rule and the token; change this element only (the token only if all like it should change), then read it again. Only status \"resolved\" is certain; otherwise ask the person which one. incomplete=\"true\": Tracy had read only part of the site, so no status is certain yet: before changing anything but its words, read the level (`content.read` {id}) or call `content.locate` again; if it still is not \"resolved\", ask the person which one. status=\"unchecked\": nothing was looked up; call `content.locate` before changing anything but its words. Write each comment's line in that comment's language (its block's `lang`, else its words) and the rest of your answer in the last comment's, whatever this conversation or the site used before; never say which language you use or why. Answer a comment only through `tracy_site` / `tracy_emdash` content writes (receipts the person can undo): never edit theme, template, plugin or PHP/JS/CSS files on the site for a comment, except a look change (above) or the call a `write:` line gives; if the page prints no slot for what was asked (for example an image the page prints with no alt at all), say so with ✗ and go on. In your reply use plain words: never a selector, id, mark, tool or action name, error code or receipt id (not `NO_BROWSER`, not `apply.revert`) — a content change is undone by asking you, so say that; only a look change ends with its `Undo: look.revert <id>`. A look change says its scope in its line, in plain words (\"every card heading on every page\", \"this page only\"), and ends it with the undo its write's result gave, e.g. `✓ updated: card headings lighter (weight 600 → 500) on every page and language. Undo: look.revert 7f3a9c`."
+  },
+  {
+    "items": [
+      {
+        "n": 1,
+        "text": "Change to 'Building the groundwork for Russia's industry'",
+        "element": {
+          "url": "https://northgate.tracy.site/",
+          "selector": "main > section.hero h1",
+          "label": "Hero › heading",
+          "text": "Industrial construction, from design to handover",
+          "marks": ["post:12:home block:core/heading"]
+        },
+        "locate": {
+          "status": "resolved",
+          "levels": [
+            {
+              "kind": "field",
+              "id": "content_12#block_3/heading",
+              "label": "Hero › heading",
+              "writable": true
+            },
+            {
+              "kind": "record",
+              "id": "content_12",
+              "label": "page \"Home\"",
+              "writable": true
+            }
+          ]
+        }
+      },
+      {
+        "n": 3,
+        "text": "Rename to \"What we do\"\nand keep the icon",
+        "element": {
+          "url": "https://northgate.tracy.site/about",
+          "selector": "header nav li.item-104 > a",
+          "label": "Services",
+          "text": "Services",
+          "marks": ["menuItem:104"]
+        },
+        "locate": {
+          "status": "resolved",
+          "levels": [
+            {
+              "kind": "record",
+              "id": "joomla:menu:104",
+              "label": "Services",
+              "writable": true
+            }
+          ]
+        }
+      }
+    ],
+    "turn": "1. Change to 'Building the groundwork for Russia's industry'\n3. Rename to \"What we do\"\n   and keep the icon\n\n```tracy-element\n<mentioned-element n=\"1\" url=\"https://northgate.tracy.site/\" selector=\"main &gt; section.hero h1\" status=\"resolved\" kind=\"field\" name=\"Hero › heading\" lang=\"en\">\ntext: Industrial construction, from design to handover\nmarks: post:12:home block:core/heading\nlevels:\n- field \"Hero › heading\" id=content_12#block_3/heading [picked]\n- record \"page \"Home\"\" id=content_12\n</mentioned-element>\n```\n```tracy-element\n<mentioned-element n=\"3\" url=\"https://northgate.tracy.site/about\" selector=\"header nav li.item-104 &gt; a\" status=\"resolved\" kind=\"record\" name=\"Services\" lang=\"en\">\ntext: Services\nmarks: menuItem:104\nlevels:\n- record \"Services\" id=joomla:menu:104 [picked]\n</mentioned-element>\n```\nThe elements above are numbered (n) like the comments before them: do every comment, by number; pass `comment: <n>` on every `tracy_site` or `tracy_emdash` call made for comment n, and one write that answers several comments carries `comment: [1, 2]`; if one cannot be done, say why and go on with the next; answer with a markdown list, one bullet per number (`- 1 ✓ …`, `- 3 ✗ … (reason)`). For each element: To change its words: `tracy_site` `content.replace` {find: its words as the text line shows them, replace, path: the url's path}, nothing read first. Anything else: start from its levels (ids included); with no levels, or if the site changed, call `tracy_site` `content.locate` {url, text, marks: the \"marks:\" values split at \" | \", never the selector}. Its look (colour, size, spacing, font): change it yourself — `page.look` {path, style} names its rule and the token; change this element only (the token only if all like it should change), then read it again. Only status \"resolved\" is certain; otherwise ask the person which one. Write each comment's line in that comment's language (its block's `lang`, else its words) and the rest of your answer in the last comment's, whatever this conversation or the site used before; never say which language you use or why. Answer a comment only through `tracy_site` / `tracy_emdash` content writes (receipts the person can undo): never edit theme, template, plugin or PHP/JS/CSS files on the site for a comment, except a look change (above) or the call a `write:` line gives; if the page prints no slot for what was asked (for example an image the page prints with no alt at all), say so with ✗ and go on. In your reply use plain words: never a selector, id, mark, tool or action name, error code or receipt id (not `NO_BROWSER`, not `apply.revert`) — a content change is undone by asking you, so say that; only a look change ends with its `Undo: look.revert <id>`. A look change says its scope in its line, in plain words (\"every card heading on every page\", \"this page only\"), and ends it with the undo its write's result gave, e.g. `✓ updated: card headings lighter (weight 600 → 500) on every page and language. Undo: look.revert 7f3a9c`."
+  },
+  {
+    "items": [
+      {
+        "n": 2,
+        "text": "A construction site with modern machines",
+        "element": {
+          "url": "https://northgate.tracy.site/",
+          "selector": "main figure.wp-block-image > img",
+          "label": "news-1.png",
+          "text": "",
+          "marks": []
+        },
+        "locate": null
+      },
+      {
+        "n": 3,
+        "text": "Rename to \"What we do\"\nand keep the icon",
+        "element": {
+          "url": "https://northgate.tracy.site/about",
+          "selector": "header nav li.item-104 > a",
+          "label": "Services",
+          "text": "Services",
+          "marks": ["menuItem:104"]
+        },
+        "locate": {
+          "status": "resolved",
+          "levels": [
+            {
+              "kind": "record",
+              "id": "joomla:menu:104",
+              "label": "Services",
+              "writable": true
+            }
+          ]
+        }
+      },
+      {
+        "n": 4,
+        "text": "Add a FAQ page link in the footer",
+        "element": null,
+        "url": "https://northgate.tracy.site/about"
+      }
+    ],
+    "turn": "2. A construction site with modern machines\n3. Rename to \"What we do\"\n   and keep the icon\n4. Add a FAQ page link in the footer\n\n```tracy-element\n<mentioned-element n=\"2\" url=\"https://northgate.tracy.site/\" selector=\"main figure.wp-block-image &gt; img\" status=\"unchecked\" name=\"news-1.png\" lang=\"en\">\n</mentioned-element>\n```\n```tracy-element\n<mentioned-element n=\"3\" url=\"https://northgate.tracy.site/about\" selector=\"header nav li.item-104 &gt; a\" status=\"resolved\" kind=\"record\" name=\"Services\" lang=\"en\">\ntext: Services\nmarks: menuItem:104\nlevels:\n- record \"Services\" id=joomla:menu:104 [picked]\n</mentioned-element>\n```\n```tracy-page\n<page n=\"4\" url=\"https://northgate.tracy.site/about\" path=\"/about\" lang=\"en\">\n</page>\n```\nThe elements above are numbered (n) like the comments before them: do every comment, by number; pass `comment: <n>` on every `tracy_site` or `tracy_emdash` call made for comment n, and one write that answers several comments carries `comment: [1, 2]`; if one cannot be done, say why and go on with the next; answer with a markdown list, one bullet per number (`- 1 ✓ …`, `- 3 ✗ … (reason)`). A `<page>` block is a comment about that whole page (its url), not one element: do it the same way, by number. For each element: To change its words: `tracy_site` `content.replace` {find: its words as the text line shows them, replace, path: the url's path}, nothing read first. Anything else: start from its levels (ids included); with no levels, or if the site changed, call `tracy_site` `content.locate` {url, text, marks: the \"marks:\" values split at \" | \", never the selector}. Its look (colour, size, spacing, font): change it yourself — `page.look` {path, style} names its rule and the token; change this element only (the token only if all like it should change), then read it again. Only status \"resolved\" is certain; otherwise ask the person which one. incomplete=\"true\": Tracy had read only part of the site, so no status is certain yet: before changing anything but its words, read the level (`content.read` {id}) or call `content.locate` again; if it still is not \"resolved\", ask the person which one. status=\"unchecked\": nothing was looked up; call `content.locate` before changing anything but its words. Write each comment's line in that comment's language (its block's `lang`, else its words) and the rest of your answer in the last comment's, whatever this conversation or the site used before; never say which language you use or why. Answer a comment only through `tracy_site` / `tracy_emdash` content writes (receipts the person can undo): never edit theme, template, plugin or PHP/JS/CSS files on the site for a comment, except a look change (above) or the call a `write:` line gives; if the page prints no slot for what was asked (for example an image the page prints with no alt at all), say so with ✗ and go on. In your reply use plain words: never a selector, id, mark, tool or action name, error code or receipt id (not `NO_BROWSER`, not `apply.revert`) — a content change is undone by asking you, so say that; only a look change ends with its `Undo: look.revert <id>`. A look change says its scope in its line, in plain words (\"every card heading on every page\", \"this page only\"), and ends it with the undo its write's result gave, e.g. `✓ updated: card headings lighter (weight 600 → 500) on every page and language. Undo: look.revert 7f3a9c`."
+  },
+  {
+    "items": [
+      {
+        "n": 1,
+        "text": "Change to 'Building the groundwork for Russia's industry'",
+        "element": {
+          "url": "https://northgate.tracy.site/",
+          "selector": "main > section.hero h1",
+          "label": "Hero › heading",
+          "text": "Industrial construction, from design to handover",
+          "marks": ["post:12:home block:core/heading"]
+        },
+        "locate": {
+          "status": "resolved",
+          "levels": [
+            {
+              "kind": "field",
+              "id": "content_12#block_3/heading",
+              "label": "Hero › heading",
+              "writable": true
+            },
+            {
+              "kind": "record",
+              "id": "content_12",
+              "label": "page \"Home\"",
+              "writable": true
+            }
+          ]
+        }
+      },
+      {
+        "n": 2,
+        "text": "A construction site with modern machines",
+        "element": {
+          "url": "https://northgate.tracy.site/",
+          "selector": "main figure.wp-block-image > img",
+          "label": "news-1.png",
+          "text": "",
+          "marks": []
+        },
+        "locate": null
+      },
+      {
+        "n": 3,
+        "text": "Rename to \"What we do\"\nand keep the icon",
+        "element": {
+          "url": "https://northgate.tracy.site/about",
+          "selector": "header nav li.item-104 > a",
+          "label": "Services",
+          "text": "Services",
+          "marks": ["menuItem:104"]
+        },
+        "locate": {
+          "status": "resolved",
+          "levels": [
+            {
+              "kind": "record",
+              "id": "joomla:menu:104",
+              "label": "Services",
+              "writable": true
+            }
+          ]
+        }
+      },
+      {
+        "n": 4,
+        "text": "Add a FAQ page link in the footer",
+        "element": null,
+        "url": "https://northgate.tracy.site/about"
+      }
+    ],
+    "turn": "1. Change to 'Building the groundwork for Russia's industry'\n2. A construction site with modern machines\n3. Rename to \"What we do\"\n   and keep the icon\n4. Add a FAQ page link in the footer\n\n```tracy-element\n<mentioned-element n=\"1\" url=\"https://northgate.tracy.site/\" selector=\"main &gt; section.hero h1\" status=\"resolved\" kind=\"field\" name=\"Hero › heading\" lang=\"en\">\ntext: Industrial construction, from design to handover\nmarks: post:12:home block:core/heading\nlevels:\n- field \"Hero › heading\" id=content_12#block_3/heading [picked]\n- record \"page \"Home\"\" id=content_12\n</mentioned-element>\n```\n```tracy-element\n<mentioned-element n=\"2\" url=\"https://northgate.tracy.site/\" selector=\"main figure.wp-block-image &gt; img\" status=\"unchecked\" name=\"news-1.png\" lang=\"en\">\n</mentioned-element>\n```\n```tracy-element\n<mentioned-element n=\"3\" url=\"https://northgate.tracy.site/about\" selector=\"header nav li.item-104 &gt; a\" status=\"resolved\" kind=\"record\" name=\"Services\" lang=\"en\">\ntext: Services\nmarks: menuItem:104\nlevels:\n- record \"Services\" id=joomla:menu:104 [picked]\n</mentioned-element>\n```\n```tracy-page\n<page n=\"4\" url=\"https://northgate.tracy.site/about\" path=\"/about\" lang=\"en\">\n</page>\n```\nThe elements above are numbered (n) like the comments before them: do every comment, by number; pass `comment: <n>` on every `tracy_site` or `tracy_emdash` call made for comment n, and one write that answers several comments carries `comment: [1, 2]`; if one cannot be done, say why and go on with the next; answer with a markdown list, one bullet per number (`- 1 ✓ …`, `- 3 ✗ … (reason)`). A `<page>` block is a comment about that whole page (its url), not one element: do it the same way, by number. For each element: To change its words: `tracy_site` `content.replace` {find: its words as the text line shows them, replace, path: the url's path}, nothing read first. Anything else: start from its levels (ids included); with no levels, or if the site changed, call `tracy_site` `content.locate` {url, text, marks: the \"marks:\" values split at \" | \", never the selector}. Its look (colour, size, spacing, font): change it yourself — `page.look` {path, style} names its rule and the token; change this element only (the token only if all like it should change), then read it again. Only status \"resolved\" is certain; otherwise ask the person which one. incomplete=\"true\": Tracy had read only part of the site, so no status is certain yet: before changing anything but its words, read the level (`content.read` {id}) or call `content.locate` again; if it still is not \"resolved\", ask the person which one. status=\"unchecked\": nothing was looked up; call `content.locate` before changing anything but its words. Write each comment's line in that comment's language (its block's `lang`, else its words) and the rest of your answer in the last comment's, whatever this conversation or the site used before; never say which language you use or why. Answer a comment only through `tracy_site` / `tracy_emdash` content writes (receipts the person can undo): never edit theme, template, plugin or PHP/JS/CSS files on the site for a comment, except a look change (above) or the call a `write:` line gives; if the page prints no slot for what was asked (for example an image the page prints with no alt at all), say so with ✗ and go on. In your reply use plain words: never a selector, id, mark, tool or action name, error code or receipt id (not `NO_BROWSER`, not `apply.revert`) — a content change is undone by asking you, so say that; only a look change ends with its `Undo: look.revert <id>`. A look change says its scope in its line, in plain words (\"every card heading on every page\", \"this page only\"), and ends it with the undo its write's result gave, e.g. `✓ updated: card headings lighter (weight 600 → 500) on every page and language. Undo: look.revert 7f3a9c`."
+  },
+  {
+    "items": [
+      {
+        "n": 4,
+        "text": "Add a FAQ page link in the footer",
+        "element": null,
+        "url": "https://northgate.tracy.site/about"
+      },
+      {
+        "n": 5,
+        "text": "Second",
+        "element": null,
+        "url": "https://northgate.tracy.site/about"
+      }
+    ],
+    "turn": "4. Add a FAQ page link in the footer\n5. Second\n\n```tracy-page\n<page n=\"4\" url=\"https://northgate.tracy.site/about\" path=\"/about\" lang=\"en\">\n</page>\n```\n```tracy-page\n<page n=\"5\" url=\"https://northgate.tracy.site/about\" path=\"/about\">\n</page>\n```\nThe elements above are numbered (n) like the comments before them: do every comment, by number; pass `comment: <n>` on every `tracy_site` or `tracy_emdash` call made for comment n, and one write that answers several comments carries `comment: [1, 2]`; if one cannot be done, say why and go on with the next; answer with a markdown list, one bullet per number (`- 1 ✓ …`, `- 3 ✗ … (reason)`). A `<page>` block is a comment about that whole page (its url), not one element: do it the same way, by number. For each element: To change its words: `tracy_site` `content.replace` {find: its words as the text line shows them, replace, path: the url's path}, nothing read first. Anything else: start from its levels (ids included); with no levels, or if the site changed, call `tracy_site` `content.locate` {url, text, marks: the \"marks:\" values split at \" | \", never the selector}. Its look (colour, size, spacing, font): change it yourself — `page.look` {path, style} names its rule and the token; change this element only (the token only if all like it should change), then read it again. Only status \"resolved\" is certain; otherwise ask the person which one. Write each comment's line in that comment's language (its block's `lang`, else its words) and the rest of your answer in the last comment's, whatever this conversation or the site used before; never say which language you use or why. Answer a comment only through `tracy_site` / `tracy_emdash` content writes (receipts the person can undo): never edit theme, template, plugin or PHP/JS/CSS files on the site for a comment, except a look change (above) or the call a `write:` line gives; if the page prints no slot for what was asked (for example an image the page prints with no alt at all), say so with ✗ and go on. In your reply use plain words: never a selector, id, mark, tool or action name, error code or receipt id (not `NO_BROWSER`, not `apply.revert`) — a content change is undone by asking you, so say that; only a look change ends with its `Undo: look.revert <id>`. A look change says its scope in its line, in plain words (\"every card heading on every page\", \"this page only\"), and ends it with the undo its write's result gave, e.g. `✓ updated: card headings lighter (weight 600 → 500) on every page and language. Undo: look.revert 7f3a9c`."
+  }
+]

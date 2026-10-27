@@ -1,0 +1,312 @@
+/*
+ * base — token layer and dark remap
+ * Made by scripts/make-style.mjs from vendor/od-design-system/systems/base/, then edited by hand (15/10/2026):
+ * every colour, face and corner token reads its design-system role variable with the made value as
+ * the fallback (var(--ds-c-bg, #ffffff)), so nothing changes until a system is worn. A new run of
+ * the script drops those reads: put them back. A brand-specific COMPONENT goes in scss/_signature-base.scss.
+ */
+:root {
+  --bg: var(--ds-c-bg, #ffffff);
+  --surface: var(--ds-c-surface, #f5f5f7);
+  --surface-warm: var(--ds-c-surface-warm, #fbfbfd);
+
+
+  --fg: var(--ds-c-fg, #1d1d1f);
+  --fg-2: var(--ds-c-fg-2, #424245);
+  --muted: var(--ds-c-muted, #6e6e73);
+  --meta: var(--ds-c-meta, #86868b);
+
+
+  --border: var(--ds-c-border, #d2d2d7);
+  --border-soft: var(--ds-c-border-soft, #e8e8ed);
+
+
+  --accent: var(--ds-c-accent, #0071e3);
+  --accent-on: var(--ds-c-accent-on, #ffffff);
+
+
+  --accent-hover: var(--ds-c-accent-hover, #0077ed);
+  --accent-active: var(--ds-c-accent-active, #0066cc);
+
+
+  --success: var(--ds-c-success, #16a34a);
+  --warn: var(--ds-c-warn, #eab308);
+  --danger: var(--ds-c-danger, #dc2626);
+
+
+  --font-display:
+  var(--ds-font-display, "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif);
+  --font-body:
+  var(--ds-font-body, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif);
+  --font-mono:
+  var(--ds-font-mono, "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Monaco, Consolas, monospace);
+
+
+  --text-xs:   12px;
+  --text-sm:   14px;
+  --text-base: 17px;
+  --text-lg:   21px;
+  --text-xl:   28px;
+  --text-2xl:  40px;
+  --text-3xl:  56px;
+  --text-4xl:  80px;
+
+
+  --leading-body:  1.47;
+  --leading-tight: 1.05;
+
+
+  --tracking-display: -0.015em;
+
+
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-12: 48px;
+
+
+  --section-y-desktop: 100px;
+  --section-y-tablet:  64px;
+  --section-y-phone:   40px;
+
+
+  --radius-sm: var(--ds-input-radius, 8px);
+  --radius-md: var(--ds-btn-radius, 12px);
+  --radius-lg: var(--ds-card-radius, 18px);
+  --radius-pill: var(--ds-pill-radius, 980px);
+
+
+  --elev-flat:   none;
+  --elev-ring:   0 0 0 1px var(--border);
+  --elev-raised: 0 12px 32px rgba(0, 0, 0, 0.08);
+
+
+  --focus-ring: 0 0 0 4px var(--ds-c-focus-ring, color-mix(in oklab, var(--accent), transparent 65%));
+
+
+  --motion-fast:   150ms;
+  --motion-base:   220ms;
+  --ease-standard: cubic-bezier(0.28, 0, 0.22, 1);
+
+
+  --container-max:            1024px;
+  --container-gutter-desktop: 22px;
+  --container-gutter-tablet:  18px;
+  --container-gutter-phone:   16px;
+
+  /* from tokens.gaps.css — declared in DESIGN.md, absent from tokens.css */
+  --radius-xl: 32px; /* ds-keep: declared for DESIGN.md, no rule of the template reads it */
+
+  --font-substitute-stack: var(--ds-font-body, Inter, "Inter Tight", sans-serif);
+
+  --text-4xl-phone: 40px;
+  --text-3xl-phone: 28px;
+  --text-2xl-phone: 20px;
+
+  /* the nine the shared layer reads and never declares — see assets/shared-layer/STYLE-CONTRACT.md */
+  --tracy-band-y: 100px;
+  --tracy-band-y-tablet: 64px;
+  --tracy-band-y-phone: 40px;
+  --tracy-body-tracking: normal;
+  --tracy-capsule: var(--ds-pill-radius, 980px);
+  --tracy-capsule-pad: var(--space-3) var(--space-5);
+  --tracy-ring: 0 0 0 1px var(--border);
+  --tracy-shell-radius: var(--ds-card-radius, 18px);
+  --tracy-quiet: var(--muted);
+  --tracy-scene-bg: var(--ds-c-ink, #000000);
+  --tracy-scene-fg: var(--ds-c-on-ink, #f8f8f8);
+}
+
+html[data-theme="dark"],
+[data-bs-theme="dark"] {
+  --bg: var(--ds-c-bg, #000000);  /* darkest neutral the system declares (L* 0.0) */
+  --surface-warm: var(--ds-c-surface-warm, #0e0e0e);  /* ground tier, 4.0 L* from the page ground (pushed out to stay clear of the tier below), interpolated — the system declares no stop at this tier */
+  --surface: var(--ds-c-surface, #1d1d1f);  /* ground tier, 10.8 L* from the page ground (pushed out to stay clear of the tier below), matched to a declared stop */
+  --border-soft: var(--ds-c-border-soft, #262629);  /* ground tier, 15.3 L* from the page ground (pushed out to stay clear of the tier below), matched to a declared stop */
+  --border: var(--ds-c-border, #2f2f30);  /* ground tier, 19.3 L* from the page ground (pushed out to stay clear of the tier below), interpolated — the system declares no stop at this tier */
+  --meta: var(--ds-c-meta, #6f6f73);  /* holds the light ratio 3.33 against the dark ground, interpolated — no declared stop at this tier */
+  --muted: var(--ds-c-muted, #87878b);  /* holds the light ratio 4.66 against the dark ground, interpolated — no declared stop at this tier */
+  --fg-2: var(--ds-c-fg-2, #c0c0c1);  /* holds the light ratio 9.20 against the dark ground, interpolated — no declared stop at this tier */
+  --fg: var(--ds-c-fg, #f8f8f8);  /* holds the light ratio 15.46 against the dark ground, interpolated — no declared stop at this tier, raised to clear the floor */
+  --accent: var(--ds-c-accent, #2997ff);  /* named in DESIGN.md as a brighter variant of the light accent */
+  --accent-on: var(--ds-c-accent-on, #000000);  /* whichever end of the dark ramp has more contrast on the new accent */
+  --accent-hover: var(--ds-c-accent-hover, #349cff);  /* same direction and distance the light palette used (+0.020 luminance) */
+  --accent-active: var(--ds-c-accent-active, #278ff1);  /* same direction and distance the light palette used (-0.035 luminance) */
+  --success: var(--ds-c-success, #16a34a);  /* already clears 4.5 on the dark surface */
+  --warn: var(--ds-c-warn, #eab308);  /* already clears 4.5 on the dark surface */
+  --danger: var(--ds-c-danger, #e45858);  /* lifted to clear 4.5 on the dark surface */
+}
+
+
+/* T4 reads these at runtime from etc/theme/*.json as LITERALS, in a sheet that loads after
+   template.css. A literal does not flip, so the dark hook has to restate them in terms of the
+   tokens it just remapped — otherwise --bg is black and the page is white. */
+html[data-theme="dark"],
+html.t4-dark,
+[data-bs-theme="dark"] {
+  --body-bg-color: var(--bg);
+  --body-text-color: var(--fg);
+  --body-link-color: var(--ds-c-accent-text, var(--accent));
+  --body-link-hover-color: var(--ds-c-accent-text-hover, var(--accent-hover));
+  --color-primary: var(--accent);
+  --color-secondary: var(--surface);
+  --color-success: var(--success);
+  --color-info: var(--ds-c-info, var(--accent));
+  --color-warning: var(--warn);
+  --color-danger: var(--danger);
+  --color-light: var(--surface);
+  --color-dark: var(--fg);
+  --mainnav-text-color: var(--fg);
+  --mainnav-link-color: var(--fg);
+  --mainnav-link-hover-color: var(--ds-c-accent-text, var(--accent));
+  --mainnav-link-active-color: var(--ds-c-accent-text, var(--accent));
+  --footer-bg-color: var(--surface);
+  --footer-text-color: var(--meta);
+  --footer-link-color: var(--muted);
+  --footer-link-hover-color: var(--fg);
+}
+
+
+/* T4 compiled ONE design system into Bootstrap's own variables. This sheet loads after
+   template.css, and every value here is a var(), so it follows the dark remap above for free. */
+:root {
+  --t4-body-bg: var(--bg);
+  --t4-white: var(--bg);
+  --t4-body-color: var(--fg);
+  --t4-heading-color: var(--ds-c-heading, var(--fg));
+  --t4-emphasis-color: var(--fg);
+  --t4-dark: var(--fg);
+  --t4-secondary: var(--muted);
+  --t4-gray: var(--muted);
+  --t4-secondary-color: var(--muted);
+  --t4-tertiary-color: var(--meta);
+  --t4-body-color: var(--fg);
+  --t4-highlight-color: var(--fg);
+  --t4-border-color: var(--border);
+  --t4-gray-100: var(--surface-warm);
+  --t4-gray-200: var(--surface);
+  --t4-gray-300: var(--border-soft);
+  --t4-gray-400: var(--border);
+  --t4-gray-500: var(--meta);
+  --t4-gray-600: var(--muted);
+  --t4-gray-700: var(--fg-2);
+  --t4-gray-800: var(--fg);
+  --t4-gray-900: var(--fg);
+  --t4-gray-dark: var(--fg);
+  --t4-light: var(--surface-warm);
+  --t4-secondary-bg: var(--surface);
+  --t4-tertiary-bg: var(--surface-warm);
+  --t4-blue: var(--accent);
+  --t4-primary: var(--accent);
+  --t4-link-color: var(--ds-c-accent-text, var(--accent));
+  --t4-link-hover-color: var(--ds-c-accent-text-hover, var(--accent-hover));
+  --link-hover-color: var(--ds-c-accent-text-hover, var(--accent-hover));
+  --t4-success: var(--success);
+  --t4-green: var(--success);
+  --t4-warning: var(--warn);
+  --t4-yellow: var(--warn);
+  --t4-danger: var(--danger);
+  --t4-red: var(--danger);
+  --t4-primary-bg-subtle: color-mix(in srgb, var(--accent) 16%, var(--bg));
+  --t4-primary-border-subtle: color-mix(in srgb, var(--accent) 34%, var(--bg));
+  --t4-primary-text-emphasis: color-mix(in srgb, var(--accent) 62%, var(--fg));
+  --t4-secondary-bg-subtle: color-mix(in srgb, var(--muted) 16%, var(--bg));
+  --t4-secondary-border-subtle: color-mix(in srgb, var(--muted) 34%, var(--bg));
+  --t4-secondary-text-emphasis: color-mix(in srgb, var(--muted) 62%, var(--fg));
+  --t4-success-bg-subtle: var(--ds-c-success-bg, color-mix(in srgb, var(--success) 16%, var(--bg)));
+  --t4-success-border-subtle: color-mix(in srgb, var(--success) 34%, var(--bg));
+  --t4-success-text-emphasis: var(--ds-c-success-text, color-mix(in srgb, var(--success) 62%, var(--fg)));
+  --t4-info-bg-subtle: var(--ds-c-info-bg, color-mix(in srgb, var(--accent) 16%, var(--bg)));
+  --t4-info-border-subtle: var(--ds-c-info, color-mix(in srgb, var(--accent) 34%, var(--bg)));
+  --t4-info-text-emphasis: var(--ds-c-info-text, color-mix(in srgb, var(--accent) 62%, var(--fg)));
+  --t4-warning-bg-subtle: var(--ds-c-warn-bg, color-mix(in srgb, var(--warn) 16%, var(--bg)));
+  --t4-warning-border-subtle: color-mix(in srgb, var(--warn) 34%, var(--bg));
+  --t4-warning-text-emphasis: var(--ds-c-warn-text, color-mix(in srgb, var(--warn) 62%, var(--fg)));
+  --t4-danger-bg-subtle: var(--ds-c-danger-bg, color-mix(in srgb, var(--danger) 16%, var(--bg)));
+  --t4-danger-border-subtle: color-mix(in srgb, var(--danger) 34%, var(--bg));
+  --t4-danger-text-emphasis: var(--ds-c-danger-text, color-mix(in srgb, var(--danger) 62%, var(--fg)));
+  --t4-light-bg-subtle: var(--surface-warm);
+  --t4-light-border-subtle: var(--border-soft);
+  --t4-light-text-emphasis: var(--fg-2);
+  --t4-dark-bg-subtle: var(--surface);
+  --t4-dark-border-subtle: var(--border);
+  --t4-dark-text-emphasis: var(--fg);
+  --t4-card-bg: var(--bg);
+  --t4-card-border-color: var(--border-soft);
+  --t4-card-cap-bg: var(--surface);
+  --t4-dropdown-bg: var(--bg);
+  --t4-dropdown-border-color: var(--border-soft);
+  --t4-dropdown-divider-bg: var(--border-soft);
+  --t4-dropdown-link-hover-bg: var(--surface);
+  --t4-dropdown-link-hover-color: var(--fg);
+  --t4-dropdown-link-active-bg: var(--accent);
+  --t4-dropdown-link-active-color: var(--accent-on);
+  --t4-list-group-bg: var(--bg);
+  --t4-list-group-border-color: var(--border-soft);
+  --t4-list-group-disabled-bg: var(--ds-c-disabled-bg, var(--surface));
+  --t4-list-group-active-bg: var(--accent);
+  --t4-list-group-active-color: var(--accent-on);
+  --t4-list-group-active-border-color: var(--accent);
+  --t4-modal-bg: var(--bg);
+  --t4-modal-border-color: var(--border);
+  --t4-popover-bg: var(--bg);
+  --t4-popover-border-color: var(--border-soft);
+  --t4-popover-header-bg: var(--surface);
+  --t4-toast-bg: var(--bg);
+  --t4-toast-header-bg: var(--surface);
+  --t4-tooltip-bg: var(--fg);
+  --t4-tooltip-color: var(--bg);
+  --t4-table-color: var(--fg);
+  --t4-table-bg: transparent;
+  --t4-table-border-color: var(--border-soft);
+  --t4-table-striped-color: var(--fg);
+  --t4-table-striped-bg: var(--surface-warm);
+  --t4-table-hover-color: var(--fg);
+  --t4-table-hover-bg: var(--surface);
+  --t4-table-active-color: var(--fg);
+  --t4-table-active-bg: var(--surface);
+  --t4-table-accent-bg: var(--surface-warm);
+  --t4-nav-tabs-link-active-bg: var(--bg);
+  --t4-nav-pills-link-active-bg: var(--accent);
+  --t4-nav-pills-link-active-color: var(--accent-on);
+  --t4-navbar-color: var(--fg-2);
+  --t4-navbar-hover-color: var(--fg);
+  --t4-navbar-active-color: var(--fg);
+  --t4-navbar-disabled-color: var(--ds-c-disabled-fg, var(--meta));
+  --t4-navbar-brand-color: var(--fg);
+  --t4-navbar-brand-hover-color: var(--fg);
+  --t4-navbar-toggler-border-color: var(--border);
+  --t4-pagination-bg: var(--bg);
+  --t4-pagination-active-bg: var(--accent);
+  --t4-pagination-active-color: var(--accent-on);
+  --t4-pagination-active-border-color: var(--accent);
+  --t4-pagination-disabled-bg: var(--ds-c-disabled-bg, var(--bg));
+  --t4-progress-bar-bg: var(--accent);
+  --t4-progress-bar-color: var(--accent-on);
+  --t4-badge-color: var(--accent-on);
+  --t4-btn-close-color: var(--fg);
+  --t4-backdrop-bg: var(--fg);
+  --t4-border-color-translucent: var(--border-soft);
+  --t4-focus-ring-color: var(--ds-c-focus-ring, color-mix(in srgb, var(--accent) 40%, transparent));
+  --t4-code-color: var(--fg-2);
+  --t4-highlight-bg: var(--surface-warm);
+  --t4-form-valid-color: var(--success);
+  --t4-form-valid-border-color: var(--success);
+  --t4-form-invalid-color: var(--danger);
+  --t4-form-invalid-border-color: var(--danger);
+  --t4-box-shadow: 0 0 0 1px var(--border);
+  --t4-box-shadow-sm: 0 0 0 1px var(--border-soft);
+  /* Bootstrap's root corners and face, as template.css compiles them (the same values whichever
+     style sheet is chosen), read through their roles: every framework rule built on them follows. */
+  --t4-border-radius: var(--ds-btn-radius, 12px);
+  --t4-border-radius-sm: var(--ds-input-radius, 8px);
+  --t4-border-radius-lg: var(--ds-card-radius, 18px);
+  --t4-border-radius-xl: var(--ds-card-radius, 1rem);
+  --t4-border-radius-xxl: var(--ds-card-radius, 2rem);
+  --t4-border-radius-pill: var(--ds-pill-radius, 980px);
+  --t4-font-sans-serif: var(--ds-font-body, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+}

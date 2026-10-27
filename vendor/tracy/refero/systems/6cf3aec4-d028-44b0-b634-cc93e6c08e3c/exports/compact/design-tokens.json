@@ -1,0 +1,74 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary canvas, card surfaces, button text, and the base against which every other neutral is measured. Carries ~21:1 contrast with deep charcoal for all body and display text"
+    },
+    "bone-warm": {
+      "$value": "#f6f2eb",
+      "$type": "color",
+      "$description": "Bone Warm — Secondary surface wash — the system's only warm neutral. Used as a soft section background to break white-on-white monotony and evoke paper-stock texture. Contrasts 14.4:1 with charcoal text"
+    },
+    "ash-mist": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Ash Mist — Input field backgrounds, inset card wells, and disabled surface states. The cool-gray complement to Bone Warm — use the warm tone for sections, the cool tone for form wells"
+    },
+    "graphite-border": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Graphite Border — Default hairline border color (444 border usages — by far the most-used neutral in the system). Also used for muted helper text and icon outlines. The structural divider color of the entire UI"
+    },
+    "smoke-border": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Smoke Border — Secondary hairline borders and placeholder text — used when #666666 would feel too heavy against a light surface"
+    },
+    "pearl-border": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Pearl Border — Subtle dividers and very light borders in nav-adjacent contexts where separation should be nearly invisible"
+    },
+    "silver-border": {
+      "$value": "#bdbdbd",
+      "$type": "color",
+      "$description": "Silver Border — Light link borders, particularly for outlined navigation links that need separation without emphasis"
+    },
+    "slate-text": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Slate Text — Secondary body copy, link borders, and UI text that should recede from primary content. Pairs with Paper White for ~12.6:1 contrast"
+    },
+    "carbon-input": {
+      "$value": "#495057",
+      "$type": "color",
+      "$description": "Carbon Input — Input field text color — a cool desaturated charcoal that feels typographic rather than aggressive, distinct from the warmer #333333 used elsewhere"
+    },
+    "obsidian": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Obsidian — Primary action fill, primary nav background, and the deepest neutral in the system. Used for the filled CTA button, sticky header band, and dark surface blocks. Contrasts 16.1:1 with white — strong enough for any text role"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Maximum-emphasis text, heading borders, and accent strokes. Reserved for the most important typographic moments and thin rule lines — never used as a large fill surface (use Obsidian instead)"
+    }
+  },
+  "font": {
+    "dm-sans": {
+      "$value": "DM Sans",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all UI, body, and display contexts. A geometric-humanist sans with optical-size-friendly proportions — its clean terminals and open counters let it survive at 12px metadata and 92px display equally well. Weight 400 carries all body and utility text; weight 500 handles button labels and emphasized inline text; weight 700 is reserved for headlines and section titles. The 92px display step is the system's signature — used for hero statements with tight tracking (letter-spacing: -0.0110em) to give display headlines a condensed, editorial authority. All-uppercase button and label text uses the wider 0.0560em tracking for letterform breathing room."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.wgsn.com/en",
+      "siteName": "WGSN",
+      "extractedAt": "2026-06-03T21:52:45.915Z",
+      "variant": "compact"
+    }
+  }
+}

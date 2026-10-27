@@ -1,0 +1,80 @@
+[
+  {
+    "assertionIds": [],
+    "edgeTags": ["retry"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["site"]
+    },
+    "id": "QA-FLOWS-build-resume-retry-failed-job",
+    "itemIds": ["flow:build-resume", "capability:build-a-new-site"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a failed or interrupted build can be retried and resumes to done without a second site",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "not scripted: needs a recorded fault injection in the host",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Build, retry, resume — failed job (retry)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["reload-resume"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["site"]
+    },
+    "id": "QA-FLOWS-build-resume-reload-resume-poll-after-reload",
+    "itemIds": ["flow:build-resume", "capability:build-a-new-site"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a failed or interrupted build can be retried and resumes to done without a second site",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Build, retry, resume — poll after reload (reload-resume)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["interrupted"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["db"],
+      "writes": ["site"]
+    },
+    "id": "QA-FLOWS-build-resume-interrupted-host-restart",
+    "itemIds": ["flow:build-resume", "capability:build-a-new-site"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a failed or interrupted build can be retried and resumes to done without a second site",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Build, retry, resume — host restart (interrupted)",
+    "targets": ["local"]
+  }
+]

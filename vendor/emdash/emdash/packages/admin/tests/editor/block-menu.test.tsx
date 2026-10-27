@@ -1,0 +1,653 @@
+/**
+ * BlockMenu component tests.
+ *
+ * Tests the floating block-level context menu that appears when clicking
+ * a drag handle. Covers the main menu (Turn into, Duplicate, Delete),
+ * the "Turn into" submenu with block transforms, Escape to close,
+ * and click-outside dismissal.
+ *
+ * BlockMenu is a standalone component that takes an editor instance,
+ * an anchor element, and open/close callbacks. It renders through
+ * Kumo's dropdown primitive, anchored to the selected block.
+ */
+
+import type { Editor } from "@tiptap/react";
+import * as React from "react";
+import { describe, it, expect, vi } from "vitest";
+import { userEvent } from "vitest/browser";
+
+import { BlockMenu } from "../../src/components/editor/BlockMenu";
+import { PortableTextEditor } from "../../src/components/PortableTextEditor";
+import { render } from "../utils/render";
+
+import "../../src/styles.css";
+
+// ---------------------------------------------------------------------------
+// Mocks — same as other editor tests
+// ---------------------------------------------------------------------------
+
+vi.mock("../../src/components/MediaPickerModal", () => ({
+	MediaPickerModal: () => null,
+}));
+
+vi.mock("../../src/components/SectionPickerModal", () => ({
+	SectionPickerModal: () => null,
+}));
+
+vi.mock("../../src/components/editor/DragHandleWrapper", () => ({
+	DragHandleWrapper: () => null,
+}));
+
+vi.mock("../../src/components/editor/ImageNode", async () => {
+	const { Node } = await import("@tiptap/core");
+	const ImageExtension = Node.create({
+		name: "image",
+		group: "block",
+		atom: true,
+		addAttributes() {
+			return {
+				src: { default: null },
+				alt: { default: "" },
+				title: { default: "" },
+				caption: { default: "" },
+				mediaId: { default: null },
+				provider: { default: "local" },
+				width: { default: null },
+				height: { default: null },
+				displayWidth: { default: null },
+				displayHeight: { default: null },
+			};
+		},
+		parseHTML() {
+			return [{ tag: "img[src]" }];
+		},
+		renderHTML({ HTMLAttributes }) {
+			return ["img", HTMLAttributes];
+		},
+	});
+	return { ImageExtension };
+});
+
+vi.mock("../../src/components/editor/PluginBlockNode", async () => {
+	const { Node } = await import("@tiptap/core");
+	const PluginBlockExtension = Node.create({
+		name: "pluginBlock",
+		group: "block",
+		atom: true,
+		addAttributes() {
+			return {
+				blockType: { default: "embed" },
+				id: { default: "" },
+				data: { default: {} },
+			};
+		},
+		parseHTML() {
+			return [{ tag: "div[data-plugin-block]" }];
+		},
+		renderHTML({ HTMLAttributes }) {
+			return ["div", { ...HTMLAttributes, "data-plugin-block": "" }];
+		},
+	});
+	return {
+		PluginBlockExtension,
+		getEmbedMeta: () => ({ label: "Embed", Icon: () => null }),
+		registerPluginBlocks: () => {},
+		resolveIcon: () => () => null,
+	};
+});
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const defaultValue = [
+	{
+		_type: "block" as const,
+		_key: "1",
+		style: "normal" as const,
+		children: [{ _type: "span" as const, _key: "s1", text: "First paragraph" }],
+	},
+	{
+		_type: "block" as const,
+		_key: "2",
+		style: "normal" as const,
+		children: [{ _type: "span" as const, _key: "s2", text: "Second paragraph" }],
+	},
+];
+
+/** Render the full editor to get a real TipTap Editor instance */
+async function getEditor() {
+	let editorInstance: Editor | null = null;
+
+	await render(
+		<PortableTextEditor
+			value={defaultValue}
+			onEditorReady={(editor) => {
+				editorInstance = editor;
+			}}
+		/>,
+	);
+
+	await vi.waitFor(
+		() => {
+			expect(document.querySelector(".ProseMirror")).toBeTruthy();
+			expect(editorInstance).toBeTruthy();
+		},
+		{ timeout: 3000 },
+	);
+
+	const pm = document.querySelector(".ProseMirror") as HTMLElement;
+	return { editor: editorInstance!, pm };
+}
+
+/**
+ * Wrapper component that renders BlockMenu with an anchor element.
+ * This is needed because BlockMenu uses useFloating which needs a real DOM element.
+ */
+function BlockMenuTestWrapper({
+	editor,
+	isOpen,
+	onClose,
+}: {
+	editor: Editor;
+	isOpen: boolean;
+	onClose: () => void;
+}) {
+	const anchorRef = React.useRef<HTMLDivElement>(null);
+
+	return (
+		<>
+			<div ref={anchorRef} data-testid="anchor" style={{ width: 100, height: 20 }}>
+				Anchor
+			</div>
+			<BlockMenu
+				editor={editor}
+				anchorElement={anchorRef.current}
+				isOpen={isOpen}
+				onClose={onClose}
+			/>
+		</>
+	);
+}
+
+function ClosingBlockMenuTestWrapper({
+	editor,
+	onCloseComplete,
+}: {
+	editor: Editor;
+	onCloseComplete: () => void;
+}) {
+	const [isOpen, setIsOpen] = React.useState(true);
+	const anchorRef = React.useRef<HTMLDivElement>(null);
+
+	return (
+		<>
+			<div ref={anchorRef}>Anchor</div>
+			<button type="button">Outside menu</button>
+			<BlockMenu
+				editor={editor}
+				anchorElement={anchorRef.current}
+				isOpen={isOpen}
+				onClose={() => setIsOpen(false)}
+				onCloseComplete={onCloseComplete}
+			/>
+		</>
+	);
+}
+
+/** Get the block menu portal element */
+function getBlockMenu(): HTMLElement | null {
+	const portals = document.querySelectorAll("body > div");
+	for (const el of portals) {
+		// The block menu has "Turn into", "Duplicate", "Delete" buttons
+		if (el.textContent?.includes("Turn into") || el.textContent?.includes("Back")) {
+			return el as HTMLElement;
+		}
+	}
+	return null;
+}
+
+/** Get all actionable items in the menu */
+function getMenuItems(menu: HTMLElement): HTMLElement[] {
+	return [...menu.querySelectorAll<HTMLElement>('[role="menuitem"]')];
+}
+
+/** Find a menu item by its text content */
+function findButtonByText(menu: HTMLElement, text: string): HTMLElement | null {
+	const items = getMenuItems(menu);
+	return items.find((item) => item.textContent?.includes(text)) ?? null;
+}
+
+// =============================================================================
+// BlockMenu — Main Menu
+// =============================================================================
+
+describe("BlockMenu", () => {
+	it("renders nothing when isOpen is false", async () => {
+		const { editor } = await getEditor();
+		const onClose = vi.fn();
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={false} onClose={onClose} />);
+
+		expect(getBlockMenu()).toBeNull();
+	});
+
+	it("renders main menu with Turn into, Duplicate, Delete when open", async () => {
+		const { editor } = await getEditor();
+		const onClose = vi.fn();
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			const menu = getBlockMenu();
+			expect(menu).toBeTruthy();
+		});
+
+		const menu = getBlockMenu()!;
+		expect(findButtonByText(menu, "Turn into")).toBeTruthy();
+		expect(findButtonByText(menu, "Duplicate")).toBeTruthy();
+		expect(findButtonByText(menu, "Delete")).toBeTruthy();
+	});
+
+	it("exposes block actions as an accessible menu", async () => {
+		const { editor } = await getEditor();
+		const onClose = vi.fn();
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(document.querySelector('[role="menu"]')).toBeTruthy();
+		});
+
+		const menu = document.querySelector('[role="menu"]')!;
+		const items = [...menu.querySelectorAll('[role="menuitem"]')];
+
+		expect(items.map((item) => item.textContent)).toEqual(["Turn into", "Duplicate", "Delete"]);
+	});
+
+	it("shows Turn into submenu when Turn into is clicked", async () => {
+		const { editor } = await getEditor();
+		const onClose = vi.fn();
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		const menu = getBlockMenu()!;
+		findButtonByText(menu, "Turn into")!.click();
+
+		// Should show transform options
+		await vi.waitFor(() => {
+			const updatedMenu = getBlockMenu()!;
+			expect(findButtonByText(updatedMenu, "Back")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Paragraph")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Heading 1")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Heading 2")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Heading 3")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Heading 4")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Heading 5")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Heading 6")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Quote")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Code Block")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Bullet List")).toBeTruthy();
+			expect(findButtonByText(updatedMenu, "Numbered List")).toBeTruthy();
+		});
+	});
+
+	it("uses the light interaction surface for highlighted block transforms", async () => {
+		const root = document.documentElement;
+		const previousMode = root.getAttribute("data-mode");
+		const previousTheme = root.getAttribute("data-theme");
+		root.dataset.mode = "light";
+		root.dataset.theme = "classic";
+
+		try {
+			const { editor } = await getEditor();
+			const onClose = vi.fn();
+
+			await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+			await vi.waitFor(() => {
+				expect(getBlockMenu()).toBeTruthy();
+			});
+
+			findButtonByText(getBlockMenu()!, "Turn into")!.click();
+			await vi.waitFor(() => {
+				expect(findButtonByText(getBlockMenu()!, "Heading 1")).toBeTruthy();
+			});
+
+			const item = findButtonByText(getBlockMenu()!, "Heading 1")!;
+			await userEvent.hover(item);
+
+			const tintReference = document.createElement("div");
+			tintReference.style.backgroundColor = "var(--color-kumo-tint)";
+			document.body.append(tintReference);
+			const expectedColor = getComputedStyle(tintReference).backgroundColor;
+			tintReference.remove();
+
+			await vi.waitFor(() => {
+				expect(item.hasAttribute("data-highlighted")).toBe(true);
+				expect(getComputedStyle(item).backgroundColor).toBe(expectedColor);
+			});
+		} finally {
+			if (previousMode === null) root.removeAttribute("data-mode");
+			else root.setAttribute("data-mode", previousMode);
+			if (previousTheme === null) root.removeAttribute("data-theme");
+			else root.setAttribute("data-theme", previousTheme);
+		}
+	});
+
+	it("returns to main menu when Back is clicked in transform submenu", async () => {
+		const { editor } = await getEditor();
+		const onClose = vi.fn();
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		const menu = getBlockMenu()!;
+		findButtonByText(menu, "Turn into")!.click();
+
+		await vi.waitFor(() => {
+			expect(findButtonByText(getBlockMenu()!, "Back")).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Back")!.click();
+
+		await vi.waitFor(() => {
+			const mainMenu = getBlockMenu()!;
+			expect(findButtonByText(mainMenu, "Turn into")).toBeTruthy();
+			expect(findButtonByText(mainMenu, "Duplicate")).toBeTruthy();
+		});
+	});
+
+	it("transforms block to heading when Heading 1 is selected", async () => {
+		const { editor, pm } = await getEditor();
+		const onClose = vi.fn();
+
+		// Focus editor on first paragraph
+		editor.commands.focus("start");
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		// Open transforms
+		findButtonByText(getBlockMenu()!, "Turn into")!.click();
+
+		await vi.waitFor(() => {
+			expect(findButtonByText(getBlockMenu()!, "Heading 1")).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Heading 1")!.click();
+
+		// Should close menu and transform block
+		expect(onClose).toHaveBeenCalled();
+
+		await vi.waitFor(() => {
+			expect(pm.querySelector("h1")).toBeTruthy();
+		});
+	});
+
+	it("transforms block to blockquote", async () => {
+		const { editor, pm } = await getEditor();
+		const onClose = vi.fn();
+
+		editor.commands.focus("start");
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Turn into")!.click();
+
+		await vi.waitFor(() => {
+			expect(findButtonByText(getBlockMenu()!, "Quote")).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Quote")!.click();
+
+		expect(onClose).toHaveBeenCalled();
+
+		await vi.waitFor(() => {
+			expect(pm.querySelector("blockquote")).toBeTruthy();
+		});
+	});
+
+	it("transforms block to code block", async () => {
+		const { editor, pm } = await getEditor();
+		const onClose = vi.fn();
+
+		editor.commands.focus("start");
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Turn into")!.click();
+
+		await vi.waitFor(() => {
+			expect(findButtonByText(getBlockMenu()!, "Code Block")).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Code Block")!.click();
+
+		expect(onClose).toHaveBeenCalled();
+
+		await vi.waitFor(() => {
+			expect(pm.querySelector("pre")).toBeTruthy();
+		});
+	});
+
+	it("transforms block to bullet list", async () => {
+		const { editor, pm } = await getEditor();
+		const onClose = vi.fn();
+
+		editor.commands.focus("start");
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Turn into")!.click();
+
+		await vi.waitFor(() => {
+			expect(findButtonByText(getBlockMenu()!, "Bullet List")).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Bullet List")!.click();
+
+		expect(onClose).toHaveBeenCalled();
+
+		await vi.waitFor(() => {
+			expect(pm.querySelector("ul")).toBeTruthy();
+		});
+	});
+
+	it("deletes the current block when Delete is clicked", async () => {
+		const { editor, pm } = await getEditor();
+		const onClose = vi.fn();
+
+		// Select the first block as the drag handle does before opening the menu
+		editor.commands.setNodeSelection(0);
+
+		// Count initial paragraphs
+		const initialParagraphs = pm.querySelectorAll("p").length;
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Delete")!.click();
+
+		expect(onClose).toHaveBeenCalled();
+
+		// Should have one fewer paragraph
+		await vi.waitFor(() => {
+			const newParagraphs = pm.querySelectorAll("p").length;
+			expect(newParagraphs).toBeLessThan(initialParagraphs);
+		});
+	});
+
+	it("deletes a selected table when Delete is clicked", async () => {
+		const { editor, pm } = await getEditor();
+		const onClose = vi.fn();
+
+		editor.chain().focus("start").insertTable({ rows: 2, cols: 2, withHeaderRow: true }).run();
+
+		let tablePos = -1;
+		editor.state.doc.descendants((node, pos) => {
+			if (node.type.name !== "table") return true;
+			tablePos = pos;
+			return false;
+		});
+		expect(tablePos).toBeGreaterThanOrEqual(0);
+
+		editor.commands.setNodeSelection(tablePos);
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Delete")!.click();
+
+		expect(onClose).toHaveBeenCalled();
+		await vi.waitFor(() => {
+			expect(pm.querySelector("table")).toBeNull();
+		});
+	});
+
+	it("duplicates the current block when Duplicate is clicked", async () => {
+		const { editor, pm } = await getEditor();
+		const onClose = vi.fn();
+
+		// Select the first block as the drag handle does before opening the menu
+		editor.commands.setNodeSelection(0);
+
+		const initialParagraphs = pm.querySelectorAll("p").length;
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		findButtonByText(getBlockMenu()!, "Duplicate")!.click();
+
+		expect(onClose).toHaveBeenCalled();
+
+		await vi.waitFor(() => {
+			const newParagraphs = pm.querySelectorAll("p").length;
+			expect(newParagraphs).toBe(initialParagraphs + 1);
+		});
+	});
+
+	it("closes on Escape key", async () => {
+		const { editor } = await getEditor();
+		const onClose = vi.fn();
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		await userEvent.keyboard("{Escape}");
+
+		expect(onClose).toHaveBeenCalled();
+	});
+
+	it("stays open when the pointer leaves a highlighted menu item", async () => {
+		const { editor, pm } = await getEditor();
+		const onClose = vi.fn();
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		await userEvent.hover(findButtonByText(getBlockMenu()!, "Duplicate")!);
+		await userEvent.hover(pm.querySelectorAll("p")[1]!);
+
+		expect(onClose).not.toHaveBeenCalled();
+		expect(getBlockMenu()).toBeTruthy();
+	});
+
+	it("closes when the user clicks outside the menu", async () => {
+		const { editor, pm } = await getEditor();
+		const onClose = vi.fn();
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		await userEvent.click(pm.querySelectorAll("p")[1]!);
+
+		expect(onClose).toHaveBeenCalled();
+	});
+
+	it("reports when the menu exit transition completes", async () => {
+		const { editor } = await getEditor();
+		const onCloseComplete = vi.fn();
+		const screen = await render(
+			<ClosingBlockMenuTestWrapper editor={editor} onCloseComplete={onCloseComplete} />,
+		);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		await userEvent.click(screen.getByRole("button", { name: "Outside menu" }));
+
+		await vi.waitFor(() => {
+			expect(onCloseComplete).toHaveBeenCalledOnce();
+		});
+	});
+
+	it("closes transform submenu on Escape (returns to main, not full close)", async () => {
+		const { editor } = await getEditor();
+		const onClose = vi.fn();
+
+		await render(<BlockMenuTestWrapper editor={editor} isOpen={true} onClose={onClose} />);
+
+		await vi.waitFor(() => {
+			expect(getBlockMenu()).toBeTruthy();
+		});
+
+		// Open transforms
+		findButtonByText(getBlockMenu()!, "Turn into")!.click();
+
+		await vi.waitFor(() => {
+			expect(findButtonByText(getBlockMenu()!, "Back")).toBeTruthy();
+		});
+
+		// Escape should close submenu, not the whole menu
+		await userEvent.keyboard("{Escape}");
+
+		// onClose should NOT have been called — submenu should just close
+		// (The component resets showTransforms on Escape in submenu)
+		await vi.waitFor(() => {
+			const menu = getBlockMenu()!;
+			// Should be back to main menu
+			expect(findButtonByText(menu, "Turn into")).toBeTruthy();
+		});
+	});
+});

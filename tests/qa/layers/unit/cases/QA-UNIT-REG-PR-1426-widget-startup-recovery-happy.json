@@ -1,0 +1,60 @@
+{
+  "id": "QA-UNIT-REG-PR-1426-widget-startup-recovery-happy",
+  "itemIds": ["regression:REG-PR-1426-widget-startup-recovery"],
+  "requirement": "Transient widget startup reads recover without replaying messages, authentication or site operations",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1426-widget-startup-recovery.json",
+    "ref": "PR #1426 (fix); fix evidence: none recorded",
+    "invariant": "Temporary DNS, connection and database readiness failures return sanitized HTTP503 retryable true; unknown or unreadable context returns retryable false. Only state and catalogue GET reads may retry twice, with a ten-second timeout per attempt; POST adoption, message, authentication and creation requests are not automatically retried. Exhaustion provides an explicit single-flight retry action without clearing saved state, drafts or visitor cookies. Unreadable saved context is refused without cookie replacement or store writes; diagnostics contain fixed categories only.",
+    "productSources": [
+      "apps/tracy-web/src/widget/assets/embed.js:1",
+      "apps/tracy-web/src/widget/assets/live.js:1",
+      "apps/tracy-web/src/widget/route.js:50"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/widget/route.js:542 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "only transient bootstrap GET reads retry twice and retain draft/history while connecting",
+    "network GET failure retries but native adoption POST failure is not automatically retried",
+    "an unreadable saved visitor is refused without replacing its cookie or overwriting its context"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1426-widget-startup-recovery"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1426-widget-startup-recovery",
+    "pr": 1426,
+    "kind": "fix",
+    "area": "widget/startup",
+    "file": "tests/regression/cases/REG-PR-1426-widget-startup-recovery.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/widget-startup-errors.test.mjs",
+    "apps/tracy-web/test/widget-bootstrap.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "only transient bootstrap GET reads retry twice and retain draft/history while connecting",
+    "network GET failure retries but native adoption POST failure is not automatically retried",
+    "an unreadable saved visitor is refused without replacing its cookie or overwriting its context"
+  ],
+  "timeoutS": 600
+}

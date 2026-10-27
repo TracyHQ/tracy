@@ -1,0 +1,381 @@
+{
+  "dos": [
+    "Use 9999px radius for every button, tag, and pill — the radius is the brand's friendliness signal",
+    "Apply the 1px inset white border (rgba(255,255,255,0.12)) to all elevated interactive elements on Obsidian surfaces",
+    "Use the aurora gradient (linear-gradient(to right, #3898ff, #7a70ff)) only for primary hero CTAs and the wordmark — reserving it makes it feel premium",
+    "Default to #0e76fd for all secondary action buttons and link emphasis",
+    "Set body copy at 16px SFRounded weight 400 with 0.27px letter-spacing; headlines at 40-52px weight 700 with 0.88-1.3px letter-spacing",
+    "Float product cards with rgba(0, 0, 0, 0.4) 0px 8px 24px 0px — the heavy shadow is what makes a modal feel like a window into the product",
+    "Keep the canvas at true #000000 — never warm it with off-black, the void is the point"
+  ],
+  "donts": [
+    "Don't use the chromatic accent colors (Hyper Pink, Ember Red, Solar Orange, Toxic Green) as semantic UI states — they are demonstration options, not success/error/warning tokens",
+    "Don't apply shadow to text or the canvas itself — shadows belong to floating cards only, the background is shadowless",
+    "Don't use negative letter-spacing — SFRounded is designed for positive tracking; tightening it fights the rounded letterforms",
+    "Don't introduce a second body font — SFRounded handles everything from 11px captions to 52px displays; a serif or system fallback breaks the cohesion",
+    "Don't place white or light-colored cards on the canvas — every surface must stay in the Obsidian/Graphite range to preserve the void",
+    "Don't use #25292 for text — it's a border color, contrast on it is insufficient for readable copy",
+    "Don't round images of phones or product screenshots with small radii — they should be 24px+ or fully inherit the device frame"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#0e76fd",
+      "name": "Signal Blue",
+      "role": "Primary CTA fill, active states, brand wordmark, link emphasis — the only chromatic blue with enough surface area to carry identity",
+      "group": "brand"
+    },
+    {
+      "hex": "#3898ff",
+      "name": "Aurora Gradient",
+      "role": "Hero CTA gradient, brand wordmark highlight, selected-state washes — flows from sky-blue to electric violet",
+      "group": "brand",
+      "gradient": "linear-gradient(to right, rgb(56, 152, 255), rgb(122, 112, 255))"
+    },
+    {
+      "hex": "#7a70ff",
+      "name": "Electric Violet",
+      "role": "Gradient terminus, brand-secondary accent — appears only as the cool half of the aurora",
+      "group": "brand"
+    },
+    {
+      "hex": "#38228f",
+      "name": "Deep Iris",
+      "role": "Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content.",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff5ca0",
+      "name": "Hyper Pink",
+      "role": "Accent spectrum — demonstration option in the wallet-customization showcase, not a UI-state color",
+      "group": "accent"
+    },
+    {
+      "hex": "#fa423c",
+      "name": "Ember Red",
+      "role": "Accent spectrum — demonstration option in wallet-customization showcase",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff801f",
+      "name": "Solar Orange",
+      "role": "Accent spectrum — demonstration option in wallet-customization showcase",
+      "group": "accent"
+    },
+    {
+      "hex": "#1db847",
+      "name": "Toxic Green",
+      "role": "Accent spectrum — demonstration option in wallet-customization showcase",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Void",
+      "role": "Page canvas, deepest surfaces, inverted button borders — true black anchors the entire system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1b1c1e",
+      "name": "Obsidian",
+      "role": "Card surfaces, code blocks, modal containers, body text on light — the workhorse elevated surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#121314",
+      "name": "Shadow",
+      "role": "Shadow tint color (used in box-shadow rgba), near-black with a hint of warmth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#25292e",
+      "name": "Graphite",
+      "role": "Hairline borders, dividers, icon stroke, secondary text on dark — the most-used neutral border in the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2f3334",
+      "name": "Slate",
+      "role": "Secondary borders, subtle dividers between sections — sits between Graphite and Pewter",
+      "group": "neutral"
+    },
+    {
+      "hex": "#353a3b",
+      "name": "Carbon",
+      "role": "Tertiary icon fills, disabled-state borders, subtle backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#646566",
+      "name": "Pewter",
+      "role": "Disabled button background, low-emphasis surfaces — never for text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#95979c",
+      "name": "Fog",
+      "role": "Muted helper text, icon secondary, placeholder text — the only gray that carries readable information",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Snow",
+      "role": "Primary text, inverted button fill, light-surface backgrounds, icon glyphs, hairline highlight borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0f1f5",
+      "name": "Mist",
+      "role": "Light-theme surface fallback, very subtle off-white for section backgrounds on the demo",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed dark canvas (#000000) with all content centered within a 1200px max-width. Hero: centered single-column stack — brand wordmark → H1 headline → subtext → terminal code block → gradient CTA. Below the hero, a floating product showcase zone overlaps the section boundary: a 2-column arrangement of the wallet connection modal (left), an educational info card (middle), and a mobile phone preview (right), each floating with heavy shadows. Section rhythm alternates: centered headline → 6-column partner logo grid → centered closing band. Vertical section gaps are large (80-120px) to let the dark canvas breathe. Navigation is a minimal top bar (logo+version left, single CTA right) with no mega-menu or sidebar. The mobile preview card overlaps into the next section to create visual flow between bands.",
+  "imagery": "Imagery is sparse and product-centric. The only visual content is product screenshots of the RainbowKit component itself (the wallet connection modal and a mobile phone preview) plus the six-column partner logo grid. Logos are full-color brand assets presented in circular frames (9999px radius), never monochrome duotones. No photography, no illustration, no abstract graphics, no 3D renders. The modal screenshots serve as both marketing visual and product proof — they ARE the hero. The void canvas is itself a design choice: the absence of decorative imagery signals developer-tool seriousness while the rounded typography and gradient CTA push back toward consumer-app warmth.",
+  "similar": [
+    {
+      "why": "Same dark-void canvas with floating product modals and a single blue accent — the wallet-connection category has converged on this visual language",
+      "business": "WalletConnect"
+    },
+    {
+      "why": "Identical approach: black canvas, pill-shaped CTAs, rounded sans typography, and a blue-to-violet gradient as the primary brand moment",
+      "business": "Privy"
+    },
+    {
+      "why": "Same midnight-mode UI with pill buttons, rounded geometry, and a single chromatic accent (blue) against pure black backgrounds",
+      "business": "Dynamic"
+    },
+    {
+      "why": "Developer-tool dark UI with floating auth modals, gradient brand moments, and rounded typography that softens the cryptographic seriousness",
+      "business": "Web3Auth"
+    },
+    {
+      "why": "Same floating-card-on-dark approach for showcasing product components, though Stripe's accent is purple rather than blue",
+      "business": "Stripe (docs)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "24px",
+      "icons": "12px",
+      "pills": "9999px",
+      "inputs": "12px",
+      "modals": "24px",
+      "buttons": "9999px",
+      "codeBlocks": "12px",
+      "logoFrames": "9999px"
+    },
+    "elementGap": "12px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "crypto",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Void Canvas",
+      "level": 0,
+      "purpose": "Page background, full-bleed dark ground"
+    },
+    {
+      "hex": "#1b1c1",
+      "name": "Obsidian Card",
+      "level": 1,
+      "purpose": "Modals, code blocks, elevated containers above the canvas"
+    },
+    {
+      "hex": "#25292",
+      "name": "Graphite Edge",
+      "level": 2,
+      "purpose": "Hairline borders that separate and outline elements on Obsidian"
+    },
+    {
+      "hex": "#38228f",
+      "name": "Deep Iris Feature",
+      "level": 3,
+      "purpose": "Brand-tinted card surface for premium or featured components"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.4) 0px 8px 24px 0px",
+      "element": "Floating product cards and modals"
+    },
+    {
+      "style": "rgba(255, 255, 255, 0.12) 0px 0px 0px 1px inset",
+      "element": "Button inset highlight"
+    },
+    {
+      "style": "rgba(27, 29, 31, 0.1) 0px 10px 30px 0px, rgba(27, 29, 31, 0.04) 0px 5px 15px 0px",
+      "element": "Primary gradient button (hover/elevated)"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 4px 12px 0px",
+      "element": "Subtle elevated card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.32) 0px 8px 32px 0px",
+      "element": "Featured brand card"
+    },
+    {
+      "style": "rgb(255, 255, 255) 0px 0px 0px 4px",
+      "element": "Focus ring"
+    }
+  ],
+  "northStar": "Neon wallet modal floating in a black void — the blue-to-violet aurora glows through the dark.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.31,
+      "letterSpacing": 0.35
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.29,
+      "letterSpacing": 0.35
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.25,
+      "letterSpacing": 0.27
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.33,
+      "letterSpacing": 0.31
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.3
+    },
+    {
+      "role": "heading",
+      "size": 24,
+      "lineHeight": 1.17,
+      "letterSpacing": 0.43
+    },
+    {
+      "role": "heading-lg",
+      "size": 40,
+      "lineHeight": 1.05,
+      "letterSpacing": 0.88
+    },
+    {
+      "role": "display",
+      "size": 52,
+      "lineHeight": 1,
+      "letterSpacing": 1.3
+    }
+  ],
+  "components": [
+    {
+      "name": "Gradient Primary CTA",
+      "role": "The hero action — invites the visitor into the documentation.",
+      "description": "Filled button with linear-gradient(to right, #3898ff, #7a70ff), white text at 16px SFRounded weight 500, letter-spacing 0.27px. Padding 12px 24px. Radius 9999px (pill). White inset border highlight at rgba(255,255,255,0.12) for edge definition. On elevation: two-layer soft shadow."
+    },
+    {
+      "name": "Solid Blue Pill Button",
+      "role": "Secondary CTAs and persistent nav actions like 'Connect Wallet'.",
+      "description": "Background #0e76fd, white text, 16px SFRounded weight 500. Padding 6px 16px. Radius 9999px. Sits in the top-right of the nav. Compact, high-contrast, unmistakable."
+    },
+    {
+      "name": "Ghost Nav Button (Logo + Version)",
+      "role": "Brand identification in the nav bar with version metadata.",
+      "description": "Rainbow gradient icon (app-style) followed by 'RainbowKit' text in white at 14px weight 600, with a small version badge (1.3.10) using Pewter background, white text at 11px, radius 9999px, padding 1px 5px."
+    },
+    {
+      "name": "Terminal Code Block",
+      "role": "Copy-paste installation command in the hero.",
+      "description": "Dark surface (#1b1c1 or near-black) with a subtle white border. Contains monospace text (SFMono 14px) showing npm command. Includes a small copy-icon button on the right side. Padding ~12px 18px. Radius 12px."
+    },
+    {
+      "name": "Wallet Connection Modal",
+      "role": "The product showcase — the actual RainbowKit component floating on the landing page.",
+      "description": "Card at 24px radius, Obsidian surface (#1b1c1e), heavy shadow (rgba(0,0,0,0.4) 0px 8px 24px). Header row with title 'Connect a Wallet' and close X icon. Body has a 'Popular' label, then a list of wallet items (Rainbow, Coinbase Wallet, MetaMask, WalletConnect) with brand icons and right-arrow chevrons. A 'More' section below with Ledger Live. All text white at 16px SFRounded weight 500."
+    },
+    {
+      "name": "Wallet List Item",
+      "role": "Selectable option inside the connection modal.",
+      "description": "Row with: circular wallet brand icon (32px), wallet name in white 16px weight 500, optional right chevron. Subtle hover state would lift the row background. Padding ~12px vertical, 16px horizontal."
+    },
+    {
+      "name": "What-is-a-Wallet Info Card",
+      "role": "Educational companion card explaining wallets next to the connection modal.",
+      "description": "Same Obsidian surface and shadow as the modal. Contains a heading 'What is a Wallet?' in white 20px, followed by short paragraphs of body text (14-16px) and small inline feature icons. Functions as a secondary educational surface beside the primary action."
+    },
+    {
+      "name": "Mobile Preview Card",
+      "role": "Showcases the wallet UI on a phone frame, demonstrating responsive behavior.",
+      "description": "Vertical phone frame with rounded corners, displaying the same 'Connect a Wallet' modal scaled down. Background slightly lighter to separate from the canvas. Acts as a visual product screenshot, not an interactive component."
+    },
+    {
+      "name": "Section Heading Block",
+      "role": "Centered section titles with supporting copy.",
+      "description": "Centered text block. Main heading in white 20-24px SFRounded weight 600. Supporting paragraph in Fog (#95979c) 16px weight 400. Generous vertical spacing above and below. Used to introduce the partner grid."
+    },
+    {
+      "name": "Partner Logo Grid Item",
+      "role": "Brand trust marker — a 6×n grid of partner logos.",
+      "description": "Circular logo container (radius 9999px) with the brand's actual logo. Below: brand name in white 14px weight 500. Gap between items 40-60px horizontally. No background fill — the logo floats on Void. Logos are full-color brand assets, not monochrome."
+    },
+    {
+      "name": "Inset Highlight Border",
+      "role": "The defining visual signature of interactive elements on dark surfaces.",
+      "description": "1px inset border in rgba(255,255,255,0.12) applied to buttons and elevated cards. Creates a subtle lit-edge effect that mimics light catching the top of a physical surface — the only reason buttons read as 'raised' in a fully dark UI."
+    },
+    {
+      "name": "Gradient Brand Wordmark",
+      "role": "The 'RainbowKit' hero title.",
+      "description": "Text rendered with the aurora gradient (#3898ff → #7a70ff) as a CSS background-clip:text fill, at 40-52px SFRounded weight 700, letter-spacing 1.3px. The gradient is applied to the entire word, not individual letters."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface for all UI — rounded geometric sans, chosen because the soft terminals make technical Web3 copy feel approachable rather than intimidating",
+      "sizes": "11px, 14px, 16px, 18px, 20px, 24px, 40px, 52px",
+      "family": "SFRounded",
+      "weight": "400, 500, 600, 700, 800",
+      "lineHeight": "1.00–1.33",
+      "substitute": "Nunito, Inter (rounded variant), Avenir Next Rounded",
+      "letterSpacing": "Positive throughout (0.007–0.032em) — unusual for a display font; tracking opens up with size, giving headlines a roomy, friendly rhythm rather than the tight compressed look of typical tech brands"
+    },
+    {
+      "role": "Code snippets, terminal commands, technical strings — the npm install command in the hero",
+      "sizes": "14px",
+      "family": "SFMono",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "JetBrains Mono, Fira Code, SF Mono",
+      "letterSpacing": "0.0250em"
+    },
+    {
+      "role": "Fallback body copy when the web font hasn't loaded — barely visible because SFRounded dominates",
+      "sizes": "20px",
+      "family": "system-ui",
+      "weight": "400",
+      "lineHeight": "1.05",
+      "letterSpacing": "0.0170em"
+    },
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "13px, 16px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.2"
+    }
+  ],
+  "description": "RainbowKit uses a midnight crypto-native language: a black canvas with floating dark cards, confident rounded sans-serif typography, and a single vivid blue-to-violet gradient as the brand's emotional core. The design lives in the gap between developer-tool severity and consumer-app approachability — heavy shadows create depth on a flat dark surface, inset white border highlights define button edges, and 9999px radii make every interactive feel like a friendly pill. Color is used surgically: a primary signal blue for action, the aurora gradient for the hero CTA, and pure white text against layered grays for hierarchy. Component modals float with dramatic 24px shadow stacks, previewing the toolkit's own product surfaces. The six-column partner grid below signals community trust at scale without resorting to testimonials.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #ffffff (primary), #95979c Fog (muted)\n- background: #000000 Void (canvas), #1b1c1e Obsidian (cards)\n- border: #25292e Graphite (hairlines), rgba(255,255,255,0.12) (inset highlights)\n- accent: aurora gradient #3898ff → #7a70ff\n- primary action: #0e76fd (filled action)\n\n## Example Component Prompts\n\n*Create a Primary Action Button: #0e76fd background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n**Solid Blue Nav Button**: Build a compact pill button with #0e76fd background, white 'Connect Wallet' text at 16px SFRounded weight 500, padding 6px 16px, radius 9999px, no shadow.\n\n**Wallet Connection Modal Card**: Compose a card on #1b1c1e Obsidian with 24px radius, shadow rgba(0,0,0,0.4) 0px 8px 24px 0px. Header: 'Connect a Wallet' in white 16px SFRounded weight 600, with a small × close icon top-right at #95979c. Body: 'Popular' label in Fog 14px, then 4 list rows (Rainbow, Coinbase Wallet, MetaMask, WalletConnect) each with a 32px brand icon, white 16px name, and right chevron at #95979c.\n\n**Terminal Code Block**: Render a dark code container at #1b1c1e Obsidian with 12px radius and a 1px Graphite border. Inside: monospace text 'npm init @rainbow-me/rainbowkit@latest' at 14px in SFMono, white. Right side: small copy icon at 16px in #95979c. Padding 12px 18px.\n\n**Gradient Brand Wordmark**: Display 'RainbowKit' as text with the aurora gradient (linear-gradient(to right, #3898ff, #7a70ff)) applied via background-clip:text, at 40-52px SFRounded weight 700, letter-spacing 0.88-1.3px, white fill where the gradient is masked. Center it on the void canvas."
+    }
+  ]
+}

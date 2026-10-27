@@ -1,0 +1,57 @@
+{
+  "id": "QA-UNIT-REG-PR-1015-plan-model-per-conversation-happy",
+  "itemIds": ["regression:REG-PR-1015-plan-model-per-conversation"],
+  "requirement": "A conversation's model is decided once — the customer's connected plan in the desktop app, else Tracy's — never falls back mid-conversation, and plan routes never reach a shared host",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1015-plan-model-per-conversation.json",
+    "ref": "PR #1015 (feat); fix evidence: none recorded",
+    "invariant": "S1: clean TAP; passes: no customerRoutes → default and credentials unread; a new conversation takes the connected plan, else the default; decided once (connecting later does not move a running conversation); a plan gone mid-conversation fails with tracy/plan-disconnected and never runs on the default; a logged route survives a restart; the model door accepts only the conversation's own model. S2: clean TAP; passes: connecting on → settings + config-editor on, dsh-subscriptions limited to the allowed vendors, routes in that order, authorization and ui-settings-models untouched; connecting off / no vendor / unreadable → no patch; a server that does not answer → the last copy kept, else nothing. S3: clean TAP; `customerRoutes` on tracy-mode-picker (as a row or an insert) is red in the fleet patch, the native bundle and the cowork bundle.",
+    "productSources": [
+      "apps/tracy-web/src/lib/desktop-setting.js:6",
+      "packages/desktop/tracy-desktop/src/plan-profile.js:30",
+      "packages/ui/tracy-mode-picker/lib/index.js:9",
+      "packages/ui/tracy-mode-picker/src/host/model-policy.mjs:15",
+      "scripts/check-image-profile.ts:675"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/desktop/tracy-desktop/src/plan-profile.js:154 readFileSync() with a computed path",
+      "packages/desktop/tracy-desktop/test/plan-profile.test.mjs:106 readFileSync() with a computed path",
+      "packages/desktop/tracy-desktop/test/plan-profile.test.mjs:127 readFileSync() with a computed path",
+      "packages/desktop/tracy-desktop/test/plan-profile.test.mjs:144 import() with a computed specifier",
+      "packages/desktop/tracy-desktop/test/plan-profile.test.mjs:145 import() with a computed specifier",
+      "packages/ui/tracy-mode-picker/test/session-models.test.mjs:30 import() with a computed specifier",
+      "packages/ui/tracy-mode-picker/test/session-models.test.mjs:33 import() with a computed specifier",
+      "scripts/test/image-profile.test.mjs:198 readFileSync() names packages/fleet/tracy-fleet-operation/dsh/profile/does-not-exist.cordis.patch.yml, which is not a file"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1015-plan-model-per-conversation.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1015-plan-model-per-conversation"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1015-plan-model-per-conversation",
+    "pr": 1015,
+    "kind": "feat",
+    "area": "desktop/plan-connect",
+    "file": "tests/regression/cases/REG-PR-1015-plan-model-per-conversation.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1015-plan-model-per-conversation.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

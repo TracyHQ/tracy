@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1109-auto-merge-unknown-mergeable",
+  "kind": "fix",
+  "title": "Auto-merge reads a PR again while GitHub still computes its mergeability instead of turning a green PR away",
+  "pr": 1109,
+  "area": "ci/auto-merge",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the auto-merge unit tests on the PR checkout.",
+    "Feed mergeCandidates a PR whose first read has mergeable: null, then one that stays null on every read."
+  ],
+  "expect": [
+    "A first read with mergeable: null followed by a clean read reaches the exact-head gate and merges after one wait.",
+    "A PR whose mergeability stays unknown after four reads is reported as mergeability-unknown and never reaches the gate or the merge.",
+    "A closed PR is read once, without retries.",
+    "Every earlier guard (draft, reviews, head change, expired verdict, App token) still blocks the merge."
+  ],
+  "selectors": {
+    "script": "scripts/auto-merge-develop.mjs"
+  },
+  "fence": "Deterministic units with an injected GitHub reader and wait; no live GitHub call.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/auto-merge-develop.test.mjs"],
+    "tests": [
+      "mergeability still being computed is read again before the PR is judged",
+      "mergeability that stays unknown is reported as such and never reaches the gate",
+      "automatic merge is restricted to ready same-repository develop PRs with known clean mergeability",
+      "draft, review, branch and head changes after the gate prevent merge",
+      "a verdict expiring during the last review reads never reaches merge"
+    ]
+  }
+}

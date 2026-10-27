@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1021-ai-leftovers-actor-symlink-tokens",
+  "kind": "fix",
+  "title": "An actor assertion lives at most two minutes; the agent cannot make a symbolic link that leaves the site; an assistant answer keeps the token counts the provider reported, and unknown stays unknown",
+  "pr": 1021,
+  "area": "ops/model-and-ai",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd` with TEST_DATABASE_URL set to a scratch Postgres.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": ["0 failures.", "Every test named in run.tests reports ok."],
+  "selectors": {
+    "function": "apps/tracy-web/src/lib/actor.js verifyActor; packages/tools/tracy-subprocess-docker/src/site-guards.mjs outsideSymlinkIn; apps/tracy-web/src/assistant/model.js readEvent",
+    "test": "apps/tracy-web/test/actor.test.mjs, assistant.test.mjs; packages/tools/tracy-subprocess-docker/test/site-guards.test.mjs"
+  },
+  "fence": "verifyActor bounds the expiry at 120 s; commandApprovalReason refuses ln -s to an absolute, home or .. target; saveTurn keeps provider usage and NULL when absent. Throwaway Postgres and local doubles, no network.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/actor.test.mjs",
+      "apps/tracy-web/test/assistant.test.mjs",
+      "packages/tools/tracy-subprocess-docker/test/site-guards.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "dsh prompter assertion verifies only with the actor key and a bounded expiry",
+      "a symbolic link that leaves the site folder is refused",
+      "the provider’s token counts reach the answer’s row",
+      "the stream request asks for usage"
+    ]
+  }
+}

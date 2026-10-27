@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "14efe0a8-5abf-441c-919d-add271317bf9",
+  "status": "complete",
+  "name": "Hartzler Family Dairy",
+  "url": "https://styles.refero.design/style/14efe0a8-5abf-441c-919d-add271317bf9",
+  "sourceWebsite": "https://www.hartzlerdairy.com",
+  "extractedAt": "2026-06-03T18:39:48.187Z",
+  "capturedAt": "2026-10-08T05:08:34.223846+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Creamery billboard at golden hour — the products are the type and the type is the room.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/cb18a4e6-e02c-4b2c-89d7-5ecc7cc1c897.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4d53630a-9e01-4f8a-9588-280682f3a691.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e53d6159-6cf3-4542-8670-e9dff87d594a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3d8f3b5f-e79c-4a33-af07-da14ebd6fe46.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/78cb41fe-b4bb-4265-a2e2-5a963cc6f541.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7a006168702369c441ef2899a2b021b453930e8a81287980ef062f00475bd781",
+      "bytes": 20359
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "32dd04a548ee8451022263137eb3749761b869497fa3c204a84d94c2b7bc84cd",
+      "bytes": 138553
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a1a5fddcd7071334b4f9b2c12e8c2cf62454651fd94819b95f14e081ae4e74f4",
+      "bytes": 17616
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0f482e31949fb0a3bb2007893fda4c0ee293aca1fd8677df1c60c0d71a2e388d",
+      "bytes": 6474
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c3c3e55c89a3db039fc6444f7e88318340f06b2e7a45886a68e640ecb3336341",
+      "bytes": 12591
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "3aa1ef864b978be8c721319373d12f16005878ee0de2aa2ce25e81dbcd76e718",
+      "bytes": 2695
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "395d01ec64bf343dd4003ec8fbc50a6089b1076af27924c8ba9ca957c840ccfa",
+      "bytes": 524
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "309b5765e1df5456db518cf2bb03f7fea5424bf64bef441faaa6ae3aa3127b0b",
+      "bytes": 541
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3f77a6e76f9be940ddb4f1de1b7a85614622a37a8d9490f300543351ed005567",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "715ee8f98be7dd4a3cf9437d7ce6b3798bacda9e9ac9467814c6e699cd9aacb5",
+      "bytes": 42474
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "b1f1ee2c755f28ef0f5be9ffa334ccdf4377acb8c22b12afb8c4af20b52bd5b2",
+      "bytes": 22059
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5652f1c9da889c4c1021543e001ef41937af8cec28911676e343d80bddbb286c",
+      "bytes": 31104
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ed97385d315aeca255f7283ed9743b3ccd055c123b45a22192f5e27afca76f81",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "aec831a07b96d988d4f937feaa4ea2f699237d905177060a3fe35ddf918ecad5",
+      "bytes": 1240
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "39a4e15270e1b247baa627ee87b351d7a430664ed0633396519014fcc1b084c8",
+      "bytes": 1740
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "14efe0a8-5abf-441c-919d-add271317bf9",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1d51a2db-18fc-4de3-bff7-d1e73ace8b6e",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "4d42420f-a7d4-499f-8025-5af294fff0f5",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "6fb648be-cc69-4a84-a798-9f0f006922a0",
+    "734ab03c-a326-43e3-a463-c5f90247404f",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "8e1c35bf-f0e8-4889-b869-d9883bb76767",
+    "9836e7c2-ac8e-453d-bdef-2677eb078d59",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "ab7996ed-e0ed-40a0-81a5-d37f19ef35b0",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d91841cf-c717-43ef-97a2-400778fa6e1a",
+    "e327d332-270d-4779-a55c-cd82b8624d2a",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495"
+  ]
+}

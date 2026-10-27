@@ -1,0 +1,60 @@
+{
+  "id": "QA-UNIT-REG-PR-1297-emdash-blank-name-closed-contact-happy",
+  "itemIds": ["regression:REG-PR-1297-emdash-blank-name-closed-contact"],
+  "requirement": "EmDash: with Name left blank the description is still written and a Vietnamese site translated; a brochure button never leads to a contact page the customer unticked",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1297-emdash-blank-name-closed-contact.json",
+    "ref": "PR #1297 (fix); fix evidence: Local stand 13/10/2026 (tasks/evidence/site-questions-2026-10-13/): Tracy Business EmDash, Name blank with About given, kept the demo copy word for word; a Vietnamese bakery with only Home ticked had the hero's 'Liên hệ tiệm bánh' leading to /contact, which answered 404 (shots/local-h1/tracy-business-emdash-onlyhome-home.jpg).",
+    "invariant": "'a description with no name is written: the copy prompt carries the business and no name' is ok. 'the gate: a step that writes needs the description, a translation needs a root written in another language' is ok: modelMay('copy', 'en', {about}, {}) is true with no name, modelMay('labels', 'en', {}, {en: 'vi'}) is true. 'FULL with the contact page unticked: the brochure button goes, never to a closed page' is ok: hero_cta2_url and hero_cta2_label are both '' (was '/contact'). 'FULL in Vietnamese with the seed as released: the brochure button leads to the contact page' stays ok (/contact when the page is kept). Every other test of the three files stays ok.",
+    "productSources": ["packages/cms/tracy-emdash-theme-business/tools/personalize.mjs:255"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a description with no name is written: the copy prompt carries the business and no name",
+    "the gate: a step that writes needs the description, a translation needs a root written in another language",
+    "FULL with the contact page unticked: the brochure button goes, never to a closed page",
+    "FULL in Vietnamese with the seed as released: the brochure button leads to the contact page",
+    "BLANK (name only): the brochure button stays the demo"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1297-emdash-blank-name-closed-contact"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/cms/tracy-emdash-theme-business", "tracy-emdash-theme-business"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1297-emdash-blank-name-closed-contact",
+    "pr": 1297,
+    "kind": "fix",
+    "area": "add-site/apply",
+    "file": "tests/regression/cases/REG-PR-1297-emdash-blank-name-closed-contact.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/personalize-tone.test.mjs",
+    "tests/personalize-fallback-gate.test.mjs",
+    "tests/personalize-demo-files-seed.test.mjs"
+  ],
+  "cwd": "packages/cms/tracy-emdash-theme-business",
+  "needs": [],
+  "tests": [
+    "a description with no name is written: the copy prompt carries the business and no name",
+    "the gate: a step that writes needs the description, a translation needs a root written in another language",
+    "FULL with the contact page unticked: the brochure button goes, never to a closed page",
+    "FULL in Vietnamese with the seed as released: the brochure button leads to the contact page",
+    "BLANK (name only): the brochure button stays the demo"
+  ],
+  "timeoutS": 600
+}

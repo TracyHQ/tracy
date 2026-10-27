@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-977-confirmation-how-it-works-link",
+  "kind": "fix",
+  "title": "The whitelist confirmation's \"See how Tracy works\" line is a whole link to /how-it-works/, not cut after \"tracy.\" by the autolink guard",
+  "pr": 977,
+  "area": "tracy-web/mail",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/mail-footer-terms.test.mjs apps/tracy-web/test/whitelist-confirmation-i18n.test.mjs",
+    "S2: Record the exit code, the '# fail' line and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "The confirmation HTML holds 'See how Tracy works: <a href=\"https://tracy.ai/how-it-works/\" style=\"color:#a3462a;\">https://tracy.ai/how-it-works/</a>', with no zero-width joiner inside the address; the text part keeps 'See how Tracy works: https://tracy.ai/how-it-works/'; the visitor's website stays unlinkable (example.&zwnj;com)."
+  ],
+  "selectors": {
+    "mail": "confirmationMail in apps/tracy-web/src/mail/confirmation-mail.js"
+  },
+  "evidence": "Sarah, 06/10/2026, Gmail on a phone: in the confirmation from plugin 1.1.2 only 'https://tracy.' was a link; the line was a text paragraph run through unlinkedHtml.",
+  "fence": "The pure mail renderer; no mail client.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/mail-footer-terms.test.mjs",
+      "apps/tracy-web/test/whitelist-confirmation-i18n.test.mjs"
+    ],
+    "tests": [
+      "3: the confirmation links \"See how Tracy works\" whole",
+      "the English mail kept its words",
+      "every sentence of the mail is a catalogue key, in every language"
+    ]
+  }
+}

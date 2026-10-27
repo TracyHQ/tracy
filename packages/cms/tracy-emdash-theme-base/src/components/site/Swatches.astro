@@ -1,0 +1,39 @@
+---
+/**
+ * Colour-role swatches (source: `.tracy-fixture .grid .swatch`). Every tile paints
+ * `var(--color-<role>)` straight from tokens.css, so the grid is right in dark mode by
+ * construction (DECISIONS D9): there is no second list of hex values to drift.
+ * Role names are the token names themselves, not copy; the intro above the grid is the CMS field.
+ * The rule between a tile and its label is the label's top edge (on the label's surface), not the tile's
+ * bottom edge: on the tile it was a light line across a dark or saturated colour under a worn system
+ * (BORDER-1, 16/10/2026). The tile is 1px shorter, so the card draws the same pixels.
+ */
+const ROLES: Array<{ token: string; name: string }> = [
+  { token: 'bg', name: 'Background' },
+  { token: 'surface', name: 'Surface' },
+  { token: 'surface-warm', name: 'Surface warm' },
+  { token: 'fg', name: 'Foreground' },
+  { token: 'fg-2', name: 'Foreground 2' },
+  { token: 'fg-muted', name: 'Muted' },
+  { token: 'fg-meta', name: 'Meta' },
+  { token: 'line', name: 'Line' },
+  { token: 'line-soft', name: 'Line soft' },
+  { token: 'accent', name: 'Accent' },
+  { token: 'accent-on', name: 'On accent' },
+  { token: 'success', name: 'Success' },
+  { token: 'warn', name: 'Warning' },
+  { token: 'danger', name: 'Danger' }
+]
+---
+
+<ul class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4" role="list">
+	{ROLES.map((r) => (
+		<li class="card overflow-hidden">
+			<div class="h-[87px]" style={`background: var(--color-${r.token})`} aria-hidden="true"></div>
+			<div class="border-t border-line-soft bg-surface px-3 py-3">
+				<strong class="block text-[14px] font-semibold text-fg">{r.name}</strong>
+				<code class="block font-mono text-[12px] text-fg-muted">--color-{r.token}</code>
+			</div>
+		</li>
+	))}
+</ul>

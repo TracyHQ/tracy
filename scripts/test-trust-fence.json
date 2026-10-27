@@ -1,0 +1,186 @@
+{
+  "schema": "tracy-test-trust-cohort/v1",
+  "cohort": "fence",
+  "budgetSeconds": 600,
+  "timeoutSeconds": 60,
+  "tests": [
+    "packages/tools/tracy-subprocess-docker/test/route.test.mjs",
+    "packages/tools/tracy-subprocess-docker/test/review-fence-coverage.test.mjs",
+    "packages/tools/tracy-subprocess-docker/test/site-guards.test.mjs",
+    "packages/tools/tracy-webroot-read/test/resolve-webroot.test.mjs",
+    "packages/tools/tracy-site-tools/test/media-scan-fence.test.mjs",
+    "apps/tracy-web/test/turn-undo.test.mjs"
+  ],
+  "mutants": [
+    {
+      "id": "exec-stamped-root-unchecked",
+      "description": "LAYER. Drop the compare of a spawn's cwd label with the stamped workspace root. At this check a confined seat's command with a cwd in another site would run in that site's container. For bash, pwsh and terminal_open the working-directory guard and the path fence refuse the same directory before a spawn; this check alone covers a tool neither table knows.",
+      "file": "packages/tools/tracy-subprocess-docker/src/route.mjs",
+      "find": "  if (root !== null && root !== undefined && siteOf(root, cfg.sitesRoot).label !== label) {",
+      "replace": "  if (false) {",
+      "expect": {
+        "killedBy": [
+          "packages/tools/tracy-subprocess-docker/test/route.test.mjs",
+          "packages/tools/tracy-subprocess-docker/test/review-fence-coverage.test.mjs"
+        ]
+      }
+    },
+    {
+      "id": "rg-root-any-site",
+      "description": "LAYER. Let Tracy's in-process ripgrep take a search root anywhere under the sites root. At this check grep and glob would search another customer's files as the Tracy user, outside any container. The path fence has already refused such a path argument before the spawn; alone this mutant lets nothing across.",
+      "file": "packages/tools/tracy-subprocess-docker/src/route.mjs",
+      "find": "    if (insideSite(abs, siteRoot)) continue",
+      "replace": "    if (insideSite(abs, siteRoot) || abs.startsWith(`${trimRoot(sitesRoot)}/`)) continue",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-subprocess-docker/test/route.test.mjs"]
+      }
+    },
+    {
+      "id": "spill-door-any-session",
+      "description": "ALONE, given the path. Let the spilled-output door match any session's folder instead of the caller's own: read, grep and glob of one seat open another session's spilled tool output, which may be another customer's.",
+      "file": "packages/tools/tracy-subprocess-docker/src/route.mjs",
+      "find": "/session-${hash}(?:/.*)?$`).test(resolved)",
+      "replace": "/session-[0-9a-f]{12}(?:/.*)?$`).test(resolved)",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-subprocess-docker/test/route.test.mjs"]
+      }
+    },
+    {
+      "id": "inside-site-prefix-without-separator",
+      "description": "ALONE. Compare a resolved path with the site folder without the trailing '/': the path fence lets site foo's read, grep, glob, write and edit open files of site foo-bar.",
+      "file": "packages/tools/tracy-subprocess-docker/src/route.mjs",
+      "find": "  return resolved === siteRoot || resolved.startsWith(`${siteRoot}/`)",
+      "replace": "  return resolved === siteRoot || resolved.startsWith(siteRoot)",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-subprocess-docker/test/review-fence-coverage.test.mjs"]
+      }
+    },
+    {
+      "id": "read-path-unfenced",
+      "description": "ALONE. Treat read's file_path as content instead of a path: the path fence skips it, and a seat of one site reads any file the Tracy process can open, another customer's wp-config.php included.",
+      "file": "packages/tools/tracy-subprocess-docker/src/route.mjs",
+      "find": "  read: { paths: ['file_path'], content: [] },",
+      "replace": "  read: { paths: [], content: ['file_path'] },",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-subprocess-docker/test/review-fence-coverage.test.mjs"]
+      }
+    },
+    {
+      "id": "declared-path-demoted",
+      "description": "ALONE, for a seat whose sandbox mode does not confine writes. Stop marking a schema-declared path argument as declared: the path fence then skips a path that does not exist yet, so write creates a new file in another site or in the Tracy home; the platform-core and new-PHP refusals, which read the same mark, stop too.",
+      "file": "packages/tools/tracy-subprocess-docker/src/route.mjs",
+      "find": "      candidates.push({ arg, value, declared: true })",
+      "replace": "      candidates.push({ arg, value, declared: false })",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-subprocess-docker/test/review-fence-coverage.test.mjs"]
+      }
+    },
+    {
+      "id": "link-absolute-target-allowed",
+      "description": "LAYER. Stop refusing a symbolic link whose target is an absolute path: ln -s /site/other/.webroot x is no longer refused. The path fence still resolves a link when a file tool opens it; what this refusal removes is the link a swapped-link race needs.",
+      "file": "packages/tools/tracy-subprocess-docker/src/site-guards.mjs",
+      "find": "  return bare === '' || bare.startsWith('/') || bare.startsWith('~') || /(?:^|\\/)\\.\\.(?:\\/|$)/.test(bare)",
+      "replace": "  return bare === '' || bare.startsWith('~') || /(?:^|\\/)\\.\\.(?:\\/|$)/.test(bare)",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-subprocess-docker/test/site-guards.test.mjs"]
+      }
+    },
+    {
+      "id": "link-computed-target-allowed",
+      "description": "LAYER. Stop refusing a link target the shell builds at run time (a variable, a substitution, a glob): T=/site/other; ln -s \"$T\" f is no longer refused. The path fence still resolves a link when a file tool opens it; what this refusal removes is the link a swapped-link race needs.",
+      "file": "packages/tools/tracy-subprocess-docker/src/site-guards.mjs",
+      "find": "  if (/[$`{*?]/.test(target)) return true",
+      "replace": "  if (false) return true",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-subprocess-docker/test/site-guards.test.mjs"]
+      }
+    },
+    {
+      "id": "language-symlink-unread",
+      "description": "LAYER. Stop reading symlink() calls of PHP, Python, Perl and Node: php -r 'symlink(\"/site/other/.webroot\", \"x\")' is no longer refused. The path fence still resolves a link when a file tool opens it; what this refusal removes is the link a swapped-link race needs.",
+      "file": "packages/tools/tracy-subprocess-docker/src/site-guards.mjs",
+      "find": "    if (!literal || unreadableLinkTarget(target)) return { via: 'symlink()', target }",
+      "replace": "    if (false) return { via: 'symlink()', target }",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-subprocess-docker/test/site-guards.test.mjs"]
+      }
+    },
+    {
+      "id": "webroot-fence-off",
+      "description": "ALONE. Drop the check of the resolved webroot against the session workspace: with a configured webroot or a .webroot link that leads into another site, the site-profile tools read that customer's CMS files as this site's.",
+      "file": "packages/tools/tracy-webroot-read/src/webroot.mjs",
+      "find": "  if (real !== root && !real.startsWith(`${root}${path.sep}`)) {",
+      "replace": "  if (false) {",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-webroot-read/test/resolve-webroot.test.mjs"]
+      }
+    },
+    {
+      "id": "webroot-checked-by-name",
+      "description": "LAYER. Check the webroot by its name instead of its real path, so a .webroot that is a symlink into another site passes this check. The per-file check (insideWebroot) compares each real path with the returned root and still refuses the reads.",
+      "file": "packages/tools/tracy-webroot-read/src/webroot.mjs",
+      "find": "  const real = await realpath(resolved)",
+      "replace": "  const real = resolved",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-webroot-read/test/resolve-webroot.test.mjs"]
+      }
+    },
+    {
+      "id": "webroot-prefix-without-separator",
+      "description": "ALONE. Compare the webroot with the session workspace without the path separator: a configured or linked webroot in a sibling site whose label starts with this one's (wpdemo, wpdemo2) passes, and that customer's CMS files are read.",
+      "file": "packages/tools/tracy-webroot-read/src/webroot.mjs",
+      "find": "  if (real !== root && !real.startsWith(`${root}${path.sep}`)) {",
+      "replace": "  if (real !== root && !real.startsWith(root)) {"
+    },
+    {
+      "id": "media-root-fence-off",
+      "description": "ALONE. Walk a media root wherever its real path lands: with an uploads folder linked into another site, media.scan lists that customer's pictures.",
+      "file": "packages/tools/tracy-site-tools/lib/index.js",
+      "find": "      if (dir !== null && dir.startsWith(`${base3}${path17.sep}`)) await walk2(dir, r);",
+      "replace": "      if (dir !== null) await walk2(dir, r);",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-site-tools/test/media-scan-fence.test.mjs"]
+      }
+    },
+    {
+      "id": "media-root-opened-by-name",
+      "description": "ALONE. Open a media root by its name instead of its real path, as before the fix: with an uploads folder linked into another site, media.scan lists that customer's pictures.",
+      "file": "packages/tools/tracy-site-tools/lib/index.js",
+      "find": "      const dir = await fs8.realpath(path17.join(base3, r)).catch(() => null);",
+      "replace": "      const dir = path17.join(base3, r);",
+      "expect": {
+        "killedBy": ["packages/tools/tracy-site-tools/test/media-scan-fence.test.mjs"]
+      }
+    },
+    {
+      "id": "undo-ignores-later-content-change",
+      "description": "Stop reporting CONTENT_CHANGED_AFTER: the undo plan is no longer blocked when the customer edited content in the CMS admin, or another conversation wrote, after the turn, so the undo would overwrite that edit. Whether a later door refuses the revert on its own was not checked.",
+      "file": "apps/tracy-web/src/sites/turn-undo.js",
+      "find": "    if (changedAfter) reasons.push({ code: 'CONTENT_CHANGED_AFTER', ...changedAfter })",
+      "replace": "    if (false) reasons.push({ code: 'CONTENT_CHANGED_AFTER', ...changedAfter })",
+      "expect": {
+        "killedBy": ["apps/tracy-web/test/turn-undo.test.mjs"]
+      }
+    },
+    {
+      "id": "undo-ignores-later-restore",
+      "description": "Stop reporting RESTORED_AFTER: the undo plan is no longer blocked when the site was restored after the turn, so the undo would run on top of the restored site. Whether a later door refuses it on its own was not checked.",
+      "file": "apps/tracy-web/src/sites/turn-undo.js",
+      "find": "    if (restore) reasons.push({ code: 'RESTORED_AFTER', at: iso(restore.created_at), action: restore.action })",
+      "replace": "    if (false) reasons.push({ code: 'RESTORED_AFTER', at: iso(restore.created_at), action: restore.action })",
+      "expect": {
+        "killedBy": ["apps/tracy-web/test/turn-undo.test.mjs"]
+      }
+    },
+    {
+      "id": "undo-continues-after-failed-file-step",
+      "description": "ALONE. Keep going after a file undo that did not succeed: the run reverts content and undoes older turns on top of the failed step, leaving the site half undone.",
+      "file": "apps/tracy-web/src/sites/turn-undo.js",
+      "find": "        if (done.code) files.code = done.code\n        stopped = true\n        break",
+      "replace": "        if (done.code) files.code = done.code\n        break",
+      "expect": {
+        "killedBy": ["apps/tracy-web/test/turn-undo.test.mjs"]
+      }
+    }
+  ]
+}

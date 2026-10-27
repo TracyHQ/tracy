@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1129-signin-joomlart",
+  "kind": "feat",
+  "title": "Sign in with a JoomlArt account, land on a template from joomlart.com, download its quickstart",
+  "pr": 1129,
+  "area": "identity/joomlart-sso",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run apps/tracy-web/test/identity-joomlart.test.mjs and joomlart-sso.test.mjs \u2014 the test's own HMAC signer plays aMember.",
+    "S2: run apps/tracy-web/test/template-intent.test.mjs \u2014 /new?template=<id> signed out, signed in, unoffered, catalogue down, and the root with a template waiting.",
+    "S3: run apps/tracy-web/test/quickstart-download.test.mjs \u2014 the streaming door with a fake GitHub.",
+    "S4: the three migrations exist and the API reference snapshot names the three doors.",
+    "S5: run apps/tracy-web/test/public-signin.test.mjs. Legacy BETA_GATE=on/off with no aMember key must both send a code and preserve the selected JA Kinetic template after verification.",
+    "S6: run discord-doors.test.mjs and security-headers.test.mjs. Legacy beta config must permit non-members to verify their Discord address and the login CSP must omit the now-unused whitelist redirect origin."
+  ],
+  "expect": [
+    "S1: exit 0, 0 failures; the signed-answer, replay, unverified-email, safePath-next, paid-entitlement and template-waiting cases pass.",
+    "S2: exit 0, 0 failures, 0 skipped; the five named cases pass.",
+    "S3: exit 0, 0 failures (the Postgres case may be skipped without TEST_DATABASE_URL).",
+    "S4: 086-identity-entitlement.sql, 087-quickstart-download.sql, 088-desktop-intent.sql present; snapshot includes /signin/joomlart, /signin/joomlart/callback, /api/quickstarts/{template}/{cms}/quickstart.zip.",
+    "S5: exit 0, 0 failures, 0 skipped; invalid codes mint no session, valid codes redirect to the requested template and existing sessions continue without another login. S1 also admits free, expired and absent memberships.",
+    "S6: both suites exit 0 with no skipped tests; the non-member receives one code without a membership request, verifies it, and form-action allows only self and the configured identity providers."
+  ],
+  "selectors": {
+    "doors": "GET /signin/joomlart, GET /signin/joomlart/callback, GET /new?template=, GET /api/quickstarts/:template/:cms/quickstart.zip",
+    "tool": "tests/regression/scripts/REG-PR-1129-signin-joomlart.mjs"
+  },
+  "fence": "A forged, replayed or foreign-nonce aMember answer never mints a session; a template the gallery does not show cannot be reached or downloaded; the GitHub token never leaves tracy-web.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1129-signin-joomlart.mjs"]
+  }
+}

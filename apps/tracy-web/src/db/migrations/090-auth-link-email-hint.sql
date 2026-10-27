@@ -1,0 +1,16 @@
+-- The address a person typed in the desktop app before the app opened its sign-in round
+-- (11/10/2026, `tasks/todo-desktop-onboard-v2.md`, contract item 2).
+--
+-- WHY. On first run the app shows Tracy's own sign-in form; "Continue with email" opens the round
+-- with the typed address, so the browser page can ask for a code for THAT address instead of making
+-- the person type it again. The address travels in the round's body, never in a URL.
+--
+-- 🔒 A HINT, NOT AN IDENTITY. The app (or anyone calling `POST /auth/link/browser`) may write any
+-- address here. It decides which address the browser OFFERS to verify; it never approves anything
+-- by itself. A round is approved for the hint only through a code mailed to it and bound to this
+-- round (`091-auth-challenge.sql`), and a signed-in person who approves as somebody else does so on
+-- purpose, on a page that names both addresses.
+--
+-- Null = the app sent none (Google, every app before 0.6.0, every lane). A new nullable column: no
+-- scan, no backfill.
+alter table auth_link add column if not exists email_hint text;

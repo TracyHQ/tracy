@@ -1,0 +1,67 @@
+{
+  "id": "REG-PR-1162-app-statistic-quickstarts",
+  "kind": "feat",
+  "title": "App Statistic JA QS Download tab counts admitted quickstart zip requests with their links and recorded referring page, without inventing links or multiplying user counts",
+  "pr": 1162,
+  "area": "ops/app-statistic",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the App Statistic backend tests against a scratch PostgreSQL schema migrated from zero.",
+    "Seed quickstart_download rows for a live account, a deleted account, an anonymous request, a user with several desktop downloads and installs, 120 rows for paging, and rows with and without a referrer.",
+    "Run the referrer path tests: the referrer helper, the JoomlArt sign-in round, the /new landing and the quickstart download door."
+  ],
+  "expect": [
+    "view=quickstarts drops version, channel, platform and account filters and keeps template; template is dropped on the desktop views.",
+    "A quickstart row carries requestedAt, template and cms split from the release tag and the account's first-sign-in source; a deleted account's row stays counted with userId and email null.",
+    "The rolling date range includes a request exactly at the boundary and excludes one a millisecond earlier.",
+    "Users count quickstarts beside downloads and installs without multiplying them (3 downloads, 2 installs, 2 quickstarts) and a quickstart-only account appears.",
+    "Quickstart paging is server-side: 120 rows give 50, 50, 20 with stable distinct ids.",
+    "Quickstart detail lists the same account's quickstart requests and activity; a request whose account was deleted lists only itself.",
+    "A Joomla quickstart row links https://www.joomlart.com/joomla/templates/<template>; a non-Joomla cms gets no template link; every row links its release on JoomlArt-Products/ja-products.",
+    "A referrer is kept only as an absolute http(s) URL of at most 512 characters without credentials or fragment; javascript:, data:, relative, garbage and overlong values become null.",
+    "An explicit ref wins over the Referer header; an origin-only Referer is kept; Tracy's own origin is never a referrer.",
+    "The JoomlArt sign-in carries ref on a template landing next through the callback, and next still never leaves Tracy's origin.",
+    "The landing's Download link carries ref; the download door stores it, stores null for a bad one and still serves the zip; rows written before recording show a null referrer.",
+    "A referrer keeps only scheme, host and path; Tracy's own host on any scheme or port is not a referrer; the Google/GitHub sign-in callback answers Referrer-Policy: no-referrer so the provider is never recorded."
+  ],
+  "selectors": {
+    "list": "/api/ops/app-statistic?view=quickstarts",
+    "detail": "/api/ops/app-statistic/quickstarts/:id"
+  },
+  "fence": "Read-only aggregation over quickstart_download plus one nullable referrer column; the hour is still counted in the door's single insert; next still passes safePath.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/ops-app-statistic.test.mjs",
+      "apps/tracy-web/test/referrer.test.mjs",
+      "apps/tracy-web/test/identity-joomlart.test.mjs",
+      "apps/tracy-web/test/template-intent.test.mjs",
+      "apps/tracy-web/test/quickstart-download.test.mjs",
+      "apps/tracy-web/test/oauth.test.mjs"
+    ],
+    "tests": [
+      "the quickstarts view drops desktop-only filters and accepts a template filter",
+      "one quickstart row is one admitted zip request; a deleted account stays a counted unknown",
+      "the quickstart date range starts exactly at the rolling boundary",
+      "users count quickstarts once beside downloads and installs, and quickstart-only users appear",
+      "quickstart paging is server-side and stable past 50 rows",
+      "quickstart detail lists the same account’s quickstarts and activity, never another anonymous row",
+      "a quickstart row links its template page (Joomla only) and its release, and shows the recorded referrer",
+      "a referrer is an absolute http(s) URL of at most 512 characters, without credentials or fragment",
+      "an explicit ref wins over the Referer header; a bad ref falls back; our own origin is not a referrer",
+      "ref rides on a template landing next only, and the result is still a same-origin path",
+      "start: the referring page rides on a template next and comes back from the callback",
+      "start: a ref never turns next into another origin",
+      "the Download link carries the referring page: the landing ref first, else the Referer, else none",
+      "a signed-out person keeps the Referer through sign-in: it rides on next as ref",
+      "the referring page the landing passed is stored with the row; anything else is stored as null and still served",
+      "GET /signin/google -> GET /signin/google/callback: cookie set, an identity row exists, /auth/me reads the email back",
+      "signin/:provider/callback: a state nobody ever issued -> 400"
+    ],
+    "needs": ["postgres"]
+  }
+}

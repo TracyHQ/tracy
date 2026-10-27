@@ -1,0 +1,348 @@
+{
+  "dos": [
+    "Use #4d1520 as the default text color and primary button fill — it is the system's single chromatic anchor and should appear in every screen",
+    "Set page canvas to #fbf9f6 parchment, not pure white — the warm ivory is what makes the burgundy sing",
+    "Use 6px radius for all cards, buttons, and inputs as the default; reserve 1440px for pill badges only",
+    "Use Tt Commons Pro at weight 400 for display headings 44px and above — the whisper-weight at large size is a signature",
+    "Apply the wine-tinted shadow rgba(77,21,32,0.16) 19px 32px 73px only on hero-scale elevated cards, never on small UI elements",
+    "Use #faffa7 lemon as a decorative accent fill in illustration blocks and badge backgrounds — never as a text color on dark surfaces",
+    "Center content within a 1200px max-width column with 24–40px horizontal padding for comfortable reading rhythm"
+  ],
+  "donts": [
+    "Do not introduce cold grays (#e5e7eb, #f3f4f6, #6b7280) — the entire system is warm-toned and cool neutrals will clash",
+    "Do not use 8px or 12px border-radius on cards or buttons — the 6px radius is part of the system's distinctive geometry",
+    "Do not set body or heading text to weight 600 or 700 — the system maxes out at 600 for emphasis and prefers 400–500",
+    "Do not use pure black (#000000) for text — use #4d1520 wine ink instead, even for body copy",
+    "Do not add drop shadows to buttons, nav items, or small interactive elements — shadows are reserved for hero-scale elevation",
+    "Do not use blue, green, or standard semantic colors for status — the system communicates state through opacity, position, and the single brand hue",
+    "Do not center-align body paragraphs longer than two lines — left-align for readability; center only for headlines and short CTAs"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#4d1520",
+      "name": "Wine Ink",
+      "role": "Primary text, primary filled button background, active states, heading color, card borders, and dominant brand stroke — the single chromatic anchor of the entire system",
+      "group": "brand"
+    },
+    {
+      "hex": "#360912",
+      "name": "Midnight Wine",
+      "role": "Darkest surface for footer bands and inverted panels",
+      "group": "brand"
+    },
+    {
+      "hex": "#faffa7",
+      "name": "Lemon Whisper",
+      "role": "Decorative accent fill and border — used in illustration blocks, testimonial card outlines, icon highlights, and soft highlight washes",
+      "group": "accent"
+    },
+    {
+      "hex": "#662f3d",
+      "name": "Blush Rust",
+      "role": "Softened brand fill for secondary surfaces and SVG illustration shading",
+      "group": "accent"
+    },
+    {
+      "hex": "#e6b800",
+      "name": "Citrine Pop",
+      "role": "Rare saturated accent for micro-detail and decorative strokes",
+      "group": "accent"
+    },
+    {
+      "hex": "#825b63",
+      "name": "Mauve Ash",
+      "role": "Muted body text and subtle borders when full brand ink would be too loud",
+      "group": "accent"
+    },
+    {
+      "hex": "#fbf9f6",
+      "name": "Parchment",
+      "role": "Primary page canvas — the warm ivory that replaces cold white throughout",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Card surfaces, input fields, elevated panels — the brightest neutral layer above the parchment canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2eee7",
+      "name": "Linen Beige",
+      "role": "Hairline borders, dividers, ghost button outlines, and subtle UI separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d3cac3",
+      "name": "Sandstone",
+      "role": "Muted borders and secondary divider lines on cards and links",
+      "group": "neutral"
+    },
+    {
+      "hex": "#aaa49f",
+      "name": "Driftwood",
+      "role": "Lowest-contrast neutral for decorative borders and inactive link text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#717182",
+      "name": "Slate Smoke",
+      "role": "Body secondary text, icon strokes, and helper copy — the only cool-leaning neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#101828",
+      "name": "Charcoal Ink",
+      "role": "Occasional dark text and info-toned badge borders when Wine Ink would be too warm",
+      "group": "neutral"
+    },
+    {
+      "hex": "#feffe1",
+      "name": "Butter Cream",
+      "role": "Ultra-soft warm fill for highlight zones and subtle surface washes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e9e3d8",
+      "name": "Dawn Glow",
+      "role": "Warm card background tint used sparingly for warm-on-warm contrast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d7a0a0",
+      "name": "Rose Whisper",
+      "role": "Soft card border accent for warm-toned testimonial and content cards",
+      "group": "neutral"
+    },
+    {
+      "hex": "#906c7b",
+      "name": "Plum Echo",
+      "role": "Badge and pill background for muted tag variants",
+      "group": "neutral"
+    }
+  ],
+  "imagery": "Illustration-only, no photography. Visuals are flat geometric compositions — invoice printers, calculators, and product diagrams rendered as simplified vector shapes in the brand palette (wine outlines on lemon or cream fills). Illustrations sit in large rounded-rectangle panels (#13px radius) with generous internal padding. The style is intentionally retro-tech: chunky devices, flat shading, no gradients on objects (gradients are reserved for the gradient blobs behind the headline). No people, no lifestyle photography, no product screenshots — the abstract illustrations carry the entire visual load and reinforce the system's 'modern ledger' identity.",
+  "similar": [
+    {
+      "why": "Same warm-ivory canvas (#fbf9f6-adjacent) replacing cold white, with a single deep chromatic anchor color doing all text and button duty. Both use generous spacing and whisper-weight display headlines.",
+      "business": "Mercury"
+    },
+    {
+      "why": "Similar flat, editorial fintech aesthetic with muted warm palette, low elevation, and large confident type. Both avoid the typical SaaS blue/gray template and use a distinctive brand color throughout.",
+      "business": "Ramp"
+    },
+    {
+      "why": "Shared warm-illustration visual language — flat geometric product illustrations in rounded panels with soft accent-color backgrounds, no photography, brand-colored type doing structural work.",
+      "business": "Pillpack (now part of Amazon Pharmacy)"
+    },
+    {
+      "why": "Both use a single dominant brand hue against a warm off-white canvas, with pill-shaped badges, tight-tracked large headlines, and a flat low-elevation component system that feels editorial rather than dashboard-y.",
+      "business": "Brex"
+    },
+    {
+      "why": "Same restricted two-color chromatic palette (one deep brand + one bright accent) on warm neutrals, with sculptural display type and illustration-driven hero sections instead of product screenshots.",
+      "business": "Kalshi"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "6px",
+      "badges": "1440px",
+      "inputs": "6px",
+      "buttons": "6px",
+      "navLinks": "6px",
+      "largeButtons": "24px",
+      "illustrationCards": "13px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#fbf9f6",
+      "name": "Parchment Canvas",
+      "level": 0,
+      "purpose": "Base page background — warm ivory that sets the entire system's temperature"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card White",
+      "level": 1,
+      "purpose": "Elevated card and content surfaces above the canvas"
+    },
+    {
+      "hex": "#feffe1",
+      "name": "Butter Cream",
+      "level": 2,
+      "purpose": "Soft warm fill for highlight zones and muted content cards"
+    },
+    {
+      "hex": "#faffa7",
+      "name": "Lemon Whisper",
+      "level": 3,
+      "purpose": "Decorative accent fill for illustration blocks and accent cards"
+    },
+    {
+      "hex": "#360912",
+      "name": "Midnight Wine",
+      "level": 4,
+      "purpose": "Inverted dark surface for footer and occasional dark-band sections"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(77, 21, 32, 0.16) 19px 32px 73px 0px",
+      "element": "Hero illustration panel"
+    }
+  ],
+  "northStar": "Burgundy ink on cream parchment — a modern ledger rewritten for the AI era.",
+  "typeScale": [
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.012
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.012
+    },
+    {
+      "role": "subheading",
+      "size": 22,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.015
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.02
+    },
+    {
+      "role": "heading",
+      "size": 44,
+      "lineHeight": 1.15,
+      "letterSpacing": -0.021
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1,
+      "letterSpacing": -0.021
+    },
+    {
+      "role": "display",
+      "size": 76,
+      "lineHeight": 0.95,
+      "letterSpacing": -0.04
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Filled Button",
+      "role": "Main call-to-action — used for 'Book a Demo' and all conversion actions",
+      "description": "Background #4d1520, text white (#ffffff) or #faffa7 accent, 6px radius, padding 10px 20px or 12px 20px, font Tt Commons Pro 500 at 16px. Often paired with a small yellow grid/dot icon trailing the label. The contrast between the deep wine fill and the warm canvas makes these feel like ink stamps."
+    },
+    {
+      "name": "Ghost / Text Button",
+      "role": "Secondary action — 'Meet our AI agents', 'Learn more' links",
+      "description": "No background or border. Text in #4d1520 or #717182 at 16px weight 500, optionally with a right-arrow chevron. Sits inline with body copy, never competing with the primary."
+    },
+    {
+      "name": "Navigation Link",
+      "role": "Top nav menu items — Product, Capital, Industries, Resources, About",
+      "description": "Text #4d1520 at 14–15px weight 500, no background. Caret/chevron icons in matching color for dropdowns. Items separated by 24–32px horizontal gap."
+    },
+    {
+      "name": "Announcement Banner",
+      "role": "Top-of-page news strip",
+      "description": "Full-bleed #faffa7 background, text #4d1520 at 14px, centered, with a right-side close (×) button. Thin bottom border or no border — sits flush against the page."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Section-defining display text — 'Get paid on time. Every time.'",
+      "description": "Tt Commons Pro at 56–68px, weight 400, color #4d1520, letter-spacing -0.021em to -0.04em, line-height 1.0–1.05. The restrained 400 weight at enormous size is a signature choice — it whispers rather than shouts."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Customer quote card in the social proof section",
+      "description": "Warm tinted background (#faffa7 lemon or #feffe1 cream variants), 1px border in matching warmer tone, 6–13px radius, padding 20–24px. Company name in #4d1520 at 14px weight 600, quote text in #4d1520 at 15–16px weight 400, author line with avatar circle at bottom."
+    },
+    {
+      "name": "Logo Bar Card",
+      "role": "Trusted-by logo row in a single horizontal band",
+      "description": "Parchment canvas, logos in grayscale or muted brand colors at 40–48px height, evenly spaced with 8–10px gaps. A small 'Trusted by' label in #717182 sits to the left."
+    },
+    {
+      "name": "Pill Badge / Tag",
+      "role": "Category labels — '+ AI AGENTS FOR ACCOUNTS RECEIVABLE'",
+      "description": "Background #faffa7 or #906c7b, text #4d1520 or white, 1440px radius (full pill), padding 4px 12px or 6px 14px, font Geist Mono 500 at 12–14px, uppercase. The mono font in pill form is the system's signature micro-component."
+    },
+    {
+      "name": "Illustration Panel",
+      "role": "Hero visual and decorative graphic blocks",
+      "description": "Large rounded rectangles (#13px radius) with #faffa7 or #feffe1 fill containing flat geometric illustrations of products (invoice printers, calculators). Sits in a 2-column hero with text on the left. The only place the system allows large color blocks."
+    },
+    {
+      "name": "Card Surface",
+      "role": "Generic content card base",
+      "description": "White (#ffffff) background, 1px border in #f2eee7, 6px radius, padding 24px. Optional brand-tinted shadow: rgba(77,21,32,0.16) 19px 32px 73px — a deep wine-tinted shadow used sparingly for hero-scale elevation only."
+    },
+    {
+      "name": "Body Text Block",
+      "role": "Paragraph and helper copy",
+      "description": "Tt Commons Pro 400 at 18px, color #4d1520 for primary body or #717182 for secondary, line-height 1.5–1.6, letter-spacing -0.012em. Comfortable reading width within the 1200px max column."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Sticky or static header with brand and primary nav",
+      "description": "Parchment (#fbf9f6) background, full-width, 64–80px height. Logo left (wordmark + icon), nav links center-right, Login + Capital + Book a Demo right. Thin bottom border in #f2eee7 optional."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface across all contexts — headings, body, nav, buttons, cards. The variable weight axis (400–600) and extreme size range (9px micro-labels to 85px display) make it the sole workhorse. Display sizes use aggressive negative tracking (-0.04em at 76–85px) for a sculptural editorial feel; body sizes stay near normal tracking. The 600 weight carries emphasis without ever feeling bold-shouty.",
+      "sizes": "9, 10, 12, 14, 15, 16, 18, 20, 22, 32, 44, 56, 64, 68, 76, 85",
+      "family": "Tt Commons Pro Variable",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.20–2.39 (tight for display, generous for body)",
+      "substitute": "Switzer, General Sans, or Inter as close geometric-grotesque alternatives",
+      "letterSpacing": "-0.0400em, -0.0210em, -0.0200em, -0.0150em, -0.0120em, 0.0200em"
+    },
+    {
+      "role": "Monospace accent for badge labels, inline code, and small caps-style tags like '+ AI AGENTS FOR ACCOUNTS RECEIVABLE'. Normal letter-spacing — not tracked like the primary face.",
+      "sizes": "14, 18",
+      "family": "Geist Mono",
+      "weight": "400, 500",
+      "lineHeight": "1.33–1.75",
+      "substitute": "JetBrains Mono, IBM Plex Mono, or Space Mono"
+    },
+    {
+      "role": "Open Sans — detected in extracted data but not described by AI",
+      "sizes": "18px",
+      "family": "Open Sans",
+      "weight": "400",
+      "lineHeight": "1.2",
+      "letterSpacing": "-0.02"
+    }
+  ],
+  "description": "Daylit operates in a warm, candlelit fintech vernacular — a parchment-ivory canvas (#fbf9f6) replaces the cold white norm, and a single deep burgundy (#4d1520) does all the heavy lifting as text, borders, and the primary action fill. Pale lemon (#faffa7) acts as a secondary highlight accent that appears in decorative illustration blocks, testimonial card borders, and badge fills, keeping the palette to roughly two chromatic anchors. Type is large, confident, and tightly tracked — display sizes push to 76–85px with aggressive negative letter-spacing, giving headlines a sculptural, almost editorial quality. Components are flat and low-elevation: hairline warm borders, a 6px default radius, and a single brand-tinted shadow reserved for hero-scale elevation. The overall rhythm is spacious and unhurried, with generous section padding and a centered max-width reading column that feels like a well-typeset annual report rather than a dense SaaS dashboard.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text/headings: #4d1520\n- background: #fbf9f6\n- card surface: #ffffff\n- border/hairline: #f2eee7\n- accent fill: #faffa7\n- primary action: #4d1520 (filled action)\n\n**Example Component Prompts**\n\n1. Create a Primary Action Button: #4d1520 background, #fbf9f6 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. *Testimonial card*: White background, 1px border in #f2eee7, 6px radius, 24px padding. Company name in Tt Commons Pro 600 at 14px, #4d1520. Quote body in Tt Commons Pro 400 at 15px, #4d1520, line-height 1.6. Author line at bottom: 32px circular avatar + name in weight 500 at 14px, #4d1520 + role in #717182.\n\n3. *Pill badge*: Background #faffa7, text #4d1520, 1440px radius, padding 4px 12px, Geist Mono 500 at 12px, uppercase. Optional left '+' icon in #4d1520.\n\n4. *Navigation bar*: Full-width, #fbf9f6 background, 72px height. Left: wordmark logo in #4d1520. Center-right: 5 nav links in Tt Commons Pro 500 at 15px, #4d1520, 32px gap between items, each with a small 12px caret. Far right: 'Login' text link, 'Capital' text link, then filled 'Book a Demo' button with #4d1520 background, white text, 6px radius, 10px 18px padding, plus a small yellow 2×2 grid icon trailing the label.\n\n5. *Logo bar*: Full-width section on #fbf9f6. Left label 'Trusted by' in Tt Commons Pro 400 at 14px, #717182. Right: 6–8 grayscale logos at 40px height, evenly spaced with 8px gaps, flexbox row, center-aligned vertically."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Three gradients are used, all subtle and decorative:\n1. Pink-to-white wash: linear-gradient(51.57deg, rgb(238,143,162) 20%, rgb(255,255,255) 77%) — used as a soft background glow behind hero headlines, creating a warm bloom effect.\n2. Wine deepening: linear-gradient(49deg, rgb(77,21,32) 20%, rgb(179,49,74) 162%) — a brand-on-brand gradient for the footer or inverted CTA, adding richness without changing hue family.\n3. Lemon-to-amber: linear-gradient(120deg, rgba(250,255,167,0), rgba(255,187,117,0.4)) — a transparent warm wash used as a decorative light-source overlay in illustration panels.\nGradients should never appear on text, buttons, or small UI elements — they are atmospheric and large-scale only."
+    }
+  ],
+  "elevationPhilosophy": "The system uses almost no elevation. Surfaces are distinguished by background color and 1px warm borders rather than shadows. The single shadow in the system is wine-tinted (not neutral gray) and reserved for hero-scale elements, giving the design a flat, editorial, almost print-like quality. When depth is needed, it comes from color temperature shifts — warm cream → white → pale lemon — not from drop shadows."
+}

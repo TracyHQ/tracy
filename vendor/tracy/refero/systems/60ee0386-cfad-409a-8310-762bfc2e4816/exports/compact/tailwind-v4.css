@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-void-black: #000000;
+  --color-carbon: #181818;
+  --color-graphite: #1e1f20;
+  --color-iron: #333333;
+  --color-slate: #807f7f;
+  --color-fog: #999999;
+  --color-ash: #666666;
+  --color-chalk: #f1f4f4;
+  --color-pure-white: #ffffff;
+  --color-signal-mint: #22e2a8;
+  --color-deep-navy: #0a2142;
+  --color-concentric-teal: #085556;
+
+  /* Typography */
+  --font-the-future: 'The Future', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

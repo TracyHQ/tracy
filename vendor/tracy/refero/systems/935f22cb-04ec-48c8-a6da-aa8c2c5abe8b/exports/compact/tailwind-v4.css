@@ -1,0 +1,22 @@
+@theme {
+  /* Colors */
+  --color-cobalt-signal: #1c60f6;
+  --color-ember-vermillion: #fa4028;
+  --color-midnight-ink: #24355c;
+  --color-periwinkle-mist: #c9d7f5;
+  --color-bone: #ededed;
+  --color-ink-black: #000000;
+  --color-charcoal: #2d2d2d;
+  --color-graphite: #404040;
+  --color-slate: #767676;
+  --color-frost: #dddddd;
+  --color-ash: #8f8f8f;
+  --color-onyx: #171717;
+  --color-paper-white: #ffffff;
+
+  /* Typography */
+  --font-primary: 'Primary', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-custom-sans-likely-inter-or-a-geometric-humanist-substitute: 'Custom Sans (likely Inter or a geometric humanist substitute)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-editorial-serif-custom-high-contrast-modern-serif-didone-family: 'Editorial Serif (custom — high-contrast modern serif, Didone family)', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-secondaryfont: 'SecondaryFont', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

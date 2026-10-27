@@ -1,0 +1,268 @@
+{
+  "dos": [
+    "Use 9999px radius on all interactive buttons, tags, and avatars",
+    "Apply TwitterChirp with font-feature-settings: \"ss01\" on all UI text",
+    "Use #1d9bf0 exclusively for actionable elements: Follow buttons, links, verified badges, active states",
+    "Separate cards with 1px borders in #eff3f4 or #cfd9de — never use shadows for card definition",
+    "Use #0f1419 for primary text, #536471 for secondary text, and #829aab for tertiary/disabled",
+    "Maintain the three-column layout: left nav (68px), center feed (600px), right rail (290px) within a 990px max-width",
+    "Use #eff3f4 for hover states and secondary surface fills only"
+  ],
+  "donts": [
+    "Don't introduce any chromatic color beyond #1d9bf0 — the single-accent rule defines the system",
+    "Don't use shadows for card separation — use hairline borders only",
+    "Don't use sharp or moderate radii (0-8px) on buttons, tags, or avatars — 9999px is mandatory for interactive surfaces",
+    "Don't center body text or feed content — left-align everything for scannability",
+    "Don't use weight 800 for body text — reserve for display names, headlines, and the 20-23px scale only",
+    "Don't add decorative imagery, illustrations, or branded graphics — user content is the visual layer",
+    "Don't use #000000 for text — use #0f1419 for the softer near-black that defines the system"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1d9bf0",
+      "name": "X Blue",
+      "role": "Follow buttons, link text, verified badges, active nav icons, bottom CTA accents — the only chromatic color in the system, used sparingly to mark anything interactive or trustworthy",
+      "group": "brand"
+    },
+    {
+      "hex": "#0f1419",
+      "name": "Ink Black",
+      "role": "Primary text, button text, icon fills — the dominant readable foreground on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#536471",
+      "name": "Graphite",
+      "role": "Secondary text, metadata, timestamps, muted icon fills, helper labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#829aab",
+      "name": "Fog Gray",
+      "role": "Tertiary text and disabled-state foreground",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page background, card surfaces, modal surfaces, button text on chromatic fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eff3f4",
+      "name": "Mist Gray",
+      "role": "Hover states, secondary surface fills, subtle dividers, input backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cfd9de",
+      "name": "Hairline Gray",
+      "role": "1px border strokes separating cards, inputs, nav sections, and buttons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e0e4e7",
+      "name": "Shadow Dust",
+      "role": "Inset shadow base for inputs and select surfaces — 3% opacity black on this tone",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4b4f53",
+      "name": "Charcoal",
+      "role": "Dark-mode surface fill (previews, code blocks, dim button state)",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Three-column desktop layout centered within ~990px max-width. Left column: icon-only vertical nav (~68px), black X logo at top, navigation icons stacked vertically centered. Center column: ~600px wide, the main content surface (feed, profile, explore). Right column: ~290px wide, sticky sidebar with search, sign-up card, and footer links. Profile pages add a full-bleed banner image at top spanning the center+right columns, with the avatar overlapping the banner/content boundary. Cards stack vertically with 0px gap (separated only by 1px #eff3f4 hairline borders). No alternating section bands — the entire page is one continuous white surface. A full-width sticky bottom bar (blue) appears as an acquisition prompt. Navigation is minimal: left icon rail on desktop, bottom tab bar on mobile.",
+  "imagery": "Imagery is user-generated, not branded. Profile banners are user-uploaded photos or abstract color fields (often warm tones like the orange shown). Post media is user-uploaded images and videos displayed at full card width with no decorative treatment — no masks, no rounded corners on the media itself. The X logo is the only branded visual asset: a stark black geometric mark. Icons throughout are single-color, filled, simple geometric shapes (circles, arrows, hearts, retweet arrows) at ~18.75px, rendered in #0f1419 or #536471 with no multi-color treatments. There are no illustrations, no abstract decorative graphics, no product photography — the platform is a container for user content, and the visual language reinforces that by being completely transparent.",
+  "similar": [
+    {
+      "why": "Same text-first content feed philosophy, hairline border card separation, single accent color (Reddit Orange vs X Blue) on an otherwise monochrome interface, pill-shaped action buttons",
+      "business": "Reddit"
+    },
+    {
+      "why": "Near-identical three-column layout, infinite-radius pill buttons, and the same minimal-chrome approach to surfacing social conversation; both treat the timeline as a content surface rather than a software product",
+      "business": "Threads"
+    },
+    {
+      "why": "Same compact density, hairline borders instead of shadows, and content-first vertical feed; Mastodon's purple accent operates the same single-color-punctuation role as X Blue",
+      "business": "Mastodon"
+    },
+    {
+      "why": "Same newswire-on-white-paper philosophy — pure typographic hierarchy, zero decorative chrome, information density prioritized over visual comfort, hairline separators between items",
+      "business": "Hacker News"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "16px",
+      "inputs": "4px",
+      "modals": "16px",
+      "avatars": "9999px",
+      "buttons": "9999px"
+    },
+    "elementGap": "4px",
+    "sectionGap": "",
+    "cardPadding": "12px",
+    "pageMaxWidth": "990px"
+  },
+  "industry": "media",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — the entire app sits on pure white"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Post cards, profile sections, sidebar widgets — same white as canvas, defined only by hairline borders"
+    },
+    {
+      "hex": "#eff3f4",
+      "name": "Hover",
+      "level": 2,
+      "purpose": "Interactive feedback on rows, links, nav items — the only secondary fill"
+    },
+    {
+      "hex": "#1d9bf0",
+      "name": "Action",
+      "level": 3,
+      "purpose": "Filled button backgrounds, active states, accent washes"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(101, 119, 134, 0.2) 0px 0px 8px 0px, rgba(101, 119, 134, 0.25) 0px 1px 3px 1px",
+      "element": "Dropdown Overlay"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.03) 0px 0px 2px 0px inset",
+      "element": "Input Fields"
+    }
+  ],
+  "northStar": "blue wire on white newsprint. A stark, content-first timeline where one vivid blue punctures an otherwise monochrome interface, and pill-shaped controls signal action without weight.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.22
+    },
+    {
+      "role": "body",
+      "size": 15,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading",
+      "size": 23,
+      "lineHeight": 1.09
+    }
+  ],
+  "components": [
+    {
+      "name": "Follow Button",
+      "role": "Primary action — subscribing to a user's timeline",
+      "description": "Pill button, 9999px radius, #1d9bf0 background, #ffffff text, TwitterChirp 15px weight 700, padding 0 16px, height ~36px. On hover, background lightens to ~#1a8cd8. Followed state inverts to outlined: transparent background, #536471 border (1px), #536471 text."
+    },
+    {
+      "name": "Post/Reply Button",
+      "role": "Composing a new post or reply",
+      "description": "Pill button, 9999px radius, #1d9bf0 background, #ffffff text, TwitterChirp 15px weight 700, full-width in compose area, min-height 36px, padding 0 16px. Disabled state reduces opacity to ~50%."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Secondary nav actions (back, more menus)",
+      "description": "Circular 36×36px button, 9999px radius, transparent background, #0f1419 icon fill, no border. On hover, background fills with #eff3f4."
+    },
+    {
+      "name": "Tweet Card",
+      "role": "Single post in the feed timeline",
+      "description": "Full-width card on white (#ffffff), 1px bottom border in #eff3f4, padding 12px 16px. Contains 40px circular avatar, display name (TwitterChirp 15px weight 700 #0f1419) with optional verified check in #1d9bf0, @handle (TwitterChirp 15px weight 400 #536471), timestamp (13px #536471), post body (15px #0f1419), and optional media. Three-dot overflow menu at top-right."
+    },
+    {
+      "name": "Post Action Bar",
+      "role": "Engagement interactions on each post",
+      "description": "Horizontal row of five icon+count groups: reply, retweet, like, view count, bookmark, share. Icons in #536471 at 18.75px. Active states: retweet turns #00ba7c green, like turns #f91880 pink. Numbers in TwitterChirp 13px #536471. Vertical spacing between icon groups auto-distributes."
+    },
+    {
+      "name": "Sign Up Card (Right Sidebar)",
+      "role": "New user acquisition in right rail",
+      "description": "Card with #ffffff background, 16px radius, 1px #eff3f4 border (or no border on flat variant), padding ~16px. Contains headline 'New to X?' (20px weight 800 #0f1419), subtext (15px #536471), three stacked buttons: 'Sign up with Google' (white bg, #cfd9de border, black Google icon), 'Sign up with Apple' (white bg, #cfd9de border, black Apple icon), 'Create account' (outlined pill, #cfd9de border, #0f1419 text, 9999px radius)."
+    },
+    {
+      "name": "Bottom Sticky CTA Bar",
+      "role": "Persistent acquisition prompt",
+      "description": "Full-width sticky bar at viewport bottom, #1d9bf0 background, padding 12px 16px. Left side: headline 'Don't miss what's happening' (15px weight 700 #ffffff), subtext (13px #ffffff). Right side: two pill buttons — 'Log in' (white bg, #0f1419 text) and 'Sign up' (outline white border, #ffffff text), both 9999px radius, ~32px height."
+    },
+    {
+      "name": "Profile Header",
+      "role": "User identity surface on profile pages",
+      "description": "Top section with full-width banner image (auto-height, no radius), 133×133px circular avatar overlapping banner by ~33px, padding 16px below. Profile name (20px weight 800 #0f1419) with verified badge, @handle (15px #536471), bio (15px #0f1419), link (15px #1d9bf0), metadata row (join date, location in 15px #536471), follower/following counts (15px #0f1419, label #536471). Follow button positioned top-right as pill."
+    },
+    {
+      "name": "Search Input",
+      "role": "Global search and query input",
+      "description": "Rounded input with 4px radius, #eff3f4 background, padding 8px 12px, placeholder text 15px #536471. No visible border. Search icon prefix in #536471. On focus, adds inset shadow rgba(0,0,0,0.03) 0px 0px 2px 0px."
+    },
+    {
+      "name": "Verified Badge",
+      "role": "Authenticity marker on accounts",
+      "description": "Small inline icon (~16px) in #1d9bf0, placed immediately after display name. Filled badge with check mark. No text label in standard variant."
+    },
+    {
+      "name": "Tab Bar (Posts/Replies/Media)",
+      "role": "Profile page content filter",
+      "description": "Horizontal tab strip, no background, 1px bottom border #cfd9de spanning full width. Each tab: TwitterChirp 15px weight 500, #536471 inactive / #0f1419 active, padding 16px, centered text. Active tab has 2px #1d9bf0 underline at bottom edge."
+    },
+    {
+      "name": "Avatar",
+      "role": "User identity thumbnail",
+      "description": "Circular image, 9999px radius, sizes range from 32px (feed) to 40px (tweet cards) to 133px (profile header). Fallback: #cfd9de background with user initial in #0f1419."
+    },
+    {
+      "name": "Dropdown Overlay",
+      "role": "Contextual menus and pickers",
+      "description": "Floating card with #ffffff background, 16px radius, subtle shadow rgba(101,119,134,0.2) 0px 0px 8px 0px + rgba(101,119,134,0.25) 0px 1px 3px 1px, padding 4px 0. Menu items: TwitterChirp 15px #0f1419, padding 8px 12px, hover fills #eff3f4."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary brand typeface across all UI — feeds, nav, buttons, headings, body. The custom letterforms with ss01 stylistic set create X's distinctive voice; the tightly compressed 0.80 lineHeight on small sizes maximizes information density in the feed.",
+      "sizes": "11px, 13px, 14px, 15px, 20px, 23px",
+      "family": "TwitterChirp",
+      "weight": "400, 500, 700, 800",
+      "lineHeight": "0.80, 1.09, 1.14, 1.20, 1.22, 1.23, 1.33",
+      "substitute": "Inter, system-ui, -apple-system",
+      "fontFeatureSettings": "\"ss01\" on"
+    },
+    {
+      "role": "System fallback for legacy rendering paths; not a design choice but a technical fallback that should never appear in production UI",
+      "sizes": "15px",
+      "family": "Times",
+      "weight": "400, 700",
+      "lineHeight": "1.20",
+      "substitute": "n/a"
+    }
+  ],
+  "description": "X is a newswire on white paper: a content-first real-time conversation surface where the UI dissolves into the background so text and media carry the experience. The design is ruthlessly minimal — a three-column grid (left nav, center feed, right rail), hairline borders instead of shadows, and one chromatic accent (X Blue) that appears only on things you can tap. Typography is the product: TwitterChirp's custom letterforms with the ss01 stylistic set create a distinctive voice across every weight. Buttons are infinite-radius pills, surfaces are flat whites, and density stays compact to maximize feed real estate. Every visual choice reinforces the idea that X is a public square, not a software product — the chrome is scaffolding, the content is the building.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text (primary): #0f1419\n- text (secondary): #536471\n- background: #ffffff\n- border: #cfd9de\n- accent: #1d9bf0\n- primary action: #1d9bf0 (filled action)\n\n## Example Component Prompts\n\n**1. Create a Follow Button:**\nPill button, 9999px radius, #1d9bf0 background, #ffffff text, TwitterChirp 15px weight 700 with font-feature-settings \"ss01\" on, padding 0 16px, height 36px. Hover: background #1a8cd8.\n\n**2. Create a Tweet Card:**\nFull-width card, #ffffff background, 1px bottom border #eff3f4, padding 12px 16px. Left: 40px circular avatar (9999px radius). Right: display name (TwitterChirp 15px weight 700 #0f1419) + verified badge (#1d9bf0 check icon) + @handle (15px weight 400 #536471) + timestamp (13px #536471). Body text: 15px #0f1419. Action bar below: five icon groups in #536471 at 18.75px, with counts in 13px #536471.\n\n**3. Create a Profile Header:**\nFull-width banner image (no radius, auto height ~200px). 133px circular avatar (9999px radius) overlapping banner bottom by ~33px, positioned 16px from left. Name: TwitterChirp 20px weight 800 #0f1419 + verified badge. Handle: 15px #536471. Bio: 15px #0f1419. Follow button top-right: pill 9999px, #1d9bf0 bg, #ffffff text, 15px weight 700.\n\n**4. Create a Sign-Up Sidebar Card:**\nCard with #ffffff background, 16px radius, no border, padding 16px. Headline: 'New to X?' at 20px weight 800 #0f1419. Subtext: 15px #536471. Three stacked buttons: two social auth buttons (#ffffff bg, 1px #cfd9de border, 9999px radius, black brand icon, 15px weight 500 #0f1419 text) and one 'Create account' outlined button (transparent bg, 1px #cfd9de border, #0f1419 text, 9999px radius, full width).\n\n**5. Create a Bottom Sticky CTA Bar:**\nFull-width sticky bar, #1d9bf0 background, padding 12px 16px. Left: headline 15px weight 700 #ffffff, subtext 13px #ffffff. Right: two pill buttons — 'Log in' (white bg, #0f1419 text) and 'Sign up' (1px white border, transparent bg, #ffffff text), both 9999px radius, ~32px height."
+    },
+    {
+      "title": "Single-Accent Philosophy",
+      "content": "X enforces a monochrome interface with exactly one chromatic accent. The system is designed so that if you removed all #1d9bf0 from the interface, you would still understand the entire information architecture — the blue is decoration layered onto a complete achromatic system, not a load-bearing color. This means: text hierarchy works without color (weight + #0f1419 vs #536471), card separation works without color (hairline borders), interactive affordance works without color (pill shape + cursor). The blue arrives only on things that demand attention: a button you haven't pressed yet, a link you haven't clicked, a verified account. This restraint is the brand — X feels confident because it doesn't reach for color to explain itself."
+    }
+  ]
+}

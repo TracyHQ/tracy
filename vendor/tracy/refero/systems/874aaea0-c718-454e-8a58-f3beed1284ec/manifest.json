@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "874aaea0-c718-454e-8a58-f3beed1284ec",
+  "status": "complete",
+  "name": "Runway",
+  "url": "https://styles.refero.design/style/874aaea0-c718-454e-8a58-f3beed1284ec",
+  "sourceWebsite": "https://runway.com",
+  "extractedAt": "2026-06-03T19:03:23.827Z",
+  "capturedAt": "2026-10-08T05:14:26.304680+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Kraft paper ledger under amber desk lamp. Every screen should feel like opening a well-organized financial notebook: cream paper, espresso ink, one warm highlight color, no cold digital surfaces.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4e914c76-ee63-41aa-9da9-729d30b5a241.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "652ab5645fafc0850dd583010315d1b1158ac69da0d0d828d1bce0bcda67acde",
+      "bytes": 21633
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "db0f6480545296b89cf5b87b5780e1f84c25a8c0b7029a3fee8406b6f49e6049",
+      "bytes": 128815
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a863b2d4ed7a0ea2d80674376f1dbf897c3663951f0d8cfa748fd94e6e4457dc",
+      "bytes": 18064
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e7f7860293c1587fdb660bae3e72b8e5608c7931242d8126705e04e940e84c63",
+      "bytes": 14232
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "023f0f0bb643875f2ac897bf15cf81349d3000b892633f3ebce4c0a6ecb58686",
+      "bytes": 12890
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "14f432b710e3b3b18d0ab6d12dc603e984e2e7e338648572d30c4769c1facb85",
+      "bytes": 3480
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b9e141c217e48089bcbb37cc8c2d9483e502383f40425395008d54080c026f16",
+      "bytes": 601
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2602a19b9326fda7c321668df71e4db925e0edcc9f5549dd643220645623145f",
+      "bytes": 618
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f19c561a89f2bc05fcd1dcc02670a899617415a3dcb3e5ea560d5c289c884ca8",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "dcf934c73e6b0bd3e77ee7b3ee789e49a139237a16402d94e191eb9461c05dec",
+      "bytes": 45839
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "10ef1ae0853a76018062e6c9196767b6348e54d7ef11f873aa376469343bc311",
+      "bytes": 24249
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5acdb6d1f18de4718532ef09081925ab4c76e017bd0c60918c2442aef25facfc",
+      "bytes": 58171
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4f17ac141f09b90fb85784a5880936bc340b7f0814194fafa443efef34b9fce9",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a2d3f70742f34ab30a1cca0d63d8c6640524002435b50f9853c674f95629ffe7",
+      "bytes": 2125
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "82c149f1e5c2a05db227ab05fe9c7cf53b7641697757d485c550cca815b3150e",
+      "bytes": 2673
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "0e971626-ca51-45ba-acf6-35a53c561b2c",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "2b41e7c4-1e8c-4ea2-a87f-51e24c57886e",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3634d5eb-ccfa-4881-b234-3dd735fb7ae4",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "5076959f-f849-4b50-8f8a-2040d4756f98",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "715a3ad2-5b6d-421f-b72b-3aa6fec86351",
+    "7368cfab-6313-4e50-97e5-c3318c52e7fe",
+    "874aaea0-c718-454e-8a58-f3beed1284ec",
+    "91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "d7fb1721-1878-4cbb-a24b-051800557c75",
+    "dfbcffc2-79a3-4349-b5c6-1aa9fae4fcf4",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8"
+  ]
+}

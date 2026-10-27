@@ -1,0 +1,120 @@
+# Server override — what a real Linux host needs that a laptop does not, and NOTHING else.
+#
+# 🔒 THE BASE FILE IS ALREADY SERVER-SHAPED. `compose.yml` gives `tracy-host` `network_mode: host`
+# and gives `minio`/`dns` a `profiles: [local]` — so on a server you simply DO NOT pass
+# `--profile local`, and those two never start. `compose.macos.yml` is the file that bends the
+# base out of shape, not this one. Keeping this override thin is the point: every line here is a
+# way for dev and production to drift, so it earns its place or it does not exist.
+#
+# Use it:
+#   cd deploy && docker compose -f compose.yml -f compose.server.yml up -d
+#     (no `--profile local` — that is what leaves minio and dnsmasq out)
+#
+# What is DELIBERATELY not here:
+#   - `network_mode: host` for tracy-host — already the base's own value. On Linux it means the
+#     machine's namespace, which is where go-live's iptables rules and a site's published
+#     loopback ports both live. (On Docker Desktop it means the Linux VM's namespace, which is
+#     nobody's — that is why the macOS override exists at all.)
+#   - a `dns-host` service — macOS-only. A server resolves `<label>.tracy.ai` through real public
+#     DNS, because the address is real.
+#   - `TRACY_EGRESS_FENCE` — an env value, not a compose value. It belongs `on` here: this
+#     machine HAS iptables, so `provision.sh` can hang the egress net it was written for.
+services:
+  # 🔒 A SERVER'S APP SERVICES COME BACK BY THEMSELVES. The base gives only tracy-dsh and the
+  # docker proxy a restart policy, so on a host tracy-web, tracy-host and postgres ran with
+  # `restart: no`. Measured 24/09 on dev: under memory pressure tracy-web lost DNS to `postgres`
+  # (EAI_AGAIN), the unhandled rejection ended the process, and cowork.tracy.site answered 502 for
+  # over 20 minutes until someone ran `docker start` by hand. `unless-stopped` and not `always`:
+  # a person who stops a service on purpose keeps it stopped across a reboot.
+  postgres:
+    restart: unless-stopped
+
+  tracy-dsh:
+    # 🔒 CUT THE LOOPBACK RESOLVER. The base points tracy-dsh at `172.30.0.53` — the dnsmasq that
+    # only exists under `--profile local`, and whose whole job is to make up an answer for
+    # `<label>.tracy.test`, a name that resolves nowhere real. Leave the line in on a server and
+    # every DNS query dsh makes goes to an address with nothing behind it: not just site names —
+    # `api.deepseek.com`, `github.com`, the model endpoint, all of it. The failure is a timeout,
+    # not a refusal, so it reads as "the network is slow" for as long as anyone is willing to
+    # believe that.
+    #
+    # `!reset` and not `dns: []` — measured 10/09: an empty list is MERGED, not substituted, so
+    # the base's `172.30.0.53` survived it untouched and `docker compose config` still showed the
+    # resolver. `!reset` is the Compose-spec tag that exists for exactly this, and it is the only
+    # thing that actually removes an inherited value.
+    dns: !reset null
+
+  # ── The two app services: where their environment comes from, and whose secret they get ──────
+  #
+  # 🔒 `env_file` IS A RELATIVE PATH, AND `--env-file` DOES NOT REPLACE IT. The base names
+  # `.env` — resolved against `deploy/`, which exists in a checkout and nowhere on a server. Left
+  # alone, compose does not even reach the point of starting anything: it stops at
+  # `env file /opt/tracy-fleet/stack/.env not found`. Measured 11/09 by copying the two compose
+  # files into an empty directory.
+  #
+  # And the obvious-looking fix is the wrong one. `docker compose --env-file <path>` loads
+  # variables for INTERPOLATION — the `${…}` on the left of the colon — and puts none of them
+  # inside a container. The 51 keys the app actually reads (`SESSION_SECRET`, `MODEL_API_KEY`,
+  # `GITHUB_APP_PRIVATE_KEY`, …) reach the process only through `env_file`, so the server's copy
+  # has to be named here, by absolute path.
+  #
+  # `!override` and not a second entry: compose MERGES `env_file` lists, so appending would leave
+  # the unreachable `.env` in front and fail exactly as before.
+  #
+  # `/etc/tracy/tracy-web.env` is the same convention `/etc/tracy/host-dsh.env` already follows on
+  # a fleet host: root-owned, 0600, outside every checkout, and the one file a person edits.
+  #
+  # The path is a VARIABLE so a second stack on the same host (a trial shard next to the master)
+  # can point at its own file instead of inheriting the master's whole environment.
+  # `deploy-tracy-stack.sh` and `check-server.sh` export `TRACY_STACK_ENV_FILE` from `--env-file`.
+  # Unset, it is the old literal, so on an existing host the interpolated string — and with it the
+  # config hash of tracy-web and tracy-host — does not move. Same shape as `host-dsh.yml`'s own
+  # `env_file`.
+  tracy-web:
+    restart: unless-stopped
+    env_file: !override ['${TRACY_STACK_ENV_FILE:-/etc/tracy/tracy-web.env}']
+    environment:
+      # No automatic real-data enablement on staging/production or an unconfigured dev host.
+      INVITATIONS_REAL_KEY_DIR: !reset null
+    # 🔒 THE HOST'S dsh IS IN A DIFFERENT COMPOSE PROJECT, AND NOTHING ELSE REACHES IT.
+    # `HOST_<name>_DSH_ORIGIN` is dialled from INSIDE this container (`seats/route.js`,
+    # `public/route.js`, `cron.js` all fetch `${host.dshOrigin}…` server-side), so it has to be an
+    # address this container can resolve. On a laptop that is free: dsh is a service of this same
+    # compose file, so `http://tracy-dsh:8080` resolves on `default`. On a fleet host dsh belongs
+    # to project `tracy-host-dsh` (`/opt/tracy-fleet/dsh/host-dsh.yml`, deployed by
+    # `build-dsh-image.yml`) and publishes `127.0.0.1:51700` — LOOPBACK ONLY. Measured 11/09 from
+    # inside this container: `tracy-dsh:8080` and `host.docker.internal:51700` both `fetch failed`;
+    # after joining the network below, `tracy-dsh:8080` answers 401 (the password door, i.e.
+    # reached). A loopback publish is unreachable across the bridge, so `extra_hosts` cannot help.
+    #
+    # Joining dsh's network from HERE and not attaching dsh to ours, on purpose: a `docker network
+    # connect` on dsh is undone the next time `build-dsh-image.yml` recreates that container —
+    # silently, and the symptom would be seats failing weeks later for no local reason. The
+    # attachment held by THIS service survives dsh being recreated, because dsh rejoins the same
+    # network by name.
+    networks:
+      dsh: {}
+  tracy-host:
+    restart: unless-stopped
+    env_file: !override ['${TRACY_STACK_ENV_FILE:-/etc/tracy/tracy-web.env}']
+    environment:
+      # The base has to write `${HOST_local_SECRET}` — compose interpolation does not nest, so it
+      # cannot spell `HOST_<HOST_NAME>_SECRET`. A server host is not called `local` (this one is
+      # `dev`), so that variable is unset there and `need(env, 'HOST_SECRET')` stops tracy-host at
+      # boot. `deploy-tracy-stack.sh` reads `HOST_<HOST_NAME>_SECRET` out of the env file and
+      # exports `HOST_SECRET`; `:?` makes a deploy that forgot to fail HERE, by name, instead of
+      # in a crash loop whose log says only that a key is missing.
+      HOST_SECRET: ${HOST_SECRET:?deploy-tracy-stack.sh must export HOST_SECRET from HOST_<HOST_NAME>_SECRET}
+
+# Declared external because this network is another project's: compose must join it, never create
+# or remove it. `name:` is the literal docker network name — `tracy-host-dsh` comes from `name:`
+# inside `host-dsh.yml` itself (not from a directory), so it is stable across deploys of that
+# stack. A server missing it fails loudly at `up` ("network ... not found") rather than starting a
+# tracy-web whose seat doors quietly time out.
+#
+# The name is a variable so a second stack's tracy-web joins ITS OWN dsh network; unset, it is the
+# old literal and nothing moves on an existing host.
+networks:
+  dsh:
+    external: true
+    name: ${TRACY_DSH_NETWORK:-tracy-host-dsh_egress}

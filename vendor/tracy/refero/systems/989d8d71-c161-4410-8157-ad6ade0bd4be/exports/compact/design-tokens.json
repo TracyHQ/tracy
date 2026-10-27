@@ -1,0 +1,64 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#0d1400",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, ghost/outline action borders, filled dark buttons — near-black with a faint green undertone carries both editorial type and CTA strokes"
+    },
+    "lime-voltage": {
+      "$value": "#aaff00",
+      "$type": "color",
+      "$description": "Lime Voltage — Brand accent, active states, highlight tags, energetic punctuation — the single chromatic accent that gives the white canvas its electric charge"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button fills — the foundation everything sits on"
+    },
+    "olive-stone": {
+      "$value": "#838976",
+      "$type": "color",
+      "$description": "Olive Stone — Muted helper text, secondary icons, neutral badge borders, low-emphasis UI chrome"
+    },
+    "soft-mist": {
+      "$value": "#e6e7e4",
+      "$type": "color",
+      "$description": "Soft Mist — Hairline dividers, subtle surface edges, low-contrast separators"
+    },
+    "peach-wash": {
+      "$value": "#ffe4c3",
+      "$type": "color",
+      "$description": "Peach Wash — Category card accent — warm pastel surface for color-coded product groupings"
+    },
+    "sky-wash": {
+      "$value": "#cbedff",
+      "$type": "color",
+      "$description": "Sky Wash — Category card accent — cool pastel surface for color-coded product groupings"
+    },
+    "mint-wash": {
+      "$value": "#caf3aa",
+      "$type": "color",
+      "$description": "Mint Wash — Category card accent — fresh pastel surface for color-coded product groupings"
+    }
+  },
+  "font": {
+    "vend-sans": {
+      "$value": "Vend Sans",
+      "$type": "fontFamily",
+      "$description": "Custom display + label typeface. Headlines run at 43–61px weight 600/700 with tight negative tracking (-0.033em to -0.023em) for a compressed, editorial feel. The same family doubles as small all-caps labels at 11–13px with wide positive tracking (+0.039em to +0.045em) — a deliberate dual register: whisper-quiet labels, assertive display."
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "Body and supporting text. Stays at 16px with 0.031em tracking — deliberately understated so Vend Sans can lead. No custom body face: the system font is the quiet workhorse, and custom type is reserved for moments of emphasis."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://artboard.studio",
+      "siteName": "Artboard",
+      "extractedAt": "2026-06-03T20:23:43.803Z",
+      "variant": "compact"
+    }
+  }
+}

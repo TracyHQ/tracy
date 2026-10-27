@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8ac43b3b-7139-4777-bc77-217614e01e89",
+  "status": "complete",
+  "name": "Ayaka B. Ito",
+  "url": "https://styles.refero.design/style/8ac43b3b-7139-4777-bc77-217614e01e89",
+  "sourceWebsite": "https://ayakaito.com",
+  "extractedAt": "2026-06-03T21:39:55.027Z",
+  "capturedAt": "2026-10-08T05:14:33.967730+00:00",
+  "theme": "mixed",
+  "industry": "design",
+  "description": "Editorial spread on warm linen paper.\n\nA tactile, magazine-like atmosphere where oversized serif type and flat color planes replace the usual UI scaffolding.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ba25d06f-57d7-4b04-9f40-eebccddbd9a4.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6186ee79d59a3feb8f9819f77628b93d59d38503b6a121630662bb55ae55483e",
+      "bytes": 24934
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ad86c846d2421f79a14b23f1f07310b65bc6afb1ef2ec1935d6d41d6f21b635b",
+      "bytes": 331467
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "317ea2e61fdd1a3e91f5b20824b418753a646a512611811dec880ce16771813d",
+      "bytes": 22341
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "92c47b2f590add852a200fa9b0bde9f20be7d5377768ff7e25a8011407112fdc",
+      "bytes": 18127
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "32a24ff57f9467d262cc770f209a7f94de9c018f556c95a227d70f12041cf7ba",
+      "bytes": 16235
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1829b747c94ba2bf7efc3b7d53db5c10ccbb0d8923912d9613a08902d30108dd",
+      "bytes": 4832
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4e236196d063cd58f8a19b4a467071eb4166aa696ad94f98f5b41e339bcd55f4",
+      "bytes": 833
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8340d931ed015ee531c45e773ebd721becc74651259417433d13a2e74f92f342",
+      "bytes": 850
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "393636c667e75dc567cbd60875772286f1d059880187dfd9d4098e34b55d4b3e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "0290e1de81455383cb01133b61d51656e093df823ca0e93fd0e6467d4f11b97b",
+      "bytes": 49918
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f713bc5de444806cfc1a1b850e4d01fc807fb4a557ed16abf377aceb1c52a8b3",
+      "bytes": 25751
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "94f87f730d44a30bb5dbc41cfa32c8d4c31ad29ac3be69629c431268a9d3d636",
+      "bytes": 62915
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "9dfcf3c4aaf15bcb5d0533d23193ff8bf3f44815e7fab85576b53675231b1b77",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "abea4db4a951bf735d1f7f5521eda83f5f963c8018a0bbb89b7cfff4c0eac0a6",
+      "bytes": 1650
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "06bbee1c720619efe7eb416337c716e6fd107f86dcb1cef375c7986d85c9252d",
+      "bytes": 2215
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2ab2f666-6da7-4cd8-bc91-52a28bd560ad",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "77a193de-2472-4637-802f-d930ec61c180",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

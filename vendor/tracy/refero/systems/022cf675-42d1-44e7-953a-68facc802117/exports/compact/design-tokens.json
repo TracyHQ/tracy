@@ -1,0 +1,84 @@
+{
+  "color": {
+    "apple-ink": {
+      "$value": "#1d1d1f",
+      "$type": "color",
+      "$description": "Apple Ink — Primary text, card borders, structural outlines — near-black with a hint of warmth prevents harshness against the fog canvas"
+    },
+    "fog-canvas": {
+      "$value": "#f5f5f7",
+      "$type": "color",
+      "$description": "Fog Canvas — Page background, badge fills, secondary surfaces — the signature Apple light gray that defines the gallery atmosphere"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, icon fills, elevated layers above fog canvas"
+    },
+    "graphite": {
+      "$value": "#707070",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, subdued borders, nav dividers"
+    },
+    "slate": {
+      "$value": "#86868b",
+      "$type": "color",
+      "$description": "Slate — Muted helper text, tertiary metadata, de-emphasized labels"
+    },
+    "charcoal": {
+      "$value": "#333336",
+      "$type": "color",
+      "$description": "Charcoal — Nav bar elements, button borders on dark surfaces, structural strokes"
+    },
+    "smoke": {
+      "$value": "#474747",
+      "$type": "color",
+      "$description": "Smoke — Nav text and borders, link borders in secondary contexts"
+    },
+    "iron": {
+      "$value": "#5b5b61",
+      "$type": "color",
+      "$description": "Iron — Body text in lower-emphasis contexts, subtle borders"
+    },
+    "ash": {
+      "$value": "#e8e8ed",
+      "$type": "color",
+      "$description": "Ash — Ghost button backgrounds, inactive chip surfaces, soft separators"
+    },
+    "electric-blue": {
+      "$value": "#0071e3",
+      "$type": "color",
+      "$description": "Electric Blue — Buy button fill, primary action background — the only chromatic surface in the system, reserved exclusively for conversion"
+    },
+    "link-blue": {
+      "$value": "#0066cc",
+      "$type": "color",
+      "$description": "Link Blue — Inline text links, Learn more arrows, navigational text accents"
+    },
+    "iridescent-spectrum": {
+      "$value": "#c959dd",
+      "$type": "color",
+      "$description": "Iridescent Spectrum — Decorative imagery gradient spanning cyan, violet, magenta, amber — appears only in the product's light-ring visual, never in UI controls"
+    }
+  },
+  "font": {
+    "sf-pro-display": {
+      "$value": "SF Pro Display",
+      "$type": "fontFamily",
+      "$description": "Display and headings — weight 600 at 56–96px with aggressive negative tracking (up to -0.022em) creates headlines that read as carved geometry rather than typed copy; feature labels at 19–28px use slight positive tracking (0.004–0.012em) to breathe as small caps-like marks"
+    },
+    "sf-pro-text": {
+      "$value": "SF Pro Text",
+      "$type": "fontFamily",
+      "$description": "Body copy, navigation, supporting text — 17px at weight 400 is the default reading size; 20px for lead paragraphs; 12px for legal and footnote text; 44px reserved for large interactive text. Negative tracking tightens at all sizes (-0.022em to -0.003em)"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.apple.com/airpods-pro",
+      "siteName": "Apple (España)",
+      "extractedAt": "2026-06-03T15:31:53.040Z",
+      "variant": "compact"
+    }
+  }
+}

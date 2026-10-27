@@ -1,0 +1,89 @@
+{
+  "color": {
+    "electric-violet": {
+      "$value": "#592eff",
+      "$type": "color",
+      "$description": "Electric Violet — Primary action background, filled CTA buttons, active link borders, selected badge strokes — the single saturated chromatic that drives every conversion and active state"
+    },
+    "midnight-plum": {
+      "$value": "#21164c",
+      "$type": "color",
+      "$description": "Midnight Plum — Headline text color, display-weight typography — deep violet-ink that reads as near-black but carries a violet undertone matching the primary"
+    },
+    "obsidian-charcoal": {
+      "$value": "#353241",
+      "$type": "color",
+      "$description": "Obsidian Charcoal — Body text, paragraph copy, list items, icon strokes, default borders and dividers — the workhorse neutral that defines almost all interface line work"
+    },
+    "slate-smoke": {
+      "$value": "#5f5f69",
+      "$type": "color",
+      "$description": "Slate Smoke — Secondary body text, muted helper copy, supporting metadata"
+    },
+    "pearl-mist": {
+      "$value": "#e0e0db",
+      "$type": "color",
+      "$description": "Pearl Mist — Hairline borders on buttons, cards, and inputs; subtle structural dividers"
+    },
+    "soft-concrete": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Soft Concrete — Subtle surface fills, secondary button backgrounds, disabled or recessed controls"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page and card surfaces, button text on violet fills, nav-pill and elevated panel backgrounds"
+    },
+    "sky-tint": {
+      "$value": "#bcf2ff",
+      "$type": "color",
+      "$description": "Sky Tint — Decorative pastel accent — painterly background fills, soft highlight washes, illustrative splashes"
+    },
+    "lime-spritz": {
+      "$value": "#dfff9d",
+      "$type": "color",
+      "$description": "Lime Spritz — Decorative pastel accent — painterly background fills, squiggle underline fills, product card surface variation"
+    },
+    "cotton-candy": {
+      "$value": "#ffaae6",
+      "$type": "color",
+      "$description": "Cotton Candy — Decorative pastel accent — soft pink washes, squiggle underline highlights, atmospheric card backgrounds"
+    },
+    "neon-cyan": {
+      "$value": "#2ed6ff",
+      "$type": "color",
+      "$description": "Neon Cyan — Badge stroke and informational icon accent — vivid, used in tag outlines and feature flags"
+    },
+    "lime-pop": {
+      "$value": "#a2ea13",
+      "$type": "color",
+      "$description": "Lime Pop — Badge stroke and positive/success-leaning icon accent — vivid green used in tag outlines"
+    },
+    "magenta-pulse": {
+      "$value": "#f843c2",
+      "$type": "color",
+      "$description": "Magenta Pulse — Badge stroke and energetic icon accent — hot pink for tag outlines and feature highlights"
+    }
+  },
+  "font": {
+    "polysans": {
+      "$value": "PolySans",
+      "$type": "fontFamily",
+      "$description": "Display and headline face — custom geometric sans used exclusively for page titles, section headers, and hero copy at heavy weights. The 68px hero size with weight 700 and tight -0.02em tracking is the system's signature: it reads architectural and confident, not friendly. Substitute with General Sans Bold or Plus Jakarta Sans 700 if unavailable."
+    },
+    "plus-jakarta-sans": {
+      "$value": "Plus Jakarta Sans",
+      "$type": "fontFamily",
+      "$description": "Body, UI, and supporting type — paragraphs at 18px/1.6 weight 400, button labels and nav links at 16px weight 500, badges at 14px, medium emphasis at 500. The 32px size at tight 1.10 line-height appears in sub-section headings. Universal -0.02em tracking pulls it into the same family feel as PolySans."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.adora.so",
+      "siteName": "Adora",
+      "extractedAt": "2026-06-03T15:03:57.303Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-midnight-ink: #1a1c2c;
+  --color-warm-parchment: #fcfaf3;
+  --color-soft-linen: #ebe9e4;
+  --color-obsidian: #000000;
+  --color-blush-coral: #fd9494;
+
+  /* Typography */
+  --font-zjsansdisplay: 'ZJSansDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-featuredecklight: 'FeatureDeckLight', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

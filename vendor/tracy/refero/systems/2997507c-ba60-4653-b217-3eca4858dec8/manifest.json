@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "2997507c-ba60-4653-b217-3eca4858dec8",
+  "status": "complete",
+  "name": "FigureAI",
+  "url": "https://styles.refero.design/style/2997507c-ba60-4653-b217-3eca4858dec8",
+  "sourceWebsite": "https://www.figure.ai/figure",
+  "extractedAt": "2026-09-20T22:15:01.223Z",
+  "capturedAt": "2026-10-08T05:09:35.480027+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Robotics lab catalog. White technical documentation is interrupted by cinematic evidence of a humanoid moving through real interiors.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/26c00315-490e-482d-8690-494c538802af.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ece59651-88bb-43f6-b101-cbf07dc52a6f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/0f8c07d5-3550-4d03-b249-baac1edb68b1.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/5eaed485-f4c1-4ef2-974c-06a5cf28ad15.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4013ec3f-e325-4df2-913f-66143c1ad1d3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "52bc9a4ade027e505eba5e05f9430d9c677d4839866fb627c63625ebe014cab1",
+      "bytes": 17818
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f3f862186aa34cbc2a960fedbc8a4e3b4574e705497b59021f980c9564468459",
+      "bytes": 89665
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "7d95b3ad147945460b9efd2c811228591f2e5800679eb0f054b0f2038a9566f9",
+      "bytes": 14582
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "10e3b31478e16b00e2f068d4a70f9304dde39126f18a416977da1999c39717fc",
+      "bytes": 7873
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "88f5aac10a4cd71766cadd084e545c1fd8b873e20676d218c963093b1fd4db8c",
+      "bytes": 10744
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e164df7082d5c17a405b5040c814e1ebee92f6a13f4aff239319d4fee114b1c6",
+      "bytes": 1915
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2ab3e5c0a3b9873f023caa2551140450bb4cf8f206ba8c5c60f84d977cf6f558",
+      "bytes": 509
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "386c06ada4360baca7004eb031ab1253c843ac57527eb2596961c7f431b2af09",
+      "bytes": 526
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "80a42e53307565b05c550d07dd55d733c9f208714aabb8dc7c732c3c5633817a",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "6c2e7cf8ed5822c709782b58bd997776e3e793f3e01b5d0d4f2d8abc73f19003",
+      "bytes": 39009
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1e7d441479d124f214a0d6d13d8ff376389c293fe49ecb32fc5ecd324d33ccd2",
+      "bytes": 20219
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "da840086aa3f7b152282e237c0299de39e7bc5dde3cebeff61f88cb8731ee935",
+      "bytes": 31607
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "203cb0df080de9a71dd1cd1e0231d88b9a8cb28464a90cddb50d77fec604d9aa",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "cba974e55bcb3742a3e76d3995ddd8abfeecb9c029920e5a33859e74805aea34",
+      "bytes": 1679
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "adfd5c7807d31b124e3cc1a07cad8347024a6b867965db4aa0732231396b78d9",
+      "bytes": 2257
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "14cc44e6-41bf-4178-b834-fc61bfeed4ae",
+    "186775da-7568-49e5-8110-4fd0bbc7bbe3",
+    "1ab79e76-a07f-48fd-8e93-0a0fee12abd7",
+    "1d4cbd69-ee0f-4f13-ba7d-14d3eaed7349",
+    "2997507c-ba60-4653-b217-3eca4858dec8",
+    "2d78835a-fffe-4416-8e3d-ac37207fbd6b",
+    "30dfffb4-ff6d-4128-b3e5-39046ba258f0",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "46781641-8afd-4b01-9f67-06046b6eda71",
+    "478c8660-f1a0-4339-ac8c-4cf7ca4cf738",
+    "5c94c49f-0612-4261-842c-e1d501f3e13d",
+    "7aa1dbff-f5f1-4a64-9dba-f4caad7f1ebf",
+    "84a0fc5e-3610-4c10-a922-7848daa68b92",
+    "8f623d19-51f6-4da2-bc45-05573cc98283",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "c521be99-14af-4d57-8f8f-34c76c9ade61",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "dc541737-8bf2-4b31-b729-0352f696e82f",
+    "e31435dd-d4fc-4534-8a40-35a1e38ebae5",
+    "e81d4724-9615-4159-8678-cef35f986cab"
+  ]
+}

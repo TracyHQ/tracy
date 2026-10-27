@@ -1,0 +1,38 @@
+---
+// mika-template-version: 0.1.1
+import { actions } from "astro:actions";
+import { Link, Text } from "@cloudflare/kumo";
+import { createMika } from "@bnomei/emdash-mika/astro";
+import { api } from "../lib/mika-api";
+import MikaKumoPage from "../components/MikaKumoPage.astro";
+import WishlistList from "../components/WishlistList.astro";
+import { mikaTemplateCurrentCartItemCount } from "../lib/cart";
+import { mikaTemplateRoutes } from "../lib/routes";
+
+export const prerender = false;
+
+const Mika = createMika(Astro, { api });
+
+const removeResult = Astro.getActionResult(actions.mika.wishlist.remove);
+const moveToCartResult = Astro.getActionResult(actions.mika.wishlist.moveToCart);
+const actionError = removeResult?.error?.message ?? moveToCartResult?.error?.message;
+const wishlistResult = await Mika.wishlist.get();
+const wishlist = wishlistResult.ok ? wishlistResult.data : null;
+const error = actionError ?? (wishlistResult.ok ? null : wishlistResult.error.message);
+const cartItemCount = await mikaTemplateCurrentCartItemCount(Astro);
+---
+
+<MikaKumoPage title="Wishlist" pageSize="narrow" cartItemCount={cartItemCount} data-mika-wishlist-page>
+  <section class="mika-kumo-panel mika-kumo-stack">
+    {error && <Text as="p" variant="error" role="alert">{error}</Text>}
+    {moveToCartResult?.data && (
+      <Text as="p" variant="success" role="status">Item moved to cart.</Text>
+    )}
+    <WishlistList wishlist={wishlist} />
+    {!(wishlist?.items.length) && (
+      <div class="mika-kumo-actions">
+        <Link href={mikaTemplateRoutes.products}>Browse products</Link>
+      </div>
+    )}
+  </section>
+</MikaKumoPage>

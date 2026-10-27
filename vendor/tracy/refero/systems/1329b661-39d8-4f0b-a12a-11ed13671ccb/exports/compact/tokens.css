@@ -1,0 +1,30 @@
+:root {
+  /* Colors */
+  --color-lime-spark: #bfff5a;
+  --color-cobalt-signal: #1a67fd;
+  --color-forest-depth: #0b3d28;
+  --color-paper-white: #fcfcfd;
+  --color-midnight-ink: #1d2130;
+  --color-carbon: #151720;
+  --color-obsidian: #0a0d16;
+  --color-mist-gray: #ebeef7;
+  --color-slate-edge: #d5d9e8;
+  --color-silver-wash: #d6d6d7;
+  --color-pewter: #6b6d72;
+  --color-graphite: #474950;
+  --color-cyan-beam: #46d8ff;
+  --gradient-cyan-beam: radial-gradient(100% 100% at 50% 0px, rgb(122, 227, 255) 0%, rgb(70, 216, 255) 100%);
+  --color-mint-pulse: #19f79a;
+  --gradient-mint-pulse: radial-gradient(100% 100% at 50% 0px, rgb(93, 247, 182) 0%, rgb(25, 247, 154) 100%);
+  --color-citron-wave: #e5ed38;
+  --gradient-citron-wave: radial-gradient(100% 100% at 50% 0px, rgb(236, 241, 116) 0%, rgb(229, 237, 56) 100%);
+  --color-orchid-glaze: #ff9dec;
+  --gradient-orchid-glaze: radial-gradient(100% 100% at 50% 0px, rgb(255, 181, 241) 0%, rgb(255, 157, 236) 100%);
+  --color-amber-glow: #ffc650;
+  --gradient-amber-glow: radial-gradient(100% 100% at 50% 0px, rgb(255, 216, 136) 0%, rgb(255, 198, 80) 100%);
+  --color-mint-tint: #d8fbed;
+
+  /* Typography — Font Families */
+  --font-ibm-plex-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ibm-plex-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

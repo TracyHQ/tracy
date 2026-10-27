@@ -1,0 +1,57 @@
+{
+  "pages": [
+    {
+      "id": "home-3",
+      "label": "Home",
+      "home": true
+    },
+    {
+      "id": "category/category-style-1",
+      "label": "Category Style 1"
+    },
+    {
+      "id": "category/category-style-2",
+      "label": "Category Style 2"
+    },
+    {
+      "id": "category/category-style-3",
+      "label": "Category Style 3"
+    },
+    {
+      "id": "category/category-style-4",
+      "label": "Category Style 4"
+    },
+    {
+      "id": "detail/layout-1",
+      "label": "Detail › Layout 1"
+    },
+    {
+      "id": "detail/layout-2",
+      "label": "Detail › Layout 2"
+    },
+    {
+      "id": "detail/layout-3",
+      "label": "Detail › Layout 3"
+    },
+    {
+      "id": "detail/video",
+      "label": "Detail › Video"
+    },
+    {
+      "id": "detail/gallery",
+      "label": "Detail › Gallery"
+    },
+    {
+      "id": "pages/j-content/category-blog",
+      "label": "Category Blog"
+    },
+    {
+      "id": "pages/j-content/featured-articles",
+      "label": "Featured Articles"
+    },
+    {
+      "id": "contact",
+      "label": "Contact"
+    }
+  ]
+}

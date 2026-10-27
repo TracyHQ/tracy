@@ -1,0 +1,250 @@
+{
+  "dos": [
+    "Use Raveo Variable at weight 1000 for all headings and display text — never reduce to 700 or below; the heaviness is the signature",
+    "Set letter-spacing to -0.04em on 64px display text and -0.02em on 22-32px headings; let it breathe to 0 at 12px micro-labels",
+    "Maintain 0% colorfulness: every UI color must be achromatic. Never introduce a brand hue, accent, or state color",
+    "Use the 116px section gap between major content blocks; this generosity is what makes the page feel like a gallery, not a feed",
+    "Set pill buttons to 40-50px border-radius so they read as fully rounded, not as rounded rectangles",
+    "Place carousel pagination dots right-aligned directly under the display headline, spaced 10px apart",
+    "Activate the font features 'blwf', 'cv03', 'cv04', 'cv09', 'cv11' on every Raveo Variable instance — they are part of the typographic identity"
+  ],
+  "donts": [
+    "Never introduce color — no blues, no greens, no warm tones. The only color allowed is grayscale and the hues within editorial imagery",
+    "Never set Raveo Variable below weight 1000; lighter weights break the heavy typographic voice",
+    "Never use a standard sans-serif for display text; Raveo's compressed, heavy form factor is the entire brand",
+    "Never add drop shadows, glows, or gradients — the system is flat by intent; depth comes from grayscale layering only",
+    "Never center body text — left-align everything except display headlines; the asymmetric grid is the layout voice",
+    "Never pad buttons less than 40px horizontally; pill shapes need space to read as pills, not chips",
+    "Never use icons in the nav row; nav items are heavy type only. The icon language is reserved for buttons and cursors"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "role": "Page background, card surfaces, primary canvas — the default stage for all content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Primary text, pill button fills, display headlines on dark, thin borders for reverse-contrast components",
+      "group": "neutral"
+    },
+    {
+      "hex": "#111111",
+      "name": "Carbon",
+      "role": "Input fields, secondary surface elevation, subtle dark borders — one shade above Obsidian for depth without contrast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1c1c1c",
+      "name": "Graphite",
+      "role": "Elevated surface layer above the canvas — for overlay cards, tooltips, and floating panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#454545",
+      "name": "Smoke",
+      "role": "Headline accent borders, secondary text, low-emphasis dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#575757",
+      "name": "Ash",
+      "role": "Body-level borders, inactive dividers, low-contrast separators between sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#050505",
+      "name": "Near Black",
+      "role": "Subtle hairlines and body borders that are nearly invisible against Obsidian",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed dark page with max-width 1200px content container. Hero is a single display headline right-aligned beside a left-aligned image gallery, with carousel controls beneath the headline. Sections are separated by 116px vertical gaps with no dividers or alternating bands — the rhythm comes from spacing alone. The footer is a two-column block: left column is contact text, right column is stacked social links in heavy type, both on the same Obsidian surface. Navigation is a sticky top bar with brand left and nav right. Content sections use asymmetric compositions (text-right/image-left, or full-bleed image with overlay type) rather than centered stacks. The 'Next — Section' transition pattern is a recurring device: a large display label in mixed gray and white at the leading edge of the next section.",
+  "imagery": "Imagery is editorial and high-contrast: black-and-white photography of working environments (desks, monitors, rooms) anchors content sections, while colorful 3D cursor renderings and graphic illustrations punctuate the hero — these are the only chromatic elements on the page, and they function as artwork within an otherwise monochrome frame. Images float on Obsidian with no borders or shadows; they are edge-to-edge or generous-margined, never thumbnail-sized. No icons in the UI itself — interaction symbols are reserved for buttons. Icon style in any UI context: none; the system relies on type and arrows. Photography treatment is documentary and candid (B&W, no color grading, no vignettes). The visual density is low: a few large images per page, each given room to breathe.",
+  "similar": [
+    {
+      "why": "Same ultra-minimal dark canvas with no chrome, left-aligned typographic navigation, and editorial image blocks floating on a near-black surface",
+      "business": "Are.na"
+    },
+    {
+      "why": "Personal portfolio with monochrome palette, custom variable display type, and large negative-tracked headlines as the primary brand element",
+      "business": "Rauno Freiberg"
+    },
+    {
+      "why": "Pure black background, system sans-serif body, and one display weight carrying all hierarchy — minimal UI lets the type do the work",
+      "business": "Vercel Design"
+    },
+    {
+      "why": "Treats the personal site as a gallery wall — generous spacing, B&W editorial photography, and no decorative UI elements",
+      "business": "Minimal Gallery (independent designers)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "4px",
+      "links": "8px",
+      "pills": "50px",
+      "buttons": "40px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "116px",
+    "cardPadding": "40px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "level": 0,
+      "purpose": "Page canvas — the base floor for all content"
+    },
+    {
+      "hex": "#111111",
+      "name": "Carbon",
+      "level": 1,
+      "purpose": "Input fields and subtle elevation — one shade above the canvas for form surfaces"
+    },
+    {
+      "hex": "#1c1c1c",
+      "name": "Graphite",
+      "level": 2,
+      "purpose": "Floating panels, overlay cards, tooltips — two shades above the canvas"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 3,
+      "purpose": "Inverted surface for filled pill buttons and the rare reverse-contrast element"
+    }
+  ],
+  "northStar": "monochrome typographic gallery. Every pixel is either ink-black, paper-white, or a gray between — hierarchy lives in the weight of Raveo Variable, never in color.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body",
+      "size": 22,
+      "lineHeight": 1.18,
+      "letterSpacing": -0.44
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.06
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1,
+      "letterSpacing": -2.56
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill CTA Button",
+      "role": "Primary action trigger — the only filled button in the system",
+      "description": "40px border-radius (full pill), 40px horizontal padding, ~28px vertical padding. White background (#ffffff) with a black arrow icon. No text label — the arrow IS the affordance. Hairline 1px border optional. Used for carousel next, send, go."
+    },
+    {
+      "name": "Outline Pill Button",
+      "role": "Secondary action with ghost treatment",
+      "description": "40-50px border-radius, white 1px border on Obsidian background, transparent fill. Arrow or dot inside. Inverts the primary pill: same shape, no fill."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Horizontal row, 8px element gap, 12px vertical padding. Brand block (name + local time) left, nav links right. Nav items in Raveo Variable at 12px weight 1000, tracking normal. Active item ('NEW') uses Paper White; inactive items use Ash (#575757) with 1px borders forming underline-style separators."
+    },
+    {
+      "name": "Display Headline",
+      "role": "Section and page titles",
+      "description": "Raveo Variable at 64px, weight 1000, line-height 1.0, letter-spacing -0.04em. Always Paper White on Obsidian. Two-line max. This is the loudest element on every page — it carries the brand voice alone."
+    },
+    {
+      "name": "Carousel Pagination Dots",
+      "role": "Indicates position within a horizontal scroll gallery",
+      "description": "Sequence of short horizontal lines (16-20px wide, 2-3px tall), Ash (#575757) inactive, Paper White active. Right-aligned under display headline. Spacing 10px between dots."
+    },
+    {
+      "name": "Section Transition Label",
+      "role": "Bridge between content blocks ('Next — About')",
+      "description": "Raveo Variable at 64px, weight 1000. Word 'Next' in Ash (#575757) at reduced opacity, dash separator, section name in Paper White. Sits at the leading edge of a full-bleed image or new section."
+    },
+    {
+      "name": "Footer Link Block",
+      "role": "Social and contact links in the page footer",
+      "description": "Two-column layout. Left column: intro text + email address in Raveo at 14-22px, weight 1000, Paper White. Right column: stacked social links (Twitter, Instagram, LinkedIn) at 32px Raveo weight 1000, no underlines, no bullets — just stacked heavy type."
+    },
+    {
+      "name": "Brand Header",
+      "role": "Identity lockup in the top-left corner",
+      "description": "Two lines: 'Claudio Guglieri' in Raveo Variable 14px weight 1000 Paper White, with 'Local time — HH:MM City' beneath in system sans-serif 12px weight 400 Ash. No logo mark — the name IS the mark."
+    },
+    {
+      "name": "Bordered Link",
+      "role": "Inline text links with border underlines",
+      "description": "8px border-radius on hover or focus. Text in Paper White, 1px Ash border as underline. 8px padding on tap target."
+    },
+    {
+      "name": "Image Gallery Card",
+      "role": "Container for editorial imagery in carousel or grid",
+      "description": "No card surface — images float on Obsidian with 40px between cards. Optional 4px radius on individual images. Images are the content; no shadow, no border, no background plate."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "14px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Display and heading font at its heaviest weight (1000). The variable axis is not used — the system commits to maximum weight to create typographic mass without chromatic weight. Sizes scale from 64px display down to 12px micro-labels (e.g., nav items 'NEW', 'Feed'). Letter-spacing tightens aggressively at large sizes (-0.04em at 64px, -0.02em at 22px) to lock the glyphs into a single visual block. Font features 'blwf', 'cv03', 'cv04', 'cv09', 'cv11' activate specific stylistic alternates — a signature typographic fingerprint. No web-safe substitute captures this; 'Inter' at weight 900 is the closest match, but weight and openness will differ.",
+      "sizes": "12px, 14px, 22px, 32px, 64px",
+      "family": "Raveo Variable Variable",
+      "weight": "1000",
+      "lineHeight": "1.00, 1.06, 1.18, 1.20, 1.60",
+      "substitute": "Inter (weight 900) or Manrope (weight 800)",
+      "letterSpacing": "-0.04em at 64px, -0.02em at 22px, normal at 12px",
+      "fontFeatureSettings": "'blwf', 'cv03', 'cv04', 'cv09', 'cv11'"
+    },
+    {
+      "role": "Secondary utility text — nav links, metadata, timestamps, captions. Weight 400 only; no bold variants. The system font acts as a quiet complement to Raveo's display voice.",
+      "sizes": "12px",
+      "family": "System Sans-Serif",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "system-ui, -apple-system, 'Segoe UI', Roboto"
+    },
+    {
+      "role": "One-off paragraph text at 22px — lighter weight than Raveo at the same size creates a body/heading tension within the same line height",
+      "sizes": "22px",
+      "family": "Inter Display",
+      "weight": "400",
+      "lineHeight": "1.18",
+      "substitute": "Inter"
+    }
+  ],
+  "description": "Guglieri is a monochrome typographic gallery: pure obsidian canvas, one voice of custom variable display type at its heaviest weight, and zero chromatic noise. The entire system is achromatic — every interface element, border, and label lives on a grayscale between true black and pure white, with the only color in the experience coming from editorial imagery and artwork. Hierarchy is built through weight, size, and negative letter-spacing rather than color, with the custom Raveo Variable font pushing to weight 1000 to create visual mass without warmth. Components are stripped to their skeletons: pill buttons with hairline borders, generous section spacing, and text-driven navigation. The mood is a designer-critic's reading room — confident, editorial, anti-decorative.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- background: #000000\n- surface: #111111\n- elevated surface: #1c1c1c\n- text: #ffffff\n- border: #575757\n- accent: none\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n\n1. **Display headline block**: 64px Raveo Variable weight 1000, color #ffffff, line-height 1.0, letter-spacing -2.56px. Right-aligned within a 1200px max-width container. Sits on #000000 canvas with 116px space above and below.\n\n2. **Pill navigation button**: 12px Raveo Variable weight 1000, text #ffffff (active) or #575757 (inactive). No background, no border. 8px gap between items, 12px vertical padding. Horizontal row, left-aligned brand / right-aligned nav.\n\n3. **Footer social link stack**: 32px Raveo Variable weight 1000, color #ffffff, line-height 1.06, letter-spacing -0.64px. Three items stacked vertically with 0px gap between them. No bullets, no underlines, no icons. Left-aligned in a two-column footer layout.\n\n4. **Section transition label**: 64px Raveo Variable weight 1000. First word in #575757, em-dash, second word in #ffffff. Left-aligned, 1200px max-width, sitting at the top edge of a full-bleed B&W image section.\n\n5. **Carousel pagination**: Five short horizontal bars (18px wide, 2px tall), spaced 10px apart, right-aligned. Bars 1-4 in #575757, bar 5 (current) in #ffffff. Sits 24px below the display headline."
+    }
+  ],
+  "elevationPhilosophy": "The system is intentionally flat. No drop shadows, no glows, no gradients. Depth is implied by grayscale layering (Obsidian canvas → Carbon form surface → Graphite overlay) and by spacing alone. This flatness is the signature: every pixel of visual weight goes into typography, not into chrome."
+}

@@ -1,0 +1,25 @@
+@theme {
+  /* Colors */
+  --color-spring-pulse: #a7f175;
+  --color-void: #000000;
+  --color-obsidian: #211d1d;
+  --color-carbon: #0f1015;
+  --color-bone: #ffffff;
+  --color-ash: #373434;
+  --color-smoke: #707477;
+  --color-fog: #c4c4c4;
+  --color-taupe: #b0a79e;
+  --color-sand: #e0dcd6;
+  --color-slate: #505050;
+  --color-iris: #9e9eff;
+  --color-amethyst: #a370fc;
+  --color-cobalt: #3860be;
+  --color-tide: #83d9e1;
+  --color-saffron: #fdbd68;
+
+  /* Typography */
+  --font-times-system: 'Times (system)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-affinity-serif-variable: 'Affinity Serif Variable', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-canva-sans: 'Canva Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

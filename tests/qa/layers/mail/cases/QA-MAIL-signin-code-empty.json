@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-signin-code-empty",
+  "itemIds": [
+    "direct:signin-code:en",
+    "direct:signin-code:vi",
+    "direct:signin-code:de",
+    "direct:signin-code:it",
+    "direct:signin-code:fr",
+    "direct:signin-code:nl",
+    "direct:signin-code:zh",
+    "direct:signin-code:es"
+  ],
+  "requirement": "the sign-in code letter with names, sites or a website missing steps down to a plainer sentence",
+  "oracle": {
+    "source": "emails.js docblocks (steps down through what is known)",
+    "ref": "emails.js docblocks (steps down through what is known)",
+    "invariant": "no hole, no \"undefined\""
+  },
+  "edgeTags": ["empty"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.empty:signin-code"],
+  "redProof": null,
+  "legacyIds": []
+}

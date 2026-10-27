@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1100-p4-joomla-untrimmed-links-off",
+  "kind": "fix",
+  "title": "Joomla: a link into a page the demo trim hid that the customer did not tick is taken off through empty_links, never sent to Contact (#1013)",
+  "pr": 1100,
+  "area": "brief/joomla",
+  "cms": ["jo"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-seeder/test/plan-dead-links.test.mjs apps/tracy-web/test/brief-joomla.test.mjs",
+    "S2: Record the exit code, the '# pass', '# fail', '# skipped' lines and the result of the tests named below."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# skipped 0'.",
+    "'a button to a page the demo trim hid is never sent to Contact: it keeps its link, and is taken off where its layout was reviewed' is ok: with trimmed:true no change names module-201.6/.8/.10, no slot is given leadsTo, nothing is index.php?Itemid=227, plan.emptyLinks is ['module-201.6', 'module-201.10'] (the two whose slots inspect marks emptyLink) and absent for a reading with no marks.",
+    "'a page hidden after the trim is named to the same rule, and a link into it is dead the same way' is ok: deadLinks names links into the trim map's rows and into the ids in `also`, only `also` with no trim map or with trim:false.",
+    "'a button into a page the demo trim hid that the customer did not tick is taken off after Apply, never sent to Contact' is ok: on tracy-business/j6 1.2.0 with Projects unticked, and with no Pages answer, module-843.5 and module-848.5 end taken off ('' via empty_links), no contract write changes them, no model slot carries leadsTo; with a trim that did not run, neither is touched.",
+    "'a link whose layout the site has not reviewed is left as it is and said, never sent to the contact page' is ok: linksLeft 6 (two into unticked pages, four into the trimmed Projects and News), one note '6 link(s) to pages taken off cannot be taken off …', none of the four changed, and only one inspect."
+  ],
+  "selectors": {
+    "planner": "deadLinks(state, dataDir, {also, back, trim}) and planJoomlaContract → emptyLinks in packages/cms/tracy-seeder/src/plan-joomla-contract.mjs",
+    "apply": "takeLinksOff in apps/tracy-web/src/sites/brief-engines/joomla.js (runs when the tidy-up took pages off or trim.status is 'hidden')"
+  },
+  "evidence": "Product decision 10/10/2026 on the P4 open item (option a): until then the planner sent every link into a trim-hidden page nobody ticked to the contact page (traced on tracy-business/j6 1.2.0: module-674.7, module-816.12, module-843.5, module-848.5 → index.php?Itemid=604), against the #1013 rule that links are never moved to Contact.",
+  "fence": "The planner never moves a dead link and returns only the emptyLink-marked ones; Apply takes off links into trim-hidden pages nobody ticked once the trim ran. Not covered: the trim map itself (claude-cowork repo; pages outside the Pages list stay hidden — the open #1013 note).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-seeder/test/plan-dead-links.test.mjs",
+      "apps/tracy-web/test/brief-joomla.test.mjs"
+    ],
+    "tests": [
+      "a button to a page the demo trim hid is never sent to Contact: it keeps its link, and is taken off where its layout was reviewed",
+      "a page hidden after the trim is named to the same rule, and a link into it is dead the same way",
+      "a button into a page the demo trim hid that the customer did not tick is taken off after Apply, never sent to Contact",
+      "a link whose layout the site has not reviewed is left as it is and said, never sent to the contact page"
+    ]
+  }
+}

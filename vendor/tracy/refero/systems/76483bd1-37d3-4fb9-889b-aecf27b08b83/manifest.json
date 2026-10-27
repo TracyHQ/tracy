@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "76483bd1-37d3-4fb9-889b-aecf27b08b83",
+  "status": "complete",
+  "name": "Woven",
+  "url": "https://styles.refero.design/style/76483bd1-37d3-4fb9-889b-aecf27b08b83",
+  "sourceWebsite": "https://wovenwhisky.com",
+  "extractedAt": "2026-06-03T20:46:50.721Z",
+  "capturedAt": "2026-10-08T05:13:33.695744+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Ink on cream parchment. A distiller's editorial spread where warm cream canvases, a single dark ink color, and wide-tracked uppercase type create the only visual structure; product photography provides all the color.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/aa4d7328-959d-4387-8f54-55a929bd5559.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/6014b4fd-8c77-4068-ba0c-6fb40983bec9.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/2bb781a2-f994-45d6-956a-cde12150d7fd.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/2d8d2fb8-a88e-4352-87be-02dc6b49ba23.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e7f788ea-a63a-4484-b479-6aeccadd15f9.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c3898e9ac6045b2d0114942a6b69017d81210ee01f434b3f2fb6105742130866",
+      "bytes": 21272
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "27aaea60b0f1e0ffc94991fa62452263aed9b35b87d145c6dc83e15a1f67f014",
+      "bytes": 25361
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "53300aeff75fd1f463040a803e0d213a77e4da389b0d434871ad6b4dee7ac842",
+      "bytes": 17467
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d526bcdf565e8615cfeb37f103ed2d967945d58b8fc33f6733195d5fa7a4ea2c",
+      "bytes": 13867
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "2a63b6d4ff39adb33332ee2ad82e905173c7c918189115d2d823a4a27a115d95",
+      "bytes": 13435
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "89ad9c1dfc6234dc5ea86d5651893b7b1058854f7f4c32b9d063f7ff70723906",
+      "bytes": 2658
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "8d72a9ed6d1cfb6f33677983ffefe4ce677ffe46ef8e158bc60474bba565a528",
+      "bytes": 697
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "74d92d76a1fe59e9463606130ae1a3421478fd86e9ca4dcb2688134261fa27f4",
+      "bytes": 714
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "beb4e9318baefe1ba86b98d5830ff65dee7da572e3aa0eb823cf273583066484",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a09a0a66907296a2da1321ac61a52b4e6bc546429e3afd17ac4e6313e7120b18",
+      "bytes": 43136
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e192738672558b2d11b766660ab15d140fd266a5aaed9270edb3f7220565f064",
+      "bytes": 22603
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "92fe17ca7d2174bc5b1a4d0e8525844b6292e576da799bcb5df2a379476a838d",
+      "bytes": 45899
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6e92e8757ac4a8b1e6a5cbfd57782fcf65ad95d030362544a0f7511948d8e607",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e2d732ed4141dd182cfbde84a19cb0f397c322b47bcf67f42e8f3d37a092e089",
+      "bytes": 1585
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "705a938b0e4fa9bedd98c0fe148fa2e7fbdd12ea28dc447cedcabc6639d4eedd",
+      "bytes": 2109
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "1d51a2db-18fc-4de3-bff7-d1e73ace8b6e",
+    "1f9089e1-4170-482f-b988-afe1124a70a9",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "34534515-c044-4d37-940d-44352d62ee44",
+    "3b080dc3-1992-43fe-91d6-2a721f934435",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "76483bd1-37d3-4fb9-889b-aecf27b08b83",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268",
+    "f3f7122e-d8d3-48f7-9d9d-df6e71545010"
+  ]
+}

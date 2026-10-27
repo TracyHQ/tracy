@@ -1,0 +1,99 @@
+{
+  "color": {
+    "midnight-iris": {
+      "$value": "#131032",
+      "$type": "color",
+      "$description": "Midnight Iris — Primary text, headings, and dark section backgrounds — the deepest near-black with a violet undertone carries the same identity across both light copy and immersive dark bands"
+    },
+    "iris-spark": {
+      "$value": "#614efa",
+      "$type": "color",
+      "$description": "Iris Spark — Filled buttons, link emphasis, active states, gradient stops — the only vivid saturated color in the palette, used as a small functional spark against the cream canvas"
+    },
+    "violet-mist": {
+      "$value": "#dfdcfe",
+      "$type": "color",
+      "$description": "Violet Mist — Soft accent washes, tag backgrounds, decorative highlights — a near-white violet tint that echoes Iris Spark at very low intensity"
+    },
+    "cyan-glow": {
+      "$value": "#98c8ff",
+      "$type": "color",
+      "$description": "Cyan Glow — Supporting palette color for small decorative accents when the core palette needs contrast."
+    },
+    "mint-whisper": {
+      "$value": "#eafdfa",
+      "$type": "color",
+      "$description": "Mint Whisper — Pill badge and announcement tag backgrounds — a barely-there cool tint to differentiate informational chips from the warm cream canvas"
+    },
+    "iris-halo": {
+      "$value": "#8374fb",
+      "$type": "color",
+      "$description": "Iris Halo — Soft highlight overlays and secondary gradient midtones — a lighter violet used in multi-stop gradients"
+    },
+    "fog": {
+      "$value": "#918f9f",
+      "$type": "color",
+      "$description": "Fog — Muted body copy, helper text, secondary labels — the primary low-emphasis text color against cream and white surfaces"
+    },
+    "shadow": {
+      "$value": "#5b5971",
+      "$type": "color",
+      "$description": "Shadow — Stronger secondary text, metadata — deeper than Fog for labels that need more presence without reaching Midnight Iris"
+    },
+    "ash": {
+      "$value": "#a1a1aa",
+      "$type": "color",
+      "$description": "Ash — Disabled text, placeholder content, very low-emphasis UI elements"
+    },
+    "slate": {
+      "$value": "#1a1a22",
+      "$type": "color",
+      "$description": "Slate — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "charcoal": {
+      "$value": "#24232d",
+      "$type": "color",
+      "$description": "Charcoal — Secondary dark text, very dark UI elements"
+    },
+    "hairline": {
+      "$value": "#e7e7ea",
+      "$type": "color",
+      "$description": "Hairline — Borders, dividers, card outlines — a cool light gray that separates surfaces on the warm cream canvas"
+    },
+    "silver": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Silver — Shadows, very subtle borders, disabled surface tones"
+    },
+    "snow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Snow — Card surfaces, button text, dark-section text — pure white for maximum contrast on dark backgrounds"
+    },
+    "cloud": {
+      "$value": "#f7f7f8",
+      "$type": "color",
+      "$description": "Cloud — Secondary surface, footer background — a cool off-white that sits one step below Snow"
+    },
+    "warm-paper": {
+      "$value": "#f2ece2",
+      "$type": "color",
+      "$description": "Warm Paper — Dominant page canvas — a warm beige that replaces the typical cold white SaaS background, giving the entire site a tactile, editorial feel"
+    }
+  },
+  "font": {
+    "plus-jakarta-sans": {
+      "$value": "Plus Jakarta Sans",
+      "$type": "fontFamily",
+      "$description": "Single-family geometric humanist sans used for every text role from 10px badges to 58px display headlines"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://krisp.ai",
+      "siteName": "Krisp",
+      "extractedAt": "2026-06-03T21:11:56.326Z",
+      "variant": "compact"
+    }
+  }
+}

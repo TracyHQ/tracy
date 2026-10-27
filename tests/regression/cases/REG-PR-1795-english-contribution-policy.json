@@ -1,0 +1,23 @@
+{
+  "id": "REG-PR-1795-english-contribution-policy",
+  "kind": "fix",
+  "title": "English contribution policy checks every new commit using trusted policy",
+  "pr": 1795,
+  "area": "ci/english-contributions",
+  "cms": ["any"],
+  "needs": ["node", "git", "dependencies"],
+  "flaky_model": false,
+  "steps": [
+    "Run node --test scripts/test/check-english-commits.test.mjs scripts/test/check-language-policy.test.mjs scripts/test/ci-public-repo.test.mjs from the repository root.",
+    "Inspect the TAP totals and exit status; the fixtures create isolated Git repositories and do not need a running application."
+  ],
+  "expect": [
+    "Exit status is 0, all tests pass and none are skipped.",
+    "Foreign text in new docs, tests, markup, commit messages and PR metadata is rejected; decomposed Unicode and recognizable ASCII phrases do not bypass the check.",
+    "Intermediate reverted changes and merge messages are checked; editing the candidate policy does not authorize an exception.",
+    "English changes and narrow reviewed translation data pass; invalid UTF-8, missing history and changed opaque objects fail closed.",
+    "The workflow uses read-only permissions, a GitHub-hosted runner and base validator code, with no contributor code execution or private submodule checkout."
+  ],
+  "selectors": {},
+  "fence": "Trusted-base language-policy PR check plus required CODEOWNERS review and branch protection after publication."
+}

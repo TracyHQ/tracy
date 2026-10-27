@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-ember-orange: #de4c00;
+  --color-soft-ember: #efa680;
+  --color-bone-white: #fffefb;
+  --color-linen: #f3f2ee;
+  --color-hairline-gray: #e5e7eb;
+  --color-stone-border: #c1bdba;
+  --color-warm-taupe: #a49784;
+  --color-graphite: #333833;
+  --color-warm-graphite: #271503;
+  --color-ink: #000000;
+  --color-deep-forest: #040c06;
+
+  /* Typography — Font Families */
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-tobias: 'Tobias', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-atkinson-hyperlegible-mono: 'Atkinson Hyperlegible Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-work-sans: 'Work Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

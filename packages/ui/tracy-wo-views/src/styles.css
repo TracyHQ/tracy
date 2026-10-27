@@ -1,0 +1,752 @@
+/*
+ * @tracy/wo-views — plain CSS, every class `.tracy-wo-*`, Tracy tokens only (tokens.css), no reset.
+ * The consumer puts the views inside an element with class `tracy-wo` (the container queried below)
+ * and may set `data-view="table|grid|map"` on it so the sort select and Columns button follow the view.
+ * Focus is a 1px stroke that changes colour, never a halo (DESIGN.md §5).
+ * The UA margins of p/ul/dl/h2/h3 are the consumer's reset to zero, in a layer BELOW its utilities:
+ * imported above `utilities` (as the plugin does), a reset here would beat every `m-*` utility.
+ */
+
+.tracy-wo {
+  container-type: inline-size;
+  color: var(--foreground);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* ---- shared bits ---- */
+.tracy-wo-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.tracy-wo-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.tracy-wo-muted {
+  color: var(--muted-foreground);
+}
+.tracy-wo-small {
+  font-size: 12px;
+  line-height: 17px;
+}
+.tracy-wo-strong {
+  font-weight: 600;
+}
+.tracy-wo-fit {
+  display: inline-flex;
+  width: fit-content;
+}
+.tracy-wo-contents {
+  display: contents;
+}
+.tracy-wo-glyph {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+.tracy-wo-glyph-sm {
+  width: 12px;
+  height: 12px;
+  flex: none;
+}
+.tracy-wo-empty {
+  padding: 24px 0;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+.tracy-wo-link,
+.tracy-wo-host,
+.tracy-wo-icon-link,
+.tracy-wo-place-name,
+.tracy-wo-contact-line > a,
+.tracy-wo-chat {
+  color: inherit;
+  text-decoration: none;
+  border-radius: 3px;
+  outline: none;
+}
+.tracy-wo-link:hover,
+.tracy-wo-host:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.tracy-wo-link:focus-visible,
+.tracy-wo-host:focus-visible,
+.tracy-wo-icon-link:focus-visible,
+.tracy-wo-place-name:focus-visible,
+.tracy-wo-contact-line > a:focus-visible,
+.tracy-wo-chat:focus-visible,
+.tracy-wo-score:focus-visible {
+  outline: 1px solid var(--ring);
+  outline-offset: 1px;
+}
+.tracy-wo-host {
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--muted-foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- results header ---- */
+.tracy-wo-res-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.tracy-wo-res-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.tracy-wo-count b {
+  font-weight: 600;
+}
+.tracy-wo-note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--muted-foreground);
+}
+.tracy-wo-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tracy-wo-sort-select {
+  display: none;
+}
+.tracy-wo[data-view='grid'] .tracy-wo-sort-select,
+.tracy-wo[data-view='map'] .tracy-wo-sort-select {
+  display: block;
+}
+.tracy-wo[data-view='grid'] .tracy-wo-columns,
+.tracy-wo[data-view='map'] .tracy-wo-columns {
+  display: none;
+}
+
+/* ---- view switch: only the pressed view is filled, like a selected tab ---- */
+.tracy-wo-view-switch [data-slot='toggle-group-item'] {
+  background-color: transparent;
+  color: var(--muted-foreground);
+}
+.tracy-wo-view-switch [data-slot='toggle-group-item']:hover {
+  color: var(--foreground);
+}
+.tracy-wo-view-switch [data-slot='toggle-group-item'][data-pressed] {
+  background-color: var(--muted);
+  color: var(--foreground);
+}
+
+/* ---- kind tabs: one scrolling row of pills ---- */
+.tracy-wo-kind-tabs {
+  min-width: 0;
+}
+.tracy-wo-kind-list {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  justify-content: flex-start;
+}
+.tracy-wo-kind-list > * {
+  flex: 0 0 auto;
+}
+.tracy-wo-tab-count {
+  color: var(--muted-foreground);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Columns menu (portaled, so not under .tracy-wo) ---- */
+.tracy-wo-columns-menu {
+  min-width: 220px;
+}
+.tracy-wo-menu-note {
+  margin: 0;
+  padding: 4px 6px 2px;
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--muted-foreground);
+}
+
+/* ---- score + its tooltip (portaled) ---- */
+.tracy-wo-score {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: default;
+  border-radius: 6px;
+  outline: none;
+}
+.tracy-wo-grade {
+  min-width: 22px;
+  padding-inline: 6px;
+}
+.tracy-wo-why {
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+.tracy-wo-tip {
+  max-width: 20rem;
+  text-align: left;
+}
+.tracy-wo-tip-list {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 16px;
+  row-gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tracy-wo-tip-list li {
+  display: contents;
+}
+.tracy-wo-tip-list li span:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.tracy-wo-tip-total {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid color-mix(in oklab, var(--background) 25%, transparent);
+}
+.tracy-wo-tip-note {
+  margin: 4px 0 0;
+  opacity: 0.8;
+}
+
+/* ---- cells ---- */
+.tracy-wo-web-score {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.tracy-wo-web-score[data-low='true'] {
+  color: var(--destructive);
+}
+.tracy-wo-cms {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  color: var(--foreground);
+  vertical-align: -2px;
+}
+.tracy-wo-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.tracy-wo-skel-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 2px;
+}
+.tracy-wo-skel {
+  height: 10px;
+}
+.tracy-wo-skel-long {
+  width: 120px;
+}
+.tracy-wo-skel-short {
+  width: 84px;
+}
+.tracy-wo-social {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.tracy-wo-icon-link {
+  display: inline-grid;
+  place-items: center;
+}
+.tracy-wo-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  max-width: 200px;
+}
+.tracy-wo-contact-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.tracy-wo-contact-line > a:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.tracy-wo-contact-line > a:first-child span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tracy-wo-contact-line > a:first-child:hover span {
+  text-decoration: underline;
+}
+.tracy-wo-contact-line > a:first-child svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--muted-foreground);
+}
+.tracy-wo-chat {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+  min-width: 18px;
+  padding: 0 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 4px);
+  flex: none;
+}
+.tracy-wo-chat:hover {
+  background: var(--muted);
+}
+.tracy-wo-chat-name {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.tracy-wo-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.tracy-wo-type svg {
+  color: var(--muted-foreground);
+}
+.tracy-wo-place-name {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.tracy-wo-place-name:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.tracy-wo-place-name svg {
+  margin-left: 4px;
+  vertical-align: -1px;
+  color: var(--muted-foreground);
+}
+.tracy-wo-open {
+  color: var(--success);
+}
+.tracy-wo-closed {
+  color: var(--muted-foreground);
+}
+
+/* ---- table: wider than the frame scrolls sideways; checkbox and Place stay put ---- */
+.tracy-wo-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  overflow: hidden;
+}
+.tracy-wo-table-wrap [data-slot='table-container'] {
+  overscroll-behavior-x: contain;
+}
+.tracy-wo-table {
+  font-size: 13px;
+}
+.tracy-wo-table td {
+  padding: 10px 8px;
+  vertical-align: top;
+  white-space: normal;
+}
+.tracy-wo-table tbody tr {
+  cursor: pointer;
+}
+.tracy-wo-table th.tracy-wo-sortable {
+  padding: 0 2px;
+}
+.tracy-wo-table th.tracy-wo-sortable button {
+  font-size: 13px;
+  padding-inline: 6px;
+}
+.tracy-wo-sort-icon {
+  color: var(--muted-foreground);
+}
+.tracy-wo-table th button[data-active='true'] .tracy-wo-sort-icon {
+  color: var(--foreground);
+}
+.tracy-wo-table .tracy-wo-c-check {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: 36px;
+  min-width: 36px;
+  padding-left: 12px;
+  padding-right: 0;
+  background: var(--card);
+}
+.tracy-wo-table td.tracy-wo-c-check {
+  padding-top: 12px;
+}
+.tracy-wo-table .tracy-wo-c-place {
+  position: sticky;
+  left: 36px;
+  z-index: 1;
+  min-width: 190px;
+  background: var(--card);
+  border-right: 1px solid var(--border);
+}
+.tracy-wo-table tbody tr:hover > td.tracy-wo-c-check,
+.tracy-wo-table tbody tr:hover > td.tracy-wo-c-place {
+  background: color-mix(in oklab, var(--muted) 50%, var(--card));
+}
+.tracy-wo-table tbody tr[data-selected='true'] > td.tracy-wo-c-check,
+.tracy-wo-table tbody tr[data-selected='true'] > td.tracy-wo-c-place {
+  background: color-mix(in oklab, var(--muted) 85%, var(--card));
+}
+/* The row an inspector shows (`activeKey`). */
+.tracy-wo-table tbody tr[data-active='true'] > td {
+  background: color-mix(in oklab, var(--primary) 7%, var(--card));
+}
+.tracy-wo-table tbody tr[data-active='true'] > td.tracy-wo-c-check {
+  box-shadow: inset 2px 0 0 var(--primary);
+}
+.tracy-wo-table .tracy-wo-c-type {
+  min-width: 130px;
+}
+.tracy-wo-table .tracy-wo-c-score {
+  min-width: 140px;
+}
+.tracy-wo-table .tracy-wo-c-web {
+  min-width: 220px;
+}
+.tracy-wo-table .tracy-wo-c-google {
+  min-width: 110px;
+  white-space: nowrap;
+}
+.tracy-wo-table .tracy-wo-c-social {
+  min-width: 180px;
+}
+.tracy-wo-table .tracy-wo-c-contact {
+  min-width: 160px;
+}
+.tracy-wo-table .tracy-wo-c-status {
+  min-width: 110px;
+}
+.tracy-wo-narrow-cards {
+  display: none;
+}
+
+/* ---- cards: grid, narrow layout, map ---- */
+.tracy-wo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+.tracy-wo-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 0 14px 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  color: var(--card-foreground);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.tracy-wo-card:hover {
+  border-color: color-mix(in oklab, var(--foreground) 25%, var(--border));
+}
+.tracy-wo-card[data-selected='true'],
+.tracy-wo-card[data-active='true'] {
+  border-color: var(--primary);
+}
+.tracy-wo-cover {
+  position: relative;
+  flex: none;
+  height: 168px;
+  margin: 0 -14px;
+  background: var(--muted);
+}
+.tracy-wo-card-compact .tracy-wo-cover {
+  height: 120px;
+}
+.tracy-wo-cover img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tracy-wo-credit {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  max-width: calc(100% - 12px);
+  padding: 1px 6px;
+  overflow: hidden;
+  border-radius: var(--radius-sm, 4px);
+  background: color-mix(in oklab, var(--foreground) 65%, transparent);
+  color: var(--background);
+  font-size: 10px;
+  line-height: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.tracy-wo-cover-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.tracy-wo-cover-check {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  background: var(--card);
+}
+.tracy-wo-card-close {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+.tracy-wo-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.tracy-wo-card-top > .tracy-wo-cell:first-child {
+  flex: 1 1 0;
+}
+/* The score keeps its grade and number whole; only its reason line gives way, ending in "…". */
+.tracy-wo-card-top > .tracy-wo-cell:last-child {
+  flex: 0 1 auto;
+  max-width: 45%;
+  align-items: flex-end;
+}
+.tracy-wo-card-top .tracy-wo-score {
+  flex: none;
+}
+.tracy-wo-card-top .tracy-wo-why {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tracy-wo-card-facts {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 8px 10px;
+}
+.tracy-wo-card-facts dt {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.tracy-wo-card-facts dd {
+  min-width: 0;
+}
+.tracy-wo-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- map ---- */
+.tracy-wo-map {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--muted);
+}
+.tracy-wo-map-canvas {
+  width: 100%;
+  height: 460px;
+}
+.tracy-wo-map-empty {
+  display: grid;
+  place-items: center;
+  min-height: 200px;
+  padding: 24px;
+  text-align: center;
+}
+.tracy-wo-map-legend {
+  /* Bottom left, above Google's logo: the top left holds Google's Map/Satellite control. */
+  position: absolute;
+  left: 8px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 24px);
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  font-size: 12px;
+}
+.tracy-wo-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.tracy-wo-dot[data-grade='A'],
+.tracy-wo-pin[data-grade='A'] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.tracy-wo-dot[data-grade='B'],
+.tracy-wo-pin[data-grade='B'] {
+  background: var(--muted-foreground);
+  color: var(--background);
+}
+.tracy-wo-dot[data-grade='C'] {
+  background: var(--border);
+}
+.tracy-wo-pin {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--background);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tracy-wo-pin[data-grade='C'] {
+  background: var(--card);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+.tracy-wo-pin[data-selected='true'] {
+  border-color: var(--foreground);
+}
+.tracy-wo-pin[data-cluster='true'] {
+  width: 32px;
+  height: 32px;
+  background: var(--foreground);
+  color: var(--background);
+}
+.tracy-wo-map-card {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 300px;
+  max-height: calc(100% - 24px);
+  overflow-y: auto;
+}
+
+/* ---- narrow container: rows become cards, sort moves into a select ---- */
+@container (max-width: 560px) {
+  .tracy-wo-table-wrap {
+    display: none;
+  }
+  .tracy-wo-narrow-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .tracy-wo-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .tracy-wo-sort-select {
+    display: block;
+  }
+  .tracy-wo-columns,
+  .tracy-wo-view-switch [data-view='table'],
+  .tracy-wo-tool-label {
+    display: none;
+  }
+  .tracy-wo-cover {
+    height: 140px;
+  }
+  .tracy-wo-map-card {
+    left: 12px;
+    right: 12px;
+    top: auto;
+    bottom: 12px;
+    width: auto;
+    max-height: 70%;
+  }
+}
+
+/* ---- Demo column (cells/demo.tsx) ---- */
+.tracy-wo-demo-key {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+.tracy-wo-demo-calm {
+  color: var(--muted-foreground);
+}
+.tracy-wo-demo-soon {
+  color: var(--primary);
+}
+.tracy-wo-demo-urgent {
+  color: var(--destructive);
+}
+.tracy-wo-demo-act {
+  margin-left: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  outline: none;
+}
+.tracy-wo-demo-act:focus-visible {
+  outline: 1px solid var(--ring);
+  outline-offset: 1px;
+}
+.tracy-wo-demo-act:disabled {
+  cursor: default;
+  opacity: 0.5;
+}

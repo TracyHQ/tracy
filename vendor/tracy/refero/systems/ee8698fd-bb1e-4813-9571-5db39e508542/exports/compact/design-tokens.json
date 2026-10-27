@@ -1,0 +1,129 @@
+{
+  "color": {
+    "signal-violet": {
+      "$value": "#615fff",
+      "$type": "color",
+      "$description": "Signal Violet — Logo mark, link text, icon accents, brand-colored borders and fills — the single chromatic anchor that signals the brand across an otherwise achromatic interface"
+    },
+    "ink": {
+      "$value": "#09090b",
+      "$type": "color",
+      "$description": "Ink — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, card surface, button surface — the dominant canvas"
+    },
+    "hairline": {
+      "$value": "#e4e4e7",
+      "$type": "color",
+      "$description": "Hairline — Dividers, card borders, input borders, subtle structural separation"
+    },
+    "graphite": {
+      "$value": "#52525c",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text, descriptions, muted labels, caption text"
+    },
+    "slate": {
+      "$value": "#848485",
+      "$type": "color",
+      "$description": "Slate — Tertiary text, meta labels, inactive nav items, placeholder content"
+    },
+    "charcoal": {
+      "$value": "#404040",
+      "$type": "color",
+      "$description": "Charcoal — Dark surface for filled buttons and emphasis panels"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — SVG icon fills, deepest contrast for illustration artwork"
+    },
+    "mint": {
+      "$value": "#00bc7d",
+      "$type": "color",
+      "$description": "Mint — Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "forest": {
+      "$value": "#0d542b",
+      "$type": "color",
+      "$description": "Forest — Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "amber": {
+      "$value": "#fe9a00",
+      "$type": "color",
+      "$description": "Amber — Yellow supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "sunburst": {
+      "$value": "#ffb900",
+      "$type": "color",
+      "$description": "Sunburst — Yellow supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "rust": {
+      "$value": "#e17100",
+      "$type": "color",
+      "$description": "Rust — Orange supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "crimson": {
+      "$value": "#ec003f",
+      "$type": "color",
+      "$description": "Crimson — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "maroon": {
+      "$value": "#82181a",
+      "$type": "color",
+      "$description": "Maroon — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "ultraviolet": {
+      "$value": "#8200db",
+      "$type": "color",
+      "$description": "Ultraviolet — Illustration accent violet, tag variant"
+    },
+    "iris": {
+      "$value": "#9810fa",
+      "$type": "color",
+      "$description": "Iris — Illustration accent purple, tag variant"
+    },
+    "cobalt": {
+      "$value": "#155dfc",
+      "$type": "color",
+      "$description": "Cobalt — Illustration accent blue, tag variant"
+    },
+    "midnight": {
+      "$value": "#1c398e",
+      "$type": "color",
+      "$description": "Midnight — Illustration accent indigo, tag variant"
+    },
+    "lilac-mist": {
+      "$value": "#dfdfff",
+      "$type": "color",
+      "$description": "Lilac Mist — Soft violet surface wash, subtle card highlight"
+    }
+  },
+  "font": {
+    "ui-sans-serif-system-inter-geist-sans-sf-pro": {
+      "$value": "ui-sans-serif (system: Inter / Geist Sans / SF Pro)",
+      "$type": "fontFamily",
+      "$description": "All UI text — body at 14px/1.43, labels and tags at 12px/1.33, navigation at 13–14px, subheadings at 16–18px, and display headings at 30px. The 30px display step is notably restrained — this system does not shout at scale; it informs through compact hierarchy"
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Numeric data displays (invoice amounts, invoice numbers, code labels, metrics) — the monospace brings technical precision to data-heavy illustration cards. 10–12px for inline code/metric tags, 24–30px for prominent figures"
+    },
+    "mulish": {
+      "$value": "Mulish",
+      "$type": "fontFamily",
+      "$description": "Mulish — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://pro.tailark.com/illustrations",
+      "siteName": "Tailark Pro",
+      "extractedAt": "2026-06-03T19:35:47.699Z",
+      "variant": "compact"
+    }
+  }
+}

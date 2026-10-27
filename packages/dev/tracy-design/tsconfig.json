@@ -1,0 +1,11 @@
+{
+  // `extends` a path INSIDE the tree — does not break the self-contained rule. The previous version copied the
+  // base's whole content here with a note "that base file is not in TCH"; now it is.
+  "extends": "../../../tsconfig.base.json",
+  // `allowJs` so a story can bring in the REAL PAGE: `workers/fleet-bar/src/pages.js` generates the sign-in
+  // door's HTML, and importing it directly is the only way the drawing cannot drift from the running code.
+  // `allowImportingTsExtensions`: stories import real plugin components, and a plugin whose node
+  // tests load its sources directly writes `./x.ts` imports (`@tracy/dsh-my-sites` delete/leave flows).
+  "compilerOptions": { "allowJs": true, "allowImportingTsExtensions": true },
+  "include": ["src"]
+}

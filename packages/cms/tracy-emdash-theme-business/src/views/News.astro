@@ -1,0 +1,174 @@
+---
+import { getEmDashEntry, getSiteSettings, getTaxonomyTerms, getTerm } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Chips from '@/components/site/Chips.astro'
+import Photo from '@/components/site/Photo.astro'
+import Pagination from '@/components/site/Pagination.astro'
+import SearchIcon from '@/components/site/SearchIcon.astro'
+import type { Chrome } from '@/lib/chrome'
+import { fill, formatDate, href, readingLabel, type Locale } from '@/lib/i18n'
+import { uiLocale } from '@/lib/ui'
+import { loadPosts, paginate } from '@/lib/posts'
+import { stampFor, stampsFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  category?: string | null
+  tag?: string | null
+}
+const { chrome, locale, category = null, tag = null } = Astro.props
+const { site } = chrome
+const slots = Object.fromEntries(((site.slots ?? []) as any[]).map((s) => [s.key, s.text]))
+const [{ entry }, settings, categories] = await Promise.all([
+  getEmDashEntry('news_page', 'news', { locale }),
+  getSiteSettings(),
+  getTaxonomyTerms('category', { locale })
+])
+if (!entry) return Astro.rewrite(href(locale, '/404'))
+const n = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'news_page', entry)
+const $site = stampFor(Astro.request, 'site', site)
+const $ = stampsFor(Astro.request)
+const term = category
+  ? await getTerm('category', category, { locale })
+  : tag
+    ? await getTerm('tag', tag, { locale })
+    : null
+if ((category || tag) && !term) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const all = await loadPosts(locale)
+const filtered = category
+  ? all.filter((p) => p.category?.slug === category)
+  : tag
+    ? await loadPosts(locale, { tag })
+    : all
+const PER = settings.postsPerPage ?? 4 // seed sets 4: a 2x2 card grid with no orphan row (source)
+const pageParam = Number.parseInt(Astro.url.searchParams.get('page') ?? '1') || 1
+// The featured post leads page 1 of the unfiltered list; the rest paginate.
+const featured = !category && !tag ? filtered.find((p) => p.data.featured) : undefined
+const rest = featured ? filtered.filter((p) => p !== featured) : filtered
+const { pages, page, slice, outOfRange } = paginate(rest, pageParam, PER)
+if (outOfRange) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const counts = new Map<string, number>()
+for (const p of all) if (p.category) counts.set(p.category.slug, (counts.get(p.category.slug) ?? 0) + 1)
+const usedCats = categories.filter((c) => counts.get(c.slug))
+const base = category ? `/news/category/${category}` : tag ? `/news/tag/${tag}` : '/news'
+const pageUrl = (k: number) => href(locale, k > 1 ? `${base}?page=${k}` : base)
+const chips = [
+  {
+    label: n.all_label ?? 'All',
+    url: href(locale, '/news'),
+    active: !category && !tag,
+    stamp: $page('all_label')
+  },
+  ...usedCats.map((c) => ({
+    label: c.label,
+    url: href(locale, `/news/category/${c.slug}`),
+    active: c.slug === category
+  }))
+]
+const latest = all.slice(0, 3)
+const crumbs = [
+  { label: site.home_label, url: href(locale, '/'), stamp: $site('home_label') },
+  ...(term
+    ? [{ label: n.breadcrumb, url: href(locale, '/news'), stamp: $page('breadcrumb') }, { label: term.label }]
+    : [{ label: n.breadcrumb, stamp: $page('breadcrumb') }])
+]
+const postUrl = (slug: string) => href(locale, `/news/${slug}`)
+---
+
+<Base chrome={chrome} title={term ? `${term.label} — ${n.breadcrumb}` : n.breadcrumb || n.title} description={n.lede} currentPath="/news" content={term ? null : { collection: "news_page", id: entry.data.id, slug: "news", toPath: () => "/news" }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={crumbs} />
+		<div class="container-site pb-[88px] pt-14">
+			<div class="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+				<div>
+					<h1 class="h-list mb-2.5" {...(term ? {} : $page("title"))}>{term ? term.label : n.title}</h1>
+					<p class="text-[16.5px] text-fg-muted" {...$page("lede")}>{n.lede}</p>
+				</div>
+				<div class="whitespace-nowrap text-[13.5px] text-fg-meta" {...$page("count_label")}>{fill(n.count_label, { count: filtered.length })}</div>
+			</div>
+			<Chips items={chips} class="mb-10 border-b border-line pb-6" />
+			<div class="flex flex-wrap items-start gap-14">
+				<div class="min-w-0 flex-[1_1_520px]">
+					{featured && page === 1 && (
+						<article class="mb-11 grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] items-center gap-7 border border-line-card bg-card" {...$("posts", featured)()}>
+							<Photo image={featured.data.featured_image} stamp={$('posts', featured)("featured_image")} alt={featured.data.title} placeholder={slots.featured} class="h-[290px] !border-0" priority />
+							<div class="p-7 md:pl-0">
+								<div class="eyebrow mb-3 !tracking-[.14em]" {...$page("featured_label")}>{n.featured_label}{featured.category ? ` · ${featured.category.label}` : ""}</div>
+								<h2 class="h-card-lg mb-3"><a href={postUrl(featured.slug)} class="text-fg hover:text-forest-text" {...$('posts', featured)("title")}>{featured.data.title}</a></h2>
+								<p class="mb-[18px] text-[15.5px] leading-[1.65] text-fg-muted" {...$('posts', featured)("excerpt")}>{featured.data.excerpt}</p>
+								<div class="text-[13.5px] text-fg-meta">{[formatDate(featured.data.date, uiLocale(locale)), featured.data.author, readingLabel(featured.data.reading_time, uiLocale(locale))].filter(Boolean).join(" · ")}</div>
+							</div>
+						</article>
+					)}
+					{slice.length === 0 && <p class="text-[15px] text-fg-meta">—</p>}
+					<div class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-x-7 gap-y-8">
+						{slice.map((p) => (
+							<article {...$("posts", p)()}>
+								<Photo image={p.data.featured_image} stamp={$('posts', p)("featured_image")} alt={p.data.title} placeholder={slots.news} class="mb-4 h-[170px]" />
+								{p.category && <div class="eyebrow mb-2 !tracking-[.14em]"><a href={href(locale, `/news/category/${p.category.slug}`)} class="text-signal-text">{p.category.label}</a></div>}
+								<h3 class="mb-2 text-[20px] font-semibold leading-[1.32] tracking-[-.012em]"><a href={postUrl(p.slug)} class="text-fg hover:text-forest-text" {...$('posts', p)("title")}>{p.data.title}</a></h3>
+								{p.data.excerpt && <p class="mb-2.5 text-[14.5px] leading-[1.6] text-fg-muted" {...$('posts', p)("excerpt")}>{p.data.excerpt}</p>}
+								<div class="text-[13px] text-fg-meta">{formatDate(p.data.date, uiLocale(locale))}</div>
+							</article>
+						))}
+					</div>
+					<Pagination page={page} pages={pages} url={pageUrl} meta={fill(n.page_meta, { page, pages, perPage: PER })} locale={locale} />
+				</div>
+
+				<aside class="flex flex-[1_1_300px] flex-col gap-8">
+					<div class="border border-line-card bg-card p-[22px]">
+						<div class="column-label mb-3.5" {...$page("sidebar_search_title")}>{n.sidebar_search_title}</div>
+						<form action={href(locale, "/search")} method="get" class="flex" role="search">
+							<input type="search" name="q" placeholder={n.sidebar_search_placeholder} {...$page("sidebar_search_placeholder")} aria-label={n.sidebar_search_title} class="field-input !py-[11px] !text-[14.5px]" />
+							<button type="submit" class="flex items-center rounded-r-[var(--ds-input-radius,0px)] bg-[var(--ds-c-accent,var(--color-forest))] px-4 text-[15px] text-[color:var(--ds-c-accent-on,var(--color-white))]" aria-label={site.search_button}><SearchIcon /></button>
+						</form>
+					</div>
+					<div class="border border-line-card p-[22px]">
+						<div class="column-label mb-3.5" {...$page("categories_title")}>{n.categories_title}</div>
+						<div class="flex flex-col">{usedCats.map((c) => <a href={href(locale, `/news/category/${c.slug}`)} class="flex justify-between border-b border-line-soft py-[9px] text-[15px] text-fg hover:text-forest-text">{c.label} <span class="text-fg-faint">{counts.get(c.slug)}</span></a>)}</div>
+					</div>
+					<div class="border border-line-card p-[22px]">
+						<div class="column-label mb-3.5" {...$page("latest_title")}>{n.latest_title}</div>
+						<div class="flex flex-col gap-4">
+							{latest.map((l) => (
+								<a href={postUrl(l.slug)} class="grid grid-cols-[96px_1fr] items-start gap-3 text-fg hover:text-forest-text" {...$("posts", l)()}>
+									<Photo image={l.data.featured_image} stamp={$('posts', l)("featured_image")} alt="" placeholder=" " class="h-[68px]" width={192} height={136} />
+									<div><div class="text-[14.5px] font-semibold leading-[1.35]" {...$('posts', l)("title")}>{l.data.title}</div><div class="mt-1 text-[12.5px] text-fg-meta">{formatDate(l.data.date, uiLocale(locale))}</div></div>
+								</a>
+							))}
+						</div>
+					</div>
+					<div class="bg-forest p-[26px] text-on-forest-band">
+						<div class="mb-2.5 font-serif text-[22px] leading-[1.25]" {...$page("newsletter_title")}>{n.newsletter_title}</div>
+						<p class="mb-4 text-[14.5px] leading-[1.6] text-on-forest-muted" {...$page("newsletter_text")}>{n.newsletter_text}</p>
+						{n.newsletter_form_id ? (
+							<form class="ng-newsletter" method="post" action="/_emdash/api/plugins/emdash-forms/submit" data-form-id={n.newsletter_form_id}>
+								<input type="email" name="email" required placeholder={n.newsletter_placeholder} {...$page("newsletter_placeholder")} aria-label={n.newsletter_placeholder} class="mb-2.5 w-full rounded-[var(--ds-input-radius,0px)] border border-forest-line bg-forest-deep px-3 py-[11px] font-sans text-[14.5px] text-[color:var(--ds-c-on-accent-band,var(--color-white))] placeholder:text-on-forest-faint" />
+								<input type="text" name="_hp" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+								<input type="hidden" name="formId" value={n.newsletter_form_id} />
+								<button type="submit" class="btn-primary w-full !px-3 !py-3 !text-[14.5px]" {...$page("newsletter_button")}>{n.newsletter_button}</button>
+								<p class="ng-newsletter-status mt-2.5 text-[13px] text-on-forest-muted" aria-live="polite"></p>
+							</form>
+						) : (
+							<div><input type="email" disabled placeholder={n.newsletter_placeholder} {...$page("newsletter_placeholder")} class="mb-2.5 w-full rounded-[var(--ds-input-radius,0px)] border border-forest-line bg-forest-deep px-3 py-[11px] text-[14.5px] opacity-70" /><button disabled class="btn-primary w-full !px-3 !py-3 !text-[14.5px] opacity-70" {...$page("newsletter_button")}>{n.newsletter_button}</button></div>
+						)}
+					</div>
+				</aside>
+			</div>
+		</div>
+	</main>
+</Base>
+
+<script src="@/lib/newsletter-client.ts"></script>

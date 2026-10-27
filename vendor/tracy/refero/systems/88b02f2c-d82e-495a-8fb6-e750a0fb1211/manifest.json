@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "88b02f2c-d82e-495a-8fb6-e750a0fb1211",
+  "status": "complete",
+  "name": "Secure and powerful crypto wallet | Ctrl Wallet",
+  "url": "https://styles.refero.design/style/88b02f2c-d82e-495a-8fb6-e750a0fb1211",
+  "sourceWebsite": "https://ctrl.xyz",
+  "extractedAt": "2026-06-03T19:42:48.578Z",
+  "capturedAt": "2026-10-08T05:14:29.214002+00:00",
+  "theme": "light",
+  "industry": "crypto",
+  "description": "sticker-bombed white lab — confetti cards on surgical chrome",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c573fef1-9fbb-4914-b941-9bd87af7ef4a.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c2a3c426-f866-4876-92d4-644fc1df536c.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/779b00d6-0016-4ad2-9490-f46486d94408.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/29bddcbc-e3f0-4cd3-bf54-c37c1276ed2b.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a150cac6-c664-4d45-bd68-bfe7827d069b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1f0258ac2534901ef87f0ae97908560626c21b0edc875fc504f9f38b616327b1",
+      "bytes": 19167
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "261c1c9143466a0c9bef3149dcca062dd2e441ec50817ea59847fb7d31c3ba4d",
+      "bytes": 42569
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b6863ea923d99405c041ecd035c910cd5e55e8d6ba62a7f43bca04aca5fc6b25",
+      "bytes": 16013
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "09bb33e301621765178025b6e32894d0313b1d6c00006f4ebf590f83f395fcbb",
+      "bytes": 13935
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "bd3ee2894011de71ac9841f09f72ef01694a7923bd1506733781607d307e1ac7",
+      "bytes": 12466
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7607259a8a6f88488a9efe9e9b5835ba586a54bc7ca4d67fd1e0b5cc3b30f748",
+      "bytes": 3073
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b9e62d16d6c164e28e13497dd8ece54c53ef56db8870ee05b39ac9ecc5e49878",
+      "bytes": 542
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d2ecd5b1fda62f8d7b11b2806b2f7b7ae52130c65764c0649d2d3c0298962c26",
+      "bytes": 559
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "600335fb0aef691bb7f92336b64c46e115fe4af91ff66d49e306097cd3b55d4f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "525bf145e889d21d6fa4c16e6df08de17fbb35ab281696318a74ea3826b67307",
+      "bytes": 43756
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "fc10035aec58b8263e3df96b8796c815147774bb5233e8fea5f1da630bca27d3",
+      "bytes": 23549
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d4173383c383b55899b7b5bfefbf4555306291ad25b1de6070f795a4c2376061",
+      "bytes": 53691
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c9e02ce5b6f6bc1b46a166dca4a4c77ea59e5d20ba5a3cd2231a7cab3948f202",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b19f023910283fa87d75682a5aa282b2509112a93441f310975f644e4689c3b3",
+      "bytes": 1550
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "acd793815043175b3436c39ae10ca892e103467dbaadee0c0ad663d8e306f010",
+      "bytes": 2084
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+    "1680693c-aed8-47e8-917a-04eb89497b09",
+    "1bcae895-2245-4d33-aa43-1c1e80719554",
+    "29392960-0acf-4891-ad33-28a72f6a9b75",
+    "4ce66adb-ed8b-4e71-8066-15d92c4d2be0",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "6248749d-b440-4561-b4d7-2d39c0fd4fd3",
+    "680cf16b-0093-473b-854f-f1de9af5e698",
+    "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+    "7421c174-a1b1-4695-a9e7-a82dc6f5ea3b",
+    "786f99e5-8c40-4205-a878-bf006b330f4e",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "802bdc0e-ec2e-4d2d-bf5d-de98c0899f66",
+    "88b02f2c-d82e-495a-8fb6-e750a0fb1211",
+    "8b6b547f-a357-4f1b-9842-4579c62dd42b",
+    "91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a74d60e1-0a09-48a1-8721-13f1f45727f1",
+    "b0cb2465-ad7b-4657-a2e4-b8c793355cd3",
+    "da0bfca3-df1d-49d9-ae25-61d8f348426f"
+  ]
+}

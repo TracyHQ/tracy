@@ -1,0 +1,99 @@
+{
+  "color": {
+    "voltage-lime": {
+      "$value": "#d2e823",
+      "$type": "color",
+      "$description": "Voltage Lime — Primary action buttons, highlighted headlines, accent surfaces — the brand's signature chartreuse, used sparingly as functional punctuation across every section"
+    },
+    "cobalt-signal": {
+      "$value": "#2665d6",
+      "$type": "color",
+      "$description": "Cobalt Signal — Full-bleed section backgrounds, link accents — saturated blue used as an alternate hero band"
+    },
+    "bordeaux-maroon": {
+      "$value": "#780016",
+      "$type": "color",
+      "$description": "Bordeaux Maroon — Full-bleed FAQ and deep sections — dark wine red for high-contrast blocks"
+    },
+    "midnight-ink": {
+      "$value": "#1e2330",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, icon fills, dark UI outlines — near-black with a faint blue undertone, the default ink color"
+    },
+    "plaster-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Plaster White — Card surfaces, button text, pill nav background — pure white floats above the colored sections"
+    },
+    "bone-canvas": {
+      "$value": "#f3f3f1",
+      "$type": "color",
+      "$description": "Bone Canvas — Page background base, subtle button surfaces — warm off-white with a faint green cast"
+    },
+    "cement-gray": {
+      "$value": "#adadad",
+      "$type": "color",
+      "$description": "Cement Gray — Muted card backgrounds, disabled or secondary surfaces"
+    },
+    "slate-mute": {
+      "$value": "#676b5f",
+      "$type": "color",
+      "$description": "Slate Mute — Muted link text, secondary borders, low-emphasis text — warm desaturated olive-gray"
+    },
+    "carbon": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Carbon — Deep button text and borders for inverted controls"
+    },
+    "lilac-whisper": {
+      "$value": "#e9c0e9",
+      "$type": "color",
+      "$description": "Lilac Whisper — Decorative borders, icon strokes, soft accent washes — pastel pink used for outlines and ornaments"
+    },
+    "indigo-abyss": {
+      "$value": "#061492",
+      "$type": "color",
+      "$description": "Indigo Abyss — Deep card surfaces, tertiary button backgrounds — saturated navy"
+    },
+    "forest-depth": {
+      "$value": "#254f1a",
+      "$type": "color",
+      "$description": "Forest Depth — Headline outlines, bordered cards, body emphasis — dark forest green as an alternate text color"
+    },
+    "saffron": {
+      "$value": "#d6a337",
+      "$type": "color",
+      "$description": "Saffron — Card accent backgrounds — warm gold for variety blocks"
+    }
+  },
+  "font": {
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback for form inputs and legacy text nodes — only appears as a default rendering, not a designed choice"
+    },
+    "linksans": {
+      "$value": "Linksans",
+      "$type": "fontFamily",
+      "$description": "Primary brand typeface — geometric custom sans used everywhere from nav to 80px display headlines. Weight 700–800 at large sizes with negative letter-spacing creates the compressed, poster-like headline voice. Substitute with Inter or Space Grotesk if Linksans is unavailable."
+    },
+    "linksans-linksansvf": {
+      "$value": "Linksans Linksansvf",
+      "$type": "fontFamily",
+      "$description": "Linksans Linksansvf — detected in extracted data but not described by AI"
+    },
+    "yerk": {
+      "$value": "yerk",
+      "$type": "fontFamily",
+      "$description": "yerk — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://linktr.ee",
+      "siteName": "Linktr",
+      "extractedAt": "2026-06-03T15:26:07.229Z",
+      "variant": "compact"
+    }
+  }
+}

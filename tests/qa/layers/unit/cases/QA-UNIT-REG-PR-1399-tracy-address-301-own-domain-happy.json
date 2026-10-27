@@ -1,0 +1,55 @@
+{
+  "id": "QA-UNIT-REG-PR-1399-tracy-address-301-own-domain-happy",
+  "itemIds": ["regression:REG-PR-1399-tracy-address-301-own-domain"],
+  "requirement": "The Tracy address of a published site with a connected own domain sends visitors and crawlers to that domain with a 301",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1399-tracy-address-301-own-domain.json",
+    "ref": "PR #1399 (fix); fix evidence: Measured 15/10/2026 on production: a published site with a connected own domain answered 200 at its Tracy address, also to a Googlebot user agent, with rel=canonical and robots.txt on the Tracy address. Parent commit of the fix: 200 for an anonymous GET in the router test; after the fix: 301 to the own domain.",
+    "invariant": "S1: 301, Location https://<own domain> with the same path and query, cache-control no-store; the site is not asked (pre-fix: 200 with the site's page and a canonical pointing at the Tracy address). S2: each is proxied to the site as before (no 301); every Design system preview answer carries x-robots-tag noindex, nofollow; the read mark is not passed on to the CMS. S3: served at the Tracy address as before, no redirect.",
+    "productSources": [
+      "apps/tracy-web/src/bar/own-domain-integrity.js:380",
+      "apps/tracy-web/src/bar/own-domain.js:61",
+      "apps/tracy-web/src/bar/route.js:117",
+      "apps/tracy-web/src/bar/site-proxy.js:530",
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/lib/own-read.js:16",
+      "apps/tracy-web/src/lib/session.js:101",
+      "apps/tracy-web/src/seats/store.js:74",
+      "apps/tracy-web/src/sites/address.js:54",
+      "apps/tracy-web/src/sites/domain-probe.js:60",
+      "apps/tracy-web/src/sites/resolver.js:93",
+      "apps/tracy-web/src/sites/store.js:35"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/db/index.js:52 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1399-tracy-address-301-own-domain.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1399-tracy-address-301-own-domain"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1399-tracy-address-301-own-domain",
+    "pr": 1399,
+    "kind": "fix",
+    "area": "sites/own-domain",
+    "file": "tests/regression/cases/REG-PR-1399-tracy-address-301-own-domain.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1399-tracy-address-301-own-domain.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

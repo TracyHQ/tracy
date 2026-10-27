@@ -1,0 +1,89 @@
+{
+  "color": {
+    "obsidian-shell": {
+      "$value": "#132322",
+      "$type": "color",
+      "$description": "Obsidian Shell — Primary page background, dark navigation, dark card surfaces — the structural canvas that absorbs everything else and makes the green accent feel electric by contrast"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary text on dark surfaces, card content backgrounds, light section canvases — maximum contrast against the obsidian shell"
+    },
+    "mint-frost": {
+      "$value": "#edf7f5",
+      "$type": "color",
+      "$description": "Mint Frost — Light content card surfaces, elevated feature panels — the bright counterpoint that breaks up dark sections and hosts detailed content"
+    },
+    "deep-abyss": {
+      "$value": "#0e1a19",
+      "$type": "color",
+      "$description": "Deep Abyss — Darker surface variant for nested elements, deep card backgrounds, gradient endpoints — pushes further into the void when extra depth is needed"
+    },
+    "charcoal": {
+      "$value": "#070f0f",
+      "$type": "color",
+      "$description": "Charcoal — Darkest surface for overlays, modals, and maximum-contrast panels"
+    },
+    "fog-border": {
+      "$value": "#d0d3d3",
+      "$type": "color",
+      "$description": "Fog Border — Hairline dividers and borders on light surfaces — quiet structural lines that never compete with content"
+    },
+    "stone-border": {
+      "$value": "#b2b6b4",
+      "$type": "color",
+      "$description": "Stone Border — Medium borders on light cards, secondary dividers, subtle frame lines"
+    },
+    "slate-text": {
+      "$value": "#828786",
+      "$type": "color",
+      "$description": "Slate Text — Muted body text, captions on light backgrounds, secondary labels"
+    },
+    "graphite-fill": {
+      "$value": "#424f4f",
+      "$type": "color",
+      "$description": "Graphite Fill — Icon fills, decorative SVG strokes on light sections"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — SVG icon fills, high-contrast decorative strokes — graphic asset workhorse"
+    },
+    "neon-pulse": {
+      "$value": "#3ddc91",
+      "$type": "color",
+      "$description": "Neon Pulse — Green action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "mint-whisper": {
+      "$value": "#97ddbc",
+      "$type": "color",
+      "$description": "Mint Whisper — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "signal-yellow": {
+      "$value": "#ffcd48",
+      "$type": "color",
+      "$description": "Signal Yellow — Accent fills within isometric illustrations and product mockups — a warm punctuation that breaks the green monochrome and adds dimensional interest to graphics"
+    }
+  },
+  "font": {
+    "aeonik": {
+      "$value": "Aeonik",
+      "$type": "fontFamily",
+      "$description": "Body and UI text — the workhorse typeface for paragraphs, button labels, nav items, card content, and form fields. Clean geometric humanist sans at weight 400, tightly tracked at body sizes (-0.08px at 16px)."
+    },
+    "aeonikfono": {
+      "$value": "AeonikFono",
+      "$type": "fontFamily",
+      "$description": "Display, headings, and uppercase eyebrow labels. Weight 500 for the largest display sizes (40–64px) to anchor the hierarchy; weight 400 for 14–32px headings and 9px all-caps labels with 0.05em tracking. The 9px tracked-out caps create the small structural labels that sit above section titles."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://saucelabs.com",
+      "siteName": "Sauce Labs",
+      "extractedAt": "2026-06-03T20:01:57.689Z",
+      "variant": "compact"
+    }
+  }
+}

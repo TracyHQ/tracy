@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "fdc72952-9b36-443a-9e0c-20b366aee29f",
+  "status": "complete",
+  "name": "Flecto",
+  "url": "https://styles.refero.design/style/fdc72952-9b36-443a-9e0c-20b366aee29f",
+  "sourceWebsite": "https://flecto.io",
+  "extractedAt": "2026-06-03T21:22:21.255Z",
+  "capturedAt": "2026-10-08T05:19:59.500591+00:00",
+  "theme": "mixed",
+  "industry": "saas",
+  "description": "Botanical greenhouse glasshouse. A warm cream-walled conservatory where deep teal planters hold bright mint seedlings — flat, rounded, alive with green, zero shadows.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c975c431-93d4-42d9-b2e2-9409470cfaa9.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5e0298e6-3e56-4e1e-b9c2-47c291d7f15c.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/479c8d62-4ab6-45df-9f31-f214917e2351.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c063b185-9f71-4d31-9b95-fc8c3f96a6d8.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c9ead6df-a8ef-4aa6-b665-1e4ece6ddbe2.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bf28880763f2079e4589a677bb9baf24f91cc12fe66a734f38e1ff41eb63db5c",
+      "bytes": 20293
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "559d63713764ca3f73f46c76c063a0520b060e76217c29d0816712cbdaf2ba12",
+      "bytes": 57750
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "9fd9452916e3d5e73a0b34bef8c163a188b5b4ffab680e961e0652d9eb0e0342",
+      "bytes": 16278
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "da8111b02925ee415c55d8e9cfd82a0fa6dd8b23beaaa7f1f01d3ed8339f2321",
+      "bytes": 30160
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7a1ec62812e622f104ffd6ba36d8e5170bbc38c2b467b50b2a84e197f78e41b8",
+      "bytes": 11524
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "0603a2061717d57fa149e6129f69a7b6eb371bb1c0d2e546ce9d907ab2c1eafa",
+      "bytes": 3652
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "9e8a071041a1d465e0d01c60852d9afe940ea80733041ac8ff6a6247d3c44376",
+      "bytes": 709
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5a98234d5b3a9d14503f5dc07c471df291bd141ba2843c8aa385ad6e9c70db0a",
+      "bytes": 726
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "214d39d70ebfc856f89ab1f02d31aa29604c759ed349f0412f24c9e47b17cfc4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "57afae671527a636191fdd85a4998255137cae31edfe8de6a3ae2d79f55a2d0a",
+      "bytes": 46918
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "cacd9e82c69551892b2daf7be7dee3ce00002b205f9d0f63d392ea57b87339b5",
+      "bytes": 25825
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "af9d91d8881304dccaeb98100ec414a69aabecd190fa7953295e1fb97e5096ef",
+      "bytes": 93387
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "bea4b6fca26d27d95184baa1b982c8212d323061ca8ce1388757b7be6e4147a9",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "8114d60c8fd408a56007d09877d0138e5e17bee5627b308c2976db1df4eaf363",
+      "bytes": 2109
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "de5c8e52482db2aa3c6ee418a8bc429e85771fb357cafdb40cc5301626bf4902",
+      "bytes": 2692
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "329075e8-97ed-4722-8952-d9bf001de233",
+    "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+    "51734338-9046-47eb-a595-77ffa37b4725",
+    "7f9eabb2-3f76-477d-849f-e868e698f421",
+    "80d7ef36-ed7e-48bb-b558-f772eb40106f",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "8f42603d-7ff9-446e-99a3-6bdd1f388ae5",
+    "9501cfdc-3eb3-4b64-90f6-9afdded48945",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "e9001d5a-504d-47ed-aef0-d0d35fa86418",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fdc72952-9b36-443a-9e0c-20b366aee29f"
+  ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Archivo",
+    "cssVariable": "--font-archivo",
+    "weights": [400, 500, 600, 700],
+    "styles": ["normal", "italic"],
+    "subsets": ["latin", "latin-ext"],
+    "optimizedFallbacks": false,
+    "fallbacks": ["system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"]
+  },
+  {
+    "name": "Newsreader",
+    "cssVariable": "--font-newsreader",
+    "weights": [400, 500],
+    "styles": ["normal", "italic"],
+    "subsets": ["latin", "latin-ext"],
+    "optimizedFallbacks": false,
+    "fallbacks": ["Georgia", "Times New Roman", "serif"]
+  }
+]

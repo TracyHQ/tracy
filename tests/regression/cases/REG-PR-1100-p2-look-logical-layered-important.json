@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1100-p2-look-logical-layered-important",
+  "kind": "fix",
+  "title": "page.look reads logical sides (padding-inline/-block) and the !important order of cascade layers; look.set writes inside the layer of the !important it must beat",
+  "pr": 1100,
+  "area": "site-tools/look",
+  "cms": ["em", "wp", "jo"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/tools/tracy-site-tools run: node --test --test-reporter=tap test/look-style.test.mjs test/look-set.test.mjs",
+    "S2: Read the tests named in run.tests (the dskeepem hero cascade as CDP read it: .btn-primary in @layer components, the !px-[…]/!py-[…] utilities as padding-inline/padding-block !important in @layer utilities)."
+  ],
+  "expect": [
+    "S1 exits 0.",
+    "padding names the utilities, not .btn-primary: parts top/bottom by the !py rule (padding-block … !important) and right/left by the !px rule (padding-inline … !important), layer 'utilities'; padding-left, padding-inline and padding-block-start read the same rules; rtl maps padding-inline-start to padding-right, vertical-rl maps padding-block-start to padding-right.",
+    "Among !important declarations the earliest layer wins (.c0.c0 @layer base over @layer utilities and over an unlayered #t.c1), a layered one beats an unlayered one, the style attribute beats both; normal declarations keep the browser's order (the unlayered rule wins).",
+    "look.set against a !important utility in @layer utilities writes its rule inside '@layer utilities { … !important }'; sides held !important by two different layers are refused, nothing written."
+  ],
+  "selectors": {
+    "code": "packages/tools/tracy-site-tools/src/host/look-style.mjs resolveStyles (SIDE, physicalOf, namesFor, winnerIn rank); look-set.mjs (layer, ruleText)",
+    "fixture": "packages/tools/tracy-site-tools/test/look-cascade-fixture.mjs emHeroCascade"
+  },
+  "evidence": "dskeepem 10/10/2026 (stand from 96a53b266): page.look reported padding 'set: padding: var(--ds-btn-pad-y,15px) var(--ds-btn-pad-x,30px), by: .btn-primary @layer components' before and after the write while computed 19px 38px came from `!px-[calc(…)]`/`!py-[calc(…)]` (padding-inline/padding-block !important, @layer utilities) — tasks/evidence/followups-2026-10-10/p2-look/em-page-look-padding-*.json.",
+  "fence": "resolveStyles resolves logical properties to the element's physical sides and ranks !important declarations by layer (earlier first, layered before unlayered); look.set re-opens the winning layer",
+  "run": {
+    "cwd": "packages/tools/tracy-site-tools",
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/look-style.test.mjs", "test/look-set.test.mjs"],
+    "tests": [
+      "🔒 a logical side is the physical side it sets",
+      "🔒 among !important declarations an EARLIER cascade layer wins",
+      "🔒 an !important in a cascade layer is beaten from inside that layer"
+    ]
+  }
+}

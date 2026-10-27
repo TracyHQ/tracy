@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-bone: #f2edde;
+  --color-rust: #af6446;
+  --color-ink: #000000;
+
+  /* Typography */
+  --font-scto-grotesk-a: 'Scto Grotesk A', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-merlo: 'Merlo', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

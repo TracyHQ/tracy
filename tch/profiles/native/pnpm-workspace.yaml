@@ -1,0 +1,42 @@
+# dsh writes the first four settings itself (initProfile in @deepseek-ai/dsh-app-boot) and
+# never touches an existing file. `nodeLinker: hoisted` and `autoInstallPeers: false` are the
+# load-bearing pair: they give out-of-tree plugins a flat node_modules whose missing peers
+# fall through to profiles/node_modules, so every plugin shares the installation's single
+# cordis instance instead of a duplicate. Do not "tidy" them to match the repository root,
+# which sets autoInstallPeers the other way for a different reason.
+packages:
+  - .
+
+nodeLinker: hoisted
+autoInstallPeers: false
+
+# The repository root's pnpm-workspace.yaml does not reach this folder (same reason as .npmrc).
+#
+# What the patch fixed: dsh-passwords@2.6.5 strips ALL cookies before proxying to dsh (gateway.js,
+# note F-15), based on a white-box review that concluded "upstream dsh is an unauthenticated app".
+# That held for rc.2 and is WRONG for 0.1.2-alpha.1: alpha.1 added `dsh-client-connection`, which
+# requires the `dsh-auth-<authority>` cookie (decision note 2026-08-24), so every request through
+# the gateway returned 401 with nothing saying why.
+#
+# The patch lets only `dsh-auth-*` through. The gateway's session cookie (`dsh_gateway_token`) is
+# STILL stripped — that is what F-15 exists to protect, and it is unchanged.
+
+
+# `node-pty` is a native addon — the `dsh-better-sidebar` terminal tab runs on it, and pnpm 11
+# blocks every dependency's build scripts by default (a sound default: install scripts are where
+# a compromised package gets to run arbitrary code).
+#
+# Declared HERE rather than via `pnpm approve-builds`: that command stores the approval in the
+# machine's local state, so a fleet rebuilding the profile would NOT have it — and the failure is
+# a terminal tab that silently will not open, not an install error anyone sees.
+allowBuilds:
+  node-pty: true
+
+# dsh-passwords is NO longer patched with `pnpm patch` (settled 30/08).
+#
+# The `stripGatewayAuthQuery` fix is now a commit in the fork `vendor/tracy/dsh-passwords` — since
+# 06/09 a WORKSPACE MEMBER of this repo, linked straight into the profile, through no registry.
+#
+# Why the change: the diff-style patch was removed by mistake twice because readers thought it
+# skipped the credential-stripping step. In the fork it is commented code, with a regression test
+# that runs alongside upstream's own 20 tests, and it rebases onto a new tag when upstream releases.

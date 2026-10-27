@@ -1,0 +1,69 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on dark backgrounds, inverse text in dark sections"
+    },
+    "ink-black": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, filled CTA buttons, navigation, footer — the only action color in the entire system, near-black not pure #000"
+    },
+    "charcoal": {
+      "$value": "#1f1f1e",
+      "$type": "color",
+      "$description": "Charcoal — Dark section backgrounds (category bands, video frame borders), elevated dark surfaces"
+    },
+    "stone": {
+      "$value": "#535250",
+      "$type": "color",
+      "$description": "Stone — Secondary body text, muted helper text, subdued list/border accents"
+    },
+    "driftwood": {
+      "$value": "#949189",
+      "$type": "color",
+      "$description": "Driftwood — Tertiary text, icon strokes, subtle borders — warm gray that hints at the brand's earthy content tone"
+    },
+    "sand": {
+      "$value": "#bcb9ae",
+      "$type": "color",
+      "$description": "Sand — Link borders at rest, muted borders, decorative dividers — warmest neutral, signals hover-to-reveal interaction"
+    },
+    "mist": {
+      "$value": "#e9e8e7",
+      "$type": "color",
+      "$description": "Mist — Light surface tint, input field backgrounds, secondary card surfaces, subtle washes"
+    },
+    "ash": {
+      "$value": "#e0dedc",
+      "$type": "color",
+      "$description": "Ash — Hairline borders, card outlines, divider lines between content blocks"
+    },
+    "graphite": {
+      "$value": "#d4d3ce",
+      "$type": "color",
+      "$description": "Graphite — Stronger borders for form fields, table separators, more visible structural dividers"
+    },
+    "smoke": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Smoke — Input text, focused form field borders, higher-emphasis text variant"
+    }
+  },
+  "font": {
+    "haffer": {
+      "$value": "Haffer",
+      "$type": "fontFamily",
+      "$description": "Single typeface across the entire system. Custom sans with humanist warmth in the letterforms that counterbalances the achromatic palette. Weight 400 handles body and most UI; weight 500 for subheadings and emphasis; weight 600 reserved for statistics and numerical display. Display sizes (48–60px) at weight 400 with tight tracking carry all emotional weight — bold weight is rarely used because scale does the work instead."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://kajabi.com",
+      "siteName": "Kajabi",
+      "extractedAt": "2026-06-03T21:37:14.462Z",
+      "variant": "compact"
+    }
+  }
+}

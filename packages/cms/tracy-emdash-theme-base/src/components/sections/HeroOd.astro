@@ -1,0 +1,116 @@
+---
+/** The OpenDesign landing hero: centred copy over an illustrative "website toolkit" mock (no photo in the source). */
+import type { Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  eyebrow?: string
+  title: string
+  lead?: string
+  cta1Label?: string
+  cta1Url?: string
+  cta2Label?: string
+  cta2Url?: string
+  note?: string
+  mockCaption?: string
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: Partial<
+    Record<'eyebrow' | 'title' | 'lead' | 'cta1Label' | 'cta2Label' | 'note' | 'mockCaption', string>
+  >
+}
+const { eyebrow, title, lead, cta1Label, cta1Url, cta2Label, cta2Url, note, mockCaption, stamp, fields } =
+  Astro.props
+const none = {}
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [cta1Url, cta2Url])
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+// Preserve the source preview's eight bars and chart-to-utility proportions.
+const bars = [42, 68, 54, 82, 64, 96, 72, 58]
+---
+
+<section class="wrap pt-[clamp(56px,9vw,108px)] text-center" data-block="hero">
+	<div class="mx-auto max-w-[860px]">
+		{eyebrow && <span class="eyebrow-badge mb-5" {...at("eyebrow")}>{eyebrow}</span>}
+		<h1 class="h-hero mx-auto mb-5 max-w-[560px]" {...at("title")}>{title}</h1>
+		{lead && <p class="lead mx-auto mb-8 max-w-[724px] leading-[1.5] text-pretty" {...at("lead")}>{lead}</p>}
+		<div class="mb-4 flex flex-wrap justify-center gap-3">
+			{cta1Label && live(cta1Url) && <a href={cta1Url || "#"} class="btn btn-primary" {...at("cta1Label")}>{cta1Label}</a>}
+			{cta2Label && live(cta2Url) && <a href={cta2Url || "#"} class="btn btn-secondary" {...at("cta2Label")}>{cta2Label}</a>}
+		</div>
+		{note && <p class="text-[12px] text-fg-meta" {...at("note")}>{note}</p>}
+	</div>
+	<div class="mx-auto mt-12 max-w-[980px]">
+		<div class="min-h-[349px] overflow-hidden rounded-[var(--ds-card-radius,14px)] border border-line-soft bg-bg shadow-[0_32px_80px_-24px_var(--color-surface)] dark:shadow-[0_32px_80px_-24px_var(--color-surface)]" aria-hidden="true">
+			<div class="flex items-center gap-2 border-b border-line-soft px-4 py-3">
+				<span class="h-2.5 w-2.5 rounded-full bg-danger"></span><span class="h-2.5 w-2.5 rounded-full bg-warn"></span><span class="h-2.5 w-2.5 rounded-full bg-success"></span>
+				<span class="ml-3 text-[12px] text-fg-meta" {...at("mockCaption")}>{mockCaption}</span>
+			</div>
+			<div class="hero-preview-grid grid min-h-[300px] grid-cols-[140px_1fr] md:grid-cols-[200px_1fr]">
+				<div class="hero-preview-side flex flex-col gap-2 border-r border-line-soft p-4">
+					{[0, 1, 2, 3].map((i) => (
+						<div class:list={["flex items-center gap-2 rounded-[8px] px-2 py-1.5", i === 0 && "bg-surface"]}><span class:list={["h-4 w-4 rounded-[4px]", i === 0 ? "bg-accent" : "bg-surface"]}></span><span class:list={["h-2 rounded bg-surface", i === 0 ? "w-20 bg-line" : i === 1 ? "w-14" : i === 2 ? "w-24" : "w-16"]}></span>{/* ds-keep: skeleton row of a drawn mock interface */}</div>
+					))}
+				</div>
+				<div class="hero-preview-body flex flex-col gap-4 p-5">
+					<div class="hero-preview-heading flex items-center justify-between"><span class="h-3 w-40 rounded bg-surface"></span>{/* ds-keep: skeleton line of a drawn mock interface */}<span class="h-7 w-16 rounded-full bg-accent"></span></div>
+					<div class="grid grid-cols-[1.4fr_1fr] gap-4" data-hero-panels>
+						<div class="flex h-40 min-[721px]:h-[216px] items-end gap-2 rounded-[var(--ds-card-radius,10px)] border border-line-soft p-4" data-hero-chart>
+							{bars.map((h, i) => <span class:list={["flex-1 rounded-t-[4px]", i % 3 === 0 ? "bg-accent/45" : i % 3 === 1 ? "bg-accent" : "bg-[var(--base-ds-accent-deep,var(--ds-c-accent,#0a4fa8))]"]} style={`height:${h}%`}></span>)}{/* ds-keep: caps of bars in a drawn mock chart */}
+						</div>
+						<div class="flex flex-col gap-3">
+							<div class="rounded-[var(--ds-card-radius,10px)] border border-line-soft p-3"><span class="mb-2 block h-2 w-16 rounded bg-surface"></span><span class="block h-2 w-24 rounded bg-surface"></span>{/* ds-keep: skeleton row of a drawn mock interface */}</div>
+							<div class="rounded-[var(--ds-card-radius,10px)] border border-line-soft p-3"><span class="mb-2 block h-2 w-20 rounded bg-surface"></span><span class="block h-2 w-12 rounded bg-surface"></span>{/* ds-keep: skeleton row of a drawn mock interface */}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	@media (max-width: 720px) {
+		.hero-preview-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.hero-preview-side {
+			border-right-width: 0;
+			border-bottom-width: 1px;
+			gap: 4px;
+			padding: 16px 12px;
+		}
+		.hero-preview-side > div {
+			padding: 7px 10px;
+		}
+		.hero-preview-side > div > span:first-child {
+			width: 14px;
+			height: 14px;
+		}
+		.hero-preview-side > div > span:last-child {
+			width: 52%;
+		}
+		.hero-preview-side > div:first-child > span:last-child {
+			width: 64%;
+		}
+		.hero-preview-body {
+			min-width: 0;
+			gap: 16px;
+			padding: 20px;
+		}
+		.hero-preview-heading {
+			flex-wrap: wrap;
+			gap: 12px;
+		}
+		.hero-preview-heading > span:first-child {
+			width: 180px;
+		}
+		.hero-preview-heading > span:last-child {
+			width: 96px;
+		}
+	}
+</style>

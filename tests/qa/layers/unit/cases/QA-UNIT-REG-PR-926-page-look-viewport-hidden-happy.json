@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-926-page-look-viewport-hidden-happy",
+  "itemIds": ["regression:REG-PR-926-page-look-viewport-hidden"],
+  "requirement": "page.look reads a style at the viewport an agent names (\"390x844\", \"phone\", \"tablet\", \"1440x900\") and answers an element it holds but hides with hidden: display:none, not STYLE_TARGET_NOT_FOUND",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-926-page-look-viewport-hidden.json",
+    "ref": "PR #926 (fix); fix evidence: Flow D 05/10/2026: WordPress hide-mobile `viewport:\"phone 390×844\"` → BAD_STYLE then STYLE_TARGET_NOT_FOUND for the button it had just hidden; Joomla hide-mobile `\"390x844\"` and `\"1440x900\"` → BAD_STYLE ×2 (maxSameRefusal failed), then STYLE_TARGET_NOT_FOUND; EmDash hide-mobile `\"390x844\"`, `\"1280x900\"` → BAD_STYLE ×2, then STYLE_TARGET_NOT_FOUND.",
+    "invariant": "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled. 'viewportOf: a name, a device word or a size, each read at the viewport of its width class' passes: `390x844`, `phone 390×844` and `phone` read as mobile, `tablet` and `768x1024` as tablet (768×1024), `1440x900` and `1280x900` as desktop; `sideways` is still BAD_STYLE. '🔒 findTarget + describeTarget: an element hidden on this viewport is found by its exact words and said hidden, not \"not found\"' passes: the words of a button under a `display:none` wrapper find it, `hidden` is `display:none on <div.wtb-actions>`, a partial match never reaches a hidden element, and styleAnswer carries the reason. 'BROWSER_SCRIPT (style): a tablet read at 768×1024…' passes: Emulation.setDeviceMetricsOverride gets width 768, height 1024, mobile true.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/lib/index.js:45749",
+      "packages/tools/tracy-site-tools/src/host/exec.mjs:673",
+      "packages/tools/tracy-site-tools/src/host/look-style.mjs:29",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:994"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/tools/tracy-site-tools/lib/index.js:11629 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11743 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11771 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11836 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11856 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:11859 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:16457 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:17322 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:17541 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:18346 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:2481 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:44607 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:44784 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:9961 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:9972 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/lib/index.js:9975 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/look-style.test.mjs:1440 execFile() runs a computed command",
+      "packages/tools/tracy-site-tools/test/look-style.test.mjs:1440 execFile() runs computed arguments",
+      "packages/tools/tracy-site-tools/test/look-style.test.mjs:37 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-926-page-look-viewport-hidden.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-926-page-look-viewport-hidden"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-926-page-look-viewport-hidden",
+    "pr": 926,
+    "kind": "fix",
+    "area": "site-tools/look",
+    "file": "tests/regression/cases/REG-PR-926-page-look-viewport-hidden.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-926-page-look-viewport-hidden.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

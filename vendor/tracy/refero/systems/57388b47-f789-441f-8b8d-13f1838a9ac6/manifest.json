@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "57388b47-f789-441f-8b8d-13f1838a9ac6",
+  "status": "complete",
+  "name": "INO",
+  "url": "https://styles.refero.design/style/57388b47-f789-441f-8b8d-13f1838a9ac6",
+  "sourceWebsite": "https://ino.jewelry",
+  "extractedAt": "2026-06-03T18:13:32.148Z",
+  "capturedAt": "2026-10-08T05:11:49.531071+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Museum vitrine in silence — every piece floats in white space like a single object behind glass, framed by near-black whisper type.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/81d51c50-23fe-4351-b56b-fb5f052f9575.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/1fcde2e5-c341-4cb3-835d-0c379ee34822.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/34e90f88-14fb-4a7a-abb3-891e660375e5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/54e2bb3a-4a39-4a9e-afba-ba7e5046af1e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/54747278-358b-49e0-a888-01273803d3df.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e0b9707196d370c52af51c9ede79d23b6db51c99c0e44d975fe70b5923062811",
+      "bytes": 19222
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8a8ce4e5ee8f41afdedffcc8dd7749e92c8849489b229f13c7b4bdec9057e4f1",
+      "bytes": 117524
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "df112ba0bc8e5bf556574b47df6cb24112e09843546a90df983cfa9ebe84c16b",
+      "bytes": 17030
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "44c38c1e2fd13da4f773fa6fbd905e501017f751b5b88b222543db5b5488aea3",
+      "bytes": 6869
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "bec93510d1a8c82456135ec818ee31f2fbd07886eb4e8d46301b75758ca55b5e",
+      "bytes": 12127
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "23d607a263d037a31cbc14e3f62c8d7a99c8b1a23f7a6de57973bd5f742dfea3",
+      "bytes": 2049
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "16e82c66b64e39a21cd28700b29fdce9ded4468fc3d7f5d198d673fb97da8fca",
+      "bytes": 433
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "77ebed2c32d73c70d0644ed2702845458f34e608c734e8318ff8cfb00679557c",
+      "bytes": 450
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d3087928ddcb86460f47ef6821476ae556274561b8693988aecc6edbeb0cd99f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "328860b3e7f843e7efe4cfa5a6e5115b6490da704e2adb14ef9b56c9fa20c35a",
+      "bytes": 41002
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1bb5cc78bb7b6e6b47bc3f72559e1e877f0e85406dfb761b639ea729aca8562e",
+      "bytes": 21068
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8728c39b94d706146046e3232f56b01ece4153cdc741d0c56e66d828122d8dd6",
+      "bytes": 33742
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a5ff386c95c8e69030c895052c37d2a8a7fb28863d92039f7ea186ad2f63f16d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "3dabeb56784afdf0854bae363a57422a130cfebb28a989862955e39746bf1e82",
+      "bytes": 1187
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4f2b912276203b7ab71d2e27249521b7168f25344fa652b36193597a3488f6a1",
+      "bytes": 1601
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "17824ea8-ac7d-42ca-97e2-9bf92ebea7e1",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "27a4a4fa-4b1a-4e7e-b2c3-3e5bf57f00e5",
+    "2fd71e12-12fc-4346-8281-52afe12bb951",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "57388b47-f789-441f-8b8d-13f1838a9ac6",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "76bfda6b-125f-4d9b-96c0-356de1e9fc10",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "e00519a1-7b8a-4171-b49b-550c64a57d3c",
+    "e67ac20e-6497-4756-b7e2-17859a794fb6",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1502-ecr-dual-push",
+  "kind": "feat",
+  "title": "Images are mirrored from GHCR to AWS ECR, deploys pick the pull registry per environment, the shard updater logs in to ECR without leaking the key, and the master accepts the ECR dsh repository",
+  "pr": 1502,
+  "area": "deploy/registry",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd` (bash, jq, openssl on the PATH). Every registry call goes to a fake `docker` on the PATH; nothing reaches GHCR, ECR or AWS.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": [
+    "0 failures. Tests that need TEST_DATABASE_URL may skip; none of them is named here.",
+    "Every test named in run.tests reports ok.",
+    "No AWS secret appears in any captured argv or output."
+  ],
+  "selectors": {
+    "ci": "scripts/ci/mirror-to-ecr.sh; .github/workflows/build-app-images.yml and build-dsh-image.yml job mirror-to-ecr; .github/actions/deploy-tracy-stack and deploy-host-dsh input registry",
+    "script": "deploy/scripts/tracy-updater.sh registry_login (REGISTRY_AUTH=ecr); deploy/scripts/install-shard.sh; deploy/scripts/deploy-tracy-stack.sh and packages/fleet/tracy-fleet-operation/dsh/deploy-host-dsh.sh local re-tag",
+    "code": "apps/tracy-web/src/shards/check.js dshTagOf",
+    "test": "scripts/test/mirror-to-ecr.test.mjs, tracy-updater.test.mjs, install-shard.test.mjs, apps/tracy-web/test/shards-check.test.mjs, packages/fleet/tracy-fleet-operation/test/adopt-local-image.test.mjs"
+  },
+  "fence": "Local doubles only: fake docker and aws-cli on the PATH, temp directories, no network, no server, no real key.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "--test-reporter=tap",
+      "scripts/test/mirror-to-ecr.test.mjs",
+      "scripts/test/tracy-updater.test.mjs",
+      "scripts/test/install-shard.test.mjs",
+      "apps/tracy-web/test/shards-check.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/adopt-local-image.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a context tag only GHCR holds (reused, not rebuilt) is copied to ECR, then the extra tags point at it",
+      "a context tag ECR already holds is not copied again",
+      "a tag GHCR does not hold fails the job, and a bad tag is refused before any registry call",
+      "REGISTRY_AUTH=ecr: the plan logs in to ECR through the aws-cli image and pulls under TRACY_IMAGE_PREFIX",
+      "REGISTRY_AUTH=ecr with a prefix outside ECR_REGISTRY is refused before anything is planned",
+      "ECR login (fake docker): the pull key reaches the aws-cli container through a 0600 file, never an argv, and the file is removed",
+      "REGISTRY_AUTH=ecr: registry.env names the ECR pull key, the login goes through the aws-cli image, every image under TRACY_IMAGE_PREFIX",
+      "REGISTRY_AUTH=ecr: its inputs are required by name, and a prefix outside ECR_REGISTRY is refused",
+      "the master s dsh tag falls back to the running container when the host cannot read host-dsh.env",
+      "deploy-tracy-stack.sh: an image only under its GHCR name is tagged under the ECR name, said in one line",
+      "deploy-host-dsh.sh: an image only under its GHCR name is tagged under the ECR name, said in one line"
+    ]
+  }
+}

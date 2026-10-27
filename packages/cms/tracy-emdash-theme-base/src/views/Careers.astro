@@ -1,0 +1,41 @@
+---
+/**
+ * /careers — the timeline (its heading is the page's h1, as in the source) and the CTA. The
+ * source renders no article header: the `intro` field is not on the page, and the view follows
+ * the source.
+ */
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import Timeline from '@/components/sections/Timeline.astro'
+import CtaBand from '@/components/sections/CtaBand.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { entry } = await getEmDashEntry('careers', 'careers', { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const d = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'careers', entry)
+---
+
+<Base chrome={chrome} title={d.title} description={d.intro || d.timeline_intro} currentPath="/careers" content={{ collection: "careers", id: entry.data.id, slug: "careers", toPath: () => "/careers" }}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<section class="band">
+			<Timeline as="h1" eyebrow={d.timeline_eyebrow} heading={d.timeline_heading} intro={d.timeline_intro} entries={d.timeline_entries ?? []} stamp={$page} fields={{ eyebrow: "timeline_eyebrow", heading: "timeline_heading", intro: "timeline_intro", entries: "timeline_entries" }} />
+		</section>
+		<section class="band">
+			<CtaBand variant="capsule" title={d.cta_statement} text={d.cta_support} btnLabel={d.cta_btn_label} btnUrl={d.cta_btn_url} linkLabel={d.cta_link_label} linkUrl={d.cta_link_url} stamp={$page} fields={{ title: "cta_statement", text: "cta_support", btnLabel: "cta_btn_label", linkLabel: "cta_link_label" }} />
+		</section>
+	</main>
+</Base>

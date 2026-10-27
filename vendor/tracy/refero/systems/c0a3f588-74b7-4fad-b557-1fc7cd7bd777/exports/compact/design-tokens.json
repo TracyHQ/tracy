@@ -1,0 +1,39 @@
+{
+  "color": {
+    "ink-charcoal": {
+      "$value": "#292a2c",
+      "$type": "color",
+      "$description": "Ink Charcoal — Primary text, dominant border strokes (635 occurrences as borderColor), nav accents"
+    },
+    "vellum": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Vellum — Page canvas, card surfaces — warm-leaning off-white that gives the page a paper-stock feel rather than digital white"
+    },
+    "full-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Full Black — Link border underlines, footer text, icon strokes, image overlay text — used as a chromatic anchor only where maximum contrast against Vellum is required"
+    }
+  },
+  "font": {
+    "ogg": {
+      "$value": "ogg",
+      "$type": "fontFamily",
+      "$description": "Display and project headlines. This is a high-contrast didone-flavored serif used at 55px with aggressive -0.036em tracking — it acts as the gallery label, announcing each case study with typographic weight that the sans-serif never attempts. At smaller sizes (24-26px) the same family handles editorial pull-quotes and the wordmark, where the negative tracking tightens less aggressively (-0.02em). The signature choice: a single weight (400) doing all serif work, relying on the contrast within letterforms rather than weight variation to create hierarchy."
+    },
+    "telegraf": {
+      "$value": "telegraf",
+      "$type": "fontFamily",
+      "$description": "Body copy, navigation, metadata tags, project category labels, and secondary headings. A geometric sans that does all the quiet documentation work. At 55px it can also serve as display type, creating a rare moment where both fonts meet at the same size — typically the serif announces the project name while the sans describes it below. Tracking is positive throughout (0.002em to 0.040em), widening as size decreases — a deliberate inverse relationship that keeps small caps-styled metadata readable and gives the wordmark breathing room."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://notreal.tv",
+      "siteName": "Not Real",
+      "extractedAt": "2026-06-03T21:12:12.230Z",
+      "variant": "compact"
+    }
+  }
+}

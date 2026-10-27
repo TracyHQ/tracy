@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.join_request-escape",
+  "itemIds": [
+    "letter:team.join_request:en",
+    "letter:team.join_request:vi",
+    "letter:team.join_request:de",
+    "letter:team.join_request:it",
+    "letter:team.join_request:fr",
+    "letter:team.join_request:nl",
+    "letter:team.join_request:zh",
+    "letter:team.join_request:es"
+  ],
+  "requirement": "team.join_request: markup in user-supplied text is escaped in HTML",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "hostile",
+    "invariant": "a letter must not carry live markup from a person-supplied name, quote or site address"
+  },
+  "edgeTags": ["escape"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.escape#team.join_request:"],
+  "redProof": null,
+  "legacyIds": []
+}

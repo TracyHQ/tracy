@@ -1,0 +1,9 @@
+:root {
+  /* Colors */
+  --color-canvas: #ffffff;
+  --color-ink: #000000;
+  --color-stone: #757575;
+
+  /* Typography — Font Families */
+  --font-helvetica-now-text: 'Helvetica Now Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

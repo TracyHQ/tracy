@@ -1,0 +1,314 @@
+import { generateKeyPairSync } from "node:crypto";
+
+import { decodePKIXRSAPublicKey } from "@oslojs/crypto/rsa";
+import { encodeBase64urlNoPadding } from "@oslojs/encoding";
+import { parseAttestationObject, coseAlgorithmRS256, COSEKeyType } from "@oslojs/webauthn";
+import { describe, expect, it, vi } from "vitest";
+
+import { bindChallengeContext, defineChallengeContext } from "./challenge-context.js";
+import { generateRegistrationOptions, verifyRegistrationResponse } from "./register.js";
+import type { AtomicChallengeStore, ChallengeStore, PasskeyConfig } from "./types.js";
+
+/**
+ * Locks in origin-check parity with `authenticate.ts`. The two functions
+ * share the same 3-line block; without this test, a divergence would slip
+ * through. The challenge mock satisfies the prior steps so origin verification
+ * is the next gate the function reaches — `attestationObject` is junk, which
+ * never gets parsed because the origin check fires first.
+ */
+
+const config: PasskeyConfig = {
+	rpName: "Test Site",
+	rpId: "example.com",
+	origins: ["https://example.com"],
+};
+
+const enrolmentContext = defineChallengeContext("passkey-enrolment", 1, (value) => value);
+
+function base64url(bytes: Uint8Array): string {
+	return Buffer.from(bytes).toString("base64url");
+}
+
+function makeChallengeStore(): ChallengeStore {
+	return {
+		set: vi.fn(async () => undefined),
+		get: vi.fn(async () => ({
+			type: "registration" as const,
+			userId: "user_1",
+			expiresAt: Date.now() + 60_000,
+		})),
+		delete: vi.fn(async () => undefined),
+	};
+}
+
+vi.mock("@oslojs/webauthn", async (importOriginal) => {
+	const mod = await importOriginal<typeof import("@oslojs/webauthn")>();
+	return {
+		...mod,
+		parseAttestationObject: vi.fn(mod.parseAttestationObject),
+	};
+});
+
+describe("verifyRegistrationResponse", () => {
+	it.each(["preferred", "required", "discouraged"] as const)(
+		"wires %s user verification into registration options",
+		async (userVerification) => {
+			const options = await generateRegistrationOptions(
+				{ ...config, userVerification },
+				{ id: "user_1", email: "user@example.com", name: "User" },
+				[],
+				makeChallengeStore(),
+			);
+
+			expect(options.authenticatorSelection?.userVerification).toBe(userVerification);
+		},
+	);
+
+	it("defaults registration options to preferred user verification", async () => {
+		const options = await generateRegistrationOptions(
+			config,
+			{ id: "user_1", email: "user@example.com", name: "User" },
+			[],
+			makeChallengeStore(),
+		);
+
+		expect(options.authenticatorSelection?.userVerification).toBe("preferred");
+	});
+
+	it.each([
+		["undefined", undefined],
+		["non-callable", "not-a-function"],
+	] as const)("rejects a typed-context store with %s consume", async (_label, consume) => {
+		const challengeStore = makeChallengeStore();
+		const options = await generateRegistrationOptions(
+			config,
+			{ id: "user_1", email: "user@example.com", name: "User" },
+			[],
+			challengeStore,
+			bindChallengeContext(enrolmentContext, { approverDid: "did:plc:approver" }),
+		);
+		const clientDataJSON = Buffer.from(
+			JSON.stringify({
+				type: "webauthn.create",
+				challenge: options.challenge,
+				origin: "https://example.com",
+			}),
+		);
+		const malformedStore = {
+			...challengeStore,
+			consume,
+		} as unknown as AtomicChallengeStore;
+
+		await expect(
+			verifyRegistrationResponse(
+				config,
+				{
+					id: "test-credential",
+					rawId: "test-credential",
+					type: "public-key",
+					response: {
+						clientDataJSON: base64url(clientDataJSON),
+						attestationObject: "AA",
+					},
+				},
+				malformedStore,
+				enrolmentContext,
+			),
+		).rejects.toThrow("Typed challenge context requires an atomic challenge store");
+		expect(challengeStore.get).not.toHaveBeenCalled();
+		expect(challengeStore.delete).not.toHaveBeenCalled();
+	});
+
+	it("returns typed context after atomic challenge consumption", async () => {
+		const challengeStore = makeChallengeStore();
+		const options = await generateRegistrationOptions(
+			config,
+			{ id: "user_1", email: "user@example.com", name: "User" },
+			[],
+			challengeStore,
+			bindChallengeContext(enrolmentContext, { approverDid: "did:plc:approver" }),
+		);
+		const stored = vi.mocked(challengeStore.set).mock.calls[0]?.[1];
+		if (!stored) throw new Error("Expected challenge data to be stored");
+		const atomicStore = {
+			atomic: true,
+			set: challengeStore.set,
+			consume: vi.fn(async () => stored),
+		} satisfies AtomicChallengeStore;
+
+		const clientDataJSON = Buffer.from(
+			JSON.stringify({
+				type: "webauthn.create",
+				challenge: options.challenge,
+				origin: "https://example.com",
+			}),
+		);
+		const { publicKey } = generateKeyPairSync("rsa", { modulusLength: 2048 });
+		const jwk = publicKey.export({ format: "jwk" });
+		const n = BigInt(`0x${Buffer.from(jwk.n!, "base64url").toString("hex")}`);
+		const e = BigInt(`0x${Buffer.from(jwk.e!, "base64url").toString("hex")}`);
+		vi.mocked(parseAttestationObject).mockReturnValueOnce({
+			authenticatorData: {
+				verifyRelyingPartyIdHash: () => true,
+				userPresent: true,
+				userVerified: true,
+				signatureCounter: 0,
+				credential: {
+					id: new Uint8Array(16),
+					publicKey: {
+						algorithm: () => coseAlgorithmRS256,
+						type: () => COSEKeyType.RSA,
+						rsa: () => ({ n, e }),
+					},
+				},
+			},
+			attestationStatement: { format: "none" },
+		} as any);
+
+		const result = await verifyRegistrationResponse(
+			config,
+			{
+				id: "test-credential",
+				rawId: "test-credential",
+				type: "public-key",
+				response: {
+					clientDataJSON: base64url(clientDataJSON),
+					attestationObject: "AA",
+				},
+			},
+			atomicStore,
+			enrolmentContext,
+		);
+
+		expect(result).toMatchObject({ challengeContext: { approverDid: "did:plc:approver" } });
+		expect(atomicStore.consume).toHaveBeenCalledWith(options.challenge);
+		expect(challengeStore.delete).not.toHaveBeenCalled();
+	});
+
+	it("rejects registration without UV when user verification is required", async () => {
+		const challenge = encodeBase64urlNoPadding(new TextEncoder().encode("test-challenge"));
+		const clientDataJSON = Buffer.from(
+			JSON.stringify({
+				type: "webauthn.create",
+				challenge,
+				origin: "https://example.com",
+			}),
+		);
+		vi.mocked(parseAttestationObject).mockReturnValueOnce({
+			authenticatorData: {
+				verifyRelyingPartyIdHash: () => true,
+				userPresent: true,
+				userVerified: false,
+			},
+			attestationStatement: { format: "none" },
+		} as any);
+
+		await expect(
+			verifyRegistrationResponse(
+				{ ...config, userVerification: "required" },
+				{
+					id: "test-credential",
+					rawId: "test-credential",
+					type: "public-key",
+					response: {
+						clientDataJSON: base64url(clientDataJSON),
+						attestationObject: "AA",
+					},
+				},
+				makeChallengeStore(),
+			),
+		).rejects.toThrow("User verification not verified");
+	});
+	it("rejects an origin not in the accepted list", async () => {
+		const challenge = encodeBase64urlNoPadding(new TextEncoder().encode("test-challenge"));
+		const clientDataJSON = Buffer.from(
+			JSON.stringify({
+				type: "webauthn.create",
+				challenge,
+				origin: "https://attacker.com",
+			}),
+		);
+
+		await expect(
+			verifyRegistrationResponse(
+				config,
+				{
+					id: "test-credential",
+					rawId: "test-credential",
+					type: "public-key",
+					response: {
+						clientDataJSON: base64url(clientDataJSON),
+						attestationObject: "AA",
+					},
+				},
+				makeChallengeStore(),
+			),
+		).rejects.toThrow(/Invalid origin: https:\/\/attacker\.com not in/);
+	});
+
+	it("processes an RS256 registration correctly and encodes to PKIX", async () => {
+		const challenge = encodeBase64urlNoPadding(new TextEncoder().encode("test-challenge"));
+		const clientDataJSON = Buffer.from(
+			JSON.stringify({
+				type: "webauthn.create",
+				challenge,
+				origin: "https://example.com",
+			}),
+		);
+
+		// Generate a real RSA key pair to get valid modulus and exponent
+		const { publicKey } = generateKeyPairSync("rsa", { modulusLength: 2048 });
+		const jwk = publicKey.export({ format: "jwk" });
+		const nBuf = Buffer.from(jwk.n!, "base64url");
+		const eBuf = Buffer.from(jwk.e!, "base64url");
+
+		// oslojs expects these to be BigInts for its internal math
+		const n = BigInt("0x" + nBuf.toString("hex"));
+		const e = BigInt("0x" + eBuf.toString("hex"));
+
+		// Mock the parsed attestation object to bypass CBOR parsing and inject our RSA key
+		vi.mocked(parseAttestationObject).mockReturnValueOnce({
+			authenticatorData: {
+				rpIdHash: new Uint8Array(32),
+				verifyRelyingPartyIdHash: () => true,
+				userPresent: true,
+				userVerified: true,
+				flags: { uv: true, up: true, be: false, bs: false, at: true, ed: false },
+				signatureCounter: 0,
+				credential: {
+					id: new Uint8Array(16),
+					publicKey: {
+						algorithm: () => coseAlgorithmRS256,
+						type: () => COSEKeyType.RSA,
+						rsa: () => ({ n, e }),
+					},
+				},
+			},
+			attestationStatement: {
+				format: "none",
+			},
+		} as any);
+
+		const result = await verifyRegistrationResponse(
+			{ ...config, userVerification: "required" },
+			{
+				id: "test-credential",
+				rawId: "test-credential",
+				type: "public-key",
+				response: {
+					clientDataJSON: base64url(clientDataJSON),
+					attestationObject: "AA", // Mocked
+				},
+			},
+			makeChallengeStore(),
+		);
+
+		expect(result.algorithm).toBe(coseAlgorithmRS256);
+		expect(result.publicKey).toBeInstanceOf(Uint8Array);
+
+		// Verify the round-trip: encodePKIX() was called, so decodePKIXRSAPublicKey() should work
+		const decoded = decodePKIXRSAPublicKey(result.publicKey);
+		expect(decoded.n).toEqual(n);
+		expect(decoded.e).toEqual(e);
+	});
+});

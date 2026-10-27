@@ -1,0 +1,59 @@
+{
+  "color": {
+    "deep-ink": {
+      "$value": "#000d10",
+      "$type": "color",
+      "$description": "Deep Ink — Primary text, footer background, filled action buttons, icon strokes — the structural near-black carries the entire brand voice in type and CTAs"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text on dark, nav backdrop — the quiet field against which everything else reads"
+    },
+    "cool-ash": {
+      "$value": "#8e8e95",
+      "$type": "color",
+      "$description": "Cool Ash — Secondary body text, nav items, muted helper labels — the only neutral that recedes deliberately behind primary copy"
+    },
+    "pebble": {
+      "$value": "#d5d3d4",
+      "$type": "color",
+      "$description": "Pebble — Hairline borders, dividers, subtle surface alternation between dark sections — visible only at edges"
+    },
+    "midnight-hull": {
+      "$value": "#0f0f1c",
+      "$type": "color",
+      "$description": "Midnight Hull — Dark section backgrounds (Travel Support area) — slightly bluer than Deep Ink to differentiate stacked dark bands"
+    },
+    "charcoal-deck": {
+      "$value": "#151623",
+      "$type": "color",
+      "$description": "Charcoal Deck — Elevated dark panels and deep section backgrounds — the top of the dark surface stack with a faint indigo cast"
+    },
+    "clay-ember": {
+      "$value": "#bc7155",
+      "$type": "color",
+      "$description": "Clay Ember — Featured solution card background, decorative fills — the single warm note in an otherwise cold system, used sparingly to make one offering feel chosen"
+    }
+  },
+  "font": {
+    "helveticanowdisplay": {
+      "$value": "HelveticaNowDisplay",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the system. The weight 700 at 187px with -0.02em tracking is the signature: it sets the wordmark and hero at near-architectural scale, turning headlines into physical objects. Weight 400 at 18px with 1.61 line-height handles all body copy, creating the most spacious text block in the type system."
+    },
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.flyhyer.com",
+      "siteName": "Hyer Aviation",
+      "extractedAt": "2026-07-03T03:14:39.142Z",
+      "variant": "compact"
+    }
+  }
+}

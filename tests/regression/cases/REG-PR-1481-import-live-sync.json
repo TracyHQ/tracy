@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1481-import-live-sync",
+  "kind": "feat",
+  "title": "Sync from live brings an imported Joomla site's live changes into its copy, keeps Tracy's side wherever both changed and lists those places, renumbers records both sites created, holds what it cannot renumber, and never takes the live configuration or token",
+  "pr": 1481,
+  "area": "import/live-sync",
+  "cms": ["jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-sync-files.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs",
+    "S2: node --test packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs (a docker daemon: they start mariadb:11)",
+    "S3: node --test packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs",
+    "S4 (local stack only): node tests/live-sync-sim/sim.mjs — a real Import of a Joomla site on the stack, eleven scenarios through the Sync door, the last one the handover ZIP run on the official joomla image"
+  ],
+  "expect": [
+    "S1: every test passes; configuration.php keeps the copy's password, host and live_site even when only the live site changed the file; records both sides created get new numbers and every reference follows.",
+    "S2: every test passes, none skipped; a clash keeps the copy's value and is listed under kept with the live value; a copy changed after the merge is refused COPY_CHANGED; an incremental read is laid over the last one; forget deletes the last read and the next sync starts from the build.",
+    "S3: every test passes; the token never appears in the script's output; a database that changes between the two reads is LIVE_BUSY.",
+    "S4: 11/11 scenarios pass."
+  ],
+  "selectors": {
+    "doors": "GET|POST /api/sites/:key/sync (body {allowHeld})",
+    "host": "tracy-host job kinds webroot-sync, webroot-sync-merge, webroot-sync-apply, webroot-sync-copy-token, webroot-sync-forget",
+    "ui": "[data-sync-now], [data-sync-then-export], [data-export-without-sync], [data-live-sync-state]"
+  },
+  "evidence": "tasks/evidence/live-sync/ — the stand runs, and flow/ + sim/: the simulator's scenarios and the Sync button step by step on the real dsh page",
+  "fence": "The merge keeps Tracy's side wherever both sites changed one place and says so (kept), never takes the live site's configuration file whole, holds new live records it cannot number again instead of dropping them, and an apply refuses a copy that moved since its merge",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-files.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs"
+    ],
+    "timeout_s": 1800
+  }
+}

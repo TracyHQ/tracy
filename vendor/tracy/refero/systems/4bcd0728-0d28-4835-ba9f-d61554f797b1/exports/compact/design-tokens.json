@@ -1,0 +1,89 @@
+{
+  "color": {
+    "ember-orange": {
+      "$value": "#ff5a2f",
+      "$type": "color",
+      "$description": "Ember Orange — Primary action buttons, active badges, accent borders — the system's only chromatic voice, used to signal interactivity and emphasis"
+    },
+    "ember-orange-link-variant": {
+      "$value": "#f15b2b",
+      "$type": "color",
+      "$description": "Ember Orange (link variant) — Orange text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Primary text, icons, image overlays, card headings — maximum contrast against white canvas"
+    },
+    "graphite": {
+      "$value": "#1f1f1f",
+      "$type": "color",
+      "$description": "Graphite — Headings, body emphasis, dark surface alternative — slightly softened black for large display text"
+    },
+    "slate-dark": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Slate Dark — List items, secondary body text, card content"
+    },
+    "stone": {
+      "$value": "#555555",
+      "$type": "color",
+      "$description": "Stone — Navigation labels, subdued body text"
+    },
+    "pewter": {
+      "$value": "#707070",
+      "$type": "color",
+      "$description": "Pewter — Muted descriptions, inactive list items, heading borders"
+    },
+    "steel": {
+      "$value": "#a5a5a5",
+      "$type": "color",
+      "$description": "Steel — Disabled or decorative text"
+    },
+    "mist": {
+      "$value": "#b7bfc1",
+      "$type": "color",
+      "$description": "Mist — Card borders, subtle button shadows — cool-tinted gray that defines container edges"
+    },
+    "cloud": {
+      "$value": "#cbcbcb",
+      "$type": "color",
+      "$description": "Cloud — Alternate card backgrounds, disabled surfaces"
+    },
+    "fog": {
+      "$value": "#dddddd",
+      "$type": "color",
+      "$description": "Fog — Neutral secondary button fill, placeholder surfaces"
+    },
+    "paper": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Paper — Hairline dividers, borders across all contexts — the structural neutral that separates sections"
+    },
+    "pearl": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Pearl — Card surfaces, subtle backgrounds, alternate section bands"
+    },
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, nav surface, card fill, button text — the dominant canvas"
+    }
+  },
+  "font": {
+    "plus-jakarta-sans": {
+      "$value": "Plus Jakarta Sans",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for all text — body, headings, nav, buttons, badges, icons. The wide weight range (300–800) carries the entire visual hierarchy; display sizes reach 80px at weight 300 for a light, expansive headline, while UI text sits at 14-16px weight 400-500"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://pad.dotincorp.com",
+      "siteName": "Dot Inc.",
+      "extractedAt": "2026-06-03T20:18:32.038Z",
+      "variant": "compact"
+    }
+  }
+}

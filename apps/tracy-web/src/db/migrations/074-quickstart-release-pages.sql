@@ -1,0 +1,14 @@
+-- The pages a release's template has, as the release itself ships them (`tracy_site_pages.json`,
+-- `apps/tracy-web/src/lib/site-pages-schema.mjs`; plan T02, #1013, 07/10/2026).
+--
+--   pages   jsonb, nullable: `[{ "id", "label", "home"? }]` as last read; null when the release
+--           ships no file, or the file was refused (the sentence is in `reason`, the release stays
+--           choosable)
+--
+-- 🔒 THE LIST LIVES ON THE RELEASE, NOT HERE. Like `inspiration`, the column is overwritten by every
+-- read (`syncReleases`, `syncLocalReleases`): a file changed or taken off the release changes the
+-- list on the next read. Nobody edits it in this table.
+--
+-- A new nullable column: no scan, no backfill. Rows fill on the next read (boot, every ten
+-- minutes, Refresh, or the release webhook).
+alter table quickstart_releases add column if not exists pages jsonb;

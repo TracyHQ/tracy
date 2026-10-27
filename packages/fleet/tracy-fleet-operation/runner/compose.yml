@@ -1,0 +1,45 @@
+# One GitHub Actions runner for the source repository (TRACY_SOURCE_REPO). This machine also carries the dev deploy stack, so the
+# ceilings below are load-bearing, not decoration: an unbounded `docker build` takes every core and
+# the dev tracy-dsh stops answering while it runs.
+services:
+  runner:
+    build: .
+    image: tracy/actions-runner:local
+    container_name: tracy-runner
+    restart: unless-stopped
+    # 🔒 ROOT IN THIS CONTAINER, DELIBERATELY. The deploy writes /etc/tracy/host-dsh.env and
+    # /opt/tracy-fleet/dsh/ on the HOST, both root-owned there. The alternative — chowning fleet
+    # directories to uid 1001 — weakens the host's own permissions for every local user, to buy
+    # nothing: this container already holds the docker socket, which is root on the host anyway.
+    user: "0:0"
+    environment:
+      RUNNER_ALLOW_RUNASROOT: "1"
+      # TracyHQ/tch until the move to the public repo; then TRACY_SOURCE_REPO=TracyHQ/tracy in ./.env and re-register.
+      RUNNER_REPO: ${TRACY_SOURCE_REPO:-TracyHQ/tch}
+      RUNNER_NAME: tracy-build-01
+      RUNNER_LABELS: self-hosted,linux,x64,tracy-build,tracy-dev
+      RUNNER_TOKEN: ${RUNNER_TOKEN:-}
+    volumes:
+      # The host daemon builds; this container only drives it.
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Runner identity + workspace survive a restart.
+      - runner-home:/home/runner
+      # What the deploy writes on this host. Same absolute paths inside and out, because compose
+      # resolves host-dsh.yml's relative bind (./docker-proxy.haproxy.cfg) against the file's own
+      # directory and then hands the DAEMON an absolute path — a path that has to exist on the host.
+      - /opt/tracy-fleet:/opt/tracy-fleet
+      - /etc/tracy:/etc/tracy
+      # The host dsh's /desk-home lives here, and `seed-profile.sh` writes into it. Without this line
+      # deploy dies at `seed-profile: no /srv/tracy/host-dsh/home` — a folder that EXISTS on the host but
+      # the container cannot see (measured 07/09, the first CD run).
+      - /srv/tracy:/srv/tracy
+    group_add:
+      - "988"
+    deploy:
+      resources:
+        limits:
+          cpus: '6'
+          memory: 12G
+
+volumes:
+  runner-home:

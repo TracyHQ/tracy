@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1421-export-dialog-privacy-one-line",
+  "kind": "fix",
+  "title": "Export site as ZIP, now the Download step of the Publish tab: the privacy line is one strip with the approved words, what the ZIP holds is shown as tags (no collapsible Export details row), and the backup download dialog focuses itself",
+  "pr": 1421,
+  "area": "site-backup/export-zip",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Open the ZIP step of the Publish tab (choose 'Download a ZIP', or 'Export site as ZIP' in the '…' menu) on a site with no package yet.",
+    "S2: On the same step read the privacy strip and the list of what the ZIP holds.",
+    "S3: Open the Backup download dialog and read the focused element, then press Tab."
+  ],
+  "expect": [
+    "S1: the step is at stage 'confirm' ([data-export-stage=\"confirm\"]) and its footer offers Prepare ZIP ([data-export-start]).",
+    "S2: one [data-export-privacy] strip reads 'Contains personal data and site secrets. Keep it private.'; [data-export-details] lists four tags (fresh backup, files over 50 MB included, up to 1 GiB, README); there is no collapsible details row.",
+    "S3: the dialog itself holds focus on open; Tab reaches a button."
+  ],
+  "selectors": {
+    "files": "packages/core/tracy-core/src/site-tabs/publish/ZipStep.tsx, packages/core/tracy-core/src/site-tabs/publish/use-site-export.ts, packages/core/tracy-core/src/site-tabs/DownloadBackupDialog.tsx",
+    "dom": "[data-export-stage], [data-export-privacy], [data-export-details], [data-export-start], [data-download-backup]",
+    "tool": "node --test DOM test of the ZIP step (jsdom), and the browser test of the backup download dialog"
+  },
+  "evidence": "On dev the dialog was 448px (sm:max-w-md) and the word 'private.' wrapped alone onto a second line; the test measured 2 line boxes before the change; the dialog focused the Export details trigger on open, and with no preflight its bare `border` painted in currentColor (oklch(0.145 0 0) in light, near-white on the dark dsh page)",
+  "fence": "The real ZIP step and its hook in jsdom with the export doors stubbed (English words of the plugin's own table); the one-line measurement of the old 512px dialog has no counterpart since the dialog became a step of the Publish tab (23/10/2026)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs",
+      "packages/site/tracy-site-tabs/test/e2e/backup-download-dialog.test.mjs"
+    ],
+    "tests": [
+      "ZIP: the confirm step lists what the package holds as tags and keeps the privacy line, with no collapsible box",
+      "ZIP: a server that cannot say (an older server, an error) opens on Prepare ZIP",
+      "opening the backup download dialog focuses the dialog, not its first button"
+    ]
+  }
+}

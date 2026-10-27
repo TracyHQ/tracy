@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-cursor-green: #27f795;
+  --color-hover-green: #008060;
+  --color-terminal-red: #800000;
+  --color-pure-white: #ffffff;
+  --color-void-black: #000000;
+  --color-console-black: #0a0a0a;
+  --color-panel-charcoal: #151515;
+  --color-card-graphite: #262626;
+  --color-border-smoke: #353535;
+  --color-muted-ash: #8d8d8d;
+  --color-tertiary-fog: #999999;
+  --color-highlight-mist: #d9d9d9;
+
+  /* Typography — Font Families */
+  --font-roboto: 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roboto-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

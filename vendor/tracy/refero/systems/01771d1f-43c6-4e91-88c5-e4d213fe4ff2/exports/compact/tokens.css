@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-bone-canvas: #efefe4;
+  --color-paper-white: #fcfcf9;
+  --color-bright-card: #ffffff;
+  --color-mist: #f3f3f4;
+  --color-ash-gray: #e3e3e3;
+  --color-stone: #d7d7d6;
+  --color-smoke: #c1c1c0;
+  --color-pewter: #a8a8a8;
+  --color-graphite: #909090;
+  --color-slate: #83837e;
+  --color-iron: #666666;
+  --color-lava: #434341;
+  --color-carbon: #222222;
+  --color-ink: #181818;
+  --color-studio-blue: #5d8cd7;
+  --color-wash-blue: #81adec;
+
+  /* Typography — Font Families */
+  --font-matter: 'Matter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-paper-mono: 'Paper Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

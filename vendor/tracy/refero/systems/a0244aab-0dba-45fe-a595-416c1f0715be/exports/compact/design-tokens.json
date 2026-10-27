@@ -1,0 +1,134 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page and card surfaces, button text on dark fills, inverse text on black"
+    },
+    "ash-gray": {
+      "$value": "#dbdbdb",
+      "$type": "color",
+      "$description": "Ash Gray — Default hairline borders, dividers between sections, the most-used neutral border"
+    },
+    "carbon": {
+      "$value": "#242424",
+      "$type": "color",
+      "$description": "Carbon — Navigation borders, deep surface tone, alt black for softer contrast"
+    },
+    "graphite": {
+      "$value": "#545454",
+      "$type": "color",
+      "$description": "Graphite — Body text, icon strokes, secondary text, muted UI labels"
+    },
+    "smoke": {
+      "$value": "#969696",
+      "$type": "color",
+      "$description": "Smoke — Tertiary text, placeholder labels, disabled icon outlines, decorative dot fields"
+    },
+    "slate": {
+      "$value": "#7a7a7a",
+      "$type": "color",
+      "$description": "Slate — Muted helper text, subtle borders, supporting metadata"
+    },
+    "bone": {
+      "$value": "#e7e7e7",
+      "$type": "color",
+      "$description": "Bone — Light borders, subtle surface separators, ghost button outlines"
+    },
+    "iron": {
+      "$value": "#414141",
+      "$type": "color",
+      "$description": "Iron — Icon strokes, dark borders, button shadows, dense text"
+    },
+    "obsidian": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Obsidian — Filled button background — the system’s only CTA fill, paired with white text"
+    },
+    "mist": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Mist — Subtle elevated surfaces, off-white section bands, card hover wash"
+    },
+    "cinder": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Cinder — Deepest text and badge backgrounds, near-black accent"
+    },
+    "signal-green": {
+      "$value": "#009966",
+      "$type": "color",
+      "$description": "Signal Green — Green outline accent for tags, dividers, and focused UI edges"
+    },
+    "spring-mint": {
+      "$value": "#00bc7d",
+      "$type": "color",
+      "$description": "Spring Mint — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    },
+    "fern": {
+      "$value": "#00d492",
+      "$type": "color",
+      "$description": "Fern — Soft badge backgrounds, callout fills, gradient end-stop"
+    },
+    "ember-orange": {
+      "$value": "#e17100",
+      "$type": "color",
+      "$description": "Ember Orange — Icon strokes and feature-card illustrations — the warmest functional accent in iconography"
+    },
+    "marigold": {
+      "$value": "#fe9a00",
+      "$type": "color",
+      "$description": "Marigold — Vivid icon fills, alert-tinged highlights, gradient mid-stop; The signature top-of-page gradient hairline — 9-stop spectrum from maroon through amber, green, indigo, to sky"
+    },
+    "amber": {
+      "$value": "#ffb900",
+      "$type": "color",
+      "$description": "Amber — Tag/badge backgrounds, warm highlight washes, featured callout fills"
+    },
+    "coral": {
+      "$value": "#ff6467",
+      "$type": "color",
+      "$description": "Coral — Red outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color"
+    },
+    "iris-blue": {
+      "$value": "#155dfc",
+      "$type": "color",
+      "$description": "Iris Blue — Link and icon accent — the only saturated blue, used sparingly for emphasis strokes"
+    }
+  },
+  "font": {
+    "ui-sans-serif-system": {
+      "$value": "ui-sans-serif (system)",
+      "$type": "fontFamily",
+      "$description": "UI chrome — nav labels, buttons, badges, table data, form fields. Renders as a system font (San Francisco / Segoe UI / Roboto fallback). Small sizes (9–13px) handle the dense secondary UI; 16–18px for button text. Wide tracking (0.05em) on uppercase micro-labels like “THE PROBLEM”."
+    },
+    "tobias": {
+      "$value": "Tobias",
+      "$type": "fontFamily",
+      "$description": "Display and headline serif — used at massive sizes (up to 140px) for hero statements, section openers, and oversized editorial moments. The weight-100 thinness is the brand’s single most distinctive choice; it makes headlines feel engraved rather than printed. No system font replicates this — substitute with a hairline serif (e.g. “Tobias”, “GT Super”, or “Fraunces 100”)."
+    },
+    "diatype": {
+      "$value": "Diatype",
+      "$type": "fontFamily",
+      "$description": "Primary body and subheading sans — compact, neutral, engineered for reading. Weight 300 for lighter pull-quotes, 400 for body, 500 for subhead emphasis. The slight contrast with Tobias gives the editorial pairing its rhythm. Substitute with Inter, Söhne, or Geist."
+    },
+    "speakeasyascii": {
+      "$value": "speakeasyAscii",
+      "$type": "fontFamily",
+      "$description": "speakeasyAscii — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.speakeasy.com",
+      "siteName": "Speakeasy",
+      "extractedAt": "2026-06-03T16:20:24.899Z",
+      "variant": "compact"
+    }
+  }
+}

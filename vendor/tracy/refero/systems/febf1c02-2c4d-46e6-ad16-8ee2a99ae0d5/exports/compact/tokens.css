@@ -1,0 +1,8 @@
+:root {
+  /* Colors */
+  --color-cream-paper: #fffffc;
+  --color-ink-black: #000000;
+
+  /* Typography — Font Families */
+  --font-circular-std: 'Circular Std', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

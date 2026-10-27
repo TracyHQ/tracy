@@ -1,0 +1,601 @@
+[
+  {
+    "id": "QA-INFRA-dockerfile-dsh-disk-permission",
+    "itemIds": [
+      "dockerfile:packages/fleet/tracy-fleet-operation/dsh/Dockerfile",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/brand/tracy-brand",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/bundle/tracy-native",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/design/tracy-brand-engine",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/design/tracy-design-inspiration",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/design/tracy-design-skill",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/cms/",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/entrypoint.sh",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/profile/cordis.patch.yml",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/profile/package.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/profile/settings.yaml",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/skill-sets.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/scripts/provision/templates",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/locale/tracy-locale-vi",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/locale/tracy-locales",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-add-site",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-inbox",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-my-sites",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-site-build-emdash",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-site-build-joomla",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-site-build-wordpress",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-site-tabs",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/tools/tracy-sandbox-docker",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/tools/tracy-site-tools",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/tools/tracy-subprocess-docker",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/tools/tracy-webroot-read",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-ask-form",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-assistant",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-chat-input",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-mode-picker",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-model-plan",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-settings",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-sidebar",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-tab-link",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/joomla/joomlart-t4-skill",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/deepseek-harness/",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-better-locale",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-better-sidebar",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-better-sidebar/package.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-better-sidebar/pnpm-lock.yaml",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-better-sidebar/pnpm-workspace.yaml",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-locale-vi",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-passwords",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-passwords/.npmrc",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-passwords/npm-shrinkwrap.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-passwords/package.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-subscriptions",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/mattpocock-skills",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/od-brand-engine",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/od-design-system/catalog.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/od-design-system/systems",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/od-skill"
+    ],
+    "requirement": "packages/fleet/tracy-fleet-operation/dsh/Dockerfile: every COPY from a build context that may have been created under umask 077 stays readable by the image's runtime user (chown/chmod/--chmod/--chown, or a root runtime)",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["disk-permission", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["packages/fleet/tracy-fleet-operation/dsh/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["context-copies-readable", "scratch-context-private"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-dsh-missing-asset",
+    "itemIds": [
+      "dockerfile:packages/fleet/tracy-fleet-operation/dsh/Dockerfile",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/brand/tracy-brand",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/bundle/tracy-native",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/design/tracy-brand-engine",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/design/tracy-design-inspiration",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/design/tracy-design-skill",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/cms/",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/entrypoint.sh",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/profile/cordis.patch.yml",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/profile/package.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/profile/settings.yaml",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/dsh/skill-sets.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/fleet/tracy-fleet-operation/scripts/provision/templates",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/locale/tracy-locale-vi",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/locale/tracy-locales",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-add-site",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-inbox",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-my-sites",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-site-build-emdash",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-site-build-joomla",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-site-build-wordpress",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/site/tracy-site-tabs",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/tools/tracy-sandbox-docker",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/tools/tracy-site-tools",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/tools/tracy-subprocess-docker",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/tools/tracy-webroot-read",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-ask-form",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-assistant",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-chat-input",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-mode-picker",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-model-plan",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-settings",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-sidebar",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::packages/ui/tracy-tab-link",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/joomla/joomlart-t4-skill",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/deepseek-harness/",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-better-locale",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-better-sidebar",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-better-sidebar/package.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-better-sidebar/pnpm-lock.yaml",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-better-sidebar/pnpm-workspace.yaml",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-locale-vi",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-passwords",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-passwords/.npmrc",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-passwords/npm-shrinkwrap.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-passwords/package.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/dsh-subscriptions",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/mattpocock-skills",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/od-brand-engine",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/od-design-system/catalog.json",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/od-design-system/systems",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/dsh/Dockerfile::vendor/tracy/od-skill"
+    ],
+    "requirement": "packages/fleet/tracy-fleet-operation/dsh/Dockerfile: every COPY source from the build context exists (or is a documented build output) and is not excluded by .dockerignore",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["missing-asset", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["packages/fleet/tracy-fleet-operation/dsh/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["sources-reach-image"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-host-disk-permission",
+    "itemIds": [
+      "dockerfile:apps/tracy-host/Dockerfile",
+      "dockerfile-input:apps/tracy-host/Dockerfile::apps/tracy-host/package.json",
+      "dockerfile-input:apps/tracy-host/Dockerfile::apps/tracy-host/pnpm-lock.yaml",
+      "dockerfile-input:apps/tracy-host/Dockerfile::apps/tracy-host/src",
+      "dockerfile-input:apps/tracy-host/Dockerfile::packages/cms/tracy-emdash-theme-business/tools/personalize.mjs",
+      "dockerfile-input:apps/tracy-host/Dockerfile::packages/fleet/tracy-fleet-operation/scripts",
+      "dockerfile-input:apps/tracy-host/Dockerfile::packages/fleet/tracy-fleet-operation/web",
+      "dockerfile-input:apps/tracy-host/Dockerfile::vendor/php/scssphp/LICENSE.md",
+      "dockerfile-input:apps/tracy-host/Dockerfile::vendor/php/scssphp/src"
+    ],
+    "requirement": "apps/tracy-host/Dockerfile: every COPY from a build context that may have been created under umask 077 stays readable by the image's runtime user (chown/chmod/--chmod/--chown, or a root runtime)",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["disk-permission", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["apps/tracy-host/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["context-copies-readable", "scratch-context-private"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-host-missing-asset",
+    "itemIds": [
+      "dockerfile:apps/tracy-host/Dockerfile",
+      "dockerfile-input:apps/tracy-host/Dockerfile::apps/tracy-host/package.json",
+      "dockerfile-input:apps/tracy-host/Dockerfile::apps/tracy-host/pnpm-lock.yaml",
+      "dockerfile-input:apps/tracy-host/Dockerfile::apps/tracy-host/src",
+      "dockerfile-input:apps/tracy-host/Dockerfile::packages/cms/tracy-emdash-theme-business/tools/personalize.mjs",
+      "dockerfile-input:apps/tracy-host/Dockerfile::packages/fleet/tracy-fleet-operation/scripts",
+      "dockerfile-input:apps/tracy-host/Dockerfile::packages/fleet/tracy-fleet-operation/web",
+      "dockerfile-input:apps/tracy-host/Dockerfile::vendor/php/scssphp/LICENSE.md",
+      "dockerfile-input:apps/tracy-host/Dockerfile::vendor/php/scssphp/src"
+    ],
+    "requirement": "apps/tracy-host/Dockerfile: every COPY source from the build context exists (or is a documented build output) and is not excluded by .dockerignore",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["missing-asset", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["apps/tracy-host/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["sources-reach-image"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-image-build-umask077",
+    "itemIds": ["dockerfile:apps/tracy-web/Dockerfile"],
+    "requirement": "a scratch build context created under umask 077 builds an image whose runtime user can still read every copied file (real `docker build`)",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["disk-permission"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["a local node:24-slim image (no pull is made)"],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-runner-disk-permission",
+    "itemIds": [
+      "dockerfile:packages/fleet/tracy-fleet-operation/runner/Dockerfile",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/runner/Dockerfile::entrypoint.sh"
+    ],
+    "requirement": "packages/fleet/tracy-fleet-operation/runner/Dockerfile: every COPY from a build context that may have been created under umask 077 stays readable by the image's runtime user (chown/chmod/--chmod/--chown, or a root runtime)",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["disk-permission", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["packages/fleet/tracy-fleet-operation/runner/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["context-copies-readable", "scratch-context-private"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-runner-missing-asset",
+    "itemIds": [
+      "dockerfile:packages/fleet/tracy-fleet-operation/runner/Dockerfile",
+      "dockerfile-input:packages/fleet/tracy-fleet-operation/runner/Dockerfile::entrypoint.sh"
+    ],
+    "requirement": "packages/fleet/tracy-fleet-operation/runner/Dockerfile: every COPY source from the build context exists (or is a documented build output) and is not excluded by .dockerignore",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["missing-asset", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["packages/fleet/tracy-fleet-operation/runner/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["sources-reach-image"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-theme-base-disk-permission",
+    "itemIds": [
+      "dockerfile:packages/cms/tracy-emdash-theme-base/Dockerfile",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-base/Dockerfile::.",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-base/Dockerfile::package.json",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-base/Dockerfile::pnpm-lock.yaml",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-base/Dockerfile::pnpm-workspace.yaml"
+    ],
+    "requirement": "packages/cms/tracy-emdash-theme-base/Dockerfile: every COPY from a build context that may have been created under umask 077 stays readable by the image's runtime user (chown/chmod/--chmod/--chown, or a root runtime)",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["disk-permission", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["packages/cms/tracy-emdash-theme-base/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["context-copies-readable", "scratch-context-private"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-theme-base-missing-asset",
+    "itemIds": [
+      "dockerfile:packages/cms/tracy-emdash-theme-base/Dockerfile",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-base/Dockerfile::.",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-base/Dockerfile::package.json",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-base/Dockerfile::pnpm-lock.yaml",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-base/Dockerfile::pnpm-workspace.yaml"
+    ],
+    "requirement": "packages/cms/tracy-emdash-theme-base/Dockerfile: every COPY source from the build context exists (or is a documented build output) and is not excluded by .dockerignore",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["missing-asset", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["packages/cms/tracy-emdash-theme-base/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["sources-reach-image"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-theme-business-disk-permission",
+    "itemIds": [
+      "dockerfile:packages/cms/tracy-emdash-theme-business/Dockerfile",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-business/Dockerfile::.",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-business/Dockerfile::package.json",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-business/Dockerfile::pnpm-lock.yaml",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-business/Dockerfile::pnpm-workspace.yaml"
+    ],
+    "requirement": "packages/cms/tracy-emdash-theme-business/Dockerfile: every COPY from a build context that may have been created under umask 077 stays readable by the image's runtime user (chown/chmod/--chmod/--chown, or a root runtime)",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["disk-permission", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["packages/cms/tracy-emdash-theme-business/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["context-copies-readable", "scratch-context-private"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-theme-business-missing-asset",
+    "itemIds": [
+      "dockerfile:packages/cms/tracy-emdash-theme-business/Dockerfile",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-business/Dockerfile::.",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-business/Dockerfile::package.json",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-business/Dockerfile::pnpm-lock.yaml",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-business/Dockerfile::pnpm-workspace.yaml"
+    ],
+    "requirement": "packages/cms/tracy-emdash-theme-business/Dockerfile: every COPY source from the build context exists (or is a documented build output) and is not excluded by .dockerignore",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["missing-asset", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["packages/cms/tracy-emdash-theme-business/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["sources-reach-image"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-theme-saas-disk-permission",
+    "itemIds": [
+      "dockerfile:packages/cms/tracy-emdash-theme-saas/Dockerfile",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-saas/Dockerfile::.",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-saas/Dockerfile::package.json",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-saas/Dockerfile::pnpm-lock.yaml",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-saas/Dockerfile::pnpm-workspace.yaml"
+    ],
+    "requirement": "packages/cms/tracy-emdash-theme-saas/Dockerfile: every COPY from a build context that may have been created under umask 077 stays readable by the image's runtime user (chown/chmod/--chmod/--chown, or a root runtime)",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["disk-permission", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["packages/cms/tracy-emdash-theme-saas/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["context-copies-readable", "scratch-context-private"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-theme-saas-missing-asset",
+    "itemIds": [
+      "dockerfile:packages/cms/tracy-emdash-theme-saas/Dockerfile",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-saas/Dockerfile::.",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-saas/Dockerfile::package.json",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-saas/Dockerfile::pnpm-lock.yaml",
+      "dockerfile-input:packages/cms/tracy-emdash-theme-saas/Dockerfile::pnpm-workspace.yaml"
+    ],
+    "requirement": "packages/cms/tracy-emdash-theme-saas/Dockerfile: every COPY source from the build context exists (or is a documented build output) and is not excluded by .dockerignore",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["missing-asset", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["packages/cms/tracy-emdash-theme-saas/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["sources-reach-image"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-web-disk-permission",
+    "itemIds": [
+      "dockerfile:apps/tracy-web/Dockerfile",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-docs/dist",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-web/package.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-web/pnpm-lock.yaml",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-web/scripts/backfill-site-operations.mjs",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-web/src",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-web/static/ops-cms",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-content-api/describe-map.mjs",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-content-api/package.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-content-api/schema.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-content-api/validate.mjs",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-base/artifact.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-base/seed/personalize.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-base/seed/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-base/seed/seed.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-base/template.config.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/artifact.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/seed/content-api-map.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/seed/personalize.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/seed/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/seed/seed.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/seed/site-model.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/template.config.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/tools/personalize.mjs",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-saas/seed/personalize.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-saas/seed/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-saas/seed/seed.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-saas/template.config.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-joomla-quickstart/contracts",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-joomla-quickstart/translations",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-seeder/src",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-wordpress-quickstart/contracts",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/core/tracy-core/src/ui-switches/catalogue.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/fleet/tracy-fleet-operation/scripts/provision/design-templates.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/fleet/tracy-fleet-operation/scripts/provision/emdash/personalize",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/site/tracy-site-build-core/src/questions.mjs",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/site/tracy-site-build-emdash/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/site/tracy-site-build-joomla/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/site/tracy-site-build-wordpress/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/web/tracy-design-page/dist",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/web/tracy-harness/dist"
+    ],
+    "requirement": "apps/tracy-web/Dockerfile: every COPY from a build context that may have been created under umask 077 stays readable by the image's runtime user (chown/chmod/--chmod/--chown, or a root runtime)",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["disk-permission", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["apps/tracy-web/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["context-copies-readable", "scratch-context-private"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-dockerfile-web-missing-asset",
+    "itemIds": [
+      "dockerfile:apps/tracy-web/Dockerfile",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-docs/dist",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-web/package.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-web/pnpm-lock.yaml",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-web/scripts/backfill-site-operations.mjs",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-web/src",
+      "dockerfile-input:apps/tracy-web/Dockerfile::apps/tracy-web/static/ops-cms",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-content-api/describe-map.mjs",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-content-api/package.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-content-api/schema.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-content-api/validate.mjs",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-base/artifact.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-base/seed/personalize.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-base/seed/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-base/seed/seed.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-base/template.config.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/artifact.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/seed/content-api-map.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/seed/personalize.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/seed/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/seed/seed.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/seed/site-model.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/template.config.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-business/tools/personalize.mjs",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-saas/seed/personalize.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-saas/seed/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-saas/seed/seed.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-emdash-theme-saas/template.config.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-joomla-quickstart/contracts",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-joomla-quickstart/translations",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-seeder/src",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/cms/tracy-wordpress-quickstart/contracts",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/core/tracy-core/src/ui-switches/catalogue.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/fleet/tracy-fleet-operation/scripts/provision/design-templates.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/fleet/tracy-fleet-operation/scripts/provision/emdash/personalize",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/site/tracy-site-build-core/src/questions.mjs",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/site/tracy-site-build-emdash/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/site/tracy-site-build-joomla/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/site/tracy-site-build-wordpress/questions.json",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/web/tracy-design-page/dist",
+      "dockerfile-input:apps/tracy-web/Dockerfile::packages/web/tracy-harness/dist"
+    ],
+    "requirement": "apps/tracy-web/Dockerfile: every COPY source from the build context exists (or is a documented build output) and is not excluded by .dockerignore",
+    "oracle": {
+      "source": ".dockerignore",
+      "ref": "dockerfile-copy-semantics",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing"
+    },
+    "edgeTags": ["missing-asset", "version-mismatch"],
+    "targets": ["local"],
+    "effects": {
+      "reads": ["apps/tracy-web/Dockerfile"],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": ["sources-reach-image"],
+    "redProof": null,
+    "legacyIds": []
+  }
+]

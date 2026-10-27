@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-blush-paper: #f5e5e5;
+  --color-ink: #000000;
+  --color-rose: #d9698c;
+
+  /* Typography */
+  --font-haas-grotesk-display-r-web: 'Haas Grotesk Display R Web', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-yinka-sans-ultra: 'Yinka Sans Ultra', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

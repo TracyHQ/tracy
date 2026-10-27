@@ -1,0 +1,79 @@
+{
+  "color": {
+    "midcurrent-navy": {
+      "$value": "#000e1f",
+      "$type": "color",
+      "$description": "Midcurrent Navy — Primary text, filled buttons, rating widget, icon strokes — the workhorse dark surface that grounds every interface layer"
+    },
+    "deep-cobalt": {
+      "$value": "#0000c5",
+      "$type": "color",
+      "$description": "Deep Cobalt — Announcement bar surface and occasional accent punctuation — saturated blue used sparingly to break an otherwise monochrome frame"
+    },
+    "twilight-slate": {
+      "$value": "#1a2635",
+      "$type": "color",
+      "$description": "Twilight Slate — Secondary borders and emphasis dividers — a near-gray that steps up from Midcurrent Navy for subtle layering without contrast jumps"
+    },
+    "graphite": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Graphite — Icon fills, nav text, and footer ink — pure black reserved for the smallest functional elements where maximum punch is needed"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, product tile backgrounds, nav bar canvas, and inverted text on dark fills"
+    },
+    "morning-mist": {
+      "$value": "#f4f4f4",
+      "$type": "color",
+      "$description": "Morning Mist — Page canvas and elevated card background — the warm off-white that gives the entire site its soft, lived-in brightness"
+    },
+    "cloud-veil": {
+      "$value": "#e6e7e9",
+      "$type": "color",
+      "$description": "Cloud Veil — Dominant hairline border for cards, icons, links, and image frames — the quietest structural line in the system"
+    },
+    "soft-stone": {
+      "$value": "#dcdddf",
+      "$type": "color",
+      "$description": "Soft Stone — List dividers, secondary borders, and badge outlines — one step darker than Cloud Veil for hierarchy between hairline and emphasis"
+    },
+    "slate-gray": {
+      "$value": "#666e79",
+      "$type": "color",
+      "$description": "Slate Gray — Muted helper text, secondary copy, and link text in resting state — cool gray that recedes behind primary navy content"
+    },
+    "sunbeam": {
+      "$value": "#fff48d",
+      "$type": "color",
+      "$description": "Sunbeam — Star-rating fills and small highlight washes — the only warm color in the system, kept tiny and functional"
+    }
+  },
+  "font": {
+    "gt-walsheim-pro": {
+      "$value": "GT-Walsheim-Pro",
+      "$type": "fontFamily",
+      "$description": "GT-Walsheim-Pro — detected in extracted data but not described by AI"
+    },
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://a-dam.com",
+      "siteName": "A-dam",
+      "extractedAt": "2026-06-03T21:50:00.298Z",
+      "variant": "compact"
+    }
+  }
+}

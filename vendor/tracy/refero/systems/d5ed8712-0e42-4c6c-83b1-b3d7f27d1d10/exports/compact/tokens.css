@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-ink-black: #141414;
+  --color-paper-white: #ffffff;
+  --color-mist-gray: #a1a1a1;
+  --color-smoke-gray: #8a8a8a;
+  --color-veil-gray: #d0d0d0;
+  --color-periwinkle-glow: #acafff;
+
+  /* Typography — Font Families */
+  --font-primary-font: 'Primary Font', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-custom-geometric-sans-sphere-like-soft-terminals: 'Custom geometric sans (sphere-like, soft terminals)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-custom-uppercase-display-sans-tracked-out: 'Custom uppercase display sans (tracked out)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-secondary-font: 'Secondary Font', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

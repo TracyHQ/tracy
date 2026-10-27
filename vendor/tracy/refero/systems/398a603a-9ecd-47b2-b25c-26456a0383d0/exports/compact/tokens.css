@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-paper-white: #ffffff;
+  --color-milk-paper: #fff4ec;
+  --color-cocoa-ink: #1b0800;
+  --color-talent-peach: #f6c9a1;
+  --color-home-umber: #381a06;
+  --color-join-blush: #fae3cf;
+  --color-shortlist-clay: #78492d;
+  --color-shortlist-cream: #fdf4ed;
+  --color-peach-wash: #ffe2cc;
+  --color-profile-copper: #db9a68;
+  --color-fine-grey: #999999;
+
+  /* Typography — Font Families */
+  --font-die-grotesk-b-semibold: 'Die Grotesk B SemiBold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-die-grotesk-b-bold: 'Die Grotesk B Bold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-die-grotesk-b-black: 'Die Grotesk B Black', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-die-grotesk-c-black: 'Die Grotesk C Black', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-bonto: 'Bonto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

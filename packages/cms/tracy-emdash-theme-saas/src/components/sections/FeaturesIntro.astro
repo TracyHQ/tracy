@@ -1,0 +1,171 @@
+---
+/**
+ * features_intro — heading over a grid of icon cards. `columns` (2–4) sets the grid; the two-column
+ * record (/company/about values) is looser in the source, with more air under the icon.
+ */
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import { stampFor, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  /** True inside the 760px article column of inner pages (DECISIONS D18). */
+  narrow?: boolean
+}
+const { data, index, narrow = false } = Astro.props
+const items: Record<string, any>[] = Array.isArray(data.items) ? data.items : []
+const parsed = Number.parseInt(String(data.columns ?? ''), 10)
+const columns = parsed >= 2 && parsed <= 4 ? parsed : 3
+// The source tints sections at even positions with the elevated band.
+const band = index % 2 === 0
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'features_intro', null)
+---
+
+<section class:list={['fi', `fi--${columns}`, band && 'k-band fi--band', narrow && 'is-narrow']} {...s()}>
+	<div class="k-container">
+		{
+			(data.eyebrow || data.title || data.sub) && (
+				<header class="fi-head">
+					{data.eyebrow && <p class="k-eyebrow fi-eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+					{data.title && <h2 class="k-h2" {...s('title')}>{data.title}</h2>}
+					{data.sub && <p class="k-sub fi-sub" {...s('sub')}>{data.sub}</p>}
+				</header>
+			)
+		}
+		<div class="fi-grid" style={`--fi-cols: ${columns}`}>
+			{
+				items.map((item) => (
+					<div class="fi-card k-card" {...s.block('items')}>
+						{item.icon && (
+							<span class="fi-icon">
+								<Icon name={item.icon} size={22} />
+							</span>
+						)}
+						{item.item_title && <h3 class="fi-title" {...s('items.item_title')}>{item.item_title}</h3>}
+						{item.item_text && <p class="fi-text" {...s('items.item_text')}>{item.item_text}</p>}
+						{item.stat && <span class="fi-stat" {...s('items.stat')}>{item.stat}</span>}
+					</div>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.fi {
+		padding-block: 80px;
+	}
+	.fi--band {
+		border-block: 1px solid var(--k-border);
+	}
+	.fi-head {
+		max-width: 720px;
+		margin-bottom: 44px;
+	}
+	.fi-eyebrow {
+		margin-bottom: 14px;
+	}
+	.fi-sub {
+		margin-top: 14px;
+	}
+	.fi-grid {
+		display: grid;
+		grid-template-columns: repeat(var(--fi-cols), minmax(0, 1fr));
+		gap: 20px;
+	}
+	.fi-card {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		padding: 28px;
+		border-radius: 14px;
+	}
+	.fi-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 10px;
+		color: var(--k-primary);
+		background: color-mix(in srgb, var(--k-primary) 10%, transparent);
+	}
+	.fi-title {
+		font-size: 24px;
+		line-height: 1.06;
+		letter-spacing: -0.5px;
+		font-weight: 600;
+	}
+	.fi-text {
+		font-size: 14.5px;
+		line-height: 22px;
+	}
+	.fi-stat {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		line-height: 1.7;
+		letter-spacing: 0.5px;
+		color: var(--k-muted);
+	}
+	.fi--2 .fi-icon {
+		margin-bottom: 6px;
+	}
+	.fi--2 .fi-text {
+		font-size: 15px;
+		line-height: 1.75;
+		margin-top: -4px;
+	}
+
+	@media (max-width: 991px) {
+		.fi--4 .fi-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 767px) {
+		.fi {
+			padding-block: 56px;
+		}
+		.fi-grid,
+		.fi--4 .fi-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.fi-card {
+			padding: 24px;
+		}
+	}
+
+	/* Inside the 760px article column: a tinted box with a smaller section title. */
+	.fi.is-narrow {
+		padding-block: 72px;
+	}
+	.is-narrow .fi-eyebrow {
+		font-size: 12px;
+	}
+	.is-narrow .fi-head .k-h2 {
+		font-size: 24px;
+		line-height: 1.15;
+		letter-spacing: -0.5px;
+	}
+	.is-narrow.fi--2 .fi-card {
+		padding: 26px;
+	}
+	/* Measured 25.92px on the source's two-column record (About) vs 27.6px on the three-column one. */
+	.is-narrow.fi--2 .fi-head .k-h2 {
+		line-height: 1.08;
+	}
+	@media (max-width: 767px) {
+		/* The source's article column keeps a 20px inset from the viewport on phones. */
+		.fi.is-narrow {
+			padding-block: 56px;
+			margin-inline: 20px;
+		}
+		.is-narrow .fi-head .k-h2,
+		.is-narrow .fi-title {
+			font-size: 22px;
+		}
+	}
+</style>

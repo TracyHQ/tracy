@@ -1,0 +1,1013 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-space",
+  "minVersion": {
+    "quickstart/ja-space/j6": "1.0.3"
+  },
+  "maxVersion": {
+    "quickstart/ja-space/j6": "1.0.7"
+  },
+  "maxVersionNote": "1.0.7 21/10/2026 (TEXT-1 batch 1): built from 1.0.6 (release-batch.mjs --overlay); only the light template.css, LTR and RTL (danger-text) differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.5 16/10/2026 (#1375): re-cut of 1.0.4 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json). 1.0.6 19/10/2026 (dot 3): the template reads every role variable (role scan 2279 -> 0 unresolved, VARS-1): the shipped stylesheets seeded, role-scan --write, flagged spots settled by rule (LESS build variables, decorative SVG gradients and translucent tints kept with a reason), heading, focus ring, disabled and warm surface read where they paint; every read falls back to the released value (release-batch verify).",
+  "release": "quickstart/ja-space/j6@1.0.2",
+  "roles": {
+    "page": "body",
+    "display": "h1.ja-animate",
+    "body": ".t3-section .features-item p",
+    "section": "#Section99"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 80px",
+    "displayFace": "Metropolis 700, tracking -0.05em",
+    "body": "running text of the feature cards (14px); re-probed 11/10/2026: the hero lead (p.lead, in an acm-features block outside .t3-section) keeps the weight the template gives it (400) where a system asks 500",
+    "section": "first padded full-width section, padding-top 72px"
+  },
+  "keepScopes": ["#t3-header", ".t3-hero", ".ja-masthead", ".view-project", "#Mod106"],
+  "keepColors": {
+    "#t3-header": "rgb(158, 158, 158)",
+    ".t3-hero": "rgb(158, 158, 158)"
+  },
+  "keepNote": "the header and the hero sit on the hero photo (no ground of their own): they keep the template's white and yellow text, as the released page computes it; the texts they inherit get the template's page text (#9e9e9e) back. Faces still follow (font rules do not stop at kept bands). Found 11/10/2026 by the per-element probe: under MotherDuck and Apple the hero lead, the logo and the active menu item turned grey/dark on the dark photo (1.04–2.07)",
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#000000",
+    "--fg": "#9e9e9e",
+    "--fg-2": "#ffffff",
+    "--accent": "#fd7d57",
+    "--accent-hover": "#fd7d57",
+    "--surface": "#0e0e0e",
+    "--meta": "#888888",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#191919",
+    "--muted": "#555555",
+    "--font-display": "\"Metropolis\", sans-serif",
+    "--font-body": "\"Metropolis\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#000000",
+      "fg": "#9e9e9e",
+      "fg-2": "#ffffff",
+      "accent": "#fd7d57",
+      "accent-hover": "#fd7d57",
+      "surface": "#f7f7f7",
+      "meta": "#888888",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#191919",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#000000",
+      "surface": "#0e0e0e",
+      "fg": "#9e9e9e"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface-warm": "#ffffff",
+      "border-soft": "#eaeaea",
+      "border": "#1f1f1f",
+      "danger": "#eb4c49",
+      "surface": "#080808",
+      "bg": "#010101"
+    },
+    {
+      "surface-warm": "#eeeeee",
+      "border-soft": "#e5e5e5",
+      "border": "#262626",
+      "surface": "#0c0c0c",
+      "bg": "#050505"
+    },
+    {
+      "surface-warm": "#f5f5f5",
+      "border-soft": "#e0e2e3",
+      "border": "#202020",
+      "surface": "#141414"
+    },
+    {
+      "surface-warm": "#fcfcfc",
+      "border-soft": "#e1e1e1",
+      "border": "#101010"
+    },
+    {
+      "surface-warm": "#f9f9f9",
+      "border-soft": "#f2f2f2",
+      "border": "#181818"
+    },
+    {
+      "surface-warm": "#f7f7f7",
+      "border-soft": "#e5e7eb",
+      "border": "#1a1a1a"
+    },
+    {
+      "surface-warm": "#f9f2f4",
+      "border-soft": "#e3e3e3"
+    },
+    {
+      "surface-warm": "#f8f8f8",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "surface-warm": "#f0f0f0"
+    },
+    {
+      "surface-warm": "#f3f3f3"
+    },
+    {
+      "surface-warm": "#fafafa"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (60 line colours, 71 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.ja-animate",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Section99"],
+    "bodyFace": ["body"],
+    "pill": [".badge"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img)), .t3-section a:not([class*=btn]):not(:has(img)), #t3-header a:not([class*=btn]):not(:has(img))",
+    "muted": "#t3-mainbody p, .t3-sl p:not([class*=hero]):not([class*=banner]):not([class*=slide]), .t3-section p:not(.lead), .t3-section .features-desc",
+    "body": "#t3-mainbody p, .t3-section .features-item p, .t3-section .features-desc",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 12 tried (byte 11426); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 464,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 6
+    },
+    {
+      "hex": "#eaeaea",
+      "uses": 108,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 106,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 24
+    },
+    {
+      "hex": "#f5f5f5",
+      "uses": 72,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 12
+    },
+    {
+      "hex": "#1f1f1f",
+      "uses": 72,
+      "kind": "line",
+      "role": "border",
+      "near": "#191919",
+      "distance": 10
+    },
+    {
+      "hex": "#eb4c49",
+      "uses": 66,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#d9534f",
+      "distance": 20
+    },
+    {
+      "hex": "#080808",
+      "uses": 64,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#0e0e0e",
+      "distance": 10
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 34,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#fcfcfc",
+      "uses": 26,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 2
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 20,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 5
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 18,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 8
+    },
+    {
+      "hex": "#262626",
+      "uses": 18,
+      "kind": "line",
+      "role": "border",
+      "near": "#191919",
+      "distance": 23
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 16,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 11,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#202020",
+      "uses": 10,
+      "kind": "line",
+      "role": "border",
+      "near": "#191919",
+      "distance": 12
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 15
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 13
+    },
+    {
+      "hex": "#101010",
+      "uses": 8,
+      "kind": "line",
+      "role": "border",
+      "near": "#191919",
+      "distance": 16
+    },
+    {
+      "hex": "#0c0c0c",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#0e0e0e",
+      "distance": 3
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 7
+    },
+    {
+      "hex": "#181818",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#191919",
+      "distance": 2
+    },
+    {
+      "hex": "#010101",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#000000",
+      "distance": 2
+    },
+    {
+      "hex": "#050505",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#000000",
+      "distance": 9
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 20
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#141414",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#0e0e0e",
+      "distance": 10
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 12
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#1a1a1a",
+      "uses": 4,
+      "kind": "line",
+      "role": "border",
+      "near": "#191919",
+      "distance": 2
+    },
+    {
+      "hex": "#f3f3f3",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 15
+    },
+    {
+      "hex": "#fafafa",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 3
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on quickstart/ja-space/j6 1.0.3 (published; tasks/evidence/ds-remeasure-5-2026-10-11/ja-space): 12/12 with Moxie, MotherDuck, Toggl Track, Apple, controls 0 differences, no text made less readable than the template's own, 73%–100% of the page follows; checked by eye under Moxie and Toggl Track (dark), MotherDuck and Apple (light). The older probe passed it while its contrast kinds found no element on the home page (only the footer was measured); measured on the sections themselves, the header and the hero on the dark photo turned grey/dark under the light systems (hero lead, logo, active menu item: 1.04–2.07): both are kept (keepScopes + keepColors), faces still follow. The body probe reads the feature cards' running text (the hero lead keeps its own 400); the footer's .text-hide \"Powered by\" link (font-size 0) is no longer judged (flow.mjs). Re-measured 12/10/2026 with the unified probe (fix/ds-reverify-d) on the published 1.0.3, three runs: 12/12 each, controls 0 differences, 73%–100% of the page follows, no text made less readable than the template's own; the muted and body kinds at 1440 px live only in sections JA Space reveals through jQuery inview (opacity 0 until .ja-inview, from 992 px), which the measuring browser's page walk does not always trigger, so one desktop view had no sample in two of the three runs (MotherDuck, then Toggl Track) and every view had samples in the other; the contract is unchanged (tasks/evidence/ds-reverify-d-2026-10-12/ja-space)",
+  "keepDefaults": {},
+  "bands": {
+    "#t3-header": {
+      "ground": "#000000",
+      "texts": ["#cccccc", "#ffffff"],
+      "root": false,
+      "paint": {
+        ".item-129 a": {
+          "color": "accent"
+        },
+        ".item-129:not(.itemid-128 *) a:hover, .item-129:not(.itemid-128 *) a:focus": {
+          "color": "text"
+        },
+        ".t3-wrapper": {
+          "background-color": "ground"
+        }
+      },
+      "important": true,
+      "picture": true
+    },
+    ".t3-hero": {
+      "ground": "#000000",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        ".t3-module": {
+          "background-color": "ground"
+        },
+        ".acm-features": {
+          "background-color": "ground"
+        },
+        ".container": {
+          "background-color": "ground"
+        },
+        ".features-item": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".ja-masthead": {
+      "ground": "#000000",
+      "texts": ["#ffffff", "#4acaff"],
+      "picture": true,
+      "important": true
+    },
+    ".view-project": {
+      "ground": "#3c3c3c",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    "#Mod106": {
+      "ground": "#fcfcfc",
+      "texts": ["#222222", "#555555"],
+      "picture": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 14/10/2026 (visual review, /index.php/our-projects and /index.php/pages/joomla-content/all-categories): (1) the inner page-title band (.ja-masthead.has-bg) is the nebula photo faded at its bottom into the page by a ::before gradient drawn in the page colour, under a cyan gradient title and a white subtitle; under a light system the fade went to white right under the words (title about 1.3:1, subtitle gone). It is a kept picture band now: the fade keeps the template’s black and the words their colours, as on the dark page they were drawn for; (2) each project card (.view-project) lays its title and type in the template’s white over its photo (.intro-wrap, absolute); the words followed the page text, dark on the dark car and room photos under light systems. Each card is a kept picture band now, its words keep their white. The drafted pill .badge is kept. 15/10/2026: (3) the header (#t3-header, root false) has no ground of its own either: it lies over the hero's nebula photo (keepNote), yet its accent link (.item-129 a, 'Start a Project', the template's pale #ffd97b) was made readable on the band's recorded #000000, where a mid accent already reaches 4.5:1; on the photo's dark violet (#271225) it read 3.80-4.40:1 (Notion #0075de, Figma #625ffc, Voiceflow #437ce8 at 1440, v10). The header is a picture band like the hero it lies over: its accent is judged where the photo runs 30% toward its words, a pale tint of the system's accent as the template's own pale yellow (Notion #94c5f1); its .t3-wrapper paint (a ground, which a picture band keeps) named nothing inside the header",
+  "sideRules": {
+    "light": {
+      ".view-project .intro-wrap": {
+        "background-image": "linear-gradient(to top, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0))"
+      },
+      ".view-project .article-title a": {
+        "font-weight": "700"
+      },
+      ".view-project .project-type": {
+        "font-weight": "400"
+      },
+      ".latest-project .intro-image::before": {
+        "background-image": "linear-gradient(135deg, var(--ds-c-accent), var(--ds-c-accent-hover))"
+      },
+      ".acm-cliens .client-img img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".text-gradient, div.ja-masthead .ja-masthead-detail .ja-masthead-title, .acm-features.style-1 h1": {
+        "background": "none !important",
+        "-webkit-text-fill-color": "currentColor !important"
+      },
+      ".icon-gradient, .acm-features.style-2 .features-item .font-icon span::before": {
+        "background": "none !important",
+        "color": "var(--ds-c-accent-text) !important",
+        "-webkit-text-fill-color": "currentColor"
+      },
+      ".bg-gradient, .bg-gradient-hover, .navbar-toggle, .btn.off-canvas-toggle, .acm-features.style-4 #resume, .acm-features.style-4 #pause, .login-wrap .input-password-toggle, .input-password-toggle, .t3-off-canvas .t3-off-canvas-header, #t3-off-canvas .t3-off-canvas-header": {
+        "background": "var(--ds-c-accent) !important",
+        "color": "var(--ds-c-accent-on) !important",
+        "border-color": "var(--ds-c-accent) !important"
+      },
+      ".acm-features.style-2 .features-item::before, .project-view .view-project .image-wrap a::before, .latest-project .intro-image::before": {
+        "background": "var(--ds-c-accent) !important"
+      },
+      "div.ja-masthead::before": {
+        "background-image": "linear-gradient(to top, var(--ds-c-bg), transparent)"
+      },
+      ".acm-features.style-4 .features-media::after": {
+        "display": "none"
+      },
+      ".ja-decor": {
+        "display": "none !important"
+      },
+      "code, kbd, pre, samp": {
+        "font-family": "var(--ds-font-mono, monospace)"
+      },
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-primary": {
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".example-colors .color-brand-info": {
+        "background-color": "var(--ds-c-info)"
+      },
+      ".btn.btn-secondary, .btn.btn-default": {
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important",
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-secondary:hover, .btn.btn-secondary:focus, .btn.btn-default:hover, .btn.btn-default:focus": {
+        "background": "var(--ds-c-fg-2) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".panel-success .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-success .panel-heading .panel-title": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".panel-info .panel-heading .panel-title": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".panel-warning .panel-heading .panel-title": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".panel-danger .panel-heading .panel-title": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-primary .panel-heading": {
+        "color": "var(--ds-c-fg-2)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".panel-primary .panel-heading .panel-title": {
+        "color": "var(--ds-c-fg-2)"
+      },
+      ".acm-features.style-4 .features-media img": {
+        "border-radius": "50%"
+      },
+      ".btn-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-success-text) !important"
+      },
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-warn-text) !important"
+      },
+      ".btn-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-danger-text) !important"
+      },
+      ".btn-success:hover, .btn-success:focus, .btn-success:active": {
+        "color": "var(--ds-c-success-text) !important",
+        "background": "var(--ds-c-success-bg) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      ".btn-warning:hover, .btn-warning:focus, .btn-warning:active": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background": "var(--ds-c-warn-bg) !important"
+      },
+      ".btn-danger:hover, .btn-danger:focus, .btn-danger:active": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background": "var(--ds-c-danger-bg) !important"
+      },
+      ".acm-features.style-1::before": {
+        "background-image": "linear-gradient(to top, var(--ds-c-bg), transparent)"
+      },
+      ".acm-features.style-4 #resume:hover, .acm-features.style-4 #resume:focus, .acm-features.style-4 #pause:hover, .acm-features.style-4 #pause:focus": {
+        "background": "var(--ds-c-accent-hover) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      "h2, h3, h4, h5, h6, .h2, .h3, .h4, .h5, .h6, .sub-heading, .registration legend, .profile-edit legend, .profile legend, .list-group-item-heading, #t3-off-canvas .t3-off-canvas-header h2": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      ".counter, .module-title, .t3-megamenu .dropdown-header, .navbar-default .navbar-nav li a, .navbar-default .navbar-nav li span, #t3-mainnav .navbar-nav li a, #t3-mainnav .navbar-nav li span, .headright .mod-languages, #slide-contact .panel .panel-heading .accordion-toggle, .tooltip, .popover": {
+        "font-family": "var(--ds-font-body)"
+      },
+      "#t3-header .logo a:hover, #t3-header .logo a:focus, #t3-header .logo a:hover span, #t3-header .logo a:focus span, .view-project .item-image a:hover, .view-project .item-image a:focus": {
+        "color": "var(--ds-c-accent-on-ink) !important"
+      },
+      ".project-view.style-2 .view-project .article-title a:hover, .project-view.style-2 .view-project .article-title a:focus, .project-view.style-2 .view-project .article-title a:active": {
+        "color": "inherit !important"
+      },
+      "#t3-header:is(.itemid-128 *) .item-129 a": {
+        "color": "inherit !important"
+      },
+      "#t3-header:is(.itemid-128 *) .item-129 a:hover, #t3-header:is(.itemid-128 *) .item-129 a:focus, #t3-header:is(.itemid-128 *) .logo a:hover, #t3-header:is(.itemid-128 *) .logo a:focus, #t3-header:is(.itemid-128 *) .logo a:hover span, #t3-header:is(.itemid-128 *) .logo a:focus span": {
+        "color": "var(--tracy-light-header-hover) !important"
+      },
+      "body:is(.itemid-128 *)": {
+        "--tracy-light-header-hover": "var(--ds-c-fg)"
+      },
+      "#t3-header .item-129 a:is(:hover, :focus), #t3-header .navbar-default .navbar-nav > li > :is(a, span):is(:hover, :focus), .pagination > li > :is(a, span):is(:hover, :focus), #t3-header:is(.itemid-128 *) .logo a:is(:hover, :focus) span, .latest-project a:is(:hover, :focus) .intro-image span": {
+        "text-decoration-line": "underline !important"
+      }
+    },
+    "dark": {
+      ".view-project .intro-wrap": {
+        "background-image": "linear-gradient(to top, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.5) 75%, rgba(0, 0, 0, 0))"
+      },
+      ".view-project .article-title a": {
+        "font-weight": "700"
+      },
+      ".view-project .project-type": {
+        "font-weight": "400"
+      },
+      ".latest-project .intro-image::before": {
+        "background-image": "linear-gradient(135deg, var(--ds-c-accent), var(--ds-c-accent-hover))"
+      },
+      ".text-gradient, div.ja-masthead .ja-masthead-detail .ja-masthead-title, .acm-features.style-1 h1": {
+        "background": "none !important",
+        "-webkit-text-fill-color": "currentColor !important"
+      },
+      ".icon-gradient, .acm-features.style-2 .features-item .font-icon span::before": {
+        "background": "none !important",
+        "color": "var(--ds-c-accent-text) !important",
+        "-webkit-text-fill-color": "currentColor"
+      },
+      ".bg-gradient, .bg-gradient-hover, .navbar-toggle, .btn.off-canvas-toggle, .acm-features.style-4 #resume, .acm-features.style-4 #pause, .login-wrap .input-password-toggle, .input-password-toggle, .t3-off-canvas .t3-off-canvas-header, #t3-off-canvas .t3-off-canvas-header": {
+        "background": "var(--ds-c-accent) !important",
+        "color": "var(--ds-c-accent-on) !important",
+        "border-color": "var(--ds-c-accent) !important"
+      },
+      ".acm-features.style-2 .features-item::before, .project-view .view-project .image-wrap a::before, .latest-project .intro-image::before": {
+        "background": "var(--ds-c-accent) !important"
+      },
+      "div.ja-masthead::before": {
+        "background-image": "linear-gradient(to top, var(--ds-c-bg), transparent)"
+      },
+      ".acm-features.style-4 .features-media::after": {
+        "display": "none"
+      },
+      ".ja-decor": {
+        "display": "none !important"
+      },
+      "code, kbd, pre, samp": {
+        "font-family": "var(--ds-font-mono, monospace)"
+      },
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-primary": {
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".example-colors .color-brand-info": {
+        "background-color": "var(--ds-c-info)"
+      },
+      ".btn.btn-secondary, .btn.btn-default": {
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important",
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-secondary:hover, .btn.btn-secondary:focus, .btn.btn-default:hover, .btn.btn-default:focus": {
+        "background": "var(--ds-c-fg-2) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".panel-success .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-success .panel-heading .panel-title": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".panel-info .panel-heading .panel-title": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".panel-warning .panel-heading .panel-title": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".panel-danger .panel-heading .panel-title": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-primary .panel-heading": {
+        "color": "var(--ds-c-fg-2)",
+        "background-color": "var(--ds-c-surface-warm)",
+        "border-color": "var(--ds-c-accent)"
+      },
+      ".panel-primary .panel-heading .panel-title": {
+        "color": "var(--ds-c-fg-2)"
+      },
+      ".acm-features.style-4 .features-media img": {
+        "border-radius": "50%"
+      },
+      ".btn-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-success-text) !important"
+      },
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-warn-text) !important"
+      },
+      ".btn-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-danger-text) !important"
+      },
+      ".btn-success:hover, .btn-success:focus, .btn-success:active": {
+        "color": "var(--ds-c-success-text) !important",
+        "background": "var(--ds-c-success-bg) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      ".btn-warning:hover, .btn-warning:focus, .btn-warning:active": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background": "var(--ds-c-warn-bg) !important"
+      },
+      ".btn-danger:hover, .btn-danger:focus, .btn-danger:active": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background": "var(--ds-c-danger-bg) !important"
+      },
+      ".acm-features.style-1::before": {
+        "background-image": "linear-gradient(to top, var(--ds-c-bg), transparent)"
+      },
+      ".acm-features.style-4 #resume:hover, .acm-features.style-4 #resume:focus, .acm-features.style-4 #pause:hover, .acm-features.style-4 #pause:focus": {
+        "background": "var(--ds-c-accent-hover) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      "h2, h3, h4, h5, h6, .h2, .h3, .h4, .h5, .h6, .sub-heading, .registration legend, .profile-edit legend, .profile legend, .list-group-item-heading, #t3-off-canvas .t3-off-canvas-header h2": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      ".counter, .module-title, .t3-megamenu .dropdown-header, .navbar-default .navbar-nav li a, .navbar-default .navbar-nav li span, #t3-mainnav .navbar-nav li a, #t3-mainnav .navbar-nav li span, .headright .mod-languages, #slide-contact .panel .panel-heading .accordion-toggle, .tooltip, .popover": {
+        "font-family": "var(--ds-font-body)"
+      },
+      "#t3-header .logo a:hover, #t3-header .logo a:focus, #t3-header .logo a:hover span, #t3-header .logo a:focus span, .view-project .item-image a:hover, .view-project .item-image a:focus": {
+        "color": "var(--ds-c-accent-on-ink) !important"
+      },
+      ".project-view.style-2 .view-project .article-title a:hover, .project-view.style-2 .view-project .article-title a:focus, .project-view.style-2 .view-project .article-title a:active": {
+        "color": "inherit !important"
+      },
+      "#t3-header:is(.itemid-128 *) .item-129 a": {
+        "color": "inherit !important"
+      },
+      "#t3-header:is(.itemid-128 *) .item-129 a:hover, #t3-header:is(.itemid-128 *) .item-129 a:focus, #t3-header:is(.itemid-128 *) .logo a:hover, #t3-header:is(.itemid-128 *) .logo a:focus, #t3-header:is(.itemid-128 *) .logo a:hover span, #t3-header:is(.itemid-128 *) .logo a:focus span": {
+        "color": "var(--tracy-light-header-hover) !important"
+      },
+      "body:is(.itemid-128 *)": {
+        "--tracy-light-header-hover": "color-mix(in srgb, var(--ds-c-bg) 60%, #fff)"
+      },
+      "#t3-header .item-129 a:is(:hover, :focus), #t3-header .navbar-default .navbar-nav > li > :is(a, span):is(:hover, :focus), .pagination > li > :is(a, span):is(:hover, :focus), #t3-header:is(.itemid-128 *) .logo a:is(:hover, :focus) span, .latest-project a:is(:hover, :focus) .intro-image span": {
+        "text-decoration-line": "underline !important"
+      }
+    }
+  },
+  "followRules": {
+    ".latest-project .intro-image span": {
+      "color": "accent-text"
+    },
+    ".latest-project .intro-image:hover span, .latest-project .intro-image:focus-within span": {
+      "color": "accent-on"
+    },
+    ".pagination > li > a:hover, .pagination > li > a:focus, .pagination > li > span:hover, .pagination > li > span:focus": {
+      "background-color": "surface-hover",
+      "border-color": "border",
+      "color": "fg"
+    },
+    ".acm-cliens .client-item": {
+      "border-color": "border-soft"
+    },
+    "body, .t3-wrapper": {
+      "background-color": "bg"
+    },
+    ".t3-footer, .t3-footnav .t3-module": {
+      "background-color": "bg",
+      "color": "muted"
+    },
+    "code, kbd": {
+      "color": "fg-2",
+      "background-color": "surface"
+    },
+    ".counter": {
+      "color": "fg",
+      "background-color": "surface"
+    },
+    ".example-colors .color-brand-secondary": {
+      "background-color": "accent-hover",
+      "color": "accent-on"
+    },
+    ".example-colors .color-gray-dark": {
+      "background-color": "surface",
+      "color": "fg-2"
+    },
+    ".example-colors .color-gray": {
+      "background-color": "border",
+      "color": "fg-2"
+    },
+    ".example-colors .color-gray-light": {
+      "background-color": "border-soft",
+      "color": "fg-2"
+    },
+    ".example-colors .color-gray-lighter, .example-colors .color-gray-lightest": {
+      "background-color": "surface-warm",
+      "color": "fg-2"
+    },
+    "select": {
+      "border-color": "border"
+    },
+    ".list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus": {
+      "background-color": "surface-warm!",
+      "border-color": "border!",
+      "color": "fg-2!"
+    },
+    ".acm-features.style-2 .features-item": {
+      "background-color": "surface"
+    },
+    "blockquote p": {
+      "color": "fg-2"
+    },
+    "blockquote, .blockquote-reverse, blockquote.pull-right": {
+      "border-color": "border"
+    },
+    ".panel-default > .panel-heading": {
+      "background-color": "surface-warm",
+      "color": "fg-2"
+    }
+  },
+  "sideNote": "14/10/2026 (visual review, round 3): project captions. On /our-projects each card’s title and type (.view-project .intro-wrap, white words with a faint black shadow, laid on the bottom 104px of a pastel photo) took the system’s display weight, so a thin face (Playfair 400 under Mailchimp, Inter Tight 300 under Stripe) left white hairlines on a light photo — already a weak pairing in the template (bold 700 white on pastel). The caption block gets a black scrim rising from the card’s foot (65% → 50% → none) and the title keeps the template’s 700, the type its 400: the words stay the template’s white on its photo, now on a ground dark enough for them. On the home carousel (.latest-project) the hover caption sits on the accent gradient overlay but was set in the system’s heading ink (the template’s fg-2, white in its own palette): it takes the accent’s own words (accent-on, followRules), and the overlay runs accent → accent-hover instead of ending in the template’s literal coral #f55d59",
+  "literalsNote": "rgba(0, 0, 0, 0.65) / 0.5: the scrim under the project captions’ white words on their photos (/our-projects) — the template’s own black (its 30% black text shadow), deepened so its white words read on a light photo",
+  "reviewV8Note": "15/10/2026 (look review v8): the client logos are white pictures made for the dark page: under a light system they are inverted; the grid lines take the soft line colour (the template’s hairline on black)",
+  "hoverNote": "21/10/2026 (HOVER-1 and HOVER-2, TEXT-1 batch 1): each state reads a role apart from rest. The header is kept, so every --ds-c-* is reset inside it: the logo's hover read var(--ds-c-accent-on-ink), found nothing and inherited the header's #9e9e9e, 2.7:1 on the Home Light page's white header (HOVER-1); there (.itemid-128) the logo and 'Start a Project' hover in a role read on the body, outside the reset (--tracy-light-header-hover): the system's text under a light system (4.71:1 or more on #fcfcfc and white across the 1028 light systems of the library), the system's page 40% toward white under a dark one (black's #666666: 5.7:1 on the white, 3.66:1 on black), 21/10/2026: the header sits on the hero photo's white, but the hover probe sees no photo there, only the dark page behind it, so the state must read on both (3:1 or more on #fcfcfc under 1332 of the 1334 dark sides of the library, on their page under 1330; the page 40% toward black read 1:1 on that page, HOVER-1 on 'Start a Project'; the template's own red #eb4c49 is the template's brand hue on a hover, ACCENT-LEAK; filling the header with the photo's #fcfcfc was measured as a kept block and its 'Start a Project' rest as low text, TPL-1 and CON-2). On the dark pages the menu keeps the template's own words (80% white at rest, white on hover, focus and when active or open): the band's second text is judged on the recorded black, not the photo, and read 4.08 to 4.3:1 on it under every system of the library (CON-1 on Moxie, 4.38:1 against the template's 7.4:1), so hover and focus are told apart by an underline instead. 'Start a Project' turns from the band's accent to its text. The home carousel's caption (shown on hover only) reads the page text at rest and the accent's words on hover, so the hover differs in colour as well as in opacity, which the probe does not read on the words. Pagination links take the neutral hover ground under the page text, as Bootstrap's own hover. 21/10/2026 (review): 'Start a Project' turns from the band's accent to its text, the same white under 466 systems, so its hover and focus also underline, as do the pagination links (their rest words are not a role this contract writes); the carousel caption, hidden at rest, reads the accent words at rest (apart from accent-on under every system, where the page text was the same under 3). 21/10/2026 (measure of batch 1): the Home Light alias was written on .itemid-128, a class of <html> itself, which a rule under :root never names: it was never set and the logo's hover fell back to an inherited grey (#9e9e9e on white under 5fd3, HOVER-1); it is set on the body (body:is(.itemid-128 *)). The logo's hover reads the page text, within 3 channels of its kept #333 rest under eight systems, so it underlines too; the project cards' titles (.latest-project) show on the card's own :hover, which the hover probe never reaches from the link, so the link's state underlines them (HOVER-2 on the three home pages)."
+}

@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1357-cowork-joomla-0-24-28",
+  "kind": "fix",
+  "title": "Every Joomla quickstart pins Claude Cowork for Joomla 0.24.28 (the self-updater never downloads inside a visitor's request), with the published asset's bytes and sha256, in both catalogues",
+  "pr": 1357,
+  "area": "quickstarts/cowork-pins",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read every Joomla entry with a cowork pin in apps/tracy-web/src/quickstarts.json and packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json."
+  ],
+  "expect": [
+    "S1: every Joomla pin is version 0.24.28 or later (0.24.28 exactly when this PR merged: bytes 42591963, sha256 db8c3b54…cc92cc0ae; the exact current asset is held by the case of the PR that moved the pin last); the provision copy pins the same."
+  ],
+  "selectors": {
+    "pins": "apps/tracy-web/src/quickstarts.json + packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json cowork"
+  },
+  "evidence": "Before this PR every Joomla quickstart pinned 0.24.27, whose self-updater read the ~42 MB package into memory in a visitor's request: 61 memory fatals in 24 h on 20 of 24 fleet01 demos, each appending Joomla's 500 Whoops page to the visitor's page",
+  "fence": "Every contract of 0.24.27 is carried unchanged: pin-joomla-cowork.mjs refuses a release whose zip does not carry the recorded contract files byte for byte",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1357-cowork-joomla-0-24-28.mjs"]
+  }
+}

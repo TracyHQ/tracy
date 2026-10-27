@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1479-voice-switch-read-blip",
+  "kind": "fix",
+  "title": "A voice switch the database cannot read for a while does not end live voice sessions; Voice off mid-phrase sends no partial",
+  "pr": 1479,
+  "area": "voice/relay",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: a live relay session whose ui_setting read starts failing.",
+    "S2: a reading (say) under way whose switch read fails, then the switch turns off.",
+    "S3: the switch turns off while a phrase is pending.",
+    "S4: the service answers quota_exceeded."
+  ],
+  "expect": [
+    "S1: the session keeps running.",
+    "S2: the reading keeps running while the read fails, and is cut when the switch reads false.",
+    "S3: the session ends 'stopped' with settled false.",
+    "S4: the end reason is 'provider', not 'provider-busy'."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/speech-relay.test.mjs, apps/tracy-web/test/speech-say.test.mjs, apps/tracy-web/test/speech-switch.test.mjs",
+    "code": "lib/speech-switch.js switchWatch, speech/relay.js, speech/say.js"
+  },
+  "evidence": "Review 19/10/2026: every live session queried ui_setting each second and ended on any query error",
+  "fence": "Only an explicit false from the switch ends a running voice session",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/speech-relay.test.mjs",
+      "apps/tracy-web/test/speech-say.test.mjs"
+    ],
+    "tests": [
+      "a running session outlives a voice switch the database cannot read for a while",
+      "Voice turned off mid-phrase ends the session as unconfirmed, so the page does not send the partial",
+      "a reading under way outlives a voice switch the database cannot read; Voice turned off still cuts it",
+      "the service's errors end the session with a reason the page can word"
+    ]
+  }
+}

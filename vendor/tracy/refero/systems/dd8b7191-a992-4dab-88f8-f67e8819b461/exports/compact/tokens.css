@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-signal-yellow: #ffe600;
+  --color-globe-azure: #007fff;
+  --color-roof-coral: #ef3b2c;
+  --color-charcoal-ink: #333333;
+  --color-cloud-white: #ffffff;
+
+  /* Typography — Font Families */
+  --font-changa-one: 'Changa One', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "joomla",
+  "label": "Tracy Business",
+  "version": "1.2.1",
+  "cms": "6.1.1",
+  "install": {
+    "webroot": {
+      "file": "tracy-business-j6-webroot-1.2.1.tar.gz",
+      "sha256": "870fd9360e82654676d1beac2a403a2d14cfcf1e791aae985653cdd83cce9c19"
+    },
+    "database": {
+      "file": "tracy-business-j6-database-1.2.1.sql.gz",
+      "sha256": "4132d1ad869244029555716a682aafbc94041c18a32ec2d137f95a971ac51c9c"
+    }
+  },
+  "template": "tracy_business"
+}

@@ -1,0 +1,28 @@
+---
+title: API 参考
+description: Tracy API 的交互式 OpenAPI 参考，以及它所依据的原始文档——openapi.json、llms.txt 和 Claude Cowork 插件文档。
+tableOfContents: false
+---
+
+下面的参考实时取自 `tracy-web` 为自身构建的 OpenAPI 3.1 文档，因此它永远不会落后于路由。
+**Test request** 会带着你粘贴的密钥把请求发往 API 主机——密钥只留在你的标签页里，不会被存储在任何
+地方。也可以单独打开它：[`/api/reference/`](/api/reference/)。
+
+<iframe
+  class="tracy-reference-frame"
+  src="/api/reference/"
+  title="Tracy API reference"
+  loading="lazy"
+></iframe>
+
+## 文档
+
+| | |
+|---|---|
+| [`/api/openapi.json`](/api/openapi.json) | 公开 API 的 OpenAPI 3.1 文档——每一条路由、参数、请求体、响应和拒绝；`servers[0]` 是API 主机。 |
+| [`/api/llms.txt`](/api/llms.txt) | 同一份参考的纯文本版本，采用 [llms.txt](https://llmstxt.org) 格式，每个操作一行，供语言模型阅读。 |
+| [`/api/claude-cowork.json`](/api/claude-cowork.json) | 客户 Joomla 或 WordPress Site 上 Claude Cowork 插件的 HTTP 表面——它的动作入口和 `/content.json`——以 OpenAPI 文档的形式呈现。 |
+
+参考为每个 Apply 动作标注了它所需的**工具集**（`content`、`code`、`site`、`lifecycle`）以及
+响应它的插件版本；这些列来自入口自身的表格，这也是为什么它们放在参考里，而不是放在
+[兼容性](/zh-cn/reference/compatibility/)页面上。

@@ -1,0 +1,60 @@
+{
+  "id": "REG-PR-1071-harness-survey-followup",
+  "kind": "fix",
+  "title": "Harness survey follow-up: a command's background processes are swept on every exit, symlinks out of the site are refused however spelled, webroot reads check the file they opened, Joomla and EmDash whole-body writes take the body guard, the comment fence sees /var/www/html, and the T4 build skill leaves Writer and SEO modes",
+  "pr": 1071,
+  "area": "agent-harness",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/tools/tracy-subprocess-docker/test/provider.test.mjs packages/tools/tracy-subprocess-docker/test/site-guards.test.mjs packages/tools/tracy-webroot-read/test/symlink-fence.test.mjs packages/tools/tracy-site-tools/test/comment-fence.test.mjs packages/tools/tracy-site-tools/test/handler.test.mjs packages/ui/tracy-mode-picker/test/account-subscriptions.test.mjs scripts/test/skill-catalog.test.mjs",
+    "S2: Read the result of each test named below. On Linux the race test runs; on a machine without /proc it is skipped by design."
+  ],
+  "expect": [
+    "0 failures.",
+    "'reap: a command that exits CLEANLY is swept as it closes' and 'reap: a command whose done REJECTS is swept too' pass.",
+    "'a symbolic link is refused however ln is spelled' and 'a language-level symlink call is refused' pass.",
+    "'openInsideWebroot: a file inside opens' passes; 'a folder flipped to the neighbour's during reads never yields the neighbour's file' passes on Linux.",
+    "'a shell write through the container's own document root is the site's file too' and 'a write: line's folder name allows that one file' pass.",
+    "The eight '🔒 D6′ Joomla' / '🔒 D6′ EmDash' body-guard tests pass.",
+    "'the per-session memory stays bounded' and 'the T4 build skill goes to the Joomla modes that change a template' pass."
+  ],
+  "selectors": {
+    "reaper": "packages/tools/tracy-subprocess-docker/index.js attachReaper (sweepOnExit)",
+    "symlinkGuard": "packages/tools/tracy-subprocess-docker/src/site-guards.mjs outsideSymlinkIn",
+    "readFence": "packages/tools/tracy-webroot-read/src/webroot.mjs openInsideWebroot; tracy-site-tools src/host/index.ts mediaScan",
+    "bodyGuard": "packages/tools/tracy-site-tools/src/host/site-call.mjs judgeWholeBody",
+    "commentFence": "packages/tools/tracy-site-tools/src/host/comment-fence.mjs hostPath, excepted",
+    "skillSets": "packages/fleet/tracy-fleet-operation/dsh/skill-sets.json; scripts/gen-presets.ts"
+  },
+  "fence": "Each test drives the mechanism with bad input: a clean or rejected command exit, symlink commands in many spellings, a folder swapped for a link during reads, a whole-body write without a read or shorter than 80 %, a sed through /var/www/html, a write: line whose tail matches other files, 2001 sessions. No model, no network, no Postgres.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-subprocess-docker/test/provider.test.mjs",
+      "packages/tools/tracy-subprocess-docker/test/site-guards.test.mjs",
+      "packages/tools/tracy-webroot-read/test/symlink-fence.test.mjs",
+      "packages/tools/tracy-site-tools/test/comment-fence.test.mjs",
+      "packages/tools/tracy-site-tools/test/handler.test.mjs",
+      "packages/ui/tracy-mode-picker/test/account-subscriptions.test.mjs",
+      "scripts/test/skill-catalog.test.mjs"
+    ],
+    "tests": [
+      "reap: a command that exits CLEANLY is swept as it closes",
+      "reap: a command whose done REJECTS is swept too",
+      "a symbolic link is refused however ln is spelled",
+      "a language-level symlink call is refused",
+      "openInsideWebroot: a file inside opens",
+      "a shell write through the container's own document root is the site's file too",
+      "a write: line's folder name allows that one file",
+      "🔒 D6′ Joomla: an article introtext written whole without a read",
+      "🔒 D6′ Joomla: an introtext cut under 80 % of the read is refused",
+      "🔒 D6′ EmDash: a rich-text field cut under 80 % of the read is refused",
+      "the per-session memory stays bounded",
+      "the T4 build skill goes to the Joomla modes that change a template"
+    ]
+  }
+}

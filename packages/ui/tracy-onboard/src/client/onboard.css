@@ -1,0 +1,256 @@
+/* The first-run screen's ONE stylesheet, a port of tasks/evidence/desktop-onboard/mock/onboard.html.
+   Each mock class `.x` is `.tv-ob-x` here, in the mock's order, so a change Lee asks for on the mock
+   is the same small diff here. Since Lee's approval (10/10/2026) the panel has the size, corner,
+   border, shadow and mask of Tracy's Settings dialog (`@tracy/dsh-settings` styles.ts `.ts-surface`,
+   `.ts-mask`) and Orca's Getting Started layout: logo row, SETUP checklist left, the step right.
+
+   MODE B (DESIGN.md §0): this screen lives inside dsh's page. No reset, no Tailwind, no rule on
+   html/body; everything is under `.tv-onboard`. Colours: the mock's token names, declared on the
+   root from dsh's `--dsw-alias-*` with the light value of `@tracy/ui` `tokens.css` as fallback (the
+   same pairs tokens.css uses), so the screen follows dsh's theme as it switches. Dark is dsh's own
+   `[data-ds-dark-theme]` on <body>. */
+
+.tv-onboard {
+  --radius: 0.625rem;
+  --background: var(--dsw-alias-bg-base, oklch(1 0 0));
+  --foreground: var(--dsw-alias-label-primary, oklch(0.145 0 0));
+  --card: var(--dsw-alias-bg-layer-1, oklch(1 0 0));
+  --card-foreground: var(--dsw-alias-label-primary, oklch(0.145 0 0));
+  --primary: oklch(0.588 0.136 37.4); /* Tracy terracotta #bf5b3d, not mapped (tokens.css) */
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.588 0.136 37.4);
+  --muted: var(--dsw-alias-bg-layer-2, oklch(0.97 0 0));
+  --muted-foreground: var(--dsw-alias-label-tertiary, oklch(0.556 0 0));
+  --accent: var(--dsw-alias-bg-layer-2, oklch(0.97 0 0));
+  --border: var(--dsw-alias-border-l1, oklch(0.922 0 0));
+  --input: var(--dsw-alias-border-l2, oklch(0.922 0 0));
+  --sidebar: var(--dsw-alias-bg-layer-1, oklch(0.985 0 0));
+  --success: var(--dsw-alias-state-success-primary, oklch(0.696 0.17 162.48));
+  /* No warning token in tokens.css; amber from the chart scale, as in the mock. */
+  --warning-border: oklch(0.769 0.188 70.08);
+}
+[data-ds-dark-theme] .tv-onboard {
+  --warning-border: oklch(0.769 0.188 70.08 / 70%);
+}
+
+/* The two theme previews of step 2 paint a FIXED palette whatever the page's theme. */
+.tv-onboard .tv-ob-pv-light {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --border: oklch(0.922 0 0);
+  --sidebar: oklch(0.985 0 0);
+}
+.tv-onboard .tv-ob-pv-dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --sidebar: oklch(0.205 0 0);
+}
+
+/* What the mock's page-wide rules did, held inside the screen. */
+.tv-onboard, .tv-onboard * { box-sizing: border-box; }
+.tv-onboard {
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+/* :where() keeps these at element weight, as the mock's bare `button` rule: every class below wins. */
+:where(.tv-onboard) button { font: inherit; color: inherit; margin: 0; }
+.tv-onboard :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+.tv-ob-overlay {
+  /* Above Settings (`.ts-mask`, z-index 1000): Help › Getting started may open while Settings is up. */
+  position: fixed; inset: 0; z-index: 1001; display: flex; align-items: center; justify-content: center;
+  background: var(--dsw-alias-bg-mask-1, rgba(0, 0, 0, 0.45));
+  backdrop-filter: var(--dsw-mask-blur, blur(4px));
+}
+/* Settings' panel, measure for measure (`.ts-surface`). */
+.tv-ob-dialog {
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  width: 760px; max-width: calc(100vw - 48px);
+  height: min(600px, 100vh - 48px);
+  background: var(--card); color: var(--card-foreground);
+  border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+}
+.tv-ob-dialog:focus { outline: none; }
+.tv-ob-inner { display: flex; flex-direction: column; min-height: 0; height: 100%; padding: 18px 24px 16px; }
+
+.tv-ob-top { flex: none; display: flex; align-items: center; gap: 10px; min-width: 0; }
+.tv-ob-logo-mark {
+  width: 22px; height: 22px; flex: none; border-radius: 6px; background: var(--primary); color: var(--primary-foreground);
+  display: grid; place-items: center; font-size: 12px; font-weight: 700;
+}
+.tv-ob-logo-name { flex: none; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+.tv-ob-eyebrow { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--muted-foreground); }
+/* The header's actions (mock onboard-checklist-menu.html, A): "Hide from account menu" as a 26px ghost
+   text button, then × after Settings' `.ts-close`. The eyebrow gives way first; these never wrap. */
+.tv-ob-top-actions { margin-left: auto; flex: none; display: flex; align-items: center; gap: 2px; }
+.tv-ob-hide { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px; border: 0; border-radius: 7px;
+  background: transparent; color: var(--muted-foreground); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+.tv-ob-hide:hover { background: color-mix(in oklab, var(--foreground) 5%, transparent); color: var(--foreground); }
+.tv-ob-hide svg { width: 13px; height: 13px; }
+/* Hidden from the account menu: the button offers "Show in account menu", in the primary colour. */
+.tv-ob-hide[data-state="hidden"] { color: var(--primary); }
+.tv-ob-close { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 7px;
+  background: transparent; color: var(--muted-foreground); cursor: pointer; }
+.tv-ob-close:hover { background: color-mix(in oklab, var(--foreground) 5%, transparent); color: var(--foreground); }
+.tv-ob-close:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
+.tv-ob-close svg { width: 14px; height: 14px; }
+
+/* Orca's Getting Started grid: the checklist rail, then the step behind a hairline. */
+.tv-ob-columns { flex: 1; min-height: 0; margin-top: 18px; display: grid; grid-template-columns: 184px minmax(0, 1fr); gap: 22px; }
+.tv-ob-rail { min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.tv-ob-rail-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 2px 8px; }
+.tv-ob-rail-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-foreground); }
+.tv-ob-rail-count { font-size: 11px; font-variant-numeric: tabular-nums; color: var(--muted-foreground); }
+.tv-ob-rail-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 7px 8px; border: 0; border-radius: 7px;
+  background: transparent; text-align: left; cursor: pointer; transition: background .15s; }
+.tv-ob-rail-row:hover { background: color-mix(in oklch, var(--accent) 60%, transparent); }
+.tv-ob-rail-row[aria-current="step"] { background: var(--accent); }
+.tv-ob-rail-mark { width: 20px; height: 20px; flex: none; display: grid; place-items: center; border-radius: 50%;
+  border: 1px solid var(--border); color: var(--muted-foreground); font-size: 11px; font-variant-numeric: tabular-nums; }
+.tv-ob-rail-row[data-done="true"] .tv-ob-rail-mark { border-color: var(--foreground); background: var(--foreground); color: var(--background); }
+.tv-ob-rail-mark svg { width: 10px; height: 10px; }
+.tv-ob-rail-name { min-width: 0; flex: 1; font-size: 13px; line-height: 1.3; color: var(--foreground); }
+.tv-ob-rail-row[data-done="true"]:not([aria-current]) .tv-ob-rail-name { color: var(--muted-foreground); }
+.tv-ob-rail-row[aria-current="step"] .tv-ob-rail-name { font-weight: 500; }
+.tv-ob-pane { min-width: 0; min-height: 0; display: flex; flex-direction: column; padding-left: 22px; border-left: 1px solid var(--border); }
+
+.tv-ob-head { flex: none; }
+.tv-ob-title-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.tv-ob-chip { display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 500;
+  border: 1px solid var(--border); color: var(--muted-foreground); }
+.tv-ob-chip.tv-ob-done { color: var(--foreground); border-color: color-mix(in oklch, var(--success) 50%, transparent); background: color-mix(in oklch, var(--success) 10%, transparent); }
+.tv-ob-chip.tv-ob-done svg { color: var(--success); }
+.tv-ob-enabled-card { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; }
+.tv-ob-enabled-card.tv-ob-on { border-color: color-mix(in oklch, var(--success) 45%, transparent); }
+.tv-ob-enabled-icon { width: 26px; height: 26px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--success); color: var(--primary-foreground); }
+.tv-ob-enabled-icon.tv-ob-off { background: var(--muted); color: var(--muted-foreground); }
+.tv-ob-enabled-icon svg { width: 13px; height: 13px; }
+.tv-ob-section-title { font-size: 13px; font-weight: 600; }
+.tv-ob-section-line { margin-top: 2px; font-size: 12px; color: var(--muted-foreground); }
+.tv-ob-sound-row { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.tv-ob-select { width: 200px; max-width: 100%; height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--input);
+  background: var(--background); color: var(--foreground); font: inherit; font-size: 13px; cursor: pointer; }
+.tv-ob-title { margin: 0; min-width: 0; font-size: 20px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; }
+.tv-ob-subtitle { margin: 6px 0 0; font-size: 13px; line-height: 1.5; color: var(--muted-foreground); }
+
+/* The step scrolls inside the pane; the panel never grows. */
+.tv-ob-body { margin-top: 18px; min-height: 0; flex: 1; overflow-y: auto; padding-right: 4px; }
+
+/* Step 2's cards, section heads, connect panel, buttons and "Show N more" are Settings' shared
+   component since 12/10/2026 (`@tracy/dsh-model-plan/account-cards`, tasks/todo-ai-accounts-unify.md):
+   their rules (`.tv-ob-stack`, `.tv-ob-note`, `.tv-ob-section-head`, `.tv-ob-grid`, `.tv-ob-agent*`,
+   `.tv-ob-badge`, `.tv-ob-check`, `.tv-ob-disclosure`, `.tv-ob-btn*`, `.tv-ob-connect*`,
+   `.tv-ob-paste`, `.tv-ob-device`, `.tv-ob-spinner`) live in account-cards.css, appended to this one
+   by styles.ts. Below: only what that file lacks. */
+.tv-ob-btn-primary-outline { border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 6px 12px; font-weight: 500; }
+.tv-ob-btn-primary-outline:hover { background: color-mix(in oklch, var(--primary) 8%, transparent); }
+.tv-ob-kbd { display: inline-flex; align-items: center; gap: 3px; margin-left: 4px; padding: 3px 6px; border-radius: 4px; font-size: 10px; line-height: 1;
+  border: 1px solid color-mix(in oklch, var(--primary-foreground) 25%, transparent); opacity: .85; }
+.tv-ob-warn { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  border: 1px solid var(--warning-border); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--muted-foreground); line-height: 1.5; }
+.tv-ob-warn b { color: var(--foreground); font-weight: 500; }
+
+/* Step 3, the looks */
+.tv-ob-themes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.tv-ob-theme-card { overflow: hidden; padding: 10px; text-align: left; cursor: pointer; background: transparent; border: 1px solid var(--border); border-radius: 12px; }
+.tv-ob-theme-card:hover { background: color-mix(in oklch, var(--accent) 60%, transparent); }
+.tv-ob-theme-card[aria-pressed="true"] { border-color: color-mix(in oklch, var(--foreground) 60%, transparent); background: var(--accent); }
+.tv-ob-preview-wrap { position: relative; height: 84px; margin-bottom: 10px; display: grid; place-items: center; border-radius: 8px;
+  background: var(--muted); border: 1px solid var(--border); }
+.tv-ob-preview-wrap .tv-ob-check { position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.tv-ob-pv { position: relative; width: min(112px, 100% - 12px); height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+.tv-ob-pv-half { position: absolute; inset: 0; }
+.tv-ob-pv-win { position: absolute; inset: 0; display: flex; background: var(--background); }
+.tv-ob-pv-side { width: 34%; padding: 6px; display: flex; flex-direction: column; gap: 4px; background: var(--sidebar); border-right: 1px solid var(--border); }
+.tv-ob-pv-row { height: 4px; border-radius: 2px; background: color-mix(in oklch, var(--foreground) 12%, transparent); }
+.tv-ob-pv-row.tv-ob-on { background: var(--primary); width: 70%; }
+.tv-ob-pv-row.tv-ob-short { width: 80%; }
+.tv-ob-pv-main { flex: 1; padding: 8px; display: flex; flex-direction: column; gap: 5px; }
+.tv-ob-pv-line { height: 5px; border-radius: 2px; background: color-mix(in oklch, var(--foreground) 22%, transparent); }
+.tv-ob-pv-line.tv-ob-short { width: 62%; background: color-mix(in oklch, var(--foreground) 10%, transparent); }
+.tv-ob-pv-compose { margin-top: auto; height: 10px; border-radius: 3px; border: 1px solid var(--border); background: var(--card); }
+.tv-ob-pv-split-l { clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
+.tv-ob-pv-split-r { clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%); }
+.tv-ob-pv-divider { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--border); }
+.tv-ob-theme-meta { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 8px; }
+.tv-ob-theme-label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+.tv-ob-theme-label svg { color: var(--muted-foreground); }
+.tv-ob-theme-hint { font-size: 11px; color: var(--muted-foreground); }
+.tv-ob-footnote { display: flex; align-items: center; gap: 8px; padding: 0 4px; font-size: 12px; color: var(--muted-foreground); }
+.tv-ob-footnote b { color: var(--foreground); font-weight: 500; }
+
+/* Step 4 */
+.tv-ob-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; }
+.tv-ob-row-title { font-size: 13px; font-weight: 500; }
+.tv-ob-row-desc { margin-top: 2px; font-size: 12px; color: var(--muted-foreground); }
+.tv-ob-switch { position: relative; width: 36px; height: 20px; flex: none; border: 0; padding: 0; border-radius: 999px; cursor: pointer; background: var(--input); transition: background .15s; }
+.tv-ob-switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--background); box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform .15s; }
+.tv-ob-switch[aria-checked="true"] { background: var(--primary); }
+.tv-ob-switch[aria-checked="true"]::after { transform: translateX(16px); background: var(--primary-foreground); }
+.tv-ob-status { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-radius: 10px;
+  border: 1px solid var(--border); background: color-mix(in oklch, var(--muted) 40%, transparent); font-size: 12px; color: var(--muted-foreground); }
+.tv-ob-status.tv-ob-blocked { border-color: var(--warning-border); }
+.tv-ob-status-text { display: flex; align-items: center; gap: 10px; }
+.tv-ob-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--muted-foreground); }
+.tv-ob-dot.tv-ob-ok { background: var(--success); }
+.tv-ob-dot.tv-ob-warn-dot { background: var(--warning-border); }
+
+.tv-ob-footer { margin-top: 14px; flex: none; display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border); }
+.tv-ob-skip { border: 0; background: none; padding: 6px 10px; border-radius: 7px; font-size: 13px; color: var(--muted-foreground); cursor: pointer; }
+.tv-ob-skip:hover { color: var(--foreground); }
+.tv-ob-foot-right { display: flex; align-items: center; gap: 8px; }
+
+
+/* Step 1, Sign in (v2 mock onboard-connect-now.html): the signed-in card; always done here. */
+.tv-ob-who { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 10px;
+  border: 1px solid color-mix(in oklch, var(--success) 45%, transparent); background: color-mix(in oklch, var(--success) 6%, transparent); }
+.tv-ob-who-text { flex: 1; min-width: 0; }
+.tv-ob-who-name { font-size: 13px; font-weight: 600; }
+.tv-ob-who-mail { margin-top: 2px; font-size: 12px; color: var(--muted-foreground); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+
+/* Step 3, Appearance & language: Settings' Language row on top (its CSS: LANGUAGE_ROW_CSS, styles.ts),
+   one line under it, a hairline, then the looks under their own heading. */
+.tv-ob-lang .ts-row { padding-top: 0; }
+.tv-ob-lang-note { margin-top: -4px; font-size: 12px; color: var(--muted-foreground); line-height: 1.5; }
+.tv-ob-lang-note b { color: var(--foreground); font-weight: 500; }
+.tv-ob-divider { height: 1px; background: var(--border); margin: 4px 0; }
+.tv-ob-block-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+
+/* Step 4, macOS blocks Tracy's notifications: the amber card; sound and test stay, disabled. */
+.tv-ob-enabled-card > div { flex: 1; min-width: 0; }
+.tv-ob-enabled-card.tv-ob-blocked { border-color: var(--warning-border); background: color-mix(in oklch, var(--warning-border) 8%, transparent); }
+.tv-ob-enabled-card.tv-ob-blocked b { color: var(--foreground); font-weight: 500; }
+.tv-ob-enabled-icon.tv-ob-warn-icon { background: color-mix(in oklch, var(--warning-border) 30%, transparent); color: var(--foreground); }
+.tv-ob-locked { opacity: .5; }
+.tv-ob-locked select, .tv-ob-locked button { cursor: not-allowed; }
+.tv-ob-locked .tv-ob-btn:disabled { opacity: 1; }
+.tv-ob-locked-why { margin-top: -6px; font-size: 12px; color: var(--muted-foreground); }
+
+/* The account menu's "Getting started" row (mock onboard-checklist-menu.html, B): the row itself is
+   `@tracy/core/site-tabs` PopoverItem, outside `.tv-onboard`, so these two stand on their own. The
+   ring sits in the row's 16px icon column; `n/N` at the right edge. */
+.tv-ob-ring { width: 16px; height: 16px; display: block; flex: none; }
+.tv-ob-ring .tv-ob-ring-track { fill: none; stroke: currentColor; stroke-width: 2; opacity: .25; }
+.tv-ob-ring .tv-ob-ring-arc { fill: none; stroke: var(--success, oklch(0.696 0.17 162.48)); stroke-width: 2; stroke-linecap: round;
+  transition: stroke-dashoffset .25s; }
+.tv-ob-ring .tv-ob-ring-tick { fill: none; stroke: var(--success, oklch(0.696 0.17 162.48)); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; }
+.tv-ob-menu-count { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--muted-foreground, var(--dsw-alias-label-tertiary)); }
+
+/* A narrow window: the checklist goes on top, the step below it. */
+@media (max-width: 620px) {
+  /* The top row cannot hold the label beside the logo and Close: the button keeps its icon, its
+     name (aria-label) and its hint (title), and Close stays inside the card (dev, 12/10/2026). */
+  .tv-ob-hide-label { display: none; }
+  .tv-ob-columns { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 12px; }
+  .tv-ob-pane { padding-left: 0; border-left: 0; padding-top: 12px; border-top: 1px solid var(--border); }
+  .tv-ob-themes { grid-template-columns: minmax(0, 1fr); }
+}

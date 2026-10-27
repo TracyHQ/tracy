@@ -1,0 +1,44 @@
+{
+  "color": {
+    "parchment": {
+      "$value": "#eee9cc",
+      "$type": "color",
+      "$description": "Parchment — Primary canvas and card surface — the warm bone tone that carries all body content, tables, and quiet sections"
+    },
+    "aged-linen": {
+      "$value": "#cecab1",
+      "$type": "color",
+      "$description": "Aged Linen — Secondary surface and muted text — slightly deeper parchment for sub-surfaces, helper text, and table headers"
+    },
+    "tobacco-brown": {
+      "$value": "#674825",
+      "$type": "color",
+      "$description": "Tobacco Brown — Chapter-break sections and featured band backgrounds — rich warm umber that anchors the page's heaviest typographic moments"
+    },
+    "midnight-espresso": {
+      "$value": "#1e1915",
+      "$type": "color",
+      "$description": "Midnight Espresso — Full-bleed dark sections and navigation background — the near-black that creates the page's dramatic section breaks"
+    },
+    "ink-black": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Ink Black — Primary text and hairline rules — the deepest tone for body copy, headings, table content, and footer dividers"
+    }
+  },
+  "font": {
+    "pp-neue-montreal": {
+      "$value": "PP Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "The sole typeface across the entire system — used at every size from 15px captions to 317px display words. Weight stays at 400 throughout, so hierarchy is built purely through scale, whitespace, and the choice of dark or light ground. This single-weight restraint is the signature: no bold, no italic, no medium — just one calm voice that gets larger or smaller depending on how much the page wants to say. Substitute with Inter or Söhne for similar geometric neutrality."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://maelanlemeur.com",
+      "siteName": "Maëlan Le Meur",
+      "extractedAt": "2026-06-03T21:08:28.717Z",
+      "variant": "compact"
+    }
+  }
+}

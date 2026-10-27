@@ -1,0 +1,84 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#1e242c",
+      "$type": "color",
+      "$description": "Ink — Primary text, nav borders, icon strokes, card borders — near-black with a barely-there cool tint reads as a refined alternative to pure black"
+    },
+    "steel": {
+      "$value": "#576579",
+      "$type": "color",
+      "$description": "Steel — Secondary text, muted nav links, subtle borders — the workhorse mid-gray for everything that must be quieter than body copy"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, button text on filled controls — the dominant surface"
+    },
+    "mist": {
+      "$value": "#e7eaee",
+      "$type": "color",
+      "$description": "Mist — Nav dividers, subtle section separators — the lightest functional border"
+    },
+    "fog": {
+      "$value": "#dbdfe5",
+      "$type": "color",
+      "$description": "Fog — Card borders, content block outlines — slightly darker than Mist for card-level separation"
+    },
+    "ash": {
+      "$value": "#cfd5dd",
+      "$type": "color",
+      "$description": "Ash — Button focus shadow, input hover rings — the mid-neutral for interaction feedback"
+    },
+    "signal-blue": {
+      "$value": "#1a73e8",
+      "$type": "color",
+      "$description": "Signal Blue — Blue action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "coal": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Coal — Icon fills, SVG strokes — true black reserved for graphic assets only, not text"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "helveticanowmtdisplaymedium": {
+      "$value": "HelveticaNowMTDisplayMedium",
+      "$type": "fontFamily",
+      "$description": "Display headlines (page titles like 'Variable fonts') — the largest voice on the page, 57px with tight 1.12 line-height"
+    },
+    "helveticanowmttextregular": {
+      "$value": "HelveticaNowMTTextRegular",
+      "$type": "fontFamily",
+      "$description": "Body copy, nav items, buttons, article titles, card descriptions — the workhorse text family across 13/14/16px with line-heights that scale from tight nav (1.20) to generous article body (1.50)"
+    },
+    "helveticanowmttextbold": {
+      "$value": "HelveticaNowMTTextBold",
+      "$type": "fontFamily",
+      "$description": "Bold labels, active nav states, emphasized article titles — the -0.02em tracking is a brand signature: tight enough to read as deliberate typographic craft"
+    },
+    "helveticanowmtmicroregular": {
+      "$value": "HelveticaNowMTMicroRegular",
+      "$type": "fontFamily",
+      "$description": "Micro-copy, metadata, breadcrumb text, tag labels — 11px with 2.55 line-height for very fine annotations; 14px version for small UI labels"
+    },
+    "typecasevar": {
+      "$value": "TypecaseVar",
+      "$type": "fontFamily",
+      "$description": "TypecaseVar — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://variable-fonts.com",
+      "siteName": "Monotype.",
+      "extractedAt": "2026-06-03T20:23:34.786Z",
+      "variant": "compact"
+    }
+  }
+}

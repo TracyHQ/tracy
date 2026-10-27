@@ -1,0 +1,49 @@
+{
+  "color": {
+    "bone-white": {
+      "$value": "#f6f6f6",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, large background blocks"
+    },
+    "divider-grey": {
+      "$value": "#e6e6e6",
+      "$type": "color",
+      "$description": "Divider Grey — Hairline borders between nav rows, section dividers"
+    },
+    "off-black": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Off-Black — Headlines, body text, nav labels, button strokes"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, nav bar backgrounds, elevated panels"
+    },
+    "muted-grey": {
+      "$value": "#b2b2b2",
+      "$type": "color",
+      "$description": "Muted Grey — Tertiary helper text, inactive labels"
+    },
+    "signal-red": {
+      "$value": "#ff0000",
+      "$type": "color",
+      "$description": "Signal Red — Accent panel fills — rotating display block, category highlight surface"
+    }
+  },
+  "font": {
+    "eurostile-becane": {
+      "$value": "Eurostile Becane",
+      "$type": "fontFamily",
+      "$description": "Custom Eurostile variant is the sole typeface across all scales. Used uppercase at 8px with 0.04em tracking for nav, buttons, labels, and micro-copy — the high tracking and small size force labels to read as gallery placards rather than UI. Bold 30px anchors the hero 'COLLECTION' wordmark. Substitutes: Eurostile, 'Helvetica Neue', Arial — the geometric warmth of Eurostile is the closest system match; fallback to Helvetica Neue retains the uppercase utility feel."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.becaneparis.com",
+      "siteName": "Bécane",
+      "extractedAt": "2026-07-03T15:37:39.565Z",
+      "variant": "compact"
+    }
+  }
+}

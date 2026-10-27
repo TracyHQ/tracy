@@ -1,0 +1,48 @@
+{
+  "id": "QA-UNIT-REG-PR-1286-emdash-personalization-happy",
+  "itemIds": ["regression:REG-PR-1286-emdash-personalization"],
+  "requirement": "EmDash personalization preserves technical enums and translates every mapped repeater label",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1286-emdash-personalization.json",
+    "ref": "PR #1286 (fix); fix evidence: tasks/evidence/akemi-user-acceptance-2026-10-13/emdash-base-enum-write-failures-before.json: real German build rejected complete page updates because hero_aside_state had been translated outside the schema enum.",
+    "invariant": "Technical success/warning and publication status values are never offered for translation; visible state/status labels are translated. Every mapped kicker, title, text, CTA, tab and link label is rewritten; URLs and unrelated data remain byte-equivalent. Both help texts translate, the briefed field retains its own label, and the consent field stays required.",
+    "productSources": ["packages/cms/tracy-emdash-theme-base/tools/personalize.mjs:2265"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1286-emdash-personalization.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1286-emdash-personalization"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/cms/tracy-emdash-theme-base", "tracy-emdash-theme-base"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1286-emdash-personalization",
+    "pr": 1286,
+    "kind": "fix",
+    "area": "site-editing/personalization",
+    "file": "tests/regression/cases/REG-PR-1286-emdash-personalization.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern=technical state enums|home benefit cards|a root written in Vietnamese",
+    "packages/cms/tracy-emdash-theme-base/tests/personalize-written-language.test.mjs",
+    "packages/cms/tracy-emdash-theme-base/tests/personalize-facts.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 60
+}

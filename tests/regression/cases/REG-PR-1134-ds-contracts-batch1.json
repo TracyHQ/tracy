@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1134-ds-contracts-batch1",
+  "kind": "feat",
+  "title": "Batch 1 of the slot contracts: Tracy SaaS EmDash 1.4.5, nine JA Joomla j6 templates, Tracy Apple and Tracy Airbnb are offered from the release each was measured on; JA Resort, Symphony and Vital say why not",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, read templates/joomla-{ja-rent,ja-directory,ja-resume,ja-sensei,ja-prodex,ja-seven,ja-tour,ja-impact,ja-podcast}.json through loadContract (ready, minVersion, readyNote) and each one's tasks/evidence/ds-contracts-batch1-2026-10-11/<slug>-j6/final.json; ask contractFor for a site of that tag at that version.",
+    "S2: For the seven re-releases built here, read packages/cms/tracy-joomla-quickstart/contracts/<slug>/j6/<version>/ and the template-profiles row of that version.",
+    "S3: Build the Moxie module sheet (joomlaSlot) for joomla-ja-tour, joomla-ja-podcast, joomla-ja-impact, joomla-ja-seven.",
+    "S4: read emdash-tracy-saas minVersion (1.4.12 since 12/10/2026; 1.4.5 when this case was written); contractFor for an EmDash tracy-saas site at that release, at the release before it in template-profiles, and at 1.4.4; node --test tests/ds-slot.test.mjs in packages/cms/tracy-emdash-theme-saas.",
+    "S5: node --test test/cms.test.mjs test/slot.test.mjs test/tokenize.test.mjs in packages/design/tracy-ds-slot.",
+    "S6: contractFor for Joomla templates tracy and tracy_airbnb on a tracy-apple/j6 1.3.0 site.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-batch1.mjs"
+  ],
+  "expect": [
+    "S1: each is ready with minVersion {quickstart/<slug>/j6: ja-rent 1.0.2, ja-podcast 1.0.2, the rest 1.0.1}; its readyNote names its evidence folder; final.json: every verdict passes (six systems × two widths + controls), controls 0,0,0,0, no text under 4.5:1 worse than the template's own, every contrast kind the batch-1 measure probed found a sample and is still judged by the contract (a kind the contract gained since, heading/text of the per-element probe, comes with a ds-remeasure/ds-reverify evidence folder for that template named in readyNote and present on disk), lowest share following ≥ 0.5; contractFor returns the contract. ja-resort, ja-symphony and ja-vital readyNotes start 'NOT offered yet'.",
+    "S2: manifest.json, presentation-lock.json and content-map.json exist, manifest id <slug>/j6/<version>, builtFrom.change names the worn design system (ja-resume and ja-sensei: and T3 dev mode off); the profile row exists.",
+    "S3: Tour's sheet paints body colour and ground from --ds-c-fg/--ds-c-bg and .btn.btn-secondary with the accent !important outside kept bands; Podcast's token scope includes .dark-active with --body-text-color:var(--ds-c-fg); Impact gives .header-top --t4-gray-500:#adb5bd back; Seven sets --color-secondary:var(--ds-c-fg-2).",
+    "S4: minVersion is 1.4.5 or later; minVersion → emdash-tracy-saas; the release before it and 1.4.4 → TEMPLATE_NEEDS_UPDATE; theme package.json is minVersion or later; the theme's slot test passes; template-profiles has 1.4.5 and minVersion.",
+    "S5: 0 failures (followRules test included).",
+    "S6: tracy → joomla-tracy-base, tracy_airbnb → joomla-tracy-airbnb (module in header-r)."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/*.json ready, minVersion, readyNote, keepScopes, keepDefaults, templateVars, tokenScope, runtime, followRules, t3DevmodeOff, contrast",
+    "emitter": "packages/design/tracy-ds-slot/src/joomla.mjs followRules()",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor(templateKey, {key, version})"
+  },
+  "evidence": "tasks/evidence/ds-contracts-batch1-2026-10-11/README.md (per-template table, causes found, releases built with SHA-256, what is not verified)",
+  "fence": "which batch-1 templates are offered, from which release, and the contract fields and emitter mechanism that made them pass; not the release upload (RELEASE-DS-BATCH1.sh, a person runs it) nor the three templates not offered (causes recorded, not fixed)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-batch1.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

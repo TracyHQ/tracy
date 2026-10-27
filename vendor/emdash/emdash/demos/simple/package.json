@@ -1,0 +1,33 @@
+{
+  "name": "emdash-demo",
+  "version": "0.0.3",
+  "private": true,
+  "type": "module",
+  "emdash": {
+    "seed": "seed/seed.json"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/node": "catalog:",
+    "@astrojs/react": "catalog:",
+    "@emdash-cms/auth-atproto": "workspace:*",
+    "@emdash-cms/plugin-atproto": "workspace:*",
+    "@emdash-cms/plugin-audit-log": "workspace:*",
+    "@emdash-cms/plugin-color": "workspace:*",
+    "@emdash-cms/plugin-cli": "workspace:*",
+    "@emdash-cms/plugin-mcp-smoke": "workspace:*",
+    "astro": "catalog:",
+    "emdash": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@astrojs/check": "catalog:"
+  }
+}

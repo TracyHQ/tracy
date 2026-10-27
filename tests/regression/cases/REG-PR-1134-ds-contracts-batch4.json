@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1134-ds-contracts-batch4",
+  "kind": "feat",
+  "title": "The framework and third-party Joomla quickstarts of batch 4 have the slot contracts their measurement allows: Purity III, T3 Blank and T4 Blank (t4-framework + ijoomla-com-guru-pro) are ready, the five GavickPro templates have no slot; a template sized by Bootstrap utilities takes sizes and shapes !important, and a kept light band keeps its own text",
+  "pr": 1134,
+  "area": "design-system/slot-contracts",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/design/tracy-ds-slot/test/cms.test.mjs apps/tracy-web/test/design-system-door.test.mjs",
+    "S2: Read the result of each test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'Joomla: a template sized by Bootstrap utilities takes sizes and shapes !important, a JA template does not' passes.",
+    "'a template maps to its slot contract; one without a contract says why' passes (purity_III, t3_bs3_blank, t4_bs5_blank map to their contracts; gk_appetit, gk_archi, gk_compact, gk_restly, gk_spotlight answer TEMPLATE_HAS_NO_SLOT)."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-purity-iii.json, joomla-t3-bs3-blank.json, joomla-t4-bs5-blank.json",
+    "contractField": "utilitiesImportant (src/joomla.mjs), keepText (src/tokens56.mjs keepRules)",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template}))"
+  },
+  "evidence": "tasks/evidence/ds-contracts-batch4-2026-10-11/README.md",
+  "fence": "Which Joomla template element maps to which slot contract and readiness; the opt-in emitter rules a Bootstrap-utility page needs. No stand, no model, no Docker.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/design/tracy-ds-slot/test/cms.test.mjs",
+      "apps/tracy-web/test/design-system-door.test.mjs"
+    ],
+    "tests": [
+      "Joomla: a template sized by Bootstrap utilities takes sizes and shapes !important, a JA template does not",
+      "a template maps to its slot contract; one without a contract says why"
+    ]
+  }
+}

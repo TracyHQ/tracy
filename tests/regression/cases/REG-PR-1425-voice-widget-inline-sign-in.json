@@ -1,0 +1,55 @@
+{
+  "id": "REG-PR-1425-voice-widget-inline-sign-in",
+  "kind": "feat",
+  "title": "Embeddable voice widget keeps the mobile conversation visible and isolates inline sign-in credentials",
+  "pr": 1425,
+  "area": "widget/voice-sign-in",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the real route and browser fixture tests from this branch. The fixture serves the widget assets and supplies synthetic speech and API responses; it sends no mail and creates no customer sites."
+  ],
+  "expect": [
+    "Operator switch off and foreign-origin writes are refused.",
+    "OTP is verified for the bound email, excluded from history, and choices are retained.",
+    "Google requires a freshly attested OAuth callback and a single-use flow.",
+    "Mobile transcript scrolling, catalogue browsing and viewport resize keep the orb/composer visible.",
+    "Spoken email is read back before confirmation; OTP verifies on the same microphone and normal conversation resumes.",
+    "The visitor cookie is host-only and partitioned; sign-out clears the same path and partition.",
+    "The website widget is hidden by default until the operator enables its switch.",
+    "Every registered widget route appears in the API reference, with no documented route missing from the app.",
+    "A backend renewal of the internal guest session never sets that credential in the visitor browser."
+  ],
+  "selectors": {
+    "routes": "/widget/api/auth/email, /widget/api/auth/verify, /widget/oauth/complete",
+    "dom": ".voice-presence, .transcript, .live-dock, #auth-email, #auth-code"
+  },
+  "fence": "Operator/Origin gates, email binding, OAuth callback attestation, private speech cursor and persistent microphone; browser fixture does not replace the product JavaScript.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/widget.test.mjs",
+      "apps/tracy-web/test/widget-oauth-handoff.test.mjs",
+      "apps/tracy-web/test/widget-voice-auth.test.mjs",
+      "apps/tracy-web/test/e2e/widget-voice-auth.test.mjs",
+      "packages/core/tracy-core/test/ui-switches.test.mjs",
+      "apps/tracy-web/test/api-reference.test.mjs"
+    ],
+    "tests": [
+      "widget is disabled by the operator switch and foreign writes are refused",
+      "OTP is bound to the submitted email, never reaches conversation, and keeps selections",
+      "Google completion authenticates the original embedded visitor and cannot be replayed",
+      "widget receives a fresh OAuth session only after the provider and both state checks succeeded",
+      "a shared speech session does not carry email or OTP chunks into resumed chat",
+      "mobile voice keeps the orb and composer visible while scrolling, browsing and resizing",
+      "voice sign-in confirms the spoken email and verifies OTP without replacing the microphone",
+      "widget visitor uses a host-only partitioned cookie and sign-out clears the matching scope",
+      "<html> carries the hidden ids at once (defaults), then the door answer",
+      "every route the app serves is in the reference, and every documented route is served",
+      "guest backend relays never set the internal session cookie in the browser"
+    ]
+  }
+}

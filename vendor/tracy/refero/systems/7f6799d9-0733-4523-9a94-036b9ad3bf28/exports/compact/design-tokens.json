@@ -1,0 +1,64 @@
+{
+  "color": {
+    "canvas-black": {
+      "$value": "#101011",
+      "$type": "color",
+      "$description": "Canvas Black — Base page canvas beneath full-bleed photography and dark bands; primary text on light surfaces; link underlines in dark contexts"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary text color on dark/photographic backgrounds; content section background; dominant border color (hairline rules and dividers across the layout)"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Heading and body text on light surfaces; second structural border color — used wherever a slightly harder edge than #101011 is needed"
+    },
+    "fog-gray": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Fog Gray — Subtle surface tint separating content blocks from white paper; soft borders on body text and cards where a pure white hairline would disappear"
+    },
+    "smoke-gray": {
+      "$value": "#bab7b2",
+      "$type": "color",
+      "$description": "Smoke Gray — Muted heading accent — used for secondary headings and borders where the hierarchy needs to recede below the primary type"
+    },
+    "ash-gray": {
+      "$value": "#888888",
+      "$type": "color",
+      "$description": "Ash Gray — Body text metadata, link underlines in light contexts, and mid-weight borders — the workhorse neutral for anything that should be seen but not foregrounded"
+    },
+    "charcoal": {
+      "$value": "#262627",
+      "$type": "color",
+      "$description": "Charcoal — Deepest secondary border and muted text on light sections — just one step lighter than canvas black, used to keep dark elements feeling part of the same family"
+    },
+    "void": {
+      "$value": "#080809",
+      "$type": "color",
+      "$description": "Void — Near-pure black for the darkest link borders and emphasis text — visually indistinguishable from #000000 but kept distinct in the scale for deepest emphasis"
+    }
+  },
+  "font": {
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "The entire typographic system. Weight 400 at 162px is the signature move — most portfolios would use 700-900 for a hero this large; Phipps uses regular, letting the sheer size and aggressive negative tracking carry authority instead of stroke weight. LineHeight of 0.90 on the display size means the two-line hero actually visually interlocks. All other text (body, labels, navigation, links) is the same family at the same weight — there is no secondary typeface voice."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Used only as 13px image captions or photo metadata — the serif appears as a deliberate editorial counterpoint to the Helvetica system, breaking the all-grotesque monotony at micro scale"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://phippscharlie.com",
+      "siteName": "Charlie Phipps",
+      "extractedAt": "2026-06-03T19:45:21.588Z",
+      "variant": "compact"
+    }
+  }
+}

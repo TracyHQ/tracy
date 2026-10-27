@@ -1,0 +1,22 @@
+@theme {
+  /* Colors */
+  --color-studio-black: #000000;
+  --color-pure-white: #ffffff;
+  --color-deep-ink: #0b1215;
+  --color-graphite-stroke: #394649;
+  --color-fog-border: #e0e0e0;
+  --color-ash-mid: #757575;
+  --color-charcoal-surface: #232424;
+  --color-skill-green: #55da9b;
+  --color-neon-pulse: #00ff84;
+  --color-electric-cyan: #24c2f2;
+  --color-creator-violet: #6927ef;
+  --color-deep-violet: #5620c1;
+  --color-facebook-blue: #1877f2;
+  --color-google-red: #ea4335;
+  --color-warning-amber: #f6b60b;
+
+  /* Typography */
+  --font-gt-walsheim-pro: 'GT Walsheim Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

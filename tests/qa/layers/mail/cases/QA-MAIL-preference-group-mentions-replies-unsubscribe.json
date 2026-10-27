@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-preference-group-mentions-replies-unsubscribe",
+  "itemIds": ["preference-group:mentions-replies"],
+  "requirement": "letters of group mentions-replies carry a working unsubscribe header",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "groups",
+    "invariant": "RFC 8058 headers for switchable groups only"
+  },
+  "edgeTags": ["unsubscribe"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.unsubscribe-header#comment.mention:|comment.reply:"],
+  "redProof": null,
+  "legacyIds": []
+}

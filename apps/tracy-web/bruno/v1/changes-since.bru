@@ -1,0 +1,19 @@
+meta {
+  name: changes since
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}/changes?since={{version}}&locale={{locale}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  # What moved since a version
+
+  `since` is the `version` "pages" answered, in the same `locale` scope. Answers the pages added,
+  changed and removed and a new `version`. The versions live in the server's memory for 30 minutes
+  and at most 500 reads: `409 CONTENT_SNAPSHOT_EXPIRED` means run "pages" again.
+}

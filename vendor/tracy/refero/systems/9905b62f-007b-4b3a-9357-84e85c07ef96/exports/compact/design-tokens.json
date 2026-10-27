@@ -1,0 +1,99 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, primary background — the floor everything sits on"
+    },
+    "carbon": {
+      "$value": "#0f0f10",
+      "$type": "color",
+      "$description": "Carbon — Card and elevated surface — one step up from canvas for contained blocks"
+    },
+    "graphite": {
+      "$value": "#27272a",
+      "$type": "color",
+      "$description": "Graphite — Borders, dividers, inset surfaces, nav background — the structural neutral"
+    },
+    "filament": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Filament — Hairline borders on badges, tags, and outlined controls — the machined edge"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary text, filled CTA background, icon strokes — the highest contrast signal"
+    },
+    "fog": {
+      "$value": "#abafb4",
+      "$type": "color",
+      "$description": "Fog — Secondary text, subdued body copy, card labels"
+    },
+    "ash": {
+      "$value": "#6e727a",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, badge captions, metadata"
+    },
+    "mist": {
+      "$value": "#99a1af",
+      "$type": "color",
+      "$description": "Mist — Tertiary text, icon strokes, disabled-state foreground"
+    },
+    "silver": {
+      "$value": "#cad5e2",
+      "$type": "color",
+      "$description": "Silver — Decorative icon strokes, product-mock accent lines"
+    },
+    "slate": {
+      "$value": "#364153",
+      "$type": "color",
+      "$description": "Slate — Deep icon fills, secondary button text, sparse accent"
+    },
+    "sleet": {
+      "$value": "#f3f4f6",
+      "$type": "color",
+      "$description": "Sleet — Code editor chrome, light surface insets, inverted card fill"
+    },
+    "neon-cyan": {
+      "$value": "#52e1fe",
+      "$type": "color",
+      "$description": "Neon Cyan — Blue text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color"
+    },
+    "beacon-teal": {
+      "$value": "#25aeba",
+      "$type": "color",
+      "$description": "Beacon Teal — Glow halo behind hero product imagery, soft radial accent"
+    },
+    "amber": {
+      "$value": "#ffb86a",
+      "$type": "color",
+      "$description": "Amber — Decorative icon accent, editorial highlight — the warm counterpoint to cyan"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Primary interface and editorial type — headlines at weight 500 with aggressive negative tracking (up to -0.05em at 68px) create display density without heaviness; body at 400 reads cleanly against Obsidian canvas"
+    },
+    "commitmono": {
+      "$value": "CommitMono",
+      "$type": "fontFamily",
+      "$description": "Code-first monospace — terminal commands, file labels, badge text, inline code snippets; 13–14px range keeps code as peer to body copy rather than as ornamental detail"
+    },
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "Email preview rendering — the email itself uses system font stack so rendered output matches recipient inbox; liga features disabled to keep copy neutral"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://react.email",
+      "siteName": "React Email",
+      "extractedAt": "2026-06-03T20:27:10.388Z",
+      "variant": "compact"
+    }
+  }
+}

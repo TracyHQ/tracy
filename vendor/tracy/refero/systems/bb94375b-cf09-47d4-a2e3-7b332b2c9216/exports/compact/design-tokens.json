@@ -1,0 +1,59 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, hairline borders, subtle dividers — used at very-high frequency (1452 instances) across body, list, card, and input borders. The near-black rather than pure #000 keeps the UI from feeling harsh while preserving the monochromatic authority"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, button text on dark fills, input fields. The base layer everything else floats on"
+    },
+    "stage-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Stage Black — High-contrast neutral action fill for primary buttons on light surfaces."
+    },
+    "concrete": {
+      "$value": "#959595",
+      "$type": "color",
+      "$description": "Concrete — Mid-tone neutral for secondary text, muted metadata, disabled states. Bridges the gap between #1a1a1a and white for hierarchical de-emphasis"
+    },
+    "stone": {
+      "$value": "#90867a",
+      "$type": "color",
+      "$description": "Stone — Warm-tinted neutral appearing in hero overlays and photographic edges. Subtly breaks the otherwise cool monochrome with an organic warmth pulled from creator imagery"
+    },
+    "sky-tint": {
+      "$value": "#94bbff",
+      "$type": "color",
+      "$description": "Sky Tint — Soft blue-washed section background visible behind the creator-photo carousel. Functions as a breathing tonal band between the pure-white canvas and photographic blocks — never used on UI controls"
+    },
+    "deep-sky": {
+      "$value": "#71a0ff",
+      "$type": "color",
+      "$description": "Deep Sky — Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "brand-blue": {
+      "$value": "#002a57",
+      "$type": "color",
+      "$description": "Brand Blue — Deep navy from the logo wordmark and highest-contrast brand moments. The darkest chromatic in the system, reserved for brand identity and the cookie banner link text"
+    }
+  },
+  "font": {
+    "oracle": {
+      "$value": "Oracle",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all contexts — body, heading, button, link, input, card. The 250–300 weights for display and headings are anti-convention: most platforms shout with 700–800 weights; Oracle whispers, creating editorial authority through restraint. The 500 weight appears only in UI controls and nav. Negative letter-spacing scales with size: -0.06em at 188px down to -0.018em at 22px, pulling the wide display headlines into a tight, monolithic block."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.patreon.com",
+      "siteName": "Patreon",
+      "extractedAt": "2026-06-03T19:53:40.401Z",
+      "variant": "compact"
+    }
+  }
+}

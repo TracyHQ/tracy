@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1549-sync-fast-read",
+  "kind": "feat",
+  "title": "Sync from live asks the live site first whether it moved, reads only what moved, and no longer stops on Joomla's scheduler log",
+  "pr": 1549,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+  ],
+  "expect": [
+    "S1: every test passes; with table checksums the database is read once and a table that moved is read again alone; a matching fingerprint answers unchanged with no table or file asked for; the cheap listing hashes only files whose size or mtime moved; db.dump_many cut differently on two reads agrees; an older engine's read that brought nothing new answers unchanged; scheduler_logs rows both sites added keep the copy's"
+  ],
+  "selectors": {
+    "host": "live-pull.mjs abilities pullMany pullDatabase listCheap fingerprintNow, webroot-sync.sh answer_unchanged, live_sync.py appendTables"
+  },
+  "evidence": "tasks/evidence/sync-fast-read/",
+  "fence": "A sync of a live site that did not move never merges or restores anything, and a sync never stops on a log row both sites wrote",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+    ]
+  }
+}

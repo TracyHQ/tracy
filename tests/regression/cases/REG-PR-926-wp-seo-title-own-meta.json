@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-926-wp-seo-title-own-meta",
+  "kind": "fix",
+  "title": "Changing only a WordPress page's search title never renames the page: the plugin's own meta where it prints, else said",
+  "pr": 926,
+  "area": "site-tools/wordpress-seo",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-name-pattern='^seo:' packages/tools/tracy-site-tools/test/normalize.test.mjs",
+    "S2: Run: node --test apps/tracy-web/test/content-where.test.mjs",
+    "S3: Run: node --test --test-name-pattern='WP_SEO_META|SEO/GEO mode' packages/tools/tracy-site-tools/test/site-context.test.mjs",
+    "S4: Read the pass/fail counts and the test names of each run."
+  ],
+  "expect": [
+    "0 failures in all three runs.",
+    "A content.update {kind:\"postmeta\", key:\"_claude_cowork_seo_title\"} on WordPress resolves wpSeoMeta: on a Claude Cowork older than 0.18.0 with no SEO plugin it is refused SEO_TITLE_UNSUPPORTED (its next says the page title is the only title and renaming it renames the breadcrumb and heading); on 0.18.0+ it is sent, with a note when the title holds no site name.",
+    "With Yoast SEO or Rank Math active the key becomes _yoast_wpseo_title / rank_math_title (description: _yoast_wpseo_metadesc / rank_math_description); with All in One SEO, SmartCrawl, SureRank or Jetpack with seo-tools it is refused SEO_PLUGIN_FIELDS.",
+    "A post write's seo on an older plugin is refused (SEO_TITLE_UNSUPPORTED, or SEO_FIELD_DROPPED naming the SEO plugin's keys).",
+    "The Tracy Business wp7 where-map offers the _claude_cowork_seo_title entry (kind postmeta, value '<new page part> – <site name>') before the post_title entry, which says the breadcrumb changes too."
+  ],
+  "selectors": {
+    "function": "packages/tools/tracy-site-tools/src/host/normalize.mjs resolveSeo",
+    "keys": "packages/tools/tracy-site-tools/src/host/wp-seo.mjs WP_SEO_META, WP_SEO_PLUGINS",
+    "where": "apps/tracy-web/src/sites/where/wordpress-tracy-business-wp7.json topics.seo",
+    "test": "packages/tools/tracy-site-tools/test/normalize.test.mjs"
+  },
+  "evidence": "05/10/2026, Tracy Business wp7 with no SEO plugin: asked to change only what Google shows, the agent renamed the page (the only where.seo entry), which renamed the breadcrumb in <main>; the plugin's seo:{title} had written nothing, silently. Plugin side: TracyHQ/claude-cowork#119.",
+  "fence": "resolveSeo reads plugin.list and info before any _claude_cowork_seo_* or seo write leaves tracy_site",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-926-wp-seo-title-own-meta.mjs"]
+  }
+}

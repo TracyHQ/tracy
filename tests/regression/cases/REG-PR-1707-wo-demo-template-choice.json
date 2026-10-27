@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1707-wo-demo-template-choice",
+  "kind": "feat",
+  "title": "The Build card offers Tracy’s CMS and template list; keeping the default sends nothing",
+  "pr": 1707,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/tracy-builder",
+  "steps": [
+    "S1: Run the Build card view-model suite and the builder suite (GET /tracy/options against the fake Tracy)."
+  ],
+  "expect": ["S1: both pass; the three template-choice tests and the options door test pass."],
+  "selectors": {
+    "function": "tracyTemplateView in packages/wo/website-opportunities/ui/public/tracy-view-models.js",
+    "door": "GET /api/website-opportunities/tracy/options",
+    "tool": "tests/regression/scripts/REG-PR-1707-wo-demo-template-choice.mjs"
+  },
+  "evidence": "Stranger run 25/10/2026: every demo used Tracy Base; JA Fresco could only be named through the API",
+  "fence": "Template choice sent with a demo",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1707-wo-demo-template-choice.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

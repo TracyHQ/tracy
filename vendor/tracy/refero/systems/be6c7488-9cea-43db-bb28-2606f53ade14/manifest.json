@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "be6c7488-9cea-43db-bb28-2606f53ade14",
+  "status": "complete",
+  "name": "Vimeo",
+  "url": "https://styles.refero.design/style/be6c7488-9cea-43db-bb28-2606f53ade14",
+  "sourceWebsite": "https://vimeo.com",
+  "extractedAt": "2026-06-03T20:47:19.106Z",
+  "capturedAt": "2026-10-08T05:16:55.828942+00:00",
+  "theme": "mixed",
+  "industry": "media",
+  "description": "Spotlight on matte white",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/cba924a9-9096-4ace-af0f-5099355e952a.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9c8b3c54806c71cb439c09a92ee94515a92f2cb416e5fed903f24aada10cb73a",
+      "bytes": 20979
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "742280165edda6eb673e7a338a2a150ecc8d417c07c087e65be38c333bc8d89a",
+      "bytes": 102638
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b6b6a659e0186a7e192a2562ff27fdb5d51de4f6d15ec9a6b88e2c974afd3834",
+      "bytes": 17439
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b5ccdca73ceff6aeb608659f32c3ec2b53a0a51ee47b6776103505dd5238917f",
+      "bytes": 14602
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f0eb38cc2e5ec7d5a6eb0e1c72392e2774f265b2881b1076a03ad985c94f848e",
+      "bytes": 14706
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "80ad2a0e84a87b02ccba191cc13c378f8ff01bd509f92186fac47be9b19764e4",
+      "bytes": 3605
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "61911ad64a84b2ac93a08af4812d25140c1626442e9b8fa12a92d365854c908d",
+      "bytes": 580
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a655f50b6bdf2914f6fbec6a1f4b68ae47496d402d530a2f162ff9a4afe498d3",
+      "bytes": 597
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "39fb137072e508d08fe1856d0b536f8fde8f34b65800d121412d589a25fd9db1",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5d508e76526fb3dcfa6aa4a23d1c425c1d4c9204609ca9fac15d6fd81c92dfac",
+      "bytes": 55716
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "275f465d302892b86ce75dc0786d09ce0a4ea34fe17615a0673481b455bccbf0",
+      "bytes": 33457
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1f5b35095218049b0d49d45d7d57e66d6cc0ad6c09e30b66a0143f8d1fd5da02",
+      "bytes": 186113
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8abc74a1b4bd74f8fda7fc988d295d85fdffa9b7ff45e69e48d4d60a930fa433",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "002312e8203e01fedaa6ac589974f6bcd2b2b033b30a391b6a77e06c6d6abab1",
+      "bytes": 1754
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "baa639b5773a543392b5dfe20bc3096a3a996092f41757f7d6ebaebfe2436d10",
+      "bytes": 2392
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "09b5a06b-29dc-4d17-8722-d29bd93010c8",
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "242db326-a6f3-482a-b12e-5e7f8af94981",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "30c3aa18-4323-4448-8ddd-3ca933fe5780",
+    "45c4f990-e6b4-472d-89a4-06870ac17b9f",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "7f9eabb2-3f76-477d-849f-e868e698f421",
+    "80b2cc74-62c5-4898-bc2b-12aa94ed2943",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "94ed6ce8-c2e5-45bf-83bd-e5d1daf63efc",
+    "b8ce0a90-40c6-4518-940c-8c97ccf9c1a0",
+    "be6c7488-9cea-43db-bb28-2606f53ade14",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "c955d25a-b32a-441d-9f07-a260d1df897b",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "da332394-784c-4df2-9e66-c3f7b1d28f28",
+    "e549766e-b8b1-48a2-bd72-8cc04e9e4e9d",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a"
+  ]
+}

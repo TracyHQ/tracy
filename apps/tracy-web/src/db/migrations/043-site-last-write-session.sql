@@ -1,0 +1,15 @@
+-- Which conversation made the site's last write — beside `last_write_at` (`040-site-last-write.sql`),
+-- written in the same statement (`auditSiteWrite`, `sites/store.js`) from the audit row's
+-- `detail.sessionId` (the dsh session id the Apply door and `POST /api/sites/:key/changed` record;
+-- null when the write named none).
+--
+-- WHY (e2e v8 V8-1, 30/09, `tasks/evidence/comment-people/e2e-v8/verify.md`): the site-changed notice
+-- compared `last_write_at` with the time the conversation last CALLED a site tool, and a
+-- conversation's own write is stamped when it lands — after its call (12:38:59.59 vs 12:38:58.447 on
+-- the stand) — so the next turn was told another conversation had changed the site. Only the writer's
+-- session tells the two apart; `GET /api/sites/:key/changed` answers `byThisConversation` from it.
+--
+-- 🔒 A COLUMN, NOT A QUERY ON `audit`, for the reason 040 gives: that door is asked on every turn and
+-- `audit` has no site index. No backfill: null reads "not this conversation's", and the notice then
+-- falls back to comparing times, as before this column.
+alter table site add column last_write_session text;

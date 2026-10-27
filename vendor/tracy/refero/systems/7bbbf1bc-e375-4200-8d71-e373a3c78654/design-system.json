@@ -1,0 +1,326 @@
+{
+  "dos": [
+    "Use 8px radius for all rectangular buttons and inputs, 9999px for pill-shaped tags and nav CTAs",
+    "Apply Inter weight 500 for navigation items, button text, and subtle emphasis; reserve 600-700 for subheadings",
+    "Use Satoshi weight 500 at 40-48px for section display headlines — never drop below 40px",
+    "Pair the Ink Black (#0a0a0a) primary CTA with an Ember Orange (#ea580c) in-product action for a clear primary/secondary distinction",
+    "Use Geist Mono for shortened URLs, click counts, and any technical data display",
+    "Keep section gaps at 80px+ to maintain the airy, spacious rhythm",
+    "Use hairline 1px Mist (#e5e5e5) borders for all dividers and input resting states"
+  ],
+  "donts": [
+    "Don't use Ember Orange (#ea580c) for more than one action per view — it loses impact when overused",
+    "Don't apply heavy drop shadows — the system uses whisper-soft 1-6px lifts only",
+    "Don't use Satoshi for body text or UI labels — it's display-only at 40px+",
+    "Don't use filled colored backgrounds for cards — surfaces stay white or light-tinted only",
+    "Don't use 4px radius for primary CTAs or feature cards — 8px and 12px are the system minimums for significant elements",
+    "Don't introduce new chromatic colors — the palette is monochrome + orange + blue accent",
+    "Don't use decorative gradients on product surfaces — the warm gradient is hero-only atmospheric"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f5f5f5",
+      "name": "Canvas Cream",
+      "role": "Page background base — the warm off-white that gives the interface its sunlit feel",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Card surfaces, elevated panels, input fields — pure white for content containers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0a0a0a",
+      "name": "Ink Black",
+      "role": "Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#171717",
+      "name": "Charcoal",
+      "role": "Secondary text, button text on dark fills, heading weights",
+      "group": "neutral"
+    },
+    {
+      "hex": "#404040",
+      "name": "Graphite",
+      "role": "Tertiary text, muted descriptions, secondary button text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#737373",
+      "name": "Steel",
+      "role": "Placeholder text, disabled states, low-emphasis body copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a3a3a3",
+      "name": "Ash",
+      "role": "Icon fills at rest, muted helper text, tertiary icons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d4d4d4",
+      "name": "Fog",
+      "role": "Input borders at rest, subtle dividers, inactive form controls",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e5e5",
+      "name": "Mist",
+      "role": "Hairline borders throughout — the workhorse divider color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6b7280",
+      "name": "Slate",
+      "role": "Muted body text, secondary icon strokes, meta information",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ea580c",
+      "name": "Ember Orange",
+      "role": "Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#fb923c",
+      "name": "Ember Glow",
+      "role": "Lighter orange for hover states on ember elements, soft accent fills",
+      "group": "brand"
+    },
+    {
+      "hex": "#7c2d12",
+      "name": "Ember Deep",
+      "role": "Dark orange for icon strokes and decorative accents needing depth",
+      "group": "brand"
+    },
+    {
+      "hex": "#3b82f6",
+      "name": "Signal Blue",
+      "role": "Decorative icon accent, link highlights, informational touches — the secondary chromatic note",
+      "group": "accent"
+    },
+    {
+      "hex": "#22863a",
+      "name": "Terminal Green",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#d32f2f",
+      "name": "Alert Red",
+      "role": "Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#f97316",
+      "name": "Warm Sunrise",
+      "role": "Gradient endpoint for the hero's warm peach wash — the signature atmospheric gradient",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, rgb(244, 149, 12), rgb(235, 92, 12))"
+    }
+  ],
+  "layout": "The page uses a max-width ~1200px centered container with generous outer padding. The hero is centered text over a warm gradient wash that fades to white — full-bleed gradient with a constrained content stack. Below, sections alternate between centered headline + product visual patterns. The trust logo grid is a 2×5 layout with even spacing. The feature sections use a single-column centered heading followed by a wide product mockup card. Navigation is a simple top bar with horizontal links and right-aligned auth buttons. Content density is low — large vertical breathing room between sections (80px+).",
+  "imagery": "Visuals are product-first: the site uses UI mockups and product screenshots rather than lifestyle photography. The hero link-shortener card and the branded-links product mockup are the primary visual elements. Customer logos appear as small monochrome marks in a trust grid. The only decorative gradient is the warm peach-to-white wash behind the hero section — everything else sits on a clean neutral canvas. No stock photography, no illustrations, no 3D renders. Icons are minimal: small leading icons in section badges and inline link/chain icons in the shortener UI.",
+  "similar": [
+    {
+      "why": "Same monochrome-first aesthetic with hairline borders, near-black primary CTAs, and minimal color usage; shared commitment to a compact 4px grid and utility-focused Inter typography",
+      "business": "Vercel"
+    },
+    {
+      "why": "Similar product-mockup-as-hero approach, pill-shaped CTAs, and the same 8px/12px radius hierarchy for buttons and cards",
+      "business": "Linear"
+    },
+    {
+      "why": "Comparable warm gradient hero washes, orange brand accent against neutral canvas, and the same Satoshi-style rounded display headlines for hero copy",
+      "business": "Cal.com"
+    },
+    {
+      "why": "Shared product screenshot emphasis over lifestyle imagery, clean monochrome UI with single chromatic accent, and Geist Mono for technical data",
+      "business": "Raycast"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "12px",
+      "pills": "9999px",
+      "inputs": "8px",
+      "buttons": "8px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#f5f5f5",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background with warm cream tint — the base layer everything sits on"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 1,
+      "purpose": "Card surfaces and product UI mockups — pure white containers"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Elevated",
+      "level": 2,
+      "purpose": "Modals, popovers, floating panels with subtle shadow elevation"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "element": "Primary button"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.1) 0px 2px 4px -2px",
+      "element": "Product card / link shortener"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 0px 0px 4px",
+      "element": "Input focus ring"
+    }
+  ],
+  "northStar": "warm sunrise over monochrome architecture",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.15
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Main conversion action — 'Start for free', 'Sign up'",
+      "description": "Ink Black (#0a0a0a) fill, Paper White (#ffffff) text, 8px radius, Inter weight 500 at 14px, 8px 16px padding, subtle 0px 1px 2px shadow at 5% black. The near-black fill against the warm cream canvas is the strongest visual element on any page."
+    },
+    {
+      "name": "Secondary Ghost Button",
+      "role": "Secondary action — 'Get a demo', 'Log in'",
+      "description": "Transparent fill with Mist (#e5e5e5) 1px border, Charcoal (#171717) text, 8px radius, Inter weight 500 at 14px, 8px 16px padding. Sits beside the primary CTA as a quiet alternative."
+    },
+    {
+      "name": "Sign Up Pill Button",
+      "role": "Navigation primary action",
+      "description": "Ink Black (#0a0a0a) fill, white text, 9999px radius (full pill), Inter weight 500 at 14px, 6px 14px padding. Slightly tighter padding than card CTAs for the nav context."
+    },
+    {
+      "name": "Ember Action Button",
+      "role": "Brand-emphasized action — 'Shorten link', key conversion in product context",
+      "description": "Ember Orange (#ea580c) fill, white text, 8px radius, Inter weight 500 at 14px, 8px 16px padding. The single chromatic button in the system — use sparingly for the most important in-product action."
+    },
+    {
+      "name": "Text Input",
+      "role": "URL destination, search, text fields",
+      "description": "Paper White (#ffffff) fill, Fog (#d4d4d4) 1px border, Ash (#a3a3a3) placeholder text, Charcoal (#171717) input text, 8px radius, Inter at 14px, 10px 14px padding. Focus state: 4px black-at-10% outer ring."
+    },
+    {
+      "name": "Link Shortener Card",
+      "role": "Hero product demonstration — the centerpiece of the homepage",
+      "description": "Paper White surface, 12px radius, two-layer shadow (0px 4px 6px -1px / 0px 2px 4px -2px at 10% black). Contains: input row with Ember Action Button, and a result row with Geist Mono short URL + click count badge. This is the signature component."
+    },
+    {
+      "name": "Brand Tag / Badge",
+      "role": "Category label above headlines — 'Dub Links', 'Branded Short Links'",
+      "description": "Light tinted background, Charcoal text, 9999px radius, Inter weight 500 at 12px, 2px 10px padding. Features a small leading icon. Tints include #fef9c3 (warm yellow), #eff6ff (cool blue), #dcfce7 (mint)."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Transparent on canvas, Ink Black logo wordmark, Inter nav items at 14px weight 500 in Charcoal. Dropdown items have 8px radius. Active nav item has light background highlight."
+    },
+    {
+      "name": "Trust Logo Grid",
+      "role": "Social proof — customer logos",
+      "description": "2-row grid of 5 columns, 40px row gap, each logo rendered in Ash (#a3a3a3) or muted monochrome. 'CASE STUDY' link in Geist Mono appears beneath select logos. No borders, pure whitespace separation."
+    },
+    {
+      "name": "Product UI Mockup",
+      "role": "Feature section visual — link creation interface",
+      "description": "Paper White surface, 12px radius, layered shadow. Contains form fields, QR code preview, social link preview icons. Simulated browser chrome with traffic light dots at top. Rounded input fields at 8px."
+    },
+    {
+      "name": "QR Code Preview Tile",
+      "role": "Embedded QR code in product mockup",
+      "description": "Paper White fill with 8px radius, 1px Mist border, small external link icon. Centered QR code pattern in black."
+    },
+    {
+      "name": "Section Heading",
+      "role": "Feature section titles",
+      "description": "Satoshi weight 500 at 40-48px, Ink Black color, centered, line-height 1.15. Followed by 18px body text in Slate (#6b7280) at weight 400, max-width ~600px centered."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display headlines — the custom Satoshi at medium weight creates a rounded, friendly authority at hero scale; its geometric softness contrasts with Inter's utilitarian precision",
+      "sizes": "40px, 48px",
+      "family": "Satoshi",
+      "weight": "500",
+      "lineHeight": "1.00-1.15",
+      "substitute": "General Sans, Switzer, Inter (weight 600)"
+    },
+    {
+      "role": "Primary UI font — handles body text, nav items, buttons, form labels, section headings; weight 500 for nav active states and subtle emphasis, 600-700 for subheadings; tight 1.25-1.43 line-height at body sizes keeps the compact density working",
+      "sizes": "8px, 12px, 14px, 16px, 18px, 20px, 24px",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.25-1.56"
+    },
+    {
+      "role": "Short URL display, code snippets, technical metadata — monospace where data precision matters (the shortened link, the click counter)",
+      "sizes": "12px, 13px, 14px",
+      "family": "Geist Mono",
+      "weight": "400",
+      "lineHeight": "1.33-1.50"
+    }
+  ],
+  "description": "Dub presents a warm, confident SaaS aesthetic: a near-monochrome interface anchored by soft cream-to-white gradients, with one vivid orange accent that makes every action feel activated. The system breathes through generous whitespace on a compact 4px grid, pairing Inter's utility precision with Satoshi's rounded display character for headlines. Surfaces stay matte and light with hairline borders and whisper-soft shadows — depth comes from subtle tonal shifts and elevation, never heavy panels. The primary CTA is always a black pill with orange-ember micro-accents nearby, creating a contrast between structural neutrality and brand warmth. Components should feel quick and utilitarian: 4px and 8px radii dominate, pill buttons carry CTAs, and cards are flat white rectangles on a faintly warm canvas.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #0a0a0a\n- background: #f5f5f5 (canvas) / #ffffff (surfaces)\n- border: #e5e5e5\n- accent: #ea580c (Ember Orange)\n- primary action: no distinct CTA color\n- secondary text: #6b7280\n\n**3 Example Component Prompts**\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. Create a link shortener product card: white surface, 12px radius, shadow 0px 4px 6px -1px rgba(0,0,0,0.1). Contains a row with an input field (white fill, 1px #d4d4d4 border, 8px radius, 10px 14px padding, Inter 14px) and an Ember Orange (#ea580c) action button at 8px radius with white text. Below it, a result row showing a shortened URL in Geist Mono 14px and a click count in a light pill badge.\n\n3. Create a section with a brand badge: a pill-shaped tag (9999px radius) with #fef9c3 background and #171717 text, Inter weight 500 at 12px, 2px 10px padding, with a small leading icon. Below it, a Satoshi 40px headline in #0a0a0a, centered, followed by a 16px Inter body in #6b7280."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is whispered, not declared: the system uses 1-2px micro-shadows for buttons and 4-6px lifts for product cards. Inset shadows appear on inset UI states. The overall feel is flat surfaces with occasional gentle lift — never dramatic floating panels."
+}

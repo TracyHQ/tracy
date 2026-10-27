@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1100-p3-rebuild-flags-pins",
+  "kind": "fix",
+  "title": "site.rebuild on an EmDash site wearing a design-system slot names every class written since the last build that pins a value the slot owns, with its place and the slot-relative class to write, builds anyway and puts the fix before the reply; page.look names a literal winning over one of the slot's variables as a pin",
+  "pr": 1100,
+  "area": "agent/look",
+  "cms": ["em"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. In the TCH checkout at the commit under test, with dependencies installed (pnpm install), run: node --test --test-reporter=tap packages/site/tracy-site-build-emdash/test/slot-pins.test.mjs packages/site/tracy-site-build-core/test/host-site-request.test.mjs packages/tools/tracy-site-tools/test/ds-slot-worn.test.mjs",
+    "S2: Record the exit code, '# fail' and the result of each test named in run.tests."
+  ],
+  "expect": [
+    "The container read (the same script the site's container runs, run by node on a fixture /app): on a site wearing the slot it returns only the class strings of source files saved after the last build that the last build's /app/dist does not contain — the hero line Home.astro:85 as the agent rewrote it, not the unchanged band button at :185, not an unused component older than the build and absent from dist; nothing saved since the build, nothing judged; with no slot it reads nothing else; with no dist it judges nothing.",
+    "The measured turn (class 'btn-primary !rounded-full !px-[calc(var(--ds-btn-pad-x,30px)+8px)] !py-[calc(var(--ds-btn-pad-y,15px)+6px)] !text-[16px]'): two findings at src/views/Home.astro:85 — '!rounded-full' → '!rounded-[var(--ds-btn-radius,9999px)]' (a literal radius over --ds-btn-radius) and '!text-[16px]' → 'text-[16px]' (`!` before a literal); the next starts 'Built, but 2 classes written since the last build pin a value the design-system slot owns' and says 'Before you tell the customer anything, in this same turn: make each replacement … then ONE site.rebuild again.'",
+    "The classifier: button padding, radius, colours (nearest --ds-c-*) and heading sizes become slot-relative with the literal as fallback; relative classes, non-button padding and plain literal sizes pass; a `!` before a literal is named anywhere.",
+    "rebuildSite reads the pins before `astro build`, builds anyway, and answers findings + next + a detail naming them; with no slot or no answer from the read it answers as before (no findings, default next).",
+    "The build host hands an operation's findings and its own next to the agent, and keeps the default next when the operation gives none.",
+    "page.look on the slot site: the hero's 'border-radius: 2147483647px !important' row gets pin \"a literal over the slot's --ds-btn-radius: the next system will not reach it — write var(--ds-btn-radius, 2147483647px)\"; rows set through the slot's variables get none; a literal colour names the nearest --ds-c-*; Joomla corners name --radius-pill; a slot with no such variable says nothing.",
+    "Exit 0, '# fail 0'."
+  ],
+  "selectors": {
+    "check": "packages/site/tracy-site-build-emdash/src/host/slot-pins.mjs SLOT_PINS_SCRIPT / slotPins / pinsNext",
+    "rebuild": "packages/site/tracy-site-build-emdash/src/host/requests.mjs rebuildSite",
+    "host": "packages/site/tracy-site-build-core/src/host/host.ts action 'request' perform answer",
+    "pageLook": "packages/tools/tracy-site-tools/src/host/ds-slot-worn.mjs slotPinNotes, index.ts pageLook"
+  },
+  "evidence": "Stand from #1100 @ 8323b61f7 (10/10/2026), dskeepem wearing Moxie, 'Cho nút chính ở đầu trang chủ nhỏ lại một chút': the context held the round-2 Design system line word for word, yet the agent changed only the padding offsets and the size with one string replace, kept '!rounded-full', wrote '!text-[16px]', and site.rebuild answered only 'Tell the customer in one line what changed and where to look.'; under MotherDuck (2px) the hero stayed a pill. The dist assumption measured on the stand: the hero's current class string is in /app/dist (626 files, 35 MB, 0.9 s), the one an earlier turn replaced is not.",
+  "fence": "Mechanism only: what the rebuild and page.look answer. Not covered: whether the model then makes the replacements; that is the stand re-check.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-site-build-emdash/test/slot-pins.test.mjs",
+      "packages/site/tracy-site-build-core/test/host-site-request.test.mjs",
+      "packages/tools/tracy-site-tools/test/ds-slot-worn.test.mjs"
+    ],
+    "tests": [
+      "the read: only the class strings the last build does not contain",
+      "the read: nothing saved since the last build, nothing judged",
+      "the read: no slot, nothing else read",
+      "🔒 the measured turn: the kept `!rounded-full`",
+      "what counts as a pin",
+      "🔒 rebuildSite: reads the pins BEFORE the build",
+      "rebuildSite on a site wearing no slot",
+      "an operation that found something hands its findings",
+      "🔒 page.look on a slot site",
+      "page.look pin notes"
+    ]
+  }
+}

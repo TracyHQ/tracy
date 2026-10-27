@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-voyara/j6/1.0.7",
+  "platform": "joomla",
+  "template": "ja_voyara",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-voyara",
+    "id": "quickstart/ja-voyara/j6",
+    "version": "1.0.7",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_voyara",
+    "framework": "t4",
+    "prefix": "jav_",
+    "parts": {
+      "webroot": {
+        "file": "ja-voyara-j6-webroot-1.0.7.tar.gz",
+        "bytes": 194858188,
+        "sha256": "98a47616d3782aa1a394ea6ffe15f0433f392c324ec0822dad29cdae0b47ef39"
+      },
+      "database": {
+        "file": "ja-voyara-j6-database-1.0.7.sql.gz",
+        "bytes": 355678,
+        "sha256": "aa976685707e5f4a8357bd9908856a9c034ae4cbe03eb571a88451341dc5a9b3"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T10:24:20.132Z",
+    "builtFrom": {
+      "site": "voyara-j6-g2",
+      "tag": "quickstart/ja-voyara/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-voyara/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.21",
+  "mode": "content-recommendation"
+}

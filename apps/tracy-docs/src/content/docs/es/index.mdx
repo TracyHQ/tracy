@@ -1,0 +1,41 @@
+---
+title: "Tracy Cowork — crea y edita tu sitio web con IA"
+description: "Tracy Cowork crea y edita tu sitio WordPress, Joomla o EmDash cuando se lo pides en un chat, te muestra cada cambio y te deja deshacerlo."
+template: splash
+hero:
+  title: "Tracy Cowork — crea y edita tu sitio web con IA"
+  tagline: "Pídelo en un chat y Tracy hace el cambio en tu sitio real de WordPress, Joomla o EmDash — y luego te muestra cada cambio para que lo revises y lo deshagas."
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: "Primeros pasos"
+      link: /es/get-started/
+      icon: right-arrow
+    - text: "Descargar la aplicación"
+      link: /es/desktop/download/
+      icon: download
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+<CardGrid>
+  <Card title="Primeros pasos" icon="rocket">
+    Inicia sesión, añade tu primer sitio y pídele un cambio a Tracy. [Primeros pasos](/es/get-started/)
+  </Card>
+  <Card title="Aplicación de escritorio" icon="laptop">
+    Tracy para macOS, Windows y Linux. Se actualiza sola. [Descargar la aplicación](/es/desktop/download/)
+  </Card>
+  <Card title="MCP Server" icon="puzzle">
+    Conecta ChatGPT, Claude, Claude Code, Cursor o Codex a tu sitio de Tracy. [Configurar MCP](/es/mcp/getting-started/)
+  </Card>
+  <Card title="Trabajar con tu sitio" icon="pencil">
+    Chat, comentarios en la página, Site changes, deshacer y Backup. [Usar Tracy](/es/using-tracy/)
+  </Card>
+  <Card title="Registro de cambios" icon="document">
+    Un registro fechado de qué cambió y cuándo: en [Tracy Cowork](/es/changelog/desktop/), en la web y en la app, y en la [API](/es/changelog/).
+  </Card>
+  <Card title="Para desarrolladores y agentes" icon="seti:json">
+    La API de Tracy: lee y modifica un sitio alojado por Tracy por HTTPS con una clave vinculada a tu asiento. [Visión general de la API](/es/api/)
+  </Card>
+</CardGrid>

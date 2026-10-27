@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JA Kinetic colors</title>
+    <link rel="stylesheet" href="../tokens.css" />
+    <style>
+      body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); }
+      main { max-width: var(--container-max); margin: 0 auto; padding: var(--space-12) var(--space-8); }
+      h1 { margin: 0 0 var(--space-2); font-family: var(--font-display); font-size: var(--text-2xl); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); color: var(--fg-2); }
+      .eyebrow { margin: 0 0 var(--space-6); color: var(--accent); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 2px; text-transform: uppercase; }
+      h2 { margin: var(--space-8) 0 var(--space-4); font-family: var(--font-display); font-size: var(--text-lg); line-height: var(--leading-tight); letter-spacing: -0.3px; color: var(--fg-2); }
+
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-4); }
+      .swatch { border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); overflow: hidden; box-shadow: var(--elev-card); }
+      .color { height: 88px; background: var(--value); }
+      .color.grid-bg { background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 30px 30px; }
+      .meta { padding: var(--space-3); color: var(--muted); font-size: var(--text-sm); font-family: var(--font-mono); }
+      strong { display: block; margin-bottom: var(--space-1); color: var(--fg-2); font-family: var(--font-body); }
+      .note { max-width: 70ch; margin: var(--space-4) 0 0; color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">// direction: terminal</p>
+      <h1>Color roles</h1>
+
+      <h2>Ground and ink</h2>
+      <section class="grid">
+        <article class="swatch" style="--value: var(--bg)"><div class="color"></div><div class="meta"><strong>Canvas</strong>--bg</div></article>
+        <article class="swatch" style="--value: var(--surface)"><div class="color"></div><div class="meta"><strong>Card</strong>--surface</div></article>
+        <article class="swatch" style="--value: var(--surface-warm)"><div class="color"></div><div class="meta"><strong>Tinted band</strong>--surface-warm</div></article>
+        <article class="swatch" style="--value: var(--fg)"><div class="color"></div><div class="meta"><strong>Body ink</strong>--fg</div></article>
+        <article class="swatch" style="--value: var(--fg-2)"><div class="color"></div><div class="meta"><strong>Heading ink</strong>--fg-2</div></article>
+        <article class="swatch" style="--value: var(--muted)"><div class="color"></div><div class="meta"><strong>Muted</strong>--muted</div></article>
+        <article class="swatch" style="--value: var(--border)"><div class="color"></div><div class="meta"><strong>Hairline</strong>--border</div></article>
+      </section>
+
+      <h2>Accent and status</h2>
+      <section class="grid">
+        <article class="swatch" style="--value: var(--accent)"><div class="color"></div><div class="meta"><strong>Accent</strong>--accent</div></article>
+        <article class="swatch" style="--value: var(--accent-hover)"><div class="color"></div><div class="meta"><strong>Accent hover</strong>--accent-hover</div></article>
+        <article class="swatch" style="--value: var(--accent-secondary)"><div class="color"></div><div class="meta"><strong>Leaf</strong>--accent-secondary</div></article>
+        <article class="swatch" style="--value: var(--success)"><div class="color"></div><div class="meta"><strong>Operational</strong>--success</div></article>
+        <article class="swatch" style="--value: var(--warn)"><div class="color"></div><div class="meta"><strong>Degraded</strong>--warn</div></article>
+        <article class="swatch" style="--value: var(--danger)"><div class="color"></div><div class="meta"><strong>Outage</strong>--danger</div></article>
+      </section>
+
+      <h2>Surface treatments</h2>
+      <section class="grid">
+        <article class="swatch" style="--value: var(--bg)"><div class="color grid-bg"></div><div class="meta"><strong>Line grid</strong>--grid on --bg</div></article>
+        <article class="swatch" style="--value: var(--chrome-elevated)"><div class="color"></div><div class="meta"><strong>Footer ground</strong>--chrome-elevated</div></article>
+      </section>
+
+      <p class="note">
+        The status trio is direction independent and is not remapped in dark: a green
+        operational dot has to stay green in the indigo and cyan colourways. The accent,
+        the grounds and the hairline are the values that move.
+      </p>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-bone: #f2f1ed;
+  --color-paper-white: #ffffff;
+  --color-cocoa: #3b3429;
+  --color-ink: #000000;
+  --color-stone: #646464;
+  --color-ash: #b4aeac;
+
+  /* Typography — Font Families */
+  --font-goudy-old-style: 'Goudy Old Style', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-sans-ui-chrome: 'System Sans (UI chrome)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

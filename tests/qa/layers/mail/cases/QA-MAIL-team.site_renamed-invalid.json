@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.site_renamed-invalid",
+  "itemIds": [
+    "letter:team.site_renamed:en",
+    "letter:team.site_renamed:vi",
+    "letter:team.site_renamed:de",
+    "letter:team.site_renamed:it",
+    "letter:team.site_renamed:fr",
+    "letter:team.site_renamed:nl",
+    "letter:team.site_renamed:zh",
+    "letter:team.site_renamed:es"
+  ],
+  "requirement": "team.site_renamed refuses an unknown role, wrong-typed facts and header injection",
+  "oracle": {
+    "source": "apps/tracy-web/src/mail/letters/team.js and comments.js header comments (approved copy, spec #809)",
+    "ref": "per-kind button, facts and \"never mailed\" rules",
+    "invariant": "the seat book allows four roles only; a letter needing one sends nothing otherwise"
+  },
+  "edgeTags": ["invalid"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.invalid#team.site_renamed:"],
+  "redProof": null,
+  "legacyIds": []
+}

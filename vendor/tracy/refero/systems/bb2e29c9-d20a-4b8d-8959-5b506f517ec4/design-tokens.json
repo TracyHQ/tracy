@@ -1,0 +1,430 @@
+{
+  "color": {
+    "studio-canvas": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Studio Canvas — Page backgrounds, hero fields, footer fields, and large seamless content bands"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Light inset surfaces, reversed text, icon fills, and white action treatment"
+    },
+    "charcoal-ink": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal Ink — Display and body text, dark navigation panels, filled controls, and primary action backgrounds"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Secondary text and text on dark filled controls"
+    },
+    "soft-ash": {
+      "$value": "#555555",
+      "$type": "color",
+      "$description": "Soft Ash — Footer legal copy, locale links, and subdued helper text"
+    },
+    "absolute-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Absolute Black — Portfolio feature cards, hairline ghost controls, and decorative black-to-canvas transitions"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Core display, body, navigation, and control family. Headlines run at 48px/700, 64px/600, and 80px/600 with -0.04em tracking: compressed letterforms let very large statements remain like editorial labels rather than billboard type."
+    },
+    "inter-tight": {
+      "$value": "Inter Tight",
+      "$type": "fontFamily",
+      "$description": "Compact public navigation, small labels, and 16px strong body labels. Its narrower proportions keep the navigation dense against the large, spacious display type."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Fallback treatment for isolated button and icon utilities."
+    },
+    "font-awesome-6-brands": {
+      "$value": "Font Awesome 6 Brands",
+      "$type": "fontFamily",
+      "$description": "Brand-social icons in navigation and footer clusters."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "11px",
+        "fontWeight": 400,
+        "lineHeight": 1.66,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 11px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Inter Tight",
+        "fontSize": "15px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "sans-serif",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Arial",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 600,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "base-5": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 600,
+        "lineHeight": 1.15,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-5 at 16px"
+    },
+    "base-6": {
+      "$value": {
+        "fontFamily": "Inter Tight",
+        "fontSize": "16px",
+        "fontWeight": 700,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-6 at 16px"
+    },
+    "base-7": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 700,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-7 at 16px"
+    },
+    "base-8": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-8 at 16px"
+    },
+    "base-9": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 700,
+        "lineHeight": 1.66,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-9 at 16px"
+    },
+    "base-10": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.66,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-10 at 16px"
+    },
+    "base-11": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-11 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Font Awesome 6 Brands",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "19px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 19px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "sans-serif",
+        "fontSize": "19px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 19px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "20px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "20px",
+        "fontWeight": 600,
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 20px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "48px",
+        "fontWeight": 700,
+        "lineHeight": 1.1,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 48px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "64px",
+        "fontWeight": 600,
+        "lineHeight": 1.66,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 64px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "80px",
+        "fontWeight": 600,
+        "lineHeight": 1,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 80px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "28": {
+      "$value": "28px",
+      "$type": "dimension",
+      "$description": "Spacing 28px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "56": {
+      "$value": "56px",
+      "$type": "dimension",
+      "$description": "Spacing 56px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "100": {
+      "$value": "100px",
+      "$type": "dimension",
+      "$description": "Spacing 100px"
+    },
+    "140": {
+      "$value": "140px",
+      "$type": "dimension",
+      "$description": "Spacing 140px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "md": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    },
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "xl": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    }
+  },
+  "shadow": {
+    "md": {
+      "$value": "rgba(0, 0, 0, 0.1) 0px 2px 15px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation md"
+    }
+  },
+  "surface": {
+    "studio-canvas": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Surface level 0: Default page, hero, and footer background."
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 1: Inverse controls and light inset surfaces."
+    },
+    "graphite-surface": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Surface level 2: Secondary dark utility surface."
+    },
+    "charcoal-surface": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Surface level 3: Navigation panels and filled controls."
+    },
+    "absolute-black-surface": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Surface level 4: Full-bleed showcase cards and deepest contrast blocks."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://studio.design",
+      "siteName": "Studio.Design",
+      "extractedAt": "2026-09-20T22:02:50.965Z",
+      "variant": "extended"
+    }
+  }
+}

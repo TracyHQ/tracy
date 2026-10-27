@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "scope": "pilot",
+  "expectedCases": 8,
+  "observedCases": 8,
+  "elements": 336,
+  "properties": 1152,
+  "missing": [],
+  "findings": [],
+  "contractHash": "d281077483d8504d320f4d4abf764781d19989e96b19d253ee5c7d4986f2aa2d"
+}

@@ -1,0 +1,99 @@
+{
+  "color": {
+    "voltage-violet": {
+      "$value": "#862fe7",
+      "$type": "color",
+      "$description": "Voltage Violet — Primary filled action buttons, active nav state, key accent text — the single saturated brand anchor against the white canvas"
+    },
+    "ultra-violet": {
+      "$value": "#5f259e",
+      "$type": "color",
+      "$description": "Ultra Violet — Deeper violet for gradient stop, hover state, or emphasis text where Voltage Violet feels too bright"
+    },
+    "lavender-mist": {
+      "$value": "#ad6df4",
+      "$type": "color",
+      "$description": "Lavender Mist — Soft decorative violet for card backgrounds, icon tints, and gradient mid-stops"
+    },
+    "orchid-wash": {
+      "$value": "#bd8ff0",
+      "$type": "color",
+      "$description": "Orchid Wash — Lightest decorative violet wash for large surface fills behind product cards and feature bands"
+    },
+    "magenta-spark": {
+      "$value": "#ff5fe4",
+      "$type": "color",
+      "$description": "Magenta Spark — Pink wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "hot-pink-ray": {
+      "$value": "#e22ba4",
+      "$type": "color",
+      "$description": "Hot Pink Ray — Saturated pink gradient stop paired with violet in atmospheric gradient orbs"
+    },
+    "amber-pulse": {
+      "$value": "#dc5f05",
+      "$type": "color",
+      "$description": "Amber Pulse — Warm orange accent in gradient orbs providing chromatic counterpoint to the violet/pink palette"
+    },
+    "midnight-ink": {
+      "$value": "#111827",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary heading and body text, primary border, and filled dark action background (the dark CTA variant)"
+    },
+    "graphite": {
+      "$value": "#3f4654",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, nav borders, muted UI text on white surfaces"
+    },
+    "slate": {
+      "$value": "#6b7589",
+      "$type": "color",
+      "$description": "Slate — Tertiary text, icon fills, helper copy, and supporting metadata"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary card and surface background, button text on filled violet actions, inverted text"
+    },
+    "fog": {
+      "$value": "#f1f5f9",
+      "$type": "color",
+      "$description": "Fog — Alternate section background, subtle surface lift above white"
+    },
+    "mist": {
+      "$value": "#d8e0ea",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, input borders, button focus rings, subtle dividers"
+    },
+    "mint-wash": {
+      "$value": "#d6fcf4",
+      "$type": "color",
+      "$description": "Mint Wash — Soft mint tint for highlighted feature panels and tag/badge backgrounds — appears as a chromatic counterpoint to violet"
+    },
+    "lavender-field": {
+      "$value": "#ebdafd",
+      "$type": "color",
+      "$description": "Lavender Field — Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "bricolage-grotesque": {
+      "$value": "Bricolage Grotesque",
+      "$type": "fontFamily",
+      "$description": "Display and heading face. Variable custom sans with subtle character (slightly condensed, soft terminals) used for hero headlines at 48–56px, section headlines at 32px, and emphasized subheadings. The tight -0.025em tracking at large sizes is signature — it pulls the wide geometric forms into a dense, confident block. Weights stay conservative: 400 for body-class copy in display contexts, 600 only when emphasis is needed."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Workhorse UI and body face. Used for nav, buttons, body copy, captions, and all dense interface text. Letter-spacing opens to +0.1em at 12px for uppercase labels (eyebrows like 'TESTIMONIAL', 'CUSTOMER FEEDBACK'). Carries the readability weight of the system; Bricolage never appears below 20px."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://grabee.com",
+      "siteName": "Supahub",
+      "extractedAt": "2026-06-03T17:17:57.283Z",
+      "variant": "compact"
+    }
+  }
+}

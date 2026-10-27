@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-electric-indigo: #1f00ff;
+  --color-patch-orange: #ff622b;
+  --color-pure-white: #ffffff;
+  --color-fog-gray: #f2f2f2;
+  --color-bone: #f8f8f8;
+  --color-mist: #ececec;
+  --color-gridline: #d3d3d3;
+  --color-ink: #212121;
+
+  /* Typography */
+  --font-pp-right: 'PP Right', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-archivo: 'Archivo', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

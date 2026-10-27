@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-canvas-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-carbon-plum: #29242b;
+  --color-ash: #e5e5e5;
+
+  /* Typography */
+  --font-diatype: 'Diatype', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-diatype-variable: 'Diatype Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,1357 @@
+{
+ "origin": "http://127.0.0.1:8216",
+ "takenAt": "2026-09-15T16:00:25.632Z",
+ "pages": [
+  {
+   "path": "/resources/style-guide",
+   "file": "pages/resources/style-guide.html",
+   "status": 200,
+   "sha256": "2f5c4fb2570d810b2298e7718dfa0edfccb0d52e1c5aee60613d3e2a80af5bb0"
+  },
+  {
+   "path": "/",
+   "file": "pages/index.html",
+   "status": 200,
+   "sha256": "60b85c2b90cbf627e5615b6cd4e41340a85acae2902967cf29706a27f100ad64"
+  },
+  {
+   "path": "/product",
+   "file": "pages/product.html",
+   "status": 200,
+   "sha256": "f2b85e35e565d570861c77b2c8b8bf4bfc20c2a2d009b35d05424b7c892dda72"
+  },
+  {
+   "path": "/services",
+   "file": "pages/services.html",
+   "status": 200,
+   "sha256": "df3a2a5610345cefdfe4b95049f8d9c18bff68b2ccc2251cf660a0160061909a"
+  },
+  {
+   "path": "/services/service-detail",
+   "file": "pages/services/service-detail.html",
+   "status": 200,
+   "sha256": "2a7478e089f55d6f294f7d5e74e4c084a4bdf00edf28be2b079f163333d1e58d"
+  },
+  {
+   "path": "/services/website-strategy",
+   "file": "pages/services/website-strategy.html",
+   "status": 200,
+   "sha256": "35997ff5d835e11c5dfdf76b3ff2756a03c2ac08078c9ca2dd881ce991991f3b"
+  },
+  {
+   "path": "/services/brand-and-interface-design",
+   "file": "pages/services/brand-and-interface-design.html",
+   "status": 200,
+   "sha256": "0a5120f26791a1a82e8f0ef5f6ceef0139055018b342673e750a94582eaed238"
+  },
+  {
+   "path": "/services/website-development",
+   "file": "pages/services/website-development.html",
+   "status": 200,
+   "sha256": "2fcd5ac9b7762beb5954a23e493c3770eacb30278893eaf02f41f3969069e019"
+  },
+  {
+   "path": "/services/content-and-photography",
+   "file": "pages/services/content-and-photography.html",
+   "status": 200,
+   "sha256": "5eec54b2c613dade8da3f836d14947dbc45b10e385b322292542c9b895265cd3"
+  },
+  {
+   "path": "/pricing",
+   "file": "pages/pricing.html",
+   "status": 200,
+   "sha256": "96020d1b70aabee1066c3e759257084093125a991dedbd316c451fe0e9ec77aa"
+  },
+  {
+   "path": "/resources/blog",
+   "file": "pages/resources/blog.html",
+   "status": 200,
+   "sha256": "10000b37694d598558133e3376f612335adc9e2c7d8d7ae233e0cd7f6507b91a"
+  },
+  {
+   "path": "/resources/mag-procurement",
+   "file": "pages/resources/mag-procurement.html",
+   "status": 200,
+   "sha256": "87a9724ae0b4750248e08626e7ed1f8e99afd0908445f250953463df507db77b"
+  },
+  {
+   "path": "/resources/mag-datacenter",
+   "file": "pages/resources/mag-datacenter.html",
+   "status": 200,
+   "sha256": "366d5435629b06283d1985f955741e3ca1ac1dd50c1d26c8158ad4ee3bafef0b"
+  },
+  {
+   "path": "/resources/mag-world",
+   "file": "pages/resources/mag-world.html",
+   "status": 200,
+   "sha256": "39303634d744d5a36ef1eb306f9f32ff2dd3a07ec8a5f519805b3b76c70ae92a"
+  },
+  {
+   "path": "/resources/typography",
+   "file": "pages/resources/typography.html",
+   "status": 200,
+   "sha256": "70205d976d40fadccd5c62ff6a7f22cb493b26f7dcdbcfb8d11679f6546e3512"
+  },
+  {
+   "path": "/resources/colors",
+   "file": "pages/resources/colors.html",
+   "status": 200,
+   "sha256": "2308be89613db3b5ae5ffee522bdb577a6169e6d728fb492e0ec9f7046b9d80c"
+  },
+  {
+   "path": "/resources/spacing",
+   "file": "pages/resources/spacing.html",
+   "status": 200,
+   "sha256": "b7b4884ec8d87370450afca68985ef9b0a294ee038c393e5cf28c158ea55bd92"
+  },
+  {
+   "path": "/resources/faq",
+   "file": "pages/resources/faq.html",
+   "status": 200,
+   "sha256": "c235ca20bda398de21c2a12180d28f4576845a62e56125eeb63360c6fdeca9d6"
+  },
+  {
+   "path": "/resources/contact",
+   "file": "pages/resources/contact.html",
+   "status": 200,
+   "sha256": "130b93bc45ea12c63b536d8884dd11bd32e50e450504d62a944a2f61b4432a49"
+  },
+  {
+   "path": "/resources/search",
+   "file": "pages/resources/search.html",
+   "status": 200,
+   "sha256": "bb4f5d02cdedd357b30d7e4627cace37a24164060c1e0a75176f439cb3eb9448"
+  },
+  {
+   "path": "/resources/home-2",
+   "file": "pages/resources/home-2.html",
+   "status": 200,
+   "sha256": "16032ca719e1e5ac7864a7674768e0e863dd859a5574f260f62f124f9380ed3c"
+  },
+  {
+   "path": "/resources/marketing-samples",
+   "file": "pages/resources/marketing-samples.html",
+   "status": 200,
+   "sha256": "5b5d1735d47d139154c30f65d7d5b3658f8c0e6aed7a5f3e43bada47d080f82c"
+  },
+  {
+   "path": "/resources/home-variation",
+   "file": "pages/resources/home-variation.html",
+   "status": 200,
+   "sha256": "d448c0bbc9815a693a8960aa656e03ce5fc39a900894846414f08deb1c5b4b0e"
+  },
+  {
+   "path": "/resources/home-onepage",
+   "file": "pages/resources/home-onepage.html",
+   "status": 200,
+   "sha256": "5cdb48d304895768271a2908984e48b82aa458c45520578a5e316d39d1919ee6"
+  },
+  {
+   "path": "/company/about",
+   "file": "pages/company/about.html",
+   "status": 200,
+   "sha256": "460d95992c844fc49fc2f3baaa516c4538d8f9db2d911938e6a5028ba33bd3c1"
+  },
+  {
+   "path": "/company/team",
+   "file": "pages/company/team.html",
+   "status": 200,
+   "sha256": "e5210dbd64420dfa9325aa3aacfb9d16c514f03cc97083bf44a29d2d3960fdcf"
+  },
+  {
+   "path": "/company/careers",
+   "file": "pages/company/careers.html",
+   "status": 200,
+   "sha256": "814f6469efc2f2978e06f4577e57e28aac0c44960b43d4712bb880ee424f3645"
+  },
+  {
+   "path": "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+   "file": "pages/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal.html",
+   "status": 200,
+   "sha256": "bf1a34567a338c0fc479fd2dd0f78836b637404f57ac36c1dede20006202c787"
+  },
+  {
+   "path": "/services/43-22-sure-fire-headline-formulas-that-work",
+   "file": "pages/services/43-22-sure-fire-headline-formulas-that-work.html",
+   "status": 200,
+   "sha256": "287a5ac7c27e2314bb666b7f2e30b403491d8c10c9cca06a77d3353c2cd8c776"
+  },
+  {
+   "path": "/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+   "file": "pages/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus.html",
+   "status": 200,
+   "sha256": "ae380840b19290f322ee37c5915bc4a93029404c507e84f25c50d22f3f42ef9d"
+  },
+  {
+   "path": "/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+   "file": "pages/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel.html",
+   "status": 200,
+   "sha256": "2f37139c9b72a03334275cfa6c98ee9e73eb0f8ad81150a9322492de8e026b5a"
+  },
+  {
+   "path": "/resources/blog/36-how-to-write-like-hemingway",
+   "file": "pages/resources/blog/36-how-to-write-like-hemingway.html",
+   "status": 200,
+   "sha256": "5e807f4ef14f0ad0a11c278f36420252029613909f29ff757d008d3161ff8001"
+  },
+  {
+   "path": "/resources/blog/37-how-much-money-do-youtubers-make",
+   "file": "pages/resources/blog/37-how-much-money-do-youtubers-make.html",
+   "status": 200,
+   "sha256": "df455fb1d737a1e5e8d4a60f572a74b1b4f7f972b3dc369ce561831a5936d9e3"
+  },
+  {
+   "path": "/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+   "file": "pages/resources/blog/38-21-useful-keyboard-shortcuts-for-writers.html",
+   "status": 200,
+   "sha256": "d36437b51f7ac171526bf8eaa38469233025616556b5997c661b1f713e7dade4"
+  },
+  {
+   "path": "/resources/tags/t4-framework",
+   "file": "pages/resources/tags/t4-framework.html",
+   "status": 200,
+   "sha256": "04667c62f1406bed1df0d6329198a3999f3213da247f4d251fe58363bc7b7ad8"
+  },
+  {
+   "path": "/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+   "file": "pages/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit.html",
+   "status": 200,
+   "sha256": "063720bd4a214a04f6bd13daef4daf721c6b2a578052b3eaacdcf3545a919370"
+  },
+  {
+   "path": "/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+   "file": "pages/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read.html",
+   "status": 200,
+   "sha256": "abf00d5b031cfaa03cfa7b9456564173290101b19d6ebf23d4a1cc800ebdc8bd"
+  },
+  {
+   "path": "/resources/blog/41-why-being-naive-can-make-your-fortune",
+   "file": "pages/resources/blog/41-why-being-naive-can-make-your-fortune.html",
+   "status": 200,
+   "sha256": "402873d96ed324ca3677823068d31f206b1d1f23aa5f6d1792ee126445e46d84"
+  },
+  {
+   "path": "/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+   "file": "pages/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22.html",
+   "status": 200,
+   "sha256": "c3ce7ea12f4ad2fae899d10f2a8882f1c0fc8cf4c29c4faccc719c8c817ebe46"
+  },
+  {
+   "path": "/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+   "file": "pages/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native.html",
+   "status": 200,
+   "sha256": "61fd762707b8d31bb433094d9940e973ef1c622fb7db4f1da89a0f66826a3f9c"
+  },
+  {
+   "path": "/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+   "file": "pages/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum.html",
+   "status": 200,
+   "sha256": "6f89d77198fd7e3e529caae4c5d0ea88a509f0d82524fd8fc43b5b4507b46527"
+  },
+  {
+   "path": "/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+   "file": "pages/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices.html",
+   "status": 200,
+   "sha256": "4794087be75c2849baed3822c43748a75a2bc8055fc7a70ed9ea43fb685b2743"
+  },
+  {
+   "path": "/resources/all-categories/17-magazine",
+   "file": "pages/resources/all-categories/17-magazine.html",
+   "status": 200,
+   "sha256": "4063c5832e107bdec89eba9594c29233f36d30ec122ef4127390c0cae0463524"
+  },
+  {
+   "path": "/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+   "file": "pages/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction.html",
+   "status": 200,
+   "sha256": "2dcc39540d30bcb93ae8b1a9217b3d2f1d739e8e973dd399ba68a155d6c39689"
+  },
+  {
+   "path": "/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+   "file": "pages/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you.html",
+   "status": 200,
+   "sha256": "e9c943d99c2696a90a81615c5b0a9b7fc76b98c24a4363da2b0031a23f619245"
+  },
+  {
+   "path": "/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+   "file": "pages/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action.html",
+   "status": 200,
+   "sha256": "0c4cca6a27e1539cf5b698d0b706e60ba5c6ebc96195f07bac09b22f8d4b0805"
+  },
+  {
+   "path": "/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+   "file": "pages/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity.html",
+   "status": 200,
+   "sha256": "0ebcf829366876692710c9eaec25335e89e480c1a6a8126bc1548e0e72fea92b"
+  },
+  {
+   "path": "/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+   "file": "pages/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo.html",
+   "status": 200,
+   "sha256": "2d14e60e0457f7a89f984332ce9a9dba64d8db53536b762034d9260548bc16cf"
+  },
+  {
+   "path": "/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+   "file": "pages/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable.html",
+   "status": 200,
+   "sha256": "dd977de0f78f2a8e6518802b82c7a9d9524479c7a131b67c430824da3d60f0b0"
+  },
+  {
+   "path": "/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+   "file": "pages/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton.html",
+   "status": 200,
+   "sha256": "ecc7a89c71dfc740728a9c43e0102b6caa6a1da1616c575a835f5bcda91e897a"
+  },
+  {
+   "path": "/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+   "file": "pages/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading.html",
+   "status": 200,
+   "sha256": "93ebe4f70fe423612ef8cf1998682f94c83238e8a6034c2e7586910f880a7501"
+  },
+  {
+   "path": "/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+   "file": "pages/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic.html",
+   "status": 200,
+   "sha256": "d677ff845c7298553b1479ad05932c816e69c6cc9875390a89e3e61d29eec7c4"
+  },
+  {
+   "path": "/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+   "file": "pages/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise.html",
+   "status": 200,
+   "sha256": "cb4d785e16e43909ed18c142f1ac55f34f2cae4b1f533f0cea089dc9a642f7b6"
+  },
+  {
+   "path": "/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+   "file": "pages/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger.html",
+   "status": 200,
+   "sha256": "7e7804211255ef3d4e1f58d645022db47ecbe7c578d6dcee88aa4c29d2ab1102"
+  },
+  {
+   "path": "/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+   "file": "pages/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace.html",
+   "status": 200,
+   "sha256": "c4f2c9afaa765593313bd4f254790013730c7a9608976108e6fe59a46743141c"
+  },
+  {
+   "path": "/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+   "file": "pages/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce.html",
+   "status": 200,
+   "sha256": "27a5d2866b3c5f26ce23ebc060abb3330a29cc3ab70bf8b3461aa11a3c6c8172"
+  },
+  {
+   "path": "/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+   "file": "pages/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions.html",
+   "status": 200,
+   "sha256": "6ad352a5ac0f379c503d366e011bcc6e6c89ea832ec488942699d75a6a0f239f"
+  },
+  {
+   "path": "/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+   "file": "pages/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world.html",
+   "status": 200,
+   "sha256": "72c05188245614c09ac8553094ddd190563995fa6821bce74b2450d1228fd5d1"
+  },
+  {
+   "path": "/resources/tags/jooma-4-x",
+   "file": "pages/resources/tags/jooma-4-x.html",
+   "status": 200,
+   "sha256": "1a90b0b980564b9efd40b8056c1b7deac9a9ddbb60657caddfff46cd0ca0a1a3"
+  },
+  {
+   "path": "/resources/tags/joomla-3-9",
+   "file": "pages/resources/tags/joomla-3-9.html",
+   "status": 200,
+   "sha256": "b934b273cc508e2bd6fdecc17486798eaee2715889a638228b82193e167b6106"
+  },
+  {
+   "path": "/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+   "file": "pages/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat.html",
+   "status": 200,
+   "sha256": "35c1b84df7a7ef510493dd7d6256869f4483bcdf22cc085d53c8eb2294d2aa56"
+  },
+  {
+   "path": "/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+   "file": "pages/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices.html",
+   "status": 200,
+   "sha256": "c086956990a5a5385fd6b6c3ac728d9177f1a20d920e1c297a3959b625ffc844"
+  },
+  {
+   "path": "/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+   "file": "pages/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis.html",
+   "status": 200,
+   "sha256": "b235765a6fdaf2d6fb116d6cae08f42423153377c43a00b642c5e2b1d1015bca"
+  },
+  {
+   "path": "/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+   "file": "pages/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus.html",
+   "status": 200,
+   "sha256": "9ba9ff1c144512f63daaff6b1e2d9ed1c025b45a7c6c6960f98cd7f2c29c72a6"
+  },
+  {
+   "path": "/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+   "file": "pages/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique.html",
+   "status": 200,
+   "sha256": "0ff4df849a477ddb8b2a9e300f086eeffd4f0c7d261b80b931d65e71431ab1b5"
+  },
+  {
+   "path": "/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+   "file": "pages/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla.html",
+   "status": 200,
+   "sha256": "d6c2b517849bfd079d33adc92330f336a3f0f4460935b4933895c02e8d5cae6a"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+   "file": "pages/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum.html",
+   "status": 200,
+   "sha256": "c02cb5729b465cd93cab9a72d2eb0b1b334e331c8af07bf00af1688092d34f28"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+   "file": "pages/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat.html",
+   "status": 200,
+   "sha256": "33302b83764a596ebaa1f774207474df1ff0c825bc60c5b2f2bce434acec3b6c"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+   "file": "pages/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis.html",
+   "status": 200,
+   "sha256": "809083e064a06909811e9b4d58e2000cb93ac226a39780caa05bebbe9a8c0063"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+   "file": "pages/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum.html",
+   "status": 200,
+   "sha256": "1bb375e6afeb810221844631cb843b4e65cfc03eaf3433c75420fad49eaefc47"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+   "file": "pages/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra.html",
+   "status": 200,
+   "sha256": "b323e36123e34dbda63729716e71d9a59c5dfa1aa5c894f5687b9db68007c0d6"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+   "file": "pages/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies.html",
+   "status": 200,
+   "sha256": "76c28c8b55aa31ab60a26f82395ceefb0f71ca4a1909e70677db1e7b7a9ae6a7"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+   "file": "pages/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat.html",
+   "status": 200,
+   "sha256": "e9b4515b65a8523fac96b3cdcf43fd617dc21c11007aefc30b2b0f90f3de2f43"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+   "file": "pages/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla.html",
+   "status": 200,
+   "sha256": "b1244c75638f5823af77513dcc07dc71fc8db22a7803eb2cd9df517d7251805e"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+   "file": "pages/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut.html",
+   "status": 200,
+   "sha256": "25c49dade3a9bdf17bc77e5510d8f24163b66e868bc7dd348c495de21fe407ec"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+   "file": "pages/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu.html",
+   "status": 200,
+   "sha256": "a676811d75049809e6bdafeadf6f451cab5bdcbafa76aceeedfe93180db29ea7"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+   "file": "pages/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem.html",
+   "status": 200,
+   "sha256": "57f98809eaca34a2d5b40d349ebfedf1f04728828a460ad4ff160f170ab6cbc7"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+   "file": "pages/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique.html",
+   "status": 200,
+   "sha256": "923022e9b6dd53952d00821729cd6b19811f99543644e15d52c1678b5f54703f"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+   "file": "pages/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu.html",
+   "status": 200,
+   "sha256": "13b9654f349ce08bb8e504fb815833be6428e67b0d6d136ad4c73ef8c6b93b96"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+   "file": "pages/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut.html",
+   "status": 200,
+   "sha256": "5083873e1d050018e1fae2c9e315d551093b24a7dcc9f37ce322e759991df49c"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+   "file": "pages/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla.html",
+   "status": 200,
+   "sha256": "3284d7d2af348cbd5c8e7936a86f213e300869a9bb547c9ffbe1445d3ace5054"
+  },
+  {
+   "path": "/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+   "file": "pages/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat.html",
+   "status": 200,
+   "sha256": "24939ae01cf4a5173d4206453390479ff5e2c6349d9f1c57567320fcaba3221c"
+  },
+  {
+   "path": "/nope-404-probe",
+   "file": "pages/nope-404-probe.html",
+   "status": 404,
+   "sha256": "e5a0f661aa44060d388c61953c536902222d2dbfbc8424c9991a0242ded0f688"
+  }
+ ],
+ "files": [
+  {
+   "path": "/images/demo/blog/blog-10.jpg",
+   "size": 169414,
+   "sha256": "a49eca167649ce2aadabe3bb54424df11441cc04b3a3dda0dc39b0354d80ca15"
+  },
+  {
+   "path": "/images/demo/blog/blog-12.jpg",
+   "size": 133797,
+   "sha256": "7e2d75d744962b76cec9c1acf8ad5b0c5b37ced0a8d172253a0cd5e1665a9e19"
+  },
+  {
+   "path": "/images/demo/blog/blog-15.jpg",
+   "size": 195463,
+   "sha256": "93972e762c0f13f8471ba1c720780ba1e47501c813c9a75e9bc7fdcadb2b326b"
+  },
+  {
+   "path": "/images/demo/blog/blog-4.jpg",
+   "size": 125231,
+   "sha256": "b3d1d8563ce86db2fd8cac80ed63044ff83e6eee1d70fca3d0c4b85d7f398f1a"
+  },
+  {
+   "path": "/images/demo/blog/blog-6.jpg",
+   "size": 176560,
+   "sha256": "5c0e133e4293f40c36870d5e7bb5c91b7ec0671e12c1b26988b4a6787a64bb33"
+  },
+  {
+   "path": "/images/demo/magz/magz-10.jpg",
+   "size": 116230,
+   "sha256": "471073c7a5c3b69788d7fa7464dfa380b1e149bed75056371deb88e0da6daf20"
+  },
+  {
+   "path": "/images/demo/magz/magz-13.jpg",
+   "size": 138759,
+   "sha256": "7709882b95ba891391cfe086f33f4b76e94bed0597bc809f392700be5824e2d8"
+  },
+  {
+   "path": "/images/demo/magz/magz-2.jpg",
+   "size": 260429,
+   "sha256": "96a39a534446b71dd70ab5d569fbb6cd6c0a3a6927cb9866f91ecf44a3893e2f"
+  },
+  {
+   "path": "/images/demo/magz/magz-3.jpg",
+   "size": 265201,
+   "sha256": "c01ec30239f74e5544dead561c9cdea7226d96d00c3bdefe60a9938fd610fb93"
+  },
+  {
+   "path": "/images/demo/magz/magz-9.jpg",
+   "size": 174500,
+   "sha256": "a44fc5732bcd5fb0f403f148e1817d9a439bfcc8a1caf729e031395ecb7f9d49"
+  },
+  {
+   "path": "/images/demo/members/mem-1.jpg",
+   "size": 39299,
+   "sha256": "73b1e6530d44d158360aa68f1f0f4dbe8931633333fd7d758039a1a5ccc4bd72"
+  },
+  {
+   "path": "/images/demo/members/mem-2.jpg",
+   "size": 40605,
+   "sha256": "849439a9480751cf17fd5ac7528ff8bf127a8fef0bc97655bdc0a1ac1f0f9b63"
+  },
+  {
+   "path": "/images/demo/members/mem-3.jpg",
+   "size": 47050,
+   "sha256": "38a3ec8616cf4de97e885dc175f30214b01e010672b456f4ca6b4835c93e68fd"
+  },
+  {
+   "path": "/images/demo/members/mem-4.jpg",
+   "size": 39539,
+   "sha256": "665790629ba6a46a86f94338cc9fc03c65f6fcffe03840a3b20e42f1c4ccd8a1"
+  },
+  {
+   "path": "/images/demo/misc/sam-13.jpg",
+   "size": 318243,
+   "sha256": "8cf4dac3e61daf8002972a232c5a7c1da7b5adb9f95b3d51318e63433ec879dc"
+  },
+  {
+   "path": "/images/demo/misc/sam-14.jpg",
+   "size": 106702,
+   "sha256": "56c601e92f3cc8a9eec8e51a790a17dbcf309b5683ca55bc7492dbb1760cc711"
+  },
+  {
+   "path": "/images/demo/misc/sam-15.jpg",
+   "size": 179763,
+   "sha256": "5290d2d7e7a299adcd26c7564166e92c0ccfc1da524049585877051028db9e14"
+  },
+  {
+   "path": "/images/demo/misc/sam-16.jpg",
+   "size": 123913,
+   "sha256": "473f782b62ba9799b2366dd7c4b6073864d38cfe3429c12314d016357fd3713b"
+  },
+  {
+   "path": "/images/demo/misc/sam-3.jpg",
+   "size": 49597,
+   "sha256": "df41bd20048a2e689d6f7c674fa0fa3edce02c36985285f4470708a7eeff050f"
+  },
+  {
+   "path": "/images/demo/misc/sam-4.jpg",
+   "size": 71032,
+   "sha256": "8c4366d63f1f4369f2670250ed70fe56e1542fe4259b786755ce46111a699576"
+  },
+  {
+   "path": "/images/demo/misc/sam-6.jpg",
+   "size": 86057,
+   "sha256": "b1b3878c24796f421ad05f2c7149b2052a2cb7742b1a58b316c5131a5b5cd9fa"
+  },
+  {
+   "path": "/images/demo/misc/sam-7.jpg",
+   "size": 177976,
+   "sha256": "c9b466ae2099a1c0523a34c7df204c8c40d9d8bcc609b7e3407e3deb640afbce"
+  },
+  {
+   "path": "/images/demo/misc/sam-8.jpg",
+   "size": 171196,
+   "sha256": "c8610fb99c9c84105ba700eabedfac3237abbb7b980b4cec915e6651e6072451"
+  },
+  {
+   "path": "/images/demo/misc/sam-9.jpg",
+   "size": 191432,
+   "sha256": "dbba0a7722b67496570cf7e657b3c50a2de9bb4981bb4d34533667c2dc4708f3"
+  },
+  {
+   "path": "/images/tracy-base/chapter-depth.jpg",
+   "size": 133274,
+   "sha256": "ebb10f5ba52fc8789e5debae57108112583ae2a8bf5479e4240891a302b83591"
+  },
+  {
+   "path": "/images/tracy-base/chapter-material.jpg",
+   "size": 108739,
+   "sha256": "7c3839e274c7c6e02c7d0f6296eb292314e8cc31c908f0a6e24fc8538f630c91"
+  },
+  {
+   "path": "/images/tracy-base/chapter-precision.jpg",
+   "size": 112944,
+   "sha256": "1245a449e4bc5b8c99c40ba08ec2c895e509bac303788acf3aedae5bf310d4c1"
+  },
+  {
+   "path": "/images/tracy-base/mark-1.png",
+   "size": 548,
+   "sha256": "2e9e9f201539600f9250bb7f7cb9fbb5594ce4336578d99b1a8b3a811ec7c06f"
+  },
+  {
+   "path": "/images/tracy-base/mark-2.png",
+   "size": 589,
+   "sha256": "f10544fd366040689f4ceb6de68542558ae09bbd9e9435373d2e22690e9b1cfe"
+  },
+  {
+   "path": "/images/tracy-base/mark-3.png",
+   "size": 376,
+   "sha256": "34e030023c71e18f9817f5992648e2a31bf79ce5ce24a979fbe75ed406504cbc"
+  },
+  {
+   "path": "/images/tracy-base/mark-4.png",
+   "size": 689,
+   "sha256": "92f479ac0b47f322958ee1a6e9cfd09b5abf61dcf635c7837828cfa71d68ceaa"
+  },
+  {
+   "path": "/images/tracy-base/mark-5.png",
+   "size": 548,
+   "sha256": "2e9e9f201539600f9250bb7f7cb9fbb5594ce4336578d99b1a8b3a811ec7c06f"
+  },
+  {
+   "path": "/images/tracy-base/mark-6.png",
+   "size": 589,
+   "sha256": "f10544fd366040689f4ceb6de68542558ae09bbd9e9435373d2e22690e9b1cfe"
+  },
+  {
+   "path": "/images/tracy-demo/studio-workspace.png",
+   "size": 2256400,
+   "sha256": "0ec09d69134bd6f87b0b1fa8c27624457293651ac777595ba7396550e3beab7c"
+  },
+  {
+   "path": "/media/tracy-landing/native-landing.css",
+   "size": 27727,
+   "sha256": "74ff43779756a229b108adabcde6d0a13fa8b5fd43edbee743b7b5e70e463e8c"
+  },
+  {
+   "path": "/media/tracy-marketing/LICENSE",
+   "size": 11296,
+   "sha256": "9d95806a26532623360eb84bb17d298f394b55ef73fb4c0796d99b4319b2b0da"
+  },
+  {
+   "path": "/media/tracy-marketing/NOTICE",
+   "size": 3513,
+   "sha256": "19d61a92e91c005d37337af8689350c504d0363ee96bdc432307fe6f905ff7e8"
+  },
+  {
+   "path": "/media/tracy-marketing/email-dark.html",
+   "size": 21339,
+   "sha256": "34e074048db39cd5a34ee1b689e73b3361562147a9dd0f264593ba2086b5953e"
+  },
+  {
+   "path": "/media/tracy-marketing/email-light.html",
+   "size": 21325,
+   "sha256": "a40c627853f5b49a2af09daa2b13ad3b77756c4ff4cb17fe5d548e9713d90aa7"
+  },
+  {
+   "path": "/media/tracy-marketing/form-dark.html",
+   "size": 22945,
+   "sha256": "7d1098e2e91b447821a4ca23177a6167b20e90448910302dbe8037371d89b8e3"
+  },
+  {
+   "path": "/media/tracy-marketing/form-light.html",
+   "size": 22931,
+   "sha256": "c643c444a4158e8d333b8e1a523edefdfb5f3426ce36a04242f9daaec64b497b"
+  },
+  {
+   "path": "/media/tracy-marketing/manifest.json",
+   "size": 2774,
+   "sha256": "ce409887229b42ee64527f3c3c68ab11e577faae83e26ee87ccfc84d65b441a8"
+  },
+  {
+   "path": "/media/tracy-marketing/newsletter-dark.html",
+   "size": 23566,
+   "sha256": "66412d834a45952e1d6433e59c0888d0fcf2c816e341bac2bb063642693ec638"
+  },
+  {
+   "path": "/media/tracy-marketing/newsletter-light.html",
+   "size": 23552,
+   "sha256": "e0d87ec787ed5a91e1f53f83a5e19e4e32d4750772c42af3238ce20b23fa2e88"
+  },
+  {
+   "path": "/media/tracy-marketing/poster-dark.html",
+   "size": 18828,
+   "sha256": "da53ba2615b23c76c7df3a825f2fd8913c5f90d1867d6b47e8f69b70ca036d8b"
+  },
+  {
+   "path": "/media/tracy-marketing/poster-light.html",
+   "size": 18814,
+   "sha256": "b8ff44acd253323eeb7d426487bc7ca819c9a5bfcc66c7765a47979330da6ff3"
+  },
+  {
+   "path": "/media/tracy-marketing/slide-dark.html",
+   "size": 41772,
+   "sha256": "c41236113b914ebe8bccd672920bb2ac4ea280a367dde9e2987c38991ac6831b"
+  },
+  {
+   "path": "/media/tracy-marketing/slide-light.html",
+   "size": 41758,
+   "sha256": "8f9b7b95f695e94e51ea30f3ee1fd0b371acd4450be19b66b4570ab5611e6cc9"
+  },
+  {
+   "path": "/media/tracy-marketing/typography-dark.html",
+   "size": 25674,
+   "sha256": "3fc3c2596e7f188a3f9164f3ef1ca2e33db8420c0edf8114aa6ef6014c0801ba"
+  },
+  {
+   "path": "/media/tracy-marketing/typography-light.html",
+   "size": 25660,
+   "sha256": "3e429a925d47096a2e3ffad40ce11d002da55fe2f696fa682294dcce0557eed9"
+  },
+  {
+   "path": "/templates/tracy/css/site-repairs.css",
+   "size": 24820,
+   "sha256": "d8951a366a85d0f0167b902c5e3eaf27e17aeafe39807a5f76b6d950a252c2b2"
+  },
+  {
+   "path": "/templates/tracy/css/styles/base.css",
+   "size": 11395,
+   "sha256": "f0321d6d2b5aaac248adac131ee0e707c4c36cb9aaccb508981d5346c585ac47"
+  },
+  {
+   "path": "/templates/tracy/js/darkmode.js",
+   "size": 3185,
+   "sha256": "2c329c0942e8b66669c6907714ffc74c01a58c56cdc9dcb9518f6c5a2003e5cd"
+  },
+  {
+   "path": "/templates/tracy/scss/_all.scss",
+   "size": 1649,
+   "sha256": "84185ca1b12c159f9d811b9a74f87a7024adde01154c0a802c5c1fbaed47028e"
+  },
+  {
+   "path": "/templates/tracy/scss/_bootstrap.scss",
+   "size": 2835,
+   "sha256": "d503c13f8da9ce60838bc69bfcd7b2518ba264cccece1559d18d8707af77bf96"
+  },
+  {
+   "path": "/templates/tracy/scss/_chrome.scss",
+   "size": 60768,
+   "sha256": "baa8748143baeed5b1ede3aa213e58e76a5ce7e9f82110cbe9be23f62d1ec441"
+  },
+  {
+   "path": "/templates/tracy/scss/_components.scss",
+   "size": 1720,
+   "sha256": "7cb69fe565928d634158893a439e32c475bcb56371d99ad0303857a6255c0ef2"
+  },
+  {
+   "path": "/templates/tracy/scss/_fixture-pages.scss",
+   "size": 3976,
+   "sha256": "bcaebb22e92466f4758c07f952c8689a949d4be3830784ed9cffd1d75ffb6d0c"
+  },
+  {
+   "path": "/templates/tracy/scss/_forms.scss",
+   "size": 766,
+   "sha256": "f9ffcd4acbb83dcc8fbdb75ea45ad4883c05d6e69898477ea62f53b4e8a08277"
+  },
+  {
+   "path": "/templates/tracy/scss/_global.scss",
+   "size": 1532,
+   "sha256": "b1fa5c1c997836271ee9df039596cb43b7a953c5fa58a14f5bd3be30fa1baee6"
+  },
+  {
+   "path": "/templates/tracy/scss/_joomla.scss",
+   "size": 19447,
+   "sha256": "2f4518b8a19926c32b3906f616b9eef10a609584a258d603cf100128f77b72e8"
+  },
+  {
+   "path": "/templates/tracy/scss/_megamenu.scss",
+   "size": 10311,
+   "sha256": "688e067f51739e81f71d08348ff4a87408605ef8a0ebcca61c8f283ccf4f500f"
+  },
+  {
+   "path": "/templates/tracy/scss/_modules.scss",
+   "size": 8069,
+   "sha256": "e07e0179ed83af15146bed74f713228fc8bc6b6d2f3517775bb9a84a180c0b96"
+  },
+  {
+   "path": "/templates/tracy/scss/_navigations.scss",
+   "size": 4359,
+   "sha256": "d0a0b501a69b660c69b5fb0b567c4561f8a469fd77748cb949f91d994f9eeb17"
+  },
+  {
+   "path": "/templates/tracy/scss/_offcanvas.scss",
+   "size": 1933,
+   "sha256": "00b00d641663cbd3cb643d3ea2ba4fa96870f5a8c81f023157185292d550c6d6"
+  },
+  {
+   "path": "/templates/tracy/scss/_overrides-content.scss",
+   "size": 48496,
+   "sha256": "4f0d4afeb26911bc374aed43d54908e6426c376490e58969d4796b59353f8e4a"
+  },
+  {
+   "path": "/templates/tracy/scss/_overrides-misc.scss",
+   "size": 15295,
+   "sha256": "7d3c73d441baa18747f4eba2e56fe7f0a88dd72f79314b6f194410ff96b81e7b"
+  },
+  {
+   "path": "/templates/tracy/scss/_overrides-spine.scss",
+   "size": 7638,
+   "sha256": "6d3bfcb38366e1e019d4fcfaf778eda9c9397a7e6e445309e56abb82d4caee2d"
+  },
+  {
+   "path": "/templates/tracy/scss/_overrides-users.scss",
+   "size": 34030,
+   "sha256": "58745c1d9628de3f031b7385df0a529c378cc51072cbe0430cbced8fe20dc586"
+  },
+  {
+   "path": "/templates/tracy/scss/_styles.scss",
+   "size": 13889,
+   "sha256": "984dd24cf3b3a7b1391b1add5d5b6407d9c3f17cb9b699906cfe502e825ced08"
+  },
+  {
+   "path": "/templates/tracy/scss/_typo.scss",
+   "size": 8604,
+   "sha256": "d93d72374d256b28617e57936a059160a25952578d3b08d959fce2eed3c46766"
+  },
+  {
+   "path": "/templates/tracy/scss/_utilities.scss",
+   "size": 3060,
+   "sha256": "11e42d82e16c224badf089374dfd23c07faee30182d3dc2a3d37edaae1634ec1"
+  },
+  {
+   "path": "/templates/tracy/scss/_variables.scss",
+   "size": 41037,
+   "sha256": "e594932e709c240b23f41858a53b11a0d848074adc3bd14041d916c98ec0f5fc"
+  },
+  {
+   "path": "/templates/tracy/scss/_vars.scss",
+   "size": 405,
+   "sha256": "6f4f70464281d4d6d120c98ea22766ed77778635c61fc3ad248ec944cfc16874"
+  },
+  {
+   "path": "/templates/tracy/scss/frontend-edit.scss",
+   "size": 1306,
+   "sha256": "932d438ee156e375bf0750763acb5cb50e2129f816750a78c6b803191e0fcca8"
+  },
+  {
+   "path": "/templates/tracy/scss/jpages.scss",
+   "size": 7130,
+   "sha256": "4d6148578c03ad82a48e3cff3cc5732faecdac619162de2b615d2b1b10badd84"
+  },
+  {
+   "path": "/templates/tracy/scss/prepros.config",
+   "size": 22971,
+   "sha256": "ba9ada9fac9dfd7e1802bbd40843bb659a3283ea6a614ad2a700c175a49e53c2"
+  },
+  {
+   "path": "/templates/tracy/scss/rtl.scss",
+   "size": 121,
+   "sha256": "14f1f80a4be9684a16c22105804851deb6765ae6783b1d8c3c2f48b930df8a22"
+  },
+  {
+   "path": "/templates/tracy/scss/site-repairs.scss",
+   "size": 23466,
+   "sha256": "6b5453041bdf251033686dd1200e7de4a78ecf3bb902538262af4a90d892bd1f"
+  },
+  {
+   "path": "/templates/tracy/scss/template.scss",
+   "size": 626,
+   "sha256": "f33dc6b9e57c69e49d58666c0a95c3b6c6e87fbf4227968f00db1524276b4052"
+  },
+  {
+   "path": "/templates/tracy/scss/theme.scss",
+   "size": 210,
+   "sha256": "c54f5a25494dcced25b07077b3c12f24d27e9ed4e51cc5640b725a23d18f5c44"
+  },
+  {
+   "path": "/templates/tracy/scss/tpl/theme.tpl.scss",
+   "size": 129,
+   "sha256": "d1c0a988a92693d9c6eb06e97ba60c96d0d7e4cdec1260aa92e7009286bbcb25"
+  },
+  {
+   "path": "/templates/tracy/acm/accordion/config.xml",
+   "size": 87,
+   "sha256": "6f22f95a0bc4ab8f4cd9360cf91645012387602a6feb798eda54c09f76c7cad7"
+  },
+  {
+   "path": "/templates/tracy/acm/accordion/css/style.css",
+   "size": 7188,
+   "sha256": "de299068c25199462403c238f06e9c427574fd4457aa72b3bb1f00d2fb08bf59"
+  },
+  {
+   "path": "/templates/tracy/acm/accordion/tmpl/style-1.php",
+   "size": 4428,
+   "sha256": "559d3d8ded4f21611b5c350f8ff34b7f3986f6d90cfb88ff693d38b1365dc00a"
+  },
+  {
+   "path": "/templates/tracy/acm/accordion/tmpl/style-1.xml",
+   "size": 2683,
+   "sha256": "d63fdd20a2a1c9758582e4bd27eaf74bb59e974282e5cf318a81e917c253f3fc"
+  },
+  {
+   "path": "/templates/tracy/acm/carousel/config.xml",
+   "size": 86,
+   "sha256": "2ecbf622cb8bf1057e0754557550e395726ab0e491af2dfc3bb2fddf713c88bf"
+  },
+  {
+   "path": "/templates/tracy/acm/carousel/css/style.css",
+   "size": 7806,
+   "sha256": "a90a49d242f4c148adaac86a29d3dc92952e109dcf71f96de0e5693ccf22dd38"
+  },
+  {
+   "path": "/templates/tracy/acm/carousel/tmpl/style-1.php",
+   "size": 9482,
+   "sha256": "5e807dfa9e26eda30fdcfdb33a086cb350c38de31f1b4a6a5a28b9689dff0c37"
+  },
+  {
+   "path": "/templates/tracy/acm/carousel/tmpl/style-1.xml",
+   "size": 1894,
+   "sha256": "84999a1cbedbfce31fb2a63b5ec886eff1be7ec19fcfeb5ff65f33a9e0f547b2"
+  },
+  {
+   "path": "/templates/tracy/acm/clients/config.xml",
+   "size": 85,
+   "sha256": "3840a5fafaa312cf30a7e568f57f68ab57a82a70ceb30a98535dfe54354fc55d"
+  },
+  {
+   "path": "/templates/tracy/acm/clients/css/style.css",
+   "size": 4206,
+   "sha256": "28a146c28cab9618842f54f4b94d228f9bc3e9e3a3982e6bcecece5cff3a1e1c"
+  },
+  {
+   "path": "/templates/tracy/acm/clients/less/style.less",
+   "size": 4155,
+   "sha256": "81619f6a27fd33ca6d311328e0da3d49c4834b7e9ecf2c43e3bd84207593a920"
+  },
+  {
+   "path": "/templates/tracy/acm/clients/tmpl/style-1.php",
+   "size": 4150,
+   "sha256": "643bd3a6858482ba5b40146cc95f2c72094cae32d02e0ce58628e054af011e7f"
+  },
+  {
+   "path": "/templates/tracy/acm/clients/tmpl/style-1.xml",
+   "size": 1152,
+   "sha256": "6fae18cc9370003f1b7c1376563d255f03792719a4bcfa2a99bd272a9dbd8f2d"
+  },
+  {
+   "path": "/templates/tracy/acm/contact-information/config.xml",
+   "size": 92,
+   "sha256": "f93d5424302a13e9ba6084631f08a61bbedd7cbf67a1b44985d0afcea0820b23"
+  },
+  {
+   "path": "/templates/tracy/acm/contact-information/css/style.css",
+   "size": 2014,
+   "sha256": "0825f92f34479e4e202d3a4ef01fd156594640790970e4a3edd2086a6e9123d7"
+  },
+  {
+   "path": "/templates/tracy/acm/contact-information/en-GB.contact-information.ini",
+   "size": 470,
+   "sha256": "c1caea08f067bca69c480a337bd1d9cd53659da2c37aff12d1f9269ec42ae7c7"
+  },
+  {
+   "path": "/templates/tracy/acm/contact-information/tmpl/style-1.php",
+   "size": 1429,
+   "sha256": "b39bb81604837b1f6e67fac61ef9c3f0ecf9e25573dbd0164d07c829e6aa1588"
+  },
+  {
+   "path": "/templates/tracy/acm/contact-information/tmpl/style-1.xml",
+   "size": 959,
+   "sha256": "fc6087993d12bcf5aa8f5120452d761a7b9c1f5c8e229063bc92fc9e40b2723f"
+  },
+  {
+   "path": "/templates/tracy/acm/cta-capsule/config.xml",
+   "size": 89,
+   "sha256": "802fe5477a3ba431b8fd30db3c713cb945e0b34bca2a441cd919577e4bd9742d"
+  },
+  {
+   "path": "/templates/tracy/acm/cta-capsule/css/style.css",
+   "size": 6686,
+   "sha256": "f11408a5780c2b089b9e3a02d60a6e4d39bafe088e50cc7f8beda20554f049d3"
+  },
+  {
+   "path": "/templates/tracy/acm/cta-capsule/less/style.less",
+   "size": 6605,
+   "sha256": "02c826532dc4cb6e2bd8ead267b6a3eb4c82b846ebc4b2c50ce5528008824414"
+  },
+  {
+   "path": "/templates/tracy/acm/cta-capsule/tmpl/style-1.php",
+   "size": 3289,
+   "sha256": "8c0b476b755e4e324b7cc2993bef2e4dc77c7e61451f9f80a26a1e18b11995dd"
+  },
+  {
+   "path": "/templates/tracy/acm/cta-capsule/tmpl/style-1.xml",
+   "size": 1409,
+   "sha256": "a2b887f674226a2d6972a7ce78cb3105a01be5e429ea3a7b5cfd1ec257e6c878"
+  },
+  {
+   "path": "/templates/tracy/acm/data.php",
+   "size": 3001,
+   "sha256": "3b90d6e872a2e25066069955979866b9c87165766696370089e0a7df47f89a0f"
+  },
+  {
+   "path": "/templates/tracy/acm/features-intro/config.xml",
+   "size": 92,
+   "sha256": "62858052cdf606e323fdb78d203f42f01456b52f68fa3ed7822859c2f052d602"
+  },
+  {
+   "path": "/templates/tracy/acm/features-intro/css/style.css",
+   "size": 12554,
+   "sha256": "3c05ce7edd0e6be00c8e6cd1f45c4a024c814c61ae8d071eea897adf26be9b6e"
+  },
+  {
+   "path": "/templates/tracy/acm/features-intro/less/style.less",
+   "size": 12424,
+   "sha256": "96aedf3c8efeb67c9826028a4ac5f393abad77c53be8289e72ae2c1f52c749e9"
+  },
+  {
+   "path": "/templates/tracy/acm/features-intro/tmpl/style-1.php",
+   "size": 5922,
+   "sha256": "0a7efd5cf556e3d836a5cf0034a13ab766d88e305ece5437bed5289b695089c3"
+  },
+  {
+   "path": "/templates/tracy/acm/features-intro/tmpl/style-1.xml",
+   "size": 2634,
+   "sha256": "c39c073618b1fc6fb57d96e1e3a6515ed89754834bd63b94eeb1d0ff866ba3e8"
+  },
+  {
+   "path": "/templates/tracy/acm/hero/config.xml",
+   "size": 82,
+   "sha256": "834df2f965c5bbf41c70e0fbf808ffc37219469503891517632ed3ad2bc9edd6"
+  },
+  {
+   "path": "/templates/tracy/acm/hero/css/style.css",
+   "size": 11200,
+   "sha256": "69cc6f141a30d4badcacb0f5d21eae81617858daf7d7643d3f620e46c3a11f15"
+  },
+  {
+   "path": "/templates/tracy/acm/hero/less/style.less",
+   "size": 11049,
+   "sha256": "aaa6b28a23520533383490fa04bea4b59753a51b02db65b39af09154b9934df8"
+  },
+  {
+   "path": "/templates/tracy/acm/hero/tmpl/style-1.php",
+   "size": 6355,
+   "sha256": "f8f2ee0734d89c48109bbb7f4168359ef1501628b59338b79ac33ec136e05fd6"
+  },
+  {
+   "path": "/templates/tracy/acm/hero/tmpl/style-1.xml",
+   "size": 3026,
+   "sha256": "ac269ff06bd0113fcfe7851841e4d0a8dabd5dba6d61b2ff8a2ec8252044135e"
+  },
+  {
+   "path": "/templates/tracy/acm/hero/tmpl/style-2.php",
+   "size": 3331,
+   "sha256": "3d18e224d7500897de40b6249c86cb773b731366909c13af0e265f757bbff994"
+  },
+  {
+   "path": "/templates/tracy/acm/hero/tmpl/style-2.xml",
+   "size": 1617,
+   "sha256": "7941a4f71ba0787ce2c860f431b6a9f2584b6e52f0a1eb61eddeddd78be6c94c"
+  },
+  {
+   "path": "/templates/tracy/acm/marketing-samples/config.xml",
+   "size": 95,
+   "sha256": "04b9649f8ec27e6dfa85cc5f33dcd85d3803f1081caca651d16a6c9117f1fb36"
+  },
+  {
+   "path": "/templates/tracy/acm/marketing-samples/css/style.css",
+   "size": 237,
+   "sha256": "eab2a2848684aff6d5699046e86d689aa7854983ec6952ed748c0bc8d2de92e9"
+  },
+  {
+   "path": "/templates/tracy/acm/marketing-samples/tmpl/style-1.php",
+   "size": 5709,
+   "sha256": "ab2c7014d35eaa2d676a9603296aada3aa9bea60ad1ed9887a7078312fc72ab2"
+  },
+  {
+   "path": "/templates/tracy/acm/marketing-samples/tmpl/style-1.xml",
+   "size": 2853,
+   "sha256": "6a54160a6798b2ce124bcfc9b8c54017a2c7845197bbe79d46c24b59da4ac518"
+  },
+  {
+   "path": "/templates/tracy/acm/menu-feature/config.xml",
+   "size": 61,
+   "sha256": "d4f5f1af3fbc78f9493652930c3b1c0df68f17f56241d4dc061db4d6f1a8832e"
+  },
+  {
+   "path": "/templates/tracy/acm/menu-feature/tmpl/style-1.php",
+   "size": 1416,
+   "sha256": "5bc61be63b7a83af6ce2907913ba8b6722078fcae499379f00727c7b1a309d83"
+  },
+  {
+   "path": "/templates/tracy/acm/menu-feature/tmpl/style-1.xml",
+   "size": 722,
+   "sha256": "27c2198e179cad3ece4030000a1e1b4e91c9be1352c0bddfaa0137beb63c6a96"
+  },
+  {
+   "path": "/templates/tracy/acm/pricing/config.xml",
+   "size": 85,
+   "sha256": "b4b108ff65a510465360d6dc1b3a55eef10a123e0dbcd23ec1a5d47f62ef5a10"
+  },
+  {
+   "path": "/templates/tracy/acm/pricing/css/style.css",
+   "size": 8467,
+   "sha256": "8d0e4be0d8d1c4331e749740e50aeda2ac5a224055680ad64b3ce6e49a122ecb"
+  },
+  {
+   "path": "/templates/tracy/acm/pricing/tmpl/style-1.php",
+   "size": 7288,
+   "sha256": "b480d5f928563c3c6498edf9f99beb63c90b0163f04004b6763e44551cbc6823"
+  },
+  {
+   "path": "/templates/tracy/acm/pricing/tmpl/style-1.xml",
+   "size": 3891,
+   "sha256": "7f07feaa15662a801c53607e0309afd131831d49e4d5c6c5a22dbd76e83f77f0"
+  },
+  {
+   "path": "/templates/tracy/acm/site-notice/config.xml",
+   "size": 89,
+   "sha256": "e32502abe3521f43e5fc4327c667fbaa72ad1f23cd4a95c8e189f9e7f9426772"
+  },
+  {
+   "path": "/templates/tracy/acm/site-notice/css/style.css",
+   "size": 229,
+   "sha256": "7a2924d6473957bef5cbba10752fbfe9d1efb00d141b57cabfda5f457fd5374a"
+  },
+  {
+   "path": "/templates/tracy/acm/site-notice/tmpl/style-1.php",
+   "size": 930,
+   "sha256": "ee27b384833356495d59e0acb8183d2790b09c255f263101f57d2ee77aa161c3"
+  },
+  {
+   "path": "/templates/tracy/acm/site-notice/tmpl/style-1.xml",
+   "size": 442,
+   "sha256": "31d4669966cc2cc3566f5ca76007e13b7a14c8b4264bfd0c61a7ff089950927c"
+  },
+  {
+   "path": "/templates/tracy/acm/social-links/config.xml",
+   "size": 85,
+   "sha256": "355c70daedddf9e7959492b07ee5854e76650ed885ec9f271b5d4eddb760ebdb"
+  },
+  {
+   "path": "/templates/tracy/acm/social-links/css/style.css",
+   "size": 782,
+   "sha256": "a5a49f80cdc710ac40af0e067d71c48b05bb92976d7a4b0d24ece62ce5543f32"
+  },
+  {
+   "path": "/templates/tracy/acm/social-links/tmpl/style-1.php",
+   "size": 1967,
+   "sha256": "09932e7ab48c80fdd6975b225c799e2354076ec30f9c5fa73456f55fac5987d1"
+  },
+  {
+   "path": "/templates/tracy/acm/social-links/tmpl/style-1.xml",
+   "size": 732,
+   "sha256": "e6ddc285c56fd65bc58715db035b2dd67c7d793e831d7493f3f5c4839c775174"
+  },
+  {
+   "path": "/templates/tracy/acm/statistics/config.xml",
+   "size": 88,
+   "sha256": "2b6cea4f41810ae0dfd68c2545f9e8fdd73f173575abf84a69bb84b9c7357961"
+  },
+  {
+   "path": "/templates/tracy/acm/statistics/css/style.css",
+   "size": 3758,
+   "sha256": "d03eb9754027aa5b0a605856a403d3b0c50a1919e6cc7f650c34cffa622f8667"
+  },
+  {
+   "path": "/templates/tracy/acm/statistics/less/style.less",
+   "size": 3708,
+   "sha256": "92f7d32aeb655388688bdb87260ed9eb5cb683cc57ca2451cc03bcdbe4df887f"
+  },
+  {
+   "path": "/templates/tracy/acm/statistics/tmpl/style-1.php",
+   "size": 2793,
+   "sha256": "66947e5f90d24edebfb3c3ac7164672e7d134d53581bca8e254c810115cd070a"
+  },
+  {
+   "path": "/templates/tracy/acm/statistics/tmpl/style-1.xml",
+   "size": 1504,
+   "sha256": "39f0b1f1e2d38dd46348bdfc6527a72bd84053d05cbb547a9f0082fdfab78592"
+  },
+  {
+   "path": "/templates/tracy/acm/story-chapter/chapter.php",
+   "size": 6385,
+   "sha256": "4f12c5421b22219705914c70f974121b1b34e3c33c4d12796ba0b1081b8d960f"
+  },
+  {
+   "path": "/templates/tracy/acm/story-chapter/config.xml",
+   "size": 91,
+   "sha256": "5204ce697b4ecaa300851057053a3c9f2149c3b4071b988939c9ff3bfee96e97"
+  },
+  {
+   "path": "/templates/tracy/acm/story-chapter/css/style.css",
+   "size": 6028,
+   "sha256": "ecb006bf4c11c0308001365d795752755f4b01601b7e7c4624fc6e310ea71e37"
+  },
+  {
+   "path": "/templates/tracy/acm/story-chapter/less/style.less",
+   "size": 5962,
+   "sha256": "1d2f974683b53ca081925872576771498072297846dcca06f60a8404b96bac4e"
+  },
+  {
+   "path": "/templates/tracy/acm/story-chapter/tmpl/style-1.php",
+   "size": 747,
+   "sha256": "c7aeb6c0563e1a243e5879c5df067809665c7024b839e335331a01baf410bf99"
+  },
+  {
+   "path": "/templates/tracy/acm/story-chapter/tmpl/style-1.xml",
+   "size": 2296,
+   "sha256": "c87610a95bcca06b93d08d40bf5e0073efaa6cde19fcbbf6c72f6f2c4c303a1f"
+  },
+  {
+   "path": "/templates/tracy/acm/story-chapter/tmpl/style-2.php",
+   "size": 761,
+   "sha256": "64ca10615038fc3462c3ace9aebd8873676a82f778fe9223a6f48c6984524c93"
+  },
+  {
+   "path": "/templates/tracy/acm/story-chapter/tmpl/style-2.xml",
+   "size": 2296,
+   "sha256": "ecb5c55e3d6f423acdbf8698bdff3e210c00cfcbb6869b767ba48e20f9b51097"
+  },
+  {
+   "path": "/templates/tracy/acm/tabs/config.xml",
+   "size": 82,
+   "sha256": "3de288f1da456e42fec8027d7db42ca1fc2ead187ae74a89d6509a9172969e17"
+  },
+  {
+   "path": "/templates/tracy/acm/tabs/css/style.css",
+   "size": 4782,
+   "sha256": "168cd74b3ca9a494f17e70c3b5263d04e81f830c652003a524c18204715b8e7e"
+  },
+  {
+   "path": "/templates/tracy/acm/tabs/tmpl/style-1.php",
+   "size": 7008,
+   "sha256": "3543f35d1976c2666265618498c9587d05fdba2624ca280c59791c5a0d55e9e2"
+  },
+  {
+   "path": "/templates/tracy/acm/tabs/tmpl/style-1.xml",
+   "size": 1295,
+   "sha256": "8a52f72b3f20e8f1feb2f20d9b91abc152869a754601ee53f19a24e46be4058d"
+  },
+  {
+   "path": "/templates/tracy/acm/team/config.xml",
+   "size": 82,
+   "sha256": "18033a3e25e4eee99f3d3f6b05a568dfc4cbe36f2fa11d779c2a72a82db66e1d"
+  },
+  {
+   "path": "/templates/tracy/acm/team/css/style.css",
+   "size": 7254,
+   "sha256": "3d341429f0e2503aa7a495ca45504c70052d86f72a66dcf38d886af4247ebdce"
+  },
+  {
+   "path": "/templates/tracy/acm/team/less/style.less",
+   "size": 7145,
+   "sha256": "fb95e40d1f4fd475982b2e66be62f82ee30329ba6c14fcab55cfbde64a07c87a"
+  },
+  {
+   "path": "/templates/tracy/acm/team/tmpl/style-1.php",
+   "size": 7717,
+   "sha256": "d1b8894268e2bec82b9e8af0118bdcdc8b156a7ed1287a282c67c4622214fc2d"
+  },
+  {
+   "path": "/templates/tracy/acm/team/tmpl/style-1.xml",
+   "size": 2202,
+   "sha256": "3d213df0b96170eb97ea5aaa729ac48117f01e50f7c071848e3fbc0d50c2fd95"
+  },
+  {
+   "path": "/templates/tracy/acm/team/tmpl/style-2.php",
+   "size": 3417,
+   "sha256": "e6e49c3dab174ab349d6cc8734e293cd52de2db3b4c02dd2ae199f82117c3eb9"
+  },
+  {
+   "path": "/templates/tracy/acm/team/tmpl/style-2.xml",
+   "size": 847,
+   "sha256": "6830ba67940fefaad3ae6858e24676f43891fb361d06867200bf86c207ef8b2c"
+  },
+  {
+   "path": "/templates/tracy/acm/testimonials/config.xml",
+   "size": 90,
+   "sha256": "4792850b743cc64e621ff318d5da2e207183fc8ec0dc0151f861478032e4dcb0"
+  },
+  {
+   "path": "/templates/tracy/acm/testimonials/css/style.css",
+   "size": 6436,
+   "sha256": "565e5c9f56ad7f929468e40d8fdd8b9e12a6d78d1cfa957a20ad734af1104507"
+  },
+  {
+   "path": "/templates/tracy/acm/testimonials/less/style.less",
+   "size": 6348,
+   "sha256": "fbabfa4b89ecc485230488cf5f208a18c030be88da1cc161afeea9be8c59fb45"
+  },
+  {
+   "path": "/templates/tracy/acm/testimonials/tmpl/style-1.php",
+   "size": 7177,
+   "sha256": "89f54ecc145325ccd55f7ff81fca6afefb2b136cdb2849f53d89f4d37039a232"
+  },
+  {
+   "path": "/templates/tracy/acm/testimonials/tmpl/style-1.xml",
+   "size": 1933,
+   "sha256": "0d4c802f7730403a6e7a3a7b79a854569fc39c5ea8da2d40d4371b18c6c41d6e"
+  },
+  {
+   "path": "/templates/tracy/acm/timeline/config.xml",
+   "size": 86,
+   "sha256": "443592357620dc0e792665634d81d63113a2a8bb3c8dea09801ae36480b0649d"
+  },
+  {
+   "path": "/templates/tracy/acm/timeline/css/style.css",
+   "size": 5035,
+   "sha256": "138d32ce4283a9a56ac46df2d596537bf0c252b54b1b32a076ab7013e9830f93"
+  },
+  {
+   "path": "/templates/tracy/acm/timeline/tmpl/style-1.php",
+   "size": 3423,
+   "sha256": "fcd871d7c45cee6a69bd55e7579efdf9361a4d98e6156b7c3f2eb8a61bdefdf7"
+  },
+  {
+   "path": "/templates/tracy/acm/timeline/tmpl/style-1.xml",
+   "size": 1649,
+   "sha256": "d99415d51bf92494f795ee4fe25bce0f48b5d247ab1622b7104b4466bd0b727b"
+  }
+ ],
+ "note": "templates/tracy/{scss,acm} added 15/09 (same day, before the contract hash): the SCSS and ACM layout sources are the design rules the rendered CSS was compiled from."
+}

@@ -1,0 +1,247 @@
+.k-ui-namespace span[class*=k-icon-]::before {
+  font-size: 18px;
+}
+.k-ui-namespace .k-icon-document-document::before {
+  color: #4275f4;
+}
+.k-ui-namespace .k-icon-document-pdf::before {
+  color: #fc6a6b;
+}
+.k-ui-namespace .k-icon-document-image::before {
+  color: #2CC990;
+}
+.k-ui-namespace .k-icon-document-video::before {
+  color: #FF7416;
+}
+.k-ui-namespace .k-icon-document-archive::before {
+  color: #42729B;
+}
+.k-ui-namespace .docman_download {
+  background: var(--t4-gray-100);
+  border: 1px dashed var(--t4-gray-300);
+  border-radius: 0.375rem;
+  padding: 1.5rem;
+}
+.k-ui-namespace .docman_download.docman_download--left {
+  margin: 0 1.5rem 1.5rem 0;
+}
+.k-ui-namespace .docman_download.docman_download--right {
+  margin: 0 0 1.5rem 1.5rem;
+}
+@media (max-width: 576px) {
+  .k-ui-namespace .docman_download.docman_download--right {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    max-width: 100%;
+    margin-left: 0;
+    gap: 1rem;
+    width: 100%;
+  }
+}
+@media (max-width: 576px) {
+  .k-ui-namespace .docman_download a.btn {
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 0.5rem;
+    width: auto;
+  }
+}
+.k-ui-namespace .k-toolbar {
+  border-radius: var(--t4-border-radius);
+  border: 0;
+}
+.k-ui-namespace .docman_category {
+  background-color: #fff7ed;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.k-ui-namespace .docman_category h3.koowa_header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.k-ui-namespace .docman_category h3.koowa_header .koowa_header__item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.k-ui-namespace .docman_category h3.koowa_header .koowa_header__item .k-icon--size-medium {
+  font-size: 1.125rem;
+}
+.k-ui-namespace .docman_category .docman_description {
+  padding-bottom: 0;
+}
+.k-ui-namespace h1.koowa_header {
+  font-size: 1.75rem;
+}
+.k-ui-namespace h1.koowa_header a {
+  color: var(--body-text-color);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1rem;
+}
+.k-ui-namespace h1.koowa_header a:hover, .k-ui-namespace h1.koowa_header a:focus, .k-ui-namespace h1.koowa_header a:active {
+  color: var(--body-link-hover-color);
+}
+.k-ui-namespace h1.koowa_header span[class*=k-icon-] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.k-ui-namespace .koowa_header__item .label {
+  font-size: 0.875rem;
+  font-weight: 400;
+  padding: 0.25rem 0.375rem;
+}
+.k-ui-namespace .docman_list_layout .koowa_header,
+.k-ui-namespace .docman_document_layout .koowa_header {
+  margin-bottom: 0.75rem;
+}
+.k-ui-namespace .docman_list_layout .koowa_header a,
+.k-ui-namespace .docman_document_layout .koowa_header a {
+  color: var(--body-text-color);
+}
+.k-ui-namespace .docman_list_layout .koowa_header a:hover, .k-ui-namespace .docman_list_layout .koowa_header a:focus, .k-ui-namespace .docman_list_layout .koowa_header a:active,
+.k-ui-namespace .docman_document_layout .koowa_header a:hover,
+.k-ui-namespace .docman_document_layout .koowa_header a:focus,
+.k-ui-namespace .docman_document_layout .koowa_header a:active {
+  color: var(--body-link-hover-color);
+}
+.k-ui-namespace .docman_list_layout .koowa_header .whitespace_preserver,
+.k-ui-namespace .docman_document_layout .koowa_header .whitespace_preserver {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1rem;
+}
+.k-ui-namespace .docman_list_layout .docman_description .docman_thumbnail,
+.k-ui-namespace .docman_document_layout .docman_description .docman_thumbnail {
+  margin: 0.375rem 1.5rem 1.5rem 0;
+}
+@media (max-width: 576px) {
+  .k-ui-namespace .docman_list_layout .docman_description .docman_thumbnail,
+.k-ui-namespace .docman_document_layout .docman_description .docman_thumbnail {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+    min-width: 100%;
+    width: 100%;
+  }
+}
+.k-ui-namespace .docman_list_layout .docman_description .docman_thumbnail img,
+.k-ui-namespace .docman_document_layout .docman_description .docman_thumbnail img {
+  border-radius: 0.375rem;
+}
+.k-ui-namespace .docman_table_layout .table td {
+  padding: 0.5rem 1rem;
+}
+.k-ui-namespace .docman_table_layout .table td.k-table-data--toggle {
+  padding-left: 0;
+  padding-right: 0;
+}
+.k-ui-namespace .docman_table_layout .table td.koowa_table__dates {
+  font-size: 0.875rem;
+}
+
+.k-ui-namespace .mod_docman.mod_docman--documents ul {
+  margin: 0;
+  padding: 0;
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li {
+  margin: 0;
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li + li {
+  border-top: 1px solid var(--t4-border-color);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .koowa_header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  margin: 0;
+  padding: 0;
+  gap: 0.75rem;
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .koowa_header::before, .k-ui-namespace .mod_docman.mod_docman--documents ul li .koowa_header::after {
+  display: none;
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .koowa_header .label {
+  font-size: 11px;
+  font-weight: 400;
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .module_document__info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 0.5rem;
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .module_document__info .module_document__category,
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .module_document__info .module_document__date,
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .module_document__info .module_document__size,
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .module_document__info .module_document__downloads {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  width: auto;
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .module_document__info .module_document__category .koowa_wrapped_content,
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .module_document__info .module_document__date .koowa_wrapped_content,
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .module_document__info .module_document__size .koowa_wrapped_content,
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .module_document__info .module_document__downloads .koowa_wrapped_content {
+  width: auto;
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li .koowa_header__item--image_container {
+  padding: 0;
+  min-width: auto;
+  width: auto;
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li a {
+  color: var(--body-text-color);
+}
+.k-ui-namespace .mod_docman.mod_docman--documents ul li a:hover, .k-ui-namespace .mod_docman.mod_docman--documents ul li a:focus, .k-ui-namespace .mod_docman.mod_docman--documents ul li a:active {
+  color: var(--body-link-hover-color);
+}
+.k-ui-namespace .mod_docman.mod_docman--categories ul {
+  margin: 0;
+  padding: 0;
+}
+.k-ui-namespace .mod_docman.mod_docman--categories ul li a {
+  --body-link-color: var(--body-text-color);
+}

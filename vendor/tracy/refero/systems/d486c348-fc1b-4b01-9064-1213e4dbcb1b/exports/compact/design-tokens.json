@@ -1,0 +1,64 @@
+{
+  "color": {
+    "indigo-pulse": {
+      "$value": "#3b3996",
+      "$type": "color",
+      "$description": "Indigo Pulse — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    },
+    "slate": {
+      "$value": "#6e6d7a",
+      "$type": "color",
+      "$description": "Slate — Hairline borders, dividers, secondary text, list separators — the structural gray that quietly defines the page grid"
+    },
+    "graphite": {
+      "$value": "#383938",
+      "$type": "color",
+      "$description": "Graphite — Navigation text, heading text, dark UI elements — the primary readable dark on white"
+    },
+    "ink": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Ink — Headline color, strongest body emphasis, near-black for maximum contrast on light surfaces"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, card surfaces, text on dark/indigo fills — the dominant canvas"
+    },
+    "mist": {
+      "$value": "#edeef3",
+      "$type": "color",
+      "$description": "Mist — Elevated panels, subtle background washes, light borders — the cool-tinted off-white that lifts content above the page"
+    },
+    "cloud": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Cloud — Secondary card surfaces, quiet content panels"
+    },
+    "mint-whisper": {
+      "$value": "#c3f5dd",
+      "$type": "color",
+      "$description": "Mint Whisper — Task category tag accent (product UI), logo green dot — pastel annotation, not interface chrome"
+    },
+    "lavender-drift": {
+      "$value": "#d1cafa",
+      "$type": "color",
+      "$description": "Lavender Drift — Task category tag accent (product UI), logo blue dot — pastel annotation"
+    }
+  },
+  "font": {
+    "avenir-next": {
+      "$value": "Avenir Next",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system — nav, body, headings, display. Avenir Next's geometric humanism gives the page a calm, friendly, Apple-adjacent feel. Weight 400 carries everything; weight 600 is reserved for navigation and small emphases. Display headlines at 65px with negative tracking create a compressed, confident presence rather than shouting."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://getdooapp.com",
+      "siteName": "Doo",
+      "extractedAt": "2026-06-03T21:22:52.032Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  // Shared TypeScript base. Every package `extends` this file instead of copying it.
+  //
+  // WHY IT CAME LATE. Until 2026-08-30 this repo had 5 unrelated tsconfigs and NO
+  // `typecheck` command — 12 TypeScript packages and no gate knew whether they compiled.
+  // Three of those five files had drifted: `tracy-view` lacked `lib`, `isolatedModules` and
+  // `verbatimModuleSyntax`; `tracy-design` copied `tracy-infra`'s base into its own
+  // body with a comment explaining why it could not `extends` (that base file did not exist
+  // here). Now it does.
+  //
+  // 🔒 `extends` WITH A RELATIVE PATH INSIDE THE TREE DOES NOT BREAK THE SELF-CONTAINED RULE. That rule
+  // (`scripts/check-self-contained.ts`) forbids pointing OUTSIDE the TCH tree — `link:/abs/path`, a
+  // registry that is a disk path. `../../../tsconfig.base.json` lives in the repo itself, so it travels
+  // with every clone. What bit before was `extends` into a file of ANOTHER repo.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true
+  }
+}

@@ -1,0 +1,2371 @@
+{
+  "$comment": "Raw navigation markup of the release, captured by capture-navigation-source.mjs from its own database archive. Input of scripts/build-wordpress-showcase-nav.mjs; never edit by hand.",
+  "schemaVersion": "tracy-quickstart-navigation-source/wordpress/v1",
+  "contract": "ja-nova/wp7/1.1.13",
+  "database": {
+    "file": "ja-nova-wp7-database-1.1.13.sql.gz",
+    "sha256": "d17915868ca33728463c110d02cc391eeb011fa6df3e8166c0f25df8229d44f5"
+  },
+  "stylesheet": "wp-ja-nova",
+  "frontPage": 150,
+  "navigations": [
+    {
+      "id": 4,
+      "slug": "navigation",
+      "title": "Navigation",
+      "language": "en",
+      "sha256": "88dd77bdd43908fbb988625333df83b8739f87139b56e469ffda99bc50a0768e",
+      "content": "<!-- wp:page-list /-->"
+    },
+    {
+      "id": 179,
+      "slug": "mainmenu",
+      "title": "mainmenu",
+      "language": "en",
+      "sha256": "bac68a5b4cdfc134927f0d9c322dfe0f974ed5c7b4d1cc67c066ec40744bcc0c",
+      "content": "<!-- wp:navigation-link {\"label\":\"Home\",\"type\":\"page\",\"id\":150,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-submenu {\"label\":\"About Us\",\"type\":\"page\",\"id\":159,\"url\":\"https://quickstart.invalid/about-us-2/\",\"kind\":\"post-type\"} -->\n<!-- wp:navigation-link {\"label\":\"Career\",\"type\":\"page\",\"id\":173,\"url\":\"https://quickstart.invalid/about-us-2/career/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact\",\"type\":\"page\",\"id\":172,\"url\":\"https://quickstart.invalid/about-us-2/contact/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"Project\",\"type\":\"page\",\"id\":158,\"url\":\"https://quickstart.invalid/project/\",\"kind\":\"post-type\"} -->\n<!-- wp:navigation-link {\"label\":\"Branding\",\"type\":\"page\",\"id\":174,\"url\":\"https://quickstart.invalid/project/branding/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"UI/UX design\",\"type\":\"page\",\"id\":175,\"url\":\"https://quickstart.invalid/project/ui-ux-design/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Illustration\",\"type\":\"page\",\"id\":176,\"url\":\"https://quickstart.invalid/project/illustration/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Project Detail\",\"type\":\"post\",\"id\":145,\"url\":\"/brochure-and-flyer-design/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-link {\"label\":\"Services\",\"type\":\"page\",\"id\":160,\"url\":\"https://quickstart.invalid/services/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 180,
+      "slug": "users",
+      "title": "users",
+      "language": "en",
+      "sha256": "d629b0bbcec1caf06381b7b69ba608f5f0450111ae7e60435c8db333e7fe5245",
+      "content": "<!-- wp:navigation-link {\"label\":\"Login Form\",\"type\":\"page\",\"id\":151,\"url\":\"https://quickstart.invalid/login-form/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Registration Form\",\"type\":\"page\",\"id\":152,\"url\":\"https://quickstart.invalid/registration-form/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"User Profile\",\"type\":\"page\",\"id\":153,\"url\":\"https://quickstart.invalid/user-profile/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 181,
+      "slug": "jpages",
+      "title": "jpages",
+      "language": "en",
+      "sha256": "fa550e144e3976de0cb3c8dfce1e596c37e469319558b2405f006ff6513134af",
+      "content": "<!-- wp:navigation-link {\"label\":\"Error Page\",\"type\":\"page\",\"id\":154,\"url\":\"https://quickstart.invalid/error-page/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Offline Pages\",\"type\":\"page\",\"id\":155,\"url\":\"https://quickstart.invalid/offline-pages/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Typography\",\"type\":\"page\",\"id\":156,\"url\":\"https://quickstart.invalid/typography/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Smart Search\",\"type\":\"page\",\"id\":168,\"url\":\"https://quickstart.invalid/?page_id=168\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 182,
+      "slug": "jcontent",
+      "title": "jcontent",
+      "language": "en",
+      "sha256": "e23b3c658e3d988f9fd6c7fb6ab9af3ab70d9a989dd03e29b504508982bc0c01",
+      "content": "<!-- wp:navigation-link {\"label\":\"Category Blog\",\"type\":\"page\",\"id\":169,\"url\":\"https://quickstart.invalid/category-blog/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Featured Articles\",\"type\":\"page\",\"id\":157,\"url\":\"https://quickstart.invalid/featured-articles/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Author listting\",\"type\":\"page\",\"id\":170,\"url\":\"https://quickstart.invalid/author-listting/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Blog Detail\",\"type\":\"post\",\"id\":108,\"url\":\"/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 183,
+      "slug": "services",
+      "title": "services",
+      "language": "en",
+      "sha256": "58fc40edd8aa730369aba4e064efdad448ee41820a06c866886160527b11ee59",
+      "content": "<!-- wp:navigation-link {\"label\":\"Illustration\",\"type\":\"page\",\"id\":161,\"url\":\"https://quickstart.invalid/illustration/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Development\",\"type\":\"page\",\"id\":162,\"url\":\"https://quickstart.invalid/development/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Mobile Application\",\"type\":\"page\",\"id\":163,\"url\":\"https://quickstart.invalid/mobile-application/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Cloud solutions\",\"type\":\"page\",\"id\":164,\"url\":\"https://quickstart.invalid/cloud-solutions/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"IT infrastructure\",\"type\":\"page\",\"id\":165,\"url\":\"https://quickstart.invalid/it-infrastructure/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Cybersecurity\",\"type\":\"page\",\"id\":166,\"url\":\"https://quickstart.invalid/cybersecurity/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Virtualization\",\"type\":\"page\",\"id\":167,\"url\":\"https://quickstart.invalid/virtualization/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 184,
+      "slug": "tracy-footer-1",
+      "title": "Footer — footnav-1",
+      "language": "en",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content": ""
+    }
+  ],
+  "templateParts": [
+    {
+      "id": 185,
+      "slug": "header",
+      "theme": "wp-ja-nova",
+      "area": "header",
+      "sha256": "c3f6ddffd3aa094165aba86c2f679f57ae946d9f94b53579c4305ee3091bf81c",
+      "content": "<!-- wp:group {\"className\":\"jn-header__inner\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-header__inner\">\n<!-- wp:group {\"anchor\":\"jn-header-menu\",\"className\":\"jn-header__menu\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-header__menu\" id=\"jn-header-menu\">\n<!-- wp:group {\"className\":\"jn-drawer__head\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-drawer__head\">\n<!-- wp:site-logo {\"width\":108,\"shouldSyncIcon\":false,\"className\":\"jn-logo jn-logo\\u002d\\u002dlight jn-drawer__logo\"} /-->\n<!-- wp:site-logo {\"width\":108,\"shouldSyncIcon\":false,\"className\":\"jn-logo jn-logo\\u002d\\u002ddark jn-drawer__logo\"} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:navigation {\"ref\":179,\"overlayMenu\":\"never\",\"className\":\"jn-nav\",\"metadata\":{\"name\":\"nav.mainmenu\"},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jn-header__brand\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-header__brand\">\n<!-- wp:site-logo {\"width\":162,\"shouldSyncIcon\":false,\"className\":\"jn-logo jn-logo\\u002d\\u002dlight\"} /-->\n<!-- wp:site-logo {\"width\":162,\"shouldSyncIcon\":false,\"className\":\"jn-logo jn-logo\\u002d\\u002ddark\"} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jn-header__right\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-header__right\">\n<!-- wp:group {\"className\":\"jn-quick\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-quick\">\n<!-- wp:paragraph {\"className\":\"jn-quick__item jn-quick__item\\u002d\\u002dphone\"} -->\n<p class=\"jn-quick__item jn-quick__item--phone\"><a href=\"tel:+1-202-555-0160\">+1-202-555-0160</a></p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"jn-quick__item jn-quick__item\\u002d\\u002dmail\"} -->\n<p class=\"jn-quick__item jn-quick__item--mail\"><a href=\"mailto:office@salmon.com\">office@salmon.com</a></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:html -->\n<button type=\"button\" class=\"jn-theme-toggle\" data-tracy-theme-toggle aria-pressed=\"false\" aria-label=\"Theme: automatic. Switch to light\"><svg class=\"jn-theme-toggle__moon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"/></svg><svg class=\"jn-theme-toggle__sun\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"5\"/><path d=\"M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42\"/></svg></button>\n<!-- /wp:html -->\n<!-- wp:html -->\n<button type=\"button\" class=\"jn-drawer-toggle\" aria-controls=\"jn-header-menu\" aria-expanded=\"false\" aria-label=\"Open the menu\"><span aria-hidden=\"true\"></span><span aria-hidden=\"true\"></span><span aria-hidden=\"true\"></span></button>\n<!-- /wp:html -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n"
+    },
+    {
+      "id": 186,
+      "slug": "footer",
+      "theme": "wp-ja-nova",
+      "area": "footer",
+      "sha256": "aacf29bd3e88cced486c97183c26bad941ef227a8a8339d76df31f3a4d8dfa55",
+      "content": "<!-- wp:group {\"className\":\"jn-footer__main\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-footer__main\">\n<!-- wp:group {\"className\":\"jn-container jn-footer__grid\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-container jn-footer__grid\">\n<!-- wp:group {\"className\":\"jn-footer__col jn-footer__col\\u002d\\u002dinfo\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-footer__col jn-footer__col--info\">\n<!-- wp:site-logo {\"width\":150,\"shouldSyncIcon\":false,\"className\":\"jn-footer__logo tracy-logo-dark\"} /-->\n<!-- wp:paragraph {\"className\":\"jn-footer__about\"} -->\n<p class=\"jn-footer__about\">You can find experts from all walks of life from TikTok stars to Lawyers</p>\n<!-- /wp:paragraph -->\n<!-- wp:social-links {\"className\":\"jn-social is-style-logos-only\"} -->\n<ul class=\"wp-block-social-links is-style-logos-only jn-social\"><!-- wp:social-link {\"url\":\"#\",\"service\":\"facebook\",\"label\":\"Facebook\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"twitter\",\"label\":\"Twitter\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"instagram\",\"label\":\"Instagram\"} /--></ul>\n<!-- /wp:social-links -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jn-footer__col\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-footer__col\">\n<!-- wp:heading {\"level\":3,\"className\":\"jn-footer__title\"} -->\n<h3 class=\"wp-block-heading jn-footer__title\">Users</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":180,\"overlayMenu\":\"never\",\"className\":\"jn-footer__links\",\"metadata\":{\"name\":\"nav.users\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jn-footer__col\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-footer__col\">\n<!-- wp:heading {\"level\":3,\"className\":\"jn-footer__title\"} -->\n<h3 class=\"wp-block-heading jn-footer__title\">Pages</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":181,\"overlayMenu\":\"never\",\"className\":\"jn-footer__links\",\"metadata\":{\"name\":\"nav.jpages\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jn-footer__col\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-footer__col\">\n<!-- wp:heading {\"level\":3,\"className\":\"jn-footer__title\"} -->\n<h3 class=\"wp-block-heading jn-footer__title\">Content</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":182,\"overlayMenu\":\"never\",\"className\":\"jn-footer__links\",\"metadata\":{\"name\":\"nav.jcontent\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jn-footer__bottom\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-footer__bottom\">\n<!-- wp:group {\"className\":\"jn-container\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jn-container\">\n<!-- wp:paragraph {\"className\":\"jn-copyright\"} -->\n<p class=\"jn-copyright\">Copyright © {year} {site.title}. All Rights Reserved.</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n"
+    }
+  ],
+  "themeParts": [
+    {
+      "slug": "share",
+      "file": "parts/share.html",
+      "sha256": "4c237bbb6ff59af4e7edc03cce405d31ea92eb7914be44a030408c91968ea565",
+      "content": "<!-- wp:pattern {\"slug\":\"wp-ja-nova/part-share\"} /-->\n"
+    }
+  ],
+  "linkedPosts": [
+    {
+      "id": 108,
+      "type": "post",
+      "status": "publish",
+      "slug": "virtual-memorials-exploring-the-impact-of-business-technology-on-mourning",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/more",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query"
+      ]
+    },
+    {
+      "id": 145,
+      "type": "post",
+      "status": "publish",
+      "slug": "brochure-and-flyer-design",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/more",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query"
+      ]
+    },
+    {
+      "id": 150,
+      "type": "page",
+      "status": "publish",
+      "slug": "home",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query"
+      ]
+    },
+    {
+      "id": 151,
+      "type": "page",
+      "status": "publish",
+      "slug": "login-form",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 152,
+      "type": "page",
+      "status": "publish",
+      "slug": "registration-form",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 153,
+      "type": "page",
+      "status": "publish",
+      "slug": "user-profile",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 154,
+      "type": "page",
+      "status": "publish",
+      "slug": "error-page",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image"
+      ]
+    },
+    {
+      "id": 155,
+      "type": "page",
+      "status": "publish",
+      "slug": "offline-pages",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image"
+      ]
+    },
+    {
+      "id": 156,
+      "type": "page",
+      "status": "publish",
+      "slug": "typography",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 157,
+      "type": "page",
+      "status": "publish",
+      "slug": "featured-articles",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 158,
+      "type": "page",
+      "status": "publish",
+      "slug": "project",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query"
+      ]
+    },
+    {
+      "id": 159,
+      "type": "page",
+      "status": "publish",
+      "slug": "about-us-2",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 160,
+      "type": "page",
+      "status": "publish",
+      "slug": "services",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 161,
+      "type": "page",
+      "status": "publish",
+      "slug": "illustration",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 162,
+      "type": "page",
+      "status": "publish",
+      "slug": "development",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 163,
+      "type": "page",
+      "status": "publish",
+      "slug": "mobile-application",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 164,
+      "type": "page",
+      "status": "publish",
+      "slug": "cloud-solutions",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 165,
+      "type": "page",
+      "status": "publish",
+      "slug": "it-infrastructure",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 166,
+      "type": "page",
+      "status": "publish",
+      "slug": "cybersecurity",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 167,
+      "type": "page",
+      "status": "publish",
+      "slug": "virtualization",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 168,
+      "type": "page",
+      "status": "draft",
+      "slug": "smart-search",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/search"
+      ]
+    },
+    {
+      "id": 169,
+      "type": "page",
+      "status": "publish",
+      "slug": "category-blog",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/search",
+        "core/social-link",
+        "core/social-links",
+        "core/tag-cloud"
+      ]
+    },
+    {
+      "id": 170,
+      "type": "page",
+      "status": "publish",
+      "slug": "author-listting",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading"
+      ]
+    },
+    {
+      "id": 172,
+      "type": "page",
+      "status": "publish",
+      "slug": "contact",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/column",
+        "core/columns",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/shortcode",
+        "core/social-link",
+        "core/social-links"
+      ]
+    },
+    {
+      "id": 173,
+      "type": "page",
+      "status": "publish",
+      "slug": "career",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 174,
+      "type": "page",
+      "status": "publish",
+      "slug": "branding",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 175,
+      "type": "page",
+      "status": "publish",
+      "slug": "ui-ux-design",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 176,
+      "type": "page",
+      "status": "publish",
+      "slug": "illustration",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    }
+  ],
+  "listings": [
+    {
+      "id": 108,
+      "type": "post",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaRelated"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 145,
+      "type": "post",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 2,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaRelated"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 150,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 0,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaNovaCategory"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 157,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "only",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 7,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "only",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "tracyMore"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 158,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 100,
+          "pages": 0,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaCategory",
+            "wpJaNovaSourceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 100,
+          "pages": 0,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaCategory",
+            "wpJaNovaSourceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 100,
+          "pages": 0,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaCategory",
+            "wpJaNovaSourceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 100,
+          "pages": 0,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaCategory",
+            "wpJaNovaSourceOrder"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 169,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaCategory"
+          ]
+        },
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaNovaCategory"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "tracyMore",
+            "wpJaNovaCategory"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 171,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 20,
+          "pages": 0,
+          "paginated": true,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaTags"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 174,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              6
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              6
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "tracyMore"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 2,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaRelated"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 175,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              7
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              7
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "tracyMore"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 2,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaRelated"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 176,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              8
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              8
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "tracyMore"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 2,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaNovaRelated"
+          ]
+        }
+      ]
+    }
+  ],
+  "listedPosts": [
+    {
+      "id": 104,
+      "type": "post",
+      "slug": "how-business-technology-changed-how-we-think-about-death",
+      "author": 2,
+      "date": "2023-07-11 06:58:05",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          10,
+          11
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 105,
+      "type": "post",
+      "slug": "why-the-biggest-myths-about-business-may-actually-be-right",
+      "author": 2,
+      "date": "2023-07-11 06:58:04",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          12,
+          13,
+          14,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 106,
+      "type": "post",
+      "slug": "how-to-create-an-awesome-software-video-about-success-busines",
+      "author": 2,
+      "date": "2023-07-11 06:58:03",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          13,
+          14,
+          16
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 107,
+      "type": "post",
+      "slug": "the-digital-age-of-death-how-business-technology-is-transforming-end-of-life",
+      "author": 3,
+      "date": "2023-07-11 06:58:02",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          10,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 108,
+      "type": "post",
+      "slug": "virtual-memorials-exploring-the-impact-of-business-technology-on-mourning",
+      "author": 3,
+      "date": "2023-07-11 06:58:01",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          10,
+          13,
+          17
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 109,
+      "type": "post",
+      "slug": "from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance",
+      "author": 3,
+      "date": "2023-07-11 06:58:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          13
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 110,
+      "type": "post",
+      "slug": "the-rise-of-online-funeral-services-business-technology-s-role",
+      "author": 4,
+      "date": "2023-07-11 06:57:59",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          10,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 111,
+      "type": "post",
+      "slug": "tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye",
+      "author": 4,
+      "date": "2023-07-11 06:57:58",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          13,
+          15,
+          17
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 112,
+      "type": "post",
+      "slug": "revolutionizing-death-care-the-business-tech-disruption-in-funeral-services",
+      "author": 4,
+      "date": "2023-07-11 06:57:57",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          10,
+          15,
+          17
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 113,
+      "type": "post",
+      "slug": "how-business-technology-is-shaping-the-way-we-remember-2023",
+      "author": 5,
+      "date": "2023-07-11 06:57:56",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          13,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 114,
+      "type": "post",
+      "slug": "examining-the-role-of-business-technology-in-the-mourning-process",
+      "author": 5,
+      "date": "2023-07-11 06:57:55",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 115,
+      "type": "post",
+      "slug": "mourning-in-the-digital-age-unpacking-the-influence-of-business-technology",
+      "author": 5,
+      "date": "2023-07-11 06:57:54",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 116,
+      "type": "post",
+      "slug": "the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era",
+      "author": 6,
+      "date": "2023-07-11 06:57:53",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 117,
+      "type": "post",
+      "slug": "transforming-grief-exploring-the-impact-of-business-technology-on-memorialization",
+      "author": 6,
+      "date": "2023-07-11 06:57:52",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 118,
+      "type": "post",
+      "slug": "the-influence-of-business-technology-on-mourning-practices-2023",
+      "author": 6,
+      "date": "2023-07-11 06:57:51",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 119,
+      "type": "post",
+      "slug": "digital-tributes-examining-the-changing-face-of-mourning-with-business-technology",
+      "author": 7,
+      "date": "2023-07-11 06:57:50",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 120,
+      "type": "post",
+      "slug": "remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning",
+      "author": 7,
+      "date": "2023-07-11 06:57:49",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 121,
+      "type": "post",
+      "slug": "the-digital-remembrance-investigating-the-role-of-business-technology-in-grief",
+      "author": 7,
+      "date": "2023-07-11 06:57:48",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 122,
+      "type": "post",
+      "slug": "mourning-in-the-digital-world-examining-the-impact-of-business-technology",
+      "author": 8,
+      "date": "2023-07-11 06:57:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 123,
+      "type": "post",
+      "slug": "from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey",
+      "author": 8,
+      "date": "2023-07-11 06:57:46",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 124,
+      "type": "post",
+      "slug": "embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning",
+      "author": 8,
+      "date": "2023-07-11 06:57:45",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 125,
+      "type": "post",
+      "slug": "beyond-the-funeral-navigating-grief-in-the-age-of-business-technology",
+      "author": 9,
+      "date": "2023-07-11 06:57:44",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 126,
+      "type": "post",
+      "slug": "the-digital-mourning-ritual-examining-the-influence-of-business-technology",
+      "author": 9,
+      "date": "2023-07-11 06:57:43",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 127,
+      "type": "post",
+      "slug": "mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones",
+      "author": 9,
+      "date": "2023-07-11 06:57:42",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 128,
+      "type": "post",
+      "slug": "virtual-connections-exploring-how-business-technology-is-redefining-mourning",
+      "author": 10,
+      "date": "2023-07-11 06:57:41",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 129,
+      "type": "post",
+      "slug": "remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief",
+      "author": 10,
+      "date": "2023-07-11 06:57:40",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 130,
+      "type": "post",
+      "slug": "the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process",
+      "author": 10,
+      "date": "2023-07-11 06:57:39",
+      "language": "en",
+      "terms": {
+        "category": [
+          3
+        ],
+        "post_tag": [
+          9,
+          11,
+          15
+        ],
+        "wp_ja_nova_keyword": [
+          25,
+          26,
+          27
+        ]
+      }
+    },
+    {
+      "id": 131,
+      "type": "post",
+      "slug": "landing-page-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:24",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 132,
+      "type": "post",
+      "slug": "design-system-and-ul-kit",
+      "author": 2,
+      "date": "2023-07-19 03:06:23",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 133,
+      "type": "post",
+      "slug": "realistic-scenarios",
+      "author": 2,
+      "date": "2023-07-19 03:06:22",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 134,
+      "type": "post",
+      "slug": "mobile-app-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:21",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 135,
+      "type": "post",
+      "slug": "muckup-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:20",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 136,
+      "type": "post",
+      "slug": "web-application-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:19",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 137,
+      "type": "post",
+      "slug": "corporate-website-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:18",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 138,
+      "type": "post",
+      "slug": "blog-design-and-layout",
+      "author": 2,
+      "date": "2023-07-19 03:06:17",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 139,
+      "type": "post",
+      "slug": "social-media-graphics",
+      "author": 2,
+      "date": "2023-07-19 03:06:16",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 140,
+      "type": "post",
+      "slug": "brand-identity-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:15",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 141,
+      "type": "post",
+      "slug": "logo-design-and-branding",
+      "author": 2,
+      "date": "2023-07-19 03:06:14",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 142,
+      "type": "post",
+      "slug": "infographic-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:13",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 143,
+      "type": "post",
+      "slug": "email-newsletter-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:12",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 144,
+      "type": "post",
+      "slug": "presentation-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:11",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 145,
+      "type": "post",
+      "slug": "brochure-and-flyer-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:10",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 146,
+      "type": "post",
+      "slug": "packaging-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:09",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 147,
+      "type": "post",
+      "slug": "poster-and-banner-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:08",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    },
+    {
+      "id": 148,
+      "type": "post",
+      "slug": "event-invitation-design",
+      "author": 2,
+      "date": "2023-07-19 03:06:07",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          12,
+          18
+        ],
+        "wp_ja_nova_keyword": [
+          28,
+          29,
+          30
+        ]
+      }
+    }
+  ],
+  "terms": [
+    {
+      "id": 1,
+      "taxonomy": "category",
+      "slug": "uncategorized",
+      "parent": 0
+    },
+    {
+      "id": 2,
+      "taxonomy": "category",
+      "slug": "uncategorised",
+      "parent": 0
+    },
+    {
+      "id": 3,
+      "taxonomy": "category",
+      "slug": "blog",
+      "parent": 0
+    },
+    {
+      "id": 4,
+      "taxonomy": "category",
+      "slug": "project",
+      "parent": 0
+    },
+    {
+      "id": 5,
+      "taxonomy": "category",
+      "slug": "services",
+      "parent": 0
+    },
+    {
+      "id": 6,
+      "taxonomy": "category",
+      "slug": "branding",
+      "parent": 4
+    },
+    {
+      "id": 7,
+      "taxonomy": "category",
+      "slug": "ui-ux-design",
+      "parent": 4
+    },
+    {
+      "id": 8,
+      "taxonomy": "category",
+      "slug": "illustration",
+      "parent": 4
+    },
+    {
+      "id": 9,
+      "taxonomy": "post_tag",
+      "slug": "careers",
+      "parent": 0
+    },
+    {
+      "id": 10,
+      "taxonomy": "post_tag",
+      "slug": "company",
+      "parent": 0
+    },
+    {
+      "id": 11,
+      "taxonomy": "post_tag",
+      "slug": "devops",
+      "parent": 0
+    },
+    {
+      "id": 12,
+      "taxonomy": "post_tag",
+      "slug": "developer",
+      "parent": 0
+    },
+    {
+      "id": 13,
+      "taxonomy": "post_tag",
+      "slug": "team",
+      "parent": 0
+    },
+    {
+      "id": 14,
+      "taxonomy": "post_tag",
+      "slug": "digital",
+      "parent": 0
+    },
+    {
+      "id": 15,
+      "taxonomy": "post_tag",
+      "slug": "computer",
+      "parent": 0
+    },
+    {
+      "id": 16,
+      "taxonomy": "post_tag",
+      "slug": "programming",
+      "parent": 0
+    },
+    {
+      "id": 17,
+      "taxonomy": "post_tag",
+      "slug": "coding",
+      "parent": 0
+    },
+    {
+      "id": 18,
+      "taxonomy": "post_tag",
+      "slug": "design",
+      "parent": 0
+    },
+    {
+      "id": 25,
+      "taxonomy": "wp_ja_nova_keyword",
+      "slug": "tech",
+      "parent": 0
+    },
+    {
+      "id": 26,
+      "taxonomy": "wp_ja_nova_keyword",
+      "slug": "design",
+      "parent": 0
+    },
+    {
+      "id": 27,
+      "taxonomy": "wp_ja_nova_keyword",
+      "slug": "style",
+      "parent": 0
+    },
+    {
+      "id": 28,
+      "taxonomy": "wp_ja_nova_keyword",
+      "slug": "team",
+      "parent": 0
+    },
+    {
+      "id": 29,
+      "taxonomy": "wp_ja_nova_keyword",
+      "slug": "illustrations",
+      "parent": 0
+    },
+    {
+      "id": 30,
+      "taxonomy": "wp_ja_nova_keyword",
+      "slug": "company",
+      "parent": 0
+    }
+  ],
+  "stickyPosts": [
+    104,
+    106,
+    108,
+    110,
+    111,
+    113,
+    115,
+    117,
+    119,
+    121,
+    123,
+    125,
+    127,
+    129
+  ]
+}

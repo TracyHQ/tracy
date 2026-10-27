@@ -1,0 +1,44 @@
+{
+  "color": {
+    "chalk-cream": {
+      "$value": "#e6e0d9",
+      "$type": "color",
+      "$description": "Chalk Cream — Primary page canvas and secondary section background; the warm off-white that makes brown type and sculpture photography feel curated rather than clinical"
+    },
+    "lavender-stone": {
+      "$value": "#b7b3be",
+      "$type": "color",
+      "$description": "Lavender Stone — Alternate section background and hero canvas; introduces a cool, chalky counterpoint to the warm cream without breaking the achromatic discipline"
+    },
+    "saddle-brown": {
+      "$value": "#5d3a19",
+      "$type": "color",
+      "$description": "Saddle Brown — All headings, body copy, link text, and hairline borders — the only chromatic voice in the system, used as a drawn-with-ink accent against the pale neutrals; Outlined and ghost interactive borders; links and navigation controls carry a 1px brown stroke rather than a filled background, keeping the surface quiet"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Decorative SVG fills only; never used for UI text or surface elements"
+    }
+  },
+  "font": {
+    "grandslang-roman": {
+      "$value": "GrandSlang-Roman",
+      "$type": "fontFamily",
+      "$description": "Brand mark and large display headings only — used at 58px+ for the wordmark and section titles. Weight 100 is the entire signature: hairline serif strokes that read as drawn rather than typeset. Substitute: Cormorant Garamond Ultralight or Italiana, which approximate the extreme thinness and high-contrast serif construction."
+    },
+    "neue-haas-grotesk-display": {
+      "$value": "Neue Haas Grotesk Display",
+      "$type": "fontFamily",
+      "$description": "All body copy, navigation, secondary headings, and product labels. Weights 400 for body, 500 for emphasis. The neo-grotesque geometry acts as a neutral ground for the expressive display serif — a deliberate Swiss-type baseline that lets GrandSlang perform. Substitute: Inter, Neue Haas Unica, or Helvetica Neue."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ohdada.de",
+      "siteName": "OhDada",
+      "extractedAt": "2026-06-03T21:25:36.041Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "color": {
+    "bone-white": {
+      "$value": "#f2f2f3",
+      "$type": "color",
+      "$description": "Bone White — Primary text, nav links, button labels, footer copy — the only light on the page, used for everything that must be read"
+    },
+    "slate-dark": {
+      "$value": "#25262d",
+      "$type": "color",
+      "$description": "Slate Dark — Page canvas, base surface for all cards and sections"
+    },
+    "graphite": {
+      "$value": "#383a42",
+      "$type": "color",
+      "$description": "Graphite — Elevated surface — nested cards, button hover fills, secondary panels sitting on top of Slate Dark"
+    },
+    "fog": {
+      "$value": "#858893",
+      "$type": "color",
+      "$description": "Fog — Secondary text, metadata labels, inactive nav items, muted descriptions"
+    },
+    "ash": {
+      "$value": "#54565f",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, timestamps, low-priority labels"
+    },
+    "charcoal": {
+      "$value": "#0c0c0c",
+      "$type": "color",
+      "$description": "Charcoal — Outlined button borders, icon strokes on dark surfaces"
+    },
+    "indigo-dusk": {
+      "$value": "#384270",
+      "$type": "color",
+      "$description": "Indigo Dusk — Violet supporting accent for decorative details and low-frequency emphasis"
+    }
+  },
+  "font": {
+    "replica-regular": {
+      "$value": "Replica-Regular",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all body text, headings, navigation, and the hero display. The single weight (400) is the signature — no bold, no light, just one confident regular cut. The tight -0.014em tracking throughout gives geometric letters a slightly condensed, deliberate feel. Used at every size from 14px captions to the 120px+ hero mural."
+    },
+    "replica-mono": {
+      "$value": "Replica-Mono",
+      "$type": "fontFamily",
+      "$description": "Reserved for metadata and structural labels: year markers, project tags (Art Direction, Branding, Design Systems), and small heading-like elements. Creates a clear typographic separation between content (Replica-Regular) and structural scaffolding (Replica-Mono)."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://maciej.co",
+      "siteName": "Maciej Zadykowicz",
+      "extractedAt": "2026-06-03T18:31:51.783Z",
+      "variant": "compact"
+    }
+  }
+}

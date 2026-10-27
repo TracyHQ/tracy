@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-pin-red: #e60023;
+  --color-ink-plum: #211922;
+  --color-gallery-white: #ffffff;
+  --color-fog-gray: #666666;
+  --color-stone-gray: #8c8c8c;
+  --color-linen: #e5e5e0;
+  --color-charcoal: #000000;
+  --color-halo-yellow: #fffd92;
+  --color-ember-coral: #fa5f2e;
+  --color-lavender-veil: #9270d7;
+  --color-link-cobalt: #2b48d4;
+
+  /* Typography */
+  --font-pin-sans: 'Pin Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

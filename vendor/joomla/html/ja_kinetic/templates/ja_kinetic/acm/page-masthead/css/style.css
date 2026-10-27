@@ -1,0 +1,141 @@
+/* Kinetic — Page Masthead ACM block (self-contained, block-scoped).
+   The centered inner-page header over the faint line-grid background. All
+   color/type/spacing route through the template design tokens, so light + dark
+   + all three directions (terminal/blueprint/signal) resolve automatically. */
+
+.acm-page-masthead {
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--text);
+}
+.acm-page-masthead .hx-section {
+  padding: 66px 0 58px;
+  border-bottom: 1px solid var(--border);
+}
+.acm-page-masthead .hx-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+/* ---- head ---- */
+.acm-page-masthead .hx-mast-head {
+  max-width: 760px;
+}
+.acm-page-masthead .hx-eyebrow {
+  display: block;
+  margin: 0 0 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.acm-page-masthead .hx-h1 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 46px;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -1.3px;
+  color: var(--heading);
+}
+.acm-page-masthead .hx-mast-sub {
+  margin: 18px 0 0;
+  max-width: 640px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* ---- inline editorial links (micro-interactions.md §3c LINK gesture) ----
+   title/sub are rich-text fields (unescaped) so an admin can drop an inline
+   <a> or breadcrumb-style link/button into either; the eyebrow is escaped
+   plain text so it never carries markup. */
+.acm-page-masthead .hx-mast-head a {
+  color: var(--primary);
+  transition: color .15s ease;
+}
+.acm-page-masthead .hx-mast-head a:hover,
+.acm-page-masthead .hx-mast-head a:focus-visible {
+  color: var(--primary-hover, var(--primary));
+  outline: none;
+}
+
+/* ---- any inline button-styled link (micro-interactions.md §3b BUTTON gesture) ---- */
+.acm-page-masthead .hx-mast-head a.btn,
+.acm-page-masthead .hx-mast-head a.hx-cta-btn {
+  color: var(--primary-ink);
+  background: var(--primary);
+  transition: background-color .15s ease, box-shadow .2s ease;
+}
+.acm-page-masthead .hx-mast-head a.btn:hover,
+.acm-page-masthead .hx-mast-head a.btn:focus-visible,
+.acm-page-masthead .hx-mast-head a.hx-cta-btn:hover,
+.acm-page-masthead .hx-mast-head a.hx-cta-btn:focus-visible {
+  background: var(--primary-hover);
+  color: var(--primary-ink);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 77, 124, 15), .25);
+  outline: none;
+}
+
+/* ---- centered (default) ---- */
+.acm-page-masthead.is-center .hx-mast-head {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.acm-page-masthead.is-center .hx-mast-sub {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---- left ---- */
+.acm-page-masthead.is-left .hx-mast-head {
+  text-align: left;
+}
+
+/* ---- responsive ---- */
+@media (max-width: 860px) {
+  .acm-page-masthead .hx-h1 {
+    font-size: 38px;
+    letter-spacing: -1px;
+  }
+}
+@media (max-width: 620px) {
+  .acm-page-masthead .hx-section {
+    padding: 64px 0;
+  }
+  .acm-page-masthead .hx-pad {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .acm-page-masthead .hx-mast-sub {
+    font-size: 16px;
+  }
+}
+
+/* ---- dark: subtle elevated band + per-direction primary radial tint (.pen g6vc2x:
+   #<primary>0F -> #161B18 at 55%). Dark-scoped only; light masthead stays as-is. The
+   radial LAYERS over the existing .hx-grid-bg lines (same element) — keep both grid
+   gradients here so the shorthand doesn't wipe the grid. ---- */
+html.t4-dark .acm-page-masthead .hx-section {
+  --mast-tint: rgba(163, 230, 53, 0.10);
+  background-color: #161B18;
+  /* .pen g6vc2x radial glow #A3E6350F -> #A3E63522: brighter center that fades
+     through a low-alpha mid-stop, so the glow reads instead of ending flat on the
+     elevated band. --mast-tint (the center alpha) recolors per direction below. */
+  background-image:
+    radial-gradient(150% 120% at 50% 0%, var(--mast-tint) 0%, transparent 70%),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
+}
+html.t4-dark[data-style="blueprint"] .acm-page-masthead .hx-section { --mast-tint: rgba(99, 102, 241, 0.12); }
+html.t4-dark[data-style="signal"] .acm-page-masthead .hx-section { --mast-tint: rgba(34, 211, 238, 0.12); }
+
+/* Reduced motion (micro-interactions.md §4) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; }
+}

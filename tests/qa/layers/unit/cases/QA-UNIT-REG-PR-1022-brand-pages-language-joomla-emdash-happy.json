@@ -1,0 +1,54 @@
+{
+  "id": "QA-UNIT-REG-PR-1022-brand-pages-language-joomla-emdash-happy",
+  "itemIds": ["regression:REG-PR-1022-brand-pages-language-joomla-emdash"],
+  "requirement": "The logo, favicon and pages answers change Joomla and EmDash sites too: Joomla T3 template styles and T4 site profiles through template.siteSettings (plugin 0.23.0), EmDash through the template tool's brand-only run; unticked EmDash pages are unpublished in every locale and leave the menu; the tone reaches the EmDash copy prompt as the voice",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1022-brand-pages-language-joomla-emdash.json",
+    "ref": "PR #1022 (feat); fix evidence: 07/10/2026: seven default questions must change the site on WordPress, Joomla and EmDash for every gallery template (issue #1013 phases 2 and 3, plan tasks/plan-ten-logo-favicon.md).",
+    "invariant": "Every run exits 0 with 0 failures and 0 skipped tests. Joomla T3: every template style takes the light or dark logo its profile names (JA Smallbiz four styles, JA Mood 'Home Dark' the dark one), every other param kept; the favicon goes through template.siteSettings other_faviconFile; plugin 0.22.0 writes the logo and skips the favicon as plugin too old. Joomla T4: one template.siteSettings set with site_logo and site_logo_dark plus one content.contract apply on the footer slot; file names are new on every run and never a template file; apply.revert of every recorded id puts the site back. EmDash: the tool runs with --brand-only, the three files and the apply id; settings.logo, settings.favicon and the chrome entry's logo_dark land on the site and --revert takes all of it back; a picture the tool could not write is a skip with its reason, and nothing fails the build. EmDash pages: an unticked id is unpublished in every written language and its menu items are removed, --revert brings both back; the home page is never hidden. EmDash tone: the tone reaches the copy prompt as the voice beside the description; no tone leaves the prompt as it was.",
+    "productSources": [
+      "apps/tracy-web/src/lib/emdash-tool.js:67",
+      "apps/tracy-web/src/lib/template-profiles.js:49",
+      "apps/tracy-web/src/sites/brief-engines/brand-emdash.js:76",
+      "apps/tracy-web/src/sites/brief-engines/brand.js:173",
+      "apps/tracy-web/src/sites/route.js:730",
+      "packages/cms/tracy-emdash-theme-business/tools/personalize.mjs:3306"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/test/brief-emdash-brand.test.mjs:210 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash-brand.test.mjs:50 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-emdash-brand.test.mjs:52 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-business/tools/personalize.mjs:2811 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1022-brand-pages-language-joomla-emdash.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1022-brand-pages-language-joomla-emdash"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1022-brand-pages-language-joomla-emdash",
+    "pr": 1022,
+    "kind": "feat",
+    "area": "add-site/questions",
+    "file": "tests/regression/cases/REG-PR-1022-brand-pages-language-joomla-emdash.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1022-brand-pages-language-joomla-emdash.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

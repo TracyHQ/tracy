@@ -1,0 +1,39 @@
+{
+  "color": {
+    "parchment": {
+      "$value": "#dbd6d0",
+      "$type": "color",
+      "$description": "Parchment — Page canvas, card surfaces, light dividers, link borders — a warm desaturated bone tone that replaces the conventional near-white and gives the whole system its editorial temperature"
+    },
+    "carbon-ink": {
+      "$value": "#1e1f1f",
+      "$type": "color",
+      "$description": "Carbon Ink — Primary text, display headlines, nav rules, card borders, icon strokes — near-black with the faintest warm cast that harmonizes with the parchment rather than fighting it"
+    },
+    "pitch-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pitch Black — Reserved for maximum-contrast display moments and the deepest text on the lightest surfaces — used sparingly so Carbon Ink carries the default reading weight"
+    }
+  },
+  "font": {
+    "lausanne": {
+      "$value": "Lausanne",
+      "$type": "fontFamily",
+      "$description": "Primary serif — carries nav labels at 12–15px weight 400, body and link copy at 14–15px weight 400, and the colossal 215px display headline at weight 200. The weight-200 display is the signature: most agencies use 600–700 for monumental type, Lausanne's hairline 200 lets the headline whisper at 215px and still feel like the loudest thing on the page through scale alone"
+    },
+    "gunsan": {
+      "$value": "Gunsan",
+      "$type": "fontFamily",
+      "$description": "Display serif companion — weight 600 at 215px with an aggressively tight 0.77 line-height creates the condensed, high-contrast letterspacing on hero compositions. The 0.77 leading is the tightest in the system and is the only place this font appears"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://garden-eight.com",
+      "siteName": "Garden Eight",
+      "extractedAt": "2026-06-03T20:19:17.796Z",
+      "variant": "compact"
+    }
+  }
+}

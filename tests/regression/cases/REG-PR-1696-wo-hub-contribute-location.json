@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1696-wo-hub-contribute-location",
+  "kind": "feat",
+  "title": "Place Details asks Google for the place's point, and a contribution offers it to the hub as a location; a copy that came from the hub is never sent back",
+  "pr": 1696,
+  "area": "website-opportunities/hub",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: A client with HUB_CONTRIBUTE=1 researches a place whose Google record has a location; its hub tick sends the contribution and the hub verifies it.",
+    "S2: Three snapshot sources: one this server read from Google with a location, one whose facts came via the hub, one marked with provenance hub."
+  ],
+  "expect": [
+    "S1: the hub holds identity, location, name, phone and address observations; the location observation is accepted.",
+    "S2: only the first is queued, with a location observation naming google_maps as its source; the other two offer nothing."
+  ],
+  "selectors": {
+    "mask": "packages/wo/website-opportunities/domain/gplaces-details.mjs GPLACES_DETAIL_FIELDS, placeFactsFromDetails",
+    "client": "packages/wo/website-opportunities/src/hub/local-cache.js contributionFromFacts, offer"
+  },
+  "evidence": "Before: Place Details did not ask for location, so contributions could not carry it",
+  "fence": "GPLACES_DETAIL_FIELDS includes location; contributionFromFacts adds a location observation from Google's facts only",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/hub-wiring.test.mjs",
+      "packages/wo/website-opportunities/test/hub-local-cache.test.mjs",
+      "packages/wo/website-opportunities/test/domain-gplaces-details.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "only the closed field list leaves a client",
+      "a contribution offers the location Google gave this server",
+      "facts carry Google's point for the place"
+    ]
+  }
+}

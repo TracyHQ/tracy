@@ -1,0 +1,821 @@
+/* The `tv-*` rules of the site tabs — plain CSS, mode B (DESIGN.md §0): no Tailwind entry here, so
+   both the plugin's build (through `site-tabs.css`) and `@tracy/design`'s Storybook (directly) load
+   this one file. Every rule is scoped to `.tracy-site-tabs`. */
+
+/* The shared header (site picker, section title, the tab's action button) stays put while the list
+   scrolls under it (Akemi, 30/09). Every view renders it as the first child of this root, which is
+   the scrollport and has no padding, so top 0 is the pane's top edge. The ground is the column's own
+   colour: --tsb-surface is what tracy-sidebar sets on the dockkit surface, while --background
+   resolves at :root to a darker fallback here and would show as a stripe (same reason as the
+   Design inspirations filter band). */
+.tracy-site-tabs.tv-site-tabs-frame > :first-child { position: sticky; top: 0; z-index: 10; background-color: var(--tsb-surface, var(--background)); }
+
+/* Option A, "centred raised card" (Akemi 14/10/2026), the Claude Design look. Same values in
+   tracy-inbox, tracy-my-sites and tracy-add-site (their styles.ts): change them together.
+   The frame is the ground, one step off the card; the view's header (first child) and body (second
+   child) form ONE card on the ground. Team, Settings, Publish and Site changes now draw the page shell
+   instead (below); Diff keeps the full width a code diff needs. Only the first two children: the loading bar renders after the view.
+   Narrow (below card + two 24px gutters, e.g. the 430px drag floor): the card fills the panel with
+   no gutter, side border or corner, and nothing may scroll sideways. */
+.tracy-site-tabs.tv-site-tabs-frame:not([data-tab-kind="diff"]) {
+  container-type: inline-size;
+  background-color: color-mix(in oklab, var(--foreground) 4.5%, var(--background));
+}
+.tracy-site-tabs.tv-site-tabs-frame:not([data-tab-kind="diff"]) > :first-child { background-color: var(--card); }
+.tracy-site-tabs.tv-site-tabs-frame:not([data-tab-kind="diff"]) > :nth-child(2) {
+  background-color: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+/* The tab's loading bar renders after the view, so while a view shows a single child the bar IS
+   the second child, and the card-body rules above and below (ground, border, padding, width) turned
+   it into an empty bordered box under the header (14/10/2026). It keeps its own 2px line. */
+.tracy-site-tabs.tv-site-tabs-frame > .tv-tab-loading-bar.tv-tab-loading-bar.tv-tab-loading-bar {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+/* The wide card, one block per card width (a container query cannot read a variable). The header
+   stays sticky (Akemi, 30/09), so rounded top corners would show the rows scrolling under them: in
+   the wide card the header is painted ground, and the card face with its top and side border is a
+   pseudo-element under the header's content (the sticky header is its positioning box). The
+   pseudo-element is switched on by a variable the wide rules set, not by a query of its own: the
+   header is itself a size container, so a query written for the pseudo-element would measure the
+   header, not the frame. */
+.tracy-site-tabs.tv-site-tabs-frame:not([data-tab-kind="diff"]) > :first-child::before {
+  content: var(--tv-card-face, none);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
+  background-color: var(--card);
+}
+/* Vertically centred card (Akemi 14/10/2026): Settings (Team, Publish and Site changes draw the
+   page shell instead, below). The
+   frame is a flex column, and in the wide card two growing spacers (its own ::before and ::after) sit around the
+   card, so the card stays on the panel's centre and grows from it as rows are added. Safe
+   centring: the spacers never shrink below the card's usual 20px top and 40px bottom gaps, so a
+   card taller than the panel starts at the top and scrolls normally with nothing clipped (plain
+   justify-content: center would cut the top off). The spacers replace the card's own margins.
+   The frame's own display sits outside the query on purpose: the frame is the size container, and
+   a container query never matches its own container, only what is inside it (the pseudo-elements
+   count as inside). Below the threshold the spacers are absent, so the flat card stays top-aligned.
+   The sticky header still sticks: the frame stays the scrollport, a flex item can be sticky.
+   To centre another kind, add it to the :is() list of the two frame rules below and to the spacer
+   rules inside the container query of that kind's wide card (768px for the 720px card, 1008px for
+   Site changes). */
+.tracy-site-tabs.tv-site-tabs-frame:is([data-tab-kind="team"], [data-tab-kind="settings"], [data-tab-kind="publish"], [data-tab-kind="changes"]) { display: flex; flex-direction: column; }
+.tracy-site-tabs.tv-site-tabs-frame:is([data-tab-kind="team"], [data-tab-kind="settings"], [data-tab-kind="publish"], [data-tab-kind="changes"]) > * { flex: none; }
+/* The Team tab (24/10/2026): the Publish page shell without its stepper, not the centred card.
+   The page fills the panel under the sticky tab header on the card surface; its children stand in
+   one column spanning the full panel width, with the gutters of the Add site and Publish root
+   (WIZARD_ROOT_LAYOUT_CSS in @tracy/core/wizard-shell): 16px, 24px from 600px, 32px from 900px.
+   Title and lead are the wizard's own classes (tas-wizard-head, -title, -desc). The page is its own
+   size container, so the gutters follow the panel, not the window. */
+.tracy-site-tabs.tv-site-tabs-frame > .tv-page { flex: 1 0 auto; }
+.tracy-site-tabs .tv-page { container-type: inline-size; min-width: 0; width: 100%; padding: 24px 0; background-color: var(--card); }
+.tracy-site-tabs .tv-page > * { width: calc(100% - 32px); margin-inline: 16px; }
+@container (min-width: 600px) {
+  .tracy-site-tabs .tv-page > * { width: calc(100% - 48px); margin-inline: 24px; }
+}
+@container (min-width: 900px) {
+  .tracy-site-tabs .tv-page > * { width: calc(100% - 64px); margin-inline: 32px; }
+}
+/* Site changes (24/10/2026): the same page shell as Team and Publish, left-aligned at the panel's full
+   width with no centred card. These are the Changes tab's own rules (a copy of the .tv-page ones above,
+   so the two can change apart). The list inside keeps its own row padding; the page gutter is trimmed
+   by the same amount so the first column lines up under the title. The lead stays on one line and
+   wraps only when the panel is narrower than the text. */
+.tracy-site-tabs.tv-site-tabs-frame > .tv-changes-page { flex: 1 0 auto; }
+.tracy-site-tabs .tv-changes-page { container-type: inline-size; min-width: 0; width: 100%; padding: 24px 0; background-color: var(--card); }
+.tracy-site-tabs .tv-changes-page > * { width: calc(100% - 32px); margin-inline: 16px; }
+.tracy-site-tabs .tv-changes-page .tas-wizard-head { margin-bottom: 8px; }
+.tracy-site-tabs .tv-changes-page .tv-activity-v2 { margin-inline: -14px -12px; }
+/* In a narrow panel the two buttons drop under the total instead of squeezing it into a column of words. */
+.tracy-site-tabs .tv-changes-page .tv-changes-summary { flex-wrap: wrap; row-gap: 8px; }
+/* When the two buttons alone are wider than the panel (Typ: Personen und Tracy at 390px, 24/10/2026),
+   they wrap onto two lines, right-aligned, instead of running off the panel's right edge. */
+.tracy-site-tabs .tv-changes-page .tv-changes-tools { flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; min-width: 0; max-width: 100%; }
+@container (min-width: 600px) {
+  .tracy-site-tabs .tv-changes-page > * { width: calc(100% - 48px); margin-inline: 24px; }
+}
+@container (min-width: 900px) {
+  .tracy-site-tabs .tv-changes-page > * { width: calc(100% - 64px); margin-inline: 32px; }
+}
+
+/* Site changes on a first open, before its list is in: no card, a small muted spinner in the middle
+   of the panel (the frame's spacers centre it in the wide panel; it fills the narrow one). It is the
+   frame's first child, so the header's sticky ground and the card face are switched off here. It
+   fades in after 250 ms, the tab loading bar's own wait, so a fast answer never blinks it. */
+.tracy-site-tabs.tv-site-tabs-frame[data-tab-kind="changes"] > [data-changes-loading="none"] {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: none;
+  min-height: 160px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  --tv-card-face: none;
+}
+.tracy-site-tabs .tv-changes-waiting-spinner { display: block; box-sizing: border-box; width: 18px; height: 18px; border: 2px solid color-mix(in oklab, var(--muted-foreground) 30%, transparent); border-top-color: var(--muted-foreground); border-radius: 999px; opacity: 0; animation: tv-changes-waiting-in 150ms ease-out 250ms forwards, tv-changes-waiting-spin 1s linear infinite; }
+@keyframes tv-changes-waiting-in { to { opacity: 1; } }
+@keyframes tv-changes-waiting-spin { to { transform: rotate(360deg); } }
+/* Site changes placeholder rows: grey bars, no words, a soft pulse that stops under reduced motion. */
+.tracy-site-tabs .tv-changes-skeleton { display: flex; flex-direction: column; gap: 0; padding: 12px 12px 6px 14px; }
+.tracy-site-tabs .tv-skeleton-bar { display: block; height: 10px; border-radius: 4px; background-color: color-mix(in oklab, var(--foreground) 8%, transparent); animation: tv-status-pulse 1.6s ease-in-out infinite; }
+.tracy-site-tabs .tv-skeleton-summary { width: 140px; margin-bottom: 14px; }
+.tracy-site-tabs .tv-skeleton-row { display: flex; flex-direction: column; gap: 8px; padding: 14px 0; border-top: 1px solid var(--border); }
+.tracy-site-tabs .tv-skeleton-line { width: min(420px, 70%); height: 12px; }
+.tracy-site-tabs .tv-skeleton-meta { width: min(240px, 45%); }
+@media (prefers-reduced-motion: reduce) { .tracy-site-tabs .tv-skeleton-bar { animation: none; } }
+
+/* Runtime Settings, layout D (Akemi 04/10), scoped to the host surface (Mode B, no reset): a header
+   with the CMS logo and the two buttons, the address in a framed block, then compact rows (label
+   left, value right at 13px), the open-in icon shown on hover or keyboard focus. */
+/* One column that may shrink: a row's unbroken value (an admin URL) must not set the pane's width. */
+.tracy-site-tabs .tv-site-settings { container-type: inline-size; display: grid; align-content: start; grid-template-columns: minmax(0, 1fr); gap: 20px; min-width: 0; width: 100%; padding: 24px 0; background-color: var(--card); }
+.tracy-site-tabs.tv-site-tabs-frame > .tv-site-settings { flex: 1 0 auto; }
+.tracy-site-tabs .tv-site-settings > * { width: calc(100% - 32px); margin-inline: 16px; }
+.tracy-site-tabs .tv-site-settings > .tv-site-settings-title { margin-bottom: 0; }
+@container (min-width: 600px) {
+  .tracy-site-tabs .tv-site-settings > * { width: calc(100% - 48px); margin-inline: 24px; }
+}
+@container (min-width: 900px) {
+  .tracy-site-tabs .tv-site-settings > * { width: calc(100% - 64px); margin-inline: 32px; }
+}
+.tracy-site-tabs .tv-site-head { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.tracy-site-tabs .tv-site-head-tile { display: grid; flex: none; place-items: center; width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 4%, var(--card)); }
+.tracy-site-tabs .tv-site-head-logo { width: 22px; height: 22px; }
+.tracy-site-tabs .tv-site-head-text { flex: 1; min-width: 0; }
+.tracy-site-tabs .tv-site-head-name { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--foreground); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tracy-site-tabs .tv-site-head-line { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; min-width: 0; }
+.tracy-site-tabs .tv-site-head-line .tv-site-head-name { min-width: 0; }
+.tracy-site-tabs .tv-site-head-status { display: flex; flex: none; }
+/* Draft / Publishing… / Live: dot and word. The word carries the state; the colour only repeats it.
+   The same rules as the My Sites row's chip (`tracy-my-sites` `styles.ts`). */
+.tracy-site-tabs .tv-status-chip { flex-shrink: 0; gap: 6px; }
+.tracy-site-tabs .tv-status-chip[data-status="live"] { border-color: color-mix(in oklab, var(--success) 50%, transparent); background-color: color-mix(in oklab, var(--success) 10%, transparent); }
+.tracy-site-tabs .tv-status-chip[data-status="publishing"] { border-color: color-mix(in oklab, var(--primary) 40%, transparent); background-color: color-mix(in oklab, var(--primary) 10%, transparent); }
+.tracy-site-tabs .tv-status-dot { width: 6px; height: 6px; border-radius: 9999px; background-color: var(--muted-foreground); }
+.tracy-site-tabs .tv-status-chip[data-status="live"] .tv-status-dot { background-color: var(--success); }
+.tracy-site-tabs .tv-status-chip[data-status="publishing"] .tv-status-dot { background-color: var(--primary); animation: tv-status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes tv-status-pulse { 50% { opacity: 0.5; } }
+.tracy-site-tabs .tv-site-head-sub { font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-site-head-actions { display: flex; flex: none; flex-wrap: wrap; gap: 6px; }
+/* The two buttons are links: no preflight here, so the browser's underline and link blue are undone. */
+.tracy-site-tabs .tv-site-head-actions a { text-decoration: none; }
+.tracy-site-tabs .tv-site-head-actions a.tv-site-head-outline { color: var(--foreground); }
+/* Section heading in the Inbox's style: 14/20 semibold, a count pill after it. */
+.tracy-site-tabs .tv-site-sec { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--foreground); }
+.tracy-site-tabs .tv-site-domains { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.tracy-site-tabs .tv-domain-title { margin: 0; border-radius: 4px; outline: none; }
+/* Focus is one 1px stroke that changes colour, never a halo (DESIGN.md §5). */
+.tracy-site-tabs .tv-domain-title:focus-visible,
+.tracy-site-tabs .tv-domain-card h3:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
+.tracy-site-tabs .tv-domain-card { border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.tracy-site-tabs .tv-domain-card-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 14px; }
+.tracy-site-tabs .tv-domain-card-head { display: grid; gap: 2px; }
+.tracy-site-tabs .tv-domain-card-head h3 { margin: 0; font-size: 12px; line-height: 17px; font-weight: 400; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-domain-lead { margin: 0; font-size: 13px; line-height: 18px; color: var(--foreground); overflow-wrap: anywhere; }
+/* One line when it fits; otherwise the action drops under the address, at the right. The row keeps
+   the height of its button, so the working line that replaces the button moves nothing. */
+.tracy-site-tabs .tv-domain-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; min-height: 28px; }
+/* The address never shrinks beside the actions: when the two do not fit one line the actions wrap
+   under it, and the address breaks (after a dot) only when it is wider than the whole card. */
+.tracy-site-tabs .tv-domain-address { display: flex; flex: none; align-items: center; gap: 4px; min-width: 0; max-width: 100%; }
+.tracy-site-tabs .tv-domain-actions { display: flex; flex: 1 1 auto; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 8px; min-width: 0; min-height: 28px; }
+.tracy-site-tabs .tv-domain-action { display: flex; align-items: center; min-height: 28px; margin-left: auto; }
+.tracy-site-tabs .tv-host { min-width: 0; overflow-x: auto; }
+.tracy-site-tabs .tv-mono { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 13px; line-height: 18px; color: var(--foreground); }
+.tracy-site-tabs .tv-nowrap { white-space: nowrap; }
+.tracy-site-tabs .tv-copy { display: flex; flex: none; align-items: center; gap: 4px; }
+.tracy-site-tabs .tv-copy-button { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-copy-done { color: var(--success); }
+/* The word floats above the icon and reserves no width, so saying "Copied" moves nothing. */
+.tracy-site-tabs .tv-copy { position: relative; }
+.tracy-site-tabs .tv-copy-said { position: absolute; bottom: calc(100% + 2px); left: 50%; transform: translateX(-50%); padding: 2px 6px; border-radius: 6px; background: var(--popover, var(--card)); border: 1px solid var(--border); font-size: 12px; line-height: 17px; white-space: nowrap; color: var(--muted-foreground); pointer-events: none; }
+.tracy-site-tabs .tv-copy-said:empty { display: none; }
+.tracy-site-tabs .tv-domain-working { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-spinner { flex: none; width: 14px; height: 14px; }
+.tracy-site-tabs .tv-domain-draft { color: var(--destructive); }
+.tracy-site-tabs .tv-domain-draft:hover { background-color: color-mix(in oklab, var(--destructive) 10%, transparent); color: var(--destructive); }
+.tracy-site-tabs .tv-domain-note { margin: 0; font-size: 12px; line-height: 17px; color: var(--muted-foreground); overflow-wrap: anywhere; }
+.tracy-site-tabs .tv-domain-note-alert { color: var(--destructive); }
+.tracy-site-tabs .tv-domain-failed { display: grid; gap: 2px; font-size: 12px; line-height: 17px; }
+.tracy-site-tabs .tv-domain-failed-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; }
+.tracy-site-tabs .tv-domain-failed-line p { margin: 0; color: var(--destructive); overflow-wrap: anywhere; }
+.tracy-site-tabs .tv-domain-details { display: grid; gap: 2px; color: var(--muted-foreground); overflow-wrap: anywhere; }
+.tracy-site-tabs .tv-domain-details p { margin: 0; }
+.tracy-site-tabs .tv-link { height: auto; padding: 0; border-radius: 4px; font-size: 12px; line-height: 17px; font-weight: 400; }
+.tracy-site-tabs .tv-link-quiet { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-link:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
+/* A spinner or a pulsing dot that keeps turning is motion nobody asked for. */
+@media (prefers-reduced-motion: reduce) {
+  .tracy-site-tabs .tv-spinner,
+  .tracy-site-tabs .tv-status-chip[data-status="publishing"] .tv-status-dot { animation: none; }
+}
+.tracy-site-tabs .tv-site-rows { margin: 0; padding: 0; list-style: none; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+.tracy-site-tabs .tv-site-row { display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 9px 10px 9px 14px; }
+.tracy-site-tabs .tv-site-row + .tv-site-row { border-top: 1px solid var(--border); }
+.tracy-site-tabs .tv-site-row:hover { background: color-mix(in oklab, var(--foreground) 5%, var(--card)); }
+.tracy-site-tabs .tv-site-row-label { flex: 0 1 190px; min-width: 96px; font-size: 13px; line-height: 18px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-site-row-value { flex: 1; min-width: 0; font-size: 13px; line-height: 18px; color: var(--foreground); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tracy-site-tabs .tv-site-row-link { display: inline-grid; flex: none; place-items: center; width: 22px; height: 22px; border-radius: 6px; color: var(--muted-foreground); opacity: 0; }
+.tracy-site-tabs .tv-site-row:hover .tv-site-row-link,
+.tracy-site-tabs .tv-site-row-link:focus-visible { opacity: 1; }
+.tracy-site-tabs a.tv-site-row-link:hover { color: var(--foreground); }
+.tracy-site-tabs .tv-site-row-link:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; }
+.tracy-site-tabs .tv-site-settings-error { padding: 0 0 8px; font-size: 13px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-site-address-form { display: grid; gap: 8px; }
+.tracy-site-tabs .tv-site-address-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.tracy-site-tabs .tv-site-address-help { margin: 0; font-size: 12px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-site-address-error { color: var(--destructive); font-size: 13px; }
+/* A domain of the customer's own (`OwnDomainCard`): the name and its one-word state, the DNS records
+   to create with what the last lookup found under each, and its actions. Same card as the address. */
+.tracy-site-tabs .tv-own-domain-entry { display: flex; }
+:root[data-tracy-hide~="site-connect-domain"] .tracy-site-tabs .tv-own-domain-entry { display: none; }
+/* The server refuses to check DNS for, or reserve again, a domain while the switch is off: no button that can only fail. */
+:root[data-tracy-hide~="site-connect-domain"] .tracy-site-tabs [data-action="check-dns"],
+:root[data-tracy-hide~="site-connect-domain"] .tracy-site-tabs [data-action="reserve-again"] { display: none; }
+.tracy-site-tabs .tv-own-domain-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
+.tracy-site-tabs .tv-own-domain-head h3 { margin: 0; min-width: 0; font-size: 13px; line-height: 18px; font-weight: 500; color: var(--foreground); }
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="live"],
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="verified"] { border-color: color-mix(in oklab, var(--success) 50%, transparent); background-color: color-mix(in oklab, var(--success) 10%, transparent); }
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="live"] .tv-status-dot,
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="verified"] .tv-status-dot { background-color: var(--success); }
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="wrong"],
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="failed"],
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="cleanup"] { border-color: color-mix(in oklab, var(--destructive) 50%, transparent); background-color: color-mix(in oklab, var(--destructive) 10%, transparent); }
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="wrong"] .tv-status-dot,
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="failed"] .tv-status-dot,
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="cleanup"] .tv-status-dot { background-color: var(--destructive); }
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="connecting"],
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="removing"] { border-color: color-mix(in oklab, var(--primary) 40%, transparent); background-color: color-mix(in oklab, var(--primary) 10%, transparent); }
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="connecting"] .tv-status-dot,
+.tracy-site-tabs .tv-domain-chip[data-domain-chip="removing"] .tv-status-dot { background-color: var(--primary); }
+.tracy-site-tabs .tv-domain-records { display: grid; gap: 8px; }
+.tracy-site-tabs .tv-domain-record { display: grid; gap: 4px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; line-height: 17px; overflow-wrap: anywhere; }
+.tracy-site-tabs .tv-domain-record[data-check="wrong"] { border-color: color-mix(in oklab, var(--destructive) 50%, var(--border)); }
+.tracy-site-tabs .tv-domain-record-title { margin: 0; font-weight: 500; color: var(--foreground); }
+/* One rhythm for the three rows: a line of 18px inside 3px above and below is 24px, the height of
+   the copy button, so a row with a button is no taller than one without. Label and value are the
+   same size and sit on one baseline (the grid aligns each row by its first line), so a value that
+   wraps keeps its label beside its first line. The label carries no padding of its own: where the
+   two fonts place their baselines a pixel apart, it moves inside the row instead of making a row
+   with a monospace value taller than one without. */
+.tracy-site-tabs .tv-domain-record dl { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 0 12px; margin: 0; }
+.tracy-site-tabs .tv-domain-record dt { line-height: 18px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-domain-record dd { margin: 0; min-width: 0; padding-block: 3px; line-height: 18px; color: var(--foreground); }
+.tracy-site-tabs .tv-domain-record .tv-mono { font-size: 12px; line-height: 18px; }
+/* A value with its copy button right after it: the text takes what it needs and wraps inside the
+   box when it is longer; the button stays on the text's first line. */
+.tracy-site-tabs .tv-domain-record dd.tv-domain-record-value { display: flex; align-items: flex-start; gap: 4px; padding-block: 0; }
+.tracy-site-tabs .tv-domain-record-value > :first-child { flex: 0 1 auto; min-width: 0; padding-block: 3px; }
+.tracy-site-tabs .tv-domain-record-value > .tv-copy { height: 24px; }
+.tracy-site-tabs .tv-domain-found { margin: 0; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-domain-found[data-found="ok"] { color: var(--success); }
+.tracy-site-tabs .tv-domain-found[data-found="wrong"] { color: var(--destructive); }
+.tracy-site-tabs .tv-own-domain-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.tracy-site-tabs .tv-own-domain-actions .tv-domain-draft { margin-left: auto; }
+.tracy-site-tabs .tv-site-address-pending { margin-top: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; overflow-wrap: anywhere; }
+.tracy-site-tabs .tv-site-address-pending h3 { margin: 0; font-size: 13px; }
+.tracy-site-tabs .tv-site-address-pending dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; }
+.tracy-site-tabs .tv-site-address-pending dt { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-site-address-pending dd { margin: 0; }
+
+/* Site changes (option A's frame, Akemi 01/10): events and backups by day, each row opening in
+   place. Hover only brightens: the column's text colour mixed into the column's own ground, never a
+   border change. Focus is one stroke drawn inside the row, no halo. */
+/* The filter sits at the row's right edge, under the header's Create a backup button: the right
+   padding is the header's (12px), and the trigger's wrapper is the flex item pushed right. In a
+   narrow pane the summary wraps; the button keeps its size and place (Akemi 01/10). */
+.tracy-site-tabs .tv-changes-summary { display: flex; align-items: center; gap: 6px; padding: 10px 12px 2px 14px; font-size: 12px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-changes-filter-anchor { flex: none; margin-left: auto; }
+.tracy-site-tabs .tv-changes-filter { display: inline-flex; flex: none; align-items: center; gap: 6px; padding: 3px 6px; border-radius: 6px; font-size: 12px; color: var(--muted-foreground); cursor: pointer; }
+.tracy-site-tabs .tv-changes-filter:hover,
+.tracy-site-tabs .tv-changes-filter[aria-expanded="true"] { background-color: color-mix(in oklab, var(--foreground) 6%, var(--tsb-surface, var(--background))); color: var(--foreground); }
+.tracy-site-tabs .tv-count-pill { display: inline-grid; place-items: center; min-width: 22px; height: 18px; padding: 0 6px; border-radius: 999px; background-color: color-mix(in oklab, var(--foreground) 8%, transparent); color: var(--muted-foreground); font-size: 11px; font-weight: 400; font-variant-numeric: tabular-nums; }
+.tracy-site-tabs .tv-moment-list { padding: 0 6px 6px; }
+.tracy-site-tabs .tv-moment-zone { display: flex; align-items: center; gap: 6px; margin: 8px 0 2px; font-size: 12px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-moment-file { display: flex; width: 100%; align-items: center; gap: 8px; padding: 2px 4px; margin-left: -4px; border-radius: 6px; text-align: left; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+.tracy-site-tabs .tv-moment-file:not(:disabled):hover { background-color: color-mix(in oklab, var(--foreground) 6%, transparent); }
+.tracy-site-tabs .tv-moment-file:focus-visible,
+.tracy-site-tabs .tv-moment-more:focus-visible,
+.tracy-site-tabs .tv-moment-link:focus-visible,
+.tracy-site-tabs .tv-changes-filter:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; }
+.tracy-site-tabs .tv-moment-more { margin-top: 2px; padding: 2px 4px; margin-left: -4px; border-radius: 6px; font-size: 12px; color: var(--muted-foreground); cursor: pointer; }
+.tracy-site-tabs .tv-moment-more:hover { color: var(--foreground); }
+.tracy-site-tabs .tv-moment-link { color: var(--foreground); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+
+/* Q1 of plan todo-site-changes, ported from the @tracy/design mockup `site-changes-turns` (mode A
+   utilities there, these rules here). An outside moment opens to a line instead of Undo; a refused
+   undo lists the files that changed since; a configuration file's Diff tab names it, no bytes. */
+.tracy-site-tabs .tv-moment-lead { margin: 0; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-restore-files { margin: 0; max-height: 192px; overflow-y: auto; list-style: none; padding: 8px; border: 1px solid var(--border); border-radius: 6px; }
+.tracy-site-tabs .tv-restore-files > li { padding: 2px 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 16px; }
+.tracy-site-tabs .tv-diff-blocked { padding: 16px 12px; font-size: 14px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-diff-blocked-title { margin: 0; color: var(--foreground); }
+.tracy-site-tabs .tv-diff-blocked-hint { margin: 4px 0 0; font-size: 12px; }
+
+/* The pieces of an opened row and the coverage foot, first ported from the approved @tracy/design
+   mockup `site-changes-turns` (plan todo-site-changes P1, mode A utilities there, these rules here)
+   and kept by the event list. */
+.tracy-site-tabs .tv-activity-flag-mark { flex: none; width: 14px; height: 14px; margin-top: 3px; }
+.tracy-site-tabs .tv-activity-gap { margin-top: 8px; }
+.tracy-site-tabs .tv-activity-section-title { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; font-size: 12px; font-weight: 600; color: var(--foreground); }
+.tracy-site-tabs .tv-activity-section-count { font-weight: 400; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-list { margin: 0; padding: 0; list-style: none; }
+.tracy-site-tabs .tv-activity-line { display: flex; align-items: flex-start; gap: 8px; padding: 2px 0; font-size: 12px; line-height: 16px; }
+.tracy-site-tabs .tv-activity-line-text { flex: 1; min-width: 0; overflow-wrap: anywhere; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-strong { color: var(--foreground); font-weight: 500; }
+.tracy-site-tabs .tv-activity-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-link { display: inline-flex; align-items: center; gap: 2px; }
+.tracy-site-tabs .tv-moment-file[data-clickable] { cursor: pointer; }
+.tracy-site-tabs .tv-moment-file:not([data-clickable]) { cursor: default; }
+.tracy-site-tabs .tv-file-letter { flex: none; width: 12px; font-weight: 700; }
+.tracy-site-tabs .tv-file-path { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.tracy-site-tabs .tv-file-lines { flex: none; }
+.tracy-site-tabs .tv-activity-more { display: flex; align-items: center; gap: 8px; padding: 10px 8px 0; }
+.tracy-site-tabs .tv-activity-more-failed { font-size: 12px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-coverage { display: grid; gap: 10px; margin: 4px 14px 16px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-coverage-line { display: flex; align-items: flex-start; gap: 8px; }
+.tracy-site-tabs .tv-backups-failed { margin: 4px 14px 8px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-coverage-icon { flex: none; width: 14px; height: 14px; margin-top: 1px; }
+.tracy-site-tabs .tv-activity-coverage-title { margin: 0; font-weight: 500; color: var(--foreground); }
+.tracy-site-tabs .tv-activity-coverage-hint { margin: 2px 0 0; }
+.tracy-site-tabs .tv-activity-coverage-line > div > p:first-child { margin-top: 0; }
+.tracy-site-tabs .tv-diff-scope { display: flex; align-items: center; gap: 8px; margin: 0; padding: 6px 12px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-diff-scope-badge { padding: 2px 6px; border-radius: 6px; background-color: color-mix(in oklab, var(--foreground) 8%, transparent); color: var(--foreground); font-size: 11px; font-weight: 500; }
+
+/* Site changes V2 (plan todo-site-changes-v2 §3). One row = one recorded event. The pane, a size
+   container, decides where a row's actions sit (beside it, or under it in a narrow pane). */
+.tracy-site-tabs .tv-activity-v2 { container: tv-changes / inline-size; }
+/* Site changes as one vertical timeline (layout C, chosen by Akemi 24/10/2026). One line runs down the
+   left; every entry (rows, day labels, markers) draws its own piece of it in its left padding. A change
+   is a small dot on the line, a backup a filled node. Each row is a box (chevron, title, one muted meta
+   line) beside ONE right-hand actions column shared by every row: the column's width is fixed, its
+   buttons right-aligned and top-aligned to the title, so Undo, Restore, Download and the menu line up
+   down the list whatever the title. Opened, the box takes a hairline and a faint tint and holds the
+   detail too, so row and detail read as one block; the line keeps running beside it. Neutral tints
+   only; terracotta is kept for what is new. */
+.tracy-site-tabs .tv-activity-v2 { --tv-row-actions: 12.5rem; }
+.tracy-site-tabs .tv-moment-list li,
+.tracy-site-tabs .tv-moment-day { position: relative; margin: 0; padding-left: 34px; }
+.tracy-site-tabs .tv-moment-list li::before,
+.tracy-site-tabs .tv-moment-day::before { content: ""; position: absolute; top: 0; bottom: 0; left: 15px; width: 2px; background-color: color-mix(in oklab, var(--muted-foreground) 30%, transparent); }
+.tracy-site-tabs .tv-moment-list section:first-of-type > .tv-moment-day::before { top: 50%; }
+.tracy-site-tabs .tv-moment-list section:last-of-type > ol > li:last-child:not([data-open])::before { bottom: auto; height: 21px; }
+/* A change: a small hollow dot, filled terracotta while it is new. A backup: a filled node ringed by
+   the page, so the line stops at it. */
+.tracy-site-tabs .tv-activity-event::after { content: ""; position: absolute; top: 16px; left: 11px; box-sizing: border-box; width: 10px; height: 10px; border: 2px solid color-mix(in oklab, var(--muted-foreground) 70%, transparent); border-radius: 999px; background-color: var(--card); }
+.tracy-site-tabs .tv-activity-event[data-unread]::after { border-color: var(--primary); background-color: var(--primary); }
+.tracy-site-tabs .tv-backup::after { content: ""; position: absolute; top: 14px; left: 9px; width: 14px; height: 14px; border-radius: 999px; background-color: var(--foreground); box-shadow: 0 0 0 3px var(--card); }
+
+/* The row box: hover tint while closed; opened, a hairline and a faint tint around row and detail. */
+.tracy-site-tabs .tv-row-box { border: 1px solid transparent; border-radius: 10px; transition: background-color 0.5s; }
+.tracy-site-tabs .tv-moment-list li:not([data-open]) > .tv-row-box:hover { background-color: color-mix(in oklab, var(--foreground) 4%, var(--tsb-surface, var(--background))); transition: none; }
+.tracy-site-tabs .tv-moment-list li[data-open] > .tv-row-box { border-color: var(--border); background-color: color-mix(in oklab, var(--foreground) 2.5%, var(--tsb-surface, var(--background))); }
+/* Jump to backup lands on a row (a backup, or a restore row holding its Before-restore point). */
+.tracy-site-tabs .tv-moment-list li[data-flash] > .tv-row-box { background-color: color-mix(in oklab, var(--foreground) 9%, transparent); transition: none; }
+.tracy-site-tabs .tv-row-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(var(--tv-row-actions), max-content); align-items: start; }
+.tracy-site-tabs .tv-activity-event-main { position: relative; display: flex; min-width: 0; align-items: flex-start; gap: 8px; padding: 10px 4px 10px 8px; border-radius: 9px; text-align: left; cursor: pointer; }
+.tracy-site-tabs .tv-backup .tv-activity-event-main:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
+/* The chevron says the row opens before it is pressed; it turns down when open. */
+.tracy-site-tabs .tv-row-chevron { flex: none; width: 14px; height: 14px; margin-top: 3px; color: var(--muted-foreground); transition: transform 0.15s; }
+.tracy-site-tabs .tv-row-box:hover .tv-row-chevron { color: var(--foreground); }
+.tracy-site-tabs .tv-moment-list li[data-open] .tv-row-chevron { transform: rotate(90deg); }
+[dir="rtl"] .tracy-site-tabs .tv-row-chevron { transform: scaleX(-1); }
+.tracy-site-tabs .tv-row-body { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 3px; }
+.tracy-site-tabs .tv-moment-list li[data-open] .tv-activity-desc-text { white-space: normal; overflow-wrap: anywhere; }
+.tracy-site-tabs .tv-backup-name { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 600; }
+/* Who · type · when · what: each part wraps whole and carries the dot before it, so no dot is left
+   hanging at a line's end. */
+.tracy-site-tabs .tv-row-meta { display: flex; min-width: 0; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-row-part { display: inline-flex; min-width: 0; align-items: center; gap: 4px; white-space: nowrap; }
+.tracy-site-tabs .tv-row-part + .tv-row-part::before { content: "\00B7"; margin-right: 2px; color: color-mix(in oklab, var(--muted-foreground) 60%, transparent); }
+.tracy-site-tabs .tv-row-part .tv-activity-cell-text { color: inherit; }
+.tracy-site-tabs .tv-row-part[data-cell="by"] .tv-activity-cell-text { color: color-mix(in oklab, var(--foreground) 80%, var(--muted-foreground)); font-weight: 500; }
+.tracy-site-tabs .tv-row-part[data-cell="by"] .tv-activity-cell-text[data-muted] { color: var(--muted-foreground); font-weight: 400; }
+.tracy-site-tabs .tv-row-scope { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.tracy-site-tabs .tv-row-part.tv-row-scope::before { margin-right: 6px; }
+.tracy-site-tabs .tv-row-meta[data-warn] .tv-row-scope { color: var(--destructive); }
+.tracy-site-tabs .tv-row-status { font-size: 12px; line-height: 16px; }
+.tracy-site-tabs .tv-backup-badge { display: inline-flex; flex: none; align-items: center; padding: 1px 6px; border: 1px solid var(--border); border-radius: 999px; background-color: var(--muted); color: var(--muted-foreground); font-size: 10px; line-height: 16px; font-weight: 500; white-space: nowrap; }
+/* The actions: quiet text buttons, always on screen, stronger while the row is hovered or focused. */
+.tracy-site-tabs .tv-row-actions { display: flex; min-width: 0; align-items: center; justify-content: flex-end; gap: 2px; padding: 8px 6px 0 0; }
+.tracy-site-tabs .tv-row-action { display: inline-flex; flex: none; align-items: center; gap: 4px; height: 24px; padding: 0 6px; border-radius: 6px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); white-space: nowrap; cursor: pointer; }
+.tracy-site-tabs .tv-row-action > svg { flex: none; width: 13px; height: 13px; }
+.tracy-site-tabs .tv-row-box:hover .tv-row-action:not(:disabled),
+.tracy-site-tabs .tv-row-box:focus-within .tv-row-action:not(:disabled),
+.tracy-site-tabs .tv-row-action[aria-expanded="true"] { color: var(--foreground); }
+.tracy-site-tabs .tv-row-action:not(:disabled):hover,
+.tracy-site-tabs .tv-row-action[aria-expanded="true"] { background-color: color-mix(in oklab, var(--foreground) 7%, transparent); }
+.tracy-site-tabs .tv-row-action:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; }
+.tracy-site-tabs .tv-row-action:disabled { opacity: 0.5; cursor: not-allowed; }
+.tracy-site-tabs .tv-row-more { width: 24px; justify-content: center; padding: 0; }
+.tracy-site-tabs .tv-row-more > svg { width: 16px; height: 16px; }
+.tracy-site-tabs .tv-row-more-slot { display: block; flex: none; width: 24px; height: 24px; }
+/* The opened row, plan §3.2's order: result → identity → request → effects → technical → actions;
+   indented to the title, past the chevron. */
+.tracy-site-tabs .tv-activity-detail { padding: 0 12px 12px 30px; font-size: 12px; line-height: 16px; }
+
+/* Day labels: small and muted, with a tick on the line. */
+.tracy-site-tabs .tv-moment-day { padding-top: 16px; padding-bottom: 4px; padding-right: 8px; font-size: 11px; line-height: 16px; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-moment-day::after { content: ""; position: absolute; bottom: 9px; left: 12px; width: 8px; height: 2px; border-radius: 2px; background-color: color-mix(in oklab, var(--muted-foreground) 70%, transparent); }
+/* "N new since you last looked" (plan todo-site-changes-badge-count §2.5–2.6): a note, not an alarm.
+   Muted words between hairlines, and one terracotta dot on the line. A row already looked at is drawn
+   as every row is, never dimmed: nearly every row is one, and a dimmed ledger is an unreadable one. */
+.tracy-site-tabs .tv-activity-new-divider { display: flex; align-items: center; gap: 8px; padding-top: 6px; padding-bottom: 6px; padding-right: 8px; font-size: 11px; line-height: 16px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-new-divider::after { content: ""; position: absolute; top: 50%; left: 12px; width: 8px; height: 8px; margin-top: -4px; border-radius: 999px; background-color: var(--primary); box-shadow: 0 0 0 3px var(--card); }
+.tracy-site-tabs .tv-activity-new-divider-rule { flex: 1; height: 1px; background-color: var(--border); }
+.tracy-site-tabs .tv-activity-new-divider-text { flex: none; font-variant-numeric: tabular-nums; }
+/* A backup folded under a Type filter: a small node on the line between hairlines. */
+.tracy-site-tabs .tv-backup-divider { display: flex; align-items: center; gap: 8px; padding-top: 6px; padding-bottom: 6px; padding-right: 8px; font-size: 11px; line-height: 16px; color: var(--muted-foreground); transition: background-color 0.5s; }
+.tracy-site-tabs .tv-backup-divider[data-flash] { background-color: color-mix(in oklab, var(--foreground) 9%, transparent); transition: none; }
+.tracy-site-tabs .tv-backup-divider::after { content: ""; position: absolute; top: 50%; left: 11px; width: 10px; height: 10px; margin-top: -5px; border-radius: 999px; background-color: var(--foreground); box-shadow: 0 0 0 3px var(--card); }
+.tracy-site-tabs .tv-backup-divider-rule { flex: 1; height: 1px; background-color: var(--border); }
+/* A narrow pane: the actions drop under the meta line, at the title's edge, and what a change touched
+   takes its own line under who, type and when. */
+@container tv-changes (max-width: 520px) {
+  .tracy-site-tabs .tv-row-head { grid-template-columns: minmax(0, 1fr); }
+  .tracy-site-tabs .tv-row-actions { justify-content: flex-start; margin-top: -4px; padding: 0 6px 8px 24px; }
+  .tracy-site-tabs .tv-row-actions:not(:has(button)) { display: none; }
+  .tracy-site-tabs .tv-row-more-slot { display: none; }
+  .tracy-site-tabs .tv-row-scope { flex-basis: 100%; }
+  .tracy-site-tabs .tv-row-scope::before { display: none; }
+}
+.tracy-site-tabs .tv-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.tracy-site-tabs .tv-activity-total { display: inline-flex; min-width: 0; align-items: center; gap: 4px; }
+/* The reason a total is a floor, readable by pointer AND keyboard: a real button, its words drawn on
+   hover and on focus (a `title` alone never shows to a keyboard). */
+.tracy-site-tabs .tv-activity-hint { position: relative; display: inline-flex; flex: none; padding: 1px; border-radius: 4px; color: var(--muted-foreground); cursor: help; }
+.tracy-site-tabs .tv-activity-hint:focus-visible { outline: 1px solid var(--ring); outline-offset: 1px; }
+.tracy-site-tabs .tv-activity-hint:hover::after,
+.tracy-site-tabs .tv-activity-hint:focus-visible::after { content: attr(data-hint); position: absolute; top: calc(100% + 6px); left: -8px; z-index: 20; width: max-content; max-width: min(280px, 70vw); padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background-color: var(--popover); color: var(--popover-foreground); font-size: 12px; line-height: 16px; font-weight: 400; text-align: left; white-space: normal; box-shadow: 0 4px 12px rgb(0 0 0 / 0.12); }
+.tracy-site-tabs .tv-activity-filter { border: 1px solid var(--border); color: var(--foreground); }
+.tracy-site-tabs .tv-activity-glyph { flex: none; width: 14px; height: 14px; color: var(--muted-foreground); }
+.tracy-site-tabs[role="menu"] [role^="menuitem"]:focus-visible { outline: none; background-color: color-mix(in oklab, var(--foreground) 10%, transparent); }
+
+/* New since the person last looked (data-unread): a terracotta dot on the line (above) and a firmer title. */
+.tracy-site-tabs .tv-activity-event[data-unread] .tv-activity-desc-text { font-weight: 500; }
+/* The toggle is the Description's button; a press anywhere on the first line opens the row too.
+   Its focus ring is drawn around the whole row, not the words. */
+.tracy-site-tabs .tv-activity-toggle { display: block; width: 100%; min-width: 0; text-align: left; cursor: pointer; }
+.tracy-site-tabs .tv-activity-toggle:focus-visible { outline: none; }
+.tracy-site-tabs .tv-activity-event-main:has(.tv-activity-toggle:focus-visible) { outline: 1px solid var(--ring); outline-offset: -1px; }
+/* The quick-open arrow: a link of its own in the Source cell; its press never opens the row. */
+.tracy-site-tabs .tv-activity-quick { position: relative; z-index: 1; display: inline-flex; flex: none; align-items: center; justify-content: center; width: 18px; height: 18px; margin-left: 2px; border-radius: 4px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-quick:hover { color: var(--foreground); background-color: color-mix(in oklab, var(--foreground) 8%, transparent); }
+.tracy-site-tabs .tv-activity-quick:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; }
+.tracy-site-tabs .tv-activity-desc-line { display: flex; min-width: 0; align-items: baseline; gap: 6px; font-size: 14px; line-height: 20px; color: var(--foreground); }
+.tracy-site-tabs .tv-activity-desc-line[data-muted] { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-desc-text { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.tracy-site-tabs .tv-activity-desc-line .tv-activity-flag-mark { align-self: center; margin-top: 0; }
+.tracy-site-tabs .tv-activity-chip { flex: none; padding: 0 4px; border: 1px solid var(--border); border-radius: 4px; font-size: 10px; line-height: 14px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-cell-text { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--foreground); }
+.tracy-site-tabs .tv-activity-cell-text[data-muted] { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-time { color: var(--muted-foreground); white-space: nowrap; }
+.tracy-site-tabs .tv-activity-face { display: flex; flex: none; align-items: center; justify-content: center; width: 20px; height: 20px; border: 1px solid var(--border); border-radius: 5px; background-color: var(--muted); color: var(--muted-foreground); font-size: 10px; font-weight: 600; }
+.tracy-site-tabs .tv-activity-face[data-face="unknown"] { border-radius: 999px; border-style: dashed; border-color: color-mix(in oklab, var(--muted-foreground) 50%, transparent); background-color: transparent; }
+.tracy-site-tabs .tv-activity-face[data-small] { width: 16px; height: 16px; }
+
+/* The opened row, plan §3.2's order: result → identity → request → effects → technical → actions. */
+.tracy-site-tabs .tv-activity-block { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
+.tracy-site-tabs .tv-activity-block:first-child { margin-top: 0; padding-top: 0; border-top-width: 0; }
+.tracy-site-tabs .tv-activity-block-title { margin: 0 0 4px; font-size: 12px; font-weight: 600; color: var(--foreground); }
+.tracy-site-tabs .tv-activity-note { display: flex; align-items: flex-start; gap: 6px; margin: 4px 0 0; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-block > .tv-activity-note:first-child { margin-top: 0; }
+.tracy-site-tabs .tv-activity-note-icon { flex: none; width: 14px; height: 14px; margin-top: 1px; }
+.tracy-site-tabs .tv-activity-identity { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 4px 8px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-source-chip { display: inline-flex; flex: none; align-items: center; gap: 4px; padding: 1px 6px; border: 1px solid var(--border); border-radius: 6px; color: var(--foreground); }
+.tracy-site-tabs .tv-activity-identity-who { display: flex; flex: 1; min-width: 0; align-items: flex-start; gap: 6px; }
+.tracy-site-tabs .tv-activity-identity-row { flex-basis: 100%; margin: 0; }
+.tracy-site-tabs .tv-activity-request { margin: 0; padding-left: 10px; border-left: 2px solid var(--border); font-size: 14px; line-height: 20px; color: var(--foreground); white-space: pre-wrap; overflow-wrap: anywhere; }
+.tracy-site-tabs .tv-activity-group { margin-top: 8px; }
+.tracy-site-tabs .tv-activity-group:first-child { margin-top: 0; }
+.tracy-site-tabs .tv-activity-summary { color: var(--muted-foreground); cursor: pointer; border-radius: 4px; }
+.tracy-site-tabs .tv-activity-summary:hover { color: var(--foreground); }
+.tracy-site-tabs .tv-activity-summary:focus-visible { outline: 1px solid var(--ring); outline-offset: 1px; }
+.tracy-site-tabs .tv-activity-tech { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; margin: 6px 0 0; }
+.tracy-site-tabs .tv-activity-tech dt { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-activity-tech dd { margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.tracy-site-tabs .tv-activity-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.tracy-site-tabs .tv-undo-not { padding: 10px; border: 1px solid color-mix(in oklab, #f59e0b 40%, transparent); border-radius: 6px; background-color: color-mix(in oklab, #f59e0b 5%, transparent); font-size: 12px; line-height: 16px; }
+.tracy-site-tabs .tv-undo-not-title { margin: 0 0 4px; font-weight: 600; color: var(--foreground); }
+.tracy-site-tabs .tv-undo-not-list { margin: 0; padding-left: 16px; list-style: disc; color: var(--muted-foreground); }
+/* "Puts back:" of Undo this request (door d3): the same box as above, neutral — it is what the undo
+   does, not a warning. */
+.tracy-site-tabs .tv-undo-list { padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; line-height: 16px; }
+/* People and Tracy (the default): the one line that says how many automatic updates it holds back. */
+.tracy-site-tabs .tv-activity-hidden { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 8px 14px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); border-bottom: 1px solid var(--border); }
+/* An unconfirmed restore (timeout, lost reply): amber, not the red of a refusal — it may have run. */
+.tracy-site-tabs .tv-restore-unconfirmed { margin: 0; font-size: 12px; line-height: 16px; color: #b45309; }
+.tracy-site-tabs:where([data-ds-dark-theme], [data-ds-dark-theme] *) .tv-restore-unconfirmed { color: #fbbf24; }
+/* A V2 list reading under a newly picked Source: said in the list's place, never an empty pane. */
+.tracy-site-tabs .tv-activity-reading { padding: 16px 14px; font-size: 13px; line-height: 18px; color: var(--muted-foreground); }
+
+/* Backups as the milestones of Site changes (ADR 0024): Jump to backup, the badge's warning colours,
+   the detail and the dialogs. The rows themselves are drawn by the timeline rules above. */
+.tracy-site-tabs .tv-changes-tools { display: flex; flex: none; align-items: center; gap: 6px; margin-left: auto; }
+.tracy-site-tabs .tv-changes-tools .tv-changes-filter-anchor { margin-left: 0; }
+.tracy-site-tabs .tv-backup-mark { flex: none; width: 14px; height: 14px; color: var(--primary); }
+.tracy-site-tabs .tv-backup-badge[data-capability="files-only"] { border-color: var(--border); background-color: var(--muted); color: var(--muted-foreground); }
+.tracy-site-tabs .tv-backup-badge[data-capability="db-missing"] { border-color: color-mix(in oklab, var(--destructive) 40%, transparent); background-color: color-mix(in oklab, var(--destructive) 10%, transparent); color: var(--destructive); }
+.tracy-site-tabs .tv-backup-divider-text { flex: none; font-weight: 500; font-variant-numeric: tabular-nums; }
+.tracy-site-tabs .tv-backup-detail-name { margin: 0; font-size: 14px; font-weight: 600; color: var(--foreground); overflow-wrap: anywhere; }
+.tracy-site-tabs .tv-backup-notes { margin: 4px 0 0; font-size: 14px; line-height: 20px; color: var(--foreground); white-space: pre-line; overflow-wrap: anywhere; }
+.tracy-site-tabs .tv-backup-keeps { margin: 0; color: var(--foreground); }
+.tracy-site-tabs .tv-backup-keeps[data-warn] { color: var(--destructive); }
+.tracy-site-tabs .tv-backup-why { flex-basis: 100%; }
+.tracy-site-tabs .tv-backup-jump-n { flex: none; width: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tracy-site-tabs .tv-backup-jump-title { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.tracy-site-tabs .tv-backup-jump-day { flex: none; font-size: 12px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-backup-scope { display: flex; align-items: flex-start; gap: 6px; margin: 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background-color: color-mix(in oklab, var(--muted) 50%, transparent); font-size: 12px; line-height: 16px; color: var(--foreground); }
+.tracy-site-tabs .tv-backup-lost { padding: 10px; border: 1px solid color-mix(in oklab, var(--destructive) 40%, transparent); border-radius: 6px; background-color: color-mix(in oklab, var(--destructive) 5%, transparent); font-size: 12px; line-height: 16px; }
+.tracy-site-tabs .tv-backup-lost-title { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; font-weight: 600; color: var(--destructive); }
+.tracy-site-tabs .tv-backup-lost-list { margin: 0; padding-left: 20px; list-style: disc; color: var(--foreground); }
+.tracy-site-tabs .tv-backup-before { display: flex; align-items: flex-start; gap: 6px; margin: 0; font-size: 14px; line-height: 20px; color: var(--foreground); }
+.tracy-site-tabs .tv-backup-jump { border: 1px solid var(--border); color: var(--foreground); }
+/* A Tracy update's files, inside Technical details. */
+.tracy-site-tabs .tv-activity-tech-files { margin-top: 6px; }
+
+/* "Open conversation" (plan todo-open-conversation A): the typed message a Site changes row opened
+   is marked for a moment in dsh's chat. The ONE rule here not under `.tracy-site-tabs`: the node is
+   dsh's, and only `conversation-scroll.mjs` sets this attribute, for 2.4 s. An outline and a tint,
+   no layout change, colours from the shared tokens (mode B). */
+[data-tracy-msg-flash] { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 10px; background-color: color-mix(in oklab, var(--primary) 8%, transparent); transition: background-color 0.4s ease, outline-color 0.4s ease; }
+@media (prefers-reduced-motion: reduce) { [data-tracy-msg-flash] { transition: none; } }
+
+/* "Tracy replied" (plan todo-open-conversation C): the reply as stored, as text. */
+.tracy-site-tabs .tv-activity-reply { margin: 0; padding-left: 10px; border-left: 2px solid var(--border); font-size: 13px; line-height: 18px; color: var(--foreground); white-space: pre-wrap; overflow-wrap: anywhere; }
+/* "Open conversation" on someone else's row: dimmed, focusable, and it says whose it is on hover
+   and on keyboard focus (the same drawn hint as the total's reason). */
+.tracy-site-tabs .tv-activity-off { position: relative; color: var(--muted-foreground); border-style: dashed; cursor: not-allowed; }
+.tracy-site-tabs .tv-activity-off:hover::after,
+.tracy-site-tabs .tv-activity-off:focus-visible::after { content: attr(data-hint); position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 20; width: max-content; max-width: min(280px, 70vw); padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background-color: var(--popover); color: var(--popover-foreground); font-size: 12px; line-height: 16px; font-weight: 400; text-align: left; white-space: normal; box-shadow: 0 4px 12px rgb(0 0 0 / 0.12); }
+/* "Ask Tracy to revert…": what the press did, on its own line under the buttons. */
+.tracy-site-tabs .tv-activity-asked { flex-basis: 100%; }
+
+/* Team dialogs: the invite wizard (layout D3) and Approve request (V3), Akemi 04/10. The popup is
+   portalled out of the plugin root, so it carries .tracy-site-tabs itself. 560px wide: the
+   dialog's own max-w-[calc(100%-2rem)] utility beat sm:max-w-lg and let it grow to the viewport,
+   and two classes here outrank one (DESIGN.md 3.1). The request tile pair is the Inbox's option B. */
+.tracy-site-tabs.tv-team-dialog {
+  --tv-team-tile-request: color-mix(in oklab, var(--primary) 18%, var(--card));
+  --tv-team-icon-request: color-mix(in oklab, var(--primary) 82%, var(--foreground));
+  --tv-team-chip: color-mix(in oklab, var(--foreground) 7%, var(--card));
+  --tv-team-solid-in: #18804a;
+  --tv-team-tone-in: #1d7f4f;
+  width: 560px; max-width: calc(100% - 2rem);
+}
+.tracy-site-tabs.tv-team-dialog:where([data-ds-dark-theme], [data-ds-dark-theme] *) {
+  --tv-team-tile-request: color-mix(in oklab, var(--primary) 30%, var(--card));
+  --tv-team-icon-request: color-mix(in oklab, var(--primary) 50%, var(--foreground));
+  --tv-team-tone-in: #5cc48f;
+}
+/* Every dialog of these tabs: a title long enough to wrap (a site's address plus a backup's name, and
+   longer still translated) keeps clear of the ✕ in the corner, and its lines do not stack on each
+   other — `@tracy/ui` sets the title `leading-none` (e2e E10.2: vi restore title under the ✕). */
+.tracy-site-tabs[data-slot="dialog-content"]:has(> [data-slot="dialog-close"]) > [data-slot="dialog-header"] { padding-right: 28px; }
+.tracy-site-tabs[data-slot="dialog-content"] [data-slot="dialog-title"] { line-height: 1.35; overflow-wrap: anywhere; }
+.tracy-site-tabs.tv-team-dialog [data-slot="dialog-title"] { font-size: 14px; line-height: 20px; font-weight: 600; }
+.tracy-site-tabs.tv-team-dialog [data-slot="dialog-description"] { font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-body { display: grid; gap: 14px; min-width: 0; }
+.tracy-site-tabs.tv-team-dialog .tv-team-steps { display: flex; align-items: center; gap: 10px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-steps-label { font-size: 11px; line-height: 16px; font-weight: 600; color: var(--muted-foreground); white-space: nowrap; }
+.tracy-site-tabs.tv-team-dialog .tv-team-bars { display: flex; flex: 1; gap: 4px; }
+/* The unfilled bars: 18% text on the dialog's own ground, quiet but visible in both themes (7% vanished in dark). */
+.tracy-site-tabs.tv-team-dialog .tv-team-bars i { flex: 1; height: 3px; border-radius: 2px; background: color-mix(in oklab, var(--foreground) 18%, var(--popover)); }
+.tracy-site-tabs.tv-team-dialog .tv-team-bars i[data-on] { background: var(--primary); }
+/* Section heading from the Inbox: bold 13/18, a count chip, a hint on the right. */
+.tracy-site-tabs.tv-team-dialog .tv-team-sec { display: flex; align-items: baseline; gap: 8px; margin: 0 0 8px; padding: 0 2px; font-size: 13px; line-height: 18px; font-weight: 700; color: var(--foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-count { padding: 1px 7px; border-radius: 999px; background: var(--tv-team-chip); color: var(--muted-foreground); font-size: 11px; line-height: 16px; font-weight: 600; }
+.tracy-site-tabs.tv-team-dialog .tv-team-sec-hint { margin-left: auto; color: var(--muted-foreground); font-size: 11px; font-weight: 500; }
+.tracy-site-tabs.tv-team-dialog .tv-team-help { margin: 6px 2px 0; font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-error { margin: 8px 2px 0; font-size: 12px; line-height: 17px; color: var(--destructive); }
+/* Address field with chips: the chips and the input share one bordered box. Focus is the border
+   alone, no halo around it (Akemi, 05/10/2026; DESIGN.md section 5). */
+.tracy-site-tabs.tv-team-dialog .tv-team-field { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 36px; padding: 5px 8px; border: 1px solid var(--input); border-radius: 8px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-field:focus-within { border-color: var(--primary); }
+.tracy-site-tabs.tv-team-dialog .tv-team-chip { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 4px 0 8px; border-radius: 999px; background: var(--tv-team-chip); font-size: 12px; color: var(--foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-chip button { display: inline-flex; padding: 2px; border-radius: 999px; color: var(--muted-foreground); cursor: pointer; }
+.tracy-site-tabs.tv-team-dialog .tv-team-chip button:hover { color: var(--foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-chip svg { width: 12px; height: 12px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-field-input { flex: 1; min-width: 160px; height: 24px; padding: 0; border: 0; box-shadow: none; background: transparent; font-size: 12.8px; }
+/* Bordered list from the Inbox and the Team tab; the picked row is 7% terracotta on the card. */
+.tracy-site-tabs.tv-team-dialog .tv-team-list { display: block; margin: 0; padding: 0; list-style: none; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+.tracy-site-tabs.tv-team-dialog .tv-team-list > * + * { border-top: 1px solid var(--border); }
+.tracy-site-tabs.tv-team-dialog .tv-team-sites { max-height: 280px; overflow-y: auto; }
+.tracy-site-tabs.tv-team-dialog .tv-team-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; cursor: pointer; }
+.tracy-site-tabs.tv-team-dialog .tv-team-list > [data-selected],
+.tracy-site-tabs.tv-team-dialog .tv-team-row[data-selected] { background: color-mix(in oklab, var(--primary) 7%, var(--card)); }
+.tracy-site-tabs.tv-team-dialog .tv-team-list > [data-unavailable] .tv-team-row { cursor: default; opacity: 0.5; }
+.tracy-site-tabs.tv-team-dialog .tv-team-row-text { display: grid; flex: 1; min-width: 0; }
+.tracy-site-tabs.tv-team-dialog .tv-team-row-title { font-size: 13px; line-height: 18px; font-weight: 500; color: var(--foreground); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tracy-site-tabs.tv-team-dialog .tv-team-row-desc { font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-grow { flex: 1; min-width: 0; }
+.tracy-site-tabs.tv-team-dialog .tv-team-cms { flex: none; width: 20px; height: 20px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-here { flex: none; padding: 1px 7px; border-radius: 999px; background: var(--tv-team-tile-request); color: var(--tv-team-icon-request); font-size: 11px; line-height: 16px; font-weight: 600; }
+/* The Inbox's 28px round tile; pale terracotta with a terracotta icon on the picked row. */
+.tracy-site-tabs.tv-team-dialog .tv-team-tile { display: flex; flex: none; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 999px; background: var(--tv-team-chip); color: var(--muted-foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-tile svg { width: 15px; height: 15px; }
+.tracy-site-tabs.tv-team-dialog [data-selected] .tv-team-tile,
+.tracy-site-tabs.tv-team-dialog .tv-team-card .tv-team-tile { background: var(--tv-team-tile-request); color: var(--tv-team-icon-request); }
+.tracy-site-tabs.tv-team-dialog .tv-team-tile-40 { width: 40px; height: 40px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-tile-40 svg { width: 20px; height: 20px; }
+/* The Inbox "Needs your answer" card: Review's preview and the requester in Approve. */
+.tracy-site-tabs.tv-team-dialog .tv-team-card { display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 10px; border: 1px solid color-mix(in oklab, var(--tv-team-icon-request) 40%, var(--border)); background: color-mix(in oklab, var(--tv-team-icon-request) 9%, var(--card)); }
+.tracy-site-tabs.tv-team-dialog .tv-team-person { align-items: center; padding: 12px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-name { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--foreground); overflow-wrap: anywhere; }
+.tracy-site-tabs.tv-team-dialog .tv-team-line { margin-top: 3px; font-size: 12px; line-height: 17px; color: var(--foreground); overflow-wrap: anywhere; }
+.tracy-site-tabs.tv-team-dialog .tv-team-muted { color: var(--muted-foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-verb { color: var(--tv-team-icon-request); font-weight: 600; }
+.tracy-site-tabs.tv-team-dialog .tv-team-card-actions { display: flex; gap: 6px; margin-top: 8px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-fake-primary,
+.tracy-site-tabs.tv-team-dialog .tv-team-fake-outline { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 8px; border: 1px solid transparent; font-size: 12.8px; font-weight: 500; }
+.tracy-site-tabs.tv-team-dialog .tv-team-fake-primary { background: var(--primary); color: var(--primary-foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-fake-outline { border-color: var(--input); color: var(--foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-sentence { margin: 0 2px; }
+/* Done: the Inbox's green tile and one sentence, centred. */
+.tracy-site-tabs.tv-team-dialog .tv-team-done { padding: 14px 10px 4px; text-align: center; }
+.tracy-site-tabs.tv-team-dialog .tv-team-done .tv-team-tile { margin: 0 auto 10px; background: var(--tv-team-solid-in); color: #fff; }
+.tracy-site-tabs.tv-team-dialog .tv-team-outcome .tv-team-help { margin: -4px 12px 10px; }
+/* Spam hints D1 + D2 on Done (Akemi 05/10, variant C): the invite link and email rows. */
+.tracy-site-tabs.tv-team-dialog .tv-team-hints { margin-top: 14px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-copy { display: inline-grid; flex: none; }
+.tracy-site-tabs.tv-team-dialog .tv-team-copy-label { grid-area: 1 / 1; text-align: center; }
+.tracy-site-tabs.tv-team-dialog .tv-team-copy-label[aria-hidden='true'] { visibility: hidden; }
+.tracy-site-tabs.tv-team-dialog .tv-team-row-static { cursor: default; }
+.tracy-site-tabs.tv-team-dialog .tv-team-hint-fallback { padding: 0 12px 10px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-hint-fallback .tv-team-help { margin: 0 0 6px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-tone { flex: none; font-size: 12px; }
+.tracy-site-tabs.tv-team-dialog .tv-team-tone[data-tone="ok"] { color: var(--tv-team-tone-in); }
+.tracy-site-tabs.tv-team-dialog .tv-team-tone[data-tone="muted"] { color: var(--muted-foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-tone[data-tone="bad"] { color: var(--destructive); }
+/* "See what {role} can do": a quiet disclosure, the list in the Inbox's 12px. */
+.tracy-site-tabs.tv-team-dialog .tv-team-disclose { display: inline-flex; align-items: center; gap: 6px; margin: 0 2px; font-size: 12px; line-height: 17px; color: var(--muted-foreground); cursor: pointer; }
+.tracy-site-tabs.tv-team-dialog .tv-team-disclose:hover { color: var(--foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-chev { width: 14px; height: 14px; transition: transform 120ms; }
+.tracy-site-tabs.tv-team-dialog .tv-team-disclose[aria-expanded="true"] .tv-team-chev { transform: rotate(90deg); }
+.tracy-site-tabs.tv-team-dialog .tv-team-can { margin: 6px 2px 0; padding: 0; list-style: none; }
+.tracy-site-tabs.tv-team-dialog .tv-team-can li { display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 20px; color: var(--muted-foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-can li[data-allowed] { color: var(--foreground); }
+.tracy-site-tabs.tv-team-dialog .tv-team-can-mark { width: 14px; text-align: center; }
+.tracy-site-tabs.tv-team-dialog .tv-team-can li[data-allowed] .tv-team-can-mark { color: var(--primary); }
+/* Footer: a counted phrase on the left, the buttons on the right. */
+.tracy-site-tabs.tv-team-dialog .tv-team-foot { align-items: center; }
+.tracy-site-tabs.tv-team-dialog .tv-team-foot-left { margin-right: auto; font-size: 12px; color: var(--muted-foreground); }
+
+/* The Publish tab (23/10/2026): a stepped wizard on the Add site shell (`.tas-root.tas-wizard-card`,
+   rules from `@tracy/core/wizard-shell`), filling the panel under the sticky tab header so its
+   footer sticks to the panel's bottom. No centred card: the wizard is the page, as in Add site. */
+.tracy-site-tabs.tv-site-tabs-frame[data-tab-kind="publish"] > .tv-pub-wizard { flex: 1 0 auto; }
+.tracy-site-tabs .tv-pub-wizard .tas-wizard-steps { margin-top: 0; }
+.tracy-site-tabs .tv-pub-step { display: grid; gap: 14px; }
+.tracy-site-tabs .tv-pub-step > .tas-wizard-head { margin-bottom: 4px; }
+.tracy-site-tabs .tv-pub-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
+.tracy-site-tabs .tv-pub-card-head h3 { margin: 0; font-size: 12px; line-height: 17px; font-weight: 400; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-addr { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.tracy-site-tabs .tv-pub-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; min-width: 0; padding: 6px 6px 6px 12px; border: 1px solid var(--input); border-radius: 10px; background: var(--card); }
+.tracy-site-tabs .tv-pub-bar-lk { display: flex; flex: 1 1 100%; align-items: center; gap: 8px; min-width: 0; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-bar-lk > svg { width: 14px; height: 14px; flex: none; }
+.tracy-site-tabs .tv-pub-url { display: flex; flex: 0 1 auto; align-items: baseline; min-width: 0; }
+.tracy-site-tabs .tv-pub-url .tv-host { font-size: 14px; line-height: 20px; white-space: nowrap; }
+.tracy-site-tabs .tv-pub-sfx { flex: none; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-url > .tv-pub-sfx { font-size: 14px; line-height: 20px; }
+.tracy-site-tabs .tv-pub-name { color: var(--foreground); }
+.tracy-site-tabs .tv-pub-bar-lk > .tv-copy { margin-left: -2px; }
+.tracy-site-tabs .tv-pub-bar > .tv-pub-change { margin-left: auto; }
+.tracy-site-tabs .tv-pub-change { height: 28px; gap: 6px; padding: 0 10px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-change:hover { color: var(--foreground); }
+.tracy-site-tabs .tv-pub-change svg { width: 14px; height: 14px; }
+@container (min-width: 480px) {
+  .tracy-site-tabs .tv-pub-bar-lk { flex: 1 1 0; }
+}
+.tracy-site-tabs .tv-pub-side { justify-content: flex-start; min-height: 0; }
+.tracy-site-tabs .tv-pub-lead-sep { color: var(--muted-foreground); white-space: pre-wrap; }
+.tracy-site-tabs .tv-pub-back-draft { display: inline; padding: 0; border: 0; background: none; font: inherit; color: var(--muted-foreground); white-space: nowrap; cursor: pointer; border-radius: 2px; }
+.tracy-site-tabs .tv-pub-back-draft:hover, .tracy-site-tabs .tv-pub-back-draft:focus-visible { color: var(--foreground); text-decoration: underline; text-underline-offset: 2px; }
+.tracy-site-tabs .tv-pub-back-draft:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.tracy-site-tabs .tv-pub-callout { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; padding: 10px 12px; border-radius: 8px; background: color-mix(in oklab, var(--foreground) 7%, var(--card)); font-size: 13px; line-height: 20px; }
+.tracy-site-tabs .tv-pub-callout > svg { width: 14px; height: 14px; flex: none; margin-top: 3px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-callout > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tracy-site-tabs .tv-pub-callout b { font-weight: 600; color: var(--foreground); }
+.tracy-site-tabs .tv-pub-callout span { color: var(--muted-foreground); }
+/* Variant B (Akemi 24/10/2026): no bordered card and no box inside a box anywhere in the wizard.
+   Structure is spacing, small muted labels, and hairlines only where a list needs them. A status is
+   a slim strip tinted by its tone, without border: the tone is mixed into the ground, the icon at
+   the start takes the tone, a bold line and the words follow, then any action. */
+.tracy-site-tabs .tv-pub-strip { --tv-strip-tone: var(--muted-foreground); --tv-strip-mix: 12%; display: flex; align-items: flex-start; gap: 8px; margin: 0; padding: 8px 12px; border: 0; border-radius: 8px; background: color-mix(in oklab, var(--tv-strip-tone) var(--tv-strip-mix), transparent); font-size: 13px; line-height: 20px; font-weight: 400; color: var(--foreground); overflow-wrap: anywhere; }
+.tracy-site-tabs .tv-pub-strip[data-severity="warning"] { --tv-strip-tone: var(--warning); --tv-strip-mix: 14%; }
+.tracy-site-tabs .tv-pub-strip[data-severity="error"] { --tv-strip-tone: var(--destructive); --tv-strip-mix: 11%; }
+.tracy-site-tabs .tv-pub-strip[data-severity="success"] { --tv-strip-tone: var(--success); --tv-strip-mix: 12%; }
+/* Waiting is neutral ground with the primary spinner: a terracotta tint reads as an error in dark. */
+.tracy-site-tabs .tv-pub-strip[data-severity="waiting"] { --tv-strip-tone: var(--foreground); --tv-strip-mix: 6%; }
+.tracy-site-tabs .tv-pub-strip[data-severity="waiting"] > [data-slot="spinner"] { color: var(--primary); }
+.tracy-site-tabs .tv-pub-strip[data-severity="info"] { --tv-strip-tone: var(--foreground); --tv-strip-mix: 6%; }
+.tracy-site-tabs .tv-pub-strip > svg,
+.tracy-site-tabs .tv-pub-strip > [data-slot="spinner"] { width: 14px; height: 14px; flex: none; margin-top: 3px; color: var(--tv-strip-tone); }
+.tracy-site-tabs .tv-pub-strip[data-severity="info"] > svg { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-strip > .tas-create-live { margin: 7px 4px 0; }
+.tracy-site-tabs .tv-pub-strip > span { min-width: 0; }
+.tracy-site-tabs .tv-pub-strip-body { display: grid; gap: 2px; flex: 1 1 auto; min-width: 0; }
+.tracy-site-tabs .tv-pub-strip-body p { margin: 0; }
+.tracy-site-tabs .tv-pub-strip-title { font-weight: 600; color: var(--foreground); }
+.tracy-site-tabs .tv-pub-strip-title ~ p { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-strip .tv-pub-small { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-strip .tv-pub-list { margin: 2px 0 0; }
+.tracy-site-tabs .tv-pub-notice-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+/* Older lines that became strips keep their hooks; the strip's type wins over theirs. */
+.tracy-site-tabs .tv-pub-strip.tv-domain-note,
+.tracy-site-tabs .tv-pub-strip.tv-domain-working,
+.tracy-site-tabs .tv-pub-strip.tv-site-address-error { font-size: 13px; line-height: 20px; color: var(--foreground); }
+.tracy-site-tabs .tv-pub-strip.tv-domain-failed { display: flex; font-size: 13px; line-height: 20px; }
+.tracy-site-tabs .tv-pub-strip .tv-domain-failed-line p { color: var(--foreground); }
+.tracy-site-tabs .tv-pub-strip .tv-domain-failed-line .tv-link { height: 20px; font-size: 13px; }
+.tracy-site-tabs .tv-pub-strip .tv-domain-details { margin-top: 2px; font-size: 12px; line-height: 17px; }
+.tracy-site-tabs .tv-pub-alert { color: var(--destructive); }
+.tracy-site-tabs .tv-pub-label { font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+
+/* A value the customer copies sits in the address bar's own shape: the value in monospace, its copy
+   button right after it. */
+.tracy-site-tabs .tv-pub-install { display: grid; gap: 6px; }
+.tracy-site-tabs .tv-pub-install-code { font-size: 15px; line-height: 20px; letter-spacing: 0.14em; color: var(--foreground); }
+
+/* The own domain, unboxed: its name and chip, the line under them, each record as a small heading
+   over its rows, then the notes as one compact list. Two domains are parted by a hairline. */
+.tracy-site-tabs .tv-pub-step .tv-domain-card { border: 0; border-radius: 0; background: none; }
+.tracy-site-tabs .tv-pub-step .tv-domain-card-body { gap: 12px; padding: 0; }
+.tracy-site-tabs .tv-pub-step .tv-own-domain + .tv-own-domain { padding-top: 20px; border-top: 1px solid var(--border); }
+.tracy-site-tabs .tv-pub-step .tv-own-domain-head h3 { font-size: 14px; line-height: 20px; }
+.tracy-site-tabs .tv-pub-step .tv-domain-records { gap: 16px; margin-top: 2px; }
+.tracy-site-tabs .tv-pub-step .tv-domain-record { gap: 6px; padding: 0; border: 0; border-radius: 0; }
+.tracy-site-tabs .tv-pub-step .tv-domain-record-title { font-size: 13px; line-height: 18px; font-weight: 600; }
+.tracy-site-tabs .tv-pub-step .tv-domain-record dl { gap: 6px 12px; }
+/* Every row is as tall as the bar, so the three keep one rhythm: the type sits on a bar's inset
+   with no border to draw, the name and the value in the bar itself. */
+.tracy-site-tabs .tv-pub-step .tv-domain-record dd { padding: 2px 4px 2px 10px; border: 1px solid transparent; border-radius: 8px; }
+.tracy-site-tabs .tv-pub-step .tv-domain-record dd.tv-domain-record-plain { padding-block: 5px; }
+.tracy-site-tabs .tv-pub-step .tv-domain-record dd.tv-pub-value { border-color: var(--input); background: var(--card); }
+.tracy-site-tabs .tv-pub-step .tv-domain-found { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-step .tv-domain-found > svg { width: 13px; height: 13px; flex: none; margin-top: 2px; }
+.tracy-site-tabs .tv-pub-step .tv-domain-found[data-found="ok"] { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-step .tv-domain-found[data-found="ok"] > svg { color: var(--success); }
+.tracy-site-tabs .tv-pub-step .tv-domain-found[data-found="wrong"] { color: var(--destructive); }
+.tracy-site-tabs .tv-domain-notes { display: grid; gap: 3px; margin: 0; }
+.tracy-site-tabs .tv-domain-notes > p { position: relative; padding-left: 12px; }
+.tracy-site-tabs .tv-domain-notes > p::before { position: absolute; top: 7px; left: 2px; width: 3px; height: 3px; border-radius: 50%; background: currentColor; content: ""; opacity: 0.7; }
+.tracy-site-tabs .tv-pub-step .tv-own-domain-actions { margin-top: 2px; }
+.tracy-site-tabs .tv-pub-step .tv-own-domain-actions .tv-domain-draft { margin-left: 0; }
+
+/* Both sites changed N places: a text button with a chevron that turns, on the strip's left edge;
+   the places open under it, parted by hairlines. */
+.tracy-site-tabs .tv-pub-collapse { display: grid; gap: 4px; margin-top: -4px; }
+.tracy-site-tabs .tv-pub-collapse-trigger { display: inline-flex; align-items: flex-start; gap: 6px; width: fit-content; max-width: 100%; margin: 0; padding: 4px 8px 4px 4px; border: 0; border-radius: 6px; background: none; font: inherit; font-size: 13px; line-height: 20px; color: var(--foreground); text-align: left; cursor: pointer; }
+.tracy-site-tabs .tv-pub-collapse-trigger:hover { background: color-mix(in oklab, var(--foreground) 6%, transparent); }
+.tracy-site-tabs .tv-pub-collapse-trigger:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; }
+.tracy-site-tabs .tv-pub-chevron { width: 14px; height: 14px; flex: none; margin-top: 3px; color: var(--muted-foreground); transition: transform 150ms ease; }
+.tracy-site-tabs .tv-pub-collapse-trigger[aria-expanded="true"] .tv-pub-chevron,
+.tracy-site-tabs .tv-pub-collapse-trigger[data-panel-open] .tv-pub-chevron { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { .tracy-site-tabs .tv-pub-chevron { transition: none; } }
+.tracy-site-tabs .tv-pub-list.tv-pub-kept { gap: 0; margin: 0; padding: 0 0 0 24px; }
+.tracy-site-tabs .tv-pub-kept li { display: grid; gap: 2px; padding: 8px 0; min-width: 0; overflow-wrap: anywhere; }
+/* A JSON column's keys inside one kept place: no second indent, no rules between them. */
+.tracy-site-tabs .tv-pub-kept-fields { margin: 2px 0 0; }
+.tracy-site-tabs .tv-pub-kept .tv-pub-kept-fields li { padding: 2px 0; border-top: 0; }
+.tracy-site-tabs .tv-pub-kept li + li { border-top: 1px solid var(--border); }
+.tracy-site-tabs .tv-pub-kept strong { font-weight: 500; color: var(--foreground); }
+/* Sync to live's groups of changes (`PushStep.tsx`): the same text buttons with a turning chevron, one
+   under the other; a group's hint and its own tick (removals, PHP files) sit on the list's indent. */
+.tracy-site-tabs .tv-pub-push-groups { display: grid; gap: 2px; }
+.tracy-site-tabs .tv-pub-push-groups > .tv-pub-collapse { margin-top: 0; }
+.tracy-site-tabs .tv-pub-push-hint { margin: 0; padding: 0 0 4px 24px; font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-push-tick { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0 4px 24px; font-size: 13px; line-height: 20px; color: var(--foreground); cursor: pointer; }
+.tracy-site-tabs .tv-pub-push-tick > [data-slot="checkbox"] { margin-top: 2px; }
+.tracy-site-tabs .tv-pub-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.tracy-site-tabs .tv-pub-tag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; background: var(--secondary); font-size: 13px; line-height: 20px; color: var(--foreground); }
+.tracy-site-tabs .tv-pub-tag > svg { width: 14px; height: 14px; flex: none; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-field-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.tracy-site-tabs .tv-pub-field-row > [data-slot="input"], .tracy-site-tabs .tv-pub-field-row > input { flex: 1 1 220px; min-width: 0; }
+.tracy-site-tabs .tv-own-domain-entry > .tv-pub-form { flex: 1 1 auto; min-width: 0; }
+.tracy-site-tabs .tv-pub-line { margin: 0; font-size: 13px; line-height: 1.45; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-small { margin: 0; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-checklist { margin: 4px 0; }
+.tracy-site-tabs .tv-pub-checklist li[data-milestone="pending"] { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-list { display: grid; gap: 4px; margin: 6px 0 0; padding: 0; list-style: none; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-code { display: grid; gap: 8px; }
+.tracy-site-tabs .tv-pub-code-line { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-code-error { color: var(--destructive); }
+@container (max-width: 479px) {
+  .tracy-site-tabs .tv-pub-step { gap: 12px; }
+  .tracy-site-tabs .tv-pub-field-row > [data-slot="button"] { flex: 1 1 100%; }
+}

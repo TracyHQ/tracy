@@ -1,0 +1,59 @@
+{
+  "color": {
+    "void": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Void — Page background, primary canvas — the dark field that holds every piece of work"
+    },
+    "chalk": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Chalk — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "ivory": {
+      "$value": "#ebebeb",
+      "$type": "color",
+      "$description": "Ivory — Button labels and button borders — marginally warmer than Chalk, used on neutral pill buttons to feel pressed but not clinical"
+    },
+    "ash": {
+      "$value": "#7c7c7c",
+      "$type": "color",
+      "$description": "Ash — Secondary link and body text, subdued dividers — mid-gray for de-emphasized type that still needs to read"
+    },
+    "graphite": {
+      "$value": "#4d4d4d",
+      "$type": "color",
+      "$description": "Graphite — Heading borders and low-emphasis heading text — darker mid-gray that recedes behind primary Chalk type"
+    },
+    "smoke": {
+      "$value": "#707070",
+      "$type": "color",
+      "$description": "Smoke — Badge text — sits between Ash and Charcoal, calm and unreadable as ornament"
+    },
+    "steel": {
+      "$value": "#616161",
+      "$type": "color",
+      "$description": "Steel — Badge borders — paired with Smoke text for outlined tag affordance"
+    },
+    "charcoal": {
+      "$value": "#585858",
+      "$type": "color",
+      "$description": "Charcoal — Elevated surface for the single neutral filled button — barely lighter than Void so the button whispers rather than shouts"
+    }
+  },
+  "font": {
+    "wand-ui-pro": {
+      "$value": "Wand UI Pro",
+      "$type": "fontFamily",
+      "$description": "Sole typeface — used for everything from 96px display headlines down to 10px badge labels. The 475 and 550 weights are the workhorses; 650 is reserved for emphasis. The font is custom but has the personality of a contemporary geometric grotesk with subtle humanist warmth, tight apertures, and a tall x-height."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://intmagic.com",
+      "siteName": "International Magic",
+      "extractedAt": "2026-06-03T21:16:36.868Z",
+      "variant": "compact"
+    }
+  }
+}

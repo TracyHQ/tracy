@@ -1,0 +1,49 @@
+{
+  "name": "@tracy/dsh-settings",
+  "version": "0.1.15",
+  "description": "Tracy's settings surface for the dsh Web client \u2014 one full-shell page instead of the stock modal, carrying every registered section.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./language-row": "./src/client/language-row.tsx",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "check": "node scripts/build-client.mjs --check",
+    "test": "node --test test/*.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/ui/tracy-settings"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-locale"
+      ],
+      "platform": "web"
+    }
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "@tracy/core": "workspace:^",
+    "@tracy/ui": "workspace:^",
+    "@types/react": "^19.2.0",
+    "esbuild": "^0.25.0",
+    "lucide-react": "^0.525.0",
+    "react": "^19.2.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ed492f55-eddf-40ed-81cb-550b013787c8",
+  "status": "complete",
+  "name": "Rally",
+  "url": "https://styles.refero.design/style/ed492f55-eddf-40ed-81cb-550b013787c8",
+  "sourceWebsite": "https://rally.space",
+  "extractedAt": "2026-06-03T22:10:03.790Z",
+  "capturedAt": "2026-10-08T05:19:09.769659+00:00",
+  "theme": "dark",
+  "industry": "saas",
+  "description": "Cosmic farewell observatory",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/495698e4-a59a-4699-9260-112aebacaf55.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "54e42a0aa3ebc537660a47fb3a572eebffd1358fda29b3799e78410d0f31d8c4",
+      "bytes": 12444
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f169b2fac267b83bc775a16b2163109a9d04a1f3b6936f4676aec218cf67a199",
+      "bytes": 82468
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ee70d70e72ebd29944fb70822c74b80cd5e2d42615e65b73a017ccbe2592f3fa",
+      "bytes": 10325
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a2bd7f25c004fd5b91a15203b8d8fb8ed4e6878479cad7c55361a02390467e1a",
+      "bytes": 3763
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "77ec2f4de4a214603bb3af7130dcb9ba998767541ff2ba7994189724296dfc86",
+      "bytes": 7859
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "0944d5dc1c307044b3268765f4c8c4e32bd68595784eb2fd1c967f60804ce0f2",
+      "bytes": 1588
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "42361371a61f9c56580958746454cef2680ee7f248f5cfdd4c33fd579f381dc0",
+      "bytes": 457
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3a60742b22fbea0e4a05f43c2eb6447cb3c5bf2e4d8c8a09df38f903199da622",
+      "bytes": 474
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5504880c5dfcdb4d662a64a117f85c9be3dd04565bab4840d2b3f1d48b95ef86",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "62e7c880d637359741f964242ecea581017039924ce75dfeba511a34b7e9ca52",
+      "bytes": 35461
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "746538fec6051ac6ed840430b6a1675cf466bd5505e9fa398b1d5eff4b0b6591",
+      "bytes": 18451
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e1660417e9efa4efae37f972688d836cac8f5de7a69fffe4970c4e57b506854c",
+      "bytes": 19273
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e57521418d519ed500be101d3728978f87ab76514faf75311729c1997da9622b",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1cfddfd74aff8e907924f68f518072da0e26b2e4128e742680fded3ecab8529c",
+      "bytes": 860
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "dcb2b6a40cd00dc4f366c7b3d0e094712a0c293fb7578785273ad032ff061492",
+      "bytes": 1282
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "350b1557-56f0-4361-8c8b-b7a88081982b",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "5c32375f-6ef1-4345-9418-ebbb7e887343",
+    "606d4af9-9d8c-41ea-a122-f515f38f20e5",
+    "60ee0386-cfad-409a-8310-762bfc2e4816",
+    "65b30976-3663-40b2-8751-7a360ba74539",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "78558b01-c101-4b8e-8401-db91269b1150",
+    "8512e28d-5385-4c20-a336-214568c4370c",
+    "98a1ad40-90e2-4665-b49f-e5ffd4d4b90b",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "ad98aac8-347c-47da-91c5-9c020febeb92",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "ed492f55-eddf-40ed-81cb-550b013787c8",
+    "f65c3888-2eb3-41a1-87b3-f410b667097e",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8"
+  ]
+}

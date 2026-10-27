@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1477-voice-experimental",
+  "kind": "feat",
+  "title": "Voice experimental, both off by default: keyterms pilot (a listed site's own names to the speech service, bound to the account's seat) and approving a plan by voice behind the voice-plan-approval switch",
+  "pr": 1477,
+  "area": "voice/relay",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the run.cmd below (node --test over the keyterm lookup, the relay with a stand-in speech service, the /ops Voice doors, the switch catalogue and the chat-input voice suites; no database, no speech key, no audio, nothing reaches ElevenLabs).",
+    "S2: Read the exit code and the pass/fail counts."
+  ],
+  "expect": [
+    "Exit 0, 0 failures.",
+    "Keyterms: no site listed by default (GET /api/ops/speech keyterms.sites = []); the relay asks the lookup only for a well-formed ?site=, the lookup answers nothing outside the pilot or without a live seat, and the terms reach only the stand-in service's handshake as repeated keyterms; the log line counts them ('[speech] keyterms: 2 sent, 2 echoed by the service') and holds no word.",
+    "cleanKeyterms keeps NFC, collapses spaces, dedupes case-insensitively keeping the first spelling and its marks, drops markup, addresses, generic labels and anything over 20 characters (never cut), at most 30.",
+    "voice-plan-approval is in the catalogue with defaultOn false; with it off, two plans, or a question card beside the plan, Voice says 'I have a plan for you to review on screen.' and goes to the chat.",
+    "With it on: the plan's title and scope are read; only a whole phrase approving it after the reading ended answers the card with Approve, once; 'Ừ', 'OK', 'Yes.', a longer sentence, Send now, a phrase begun as Tracy finished, or a changed plan never approve; 'Sửa kế hoạch …' answers Keep planning with the words as custom feedback.",
+    "Every translation of voiceMode.say.planAsk and voiceMode.bar.plan quotes an approval phrase isPlanApproval accepts and a change lead asksPlanChange accepts."
+  ],
+  "selectors": {
+    "keyterms": "apps/tracy-web/src/lib/speech-keyterms.js speechKeyterms cleanKeyterms readKeytermCandidates",
+    "relay": "apps/tracy-web/src/speech/relay.js serviceAddress boundedKeyterms (?site=)",
+    "ops_door": "PUT /api/ops/speech/keyterms (apps/tracy-web/src/ops/speech.js)",
+    "switch": "packages/core/tracy-core/src/ui-switches/catalogue.json voice-plan-approval",
+    "plan_by_voice": "packages/ui/tracy-chat-input/src/client/voice-mode.mjs readPlan answerPlan; voice-turn-taking.mjs isPlanApproval asksPlanChange; voice-answer.mjs pendingPlan"
+  },
+  "evidence": "Council 19/10/2026 (Codex gpt-6.1-sol, xhigh), ~/tracy-bench-work/voice-mode/council/a5-codex.md sections A1 and A6: the experimental half of the Voice backlog, each behind its own default-off setting.",
+  "fence": "The keyterm lookup's pilot and seat gates, the relay's handshake address and log line, the /ops list door, and the plan approval conditions, through their own tests. Not exercised: the real ElevenLabs service (no STT quota spent), a real microphone, a live stand, dsh's real plan-review card.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/speech-keyterms.test.mjs",
+      "apps/tracy-web/test/speech-relay.test.mjs",
+      "apps/tracy-web/test/ops-speech.test.mjs",
+      "packages/core/tracy-core/test/ui-switches.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-turn-taking.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-plan.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-answer.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-mode-turn.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-mode.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-link.test.mjs"
+    ],
+    "needs": []
+  }
+}

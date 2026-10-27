@@ -1,0 +1,15 @@
+{
+  "group.mode": "Mode",
+  "group.platform": "Plateforme",
+  "lockedHint": "Cette session a déjà un historique. Le mode et la plateforme ne s’appliquent qu’à une nouvelle session",
+  "noDescription": "Aucune description",
+  "platform.adds": "ajoute {tools} outil(s) · {skills} skill(s)",
+  "platform.nothingYet": "rien pour l’instant : les agents fonctionnent uniquement avec leur mode",
+  "platform.siteRuns": "ce site fonctionne sous {platform}",
+  "role.designer": "Designer",
+  "role.developer": "Développeur",
+  "role.seo-geo": "SEO/GEO",
+  "role.writer": "Rédacteur",
+  "seatHint": "Mode et plateforme pour la prochaine session",
+  "switchRefused": "{name} a été refusé : {reason}"
+}

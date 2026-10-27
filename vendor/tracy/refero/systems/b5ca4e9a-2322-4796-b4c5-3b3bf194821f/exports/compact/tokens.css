@@ -1,0 +1,27 @@
+:root {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-warm-cream: #f9f8f6;
+  --color-sand-border: #dad4c8;
+  --color-cool-mist: #e6e8ec;
+  --color-stone-gray: #55534e;
+  --color-ash-gray: #9f9b93;
+  --color-slate-gray: #222222;
+  --color-violet-pulse: #3859f9;
+  --color-lavender-banner: #b8a5e8;
+  --color-teal-mark: #0ec5b0;
+  --color-lime-slide: #cbd810;
+  --color-ember-orange: #ff7614;
+  --color-signal-blue: #429dff;
+  --color-aqua-splash: #3bd3fd;
+  --color-cobalt: #0667d9;
+  --color-forest: #02693e;
+  --color-magenta: #8b045c;
+  --color-blush: #f8b9e3;
+
+  /* Typography — Font Families */
+  --font-roobert: 'Roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-phosphor: 'Phosphor', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-phosphor-bold: 'Phosphor-Bold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

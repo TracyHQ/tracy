@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1733-picker-frame-ancestors-self",
+  "kind": "fix",
+  "title": "A site page that frames a page of its own origin loads inside Tracy's preview: the comment picker's narrow frame-ancestors names 'self' beside the app origin",
+  "pr": 1733,
+  "area": "tracy-web/site-proxy",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/preview-ticket.test.mjs (the site proxy runs in-process against a stubbed upstream; nothing on the machine is touched)",
+    "S2: Read the ok/not ok line of each named test."
+  ],
+  "expect": [
+    "A framed request carrying a valid continuation cookie (what a nested same-origin iframe sends) gets a second CSP that is exactly frame-ancestors 'self' <app origin>.",
+    "The site's own CSP stays a separate header, untouched."
+  ],
+  "selectors": {
+    "function": "markPickerResponse in apps/tracy-web/src/bar/site-proxy.js",
+    "header": "the appended Content-Security-Policy on a picker answer"
+  },
+  "evidence": "Measured 25/10/2026 on tracy-ai-8836f920.tracy.site (dev): the page frames /wp-content/themes/tracy/assets/demo/tracy-demo-edit.html; on the public site it loads, in Tracy's preview the nested frame showed 'refused to connect'. A headless Chromium loop (app -> site -> same-origin iframe) reproduces the block with 'frame-ancestors <app>' and loads with 'frame-ancestors 'self' <app>'.",
+  "fence": "The proxy's response headers in-process. Not exercised by this case: a real browser on dev (measured separately after deploy).",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/preview-ticket.test.mjs"],
+    "tests": [
+      "inject: the narrow frame-ancestors is a SEPARATE CSP header; the site policy is untouched",
+      "inject: the narrow frame-ancestors lets the site frame its own pages inside the app, nothing more"
+    ],
+    "needs": []
+  }
+}

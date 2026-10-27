@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1578-import-seven-recovery-defects",
+  "kind": "fix",
+  "title": "Import failed reads remain retryable and all seven acceptance defects stay fixed",
+  "pr": 1578,
+  "area": "add-site/import-errors",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the deterministic test command from this checkout. It exercises the actual wizard, guidance renderer, ownership HTTP handler and host run start under controlled inputs."
+  ],
+  "expect": [
+    "A failed read with no build job permits retry, including correcting the platform; missing, successful, unsupported or unreadable status cannot authorize retry.",
+    "Concurrent starts and late retries of one failed run share one replacement; S4-F003 never sends a second unknown start.",
+    "Unknown platform plus Cloudflare preserves both instructions; timeout steps are bullets.",
+    "Missing admin-form links retain typed source origin, port and subfolder and lead to the platform admin path; unreachable links retain the exact typed URL.",
+    "Basic password guidance names WordPress or Joomla correctly; the WordPress account error offers Use another account.",
+    "Basic Auth OFF clears compulsory server fields and the checkbox can be unticked."
+  ],
+  "selectors": {
+    "wizard": ".tas-root[data-import-ux]",
+    "guidance": "[data-import-problem]"
+  },
+  "evidence": "Develop acceptance D1 through D7 from the import error UX report. Each defect has a failing test recorded before its source change.",
+  "fence": "Actual client and host entry points. Network and CMS responses are controlled in deterministic tests; real develop reacceptance is recorded separately without creating a site.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "packages/site/tracy-add-site/test/e2e/import-preflight.test.mjs",
+      "packages/site/tracy-add-site/test/import-problems.test.mjs",
+      "packages/site/tracy-add-site/test/error-next-step.test.mjs",
+      "packages/site/tracy-add-site/test/handover-lifecycle.test.mjs",
+      "apps/tracy-web/test/import-address.test.mjs"
+    ],
+    "tests": [
+      "D1: a newly opened wizard retries a failed read only when the claim has no build",
+      "D1: after a failed Joomla read, correcting the platform to WordPress permits retry",
+      "D1: overlapping starts for one site adopt the same active read",
+      "D1: two retries of one failed run start only one replacement even after it has failed",
+      "Cloudflare and unknown platform warnings show both instructions in the same resolution",
+      "the website timeout gives three bullet steps without an action inside its guidance",
+      "missing admin guidance preserves the entered source origin and subfolder safely",
+      "server-password guidance names the selected CMS account for both platforms",
+      "a WordPress account without installation rights offers Use another account",
+      "removing Basic Auth clears required server credentials and leaves the checkbox reversible"
+    ],
+    "timeout_s": 240
+  }
+}

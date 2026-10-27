@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-signin-otp-happy-accept-before",
+  "itemIds": ["flow:signin-otp"],
+  "requirement": "a code is accepted just before it lapses",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "lifetimes.otpMs",
+    "invariant": "10 minutes"
+  },
+  "edgeTags": ["happy", "token-expired"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.signin.expiry#accepted-before-expiry"],
+  "redProof": null,
+  "legacyIds": []
+}

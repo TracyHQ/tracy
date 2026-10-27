@@ -1,0 +1,17 @@
+{
+  "failed": "Impossibile visualizzare il PDF: {message}",
+  "loading": "Rendering del documento...",
+  "pageImage": "Pagina PDF {page}",
+  "password": "Questo PDF richiede una password. L’anteprima dei file protetti da password non è supportata.",
+  "rendering": "Rendering della pagina…",
+  "retry": "Riprova",
+  "title": "PDF",
+  "unsupported": "L’anteprima PDF richiede il contenuto completo del file.",
+  "workerFailed": "Il processo di rendering del PDF non è riuscito a continuare. Riprova.",
+  "zoomControls": "Controlli dello zoom",
+  "zoomFitWidth": "Adatta alla larghezza",
+  "zoomIn": "Ingrandisci",
+  "zoomMenu": "Scegli lo zoom",
+  "zoomOut": "Riduci",
+  "zoomValue": "{percent}%"
+}

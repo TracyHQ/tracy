@@ -1,0 +1,26 @@
+[
+ {
+  "id": "101",
+  "path": "/"
+ },
+ {
+  "id": "128",
+  "path": "/home-2"
+ },
+ {
+  "id": "201",
+  "path": "/skipped"
+ },
+ {
+  "id": "202",
+  "path": "/plain"
+ },
+ {
+  "id": "301",
+  "path": "/home/home-style-1"
+ },
+ {
+  "id": "302",
+  "path": "/blog"
+ }
+]

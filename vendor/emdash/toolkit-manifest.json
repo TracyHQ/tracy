@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "importedAt": "2026-09-13",
+  "baseline": "emdash@1.1.0",
+  "status": "source-only-not-runtime-verified",
+  "sourceSnapshots": [
+    {
+      "name": "emdash-mika",
+      "path": "emdash-mika",
+      "repository": "https://github.com/bnomei/emdash-mika",
+      "commit": "03d205758da358f2f4a2586e656bb01995fef193",
+      "package": "@bnomei/emdash-mika",
+      "version": "0.1.1",
+      "license": "MIT",
+      "role": "evaluation-only",
+      "importMethod": "pinned-github-source-archive",
+      "subtreeIntegration": "pending",
+      "archiveChecksumFile": "emdash-mika/IMPORT-ARCHIVE.sha256",
+      "note": "Optional commerce foundation. Requires host backend, storage, payment and authorization wiring. Astro ^7 / Node >=22.12; its peer range emdash >=0.22.0 <1.0.0 excludes baseline EmDash 1.1.0. No dependency installation or activation."
+    }
+  ],
+  "subtrees": [
+    {
+      "name": "astro-skills",
+      "path": "astro-skills",
+      "repository": "https://github.com/Lexington-Themes/astro-skills",
+      "commit": "6070f472d1b83bbb49bcb1c87519d9931755de1b",
+      "role": "agent-reference",
+      "license": "MIT",
+      "note": "Astro/Tailwind/SEO guidance. Static content collections are not a replacement for EmDash live CMS data."
+    },
+    {
+      "name": "astro-image-inspector",
+      "path": "astro-image-inspector",
+      "repository": "https://github.com/Lexington-Themes/astro-image-inspector",
+      "commit": "3fc2f409640e0710228807eba83397c5ab1bcc97",
+      "role": "development-only",
+      "license": "MIT",
+      "note": "0.2.4. Astro dev toolbar image inspection; not a production plugin."
+    },
+    {
+      "name": "emdash-smtp",
+      "path": "emdash-smtp",
+      "repository": "https://github.com/masonjames/emdash-smtp",
+      "commit": "211a954e3cb357781c09ec5f19a931f4aadda1d7",
+      "role": "runtime-candidate",
+      "license": "MIT",
+      "note": "Source package 0.3.3, not npm latest 0.3.4. Keep core and node-transports together. Trusted Node target for generic SMTP; only one email provider."
+    },
+    {
+      "name": "emdash-human-sitemap",
+      "path": "emdash-human-sitemap",
+      "repository": "https://github.com/masonjames/emdash-human-sitemap",
+      "commit": "6cc6942dce0560a375a4ce4568c1800cfea3b514",
+      "role": "optional-runtime-candidate",
+      "license": "MIT",
+      "note": "0.1.1. Check locale filtering, drafts, noindex and complete pagination before shipping."
+    },
+    {
+      "name": "emdash-page-list",
+      "path": "emdash-page-list",
+      "repository": "https://github.com/masonjames/emdash-page-list",
+      "commit": "e80d538705a3557eb542e3660d3df8d6e3d4792c",
+      "role": "optional-runtime-candidate",
+      "license": "MIT",
+      "note": "0.1.4. Menu/collection-backed lists; use only where core/theme queries are insufficient."
+    },
+    {
+      "name": "emdash-plugin-seo",
+      "path": "emdash-plugin-seo",
+      "repository": "https://github.com/jdevalk/emdash-plugin-seo",
+      "commit": "c6cc96f286137ae921d58c7388e923f4beac4f45",
+      "role": "compatibility-review-only",
+      "license": "MIT",
+      "note": "0.12.0 peer emdash ^0.21.0 excludes baseline 1.1.0. Review hooks and duplicate head/JSON-LD before enabling."
+    }
+  ],
+  "existing": [
+    {
+      "name": "core-i18n",
+      "path": "emdash/packages/core/src/i18n",
+      "note": "Core locale support; also consult core content API, translations, menus and Astro routing.",
+      "provenance": "emdash/IMPORT-NOTE.md"
+    },
+    {
+      "name": "field-kit",
+      "path": "emdash/packages/plugins/field-kit",
+      "note": "Structured JSON editors; prove admin round-trip.",
+      "provenance": "emdash/IMPORT-NOTE.md"
+    },
+    {
+      "name": "forms",
+      "path": "emdash/packages/plugins/forms",
+      "note": "Forms/submissions; mail delivery must be tested separately.",
+      "provenance": "emdash/IMPORT-NOTE.md"
+    },
+    {
+      "name": "audit-log",
+      "path": "emdash/packages/plugins/audit-log",
+      "note": "Audit trail, not backup or universal undo.",
+      "provenance": "emdash/IMPORT-NOTE.md"
+    },
+    {
+      "name": "embeds",
+      "path": "emdash/packages/plugins/embeds",
+      "note": "Optional rich embeds.",
+      "provenance": "emdash/IMPORT-NOTE.md"
+    },
+    {
+      "name": "color",
+      "path": "emdash/packages/plugins/color",
+      "note": "Optional color field widget.",
+      "provenance": "emdash/IMPORT-NOTE.md"
+    }
+  ]
+}

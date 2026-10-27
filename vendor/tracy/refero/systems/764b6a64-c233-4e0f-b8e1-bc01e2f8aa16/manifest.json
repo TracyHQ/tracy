@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+  "status": "complete",
+  "name": "Apple (España)",
+  "url": "https://styles.refero.design/style/764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+  "sourceWebsite": "https://www.apple.com/macbook-pro",
+  "extractedAt": "2026-07-03T03:37:16.981Z",
+  "capturedAt": "2026-10-08T05:13:34.212341+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "black theater with luminous hardware",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/74892f20-6428-4fdb-85dc-0e82bf3e2b41.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/a98ae945-6461-4a4e-935f-b64eeaa40dc7.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/8af9a027-c217-4c8f-b147-f66850548a3d.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/371d1284-32f3-417a-889c-39b771518a16.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/970b9648-cae1-44f0-bda3-2c4ce7207878.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "4516ed14688a8b217194c1e17f931adc3b535ad731a1b1cc590354f2715b7793",
+      "bytes": 25526
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "47382a111b6379e33ac4088fbe278801c9faeccef421fb7740692f4ee205897c",
+      "bytes": 66033
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "063a04f99358521afac6a53ae3492e568c4db82f39c0cd9cd8ce9e3dad54969a",
+      "bytes": 21245
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "5bd94eb87b5061836a02cb54c0753c94a280e71ea470736d478033daaab78a6d",
+      "bytes": 17062
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4c9f7b2497dcb21c7dd1e2702bde015327a721e547a7fd268ee78c60b68682ed",
+      "bytes": 15267
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "87203c1deb2fe62d0d6d95db8dc5d74dfdf1c206d9c3f57aa65d479439b0173a",
+      "bytes": 3403
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "381d593a8c592d76e4fb775cbf9c44898d5bc34629ac4c98b3fa109a102336c4",
+      "bytes": 698
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "84cb1654465551eb78efe6309bd21c26986ed7aa1156967aab119b8fbbf039ba",
+      "bytes": 848
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "63969970e3abb15381b1480c31a561a19358943e9837b31204c1fe0a697293c0",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d6e25e974aa06b3ae6e629ca8e6ba99d3ac8aa0e17878493b9150f1e8ee68513",
+      "bytes": 49152
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "335ba4dd23795b3e8c52840c119e677abe35b1ada7e697e74e0e9000f07aa407",
+      "bytes": 26233
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8250b85c9f6d945637899017940d2c5a7f03263af53514f32e8f0eede537a859",
+      "bytes": 80371
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8f2207db34f6e612cb95655ac3a9c3d4b8dd1c9d35447781470a92519bab75fc",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0bbf81ed56479557ebce038611f770131384188944cf6d5946a57408b7d61d82",
+      "bytes": 2008
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7300847757a0f95c7ee76da2f1fc74213c435689b26eb516f1ca322288c24d15",
+      "bytes": 2713
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+    "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+    "1bd3b2ba-9ad9-44ed-9130-03f9d94de821",
+    "297f65f7-0fbd-4521-ab91-a5f6e17175d9",
+    "2b49d4b2-8461-4985-b7ee-cf9517e19803",
+    "375e255f-6e7b-4091-bf73-6df42a094263",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a73148b9-449b-42cd-9f38-86ef694f500e",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cfcd001c-e812-4126-9bdf-1f16b68d182e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e"
+  ]
+}

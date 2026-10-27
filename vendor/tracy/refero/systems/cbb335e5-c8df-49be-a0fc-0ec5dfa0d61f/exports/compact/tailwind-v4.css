@@ -1,0 +1,29 @@
+@theme {
+  /* Colors */
+  --color-parchment: #f7f6f2;
+  --color-paper-white: #ffffff;
+  --color-forest-ink: #001f1f;
+  --color-lichen-gray: #5c7070;
+  --color-stone: #6a7878;
+  --color-slate: #455252;
+  --color-mist: #889494;
+  --color-meadow: #cdface;
+  --color-deep-forest: #2a4e1c;
+  --color-deep-teal: #003d3d;
+  --color-olive: #515c0b;
+  --color-plum: #7a2251;
+  --color-saffron: #a36a14;
+  --color-iris: #652ea3;
+  --color-mint-surface: #e4f7f9;
+  --color-lime-surface: #f8fbe7;
+  --color-lavender-surface: #e1e1fa;
+  --color-blush-surface: #fcf2fe;
+  --color-buttercream: #fff3c2;
+  --color-sage-glow: #eff5ce;
+  --color-petal: #fde5ff;
+  --color-lilac-stroke: #dcc2eb;
+  --color-halo-gradient: #a9eba9;
+
+  /* Typography */
+  --font-matter: 'Matter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

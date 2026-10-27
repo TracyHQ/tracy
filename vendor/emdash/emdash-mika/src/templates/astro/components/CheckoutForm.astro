@@ -1,0 +1,81 @@
+---
+// mika-template-version: 0.1.1
+import { actions } from "astro:actions";
+import { Button, Input } from "@cloudflare/kumo";
+import type { CartDTO } from "@bnomei/emdash-mika/types";
+import { mikaHiddenInput, mikaRedirectInputs, mikaReturnTo } from "@bnomei/emdash-mika/astro";
+import { mikaTemplateRoutes } from "../lib/routes";
+
+interface Props {
+  cart?: CartDTO | null;
+  successPath?: string;
+  cancelPath?: string;
+  returnTo?: string;
+  email?: string;
+  name?: string;
+  company?: string;
+  vatId?: string;
+  emailLabel?: string;
+  nameLabel?: string;
+  companyLabel?: string;
+  vatIdLabel?: string;
+  customerLegend?: string;
+  showCustomerFields?: boolean;
+  label?: string;
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const {
+  cart,
+  successPath = mikaTemplateRoutes.checkoutSuccess,
+  cancelPath = mikaTemplateRoutes.checkoutCancel,
+  returnTo = mikaReturnTo(Astro.url),
+  email,
+  name,
+  company,
+  vatId,
+  emailLabel = "Email address",
+  nameLabel = "Full name",
+  companyLabel = "Company (optional)",
+  vatIdLabel = "VAT ID (optional)",
+  customerLegend = "Customer details",
+  showCustomerFields = true,
+  label = "Proceed to checkout",
+  class: className,
+  ...attrs
+} = Astro.props;
+const disabled = !cart || cart.items.length === 0;
+const redirectInputs = mikaRedirectInputs(
+  { successPath, cancelPath, returnTo },
+  {
+    successFallback: mikaTemplateRoutes.checkoutSuccess,
+    cancelFallback: mikaTemplateRoutes.checkoutCancel,
+  },
+);
+---
+
+<form
+  {...attrs}
+  data-mika-checkout
+  class:list={["mika-kumo-form", className]}
+  action={actions.mika.checkout.start.queryString}
+  method="post"
+>
+  {cart?.id && <input type="hidden" {...mikaHiddenInput("cartId", cart.id)} />}
+  <input type="hidden" {...redirectInputs.successPath} />
+  <input type="hidden" {...redirectInputs.cancelPath} />
+  <input type="hidden" {...redirectInputs.returnTo} />
+
+  {showCustomerFields && (
+    <fieldset data-mika-checkout-customer class="mika-kumo-fieldset">
+      <legend class="mika-kumo-legend">{customerLegend}</legend>
+      <Input label={emailLabel} name="email" type="email" autoComplete="email" value={email} />
+      <Input label={nameLabel} name="name" autoComplete="name" value={name} />
+      <Input label={companyLabel} name="company" autoComplete="organization" value={company} />
+      <Input label={vatIdLabel} name="vatId" value={vatId} />
+    </fieldset>
+  )}
+
+  <Button type="submit" variant="primary" disabled={disabled}>{label}</Button>
+</form>

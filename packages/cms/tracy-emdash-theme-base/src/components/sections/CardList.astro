@@ -1,0 +1,31 @@
+---
+/**
+ * Three-up cards of the landing (problem / value / services): optional icon or a red bullet, h3, text.
+ * `variant="dot"` is the source's problem block (a danger-coloured bullet inline before the title --
+ * the cards name pain points); `icon` draws the icon above the title.
+ */
+import Icon from '@/components/site/Icon.astro'
+import type { Stamp } from '@/lib/stamps'
+interface Props {
+  items: Array<{ icon?: string; title: string; text: string }>
+  variant?: 'dot' | 'icon'
+  block?: string
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the repeater field the rows come from. */
+  stamp?: Stamp
+  field?: string
+}
+const { items, variant = 'icon', block, stamp, field } = Astro.props
+const none = {}
+const row = stamp && field ? stamp.block(field) : none
+const sub = (k: string) => (stamp && field ? stamp(`${field}.${k}`) : none)
+---
+
+<div class="grid-3" data-block={block}>
+	{items.map((it) => (
+		<div class="card p-6" {...row}>
+			{variant !== "dot" && it.icon && <span class="mb-5 flex h-11 w-11 items-center justify-center rounded-[var(--ds-card-radius,12px)] bg-surface text-accent"><Icon name={it.icon} /></span>}
+			<h3 class:list={["h-card mb-2 text-pretty", variant === "dot" && "flex items-start gap-3"]}>{variant === "dot" && <span class="mt-[0.45em] h-2.5 w-2.5 shrink-0 rounded-full bg-danger" aria-hidden="true"></span>}<span {...sub("title")}>{it.title}</span></h3>
+			<p class="text-[17px] leading-[1.47] text-fg-meta" {...sub("text")}>{it.text}</p>
+		</div>
+	))}
+</div>

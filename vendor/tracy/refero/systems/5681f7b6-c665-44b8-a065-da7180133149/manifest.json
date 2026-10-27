@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "5681f7b6-c665-44b8-a065-da7180133149",
+  "status": "complete",
+  "name": "A-WARE",
+  "url": "https://styles.refero.design/style/5681f7b6-c665-44b8-a065-da7180133149",
+  "sourceWebsite": "https://a-ware.at",
+  "extractedAt": "2026-06-03T20:44:11.949Z",
+  "capturedAt": "2026-10-08T05:11:46.923360+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Apothecary editorial on warm parchment. A alpine athlete's apothecary spread: cream paper, black ink, one bronze seal, and dark glass canisters floating in generous whitespace.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/167de93e-0827-4bf2-8251-c53bc9170b82.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d5fc4477a8d64bbed37facb1ad7e49553ec0fa48a6ab3377c7d4a5b9a14ec8fe",
+      "bytes": 19780
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7b165d52e3c00c86fa24d0bd3ca3f28b4900786010365e86c53967ef148857a9",
+      "bytes": 132289
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "512c3f37f27fa6442b68c0994fd9c4412e4f7a1ca35946fc95e1872c8ff36852",
+      "bytes": 16019
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "65c8e69ab2d106858e9833235f005fb0715df31eb54d7e8708614c6800935a38",
+      "bytes": 12772
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "09f57d3c3a9bc964bfc1812ad29ac48a6d1bffb5e7b98e1016d4dc1d022c73ec",
+      "bytes": 12271
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "27913ea1fb399d935eabfc888a2cf332fffd56847ae5bfb1fb5262b970b576ed",
+      "bytes": 3175
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "93d362f9789ccb100c908d6fdf5d4aa3f54e7a0f942e27475b431f1cfafde614",
+      "bytes": 655
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "035ed2d4b7cb951f82f197142e8515562d83a1d473cce7d550b30d4de7bbdd65",
+      "bytes": 672
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "30afe6c00481c75f0c493a425f7de8b834c0f2c6e267c4fe4e5844cbd85a1c85",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ab6b1d80babe3b9123ddcea66d1f13e421d0dc2de325a87d05c257163395d8e5",
+      "bytes": 44780
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "4075c7881d725ee37ff62eea07dd55305d8919bc91fabc4d23dcd4516cad35b5",
+      "bytes": 23283
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6b32c44e43d4f145cdaab3a30c8eb7ac29569971138501ce4c51102ee11b609e",
+      "bytes": 48723
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "213a7a8f3f3447044d8f21b8b705264a120047924e5443e0cdf3968ca4df7e7f",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "3233ff6a41e1cb270124deaa80ef8e8aadcc0865349ae3bc0ae0ea338c89632d",
+      "bytes": 1693
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3ffb3a6e57a44f496432c80acebd31142197da0840839caf5840280af61551c9",
+      "bytes": 2266
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "21b71be3-78a0-4681-a5b9-64cc4b40eb67",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "3f56ea4d-ed9d-4a36-8fb5-a801519ef80b",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "76c761d8-4af1-4ed5-ba93-eeb60f7006b5",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "ded6d7c4-2801-45f4-8b8a-089f1b37842d",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21"
+  ]
+}

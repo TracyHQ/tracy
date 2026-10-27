@@ -1,0 +1,66 @@
+@theme {
+  /* Colors */
+  --color-gallery-white: #ffffff;
+  --color-ink: #000000;
+  --color-paper-gray: #f6f6f6;
+  --color-quiet-gray: #878787;
+  --color-availability-green: #189e48;
+
+  /* Typography */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-rhymes-text-light: 'Rhymes Text Light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-rhymes-text-light-italic: 'Rhymes Text Light Italic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-saans-regular: 'Saans Regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-saans-medium: 'Saans Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-satoshi: 'Satoshi', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-micro-metadata: 12px;
+  --leading-micro-metadata: 1.2;
+  --tracking-micro-metadata: 0px;
+  --text-label: 14px;
+  --leading-label: 1.21;
+  --tracking-label: 0px;
+  --text-label-medium: 14px;
+  --leading-label-medium: 1.29;
+  --tracking-label-medium: 0px;
+  --text-body: 16px;
+  --leading-body: 1.5;
+  --tracking-body: 0px;
+  --text-body-strong: 16px;
+  --leading-body-strong: 1.5;
+  --tracking-body-strong: 0px;
+  --text-display: 56px;
+  --leading-display: 1.05;
+  --tracking-display: -3.36px;
+  --text-display-italic: 56px;
+  --leading-display-italic: 1.05;
+  --tracking-display-italic: -3.36px;
+  --text-hero-sans-emphasis: 70px;
+  --leading-hero-sans-emphasis: 1.03;
+  --tracking-hero-sans-emphasis: -1.4px;
+  --text-hero-display: 72px;
+  --leading-hero-display: 1;
+  --tracking-hero-display: -4.32px;
+  --text-hero-display-italic: 72px;
+  --leading-hero-display-italic: 1;
+  --tracking-hero-display-italic: -5.04px;
+
+  /* Spacing */
+  --spacing-8: 8px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-56: 56px;
+  --spacing-64: 64px;
+
+  /* Border Radius */
+  --radius-xl: 12px;
+  --radius-xl-2: 15px;
+  --radius-2xl: 20px;
+  --radius-full: 50px;
+  --radius-full-2: 60px;
+  --radius-full-3: 80px;
+  --radius-full-4: 9999px;
+}

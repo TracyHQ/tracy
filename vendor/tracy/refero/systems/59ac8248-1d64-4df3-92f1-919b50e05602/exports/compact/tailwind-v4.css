@@ -1,0 +1,26 @@
+@theme {
+  /* Colors */
+  --color-lime-spark: #d2e823;
+  --color-lavender-mist: #e9c0e9;
+  --color-cobalt-band: #2665d6;
+  --color-maroon-plate: #780016;
+  --color-cobalt-deep: #061492;
+  --color-forest-ink: #254f1a;
+  --color-mustard-pop: #d6a337;
+  --color-linen-canvas: #f3f3f1;
+  --color-white-plate: #ffffff;
+  --color-ink-black: #000000;
+  --color-midnight-ink: #1e2330;
+  --color-sage-mute: #676b5f;
+  --color-silver-border: #c7c8cb;
+  --color-charcoal-pill: #222222;
+  --color-concrete-tile: #adadad;
+  --color-leaf-wash: #ebffc5;
+  --color-moss-tint: #e8efd6;
+
+  /* Typography */
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-linksans: 'Linksans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-linksans-linksansvf: 'Linksans Linksansvf', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-yerk: 'yerk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

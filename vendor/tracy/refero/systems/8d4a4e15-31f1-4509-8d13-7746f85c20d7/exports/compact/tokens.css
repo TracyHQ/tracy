@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-ink: #1a1a1a;
+  --color-paper: #ffffff;
+  --color-mist: #f7f7f7;
+  --color-ash: #eaeaea;
+  --color-smoke: #e1e1e1;
+  --color-graphite: #838383;
+  --color-steel: #989898;
+  --color-slate: #6f6f6f;
+  --color-marigold: #ffb84d;
+  --color-buttercream: #ffe480;
+  --color-cream: #fff6d4;
+
+  /* Typography — Font Families */
+  --font-output-sans: 'Output Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

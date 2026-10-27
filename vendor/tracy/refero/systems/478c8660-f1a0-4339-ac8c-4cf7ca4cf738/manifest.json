@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "478c8660-f1a0-4339-ac8c-4cf7ca4cf738",
+  "status": "complete",
+  "name": "Ankar AI",
+  "url": "https://styles.refero.design/style/478c8660-f1a0-4339-ac8c-4cf7ca4cf738",
+  "sourceWebsite": "https://ankar.ai",
+  "extractedAt": "2026-06-03T15:45:45.699Z",
+  "capturedAt": "2026-10-08T05:11:08.796794+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Patent vault opening into white atelier — a darkroom hero with a single illuminated manuscript, dissolving into generous editorial whitespace.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b23d4f87-3b75-4228-ab9d-38fc4ac2d35d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4eafa2de-3b24-419e-adbf-901ad9cb8f91.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/7bf4cb75-4180-4b5d-81a4-4f18f20d0bfd.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b1461507-ad29-42ed-af12-bf024d371b63.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/85dd3865-cbf1-4ac7-bfa5-6911dd399ee8.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7efeeba0977ae9a9f4a8b1038236be4f4ad5ae55cc9a420597af9179666ad5ce",
+      "bytes": 21894
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "610b796db80adc37e9ee769ac17f98905922e11a33651da9cd5dc429e2886a72",
+      "bytes": 62343
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "687b711fd5562e45fecf3c7c70ca9e9b6f1c9d47c2d4c715b7f9613bf2f0e49e",
+      "bytes": 18097
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "33cef98327b24f644abe3377363eda42b5a10286fec1180de34ca7bb3655765f",
+      "bytes": 10773
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f81389254607c528ebd375765c07fee2b4d248c5df3b676526dd84415ce225c9",
+      "bytes": 12687
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "b9d6e9d177922717b0067b592bf7136fc2feaca280216c9602e88e98b9e28694",
+      "bytes": 2971
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "aa131b5fd1409e73794064e4890e6a5789b92f295670934bec1770867d49ba8d",
+      "bytes": 932
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "6f42c8e67fd4630936a1facc2ce7c0c970db0caba4c4f10b9a34820dec2a3200",
+      "bytes": 949
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a53a2bbe6b4032f4bf7990cacd23c4937c0cae8632f57c4ef5f0acf245a259dd",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "c55b9193a418a0324245b4968919d51775d31c133b72b2d7a66eb6d6379baf13",
+      "bytes": 44008
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "efeefe61bcb1491827c35d43a38362199a4fa24caa4dc3a5ffd1a2176d111585",
+      "bytes": 22769
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9302c92c6499017cee08d396d24e3b6ad5bb2af31ab0fe9bb3a472d09b12733b",
+      "bytes": 47095
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7c467b38850a8444182e50abe88d011d2d4336c09fdcb013565e80068a75e52a",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "fa482f7b23657cdec8d942acbd342ce3be7b1f2ae24c15bc2dc08304fc210554",
+      "bytes": 2131
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "dbb3a15900f5c1f20fbebb15faa48134146f20b0b9e0f8fb5062e3b05afcd9aa",
+      "bytes": 2711
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "14cc44e6-41bf-4178-b834-fc61bfeed4ae",
+    "1ab79e76-a07f-48fd-8e93-0a0fee12abd7",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "46781641-8afd-4b01-9f67-06046b6eda71",
+    "478c8660-f1a0-4339-ac8c-4cf7ca4cf738",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "6b9ab3aa-13ea-49e5-9889-d0c9ae629add",
+    "7b083729-e694-4b66-82a3-befb08451722",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8f623d19-51f6-4da2-bc45-05573cc98283",
+    "94c4fc51-4323-4f06-a4a4-27517e190445",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "b6f25b86-ffcf-42f1-9f37-5e37d08cb4ce",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "dc541737-8bf2-4b31-b729-0352f696e82f",
+    "ddd9ffaa-d831-4cb4-a5bf-a1efce421dca",
+    "e81d4724-9615-4159-8678-cef35f986cab",
+    "ee403055-480e-4bd4-9216-07c9ae2dde2e"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "admin": "tracyagent",
+  "siteUrl": "http://127.0.0.1:8227",
+  "options": { "siteurl": "http://127.0.0.1:8227", "home": "http://127.0.0.1:8227" },
+  "transients": [],
+  "siteTransients": [],
+  "standOptions": [],
+  "revisions": [],
+  "autoDrafts": [],
+  "trash": [],
+  "users": [{ "ID": 1, "user_login": "tracyagent", "roles": ["administrator"] }],
+  "authorMeta": [{ "ID": 1, "user_login": "tracyagent", "seeded": false }],
+  "sessions": [{ "user_login": "tracyagent", "count": 0 }],
+  "files": [],
+  "media": { "attachments": [], "content": [], "meta": [], "termmeta": [], "options": [], "files": [] },
+  "config": { "salts": true, "dbDefined": true }
+}

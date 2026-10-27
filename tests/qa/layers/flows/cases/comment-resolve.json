@@ -1,0 +1,79 @@
+[
+  {
+    "assertionIds": ["legacy:J5#verdict"],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["db"],
+      "writes": ["comment"]
+    },
+    "id": "QA-FLOWS-comment-resolve-happy-comment-thread",
+    "itemIds": ["flow:comment-resolve", "capability:comment-on-the-page", "journey:J5"],
+    "kind": "legacy",
+    "legacyIds": ["J5"],
+    "oracle": {
+      "invariant": "a comment is closed only when a write is recorded for it",
+      "ref": "ADR 0025",
+      "source": "docs/adr/0025-close-comment-on-write-evidence.md"
+    },
+    "prerequisites": ["stand", "legacy-runner", "model-credentials"],
+    "redProof": null,
+    "ref": "J5",
+    "requirement": "Comment, Tracy writes, resolve — comment thread (happy) [journey J5: comment between two people]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["invalid"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["db"],
+      "writes": ["comment"]
+    },
+    "id": "QA-FLOWS-comment-resolve-invalid-resolve-without-write",
+    "itemIds": ["flow:comment-resolve", "capability:comment-on-the-page"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a comment is closed only when a write is recorded for it",
+      "ref": "ADR 0025",
+      "source": "docs/adr/0025-close-comment-on-write-evidence.md"
+    },
+    "pendingReason": "not scripted: needs the evidence contract of ADR 0025 as a fixture",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Comment, Tracy writes, resolve — resolve without write (invalid)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["concurrent-seat"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": ["db"],
+      "writes": ["comment"]
+    },
+    "id": "QA-FLOWS-comment-resolve-concurrent-seat-two-readers",
+    "itemIds": ["flow:comment-resolve", "capability:comment-on-the-page"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a comment is closed only when a write is recorded for it",
+      "ref": "ADR 0025",
+      "source": "docs/adr/0025-close-comment-on-write-evidence.md"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Comment, Tracy writes, resolve — two readers (concurrent-seat)",
+    "targets": ["local"]
+  }
+]

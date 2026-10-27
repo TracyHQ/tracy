@@ -1,0 +1,276 @@
+{
+  "dos": [
+    "Use #ea587d only on heading text, hairline borders, and the active-nav dot — never as a filled button or background",
+    "Set all headings in Geist or wtqc with negative letter-spacing (-0.033em to -0.056em depending on size) to achieve the compressed editorial feel",
+    "Use 24px border-radius for the pill navigation and 4px for all cards and buttons",
+    "Default to max-width 720px for centered text blocks; let whitespace do the layout work",
+    "Separate cards and sections with 1px solid borders in #cccccc or #e5e5e5 — never with drop shadows",
+    "Use #f2f2f2 as the surface tint for floating elements like the pill nav",
+    "Set body text at 16–18px in #282828 with 1.38–1.5 line-height for comfortable reading"
+  ],
+  "donts": [
+    "Do not add drop shadows to cards, buttons, or navigation — the system is intentionally flat",
+    "Do not use #ea587d as a button background fill — the accent only appears on headings and borders",
+    "Do not use large border-radii on cards — keep them at 4px; only the pill nav gets 24px",
+    "Do not introduce new chromatic colors — the system is deliberately monochrome with one pink accent",
+    "Do not use positive letter-spacing — all text tracks tight (negative values) to feel compressed and confident",
+    "Do not fill the page with imagery or illustrations — let typography and whitespace carry the composition",
+    "Do not use dark mode as the default theme — white canvas is the signature; dark (#121212) is reserved for inverted sections only"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ea587d",
+      "name": "Coral Rose",
+      "role": "Accent for heading text, hairline borders, and active-state markers — the single chromatic signal in an otherwise achromatic system",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Page canvas, card surfaces, and inverted backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2f2f2",
+      "name": "Cloud",
+      "role": "Pill nav background, subtle surface elevation, and inset border shadows",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d8d4",
+      "name": "Bone",
+      "role": "Warm-toned secondary surface tint for alternating bands",
+      "group": "neutral"
+    },
+    {
+      "hex": "#282828",
+      "name": "Char",
+      "role": "Primary text, body copy, and most interface strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#121212",
+      "name": "Ink",
+      "role": "Heavier headings, body text, and prominent borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Black",
+      "role": "Maximum-emphasis text, logo wordmark, and strong border lines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b3b3b3",
+      "name": "Fog",
+      "role": "Muted helper text and disabled-state strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cccccc",
+      "name": "Mist",
+      "role": "Lowest-emphasis borders and decorative dividers",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Page-level layout is centered and max-width contained (approximately 720px for text content). The top of the page features a split header: the wordmark logo flush-left, the pill navigation floating centered. Below the header, vast white space leads to a centered bio text block that sits in the upper-middle of the viewport. The rhythm is vertical and unhurried — sections separated by 100–120px of whitespace, with no visible dividers or alternating color bands. Navigation is minimal (a single pill nav, no sidebar, no mega-menu). The overall density is sparse — the page is approximately 80% white space, making the centered type feel like a gallery placard on a white wall.",
+  "imagery": "No photography, illustration, or product imagery detected. The site is pure typography and whitespace — the creator's name, bio text, and navigation are the only visual content. Any portfolio work would be presented as text-based case study entries within hairline cards, not as image galleries. This text-only approach reinforces the editorial, gallery-curated personality.",
+  "similar": [
+    {
+      "why": "Same editorial white-space approach with centered text blocks, hairline borders, and almost no imagery — relies on typography and whitespace as the design",
+      "business": "Manual (cerealmag.com/manual)"
+    },
+    {
+      "why": "Gallery-curated white canvas with pill-shaped navigation, restrained color palette, and editorial typography with tight tracking",
+      "business": "It's Nice That (itsnicethat.com)"
+    },
+    {
+      "why": "Creative agency portfolio using pure white backgrounds, single accent color moments, and text-forward project tiles within hairline-bordered cards",
+      "business": "Pentagram (pentagram.com)"
+    },
+    {
+      "why": "Minimal personal site with system font typography, pill-shaped nav, and one accent color used sparingly on headings and links",
+      "business": "Sam Soffes (soff.es)"
+    },
+    {
+      "why": "Generous white space, 4px card radii, 1px hairline borders replacing shadows, and a single warm accent against an otherwise achromatic palette",
+      "business": "Are.na (are.na)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "4px",
+      "inputs": "4px",
+      "buttons": "4px",
+      "pillNav": "24px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "120px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "720px"
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Primary page background — the infinite white wall"
+    },
+    {
+      "hex": "#f2f2f2",
+      "name": "Pill Surface",
+      "level": 2,
+      "purpose": "Navigation pill background and subtle card elevation"
+    },
+    {
+      "hex": "#d9d8d4",
+      "name": "Warm Band",
+      "level": 3,
+      "purpose": "Occasional warm-toned section divider or band"
+    },
+    {
+      "hex": "#121212",
+      "name": "Inverted",
+      "level": 4,
+      "purpose": "Dark-mode sections or inverted text blocks"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgb(242, 242, 242) 0px 0px 0px 1px inset",
+      "element": "All surfaces"
+    }
+  ],
+  "northStar": "Quiet white gallery — coral pink whispers float in vast considered silence, framed only by pill-shaped nav and tightly-tracked type.",
+  "typeScale": [
+    {
+      "role": "caption-sm",
+      "size": 10,
+      "lineHeight": 1.17,
+      "letterSpacing": -0.37
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.38,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 2.67,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.07,
+      "letterSpacing": -0.99
+    }
+  ],
+  "components": [
+    {
+      "name": "Wordmark Logo",
+      "role": "Brand identity in the top-left corner",
+      "description": "Bold text-only 'aaronpoe' mark in #000000 or #282828, set at approximately 18–20px with tight tracking. No icon, no symbol — the name IS the brand. Positioned flush-left with generous left margin."
+    },
+    {
+      "name": "Pill Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Floating horizontal pill centered at the top of the page. Background #f2f2f2, border-radius 24px (fully pill-shaped), padding approximately 8px 8px. Contains three nav items separated by subtle spacing. The pill sits on the white canvas with no shadow — the color difference and rounded form do all the work."
+    },
+    {
+      "name": "Nav Item — Default",
+      "role": "Inactive navigation link",
+      "description": "Text label in #282828 at 12–14px, weight 400, letter-spacing near zero. No background fill, no border. Padding approximately 8px 16px."
+    },
+    {
+      "name": "Nav Item — Active (with dot indicator)",
+      "role": "Current page indicator in the pill nav",
+      "description": "Identical text styling to default nav items, prefixed with a small coral pink dot (#ea587d) at approximately 6px diameter. The dot is the only active-state signal — no bold weight change, no background shift, no underline."
+    },
+    {
+      "name": "Bio Text Block",
+      "role": "Centered hero content — the creator's statement",
+      "description": "Centered paragraph block at max-width ~520–640px, set in system or Geist 16–18px weight 400 in #282828, line-height 1.38–1.5. Two paragraphs separated by one blank line. No background, no border, no decoration — pure typography floating in white space."
+    },
+    {
+      "name": "Section Heading with Coral Border",
+      "role": "Content section titles and category labels",
+      "description": "Text in coral pink (#ea587d), potentially with a coral hairline border-bottom (1px solid #ea587d). The pink heading is the primary chromatic event in the system — it draws the eye without filling space. Size 24–30px, weight 300–500."
+    },
+    {
+      "name": "Ghost Button (Start a Project)",
+      "role": "Contact / conversion action in the nav",
+      "description": "Text-only or hairline-bordered button in the pill nav. Text at 12–14px weight 400 in #282828. No background fill, no border in default state. On hover, optionally a #f2f2f2 background or 1px #282828 border."
+    },
+    {
+      "name": "Hairline Card",
+      "role": "Content container for case studies, project tiles, or grouped content",
+      "description": "White surface (#ffffff) with 1px solid border in #e5e5e5 or #cccccc, border-radius 4px, padding 24px. No drop shadow — the 1px border defines the edge. May optionally use the inset shadow technique (box-shadow: rgb(242,242,242) 0px 0px 0px 1px inset) for a hairline that matches the cloud surface color."
+    },
+    {
+      "name": "Inset Border Divider",
+      "role": "Ultra-subtle section separation without visible lines",
+      "description": "A 1px inset shadow using #f2f2f2 (rgb(242,242,242)) creates a barely-perceptible edge. Used when a physical border would be too heavy but some surface definition is needed."
+    },
+    {
+      "name": "Project Tile",
+      "role": "Portfolio work entry — image or text-based",
+      "description": "Larger card variant with border-radius 4px, 1px border, generous internal padding (32–48px). Likely contains a project title in Geist, optional thumbnail, and a coral-pink category label or hairline accent."
+    }
+  ],
+  "typography": [
+    {
+      "role": "System-font fallback for body text and rendering across platforms. Used wherever native OS fonts provide a reliable, performance-optimized default at body size.",
+      "sizes": "16px",
+      "family": "-apple-system",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
+      "fontFeatureSettings": "\"dlig\" 0, \"hlig\" 0, \"liga\" 0, \"rlig\" 0, \"smcp\" 0"
+    },
+    {
+      "role": "Primary display and UI typeface. The 300 weight at micro sizes (8–10px) creates whisper-quiet labels; the negative letter-spacing (-0.056em at 8px, -0.037em at 10px) tightens small type into dense, confident blocks. 400 at 16–18px serves body and subheadings with -0.025em to -0.011em tracking.",
+      "sizes": "8px, 10px, 16px, 18px",
+      "family": "Geist",
+      "weight": "300, 400, 500",
+      "lineHeight": "1.00, 1.17, 1.38, 2.67",
+      "substitute": "Inter, Satoshi, General Sans",
+      "letterSpacing": "-0.056em at 8px, -0.037em at 10px, -0.025em at 16px, -0.011em at 18px",
+      "fontFeatureSettings": "\"ss02\", \"lnum\""
+    },
+    {
+      "role": "Reserved for prominent display headings (30px, 1.07 line-height, -0.033em tracking) and compact labels (12px, 1.33 line-height). The tight 1.07 line-height on the 30px size gives headings a condensed, editorial feel.",
+      "sizes": "12px, 30px",
+      "family": "wtqc (custom display)",
+      "weight": "500",
+      "lineHeight": "1.07, 1.33",
+      "substitute": "Geist, Inter",
+      "letterSpacing": "-0.033em at both sizes",
+      "fontFeatureSettings": "\"lnum\""
+    },
+    {
+      "role": "custom_166638 — detected in extracted data but not described by AI",
+      "sizes": "8px",
+      "family": "custom_166638",
+      "weight": "300",
+      "lineHeight": "1.5",
+      "fontFeatureSettings": "\"dlig\" 0, \"hlig\" 0, \"liga\" 0, \"rlig\" 0, \"smcp\" 0"
+    }
+  ],
+  "description": "Aaron Poe & Co operates as a curator's white room — a creative director's portfolio that strips interface to typography, whitespace, and a single accent. The canvas is pure white; the type stack pairs Geist (tightly tracked, negative letter-spacing) with system fonts for body copy; and a warm coral pink (#ea587d) surfaces only on heading text and hairline borders, never as a filled button. Components feel like gallery placards: a floating pill-shaped nav, centered bio blocks, and subtle 1px inset borders replacing the need for drop shadows. The rhythm is editorial — vast negative space punctuated by compressed, confident type and one whisper of color.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #282828 (body) / #000000 (logo/emphasis) / #121212 (headings)\n- background: #ffffff (canvas) / #f2f2f2 (pill nav, subtle surfaces)\n- border: #cccccc (hairlines) / #e5e5e5 (card edges)\n- accent: #ea587d (headings, active dot, accent borders only — never fills)\n- muted text: #b3b3b3\n- primary action: no distinct CTA color\n\n## Example Component Prompts\n\n1. **Pill Navigation Bar**: Centered floating nav at top of page. Background #f2f2f2, border-radius 24px, padding 8px 8px, height ~40px. Contains 3 items spaced ~16px apart. Sits on #ffffff canvas with no shadow. Items at 12px Geist weight 400, #282828, letter-spacing -0.4px.\n\n2. **Bio Text Block**: Centered paragraph block, max-width 560px, text-align center. Two paragraphs in Geist 18px weight 400, #282828, line-height 2.67 (the generous value creates breathing room between lines). No background, no border. Vertically positioned ~200px from top of viewport.\n\n3. **Section Heading**: Text 'Selected Work' in coral pink #ea587d, Geist 30px weight 500, letter-spacing -0.99px, line-height 1.07. Optionally with a 1px solid #ea587d border-bottom, 24px below the text.\n\n4. **Hairline Card**: White surface #ffffff, border 1px solid #e5e5e5, border-radius 4px, padding 24px. Contains a project title in Geist 16px weight 500 #121212, and a short description in Geist 14px weight 400 #282828. No drop shadow.\n\n5. **Active Nav Item with Dot**: Same styling as default nav item (Geist 12px weight 400 #282828), but prefixed with a 6px diameter circle in #ea587d, positioned 8px to the left of the text with 2px gap."
+    },
+    {
+      "title": "Type Philosophy",
+      "content": "The system uses negative letter-spacing aggressively at every size, with tighter tracking on display sizes (-0.056em at 8px, -0.033em at 30px) and slightly looser tracking at body size (-0.025em to -0.011em at 16–18px). This creates a voice that feels compressed, editorial, and confident — the opposite of airy or breathy typography. Font feature settings \"ss02\" and \"lnum\" are enabled on Geist, activating stylistic set 02 and lining figures for consistent numerical alignment. The 2.67 line-height at 18px body is unusual and deliberate — it creates generous vertical rhythm between lines, making the bio text feel meditative rather than dense."
+    }
+  ],
+  "elevationPhilosophy": "The system deliberately avoids drop shadows. Elevation is communicated through three subtle techniques: (1) 1px hairline borders in #e5e5e5 or #cccccc to define card edges, (2) a 1px inset shadow using the #f2f2f2 surface color for ghost borders that read as surface transitions rather than lines, and (3) the #f2f2f2 pill nav background, which uses color contrast against the white canvas to feel elevated without any shadow blur. This keeps every element flat, editorial, and print-like."
+}

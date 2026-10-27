@@ -1,0 +1,59 @@
+{
+  "color": {
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Text, image grid gutter borders, hairline dividers, nav chip outlines — the structural ink that defines the grid structure and typography"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, nav chip backgrounds, card surface — the gallery wall behind everything"
+    },
+    "warm-charcoal": {
+      "$value": "#393939",
+      "$type": "color",
+      "$description": "Warm Charcoal — Central name card surface, secondary text, soft borders — the mid-tone that makes the pale-rose card read as a distinct layer without breaking the monochrome"
+    },
+    "blush-card": {
+      "$value": "#e8c4c0",
+      "$type": "color",
+      "$description": "Blush Card — Background of the central name card — the only chromatic accent, a dusty rose that warms the otherwise pure black-and-white system"
+    }
+  },
+  "font": {
+    "font1": {
+      "$value": "font1",
+      "$type": "fontFamily",
+      "$description": "font1 — detected in extracted data but not described by AI"
+    },
+    "custom-display-serif": {
+      "$value": "Custom Display Serif",
+      "$type": "fontFamily",
+      "$description": "Hero name display and small print. The 238px size with line-height 0.80 and -0.04em tracking creates a tightly cropped masthead that feels printed, not rendered. Weight 300 at display size is the signature — it whispers rather than shouts, giving the name editorial weight through restraint rather than boldness. The italic treatment in the screenshot adds a calligraphic warmth that contrasts the rigid grid around it."
+    },
+    "custom-body-serif": {
+      "$value": "Custom Body Serif",
+      "$type": "fontFamily",
+      "$description": "Body copy, bio description, nav chip text, and link labels. Tight line-height 1.10 at small sizes creates a dense, catalog-like feel. The -0.025em tracking tightens the letterforms for compact, refined small text that reads as label or caption rather than prose."
+    },
+    "font2": {
+      "$value": "font2",
+      "$type": "fontFamily",
+      "$description": "font2 — detected in extracted data but not described by AI"
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "ui-sans-serif — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.nrly.co",
+      "siteName": "Nathan Riley",
+      "extractedAt": "2026-06-03T20:06:52.371Z",
+      "variant": "compact"
+    }
+  }
+}

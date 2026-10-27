@@ -1,0 +1,63 @@
+{
+  "id": "REG-PR-1443-wo-my-opportunities",
+  "kind": "feat",
+  "title": "Website Opportunities: two sub-tabs (Find places | My opportunities N) kept in the page address; My opportunities pages 50 rows newest first by cursor, polls only moving rows by id, merges rows added elsewhere on top, bulk Resume/Cancel by job ids or by the filter on screen, falls back to the old whole list; one next action per row run the same from the table, the Inspector and the Details page",
+  "pr": 1443,
+  "area": "website-opportunities",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout (dependencies installed) run the client test files named in run.cmd.",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "The address keeps wo-view, wo-stage, wo-q, wo-opp, wo-page and wo-brief beside tab= and other parameters, drops values it cannot mean, and writes nothing for defaults.",
+    "A page answer with counts/nextCursor is paged; one without is the old whole list, which the screen filters, searches and counts itself.",
+    "The poll asks only for rows whose research waits or runs or whose demo site is still being built, at most 100 ids a call; polled rows keep their place; rows added elsewhere go on top.",
+    "Bulk Resume takes paused, blocked, failed and cancelled jobs; bulk Cancel takes queued, running, paused and blocked ones; Select all matching sends the filter on screen.",
+    "Cancel and Resume call the job doors, Start research sends a request id, Build demo submits one durable demo action (buildDemo) and a lost receipt replays the same request id, Retry demo names the failed action under a new request id, Send demo opens the send step, Open the site goes to the site in Tracy.",
+    "The Details page reads the same Status and next action from the detail answer as the list row."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=60000",
+      "packages/site/tracy-website-opportunities/test/client-my-address.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-my-list.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-row-actions.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-inspector-model.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-column-prefs.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-api.test.mjs"
+    ],
+    "tests": [
+      "the sub-tab, filter, search, open row and page are read back as written",
+      "defaults are not written, and other parameters keep their place",
+      "values a hand-edited address cannot mean are dropped, not half-applied",
+      "pageAnswer: a new server answers counts and a cursor; an old one only the rows",
+      "movingIds: research waiting or running, and demo sites still being built; nothing settled",
+      "chunk: the poll asks at most 100 ids a call",
+      "mergePolled: polled rows replace theirs in place; rows outside the filter now stay where they are",
+      "prependNew: rows added elsewhere (newest first) go on top; rows already shown are refreshed, not repeated",
+      "legacyView: an old server sends every row; the screen filters, searches and counts them itself",
+      "selectionJobs: the jobs a bulk Resume and Cancel act on, from the picked rows",
+      "createLatest: only the newest question’s answer is used; a late one is dropped",
+      "startingSubTab: the address wins; otherwise My opportunities when the account has any",
+      "cancel and resume act on the row’s latest job",
+      "Build demo submits one durable action; a lost receipt replays its request id",
+      "open the site goes to the site in Tracy; a row without one fails quietly",
+      "rowFromDetail: the Details page reads the same row the list draws, from the detail answer",
+      "My opportunities remembers its own Columns choice: Opportunity and Demo on, the other optional columns off until shown",
+      "My opportunities: one page by its query, and a bulk press with its request id"
+    ]
+  },
+  "history": [
+    "24/10/2026: 1a7870661f (19/10/2026, durable demo builds): Build demo no longer opens the latest brief, it submits one demo action; 'build demo site opens the latest brief, where the site gets its name' became 'Build demo submits one durable action; a lost receipt replays its request id'.",
+    "24/10/2026: f39d4840a2 removed the dead Create site brief action and its template picker (Tracy picks the template at build time, a537888946), so the expect line drops it.",
+    "24/10/2026: 3d05423ffc (19/10/2026) shows the Demo column by default; the Columns test was renamed to '…Opportunity and Demo on…'."
+  ]
+}

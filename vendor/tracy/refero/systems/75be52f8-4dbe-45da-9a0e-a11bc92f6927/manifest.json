@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "75be52f8-4dbe-45da-9a0e-a11bc92f6927",
+  "status": "complete",
+  "name": "Smiling Wolf",
+  "url": "https://styles.refero.design/style/75be52f8-4dbe-45da-9a0e-a11bc92f6927",
+  "sourceWebsite": "https://www.smilingwolf.co.uk",
+  "extractedAt": "2026-06-03T21:32:41.879Z",
+  "capturedAt": "2026-10-08T05:13:31.721751+00:00",
+  "theme": "mixed",
+  "industry": "agency",
+  "description": "Print magazine in monochrome.\n\nTwo-tone cream and near-black panels alternate like editorial spreads; monospace metadata stamps float over large display type with tight tracking.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/a0168fd6-d22a-4102-89ff-117d4fc08e46.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a69b19c109501efcb11aeef1b36d23b5994c825ddd9273c29680db9154215e2a",
+      "bytes": 15708
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "15e2cb71b7c54ad01e7eb080252865c4101f2454c7cf3622515b2cba48485562",
+      "bytes": 43486
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4c8eb04419810a73c3a1b538e77d1bca054364dcd45a45e390fa2aa0759a55fc",
+      "bytes": 12636
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "569dd323e4ef75d6c76c84fbc5a3e506c5bb17b51414d9170b6fcd6536272fc1",
+      "bytes": 7063
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "dff534db2160a782d07cabde52e3913cb8db2220f4312331eeb91e7e21821d01",
+      "bytes": 9863
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "dc792fab70b672ec2a1f1a2d077a34c6f557ad1aa731144ace63884cf5561a31",
+      "bytes": 2191
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "55c2e0efebed65dd4afad9baa01207afdf9fb6116fa29fd16600af332ac92414",
+      "bytes": 570
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "38779933d4c06930f3d7cf9ac5c1ef4758392bfec77438aeeb4c1b25c140552b",
+      "bytes": 587
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "58e39f8c401b6832615b13c88e944e6a4a081379290b0f474a6d65f408b1ebc7",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a5f7d35d66e3c80cfc247f507f69937aa50fc9abaf172ac5852756047a0ea9b6",
+      "bytes": 38078
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "d2d430c56ed9ebf1d9c3eebbcde29949c53796ba2b87f031eae7ee2a747af1f5",
+      "bytes": 19417
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1a0c044e443d6ac5387e7d99b7b590833ca44f3095376091203c8c9b8ade072e",
+      "bytes": 29295
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e36a361eb2c5dd92fc4d2eb3807fa63d216db3cc3dd1e301bb6862380a40b28d",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c97e608df5bb8ebde19c6fad82be65f2927d2d0649889abd6826d86561e193a3",
+      "bytes": 1319
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "29926f17025622a3a6f140ccc16bf192573f59156e8309a12849beb7255ea795",
+      "bytes": 1773
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "143d553e-d71f-4e86-98ed-b80b9ef78ea9",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "75be52f8-4dbe-45da-9a0e-a11bc92f6927",
+    "8e26bf8a-44b8-4fe1-9b4b-188dd5827c0f",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c43237e3-dae2-4fc6-a917-519b25c870e5",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "f352b093-1ba7-49c7-9ce3-ad73cf9a1aee",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

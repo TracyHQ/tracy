@@ -1,0 +1,313 @@
+/* ─────────────────────────────────────────────────────────────────────────
+ * design-systems/ja-voyara/tokens.css
+ *
+ * Structured token bindings for JA Voyara — a warm editorial travel
+ * language built on a cream page, white cards, a terracotta primary and
+ * a deep teal secondary, with a high-contrast serif display over a sans
+ * body and small uppercase monospace eyebrows. This file is the
+ * *machine-readable* form of the values described in `DESIGN.md`.
+ * Agents are expected to paste the `:root { … }` block verbatim into the
+ * first `<style>` of every artifact they generate against this design
+ * system, then reference everything via var(--name) from then on.
+ *
+ * Where the values come from:
+ *   The template drives its whole design from one custom-property set,
+ *   `--voy-*`, declared on `:root` in `scss/_voyara.scss:7-43` and
+ *   compiled into `css/template.css:18390-18419`. Dark is a remap of the
+ *   same names under `html.t4-dark` in `css/darkmode.css:8-48`. Every
+ *   value below is that set translated into the shared schema names; the
+ *   T4 and Bootstrap values in `etc/theme/default.json` and
+ *   `scss/_variables.scss` are admin and compile inputs that do NOT
+ *   repaint the token-driven rules, so they are not the source here.
+ *
+ * Brand-specific schema decisions (non-obvious bindings worth flagging
+ * for reviewers and downstream brand authors):
+ *   1. --fg-2 is DARKER than --fg (#1A1512 against #2B2420). This is a
+ *      heading ink, not a second, lighter text step. Do not build a
+ *      descending ramp out of it: in dark the pair inverts (#FBF6EF over
+ *      #E8DFD4) and the relationship holds, but only because both ends
+ *      are bound, never computed.
+ *   2. --surface-warm is a real third tier (#F2EBE1), not an alias. The
+ *      page ladder is cream canvas → white card → warm sand band, and
+ *      the sand carries the masthead, the raised bands and the footer.
+ *   3. --meta is bound independently of --muted even though the two
+ *      share a light value. They are separate tokens upstream
+ *      (`--voy-muted` and `--voy-text-dim`) with separate histories, and
+ *      the same is true of --border / --border-soft, which diverge only
+ *      in dark (#352C24 against #4A3F35).
+ *   4. --accent-hover is a hand-picked value (#A6451F), not a black mix
+ *      of --accent. Rebinding the terracotta alone leaves the old hover.
+ *      --accent-active is bound to the same value: the template's
+ *      pressed state changes geometry only, so this is the honest
+ *      proposal, not a measured colour (see DESIGN.md §9 Known Gaps).
+ *   5. --success is the deep teal (#1F6F6B), the brand secondary. The
+ *      template genuinely paints valid form fields and success alerts
+ *      with it; Bootstrap's green is compiled in but never shown.
+ *   6. --tracking-display is 0, deliberately. Tracking in this design
+ *      belongs to the monospace layer only (eyebrows +1px, module titles
+ *      +0.8px, card categories +0.6px); the serif is set flush.
+ *   7. --focus-ring is an OUTLINE shorthand, not a box-shadow, because
+ *      that is what the template draws: `outline: 2px solid` the accent
+ *      at `outline-offset: 2px`. The offset therefore needs its own
+ *      token, --focus-ring-offset, declared below as a C-extension.
+ *   8. --elev-flat stays `none` and a fourth name, --elev-card, carries
+ *      the resting card shadow (0 1px 3px #0000000F). The design has
+ *      three real shadow steps; reusing --elev-raised for the resting
+ *      state would be eight times too deep.
+ *
+ * C-extensions declared here (documented in DESIGN.md, outside the
+ * shared schema): --focus-ring-offset, --elev-card, --scrim.
+ *
+ * Contract sources:
+ *   - Standard token names: design-systems/_schema/tokens.schema.ts
+ *   - A2 fallback values:   design-systems/_schema/defaults.css
+ *     (We override --accent-hover, --accent-active, --success, --warn,
+ *      --danger, --font-mono, --radius-md, --radius-lg, --elev-ring,
+ *      --elev-raised, --focus-ring, --motion-fast, --motion-base,
+ *      --ease-standard; the rest match defaults.)
+ *
+ * Keep this file additive: never invent token names not also documented
+ * in DESIGN.md or the shared schema.
+ * ─────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* ─── Surface (3 levels) ──────────────────────────────────────────
+   * Cream page, white card, warm sand band. All three are real and all
+   * three are load-bearing: the cream is the default canvas of body,
+   * `.t4-content` and the main body wrapper; white is cards, form
+   * fields, the header bar and the mega panel; sand is the raised
+   * bands, the inner-page masthead, the footer and the icon chips. */
+  --bg: #FAF6F0;
+  --surface: #FFFFFF;
+  --surface-warm: #F2EBE1;
+
+  /* ─── Foreground ramp (4 levels) ─────────────────────────────────
+   * Read this ramp as two pairs, not one descent. --fg / --fg-2 are
+   * body ink and heading ink, and the heading is the darker of the
+   * two. --muted / --meta are the quiet tier: excerpts, card meta,
+   * footer links, breadcrumbs. They share a light value and stay
+   * together in dark; they are separate names because they are
+   * separate tokens upstream and one of them was fixed later. */
+  --fg: #2B2420;
+  --fg-2: #1A1512;
+  --muted: #8A7E72;
+  --meta: #8A7E72;
+
+  /* ─── Border (2 levels) ──────────────────────────────────────────
+   * One warm hairline does card edges, the header rule and the drawer.
+   * --border-soft is the form-field edge: identical in light, lighter
+   * than --border in dark so a field still reads as an input on the
+   * near-black page. */
+  --border: #E5DCD0;
+  --border-soft: #E5DCD0;
+
+  /* ─── Accent ──────────────────────────────────────────────────────
+   * Terracotta. It carries links, primary buttons, the header CTA and
+   * the focus outline — the only warm-chromatic move in the chrome,
+   * and the one the teal secondary must never compete with. */
+  --accent: #C2562F;
+  --accent-on: #FFFFFF; /* white label on the terracotta fill */
+
+  /* ─── Accent states ───────────────────────────────────────────────
+   * Hover darkens to a fixed second value; it is NOT computed from
+   * --accent, so a re-skin that moves the terracotta must move this
+   * with it. Active is bound to the same value as hover: the template
+   * declares no pressed colour at all (the press is a transform that
+   * itself sits inside the reduced-motion guard), so this is the
+   * honest proposal rather than a measurement. */
+  --accent-hover: #A6451F;
+  --accent-active: #A6451F;
+
+  /* ─── Semantic ────────────────────────────────────────────────────
+   * --success is the brand's deep teal, not a green: the template
+   * paints valid contact fields and success alerts with the secondary.
+   * --warn is the decorative amber — rating stars, tour badges, the
+   * admin's warning and info colour — proposed here because the design
+   * has no real warning state of its own. --danger is the brick red
+   * the contact form uses for an invalid field. Reserve all three to
+   * under 5% of any surface. */
+  --success: #1F6F6B;
+  --warn:    #E0A458;
+  --danger:  #C2362F;
+
+  /* ─── Typography ──────────────────────────────────────────────────
+   * Three families, three jobs: a high-contrast serif for display, a
+   * neutral sans for reading and controls, a monospace for the small
+   * uppercase eyebrows and labels that sit above every section title.
+   * The monospace is the only family the template actually fetches; on
+   * a stock install the serif and the sans render from these fallback
+   * stacks, which is why the stacks are written out in full. */
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Type scale (px). The body baseline is a real T4 variable at 16px,
+   * not a browser default; the dense UI tier (buttons, nav links) runs
+   * at 15px and is left to component rules. The ceiling is the closing
+   * CTA title at 44px — above it the hero title is fluid,
+   * clamp(34px, 5vw, 66px), a display step this fixed scale does not
+   * try to cover. */
+  --text-xs:   12px;  /* eyebrows, labels, module titles */
+  --text-sm:   14px;  /* card excerpt, footer links, mega-panel links */
+  --text-base: 16px;  /* body baseline */
+  --text-lg:   19px;  /* hero lead */
+  --text-xl:   22px;  /* brand wordmark, large card titles */
+  --text-2xl:  28px;  /* sub-section headings */
+  --text-3xl:  40px;  /* home section headings */
+  --text-4xl:  44px;  /* closing CTA title */
+
+  /* Long, relaxed body leading (1.65) against a very tight display
+   * leading (1.14). The gap between the two is most of what makes the
+   * page read as editorial rather than as a product page. */
+  --leading-body:  1.65;
+  --leading-tight: 1.14;
+
+  /* Zero, and deliberately so: the serif is set flush to beat a base
+   * rule that would add 1.5px. Tracking in this design belongs to the
+   * monospace layer, where it runs +0.5px to +1px. */
+  --tracking-display: 0;
+
+  /* ─── Spacing ─────────────────────────────────────────────────────
+   * An 8px base unit, computed rather than typed upstream: the T4 ramp
+   * is calc() over --global-spacing: 8px. The 20px step is the card's
+   * own body padding and is not part of that ramp; 48px is both the
+   * footer grid gap and the header side gutter. */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-12: 48px;
+
+  /* ─── Section rhythm ──────────────────────────────────────────────
+   * 88px is the headline rhythm and it holds all the way down to
+   * 640px, where one redeclaration takes every section to 48px at
+   * once. There is no tablet step in the template: the 64px bound here
+   * is the design's own compact-band value (logo strips run at 34px,
+   * stats and CTA bands at 64px), offered so the schema's three-step
+   * contract has an honest middle. */
+  --section-y-desktop: 88px;
+  --section-y-tablet:  64px;
+  --section-y-phone:   48px;
+
+  /* ─── Radius ──────────────────────────────────────────────────────
+   * Soft but tiered, and the tiers mean different things:
+   *   sm   → 8px    form fields
+   *   md   → 14px   brand mark, icon chips
+   *   lg   → 22px   cards, mega panel, feature cards
+   *   pill → 9999px every button, the header CTA, badges, social icons
+   * The pill is the signature: there is no square button anywhere in
+   * this design. */
+  --radius-sm:   8px;
+  --radius-md:   14px;
+  --radius-lg:   22px;
+  --radius-pill: 9999px;
+
+  /* ─── Elevation ───────────────────────────────────────────────────
+   * Flat surfaces here are a 1px --border rule with no shadow at all —
+   * the theme toggle, the drawer, the social icons. Cards rest on a
+   * whisper (--elev-card) and lift to --elev-raised on hover. The ring
+   * is the form-field focus glow: a 3px terracotta wash at ~13% alpha.
+   * It is a hard-coded alpha upstream and is NOT remapped in dark, so
+   * a focused field keeps a light-terracotta ring on the dark page — a
+   * known defect, recorded here rather than silently fixed. */
+  --elev-flat:   none;
+  --elev-card:   0 1px 3px #0000000F;  /* C-extension: resting card */
+  --elev-ring:   0 0 0 3px #C2562F22;
+  --elev-raised: 0 8px 24px #0000001A;
+
+  /* ─── Focus ───────────────────────────────────────────────────────
+   * An outline, not a glow: 2px of solid accent, held 2px off the
+   * element. Written as two tokens because the two CSS properties are
+   * separate — use them as
+   *   outline: var(--focus-ring); outline-offset: var(--focus-ring-offset);
+   * The pair is a genuine global floor in this design: links, buttons
+   * and six button classes all declare it. */
+  --focus-ring: 2px solid var(--accent);
+  --focus-ring-offset: 2px;  /* C-extension */
+
+  /* ─── Motion ──────────────────────────────────────────────────────
+   * Fast and unshowy. 0.12s moves transforms, 0.18s moves colour,
+   * border and background, and both are ungated — they apply at any
+   * motion preference. The slower steps in the template (0.25s cards,
+   * 0.4s image zoom, 0.6s scroll reveal) all sit inside a
+   * prefers-reduced-motion guard and are component-internal. The
+   * easing is the plain `ease` keyword; no custom curve appears
+   * anywhere in the compiled or overlay CSS. */
+  --motion-fast:   0.12s;
+  --motion-base:   0.18s;
+  --ease-standard: ease;
+
+  /* ─── Layout ──────────────────────────────────────────────────────
+   * One container width for the whole site: 1140px, which overrides
+   * the Bootstrap ladder so the column does not step at breakpoints.
+   * The gutter has no breakpoint either — the same 16px holds at every
+   * width. The header is the documented exception: a fluid container
+   * with a 48px side gutter that steps to 20px at 1024px. */
+  --container-max:            1140px;
+  --container-gutter-desktop: 16px;
+  --container-gutter-tablet:  16px;
+  --container-gutter-phone:   16px;
+
+  /* ─── Scrim (C-extension) ─────────────────────────────────────────
+   * The overlay laid over the full-bleed hero photograph so the serif
+   * title and the search bar stay legible over any image. It is warm,
+   * not neutral black: #16100B at ~69% alpha. Not remapped in dark —
+   * the hero is already a dark scene in both modes. */
+  --scrim: #16100BB0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+ * DARK
+ *
+ * `[data-theme="dark"]` is this repository's standard theme hook, and
+ * `html.t4-dark` is the selector the template itself ships, set on the
+ * root element before paint from a cookie, then the site default, then
+ * the operating-system preference. Both are bound so a generated
+ * artifact and a real site flip from the same block.
+ *
+ * Dark is a remap of the same names and nothing else. The template's
+ * dark file declares no font family, no font size, no radius, no
+ * container width, no duration and no easing — the relationships are
+ * carried entirely by these colours and shadows.
+ *
+ * Two honest gaps, both inherited:
+ *   - --elev-ring is NOT remapped upstream, so a focused field keeps a
+ *     light-terracotta ring on the near-black page. We keep the defect
+ *     visible here rather than invent a value.
+ *   - --scrim is not remapped either; the hero is a dark scene already.
+ * ─────────────────────────────────────────────────────────────────── */
+[data-theme="dark"],
+html.t4-dark {
+  --bg: #15110E;
+  --surface: #211B16;
+  --surface-warm: #1C1712;
+
+  /* The ramp inverts: the heading ink is now LIGHTER than the body ink,
+   * which is exactly the same relationship read from the other side. */
+  --fg: #E8DFD4;
+  --fg-2: #FBF6EF;
+  --muted: #9C9085;
+  --meta: #9C9085;
+
+  /* The one pair that genuinely diverges in dark: a field edge has to
+   * stand off the page more than a card edge does. */
+  --border: #352C24;
+  --border-soft: #4A3F35;
+
+  --accent: #D86A3F;
+  --accent-on: #FFFFFF;
+  --accent-hover: #E27E55;
+  --accent-active: #E27E55;
+
+  --success: #46A39D;
+  --warn:    #E8B66F;
+  --danger:  #E2745A;
+
+  /* Shadows deepen: the same geometry at roughly four times the alpha,
+   * because a 6% black shadow is invisible on a near-black page. */
+  --elev-card:   0 1px 3px #00000066;
+  --elev-raised: 0 8px 24px #00000080;
+}

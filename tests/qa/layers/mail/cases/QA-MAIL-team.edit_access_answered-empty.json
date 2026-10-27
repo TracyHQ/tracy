@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.edit_access_answered-empty",
+  "itemIds": [
+    "letter:team.edit_access_answered:en",
+    "letter:team.edit_access_answered:vi",
+    "letter:team.edit_access_answered:de",
+    "letter:team.edit_access_answered:it",
+    "letter:team.edit_access_answered:fr",
+    "letter:team.edit_access_answered:nl",
+    "letter:team.edit_access_answered:zh",
+    "letter:team.edit_access_answered:es"
+  ],
+  "requirement": "team.edit_access_answered with missing facts sends nothing or a clean letter, never a hole",
+  "oracle": {
+    "source": "apps/tracy-web/src/mail/letters/team.js and comments.js header comments (approved copy, spec #809)",
+    "ref": "per-kind button, facts and \"never mailed\" rules",
+    "invariant": "a letter that would need a missing fact sends nothing; a comment deleted since is never mailed (R3)"
+  },
+  "edgeTags": ["empty"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.empty#team.edit_access_answered:"],
+  "redProof": null,
+  "legacyIds": []
+}

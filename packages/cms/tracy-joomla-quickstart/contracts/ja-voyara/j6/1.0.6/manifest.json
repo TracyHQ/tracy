@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-voyara/j6/1.0.6",
+  "platform": "joomla",
+  "template": "ja_voyara",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-voyara",
+    "id": "quickstart/ja-voyara/j6",
+    "version": "1.0.6",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_voyara",
+    "framework": "t4",
+    "prefix": "jav_",
+    "parts": {
+      "webroot": {
+        "file": "ja-voyara-j6-webroot-1.0.6.tar.gz",
+        "bytes": 195478693,
+        "sha256": "087779c7c84c8fbd3891b88bd840c0c54637b889da79a0be547db8f999a56574"
+      },
+      "database": {
+        "file": "ja-voyara-j6-database-1.0.6.sql.gz",
+        "bytes": 355304,
+        "sha256": "0e2bfca859dff2cf6129d30ed1b86665d6e6bcc832aab46264667e9e4601d8ec"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-10T09:31:13.000Z",
+    "builtFrom": {
+      "from": "quickstart/ja-voyara/j6@1.0.5",
+      "by": "coding-workflow task 48f68f5edc6a",
+      "change": "the local Site profile carries the typography of etc/site/default.json; ja_voyara 1.0.1 -> 1.0.2; no other payload change"
+    },
+    "release": "quickstart/ja-voyara/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.16",
+  "mode": "content-recommendation"
+}

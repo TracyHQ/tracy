@@ -1,0 +1,33 @@
+{
+  "statusCode": 0,
+  "status_code": 0,
+  "status_msg": "",
+  "userInfo": {
+    "user": {
+      "id": "174622",
+      "uniqueId": "examplebrand",
+      "secUid": "MS4wLjABAAAAg4tDffIOUROgUvxS_gk8bvOKJz8lairklioMDpTfAtX",
+      "nickname": "Example Brand",
+      "privateAccount": false,
+      "verified": true
+    },
+    "stats": {
+      "followerCount": 96300000,
+      "followingCount": 1,
+      "heart": 465800000,
+      "heartCount": 465800000,
+      "videoCount": 1510,
+      "diggCount": 0,
+      "friendCount": 1
+    },
+    "statsV2": {
+      "followerCount": "96327537",
+      "followingCount": "1",
+      "heart": "465776927",
+      "heartCount": "465776927",
+      "videoCount": "1510",
+      "diggCount": "0",
+      "friendCount": "1"
+    }
+  }
+}

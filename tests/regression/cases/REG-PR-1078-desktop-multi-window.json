@@ -1,0 +1,70 @@
+{
+  "id": "REG-PR-1078-desktop-multi-window",
+  "kind": "feat",
+  "title": "Desktop app: Cmd+click on another site or a Tracy screen opens a second app window from a painted spare, and that window keeps its own column widths and conversation selection",
+  "pr": 1078,
+  "area": "desktop/multi-window",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test on packages/site/tracy-site-tabs/test/desktop-open.test.mjs (routeDesktopOpen with how the link was pressed).",
+    "S2: Run node --test on packages/desktop/tracy-desktop/test/open-requests.test.mjs (the main process asks a page that opens windows, and opens the window itself, once).",
+    "S3: Run node --test on packages/desktop/tracy-desktop/test/window-storage.test.mjs (a second window's copy of the window-level storage keys).",
+    "S4: Run node --test on packages/desktop/tracy-desktop/test/window-pool.test.mjs (the spare window's lifecycle)."
+  ],
+  "expect": [
+    "S1: Cmd/middle/Shift click on another of the viewer's sites answers window on /<siteKey>/?open=browser&page=…; on a Tracy screen (/<siteKey>/…, /new, /ops) answers window on that address; a third party, an admin, a page of the site on screen and any non-screen of Tracy's origin answer external; a plain click (or no disposition) is routed exactly as before.",
+    "S2: a page that did not say it opens windows gets the old Cmd+click (browser, unasked); a page that did is asked with the disposition; a window decision on Tracy's origin is opened by the app exactly once and never handed to the page; a window decision off the origin, a window decision for a plain click, and a navigate/tab answer to a Cmd+click all open the browser on the pressed address; a new document must declare windows again.",
+    "S3: a second window seeds each window-level key once from the shared value, then writes and removals stay in its own copy (session storage, surviving its reload); the main window's later changes and storage events for those keys never reach it; every other key, drafts included, stays shared.",
+    "S4: take() is synchronous and gives the painted spare once; at most one spare is prepared; the refill runs after the turn; signed out or quitting prepares nothing; discard drops the spare and the scheduled refill; dispose ends it for good; a spare that fails to load is destroyed."
+  ],
+  "selectors": {
+    "router": "packages/site/tracy-site-tabs/src/client/desktop-open.mjs routeDesktopOpen(url, ctx, { disposition })",
+    "state machine": "packages/desktop/tracy-desktop/src/open-requests.js createOpenRouter (openWindow, setReady(ready, { windows }))",
+    "storage": "packages/desktop/tracy-desktop/src/window-storage.js isolateWindowStorage, WINDOW_KEYS",
+    "pool": "packages/desktop/tracy-desktop/src/window-pool.js createWindowPool",
+    "bridge": "window.tracyDesktop.window.role, tracyDesktop.protocolVersion 2, links.route({ windows: true, decide(url, how) })"
+  },
+  "evidence": "tasks/evidence/desktop-multi-window/e2e/results.json (the app from source on the local stand: Cmd+click, both timings, isolation both ways, Cmd+B per window, sign-out, offline)",
+  "fence": "The page names the address; the main process checks it is Tracy's and opens the window once. Only three window-level keys are isolated; drafts, theme, language and site history stay shared",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-site-tabs/test/desktop-open.test.mjs",
+      "packages/desktop/tracy-desktop/test/open-requests.test.mjs",
+      "packages/desktop/tracy-desktop/test/window-storage.test.mjs",
+      "packages/desktop/tracy-desktop/test/window-pool.test.mjs"
+    ],
+    "tests": [
+      "Cmd+click on another of the viewer's sites opens it in a second window",
+      "Cmd+click on one of Tracy's screens opens it in a second window",
+      "Shift+click and middle click count as Cmd+click",
+      "Cmd+click keeps the browser for a third party",
+      "a plain click is routed as before, never into a second window",
+      "a page that cannot open windows (an older bundle)",
+      "a page that opens windows is asked about Cmd+click",
+      "a second window on Tracy is opened by the app itself, exactly once",
+      "a second window anywhere but Tracy is not obeyed",
+      "a plain click never opens a second window",
+      "Cmd+click never moves this window or its side card",
+      "a new document has to say again that it opens windows",
+      "a second window starts from the shared value",
+      "a second window's writes stay in that window",
+      "once started, a second window does not follow later changes of the main window",
+      "a removal in a second window is remembered there",
+      "every other key, drafts included, is shared as before",
+      "a reload of the second window keeps that window's values",
+      "the main window's storage events about an isolated key do not reach the second window's page",
+      "the function carries no outside reference",
+      "nothing is ready until the spare has painted",
+      "at most one spare is being prepared",
+      "two Cmd+clicks in a row",
+      "sign-out discards the spare and the refill already scheduled",
+      "quit: the spare is destroyed and nothing is prepared again",
+      "a spare that fails to prepare is dropped"
+    ]
+  }
+}

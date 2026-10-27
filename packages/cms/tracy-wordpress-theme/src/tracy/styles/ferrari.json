@@ -1,0 +1,242 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "title": "Ferrari",
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "#0b0b0b"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#171717"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "#23130f"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "#fffaf0"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "#e8dcc8"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "#a89f91"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "#ffd200"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "#342a24"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "#241f1b"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#dc0000"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "color-mix(in oklab, var(--wp--preset--color--accent), black 8%)"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "color-mix(in oklab, var(--wp--preset--color--accent), black 14%)"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "#0f9d58"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "#ffd200"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "#ff3b30"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "\"Ferrari Sans\", \"Helvetica Neue\", Arial, sans-serif"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "\"Ferrari Sans\", \"Helvetica Neue\", Arial, sans-serif"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "\"SF Mono\", ui-monospace, Menlo, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "12px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "14px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "16px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "19px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "26px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "40px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "62px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "88px"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "1240px",
+      "wideSize": "1240px"
+    },
+    "custom": {
+      "leading": {
+        "body": "1.5",
+        "tight": "0.98"
+      },
+      "tracking": {
+        "display": "-0.03em"
+      },
+      "sectionY": {
+        "desktop": "112px",
+        "tablet": "80px",
+        "phone": "56px"
+      },
+      "radius": {
+        "sm": "4px",
+        "md": "8px",
+        "lg": "14px",
+        "pill": "9999px"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0 26px 80px rgba(0, 0, 0, 0.48)"
+      },
+      "focusRing": "0 0 0 4px rgba(220, 0, 0, 0.30)",
+      "motion": {
+        "fast": "130ms",
+        "base": "220ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.16, 1, 0.3, 1)"
+      },
+      "container": {
+        "max": "1240px",
+        "gutterDesktop": "40px",
+        "gutterTablet": "28px",
+        "gutterPhone": "18px"
+      },
+      "tracy": {
+        "inspiration": "ferrari"
+      }
+    }
+  }
+}

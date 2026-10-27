@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "ES2024",
+		"module": "preserve",
+		"moduleResolution": "bundler",
+		"declaration": true,
+		"declarationMap": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+		"outDir": "dist",
+		"rootDir": "src",
+		"lib": ["ES2024", "DOM"]
+	},
+	"include": ["src"],
+	"exclude": ["src/middleware.ts"]
+}

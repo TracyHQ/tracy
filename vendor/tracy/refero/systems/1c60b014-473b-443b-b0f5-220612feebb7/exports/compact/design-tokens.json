@@ -1,0 +1,74 @@
+{
+  "color": {
+    "pitch-black": {
+      "$value": "#050505",
+      "$type": "color",
+      "$description": "Pitch Black — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "midnight": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Midnight — Filled action button backgrounds (Try Chronicle, Talk to sales, Try for free); icon fills; strongest contrast anchor"
+    },
+    "charcoal": {
+      "$value": "#151515",
+      "$type": "color",
+      "$description": "Charcoal — Navigation link text and active nav states"
+    },
+    "obsidian": {
+      "$value": "#292929",
+      "$type": "color",
+      "$description": "Obsidian — Footer fine print and copyright text"
+    },
+    "graphite": {
+      "$value": "#6b6b6b",
+      "$type": "color",
+      "$description": "Graphite — Body text, UI borders, ghost button borders and text — the workhorse mid-tone"
+    },
+    "pewter": {
+      "$value": "#7e7e7e",
+      "$type": "color",
+      "$description": "Pewter — Secondary body copy and captions"
+    },
+    "ash": {
+      "$value": "#929292",
+      "$type": "color",
+      "$description": "Ash — Disabled or inactive button text and borders"
+    },
+    "silver": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Silver — Subtle background dividers and muted separators"
+    },
+    "fog": {
+      "$value": "#e2e2e2",
+      "$type": "color",
+      "$description": "Fog — Card borders, image borders, input borders — the hairline rule color"
+    },
+    "limestone": {
+      "$value": "#f3f3f3",
+      "$type": "color",
+      "$description": "Limestone — Alternating section backgrounds, testimonial section canvas, muted surface fills"
+    },
+    "cloud": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Cloud — Primary page canvas, card surfaces, link text on filled black buttons"
+    }
+  },
+  "font": {
+    "diatype": {
+      "$value": "Diatype",
+      "$type": "fontFamily",
+      "$description": "Single typeface for the entire system — headings, body, nav, buttons. Weight 400 for body and secondary text; weight 500 for prominent headings and CTAs. Negative tracking of -0.03em at display sizes creates mechanical compression uncommon in SaaS type — the letterforms feel pressed into the page rather than set on it. No serif, no decorative fallback: if Diatype is absent, the design loses its primary identity marker."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://chroniclehq.com",
+      "siteName": "Chronicle",
+      "extractedAt": "2026-05-01T15:51:33.254Z",
+      "variant": "compact"
+    }
+  }
+}

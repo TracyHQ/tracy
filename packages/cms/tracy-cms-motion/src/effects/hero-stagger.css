@@ -1,0 +1,47 @@
+/*
+ * hero-stagger — on load the hero's units arrive one after another in document order.
+ *
+ * The delay is not in this file. A real hero puts its copy in one column and its image in another,
+ * so the units sit under different parents, and `:nth-child()` counts among siblings only — a rung
+ * ladder here would fire the two buttons alongside the eyebrow. The runtime reads the step off
+ * `--tracy-motion-step` below and hands each unit its own delay through the Web Animations API,
+ * eight rungs with everything past the eighth sharing the last, so a long hero settles instead of
+ * drifting further and further out. Nothing is written onto the customer's markup to carry it: no
+ * attribute, no inline style.
+ *
+ * The effect class also lifts the base sheet's hide off the section. It is added in the same task
+ * that starts the animations, so the section becomes visible only once its units are already
+ * moving.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html.tracy-motion .tracy-motion-hero-stagger {
+    --tracy-motion-dur: 520ms;
+    --tracy-motion-ease: cubic-bezier(0.2, 0, 0, 1);
+    --tracy-motion-step: 90ms;
+    --tracy-motion-rise: 12px;
+    opacity: 1;
+  }
+
+  html.tracy-motion .tracy-motion-hero-stagger.tracy-motion-bold {
+    --tracy-motion-dur: 720ms;
+    --tracy-motion-step: 150ms;
+    --tracy-motion-rise: 24px;
+  }
+
+  html.tracy-motion .tracy-motion-hero-stagger .tracy-motion-unit {
+    animation: tracy-motion-hero-stagger var(--tracy-motion-dur) var(--tracy-motion-ease) both;
+  }
+}
+
+@keyframes tracy-motion-hero-stagger {
+  from {
+    opacity: 0;
+    transform: translateY(var(--tracy-motion-rise));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

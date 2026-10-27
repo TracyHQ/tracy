@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-rent/j6/1.0.5",
+  "platform": "joomla",
+  "template": "ja_rent",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-rent",
+    "id": "quickstart/ja-rent/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_rent",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-rent-j6-webroot-1.0.5.tar.gz",
+        "bytes": 53580597,
+        "sha256": "65f843bf1fcabad1de7d08cbb099f0a65ce8f17daa7fa151fa50e22a7d1dfbba"
+      },
+      "database": {
+        "file": "ja-rent-j6-database-1.0.5.sql.gz",
+        "bytes": 114822,
+        "sha256": "5a40846ae8a0e416f04b950e9fe28015c6599b5eb9749be9af1d63570175cd1b"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-19T19:29:49.208Z",
+    "builtFrom": {
+      "from": "quickstart/ja-rent/j6@1.0.4",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 578 files replaced (templates/ja_rent/component.php, templates/ja_rent/error.php, templates/ja_rent/favicon.ico, templates/ja_rent/index.html, templates/ja_rent/index.php, templates/ja_rent/offline.php, templates/ja_rent/templateDetails.xml, templates/ja_rent/templateHook.php, templates/ja_rent/templateInfo.php, templates/ja_rent/template_preview.png, templates/ja_rent/template_thumbnail.png, templates/ja_rent/thememagic.xml, templates/ja_rent/acm, templates/ja_rent/css, templates/ja_rent/etc, templates/ja_rent/fonts, templates/ja_rent/html, templates/ja_rent/images, templates/ja_rent/js, templates/ja_rent/language, templates/ja_rent/less, templates/ja_rent/tpls); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-rent/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

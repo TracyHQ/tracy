@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1638-seen-hints-per-account",
+  "kind": "fix",
+  "title": "One-time hints show once per account, across browsers and devices",
+  "pr": 1638,
+  "area": "onboarding/seen-hints",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the onboarding package tests and the voice tip account test on this branch.",
+    "Render the site tour and the voice tip in a fresh browser for an account the server reports as having seen them.",
+    "Render them for an account that has not seen them, finish them, and check the account record is written; carry over an existing browser mark.",
+    "Read the desktop first-run state for an account that completed onboarding on another device."
+  ],
+  "expect": [
+    "A fresh browser does not show the site tour or the voice tip when the account has seen them.",
+    "Finishing a hint records it on the account; an old browser mark is recorded on the account once and removed.",
+    "A failed read does not show the hint.",
+    "The desktop app does not reopen the first-run tour for an account that completed it."
+  ],
+  "selectors": {
+    "stage": "[data-tour-stage]"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-onboard/test/mount.test.mjs",
+      "packages/ui/tracy-onboard/test/surface.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-tip-account.test.mjs"
+    ],
+    "tests": [
+      "a previously seen account does not see the tip on a fresh browser",
+      "legacy browser state is copied to the account then removed",
+      "account seen hints suppress the site tour in a fresh browser",
+      "a failed seen-hint read hides the site tour",
+      "desktop stage 1 through the surface overlay uses account completion on a new device",
+      "the desktop surface: the account decides both flags"
+    ]
+  }
+}

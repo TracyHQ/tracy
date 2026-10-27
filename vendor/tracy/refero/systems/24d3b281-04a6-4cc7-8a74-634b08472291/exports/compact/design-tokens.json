@@ -1,0 +1,89 @@
+{
+  "color": {
+    "ivory-page": {
+      "$value": "#fffdf8",
+      "$type": "color",
+      "$description": "Ivory Page — Primary canvas, page background, card surface. Warm off-white reads as paper, not screen"
+    },
+    "ink-charcoal": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Ink Charcoal — Primary text, icon strokes, body copy. Near-black with a touch of warmth against the ivory canvas"
+    },
+    "pressed-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pressed Black — Illustration fill, SVG marks, fine ink details. Hard black reserved for the hand-drawn graphics layer"
+    },
+    "graphite-rule": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Graphite Rule — Hairline borders, dividers, card outlines, image frames. The dominant structural neutral — everything thin on the page is drawn with this"
+    },
+    "smoke": {
+      "$value": "#8c8c8c",
+      "$type": "color",
+      "$description": "Smoke — Muted helper text, captions, secondary metadata. Reads as pencil-gray against ivory"
+    },
+    "ash-border": {
+      "$value": "#d1d1d1",
+      "$type": "color",
+      "$description": "Ash Border — Button borders, outlined-control frames, slightly heavier than Graphite Rule"
+    },
+    "slate-body": {
+      "$value": "#474747",
+      "$type": "color",
+      "$description": "Slate Body — Secondary body copy, subdued icon detail, supporting prose"
+    },
+    "soft-halo": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Soft Halo — Alternate surface, recessed panels, secondary card backgrounds beneath the primary ivory"
+    },
+    "sepia": {
+      "$value": "#512906",
+      "$type": "color",
+      "$description": "Sepia — Primary action fill, filled CTA buttons, key accent text. Dark warm brown reads as leather binding — the brand's single chromatic commitment to interface weight"
+    },
+    "ink-violet": {
+      "$value": "#242d64",
+      "$type": "color",
+      "$description": "Ink Violet — Feature-panel surface, deep accent headings, large display blocks. The nocturnal counterpart to ivory — used as a full bleed to break the paper rhythm"
+    },
+    "forest-ink": {
+      "$value": "#0c3b1a",
+      "$type": "color",
+      "$description": "Forest Ink — Secondary accent text, category tags, decorative strokes. Saturated dark green used the way a fountain-pen user might switch inks"
+    },
+    "oxblood": {
+      "$value": "#5e0831",
+      "$type": "color",
+      "$description": "Oxblood — Tertiary accent, pull-quote emphasis, rare highlight text. The most restrained of the ink colors — deployed once or twice per page at most"
+    },
+    "margin-yellow": {
+      "$value": "#ffc934",
+      "$type": "color",
+      "$description": "Margin Yellow — Decorative highlighter wash, accent backgrounds, illustration fill. The single vivid color — used as a flat block behind a handful of illustrations and never on chrome"
+    }
+  },
+  "font": {
+    "iowanold": {
+      "$value": "IowanOld",
+      "$type": "fontFamily",
+      "$description": "All headlines, hero text, feature titles, and emphasis blocks. The serif carries the 'notebook' voice — its oldstyle proportions, small contrast, and bracketed serifs read as editorial print, not product UI. Weight 400 at 42–48px lets the type feel set, not shouted; weight 500 reserved for the smallest display lines. IowanOld is a custom brand face; substitute with Source Serif Pro, Tiempos Text, or PT Serif."
+    },
+    "suisseintl": {
+      "$value": "SuisseIntl",
+      "$type": "fontFamily",
+      "$description": "All body copy, navigation, button labels, footer text, utility chrome. The neo-grotesque companion stays quiet so the serif can lead. Line-height 1.00 is reserved for the smallest UI text inside compact controls; 1.50 for body paragraphs. SuisseIntl is a custom brand face; substitute with Inter, Söhne, or Helvetica Neue."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.opennote.com",
+      "siteName": "Opennote",
+      "extractedAt": "2026-06-03T17:19:14.702Z",
+      "variant": "compact"
+    }
+  }
+}

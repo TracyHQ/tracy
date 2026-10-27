@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-symphony/j6/1.0.5",
+  "platform": "joomla",
+  "template": "ja_symphony",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-symphony",
+    "id": "quickstart/ja-symphony/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_symphony",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-symphony-j6-webroot-1.0.5.tar.gz",
+        "bytes": 46590912,
+        "sha256": "095087b2dc38d69b1dfbabcd30825cd0434696a4a54614b7a8729f8bd97769d4"
+      },
+      "database": {
+        "file": "ja-symphony-j6-database-1.0.5.sql.gz",
+        "bytes": 82202,
+        "sha256": "30c92a64b77649d769979a198c45e6cdd6ae948390fb76151703085e6c3bedd8"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T08:30:23.704Z",
+    "builtFrom": {
+      "from": "quickstart/ja-symphony/j6@1.0.4",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 1 files replaced (templates/ja_symphony/css); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-symphony/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

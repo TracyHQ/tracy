@@ -1,0 +1,44 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, body borders, all text in dark contexts — the default background every other element sits on"
+    },
+    "bone-cream": {
+      "$value": "#ebe4d8",
+      "$type": "color",
+      "$description": "Bone Cream — Primary text color, button fills, surface highlights — warm off-white that reads as paper, not screen white"
+    },
+    "ash-taupe": {
+      "$value": "#c3bdb3",
+      "$type": "color",
+      "$description": "Ash Taupe — Button box-shadow tint — the single warm-gray accent in the system"
+    },
+    "alarm-red": {
+      "$value": "#ff4034",
+      "$type": "color",
+      "$description": "Alarm Red — Hazard icons, strikethrough editorial links, flame illustrations, concentric radar rings — the only chromatic signal in the system, reserved for things requiring attention"
+    }
+  },
+  "font": {
+    "spektra": {
+      "$value": "Spektra",
+      "$type": "fontFamily",
+      "$description": "Display and heading face — extremely condensed, near-black weight even at 400, used for the campaign title and brand wordmark at poster sizes"
+    },
+    "helvetica-neue-lt": {
+      "$value": "Helvetica Neue LT",
+      "$type": "fontFamily",
+      "$description": "Body, subheadings, UI text — quiet humanist sans at 400 for body, 800 for emphasized subheads and footer marks"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.climatecatastrophepack.com",
+      "siteName": "Cards Against Humanity",
+      "extractedAt": "2026-06-03T21:06:36.930Z",
+      "variant": "compact"
+    }
+  }
+}

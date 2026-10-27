@@ -1,0 +1,260 @@
+{
+  "dos": [
+    "Use #ffffff as the default content surface and reserve #f6f6f6 or #ededed for large muted section bands.",
+    "Use #111111 for headings; set section headings at 20px/28px weight 700, card headings at 24px/32px weight 700, and app-promotion headings at 32px/40px weight 800.",
+    "Use #1878ec for search submission, destination links, and compact promotional surfaces.",
+    "Use 1000px or 9999px radii for horizontal hero controls and search surfaces.",
+    "Use 32px radii for large photographic hero frames and blue promotional tiles.",
+    "Use 1px solid #d9d9d9 dividers between search fields and on bordered card edges.",
+    "Keep common control padding at 8px vertical with 12px horizontal padding; use 8px gaps between tightly related controls."
+  ],
+  "donts": [
+    "Do not apply drop shadows to #f6f6f6 cards or #1878ec promotional tiles.",
+    "Do not use #1878ec as a page background; confine it to links, search submission, and contained promotional areas.",
+    "Do not replace hero navigation’s transparent white treatment with dark text or filled dark buttons.",
+    "Do not use sharp corners on hero imagery; retain the 32px image radius.",
+    "Do not use more than a 1px #d9d9d9 border for structural separation.",
+    "Do not set navigation, sign-in, or trip links below 16px/24px weight 600.",
+    "Do not turn the search fields into individually rounded inputs; retain the shared white pill surface and 0px field radii."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1878ec",
+      "name": "Hopper Blue",
+      "role": "Search button fill, destination links, inline navigation links, and selected product accents — saturated blue punctuates an otherwise achromatic travel interface",
+      "group": "brand"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White",
+      "role": "Primary page and card surfaces; white text and outlines over the photographic hero",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f6f6f6",
+      "name": "Cloud",
+      "role": "Muted card and footer-region surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ededed",
+      "name": "Mist",
+      "role": "Secondary page bands and subdued background areas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d9d9",
+      "name": "Divider Gray",
+      "role": "1px card borders, search-field separators, and quiet structural rules",
+      "group": "neutral"
+    },
+    {
+      "hex": "#111111",
+      "name": "Ink",
+      "role": "Headings, search-entry text, and highest-emphasis content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#606060",
+      "name": "Graphite",
+      "role": "Muted informational text, footer links, and secondary iconography",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b3b3b3",
+      "name": "Placeholder Gray",
+      "role": "Placeholder text and inactive control icons",
+      "group": "neutral"
+    }
+  ],
+  "layout": "The page begins with a large, contained destination-photo hero whose rounded image frame holds the logo, horizontally centered product navigation, right-aligned utility controls, and a centered horizontal booking search bar. Below, white content space gives deal content broad breathing room, followed by a two-column app-download composition: left-aligned text, QR code, download link, and ratings sit beside overlapping phone product screenshots. The page closes with a pale-gray exploration band containing a compact heading and a four-column directory of blue destination links. Navigation is a single top bar embedded in the hero rather than a separate opaque header; the page rhythm alternates photographic hero, white content, then muted utility/footer surface.",
+  "imagery": "Photography is the primary atmospheric visual: a wide destination landscape fills the hero, with the place itself functioning as the product invitation. The crop is immersive rather than editorial, contained in a 32px rounded frame and overlaid with white navigation and booking controls. Product imagery appears in the app block as overlapping, upright mobile-screen screenshots with raw device edges; it explains the mobile experience rather than serving as abstract decoration. Icons are compact white or dark line symbols used beside navigation labels and controls, while QR code and store-rating graphics provide functional acquisition proof.",
+  "similar": [
+    {
+      "why": "Shares a destination-led booking hero with a centralized multi-field search control and restrained white overlay navigation.",
+      "business": "Airbnb"
+    },
+    {
+      "why": "Shares travel-product navigation with compact transport icons and blue as the booking and link accent.",
+      "business": "Skyscanner"
+    },
+    {
+      "why": "Shares an image-backed travel-discovery entry point and a modular search interface for multiple trip parameters.",
+      "business": "KAYAK"
+    },
+    {
+      "why": "Shares broad destination photography, contained rounded image framing, and accommodation-search emphasis.",
+      "business": "Vrbo"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "links": "4px",
+      "pills": "9999px",
+      "images": "32px",
+      "inputs": "0px",
+      "buttons": "1000px",
+      "compactControls": "12px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "48px",
+    "cardPadding": "12px",
+    "pageMaxWidth": null
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "White Canvas",
+      "level": 0,
+      "purpose": "Primary page background and booking-search surface."
+    },
+    {
+      "hex": "#f6f6f6",
+      "name": "Cloud Surface",
+      "level": 1,
+      "purpose": "Muted destination cards and low-emphasis section surfaces."
+    },
+    {
+      "hex": "#ededed",
+      "name": "Mist Band",
+      "level": 2,
+      "purpose": "Large footer and exploration background bands."
+    },
+    {
+      "hex": "#1878ec",
+      "name": "Hopper Blue Surface",
+      "level": 3,
+      "purpose": "Contained promotional cards and booking search submission."
+    }
+  ],
+  "northStar": "Santorini window at dusk. A softened destination photograph acts as the atmospheric top layer, with compact white navigation and booking controls suspended over it.",
+  "typeScale": [
+    {
+      "role": "destination-link",
+      "size": 14,
+      "family": "Proxima Nova",
+      "weight": 400,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "family": "Proxima Nova",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "nav",
+      "size": 16,
+      "family": "Proxima Nova",
+      "weight": 600,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "section-heading",
+      "size": 20,
+      "family": "Proxima Nova",
+      "weight": 700,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "role": "card-heading",
+      "size": 24,
+      "family": "Proxima Nova",
+      "weight": 700,
+      "lineHeight": 1.33,
+      "letterSpacing": 0
+    },
+    {
+      "role": "app-heading",
+      "size": 32,
+      "family": "Proxima Nova",
+      "weight": 800,
+      "lineHeight": 1.25,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Hero Destination Frame",
+      "role": "Top-level travel discovery surface",
+      "description": "Use a destination photograph as a contained wide frame with 32px corners. Overlay white navigation and utility controls directly on the image; keep the image label in white and align it toward the lower edge."
+    },
+    {
+      "name": "Transparent Product Navigation",
+      "role": "Hero service switching",
+      "description": "Use 16px/24px Proxima Nova at 600 in #ffffff, paired with small white line icons. Each item has 8px vertical and 12px horizontal padding, transparent fill, and a 1000px radius; the selected item receives a 1px #ffffff border."
+    },
+    {
+      "name": "Hero Sign-In Button",
+      "role": "Outlined account entry",
+      "description": "Use transparent fill, 1px solid #ffffff border, #ffffff 16px/24px semibold text, 8px 24px padding, and a 12px radius. Keep this treatment exclusive to controls placed over dark or photographic imagery."
+    },
+    {
+      "name": "Circular Utility Icon Button",
+      "role": "Hero search or locale utility control",
+      "description": "Use transparent fill, a 1px #ffffff outline, #ffffff iconography, 8px padding, and a 50% radius. The control is visually smaller than text-bearing hero buttons."
+    },
+    {
+      "name": "Destination Search Bar",
+      "role": "Multi-field booking search",
+      "description": "Build a white pill-shaped horizontal surface with a 9999px radius. Separate fields with 1px #d9d9d9 vertical rules; use #111111 for entered values, #b3b3b3 for placeholder values, 24px left padding, 25px top padding, 7px bottom padding, and 4px right padding."
+    },
+    {
+      "name": "Blue Search Submit Button",
+      "role": "Booking-search submission",
+      "description": "Use a #1878ec circular fill with white search iconography and a 9999px radius. Seat it inside the right end of the white search bar rather than expanding it into a page-wide button."
+    },
+    {
+      "name": "Destination Deal Card",
+      "role": "Browseable destination promotion",
+      "description": "Use a #f6f6f6 surface, 16px radius, no box shadow, and no internal card padding. Preserve image-first composition and use a 1px #d9d9d9 border only where cards need separation from a white background."
+    },
+    {
+      "name": "Blue Promotional Tile",
+      "role": "Branded feature or offer surface",
+      "description": "Use #1878ec as a flat full-bleed card background with a 32px radius and no shadow. Set internal copy and icons in #ffffff."
+    },
+    {
+      "name": "App Download Showcase",
+      "role": "Mobile-app acquisition block",
+      "description": "Place a 32px/40px, weight-800 #111111 heading above 16px/24px supporting copy. Pair the text column with a raw QR code, blue #1878ec download link treatment, store-rating marks, and overlapping upright phone screenshots."
+    },
+    {
+      "name": "Destination Link Directory",
+      "role": "Footer exploration navigation",
+      "description": "Use a #f6f6f6 or #ededed section band with a 20px/28px, weight-700 #111111 section heading. Set destination links in #1878ec at 14px/20px weight 400, arranged in evenly spaced columns with 8px vertical rhythm."
+    },
+    {
+      "name": "Text Link",
+      "role": "Inline and directory navigation",
+      "description": "Use #1878ec at 14px/20px for compact destination links or 16px/24px for utility links, both at weight 400. Retain the 4px link radius for focus and hover containment."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single-family system for all navigation, controls, destination links, body copy, and headings. The 700-800 heading weights give short labels a compact, punchy travel-retail voice rather than using oversized display type.",
+      "sizes": "14px, 16px, 18px, 20px, 24px, 32px",
+      "family": "Proxima Nova",
+      "weight": "400, 600, 700, 800",
+      "lineHeight": "1.25, 1.33, 1.40, 1.43, 1.44, 1.50",
+      "substitute": "Nunito Sans",
+      "letterSpacing": "-0.16px at 16px on tightened UI text; otherwise normal tracking in measured headings, links, and navigation."
+    }
+  ],
+  "description": "Hopper frames travel booking as a panoramic destination window: a full-bleed, rounded travel photograph carries the navigation and search controls, while the rest of the page returns to expansive white and pale-gray utility sections. The interface is text-dominant outside of imagery, using tightly structured Proxima Nova headings, blue links as navigational punctuation, and restrained 1px gray dividers. Pill-shaped controls float over photography, while destination and app-promotion content sits in flat, border-led surfaces with virtually no shadow.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Hopper Blue: #1878ec — Search button fill, destination links, inline navigation links, and selected product accents — saturated blue punctuates an otherwise achromatic travel interface\n- White: #ffffff — Primary page and card surfaces; white text and outlines over the photographic hero\n- Cloud: #f6f6f6 — Muted card and footer-region surfaces\n- Mist: #ededed — Secondary page bands and subdued background areas\n- Divider Gray: #d9d9d9 — 1px card borders, search-field separators, and quiet structural rules\n- Ink: #111111 — Headings, search-entry text, and highest-emphasis content\n- Graphite: #606060 — Muted informational text, footer links, and secondary iconography\n- Placeholder Gray: #b3b3b3 — Placeholder text and inactive control icons\n\nCreate a rounded destination-photo hero with a 32px image radius; overlay a transparent navigation row in #ffffff using 16px/24px Proxima Nova weight 600 and white line icons.\nCreate a shared white booking-search pill with 9999px corners, #d9d9d9 field dividers, #111111 values, #b3b3b3 placeholders, and a circular #1878ec search submit control.\nCreate an app-download section on #ffffff with a #111111 Proxima Nova 32px/40px weight-800 heading, 16px/24px support text, a QR code, a #1878ec text link, and overlapping phone screenshots.\nCreate a destination directory on a #ededed band using a #111111 20px/28px weight-700 heading and four columns of #1878ec 14px/20px links.\nCreate a flat #f6f6f6 destination card with 16px corners, a 1px #d9d9d9 edge where needed, and no shadow."
+    }
+  ],
+  "elevationPhilosophy": "Surfaces are separated by photo framing, pale tonal shifts, 1px #d9d9d9 borders, and large-radius silhouettes rather than box shadows. The booking bar achieves prominence through its white fill against photography, not raised elevation."
+}

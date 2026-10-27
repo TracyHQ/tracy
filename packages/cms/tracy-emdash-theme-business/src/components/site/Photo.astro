@@ -1,0 +1,40 @@
+---
+/**
+ * A fixed-height image frame (the design's `image-slot`): the photo covers the box; an empty
+ * field shows the placeholder hint instead of a broken image. `contain` for logos.
+ */
+import { Image } from 'emdash/ui'
+import { mediaUrl } from '@/lib/media'
+import type { Attrs } from '@/lib/stamps'
+
+interface Props {
+  image: any
+  alt?: string
+  placeholder?: string
+  class?: string
+  contain?: boolean
+  priority?: boolean
+  width?: number
+  height?: number
+  /** Provenance stamp of the image field (`src/lib/stamps.ts`); empty on an ordinary request. */
+  stamp?: Attrs
+}
+const {
+  image,
+  alt = '',
+  placeholder = '',
+  class: className = '',
+  contain = false,
+  priority = false,
+  width = 1200,
+  height = 800,
+  stamp = {}
+} = Astro.props
+const src = mediaUrl(image)
+---
+
+<div class:list={["photo-frame", contain && "contain", className]} {...stamp}>
+	{src?.startsWith("/_emdash/api/media/file/") ? (
+		<img src={src} alt={alt} width={width} height={height} loading={priority ? "eager" : "lazy"} fetchpriority={priority ? "high" : undefined} decoding="async" class="ng-photo" />
+	) : src ? <Image image={image} alt={alt} width={width} height={height} priority={priority} class="ng-photo" /> : <span class="photo-placeholder">{placeholder}</span>}
+</div>

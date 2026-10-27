@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-obsidian-canvas: #000000;
+  --color-parchment: #efe6d8;
+  --color-bone: #aca69c;
+  --color-ash: #736e68;
+  --color-charcoal: #605c56;
+  --color-neon-petal: #ffa1f7;
+  --color-acid-lime: #4dff00;
+
+  /* Typography */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist-pixel-triangle: 'Geist Pixel Triangle', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

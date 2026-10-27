@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-voltage-green: #00fb34;
+  --color-alarm-red: #ff0000;
+  --color-caution-yellow: #fff500;
+  --color-absolute-black: #000000;
+  --color-pure-white: #ffffff;
+  --color-ashen-gray: #aba4a4;
+
+  /* Typography — Font Families */
+  --font-offwhite: 'Offwhite', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

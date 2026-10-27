@@ -1,0 +1,59 @@
+{
+  "color": {
+    "ember-orange": {
+      "$value": "#f53900",
+      "$type": "color",
+      "$description": "Ember Orange — Primary brand accent — filled CTAs, outlined action borders, icon fills, decorative accents, sparkline highlights. The only chromatic color in the interface; its vividness against the achromatic canvas makes every action feel switched on"
+    },
+    "peach-wash": {
+      "$value": "#ffe0d6",
+      "$type": "color",
+      "$description": "Peach Wash — Soft tinted surface — pill-badge backgrounds, subtle highlight panels, secondary button fills where a quieter orange is needed"
+    },
+    "snow-canvas": {
+      "$value": "#fffafa",
+      "$type": "color",
+      "$description": "Snow Canvas — Primary page background and elevated surface — the base on which all other elements sit"
+    },
+    "ink-black": {
+      "$value": "#040101",
+      "$type": "color",
+      "$description": "Ink Black — Primary text color for headings, body, and nav. Used for icon strokes and form input values"
+    },
+    "fog-gray": {
+      "$value": "#827e7e",
+      "$type": "color",
+      "$description": "Fog Gray — Secondary and helper text — muted descriptions, captions, placeholder strings"
+    },
+    "smoke-gray": {
+      "$value": "#4d4b4b",
+      "$type": "color",
+      "$description": "Smoke Gray — Tertiary text — timestamps, micro-labels, fine print beneath primary content"
+    },
+    "ash-border": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Ash Border — Hairline dividers, card borders, FAQ separators, input field borders, icon outline strokes"
+    },
+    "pebble-gray": {
+      "$value": "#c0bcbc",
+      "$type": "color",
+      "$description": "Pebble Gray — Subtle alternating section backgrounds and disabled state fills"
+    }
+  },
+  "font": {
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Universal type family — all headings, body, nav, buttons, cards, footer. The tight line-height (1.0–1.11) on display sizes and 700 weight creates a dense, confident display voice; 400 at 1.4 keeps body readable without feeling loose."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.heynds.com/en",
+      "siteName": "Heynds",
+      "extractedAt": "2026-06-03T21:00:52.630Z",
+      "variant": "compact"
+    }
+  }
+}

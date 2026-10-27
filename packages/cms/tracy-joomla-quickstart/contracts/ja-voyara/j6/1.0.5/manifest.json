@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-voyara/j6/1.0.5",
+  "platform": "joomla",
+  "template": "ja_voyara",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-voyara",
+    "id": "quickstart/ja-voyara/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_voyara",
+    "framework": "t4",
+    "prefix": "jav_",
+    "parts": {
+      "webroot": {
+        "file": "ja-voyara-j6-webroot-1.0.5.tar.gz",
+        "bytes": 196004035,
+        "sha256": "1d07f4339b8092f79b7c957de67eed5cb970930916c1ee4d7c2768a43c074639"
+      },
+      "database": {
+        "file": "ja-voyara-j6-database-1.0.5.sql.gz",
+        "bytes": 355304,
+        "sha256": "c57af8d30dbe6c663a1d2df98a721103b73ffe23aaee52c1c73aabbe69a22937"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-09T10:24:19.712Z",
+    "builtFrom": {
+      "from": "quickstart/ja-voyara/j6@1.0.4",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-voyara/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.0",
+  "mode": "content-recommendation"
+}

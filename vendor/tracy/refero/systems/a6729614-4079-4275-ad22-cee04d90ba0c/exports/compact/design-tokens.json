@@ -1,0 +1,44 @@
+{
+  "color": {
+    "bone-white": {
+      "$value": "#fcf9ee",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, hero left panel, newsletter input background — the warmest near-white, slightly yellowed like aged paper"
+    },
+    "linen": {
+      "$value": "#f2efe3",
+      "$type": "color",
+      "$description": "Linen — Card surfaces, section backgrounds, one decorative button fill — a half-shade deeper than Bone White, reads as the same material under indirect light"
+    },
+    "pebble": {
+      "$value": "#bcbab2",
+      "$type": "color",
+      "$description": "Pebble — Hairline borders, input outlines, list dividers — warm gray that disappears against the cream, only visible at the exact edge it frames"
+    },
+    "bark": {
+      "$value": "#6a6965",
+      "$type": "color",
+      "$description": "Bark — Secondary text, muted body copy, card meta lines — warm dark gray, 5.2:1 on Bone White, carries metadata without competing with primary text"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "beausite": {
+      "$value": "beausite",
+      "$type": "fontFamily",
+      "$description": "Sole typeface — covers display headlines, section titles, body, nav, buttons, and footer. beausite is a contemporary humanist sans with calligraphic DNA; its soft terminals and slightly flared apertures give the warm-cream palette a hand-set quality that no system font can replicate."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://misuko.be",
+      "siteName": "Spécialiste Belge",
+      "extractedAt": "2026-06-03T19:17:01.327Z",
+      "variant": "compact"
+    }
+  }
+}

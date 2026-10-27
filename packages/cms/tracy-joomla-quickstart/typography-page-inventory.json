@@ -1,0 +1,1165 @@
+[
+  {
+    "route": "/",
+    "status": 200,
+    "finalRoute": "/",
+    "title": "Home",
+    "heading": "A better website starts with your business.",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/product",
+    "status": 200,
+    "finalRoute": "/product",
+    "title": "Product",
+    "heading": "A clear foundation for the work ahead.",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services",
+    "status": 200,
+    "finalRoute": "/services",
+    "title": "Service",
+    "heading": "Website services",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services/service-detail",
+    "status": 200,
+    "finalRoute": "/services/service-detail",
+    "title": "Website design and build",
+    "heading": "Website design and build",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services/website-strategy",
+    "status": 200,
+    "finalRoute": "/services/website-strategy",
+    "title": "Website strategy",
+    "heading": "Website strategy",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services/brand-and-interface-design",
+    "status": 200,
+    "finalRoute": "/services/brand-and-interface-design",
+    "title": "Brand and interface design",
+    "heading": "Brand and interface design",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services/website-development",
+    "status": 200,
+    "finalRoute": "/services/website-development",
+    "title": "Website development",
+    "heading": "Website development",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services/content-and-photography",
+    "status": 200,
+    "finalRoute": "/services/content-and-photography",
+    "title": "Content and photography",
+    "heading": "Content and photography",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pricing",
+    "status": 200,
+    "finalRoute": "/pricing",
+    "title": "Pricing",
+    "heading": "Choose the level of support that fits.",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/blog",
+    "status": 200,
+    "finalRoute": "/resources/blog",
+    "title": "Blog",
+    "heading": "Content guides",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/category-list",
+    "status": 200,
+    "finalRoute": "/resources/category-list",
+    "title": "All articles",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/archive",
+    "status": 200,
+    "finalRoute": "/resources/archive",
+    "title": "Archive",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories",
+    "status": 200,
+    "finalRoute": "/resources/all-categories",
+    "title": "Topics",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-procurement",
+    "status": 200,
+    "finalRoute": "/resources/mag-procurement",
+    "title": "Website planning",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-datacenter",
+    "status": 200,
+    "finalRoute": "/resources/mag-datacenter",
+    "title": "Website operations",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-world",
+    "status": 200,
+    "finalRoute": "/resources/mag-world",
+    "title": "Studio notes",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/style-guide",
+    "status": 200,
+    "finalRoute": "/resources/style-guide",
+    "title": "Style guide",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/typography",
+    "status": 200,
+    "finalRoute": "/resources/typography",
+    "title": "Typography",
+    "heading": "Typography",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/colors",
+    "status": 200,
+    "finalRoute": "/resources/colors",
+    "title": "Color roles",
+    "heading": "Color roles",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/spacing",
+    "status": 200,
+    "finalRoute": "/resources/spacing",
+    "title": "Spacing and radius",
+    "heading": "Spacing and radius",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/faq",
+    "status": 200,
+    "finalRoute": "/resources/faq",
+    "title": "Questions",
+    "heading": "Questions",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/contact",
+    "status": 200,
+    "finalRoute": "/resources/contact",
+    "title": "Contact us",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/search",
+    "status": 200,
+    "finalRoute": "/resources/search",
+    "title": "Search",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/tags",
+    "status": 200,
+    "finalRoute": "/resources/tags",
+    "title": "Tags",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/sign-in",
+    "status": 200,
+    "finalRoute": "/resources/sign-in",
+    "title": "Sign in",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/home-2",
+    "status": 200,
+    "finalRoute": "/resources/home-2",
+    "title": "Home — variant",
+    "heading": "Good websites are a team effort.",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/single-contact",
+    "status": 200,
+    "finalRoute": "/resources/single-contact",
+    "title": "Talk to sales",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/single-tag",
+    "status": 200,
+    "finalRoute": "/resources/single-tag",
+    "title": "Joomla",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/marketing-samples",
+    "status": 200,
+    "finalRoute": "/resources/marketing-samples",
+    "title": "Marketing samples",
+    "heading": "One identity. Every message.",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/home-variation",
+    "status": 200,
+    "finalRoute": "/resources/home-variation",
+    "title": "Home variation",
+    "heading": "A better website starts with your business.",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/home-onepage",
+    "status": 200,
+    "finalRoute": "/resources/home-onepage",
+    "title": "Home - Onepage",
+    "heading": "A thoughtful studio.A stronger digital presence.",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/company/about",
+    "status": 200,
+    "finalRoute": "/company/about",
+    "title": "About",
+    "heading": "Make the first impression feel like you.",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/company/team",
+    "status": 200,
+    "finalRoute": "/company/team",
+    "title": "Team",
+    "heading": "People",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/company/careers",
+    "status": 200,
+    "finalRoute": "/company/careers",
+    "title": "Careers",
+    "heading": "Small steps, a shared direction.",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/contact-category",
+    "status": 200,
+    "finalRoute": "/pages/contact-category",
+    "title": "Contact category",
+    "heading": "Studio contacts",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/featured-contacts",
+    "status": 200,
+    "finalRoute": "/pages/featured-contacts",
+    "title": "Featured contacts",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/news-feeds",
+    "status": 200,
+    "finalRoute": "/pages/news-feeds",
+    "title": "News feeds",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/wrapper",
+    "status": 200,
+    "finalRoute": "/pages/wrapper",
+    "title": "Wrapper",
+    "heading": "Design reference",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors",
+    "status": 200,
+    "finalRoute": "/pages/authors",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/account/create-account",
+    "status": 200,
+    "finalRoute": "/account/create-account",
+    "title": "Create account",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/account/profile",
+    "status": 200,
+    "finalRoute": "/resources/sign-in",
+    "title": "Sign in",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/account/reset-password",
+    "status": 200,
+    "finalRoute": "/account/reset-password",
+    "title": "Reset password",
+    "heading": "Reset password",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/account/forgot-username",
+    "status": 200,
+    "finalRoute": "/account/forgot-username",
+    "title": "Forgot username",
+    "heading": "Forgot username",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+    "status": 200,
+    "finalRoute": "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+    "title": "Website care",
+    "heading": "Website care",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services/43-22-sure-fire-headline-formulas-that-work",
+    "status": 200,
+    "finalRoute": "/services/43-22-sure-fire-headline-formulas-that-work",
+    "title": "Planning a focused campaign page",
+    "heading": "Planning a focused campaign page",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+    "status": 200,
+    "finalRoute": "/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+    "title": "Writing a useful website brief",
+    "heading": "Writing a useful website brief",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+    "status": 200,
+    "finalRoute": "/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+    "title": "Designing a contact page people can use",
+    "heading": "Designing a contact page people can use",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/blog/36-how-to-write-like-hemingway",
+    "status": 200,
+    "finalRoute": "/resources/blog/36-how-to-write-like-hemingway",
+    "title": "Editing website copy for clarity",
+    "heading": "Editing website copy for clarity",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/blog/37-how-much-money-do-youtubers-make",
+    "status": 200,
+    "finalRoute": "/resources/blog/37-how-much-money-do-youtubers-make",
+    "title": "Choosing what belongs on the homepage",
+    "heading": "Choosing what belongs on the homepage",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+    "status": 200,
+    "finalRoute": "/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+    "title": "Building an editorial calendar",
+    "heading": "Building an editorial calendar",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/tags/t4-framework",
+    "status": 200,
+    "finalRoute": "/resources/tags/t4-framework",
+    "title": "T4 Framework",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+    "status": 200,
+    "finalRoute": "/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+    "title": "Making service pages more specific",
+    "heading": "Making service pages more specific",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+    "status": 200,
+    "finalRoute": "/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+    "title": "Writing headings that guide a reader",
+    "heading": "Writing headings that guide a reader",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/blog/41-why-being-naive-can-make-your-fortune",
+    "status": 200,
+    "finalRoute": "/resources/blog/41-why-being-naive-can-make-your-fortune",
+    "title": "Using customer stories responsibly",
+    "heading": "Using customer stories responsibly",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+    "status": 200,
+    "finalRoute": "/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+    "title": "A simple content review workflow",
+    "heading": "A simple content review workflow",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+    "status": 200,
+    "finalRoute": "/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+    "title": "Lessons from a website discovery workshop",
+    "heading": "Lessons from a website discovery workshop",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+    "status": 200,
+    "finalRoute": "/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+    "title": "Keeping project communication clear",
+    "heading": "Keeping project communication clear",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+    "status": 200,
+    "finalRoute": "/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+    "title": "A thoughtful follow-up after launch",
+    "heading": "A thoughtful follow-up after launch",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/2-uncategorised",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/2-uncategorised",
+    "title": "Studio resources",
+    "heading": "Studio resources",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories",
+    "title": "Explore the studio",
+    "heading": "Explore the studio",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/11-technical",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/11-technical",
+    "title": "Practical guides",
+    "heading": "Practical guides",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/12-cool-workspace",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/12-cool-workspace",
+    "title": "Inside the studio",
+    "heading": "Inside the studio",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/13-food-and-drink",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/13-food-and-drink",
+    "title": "Studio life",
+    "heading": "Studio life",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/14-pages",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/14-pages",
+    "title": "Website pages",
+    "heading": "Website pages",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/17-magazine",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/17-magazine",
+    "title": "Insights",
+    "heading": "Insights",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+    "status": 200,
+    "finalRoute": "/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+    "title": "Choosing a CMS your team can use",
+    "heading": "Choosing a CMS your team can use",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/demo",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/demo",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+    "status": 200,
+    "finalRoute": "/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+    "title": "Asking better questions about hosting",
+    "heading": "Asking better questions about hosting",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+    "status": 200,
+    "finalRoute": "/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+    "title": "Preparing an asset inventory",
+    "heading": "Preparing an asset inventory",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+    "status": 200,
+    "finalRoute": "/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+    "title": "Reviewing third-party integrations",
+    "heading": "Reviewing third-party integrations",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+    "status": 200,
+    "finalRoute": "/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+    "title": "Comparing proposals on the same basis",
+    "heading": "Comparing proposals on the same basis",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+    "status": 200,
+    "finalRoute": "/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+    "title": "Studio notes: making time for improvements",
+    "heading": "Studio notes: making time for improvements",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+    "status": 200,
+    "finalRoute": "/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+    "title": "Studio notes: welcoming a new perspective",
+    "heading": "Studio notes: welcoming a new perspective",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+    "status": 200,
+    "finalRoute": "/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+    "title": "Studio notes: reviewing work together",
+    "heading": "Studio notes: reviewing work together",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+    "status": 200,
+    "finalRoute": "/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+    "title": "Studio notes: a better project kickoff",
+    "heading": "Studio notes: a better project kickoff",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+    "status": 200,
+    "finalRoute": "/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+    "title": "Studio notes: starting with the customer",
+    "heading": "Studio notes: starting with the customer",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+    "status": 200,
+    "finalRoute": "/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+    "title": "Reducing unnecessary page weight",
+    "heading": "Reducing unnecessary page weight",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+    "status": 200,
+    "finalRoute": "/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+    "title": "Making recovery part of launch planning",
+    "heading": "Making recovery part of launch planning",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/Lawrence",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/Lawrence",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+    "status": 200,
+    "finalRoute": "/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+    "title": "A routine for website updates",
+    "heading": "A routine for website updates",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+    "status": 200,
+    "finalRoute": "/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+    "title": "Keeping forms connected to your team",
+    "heading": "Keeping forms connected to your team",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+    "status": 200,
+    "finalRoute": "/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+    "title": "Reading website analytics with a purpose",
+    "heading": "Reading website analytics with a purpose",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/DamonZ",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/DamonZ",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/tags/jooma-4-x",
+    "status": 200,
+    "finalRoute": "/resources/tags/jooma-4-x",
+    "title": "Jooma 4.x",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/tags/joomla-3-9",
+    "status": 200,
+    "finalRoute": "/resources/tags/joomla-3-9",
+    "title": "Joomla 3.9",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+    "status": 200,
+    "finalRoute": "/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+    "title": "Mai Tran — Design Director",
+    "heading": "Mai Tran — Design Director",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+    "status": 200,
+    "finalRoute": "/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+    "title": "Dan Okonkwo — Development Lead",
+    "heading": "Dan Okonkwo — Development Lead",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+    "status": 200,
+    "finalRoute": "/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+    "title": "Sofia Lindqvist — Brand Designer",
+    "heading": "Sofia Lindqvist — Brand Designer",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+    "status": 200,
+    "finalRoute": "/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+    "title": "Ravi Menon — Research Lead",
+    "heading": "Ravi Menon — Research Lead",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+    "status": 200,
+    "finalRoute": "/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+    "title": "How the demo team works together",
+    "heading": "How the demo team works together",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+    "status": 200,
+    "finalRoute": "/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+    "title": "Meet the people behind a project",
+    "heading": "Meet the people behind a project",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/news-feeds/5-uncategorised",
+    "status": 200,
+    "finalRoute": "/pages/news-feeds/5-uncategorised",
+    "title": "News feeds",
+    "heading": "Industry updates",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/margarete69",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/margarete69",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/deonte.daniel",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/deonte.daniel",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/dion.parker",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/dion.parker",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/2-uncategorised/1-about-us",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/2-uncategorised/1-about-us",
+    "title": "About us",
+    "heading": "About us",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=4",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=8",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=12",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=16",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=20",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=24",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=28",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=32",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=36",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=44",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/2-uncategorised/13-full-width",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/2-uncategorised/13-full-width",
+    "title": "Full width",
+    "heading": "Full width",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+    "title": "Sidebar Left + Content",
+    "heading": "Sidebar Left + Content",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+    "title": "Content + Sidebar Right",
+    "heading": "Content + Sidebar Right",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+    "title": "Testing a website before launch",
+    "heading": "Testing a website before launch",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+    "title": "Planning a website migration",
+    "heading": "Planning a website migration",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+    "title": "Keeping images sharp on smaller screens",
+    "heading": "Keeping images sharp on smaller screens",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+    "title": "Making a website easy to maintain",
+    "heading": "Making a website easy to maintain",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+    "title": "A practical handover checklist",
+    "heading": "A practical handover checklist",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+    "title": "Testing keyboard navigation",
+    "heading": "Testing keyboard navigation",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+    "title": "Inside a collaborative design review",
+    "heading": "Inside a collaborative design review",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+    "title": "Preparing for a team photo session",
+    "heading": "Preparing for a team photo session",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+    "title": "A workspace that supports creative work",
+    "heading": "A workspace that supports creative work",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+    "title": "From workshop notes to a page plan",
+    "heading": "From workshop notes to a page plan",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+    "title": "Organising a useful inspiration library",
+    "heading": "Organising a useful inspiration library",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+    "title": "Keeping project decisions findable",
+    "heading": "Keeping project decisions findable",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+    "title": "Making room for informal conversations",
+    "heading": "Making room for informal conversations",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+    "title": "A team lunch with a purpose",
+    "heading": "A team lunch with a purpose",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+    "title": "Collecting inspiration outside the studio",
+    "heading": "Collecting inspiration outside the studio",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+    "title": "Sharing knowledge in small sessions",
+    "heading": "Sharing knowledge in small sessions",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/14-pages/32-header-1",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/14-pages/32-header-1",
+    "title": "Header 1",
+    "heading": "Header 1",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/14-pages/33-header-2",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/14-pages/33-header-2",
+    "title": "Header 2",
+    "heading": "Header 2",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/14-pages/34-header-3",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/14-pages/34-header-3",
+    "title": "Header 3",
+    "heading": "Header 3",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/14-pages/35-header-4",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/14-pages/35-header-4",
+    "title": "Header 4 (Main menu - Logo - Topbar right)",
+    "heading": "Header 4 (Main menu - Logo - Topbar right)",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/demo?start=4",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/demo",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/Lawrence?start=4",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/Lawrence",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/DamonZ?start=4",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/DamonZ",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+    "status": 200,
+    "finalRoute": "/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+    "title": "Joomla! announcements",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/margarete69?start=4",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/margarete69",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/deonte.daniel?start=4",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/deonte.daniel",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/dion.parker?start=4",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/dion.parker",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=0",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/2-uncategorised/16-3-columns",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/2-uncategorised/16-3-columns",
+    "title": "3 Columns",
+    "heading": "3 Columns",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/2-uncategorised/17-layouts",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/2-uncategorised/17-layouts",
+    "title": "Layouts",
+    "heading": "Layouts",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/2-uncategorised/31-home-dark",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/2-uncategorised/31-home-dark",
+    "title": "Home Dark",
+    "heading": "Home Dark",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/tracyagent?start=40",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/tracyagent",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/14-pages/65-offline-page",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/14-pages/65-offline-page",
+    "title": "Offline page",
+    "heading": "Offline page",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/demo?start=0",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/demo",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/Lawrence?start=0",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/Lawrence",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/DamonZ?start=0",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/DamonZ",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/margarete69?start=0",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/margarete69",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/deonte.daniel?start=0",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/deonte.daniel",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/pages/authors/author/dion.parker?start=0",
+    "status": 200,
+    "finalRoute": "/pages/authors/author/dion.parker",
+    "title": "Authors",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/14-pages/46-features-page",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/14-pages/46-features-page",
+    "title": "Features page",
+    "heading": "Features page",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/14-pages/48-faqs",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/14-pages/48-faqs",
+    "title": "FAQs",
+    "heading": "FAQs",
+    "hasSharedTypography": true
+  },
+  {
+    "route": "/resources/all-categories/14-pages/64-error-page",
+    "status": 200,
+    "finalRoute": "/resources/all-categories/14-pages/64-error-page",
+    "title": "Error page",
+    "heading": "Error page",
+    "hasSharedTypography": true
+  }
+]

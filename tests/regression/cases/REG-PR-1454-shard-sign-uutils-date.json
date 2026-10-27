@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1454-shard-sign-uutils-date",
+  "kind": "fix",
+  "title": "Shard and seat request signing sends a 13-digit millisecond timestamp even where uutils date prints nanoseconds for %3N",
+  "pr": 1454,
+  "area": "deploy/shard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd` (bash, openssl on the PATH). One test puts a fake `date` that behaves like uutils (`%3N` prints nine digits of nanoseconds) first on the PATH and runs deploy/scripts/shard-sign.sh without --timestamp.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": [
+    "0 failures and 0 skipped.",
+    "Every test named in run.tests reports ok.",
+    "x-shard-timestamp has exactly 13 digits and is within 60 s of the test's clock."
+  ],
+  "selectors": {
+    "script": "deploy/scripts/shard-sign.sh (TS default); packages/fleet/tracy-fleet-operation/dsh/host-dsh-init.sh step 6 (TS)",
+    "test": "scripts/test/shard-sign-interop.test.mjs, packages/fleet/tracy-fleet-operation/test/host-dsh-init.test.mjs"
+  },
+  "fence": "No server, no network: the signer runs locally against a fake date; host-dsh-init.sh is read as text.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "--test-reporter=tap",
+      "scripts/test/shard-sign-interop.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/host-dsh-init.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "with no --timestamp the signer uses 13-digit milliseconds, even under uutils date",
+      "step 6 signs with seconds x 1000, never date +%s%3N (uutils prints nanoseconds: 403 stale)",
+      "a POST signed in bash passes tracy-host verifyHostCall (the same string when the method is POST)"
+    ]
+  }
+}

@@ -1,0 +1,427 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-resume",
+  "release": "quickstart/ja-resume/j6@1.0.1",
+  "roles": {
+    "page": "body",
+    "display": "h1.item-title",
+    "body": "div.col-sm-7.col-md-8 div.features-info p",
+    "button-primary": "a.btn.btn-primary",
+    "section": "#about_me",
+    "input": "#contact_name"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 55px",
+    "displayFace": "Work Sans 700, tracking 0em",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(252, 97, 93)",
+    "section": "first padded full-width section, padding-top 144px",
+    "input": "first text field"
+  },
+  "keepScopes": [],
+  "keepColors": {},
+  "keepNote": "kept: the header, which lies transparent over the black photo hero (its white menu and the red CV square: under a light system the menu took the system's dark text on the photo, Apple 2.09:1, and the CV letters took the system text on the accent square, Moxie 1.07:1), the introduction (the photo hero) and the contact band, whose left card is a dark #222222 panel the stylesheets paint with a literal (its address, phone and mail white, its title the template red: under a light system the card stayed dark while its text took the system's dark text, MotherDuck 2.78:1, Apple 1.59:1). Each band's inherited text colour is given back (keepColors, #333333 as the released page computes it)",
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#fdfdfd",
+    "--fg": "#333333",
+    "--fg-2": "#222222",
+    "--accent": "#fc615d",
+    "--accent-hover": "#fb1812",
+    "--surface": "#eff0f4",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#dddddd",
+    "--muted": "#666666",
+    "--font-display": "\"inherit\", sans-serif",
+    "--font-body": "\"Work Sans\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#000000"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#fdfdfd",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "accent": "#fc615d",
+      "accent-hover": "#fb1812",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#dddddd",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#fdfdfd",
+      "fg": "#333333",
+      "fg-2": "#ffffff",
+      "accent": "#fc615d",
+      "accent-on": "#ffffff",
+      "surface": "#eff0f4",
+      "border": "#ffffff",
+      "surface-warm": "#000000"
+    },
+    {
+      "accent": "#fc615d"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#eeeeee",
+      "border": "#d9d9d9",
+      "surface-warm": "#080808",
+      "border-soft": "#eaeaea",
+      "accent-active": "#0063dc"
+    },
+    {
+      "surface": "#d9edf7",
+      "bg": "#f9f9f9",
+      "border-soft": "#e5e5e5",
+      "border": "#e0e2e3"
+    },
+    {
+      "surface": "#fcf8e3",
+      "bg": "#fafafb",
+      "border-soft": "#f2f2f2",
+      "border": "#e1e1e1"
+    },
+    {
+      "bg": "#f8f8f8",
+      "surface": "#e7e7e7",
+      "border-soft": "#ebebeb",
+      "border": "#e3e3e3"
+    },
+    {
+      "surface": "#f9f2f4",
+      "border": "#d5d5d5",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "surface": "#e8e8e8"
+    },
+    {
+      "surface": "#f0f0f0"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (66 line colours, 83 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.item-title",
+    "heading": [".t3-wrapper h2:where(:not(.section-title *))", "main h2:where(:not(.section-title *))"],
+    "button": [
+      ".btn:not(.article-footer .btn, .back-to-top .btn, #infinity-next)",
+      "a.btn.btn-primary:not(.article-footer .btn)"
+    ],
+    "buttonPrimary": [
+      ".btn-primary:not(.module-highlight .btn-primary):not(.article-footer .btn)",
+      "a.btn.btn-primary:not(.article-footer .btn)"
+    ],
+    "card": [".card"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#about_me"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": "h4.item-title > a, div.item-content > div.item-date, span.author-name, #t3-mainbody a:not([class*=btn]):not(:has(img))",
+    "muted": "div.module > small, dl.info-list dt > span",
+    "body": "div.features-info > p, div.acm-desc p, div.form-info > p, #t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "languageswitcherload",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 16 tried (byte 8520); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 774,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fdfdfd",
+      "distance": 3
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 407,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eff0f4",
+      "distance": 6
+    },
+    {
+      "hex": "#d9d9d9",
+      "uses": 359,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 7
+    },
+    {
+      "hex": "#080808",
+      "uses": 148,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#000000",
+      "distance": 14
+    },
+    {
+      "hex": "#d9edf7",
+      "uses": 110,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eff0f4",
+      "distance": 22
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 110,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eff0f4",
+      "distance": 23
+    },
+    {
+      "hex": "#eaeaea",
+      "uses": 96,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 80,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fdfdfd",
+      "distance": 7
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 78,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#fafafb",
+      "uses": 60,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fdfdfd",
+      "distance": 5
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 36,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 15
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 32,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 8
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 32,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fdfdfd",
+      "distance": 9
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 28,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 7
+    },
+    {
+      "hex": "#e7e7e7",
+      "uses": 22,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eff0f4",
+      "distance": 18
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 17,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 16,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eff0f4",
+      "distance": 10
+    },
+    {
+      "hex": "#e8e8e8",
+      "uses": 16,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eff0f4",
+      "distance": 16
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 16,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 10
+    },
+    {
+      "hex": "#d5d5d5",
+      "uses": 13,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 14
+    },
+    {
+      "hex": "#0063dc",
+      "uses": 12,
+      "kind": "fill",
+      "role": "accent-active",
+      "near": "#0066cc",
+      "distance": 16
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#eff0f4",
+      "distance": 4
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on the published quickstart/ja-resume/j6 1.0.1 (installer sha256 0c87e44c…, the same file as the local build; tasks/evidence/ds-remeasure-4-2026-10-11/ja-resume-j6): first 4/12 — under light systems the header menu over the black hero photo took the system's dark text (Apple 2.09:1), the CV letters on the accent square took the system text (Moxie 1.07:1), and the dark #222222 contact card's texts went dark (Apple 1.59:1); the 1 px timeline rule was also read as the grey ground of every phone date (flow.mjs now takes a pseudo-element's percentage size against its box). The header and the contact band are now kept with the introduction, each with its inherited text colour (keepColors): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, kept bands 0 differences, no text under 4.5:1 worse than the template's own (the lowest, 1.66, is the template's own), 72% or more of the page follows, every contrast kind sampled in every view, dark and light screenshots looked at. Earlier: measured 11/10/2026 on the local build of ja-resume/j6 1.0.1 (tasks/evidence/ds-contracts-batch1-2026-10-11/ja-resume-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: accent-text, muted, body, footer), 82% or more of the page follows; without a system 1.0.1 computes exactly what 1.0.0 does; 1.0.1 ships T3 dev mode off (t3DevmodeOff, 8 styles): T3 now serves its tokenized css/ files; with no system 0 of ~3,800 painted values differ from 1.0.0 (dev mode on) on five pages",
+  "t3DevmodeOff": true,
+  "t3DevmodeNote": "every style of the released template has T3 dev mode on: T3 compiles its LESS per request and never serves css/*.css, so tokenized stylesheets cannot reach the page (09/10: 7-21% followed). The next release ships dev mode off (release-joomla.mjs); with minify on, T3 then serves its combined css/ files, tokenized",
+  "contrastNote": "the home page has no #t3-mainbody text: its item titles, dates and author names in the accent, its info list and footer notes (muted) and its section text (body) are what a reader reads (11/10/2026)",
+  "minVersion": {
+    "quickstart/ja-resume/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-resume/j6": "1.0.7"
+  },
+  "maxVersionNote": "1.0.7 21/10/2026 (TEXT-1 batch 3): built from 1.0.6 (release-batch.mjs --overlay); only css/template.css with its themes/ and rtl/ copies differ (and their SCSS/LESS sources): text that read a ground role (TEXT-1) now reads its text role with its own colour as the fallback, and words on a status fill pair with it (page-colour words on the status text shade, or the status text on its pale fill); unworn the page is the release's own (VERIFICATION.json). 1.0.2 (11/10/2026, TCH #1180) is 1.0.1's installer, the same bytes (sha256 checked against the release): only its content contract changed, to name T3 dev mode off as the database does, so it wears the slot exactly as 1.0.1 was measured 1.0.4 16/10/2026 (#1375): re-cut of 1.0.3 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text), and the dark-triangular-yellow theme tokenized with its own palette (filePalettes); nothing else moved, and unworn the page is the release's own (VERIFICATION.json). 1.0.6 18/10/2026: 1.0.5 with the Joomla 3 system stylesheet (media/system/css/system.css) linked only where it exists (Joomla 4+ ship none, the link answered 404, PREV-1 on dev); nothing the page wears changed.",
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; #contact removed 13/10/2026: its drafted band repainted only .section-content while the card's #222222 is drawn elsewhere, so the accent picked for a dark ground sat on #fdfdfd (3.7:1, Spotify 1.89:1) — the contact card stays kept whole, as measured 12/12 on 11/10",
+  "followRules": {
+    ".ppc-progress-fill": {
+      "background-color": "surface-warm!"
+    },
+    ".stats-item-counter .progressbar > span, .progress-pie-chart": {
+      "background-color": "accent!"
+    }
+  },
+  "contractNotes1317": "13/10/2026 (#1317): the progress-bar track and the timeline icon fills follow the system warm surface. #contact is kept whole by agreement (keepWhole) and its 38 line samples still count against follows (73% under Moxie): a measurement question, not a contract one; the logo badge (.logo-text, the template accent) is the brand mark and stays. Round 4 (14/10): the skill pies paint their track and centre through inline style attributes (background-color:#eff0f4 / #fff written by the module), so the round-3 track rule never landed; the track rule is !important now, and the bars and pies (each its own inline colour, red, blue, green, cyan) take the system accent. The pie centre keeps its white: on a dark system's centre the pies' own percent colours read 3.4:1. The header (kept, laid over the intro photo) repaints its menu links and its menu toggle bars with the system's light words on the photo: under Moxie they stayed white while the page under them turned.",
+  "selectorsNote": "14/10/2026 (visual review): the skill rings are drawn from boxes — a 50% round track (.ppc-progress-fill) clipped to a half and turned over a round coloured disc — and discover.mjs read that track as the template’s card (“repeated rounded box ×2”), so the card and cardLike rules gave it the system’s card radius and shadow: a square corner stood out of every ring past 50% (Airbnb, Moxie). The ring boxes are no card: selectors.card keeps .card only, cardLike is dropped; the track’s colour (followRules, #1317) is untouched",
+  "reviewV8Note": "15/10/2026 (look review v8): the rotated side labels (.section-title h2, 14px) took the section heading size and ran over the content: the heading selectors leave them out",
+  "filePalettes": {
+    "css/themes/dark-triangular-yellow/": {
+      "bg": "#111111",
+      "fg": "#999999",
+      "fg-2": "#ffffff",
+      "accent": "#ffcc00",
+      "accent-hover": "#b38f00",
+      "surface": "#1a1a1a",
+      "surface-warm": "#222222",
+      "border": "#333333",
+      "muted": "#666666"
+    }
+  },
+  "rolesNote": "16/10/2026 (#1375): the measured card role pointed at the skill ring track (.ppc-progress-fill), which selectorsNote (14/10) had already taken out of the card rules: every system missed card.borderTopLeftRadius=50% on the published 1.0.3 as on 1.0.4. The home page has no .card, so the role is not measured, as on the contracts whose pages show no card.",
+  "filePalettesNote": "15/10/2026 (#1375): the release's \"Home Blogger\" page (the only inner page its home links to, through T3's drawer) uses the theme dark-triangular-yellow, whose sheets were never tokenized: none of its colours is in the template's palettes (less/themes/dark-triangular-yellow/variables.less: @body-bg #111, @text-color #999, @brand-primary yellow #ffcc00, 101 uses), so a worn system did not reach the page (4/8 in #1298's final measure). Those sheets are tokenized with their own palette, read off variables.less and the colours they paint most; the light themes' roles do not move.",
+  "batch2Note": "17/10/2026 (batch 2, role variables, 1.0.5): the template now reads the role variables itself (ja-products ds-b2-fin-resume), so nothing is kept any more: keepScopes, keepColors, bands and keepWhole are gone. The header and the photo hero were kept to save the menu words on the photo (white under a dark hero, dark under a light one); kept, they also kept the logo square and the active menu rule in the template red and, on every inner page where the transparent header lies over the page, painted the menu and the menu toggle white on white (Figma). The template paints them itself now: menu and toggle bars read the page text, on a dark hero (style-dark) the ink pair, on a light one (style-white) the ink, worn only; the photo bands stand on the ink or its light partner. The contact band (kept whole since 13/10) wears the system: its card is the raised surface, its title and links the accent text, so the template red and the white form panel no longer stay under every system (TPL-1, glare). selectors.button/buttonPrimary leave out the blog’s small Read more (.article-footer .btn: it grew from 113x27 to 161x48 and took the accent, BTN-1/CLIP-1) and the dark button of the accent-coloured login module (.module-highlight .btn-primary: an accent fill on the accent box, lost); both read their roles in the template. maxVersion 1.0.5.",
+  "reviewV9Note": "17/10/2026 (Akemi look review on the local cluster): (1) the timeline dots vanished under every system: followRules painted .item-icon the warm surface at the slot weight, over the template's own accent first dot, and the warm surface is the page ground (Airbnb/Figma #f9f9f9 on white, Moxie #11110f on black); the rule is gone, the template reads the roles itself (first dot accent, the others the border colour, the rule the soft border). (2) the back-to-top square (.back-to-top .btn, 50x50, padding 0) took the system button padding and corner: a 50 px box with 21 px side padding pushed the chevron off-centre, and its 4 px border (the fill colour in the release) read the border role, a grey ring; the button selectors leave it out and the template's .btn-inverse border reads its fill role.",
+  "reviewV10Note": "18/10/2026 (probe 10, live frame): (1) the feed's end marker (#infinity-next, a disabled .btn-block 'That's All' under the release's floated 'no articles' line on an empty social feed page) took the system button's padding and white-space normal, so its label wrapped below the float and the box grew 44 to 71 px (Moxie) / 76 px (Figma) over that line: the button selectors leave it out, the template clears the float and reads --ds-btn-radius itself (worn only), the box keeps the release's 44 px. (2) and (3) are the template's own: the gallery hover veil reads ink and its captions keep the template's white with a ds-keep note (they read surface and fg-2: a light veil and black words under Figma; on-ink was tried and is Moxie's cream, 2.79:1 on the model gallery's light photograph where the white reads 3.19:1), and the active menu item over a dark hero reads on-ink like the others (accent-on-ink was 1.83:1 on the model hero under Figma).",
+  "sideRules": {
+    "light": {
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".acm-features-intro.style-1.style-white, .acm-features-intro.style-1.style-white :is(h1, h2, h3, .item-title, .item-position, .item-description, .item-description a, a)": {
+        "color": "#333333 !important"
+      },
+      ".t3-header.style-white:not(.ja-affix-top) .navbar-default .navbar-nav > li:not(.active) > a": {
+        "color": "#333333 !important"
+      },
+      ".section:has(> .section-content .acm-features-intro.style-1.style-white) > .section-title :is(h2, h2 span)": {
+        "color": "#333333 !important"
+      }
+    },
+    "dark": {
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".acm-features-intro.style-1.style-white, .acm-features-intro.style-1.style-white :is(h1, h2, h3, .item-title, .item-position, .item-description, .item-description a, a)": {
+        "color": "#333333 !important"
+      },
+      ".t3-header.style-white:not(.ja-affix-top) .navbar-default .navbar-nav > li:not(.active) > a": {
+        "color": "#333333 !important"
+      },
+      ".section:has(> .section-content .acm-features-intro.style-1.style-white) > .section-title :is(h2, h2 span)": {
+        "color": "#333333 !important"
+      }
+    }
+  },
+  "hoverNote": "21/10/2026 (HOVER-2, TEXT-1 batch 3): menu, title, footer and tag links read one role at rest and on hover under some systems (Moxie, 5fd3), so hover and focus also underline; buttons, dropdown items, the logo and pagination keep their own states. The same underline is written on the link's inner words (span, strong, em, b, small, headings, p): the probe reads the cue on the element that holds the words, and an underline set on the link alone does not change that element's computed style. The light hero photograph (style-white) keeps the template's own #333333 words under every system: the system's text role read dim on the photo under Moxie in both modes (CON-2, photo-text, 1.0.7 measure 21/10/2026); the photo is the template's, so is the ink on it. The header menu over that photograph (not scrolled) and the section title that follows it keep the same #333333.",
+  "literalsNote": "#333333: the template's own ink for the words, the header menu and the section title laid on its light hero photograph (style-white); the photograph is the template's, light under every system, so its ink is too (CON-2, photo-text, 21/10/2026)"
+}

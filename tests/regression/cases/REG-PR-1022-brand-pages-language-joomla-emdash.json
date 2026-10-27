@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1022-brand-pages-language-joomla-emdash",
+  "kind": "feat",
+  "title": "The logo, favicon and pages answers change Joomla and EmDash sites too: Joomla T3 template styles and T4 site profiles through template.siteSettings (plugin 0.23.0), EmDash through the template tool's brand-only run; unticked EmDash pages are unpublished in every locale and leave the menu; the tone reaches the EmDash copy prompt as the voice",
+  "pr": 1022,
+  "area": "add-site/questions",
+  "cms": ["jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-web/test/brief-brand-joomla.test.mjs",
+    "S2: Run: node --test apps/tracy-web/test/brief-emdash-brand.test.mjs",
+    "S3: From packages/cms/tracy-emdash-theme-business run: node --test tests/personalize-brand.test.mjs tests/personalize-pages.test.mjs tests/personalize-tone.test.mjs",
+    "S4: Read the exit code and the fail/skipped counts of each run."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures and 0 skipped tests.",
+    "Joomla T3: every template style takes the light or dark logo its profile names (JA Smallbiz four styles, JA Mood 'Home Dark' the dark one), every other param kept; the favicon goes through template.siteSettings other_faviconFile; plugin 0.22.0 writes the logo and skips the favicon as plugin too old.",
+    "Joomla T4: one template.siteSettings set with site_logo and site_logo_dark plus one content.contract apply on the footer slot; file names are new on every run and never a template file; apply.revert of every recorded id puts the site back.",
+    "EmDash: the tool runs with --brand-only, the three files and the apply id; settings.logo, settings.favicon and the chrome entry's logo_dark land on the site and --revert takes all of it back; a picture the tool could not write is a skip with its reason, and nothing fails the build.",
+    "EmDash pages: an unticked id is unpublished in every written language and its menu items are removed, --revert brings both back; the home page is never hidden.",
+    "EmDash tone: the tone reaches the copy prompt as the voice beside the description; no tone leaves the prompt as it was."
+  ],
+  "selectors": {
+    "apply_action": "template.siteSettings (APPLY_RULES + RELAY_ACTIONS)",
+    "brand_step": "setSiteBrand in apps/tracy-web/src/sites/brief-engines/brand.js",
+    "emdash_brand": "apps/tracy-web/src/sites/brief-engines/brand-emdash.js",
+    "emdash_tool": "packages/cms/tracy-emdash-theme-business/tools/personalize.mjs --brand-only --logo-file --logo-dark-file --favicon-file --apply-id",
+    "joomla_writer": "apps/tracy-web/src/sites/brief-engines/brand-joomla.js (brand-joomla-t3.js, brand-joomla-t4.js)"
+  },
+  "evidence": "07/10/2026: seven default questions must change the site on WordPress, Joomla and EmDash for every gallery template (issue #1013 phases 2 and 3, plan tasks/plan-ten-logo-favicon.md).",
+  "fence": "Units over a fake Joomla Apply door and the real EmDash template tool on a local site fixture. Not exercised here: a running Joomla with Claude Cowork 0.23.0, a deployed EmDash theme release, the dev surface.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1022-brand-pages-language-joomla-emdash.mjs"],
+    "needs": []
+  }
+}

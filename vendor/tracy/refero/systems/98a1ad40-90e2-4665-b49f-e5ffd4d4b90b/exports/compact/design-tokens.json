@@ -1,0 +1,64 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page background, primary canvas — absolute black eliminates surface depth, making images and white type feel like they float"
+    },
+    "obsidian": {
+      "$value": "#171718",
+      "$type": "color",
+      "$description": "Obsidian — Card surfaces, elevated panels, designer profile containers — one shade above void to separate without illuminating"
+    },
+    "graphite": {
+      "$value": "#2c2c2e",
+      "$type": "color",
+      "$description": "Graphite — Borders on inputs, buttons, and nav dividers — the thinnest readable outline on near-black"
+    },
+    "ash": {
+      "$value": "#888888",
+      "$type": "color",
+      "$description": "Ash — Muted body text, secondary labels, inactive borders — the only gray with enough chroma to carry information"
+    },
+    "smoke": {
+      "$value": "#e9e9e9",
+      "$type": "color",
+      "$description": "Smoke — Helper text, subtle text accents on dark surfaces"
+    },
+    "bone": {
+      "$value": "#f3f3f3",
+      "$type": "color",
+      "$description": "Bone — Headings, high-emphasis text — slightly off-white to avoid harshness against pure black"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary headings, logo text, pure-contrast display copy"
+    },
+    "platinum": {
+      "$value": "#dddddd",
+      "$type": "color",
+      "$description": "Platinum — Nav text at rest — sits one step below pure white to create a de-emphasized nav hierarchy"
+    },
+    "sprint-violet": {
+      "$value": "#6a48f2",
+      "$type": "color",
+      "$description": "Sprint Violet — Primary CTA fill, active link, brand accent — the single chromatic note in an achromatic system, reserved for actions that convert; Accent gradient terminus — fades from Sprint Violet into soft pink to signal premium/highlight moments"
+    }
+  },
+  "font": {
+    "neue-montreal": {
+      "$value": "Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "Single-family type system. Weight 400 carries the entire display scale up to 104px — the deliberate refusal of a bold weight is the signature. Weight 500 activates only on small uppercase labels and button text. Negative letter-spacing tightens display sizes (-0.02em at 70-104px) while small uppercase eyebrow labels open to +0.035-0.040em. The 104px display at weight 400 is anti-conventional — most systems would set this at 700-800; here it whispers, letting the void around it carry the weight."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.stellar.work",
+      "siteName": "Stellar",
+      "extractedAt": "2026-06-03T21:53:03.016Z",
+      "variant": "compact"
+    }
+  }
+}

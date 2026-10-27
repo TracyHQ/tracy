@@ -1,0 +1,23 @@
+{
+  "name": "@tracy/od-design-system",
+  "version": "0.4.1-tracy.1",
+  "description": "154 design systems (152 from OpenDesign + ja-kinetic, ja-voyara), packaged to be preinstalled in the agent image — every Tracy agent reads from one shared copy",
+  "type": "module",
+  "license": "Apache-2.0",
+  "exports": {
+    "./catalog.json": "./catalog.json",
+    "./package.json": "./package.json",
+    "./slots.json": "./slots.json"
+  },
+  "files": [
+    "systems",
+    "catalog.json",
+    "slots.json",
+    "dark.json",
+    "NOTICE",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node scripts/build-catalog.mjs"
+  }
+}

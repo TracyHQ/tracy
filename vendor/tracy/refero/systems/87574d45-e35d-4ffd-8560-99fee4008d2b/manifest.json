@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "87574d45-e35d-4ffd-8560-99fee4008d2b",
+  "status": "complete",
+  "name": "Kikin",
+  "url": "https://styles.refero.design/style/87574d45-e35d-4ffd-8560-99fee4008d2b",
+  "sourceWebsite": "https://www.kikin.io",
+  "extractedAt": "2026-06-03T21:22:45.752Z",
+  "capturedAt": "2026-10-08T05:14:26.784012+00:00",
+  "theme": "mixed",
+  "industry": "fintech",
+  "description": "Vintage park-poster on cream paper — a financial product wearing a patch jacket.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b5a1a4d6-e393-44b5-84d1-6f4c2843ff7e.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/46a79463-3cec-4828-b71d-fe2d78363a37.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a89baaf5-723b-4d17-929c-51548ccb851c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c9f610b8-ff9e-4478-bf49-a8d93ab1f43a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/6804c42a-0be6-43a8-993f-98b4d4bfe01e.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bfbef713b73520eaf6d40ee4d4241a043d66754f94fb4977d05a77b259d5d2bf",
+      "bytes": 22102
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a84f8125ae1e374645f06eadcfa52e940b154d68e6767245e9a99ee9141db579",
+      "bytes": 184583
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f1a88a40981d82c0347f889e387487fd2980c0b8effaaa94264bf41a4ae4c8bf",
+      "bytes": 18502
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b3e645bde2c89b5bb4257673f83ddb9fb69e8ad7d57e4ddf47dd7ee55ecc21ff",
+      "bytes": 14050
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "137d2edc8ea6754682edb5af8f0c19094df2ead96df886f117908c53f0d7a8ae",
+      "bytes": 14001
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "55ee70c25fb7b2828e9fd2750a6ac9d4dd73f758ce305088533a6237a6a7e7de",
+      "bytes": 4221
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c6d71bd42e9ac937326941cd0ff49d24d52aa52bea981d7688609139e2acbae7",
+      "bytes": 787
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "38526ce92816ea43a26ade263ba30e25b5171cb48754c9bbbb9a26bc196d2765",
+      "bytes": 804
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "813b5ebf0547d65ec30b58a9066c0bc8950e9074a22b065455f8ff11ab4b4621",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4424c8d412975b35e3672baa76d91d85c3b42927ebcf264512eed9bb89f9b0a3",
+      "bytes": 47196
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2c90979eca61dbb24b449a834fefa79b92e770afab15494c083ccf9e10b51c24",
+      "bytes": 24458
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a197ffeda02651b945f1e168528d39397c33430f52d1a8a0b1235e7a8dd3b09d",
+      "bytes": 51858
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "82e102de68f68b3d3b5c7cbe173eec8bc9afa98dae569bd8feb5ce4c193b5987",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9ca906c9cfcd1b2aed887bc0aa5485f6439db258ec576f83e2390f4e48a187a7",
+      "bytes": 1829
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "354bbf7aa32cb21959c16c526f1dc6b29bb0cd695a721e6d2e437471204629be",
+      "bytes": 2410
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "043341c3-cf82-4be1-9142-fa5e6a370ca9",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "35ae81e1-273c-43d7-9bcd-ea186d062c13",
+    "3634d5eb-ccfa-4881-b234-3dd735fb7ae4",
+    "4a248569-2b5a-4416-bb2a-c78890218b9f",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "7f7d24b9-6878-4548-82ca-a26bbf7a6f2c",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "874aaea0-c718-454e-8a58-f3beed1284ec",
+    "87574d45-e35d-4ffd-8560-99fee4008d2b",
+    "8d3dc65e-4443-4bb3-b1a9-b0fc98381db9",
+    "91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b3f7b44d-6564-4015-902a-259b4790b9de",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "d2e327b2-1181-4203-82a6-2dc15a72078a",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "f22f1195-837d-4b1d-a48c-9123b122bf87",
+    "fb812ddb-d7c0-4540-82d7-1562dff16f09"
+  ]
+}

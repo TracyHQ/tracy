@@ -1,0 +1,40 @@
+---
+import { Code } from '@astrojs/starlight/components'
+
+interface Props {
+  client: 'claude-code' | 'cursor' | 'codex'
+}
+
+// Shared by the quickstart tabs and detailed guides so copyable configuration cannot drift.
+const setups = {
+  'claude-code': {
+    title: 'Add Tracy with Claude Code',
+    lang: 'sh',
+    code: 'claude mcp add --transport http \\\n  --client-id tracy-claude-code \\\n  --callback-port 17832 \\\n  tracy https://cowork.tracy.ai/mcp'
+  },
+  cursor: {
+    title: '.cursor/mcp.json',
+    lang: 'json',
+    code: JSON.stringify(
+      {
+        mcpServers: {
+          tracy: {
+            url: 'https://cowork.tracy.ai/mcp',
+            auth: { CLIENT_ID: 'tracy-cursor', scopes: ['content'] }
+          }
+        }
+      },
+      null,
+      2
+    )
+  },
+  codex: {
+    title: '~/.codex/config.toml',
+    lang: 'toml',
+    code: '[mcp_servers.tracy]\nurl = "https://cowork.tracy.ai/mcp"\n\n[mcp_servers.tracy.oauth]\nclient_id = "tracy-codex"\ncallback_url = "http://127.0.0.1:17833/callback"\ncallback_port = 17833'
+  }
+}
+const setup = setups[Astro.props.client]
+---
+
+<Code code={setup.code} lang={setup.lang} title={setup.title} />

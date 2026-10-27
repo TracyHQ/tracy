@@ -1,0 +1,124 @@
+{
+  "color": {
+    "indigo-frame": {
+      "$value": "#160572",
+      "$type": "color",
+      "$description": "Indigo Frame — Navigation strokes, display headlines, footer band — the deepest anchor in the system, commanding authority without shouting"
+    },
+    "cream-paper": {
+      "$value": "#f2ebe6",
+      "$type": "color",
+      "$description": "Cream Paper — Primary page canvas for content sections — warm eggshell that softens black text and lets illustration breathe"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, reversed text on dark bands, and the clean counterpoint to cream — the gallery wall"
+    },
+    "obsidian-hairline": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian Hairline — Dominant border, text, and icon stroke — used as a 1-2px frame line across nav, cards, and decorative elements"
+    },
+    "slate-ink": {
+      "$value": "#2c2c2c",
+      "$type": "color",
+      "$description": "Slate Ink — Secondary text and softer borders where pure black feels too severe"
+    },
+    "fog-wash": {
+      "$value": "#eef4fb",
+      "$type": "color",
+      "$description": "Fog Wash — Pale blue-tinted background for muted emphasis blocks"
+    },
+    "buttermilk": {
+      "$value": "#fef9ee",
+      "$type": "color",
+      "$description": "Buttermilk — Subtle warm wash for highlighted text or callout backgrounds"
+    },
+    "crimson-spotlight": {
+      "$value": "#ea0706",
+      "$type": "color",
+      "$description": "Crimson Spotlight — Editorial accent for critical announcements and bold display statements — the marquee marker"
+    },
+    "vermillion": {
+      "$value": "#d64e2e",
+      "$type": "color",
+      "$description": "Vermillion — Warm secondary accent on project card titles, links, and illustrative borders"
+    },
+    "apricot-whisper": {
+      "$value": "#e29675",
+      "$type": "color",
+      "$description": "Apricot Whisper — Soft warm accent for icon strokes and decorative borders"
+    },
+    "peach-blush": {
+      "$value": "#eea883",
+      "$type": "color",
+      "$description": "Peach Blush — Mid-warmth accent on icon outlines and link underlines"
+    },
+    "tangerine-pop": {
+      "$value": "#ff7701",
+      "$type": "color",
+      "$description": "Tangerine Pop — Filled action button background — the only true filled CTA, used for the play/forward action in the footer"
+    },
+    "cobalt-stage": {
+      "$value": "#2544a0",
+      "$type": "color",
+      "$description": "Cobalt Stage — Filled action button background for primary browse/enter actions"
+    },
+    "plum-velvet": {
+      "$value": "#4b0f4d",
+      "$type": "color",
+      "$description": "Plum Velvet — Filled action button background for dark editorial CTAs"
+    },
+    "rose-petal": {
+      "$value": "#d98199",
+      "$type": "color",
+      "$description": "Rose Petal — Filled action button background for soft secondary entries"
+    },
+    "electric-teal": {
+      "$value": "#24e3dc",
+      "$type": "color",
+      "$description": "Electric Teal — Interactive link and menu accent — the only cool chromatic in the system, reserved for navigation affordances"
+    },
+    "acid-green": {
+      "$value": "#24e34c",
+      "$type": "color",
+      "$description": "Acid Green — Secondary interactive link accent for hover/active states"
+    },
+    "daffodil": {
+      "$value": "#f9e44d",
+      "$type": "color",
+      "$description": "Daffodil — Decorative icon and link accent — cheerful punctuation"
+    },
+    "highlighter-yellow": {
+      "$value": "#ffff00",
+      "$type": "color",
+      "$description": "Highlighter Yellow — Badge background for editorial tags and callout labels"
+    }
+  },
+  "font": {
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "millik": {
+      "$value": "Millik",
+      "$type": "fontFamily",
+      "$description": "Display serif for hero headlines, artist names, and editorial display copy. The extreme negative letter-spacing (-0.05em at 88px down to -0.018em at 20px) and tight line-height (0.95–1.00 at large sizes) is the signature: the type sits dense and confident, not airy. Use weight 400 for editorial body, 700 for display headlines."
+    },
+    "klarheit-grotesk": {
+      "$value": "Klarheit Grotesk",
+      "$type": "fontFamily",
+      "$description": "Workhorse grotesque for navigation, body text, buttons, badges, and supporting labels. Regular (400) is the default; Semibold (600) appears at 22px for subheadings; Bold (700) at 24px for nav emphasis. The grotesque is intentionally quiet — it holds the structure while the serif does the talking."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.handsomefrank.com",
+      "siteName": "Handsome Frank",
+      "extractedAt": "2026-06-03T19:33:14.670Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,1969 @@
+{
+  "kind": "unstyled-input",
+  "about": "Probe data (empty-block: only the boxes where nothing is seen, the rest can never be a finding) cut from real Add site previews (preview-check.mjs PREVIEW_DATA=1, the detector's own probe on the plain and the worn page, scripts off as in the preview frame). Regenerate by re-running the probe; never edit values by hand. Clean also holds JA Kinetic Joomla's finder (Moxie, light, 15/10/2026): a transparent borderless input inside the bordered search bar the template draws around it, over the masthead's gradient; seen through that box.",
+  "broken": [
+    {
+      "source": "quickstart/ja-vega/wp7@1.1.15 (https://ja-vega-wordpress.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#eae5cc",
+        "#eee9cf",
+        "#000000",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1",
+        "#4e6695",
+        "#4e6594"
+      ],
+      "worn": {
+        "data": {
+          "roles": [
+            {
+              "name": "bg",
+              "c": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "name": "surface",
+              "c": {
+                "r": 234,
+                "g": 229,
+                "b": 204,
+                "a": 1
+              }
+            },
+            {
+              "name": "surface-warm",
+              "c": {
+                "r": 238,
+                "g": 233,
+                "b": 207,
+                "a": 1
+              }
+            },
+            {
+              "name": "fg",
+              "c": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "name": "fg-2",
+              "c": {
+                "r": 61,
+                "g": 60,
+                "b": 53,
+                "a": 1
+              }
+            },
+            {
+              "name": "muted",
+              "c": {
+                "r": 93,
+                "g": 91,
+                "b": 81,
+                "a": 1
+              }
+            },
+            {
+              "name": "meta",
+              "c": {
+                "r": 105,
+                "g": 102,
+                "b": 91,
+                "a": 1
+              }
+            },
+            {
+              "name": "border",
+              "c": {
+                "r": 210,
+                "g": 206,
+                "b": 182,
+                "a": 1
+              }
+            },
+            {
+              "name": "border-soft",
+              "c": {
+                "r": 227,
+                "g": 223,
+                "b": 197,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent",
+              "c": {
+                "r": 103,
+                "g": 134,
+                "b": 196,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-on",
+              "c": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-hover",
+              "c": {
+                "r": 91,
+                "g": 118,
+                "b": 172,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-active",
+              "c": {
+                "r": 94,
+                "g": 117,
+                "b": 161,
+                "a": 1
+              }
+            },
+            {
+              "name": "success",
+              "c": {
+                "r": 22,
+                "g": 163,
+                "b": 74,
+                "a": 1
+              }
+            },
+            {
+              "name": "warn",
+              "c": {
+                "r": 234,
+                "g": 179,
+                "b": 8,
+                "a": 1
+              }
+            },
+            {
+              "name": "danger",
+              "c": {
+                "r": 220,
+                "g": 38,
+                "b": 38,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-text",
+              "c": {
+                "r": 78,
+                "g": 102,
+                "b": 149,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-text-hover",
+              "c": {
+                "r": 78,
+                "g": 101,
+                "b": 148,
+                "a": 1
+              }
+            }
+          ],
+          "fields": [
+            {
+              "path": "div:1/footer:1/div:1/div:1/div:5/form:1/p:2/input:1",
+              "at": "input[name=jv_website]",
+              "w": 153,
+              "h": 21,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "around": null,
+              "text": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                }
+              ],
+              "ua": true
+            },
+            {
+              "path": "div:1/footer:1/div:1/div:1/div:5/form:1/div:1/input:1",
+              "at": "input.jv-newsletter__email[name=jv_email]",
+              "w": 153,
+              "h": 21,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "around": null,
+              "text": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                }
+              ],
+              "ua": true
+            }
+          ]
+        }
+      },
+      "plain": {
+        "data": {
+          "roles": [],
+          "fields": [
+            {
+              "path": "div:1/footer:1/div:1/div:1/div:5/form:1/p:2/input:1",
+              "at": "input[name=jv_website]",
+              "w": 153,
+              "h": 21,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "around": null,
+              "text": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                }
+              ],
+              "ua": true
+            },
+            {
+              "path": "div:1/footer:1/div:1/div:1/div:5/form:1/div:1/input:1",
+              "at": "input.jv-newsletter__email[name=jv_email]",
+              "w": 153,
+              "h": 21,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "around": null,
+              "text": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                },
+                {
+                  "r": 118,
+                  "g": 118,
+                  "b": 118,
+                  "a": 1
+                }
+              ],
+              "ua": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-vega/wp7@1.1.15 (https://ja-vega-wordpress.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": {
+          "roles": [
+            {
+              "name": "bg",
+              "c": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "name": "surface",
+              "c": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            {
+              "name": "surface-warm",
+              "c": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              }
+            },
+            {
+              "name": "fg",
+              "c": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "name": "fg-2",
+              "c": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              }
+            },
+            {
+              "name": "muted",
+              "c": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              }
+            },
+            {
+              "name": "meta",
+              "c": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              }
+            },
+            {
+              "name": "border",
+              "c": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "name": "border-soft",
+              "c": {
+                "r": 122,
+                "g": 120,
+                "b": 106,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent",
+              "c": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-on",
+              "c": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-hover",
+              "c": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-active",
+              "c": {
+                "r": 159,
+                "g": 190,
+                "b": 252,
+                "a": 1
+              }
+            },
+            {
+              "name": "success",
+              "c": {
+                "r": 22,
+                "g": 163,
+                "b": 74,
+                "a": 1
+              }
+            },
+            {
+              "name": "warn",
+              "c": {
+                "r": 234,
+                "g": 179,
+                "b": 8,
+                "a": 1
+              }
+            },
+            {
+              "name": "danger",
+              "c": {
+                "r": 220,
+                "g": 38,
+                "b": 38,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-text",
+              "c": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-text-hover",
+              "c": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              }
+            }
+          ],
+          "fields": [
+            {
+              "path": "div:1/footer:1/div:1/div:1/div:5/form:1/p:2/input:1",
+              "at": "input[name=jv_website]",
+              "w": 153,
+              "h": 21,
+              "fill": {
+                "r": 59,
+                "g": 59,
+                "b": 59,
+                "a": 1
+              },
+              "around": null,
+              "text": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                }
+              ],
+              "ua": true
+            },
+            {
+              "path": "div:1/footer:1/div:1/div:1/div:5/form:1/div:1/input:1",
+              "at": "input.jv-newsletter__email[name=jv_email]",
+              "w": 153,
+              "h": 21,
+              "fill": {
+                "r": 59,
+                "g": 59,
+                "b": 59,
+                "a": 1
+              },
+              "around": null,
+              "text": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                }
+              ],
+              "ua": true
+            }
+          ]
+        }
+      },
+      "plain": {
+        "data": {
+          "roles": [],
+          "fields": [
+            {
+              "path": "div:1/footer:1/div:1/div:1/div:5/form:1/p:2/input:1",
+              "at": "input[name=jv_website]",
+              "w": 153,
+              "h": 21,
+              "fill": {
+                "r": 59,
+                "g": 59,
+                "b": 59,
+                "a": 1
+              },
+              "around": null,
+              "text": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                }
+              ],
+              "ua": true
+            },
+            {
+              "path": "div:1/footer:1/div:1/div:1/div:5/form:1/div:1/input:1",
+              "at": "input.jv-newsletter__email[name=jv_email]",
+              "w": 153,
+              "h": 21,
+              "fill": {
+                "r": 59,
+                "g": 59,
+                "b": 59,
+                "a": 1
+              },
+              "around": null,
+              "text": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                },
+                {
+                  "r": 133,
+                  "g": 133,
+                  "b": 133,
+                  "a": 1
+                }
+              ],
+              "ua": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-resort/j6@1.0.4 (https://ja-resort-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#b7b39f",
+        "#000000",
+        "#868474",
+        "#93b6fb",
+        "#858273",
+        "#060605",
+        "#84acfb",
+        "#1a1a1a",
+        "#7a786a",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": {
+          "roles": [
+            {
+              "name": "border",
+              "c": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "name": "fg-2",
+              "c": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              }
+            },
+            {
+              "name": "bg",
+              "c": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "name": "fg",
+              "c": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "name": "meta",
+              "c": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-text-hover",
+              "c": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "muted",
+              "c": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              }
+            },
+            {
+              "name": "success",
+              "c": {
+                "r": 40,
+                "g": 167,
+                "b": 69,
+                "a": 1
+              }
+            },
+            {
+              "name": "danger",
+              "c": {
+                "r": 220,
+                "g": 53,
+                "b": 69,
+                "a": 1
+              }
+            },
+            {
+              "name": "warn",
+              "c": {
+                "r": 255,
+                "g": 193,
+                "b": 7,
+                "a": 1
+              }
+            },
+            {
+              "name": "surface-warm",
+              "c": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-hover",
+              "c": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-on",
+              "c": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent",
+              "c": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-text",
+              "c": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "surface",
+              "c": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            {
+              "name": "border-soft",
+              "c": {
+                "r": 122,
+                "g": 120,
+                "b": 106,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-active",
+              "c": {
+                "r": 159,
+                "g": 190,
+                "b": 252,
+                "a": 1
+              }
+            }
+          ],
+          "fields": [
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/form:1/div:1/div:1/div:1/input:1",
+              "at": "input.checkin_module.datefield.form-control",
+              "w": 492,
+              "h": 59,
+              "fill": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "around": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "text": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                }
+              ],
+              "ua": false
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/form:1/div:1/div:2/div:1/input:1",
+              "at": "input.checkout_module.datefield.form-control",
+              "w": 492,
+              "h": 59,
+              "fill": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "around": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "text": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                }
+              ],
+              "ua": false
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/form:1/div:1/div:3/select:1",
+              "at": "select.form-select[name=room_type_id]",
+              "w": 492,
+              "h": 61,
+              "fill": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "around": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              },
+              "text": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                }
+              ],
+              "ua": false
+            }
+          ]
+        }
+      },
+      "plain": {
+        "data": {
+          "roles": [],
+          "fields": [
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/form:1/div:1/div:1/div:1/input:1",
+              "at": "input.checkin_module.datefield.form-control",
+              "w": 522,
+              "h": 59,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "around": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "text": {
+                "r": 41,
+                "g": 65,
+                "b": 56,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                },
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                },
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                },
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                }
+              ],
+              "ua": false
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/form:1/div:1/div:2/div:1/input:1",
+              "at": "input.checkout_module.datefield.form-control",
+              "w": 522,
+              "h": 59,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "around": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "text": {
+                "r": 41,
+                "g": 65,
+                "b": 56,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                },
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                },
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                },
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                }
+              ],
+              "ua": false
+            },
+            {
+              "path": "div:2/div:1/div:1/div:10/div:1/div:1/form:1/div:1/div:3/select:1",
+              "at": "select.form-select[name=room_type_id]",
+              "w": 522,
+              "h": 61,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "around": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "text": {
+                "r": 123,
+                "g": 131,
+                "b": 131,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                },
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                },
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                },
+                {
+                  "r": 225,
+                  "g": 219,
+                  "b": 213,
+                  "a": 1
+                }
+              ],
+              "ua": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 (https://ja-kinetic-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme light, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#858273",
+        "#f4efd4",
+        "#868474",
+        "#93b6fb",
+        "#b7b39f",
+        "#7a786a",
+        "#84acfb",
+        "#1a1a1a",
+        "#060605",
+        "#000000",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": {
+          "roles": [
+            {
+              "name": "muted",
+              "c": {
+                "r": 133,
+                "g": 130,
+                "b": 115,
+                "a": 1
+              }
+            },
+            {
+              "name": "fg",
+              "c": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "name": "meta",
+              "c": {
+                "r": 134,
+                "g": 132,
+                "b": 116,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-text-hover",
+              "c": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "fg-2",
+              "c": {
+                "r": 183,
+                "g": 179,
+                "b": 159,
+                "a": 1
+              }
+            },
+            {
+              "name": "border-soft",
+              "c": {
+                "r": 122,
+                "g": 120,
+                "b": 106,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent",
+              "c": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-text",
+              "c": {
+                "r": 132,
+                "g": 172,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "surface",
+              "c": {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            },
+            {
+              "name": "border",
+              "c": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "name": "danger",
+              "c": {
+                "r": 229,
+                "g": 72,
+                "b": 77,
+                "a": 1
+              }
+            },
+            {
+              "name": "warn",
+              "c": {
+                "r": 245,
+                "g": 166,
+                "b": 35,
+                "a": 1
+              }
+            },
+            {
+              "name": "success",
+              "c": {
+                "r": 48,
+                "g": 164,
+                "b": 108,
+                "a": 1
+              }
+            },
+            {
+              "name": "surface-warm",
+              "c": {
+                "r": 6,
+                "g": 6,
+                "b": 5,
+                "a": 1
+              }
+            },
+            {
+              "name": "bg",
+              "c": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-on",
+              "c": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-hover",
+              "c": {
+                "r": 147,
+                "g": 182,
+                "b": 251,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-active",
+              "c": {
+                "r": 159,
+                "g": 190,
+                "b": 252,
+                "a": 1
+              }
+            }
+          ],
+          "fields": [
+            {
+              "path": "div:1/div:1/div:1/div:10/footer:1/div:1/div:2/div:1/div:1/form:1/div:1/div:2/div:1/label:1/input:1",
+              "at": "input.cell.acym__user__edit__email[name=user[email]]",
+              "w": 260,
+              "h": 45,
+              "fill": {
+                "r": 65,
+                "g": 64,
+                "b": 59,
+                "a": 1
+              },
+              "around": {
+                "r": 65,
+                "g": 64,
+                "b": 59,
+                "a": 1
+              },
+              "text": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                }
+              ],
+              "ua": false
+            }
+          ]
+        }
+      },
+      "plain": {
+        "data": {
+          "roles": [],
+          "fields": [
+            {
+              "path": "div:1/div:1/div:1/div:10/footer:1/div:1/div:2/div:1/div:1/form:1/div:1/div:2/div:1/label:1/input:1",
+              "at": "input.cell.acym__user__edit__email[name=user[email]]",
+              "w": 260,
+              "h": 45,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "around": {
+                "r": 242,
+                "g": 245,
+                "b": 238,
+                "a": 1
+              },
+              "text": {
+                "r": 16,
+                "g": 20,
+                "b": 15,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 228,
+                  "g": 232,
+                  "b": 224,
+                  "a": 1
+                },
+                {
+                  "r": 228,
+                  "g": 232,
+                  "b": 224,
+                  "a": 1
+                },
+                {
+                  "r": 228,
+                  "g": 232,
+                  "b": 224,
+                  "a": 1
+                },
+                {
+                  "r": 228,
+                  "g": 232,
+                  "b": 224,
+                  "a": 1
+                }
+              ],
+              "ua": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light /index.php/pages/search",
+      "systemColours": [
+        "#5d5b51",
+        "#000000",
+        "#69665b",
+        "#4e6594",
+        "#3d3c35",
+        "#e3dfc5",
+        "#6786c4",
+        "#4e6695",
+        "#d2ceb6",
+        "#f4efd4",
+        "#5b76ac",
+        "#eae5cc",
+        "#eee9cf",
+        "#5e75a1"
+      ],
+      "worn": {
+        "data": {
+          "roles": [
+            {
+              "name": "muted",
+              "c": {
+                "r": 93,
+                "g": 91,
+                "b": 81,
+                "a": 1
+              }
+            },
+            {
+              "name": "fg",
+              "c": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "name": "meta",
+              "c": {
+                "r": 105,
+                "g": 102,
+                "b": 91,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-text-hover",
+              "c": {
+                "r": 78,
+                "g": 101,
+                "b": 148,
+                "a": 1
+              }
+            },
+            {
+              "name": "fg-2",
+              "c": {
+                "r": 61,
+                "g": 60,
+                "b": 53,
+                "a": 1
+              }
+            },
+            {
+              "name": "border-soft",
+              "c": {
+                "r": 227,
+                "g": 223,
+                "b": 197,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent",
+              "c": {
+                "r": 103,
+                "g": 134,
+                "b": 196,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-text",
+              "c": {
+                "r": 78,
+                "g": 102,
+                "b": 149,
+                "a": 1
+              }
+            },
+            {
+              "name": "danger",
+              "c": {
+                "r": 179,
+                "g": 57,
+                "b": 61,
+                "a": 1
+              }
+            },
+            {
+              "name": "warn",
+              "c": {
+                "r": 106,
+                "g": 72,
+                "b": 15,
+                "a": 1
+              }
+            },
+            {
+              "name": "success",
+              "c": {
+                "r": 28,
+                "g": 97,
+                "b": 64,
+                "a": 1
+              }
+            },
+            {
+              "name": "border",
+              "c": {
+                "r": 210,
+                "g": 206,
+                "b": 182,
+                "a": 1
+              }
+            },
+            {
+              "name": "bg",
+              "c": {
+                "r": 244,
+                "g": 239,
+                "b": 212,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-on",
+              "c": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-hover",
+              "c": {
+                "r": 91,
+                "g": 118,
+                "b": 172,
+                "a": 1
+              }
+            },
+            {
+              "name": "surface",
+              "c": {
+                "r": 234,
+                "g": 229,
+                "b": 204,
+                "a": 1
+              }
+            },
+            {
+              "name": "surface-warm",
+              "c": {
+                "r": 238,
+                "g": 233,
+                "b": 207,
+                "a": 1
+              }
+            },
+            {
+              "name": "accent-active",
+              "c": {
+                "r": 94,
+                "g": 117,
+                "b": 161,
+                "a": 1
+              }
+            }
+          ],
+          "fields": [
+            {
+              "path": "div:1/div:1/div:1/div:3/div:2/div:1/div:1/div:1/form:1/fieldset:1/div:1/input:1",
+              "at": "input.js-finder-search-query.kinetic-finder__input[name=q]",
+              "w": 671,
+              "h": 45,
+              "fill": null,
+              "around": {
+                "r": 234,
+                "g": 229,
+                "b": 204,
+                "a": 1
+              },
+              "text": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "borders": [],
+              "ua": false,
+              "box": {
+                "fill": {
+                  "r": 234,
+                  "g": 229,
+                  "b": 204,
+                  "a": 1
+                },
+                "borders": [
+                  {
+                    "r": 210,
+                    "g": 206,
+                    "b": 182,
+                    "a": 1
+                  },
+                  {
+                    "r": 210,
+                    "g": 206,
+                    "b": 182,
+                    "a": 1
+                  },
+                  {
+                    "r": 210,
+                    "g": 206,
+                    "b": 182,
+                    "a": 1
+                  },
+                  {
+                    "r": 210,
+                    "g": 206,
+                    "b": 182,
+                    "a": 1
+                  }
+                ],
+                "around": null
+              }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/footer:1/div:1/div:2/div:1/div:1/form:1/div:1/div:2/div:1/label:1/input:1",
+              "at": "input.cell.acym__user__edit__email[name=user[email]]",
+              "w": 260,
+              "h": 45,
+              "fill": {
+                "r": 234,
+                "g": 229,
+                "b": 204,
+                "a": 1
+              },
+              "around": {
+                "r": 238,
+                "g": 233,
+                "b": 207,
+                "a": 1
+              },
+              "text": {
+                "r": 61,
+                "g": 60,
+                "b": 53,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 210,
+                  "g": 206,
+                  "b": 182,
+                  "a": 1
+                },
+                {
+                  "r": 210,
+                  "g": 206,
+                  "b": 182,
+                  "a": 1
+                },
+                {
+                  "r": 210,
+                  "g": 206,
+                  "b": 182,
+                  "a": 1
+                },
+                {
+                  "r": 210,
+                  "g": 206,
+                  "b": 182,
+                  "a": 1
+                }
+              ],
+              "ua": false
+            }
+          ]
+        }
+      },
+      "plain": {
+        "data": {
+          "roles": [],
+          "fields": [
+            {
+              "path": "div:1/div:1/div:1/div:3/div:2/div:1/div:1/div:1/form:1/fieldset:1/div:1/input:1",
+              "at": "input.js-finder-search-query.kinetic-finder__input[name=q]",
+              "w": 671,
+              "h": 45,
+              "fill": null,
+              "around": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "text": {
+                "r": 16,
+                "g": 20,
+                "b": 15,
+                "a": 1
+              },
+              "borders": [],
+              "ua": false,
+              "box": {
+                "fill": {
+                  "r": 255,
+                  "g": 255,
+                  "b": 255,
+                  "a": 1
+                },
+                "borders": [
+                  {
+                    "r": 228,
+                    "g": 232,
+                    "b": 224,
+                    "a": 1
+                  },
+                  {
+                    "r": 228,
+                    "g": 232,
+                    "b": 224,
+                    "a": 1
+                  },
+                  {
+                    "r": 228,
+                    "g": 232,
+                    "b": 224,
+                    "a": 1
+                  },
+                  {
+                    "r": 228,
+                    "g": 232,
+                    "b": 224,
+                    "a": 1
+                  }
+                ],
+                "around": null
+              }
+            },
+            {
+              "path": "div:1/div:1/div:1/div:4/footer:1/div:1/div:2/div:1/div:1/form:1/div:1/div:2/div:1/label:1/input:1",
+              "at": "input.cell.acym__user__edit__email[name=user[email]]",
+              "w": 260,
+              "h": 45,
+              "fill": {
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 1
+              },
+              "around": {
+                "r": 242,
+                "g": 245,
+                "b": 238,
+                "a": 1
+              },
+              "text": {
+                "r": 16,
+                "g": 20,
+                "b": 15,
+                "a": 1
+              },
+              "borders": [
+                {
+                  "r": 228,
+                  "g": 232,
+                  "b": 224,
+                  "a": 1
+                },
+                {
+                  "r": 228,
+                  "g": 232,
+                  "b": 224,
+                  "a": 1
+                },
+                {
+                  "r": 228,
+                  "g": 232,
+                  "b": 224,
+                  "a": 1
+                },
+                {
+                  "r": 228,
+                  "g": 232,
+                  "b": 224,
+                  "a": 1
+                }
+              ],
+              "ua": false
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

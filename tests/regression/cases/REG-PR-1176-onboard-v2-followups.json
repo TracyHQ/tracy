@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1176-onboard-v2-followups",
+  "kind": "fix",
+  "title": "Desktop first-run follow-ups: a refused sign-in says why, Cancel ends the round on the server, the connected AI account is the pick and never gets a not-installed card",
+  "pr": 1176,
+  "area": "desktop/onboard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node tests/regression/scripts/REG-PR-1176-onboard-v2-followups.mjs",
+    "S2: Read one ok/not ok line per fence."
+  ],
+  "expect": [
+    "Refused exchange shows the reason: GET /login?onboard=1&reason=not-admitted draws the whitelist alert; expired/denied/failed draw 'The sign-in did not finish. Try again.'; an unknown reason draws nothing and is not echoed; the app maps a 403 SIGN_IN_REFUSED/NOT_ADMITTED redeem to /login?reason=not-admitted and keeps onboard=1 on a first run.",
+    "Cancel flips the round: POST /auth/link/:nonce/cancel with the round's clientSecret answers 204, the poll reads denied, a later /signin/approve answers 400 and the session redeem 404; wrong secret, lane round and approved round are untouched; the app sends the cancel once with the secret only in the body.",
+    "The not-installed card is absent when the picked vendor is connected.",
+    "A connected account is preselected over the scan's pick (the one in status.next first), sits in the main grid, and the panel shows data-connect=connected with no [data-warn]."
+  ],
+  "selectors": {
+    "door": "POST /auth/link/:nonce/cancel",
+    "page": "GET /login?reason=",
+    "dom": "[data-agent] aria-pressed, [data-connect], [data-warn]"
+  },
+  "evidence": "tasks/evidence/desktop-onboard-v2/dev-acceptance/README.md (findings 3 and 4, dev acceptance of #1166)",
+  "fence": "SIGN_IN_REASONS in identity/pages.js; cancelDesktopLink in identity/store.js; signInFailedUrl and the abort hook in the desktop handoff; accountView/connected action in tracy-onboard flow.ts",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1176-onboard-v2-followups.mjs"]
+  }
+}

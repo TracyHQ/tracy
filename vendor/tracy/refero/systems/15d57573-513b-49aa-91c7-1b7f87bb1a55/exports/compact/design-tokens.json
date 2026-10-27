@@ -1,0 +1,39 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, all borders, outline strokes, link underlines, background type fill"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surface, filled button background"
+    }
+  },
+  "font": {
+    "maison-neue": {
+      "$value": "Maison Neue",
+      "$type": "fontFamily",
+      "$description": "Primary UI and headline typeface — used for nav links, body copy, button text, and bold all-caps hero statements. The 65px weight 500 is the signature headline voice: tight leading (1.11), all-caps, commanding without decorative weight. Substitute: Inter, Helvetica Neue, Neue Haas Grotesk"
+    },
+    "basebloom": {
+      "$value": "BASEBLOOM",
+      "$type": "fontFamily",
+      "$description": "Architectural display layer — rendered as massive outlined characters (864px, line-height 0.83) that sit behind body content as visual scaffolding, never carrying readable information. Substitute: a custom ultra-condensed display face or CSS stroke text"
+    },
+    "unzyale": {
+      "$value": "Unzyale",
+      "$type": "fontFamily",
+      "$description": "Rare secondary display use — appears in link context at 58px as a typographic accent. Substitute: a condensed or script contrast face"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://wemakethings.de",
+      "siteName": "Wemakethings",
+      "extractedAt": "2026-06-03T21:56:26.799Z",
+      "variant": "compact"
+    }
+  }
+}

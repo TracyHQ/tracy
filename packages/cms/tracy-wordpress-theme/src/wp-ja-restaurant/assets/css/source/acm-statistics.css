@@ -1,0 +1,92 @@
+/* wp-ja-restaurant: acm/statistics/css/style.css of the JA Restaurant 1.0.6 Joomla template (GPL v3, JoomlArt), carried rule for rule by tasks/ja-restaurant-wp7/tools/port-css.mjs (DECISIONS D-10). Colours read light-dark(<source>, <derived dark, D-03>); do not edit by hand, re-run the tool. */
+.section-inner {
+  background-size: cover;
+  background-position: center center;
+}
+.uber-stats .stats-header {
+  margin-bottom: 50px;
+}
+.uber-stats .stats-header .stats-title {
+  margin: 0 0 60px;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--ds-c-fg, light-dark(#333333, #f0ece2));
+  line-height: 1.75;
+}
+.uber-stats .stats-header .stats-description {
+  margin-top: 0;
+  font-weight: 300;
+  line-height: 1.875;
+}
+.uber-stats .stats-list {
+  margin-bottom: 0;
+  padding: 0;
+  list-style: none;
+}
+.uber-stats .stats-list:before,
+.uber-stats .stats-list:after {
+  display: table;
+  content: " ";
+}
+.uber-stats .stats-list:after {
+  clear: both;
+}
+.uber-stats .stats-list li {
+  padding: 0 25px;
+  border-top: 0;
+}
+.uber-stats.style-1 .stats-list .stats-asset {
+  margin-bottom: 30px;
+}
+.uber-stats.style-1 .stats-list .stats-asset:before,
+.uber-stats.style-1 .stats-list .stats-asset:after {
+  display: table;
+  content: " ";
+}
+.uber-stats.style-1 .stats-list .stats-asset:after {
+  clear: both;
+}
+.uber-stats.style-1 .stats-list span {
+  display: block;
+  text-align: center;
+}
+.uber-stats.style-1 .stats-list span.stats-item-counter {
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.uber-stats.style-1 .stats-list span.stats-item-counter .progressbar {
+  background: var(--ds-c-accent, #d24a24);
+  color: var(--ds-c-accent-on, #ffffff);
+}
+.uber-stats.style-1 .stats-list span.stats-item-counter .progressbar span {
+  background-color: var(--ds-c-accent, #d24a24);
+  font-size: 14px;
+}
+.uber-stats.style-1 .stats-list span.stats-item-subject {
+  text-align: left;
+  padding-left: 0;
+}
+.ie8 .uber-stats .container {
+  width: auto;
+}
+@-webkit-keyframes progressBar {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+@keyframes progressBar {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+.inview .uber-stats .stats-list span.stats-item-counter .progressbar span {
+  -webkit-animation: progressBar 900ms ease 0.15s forwards;
+  -moz-animation: progressBar 900ms ease 0.15s forwards;
+  animation: progressBar 900ms ease 0.15s forwards;
+}

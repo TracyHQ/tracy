@@ -1,0 +1,21 @@
+meta {
+  name: one apply
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}/applies/{{applyId}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  applyId: bruno-record-1
+}
+
+docs {
+  # The steps one apply made
+
+  `apply.list` for the receipt `applyId` names (Vars tab); `bruno-record-1` after "record patch".
+}

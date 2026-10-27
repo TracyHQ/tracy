@@ -1,0 +1,294 @@
+{
+  "dos": [
+    "Use Alliance No.2 for all display and heading text at 28px or above, with negative tracking between -0.01em and -0.05em depending on size.",
+    "Set every section-introduction label in Geist Mono 12px UPPERCASE with +0.06em tracking — this is the system's signature editorial punctuation.",
+    "Use 2px border radius on all buttons, cards, inputs, and tags. 8px is reserved for images only.",
+    "Reach for Neon Mint (#90fc95) as a full-bleed section background or large surface, never as a button fill or text color on a small element.",
+    "Use Obsidian (#1e211e) for filled buttons and primary text — its faint green undertone ties the dark surface back to the brand accent.",
+    "Place at least one full-bleed dark (Obsidian) section and at least one full-bleed Neon Mint section on every marketing page — the two-mood rhythm is the brand.",
+    "Stack headlines at line-height 1.00–1.10 and body copy at 1.40–1.50; the contrast between tight display and comfortable body is a signature."
+  ],
+  "donts": [
+    "Don't use soft or large border radii — 2px is the system limit, anything above 8px breaks the architectural language.",
+    "Don't use the Neon Mint as a button background, link color, or text accent — it is a SURFACE, not a point color.",
+    "Don't use drop shadows or blur for elevation — the system stacks surfaces through color contrast only.",
+    "Don't set body copy below 14px or above 24px — Geist's comfort range is narrow and intentional.",
+    "Don't use pure black (#000000) for large fills or text blocks — reserve it for borders and 1px details; Obsidian handles surfaces.",
+    "Don't use more than one chromatic color per page — the entire palette is one accent.",
+    "Don't set headings in Geist when Alliance No.2 is available — the contrast between the custom display face and the UI face is the typographic signature."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1e211e",
+      "name": "Obsidian",
+      "role": "Filled buttons, hero canvas, primary text on light surfaces — near-black with a barely-there green undertone that links it to the mint accent without announcing itself",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page background, card surfaces, button text on dark fills, nav background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Hairline borders, icon strokes, sharpest outlines — provides the crispest edge against white surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4b4d4b",
+      "name": "Graphite",
+      "role": "Secondary body text, subdued borders — the middle voice between Obsidian and Ash",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d2d3d2",
+      "name": "Ash",
+      "role": "Hairline dividers, accordion separators, disabled and inactive states",
+      "group": "neutral"
+    },
+    {
+      "hex": "#90fc95",
+      "name": "Neon Mint",
+      "role": "Highlight section backgrounds, stat callout fills, wireframe geometry accents — the single chromatic moment that makes the brand instantly recognizable",
+      "group": "brand"
+    }
+  ],
+  "layout": "Centered max-width ~1200px content column with a two-mood vertical rhythm: full-bleed Obsidian hero (split text-left / wireframe-right) → white content sections → full-bleed Neon Mint highlight band with 4-column stat cards → back to white for FAQ and remaining content. Navigation is a flat horizontal bar with no shadow, no border. The hero is the only asymmetric layout moment; everything else centers or uses simple column grids. Sections are separated by generous 96–160px vertical gaps, creating a confident, unhurried scroll. The wireframe geometry always bleeds off the right edge of the page, anchoring the right side of the visual field.",
+  "imagery": "The site uses almost no photography. The dominant visual device is a geometric wireframe: isometric cubes drawn in 1px strokes in Neon Mint (on the dark hero) or Obsidian (on the green band), stacked offset to create a sense of depth and bleeding off the page edge. These cubes function as both decoration and abstract brand mark — suggesting structure, systems, and modularity. The only photographic opportunity is in the dark hero, where the wireframe floats over the near-black canvas with no supporting imagery.",
+  "similar": [
+    {
+      "why": "Same near-black surfaces paired with a single vivid accent, sharp 2–4px corners, and editorial-grade display typography with tight negative tracking",
+      "business": "Linear"
+    },
+    {
+      "why": "Same restraint with one chromatic highlight, large light-weight display headlines, and white-canvas product surfaces with dark hero blocks",
+      "business": "Mercury"
+    },
+    {
+      "why": "Same dark/light two-mood page rhythm, monochrome base with a single neon green accent, and architectural wireframe geometry as hero decoration",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same obsession with custom display serifs/sans, generous whitespace between sections, and a flat non-shadowed surface system",
+      "business": "Pigment"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "2px",
+      "cards": "2px",
+      "images": "8px",
+      "inputs": "2px",
+      "buttons": "2px"
+    },
+    "elementGap": "10-12px",
+    "sectionGap": "96-160px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 0,
+      "purpose": "Page canvas and dominant section background"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Stat Card",
+      "level": 1,
+      "purpose": "White cards floating on the Neon Mint highlight band"
+    },
+    {
+      "hex": "#90fc95",
+      "name": "Neon Mint Band",
+      "level": 2,
+      "purpose": "Full-bleed highlight section breaking the white rhythm"
+    },
+    {
+      "hex": "#1e211",
+      "name": "Obsidian Hero",
+      "level": 3,
+      "purpose": "Dark full-bleed hero canvas with wireframe geometry"
+    }
+  ],
+  "elevation": [],
+  "northStar": "neon greenhouse at midnight",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.72
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.28
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "body-lg",
+      "size": 19,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.38
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "heading-sm",
+      "size": 28,
+      "lineHeight": 1.2,
+      "letterSpacing": -1.12
+    },
+    {
+      "role": "heading",
+      "size": 52,
+      "lineHeight": 1.1,
+      "letterSpacing": -2.08
+    },
+    {
+      "role": "heading-lg",
+      "size": 58,
+      "lineHeight": 1,
+      "letterSpacing": -2.32
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 1,
+      "letterSpacing": -4
+    }
+  ],
+  "components": [
+    {
+      "name": "Filled Dark Button",
+      "role": "Primary action on light surfaces",
+      "description": "Obsidian (#1e211e) background, Paper (#ffffff) text at 14px Geist, 2px radius, 11px vertical / 16px horizontal padding, no border. Used for the dominant 'Request a Demo' action in the nav and hero."
+    },
+    {
+      "name": "Outlined Dark Button",
+      "role": "Secondary action on light surfaces",
+      "description": "Transparent background, 1px Obsidian (#1e211e) border, Obsidian text at 14px Geist, 2px radius, 11px / 16px padding. Sits beside the filled button as a quieter companion."
+    },
+    {
+      "name": "Outlined Light Button",
+      "role": "Tertiary action on dark surfaces",
+      "description": "Transparent background, 1px Paper (#ffffff) border at 50% opacity, Paper text at 14px Geist, 2px radius. Used sparingly for secondary actions inside dark sections."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Global site header",
+      "description": "Paper (#ffffff) background, 64–72px height, horizontal flex with 24px column gap. Logo left, dropdown links center, two dark buttons right. No shadow, no border-bottom — floats on the canvas."
+    },
+    {
+      "name": "Dark Hero Section",
+      "role": "First-screen brand statement",
+      "description": "Full-bleed Obsidian (#1e211e) background, ~600–700px tall, split layout: text-left at max-width 560px with 80px Alliance No.2 Light headline and 18px Geist body, wireframe cube graphic bleeding off the right edge."
+    },
+    {
+      "name": "Neon Mint Highlight Band",
+      "role": "Metrics and proof section",
+      "description": "Full-bleed Neon Mint (#90fc95) background, houses 4 stat cards in a horizontal row. Includes geometric cube outlines in dark green as decorative bleed on the right edge."
+    },
+    {
+      "name": "Stat Card",
+      "role": "Single metric display",
+      "description": "Paper (#ffffff) background, 2px radius, 24px padding, no border. Eyebrow label in Geist Mono 12px uppercase +0.06em, massive number at 80px Alliance No.2 Light, descriptor at 16px Geist in Graphite. Floats on Neon Mint."
+    },
+    {
+      "name": "Eyebrow Label",
+      "role": "Section introduction line",
+      "description": "Geist Mono 12px UPPERCASE, +0.72px letter-spacing, Obsidian or Paper color depending on surface. ALWAYS appears directly above a section headline as a category marker."
+    },
+    {
+      "name": "Section Headline",
+      "role": "Primary content heading",
+      "description": "Alliance No.2 Regular at 52–58px, -0.04em tracking, Obsidian on light / Paper on dark. Sets the editorial tone of every content section."
+    },
+    {
+      "name": "FAQ Accordion Row",
+      "role": "Expandable question item",
+      "description": "Paper background, 1px Ash (#d2d3d2) bottom border only, 24px vertical padding, question text in 19px Geist Obsidian. No background fill, no card chrome — the divider line IS the component."
+    },
+    {
+      "name": "Wireframe Cube Graphic",
+      "role": "Decorative hero/section geometry",
+      "description": "Isometric cube outlines in 1px strokes — Neon Mint on dark hero, Obsidian on Neon Mint band. Stacked offset to create depth, always bleeding off a page edge."
+    },
+    {
+      "name": "Footer",
+      "role": "Site footer",
+      "description": "Paper background, multi-column link grid, Obsidian text, 1px Ash hairline divider above. Echoes the nav's flatness."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Display and heading face for editorial moments — set large (52–80px) with aggressive negative tracking (-0.05em to -0.01em). The Light weight at 80px is used once for a hero statement, a deliberate whisper-quiet choice against the dark canvas. Enables stylistic set ss10 plus character variants 03, 04, 09, 11.",
+      "sizes": "24, 28, 52, 58, 80px",
+      "family": "Alliance No.2",
+      "weight": "300, 400",
+      "lineHeight": "1.00–1.20",
+      "substitute": "Tiempos Headline, GT Sectra, or for free: Fraunces at -2% tracking",
+      "letterSpacing": "-4px at 80px, -2.9px at 58px, -2.6px at 52px, -1.12px at 28px, -1.2px at 24px",
+      "fontFeatureSettings": "\"ss10\" on, \"cv03\" on, \"cv04\" on, \"cv09\" on, \"cv11\" on"
+    },
+    {
+      "role": "Secondary display and large body — used at 72px for an alternative hero treatment and 19–21px for comfortable long-form reading. Weight 300 echoes the Alliance No.2 Light restraint.",
+      "sizes": "19, 21, 72px",
+      "family": "Geist",
+      "weight": "300, 400",
+      "lineHeight": "1.00, 1.40, 1.50",
+      "substitute": "Inter, General Sans",
+      "letterSpacing": "-0.76px at 19px"
+    },
+    {
+      "role": "Primary UI and body face — nav links, button labels, body copy, form fields, card text. Slightly negative tracking (-0.01 to -0.02em) tightens Geist's default spacing for a more engineered feel.",
+      "sizes": "14, 16, 17, 19, 21, 24px",
+      "family": "Geist Variable",
+      "weight": "400",
+      "lineHeight": "1.40",
+      "substitute": "Inter, General Sans",
+      "letterSpacing": "-0.28px at 14px, -0.32px at 16px, -0.34px at 17px, -0.38px at 19px, -0.42px at 21px, -0.48px at 24px",
+      "fontFeatureSettings": "\"ss03\" on, \"cv03\" on, \"cv04\" on, \"cv09\" on, \"cv11\" on"
+    },
+    {
+      "role": "Eyebrow labels and monospaced micro-text — ALWAYS set in UPPERCASE with +0.06em tracking, used as the section-introduction line above every heading (e.g. 'AUTOMATE COLLECTIONS, YOUR WAY'). The only place tracking opens up.",
+      "sizes": "12, 16px",
+      "family": "Geist Mono",
+      "weight": "400",
+      "lineHeight": "1.20, 1.40",
+      "substitute": "JetBrains Mono, IBM Plex Mono",
+      "letterSpacing": "+0.72px at 12px, +0.96px at 16px"
+    }
+  ],
+  "description": "A fintech site that lives in two registers: a near-black hero with wireframe geometry and whisper-light Alliance No.2 display headlines at 52–80px with aggressive negative tracking, then sections that snap to a white canvas and erupt with a single radioactive mint accent. The system is deliberately sharp — a 2px border radius governs almost every surface, rejecting softness in favor of an architectural, blueprint-like language. Typography carries the brand: custom display faces set tight and large, Geist Variable keeps the interface grounded, and Geist Mono at 12px with +0.06em tracking introduces an editorial eyebrow label used above every section. Color is surgical: black, white, and a near-black with a green undertone (#1e211e) do 90% of the work; the mint #90fc95 is reserved as a single bright punctuation mark for highlight bands and metric surfaces.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #1e211e (Obsidian)\n- background: #ffffff (Paper)\n- border: #1e211e or #d2d3d2 (Ash)\n- accent surface: #90fc95 (Neon Mint) — for full-bleed bands only\n- primary action: #1e211e (filled action)\n\n**3 Example Component Prompts**\n\n1. **Dark Hero Section**: Full-bleed Obsidian (#1e211e) background, ~640px tall. Headline at 80px Alliance No.2 Light, #ffffff, letter-spacing -4px, line-height 1.00, positioned left at max-width 560px. Body subtext at 19px Geist weight 400, #ffffff at 80% opacity. Two buttons: filled #1e211e would disappear — instead use a Filled Light button (white bg, dark text, 2px radius) and an Outlined Light button (1px white border at 50% opacity, white text). Wireframe cube graphic in 1px Neon Mint strokes bleeding off the right edge.\n\n2. **Neon Mint Highlight Band**: Full-bleed #90fc95 background, 120px vertical padding. Eyebrow label in Geist Mono 12px UPPERCASE +0.72px tracking, #1e211e. Section headline at 52px Alliance No.2 Regular, #1e211e, letter-spacing -2.08px. Below, a 4-column row of Stat Cards: #ffffff background, 2px radius, 24px padding, 80px Alliance No.2 Light number in #1e211e, 16px Geist descriptor in #4b4d4b.\n\n3. **FAQ Accordion List**: White (#ffffff) background, max-width 800px centered. List title at 52px Alliance No.2 Regular, #1e211e. Each row: 24px vertical padding, 19px Geist #1e211e question text, 1px #d2d3d2 bottom border only. No card backgrounds, no shadows — the divider line is the component."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is achieved through color contrast and surface bands, not shadows. Dark hero on white page, white cards on Neon Mint, white card on Obsidian — the system stacks surfaces through hue and value, keeping every edge crisp. No drop shadows, no blur."
+}

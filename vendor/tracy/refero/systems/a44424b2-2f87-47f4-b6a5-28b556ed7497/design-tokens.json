@@ -1,0 +1,527 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page canvas, full-bleed section backgrounds, dark product-demo interiors"
+    },
+    "near-black": {
+      "$value": "#050505",
+      "$type": "color",
+      "$description": "Near Black — Subtle recessed surface and dark overlay layer"
+    },
+    "carbon": {
+      "$value": "#292929",
+      "$type": "color",
+      "$description": "Carbon — Raised dark controls, prompt-composer depth, subdued surface detail"
+    },
+    "graphite": {
+      "$value": "#4d4d4d",
+      "$type": "color",
+      "$description": "Graphite — Secondary dark surface fills and inactive internal UI detail"
+    },
+    "ash": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Ash — Low-emphasis metadata, tiny helper copy, and quiet interface marks"
+    },
+    "steel": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Steel — Muted labels, inactive controls, and secondary icon strokes"
+    },
+    "fog": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Fog — Supporting body copy and descriptive text on black"
+    },
+    "silver": {
+      "$value": "#bfbfbf",
+      "$type": "color",
+      "$description": "Silver — Navigation text, higher-emphasis secondary copy, and fine strokes"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Headlines, button labels, prominent UI text, borders, and logo marks"
+    },
+    "signal-orange": {
+      "$value": "#ff4800",
+      "$type": "color",
+      "$description": "Signal Orange — Filled conversion buttons and circular submit controls — a concentrated warm interruption against Void"
+    },
+    "ember": {
+      "$value": "#ff5e23",
+      "$type": "color",
+      "$description": "Ember — Orange hover treatment, active link fill, and thin warm inset highlight"
+    },
+    "burnt-orange": {
+      "$value": "#ca4e17",
+      "$type": "color",
+      "$description": "Burnt Orange — Warm product-preview card fill and contained campaign-art surface"
+    },
+    "electric-yellow": {
+      "$value": "#ffd900",
+      "$type": "color",
+      "$description": "Electric Yellow — Orange-button glow, bright decorative borders, and vivid campaign-art accents"
+    },
+    "vector-green": {
+      "$value": "#08c380",
+      "$type": "color",
+      "$description": "Vector Green — Sweeping decorative strokes and gradient-led editorial emphasis; Decorative line treatment, highlighted headline underlines, and expressive graphic strokes"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Dense interface system for navigation, prompt text, buttons, metadata, product-demo controls, and body copy. Tight small labels may use expanded tracking, while normal body and navigation copy stays untracked."
+    },
+    "acidgrotesk": {
+      "$value": "AcidGrotesk",
+      "$type": "fontFamily",
+      "$description": "Display and section-heading family. Weight 400 keeps large statements open and conversational rather than heavy; use its 34px treatment for compact hero statements and 45px for editorial section lines."
+    },
+    "acidgrotesksubset": {
+      "$value": "AcidGroteskSubset",
+      "$type": "fontFamily",
+      "$description": "Supporting brand copy in footer links, compact UI labels, and small explanatory text; it keeps utility text visually related to the expressive display face."
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "system-ui — detected in extracted data but not described by AI"
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "9px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 9px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "9px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.1em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 9px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "10px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 10px"
+    },
+    "xs-4": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "10px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-4 at 10px"
+    },
+    "xs-5": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "10px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.22em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-5 at 10px"
+    },
+    "xs-6": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "10px",
+        "fontWeight": 600,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-6 at 10px"
+    },
+    "xs-7": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "12px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-7 at 12px"
+    },
+    "xs-8": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.71,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-8 at 12px"
+    },
+    "xs-9": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.05em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-9 at 12px"
+    },
+    "xs-10": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-10 at 12px"
+    },
+    "xs-11": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "12px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.189em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-11 at 12px"
+    },
+    "xs-12": {
+      "$value": {
+        "fontFamily": "AcidGroteskSubset",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-12 at 12px"
+    },
+    "xs-13": {
+      "$value": {
+        "fontFamily": "AcidGroteskSubset",
+        "fontSize": "12px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-13 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "AcidGroteskSubset",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "AcidGroteskSubset",
+        "fontSize": "15px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 15px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "AcidGrotesk",
+        "fontSize": "17px",
+        "fontWeight": 500,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 17px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "AcidGrotesk",
+        "fontSize": "21px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 21px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "AcidGrotesk",
+        "fontSize": "34px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 34px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "AcidGrotesk",
+        "fontSize": "45px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 45px"
+    },
+    "4xl-2": {
+      "$value": {
+        "fontFamily": "AcidGrotesk",
+        "fontSize": "45px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl-2 at 45px"
+    },
+    "4xl-3": {
+      "$value": {
+        "fontFamily": "AcidGrotesk",
+        "fontSize": "45px",
+        "fontWeight": 400,
+        "lineHeight": 0.9,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl-3 at 45px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "AcidGrotesk",
+        "fontSize": "75px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 75px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "system-ui",
+        "fontSize": "2880px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 2880px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "56": {
+      "$value": "56px",
+      "$type": "dimension",
+      "$description": "Spacing 56px"
+    },
+    "168": {
+      "$value": "168px",
+      "$type": "dimension",
+      "$description": "Spacing 168px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "sm": {
+      "$value": "2.57143px",
+      "$type": "dimension",
+      "$description": "Border radius sm"
+    },
+    "lg": {
+      "$value": "8.57143px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "xl": {
+      "$value": "13.7143px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    },
+    "2xl": {
+      "$value": "17.1429px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "2xl-2": {
+      "$value": "20.5714px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl-2"
+    },
+    "3xl": {
+      "$value": "25.7143px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "3xl-2": {
+      "$value": "37.7143px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-2"
+    },
+    "full": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    }
+  },
+  "shadow": {
+    "subtle": {
+      "$value": "rgba(255, 94, 35, 0.4) 0px 0px 0px 1px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    }
+  },
+  "surface": {
+    "void-canvas": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page, navigation, and section background"
+    },
+    "near-black-recess": {
+      "$value": "#050505",
+      "$type": "color",
+      "$description": "Surface level 1: Subtle inset and overlay surface"
+    },
+    "carbon-control": {
+      "$value": "#292929",
+      "$type": "color",
+      "$description": "Surface level 2: Prompt shells, compact dark controls, and raised UI detail"
+    },
+    "frosted-white-panel": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 3: Use at 5-10% opacity for outlined buttons and translucent product-demo frames"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.linearity.io",
+      "siteName": "Linearity",
+      "extractedAt": "2026-09-20T22:04:03.946Z",
+      "variant": "extended"
+    }
+  }
+}

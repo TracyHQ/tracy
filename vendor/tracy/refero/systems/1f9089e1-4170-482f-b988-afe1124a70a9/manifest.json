@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1f9089e1-4170-482f-b988-afe1124a70a9",
+  "status": "complete",
+  "name": "Incommonwith",
+  "url": "https://styles.refero.design/style/1f9089e1-4170-482f-b988-afe1124a70a9",
+  "sourceWebsite": "https://www.incommonwith.com",
+  "extractedAt": "2026-06-03T19:06:51.699Z",
+  "capturedAt": "2026-10-08T05:09:12.901668+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Editorial atelier in oxblood ink — warm cream pages, sunlit interior photography, and a single deep burgundy ink that carries every word, border, and link like fine letterpress.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d6d39093-fd34-4299-b22d-b3893042836f.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2c0267b8a266faa54f8d3aad267ae866f282263f9cc87dc18cc5ccc637b3ea8d",
+      "bytes": 17463
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2e84d735ea62e7f6c6c7fc436dcad2f8927db260fcdfa02cb2e4873f38d5eb4d",
+      "bytes": 202648
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3485706eac99fa590a3e3cb662fc7078e792018c67832972ae498ed2ef6a20f8",
+      "bytes": 14855
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b5131ec3b3ac017a5bc84206ea5f2331adb8b272a9f245e702a230fe5347e025",
+      "bytes": 5785
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b94823f8e979b89a4b40d12a0479476e4e56277fadde34dd95ccc30f457d00e6",
+      "bytes": 11531
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "b80b701ffea7c16e46c2c3231c22dfca46f8b1ff69833f71e531287a357db0af",
+      "bytes": 2152
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "afc68ace264b8147f6680058415b86b742ccfd5715be6a8659cac946eb254b73",
+      "bytes": 454
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "b9ce721e609a415c906e7c83fd40e294f31724304d0f3d4fc3a21a1879b3581e",
+      "bytes": 471
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7c564d89f7cbbf2557235234d01acc03eb7d0b5237db11e42de9a863272980a3",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a5cd9b714b99890ffae4f6f75ae939eb8d79ef3f4006b93fb55a96a65d396a6f",
+      "bytes": 39896
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2a3b3c79de9d8f769ed8b3ca1e76c4199349ec4169df712d188b92734651ebc8",
+      "bytes": 20773
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ca449ab2040d00063d5c11d8ebc8a815d83ef55610fadcc54c70af8170f2340a",
+      "bytes": 33715
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "aa36a8f527da81552ebf790e5ee3f5a1d67fe8fb9f9a65a321b4d12d53dbfd15",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "254d75ea4862959f3eeded03c37d0568fc38305f062acfabaa9877d073662501",
+      "bytes": 1031
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "474760c88148a6d03138de57b4b61725aa1bb73c3ad8f99e85c7fb3f6490edf7",
+      "bytes": 1508
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "1f9089e1-4170-482f-b988-afe1124a70a9",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "37f752a0-879e-4451-a4a4-0a82896e3890",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "5fbdad0a-d102-41c2-8253-f201ad6a6673",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6262b0bb-ea6f-481b-b706-65df29507b6c",
+    "7b083729-e694-4b66-82a3-befb08451722",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3"
+  ]
+}

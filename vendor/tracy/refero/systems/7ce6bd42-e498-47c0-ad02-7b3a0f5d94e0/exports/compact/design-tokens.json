@@ -1,0 +1,84 @@
+{
+  "color": {
+    "espresso-ink": {
+      "$value": "#1a0000",
+      "$type": "color",
+      "$description": "Espresso Ink — Primary text, filled CTA buttons, top navigation bar, icon strokes — warm near-black replaces pure #000 to feel like ground cocoa rather than ink"
+    },
+    "prism-spectrum": {
+      "$value": "#a6b4f7",
+      "$type": "color",
+      "$description": "Prism Spectrum — Hero background gradient — sky blue to lavender to mint to emerald, used as a one-screen burst of color at the top of the page only"
+    },
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, product card surfaces, button text on dark fills"
+    },
+    "linen-mist": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Linen Mist — Secondary card surface, alternating section background, subtle depth against pure white"
+    },
+    "bone": {
+      "$value": "#ededec",
+      "$type": "color",
+      "$description": "Bone — Hairline borders, dividers, icon strokes, subtle surface elevation — the warm-tinted neutral that holds the system together"
+    },
+    "taupe-slate": {
+      "$value": "#514f4c",
+      "$type": "color",
+      "$description": "Taupe Slate — Secondary body text, card borders, muted labels — warm gray that pairs with Espresso Ink without going cold"
+    },
+    "ash-gray": {
+      "$value": "#aeaea6",
+      "$type": "color",
+      "$description": "Ash Gray — Helper text, tertiary metadata, low-emphasis borders"
+    },
+    "charcoal-bronze": {
+      "$value": "#3a3a3a",
+      "$type": "color",
+      "$description": "Charcoal Bronze — Badge backgrounds, dark overlay surfaces, secondary dark elements"
+    },
+    "obsidian-roast": {
+      "$value": "#221919",
+      "$type": "color",
+      "$description": "Obsidian Roast — Deep section backgrounds, dark overlay panels — warmer and richer than #000"
+    },
+    "iris-blue": {
+      "$value": "#98bbf4",
+      "$type": "color",
+      "$description": "Iris Blue — Accent card surface, decorative highlight wash on product cards — echoes the hero gradient's blue end"
+    }
+  },
+  "font": {
+    "greed-semibold": {
+      "$value": "Greed SemiBold",
+      "$type": "fontFamily",
+      "$description": "Greed SemiBold — detected in extracted data but not described by AI"
+    },
+    "greed-condensed": {
+      "$value": "Greed Condensed",
+      "$type": "fontFamily",
+      "$description": "Subheading tier — same condensed family at reduced weight and size for section titles that need display character without hero scale"
+    },
+    "area": {
+      "$value": "Area",
+      "$type": "fontFamily",
+      "$description": "Body text, UI labels, button text, links, badges. A geometric sans with generous x-height and normal tracking — the steady workhorse that keeps the interface readable below the display headlines."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://fluz.app/us",
+      "siteName": "Fluz",
+      "extractedAt": "2026-06-03T18:02:52.380Z",
+      "variant": "compact"
+    }
+  }
+}

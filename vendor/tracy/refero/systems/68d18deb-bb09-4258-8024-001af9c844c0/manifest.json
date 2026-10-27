@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "68d18deb-bb09-4258-8024-001af9c844c0",
+  "status": "complete",
+  "name": "21n",
+  "url": "https://styles.refero.design/style/68d18deb-bb09-4258-8024-001af9c844c0",
+  "sourceWebsite": "https://memotron.app",
+  "extractedAt": "2026-06-03T16:28:19.647Z",
+  "capturedAt": "2026-10-08T05:12:46.679093+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Open atlas under pale daylight — a spacious, light-mode canvas where knowledge tools feel weightless against a single charcoal anchor.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/11e221d0-edfd-4045-97a2-fc0f806b6dc8.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/457e9e78-3cb8-4af0-bcd3-6941c8c61c76.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/6463baf7-688a-4fea-99ce-e8970aa144fb.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/2823b3a6-0373-484e-adf4-80a9460a4481.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/298818ab-4000-494f-b1c6-e7edb67c9d7c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ee4fdecb1eb89a5de937730361b74859b9aa735c72e8373d4ba153590217cb27",
+      "bytes": 19138
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b5261d54c68fe3732fe4a82d845e9aadff6888a1ee36e94e7a480c0afb251375",
+      "bytes": 84051
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "2cdde05b12a659ef37c4653729cc22c9b75387730b41bf63f48e8f3e85172ae2",
+      "bytes": 16505
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d3dc348523b14ac54d37810d154a065cf309a4bdb42a27eacc9ab32e98ee1952",
+      "bytes": 10453
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "67691a8988def902e355b07c3a57d762d74a279b2ea8faaf32d7a7a7f85305e6",
+      "bytes": 11924
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2870dcc1a499558d8a8fcb47cb452304fafd1b3fcd4b23baee39bcef0993e56b",
+      "bytes": 2693
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "db9a074c66f5f23bec384d1fceb6670e9d03259c3f01b93f27a936290d383fab",
+      "bytes": 436
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e4bcce6aa3c2ad76fd2e448fc647f0afb06cb1dff86539976ac9eb64458801dc",
+      "bytes": 453
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "26d24d58a5cd729db343097143752de13885b31f504f76102d3fc1f04cc28758",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "df2a378d9bc42d0b913e98c8d45625fc2d6f33a604a4e549551a0f90b373a48e",
+      "bytes": 42465
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6f465c3b59ae72d20e0aeda799ca6e6321fabf10af0427e9c12032aedc03e26f",
+      "bytes": 22173
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "4bd64aa976a312d31dfa5d54364f4fed4f4542726c0715a1fdcd3bae2ab4a9fa",
+      "bytes": 37383
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "234d44acf16e7d3954793602169372ae9dbc043c57b1d9eac05748b3ee1fa216",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "bb36a6d6bbe8c9b77193d555f9425e8feca464300ce5b30f55beeaecf25472b9",
+      "bytes": 1341
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "723580fbcb872b13f34b89c44ff494c78526a985907278284ba75b3b629c953b",
+      "bytes": 1978
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "08c0ead0-1899-47b4-bfdc-865ab459bbe5",
+    "13f27e7a-d84f-4ff9-a030-ae4e2c930757",
+    "29567671-da1e-4f85-ae52-8b611fecc384",
+    "2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "586b97ac-f687-46ba-bbf7-31031cfcc110",
+    "5bfe6c1d-1b15-4f8d-b0c9-677a33291c5d",
+    "5d8ad116-b3d8-4890-a969-5b856b35c678",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "67cdbe0a-a9d5-4a41-91a6-5b26550efc69",
+    "68d18deb-bb09-4258-8024-001af9c844c0",
+    "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+    "7368cfab-6313-4e50-97e5-c3318c52e7fe",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "754ad72f-9abd-43df-ac72-c6abf2036ed4",
+    "88e9d606-7e8f-479c-9508-1b081e254ed9",
+    "8d4a4e15-31f1-4509-8d13-7746f85c20d7",
+    "c7fe6b78-9ce3-4d69-a3f0-b8310c779e7a",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99"
+  ]
+}

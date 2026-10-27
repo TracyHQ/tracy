@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0e8db8d0-4d8f-48ac-a8e7-aaea9601e3ce",
+  "status": "complete",
+  "name": "Martin Laxenaire",
+  "url": "https://styles.refero.design/style/0e8db8d0-4d8f-48ac-a8e7-aaea9601e3ce",
+  "sourceWebsite": "https://www.martin-laxenaire.fr",
+  "extractedAt": "2026-06-03T20:39:31.114Z",
+  "capturedAt": "2026-10-08T05:08:13.129188+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "kinetic poster crashing through liquid color waves",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f7a25a8c-1cb5-48b5-ac8f-412a14d8d07e.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "845b24a3e1e8db92f9ecf0ed609b7d5bb7af10ef8976f83462c10ca66749026e",
+      "bytes": 19594
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4efa0f335387c600aa90d61e10bedffb9f5e2e3719ce8f9868bd69c26b217db2",
+      "bytes": 113932
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b929a377b314b95bc09ec54975ab2a8f283b14e5dcef30bd3e6fdcd3fda5bfc2",
+      "bytes": 15625
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "df949fbb995e0df5781591ea615e503e209558d0bf67b5fefc10786dacde42e4",
+      "bytes": 10066
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4f05ba4d5d2c0b58469df83e5fd689925024db49695f1400d20158d3d004dc51",
+      "bytes": 11238
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "76439c38e22ed2638d298186aec8704a717915d679a97dc454fc97fce39519f1",
+      "bytes": 2088
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f55b6e6e037908c083b9b477194b66f98230cd907a50e9e5e74e58146672d98c",
+      "bytes": 572
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c6c4c8c92a30a7c9faee66bd0d7a438cfe16e482874f1b8b32c97ce7cb81ef9c",
+      "bytes": 589
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "cc3b7970f5c8cc4b2cd9fccd82546bfc3381225e34bbc186a430866045e656ec",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a9692d25b8fbf2a54699fcffb484cf4ce9581704a4ed0d7f9f463156c8496bae",
+      "bytes": 40977
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "fcd9cd9cedb12868032cd18fe9929f2ea489b77d0a221ec308186117883926a7",
+      "bytes": 20904
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "de1bcc50d626453badd193259eff795a0d99d2a8043f3186abda8b091b36fea0",
+      "bytes": 35011
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f378a4f1c67a71ce00bc8bb75716ea51b54a29153bca63cc973c221042fd9cd8",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "82e22f78b8bacbc3474255b58ef6125205c268cbc3de44692ef580cc82488dce",
+      "bytes": 1517
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3abd9074bd79f228d23d449d4d1736f66fbd5c22c10eb7fd46978dbc2577cb0b",
+      "bytes": 1977
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0e8db8d0-4d8f-48ac-a8e7-aaea9601e3ce",
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "286b6ba8-a45d-48e0-b556-ff6aeac68058",
+    "34aa811f-6084-484c-b4c0-f587b514e970",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5a7ba5ff-0476-4f3f-99f9-0b920534dde5",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "8d1b6c70-e045-4ce6-891d-aba5d5c00e0d",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1e82907-d1cf-46cd-8ae7-3561c5b15fd0",
+    "bb63a015-b018-4bd9-be66-0973ac6be753",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

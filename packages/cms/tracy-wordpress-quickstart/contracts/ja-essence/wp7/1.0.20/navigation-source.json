@@ -1,0 +1,2743 @@
+{
+  "$comment": "Raw navigation markup of the release, captured by capture-navigation-source.mjs from its own database archive. Input of scripts/build-wordpress-showcase-nav.mjs; never edit by hand.",
+  "schemaVersion": "tracy-quickstart-navigation-source/wordpress/v1",
+  "contract": "ja-essence/wp7/1.0.20",
+  "database": {
+    "file": "ja-essence-wp7-database-1.0.20.sql.gz",
+    "sha256": "78c181592ca2e1897b7d22e4eb4258bdae5824b6433043e7bda1e6bcd5d48713"
+  },
+  "stylesheet": "wp-ja-essence",
+  "frontPage": 118,
+  "navigations": [
+    {
+      "id": 155,
+      "slug": "mainmenu",
+      "title": "mainmenu",
+      "language": "en",
+      "sha256": "659ba62e4cfe367a324c844b5459b01980dad2ec6c8ff9269d4958c3bee06190",
+      "content": "<!-- wp:navigation-submenu {\"label\":\"Home\",\"type\":\"page\",\"id\":118,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} -->\n<!-- wp:navigation-link {\"label\":\"Home 1\",\"type\":\"page\",\"id\":133,\"url\":\"https://quickstart.invalid/home/home-1/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home 2\",\"type\":\"page\",\"id\":125,\"url\":\"https://quickstart.invalid/home/home-2/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home 3\",\"type\":\"page\",\"id\":118,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home 4\",\"type\":\"page\",\"id\":131,\"url\":\"https://quickstart.invalid/home/home-4/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home 5\",\"type\":\"page\",\"id\":132,\"url\":\"https://quickstart.invalid/home/home-5/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"#Category\"} -->\n<!-- wp:navigation-link {\"label\":\"Category Style 1\",\"type\":\"page\",\"id\":137,\"url\":\"https://quickstart.invalid/category/category-style-1/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Category Style 2\",\"type\":\"page\",\"id\":138,\"url\":\"https://quickstart.invalid/category/category-style-2/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Category Style 3\",\"type\":\"page\",\"id\":139,\"url\":\"https://quickstart.invalid/category/category-style-3/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Category Style 4\",\"type\":\"page\",\"id\":140,\"url\":\"https://quickstart.invalid/category/category-style-4/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"Detail\"} -->\n<!-- wp:navigation-link {\"label\":\"Layout 1\",\"type\":\"page\",\"id\":126,\"url\":\"https://quickstart.invalid/detail/layout-1/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Layout 2\",\"type\":\"page\",\"id\":127,\"url\":\"https://quickstart.invalid/detail/layout-2/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Layout 3\",\"type\":\"page\",\"id\":128,\"url\":\"https://quickstart.invalid/detail/layout-3/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Video\",\"type\":\"page\",\"id\":129,\"url\":\"https://quickstart.invalid/detail/video/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Gallery\",\"type\":\"page\",\"id\":130,\"url\":\"https://quickstart.invalid/detail/gallery/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"Pages\"} -->\n<!-- wp:navigation-submenu {\"label\":\"User\"} -->\n<!-- wp:navigation-link {\"label\":\"Login Form\",\"type\":\"page\",\"id\":141,\"url\":\"https://quickstart.invalid/pages/user/login-form/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Registration Form\",\"type\":\"page\",\"id\":142,\"url\":\"https://quickstart.invalid/pages/user/registration-form/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"User Profile\",\"type\":\"page\",\"id\":143,\"url\":\"https://quickstart.invalid/pages/user/user-profile/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Edit User Profile\",\"type\":\"page\",\"id\":148,\"url\":\"https://quickstart.invalid/pages/user/edit-user-profile/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"J!Pages\"} -->\n<!-- wp:navigation-link {\"label\":\"Error Page\",\"type\":\"page\",\"id\":144,\"url\":\"https://quickstart.invalid/pages/j-pages/error-page/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Offline Pages\",\"type\":\"page\",\"id\":145,\"url\":\"https://quickstart.invalid/pages/j-pages/offline-pages/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Typography\",\"type\":\"page\",\"id\":146,\"url\":\"https://quickstart.invalid/pages/j-pages/typography/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Smart Search\",\"url\":\"/pages/j-pages/smart-search/\",\"kind\":\"custom\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"J! Content\"} -->\n<!-- wp:navigation-link {\"label\":\"Category Blog\",\"type\":\"page\",\"id\":150,\"url\":\"https://quickstart.invalid/pages/j-content/category-blog/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Featured Articles\",\"type\":\"page\",\"id\":147,\"url\":\"https://quickstart.invalid/pages/j-content/featured-articles/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Author listting\",\"type\":\"page\",\"id\":151,\"url\":\"https://quickstart.invalid/pages/j-content/author-listting/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Tagged Items\",\"type\":\"page\",\"id\":152,\"url\":\"https://quickstart.invalid/pages/j-content/tagged-items/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-link {\"label\":\"Contact\",\"type\":\"page\",\"id\":117,\"url\":\"https://quickstart.invalid/contact/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 156,
+      "slug": "category",
+      "title": "category",
+      "language": "en",
+      "sha256": "450862436e60e5b06d12ea19b8b98831c82b5257e3827351733cb3c6d8d079f6",
+      "content": "<!-- wp:navigation-link {\"label\":\"Health\",\"type\":\"page\",\"id\":137,\"url\":\"https://quickstart.invalid/category/category-style-1/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Design\",\"type\":\"page\",\"id\":138,\"url\":\"https://quickstart.invalid/category/category-style-2/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Fashion\",\"type\":\"page\",\"id\":139,\"url\":\"https://quickstart.invalid/category/category-style-3/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Resources\",\"type\":\"page\",\"id\":122,\"url\":\"https://quickstart.invalid/resources/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Lifestyle\",\"type\":\"page\",\"id\":123,\"url\":\"https://quickstart.invalid/lifestyle/\",\"kind\":\"post-type\"} /-->"
+    }
+  ],
+  "templateParts": [
+    {
+      "id": 157,
+      "slug": "header",
+      "theme": "wp-ja-essence",
+      "area": "header",
+      "sha256": "a4bb8472cd247c75cef946098da10d26a94a12e49390fd608a679740471a52cf",
+      "content": "<!-- wp:group {\"className\":\"je-header__inner\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group je-header__inner\">\n<!-- wp:group {\"className\":\"je-header__top\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group je-header__top\">\n<!-- wp:social-links {\"iconColor\":\"fg-2\",\"className\":\"je-social is-style-logos-only\",\"metadata\":{\"name\":\"header.social\"},\"layout\":{\"type\":\"flex\",\"justifyContent\":\"left\"}} -->\n<ul class=\"wp-block-social-links je-social is-style-logos-only has-icon-color\">\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"facebook\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"x\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"instagram\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"feed\"} /-->\n</ul>\n<!-- /wp:social-links -->\n<!-- wp:site-title {\"level\":0,\"className\":\"je-site-name\"} /-->\n<!-- wp:buttons {\"className\":\"je-subscribe\",\"layout\":{\"type\":\"flex\",\"justifyContent\":\"right\"}} -->\n<div class=\"wp-block-buttons je-subscribe\">\n<!-- wp:button {\"className\":\"je-btn-primary\",\"metadata\":{\"name\":\"header.subscribe\"}} -->\n<div class=\"wp-block-button je-btn-primary\"><a class=\"wp-block-button__link wp-element-button\" href=\"/contact\">Subscribe</a></div>\n<!-- /wp:button -->\n</div>\n<!-- /wp:buttons -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"je-header__bottom\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group je-header__bottom\">\n<!-- wp:group {\"className\":\"je-header__tools\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group je-header__tools\">\n<!-- wp:html -->\n<button type=\"button\" class=\"je-drawer-toggle\" aria-controls=\"je-drawer\" aria-expanded=\"false\" aria-label=\"Open the menu\"><span aria-hidden=\"true\"></span><span aria-hidden=\"true\"></span><span aria-hidden=\"true\"></span></button>\n<button type=\"button\" class=\"je-theme-toggle\" data-tracy-theme-toggle aria-pressed=\"false\" aria-label=\"Theme: light. Switch to dark\"><svg class=\"je-tt-moon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"/></svg><svg class=\"je-tt-sun\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\"/></svg></button>\n<!-- /wp:html -->\n</div>\n<!-- /wp:group -->\n<!-- wp:navigation {\"ref\":155,\"overlayMenu\":\"never\",\"className\":\"je-nav\",\"metadata\":{\"name\":\"nav.mainmenu\"},\"layout\":{\"type\":\"flex\",\"justifyContent\":\"center\",\"flexWrap\":\"nowrap\"}} /-->\n<!-- wp:search {\"label\":\"Search\",\"showLabel\":false,\"buttonText\":\"Search\",\"buttonPosition\":\"button-only\",\"buttonUseIcon\":true,\"isSearchFieldHidden\":true,\"className\":\"je-search\"} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"anchor\":\"je-drawer\",\"className\":\"je-drawer\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group je-drawer\" id=\"je-drawer\">\n<!-- wp:group {\"className\":\"je-drawer__head\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group je-drawer__head\">\n<!-- wp:paragraph {\"className\":\"je-drawer__title\"} -->\n<p class=\"je-drawer__title\">Sidebar Menu</p>\n<!-- /wp:paragraph -->\n<!-- wp:html -->\n<button type=\"button\" class=\"je-theme-toggle\" data-tracy-theme-toggle aria-pressed=\"false\" aria-label=\"Theme: light. Switch to dark\"><svg class=\"je-tt-moon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"/></svg><svg class=\"je-tt-sun\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\"/></svg></button>\n<!-- /wp:html -->\n<!-- wp:html -->\n<button type=\"button\" class=\"je-drawer-close\" aria-label=\"Close the menu\">&times;</button>\n<!-- /wp:html -->\n</div>\n<!-- /wp:group -->\n<!-- wp:paragraph {\"className\":\"je-drawer__menu\"} -->\n<p class=\"je-drawer__menu\">Menu</p>\n<!-- /wp:paragraph -->\n<!-- wp:navigation {\"ref\":155,\"overlayMenu\":\"never\",\"className\":\"je-drawer-nav\",\"metadata\":{\"name\":\"nav.mainmenu\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n"
+    },
+    {
+      "id": 158,
+      "slug": "footer",
+      "theme": "wp-ja-essence",
+      "area": "footer",
+      "sha256": "ca6ee5053a892a39af9a07c665851018984f81a78613b5ce893ccee29c463ab9",
+      "content": "<!-- wp:group {\"className\":\"je-footer__inner\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group je-footer__inner\">\n<!-- wp:group {\"className\":\"je-footer__info\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group je-footer__info\">\n<!-- wp:group {\"className\":\"je-footer__brand\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group je-footer__brand\">\n<!-- wp:site-logo {\"width\":132,\"className\":\"je-footer__logo je-footer__logo\\u002d\\u002dlight\"} /-->\n<!-- wp:site-logo {\"width\":132,\"className\":\"je-footer__logo je-footer__logo\\u002d\\u002ddark\"} /-->\n<!-- wp:paragraph {\"className\":\"je-footer__tagline\"} -->\n<p class=\"je-footer__tagline\">A super modern theme following the latest trends with premium membership</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"je-footer__action\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group je-footer__action\">\n<!-- wp:buttons {\"className\":\"je-footer__cta\"} -->\n<div class=\"wp-block-buttons je-footer__cta\">\n<!-- wp:button {\"className\":\"je-btn-dark\"} -->\n<div class=\"wp-block-button je-btn-dark\"><a class=\"wp-block-button__link wp-element-button\" href=\"/contact\">Become a subscriber</a></div>\n<!-- /wp:button -->\n</div>\n<!-- /wp:buttons -->\n<!-- wp:paragraph {\"className\":\"je-footer__small\"} -->\n<p class=\"je-footer__small\">Get all the latest posts delivered straight to inbox.</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:navigation {\"ref\":156,\"overlayMenu\":\"never\",\"className\":\"je-footer-nav\",\"metadata\":{\"name\":\"nav.category\"},\"layout\":{\"type\":\"flex\",\"justifyContent\":\"center\"}} /-->\n<!-- wp:paragraph {\"className\":\"je-footer__copy\",\"align\":\"center\",\"metadata\":{\"name\":\"footer.copyright\"}} -->\n<p class=\"je-footer__copy has-text-align-center\">Copyright © {year} {site.title}. All Rights Reserved.<br>WordPress is Free Software released under the GNU General Public License.</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n"
+    }
+  ],
+  "themeParts": [],
+  "linkedPosts": [
+    {
+      "id": 117,
+      "type": "page",
+      "status": "publish",
+      "slug": "contact",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/shortcode"
+      ]
+    },
+    {
+      "id": 118,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-3",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/cover",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/pattern",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query"
+      ]
+    },
+    {
+      "id": 122,
+      "type": "page",
+      "status": "publish",
+      "slug": "resources",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/read-more",
+        "wp-ja-essence/hits",
+        "wp-ja-essence/media-icon"
+      ]
+    },
+    {
+      "id": 123,
+      "type": "page",
+      "status": "publish",
+      "slug": "lifestyle",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/read-more",
+        "wp-ja-essence/hits",
+        "wp-ja-essence/media-icon"
+      ]
+    },
+    {
+      "id": 125,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-2",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/categories",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/pattern",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/shortcode",
+        "core/tag-cloud",
+        "wp-ja-essence/hits"
+      ]
+    },
+    {
+      "id": 126,
+      "type": "page",
+      "status": "publish",
+      "slug": "layout-1",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph",
+        "core/post-date",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query",
+        "core/shortcode",
+        "core/tag-cloud",
+        "wp-ja-essence/article-footer",
+        "wp-ja-essence/hits"
+      ]
+    },
+    {
+      "id": 127,
+      "type": "page",
+      "status": "publish",
+      "slug": "layout-2",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph",
+        "core/post-date",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "wp-ja-essence/article-footer",
+        "wp-ja-essence/hits"
+      ]
+    },
+    {
+      "id": 128,
+      "type": "page",
+      "status": "publish",
+      "slug": "layout-3",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/shortcode",
+        "wp-ja-essence/article-footer",
+        "wp-ja-essence/hits"
+      ]
+    },
+    {
+      "id": 129,
+      "type": "page",
+      "status": "publish",
+      "slug": "video",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/embed",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph",
+        "core/post-date",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/shortcode",
+        "core/tag-cloud",
+        "wp-ja-essence/article-footer",
+        "wp-ja-essence/hits"
+      ]
+    },
+    {
+      "id": 130,
+      "type": "page",
+      "status": "publish",
+      "slug": "gallery",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph",
+        "core/post-date",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/shortcode",
+        "core/tag-cloud",
+        "wp-ja-essence/article-footer",
+        "wp-ja-essence/hits"
+      ]
+    },
+    {
+      "id": 131,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-4",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/image",
+        "core/pattern"
+      ]
+    },
+    {
+      "id": 132,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-5",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/cover",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/pattern",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/shortcode",
+        "core/tag-cloud",
+        "wp-ja-essence/hits"
+      ]
+    },
+    {
+      "id": 133,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-1",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/pattern",
+        "core/post-date",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query",
+        "core/shortcode",
+        "core/tag-cloud",
+        "wp-ja-essence/hits"
+      ]
+    },
+    {
+      "id": 137,
+      "type": "page",
+      "status": "publish",
+      "slug": "category-style-1",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/read-more",
+        "wp-ja-essence/hits",
+        "wp-ja-essence/media-icon"
+      ]
+    },
+    {
+      "id": 138,
+      "type": "page",
+      "status": "publish",
+      "slug": "category-style-2",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/read-more",
+        "wp-ja-essence/hits",
+        "wp-ja-essence/media-icon"
+      ]
+    },
+    {
+      "id": 139,
+      "type": "page",
+      "status": "publish",
+      "slug": "category-style-3",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/read-more",
+        "wp-ja-essence/hits",
+        "wp-ja-essence/media-icon"
+      ]
+    },
+    {
+      "id": 140,
+      "type": "page",
+      "status": "publish",
+      "slug": "category-style-4",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/read-more",
+        "core/shortcode",
+        "core/tag-cloud",
+        "wp-ja-essence/hits",
+        "wp-ja-essence/media-icon"
+      ]
+    },
+    {
+      "id": 141,
+      "type": "page",
+      "status": "publish",
+      "slug": "login-form",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/image",
+        "wp-ja-essence/login-form"
+      ]
+    },
+    {
+      "id": 142,
+      "type": "page",
+      "status": "publish",
+      "slug": "registration-form",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/image",
+        "wp-ja-essence/register-form"
+      ]
+    },
+    {
+      "id": 143,
+      "type": "page",
+      "status": "publish",
+      "slug": "user-profile",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/image",
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 144,
+      "type": "page",
+      "status": "publish",
+      "slug": "error-page",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/html",
+        "core/image"
+      ]
+    },
+    {
+      "id": 145,
+      "type": "page",
+      "status": "publish",
+      "slug": "offline-pages",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/html",
+        "core/image"
+      ]
+    },
+    {
+      "id": 146,
+      "type": "page",
+      "status": "publish",
+      "slug": "typography",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 147,
+      "type": "page",
+      "status": "publish",
+      "slug": "featured-articles",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/pattern",
+        "core/post-date",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/shortcode",
+        "core/tag-cloud",
+        "wp-ja-essence/hits"
+      ]
+    },
+    {
+      "id": 148,
+      "type": "page",
+      "status": "publish",
+      "slug": "edit-user-profile",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/image",
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 150,
+      "type": "page",
+      "status": "publish",
+      "slug": "category-blog",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/read-more",
+        "core/shortcode",
+        "core/tag-cloud",
+        "wp-ja-essence/hits",
+        "wp-ja-essence/media-icon"
+      ]
+    },
+    {
+      "id": 151,
+      "type": "page",
+      "status": "publish",
+      "slug": "author-listting",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/image",
+        "wp-ja-essence/authors"
+      ]
+    },
+    {
+      "id": 152,
+      "type": "page",
+      "status": "publish",
+      "slug": "tagged-items",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/image",
+        "wp-ja-essence/tagged-list"
+      ]
+    }
+  ],
+  "listings": [
+    {
+      "id": 118,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              8
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category",
+            "post_tag"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 123,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              9
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category",
+            "post_tag"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 125,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/categories",
+          "taxonomy": "category"
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        }
+      ]
+    },
+    {
+      "id": 126,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [
+            5
+          ],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 2,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceAuthorLatest"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceOthers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 127,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [
+            10
+          ],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceAuthorLatest"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaEssenceOthers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 128,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [
+            10
+          ],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceAuthorLatest"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaEssenceOthers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 129,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [
+            2
+          ],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 2,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceAuthorLatest"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaEssenceOthers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 130,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [
+            10
+          ],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 2,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceAuthorLatest"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaEssenceOthers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 132,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceLabels",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        }
+      ]
+    },
+    {
+      "id": 133,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        }
+      ]
+    },
+    {
+      "id": 137,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              5
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category",
+            "post_tag"
+          ],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaEssenceOthers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 138,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              6
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category",
+            "post_tag"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 139,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              7
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 9,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category",
+            "post_tag"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 140,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              4
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category",
+            "post_tag"
+          ],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceLabels",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        }
+      ]
+    },
+    {
+      "id": 147,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaEssenceOthers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 150,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              7
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 5,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category",
+            "post_tag"
+          ],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 1,
+          "paginated": false,
+          "order": "asc",
+          "orderBy": "title",
+          "termLinks": [],
+          "unsupported": [
+            "wpJaEssenceCategory",
+            "wpJaEssenceOrder"
+          ]
+        },
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "ignore",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 3,
+          "pages": 1,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": [
+            "wpJaEssenceOthers"
+          ]
+        }
+      ]
+    }
+  ],
+  "listedPosts": [
+    {
+      "id": 70,
+      "type": "post",
+      "slug": "vintage-inspired-martini-and-cocktail-glasses",
+      "author": 2,
+      "date": "2023-06-07 03:31:54",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          11,
+          12,
+          13
+        ]
+      }
+    },
+    {
+      "id": 71,
+      "type": "post",
+      "slug": "healthy-eating-tips-for-busy-professionals",
+      "author": 2,
+      "date": "2023-06-09 07:23:22",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 72,
+      "type": "post",
+      "slug": "mindful-eating-for-weight-management",
+      "author": 3,
+      "date": "2023-06-09 07:23:21",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 73,
+      "type": "post",
+      "slug": "exercise-routines-for-overall-fitness",
+      "author": 3,
+      "date": "2023-06-09 07:23:20",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 74,
+      "type": "post",
+      "slug": "beauty-in-simplicity-exploring-line-art",
+      "author": 3,
+      "date": "2023-06-09 07:23:19",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 75,
+      "type": "post",
+      "slug": "drawing-with-elegance-the-art-of-line-work",
+      "author": 4,
+      "date": "2023-06-09 07:23:18",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 76,
+      "type": "post",
+      "slug": "embracing-minimalism-line-art-creations",
+      "author": 4,
+      "date": "2023-06-14 03:11:05",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          10,
+          11,
+          13,
+          15
+        ]
+      }
+    },
+    {
+      "id": 77,
+      "type": "post",
+      "slug": "capturing-essence-expressive-line-art-techniques",
+      "author": 4,
+      "date": "2023-06-14 03:41:37",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          10,
+          11,
+          12,
+          15
+        ]
+      }
+    },
+    {
+      "id": 78,
+      "type": "post",
+      "slug": "from-lines-to-life-mastering-the-art-of-line-drawing",
+      "author": 5,
+      "date": "2023-06-09 07:23:17",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 79,
+      "type": "post",
+      "slug": "the-power-of-lines-creating-impactful-line-art",
+      "author": 5,
+      "date": "2023-06-09 07:23:16",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 80,
+      "type": "post",
+      "slug": "fluid-lines-infinite-possibilities-line-art-inspirations",
+      "author": 6,
+      "date": "2023-06-09 07:23:15",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 81,
+      "type": "post",
+      "slug": "dancing-with-lines-dynamic-line-art-expressions",
+      "author": 6,
+      "date": "2023-06-09 07:23:14",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 82,
+      "type": "post",
+      "slug": "harmony-in-lines-balancing-elements-in-line-art",
+      "author": 6,
+      "date": "2023-06-09 07:23:13",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 83,
+      "type": "post",
+      "slug": "the-beauty-of-symmetry-symmetrical-line-art-designs",
+      "author": 7,
+      "date": "2023-06-09 07:23:12",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 84,
+      "type": "post",
+      "slug": "beyond-black-and-white-adding-colors-to-line-art",
+      "author": 7,
+      "date": "2023-06-14 03:41:36",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          11,
+          12,
+          15
+        ]
+      }
+    },
+    {
+      "id": 85,
+      "type": "post",
+      "slug": "sketching-stories-narrative-elements-in-line-art",
+      "author": 7,
+      "date": "2023-06-14 03:11:04",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          11,
+          13,
+          15
+        ]
+      }
+    },
+    {
+      "id": 86,
+      "type": "post",
+      "slug": "organic-geometry-exploring-geometric-line-art",
+      "author": 8,
+      "date": "2023-06-09 07:23:11",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 87,
+      "type": "post",
+      "slug": "line-art-portraits-capturing-emotions-with-lines",
+      "author": 8,
+      "date": "2023-06-09 07:23:10",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 88,
+      "type": "post",
+      "slug": "nature-s-intricacy-botanical-line-art-explorations",
+      "author": 8,
+      "date": "2023-06-09 07:23:09",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 89,
+      "type": "post",
+      "slug": "architectural-wonders-line-art-in-buildings-and-landscapes",
+      "author": 9,
+      "date": "2023-06-09 07:23:08",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 90,
+      "type": "post",
+      "slug": "outlining-creativity-line-art-for-illustrations-and-designs",
+      "author": 9,
+      "date": "2023-06-09 07:23:07",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 91,
+      "type": "post",
+      "slug": "whimsical-wonders-imaginative-line-art-creations",
+      "author": 9,
+      "date": "2023-06-09 07:23:06",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 92,
+      "type": "post",
+      "slug": "harmony-in-lines-balancing-elements-in-line-art-2",
+      "author": 6,
+      "date": "2023-06-09 07:23:05",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 93,
+      "type": "post",
+      "slug": "dancing-with-lines-dynamic-line-art-expressions-2",
+      "author": 6,
+      "date": "2023-06-09 07:23:04",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 94,
+      "type": "post",
+      "slug": "fluid-lines-infinite-possibilities-line-art-inspirations-2",
+      "author": 6,
+      "date": "2023-06-09 07:23:03",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 95,
+      "type": "post",
+      "slug": "harmony-in-lines-balancing-elements-in-line-art-3",
+      "author": 6,
+      "date": "2023-06-09 07:23:02",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 96,
+      "type": "post",
+      "slug": "capturing-essence-expressive-line-art-techniques-2",
+      "author": 4,
+      "date": "2023-06-14 03:41:35",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          10,
+          11,
+          12,
+          15
+        ]
+      }
+    },
+    {
+      "id": 97,
+      "type": "post",
+      "slug": "embracing-minimalism-line-art-creations-2",
+      "author": 4,
+      "date": "2023-06-14 03:11:03",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          10,
+          11,
+          13,
+          15
+        ]
+      }
+    },
+    {
+      "id": 98,
+      "type": "post",
+      "slug": "drawing-with-elegance-the-art-of-line-work-2",
+      "author": 4,
+      "date": "2023-06-09 07:23:01",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 99,
+      "type": "post",
+      "slug": "architectural-wonders-line-art-in-buildings-and-landscapes-2",
+      "author": 9,
+      "date": "2023-06-09 07:23:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 100,
+      "type": "post",
+      "slug": "organic-geometry-exploring-geometric-line-art-2",
+      "author": 8,
+      "date": "2023-06-09 07:22:59",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 101,
+      "type": "post",
+      "slug": "beyond-black-and-white-adding-colors-to-line-art-2",
+      "author": 7,
+      "date": "2023-06-14 03:41:34",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          10,
+          11,
+          12,
+          15
+        ]
+      }
+    },
+    {
+      "id": 102,
+      "type": "post",
+      "slug": "fluid-lines-infinite-possibilities-line-art-inspirations-3",
+      "author": 6,
+      "date": "2023-06-09 07:22:58",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 103,
+      "type": "post",
+      "slug": "dancing-with-lines-dynamic-line-art-expressions-3",
+      "author": 6,
+      "date": "2023-06-09 07:22:57",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 104,
+      "type": "post",
+      "slug": "harmony-in-lines-balancing-elements-in-line-art-4",
+      "author": 6,
+      "date": "2023-06-09 07:22:56",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 105,
+      "type": "post",
+      "slug": "whimsical-wonders-imaginative-line-art-creations-2",
+      "author": 9,
+      "date": "2023-06-09 07:22:55",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 106,
+      "type": "post",
+      "slug": "architectural-wonders-line-art-in-buildings-and-landscapes-3",
+      "author": 9,
+      "date": "2023-06-09 07:22:54",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 107,
+      "type": "post",
+      "slug": "nature-s-intricacy-botanical-line-art-explorations-2",
+      "author": 8,
+      "date": "2023-06-09 07:22:53",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 108,
+      "type": "post",
+      "slug": "sketching-stories-narrative-elements-in-line-art-2",
+      "author": 7,
+      "date": "2023-06-14 03:11:02",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          11,
+          13,
+          15
+        ]
+      }
+    },
+    {
+      "id": 109,
+      "type": "post",
+      "slug": "abstract-wonders-exploring-line-art-composition",
+      "author": 5,
+      "date": "2023-06-09 07:22:52",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 110,
+      "type": "post",
+      "slug": "capturing-essence-expressive-line-art-techniques-3",
+      "author": 4,
+      "date": "2023-06-14 03:41:33",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ],
+        "post_tag": [
+          10,
+          11,
+          12,
+          15
+        ]
+      }
+    },
+    {
+      "id": 111,
+      "type": "post",
+      "slug": "mindful-eating-for-weight-management-2",
+      "author": 3,
+      "date": "2023-06-09 07:22:51",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 112,
+      "type": "post",
+      "slug": "essential-nutrients-for-optimal-health",
+      "author": 10,
+      "date": "2023-06-09 07:22:50",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 113,
+      "type": "post",
+      "slug": "mental-health-and-well-being-strategies",
+      "author": 10,
+      "date": "2023-06-09 07:22:49",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ],
+        "post_tag": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    {
+      "id": 114,
+      "type": "post",
+      "slug": "natural-remedies-for-common-ailments",
+      "author": 10,
+      "date": "2023-06-14 03:41:32",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ],
+        "post_tag": [
+          10,
+          11,
+          12,
+          15
+        ]
+      }
+    },
+    {
+      "id": 115,
+      "type": "post",
+      "slug": "fitness-tips-for-a-healthy-lifestyle",
+      "author": 2,
+      "date": "2023-06-14 03:11:01",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ],
+        "post_tag": [
+          10,
+          11,
+          13,
+          15
+        ]
+      }
+    }
+  ],
+  "terms": [
+    {
+      "id": 1,
+      "taxonomy": "category",
+      "slug": "uncategorized",
+      "parent": 0
+    },
+    {
+      "id": 2,
+      "taxonomy": "category",
+      "slug": "uncategorised",
+      "parent": 0
+    },
+    {
+      "id": 3,
+      "taxonomy": "category",
+      "slug": "blog",
+      "parent": 0
+    },
+    {
+      "id": 4,
+      "taxonomy": "category",
+      "slug": "blog-normal",
+      "parent": 0
+    },
+    {
+      "id": 5,
+      "taxonomy": "category",
+      "slug": "blog-health",
+      "parent": 3
+    },
+    {
+      "id": 6,
+      "taxonomy": "category",
+      "slug": "blog-design",
+      "parent": 3
+    },
+    {
+      "id": 7,
+      "taxonomy": "category",
+      "slug": "blog-fashion",
+      "parent": 3
+    },
+    {
+      "id": 8,
+      "taxonomy": "category",
+      "slug": "resources",
+      "parent": 3
+    },
+    {
+      "id": 9,
+      "taxonomy": "category",
+      "slug": "lifestyle",
+      "parent": 3
+    },
+    {
+      "id": 10,
+      "taxonomy": "post_tag",
+      "slug": "lifestyle",
+      "parent": 0
+    },
+    {
+      "id": 11,
+      "taxonomy": "post_tag",
+      "slug": "health",
+      "parent": 0
+    },
+    {
+      "id": 12,
+      "taxonomy": "post_tag",
+      "slug": "video",
+      "parent": 0
+    },
+    {
+      "id": 13,
+      "taxonomy": "post_tag",
+      "slug": "travel",
+      "parent": 0
+    },
+    {
+      "id": 14,
+      "taxonomy": "post_tag",
+      "slug": "design",
+      "parent": 0
+    },
+    {
+      "id": 15,
+      "taxonomy": "post_tag",
+      "slug": "technology",
+      "parent": 0
+    }
+  ],
+  "stickyPosts": [
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    84,
+    85,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104
+  ]
+}

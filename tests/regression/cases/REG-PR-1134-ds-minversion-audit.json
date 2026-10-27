@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1134-ds-minversion-audit",
+  "kind": "feat",
+  "title": "A design-system slot contract offers Apply only for the template releases checked to wear it: a release newer than its maxVersion is refused as TEMPLATE_VERSION_UNCHECKED, on WordPress in the write's own run too",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/design-system-door.test.mjs apps/tracy-host/test/ds-slot.test.mjs packages/design/tracy-design-inspiration/test/design-system-button.test.mjs.",
+    "S2: read every packages/design/tracy-ds-slot/templates/*.json through apps/tracy-web/src/lib/ds-slot.js slotContracts(); for each ready contract and each minVersion key, read maxVersion.",
+    "S3: contractFor(<template>, {key, version}) for joomla/ja-spa at 1.0.1; for joomla/ja-spa, emdash/tracy-business and wordpress/wp-ja-vega at their contract's maxVersion and at the next patch release past it (when written: 1.0.4/1.0.5, 1.7.14/1.7.15, 1.1.15/1.1.16; develop has since checked 1.0.5, 1.7.16, 1.1.16); maxVersionOf('wordpress/tracy-base').",
+    "S4: apps/tracy-host/src/ds-slot.js WORDPRESS_DS_PHP and validateDsSlotBody with payload.maxTheme {'wp-ja-kinetic': 'x'} and {'wp-ja-kinetic': '1.1.12'}.",
+    "S5: every translated tracy-design-inspiration.json (vi, de, es, fr, it, nl, zh) no longer has ds.unsupported.TEMPLATE_VERSION_UNCHECKED or ds.version.upTo (the tab stopped saying version reasons, 12/10/2026).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-minversion-audit.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: every ready contract has a string maxVersion >= minVersion for each non-null minVersion key; ja-spa, ja-morgan at 1.0.4 or later, ja-voyara 1.0.6 or later, tracy-business/emdash-0.x 1.7.14 or later, wp-ja-essence 1.0.16 or later, wp-ja-vega 1.1.15 or later (a window only moves forward).",
+    "S3: ja-spa 1.0.1 TEMPLATE_NEEDS_UPDATE need 1.0.2; each of ja-spa, tracy-business and vega at its maxVersion returns its contract, and one patch past it {reason:'TEMPLATE_VERSION_UNCHECKED', upTo:<maxVersion>, have:<next>}; maxVersionOf tracy-base names exactly tracy-base and tracy, each 1.1.5 or later.",
+    "S4: the PHP contains version_compare($tv,$top,\">\"); 'x' → 'refused maxTheme'; '1.1.12' → null (valid).",
+    "S5: the 14 strings are absent."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/*.json minVersion, maxVersion, maxVersionNote",
+    "door": "GET/POST /api/sites/:key/design-system reason TEMPLATE_VERSION_UNCHECKED, version.upTo"
+  },
+  "evidence": "tasks/evidence/ds-minversion-audit-2026-10-11/README.md: every live release newer than a contract's minVersion downloaded and its stylesheets counted against the minVersion build (none lost the slot; wp-ja-vega 1.1.14's one literal pair is deliberate).",
+  "fence": "the version window [minVersion, maxVersion] the door and the WordPress write enforce; not whether a given release is tokenized (that is the audit)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-minversion-audit.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

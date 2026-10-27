@@ -1,0 +1,41 @@
+{
+  "id": "QA-UNIT-REG-104-happy",
+  "itemIds": ["regression:REG-104"],
+  "requirement": "The EmDash image build keeps an 8 GB Node heap for the build stage even when upstream's Dockerfile sets its own heap line after COPY, and the guard fails on any other value instead of matching any heap line",
+  "oracle": {
+    "source": "tests/regression/cases/REG-104-emdash-build-heap-guard.json",
+    "ref": "PR #902 (fix); fix evidence: tasks/todo-dsh-core-0-2-0.md §5 (agent C, 04/10/2026): emdash@1.1.0's Dockerfile sets ENV NODE_OPTIONS=--max-old-space-size=4096 after COPY . ., so the 8 GB line the script inserted under FROM deps AS build was overridden and `grep -q 'max-old-space-size'` stayed green on the upstream line.",
+    "invariant": "PASS_N === 5, FAIL_N === 0, SKIP_N === 0 (the two heap cases ran, not skipped). HEAP_LINES === 1 and HEAP_8G === 1 on emdash@1.1.0's Dockerfile (upstream's 4096 line rewritten, no second line). GUARD_COUNT >= 1 and OLD_GUARD === 0 (the count guard replaced the presence guard).",
+    "productSources": ["packages/fleet/tracy-fleet-operation/scripts/provision/emdash/build-image.sh:22"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-104.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-104"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-104",
+    "pr": 902,
+    "kind": "fix",
+    "area": "fleet/emdash-build",
+    "file": "tests/regression/cases/REG-104-emdash-build-heap-guard.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-104.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d67e1407-6d16-47e8-89cf-22f5c5f2dd88",
+  "status": "complete",
+  "name": "Gumroad",
+  "url": "https://styles.refero.design/style/d67e1407-6d16-47e8-89cf-22f5c5f2dd88",
+  "sourceWebsite": "https://gumroad.com",
+  "extractedAt": "2026-06-03T15:01:11.612Z",
+  "capturedAt": "2026-10-08T05:18:01.738819+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Pink coin on a cream sketchbook. Warm off-white canvas, inky geometric type, and a single hot-pink coin mascot stamped across every page like a sticker on a notebook.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1c22b919-1a70-4621-be34-367d25dfabb9.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5b3c01ca-546e-4877-895f-63a3b8345a60.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f40c0f46-fdc8-4b65-afe3-4db18e4834b9.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/83903a9c-2cca-4c62-9d43-013ec1ada7cd.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/9919923e-46ab-4595-b6dc-b91e4d369ffe.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c3ee3b91efe2d1dbd37d5c5942fa4edb22c37406b2b2f473f7327f237828cdef",
+      "bytes": 18573
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "47a80aeb9c637d66c07fd1c39446ec4385866c9f548ac32f3022e192675c5881",
+      "bytes": 115387
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b1e2cea6ece2fde431a32629db75d7afc80ba7b1383fb00db0d6b9cce395acd6",
+      "bytes": 15121
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "41a45aea07183a4af0247d66c21ea144a1438d463475d1aca3797392bb7c6930",
+      "bytes": 11743
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "bda3a14a62bddc17071c397d466316d08285c0b9efdab26b228e4f61c161324c",
+      "bytes": 11896
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "18e24903999fb30320d6d76b3cd9189f3f692eb49557d683a63475792bf685f6",
+      "bytes": 2664
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "11ac5aa7a12ac12739599b681083ede1ad405813b84de51efcb7b400a6ae58eb",
+      "bytes": 471
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "77b25e352a85880cdeb61259a1d538c2e13d10f521d9962ef14ae92fb564d02e",
+      "bytes": 488
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6870f5956df79d00760028aea3273b6aac27b3cc6d899c7dfb4260a9c9c8658c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "459223ef32874dd2a5cda19d5aba2c6062b42a99b7e5d73451a2efe75451ca96",
+      "bytes": 41444
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8c036e8d4483474160915d2de54902a8c21301e41a63ab0af71eab75d5c41f17",
+      "bytes": 21218
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8a35061fe7acd5487f4e2448f429240d4d34f17b9cd1653938c3b332027ba62e",
+      "bytes": 37786
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ac91922f3a1ba7cb9c9ba2ac3eba90c8f4440d520334324e21768dfc1efde5ca",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a2c79d352b7c868f3a6eae7d8af70c1402090dad502eef8a3762f0afb0c89c69",
+      "bytes": 1632
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9b93f6a2ff1c72ff7b90a4997ee8c041142c2fc17f561896e4cbd8f446ba7555",
+      "bytes": 2140
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1b2aaf14-43b0-4c23-bd25-1d49924fe85e",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "342f1c3b-a123-49b6-a980-3491bc7793db",
+    "35ae81e1-273c-43d7-9bcd-ea186d062c13",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "48ae4f04-21cb-4ab3-8752-33b626a48c95",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "53538d2d-d5a1-4719-9c7a-d7ab1f3a8c8a",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "680cf16b-0093-473b-854f-f1de9af5e698",
+    "6b201ccd-16ae-4c2d-84bb-498f7cb568dd",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b22f68eb-7ed1-47b6-995e-2c0afc79ac7e",
+    "d67e1407-6d16-47e8-89cf-22f5c5f2dd88",
+    "e0ad1a25-5609-45e6-a355-9bdeec86c5ae",
+    "e6b53c1e-644b-4300-b42f-0e64905d1443",
+    "f71e92b0-d7a5-4203-b975-394f185218c2"
+  ]
+}

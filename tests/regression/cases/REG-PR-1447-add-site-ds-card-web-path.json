@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1447-add-site-ds-card-web-path",
+  "kind": "fix",
+  "title": "Add site keeps its Design system card: a quickstart tag with an encoded slash in the query reaches the support and preview doors (tracyWebPath and nativeBackendPath check encoded traversal in the path only)",
+  "pr": 1447,
+  "area": "add-site/design-system",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout (dependencies installed) run the test files named in run.cmd.",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "tracyWebPath returns /api/design-system/support?quickstart=quickstart%2Fja-kinetic%2Fj6&platform=joomla unchanged off the widget and with /widget/native/backend in front under the native widget.",
+    "tracyWebPath still throws TRACY_WEB_PATH_INVALID for encoded traversal in the path, a fragment, or a backslash.",
+    "nativeBackendPath lets the same support query through and still refuses encoded traversal in the path and a fragment."
+  ],
+  "selectors": {},
+  "fence": "packages/core/tracy-core/src/web-path/index.mjs tracyWebPath; apps/tracy-web/src/widget/native-backend.js nativeBackendPath",
+  "evidence": "19/10/2026 on cowork.tracy.site: readSupport caught Error TRACY_WEB_PATH_INVALID; no /api/design-system/support request; no [data-design-system-card].",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=60000",
+      "packages/core/tracy-core/test/web-path.test.mjs",
+      "apps/tracy-web/test/widget-native-backend.test.mjs"
+    ],
+    "tests": [
+      "an encoded slash in a query value is a value, not a way out of the door",
+      "only an explicit native widget mount selects the authenticated Tracy bridge",
+      "native backend permits the creation flow and preserves its query without granting administrative methods"
+    ]
+  }
+}

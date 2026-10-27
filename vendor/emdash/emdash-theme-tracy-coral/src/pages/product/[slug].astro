@@ -1,0 +1,1044 @@
+---
+import {
+	getEmDashEntry,
+	getEmDashCollection,
+	getEntryTerms,
+	getSeoMeta,
+	decodeSlug,
+	getSiteSettings,
+} from "emdash";
+import { safeJsonLdSerialize } from "emdash/page";
+import Base from "../../layouts/Base.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import RichText from "../../components/RichText.astro";
+import StarRating from "../../components/StarRating.astro";
+import Price from "../../components/Price.astro";
+import { getMediaUrl } from "../../utils/media-url";
+import { metaDescription } from "../../utils/reading-time";
+import {
+	resolveBlogSiteIdentity,
+	resolveSiteOrigin,
+	resolveTitleSeparator,
+} from "../../utils/site-identity";
+import {
+	averageRating,
+	parseGallery,
+	parseReviews,
+	parseVariants,
+} from "../../utils/product-fields";
+import { heroDate } from "../../utils/dates";
+
+const slug = decodeSlug(Astro.params.slug);
+
+if (!slug) {
+	return Astro.rewrite("/404");
+}
+
+const { entry: product, cacheHint } = await getEmDashEntry("products", slug);
+
+if (!product) {
+	return Astro.rewrite("/404");
+}
+
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const cats = await getEntryTerms("products", product.data.id, "product-category");
+
+// Related products: same first category, demo-style row of four.
+// A bounded where-filter query instead of hydrating the whole category.
+const related = cats.length
+	? (
+			await getEmDashCollection("products", {
+				where: { "product-category": cats[0].slug },
+				limit: 5,
+			})
+		).entries
+			.filter((p) => p.id !== product.id)
+			.slice(0, 4)
+	: [];
+
+// Related cards derive their stars the same way the product page does, so
+// a card and the page it links to can never show different ratings.
+const relatedRatings = new Map(
+	related.map((p) => [p.id, averageRating(parseReviews(p.data.reviews))]),
+);
+
+const d = product.data;
+// gallery/variants are raw JSON typed as `unknown`, and reviews arrives
+// typed but can still hold half-filled rows — all three are parsed rather
+// than cast so a malformed entry drops out instead of throwing a 500.
+const gallery = parseGallery(d.gallery);
+const mainImage = gallery[0] ?? getMediaUrl(d.featured_image);
+const variants = parseVariants(d.variants);
+const reviews = parseReviews(d.reviews);
+// Averaged from the reviews rather than stored, so the stars and the
+// aggregateRating can never contradict the list of reviews below them.
+const rating = averageRating(reviews);
+
+// Meta description: the excerpt when present, else a snippet of the
+// long description — products otherwise ship no description at all.
+const description = (d.excerpt as string) || metaDescription(d.content) || undefined;
+
+// schema.org/Product JSON-LD. Prices are stored as display strings
+// ("£13.00"); the offer is only emitted when one parses cleanly.
+const siteSettings = await getSiteSettings();
+const { siteTitle } = resolveBlogSiteIdentity(siteSettings);
+const siteOrigin = resolveSiteOrigin(siteSettings, Astro.url.origin);
+const absoluteUrl = (path: string | undefined) =>
+	path ? (path.startsWith("http") ? path : `${siteOrigin}${path}`) : undefined;
+const priceMatch = typeof d.price === "string" ? d.price.match(/([£$€])\s*([\d.,]+)/) : null;
+const CURRENCIES: Record<string, string> = { "£": "GBP", $: "USD", "€": "EUR" };
+const productLd = {
+	"@context": "https://schema.org",
+	"@type": "Product",
+	name: d.title,
+	url: `${siteOrigin}/product/${slug}`,
+	...(absoluteUrl(mainImage) && { image: absoluteUrl(mainImage) }),
+	...(description && { description }),
+	...(d.sku && { sku: d.sku }),
+	...(priceMatch && {
+		offers: {
+			"@type": "Offer",
+			price: priceMatch[2].replace(/,/g, ""),
+			priceCurrency: CURRENCIES[priceMatch[1]],
+			availability: d.oos
+				? "https://schema.org/OutOfStock"
+				: "https://schema.org/InStock",
+			url: `${siteOrigin}/product/${slug}`,
+		},
+	}),
+	...(rating !== undefined && {
+		aggregateRating: {
+			"@type": "AggregateRating",
+			ratingValue: rating,
+			reviewCount: reviews.length,
+			bestRating: 5,
+			worstRating: 1,
+		},
+	}),
+	// Google reports `review` as a missing recommended field on Product
+	// when only the aggregate is present. `datePublished` is date-only
+	// (schema.org takes a Date there) and omitted when a review carries
+	// no parseable date, rather than guessed at.
+	...(reviews.length > 0 && {
+		review: reviews.map((r) => ({
+			"@type": "Review",
+			author: { "@type": "Person", name: r.author },
+			reviewBody: r.text,
+			...(r.date && { datePublished: r.date.toISOString().slice(0, 10) }),
+			...(typeof r.rating === "number" && {
+				reviewRating: {
+					"@type": "Rating",
+					ratingValue: r.rating,
+					bestRating: 5,
+					worstRating: 1,
+				},
+			}),
+		})),
+	}),
+};
+
+// The admin's SEO panel drives the head here as it does on posts —
+// otherwise a product marked noindex still advertised itself as
+// indexable while dropping out of the sitemap.
+const seo = getSeoMeta(product, {
+	siteTitle,
+	siteUrl: siteOrigin,
+	path: `/product/${slug}`,
+	defaultOgImage: mainImage,
+	defaultDescription: description,
+	titleSeparator: resolveTitleSeparator(siteSettings),
+});
+---
+
+<Base
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	robots={seo.robots ?? undefined}
+	content={{ collection: "products", id: d.id, slug }}
+	overHero
+>
+	<PageHeader
+		title={d.title}
+		crumbs={[{ label: "Shop", href: "/shop" }, { label: d.title }]}
+		titleAttrs={product.edit.title}
+	/>
+	<div class="product-shell">
+		<article class="product-single">
+			<div class="product-top">
+				<div class="product-gallery">
+					<div class="gallery-main">
+						<div class="gallery-viewport">
+							<img
+								class="gallery-slide is-active"
+								src={mainImage}
+								data-full={mainImage}
+								alt={d.title}
+								width="600"
+								height="600"
+							/>
+							<img class="gallery-slide" src={mainImage} alt="" width="600" height="600" aria-hidden="true" />
+							<div class="gallery-zoom-pane" aria-hidden="true"></div>
+						</div>
+						<button type="button" class="gallery-zoom-trigger" aria-label="View full size image">
+							<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+								<circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2" />
+								<line x1="15.5" y1="15.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+							</svg>
+						</button>
+						{d.price_old && <span class="shop-sale">Sale!</span>}
+					</div>
+					{
+						gallery.length > 1 && (
+							<div class="gallery-thumbs">
+								{gallery.map((g, i) => (
+									<button
+										type="button"
+										class:list={["gallery-thumb", { current: i === 0 }]}
+										data-full={g}
+										aria-label={`Show image ${i + 1}`}
+									>
+										<img src={g} alt="" loading="lazy" width="600" height="600" />
+									</button>
+								))}
+							</div>
+						)
+					}
+				</div>
+				<div class="product-summary">
+					<h2 class="product-name">{d.title}</h2>
+					{
+						rating !== undefined && (
+							<p class="product-rating-row">
+								<StarRating value={rating} size="0.9em" />
+								{reviews.length > 0 && (
+									<a href="#tab-reviews" class="review-count">
+										({reviews.length} customer {reviews.length === 1 ? "review" : "reviews"})
+									</a>
+								)}
+							</p>
+						)
+					}
+					{
+						(d.price || d.price_old) && (
+							<Price now={d.price} was={d.price_old} size="1.6rem" />
+						)
+					}
+					{d.excerpt && <p class="product-short">{d.excerpt}</p>}
+					{
+						d.oos ? (
+							<p class="product-oos">
+								{d.stock || "This product is currently out of stock and unavailable."}
+							</p>
+						) : (
+							<>
+								{d.stock && <p class="product-availability">{d.stock}</p>}
+								{variants.length > 0 && (
+									<table class="product-variants">
+										<tbody>
+											{variants.map((v) => (
+												<tr>
+													<td class="variant-label">
+														<label>{v.label}</label>
+													</td>
+													<td class="variant-value">
+														<select aria-label={v.label}>
+															<option value="">Choose an option</option>
+															{v.options.map((o) => (
+																<option>{o}</option>
+															))}
+														</select>
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
+								)}
+								<a href="/shop" class="product-buy">
+									{d.button ?? "Add to basket"}
+								</a>
+							</>
+						)
+					}
+					<p class="product-meta">
+						{d.sku && (
+							<>
+								SKU: <span>{d.sku}</span>{" "}
+							</>
+						)}
+						{
+							cats.length > 0 && (
+								<>
+									Categories:{" "}
+									{cats.map((c, i) => (
+										<>
+											{i > 0 && ", "}
+											<a href="/shop">{c.label}</a>
+										</>
+									))}
+								</>
+							)
+						}
+					</p>
+				</div>
+			</div>
+
+			<div class="product-tabs">
+				<ul class="tabs-nav" role="tablist">
+					<li role="presentation">
+						<button type="button" class="tab-link active" data-tab="description" role="tab" id="tablabel-description" aria-controls="tab-description" aria-selected="true">
+							Description
+						</button>
+					</li>
+					{
+						reviews.length > 0 && (
+							<li role="presentation">
+								<button type="button" class="tab-link" data-tab="reviews" role="tab" id="tablabel-reviews" aria-controls="tab-reviews" aria-selected="false">
+									Reviews ({reviews.length})
+								</button>
+							</li>
+						)
+					}
+				</ul>
+				<section class="tab-panel active" data-panel="description" id="tab-description" role="tabpanel" aria-labelledby="tablabel-description" tabindex="0">
+					<h2 class="panel-title"><span>Description</span></h2>
+					<RichText value={d.content} />
+				</section>
+				{
+					reviews.length > 0 && (
+						<section class="tab-panel" data-panel="reviews" id="tab-reviews" role="tabpanel" aria-labelledby="tablabel-reviews" tabindex="0">
+							<h2 class="panel-title">
+								<span>
+									{reviews.length} {reviews.length === 1 ? "review" : "reviews"} for {d.title}
+								</span>
+							</h2>
+							<ol class="review-list">
+								{reviews.map((r) => (
+									<li>
+										<span class="review-avatar" aria-hidden="true">
+											<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+												<path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
+											</svg>
+										</span>
+										<div class="review-body">
+											{typeof r.rating === "number" && (
+												<StarRating value={r.rating} size="0.9em" />
+											)}
+											<p class="review-meta">
+												<strong>{r.author}</strong>
+												{r.date && (
+													<span>
+														{" – "}
+														<time datetime={r.date.toISOString().slice(0, 10)}>
+															{heroDate(r.date)}
+														</time>
+													</span>
+												)}
+											</p>
+											<p class="review-text">{r.text}</p>
+										</div>
+									</li>
+								))}
+							</ol>
+						</section>
+					)
+				}
+			</div>
+
+			{
+				related.length > 0 && (
+					<section class="product-related">
+						<h3 class="related-title-heading"><span>Related products</span></h3>
+						<ul class="related-grid">
+							{related.map((p) => {
+								const relatedRating = relatedRatings.get(p.id);
+								return (
+								<li class="related-item">
+									<a href={`/product/${p.id}`} class="related-thumb" tabindex="-1">
+										{p.data.price_old && <span class="shop-sale">Sale!</span>}
+										<img src={getMediaUrl(p.data.featured_image)} alt="" loading="lazy" width="600" height="600" />
+										<span class="related-button">{p.data.oos ? "Read more" : (p.data.button ?? "Add to basket")}</span>
+									</a>
+									<a href={`/product/${p.id}`} class="related-title">
+										{p.data.title}
+									</a>
+									{relatedRating !== undefined && (
+										<StarRating value={relatedRating} size="0.9em" />
+									)}
+									<Price now={p.data.price as string} was={p.data.price_old as string} />
+								</li>
+								);
+							})}
+						</ul>
+					</section>
+				)
+			}
+		</article>
+	</div>
+	{/* is:inline explicit — see the note in portfolio/[slug].astro */}
+	<script type="application/ld+json" is:inline set:html={safeJsonLdSerialize(productLd)} />
+</Base>
+
+<div class="gallery-lightbox" hidden role="dialog" aria-modal="true" aria-label="Full size image" tabindex="-1">
+	<button type="button" class="gallery-lightbox-close" aria-label="Close">&times;</button>
+	<img src="" alt="" />
+</div>
+
+<script>
+	const canHover = () => matchMedia("(pointer: fine)").matches;
+
+	// Gallery: thumbs slide the main image in, pointer-fine hover pans a zoom lens
+	for (const gal of document.querySelectorAll<HTMLElement>(".product-gallery")) {
+		const viewport = gal.querySelector<HTMLElement>(".gallery-viewport");
+		const zoomPane = gal.querySelector<HTMLElement>(".gallery-zoom-pane");
+		const trigger = gal.querySelector<HTMLButtonElement>(".gallery-zoom-trigger");
+		const thumbs = gal.querySelectorAll<HTMLButtonElement>(".gallery-thumb");
+		if (!viewport) continue;
+
+		// Two fixed <img> layers, ping-ponged by index — never created or torn down,
+		// so "which one is current" is a plain variable instead of a DOM query that can
+		// go stale if a transition gets interrupted or never fires transitionend.
+		const slides = viewport.querySelectorAll<HTMLImageElement>(".gallery-slide");
+		let activeIndex = 0;
+		const currentImg = () => slides[activeIndex];
+
+		const slideTo = (src: string, direction: "left" | "right") => {
+			const active = slides[activeIndex];
+			const standby = slides[1 - activeIndex];
+			if (!active || !standby || active.dataset.full === src) return;
+
+			// Snap the standby layer to its entry side with no transition, then swap.
+			standby.style.transition = "none";
+			standby.style.transform = `translateX(${direction === "right" ? 100 : -100}%)`;
+			standby.src = src;
+			standby.dataset.full = src;
+			standby.alt = active.alt;
+			standby.removeAttribute("aria-hidden");
+			// Force layout so the snapped position is committed before re-enabling the transition.
+			void standby.getBoundingClientRect();
+			standby.style.transition = "";
+			setTimeout(() => {
+				active.style.transform = `translateX(${direction === "right" ? -100 : 100}%)`;
+				standby.style.transform = "translateX(0)";
+			}, 0);
+
+			active.classList.remove("is-active");
+			active.setAttribute("aria-hidden", "true");
+			standby.classList.add("is-active");
+			activeIndex = 1 - activeIndex;
+		};
+
+		const activateThumb = (t: HTMLButtonElement, i: number) => {
+			if (!t.dataset.full || t.classList.contains("current")) return;
+			const prevIndex = Array.from(thumbs).findIndex((x) => x.classList.contains("current"));
+			slideTo(t.dataset.full, i > prevIndex ? "right" : "left");
+			thumbs.forEach((x) => x.classList.toggle("current", x === t));
+		};
+
+		thumbs.forEach((t, i) => {
+			t.addEventListener("click", () => activateThumb(t, i));
+			// Explicit Enter/Space handling: preventDefault cancels the browser's own
+			// synthesized click for the keydown, so activation runs through exactly one
+			// path (this one) instead of racing a native click from the same keypress.
+			t.addEventListener("keydown", (e) => {
+				if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+					e.preventDefault();
+					activateThumb(t, i);
+				}
+			});
+		});
+
+		if (zoomPane) {
+			viewport.addEventListener("mouseenter", () => {
+				if (!canHover()) return;
+				zoomPane.classList.add("is-active");
+			});
+			viewport.addEventListener("mousemove", (e) => {
+				if (!zoomPane.classList.contains("is-active")) return;
+				// Re-read the active slide on every move (not just mouseenter) so a
+				// thumbnail switch mid-hover can't leave the zoom pane showing a stale image.
+				const img = currentImg();
+				if (img) zoomPane.style.backgroundImage = `url(${img.currentSrc || img.src})`;
+				const rect = viewport.getBoundingClientRect();
+				const x = ((e.clientX - rect.left) / rect.width) * 100;
+				const y = ((e.clientY - rect.top) / rect.height) * 100;
+				zoomPane.style.backgroundPosition = `${x}% ${y}%`;
+			});
+			viewport.addEventListener("mouseleave", () => zoomPane.classList.remove("is-active"));
+		}
+
+		trigger?.addEventListener("click", () => {
+			const img = currentImg();
+			const lightbox = document.querySelector<HTMLElement>(".gallery-lightbox");
+			const closeBtn = lightbox?.querySelector<HTMLButtonElement>(".gallery-lightbox-close");
+			const lightboxImg = lightbox?.querySelector("img");
+			if (!img || !lightbox || !lightboxImg || !closeBtn) return;
+			lightboxImg.src = img.currentSrc || img.src;
+			lightboxImg.alt = img.alt;
+			lightboxReturnFocus = trigger;
+			lightbox.hidden = false;
+			closeBtn.focus();
+		});
+	}
+
+	const lightbox = document.querySelector<HTMLElement>(".gallery-lightbox");
+	const lightboxClose = lightbox?.querySelector<HTMLButtonElement>(".gallery-lightbox-close");
+	let lightboxReturnFocus: HTMLElement | null = null;
+
+	const closeLightbox = () => {
+		if (!lightbox || lightbox.hidden) return;
+		lightbox.hidden = true;
+		lightboxReturnFocus?.focus();
+		lightboxReturnFocus = null;
+	};
+
+	lightbox?.addEventListener("click", (e) => {
+		if (e.target === lightbox || (e.target as HTMLElement).closest(".gallery-lightbox-close")) {
+			closeLightbox();
+		}
+	});
+	document.addEventListener("keydown", (e) => {
+		if (!lightbox || lightbox.hidden) return;
+		if (e.key === "Escape") {
+			closeLightbox();
+		} else if (e.key === "Tab" && lightboxClose) {
+			// The close button is the only focusable element in the dialog; keep Tab
+			// (and Shift+Tab) from escaping into the page behind it.
+			e.preventDefault();
+			lightboxClose.focus();
+		}
+	});
+
+	// Tabs
+	for (const tabs of document.querySelectorAll<HTMLElement>(".product-tabs")) {
+		const links = [...tabs.querySelectorAll<HTMLButtonElement>(".tab-link")];
+		const panels = tabs.querySelectorAll<HTMLElement>(".tab-panel");
+		const activate = (name: string, focus = false) => {
+			links.forEach((l) => {
+				const on = l.dataset.tab === name;
+				l.classList.toggle("active", on);
+				l.setAttribute("aria-selected", String(on));
+				// Roving tabindex, per the APG tabs pattern.
+				l.tabIndex = on ? 0 : -1;
+				if (on && focus) l.focus();
+			});
+			panels.forEach((p) => p.classList.toggle("active", p.dataset.panel === name));
+		};
+		links.forEach((l, i) => {
+			l.addEventListener("click", () => activate(l.dataset.tab!));
+			l.addEventListener("keydown", (event) => {
+				const key = event.key;
+				let next: HTMLButtonElement | undefined;
+				if (key === "ArrowRight") next = links[(i + 1) % links.length];
+				else if (key === "ArrowLeft") next = links[(i - 1 + links.length) % links.length];
+				else if (key === "Home") next = links[0];
+				else if (key === "End") next = links[links.length - 1];
+				if (!next) return;
+				event.preventDefault();
+				activate(next.dataset.tab!, true);
+			});
+		});
+		// Non-active tabs start outside the tab order.
+		links.forEach((l) => {
+			l.tabIndex = l.classList.contains("active") ? 0 : -1;
+		});
+		// "(N customer reviews)" deep link
+		document.querySelector(".review-count")?.addEventListener("click", () => activate("reviews"));
+	}
+</script>
+
+<style>
+	/* Demo product single: one-column white main, 50/50 gallery/summary */
+	.product-shell {
+		max-width: calc(var(--wide-width) - 4em);
+		margin: 0 auto;
+	}
+
+	.product-single {
+		background: var(--color-surface);
+		padding: 4em clamp(1.5em, 4.4vw, 4em);
+	}
+
+	.product-top {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: 2.6em;
+	}
+
+	.gallery-main {
+		position: relative;
+		line-height: 0;
+	}
+
+	.gallery-viewport {
+		position: relative;
+		overflow: hidden;
+		aspect-ratio: 1;
+	}
+
+	.gallery-slide {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transform: translateX(100%);
+		transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.gallery-slide.is-active {
+		z-index: 2;
+		transform: translateX(0);
+	}
+
+	/* Pointer-fine cursor-pan zoom lens, layered above both slide layers */
+	.gallery-zoom-pane {
+		position: absolute;
+		inset: 0;
+		z-index: 3;
+		background-repeat: no-repeat;
+		background-size: 200%;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.2s ease-out;
+	}
+
+	.gallery-zoom-pane.is-active {
+		opacity: 1;
+	}
+
+	.gallery-zoom-trigger {
+		position: absolute;
+		top: 0.9em;
+		right: 0.9em;
+		z-index: 4;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25em;
+		height: 2.25em;
+		padding: 0;
+		border: 0;
+		background: color-mix(in srgb, var(--bg) 85%, transparent);
+		color: var(--color-text);
+		cursor: pointer;
+		transition:
+			background 0.2s ease-out,
+			color 0.2s ease-out;
+	}
+
+	.gallery-zoom-trigger:hover,
+	.gallery-zoom-trigger:focus-visible {
+		background: var(--color-gold);
+		color: var(--accent-on);
+	}
+
+	@media (pointer: coarse) {
+		.gallery-zoom-pane {
+			display: none;
+		}
+	}
+
+	.gallery-lightbox {
+		position: fixed;
+		inset: 0;
+		z-index: 1000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4vh 4vw;
+		background: color-mix(in srgb, var(--fg) 92%, transparent);
+	}
+
+	.gallery-lightbox[hidden] {
+		display: none;
+	}
+
+	.gallery-lightbox img {
+		max-width: 100%;
+		max-height: 92vh;
+		object-fit: contain;
+	}
+
+	.gallery-lightbox-close {
+		position: absolute;
+		top: 1em;
+		right: 1.2em;
+		border: 0;
+		background: none;
+		color: var(--accent-on);
+		font-size: var(--font-size-2xl);
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.gallery-thumbs {
+		display: flex;
+		gap: 0;
+		margin-top: 0;
+	}
+
+	.gallery-thumb {
+		width: 25%;
+		padding: 0;
+		border: 0;
+		background: none;
+		cursor: pointer;
+		line-height: 0;
+		opacity: 0.85;
+		transition: opacity 0.2s ease-out;
+	}
+
+	.gallery-thumb.current,
+	.gallery-thumb:hover {
+		opacity: 1;
+	}
+
+	.gallery-thumb img {
+		width: 100%;
+		aspect-ratio: 1;
+		object-fit: cover;
+	}
+
+	.shop-sale {
+		position: absolute;
+		top: 0.75em;
+		left: 0.75em;
+		z-index: 2;
+		padding: 0.3em 0.8em;
+		background: color-mix(in srgb, var(--bg) 75%, transparent);
+		color: var(--color-gold);
+		font-weight: 700;
+		line-height: 1.6;
+	}
+
+	/* Demo .product_title: Muli light 27.2px TEAL, no margin */
+	.product-name {
+		margin: 0;
+		font-family: var(--font-body);
+		font-size: var(--font-size-xl);
+		font-weight: 300;
+		color: var(--color-teal);
+	}
+
+	.product-rating-row {
+		display: flex;
+		align-items: center;
+		gap: 0.6em;
+		margin: 0.4em 0 0;
+	}
+
+
+	/* Demo: gold review-count link */
+	.review-count {
+		font-size: 0.9em;
+		color: var(--color-gold);
+		text-decoration: none;
+	}
+
+	.review-count:hover {
+		color: var(--color-teal);
+	}
+
+	/* Demo .summary .price: teal 25.9px with 25.9px below (Price component) */
+	.product-summary :global(.price) {
+		display: block;
+		margin: 0.6em 0 1em;
+	}
+
+	.product-short {
+		margin: 0 0 1.6em;
+		line-height: 1.8;
+	}
+
+	/* Demo out-of-stock notice: red line */
+	.product-oos {
+		margin: 0 0 1.6em;
+		color: var(--danger);
+	}
+
+	/* Same slot as the out-of-stock notice, but this one accompanies a
+	   product you can still buy, so it reads as information rather than
+	   as a warning. */
+	.product-availability {
+		margin: 0 0 1.6em;
+		color: var(--color-text-secondary);
+	}
+
+	/* Variations: label column + select (demo .variations) */
+	.product-variants {
+		margin: 0 0 1.5em;
+		border-collapse: collapse;
+	}
+
+	.variant-label {
+		padding: 0.4em 1.5em 0.4em 0;
+		font-weight: 700;
+		color: var(--color-heading);
+	}
+
+	.variant-value select {
+		padding: 0.6em 2.4em 0.6em 0.8em;
+		border: 1px solid var(--color-border);
+		border-radius: 0;
+		background-color: var(--color-surface);
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23707070' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 0.8em center;
+		font-family: var(--font-body);
+		font-size: var(--font-size-base);
+		color: var(--color-text);
+		appearance: none;
+		-webkit-appearance: none;
+		cursor: pointer;
+	}
+
+	/* Demo gold button (1em 2em padding), teal hover */
+	.product-buy {
+		display: inline-block;
+		padding: 1em 2em;
+		background: var(--color-gold);
+		color: var(--accent-on);
+		font-weight: 700;
+		text-decoration: none;
+		transition: background 0.3s ease-out;
+	}
+
+	.product-buy:hover,
+	.product-buy:focus-visible {
+		background: var(--color-teal-solid);
+	}
+
+	/* Demo meta line: SKU + gold category links */
+	.product-meta {
+		margin-top: 1.6em;
+		font-size: 0.95em;
+		color: var(--color-text);
+	}
+
+	.product-meta a {
+		color: var(--color-gold);
+		text-decoration: none;
+	}
+
+	.product-meta a:hover {
+		color: var(--color-teal);
+	}
+
+	/* ---------- Tabs (demo woocommerce-tabs: 41.6px above, boxed
+	   active tab on a hairline, panels with gold-strip headings) ------ */
+	.product-tabs {
+		padding-top: 2.6em;
+	}
+
+	.tabs-nav {
+		display: flex;
+		margin: 0 0 1.6em;
+		padding: 0 0 0 1em;
+		list-style: none;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.tab-link {
+		position: relative;
+		bottom: -1px;
+		padding: 0.75em 1.2em;
+		border: 1px solid transparent;
+		background: none;
+		font-family: var(--font-body);
+		font-size: var(--font-size-sm);
+		color: var(--color-text);
+		cursor: pointer;
+	}
+
+	.tab-link.active {
+		border-color: var(--color-border);
+		border-bottom-color: var(--color-surface);
+		background: var(--color-surface);
+	}
+
+	.tab-panel {
+		display: none;
+	}
+
+	.tab-panel.active {
+		display: block;
+	}
+
+	/* Gold highlighter strip on the panel headings (demo scrim) */
+	.panel-title,
+	.related-title-heading {
+		margin: 0 0 1.2em;
+		font-family: var(--font-body);
+		font-size: var(--font-size-lg);
+		font-weight: 400;
+		color: var(--color-text);
+	}
+
+	.related-title-heading {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		margin-bottom: 1.5em;
+	}
+
+	.panel-title span,
+	.related-title-heading span {
+		background-image: var(--gold-scrim);
+		background-repeat: no-repeat;
+		background-size: 100% 0.5em;
+		background-position: 0 90%;
+	}
+
+	/* Reviews */
+	.review-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.review-list li {
+		display: flex;
+		gap: 1em;
+		padding: 1.2em 0;
+		border-bottom: 1px solid var(--color-border-subtle);
+	}
+
+	.review-list li:last-child {
+		border-bottom: 0;
+	}
+
+	.review-avatar {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 52px;
+		height: 52px;
+		border-radius: 50%;
+		background: var(--color-bg-subtle);
+		color: var(--color-muted);
+	}
+
+	.review-meta {
+		margin: 0.3em 0 0.4em;
+		font-size: 0.9em;
+		color: var(--color-muted);
+	}
+
+	.review-meta strong {
+		color: var(--color-heading);
+	}
+
+	.review-text {
+		margin: 0;
+		line-height: 1.8;
+	}
+
+	/* ---------- Related products (demo loop cards) ---------- */
+	.product-related {
+		margin-top: 2.6em;
+	}
+
+	.related-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 1.75em;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.related-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+
+	.related-thumb {
+		position: relative;
+		display: block;
+		width: 100%;
+		overflow: hidden;
+		line-height: 0;
+	}
+
+	.related-thumb img {
+		width: 100%;
+		aspect-ratio: 1;
+		object-fit: cover;
+		transition:
+			transform 0.3s ease-out,
+			opacity 0.3s ease-out;
+	}
+
+	.related-item:hover .related-thumb img,
+	.related-item:focus-within .related-thumb img {
+		transform: scale(1.1);
+		opacity: 0.8;
+	}
+
+	.related-button {
+		position: absolute;
+		z-index: 2;
+		left: 1em;
+		right: 1em;
+		top: 50%;
+		padding: 0.6em 1em;
+		background: var(--color-gold);
+		color: var(--accent-on);
+		font-size: var(--font-size-sm);
+		font-weight: 700;
+		line-height: 1.4;
+		text-align: center;
+		opacity: 0;
+		transform: translateY(calc(-50% - 10px));
+		transition:
+			opacity 0.3s ease-out,
+			transform 0.3s ease-out,
+			background 0.3s ease-out;
+	}
+
+	.related-item:hover .related-button,
+	.related-item:focus-within .related-button {
+		opacity: 1;
+		transform: translateY(-50%);
+	}
+
+	.related-button:hover {
+		background: var(--color-teal-solid);
+	}
+
+	.related-title {
+		margin-top: 0.8em;
+		color: var(--color-teal);
+		text-decoration: none;
+		transition: 0.2s ease-out color;
+	}
+
+	.related-title:hover {
+		color: var(--color-gold);
+	}
+
+	.related-item :global(.star-rating) {
+		margin-top: 0.4em;
+	}
+
+	.related-item :global(.price) {
+		margin-top: 0.3em;
+	}
+
+	@media (max-width: 900px) {
+		.product-top {
+			grid-template-columns: 1fr;
+		}
+
+		.related-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-bone-white: #ffffff;
+  --color-obsidian-ink: #000000;
+  --color-carbon-edge: #0a0a0a;
+
+  /* Typography — Font Families */
+  --font-items-light: 'Items-Light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-syndicatgroteskmedium: 'SyndicatGroteskMedium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

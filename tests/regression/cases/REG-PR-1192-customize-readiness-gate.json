@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1192-customize-readiness-gate",
+  "kind": "feat",
+  "title": "Customize your site readiness is a Road to live step: must-fix rules hold Publish (CUSTOMIZE_NOT_READY), worth-fixing rules warn, a published release only warns",
+  "pr": 1192,
+  "area": "ops/road-to-live/customize",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test apps/tracy-web/test/road-to-live.test.mjs.",
+    "S2: Run node --test apps/tracy-web/test/customize-readiness.test.mjs (the severity file and summary tests run without Postgres).",
+    "S3: Run node --test packages/web/tracy-harness/test/problem-guides.test.mjs packages/web/tracy-harness/test/template-presses.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes, including must-fix, worth-fixing only, checking, published but failing and the CUSTOMIZE_NOT_READY refusal.",
+    "S2: every test that runs passes; rule-severity.json names every rule of RULES with a group, a question, a line and a reason.",
+    "S3: every test passes, including the Customize your site score title, the two groups, one prompt and Check again."
+  ],
+  "selectors": {
+    "road": "apps/tracy-web/src/lib/road-to-live.js customizeStep",
+    "severity": "apps/tracy-web/src/lib/template-customization-question-readiness/rule-severity.json",
+    "door": "POST /api/ops/quickstart/inspiration/publish -> CUSTOMIZE_NOT_READY; POST /api/ops/quickstart/customize/check",
+    "panel": "[data-road-step=customize] [data-road-rules] [data-road-check-again]"
+  },
+  "evidence": "Before this change /ops could publish a template whose logo, business name or language answer is not applied; the readiness check ran only on a laptop",
+  "fence": "The road and the publish door read one stored check and one severity file; a published release is never taken off",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/road-to-live.test.mjs",
+      "apps/tracy-web/test/customize-readiness.test.mjs",
+      "packages/web/tracy-harness/test/problem-guides.test.mjs",
+      "packages/web/tracy-harness/test/template-presses.test.mjs"
+    ]
+  }
+}

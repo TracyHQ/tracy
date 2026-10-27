@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a7530405-e523-4268-bba5-ef13549fd61c",
+  "status": "complete",
+  "name": "Datalands",
+  "url": "https://styles.refero.design/style/a7530405-e523-4268-bba5-ef13549fd61c",
+  "sourceWebsite": "https://datalands.co",
+  "extractedAt": "2026-06-03T18:20:46.760Z",
+  "capturedAt": "2026-10-08T05:15:51.056302+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "Black cathedral with a single neon heartbeat. The wordmark fills the nave; everything else is a whispered caption beneath it.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/711ed332-a6fc-4ba0-ae51-807069c208a0.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/9530a7bd-959d-4dba-9086-52a649e27060.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/8e3a20ec-f037-4748-bfd1-6441bedb40f5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b238c26c-7492-4d1e-8fbb-6b8f6fe0f0d7.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/f176976c-2a20-403f-9e2e-3448c1195802.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "92501541d83091cfedff686edd928555c8192fb1795586321402513e1de11d41",
+      "bytes": 25679
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b11a80f667768b06e5872f2cbcd6335cf3adc0062240f4d8fb8c26cb02a50d06",
+      "bytes": 37454
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "db83d31638902f0689cd9c7ecfda37293ada73aed2f2a90a9b0c3f2f83ade706",
+      "bytes": 19486
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "df8cd649a06f8731fbfa7d4f37283534264a957dfc1fd974fd234ba61ab933fe",
+      "bytes": 13805
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e8fe0f390d01ab1dd7017d26cbe64108d97c1de2751b9e5b8b30a946780f7e26",
+      "bytes": 14024
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8d26ff22fa598fecfe98f463a87b591bf4abc075b585adb17f0ba1a1f6551c3c",
+      "bytes": 4997
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "8192053d84193438f5cadac363d73faf7306709275e02b34dadaf8b14b28c0ef",
+      "bytes": 1475
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "399b236688d60594afa207c5ae744720699d3da806ad47fb74ea9b86274f74d4",
+      "bytes": 1492
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "589291c6afa4a596563975c49d511deafb933ee11ffbf15454ffa5f45326a66a",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "859e61caa346c36e97626c1a202218e9b8924fe152e45c828182548a3b9300ab",
+      "bytes": 45913
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "7cda9949ecc32e83d9bb6bd271a70cd0ad81598eee5f2281e6f32114e03863b7",
+      "bytes": 23618
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6240cea1812e9b7e573acbeaf398dde0d7eb516febe004e49b1d3f395e4ef2d0",
+      "bytes": 50509
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e9a4493206389d46ca2112442225f2aea0578adb7e82481bcdf4b0db2d37697c",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9ddfa820d4f3a1c87934c16ca7e22f9ef1b9c82c32d28f4d8bdbaebe77e55d68",
+      "bytes": 2746
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "dd04db612133dc3b0ebb5eec24393b94414cca5cb2659ce4bbf5993ddef91d5a",
+      "bytes": 3258
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "004f4856-4b01-4c23-a9fb-866303d5013b",
+    "02610b06-d16e-47bd-a1ea-18979a9ed4f5",
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "64ba8e77-d1be-48a2-a47d-bdd46e139b8f",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1e82907-d1cf-46cd-8ae7-3561c5b15fd0",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "f1b76a42-050e-4c9e-96e3-a77fbd718c68",
+    "f68dd3d8-e8fa-4d2c-8c59-28aba06c9d8a",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

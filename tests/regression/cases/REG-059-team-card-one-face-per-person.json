@@ -1,0 +1,39 @@
+{
+  "id": "REG-059",
+  "kind": "feat",
+  "title": "Team card: the start screen's Team card draws up to three other members' faces and the seat count, and one account wears the same face at /auth/me, /api/team and the comment doors",
+  "pr": 857,
+  "area": "team/start-card",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, DSH, A and seat A's cookie COOKIE_A, api. Case variable: KEY = site key of a site where seat A holds an ACCEPTED seat and at least two other accounts hold active seats (pick the site with the most active seats from GET /api/team; record KEY and the number of its seats whose status is 'active' or ('invited' with requestedAt null) as N_VALID).",
+    "Check the build: docker exec $DSH grep -c 'tv-start-card-faces' /desk-home/profiles/native/node_modules/@tracy/dsh-chat-input/lib/client.js must print a number >= 1; otherwise stop with BLOCKED note image-without-team-card.",
+    "Doors: api a GET /auth/me -> record ME = {email, face}; FACE_ME must be an object {initial, color, avatarUrl} with initial a single uppercase character and color matching /^#[0-9a-f]{6}$/. api a GET /api/team -> find the site KEY; record SEATS = its seats[] and MY_SEAT = the seat whose email equals ME.email; record OTHERS = the valid seats (status 'active', or 'invited' with requestedAt null) whose email differs from ME.email, in the order the server lists them.",
+    "Door agreement: MY_SEAT.initial === FACE_ME.initial and MY_SEAT.color === FACE_ME.color. Every seat in SEATS carries initial (one uppercase character) and color (#rrggbb). api a GET /api/sites/KEY/comments -> for every row whose author.accountId equals a seat's id, author.initial and author.color must equal that seat's initial and color (record MATCHED = how many rows were compared; 0 is fine when the site has no comment). api a GET /api/sites/KEY/comments/people -> every person carries initial and color equal to the seat of the same accountId.",
+    "Browser: connect Playwright over CDP as the README says (never chromium.launch()); NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}} with cookie tracy_sess = COOKIE_A. page.goto(ORIGIN + '/' + KEY + '/?open=browser&page=%2F&mode=interactive') — a fresh session, so the start screen with the four round cards is shown. Wait (<= 90 s) for .tv-start-card and until the Team card (.tv-start-card whose .tv-start-card-title text is 'Team') contains .tv-start-card-faces.",
+    "Record from the Team card: FACES = the [data-tracy-face] elements inside .tv-start-card-faces, each as {text, background: getComputedStyle(el).backgroundColor, width: getBoundingClientRect().width}; TEAM_COUNT = the data-team-count attribute of .tv-start-card-faces; PEOPLE_TEXT = the text of .tv-start-card-people (or null). Record from the Comments card: COMMENTS_COUNT = text of .tv-start-card-count (or null).",
+    "Helper: hexToRgb(color) -> 'rgb(r, g, b)' of a #rrggbb string."
+  ],
+  "expect": [
+    "The build check prints a count >= 1.",
+    "FACE_ME is an object; MY_SEAT.initial === FACE_ME.initial and MY_SEAT.color === FACE_ME.color (one account, one face, at two doors).",
+    "Every comment author compared (MATCHED rows) and every person of /comments/people match their seat's initial and color.",
+    "FACES.length === Math.min(3, OTHERS.length) and FACES[i].text === OTHERS[i].initial and FACES[i].background === hexToRgb(OTHERS[i].color) for every i (the faces are the OTHER members, the viewer's own face is not among them).",
+    "Every face has width 20 (+-1).",
+    "TEAM_COUNT === String(N_VALID) (seats counted directly: active plus pending invitations, no join requests, no revoked, no declined, no +1).",
+    "When OTHERS.length === 0, PEOPLE_TEXT is the 'only you' wording and no face is drawn; otherwise PEOPLE_TEXT ends with TEAM_COUNT.",
+    "No page error, console.error or failed request on the page (chrome-watch --errors --page <KEY> after the load)."
+  ],
+  "selectors": {
+    "chatInputBuild": "/desk-home/profiles/native/node_modules/@tracy/dsh-chat-input/lib/client.js (dsh container)",
+    "card": ".tv-start-card (title in .tv-start-card-title)",
+    "teamFaces": ".tv-start-card-faces [data-tracy-face]",
+    "teamCount": ".tv-start-card-faces[data-team-count]",
+    "teamPeople": ".tv-start-card-people",
+    "commentsCount": ".tv-start-card-count",
+    "doors": "GET /auth/me (face) · GET /api/team (seats[].initial, color, avatarUrl) · GET /api/sites/:key/comments (author.initial, color) · GET /api/sites/:key/comments/people"
+  },
+  "fence": "apps/tracy-web/src/lib/person-face.js is the one place a person's face is decided (initial = first character of display_name || email, color = FNV-1a of 'account:<id>' into eight colours); rosterRow, the comment doors and /auth/me all return it, and @tracy/core/team/face Face plus clusterOf draw the start card from those fields — no client hashes a colour."
+}

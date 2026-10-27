@@ -1,0 +1,18 @@
+{
+  // Only `react-docgen-typescript` reads this file — NOT `pnpm typecheck`.
+  //
+  // WHY IT EXISTS. Docgen builds a TypeScript program and skips every file outside it, and it skips
+  // SILENTLY from the user's side: stories still run, docs pages are still generated, only the
+  // props table is empty. Measured 03/09: the bench's `tsconfig.json` has `include: ["src"]`, so all
+  // 62 `@tracy/ui` components — living in another package — fell outside, and the log printed
+  // exactly 69 "Skipping docgen" lines.
+  //
+  // It is separate from the bench's `tsconfig.json` rather than widening `include` there, because
+  // the two files answer different questions: `tsconfig.json` says "which files the typecheck gate
+  // guards" — and `@tracy/ui` already has its own gate in `pnpm typecheck`; adding it here would
+  // guard it twice with two sets of compilerOptions. This file only says "which files docgen may
+  // read".
+  "extends": "../../../../tsconfig.base.json",
+  "compilerOptions": { "allowJs": true },
+  "include": ["../src", "../../../ui/tracy-ui/src"]
+}

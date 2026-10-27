@@ -1,0 +1,57 @@
+{
+  "id": "REG-PR-1698-pd-builder",
+  "kind": "feat",
+  "title": "The open repo's tracy builder connects to a Tracy account with the OAuth device flow and builds a demo with one press, without a second demo after a timeout",
+  "pr": 1698,
+  "area": "website-opportunities/builder",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: A fake Tracy on a local port. A connection asks for a device code, polls (pending, slow_down, then allowed; also denied; also expired), then reads /v1/me.",
+    "S2: The access token expires; five calls run at once. Then the grant is revoked in Tracy and a call runs. Then Disconnect.",
+    "S3: The standalone app with TRACY_URL at the fake: the operator connects on /operator/tracy; Build it with Tracy on a saved place; the tick follows the demo to ready.",
+    "S4: The fake stalls POST /v1/demos past the client timeout, then the tick runs; the fake answers 409 DEMO_LIMIT_REACHED; 503 SPONSOR_BUDGET_EXHAUSTED; a cancel."
+  ],
+  "expect": [
+    "S1: the page sees the user code and link but never a token or device code; slow_down adds 5 s before the next poll; denied and expired end with error access_denied / expired_token; the token file has mode 0600.",
+    "S2: exactly one refresh for the five calls, the rotated pair written before use; revoked → state reconnect with no token kept; disconnect posts the refresh token to /oauth/revoke and deletes the file.",
+    "S3: the request body is website-opportunities/demo-request/v1 with the business name and location; a second press answers the same demo; ready → demo url, editUrl, expiresAt on GET /:id, the row in the Outreach stage with a draft carrying the link.",
+    "S4: one demo only after the timeout (same Idempotency-Key and bytes); 409 with live and limit kept on the demo as refused; 503 surfaced; cancel reaches Tracy."
+  ],
+  "selectors": {
+    "connection": "packages/wo/website-opportunities/src/tracy-connection.js, src/tracy-token-file.js",
+    "builder": "packages/wo/website-opportunities/src/plugins/builders/tracy.js, tracy-request.js",
+    "operator": "packages/wo/website-opportunities/src/ops/tracy-routes.js",
+    "schema": "packages/wo/website-opportunities/src/schema/0006-tracy-demo.sql",
+    "ui": "packages/wo/website-opportunities/ui/public/tracy-view-models.js"
+  },
+  "evidence": "Before: builders/tracy.js was a planned stub that threw BUILDER_PLANNED; the place page only linked to tracy.ai",
+  "fence": "the request row (exact body + idempotency key) is written before POST /v1/demos; refresh is single-flight and saved atomically; invalid_grant on refresh → reconnect",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/tracy-connection.test.mjs",
+      "packages/wo/website-opportunities/test/plugins-builder-tracy.test.mjs",
+      "packages/wo/website-opportunities/test/tracy-request.test.mjs",
+      "packages/wo/website-opportunities/test/ui-tracy-view-models.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "connect shows a code and a link",
+      "slow_down makes the next poll wait five seconds longer",
+      "a denied code ends the flow",
+      "an expired code ends the flow",
+      "many calls that find the token expired share ONE refresh",
+      "a grant revoked in Tracy turns the connection to Reconnect",
+      "disconnect revokes the grant in Tracy",
+      "Build it with Tracy sends the place, then the tick follows the demo to ready",
+      "a timeout never makes a second demo",
+      "the live demo limit comes back with its numbers",
+      "cancel reaches Tracy",
+      "Build: the live demo limit names both numbers"
+    ]
+  }
+}

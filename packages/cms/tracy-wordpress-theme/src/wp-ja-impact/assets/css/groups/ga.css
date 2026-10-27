@@ -1,0 +1,349 @@
+/* Group A — content and account pages: forms, the contact page, the standalone 404 (source: css/jpages.css, darkmode.css). */
+
+/* ── Forms (login, registration, reset): 400 px wide, 56 px controls, 8 px radius, navy button ───────────── */
+body.tracy .jim-form { max-width: 400px; margin: 0 auto; }
+body.tracy .jim-form__row { margin: 0 0 24px; }
+body.tracy .jim-form__row > label { display: block; margin: 0 0 8px; font-weight: 500; color: var(--jim-heading); }
+body.tracy .jim-form__star { color: var(--wp--preset--color--danger); }
+body.tracy .jim-form__control {
+  width: 100%; height: 56px; box-sizing: border-box; padding: 14px; border: 1px solid var(--jim-line); border-radius: var(--ds-input-radius, var(--jim-radius));
+  background: var(--jim-surface); color: var(--jim-text); font: inherit;
+}
+body.tracy .jim-form__control:focus { border-color: var(--ds-c-focus-ring, var(--jim-success)); outline: 0; }
+body.tracy .jim-form__row--check label { display: flex; align-items: center; gap: 8px; font-weight: 400; color: var(--jim-text); }
+body.tracy .jim-form__intro { margin: 0 0 24px; }
+body.tracy .jim-form__submit {
+  height: 56px; padding: 17px 32px; border: 1px solid var(--ds-c-accent, var(--jim-primary)); border-radius: var(--ds-btn-radius, var(--jim-radius)); background: var(--ds-c-accent, var(--jim-primary));
+  color: var(--ds-c-accent-on, #ffffff); font: inherit; font-weight: 500; line-height: 20px; cursor: pointer;
+}
+body.tracy .jim-form__submit:hover { opacity: 0.85; }
+body.tracy .jim-form__cancel { margin-left: 16px; }
+body.tracy .jim-form__links { margin: 24px 0 0; padding: 0; list-style: none; }
+body.tracy .jim-form__links li { margin: 0 0 8px; }
+
+/* ── Account pages: sign-in, registration, password and username forms, drawn as Joomla's user views (Bootstrap form-control, input-group, form-check) ── */
+body.tracy .jim-account { max-width: 400px; margin: 0 auto; }
+body.tracy .jim-account--register { max-width: 550px; }
+body.tracy .jim-account fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+body.tracy .jim-account legend { display: block; width: 100%; margin: 0 0 16px; padding: 0; color: var(--jim-text); }
+body.tracy .jim-account--register legend { margin: 0 0 8px; padding: 0 6px 0 0; background: var(--jim-raised); color: var(--jim-heading); font-size: 28px; font-weight: 500; line-height: 33.6px; letter-spacing: 1px; }
+body.tracy .jim-account .field-spacer { margin: 0; padding-bottom: 8px; }
+body.tracy .jim-account.jim-account--password { box-sizing: border-box; max-width: 450px; padding: 32px; border: 1px solid var(--jim-line); border-radius: var(--jim-radius); }
+body.tracy .jim-account.jim-account--password label { margin: 0; }
+body.tracy .jim-account.jim-account--password .control-group:last-child { margin-bottom: 0; }
+body.tracy .jim-account.jim-account--password .control-label { padding-top: 5px; margin-bottom: 8px; }
+body.tracy .jim-account .control-group { margin: 0 0 18px; }
+body.tracy .jim-account label { display: inline-block; margin: 0 0 4px; color: var(--jim-text); font-weight: 400; }
+body.tracy .jim-account .star, body.tracy .jim-account .red { color: var(--ds-c-danger-text, #dc3545); }
+body.tracy .jim-account .star { display: inline-block; }
+body.tracy .jim-account .form-control {
+  display: block; width: 100%; box-sizing: border-box; padding: 14px; border: 1px solid light-dark(var(--jim-surface), var(--ds-c-border, rgba(255, 255, 255, 0.18))); border-radius: var(--ds-input-radius, var(--jim-radius));
+  background: var(--jim-surface); color: var(--jim-text); font: inherit; line-height: 25.6px;
+}
+body.tracy .jim-account--login input[type='text'].form-control { color: light-dark(var(--ds-c-fg, #212529), var(--ds-c-fg, #c2c9d6)); }
+body.tracy .jim-account .form-control:focus { border-color: light-dark(var(--ds-c-focus-ring, var(--jim-success)), var(--ds-c-focus-ring, #6f9bf0)); outline: 0; }
+body.tracy .jim-account .input-group { display: flex; width: 100%; }
+body.tracy .jim-account .input-group .form-control { flex: 1 1 auto; width: 1%; min-width: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; } /* ds-keep: inner corners of a joined input group, square on purpose */
+body.tracy .jim-account .input-password-toggle { position: relative; z-index: 2; padding: 17px 16px; margin: 0 0 0 -1px; border-top-left-radius: 0; border-bottom-left-radius: 0; } /* ds-keep: inner corners of a joined input group, square on purpose */
+body.tracy .jim-account .icon-eye { display: inline-block; width: 1.25em; text-align: center; }
+body.tracy .jim-account .icon-eye::before { content: '\f06e'; font-family: 'Font Awesome 6 Free'; font-weight: 900; }
+body.tracy .jim-account .input-password-toggle.is-shown .icon-eye::before { content: '\f070'; }
+body.tracy .jim-account .form-check { margin: 0 0 16px; padding: 0 0 0 24px; }
+body.tracy .jim-account .form-check-input {
+  float: left; width: 16px; height: 16px; margin: 4px 4px 0 -24px; border: 1px solid light-dark(var(--jim-line), var(--ds-c-border, rgba(255, 255, 255, 0.3))); border-radius: var(--ds-input-radius, 4px); background: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-bg, #28354f));
+  appearance: none; -webkit-appearance: none; vertical-align: top; cursor: pointer; font-size: 16px; line-height: 25.6px;
+}
+body.tracy .jim-account .form-check-input:checked { border-color: var(--ds-c-accent, var(--jim-primary)); background: var(--ds-c-accent, var(--jim-primary)) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") center / contain no-repeat; }
+body.tracy .jim-account .login-submit .btn { width: 100%; margin: 0; }
+body.tracy .jim-account .btn { margin-bottom: 0; }
+body.tracy .other-links ul { margin: 0; padding: 0; list-style: none; text-align: center; }
+body.tracy .other-links li { display: inline-block; padding: 0 8px; }
+body.tracy .other-links { max-width: 400px; margin: 0 auto; }
+
+/* ── Contact page ─────────────────────────────────────────────────────────────────────────────────── */
+body.tracy .jim-contactpage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; }
+@media (min-width: 992px) { body.tracy .jim-contactpage { grid-template-columns: minmax(0, 1fr) 404px; gap: 64px; } }
+body.tracy .jim-contactpage > * { margin: 0; }
+body.tracy .jim-contactpage__title { margin: 0 0 48px; font-size: 28px; line-height: 1.2; letter-spacing: normal; }
+body.tracy .jim-contactpage__map { box-sizing: border-box; height: 530px; margin: 0 0 48px; border-radius: var(--jim-radius); background: var(--ds-c-surface-warm, light-dark(#e8eaed, #1e2a45)); }
+body.tracy .jim-contactpage__map-note { margin: 0; line-height: 0; font-size: 0; }
+body.tracy .jim-contactpage__main > p { margin: 0 0 32px; }
+body.tracy .jim-contactpage__card { margin: 0 0 32px; padding: 32px; border: 1px solid var(--jim-line); border-radius: var(--jim-radius); background: var(--jim-raised); }
+body.tracy .jim-contactpage__card-title { margin: 0 0 29px; font-size: 24px; line-height: 1.2; letter-spacing: -0.24px; }
+body.tracy .jim-contactpage__item { margin: 0; padding: 0 0 31px; border-bottom: 1px solid var(--jim-line); }
+body.tracy .jim-contactpage__item + .jim-contactpage__item { padding-top: 31px; }
+body.tracy .jim-contactpage__hours .jim-contactpage__item:last-child { padding-bottom: 0; border-bottom: 0; }
+body.tracy .jim-contactpage__map + .jim-contactpage__title { margin-bottom: 16px; }
+body.tracy .jim-contactpage__sub { margin: 0; font-size: 16px; line-height: 19.2px; text-transform: uppercase; color: var(--jim-text); }
+body.tracy .jim-contactpage__hours .jim-contactpage__sub { margin-top: 8px; line-height: 25.6px; text-transform: none; }
+body.tracy .jim-contactpage__hours .jim-contactpage__value { margin-top: 0; }
+body.tracy .jim-contactpage__value { margin: 4px 0 0; font-size: 18px; font-weight: 500; line-height: 27px; color: var(--jim-heading); }
+body.tracy .jim-contactpage__value a { color: var(--jim-heading); }
+body.tracy :is(.jim-contactpage__social, .jim-boxsocial) { margin: 32px 0 0; gap: 16px; }
+body.tracy :is(.jim-contactpage__social, .jim-boxsocial) .wp-social-link { width: 48px; height: 48px; background: var(--jim-surface); border-radius: var(--ds-btn-radius, 4px); }
+body.tracy :is(.jim-contactpage__social, .jim-boxsocial) .wp-social-link a { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; }
+body.tracy :is(.jim-contactpage__social, .jim-boxsocial) .wp-social-link svg { display: none; }
+body.tracy :is(.jim-contactpage__social, .jim-boxsocial) .wp-social-link a::before { font-family: 'Font Awesome 6 Brands'; font-size: 20px; line-height: 20px; }
+body.tracy :is(.jim-contactpage__social, .jim-boxsocial) .wp-social-link-facebook a::before { content: '\f39e'; color: #1877f2; }
+body.tracy :is(.jim-contactpage__social, .jim-boxsocial) .wp-social-link-twitter a::before { content: '\f099'; color: #1d9bf0; }
+body.tracy :is(.jim-contactpage__social, .jim-boxsocial) .wp-social-link-tiktok a::before { content: '\e07b'; color: light-dark(#000000, #ffffff); }
+body.tracy :is(.jim-contactpage__social, .jim-boxsocial) .wp-social-link-pinterest a::before { content: '\f0d2'; color: #cb2027; }
+/* The form: the source draws no labels (the placeholders are the labels), first name and email side by side. */
+body.tracy .jim-contactpage__main .wpcf7-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+body.tracy .jim-contactpage__main .wpcf7-form > * { margin: 0; grid-column: 1 / -1; }
+body.tracy .jim-contactpage__main .wpcf7-form > p:nth-of-type(-n + 2) { grid-column: auto; }
+body.tracy .jim-contactpage__main .wpcf7-form .hidden-fields-container { display: none; }
+body.tracy .jim-contactpage__main .wtb-form__field { font-size: 0; }
+body.tracy .jim-contactpage__main .wtb-form__field .wpcf7-form-control-wrap { font-size: 16px; }
+body.tracy .jim-contactpage__main .wtb-form__required { display: none; }
+body.tracy .wpcf7 form { max-width: 100%; }
+body.tracy .wpcf7 label { display: block; margin: 0 0 16px; font-weight: 500; color: var(--jim-heading); }
+body.tracy .wpcf7 :is(input[type='text'], input[type='email'], textarea) {
+  width: 100%; box-sizing: border-box; padding: 14px; border: 1px solid var(--jim-line); border-radius: var(--ds-input-radius, var(--jim-radius)); background: var(--jim-surface); color: var(--jim-text); font: inherit;
+}
+body.tracy .wpcf7 textarea { min-height: 200px; }
+body.tracy .wpcf7 input[type='submit'] {
+  height: 56px; padding: 17px 32px; border: 1px solid var(--jim-success); border-radius: var(--ds-btn-radius, var(--jim-radius)); background: var(--jim-success); color: var(--ds-c-accent-on, #ffffff); font: inherit; font-weight: 500; cursor: pointer;
+}
+
+/* ── 404: a standalone page (source: body.error-page) ─────────────────────────────────────────────── */
+body.tracy .jim-404 { display: flex; align-items: center; justify-content: center; min-height: 100vh; box-sizing: border-box; padding: 0 16px; background: var(--wp--preset--color--bg); }
+body.tracy .jim-404__wrap { max-width: 1000px; text-align: center; }
+body.tracy .jim-404__digits { position: relative; }
+body.tracy .jim-404__digit { display: inline-block; margin: 0; font-size: 20rem; line-height: 1; color: var(--jim-link); }
+body.tracy .jim-404__digit--four1 { animation: jim-swing 0.5s ease-in-out infinite alternate; }
+body.tracy .jim-404__digit--zero { animation: jim-swing2 2s ease-in-out infinite alternate; }
+body.tracy .jim-404__digit--four2 { animation: jim-swing3 0.5s ease-in-out infinite alternate; }
+@keyframes jim-swing { from { transform: rotate(3deg); } to { transform: rotate(-3deg); } }
+@keyframes jim-swing2 { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+@keyframes jim-swing3 { from { transform: rotate(-3deg); } to { transform: rotate(8deg); } }
+@media (prefers-reduced-motion: reduce) { body.tracy .jim-404__digit { animation: none; } }
+body.tracy .jim-404__bubble { position: absolute; top: 10%; left: -10%; z-index: 2; width: 80px; height: 80px; margin: 0; border-radius: 50%; background: var(--ds-c-ink, light-dark(#1d3677, #28354f)); color: var(--ds-c-on-ink, light-dark(#ffffff, #eef1f6)); font-size: 32px; font-style: italic; line-height: 80px; }
+body.tracy .jim-404__bubble::after { content: ''; position: absolute; top: 70%; right: 0; border-left: 20px solid var(--ds-c-ink, light-dark(#1d3677, #28354f)); border-top: 15px solid transparent; border-bottom: 15px solid transparent; transform: rotate(45deg); }
+body.tracy .jim-404__title { margin: 3.5rem 0 8px; font-size: 2.25rem; line-height: 1.6; letter-spacing: -0.8px; color: var(--jim-link); }
+body.tracy .jim-404__text { margin: 0; padding-top: 8px; }
+body.tracy .jim-404__text strong { font-weight: 500; }
+body.tracy .jim-404__home { margin: 2rem 0 0; justify-content: center; }
+@media (max-width: 575.98px) { body.tracy .jim-404__home { margin-top: 3rem; } }
+body.tracy .jim-404__home .wp-block-button__link { border-color: var(--ds-c-accent, var(--jim-primary)); background: var(--ds-c-accent, var(--jim-primary)); text-transform: uppercase; }
+@media (max-width: 767.98px) {
+  body.tracy .jim-404__digit { font-size: 10rem; }
+  body.tracy .jim-404__bubble { display: none; }
+}
+@media (max-width: 575.98px) { body.tracy .jim-404__title { margin-top: 1rem; font-size: 1.5rem; } }
+
+/* ── Bootstrap 5 components the source's article bodies use (typography page; measured on the source, 1440 px) ─── */
+body.tracy .jim-prose :is(.row, .article-body .row) { display: flex; flex-wrap: wrap; margin-left: -16px; margin-right: -16px; }
+body.tracy .jim-prose .row > * { box-sizing: border-box; padding-inline: 16px; max-width: 100%; flex: 0 0 100%; width: 100%; }
+body.tracy .jim-prose .row > .col { flex: 1 0 0; }
+@media (min-width: 992px) {
+  body.tracy .jim-prose .row > .col-lg-3 { flex: 0 0 25%; width: 25%; }
+  body.tracy .jim-prose .row > .col-lg-9 { flex: 0 0 75%; width: 75%; }
+  body.tracy .jim-prose .row > .col-lg-6 { flex: 0 0 50%; width: 50%; }
+  body.tracy .jim-prose .row > .offset-lg-3 { margin-left: 25%; }
+}
+/* Bootstrap row-cols-N: the column count wins over a bare `.col` (flex: 1 0 0), below and above the breakpoint. */
+body.tracy .jim-prose .row.row-cols-1 > * { flex: 0 0 auto; width: 100%; }
+@media (min-width: 768px) {
+  body.tracy .jim-prose .row.row-cols-md-2 > * { flex: 0 0 50%; width: 50%; }
+  body.tracy .jim-prose .col-md-5 { flex: 0 0 41.6667%; width: 41.6667%; }
+  body.tracy .jim-prose .col-md-6 { flex: 0 0 50%; width: 50%; }
+  body.tracy .jim-prose .col-md-7 { flex: 0 0 58.3333%; width: 58.3333%; }
+}
+@media (min-width: 992px) {
+  body.tracy .jim-prose .row.row-cols-lg-2 > * { flex: 0 0 auto; width: 50%; }
+  body.tracy .jim-prose .row.row-cols-lg-3 > * { flex: 0 0 auto; width: 33.3333%; }
+}
+body.tracy :is(.display-1, .display-2, .display-3, .display-4, .display-5, .display-6) { margin: 0 0 16px; font-weight: 300; line-height: 1.2; letter-spacing: normal; color: var(--jim-text); }
+/* Bootstrap 5 responsive display sizes (rfs): fluid below 1200 px, fixed from 1200 px. */
+body.tracy .display-1 { font-size: calc(1.625rem + 4.5vw); }
+body.tracy .display-2 { font-size: calc(1.575rem + 3.9vw); }
+body.tracy .display-3 { font-size: calc(1.525rem + 3.3vw); }
+body.tracy .display-4 { font-size: calc(1.475rem + 2.7vw); }
+body.tracy .display-5 { font-size: calc(1.425rem + 2.1vw); }
+body.tracy .display-6 { font-size: calc(1.375rem + 1.5vw); }
+@media (min-width: 1200px) {
+  body.tracy .display-1 { font-size: 5rem; }
+  body.tracy .display-2 { font-size: 4.5rem; }
+  body.tracy .display-3 { font-size: 4rem; }
+  body.tracy .display-4 { font-size: 3.5rem; }
+  body.tracy .display-5 { font-size: 3rem; }
+  body.tracy .display-6 { font-size: 2.5rem; }
+}
+body.tracy .lead { font-size: 18px; line-height: 1.6; }
+body.tracy :is(p, div, span).h1 { font-size: var(--jim-h1); }
+body.tracy :is(p, div, span).h2 { font-size: var(--jim-h2); }
+body.tracy :is(p, div, span).h3 { font-size: var(--jim-h3); }
+body.tracy :is(p, div, span).h4 { font-size: var(--jim-h4); }
+body.tracy :is(p, div, span).h5 { font-size: var(--jim-h5); }
+body.tracy :is(p, div, span).h6 { font-size: var(--jim-h6); }
+body.tracy :is(p, div, span):is(.h1, .h2, .h3, .h4, .h5, .h6) { margin: 0 0 8px; font-weight: 500; line-height: 1.2; color: var(--jim-heading); }
+
+body.tracy .alert { position: relative; margin: 0 0 16px; padding: 16px 48px 16px 16px; border: 1px solid transparent; border-radius: var(--jim-radius); }
+body.tracy .alert-primary { background: var(--ds-c-surface-warm, light-dark(#1d3677, #10213f)); border-color: var(--ds-c-border-soft, light-dark(#1d3677, #1d3677)); color: var(--ds-c-accent-text, light-dark(#ffffff, #6f9bf0)); }
+body.tracy .alert-secondary { background: var(--ds-c-surface-warm, light-dark(#e2e3e5, #1a2233)); border-color: var(--ds-c-border-soft, light-dark(#c4c8cb, #2c3a52)); color: var(--ds-c-muted, light-dark(#2b2f32, #c2c9d6)); }
+body.tracy .alert-success { background: var(--ds-c-success-bg, light-dark(#d1e7dd, #0e2a1e)); border-color: var(--ds-c-success, light-dark(#a3cfbb, #1c5239)); color: var(--ds-c-success-text, light-dark(#0a3622, #75dba8)); }
+body.tracy .alert-danger { background: var(--ds-c-danger-bg, light-dark(#f8d7da, #2c1316)); border-color: var(--ds-c-danger, light-dark(#f1aeb5, #5c2329)); color: var(--ds-c-danger-text, light-dark(#58151c, #ea868f)); }
+body.tracy .alert-warning { background: var(--ds-c-warn-bg, light-dark(#fff3cd, #332701)); border-color: var(--ds-c-warn, light-dark(#ffe69c, #664d03)); color: var(--ds-c-warn-text, light-dark(#664d03, #ffda6a)); }
+body.tracy .alert-info { background: var(--ds-c-info-bg, light-dark(#2970db, #032830)); border-color: var(--ds-c-info, light-dark(#2970db, #055160)); color: var(--ds-c-info-text, light-dark(#ffffff, #6edff6)); }
+body.tracy .alert-light { background: var(--ds-c-surface, light-dark(#fcfcfd, #1a2233)); border-color: light-dark(var(--ds-c-border, #e9ecef), var(--ds-c-border, #2c3a52)); color: light-dark(var(--ds-c-fg, #495057), var(--ds-c-fg, #c2c9d6)); }
+body.tracy .alert-dark { background: var(--ds-c-border-soft, light-dark(#ced4da, #1a2233)); border-color: var(--ds-c-border, light-dark(#adb5bd, #2c3a52)); color: light-dark(var(--ds-c-fg, #495057), var(--ds-c-fg, #c2c9d6)); }
+body.tracy .alert .btn-close { position: absolute; top: 0; right: 0; width: 48px; height: 56px; padding: 0; border: 0; background: transparent; cursor: pointer; font-size: 0; }
+body.tracy .alert .btn-close::before { content: '\f00d'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 14px; color: currentColor; }
+body.tracy .alert-link { font-weight: 700; }
+
+body.tracy .badge { display: inline-block; padding: 4.2px 7.8px; border-radius: var(--ds-pill-radius, var(--jim-radius)); font-size: 12px; font-weight: 400; line-height: 12px; letter-spacing: normal; color: var(--ds-c-on-ink, #ffffff); text-align: center; vertical-align: baseline; white-space: nowrap; }
+body.tracy .rounded-pill { border-radius: var(--ds-pill-radius, 800px); }
+body.tracy .bg-primary { background-color: var(--ds-c-accent, var(--jim-primary)); color: var(--ds-c-accent-on, #ffffff); }
+body.tracy .bg-secondary { background-color: var(--ds-c-surface-warm, #6c757d); color: var(--ds-c-fg, #ffffff); }
+body.tracy .bg-success { background-color: var(--ds-c-success, var(--jim-success)); color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .bg-danger { background-color: var(--ds-c-danger, #dc3545); color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .bg-warning { background-color: var(--jim-warning); }
+body.tracy .bg-info { background-color: var(--jim-info); color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .bg-light { background-color: var(--jim-band); }
+body.tracy .bg-dark { background-color: var(--ds-c-ink, #212529); color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .text-dark { color: var(--ds-c-fg, #212529); }
+body.tracy .text-light { color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .text-muted, body.tracy .text-secondary { color: var(--ds-c-muted, #6c757d); }
+body.tracy .text-primary { color: var(--jim-link); }
+body.tracy .text-success { color: var(--jim-eyebrow); }
+body.tracy .text-danger { color: var(--ds-c-danger-text, #dc3545); }
+body.tracy .text-warning { color: var(--ds-c-warn-text, var(--jim-warning)); }
+body.tracy .text-info { color: var(--ds-c-info-text, var(--jim-info)); }
+
+body.tracy :where(button, a).btn { display: inline-block; margin: 0 0 8px; padding: 17px 32px; border: 1px solid transparent; border-radius: var(--ds-btn-radius, var(--jim-radius)); background: transparent; font: inherit; font-weight: 500; line-height: 20px; text-align: center; text-decoration: none; cursor: pointer; transition: opacity 0.15s ease; }
+body.tracy .btn:hover { opacity: 0.85; }
+body.tracy .btn-sm { padding: 6.24px 12px; font-size: 14px; line-height: 17.5px; }
+body.tracy .btn-lg { padding: 18.5px 32px; font-size: 20px; line-height: 25px; }
+body.tracy .btn-primary { background: var(--ds-c-accent, var(--jim-primary)); border-color: var(--ds-c-accent, var(--jim-primary)); color: var(--ds-c-accent-on, #ffffff); }
+body.tracy .btn-secondary { background: var(--ds-c-surface, #6c757d); border-color: var(--ds-c-border, #6c757d); color: var(--ds-c-fg, #ffffff); }
+body.tracy .btn-success { background: var(--ds-c-success, var(--jim-success)); border-color: var(--ds-c-success, var(--jim-success)); color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .btn-danger { background: var(--ds-c-danger, #dc3545); border-color: var(--ds-c-danger, #dc3545); color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .btn-warning { background: var(--jim-warning); border-color: var(--jim-warning); color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .btn-info { background: var(--jim-info); border-color: var(--jim-info); color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .btn-light { background: var(--jim-band); border-color: var(--jim-band); color: var(--ds-c-fg, light-dark(#000000, #eef1f6)); }
+body.tracy .btn-dark { background: var(--ds-c-ink, #212529); border-color: var(--ds-c-ink, #212529); color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .btn-link { color: var(--ds-c-accent-text, #0d6efd); font-weight: 400; }
+body.tracy .btn-outline-primary { border-color: var(--ds-c-accent-text, var(--jim-primary)); color: var(--jim-link); }
+body.tracy .btn-outline-secondary { border-color: var(--ds-c-muted, #6c757d); color: var(--ds-c-muted, #6c757d); }
+body.tracy .btn-outline-success { border-color: var(--ds-c-success, var(--jim-success)); color: var(--ds-c-success-text, var(--jim-success)); }
+body.tracy .btn-outline-danger { border-color: var(--ds-c-danger, #dc3545); color: var(--ds-c-danger-text, #dc3545); }
+body.tracy .btn-outline-warning { border-color: var(--jim-warning); color: var(--ds-c-warn-text, var(--jim-warning)); }
+body.tracy .btn-outline-info { border-color: var(--jim-info); color: var(--ds-c-info-text, var(--jim-info)); }
+body.tracy .btn-outline-light { border-color: light-dark(var(--jim-band), var(--ds-c-border, #33415e)); color: light-dark(var(--ds-c-on-ink, #fff9ef), var(--jim-text)); }
+body.tracy .btn-outline-dark { border-color: var(--ds-c-border, light-dark(#212529, #33415e)); color: light-dark(var(--ds-c-fg, #212529), var(--jim-text)); }
+
+body.tracy .card { display: flex; flex-direction: column; min-width: 0; margin: 0 0 16px; border: 1px solid var(--jim-line); border-radius: var(--jim-radius); background: var(--jim-raised); color: var(--jim-text); }
+body.tracy .card-body { flex: 1 1 auto; padding: 16px 24px; }
+body.tracy .card-header { padding: 16px 24px; border-bottom: 1px solid var(--jim-line); color: var(--jim-link); }
+body.tracy .card-title { margin: 0 0 8px; }
+body.tracy .card-text:last-child { margin-bottom: 0; }
+
+body.tracy .progress { display: flex; height: 16px; margin: 0 0 16px; overflow: hidden; border-radius: var(--ds-pill-radius, var(--jim-radius)); background: var(--jim-line); font-size: 12px; }
+body.tracy .progress-bar { display: flex; font-size: 16px; line-height: 25.6px; flex-direction: column; justify-content: center; margin: 0; overflow: hidden; background: var(--jim-success); color: var(--ds-c-accent-on, #ffffff); text-align: center; white-space: nowrap; }
+body.tracy .progress-bar.bg-warning { background: var(--jim-warning); }
+body.tracy .progress-bar.text-dark { color: var(--ds-c-fg, #212529); }
+body.tracy .progress-bar.bg-info { background: var(--jim-info); }
+body.tracy .progress-bar.bg-danger { background: var(--ds-c-danger, #dc3545); }
+body.tracy .w-25 { width: 25%; } body.tracy .w-50 { width: 50%; } body.tracy .w-75 { width: 75%; } body.tracy .w-100 { width: 100%; }
+
+body.tracy :is(.spinner-border, .spinner-grow) { display: inline-block; width: 32px; height: 32px; margin: 0 4px; vertical-align: text-bottom; color: var(--jim-link); }
+body.tracy .spinner-border { border: 4px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: jim-spin 0.75s linear infinite; }
+body.tracy .spinner-grow { border-radius: 50%; background: currentColor; opacity: 0; animation: jim-grow 0.75s linear infinite; }
+@keyframes jim-spin { to { transform: rotate(360deg); } }
+@keyframes jim-grow { 0% { transform: scale(0); } 50% { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { body.tracy :is(.spinner-border, .spinner-grow) { animation-duration: 1.5s; } }
+body.tracy .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+body.tracy .pagination { display: flex; flex-wrap: wrap; gap: 16px; margin: 0 0 16px; padding: 0; list-style: none; }
+body.tracy .page-link { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; box-sizing: border-box; border: 1px solid light-dark(var(--ds-c-surface, #f8f9fa), var(--ds-c-border, #33415e)); border-radius: var(--ds-pill-radius, var(--jim-radius)); background: light-dark(var(--ds-c-surface, #f8f9fa), var(--ds-c-surface, #1e2a45)); color: var(--jim-link); font-size: 14px; font-weight: 500; line-height: 17.5px; letter-spacing: -0.16px; text-decoration: none; }
+body.tracy .page-item.active .page-link { border-color: var(--jim-success); background: var(--jim-success); color: var(--ds-c-accent-on, #ffffff); }
+body.tracy .page-item.disabled .page-link { color: light-dark(var(--jim-link), var(--ds-c-muted, #8c97a8)); opacity: 0.6; pointer-events: none; }
+body.tracy .page-item.disabled { display: none; }
+body.tracy .bd-example .pagination:not(.pagination-sm):not(.pagination-lg) .page-link { font-size: 16px; line-height: 20px; }
+body.tracy .pagination-lg .page-link { width: 48px; height: 48px; font-size: 20px; line-height: 25px; }
+
+body.tracy .alert a { font-weight: 700; color: inherit; text-decoration: underline; }
+
+/* Search view: results beside a sidebar of the source's login and follow modules. */
+body.tracy .jim-search-columns { gap: 32px; }
+body.tracy .jim-side__title { margin: 0 0 24px; font-size: var(--jim-h4); }
+body.tracy .jim-form--side { max-width: none; margin: 0 0 48px; }
+body.tracy .jim-social--side .wp-social-link { background: transparent; color: var(--jim-link); }
+
+body.tracy small { font-size: 0.875em; line-height: 1.6; }
+
+body.tracy .badge.bg-light, body.tracy .badge.bg-light.text-dark { background-color: light-dark(var(--jim-band), var(--ds-c-surface-warm, #28354f)); color: light-dark(var(--ds-c-fg, #212529), var(--ds-c-fg, #eef1f6)); }
+body.tracy .card .col-md-5 { color: light-dark(var(--ds-c-fg, #212529), var(--jim-text)); }
+
+/* WordPress scales a social link on hover; the source's icons stay put (hover-jump scan). */
+body.tracy .wp-social-link:hover { transform: none; }
+
+/* ── Search view: the form, and the sidebar's cards (source: mod_login and the follow-us module in cards) ───────── */
+body.tracy .jim-fa { font-family: 'Font Awesome 6 Free'; font-weight: 900; font-style: normal; }
+body.tracy .jim-search-form { margin: 0 0 16px; }
+body.tracy .jim-search-form .wp-block-search__label { display: block; margin: 0 0 8px; font-size: 16px; font-weight: 500; color: var(--jim-heading); }
+body.tracy .jim-search-form .wp-block-search__inside-wrapper { display: flex; gap: 8px; }
+body.tracy .jim-search-form .wp-block-search__input { flex: 0 1 218px; min-width: 0; box-sizing: border-box; height: 56px; padding: 14px; border: 1px solid var(--jim-surface); border-radius: var(--ds-input-radius, var(--jim-radius)); background: var(--jim-surface); color: var(--jim-text); font: inherit; }
+body.tracy .jim-search-form .wp-block-search__button { margin: 0; padding: 17px 32px; border: 1px solid var(--ds-c-accent, var(--jim-primary)); border-radius: var(--ds-btn-radius, var(--jim-radius)); background: var(--ds-c-accent, var(--jim-primary)); color: var(--ds-c-accent-on, #ffffff); font-weight: 500; line-height: 20px; cursor: pointer; }
+body.tracy .jim-side-card { margin: 0 0 32px; padding: 32px; border: 1px solid var(--jim-line); border-radius: var(--jim-radius); background: var(--jim-raised); }
+body.tracy .jim-side-card .jim-side__title { margin: 0 0 32px; font-size: 24px; line-height: 1.2; letter-spacing: -0.24px; }
+body.tracy .jim-account-side .input-group { display: flex; margin: 0 0 16px; }
+body.tracy .jim-account-side .form-control { flex: 1 1 auto; width: 1%; min-width: 0; box-sizing: border-box; height: 56px; padding: 14px; border: 1px solid var(--jim-surface); border-radius: var(--ds-input-radius, var(--jim-radius)) 0 0 var(--ds-input-radius, var(--jim-radius)); background: var(--jim-surface); color: var(--jim-text); font: inherit; }
+body.tracy .jim-account-side .input-group-text { display: flex; align-items: center; justify-content: center; width: 48px; border-radius: 0 var(--ds-input-radius, var(--jim-radius)) var(--ds-input-radius, var(--jim-radius)) 0; background: var(--ds-c-accent, var(--jim-primary)); color: var(--ds-c-accent-on, #ffffff); font-size: 14px; }
+body.tracy .jim-account-side .form-check { margin: 0 0 16px; padding: 0 0 0 24px; }
+body.tracy .jim-account-side .form-check-input { float: left; width: 16px; height: 16px; margin: 4px 4px 0 -24px; border: 1px solid var(--jim-line); border-radius: var(--ds-input-radius, 4px); background: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-bg, #28354f)); appearance: none; -webkit-appearance: none; }
+body.tracy .jim-account-side .btn { margin: 0 0 16px; }
+body.tracy .jim-account-side__links { margin: 0; padding: 0; list-style: none; }
+body.tracy .jim-account-side__links li { margin: 0 0 8px; }
+body.tracy .jim-account-side__links a { color: var(--jim-text); }
+body.tracy .jim-account-side__links .jim-fa { font-size: 12px; }
+body.tracy .jim-fa--chevron { margin-left: 4px; }
+body.tracy .jim-fa--chevron::before { content: '\f054'; }
+
+/* Bootstrap grid on content pages: a row pulls out by the gutter (the columns put it back), and `ps-lg-5` is 48 px. */
+/* WordPress's constrained layout centres every child at the content width with !important margins; a Bootstrap row is wider than the text column. */
+body.tracy .jim-prose .wp-block-group.row { max-width: none !important; margin-left: -16px !important; margin-right: -16px !important; }
+@media (min-width: 992px) { body.tracy .jim-prose .ps-lg-5 { padding-left: 48px; } }
+
+/* The source's component blocks on the Typography page: 64 px above and below, a 2 px rule under (measured). */
+body.tracy .jim-prose .t4-typo-example { padding-block: 64px; border-bottom: 2px solid var(--jim-line); }
+
+@media (max-width: 575.98px) { body.tracy .jim-contactpage__map { height: 350px; } }
+@media (min-width: 992px) and (max-width: 1199.98px) { body.tracy .jim-contactpage { grid-template-columns: minmax(0, 1fr) 336px; } }
+
+/* Contact form: 16 px between rows (a paragraph holding only a control has no line of its own), first name and email stacked under 576 px,
+   the consent boxes drawn like the source's form-check, and the arrow on the Send button. */
+body.tracy .jim-contactpage__main .wpcf7-form > p:has(.wpcf7-form-control-wrap > :is(input:not([type='checkbox']), textarea)) { line-height: 0; }
+body.tracy .jim-contactpage__main .wtb-form__field br { display: none; }
+body.tracy .jim-contactpage__main .wpcf7-form :is(input:not([type='checkbox']), textarea) { margin: 0; line-height: 25.6px; }
+@media (max-width: 767.98px) {
+  body.tracy .jim-contactpage__main .wpcf7-form { grid-template-columns: 1fr; }
+}
+body.tracy .jim-contactpage__main :is(.wpcf7-acceptance, .wpcf7-checkbox) .wpcf7-list-item { margin: 0; }
+body.tracy .jim-contactpage__main :is(.wpcf7-acceptance, .wpcf7-checkbox) label { display: flex; align-items: flex-start; gap: 8px; margin: 0; font-weight: 400; color: var(--jim-text); }
+body.tracy .jim-contactpage__main :is(.wpcf7-acceptance, .wpcf7-checkbox) input[type='checkbox'] {
+  flex: none; width: 16px; height: 16px; margin: 4px 0 0; border: 1px solid var(--jim-line); border-radius: var(--ds-input-radius, 4px); background: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-bg, #28354f));
+  appearance: none; -webkit-appearance: none; cursor: pointer;
+}
+body.tracy .jim-contactpage__main :is(.wpcf7-acceptance, .wpcf7-checkbox) input[type='checkbox']:checked { border-color: var(--ds-c-accent, var(--jim-primary)); background: var(--ds-c-accent, var(--jim-primary)) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") center / contain no-repeat; }
+body.tracy .jim-contactpage__main .wpcf7-form input.wpcf7-submit {
+  padding-right: 56px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 8h12M9 3l5 5-5 5'/%3e%3c/svg%3e");
+  background-repeat: no-repeat; background-position: right 24px center; background-size: 16px;
+}
+body.tracy .jim-contactpage__main .wpcf7-form { row-gap: 0; }
+body.tracy .jim-contactpage__main .wpcf7-form > p:has(:is(.wpcf7-acceptance, .wpcf7-checkbox)) { margin-top: 16px; }
+body.tracy .jim-contactpage__main .wpcf7-form > p:has(:is(.wpcf7-acceptance, .wpcf7-checkbox)) { margin-top: 20px; }
+body.tracy .jim-contactpage__main .wpcf7-form > p:has(input[name='acceptance-1']) { margin-top: 13px; }
+body.tracy .jim-contactpage__main .wpcf7-form > p:has(input[name='send-a-copy-to-yourself']) { margin-top: 20px; }
+body.tracy .jim-contactpage__main .wpcf7-form > p:has(.wpcf7-submit) { margin-top: 62px; }
+
+/* The offline page's notice box: a #28354f fill in dark (light has none). */
+html[data-theme='dark'] body.tracy .jim-prose .well { background: var(--ds-c-surface, #28354f); }
+@media (prefers-color-scheme: dark) { html:not([data-theme]) body.tracy .jim-prose .well { background: var(--ds-c-surface, #28354f); } }
+
+/* A Send button that cannot be used right now reads as such (Contact Form 7 disables it while its form is sending or, with
+   acceptance-as-validation off, until the consent is ticked): dimmed and not clickable-looking. Release 1.0.1 validates on
+   submit instead, so this is the safety net for the sending state. */
+body.tracy .wpcf7 :is(input.wpcf7-submit, button[type='submit']):disabled { opacity: 0.5; cursor: not-allowed; }

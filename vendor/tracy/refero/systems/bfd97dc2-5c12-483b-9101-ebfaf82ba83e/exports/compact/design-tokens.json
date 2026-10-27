@@ -1,0 +1,69 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#101010",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, primary dark surface"
+    },
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Maximum depth, nav borders, icon outlines, image masks"
+    },
+    "carbon": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Carbon — Card surfaces, elevated panels one step above canvas"
+    },
+    "graphite": {
+      "$value": "#272727",
+      "$type": "color",
+      "$description": "Graphite — Hover/active surface lift, tertiary borders, input fields"
+    },
+    "smoke": {
+      "$value": "#403f3f",
+      "$type": "color",
+      "$description": "Smoke — Dividers, secondary surface tier, muted container backgrounds"
+    },
+    "ash": {
+      "$value": "#bababa",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, secondary nav labels, disabled copy"
+    },
+    "snow": {
+      "$value": "#fffafa",
+      "$type": "color",
+      "$description": "Snow — Primary text, headings, filled CTA background, hairline borders — the only non-structural color in the system"
+    }
+  },
+  "font": {
+    "review-condensed": {
+      "$value": "Review Condensed",
+      "$type": "fontFamily",
+      "$description": "Display headlines only — the 128px hero, 72px section openers. Ultra-condensed 900 weight with 0.8 line-height creates a compressed, manifesto-grade statement. The near-zero line-height at 128px is the signature: letters almost collide vertically, giving the type a carved-into-stone density. Free substitute: Anton or Bebas Neue at equivalent weight."
+    },
+    "review": {
+      "$value": "Review",
+      "$type": "fontFamily",
+      "$description": "Buttons, nav labels, subheadings, card titles, emphasized body. At 14–18px it functions as UI text with weight 700; at 32px weight 900 it serves as in-section headings. Slight negative tracking at small sizes (-0.01em) tightens the UI, while +0.02em at 32px opens the heading. Free substitute: Archivo Black or Space Grotesk Bold."
+    },
+    "kalice": {
+      "$value": "Kalice",
+      "$type": "fontFamily",
+      "$description": "Body copy, nav items, and any all-caps micro-text. The 0.04–0.06em letter-spacing is the technical-fingerprint detail — at 12px it reads as terminal/monospace-adjacent labels (think captcha, ticker, or command line), and at 16px it becomes technical documentation prose. Free substitute: JetBrains Mono or IBM Plex Mono."
+    },
+    "times-system": {
+      "$value": "Times (system)",
+      "$type": "fontFamily",
+      "$description": "Fallback body — appears as default browser rendering where custom faces haven't loaded. Do not design against this; treat as graceful degradation only."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bitcoinos.build",
+      "siteName": "BitcoinOS",
+      "extractedAt": "2026-06-03T21:35:50.589Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-press-ink: #252422;
+  --color-bone-paper: #e2e0d9;
+  --color-pure-carbon: #000000;
+
+  /* Typography */
+  --font-eg-metaphor: 'EG Metaphor', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-s85: 'S85', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

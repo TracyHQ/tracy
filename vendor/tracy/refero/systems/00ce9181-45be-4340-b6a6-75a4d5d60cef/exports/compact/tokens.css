@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-porcelain: #ffffff;
+  --color-charcoal: #1d1d1d;
+  --color-hairline: #e5e7eb;
+  --color-smoke: #737373;
+  --color-ash: #a3a3a3;
+  --color-mist: #f3f4f6;
+  --color-graphite: #5e5e5e;
+  --color-bone: #cacaca;
+  --color-onyx: #000000;
+  --color-slate: #6b7280;
+  --color-moss: #569d5f;
+  --color-signal-blue: #2563eb;
+
+  /* Typography — Font Families */
+  --font-suisseintl: 'SuisseIntl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-monospace: 'ui-monospace', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-intercom-sans: 'Intercom Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-intercom-font: 'intercom-font', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

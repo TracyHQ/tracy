@@ -1,0 +1,10 @@
+:root {
+  /* Colors */
+  --color-press-black: #000000;
+  --color-bone-white: #ffffff;
+  --color-smoke-gray: #cccccc;
+
+  /* Typography — Font Families */
+  --font-standard: 'Standard', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

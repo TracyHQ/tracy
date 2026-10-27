@@ -1,0 +1,18 @@
+{
+  "release.blurb": "Alles, was vor und nach dem Erscheinen einer neuen Version zu prüfen ist. Zeilen mit {ok}, {fix}, {check} oder {note} misst dieser Server bei jedem Laden; den Rest haken Sie von Hand ab. Haken bleiben in diesem Browser, nur für dieses release.",
+  "release.checkAgain": "Erneut prüfen",
+  "release.done": "{done} / {total} erledigt",
+  "release.footer": "Gemessen am {when} auf {origin}. Die Umgebung von tracy-host und tracy-dsh ist für diesen Server nicht sichtbar: Diese Zeilen nennen den auszuführenden Befehl.",
+  "release.local": "Dies ist ein lokaler Stand: Hier muss nichts behoben werden. Die Checkliste gilt für dev, staging und production, wo eine fehlende Variable wirklich fehlt.",
+  "release.onlyOpen": "Nur Unerledigtes",
+  "release.readFailed": "Die Checkliste konnte nicht gelesen werden.",
+  "release.state.fail": "Beheben",
+  "release.state.info": "Hinweis",
+  "release.state.pass": "OK",
+  "release.state.warn": "Prüfen",
+  "release.title": "Release-Checkliste",
+  "release.toCheck_one": "{count} zu prüfen",
+  "release.toCheck_other": "{count} zu prüfen",
+  "release.toFix_one": "{count} zu beheben",
+  "release.toFix_other": "{count} zu beheben"
+}

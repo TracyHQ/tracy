@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+  "status": "complete",
+  "name": "Koox",
+  "url": "https://styles.refero.design/style/d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+  "sourceWebsite": "https://koox.co.uk",
+  "extractedAt": "2026-06-03T20:16:10.877Z",
+  "capturedAt": "2026-10-08T05:17:49.092814+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Brutalist cold-press lab — white tile, sticker print, stencil voice.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1e57f29f-89e5-40b4-a326-7864d405e31d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/9c78a11b-0db5-4bd7-82f3-fa8557e91266.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/fd47bd28-6040-4fc8-b240-38066b4070be.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/0b0e8b5d-1d91-442b-b489-4fd4ef5a6356.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0db21e9e-87c5-46d2-912b-7543cc82bfda.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c0412d5fe192e87fb11f765b57ad65dff81f91c520ee37ce722a74fdc44ed1f0",
+      "bytes": 18680
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a5f5767f3844dfa9c04f9b2af7b19b53bd5141a413c0b14d96138945345d94ae",
+      "bytes": 154093
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "12cb36861cd48528ca3448c2e046b48866a649181a7062bc4847fa49c5d21132",
+      "bytes": 16509
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a0ad35d6b808b166c75312b24058101e3002b6e7885535dc9d967b58f816e2e9",
+      "bytes": 13654
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "a975d0f1735def76cd495afc2ae5be1d1e381ca85ad06146d80694a57072eaf4",
+      "bytes": 12086
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "104db206ad912e1adb19bbfa4601e27974b685575bf2d637f45b58bf016d0ad3",
+      "bytes": 3298
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b30e80b3b928a67523b8e0128e7944d2a593ee9a98e69bbf2bd3bfec40790dbc",
+      "bytes": 489
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "98a1593270a7b64c1fe5a8b19159f8aac69648c2891a5ea06f2c48c2ff600b84",
+      "bytes": 506
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "2131ae2a79d875c1d480adb0a45775bec953fe955b1a379c4bf489fb607e1a13",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8960aafe20ba12aea6d9925fe6699bbd2660d42e32fc0278efd2bbba7a1f5a1a",
+      "bytes": 44726
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2cacffd24db14a842f6161eb6db3e9fdbd6b864c418f4a9ad701d06eb0c73d6d",
+      "bytes": 23930
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d039bacd08e615f95f14ba3bafe3495b73e29e8038327b32289e29bc06074b77",
+      "bytes": 56766
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "28d5f9cc41fa2d8b410659000a399765d9b56a7aece48002fcbd1c4a3aa246f4",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "430aae797302448a107383110caa6b1d3f6ee5a0e82e494b5a69d20cc47297d6",
+      "bytes": 1485
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5a4d1f4ccedcefa5dd203837818d2e1a3f60f313ae6d49fbf0d86c0b3c6f5e8a",
+      "bytes": 2089
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "2186dddd-60ee-4898-b11d-88483daf477e",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "35ae81e1-273c-43d7-9bcd-ea186d062c13",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "66eb1c37-a8e5-4e6c-b17f-a75385b462e7",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "7976704d-549b-4ba6-9a0f-c792766a9df3",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "8efa9029-b39c-48db-a8ec-c97c645a7a58",
+    "a6bf8730-6515-4a47-9d5f-927e1e0c67d5",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

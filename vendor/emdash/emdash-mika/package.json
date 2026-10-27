@@ -1,0 +1,185 @@
+{
+  "name": "@bnomei/emdash-mika",
+  "version": "0.1.1",
+  "description": "Agent-ready commerce primitives for content-led storefronts.",
+  "keywords": [
+    "agentic-commerce",
+    "astro",
+    "cart",
+    "cms",
+    "commerce",
+    "ecommerce",
+    "emdash",
+    "emdash-plugin",
+    "headless-commerce",
+    "subscription",
+    "typescript"
+  ],
+  "homepage": "https://github.com/bnomei/emdash-mika#readme",
+  "bugs": {
+    "url": "https://github.com/bnomei/emdash-mika/issues"
+  },
+  "license": "MIT",
+  "author": "Bruno Meilick <b@bnomei.com> (https://bnomei.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bnomei/emdash-mika.git"
+  },
+  "files": [
+    "dist",
+    "src/templates"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./acp": {
+      "types": "./dist/acp.d.mts",
+      "import": "./dist/acp.mjs"
+    },
+    "./agent": {
+      "types": "./dist/agent.d.mts",
+      "import": "./dist/agent.mjs"
+    },
+    "./admin": {
+      "types": "./dist/admin.d.mts",
+      "import": "./dist/admin.mjs"
+    },
+    "./astro": {
+      "types": "./dist/astro.d.mts",
+      "import": "./dist/astro.mjs"
+    },
+    "./astro-actions": {
+      "types": "./dist/astro-actions.d.mts",
+      "import": "./dist/astro-actions.mjs"
+    },
+    "./client": {
+      "types": "./dist/api/client.d.mts",
+      "import": "./dist/api/client.mjs"
+    },
+    "./email": {
+      "types": "./dist/email.d.mts",
+      "import": "./dist/email.mjs"
+    },
+    "./provider": {
+      "types": "./dist/provider.d.mts",
+      "import": "./dist/provider.mjs"
+    },
+    "./react": {
+      "types": "./dist/react.d.mts",
+      "import": "./dist/react.mjs"
+    },
+    "./server": {
+      "types": "./dist/server.d.mts",
+      "import": "./dist/server.mjs"
+    },
+    "./server/ports": {
+      "types": "./dist/server/ports.d.mts",
+      "import": "./dist/server/ports.mjs"
+    },
+    "./server/maintenance": {
+      "types": "./dist/server/maintenance.d.mts",
+      "import": "./dist/server/maintenance.mjs"
+    },
+    "./server/email": {
+      "types": "./dist/server/email.d.mts",
+      "import": "./dist/server/email.mjs"
+    },
+    "./stripe": {
+      "types": "./dist/stripe.d.mts",
+      "import": "./dist/stripe.mjs"
+    },
+    "./templates/astro/*": "./src/templates/astro/*",
+    "./types": {
+      "types": "./dist/types/index.d.mts",
+      "import": "./dist/types/index.mjs"
+    },
+    "./types/primitives": {
+      "types": "./dist/types/primitives-entry.d.mts",
+      "import": "./dist/types/primitives-entry.mjs"
+    },
+    "./types/aggregates": {
+      "types": "./dist/types/aggregates.d.mts",
+      "import": "./dist/types/aggregates.mjs"
+    },
+    "./types/documents": {
+      "types": "./dist/types/documents.d.mts",
+      "import": "./dist/types/documents.mjs"
+    },
+    "./types/operational": {
+      "types": "./dist/types/operational.d.mts",
+      "import": "./dist/types/operational.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "npm run build:pack -- --clean",
+    "build:pack": "vp pack src/index.ts src/acp.ts src/agent.ts src/admin.ts src/astro.ts src/astro-actions.ts src/api/client.ts src/email.ts src/provider.ts src/react.ts src/server.ts src/server/ports.ts src/server/maintenance.ts src/server/email.ts src/stripe.ts src/types/index.ts src/types/primitives-entry.ts src/types/aggregates.ts src/types/documents.ts src/types/operational.ts --format esm --dts --tsconfig tsconfig.json",
+    "precheck": "npm run build",
+    "check": "vp check .",
+    "pack:check": "npm run build:pack -- --clean --publint",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run check && npm run typecheck && npm run test && npm run templates:check && npm run pack:check && npm run types:check",
+    "release:check": "node scripts/check-release.mjs",
+    "templates:check": "astro check --root test/fixtures/astro-template-check",
+    "test": "vp test run test/*.test.ts && tsc -p test/tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "types:check": "attw --pack . --profile esm-only --no-summary && tsc -p test/package-exports.tsconfig.json"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.3",
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/react": "^6.0.2",
+    "@cloudflare/kumo": "^2.5.2",
+    "@libsql/kysely-libsql": "^0.4.1",
+    "@phosphor-icons/react": "^2.1.10",
+    "@types/react": "^19.2.7",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "astro": "^7.2.0",
+    "emdash": "^0.22.0",
+    "kysely": "^0.28.0",
+    "publint": "^0.3.21",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.7",
+    "typescript": "^6.0.3",
+    "vite-plus": "^0.1.24"
+  },
+  "peerDependencies": {
+    "@cloudflare/kumo": "^2.5.2",
+    "@phosphor-icons/react": "^2.1.10",
+    "astro": "^7.0.0",
+    "emdash": ">=0.22.0 <1.0.0",
+    "react": "^18.3.0 || ^19.0.0",
+    "react-dom": "^18.3.0 || ^19.0.0",
+    "stripe": ">=16.0.0 <21.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@cloudflare/kumo": {
+      "optional": true
+    },
+    "@phosphor-icons/react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "stripe": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "npm@11.16.0"
+}

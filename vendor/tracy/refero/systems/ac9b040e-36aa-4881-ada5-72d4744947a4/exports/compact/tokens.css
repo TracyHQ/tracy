@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-bone-white: #ffffff;
+  --color-paper-mist: #f4f4f4;
+  --color-sage-paper: #dbded5;
+
+  /* Typography — Font Families */
+  --font-kinfolk-serif-text: 'Kinfolk-Serif-Text', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-kinfolk-serif-display: 'Kinfolk-Serif-Display', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-kinfolk-serif-deck: 'Kinfolk-Serif-Deck', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-kinfolk-sans: 'Kinfolk-Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

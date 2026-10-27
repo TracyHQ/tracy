@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-fiverr-green: #1dbf73;
+  --color-forest-stage: #003912;
+  --color-carbon: #222325;
+  --color-graphite: #62646a;
+  --color-paper: #ffffff;
+  --color-mist: #dadbdd;
+  --color-fog: #c5c6c9;
+  --color-slate: #404145;
+  --color-smoke: #74767e;
+
+  /* Typography */
+  --font-macan: 'Macan', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

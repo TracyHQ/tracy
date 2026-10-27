@@ -1,0 +1,5 @@
+# Inserts the tracy-wp row; the user's patch afterwards only edits it, never inserts it again.
+# (Inserting twice = a second row with the same id = dsh REFUSES to boot.)
+- insert:
+    - id: tracy-webroot-read
+      name: '@tracy/dsh-webroot-read'

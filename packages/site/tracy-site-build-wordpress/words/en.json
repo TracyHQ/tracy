@@ -1,0 +1,40 @@
+{
+  "header": "Build on {site}",
+  "question": "\"{task}\" failed at step {n} of {total}. Try that step again?",
+  "retry": "Retry this step",
+  "retryWhy": "Run it again from where it stopped.",
+  "leave": "Leave it for now",
+  "leaveWhy": "Keep the site as it is. Retry is still in the Build tab.",
+  "signIn": "Sign in again, then retry",
+  "signInWhy": "This step was refused because nobody was signed in behind it. Reload the page, then choose this.",
+  "stages": {
+    "check": "Check the site",
+    "theme": "Install the theme",
+    "style": "Apply the look",
+    "copy": "Write your words",
+    "seed": "Lay out the pages",
+    "shot": "Take a picture",
+    "skipped": "{task} (skipped)",
+    "plugin": "Install the translation plugin",
+    "copyLang": "Write your words in {lang}",
+    "seedPages": "Lay out {n} pages",
+    "styleWaiting": "Apply the look (Tracy does this one)"
+  },
+  "progress": {
+    "covers": "{done} of {total} pictures",
+    "posts": "writing the blog",
+    "sections": "writing the page"
+  },
+  "langNameLower": false,
+  "form.designBuildFromBase": "{requested} needs a new Joomla template. We will build its design from the configured base; the website is complete only after design review.",
+  "provision": {
+    "creating": "Create the site",
+    "fetching": "Fetch the site files",
+    "baseline": "Record the starting point of the files",
+    "database": "Start the database",
+    "importing": "Import the database",
+    "configuring": "Configure the site",
+    "failed": "Site setup stopped: {detail}. Press Try again in the Build tab.",
+    "failedBare": "Site setup stopped. Press Try again in the Build tab."
+  }
+}

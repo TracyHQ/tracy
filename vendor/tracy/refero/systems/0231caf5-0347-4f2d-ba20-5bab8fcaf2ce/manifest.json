@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0231caf5-0347-4f2d-ba20-5bab8fcaf2ce",
+  "status": "complete",
+  "name": "TeePublic",
+  "url": "https://styles.refero.design/style/0231caf5-0347-4f2d-ba20-5bab8fcaf2ce",
+  "sourceWebsite": "https://unfurproject.com",
+  "extractedAt": "2026-06-03T20:24:41.234Z",
+  "capturedAt": "2026-10-08T05:07:47.680671+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Indie creator marketplace on white paper. A clean gallery wall where artist designs sit on bright cards, one signature blue links it all together, and the whole thing moves at the speed of discovery.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/968ccbba-43f5-44d5-862a-e81e285069c1.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "088af4bbd2f1e90bbbe4c2697dd40a4ea30948833604e40f70005766f7a0db58",
+      "bytes": 23263
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fe3df3652533aa5c78405e280e0031b51daeac2224482874a798e23c0f3d8a7c",
+      "bytes": 177487
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "bc7c0cda02a4e38209755dd2d9d8d26fa779c7a5e4334eb9afe20a1ba51b24ea",
+      "bytes": 19128
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "73d6b2ddac26040eaf93b0863c59c1041a7211c05df966203470e131407044f3",
+      "bytes": 19181
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "9afcaa1102c4d89af5bc2ddf638b1ad1b06ad97970061bc1f33a069868873e48",
+      "bytes": 14924
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "48bd7da6d1470cd563cb605a0064b3fe0d186f3563aea00addbadb64fdd24442",
+      "bytes": 4202
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1d66cdff0b449182d154f290392fc0675752aa843f312a6b44f548cde2d636ac",
+      "bytes": 813
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "992d3228dd4533416d9bfce863d5375128e4bdd6ab4170280191895cd2ed7674",
+      "bytes": 830
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "44c7f9e0beb504142e81f0641ff403a8e677ef8f62a1b41f12f6d66c97753910",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b0b953b23d331d163691f9b71ed48f1ae3c666ed36b020e4833540041b46f41a",
+      "bytes": 46612
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0848e8e9a7221b75a24dfe4e6f74c1e64ec54e4456626f8fb525db30fba0c94e",
+      "bytes": 24365
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a9042bcf07d421e2b259fd9b0d2dc9b9e6004453b891312b23bd997c0f415e18",
+      "bytes": 67079
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c2a05406574e67d185b88305d4d002754bf8dfd1eb297b5b7160e53530f701f4",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ebc7d58a18d1d5a2f9626dd6c42f93f4797509fd5b6daefcae8c4e6bd01698d9",
+      "bytes": 1985
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f961049f7e2173120033e083c7fed67b464cb163b60cd8046f0529191585dac8",
+      "bytes": 2611
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0231caf5-0347-4f2d-ba20-5bab8fcaf2ce",
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "1b2aaf14-43b0-4c23-bd25-1d49924fe85e",
+    "342f1c3b-a123-49b6-a980-3491bc7793db",
+    "36ab47c3-3d47-42a5-af2e-1760bc348bcd",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+    "4fa67bd1-f01d-454a-b522-4a0359ff9815",
+    "6bc9448b-5d39-4aba-9007-25c7a2aedbad",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "a80507cb-afda-46dd-a2b9-ba91f3a78e78",
+    "b8ce0a90-40c6-4518-940c-8c97ccf9c1a0",
+    "d7096101-d33c-43b8-8b0b-d9dfff802db2",
+    "e00519a1-7b8a-4171-b49b-550c64a57d3c",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b"
+  ]
+}

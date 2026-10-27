@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>{{t:mail.signInHeading}}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;padding:0;background:#faf7f4;-webkit-text-size-adjust:100%}
+    a{color:#a3462a}
+    @media (max-width:600px){.mail-pad{padding-left:24px!important;padding-right:24px!important}.mail-title{font-size:30px!important}.mail-code{font-size:34px!important;letter-spacing:5px!important}}
+  </style>
+</head>
+<body style="margin:0;padding:0;background:#faf7f4;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#faf7f4;">{{t:mail.signInPreheader}}&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#faf7f4;">
+    <tr><td align="center" style="padding:32px 12px;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;">
+        <tr><td background="https://tracy.ai/assets/bg.jpg" bgcolor="#f3dccd" class="mail-pad" style="background:#f3dccd url('https://tracy.ai/assets/bg.jpg') center/cover no-repeat;border-radius:16px 16px 0 0;padding:28px 40px 26px;">
+          <img src="https://tracy.ai/assets/logo.png" width="120" alt="Tracy" style="display:block;border:0;width:120px;height:auto;">
+        </td></tr>
+        <tr><td bgcolor="#fffdfb" class="mail-pad" style="background:#fffdfb;border:1px solid #e9e1dc;border-top:0;border-radius:0 0 16px 16px;padding:36px 40px 34px;">
+          <p style="margin:0 0 14px;font-family:Inter,Arial,Helvetica,sans-serif;font-size:13px;line-height:1;font-weight:600;color:#a3462a;"><span style="display:inline-block;background:#f8eae5;border-radius:999px;padding:7px 12px;">&#9679;&nbsp; {{t:mail.signInBadge}}</span></p>
+          <h1 class="mail-title" style="margin:0 0 18px;font-family:system-ui,BlinkMacSystemFont,-apple-system,'Segoe UI',Roboto,'Noto Sans','PingFang SC','Microsoft YaHei',sans-serif;font-size:34px;line-height:1.15;font-weight:600;color:#1a1715;">{{t:mail.signInHeading}}</h1>
+          <p style="margin:0 0 18px;font-family:Inter,Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#2b2522;">{{t:mail.signInBody}}</p><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 18px;background:#faf7f4;border:1px solid #e9e1dc;border-radius:12px;"><tr><td align="center" style="padding:22px 18px;"><span class="mail-code" style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:38px;line-height:1.2;font-weight:600;letter-spacing:7px;color:#1a1715;">{{code}}</span></td></tr></table><p style="margin:0 0 24px;font-family:Inter,Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:#6b625d;">{{t:mail.signInValid}}</p><p style="margin:0;padding:14px 16px;background:#f8f0ec;border-radius:10px;font-family:Inter,Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:#5c534e;"><strong style="color:#1a1715;">{{t:mail.signInNotRequested}}</strong> {{t:mail.signInNotRequestedRest}}</p>
+        </td></tr>
+{{brandFooter}}
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

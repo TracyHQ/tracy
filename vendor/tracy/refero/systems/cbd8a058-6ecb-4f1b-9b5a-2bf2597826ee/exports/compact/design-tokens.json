@@ -1,0 +1,109 @@
+{
+  "color": {
+    "abyssal-ink": {
+      "$value": "#0b2330",
+      "$type": "color",
+      "$description": "Abyssal Ink — Primary text, nav links, borders, icon strokes — the workhorse near-black with a whisper of navy. Carries every reading surface in the system"
+    },
+    "bone": {
+      "$value": "#faf9f8",
+      "$type": "color",
+      "$description": "Bone — Page canvas, card surfaces, button text on dark fills — a warm off-white, never pure #fff"
+    },
+    "obsidian": {
+      "$value": "#141312",
+      "$type": "color",
+      "$description": "Obsidian — Headings, display text, strong UI fills — slightly warmer than Abyssal, used where headings need a touch more warmth"
+    },
+    "espresso": {
+      "$value": "#272420",
+      "$type": "color",
+      "$description": "Espresso — Filled button background (primary action), dark surface sections — the primary CTA color, a warm near-black"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Absolute dark for SVG fills and the strictest contrast moments — used sparingly where true black is needed"
+    },
+    "ash": {
+      "$value": "#f3f3f3",
+      "$type": "color",
+      "$description": "Ash — Card surfaces, badge backgrounds, subtle elevated panels — the first step up from the canvas"
+    },
+    "mist": {
+      "$value": "#e8e7e6",
+      "$type": "color",
+      "$description": "Mist — Borders, dividers, secondary surface fills — a warm gray that defines edges without drawing attention"
+    },
+    "vapor": {
+      "$value": "#dddcd9",
+      "$type": "color",
+      "$description": "Vapor — Lightest visible border, ghost button outlines — the quietest edge in the system"
+    },
+    "pebble": {
+      "$value": "#c4c4bc",
+      "$type": "color",
+      "$description": "Pebble — Muted body text, subdued metadata, tertiary information"
+    },
+    "fog": {
+      "$value": "#9a9a91",
+      "$type": "color",
+      "$description": "Fog — Disabled text, placeholder text, very subdued heading accents"
+    },
+    "smoke": {
+      "$value": "#8f8d8b",
+      "$type": "color",
+      "$description": "Smoke — Mid-tone surface fills, pressed button states"
+    },
+    "graphite": {
+      "$value": "#6e6d6a",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text, subtle borders, icon strokes in secondary contexts"
+    },
+    "slate": {
+      "$value": "#575653",
+      "$type": "color",
+      "$description": "Slate — Body text, nav borders, link underlines — the mid-neutral for readable secondary information"
+    },
+    "coffee": {
+      "$value": "#322e2a",
+      "$type": "color",
+      "$description": "Coffee — Deep dark surface, image borders, the second-darkest fill — used in footer-adjacent surfaces and image frames"
+    },
+    "dusk": {
+      "$value": "#efdcb6",
+      "$type": "color",
+      "$description": "Dusk — Gradient start — warm golden, the opening tone of the signature sunset gradient"
+    },
+    "ember": {
+      "$value": "#eba370",
+      "$type": "color",
+      "$description": "Ember — Gradient mid-stop — coral-orange transition in the signature sunset gradient"
+    },
+    "twilight": {
+      "$value": "#7d7a8f",
+      "$type": "color",
+      "$description": "Twilight — Gradient end — muted purple-gray closing the sunset gradient"
+    }
+  },
+  "font": {
+    "tt-commons-pro": {
+      "$value": "TT Commons Pro",
+      "$type": "fontFamily",
+      "$description": "Functional UI typeface — nav links, button labels, badge text, small labels. Single weight 400 is a deliberate choice: the interface whispers instead of shouts. Used at 16-18px for UI chrome and at 40px for one rare editorial moment."
+    },
+    "abc-diatype": {
+      "$value": "ABC Diatype",
+      "$type": "fontFamily",
+      "$description": "Editorial typeface — display headings at 40px weight 500, section headings at 32px weight 500, subheadings at 24px weight 400, body at 16px. The geometric construction gives the system its quiet authority; the weight 500 (not 600-700) for headings is the anti-convention choice that defines Sprig's restraint."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sprig.com",
+      "siteName": "Sprig",
+      "extractedAt": "2026-06-03T20:53:59.378Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "REG-018",
+  "kind": "fix",
+  "title": "Create a backup pressed before the backups answer drafts, counts and numbers nothing until they do, and its untouched notes follow the draft — to empty when nothing is new",
+  "pr": 812,
+  "area": "site-changes/backup",
+  "cms": ["wp"],
+  "needs": ["stand", "site:wp", "seat:owner", "model"],
+  "flaky_model": true,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, DSH, A and seat A's cookie COOKIE_A, api, pq (SELECT/WITH only). Case variables: S = qa1wp01.scv2.tracy.test (a WordPress site seat A owns); RUN=$(date +%s).",
+    "Unit seam: node --test --test-reporter=tap --test-name-pattern=\"REG-018|typed before the draft\" packages/site/tracy-site-tabs/test/e2e/changes-v2.test.mjs",
+    "Make the newest backup the newest thing: api a POST /api/sites/<S>/backup '{\"title\":\"REG-018-base-'$RUN'\",\"notes\":\"\"}' (HTTP 200 required, else BLOCKED note backup-refused); N = body.version.",
+    "Browser: run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; connect Playwright (repo copy node_modules/.pnpm/playwright@1.63.0) with chromium.connectOverCDP('http://127.0.0.1:9222'), never chromium.launch(); a NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}} with cookie {name:'tracy_sess', value:COOKIE_A, domain:COOKIE_DOMAIN, path:'/', httpOnly:true}; log every request whose method is POST and whose path ends with '/backup'; never close a page, a context or the browser.",
+    "Delay the backups: page.route((url) => new URL(url).pathname === '/api/sites/' + S + '/backups', async (route) => { await new Promise((r) => setTimeout(r, 6000)); await route.continue() }).",
+    "Scenario 1 — nothing new: open Site changes of S (README § Open Site changes, but do NOT wait for the backups); as soon as [data-create-backup] is visible, click it; wait (<= 5 s) for '[role=dialog] [data-draft]'. From the click until the dialog says 'Drafted from the ', sample the textarea every 100 ms and record MAX1 = the most lines it ever held (an empty value is 0 lines). Within the 6 s the backups are held, record P1 = {draft: the textarea's value, dialog: the trimmed text of [role=dialog]}. Then wait (<= 30 s) until the dialog's text contains 'Drafted from the '; record D1 = the textarea's value and H1 = the dialog text. Click the dialog's 'Cancel' button and wait until no [role=dialog] remains.",
+    "Scenario 2 — one change: send the chat (README § Send a chat message) 'Change the site tagline to exactly: REG-018-' + RUN + '. Use the content tools; do nothing else.' and wait for the turn to end (README); TURN = its turn_id. Find its row (README § Find a row in Site changes) li.tv-activity-event[data-event='<TURN>'] (absent → BLOCKED note agent-did-not-edit). page.reload(); wait for Site changes as before (not for the backups); click [data-create-backup] at once; record MAX2 and P2 the same way within the held 6 s; then wait (<= 30 s) for 'Drafted from the ' and record D2 = the textarea's value and H2 = the dialog text. Click 'Cancel' and wait until no [role=dialog] remains.",
+    "Record POSTS = the number of logged POST …/backup requests after the one made via the door."
+  ],
+  "expect": [
+    "The unit seam exits 0 and its TAP ends with '# fail 0'.",
+    "P1 and P2: draft === '' and the dialog text contains 'Reading what changed since the last backup…' and not 'Drafted from' (before the fix the dialog drafted every event 'since the start', counted them and showed a number from /changes while /backups was out).",
+    "MAX1 === 0 and MAX2 <= 1: the field never showed a longer draft than the one it ends with (before the fix it first filled with every event since the start, then collapsed).",
+    "Scenario 1: D1 === '' and H1 contains 'Drafted from the 0 changes since Backup <N>.' (before the fix the stale 'since the start' notes stayed in the textarea and were saved with the backup).",
+    "Scenario 2: H2 contains 'Drafted from the 1 changes since Backup <N>.'; D2 is exactly one line, starting '· ' and containing ' — Chat'.",
+    "POSTS === 0 (both dialogs closed without confirming)."
+  ],
+  "selectors": {
+    "createBackup": "[data-create-backup]",
+    "draft": "[role=dialog] [data-draft] (the notes textarea)",
+    "cancel": "[role=dialog] button with text 'Cancel'",
+    "backupsDoor": "GET /api/sites/:key/backups (delayed with page.route, 6 s)",
+    "turnRow": "li.tv-activity-event[data-event='<turnId>']"
+  },
+  "evidence": "packages/site/tracy-site-tabs/test/e2e/changes-v2.test.mjs (REG-018 tests: the fixture holds /backups with __holdBackups)",
+  "fence": "packages/core/tracy-core/src/site-tabs/ChangesView.tsx drafts, counts and numbers a new backup only once both the events and /backups have answered (sinceLatest, nextNumber from the backups); BackupDialogs.tsx CreateBackupDialog keeps untouched notes equal to the draft, empty included."
+}

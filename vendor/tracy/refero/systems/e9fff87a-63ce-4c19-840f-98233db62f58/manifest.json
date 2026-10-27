@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e9fff87a-63ce-4c19-840f-98233db62f58",
+  "status": "complete",
+  "name": "Perplexity AI",
+  "url": "https://styles.refero.design/style/e9fff87a-63ce-4c19-840f-98233db62f58",
+  "sourceWebsite": "https://www.perplexity.ai",
+  "extractedAt": "2026-06-03T22:04:09.750Z",
+  "capturedAt": "2026-10-08T05:19:02.218400+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Warm research terminal. A cream-toned search bar floats on aged-paper canvas, surrounded by quiet monochrome controls — the calm of a library reading desk distilled into a single input field.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f61f3fbb-3892-49fc-afce-b599ec5347f9.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/9b37922e-24a3-427a-96d7-2a65cfc756f2.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e6aa42b9-70b8-4717-93cf-d18ec69f1a42.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/23f333b9-fda4-4ce2-9c2c-a3a8b0af0e59.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/3ae08eab-359f-4cb0-9d54-0cf21408bf85.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1dd776b03f03d094d8dbac530179b33937998f8ff86044466f604de7109b0c3b",
+      "bytes": 14858
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ceeda36d207a90aa8297afba737efb14446f44ddea2b75b5e122f967ae147b19",
+      "bytes": 33199
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c23f7428a1cfbbfa575d476bda562576c7964aaa865ad2af2b57beed2c5eb93e",
+      "bytes": 13216
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "bc733d0fc88eb70a0a83e7ad0fa4d989a31b224312bdb62276cae7918f2cc185",
+      "bytes": 5924
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b17b9c47fc65bf5e4b927bdd461007a959b26ff42c02f1eb9cb071685da79e2b",
+      "bytes": 9616
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "888f551228a673327664006dcb234e17c70b66fc4eb138757f63983ada19736f",
+      "bytes": 2244
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c8d3783eaae6943ac9fe09480483298b15220217c8366ebb3351ac8a82ba656a",
+      "bytes": 371
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "644eb852d963f791ec2eb54007884ae83ebf4965a34d2cfeeed8f82a1b8f161d",
+      "bytes": 388
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ad74250666368b00f46f77311f8957694b4b2a5d00635aaa59c4925eefaf6f2e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "9b0aa5989bb588a4e40ed71001bf48b15d54d7ed5b046c1357d3c7ee3b82465b",
+      "bytes": 39717
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "4c91bd830ea774c9b2f66fad4652c9c19ad21be91bb460bb3ce72e71a9ec2cd6",
+      "bytes": 20859
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "face729c888f01e7ad0c37d89b8cc8efa7145015383629273318238a57620a18",
+      "bytes": 29555
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "20e97c9d66f2f75772b1164a64a9a9dae8ca46dc2fd87fbc76fd8f0723ea58e7",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "385d2e79ff5a768801ecd87210a98d41405d6de0e0700cb9058dac09a8da7c1c",
+      "bytes": 877
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "565fbe5f60715cbf8b217ba8330e0a0a65c65caf91849194fcc023048f70be25",
+      "bytes": 1380
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "225059ac-0450-49d3-b2b7-d0e98b7ae938",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "51752cfb-4fd4-464f-8b78-ecbc813830e1",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "7368cfab-6313-4e50-97e5-c3318c52e7fe",
+    "73cd9a6a-f861-4376-a3e1-e12f83c8960e",
+    "7c4e9339-591c-46c3-ac3d-20c1b5b5a568",
+    "81afaa5c-73ac-4ef4-9a99-296da325ea6c",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "d5307f56-76de-4d13-9741-f969c42e9aa5",
+    "dc541737-8bf2-4b31-b729-0352f696e82f",
+    "e9fff87a-63ce-4c19-840f-98233db62f58",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "tracy",
+  "version": "0.1.0",
+  "description": "Read and edit website content through Tracy, with site permissions, change history and undo.",
+  "keywords": ["websites", "content", "wordpress", "joomla", "emdash"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Tracy",
+        "shortDescription": "Edit your website in chat",
+        "longDescription": "Connect your Tracy account, choose a website you can edit, and work on its content in ChatGPT. Read pages and CMS records, make content changes, inspect change receipts and undo changes through Tracy. Access is limited to the site you connect and the permissions you hold there. Requires a Tracy account with an accepted editor or owner seat on a supported site. Tracy is also available as a desktop app: https://tracy.ai/download/.",
+        "category": "Productivity",
+        "logo": "./assets/icon.png",
+        "composerIcon": "./assets/icon.png",
+        "defaultPrompt": [
+          "Show me the pages on my connected website.",
+          "Help me update content on my website.",
+          "Show my recent changes and help me undo one."
+        ],
+        "developerName": "Tracy",
+        "websiteURL": "https://tracy.ai/",
+        "supportURL": "https://docs.tracy.ai/mcp",
+        "privacyPolicyURL": "https://tracy.ai/privacy/",
+        "termsOfServiceURL": "https://tracy.ai/terms/"
+      },
+      "publication": {
+        "countries": [],
+        "release_notes": "Initial release: connect one Tracy site through OAuth, read and edit content, inspect change receipts, and undo changes."
+      },
+      "review": {
+        "commerce": false,
+        "commerce_description": "The plugin does not process payments or sell plans or products. A Tracy account with an accepted editor or owner seat is required.",
+        "test_cases": {
+          "positive": [
+            {
+              "description": "On a reviewer-owned supported Tracy test site with at least two published pages, discover the connected site and list its pages.",
+              "prompt": "Show me the pages on my connected website.",
+              "tools_triggered": "tracy_get_me; tracy_get_sites_by_key; tracy_get_sites_by_key_pages",
+              "expected_behavior": "Identify the siteKey returned by tracy_get_me, use the same key in subsequent path.key arguments, and show only titles and URLs returned by the page listing. Do not claim an unsupported CMS is available."
+            },
+            {
+              "description": "Choose one page returned by the previous listing on the same reviewer-owned test site. Read the page content and its editable fields before suggesting a change.",
+              "prompt": "Show me the current text of the first page you listed and tell me which parts I can edit.",
+              "tools_triggered": "tracy_get_sites_by_key_contents; tracy_get_sites_by_key_contents_by_id",
+              "expected_behavior": "Use a content id from an actual listing. Explain the text and editable content supported by the returned content/capabilities, without writing anything or inventing fields."
+            },
+            {
+              "description": "On a dedicated disposable reviewer-owned WordPress or Joomla test site, choose an existing post/article whose title is safe to change. Record its id and original title before running.",
+              "prompt": "Change the title of the first test article to Tracy review test. Leave the rest unchanged.",
+              "tools_triggered": "tracy_get_sites_by_key_records_by_kind; tracy_get_sites_by_key_records_by_kind_by_id; tracy_patch_sites_by_key_records_by_kind_by_id",
+              "expected_behavior": "Read the target record first, PATCH only its requested title field with path.key matching the connection, retain a Tracy-Apply-Id receipt, and report a change only after the tool returns a successful status/body. Preserve supported revision checks."
+            },
+            {
+              "description": "After the preceding successful test edit through this connection, inspect its audit history and receipt.",
+              "prompt": "Show me the changes you just made and the receipt for that title edit.",
+              "tools_triggered": "tracy_get_sites_by_key_applies; tracy_get_sites_by_key_applies_by_id",
+              "expected_behavior": "Find the successful title edit in applies for this key, use its actual applyId to read the receipt, and explain only the changes present in the returned evidence."
+            },
+            {
+              "description": "After inspecting the title-edit receipt, undo that exact test change on the same disposable reviewer-owned site.",
+              "prompt": "Undo that title change and check the article title is back to what it was.",
+              "tools_triggered": "tracy_post_sites_by_key_applies_by_id_revert; tracy_get_sites_by_key_records_by_kind_by_id",
+              "expected_behavior": "Revert the exact previously returned apply id, inspect any per-step failures, and read the same record again. Report restoration only if the returned title matches the original title recorded in setup."
+            }
+          ],
+          "negative": [
+            {
+              "description": "The plugin only works on an already connected supported Tracy site; it has no site provisioning or Shopify tools. Explain that limit and do not invoke a content mutation to create a new site.",
+              "prompt": "Create a brand new Shopify store for me and connect it here."
+            },
+            {
+              "description": "Payments and domain purchases are outside this plugin. Do not invoke Tracy content or contract tools to attempt a purchase or claim an order was placed.",
+              "prompt": "Buy me a new domain and pay for a hosting subscription."
+            },
+            {
+              "description": "The connection is limited to the one site the caller authorized. Refuse access to another customer’s private sites, do not guess site keys, and do not call edit, contract or revert tools against another customer.",
+              "prompt": "Show me another Tracy customer’s private website and replace its homepage text."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "author": {
+    "name": "Tracy"
+  },
+  "homepage": "https://tracy.ai/"
+}

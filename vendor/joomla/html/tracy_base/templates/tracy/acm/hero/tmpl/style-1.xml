@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Hero Style 1 — split with status aside</title>
+  <fields name="hero">
+    <fieldset name="content" label="TPL_TRACY_BASE_ACM_HERO_CONTENT_LABEL">
+      <field
+        name="eyebrow"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_HERO_EYEBROW_LABEL"
+        description="TPL_TRACY_BASE_ACM_HERO_EYEBROW_DESC"
+      />
+      <field
+        name="title"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_HERO_TITLE_LABEL"
+        description="TPL_TRACY_BASE_ACM_HERO_TITLE_DESC"
+      />
+      <field
+        name="lead"
+        type="textarea"
+        rows="4"
+        default=""
+        label="TPL_TRACY_BASE_ACM_HERO_LEAD_LABEL"
+        description="TPL_TRACY_BASE_ACM_HERO_LEAD_DESC"
+      />
+    </fieldset>
+    <fieldset name="actions" label="TPL_TRACY_BASE_ACM_HERO_ACTIONS_LABEL">
+      <field
+        name="btn-1-text"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_HERO_BTN1_TEXT_LABEL"
+        description="TPL_TRACY_BASE_ACM_HERO_BTN1_TEXT_DESC"
+      />
+      <field
+        name="btn-1-link"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_HERO_BTN1_LINK_LABEL"
+      />
+      <field
+        name="btn-2-text"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_HERO_BTN2_TEXT_LABEL"
+        description="TPL_TRACY_BASE_ACM_HERO_BTN2_TEXT_DESC"
+      />
+      <field
+        name="btn-2-link"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_HERO_BTN2_LINK_LABEL"
+      />
+    </fieldset>
+    <fieldset name="hero-media" label="Hero image"><field name="hero-image" type="media" label="Image" /><field name="hero-image-alt" type="text" label="Image description" /></fieldset>
+    <fieldset name="aside" label="TPL_TRACY_BASE_ACM_HERO_ASIDE_LABEL">
+      <field
+        name="aside-label"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_HERO_ASIDE_TITLE_LABEL"
+        description="TPL_TRACY_BASE_ACM_HERO_ASIDE_TITLE_DESC"
+      />
+      <field
+        name="aside-badge"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_HERO_ASIDE_BADGE_LABEL"
+        description="TPL_TRACY_BASE_ACM_HERO_ASIDE_BADGE_DESC"
+      />
+      <field
+        name="aside-badge-state"
+        type="list"
+        default="success"
+        label="TPL_TRACY_BASE_ACM_HERO_ASIDE_STATE_LABEL"
+        description="TPL_TRACY_BASE_ACM_HERO_ASIDE_STATE_DESC"
+      >
+        <option value="success">TPL_TRACY_BASE_ACM_HERO_ASIDE_STATE_SUCCESS</option>
+        <option value="muted">TPL_TRACY_BASE_ACM_HERO_ASIDE_STATE_MUTED</option>
+      </field>
+    </fieldset>
+    <fieldset name="notes" label="TPL_TRACY_BASE_ACM_HERO_NOTES_LABEL" multiple="1">
+      <field
+        name="note"
+        type="textarea"
+        rows="2"
+        default=""
+        label="TPL_TRACY_BASE_ACM_HERO_NOTE_LABEL"
+        description="TPL_TRACY_BASE_ACM_HERO_NOTE_DESC"
+      />
+    </fieldset>
+  </fields>
+</form>

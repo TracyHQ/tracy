@@ -1,0 +1,326 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-vega",
+  "minVersion": {
+    "quickstart/ja-vega/j6": "1.0.4"
+  },
+  "maxVersion": {
+    "quickstart/ja-vega/j6": "1.0.8"
+  },
+  "maxVersionNote": "1.0.8 21/10/2026 (TEXT-1 batch 2): built from 1.0.7 (release-batch.mjs --overlay); only css/template.css differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.7 16/10/2026 (role-variable batch 2, local build, not published): the template's stylesheets read the standard role variables at the source (ja-products ds-b2-fin-vega); unworn the page is 1.0.6's (VERIFICATION.json). 1.0.6 16/10/2026 (#1375): re-cut of 1.0.5 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-vega/j6@1.0.3",
+  "modes": true,
+  "modesNote": "from 1.0.7 (role variables): the template has a light/dark switch (css/darkmode.css under html[data-theme=dark], the header theme toggle, cookie ja_vega-theme) whose dark side reads the roles too (--dm-* read --ds-c-*), so the Add site popup offers Light | Dark (TDSR MODE-3), as JA Vital 1.0.6. Both sides keep the contract's bands (the shared emitter writes a rule both sides share once, side-merge.mjs).",
+  "modesAuto": false,
+  "modesAutoNote": "the pre-paint script in index.php always sets data-theme (light or dark, from ?theme=, the cookie, the default, or the OS when the default is auto) before the page paints, so no unmarked 'auto' state is left to the OS: the OS-dark copy is not written (as JA Vital and JA Kinetic Joomla).",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.hero-title",
+    "body": "div.features-item div.desc",
+    "button-primary": "div.acm-action a.btn.btn-primary",
+    "card": "div.col-12.col-md-6 div.features-item",
+    "container": "div.acm-hero.style-1 div.container",
+    "section": "#Mod113"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 56px",
+    "displayFace": "Inter Tight 600, tracking -0.009em",
+    "body": "first body text of the page's own size (16px; Vega sets its running text in div.desc, not p); re-probed 10/10/2026: discover.mjs took a testimonial p.lead, a lead text whose weight the template sets itself (400); under Toggl Track the six div.desc blocks take 500, the seven .lead blocks keep 400",
+    "button-primary": "first filled, coloured call to action: rgb(29, 78, 216)",
+    "card": "repeated rounded box ×6",
+    "container": "first content container, max-width 1320px",
+    "section": "first padded full-width section, padding-top 128px"
+  },
+  "keepScopes": [".style-4", ".t4-footer", "#t4-header"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#757575",
+    "--fg-2": "#121316",
+    "--accent": "#1d4ed8",
+    "--accent-hover": "#040eac",
+    "--surface": "#fafafa",
+    "--surface-warm": "#121316",
+    "--success": "#198754",
+    "--warn": "#f59e0b",
+    "--danger": "#dc3545",
+    "--border": "#e6e6e6",
+    "--muted": "#666666",
+    "--font-display": "\"Inter Tight\", sans-serif",
+    "--font-body": "\"Inter Tight\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#757575",
+      "fg-2": "#121316",
+      "accent": "#1d4ed8",
+      "accent-hover": "#040eac",
+      "surface": "#fafafa",
+      "surface-warm": "#121316",
+      "success": "#198754",
+      "warn": "#f59e0b",
+      "danger": "#dc3545",
+      "border": "#e6e6e6",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#fafafa",
+      "fg": "#757575",
+      "accent": "#1d4ed8",
+      "accent-on": "#ffffff",
+      "surface-warm": "#121316"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "fg": "#6c757d",
+      "border": "#dee2e6",
+      "surface": "#fafafa",
+      "border-soft": "#e9ecef"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (61 line colours, 46 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn:not(.btn-readmore)", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "card": ["div.features-item", ".card"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["#Mod113"],
+    "bodyFace": ["body"],
+    "eyebrow": [".info-sub"],
+    "cardLike": [".teams-item-inner", ".features-item", ".testimonials-item"],
+    "pill": [".badge"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "div.features-item div.desc, .testimonials-item p.lead",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": ".t4-section :is(h1, h2, h3, h4, .h2, .h3)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 20 tried (byte 6134); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#6c757d",
+      "uses": 13,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#757575",
+      "distance": 12
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 7,
+      "kind": "custom",
+      "role": "border",
+      "near": "#e6e6e6",
+      "distance": 9
+    },
+    {
+      "hex": "#fafafa",
+      "uses": 6,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 0
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#757575",
+    "--body-link-color": "#1d4ed8",
+    "--body-link-hover-color": "#040eac",
+    "--color-primary": "#1d4ed8",
+    "--color-secondary": "#111112",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#f59e0b",
+    "--color-danger": "#dc3545",
+    "--color-light": "#fafafa",
+    "--color-dark": "#121316",
+    "--mainnav-text-color": "#ffffff",
+    "--mainnav-link-color": "#ffffff",
+    "--mainnav-link-hover-color": "#ffffff",
+    "--mainnav-link-active-color": "#ffffff",
+    "--footer-bg-color": "#121316",
+    "--footer-text-color": "rgba(255, 255, 255, 0.6)",
+    "--footer-link-color": "rgba(255, 255, 255, 0.6)",
+    "--footer-link-hover-color": "#ffffff",
+    "--headings-color": "#050505"
+  },
+  "ready": true,
+  "readyNote": "measured 10/10/2026 on ja-vega/j6 1.0.4 (tasks/evidence/followups-2026-10-10/p6-dsdata/ready-templates.txt): 12/12, default unchanged, no text made less readable than the template's own under the systems tried, 67% or more of the page follows; its body probe now reads the running text (div.desc), not a testimonial lead. Re-measured 11/10/2026 with the per-element probe on quickstart/ja-vega/j6 1.0.4 (published, its minVersion; tasks/evidence/ds-remeasure-5-2026-10-11/ja-vega): 12/12 with Moxie, MotherDuck, Toggl Track, Apple, controls 0 differences, no text made less readable than the template's own, 70%–98% of the page follows (the dark hero, the dark band and the footer are kept); checked by eye under Moxie and Toggl Track (dark), MotherDuck and Apple (light). Before the fixes 6/12: the article titles kept T4's #050505 heading colour on dark cards (Moxie 1.03, Toggl Track 1.22; templateVars --headings-color), the menu turned dark on the dark hero the header overlaps under MotherDuck and Apple (1.49, 1.03; #t4-header kept), the tag pills kept a literal light fill under light text (1.08, 2.38; followRules), contrast kind body found no element. A heading kind was added: the section titles on the light wave picture (1.26–4.28; the picture gives way, sideRules). By eye: the feature icons, client logos and review badges drawn black for a white page are inverted under a dark system",
+  "keepColors": {
+    ".style-4": "rgba(255, 255, 255, 0.6)",
+    ".t4-footer": "rgba(255, 255, 255, 0.6)",
+    "#t4-header": "#757575"
+  },
+  "keepNote": "the header overlaps the dark hero (.header-overlap, no ground of its own): it keeps the template's white menu and phone as the released page computes them, under light systems too. Found 11/10/2026 by the per-element probe: under MotherDuck and Apple the menu links turned dark on the dark hero (1.49, 1.03). The dark band (.style-4) and the footer keep theirs as before; the texts they inherit get the band's own colour back (keepColors)",
+  "templateVars": {
+    "--headings-color": "var(--ds-c-fg-2)"
+  },
+  "templateVarsNote": "T4's generated theme CSS writes the template's heading colour (--headings-color: #050505) at :root, which the article titles (.heading-link) read: the system's heading colour; kept bands keep #050505 (keepDefaults)",
+  "followRules": {
+    ".mod-view-article-list .item-inner .item-content .tags > li > a:not(:hover)": {
+      "background-color": "surface"
+    },
+    ".section-title": {
+      "border-color": "fg"
+    }
+  },
+  "followNote": "the article list's tag pills (.tags > li > a, a.badge) paint a literal #F5F7FA the 1.0.4 stylesheet kept (shorthand background) while their text takes the system's accent text: under a dark system cream or pink on the light pill (Moxie 1.08, Toggl Track 2.38). The pill takes the system's surface; hovered it keeps the template's own accent fill",
+  "sideRules": {
+    "light": {
+      ".social-inner a:is(:hover, :focus)": {
+        "opacity": "0.7"
+      },
+      ".company-info a:is(:hover, :focus), .footer2 a:is(:hover, :focus), a.heading-link:is(:hover, :focus), .slider-content .sub-title a:is(:hover, :focus), .item-tag-title a:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".bg-overlay-image": {
+        "background-image": "none !important"
+      },
+      ".teams-item .teams-text": {
+        "background-color": "color-mix(in srgb, var(--ds-c-bg) 70%, transparent)"
+      }
+    },
+    "dark": {
+      ".social-inner a:is(:hover, :focus)": {
+        "opacity": "0.7"
+      },
+      ".company-info a:is(:hover, :focus), .footer2 a:is(:hover, :focus), a.heading-link:is(:hover, :focus), .slider-content .sub-title a:is(:hover, :focus), .item-tag-title a:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".bg-overlay-image": {
+        "background-image": "none !important"
+      },
+      ".t4-footer": {
+        "background-color": "transparent !important"
+      },
+      ".style-4": {
+        "background-color": "transparent !important"
+      },
+      ".t4-footer div.acym_module_form .btn": {
+        "background-color": "var(--dm-primary-text) !important",
+        "border-color": "var(--dm-primary-text) !important",
+        "color": "var(--dm-bg) !important"
+      },
+      ".client-item .client-img img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".vote-brand img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".features-item .img-icon img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".teams-item .teams-text": {
+        "background-color": "color-mix(in srgb, var(--ds-c-bg) 70%, transparent)"
+      }
+    }
+  },
+  "sideNote": "two modes (16/10/2026, batch 2): on a dark worn page the footer and the dark feature band (.style-4) let the page show through: the template\u2019s dark side lifts them only 1.01:1 off its page, while the ink band rule gave them the system\u2019s surface, a block 1.21:1 off Moxie\u2019s black (GROUND-2 loud-band); on a light worn page they keep the system\u2019s ink. Their newsletter button there wears the dark side\u2019s readable accent (--dm-primary-text, the system\u2019s accent-text as the template\u2019s darkmode.css resolves it at the root) under the page colour: the kept band\u2019s pair turned it over to a white pill on the dark page (TPL-1 glare, Figma dark). the testimonials and partners bands lay a light lavender wave photograph (.bg-overlay-image, bg-wave-1.jpg, an inline style) behind their titles: under a worn system it gives way to the worn page. Under Moxie and Toggl Track light titles sat on the light picture (1.26, 1.74), under MotherDuck its grey heading colour 4.28 (the template's own near-black); the black line icons of the service and partnership features (.features-item .img-icon), the client logos (.client-item) and the review badges (.vote-brand: Clutch, Google), pictures drawn for a white page, are inverted with their hue kept under a dark system, where their dark names vanished on the dark page; visual review 14/10/2026: the team name labels on /about-us (.teams-text, a name and a role laid on the bottom of each portrait) are a literal white 70% veil while their words follow the page: under a dark system the light words sat on the white veil (Moxie cream on white). The veil is now the worn page colour at the template’s 70%, on both sides, so the words that follow the page read on it and the portrait still shows through",
+  "bands": {
+    ".style-4": {
+      "ground": "#121316",
+      "texts": ["#ffffff", "#a0a1a2"],
+      "important": true,
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      }
+    },
+    ".t4-footer": {
+      "ground": "#121316",
+      "texts": ["#a0a1a2", "#ffffff"],
+      "important": true,
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      }
+    },
+    "#t4-header": {
+      "ground": "#ffffff",
+      "texts": ["#ffffff"],
+      "root": false,
+      "buttonGround": "#121316",
+      "paint": {
+        ".label": {
+          "color": "accent"
+        },
+        ".t4-content": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".slider-content": {
+      "ground": "#5f6366",
+      "texts": ["#ffffff"],
+      "kind": "ink",
+      "fill": true,
+      "repaint": true,
+      "important": true,
+      "words": [".sub-title a", ".heading-link", ".portfolio-info li", ".portfolio-info label"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "buttonGroundNote": "16/10/2026 (batch 2, modes): the header has no ground of its own and lays its Contact Us button on the dark hero or page-title photograph (or the black header bar of a page without one), so its button pair is judged on #121316, the template's dark ink: on the band's nominal white the system's pair did not stand out under Moxie's light side and the button kept the template's blue (BTN-1).",
+  "contractNotes1317": "13/10/2026 (#1317): the dark feature band (.style-4) and the footer kept their white words (228 left paints under Moxie, 63% followed) while their ground followed; both repaint their words with the system text. The section titles draw a black rule; it follows the text colour. The header words stay white on the hero photo by design (an overlay band). Round 4 (14/10): the success-stories slider's caption panel (.slider-content, white words on a 10% white glass over the photo) let the page ground through: the ground followed while 72 white words stayed, so the page followed 75% under Moxie. The panel is a fill band of the system's ink now (its surface on a dark system), its words the system's words on it.",
+  "hoverNote": "Social icons: hover and focus dim the link to 70% opacity, the cue an icon without words can carry. 21/10/2026 (HOVER-2, TEXT-1 batch 2): the footer contact, social and licence links, the slider titles and sub-titles and the tag list hover in their rest role under a system: each is underlined on hover and focus."
+}

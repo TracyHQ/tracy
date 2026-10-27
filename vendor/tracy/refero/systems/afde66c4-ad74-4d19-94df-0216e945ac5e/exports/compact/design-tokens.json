@@ -1,0 +1,69 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Ink — High-contrast neutral action fill for primary buttons on light surfaces."
+    },
+    "pure-paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure Paper — Card surfaces, elevated panels, content backgrounds — the base canvas color sits one step brighter than the page"
+    },
+    "soft-mist": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Soft Mist — Hairline borders, input outlines, dividers, subtle panel fills — the structural glue that separates regions without lines shouting"
+    },
+    "charcoal": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Charcoal — Secondary dark surface (pricing card, alternate hero), occasional dark fills where deeper weight is needed than Ink"
+    },
+    "ash": {
+      "$value": "#686868",
+      "$type": "color",
+      "$description": "Ash — Secondary body text, nav links, supporting copy — the first step down from primary text"
+    },
+    "slate": {
+      "$value": "#515151",
+      "$type": "color",
+      "$description": "Slate — Tertiary text, icon strokes on light backgrounds, muted metadata"
+    },
+    "muted": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Muted — Helper text, caption-level copy, secondary icon strokes"
+    },
+    "fog": {
+      "$value": "#929292",
+      "$type": "color",
+      "$description": "Fog — Placeholder text, disabled labels, very low-emphasis text"
+    },
+    "chalk": {
+      "$value": "#cbcbcb",
+      "$type": "color",
+      "$description": "Chalk — Shadow residue on dark buttons, ultra-low-contrast surface markers"
+    },
+    "mint-whisper": {
+      "$value": "#ecfdf5",
+      "$type": "color",
+      "$description": "Mint Whisper — Primary page canvas and white card surfaces. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "The sole typeface. Weight 600 reserved for section labels and small UI controls; weight 500 for nav and secondary buttons; weight 400 for body and most copy. The system commits to one family rather than pairing a display serif — a deliberate editorial choice that keeps the visual signal monochrome."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://audyr.com",
+      "siteName": "Audyr",
+      "extractedAt": "2026-06-03T15:39:37.355Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Ink Black — Primary canvas — full-page background, hero panels, footer. The dominant surface everything else floats over"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — All text, hairline borders, nav links, section labels. The only ink on the page; used at 100% opacity on dark surfaces and as a border-only accent on imagery"
+    },
+    "smoke": {
+      "$value": "#4f4f4f",
+      "$type": "color",
+      "$description": "Smoke — Subtle hairline borders on navigation elements — recedes against the ink black, visible only on close inspection"
+    },
+    "bronze-veil": {
+      "$value": "#bc9873",
+      "$type": "color",
+      "$description": "Bronze Veil — Orange wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "aktiv-web-custom-substitute-inter-tight-or-shne": {
+      "$value": "aktiv-web (custom) / substitute: Inter Tight or Söhne",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse — nav labels at 12–13px (weight 400, tracked), body and section headings at 25px (weight 400, line-height 1.2), mid-page editorial statements at 54px (weight 400, line-height 1.2), and the 'CASES / STUDIES' two-line heading at ~74px. The signature choice: weight 400 for 54–74px display sizes — no bold display, no uppercase shouting. Headlines read as confident paragraphs, not banners."
+    },
+    "editorial-display-serif-not-captured-in-data-visible-in-hero-wordmark": {
+      "$value": "Editorial display serif (not captured in data — visible in hero wordmark)",
+      "$type": "fontFamily",
+      "$description": "The 'Numbered' wordmark uses a high-contrast transitional/old-style serif with sharp terminals — the only non-sans element in the system. This single serif mark is the brand's typographic signature; it appears once per page as a hero anchor and nowhere else. Suggested substitutes: PP Editorial New, GT Sectra, or Canela."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://numbered.studio",
+      "siteName": "Numbered",
+      "extractedAt": "2026-06-03T21:37:08.390Z",
+      "variant": "compact"
+    }
+  }
+}

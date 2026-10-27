@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1468-ds-dot3a-measured-clean",
+  "kind": "fix",
+  "title": "Design system dot 3a: JA Resort Joomla 1.0.4 and JA Essence/Impact/Nova/Vega WordPress committed probe-v10 measurements judge clean; four probe-10 false findings stay fixed; WordPress child pages measured at their address; the smaller WordPress worn sheet is the same page",
+  "pr": 1468,
+  "area": "design-system/readiness",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Judge the committed design-system-measurement.json of JA Resort j6 1.0.4, JA Essence wp7 1.0.18, JA Impact wp7 1.0.9, JA Nova wp7 1.1.12 and JA Vega wp7 1.1.15 with judgeMeasurement and preview-system-issues.json, as /ops judges them (PREVIEW-PARITY on Joomla only).",
+    "S2: Run the detector tests (button-dark white variant, button wrapper, photo-text same colour, empty block already in the template), the preview-pages child page test, and the WordPress worn sheet and side-merge tests."
+  ],
+  "expect": [
+    "S1: every one of the 5 releases leaves 0 rules failing; only SCREEN-1 may warn.",
+    "S2: the false findings stay dropped and the real catches are still found; a WordPress child slug is measured at /<parent>/<slug>/; every wordpress-* contract under 5 systems wears the same rules, in the same order, with the same values as its readable sheet."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1468-ds-dot3a-measured-clean.mjs",
+    "evidence": "packages/cms/tracy-*-quickstart/contracts/*/*/*/design-system-measurement.json"
+  },
+  "evidence": "Committed v10 measurements of the dot-3a line plus the unit tests over the detectors, preview pages and the WordPress slot emitter it changed",
+  "fence": "Measurement judging, detector logic and the WordPress worn sheet in tracy-web and tracy-ds-slot; does not drive a stand or a browser",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1468-ds-dot3a-measured-clean.mjs"],
+    "timeout_s": 600
+  }
+}

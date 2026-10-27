@@ -1,0 +1,74 @@
+{
+  "color": {
+    "gallery-white": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Gallery White — Page canvas, light section bands, footer background"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Overlay type, white order pills, light media and control surfaces"
+    },
+    "charcoal-field": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal Field — Dark hero and dark feature-section backgrounds"
+    },
+    "graphite": {
+      "$value": "#474747",
+      "$type": "color",
+      "$description": "Graphite — Primary editorial text and dark filled order controls"
+    },
+    "quiet-gray": {
+      "$value": "#8f8f8f",
+      "$type": "color",
+      "$description": "Quiet Gray — Secondary labels, subdued links, inactive supporting UI"
+    },
+    "steel-gray": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Steel Gray — Inactive local-navigation labels"
+    },
+    "ink": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Ink — Unfilled control text and highest-emphasis dark text"
+    },
+    "control-mist": {
+      "$value": "#d6d6d6",
+      "$type": "color",
+      "$description": "Control Mist — Muted pill-control fills and subdued control states"
+    }
+  },
+  "font": {
+    "abcdiatype": {
+      "$value": "ABCDiatype",
+      "$type": "fontFamily",
+      "$description": "Default reading, product descriptions, utility buttons, pricing detail, and small spaced navigation. Normal tracking carries body copy; 10px uppercase labels expand to 1.28px tracking."
+    },
+    "abcdiatypemedium": {
+      "$value": "ABCDiatypeMedium",
+      "$type": "fontFamily",
+      "$description": "The 56px section headline is medium rather than bold, allowing the photography to carry the visual weight; 11px uppercase navigation uses the same family with measured spacing."
+    },
+    "abcdiatypebold": {
+      "$value": "ABCDiatypeBold",
+      "$type": "fontFamily",
+      "$description": "Use for compact product names, emphasized inline identifiers, and the 24px hero product title; reserve the 2.2px tracked 11px treatment for compact labels."
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "ui-sans-serif — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.1x.tech/neo",
+      "siteName": "1X Tech",
+      "extractedAt": "2026-09-20T22:15:06.310Z",
+      "variant": "compact"
+    }
+  }
+}

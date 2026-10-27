@@ -1,0 +1,114 @@
+{
+  "color": {
+    "sky-tint": {
+      "$value": "#ebf5ff",
+      "$type": "color",
+      "$description": "Sky Tint — Page canvas and soft background washes — the defining ambient color that sets the daylight atmosphere"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Pure card surfaces, button text, and icon fills on dark controls"
+    },
+    "bone-white": {
+      "$value": "#fafdff",
+      "$type": "color",
+      "$description": "Bone White — Primary card surface and elevated panel backgrounds — a barely-blue white that feels paper-like"
+    },
+    "mist-gray": {
+      "$value": "#f6f7f8",
+      "$type": "color",
+      "$description": "Mist Gray — Subtle secondary surfaces and section dividers"
+    },
+    "ink": {
+      "$value": "#0a0d12",
+      "$type": "color",
+      "$description": "Ink — All heading text, primary display type, and deep emphasis copy"
+    },
+    "charcoal": {
+      "$value": "#181d27",
+      "$type": "color",
+      "$description": "Charcoal — Filled button backgrounds and the dense visual anchor against the airy canvas"
+    },
+    "graphite": {
+      "$value": "#535862",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text and supporting copy"
+    },
+    "fog": {
+      "$value": "#93979f",
+      "$type": "color",
+      "$description": "Fog — Muted helper text, FAQ answers, and low-emphasis body"
+    },
+    "slate-shadow": {
+      "$value": "#3b3d41",
+      "$type": "color",
+      "$description": "Slate Shadow — Dark shadow tone behind buttons and elevated controls"
+    },
+    "iris-blue": {
+      "$value": "#0069e0",
+      "$type": "color",
+      "$description": "Iris Blue — Brand accent — chromatic borders, outline strokes, and the single vivid punctuation color in the otherwise pale system; Brand gradient used for decorative borders and accent fills"
+    },
+    "sky-blue": {
+      "$value": "#0099ff",
+      "$type": "color",
+      "$description": "Sky Blue — Inline highlight text and emphasis spans within body copy"
+    },
+    "lavender-wash": {
+      "$value": "#f1e6ff",
+      "$type": "color",
+      "$description": "Lavender Wash — Pastel card surface for feature tiles and category blocks"
+    },
+    "mint-wash": {
+      "$value": "#d3f6e3",
+      "$type": "color",
+      "$description": "Mint Wash — Pastel card surface for feature tiles and category blocks"
+    },
+    "powder-blue": {
+      "$value": "#cce7ff",
+      "$type": "color",
+      "$description": "Powder Blue — Gray wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    },
+    "solar-gradient": {
+      "$value": "#fff2be",
+      "$type": "color",
+      "$description": "Solar Gradient — Warm gradient stop for decorative feature highlights"
+    },
+    "violet-gradient": {
+      "$value": "#e4ccff",
+      "$type": "color",
+      "$description": "Violet Gradient — Decorative gradient wash for feature category blocks"
+    },
+    "aqua-gradient": {
+      "$value": "#c2e9ff",
+      "$type": "color",
+      "$description": "Aqua Gradient — Decorative gradient wash for feature category blocks"
+    },
+    "peach-gradient": {
+      "$value": "#ffd1b8",
+      "$type": "color",
+      "$description": "Peach Gradient — Decorative gradient wash for feature category blocks"
+    }
+  },
+  "font": {
+    "aeonik": {
+      "$value": "Aeonik",
+      "$type": "fontFamily",
+      "$description": "Display and heading face for all editorial moments — 148px hero headlines, 72px section openers, 48px card titles, 32px subheadings. Fixed at weight 500; the brand never goes bolder. Tracking pulls tight at -0.02em which gives the geometric forms a sculpted, almost engraved quality at large sizes. Substitute: 'Söhne', 'Inter', or 'General Sans'."
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "UI and body face for everything below the headline tier — body copy, buttons, labels, captions, card descriptions, nav links. Weight 500 is the workhorse; 600 only for tiny 10px micro-labels. The 18px / 20px sizes with -0.01em tracking carry the interface's conversational voice. Substitute: 'Geist', 'Inter', or 'Söhne'."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://geniestudio.app",
+      "siteName": "Geniestudio",
+      "extractedAt": "2026-07-03T03:11:24.001Z",
+      "variant": "compact"
+    }
+  }
+}

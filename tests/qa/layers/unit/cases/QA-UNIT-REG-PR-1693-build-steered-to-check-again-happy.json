@@ -1,0 +1,66 @@
+{
+  "id": "QA-UNIT-REG-PR-1693-build-steered-to-check-again-happy",
+  "itemIds": ["regression:REG-PR-1693-build-steered-to-check-again"],
+  "requirement": "A whole-site build about to end on a failed check while checks remain is steered to repair and check again, at most three times a turn",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1693-build-steered-to-check-again.json",
+    "ref": "PR #1693 (fix); fix evidence: none recorded",
+    "invariant": "S1: a system-reminder saying 4 of 5 checks remain. S2: null each time.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/src/host/emdash.mjs:730",
+      "packages/tools/tracy-site-tools/src/host/legacy-refusal.mjs:11",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:2582",
+      "packages/tools/tracy-site-tools/src/host/site.mjs:3573",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:269",
+      "packages/tools/tracy-site-tools/src/host/wp-seo.mjs:19"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-site-build-core/src/host/build.mjs:111 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:263 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:301 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:304 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs:1420 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs:2100 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "checkAgainStep: a build ending on a failed check with checks left is steered on; a pass, a spent budget or no check is not"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1693-build-steered-to-check-again"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1693-build-steered-to-check-again",
+    "pr": 1693,
+    "kind": "fix",
+    "area": "website-opportunities/agent-demo",
+    "file": "tests/regression/cases/REG-PR-1693-build-steered-to-check-again.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/site-context.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "checkAgainStep: a build ending on a failed check with checks left is steered on; a pass, a spent budget or no check is not"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "obsidian-ink": {
+      "$value": "#212123",
+      "$type": "color",
+      "$description": "Obsidian Ink — Neutral form states, badge text, and quiet UI feedback where color should stay understated."
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Page canvas, card surfaces, inverse text on dark fills. The dominant surface; almost the entire site lives here"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Icon fills, decorative graphic strokes, active state fills for the navigation dot indicator. Used sparingly for maximum tonal contrast against Bone"
+    },
+    "ash": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Ash — Medium-contrast borders, control outlines, and structural separators."
+    },
+    "pebble": {
+      "$value": "#a6a6a7",
+      "$type": "color",
+      "$description": "Pebble — Muted helper text, fine body dividers, secondary metadata. The lightest functional gray — used for price labels and supporting copy that must recede"
+    }
+  },
+  "font": {
+    "sequel100wide": {
+      "$value": "Sequel100Wide",
+      "$type": "fontFamily",
+      "$description": "Sole brand typeface, used at weight 400 only across every context — nav, body, headings, hero copy, prices, labels. The wide-set geometric character with generous letter-spacing carries the entire brand voice. The absence of bold weight is deliberate: hierarchy comes from uppercase casing, tracking, and position, not from weight variation."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback for button rendering in legacy contexts. Not part of the brand voice — appears only when Sequel100Wide fails to load."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ino.jewelry",
+      "siteName": "INO",
+      "extractedAt": "2026-06-03T18:13:32.148Z",
+      "variant": "compact"
+    }
+  }
+}

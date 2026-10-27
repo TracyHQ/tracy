@@ -1,0 +1,25 @@
+:root {
+  /* Colors */
+  --color-signal-violet: #7084ff;
+  --gradient-signal-violet: linear-gradient(179deg, #405bff 1.06%, #7084ff 123.42%);
+  --color-voltage-blue: #405bff;
+  --color-midnight-ink: #0e0e0e;
+  --color-carbon: #191919;
+  --color-graphite: #414042;
+  --color-steel: #58595b;
+  --color-slate: #6d6e71;
+  --color-fog: #a7a9ac;
+  --color-ash: #d1d3d4;
+  --color-paper: #ffffff;
+  --color-smoke: #2c2c2c;
+  --color-plasma-cyan: #3dd6f5;
+
+  /* Typography — Font Families */
+  --font-bodyfont: 'bodyFont', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sohne-custom-grotesk: 'Sohne / custom grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sohne-mono-jetbrains-mono: 'Sohne Mono / JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-monofont: 'monoFont', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helvetica: 'Helvetica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-headingfont1: 'headingFont1', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

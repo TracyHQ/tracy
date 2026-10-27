@@ -1,0 +1,48 @@
+---
+title: Connect Claude Code
+description: Add Tracy to Claude Code, sign in with OAuth, and verify your website connection.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import McpSetup from '../../../../components/McpSetup.astro';
+
+Use Tracy from a Claude Code conversation to read and edit one connected website. You need Claude Code installed and a Tracy account with access to that website. See the [shared prerequisites](/mcp/getting-started/#what-you-need).
+
+## Add Tracy
+
+Run this command in the project where you want to use Tracy:
+
+<McpSetup client="claude-code" />
+
+The client ID identifies Claude Code's public connection. It is not a secret. No client secret or manually copied access token is needed.
+
+## Sign in
+
+<Steps>
+
+1. Start Claude Code in that project and enter `/mcp`.
+2. Select **tracy** and start authentication.
+3. In the browser, sign in to Tracy. Review the app identity and select the website you intend to use.
+4. Approve the connection, return to Claude Code, and check that Tracy's tools are available.
+
+</Steps>
+
+<Aside type="note" title="Keep the callback address unchanged">
+This registration uses `http://localhost:17832/callback`. Leave port `17832` free while signing in. Changing the port or replacing `localhost` with another hostname will not match this registration.
+</Aside>
+
+## Verify the connection
+
+```text wrap title="First prompt"
+Use Tracy to show the connected website and list its pages. Do not make any changes.
+```
+
+Check the returned website before proceeding to [your first edit](/mcp/working-with-your-site/). An authentication success message alone does not prove that a tool call works.
+
+OAuth and code exchange were verified with Claude Code 2.1.301 on an isolated test environment. That check does not replace a real tool read on your connected website.
+
+## Disconnect
+
+Remove the server with `claude mcp remove tracy` in the same configuration scope where you added it. To withdraw its access on Tracy as well, follow [Revoke access](/mcp/permissions/).
+
+For configuration scopes and command options, see the [official Claude Code MCP guide](https://code.claude.com/docs/en/mcp). If authentication fails, check [connection errors](/mcp/troubleshooting/).

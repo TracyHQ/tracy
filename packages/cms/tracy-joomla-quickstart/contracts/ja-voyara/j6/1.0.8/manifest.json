@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-voyara/j6/1.0.8",
+  "platform": "joomla",
+  "template": "ja_voyara",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-voyara",
+    "id": "quickstart/ja-voyara/j6",
+    "version": "1.0.8",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_voyara",
+    "framework": "t4",
+    "prefix": "jav_",
+    "parts": {
+      "webroot": {
+        "file": "ja-voyara-j6-webroot-1.0.8.tar.gz",
+        "bytes": 195167992,
+        "sha256": "e71d15d765831a2f904f4182020ec2bcfa9269b58f33201b0be74fbf311a8dde"
+      },
+      "database": {
+        "file": "ja-voyara-j6-database-1.0.8.sql.gz",
+        "bytes": 356059,
+        "sha256": "6482a528fd611110262708ab96825259545000096a2fc2e95d166bc3eb632351"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-13T16:28:12.340Z",
+    "builtFrom": {
+      "site": "voyara-base",
+      "tag": "quickstart/ja-voyara/j6",
+      "by": "readiness-2026-10-13: the 1.0.7 pair with template 1.0.4 laid over the webroot and six module rows of the database given the words their layouts printed"
+    },
+    "release": "quickstart/ja-voyara/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.27",
+  "mode": "content-recommendation"
+}

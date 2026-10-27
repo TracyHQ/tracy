@@ -1,0 +1,2645 @@
+/* wp-ja-kinetic — the source's own page chrome for the search page (`kinetic-finder`) and the
+ * login / register / account / password-reset pages (`kinetic-auth`), ported from the Joomla
+ * source's T4 template overrides (`templates/ja_kinetic/html/com_finder/…`,
+ * `templates/ja_kinetic/html/com_users/…`) and their compiled rules in `css/template.css`
+ * (`.kinetic-finder` block ~22464-22735, `.kinetic-auth` block ~21551-22052, plus the per-page
+ * overlays `css/page-232.css` … `css/page-237.css` for the masthead/split sizing and, on search,
+ * the whole card-result layout). Loaded after wp-ja-kinetic-sections.css, whose `:root` bridge
+ * already declares every custom property these rules read (`--primary`, `--heading`, `--surface`,
+ * …).
+ *
+ * Search results are rendered by the `wp-ja-kinetic/kinetic-search-results` block
+ * (blocks/kinetic-search-results/render.php), not a `core/query` loop — it builds the resultcount
+ * line, the URL-breadcrumb meta row, term highlighting and a Joomla-shaped pager
+ * (`ul.pagination > li.page-item > a.page-link`, matching the source's own Bootstrap pagination
+ * classes — visible in page-232.css's own dark-mode rules, `.pagination .page-link` etc.) directly
+ * from `$wp_query`/`paginate_links()`, so every element the source still shows after page-232.css
+ * (verbatim quotes of the surviving, non-`display:none` rules are in that block's own doc comment)
+ * has a real value to render, not a stub.
+ *
+ * @package wp-ja-kinetic
+ */
+
+/* ==========================================================================
+   kinetic-finder — search page
+   The base cross-page rules (css/template.css:22464-22735, compiled from
+   html/com_finder/_kinetic-finder.css) are entirely eclipsed on the live source by its
+   per-menu-item overlay `css/page-232.css` (body.item-232, ~280 rules, all !important):
+   full-bleed gradient masthead, pill eyebrow, transparent-in-pill search field, and result
+   cards instead of a bordered list. Ported verbatim onto `body.item-232 .kinetic-finder` (a
+   parallel agent's `body_class` filter puts `item-232` on this view from page-map.json).
+   WordPress's search results are not backed by a Page post the way login/register are — if
+   `item-232` does not land here, these rules simply do not match and the block's own inline
+   fallback (none — see the block's render.php) is what a visitor sees; flagged to the coordinator
+   as the "search may need special handling" case.
+   Dropped against page-232, and why — the only things page-232 still `display:none`s:
+    - the advanced-search panel (`__advtoggle`/`__advanced`/`__filter`, page-232.css §8c): Smart
+      Search's indexed-taxonomy filter UI, which core search has no index to filter against.
+    - taxonomy chips (`__tax`, page-232.css §18), the result thumbnail (`__image`, §15b) and the
+      publish date (`__date`, §16 `display:none!important`) — proven hidden, not merely unbuilt.
+    - the "suggested query" (did-you-mean) branch of `__explained` (§11b) — no index to source it; the
+      explained "<term> is required" line itself IS rendered by the block and hidden as on the source.
+   Everything else page-232 still shows (resultcount, the URL-breadcrumb meta row, highlighted
+   terms, the pager and its counter) is rendered by the block — see its own doc comment.
+   ========================================================================== */
+
+body.item-232 .kinetic-finder .kinetic-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  border-radius: 100px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+  margin: 0;
+}
+
+body.item-232 .kinetic-finder .kinetic-eyebrow::before {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.hx-muted {
+  color: var(--muted);
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__masthead {
+  background: radial-gradient(ellipse 150% 140% at 50% 0%, color-mix(in srgb, var(--primary) 6%, transparent) 0%, var(--elevated) 60%);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 66px 32px 58px;
+  margin: 0;
+  text-align: center;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__masthead-inner {
+  max-width: 820px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__title {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -1.3px;
+  color: var(--heading);
+  margin: 0;
+  max-width: 760px;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__form {
+  width: 100%;
+  max-width: 820px;
+  /* measured live: 0, not the block-group default top margin this `core/group` wrapper otherwise
+     carries (AU-036). */
+  margin-top: 0;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-input-radius, 12px);
+  padding: 4px 4px 4px 16px;
+  box-shadow: var(--shadow);
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  color: var(--heading);
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  padding: 10px 0;
+  box-shadow: none;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__input:focus {
+  outline: none;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__input::placeholder {
+  color: var(--muted);
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__submit {
+  flex: 0 0 auto;
+  border-radius: var(--ds-btn-radius, 9px);
+  padding: 11px 20px;
+  white-space: nowrap;
+}
+
+/* Advanced Search toggle + fieldset — kept in markup for D-11 element-tree parity (the block's own
+   doc comment) but hidden exactly as the source's own page-232.css §8c hides it, verbatim: "The
+   .pen Search Box is a clean [icon][input][Search] pill with NO advanced toggle. The filters
+   aren't part of the design, so suppress the toggle button and the advanced fieldset (kept in
+   markup for functional fallback but not shown)." */
+body.item-232 .kinetic-finder .kinetic-finder__advtoggle,
+body.item-232 .kinetic-finder .kinetic-finder__advanced,
+body.item-232 .kinetic-finder #advancedSearch {
+  display: none !important;
+}
+
+/* The hidden toggle's own values, verbatim from page-232.css §10 ("ADVANCED TOGGLE (minor — not in
+   design but keep functional)"); its 13px line-height is the `.hx-btn` `line-height: 1`. */
+body.item-232 .kinetic-finder .kinetic-finder__advtoggle {
+  font-size: 13px !important;
+  color: var(--muted) !important;
+  margin: 10px auto 0 !important;
+}
+
+/* Hidden panel's own base rules, as the source computes them while hidden. Advanced panel and tips
+   from css/template.css:22534-22545 (both rules verbatim; the tips' 21.7px line-height is its 14px
+   font-size times the inherited 1.55). Toggle icon: the Font Awesome
+   5 `[class^="icon-"]` display, family, weight + `line-height: 1` and the `.icon-options::before` cog
+   glyph from the source's all.min.css; its 13px size and muted color are inherited from the toggle
+   (page-232.css §10). No Font Awesome font is carried: the source declares its faces but never fetches
+   one on this page (every face `unloaded`), since the toggle is `display: none` in every state. */
+.kinetic-finder .kinetic-finder__advanced {
+  margin: 18px auto 0;
+  max-width: 720px;
+  text-align: left;
+}
+
+.kinetic-finder .kinetic-finder__tips {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 16px;
+  text-align: left;
+}
+
+/* The tips copy's paragraphs, as the source computes them: top margin 0 from the Bootstrap reboot
+   `p { margin-top: 0 }`, bottom margin 0 from core's media/com_finder/css/finder.min.css
+   `.com-finder * { margin-bottom: 0 }` (scoped here to the tips, not the whole finder). */
+.kinetic-finder .kinetic-finder__tips p {
+  margin: 0;
+}
+
+/* The filter window's own layout, verbatim from css/template.css:22547-22551. Its select rules are
+   not carried: the filter selects (blocks/kinetic-search-form) sit in the panel that is
+   `display: none` on both sides, so nothing of them ever renders. */
+.kinetic-finder .kinetic-finder__filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* The finder's two visually-hidden legends, sized by the source's Bootstrap reboot `legend` rule
+   (css/template.css:531-541); their line-height already inherits, as there. */
+.kinetic-finder legend {
+  font-size: calc(1.275rem + 0.3vw);
+}
+
+@media (min-width: 1200px) {
+  .kinetic-finder legend {
+    font-size: 1.5rem;
+  }
+}
+
+.kinetic-finder .icon-options {
+  display: inline-block;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  line-height: 1;
+}
+
+.kinetic-finder .icon-options::before {
+  content: "\f013";
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__results {
+  background: var(--bg);
+  padding: 56px 32px 72px;
+  /* measured live: 0 (AU-105), not the block-group default top margin. */
+  margin-top: 0;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__results > * {
+  max-width: 820px;
+  margin-inline: auto;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__empty {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 12px);
+  padding: 56px 40px;
+  text-align: center;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__empty h2 {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 22px;
+  font-weight: 600;
+  /* source inherits these from its global h2 rules (computed 23.32px / -1px); WP's h2 element
+     style would otherwise give 1.04 / -1.5px */
+  line-height: 1.06;
+  letter-spacing: -1px;
+  color: var(--heading);
+  margin: 0 0 10px;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__empty .hx-muted {
+  font-size: 15px;
+  margin: 0;
+}
+
+/* Explained-query line ("<term> is required"): in the DOM on the source, hidden by page-232.css §11b.
+   Base sizing from css/template.css:22569 (block margins only — the inline `auto` comes from the
+   `.kinetic-finder__results > *` rule above, as on the source), hide verbatim from page-232.css:271,
+   term weight from core's media/com_finder/css/finder.css. */
+body.item-232 .kinetic-finder .kinetic-finder__explained {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 14px;
+  display: none !important;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__explained span.term {
+  font-weight: 800;
+}
+
+/* No-results card after the explained line: css/template.css:14149 + :15051 (`#search-result-empty`),
+   also core finder.css `.com-finder__results>*+*{margin-top:1.5em}`; beats WP's flow-layout gap. */
+body.item-232 .kinetic-finder #search-result-empty {
+  margin-top: 1.5rem;
+  color: var(--ds-c-muted, #495057);
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__resultcount {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  margin: 0 auto 4px;
+}
+
+/* the source's `<br id="highlighter-start/end">` markers around the list — page-232.css:276-279. */
+body.item-232 .kinetic-finder #highlighter-start,
+body.item-232 .kinetic-finder #highlighter-end {
+  display: none !important;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__list {
+  border: 0;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* measured live: 24px, not the 16px this block-group otherwise carries (AU-125). */
+  margin-top: 24px;
+}
+
+body.item-232 .kinetic-finder .kinetic-result {
+  display: block;
+  padding: 20px 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 12px);
+  transition: background-color .15s, border-color .15s;
+  /* declared-but-inert on this `display:block` element (matches the source's own values exactly,
+     computed style parity only — no visual effect since `display` itself already agrees on both
+     sides): flex-direction column only at 390 (AU-126), align-items/gap always (AU-127/128). */
+  align-items: flex-start;
+  gap: 20px;
+}
+
+@media (max-width: 767.98px) {
+  body.item-232 .kinetic-finder .kinetic-result {
+    flex-direction: column;
+  }
+}
+
+body.item-232 .kinetic-finder .kinetic-result:hover,
+body.item-232 .kinetic-finder .kinetic-result:focus-within {
+  background: var(--elevated);
+  border-color: var(--primary);
+}
+
+body.item-232 .kinetic-finder .kinetic-result__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  /* measured live: 0 (AU-129) — the visible spacing between title/text/meta comes from each row's
+     own margin below, not a flex gap. */
+  gap: 0;
+}
+
+/* meta row (URL breadcrumb) — page-232.css §16 verbatim: emitted last in document order (as the
+   source's `default_result.php`), painted ABOVE the title by `order:-1` (measured live: source meta
+   box y=21, title y=44 inside the card at 1440). */
+body.item-232 .kinetic-finder .kinetic-result__meta {
+  order: -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: baseline;
+  margin-bottom: 6px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+
+body.item-232 .kinetic-finder .kinetic-result__url {
+  color: var(--ds-c-accent-text, var(--primary));
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+body.item-232 .kinetic-finder .kinetic-result__title {
+  font-family: var(--ds-font-display, "Space Grotesk", sans-serif);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  /* the source's own h4 tracking (computed -1px there); WP's h4 element style gives -1.5px */
+  letter-spacing: -1px;
+  color: var(--heading);
+  margin: 0 0 6px;
+}
+
+body.item-232 .kinetic-finder .kinetic-result__title a {
+  color: var(--heading);
+  text-decoration: none;
+  transition: color .15s;
+}
+
+body.item-232 .kinetic-finder .kinetic-result:hover .kinetic-result__title a,
+body.item-232 .kinetic-finder .kinetic-result:focus-within .kinetic-result__title a {
+  color: var(--ds-c-accent-text-hover, var(--primary));
+}
+
+body.item-232 .kinetic-finder .kinetic-result__text {
+  font-family: var(--ds-font-body, "IBM Plex Sans", sans-serif);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--text);
+  margin: 0;
+}
+
+/* highlighted search term — page-232.css §20 (not display:none'd, so ported). WordPress core
+   search does not mark matches itself; the block wraps them server-side (see render.php). */
+body.item-232 .kinetic-finder .highlight {
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--ds-c-accent-text, var(--primary));
+  font-weight: 600;
+  border-radius: 3px; /* ds-keep: search hit highlight, a text mark */
+  padding: 0 2px;
+}
+
+/* pagination — the source's own Bootstrap component classes (`.pagination`/`.page-item`/
+   `.page-link`, confirmed by page-232.css §21's dark-mode rules targeting exactly those), built
+   here from PHP's `paginate_links()` against the live `$wp_query` (kinetic-search-results block). */
+body.item-232 .kinetic-finder .kinetic-finder__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  /* measured live (AU-132-134/140): 32px top padding at 1440 (0 bottom there already matches),
+     32px bottom margin at both widths, 16px top/bottom padding swapped in at 390. `!important`:
+     a later block-theme default list/nav margin otherwise wins the cascade on this selector at the
+     same specificity (measured: `margin:0` alone here did not stick). */
+  margin-top: 24px !important;
+  margin-bottom: 32px !important;
+  padding-top: 32px !important;
+}
+
+body.item-232 .kinetic-finder .pagination {
+  display: flex;
+  /* measured live: unset ("normal"), not a fixed 6px (AU-135) — the page-link buttons' own
+     min-width/padding already give them breathing room. */
+  gap: normal;
+  list-style: none;
+  /* source css/template.css `.pagination { margin: 1rem auto; }`, reset to 0 from 992px up by
+     `.pagination-wrap .pagination { margin: 0; }` (AU-136/137: 16px at 390, 0 at 1440).
+     `!important`: a later block-theme default list/nav margin otherwise wins the cascade here. */
+  margin: 1rem auto !important;
+  padding: 0 !important;
+}
+
+@media (min-width: 992px) {
+  body.item-232 .kinetic-finder .pagination {
+    margin: 0 !important;
+  }
+}
+
+/* The source search pager is the T4 base theme's plain Bootstrap pagination, light values
+   verbatim: css/template.css `.pagination` custom properties (4710-4730), `.page-link` (4736-4745),
+   hover/focus (4751-4763), `.active > .page-link` (4764-4769), `.disabled > .page-link`
+   (4770-4775), `.page-item:not(:first-child) .page-link { margin-left: -1px }` (4777), and the
+   joined-group corners of `.pagination-wrap .pagination` (14993-15004). Font family and
+   line-height are inherited from the page, as on the source. */
+body.item-232 .kinetic-finder .page-link {
+  position: relative;
+  display: block;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  color: var(--ds-c-accent-text, #0d6efd);
+  background-color: var(--ds-c-surface, #fff);
+  border: 1px solid var(--ds-c-border, #dee2e6);
+  border-radius: var(--ds-btn-radius, 0);
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+body.item-232 .kinetic-finder .page-item:not(:first-child) .page-link {
+  margin-left: -1px;
+}
+
+body.item-232 .kinetic-finder .page-item:first-of-type .page-link {
+  border-radius: var(--ds-btn-radius, 0.25rem) 0 0 var(--ds-btn-radius, 0.25rem);
+}
+
+body.item-232 .kinetic-finder .page-item:last-of-type .page-link {
+  border-radius: 0 var(--ds-btn-radius, 0.25rem) var(--ds-btn-radius, 0.25rem) 0;
+}
+
+/* source `img, svg { vertical-align: middle; }` (template.css); the parent theme's
+   `:where(.tracy) svg { display: block }` would otherwise stack the chevron on its own line box. */
+body.item-232 .kinetic-finder .hx-pag-ico {
+  display: inline;
+  vertical-align: middle;
+}
+
+/* source css/template.css `.pagination-wrap ul li { display: inline-block; }` — blockified to
+   `block` as a flex item of `ul.pagination` (AU-138/139), not the `<li>` default `list-item`. */
+body.item-232 .kinetic-finder .page-item,
+body.item-232 .kinetic-finder .page-item.active {
+  display: inline-block;
+}
+
+body.item-232 .kinetic-finder .page-link:hover {
+  z-index: 2;
+  color: var(--ds-c-accent-text-hover, rgb(10.4, 88, 202.4));
+  background-color: var(--ds-c-surface-warm, #e9ecef);
+  border-color: var(--ds-c-border, #dee2e6);
+}
+
+body.item-232 .kinetic-finder .page-link:focus {
+  z-index: 3;
+  color: var(--ds-c-accent-text-hover, rgb(10.4, 88, 202.4));
+  background-color: var(--ds-c-surface-warm, #e9ecef);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+body.item-232 .kinetic-finder .page-item.active .page-link {
+  z-index: 3;
+  color: var(--ds-c-accent-on, #fff);
+  background-color: var(--ds-c-accent, #0d6efd);
+  border-color: var(--ds-c-accent, #0d6efd);
+}
+
+body.item-232 .kinetic-finder .page-item.disabled .page-link {
+  color: var(--ds-c-muted, #6c757d);
+  pointer-events: none;
+  background-color: var(--ds-c-surface, #fff);
+  border-color: var(--ds-c-border, #dee2e6);
+}
+
+/* source page-232.css §21 dark-mode re-colouring, verbatim except the dark hook
+   (`html.t4-dark` becomes this theme's `:root[data-theme="dark"]`). */
+:root[data-theme="dark"] body.item-232 .kinetic-finder .pagination .page-link {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+:root[data-theme="dark"] body.item-232 .kinetic-finder .pagination .page-item.active .page-link {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-ink) !important;
+}
+:root[data-theme="dark"] body.item-232 .kinetic-finder .pagination .page-item.disabled .page-link {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--muted) !important;
+  opacity: .5;
+}
+
+body.item-232 .kinetic-finder .kinetic-finder__counter {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+
+@media (max-width: 767.98px) {
+  body.item-232 .kinetic-finder .kinetic-finder__masthead {
+    padding: 44px 24px 38px;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__masthead-inner {
+    gap: 14px;
+  }
+  body.item-232 .kinetic-finder .kinetic-eyebrow {
+    font-size: 11px;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__title {
+    font-size: 33px;
+    letter-spacing: -1px;
+    max-width: 100%;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__results {
+    padding: 36px 20px 56px;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__field {
+    padding: 4px 4px 4px 14px;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__submit {
+    padding: 11px 18px;
+  }
+  body.item-232 .kinetic-finder .kinetic-result {
+    padding: 18px 20px;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__pagination {
+    flex-direction: column;
+    align-items: flex-start;
+    /* measured live at 390 (AU-132/133): 16px top / 32px bottom, not the 32px-top/0-bottom the
+       desktop rule above sets. */
+    padding-top: 16px !important;
+    padding-bottom: 32px !important;
+  }
+}
+
+/* Source css/template.css:22695-22711 (`@media (max-width: 560px)`): the field row wraps and the
+   Search button takes a full-width second row, label centered (AU-038). */
+@media (max-width: 560px) {
+  body.item-232 .kinetic-finder .kinetic-finder__field {
+    flex-wrap: wrap;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__submit {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==========================================================================
+   kinetic-auth — login / register / account / password-reset
+   Source: css/template.css:21551-22052 (compiled from html/com_users/_kinetic-users.css) for the
+   shared card/field/button rules, plus html/com_users/auth-fix.css for the password-field width
+   fix. The logout view (`default_logout.php`) is not ported: WordPress has no standalone logout
+   page (`wp_logout_url()` is a link, not a page), so there is nothing for it to be a template of.
+   ========================================================================== */
+
+.kinetic-auth {
+  display: flex;
+  justify-content: center;
+  padding: 56px 20px 72px;
+}
+
+@media (max-width: 620px) {
+  .kinetic-auth {
+    padding: 40px 16px 56px;
+  }
+}
+
+.kinetic-auth__card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 16px);
+  padding: 36px 32px;
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 620px) {
+  .kinetic-auth__card {
+    padding: 28px 22px;
+  }
+}
+
+/* ---- masthead: eyebrow pill + H1 + optional sub (post-title / post-excerpt in the template) --- */
+.kinetic-auth-masthead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 64px 24px 56px;
+  text-align: center;
+  background-image: radial-gradient(ellipse 75% 60% at 50% 0%, var(--kds-accent-100, var(--ds-c-accent, rgba(163, 230, 53, .10))) 0%, transparent 60%);
+  /* measured live: 0, not the block-group default top margin a preceding notice alert otherwise
+     leaves it with (AU-212). */
+  margin-top: 0;
+}
+
+.kinetic-auth__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 5px 12px;
+  background: var(--kds-accent-082, var(--ds-c-accent, rgba(163, 230, 53, .082)));
+  border: 1px solid var(--kds-accent-250, var(--ds-c-accent, rgba(163, 230, 53, .25)));
+  border-radius: 100px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+
+.kinetic-auth__eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.kinetic-auth-masthead__title {
+  margin: 0;
+  max-width: 780px;
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -1.3px;
+  color: var(--heading);
+}
+
+.kinetic-auth-masthead__sub {
+  margin: 0;
+  max-width: 600px;
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* ---- the plain in-card head (reset/confirm.php, reset/complete.php only — css/template.css
+   :21591-21614): unlike the other auth views, these two steps put the eyebrow+H1 INSIDE
+   `.kinetic-auth__card`, not as a separate outer masthead. `.kinetic-auth__eyebrow` is the SAME
+   class the pill masthead uses, so the item-236 pill styling below still applies here too — the
+   source's own page-236.css only scopes `.kinetic-auth-masthead__title` (the "-masthead" name),
+   never plain `.kinetic-auth__title`, so these two steps keep this smaller 30px size, not the
+   masthead's 46px. */
+.kinetic-auth__head {
+  margin-bottom: 24px;
+}
+
+.kinetic-auth__title {
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 0;
+}
+
+/* the outer masthead section is not rendered alongside the plain in-card head above (real
+   structural removal — `wp_ja_kinetic_suppress_plain_masthead()`, inc/extra.php); no CSS backstop
+   needed here since that filter is unconditional on every plain-view state. */
+
+/* ---- form fields (login / register / password-reset cards) ---- */
+.kinetic-auth .control-group {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  /* source: css/template.css:11521-11523, `form:not(.form-no-margin) .control-group{margin-bottom:
+     18px}` — Bootstrap's own form spacing, not overridden per-page. */
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+/* Bootstrap 3's own `.control-group` clearfix — `::after` ONLY (re-verified with the shared
+   comparator, run-3 fix round: an `::before` rule here read back as a regression — the source's
+   own `::before` content is `none`, only `::after` is `""` (AU-143/218/224/243/296/299/300/
+   349/355). */
+.kinetic-auth .control-group::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.kinetic-auth .control-label {
+  display: block;
+  width: 100%;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 400;
+  margin: 0 0 6px;
+  /* source: css/template.css:11524-11526, Bootstrap's own horizontal-form label padding —
+     `.kinetic-auth .control-label` (template.css:21591 area) resets `float` to block but never
+     clears this padding, so it survives on the live source too. */
+  position: relative;
+  padding-top: 5px;
+  padding-right: 5px;
+}
+
+/* every `<label>` under `.control-label` (required or not — the register form's own "Company" is
+   optional and still needs this, AU-225/226) — Bootstrap's own `label{display:inline-block;
+   margin-bottom:.5rem}` overridden by the source's `.control-label label{display:block;
+   margin-bottom:6px}` (measured live: block/6px, not the browser default inline/0). */
+.kinetic-auth .control-label label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* required "*" marker's own colour, independent of the `display:none` rule below that hides it on
+   every one of these four pages — measured live on a page that does NOT hide it (register's
+   Company-row sibling fields use the same `.star` class and colour token elsewhere in this port):
+   rgb(229,72,77) (AU-146/147/221/222/297/298). */
+.kinetic-auth .star {
+  color: var(--ds-c-danger-text, #e5484d);
+}
+
+/* ---- screen-reader-only utility — the source's own `.visually-hidden` (the show-password label,
+   the alert heading's type text): measured live, the exact "sr-only" clip technique, not just
+   plain text — `display:block; position:absolute` with a collapsed 1×1 box (AU-175-184/203-
+   210/335-344, in every case where the browser default `<span>` display:inline/position:static was
+   the whole diff). ---- */
+.kinetic-auth .visually-hidden,
+.kinetic-finder .visually-hidden,
+#system-message-container .visually-hidden {
+  display: block;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- client-side "required field" validation (wp-ja-kinetic-auth-finder.js) — Joomla core's own
+   `validate.js` classes/markup, measured live on the running source (empty-username blur, login
+   page): the label gets ` invalid`, the field's own `.controls` wrapper gets ` has-danger`, the
+   field itself gets ` form-control-danger invalid`, and a `.form-control-feedback` bubble is
+   appended inside the `<label>` after the `.star` — the source's own Bootstrap-popover bubble,
+   ported rule for rule from css/template.css:5829-5872 (`.control-label .form-control-feedback`
+   shares `.popover`'s box), :5980-5983 (body padding/colour) and :11494-11519 (placement above
+   the label, anchored to the `position:relative` `.control-label`, plus the two-border down arrow
+   drawn by `::before`/`::after`) — no box-shadow (AU-008/190-192/245-250). ---- */
+.kinetic-auth .controls.has-danger input.form-control {
+  border-color: var(--ds-c-danger, #e5484d);
+}
+
+.kinetic-auth .control-label label.invalid .form-control-feedback {
+  display: block;
+  position: absolute;
+  z-index: 1070;
+  top: auto;
+  right: auto;
+  bottom: 1rem;
+  left: 0;
+  min-width: 276px;
+  max-width: 276px;
+  margin-bottom: 1rem;
+  padding: 16px;
+  border: 1px solid var(--ds-c-border, rgba(0, 0, 0, 0.2));
+  border-radius: var(--ds-input-radius, 4.8px);
+  background-color: var(--ds-c-surface, #fff);
+  background-clip: padding-box;
+  color: var(--ds-c-fg, #212529);
+  font-family: var(--ds-font-body, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  text-align: left;
+  text-align: start;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.kinetic-auth .control-label label.invalid .form-control-feedback::before,
+.kinetic-auth .control-label label.invalid .form-control-feedback::after {
+  position: absolute;
+  display: block;
+  content: "";
+  border-color: transparent;
+  border-style: solid;
+  border-width: 0.5rem 0.5rem 0;
+}
+
+.kinetic-auth .control-label label.invalid .form-control-feedback::before {
+  bottom: -8px;
+  border-top-color: var(--ds-c-border, rgba(0, 0, 0, 0.25));
+}
+
+.kinetic-auth .control-label label.invalid .form-control-feedback::after {
+  bottom: -7px;
+  border-top-color: var(--ds-c-danger, #fff);
+}
+
+/* required "*" marker — kept in markup for D-11 element-tree parity (each label's own doc comment
+   in the four blocks below) but hidden exactly as the source's own per-page CSS hides it on every
+   one of these four pages, unconditionally (not a mobile-only rule): `body.item-233 .kinetic-auth
+   .star{display:none}` (page-233.css:96), the same rule verbatim on page-234.css:76, page-236.css:
+   65, page-237.css:64 — the same "kept in markup … but not shown" standard as the password toggle
+   and the search page's Advanced Search panel. */
+body.item-233 .kinetic-auth .star,
+body.item-234 .kinetic-auth .star,
+body.item-236 .kinetic-auth .star,
+body.item-237 .kinetic-auth .star {
+  display: none;
+}
+
+.kinetic-auth .controls {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.kinetic-auth input:not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]) {
+  /* Bootstrap's own `.form-control` sets this (source's global reset) — browsers default a bare
+     <input> to inline-block, never ported here before (AU-148/223/227/307). */
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg);
+  color: var(--heading);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-btn-radius, 9px);
+  padding: 12px 13px;
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 14px;
+  line-height: 1.4;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.kinetic-auth input::placeholder {
+  color: var(--muted);
+}
+
+.kinetic-auth input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+/* ---- browser default <fieldset>/<legend> box model — source's own global reset
+   (css/template.css:524-534, Bootstrap's own `fieldset{min-width:0;padding:0;margin:0;border:0}`)
+   is never scoped to `.kinetic-auth`/`.kinetic-finder` on the source because it is a page-wide
+   rule there; ported scoped here since this stylesheet only ever touches these two regions. ---- */
+.kinetic-auth fieldset,
+.kinetic-finder fieldset {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+/* ---- Font Awesome faces for the eye toggle — the two woff2 files the running source itself
+   serves on its reset new-password page, byte-identical, bundled (no CDN): Font Awesome 4.7
+   `FontAwesome` (vendors/font-awesome/css/font-awesome.min.css) draws every `icon-*::before` glyph,
+   since the source's css/template.css:18961-18966 sets `[class*=" icon-"]::before { font-family:
+   Fontawesome }`; Font Awesome 5 Free solid 900 (vendors/font-awesome5/css/all.min.css) is the icon
+   span's own family, so it sets the span's line metrics (measured: without it the input-group
+   grows to 47px, the source's is 46px). ---- */
+@font-face {
+  font-family: "FontAwesome";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../fonts/fontawesome-webfont.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("../fonts/fa-solid-900.woff2") format("woff2");
+}
+
+/* ---- show-password eye toggle — kept in markup for D-11 element-tree parity (render.php's own
+   doc comment) but hidden exactly as the source's own auth-fix.css hides it, verbatim
+   (templates/ja_kinetic/html/com_users/auth-fix.css) — the password field fills the toggle's
+   freed width instead of the "$width × ~145px" collapse that CSS file's own comment describes.
+   Computed-style properties below (padding/radius/colour/…) have zero pixel effect — the element
+   stays `display:none` on both sides — carried only so the hidden node's own `getComputedStyle()`
+   matches the source's exactly too (AU-154-166, run-3 ruling #4). ---- */
+/* `.btn` (below) is a same-specificity 2-class selector declared LATER in this file, so it was
+   winning padding/border-radius/font-size/line-height ties on this hidden button (measured live,
+   AU-154-166: this rule's own declared values never actually reached getComputedStyle()). Qualify
+   with `.btn` here too so this rule's specificity (3 classes) beats the generic one regardless of
+   source order — root-cause fix, not a per-page patch. */
+.kinetic-auth .btn.input-password-toggle {
+  display: none !important;
+  position: relative;
+  padding: 12px 18px;
+  margin-left: -1px;
+  border: 1px solid var(--border);
+  border-left-width: 0;
+  border-top-left-radius: var(--ds-btn-radius, 0);
+  border-bottom-left-radius: var(--ds-btn-radius, 0);
+  border-top-right-radius: var(--ds-btn-radius, 9px);
+  border-bottom-right-radius: var(--ds-btn-radius, 9px);
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 14px;
+}
+
+/* `.icon-eye-slash`: the same icon once the toggle has been clicked (the source's `passwordview.js`
+   swaps the class; wp-ja-kinetic-auth-finder.js does the same) — measured live, same box/font as
+   the open eye, glyph Font Awesome 5 "eye-slash" (`\f070`). No colour of its own: the source's
+   icon inherits the toggle's (muted at rest, heading on hover — matched rules read live). */
+.kinetic-auth .input-password-toggle .icon-eye,
+.kinetic-auth .input-password-toggle .icon-eye-slash {
+  display: inline-block;
+  font-family: "Font Awesome 5 Free";
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 14px;
+}
+
+/* `.icon-fw` — the source's all.min.css:4659-4662, verbatim. */
+.kinetic-auth .input-password-toggle .icon-fw {
+  width: 1.25em;
+  text-align: center;
+}
+
+/* the source's glyphs, measured live: "eye" (`\f06e`) and "eye-slash" (`\f070`), drawn by the
+   Font Awesome 4.7 face declared above (css/template.css:17695-17698 and 18964-18966). */
+.kinetic-auth .input-password-toggle .icon-eye::before {
+  content: "\f06e";
+  font-family: FontAwesome;
+}
+
+.kinetic-auth .input-password-toggle .icon-eye-slash::before {
+  content: "\f070";
+  font-family: FontAwesome;
+}
+
+.kinetic-auth .input-group {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  position: relative;
+  align-items: stretch;
+}
+
+/* Source: css/template.css:2666-2670, verbatim (the `.form-control` part) — a focused field rises
+   above its input-group neighbours, so its focus ring paints over the eye toggle's edge. */
+.input-group > .form-control:focus {
+  z-index: 5;
+}
+
+.kinetic-auth .input-group > input.form-control,
+.kinetic-auth .password-group input.form-control,
+.kinetic-auth input[type="password"] {
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  /* squared off on the side the (hidden) toggle button sits against — measured live: `9px 0 0 9px`,
+     not the field's own uniform 9px (AU-153/240/322; the "known leftover" the run-3 audit calls out
+     as having a REAL visible effect on the field's right corners, unlike the toggle button itself).
+     `!important`: the generic `.kinetic-auth input:not(...)` rule above sets a uniform 9px at
+     higher specificity (four `:not()` args each count toward it) — re-verified with the shared
+     comparator, run-3 fix round: a plain declaration here did not win that fight. */
+  position: relative;
+  border-top-right-radius: var(--ds-input-radius, 0) !important;
+  border-bottom-right-radius: var(--ds-input-radius, 0) !important;
+}
+
+/* the reset new-password fields keep the uniform 9px: the source's css/page-236.css:66-69 sets
+   `border-radius: 9px !important` there and, unlike page-234.css:82-84 on register, never squares
+   the password field's right side (measured live: 9px on both fields). */
+/* The field sizes from its content, the toggle takes the rest: css/template.css:22012-22016
+   `.kinetic-auth .input-group > .form-control { flex: 1 1 auto !important; width: auto !important }`
+   with the field's own `size="30"` (render.php) — measured: field 153.66px, toggle 241.34px at 1440. */
+.kinetic-auth .input-group:has(#password1) > input.form-control,
+.kinetic-auth .input-group:has(#password2) > input.form-control {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  border-radius: var(--ds-input-radius, 9px) !important;
+}
+
+/* ---- reset new-password page ONLY (`#password1`/`#password2`, kinetic-auth-password/render.php's
+   `complete` branch) — the one auth page where the show-password toggle is actually visible
+   (AU-017/312-334, run-3 audit): every other page hides it (rule above). Padding, font and border
+   colour come from the rule above; measured live, this one differs in its full 1px left border,
+   right-rounded 8px (not 9px) and white background, plus Bootstrap's `.input-group .btn`
+   z-index (css/template.css:2671-2674). `:has()` keys off the field's own id rather than an extra
+   class, so the card's own class list still matches the source's plain `kinetic-auth__card`. ---- */
+.kinetic-auth .input-group:has(#password1) .input-password-toggle,
+.kinetic-auth .input-group:has(#password2) .input-password-toggle {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  border-left-width: 1px;
+  border-radius: var(--ds-input-radius, 0 8px 8px 0);
+  background-color: var(--ds-c-surface, #fff);
+  vertical-align: middle;
+}
+
+/* hover: css/template.css:21797-21800 `.kinetic-auth .btn-secondary:hover { background:
+   var(--elevated); color: var(--heading) }`, values verbatim — qualified like the rule above so it
+   beats that rule's white background (the source's T4 `.btn:hover` colours, template.css:2963, lose
+   to this same rule there). The 0.85 opacity is the global 36.css rule in wp-ja-kinetic.css. */
+.kinetic-auth .input-group:has(#password1) .input-password-toggle:hover,
+.kinetic-auth .input-group:has(#password2) .input-password-toggle:hover {
+  background: var(--elevated);
+  color: var(--heading);
+}
+
+/* ---- password field "Minimum Requirements" line + strength meter/output (register Password,
+   reset new-password) — kept in the DOM (reset_complete.xml / registration form's `password1`
+   field, both `rules="true"`, and wp-ja-kinetic-auth-finder.js's own `PasswordStrength` port).
+   Base look = the source's Bootstrap rules: `.text-muted` (css/template.css:7929, the light
+   `--t4-secondary-color` of template.css:100 — the source's dark mode keys off `html.t4-dark`,
+   which never redefines it), `small, .small` 0.875em (template.css:339), inherited 1.55 line-height,
+   no margin; `output` inline-block (template.css:590); `meter` the browser's own box. Measured
+   live: shown on the reset new-password page (item-236); hidden on register only, by the source's
+   own css/page-234.css:91-94 "hide the password strength meter / rules" — `display:none` on the
+   register page in every state (plain, error, required-empty) (AU-229..234/241/242). ---- */
+.kinetic-auth .small.text-muted {
+  margin: 0;
+  font-size: 0.875em;
+  line-height: 1.55;
+  color: var(--ds-c-muted, rgba(33, 37, 41, 0.75));
+}
+
+.kinetic-auth output {
+  display: inline-block;
+}
+
+body.item-234 .kinetic-auth [id$="-rules"],
+body.item-234 .kinetic-auth meter,
+body.item-234 .kinetic-auth output {
+  display: none !important;
+}
+
+/* ---- password strength meter (register only — css/template.css:14431 `.registration meter{min-
+   width:288px}`, the ONLY sizing rule the source carries for it; reset-complete's own body class,
+   `.kinetic-auth`, never carries `.registration` so the source never sizes its meter there either).
+   ---- */
+body.item-234 .kinetic-auth meter {
+  min-width: 288px;
+}
+
+/* ---- buttons ---- */
+.kinetic-auth .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 13px 0;
+  border-radius: var(--ds-btn-radius, 9px);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: .15s;
+}
+
+.kinetic-auth .btn-primary {
+  background: var(--primary);
+  color: var(--primary-ink);
+  border-color: var(--primary);
+  /* measured live: 4px, not the generic .btn 6px (AU-186/244/301) — every submit button in this
+     region is a .btn-primary, and the source's own control-group spacing already accounts for it. */
+  margin-top: 4px;
+}
+
+.kinetic-auth .btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: var(--primary-ink);
+}
+
+/* ---- "Forgot password?" inline link (login card only) ---- */
+.kinetic-auth__inline-link {
+  display: flex;
+  justify-content: flex-end;
+  margin: -4px 0 4px;
+}
+
+.kinetic-auth__inline-link a {
+  color: var(--ds-c-accent-text, var(--primary));
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.kinetic-auth__inline-link a:hover {
+  color: var(--ds-c-accent-text-hover, var(--primary-hover));
+  text-decoration: underline;
+}
+
+/* ---- secondary links row under the card ("New to Kinetic? Create an account" etc.) ---- */
+.kinetic-auth__altrow {
+  display: flex;
+  justify-content: center;
+  /* measured live: source computes "normal" here (no explicit align-items on its own rule) — AU-187. */
+  gap: 5px;
+  margin: 16px 0 0;
+  font-size: 13.5px;
+}
+
+/* reset / remind: source css/page-236.css:77-79 and page-237.css:78-81, both `margin: 18px 0 0`
+   (login/register keep 16px, page-234.css:101-103). Goes with the submit-row 0 below: without it
+   the 18px no longer reaches the altrow through the form's collapsed bottom margin. */
+body.item-236 .kinetic-auth__altrow,
+body.item-237 .kinetic-auth__altrow {
+  margin-top: 18px;
+}
+
+/* remind only: page-237.css:79 adds `align-items: center` (page-236.css:78 does not). */
+body.item-237 .kinetic-auth__altrow {
+  align-items: center;
+}
+
+/* reset / remind submit row: source css/template.css:14349-14354, verbatim — its 0 beats the
+   generic `.kinetic-auth .control-group` 18px above. */
+div.com-users-remind .com-users-remind__submit,
+div.com-users-remind .com-users-reset__submit,
+div.com-users-reset .com-users-remind__submit,
+div.com-users-reset .com-users-reset__submit {
+  margin-bottom: 0;
+}
+
+.kinetic-auth__altrow span {
+  color: var(--muted);
+}
+
+.kinetic-auth__altrow a {
+  color: var(--ds-c-accent-text, var(--primary));
+  font-weight: 600;
+}
+
+.kinetic-auth__altrow a:hover {
+  color: var(--ds-c-accent-text-hover, var(--primary-hover));
+  text-decoration: underline;
+}
+
+.kinetic-auth__altsep {
+  color: var(--muted);
+}
+
+/* ---- benefits panel (login / register cards) ---- */
+.kinetic-auth__benefits {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  /* measured live: 0, not the block-group default top margin (AU-188). */
+  margin-top: 0;
+}
+
+.kinetic-auth__benefits-title {
+  margin: 0;
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -.6px;
+  color: var(--heading);
+  /* measured live: source computes 27.56px ("normal") while WP computed 27.04px for the same
+     font-size — pin it explicitly so both sides render the same line height (AU-189). */
+  line-height: 1.06;
+}
+
+.kinetic-auth__checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.kinetic-auth__checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.kinetic-auth__check {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--ds-c-accent-text, var(--primary));
+}
+
+.kinetic-auth__checklist li span {
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 15px;
+  line-height: 1.53;
+  color: var(--text);
+}
+
+/* ---- register's Full Name + Company row (css/page-234.css, body.item-234 only) ---- */
+body.item-234 .kinetic-auth__row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+body.item-234 .kinetic-auth__row > .control-group {
+  flex: 1 1 0;
+  margin-bottom: 0;
+}
+
+@media (max-width: 767.98px) {
+  body.item-234 .kinetic-auth__row {
+    flex-direction: column;
+    gap: 0;
+  }
+  body.item-234 .kinetic-auth__row > .control-group {
+    margin-bottom: 16px;
+  }
+}
+
+/* ---- #system-message-container (login/register/reset/remind notices) ----
+   The source's own site-wide message system, not a kinetic-auth-specific component — Joomla
+   renders it through a custom element, `<joomla-alert type="…">`, in `#t4-main-body` ahead of
+   the page's own component markup (measured live on the running source, wrong-credentials login:
+   `#system-message-container > joomla-alert[type="warning"] > .alert-heading` +
+   `.alert-wrapper > .alert-message`). Reproduced here as plain markup carrying the SAME id,
+   classes and computed styles the source's `<joomla-alert>` actually paints — not the inert
+   `.alert.alert-warning` div Joomla itself only ships as a `<noscript>` fallback (measured
+   `getComputedStyle()` on the live element matches the `--jui-alert-warning-*` custom-property
+   values below exactly, not the token-driven `.alert-warning{border-color:var(--warn)}` rule
+   template.css also carries — that rule styles the noscript fallback, which JS replaces, so it is
+   not what a visitor with JavaScript ever sees). Position: the source's own — a sibling rendered
+   just BEFORE `.kinetic-auth` (both children of `#t4-main-body`), not inside the grid-bg group; the
+   templates place the notice block between the header part and the `.kinetic-auth` group, so here
+   both are children of `.wp-site-blocks`. */
+#system-message-container {
+  /* flush against whatever precedes it (source: css/template.css:19833-19836, no top margin), and
+     ZERO horizontal padding of its own — measured live (both 1440 and 390): box is
+     [100,0,1240,43] at 1440 (max-width 1240 + margin auto, same as below) and full-bleed [0,0,390,…]
+     at 390. The inset visitors see comes from `joomla-alert`'s own fixed 20px inline padding below,
+     not from this container — a run-3 fix: this used to carry `padding-inline`, which the live
+     source's container never has (AU-199/200/214/215). */
+  margin: 0 auto;
+  max-width: 1240px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* `<joomla-alert type="…">` — no class of its own on the source (measured 2026-09-22, wrong-
+   credentials login): tag selector, not `.wp-ja-kinetic-alert`, so the WordPress element tree
+   carries the exact same empty class list the source's custom element does. */
+joomla-alert {
+  display: block;
+  min-width: 250px;
+  margin: 0 0 16px;
+  padding: 8px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--ds-card-radius, 4px);
+  font-family: var(--ds-font-body, "IBM Plex Sans");
+  font-size: 16px;
+  /* measured live (re-verified against the built fix): `position: static` (the default — the
+     close button below is what carries `position: relative`, floated right, not this container)
+     and `text-align: start`, not `left` (re-measured with the shared comparator, run-3 fix round:
+     a plain `left`/`inherit` here still read back as `left` — likely a later default this
+     specificity does not out-cascade — `!important` on both matches). */
+  text-align: start !important;
+  position: static !important;
+}
+
+joomla-alert[type="warning"] {
+  background-color: var(--ds-c-warn-bg, #fcefdc);
+  border-color: var(--ds-c-warn, #fbe8cd);
+  color: var(--ds-c-warn-text, #7d5a29);
+}
+
+joomla-alert[type="danger"],
+joomla-alert[type="error"] {
+  background-color: var(--ds-c-danger-bg, #f7dddc);
+  border-color: var(--ds-c-danger, #f4cfce);
+  color: var(--ds-c-danger-text, #712b29);
+}
+
+joomla-alert[type="success"] {
+  background-color: var(--ds-c-success-bg, #d9e6d9);
+  border-color: var(--ds-c-success, #cadcca);
+  color: var(--ds-c-success-text, #234423);
+}
+
+joomla-alert[type="info"] {
+  background-color: var(--ds-c-info-bg, #d1ecf1);
+  border-color: var(--ds-c-info, #bee5eb);
+  color: var(--ds-c-info-text, #0c5460);
+}
+
+/* `button.joomla-alert--close` — measured live: 46×30 box pinned to the alert's top-right corner,
+   24px/700 "×" glyph at 0.5 opacity, no border/background of its own. */
+joomla-alert .joomla-alert--close {
+  /* measured live: `position: relative` on the BUTTON itself (not `absolute` — its container above
+     is `static`), floated right, then nudged up/out into the alert's padding by the source's own
+     offsets and given its white glyph shadow — media/vendor/joomla-custom-elements/css/
+     joomla-alert.min.css: `top:-.5rem;right:-1.25rem;text-shadow:0 1px 0 #fff` (without the offsets
+     the button sat 8px lower and 20px further left, register success 1440/390). */
+  position: relative;
+  float: right;
+  top: -8px;
+  right: -20px;
+  text-shadow: 0 1px 0 #fff;
+  padding: 3.2px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--ds-c-fg, #000);
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: center;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+joomla-alert .joomla-alert--close:hover {
+  opacity: 1;
+}
+
+/* `.alert-heading` carries no visible text of its own (the type label is a `.visually-hidden`
+   screen-reader string) — block-level with two zero-size children, so it occupies no height; kept
+   `display:block` (not `none`) to match the source's own element tree exactly (AU-201/203/261/280). */
+joomla-alert .alert-heading {
+  display: block;
+  text-align: inherit;
+}
+
+joomla-alert .alert-wrapper {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  text-align: inherit;
+}
+
+joomla-alert .alert-message {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  /* measured live: own `left`, not inherited `start` from the container (re-verified with the
+     shared comparator, run-3 fix round) — and a fixed `border-top-color` that does NOT follow the
+     alert's own type colour (AU-211/254/271/290 all measured the same rgb(48,164,108), a base
+     value unrelated to `type`; zero pixel effect, `border-top-width` stays 0). */
+  text-align: left;
+  border-top-color: var(--ds-c-success, rgb(48, 164, 108));
+}
+
+/* ==========================================================================
+   Per-page split/sizing — source's css/page-233.css … page-237.css, scoped there to
+   `body.item-<menu id>`. Ported verbatim to `body.item-233` … `body.item-237`: a parallel agent
+   adds a `body_class` filter that maps each WordPress page back to the source's own Itemid via
+   page-map.json, so the source's selectors work unmodified — no `page-template-*` rescoping
+   needed. Login is 233, register 234, account/profile 235, reset 236, remind 237 (page-map.json).
+   The reset and remind menu items both use this theme's one `page-password` template (WordPress
+   has one lost-password flow where the source has two separate views); `kinetic-auth-password`
+   (the block) tells them apart by the page's own slug and renders the right form for each, but
+   the CSS itself is source-identical per Itemid, so both `body.item-236` and `body.item-237`
+   carry their own rule set below rather than one merged one.
+   ========================================================================== */
+
+body.item-233 .kinetic-auth,
+body.item-234 .kinetic-auth,
+body.item-236 .kinetic-auth,
+body.item-237 .kinetic-auth,
+body.item-235 .kinetic-auth {
+  display: block;
+  width: 100%;
+  max-width: none;
+  padding: 0 0 80px;
+}
+
+body.item-235 .kinetic-auth {
+  padding: 0 0 72px;
+}
+
+/* css/template.css:14320-14327 `div.com-users-remind, div.com-users-reset` — only its radius
+   survives the page rules above (it rounds the grid background's corners). */
+div.com-users-remind,
+div.com-users-reset {
+  border-radius: var(--ds-card-radius, 0.25rem);
+}
+
+/* reset confirm's empty fieldset paragraph: css/template.css:21649-21655, then hidden by
+   css/page-236.css:60 ("fieldset intro lives in the masthead sub"). */
+.kinetic-auth fieldset > p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+
+body.item-236 .kinetic-auth fieldset > p {
+  display: none;
+}
+
+body.item-233 .kinetic-auth-masthead,
+body.item-234 .kinetic-auth-masthead {
+  padding: 64px 24px 56px;
+}
+
+body.item-236 .kinetic-auth-masthead ,
+body.item-237 .kinetic-auth-masthead {
+  padding: 56px 24px 48px;
+}
+
+/* page-password.html carries both the reset and the remind masthead sub as static paragraphs
+   (one .kinetic-auth-password block resolves the two source Itemids, kinetic-auth-password's own
+   doc comment) — only the one matching the page's own item-<Itemid> body class is shown, the
+   source's own TPL_KINETIC_AUTH_RESET_SUB / _REMIND_SUB split by menu item. */
+body.item-236 .kinetic-auth-masthead__sub--remind,
+body.item-237 .kinetic-auth-masthead__sub--reset {
+  display: none;
+}
+
+body.item-235 .kinetic-auth-masthead {
+  padding: 66px 32px 58px;
+  border-bottom: 1px solid var(--border);
+}
+
+body.item-235 .kinetic-auth-masthead__title {
+  max-width: 760px;
+}
+
+/* 2-col split: form card left + benefits right (login / register only) */
+body.item-233 .kinetic-auth__split,
+body.item-234 .kinetic-auth__split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+body.item-233 .kinetic-auth__card,
+body.item-234 .kinetic-auth__card {
+  min-width: 0;
+  max-width: none;
+  padding: 34px;
+}
+
+/* registration success — source's own `registration/complete.php`: one plain card, no grid, no
+   split (`wp_ja_kinetic_unwrap_register_success_split()`, inc/extra.php, removes WordPress's own
+   wrapper; `wp_ja_kinetic_auth_main_state_classes()` there swaps the outer class to
+   `registration-complete`). Measured live on `?layout=complete` (1440 + 390): the outer
+   `.kinetic-auth` stays `display:block` (the item-234 rule above; `justify-content:center` from the
+   base rule is inert) and the card is the plain item-234 card — full width, padding 34px/24px, no
+   max-width, no top margin. The only rule this state needs of its own is that zero top margin: here
+   the card follows the notice inside a flow-layout group, which would otherwise add the block gap
+   on top of the notice's own 16px bottom margin (the source's gap is that 16px alone). */
+body.item-234 .kinetic-auth.registration-complete .kinetic-auth__card {
+  margin-top: 0;
+}
+
+/* single centered card (password page only) */
+body.item-236 .kinetic-auth__card ,
+body.item-237 .kinetic-auth__card {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+@media (max-width: 767.98px) {
+  body.item-233 .kinetic-auth,
+  body.item-234 .kinetic-auth,
+  body.item-236 .kinetic-auth,
+body.item-237 .kinetic-auth,
+  body.item-235 .kinetic-auth {
+    padding: 0 0 56px;
+  }
+  /* reset keeps 20px sides on mobile — page-236.css:86, verbatim. */
+  body.item-236 .kinetic-auth {
+    padding: 0 20px 56px;
+  }
+  /* remind keeps the same 20px sides on mobile — page-237.css:88, verbatim. */
+  body.item-237 .kinetic-auth {
+    padding: 0 20px 56px;
+  }
+  body.item-233 .kinetic-auth-masthead,
+  body.item-234 .kinetic-auth-masthead {
+    padding: 40px 20px 36px;
+    gap: 14px;
+  }
+  /* reset/remind's own mobile masthead padding differs from login/register's — page-236.css:87 /
+     page-237.css:89, verbatim: 0 horizontal padding (not 20px), 32px bottom (not 36px). */
+  body.item-236 .kinetic-auth-masthead,
+  body.item-237 .kinetic-auth-masthead {
+    padding: 40px 0 32px;
+    gap: 14px;
+  }
+  body.item-235 .kinetic-auth-masthead {
+    padding: 44px 24px 38px;
+    gap: 14px;
+  }
+  body.item-233 .kinetic-auth-masthead__title,
+  body.item-234 .kinetic-auth-masthead__title,
+  body.item-236 .kinetic-auth-masthead__title ,
+  body.item-237 .kinetic-auth-masthead__title {
+    font-size: 32px;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+  body.item-235 .kinetic-auth-masthead__title {
+    font-size: 33px;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+  body.item-233 .kinetic-auth__eyebrow,
+  body.item-234 .kinetic-auth__eyebrow,
+  body.item-236 .kinetic-auth__eyebrow,
+body.item-237 .kinetic-auth__eyebrow,
+  body.item-235 .kinetic-auth__eyebrow {
+    font-size: 11px;
+  }
+  body.item-233 .kinetic-auth-masthead__sub,
+  body.item-234 .kinetic-auth-masthead__sub,
+  body.item-236 .kinetic-auth-masthead__sub,
+body.item-237 .kinetic-auth-masthead__sub,
+  body.item-235 .kinetic-auth-masthead__sub {
+    font-size: 15px;
+  }
+  body.item-233 .kinetic-auth__split,
+  body.item-234 .kinetic-auth__split {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 32px;
+    padding: 0 20px;
+  }
+  body.item-233 .kinetic-auth__card,
+  body.item-234 .kinetic-auth__card {
+    padding: 24px;
+  }
+  body.item-236 .kinetic-auth__card ,
+  body.item-237 .kinetic-auth__card {
+    max-width: 100%;
+    padding: 26px;
+  }
+  body.item-233 .kinetic-auth__benefits-title,
+  body.item-234 .kinetic-auth__benefits-title {
+    font-size: 22px;
+  }
+}
+
+/* ==========================================================================
+   Account / profile view — source's `.kinetic-profile__*` (css/page-235.css:76-183). The edit
+   view (`?layout=edit`) follows in its own section below.
+   ========================================================================== */
+
+.kinetic-profile__split {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  align-items: start;
+  gap: 32px;
+  max-width: 1148px;
+  margin: 0 auto;
+  padding: 56px 24px 0;
+}
+
+.kinetic-profile__identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 16px);
+}
+
+.kinetic-profile__avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--primary) 14.5%, transparent);
+}
+
+.kinetic-profile__avatar span {
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ds-c-accent-text, var(--primary));
+  line-height: 1;
+}
+
+.kinetic-profile__id-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 0;
+}
+
+.kinetic-profile__name {
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.kinetic-profile__email {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.kinetic-profile__edit-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 0;
+  background: var(--primary);
+  color: var(--primary-ink);
+  border-radius: var(--ds-btn-radius, 9px);
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .15s;
+}
+
+.kinetic-profile__edit-btn:hover {
+  background: var(--primary-hover);
+  color: var(--primary-ink);
+}
+
+.kinetic-profile__logout {
+  margin-top: 12px;
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.kinetic-profile__logout:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+.kinetic-profile__main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.kinetic-profile__card {
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 14px);
+}
+
+.kinetic-profile__card-head {
+  margin: 0 0 16px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.kinetic-profile__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 18px;
+  margin: 0;
+}
+
+.kinetic-profile__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  min-width: 0;
+}
+
+.kinetic-profile__field dt {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  flex: 0 0 auto;
+  width: auto;
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+.kinetic-profile__field dd {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  flex: 0 0 auto;
+  width: auto;
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--heading);
+  word-break: break-word;
+}
+
+@media (max-width: 767.98px) {
+  .kinetic-profile__split {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 40px 20px 0;
+  }
+  .kinetic-profile__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* ==========================================================================
+   Profile edit view (`?layout=edit`, the source's html/com_users/profile/edit.php) — AU-018.
+   1. The source's own edit-view rules, verbatim: css/page-235.css:185-356 + its ≤767.98px card
+      rule (:371-372).
+   2. The two Joomla core field sheets the source page loads for this form, verbatim:
+      media/vendor/choicesjs/css/choices.min.css (Time Zone fancy-select) and
+      media/system/css/fields/joomla-field-media.min.css (Avatar).
+   0. First, the source's base rules that reach this form before page-235.css does, as it computes
+      them (css/template.css — Bootstrap 5 / T4 reboot, table, modal, tooltip, btn-group, input-group
+      and its `.kinetic-auth` auth rules; media/t4/css/36.css `--color-success`; the Font Awesome 5
+      `[class*=" icon-"]` box from font-awesome5/css/all.min.css).
+   ========================================================================== */
+
+body.item-235 .com-users-profile__edit.kinetic-auth,
+body.item-235 .profile-edit.kinetic-auth {
+  padding: 0 0 80px;
+}
+
+.com-users-profile__edit [hidden] {
+  display: none !important;
+}
+
+.com-users-profile__edit #member-profile {
+  text-align: left;
+}
+
+.com-users-profile__edit select,
+.com-users-profile__edit textarea {
+  width: 100%;
+  line-height: 1.4;
+}
+
+.com-users-profile__edit .custom-select {
+  appearance: none;
+}
+
+.com-users-profile__edit .form-control {
+  display: block;
+}
+
+.com-users-profile__edit caption {
+  color: var(--ds-c-muted, rgba(33, 37, 41, 0.75));
+  text-align: left;
+}
+
+.com-users-profile__edit .field-calendar .visually-hidden {
+  display: none;
+}
+
+.com-users-profile__edit .controls {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.com-users-profile__edit .btn {
+  font-size: 14px;
+  padding: 12px 18px;
+  border-radius: var(--ds-btn-radius, 8px);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.com-users-profile__edit .btn-primary {
+  margin-top: 6px;
+}
+
+.com-users-profile__edit .btn.input-password-toggle .icon-fw {
+  margin-right: 0;
+}
+
+.com-users-profile__edit .controls .btn + .btn {
+  margin-top: 10px;
+}
+
+.com-users-profile__edit .btn-success {
+  background-color: var(--ds-c-success, #30a46c);
+  border-color: var(--ds-c-success, #30a46c);
+  color: var(--ds-c-success-text, #fff);
+}
+
+.com-users-profile__edit .btn-group {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  border-radius: var(--ds-btn-radius, 0.25rem);
+}
+
+.com-users-profile__edit .btn-group > .btn,
+.com-users-profile__edit .input-group .btn {
+  position: relative;
+}
+
+.com-users-profile__edit .input-group > :not(:first-child) {
+  margin-left: -1px;
+}
+
+.com-users-profile__edit [class^="icon-"],
+.com-users-profile__edit [class*=" icon-"] {
+  display: inline-block;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  line-height: 1;
+}
+
+.com-users-profile__edit .btn [class^="icon-"],
+.com-users-profile__edit .btn [class*=" icon-"] {
+  margin-right: 0.5rem;
+}
+
+/* The form's icon glyphs, measured live on the source (CDP platform fonts): every `icon-*::before` is
+   painted by the Font Awesome 4.7 face declared with the eye toggle above (css/template.css:18964-18966
+   sets the family), while the span keeps the Font Awesome 5 box set just above. Codepoints are the
+   source's font-awesome5/css/all.min.css ones (template.css:18987 for the calendar); the eye's
+   `\f06e` / `\f070` come from the eye-toggle rules above. */
+.com-users-profile__edit [class^="icon-"]::before,
+.com-users-profile__edit [class*=" icon-"]::before {
+  font-family: FontAwesome;
+}
+
+.com-users-profile__edit .icon-info-circle::before {
+  content: "\f05a";
+}
+
+.com-users-profile__edit .icon-plus::before {
+  content: "\f067";
+}
+
+.com-users-profile__edit .icon-calendar::before {
+  content: "\f073";
+}
+
+.com-users-profile__edit .choices[data-type*="select-one"] .choices__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.com-users-profile__edit .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1055;
+  display: none;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+}
+
+.com-users-profile__edit .fade:not(.show) {
+  opacity: 0;
+}
+
+.com-users-profile__edit [role="tooltip"]:not(.show) {
+  right: 5em;
+  z-index: 1070;
+  display: none;
+  max-width: none;
+  padding: 0.5em;
+  margin: 0.5em;
+  color: var(--ds-c-fg, #000);
+  text-align: start;
+  background: var(--ds-c-surface, #fff);
+  border: 1px solid var(--ds-c-border, #6d757e);
+  border-radius: var(--ds-card-radius, 0.25rem);
+}
+
+.com-users-profile__edit .table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.com-users-profile__edit .table {
+  caption-side: bottom;
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+  vertical-align: top;
+  border-color: var(--border);
+}
+
+.com-users-profile__edit .table thead,
+.com-users-profile__edit .table tbody,
+.com-users-profile__edit .table tr,
+.com-users-profile__edit .table th,
+.com-users-profile__edit .table td {
+  border-color: inherit;
+  border-style: solid;
+  border-width: 0;
+}
+
+.com-users-profile__edit .table > :not(caption) > * > * {
+  padding: 0.5rem;
+  color: var(--ds-c-fg, #212529);
+  background-color: transparent;
+  border-bottom-width: 1px;
+  box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.04);
+}
+
+.com-users-profile__edit .table > tbody {
+  vertical-align: inherit;
+}
+
+.com-users-profile__edit .table > thead {
+  vertical-align: bottom;
+}
+
+/* ═══════════════════ EDIT VIEW ══════════════════════════════════════════════ */
+body.item-235 .com-users-profile__edit .kinetic-auth__card,
+body.item-235 .profile-edit .kinetic-auth__card {
+  width: 760px;
+  max-width: 100%;
+  margin: 56px auto 0;
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--ds-card-radius, 16px);
+  box-shadow: none;
+}
+body.item-235 .com-users-profile__edit-form .control-label,
+body.item-235 .com-users-profile__edit-form label:not(.form-check-label) {
+  color: var(--text) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  margin-bottom: 6px !important;
+}
+body.item-235 .com-users-profile__edit-form .star { display: none; }
+body.item-235 .com-users-profile__edit-form .optional { display: none; }
+body.item-235 .com-users-profile__edit-form input:not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),
+body.item-235 .com-users-profile__edit-form select,
+body.item-235 .com-users-profile__edit-form textarea,
+body.item-235 .com-users-profile__edit-form .form-control {
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--ds-btn-radius, 9px) !important;
+  padding: 12px 13px !important;
+  max-width: none !important;
+  color: var(--heading) !important;
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 14px !important;
+}
+body.item-235 .com-users-profile__edit-form textarea { min-height: 90px; }
+/* password input-group: weld a fixed-width eye toggle to the right of a
+   full-width input. J6 renders the toggle as `.input-group .input-password-toggle`
+   (NOT `.password-group`), and the global `.kinetic-auth .btn{width:100%}` rule
+   balloons it to ~509px → squeezes the password input to ~186px. Pin the input
+   to flex-grow and the toggle to a 46px square. */
+/* `.password-group` wraps the input-group + the strength meter; lay them in a
+   column so the input-group fills the card width (it was a shrink-to-content flex
+   child → only ~347px wide). */
+body.item-235 .com-users-profile__edit-form .password-group { display: flex !important; flex-direction: column !important; align-items: stretch !important; width: 100% !important; }
+body.item-235 .com-users-profile__edit-form .input-group { display: flex !important; flex-wrap: nowrap !important; width: 100% !important; }
+body.item-235 .com-users-profile__edit-form .input-group > input:not([type=checkbox]):not([type=radio]),
+body.item-235 .com-users-profile__edit-form .password-group input:not([type=checkbox]):not([type=radio]) {
+  flex: 1 1 auto !important;
+  width: 1% !important;
+  min-width: 0 !important;
+  border-top-right-radius: var(--ds-input-radius, 0) !important;
+  border-bottom-right-radius: var(--ds-input-radius, 0) !important;
+}
+body.item-235 .com-users-profile__edit-form .input-group-text,
+body.item-235 .com-users-profile__edit-form .input-group .input-password-toggle,
+body.item-235 .com-users-profile__edit-form .input-group > button:last-child,
+body.item-235 .com-users-profile__edit-form .password-group .btn {
+  flex: 0 0 46px !important;
+  width: 46px !important;
+  min-width: 46px !important;
+  align-self: stretch !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  border-left: 0 !important;
+  color: var(--muted) !important;
+  border-radius: var(--ds-btn-radius, 0 9px 9px 0) !important;
+}
+body.item-235 .com-users-profile__edit-form .input-password-toggle:hover { background: var(--elevated) !important; color: var(--text) !important; }
+/* the toggle ships its label text "Show Password" + an icomoon eye span; keep only
+   the glyph, hide the wrapping label text so the 46px square reads as an icon button. */
+body.item-235 .com-users-profile__edit-form .input-password-toggle span:not([class*=icon]):not([aria-hidden]) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* password-strength <meter> ships the UA white inset ::-webkit-meter-bar track →
+   reads as a stray white bar in dark. Redraw it token-driven (reads in both themes). */
+body.item-235 .com-users-profile__edit-form meter {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--border);
+}
+body.item-235 .com-users-profile__edit-form meter::-webkit-meter-bar {
+  background: var(--border);
+  border: 0;
+  border-radius: 100px;
+}
+body.item-235 .com-users-profile__edit-form meter::-webkit-meter-optimum-value,
+body.item-235 .com-users-profile__edit-form meter::-webkit-meter-suboptimum-value,
+body.item-235 .com-users-profile__edit-form meter::-webkit-meter-even-less-good-value {
+  background: var(--primary);
+  border-radius: 100px;
+}
+body.item-235 .com-users-profile__edit-form meter::-moz-meter-bar { background: var(--primary); border-radius: 100px; }
+/* Choices.js select (Time Zone etc.) — vendor CSS hardcodes #f9f9f9 → [DARK-STUCK-LIGHT].
+   Route through tokens so it matches the other inputs in both themes. */
+body.item-235 .com-users-profile__edit-form .choices__inner {
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--ds-input-radius, 9px) !important;
+  min-height: 0;
+  padding: 9px 13px !important;
+  color: var(--heading);
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 14px;
+}
+body.item-235 .com-users-profile__edit-form .choices__list--single .choices__item { color: var(--heading); }
+body.item-235 .com-users-profile__edit-form .choices__list--dropdown,
+body.item-235 .com-users-profile__edit-form .choices__list[aria-expanded] {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--heading);
+}
+body.item-235 .com-users-profile__edit-form .choices__list--dropdown .choices__item { color: var(--heading); }
+body.item-235 .com-users-profile__edit-form .choices__list--dropdown .choices__item--selectable.is-highlighted,
+body.item-235 .com-users-profile__edit-form .choices__list--dropdown .choices__item.is-highlighted {
+  background: var(--elevated) !important;
+}
+body.item-235 .com-users-profile__edit-form .choices__input { background: transparent !important; color: var(--heading); }
+body.item-235 .com-users-profile__edit-form .choices[data-type*=select-one]::after { border-color: var(--muted) transparent transparent; }
+/* Joomla renames the Choices clear button `.choices__button_joomla` (NOT the upstream
+   `.choices__button`); it ships a #E9ECEF light circle → a white blob on the dark control
+   and is absent from the design. Hide both variants. (P52 clear-button variant.) */
+body.item-235 .com-users-profile__edit-form .choices__button_joomla,
+body.item-235 .com-users-profile__edit-form .choices__button { display: none !important; }
+
+/* fieldset spacing + legend (section heads) */
+body.item-235 .com-users-profile__edit-form fieldset { border: 0; padding: 0; margin: 0 0 8px; min-width: 0; }
+body.item-235 .com-users-profile__edit-form legend {
+  display: block; width: 100%; float: none;
+  border: 0; padding: 0; margin: 0 0 14px;
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 16px; font-weight: 600; color: var(--heading);
+}
+/* first fieldset legend ("Edit Your Profile") is redundant with the masthead H1 */
+body.item-235 .com-users-profile__edit-form > fieldset:first-of-type > legend { display: none; }
+body.item-235 .com-users-profile__edit-form .control-group { margin-bottom: 16px; }
+/* sub-sections (MFA / oteps) divider */
+body.item-235 .com-users-profile__multifactor,
+body.item-235 .com-users-profile__twofactor,
+body.item-235 .com-users-profile__oteps {
+  margin-top: 8px; padding-top: 18px; border-top: 1px solid var(--border);
+}
+body.item-235 .com-users-profile__edit-submit .controls {
+  display: flex; gap: 12px; align-items: center;
+}
+body.item-235 .com-users-profile__edit-submit .btn {
+  width: auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 12px 24px;
+  border-radius: var(--ds-btn-radius, 9px);
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 14.5px; font-weight: 600; line-height: 1;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+body.item-235 .com-users-profile__edit-submit .btn-primary {
+  background: var(--primary); color: var(--primary-ink); border-color: var(--primary);
+}
+body.item-235 .com-users-profile__edit-submit .btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+body.item-235 .com-users-profile__edit-submit .btn-danger {
+  background: var(--surface) !important; color: var(--heading) !important; border: 1px solid var(--border) !important;
+}
+body.item-235 .com-users-profile__edit-submit .btn-danger:hover { background: var(--elevated) !important; }
+
+/* ═══════════════════ MOBILE (≤767.98px) ═════════════════════════════════════ */
+
+@media (max-width: 767.98px) {
+  body.item-235 .com-users-profile__edit .kinetic-auth__card,
+  body.item-235 .profile-edit .kinetic-auth__card { width: auto; margin: 40px 20px 0; padding: 24px 20px; }
+}
+
+/* media/vendor/choicesjs/css/choices.min.css */
+.choices {
+  margin-bottom: var(--choices-guttering,24px);
+  font-size: var(--choices-font-size-lg,16px);
+  position: relative;
+  overflow: hidden;
+}
+
+.choices:focus {
+  outline: 0;
+}
+
+.choices:last-child {
+  margin-bottom: 0;
+}
+
+.choices.is-open {
+  overflow: visible;
+}
+
+.choices.is-disabled :is(.choices__inner,
+.choices__input) {
+  background-color: var(--choices-bg-color-disabled,var(--ds-c-disabled-bg, #eaeaea));
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: not-allowed!important;
+}
+
+.choices.is-disabled .choices__item {
+  cursor: not-allowed;
+  color: var(--choices-item-disabled-color,var(--ds-c-disabled-fg, #fff));
+}
+
+.choices [hidden] {
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+}
+
+.choices[data-type*=select-one] {
+  cursor: pointer;
+}
+
+.choices[data-type*=select-one] .choices__inner {
+  padding-bottom: var(--choices-inner-one-padding,7.5px);
+}
+
+.choices[data-type*=select-one] .choices__input {
+  width: var(--choices-width,100%);
+  padding: var(--choices-dropdown-item-padding,10px);
+  border-bottom: var(--choices-base-border,1px solid) var(--choices-keyline-color,var(--ds-c-border-soft, #ddd));
+  background-color: var(--choices-bg-color-dropdown,var(--ds-c-surface, #fff));
+  margin: 0;
+  display: block;
+}
+
+.choices[data-type*=select-one] .choices__button {
+  background-image: var(--choices-icon-cross-inverse,url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==));
+  opacity: .25;
+  background-size: 8px;
+  border-radius: var(--ds-btn-radius, 10em);
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-right: 25px;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+  right: 0;
+}
+
+.choices[data-type*=select-one] .choices__button:is(:hover,
+:focus) {
+  opacity: var(--choices-button-opacity-hover,1);
+}
+
+.choices[data-type*=select-one] .choices__button:focus {
+  box-shadow: 0 0 0 2px var(--choices-highlight-color,#005f75);
+}
+
+.choices[data-type*=select-one] .choices__item[data-placeholder] .choices__button {
+  display: none;
+}
+
+.choices[data-type*=select-one]:after {
+  content: "";
+  border-style: solid;
+  border-color: var(--choices-text-color,#333) transparent transparent transparent; /* ds-keep: Choices.js library default behind its own variable */
+  border-width: var(--choices-arrow-size,5px);
+  width: 0;
+  height: 0;
+  right: var(--choices-arrow-right,11.5px);
+  margin-top: var(--choices-arrow-margin-top,-2.5px);
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+}
+
+.choices[data-type*=select-one].is-open:after {
+  border-color: transparent transparent var(--choices-text-color,#333); /* ds-keep: Choices.js library default behind its own variable */
+  margin-top: var(--choices-arrow-margin-top-open,-7.5px);
+}
+
+.choices[data-type*=select-one][dir=rtl]:after {
+  left: 11.5px;
+  right: auto;
+}
+
+.choices[data-type*=select-one][dir=rtl] .choices__button {
+  margin-left: 25px;
+  margin-right: 0;
+  left: 0;
+  right: auto;
+}
+
+.choices:is([data-type*=select-multiple],
+[data-type*=text]) .choices__inner {
+  cursor: text;
+}
+
+.choices:is([data-type*=select-multiple],
+[data-type*=text]) .choices__button {
+  margin: 0 calc(var(--choices-button-offset,8px)*-.5)0 var(--choices-button-offset,8px);
+  padding-left: calc(var(--choices-button-offset,8px)*2);
+  border-left: 1px solid color-mix(in srgb,var(--choices-primary-color,var(--ds-c-accent, #005f75)) 90%,var(--choices-darken,black)); /* ds-keep: Choices.js library default behind its own variable */
+  background-image: var(--choices-icon-cross,url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==));
+  background-size: var(--choices-button-dimension,8px);
+  width: var(--choices-button-dimension,8px);
+  line-height: var(--choices-button-line-height,1);
+  border-radius: var(--choices-button-border-radius,0);
+  opacity: var(--choices-button-opacity,.75);
+  display: inline-block;
+  position: relative;
+}
+
+.choices:is([data-type*=select-multiple],
+[data-type*=text]) .choices__button:is(:hover,
+:focus) {
+  --choices-button-opacity: var(--choices-button-opacity-hover,1);
+}
+
+.choices__inner {
+  vertical-align: top;
+  width: var(--choices-width,100%);
+  background-color: var(--choices-bg-color,var(--ds-c-bg, #f9f9f9));
+  padding: var(--choices-inner-padding,7.5px 7.5px 3.75px);
+  border: var(--choices-base-border,1px solid) var(--choices-keyline-color,var(--ds-c-border-soft, #ddd));
+  border-radius: var(--choices-border-radius,2.5px);
+  font-size: var(--choices-font-size-md,14px);
+  min-height: var(--choices-input-height,44px);
+  display: inline-block;
+  overflow: hidden;
+}
+
+.is-focused .choices__inner,
+.is-open .choices__inner {
+  border-color: color-mix(in srgb,var(--choices-keyline-color,var(--ds-c-border-soft, #ddd)) 85%,var(--choices-darken,black)); /* ds-keep: Choices.js library default behind its own variable */
+}
+
+.is-open .choices__inner {
+  border-radius: var(--choices-border-radius,2.5px) var(--choices-border-radius,2.5px)0 0;
+}
+
+.is-invalid .choices__inner {
+  border-color: var(--choices-invalid-color,var(--ds-c-danger, #d33141));
+}
+
+.is-flipped.is-open .choices__inner {
+  border-radius: 0 0 var(--choices-border-radius,2.5px) var(--choices-border-radius,2.5px);
+}
+
+.choices__list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.choices__list--single {
+  padding: var(--choices-list-single-padding,4px 16px 4px 4px);
+  display: inline-block;
+}
+
+[dir=rtl] .choices__list--single {
+  padding-left: 16px;
+  padding-right: 4px;
+}
+
+.choices__list--single,
+.choices__list--single .choices__item {
+  width: var(--choices-width,100%);
+}
+
+.choices__list--multiple {
+  display: inline;
+}
+
+.choices__list--multiple .choices__item {
+  vertical-align: middle;
+  border-radius: var(--choices-border-radius-item,20px);
+  padding: var(--choices-multiple-item-padding,4px 10px);
+  font-size: var(--choices-font-size-sm,12px);
+  margin-right: var(--choices-multiple-item-margin,3.75px);
+  margin-bottom: var(--choices-multiple-item-margin,3.75px);
+  background-color: var(--choices-primary-color,var(--ds-c-accent, #005f75));
+  border: 1px solid color-mix(in srgb,var(--choices-primary-color,var(--ds-c-accent, #005f75)) 95%,var(--choices-darken,black)); /* ds-keep: Choices.js library default behind its own variable */
+  color: var(--choices-item-color,#fff); /* ds-keep: Choices.js library default behind its own variable */
+  word-break: break-all;
+  box-sizing: border-box;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.choices__list--multiple .choices__item[data-deletable] {
+  padding-right: 5px;
+}
+
+[dir=rtl] .choices__list--multiple .choices__item {
+  margin-right: 0;
+  margin-left: var(--choices-multiple-item-margin,3.75px);
+}
+
+.choices__list--multiple .choices__item.is-highlighted {
+  background-color: color-mix(in srgb,var(--choices-primary-color,var(--ds-c-accent, #005f75)) 95%,var(--choices-darken,var(--ds-c-ink, black)));
+  border: 1px solid color-mix(in srgb,var(--choices-primary-color,var(--ds-c-accent, #005f75)) 90%,var(--choices-darken,black)); /* ds-keep: Choices.js library default behind its own variable */
+}
+
+.is-disabled .choices__list--multiple .choices__item {
+  background-color: color-mix(in srgb,var(--choices-disabled-color,var(--ds-c-surface-warm, #eaeaea)) 75%,var(--choices-darken,var(--ds-c-ink, black)));
+  border: 1px solid color-mix(in srgb,var(--choices-disabled-color,var(--ds-c-border-soft, #eaeaea)) 65%,var(--choices-darken,black)); /* ds-keep: Choices.js library default behind its own variable */
+}
+
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+  z-index: var(--choices-z-index,1);
+  width: var(--choices-width,100%);
+  background-color: var(--choices-bg-color-dropdown,var(--ds-c-surface, #fff));
+  border: var(--choices-base-border,1px solid) var(--choices-keyline-color,var(--ds-c-border-soft, #ddd));
+  border-bottom-left-radius: var(--choices-border-radius,2.5px);
+  border-bottom-right-radius: var(--choices-border-radius,2.5px);
+  word-break: break-all;
+  margin-top: -1px;
+  display: none;
+  position: absolute;
+  top: 100%;
+  overflow: hidden;
+}
+
+.is-active.choices__list--dropdown,
+.is-active.choices__list[aria-expanded] {
+  display: block;
+}
+
+.is-open .choices__list--dropdown,
+.is-open .choices__list[aria-expanded] {
+  border-color: color-mix(in srgb,var(--choices-keyline-color,var(--ds-c-border-soft, #ddd)) 85%,var(--choices-darken,black)); /* ds-keep: Choices.js library default behind its own variable */
+}
+
+.is-flipped .choices__list--dropdown,
+.is-flipped .choices__list[aria-expanded] {
+  border-radius: var(--ds-card-radius, .25rem .25rem 0 0);
+  margin-top: 0;
+  margin-bottom: -1px;
+  top: auto;
+  bottom: 100%;
+}
+
+.choices__list--dropdown .choices__list,
+.choices__list[aria-expanded] .choices__list {
+  -webkit-overflow-scrolling: touch;
+  will-change: scroll-position;
+  max-height: 300px;
+  position: relative;
+  overflow: auto;
+}
+
+.choices__list--dropdown .choices__item,
+.choices__list[aria-expanded] .choices__item {
+  padding: var(--choices-dropdown-item-padding,10px);
+  font-size: var(--choices-font-size-md,14px);
+  position: relative;
+}
+
+[dir=rtl] .choices__list--dropdown .choices__item,
+[dir=rtl] .choices__list[aria-expanded] .choices__item {
+  text-align: right;
+}
+
+@media (width>=640px) {
+  .choices__list--dropdown .choices__item--selectable.is-highlighted[data-select-text],
+  .choices__list[aria-expanded] .choices__item--selectable.is-highlighted[data-select-text] {
+    padding-right: 100px;
+  }
+  .choices__list--dropdown .choices__item--selectable.is-highlighted[data-select-text]:after,
+  .choices__list[aria-expanded] .choices__item--selectable.is-highlighted[data-select-text]:after {
+    content: attr(data-select-text);
+    font-size: var(--choices-font-size-sm,12px);
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+  }
+  [dir=rtl] .choices__list--dropdown .choices__item--selectable.is-highlighted[data-select-text],
+  [dir=rtl] .choices__list[aria-expanded] .choices__item--selectable.is-highlighted[data-select-text] {
+    text-align: right;
+    padding-left: 100px;
+    padding-right: 10px;
+  }
+  [dir=rtl] .choices__list--dropdown .choices__item--selectable.is-highlighted[data-select-text]:after,
+  [dir=rtl] .choices__list[aria-expanded] .choices__item--selectable.is-highlighted[data-select-text]:after {
+    left: 10px;
+    right: auto;
+  }
+}
+
+.choices__list--dropdown .choices__item--selectable.is-selected:after,
+.choices__list[aria-expanded] .choices__item--selectable.is-selected:after {
+  content: none!important;
+}
+
+.choices__list--dropdown .choices__item--selectable.is-highlighted,
+.choices__list--dropdown .choices__item--selectable.is-selected,
+.choices__list[aria-expanded] .choices__item--selectable.is-highlighted,
+.choices__list[aria-expanded] .choices__item--selectable.is-selected {
+  background-color: var(--choices-highlighted-color,var(--ds-c-surface-warm, #f2f2f2));
+}
+
+.choices__item {
+  cursor: default;
+}
+
+.choices__item--selectable {
+  cursor: pointer;
+}
+
+.choices__item--disabled {
+  cursor: not-allowed;
+  -webkit-user-select: none;
+  user-select: none;
+  opacity: .5;
+}
+
+.choices__heading {
+  border-bottom: 1px solid color-mix(in srgb,var(--choices-keyline-color,var(--ds-c-border-soft, #ddd)) 90%,var(--choices-lighten,var(--ds-c-border-soft, white)));
+  color: var(--ds-c-meta, gray);
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.choices__button {
+  text-indent: -9999px;
+  appearance: none;
+  cursor: pointer;
+  background-color: #0000;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  border: 0;
+}
+
+.choices__button:focus,
+.choices__input:focus {
+  outline: 0;
+}
+
+.choices__input {
+  vertical-align: baseline;
+  background-color: var(--choices-bg-color,var(--ds-c-bg, #f9f9f9));
+  font-size: var(--choices-font-size-md,14px);
+  margin-bottom: var(--choices-input-margin-bottom,5px);
+  max-width: var(--choices-width,100%);
+  padding: var(--choices-input-padding,4px 0 4px 2px);
+  border: 0;
+  border-radius: var(--ds-input-radius, 0);
+  display: inline-block;
+}
+
+.choices__input::-webkit-search-cancel-button,
+.choices__input::-webkit-search-decoration,
+.choices__input::-webkit-search-results-button,
+.choices__input::-webkit-search-results-decoration {
+  display: none;
+}
+
+.choices__input::-ms-clear,
+.choices__input::-ms-reveal {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+[dir=rtl] .choices__input {
+  padding-left: 0;
+  padding-right: 2px;
+}
+
+.choices__placeholder {
+  opacity: var(--choices-placeholder-opacity,.5);
+}
+
+/* media/system/css/fields/joomla-field-media.min.css */
+joomla-field-media .field-media-preview {
+  background-color: var(--ds-c-surface-warm, #f2f2f2);
+  border: 1px solid var(--ds-c-border-soft, #00000026);
+  border-bottom-width: 0;
+  border-radius: var(--ds-input-radius, .25rem .25rem 0 0);
+  justify-content: center;
+  align-items: center;
+  max-width: 356px;
+  height: 180px;
+  padding: 10px;
+  display: flex;
+  overflow: hidden;
+}
+
+joomla-field-media .field-media-preview-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='rgba(0,0,0,.25)' d='M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm-6 336H54a6 6 0 0 1-6-6V118a6 6 0 0 1 6-6h404a6 6 0 0 1 6 6v276a6 6 0 0 1-6 6zM128 152c-22.091 0-40 17.909-40 40s17.909 40 40 40 40-17.909 40-40-17.909-40-40-40zM96 352h320v-80l-87.515-87.515c-4.686-4.686-12.284-4.686-16.971 0L192 304l-39.515-39.515c-4.686-4.686-12.284-4.686-16.971 0L96 304v48z'/%3E%3C/svg%3E");
+  background-size: 7rem;
+  width: 7rem;
+  height: 7rem;
+}
+
+joomla-field-media .field-media-input {
+  border-top-left-radius: var(--ds-input-radius, 0);
+  border-start-start-radius: var(--ds-input-radius, 0);
+}
+
+joomla-field-media .input-group>.btn.btn-success.button-select,
+joomla-field-media .button-clear {
+  border-top-right-radius: var(--ds-btn-radius, 0);
+  border-start-end-radius: var(--ds-btn-radius, 0);
+}
+
+joomla-field-media img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Phones: the 12px text floor (RSP-01). The source sets its mono labels at 10-11.5px; on a phone (575.98px and below, where the source's own phone rules apply) every one of
+   them is raised to 12px. Generated from this file's own rules: keep it last, and regenerate it
+   when a label size changes. */
+@media (max-width: 575.98px) {
+  body.item-232 .kinetic-finder .kinetic-eyebrow,
+  body.item-232 .kinetic-finder .kinetic-result__meta,
+  body.item-232 .kinetic-finder .kinetic-result__url,
+  .kinetic-auth__eyebrow,
+  body.item-233 .kinetic-auth__eyebrow,
+  body.item-234 .kinetic-auth__eyebrow,
+  body.item-236 .kinetic-auth__eyebrow,
+  body.item-237 .kinetic-auth__eyebrow,
+  body.item-235 .kinetic-auth__eyebrow,
+  .kinetic-profile__email,
+  .kinetic-profile__card-head {
+    font-size: 12px;
+  }
+}

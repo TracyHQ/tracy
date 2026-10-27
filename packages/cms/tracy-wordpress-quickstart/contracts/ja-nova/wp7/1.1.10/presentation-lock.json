@@ -1,0 +1,336 @@
+{
+  "schemaVersion": "tracy-quickstart-presentation-lock/wordpress/v1",
+  "$comment": "What a build must leave alone on a restored quickstart/ja-nova/wp7 1.1.10 site. Options are compared by value; files by sha256 of the shipped theme, captured from the release's webroot archive; each governed page by the hash of its markup with every slot masked.",
+  "options": {
+    "stylesheet": "wp-ja-nova",
+    "template": "wp-ja-nova",
+    "show_on_front": "page",
+    "permalink_structure": "/%postname%/",
+    "users_can_register": "1"
+  },
+  "themeMods": {
+    "theme": "wp-ja-nova",
+    "protected": [
+      "custom_css_post_id",
+      "nav_menu_locations"
+    ]
+  },
+  "fileRoots": [
+    "wp-content/themes/wp-ja-nova"
+  ],
+  "files": {
+    "wp-content/themes/wp-ja-nova/AGENTS.md": "341723fecb04e1ba436ce4099db2f438fedf49ca83ae1b3906f2654101aef9fa",
+    "wp-content/themes/wp-ja-nova/assets/css/fixture-page.css": "d2c9d7c59ba6ed16038ac7879d0a07813e3d46046f16dff44e51278087a3f173",
+    "wp-content/themes/wp-ja-nova/assets/css/layout.css": "dca7d68d13067d81e306200f1ec08e2a5fa03b05bf3b46202ebe69ae86d9c06f",
+    "wp-content/themes/wp-ja-nova/assets/css/sections.css": "d287eb0b26beee53654bdab114c23195e72b212240d9e5703d9546252a130a3f",
+    "wp-content/themes/wp-ja-nova/assets/css/tracy-motion.css": "656642b63d46e2cb41fcd5af3437e25fed38175280bfcf14e9a1f6da5efb6bec",
+    "wp-content/themes/wp-ja-nova/assets/css/tracy.css": "e4ff46badd4a022c1e0a0fcd742d5ce1acbcd329bc769de5a23f7d65381b0e71",
+    "wp-content/themes/wp-ja-nova/assets/css/wp-ja-nova-typography.css": "62f6450c2774600818453a33ffef9ac15b50a42e6eee1c51d53c34f205570e0c",
+    "wp-content/themes/wp-ja-nova/assets/css/wp-ja-nova.css": "d9dee3a6f60e70ef5e488fd76be9987389b9860515d9ee8095123689336eaf39",
+    "wp-content/themes/wp-ja-nova/assets/fonts/golos-text-OFL.txt": "ff532f9e8789f09a9fdffc3c0954eedfb0a48be77b2e2eb90f5f82e4f347f50c",
+    "wp-content/themes/wp-ja-nova/assets/fonts/golos-text-latin.woff2": "f8d71091110f0113ba8bd16bee2ac68b51dd6491c5b9404e9fbb82b20ae632f1",
+    "wp-content/themes/wp-ja-nova/assets/img/hero-placeholder.svg": "76cadc072b438fc2ec4e892db5f0d8146c4323b360f37a848c57193ecade5bf1",
+    "wp-content/themes/wp-ja-nova/assets/img/ic-email.png": "6d4f17a98603c1974cab7894549f61e5cd28330c110883cefd8f2a8775ab2e2c",
+    "wp-content/themes/wp-ja-nova/assets/img/ic-location.png": "6ff6da30747ec6b20577a7efd408768859ae4f632435ae81a187c2ba0d60e06b",
+    "wp-content/themes/wp-ja-nova/assets/img/ic-phone.png": "e763b52816f7f7f1da313b5fc5ffc1d251f334822df46379c5464c762b7ac866",
+    "wp-content/themes/wp-ja-nova/assets/img/ic-speaker.png": "b65e469f580c413920f0c958d4256ed4b79738b35efeef6156049b1a6c114d9f",
+    "wp-content/themes/wp-ja-nova/assets/img/icon-decor-1.png": "ff240f799af9f4da5a643cf6bbd720ccba48a3d92d5e24b4ba409d7254943c53",
+    "wp-content/themes/wp-ja-nova/assets/img/icon-decor-2.png": "7000cad6f7413fdb43ab0da4f9081151828f2b34d0d8d572e032484aa977ee53",
+    "wp-content/themes/wp-ja-nova/assets/img/icon-decor-3.png": "6623411999bc43264ccfcdce79fa5b3a217e859637a2f8231f3a4dcd98f6e61e",
+    "wp-content/themes/wp-ja-nova/assets/img/icon-decor-4.png": "46ac8ce6b992a688c81d571122283ba6ca34634ba58908497b45d59b3fb41f26",
+    "wp-content/themes/wp-ja-nova/assets/img/placeholder.svg": "b2d770577c7a42644670e479de92ba44c2039b96256e8739a6d69361905ec15e",
+    "wp-content/themes/wp-ja-nova/assets/js/tracy-motion.js": "e0de98821c906566fe3cb2e4ba7d4203375f61e1061a869fe5b53c566a796c36",
+    "wp-content/themes/wp-ja-nova/assets/js/tracy-preview.js": "174189d9b2412fe0b7a3f69dde16d901d43d24528b89d3bbad3c78adacb54eed",
+    "wp-content/themes/wp-ja-nova/assets/js/tracy.js": "88c0d89600b0320a54eb34f943c4f29f631a920eca0866a78e2f054837ae1df4",
+    "wp-content/themes/wp-ja-nova/assets/js/wp-ja-nova-dark.js": "1b7d5018f9e408cf9c8b5814cdc3f5ed23a6f9fd2a979d274b06451fc90c6a13",
+    "wp-content/themes/wp-ja-nova/assets/js/wp-ja-nova.js": "8eca464a6a1756ee6d4065a531c50495d99b7dbcdd801b85dfaaeafd3d406372",
+    "wp-content/themes/wp-ja-nova/docs/architecture.md": "0194f19cf5f36e4dd0a92e3203dc91d2153558e0a97bd3c80984eff5dd5a3292",
+    "wp-content/themes/wp-ja-nova/docs/checks-and-recovery.md": "d2d4b7135d84656d9428a58b3a9e448f4bd3392f4e8de35e9b4c3ef01a50cbf8",
+    "wp-content/themes/wp-ja-nova/docs/content-model.md": "2b77161ffd5ab05a554da49524783ff5df57bd3de751e96480e6c6ac63e1b8c3",
+    "wp-content/themes/wp-ja-nova/docs/content-rules.md": "61fbcb76976e2b9c48c3585081865eb187f70a698b21f63775e0872390be93ac",
+    "wp-content/themes/wp-ja-nova/docs/design-system.md": "7ffbf2139420331177b139e78c6ca2c015099cab0638e1c19fb6df69a1e52396",
+    "wp-content/themes/wp-ja-nova/docs/generated/inventory.json": "a2d109699ac708f5ab0bddfb9853980d9bb4fb27b58c3730b67505bd7c4a5778",
+    "wp-content/themes/wp-ja-nova/docs/generated/inventory.md": "7ce93f097d28bf440bdd0008df5f3bf984bccdfde0619597cde8d1f6f2975b44",
+    "wp-content/themes/wp-ja-nova/docs/install.md": "906043f58bebbfda4c242686c52a96fe372ef43cf88ad60395df767b14cf32c7",
+    "wp-content/themes/wp-ja-nova/functions.php": "906a53871f4556be9457e409aae5884bb3e303a383677e235440bf5c502d1bbb",
+    "wp-content/themes/wp-ja-nova/inc/asset-version.php": "3a714c4a5c7cc86565cbafdb063a68340b09c58045962b8751ef3ed66c415b1d",
+    "wp-content/themes/wp-ja-nova/inc/brand-logo.php": "dd5e6615f1a9f2030f8d597c24fbb4bc07db2bee6ed41554ae9a1b119146521e",
+    "wp-content/themes/wp-ja-nova/inc/extra.php": "c7c327478a551b317604be3e0c6c8e8610ca5ab97644a835af94f3088ced6cf3",
+    "wp-content/themes/wp-ja-nova/inc/motion-head.php": "e8e3b5b22ac792cf8ce2ee97ff4dfdce949fc85d2f5aab34bdb8a21a498e41d5",
+    "wp-content/themes/wp-ja-nova/inc/update.php": "f89a7bbe5b99c393fc78b9f27742a7ce13a07afa1f9caf45326fcc63a3808532",
+    "wp-content/themes/wp-ja-nova/inc/variations.php": "54eee8dcec3f61fcaaffa3ecde6887b2b467cec816cce873f47aa4389d79a447",
+    "wp-content/themes/wp-ja-nova/inspirations.json": "3f0d18583db98cf7876cf373b4327b88b400b18fe5a553e8e28d0ad76903e4c8",
+    "wp-content/themes/wp-ja-nova/parts/footer.html": "7650d5b27adbb8848884e3fc3ab05b35b7d39f9bf140360afa653a2832f52e96",
+    "wp-content/themes/wp-ja-nova/parts/header.html": "a889b67f61c22267714f22fbf52d8e15c82e2569f3cab9c52c4ccc639398751d",
+    "wp-content/themes/wp-ja-nova/parts/share.html": "43b8a048bed75275ab340293d161b056643675646c2292314ede8b69adfa0bf6",
+    "wp-content/themes/wp-ja-nova/patterns/acm-cards-inline.php": "879f6587d4499d9c0c86a5fa542b8b383402b168d354d6079f4c2c8feb19d088",
+    "wp-content/themes/wp-ja-nova/patterns/acm-cards.php": "d1734f7237bd5a0035a3ba277407747b15154a9ce08cc8acc20d9347622bb9a9",
+    "wp-content/themes/wp-ja-nova/patterns/acm-clients.php": "8b9a01ec8a9b64a0c4f6a8686543693b678525a44547371e3917c254417e89e4",
+    "wp-content/themes/wp-ja-nova/patterns/acm-cta-bar.php": "12041c3833f79862ee36cd6e9b8ef801d2358a2ae4403c757b8b50cc53d59329",
+    "wp-content/themes/wp-ja-nova/patterns/acm-cta.php": "cec32228ed94f9df6b18ba2a8ee9c65413ac624f9a59680d7dd9a3bf9238049f",
+    "wp-content/themes/wp-ja-nova/patterns/acm-expertise.php": "8934fe856612da7b1a492a3422acddd87d166c877cb5e2012af500d84ed3347d",
+    "wp-content/themes/wp-ja-nova/patterns/acm-faq.php": "4406100e566cdbc4b8b270557de985495923f981dc621b7799e360aa8237058f",
+    "wp-content/themes/wp-ja-nova/patterns/acm-feature.php": "36f3198f83069f4ebb52cc80c3c3f619560bac2bd76742a5fb95a53d1e845a2e",
+    "wp-content/themes/wp-ja-nova/patterns/acm-hero.php": "e421d75e053a89f72635d48ae824dbf037c86738dbf6c2deb98799bc2da669db",
+    "wp-content/themes/wp-ja-nova/patterns/acm-latest.php": "103de50b223ec4a4f15bd5c51bd2d3e6af6adb220e44cf3e32876041920112b4",
+    "wp-content/themes/wp-ja-nova/patterns/acm-news.php": "ca1b66f10d417fa30378f5642c0af007870a2c87315387da350dfb57edd9aed8",
+    "wp-content/themes/wp-ja-nova/patterns/acm-positions.php": "c9c452f7322bf670745b84a3b784f6d7fc8ae43416687e2fc0bf9f95fb7fad25",
+    "wp-content/themes/wp-ja-nova/patterns/acm-pricing.php": "b213e521a12b98a6c4b8a76f3932da945b4f047dbc1de0260fba1a2a0e83f648",
+    "wp-content/themes/wp-ja-nova/patterns/acm-project-tabs.php": "d41880a45b8fb788933371efc4d8215640179da910b2d262b0ae3c093a68f48f",
+    "wp-content/themes/wp-ja-nova/patterns/acm-related-projects.php": "51970af4a8cff81b0336c7d36eebbc8fc248e64dfc6550314b4b9cd27236791c",
+    "wp-content/themes/wp-ja-nova/patterns/acm-related.php": "7f208bfc59ee3b96c62e6c183ed8e01fb25734655b893c4e3972f61851b281c5",
+    "wp-content/themes/wp-ja-nova/patterns/acm-search-band.php": "e5de3c7db0d8d7a0d527e34c10b5091a2f862cc58324e8acb60174f168042de6",
+    "wp-content/themes/wp-ja-nova/patterns/acm-stats.php": "0620310f26505126df7a94a9f64d25fc37f29f096bb4a7d6d5e5c18a0b2efd5e",
+    "wp-content/themes/wp-ja-nova/patterns/acm-teams.php": "128306e48801da11372c01839aa4fcc4bcc40077673cd82b7cec93dba4f9bde6",
+    "wp-content/themes/wp-ja-nova/patterns/acm-text-slider.php": "91d4f271d3a52258f9aec73795ff2a9e72d026416edb9764d65ea3331fcee887",
+    "wp-content/themes/wp-ja-nova/patterns/acm-values.php": "ae7e24561e71b5044403b11a3a9f5b5da0e225130f62b66acd7c24522acb5f2c",
+    "wp-content/themes/wp-ja-nova/patterns/acm-video.php": "4ceb4a833e562f8d98a88dc2f42e16086fc2a49c14e3118d7d3f84739ee68778",
+    "wp-content/themes/wp-ja-nova/patterns/cards.php": "b9cff6d1aebcff1665eb25508e27b38d9527e406740683b56035a715b57b3f85",
+    "wp-content/themes/wp-ja-nova/patterns/landing.php": "8d34c7c6c4385651fc63db98ad8dd380800aaf33e64821381b0b4b1754c8cde3",
+    "wp-content/themes/wp-ja-nova/patterns/pricing.php": "31f9e291814519b99566250b97ac6d86011c41b5089da4a28ca0061348880e72",
+    "wp-content/themes/wp-ja-nova/patterns/section-contact.php": "60fdcec2f10f1086a8049b1acebbd024978576af1c1080c838787105dd33b0eb",
+    "wp-content/themes/wp-ja-nova/patterns/section-cta-final.php": "ecd60c0133ebf1d5a02cec4f4eca766ea449864f5c767e0c10a84745d61c547e",
+    "wp-content/themes/wp-ja-nova/patterns/section-cta-inline.php": "462272c9187d7867520afc9879d39ca9863a890af69d807643caf879abb3cfdc",
+    "wp-content/themes/wp-ja-nova/patterns/section-faq.php": "2559ac76347faf40b33af9cff183402c30b3ba49a1423015a7f940b39b2985e8",
+    "wp-content/themes/wp-ja-nova/patterns/section-features.php": "abaf6c3abd70ae7dd515932371e4cb415a5c67cbe346695f697ce8534f23705a",
+    "wp-content/themes/wp-ja-nova/patterns/section-gallery.php": "05eca35fed040a5da189dc458a03cd86a3c3000a50bc14ccc65f98e01976a0df",
+    "wp-content/themes/wp-ja-nova/patterns/section-hero.php": "2b6d329d57d9f244e740dcf727d33c5b02a187c4fac52137aeb10760fe1a28be",
+    "wp-content/themes/wp-ja-nova/patterns/section-how-it-works.php": "39585d44005856de0a97410d762cf6bcdd08aa24b1c6172bca8820a169e77a35",
+    "wp-content/themes/wp-ja-nova/patterns/section-listing.php": "1e09d65604c6a63f380919b07ea7dbbc67e16c9fc98626d9e48babf45eaaeb76",
+    "wp-content/themes/wp-ja-nova/patterns/section-pillars.php": "dc41ac8a3828a6c06b067bbbd7a338445ee0ae24176b8a6f1c14ff46d0bc0bd5",
+    "wp-content/themes/wp-ja-nova/patterns/section-pricing.php": "54cbc560b36c4670dd6affd274d08100b02e016aa89a25bfab24073bce00db26",
+    "wp-content/themes/wp-ja-nova/patterns/section-problem.php": "c83b7ecc47a79e61ae94bb8d960e802ccde630b1cb3ac6580508b66e218feda2",
+    "wp-content/themes/wp-ja-nova/patterns/section-proof.php": "2ece2c6165809cfa08aeec8ec68620bcecd9a4762dfd7de8b1b1e1c060bcfc09",
+    "wp-content/themes/wp-ja-nova/patterns/section-social-proof.php": "3f79e674bd377bb3e3496fb15faa2ff55bd6f4a58e3b7545491e0e72e3ab01bd",
+    "wp-content/themes/wp-ja-nova/patterns/section-styleguide.php": "036a6b9a7967f56b06786e21cba76eaa4845b4ade1c36c03f4634c9e042140cf",
+    "wp-content/themes/wp-ja-nova/patterns/section-team.php": "539399cdefc0989bfdc07cc6ef300e1a632db5d1c40e067cfcae545adff68092",
+    "wp-content/themes/wp-ja-nova/readme.txt": "c1c62dcc765d49279a4abf804694db4ac86a9687b4bb2533319c806511690900",
+    "wp-content/themes/wp-ja-nova/screenshot.png": "f02d6016b09875cbad0ce2db9a763a41b4aa11896ecfe4aba1872727d5181e00",
+    "wp-content/themes/wp-ja-nova/style.css": "f730f3b0b0c8155720138fec67b9256c82909a5f4debfce9b27e3eee0b02d989",
+    "wp-content/themes/wp-ja-nova/styles/wp-ja-nova.json": "65d0a4b345ef1341fb432b12c784277660d911d35408d39de2f1665de397da26",
+    "wp-content/themes/wp-ja-nova/templates/404.html": "5b0b349d68c010b9da0436c58d1ca5980c3556af03b948e13c72aab15cd18922",
+    "wp-content/themes/wp-ja-nova/templates/archive.html": "eec1b5f210594812bffce95228a2a18de25e4341b92172e8fea832e6d549b3fd",
+    "wp-content/themes/wp-ja-nova/templates/artifact.html": "26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+    "wp-content/themes/wp-ja-nova/templates/fixture.html": "26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+    "wp-content/themes/wp-ja-nova/templates/front-page.html": "c99bfdaf696298baf952443b08041665202c31a72a9adff05612e057dbd2c2cc",
+    "wp-content/themes/wp-ja-nova/templates/home.html": "eec1b5f210594812bffce95228a2a18de25e4341b92172e8fea832e6d549b3fd",
+    "wp-content/themes/wp-ja-nova/templates/index.html": "eec1b5f210594812bffce95228a2a18de25e4341b92172e8fea832e6d549b3fd",
+    "wp-content/themes/wp-ja-nova/templates/landing.html": "f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+    "wp-content/themes/wp-ja-nova/templates/page-account.html": "a40c424c98028701915f8c91912f26af82025ee50cc35954e7e935872967aabb",
+    "wp-content/themes/wp-ja-nova/templates/page-contact.html": "114adf75746cbb6ef824c6297b60eaec9851b6aa5d1d25a9098959439e03d01a",
+    "wp-content/themes/wp-ja-nova/templates/page-landing.html": "62fd468635615dd9b538c0d2cd94d8d721abe03300a2dc1c9f143c54562c99da",
+    "wp-content/themes/wp-ja-nova/templates/page-login.html": "c33d6714dc2046413b1a94ba56c3e5b6169796e215a6e826d250da19da36887c",
+    "wp-content/themes/wp-ja-nova/templates/page-register.html": "1818972dbbcba2a82673b9ec4d2b7419b4c35845da933ddacb9c1e3a02f2d32c",
+    "wp-content/themes/wp-ja-nova/templates/page-service.html": "ced245f61fd50553dd48a30ecd5f4c2deff3a787f3e1eb925b82120e04f1989b",
+    "wp-content/themes/wp-ja-nova/templates/page.html": "114adf75746cbb6ef824c6297b60eaec9851b6aa5d1d25a9098959439e03d01a",
+    "wp-content/themes/wp-ja-nova/templates/pricing.html": "4ec92f84723376773688c77dc42261c379b09ac2c78a539de894414c64d24fa7",
+    "wp-content/themes/wp-ja-nova/templates/search.html": "1c2f1ad4eff500f78edd184dd0d46a37363af3a744cff38de7525b4f650ea576",
+    "wp-content/themes/wp-ja-nova/templates/single-project.html": "4dae06f1548bacb1adeca5b3cf0159134032006d2be0b0777420820a311b8587",
+    "wp-content/themes/wp-ja-nova/templates/single.html": "b8b4b1aa939d29cdecb3036eecbc10699314be9f070646f3fb26c944d91867a4",
+    "wp-content/themes/wp-ja-nova/theme.json": "4cc42efaaf79c89580a94db0b14d84b64844b8aa74eccec3c56c9fcda43ed5e2"
+  },
+  "templateParts": {
+    "header": {
+      "sha256": "c3f6ddffd3aa094165aba86c2f679f57ae946d9f94b53579c4305ee3091bf81c"
+    },
+    "footer": {
+      "sha256": "aacf29bd3e88cced486c97183c26bad941ef227a8a8339d76df31f3a4d8dfa55"
+    }
+  },
+  "entities": {
+    "option-blogname": {},
+    "option-blogdescription": {},
+    "page-home": {
+      "post_type": "page",
+      "post_name": "home",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "710e5a5e04dfff60fec95177f37b340e57e01c6aa93c25ca93c900644daf6936"
+    },
+    "page-login-form": {
+      "post_type": "page",
+      "post_name": "login-form",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "81ae8d4a2957dbf6ca1e46d1adadbbceb75690b05218286a5583bc987641b0cb"
+    },
+    "page-registration-form": {
+      "post_type": "page",
+      "post_name": "registration-form",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "a29ed1773dacd11bf927e8def0123f4ba3b8ce8b33f3380d9d9c50541e81c305"
+    },
+    "page-user-profile": {
+      "post_type": "page",
+      "post_name": "user-profile",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "a29ed1773dacd11bf927e8def0123f4ba3b8ce8b33f3380d9d9c50541e81c305"
+    },
+    "page-error-page": {
+      "post_type": "page",
+      "post_name": "error-page",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "c84a30a3dc960cbc7d20ffe2ac0d5c11644e79c0ea77f11b707f7de6d8a41a43"
+    },
+    "page-offline-pages": {
+      "post_type": "page",
+      "post_name": "offline-pages",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "38f90e32ec1152c6c61cc45c12e2e1a7d3bd565d0b03a4651c675299fd3d73a0"
+    },
+    "page-typography": {
+      "post_type": "page",
+      "post_name": "typography",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "addcd15d6d319efbb9ba38cc80cc37d7ac615b32d06e86503798716f5d7568cd"
+    },
+    "page-featured-articles": {
+      "post_type": "page",
+      "post_name": "featured-articles",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "92d86cdb0c7cbb3ad2e26d83bf5ee85ef4d2c39dbd89b533e7a2d1890d6912f4"
+    },
+    "page-project": {
+      "post_type": "page",
+      "post_name": "project",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "174bc57d7d976125e3e301726da032445ce143edf0e0332b43caec4b402872b8"
+    },
+    "page-about-us-2": {
+      "post_type": "page",
+      "post_name": "about-us-2",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "71142cb04bdf5515551770ae01452e0aa419db9a7affa7fa9844e00d35a492d9"
+    },
+    "page-services": {
+      "post_type": "page",
+      "post_name": "services",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "c1e93a9e0714b67326e5b5755f690200dc07fd26369a964d290228e8e6a42234"
+    },
+    "page-development": {
+      "post_type": "page",
+      "post_name": "development",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "adeb588e9d470dd978b0bb22b42938662f5e6883bfeb320068db5a4b9ed8e66f"
+    },
+    "page-mobile-application": {
+      "post_type": "page",
+      "post_name": "mobile-application",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "80d68edd0a28075dedb06a816a2284a76f306176f2ea0a59b7a1ae51ddf66542"
+    },
+    "page-cloud-solutions": {
+      "post_type": "page",
+      "post_name": "cloud-solutions",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "c6ec9e6b0a93049731947446e431be754ce04002022bb624ef52d26676ef6f27"
+    },
+    "page-it-infrastructure": {
+      "post_type": "page",
+      "post_name": "it-infrastructure",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "3642d2261b6b54476454f366488a246f8bc615128804126caccdf1d2334d785a"
+    },
+    "page-cybersecurity": {
+      "post_type": "page",
+      "post_name": "cybersecurity",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "cb4d7925247beab62066d2479ccf22e1dc488f772d479c6827d1a75301e4bef7"
+    },
+    "page-virtualization": {
+      "post_type": "page",
+      "post_name": "virtualization",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "221410c822ec373750c0818be2eba76726ce03d16fb609b2606ee10bd05f1a1b"
+    },
+    "page-category-blog": {
+      "post_type": "page",
+      "post_name": "category-blog",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "c61bec1c63cab6322c5a1b94137c2638b116315efff76c21a034489f6b290e98"
+    },
+    "page-author-listting": {
+      "post_type": "page",
+      "post_name": "author-listting",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "7bb36611cd91ecfcb1964a37e74a317e36d524d12376ad154a3a22680a31c21d"
+    },
+    "page-tagged-items": {
+      "post_type": "page",
+      "post_name": "tagged-items",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "601cb900bbb1c5647341e72d10efa12be0caed539e667f1a0f73491551d2bf18"
+    },
+    "page-contact": {
+      "post_type": "page",
+      "post_name": "contact",
+      "post_status": "publish",
+      "post_parent": 159,
+      "language": null,
+      "skeleton": "5f6f52980627f34c578145f06124868c576d461c7c7ed4c7e076096dc609003b"
+    },
+    "page-career": {
+      "post_type": "page",
+      "post_name": "career",
+      "post_status": "publish",
+      "post_parent": 159,
+      "language": null,
+      "skeleton": "6e2c4c858af4da23a14678d7b146b186d25f2c5c495e1573de3fa02c30f1a1fb"
+    },
+    "page-branding": {
+      "post_type": "page",
+      "post_name": "branding",
+      "post_status": "publish",
+      "post_parent": 158,
+      "language": null,
+      "skeleton": "28cc988081f79623938d272928036ded12cec753629273bd5309999497e9d686"
+    },
+    "page-ui-ux-design": {
+      "post_type": "page",
+      "post_name": "ui-ux-design",
+      "post_status": "publish",
+      "post_parent": 158,
+      "language": null,
+      "skeleton": "02631d860f182e9ef17774cfbf6e129bbd9000313178979cd452087382721dc0"
+    }
+  }
+}

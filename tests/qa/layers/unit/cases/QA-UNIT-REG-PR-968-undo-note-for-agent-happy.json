@@ -1,0 +1,63 @@
+{
+  "id": "QA-UNIT-REG-PR-968-undo-note-for-agent-happy",
+  "itemIds": ["regression:REG-PR-968-undo-note-for-agent"],
+  "requirement": "After an undo from the chat, the agent's next turn carries one agent-only notice naming the undone request; nothing when nothing was undone, and a failing turn door never refuses the step",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-968-undo-note-for-agent.json",
+    "ref": "PR #968 (fix); fix evidence: Measured on cowork.tracy.site 06/10/2026: after an Undo, the agent's next reply said the heading showed the old wording again and that something on the person's side may be putting it back. The undo reverts under the person's session, so the site-changed notice was suppressed.",
+    "invariant": "0 failures. 'the turn door names an undone request: one notice right after the person’s message' passes. 'nothing undone: the step goes in exactly as it came' passes. 'the turn door fails (refused, unreachable): no notice, and the step is never refused' passes. 'undoneOf keeps only well-formed entries, at most five' passes.",
+    "productSources": [
+      "packages/site/tracy-site-tabs/src/host/turn-record.mjs:412",
+      "packages/ui/tracy-chat-input/src/client/comment-turn.mjs:1511"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-site-tabs/test/turn-undone-hook.test.mjs:59 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the turn door names an undone request: one notice right after the person",
+    "nothing undone: the step goes in exactly as it came",
+    "the turn door fails (refused, unreachable): no notice, and the step is never refused",
+    "undoneOf keeps only well-formed entries, at most five"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-968-undo-note-for-agent"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-site-tabs", "tracy-site-tabs"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-968-undo-note-for-agent",
+    "pr": 968,
+    "kind": "fix",
+    "area": "chat/turn-undo",
+    "file": "tests/regression/cases/REG-PR-968-undo-note-for-agent.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/site/tracy-site-tabs/test/turn-undone-hook.test.mjs",
+    "packages/site/tracy-site-tabs/test/turn-record.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the turn door names an undone request: one notice right after the person",
+    "nothing undone: the step goes in exactly as it came",
+    "the turn door fails (refused, unreachable): no notice, and the step is never refused",
+    "undoneOf keeps only well-formed entries, at most five"
+  ],
+  "timeoutS": 600
+}

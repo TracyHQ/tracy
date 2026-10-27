@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "tracy-capabilities/v1",
+  "version": "1.0.0",
+  "platform": "wordpress",
+  "$comment": "The WordPress side of the capability catalog (`@tracy/site-build-core/host/capabilities.mjs` validates it). One provider so far: the Tracy Base quickstart, restored by the fleet (provision/platform/wordpress.sh) and dressed by the quickstart branch of stages.mjs. The artifact is the release's webroot tar, pinned by sha256 and asset id from the draft release tracy-base/wp7 (14/09/2026); the database half of the pair is pinned in provision/quickstarts.json. Since 25/09/2026 two more providers: wordpress-content (content.revise, the contract door of the Cowork plugin) and wordpress-multilingual (language.add: the seed stage runs again with one more of the archive's editions live).",
+  "artifacts": {
+    "tracy-base-wp7-runtime-1.0.0": {
+      "kind": "tracy-runtime-quickstart",
+      "version": "1.0.0",
+      "release": "tracy-base/wp7",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Fwp7/tracy-base-wp7-webroot-1.0.0.tar.gz",
+      "sha256": "d808b89b44a0596f207c1c2d90be5f64ebdf410b90562a5e2de7e6a0ec795802",
+      "bytes": 45475996,
+      "githubAssetId": 562618745,
+      "$comment": "The webroot tar is the pinned artifact (the fleet reads both files of the pair through quickstarts.json, which pins the database too: sha256 e8600680…, asset 562618742)."
+    }
+  },
+  "providers": {
+    "tracy-base-wp7": {
+      "version": "1.0.0",
+      "platformMajors": [7],
+      "requires": [],
+      "extensions": [
+        {
+          "type": "theme",
+          "element": "tracy-base"
+        },
+        {
+          "type": "plugin",
+          "element": "claude-cowork"
+        }
+      ],
+      "recipe": "quickstart.restore",
+      "verification": "tracy-base.design",
+      "state": "ready",
+      "contract": "tracy-base/wp7/1.0.0",
+      "coworkMinVersion": "0.8.0",
+      "theme": "tracy-base",
+      "artifact": "tracy-base-wp7-runtime-1.0.0"
+    },
+    "wordpress-content": {
+      "version": "1.0.0",
+      "platformMajors": [7],
+      "requires": [],
+      "extensions": [
+        {
+          "type": "plugin",
+          "element": "claude-cowork"
+        }
+      ],
+      "recipe": "content.contract",
+      "verification": "content.rendered",
+      "state": "ready"
+    },
+    "wordpress-multilingual": {
+      "version": "1.0.0",
+      "platformMajors": [7],
+      "requires": ["wordpress-content"],
+      "extensions": [
+        {
+          "type": "plugin",
+          "element": "polylang"
+        },
+        {
+          "type": "plugin",
+          "element": "claude-cowork"
+        }
+      ],
+      "recipe": "language.add",
+      "verification": "language.editions-live",
+      "state": "ready"
+    }
+  },
+  "capabilities": {
+    "site.create.tracy-base": {
+      "provider": "tracy-base-wp7"
+    },
+    "content.revise": {
+      "provider": "wordpress-content"
+    },
+    "language.add": {
+      "provider": "wordpress-multilingual"
+    }
+  }
+}

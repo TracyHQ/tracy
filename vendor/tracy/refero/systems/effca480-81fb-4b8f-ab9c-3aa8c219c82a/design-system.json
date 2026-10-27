@@ -1,0 +1,282 @@
+{
+  "dos": [
+    "Use #ff5065 as the sole filled chromatic color for primary actions, active states, and icon accents",
+    "Apply 100px border-radius to all buttons, badges, and small images for the signature pill shape",
+    "Set display headlines at 56px Gilroy weight 700 with line-height 0.80 for tight stacked blocks",
+    "Use #0e0f10 (not #000000) for primary text to keep warmth in the dark tones",
+    "Apply the single shadow token 0 5px 25px rgba(38,42,62,0.06) to all elevated cards",
+    "Space sections at 80px vertical gaps with 24px card padding as the default interior rhythm",
+    "Keep the floating webinar widget pattern in the bottom-left as a persistent lead-capture anchor"
+  ],
+  "donts": [
+    "Don't introduce additional chromatic colors beyond coral, ember, persimmon, and the pink wash",
+    "Don't use heavy or dark shadows — the entire elevation system relies on 0.06 alpha only",
+    "Don't soften body text below weight 500 — Gilroy's lighter weights are reserved for nothing here",
+    "Don't use sharp corners (0–4px) on any user-facing surface except small nav details",
+    "Don't add background colors to body copy sections — the white silence IS the design",
+    "Don't apply letter-spacing adjustments — tracking stays at normal across all sizes",
+    "Don't use photography as hero imagery — product UI screenshots and illustrations carry the visual weight"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ff5065",
+      "name": "Signal Coral",
+      "role": "Primary action buttons, active links, icon accents, decorative badges — the only chromatic element allowed to fill space",
+      "group": "brand"
+    },
+    {
+      "hex": "#ff7a59",
+      "name": "Ember Wash",
+      "role": "Secondary warm accent for icon borders, decorative fills, and illustration strokes when coral needs a lighter companion",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff5c35",
+      "name": "Persimmon",
+      "role": "Deepest warm accent for icon borders, decorative fills, and hero illustration strokes",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffe9eb",
+      "name": "Coral Mist",
+      "role": "Soft pink-tinted wash for accent backgrounds, hover surfaces, and decorative bands",
+      "group": "accent"
+    },
+    {
+      "hex": "#0e0f10",
+      "name": "Carbon Ink",
+      "role": "Primary text, filled neutral buttons, dark surface backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Page canvas, card surfaces, text on dark fills, outlined button borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f4f4f8",
+      "name": "Fog",
+      "role": "Subtle section backgrounds, tertiary surface layer",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2f3133",
+      "name": "Graphite",
+      "role": "Badge fills, dark nav backgrounds, subtle card borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7a7b7c",
+      "name": "Slate",
+      "role": "Muted helper text, icon strokes, secondary borders, list dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666666",
+      "name": "Smoke",
+      "role": "Secondary text on light surfaces",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered, generous vertical rhythm with ~80px section gaps. Hero is a centered headline stack with two CTAs below. Content alternates between full-bleed centered headline blocks and multi-column card grids (3-column testimonials, 4-column logo marquee). A floating webinar widget persists in the bottom-left corner across scroll. A diagonal coral 'new' marquee band appears as a decorative section divider. Navigation is a sticky white top bar with logo-left, links-center, actions-right.",
+  "imagery": "Product UI screenshots are the primary visual asset, shown inside rounded white cards with soft shadows. Photography is absent from marketing surfaces — the product IS the hero. Illustrated icons use coral and persimmon strokes against white. A persistent floating widget (webinar thumbnail) in the lower-left adds a persistent visual anchor. The decorative diagonal 'new' marquee ribbon provides the only non-product visual texture.",
+  "similar": [
+    {
+      "why": "Same single-accent coral on white silence, pill-shaped buttons, heavy display headlines, and soft-shadow card approach",
+      "business": "Cal.com"
+    },
+    {
+      "why": "Restrained white canvas with one vivid accent color driving CTAs, rounded card chrome, geometric sans display type",
+      "business": "Loom"
+    },
+    {
+      "why": "Clean white-space-dominant layout, bold geometric type, generous radii, and minimal but precise shadow elevation",
+      "business": "Webflow"
+    },
+    {
+      "why": "High-contrast black text on white with a single warm accent, pill buttons, tight headline leading, and confident display weight",
+      "business": "Pitch"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "4px",
+      "cards": "24px",
+      "badges": "100px",
+      "images": "100px",
+      "buttons": "100px",
+      "largeCards": "40px",
+      "smallCards": "16px",
+      "extraLargeCards": "120px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Primary page background — most of the site is bare white"
+    },
+    {
+      "hex": "#f4f4f8",
+      "name": "Fog",
+      "level": 1,
+      "purpose": "Subtle section bands and tertiary containers"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 2,
+      "purpose": "Testimonial cards, feature cards, floating widget — same as canvas but defined by shadow and border"
+    },
+    {
+      "hex": "#ffe9eb",
+      "name": "Accent Wash",
+      "level": 3,
+      "purpose": "Coral-tinted decorative backgrounds and banner areas"
+    },
+    {
+      "hex": "#0e0f10",
+      "name": "Dark Surface",
+      "level": 4,
+      "purpose": "Inverted sections, filled dark buttons, dark nav blocks"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 5px 25px rgba(38, 42, 62, 0.06)",
+      "element": "Cards and floating panels"
+    }
+  ],
+  "northStar": "neon coral signal on white silence",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.43
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1.11
+    },
+    {
+      "role": "display",
+      "size": 56,
+      "lineHeight": 0.8
+    }
+  ],
+  "components": [
+    {
+      "name": "Coral Filled Button",
+      "role": "Primary call-to-action across the site",
+      "description": "Background #ff5065, white text, 100px border-radius (pill), padding 12px 24px, font-weight 500 at 16px, Gilroy. Used for 'Start for free' and 'Register now' actions."
+    },
+    {
+      "name": "Dark Filled Button",
+      "role": "Secondary action in the navigation",
+      "description": "Background #0e0f10, white text, 100px border-radius, 8px 16px padding, 14px Gilroy weight 500. Used for 'Log in' in the header."
+    },
+    {
+      "name": "Outlined Ghost Button",
+      "role": "Secondary action paired with coral CTAs",
+      "description": "White background, 1px black border (#000000), black text, 100px border-radius, 12px 24px padding, 16px Gilroy weight 500. Used for 'Book a demo'."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "White background, sticky, horizontal layout with logo left, nav links centered, actions right. Links are 16px Gilroy 500 in #0e0f10. 'Partners' carries a small inline 'new' badge in coral."
+    },
+    {
+      "name": "'New' Diagonal Badge",
+      "role": "Marker for recently added nav items",
+      "description": "Coral #ff5065 text on white, small italic 12px, placed inline after a nav label. Repeats as a decorative marquee band in the pink-coral diagonal stripe."
+    },
+    {
+      "name": "Hero Headline Block",
+      "role": "Opening screen title and subtitle",
+      "description": "Centered layout, 56px Gilroy weight 700, #0e0f10, line-height 0.80 (tight stack). Subtitle at 18px weight 500 in #0e0f10. Below: two CTAs (coral filled + ghost outlined)."
+    },
+    {
+      "name": "Logo Marquee Strip",
+      "role": "Social proof band",
+      "description": "Single row of client logos in grayscale on white, no dividers, even spacing, sits between hero and first content section."
+    },
+    {
+      "name": "Feature Screenshot Card",
+      "role": "Product showcase panel",
+      "description": "White surface, 16px or 24px border-radius, 0 5px 25px rgba(38,42,62,0.06) shadow. Contains a product UI screenshot above a short label. The shadow is deliberately faint — cards sit on the page rather than float above it."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Social proof quote card",
+      "description": "White background, 24px radius, subtle shadow, 24px padding. Five coral stars at top, headline at 18px weight 600, quote at 16px weight 500, author with circular 100px avatar and name + role at 14px."
+    },
+    {
+      "name": "Floating Webinar Widget",
+      "role": "Persistent lead-capture overlay",
+      "description": "Fixed bottom-left card, 16px radius, white surface, soft shadow. Contains 'Upcoming webinar' label with close icon, a 100px-radius thumbnail, webinar title at 16px weight 600, and a full-width coral CTA ('Register now') at 100px radius."
+    },
+    {
+      "name": "Coral Diagonal Marquee Band",
+      "role": "Decorative announcement strip",
+      "description": "Coral-tinted #ffe9eb background with repeating 'new' text on a 45° diagonal angle, creating a ribbon effect between sections."
+    },
+    {
+      "name": "Rating Badge Row",
+      "role": "Trust indicator cluster",
+      "description": "Row of platform icons (G2, Capterra, HubSpot) paired with star counts and ratings at 14px Gilroy 500. Coral stars, black text, light spacing between groups."
+    },
+    {
+      "name": "Footer Link Section",
+      "role": "Site footer navigation",
+      "description": "Dark or white background, column-based link groupings, 16px Gilroy 500 in #0e0f10 or #ffffff, 8px row gap between links."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All UI and display text. Used at 56px weight 700 for hero headlines with extremely tight leading (~0.80), creating chunky display blocks. Weight 600 for section headings at 48px, weight 500–600 for body 16–18px, weight 500 for nav and labels at 14px",
+      "sizes": "14, 16, 18, 20, 48, 56",
+      "family": "Gilroy",
+      "weight": "500, 600, 700",
+      "lineHeight": "1.0–1.2 for display, 1.4–1.6 for body, 0.80–0.88 for tightest headline lockups",
+      "substitute": "Sora, DM Sans, or Manrope",
+      "letterSpacing": "normal (0) at all sizes — tracking is never adjusted, letting the geometric letterforms do the work"
+    }
+  ],
+  "description": "Contrast runs on white-silence interrupted by one vivid coral signal. The entire visual system is deliberately restrained — generous whitespace, monochrome surfaces, heavy geometric type — so that the single warm-red CTA can do all the emotional work. Cards float on barely-visible shadows (0.06 alpha), radii are generous and pill-heavy, and the coral accent repeats as a system: buttons, borders, icons, badges, decorative washes. Black text is near-pure (#0e0f10) rather than softened gray, giving the headlines weight and authority that the otherwise delicate chrome would otherwise lack. Layout alternates between full-bleed centered hero stacks and dense multi-column card grids, with a persistent floating webinar widget anchoring the lower-left.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #0e0f10\n- background: #ffffff\n- border: #000000 or #7a7b7c\n- accent: #ff5065\n- muted text: #7a7b7c\n- primary action: #ff5065 (filled action)\n\nExample Component Prompts:\n\n1. Create a Primary Action Button: #ff5065 background, #000000 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. Create a testimonial card: white #ffffff surface, 24px border-radius, 0 5px 25px rgba(38,42,62,0.06) shadow, 24px padding. Five coral #ff5065 stars at top, quote at 16px Gilroy weight 500, #0e0f10, author row with 100px-radius circular avatar, name at 14px weight 600 and role at 14px weight 500 in #7a7b7c.\n\n3. Create a floating webinar widget: fixed bottom-left, 16px border-radius, white surface, soft shadow rgba(38,42,62,0.06). 'Upcoming webinar' label at 14px weight 600 in #0e0f10, webinar thumbnail at 100px radius, title at 16px weight 600, full-width coral CTA (#ff5065, white text, 100px radius, 12px padding).\n\n4. Create a feature screenshot card: white background, 16px border-radius, 0 5px 25px rgba(38,42,62,0.06) shadow, product UI screenshot filling the card top with 100px top radius, label text at 16px Gilroy weight 500 in #0e0f10 below.\n\n5. Create a navigation bar: white sticky top bar, logo left, centered nav links at 16px Gilroy weight 500 in #0e0f10 (one link with inline coral 'new' badge), actions right with a dark 'Log in' button (#0e0f10 fill, white text, 100px radius) and a coral 'Start for free' button (#ff5065 fill, white text, 100px radius)."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is a whisper, not a statement. The single shadow token uses 0.06 alpha — barely visible — so cards appear to rest on the page rather than levitate. No second shadow tier, no glow, no colored shadows. Depth is communicated through the shadow's presence and the card's generous radius, not its darkness."
+}

@@ -1,0 +1,671 @@
+@charset "UTF-8";
+/**
+ *------------------------------------------------------------------------------
+ * @package       TRACY_BASE - Free Template for Joomla!
+ *------------------------------------------------------------------------------
+ * @copyright     Copyright (C) 2004-2021 JoomlArt.com. All Rights Reserved.
+ * @license       GNU General Public License version 2 or later; see LICENSE.txt
+ * @authors       JoomlArt
+ *------------------------------------------------------------------------------
+**/
+html {
+  height: 100%;
+}
+
+.t4-edit-layout {
+  position: relative;
+  padding-bottom: 100px;
+}
+.t4-edit-layout .container {
+  max-width: 1200px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.t4-edit-layout .btn,
+.t4-edit-layout .btn-toolbar .btn {
+  background-color: var(--ds-c-surface-warm, #e8e8ed);
+  border: 0;
+  color: var(--ds-c-fg, #424245);
+  line-height: 1;
+  font-weight: 600;
+  padding: 0.875rem 1rem;
+}
+.t4-edit-layout .btn.btn-primary,
+.t4-edit-layout .btn-toolbar .btn.btn-primary {
+  background-color: var(--ds-c-accent, #0071e3);
+  color: var(--ds-c-accent-on, #ffffff);
+}
+.t4-edit-layout .btn [class^=icon-], .t4-edit-layout .btn [class*=" icon-"],
+.t4-edit-layout .btn-toolbar .btn [class^=icon-],
+.t4-edit-layout .btn-toolbar .btn [class*=" icon-"] {
+  margin-right: 6px;
+  opacity: 0.6;
+}
+.t4-edit-layout .btn.btn-danger,
+.t4-edit-layout .btn-toolbar .btn.btn-danger {
+  background: var(--ds-c-danger, #dc2626);
+  color: var(--ds-c-danger-text, #ffffff);
+}
+.t4-edit-layout .btn.btn-danger:hover, .t4-edit-layout .btn.btn-danger:focus, .t4-edit-layout .btn.btn-danger:active,
+.t4-edit-layout .btn-toolbar .btn.btn-danger:hover,
+.t4-edit-layout .btn-toolbar .btn.btn-danger:focus,
+.t4-edit-layout .btn-toolbar .btn.btn-danger:active {
+  background: var(--ds-c-danger, rgb(69.9019607843%, 11.2745098039%, 11.2745098039%));
+}
+.t4-edit-layout .btn-clone [class^=icon-], .t4-edit-layout .btn-clone [class*=" icon-"],
+.t4-edit-layout .btn-delete [class^=icon-],
+.t4-edit-layout .btn-delete [class*=" icon-"] {
+  margin-right: 0;
+}
+.t4-edit-layout .btn-group.radio .btn {
+  border-radius: var(--ds-btn-radius, 0);
+}
+.t4-edit-layout .btn-group.radio .btn:first-of-type {
+  border-top-left-radius: var(--ds-btn-radius, 5px);
+  border-bottom-left-radius: var(--ds-btn-radius, 5px);
+}
+.t4-edit-layout .btn-group.radio .btn:last-of-type {
+  border-top-right-radius: var(--ds-btn-radius, 5px);
+  border-bottom-right-radius: var(--ds-btn-radius, 5px);
+}
+.t4-edit-layout .field-calendar .input-group {
+  display: flex;
+  align-items: stretch;
+}
+.t4-edit-layout .field-calendar .form-control {
+  border-top-right-radius: var(--ds-input-radius, 0);
+  border-bottom-right-radius: var(--ds-input-radius, 0);
+}
+@media (max-width: 480px) {
+  .t4-edit-layout .field-calendar .form-control {
+    max-width: 200px;
+  }
+}
+.t4-edit-layout .field-calendar .btn {
+  margin: 0;
+}
+.t4-edit-layout .field-calendar .buttons-wrapper .btn {
+  color: var(--ds-c-fg-2, #424245);
+  font-weight: 600;
+}
+.t4-edit-layout .field-calendar .buttons-wrapper .btn:hover, .t4-edit-layout .field-calendar .buttons-wrapper .btn:focus, .t4-edit-layout .field-calendar .buttons-wrapper .btn:active {
+  color: #ffffff;
+}
+.t4-edit-layout joomla-field-media {
+  display: block;
+  max-width: 100%;
+}
+.t4-edit-layout joomla-field-media div.input-group {
+  border-bottom-right-radius: var(--ds-input-radius, 0.25rem);
+  display: flex;
+  overflow: hidden;
+}
+.t4-edit-layout joomla-field-media div.input-group .btn {
+  border-radius: var(--ds-btn-radius, 0);
+}
+.t4-edit-layout joomla-field-media .field-media-input {
+  border-top-right-radius: var(--ds-input-radius, 0);
+  border-bottom-right-radius: var(--ds-input-radius, 0);
+  height: 42px;
+  flex: 1;
+  line-height: 42px;
+}
+.t4-edit-layout joomla-field-media .btn {
+  border-radius: var(--ds-btn-radius, 0);
+  margin: 0;
+  padding: 0 16px;
+}
+.t4-edit-layout joomla-field-media .btn span.icon-times {
+  margin-right: 0;
+}
+.t4-edit-layout joomla-field-media .button-clear {
+  border-bottom-right-radius: var(--ds-btn-radius, 4px);
+}
+.t4-edit-layout #attrib-content_meta .input-append {
+  display: flex;
+  align-items: center;
+}
+.t4-edit-layout #attrib-content_meta .input-append .media-preview {
+  white-space: nowrap;
+  min-height: 38px;
+  line-height: 38px;
+}
+.t4-edit-layout #attrib-content_meta .input-append input {
+  max-width: 140px;
+}
+.t4-edit-layout #attrib-content_meta .input-append .btn {
+  border: 0;
+}
+.t4-edit-layout #attrib-content_meta .input-append .btn [class^=icon-] {
+  margin-right: 0;
+  margin-top: -3px;
+}
+.t4-edit-layout #attrib-content_meta .input-append .btn:hover, .t4-edit-layout #attrib-content_meta .input-append .btn:focus, .t4-edit-layout #attrib-content_meta .input-append .btn:active {
+  border: 0;
+}
+.t4-edit-layout #attrib-content_meta .jaacm-list a.modal {
+  position: relative;
+}
+.t4-edit-layout input {
+  max-width: 100%;
+}
+.t4-edit-layout joomla-field-fancy-select {
+  display: block;
+  max-width: 300px;
+}
+.t4-edit-layout joomla-field-fancy-select .choices__inner {
+  border: 1px soild var(--ds-c-border, #d2d2d7);
+  border-radius: var(--ds-input-radius, 5px);
+  padding: 0.5rem;
+  min-width: 300px;
+}
+.t4-edit-layout joomla-field-fancy-select .choices__inner .choices__button_joomla {
+  background-color: var(--ds-c-bg, #ffffff);
+  border-radius: var(--ds-btn-radius, 5px);
+  border: 1px solid var(--ds-c-border, #d2d2d7);
+  margin-left: 6px;
+  padding: 4px 6px;
+}
+.t4-edit-layout joomla-field-fancy-select .choices__inner .choices__button_joomla:hover, .t4-edit-layout joomla-field-fancy-select .choices__inner .choices__button_joomla:focus {
+  border: 1px solid var(--ds-c-border, #b7b7bf);
+  cursor: pointer;
+}
+.t4-edit-layout joomla-field-fancy-select .choices__inner .choices__input--cloned {
+  display: none !important;
+}
+.t4-edit-layout select.form-select,
+.t4-edit-layout select.custom-select {
+  background: url(select-bg.svg) no-repeat 100%/116rem var(--ds-c-surface, #f5f5f7);
+  border: 1px solid var(--ds-c-border, #d2d2d7);
+  border-radius: var(--ds-input-radius, 5px);
+  display: block;
+  font-size: 15px;
+  padding: 0.6rem 3rem 0.6rem 1rem;
+  min-width: 295px;
+  max-width: 100%;
+  cursor: pointer;
+  appearance: none;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+@media (max-width: 480px) {
+  .t4-edit-layout select.form-select,
+  .t4-edit-layout select.custom-select {
+    min-width: 250px;
+  }
+}
+.t4-edit-layout .custom-select optgroup,
+.t4-edit-layout .custom-select option,
+.t4-edit-layout .form-select optgroup,
+.t4-edit-layout .form-select option {
+  background-color: var(--ds-c-bg, #ffffff);
+}
+.t4-edit-layout .choices[data-type*=select-one] .choices__inner .choices__item,
+.t4-edit-layout .choices[data-type*=select-multiple] .choices__inner .choices__item {
+  white-space: nowrap;
+}
+.t4-edit-layout .accordion-item {
+  background-color: var(--ds-c-bg, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+.t4-edit-layout .accordion-item:first-of-type {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+.t4-edit-layout .accordion-item:not(:first-of-type) {
+  border-top: 0;
+}
+.t4-edit-layout .accordion-header {
+  border-radius: 0.25rem;
+  margin: 0;
+}
+.t4-edit-layout .accordion-button {
+  background-color: var(--ds-c-bg, #ffffff);
+  border: 0;
+  border-radius: var(--ds-btn-radius, 0.25rem);
+  border-top-left-radius: var(--ds-btn-radius, 0px);
+  border-top-right-radius: var(--ds-btn-radius, 0px);
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: var(--ds-c-fg, #22262a);
+  cursor: pointer;
+  text-align: left;
+  overflow-anchor: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, border-radius 0.15s ease;
+  width: 100%;
+}
+.t4-edit-layout .accordion-button::after {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%2322262a'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 01.708 0L8 10.293l5.646-5.647a.5.5 0 01.708.708l-6 6a.5.5 0 01-.708 0l-6-6a.5.5 0 010-.708z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+  content: "";
+  flex-shrink: 0;
+  height: 1.25rem;
+  margin-left: auto;
+  width: 1.25rem;
+}
+.t4-edit-layout .accordion-button:not(.collapsed)::after {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230f244d'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 01.708 0L8 10.293l5.646-5.647a.5.5 0 01.708.708l-6 6a.5.5 0 01-.708 0l-6-6a.5.5 0 010-.708z'/%3E%3C/svg%3E");
+  transform: rotate(-180deg);
+}
+.t4-edit-layout .accordion-item:first-of-type .accordion-button {
+  border-top-left-radius: calc(0.25rem - 1px);
+  border-top-right-radius: calc(0.25rem - 1px);
+}
+.t4-edit-layout .accordion-item:last-of-type {
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+.t4-edit-layout .accordion-item:last-of-type .accordion-collapse {
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+.t4-edit-layout .accordion-button:not(.collapsed) {
+  background-color: var(--ds-c-surface-warm, #e7eaee);
+}
+.t4-edit-layout .accordion-body {
+  padding: 1rem 1.25rem;
+}
+.t4-edit-layout .mb-3 {
+  margin-bottom: 15px;
+}
+.t4-edit-layout .d-none {
+  display: none;
+}
+.t4-edit-layout.view-profile .close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.tip-wrap {
+  background-color: var(--ds-c-bg, #ffffff);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--ds-c-border, #d2d2d7);
+  border-radius: 5px;
+  padding: 0;
+}
+.tip-wrap .tip-title {
+  padding: 0.25rem 0.5rem;
+}
+.tip-wrap .tip-text {
+  padding: 0.5rem;
+}
+
+.nav-tabs a.nav-link {
+  display: block !important;
+}
+
+.btn-toolbar .btn {
+  background-color: #6e6e73;
+  color: #ffffff;
+}
+.btn-toolbar .btn:hover, .btn-toolbar .btn:focus, .btn-toolbar .btn:active {
+  background-color: rgb(38.2483660131%, 38.2483660131%, 39.9869281046%);
+  color: #ffffff;
+}
+
+.label.label-default {
+  background-color: var(--ds-c-surface, #f5f5f7);
+  color: var(--ds-c-fg, #424245);
+  border-radius: 3px;
+  padding: 2px 8px;
+}
+
+.badge {
+  border-radius: var(--ds-pill-radius, 4px);
+  font-size: 0.9296875rem;
+  line-height: 1;
+  padding: 4px 8px;
+}
+.badge.bg-secondary {
+  background-color: #6e6e73;
+  color: #ffffff;
+}
+
+.t4-header {
+  background-color: var(--ds-c-surface-warm, #fbfbfd);
+  border-bottom: 1px solid var(--ds-c-border, #d2d2d7);
+}
+
+.radio.btn-group input[type=radio] {
+  display: none;
+}
+.radio.btn-group > label {
+  background-color: var(--ds-c-surface, #f5f5f7);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  text-shadow: none;
+  user-select: none;
+}
+.radio.btn-group > label:first-of-type {
+  border-right: 0;
+  margin-left: 0;
+}
+.radio.btn-group > label:last-of-type {
+  border-left: 0;
+}
+
+.collapse:not(.show) {
+  height: 0;
+  overflow: hidden;
+}
+
+.t4-megamenu.collapse:not(.show) {
+  overflow: visible;
+}
+
+.chzn-container {
+  min-width: 220px;
+}
+
+.field-calendar .btn.btn-secondary {
+  background-color: #86868b;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.edit.item-page .nav-tabs li {
+  margin-bottom: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.edit.item-page .nav-tabs li a {
+  border: 0;
+  border-radius: 0;
+  color: var(--ds-c-fg-2, #424245);
+  padding-left: 0;
+  padding-right: 0;
+}
+.edit.item-page .nav-tabs li a.active {
+  background-color: transparent;
+  border-bottom-color: var(--ds-c-accent, #0071e3);
+  color: var(--ds-c-accent-text, #0071e3);
+}
+.edit.item-page fieldset {
+  background-color: var(--ds-c-surface-warm, rgb(94.431372549%, 94.431372549%, 97.2156862745%));
+  padding: 2rem;
+  margin-bottom: 20px;
+}
+@media (max-width: 767px) {
+  .edit.item-page fieldset {
+    padding: 1rem;
+  }
+}
+.edit.item-page #editor {
+  margin-bottom: 0;
+}
+.edit.item-page #editor .control-group .controls {
+  margin-left: 0;
+}
+.edit.item-page #editor .control-group #jform_title {
+  border-radius: 0;
+  width: 100%;
+}
+.edit.item-page #editor .js-editor-none textarea {
+  border: 1px solid var(--ds-c-border-soft, #f5f5f7);
+  padding: 10px;
+}
+.edit.item-page #editor .CodeMirror {
+  text-align: left;
+}
+.edit.item-page #editor .btn-toolbar {
+  padding: 0.75rem 1rem;
+}
+.edit.item-page .btn-toolbar .btn {
+  border-radius: var(--ds-btn-radius, 4px);
+}
+.edit.item-page .editor-xtd-buttons .btn,
+.edit.item-page .editor-xtd-buttons .btn.btn-secondary {
+  background: var(--ds-c-surface-warm, #e8e8ed);
+  color: var(--ds-c-fg, #1d1d1f);
+  margin-bottom: 4px;
+  padding: 12px 16px;
+}
+.edit.item-page .editor-xtd-buttons .btn:hover, .edit.item-page .editor-xtd-buttons .btn:focus, .edit.item-page .editor-xtd-buttons .btn:active,
+.edit.item-page .editor-xtd-buttons .btn.btn-secondary:hover,
+.edit.item-page .editor-xtd-buttons .btn.btn-secondary:focus,
+.edit.item-page .editor-xtd-buttons .btn.btn-secondary:active {
+  background-color: var(--ds-c-surface-warm, #d2d2d7);
+}
+
+.edit .btn {
+  margin: 4px 0;
+}
+.edit .btn-primary span::before {
+  color: #ffffff;
+}
+.edit .btn.btn-secondary {
+  background: var(--ds-c-surface-warm, #e8e8ed);
+  color: var(--ds-c-fg, #1d1d1f);
+}
+.edit .btn.btn-secondary:hover, .edit .btn.btn-secondary:focus, .edit .btn.btn-secondary:active {
+  background-color: var(--ds-c-surface-warm, #d2d2d7);
+}
+
+.well {
+  background-color: var(--ds-c-surface, #f5f5f7);
+  border: 1px solid var(--ds-c-border, #d2d2d7);
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+#member-profile {
+  text-align: left;
+}
+
+fieldset legend {
+  border-bottom: 1px solid var(--ds-c-border, #d2d2d7);
+}
+
+#jform_privacyconsent_privacy-lbl .modal {
+  display: inline;
+  position: static;
+}
+
+#modules-form {
+  text-align: left;
+}
+#modules-form .btn-toolbar {
+  margin-bottom: 2rem;
+}
+#modules-form #options .accordion {
+  padding: 0;
+  margin-bottom: 1rem;
+}
+#modules-form #options .card-header {
+  margin-bottom: -1px;
+  padding: 0;
+}
+#modules-form #options .card-header h2 {
+  margin: 0;
+  line-height: 1;
+}
+#modules-form #options .card-header h2 .btn {
+  border: 0;
+  border-radius: var(--ds-btn-radius, 0);
+  color: var(--ds-c-fg-2, #424245);
+  display: block;
+  padding: 1rem;
+  text-align: left;
+  width: 100%;
+}
+#modules-form #options .card-header h2 .btn:hover, #modules-form #options .card-header h2 .btn:focus, #modules-form #options .card-header h2 .btn:active {
+  color: var(--ds-c-accent-text, #0071e3);
+  text-decoration: none;
+}
+
+#sbox-window {
+  left: 50% !important;
+  transform: translateX(-50%);
+  width: 60% !important;
+  padding: 20px;
+}
+#sbox-window iframe {
+  height: 100%;
+  width: 100%;
+}
+
+.jviewport-width80 {
+  max-width: 80vw;
+}
+
+.jviewport-height70 {
+  height: 70vh;
+}
+
+.jviewport-height60 {
+  height: 60vh;
+}
+
+.modal-dialog iframe {
+  width: 100%;
+}
+
+.t4-edit-layout .modal-footer .btn {
+  border-radius: var(--ds-btn-radius, 5px);
+  padding: 12px 16px;
+}
+.t4-edit-layout .modal-footer .btn.btn-success {
+  background-color: var(--ds-c-success, #457d54);
+  color: var(--ds-c-success-text, #ffffff);
+}
+
+.modal-header button.btn-close {
+  cursor: pointer;
+}
+
+[class^=icon-], [class*=" icon-"] {
+  display: inline-block;
+}
+[class^=icon-]::before, [class*=" icon-"]::before {
+  font-family: Fontawesome;
+}
+
+.icon-ok::before {
+  content: "\f00c";
+}
+
+.icon-cancel::before {
+  content: "\f00d";
+}
+
+.icon-apply::before {
+  content: "\f00c";
+}
+
+.icon-save::before {
+  content: "\f0c7";
+}
+
+.icon-times::before {
+  content: "\f00d";
+}
+
+.icon-calendar::before {
+  content: "\f073";
+}
+
+.radio-custom {
+  display: flex;
+  align-items: center;
+}
+.radio-custom label.form-check {
+  padding-left: 0;
+}
+.radio-custom label.form-check:first-of-type {
+  margin-right: 16px;
+}
+.radio-custom input {
+  height: auto;
+  width: auto;
+}
+
+.view-config form > fieldset {
+  margin-top: 30px;
+}
+.view-config form > fieldset legend {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+.view-config form > fieldset label {
+  display: block;
+  padding-bottom: 5px;
+}
+
+.com-users-profile__multifactor .btn:hover,
+.com-users-profile__multifactor .btn:focus,
+.com-users-profile__multifactor .btn:active {
+  background-color: var(--ds-c-accent, #0071e3);
+  color: var(--ds-c-accent-on, #ffffff);
+}
+
+.com-users-profile__edit-submit .btn {
+  font-weight: 700;
+  padding: 0.875rem 1rem;
+  height: auto;
+}
+
+.jmodedit {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 300;
+}
+
+select {
+  font-family: var(--ds-font-body, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+}
+
+.accordion {
+  padding: 0;
+}
+
+.choices[data-type*=select-one] .choices__item,
+.choices[data-type*=select-multiple] .choices__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.choices[data-type*=select-one] .choices__list--multiple,
+.choices[data-type*=select-multiple] .choices__list--multiple {
+  display: flex;
+  flex-wrap: wrap;
+}
+.choices[data-type*=select-one] .choices__button_joomla,
+.choices[data-type*=select-multiple] .choices__button_joomla {
+  background: var(--ds-c-surface, #f5f5f7);
+  color: var(--ds-c-muted, #6e6e73);
+  border: 0;
+  border-radius: 50%;
+  height: 20px;
+  overflow: hidden;
+  text-indent: -9999rem;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+  width: 20px;
+}
+.choices[data-type*=select-one] .choices__button_joomla:hover, .choices[data-type*=select-one] .choices__button_joomla:focus, .choices[data-type*=select-one] .choices__button_joomla:active,
+.choices[data-type*=select-multiple] .choices__button_joomla:hover,
+.choices[data-type*=select-multiple] .choices__button_joomla:focus,
+.choices[data-type*=select-multiple] .choices__button_joomla:active {
+  background: var(--ds-c-danger, #dc2626);
+  color: var(--ds-c-accent-on, #fff);
+  cursor: pointer;
+}
+.choices[data-type*=select-one] .choices__button_joomla::before,
+.choices[data-type*=select-multiple] .choices__button_joomla::before {
+  content: "×";
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  position: absolute;
+  text-indent: 0;
+  left: 4px;
+  top: 1px;
+  height: 16px;
+}

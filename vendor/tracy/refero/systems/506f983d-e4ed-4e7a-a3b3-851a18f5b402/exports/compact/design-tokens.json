@@ -1,0 +1,79 @@
+{
+  "color": {
+    "void-canvas": {
+      "$value": "#050608",
+      "$type": "color",
+      "$description": "Void Canvas — Page backgrounds and uninterrupted full-bleed section canvas"
+    },
+    "ink-surface": {
+      "$value": "#0a0b0f",
+      "$type": "color",
+      "$description": "Ink Surface — Inset page regions, dark filled controls, and low-level card surfaces"
+    },
+    "charcoal-panel": {
+      "$value": "#0f1219",
+      "$type": "color",
+      "$description": "Charcoal Panel — Product-demo panels, card fills, dark text on white controls, and structural borders"
+    },
+    "steel-panel": {
+      "$value": "#151822",
+      "$type": "color",
+      "$description": "Steel Panel — Raised dark controls and secondary panel layers"
+    },
+    "slate-edge": {
+      "$value": "#1f1e2a",
+      "$type": "color",
+      "$description": "Slate Edge — Fine borders around dark demo panes, tabs, and outlined controls"
+    },
+    "cloud-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Cloud White — High-emphasis headings, icons, filled action surfaces, and logo marks"
+    },
+    "frost-text": {
+      "$value": "#dee1ea",
+      "$type": "color",
+      "$description": "Frost Text — Lead paragraphs and lower-emphasis navigation text"
+    },
+    "misted-slate": {
+      "$value": "#b2b8cd",
+      "$type": "color",
+      "$description": "Misted Slate — Muted body copy, inactive tabs, secondary links, and product-interface labels"
+    },
+    "quiet-slate": {
+      "$value": "#8f94a6",
+      "$type": "color",
+      "$description": "Quiet Slate — Metadata, subdued icons, and tertiary product-interface text"
+    },
+    "signal-violet": {
+      "$value": "#7064f2",
+      "$type": "color",
+      "$description": "Signal Violet — Brand symbol, selected product icons, and violet light sources — a narrowly deployed signal against the black canvas"
+    },
+    "violet-atmosphere": {
+      "$value": "#9182f8",
+      "$type": "color",
+      "$description": "Violet Atmosphere — Soft demo-edge illumination and decorative feature-section washes"
+    },
+    "slate-lift": {
+      "$value": "#5d6890",
+      "$type": "color",
+      "$description": "Slate Lift — Subtle upward background haze behind contained product visuals"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Use throughout. Weight 500 carries navigation, labels, and display headings; 400 carries explanatory copy; 600 is reserved for compact feature titles and high-emphasis white controls. The 500-weight 48px display treatment is intentionally quieter than a 700-weight marketing headline."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://featurebase.app",
+      "siteName": "Featurebase",
+      "extractedAt": "2026-09-24T17:35:11.555Z",
+      "variant": "compact"
+    }
+  }
+}

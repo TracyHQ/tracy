@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1343-media-revoke-honest",
+  "kind": "fix",
+  "title": "EmDash media deletion distinguishes page references, library storage, and cached public URLs",
+  "pr": 1343,
+  "area": "site-tools/emdash-media",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "From the checkout under test, run `pnpm --filter @tracy/dsh-site-tools exec node --test test/emdash.test.mjs test/emdash-call.test.mjs`.",
+    "Keep the TAP output as evidence. The fake EmDash MCP site returns both storageDeleted:true and storageDeleted:false media_delete answers; no live library item is changed."
+  ],
+  "expect": [
+    "The EmDash prompt says content_update removes a picture reference from a page; media_delete removes its media-library record and stored file, leaves page references unchanged, and may break them.",
+    "The prompt says media_delete does not revoke a public URL and cannot promise cached URLs stop serving; it adds no purge or deny integration.",
+    "When storageDeleted is true, the successful media_delete response says the stored file was deleted, page references remain, and a cached public URL may still serve; it forbids claiming the URL is revoked or unreachable.",
+    "When storageDeleted is false, the response says the library record was removed but the stored file may remain and may still be served from origin; it does not claim the file is gone, and says a cached public URL may still serve.",
+    "The unconfirmed media_delete asks the customer before any delete call; the confirmation gate is unchanged."
+  ],
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/emdash.test.mjs", "test/emdash-call.test.mjs"],
+    "cwd": "packages/tools/tracy-site-tools",
+    "tests": [
+      "the tracy_emdash description is the road (T9)",
+      "the EmDash prompt separates page removal, library deletion, and public URL revocation",
+      "a confirmed media_delete with storageDeleted:true reports file removal without claiming the public URL was revoked",
+      "a confirmed media_delete with storageDeleted:false says the stored file may remain and still serve",
+      "each of the ten destructive tools asks first, with no exec"
+    ]
+  },
+  "selectors": {
+    "prompt": "EMDASH_DESCRIPTION in packages/tools/tracy-site-tools/src/host/emdash.mjs",
+    "deleteAnswer": "runEmdashTool result.next in packages/tools/tracy-site-tools/src/host/emdash-call.mjs",
+    "confirmation": "EMDASH_DESTRUCTIVE_TOOLS / CONFIRM_FIRST in packages/tools/tracy-site-tools/src/host/emdash.mjs and emdash-call.mjs"
+  },
+  "evidence": "Issue #1304: origin deletion does not establish that a public URL served through an edge cache is unavailable.",
+  "fence": "content_update changes/removes the page reference; media_delete removes the library row, but the stored file is confirmed removed only when storageDeleted is true; cached public URL unavailability is not guaranteed and no CDN purge or deny integration is added."
+}

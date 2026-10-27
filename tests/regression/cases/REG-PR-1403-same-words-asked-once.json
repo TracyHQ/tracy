@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1403-same-words-asked-once",
+  "kind": "fix",
+  "title": "Apply asks a word that is the same in both languages (\"Menu\", \"Logo\" in Dutch) alone once instead of splitting batches down to it, and not again in the same run; the LANG-2 rule is unchanged",
+  "pr": 1403,
+  "area": "apply/same-words",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: translateLines over two batches of ten lines to Dutch, holding \"Menu\" twice and \"Logo\" once, with a model that keeps those two as written and translates the rest.",
+    "S2: translateLines with a model whose batch answers leave one line out entirely."
+  ],
+  "expect": [
+    "S1: every other line Dutch; Menu and Logo kept and said as kept (3 lines); no batch smaller than ten (nothing split), at most four calls alone (Menu asked alone once only).",
+    "S2: the line left out is still split down and translated alone."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/brief-engines/translate-lines.js",
+    "dom": ""
+  },
+  "evidence": "Plan #1403 item 8 (stand 16/10/2026, Dutch Joomla Apply): words Dutch as written went through the batch asked again, every split half and the tries alone, the same answer each time",
+  "fence": "An unchanged answer is still no translation (LANG-2); only a readable batch's unchanged answer skips the split",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/translate-lines-same-words.test.mjs",
+      "apps/tracy-web/test/translate-lines-demo-names.test.mjs"
+    ],
+    "tests": [
+      "a word the model keeps as it is in a readable batch is asked alone, never split; the next time not at all",
+      "a line a batch could not answer at all is still split and asked alone (the LANG-2 path is kept)",
+      "g61 WordPress: a menu label a model keeps as a brand still ends translated, and the report says how",
+      "g61 Joomla: mega column titles offered as page literals end translated, \"J!Pages\" too"
+    ]
+  }
+}

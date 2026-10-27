@@ -1,0 +1,74 @@
+{
+  "color": {
+    "dropbox-blue": {
+      "$value": "#0061fe",
+      "$type": "color",
+      "$description": "Dropbox Blue — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "cream-paper": {
+      "$value": "#f7f5f2",
+      "$type": "color",
+      "$description": "Cream Paper — Page canvas, section backgrounds, nav bar surface — warm off-white replaces sterile SaaS white to soften the system"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Elevated card surfaces, content panels, product mockup backgrounds — the only true white, reserved for surfaces that sit on the cream canvas"
+    },
+    "warm-ink": {
+      "$value": "#1e1919",
+      "$type": "color",
+      "$description": "Warm Ink — Primary text, dark nav button text, heading color — warm near-black reads softer than pure ink on cream backgrounds"
+    },
+    "stone-gray": {
+      "$value": "#716b61",
+      "$type": "color",
+      "$description": "Stone Gray — Secondary text, helper copy, muted icon strokes, footer metadata — warm desaturated gray that sits comfortably on cream"
+    },
+    "sand-card": {
+      "$value": "#eee9e2",
+      "$type": "color",
+      "$description": "Sand Card — Alternate card surface, subtle elevated panel — slightly darker cream for cards that need gentle separation from canvas"
+    },
+    "magenta-accent": {
+      "$value": "#cd2f7b",
+      "$type": "color",
+      "$description": "Magenta Accent — Decorative highlight, occasional link underline, brand illustration accent — provides chromatic variety without competing with primary blue"
+    }
+  },
+  "font": {
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    },
+    "atlas-grotesk-web": {
+      "$value": "Atlas Grotesk Web",
+      "$type": "fontFamily",
+      "$description": "Body copy, navigation links, UI labels, button text — Dropbox's primary interface typeface; geometric humanist sans with open apertures, optimized for dense UI reading at 14–16px"
+    },
+    "sharp-grotesk": {
+      "$value": "Sharp Grotesk",
+      "$type": "fontFamily",
+      "$description": "Section headings and subheadings — medium weight (500) instead of bold creates editorial restraint; the tight, slightly compressed letterforms distinguish it from generic sans headings"
+    },
+    "sharp-grotesk-23": {
+      "$value": "Sharp Grotesk 23",
+      "$type": "fontFamily",
+      "$description": "Display headings at 32px+ — regular weight (not bold) on large display type is an anti-convention choice that relies on size and letterform precision rather than weight to create impact"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://dropbox.com",
+      "siteName": "Dropbox.com",
+      "extractedAt": "2026-06-03T22:38:25.677Z",
+      "variant": "compact"
+    }
+  }
+}

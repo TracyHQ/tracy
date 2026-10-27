@@ -1,0 +1,36 @@
+meta {
+  name: apply.list
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "apply.list",
+    "params": { "apply_id": "{{applyId}}" }
+  }
+}
+
+vars:pre-request {
+  applyId: replace-with-an-apply-id
+}
+
+docs {
+  # The steps one earlier write made
+
+  Every write through the Apply door carries an `apply_id` and answers it back. `apply.list`
+  takes that id and lists the steps it made (on WordPress each step is
+  `{op, created, kind, id, key}`), which is how to tell whether a write landed.
+
+  Set `applyId` in this request's Vars tab to an id a write answered. With a made-up id the
+  component answers that it knows no such apply.
+
+  This is a read, but it needs the `content` toolset: a seat without it gets
+  `403 TOOLSET_NOT_GRANTED`.
+}

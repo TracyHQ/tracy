@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-bone: #f7f3f0;
+  --color-obsidian: #131713;
+  --color-carbon: #000000;
+  --color-ash: #bebcb9;
+  --color-graphite: #858582;
+
+  /* Typography */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-bagoss-standard: 'Bagoss Standard', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-general-grotesque-mono: 'General Grotesque Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

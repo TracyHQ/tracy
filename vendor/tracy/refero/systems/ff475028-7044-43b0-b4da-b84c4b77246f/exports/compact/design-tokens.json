@@ -1,0 +1,34 @@
+{
+  "color": {
+    "gallery-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Gallery Black — Page background, navigation field, gallery gutters, and media-stage canvas"
+    },
+    "projection-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Projection White — Navigation, editorial labels, captions, logo lettering, and image-overlay text"
+    },
+    "index-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Index Gray — Muted secondary index text and subdued metadata"
+    }
+  },
+  "font": {
+    "helveesti": {
+      "$value": "Helveesti",
+      "$type": "fontFamily",
+      "$description": "The sole measured interface face for uppercase navigation, project metadata, captions, and small editorial labels. Its 0.06em tracking turns plain sans-serif text into widely spaced catalogue notation."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://benandmartin.com",
+      "siteName": "BAM Photographers",
+      "extractedAt": "2026-09-20T19:26:46.303Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[Unit]
+Description=Tracy shard: heartbeat to the master (tracy-heartbeat.sh)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/tracy-fleet/stack/tracy-heartbeat.sh
+TimeoutStartSec=50
+Nice=5

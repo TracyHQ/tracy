@@ -1,0 +1,311 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-nova/j6/1.0.9",
+  "baseHash": "d3d1ac58a26aba15a4a3ec82a00649b19c11ec3a2a67b6b74b9fe6683f087e2d",
+  "baseFiles": {
+    "manifest.json": "47abffc1ae3daddc4bce078d908923c079c7f7937b62a3e783bcbe458ce0743f",
+    "content-map.json": "96c2cbc88a6b6d522bd8f09f9a3b73780788a706e8cfa22f8d8a7a0375ac425c",
+    "presentation-lock.json": "79afb8e83418a03298422ef8e605e0361fbb32d81c62c95f35060724388b0b23"
+  },
+  "inputs": {},
+  "decisionsHash": "8c59839b686dbe1ecf68181f3b534c30d24ee1fcacaf1a022b0a96d5157f9d8a",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-109",
+      "identity": {
+        "path": "error-page",
+        "menutype": "jpages",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-110",
+      "identity": {
+        "path": "offline-pages",
+        "menutype": "jpages",
+        "language": "*"
+      },
+      "label": "Offline Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Pages\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-111",
+      "identity": {
+        "path": "typography",
+        "menutype": "jpages",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-114",
+      "identity": {
+        "path": "featured-articles",
+        "menutype": "jcontent",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (the \"jcontent\" footer menu (module \"J! Content\") lists only Joomla sample content views of the demo)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-115",
+      "identity": {
+        "path": "author-listting",
+        "menutype": "jcontent",
+        "language": "*"
+      },
+      "label": "Author listting",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"jcontent\" footer menu (module \"J! Content\") lists only Joomla sample content views of the demo"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-116",
+      "identity": {
+        "path": "blog-detail",
+        "menutype": "jcontent",
+        "language": "*"
+      },
+      "label": "Blog Detail",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"jcontent\" footer menu (module \"J! Content\") lists only Joomla sample content views of the demo"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Login Form",
+      "where": "users/login-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Registration Form",
+      "where": "users/registration-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "User Profile",
+      "where": "users/user-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-112",
+      "label": "Smart Search",
+      "where": "jpages/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "Blog",
+      "where": "jcontent/category-blog",
+      "rule": "keep.only-route-to-content",
+      "reason": "the only menu route to category:8: a branch hide may not take real content along"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Contact",
+      "where": "mainmenu/about-us-2/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-118",
+      "label": "Project",
+      "where": "mainmenu/project",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-124",
+      "label": "About Us",
+      "where": "mainmenu/about-us-2",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-125",
+      "label": "Branding",
+      "where": "mainmenu/project/branding",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-126",
+      "label": "UI/UX design",
+      "where": "mainmenu/project/ui-ux-design",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-127",
+      "label": "Illustration",
+      "where": "mainmenu/project/illustration",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-129",
+      "label": "Services",
+      "where": "mainmenu/services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-130",
+      "label": "Project Detail",
+      "where": "mainmenu/project/project-detail",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Career",
+      "where": "mainmenu/about-us-2/career",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-132",
+      "label": "Illustration",
+      "where": "services/illustration",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-133",
+      "label": "Development",
+      "where": "services/development",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-134",
+      "label": "Mobile Application",
+      "where": "services/mobile-application",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-135",
+      "label": "Cloud solutions",
+      "where": "services/cloud-solutions",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-136",
+      "label": "IT infrastructure",
+      "where": "services/it-infrastructure",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-137",
+      "label": "Cybersecurity",
+      "where": "services/cybersecurity",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-138",
+      "label": "Virtualization",
+      "where": "services/virtualization",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@sidebar-right",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 10 entries stay"
+    },
+    {
+      "key": "module-133",
+      "label": "Users",
+      "where": "mod_menu@footnav-2",
+      "rule": "keep.default",
+      "reason": "renders users: 3 entries stay"
+    },
+    {
+      "key": "module-134",
+      "label": "J!Pages",
+      "where": "mod_menu@footnav-3",
+      "rule": "keep.default",
+      "reason": "renders jpages: 1 entry stays"
+    },
+    {
+      "key": "module-135",
+      "label": "J! Content",
+      "where": "mod_menu@footnav-4",
+      "rule": "keep.default",
+      "reason": "renders jcontent: 1 entry stays"
+    },
+    {
+      "key": "module-146",
+      "label": "Service Category",
+      "where": "mod_menu@sidebar-l",
+      "rule": "keep.default",
+      "reason": "renders services: 7 entries stay (class \"menu-box\")"
+    },
+    {
+      "key": "module-147",
+      "label": "Menu Off-canvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 10 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 6,
+    "modules": 0,
+    "kept": 28,
+    "unresolved": 0
+  }
+}

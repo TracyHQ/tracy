@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-893-other-answers-reach-planners-and-judges",
+  "kind": "fix",
+  "title": "Every answer reaches the copy planners and the page and menu judges, not only the description",
+  "pr": 893,
+  "area": "sites/apply",
+  "cms": ["wp", "jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-joomla.test.mjs apps/tracy-web/test/brief-shared.test.mjs apps/tracy-web/test/brief-wordpress.test.mjs apps/tracy-web/test/site-brief-normalize.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"beside a description, the other answers reach the copy as their own field; without one they are the description, said once\"; \"the other answers ride in the site block as their own field, so every planner reads them beside the description\"; \"a judge is shown everything the customer said up to its bound, not the first 300 characters\"; \"the planner reads the other answers beside the description, and the menu judge everything the customer said\"; \"the planners read the other answers beside the description, and the judge everything the customer said\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 152).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): beside a description the other answers (sector, an admin's question) ride in the site block as `details` (at most 1200 characters) that the WordPress and Joomla planners read, and the page and menu judges see everything the customer said up to JUDGE_BRIEF_MAX (1200), not the first 300 characters."
+  ],
+  "selectors": {
+    "normalizer": "DETAILS_MAX in apps/tracy-web/src/sites/brief-normalize.js",
+    "shared": "siteBlock (details), spokenOf, JUDGE_BRIEF_MAX in apps/tracy-web/src/sites/brief-engines/shared.js"
+  },
+  "evidence": "Ledger L06, 05/10/2026 (code reading, brief-normalize.js and the WordPress judge): with a description answered, the other answers never reached the models writing the copy, and the judges read only spokenOf(brief).slice(0, 300). Red 71cadfce9, fix 1f8348fe9.",
+  "fence": "Without a description the other answers are the description, said once; what the planners may write is unchanged.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-joomla.test.mjs",
+      "apps/tracy-web/test/brief-shared.test.mjs",
+      "apps/tracy-web/test/brief-wordpress.test.mjs",
+      "apps/tracy-web/test/site-brief-normalize.test.mjs"
+    ],
+    "tests": [
+      "beside a description, the other answers reach the copy as their own field; without one they are the description, said once",
+      "the other answers ride in the site block as their own field, so every planner reads them beside the description",
+      "a judge is shown everything the customer said up to its bound, not the first 300 characters",
+      "the planner reads the other answers beside the description, and the menu judge everything the customer said",
+      "the planners read the other answers beside the description, and the judge everything the customer said"
+    ]
+  }
+}

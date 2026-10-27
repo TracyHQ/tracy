@@ -1,0 +1,52 @@
+{
+  "id": "QA-UNIT-REG-PR-1182-narrow-panel-keeps-composer-happy",
+  "itemIds": ["regression:REG-PR-1182-narrow-panel-keeps-composer"],
+  "requirement": "At 360 px the right panel no longer covers the composer when a page opens a tab on load; a ?tab= link still reveals it",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1182-narrow-panel-keeps-composer.json",
+    "ref": "PR #1182 (fix); fix evidence: ACC-30.C2a (tasks/evidence/site-changes-v2/dev-acceptance/ACC-30.C2a/composer-360.png): the Browser panel covered the whole 360 px frame; after the fix tasks/evidence/tracy-site-sweep/L3/K1/",
+    "invariant": "S1: [data-rightbar-collapsed] present; the point lands inside the composer card (not in [data-rightbar-col]). S2: [data-rightbar-collapsed] absent (the site preview is open beside the chat as before). S3: [data-rightbar-collapsed] absent; the My Sites tab is visible.",
+    "productSources": [
+      "vendor/tracy/deepseek-harness/packages/client/ui-sidebar-right/src/client/service.ts:90",
+      "vendor/tracy/deepseek-harness/packages/client/ui-sidebar-right/src/client/stores.ts:319",
+      "vendor/tracy/deepseek-harness/packages/client/ui-sidebar-right/src/client/tab-registry.ts:255",
+      "vendor/tracy/deepseek-harness/packages/client/ui-sidebar-right/src/client/tabs/guide/definition.ts:20"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1182-narrow-panel-keeps-composer.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1182-narrow-panel-keeps-composer"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1182-narrow-panel-keeps-composer",
+    "pr": 1182,
+    "kind": "fix",
+    "area": "dsh-fork/ui-sidebar-right",
+    "file": "tests/regression/cases/REG-PR-1182-narrow-panel-keeps-composer.json"
+  },
+  "command": [
+    "node_modules/.bin/vitest",
+    "run",
+    "packages/client/ui-sidebar-right/tests/service.client.spec.ts",
+    "-t",
+    "covering the conversation|any open on a wide frame|already expanded panel"
+  ],
+  "cwd": "vendor/tracy/deepseek-harness",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 300
+}

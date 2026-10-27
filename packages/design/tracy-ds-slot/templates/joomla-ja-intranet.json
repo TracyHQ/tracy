@@ -1,0 +1,497 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-intranet",
+  "release": "quickstart/ja-intranet/j6@1.0.1",
+  "minVersion": {
+    "quickstart/ja-intranet/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-intranet/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "roles": {
+    "page": "body",
+    "card": "div.module-inner",
+    "input": "#modlgn-username"
+  },
+  "discovered": {
+    "page": "body",
+    "card": "repeated rounded box ×16",
+    "input": "first text field"
+  },
+  "keepScopes": [".t3-header", ".alert"],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 build (tasks/evidence/ds-contracts-intranet-2026-10-11): 1.0.0 as published answers 500 on Joomla 6, 1.0.1 repairs it (T3 3.3.2, the 67 missing core extension rows, compat6 aliases on), turns T3 dev mode off and tokenizes the stylesheets; default unchanged against the repair alone (0 computed differences, same pixels), every menu page 200, 12/12 under four systems, 92-97% of the page follows, no text made less readable than the template's own (home, phone, blog, social feed, vertical dashboard). The seven account pages on the Login layout keep the template's look (no slot position there)",
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "pairVarFill": true,
+  "baseTokens": {
+    "--bg": "#f4f5f6",
+    "--fg": "#646566",
+    "--fg-2": "#292c35",
+    "--accent": "#4275f4",
+    "--accent-hover": "#0d48dd",
+    "--surface": "#ffffff",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#ebeef0",
+    "--muted": "#555555",
+    "--font-display": "\"Roboto\", sans-serif",
+    "--font-body": "\"Roboto\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#f4f5f6",
+      "fg": "#646566",
+      "fg-2": "#292c35",
+      "accent": "#4275f4",
+      "accent-hover": "#0d48dd",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#ebeef0",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#f4f5f6",
+      "surface": "#ffffff",
+      "fg": "#646566",
+      "fg-2": "#a2acb3"
+    },
+    {
+      "accent": "#4275f4"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface-warm": "#fafafa",
+      "bg": "#eeeeee",
+      "accent-hover": "#1252f1",
+      "border-soft": "#e1e1e1",
+      "border": "#f4f5f6",
+      "accent-active": "#0063dc",
+      "accent": "#3366ff"
+    },
+    {
+      "accent-hover": "#0c45d3",
+      "bg": "#fcf8e3",
+      "surface-warm": "#f9f9f9",
+      "border-soft": "#e5e5e5",
+      "border": "#f7f7f7"
+    },
+    {
+      "bg": "#f4f4f4",
+      "border-soft": "#e0e2e3",
+      "border": "#eaeff1"
+    },
+    {
+      "bg": "#e8e8e8",
+      "border-soft": "#e3e3e3",
+      "border": "#f2f2f2"
+    },
+    {
+      "bg": "#f0f0f0",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "bg": "#ebebeb"
+    },
+    {
+      "bg": "#e9f2f9"
+    },
+    {
+      "bg": "#eaf5ff"
+    },
+    {
+      "bg": "#ebeef0"
+    },
+    {
+      "bg": "#e9eff7"
+    },
+    {
+      "bg": "#f9f2f4"
+    },
+    {
+      "bg": "#fdf3e4"
+    },
+    {
+      "bg": "#e2f5fd"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (79 line colours, 113 text colours seen)",
+  "selectors": {
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "card": ["div.module-inner", ".card"],
+    "container": ["#t3-mainbody .container, .container"],
+    "bodyFace": ["body"],
+    "onAccent": [".blog .category-info .page-subheader"],
+    "cardLike": [".module-inner"],
+    "pill": [".label", ".badge"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": ".t3-wrapper p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t3-wrapper p, .t3-wrapper li",
+    "heading": ".t3-wrapper :is(h1, h2, h3, h4)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "footer",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "footer: the one position every layout but the login one renders unconditionally (default, dashboard and wall, tpls/blocks/footer.php). pass-joomla.mjs found notification earliest (byte 14347), but tpls/blocks/header.php opens a right-hand header column with the off-canvas toggle whenever notification, head-search or languageswitcherload holds a module: the slot itself changed the kept header (6 -> 9 visible elements). alert renders only in the dashboard layout. The seven account pages on the Login layout (tpls/login.php: login position only) keep the template's look"
+  },
+  "nearPalette": [
+    {
+      "hex": "#fafafa",
+      "uses": 770,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 3
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 676,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 12
+    },
+    {
+      "hex": "#1252f1",
+      "uses": 370,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#0d48dd",
+      "distance": 23
+    },
+    {
+      "hex": "#0c45d3",
+      "uses": 338,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#0d48dd",
+      "distance": 10
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 146,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 21
+    },
+    {
+      "hex": "#f4f4f4",
+      "uses": 133,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 2
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 98,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 94,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 5
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 92,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#e8e8e8",
+      "uses": 65,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 23
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 49,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 9
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 44,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 17
+    },
+    {
+      "hex": "#e9f2f9",
+      "uses": 35,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 12
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 32,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#f4f5f6",
+      "uses": 28,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebeef0",
+      "distance": 13
+    },
+    {
+      "hex": "#eaf5ff",
+      "uses": 28,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 13
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 28,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebeef0",
+      "distance": 17
+    },
+    {
+      "hex": "#ebeef0",
+      "uses": 28,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 13
+    },
+    {
+      "hex": "#e9eff7",
+      "uses": 28,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 13
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 16,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 6
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 16,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 12
+    },
+    {
+      "hex": "#0063dc",
+      "uses": 14,
+      "kind": "fill",
+      "role": "accent-active",
+      "near": "#0066cc",
+      "distance": 16
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 14,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#fdf3e4",
+      "uses": 14,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 20
+    },
+    {
+      "hex": "#e2f5fd",
+      "uses": 14,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#f4f5f6",
+      "distance": 19
+    },
+    {
+      "hex": "#eaeff1",
+      "uses": 7,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebeef0",
+      "distance": 2
+    },
+    {
+      "hex": "#3366ff",
+      "uses": 7,
+      "kind": "fill",
+      "role": "accent",
+      "near": "#4275f4",
+      "distance": 24
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 7,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebeef0",
+      "distance": 8
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "keepColors": {
+    ".t3-header": "rgb(100, 101, 102)"
+  },
+  "alphaVars": [],
+  "onAccentNote": "the blog category header paints the accent as its ground in one rule and its title white in another (css/template.css .blog .category-info .page-subheader): the title takes the accent text colour",
+  "t3DevmodeOff": true,
+  "t3DevmodeNote": "JA Intranet 1.0.0 ships T3 dev mode on in all 11 template styles (LESS compiled per request, css/ never served): the next release ships it off",
+  "bands": {
+    ".t3-header": {
+      "ground": "#4275f4",
+      "texts": [],
+      "important": true
+    },
+    ".alert": {
+      "ground": "#dff0d8",
+      "texts": ["#000000"],
+      "important": true,
+      "kind": "panel",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text",
+          "border-color": "text-2"
+        },
+        ":is(p, span, strong, a, .close)": {
+          "color": "text"
+        }
+      }
+    },
+    ".page-subheader": {
+      "ground": "#4275f4",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".subheading-category"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent; 14/10/2026 (visual review, round 3): the dashboard’s success alert (.alert, Bootstrap’s pale green with green words) was kept with its own words, so under a dark system it took the system’s light side as its ground — a white strip on the near-black page (Linear). It is now a panel that repaints its words (repaint: true, words and line painted text / text-2): the system’s surface with the system’s words, on either side of light",
+  "followRules": {
+    ".t3-module.mod-secondary .module-title": {
+      "background-color": "fg-2",
+      "color": "bg"
+    },
+    ".t3-module.mod-highlight .module-inner": {
+      "border-color": "accent"
+    },
+    ".progressbar span": {
+      "background-color": "accent!"
+    }
+  },
+  "followNote": "the template’s second brand colour, a green (#34bf49) its stylesheet writes as a literal, stayed on the secondary modules’ title bars (.t3-module.mod-secondary .module-title, MODULE SECONDARY, WHO’S ONLINE), the highlighted modules’ 2px frame (.t3-module.mod-highlight .module-inner) and the poll’s result bars (.progressbar span, an inline style of the poll module) under every system (visual review 14/10/2026). The primary modules’ bars wear the accent; the secondary ones take the system’s ink with its page colour as words (always the system’s own text contrast, and set apart from the accent bars), the highlight frame and the poll bars the accent (!important over the inline style)",
+  "sideRules": {
+    "light": {
+      ".ja-google-chart svg rect[fill=\"#ffffff\"]": {
+        "fill": "transparent"
+      },
+      ".ja-google-chart svg text": {
+        "fill": "var(--ds-c-fg)"
+      },
+      ".ja-google-chart svg text[stroke=\"#ffffff\"]": {
+        "stroke": "transparent"
+      },
+      ".ja-google-chart svg rect[fill=\"#cccccc\"]": {
+        "fill": "color-mix(in srgb, var(--ds-c-fg) 25%, transparent)"
+      },
+      ".ja-google-chart svg rect[fill=\"#ebebeb\"]": {
+        "fill": "color-mix(in srgb, var(--ds-c-fg) 10%, transparent)"
+      },
+      ".ja-google-chart svg path[fill=\"#f5f5f5\"]": {
+        "fill": "color-mix(in srgb, var(--ds-c-fg) 10%, transparent)",
+        "stroke": "color-mix(in srgb, var(--ds-c-fg) 25%, transparent)"
+      },
+      ".ja-google-chart svg path[stroke=\"#dddddd\"]": {
+        "stroke": "color-mix(in srgb, var(--ds-c-fg) 25%, transparent)"
+      }
+    },
+    "dark": {
+      ".ja-google-chart svg rect[fill=\"#ffffff\"]": {
+        "fill": "transparent"
+      },
+      ".ja-google-chart svg text": {
+        "fill": "var(--ds-c-fg)"
+      },
+      ".ja-google-chart svg text[stroke=\"#ffffff\"]": {
+        "stroke": "transparent"
+      },
+      ".ja-google-chart svg rect[fill=\"#cccccc\"]": {
+        "fill": "color-mix(in srgb, var(--ds-c-fg) 25%, transparent)"
+      },
+      ".ja-google-chart svg rect[fill=\"#ebebeb\"]": {
+        "fill": "color-mix(in srgb, var(--ds-c-fg) 10%, transparent)"
+      },
+      ".ja-google-chart svg path[fill=\"#f5f5f5\"]": {
+        "fill": "color-mix(in srgb, var(--ds-c-fg) 10%, transparent)",
+        "stroke": "color-mix(in srgb, var(--ds-c-fg) 25%, transparent)"
+      },
+      ".ja-google-chart svg path[stroke=\"#dddddd\"]": {
+        "stroke": "color-mix(in srgb, var(--ds-c-fg) 25%, transparent)"
+      }
+    }
+  },
+  "sideNote": "14/10/2026 (visual review, round 3): the dashboard’s Google charts (the daily line chart and the geo map, .ja-google-chart) are SVG drawn by the chart library with its own presentation attributes — a white background rect (#ffffff), black and #222 labels, #cccccc / #ebebeb grid lines, #f5f5f5 land with #dddddd borders — so under a dark system they stayed white boxes on the near-black page (Linear, Moxie). On both sides the background rect is transparent (the module’s ground shows), labels take the system text (fg), grid lines, land and borders are the system text mixed into transparency (25% / 10%), the halo of the map’s legend labels is dropped; the data colours (series lines, country shades) are the chart’s own and stay. General: roles only"
+}

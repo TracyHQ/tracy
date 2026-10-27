@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4ce66adb-ed8b-4e71-8066-15d92c4d2be0",
+  "status": "complete",
+  "name": "Status",
+  "url": "https://styles.refero.design/style/4ce66adb-ed8b-4e71-8066-15d92c4d2be0",
+  "sourceWebsite": "https://status.app",
+  "extractedAt": "2026-06-03T19:22:22.652Z",
+  "capturedAt": "2026-10-08T05:11:20.513079+00:00",
+  "theme": "dark",
+  "industry": "crypto",
+  "description": "encrypted vault behind midnight glass — a dark security console where the only color is a single violet signal lamp",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/eb8d8d78-bfa2-4677-8404-fb10a2386e9a.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/406fb2ac-6569-4438-a8b6-750df19ed821.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/3fe738b9-0ae3-4ded-9175-7bacfc0c75c5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/40fe681b-2b22-4b7d-b772-75797a2b04d5.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/2beb34bd-9d4d-4f46-b64d-ce8cecc159f3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b81b4493a31f3884ff9733a36f5ce9c38f5b6feb95d3142f5a074210cddceb8e",
+      "bytes": 18489
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "70a4cb696997e0a2afcc7484ef9615cbd9f50a14684742b2fab385eeb1990c98",
+      "bytes": 134207
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0d009b8a04ed4c82b8d6ae37b0c960b639be93d6a468bc15650d6826ec8486a0",
+      "bytes": 15263
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b6de37453e3ff193d5b234c1dce081e3d4a0f47e961d7f0bd7d98a235bd532dc",
+      "bytes": 11423
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7165f372f502921a9258f9a41329b95c044c112ad03179527ca8eed3776e6bac",
+      "bytes": 12064
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9e16e6abae2eaedca7b6132f043b8140f83f03b76a9ca5302f162d9ca05243b9",
+      "bytes": 3534
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b4e6c06487e3e7f4e6bac70302def2fa70bfa45d58887f775b3c84fd91e47c1a",
+      "bytes": 564
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "be544f8b188bff4397dd8ebc7c612c50752e42af93161801dc4b1f70408598a9",
+      "bytes": 698
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "65ffd3f5ba3f9453e5a71cfaeacfac74ffdea09f5fd0fbbc665b69feaf77a9e7",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "885b1c2256ae99b9f077c03de112d1e4baced5a408f901a51e7f7433bd68db31",
+      "bytes": 44067
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e4de91acfb117a87238d4e0d9ab810b5f6fe5049b40f630857f6db76a61af78e",
+      "bytes": 23484
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "adacd649e9c76d3b2f19d2971f1c2e8a8420cceee9392134bae975fd4a5f7b9b",
+      "bytes": 51843
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ccdd57c179809cd1cc26769f3fedae33ae4bccac40dc0cad06eee6eb136b9e27",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4ff7dd73d40d61154494db0c2e80a3212fb24e0d07c8141247def2b80e7b7e98",
+      "bytes": 1759
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "6504ee5e449bf548d4626ebb77c77e5e2aae1fe70e856b7374b684d4f0c21d7c",
+      "bytes": 2480
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "03dcd158-bc4d-447b-aaf2-8e522671a109",
+    "05a82625-786e-4343-a554-3ba8f4de23d7",
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "0d914ef0-fa84-4c60-a9aa-cef0b5eb6e5d",
+    "0ed40a3a-2541-4ffa-acdd-f1170858bc5d",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "109e52eb-e70f-493e-9527-84d672b00c7b",
+    "3a398f82-579e-4ec4-a442-9962bf007edf",
+    "4ce66adb-ed8b-4e71-8066-15d92c4d2be0",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "722f32e7-8217-4808-843d-b454eea7320a",
+    "7421c174-a1b1-4695-a9e7-a82dc6f5ea3b",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "834ce97f-61f2-4b12-bf5c-e9fad2544456",
+    "88b02f2c-d82e-495a-8fb6-e750a0fb1211",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a74d60e1-0a09-48a1-8721-13f1f45727f1",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e80231a2-e4d6-406a-a2c9-2e6109679690"
+  ]
+}

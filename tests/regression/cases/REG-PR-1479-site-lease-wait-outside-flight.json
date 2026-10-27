@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1479-site-lease-wait-outside-flight",
+  "kind": "fix",
+  "title": "A write waiting for the site's write lease leaves the site's queue, so the conversation holding the lease keeps writing",
+  "pr": 1479,
+  "area": "site-changes/lease",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Through the shipped bundle (handler.test.mjs), conversation A holds the Joomla site's write lease; conversation B's write is refused SITE_BUSY and waits; A then writes again.",
+    "S2: With the real createCallMemory and waitOutLease (call-memory.test.mjs), B waits for the lease inside a flight while A's read is queued on the same site."
+  ],
+  "expect": [
+    "S1: A's write is answered while B is still waiting; B sends again only after A's call.",
+    "S2: A's read answers before B's wait ends, and B's next send is queued behind it."
+  ],
+  "selectors": {
+    "test": "packages/tools/tracy-site-tools/test/handler.test.mjs, packages/tools/tracy-site-tools/test/call-memory.test.mjs",
+    "code": "call-memory.mjs flight/flightSeat, lease-wait.mjs waitOutLease leave/rejoin, index.ts applyDoor"
+  },
+  "evidence": "Review 19/10/2026: a script with the real createCallMemory + waitOutLease showed A's read answered only after B's whole lease wait (up to 100 s); A's lease then lapsed and B wrote mid-request",
+  "fence": "A lease wait is spent outside the site's flight",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/handler.test.mjs",
+      "packages/tools/tracy-site-tools/test/call-memory.test.mjs"
+    ],
+    "tests": [
+      "🔒 C1: on Joomla the conversation holding the lease writes while another waits for it — the waiter is out of the site flight",
+      "🔒 C1: the conversation holding the lease is not queued behind the write waiting for it, and the waiter queues again behind it"
+    ]
+  }
+}

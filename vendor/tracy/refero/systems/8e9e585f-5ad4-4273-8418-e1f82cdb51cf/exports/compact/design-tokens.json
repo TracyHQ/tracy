@@ -1,0 +1,89 @@
+{
+  "color": {
+    "prism-teal": {
+      "$value": "#14b8a6",
+      "$type": "color",
+      "$description": "Prism Teal — Teal supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-teal": {
+      "$value": "#0d9488",
+      "$type": "color",
+      "$description": "Deep Teal — Teal supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color; Top-to-bottom gradient from Deep Teal to white — used in the hero background as a subtle vertical wash"
+    },
+    "carbon-ink": {
+      "$value": "#1d242f",
+      "$type": "color",
+      "$description": "Carbon Ink — Primary headings, nav text, logo mark, heavy body emphasis — near-black with a cool blue undertone that pairs with the teal accent"
+    },
+    "graphite": {
+      "$value": "#111827",
+      "$type": "color",
+      "$description": "Graphite — Body text, button labels, dense content text — deeper than Carbon Ink, reserved for running copy and form values"
+    },
+    "slate": {
+      "$value": "#6b7280",
+      "$type": "color",
+      "$description": "Slate — Secondary body text, helper copy, muted descriptions, footer meta — pulls text back without losing legibility"
+    },
+    "steel": {
+      "$value": "#718096",
+      "$type": "color",
+      "$description": "Steel — Tertiary text, disabled labels, icon strokes on neutral backgrounds — one step further back than Slate"
+    },
+    "fog": {
+      "$value": "#9ca3af",
+      "$type": "color",
+      "$description": "Fog — Placeholder text, subtle icon fills, decorative dividers — present but recessive"
+    },
+    "mist": {
+      "$value": "#e2e8f0",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, card edges, code-block frames, grid lines — the structural glue that separates surfaces without weight"
+    },
+    "bone": {
+      "$value": "#f3f4f6",
+      "$type": "color",
+      "$description": "Bone — Subtle surface lift, secondary card backgrounds, alternating section bands — barely visible, used to create quiet layering"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, UI, navigation, and code-adjacent text — Inter with character variants enabled gives the system a custom-cut look inside a familiar sans. Weight 500–600 for nav and button labels, 400 for body, 375 sparingly for captions that need a lighter voice."
+    },
+    "mona-sans-vf": {
+      "$value": "Mona Sans VF",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface — GitHub's variable Mona Sans brings geometric authority with subtle humanist warmth; the 0.1em letter-spacing at 64px is the brand's signature: headline text reads as engineered precision, not marketing prose. Weight 900 reserved for hero display, 650 for section headings, 700 for sub-headings."
+    },
+    "mona-sans-mono-vf": {
+      "$value": "Mona Sans Mono VF",
+      "$type": "fontFamily",
+      "$description": "Inline code, terminal snippets, CLI command pills — the monospaced sibling to Mona Sans keeps code blocks visually tied to the display type"
+    },
+    "font-awesome-7-pro": {
+      "$value": "Font Awesome 7 Pro",
+      "$type": "fontFamily",
+      "$description": "Font Awesome 7 Pro — detected in extracted data but not described by AI"
+    },
+    "font-awesome-7-brands": {
+      "$value": "Font Awesome 7 Brands",
+      "$type": "fontFamily",
+      "$description": "Font Awesome 7 Brands — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://prisma.io",
+      "siteName": "Prisma",
+      "extractedAt": "2026-06-03T20:14:16.963Z",
+      "variant": "compact"
+    }
+  }
+}

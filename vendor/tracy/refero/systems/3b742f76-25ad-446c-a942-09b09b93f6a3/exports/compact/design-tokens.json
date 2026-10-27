@@ -1,0 +1,74 @@
+{
+  "color": {
+    "evergreen-gallery": {
+      "$value": "#1c3c27",
+      "$type": "color",
+      "$description": "Evergreen Gallery — Green accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "frost-white": {
+      "$value": "#fffffd",
+      "$type": "color",
+      "$description": "Frost White — Product card surfaces, text on dark sections — slightly warm off-white, never pure #fff"
+    },
+    "pewter-mist": {
+      "$value": "#dfe2e5",
+      "$type": "color",
+      "$description": "Pewter Mist — Hairline borders, card outlines, divider rules, ghost-button borders on light cards"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Primary text on light cards, icon strokes, high-contrast detail"
+    },
+    "bone": {
+      "$value": "#fffcda",
+      "$type": "color",
+      "$description": "Bone — Alternate warm cream surface — contrast-pair companion to dark text on light cards"
+    },
+    "ink-shadow": {
+      "$value": "#0e1e14",
+      "$type": "color",
+      "$description": "Ink Shadow — Deepest text on evergreen, near-black with green undertone — pairs with frost-white for AAA contrast"
+    },
+    "marquee-cobalt": {
+      "$value": "#447cf0",
+      "$type": "color",
+      "$description": "Marquee Cobalt — Violet outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "ember-lacquer": {
+      "$value": "#c72a00",
+      "$type": "color",
+      "$description": "Ember Lacquer — Vivid red-orange seen in product photography (lacquered shelf units) — decorative, not functional"
+    }
+  },
+  "font": {
+    "chalet-londonsixty": {
+      "$value": "Chalet-LondonSixty",
+      "$type": "fontFamily",
+      "$description": "Primary body and UI typeface — all nav links, product names, prices, badge text, footer copy, button labels. A custom rounded serif with distinctive ball terminals; its single weight is used universally"
+    },
+    "chalet-newyorksixty": {
+      "$value": "Chalet-NewYorkSixty",
+      "$type": "fontFamily",
+      "$description": "Secondary serif variant for body and link micro-copy — visually similar to LondonSixty but used in narrower contexts (small body, secondary links)"
+    },
+    "supremell-bold": {
+      "$value": "SupremeLL-Bold",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface — exclusively carries section headings (\"What's on: Bestsellers…\"), the hero wordmark, and large UI moments. A sharp geometric sans that cuts against the serif body type. The massive 80px size with -0.02em tracking is the signature move"
+    },
+    "supremell-boldflat": {
+      "$value": "SupremeLL-BoldFlat",
+      "$type": "fontFamily",
+      "$description": "Flat-cut variant of the display sans for inline link emphasis within body copy"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.symbolaudio.com",
+      "siteName": "Symbol Audio",
+      "extractedAt": "2026-06-03T21:28:37.052Z",
+      "variant": "compact"
+    }
+  }
+}

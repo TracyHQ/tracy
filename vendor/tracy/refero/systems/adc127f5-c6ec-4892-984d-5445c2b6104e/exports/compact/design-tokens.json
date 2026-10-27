@@ -1,0 +1,94 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, deepest card base, and the void between sections — the room the cards hang in"
+    },
+    "coffee-bean": {
+      "$value": "#433e3c",
+      "$type": "color",
+      "$description": "Coffee Bean — Dominant border color across cards, badges, and dividers — the hairline that frames every chromatic block"
+    },
+    "cream-paper": {
+      "$value": "#f0e7e4",
+      "$type": "color",
+      "$description": "Cream Paper — Light card surface for the hero/about panel and inverted buttons — a warm off-white that reads as printed paper on the dark canvas"
+    },
+    "charcoal": {
+      "$value": "#2b2b2b",
+      "$type": "color",
+      "$description": "Charcoal — Secondary surface and elevated card base for monochrome content blocks"
+    },
+    "espresso": {
+      "$value": "#221f1e",
+      "$type": "color",
+      "$description": "Espresso — Button background for primary text controls on dark surfaces — one shade deeper than the card it sits in"
+    },
+    "stone-gray": {
+      "$value": "#898989",
+      "$type": "color",
+      "$description": "Stone Gray — Muted body copy, list markers, and supporting metadata — the whisper tier below primary text"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Headline color on dark cards, badge text on chromatic fills, and link highlights"
+    },
+    "forest-floor": {
+      "$value": "#113619",
+      "$type": "color",
+      "$description": "Forest Floor — Themed card surface for nature/climate/sustainability chapters — the deepest chromatic field, reads as moss or deep canopy"
+    },
+    "twilight-violet": {
+      "$value": "#322b66",
+      "$type": "color",
+      "$description": "Twilight Violet — Themed card surface for space, frontier, and science verticals — saturated enough to dominate a grid cell, dark enough to hold white type"
+    },
+    "olive-depth": {
+      "$value": "#2e2909",
+      "$type": "color",
+      "$description": "Olive Depth — Themed card surface for energy and industry chapters — a near-black ochre that glows against the canvas"
+    },
+    "solar-yellow": {
+      "$value": "#fde440",
+      "$type": "color",
+      "$description": "Solar Yellow — High-impact accent card fill for transformation and thesis verticals — the loudest single block in the system, used sparingly to punctuate the grid"
+    },
+    "mint-chip": {
+      "$value": "#56d270",
+      "$type": "color",
+      "$description": "Mint Chip — Small uppercase tag/badge fill for news and announcement labels — the only saturated green used at small scale"
+    },
+    "lavender-mist": {
+      "$value": "#c6bffa",
+      "$type": "color",
+      "$description": "Lavender Mist — Soft accent for secondary badges and highlight borders on the violet card family"
+    },
+    "ember-red": {
+      "$value": "#b9534a",
+      "$type": "color",
+      "$description": "Ember Red — Reserved research and analytical-content badge fill — used almost never; its rarity makes it register as a category marker"
+    }
+  },
+  "font": {
+    "portrait": {
+      "$value": "Portrait",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif used for the wordmark, section titles, and card headlines. Portrait is a high-contrast didone-style serif; its hairline strokes and sharp serifs give the site its monograph feel. A single weight (400) is used — no bold headlines, authority comes from size and contrast alone."
+    },
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "Body, UI, badges, buttons, and metadata. Tight 400 for body, 700 for emphasis. The wide letter-spacing at small sizes (0.20–0.25em) is the defining micro-typography move: even 8px labels read as intentional, not afterthoughts."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://july.fund",
+      "siteName": "July Fund",
+      "extractedAt": "2026-06-03T19:55:33.083Z",
+      "variant": "compact"
+    }
+  }
+}

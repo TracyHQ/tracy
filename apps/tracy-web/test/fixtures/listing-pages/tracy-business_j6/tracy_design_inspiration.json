@@ -1,0 +1,183 @@
+{
+  "schemaVersion": "tracy-design-inspiration/v1",
+  "template": "tracy-business",
+  "provider": "JoomlArt",
+  "category": "Professional & Corporate",
+  "blurb": "Industrial / B2B company site: services, project portfolio, news, careers, investors, contact — Northgate Industrial demo content.",
+  "image": "business-home-1440.png",
+  "languages": [
+    "af",
+    "be",
+    "bg",
+    "ca",
+    "cs",
+    "cy",
+    "da",
+    "de",
+    "el",
+    "en",
+    "es",
+    "et",
+    "fi",
+    "fr",
+    "ga",
+    "hr",
+    "hu",
+    "it",
+    "ja",
+    "ka",
+    "lo",
+    "lt",
+    "lv",
+    "ms",
+    "nb",
+    "nl",
+    "pl",
+    "pt",
+    "ro",
+    "ru",
+    "sk",
+    "sl",
+    "sr",
+    "sv",
+    "ta",
+    "th",
+    "tr",
+    "uk",
+    "vi",
+    "zh"
+  ],
+  "layouts": [
+    {
+      "key": "home",
+      "path": "/",
+      "label": "Home",
+      "shots": {
+        "mobile": "business-home-390.png",
+        "desktop": "business-home-1440.png"
+      }
+    },
+    {
+      "key": "about",
+      "path": "/about",
+      "label": "About",
+      "shots": {
+        "mobile": "business-about-390.png",
+        "desktop": "business-about-1440.png"
+      }
+    },
+    {
+      "key": "services",
+      "path": "/services",
+      "label": "Services",
+      "shots": {
+        "mobile": "business-services-390.png",
+        "desktop": "business-services-1440.png"
+      }
+    },
+    {
+      "key": "service",
+      "path": "/services/general-contracting",
+      "count": 12,
+      "label": "Service",
+      "shots": {
+        "mobile": "business-service-390.png",
+        "desktop": "business-service-1440.png"
+      }
+    },
+    {
+      "key": "projects",
+      "path": "/projects",
+      "label": "Projects",
+      "shots": {
+        "mobile": "business-projects-390.png",
+        "desktop": "business-projects-1440.png"
+      }
+    },
+    {
+      "key": "project",
+      "path": "/projects/elektra-lipetsk",
+      "count": 20,
+      "label": "Project",
+      "shots": {
+        "mobile": "business-project-390.png",
+        "desktop": "business-project-1440.png"
+      }
+    },
+    {
+      "key": "news",
+      "path": "/news",
+      "label": "News",
+      "shots": {
+        "mobile": "business-news-390.png",
+        "desktop": "business-news-1440.png"
+      }
+    },
+    {
+      "key": "article",
+      "path": "/news/northgate-wins-the-zavolzhye-2-infrastructure-tender",
+      "count": 24,
+      "label": "Article",
+      "shots": {
+        "mobile": "business-article-390.png",
+        "desktop": "business-article-1440.png"
+      }
+    },
+    {
+      "key": "careers",
+      "path": "/careers",
+      "count": 12,
+      "label": "Careers",
+      "shots": {
+        "mobile": "business-careers-390.png",
+        "desktop": "business-careers-1440.png"
+      }
+    },
+    {
+      "key": "investors",
+      "path": "/investors",
+      "label": "Investors",
+      "shots": {
+        "mobile": "business-investors-390.png",
+        "desktop": "business-investors-1440.png"
+      }
+    },
+    {
+      "key": "contact",
+      "path": "/contact",
+      "label": "Contact",
+      "shots": {
+        "mobile": "business-contact-390.png",
+        "desktop": "business-contact-1440.png"
+      }
+    },
+    {
+      "key": "legal",
+      "path": "/terms",
+      "count": 2,
+      "label": "Terms · Privacy",
+      "shots": {
+        "mobile": "business-terms-390.png",
+        "desktop": "business-terms-1440.png"
+      }
+    },
+    {
+      "key": "ru",
+      "path": "/ru",
+      "label": "Русский",
+      "shots": {
+        "mobile": "business-home-ru-390.png",
+        "desktop": "business-home-ru-1440.png"
+      }
+    },
+    {
+      "key": "404",
+      "path": "/nope-404",
+      "label": "Not found",
+      "shots": {
+        "mobile": "business-notfound-390.png",
+        "desktop": "business-notfound-1440.png"
+      }
+    }
+  ]
+}

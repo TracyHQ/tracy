@@ -1,0 +1,59 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#e7ded1",
+      "$type": "color",
+      "$description": "Bone — Primary text, hairline borders, navigation labels, link color, icon strokes — the sole chromatic element in the UI layer, a warm off-white that avoids clinical sterility"
+    },
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page canvas, section backgrounds, every surface — pure black, not a near-black"
+    },
+    "maroon-gradient": {
+      "$value": "#4c0b02",
+      "$type": "color",
+      "$description": "Maroon Gradient — Full-bleed atmospheric section background — deep oxidized red creating a candlelit warmth against the surrounding void"
+    },
+    "violet-gradient": {
+      "$value": "#1e1594",
+      "$type": "color",
+      "$description": "Violet Gradient — Full-bleed atmospheric section background — deep indigo wash, a cold counterpoint to the maroon sections"
+    },
+    "crimson-gradient": {
+      "$value": "#6e1815",
+      "$type": "color",
+      "$description": "Crimson Gradient — Full-bleed atmospheric section background — burnt blood red, the most aggressive gradient stop"
+    },
+    "plum-gradient": {
+      "$value": "#6d0251",
+      "$type": "color",
+      "$description": "Plum Gradient — Full-bleed atmospheric section background — dark mulberry, a muted violet-red transition"
+    },
+    "olive-gradient": {
+      "$value": "#a8b428",
+      "$type": "color",
+      "$description": "Olive Gradient — Full-bleed atmospheric section background — sickly yellow-green, the only non-red gradient, used sparingly for contrast"
+    }
+  },
+  "font": {
+    "nb-akademie": {
+      "$value": "NB Akademie",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface. Custom serif used exclusively for monumental headlines at 121px with extremely tight leading (0.85) that makes characters nearly touch. The 400 weight at display size is deliberate restraint — the scale and tight tracking do the work that bold weight would do in other systems. Letter-spacing tightens further at larger sizes."
+    },
+    "nb-akademie-mono": {
+      "$value": "NB Akademie Mono",
+      "$type": "fontFamily",
+      "$description": "UI and monospace workhorse — navigation, body text, metadata, links, icons, and the 32px mid-scale heading tier. At 11px the negative tracking (-0.045em) compresses characters into a dense data-stream aesthetic. The monospaced face contrasts with the display serif to create a document/blueprint duality: editorial headlines above, technical metadata below."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://cthdrl.co",
+      "siteName": "cthdrl",
+      "extractedAt": "2026-06-03T16:25:20.533Z",
+      "variant": "compact"
+    }
+  }
+}

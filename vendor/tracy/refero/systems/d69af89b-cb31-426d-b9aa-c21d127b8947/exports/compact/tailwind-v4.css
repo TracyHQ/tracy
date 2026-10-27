@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-chalk-cream: #e6e0d9;
+  --color-lavender-stone: #b7b3be;
+  --color-saddle-brown: #5d3a19;
+  --color-ink-black: #000000;
+
+  /* Typography */
+  --font-grandslang-roman: 'GrandSlang-Roman', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neue-haas-grotesk-display: 'Neue Haas Grotesk Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

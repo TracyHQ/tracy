@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "example-studio",
+  "revision": 1,
+  "mode": "demo",
+  "language": "en",
+  "identity": {
+    "name": "company.name",
+    "summary": "company.summary",
+    "disclosure": "demo.disclosure"
+  },
+  "voice": [
+    "Plain, specific English; describe the service and next step."
+  ],
+  "sources": {
+    "demo": {
+      "kind": "demo",
+      "reference": "This fictional example profile",
+      "note": "Demonstration only; not customer facts."
+    }
+  },
+  "facts": {
+    "company.name": {
+      "value": "Example Studio",
+      "status": "demo",
+      "source": "demo"
+    },
+    "company.summary": {
+      "value": "A fictional website studio.",
+      "status": "demo",
+      "source": "demo"
+    },
+    "pricing.studio.name": {
+      "value": "Studio",
+      "status": "demo",
+      "source": "demo"
+    },
+    "pricing.studio.amount": {
+      "value": "$24",
+      "status": "demo",
+      "source": "demo"
+    },
+    "demo.disclosure": {
+      "value": "Illustrative demo; prices and company details are examples.",
+      "status": "demo",
+      "source": "demo"
+    }
+  },
+  "surfaces": [
+    {
+      "id": "pricing.html",
+      "purpose": "Compare the example package",
+      "requiredFacts": [
+        "pricing.studio.amount"
+      ]
+    },
+    {
+      "id": "email.html",
+      "purpose": "Introduce the same package",
+      "requiredFacts": [
+        "pricing.studio.amount"
+      ]
+    }
+  ],
+  "pending": []
+}

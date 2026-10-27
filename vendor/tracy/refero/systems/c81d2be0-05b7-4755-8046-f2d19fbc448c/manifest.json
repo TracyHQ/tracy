@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+  "status": "complete",
+  "name": "Wonder",
+  "url": "https://styles.refero.design/style/c81d2be0-05b7-4755-8046-f2d19fbc448c",
+  "sourceWebsite": "https://wonder.design",
+  "extractedAt": "2026-06-03T17:59:40.899Z",
+  "capturedAt": "2026-10-08T05:17:24.687229+00:00",
+  "theme": "mixed",
+  "industry": "design",
+  "description": "Neon violet command center — deep plum darkness pierced by a single laser-purple light source.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f0d8879c-1341-4a7e-ac0a-ec5d2c316c7a.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/34b0c741-26c5-470f-b6b3-e47eb91c40bf.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/c5ce8daf-cdf3-4720-a5d2-d13e98d9f7d0.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/168792b8-c96d-4cfc-b8f2-621f46d1c5c0.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a210d99e-9ac5-4016-b6b6-28c039b930c8.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "df2e1de544627fe4ea0dbde855afeee05c70e0d1999e05f1c5f31aeca5ebb00e",
+      "bytes": 23946
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9730984688eea08d4c93e5043bf9ec4ca1d9ed5eb44c7c13c30b8f0f46c0e752",
+      "bytes": 69075
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "5cc3c1bce3e61b065797b1d621155741ed18a4f5c17317a4c42a2a4e909ae6c4",
+      "bytes": 19957
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "479003b277df34a811a6a88f30d86af9f720329782982ee31f569d89fb9cf04e",
+      "bytes": 19102
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "3784991d58ce71f9e002319066c8601d70cd3ab331f15250d87912184b89e67a",
+      "bytes": 14232
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e18bb7795aacf05e994f296e61c0257a650d278258aa62a8572989e21295378a",
+      "bytes": 4715
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ac723f238b2e457792a2716ee95c6ae47dc7be95157e9ccdb662074d6cdb44b2",
+      "bytes": 915
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9a1d3fbd536d2f966ae31576a0cda9d0190f394eee7d162fc85f1bff8352a756",
+      "bytes": 932
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "20c0f2a79eb27416244a264cfb61ae50878cbcd99a30b7afddd9a772cbb3c439",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "aac8a2473688b3c054b9d721ea1bcf57aa1508039b4e703e1f85722be64e371b",
+      "bytes": 51030
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "131eeb9f19878c05f08485f7b92319887aef58ae3244e37d1474db82f14e82c5",
+      "bytes": 27775
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "4587365a551ceda61de2f52e88f24509952df3ea364823b16a5eef5962ce3b39",
+      "bytes": 75387
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8e9d56f6847b600e77b4e84f9d67aa8f1a9dae18d2ba2295da99c00929171b5b",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0f3b875fbd4f4ed66b147e39b4db12a115e342705b46c8582912316009fa6989",
+      "bytes": 2151
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "607999ca00a60808c5376cf6faabab64e5b380c4105384744395669b6645f040",
+      "bytes": 2799
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "41547c7a-3bbe-49f0-95d6-9701c9df9a5e",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "720c9806-2d70-4dd1-9a19-12efd71fc742",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "cfab7b43-ed24-41e9-9272-c858700b865b",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

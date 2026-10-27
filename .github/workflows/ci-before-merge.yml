@@ -1,0 +1,65 @@
+# After a pull request is merged into develop or main: did Tracy CI pass on the commit that was
+# merged? Branch protection is unavailable on this plan (private repo, Free: the API returns 403),
+# so nothing can refuse the merge. This makes one impossible to miss instead: a comment on the
+# pull request and a red job. Logic and reasons: scripts/check-merged-ci.mjs.
+name: CI Before Merge
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+on:
+  pull_request:
+    branches: [main, staging, develop]
+    types: [closed]
+
+jobs:
+  # A branch of this repository: the team's light runner, the CI read App token. The checkout is the
+  # base branch as it is now (the merge is already on it), not the pull request's merge ref, and no
+  # credential stays in it; pull-request code never runs on the production lane (public-repo-ci.md).
+  merged-ci:
+    name: merged with green Tracy CI
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    timeout-minutes: 5
+    steps:
+      - name: Check out the base branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          persist-credentials: false
+      - name: Create repository-scoped CI read token
+        id: ci-app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.TRACY_CI_MERGE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.TRACY_CI_MERGE_APP_PRIVATE_KEY }}
+          owner: TracyHQ
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: read
+          permission-pull-requests: read
+          permission-actions: read
+          permission-checks: read
+
+      - name: Did Tracy CI pass on the merged commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TRACY_CI_READ_APP_TOKEN: ${{ steps.ci-app.outputs.token }}
+        run: node scripts/check-merged-ci.mjs
+
+  # A fork's pull request never ran Tracy CI on the team's runners (only `fork pull request checks`),
+  # so there is no verdict to read and its token cannot comment: say so in the run, nothing else.
+  merged-ci-fork:
+    name: merged with green Tracy CI (fork)
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Report a fork merge
+        env:
+          BASE: ${{ github.event.pull_request.base.ref }}
+        run: |
+          echo "::warning::Merged from a fork: Tracy CI never ran its full rows on this code. Run Tracy CI on $BASE (Actions → Tracy CI → Run workflow) and fix forward if it is red."

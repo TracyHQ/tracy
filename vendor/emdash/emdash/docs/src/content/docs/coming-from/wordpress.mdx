@@ -1,0 +1,170 @@
+---
+title: EmDash for WordPress Developers
+description: Map WordPress content, templates, and extensions to an EmDash Astro site.
+---
+
+import { Aside, Card, CardGrid } from "@astrojs/starlight/components";
+
+EmDash keeps familiar content concepts such as posts, pages, taxonomies, menus, media, and revisions. Astro supplies the theme layer: routes, layouts, components, and server rendering.
+
+## What stays familiar
+
+Editors still work with named content types, structured fields, draft and published states, hierarchical categories, flat tags, nested menus, media, and revision history. Those concepts move into EmDash collections and management screens.
+
+The development workflow changes. PHP template selection becomes explicit Astro routes, template parts become imported components, and code is deployed separately from database content. You do not need React to build the public site; `.astro` components combine server-side TypeScript with HTML-like templates.
+
+## Concept map
+
+| WordPress | EmDash and Astro |
+| --- | --- |
+| Post type | EmDash collection |
+| Post meta | Collection field |
+| Category or tag | EmDash taxonomy |
+| `WP_Query` | `getEmDashCollection()` |
+| `get_post()` | `getEmDashEntry()` |
+| `the_content()` | `<PortableText />` |
+| Template hierarchy | Files in `src/pages/` |
+| Template part | Imported `.astro` component |
+| `header.php` and `footer.php` | Astro layout |
+| `wp_nav_menu()` | `getMenu()` |
+| Sidebar | Widget area and `<WidgetArea />` |
+| Options API | Site settings, or a plugin's `ctx.kv` |
+| WordPress plugin | Sandboxed or native EmDash plugin |
+
+## Content model
+
+Create and edit collections under **Content Types** in the EmDash admin. A collection has explicit typed fields and may enable drafts, revisions, scheduling, search, SEO, or comments.
+
+Queries return Astro live-collection entries. `entry.id` is the route identifier and is normally the slug; `entry.data.id` is the database content ID.
+
+The following archive queries posts in publication order:
+
+```astro title="src/pages/posts/index.astro"
+---
+import { getEmDashCollection } from "emdash";
+
+const { entries: posts, error } = await getEmDashCollection("posts", {
+  orderBy: { published_at: "desc" },
+  limit: 10,
+});
+
+if (error) return new Response("Could not load posts", { status: 500 });
+---
+
+{posts.map((post) => (
+  <article>
+    <h2><a href={`/posts/${post.id}`}>{post.data.title}</a></h2>
+    {post.data.excerpt && <p>{post.data.excerpt}</p>}
+  </article>
+))}
+```
+
+## Theme files
+
+Astro routes replace the WordPress template hierarchy. A template chooses its own URL structure rather than relying on magic filenames.
+
+| WordPress file | Current blog-template file |
+| --- | --- |
+| `front-page.php` or `home.php` | `src/pages/index.astro` |
+| `single.php` | `src/pages/posts/[slug].astro` |
+| `archive.php` | `src/pages/posts/index.astro` |
+| `page.php` | `src/pages/pages/[slug].astro` |
+| `category.php` | `src/pages/category/[slug].astro` |
+| `tag.php` | `src/pages/tag/[slug].astro` |
+| `search.php` | `src/pages/search.astro` |
+| `404.php` | `src/pages/404.astro` |
+| `header.php` and `footer.php` | `src/layouts/Base.astro` |
+
+Read [Astro for WordPress developers](/coming-from/astro-for-wp-devs/) for the project structure, component syntax, props, slots, layouts, routing, and server-rendered query flow used by EmDash templates.
+
+## Menus and widget areas
+
+Menus and widget areas live in the database and remain editable after setup. Templates query them at request time:
+
+```astro title="src/layouts/Base.astro"
+---
+import { getMenu } from "emdash";
+import { WidgetArea } from "emdash/ui";
+
+const primary = await getMenu("primary");
+---
+
+<nav>
+  {primary?.items.map((item) => <a href={item.url}>{item.label}</a>)}
+</nav>
+
+<aside><WidgetArea name="sidebar" /></aside>
+```
+
+## Site settings and taxonomies
+
+Customizer-style site identity lives in EmDash settings. Fetch the settings once and use the resolved logo URL when one is present:
+
+```astro title="src/components/SiteIdentity.astro"
+---
+import { getSiteSettings } from "emdash";
+
+const settings = await getSiteSettings();
+---
+
+<a href="/">
+  {settings.logo?.url
+    ? <img src={settings.logo.url} alt={settings.logo.alt || settings.title} />
+    : settings.title}
+</a>
+```
+
+Taxonomy terms are separate records rather than values stored directly in `entry.data`. Resolve a term, then use its slug in a collection filter:
+
+```ts
+import { getEmDashCollection, getTerm } from "emdash";
+
+const news = await getTerm("category", "news", { includeCounts: false });
+const { entries: posts } = news
+  ? await getEmDashCollection("posts", { where: { category: news.slug } })
+  : { entries: [] };
+```
+
+## Plugin formats
+
+EmDash has two plugin formats:
+
+- A **sandboxed plugin** uses `emdash-plugin.jsonc` for its identity and trust contract, plus a default-exported `src/plugin.ts` object typed with `SandboxedPlugin`. It can run in an isolated runtime and use Block Kit for admin UI.
+- A **native plugin** exports a build-time descriptor factory and a runtime `createPlugin()` function built with `definePlugin()`. Use this format for React admin components, public Astro components, or page fragments.
+
+Start with [Choosing a plugin format](/plugins/creating-plugins/choosing-a-format/). The hook names and `PluginContext` APIs are shared, but the package and handler shapes are not interchangeable.
+
+## Import WordPress content
+
+Open **Import WordPress** in the admin sidebar, or visit `/_emdash/admin/import/wordpress` directly. EmDash supports two import paths:
+
+1. Upload a WordPress eXtended RSS (WXR) file exported from **Tools → Export**.
+2. Install the EmDash Exporter plugin on the WordPress site and connect with a WordPress application password. This path can include content that a normal public REST API does not expose.
+
+Entering a WordPress URL without the exporter can detect the site and count public posts, pages, and media. That REST probe does not import content.
+
+The importer maps WordPress `publish` to EmDash `published`. Draft, pending, private, future, trash, and unknown statuses become drafts. Review imported permissions and publication state before changing DNS or retiring WordPress.
+
+<Aside type="caution">
+  Keep the WordPress site and its media available until content, authors, taxonomies, menus, links, and downloaded media have been verified in EmDash.
+</Aside>
+
+Follow [Migrate from WordPress](/migration/from-wordpress/) for the complete procedure and retry behavior.
+
+## Editor workflow
+
+The EmDash admin provides collection lists, a Portable Text editor, media management, menu editing, taxonomy management, revisions, and preview links. It is not a visual copy of `wp-admin`: Gutenberg blocks become Portable Text, and the available screens depend on the collections and features configured for the site.
+
+## Next steps
+
+<CardGrid>
+  <Card title="Migrate content" icon="download" href="/migration/from-wordpress/">
+    Export, import, and verify a WordPress site.
+  </Card>
+  <Card title="Port a theme" icon="puzzle" href="/themes/porting-wp-themes/">
+    Convert template files and dynamic features to an Astro template.
+  </Card>
+  <Card title="Port a plugin" icon="setting" href="/migration/porting-plugins/">
+    Choose a plugin format and map hooks, storage, routes, and UI.
+  </Card>
+</CardGrid>

@@ -1,0 +1,50 @@
+{
+  "name": "@tracy/dsh-model-plan",
+  "version": "0.1.0",
+  "description": "Settings › Model plan in the desktop app: the customer's own model plans (Claude, ChatGPT Codex, …) connected through @goodandready/dsh-subscriptions, one row per vendor the deployment allows, and what a new chat runs on",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./connect": "./src/client/connect.ts",
+    "./account-cards": "./src/client/account-cards/index.ts",
+    "./account-cards.css": "./src/client/account-cards/account-cards.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/ui/tracy-model-plan"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ],
+      "platform": "web"
+    }
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "@tracy/core": "workspace:^",
+    "@tracy/ui": "workspace:^",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.5",
+    "esbuild": "^0.25.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0"
+  },
+  "license": "MIT"
+}

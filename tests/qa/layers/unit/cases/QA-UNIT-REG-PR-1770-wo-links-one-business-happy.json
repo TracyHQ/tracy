@@ -1,0 +1,68 @@
+{
+  "id": "QA-UNIT-REG-PR-1770-wo-links-one-business-happy",
+  "itemIds": ["regression:REG-PR-1770-wo-links-one-business"],
+  "requirement": "Three links to one business (Google Maps, a listing page, a website) resolve to one business with one Google place",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1770-wo-links-one-business.json",
+    "ref": "PR #1770 (feat); fix evidence: none recorded",
+    "invariant": "S1: social, listing, website and Google links are told apart; duplicates and a second Google link are judged, not merged. S2: the three real links of the test case give one place; match never guesses. S3: the listing page gives the business name, address, phone and geo, never the Organization.",
+    "productSources": [
+      "packages/wo/website-opportunities/domain/google-link.mjs:18",
+      "packages/wo/website-opportunities/domain/link-kinds.mjs:18",
+      "packages/wo/website-opportunities/domain/listing-page.mjs:35"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "parse: place id",
+    "match: a place id or cid is exact",
+    "match: never guesses",
+    "the three real links of the test case",
+    "judgeLinks: invalid, duplicate",
+    "the business node of a listing page",
+    "readListingPage: one limited read"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1770-wo-links-one-business"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/wo/website-opportunities", "website-opportunities"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1770-wo-links-one-business",
+    "pr": 1770,
+    "kind": "feat",
+    "area": "website-opportunities/links",
+    "file": "tests/regression/cases/REG-PR-1770-wo-links-one-business.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/wo/website-opportunities/test/domain-link-kinds.test.mjs",
+    "packages/wo/website-opportunities/test/domain-google-link.test.mjs",
+    "packages/wo/website-opportunities/test/domain-listing-page.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "parse: place id",
+    "match: a place id or cid is exact",
+    "match: never guesses",
+    "the three real links of the test case",
+    "judgeLinks: invalid, duplicate",
+    "the business node of a listing page",
+    "readListingPage: one limited read"
+  ],
+  "timeoutS": 600
+}

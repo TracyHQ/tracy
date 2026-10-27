@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-1500-ds-social-ii-measured-clean",
+  "kind": "fix",
+  "title": "JA Social II Joomla 1.0.5: the committed probe-v10 measurement judges clean (it was measured before the last contract fixes and failed IDENT-1, LAYOUT-3 and PREVIEW-PARITY)",
+  "pr": 1500,
+  "area": "design-system/readiness",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Judge the committed design-system-measurement.json of ja-social-ii/j6/1.0.5 with judgeMeasurement and preview-system-issues.json, as /ops judges it.",
+    "S2: Run the slot emitter test and the scripted-opacity detector fixture."
+  ],
+  "expect": ["S1: 0 rules failing; only SCREEN-1 may warn.", "S2: both test files pass."],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1500-ds-social-ii-measured-clean.mjs",
+    "evidence": "packages/cms/tracy-joomla-quickstart/contracts/ja-social-ii/j6/1.0.5/design-system-measurement.json"
+  },
+  "evidence": "The committed v10 measurement of JA Social II 1.0.5 plus two unit test files",
+  "fence": "Measurement judging, detectors and readiness logic in tracy-web and tracy-ds-slot; does not drive a stand or a browser",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1500-ds-social-ii-measured-clean.mjs"],
+    "timeout_s": 600
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1352-emdash-base-saas-two-modes",
+  "kind": "feat",
+  "title": "Tracy Base EmDash 0.5.4 and Tracy SaaS EmDash 1.4.14 keep both modes under a design system and pass every built-site rule; the WordPress slot never shows an empty logo picture",
+  "pr": 1352,
+  "area": "design/slot",
+  "cms": ["em", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run tests/theme-preference.test.mjs in packages/cms/tracy-emdash-theme-base and tracy-emdash-theme-saas (the real pre-paint and toggle scripts on one shared storage).",
+    "S2: read the slot contracts emdash-base.json and emdash-tracy-saas.json; run packages/design/tracy-ds-slot test/slot.test.mjs and test/two-modes.test.mjs.",
+    "S3: read contracts/0.5.4 and contracts/1.4.14 design-system-measurement.json of the two themes and judge them with judgeMeasurement.",
+    "S4: read tracy-base/emdash and tracy-saas/emdash in both quickstarts.json copies, each theme's package.json, template.config.json and Dockerfile.",
+    "All of it: node tests/regression/scripts/REG-PR-1352-emdash-base-saas-two-modes.mjs"
+  ],
+  "expect": [
+    "S1: both pass: a worn system opens on its own mode and stores nothing; a choice under a system is kept under the system's key; taking it off gives the template back.",
+    "S2: readsComponents, modes and the switch selector ([data-tracy-theme-toggle], .k-theme-toggle) on both; maxVersion 0.5.4 / 1.4.14; ds-slot tests pass, including the hidden empty WordPress logo picture that no block rule reaches.",
+    "S3: ROLE-1, SCREEN-1, CON-1, UNDO-1, FONT-1, IDENT-1, MODE-1 and MODE-2 all pass for both releases (0.5.2 / 1.4.12 measured 6/12: ROLE-1 failed, MODE-2 failed or unmeasurable).",
+    "S4: both copies pin 0.5.4 (zip 7070333 B 5030d7fc...50e5 asset 639429998, state 6168865 B eed25494...66c8 asset 639430000) and 1.4.14 (zip 7808844 B 1cacc1f5...0071 asset 639438922, state 7674704 B 6ce7750f...0f5b asset 639438924); every version says the same."
+  ],
+  "selectors": {
+    "themes": "packages/cms/tracy-emdash-theme-base, packages/cms/tracy-emdash-theme-saas",
+    "pins": "apps/tracy-web/src/quickstarts.json, packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json",
+    "emitter": "packages/design/tracy-ds-slot/src/wordpress.mjs"
+  },
+  "fence": "No stand, no model, no network. The releases are on JoomlArt-Products/ja-products (tracy-base/emdash-0.x, tracy-saas/emdash-0.x); the measurements were taken on the iMac on the restored release candidates; this case reads only the repo.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1352-emdash-base-saas-two-modes.mjs"],
+    "needs": [],
+    "timeout_s": 180
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "emdash/tracy-base",
+  "minVersion": {
+    "tracy-base/emdash-0.x": "0.5.0"
+  },
+  "maxVersion": {
+    "tracy-base/emdash-0.x": "0.5.4"
+  },
+  "maxVersionNote": "0.5.1 (TCH #1196, 12/10/2026) is 0.5.0 plus sharp as a direct dependency (TCH #1182); 0.5.2 (12/10/2026) changes only seed/personalize.json (the readiness fixes): src/ byte-identical, the same src/lib/ds-slot.ts reader; 0.5.3 (TCH #1297, 13/10/2026) is 0.5.2 with only tools/personalize.mjs changed (Name left blank, a contact page unticked; the three themes ship one tool): src/ byte-identical, the same reader; 0.5.4 (branch feat/tdsr-emdash-base-saas, 14/10/2026) is 0.5.3 plus the two-mode slot: lib/ds-slot.ts reads the sheet's mode line (the same reader as Tracy Business 1.7.18), Base.astro opens on the system's side, Header.astro and OnepageHeader.astro keep a choice made under a system under tracy-base-theme@<id>; every stylesheet byte-identical to 0.5.3, re-measured on the release build (contracts/0.5.4)",
+  "release": "tracy-base/emdash-0.x@0.5.0",
+  "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
+  "discovered": {
+    "display": "the hero heading at 1440 on the published release: 56px",
+    "displayPhone": "the same heading at 390 on the published release: 40px",
+    "displayFace": "Helvetica Neue 600, tracking -0.015em",
+    "heading": "first section heading at 1440: 40px"
+  },
+  "discoveredNote": "read 14/10/2026 off the published release with no system worn (the v6 measure's baseline/default.json): the hero line's size on a desktop and a phone, its first family (an Astro font family name without its hash suffix), weight and letter spacing, and the first section heading. tracy-base's stack opens on -apple-system and system-ui, the reader's own system face, which the width table (src/font-widths.json) cannot name: the first family of the stack it knows, Helvetica Neue, stands in (SF Pro on the Mac that measured it sets a line about as wide). Until then emdashCss gave the slot no template sizes, so Eddie's 80px Inter 600 stood a five-line tower in tracy-base's centred hero column and six lines in Tracy Business's half-width one (look review v6)",
+  "readsComponents": true,
+  "readsComponentsNote": "the theme reads the slot's type and shape tokens (global.css: --ds-weight-*, --ds-size-*, --ds-tracking-display, --ds-leading-display, --ds-btn-radius, --ds-card-radius, --ds-input-radius), so the emitter reads them off an OpenDesign system's reference page (components.html) as for Tracy Business (#1309). Measured 14/10/2026 on the released 0.5.2 without it: ROLE-1 failed under BMW, Stripe and Spotify (the template's own weights, sizes and 980px button radius stayed)",
+  "modes": true,
+  "modesNote": "the theme has a light/dark switch ([data-tracy-theme-toggle] in Header.astro and OnepageHeader.astro, data-theme on html): the slot emits the system's own side under the side the system is and the other side derived from it (src/derive.mjs), and keeps the switch (Akemi 13/10/2026: hiding it is a bug; MODE-2). The theme opens on the system's side from 0.5.4 (lib/ds-slot.ts reads the sheet's mode line; a choice made under a system is stored under tracy-base-theme@<id>, UNDO-1); 0.5.0 to 0.5.3 hid the switch under a system and read the derived side only through the switch",
+  "selectors": {
+    "themeToggle": "[data-tracy-theme-toggle]"
+  },
+  "roles": {
+    "page": "body",
+    "display": ".h-hero",
+    "heading": ".h-section",
+    "body": "main p:not(.eyebrow)",
+    "button-primary": ".btn-primary",
+    "button-secondary": ".btn-secondary",
+    "card": ".card",
+    "container": ".wrap",
+    "section": ".band:not([data-block=\"hero\"])",
+    "input": ".ec-form-input"
+  },
+  "templateVars": {
+    "--color-warn-text": "color-mix(in srgb, #9a6700 45%, var(--ds-c-fg))",
+    "--color-danger": "color-mix(in srgb, #dc2626 70%, var(--ds-c-fg))"
+  },
+  "templateVarsNote": "the proof strip's kicker (ProofStrip.astro, text-warn-text) is the theme's literal amber --color-warn-text #9a6700 (4.87:1 on its white), which no system restates: on a system's page it read 4.26-4.31:1 (MotherDuck's cream, Moxie's black) and 3.43:1 on Toggl Track's purple (re-measured 12/10/2026 with every heading and text judged). It is the amber mixed a little over half toward the system's text, so it darkens on a light page and lightens on a dark one (a third was not enough on Toggl Track, whose text is its pink: 4.20:1) 14/10/2026 (final measure): the contact form's required mark (span.ec-form-required, var(--color-danger), #dc2626) read 4.35:1 on Moxie's cream page; the danger colour keeps its red mixed 70/30 with the system's text, 5.7:1 or more on every ground tried, light or dark.",
+  "followRules": {
+    "[data-block=\"social-proof\"] .text-warn-text": {
+      "color": "accent-text"
+    },
+    "[data-block=\"hero\"] [class~=\"bg-[#0a4fa8]\"]": {
+      "background-color": "accent-active"
+    }
+  },
+  "followNote": "look review v6 (14/10/2026): the proof strip's kicker (\"Strategy · Design · Development\") is set in the warning colour as a decoration (text-warn-text, #9a6700), so it stayed amber beside every system's accent; it takes the readable accent. The hero mock chart paints one bar in three with a literal deep blue (bg-[#0a4fa8]) beside its accent bars: it takes the system's deepest accent step (accent-active), as the template's blue is a deeper step of its own accent",
+  "contrast": {
+    "accent-text": "main .text-accent, main .eyebrow",
+    "muted": "main .text-fg-muted",
+    "meta": "main .text-fg-meta",
+    "card-text": "main .card p",
+    "body": "main p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": true,
+  "readyNote": "re-measured 12/10/2026 with the current probe, every heading, text and block of text judged, on a local build of Tracy Base EmDash 0.5.0 (its src, public and seed byte-identical to the release build that ships, ~/tracy-bench-work/release/ds-rebuild/base-0.5.0, artifactHash 4c22b917...: only tools/personalize.mjs and tests differ; tasks/evidence/ds-remeasure-6-2026-10-11/emdash-base): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, 99% or more of the page follows, lowest text 4.70:1, no text under 4.5:1 worse than the template's own, screenshots read by a person. The wider probe first failed it 6/12: the proof strip's literal amber kicker (templateVars, above). Before: measured again 11/10/2026 on the release build of Tracy Base EmDash 0.5.0 that ships (TCH #1180: develop's theme with the slot-pin fix of #1134 and #1177's tools; its QA contract at revision 21, every gate the release needs passing; tasks/evidence/ds-rebuild-collided-2026-10-11/tracy-base-emdash-0.5.0): 18/18 with Moxie, MotherDuck, Toggl Track, Apple, Stripe, Spotify and Linear, controls 0 differences, lowest text contrast 4.72, 96% or more of the page follows (round 2's first build: the same numbers). The released 0.4.0 has no slot reader (src/lib/ds-slot.ts arrived 09/10, after 0.4.0 shipped on 04/10); 0.5.0, never published before, is the first release that wears it",
+  "rolesNote": "15/10/2026 (v10 inner measure, /product 4/12): the role probe takes the first element each selector names, and on /product two of them named another element than on the home page. `main p` was the hero's eyebrow (p.eyebrow, 12px, weight 600, accent), so body.fontWeight read 600 against the system's 400 (Moxie) / 300 (Stripe) on desktop and phone; `.band` was Product.astro's hero (HeroAcm, data-block=\"hero\", class `band lg:pt-[calc(var(--band-y)*1.4)]`), whose top padding is the system's band rhythm times 1.4 by the template's design (140px under Moxie's 100, 134.4px under Stripe's 96, desktop only). Body text now skips the eyebrow and the section role skips the hero band; on the home page both name the same element as before (the hero lead, 21px; #problem, the first band)"
+}

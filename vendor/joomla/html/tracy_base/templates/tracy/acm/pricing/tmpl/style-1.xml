@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Pricing Style 1</title>
+  <fields name="pricing">
+    <fieldset name="band" label="TPL_TRACY_BASE_ACM_PRICING_BAND_LABEL">
+      <field
+        name="eyebrow"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_EYEBROW_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_EYEBROW_DESC"
+      />
+      <field
+        name="heading"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_HEADING_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_HEADING_DESC"
+      />
+      <field name="heading-level" type="list" default="h2" label="TPL_TRACY_PRICING_HEADING_LEVEL_LABEL" description="TPL_TRACY_PRICING_HEADING_LEVEL_DESC">
+        <option value="h2">TPL_TRACY_PRICING_HEADING_SECTION</option>
+        <option value="h1">TPL_TRACY_PRICING_HEADING_PAGE</option>
+      </field>
+      <field
+        name="intro"
+        type="textarea"
+        rows="3"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_INTRO_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_INTRO_DESC"
+      />
+      <field
+        name="surface"
+        type="list"
+        default="gray"
+        label="TPL_TRACY_BASE_ACM_PRICING_SURFACE_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_SURFACE_DESC"
+      >
+        <option value="canvas">TPL_TRACY_BASE_ACM_PRICING_SURFACE_CANVAS</option>
+        <option value="warm">TPL_TRACY_BASE_ACM_PRICING_SURFACE_WARM</option>
+        <option value="gray">TPL_TRACY_BASE_ACM_PRICING_SURFACE_GRAY</option>
+      </field>
+    </fieldset>
+    <fieldset name="tiers" label="TPL_TRACY_BASE_ACM_PRICING_TIERS_LABEL" multiple="1">
+      <field
+        name="tier-name"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_TIER_NAME_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_TIER_NAME_DESC"
+      />
+      <field
+        name="tier-summary"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_TIER_SUMMARY_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_TIER_SUMMARY_DESC"
+      />
+      <field
+        name="tier-price"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_TIER_PRICE_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_TIER_PRICE_DESC"
+      />
+      <field
+        name="tier-period"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_TIER_PERIOD_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_TIER_PERIOD_DESC"
+      />
+      <field
+        name="tier-features"
+        type="textarea"
+        rows="5"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_TIER_FEATURES_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_TIER_FEATURES_DESC"
+      />
+      <field
+        name="tier-action-label"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_TIER_ACTION_LABEL_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_TIER_ACTION_LABEL_DESC"
+      />
+      <field
+        name="tier-action-link"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_TIER_ACTION_LINK_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_TIER_ACTION_LINK_DESC"
+      />
+      <field
+        name="tier-recommended"
+        type="list"
+        default="0"
+        label="TPL_TRACY_BASE_ACM_PRICING_TIER_RECOMMENDED_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_TIER_RECOMMENDED_DESC"
+      >
+        <option value="0">TPL_TRACY_BASE_ACM_PRICING_TIER_RECOMMENDED_NO</option>
+        <option value="1">TPL_TRACY_BASE_ACM_PRICING_TIER_RECOMMENDED_YES</option>
+      </field>
+      <field
+        name="tier-badge"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_PRICING_TIER_BADGE_LABEL"
+        description="TPL_TRACY_BASE_ACM_PRICING_TIER_BADGE_DESC"
+      />
+    </fieldset>
+  </fields>
+</form>

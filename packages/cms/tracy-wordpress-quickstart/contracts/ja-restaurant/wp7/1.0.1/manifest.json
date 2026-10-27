@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-restaurant/wp7/1.0.1",
+  "platform": "wordpress",
+  "theme": "wp-ja-restaurant",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-restaurant/wp7",
+    "version": "1.0.1",
+    "platform": "wordpress",
+    "platformVersion": "7.1.3",
+    "phpVersion": "8.3.35",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-ja-restaurant",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "ja-restaurant-wp7-webroot-1.0.1.tar.gz",
+        "bytes": 55886818,
+        "sha256": "171712e0a901b833aa9bcd1fe3a65cab345fa8da6f575e636565b0e9754fd201",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-restaurant%2Fwp7/ja-restaurant-wp7-webroot-1.0.1.tar.gz"
+      },
+      "database": {
+        "file": "ja-restaurant-wp7-database-1.0.1.sql.gz",
+        "bytes": 83753,
+        "sha256": "61314673b80414fb1455f8cd82a4ecd6d7d1dda21e158497afe163ace1aca7dc",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-restaurant%2Fwp7/ja-restaurant-wp7-database-1.0.1.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.18.0",
+  "mode": "content-recommendation"
+}

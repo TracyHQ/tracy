@@ -1,0 +1,49 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, nav hairline borders, footer dividers, section rules, button text. Dominant structural color — defines the graphic skeleton against the warm canvas"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, card surfaces, overlay text on dark imagery, cookie dialog background. The breathing space"
+    },
+    "warm-sand": {
+      "$value": "#ebe6dc",
+      "$type": "color",
+      "$description": "Warm Sand — Secondary surface and section bands — the warm beige that gives the atelier its linen-like tactility. Section dividers, footer wash, category card backgrounds"
+    },
+    "concrete-gray": {
+      "$value": "#8c8c8c",
+      "$type": "color",
+      "$description": "Concrete Gray — Muted secondary text, tertiary borders, subdued image overlays. The recede color — present but never competing"
+    },
+    "ash-gray": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Ash Gray — Subtle dividers, inactive nav borders, low-emphasis rules. The quietest member of the scale"
+    }
+  },
+  "font": {
+    "f-grotesk": {
+      "$value": "F-Grotesk",
+      "$type": "fontFamily",
+      "$description": "Primary grotesque — used for everything from body to display. The entire type system runs at weight 400 only; hierarchy is pure scale."
+    },
+    "maison-neue-mono": {
+      "$value": "Maison-Neue-Mono",
+      "$type": "fontFamily",
+      "$description": "Monospace companion — navigation, category labels, button text, footer meta, promotional strip. The 'labelling' voice that contrasts the editorial grotesque."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://glein.wien",
+      "siteName": "Glein",
+      "extractedAt": "2026-06-03T19:47:42.676Z",
+      "variant": "compact"
+    }
+  }
+}

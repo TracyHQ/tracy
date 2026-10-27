@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1134-ds-wizard-words",
+  "kind": "fix",
+  "title": "The Add site wizard keeps the CMS picked by hand across Change design, and the Design system panel's cards wear the site's own words read off its home page when the site has no design-preview.json",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/wizard-draft.test.mjs test/press-state.test.mjs (cwd packages/site/tracy-add-site) — a wizard mounted again under the same press resumes the picks; a new press wins; a created site forgets them.",
+    "S2: node --test --test-name-pattern=^words apps/tracy-web/test/design-system-door.test.mjs — GET /api/sites/:key/design-system/words on a fake home page.",
+    "S3: node --test test/design-system-button.test.mjs test/site-preview-reader.test.mjs (cwd packages/design/tracy-design-inspiration) and apps/tracy-web/test/design-system-site-preview-door.test.mjs — readSiteWords, previewFromWords, the words line keys; the site preview door and its reader; the committed bundles. Since feat/design-system-ui (12/10/2026) the tab's cards show each system's own picture and name and the panel no longer calls the words door: the site's own words are seen in the site preview, its own home page wearing the system.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-wizard-words.mjs"
+  ],
+  "expect": [
+    "S1: WordPress picked, address typed, the tab unmounted and mounted again under the same press → platform wordpress, the address kept; a press naming emdash + tracy-business → emdash, empty address; forgetDraft → joomla.",
+    "S2: a Tracy Business WordPress home page → {present:true, source:'home', site:{name:'Northgate', headline:'Building the groundwork for next-generation plants', cta:'Request a quote', cta2:'See our capabilities', …}} — never 'English EN ▼', 'Dark' or 'Company'; one page read per site per WORDS_TTL_MS, one read shared by two panels; a failed read, an empty page or no reader → {present:false}; a seat without a grant reads nothing.",
+    "S3: the door's words become a SitePreview whose fill puts the name, heading and call to action in the card's slots; each source (file, page, reading, sample) has English words; the site preview door frames the site's own home page with the apply bytes in and nothing written (EmDash, WordPress), the panel's reader asks it with the system and the template the read answered, and the panel's lib/client.js reads that door ('}/preview?') and keeps the ds.words keys; the add-site lib/client.js carries the kept draft."
+  ],
+  "selectors": {
+    "door": "apps/tracy-web/src/sites/design-system.js GET /api/sites/:key/design-system/words, panelWordsOf; apps/tracy-web/src/public/design-page.js wordsOf (CONTROL_ATTR, rel=home / logo name); apps/tracy-web/src/sites/route.js home",
+    "page": "packages/site/tracy-add-site/src/client/wizard-draft.mjs, press-state.mjs initialPress kept, wizard.tsx; packages/design/tracy-design-inspiration/src/client/DesignSystemTab.tsx data-words, design-system-door.mjs readSiteWords/previewFromWords"
+  },
+  "evidence": "tasks/evidence/ds-walkthrough-2026-10-11/fix-wizard-words/README.md — the wizard reproduced on the stand before (Joomla after the return) and with the worktree's bundle served in place of the stand's (WordPress kept); the panel open time and its cards' words measured the same way.",
+  "fence": "The stand's tracy-web and dsh images predate this change and were not rebuilt (the integrator does): the stand checks serve the worktree's lib/client.js through Playwright and answer the words door from this machine with the worktree's reader over the site's real home page.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-wizard-words.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

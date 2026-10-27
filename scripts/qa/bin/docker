@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# QA docker guard — first on PATH for every process the QA orchestrator starts (rebuild-local.sh,
+# web/build.sh, stand scripts). Decides with scripts/qa/stand/docker-guard.mjs, logs every call to
+# $QA_HOME/logs/docker-guard.jsonl, and only then runs the real docker (the next `docker` on PATH
+# after this directory, or $QA_REAL_DOCKER). A refused call exits 126 with the reason on stderr.
+set -euo pipefail
+SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec node "$SELF_DIR/../stand/docker-guard.mjs" --self-dir "$SELF_DIR" -- "$@"

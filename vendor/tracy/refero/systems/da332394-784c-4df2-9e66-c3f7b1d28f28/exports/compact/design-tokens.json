@@ -1,0 +1,104 @@
+{
+  "color": {
+    "signal-violet": {
+      "$value": "#6b53ff",
+      "$type": "color",
+      "$description": "Signal Violet — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "lighter-violet": {
+      "$value": "#8d49f7",
+      "$type": "color",
+      "$description": "Lighter Violet — Secondary brand accent, gradient highlight stops, icon fills, decorative violet washes — a brighter cousin used when Signal Violet would feel too heavy"
+    },
+    "deep-indigo": {
+      "$value": "#371789",
+      "$type": "color",
+      "$description": "Deep Indigo — Dark brand text, deep gradient end-stops, footer/marketing accent on white sections — the shadow side of the violet family"
+    },
+    "solar-yellow": {
+      "$value": "#ffd02c",
+      "$type": "color",
+      "$description": "Solar Yellow — Energy accent — slide preview highlights, decorative bursts, gradient start, illustration fills. Used sparingly as visual punctuation, never as a functional color; Warm accent gradient — linear-gradient(90deg, #ffd02c, #ff9e2c) for decorative bursts and illustration gradients"
+    },
+    "ember-orange": {
+      "$value": "#ffa000",
+      "$type": "color",
+      "$description": "Ember Orange — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "slate-ink": {
+      "$value": "#2b2a35",
+      "$type": "color",
+      "$description": "Slate Ink — Primary text, heading text, icon strokes, dark surface fill — the dominant achromatic doing all reading work (1,700+ occurrences)"
+    },
+    "carbon": {
+      "$value": "#1e1d28",
+      "$type": "color",
+      "$description": "Carbon — Secondary dark text, card text on light surfaces — a step lighter than Slate Ink for subordinate copy"
+    },
+    "steel": {
+      "$value": "#3f4250",
+      "$type": "color",
+      "$description": "Steel — Muted body text, secondary headings, dark-mode support text"
+    },
+    "fog": {
+      "$value": "#6f7387",
+      "$type": "color",
+      "$description": "Fog — Supporting neutral for secondary UI, dividers, and muted labels."
+    },
+    "ash": {
+      "$value": "#95959a",
+      "$type": "color",
+      "$description": "Ash — Tertiary borders, subtle dividers, light-mode shadow tint at low opacity"
+    },
+    "mist": {
+      "$value": "#dddfe5",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, card outlines, button shadows — the lightest visible structural line"
+    },
+    "marble": {
+      "$value": "#f0eff4",
+      "$type": "color",
+      "$description": "Marble — Page canvas background — slightly cooler than pure white, sets product sections apart from card surfaces"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "shadow-violet": {
+      "$value": "#0a0359",
+      "$type": "color",
+      "$description": "Shadow Violet — Deep shadow color tinted violet (rgba 0.3) — appears only in the hero card's large ambient shadow, giving elevation an on-brand cool cast"
+    },
+    "hero-stage": {
+      "$value": "#5718eb",
+      "$type": "color",
+      "$description": "Hero Stage — Primary hero gradient end-stop — linear gradient(90deg, #5718eb, #ab6ef9) fills the entire first screen behind the headline"
+    }
+  },
+  "font": {
+    "eina01": {
+      "$value": "Eina01",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body font. Used for navigation, buttons, body copy, list items, badges, and subheadings up to 28px. Its signature is a wide +0.1em letter-spacing applied consistently — this airiness gives the UI a measured, deliberate pace rather than dense SaaS compression. Substitute: Inter or Manrope (both geometric sans with similar x-height)."
+    },
+    "mark-pro": {
+      "$value": "Mark Pro",
+      "$type": "fontFamily",
+      "$description": "Display and headline font only. Used for hero headlines (60–80px), section headings (42px), and small uppercase labels (13px). The display sizes carry tight negative tracking (-0.02em at 60–80px, -0.01em at 27–28px) that contrasts with Eina01's openness — the two fonts create a deliberate tight/wide duality. Substitute: Söhne (closest match) or Inter at heavy weight."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://pitch.com",
+      "siteName": "Pitch",
+      "extractedAt": "2026-06-03T16:17:03.024Z",
+      "variant": "compact"
+    }
+  }
+}

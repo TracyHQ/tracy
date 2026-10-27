@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "225059ac-0450-49d3-b2b7-d0e98b7ae938",
+  "status": "complete",
+  "name": "Midjourney",
+  "url": "https://styles.refero.design/style/225059ac-0450-49d3-b2b7-d0e98b7ae938",
+  "sourceWebsite": "https://midjourney.com",
+  "extractedAt": "2026-04-11T18:05:53.023Z",
+  "capturedAt": "2026-10-08T05:09:18.831920+00:00",
+  "theme": "dark",
+  "industry": null,
+  "description": "Deep-ocean bioluminescent terminal. A pressurized darkness where intelligence visibly generates itself in ASCII streams, and controls appear as faintly glowing specimens.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/698dd6e9-1f77-4eb4-a8a6-b50df6bbda02.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/95eb5c46-271c-4503-81a5-d1003a95efcc.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/2287534d-d905-4482-9200-e26a38eaa6be.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/ba47d8aa-c8b5-4478-b48c-23566d0c9f57.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/50e75698-0356-4fbf-ba94-15381261bacf.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "82760c0d062e24f9305938f77aaa8320b04ba841129e6094e2aa832e07400bd1",
+      "bytes": 22282
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "92cf7d5e4bdba65c57e6014d3bf472b3b3f58e1ebed6838d74faac229c88f686",
+      "bytes": 304728
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "7c850a89543786490050101071e4f0221a4c71bd510ab5a9c32ed73281b94f02",
+      "bytes": 38106
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "48cf30b3092e615ec6b681dbd430a4308f0f72458887c55bce6cd235b928e9c6",
+      "bytes": 8396
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ecf953bb11e143edcebd94fa281a2a596f604ea3f38b8197e32fa89e9f0f3bfb",
+      "bytes": 14768
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7ae216eaa3f0e6eb07256ef5233a9671dc4cf056dcfd0558d0a4bf9ac40bbe84",
+      "bytes": 4242
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "baf11e038bbe5ee8f030e6dc50b6e014fbdbf9ea02fa0f9bf2232676bf74765d",
+      "bytes": 778
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "54d5d4747440369928749425e659cf014ba6bf6c4c9e9f3b431b77de663b7e2c",
+      "bytes": 879
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "acfbf29446b6cf0972df9e53056e84a8f8a8cfa303553e4087f23bc76615863a",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "6b01859ed7b12d50691beb9c92e2d167c23999266daa0256c84f75906f86fb41",
+      "bytes": 55243
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8ec8c68a201736721bf7f448052da995925ce1f7d7555ed7c985bd0973ca569c",
+      "bytes": 27531
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5d4d91866189e309bf80340b83313e9bd72f7cbe1723ae81b2134ba104a54c42",
+      "bytes": 58242
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "18d543c0e96c5947c367b6e3ed09024097d0e278e61ec9acf967c7a33eaa9c95",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d9d2d0c738bfcebdfda34be948f69f15c4b5e2e4062c97f214b6e12a3b52cbdc",
+      "bytes": 1275
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1d4e5211ef2c8fd23688fb2c67e4be4fab3fe462f285a12a2535bc1be31344c3",
+      "bytes": 1919
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "1d4cbd69-ee0f-4f13-ba7d-14d3eaed7349",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "225059ac-0450-49d3-b2b7-d0e98b7ae938",
+    "2d78835a-fffe-4416-8e3d-ac37207fbd6b",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "80099f79-72b7-4367-b2e9-6a3d4a3e9e6a",
+    "ad48f4ad-42c0-4c91-a189-fa7a73a7a9e9",
+    "ad98aac8-347c-47da-91c5-9c020febeb92",
+    "bc4fb98b-37ec-480a-b7a9-acd197cbebb9",
+    "c3ceca5c-d329-4559-b947-016172941ba2",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "d5307f56-76de-4d13-9741-f969c42e9aa5",
+    "dc541737-8bf2-4b31-b729-0352f696e82f",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f99856e1-3627-4624-a811-f6053a978b62",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

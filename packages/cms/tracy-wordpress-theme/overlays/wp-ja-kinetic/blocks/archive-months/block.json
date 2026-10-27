@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/archive-months",
+  "version": "0.1.0",
+  "title": "Archive by-month rail",
+  "category": "design",
+  "icon": "calendar-alt",
+  "description": "The source's \"BY MONTH\" rail on the date archive (css/page-251.css .hx-arch-months): real year/month post counts, current selection marked active.",
+  "textdomain": "wp-ja-kinetic",
+  "attributes": {
+    "archivedOnly": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

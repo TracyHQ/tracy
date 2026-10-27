@@ -1,0 +1,69 @@
+{
+  "color": {
+    "forest-ink": {
+      "$value": "#0f3e17",
+      "$type": "color",
+      "$description": "Forest Ink — Primary action buttons, headings, links, icon strokes — deep botanical green reads as ink, the only saturated dark in the system"
+    },
+    "sage-mist": {
+      "$value": "#b1dbb8",
+      "$type": "color",
+      "$description": "Sage Mist — Mid-tone card backgrounds and decorative washes, panel-level surfaces"
+    },
+    "keylime-wash": {
+      "$value": "#e1f4df",
+      "$type": "color",
+      "$description": "Keylime Wash — Hero panel background, light card surfaces — the dominant tinted canvas tone"
+    },
+    "mint-veil": {
+      "$value": "#cfe7d3",
+      "$type": "color",
+      "$description": "Mint Veil — Accent card surfaces, soft section dividers between sage and keylime layers"
+    },
+    "slate-hush": {
+      "$value": "#b6ced5",
+      "$type": "color",
+      "$description": "Slate Hush — Cool counter-balance panel for product preview and feature blocks — breaks the green monotony with desaturated blue-gray"
+    },
+    "cream-paper": {
+      "$value": "#fffefc",
+      "$type": "color",
+      "$description": "Cream Paper — Page background, badge backgrounds, button text — warm off-white that softens every green"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Navigation text and minor UI strokes — restrained secondary ink"
+    },
+    "border-mist": {
+      "$value": "#efeeeb",
+      "$type": "color",
+      "$description": "Border Mist — Hairline dividers and subtle borders throughout the layout"
+    },
+    "forest-shadow": {
+      "$value": "#0c2f10",
+      "$type": "color",
+      "$description": "Forest Shadow — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "faire-octave": {
+      "$value": "Faire Octave",
+      "$type": "fontFamily",
+      "$description": "Display serif for all section headings and hero copy"
+    },
+    "suisse-intl": {
+      "$value": "Suisse Intl",
+      "$type": "fontFamily",
+      "$description": "Body, navigation, UI labels, buttons, captions — humanist sans at whisper weight for feature lists and normal weight for copy"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://easehealth.com",
+      "siteName": "Ease Health",
+      "extractedAt": "2026-07-03T03:18:42.774Z",
+      "variant": "compact"
+    }
+  }
+}

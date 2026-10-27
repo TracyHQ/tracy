@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-943-ja-vega-wp7-behaviour-layout-fixes",
+  "kind": "fix",
+  "title": "JA Vega wp7 1.1.9: page heights, drawer, search field, project and service cards, article quote and header sun match the Joomla source",
+  "pr": 943,
+  "area": "wordpress-theme/wp-ja-vega",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-vega theme under test (local stand restored from the quickstart pack) and the Joomla source (local stand from quickstart/ja-vega/j6, web fonts loaded, a missing page answers 404).",
+    "S2: From the TCH checkout run: node vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/visual/site-sweep.mjs --site <site> --source <source> --run-root tasks/ja-vega-wp7 --zip <theme.zip> --out <dir> (all ten checks are the default; about 7 minutes).",
+    "S3: Then run: node tasks/ja-vega-wp7/tools/measure117.mjs --site <site> --source <source> --sweep <dir> --zip <theme.zip> --out <dir>/m117.json, then node tasks/ja-vega-wp7/tools/measure118.mjs --site <site> --source <source> --base <dir>/m117.json --zip <theme.zip> --out <dir>/fix-measure.json.",
+    "S4: Run the regression group: node tasks/ja-vega-wp7/tools/measure116.mjs --site <site> --source <source> --out <dir>/m116a --only theme,author,newsletter,wording,coverage, and the same with --only project,touch,coverage.",
+    "S5: Read the summary table and the final line of each command."
+  ],
+  "expect": [
+    "site-sweep: all ten checks (overflow, scheme, background, header, chips, fixed-widgets, icons, forms, text, first-interaction) report 0 defects and 0 not measured over 34 routes x 6 widths x light and dark; the ten groups the dossier records as decided are listed as not counted; exit 0.",
+    "measure118: 19 of 19 merged checks pass, among them services-benefit-titles (18 cases: the benefit card titles of the six service pages are 20 / 24 px at 390, 768 and 1440), text-field-focus, drawer-open-strip, drawer-back-row-case and project-card-excerpts with 0 defects.",
+    "measure116: 5/5 and 3/3 checks pass."
+  ],
+  "selectors": {
+    "tool": "tasks/ja-vega-wp7/tools/measure118.mjs",
+    "evidence": "tasks/ja-vega-wp7/release/fix-measure.json"
+  },
+  "evidence": "Measures of 05/10/2026 against the local Joomla source: the 1.1.8 restore passes 6 of 10 sweep checks (fixed-widgets, icons, forms, text fail); 1.1.9 on the clean restore passes 19 of 19 (fix-measure.json bound to wp-ja-vega-1.1.9.zip e55faf13); services-benefit-titles reports 36 defects on the previous 1.1.9 build and 0 on the shipped one",
+  "fence": "Browser-measured behaviour of the shipped theme against the source; the tools exit non-zero on a defect, and a check that examined nothing fails; differences recorded as decisions (D-14, D-16, D-19, D-45, D-61, D-74, D-76) are not asserted to zero"
+}

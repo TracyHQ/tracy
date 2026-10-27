@@ -1,0 +1,71 @@
+---
+title: Tracy API
+description: Read and change a Tracy-hosted website — Joomla, WordPress or EmDash — over HTTPS with a key bound to your own seat on that site.
+template: splash
+hero:
+  tagline: One REST API over every website Tracy hosts. A key bound to your seat, resources you already know — pages, contents, records — and every write undoable.
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: Quickstart
+      link: /quickstart/
+      icon: right-arrow
+    - text: API reference
+      link: /reference/
+      icon: open-book
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+## What you can do in five minutes
+
+1. Create an API key in **Settings → API keys** of the site you hold a seat on.
+2. `GET /v1/me` — check who the key acts as, on which site, with which scopes.
+3. `GET /v1/sites/{key}/pages` — list the site's published pages with their content ids.
+4. `PATCH /v1/sites/{key}/records/{kind}/{id}` — change one title, recorded under an `apply_id`.
+5. `POST /v1/sites/{key}/applies/{apply_id}/revert` — put it back.
+
+The [Quickstart](/quickstart/) walks through exactly these five calls with `curl`.
+
+<CardGrid>
+  <Card title="Seat-bound keys" icon="seti:lock">
+    A key acts as the person who made it, on one site, with at most the toolsets that person's role grants. Revoking a seat revokes every key with it. See [Authentication](/authentication/).
+  </Card>
+  <Card title="One shape for three CMSs" icon="puzzle">
+    Pages, contents, blocks and fields read the same on Joomla, WordPress and EmDash. Records are the CMS's own rows, for when you need them. See [Concepts](/concepts/).
+  </Card>
+  <Card title="Every write is undoable" icon="rocket">
+    Each change is recorded under an `apply_id`; `POST …/applies/{id}/revert` puts back everything written under it, newest first.
+  </Card>
+  <Card title="Versioned, with a changelog" icon="document">
+    The API is `v1` in the path. Additions get a dated line in the [changelog](/changelog/); a change of meaning is a new version.
+  </Card>
+</CardGrid>
+
+## How the system is organised
+
+```text
+Bearer trk_…  (you, your agent, a partner's integration)      cookie tracy_sess (a browser on cowork.*)
+      |  /v1/*  — Bearer only, no cookie                              |  /api/sites/{key}/apply, /api/me/keys
+  api.tracy.ai ── API host ── allowlist ──┐                           |
+                 └─ /docs/api/<document>   (this site: docs.tracy.ai) |
+                                          ▼                           ▼
+                        applyDoor(siteKey, action, params, principal)   ← ONE path: seat · effective permissions ∩ scopes · lease · audit
+                                          |
+                  Claude Cowork plugin (Joomla, WordPress) · Tracy reader (EmDash)
+```
+
+- **`api.tracy.ai`** answers `/v1/*` and the three machine-read documents under `/docs/api/` (OpenAPI, Claude Cowork plugin, llms.txt). This documentation and the interactive reference are on **`docs.tracy.ai`**. Nothing else: sign-in, the workspace and the Ops tooling live on Tracy's own hostname and answer `404 NOT_ON_THIS_HOST` on both.
+- **One door.** Every `/v1` route is a thin alias of an action of the Apply door — the same path the Tracy agent takes: who you are (the key's owner), what your seat allows, the site's write lease, and the audit log.
+- **The site answers.** On Joomla and WordPress the call reaches the Claude Cowork plugin installed on the site; on EmDash, Tracy's own reader. What the site refuses comes back to you as a documented [error](/reference/errors/).
+
+## Where things are
+
+| | |
+|---|---|
+| Base URL | `https://api.tracy.ai/v1` (development: `https://api.tracy.site/v1`) |
+| OpenAPI 3.1 | [`/api/openapi.json`](/api/openapi.json) |
+| Interactive reference | [`/api/reference/`](/api/reference/) |
+| For language models | [`/api/llms.txt`](/api/llms.txt) |
+| Health | `GET /health` → `{ "ok": true }` |

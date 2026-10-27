@@ -1,0 +1,173 @@
+---
+title: Portable Text rendering components
+description: Define a plugin block in the editor and provide its Astro renderer on the public site.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+A plugin-defined Portable Text block has two parts:
+
+- A declarative block definition tells the EmDash editor how to insert and edit the block.
+- An Astro component renders the saved block on the public site.
+
+The block definition uses the shared plugin runtime and is compatible with sandboxed plugins. Loading an Astro component from the package requires a native descriptor because Astro must import it while building the host site.
+
+## Define the editor block
+
+Declare blocks in `admin.portableTextBlocks` inside `definePlugin()`. The following definition adds a callout with a heading, body, and tone:
+
+```typescript title="src/index.ts"
+return definePlugin({
+	id: "plugin-callout",
+	version: "0.1.0",
+	admin: {
+		portableTextBlocks: [
+			{
+				type: "callout",
+				label: "Callout",
+				icon: "info",
+				description: "Highlight supporting information",
+				category: "Sections",
+				fields: [
+					{
+						type: "text_input",
+						action_id: "heading",
+						label: "Heading",
+					},
+					{
+						type: "text_input",
+						action_id: "body",
+						label: "Body",
+						multiline: true,
+					},
+					{
+						type: "select",
+						action_id: "tone",
+						label: "Tone",
+						options: [
+							{ value: "note", label: "Note" },
+							{ value: "warning", label: "Warning" },
+						],
+						initial_value: "note",
+					},
+				],
+			},
+		],
+	},
+});
+```
+
+The block fields control how the block appears in the slash menu and edit dialog:
+
+| Field | Required | Behavior |
+| --- | --- | --- |
+| `type` | Yes | Becomes the saved Portable Text block's `_type` and the renderer-map key. Keep it unique across the enabled plugins. |
+| `label` | Yes | Names the block in the editor. |
+| `icon` | No | Uses the editor's supported icon key when one matches; otherwise the editor shows its generic block icon. |
+| `description` | No | Adds supporting text in the slash menu. |
+| `category` | No | Groups the block in the slash menu. The default category is `Embeds`. |
+| `placeholder` | No | Sets the simple URL input's placeholder when `fields` is omitted. |
+| `fields` | No | Replaces the simple URL input with Block Kit form elements. Each `action_id` becomes a property on the saved block. |
+
+Use the Block Kit element shapes documented in [Block Kit](/plugins/creating-plugins/block-kit/) for `fields`. The example stores a block shaped like the following value:
+
+```json
+{
+	"_type": "callout",
+	"_key": "01JEXAMPLEKEY",
+	"heading": "Before you publish",
+	"body": "Check the preview on a small screen.",
+	"tone": "warning"
+}
+```
+
+## Add the Astro component
+
+<Steps>
+
+1. Create an Astro component that accepts the saved block as `node`.
+
+   ```astro title="src/astro/Callout.astro"
+   ---
+   interface CalloutNode {
+       _type: "callout";
+       _key: string;
+       heading?: string;
+       body?: string;
+       tone?: "note" | "warning";
+   }
+
+   interface Props {
+       node: CalloutNode;
+   }
+
+   const { node } = Astro.props;
+   ---
+
+   <aside class:list={["callout", `callout--${node.tone ?? "note"}`]}>
+       {node.heading && <p class="callout__heading"><strong>{node.heading}</strong></p>}
+       {node.body && <p>{node.body}</p>}
+   </aside>
+   ```
+
+   `astro-portabletext` passes custom type components a `node` prop. It does not pass the block as `value`. The renderer uses styled text for the optional heading because the block can appear at any depth in the document; a fixed heading element could skip or repeat a heading level.
+
+2. Export the component in a map named `blockComponents`.
+
+   ```typescript title="src/astro/index.ts"
+   import Callout from "./Callout.astro";
+
+   export const blockComponents = {
+       callout: Callout,
+   };
+   ```
+
+   Each key must match the block definition's `type`.
+
+3. Add `componentsEntry` to the descriptor factory.
+
+   ```typescript title="src/index.ts"
+   export function calloutPlugin(): PluginDescriptor {
+       return {
+           id: "plugin-callout",
+           version: "0.1.0",
+           format: "native",
+           entrypoint: "@example/plugin-callout",
+           componentsEntry: "@example/plugin-callout/astro",
+       };
+   }
+   ```
+
+4. Export the `./astro` entry from the npm package. The entry must resolve to the module that exports `blockComponents`. [Distributing native plugins](/plugins/creating-native-plugins/distributing/#package-exports) shows a complete package definition.
+
+</Steps>
+
+## Rendering order and overrides
+
+EmDash automatically adds plugin components to its `<PortableText>` component. Components merge in the following order:
+
+1. EmDash built-in components
+2. Plugin `blockComponents`
+3. Components passed by the site to `<PortableText>`
+
+Later entries override earlier ones with the same type key. A site can therefore replace only the callout renderer while leaving the plugin's editor definition enabled:
+
+```astro title="src/pages/article.astro"
+---
+import { PortableText } from "emdash/ui";
+import SiteCallout from "../components/SiteCallout.astro";
+---
+
+<PortableText
+	value={entry.body}
+	components={{
+		type: {
+			callout: SiteCallout,
+		},
+	}}
+/>
+```
+
+<Aside type="note">
+	A sandboxed plugin can contribute the editor definition because it is declarative data. A sandboxed descriptor cannot use `componentsEntry`, so the site must supply the renderer itself or install a separate trusted package that provides it. Keep that split only when the sandbox boundary is worth the extra installation step.
+</Aside>

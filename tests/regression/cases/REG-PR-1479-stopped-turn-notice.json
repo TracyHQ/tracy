@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1479-stopped-turn-notice",
+  "kind": "fix",
+  "title": "The turn after a stopped one is told, once and across a host restart, which writes landed and which are unknown",
+  "pr": 1479,
+  "area": "site-changes/stop",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: an EmDash write lands after Stop; the host restarts; the next turn starts.",
+    "S2: an Apply write whose answer was lost after Stop.",
+    "S3: a turn not stopped; a write Stop kept from sending."
+  ],
+  "expect": [
+    "S1: the next turn gets one notice naming it as landed; a later turn gets none.",
+    "S2: named as unknown, never landed.",
+    "S3: no notice."
+  ],
+  "selectors": {
+    "test": "packages/tools/tracy-site-tools/test/handler.test.mjs",
+    "code": "host/stopped-writes.mjs, tracy-web sites/stopped-writes.js (migration 148), doors turn/stopped and turn/stopped/take"
+  },
+  "evidence": "Review 19/10/2026: after Stop the log said 'tool call aborted' though the write could have landed; the next turn believed nothing changed",
+  "fence": "A durable ledger of a stopped turn's writes, told once",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "packages/tools/tracy-site-tools/test/handler.test.mjs"],
+    "tests": [
+      "🔒 Q2: an EmDash write lands after Stop, the host restarts, and the next turn is told it landed — once",
+      "🔒 Q2: an Apply write whose answer was lost after Stop is named as unknown, never as landed",
+      "🔒 Q2: a turn that was not stopped reports nothing and adds no notice; a write Stop kept from being sent is not named"
+    ]
+  }
+}

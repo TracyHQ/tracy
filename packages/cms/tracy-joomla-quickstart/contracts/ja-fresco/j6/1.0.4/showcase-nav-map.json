@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-fresco/j6/1.0.4",
+  "baseHash": "4887f37894c41854a3c27c1fe6b18e28995eb2bbaf269e43c9aaaa8035da8d4a",
+  "baseFiles": {
+    "manifest.json": "6e7d32653e7edc12badfbe8cce1292d9e8d0d72b715e91ad6dcd043fccbe0f50",
+    "content-map.json": "2fcd064282668e782e5bc0f5c0d0a1be26af67aabb2a21c69bd9a12882181920",
+    "presentation-lock.json": "d48d672180b2c5283c6888fe2a557acbd069ade7d21c2ea94ee79b702c2d7ede"
+  },
+  "inputs": {},
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-122",
+      "identity": {
+        "path": "home/home-1",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home 1",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-123",
+      "identity": {
+        "path": "home/home-2",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home 2",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-127",
+      "identity": {
+        "path": "home/home-3",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home 3",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Contact",
+      "where": "mainmenu/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-118",
+      "label": "Reservation Policy",
+      "where": "about/reservation-policy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-119",
+      "label": "Privacy Policy",
+      "where": "about/privacy-policy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-120",
+      "label": "Health & Safety",
+      "where": "about/health-safety",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-121",
+      "label": "FAQ",
+      "where": "about/faq",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-124",
+      "label": "About",
+      "where": "mainmenu/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-125",
+      "label": "Gallery",
+      "where": "mainmenu/gallery",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-126",
+      "label": "Chiefs",
+      "where": "mainmenu/chiefs",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-128",
+      "label": "Menu",
+      "where": "mainmenu/menu",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-132",
+      "label": "Offer",
+      "where": "mainmenu/offer",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@sidebar-right",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 7 entries stay"
+    },
+    {
+      "key": "module-132",
+      "label": "About",
+      "where": "mod_menu@footnav-4",
+      "rule": "keep.default",
+      "reason": "renders about: 4 entries stay"
+    },
+    {
+      "key": "module-167",
+      "label": "Offcanvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 7 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 3,
+    "modules": 0,
+    "kept": 14,
+    "unresolved": 0
+  }
+}

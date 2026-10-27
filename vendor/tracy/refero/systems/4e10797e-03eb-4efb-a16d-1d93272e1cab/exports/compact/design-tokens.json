@@ -1,0 +1,64 @@
+{
+  "color": {
+    "obsidian-void": {
+      "$value": "#10020a",
+      "$type": "color",
+      "$description": "Obsidian Void — Page canvas and primary surface background — the near-black that everything floats above"
+    },
+    "dark-mulberry": {
+      "$value": "#1e0313",
+      "$type": "color",
+      "$description": "Dark Mulberry — Elevated card surface — the second tier above the canvas, slightly warmed by the glow that surrounds it"
+    },
+    "frost-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Frost White — Primary text, hairline borders, nav links, and icon fills on dark surfaces"
+    },
+    "soft-chalk": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Soft Chalk — Light surface fill for product mockup cards and inner product UI panels"
+    },
+    "plasma-pink": {
+      "$value": "#ff0068",
+      "$type": "color",
+      "$description": "Plasma Pink — Red supporting accent for decorative details and low-frequency emphasis"
+    },
+    "deep-crimson": {
+      "$value": "#91013d",
+      "$type": "color",
+      "$description": "Deep Crimson — Wide outer glow color — the broad pink wash that bleeds 99px from card edges into the void"
+    },
+    "ruby-shadow": {
+      "$value": "#700130",
+      "$type": "color",
+      "$description": "Ruby Shadow — Largest ambient glow spread — the most diffuse layer of the multi-stop shadow stack"
+    },
+    "magenta-wine": {
+      "$value": "#9f0142",
+      "$type": "color",
+      "$description": "Magenta Wine — Secondary glow tint on product image frames; the slightly warmer pink in the shadow gradient"
+    }
+  },
+  "font": {
+    "graphik-web": {
+      "$value": "Graphik Web",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI — nav, body, buttons, headings, and the display hero. Negative letter-spacing tightens every size from 14px up; the 104px display sits at -0.046em so the two-line headline reads as a single dense block. Weight 600 is the workhorse for nav and button labels, 700 for hero, 400 for body."
+    },
+    "graphik-cond-web": {
+      "$value": "Graphik Cond Web",
+      "$type": "fontFamily",
+      "$description": "Rare display variant for the gradient section heading — the condensed width creates a horizontal banner feel distinct from the upright display sizes"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://luroapp.com",
+      "siteName": "Luro",
+      "extractedAt": "2026-06-03T21:06:03.390Z",
+      "variant": "compact"
+    }
+  }
+}

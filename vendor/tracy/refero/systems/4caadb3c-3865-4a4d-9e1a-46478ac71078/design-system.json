@@ -1,0 +1,331 @@
+{
+  "dos": [
+    "Use Reckless serif at 44–76px for display headlines only; never for body, UI, or navigation text.",
+    "Set the primary CTA to a #151515 fill with the signature pink/magenta outer glow ring at 20px radius.",
+    "Keep the page canvas at #fafafa (Bone) and reserve #212123 (Obsidian) for primary text and the darkest interactive states.",
+    "Apply the pink-to-lavender gradient (Dusk Wash) as a full-bleed hero background; never as a small decorative element or button fill.",
+    "Use the three accent colors (Iris, Lagoon, Cobalt) only inside 9999px-radius badges; never as background fills for cards, buttons, or large surfaces.",
+    "Maintain 8px as the base spacing unit with 80px vertical rhythm between sections.",
+    "Set body text at 14–16px Inter with 1.5–1.6 line-height; the reading layer is generous, not dense."
+  ],
+  "donts": [
+    "Don't use Reckless below 44px — the serif's character requires display-scale size to read correctly.",
+    "Don't introduce additional saturated colors beyond Iris, Lagoon, and Cobalt; the system is 97% achromatic by design.",
+    "Don't apply the Dusk Wash gradient to cards, buttons, or text backgrounds — it is atmospheric only.",
+    "Don't use sharp corners (0–4px) on cards or buttons; the minimum structural radius is 8px for icons, 20px for containers.",
+    "Don't add heavy drop shadows to cards; use hairline borders or the existing subtle shadow patterns, not theatrical elevation.",
+    "Don't use weight 700 or above in Inter; the max weight in the system is 600.",
+    "Don't place chromatic badges on chromatic backgrounds; badges need the Bone or Obsidian canvas behind them to read."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#212123",
+      "name": "Obsidian",
+      "role": "Primary text, headings, icon strokes — near-black with a faint cool undertone, softer than pure #000 to reduce glare on long-form copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Bone",
+      "role": "Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4a4a4a",
+      "name": "Graphite",
+      "role": "Body text, secondary copy, footer text — the mid-gray that creates the reading layer between headlines and captions",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Carbon",
+      "role": "Pure black reserved for the highest-contrast elements: nav links, button labels, icon fills where absolute clarity is required",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5c5c5c",
+      "name": "Slate",
+      "role": "Muted body text, secondary nav, caption-level copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a7a7a7",
+      "name": "Mist",
+      "role": "Placeholder text, disabled states, tertiary icons, hairline strokes where subtlety is the point",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c4c4c4",
+      "name": "Ash",
+      "role": "Subtle shadows under icons and buttons, ghost borders on inactive controls",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6e6e6",
+      "name": "Fog",
+      "role": "Input field shadows, card hairline borders, the lightest visible structural line",
+      "group": "neutral"
+    },
+    {
+      "hex": "#151515",
+      "name": "Onyx",
+      "role": "Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7f7f7f",
+      "name": "Steel",
+      "role": "Tertiary text, metadata, timestamps in testimonials",
+      "group": "neutral"
+    },
+    {
+      "hex": "#555dff",
+      "name": "Iris",
+      "role": "Accent badges, feature tags — a single violet used sparingly as categorical punctuation on a sea of grayscale",
+      "group": "accent"
+    },
+    {
+      "hex": "#03cbbc",
+      "name": "Lagoon",
+      "role": "Secondary accent badges — a cool teal that pairs with Iris as the site's only chromatic vocabulary for tags and labels",
+      "group": "accent"
+    },
+    {
+      "hex": "#4389e6",
+      "name": "Cobalt",
+      "role": "Blue supporting accent for decorative details and low-frequency emphasis",
+      "group": "accent"
+    },
+    {
+      "hex": "#fc7a9b",
+      "name": "Dusk Wash",
+      "role": "Hero atmospheric gradient — the warm pink that bleeds into lavender across the hero, setting the entire emotional register",
+      "group": "brand",
+      "gradient": "linear-gradient(104deg, rgb(252, 122, 155) 0%, rgb(180, 126, 238) 100%)"
+    },
+    {
+      "hex": "#32adf7",
+      "name": "Prism Drift",
+      "role": "Decorative multi-stop gradient used in product showcase contexts — blue to purple to orange, cycling for visual energy",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, rgb(50, 173, 247) 20%, rgb(116, 75, 208) 40%, rgb(233, 127, 66) 50%, rgb(50, 173, 247) 75%)"
+    }
+  ],
+  "layout": "Max-width ~1200px centered content with full-bleed hero sections. The hero uses a soft pink-to-lavender gradient that bleeds from the top-left corner, with headline + subtext + CTA left-aligned and max-width ~480px. Navigation is a clean top bar: logo left, links center-left, Sign In + CTA right. Below the hero: a centered announcement card, then a full-width product screenshot (no side margins, bleeds to ~900px max). The testimonial section uses a carousel pattern with the active quote at full opacity and adjacent quotes faded to ~30% opacity, creating a sense of depth. Section rhythm is 80px vertical gaps with seamless flow — no alternating dark bands, no visible dividers between sections. The overall density is spacious: one idea per screen, generous whitespace, the product screenshot does the heavy lifting.",
+  "imagery": "The site is text-dominant with one large product screenshot as the primary visual asset. That screenshot shows the actual Sketch app interface — a dense tool panel on the left, canvas in the center, inspector on the right — overlaid with a purple/pink gradient wash that ties it to the hero's atmosphere. Decorative elements are minimal: large quotation mark glyphs in the testimonial section, a diamond logo mark, and a few small UI icons. No photography, no illustrations, no abstract 3D renders — the product IS the visual content. The hero gradient and the product screenshot gradient are the only chromatic visual treatments.",
+  "similar": [
+    {
+      "why": "Same restrained grayscale canvas with a single serif/sans pairing and generous whitespace; both use pill-shaped buttons and soft shadows",
+      "business": "Notion"
+    },
+    {
+      "why": "Same product-as-marketing approach where the app screenshot is the hero visual; both use minimal accent colors against near-white backgrounds",
+      "business": "Figma"
+    },
+    {
+      "why": "Same opinionated typography pairing (serif display + geometric sans body) and dark pill CTAs as primary actions",
+      "business": "Linear"
+    },
+    {
+      "why": "Same atmospheric gradient hero treatment and editorial serif headlines that break the SaaS convention of geometric sans-serif display type",
+      "business": "Arc Browser"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "24px",
+      "cards": "20px",
+      "icons": "8px",
+      "badges": "9999px",
+      "images": "12px",
+      "inputs": "3px",
+      "buttons": "20px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#fafafa",
+      "name": "Bone Canvas",
+      "level": 0,
+      "purpose": "Primary page background — the warm off-white that gives the site its paper-like, studio quality"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White Cards",
+      "level": 1,
+      "purpose": "Product screenshots, announcement cards, elevated surfaces that need to feel like paper laid on the canvas"
+    },
+    {
+      "hex": "#151515",
+      "name": "Onyx Action",
+      "level": 2,
+      "purpose": "Primary CTA button fill — the darkest interactive surface, wrapped in the signature pink glow"
+    },
+    {
+      "hex": "#fc7a9b",
+      "name": "Dusk Gradient",
+      "level": 3,
+      "purpose": "Atmospheric hero background — a soft pink-to-lavender wash that bleeds from the top-left, signaling warmth without saturation"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 0 0 3px rgba(252, 122, 155, 0.35), 0 0 12px 2px rgba(252, 122, 155, 0.2)",
+      "element": "Glow Halo CTA"
+    },
+    {
+      "style": "0px 1px 3px 0px rgba(0, 0, 0, 0.2)",
+      "element": "Icon container"
+    },
+    {
+      "style": "0px 4px 16px 0px rgba(0, 0, 0, 0.08), 0px 1px 2px 0px rgba(0, 0, 0, 0.04)",
+      "element": "Nav dropdown panel"
+    }
+  ],
+  "northStar": "serif poetry on pastel paper",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-lg",
+      "size": 15,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading",
+      "size": 22,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading-lg",
+      "size": 24,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "display-sm",
+      "size": 44,
+      "lineHeight": 1,
+      "letterSpacing": -0.88
+    },
+    {
+      "role": "display",
+      "size": 76,
+      "lineHeight": 1,
+      "letterSpacing": -1.75
+    }
+  ],
+  "components": [
+    {
+      "name": "Glow Halo CTA",
+      "role": "Primary action button — the signature dark pill with diffused magenta border",
+      "description": "Filled button with #151515 background, white text, 20px border-radius, ~12px 24px padding. Distinctive feature: a soft outer glow ring in warm pink/magenta (the button appears to sit inside a blurred halo, roughly 3–4px outside the border). Inter weight 500, 15px. Download arrow icon in white. Used for the hero 'Get started for free' and the persistent 'Get started' in the nav."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Secondary nav action",
+      "description": "Transparent or Bone (#fafafa) fill, Obsidian (#212123) text, 20px radius, smaller padding (~8px 16px). Inter weight 500, 15px. Used for 'Sign In' in the navigation. No border."
+    },
+    {
+      "name": "Diamond Logo Mark",
+      "role": "Brand identifier in nav",
+      "description": "A diamond/triangular glyph in Obsidian (#212123) — the only brand mark present. Clean geometric shape, no gradient or fill treatment. Appears top-left, 24–28px tall."
+    },
+    {
+      "name": "Announcement Banner",
+      "role": "In-page update notice",
+      "description": "Rounded card with white/Bone fill, 20px radius, subtle border or soft shadow. Contains a bold title (Inter 600, 15px) and lighter description text (Inter 400, 14px, Graphite). Centered horizontally, max-width ~600px. Sits below the hero CTA area."
+    },
+    {
+      "name": "Hero Headline Block",
+      "role": "Primary display text",
+      "description": "Reckless serif at 76px, weight 500, Obsidian color, letter-spacing -1.75px, line-height 1.0. Left-aligned, max-width ~480px. Set against a soft pink-to-lavender gradient background. Pair: Inter body text at 16px in Graphite, max-width ~420px."
+    },
+    {
+      "name": "Accent Badge",
+      "role": "Categorical tags and labels",
+      "description": "Pill-shaped (9999px radius), ~6px 12px padding, Inter weight 500 at 11–12px, white text on chromatic fill. Three variants: Iris (#555dff), Lagoon (#03cbbc), Cobalt (#4389e6). Used for feature categorization, not as buttons."
+    },
+    {
+      "name": "Product Showcase Card",
+      "role": "Large image/screenshot container",
+      "description": "Full-bleed screenshot of the Sketch app interface, 20px corner radius, subtle drop shadow. No border. The image itself contains the product UI with a purple/pink gradient overlay. Centered, max-width ~900px, sits below announcement banner."
+    },
+    {
+      "name": "Testimonial Quote Card",
+      "role": "Social proof display",
+      "description": "Bone (#fafafa) or white fill, no visible border, generous internal padding (~32px). Large quotation mark glyph in Fog (#a7a7a7) or Light gray as decorative element. Quote text in Obsidian, Inter 400 at 16–17px. Faded/disabled testimonials use reduced opacity (~30%) and Mist (#a7f7f7) text to create a carousel preview effect."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Transparent or Bone background, sticky position, 24px radius on any visible pill elements. Logo left, nav links center-left (Product dropdown, Explore dropdown, Pricing, Support), actions right (Sign In text link + Glow Halo CTA). Inter weight 500 at 15px for nav items. Dropdown items in Inter 400 at 14px."
+    },
+    {
+      "name": "Dropdown Menu Panel",
+      "role": "Expanded navigation submenu",
+      "description": "Bone background, 20px radius, soft shadow. Two-column layout with category headers (Inter 600, 14px) and link items (Inter 400, 14px). Generous padding (24px). Items separated by 8–12px vertical spacing."
+    },
+    {
+      "name": "Secondary Nav Bar",
+      "role": "Section-level navigation",
+      "description": "Appears on sub-pages with links (Design, Prototype, Collaborate, About Sketch) left-aligned and the Glow Halo CTA right-aligned. No background, just text links in Obsidian with the same pill CTA."
+    },
+    {
+      "name": "Input Field",
+      "role": "Text input",
+      "description": "Bone background, 3px or 16px border-radius, 1px Fog (#e6e6e6) border. Inter 400 at 14px placeholder text in Mist (#a7a7a7). Padding ~12px 16px. Minimal, no focus glow — the restraint is the point."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display headings only — the editorial serif used for hero text and large section titles. Weight 500 (medium) with tightened tracking (-0.02em to -0.023em) gives it a literary confidence without feeling old-fashioned. The choice to use a serif at all is the signature: most SaaS toolkits default to geometric sans-serifs; Reckless signals that Sketch is a craft tool for people who think in type.",
+      "sizes": "44px, 76px",
+      "family": "Reckless",
+      "weight": "500",
+      "lineHeight": "1.00, 1.09",
+      "substitute": "Playfair Display, Source Serif Pro, or Lora",
+      "letterSpacing": "-0.023em at 76px, -0.02em at 44px",
+      "fontFeatureSettings": "\"calt\", \"liga\""
+    },
+    {
+      "role": "All UI, body, navigation, buttons, inputs, and small headings. Inter's tall x-height and open counters keep body text readable at 14–16px; the 300 weight is used for lighter emphasis (captions, helper text), 400 for body, 500 for button labels and nav items, 600 for small section headings. The variable axis allows smooth weight transitions without loading separate files.",
+      "sizes": "11px, 12px, 14px, 15px, 16px, 17px, 20px, 22px, 24px",
+      "family": "InterVariable",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.00, 1.09, 1.15, 1.17, 1.25, 1.33, 1.40, 1.41, 1.43, 1.50, 1.60, 1.65",
+      "substitute": "Inter (Google Fonts), or system-ui",
+      "letterSpacing": "normal",
+      "fontFeatureSettings": "\"calt\", \"liga\""
+    }
+  ],
+  "description": "Sketch's design language is a writer's studio reimagined as software: a quiet, nearly grayscale canvas where one warm serif headline and a single soft pink-to-lavender gradient do all the emotional work. The interface itself is restrained — Inter at modest sizes, thin dividers, pill-shaped controls — letting the product (the Sketch app) and the community's quotes breathe. The signature move is the dark pill CTA wrapped in a diffused magenta halo: a button that glows like a desk lamp at dusk, signaling action without shouting. Color is rationed; when it appears, it arrives as atmospheric wash (the hero gradient) or as a tiny punctuation (a violet badge, a teal tag), never as structural fill.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #212123 (Obsidian)\n- background: #fafafa (Bone)\n- border: #e6e6e6 (Fog) for hairlines, #a7a7a7 (Mist) for muted\n- accent: #555dff (Iris) for violet badges\n- primary action: no distinct CTA color\n\n3 Example Component Prompts:\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. Create a testimonial card: #fafafa background, 20px radius, no border, 32px padding. Large decorative quotation mark in #a7a7a7 at 64px. Quote text in Inter 400 at 17px, #212123, line-height 1.6. Attribution below in Inter 500 at 14px, #4a4a4a.\n"
+    },
+    {
+      "title": "Gradient System",
+      "content": "Two gradients serve different roles and must never be mixed:\n\n1. Dusk Wash (atmospheric): linear-gradient(104deg, #fc7a9b 0%, #b47ede 100%). Applied only as full-bleed hero/background wash at 20–40% opacity over the Bone canvas. This is the site's emotional signature — warm, editorial, unhurried.\n\n2. Prism Drift (energy): linear-gradient(90deg, #32adf7 20%, #744bd0 40%, #e97f42 50%, #32adf7 75%). A four-stop cycling gradient used only in product showcase contexts — specifically behind or overlaid on the Sketch app screenshot. Its function is to make the product feel alive and colorful without committing the interface to any of those hues.\n\nRule: Never use these gradients on text, buttons, or small UI elements. They are scene-setters, not accent fills."
+    },
+    {
+      "title": "Typographic Voice",
+      "content": "The Reckless/Inter pairing is the most opinionated choice in the system. Reckless at 76px with -1.75px tracking says 'we are confident enough to use a serif for our biggest promise.' Inter handles everything below 24px because its clarity and tall x-height keep UI elements readable at small sizes. The contrast between a literary display face and a workhorse UI face is the entire tone: craft meets tool, writer meets software.\n\nLetter-spacing is aggressive on display (approximately -2.3% of font size) and normal everywhere else. Never apply negative tracking to Inter — the optical adjustments are already baked in and tightening further makes it feel clinical rather than confident."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is minimal and atmospheric. The system avoids heavy drop shadows on cards and containers; instead, depth is communicated through the pink halo on CTAs, hairline borders (1px in Fog), and the gentle contrast between Bone canvas and Pure White card surfaces. When shadows appear, they are soft (max 4px blur, low opacity) and never tinted with brand color — the only chromatic 'shadow' is the CTA glow."
+}

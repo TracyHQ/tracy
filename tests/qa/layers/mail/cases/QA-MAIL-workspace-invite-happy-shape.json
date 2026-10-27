@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-workspace-invite-happy-shape",
+  "itemIds": [
+    "direct:workspace-invite:en",
+    "direct:workspace-invite:vi",
+    "direct:workspace-invite:de",
+    "direct:workspace-invite:it",
+    "direct:workspace-invite:fr",
+    "direct:workspace-invite:nl",
+    "direct:workspace-invite:zh",
+    "direct:workspace-invite:es"
+  ],
+  "requirement": "the workspace invitation to a person without an account renders every part in all eight languages and prints what it must",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 7 and templates/README.md",
+    "invariant": "every Tracy letter wears the shared layout and one-line footer; each language is complete"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.shape:workspace-invite"],
+  "redProof": null,
+  "legacyIds": []
+}

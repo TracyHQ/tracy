@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-paper: #ffffff;
+  --color-carbon: #131313;
+  --color-bone-gray: #e0e0e0;
+  --color-studio-indigo: #31338e;
+
+  /* Typography — Font Families */
+  --font-helvetica: 'helvetica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-caslon: 'Caslon', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sometimes-times: 'Sometimes Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

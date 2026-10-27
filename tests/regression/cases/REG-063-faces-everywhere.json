@@ -1,0 +1,44 @@
+{
+  "id": "REG-063",
+  "kind": "feat",
+  "title": "Faces everywhere: an Inbox row and a Site changes row wear their actor's account face (the same initial and colour as /api/team), and a new team.* row the Inbox poll finds tells the page tracy:team-changed for that site",
+  "pr": 866,
+  "area": "team/faces",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner", "seat:editor"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, DSH, A (owner) and B (editor) with cookies COOKIE_A, COOKIE_B, api, pq. Case variable: KEY = (prefer a WordPress site whose home page http://KEY:8080/ answers 200 within 10 s; skip a site that answers 502) a site key where A holds an ACCEPTED owner seat and B an ACCEPTED (status 'active') editor seat (from GET /api/team as A). Record SEAT_A and SEAT_B = the seats of A and B on KEY from api a GET /api/team (each has id, email, initial, color, avatarUrl).",
+    "Check the builds: docker exec $DSH grep -c 'tracy-inbox-face' /desk-home/profiles/native/node_modules/@tracy/dsh-inbox/lib/client.js must print a number >= 1, and docker exec $DSH grep -c 'tracy:team-changed' on the same file must print a number >= 1; otherwise stop with BLOCKED note image-without-inbox-faces.",
+    "Door, Site changes: SEATS = the seats of GET /api/team (as A) on KEY, each with id, email, initial, color, avatarUrl. api a GET /api/sites/KEY/activity?version=2 (follow nextCursor up to 5 pages) -> ITEMS_SEAT = the items whose actor.type is \"person\" and actor.id === \"tracy:\" + <email of some seat in SEATS> (any seat, A included). None on KEY -> repeat on each other site where A holds an accepted seat (GET /api/team, up to 5 sites) and take the first site that has one; still none -> BLOCKED note no-activity-by-any-seat. For each item record actor.face and the matching seat S: face must equal {initial: S.initial, color: S.color, avatarUrl: S.avatarUrl}. Also record OUTSIDE = up to 3 items whose actor.type is \"system\" or \"unknown\" or whose actor.id does not start with \"tracy:\": each must have no face or face === null.",
+    "Browser as B: connect Playwright over CDP as the README says (never chromium.launch()); NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}} with cookie tracy_sess = COOKIE_B. page.goto(ORIGIN + '/' + KEY), wait (<= 90 s) for a URL containing /s/session- and [contenteditable='true']. Then install a listener BEFORE anything changes: page.evaluate(() => { window.__teamChanged = []; window.addEventListener('tracy:team-changed', (e) => window.__teamChanged.push(e.detail && e.detail.siteKey)) }). Wait 35 s so the Inbox's unread poll has read its baseline count (it polls every 30 s while the page is visible).",
+    "Make the team row: as A, api a PATCH /api/sites/KEY/seats/<SEAT_B.id> '{\"role\":\"developer\"}' -> HTTP 200; record T0 = now. This writes one team.role_changed notification for B whose actor is A.",
+    "Event: poll page.evaluate(() => window.__teamChanged) every 2 s for <= 75 s until it contains KEY; record HEARD = that array and HEARD_AFTER_MS = the time from T0. Without reloading, record HEARD_COUNT_KEY = how many entries equal KEY, wait 35 s more (one more poll with no new row) and record HEARD_COUNT_KEY_2.",
+    "Door, Inbox: api b GET /api/notifications?filter=all -> ROW = the newest notification with kind 'team.role_changed' and siteKey KEY; record ROW.id and ROW.actor (id, email, name, face).",
+    "Inbox tab as B: open the Inbox (click .tracy-inbox-nav .tracy-inbox-nav-button in the left column, or goto the session URL with &tab=tracy:inbox). Wait (<= 30 s) for [data-notification='<ROW.id>']. Record ROW_FACE = the first [data-tracy-face] inside it as {text, background: getComputedStyle(el).backgroundColor, width: getBoundingClientRect().width, boxShadow: getComputedStyle(el).boxShadow}. Record SYSTEM_FACES = for every [data-notification] row whose notification (from the door's list) has actor null, its first [data-tracy-face] {text, background} (may be empty).",
+    "Restore: as A, api a PATCH /api/sites/KEY/seats/<SEAT_B.id> '{\"role\":\"editor\"}' -> HTTP 200 (B's seat back as it was).",
+    "Site changes as A (optional browser check): NEW context with cookie COOKIE_A, open Site changes of KEY as the README says; for the row li.tv-activity-event[data-event='<ITEMS_SEAT[0].id>'] (use the README's Show more loop) record ACT_FACE = its first [data-tracy-face] as {text, background}.",
+    "Helper: hexToRgb(color) -> 'rgb(r, g, b)' of a #rrggbb string."
+  ],
+  "expect": [
+    "Both build checks print a count >= 1.",
+    "Every item of ITEMS_SEAT has actor.face = {initial: SEAT_A.initial, color: SEAT_A.color, avatarUrl: SEAT_A.avatarUrl} (one account, one face, at /api/team and /activity). Every OUTSIDE item has actor.face null or absent.",
+    "ROW.actor.id === SEAT_A.id and ROW.actor.face.initial === SEAT_A.initial and ROW.actor.face.color === SEAT_A.color.",
+    "ROW_FACE.text === SEAT_A.initial, ROW_FACE.background === hexToRgb(SEAT_A.color), ROW_FACE.width is 20 (+-1), and ROW_FACE.boxShadow is not 'none' (ringed in the row's ground).",
+    "Every SYSTEM_FACES entry has text '' (a blank neutral disc, no letter, no guessed colour).",
+    "HEARD contains KEY and HEARD_AFTER_MS <= 75000 (the Inbox poll saw the count rise, read the first unread page and told the page; no reload).",
+    "HEARD_COUNT_KEY_2 === HEARD_COUNT_KEY (a poll with the same count reads nothing more and tells nothing again).",
+    "ACT_FACE, when recorded: ACT_FACE.text === SEAT_A.initial and ACT_FACE.background === hexToRgb(SEAT_A.color).",
+    "Both PATCH calls answer HTTP 200 (B's role restored to editor).",
+    "No page error or console.error on the dsh pages whose message names tracy-inbox, tracy-site-tabs, tracy-chat-input or @tracy/core, and no HTTP >= 400 to /api/notifications, /api/team or /api/sites/KEY/activity (chrome-watch --errors --page KEY --json after the loads). Errors from the site’s own origin (KEY:8080 assets, Astro hydration, 502 from the site container) and 403 from /api/tracy-site-tools/view or /sidebar/api/jobs.list are the site’s or another door’s: list them in the notes, do not fail on them."
+  ],
+  "selectors": {
+    "inboxBuild": "/desk-home/profiles/native/node_modules/@tracy/dsh-inbox/lib/client.js (dsh container)",
+    "inboxNav": ".tracy-inbox-nav .tracy-inbox-nav-button",
+    "inboxRow": "[data-notification='<id>'] [data-tracy-face]",
+    "activityRow": "li.tv-activity-event[data-event='<id>'] [data-tracy-face]",
+    "event": "window CustomEvent tracy:team-changed {siteKey}",
+    "doors": "GET /api/team (seats[].initial, color, avatarUrl) · GET /api/notifications (actor.face) · GET /api/sites/:key/activity?version=2 (actor.face) · PATCH /api/sites/:key/seats/:accountId {role}"
+  },
+  "fence": "apps/tracy-web/src/lib/person-face.js decides every face; GET /api/notifications and the activity doors return it on actor (null for system rows and non-Tracy identities). The Inbox draws it with @tracy/core/team/face Face (section-rows.tsx ActorFace, blank grey disc for null), site-tabs ActorFace draws it on Changes/Backup/Activity rows, and tracy-inbox team-news.ts dispatches tracy:team-changed once per new team.* row id, reading the first unread page only when the unread poll's count rose."
+}

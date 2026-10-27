@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1426-widget-auth-language",
+  "kind": "fix",
+  "title": "Voice authentication localizes public guides and parses private confirmation and OTP locally",
+  "pr": 1426,
+  "area": "widget/voice-sign-in",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the named tests with fixed translation fixtures and own headless synthetic microphone/STT/TTS. Never send mail or invoke real providers."
+  ],
+  "expect": [
+    "Only language and fixed public templates reach translation; credentials and private history are rejected before inference.",
+    "Invalid placeholders, confirmation collisions and unchanged English guides for another language fail closed.",
+    "Cached concurrent language requests translate once; unavailable localization never silently switches to English.",
+    "French spoken email, oui and six French digits verify on the same microphone after explicit confirmation, without credentials in model turns.",
+    "Unicode decimal digits and localized non-Latin digit words parse exactly; surrounding unknown words and excess digits are refused."
+  ],
+  "selectors": {
+    "routes": "/widget/api/auth/language, /widget/api/auth/email, /widget/api/auth/verify",
+    "dom": "#auth-email, .auth-confirm, #auth-code"
+  },
+  "fence": "Language-only public-template localization and validated local lexicon/FSM. Fixtures do not prove actual provider coverage for all languages.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/widget-auth-language.test.mjs",
+      "apps/tracy-web/test/e2e/widget-voice-auth.test.mjs"
+    ],
+    "tests": [
+      "language pack uses existing assistant for fixed public templates only; cache/coalescing and validation fail closed",
+      "auth-language route accepts language only and rejects credentials before any translation",
+      "locale lexicon handles spoken email, localized readback, Unicode digits and non-Latin six-digit words",
+      "dynamic guide requests contain language only; no silent English fallback or mismatched stale language",
+      "French voice sign-in loads public instructions and verifies localized confirmation and digits privately"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-970-site-changes-undo",
+  "kind": "feat",
+  "title": "Site changes opens on People and Tracy with a hidden-automatic line, titles a chat row by its request, and undoes a chat request with the turn engine through one button; rows the engine does not list keep today's actions",
+  "pr": 970,
+  "area": "site-changes/undo",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/core/tracy-core/test/site-changes-undo-request.test.mjs",
+    "S2: Read the result of each test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'the list opens on People and Tracy, asked of the server, with the hidden line; Show is Type: All' passes.",
+    "'a Chat row is titled by the request, quoted, and says what changed under it' passes.",
+    "'an opened Chat row has ONE undo button; the dialog says what goes back; Undo calls the engine' passes.",
+    "'an older request: Go back to before this request, scope from-here, the later requests named' passes.",
+    "'blocked: the chat card’s sentence with who, what and when, and Ask Tracy to revert; no undo' passes.",
+    "'a Chat row the engine lists: no Undo file changes in its menu or its detail, one undo button' passes.",
+    "'rows the engine does not speak for keep Undo file changes in the menu' passes."
+  ],
+  "selectors": {
+    "doorList": "GET /api/sites/:key/activity?version=2&filter=people",
+    "doorUndo": "POST /api/sites/:key/turns/undo",
+    "view": "packages/core/tracy-core/src/site-tabs/ChangesView.tsx, ActivityEventRow.tsx, UndoRequestDialog.tsx"
+  },
+  "evidence": "Measured 05/10/2026 on cowork.tracy.site: Site changes opened on Type: All with 53,339 events, 99.8% automatic; chat rows read 'Changed N files'; an opened chat row offered Undo file changes (files only) beside Ask Tracy to revert.",
+  "fence": "The default filter is a server filter (paging stays right), and a chat row the engine lists has exactly one undo path, the same engine and words as the chat card.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/site-changes-undo-request.test.mjs"
+    ],
+    "tests": [
+      "the list opens on People and Tracy, asked of the server, with the hidden line; Show is Type: All",
+      "a Chat row is titled by the request, quoted, and says what changed under it",
+      "an opened Chat row has ONE undo button; the dialog says what goes back; Undo calls the engine",
+      "an older request: Go back to before this request, scope from-here, the later requests named",
+      "blocked: the chat card",
+      "a Chat row the engine lists: no Undo file changes in its menu or its detail, one undo button",
+      "rows the engine does not speak for keep Undo file changes in the menu"
+    ]
+  }
+}

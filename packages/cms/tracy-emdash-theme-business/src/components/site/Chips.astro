@@ -1,0 +1,15 @@
+---
+/** The design's filter row: one active dark chip, the rest outlined. Every chip is a real link. */
+import type { Attrs } from '@/lib/stamps'
+
+interface Props {
+  /** `stamp`: the provenance stamp of the field the label comes from (`src/lib/stamps.ts`). */
+  items: Array<{ label: string; url: string; active?: boolean; stamp?: Attrs }>
+  class?: string
+}
+const { items, class: className = '' } = Astro.props
+---
+
+<div class:list={["flex flex-wrap gap-2", className]}>
+	{items.map((c) => (c.active ? <a href={c.url} class="chip-active" aria-current="true" {...c.stamp}>{c.label}</a> : <a href={c.url} class="chip" {...c.stamp}>{c.label}</a>))}
+</div>

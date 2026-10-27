@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "tracy-wo-quality-corpus/v1",
+  "synthetic": true,
+  "lockedAt": "2026-10-20T12:00:00Z",
+  "at": "2026-10-20T12:00:00Z",
+  "cases": [
+    {
+      "id": "complete-sources",
+      "split": "tune",
+      "branch": "main",
+      "sources": [
+        {
+          "id": "official",
+          "kind": "official-website",
+          "branch": "main",
+          "body": "Open daily from 7AM to 10PM.\n\nCoffee and sandwiches in the old town."
+        }
+      ],
+      "expect": { "opening-hours": "supported", "promotion": "absent", "conflicts": 0 }
+    },
+    {
+      "id": "missing-sources",
+      "split": "tune",
+      "branch": "main",
+      "sources": [],
+      "expect": { "opening-hours": "absent", "promotion": "absent", "conflicts": 0 }
+    },
+    {
+      "id": "contact-conflict",
+      "split": "holdout",
+      "branch": "main",
+      "sources": [
+        { "id": "profile", "kind": "own-post", "branch": "main", "body": "Call +84 235 555 0171." },
+        { "id": "contact", "kind": "official-website", "branch": "main", "body": "Phone +84 235 555 0172." }
+      ],
+      "expect": { "phone": "conflicted", "conflicts": 1 }
+    },
+    {
+      "id": "expired-promotion",
+      "split": "holdout",
+      "branch": "main",
+      "sources": [
+        {
+          "id": "old-post",
+          "kind": "own-post",
+          "branch": "main",
+          "observedAt": "2026-10-20T08:00:00Z",
+          "body": "Happy hour 2PM to 6PM, valid until September 30, 2026.\n\nCoffee and sandwiches are on the menu."
+        }
+      ],
+      "promotionValidity": { "validUntil": "2026-09-30T23:59:59+07:00", "timeZone": "Asia/Ho_Chi_Minh" },
+      "expect": { "promotion": "stale", "opening-hours": "absent", "conflicts": 0, "retainedOtherSpan": true }
+    },
+    {
+      "id": "wrong-image-and-crop",
+      "split": "holdout",
+      "branch": "main",
+      "sources": [{ "id": "post", "kind": "own-post", "branch": "main", "body": "A new whisky selection." }],
+      "observation": {
+        "id": "photo-wine",
+        "subject": "drink",
+        "description": "A person pours red wine beside a dining board.",
+        "uncertain": ["whisky identity"],
+        "width": 1200,
+        "height": 800,
+        "focalPoint": { "x": 0.05, "y": 0.5 }
+      },
+      "placement": { "intent": "whisky", "width": 400, "height": 800 },
+      "expect": { "imageAccepted": false, "cropAccepted": false, "conflicts": 0 }
+    },
+    {
+      "id": "multilingual-branches",
+      "split": "holdout",
+      "branch": "main",
+      "sources": [
+        {
+          "id": "hoi-an",
+          "kind": "official-website",
+          "branch": "hoi-an",
+          "body": "Hoi An: Call +84 235 555 0171."
+        },
+        {
+          "id": "sapa",
+          "kind": "official-website",
+          "branch": "sapa",
+          "body": "Sapa: Call +84 214 555 0171."
+        },
+        {
+          "id": "review",
+          "kind": "third-party-review",
+          "branch": "hoi-an",
+          "body": "Best place, open 24 hours."
+        }
+      ],
+      "expect": {
+        "phone": "supported",
+        "conflicts": 0,
+        "branches": ["hoi-an", "sapa"],
+        "reviewFactAccepted": false
+      }
+    }
+  ]
+}

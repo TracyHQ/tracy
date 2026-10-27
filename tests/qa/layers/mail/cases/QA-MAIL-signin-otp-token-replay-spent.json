@@ -1,0 +1,30 @@
+{
+  "id": "QA-MAIL-signin-otp-token-replay-spent",
+  "itemIds": ["flow:signin-otp"],
+  "requirement": "a code that was used, guessed against too often, or belongs to another address is refused",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "lifetimes.otpMaxAttempts",
+    "invariant": "five wrong codes spend the code; a used code is gone"
+  },
+  "edgeTags": ["token-replay"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "mail.signin.replay#used-code-refused|too-many-wrong-guesses-spend-the-code|code-of-another-address-refused"
+  ],
+  "redProof": null,
+  "legacyIds": []
+}

@@ -1,0 +1,46 @@
+{
+  "id": "QA-UNIT-REG-061-pending",
+  "itemIds": ["regression:REG-061"],
+  "requirement": "Site changes badge in dsh's right column: the tracy:changes tab chip carries the unseen count and updates while the tab is open but not active; pressing the Inbox row 'X restored the site' opens that site's Site changes tab with the restore row lit",
+  "oracle": {
+    "source": "tests/regression/cases/REG-061-site-changes-badge-right-tab-and-inbox-restore-row.json",
+    "ref": "PR #864 (fix); fix evidence: tasks/evidence/site-changes-badge-count/stand-badge.md § 'Three things for later' (measured 04/10/2026 on the private stand `badge`: before the fix the card went to 1 while the chip stayed empty for 90 s, and the Inbox press only marked the row read; after it the chip read 'Site changes 1' at the 60 s poll and the press opened the tab with the restore row lit — right-tab-badge-seat-c.png, inbox-t12-opens-changes-seat-c.png).",
+    "invariant": "S0 has exactly one tab, active, title the site key, badge null. S1 has two tabs, the one whose title starts with 'Site changes' is active with badge null; CARD1 is null or absent (opening the tab marked the list seen). S2: the Browser tab is active, the 'Site changes' tab is inactive, badge still null. M.ok === true and M.files === 1. T_BADGE === '1' with T_WAIT <= 90 (the chat column's store polls every 60 s while the page is visible; the chip re-reads its badge through invalidateTabBadges — the fix); S3 shows the 'Site changes' tab inactive with badge '1'; CARD2 === '1' (card and chip say the same number). R.status === 'succeeded'; ROW exists with readAt === null (a new unread Inbox row for C, the restore being A's work). I0: the Inbox tab is active; ROWS contains a line with 'Restored' and the site key. I1: a tab whose title starts with 'Site changes' is active and the Inbox tab is inactive; URL1 contains 'tab=tracy:changes' (the fix: targetIn keeps the restore row's changes target — before it, the press only marked the row read); TAB.rows >= 2, TAB.unread >= 1, TAB.divider matches /new since you last looked/, and the lit rows include the restore (TAB.first or another [data-unread] row's description contains 'Restored'); N2 readAt is an ISO time (the press marked the row read as every row is). No step changed anything outside the test site; no page or context was closed.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer flows, needs stand, site:wp, seat:owner, seat:editor, seat:viewer, chrome-watch"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [
+    "need:stand",
+    "need:site:wp",
+    "need:seat:owner",
+    "need:seat:editor",
+    "need:seat:viewer",
+    "need:chrome-watch"
+  ],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-061"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:flows"],
+  "regression": {
+    "id": "REG-061",
+    "pr": 864,
+    "kind": "fix",
+    "area": "site-changes/badge",
+    "file": "tests/regression/cases/REG-061-site-changes-badge-right-tab-and-inbox-restore-row.json"
+  },
+  "ownerLayer": "flows",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "site:wp", "seat:owner", "seat:editor", "seat:viewer", "chrome-watch"]
+}

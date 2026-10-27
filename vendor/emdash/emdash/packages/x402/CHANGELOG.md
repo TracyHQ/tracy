@@ -1,0 +1,153 @@
+# @emdash-cms/x402
+
+## 1.1.0
+
+No changes in this release.
+
+## 1.0.1
+
+### Patch Changes
+
+- [#3515](https://github.com/emdash-cms/emdash/pull/3515) [`d274172`](https://github.com/emdash-cms/emdash/commit/d27417232e61bf85c1c613fecbe6875e1172af0d) Thanks [@ascorbic](https://github.com/ascorbic)! - Releases EmDash 1.0. This release includes breaking changes, such as removing APIs deprecated during 0.x. Before upgrading from 0.42, read the [upgrade guide](https://docs.emdashcms.com/upgrade-to-v1/), which lists each change and how to migrate.
+  
+  From this release, breaking changes ship only in a new major version.
+
+## 1.0.1-rc.1
+
+No changes in this release.
+
+## 1.0.1-rc.0
+
+### Patch Changes
+
+- [#3515](https://github.com/emdash-cms/emdash/pull/3515) [`d274172`](https://github.com/emdash-cms/emdash/commit/d27417232e61bf85c1c613fecbe6875e1172af0d) Thanks [@ascorbic](https://github.com/ascorbic)! - Releases EmDash 1.0. This release includes breaking changes, such as removing APIs deprecated during 0.x. The other entries for this version describe each one and how to migrate; check them before upgrading from 0.42.
+  
+  From this release, breaking changes ship only in a new major version.
+  
+  The first 1.x version is 1.0.1. npm also lists a deprecated `emdash@1.0.0`, published by mistake from 0.7-era code; do not install it.
+
+## 0.42.0
+
+No changes in this release.
+
+## 0.41.0
+
+No changes in this release.
+
+## 0.40.1
+
+No changes in this release.
+
+## 0.40.0
+
+No changes in this release.
+
+## 0.39.1
+
+No changes in this release.
+
+## 0.39.0
+
+No changes in this release.
+
+## 0.38.0
+
+No changes in this release.
+
+## 0.37.0
+
+## 0.36.0
+
+## 0.35.0
+
+## 0.34.0
+
+## 0.33.0
+
+## 0.32.0
+
+## 0.31.1
+
+## 0.31.0
+
+## 0.30.0
+
+## 0.29.0
+
+## 0.28.1
+
+## 0.28.0
+
+## 0.27.0
+
+## 0.26.0
+
+## 0.25.1
+
+## 0.25.0
+
+## 0.24.1
+
+## 0.24.0
+
+## 0.23.0
+
+## 0.22.0
+
+## 0.21.0
+
+### Patch Changes
+
+- [#1530](https://github.com/emdash-cms/emdash/pull/1530) [`997d7ee`](https://github.com/emdash-cms/emdash/commit/997d7eea8f39c16eef28577bb8ace0c0413fc38b) Thanks [@ascorbic](https://github.com/ascorbic)! - Fixes x402-protected routes hanging and returning 524 timeouts on Cloudflare Workers when the very first request to a cold isolate was cancelled mid-initialization. The resource server is now cached only once it is fully initialized, so a cancelled initializer no longer strands later requests.
+
+## 0.20.0
+
+## 0.19.0
+
+## 0.18.0
+
+## 0.17.2
+
+## 0.17.1
+
+## 0.17.0
+
+## 0.16.1
+
+## 0.16.0
+
+## 0.15.0
+
+## 0.14.0
+
+## 0.13.0
+
+## 0.12.0
+
+## 0.11.1
+
+## 0.11.0
+
+## 0.10.0
+
+## 0.9.0
+
+## 0.8.0
+
+## 0.7.0
+
+## 0.6.0
+
+## 0.5.0
+
+## 0.4.0
+
+## 0.3.0
+
+## 0.2.0
+
+## 0.1.0
+
+### Minor Changes
+
+- [#14](https://github.com/emdash-cms/emdash/pull/14) [`755b501`](https://github.com/emdash-cms/emdash/commit/755b5017906811f97f78f4c0b5a0b62e67b52ec4) Thanks [@ascorbic](https://github.com/ascorbic)! - First beta release

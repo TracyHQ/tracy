@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1134-ds-emdash-fixes",
+  "kind": "fix",
+  "title": "EmDash and the Design system button: a new Tracy site's first rebuild names no class it never wrote, a press never waits for a cold page, and a Tracy SaaS site older than the slot reader is told to update",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test tests/ds-slot-no-shipped-pins.test.mjs (cwd packages/cms/tracy-emdash-theme-base); node --test test/emdash-quickstart.test.mjs (cwd packages/fleet/tracy-fleet-operation). Tracy Business's own class fix is not in this release: another line released 1.7.13 first and develop's theme wins; it is re-applied on top as the next version.",
+    "S2: node --test test/slot-pins.test.mjs test/stages.test.mjs (cwd packages/site/tracy-site-build-emdash).",
+    "S3: node --test test/design-system-door.test.mjs (cwd apps/tracy-web).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-emdash-fixes.mjs"
+  ],
+  "expect": [
+    "S1: Tracy Base 0.5.0 ships no literal radius in the shadcn parts no page draws (each reads --ds-card-radius / --ds-input-radius / --ds-btn-radius with the value it pinned as the fallback), and the fleet's emdash_build_image dates the unpacked source at the unpack (a zip whose files carry a time seven hours ahead unpacks with none in the future).",
+    "S2: slot-pins does not judge a class string with `&` that the last build holds escaped as `&amp;`, still judges it once changed; site.restart reads the first answer to its end and renders the home page once more before it answers, and a failed warm-up changes nothing.",
+    "S3: an apply whose page load takes longer than the door's wait answers seen null without waiting (the load keeps running and ends by itself); a load within the wait says true / false, a failed one null; SEEN_WAIT_MS is 1500. Tracy SaaS 1.4.5, 1.4.9 and 1.4.10 get TEMPLATE_NEEDS_UPDATE need 1.4.12, 1.4.12 gets emdash-tracy-saas (develop's 1.4.10, #1013, came without the reader).",
+    "S4: the where-map names 1.7.13 with a verifiedReleases record for 1.7.12, template-profiles has rows tracy-business/emdash-0.x 1.7.13 and tracy-saas/emdash-0.x 1.4.10, and the committed lib/index.js of tracy-site-build-emdash carries the `&amp;` look-up and the warm-up."
+  ],
+  "selectors": {
+    "theme": "packages/cms/tracy-emdash-theme-{business,base}/src/components/ui/{checkbox,dropdown-menu,input,textarea,button}.tsx; business src/views/Home.astro:85; packages/fleet/tracy-fleet-operation/scripts/provision/emdash/quickstart-restore.sh emdash_build_image",
+    "host": "packages/site/tracy-site-build-emdash/src/host/slot-pins.mjs SLOT_PINS_SCRIPT; src/host/requests.mjs restartSite / warmUp",
+    "door": "apps/tracy-web/src/sites/design-system.js SEEN_WAIT_MS, seenWithin; packages/design/tracy-ds-slot/templates/emdash-tracy-saas.json minVersion"
+  },
+  "evidence": "tasks/evidence/ds-walkthrough-2026-10-11/README.md findings 9 and 11 (before); tasks/evidence/ds-fix-em-2026-10-11/README.md (cause, timing table, release build).",
+  "fence": "No stand, no model, no database. The release itself (ja-products) is not published here: ~/tracy-bench-work/RELEASE-EMDASH-BUSINESS-DS.sh is for a person to run. The door's timing on the stand needs images rebuilt from this branch (integrator).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-emdash-fixes.mjs"],
+    "needs": [],
+    "timeout_s": 900
+  }
+}

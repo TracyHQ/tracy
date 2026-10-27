@@ -1,0 +1,20 @@
+/* Tailwind source for the Brand tabs. Same recipe as tracy-design-inspiration/src/client/design-inspiration.css:
+   theme + utilities only, NO preflight — these tabs live inside dsh's page (CLAUDE.md LAW #4). */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@tracy/ui/tokens.css';
+@source './';
+@source '../../../../ui/tracy-ui/src';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS — the same line as
+   the My Sites, Design inspiration and Build sheets, so dark variants turn with the app's switch. */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* Mode B has no preflight: the UA still paints buttons grey with black text and form controls in
+   their own font. Scoped to this plugin's root and placed in `base`, so every utility class on a
+   `@tracy/ui` component still wins. */
+@layer base {
+  .tracy-brand-engine button, .tracy-brand-engine input, .tracy-brand-engine select { background-color: transparent; color: inherit; font: inherit; border-width: 0; padding: 0; }
+  .tracy-brand-engine * { box-sizing: border-box; }
+}

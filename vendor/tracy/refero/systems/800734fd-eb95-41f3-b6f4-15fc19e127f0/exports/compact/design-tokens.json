@@ -1,0 +1,84 @@
+{
+  "color": {
+    "lime-sprint": {
+      "$value": "#a3e635",
+      "$type": "color",
+      "$description": "Lime Sprint — Green action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary page canvas and inverse text on dark surfaces"
+    },
+    "cream": {
+      "$value": "#fcfff7",
+      "$type": "color",
+      "$description": "Cream — Warm off-white surface for cards, stat tiles, and footer — a barely-there yellow-green tint that distinguishes a lifted surface from the page without introducing a new color"
+    },
+    "ink": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Ink — Primary text color, default border, icon stroke, and hard shadow color. This is the single dark token that does structural work across text, lines, and elevation"
+    },
+    "black-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Black Ink — Strongest display text and filled icon glyphs where maximum weight is needed inside a headline or pull-quote"
+    },
+    "depth": {
+      "$value": "#303030",
+      "$type": "color",
+      "$description": "Depth — Dark button and surface background — used for the large primary action blocks in the nav and hero where a heavier fill than ink is needed but true black would be too harsh"
+    },
+    "rule": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Rule — Hairline borders, card outlines, footer dividers, and the soft separator between sections"
+    },
+    "muted": {
+      "$value": "#525252",
+      "$type": "color",
+      "$description": "Muted — Secondary body text, supporting descriptions, and the slightly softer voice below a heading"
+    },
+    "muted-gray": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Muted Gray — Tertiary helper text, badge labels, copyright fine print, and the most de-emphasized text in the hierarchy"
+    },
+    "mint-edge": {
+      "$value": "#7ee2b8",
+      "$type": "color",
+      "$description": "Mint Edge — Green accent for outlined action borders, linked labels, and lightweight interactive emphasis"
+    },
+    "mint-wash": {
+      "$value": "#dcfff1",
+      "$type": "color",
+      "$description": "Mint Wash — Gray action color for filled buttons, selected navigation states, and focused conversion moments"
+    }
+  },
+  "font": {
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Primary interface and headline face. Used for navigation, buttons, body copy, and most display text. Weight 600 carries the display sizes (28-56px) with consistently negative letter-spacing; weight 400 carries body and caption. Tight tracking on headings (-0.0200em) compresses the geometric forms into a more editorial density rather than the wide airy SaaS default"
+    },
+    "fraunces": {
+      "$value": "Fraunces",
+      "$type": "fontFamily",
+      "$description": "Display serif reserved exclusively for one or two italic emphasis words inside a Geist headline — the word 'every', 'actually', 'B2B complexity'. This single serif italic inside a sans-serif sentence is the site's editorial signature: it signals that the system thinks in terms of typeset prose rather than product copy. Never used for body, buttons, or full headlines"
+    },
+    "phosphor-fill": {
+      "$value": "Phosphor-Fill",
+      "$type": "fontFamily",
+      "$description": "Phosphor-Fill — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.brainfishai.com",
+      "siteName": "Brainfish",
+      "extractedAt": "2026-07-03T03:40:18.117Z",
+      "variant": "compact"
+    }
+  }
+}

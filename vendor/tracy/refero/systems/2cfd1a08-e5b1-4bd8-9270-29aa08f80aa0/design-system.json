@@ -1,0 +1,358 @@
+{
+  "dos": [
+    "Use the three pastel card colors (sage #d3e5e9, lavender #bbb2ce, dusty rose #cb9da2) as a fixed category system — assign one to each project status and never mix within a single card.",
+    "Set all tag pills and secondary buttons to 100px border-radius; reserve 1000px exclusively for the primary action button to create a clear hierarchy between fully rounded and pill-rounded.",
+    "Use Nng at weight 300–400 for display headlines (44px+); the light weight on large sizes is the signature — bold display text would break the editorial register.",
+    "Prefix all section labels with a bullet or step number in uppercase 12px Nng ('• STEP 1: THE BRIEF'); this micro-label system is the primary wayfinding device.",
+    "Pair burnt amber (#65451d) borders with honey gold (#e4b976) text on tags — this warm-on-warm combination is the only place gold appears, so it reads as a highlight, not decoration.",
+    "Maintain 1px hairline borders in #333333 or #e5e6e1 on all cards; never use box-shadow for elevation — the system is intentionally flat.",
+    "Keep the canvas at #ffffff with generous 64px section gaps; the lightness and breathing room are what make the pastel cards legible."
+  ],
+  "donts": [
+    "Do not use box-shadow for card elevation — the system is flat by design, relying on hairline borders and background color contrast for separation.",
+    "Do not introduce vivid or saturated colors (no electric blue, neon green, or pure red); all accent colors are muted and desaturated by design.",
+    "Do not set display headlines in bold (weight 600+); Nng weight 300–400 on large sizes is the editorial signature — bold headlines would look like a different product.",
+    "Do not use the same radius for all elements; the 100px pills vs. 8px cards vs. 1000px primary button create a deliberate visual rhythm of corner treatments.",
+    "Do not place white text on pastel card backgrounds; the card titles should always be #151515 or #453b60 (deep violet for active) for contrast and consistency.",
+    "Do not use more than two font families in a single view; Nng carries 95% of the system, Roboto appears only in rendered user content.",
+    "Do not center-align body text or descriptions; left-align everything below the display headline to maintain the editorial/document feel."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas, card base, text on dark cards — the dominant surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#151515",
+      "name": "Ink Black",
+      "role": "Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#23241f",
+      "name": "Graphite",
+      "role": "Secondary text, subtle borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3a4444",
+      "name": "Slate Gray",
+      "role": "Muted text, inactive tags, form labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Stone Border",
+      "role": "Hairline borders, dividers, card outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#808080",
+      "name": "Mist Gray",
+      "role": "Tertiary text, disabled states",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e6e1",
+      "name": "Bone",
+      "role": "Soft surface tint, secondary card backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d3e5e9",
+      "name": "Pale Sage",
+      "role": "Hairline borders, dividers, input outlines, and card edges on light surfaces.",
+      "group": "accent"
+    },
+    {
+      "hex": "#bbb2ce",
+      "name": "Lavender Mist",
+      "role": "Lavender card variant — secondary project category, tag fills",
+      "group": "accent"
+    },
+    {
+      "hex": "#cb9da2",
+      "name": "Dusty Rose",
+      "role": "Red state accent for badges, validation surfaces, and short status labels.",
+      "group": "accent"
+    },
+    {
+      "hex": "#453b60",
+      "name": "Deep Violet",
+      "role": "Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis.",
+      "group": "brand"
+    },
+    {
+      "hex": "#65451d",
+      "name": "Burnt Amber",
+      "role": "Warm brown border accent on tags and badges — the signature warm neutral that anchors the cool pastels",
+      "group": "brand"
+    },
+    {
+      "hex": "#e4b976",
+      "name": "Honey Gold",
+      "role": "Gold accent for tag text, highlighted labels — the single warm highlight color",
+      "group": "accent"
+    },
+    {
+      "hex": "#5c2529",
+      "name": "Burgundy",
+      "role": "Error/status red — badge backgrounds and warning borders",
+      "group": "semantic"
+    },
+    {
+      "hex": "#d79caa",
+      "name": "Blush Border",
+      "role": "Soft pink border accent for rose-category cards and tags",
+      "group": "accent"
+    }
+  ],
+  "layout": "Single-column page model with a centered max-width ~1200px container. The hero is a two-column split: left side holds the large display headline with inline avatar group and primary CTA, right side stacks 3–4 pastel project cards vertically as a live feed. Below the hero, the page flows as numbered process steps (STEP 1, STEP 2, …) in a two-column pattern: left column is instructional text with optional testimonial, right column is a feature card. Section rhythm is generous (64px gaps) with no alternating dark/light bands — everything stays on white. Navigation is a single wordmark logo (HUDDLE, all-caps, tight tracking) in the top-left, no nav links visible. The right-edge project feed persists in view as a sidebar-like element.",
+  "imagery": "Imagery is minimal and functional: circular avatar photos (40–56px, 1px white border) used inline within text and in testimonial cards. No hero photography, no product screenshots, no decorative illustration. The visual weight comes from the pastel card system itself — the cards act as the imagery, each one a colored tile showcasing a real project. Icons are absent or extremely minimal (small bullet/dot glyphs only).",
+  "similar": [
+    {
+      "why": "Same flat editorial layout with a single custom sans typeface, left-aligned text, and minimal use of color — both treat the page like a document rather than a product page.",
+      "business": "Read.cv"
+    },
+    {
+      "why": "Similar muted/desaturated palette with pastel-tinted cards, generous whitespace, and a curatorial/archival sensibility over aggressive product marketing.",
+      "business": "Are.na"
+    },
+    {
+      "why": "Same category-card aesthetic where each listing is a colored tile with a status indicator and tag pills — the design language of a structured directory.",
+      "business": "Craigslist redesigns (e.g., Minimal Craigslist)"
+    },
+    {
+      "why": "Both use a single custom sans, tight letter-spacing on large display sizes, pill-shaped buttons at 100px radius, and a restrained dark-on-light color palette with one or two accent colors.",
+      "business": "Linear"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "100px",
+      "cards": "8px",
+      "pills": "100px",
+      "badges": "4px",
+      "buttons": "1000px",
+      "list-items": "24px",
+      "large-cards": "40px"
+    },
+    "elementGap": "12px",
+    "sectionGap": "64px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 1,
+      "purpose": "Base page canvas and most card surfaces"
+    },
+    {
+      "hex": "#e5e6e1",
+      "name": "Bone",
+      "level": 2,
+      "purpose": "Secondary card surface, subtle background tint"
+    },
+    {
+      "hex": "#bbb2ce",
+      "name": "Lavender Mist",
+      "level": 3,
+      "purpose": "Lavender category card fill"
+    },
+    {
+      "hex": "#d3e5e9",
+      "name": "Pale Sage",
+      "level": 4,
+      "purpose": "Sage category card fill"
+    },
+    {
+      "hex": "#cb9da2",
+      "name": "Dusty Rose",
+      "level": 5,
+      "purpose": "Rose category card fill"
+    }
+  ],
+  "northStar": "Pastel inventory cards on cream paper",
+  "typeScale": [
+    {
+      "role": "micro",
+      "size": 12,
+      "lineHeight": 1.58,
+      "letterSpacing": 0
+    },
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.45,
+      "letterSpacing": -0.13
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.42,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "subheading",
+      "size": 22,
+      "lineHeight": 1.32,
+      "letterSpacing": -0.22
+    },
+    {
+      "role": "heading-sm",
+      "size": 29,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.22,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "heading-lg",
+      "size": 44,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.92
+    },
+    {
+      "role": "display",
+      "size": 69,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.45
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Pill Button",
+      "role": "Main call-to-action (e.g., 'Get started')",
+      "description": "Black fill (#151515), white text, 1000px border-radius (fully rounded), padding 16px 24px, Nng at 16px weight 500. No shadow, no border. The extra-rounded shape against the muted palette gives it weight without aggression."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Secondary action (e.g., 'Apply as a designer')",
+      "description": "No background, no border. Nng 16px weight 400, color #151515 with underline on hover. Sits beside the primary button at equal visual weight through spacing, not styling."
+    },
+    {
+      "name": "Outlined Action Button",
+      "role": "Tertiary action, less emphasis than primary",
+      "description": "Transparent background, 1px border in #151515 or accent color, 100px radius, padding 12px 20px, Nng 14px weight 500. Used for 'Get started' in secondary contexts."
+    },
+    {
+      "name": "Project Card — Sage Variant",
+      "role": "Category tile for 'upcoming' or 'monitoring' projects",
+      "description": "Background #d3e5e9 (pale sage), 1px hairline border #333333, 8px radius, padding 24px. Status label in uppercase Nng 12px weight 500 (e.g., 'COMING MONTHLY') in #3a4444. Project title in Nng 22px weight 500, color #151515. Tag pills inline at the bottom."
+    },
+    {
+      "name": "Project Card — Lavender Variant",
+      "role": "Category tile for secondary projects",
+      "description": "Background #bbb2ce (lavender mist), 1px hairline border #333333, 8px radius, padding 24px. Same structure as sage variant. Title in Nng 22px weight 500."
+    },
+    {
+      "name": "Project Card — Dusty Rose Variant",
+      "role": "Category tile for 'shipped' or 'completed' projects",
+      "description": "Background #cb9da2 (dusty rose), 1px hairline border #333333, 8px radius, padding 24px. Title in Nng 22px weight 500. Slightly warmer feel than the cool sage/lavender."
+    },
+    {
+      "name": "Active Project Card",
+      "role": "Currently-in-progress project, higher emphasis",
+      "description": "Lavender-tinted card with deep violet text (#453b60) instead of black. Signals 'live' status. Nng 22px weight 500, 'ACTIVE' label prefix in uppercase."
+    },
+    {
+      "name": "Status Tag Pill",
+      "role": "Small inline label (e.g., 'Probiotics', 'Brand Designer')",
+      "description": "100px border-radius, padding 4px 12px, Nng 13–14px weight 500, background #ffffff or light fill, 1px border in #65451d (burnt amber) or accent color. Text color matches border. The burnt-amber border is the signature warm accent that ties the tag system together."
+    },
+    {
+      "name": "Step Section Header",
+      "role": "Section divider labeling process steps",
+      "description": "All-caps Nng 12px weight 500, color #151515, preceded by a small bullet (•) or step number. Examples: 'STEP 1: THE BRIEF', 'STEP 2: THE TEAM'. Left-aligned, tight tracking, 16px+ bottom margin."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Social proof, quote from a past client",
+      "description": "White background, 1px border #e5e6e1, 8px radius, padding 16px. Quote text in Nng 16px weight 400 italic, color #3a4444. Attribution below: avatar (40px circle) + name (Nng 16px weight 500) + role (Nng 14px weight 400, #808080)."
+    },
+    {
+      "name": "Team Forming Tag",
+      "role": "Role label inside project cards (e.g., 'Brand Designer')",
+      "description": "Outlined pill with #453b60 (deep violet) border, 100px radius, padding 6px 12px, Nng 14px weight 500. The violet outline distinguishes 'needed roles' from 'filled roles' (which use a different fill)."
+    },
+    {
+      "name": "Beta Banner",
+      "role": "Top-of-page announcement strip",
+      "description": "Centered text, Nng 13px weight 500, white background, 'Private Beta' in a outlined pill (1px border #151515, 100px radius, padding 2px 8px) followed by descriptive text in #3a4444. Sits flush at the very top of the page."
+    },
+    {
+      "name": "Avatar Group",
+      "role": "Visual representation of the team inline in headlines",
+      "description": "Three overlapping circular avatars (40px each, -12px overlap), 1px white border between them. Placed inline within display text as a visual device — the faces ARE the headline punctuation."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface across all contexts: display headlines (44–69px, weight 300–400), headings (22–29px, weight 500), body (14–18px, weight 400), captions and micro-labels (12–13px, weight 500, uppercase). Custom geometric sans with tight tracking on large sizes (-0.021em at 69px) — the slight negative tracking makes the large display headlines feel dense and poster-like rather than airy.",
+      "sizes": "12px, 13px, 14px, 15px, 16px, 18px, 21px, 22px, 29px, 40px, 44px, 69px",
+      "family": "Nng",
+      "weight": "300, 400, 500, 700",
+      "lineHeight": "1.10 – 1.58",
+      "substitute": "Inter, Söhne, or Untitled Sans",
+      "letterSpacing": "-0.021em at 69px, -0.011em at 29–40px, -0.010em at 22px, -0.008em at 16–18px",
+      "fontFeatureSettings": "\"ss01\" on, \"tnum\" on"
+    },
+    {
+      "role": "Secondary system font used sparingly — likely for rendered user content (descriptions, quotes) where a neutral fallback is needed. Weight 400 only, tight tracking (-0.103em) gives it a condensed feel.",
+      "sizes": "14px, 16px",
+      "family": "Roboto",
+      "weight": "400",
+      "lineHeight": "1.25, 1.43",
+      "substitute": "system-ui, -apple-system",
+      "letterSpacing": "-0.1030em"
+    },
+    {
+      "role": "Monospaced accent — used for code-like or identifier text (project IDs, timestamps). Normal letter-spacing distinguishes it from the proportional Nng.",
+      "sizes": "14px",
+      "family": "Apercu pro mono",
+      "weight": "400",
+      "lineHeight": "1.42",
+      "substitute": "JetBrains Mono, IBM Plex Mono"
+    },
+    {
+      "role": "Moderat — detected in extracted data but not described by AI",
+      "sizes": "14px",
+      "family": "Moderat",
+      "weight": "400",
+      "lineHeight": "1.2, 1.5",
+      "letterSpacing": "-0.021"
+    }
+  ],
+  "description": "Huddle uses a quiet, editorial curation language: off-white canvas, large confident headlines, and three muted pastel card colors (sage, lavender, dusty rose) that function as category tiles for project listings. The palette is intentionally desaturated — no vivid neons, no high-saturation accents — so the system reads as a considered directory rather than a marketplace. Typography is set in a single custom sans (Nng) that carries the entire information hierarchy, with all-caps micro-labels and dot-prefixed status tags adding a catalog/inventory feel. Components lean pill-shaped (100px radius on links, 1000px on primary buttons) and borders are thin 1px hairlines rather than heavy shadows, keeping the surface flat and poster-like.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text primary: #151515\n- background: #ffffff\n- border: #333333\n- accent (card sage): #d3e5e9\n- accent (card lavender): #bbb2ce\n- accent (card rose): #cb9da2\n- brand (active violet): #453b60\n- tag border: #65451d\n- primary action: #65451d (filled action)\n\n3-5 Example Component Prompts:\n\n1. Create a Primary Action Button: #65451d background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. Create a project card grid: three cards stacked vertically, each 8px radius, 24px padding, 1px border #333333. Card 1: background #d3e5e9 (sage), uppercase 12px Nng 'COMING MONTHLY' label, title 'OneMedical for psychedelic and naturopathic therapists' in Nng 22px weight 500 #151515, three tag pills at bottom (100px radius, 1px border #65451d, text #e4b976). Card 2: background #bbb2ce (lavender), same structure. Card 3: background #cb9da2 (rose), same structure with 'SHIPPED' label.\n\n\n4. Create a testimonial card: white background, 1px border #e5e6e1, 8px radius, 16px padding. Quote in Nng 16px weight 400 italic #3a4444. Attribution row: 40px circular avatar + 'Krystin Hargrove' in Nng 16px weight 500 + 'Founder at CoTripper' in Nng 14px weight 400 #808080.\n\n5. Create a tag pill: 100px border-radius, 1px solid border #65451d, padding 4px 12px, text in Nng 13px weight 500, text color #65451d (or #e4b976 for highlighted tags). No background fill."
+    },
+    {
+      "title": "Color Card Category System",
+      "content": "The three pastel card colors are not arbitrary decoration — they form a fixed status taxonomy:\n- Sage (#d3e5e9 background): 'COMING MONTHLY' — projects being monitored or upcoming\n- Lavender (#bbb2ce background): 'BUILDING' or general/secondary — projects in formation\n- Dusty Rose (#cb9da2 background): 'SHIPPED' — completed projects\n- Deep Violet (#453b60 text on lavender): 'ACTIVE' — the currently live project, elevated within the lavender category by text color alone\n\nThis color-to-status mapping should be preserved across all project listings. Swapping card colors breaks the system's categorical meaning."
+    },
+    {
+      "title": "Border Radius Vocabulary",
+      "content": "The design uses a deliberate vocabulary of border radii, each with semantic meaning:\n- 4px: small badges, inline labels, micro-elements\n- 8px: standard cards, testimonial blocks, content containers\n- 24px: list items, expanded cards with more visual weight\n- 40px: hero/feature cards (e.g., the right-column 'CREATING HUDDLE' card)\n- 100px: tag pills, secondary buttons, inline role labels\n- 1000px: primary action button only — the fully rounded 'Get started' pill\n\nNever use 0px (sharp corners) — even the smallest badges get 4px. The progression from 4px → 1000px is a hierarchy of prominence."
+    }
+  ],
+  "elevationPhilosophy": "The design system intentionally avoids box-shadows. All elevation is achieved through background color contrast and 1px hairline borders (#333333, #e5e6e1). Cards on the white canvas rely on the pastel background fill (sage, lavender, rose) to create visual separation. This flat treatment reinforces the editorial/poster aesthetic and prevents the interface from feeling like a generic SaaS dashboard."
+}

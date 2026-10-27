@@ -1,0 +1,79 @@
+{
+  "color": {
+    "deep-indigo": {
+      "$value": "#3b1e90",
+      "$type": "color",
+      "$description": "Deep Indigo — Left edge of hero gradient — anchors the purple sky of the landing banner"
+    },
+    "signal-blue": {
+      "$value": "#116eee",
+      "$type": "color",
+      "$description": "Signal Blue — Brand links, nav accents, heading highlights, logo wordmark — the only blue that carries brand meaning"
+    },
+    "spring-mint": {
+      "$value": "#11ee92",
+      "$type": "color",
+      "$description": "Spring Mint — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "hero-sky-blue": {
+      "$value": "#3a6ef0",
+      "$type": "color",
+      "$description": "Hero Sky Blue — Right edge of hero gradient — transitions from deep indigo to a cleaner blue, softening the landing page mood"
+    },
+    "charcoal": {
+      "$value": "#252b2f",
+      "$type": "color",
+      "$description": "Charcoal — Primary body text and heading color — softer than pure black, keeps long-form copy comfortable"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Icon strokes, decorative illustration linework, highest-contrast text — used where maximum weight is needed"
+    },
+    "canvas-mist": {
+      "$value": "#f2f7fd",
+      "$type": "color",
+      "$description": "Canvas Mist — Page background — barely-blue tinted near-white, the calm base layer below the hero"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, nav background, content panels — sits one level above the mist canvas"
+    },
+    "steel-border": {
+      "$value": "#d6dee6",
+      "$type": "color",
+      "$description": "Steel Border — Input borders, dividers, subtle structural lines — cool-toned to harmonize with the mist canvas"
+    },
+    "slate-caption": {
+      "$value": "#666e7e",
+      "$type": "color",
+      "$description": "Slate Caption — Muted helper text, secondary body copy, metadata — readable but recedes against charcoal"
+    },
+    "shadow-gray": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Shadow Gray — Soft elevation wash and button shadow base — used in the subtle 1px shadow stack"
+    },
+    "trustpilot-star": {
+      "$value": "#ffcf00",
+      "$type": "color",
+      "$description": "Trustpilot Star — Review star fill on the Trustpilot social-proof line — the only yellow in the system, used exclusively for ratings"
+    }
+  },
+  "font": {
+    "nista": {
+      "$value": "Nista",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for the entire system — Nista's geometric warmth and bold-friendly weight stack carries everything from 10px metadata to 40px display headlines. The 800 weight on hero text gives authority without feeling heavy or corporate; the 400 body keeps long lesson descriptions breathable. Substitute: 'Poppins' or 'Nunito' for the friendly geometric quality, or 'DM Sans' for a cleaner alternative."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://busuu.com",
+      "siteName": "Busuu",
+      "extractedAt": "2026-06-03T18:00:17.345Z",
+      "variant": "compact"
+    }
+  }
+}

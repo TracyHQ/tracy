@@ -1,0 +1,64 @@
+{
+  "color": {
+    "espresso": {
+      "$value": "#140b00",
+      "$type": "color",
+      "$description": "Espresso — Page canvas and primary surface — warm coffee-black rather than pure black, the entire site sits on this"
+    },
+    "midnight-cocoa": {
+      "$value": "#0b0600",
+      "$type": "color",
+      "$description": "Midnight Cocoa — Deepest surface for footers and recessed bands — almost-black brown for slight layering below Espresso"
+    },
+    "warm-cream": {
+      "$value": "#fff1e0",
+      "$type": "color",
+      "$description": "Warm Cream — Primary text and icon strokes — the only ink color across the system, reads as off-white parchment in dark contexts"
+    },
+    "soft-cream": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Soft Cream — Occasional light surface tint where near-white is needed (rare, secondary to Warm Cream)"
+    },
+    "walnut": {
+      "$value": "#43392d",
+      "$type": "color",
+      "$description": "Walnut — Subtle hairline borders on dark surfaces — warm taupe that holds edges without competing with content"
+    },
+    "cedar": {
+      "$value": "#4f4538",
+      "$type": "color",
+      "$description": "Cedar — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "driftwood": {
+      "$value": "#85796c",
+      "$type": "color",
+      "$description": "Driftwood — Muted helper text and secondary labels — warm gray that recedes against Espresso without disappearing"
+    },
+    "burnt-edge": {
+      "$value": "#181109",
+      "$type": "color",
+      "$description": "Burnt Edge — Faint internal border on cards and panels — barely-visible depth line on the dark canvas"
+    },
+    "amber-forge": {
+      "$value": "#ffb442",
+      "$type": "color",
+      "$description": "Amber Forge — Primary action fill, accent highlights, and the system signal color — the only chromatic accent; appears on filled CTAs, icon hover states, and section dividers. Pairs against Espresso for a heated-metal contrast that feels pressed-in and intentional"
+    }
+  },
+  "font": {
+    "pp-neue-montreal": {
+      "$value": "PP Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system. PP Neue Montreal is a geometric humanist sans with a soft, slightly rounded terminal — more editorial than Inter, more clinical than GT America. Used at weight 400 for body and 500 for emphasis; no weight 600+ anywhere, which keeps the voice restrained and high-end. Display sizes (43–81px) use tight negative tracking (down to -1.13px) to lock letters into compact editorial blocks. Substitute with Inter (close) or Manrope (slightly warmer)."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://abetterlou.com",
+      "siteName": "Abetterlou",
+      "extractedAt": "2026-06-03T18:44:46.882Z",
+      "variant": "compact"
+    }
+  }
+}

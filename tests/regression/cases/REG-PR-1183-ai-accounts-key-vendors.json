@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1183-ai-accounts-key-vendors",
+  "kind": "feat",
+  "title": "Settings › AI accounts connects Kimi, GLM and Qwen with a pasted API key: the broker proves the key on a cheap vendor door before sealing it, sorts refusals into key / plan / vendor, never keeps an unproven key, and tells the client each vendor's sign-in kind; the client draws the key row and maps the door's refusals",
+  "pr": 1183,
+  "area": "seat-plan/key",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Common setup: none — pure unit run, no stand, no database, no network (vendor fetch is a test double).",
+    "S1: From the TCH checkout run the command in `run.cmd`.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": ["0 failures.", "Every test named in run.tests reports ok."],
+  "selectors": {
+    "door": "POST /api/seat-plan/connect/key; GET /api/seat-plan/status providers[].signIn",
+    "function": "apps/tracy-web/src/seat-plan/wire/api-key.js probeKey; apps/tracy-web/src/seat-plan/broker.js connectKey, signInOf; packages/ui/tracy-model-plan/src/client/plan-doors.ts connectKey, signInFor",
+    "test": "apps/tracy-web/test/seat-plan-kimi.test.mjs, seat-plan-glm.test.mjs, seat-plan-qwen.test.mjs; packages/ui/tracy-model-plan/test/plan-doors.test.mjs, account-key-row.test.mjs"
+  },
+  "fence": "A pasted key reaches the vault only after the vendor's cheap door (GET /models, or Z.ai's quota door) accepted it; a 401 (for Qwen: on both regions), any 403 or plan/quota refusal, and a vendor outage come back as three distinct codes (key, plan, vendor); a 403 on a chat turn keeps the stored key so the client never shows 'wrong key' for an outage; the stored blob is {kind:'key',v:1,apiKey} with subject = full SHA-256 of the key and label 'API key …' + last 4; the client takes a vendor's sign-in kind from the server's status answer and keeps its own table only for vendors older servers know.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/seat-plan-kimi.test.mjs",
+      "apps/tracy-web/test/seat-plan-glm.test.mjs",
+      "apps/tracy-web/test/seat-plan-qwen.test.mjs",
+      "packages/ui/tracy-model-plan/test/plan-doors.test.mjs",
+      "packages/ui/tracy-model-plan/test/account-key-row.test.mjs"
+    ],
+    "tests": [
+      "a good key is proven on /models and kept as a key blob with a hashed identity",
+      "a good key is proven on the quota door and kept as a key blob with a hashed identity",
+      "a rejected key is a key error",
+      "a rejected key is a key error, whether Z.ai says so in the status or only in the body",
+      "a key without a membership is a plan error, not a bad key",
+      "a key with no coding plan or balance is a plan error",
+      "a key whose account is out of quota or in arrears is a plan error",
+      "kimi down or slow is a vendor error",
+      "Z.ai down or slow is a vendor error",
+      "DashScope down or slow is a vendor error",
+      "another region is a second probe away: a Beijing key refused abroad is kept with the endpoint that took it",
+      "a key refused by both regions is a key error; any other answer is not",
+      "any 403 is an access refusal (plan), never a wrong key"
+    ]
+  }
+}

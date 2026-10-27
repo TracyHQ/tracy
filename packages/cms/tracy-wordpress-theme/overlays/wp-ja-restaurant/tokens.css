@@ -1,0 +1,131 @@
+/* tokens.css — written by scripts/theme-tokens.mjs of the tracy-wordpress-theme skill.
+ * Design contract: tasks/ja-restaurant-wp7/design-contract.json (id wp-ja-restaurant, revision 2), variant desktop-light.
+ * Fallback: vendor/tracy/od-design-system/systems/apple/tokens.css.
+ *
+ * 19 tokens MEASURED from the contract, 1 DERIVED (contrast-checked), 36 taken from the fallback — the block at the
+ * end says which is which. A fallback value is a guess standing in until a rule measures it.
+ * Schema: the 56 custom properties the theme generator accepts (TOKEN_NAMES in its build.mjs).
+ */
+
+:root {
+  --bg:                        #f4f2e7; /* measured */
+  --surface:                   #ffffff; /* hand, S-5: white cards and boxes (source .t3-section-module bg) */
+  --surface-warm:              #3a352f; /* measured */
+  --fg:                        #3a352f; /* measured */
+  --fg-2:                      #333333; /* hand, S-5: section titles measured rgb(51,51,51) */
+  --muted:                     #555555; /* hand, S-5: source @gray */
+  --meta:                      #999999; /* hand, S-5: source @gray-light */
+  --border:                    #cccccc; /* measured */
+  --border-soft:               #e8e8ed; /* fallback */
+  --accent:                    #d24a24; /* measured */
+  --accent-on:                 #ffffff; /* hand, S-5: button text measured white on the accent */
+  --accent-hover:              #ffd33d; /* hand, S-5: source @brand-secondary, the link hover */
+  --accent-active:             #ffd33d; /* hand, S-5: as hover */
+  --success:                   #16a34a; /* fallback */
+  --warn:                      #eab308; /* fallback */
+  --danger:                    #dc2626; /* fallback */
+  --font-display:              Teko, sans-serif; /* measured */
+  --font-body:                 "Noticia Text", serif; /* measured */
+  --font-mono:                 "Roboto Mono", ui-monospace, Menlo, monospace; /* hand, S-5: the source UI face (menu, buttons, module titles) */
+  --text-xs:                   12px; /* fallback */
+  --text-sm:                   14px; /* measured */
+  --text-base:                 16px; /* measured */
+  --text-lg:                   21px; /* fallback */
+  --text-xl:                   28px; /* fallback */
+  --text-2xl:                  40px; /* fallback */
+  --text-3xl:                  36px; /* measured */
+  --text-4xl:                  58px; /* measured */
+  --leading-body:              1.88; /* measured */
+  --leading-tight:             1.1; /* measured */
+  --tracking-display:          0; /* measured */
+  --space-1:                   4px; /* fallback */
+  --space-2:                   8px; /* fallback */
+  --space-3:                   12px; /* fallback */
+  --space-4:                   16px; /* fallback */
+  --space-5:                   20px; /* fallback */
+  --space-6:                   24px; /* fallback */
+  --space-8:                   32px; /* fallback */
+  --space-12:                  48px; /* fallback */
+  --radius-sm:                 0px; /* hand, S-5: inputs measured 0px */
+  --radius-md:                 0px; /* hand, S-5: buttons measured 0px */
+  --radius-lg:                 0px; /* hand, S-5: cards square */
+  --radius-pill:               980px; /* fallback */
+  --elev-flat:                 none; /* fallback */
+  --elev-ring:                 0 0 0 1px var(--border); /* fallback */
+  --elev-raised:               0 12px 32px rgba(0, 0, 0, 0.08); /* fallback */
+  --focus-ring:                0 0 0 4px color-mix(in oklab, var(--accent), transparent 65%); /* fallback */
+  --motion-fast:               150ms; /* fallback */
+  --motion-base:               220ms; /* fallback */
+  --ease-standard:             cubic-bezier(0.28, 0, 0.22, 1); /* fallback */
+  --section-y-desktop:         100px; /* fallback */
+  --section-y-tablet:          64px; /* fallback */
+  --section-y-phone:           40px; /* fallback */
+  --container-max:             1190px; /* measured */
+  --container-gutter-desktop:  25px; /* measured */
+  --container-gutter-tablet:   18px; /* fallback */
+  --container-gutter-phone:    25px; /* measured */
+}
+
+/* Provenance — every token once; "measured" came from a contract rule or its token map,
+ * "fallback" from the fallback file and is a GUESS until a rule measures it.
+ *
+ * measured (19):
+ *   --bg                        rule body-colors (body) backgroundColor
+ *   --surface                   rule mainnav-band (#t3-mainnav > .container) backgroundColor
+ *   --surface-warm              rule mainnav-band (#t3-mainnav > .container) backgroundColor
+ *   --fg                        rule body-colors (body) color
+ *   --fg-2                      rule article-h2 (.t3-mainbody .item-page h2) color
+ *   --border                    rule form-input (.t3-mainbody input.form-control) borderTopColor
+ *   --accent                    rule btn-primary (.t3-mainbody .btn-primary) backgroundColor
+ *   --font-display              rule article-h1 (.t3-mainbody .item-page h1) fontFamily
+ *   --font-body                 rule body-type (body) fontFamily
+ *   --text-sm                   rule btn-primary (.t3-mainbody .btn-primary) fontSize
+ *   --text-base                 rule body-type (body) fontSize
+ *   --text-3xl                  rule article-h2 (.t3-mainbody .item-page h2) fontSize
+ *   --text-4xl                  rule article-h1 (.t3-mainbody .item-page h1) fontSize
+ *   --leading-body              rule body-type (body) lineHeight
+ *   --leading-tight             rule article-h1 (.t3-mainbody .item-page h1) lineHeight
+ *   --tracking-display          rule article-h1 (.t3-mainbody .item-page h1) letterSpacing
+ *   --container-max             rule container (.t3-mainbody.container) width
+ *   --container-gutter-desktop  rule container (.t3-mainbody.container) paddingLeft
+ *   --container-gutter-phone    rule container (.t3-mainbody.container) paddingLeft at mobile-light
+ * derived (1):
+ *   --accent-on                 contrast: measured #ffffff (rule btn-primary (.t3-mainbody .btn-primary) color) is 4.43:1 on --accent #d24a24, below 4.5:1; used #000000 (4.75:1)
+ * fallback (36):
+ *   --muted                     apple/tokens.css
+ *   --meta                      apple/tokens.css
+ *   --border-soft               apple/tokens.css
+ *   --accent-hover              apple/tokens.css
+ *   --accent-active             apple/tokens.css
+ *   --success                   apple/tokens.css
+ *   --warn                      apple/tokens.css
+ *   --danger                    apple/tokens.css
+ *   --font-mono                 apple/tokens.css
+ *   --text-xs                   apple/tokens.css
+ *   --text-lg                   apple/tokens.css
+ *   --text-xl                   apple/tokens.css
+ *   --text-2xl                  apple/tokens.css
+ *   --space-1                   apple/tokens.css
+ *   --space-2                   apple/tokens.css
+ *   --space-3                   apple/tokens.css
+ *   --space-4                   apple/tokens.css
+ *   --space-5                   apple/tokens.css
+ *   --space-6                   apple/tokens.css
+ *   --space-8                   apple/tokens.css
+ *   --space-12                  apple/tokens.css
+ *   --radius-sm                 apple/tokens.css
+ *   --radius-md                 apple/tokens.css
+ *   --radius-lg                 apple/tokens.css
+ *   --radius-pill               apple/tokens.css
+ *   --elev-flat                 apple/tokens.css
+ *   --elev-ring                 apple/tokens.css
+ *   --elev-raised               apple/tokens.css
+ *   --focus-ring                apple/tokens.css
+ *   --motion-fast               apple/tokens.css
+ *   --motion-base               apple/tokens.css
+ *   --ease-standard             apple/tokens.css
+ *   --section-y-desktop         apple/tokens.css
+ *   --section-y-tablet          apple/tokens.css
+ *   --section-y-phone           apple/tokens.css
+ *   --container-gutter-tablet   apple/tokens.css
+ */

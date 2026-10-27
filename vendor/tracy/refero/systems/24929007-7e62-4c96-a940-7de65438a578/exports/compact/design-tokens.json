@@ -1,0 +1,79 @@
+{
+  "color": {
+    "press-black": {
+      "$value": "#231e15",
+      "$type": "color",
+      "$description": "Press Black — Primary text, headings, button borders, backgrounds of dark sections — the near-black with a warm brown undertone that prevents harshness and reads as ink rather than void"
+    },
+    "voltage-yellow": {
+      "$value": "#ffe01b",
+      "$type": "color",
+      "$description": "Voltage Yellow — Primary CTA buttons and nav 'Iniciar gratis' — one saturated hit of color on an otherwise near-monochrome page; impossible to miss without competing for dominance"
+    },
+    "teal-ink": {
+      "$value": "#004e56",
+      "$type": "color",
+      "$description": "Teal Ink — Links, icon fills, image accents — muted teal provides navigational contrast against warm-neutral backgrounds without reading as a generic blue"
+    },
+    "warm-parchment": {
+      "$value": "#ebe1cd",
+      "$type": "color",
+      "$description": "Warm Parchment — Section backgrounds for GDPR and feature callout bands — warm cream that reads as aged newsprint, warmer than gray"
+    },
+    "sand-footer": {
+      "$value": "#e7b75f",
+      "$type": "color",
+      "$description": "Sand Footer — Footer background — deeper gold-tan that anchors the page base with warmth"
+    },
+    "ash-white": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Ash White — Card backgrounds, secondary section fills"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page backgrounds, card surfaces, reversed text on dark sections"
+    },
+    "graphite": {
+      "$value": "#706d67",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text, captions, supporting copy"
+    },
+    "warm-charcoal": {
+      "$value": "#403b3b",
+      "$type": "color",
+      "$description": "Warm Charcoal — Tertiary text, card body copy on white surfaces"
+    },
+    "silver-rule": {
+      "$value": "#bcbab6",
+      "$type": "color",
+      "$description": "Silver Rule — Borders, dividers, input underlines in secondary contexts"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Input text, icon fills, certain border overrides at maximum contrast"
+    }
+  },
+  "font": {
+    "graphik-web": {
+      "$value": "Graphik Web",
+      "$type": "fontFamily",
+      "$description": "All UI text: nav, buttons, body copy, captions, badges, inputs, card text. Weight 400 is default body; 500 for subheadings and emphasis; 700 sparingly for bold callouts. The tight -0.013em letter-spacing across all sizes gives even small text a compressed editorial density."
+    },
+    "means-web": {
+      "$value": "Means Web",
+      "$type": "fontFamily",
+      "$description": "Display headlines and hero headings only. Weight 300 at 40-48px is the signature move — most SaaS headlines use 600-800, but this light-weight serif whispers authority at large scale. The -0.021em tracking at display sizes compresses letterforms into a tight, journalistic headline block."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://mailchimp.com",
+      "siteName": "Mailchimp",
+      "extractedAt": "2026-04-11T19:20:50.339Z",
+      "variant": "compact"
+    }
+  }
+}

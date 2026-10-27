@@ -1,0 +1,458 @@
+{
+  "color": {
+    "white-screen": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White Screen — Page backgrounds, navigation surface, hero utility buttons, and light text over photographic imagery"
+    },
+    "charcoal-ink": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary headings, body copy, navigation labels, film titles, and dark iconography"
+    },
+    "mist-tile": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Mist Tile — Commenter strips, quiet linked-content tiles, and secondary surface blocks"
+    },
+    "lilac-wash": {
+      "$value": "#e4eaff",
+      "$type": "color",
+      "$description": "Lilac Wash — Pale icon tiles and restrained highlighted utility surfaces"
+    },
+    "divider-ash": {
+      "$value": "#eaeaea",
+      "$type": "color",
+      "$description": "Divider Ash — Hairline borders, search-field outlines, footer base surface, and quiet separators"
+    },
+    "metadata-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Metadata Gray — Film metadata, timestamps, muted helper copy, and inactive supporting labels"
+    },
+    "lavender-projector": {
+      "$value": "#a77eff",
+      "$type": "color",
+      "$description": "Lavender Projector — Brand mark, section-icon graphics, and large featured violet fields that punctuate the monochrome catalog"
+    },
+    "ultraviolet-type": {
+      "$value": "#6c00f4",
+      "$type": "color",
+      "$description": "Ultraviolet Type — Submission and account-label text, violet icon details, and brand-word emphasis against pale lilac surfaces"
+    }
+  },
+  "font": {
+    "cooperhewitt": {
+      "$value": "CooperHewitt",
+      "$type": "fontFamily",
+      "$description": "The editorial voice: use 800 at 54px for section and hero displays, 700 at 32px for footer calls, 700 at 18px for film titles, and 300 at 16px for bylines and reading copy. The condensed, rounded grotesk makes oversized titles feel like festival-program cover lines rather than generic product headings."
+    },
+    "jetbrainsmono": {
+      "$value": "JetBrainsMono",
+      "$type": "fontFamily",
+      "$description": "Use for all catalog metadata, genres, durations, navigation, utility buttons, and compact labels. Its 800 uppercase navigation at 14px with wide tracking makes the film archive feel indexed and machine-set beside the expressive CooperHewitt titles."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "12px",
+        "fontWeight": 300,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.012em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 12px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 12px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "12px",
+        "fontWeight": 800,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.093em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "14px",
+        "fontWeight": 800,
+        "lineHeight": 1.3,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "14px",
+        "fontWeight": 300,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "14px",
+        "fontWeight": 800,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "14px",
+        "fontWeight": 800,
+        "lineHeight": 1,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "14px",
+        "fontWeight": 800,
+        "lineHeight": 3.59,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "14px",
+        "fontWeight": 300,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 14px"
+    },
+    "sm-7": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-7 at 14px"
+    },
+    "sm-8": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "14px",
+        "fontWeight": 300,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-8 at 14px"
+    },
+    "sm-9": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.7,
+        "letterSpacing": "0.011em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-9 at 14px"
+    },
+    "sm-10": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "14px",
+        "fontWeight": 700,
+        "lineHeight": 2.44,
+        "letterSpacing": "0.088em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-10 at 14px"
+    },
+    "sm-11": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "14px",
+        "fontWeight": 700,
+        "lineHeight": 1.7,
+        "letterSpacing": "0.088em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-11 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "16px",
+        "fontWeight": 300,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "16px",
+        "fontWeight": 300,
+        "lineHeight": 1.25,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "16px",
+        "fontWeight": 700,
+        "lineHeight": 2.13,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "JetBrainsMono",
+        "fontSize": "16px",
+        "fontWeight": 300,
+        "lineHeight": 2.13,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "18px",
+        "fontWeight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "18px",
+        "fontWeight": 300,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "18px",
+        "fontWeight": 700,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 18px"
+    },
+    "lg-4": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "18px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-4 at 18px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "24px",
+        "fontWeight": 700,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "32px",
+        "fontWeight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.019em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 32px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "54px",
+        "fontWeight": 800,
+        "lineHeight": 1,
+        "letterSpacing": "0.011em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 54px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "CooperHewitt",
+        "fontSize": "54px",
+        "fontWeight": 800,
+        "lineHeight": 0.88,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 54px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "140": {
+      "$value": "140px",
+      "$type": "dimension",
+      "$description": "Spacing 140px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "md": {
+      "$value": "5px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    },
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "full": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    }
+  },
+  "surface": {
+    "white-screen": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Primary navigation and catalog canvas."
+    },
+    "mist-tile": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Surface level 1: Commenter strips and subdued linked-content surfaces."
+    },
+    "lilac-wash": {
+      "$value": "#e4eaff",
+      "$type": "color",
+      "$description": "Surface level 2: Pale icon tiles and submission-control surface."
+    },
+    "divider-ash": {
+      "$value": "#eaeaea",
+      "$type": "color",
+      "$description": "Surface level 3: Footer base, borders, and surface transitions."
+    },
+    "lavender-projector": {
+      "$value": "#a77eff",
+      "$type": "color",
+      "$description": "Surface level 4: Large featured brand panel."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.shortverse.com",
+      "siteName": "Shortverse",
+      "extractedAt": "2026-09-20T22:05:44.287Z",
+      "variant": "extended"
+    }
+  }
+}

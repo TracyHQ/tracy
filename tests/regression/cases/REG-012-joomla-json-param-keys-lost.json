@@ -1,0 +1,42 @@
+{
+  "id": "REG-012",
+  "kind": "fix",
+  "title": "Joomla content.update {patch} that re-types a JSON-text param as a string and drops ':type' is refused PARAMS_KEYS_LOST; nothing is written",
+  "pr": 786,
+  "area": "site-tools/joomla",
+  "cms": ["jo"],
+  "needs": ["stand", "site:jo", "seat:owner", "fixture:ja-mood-site"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, WEB, DSH, A and seat A's cookie COOKIE_A, pq (SELECT/WITH only). Case variables: PORT = the stand's port; work in the repo root of a checkout at the stand's source commit with pnpm dependencies installed (site-tools imports @tracy/site-build-core); RUN=$(date +%s).",
+    "Check the build: docker exec $DSH grep -c PARAMS_KEYS_LOST /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.js must print a number >= 1; otherwise stop with BLOCKED note image-older-than-f9c734938.",
+    "Unit seam: node --test --test-reporter=tap --test-name-pattern='drops one of its keys|keeps \":type\"|keeps every key of the stored one' packages/tools/tracy-site-tools/test/site-call.test.mjs packages/tools/tracy-site-tools/test/merge-patch.test.mjs",
+    "Fixture: KEY = site key of a Joomla site on this stand built from template ja-mood where A is owner. If none: GET $ORIGIN/api/templates must list a template with id 'ja-mood' and a platform 'joomla' (else BLOCKED note no-ja-mood-template); POST $ORIGIN/api/sites with headers Cookie: tracy_sess=$COOKIE_A, Origin: $ORIGIN, content-type: application/json and body {label: 'reg12jo' + RUN, platform: 'joomla', design: 'ja-mood', buildId: <uuid v4>} (expect 202); KEY = <label>.<stand site domain>. SITE = 'http://' + KEY + ':' + PORT. Poll GET $SITE/ every 10 s for up to 15 min until it answers 200 with 'hero-heading' in the HTML (else BLOCKED note site-not-ready).",
+    "Define apply(action, params) = POST $ORIGIN/api/sites/$KEY/apply, body JSON {action, params}, headers Cookie: tracy_sess=$COOKIE_A, content-type: application/json, Origin: $ORIGIN (Node fetch is fine: the dsh relay calls this door the same way).",
+    "M = the digits of the last id=\"Mod<digits>\" that occurs before the first 'hero-heading' in the HTML of GET $SITE/ (if none: the id of the first item of apply content.list {kind:'module', limit:100} with module 'mod_ja_acm' and a position starting with 'masthead'). P0 = apply content.get {kind:'module', id:M} .item.params (a string); C0 = JSON.parse(JSON.parse(P0)['jatools-config']); C0 without the key ':type' or without an object under 'hero' -> BLOCKED note fixture-not-an-acm-hero.",
+    "Act: write a scratch Node ESM script that imports runSiteCall from <repo>/packages/tools/tracy-site-tools/src/host/site-call.mjs, planCall from .../src/host/site.mjs and createCallMemory from .../src/host/call-memory.mjs. send(action, params) pushes action onto SENT and returns apply(action, params). BAD = C0 with its key ':type' renamed to 'type' (same value, every other key unchanged). ANSWER = await runSiteCall({memory: createCallMemory(), sessionId: 'session-reg012', label: KEY.split('.')[0], actorKey: A, facts: {platform: 'joomla', sealed: false}, sleep: async () => {}, send, plan: planCall({action: 'content.update', params: {kind: 'module', id: M, apply_id: 'reg-012-retype-' + RUN, fields: {params: {patch: {'jatools-config': JSON.stringify(BAD)}}}}})}). Print ANSWER and SENT.",
+    "Read P1 = apply content.get {kind:'module', id:M} .item.params and HTML1 = the HTML of GET $SITE/.",
+    "Positive control: reset SENT; run the same script with apply_id 'reg-012-object-' + RUN and fields {params: {patch: {'jatools-config': {hero: {'hero-style[hero-heading]': ['REG-012-' + RUN]}}}}} -> ANSWER2; C2 = the parsed jatools-config of apply content.get {kind:'module', id:M}; then apply apply.revert {apply_id: 'reg-012-object-' + RUN} and read C3 the same way."
+  ],
+  "expect": [
+    "The build check prints a count >= 1.",
+    "The unit seam exits 0 with TAP '# pass 4' and '# fail 0'.",
+    "ANSWER.ok === false, ANSWER.code === 'PARAMS_KEYS_LOST', ANSWER.action === 'content.update', ANSWER.platform === 'joomla', ANSWER.kind === 'module', ANSWER.id === M, ANSWER.field === 'params', ANSWER.key === 'jatools-config', ANSWER.lost deep-equals [':type'].",
+    "ANSWER.error === 'fields.params.patch[\"jatools-config\"] is a string that drops \":type\" of the stored JSON text; nothing was written'.",
+    "ANSWER.next contains 'fields.params:{patch:{\"jatools-config\":{' and ends with 'Nothing was written.'",
+    "SENT deep-equals ['content.get']: no content.update reached the Apply door (before #786 the same call answered ok:true and the stored config lost ':type': evidence site-state.txt VERDICT=EMPTY(no :type)).",
+    "P1 === P0 byte for byte, and HTML1 still has id=\"Mod<M>\" with a 'hero-heading' element inside it.",
+    "Positive control: ANSWER2.ok === true; SENT deep-equals ['content.get', 'content.update']; C2[':type'] === C0[':type'] and C2.hero['hero-style[hero-heading]'] deep-equals ['REG-012-' + RUN]; after the revert C3 deep-equals C0."
+  ],
+  "selectors": {
+    "siteToolsMarker": "'PARAMS_KEYS_LOST' in /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.js (dsh container)",
+    "applyDoor": "POST /api/sites/:key/apply body {action, params}",
+    "fenceFunction": "runSiteCall in packages/tools/tracy-site-tools/src/host/site-call.mjs (mergeJsonField -> merge-patch.mjs KeysLost)",
+    "tool": "tracy_site action content.update, fields.params = {patch:{...}}",
+    "acmModule": "content.get {kind:'module', id} -> item.module === 'mod_ja_acm', item.params = JSON text whose 'jatools-config' is JSON text with ':type'",
+    "heroOnPage": "#Mod<M> .hero-heading",
+    "errorCode": "PARAMS_KEYS_LOST"
+  },
+  "evidence": "tasks/evidence/bug-0310-leemood/issue1 (Studio-local, not in git); fix f9c734938 (#786) is on develop",
+  "fence": "site-tools runSiteCall step 5b (mergeJsonField -> mergePatch with openText) throws KeysLost when a {patch} string for a stored JSON-text key drops one of its top-level keys, and answers PARAMS_KEYS_LOST before any content.update is relayed."
+}

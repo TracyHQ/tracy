@@ -1,0 +1,225 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-vogue",
+  "modes": true,
+  "modesAuto": false,
+  "modeHook": "[data-theme=\"dark\"][data-bs-theme=\"dark\"].t4-dark",
+  "modeHookNote": "js/darkmode-prepaint.js and js/darkmode.js mark the dark side with three marks on the root, set and cleared together (\"T4 dark hook is three things at once\"): data-theme=\"dark\", data-bs-theme=\"dark\" and the class t4-dark, which css/darkmode.css keys on (310 html.t4-dark selectors) along with the logo pair (span.d-light / span.d-dark). The Design system popup Light | Dark and the slot sides read and set all three (src/sides.mjs, design-system-live-page.js; grammar from d2aa12a507). With the default data-theme hook a press set only data-theme: in the live frame on the published 1.0.7 under Moxie the page kept the other side logo (the dark-side logo on the light page and back), the other side page wrapper ground and the top bar link colours, 62 to 66 visible elements off on the home page alone (18/10/2026). selectors.themeToggle .ja-theme-toggle (the header and drawer buttons, data-theme-toggle) lets the flow turn the hooked page with the template switch, as a visitor does.",
+  "modesNote": "17/10/2026 (batch 2, MODE-3): JA Vogue has a light/dark switch (the header moon, js/darkmode.js; css/darkmode.css paints html.t4-dark / data-theme=dark) and its pre-paint resolver always sets data-theme on <html> before the first paint (cookie, then the template default, then the OS), so there is no unmarked auto state: the module writes the system's own side under the template's matching mode and the other side derived from it, and the switch stays shown under a system. On the dark side the template shows its dark-mode logo (.d-dark, white), so the dark-side logo inversion only touches a logo outside .d-dark; the footer logo module's plain picture (a profile whose site logo is another file, home-2) turns white there as the template's own darkmode.css does.",
+  "minVersion": {
+    "quickstart/ja-vogue/j6": "1.0.4"
+  },
+  "maxVersion": {
+    "quickstart/ja-vogue/j6": "1.0.8"
+  },
+  "maxVersionNote": "1.0.8 21/10/2026 (TEXT-1 batch 2): built from 1.0.7 (release-batch.mjs --overlay); only css/darkmode.css, css/template.css differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.6 16/10/2026 (#1375): re-cut of 1.0.5 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-vogue/j6@1.0.3",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "heading": "h2.cta-title.h1",
+    "container": "div.container",
+    "section": "div.section-title-wrap.border-title-1"
+  },
+  "discovered": {
+    "page": "body",
+    "heading": "first section heading: 48px",
+    "container": "first content container, max-width 1320px",
+    "section": "first padded full-width section, padding-top 48px"
+  },
+  "keepScopes": [],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#4b4a51",
+    "--fg-2": "#212529",
+    "--accent": "#192227",
+    "--accent-hover": "#4d6bff",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#ffffff",
+    "--meta": "#192227",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#eaebec",
+    "--muted": "#87888d",
+    "--font-display": "\"Cormorant Infant\", sans-serif",
+    "--font-body": "\"Work Sans\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#4b4a51",
+      "fg-2": "#212529",
+      "accent": "#192227",
+      "accent-hover": "#4d6bff",
+      "surface": "#f8f9fa",
+      "surface-warm": "#ffffff",
+      "meta": "#192227",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#eaebec",
+      "muted": "#87888d"
+    },
+    {
+      "bg": "#ffffff",
+      "fg-2": "#192227"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "meta": "#192227",
+      "fg": "#495057",
+      "surface": "#f8f9fa",
+      "border-soft": "#dee2e6",
+      "border": "#e9ecef",
+      "fg-2": "#212529"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (66 line colours, 43 text colours seen)",
+  "selectors": {
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["div.section-title-wrap.border-title-1"],
+    "bodyFace": ["body"],
+    "themeToggle": ".ja-theme-toggle"
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".info-details .articles-introtext, .cta-content .cta-desc",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": ".t4-section :is(h1, h2, h3, h4, .h1, .h2)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 18 tried (byte 8520); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#192227",
+      "uses": 10,
+      "kind": "custom",
+      "role": "meta",
+      "near": "#192227",
+      "distance": 0
+    },
+    {
+      "hex": "#495057",
+      "uses": 9,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#4b4a51",
+      "distance": 9
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 8,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 0
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 8,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border",
+      "near": "#eaebec",
+      "distance": 3
+    },
+    {
+      "hex": "#212529",
+      "uses": 4,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#212529",
+      "distance": 0
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-vogue-j6): default unchanged, no text made less readable than the template's own under the systems tried, 74% or more of the page follows. Re-measured 11/10/2026 with the per-element probe on quickstart/ja-vogue/j6 1.0.4 (published, its minVersion; tasks/evidence/ds-remeasure-5-2026-10-11/ja-vogue): controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple, desktop and phone, 74%–100% of the page follows; checked by eye under Moxie and Toggl Track (dark), MotherDuck and Apple (light). Contrast kind body found no element before (now the article intro texts and the call-to-action lead) and a heading kind was added; neither found a text made less readable. By eye: the VOGUE logo picture and the header's home and search icons stayed near-black on the dark header (sideRules dark). The flow's phone verdicts stay FAIL on one role check only: the page's single .container sits inside the padded call-to-action band, 294px wide on a 390px phone (the template's own gutters, 48px a side), which the width check reads as not the system's column",
+  "sideRules": {
+    "light": {
+      "#back-to-top": {
+        "background-color": "var(--ds-c-ink, #000)"
+      },
+      "#back-to-top i": {
+        "color": "var(--ds-c-on-ink, #fff)"
+      },
+      ".social-inner a:is(:hover, :focus)": {
+        "opacity": "0.7"
+      },
+      ".t4-module .custom a:is(:hover, :focus), a.link-heading:is(:hover, :focus), .footer2 a:is(:hover, :focus), .pagination .page-link:is(:hover, :focus), .info-details .category a:is(:hover, :focus), a.mod-articles-category-title:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      }
+    },
+    "dark": {
+      "#back-to-top": {
+        "background-color": "var(--ds-c-ink, #000)"
+      },
+      "#back-to-top i": {
+        "color": "var(--ds-c-on-ink, #fff)"
+      },
+      ".social-inner a:is(:hover, :focus)": {
+        "opacity": "0.7"
+      },
+      ".t4-module .custom a:is(:hover, :focus), a.link-heading:is(:hover, :focus), .footer2 a:is(:hover, :focus), .pagination .page-link:is(:hover, :focus), .info-details .category a:is(:hover, :focus), a.mod-articles-category-title:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".custom a.logo img:not(.d-dark *)": {
+        "filter": "brightness(0) invert(1)"
+      },
+      ".logo-img:not(.d-dark *)": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".navbar-brand svg path, .finder-btn-search svg path": {
+        "stroke": "currentColor"
+      }
+    }
+  },
+  "sideNote": "under a dark worn page: the VOGUE logo picture (item-1.svg, near-black, the same file in the template's light and dark slots) is inverted with its hue kept, and the home and search icons, whose paths carry the template's dark stroke as an attribute, draw in the text colour around them; seen by eye 11/10/2026 under Moxie and Toggl Track (dark on the dark header)",
+  "followRules": {
+    "nav.mainnav, nav.mainnav .nav-item, nav.mainnav .nav-link, nav.mainnav .dropdown-menu": {
+      "border-color": "border!"
+    },
+    ".border-top, .border-bottom, .border-start, .border-end, .border-title-1, .section-title-wrap": {
+      "border-color": "border!"
+    },
+    ".category-isotope-list .col, .social-follow .link-heading, #t4-footer, .t4-footer-nav .copyright": {
+      "border-color": "border!"
+    }
+  },
+  "contractNotes1317": "13/10/2026 (#1317): the main nav and its items draw #4b4a51 lines (150 of the left paints under every system); they follow the system border. Round 4 (14/10): those border rules never landed: the lines come from Bootstrap's border utilities and the template's section rules, which set the colour with !important (still #4b4a51 under BMW, 80% followed). The rules are !important now and also name the section titles, the article grid columns, the social links and the footer.",
+  "buttonPrimaryNote": "16/10/2026 (batch 2): the template primary button is its dark text-coloured call to action, not an accent fill: from the role-variable release it paints itself with the page words colour (--ds-c-fg, labels --ds-c-bg) through its own stylesheet, so the slot no longer repaints .btn-primary with the accent (a dark button turned the lightest fill of the page under Moxie, BTN-1 button-dark). Older releases still take the accent through --color-primary.",
+  "hoverNote": "LAYOUT-3: the back-to-top arrow (#back-to-top i) read the heading colour on the button's own 50% black box and vanished under a dark-heading system: the box takes the ink band and the arrow its on-ink words. Social icons: hover and focus dim the link to 70% opacity, the cue an icon without words can carry. 21/10/2026 (HOVER-2, TEXT-1 batch 2): the footer contact, social and licence links, the pagination and the article category and title links hover in their rest role under a system: each is underlined on hover and focus."
+}

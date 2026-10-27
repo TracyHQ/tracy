@@ -1,0 +1,84 @@
+{
+  "color": {
+    "sunset-gradient": {
+      "$value": "#ea2804",
+      "$type": "color",
+      "$description": "Sunset Gradient — Hero background wash, section border frames, brand-mark dot grid — the only chromatic surface treatment in the system. Always at full saturation; never desaturated or muted; The single non-gradient accent — appears in the logo mark and the warm shadow tint. Never used for buttons, links, or text; its job is to anchor the gradient's red midpoint"
+    },
+    "forest-signal": {
+      "$value": "#2b9a66",
+      "$type": "color",
+      "$description": "Forest Signal — Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, card surfaces, code editor background. The base layer everything sits on"
+    },
+    "ink": {
+      "$value": "#202020",
+      "$type": "color",
+      "$description": "Ink — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "graphite": {
+      "$value": "#646464",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, metadata, run counts, helper labels. Provides a quiet middle step between Ink and the silver border tones"
+    },
+    "silver": {
+      "$value": "#bfbfbf",
+      "$type": "color",
+      "$description": "Silver — Avatar ring borders, decorative shadow tint, inactive dividers"
+    },
+    "smoke": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Smoke — Hairline borders on cards, model tiles, and input fields. The primary structural divider color"
+    },
+    "fog": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Fog — Subtle surface step (alt card backgrounds, section bands), input field default state"
+    },
+    "vellum": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Vellum — Warm-white off-state surface used for the secondary surface tier (e.g. model card backgrounds behind thumbnails)"
+    },
+    "cream-paper": {
+      "$value": "#fefce9",
+      "$type": "color",
+      "$description": "Cream Paper — Rare warm-tinted surface used inside editor cards and callout blocks — a very subtle nod to the gradient's yellow endpoint"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — True black for the logo wordmark, high-contrast icon strokes, and maximum-impact filled buttons when Ink is insufficient"
+    }
+  },
+  "font": {
+    "rb-freigeist-neue": {
+      "$value": "RB Freigeist Neue",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headlines. The high-contrast geometric face carries all the visual drama — 128px hero ('Run AI with an API.'), 48–72px section openers, 30px sub-headers. The 1.0 line-height at display sizes is a signature: letters almost touch, creating a dense monumental block. Tracking tightens to -0.025em at every size."
+    },
+    "basier-square": {
+      "$value": "Basier Square",
+      "$type": "fontFamily",
+      "$description": "All functional UI: body copy, navigation, buttons, labels, badges, metadata, table cells, footer. The geometric humanist counterpoint to Freigeist — quiet enough to disappear, warm enough to read at 12px captions. 14px body, 16px default, 20–24px for sub-headings, 29px for the largest non-display heading tier."
+    },
+    "jetbrains-mono": {
+      "$value": "JetBrains Mono",
+      "$type": "fontFamily",
+      "$description": "Code blocks, API tokens, version strings, inline code, keyboard shortcuts (e.g. the '⌘+K' chip inside the search input). Lives exclusively inside editor cards and technical micro-labels."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://replicate.com",
+      "siteName": "Replicate",
+      "extractedAt": "2026-06-03T18:10:30.093Z",
+      "variant": "compact"
+    }
+  }
+}

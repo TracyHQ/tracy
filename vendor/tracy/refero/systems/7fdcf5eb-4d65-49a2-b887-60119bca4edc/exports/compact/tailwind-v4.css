@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-paper-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-charcoal: #2c2222;
+  --color-fossil: #b2b4b1;
+  --color-slate-iris: #495472;
+
+  /* Typography */
+  --font-helveticaneue: 'HelveticaNeue', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helveticaneue-light: 'HelveticaNeue-Light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,65 @@
+{
+  "id": "QA-UNIT-REG-PR-1100-p4-wp-menu-link-visible-happy",
+  "itemIds": ["regression:REG-PR-1100-p4-wp-menu-link-visible"],
+  "requirement": "WordPress page.create: a menu link is reported as shown only where a visitor sees it (desktop and phone widths), and a theme's own header row of links gets the new link too",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1100-p4-wp-menu-link-visible.json",
+    "ref": "PR #1100 (fix); fix evidence: dskeepwp (tracy-base wp7), rebuilt stand 10/10/2026: page.create added 'Đối tác' to wp_navigation 137 only; tracy-base's desktop header is .tracy-header__links (where 'Dịch vụ' had been added by hand), the navigation block is hidden above 781px; the receipt said 'its menu link shows on /doi-tac/'. Read-only browser check on the stand: at 1440 'Đối tác' is hidden (display:none on ul.wp-block-navigation__container.is-responsive), 'Dịch vụ' is shown; at 390 both sit in the closed overlay.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# skipped 0'. 'WordPress: a header that draws its own row of links gets the new link there too, and the receipt says where it shows' is ok: on a tracy-base-like header (navigation block ref 68 hidden on desktop, a row of tracy-header__link paragraphs, Services drawn as a mega menu) the writes are post, post, templatePart:header under one apply_id; the row reads Home, About, Common questions /common-questions/, Projects, News; verified[1] is 'its menu link shows on / at desktop 1440 and phone 390 behind its menu button'; apply.revert hands the header back to the theme file. 'WordPress: a menu link a desktop visitor cannot see is said so, with the widths it shows at, and the receipt does not call it in the menu' is ok: with no row, only two writes; verified[1] is the menuDesktopHidden sentence (why 'display:none on <ul.wp-block-navigation__container.is-responsive>', widths 'phone 390 behind its menu button'); next is receiptMenuHidden, without 'in the menu after'; a header whose navigation block names another menu (ref 70) is not written. The WordPress FAQ test and the three Joomla page.create tests are ok with the new menu line 'its menu link shows on <home> at desktop 1440 and phone 390'.",
+    "productSources": [
+      "apps/tracy-web/src/sites/content-where.js:94",
+      "packages/tools/tracy-site-tools/src/host/emdash-call.mjs:1049",
+      "packages/tools/tracy-site-tools/src/host/page-create.mjs:1330",
+      "packages/tools/tracy-site-tools/src/host/replace-wordpress.mjs:384",
+      "packages/tools/tracy-site-tools/src/host/site-call.mjs:3361",
+      "packages/tools/tracy-site-tools/src/host/site.mjs:243",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:269",
+      "packages/tools/tracy-site-tools/src/host/tiers.mjs:94"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "WordPress: a header that draws its own row of links gets the new link there too, and the receipt says where it shows",
+    "WordPress: a menu link a desktop visitor cannot see is said so, with the widths it shows at, and the receipt does not call it in the menu",
+    "WordPress: the FAQ page in the theme's own section markup",
+    "Joomla: the article joins the category of the page it follows"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1100-p4-wp-menu-link-visible"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1100-p4-wp-menu-link-visible",
+    "pr": 1100,
+    "kind": "fix",
+    "area": "site-tools/page-create",
+    "file": "tests/regression/cases/REG-PR-1100-p4-wp-menu-link-visible.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/page-create.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "WordPress: a header that draws its own row of links gets the new link there too, and the receipt says where it shows",
+    "WordPress: a menu link a desktop visitor cannot see is said so, with the widths it shows at, and the receipt does not call it in the menu",
+    "WordPress: the FAQ page in the theme's own section markup",
+    "Joomla: the article joins the category of the page it follows"
+  ],
+  "timeoutS": 600
+}

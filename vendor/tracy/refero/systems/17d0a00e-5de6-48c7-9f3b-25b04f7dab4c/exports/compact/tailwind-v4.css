@@ -1,0 +1,20 @@
+@theme {
+  /* Colors */
+  --color-canva-violet: #8b3dff;
+  --color-deep-violet: #9729ff;
+  --color-lavender-mist: #a370fc;
+  --color-coral-ember: #ff6105;
+  --color-magenta-pop: #ff3d4d;
+  --color-fuchsia-bloom: #e950f7;
+  --color-midnight-ink: #0f1015;
+  --color-pure-white: #ffffff;
+  --color-slate-gray: #575a5f;
+  --color-pale-mist: #d7d9de;
+  --color-ink-black: #000000;
+  --color-teal-aurora: #00c4cc;
+
+  /* Typography */
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-canva-sans: 'Canva Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

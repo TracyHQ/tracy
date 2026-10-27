@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-conf/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_conf",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-conf",
+    "id": "quickstart/ja-conf/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_conf",
+    "parts": {
+      "installer": {
+        "file": "ja-conf-j6-quickstart-1.0.1.zip",
+        "bytes": 65710429,
+        "sha256": "bedbeb0de5112d80689ce84898416bfd67be38feaca52b4adc215d51f6aa4730"
+      }
+    },
+    "release": "quickstart/ja-conf/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

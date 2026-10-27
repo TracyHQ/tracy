@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sample only: the orchestrating session installs it as ~/Library/LaunchAgents/com.tracy.qa-gate.plist.
+     Paths assume the qa-tool worktree and QA_HOME of plan section 3.1. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.tracy.qa-gate</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/bin/node</string>
+    <string>/Users/USER/TCH-worktrees/qa-tool/scripts/qa/gate/server.mjs</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>QA_HOME</key>
+    <string>/Users/USER/TCH-local/qa</string>
+    <key>PATH</key>
+    <string>/usr/local/bin:/usr/bin:/bin:/Applications/Docker.app/Contents/Resources/bin</string>
+  </dict>
+  <key>WorkingDirectory</key>
+  <string>/Users/USER/TCH-worktrees/qa-tool</string>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/Users/USER/TCH-local/qa/logs/gate.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/USER/TCH-local/qa/logs/gate.log</string>
+</dict>
+</plist>

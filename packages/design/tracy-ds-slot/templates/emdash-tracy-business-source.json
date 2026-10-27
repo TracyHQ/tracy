@@ -1,0 +1,50 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "emdash/tracy-business",
+  "minVersion": {
+    "tracy-business/emdash-0.x": "1.7.23"
+  },
+  "maxVersion": {
+    "tracy-business/emdash-0.x": "1.7.23"
+  },
+  "maxVersionNote": "1.7.23 (19/10/2026, design system dot 3) is 1.7.22 with the four places the slot contract patched for 1.7.20-1.7.22 (emdash-tracy-business-roles.json followRules/shapeRules, probe v10) read at the source: src/styles/global.css :root[data-ds-worn] .tb-meta-on-card (kit form step labels and region arrow read meta), .tb-mark (the empty filled marks of the kit form, search filter and kit slides read fg), .btn-forest.tb-quote (the header call to action and its phone menu copy read accent-text with bg words), .tb-header-search (the header search button takes the button corner). Worn-only, so with no system the look is the template's (DEF-1); re-measured on the release build (contracts/1.7.23)",
+  "splitNote": "19/10/2026 (design system dot 3): from 1.7.23 the theme reads at its source the roles emdash-tracy-business-roles.json patches for 1.7.20-1.7.22 (followRules, shapeRules), so this contract carries no per-template patch: the slot writes the role values only. EmDash sites never update their theme, so 1.7.20-1.7.22 keep the patched contract; 1.7.6-1.7.19 keep emdash-tracy-business.json",
+  "applies": "the same data/ds-slot.css as tracy-base, read per request by the theme's lib/ds-slot.ts; the theme's colours are its own Tailwind variables (styles/tokens.css), each pointed at the worn colour of the role it plays",
+  "readsComponents": true,
+  "readsRoles": true,
+  "readsRolesNote": "the theme reads every standard role variable itself (var(--ds-*, <its own value>) on every colour, corner and face, role-variables.mjs; feat/ds-role-variables, 15/10/2026): the slot writes the role values only, for both sides (role-values.mjs), and none of the per-template patches it carried before (templateVars, followRules, bandButtons, shapeRules, status, omit, fontVars). A release of the theme that does not read the roles yet still needs them: they stay in emdash-tracy-business.json, the contract of those releases, nor bandText: the hero's accent line and the ink cards' kickers on the ink band read --ds-c-accent-on-ink (the accent made readable on the ink, role-values.mjs)",
+  "modes": true,
+  "modesNote": "the theme has a light/dark switch (.ng-theme-toggle, data-theme on html): the slot emits the system's own side under the side the system is, and the other side derived from it (src/derive.mjs), and does not hide the switch (Akemi 13/10/2026: hiding it is a bug; MODE-2). The theme opens on the system's side (lib/ds-slot.ts reads the sheet's mode line, from 1.7.18; 1.7.17 of TCH #1297 is 1.7.16 with the personalize tool only and keeps the one-look page)",
+  "readsComponentsNote": "this theme reads the slot's type and shape tokens (global.css: --ds-weight-*, --ds-size-*, --ds-card-radius, --ds-input-radius), so the emitter reads them off the reference page (components.html) as Joomla and WordPress do; tracy-base keeps its measured look (#1309)",
+  "selectors": {
+    "themeToggle": ".ng-theme-toggle"
+  },
+  "baseSystem": "od:apple",
+  "roles": {
+    "page": "body",
+    "display": "h1.h-hero",
+    "heading": "main h2.h-section-lg, main h2.h-section",
+    "body": "main .band-paper2 p, main section p",
+    "button-primary": "main a.btn-primary",
+    "container": "main .container-site"
+  },
+  "contrast": {
+    "accent-text": "main a.link, main .text-forest",
+    "muted": "main .text-fg-muted, main .text-fg-meta",
+    "body": "main p",
+    "on-ink": ".band-ink p",
+    "accent-on-ink": ".band-ink .text-signal",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": true,
+  "readyNote": "re-measured 12/10/2026 on the published 1.7.15 (the release run on Node from ~/tracy-bench-work/release/ds-rebuild/biz-1.7.15, tasks/evidence/ds-remeasure-integration-2026-10-12/emdash-tracy-business-1.7.15) with the unified probe of #1179: 12/12 under Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, no text worse than the template’s own, 97% or more of the page follows; the closing band’s muted lead (text-on-forest-muted, 3.52:1 under MotherDuck before) takes the page colour with its title (followRules). Before that: re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/emdash-tracy-business): 12/12 on every release measured, controls 0 differences, lowest text 4.60:1, 98% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on a local install of the released Tracy Business EmDash 1.7.6 (tasks/evidence/ds-remeasure-6-2026-10-11/emdash-tracy-business): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, 97% or more of the page follows, lowest text 4.60:1, no text under 4.5:1 worse than the template's own. Fixed on the way: the closing forest band's text (on-forest, on-forest-muted) now takes the page colour, which reads on the readable accent by construction (MotherDuck 3.52, Apple 4.19 before), and the hero's accent line on the ink band takes bandText (Toggl Track 1:1, Moxie about 2:1 before). Published 1.7.6 to 1.7.13 all carry the reader (src/lib/ds-slot.ts)",
+  "discovered": {
+    "display": "the hero heading at 1440 on the published release: 64px",
+    "displayPhone": "the same heading at 390 on the published release: 38px",
+    "displayFace": "Newsreader 400, tracking -0.025em",
+    "heading": "first section heading at 1440: 40px"
+  },
+  "discoveredNote": "read 14/10/2026 off the published release with no system worn (the v6 measure's baseline/default.json): the hero line's size on a desktop and a phone, its first family (an Astro font family name without its hash suffix), weight and letter spacing, and the first section heading. Until then emdashCss gave the slot no template sizes, so Eddie's 80px Inter 600 stood a five-line tower in tracy-base's centred hero column and six lines in Tracy Business's half-width one (look review v6)"
+}

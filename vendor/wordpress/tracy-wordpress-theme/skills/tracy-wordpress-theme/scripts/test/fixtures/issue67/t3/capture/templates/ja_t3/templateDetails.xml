@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="template" method="upgrade" client="site"><name>ja_t3</name><version>1.0.0</version><files><folder>tpls</folder></files><config><fields name="params"><fieldset name="t3"/></fields></config></extension>

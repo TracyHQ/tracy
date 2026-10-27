@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1661-emdash-saved-plan",
+  "kind": "fix",
+  "title": "tracy_emdash does not ask about a shared, site-wide write once the build's plan is saved; a delete and an unplanned write still ask",
+  "pr": 1661,
+  "area": "site-tools/emdash",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: the model's own content_update of the EmDash site entry: no plan; a saved plan; a plan not agreed."
+  ],
+  "expect": ["S1: CONFIRM_FIRST and nothing written; written once; CONFIRM_FIRST."],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/emdash-call.mjs packages/tools/tracy-site-tools/src/host/index.ts",
+    "dom": ""
+  },
+  "fence": "runEmdashTool's consequence ask, skipped only by planAgreed",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/emdash-call.test.mjs"
+    ],
+    "tests": ["the model’s own update of the site entry asks first, naming every page; its yes opens it once"]
+  }
+}

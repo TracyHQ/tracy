@@ -1,0 +1,45 @@
+{
+  "id": "REG-061",
+  "kind": "fix",
+  "title": "Site changes badge in dsh's right column: the tracy:changes tab chip carries the unseen count and updates while the tab is open but not active; pressing the Inbox row 'X restored the site' opens that site's Site changes tab with the restore row lit",
+  "pr": 864,
+  "area": "site-changes/badge",
+  "cms": ["wp"],
+  "needs": ["stand", "site:wp", "seat:owner", "seat:editor", "seat:viewer", "chrome-watch"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), PG, WEB, api, pq. Seats: A = owner, B = editor, C = a third seat on the site (viewer or editor), each with its own cookie. Case variables: KEY = site key and LABEL = container prefix of a WordPress site (scv2: KEY=scv2wp.scv2.tracy.test, LABEL=scv2wp). Browser: chrome-watch on 127.0.0.1:9222; EVERY page of this case opens in its own browser context (CDP Target.createBrowserContext + Target.createTarget + Network.setCookie tracy_sess=<seat cookie> on the stand's host) — one seat per context, never the default context (two tracy_sess cookies in one context leave a new page on 'Choose workspace').",
+    "Check the dsh build: docker exec $DSH grep -c 'invalidateTabBadges' /desk-home/profiles/native/node_modules/dsh-better-sidebar/lib/client.js must print >= 1 and the same grep on /desk-home/profiles/native/node_modules/@tracy/dsh-site-tabs/lib/client.js must print >= 1 (DSH = the host's dsh container, e.g. tracy-<stand>-dsh); otherwise stop with BLOCKED note dsh-older-than-this-fix. Check the Inbox build: docker exec $DSH grep -c 'kind:\"changes\"' /desk-home/profiles/native/node_modules/@tracy/dsh-inbox/lib/client.js must print >= 1; otherwise BLOCKED note inbox-older-than-this-fix.",
+    "Part 1, seat C's page: open $O/$KEY/ as C in a fresh context; wait for a .tv-start-card whose text contains 'Site changes'. STRIP = [...document.querySelectorAll('[class*=_tab_]')].filter(e => e.querySelector('[class*=tabTitle]')).map(e => ({title: e.querySelector('[class*=tabTitle]').textContent.trim(), badge: e.querySelector('[class*=tabBadge]')?.textContent ?? null, active: /tabActive/.test(e.className)})) — record S0 = STRIP (one tab: the site's Browser tab, active).",
+    "Press the Site changes card (the .tv-start-card containing 'Site changes'); wait for [data-site-changes-v2] .tv-activity-event (up to 90 s), wait 3 s more. Record S1 = STRIP (a 'Site changes…' tab is active, badge null) and CARD1 = the start card's .tv-start-card-count text (null/absent: the tab marked the list seen).",
+    "Switch away: click the STRIP element whose title does NOT contain 'Site changes' (the site's Browser tab). Wait 2 s. Record S2 = STRIP (Browser active, 'Site changes' inactive, badge null).",
+    "Seat B changes a file through a chat turn: TURN=session-reg061-b-$(date +%s):1; api b POST /api/sites/$KEY/turn {\"turnId\":\"$TURN\",\"title\":\"REG-061 B edits style.css\"}; docker exec $LABEL-web-1 sh -c 'f=$(ls -d /var/www/html/wp-content/themes/*/style.css | head -1); printf \"\\n/* REG-061 %s */\\n\" \"$(date +%s)\" >> \"$f\"'; M = api b POST /api/sites/$KEY/moment {\"turnId\":\"$TURN\",\"title\":\"REG-061 B edits style.css\"} → record M.ok and M.files.",
+    "Every 15 s for up to 90 s read STRIP on C's page and stop at the first read where the 'Site changes' tab's badge is not null; record T_BADGE = that badge text and T_WAIT = the seconds waited. Then record CARD2 = the start card's .tv-start-card-count text. Record S3 = STRIP.",
+    "Part 2, a teammate's restore: BK = api a GET /api/sites/$KEY/backups → record BK.latest.version (V). api a POST /api/sites/$KEY/restore {\"mode\":\"everything\",\"version\":V,\"confirm\":\"restore\"} → record R.ok, R.status, R.operationId (status must be 'succeeded'; 'pending' → wait 10 s and read api a GET /api/sites/$KEY/operations until it settles; a HOST_REFUSED/JOB_FAILED → BLOCKED note restore-not-possible-on-this-stand). N = api c GET /api/notifications?filter=all → record the newest row with kind 'team.site_restored' and siteKey $KEY as ROW (its id, readAt).",
+    "Open $O/$KEY/?tab=tracy:inbox&site=$KEY as C in a NEW fresh context; wait for .tracy-inbox-row (up to 60 s), wait 3 s; press the filter button whose text is 'All'; wait 2 s. Record I0 = STRIP (Inbox active) and ROWS = [...document.querySelectorAll('.tracy-inbox-row')].map(e => e.textContent.trim()) (one contains 'Restored').",
+    "Press the .tracy-inbox-row whose text matches /Restored/ and whose data-notification equals ROW.id (click the row element itself: it is the role=button). Wait 5 s. Record I1 = STRIP, URL1 = location.href, and TAB = {rows: document.querySelectorAll('[data-site-changes-v2] .tv-activity-event').length, unread: document.querySelectorAll('[data-site-changes-v2] .tv-activity-event[data-unread]').length, divider: document.querySelector('[data-site-changes-v2] [data-new-divider]')?.textContent ?? null, first: document.querySelector('[data-site-changes-v2] .tv-activity-event .tv-activity-desc-text')?.textContent ?? null}. Record N2 = api c GET /api/notifications?filter=all → the row ROW.id's readAt.",
+    "Leave the pages open for the person (do not close contexts). Note in the log that the site now sits at backup V restored and style.css carries one REG-061 comment line (a test site)."
+  ],
+  "expect": [
+    "S0 has exactly one tab, active, title the site key, badge null.",
+    "S1 has two tabs, the one whose title starts with 'Site changes' is active with badge null; CARD1 is null or absent (opening the tab marked the list seen).",
+    "S2: the Browser tab is active, the 'Site changes' tab is inactive, badge still null.",
+    "M.ok === true and M.files === 1.",
+    "T_BADGE === '1' with T_WAIT <= 90 (the chat column's store polls every 60 s while the page is visible; the chip re-reads its badge through invalidateTabBadges — the fix); S3 shows the 'Site changes' tab inactive with badge '1'; CARD2 === '1' (card and chip say the same number).",
+    "R.status === 'succeeded'; ROW exists with readAt === null (a new unread Inbox row for C, the restore being A's work).",
+    "I0: the Inbox tab is active; ROWS contains a line with 'Restored' and the site key.",
+    "I1: a tab whose title starts with 'Site changes' is active and the Inbox tab is inactive; URL1 contains 'tab=tracy:changes' (the fix: targetIn keeps the restore row's changes target — before it, the press only marked the row read); TAB.rows >= 2, TAB.unread >= 1, TAB.divider matches /new since you last looked/, and the lit rows include the restore (TAB.first or another [data-unread] row's description contains 'Restored'); N2 readAt is an ISO time (the press marked the row read as every row is).",
+    "No step changed anything outside the test site; no page or context was closed."
+  ],
+  "selectors": {
+    "startCard": ".tv-start-card (text 'Site changes'), count .tv-start-card-count",
+    "rightStrip": "[class*=_tab_] with child [class*=tabTitle]; badge child [class*=tabBadge]; active class contains 'tabActive' (dsh-better-sidebar 0.21.1-tracy.71 NativeTabTitle draws descriptor.badge)",
+    "changesTab": "[data-site-changes-v2] .tv-activity-event, [data-unread], [data-new-divider]",
+    "inboxRow": ".tracy-inbox-row[role=button][data-notification=<id>]; filter button text 'All'",
+    "invalidation": "BetterSidebarService.invalidateTabBadges() (feature 'tabBadgeInvalidation'), called by @tracy/dsh-site-tabs changes-unseen-badge.mjs on every tracy:changes-unseen change",
+    "inboxTarget": "tracy-inbox sections.ts targetIn('team', view) keeps view.target.kind === 'changes' (rows.ts team.site_restored)",
+    "doors": "POST /api/sites/:key/turn, POST /api/sites/:key/moment, GET /api/sites/:key/backups, POST /api/sites/:key/restore {mode:'everything', version, confirm:'restore'}, GET /api/notifications?filter=all"
+  },
+  "evidence": "tasks/evidence/site-changes-badge-count/stand-badge.md § 'Three things for later' (measured 04/10/2026 on the private stand `badge`: before the fix the card went to 1 while the chip stayed empty for 90 s, and the Inbox press only marked the row read; after it the chip read 'Site changes 1' at the 60 s poll and the press opened the tab with the restore row lit — right-tab-badge-seat-c.png, inbox-t12-opens-changes-seat-c.png).",
+  "fence": "The right-column chip draws the descriptor's badge and re-reads it when the registrant calls invalidateTabBadges (a badge is pulled on render only; a meta nudge through openTabsOf reaches only tabs with a mounted body). In the Inbox, Team rows go nowhere (ADR 0026) except a restore, whose changes target targetIn keeps."
+}

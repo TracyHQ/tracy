@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1108-wp-part-named-lines-site-language",
+  "kind": "fix",
+  "title": "WordPress: the named lines of a template part (the footer's copyright) are written in the site's one language, identity tokens kept",
+  "pr": 1108,
+  "area": "sites/apply/wordpress",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand and no site. From the TCH checkout run: node --test --test-name-pattern=\"named lines of its parts|loses an identity token\" apps/tracy-web/test/brief-wordpress.test.mjs",
+    "S2: The WordPress brief engine runs against a fake site whose footer part is the one JA Essence WP 1.0.10 stores (fixture ja-essence-wp7-1.0.10-footer.html): once in Vietnamese, once in Vietnamese with an answer that drops {site.title}, once in English.",
+    "S3: Read the node:test summary lines (tests / pass / fail) and every failing test name."
+  ],
+  "expect": [
+    "S3: tests 3 or more, fail 0.",
+    "Vietnamese site: footer.copyright reads the planner's two Vietnamese runs around the <br>, {year} and {site.title} kept, the block keeps metadata.name footer.copyright.",
+    "An answer without {site.title} is not written; English site: the line is not planned and keeps the template words."
+  ],
+  "selectors": {
+    "seam": "judging / sweepWordPress in apps/tracy-web/src/sites/brief-engines/wordpress.js and wp-residue.js (namedRuns, editRuns in wp-leaves.js)",
+    "door": "the line planner (fake model in the tests); content.update of the template part"
+  },
+  "evidence": "Dev (cowork.tracy.site), 10/10/2026: g56-ess-wp-full (JA Essence WP 1.0.10, Vietnamese) printed 'All Rights Reserved. WordPress is Free Software released under the GNU General Public License.' in the footer of every page (LANG-2).",
+  "fence": "Unit tests with a fake site and a fake model over the real 1.0.10 footer part; no live WordPress site and no model ran. Dev sites made before the deploy keep their words.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=named lines of its parts|loses an identity token",
+      "apps/tracy-web/test/brief-wordpress.test.mjs"
+    ]
+  }
+}

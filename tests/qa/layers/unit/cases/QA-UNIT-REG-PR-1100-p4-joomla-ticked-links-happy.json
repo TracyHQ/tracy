@@ -1,0 +1,90 @@
+{
+  "id": "QA-UNIT-REG-PR-1100-p4-joomla-ticked-links-happy",
+  "itemIds": ["regression:REG-PR-1100-p4-joomla-ticked-links"],
+  "requirement": "Joomla Apply: a button into a page the customer ticked that the demo trim hid keeps its page — never sent to Contact, never taken off (#1013)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1100-p4-joomla-ticked-links.json",
+    "ref": "PR #1100 (fix); fix evidence: Traced 10/10/2026 on the shipped tracy-business/j6 1.2.0 and 1.2.1 contracts: deadLinkRedirects with the trim map moves module-843.5 and module-848.5 (About and Services CTA alt-links, index.php?Itemid=602 Projects) to index.php?Itemid=604 (Contact), while Apply's tidy-up publishes a ticked Projects again (tickedMenuItems) after those words are written.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# skipped 0'. 'a button to a page the trim hid that Apply publishes again (the customer ticked it) keeps its page' is ok: with republished {221}, the Blog button (module-201.6) has no change, its label is not told 'the contact page', a model link to /product/blog is written as index.php?Itemid=221; the HelixQL button nobody ticked is left unchanged (no leadsTo); without republished the Blog button is left unchanged too, the grid link is 'invented-route', and deadLinks names the Blog button only without the tick. 'a button into a ticked page the demo trim took off still leads to it after Apply, its label written for it (#1013)' is ok: on the real tracy-business/j6 1.2.0 contract with Projects ticked and Services unticked, Projects (602) is published again, Services (601) goes, no contract write names module-843.5 or module-848.5 (they keep index.php?Itemid=602, neither moved nor emptied), and no label of modules 843/848 is sent to the model with leadsTo.",
+    "productSources": [
+      "apps/tracy-web/src/lib/contracts.js:244",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:772",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:494",
+      "apps/tracy-web/src/sites/brief-engines/pictures.js:63",
+      "apps/tracy-web/src/sites/brief-normalize.js:403",
+      "apps/tracy-web/src/sites/route.js:730",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:292"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contract-copy.js:42 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:25 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:43 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-blog-articles.js:115 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:54 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:55 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-languages.js:247 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-site-strings.js:35 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:814 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:361 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:367 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:368 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:392 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:25 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:3063 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:165 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:198 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:300 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:614 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a button to a page the trim hid that Apply publishes again (the customer ticked it) keeps its page",
+    "a button into a ticked page the demo trim took off still leads to it after Apply, its label written for it"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1100-p4-joomla-ticked-links"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/cms/tracy-seeder", "tracy-seeder"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1100-p4-joomla-ticked-links",
+    "pr": 1100,
+    "kind": "fix",
+    "area": "brief/joomla",
+    "file": "tests/regression/cases/REG-PR-1100-p4-joomla-ticked-links.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/cms/tracy-seeder/test/plan-dead-links.test.mjs",
+    "apps/tracy-web/test/brief-joomla.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a button to a page the trim hid that Apply publishes again (the customer ticked it) keeps its page",
+    "a button into a ticked page the demo trim took off still leads to it after Apply, its label written for it"
+  ],
+  "timeoutS": 600
+}

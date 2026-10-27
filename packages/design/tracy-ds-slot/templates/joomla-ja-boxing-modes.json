@@ -1,0 +1,235 @@
+{
+  "extends": "joomla-ja-boxing",
+  "template": "joomla/ja-boxing",
+  "modes": true,
+  "modeHook": ":has(> body.dark-active)",
+  "modesAuto": false,
+  "modesNote": "15/10/2026 (#1375): JA Boxing's light/dark switch (.ja-dark-mode) marks the dark side with body.dark-active and keeps the visitor's choice in a cookie; a page without the class is light whatever the OS says. The contract it extends hid the switch under every system, which ADR 0031 decision 3 calls a bug (MODE-2 failed). From 1.0.2 on, the release's template.js opens the page on the worn system's side (the slot's /* mode: */ line) while the visitor has chosen none, so both sides are worn and the switch stays; releases up to the one the base contract confirms keep one look.",
+  "sideRules": {
+    "light": {
+      ".navbar-brand .d-light": {
+        "display": "none"
+      },
+      ".navbar-brand .d-dark": {
+        "display": "inline-block"
+      },
+      ".navbar-brand .d-dark img": {
+        "filter": "invert(1) hue-rotate(180deg) brightness(0.7)"
+      },
+      ".t4-mod-wrap.bg-dark": {
+        "--color-dark": "color-mix(in srgb, var(--ds-c-bg) 96%, var(--ds-c-fg-2))"
+      },
+      ".acm-hero.style-2 .item-inner.bg-dark": {
+        "--color-dark": "color-mix(in srgb, var(--ds-c-bg) 96%, var(--ds-c-fg-2))"
+      },
+      ".contact .plain-style": {
+        "--bg-item-1": "color-mix(in srgb, var(--ds-c-bg) 96%, var(--ds-c-fg-2))"
+      },
+      "a > img[src*=\"logo/item-1.png\"]:not(.logo-img)": {
+        "filter": "invert(1) hue-rotate(180deg) brightness(0.7)"
+      },
+      "body:not(.light-active)": {
+        "--bg-item-1": "var(--ds-c-surface)",
+        "--bg-item-2": "var(--ds-c-surface)",
+        "--bg-item-3": "var(--ds-c-surface-warm)",
+        "--color-social": "var(--ds-c-fg-2)",
+        "--white": "var(--ds-c-fg-2)",
+        "--border-color": "var(--ds-c-border)",
+        "--border-color-2": "var(--ds-c-border)",
+        "--border-color-focus": "color-mix(in srgb, var(--ds-c-fg) 20%, transparent)",
+        "--placeholder-color": "color-mix(in srgb, var(--ds-c-fg) 70%, transparent)",
+        "--bg-input": "color-mix(in srgb, var(--ds-c-fg) 10%, transparent)"
+      },
+      "body:not(.light-active) .bg-dark": {
+        "--border-color": "var(--ds-c-border)"
+      },
+      "body.light-active": {
+        "--color-social": "var(--ds-c-fg-2)"
+      },
+      ".login-wrap, .com-finder": {
+        "--bg-item-1": "var(--ds-c-surface)"
+      }
+    },
+    "dark": {
+      ".t4-mod-wrap.bg-dark": {
+        "--color-dark": "color-mix(in srgb, var(--ds-c-bg) 96%, var(--ds-c-fg-2))"
+      },
+      ".acm-hero.style-2 .item-inner.bg-dark": {
+        "--color-dark": "color-mix(in srgb, var(--ds-c-bg) 96%, var(--ds-c-fg-2))"
+      },
+      ".contact .plain-style": {
+        "--bg-item-1": "color-mix(in srgb, var(--ds-c-bg) 96%, var(--ds-c-fg-2))"
+      },
+      "body.light-active": {
+        "--bg-item-1": "var(--ds-c-surface)",
+        "--bg-item-2": "var(--ds-c-surface)",
+        "--bg-item-3": "var(--ds-c-surface-warm)",
+        "--color-social": "var(--ds-c-fg-2)",
+        "--white": "var(--ds-c-fg-2)",
+        "--border-color": "var(--ds-c-border)",
+        "--border-color-2": "var(--ds-c-border)",
+        "--border-color-focus": "color-mix(in srgb, var(--ds-c-fg) 20%, transparent)",
+        "--placeholder-color": "color-mix(in srgb, var(--ds-c-fg) 70%, transparent)",
+        "--bg-input": "color-mix(in srgb, var(--ds-c-fg) 10%, transparent)",
+        "--color-dark": "var(--ds-c-surface)"
+      },
+      "body.light-active .bg-dark": {
+        "--border-color": "var(--ds-c-border)"
+      },
+      ".light-active .btn-dark, .light-active .btn-outline-dark": {
+        "--color-dark": "var(--ds-c-surface)"
+      }
+    }
+  },
+  "minVersion": {
+    "quickstart/ja-boxing/j6": "1.0.2"
+  },
+  "maxVersion": {
+    "quickstart/ja-boxing/j6": "1.0.5"
+  },
+  "maxVersionNote": "1.0.5 27/10/2026: built from the 1.0.4 installer (release-batch.mjs build --overlay), one stylesheet rule added (a footer column that holds no module is not drawn, ja-products #52), nothing else; release-batch verify finds the default look pixel-identical to 1.0.4 on desktop and phone. 1.0.4 25/10/2026: built from the 1.0.3 installer (release-batch.mjs build --overlay), the 1.0.3 stylesheets unchanged; four template overrides take image alt text from the article (ja-products #51) and js/template.js reads ?theme=dark|light for the template preview (TCH #1717); measured on the 1.0.4 installer in both schemes (design-system-measurement.json of 1.0.4). 1.0.3 24/10/2026: the 1.0.2 stylesheets unchanged (release-joomla.mjs --no-tokenize), T4 2.6.4, demo copy without the TITLE placeholder and three PHP-warning fixes; every fix of the base contract of the same day (keptButtons, light wordmark, T4 font variables, Acym field, raised band, social hover) is inherited through extends and measured on the 1.0.3 installer in both schemes (design-system-measurement.json of 1.0.3).",
+  "sideRulesNote": "24/10/2026 (modes): the popup press toggles only body.dark-active. On a dark system the page opens with dark-active and no light-active, so pressing Light removed dark-active and nothing added light-active: the template's runtime variables (hairlines, --white, input tints, item backgrounds) kept the values of its dark default on a light page. sideRules.light therefore gives the same runtime variables, as roles (a role is the worn side's value, so the same list serves both sides), to a body that has no light-active; a light-active body keeps the template's own light values. The rest of the block repeats the base contract's, because a child contract replaces a top-level key.",
+  "pictureRules": {
+    ".acm-features.style-5 .item .icon.icon-1:before": {
+      "background-image": "none",
+      "background-color": "var(--ds-c-accent)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20104%2020'%3E%3Cpath%20transform='translate%280%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'/%3E%3Cpath%20transform='translate%2828%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'%20fill='none'%20stroke='%23000'%20stroke-width='1.2'/%3E%3Cpath%20transform='translate%2856%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'%20fill='none'%20stroke='%23000'%20stroke-width='1.2'/%3E%3Cpath%20transform='translate%2884%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'%20fill='none'%20stroke='%23000'%20stroke-width='1.2'/%3E%3C/svg%3E\")",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "-webkit-mask-size": "100% 100%",
+      "-webkit-mask-repeat": "no-repeat"
+    },
+    ".acm-features.style-5 .item .icon.icon-2:before": {
+      "background-image": "none",
+      "background-color": "var(--ds-c-accent)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20104%2020'%3E%3Cpath%20transform='translate%280%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'/%3E%3Cpath%20transform='translate%2828%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'/%3E%3Cpath%20transform='translate%2856%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'%20fill='none'%20stroke='%23000'%20stroke-width='1.2'/%3E%3Cpath%20transform='translate%2884%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'%20fill='none'%20stroke='%23000'%20stroke-width='1.2'/%3E%3C/svg%3E\")",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "-webkit-mask-size": "100% 100%",
+      "-webkit-mask-repeat": "no-repeat"
+    },
+    ".acm-features.style-5 .item .icon.icon-3:before": {
+      "background-image": "none",
+      "background-color": "var(--ds-c-accent)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20104%2020'%3E%3Cpath%20transform='translate%280%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'/%3E%3Cpath%20transform='translate%2828%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'/%3E%3Cpath%20transform='translate%2856%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'/%3E%3Cpath%20transform='translate%2884%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'%20fill='none'%20stroke='%23000'%20stroke-width='1.2'/%3E%3C/svg%3E\")",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "-webkit-mask-size": "100% 100%",
+      "-webkit-mask-repeat": "no-repeat"
+    },
+    ".acm-features.style-5 .item .icon.icon-4:before": {
+      "background-image": "none",
+      "background-color": "var(--ds-c-accent)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20104%2020'%3E%3Cpath%20transform='translate%280%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'/%3E%3Cpath%20transform='translate%2828%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'/%3E%3Cpath%20transform='translate%2856%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'/%3E%3Cpath%20transform='translate%2884%29'%20d='M-.27%203.27L3.27-.27L10%206.46L16.73-.27L20.27%203.27L13.54%2010L20.27%2016.73L16.73%2020.27L10%2013.54L3.27%2020.27L-.27%2016.73L6.46%2010Z'/%3E%3C/svg%3E\")",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "-webkit-mask-size": "100% 100%",
+      "-webkit-mask-repeat": "no-repeat"
+    },
+    ".t4-section h2, main h2": {
+      "overflow-wrap": "break-word"
+    },
+    ".btn.btn-primary:after": {
+      "color": "var(--ds-c-accent-on, #000)"
+    },
+    ".btn.btn-info:after": {
+      "color": "var(--ds-c-accent-on, #000)"
+    },
+    ".btn.btn-success:after": {
+      "color": "var(--ds-c-bg, #000)"
+    },
+    ".btn.btn-danger:after": {
+      "color": "var(--ds-c-bg, #000)"
+    },
+    ".btn.btn-warning:after": {
+      "color": "var(--ds-c-bg, #000)"
+    },
+    ".acm-features.style-4 .features-item .media-lead .video-btn:hover, .acm-features.style-4 .features-item .media-lead .video-btn:focus": {
+      "transform": "scale(1.08)"
+    }
+  },
+  "followRules": {
+    ".acm-social .social-inner a": {
+      "background-color": "surface-warm",
+      "color": "fg"
+    },
+    ".acm-social .social-inner a:hover": {
+      "background-color": "surface-hover",
+      "color": "accent-text"
+    },
+    ".acm-social .social-inner a:focus": {
+      "background-color": "surface-hover",
+      "color": "accent-text"
+    },
+    "input.acym__user__edit__email": {
+      "background-color": "surface",
+      "border-color": "border",
+      "color": "fg"
+    },
+    ".btn.btn-link, .btn.btn-outline-info": {
+      "color": "accent-text"
+    },
+    ".btn.btn-link:hover, .btn.btn-link:focus": {
+      "color": "accent-text-hover"
+    },
+    ".btn.btn-primary, .btn.btn-primary:hover, .btn.btn-primary:focus, .btn.btn-primary:active, .btn.btn-info, .btn.btn-info:hover, .btn.btn-info:focus, .btn.btn-info:active": {
+      "color": "accent-on!"
+    },
+    ".btn.btn-outline-primary:hover, .btn.btn-outline-primary:focus, .btn.btn-outline-primary:active, .btn.btn-outline-info:hover, .btn.btn-outline-info:focus, .btn.btn-outline-info:active": {
+      "color": "accent-on!"
+    },
+    ".btn.btn-success, .btn.btn-success:hover, .btn.btn-success:focus, .btn.btn-success:active, .btn.btn-danger, .btn.btn-danger:hover, .btn.btn-danger:focus, .btn.btn-danger:active, .btn.btn-warning, .btn.btn-warning:hover, .btn.btn-warning:focus, .btn.btn-warning:active": {
+      "color": "bg!"
+    },
+    ".btn.btn-outline-success:hover, .btn.btn-outline-success:focus, .btn.btn-outline-success:active, .btn.btn-outline-danger:hover, .btn.btn-outline-danger:focus, .btn.btn-outline-danger:active, .btn.btn-outline-warning:hover, .btn.btn-outline-warning:focus, .btn.btn-outline-warning:active": {
+      "color": "bg!"
+    },
+    ".badge.bg-primary, .badge.bg-primary.text-dark, .badge.text-bg-primary, .badge.text-bg-primary.text-dark, .badge.bg-info, .badge.bg-info.text-dark, .badge.text-bg-info, .badge.text-bg-info.text-dark": {
+      "color": "accent-on!"
+    },
+    ".badge.bg-success, .badge.bg-success.text-dark, .badge.text-bg-success, .badge.text-bg-success.text-dark, .badge.bg-danger, .badge.bg-danger.text-dark, .badge.text-bg-danger, .badge.text-bg-danger.text-dark, .badge.bg-warning, .badge.bg-warning.text-dark, .badge.text-bg-warning, .badge.text-bg-warning.text-dark": {
+      "color": "bg!"
+    },
+    ".card.bg-primary, .card.bg-primary .card-title, .card.bg-primary .card-text, .card.bg-primary .card-header, .card.bg-primary .card-body, .card.bg-primary .card-footer, .card.bg-primary.text-dark, .card.bg-primary.text-dark .card-title, .card.bg-primary.text-dark .card-text, .card.bg-primary.text-dark .card-header, .card.bg-primary.text-dark .card-body, .card.bg-primary.text-dark .card-footer, .card.text-bg-primary, .card.text-bg-primary .card-title, .card.text-bg-primary .card-text, .card.text-bg-primary .card-header, .card.text-bg-primary .card-body, .card.text-bg-primary .card-footer, .card.text-bg-primary.text-dark, .card.text-bg-primary.text-dark .card-title, .card.text-bg-primary.text-dark .card-text, .card.text-bg-primary.text-dark .card-header, .card.text-bg-primary.text-dark .card-body, .card.text-bg-primary.text-dark .card-footer, .card.bg-info, .card.bg-info .card-title, .card.bg-info .card-text, .card.bg-info .card-header, .card.bg-info .card-body, .card.bg-info .card-footer, .card.bg-info.text-dark, .card.bg-info.text-dark .card-title, .card.bg-info.text-dark .card-text, .card.bg-info.text-dark .card-header, .card.bg-info.text-dark .card-body, .card.bg-info.text-dark .card-footer, .card.text-bg-info, .card.text-bg-info .card-title, .card.text-bg-info .card-text, .card.text-bg-info .card-header, .card.text-bg-info .card-body, .card.text-bg-info .card-footer, .card.text-bg-info.text-dark, .card.text-bg-info.text-dark .card-title, .card.text-bg-info.text-dark .card-text, .card.text-bg-info.text-dark .card-header, .card.text-bg-info.text-dark .card-body, .card.text-bg-info.text-dark .card-footer": {
+      "color": "accent-on!"
+    },
+    ".card.bg-success, .card.bg-success .card-title, .card.bg-success .card-text, .card.bg-success .card-header, .card.bg-success .card-body, .card.bg-success .card-footer, .card.bg-success.text-dark, .card.bg-success.text-dark .card-title, .card.bg-success.text-dark .card-text, .card.bg-success.text-dark .card-header, .card.bg-success.text-dark .card-body, .card.bg-success.text-dark .card-footer, .card.text-bg-success, .card.text-bg-success .card-title, .card.text-bg-success .card-text, .card.text-bg-success .card-header, .card.text-bg-success .card-body, .card.text-bg-success .card-footer, .card.text-bg-success.text-dark, .card.text-bg-success.text-dark .card-title, .card.text-bg-success.text-dark .card-text, .card.text-bg-success.text-dark .card-header, .card.text-bg-success.text-dark .card-body, .card.text-bg-success.text-dark .card-footer, .card.bg-danger, .card.bg-danger .card-title, .card.bg-danger .card-text, .card.bg-danger .card-header, .card.bg-danger .card-body, .card.bg-danger .card-footer, .card.bg-danger.text-dark, .card.bg-danger.text-dark .card-title, .card.bg-danger.text-dark .card-text, .card.bg-danger.text-dark .card-header, .card.bg-danger.text-dark .card-body, .card.bg-danger.text-dark .card-footer, .card.text-bg-danger, .card.text-bg-danger .card-title, .card.text-bg-danger .card-text, .card.text-bg-danger .card-header, .card.text-bg-danger .card-body, .card.text-bg-danger .card-footer, .card.text-bg-danger.text-dark, .card.text-bg-danger.text-dark .card-title, .card.text-bg-danger.text-dark .card-text, .card.text-bg-danger.text-dark .card-header, .card.text-bg-danger.text-dark .card-body, .card.text-bg-danger.text-dark .card-footer, .card.bg-warning, .card.bg-warning .card-title, .card.bg-warning .card-text, .card.bg-warning .card-header, .card.bg-warning .card-body, .card.bg-warning .card-footer, .card.bg-warning.text-dark, .card.bg-warning.text-dark .card-title, .card.bg-warning.text-dark .card-text, .card.bg-warning.text-dark .card-header, .card.bg-warning.text-dark .card-body, .card.bg-warning.text-dark .card-footer, .card.text-bg-warning, .card.text-bg-warning .card-title, .card.text-bg-warning .card-text, .card.text-bg-warning .card-header, .card.text-bg-warning .card-body, .card.text-bg-warning .card-footer, .card.text-bg-warning.text-dark, .card.text-bg-warning.text-dark .card-title, .card.text-bg-warning.text-dark .card-text, .card.text-bg-warning.text-dark .card-header, .card.text-bg-warning.text-dark .card-body, .card.text-bg-warning.text-dark .card-footer": {
+      "color": "bg!"
+    },
+    ".btn.btn-light, .btn.btn-outline-light": {
+      "border-color": "border"
+    },
+    ".btn.btn-light:hover, .btn.btn-light:focus, .btn.btn-light:active": {
+      "background-color": "surface-hover",
+      "border-color": "border"
+    },
+    ".btn.btn-outline-light:hover, .btn.btn-outline-light:focus, .btn.btn-outline-light:active": {
+      "background-color": "accent",
+      "border-color": "accent",
+      "color": "accent-on!"
+    },
+    ".pagination .page-link:not(.disabled):hover, .pagination .page-link:not(.disabled):focus, .pagination .page-link:not(.disabled):active": {
+      "background-color": "accent-hover",
+      "border-color": "accent-hover",
+      "color": "accent-on!"
+    },
+    ".pagenavigation .pagination a.btn:hover, .pagenavigation .pagination a.btn:focus, .pagenavigation .pagination a.btn:active": {
+      "color": "accent-on!"
+    },
+    ".progress-bar.bg-primary, .progress-bar.bg-info, .progress-bar.text-bg-primary, .progress-bar.text-bg-info": {
+      "color": "accent-on!"
+    },
+    ".progress-bar.bg-success, .progress-bar.bg-danger, .progress-bar.bg-warning, .progress-bar.text-bg-success, .progress-bar.text-bg-danger, .progress-bar.text-bg-warning": {
+      "color": "bg!"
+    },
+    ".card.bg-secondary, .card.bg-secondary .card-title, .card.bg-secondary .card-text, .card.bg-secondary .card-header, .card.bg-secondary .card-body, .card.bg-secondary .card-footer, .card.text-bg-secondary, .card.text-bg-secondary .card-title, .card.text-bg-secondary .card-text, .card.text-bg-secondary .card-header, .card.text-bg-secondary .card-body, .card.text-bg-secondary .card-footer": {
+      "color": "fg-2!"
+    }
+  },
+  "keepScopes": [".t4-hero", ".acm-cta", ".features-item .title", ".features-item .media-lead"],
+  "keepWhole": {
+    ".features-item .title": "White words laid over the photograph of a video card: they keep the template colours so they read on the photo (CON-2).",
+    ".features-item .media-lead": "White lead words laid over the photograph of a video card: they keep the template colours so they read on the photo (CON-2)."
+  },
+  "keepText": [".t4-hero", ".acm-cta", ".features-item .title", ".features-item .media-lead"]
+}

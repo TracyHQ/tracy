@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-warm-linen: #f2f0ed;
+  --color-light-mist: #eeeeee;
+  --color-soft-stone: #c1bfbc;
+  --color-warm-taupe: #978f84;
+  --color-dark-olive: #41443e;
+  --color-near-black: #050505;
+  --color-pure-black: #000000;
+
+  /* Typography — Font Families */
+  --font-lausanne-300: 'Lausanne-300', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cardinalfruit-regular: 'cardinalfruit-regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-metropolis: 'Metropolis', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

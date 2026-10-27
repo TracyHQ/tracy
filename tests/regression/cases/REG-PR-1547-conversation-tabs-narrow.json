@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1547-conversation-tabs-narrow",
+  "kind": "fix",
+  "title": "Conversation tab labels stay on one line in a narrow chat column",
+  "pr": 1547,
+  "area": "chat-input/conversation-tabs",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the conversation-tabs-narrow e2e of tracy-chat-input: dsh's header and tabs from ConversationRoot.module.css with the plugin's real stylesheet, at 340/300/250/240/220px columns in light and dark."
+  ],
+  "expect": [
+    "S1: every label renders on one line at every width; the gap is 20px at 340/300, 12px at 250/240, 8px with 12px labels at 220; the strip scrolls sideways rather than wrapping and does not clip the selection bar."
+  ],
+  "selectors": {
+    "files": "packages/ui/tracy-chat-input/test/e2e/conversation-tabs-narrow.test.mjs",
+    "attributes": "data-conversation-tabs, role=tab"
+  },
+  "evidence": "21/10/2026 local cluster: below a ~290px column the tabs wrapped to 'Ch/at', 'Comm/ents', 'Traject/ory'",
+  "fence": "The tab strip CSS of tracy-chat-input measured in Chromium against dsh's own header CSS",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=60000",
+      "packages/ui/tracy-chat-input/test/e2e/conversation-tabs-narrow.test.mjs"
+    ]
+  }
+}

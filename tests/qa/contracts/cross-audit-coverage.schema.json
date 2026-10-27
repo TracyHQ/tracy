@@ -1,0 +1,511 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:audit-kit:schema:cross-audit-coverage:1",
+  "title": "cross-audit coverage matrix v1",
+  "description": "One versioned contract for requirement, edge-case, state-transition and threat/abuse coverage. Every case carries applicability (REQUIRED/PASS/FAIL/BLOCKED/N-A/WAIVED), materiality, its dimension or threat category, and evidence references. A PASS on a case never promotes its requirement or a control to DONE/READY — that is the assessor's job over the whole matrix. `required_dimensions` and `required_threat_categories` declare the matrix the assessor checks, so a class that IS required and has no material case is reported rather than assumed absent. BOUND: only a class placed in those arrays is checked — nothing here discovers a class nobody listed, which is why obligations are seeded from surfaces and confirmed risk capabilities rather than inferred. Only a `material` case can discharge a required class; a `minor` case never does, so a required column cannot be cleared cheaply. A class that genuinely does not apply is removed through the typed `waived_dimensions`/`waived_threat_categories` tailoring decision, which carries a rationale. Confidence lives in evidence/F-state; severity is orthogonal and is not stored here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "target_digest",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Exact artifact version. Pinned rather than pattern-matched so a standalone contract check agrees with the runtime gate (crossaudit.common.CURRENT_VERSION): 1.0.0 coverage semantics differ from 1.1.0, so accepting both here would validate artifacts the engine rejects.",
+      "const": "1.1.0"
+    },
+    "kind": {
+      "const": "cross-audit-coverage"
+    },
+    "target_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "payload": {
+      "$ref": "#/$defs/payload"
+    },
+    "provenance": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "dimension": {
+      "description": "The scenario shape a case exercises. `output-correctness` is about WHAT the caller receives rather than whether the call succeeded: a happy-path case that asserts only 'it rendered' passes while the values shown are incomplete, out of range, or read from the wrong source.",
+      "enum": [
+        "happy",
+        "error",
+        "boundary",
+        "state-transition",
+        "retry",
+        "timeout",
+        "partial-failure",
+        "duplicate",
+        "out-of-order",
+        "concurrency",
+        "version-skew",
+        "resource-exhaustion",
+        "output-correctness",
+        "i18n-script-coverage",
+        "definition-drift",
+        "recoverability",
+        "failure-fidelity",
+        "value-provenance",
+        "stale-derived-state",
+        "permissive-default"
+      ]
+    },
+    "threat_category": {
+      "enum": [
+        "auth",
+        "authz",
+        "injection",
+        "ssrf",
+        "path-traversal",
+        "replay",
+        "webhook-spoof",
+        "race",
+        "double-spend",
+        "idempotency",
+        "tenant-isolation",
+        "pii",
+        "secrets",
+        "business-abuse",
+        "billing-abuse"
+      ]
+    },
+    "case_status": {
+      "enum": [
+        "REQUIRED",
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "N-A",
+        "WAIVED"
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirements",
+        "cases",
+        "required_dimensions",
+        "required_threat_categories"
+      ],
+      "properties": {
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "statement",
+              "material"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^AC-[0-9]+$"
+              },
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source": {
+                "type": "string"
+              },
+              "source_refs": {
+                "description": "`path:line` provenance this requirement was derived from. Reconciled against the source-candidate scan so a normative statement in the tree that no requirement/case cites is reported as unreconciled rather than assumed covered.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "control_id": {
+                "type": "string",
+                "pattern": "^CTRL-[A-Z0-9]{2,8}-[0-9]{3}$"
+              },
+              "material": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "title",
+              "kind",
+              "materiality",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^CASE-[0-9]+$"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "enum": [
+                  "requirement",
+                  "edge",
+                  "state-transition",
+                  "threat",
+                  "abuse"
+                ]
+              },
+              "dimension": {
+                "$ref": "#/$defs/dimension"
+              },
+              "threat_category": {
+                "$ref": "#/$defs/threat_category"
+              },
+              "design_technique": {
+                "enum": [
+                  "boundary",
+                  "partition",
+                  "decision",
+                  "state",
+                  "pairwise",
+                  "scenario",
+                  "exploratory",
+                  "property",
+                  "fuzz",
+                  "metamorphic"
+                ]
+              },
+              "requirement_ref": {
+                "type": "string",
+                "pattern": "^AC-[0-9]+$"
+              },
+              "control_id": {
+                "type": "string",
+                "pattern": "^CTRL-[A-Z0-9]{2,8}-[0-9]{3}$"
+              },
+              "materiality": {
+                "enum": [
+                  "material",
+                  "minor"
+                ]
+              },
+              "status": {
+                "$ref": "#/$defs/case_status"
+              },
+              "evidence_refs": {
+                "description": "run_ids of automation-run records or workspace paths that back this case's status.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "source_refs": {
+                "description": "`path:line` provenance in the target this case exercises. Used for traceability reconciliation against the source-candidate scan.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "rationale": {
+                "description": "Why this case is WAIVED or N-A. Non-empty by contract: an empty rationale is indistinguishable from no rationale, and both would let a status that needs no evidence stand unexplained.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "allOf": [
+              {
+                "comment": "An edge or state case must name the dimension it exercises.",
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "edge",
+                        "state-transition"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "dimension"
+                  ]
+                }
+              },
+              {
+                "comment": "A threat/abuse case must name the threat category it exercises.",
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "threat",
+                        "abuse"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "threat_category"
+                  ]
+                }
+              },
+              {
+                "comment": "A requirement case must reference the acceptance criterion it covers.",
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "requirement"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "requirement_ref"
+                  ]
+                }
+              },
+              {
+                "comment": "A WAIVED or N-A case must carry a rationale (governance). N-A is included because a resolved-without-evidence status discharges a required class: an unexplained N-A is indistinguishable from an untested one.",
+                "if": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "WAIVED",
+                        "N-A"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "rationale"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "required_dimensions": {
+          "description": "Dimensions the matrix must represent for the tailored scope; completeness is checked against this, so an absent class is detected rather than assumed covered.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dimension"
+          }
+        },
+        "required_threat_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/threat_category"
+          }
+        },
+        "waived_dimensions": {
+          "description": "A baseline required dimension removed by an EXPLICIT typed tailoring decision (rationale required). Rendered in the report; an empty required-array can never silently erase the baseline. Assess additionally requires a matching run-config waiver — by `waiver_ref`, or by the dimension name — before it honours the removal: dropping a whole class is the largest waiver in the matrix, so it needs at least the authority of waiving one case. Without it the class is reinstated as required.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "dimension",
+              "rationale"
+            ],
+            "properties": {
+              "dimension": {
+                "$ref": "#/$defs/dimension"
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              },
+              "waiver_ref": {
+                "description": "Run-config waiver ref that authorizes this class removal. Defaults to the class name when omitted; assess reinstates the class unless a matching run-config waiver exists.",
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "waived_threat_categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "threat_category",
+              "rationale"
+            ],
+            "properties": {
+              "threat_category": {
+                "$ref": "#/$defs/threat_category"
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              },
+              "waiver_ref": {
+                "description": "Run-config waiver ref that authorizes this class removal. Defaults to the class name when omitted; assess reinstates the class unless a matching run-config waiver exists.",
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "challenger_gap_dispositions": {
+          "description": "The reviewer's decision on each coverage gap the challenger raised in `blind_understanding.coverage_gaps`. `gap_id` is the engine-computed stable id (a digest of the gap text), so a decision survives re-running the challenge and a REWORDED gap correctly reappears as new. ACCEPTED must name the `case_ref` that now covers the gap; REJECTED must give a rationale. A gap with no valid disposition stays OPEN and blocks audit completion — an unanswered gap is unfinished work, not a note.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "gap_id",
+              "disposition"
+            ],
+            "properties": {
+              "gap_id": {
+                "type": "string",
+                "pattern": "^GAP-[0-9a-f]{12}$"
+              },
+              "disposition": {
+                "enum": [
+                  "ACCEPTED",
+                  "REJECTED"
+                ]
+              },
+              "case_ref": {
+                "type": "string",
+                "pattern": "^CASE-[0-9]+$"
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              },
+              "gap_text": {
+                "description": "Copy of the gap text the decision was made against (readability only; `gap_id` is authoritative).",
+                "type": "string"
+              }
+            },
+            "allOf": [
+              {
+                "comment": "Accepting a gap means a case now covers it.",
+                "if": {
+                  "properties": {
+                    "disposition": {
+                      "const": "ACCEPTED"
+                    }
+                  },
+                  "required": [
+                    "disposition"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "case_ref"
+                  ]
+                }
+              },
+              {
+                "comment": "Rejecting a challenger's gap requires a reason.",
+                "if": {
+                  "properties": {
+                    "disposition": {
+                      "const": "REJECTED"
+                    }
+                  },
+                  "required": [
+                    "disposition"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "rationale"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "candidate_waivers": {
+          "description": "EXPLICIT dismissal of a source candidate the scan surfaced. `source` is a `path:line`, a `path`, or a `path/prefix/**` glob; every dismissal needs a rationale. This is the second half of traceability: a material candidate is resolved either by a case/requirement citing it OR by an entry here — never by nobody looking at it.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source",
+              "rationale"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kinds": {
+                "description": "Restrict this dismissal to specific candidate kinds; absent means all kinds at that source.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "threat_context": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "assets": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "entrypoints": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "trust_boundaries": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-964-sidebar-files-new-session-cwd",
+  "kind": "fix",
+  "title": "The Files tab lists the tree on a conversation made with New session, without a page reload",
+  "pr": 964,
+  "area": "sidebar/files",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From vendor/tracy/dsh-better-sidebar run: npx vitest run tests/native-body-session-cwd.spec.tsx",
+    "S2: Read the exit code, the failed count and the four test titles named below.",
+    "S3: Read src/client/native/tab-adapter.tsx and src/client/Sidebar.tsx and find how each gets the session's cwd."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures.",
+    "'asks the host for the cwd of a session whose summary has none (a New session)' passes: with a list summary that has no cwd, the native tab body calls session.cwd once with that sessionId and the plugin tab's scope.cwd becomes the host's answer.",
+    "'uses the summary cwd without asking the host' and 'takes the summary cwd once it arrives' pass: a summary cwd is used without calling the host, and wins over the host's answer once it arrives.",
+    "'keeps the cwd undefined while the host has not answered, and when it refuses' passes: one call, scope.cwd stays undefined, no error thrown.",
+    "S3: both tab-adapter.tsx and Sidebar.tsx import useSessionCwd from session-cwd.ts, and tab-adapter.tsx defines no useSessionCwd of its own."
+  ],
+  "selectors": {
+    "hook": "`useSessionCwd(ctx, sessionId)` in vendor/tracy/dsh-better-sidebar/src/client/session-cwd.ts",
+    "body": "`NativeTabBody` in vendor/tracy/dsh-better-sidebar/src/client/native/tab-adapter.tsx"
+  },
+  "evidence": "Files tab on a New session drew 'Select a conversation to use the sidebar' and never listed the tree until a reload (scope.cwd undefined; no fs.trees, git.status sent without cwd). The first and fourth spec tests were red on the base (session.cwd never called).",
+  "fence": "Mechanism only, no stand: the real NativeTabBody renders under vitest with a fake client session list and a mocked session.cwd. Not covered: the live host answering session.cwd, the Files tree painting in a real browser.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-964-sidebar-files-new-session-cwd.mjs"]
+  }
+}

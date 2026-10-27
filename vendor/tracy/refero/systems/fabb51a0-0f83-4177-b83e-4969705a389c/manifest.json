@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "fabb51a0-0f83-4177-b83e-4969705a389c",
+  "status": "complete",
+  "name": "Uniswap Cup",
+  "url": "https://styles.refero.design/style/fabb51a0-0f83-4177-b83e-4969705a389c",
+  "sourceWebsite": "https://unicup.uniswap.org",
+  "extractedAt": "2026-06-03T20:45:14.175Z",
+  "capturedAt": "2026-10-08T05:19:52.250178+00:00",
+  "theme": "light",
+  "industry": "crypto",
+  "description": "Esports broadcast on a wireframe court — a pink highlighter tracing through a grid of white boxes and hairline rules.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c6e870bc-aaac-4983-8b8a-6fa42635fa35.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/91021e65-2808-4d74-b55e-5699a75f5c91.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/6747b767-c659-462c-b74b-78cf4c94a018.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/e1a2dd19-72d9-49c5-bb5a-6620589e8570.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/d5c4d32f-1493-4326-8382-79ed869bf35e.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "213aa0deaa16e64cffe652bac022d3ed20f23f070ba1124cf41216ac3e33bdaa",
+      "bytes": 16160
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4be28f04c7a6a7f58b6a29aecef3dcf232ffc97ece2ee9e834df70dc489e1e9c",
+      "bytes": 92544
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3d496a1882885dc103aa1553ebc3945bcd966b7a8eaaa6a1d19fd01c7bf46b48",
+      "bytes": 13577
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "96a96917ebcc11c6ef9358480ad73f8858d5ecc0eda0f35ed411ea93a836c4b2",
+      "bytes": 5712
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "fe267ccd7c507c6dc9c61881a3e4cd8d868c0033b19b2384d3a014a0183c1820",
+      "bytes": 10845
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8c110593bca9f98dcdec34518b6e4d9072e490ea7fe938489c765271e54a8c28",
+      "bytes": 2714
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "007beb8e954a8b8a1856b509c80683960cd651aa5a45f83850f1f7636ea4013c",
+      "bytes": 592
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e697fe466903921858452445cabcf4f047d373a3a6842f9ca8a0f3d507c5aa60",
+      "bytes": 609
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "838d3c3ad7d016d49e38fe2a3c4402df6eb62205004171eeb977e42777904b4b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "65d6b8a3ef5e0f67785c501c62915b0e216045e76147358bae24529b973d9e43",
+      "bytes": 39842
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "83b4ddfe17a44fd8550e1aebf93f366b9056718c004600c276b8be2da7c51552",
+      "bytes": 20742
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c0e6e75560099a990982e0cfceb9d98d2d1801f007280ef0f40963ae02d5044f",
+      "bytes": 29901
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "73645a4bcf030b6f6229175a9fb90dac770aa4bcf69e17b8095da10f15bdbac1",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d3daf6a1a89d3dde8966196246817c7b9a8ad29e185f4c4d7b2a50bd7f8b745c",
+      "bytes": 963
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "481b00093e68d874c29b2b9ebf08476a68256640408f8e026e56f0e50fcd3d80",
+      "bytes": 1460
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "1e675740-7935-4a49-b4c8-e5aa9fda06dd",
+    "2b07d62c-d706-4c9d-a3fb-9c163da09f03",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "40030487-56e3-447d-904f-b955ebadd0b5",
+    "408a149c-702f-4442-99df-bea49d9c0d9b",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "4fa31278-33ea-4f1c-b7ac-cdc871e36089",
+    "54bfd692-3299-48ab-8cf5-784e632227b1",
+    "5d273906-0110-48cf-99cd-63a72eb9c586",
+    "604af0f7-b4c3-4921-93af-9da03df81493",
+    "667c59e3-aaba-46e8-a2b3-255254328b6e",
+    "7f8c0c07-86e9-4b7c-a042-a7563b169143",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "a865ac1d-a4c2-425b-90db-2a7ec6d461a3",
+    "b0cb2465-ad7b-4657-a2e4-b8c793355cd3",
+    "c01ccb7b-46c9-487c-8a4e-0e9d6627f0d6",
+    "e02671e1-ba31-465f-bb7f-b124bf91ab5e",
+    "e5b95270-9148-417a-89c6-32138d83a251",
+    "fabb51a0-0f83-4177-b83e-4969705a389c",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

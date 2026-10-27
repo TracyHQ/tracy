@@ -1,0 +1,69 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Ink — Primary text, filled pill buttons, navigation emphasis, logo wordmark — the only dark anchor in an otherwise white system"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, product preview background — the default ground for all content"
+    },
+    "graphite-hairline": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Graphite Hairline — All structural borders, dividers, card edges, input borders — the most-used color in the system by frequency, defining every container"
+    },
+    "vellum": {
+      "$value": "#f3f3f3",
+      "$type": "color",
+      "$description": "Vellum — Secondary surface fills, subtle hover washes, tertiary panel background — the lightest gray still distinct from white"
+    },
+    "slate": {
+      "$value": "#6f6f6f",
+      "$type": "color",
+      "$description": "Slate — Secondary body text, metadata, icon strokes, tab labels — the primary muted text voice"
+    },
+    "pewter": {
+      "$value": "#5e5e5e",
+      "$type": "color",
+      "$description": "Pewter — Helper text, descriptive captions, micro-copy — darker than Slate for emphasized secondary text"
+    },
+    "ash": {
+      "$value": "#a0a0a0",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, disabled link color, placeholder text — the quietest readable gray"
+    },
+    "carbon": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Carbon — SVG fill and stroke for icons, 3D graphic elements — nearly identical to Ink but reserved for decorative vector work"
+    },
+    "stone": {
+      "$value": "#c7c7c7",
+      "$type": "color",
+      "$description": "Stone — Decorative fills, gradient endpoints, subtle background washes — never used for text or borders"
+    },
+    "cream-notice": {
+      "$value": "#ffe9bf",
+      "$type": "color",
+      "$description": "Cream Notice — Announcement bar background, the single warm accent in the entire system — used only for the top promotional strip"
+    }
+  },
+  "font": {
+    "monument-grotesk": {
+      "$value": "Monument Grotesk",
+      "$type": "fontFamily",
+      "$description": "The sole typeface for everything from 12px captions to 72px display headlines. No bold, no italic, no light — a single weight does all expressive work. The dramatic size jump from 18px subheading directly to 36px heading creates a distinctive editorial scale where display type towers over body text. Tight line-heights at display sizes (1.00–1.11) let large type stack into near-solid blocks."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://withcompound.com/membership",
+      "siteName": "Compound",
+      "extractedAt": "2026-06-03T18:04:54.036Z",
+      "variant": "compact"
+    }
+  }
+}

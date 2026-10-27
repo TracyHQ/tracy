@@ -1,0 +1,54 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, card surfaces, image holders — the dominant canvas; everything sits on this"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, link text, icon strokes, thin section dividers — the only mark-making color"
+    },
+    "graphite": {
+      "$value": "#858585",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, muted metadata, and softer border lines that recede behind primary ink"
+    },
+    "stone": {
+      "$value": "#8e8e90",
+      "$type": "color",
+      "$description": "Stone — Cool-toned border and divider strokes for borders that need a hairline without competing with Ink"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body copy, project captions, and the larger intro paragraphs. Used at a single weight — regularity IS the signature; no bold headlines shout, no light weight whispers."
+    },
+    "system-ui-sans-serif": {
+      "$value": "system-ui (sans-serif)",
+      "$type": "fontFamily",
+      "$description": "Small UI labels, tag text, icon-adjacent microcopy. Appears wherever a single token of body-size type recurs — utility, not statement."
+    },
+    "sfnstext": {
+      "$value": ".SFNSText",
+      "$type": "fontFamily",
+      "$description": ".SFNSText — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://andreirybin.com",
+      "siteName": "Andrei Rybin",
+      "extractedAt": "2026-06-03T21:51:21.069Z",
+      "variant": "compact"
+    }
+  }
+}

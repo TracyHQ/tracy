@@ -1,0 +1,69 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Ink — Primary text, filled button background, icon strokes — near-black ink that carries the entire brand identity. The slight softness vs pure #000 keeps it from feeling sterile"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text — the dominant light field the entire interface sits on"
+    },
+    "mist-border": {
+      "$value": "#e9eaeb",
+      "$type": "color",
+      "$description": "Mist Border — Primary hairline borders, nav pill background, structural dividers — cool gray that defines edges and containers without competing with content"
+    },
+    "cream-surface": {
+      "$value": "#f3efeb",
+      "$type": "color",
+      "$description": "Cream Surface — Warm card and section surfaces — the warm signature tone that gives the system its editorial, paper-like quality against the cool white canvas"
+    },
+    "tan-divider": {
+      "$value": "#d8d3cc",
+      "$type": "color",
+      "$description": "Tan Divider — Secondary borders on warm surfaces, subtle background washes — extends the cream warmth into the border layer"
+    },
+    "warm-subtle": {
+      "$value": "#615e5b",
+      "$type": "color",
+      "$description": "Warm Subtle — Muted helper text, secondary copy — warm gray that recedes on cream surfaces while staying readable on white"
+    },
+    "mid-gray": {
+      "$value": "#888888",
+      "$type": "color",
+      "$description": "Mid Gray — Tertiary text and disabled states — only when even Warm Subtle is too prominent"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Rare SVG fills and graphic accents — used sparingly where absolute black is required"
+    },
+    "obsidian": {
+      "$value": "#1e1e1d",
+      "$type": "color",
+      "$description": "Obsidian — Footer background, dark section inversions — the only dark surface in the system, creating a terminal moment at page bottom"
+    }
+  },
+  "font": {
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Primary interface and headline typeface — used at weight 500 (not 700) for all headings, a deliberate restraint that gives headlines editorial weight without shouting. Variable substitute: Inter."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Numerical stats, metadata, small labels — reserved for figures like $1.2B, 10,000+, 2017 where monospaced digits create an editorial financial-journalism quality. Variable substitute: JetBrains Mono."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.titan.com",
+      "siteName": "Titan",
+      "extractedAt": "2026-07-03T03:22:10.162Z",
+      "variant": "compact"
+    }
+  }
+}

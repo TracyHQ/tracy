@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ac660bff-3b21-4753-a80f-3692da6e735e",
+  "status": "complete",
+  "name": "2020",
+  "url": "https://styles.refero.design/style/ac660bff-3b21-4753-a80f-3692da6e735e",
+  "sourceWebsite": "https://albumcolors.com",
+  "extractedAt": "2026-06-03T21:45:03.975Z",
+  "capturedAt": "2026-10-08T05:16:08.607614+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "Solid color poster wall. A single saturated color fills the viewport like painted drywall, and massive black type sits on top as if stenciled.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/90c338d1-33f1-40dd-a8fa-a920778736e9.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/0257d413-ae4f-4e58-8d2e-5980dad50ded.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a7afbc89-2e69-40d1-8c92-1599454e9aa2.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f1df9ebb-8d20-4237-a8ff-51193d05c001.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0b0e9024-7170-4845-83b8-aa154d9a36d4.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3dd47b4229b299ed2272475c0e8a302ef457d3bfaad573830e3c857da834b34d",
+      "bytes": 17213
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "142b24b9788c9cf188fc80f700fafb75c4943076e6bd82f098088970fdd7affb",
+      "bytes": 102815
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e3438165bb4ca89864868d79abcd7b31cbfba882aac274a25ba9d39578f55da3",
+      "bytes": 15427
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "857ea4f34133e9cea3e326d8473bc09007531400f8a0f7877a39dc70fb935501",
+      "bytes": 6149
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e80e6f428e5b28b3fdbde4f169e30ba65eac6d735fa5e55c94a85eb5dd895160",
+      "bytes": 11281
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4217348993f2407b4576ebc5f0db9c32d633bf0c958cc428d23791412b55df50",
+      "bytes": 3334
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c221b1e968850fdb2afa0bc618c57ba6e385db7738e172cb60dce3d4aae5e4a6",
+      "bytes": 653
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "79014df33d147b7afa40c4e1a07ac9e8e9b2b84436f919c639b2c89984e8fcc7",
+      "bytes": 670
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "cd31fad9643d8229309b54080e80ae7c429055fd307544833b171a463961f59e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "17d5b079b66c9c5426164dd3cdf28fbd366eaa815609e705981e5d28456775fd",
+      "bytes": 45613
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "70b8ee9b6ffd37f1b7d92c81061f74600e21e1085d22253447b951b734172c31",
+      "bytes": 25882
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9efae10222f89ce4140edb899836e80e9f312cb777e164e9d602d9260d0a08b5",
+      "bytes": 81307
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "39d98e638e073cc41ff2461bd29e5373bef9d38603fdb4ade25cbf591e4f6b90",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "148078c3687dd2f3502d791704cb18f774e3b5c7dd5aab3019625410ccefddde",
+      "bytes": 1056
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9f1a335447247e7152ea1722d0470299d00550c7fc924afa05b1fbc88dfa1b1f",
+      "bytes": 1479
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "47b15ce2-34c8-46e3-b2de-f7eed0b6a3b9",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "a77a7289-3438-46ba-8194-214739e47514",
+    "ac660bff-3b21-4753-a80f-3692da6e735e",
+    "b04c379c-7c33-4d69-8882-8d85d7768654",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "bd62b51f-e1be-4e4f-b3d9-e9b91f817625",
+    "c0a3f588-74b7-4fad-b557-1fc7cd7bd777",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "edc0c03e-8c20-4e22-badd-2735fcb9f4a8"
+  ]
+}

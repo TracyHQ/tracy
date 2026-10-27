@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-bone-white: #fcf9ee;
+  --color-linen: #f2efe3;
+  --color-pebble: #bcbab2;
+  --color-bark: #6a6965;
+  --color-ink-black: #000000;
+
+  /* Typography */
+  --font-beausite: 'beausite', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

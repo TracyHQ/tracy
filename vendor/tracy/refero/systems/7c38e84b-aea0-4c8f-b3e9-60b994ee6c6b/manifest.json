@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7c38e84b-aea0-4c8f-b3e9-60b994ee6c6b",
+  "status": "complete",
+  "name": "Slash",
+  "url": "https://styles.refero.design/style/7c38e84b-aea0-4c8f-b3e9-60b994ee6c6b",
+  "sourceWebsite": "https://www.slash.com",
+  "extractedAt": "2026-07-03T03:52:06.621Z",
+  "capturedAt": "2026-10-08T05:13:52.246469+00:00",
+  "theme": "dark",
+  "industry": "fintech",
+  "description": "Midnight vault with gilded ledger lines.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c74df455-7532-4c5b-9433-358b96853adb.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c17ddacd-7083-4709-82d7-378ca0796a4a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f51cd771-1bf7-4ea4-8510-f3a46d0f83cb.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/0af8133f-9c6c-42a2-95c7-fd4f62fe9f90.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/03cde3c7-03ac-4ca7-b853-df8b2bdfaae3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "08dd5b46d8d3d58f95a9cebd9e9575a1101924f7b181b53660a9435c02934339",
+      "bytes": 24294
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7ff661142dcf13e314400d42cb2b5f96b2e9c174964ad6ff81a357e92561aedc",
+      "bytes": 127900
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "365234222afa3130ebc963b43b2b0218a9ec17c24e9858a919c2943ac4b63738",
+      "bytes": 20677
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "5947afa12a9aacaad730b56ad5d93b8f63ec8e5a2ebb2f4137f404837943d286",
+      "bytes": 22228
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "dfc35eca585f6fd70cdbf982909fd323aa64ffe973e7a2d2398fec68b67235af",
+      "bytes": 14325
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "986858de4ca41201d33b9a5e904e8bdef67c861fcabf86cd023ba11d58331ad8",
+      "bytes": 4234
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "8da393a34cabe965be4d5df2522e72dcc5613500e679dfe4a9cf76a93d387ae2",
+      "bytes": 699
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7e65f73737864e783831f81a48838735e213bcac57e283a1c493d746100a7455",
+      "bytes": 860
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6217b510bb3f42e903c37dc6448f2dc1757d197c4fbc7d95a137dbb4f70182ce",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4494be10f7bbfde13fd63235fd27702e934d455f126258b199e5d89c20d2fd2b",
+      "bytes": 49366
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1613d9ae9aee33b52b9292cacefc04381cf783d4185a8598ac04b05fe80aea47",
+      "bytes": 26134
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "84dc23d463ec4f3c3faf7efec066d71c5822de9ff992f2280f13500deb452636",
+      "bytes": 71677
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "5e02fa1031963ab05e321194a8307088da23bf4525c86cc55454201acc0e6b4d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "090958c9479718c5de28ebc6d42b333cc3dc4fd8a161d76d497ac7247f132047",
+      "bytes": 1998
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "25919670bca941ac10e715996c9c0d1050171c0ad7665d59b014b6d6731e28ce",
+      "bytes": 2753
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0e971626-ca51-45ba-acf6-35a53c561b2c",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "77b723ca-9583-4349-9b5e-2ef8b4fde002",
+    "7c38e84b-aea0-4c8f-b3e9-60b994ee6c6b",
+    "964b9215-396b-492c-abec-7bd778d7b1c9",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a0630421-7b66-48b4-aa14-6194a3b2c2b9",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "b58d92f6-68a8-4358-8fc9-6ea58e6d483b",
+    "bcfc6cb0-1b39-4f3f-a95e-bd7b563b0efc",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c"
+  ]
+}

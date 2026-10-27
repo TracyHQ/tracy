@@ -1,0 +1,363 @@
+{
+  "schemaVersion": "tracy-quickstart-presentation-lock/wordpress/v1",
+  "$comment": "What a build must leave alone on a restored quickstart/ja-essence/wp7 1.0.2 site. Options are compared by value; files by sha256 of the shipped theme, captured from the release's webroot archive; each governed page by the hash of its markup with every slot masked.",
+  "options": {
+    "stylesheet": "wp-ja-essence",
+    "template": "wp-ja-essence",
+    "show_on_front": "page",
+    "permalink_structure": "/%postname%/",
+    "users_can_register": "0"
+  },
+  "themeMods": {
+    "theme": "wp-ja-essence",
+    "protected": [
+      "custom_css_post_id",
+      "nav_menu_locations"
+    ]
+  },
+  "fileRoots": [
+    "wp-content/themes/wp-ja-essence"
+  ],
+  "files": {
+    "wp-content/themes/wp-ja-essence/AGENTS.md": "5242b2bb650107336dca14c11897c20f05aed92180ad1287b5769bbab6075a62",
+    "wp-content/themes/wp-ja-essence/assets/css/fixture-page.css": "d2c9d7c59ba6ed16038ac7879d0a07813e3d46046f16dff44e51278087a3f173",
+    "wp-content/themes/wp-ja-essence/assets/css/je-category.css": "0af78feeab84d2269f959cc15330010363e18d55305fcb9c2502eb73eb6d5756",
+    "wp-content/themes/wp-ja-essence/assets/css/je-detail.css": "1eaf2d5a16b7df0c7efd8a1969e516f08436a55163b2c9c1e22db4d6df407da3",
+    "wp-content/themes/wp-ja-essence/assets/css/je-home.css": "6dac3803598db74c3920c81220bffbfdba1141d4e74ff5cae4b5ec636236ff84",
+    "wp-content/themes/wp-ja-essence/assets/css/layout.css": "dca7d68d13067d81e306200f1ec08e2a5fa03b05bf3b46202ebe69ae86d9c06f",
+    "wp-content/themes/wp-ja-essence/assets/css/sections.css": "d287eb0b26beee53654bdab114c23195e72b212240d9e5703d9546252a130a3f",
+    "wp-content/themes/wp-ja-essence/assets/css/tracy-motion.css": "656642b63d46e2cb41fcd5af3437e25fed38175280bfcf14e9a1f6da5efb6bec",
+    "wp-content/themes/wp-ja-essence/assets/css/tracy.css": "e4ff46badd4a022c1e0a0fcd742d5ce1acbcd329bc769de5a23f7d65381b0e71",
+    "wp-content/themes/wp-ja-essence/assets/css/wp-ja-essence.css": "613af7820a9476567d718db2f20269de90c610e9649d12c890e67eabb99c2e1b",
+    "wp-content/themes/wp-ja-essence/assets/fonts/jost-400.woff2": "b8248fcea348b57e692c887d46c11f9c07b4ec24af9cff7ba1ae02b6de0ea0ae",
+    "wp-content/themes/wp-ja-essence/assets/fonts/jost-500.woff2": "7a953e2f57eb9fc6e509bc82454225bf15949dba2fae6ca497d41bfee565e9fe",
+    "wp-content/themes/wp-ja-essence/assets/fonts/jost-600.woff2": "37b3c26af24ff8fc63f1c044a90ccd9ee5d127c4ad1ab620816e8d93aa7a02d4",
+    "wp-content/themes/wp-ja-essence/assets/fonts/jost-700.woff2": "29f28070db5c11b3d77d80c610a5f5638845000d9270c6bcd51ce4211067c9d3",
+    "wp-content/themes/wp-ja-essence/assets/fonts/noto-serif-400.woff2": "a2eb2b62d72d5966617443b14188ba548b5e78841eb8a700eb0d539589f56510",
+    "wp-content/themes/wp-ja-essence/assets/fonts/noto-serif-700.woff2": "f924a0bd0ef5ce6838dedf21280efd709792b7cbdf397797dc8f6156ee9c0e82",
+    "wp-content/themes/wp-ja-essence/assets/img/hero-placeholder.svg": "76cadc072b438fc2ec4e892db5f0d8146c4323b360f37a848c57193ecade5bf1",
+    "wp-content/themes/wp-ja-essence/assets/img/placeholder.svg": "b2d770577c7a42644670e479de92ba44c2039b96256e8739a6d69361905ec15e",
+    "wp-content/themes/wp-ja-essence/assets/js/tracy-motion.js": "e0de98821c906566fe3cb2e4ba7d4203375f61e1061a869fe5b53c566a796c36",
+    "wp-content/themes/wp-ja-essence/assets/js/tracy-preview.js": "174189d9b2412fe0b7a3f69dde16d901d43d24528b89d3bbad3c78adacb54eed",
+    "wp-content/themes/wp-ja-essence/assets/js/tracy.js": "88c0d89600b0320a54eb34f943c4f29f631a920eca0866a78e2f054837ae1df4",
+    "wp-content/themes/wp-ja-essence/assets/js/wp-ja-essence-dark.js": "8f2da984d3966f04646f6f485dc0a7c24100061e8effb780418eb696e9dc7959",
+    "wp-content/themes/wp-ja-essence/assets/js/wp-ja-essence.js": "d66d921bfd9972d5958a00a7a06a4d0fcdc297488f22f1877b6da08f95df7471",
+    "wp-content/themes/wp-ja-essence/docs/architecture.md": "37ed916d900bf97140baa3d2ee342555c43b903be57d3906729c5628521cd79f",
+    "wp-content/themes/wp-ja-essence/docs/checks-and-recovery.md": "1298df0714a58495e3d6e7768447fd7a29fc36ccfcb58a239e43b880e98f8869",
+    "wp-content/themes/wp-ja-essence/docs/content-model.md": "6f5a43f302fddc5bb9d6ab5c92cce1e618d5c0d02b667f02e2231eb950bfc84e",
+    "wp-content/themes/wp-ja-essence/docs/content-rules.md": "8120dbe5b8f7cf5e9b5e399f3dca93969dfaa00a6384f2be9c5f77d02befb627",
+    "wp-content/themes/wp-ja-essence/docs/design-system.md": "4627d8182a97999705566a814660734f6fcb42dcefd8331f21c0bcc04a80802b",
+    "wp-content/themes/wp-ja-essence/docs/generated/inventory.json": "d4bbd1e85837ff09d206aa7a8e5fbe36fbeaefce0316a46ddcd9407390abe77a",
+    "wp-content/themes/wp-ja-essence/docs/generated/inventory.md": "54306687d4413d27954915a4234b6b9f2648fea4fc64581c6d1229d4e0e4173a",
+    "wp-content/themes/wp-ja-essence/docs/install.md": "07cafac1d281cda86ad82fa50c767d0645bb37aa0277e7da81bf994d9876eb52",
+    "wp-content/themes/wp-ja-essence/functions.php": "df3d2f3d7f267070a21350ad18cdd8ad1417cf156ab5d5128694a1b02a32c30d",
+    "wp-content/themes/wp-ja-essence/inc/asset-version.php": "3a714c4a5c7cc86565cbafdb063a68340b09c58045962b8751ef3ed66c415b1d",
+    "wp-content/themes/wp-ja-essence/inc/extra.php": "9aca520b8098a82170d9d6536e4f14d07acaa6414cc36cf08d5201c347aafac8",
+    "wp-content/themes/wp-ja-essence/inc/motion-head.php": "e8e3b5b22ac792cf8ce2ee97ff4dfdce949fc85d2f5aab34bdb8a21a498e41d5",
+    "wp-content/themes/wp-ja-essence/inc/update.php": "2ac0b34cc782cd122390bfd71cea1b96de96ddd96a1751f8034781ca498918f1",
+    "wp-content/themes/wp-ja-essence/inc/variations.php": "54eee8dcec3f61fcaaffa3ecde6887b2b467cec816cce873f47aa4389d79a447",
+    "wp-content/themes/wp-ja-essence/inspirations.json": "76e3d5b5901fd5fc883dd890518ea900ffad199cf38aedb621134f9151f48436",
+    "wp-content/themes/wp-ja-essence/parts/footer.html": "3a925df43fa9bdd3a1698d511767db74564aca557f0174f23adc7b372fbc6b79",
+    "wp-content/themes/wp-ja-essence/parts/header.html": "97b514688dbb3ec54acd61830110f55be37a3cb1bfbe2f8241d730dbb71136f6",
+    "wp-content/themes/wp-ja-essence/patterns/cards.php": "d6f4b0a045eda08ff22d9c94e6036c6ee5ad44d03547c830537225f33bc78109",
+    "wp-content/themes/wp-ja-essence/patterns/editors-choice.php": "5d3742d616935e8991f68686625873a5e9e01cbc26e6a3811c07fb0f86f3ed8d",
+    "wp-content/themes/wp-ja-essence/patterns/front-list-grid.php": "150391a69517d53e3f0a766723ba575720dd5560db73883be87712bad62cb745",
+    "wp-content/themes/wp-ja-essence/patterns/front-list-warm.php": "2690f5b119b3ae00e60173482faabcfba917941ec27518a60cad442eb0f94263",
+    "wp-content/themes/wp-ja-essence/patterns/front-list.php": "9cb00a95ca896aaf38e932e3a65bf3899184cc7555b55ee351e893b1fdc0cd9c",
+    "wp-content/themes/wp-ja-essence/patterns/landing.php": "8d34c7c6c4385651fc63db98ad8dd380800aaf33e64821381b0b4b1754c8cde3",
+    "wp-content/themes/wp-ja-essence/patterns/lead-slider.php": "bc73fbd88c88608dd6772762ba1d8321b5eccfdc292404991a7ac5280d5a5162",
+    "wp-content/themes/wp-ja-essence/patterns/post-list.php": "15c3d63d013990368ad5d74895050df2eb85c09650a7848f98329833af0be4b1",
+    "wp-content/themes/wp-ja-essence/patterns/pricing.php": "31f9e291814519b99566250b97ac6d86011c41b5089da4a28ca0061348880e72",
+    "wp-content/themes/wp-ja-essence/patterns/section-articles-categories-slide.php": "a2a95b36366ff5d30842fbd183860c1f8a0d02954ff685fdf11dd1e9a33072ad",
+    "wp-content/themes/wp-ja-essence/patterns/section-articles-category-default-feat.php": "c9f49715872d4c8dc1b555c624cd03a86a503862c2a0975cb4318c8c31b69848",
+    "wp-content/themes/wp-ja-essence/patterns/section-articles-category-horizontal-feat.php": "ebc7123f3a8d2318107ae0ee3de5f6458f3d31f70f631c4ac7d67c2b37b56b1d",
+    "wp-content/themes/wp-ja-essence/patterns/section-articles-category-list-2-feat.php": "9650684c73d2b6272d8b898de696311a5a33962008a929f75b67b9f4448bbd6b",
+    "wp-content/themes/wp-ja-essence/patterns/section-articles-category-list-2-normal.php": "d1ce18dcf4ee8b3c05752cc9d8aea1fb330634284b3e6a63a3bd976c4bf4f442",
+    "wp-content/themes/wp-ja-essence/patterns/section-articles-category-list-blog.php": "76bc2839d3f48d13d4dcc59d584b33b168395c0973ee3287f06df3840ef655a4",
+    "wp-content/themes/wp-ja-essence/patterns/section-articles-category-slide-feat.php": "3e64bad2ee407c1c94d8e2c37672604e6d72a50335684b9abe64d8dc886c4f6e",
+    "wp-content/themes/wp-ja-essence/patterns/section-articles-category-slide-normal.php": "6d72caa94c12b035ff633055497183ffc32f1f4b924aae96f4fc18cbfa056dc9",
+    "wp-content/themes/wp-ja-essence/patterns/section-articles-latest-latest-feat.php": "631b182a8a2321df362e342930acfc049ac2f07a363576461df64fd4caff38bc",
+    "wp-content/themes/wp-ja-essence/patterns/section-articles-latest-latest-nsub.php": "7b8178113f5f77aa2a1a0b839bbe3d99501f7a771b836ec7f3ff8c1394bc8b34",
+    "wp-content/themes/wp-ja-essence/patterns/section-contact.php": "60fdcec2f10f1086a8049b1acebbd024978576af1c1080c838787105dd33b0eb",
+    "wp-content/themes/wp-ja-essence/patterns/section-cta-final.php": "ecd60c0133ebf1d5a02cec4f4eca766ea449864f5c767e0c10a84745d61c547e",
+    "wp-content/themes/wp-ja-essence/patterns/section-cta-inline.php": "462272c9187d7867520afc9879d39ca9863a890af69d807643caf879abb3cfdc",
+    "wp-content/themes/wp-ja-essence/patterns/section-faq.php": "2559ac76347faf40b33af9cff183402c30b3ba49a1423015a7f940b39b2985e8",
+    "wp-content/themes/wp-ja-essence/patterns/section-features.php": "abaf6c3abd70ae7dd515932371e4cb415a5c67cbe346695f697ce8534f23705a",
+    "wp-content/themes/wp-ja-essence/patterns/section-gallery.php": "c9a83ed3f3a34a201a1474a19097aad3fed7cf246cc68b1c8ca7647016175f04",
+    "wp-content/themes/wp-ja-essence/patterns/section-hero.php": "2b6d329d57d9f244e740dcf727d33c5b02a187c4fac52137aeb10760fe1a28be",
+    "wp-content/themes/wp-ja-essence/patterns/section-how-it-works.php": "39585d44005856de0a97410d762cf6bcdd08aa24b1c6172bca8820a169e77a35",
+    "wp-content/themes/wp-ja-essence/patterns/section-listing.php": "1e09d65604c6a63f380919b07ea7dbbc67e16c9fc98626d9e48babf45eaaeb76",
+    "wp-content/themes/wp-ja-essence/patterns/section-newsletter.php": "fe1a70841baf14996fb5f1765a22448eea82e53fa4440c18fed227937ca03129",
+    "wp-content/themes/wp-ja-essence/patterns/section-pillars.php": "dc41ac8a3828a6c06b067bbbd7a338445ee0ae24176b8a6f1c14ff46d0bc0bd5",
+    "wp-content/themes/wp-ja-essence/patterns/section-pricing.php": "54cbc560b36c4670dd6affd274d08100b02e016aa89a25bfab24073bce00db26",
+    "wp-content/themes/wp-ja-essence/patterns/section-problem.php": "c83b7ecc47a79e61ae94bb8d960e802ccde630b1cb3ac6580508b66e218feda2",
+    "wp-content/themes/wp-ja-essence/patterns/section-proof.php": "2ece2c6165809cfa08aeec8ec68620bcecd9a4762dfd7de8b1b1e1c060bcfc09",
+    "wp-content/themes/wp-ja-essence/patterns/section-related-items-related-default.php": "35c3890ef33d016b190f7746841f7504325414c88ced384cf3b746b40b611fd3",
+    "wp-content/themes/wp-ja-essence/patterns/section-related-items-related-type-1.php": "561285a1a8520c89f118716e3e9ab640c2e9cd7ec9609cd6cfcceb5e2d5ccbe6",
+    "wp-content/themes/wp-ja-essence/patterns/section-social-proof.php": "3f79e674bd377bb3e3496fb15faa2ff55bd6f4a58e3b7545491e0e72e3ab01bd",
+    "wp-content/themes/wp-ja-essence/patterns/section-social.php": "7b44f47544903d816f973154f48363a5107e8733ac36e3af83b7ab89639262f4",
+    "wp-content/themes/wp-ja-essence/patterns/section-styleguide.php": "036a6b9a7967f56b06786e21cba76eaa4845b4ade1c36c03f4634c9e042140cf",
+    "wp-content/themes/wp-ja-essence/patterns/section-tags-popular.php": "e2e523f27cfe03804d9e7b6dfe6e7fa124346022ced8db28e1f6b688859d2e41",
+    "wp-content/themes/wp-ja-essence/patterns/section-team.php": "539399cdefc0989bfdc07cc6ef300e1a632db5d1c40e067cfcae545adff68092",
+    "wp-content/themes/wp-ja-essence/readme.txt": "e8eae4a60359d5c5985e15a314889b15c4cc07fb70a6f475ea305efaf35c8b65",
+    "wp-content/themes/wp-ja-essence/screenshot.png": "f02d6016b09875cbad0ce2db9a763a41b4aa11896ecfe4aba1872727d5181e00",
+    "wp-content/themes/wp-ja-essence/style.css": "07e04ea037893847c47a66363ac2094d804476739fb4c38c027fb72a0c5643dd",
+    "wp-content/themes/wp-ja-essence/styles/wp-ja-essence.json": "10271c57bd4e170de52c8e6a4ac025e71809692c5159a50421be0ce3471045c3",
+    "wp-content/themes/wp-ja-essence/templates/404.html": "9a33cee0b0cb748c0c89cc60825834f3c5f45f56c1e4b2bce744d9fba2f10edb",
+    "wp-content/themes/wp-ja-essence/templates/archive.html": "76540c1a5d652b88b00a50fcce5098f83158d00e8894ed88af42b080b7fb6df5",
+    "wp-content/themes/wp-ja-essence/templates/artifact.html": "26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+    "wp-content/themes/wp-ja-essence/templates/fixture.html": "26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+    "wp-content/themes/wp-ja-essence/templates/front-page.html": "fda43a2f6474632b90ca71329cdf6431474a1a01603001e2f6d3e8dcb5a46652",
+    "wp-content/themes/wp-ja-essence/templates/home.html": "76540c1a5d652b88b00a50fcce5098f83158d00e8894ed88af42b080b7fb6df5",
+    "wp-content/themes/wp-ja-essence/templates/index.html": "76540c1a5d652b88b00a50fcce5098f83158d00e8894ed88af42b080b7fb6df5",
+    "wp-content/themes/wp-ja-essence/templates/landing.html": "f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+    "wp-content/themes/wp-ja-essence/templates/page-account.html": "2518be446bdea1330041920a54561ca2fc050b3f5a173d44c95886be48bea0b5",
+    "wp-content/themes/wp-ja-essence/templates/page-article.html": "df149609b70a2900dc290d761ffbc04a6c8efc16bccb094c5e43f14063531ed2",
+    "wp-content/themes/wp-ja-essence/templates/page-contact.html": "58569c71fd647e03dcc61659126a0fcef63a2e74b8c83a97642545f2034c965b",
+    "wp-content/themes/wp-ja-essence/templates/page-landing.html": "261a122c4361e36cf13ee27fdc4b2bd3153bcaeac0b4938acd00480af921ae74",
+    "wp-content/themes/wp-ja-essence/templates/page-login.html": "8bd2f404872307c9418d23fb9387267101d446b8321943c10b5d4b8a644f6477",
+    "wp-content/themes/wp-ja-essence/templates/page-no-sidebar.html": "453717fb09251b64f5a80de07d6b41cb1bb11831c9bd9719df5cadc77f37d0a3",
+    "wp-content/themes/wp-ja-essence/templates/page-register.html": "edb72a0288a01e29fbb388f6837b5c810e1c2c3a51f9dd900f7f23dc6c7da1d3",
+    "wp-content/themes/wp-ja-essence/templates/page.html": "cc2ef7b9483f0a4ba5867ab8c8bb019953c410579f1a53ee2e0b9c1e1bac62f9",
+    "wp-content/themes/wp-ja-essence/templates/pricing.html": "4ec92f84723376773688c77dc42261c379b09ac2c78a539de894414c64d24fa7",
+    "wp-content/themes/wp-ja-essence/templates/search.html": "4a62a67ee6b9d7633dd3de821f6f91d53b16c2397784bf90b5ed638491f0f374",
+    "wp-content/themes/wp-ja-essence/templates/single.html": "b5e4afe47e5977b27440ffb1b2fc2b7f692249b9ee80e1d1cdd51f44589fd3f3",
+    "wp-content/themes/wp-ja-essence/theme.json": "f4c4c28e0f7dc0b703259c1dae09ef5cafdb1cfbd4efa97e7f793409d504b590"
+  },
+  "templateParts": {
+    "header": {
+      "sha256": "a4bb8472cd247c75cef946098da10d26a94a12e49390fd608a679740471a52cf"
+    },
+    "footer": {
+      "sha256": "22fac18a8dd16a11cb71953157c2ed36e253caa579c7c0983ba4e27eb4c1b3ed"
+    }
+  },
+  "entities": {
+    "option-blogname": {},
+    "option-blogdescription": {},
+    "page-contact": {
+      "post_type": "page",
+      "post_name": "contact",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "8e35fc6d439e4604a71d6b1b27238213bcff32198c817f4e75ce26d18fabdfe8"
+    },
+    "page-home-3": {
+      "post_type": "page",
+      "post_name": "home-3",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "78b0fe0791c5ca3328a602cdb31e02dd6732a7ed3ad116b30e879063bfd24e46"
+    },
+    "page-resources": {
+      "post_type": "page",
+      "post_name": "resources",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "cbc5bf5cca219399c219a8ac17a442d810d0f2b62d7488e26a708448f8f1fd30"
+    },
+    "page-lifestyle": {
+      "post_type": "page",
+      "post_name": "lifestyle",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": null,
+      "skeleton": "5377911732fc3a66c426870b4f682aaa15137f46d7fe87b0ba1e4006a3af09c7"
+    },
+    "page-home-2": {
+      "post_type": "page",
+      "post_name": "home-2",
+      "post_status": "publish",
+      "post_parent": 120,
+      "language": null,
+      "skeleton": "b93a6f8f2a4853c13d3abf71af2f0e883c8705a4822321c7f84cadb46cb8fde0"
+    },
+    "page-layout-1": {
+      "post_type": "page",
+      "post_name": "layout-1",
+      "post_status": "publish",
+      "post_parent": 121,
+      "language": null,
+      "skeleton": "530510defe151ff14f7a1add6c985a434a7c85a5b9f152f56e7191a1f3f6aebd"
+    },
+    "page-layout-2": {
+      "post_type": "page",
+      "post_name": "layout-2",
+      "post_status": "publish",
+      "post_parent": 121,
+      "language": null,
+      "skeleton": "f170ae801a19c5704399b5a8c4a8227f297cac9bcfbcc75baf698f791a3e7eaf"
+    },
+    "page-layout-3": {
+      "post_type": "page",
+      "post_name": "layout-3",
+      "post_status": "publish",
+      "post_parent": 121,
+      "language": null,
+      "skeleton": "7f6a7b0804fc71ee318768e54d7e8ffec2d023ce331c9aac9459caab262e4f36"
+    },
+    "page-video": {
+      "post_type": "page",
+      "post_name": "video",
+      "post_status": "publish",
+      "post_parent": 121,
+      "language": null,
+      "skeleton": "ef46a62fc3bce125b108f70475d16472408a2f700bf37211038b8694632b924f"
+    },
+    "page-gallery": {
+      "post_type": "page",
+      "post_name": "gallery",
+      "post_status": "publish",
+      "post_parent": 121,
+      "language": null,
+      "skeleton": "791bc0af7aacb88c1b1bdc8e2afde9277e7e0ac997dd9121dd62f54fdc25e8e9"
+    },
+    "page-home-4": {
+      "post_type": "page",
+      "post_name": "home-4",
+      "post_status": "publish",
+      "post_parent": 120,
+      "language": null,
+      "skeleton": "42e1d5c38dccd2c11cb5ac0d02f94b49cb476b6da268d8b36664eaf630a32e1e"
+    },
+    "page-home-5": {
+      "post_type": "page",
+      "post_name": "home-5",
+      "post_status": "publish",
+      "post_parent": 120,
+      "language": null,
+      "skeleton": "0b488bc778d67b5cdbc99dcdbaa7c1c379a78c08501d7a510d7af811b6d9e087"
+    },
+    "page-home-1": {
+      "post_type": "page",
+      "post_name": "home-1",
+      "post_status": "publish",
+      "post_parent": 120,
+      "language": null,
+      "skeleton": "fd5634fce26011ecb7aee11458946698f9ff293b3865725041117994709d679b"
+    },
+    "page-category-style-1": {
+      "post_type": "page",
+      "post_name": "category-style-1",
+      "post_status": "publish",
+      "post_parent": 124,
+      "language": null,
+      "skeleton": "a747f4135201e740150458dda9272b29105c38a9291b128adba29455be61f34f"
+    },
+    "page-category-style-2": {
+      "post_type": "page",
+      "post_name": "category-style-2",
+      "post_status": "publish",
+      "post_parent": 124,
+      "language": null,
+      "skeleton": "ad809c730cd255948523e183f68e8b9ac74b779cb526690649f585daff85057c"
+    },
+    "page-category-style-3": {
+      "post_type": "page",
+      "post_name": "category-style-3",
+      "post_status": "publish",
+      "post_parent": 124,
+      "language": null,
+      "skeleton": "982868abfdf7b8a4e8ea5e4575ca418a03ca3a6ccc9625119e3ebc9d80b34c2a"
+    },
+    "page-category-style-4": {
+      "post_type": "page",
+      "post_name": "category-style-4",
+      "post_status": "publish",
+      "post_parent": 124,
+      "language": null,
+      "skeleton": "132fcbbda59fa430bee492dbd025466af384f6d7cb8f8e4658a49947c5324e54"
+    },
+    "page-login-form": {
+      "post_type": "page",
+      "post_name": "login-form",
+      "post_status": "publish",
+      "post_parent": 134,
+      "language": null,
+      "skeleton": "d89158f34d7a1520f003902ee8e9ac054bf17595c0d1ecf8cf66b5df3a45b974"
+    },
+    "page-registration-form": {
+      "post_type": "page",
+      "post_name": "registration-form",
+      "post_status": "publish",
+      "post_parent": 134,
+      "language": null,
+      "skeleton": "d313507271e5d726380f5f59dd660ea7c6465d92435082e8763054649261ad29"
+    },
+    "page-user-profile": {
+      "post_type": "page",
+      "post_name": "user-profile",
+      "post_status": "publish",
+      "post_parent": 134,
+      "language": null,
+      "skeleton": "d313507271e5d726380f5f59dd660ea7c6465d92435082e8763054649261ad29"
+    },
+    "page-error-page": {
+      "post_type": "page",
+      "post_name": "error-page",
+      "post_status": "publish",
+      "post_parent": 135,
+      "language": null,
+      "skeleton": "e28d7f8526a63ac639edf319c482c49893212b11c682e0c55308ef8f13578cff"
+    },
+    "page-offline-pages": {
+      "post_type": "page",
+      "post_name": "offline-pages",
+      "post_status": "publish",
+      "post_parent": 135,
+      "language": null,
+      "skeleton": "ce968cfc766f1a5ec7cbfc98dfc522f8a8246fc3451dbd3c09821985f9e740fb"
+    },
+    "page-typography": {
+      "post_type": "page",
+      "post_name": "typography",
+      "post_status": "publish",
+      "post_parent": 135,
+      "language": null,
+      "skeleton": "4f9dc47250f8b56f667d24d1089a121365363401a745a8d2ae5822338c3ee54d"
+    },
+    "page-featured-articles": {
+      "post_type": "page",
+      "post_name": "featured-articles",
+      "post_status": "publish",
+      "post_parent": 136,
+      "language": null,
+      "skeleton": "954f27c78e7d414ca28e2f91312fce0a0f774e202ecdb675914319aebe98b3ad"
+    },
+    "page-edit-user-profile": {
+      "post_type": "page",
+      "post_name": "edit-user-profile",
+      "post_status": "publish",
+      "post_parent": 134,
+      "language": null,
+      "skeleton": "d313507271e5d726380f5f59dd660ea7c6465d92435082e8763054649261ad29"
+    },
+    "page-category-blog": {
+      "post_type": "page",
+      "post_name": "category-blog",
+      "post_status": "publish",
+      "post_parent": 136,
+      "language": null,
+      "skeleton": "0a1de4a9e9420d4119e5474b9712dbff1c08da40059f6db21dd64bbc08d1982a"
+    },
+    "page-author-listting": {
+      "post_type": "page",
+      "post_name": "author-listting",
+      "post_status": "publish",
+      "post_parent": 136,
+      "language": null,
+      "skeleton": "5b08afa532dd0e96e72273463a8f75a0e9b7424497b60f8ed73baf8f34cf7f91"
+    },
+    "page-tagged-items": {
+      "post_type": "page",
+      "post_name": "tagged-items",
+      "post_status": "publish",
+      "post_parent": 136,
+      "language": null,
+      "skeleton": "f4bb494de5bc176bd667dd9cb071ecc7c36e8a7f75729425047cd1b6db2acbe0"
+    }
+  }
+}

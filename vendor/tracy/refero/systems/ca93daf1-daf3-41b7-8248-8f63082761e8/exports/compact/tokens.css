@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-electric-iris: #3139fb;
+  --color-deep-violet: #2702c2;
+  --color-oat: #fffadd;
+  --color-linen: #fffcec;
+  --color-paper-white: #ffffff;
+  --color-obsidian: #000000;
+  --color-granite: #696969;
+  --color-olive-stone: #595853;
+
+  /* Typography — Font Families */
+  --font-marlin-soft-sq: 'Marlin Soft SQ', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-marlin: 'Marlin', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-intervariable: 'InterVariable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-favorit-mono: 'ABC Favorit Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-abc-oracle: 'ABC Oracle', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-exposure-var: 'Exposure VAR', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apple-system: '-apple-system', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

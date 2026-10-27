@@ -1,0 +1,74 @@
+{
+  "color": {
+    "terracotta-seal": {
+      "$value": "#b05a36",
+      "$type": "color",
+      "$description": "Terracotta Seal — Primary action buttons, eyebrow labels, active states, icon strokes, key badges — a single warm rust against cream paper, evokes clinical warmth without medical sterility; Subtle hero overlay gradient from terracotta to a lighter tan — used on hero photo treatment and decorative seals, not on UI surfaces"
+    },
+    "parchment": {
+      "$value": "#fef9ef",
+      "$type": "color",
+      "$description": "Parchment — Page canvas and primary surface — never use pure white; this warm off-white is the system's base tone"
+    },
+    "aged-paper": {
+      "$value": "#f5eee1",
+      "$type": "color",
+      "$description": "Aged Paper — Card and panel surfaces, subtle wash backgrounds — one step deeper than the canvas to create soft elevation without shadows"
+    },
+    "warm-taupe": {
+      "$value": "#d1c9bf",
+      "$type": "color",
+      "$description": "Warm Taupe — Hairline borders, divider lines, card outlines — replaces cold gray with a tone that belongs to the cream family"
+    },
+    "ink": {
+      "$value": "#2a2b2f",
+      "$type": "color",
+      "$description": "Ink — Primary text, heading fills, strong borders — near-black with a barely-warm cast to harmonize with parchment rather than fight it"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text, body copy, default icon fills, structural borders — slightly softer than Ink for reading-length passages"
+    },
+    "graphite": {
+      "$value": "#515151",
+      "$type": "color",
+      "$description": "Graphite — Muted helper text, captions, secondary metadata — never below 14px without sufficient weight to maintain AAA contrast on parchment"
+    },
+    "ash": {
+      "$value": "#808988",
+      "$type": "color",
+      "$description": "Ash — Input borders, disabled state outlines, placeholder text — the only cool-leaning neutral, used only on form elements"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — SVG fill default, logo mark — reserve for vector illustration, never use as text or background"
+    }
+  },
+  "font": {
+    "financier-display": {
+      "$value": "Financier Display",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headlines — weight 400 for roman, weight 300 for italic accent words within the same headline (e.g. 'Testing is easy' pairs roman with italic). The mix of roman + italic serif in one line is the system's most distinctive typographic move. Substitute: GT Super, Domaine Display, Tiempos Headline"
+    },
+    "ftbase": {
+      "$value": "Ftbase",
+      "$type": "fontFamily",
+      "$description": "Body, navigation, buttons, UI labels, and all interface text. Weight 300 is used for hero subhead and large descriptive passages; weight 400 for body; weight 600 for button labels and strong UI; weight 700 reserved for emphasis. The consistent -0.023em tracking pulls the type into a tight, confident block that contrasts the generous serif spacing. Substitute: Inter, Söhne, or Untitled Sans"
+    },
+    "fragment-mono": {
+      "$value": "Fragment mono",
+      "$type": "fontFamily",
+      "$description": "Tiny all-caps labels in badge and eyebrow contexts — monospace gives a clinical, data-precise feel for markers like 'HSA/FSA Eligible'. Use sparingly; Ftbase caps at 600+ serve most label needs"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.functionhealth.com",
+      "siteName": "Function",
+      "extractedAt": "2026-06-03T15:39:10.246Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1297-emdash-blank-name-closed-contact",
+  "kind": "fix",
+  "title": "EmDash: with Name left blank the description is still written and a Vietnamese site translated; a brochure button never leads to a contact page the customer unticked",
+  "pr": 1297,
+  "area": "add-site/apply",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "From packages/cms/tracy-emdash-theme-business run: node --test --test-reporter=tap tests/personalize-tone.test.mjs tests/personalize-fallback-gate.test.mjs tests/personalize-demo-files-seed.test.mjs",
+    "Read the ok/not ok line of each test named in run.tests, and the fail count."
+  ],
+  "expect": [
+    "'a description with no name is written: the copy prompt carries the business and no name' is ok.",
+    "'the gate: a step that writes needs the description, a translation needs a root written in another language' is ok: modelMay('copy', 'en', {about}, {}) is true with no name, modelMay('labels', 'en', {}, {en: 'vi'}) is true.",
+    "'FULL with the contact page unticked: the brochure button goes, never to a closed page' is ok: hero_cta2_url and hero_cta2_label are both '' (was '/contact').",
+    "'FULL in Vietnamese with the seed as released: the brochure button leads to the contact page' stays ok (/contact when the page is kept).",
+    "Every other test of the three files stays ok."
+  ],
+  "selectors": {
+    "gate": "modelMay in tools/personalize.mjs",
+    "contact": "planFrom option closed, step 4 (DEMO FILE LINKS) in tools/personalize.mjs"
+  },
+  "evidence": "Local stand 13/10/2026 (tasks/evidence/site-questions-2026-10-13/): Tracy Business EmDash, Name blank with About given, kept the demo copy word for word; a Vietnamese bakery with only Home ticked had the hero's 'Liên hệ tiệm bánh' leading to /contact, which answered 404 (shots/local-h1/tracy-business-emdash-onlyhome-home.jpg).",
+  "fence": "The real tool against the template's real seed and a mock EmDash, with a scripted model. Not exercised: a served release (1.7.17 is built locally; the switch is the release step).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tests/personalize-tone.test.mjs",
+      "tests/personalize-fallback-gate.test.mjs",
+      "tests/personalize-demo-files-seed.test.mjs"
+    ],
+    "cwd": "packages/cms/tracy-emdash-theme-business",
+    "tests": [
+      "a description with no name is written: the copy prompt carries the business and no name",
+      "the gate: a step that writes needs the description, a translation needs a root written in another language",
+      "FULL with the contact page unticked: the brochure button goes, never to a closed page",
+      "FULL in Vietnamese with the seed as released: the brochure button leads to the contact page",
+      "BLANK (name only): the brochure button stays the demo"
+    ]
+  }
+}

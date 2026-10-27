@@ -1,0 +1,64 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#1f1f1f",
+      "$type": "color",
+      "$description": "Ink — Primary text, footer background, filled dark buttons. The near-black that carries all body and display copy"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Button text on light surfaces, pure-black background blocks. Used where maximum contrast is required"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Page canvas, card surfaces, button text on dark fills, button borders on light fills. The dominant surface color across all sections"
+    },
+    "ash-grey": {
+      "$value": "#c9c9cd",
+      "$type": "color",
+      "$description": "Ash Grey — Hairline borders, disabled dividers, and the dominant link color at 80 occurrences. The neutral that defines edge separation without shadow"
+    },
+    "mist": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Mist — List and grouped-background fills — the recessed surface beneath cards, tables, and secondary containers"
+    },
+    "slate": {
+      "$value": "#717173",
+      "$type": "color",
+      "$description": "Slate — Neutral form states, badge text, and quiet UI feedback where color should stay understated."
+    },
+    "graphite": {
+      "$value": "#4c4c4c",
+      "$type": "color",
+      "$description": "Graphite — Tertiary body text, inline badge copy, and minor muted surfaces between true ink and slate"
+    },
+    "cobalt-wash": {
+      "$value": "#1227fd",
+      "$type": "color",
+      "$description": "Cobalt Wash — Promotional bar gradient start. The single chromatic accent in the entire system — only ever appears as part of the blue gradient on top-of-page offer strips"
+    }
+  },
+  "font": {
+    "aeonik-pro": {
+      "$value": "Aeonik Pro",
+      "$type": "fontFamily",
+      "$description": "Marketing display and heading face. Weight 500 across the entire scale — never heavier. Used for hero headlines ('Banking & Beyond' at 88px), section headings, and emphasis paragraphs. The signature choice is that no heading goes bolder than 500: authority comes from size and tracking, not weight."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Product UI and body face. Carries all buttons, form labels, navigation, badges, and the 16px default body copy. Uppercase 12px labels open to +0.0150em — the only positive tracking in the system, reserved for micro-tags and button labels to add breathing room at small sizes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://revolut.com",
+      "siteName": "Revolut",
+      "extractedAt": "2026-07-03T03:30:22.443Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,739 @@
+{
+  "_about": "Tool outputs as the tools wrote them before their fixes on JA Vega (M4/M4b, 26/09), next to the census the preflight takes of the same pages. Each case must be judged a misread; the control cases must not.",
+  "sample": [
+    {
+      "path": "/",
+      "status": null,
+      "view": "front-page",
+      "role": "content",
+      "contractId": "en-home"
+    },
+    {
+      "path": "/missing-page/",
+      "status": 404,
+      "view": "404",
+      "role": "error",
+      "contractId": "en-missing-page"
+    }
+  ],
+  "t4-headings": {
+    "_why": "M4b: T4 draws its section titles as h3 in .t4-section outside main; layout-boxes read main only and paired one heading of ten.",
+    "census": {
+      "/": {
+        "source": {
+          "url": "http://127.0.0.1/",
+          "status": 200,
+          "headings": [
+            "h"
+          ],
+          "texts": [
+            "text 0",
+            "text 1",
+            "text 2",
+            "text 3",
+            "text 4",
+            "text 5",
+            "text 6",
+            "text 7",
+            "text 8",
+            "text 9",
+            "text 10",
+            "text 11",
+            "text 12",
+            "text 13",
+            "text 14",
+            "text 15",
+            "text 16",
+            "text 17",
+            "text 18",
+            "text 19",
+            "text 20",
+            "text 21",
+            "text 22",
+            "text 23",
+            "text 24",
+            "text 25",
+            "text 26",
+            "text 27",
+            "text 28",
+            "text 29"
+          ],
+          "links": 12,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "site": {
+          "url": "http://127.0.0.1/",
+          "status": 200,
+          "headings": [
+            "h"
+          ],
+          "texts": [
+            "text 0",
+            "text 1",
+            "text 2",
+            "text 3",
+            "text 4",
+            "text 5",
+            "text 6",
+            "text 7",
+            "text 8",
+            "text 9",
+            "text 10",
+            "text 11",
+            "text 12",
+            "text 13",
+            "text 14",
+            "text 15",
+            "text 16",
+            "text 17",
+            "text 18",
+            "text 19",
+            "text 20",
+            "text 21",
+            "text 22",
+            "text 23",
+            "text 24",
+            "text 25",
+            "text 26",
+            "text 27",
+            "text 28",
+            "text 29"
+          ],
+          "links": 12,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "sharedHeadings": 10,
+        "sharedTexts": 30
+      },
+      "/missing-page/": {
+        "source": {
+          "url": "http://127.0.0.1/",
+          "status": 404,
+          "headings": [
+            "h"
+          ],
+          "texts": [],
+          "links": 2,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "site": {
+          "url": "http://127.0.0.1/",
+          "status": 404,
+          "headings": [
+            "h"
+          ],
+          "texts": [],
+          "links": 2,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "sharedHeadings": 1,
+        "sharedTexts": 0
+      }
+    },
+    "layoutBoxes": {
+      "results": [
+        {
+          "route": "/",
+          "status": [
+            200,
+            200
+          ],
+          "paired": 1,
+          "differing": 0,
+          "rows": [],
+          "onlySource": [],
+          "onlySite": [
+            "section title 1#1",
+            "section title 2#1",
+            "section title 3#1",
+            "section title 4#1",
+            "section title 5#1",
+            "section title 6#1",
+            "section title 7#1",
+            "section title 8#1",
+            "section title 9#1"
+          ]
+        }
+      ]
+    }
+  },
+  "reveals": {
+    "_why": "M4: motion knew AOS/WOW/animate.css but not the Tracy motion library; the port showed 0 reveals while its sections faded in.",
+    "census": {
+      "/": {
+        "source": {
+          "url": "http://127.0.0.1/",
+          "status": 200,
+          "headings": [
+            "h"
+          ],
+          "texts": [
+            "text 0",
+            "text 1",
+            "text 2",
+            "text 3",
+            "text 4",
+            "text 5",
+            "text 6",
+            "text 7",
+            "text 8",
+            "text 9",
+            "text 10",
+            "text 11",
+            "text 12",
+            "text 13",
+            "text 14",
+            "text 15",
+            "text 16",
+            "text 17",
+            "text 18",
+            "text 19",
+            "text 20",
+            "text 21",
+            "text 22",
+            "text 23",
+            "text 24",
+            "text 25",
+            "text 26",
+            "text 27",
+            "text 28",
+            "text 29"
+          ],
+          "links": 12,
+          "reveals": {
+            "hidden": 14,
+            "revealed": 14
+          }
+        },
+        "site": {
+          "url": "http://127.0.0.1/",
+          "status": 200,
+          "headings": [
+            "h"
+          ],
+          "texts": [
+            "text 0",
+            "text 1",
+            "text 2",
+            "text 3",
+            "text 4",
+            "text 5",
+            "text 6",
+            "text 7",
+            "text 8",
+            "text 9",
+            "text 10",
+            "text 11",
+            "text 12",
+            "text 13",
+            "text 14",
+            "text 15",
+            "text 16",
+            "text 17",
+            "text 18",
+            "text 19",
+            "text 20",
+            "text 21",
+            "text 22",
+            "text 23",
+            "text 24",
+            "text 25",
+            "text 26",
+            "text 27",
+            "text 28",
+            "text 29"
+          ],
+          "links": 12,
+          "reveals": {
+            "hidden": 12,
+            "revealed": 12
+          }
+        },
+        "sharedHeadings": 10,
+        "sharedTexts": 30
+      },
+      "/missing-page/": {
+        "source": {
+          "url": "http://127.0.0.1/",
+          "status": 404,
+          "headings": [
+            "h"
+          ],
+          "texts": [],
+          "links": 2,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "site": {
+          "url": "http://127.0.0.1/",
+          "status": 404,
+          "headings": [
+            "h"
+          ],
+          "texts": [],
+          "links": 2,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "sharedHeadings": 1,
+        "sharedTexts": 0
+      }
+    },
+    "motion": {
+      "results": [
+        {
+          "route": "/",
+          "status": [
+            200,
+            200
+          ],
+          "source": {
+            "reveals": 14,
+            "carousels": 0,
+            "autoplay": 0,
+            "loops": 0
+          },
+          "site": {
+            "reveals": 0,
+            "carousels": 0,
+            "autoplay": 0,
+            "loops": 0
+          },
+          "rows": [
+            {
+              "kind": "reveal",
+              "near": "our work",
+              "source": "14 × fade-up",
+              "site": "none"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "status-404": {
+    "_why": "Before the 404 fixes, a declared error page failed in functional (any status ≥ 400), http-parity (200 wanted of every route), layout-boxes (stopped on a non-2xx) and visual-qa (identity status).",
+    "census": {
+      "/": {
+        "source": {
+          "url": "http://127.0.0.1/",
+          "status": 200,
+          "headings": [
+            "h"
+          ],
+          "texts": [
+            "text 0",
+            "text 1",
+            "text 2",
+            "text 3",
+            "text 4",
+            "text 5",
+            "text 6",
+            "text 7",
+            "text 8",
+            "text 9",
+            "text 10",
+            "text 11",
+            "text 12",
+            "text 13",
+            "text 14",
+            "text 15",
+            "text 16",
+            "text 17",
+            "text 18",
+            "text 19",
+            "text 20",
+            "text 21",
+            "text 22",
+            "text 23",
+            "text 24",
+            "text 25",
+            "text 26",
+            "text 27",
+            "text 28",
+            "text 29"
+          ],
+          "links": 12,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "site": {
+          "url": "http://127.0.0.1/",
+          "status": 200,
+          "headings": [
+            "h"
+          ],
+          "texts": [
+            "text 0",
+            "text 1",
+            "text 2",
+            "text 3",
+            "text 4",
+            "text 5",
+            "text 6",
+            "text 7",
+            "text 8",
+            "text 9",
+            "text 10",
+            "text 11",
+            "text 12",
+            "text 13",
+            "text 14",
+            "text 15",
+            "text 16",
+            "text 17",
+            "text 18",
+            "text 19",
+            "text 20",
+            "text 21",
+            "text 22",
+            "text 23",
+            "text 24",
+            "text 25",
+            "text 26",
+            "text 27",
+            "text 28",
+            "text 29"
+          ],
+          "links": 12,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "sharedHeadings": 10,
+        "sharedTexts": 30
+      },
+      "/missing-page/": {
+        "source": {
+          "url": "http://127.0.0.1/",
+          "status": 404,
+          "headings": [
+            "h"
+          ],
+          "texts": [],
+          "links": 2,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "site": {
+          "url": "http://127.0.0.1/",
+          "status": 404,
+          "headings": [
+            "h"
+          ],
+          "texts": [],
+          "links": 2,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "sharedHeadings": 1,
+        "sharedTexts": 0
+      }
+    },
+    "functional": {
+      "findings": 1,
+      "routes": [
+        {
+          "route": "/",
+          "status": 200,
+          "findings": [],
+          "examined": {
+            "links": 12
+          }
+        },
+        {
+          "route": "/missing-page/",
+          "status": 404,
+          "findings": [
+            {
+              "kind": "page-status",
+              "status": 404
+            }
+          ],
+          "examined": {
+            "links": 2
+          }
+        }
+      ]
+    },
+    "httpParity": {
+      "routes": [
+        {
+          "route": "/",
+          "sourceStatus": 200,
+          "targetStatus": 200,
+          "sourceRuns": 30,
+          "matched": 30,
+          "missing": [],
+          "ok": true
+        },
+        {
+          "route": "/missing-page/",
+          "sourceStatus": 404,
+          "targetStatus": 404,
+          "sourceRuns": 1,
+          "matched": 1,
+          "missing": [],
+          "ok": false
+        }
+      ]
+    },
+    "layoutBoxesStderr": "layout-boxes: not measured — site http://127.0.0.1:1/missing-page/ answered 404",
+    "visualQa": {
+      "summary": {
+        "findings": 1,
+        "unclassified": 0
+      },
+      "pages": [
+        {
+          "id": "en-home",
+          "path": "/",
+          "findings": [],
+          "axes": [
+            {
+              "variant": "1440-light",
+              "examined": 30,
+              "components": [
+                {},
+                {}
+              ],
+              "findings": []
+            }
+          ]
+        },
+        {
+          "id": "en-missing-page",
+          "path": "/missing-page/",
+          "findings": [],
+          "axes": [
+            {
+              "variant": "1440-light",
+              "examined": 3,
+              "components": [
+                {}
+              ],
+              "findings": [
+                {
+                  "kind": "identity-mismatch",
+                  "what": "status",
+                  "expected": 200,
+                  "observed": 404
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "all-differ": {
+    "_why": "M4: 129 of 129 blocks differed at exit 0 — the reading, not the theme. The page read against itself differs as well.",
+    "census": {
+      "/": {
+        "source": {
+          "url": "http://127.0.0.1/",
+          "status": 200,
+          "headings": [
+            "h"
+          ],
+          "texts": [
+            "text 0",
+            "text 1",
+            "text 2",
+            "text 3",
+            "text 4",
+            "text 5",
+            "text 6",
+            "text 7",
+            "text 8",
+            "text 9",
+            "text 10",
+            "text 11",
+            "text 12",
+            "text 13",
+            "text 14",
+            "text 15",
+            "text 16",
+            "text 17",
+            "text 18",
+            "text 19",
+            "text 20",
+            "text 21",
+            "text 22",
+            "text 23",
+            "text 24",
+            "text 25",
+            "text 26",
+            "text 27",
+            "text 28",
+            "text 29"
+          ],
+          "links": 12,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "site": {
+          "url": "http://127.0.0.1/",
+          "status": 200,
+          "headings": [
+            "h"
+          ],
+          "texts": [
+            "text 0",
+            "text 1",
+            "text 2",
+            "text 3",
+            "text 4",
+            "text 5",
+            "text 6",
+            "text 7",
+            "text 8",
+            "text 9",
+            "text 10",
+            "text 11",
+            "text 12",
+            "text 13",
+            "text 14",
+            "text 15",
+            "text 16",
+            "text 17",
+            "text 18",
+            "text 19",
+            "text 20",
+            "text 21",
+            "text 22",
+            "text 23",
+            "text 24",
+            "text 25",
+            "text 26",
+            "text 27",
+            "text 28",
+            "text 29"
+          ],
+          "links": 12,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "sharedHeadings": 12,
+        "sharedTexts": 30
+      },
+      "/missing-page/": {
+        "source": {
+          "url": "http://127.0.0.1/",
+          "status": 404,
+          "headings": [
+            "h"
+          ],
+          "texts": [],
+          "links": 2,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "site": {
+          "url": "http://127.0.0.1/",
+          "status": 404,
+          "headings": [
+            "h"
+          ],
+          "texts": [],
+          "links": 2,
+          "reveals": {
+            "hidden": 0,
+            "revealed": 0
+          }
+        },
+        "sharedHeadings": 1,
+        "sharedTexts": 0
+      }
+    },
+    "layoutBoxes": {
+      "results": [
+        {
+          "route": "/",
+          "status": [
+            200,
+            200
+          ],
+          "paired": 12,
+          "differing": 12,
+          "rows": [],
+          "onlySource": [],
+          "onlySite": []
+        }
+      ]
+    },
+    "controlUnstable": {
+      "results": [
+        {
+          "route": "/",
+          "paired": 12,
+          "differing": 12
+        }
+      ]
+    },
+    "controlClean": {
+      "results": [
+        {
+          "route": "/",
+          "paired": 12,
+          "differing": 0
+        }
+      ]
+    }
+  },
+  "runs": {
+    "ok": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "ms": 1000,
+      "error": null,
+      "stderrTail": ""
+    },
+    "findings": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "ms": 1000,
+      "error": null,
+      "stderrTail": ""
+    },
+    "usage": {
+      "status": 2,
+      "signal": null,
+      "timedOut": false,
+      "ms": 1000,
+      "error": null,
+      "stderrTail": ""
+    }
+  }
+}

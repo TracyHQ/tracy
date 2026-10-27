@@ -1,0 +1,44 @@
+{
+  "color": {
+    "periwinkle-flare": {
+      "$value": "#84acfb",
+      "$type": "color",
+      "$description": "Periwinkle Flare — Primary action background, italic emphasis text, active nav state, heading accent — the lone chromatic signal in an otherwise achromatic system, used surgically to make interactions feel switched on"
+    },
+    "warm-cream": {
+      "$value": "#f4efd4",
+      "$type": "color",
+      "$description": "Warm Cream — Primary text, card borders, hairline dividers, card surfaces — a warm off-white that softens the black void and carries the editorial tone"
+    },
+    "warm-ash": {
+      "$value": "#626055",
+      "$type": "color",
+      "$description": "Warm Ash — Secondary card borders, muted text, button borders — a mid-tone warm gray for layering depth between cream borders and the black canvas"
+    },
+    "charcoal-veil": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal Veil — Subtle borders, low-emphasis dividers, body text borders — the deepest visible neutral for near-invisible structural lines"
+    }
+  },
+  "font": {
+    "ibm-plex-serif": {
+      "$value": "IBM Plex Serif",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface — weight 300 at 55px creates a whisper-light editorial presence; this serif choice signals PR-agency sophistication and gives the brand a magazine-editorial voice that distinguishes it from typical sans-serif tech sites"
+    },
+    "ibm-plex-sans": {
+      "$value": "IBM Plex Sans",
+      "$type": "fontFamily",
+      "$description": "Body, UI, navigation, buttons, captions — the functional workhorse at 16-17px weight 400; weight 300 is used for secondary text creating a light, airy body voice; weight 500 for emphasis and button labels"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://moxiegrouppr.com",
+      "siteName": "Moxie",
+      "extractedAt": "2026-06-03T21:33:53.994Z",
+      "variant": "compact"
+    }
+  }
+}

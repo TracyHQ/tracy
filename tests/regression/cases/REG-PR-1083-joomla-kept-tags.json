@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1083-joomla-kept-tags",
+  "kind": "fix",
+  "title": "A Joomla build keeps the tags of the articles it keeps: JA Podcast 190 tag pairings before an Apply, 190 after",
+  "pr": 1083,
+  "area": "site-build/joomla",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run node --test --test-reporter=tap apps/tracy-web/test/joomla-kept-tags.test.mjs from the repository root.",
+    "Test 1 reads apps/tracy-web/src/quickstarts.json and lists every Joomla pin whose Claude Cowork plugin version is below 0.24.1.",
+    "Test 2 runs a whole Apply of the Joomla engine over the real JA Podcast j6 1.0.1 contract, Podcast and Pages unticked, against a site double holding the release's 190 tag pairings (articles 1-5 and 8-40, tags 3-7) and the plugin's rule (a write naming tags replaces them, any other write keeps them), and counts the tag map before and after."
+  ],
+  "expect": [
+    "Test 1 reports ok: no Joomla pin installs a plugin older than 0.24.1",
+    "Test 2 reports ok: the Apply wrote tagged articles (some unpublished), no write named tags, deleted a tag or took a category off, and the tag map holds 190 pairings after the Apply, every article with exactly its own tags"
+  ],
+  "selectors": {
+    "door_writes": "content.update, content.batch, content.delete, content.contract apply",
+    "pins": "apps/tracy-web/src/quickstarts.json joomla entries, cowork.version"
+  },
+  "evidence": "08/10/2026, a JA Podcast j6 1.0.1 site: a brief build took #__contentitem_tag_map from 190 rows to 0 (Joomla's Taggable behaviour read an article store naming no tags as every tag removed). Fixed in Claude Cowork for Joomla 0.24.1 (TracyHQ/claude-cowork c7f4d40), whose own e2e is joomla/cowork/tests/e2e/tags-kept.sh.",
+  "fence": "The Joomla plugin pin floor (0.24.1) in quickstarts.json, and the Joomla engine's writes never naming tags, deleting tags or trashing categories.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/joomla-kept-tags.test.mjs"],
+    "tests": [
+      "every Joomla pin installs a Claude Cowork plugin that keeps tags",
+      "a whole Apply over JA Podcast 1.0.1, Podcast and Pages unticked, keeps every article its five tags"
+    ]
+  }
+}

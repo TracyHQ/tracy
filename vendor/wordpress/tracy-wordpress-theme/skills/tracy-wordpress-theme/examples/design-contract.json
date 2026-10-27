@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "id": "example",
+  "revision": 1,
+  "source": {
+    "reference": "https://example.test/style-guide",
+    "inspiration": "example",
+    "version": "1",
+    "capturedAt": "2026-01-01T00:00:00Z"
+  },
+  "theme": {
+    "selector": "html",
+    "attribute": "data-theme",
+    "lightValue": "light",
+    "darkValue": "dark"
+  },
+  "variants": [
+    {
+      "id": "desktop-light",
+      "mode": "light",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "id": "desktop-dark",
+      "mode": "dark",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "id": "mobile-light",
+      "mode": "light",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "id": "mobile-dark",
+      "mode": "dark",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "tokens": {
+    "desktop-light": {
+      "--space": "16px"
+    },
+    "desktop-dark": {
+      "--space": "16px"
+    },
+    "mobile-light": {
+      "--space": "16px"
+    },
+    "mobile-dark": {
+      "--space": "16px"
+    }
+  },
+  "rules": [
+    {
+      "id": "heading",
+      "category": "typography",
+      "selector": "h1",
+      "styles": {
+        "desktop-light": {
+          "fontSize": "40px",
+          "fontWeight": "700"
+        },
+        "desktop-dark": {
+          "fontSize": "40px",
+          "fontWeight": "700"
+        },
+        "mobile-light": {
+          "fontSize": "40px",
+          "fontWeight": "700"
+        },
+        "mobile-dark": {
+          "fontSize": "40px",
+          "fontWeight": "700"
+        }
+      }
+    },
+    {
+      "id": "colors",
+      "category": "color",
+      "selector": "body",
+      "styles": {
+        "desktop-light": {
+          "color": "#ffffff"
+        },
+        "desktop-dark": {
+          "color": "#ffffff"
+        },
+        "mobile-light": {
+          "color": "#ffffff"
+        },
+        "mobile-dark": {
+          "color": "#ffffff"
+        }
+      }
+    },
+    {
+      "id": "spacing",
+      "category": "layout",
+      "selector": "main",
+      "styles": {
+        "desktop-light": {
+          "paddingLeft": "16px"
+        },
+        "desktop-dark": {
+          "paddingLeft": "16px"
+        },
+        "mobile-light": {
+          "paddingLeft": "16px"
+        },
+        "mobile-dark": {
+          "paddingLeft": "16px"
+        }
+      }
+    },
+    {
+      "id": "button",
+      "category": "component",
+      "selector": "button",
+      "styles": {
+        "desktop-light": {
+          "borderRadius": "12px"
+        },
+        "desktop-dark": {
+          "borderRadius": "12px"
+        },
+        "mobile-light": {
+          "borderRadius": "12px"
+        },
+        "mobile-dark": {
+          "borderRadius": "12px"
+        }
+      }
+    }
+  ],
+  "coverage": [
+    {
+      "selector": "h1",
+      "properties": ["fontSize", "fontWeight"]
+    }
+  ],
+  "pages": [
+    {
+      "id": "home",
+      "url": "https://example.test/home",
+      "expectedUrl": "https://example.test/home",
+      "identity": "main",
+      "rules": ["heading", "colors", "spacing", "button"],
+      "requiredRules": ["heading"]
+    },
+    {
+      "id": "about",
+      "url": "https://example.test/about",
+      "expectedUrl": "https://example.test/about",
+      "identity": "main",
+      "rules": ["heading", "colors", "spacing", "button"],
+      "requiredRules": ["heading"]
+    }
+  ],
+  "pilotPages": ["home"],
+  "exceptions": [],
+  "pending": []
+}

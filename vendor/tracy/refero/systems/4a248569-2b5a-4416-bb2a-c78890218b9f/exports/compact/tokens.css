@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-meadow-cream: #f7f4e8;
+  --color-hillside-ink: #000000;
+  --color-stone-border: #c6c3ba;
+  --color-drone-violet: #643aed;
+
+  /* Typography — Font Families */
+  --font-fkgroteskneue: 'fkGroteskNeue', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-fkscreamer: 'fkScreamer', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-fkdisplay: 'fkDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

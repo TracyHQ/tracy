@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+  "status": "complete",
+  "name": "Huly",
+  "url": "https://styles.refero.design/style/d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+  "sourceWebsite": "https://huly.io",
+  "extractedAt": "2026-06-03T16:38:51.197Z",
+  "capturedAt": "2026-10-08T05:17:46.214740+00:00",
+  "theme": "mixed",
+  "industry": "productivity",
+  "description": "Aurora through a midnight observatory — the hero is a vertical beam of violet melting into coral, and every quiet section below it borrows that same two-color story told at lower volume.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/2ec8869b-a38f-4ae1-9861-3f6099e59acc.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/991f82c9-0aff-4730-86ad-6d71a036a203.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/212a34b4-de08-4aad-a0c6-6e534d0b3ec4.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/475ab7e4-1c42-4eaf-890f-9d4b822e8f9a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4b579f92-8ca1-45d3-8760-7141e0ddf333.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "348910994e11875e592f6ac7183f684385e57d30d0353936d983185816f53f66",
+      "bytes": 21353
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d1969f247f5d15ae493329c49a2de2f5ee51743d969edd25864cf0b72314a19e",
+      "bytes": 121637
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3e14b5e1591507120e1680740f0ee9a4cb393760c553ae7b04d3d6ddfd905ade",
+      "bytes": 17669
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a3e92ff17fd938ecc0a5e34ffbe5d8275cc335af228a1bdf9fcaec7a3d94be8c",
+      "bytes": 17104
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "1487305a3a9cf272c0d3870e68e299b86457cbc8d0bd035c3ef4e77e69b43c79",
+      "bytes": 12358
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "cd3d88c2ad129874d128ec5621e336ab032fca2f5b241b7966fb69163329f05d",
+      "bytes": 3460
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c46131e6f8963dd7aff05a9a295b86e8b495f354c404f0eb6b8009b44e545bc0",
+      "bytes": 663
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2f1215aa00335bc22e129af000ae2fe16746c6843a69077c6d2c29d7085b6e69",
+      "bytes": 680
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8361dfca33ec59964794632bd15ac20483a3b6ca2dafabcb4808ee9376394d2f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e45f95f686aea87d25b564390c1196fe7a4b76b22da37f2844867be8c7d1abab",
+      "bytes": 47769
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9f5ed375f7303dd472447f31d542d6073d969f5dbc3362dcd08bba38a821573e",
+      "bytes": 25643
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "2484a8a271d1ce67784a764c5187d8021c7cb3d933c91eebf193145f344177a1",
+      "bytes": 65985
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2dc876b883a243ab12fe7c6d537e6124f5eaad13aa0fb305490d5f53e03dd5e0",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "39a1d55a8b81767491b1f7ddb5077d9b1421e644458ab0ea210ac1c1f2b2bf1a",
+      "bytes": 1994
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f5f623ce75abdef51a625385123860d605688b53be3b2a2156d59399da311025",
+      "bytes": 2654
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "41547c7a-3bbe-49f0-95d6-9701c9df9a5e",
+    "4e10797e-03eb-4efb-a16d-1d93272e1cab",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "6f3652cf-583f-411d-a117-3a03f6342917",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "b8a8976c-52d9-4ebb-95ea-4c40f4a9acab",
+    "cb6e4ab0-b8fe-45b0-bd22-6339b073e26d",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "d5307f56-76de-4d13-9741-f969c42e9aa5",
+    "dd89ce6c-f0aa-4ca8-bd63-19dcd81920a7",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

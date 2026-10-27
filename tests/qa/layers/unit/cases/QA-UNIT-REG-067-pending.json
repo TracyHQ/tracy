@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-067-pending",
+  "itemIds": ["regression:REG-067"],
+  "requirement": "Site changes badge: one WP-Cron upgrade run (two plugins + one theme, three log rows within a second) counts as ONE on another seat's badge, a cron content edit counts nothing, and the tab's \"N new\" says the badge's number while every row of the run is lit",
+  "oracle": {
+    "source": "tests/regression/cases/REG-067-site-changes-badge-automatic-software-grouped.json",
+    "ref": "PR #875 (feat); fix evidence: tasks/evidence/site-changes-badge-count/reg-063/ (measured 04/10/2026 on the private stand `badge`: three cron rows pulled at 13:45:50 → C's count 0 → 1; a cron post edit → still 1; V2 unseenCount 1 with the three software rows unseen and the post row not; card 1, divider '1 new since you last looked', three rows lit). Dev data behind the rule: 28 no-user WordPress rows on 13 site-days, all plugin/theme/core installs and updates, against one site's 24,220-row catalogue sync.",
+    "invariant": "LOG shows three rows with user_id 0, context 'cron': plugin akismet/akismet.php, plugin hello.php, theme twentytwentyfive, all op 'update'; P1 === 3; ROWS1 is those three rows with producer context 'cron' and occurred_at within two seconds of each other. U1.count === U0.count + 1 — three software rows of one cron run are ONE thing (an island of one unit `wordpress-tracy-log:auto`). P2 === 1; ROW2 is op 'update', resource_type 'post', context 'cron'; U2.count === U1.count — a cron content edit is on the list, never on the badge. V.unseenCount === U2.count; the three software items have origin.source 'automatic', unit 'wordpress-tracy-log:auto' and unseen true; the post item has origin.source 'automatic', unit null and unseen false. CARD.text === String(U2.count) (or '9+' past 9) and CARD.title names U2.count changes; TAB.divider matches new RegExp('^' + U2.count + ' new since you last looked') while TAB.unread >= 3 and TAB.lit includes the three software rows (akismet, hello.php, twentytwentyfive) — the badge's number on the divider, every row of the run lit; U3.count === 0 after the tab drew the list. No step changed anything outside the test site; no page or context was closed.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer flows, needs stand, site:wp, seat:owner, seat:viewer, chrome-watch"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:site:wp", "need:seat:owner", "need:seat:viewer", "need:chrome-watch"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-067"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:flows"],
+  "regression": {
+    "id": "REG-067",
+    "pr": 875,
+    "kind": "feat",
+    "area": "site-changes/badge",
+    "file": "tests/regression/cases/REG-067-site-changes-badge-automatic-software-grouped.json"
+  },
+  "ownerLayer": "flows",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "site:wp", "seat:owner", "seat:viewer", "chrome-watch"]
+}

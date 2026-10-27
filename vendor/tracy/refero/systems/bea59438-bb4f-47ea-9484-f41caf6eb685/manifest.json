@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "bea59438-bb4f-47ea-9484-f41caf6eb685",
+  "status": "complete",
+  "name": "Milanote",
+  "url": "https://styles.refero.design/style/bea59438-bb4f-47ea-9484-f41caf6eb685",
+  "sourceWebsite": "https://milanote.com",
+  "extractedAt": "2026-09-24T17:41:32.731Z",
+  "capturedAt": "2026-10-08T05:16:56.207229+00:00",
+  "theme": "mixed",
+  "industry": "productivity",
+  "description": "Milanote — pinned creative studio. Build pages as an editorial gallery around floating visual boards: dark framing walls, white exhibit space, and physical-looking screenshots with soft depth.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8ed88825-9934-4209-a020-53a0cbf93816.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2fab0fe721628fd24c2a8718d27611af101ede2e314b6d37c266c19eda090d7b",
+      "bytes": 21371
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6c4327c46c46039cf617178ee9d88bef736aafe666657f53857a3054dc527dc3",
+      "bytes": 112294
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b70d733e1534c286eb2f030ccecb6e18b5b80d4cca8eb477d225fb588611c9df",
+      "bytes": 16153
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f8dbdf231374dc92e5c2dcb3b4530880ef8740a73fca0aaffcb069863fe309d7",
+      "bytes": 13173
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0d680f1d7c3e846e95ac1f1df070189a207e13132341fded45343a8400ac6b20",
+      "bytes": 11141
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8ba402fd9d72b84f3a4070db481390c260eb34b8b08d5d1f54ed77da42c33e6a",
+      "bytes": 3261
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "5cc3c47969ae689f60173f07b06216068bcb8ad0eb0898f0deac26e4bd3d7426",
+      "bytes": 889
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a6aaba2c19a601fd27dba1d61b69b699ffc31e2b1dc46aa378c761a1362fe613",
+      "bytes": 906
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "70e5de0a7b7971c4b1b0b3a50d94f6d46aaae7484c6051132cb751b68eef1448",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e66bea1bbf9d5c90e98cb25e8a068ce8d485ea6f68f5799ddd128336da0ce0ca",
+      "bytes": 42394
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "29e1567ca054bca72b0c13dc0927fbb027a6d553c077f2b7e380ea2fffaaf264",
+      "bytes": 22390
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "22c597112f0b6e74492abd82e752ec65764eadfe8b1f8e47d07a724bc6438ca0",
+      "bytes": 48683
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4583d0cf01edb3970f080f28759fbb4eb0f554ae044e0f0fb5f3b4234de65dae",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "07a49d67f7cc8e2a1946c6ae167531b1535fca1541fae26e679a68b2d322f7ce",
+      "bytes": 2664
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c463602440618b98ab1d5c0ab5b10dd189c1930b253f5ca39f1ad687d840aa6f",
+      "bytes": 3254
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "36de4683-cce3-4a01-820b-65ef8815747b",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "586b97ac-f687-46ba-bbf7-31031cfcc110",
+    "5d8ad116-b3d8-4890-a969-5b856b35c678",
+    "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+    "7368cfab-6313-4e50-97e5-c3318c52e7fe",
+    "754ad72f-9abd-43df-ac72-c6abf2036ed4",
+    "88e9d606-7e8f-479c-9508-1b081e254ed9",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "989d8d71-c161-4410-8157-ad6ade0bd4be",
+    "b8ce0a90-40c6-4518-940c-8c97ccf9c1a0",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "bea59438-bb4f-47ea-9484-f41caf6eb685",
+    "c08ebca5-87d4-4c19-a5d7-ae5e670dae11",
+    "c955d25a-b32a-441d-9f07-a260d1df897b",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ef545f0f-e7ad-4296-b3eb-65f8d045a5d9",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

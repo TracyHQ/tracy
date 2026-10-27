@@ -1,0 +1,1410 @@
+{
+  "meta": {
+    "url": "https://hopper.com",
+    "siteName": "Hopper",
+    "extractedAt": "2026-09-24T17:40:06.094Z",
+    "durationMs": 58025,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "elementCount": 404,
+    "telemetry": {
+      "enrichment": {
+        "componentHtmlStatus": "pending",
+        "attempts": 0
+      }
+    }
+  },
+  "raw": {
+    "colors": {
+      "tokens": [
+        {
+          "hex": "#1878ec",
+          "oklch": {
+            "c": 0.194164028100276,
+            "h": 256.8687708486921,
+            "l": 0.5868313240325157
+          },
+          "contexts": [
+            "card",
+            "button",
+            "link",
+            "body",
+            "other"
+          ],
+          "frequency": 31,
+          "confidence": 1,
+          "prominence": 4889230,
+          "properties": [
+            "backgroundColor",
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "body/color": 1,
+            "link/color": 27,
+            "other/fill": 1,
+            "card/backgroundColor": 1,
+            "button/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#f6f6f6",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.9731459330353415
+          },
+          "contexts": [
+            "card",
+            "other"
+          ],
+          "frequency": 4,
+          "confidence": 1,
+          "prominence": 1346167.9980761819,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "card/backgroundColor": 3,
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#ededed",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.9461052851327489
+          },
+          "contexts": [
+            "body"
+          ],
+          "frequency": 51,
+          "confidence": 1,
+          "prominence": 438095.8936582973,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "body/backgroundColor": 51
+          }
+        },
+        {
+          "hex": "#d9d9d9",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.8853053140427017
+          },
+          "contexts": [
+            "other",
+            "card"
+          ],
+          "frequency": 34,
+          "confidence": 1,
+          "prominence": 340584.3923251458,
+          "properties": [
+            "borderColor"
+          ],
+          "usageCounts": {
+            "card/borderColor": 12,
+            "other/borderColor": 22
+          }
+        },
+        {
+          "hex": "#ffffff",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 1.0000000000000002
+          },
+          "contexts": [
+            "button",
+            "body",
+            "link",
+            "other"
+          ],
+          "frequency": 39,
+          "confidence": 1,
+          "prominence": 249066.23484072858,
+          "properties": [
+            "color",
+            "borderColor",
+            "backgroundColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "body/color": 5,
+            "link/color": 1,
+            "other/fill": 8,
+            "button/color": 7,
+            "button/borderColor": 8,
+            "other/backgroundColor": 10
+          }
+        },
+        {
+          "hex": "#111111",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.17763777307657064
+          },
+          "contexts": [
+            "input",
+            "heading",
+            "button",
+            "body",
+            "link",
+            "other"
+          ],
+          "frequency": 22,
+          "confidence": 1,
+          "prominence": 139325.708246556,
+          "properties": [
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "body/color": 9,
+            "link/color": 3,
+            "other/fill": 1,
+            "input/color": 3,
+            "other/color": 1,
+            "button/color": 1,
+            "heading/color": 4
+          }
+        },
+        {
+          "hex": "#bfbfbf",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.8054428611228005
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 46800,
+          "properties": [
+            "boxShadow"
+          ],
+          "usageCounts": {
+            "other/boxShadow": 1
+          }
+        },
+        {
+          "hex": "#606060",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.4890564485258221
+          },
+          "contexts": [
+            "other",
+            "link"
+          ],
+          "frequency": 38,
+          "confidence": 1,
+          "prominence": 20480.933598091215,
+          "properties": [
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "link/color": 27,
+            "other/fill": 8,
+            "other/color": 3
+          }
+        },
+        {
+          "hex": "#fa6866",
+          "oklch": {
+            "c": 0.17966344551634494,
+            "h": 23.67219023770004,
+            "l": 0.6995465516215176
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 3724,
+          "properties": [
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 1
+          }
+        },
+        {
+          "hex": "#000000",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 5,
+          "confidence": 1,
+          "prominence": 3153.65425087981,
+          "properties": [
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 5
+          }
+        },
+        {
+          "hex": "#b3b3b3",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.7651658759683705
+          },
+          "contexts": [
+            "button",
+            "other"
+          ],
+          "frequency": 2,
+          "confidence": 1,
+          "prominence": 2054.1114009346184,
+          "properties": [
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 1,
+            "button/color": 1
+          }
+        },
+        {
+          "hex": "#fac624",
+          "oklch": {
+            "c": 0.16659116119576134,
+            "h": 88.46487425000498,
+            "l": 0.8492885809038535
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 11,
+          "confidence": 1,
+          "prominence": 415.8556500836541,
+          "properties": [
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 11
+          }
+        },
+        {
+          "hex": "#4285f4",
+          "oklch": {
+            "c": 0.18002738094419357,
+            "h": 259.95600432861727,
+            "l": 0.63038615374003
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 142,
+          "properties": [
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 1
+          }
+        },
+        {
+          "hex": "#ea4335",
+          "oklch": {
+            "c": 0.205841062123344,
+            "h": 29.077253722430367,
+            "l": 0.625730845256174
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 130,
+          "properties": [
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 1
+          }
+        },
+        {
+          "hex": "#34a853",
+          "oklch": {
+            "c": 0.16027720143019927,
+            "h": 148.49546939929175,
+            "l": 0.6475493045428872
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 125,
+          "properties": [
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 1
+          }
+        }
+      ],
+      "isDarkMode": false,
+      "colorfulness": 0.09579402204909553,
+      "contrastPairs": [
+        {
+          "level": "AAA",
+          "ratio": 21,
+          "background": "#ffffff",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 19.43,
+          "background": "#f6f6f6",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 18.88,
+          "background": "#ffffff",
+          "foreground": "#111111"
+        },
+        {
+          "level": "AAA",
+          "ratio": 17.94,
+          "background": "#ededed",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 17.47,
+          "background": "#f6f6f6",
+          "foreground": "#111111"
+        },
+        {
+          "level": "AAA",
+          "ratio": 16.13,
+          "background": "#ededed",
+          "foreground": "#111111"
+        },
+        {
+          "level": "AAA",
+          "ratio": 14.88,
+          "background": "#d9d9d9",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 13.38,
+          "background": "#d9d9d9",
+          "foreground": "#111111"
+        },
+        {
+          "level": "AAA",
+          "ratio": 13.17,
+          "background": "#fac624",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 11.84,
+          "background": "#fac624",
+          "foreground": "#111111"
+        },
+        {
+          "level": "AAA",
+          "ratio": 11.42,
+          "background": "#bfbfbf",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 10.27,
+          "background": "#bfbfbf",
+          "foreground": "#111111"
+        },
+        {
+          "level": "AAA",
+          "ratio": 10.02,
+          "background": "#b3b3b3",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 9.01,
+          "background": "#b3b3b3",
+          "foreground": "#111111"
+        },
+        {
+          "level": "AA",
+          "ratio": 6.29,
+          "background": "#ffffff",
+          "foreground": "#606060"
+        },
+        {
+          "level": "AA",
+          "ratio": 5.82,
+          "background": "#f6f6f6",
+          "foreground": "#606060"
+        },
+        {
+          "level": "AA",
+          "ratio": 5.37,
+          "background": "#ededed",
+          "foreground": "#606060"
+        },
+        {
+          "level": "fail",
+          "ratio": 4.46,
+          "background": "#d9d9d9",
+          "foreground": "#606060"
+        },
+        {
+          "level": "fail",
+          "ratio": 4.44,
+          "background": "#1878ec",
+          "foreground": "#111111"
+        },
+        {
+          "level": "fail",
+          "ratio": 4.25,
+          "background": "#ffffff",
+          "foreground": "#1878ec"
+        }
+      ]
+    },
+    "shapes": {
+      "radii": [
+        {
+          "value": 4,
+          "contexts": [
+            "body",
+            "link"
+          ],
+          "frequency": 33
+        },
+        {
+          "value": 1000,
+          "contexts": [
+            "button",
+            "other"
+          ],
+          "frequency": 15
+        },
+        {
+          "value": 20,
+          "corners": [
+            0,
+            0,
+            20,
+            20
+          ],
+          "contexts": [
+            "body",
+            "other"
+          ],
+          "frequency": 12,
+          "asymmetric": true
+        },
+        {
+          "value": 6.7,
+          "corners": [
+            4,
+            0,
+            6.7,
+            0
+          ],
+          "contexts": [
+            "body"
+          ],
+          "frequency": 9,
+          "asymmetric": true
+        },
+        {
+          "value": 9999,
+          "contexts": [
+            "button",
+            "body"
+          ],
+          "frequency": 9
+        },
+        {
+          "value": 16,
+          "contexts": [
+            "card"
+          ],
+          "frequency": 3
+        },
+        {
+          "value": 12,
+          "contexts": [
+            "link",
+            "button"
+          ],
+          "frequency": 2
+        },
+        {
+          "value": 32,
+          "contexts": [
+            "card",
+            "image"
+          ],
+          "frequency": 2
+        }
+      ],
+      "shadows": []
+    },
+    "spacing": {
+      "tokens": [
+        {
+          "value": 2,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 6,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 4,
+          "contexts": [
+            "other",
+            "input"
+          ],
+          "frequency": 27,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|other",
+            "paddingLeft|other",
+            "paddingRight|input",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 6,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 6,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 8,
+          "contexts": [
+            "other",
+            "button",
+            "link",
+            "input"
+          ],
+          "frequency": 85,
+          "properties": [
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom",
+            "paddingLeft",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other",
+            "rowGap|other",
+            "columnGap|other",
+            "paddingTop|button",
+            "paddingBottom|button",
+            "paddingRight|button",
+            "paddingLeft|button",
+            "paddingTop|link",
+            "paddingBottom|link",
+            "rowGap|link",
+            "columnGap|link",
+            "rowGap|button",
+            "columnGap|button",
+            "paddingBottom|input"
+          ]
+        },
+        {
+          "value": 10,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 8,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 11,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 12,
+          "contexts": [
+            "other",
+            "button",
+            "input"
+          ],
+          "frequency": 38,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "paddingRight",
+            "paddingLeft",
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other",
+            "paddingRight|button",
+            "paddingLeft|button",
+            "paddingRight|input",
+            "paddingTop|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 16,
+          "contexts": [
+            "link",
+            "other"
+          ],
+          "frequency": 33,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|link",
+            "paddingLeft|link",
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 20,
+          "contexts": [
+            "input",
+            "other"
+          ],
+          "frequency": 22,
+          "properties": [
+            "paddingLeft",
+            "rowGap",
+            "columnGap",
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingLeft|input",
+            "rowGap|other",
+            "columnGap|other",
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 24,
+          "contexts": [
+            "button",
+            "input",
+            "other"
+          ],
+          "frequency": 27,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|button",
+            "paddingLeft|button",
+            "paddingLeft|input",
+            "paddingTop|other",
+            "paddingBottom|other",
+            "rowGap|other",
+            "columnGap|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 25,
+          "contexts": [
+            "input"
+          ],
+          "frequency": 3,
+          "properties": [
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|input"
+          ]
+        },
+        {
+          "value": 28,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 32,
+          "contexts": [
+            "other",
+            "footer"
+          ],
+          "frequency": 27,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|other",
+            "paddingLeft|other",
+            "paddingTop|other",
+            "paddingBottom|other",
+            "rowGap|other",
+            "columnGap|other",
+            "paddingRight|footer",
+            "paddingLeft|footer"
+          ]
+        },
+        {
+          "value": 40,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 5,
+          "properties": [
+            "paddingRight",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|other",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 48,
+          "contexts": [
+            "other",
+            "footer"
+          ],
+          "frequency": 9,
+          "properties": [
+            "paddingTop",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingTop|footer",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 56,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 68,
+          "contexts": [
+            "footer"
+          ],
+          "frequency": 1,
+          "properties": [
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingBottom|footer"
+          ]
+        },
+        {
+          "value": 131,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|other",
+            "marginLeft|other"
+          ]
+        }
+      ],
+      "density": "comfortable",
+      "baseUnit": 4
+    },
+    "gradients": [],
+    "typography": {
+      "fonts": [
+        {
+          "family": "Proxima Nova",
+          "source": "custom",
+          "weights": [
+            400,
+            600,
+            700,
+            800
+          ],
+          "frequency": 365,
+          "fontFeatureSettings": []
+        }
+      ],
+      "scale": {
+        "base": 16,
+        "name": "Minor Second",
+        "ratio": 1.067,
+        "confidence": 1
+      },
+      "steps": [
+        {
+          "size": 14,
+          "family": "Proxima Nova",
+          "weight": 600,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 7,
+          "lineHeight": 1.33,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "Proxima Nova",
+          "weight": 400,
+          "contexts": [
+            "link",
+            "icon"
+          ],
+          "frequency": 65,
+          "lineHeight": 1.43,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Proxima Nova",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "card",
+            "image",
+            "link",
+            "body",
+            "icon",
+            "footer"
+          ],
+          "frequency": 247,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Proxima Nova",
+          "weight": 400,
+          "contexts": [
+            "button",
+            "other",
+            "icon"
+          ],
+          "frequency": 12,
+          "lineHeight": 1.25,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Proxima Nova",
+          "weight": 600,
+          "contexts": [
+            "body",
+            "link",
+            "icon",
+            "button"
+          ],
+          "frequency": 7,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Proxima Nova",
+          "weight": 600,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 3,
+          "lineHeight": 1.5,
+          "letterSpacing": -0.01,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Proxima Nova",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 3,
+          "lineHeight": 1.5,
+          "letterSpacing": -0.01,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Proxima Nova",
+          "weight": 600,
+          "contexts": [
+            "other",
+            "input"
+          ],
+          "frequency": 6,
+          "lineHeight": 1.44,
+          "letterSpacing": -0.01,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Proxima Nova",
+          "weight": 600,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.43,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 18,
+          "family": "Proxima Nova",
+          "weight": 600,
+          "contexts": [
+            "button",
+            "icon",
+            "body"
+          ],
+          "frequency": 3,
+          "lineHeight": 1.33,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 20,
+          "family": "Proxima Nova",
+          "weight": 700,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 24,
+          "family": "Proxima Nova",
+          "weight": 400,
+          "contexts": [
+            "button",
+            "icon"
+          ],
+          "frequency": 6,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 24,
+          "family": "Proxima Nova",
+          "weight": 700,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.33,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 32,
+          "family": "Proxima Nova",
+          "weight": 800,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.25,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        }
+      ]
+    }
+  },
+  "designSystem": {
+    "dos": [
+      "Use #ffffff as the default content surface and reserve #f6f6f6 or #ededed for large muted section bands.",
+      "Use #111111 for headings; set section headings at 20px/28px weight 700, card headings at 24px/32px weight 700, and app-promotion headings at 32px/40px weight 800.",
+      "Use #1878ec for search submission, destination links, and compact promotional surfaces.",
+      "Use 1000px or 9999px radii for horizontal hero controls and search surfaces.",
+      "Use 32px radii for large photographic hero frames and blue promotional tiles.",
+      "Use 1px solid #d9d9d9 dividers between search fields and on bordered card edges.",
+      "Keep common control padding at 8px vertical with 12px horizontal padding; use 8px gaps between tightly related controls."
+    ],
+    "donts": [
+      "Do not apply drop shadows to #f6f6f6 cards or #1878ec promotional tiles.",
+      "Do not use #1878ec as a page background; confine it to links, search submission, and contained promotional areas.",
+      "Do not replace hero navigation’s transparent white treatment with dark text or filled dark buttons.",
+      "Do not use sharp corners on hero imagery; retain the 32px image radius.",
+      "Do not use more than a 1px #d9d9d9 border for structural separation.",
+      "Do not set navigation, sign-in, or trip links below 16px/24px weight 600.",
+      "Do not turn the search fields into individually rounded inputs; retain the shared white pill surface and 0px field radii."
+    ],
+    "theme": "light",
+    "colors": [
+      {
+        "hex": "#1878ec",
+        "name": "Hopper Blue",
+        "role": "Search button fill, destination links, inline navigation links, and selected product accents — saturated blue punctuates an otherwise achromatic travel interface",
+        "group": "brand"
+      },
+      {
+        "hex": "#ffffff",
+        "name": "White",
+        "role": "Primary page and card surfaces; white text and outlines over the photographic hero",
+        "group": "neutral"
+      },
+      {
+        "hex": "#f6f6f6",
+        "name": "Cloud",
+        "role": "Muted card and footer-region surfaces",
+        "group": "neutral"
+      },
+      {
+        "hex": "#ededed",
+        "name": "Mist",
+        "role": "Secondary page bands and subdued background areas",
+        "group": "neutral"
+      },
+      {
+        "hex": "#d9d9d9",
+        "name": "Divider Gray",
+        "role": "1px card borders, search-field separators, and quiet structural rules",
+        "group": "neutral"
+      },
+      {
+        "hex": "#111111",
+        "name": "Ink",
+        "role": "Headings, search-entry text, and highest-emphasis content",
+        "group": "neutral"
+      },
+      {
+        "hex": "#606060",
+        "name": "Graphite",
+        "role": "Muted informational text, footer links, and secondary iconography",
+        "group": "neutral"
+      },
+      {
+        "hex": "#b3b3b3",
+        "name": "Placeholder Gray",
+        "role": "Placeholder text and inactive control icons",
+        "group": "neutral"
+      }
+    ],
+    "layout": "The page begins with a large, contained destination-photo hero whose rounded image frame holds the logo, horizontally centered product navigation, right-aligned utility controls, and a centered horizontal booking search bar. Below, white content space gives deal content broad breathing room, followed by a two-column app-download composition: left-aligned text, QR code, download link, and ratings sit beside overlapping phone product screenshots. The page closes with a pale-gray exploration band containing a compact heading and a four-column directory of blue destination links. Navigation is a single top bar embedded in the hero rather than a separate opaque header; the page rhythm alternates photographic hero, white content, then muted utility/footer surface.",
+    "imagery": "Photography is the primary atmospheric visual: a wide destination landscape fills the hero, with the place itself functioning as the product invitation. The crop is immersive rather than editorial, contained in a 32px rounded frame and overlaid with white navigation and booking controls. Product imagery appears in the app block as overlapping, upright mobile-screen screenshots with raw device edges; it explains the mobile experience rather than serving as abstract decoration. Icons are compact white or dark line symbols used beside navigation labels and controls, while QR code and store-rating graphics provide functional acquisition proof.",
+    "similar": [
+      {
+        "why": "Shares a destination-led booking hero with a centralized multi-field search control and restrained white overlay navigation.",
+        "business": "Airbnb"
+      },
+      {
+        "why": "Shares travel-product navigation with compact transport icons and blue as the booking and link accent.",
+        "business": "Skyscanner"
+      },
+      {
+        "why": "Shares an image-backed travel-discovery entry point and a modular search interface for multiple trip parameters.",
+        "business": "KAYAK"
+      },
+      {
+        "why": "Shares broad destination photography, contained rounded image framing, and accommodation-search emphasis.",
+        "business": "Vrbo"
+      }
+    ],
+    "spacing": {
+      "radius": {
+        "cards": "16px",
+        "links": "4px",
+        "pills": "9999px",
+        "images": "32px",
+        "inputs": "0px",
+        "buttons": "1000px",
+        "compactControls": "12px"
+      },
+      "elementGap": "8px",
+      "sectionGap": "48px",
+      "cardPadding": "12px",
+      "pageMaxWidth": null
+    },
+    "industry": "ecommerce",
+    "surfaces": [
+      {
+        "hex": "#ffffff",
+        "name": "White Canvas",
+        "level": 0,
+        "purpose": "Primary page background and booking-search surface."
+      },
+      {
+        "hex": "#f6f6f6",
+        "name": "Cloud Surface",
+        "level": 1,
+        "purpose": "Muted destination cards and low-emphasis section surfaces."
+      },
+      {
+        "hex": "#ededed",
+        "name": "Mist Band",
+        "level": 2,
+        "purpose": "Large footer and exploration background bands."
+      },
+      {
+        "hex": "#1878ec",
+        "name": "Hopper Blue Surface",
+        "level": 3,
+        "purpose": "Contained promotional cards and booking search submission."
+      }
+    ],
+    "northStar": "Santorini window at dusk. A softened destination photograph acts as the atmospheric top layer, with compact white navigation and booking controls suspended over it.",
+    "typeScale": [
+      {
+        "role": "destination-link",
+        "size": 14,
+        "family": "Proxima Nova",
+        "weight": 400,
+        "lineHeight": 1.43,
+        "letterSpacing": 0
+      },
+      {
+        "role": "body",
+        "size": 16,
+        "family": "Proxima Nova",
+        "weight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": 0
+      },
+      {
+        "role": "nav",
+        "size": 16,
+        "family": "Proxima Nova",
+        "weight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": 0
+      },
+      {
+        "role": "section-heading",
+        "size": 20,
+        "family": "Proxima Nova",
+        "weight": 700,
+        "lineHeight": 1.4,
+        "letterSpacing": 0
+      },
+      {
+        "role": "card-heading",
+        "size": 24,
+        "family": "Proxima Nova",
+        "weight": 700,
+        "lineHeight": 1.33,
+        "letterSpacing": 0
+      },
+      {
+        "role": "app-heading",
+        "size": 32,
+        "family": "Proxima Nova",
+        "weight": 800,
+        "lineHeight": 1.25,
+        "letterSpacing": 0
+      }
+    ],
+    "components": [
+      {
+        "name": "Hero Destination Frame",
+        "role": "Top-level travel discovery surface",
+        "description": "Use a destination photograph as a contained wide frame with 32px corners. Overlay white navigation and utility controls directly on the image; keep the image label in white and align it toward the lower edge."
+      },
+      {
+        "name": "Transparent Product Navigation",
+        "role": "Hero service switching",
+        "description": "Use 16px/24px Proxima Nova at 600 in #ffffff, paired with small white line icons. Each item has 8px vertical and 12px horizontal padding, transparent fill, and a 1000px radius; the selected item receives a 1px #ffffff border."
+      },
+      {
+        "name": "Hero Sign-In Button",
+        "role": "Outlined account entry",
+        "description": "Use transparent fill, 1px solid #ffffff border, #ffffff 16px/24px semibold text, 8px 24px padding, and a 12px radius. Keep this treatment exclusive to controls placed over dark or photographic imagery."
+      },
+      {
+        "name": "Circular Utility Icon Button",
+        "role": "Hero search or locale utility control",
+        "description": "Use transparent fill, a 1px #ffffff outline, #ffffff iconography, 8px padding, and a 50% radius. The control is visually smaller than text-bearing hero buttons."
+      },
+      {
+        "name": "Destination Search Bar",
+        "role": "Multi-field booking search",
+        "description": "Build a white pill-shaped horizontal surface with a 9999px radius. Separate fields with 1px #d9d9d9 vertical rules; use #111111 for entered values, #b3b3b3 for placeholder values, 24px left padding, 25px top padding, 7px bottom padding, and 4px right padding."
+      },
+      {
+        "name": "Blue Search Submit Button",
+        "role": "Booking-search submission",
+        "description": "Use a #1878ec circular fill with white search iconography and a 9999px radius. Seat it inside the right end of the white search bar rather than expanding it into a page-wide button."
+      },
+      {
+        "name": "Destination Deal Card",
+        "role": "Browseable destination promotion",
+        "description": "Use a #f6f6f6 surface, 16px radius, no box shadow, and no internal card padding. Preserve image-first composition and use a 1px #d9d9d9 border only where cards need separation from a white background."
+      },
+      {
+        "name": "Blue Promotional Tile",
+        "role": "Branded feature or offer surface",
+        "description": "Use #1878ec as a flat full-bleed card background with a 32px radius and no shadow. Set internal copy and icons in #ffffff."
+      },
+      {
+        "name": "App Download Showcase",
+        "role": "Mobile-app acquisition block",
+        "description": "Place a 32px/40px, weight-800 #111111 heading above 16px/24px supporting copy. Pair the text column with a raw QR code, blue #1878ec download link treatment, store-rating marks, and overlapping upright phone screenshots."
+      },
+      {
+        "name": "Destination Link Directory",
+        "role": "Footer exploration navigation",
+        "description": "Use a #f6f6f6 or #ededed section band with a 20px/28px, weight-700 #111111 section heading. Set destination links in #1878ec at 14px/20px weight 400, arranged in evenly spaced columns with 8px vertical rhythm."
+      },
+      {
+        "name": "Text Link",
+        "role": "Inline and directory navigation",
+        "description": "Use #1878ec at 14px/20px for compact destination links or 16px/24px for utility links, both at weight 400. Retain the 4px link radius for focus and hover containment."
+      }
+    ],
+    "typography": [
+      {
+        "role": "Single-family system for all navigation, controls, destination links, body copy, and headings. The 700-800 heading weights give short labels a compact, punchy travel-retail voice rather than using oversized display type.",
+        "sizes": "14px, 16px, 18px, 20px, 24px, 32px",
+        "family": "Proxima Nova",
+        "weight": "400, 600, 700, 800",
+        "lineHeight": "1.25, 1.33, 1.40, 1.43, 1.44, 1.50",
+        "substitute": "Nunito Sans",
+        "letterSpacing": "-0.16px at 16px on tightened UI text; otherwise normal tracking in measured headings, links, and navigation."
+      }
+    ],
+    "description": "Hopper frames travel booking as a panoramic destination window: a full-bleed, rounded travel photograph carries the navigation and search controls, while the rest of the page returns to expansive white and pale-gray utility sections. The interface is text-dominant outside of imagery, using tightly structured Proxima Nova headings, blue links as navigational punctuation, and restrained 1px gray dividers. Pill-shaped controls float over photography, while destination and app-promotion content sits in flat, border-led surfaces with virtually no shadow.",
+    "customSections": [
+      {
+        "title": "Agent Prompt Guide",
+        "content": "Quick Color Reference:\n- Hopper Blue: #1878ec — Search button fill, destination links, inline navigation links, and selected product accents — saturated blue punctuates an otherwise achromatic travel interface\n- White: #ffffff — Primary page and card surfaces; white text and outlines over the photographic hero\n- Cloud: #f6f6f6 — Muted card and footer-region surfaces\n- Mist: #ededed — Secondary page bands and subdued background areas\n- Divider Gray: #d9d9d9 — 1px card borders, search-field separators, and quiet structural rules\n- Ink: #111111 — Headings, search-entry text, and highest-emphasis content\n- Graphite: #606060 — Muted informational text, footer links, and secondary iconography\n- Placeholder Gray: #b3b3b3 — Placeholder text and inactive control icons\n\nCreate a rounded destination-photo hero with a 32px image radius; overlay a transparent navigation row in #ffffff using 16px/24px Proxima Nova weight 600 and white line icons.\nCreate a shared white booking-search pill with 9999px corners, #d9d9d9 field dividers, #111111 values, #b3b3b3 placeholders, and a circular #1878ec search submit control.\nCreate an app-download section on #ffffff with a #111111 Proxima Nova 32px/40px weight-800 heading, 16px/24px support text, a QR code, a #1878ec text link, and overlapping phone screenshots.\nCreate a destination directory on a #ededed band using a #111111 20px/28px weight-700 heading and four columns of #1878ec 14px/20px links.\nCreate a flat #f6f6f6 destination card with 16px corners, a 1px #d9d9d9 edge where needed, and no shadow."
+      }
+    ],
+    "elevationPhilosophy": "Surfaces are separated by photo framing, pale tonal shifts, 1px #d9d9d9 borders, and large-radius silhouettes rather than box shadows. The booking bar achieves prominence through its white fill against photography, not raised elevation."
+  },
+  "screenshot": {
+    "url": "https://images.refero.design/styles/refero.design/image/658ba7de-bd0e-4e49-b209-cba8a08ced29.jpg",
+    "thumbnail": "https://images.refero.design/styles/refero.design/image/09898e5b-f56e-4a74-8edf-99b1868908d2.jpg"
+  }
+}

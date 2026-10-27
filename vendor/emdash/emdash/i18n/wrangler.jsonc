@@ -1,0 +1,17 @@
+{
+	"name": "emdash-i18n",
+	"compatibility_date": "2026-04-01",
+	"vars": {
+		"NODE_OPTIONS": "--max-old-space-size=6144",
+	},
+	"assets": {
+		"directory": "./dist",
+	},
+	"routes": [
+		{
+			"pattern": "i18n.emdashcms.com",
+			"zone_name": "emdashcms.com",
+			"custom_domain": true,
+		},
+	],
+}

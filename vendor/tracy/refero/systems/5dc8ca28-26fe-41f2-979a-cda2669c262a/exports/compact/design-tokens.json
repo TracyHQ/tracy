@@ -1,0 +1,99 @@
+{
+  "color": {
+    "ivory-page": {
+      "$value": "#fffcf2",
+      "$type": "color",
+      "$description": "Ivory Page — Primary canvas — page background, card surfaces, light section bands"
+    },
+    "sandstone": {
+      "$value": "#f0ecdf",
+      "$type": "color",
+      "$description": "Sandstone — Secondary surface — alternating bands, section dividers, subtle card fills"
+    },
+    "pebble-border": {
+      "$value": "#d0cec6",
+      "$type": "color",
+      "$description": "Pebble Border — Hairline borders, button outlines, nav dividers, card edges"
+    },
+    "driftwood": {
+      "$value": "#a19c8c",
+      "$type": "color",
+      "$description": "Driftwood — Muted decorative borders and tonal accents where a softer line is needed"
+    },
+    "stone-mid": {
+      "$value": "#68655b",
+      "$type": "color",
+      "$description": "Stone Mid — Mid-neutral text, icon strokes, secondary borders"
+    },
+    "graphite": {
+      "$value": "#545454",
+      "$type": "color",
+      "$description": "Graphite — Body text, link borders, icon color — the workhorse neutral for readable content"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Heading text, emphasized body copy, dark surface text"
+    },
+    "obsidian": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Obsidian — Primary action fill, strongest text, dominant border color — the visual anchor"
+    },
+    "jet-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Jet Black — SVG fills, icon strokes, maximum contrast accents"
+    },
+    "smoke": {
+      "$value": "#393737",
+      "$type": "color",
+      "$description": "Smoke — Decorative SVG fills and strokes — vector artwork on dark sections"
+    },
+    "honey-yellow": {
+      "$value": "#f7cf49",
+      "$type": "color",
+      "$description": "Honey Yellow — Primary brand accent — announcement bar, highlight badges, decorative blocks, the signature warm punctuation against cream"
+    },
+    "burnt-umber": {
+      "$value": "#492812",
+      "$type": "color",
+      "$description": "Burnt Umber — Dark warm accent — button fills in warm contexts, icon borders, tertiary buttons needing chromatic weight"
+    },
+    "powder-blue": {
+      "$value": "#a9e1ff",
+      "$type": "color",
+      "$description": "Powder Blue — Cool accent — secondary CTA fills, info badges, test card backgrounds, the soft counterpoint to honey yellow"
+    },
+    "ash": {
+      "$value": "#8a8883",
+      "$type": "color",
+      "$description": "Ash — Subtle border accent, near-gray for dividers that need to recede"
+    }
+  },
+  "font": {
+    "instrument-sans": {
+      "$value": "Instrument Sans",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all editorial and UI text — display headlines compress to 0.75 with -3.17em tracking, body sits at 1.5–1.71 with relaxed tracking"
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced label face for nav items, buttons, badges, and tags — set uppercase with wide positive tracking to read as typeset stamps"
+    },
+    "font-awesome-7-sharp": {
+      "$value": "Font Awesome 7 Sharp",
+      "$type": "fontFamily",
+      "$description": "Icon glyphs rendered at heavy weight — sharp geometric forms that match the editorial type system"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.heyquin.io",
+      "siteName": "Quin",
+      "extractedAt": "2026-06-03T22:07:21.905Z",
+      "variant": "compact"
+    }
+  }
+}

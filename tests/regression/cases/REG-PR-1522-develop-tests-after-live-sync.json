@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1522-develop-tests-after-live-sync",
+  "kind": "fix",
+  "title": "After the live sync landed on develop, its two site doors are in the API reference, the config test knows localStand, no fleet script reads a pipe with head under pipefail, and every sync translation keeps the terms file, site and backup",
+  "pr": 1522,
+  "area": "import/live-sync",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --import tsx --test --test-reporter=tap apps/tracy-web/test/api-reference.test.mjs apps/tracy-web/test/config.test.mjs scripts/test/pipefail-early-exit.test.mjs scripts/test/kept-terms.test.ts"
+  ],
+  "expect": [
+    "S1: 'every route the app serves is in the reference, and every documented route is served' is ok: GET and POST /api/sites/:key/sync are documented.",
+    "S1: 'the seat removal is documented as naming its action' is ok: the bodyOptional rows are exactly POST /api/sites/:key/sync and DELETE /api/sites/:key/seats/:grant.",
+    "S1: 'empty means off: no mail key is the console transport, no session domain is host-only' is ok: the config keys include localStand, true on a plain-http localhost origin outside production.",
+    "S1: 'no shell file under pipefail reads a pipe with a reader that quits early' is ok: provision.sh and webroot-sync.sh read the Joomla dbprefix with sed -n 1p.",
+    "S1: 'every shipped catalogue keeps every listed term' is ok: the de/it/fr/nl/zh/es tracy-my-sites.sync.* strings keep file, site and backup."
+  ],
+  "selectors": {
+    "doors": "GET|POST /api/sites/:key/sync",
+    "files": "packages/fleet/tracy-fleet-operation/scripts/provision/provision.sh, packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-sync.sh, packages/locale/tracy-locales/*/tracy-my-sites.json"
+  },
+  "fence": "The route reference, the config key list, the pipefail reader guard and the kept-terms list each go red when a change adds a route, a config key, an early-quitting pipe reader or a translation that drops a listed term without updating them",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/api-reference.test.mjs",
+      "apps/tracy-web/test/config.test.mjs",
+      "scripts/test/pipefail-early-exit.test.mjs",
+      "scripts/test/kept-terms.test.ts"
+    ],
+    "tests": [
+      "every route the app serves is in the reference, and every documented route is served",
+      "the seat removal is documented as naming its action",
+      "empty means off: no mail key is the console transport, no session domain is host-only",
+      "no shell file under pipefail reads a pipe with a reader that quits early",
+      "every shipped catalogue keeps every listed term"
+    ],
+    "timeout_s": 300
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1083-emdash-blank-language-no-locale-hidden",
+  "kind": "fix",
+  "title": "EmDash: a brief with no language chosen sends the personalize tool no language, so no locale is hidden",
+  "pr": 1083,
+  "area": "site-build/emdash",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test --test-reporter=tap apps/tracy-web/test/brief-emdash.test.mjs from the repository root.",
+    "S2: The LANG-5 test compiles a brief whose language answer is blank and reads the questionnaire handed to the tool."
+  ],
+  "expect": [
+    "S1: the named test reports ok.",
+    "S2: the questionnaire carries no language field, so the tool hides no locale the template ships."
+  ],
+  "selectors": {
+    "engine": "apps/tracy-web/src/sites/brief-engines/ (EmDash engine)",
+    "test": "apps/tracy-web/test/brief-emdash.test.mjs"
+  },
+  "evidence": "The EmDash brief engine sent the normalizer's fallback English as if the customer had picked it, so a blank Tracy Business build still unpublished 1911 entries of 39 locales (commit df121b9a0, #1013).",
+  "fence": "The EmDash engine sending a language to the tool only when the customer chose one.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-emdash.test.mjs"],
+    "tests": ["LANG-5: a brief with no language chosen sends the tool no language, so it hides no locale"]
+  }
+}

@@ -1,0 +1,359 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-mono",
+  "minVersion": {
+    "quickstart/ja-mono/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-mono/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-mono/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "body": "div.article-content p.mod-articles-category-introtext"
+  },
+  "discovered": {
+    "page": "body",
+    "body": "running text of the blog list"
+  },
+  "keepScopes": [".t3-footer", ".style-dark", ".style-highlight"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#333333",
+    "--fg-2": "#333333",
+    "--accent": "#2727a4",
+    "--accent-hover": "#181866",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#dddddd",
+    "--muted": "#555555",
+    "--font-display": "\"Helvetica Neue\", sans-serif",
+    "--font-body": "\"Karla\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "accent": "#2727a4",
+      "accent-hover": "#181866",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#dddddd",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#333333",
+      "fg-2": "#333333"
+    },
+    {
+      "accent": "#2727a4"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#eeeeee",
+      "border-soft": "#eaeaea",
+      "surface-warm": "#fafafa",
+      "border": "#e0e2e3",
+      "accent-hover": "#1d1d7b",
+      "accent": "#22228f"
+    },
+    {
+      "border-soft": "#e7e7e7",
+      "surface": "#fcf8e3",
+      "border": "#d5d5d5",
+      "accent-hover": "#16165e"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border-soft": "#e5e5e5",
+      "border": "#e1e1e1",
+      "accent-hover": "#131352"
+    },
+    {
+      "surface": "#f8f8f8",
+      "border": "#e3e3e3",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "surface": "#f9f2f4",
+      "border-soft": "#f7f7f7"
+    },
+    {
+      "surface": "#f0f0f0",
+      "border-soft": "#e5e7eb"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (82 line colours, 99 text colours seen)",
+  "selectors": {
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "bodyFace": ["body"],
+    "inkImages": [".uber-cliens .client-img img", ".features-item.style-light .feature-image img"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": ".t3-wrapper p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t3-wrapper p, .t3-wrapper li",
+    "heading": ".t3-wrapper :is(h1, h2, h3, h4)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "languageswitcherload",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 18 tried (byte 8271); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 297,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#eaeaea",
+      "uses": 161,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#e7e7e7",
+      "uses": 130,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 6
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 93,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 60,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 58,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#fafafa",
+      "uses": 51,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 3
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 24,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 8
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 20,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 2
+    },
+    {
+      "hex": "#d5d5d5",
+      "uses": 20,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 14
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 20,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 7
+    },
+    {
+      "hex": "#1d1d7b",
+      "uses": 16,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#181866",
+      "distance": 22
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 12,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#16165e",
+      "uses": 12,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#181866",
+      "distance": 8
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 12,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 10
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 12,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 23
+    },
+    {
+      "hex": "#22228f",
+      "uses": 8,
+      "kind": "line",
+      "role": "accent",
+      "near": "#2727a4",
+      "distance": 22
+    },
+    {
+      "hex": "#131352",
+      "uses": 8,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#181866",
+      "distance": 21
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 12
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 5,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on a stand built from the published 1.0.1 its minVersion names (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-mono-j6): 12/12, controls 0, no text worse than the template's own (lowest 4.85:1), 50% or more of the page follows (Toggl Track desktop); the eye saw the white DISCOVER MORE button left on a light snow photo under a light accent (the hero multiplies its photo by the accent), the client logos and the light card's line icon vanish on a dark system and the black menu toggles on the navy header: fixed in the contract (sideRules, selectors.inkImages, no new release); checked by eye on all four systems, desktop and phone; earlier: measured 11/10/2026 on quickstart/ja-mono/j6 1.0.0, stylesheets tokenized as the next release ships them (tasks/evidence/ds-contracts-batch6-2026-10-11/templates/ja-mono-j6): 12/12, default unchanged, no text made less readable than the template's own under the systems tried, 53% or more of the page follows; its dark footer and dark/highlight feature cards are kept bands; checked by eye on the MotherDuck and Toggl Track screenshots",
+  "contrastNote": "every text of the page's wrapper (a home page built of modules has no #t3-mainbody), each judged against itself on the default page (batch 2's flow.mjs)",
+  "keepDefaults": {},
+  "rolesNote": "no display or section heading to probe: its section titles are 18px h3 labels (Introducing., Projects.) the slot leaves at their size",
+  "sideRules": {
+    "light": {
+      ".acm-cta": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 45%, #000)"
+      },
+      ".jamasthead.blend-bg": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 45%, #000)"
+      }
+    },
+    "dark": {
+      ".acm-cta": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 45%, #000)"
+      },
+      ".jamasthead.blend-bg": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 45%, #000)"
+      },
+      ".off-canvas-toggle .patty": {
+        "background-color": "#ffffff"
+      },
+      ".off-canvas-toggle .patty::before": {
+        "background-color": "#ffffff"
+      },
+      ".off-canvas-toggle .patty::after": {
+        "background-color": "#ffffff"
+      }
+    }
+  },
+  "sideNote": "the home hero (.acm-cta, its photo under background-blend-mode: multiply) and the inner pages' masthead (.jamasthead.blend-bg) multiply their photo by the accent under white words: the template multiplies by its dark #2727a4, a light system accent (Moxie #84acfb, MotherDuck, Toggl Track) left the snow light behind the white DISCOVER MORE button (seen by eye 11/10/2026, the probe reads only the sky behind the title). The accent mixed 45% toward black keeps the system hue and darkens the brightest pixel enough for white text (a white accent still reads 4.7:1)",
+  "inkNote": "the client logos (dark grey ink, greyscale at 70% opacity) and the line icon of the light Projects card (black ink) vanished on a dark system page (seen by eye on Moxie and Toggl Track, round-3 re-measure 11/10/2026): under a dark system they are inverted with their hues kept (selectors.inkImages)",
+  "toggleNote": "the header menu and sidebar toggles draw their bars in the page ground (#ffffff, tokenized as the page ground) over the always-dark header: under a dark system the bars turned black on the navy header and the phone menu button vanished (seen by eye on Moxie and Toggl Track, 11/10/2026); under a dark system they keep the template white (sideRules.dark)",
+  "bands": {
+    ".t3-footer": {
+      "ground": "#111111",
+      "texts": ["#999999", "#ffffff", "#e7e7e7"],
+      "important": true
+    },
+    ".style-dark": {
+      "ground": "#111111",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".style-highlight": {
+      "ground": "#2727a4",
+      "texts": ["#ffffff"],
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the hero’s left block (.block-left) is no longer a fill: its accent ground never shows (the hero picture, .acm-cta, covers it, darkened through sideRules to the accent at 45% in black), but as a fill it repainted the hero heading and the outline \"Discover more\" button with the words that read on the bare accent, dark under a light accent, so they turned dark on the dark picture (Moxie, MotherDuck, Toggl Track, Mailchimp, Spotify, Linear, visual review 14/10/2026). The hero words keep the template’s white, which reads on the darkened picture under every system"
+}

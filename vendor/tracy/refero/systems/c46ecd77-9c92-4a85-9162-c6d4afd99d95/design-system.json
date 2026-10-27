@@ -1,0 +1,251 @@
+{
+  "dos": [
+    "Use DomaineText 400 for all body, paragraph, and link text — never a sans-serif body face",
+    "Use Dia 900 ALL-CAPS with -0.03em letter-spacing for every label, tag, date, and nav item; the condensed ultra-bold weight is the system's identifying texture",
+    "Use DomaineDisplayNarrow 700 for headlines and the wordmark; never set display type in DomaineText or Dia",
+    "Keep card and container radius at 0px — the system is built on sharp, printed-page edges",
+    "Let the warm-tinted shadow (rgba(145, 106, 112, 0.15) 0 6px 24px) be the only elevation cue; no hard borders, no multiple shadow layers",
+    "Set body text in Ink Brown (#443235) on Parchment Rose (#f8f5f5) — never pure black, never pure white background",
+    "Maintain a 2-column card grid for editorial content; the two-up rhythm mirrors a magazine spread"
+  ],
+  "donts": [
+    "Do not introduce a filled button or chromatic CTA — the system has no action color; interactions are typographic or ghost-level",
+    "Do not add border-radius to cards, badges, or nav items — sharpness is a signature",
+    "Do not use a sans-serif for body copy or headlines; the serif/condensed-sans pairing is the identity",
+    "Do not set body text at pure #000 or headlines at less than 26px in DomaineDisplayNarrow",
+    "Do not apply multiple shadow layers or gray (non-tinted) shadows; the rose-tinted diffuse shadow is the only acceptable elevation",
+    "Do not use #916a70 (Dusty Rose) for buttons or large fills — it is a border/inset accent only",
+    "Do not center body paragraphs or break the 2-column editorial grid without deliberate reason"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f8f5f5",
+      "name": "Parchment Rose",
+      "role": "Page canvas and section backgrounds — the warm off-white ground that gives the whole system its dusty, paper-like atmosphere",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Specimen White",
+      "role": "Card surfaces and image wells — clean white plates that sit on the parchment canvas, carrying typographic specimens and editorial imagery",
+      "group": "neutral"
+    },
+    {
+      "hex": "#443235",
+      "name": "Ink Brown",
+      "role": "Primary text, headlines, and dominant body copy — the warm near-black that reads as ink rather than pure black against the rose canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#654a4e",
+      "name": "Walnut",
+      "role": "Navigation text, secondary links, and muted metadata — one step lighter than Ink Brown for hierarchy without leaving the brown family",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2e2c2c",
+      "name": "Charcoal",
+      "role": "Deepest neutral for in-image text and high-contrast moments where Ink Brown isn't dark enough",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cfc6c7",
+      "name": "Hairline Ash",
+      "role": "Subtle border on form inputs and fine dividers — a warm gray that stays in the brown family",
+      "group": "neutral"
+    },
+    {
+      "hex": "#916a70",
+      "name": "Dusty Rose",
+      "role": "Red supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "accent"
+    }
+  ],
+  "layout": "Centered single-column page (max-width ~960px) with a centered wordmark, centered horizontal nav, and a 2-column card grid for the main content stream. The hero is not a full-bleed image but a tight typographic lockup: large wordmark + tagline + nav, all centered on the warm canvas. Sections flow seamlessly with ~80px vertical gaps and no alternating bands. The card grid is the only recurring layout motif; there are no sidebars, no split text+image rows, no feature blocks — just a steady, magazine-like cascade of typographic specimens.",
+  "imagery": "Every card is a typographic specimen: photographs, flat illustrations, scanned type prints, type-on-color blocks, and editorial compositions. Imagery is always contained within the card frame (never full-bleed beyond the grid), always sharp-cornered (0px radius), and always at 2:1 or similar landscape ratio. No lifestyle photography, no people — the subject is always type itself, staged on flat color or photographic backgrounds. Iconography is absent from the interface; Dia's letterforms do the labeling work.",
+  "similar": [
+    {
+      "why": "Same editorial typographic-specimen model: centered serif-led layout, brownish-neutral palette, and cards that are type-first compositions rather than conventional blog thumbnails",
+      "business": "Fonts In Use"
+    },
+    {
+      "why": "Same warm, restrained type-presentation language — serif display headlines, generous whitespace, and a muted warm canvas that lets the specimens do the talking",
+      "business": "Typography by Hoefler & Co."
+    },
+    {
+      "why": "Same editorial-grid feel with a centered masthead and two-column article stream, though Typewolf pushes further into the dusty-rose warm palette",
+      "business": "It's Nice That"
+    },
+    {
+      "why": "Similar center-aligned content stream with typographic masthead, though Typewolf is sharper-cornered and warmer-toned",
+      "business": "Muzli by InVision"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "0px",
+      "badges": "0px",
+      "inputs": "4px",
+      "buttons": "0px"
+    },
+    "elementGap": "12px",
+    "sectionGap": "80px",
+    "cardPadding": "0px",
+    "pageMaxWidth": "960px"
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#f8f5f5",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Full-page background — the warm rose paper ground."
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Plate",
+      "level": 2,
+      "purpose": "White rectangular cards and image containers elevated on the canvas."
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(145, 106, 112, 0.15) 0px 6px 24px 0px",
+      "element": "Article card"
+    },
+    {
+      "style": "rgb(245, 241, 242) 0px -3px 0px 0px inset",
+      "element": "Header divider"
+    }
+  ],
+  "northStar": "Warm parchment typography atelier. Every element is a brownish-ink stamp on dusty rose paper, with no color allowed to compete with the type.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.36
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.45
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading",
+      "size": 28,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading-lg",
+      "size": 42,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "display",
+      "size": 46,
+      "lineHeight": 1.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Site Wordmark",
+      "role": "Centered brand identity in the header",
+      "description": "Centered 'Typewolf' set in DomaineDisplayNarrow 700 at 46px in Ink Brown (#443235), followed by a DomaineText 400 tagline ('What's Trending in Type') at ~18px in Walnut (#654a4e). Sits on the Parchment Rose canvas with generous vertical padding above and below."
+    },
+    {
+      "name": "Primary Navigation",
+      "role": "Horizontal site navigation below the wordmark",
+      "description": "Centered horizontal list of section links (FONT LISTS, LOOKBOOKS, CHECKLIST, FREE FONTS, LEARNING RESOURCES). Each item is Dia 900 at 13px in Walnut (#654a4e), ALL-CAPS with -0.03em letter-spacing, separated by generous horizontal padding (~19px). No background, no border — just text on the canvas, divided from content by a 1px rule with an inner shadow."
+    },
+    {
+      "name": "Article Card — Image Specimen",
+      "role": "Two-column grid card showcasing a typographic composition",
+      "description": "White (#ffffff) rectangular surface, 0px border-radius, no internal padding. Contains a full-bleed image (photographic, illustrated, or type-on-color background). Below the image: article title in DomaineDisplayNarrow 700 at 42px in Ink Brown; metadata row with category (Dia 900 12px, ALL-CAPS, Walnut) on the left, date stamp (Dia 900 12px, Walnut) on the right, separated from the next line by the font attribution (DomaineText 400 14px, Walnut). Elevated with the warm-tinted diffuse shadow."
+    },
+    {
+      "name": "Article Card — Text Specimen",
+      "role": "Card variant with large type in the body rather than an image",
+      "description": "Same white plate and shadow as the image card, but the content area is filled with oversized type in a display serif (DomaineDisplayNarrow or similar specimen font) at 42–46px, often with a small label like 'THE AUTHOR' in Dia 900 12px ALL-CAPS above. Functions as a typography sample first, article preview second."
+    },
+    {
+      "name": "Category Label",
+      "role": "Small ALL-CAPS tag above article metadata",
+      "description": "Dia 900 at 12px in Walnut (#654a4e), ALL-CAPS, -0.03em letter-spacing, no background or border. A pure typographic label — the visual weight does the work, not a pill or chip."
+    },
+    {
+      "name": "Date Stamp",
+      "role": "Right-aligned publication date on article cards",
+      "description": "Dia 900 at 12px in Walnut (#654a4e), ALL-CAPS, -0.03em letter-spacing. Right-aligned to the card edge with ~11px right padding. Matches the Category Label in size and weight for a balanced metadata row."
+    },
+    {
+      "name": "Font Attribution",
+      "role": "Credits the typefaces featured in the specimen below the article title",
+      "description": "DomaineText 400 at 14px in Walnut (#654a4e), sentence case. Format: 'FONTS — [Font Name], [Font Name]'. Functions as both credit and curiosity hook."
+    },
+    {
+      "name": "Text Input",
+      "role": "Form field for search or subscription",
+      "description": "White (#ffffff) background, 1px Hairline Ash (#cfc6c7) border, 4px border-radius, ~12px padding. Placeholder and entered text in DomaineText 400 14px in Walnut."
+    },
+    {
+      "name": "Nav Divider",
+      "role": "Hairline rule separating navigation from content",
+      "description": "A 1px line rendered via inset top shadow rgb(245, 241, 242) 0px -3px 0px 0px inset, matching the Parchment Rose. Full-width across the canvas, positioned directly below the nav row."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Body text, navigation, links, and all running copy — a transitional serif that carries the editorial, printed-specimen feel. Its old-style figures (onum) and standard ligatures give body text a bookish quality.",
+      "sizes": "14, 16, 18, 24, 28px",
+      "family": "DomaineText",
+      "weight": "400",
+      "lineHeight": "1.2–1.5",
+      "substitute": "Source Serif 4 or PT Serif",
+      "fontFeatureSettings": "\"calt\", \"clig\", \"kern\", \"liga\", \"onum\""
+    },
+    {
+      "role": "ALL-CAPS micro-labels: nav items, category badges, dates, font attributions, and section tags. The ultra-heavy weight plus tight tracking creates a compact, industrial counterpoint to the serif body — a signature pairing that makes even a date stamp feel designed.",
+      "sizes": "12, 13, 14, 15px",
+      "family": "Dia",
+      "weight": "900",
+      "lineHeight": "1.2–2.2",
+      "substitute": "Bebas Neue or Oswald (700–800 weight)",
+      "letterSpacing": "-0.03em",
+      "fontFeatureSettings": "\"calt\", \"clig\", \"kern\", \"liga\", \"smcp\""
+    },
+    {
+      "role": "Editorial headlines, article titles, and the site wordmark. The narrow proportions and high contrast give display type a fashion-magazine authority — it is the voice that announces, never explains.",
+      "sizes": "26, 42, 46px",
+      "family": "DomaineDisplayNarrow",
+      "weight": "700",
+      "lineHeight": "1.2",
+      "substitute": "Playfair Display or Bodoni Moda (narrow variant)",
+      "fontFeatureSettings": "\"calt\", \"clig\", \"kern\", \"liga\", \"onum\""
+    }
+  ],
+  "description": "Typewolf reads as a warm, editorial type specimen magazine pressed into a website: a dusty rose canvas (#f8f5f5) supports white rectangular cards in a two-column grid, all anchored by brownish-ink text rather than any chromatic accent system. The palette is deliberately near-monochromatic — a dark warm brown (#443235) for body copy and headlines, a slightly lighter brown (#654a4e) for nav and secondary links, and a single muted dusty rose (#916a70) reserved for borders and quiet emphasis. Typography carries the entire identity: a transitional serif (Domaine Text) for body, an ultra-heavy condensed sans (Dia) for ALL-CAPS micro-labels with -0.03em tracking, and a high-contrast display serif (Domaine Display Narrow) for editorial headlines. Surfaces are sharp-cornered, elevated only by a warm-tinted diffuse shadow (rgba(145,106,112,0.15) 0 6px 24px) that ties the elevation back to the brand palette. The result is a site that feels more like a printed specimen catalog than a web product — restrained, content-first, and quietly opinionated.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (primary): #443235 Ink Brown\n- text (secondary/nav/links): #654a4e Walnut\n- background (page canvas): #f8f5f5 Parchment Rose\n- surface (cards): #ffffff Specimen White\n- border (accent / shadow tint): #916a70 Dusty Rose\n- border (hairline): #cfc6c7 Hairline Ash\n- primary action: no distinct CTA color\n\n**3-5 Example Component Prompts**\n\n1. *Article card (image specimen)*: White (#ffffff) rectangular surface, 0px radius, warm-tinted shadow (rgba(145,106,112,0.15) 0 6px 24px). Full-bleed image fills the top. Below: article title in DomaineDisplayNarrow 700 at 42px in #443235, then a metadata row with category label (Dia 900 12px ALL-CAPS, -0.03em tracking, #654a4e) left-aligned, date stamp (same Dia spec, right-aligned), and font attribution (DomaineText 400 14px, #654a4e) below.\n\n2. *Text specimen card*: White (#ffffff) plate, 0px radius, same warm shadow. Small ALL-CAPS label 'THE AUTHOR' in Dia 900 12px #654a4e at the top. Body of oversized display type in DomaineDisplayNarrow 700 at 42–46px in #443235, filling the card.\n\n3. *Primary navigation row*: Centered horizontal list on Parchment Rose (#f8f5f5) canvas. Each link in Dia 900 13px ALL-CAPS, -0.03em letter-spacing, #654a4e. ~19px horizontal gap between items. No backgrounds or borders. A 1px hairline rule with inner shadow rgb(245,241,242) 0 -3px 0 inset divides the nav from content below.\n\n4. *Site wordmark + tagline*: Centered lockup on #f8f5f5. 'Typewolf' in DomaineDisplayNarrow 700 at 46px in #443235, followed by 'What's Trending in Type' in DomaineText 400 at 18px in #654a4e, ~12px below.\n\n5. *Text input field*: White (#ffffff) background, 1px #cfc6c7 border, 4px radius, 12px padding. Placeholder and entered text in DomaineText 400 14px in #654a4e. No visible focus ring color needed beyond a 1px #916a70 border on focus."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is minimal and warm: a single diffuse shadow tinted with the brand's dusty rose rather than neutral gray, giving even a flat card the feeling of paper resting on paper. No multiple shadow stacks, no hard drop shadows — the shadow is always soft, always colored."
+}

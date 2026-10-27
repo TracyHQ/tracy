@@ -1,0 +1,9 @@
+@theme {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-paper: #ffffff;
+  --color-terracotta: #af7653;
+
+  /* Typography */
+  --font-monument: 'Monument', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,116 @@
+---
+import { getEmDashEntry } from 'emdash'
+import { blockComponents } from '@emdash-cms/plugin-forms/astro'
+import Base from '@/layouts/Base.astro'
+import FormWords from '@/components/site/FormWords.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { uiTag } from '@/lib/ui'
+import '@emdash-cms/plugin-forms/styles'
+import '@/styles/forms.css'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { entry } = await getEmDashEntry('contact', 'contact', { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const c = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'contact', entry)
+// The Forms plugin renders the form the editor bound in `form_id` (seed-apply writes it); no id,
+// no form -- the information card still shows, nothing is invented in its place.
+const FormEmbed = (blockComponents as any)['emdash-form']
+const formId: string = (c.form_id ?? '').trim()
+// Source rule (acm/contact-information): a demo/reserved domain is shown but never linked.
+const email: string = (c.email ?? '').trim()
+const emailIsLink =
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && !/@(?:[^@]+\.)?(?:example|invalid|test)$/i.test(email)
+const social: Array<{ label?: string; url?: string }> = (c.social ?? []).filter(
+  (s: any) => s && (s.label || s.url)
+)
+const hasInfo = Boolean(c.info_heading || email || c.notice || social.length)
+---
+
+<Base chrome={chrome} title={c.title} description={c.intro || c.notice} currentPath="/contact" content={{ collection: "contact", id: entry.data.id, slug: "contact", toPath: () => "/contact" }}>
+	<main id="main" class="band">
+		<PageOwner stamp={$page} />
+		<div class="wrap">
+			<header class="mb-10 max-w-[760px] md:mb-10">
+				<h1 class="text-[clamp(32px,4vw,48px)] font-semibold leading-[1.12] tracking-[-0.035em] [overflow-wrap:anywhere]" {...$page("title")}>{c.title}</h1>
+				{c.intro && <p class="lead mt-4" {...$page("intro")}>{c.intro}</p>}
+			</header>
+			<div class:list={["grid items-start gap-8 md:gap-16", hasInfo ? "md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]" : "max-w-[720px]"]}>
+				{formId && (
+					<section class="min-w-0" aria-label={c.form_title || c.title} data-contact-form>
+						{c.form_title && <h2 class="h-card mb-6" {...$page("form_title")}>{c.form_title}</h2>}
+						{c.required_note && <p class="mb-4 text-[13px] text-fg-muted" {...$page("required_note")}>{c.required_note}</p>}
+						<FormWords tag={uiTag(locale)}><FormEmbed node={{ formId }} /></FormWords>
+					</section>
+				)}
+				{hasInfo && (
+					<aside class="rounded-[var(--ds-card-radius,20px)] border border-line-soft bg-surface p-6 md:p-7">
+						{c.info_heading && <h2 class="mb-6 text-[22px] font-bold leading-[1.05] tracking-[-0.015em]" {...$page("info_heading")}>{c.info_heading}</h2>}
+						{email && (
+							<div class="flex flex-col gap-2">
+								{c.email_label && <p class="text-fg-muted" {...$page("email_label")}>{c.email_label}</p>}
+								{emailIsLink ? <a class="text-fg [overflow-wrap:anywhere] hover:text-accent hover:underline hover:underline-offset-[0.2em]" href={`mailto:${email}`} {...$page("email")}>{email}</a> : <span class="text-fg-muted [overflow-wrap:anywhere]" aria-disabled="true" {...$page("email")}>{email}</span>}
+							</div>
+						)}
+						{c.notice && <p class="mt-6 text-[14px] leading-[1.6] text-fg-2" {...$page("notice")}>{c.notice}</p>}
+						{social.length > 0 && (
+							<div class="mt-6 border-t border-line-soft pt-6">
+								{c.social_heading && <h3 class="mb-4 text-[17px] font-semibold leading-[1.05] tracking-[-0.015em]" {...$page("social_heading")}>{c.social_heading}</h3>}
+								<ul class="flex flex-col gap-2.5 text-[15px]">
+									{social.map((s) => (
+										<li class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1" {...$page.block("social")}>
+											<span class="text-fg" {...$page("social.label")}>{s.label}</span>
+											{s.url ? <a class="text-fg hover:text-accent hover:underline hover:underline-offset-[0.2em]" href={s.url} rel="noopener noreferrer" target="_blank">{s.url.replace(/^https?:\/\/(www\.)?/, "")}</a> : c.unavailable_label && <span class="text-fg-meta" aria-disabled="true" {...$page("unavailable_label")}>{c.unavailable_label}</span>}
+										</li>
+									))}
+								</ul>
+							</div>
+						)}
+					</aside>
+				)}
+			</div>
+		</div>
+	</main>
+</Base>
+<script>
+	import "@emdash-cms/plugin-forms/client";
+	const form = document.querySelector<HTMLFormElement>("[data-contact-form] form.ec-form");
+	if (form) {
+		// The plugin's template leaves indentation inside <textarea>, which counts as a value: the
+		// placeholder never shows and a reset restores the whitespace. Clear the default value itself.
+		for (const ta of form.querySelectorAll("textarea")) if (!ta.value.trim()) { ta.defaultValue = ""; ta.value = ""; }
+	}
+</script>
+
+<style>
+  [data-contact-form] :global(.ec-form-page) {
+    gap: 40px;
+  }
+  [data-contact-form] :global(.ec-form-label) {
+    font-size: 14px;
+    line-height: 1.47;
+  }
+  /* Keep the editable Forms help text above its consent control, as in the source.
+     The source links a Joomla demo article; no policy URL is configured here. */
+  [data-contact-form] :global(.ec-form-field--checkbox) {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  [data-contact-form] :global(.ec-form-field--checkbox > .ec-form-help) {
+    order: -1;
+    color: var(--color-fg-muted);
+    font-size: inherit;
+  }
+</style>

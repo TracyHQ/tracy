@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-mood/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_mood",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-mood",
+    "id": "quickstart/ja-mood/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_mood",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-mood-j6-webroot-1.0.2.tar.gz",
+        "bytes": 63791372,
+        "sha256": "b69a74c1696b0a06f37d8a2ab29f329be771c0d33e8b64860bd34e35f53a8dab"
+      },
+      "database": {
+        "file": "ja-mood-j6-database-1.0.2.sql.gz",
+        "bytes": 155784,
+        "sha256": "662d314e35612eaec4ad25eb51feb3c5a3036fe9e14d267adfdf7c95f3e961b3"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T10:48:07.126Z",
+    "builtFrom": {
+      "site": "amood-rp",
+      "tag": "local:ja-mood-j6-1.0.2",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-mood/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.21",
+  "mode": "content-recommendation"
+}

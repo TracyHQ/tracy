@@ -1,0 +1,28 @@
+---
+import { href } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+const { sample: s, site, locale } = Astro.props
+// A button into an unticked page goes on its own; the mockup stays (TCH #1013, `src/lib/link-gate.ts`).
+const ctaUrl = s.ctaUrl ?? href(locale, '/contact')
+const live = await liveLinks(Astro.request, locale, [ctaUrl])
+---
+<div class="flex flex-wrap items-start gap-12">
+	<div class="min-w-0 flex-[1_1_260px]">
+		<div class="column-label mb-1 border-b border-line pb-3">{s.listT}</div>
+		{(s.list ?? []).map((e: any) => <div class="border-b border-line-soft py-3.5"><span class="block text-[15.5px] font-semibold">{e.t}</span><span class="mt-[3px] block text-[13.5px] text-fg-meta">{e.d}</span></div>)}
+	</div>
+	<div class="min-w-0 flex-[2_1_520px] border border-line-card bg-card">
+		<div class="flex flex-col gap-[5px] border-b border-line bg-paper-2 px-6 py-4 text-[13.5px] text-fg-muted"><span>{s.from}</span><span>{s.to}</span><span class="mt-1 text-[15px] font-semibold text-fg">{s.subj}</span></div>
+		<div class="px-[34px] py-8">
+			<div class="mb-[26px] flex items-center gap-3"><span class="flex h-[34px] w-[34px] items-center justify-center bg-forest text-[15px] font-bold text-[color:var(--ds-c-on-accent-band,var(--color-white))]">{site.brand_mark}</span><span class="text-[16px] font-bold tracking-tight">{site.brand_name}</span></div>
+			<div class="mb-3 text-[17px] font-semibold">{s.greet}</div>
+			<p class="mb-6 text-[16px] leading-[1.7] text-fg-body">{s.body1}</p>
+			<div class="mb-[26px] border border-line-card bg-paper px-[22px] py-5">
+				<div class="mb-3 text-[11.5px] font-bold uppercase tracking-[.16em] text-fg-meta">{s.metaT}</div>
+				{(s.meta ?? []).map((m: any) => <div class="flex justify-between gap-4 border-b border-line-soft py-2 text-[15px]"><span class="text-fg-meta">{m.k}</span><span class="font-medium">{m.v}</span></div>)}
+			</div>
+			{live(ctaUrl) && <a href={ctaUrl} class="btn-primary !px-[26px] !py-3.5 !text-[15px]">{s.cta}</a>}
+		</div>
+		<div class="border-t border-line bg-paper-2 px-[34px] py-[18px] text-[12.5px] leading-[1.6] text-fg-meta">{s.ft}</div>
+	</div>
+</div>

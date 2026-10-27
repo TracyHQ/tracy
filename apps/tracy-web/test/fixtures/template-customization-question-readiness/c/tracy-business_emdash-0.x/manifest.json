@@ -1,0 +1,231 @@
+{
+  "schemaVersion": "tracy-quickstart/v1",
+  "product": "tracy-business",
+  "version": "1.7.2",
+  "release": "tracy-business/emdash-0.x",
+  "repository": "JoomlArt-Products/ja-products",
+  "cms": {
+    "name": "emdash",
+    "version": "1.1.0"
+  },
+  "artifact": "tracy-business-emdash-quickstart-1.7.2.zip",
+  "file": "tracy-business-emdash-quickstart-1.7.2.zip",
+  "bytes": 5542700,
+  "sha256": "501e6810a5455ea89bb9592e2b6bf0e39a343f9168aa8668cba2423eb17b9552",
+  "format": "zip of the packed template source (build with pnpm + Docker or node); distribution.json inside carries the per-file checksums",
+  "defaultTemplate": "tracy-business",
+  "templateVersion": "1.7.2",
+  "license": "GPL-3.0-or-later",
+  "languages": {
+    "live": [
+      "en",
+      "af",
+      "be",
+      "bg",
+      "ca",
+      "cs",
+      "cy",
+      "da",
+      "de",
+      "el",
+      "es",
+      "et",
+      "fi",
+      "fr",
+      "ga",
+      "hr",
+      "hu",
+      "it",
+      "ja",
+      "ka",
+      "lo",
+      "lt",
+      "lv",
+      "ms",
+      "nb",
+      "nl",
+      "pl",
+      "pt",
+      "ro",
+      "ru",
+      "sk",
+      "sl",
+      "sr",
+      "sv",
+      "ta",
+      "th",
+      "tr",
+      "uk",
+      "vi",
+      "zh"
+    ],
+    "default": "en"
+  },
+  "agent": {
+    "token": "minted per site after restore (tools/mint-admin.cjs, tools/bootstrap-site.sh)"
+  },
+  "template": {
+    "artifactHash": "sha256:7d2a91573058e9426a0c56b8fa78bab28c86ddd2000b1797d6931d73e33c14f7",
+    "contractHash": "sha256:c2303dc5ba487493e5effa96c41ad977c9461d5808efd107f0ef651eaf6f0d18",
+    "files": 271
+  },
+  "questions": {
+    "file": "seed/questions.json",
+    "sha256": "f8779a1599d07912d46e33204f8ba6cb71e1365ea45c2ea0f34a782cde72e03c",
+    "owner": "tracy-business/emdash",
+    "count": 5,
+    "languages": [
+      "ar",
+      "de",
+      "en",
+      "es",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "vi",
+      "zh",
+      "zh-HK",
+      "zh-MO",
+      "zh-TW"
+    ]
+  },
+  "state": {
+    "file": "tracy-business-emdash-state-1.7.2.tar.gz",
+    "bytes": 8418138,
+    "sha256": "ee8f5c916ef908257df81099e061e7774368cbf0bfdaabc420fd9732b48bde68",
+    "contents": "data/data.db (SQLite, scrubbed; keeps the agent user row without credentials), data/seed-receipts.json, uploads/",
+    "scrubbed": {
+      "_emdash_api_tokens": {
+        "removed": 1,
+        "why": "agent token (hash) — re-minted per site"
+      },
+      "auth_tokens": {
+        "removed": 0,
+        "why": "sign-in state"
+      },
+      "auth_challenges": {
+        "removed": 0,
+        "why": "sign-in state"
+      },
+      "credentials": {
+        "removed": 0,
+        "why": "passkeys"
+      },
+      "oauth_accounts": {
+        "removed": 0,
+        "why": "linked accounts"
+      },
+      "_emdash_oauth_tokens": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_oauth_clients": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_authorization_codes": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_device_codes": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_404_log": {
+        "removed": 0,
+        "why": "this machine’s traffic"
+      },
+      "_emdash_rate_limits": {
+        "removed": 0,
+        "why": "this machine’s traffic"
+      },
+      "_emdash_media_upload_attempts": {
+        "removed": 0,
+        "why": "this machine’s traffic"
+      },
+      "audit_logs": {
+        "removed": 0,
+        "why": "this machine’s history"
+      },
+      "_emdash_transfer_approvals": {
+        "removed": 0,
+        "why": "this machine’s transfers"
+      },
+      "_emdash_transfer_media_blobs": {
+        "removed": 0,
+        "why": "this machine’s transfers"
+      },
+      "_emdash_transfer_package_index": {
+        "removed": 0,
+        "why": "this machine’s transfers"
+      },
+      "_emdash_transfer_staged_files": {
+        "removed": 0,
+        "why": "this machine’s transfers"
+      },
+      "_emdash_transfer_identity_map": {
+        "removed": 0,
+        "why": "this machine’s transfers"
+      },
+      "_emdash_transfer_operations": {
+        "removed": 0,
+        "why": "this machine’s transfers"
+      },
+      "_emdash_redirect_write_lock": {
+        "removed": 0,
+        "cleared": 1,
+        "why": "this machine’s write lease (cleared; the singleton row stays)"
+      },
+      "_plugin_storage:audit-log": {
+        "removed": 1280,
+        "why": "seeding history of this machine"
+      }
+    },
+    "collections": {
+      "about": 40,
+      "careers": 40,
+      "contact": 40,
+      "home": 40,
+      "investors": 40,
+      "news_page": 40,
+      "pages": 280,
+      "posts": 480,
+      "projects": 400,
+      "projects_page": 40,
+      "services": 240,
+      "services_page": 40,
+      "site": 40,
+      "vacancies": 240
+    },
+    "media": 39
+  },
+  "gates": {
+    "contracts": "pass",
+    "distribution": "pass",
+    "preflight": "pass",
+    "browser": "pending",
+    "routing": "pending",
+    "visual": "pending",
+    "build": "pending",
+    "security": "pending",
+    "visual-review": "pending",
+    "font-review": "pending",
+    "viewing-contexts": "pending",
+    "editability": "pending",
+    "forms": "pending",
+    "recovery": "pending",
+    "clean-install": "pending",
+    "independent": "pending"
+  },
+  "receipts": {}
+}

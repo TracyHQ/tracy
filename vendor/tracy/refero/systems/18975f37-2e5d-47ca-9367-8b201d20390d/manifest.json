@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "18975f37-2e5d-47ca-9367-8b201d20390d",
+  "status": "complete",
+  "name": "Chat for impact",
+  "url": "https://styles.refero.design/style/18975f37-2e5d-47ca-9367-8b201d20390d",
+  "sourceWebsite": "https://www.turn.io",
+  "extractedAt": "2026-06-03T20:01:41.338Z",
+  "capturedAt": "2026-10-08T05:08:46.766694+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "forest-green clinic with pastel rooms",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0f52adbe-a34b-4557-8187-cb4643234bbf.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c113438c-e442-4308-afa6-7bf56fbd8c06.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/39c3fa71-2196-4d9d-9923-883eff38fa7f.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/ba8923e1-027e-4044-9d61-86d6492cb569.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/1d13b35d-7817-4238-b477-5b70e3094076.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bed506f15caa8475ed912ee608056e091442739b1b1c34ba779bef835484b4b1",
+      "bytes": 25131
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "777b83e64f76fb21b3cb0298df9bf98ec46b43d0e8c44ade2b201f53e17211bf",
+      "bytes": 131225
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0ad06b7b078d20226806c2a5bc54975129b0a8d8993f0151623db587bfedaa6b",
+      "bytes": 21637
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "54ce91ed80a65ca77c3c2b156f8f8a56cf2561f916c48e38ee3a8c04a58f12f2",
+      "bytes": 17499
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0cb350b4dae4ffc3b13f2deaa479768a22deb0cffcf3ed6f02439434bac0cec8",
+      "bytes": 15361
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "55d66f9cd99aab0cf1143f5c859c8a848a112d63340ee35dde7b7d8b806ca955",
+      "bytes": 5541
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "bdd01c4e3587603f6087ca18b617535a940bbf7eb0de025b50aaa01a64429af0",
+      "bytes": 888
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d4e97c5f94e0ed6bae2fc575f7355b761c0958ffa1fd6b50ab27147938770499",
+      "bytes": 905
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "1d252627f40f542be6ba7229d00beb2dd052ef4da7dfdaa212257405502fa6d5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "bc606ff92368bb2a129155485b27e3ce411e2385f1f68438071662306cb8ceca",
+      "bytes": 50649
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "300bbd0a18367ec898968378900c83c20df03f41c11329c67924c8031c37dc18",
+      "bytes": 26832
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7cc9a6abf0393adc43245a0362b8ab22af4fe044965b3d5558cc64279b9153d4",
+      "bytes": 71986
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f297af411e2a7b909ced9e2cb335d02689a9acd760f533ba7bd7c9e65afcdfd8",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "236dc4a1061f66ac6039de7df27067c1e97d461a12548f5445c0f778ccd0e739",
+      "bytes": 2127
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "cd5307d72057a2742ecfd5c8f55e494a05277d00e1dee476314019feda965ae9",
+      "bytes": 2737
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "035a098b-5a27-48a3-8a3a-c68a698e3eab",
+    "04109c48-f591-4110-9739-622243d4ecc2",
+    "18975f37-2e5d-47ca-9367-8b201d20390d",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "21b71be3-78a0-4681-a5b9-64cc4b40eb67",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "542d4d5c-fd8f-4a8b-a4f7-4694728f7e12",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "81bd6ad6-b02b-4fb3-a600-91ecf8324171",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b4a1a95-9dbf-4565-ace7-c4cf48eb028a",
+    "9946887b-ffa9-4276-af81-ae6352795afb",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "b44b0bb2-4ba3-4599-9706-3c3e0c8c2522",
+    "be17feca-c2bd-4e17-b4d2-ed3ae019a84c",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "d577e44e-bc63-4cbe-b759-25262d089b95",
+    "e9f5e976-53f7-42f5-a882-4e63b3c2f734",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

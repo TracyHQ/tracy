@@ -1,0 +1,104 @@
+{
+  "color": {
+    "forest-stage": {
+      "$value": "#0d542b",
+      "$type": "color",
+      "$description": "Forest Stage — Hero section background, dark feature spotlights — deep green anchors the dramatic first impression"
+    },
+    "lime-sprout": {
+      "$value": "#b9ff78",
+      "$type": "color",
+      "$description": "Lime Sprout — Green supporting accent for decorative details and low-frequency emphasis"
+    },
+    "ember-coral": {
+      "$value": "#f54320",
+      "$type": "color",
+      "$description": "Ember Coral — Decorative stroke accent — wavy underlines, hand-drawn doodles, product frame borders, section dividers"
+    },
+    "coral-whisper": {
+      "$value": "#ffe3e3",
+      "$type": "color",
+      "$description": "Coral Whisper — Soft warm surface wash, hero gradient highlight, gentle background tints behind editorial sections"
+    },
+    "cream-paper": {
+      "$value": "#fcf7ed",
+      "$type": "color",
+      "$description": "Cream Paper — Primary content surface, page background for feature/pricing/footer sections — the default canvas"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Headlines, primary body text, dark icons, logo mark on light surfaces"
+    },
+    "midnight-ink": {
+      "$value": "#1c1917",
+      "$type": "color",
+      "$description": "Midnight Ink — Dark surface (footer dark mode, inverse cards), button text on light fills, heading accent"
+    },
+    "stone": {
+      "$value": "#44403b",
+      "$type": "color",
+      "$description": "Stone — Body paragraph text on cream surfaces, secondary headings, footer description copy"
+    },
+    "slate": {
+      "$value": "#292524",
+      "$type": "color",
+      "$description": "Slate — Strong secondary text, nav links on cream, meta labels"
+    },
+    "ash": {
+      "$value": "#d6d3d1",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, subtle borders on cream, disabled states, tag outlines"
+    },
+    "fog": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Fog — Hairline dividers, form field borders, table separators — the structural neutral"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surface lift on cream, button text on dark fills, input field backgrounds"
+    },
+    "moss": {
+      "$value": "#008236",
+      "$type": "color",
+      "$description": "Moss — Logo green, icon strokes, secondary brand accent — the mid-green companion to the forest stage"
+    }
+  },
+  "font": {
+    "gt-alpina-condensed": {
+      "$value": "GT Alpina Condensed",
+      "$type": "fontFamily",
+      "$description": "Display headlines — the editorial voice. Used at hero scale (96-136px) for the dramatic serif moments that anchor each section. Condensed cuts and tight line-heights give it poster-like authority. Substitute: 'Playfair Display' or 'Bodoni Moda' condensed at matching weight"
+    },
+    "gt-america-standard": {
+      "$value": "GT America Standard",
+      "$type": "fontFamily",
+      "$description": "Body text, subheadings, medium-weight headings. The workhorse grotesk for long-form paragraphs and section sub-headlines. Slight -0.007em tightening gives it a composed, not loose, feel. Substitute: 'Inter' or 'Söhne'"
+    },
+    "gt-america-extended": {
+      "$value": "GT America Extended",
+      "$type": "fontFamily",
+      "$description": "UI chrome: button labels, navigation links, footer column headers, small labels. Wider proportions at small sizes improve readability in compact UI. Substitute: 'Inter' at letter-spacing 0.02em"
+    },
+    "gt-america-condensed": {
+      "$value": "GT America Condensed",
+      "$type": "fontFamily",
+      "$description": "Section eyebrows and secondary display — the 'SCHEDULING EXPERIENCE' style small-caps labels with wide tracking (+0.05em at 18px), and tighter condensed headlines at 38px (-0.025em). Substitute: 'Inter' condensed variant or 'Barlow Condensed'"
+    },
+    "intervariable": {
+      "$value": "InterVariable",
+      "$type": "fontFamily",
+      "$description": "Fallback/utility text — appears in footer fine print and secondary system text. The site is GT-America-first; Inter fills the generic-system gaps"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://savvycal.com",
+      "siteName": "Savvycal",
+      "extractedAt": "2026-06-03T19:06:45.093Z",
+      "variant": "compact"
+    }
+  }
+}

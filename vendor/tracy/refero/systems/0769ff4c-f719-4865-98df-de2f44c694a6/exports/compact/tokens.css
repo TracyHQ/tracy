@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-canvas-white: #ffffff;
+  --color-bone: #f1efe9;
+  --color-ash: #ececec;
+  --color-stone: #6a6a6a;
+  --color-graphite: #333333;
+  --color-ink: #1f1d1e;
+  --color-obsidian: #000000;
+  --color-cobalt-ink: #1e37a0;
+
+  /* Typography — Font Families */
+  --font-lunar: 'Lunar', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

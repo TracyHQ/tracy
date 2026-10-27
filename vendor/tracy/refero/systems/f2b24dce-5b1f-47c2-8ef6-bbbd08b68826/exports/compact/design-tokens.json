@@ -1,0 +1,44 @@
+{
+  "color": {
+    "signal-orange": {
+      "$value": "#ff4f00",
+      "$type": "color",
+      "$description": "Signal Orange — Hero blocks, brand statement panels, full-bleed feature sections — the single chromatic commitment, used in large committed areas rather than small accents"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, logo, hairline borders, dark UI elements, and display type on light surfaces"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Display headings overlaid on photography and colored panels, input fields, light surface level, inverse text on dark hero blocks"
+    },
+    "raw-linen": {
+      "$value": "#ebe9e3",
+      "$type": "color",
+      "$description": "Raw Linen — Page canvas, footer background, secondary surface — warm off-white that softens the contrast between stark white and pure black"
+    },
+    "faint-stone": {
+      "$value": "#767676",
+      "$type": "color",
+      "$description": "Faint Stone — Input field borders, low-emphasis form chrome — the only mid-tone in the system"
+    }
+  },
+  "font": {
+    "moderat": {
+      "$value": "Moderat",
+      "$type": "fontFamily",
+      "$description": "Sole typeface — geometric sans-serif used at weight 300 for display and project names (120px) and weight 400 for body copy (16px). The light weight at display scale is a deliberate anti-shout: headlines whisper authority rather than declaring it, letting the orange blocks and editorial photography carry visual volume instead."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://studiothomas.co.uk",
+      "siteName": "Studio Thomas",
+      "extractedAt": "2026-06-03T21:36:08.581Z",
+      "variant": "compact"
+    }
+  }
+}

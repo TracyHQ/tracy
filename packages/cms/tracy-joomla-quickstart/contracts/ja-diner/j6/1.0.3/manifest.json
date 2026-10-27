@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-diner/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_diner",
+  "quickstart": {
+    "product": "ja-diner",
+    "platform": "joomla",
+    "version": "1.0.3",
+    "cms": {
+      "version": "6.0.3"
+    },
+    "template": "ja_diner",
+    "parts": {
+      "installer": {
+        "file": "ja-diner-j6-quickstart-1.0.3.zip",
+        "bytes": 63402189,
+        "sha256": "e602a8b2536736350cc2c1351332d8df185517d91d408a891f0500ceb4a364a9"
+      }
+    },
+    "createdAt": "2026-10-20T19:41:43.585Z",
+    "builtFrom": {
+      "from": "quickstart/ja-diner/j6@1.0.2",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 119 files replaced (language/en-GB/en-GB.tpl_ja_diner.ini, templates/ja_diner/error.php, templates/ja_diner/index.php, templates/ja_diner/offline.php, templates/ja_diner/templateInfo.php, templates/ja_diner/css, templates/ja_diner/etc, templates/ja_diner/html, templates/ja_diner/less, templates/ja_diner/language, templates/ja_diner/tpls, templates/ja_diner/acm); demo content: 56 edits (article-2, article-2, article-3, article-3, article-4, article-4, article-5, article-5, article-6, article-6, article-7, article-7, article-8, article-8, article-9, article-9, article-10, article-10, article-11, article-11, article-12, article-12, article-13, article-13, article-14, article-14, article-15, article-15, article-16, article-16, article-17, article-17, article-18, article-18, article-19, article-19, article-20, article-20, article-21, article-21, article-22, article-22, article-23, article-23, article-24, article-24, article-25, article-25, article-26, article-26, article-27, article-27, article-28, article-28, module-121, module-122); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-diner/j6"
+  },
+  "coworkContractVersion": "0.24.43",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,69 @@
+{
+  "color": {
+    "void": {
+      "$value": "#010101",
+      "$type": "color",
+      "$description": "Void — Page canvas, full-screen dark sections, and dark-image overlays"
+    },
+    "charcoal-control": {
+      "$value": "#1f1f23",
+      "$type": "color",
+      "$description": "Charcoal Control — Navigation pills, compact filled controls, secondary surface fills, and high-frequency 1px outlines"
+    },
+    "porcelain": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Porcelain — Primary headlines, UI labels, links, icons, strokes, and input text"
+    },
+    "machine-well": {
+      "$value": "#16191b",
+      "$type": "color",
+      "$description": "Machine Well — Contained card interiors and dark media panels"
+    },
+    "hairline-ash": {
+      "$value": "#252525",
+      "$type": "color",
+      "$description": "Hairline Ash — Section rules, list separators, and restrained structural borders"
+    },
+    "muted-steel": {
+      "$value": "#828b8d",
+      "$type": "color",
+      "$description": "Muted Steel — Body copy, descriptions, and secondary explanatory text"
+    },
+    "dormant-graphite": {
+      "$value": "#444444",
+      "$type": "color",
+      "$description": "Dormant Graphite — Inactive step numerals and low-emphasis heading-adjacent metadata"
+    },
+    "faint-steel": {
+      "$value": "#646e71",
+      "$type": "color",
+      "$description": "Faint Steel — Navigation counters and tertiary mono metadata"
+    }
+  },
+  "font": {
+    "office-times-round": {
+      "$value": "Office Times Round",
+      "$type": "fontFamily",
+      "$description": "Display headlines. The rounded, high-contrast serif turns large statements into editorial placards; the -3% tracking keeps its broad letterforms from becoming stately or classical."
+    },
+    "messina-sans": {
+      "$value": "Messina Sans",
+      "$type": "fontFamily",
+      "$description": "Primary interface and reading face. Use 400 for body, labels, and controls; use 600 only for 26px and 32px feature headings, where the slight negative tracking gives modules a compressed technical voice."
+    },
+    "abc-laica-mono": {
+      "$value": "ABC Laica Mono",
+      "$type": "fontFamily",
+      "$description": "Navigation, counters, steps, and uppercase metadata. Its light mono weight plus expanded tracking makes microcopy read as coordinates rather than ordinary navigation."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.awenetwork.ai",
+      "siteName": "AWE",
+      "extractedAt": "2026-09-20T19:23:25.686Z",
+      "variant": "compact"
+    }
+  }
+}

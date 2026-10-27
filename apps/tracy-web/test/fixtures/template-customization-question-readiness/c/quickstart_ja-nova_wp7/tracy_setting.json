@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "wordpress",
+  "label": "JA Nova",
+  "version": "1.1.10",
+  "cms": "7.1",
+  "install": {
+    "webroot": {
+      "file": "ja-nova-wp7-webroot-1.1.10.tar.gz",
+      "sha256": "0ba94ea3a1499989351868b8a1467930d288bd051e83deaa4de5372145de3d23"
+    },
+    "database": {
+      "file": "ja-nova-wp7-database-1.1.10.sql.gz",
+      "sha256": "13d9cb35c0ca0471db9d4a3e6dbdbcbc6e986885f9aca67f1c826b8c0dd39c9a"
+    }
+  },
+  "template": "ja-nova"
+}

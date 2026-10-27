@@ -1,0 +1,255 @@
+{
+  "color": {
+    "ultra-light-azak-grey": {
+      "$value": "#f8f7f3",
+      "$type": "color",
+      "$description": "Ultra Light Azak Grey — Light editorial canvas, reversed text, navigation text, feature-tile text, and fine underlines"
+    },
+    "dark-azak-black": {
+      "$value": "#121211",
+      "$type": "color",
+      "$description": "Dark Azak Black — Primary page field, dark section surface, dark text on the pale product stage, and footer base"
+    },
+    "medium-azak-grey": {
+      "$value": "#85837e",
+      "$type": "color",
+      "$description": "Medium Azak Grey — Secondary explanatory copy, inactive feature labels, metadata, and legal text"
+    },
+    "terrain-slate": {
+      "$value": "#3a4a49",
+      "$type": "color",
+      "$description": "Terrain Slate — Contained product-render backdrop and muted dark visual surface"
+    }
+  },
+  "font": {
+    "ft-aktual": {
+      "$value": "FT Aktual",
+      "$type": "fontFamily",
+      "$description": "The sole interface and display family. Weight 300 at 45px/45px carries all large statements with an unusually whisper-light technical tone; 68px/68px identifies product series, while 16px weight 400 carries navigation and body copy."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "10px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 10px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "11px",
+        "fontWeight": 400,
+        "lineHeight": 1.99,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 11px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.59,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "20px",
+        "fontWeight": 300,
+        "lineHeight": 3.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "30px",
+        "fontWeight": 300,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 30px"
+    },
+    "3xl-2": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "30px",
+        "fontWeight": 300,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl-2 at 30px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "45px",
+        "fontWeight": 300,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 45px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "FT Aktual",
+        "fontSize": "68px",
+        "fontWeight": 300,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 68px"
+    }
+  },
+  "spacing": {
+    "6": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "Spacing 6px"
+    },
+    "18": {
+      "$value": "18px",
+      "$type": "dimension",
+      "$description": "Spacing 18px"
+    },
+    "36": {
+      "$value": "36px",
+      "$type": "dimension",
+      "$description": "Spacing 36px"
+    },
+    "72": {
+      "$value": "72px",
+      "$type": "dimension",
+      "$description": "Spacing 72px"
+    },
+    "144": {
+      "$value": "144px",
+      "$type": "dimension",
+      "$description": "Spacing 144px"
+    },
+    "unit": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "surface": {
+    "dark-azak-black": {
+      "$value": "#121211",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page canvas, hero veil, editorial sections, and footer."
+    },
+    "terrain-slate": {
+      "$value": "#3a4a49",
+      "$type": "color",
+      "$description": "Surface level 1: Product-render field within otherwise dark compositions."
+    },
+    "ultra-light-azak-grey": {
+      "$value": "#f8f7f3",
+      "$type": "color",
+      "$description": "Surface level 2: Pale product specification stage and high-contrast reversed text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://azak.co",
+      "siteName": "AZAK",
+      "extractedAt": "2026-09-20T19:24:35.459Z",
+      "variant": "extended"
+    }
+  }
+}

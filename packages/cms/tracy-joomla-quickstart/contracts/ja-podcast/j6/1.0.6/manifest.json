@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-podcast/j6/1.0.6",
+  "platform": "joomla",
+  "template": "ja_podcast",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-podcast",
+    "id": "quickstart/ja-podcast/j6",
+    "version": "1.0.6",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_podcast",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-podcast-j6-webroot-1.0.6.tar.gz",
+        "bytes": 70439211,
+        "sha256": "4b796534bd415601a758195308fcc8819af6639712ce893fa7fb60f6e4b77367"
+      },
+      "database": {
+        "file": "ja-podcast-j6-database-1.0.6.sql.gz",
+        "bytes": 110340,
+        "sha256": "7b687d1cfa29630adbd806f495eccd0bf523a3804bfcd193f0bcb5f17ffdb2dd"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-18T06:35:05.861Z",
+    "builtFrom": {
+      "from": "quickstart/ja-podcast/j6@1.0.5",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 214 files replaced (templates/ja_podcast/AGENTS.md, templates/ja_podcast/CLAUDE.md, templates/ja_podcast/README.md, templates/ja_podcast/component.php, templates/ja_podcast/error-t4.php, templates/ja_podcast/error.php, templates/ja_podcast/favicon.ico, templates/ja_podcast/helper.php, templates/ja_podcast/index.php, templates/ja_podcast/layout.json, templates/ja_podcast/offline.php, templates/ja_podcast/templateDetails.xml, templates/ja_podcast/templateInfo.php, templates/ja_podcast/template_preview.png, templates/ja_podcast/template_thumbnail.png, templates/ja_podcast/css, templates/ja_podcast/docs, templates/ja_podcast/etc, templates/ja_podcast/fonts, templates/ja_podcast/html, templates/ja_podcast/images, templates/ja_podcast/js, templates/ja_podcast/params, templates/ja_podcast/scss, templates/ja_podcast/acm, templates/ja_podcast/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-podcast/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

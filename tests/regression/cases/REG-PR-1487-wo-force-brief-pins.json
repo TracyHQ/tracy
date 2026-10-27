@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1487-wo-force-brief-pins",
+  "kind": "fix",
+  "title": "Force Complete Brief on /ops/wo chooses its CMS and template like a customer's revision instead of a hard-coded Joomla ja_restora",
+  "pr": 1487,
+  "area": "website-opportunities/ops",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: with Tracy Base released on the three CMS, no CMS chosen by the account and the /ops/wo defaults, press force-complete-brief on a legacy opportunity.",
+    "S2: the account chose WordPress in Settings; press force-complete-brief.",
+    "S3: /ops/wo pins tracy-base/emdash-9.x (not released) under the strict policy; press force-complete-brief.",
+    "S4: the same missing pin under the default fallback policy; press force-complete-brief."
+  ],
+  "expect": [
+    "S1: the revision has cms emdash, cms_source ops_force, template quickstart tracy-base/emdash-0.x, design tracy, reason pinned.",
+    "S2: cms wordpress, template quickstart tracy-base/wp7, reason pinned.",
+    "S3: the action answers 409 TEMPLATE_PIN_UNAVAILABLE, writes no revision and leaves the sources as they were (whole action rolled back).",
+    "S4: cms emdash, the fallback fit (tracy-base/emdash-0.x here), reason starting pin-missing:tracy-base/emdash-9.x;."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/lib/wo-operator-fence.js, apps/tracy-web/src/lib/wo-revision-choice.js, apps/tracy-web/src/opportunities/revisions.js, apps/tracy-web/src/lib/wo-ops.js",
+    "dom": ""
+  },
+  "evidence": "Before: insertForcedRevision wrote cms 'joomla' and template {slug: 'ja_restora', cms: 'joomla'} whatever the account or /ops/wo said (#1461 decision, 19/10/2026).",
+  "fence": "The forced brief uses the same chooseTemplate/resolveRevisionCms as createRevision (lib/wo-revision-choice.js) and the same preference lock key as Settings saves.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/ops-wo-operator-fence.test.mjs"],
+    "needs": ["postgres"],
+    "tests": [
+      "force-complete-brief with no CMS chosen builds the /ops/wo default CMS from its pin",
+      "force-complete-brief follows the account's own CMS and that CMS's pin",
+      "force-complete-brief under a strict pin no longer offered is refused like a revision, writing nothing",
+      "force-complete-brief with a pin no longer offered falls back and says why",
+      "a forced brief and a Settings save lock the same preference key"
+    ]
+  }
+}

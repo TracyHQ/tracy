@@ -1,0 +1,56 @@
+{
+  "id": "QA-UNIT-REG-PR-1220-claude-web-callback-address-happy",
+  "itemIds": ["regression:REG-PR-1220-claude-web-callback-address"],
+  "requirement": "Claude's web sign-in draws Claude's own callback address (localhost:53692/callback) and says how to copy it from a window with no address bar",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1220-claude-web-callback-address.json",
+    "ref": "PR #1220 (fix); fix evidence: none recorded",
+    "invariant": "ol[data-steps='browser-callback'] still holds exactly three li: open, refused, copy. Step 2 holds small[data-hint='popup'] reading 'Opened in a small window with no address bar? Use its menu (⋮) and choose Open in Chrome, then copy the address.' The address-bar drawing under step 3 reads 'localhost:53692/callback?code=…' and the panel never mentions 1455. The drawn address is the host and path of the attempt's redirect_uri plus '?code=…'; with no readable redirect_uri it falls back to 'localhost:1455/auth/callback?code=…'.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-model-plan/test/accounts-pane.test.mjs:254 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the address to copy is drawn from the attempt: the redirect the vendor sends the browser back to",
+    "Claude's sign-in draws Claude's callback address and says what to do with an address-less window",
+    "a browser sign-in says what happens before the page opens: three steps in order, the refused page announced, then the paste box"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1220-claude-web-callback-address"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-model-plan", "tracy-model-plan"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1220-claude-web-callback-address",
+    "pr": 1220,
+    "kind": "fix",
+    "area": "settings/ai-accounts",
+    "file": "tests/regression/cases/REG-PR-1220-claude-web-callback-address.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-model-plan/test/accounts-pane.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the address to copy is drawn from the attempt: the redirect the vendor sends the browser back to",
+    "Claude's sign-in draws Claude's callback address and says what to do with an address-less window",
+    "a browser sign-in says what happens before the page opens: three steps in order, the refused page announced, then the paste box"
+  ],
+  "timeoutS": 180
+}

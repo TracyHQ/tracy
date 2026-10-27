@@ -1,0 +1,108 @@
+/** 
+ *------------------------------------------------------------------------------
+ * @package       TRACY_BASE - Free Template for Joomla!
+ *------------------------------------------------------------------------------
+ * @copyright     Copyright (C) 2004-2019 JoomlArt.com. All Rights Reserved.
+ * @license       GNU General Public License version 2 or later; see LICENSE.txt
+ * @authors       JoomlArt
+ *------------------------------------------------------------------------------
+**/
+
+body {
+  background-color: var(--ds-c-surface, #f6f6f6);
+  font-size: 16px;
+  font-family: var(--ds-font-body, "PT Sans","Helvetica Neue", Helvetica, Arial, sans-serif);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.outline {
+  background-color: var(--ds-c-surface-warm, #fff);
+  border: 1px solid var(--ds-c-border, #666);
+  box-shadow: 5px 5px 0 rgba(0,0,0,0.05);
+  margin: 150px auto 0;
+  padding: 40px;
+  width: 400px;
+}
+
+.outline h1 {
+  line-height: 1;
+  margin: 0;
+}
+
+.offline-message {
+  background-color: var(--ds-c-info-bg, #d9edf7);
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+  color: var(--ds-c-info-text, #069);
+  padding: 10px;
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+}
+
+#form-login-username,
+#form-login-password {
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 0;
+  overflow: hidden;
+  width: 49%;
+}
+
+#form-login-username {
+  padding-right: 10px;
+}
+
+#form-login-password {
+  padding-left: 10px;
+}
+
+#form-login-username label,
+#form-login-password label {
+  color: var(--ds-c-muted, #666);
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+#form-login-username .inputbox,
+#form-login-password .inputbox {
+  border: 1px solid var(--ds-c-border-soft, #ddd);
+  box-sizing: border-box;
+  line-height: 36px;
+  padding: 0 10px;
+  width: 100%;
+}
+
+#form-login-username .inputbox:focus,
+#form-login-password .inputbox:focus {
+  border-color: var(--ds-c-border, #666);
+}
+
+/* Submit button */
+#submit-buton {
+  margin: 20px 0 0;
+  text-align: right;
+}
+
+#submit-buton .button {
+  background-color: var(--ds-c-ink, #333);
+  border: 0;
+  color: var(--ds-c-on-ink, #fff);
+  display: inline-block;
+  font-weight: 600;
+  font-family: var(--ds-font-body, "PT Sans","Helvetica Neue", Helvetica, Arial, sans-serif);
+  line-height: 36px;
+  letter-spacing: 1px;
+  padding: 0 20px;
+  transition: background-color 0.35s;
+  text-transform: uppercase;
+}
+
+#submit-buton .button:hover {
+  background-color: var(--ds-c-accent-hover, #069);
+  cursor: pointer;
+}

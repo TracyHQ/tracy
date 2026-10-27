@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-iris-voltage: #6360d8;
+  --color-midnight-vault: #060b25;
+  --color-pure-ink: #000000;
+  --color-paper-white: #ffffff;
+  --color-graphite-slate: #383c51;
+  --color-lavender-mist: #dad9ed;
+
+  /* Typography — Font Families */
+  --font-tiempos-headline: 'Tiempos Headline', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-matter: 'Matter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

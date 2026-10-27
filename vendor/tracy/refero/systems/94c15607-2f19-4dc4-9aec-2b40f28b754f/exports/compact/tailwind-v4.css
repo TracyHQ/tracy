@@ -1,0 +1,9 @@
+@theme {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-ash: #5a5a5a;
+  --color-ghost-white: #ffffff;
+
+  /* Typography */
+  --font-polysans: 'PolySans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

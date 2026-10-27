@@ -1,0 +1,573 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "wordpress-tracy-base",
+  "template": "wordpress/wp-ja-restaurant",
+  "minVersion": {
+    "wp-ja-restaurant": "1.0.0"
+  },
+  "maxVersion": {
+    "wp-ja-restaurant": "1.0.1"
+  },
+  "maxVersionNote": "1.0.0 20/10/2026: the first cut of the theme, a port of the JA Restaurant Joomla 6 (T3) quickstart 1.0.6. Checked statically only (template-design-system-readiness.mjs on the local theme zip): the carried source sheets (assets/css/source/, from the tokenized 1.0.6 sheets by tasks/ja-restaurant-wp7/tools/port-css.mjs) read the slot with the template's own value as the fallback, the colour block of theme.overlay.json reads every role on both sides, tracy_apply_inspiration kept. Not yet measured on a built site under any system. 1.0.1 22/10/2026: a stylesheet-only patch (the hero heading's accent bar under a system, D-30); measured on a built site, see readyNote.",
+  "release": "quickstart/ja-restaurant/wp7",
+  "baseTokensFile": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-restaurant/tokens.css",
+  "roles": {
+    "page": "body",
+    "display": "h1.wp-block-heading.hero-heading",
+    "heading": "h2.wp-block-heading.t3-section-title",
+    "body": "div.features-item-inner p",
+    "button-primary": "a.btn.btn-lg.btn-primary",
+    "section": "main .t3-section"
+  },
+  "discovered": {
+    "page": "body: the page colour #f4f2e7 (tokens.css --bg, measured on the running source)",
+    "display": "the welcome heading of the hero (h1.hero-heading), as on the Joomla source: 58px",
+    "displayFace": "Teko 300, tracking 0.103em",
+    "heading": "section titles (h2.t3-section-title): 36px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(210, 74, 36)"
+  },
+  "discoveredNote": "taken from the Joomla contract (joomla-ja-restaurant.json) and the port's tokens.css, which were measured on the running Joomla source; not re-read by discover.mjs on a WordPress stand of this theme (no stand in this pass)",
+  "extraPalettes": [
+    {
+      "bg": "#f4f2e7",
+      "fg": "#3a352f",
+      "fg-2": "#222222",
+      "accent": "#d24a24",
+      "accent-hover": "#913319",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#eeeeee",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#f4f2e7",
+      "surface-warm": "#3a352f"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#ffffff"
+    }
+  ],
+  "extraNote": "the Joomla contract's first three palettes (the template's T3 less variables and Bootstrap 3's) and the white card surface: the carried source sheets are the Joomla 1.0.6 sheets, tokenized with those palettes, so the same colours are the ones they read the slot for",
+  "selectors": {
+    "display": "h1.wp-block-heading.hero-heading, .tracy-display",
+    "heading": ["main h2.wp-block-heading"],
+    "buttonPrimary": [
+      ".tracy .btn-primary:not(.btn-decor):not(.wp-block-button)",
+      ".tracy .wp-block-button.btn-primary > .wp-block-button__link",
+      ".tracy a.btn.btn-lg:not(.btn-decor):not(.btn-default.btn-block)"
+    ],
+    "button": [".tracy .btn:not(.btn-decor):not(.wp-block-button)", ".tracy .wp-block-button__link"],
+    "bodyFace": ["body.tracy"],
+    "section": [".tracy main .t3-section"],
+    "card": [".tracy-card"],
+    "pill": [".label"]
+  },
+  "selectorsNote": "the theme keeps the source's class names (t3-*, acm-*, btn), so the buttons are Bootstrap's .btn as on the Joomla contract; the decorated split buttons (.btn-decor) keep the template's padding, size and type for the same reason as there (a label box beside an arrow cell drawn on its right padding)",
+  "contrast": {
+    "accent-text": "main a:not([class*=btn]):not(:has(img))",
+    "body": "main p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": true,
+  "readyNote": "measured 22/10/2026 on the release of 1.0.1 (pack restored from the release folder, flow.mjs with the 15 featured systems at 1440 and 390, native and derived side; design-system-measurement.json of 1.0.1): 60 of 60 rows pass, CON-1 and MODE-2 included (1.0.0: 59 of 60, the row left was Airbnb derived dark at 390, the hero heading half on the accent bar, 2.92 < 3.0). Fixed by DECISIONS D-30 (b): under a system the heading's accent bar reads bg and the dark-side heading is plain fg; unworn the computed style is the same as 1.0.0. 22/10/2026, TDSR round on 1.0.1: the 14 must-fix rules the preview exposed are answered from this contract (followRules and sideRules as on joomla-ja-restaurant.json, the logo kept light on the dark side, DECISIONS D-36 and D-37); preview measured on all 31 pages at light and dark, 0 must-fix; GROUND-2 and BORDER-1 fixed from this contract (D-38): TDSR 0 FAIL on 1.0.1.",
+  "sideRules": {
+    "light": {
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-success .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-success .panel-heading .panel-title": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".panel-info .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-info .panel-heading .panel-title": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".panel-warning .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-warning .panel-heading .panel-title": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".panel-danger .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-danger .panel-heading .panel-title": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      "code, kbd, pre, samp": {
+        "font-family": "var(--ds-font-mono, monospace)"
+      },
+      ".table > :is(thead, tbody, tfoot) > tr > :is(td, th).success, .table > :is(thead, tbody, tfoot) > tr.success > :is(td, th), .table-hover > tbody > tr.success:hover > :is(td, th), .table-hover > tbody > tr > :is(td, th).success:hover": {
+        "background-color": "var(--ds-c-success-bg)",
+        "color": "var(--ds-c-success-text)"
+      },
+      ".table > :is(thead, tbody, tfoot) > tr > :is(td, th).info, .table > :is(thead, tbody, tfoot) > tr.info > :is(td, th), .table-hover > tbody > tr.info:hover > :is(td, th), .table-hover > tbody > tr > :is(td, th).info:hover": {
+        "background-color": "var(--ds-c-info-bg)",
+        "color": "var(--ds-c-info-text)"
+      },
+      ".banner-bonus ul li + li": {
+        "border-top-color": "color-mix(in srgb, var(--ds-c-accent) 30%, transparent)"
+      },
+      ".plain-style .box-contact.box-primary a": {
+        "border-bottom-color": "color-mix(in srgb, var(--ds-c-accent-on) 40%, transparent)"
+      },
+      ".acm-features.style-1 .features-item .features-item-inner": {
+        "container-type": "inline-size"
+      },
+      ".nav-tabs > li > a": {
+        "border-radius": "var(--ds-btn-radius) var(--ds-btn-radius) 0 0"
+      },
+      ".acm-happyhours.style-1 .hp-desc, .acm-happyhours.style-1 .hp-desc p": {
+        "color": "#3a352f"
+      },
+      ".acm-container-tabs .container-tabs-nav .nav-tabs li a, .nav-pills li a, .list-group-item.active, .acm-happyhours .hp-link a": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      "input.form-control, textarea.form-control, select.form-control": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".has-success .form-control": {
+        "border-color": "var(--ds-c-success-text)"
+      },
+      ".has-error .form-control": {
+        "border-color": "var(--ds-c-danger-text)"
+      },
+      ".has-warning .form-control": {
+        "border-color": "var(--ds-c-warn-text)"
+      },
+      ".acm-features.style-1 .features-item h1": {
+        "font-size": "min(58px, 11cqi)"
+      },
+      ".swatch-item.color-gray-lighter, .swatch-item.color-gray-lighter :is(dl, dt, dd)": {
+        "color": "#333333 !important"
+      },
+      ".btn.btn-decor.btn-default:is(:hover, :focus)": {
+        "background-color": "var(--ds-c-accent-hover) !important",
+        "border-color": "var(--ds-c-accent-hover) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".tracy-motion-dot:not(.is-active):not([aria-current])": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 55%, var(--ds-c-bg)) !important"
+      },
+      ".t3-section-module.custom-background .custom, .t3-section-module.custom-background .custom :is(h2, p)": {
+        "color": "var(--ds-c-fg) !important",
+        "text-shadow": "none !important"
+      },
+      ".jumbotron .btn-primary": {
+        "border": "1px solid var(--ds-c-fg) !important"
+      },
+      ".badge.badge-sale, .acm-happyhours .hp-info .hg-badge, .acm-happyhours .hp-info .hg-badge .jr-hg-strong": {
+        "background-color": "var(--ds-c-accent) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".acm-happyhours .hp-info .hg-badge .jr-hg-strong": {
+        "border-color": "var(--ds-c-border) !important"
+      }
+    },
+    "dark": {
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-success .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-success .panel-heading .panel-title": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".panel-info .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-info .panel-heading .panel-title": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".panel-warning .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-warning .panel-heading .panel-title": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".panel-danger .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-danger .panel-heading .panel-title": {
+        "color": "var(--ds-c-danger-text)"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      ".btn-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "transparent !important",
+        "border": "1px solid var(--ds-c-info-text) !important"
+      },
+      ".btn-info:hover, .btn-info:focus, .btn-info:active": {
+        "color": "var(--ds-c-info-text) !important",
+        "background": "var(--ds-c-info-bg) !important"
+      },
+      "code, kbd, pre, samp": {
+        "font-family": "var(--ds-font-mono, monospace)"
+      },
+      ".table > :is(thead, tbody, tfoot) > tr > :is(td, th).success, .table > :is(thead, tbody, tfoot) > tr.success > :is(td, th), .table-hover > tbody > tr.success:hover > :is(td, th), .table-hover > tbody > tr > :is(td, th).success:hover": {
+        "background-color": "var(--ds-c-success-bg)",
+        "color": "var(--ds-c-success-text)"
+      },
+      ".table > :is(thead, tbody, tfoot) > tr > :is(td, th).info, .table > :is(thead, tbody, tfoot) > tr.info > :is(td, th), .table-hover > tbody > tr.info:hover > :is(td, th), .table-hover > tbody > tr > :is(td, th).info:hover": {
+        "background-color": "var(--ds-c-info-bg)",
+        "color": "var(--ds-c-info-text)"
+      },
+      ".banner-bonus ul li + li": {
+        "border-top-color": "color-mix(in srgb, var(--ds-c-accent) 30%, transparent)"
+      },
+      ".plain-style .box-contact.box-primary a": {
+        "border-bottom-color": "color-mix(in srgb, var(--ds-c-accent-on) 40%, transparent)"
+      },
+      ".acm-features.style-1 .features-item .features-item-inner": {
+        "container-type": "inline-size"
+      },
+      ".nav-tabs > li > a": {
+        "border-radius": "var(--ds-btn-radius) var(--ds-btn-radius) 0 0"
+      },
+      ".acm-happyhours.style-1 .hp-desc, .acm-happyhours.style-1 .hp-desc p": {
+        "color": "#3a352f"
+      },
+      ".acm-container-tabs .container-tabs-nav .nav-tabs li a, .nav-pills li a, .list-group-item.active, .acm-happyhours .hp-link a": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".jr-logo--dark.is-tracy-logo-text": {
+        "display": "none !important"
+      },
+      ".logo:has(.jr-logo--dark.is-tracy-logo-text) .jr-logo--light": {
+        "display": "block !important"
+      },
+      ".logo:has(.jr-logo--dark.is-tracy-logo-text) .jr-logo--light img": {
+        "filter": "invert(1) !important"
+      },
+      "input.form-control, textarea.form-control, select.form-control": {
+        "background-color": "var(--ds-c-surface)",
+        "color": "var(--ds-c-fg)",
+        "border-color": "var(--ds-c-border)"
+      },
+      ".has-success .form-control": {
+        "border-color": "var(--ds-c-success-text)"
+      },
+      ".has-error .form-control": {
+        "border-color": "var(--ds-c-danger-text)"
+      },
+      ".has-warning .form-control": {
+        "border-color": "var(--ds-c-warn-text)"
+      },
+      ".acm-features.style-1 .features-item h1": {
+        "font-size": "min(58px, 11cqi)"
+      },
+      ".swatch-item.color-gray-lighter, .swatch-item.color-gray-lighter :is(dl, dt, dd)": {
+        "color": "#333333 !important"
+      },
+      ".btn.btn-decor.btn-default:is(:hover, :focus)": {
+        "background-color": "var(--ds-c-accent-hover) !important",
+        "border-color": "var(--ds-c-accent-hover) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".tracy-motion-dot:not(.is-active):not([aria-current])": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 55%, var(--ds-c-bg)) !important"
+      },
+      ".t3-section-module.custom-background .custom, .t3-section-module.custom-background .custom :is(h2, p)": {
+        "color": "var(--ds-c-fg) !important",
+        "text-shadow": "none !important"
+      },
+      ".jumbotron .btn-primary": {
+        "border": "1px solid var(--ds-c-fg) !important"
+      },
+      ".badge.badge-sale, .acm-happyhours .hp-info .hg-badge, .acm-happyhours .hp-info .hg-badge .jr-hg-strong": {
+        "background-color": "var(--ds-c-accent) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".t3-footer": {
+        "background-color": "var(--ds-c-surface-warm) !important"
+      },
+      ".acm-happyhours .hp-info .hg-badge .jr-hg-strong": {
+        "border-color": "var(--ds-c-border) !important"
+      }
+    }
+  },
+  "followRules": {
+    ".acm-features.style-1 .features-item.odd .features-item-inner": {
+      "color": "accent-on"
+    },
+    ".acm-features.style-1 .features-item.odd .features-item-inner a:not(.btn-decor)": {
+      "color": "accent-on"
+    },
+    ".acm-features.style-1 .features-item.odd .btn:not(.btn-decor)": {
+      "color": "accent-on",
+      "border-color": "accent-on"
+    },
+    ".tags .label-info": {
+      "color": "accent-on"
+    },
+    ".acm-container-tabs .container-tabs-nav .nav-tabs li.active a": {
+      "color": "accent-on"
+    },
+    ".acm-container-tabs .container-tabs-nav .nav-tabs li a.active": {
+      "color": "accent-on"
+    },
+    ".t3-module.module-primary a": {
+      "color": "accent-on"
+    },
+    ".dish-item .item-inner": {
+      "border-bottom-color": "border"
+    },
+    ".acm-happyhours.style-2 .hp-info .hg-badge strong": {
+      "color": "accent-on"
+    },
+    ".acm-happyhours.style-2 .hp-brand": {
+      "border-bottom-color": "success"
+    },
+    ".acm-happyhours.style-3 .hp-link a": {
+      "background-color": "accent",
+      "color": "accent-on"
+    },
+    ".example-colors .color-brand-primary, .label-primary": {
+      "color": "accent-on!"
+    },
+    ".list-group-item.active .list-group-item-text": {
+      "color": "accent-on"
+    },
+    ".plain-style .box-contact.box-primary h3": {
+      "color": "accent-on",
+      "border-color": "accent-on"
+    },
+    ".plain-style .box-contact.box-primary a": {
+      "color": "accent-on"
+    },
+    ".items-row.cols-1 .info-article .article-aside .category-name a": {
+      "background-color": "accent",
+      "color": "accent-on"
+    },
+    ".items-row.cols-1 .info-article .article-aside .category-name a:is(:hover, :focus, :active)": {
+      "background-color": "accent-hover",
+      "color": "accent-on"
+    },
+    ".btn-inverse": {
+      "background-color": "fg",
+      "border-color": "fg",
+      "color": "bg"
+    },
+    ".btn-secondary, button.btn:not([class*=btn-])": {
+      "background-color": "surface",
+      "border-color": "border",
+      "color": "fg"
+    },
+    "a.btn.btn-default.btn-block.btn-lg": {
+      "background-color": "surface-warm",
+      "border-color": "border",
+      "color": "fg"
+    },
+    ".pagination > li > a:is(:hover, :focus)": {
+      "background-color": "accent",
+      "border-color": "accent",
+      "color": "accent-on!"
+    },
+    ".acm-happyhours.style-1 .hp-link a": {
+      "background-color": "accent",
+      "color": "accent-on"
+    },
+    ".login-wrap .page-header h1": {
+      "color": "fg!"
+    },
+    ".list-group-item.active .list-group-item-heading": {
+      "color": "accent-on"
+    },
+    ".list-group-item.active": {
+      "color": "accent-on!"
+    },
+    ".nav-pills > li.active > a": {
+      "color": "accent-on!",
+      "background-color": "accent"
+    },
+    ".nav-pills > li.active > a:is(:hover, :focus)": {
+      "color": "accent-on!",
+      "background-color": "accent"
+    },
+    ".acm-happyhours .hp-info .hg-badge .jr-hg-strong": {
+      "color": "accent-on!"
+    },
+    ".nav-tabs > li.active > a": {
+      "color": "accent-on!",
+      "background-color": "accent"
+    },
+    ".nav-tabs > li.active > a:is(:hover, :focus)": {
+      "color": "accent-on!",
+      "background-color": "accent"
+    },
+    ".acm-happyhours .hp-link a:is(:hover, :focus)": {
+      "background-color": "accent-hover",
+      "color": "accent-on!"
+    }
+  },
+  "sideNote": "Bootstrap 3's status components (alerts, panels, labels, the info button, table states) carry the template's literal pale grounds and status words, as on the Joomla contract (joomla-ja-restaurant.json sideRules, the same rules: the theme keeps the source's class names): they read the status roles under a system. Dark side, no dark logo set (D-36): the customer's own logo picture stays and is drawn light on the dark ground instead of the name in words, so the mark keeps its size and content (IDENT-1); with a dark logo set nothing changes.",
+  "followNote": "the same follow rules as the Joomla contract (text the template sets white in one rule on an accent fill set in another, the secondary and inverse buttons, the category chips), minus the hero bar (D-30: the theme reads bg itself) and the owl slideshow ground.",
+  "literalsNote": "#333333 is the template's own ink on its own fixed light swatch (.swatch-item.color-gray-lighter, a #eeeeee sample box of the style guide page): the box is a colour sample whose ground no system repaints, so its words keep dark ink under every system. the first happy-hours description (.acm-happyhours.style-1 .hp-desc) keep the template's own #3a352f under every system: dark words with a white text shadow on a light photograph, which no system ground is under (preview probe v10 20/10/2026: the system's text read 1.68:1 on the photo under Moxie)"
+}

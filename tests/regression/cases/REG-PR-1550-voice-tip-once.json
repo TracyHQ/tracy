@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1550-voice-tip-once",
+  "kind": "fix",
+  "title": "The Voice tip shows once per browser, in one place",
+  "pr": 1550,
+  "area": "chat-input/voice-tip",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the voice-mode e2e of tracy-chat-input: the note on a new chat's chat box, a reload, a fresh browser pressing the note, a fresh browser reloading untouched then opening a chat with a header, and the header note with its Chat/Voice menu."
+  ],
+  "expect": [
+    "S1: the note shows the first time; after it was on screen once no note shows again in that browser, after a reload or in the header place; pressing it goes into Voice; opening the Chat/Voice menu closes it."
+  ],
+  "selectors": {
+    "files": "packages/ui/tracy-chat-input/test/e2e/voice-mode.test.mjs",
+    "attributes": "data-voice-tip, data-voice-tip-start, data-voice-tip-close, localStorage tracy.voice-tip.seen"
+  },
+  "evidence": "21/10/2026 cowork.tracy.site: the note covered the conversation tabs on every load, over the chat box and under the header",
+  "fence": "The VoiceTip show-once state in VoiceMode.tsx measured in Chromium with real localStorage",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=120000",
+      "packages/ui/tracy-chat-input/test/e2e/voice-mode.test.mjs"
+    ]
+  }
+}

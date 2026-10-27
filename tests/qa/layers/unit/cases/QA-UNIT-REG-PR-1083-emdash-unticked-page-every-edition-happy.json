@@ -1,0 +1,51 @@
+{
+  "id": "QA-UNIT-REG-PR-1083-emdash-unticked-page-every-edition-happy",
+  "itemIds": ["regression:REG-PR-1083-emdash-unticked-page-every-edition"],
+  "requirement": "EmDash Tracy Business: an unticked page stays off in every edition and language, out of every menu",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1083-emdash-unticked-page-every-edition.json",
+    "ref": "PR #1083 (fix); fix evidence: On a root written in Vietnamese the labels lane translated the unticked page and the write door published it again: Tracy Business EmDash 1.7.2 on dev answered /projects 200 with Projects unticked (commit 4e589f239, #1013).",
+    "invariant": "S1: every named test reports ok. S2: the unticked page is unpublished in every edition served, no menu leads to it, the home page is never hidden.",
+    "productSources": ["packages/cms/tracy-emdash-theme-business/tools/personalize.mjs:522"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "News unticked: its page is off the site in every language written, its menu items are gone, and --revert brings both back",
+    "the home page is never hidden, even when its id comes unticked",
+    "a site written in Vietnamese: the unticked page stays unpublished and out of the menu, though its labels are translated",
+    "no language chosen: the unticked page is off every edition still served, and no menu leads to it"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1083-emdash-unticked-page-every-edition"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/cms/tracy-emdash-theme-business", "tracy-emdash-theme-business"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1083-emdash-unticked-page-every-edition",
+    "pr": 1083,
+    "kind": "fix",
+    "area": "site-build/emdash/pages",
+    "file": "tests/regression/cases/REG-PR-1083-emdash-unticked-page-every-edition.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "tests/personalize-pages.test.mjs"],
+  "cwd": "packages/cms/tracy-emdash-theme-business",
+  "needs": [],
+  "tests": [
+    "News unticked: its page is off the site in every language written, its menu items are gone, and --revert brings both back",
+    "the home page is never hidden, even when its id comes unticked",
+    "a site written in Vietnamese: the unticked page stays unpublished and out of the menu, though its labels are translated",
+    "no language chosen: the unticked page is off every edition still served, and no menu leads to it"
+  ],
+  "timeoutS": 600
+}

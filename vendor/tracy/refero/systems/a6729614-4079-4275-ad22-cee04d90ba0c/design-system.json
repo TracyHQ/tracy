@@ -1,0 +1,216 @@
+{
+  "dos": [
+    "Use beausite at every typographic level — never introduce a second family",
+    "Set all display text weight 400 with letter-spacing -0.036em at 48px; tighter tracking is what makes beausite read as editorial",
+    "Build buttons as 1px black-outlined ghosts on transparent or Linen backgrounds — never fill a button with saturated color",
+    "Reserve the entire warm-cream palette (Bone White → Linen → Pebble → Bark) for structure; let photography supply the only chromatic moments",
+    "Maintain 17px element gap and 17–34px card padding as the spatial unit across all cards, inputs, and sections",
+    "Use 0px radius on cards, inputs, and section blocks; reserve the 20px pill exclusively for inline text links and tags",
+    "Set icon backgrounds to soft pastels (mint, pink, peach) inside a 40px circle — keep the card itself colorless"
+  ],
+  "donts": [
+    "Don't introduce a chromatic brand color, a gradient, or a colored button fill — the system is monochromatic by design",
+    "Don't add box-shadows, drop-shadows, or glows — elevation comes from tonal layering, not blur",
+    "Don't use system fonts (Inter, Roboto, Arial) as a substitute for beausite in a mockup without applying -0.022em to -0.036em tracking — the negative tracking is load-bearing",
+    "Don't round card or input corners — sharp 0px edges are part of the editorial signal",
+    "Don't mix icon styles — all icons should be the same stroke weight and 40px circular pastel background",
+    "Don't place body text below 14px or above 21px in content areas; the 14–21px band is the readable register",
+    "Don't separate sections with full-width rules — let whitespace and the Bone White/Linen tonal shift create the rhythm"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fcf9ee",
+      "name": "Bone White",
+      "role": "Page canvas, hero left panel, newsletter input background — the warmest near-white, slightly yellowed like aged paper",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2efe3",
+      "name": "Linen",
+      "role": "Card surfaces, section backgrounds, one decorative button fill — a half-shade deeper than Bone White, reads as the same material under indirect light",
+      "group": "neutral"
+    },
+    {
+      "hex": "#bcbab2",
+      "name": "Pebble",
+      "role": "Hairline borders, input outlines, list dividers — warm gray that disappears against the cream, only visible at the exact edge it frames",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6a6965",
+      "name": "Bark",
+      "role": "Secondary text, muted body copy, card meta lines — warm dark gray, 5.2:1 on Bone White, carries metadata without competing with primary text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered, with a two-panel hero that breaks full-bleed (Bone White text panel on the left, gray-toned photo panel on the right — no divider, the tonal shift separates them). Below the hero, content flows in single-column bands: section heading (left-aligned 30–34px) followed by either a 3-column card grid (services, case studies) or a 2-column split (text-left / feature-cards-right with pastel icons). Section rhythm is quiet: generous 48–80px vertical gaps between bands, no alternating dark/light sections, no visual dividers. Navigation is a single transparent top bar with text-only links. Footer is a 4-column link grid plus a newsletter input. Density stays low throughout — this is an editorial spread, not a dashboard.",
+  "imagery": "Photography is product-only and occupies roughly 40% of the hero and case-study cards. Treatment: full-bleed within its column, sharp corners (no rounding), no overlay text, no lifestyle context — the cardboard box, the beverage can, the jar is the entire subject. Color treatment is natural and slightly desaturated, leaning into the warm cardboard and kraft-paper palette that matches the cream canvas. No illustration, no 3D, no abstract graphics. Icons are the only non-photographic visual element: simple line glyphs inside 40px pastel circles (mint, pink, peach) that inject the system's only chromatic punctuation.",
+  "similar": [
+    {
+      "why": "Same warm cream canvas, black serif-leaning type, and full restraint from chromatic UI chrome — the product photography does the only color work",
+      "business": "Aesop"
+    },
+    {
+      "why": "Editorial single-typeface discipline with tight negative tracking and a beige/cream monochromatic palette, no shadows or colored buttons",
+      "business": "Maude"
+    },
+    {
+      "why": "Soft cream backgrounds, hairline borders, and ghost-outline buttons that let type hierarchy do all the work",
+      "business": "Glossier (early)"
+    },
+    {
+      "why": "Magazine-spread feel: large display type, generous whitespace, three-column service grids, and zero saturated UI color",
+      "business": "Toast (tablerestaurant.com)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "20px",
+      "cards": "0px",
+      "inputs": "0px",
+      "buttons": "0px (rectangular ghost) or 20px (pill links)"
+    },
+    "elementGap": "17px",
+    "sectionGap": "48-80px",
+    "cardPadding": "",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#fcf9ee",
+      "name": "Bone White",
+      "level": 1,
+      "purpose": "Page canvas, hero left half, footer background"
+    },
+    {
+      "hex": "#f2efe3",
+      "name": "Linen",
+      "level": 2,
+      "purpose": "Card surface, secondary section background, one decorative button fill"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "level": 3,
+      "purpose": "Text and hairline borders — used as a 'surface' only for the rare filled marker"
+    }
+  ],
+  "northStar": "Linen-bound brand cookbook. Warm cream paper, black ink, single whispered serif, no decoration beyond the page edge.",
+  "typeScale": [
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.79,
+      "letterSpacing": -0.022
+    },
+    {
+      "role": "body",
+      "size": 21,
+      "lineHeight": 1.36,
+      "letterSpacing": -0.022
+    },
+    {
+      "role": "subheading",
+      "size": 30,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.024
+    },
+    {
+      "role": "heading-sm",
+      "size": 34,
+      "lineHeight": 1.08,
+      "letterSpacing": -0.024
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 0.97,
+      "letterSpacing": -0.036
+    }
+  ],
+  "components": [
+    {
+      "name": "Ghost Outline Button",
+      "role": "Primary action trigger (e.g. 'Let's get in touch')",
+      "description": "Rectangular ghost button — transparent background, 1px solid #000000 border, 9px 20px padding, beausite 14px weight 400, #000000 text, leading arrow glyph. No fill, no shadow, no radius. The 1px black outline IS the button."
+    },
+    {
+      "name": "Pill Link",
+      "role": "In-text link or tertiary action",
+      "description": "beausite 14px weight 400 text, #000000 color, 20px border-radius, 16px vertical padding. Sits inline with body copy. Underline appears on hover only."
+    },
+    {
+      "name": "Hero Split Panel",
+      "role": "Landing hero with copy + product visual",
+      "description": "Full-width two-column hero. Left half: Bone White (#fcf9ee) background carrying a 48px weight 400 headline, 21px body paragraph, and ghost button. Right half: warm gray photo panel (~#d4d2cc) containing full-bleed product photography (cardboard boxes, no crop framing). 0px divider between panels — the tonal shift is the divider."
+    },
+    {
+      "name": "Service Tier Card",
+      "role": "Three-column offering (Tailored Advisory, Holistic, Blueprint)",
+      "description": "Transparent background, no border, 11px top margin between cards. Headline at 34px weight 400, #000000. Body at 14–21px weight 400, #000000. Bullet lists use small dot glyphs with 15px gap. Pricing/footer metadata at 14px weight 400, #6a6965. Cards sit on the canvas directly — no surface lift, no background card."
+    },
+    {
+      "name": "Feature Card with Pastel Icon",
+      "role": "Capability highlight (Food ERP, Food Traceability, Digital HACCP)",
+      "description": "Compact card with a 40px circular icon chip at the top (pastel backgrounds: mint #d6f0e0, pink #f8d6cc, or peach — colors appear only inside the icon circle, never on the card itself). Title in 21px beausite weight 500, #000000. Description in 14px weight 400, #6a6965. 'Learn more' link with right arrow at bottom. No card background, no border, no shadow."
+    },
+    {
+      "name": "Case Study Card",
+      "role": "Inspiring stories grid item",
+      "description": "Vertical card in a 3-column grid. Top: 16:9 cover image with sharp corners. Below image: 21px weight 400 title in #000000, date prefix in #6a6965, body excerpt in 14px weight 400 #6a6965. 17px horizontal padding. No border, no shadow — the image edge is the only visual break."
+    },
+    {
+      "name": "Newsletter Input",
+      "role": "Footer email capture",
+      "description": "Full-width single-line input on #fcf9ee canvas, 1px solid #bcbab2 bottom border (no top/side borders), 17px horizontal padding, beausite 14px. Placeholder text in #6a6965. Subscribe button text-link sits to the right, no button chrome."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Global header",
+      "description": "Transparent over Bone White canvas. Left: wordmark 'misuko' at 21px weight 500 #000000, followed by 3 text links (Our story, Corporate, Private label) at 14px weight 400 with 20px gaps. Right: language toggle (EN), Login, Cart — same 14px. No underline, no icon, no border. Sits at 17px vertical padding."
+    },
+    {
+      "name": "Section Heading Block",
+      "role": "Opens a content band (e.g. 'From Concept to Success', 'Inspiring stories')",
+      "description": "Full-width band on Bone White. Heading 30–34px beausite weight 400 #000000, left-aligned with 17px left padding. Optional right-aligned text link 'View all →' at 14px. No rule line below — whitespace separates from content below."
+    },
+    {
+      "name": "Footer Link Column",
+      "role": "Footer sitemap",
+      "description": "Four-column grid on Bone White. Column title in 14px weight 500 #000000 (Orders & Support, About the Services, Social). Links below at 14px weight 400 #6a6965, 11px vertical gap. Newsletter input spans the leftmost column with a 'Stay up to date' subhead in 14px weight 500."
+    },
+    {
+      "name": "Pricing Meta Line",
+      "role": "Service card footer (Monthly Rate, Pricing, Hourly Rate)",
+      "description": "Bottom-of-card label group, 14px weight 400. Label text in #000000, value in #6a6965. Tight vertical stack with 5px gap between rows. Sits below a 1px solid #bcbab2 hairline separator."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Sole typeface — covers display headlines, section titles, body, nav, buttons, and footer. beausite is a contemporary humanist sans with calligraphic DNA; its soft terminals and slightly flared apertures give the warm-cream palette a hand-set quality that no system font can replicate.",
+      "sizes": "14, 21, 30, 34, 48px",
+      "family": "beausite",
+      "weight": "400, 500",
+      "lineHeight": "0.97 (display) / 1.08–1.20 (headings) / 1.36–1.79 (body) / 2.86 (hero lead)",
+      "substitute": "Söhne, Inter, GT America",
+      "letterSpacing": "-0.036em (display) / -0.024em (headings) / -0.022em (body) — consistent negative tracking tightens the page into a unified block of type",
+      "fontFeatureSettings": "\"ss02\", \"ss04\", \"ss05\""
+    }
+  ],
+  "description": "Misuko operates as an editorial atelier for beverage branding: a warm cream canvas (#fcf9ee) carries a single custom serif-influenced sans (beausite) set in tight tracking, producing a magazine-spread calm. Every element speaks the same warm-monochrome dialect — black ink, warm-gray dividers, and beige paper — so color is reserved for product photography (cardboard tan) and the occasional pastel icon, never for chrome or decoration. The interface is almost entirely flat: no shadows, no gradients, no rounded corners beyond a single 20px pill on links, and no chromatic button fills — actions are ghost-outlined in black. Information density stays low; breathing room is generous and rhythm is dictated by large display headlines followed by narrow body columns, with three-column service grids and case-study cards doing the structural work.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #000000 (primary), #6a6965 (secondary/muted)\n- background: #fcf9ee (canvas), #f2efe3 (card surface)\n- border: #bcbab2 (hairline), #000000 (interactive outline)\n- accent: pastel circles only inside icons (mint, pink, peach) — not used on UI chrome\n- primary action: no distinct CTA color\n\n**3-5 Example Component Prompts**\n1. *Hero Split Section*: full-bleed two-column. Left half on #fcf9ee, right half on a warm gray photo background. Headline at 48px beausite weight 400, #000000, letter-spacing -0.036em, line-height 0.97. Body paragraph at 21px weight 400, #000000, line-height 1.36. Ghost button below: 1px #000000 border, 9px 20px padding, 14px beausite weight 400 #000000 text + arrow glyph.\n2. *Service Tier Card* (3-column grid): no background, no border. 34px beausite weight 400 #000000 title, 21px body #000000, bullet list with 5px gap, 14px meta lines in #6a6965 separated from body by 1px #bcbab2 hairline. 11px top margin between cards.\n3. *Feature Card with Icon*: 40px circular icon background in pastel mint or pink, line-icon glyph centered inside. 21px beausite weight 500 #000000 title, 14px weight 400 #6a6965 description, 'Learn more →' text link at bottom. No card surface, no border.\n4. *Case Study Card*: 16:9 cover image at top with 0px radius. Below: 21px beausite weight 400 #000000 title, 14px weight 400 #6a6965 date prefix, 14px weight 400 #6a6965 excerpt. 17px horizontal padding. No border, no shadow.\n5. *Newsletter Input*: full-width on #fcf9ee, 1px #bcbab2 bottom border only, 17px horizontal padding, beausite 14px. Placeholder #6a6965. Right-aligned 'Subscribe' as 14px text link, no button chrome."
+    }
+  ],
+  "elevationPhilosophy": "The system is intentionally flat: no box-shadows, no drop-shadows, no glows. Elevation is communicated through the warm-cream tonal stack (Bone White → Linen) and through 1px Pebble or Ink Black hairlines. Cards and inputs sit directly on the canvas with no lift — the page reads as a printed sheet, not a stacked UI."
+}

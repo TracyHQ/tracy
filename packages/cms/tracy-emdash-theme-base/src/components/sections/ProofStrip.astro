@@ -1,0 +1,32 @@
+---
+/** The "social proof" strip: a coloured kicker, a muted subtitle, an uppercase line and the service names. */
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  kicker?: string
+  title?: string
+  line?: string
+  items: Array<{ label: string }>
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: { kicker?: string; title?: string; line?: string; items?: string }
+}
+const { kicker, title, line, items, stamp, fields } = Astro.props
+const none = {}
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+const sub = (k: string) => (stamp && fields?.items ? stamp(`${fields.items}.${k}`) : none)
+---
+
+<section class="wrap py-16 text-center" data-block="social-proof">
+	<div class="mb-2 flex flex-wrap items-baseline justify-center gap-x-4 gap-y-1">
+		{kicker && <span class="text-[17px] tracking-[2px] text-kicker" {...at("kicker")}>{kicker}</span>}
+		{title && <span class="text-[12px] text-fg-muted" {...at("title")}>{title}</span>}
+	</div>
+	{line && <p class="mb-6 text-[12px] uppercase tracking-[0.16em] text-fg-meta" {...at("line")}>{line}</p>}
+	<ul class="flex flex-wrap justify-center gap-x-10 gap-y-3">
+		{items.map((i) => <li class="text-[21px] font-semibold tracking-[0.02em] text-fg-meta" {...sub("label")}>{i.label}</li>)}
+	</ul>
+</section>

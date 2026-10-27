@@ -1,0 +1,44 @@
+{
+  "color": {
+    "lilac-veil": {
+      "$value": "#b8aad0",
+      "$type": "color",
+      "$description": "Lilac Veil — Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — All body text, navigation text, link borders, card borders, and badge borders — the structural linework of the entire interface"
+    },
+    "warm-parchment": {
+      "$value": "#f4f1e4",
+      "$type": "color",
+      "$description": "Warm Parchment — Page and section backgrounds in the editorial/product area — the calm canvas against which the product photography sits"
+    },
+    "ivory-mist": {
+      "$value": "#fcfaf1",
+      "$type": "color",
+      "$description": "Ivory Mist — Navigation text color over the dark hero, subtle surface variant and hairline borders — a warmer alternative to pure white for the dark-section UI"
+    }
+  },
+  "font": {
+    "good-sans": {
+      "$value": "Good Sans",
+      "$type": "fontFamily",
+      "$description": "Sole workhorse typeface for navigation, body copy, product metadata, links, and all UI text. The dual-weight system (regular 400 for body/labels, bold 700 for brand names, prices, and emphasis) creates hierarchy without size escalation. The near-zero positive letter-spacing keeps it editorial rather than geometric."
+    },
+    "redaction": {
+      "$value": "Redaction",
+      "$type": "fontFamily",
+      "$description": "Hero wordmark only — a custom display face for the 'LUNCH' 3D chrome text that anchors the full-bleed hero. Used exactly once per page; this is the typographic signature, not a reusable component."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://lunchconcept.com",
+      "siteName": "LUNCH",
+      "extractedAt": "2026-06-03T17:26:11.337Z",
+      "variant": "compact"
+    }
+  }
+}

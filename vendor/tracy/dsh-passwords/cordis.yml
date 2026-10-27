@@ -1,0 +1,22 @@
+# DeepSeek Harness 接入 dsh-passwords 的 patch 配置
+#
+# 推荐安装方式（install.sh 已自动完成）：
+#   dsh plugin --profile web add link:/path/to/dsh-passwords
+# 本包声明了 dsh.bundle.patch，注册后此文件会作为 bundle 层被 dsh 自动应用，
+# 启动 dsh 无需任何额外参数。
+#
+# 手动方式（二选一，用于不想注册插件的情况）：
+#   dsh web --patch ./cordis.yml
+# 或把本文件内容合并进 ~/.dsh/profiles/web/cordis.patch.yml
+
+# 多用户网关固定使用官方 browse 目录交互：Windows 本地的 auto 选择器会因
+# loopback + win32 误选原生 OS 对话框，远程子用户既看不到该对话框，也不能调用
+# directoryPicker/pick。直接覆盖官方 directory-picker 行，使用 browse host/client
+# 组合；不重复插入 auto/native，也不放开原生 pick。
+- insert:
+    - id: directory-picker
+      name: '@deepseek-ai/dsh-host-directory-picker-browse'
+    - id: directory-picker-client
+      name: '@deepseek-ai/dsh-client-ui-directory-picker-browse'
+    - id: dsh-passwords
+      name: 'dsh-passwords'

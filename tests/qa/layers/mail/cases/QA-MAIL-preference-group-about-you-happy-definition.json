@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-preference-group-about-you-happy-definition",
+  "itemIds": ["preference-group:about-you"],
+  "requirement": "group about-you lists the kinds the ADR gives it",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 8",
+    "invariant": "six groups; Join requests locked"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.preferences.groups#group:about-you|six-groups"],
+  "redProof": null,
+  "legacyIds": []
+}

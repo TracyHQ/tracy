@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "60ee0386-cfad-409a-8310-762bfc2e4816",
+  "status": "complete",
+  "name": "Cosmos Network",
+  "url": "https://styles.refero.design/style/60ee0386-cfad-409a-8310-762bfc2e4816",
+  "sourceWebsite": "https://cosmos.network",
+  "extractedAt": "2026-06-03T19:35:02.413Z",
+  "capturedAt": "2026-10-08T05:12:22.150212+00:00",
+  "theme": "dark",
+  "industry": "crypto",
+  "description": "Deep space command center — a near-black financial observatory where white type and concentric diagrams float in measured silence.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/02325cbd-e906-442d-bebd-f3d1ff22d762.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/b07c58df-e48f-4aee-82a1-92984108bd89.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f1dee161-9304-4b58-857b-ee88477e4b17.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/8e703ad8-85d4-4528-bda7-317138250671.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/6c29bed9-8cba-4bab-8d3e-0aef2d7d9ad3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c1caa09a1bb112e05de7580380293e0827fe00f53a6bfde46726d72ee9160d77",
+      "bytes": 18731
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4791097942b65126d883c728af457b288294ad7574518d4637f716a642e1ccde",
+      "bytes": 148926
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ac92dc61fe365b06ba0a066b4feb24fedb7b92155bf58df23dc248df4b90fbfc",
+      "bytes": 15993
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "1951c0b199d532c9aa8dbbca021c9aadb9c4e7e5d5239374cc4a081a8235baa7",
+      "bytes": 10119
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f9966b56469ac3aa2e15d1dcaefe84f996ee7695d1c7caac75ef01097b40c865",
+      "bytes": 11147
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a9db6a93f21a4f72ab83bcdbb47715040b0cc739304d93cf3cbfee5277996e51",
+      "bytes": 2696
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b5c9482ccbc4a2edcd8e9470d222296a7e3e11327eee51e4f5a94ff23cb67021",
+      "bytes": 514
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "53b30714b6652a760d8b6a3be4a96b132df99e724403288c161e8d3dc45eabad",
+      "bytes": 531
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4d3209aaa161295441304e7e2bd901966df77c655a3a0d858f7a29f4484c89fa",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "fd6adc8214ec8be8f4163e9dd4a6f1d11b1f27330be79bc68f86f8fdf9a1ede4",
+      "bytes": 45330
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "179fe5ce9b636b7155894a743a67e7d875b6811af51cf193298f4960bb9abb00",
+      "bytes": 24857
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e621a450307e03b894d28c496f1c9724e2da5cfc90a3b5f9bf7a6806efa4d43d",
+      "bytes": 67333
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e41bb04167c0c3cb34061a67f2993fda24b30de11dd56ef8a50e9ee7853f4033",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0c4ece480321452eb629f0ef0f01888604e7e69966e274343bd24fedcff5ff51",
+      "bytes": 1590
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "52fb99258943dcdb4ed58dd0d157f71cd95c5abf277dce33b0da1e72603c61d7",
+      "bytes": 2063
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "11fed738-a5b5-4509-b4e2-3295ceab3604",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "227ff379-9b46-44fc-8ff1-37e0472239a6",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "606d4af9-9d8c-41ea-a122-f515f38f20e5",
+    "60ee0386-cfad-409a-8310-762bfc2e4816",
+    "78558b01-c101-4b8e-8401-db91269b1150",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "a79b6a74-6b67-4c9f-9d69-bff80869b943",
+    "bd9fdad0-ebe6-4546-a5c0-ed132ed0a471",
+    "c55d2f24-deb1-44c1-9846-66a3523beb29",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "ccbb774f-d1a9-4cc6-b1be-31379ba0baf1",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344"
+  ]
+}

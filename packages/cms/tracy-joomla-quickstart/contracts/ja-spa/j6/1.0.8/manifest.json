@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-spa/j6/1.0.8",
+  "platform": "joomla",
+  "template": "ja_spa",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-spa",
+    "id": "quickstart/ja-spa/j6",
+    "version": "1.0.8",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_spa",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-spa-j6-webroot-1.0.8.tar.gz",
+        "bytes": 42645690,
+        "sha256": "74f233111d6bef17740355585e294b8b7bf083a8355b64e3a2ce09573354d63c"
+      },
+      "database": {
+        "file": "ja-spa-j6-database-1.0.8.sql.gz",
+        "bytes": 80335,
+        "sha256": "0c0ebd4dff0d3ba872887892d262a029ff4ed5eeeb30596beb6d9c4e4db430eb"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T18:04:13.103Z",
+    "builtFrom": {
+      "from": "quickstart/ja-spa/j6@1.0.7",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 4 files replaced (templates/ja_spa/css, templates/ja_spa/scss); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-spa/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

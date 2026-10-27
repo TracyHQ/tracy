@@ -1,0 +1,31 @@
+{
+  "id": "REG-056",
+  "kind": "feat",
+  "title": "A comment @mention writes one Inbox row for the person mentioned and none for the writer; marking it read drops the unread count; turning a group's email off stops only the email; the join-requests group cannot be turned off",
+  "pr": 855,
+  "area": "notifications/inbox",
+  "cms": ["wp"],
+  "needs": ["stand", "seat:editor"],
+  "flaky_model": false,
+  "steps": [
+    "S0: Common setup (tests/regression/README.md). Site S = the WordPress test site (scv2wp.<stand domain>), P = its page origin as its comments carry it. Read B's account id: pq \"select id from account where email = 'scv2-b@example.test'\" → BID. Read both unread counts: api a GET /api/notifications/unread → UA0; api b GET /api/notifications/unread → UB0.",
+    "S1: api b GET /api/notifications/preferences and keep the whole groups list as PREF0 (to restore in S6).",
+    "S2: api a POST /api/sites/$S/comments '{\"text\":\"[REG-053] @b one\",\"url\":\"$P/\",\"element\":null,\"mentions\":[\"BID\"]}' → keep comment.id as C1.",
+    "S3: api b GET /api/notifications → find the row with kind 'comment.mention' and siteKey S created after S0, keep its id as N1. api a GET /api/notifications/unread → UA1. api b GET /api/notifications/unread → UB1. pq \"select mail_state from notification where id = 'N1'\" → M1.",
+    "S4: api b POST /api/notifications/N1/read; api b GET /api/notifications/unread → UB2.",
+    "S5: api b PUT /api/notifications/preferences '{\"groups\":{\"mentions-replies\":{\"inbox\":true,\"email\":false}}}'. api a POST /api/sites/$S/comments '{\"text\":\"[REG-053] @b two\",\"url\":\"$P/\",\"element\":null,\"mentions\":[\"BID\"]}' → C2. api b GET /api/notifications → the newest comment.mention row on S, id N2. pq \"select mail_state, in_inbox from notification where id = 'N2'\" → M2. Then api b PUT /api/notifications/preferences '{\"groups\":{\"join-requests\":{\"inbox\":false,\"email\":false}}}' and read the answer's join-requests group → J.",
+    "S6: Clean up: put back PREF0 for every group B changed (api b PUT /api/notifications/preferences with PREF0's inbox/email for mentions-replies). api a POST /api/sites/$S/comments/clear '{\"ids\":[\"C1\",\"C2\"]}'."
+  ],
+  "expect": [
+    "S3: exactly one new comment.mention row for B on S with actor = seat a, readAt null; UB1 = UB0 + 1; UA1 = UA0 (the writer gets nothing); M1 is 'pending' or 'sent'.",
+    "S4: UB2 = UB1 - 1.",
+    "S5: N2 exists in B's Inbox (in_inbox true) and M2 is 'none' (the email channel is off, the Inbox channel is not); J reads inbox true and email true (the locked group did not change)."
+  ],
+  "selectors": {
+    "doors": "POST /api/sites/:key/comments (mentions) · GET /api/notifications · GET /api/notifications/unread · POST /api/notifications/:id/read · GET|PUT /api/notifications/preferences",
+    "table": "notification (mail_state, in_inbox, read_at), read only",
+    "test": "apps/tracy-web/test/comment-notifications.test.mjs · notifications.test.mjs · notification-preferences.test.mjs"
+  },
+  "evidence": "Spec #809: before it, a person mentioned in a comment, replied to or removed from a site was told nothing. ADR 0026.",
+  "fence": "The server writes one row per recipient at the door that caused the event (never the writer, rule R2); a group's channel switch stops only that channel; the join-requests group is locked on"
+}

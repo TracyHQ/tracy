@@ -1,0 +1,20 @@
+# Upstream reference strings, extracted from a local DSH install.
+#
+# Kept out of the repository so it does not redistribute upstream's texts.
+# Regenerate them on your own machine:
+#
+#   npm run scan                              # resolve installed bundles
+#   node tools/dump-reference.mjs --bilingual  # tools/en/ and tools/ref/
+tools/en/
+tools/ref/
+
+# Machine-specific absolute bundle paths, written by tools/scan-install.mjs.
+tools/bundles.json
+
+# Latest audit result, useful locally but not a shared artifact.
+baseline/last-audit.json
+
+node_modules/
+*.log
+.DS_Store
+Thumbs.db

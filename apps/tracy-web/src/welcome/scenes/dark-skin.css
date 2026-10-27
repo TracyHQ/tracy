@@ -1,0 +1,147 @@
+/* Dark chrome for the copied founder replay. Website pixels and design swatches
+   stay as recorded. Palette follows Tracy tokens.css dark fallback values.
+   The host resolves System to light or dark on the iframe document. */
+:root[data-theme="dark"] .hs-win {
+  --a-bg: oklch(0.145 0 0);
+  --a-fg: oklch(0.985 0 0);
+  --a-muted: oklch(0.708 0 0);
+  --a-muted-bg: oklch(0.269 0 0);
+  --a-card: oklch(0.205 0 0);
+  --a-border: oklch(1 0 0 / .10);
+  --a-primary: #bf5b3d;
+  --a-on-primary: #fafafa;
+}
+:root[data-theme="dark"] .hs-stage { background: oklch(0.145 0 0); }
+/* Tab 2: neutral capture styles. Colored swatches and site images are preserved. */
+:root[data-theme="dark"] .hs-win :is(.hs2-s0, .hs2-s8, .hs2-s11, .hs2-s24, .hs2-s30, .hs2-s41, .hs2-s46, .hs2-s47, .hs2-s53, .hs2-s54, .hs2-s67, .hs2-s111, .hs2-s115, .hs2-s184, .hs2-s209, .hs2-s216) { background-color: var(--a-bg); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s3, .hs2-s199) { background-color: oklch(1 0 0 / .08); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s4, .hs2-s6, .hs2-s10, .hs2-s18, .hs2-s23, .hs2-s59, .hs2-s61, .hs2-s77, .hs2-s78, .hs2-s82, .hs2-s84, .hs2-s85, .hs2-s90, .hs2-s93, .hs2-s96, .hs2-s102, .hs2-s122, .hs2-s123, .hs2-s168, .hs2-s178, .hs2-s187, .hs2-s189, .hs2-s190, .hs2-s197, .hs2-s202, .hs2-s204, .hs2-s205, .hs2-s206, .hs2-s211) { color: var(--a-fg); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s5, .hs2-s7, .hs2-s15, .hs2-s17, .hs2-s25, .hs2-s56, .hs2-s57, .hs2-s60, .hs2-s64, .hs2-s65, .hs2-s68, .hs2-s72, .hs2-s74, .hs2-s81, .hs2-s86, .hs2-s94, .hs2-s101, .hs2-s124, .hs2-s193, .hs2-s198, .hs2-s208, .hs2-s217) { color: var(--a-muted); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s8, .hs2-s9, .hs2-s14, .hs2-s26, .hs2-s27, .hs2-s28, .hs2-s29, .hs2-s30, .hs2-s31, .hs2-s32, .hs2-s33, .hs2-s34, .hs2-s35, .hs2-s36, .hs2-s37, .hs2-s38, .hs2-s39, .hs2-s40, .hs2-s91, .hs2-s105, .hs2-s106, .hs2-s108, .hs2-s111, .hs2-s118, .hs2-s120, .hs2-s209, .hs2-s216, .hs2-s218) { border-bottom: 1px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s8, .hs2-s9, .hs2-s14, .hs2-s26, .hs2-s27, .hs2-s28, .hs2-s29, .hs2-s30, .hs2-s31, .hs2-s32, .hs2-s33, .hs2-s34, .hs2-s35, .hs2-s36, .hs2-s37, .hs2-s38, .hs2-s39, .hs2-s40, .hs2-s91, .hs2-s105, .hs2-s106, .hs2-s108, .hs2-s111, .hs2-s118, .hs2-s120, .hs2-s209, .hs2-s216, .hs2-s218) { border-left: 1px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s8, .hs2-s9, .hs2-s14, .hs2-s26, .hs2-s27, .hs2-s28, .hs2-s29, .hs2-s30, .hs2-s31, .hs2-s32, .hs2-s33, .hs2-s34, .hs2-s35, .hs2-s36, .hs2-s37, .hs2-s38, .hs2-s39, .hs2-s40, .hs2-s91, .hs2-s105, .hs2-s106, .hs2-s108, .hs2-s111, .hs2-s118, .hs2-s120, .hs2-s185, .hs2-s209, .hs2-s216, .hs2-s218) { border-right: 1px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s8, .hs2-s9, .hs2-s14, .hs2-s26, .hs2-s27, .hs2-s28, .hs2-s29, .hs2-s30, .hs2-s31, .hs2-s32, .hs2-s33, .hs2-s34, .hs2-s35, .hs2-s36, .hs2-s37, .hs2-s38, .hs2-s39, .hs2-s40, .hs2-s41, .hs2-s91, .hs2-s104, .hs2-s105, .hs2-s106, .hs2-s108, .hs2-s111, .hs2-s118, .hs2-s120, .hs2-s209, .hs2-s216, .hs2-s218) { border-top: 1px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s13, .hs2-s55, .hs2-s183, .hs2-s185, .hs2-s203) { background-color: var(--a-card); }
+:root[data-theme="dark"] .hs-win .hs2-s13 { border-left: 0.5px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s22, .hs2-s66, .hs2-s76, .hs2-s88, .hs2-s92, .hs2-s95, .hs2-s113, .hs2-s121, .hs2-s174, .hs2-s188) { background-color: var(--a-muted-bg); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s45, .hs2-s46, .hs2-s47, .hs2-s48, .hs2-s49, .hs2-s50, .hs2-s51, .hs2-s62, .hs2-s63, .hs2-s67, .hs2-s73, .hs2-s88, .hs2-s125, .hs2-s126, .hs2-s127, .hs2-s128, .hs2-s129, .hs2-s130, .hs2-s131, .hs2-s132, .hs2-s133, .hs2-s134, .hs2-s135, .hs2-s136, .hs2-s137, .hs2-s138, .hs2-s139, .hs2-s140, .hs2-s141, .hs2-s142, .hs2-s143, .hs2-s144, .hs2-s145, .hs2-s146, .hs2-s147, .hs2-s148, .hs2-s149, .hs2-s150, .hs2-s151, .hs2-s152, .hs2-s153, .hs2-s154, .hs2-s155, .hs2-s156, .hs2-s157, .hs2-s158, .hs2-s159, .hs2-s160, .hs2-s161, .hs2-s162, .hs2-s163, .hs2-s164, .hs2-s165, .hs2-s166, .hs2-s167, .hs2-s169, .hs2-s170, .hs2-s171, .hs2-s172, .hs2-s174, .hs2-s175, .hs2-s176, .hs2-s184) { border-bottom: 0.81103px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s45, .hs2-s46, .hs2-s47, .hs2-s48, .hs2-s49, .hs2-s50, .hs2-s51, .hs2-s62, .hs2-s63, .hs2-s67, .hs2-s73, .hs2-s88, .hs2-s125, .hs2-s126, .hs2-s127, .hs2-s128, .hs2-s129, .hs2-s130, .hs2-s131, .hs2-s132, .hs2-s133, .hs2-s134, .hs2-s135, .hs2-s136, .hs2-s137, .hs2-s138, .hs2-s139, .hs2-s140, .hs2-s141, .hs2-s142, .hs2-s143, .hs2-s144, .hs2-s145, .hs2-s146, .hs2-s147, .hs2-s148, .hs2-s149, .hs2-s150, .hs2-s151, .hs2-s152, .hs2-s153, .hs2-s154, .hs2-s155, .hs2-s156, .hs2-s157, .hs2-s158, .hs2-s159, .hs2-s160, .hs2-s161, .hs2-s162, .hs2-s163, .hs2-s164, .hs2-s165, .hs2-s166, .hs2-s167, .hs2-s169, .hs2-s170, .hs2-s171, .hs2-s172, .hs2-s174, .hs2-s176, .hs2-s184) { border-left: 0.81103px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s45, .hs2-s46, .hs2-s47, .hs2-s48, .hs2-s49, .hs2-s50, .hs2-s51, .hs2-s62, .hs2-s63, .hs2-s67, .hs2-s73, .hs2-s88, .hs2-s125, .hs2-s126, .hs2-s127, .hs2-s128, .hs2-s129, .hs2-s130, .hs2-s131, .hs2-s132, .hs2-s133, .hs2-s134, .hs2-s135, .hs2-s136, .hs2-s137, .hs2-s138, .hs2-s139, .hs2-s140, .hs2-s141, .hs2-s142, .hs2-s143, .hs2-s144, .hs2-s145, .hs2-s146, .hs2-s147, .hs2-s148, .hs2-s149, .hs2-s150, .hs2-s151, .hs2-s152, .hs2-s153, .hs2-s154, .hs2-s155, .hs2-s156, .hs2-s157, .hs2-s158, .hs2-s159, .hs2-s160, .hs2-s161, .hs2-s162, .hs2-s163, .hs2-s164, .hs2-s165, .hs2-s166, .hs2-s167, .hs2-s169, .hs2-s170, .hs2-s171, .hs2-s172, .hs2-s174, .hs2-s176, .hs2-s184) { border-right: 0.81103px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs2-s45, .hs2-s46, .hs2-s47, .hs2-s48, .hs2-s49, .hs2-s50, .hs2-s51, .hs2-s54, .hs2-s62, .hs2-s63, .hs2-s66, .hs2-s67, .hs2-s73, .hs2-s88, .hs2-s125, .hs2-s126, .hs2-s127, .hs2-s128, .hs2-s129, .hs2-s130, .hs2-s131, .hs2-s132, .hs2-s133, .hs2-s134, .hs2-s135, .hs2-s136, .hs2-s137, .hs2-s138, .hs2-s139, .hs2-s140, .hs2-s141, .hs2-s142, .hs2-s143, .hs2-s144, .hs2-s145, .hs2-s146, .hs2-s147, .hs2-s148, .hs2-s149, .hs2-s150, .hs2-s151, .hs2-s152, .hs2-s153, .hs2-s154, .hs2-s155, .hs2-s156, .hs2-s157, .hs2-s158, .hs2-s159, .hs2-s160, .hs2-s161, .hs2-s162, .hs2-s163, .hs2-s164, .hs2-s165, .hs2-s166, .hs2-s167, .hs2-s169, .hs2-s170, .hs2-s171, .hs2-s172, .hs2-s174, .hs2-s176, .hs2-s184) { border-top: 0.81103px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win .hs2-s55 { border-left: 0.405515px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win .hs2-s75 { border-bottom: 0.81103px dashed var(--a-border); }
+:root[data-theme="dark"] .hs-win .hs2-s75 { border-left: 0.81103px dashed var(--a-border); }
+:root[data-theme="dark"] .hs-win .hs2-s75 { border-right: 0.81103px dashed var(--a-border); }
+:root[data-theme="dark"] .hs-win .hs2-s75 { border-top: 0.81103px dashed var(--a-border); }
+:root[data-theme="dark"] .hs-win .hs2-s180 { background-color: var(--a-fg); }
+:root[data-theme="dark"] .hs-win .hs2-s180 { border-bottom: 0.81103px solid var(--a-fg); }
+:root[data-theme="dark"] .hs-win .hs2-s180 { border-left: 0.81103px solid var(--a-fg); }
+:root[data-theme="dark"] .hs-win .hs2-s180 { border-right: 0.81103px solid var(--a-fg); }
+:root[data-theme="dark"] .hs-win .hs2-s180 { border-top: 0.81103px solid var(--a-fg); }
+:root[data-theme="dark"] .hs-win .hs2-s186 { border-left: 1px solid var(--a-fg); }
+:root[data-theme="dark"] .hs-win .hs2-s203 { border-right: 0.5px solid var(--a-border); }
+/* Tab 4: neutral capture styles. Colored swatches and site images are preserved. */
+:root[data-theme="dark"] .hs-win :is(.hs4-s0, .hs4-s1, .hs4-s98, .hs4-s111, .hs4-s133, .hs4-s134, .hs4-s150, .hs4-s183) { background-color: var(--a-card); }
+:root[data-theme="dark"] .hs-win .hs4-s0 { border-right: 0.5px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s1, .hs4-s37, .hs4-s47, .hs4-s52, .hs4-s95, .hs4-s133, .hs4-s134, .hs4-s166, .hs4-s173, .hs4-s182) { border-right: 1px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s4, .hs4-s7, .hs4-s9, .hs4-s11, .hs4-s12, .hs4-s13, .hs4-s23, .hs4-s28, .hs4-s30, .hs4-s31, .hs4-s32, .hs4-s33, .hs4-s40, .hs4-s64, .hs4-s77, .hs4-s96, .hs4-s100, .hs4-s132, .hs4-s138, .hs4-s145, .hs4-s153, .hs4-s160, .hs4-s169, .hs4-s172, .hs4-s179) { color: var(--a-fg); }
+:root[data-theme="dark"] .hs-win .hs4-s6 { border-left: 1px solid var(--a-fg); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s9, .hs4-s12) { stroke: var(--a-fg); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s10, .hs4-s58, .hs4-s75, .hs4-s76, .hs4-s108, .hs4-s109, .hs4-s125, .hs4-s141, .hs4-s142, .hs4-s166, .hs4-s168, .hs4-s181) { background-color: var(--a-muted-bg); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s17, .hs4-s19, .hs4-s20, .hs4-s35, .hs4-s36, .hs4-s46, .hs4-s53, .hs4-s54, .hs4-s56, .hs4-s59, .hs4-s67, .hs4-s68, .hs4-s69, .hs4-s71, .hs4-s78, .hs4-s80, .hs4-s81, .hs4-s82, .hs4-s86, .hs4-s88, .hs4-s89, .hs4-s91, .hs4-s94, .hs4-s103, .hs4-s106, .hs4-s107, .hs4-s110, .hs4-s126, .hs4-s128, .hs4-s129, .hs4-s140, .hs4-s151, .hs4-s154, .hs4-s163, .hs4-s167, .hs4-s172) { color: var(--a-muted); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s20, .hs4-s36, .hs4-s54, .hs4-s106, .hs4-s107) { stroke: var(--a-muted); }
+:root[data-theme="dark"] .hs-win .hs4-s25 { background-image: linear-gradient(rgba(0, 0, 0, 0), var(--a-card)); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s29, .hs4-s37, .hs4-s45, .hs4-s63, .hs4-s95, .hs4-s131, .hs4-s143, .hs4-s148, .hs4-s173) { background-color: var(--a-bg); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s37, .hs4-s47, .hs4-s52, .hs4-s95, .hs4-s133, .hs4-s134, .hs4-s157, .hs4-s166, .hs4-s173, .hs4-s180, .hs4-s182, .hs4-s183) { border-top: 1px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s37, .hs4-s47, .hs4-s52, .hs4-s76, .hs4-s95, .hs4-s101, .hs4-s133, .hs4-s134, .hs4-s143, .hs4-s148, .hs4-s166, .hs4-s173, .hs4-s182) { border-bottom: 1px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s37, .hs4-s47, .hs4-s52, .hs4-s95, .hs4-s133, .hs4-s134, .hs4-s166, .hs4-s173, .hs4-s182) { border-left: 1px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win .hs4-s45 { border-top: 1px solid oklch(1 0 0 / .25); }
+:root[data-theme="dark"] .hs-win .hs4-s45 { border-right: 1px solid oklch(1 0 0 / .25); }
+:root[data-theme="dark"] .hs-win .hs4-s45 { border-bottom: 1px solid oklch(1 0 0 / .25); }
+:root[data-theme="dark"] .hs-win .hs4-s45 { border-left: 1px solid oklch(1 0 0 / .25); }
+:root[data-theme="dark"] .hs-win .hs4-s51 { border-bottom: 0.5px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s62, .hs4-s65, .hs4-s90, .hs4-s104, .hs4-s152, .hs4-s185) { background-color: oklch(1 0 0 / .08); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s75, .hs4-s125, .hs4-s149) { border-color: var(--a-border); }
+:root[data-theme="dark"] .hs-win .hs4-s93 { background-image: linear-gradient(color(srgb 0 0 0 / 0) 0px, var(--a-bg) 36px); }
+:root[data-theme="dark"] .hs-win .hs4-s98 { border-left: 0.5px solid var(--a-border); }
+:root[data-theme="dark"] .hs-win .hs4-s121 { background-color: var(--a-card); }
+:root[data-theme="dark"] .hs-win :is(.hs4-s130, .hs4-s175) { background-color: oklch(.32 .035 37.4); }
+:root[data-theme="dark"] .hs-win .hs4-s174 { background-color: oklch(.25 .025 37.4); }
+/* Native app chrome: library, editor, composer, Undo card, comments and Publish. */
+:root[data-theme="dark"] .hs-win .hs3,
+:root[data-theme="dark"] .hs-win .hs3-chat,
+:root[data-theme="dark"] .hs-win .hs3-card,
+:root[data-theme="dark"] .hs-win .hs3-change,
+:root[data-theme="dark"] .hs-win .hs3-comp,
+:root[data-theme="dark"] .hs-win .hs3-ta,
+:root[data-theme="dark"] .hs-win .hs5-phead,
+:root[data-theme="dark"] .hs-win .hs5-set,
+:root[data-theme="dark"] .hs-win .hs5-card,
+:root[data-theme="dark"] .hs-win .hs5-btn.o { background: var(--a-bg); }
+:root[data-theme="dark"] .hs-win .hs-hdr,
+:root[data-theme="dark"] .hs-win .hs-card-open span,
+:root[data-theme="dark"] .hs-win .hs3-side,
+:root[data-theme="dark"] .hs-win .hs3-pane,
+:root[data-theme="dark"] .hs-win .hs3-cbox,
+:root[data-theme="dark"] .hs-win .hs5-bar,
+:root[data-theme="dark"] .hs-win .hs5-body,
+:root[data-theme="dark"] .hs-win .hs5-wpbar,
+:root[data-theme="dark"] .hs-win .hs-dlg-body { background: var(--a-card); }
+:root[data-theme="dark"] .hs-win .hs3-new,
+:root[data-theme="dark"] .hs-win .hs3-bubble,
+:root[data-theme="dark"] .hs-win .hs3-url,
+:root[data-theme="dark"] .hs-win .hs3-mode,
+:root[data-theme="dark"] .hs-win .hs3-mode > span.is-on,
+:root[data-theme="dark"] .hs-win .hs3-attach,
+:root[data-theme="dark"] .hs-win .hs3-note,
+:root[data-theme="dark"] .hs-win .hs5-tab.is-on,
+:root[data-theme="dark"] .hs-win .hs5-tile,
+:root[data-theme="dark"] .hs-win .hs3-change-b > span.is-hover,
+:root[data-theme="dark"] .hs-win .hs3-change-b.is-foot > span.is-hover:first-child { background: var(--a-muted-bg); }
+:root[data-theme="dark"] .hs-win .hs3-change-b > span + span,
+:root[data-theme="dark"] .hs-win .hs3-change-b.is-foot > span:first-child { background: var(--a-bg); color: var(--a-fg); }
+:root[data-theme="dark"] .hs-win :is(.hs3-nav, .hs3-sess, .hs3-acct) { color: var(--a-fg); }
+:root[data-theme="dark"] .hs-win .hs3-tb,
+:root[data-theme="dark"] .hs-win .hs3-url > i,
+:root[data-theme="dark"] .hs-win .hs3-tbt.is-off,
+:root[data-theme="dark"] .hs-win .hs3-mode > span,
+:root[data-theme="dark"] .hs-win .hs3-crumbs > span,
+:root[data-theme="dark"] .hs-win .hs3-crumbs > em { color: var(--a-muted); }
+:root[data-theme="dark"] .hs-win .hs3-bar,
+:root[data-theme="dark"] .hs-win .hs3-ta,
+:root[data-theme="dark"] .hs-win .hs3-mode > span.is-on { border-color: var(--a-border); }
+:root[data-theme="dark"] .hs-win :is(.hs3-acct-line, .hs5-sep) { background: var(--a-border); }
+:root[data-theme="dark"] .hs-win .hs3-ref { background: oklch(.29 .035 255); }
+:root[data-theme="dark"] .hs-win .hs3-crumbs > span.is-on { background: oklch(.32 .035 37.4); }
+:root[data-theme="dark"] .hs-win .hs3-hint { background: var(--a-card); color: var(--a-fg); }
+:root[data-theme="dark"] .hs-win .hs3-run { color: #8fb4ff; }
+:root[data-theme="dark"] .hs-win .hs3-change.is-undone { background: transparent; }
+:root[data-theme="dark"] .hs-win .hs3-change-b > span.is-primary { background: #bf5b3d; color: #fafafa; }
+:root[data-theme="dark"] .hs-win .hs3-change-b > span.is-primary.is-hover { background: #aa4e32; color: #fafafa; }
+
+/* The mobile replay picture includes pale margins around its website frame.
+   Cover those margins while leaving the actual website pixels untouched. */
+:root[data-theme="dark"] .hs-mobile::after {
+  content: ""; position: absolute; z-index: 4;
+  left: 423.6px; top: 11.6px; width: 390px; height: 517.5px;
+  border-radius: 18px; box-shadow: 0 0 0 1500px var(--a-card);
+}
+/* Typing in the captured invite dialog writes an inline light text value. */
+:root[data-theme="dark"] [data-hs4="email-text"][style*="color"] { color: var(--a-fg) !important; }
+/* Tab 5 keeps several captured chrome panels as raster images. A scoped filter
+   adapts those images only. Native WordPress admin and website content retain
+   their source colors. Brand/avatar pixels in the raster panels are approximate. */
+:root[data-theme="dark"] .hs5-left,
+:root[data-theme="dark"] .hs5-view[data-v="changes"],
+:root[data-theme="dark"] .hs5-view[data-v="sites"] > img,
+:root[data-theme="dark"] .hs5-menu > img,
+:root[data-theme="dark"] .hs5-tabmenu,
+:root[data-theme="dark"] .hs5-modal > img {
+  filter: invert(1) hue-rotate(180deg) brightness(.88) contrast(.92);
+}
+:root[data-theme="dark"] .hs5-hl,
+:root[data-theme="dark"] .hs5-tabhl { background: oklch(1 0 0 / .10); }
+:root[data-theme="dark"] .hs5-modal { background: oklch(0 0 0 / .45); }
+/* Selected neutral pills invert both foreground and background together. */
+:root[data-theme="dark"] .hs-win :is(.hs2-s181, .hs2-s182) { color: var(--a-bg); }
+:root[data-theme="dark"] .hs-win .hs4-s121 { background-color: var(--a-card); }

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "43400d73-ca89-4750-8fa6-78cd2c661943",
+  "status": "complete",
+  "name": "Liron Moran Interiors",
+  "url": "https://styles.refero.design/style/43400d73-ca89-4750-8fa6-78cd2c661943",
+  "sourceWebsite": "https://www.lironmoran-interiors.com",
+  "extractedAt": "2026-06-03T19:58:15.783Z",
+  "capturedAt": "2026-10-08T05:10:55.747631+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "fashion editorial on dark linen",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/377a16fb-9f10-419a-b677-e47e54f17739.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "18b2c77f797a450daddf23e473f5f1709ca34f666f75c2e63968044957605201",
+      "bytes": 20426
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ee428bbe87cc570517946fc4c1a334c4043a39a7dfe70eebb23317a6b191c01c",
+      "bytes": 77047
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b427d32b26d4d4debaf491a74784771a5b204c311b6f6b26e36905eafa2b1d74",
+      "bytes": 16722
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "dc8e0d142ab6973a7f60617c57f0447423022c4ed734ebcf76899c03a367aaa3",
+      "bytes": 8899
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "47a6a61cd9cee0bc6e6f24fa35bbe410c45fd4a1015a354607be3e631ded7806",
+      "bytes": 12069
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c67eb8ce8db484e2c5f0dbe0ad6513c3c473e3d399ba948f55535cceeddde35c",
+      "bytes": 3165
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "21f927cb8a1a6acba683cdb71cd8b8de54fceb39744712994a592c258fc37eb1",
+      "bytes": 908
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5f70c2cceba863789e84081a63b12cb23c74eb6eec8478f9048aa155c2103e2a",
+      "bytes": 925
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "0bdbf865bdb28e995da31437119ecf600eaa2aee6a2d9a5af75cd7d719688e97",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "36f4e44f21326ca4ce7688132f4744428b31f0ab37973c29d492de918a58069b",
+      "bytes": 39908
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6cd9b8e737a4f4f398ddf5c204e6141444b640eba5a814e5fe9b87f66a5bfeba",
+      "bytes": 20427
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "cdd122713f4f0a943db05516ef91e6e06fee0e6929f0ab12f67e0075ba43e1f3",
+      "bytes": 34738
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c680a90860da34e8816b8f250b6dfa4bb2c40f639b3e65ff691c74170733f175",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e2d9681a653f309c8b635d9eecc06db22b3f15bef65f62ffc77c921fc82e4ae7",
+      "bytes": 1654
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a16ec53edd66d74416c144251313f61c6edde632a4b81a7816edc187ecf14523",
+      "bytes": 2199
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2b9e90ad-51d9-4f29-8f7e-a343dc741eab",
+    "2e4ce685-9f49-47a3-9577-bc4f196bd8f7",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "50f0b6d5-9e96-42a1-9564-a6e99c289f98",
+    "58a36cba-3fc4-48fa-a7d9-7f14592b7857",
+    "597355de-6167-4f37-8f14-b3897919a94c",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7b28c99e-ed17-451b-a39e-bd4722bc43f5",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947"
+  ]
+}

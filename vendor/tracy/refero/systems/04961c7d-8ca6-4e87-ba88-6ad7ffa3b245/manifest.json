@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "04961c7d-8ca6-4e87-ba88-6ad7ffa3b245",
+  "status": "complete",
+  "name": "Home page | Impossible Foods",
+  "url": "https://styles.refero.design/style/04961c7d-8ca6-4e87-ba88-6ad7ffa3b245",
+  "sourceWebsite": "https://impossiblefoods.com",
+  "extractedAt": "2026-06-03T17:58:21.464Z",
+  "capturedAt": "2026-10-08T05:07:56.504399+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "Blood-red punk poster in velvet darkness. A custom condensed display face bleeds across a wine-dark canvas while single-color red CTAs punch through like a price tag on a butcher's chalkboard.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b005870c-2339-4ed7-8bbe-1ac4e0d89262.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5fc074a9-3de8-4900-8738-d9228814adb4.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/117ce741-57fe-4a49-89a2-17c7fe740fd3.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/8023132a-a21f-44ba-b10f-fea831ef928e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e5b306f3-778a-4d1e-a0e3-2862d2caeb11.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "650985a695aec0ec203ed2272bd27fbaf0b4d3402d72615c1515096be530afea",
+      "bytes": 20948
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "459357aed830571fa554d1549a3d59b0a277fb5c0a780781bb29135e313e3b52",
+      "bytes": 94135
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a5541196413dd02d65ef6eb6b247ac848ea8851e47ce7d373cef2f4199b09602",
+      "bytes": 17869
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "4beaf5244701e12451c4728b3a8287cf606a38fb01fc4a4a880ff6c204bde1c5",
+      "bytes": 13876
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c518eb9c48ece3e6c6b75c55ed36508eb56ca3ed9a661074fb48879f0dc6041e",
+      "bytes": 12338
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a36f9b998361a303f040a72ca3eb0ac8282ee1d6d9cad464be406e1118cddc18",
+      "bytes": 2107
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "424f01bf62716732ef748a7f88cfb14685ef0155532ca69c250a600351304812",
+      "bytes": 374
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "15700a43aab5e2deaebcb8f89262ae36c3aaa14b239d585fc65ed969b8014d51",
+      "bytes": 391
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "37b0699a7dc1ed4d29cdf8bad4004c87217fab7c5ab4b7c886efa9e19a5d82b9",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "7cb2f5cdaea5adf14dc4440231a74ab800b140b5230764f87ba0a2a6a9168f46",
+      "bytes": 45204
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "11a35e1912c33bc82de30e8ffc5aec94d7919a28ab8e79b6cad7ae7a8643a5e0",
+      "bytes": 24069
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8480586fd48f685ba1d8a817231f4d1bea10f5ddd701845de37ba6986a0dfab7",
+      "bytes": 57959
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2a8611f51e0b4fac0ba6363f9ad6c0696e476e5b6e552944595dcb3eb6dc8861",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9abdff36f8b0e95f83bb2d609b98e41c6a48e230cefff64a24ce6c9797217e03",
+      "bytes": 1506
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e10bc08b2207018d9b25c505b700a2de25f618a5c0a3a31d8943f2eeba502b4d",
+      "bytes": 2099
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "04961c7d-8ca6-4e87-ba88-6ad7ffa3b245",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "350b1557-56f0-4361-8c8b-b7a88081982b",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3e497155-bd96-4134-a4a5-855bd885a25c",
+    "47f15da7-8905-45b3-bcab-06a4277c6168",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4d42420f-a7d4-499f-8025-5af294fff0f5",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "71a9583d-1710-4696-9269-50ca8c9a2cfa",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "a7a69d27-e1a9-4322-b58f-3c7633fdc60d",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b22f68eb-7ed1-47b6-995e-2c0afc79ac7e",
+    "b6f2b036-e48e-452f-b003-941c491015c0",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d91841cf-c717-43ef-97a2-400778fa6e1a"
+  ]
+}

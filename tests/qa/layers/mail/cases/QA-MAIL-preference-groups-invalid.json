@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-preference-groups-invalid",
+  "itemIds": [
+    "preference-group:about-you",
+    "preference-group:join-requests",
+    "preference-group:teammates",
+    "preference-group:site-changes",
+    "preference-group:mentions-replies",
+    "preference-group:resolved-reopened"
+  ],
+  "requirement": "a bad Settings body is refused, an unlisted kind is always on, a locked group cannot be switched off",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 8",
+    "invariant": "a kind in no group is always on; Join requests is locked"
+  },
+  "edgeTags": ["invalid", "empty"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "mail.preferences.groups#parse-changes-invalid|unknown-kind-always-on|locked-group-always-on|locked-group-cannot-be-switched-off"
+  ],
+  "redProof": null,
+  "legacyIds": []
+}

@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1268-demo-install-slots",
+  "kind": "fix",
+  "title": "A demo host runs at most DEMO_INSTALL_SLOTS demo installs at once; the rest queue with 'waiting for a free install slot', customers never wait",
+  "pr": 1268,
+  "area": "ops/demos",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-host/test/provision.test.mjs apps/tracy-host/test/config.test.mjs",
+    "S2: With TEST_DATABASE_URL set, run: node --test apps/tracy-web/test/ops-demos.test.mjs",
+    "S3: Read the exit code and the fail/skipped counts of each run."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures and 0 skipped tests.",
+    "With demoInstallSlots 2, four demo provisions all answer 202; two run; the third reads state queued, step 'waiting for a free install slot (next)', the fourth '(1 ahead)'; when the first ends the third starts.",
+    "With one slot taken by demos, a provision without demo:true starts at once.",
+    "DEMO_INSTALL_SLOTS='3' gives 3; '0', '-1', '1.5', 'many' and '' give 2.",
+    "The demo door's /_host/provision body carries demo: true."
+  ],
+  "selectors": {
+    "slots": "installSlots in apps/tracy-host/src/install-slots.js",
+    "door": "POST /_host/provision (body.demo)",
+    "demo_instruction": "provisionDemo in apps/tracy-web/src/lib/demo-sites.js"
+  },
+  "evidence": "fleet01, 12/10/2026: 14 demo redeploys ran provision.sh at once on 2 cores; steps frozen from 16:54Z and untouched demos (ja-phio, ja-morgan, ja-nova) gave no answer within 20 s.",
+  "fence": "The real provision door over a held fake run. Not exercised: provision.sh, fleet01's load.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1268-demo-install-slots.mjs"],
+    "needs": ["postgres"]
+  }
+}

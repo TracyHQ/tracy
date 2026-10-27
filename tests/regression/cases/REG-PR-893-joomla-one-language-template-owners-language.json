@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-893-joomla-one-language-template-owners-language",
+  "kind": "fix",
+  "title": "Joomla Apply: a template that ships one language is written in the language the owner picked",
+  "pr": 893,
+  "area": "sites/apply/joomla",
+  "cms": ["jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-joomla.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"a template that ships one language is written in the language the owner picked, not in English by default\"; \"a template that ships one language is written in it and has nothing to hide\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 55).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): the planner writes every line of a one-edition template in the first language the owner gave (de-DE in the case), not en-GB, and the 'only X was written' note fires only when more than one language was picked."
+  ],
+  "selectors": {
+    "engine": "chosenLanguages in apps/tracy-web/src/sites/brief-engines/joomla.js"
+  },
+  "evidence": "Ledger L11b, 05/10/2026: a customer who picked German for a Joomla template that ships one edition got English copy and the report 'only en-GB was written': normaliseLocales puts en-GB first and the engine wrote languages[0]. Red f06bf8ed3, fix de3c32aca.",
+  "fence": "Two-edition templates are unchanged; the site's own interface language (language pack, <html lang>) stays as the template installs it.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-joomla.test.mjs"],
+    "tests": [
+      "a template that ships one language is written in the language the owner picked, not in English by default",
+      "a template that ships one language is written in it and has nothing to hide"
+    ]
+  }
+}

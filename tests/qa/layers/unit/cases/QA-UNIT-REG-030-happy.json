@@ -1,0 +1,51 @@
+{
+  "id": "QA-UNIT-REG-030-happy",
+  "itemIds": ["regression:REG-030"],
+  "requirement": "A Joomla quickstart provision ends its pairing on the inspect answer a bound site really gives, which carries no `bound` field",
+  "oracle": {
+    "source": "tests/regression/cases/REG-030-joomla-inspect-readback.json",
+    "ref": "PR #832 (fix); fix evidence: Dev, 03/10/2026, reinstalling quickstart/ja-essence/j6: provision failed after a successful bind with `Quickstart contract inspect after bind did not confirm it: {\"ok\":true,\"contract\":\"ja-essence/j6/1.0.0\"}` (issue #824). The suite's door stub had answered inspect with `bound:true`, a field the component's inspect of a bound site does not carry.",
+    "invariant": "0 failures and 0 skipped: the suite runs the real joomla-bootstrap.php against a fake database and door. A first pairing and a re-run both complete when inspect answers {ok:true, contract:'<requested id>'} with or without `revision`, and with no `bound` key. The read-back refuses: another, empty, missing or non-string contract; `ok` that is not exactly true; a status outside 2xx or no answer; `bound:false`; `construction:true` (also beside `bound:true`); a `bound` or `construction` that is present but not a boolean. A bind answer still needs `bound:true` beside the requested contract, or the exact 'This site is already bound to <contract>' conflict.",
+    "productSources": [
+      "packages/fleet/tracy-fleet-operation/scripts/provision/joomla-bootstrap.php:8",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/platform/joomla.sh:6",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/quickstart.py:3"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:1849 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:1852 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:2296 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:61 spawnSync() runs a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-030.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-030"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-030",
+    "pr": 832,
+    "kind": "fix",
+    "area": "fleet/provision-joomla",
+    "file": "tests/regression/cases/REG-030-joomla-inspect-readback.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-030.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

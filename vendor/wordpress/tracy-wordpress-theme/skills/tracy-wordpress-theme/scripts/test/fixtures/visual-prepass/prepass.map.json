@@ -1,0 +1,15 @@
+{
+  "note": "Which WordPress element carries each measured rule of design-contract.json (written by hand, as an agent would).",
+  "rules": {
+    "body-type": "body",
+    "body-colors": "body",
+    "heading-h1": ".wp-block-post-content h1",
+    "heading-h2": ".wp-block-post-content h2",
+    "hero-title": ".tracy-hero h1",
+    "btn-primary": ".wp-block-button__link",
+    "footer-band": ".tracy-footer",
+    "section-rhythm": ".tracy-section",
+    "container": ".tracy-container"
+  },
+  "media": { "phone": "(max-width: 781px)" }
+}

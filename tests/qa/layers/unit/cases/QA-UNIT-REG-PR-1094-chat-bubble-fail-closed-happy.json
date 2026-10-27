@@ -1,0 +1,58 @@
+{
+  "id": "QA-UNIT-REG-PR-1094-chat-bubble-fail-closed-happy",
+  "itemIds": ["regression:REG-PR-1094-chat-bubble-fail-closed"],
+  "requirement": "The sign-in gate's chat bubble stays hidden for a seat when the state answer fails, errors or does not say chatEnabled",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1094-chat-bubble-fail-closed.json",
+    "ref": "PR #1094 (fix); fix evidence: Found 09/10/2026 while closing the avatar debt of PR #1082: chat.tsx set the bubble 'on' in its catch and on !res.ok.",
+    "invariant": "S1: 500 answer, thrown fetch, and an OK answer without chatEnabled render no bubble and fetch no messages; chatEnabled true shows it.",
+    "productSources": ["vendor/tracy/dsh-passwords/src/client/chat.tsx:291"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "K6: the bubble stays hidden when the state answer is an error",
+    "K6: the bubble stays hidden when the state request itself fails",
+    "K6: the bubble stays hidden when the state answer does not say \"on\"",
+    "K6: the bubble shows when the state answer says this account switched it on"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1094-chat-bubble-fail-closed"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "vendor/tracy/dsh-passwords", "dsh-passwords"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1094-chat-bubble-fail-closed",
+    "pr": 1094,
+    "kind": "fix",
+    "area": "auth/dsh-passwords/chat",
+    "file": "tests/regression/cases/REG-PR-1094-chat-bubble-fail-closed.json"
+  },
+  "command": [
+    "node",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "test/tracy/chat-entry-client.test.ts"
+  ],
+  "cwd": "vendor/tracy/dsh-passwords",
+  "needs": [],
+  "tests": [
+    "K6: the bubble stays hidden when the state answer is an error",
+    "K6: the bubble stays hidden when the state request itself fails",
+    "K6: the bubble stays hidden when the state answer does not say \"on\"",
+    "K6: the bubble shows when the state answer says this account switched it on"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-015-pending",
+  "itemIds": ["regression:REG-015"],
+  "requirement": "JA Nova wp7: toggle, touch submenus, registration, logos, career icons, drawer, wording, login, search behave like the source",
+  "oracle": {
+    "source": "tests/regression/cases/REG-015-ja-nova-wp7-audit-fixes.json",
+    "ref": "PR #813 (fix); fix evidence: Independent audit 03/10/2026; measure115 0/11 on 1.1.3, 11/11 on 1.1.5 bound to wp-ja-nova-1.1.5.zip a1a1201f (tasks/ja-nova-wp7/release/BROWSER.json)",
+    "invariant": "TOTAL 11/11 pass. theme: the first click on the theme toggle changes the page background on a light OS and on a dark OS (1440 and 390). touch-nav: at 1024 and 1180 with touch, the first tap on a parent menu item opens its submenu and keeps the URL; the second tap navigates. registration: the registration form creates a subscriber account. logos, header-order, career-icons, drawer, wording, login-required, passkey, advanced-search: each PASS with an empty bad list.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-015"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-015",
+    "pr": 813,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-nova",
+    "file": "tests/regression/cases/REG-015-ja-nova-wp7-audit-fixes.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

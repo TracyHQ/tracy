@@ -1,0 +1,104 @@
+{
+  "color": {
+    "coal-ink": {
+      "$value": "#1c1a17",
+      "$type": "color",
+      "$description": "Coal Ink — Primary text, filled CTA button background, dark card surface — warmer than pure black, prevents the page from reading as cold despite high contrast"
+    },
+    "ledger-white": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Ledger White — Page background, card surfaces, badge fills — the dominant surface; slightly warmer than #ffffff, giving the page a matte paper quality"
+    },
+    "parchment": {
+      "$value": "#f7f3eb",
+      "$type": "color",
+      "$description": "Parchment — Hero section background wash — the warmest surface tone, used for large atmospheric areas"
+    },
+    "ash": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Ash — Borders, divider lines, ghost button borders"
+    },
+    "slate-mid": {
+      "$value": "#7e7d7b",
+      "$type": "color",
+      "$description": "Slate Mid — Secondary body text, metadata labels, muted headings"
+    },
+    "graphite": {
+      "$value": "#5a5957",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text, icon strokes, nav link default state"
+    },
+    "stone": {
+      "$value": "#969594",
+      "$type": "color",
+      "$description": "Stone — Placeholder text, disabled states"
+    },
+    "fossil": {
+      "$value": "#bab9b8",
+      "$type": "color",
+      "$description": "Fossil — Hairline borders, subtle dividers"
+    },
+    "smolder": {
+      "$value": "#ff6020",
+      "$type": "color",
+      "$description": "Smolder — Primary CTA buttons, announcement bar link, high-emphasis interactive triggers — warm orange against near-black creates urgency without aggression"
+    },
+    "signal-violet": {
+      "$value": "#777eff",
+      "$type": "color",
+      "$description": "Signal Violet — Data classification labels, AI confidence highlights, link color inside product demos — signals machine intelligence rather than human action"
+    },
+    "deep-violet": {
+      "$value": "#731fff",
+      "$type": "color",
+      "$description": "Deep Violet — Secondary violet accent, gradient midpoint stop, deeper classification markers"
+    },
+    "spectrum-gradient": {
+      "$value": "#a855f7",
+      "$type": "color",
+      "$description": "Spectrum Gradient — Hero demo background gradient — teal-to-violet-to-amber sweep used as atmospheric backdrop for the product visualization"
+    },
+    "mint-pulse": {
+      "$value": "#05933b",
+      "$type": "color",
+      "$description": "Mint Pulse — AI Traffic 'High' indicator badges, positive signal states"
+    },
+    "emerald-tag": {
+      "$value": "#10b981",
+      "$type": "color",
+      "$description": "Emerald Tag — Semantic success backgrounds, gradient anchor (green end of the spectrum gradient)"
+    },
+    "sky-blush": {
+      "$value": "#bdd8ff",
+      "$type": "color",
+      "$description": "Sky Blush — Hero section vertical gradient background (top stop, blue-white)"
+    }
+  },
+  "font": {
+    "mona-sans": {
+      "$value": "Mona Sans",
+      "$type": "fontFamily",
+      "$description": "All display and section headings. The custom GitHub-adjacent variable font at weight 700 with -0.04em tracking at large sizes compresses headlines into dense data labels — they read as precision output rather than marketing copy. Weight 500 at 24-32px handles subheadings."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All body copy, UI labels, badges, nav links, button text, card metadata. The wide weight range (400 body, 600 stat labels, 700 metric numerals) creates internal hierarchy within data-dense components without switching families."
+    },
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "System fallback for non-critical UI chrome. Not a designed choice — browser default in edge cases."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://panxo.com",
+      "siteName": "Panxo",
+      "extractedAt": "2026-04-12T10:44:29.583Z",
+      "variant": "compact"
+    }
+  }
+}

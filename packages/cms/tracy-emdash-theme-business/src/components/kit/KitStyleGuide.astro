@@ -1,0 +1,93 @@
+---
+import Photo from '@/components/site/Photo.astro'
+import Pos from '@/components/kit/KitPosition.astro'
+import { wordsOf } from '@/lib/locale-words'
+import { uiLocale } from '@/lib/ui'
+import { swatchFill } from '@/lib/swatch-role'
+const { sample: g, site, locale } = Astro.props
+// The guide's own labels are the theme's words, in the language the page is written in (TCH #1013, K3, LANG-2), colour
+// names and the bracketed position descriptions included (g62: "Ink", "hero (banner)" were English on a site in Vietnamese).
+// The position names and the type figures ("Newsreader 52/1.08") are what an installer types or sets, the same in every
+// language: they are printed as code.
+const w = wordsOf(uiLocale(locale)).kit
+const typeScale = [
+  { role: 'H1', spec: 'Newsreader 52/1.08', class: 'h-article', text: g.sample1 },
+  { role: 'H2', spec: 'Newsreader 40', class: 'h-section-lg', text: g.sample2 || g.sample1 },
+  {
+    role: 'H3',
+    spec: 'Archivo 600 · 20',
+    class: 'text-[20px] font-semibold tracking-[-.012em]',
+    text: g.sample3
+  },
+  {
+    role: w.body,
+    spec: 'Archivo 17.5/1.72',
+    class: 'max-w-[44em] text-[17.5px] leading-[1.72] text-fg-body',
+    text: g.body || g.sub
+  },
+  { role: w.eyebrow, spec: '12 · .18em', class: 'eyebrow', text: g.eyebrow || g.s3 },
+  { role: w.meta, spec: '13', class: 'text-[13px] text-fg-meta', text: g.meta || g.im1 }
+]
+/** A module position: its name as the installer types it, and what the map says about it in the page's language. */
+type Position = { name: string; note?: string } | string
+const positions: Array<Position | Position[]> = [
+  'topbar',
+  ['logo', 'menu', 'header-cta'],
+  { name: 'hero', note: w.banner },
+  ['top-a', 'top-b', 'top-c', 'top-d'],
+  ['sidebar-left', { name: 'component', note: w.mainContent }, 'sidebar-right'],
+  ['bottom-a', 'bottom-b'],
+  ['footer-a', 'footer-b', 'footer-c'],
+  ['copyright', 'debug']
+]
+const cell = 'border border-dashed border-line-strong bg-paper-2 p-3.5 text-center text-[12px]'
+const cellUpper = `${cell} uppercase tracking-[.1em]`
+const swatches = [
+  [w.swatches.ink, '#14171A'],
+  [w.swatches.forest, '#14483A'],
+  [w.swatches.signal, '#DA5A2A'],
+  [w.swatches.paper, '#F5F3EE'],
+  [`${w.swatches.paper} 2`, '#EDEAE2'],
+  [w.swatches.line, '#DCD7CC']
+]
+const h = 'column-label mb-6 border-b border-line pb-3 text-fg-meta !text-[13px] !tracking-[.18em]'
+---
+<h2 class={h}>{g.s1}</h2>
+<div class="mb-14 flex flex-col gap-3 border border-line-card bg-card p-5">
+	<div class="bg-ink px-4 py-3 text-[12px] uppercase tracking-[.14em] text-[color:var(--ds-c-on-ink,var(--color-white))]"><Pos p={positions[0]} /></div>
+	<div class="grid grid-cols-[1fr_2fr_1fr] gap-3">{(positions[1] as Position[]).map((x) => <div class={cellUpper}><Pos p={x} /></div>)}</div>
+	<div class="bg-signal px-4 py-[26px] text-center text-[12px] uppercase tracking-[.14em] text-[color:var(--ds-c-accent-on,var(--color-white))]"><Pos p={positions[2]} /></div>
+	<div class="grid grid-cols-2 gap-3 md:grid-cols-4">{(positions[3] as Position[]).map((x) => <div class={cell}><Pos p={x} /></div>)}</div>
+	<div class="grid grid-cols-1 gap-3 md:grid-cols-[200px_1fr_260px]">{(positions[4] as Position[]).map((x, i) => <div class:list={[i === 1 ? "flex items-center justify-center bg-forest p-3.5 text-center text-[12px] uppercase tracking-[.14em] text-[color:var(--ds-c-on-accent-band,var(--color-white))]" : `${cell} flex min-h-[80px] items-center justify-center md:min-h-[180px]`]}><Pos p={x} /></div>)}</div>
+	<div class="grid grid-cols-2 gap-3">{(positions[5] as Position[]).map((x) => <div class={cell}><Pos p={x} /></div>)}</div>
+	<div class="grid grid-cols-3 gap-3">{(positions[6] as Position[]).map((x) => <div class="bg-ink p-3.5 text-center text-[12px] text-on-ink-soft"><Pos p={x} /></div>)}</div>
+	<div class="bg-ink px-4 py-3 text-center text-[12px] uppercase tracking-[.14em] text-on-ink-meta">{(positions[7] as Position[]).map((x, i) => <>{i > 0 && " · "}<Pos p={x} /></>)}</div>
+</div>
+<h2 class={h}>{g.s2}</h2>
+<div class="mb-14 grid grid-cols-1 items-baseline gap-x-7 gap-y-3 break-words md:grid-cols-[minmax(110px,150px)_minmax(0,1fr)] md:gap-y-4">
+	{typeScale.map((t) => <><div class="text-[12.5px] text-fg-meta">{t.role} · <code style="font-family:inherit;font-size:inherit">{t.spec}</code></div><div class={t.class}>{t.text}</div></>)}
+</div>
+<h2 class={h}>{g.s3}</h2>
+<div class="mb-14 grid grid-cols-[repeat(auto-fit,minmax(110px,1fr))] gap-3.5">{swatches.map(([n, v]) => <div><div class="h-[88px] border border-line" style={`background:${swatchFill(v)}`}></div><div class="mt-2 text-[13px] font-semibold">{n}</div><div class="text-[12.5px] text-fg-meta">{v}</div></div>)}</div>
+<h2 class={h}>{g.s4}</h2>
+<div class="mb-14 grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-10">
+	<div class="flex flex-col items-start gap-4"><span class="btn-primary !px-[26px] !py-3.5 !text-[15px]">{w.primary} — {site.quote_label}</span><span class="btn-forest !px-[26px] !py-3.5 !text-[15px]">{w.secondary} — {g.btn2}</span><span class="inline-block border border-line px-[26px] py-3.5 text-[15px] font-semibold">{w.outline} — {g.btn3}</span><span class="link-underline !text-[15px]">{w.textLink} — {g.btn3}</span><span class="inline-block bg-chip-disabled px-[26px] py-3.5 text-[15px] font-semibold text-fg-faint">{w.disabled}</span></div>
+	<div class="flex flex-col gap-4"><input type="text" placeholder={g.inp1} class="field-input" readonly /><input type="text" placeholder={g.inp2} class="field-input !border-forest-text !bg-card !outline !outline-2 !outline-focus-ring" readonly /><div><input type="text" placeholder={g.inp3} class="field-input is-error" readonly /><div class="mt-1.5 text-[13px] text-error">{g.err}</div></div><textarea placeholder={w.textarea} class="field-input h-[84px]" readonly></textarea></div>
+</div>
+<h2 class={h}>{g.s5}</h2>
+<div class="mb-14 flex flex-col gap-3">
+	<div class="border-l-[3px] border-forest-text bg-info-bg px-[18px] py-3.5 text-[15px] text-info-fg">{g.msg1}</div>
+	<div class="border-l-[3px] border-success bg-success-bg px-[18px] py-3.5 text-[15px] text-success-fg">{g.msg2}</div>
+	<div class="border-l-[3px] border-warning bg-warning-bg px-[18px] py-3.5 text-[15px] text-warning-fg">{g.msg3}</div>
+	<div class="border-l-[3px] border-error bg-error-bg px-[18px] py-3.5 text-[15px] text-error-fg">{g.msg4}</div>
+</div>
+<h2 class={h}>{g.s6}</h2>
+<div class="mb-14 table-scroll border border-line-card bg-card">
+	<table class="data-table w-full border-collapse text-left"><thead><tr class="bg-ink text-[12.5px] font-semibold uppercase tracking-[.1em] text-[color:var(--ds-c-on-ink,var(--color-white))]">{(g.th ?? []).map((t: string, i: number) => <th class:list={["px-2 py-2.5 font-semibold sm:px-[18px] sm:py-[13px]", i === 0 && "sm:w-[40%]"]}>{t}</th>)}</tr></thead><tbody>{(g.rows ?? []).map((r: any) => <tr class="border-b border-line-soft text-[13px] last:border-b-0 sm:text-[15px]"><td class="px-2 py-2.5 sm:px-[18px] sm:py-3.5">{r.a}</td><td class="px-2 py-2.5 text-fg-muted sm:px-[18px] sm:py-3.5">{r.b}</td><td class="is-num px-2 py-2.5 text-fg-muted sm:px-[18px] sm:py-3.5">{r.c}</td><td class="is-num px-2 py-2.5 text-fg-muted sm:px-[18px] sm:py-3.5">{r.d}</td></tr>)}</tbody></table>
+</div>
+<h2 class={h}>{g.s7}</h2>
+<div class="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-5">
+	<div><Photo image={g.frames?.ratio16} alt={g.im1} placeholder={site.slots?.find?.((s: any) => s.key === "ratio16")?.text} class="h-[200px]" /><div class="mt-2 text-[12.5px] text-fg-meta">{g.im1}</div></div>
+	<div><Photo image={g.frames?.contain} alt={g.im2} placeholder={site.slots?.find?.((s: any) => s.key === "contain")?.text} class="h-[200px]" contain /><div class="mt-2 text-[12.5px] text-fg-meta">{g.im2}</div></div>
+	<div><div class="flex h-[200px] items-center justify-center border border-line"><Photo image={g.frames?.avatar} alt={g.im3} placeholder={site.slots?.find?.((s: any) => s.key === "avatar")?.text} class="h-[150px] w-[150px] rounded-full !border-0 [&_.photo-placeholder]:text-[12.5px]" width={150} height={150} /></div><div class="mt-2 text-[12.5px] text-fg-meta">{g.im3}</div></div>
+</div>

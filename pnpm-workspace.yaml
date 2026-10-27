@@ -1,0 +1,237 @@
+# `tch/profiles/*` is deliberately NOT a member -- see tasks/todo-tch-greenfield.md
+# §Review Phase 2. dsh owns those directories: initProfile() writes its own
+# pnpm-workspace.yaml there pinning `nodeLinker: hoisted`, which is what makes every
+# out-of-tree plugin share one cordis instance. Claiming them here would either be
+# shadowed by that nested file (so `workspace:*` breaks at boot) or require deleting it
+# (so plugins duplicate cordis). A profile takes its plugin tree from
+# `scripts/materialize-profile.mjs` instead -- symlinks into this workspace, the same contract
+# the fleet image fills with COPY. Nothing under `tch/profiles/` installs @tracy/* by version
+# any more, and there is no registry left to install it from.
+packages:
+  - apps/*
+  - packages/*/*
+  # `@tracy/emdash-theme-business` is an EmDash site template: a standalone pnpm project with
+  # its own lockfile (emdash + astro + ~300 packages), like vendor/emdash/emdash-theme-tracy-*.
+  # Claiming it here would pull EmDash's whole dependency graph into this lockfile, which
+  # vendor/emdash/emdash/IMPORT-NOTE.md rules out. Install inside that directory instead.
+  - '!packages/cms/tracy-emdash-theme-business'
+  # Same shape, same reason: Tracy Base, the EmDash template built from the Joomla `tracy-base` site.
+  - '!packages/cms/tracy-emdash-theme-base'
+  # Same shape, same reason: Tracy SaaS, the EmDash template built from the JA Kinetic Joomla site.
+  - '!packages/cms/tracy-emdash-theme-saas'
+  # SPIKE: dsh as workspace source instead of registry.
+  - vendor/tracy/dsh-better-locale
+  - vendor/tracy/dsh-better-sidebar
+  - vendor/tracy/dsh-locale-vi
+  - vendor/tracy/dsh-passwords
+  - vendor/tracy/dsh-subscriptions
+  # `@tracy/od-brand-engine` — OpenDesign's brand pipeline, vendored with its `dist/` committed.
+  # `@tracy/dsh-brand-engine` and `@tracy/dsh-design-system` import it BY NAME and pin its exact
+  # version, so on `main` it resolved through the private registry. Here the version is the one in
+  # this directory and `linkWorkspacePackages` links it; there is nothing left to publish it to.
+  #
+  # `vendor/tracy/mattpocock-skills` and `vendor/tracy/od-skill` are deliberately NOT members: nothing imports
+  # them, they are SKILL CONTENT that `dsh/Dockerfile` copies into the image's shared library by
+  # path, never resolved as a package.
+  - vendor/tracy/od-brand-engine
+  - vendor/tracy/deepseek-harness/vendor/*
+  - vendor/tracy/deepseek-harness/packages/*/*
+  - vendor/tracy/deepseek-harness/native/landlock-run
+  - vendor/tracy/deepseek-harness/native/landlock-run/packages/*
+  # dsh 0.1.5 replaced `fs-ext` with its own flock(2) binding: `@deepseek-ai/node-addon-system`
+  # (entry) plus one prebuilt package per platform. Same shape as landlock-run, same two globs.
+  - vendor/tracy/deepseek-harness/native/system
+  - vendor/tracy/deepseek-harness/native/system/packages/*
+  - vendor/tracy/deepseek-harness/apps/*
+
+# True here, and deliberately NOT the `false` that dsh writes into every profile.
+#
+# The two directories install for different reasons. A profile loads plugins into a running
+# dsh, which already supplies cordis and friends through the hoisted profiles/node_modules
+# fallback -- installing them again beside each plugin is what duplicates cordis. This root
+# instead installs dsh itself as a development tool, and nothing else is around to supply
+# its peers: with `false`, `dsh --version` dies on a missing @deepseek-ai/cordis-plugin-group
+# before it prints anything.
+#
+# The reason to be careful with it is not the peers themselves but loose ranges: `*` and
+# friends skip prereleases, and every dsh version is a prerelease, so pnpm walks back to
+# ancient 0.0.1-rc builds whose own peers (@deepseek-ai/dsh-type-meta) no longer exist.
+# Fix that where it belongs -- an exact range on the peer -- not by disabling resolution.
+# pnpm 11 runs an install of its own before `pnpm run <script>` when it decides the tree is stale.
+# That default is right almost everywhere and WRONG for the one script this repository cannot get
+# out of: `pnpm dsh:build` has to run BEFORE the first `pnpm install`, because the install inside
+# `vendor/tracy/deepseek-harness` claims the submodule's member packages and must not land on top of a
+# root install (see the header of `scripts/build-dsh.mjs`). With the check on, `pnpm dsh:build` on a
+# fresh clone triggers a root install first, that install runs `vendor/tracy/dsh-passwords`'s `prepare`,
+# and its `tsc` dies on `@deepseek-ai/cordis` types that `dsh:build` has not built yet -- a bootstrap
+# that cannot start, with an error naming none of this. Measured on a clean checkout 06/09.
+#
+# Turning it off restores plain `pnpm run`: the scripts run, and `pnpm install` is a thing people
+# type. Every gate that needs a current tree still checks for itself.
+verifyDepsBeforeRun: false
+
+autoInstallPeers: true
+
+linkWorkspacePackages: true
+
+peerDependencyRules:
+  allowedVersions:
+    typescript: '>=5 <7'
+
+# THREE THIRD-PARTY PACKAGES DECLARE `react` AS A PEER BUT NOT `@types/react`, and that single
+# omission is enough to stop `pnpm typecheck` for the whole repo. With no such peer to satisfy,
+# pnpm puts no `@types/react` in their virtual-store directories, so TypeScript resolving React
+# types from inside `recharts`/`input-otp`/`lucide-react` `.d.ts` files walks up and lands on the
+# hoisted `node_modules/.pnpm/node_modules/@types/react`. That copy is 18.3.31, because roughly
+# fifty-five packages under `vendor/tracy/deepseek-harness` -- plus `dsh-passwords`,
+# `dsh-better-sidebar` and `workers/mail` -- genuinely run React 18. `packages/ui/tracy-ui`
+# meanwhile resolves 19.2.18 from its own tree, so one program holds two React type identities
+# and `tsc` reports three errors that name neither React nor pnpm:
+#
+#   packages/ui/tracy-ui/src/components/ui/chart.tsx(146,81): error TS2345: Argument of type
+#     'React.ReactNode' is not assignable to parameter of type
+#     'import(".../@types+react@18.3.31/node_modules/@types/react/index").ReactNode'.
+#
+# Declaring the peer makes pnpm build one instance of each package per peer set: a React 19
+# consumer gets React 19 types, and the React 18 harness keeps its own. `overrides` would have
+# been the wrong tool -- forcing 19 everywhere hands React 18 code type declarations for a React
+# it does not run, to fix a React 19 package's build.
+#
+# `optional: true` matters because `autoInstallPeers` is on above: without it, a consumer with no
+# React types at all would have one fetched and pinned on its behalf.
+packageExtensions:
+  recharts:
+    peerDependencies:
+      '@types/react': '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+  input-otp:
+    peerDependencies:
+      '@types/react': '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+  lucide-react:
+    peerDependencies:
+      '@types/react': '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+patchedDependencies:
+  node-pty@1.2.0-beta.15: vendor/tracy/deepseek-harness/patches/node-pty@1.2.0-beta.15.patch
+  # DSH and the Excel preview patch packages on the LLM and document paths; without these lines
+  # a root install runs them unpatched, silently.
+  '@earendil-works/pi-ai@0.87.1': vendor/tracy/deepseek-harness/patches/@earendil-works__pi-ai@0.87.1.patch
+  '@fortune-sheet/core@1.0.4': vendor/tracy/deepseek-harness/patches/@fortune-sheet__core@1.0.4.patch
+  '@fortune-sheet/react@1.0.4': vendor/tracy/deepseek-harness/patches/@fortune-sheet__react@1.0.4.patch
+  exceljs@4.4.0: vendor/tracy/deepseek-harness/patches/exceljs@4.4.0.patch
+
+# pnpm 11 denies dependency lifecycle scripts by default (strictDepBuilds): an unreviewed
+# script is a hard install error, not a warning. This list is upstream's own review, copied
+# from deepseek-harness at tag dsh-v0.2.0-rc.2 -- keep it in step when dsh is upgraded.
+allowBuilds:
+  # Cross-platform boundary for the persistent PTY backend, including ConPTY on Windows.
+  node-pty: true
+  # JSONL durability calls MoveFileExW with write-through publication on Windows.
+  koffi: true
+  # Restores the executable bit on node-pty's macOS spawn helper.
+  '@deepseek-ai/dsh-subprocess-local': true
+  # Pulled in by the optional pi-ai LLM backend. pnpm lists them only because they ship
+  # lifecycle scripts; those are no-ops, so denying them still leaves install succeeding.
+  '@google/genai': false
+  protobufjs: false
+  # Ships a native binary that genuinely needs its install script. pnpm appends new keys
+  # here as the literal string `set this to true or false` -- a string, not a boolean, so
+  # install keeps failing until it is answered by hand. Always answer, never leave it.
+  esbuild: true
+  # Since Electron 42 the package has NO postinstall: its ~250 MB runtime downloads the first time
+  # `require('electron')` or the `electron` bin runs, into node_modules/electron/dist (every pin in
+  # this tree is 44.x). So `pnpm install` alone leaves no binary; the first `pnpm dev` or test that
+  # needs one fetches it. The `true` stays harmless and covers an older pin brought back by mistake.
+  electron: true
+  # Comes with Tailwind v4 and only serves WATCH mode — the one-shot build in
+  # `build-client.mjs` never calls it. Its postinstall builds a native binding; if refused,
+  # Tailwind falls back to polling, which we don't use either. That is the reason to say NO:
+  # a binary-building script that no path in this repo reaches.
+  '@parcel/watcher': false
+  # dsh 0.1.5 dropped `fs-ext` (its flock(2) binding is now the workspace's own
+  # `@deepseek-ai/node-addon-system`, prebuilt per platform), so the `fs-ext: true` that stood
+  # here is gone with it. Two more upstream verdicts arrived in the same tag (node-addon-require-builtin
+  # already stands below): electron-winstaller
+  # only selects its bundled 7-Zip and Windows ships through NSIS; msgpackr-extract's native codec
+  # is not needed for store-index rewriting (the portable JavaScript codec is).
+  electron-winstaller: false
+  msgpackr-extract: false
+  # SPIKE: from vendor/tracy/deepseek-harness/pnpm-workspace.yaml (its own review).
+  lefthook: true
+  node-addon-require-builtin: false
+  # `ssh2` is pure JavaScript; its only native piece is the OPTIONAL `cpu-features`, which picks a
+  # faster cipher path when it can compile. Both are false because the image that runs this
+  # (`apps/tracy-web`, `node:24-slim`) carries no build toolchain: letting the scripts run would
+  # either fail the image build or, worse, succeed on a laptop and not on the server. Measured
+  # 16/09 with both off — `ssh2` imports and connects fine.
+  cpu-features: false
+  ssh2: false
+  # Arrives with `@scalar/api-reference` (the API reference page in `apps/tracy-web`). Its
+  # postinstall only switches the shim between Vue 2 and Vue 3; the page serves Scalar's
+  # prebuilt browser bundle and never imports vue-demi, and the image installs with
+  # `--ignore-scripts` anyway, so saying no here keeps a laptop and the image alike.
+  vue-demi: false
+
+# `@deepseek-ai/cordis-plugin-loader` is NOT overridden any more (04/09, dsh 0.1.2-rc.1).
+#
+# From 30/08 to 04/09 this block pinned `1.0.2-tracy.2`, Tracy's own build of `vendor/loader/`
+# that probed the `resolveSync` shape instead of guessing it from the Node major. Upstream fixed
+# the same bug on 29/08 (`675efe73f2`, classifying the loader by which module-job API it owns),
+# and that fix ships in `cordis-plugin-loader@1.0.3`, the version rc.1 depends on. The fork's
+# two loader commits were dropped with `0ca4e91`; the old state is tag `tracy-base-0.1.2-alpha.1`.
+#
+# If a Tracy build of this package is ever needed again it has to be an `overrides` entry, not
+# a dependency: nobody declares the package directly, it is an INDIRECT dependency of the
+# `@deepseek-ai/*` tree, and the shared `tch/profiles/node_modules` links into the root store,
+# not into any one profile's.
+# SPIKE: the `@deepseek-ai/dsh-web-frontend` override is gone -- the package is a
+# workspace member now, so there is no range left to drift.
+
+# Published security fixes for packages this workspace reaches only indirectly, or through a
+# vendor tree whose own package.json we do not edit in place (RULE #5). Each selector covers
+# only the vulnerable range of ONE major line and lifts it to the first fixed release of that
+# same line, so no entry crosses a major version. Delete an entry once every path to it
+# resolves to a fixed release on its own.
+#
+# What this does NOT reach: apps/tracy-web and apps/tracy-host install from their own
+# lockfiles (`--ignore-workspace`), and the dsh image builds the deepseek-harness submodule
+# from the submodule's lockfile -- those are fixed in their own trees.
+overrides:
+  '@ai-sdk/provider-utils@>=4.0.0-beta.10 <4.0.33': 4.0.33
+  '@modelcontextprotocol/client@>=2.0.0 <2.3.0': 2.3.0
+  '@modelcontextprotocol/sdk@>=1.3.0 <1.32.0': 1.32.0
+  '@vitest/mocker@>=4.0.0 <4.1.12': 4.1.12
+  'body-parser@<1.20.9': 1.20.9
+  'body-parser@>=2.0.0 <2.4.0': 2.4.0
+  'brace-expansion@<1.1.21': 1.1.21
+  'brace-expansion@>=2.0.0 <2.1.7': 2.1.7
+  'brace-expansion@>=5.0.0 <5.0.12': 5.0.12
+  'compression@<1.8.2': 1.8.2
+  'dompurify@>=3.0.0 <3.4.17': 3.4.17
+  'fast-uri@>=3.0.0 <3.1.9': 3.1.9
+  'fflate@>=0.8.0 <0.8.3': 0.8.3
+  # 4.2.1 was never published; 4.3.0 is the first fixed release of the 4.x line.
+  'http-cache-semantics@<4.2.1': 4.3.0
+  'hono@>=4.0.0 <4.13.11': 4.13.11
+  'ip-address@>=10.0.0 <10.7.4': 10.7.4
+  'pnpm@>=11.0.0 <11.11.0': 11.11.0
+  'postcss-selector-parser@<6.1.5': 6.1.5
+  'proxy-addr@<2.0.8': 2.0.8
+  'qs@>=6.0.0 <6.16.0': 6.16.0
+  'sharp@>=0.35.0 <0.35.5': 0.35.5
+  'source-map-js@>=1.0.0 <1.2.2': 1.2.2
+  'undici@>=7.0.0 <7.30.1': 7.30.1
+  'undici@>=8.0.0 <8.12.2': 8.12.2
+  'vite@>=6.0.0 <6.4.4': 6.4.4
+  'vite@>=8.3.0 <8.3.3': 8.3.3
+  'zod@>=4.0.0 <4.6.6': 4.6.6
+  # Not overridden (27/10/2026): happy-dom 20 (GHSA-834v-8h66-3h79, harness test-support only; the fix is
+  # major 21) and katex 0.16 (GHSA-238p-pmpm-9mq7, low; mermaid requires ^0.16, the fix is 0.18).

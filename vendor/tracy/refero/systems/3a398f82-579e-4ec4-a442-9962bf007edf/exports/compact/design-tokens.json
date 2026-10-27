@@ -1,0 +1,109 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, deep background layer — the absolute floor of the surface stack"
+    },
+    "carbon": {
+      "$value": "#060606",
+      "$type": "color",
+      "$description": "Carbon — Primary page background where pure black would be too harsh — the actual canvas color in the dominant layout"
+    },
+    "graphite": {
+      "$value": "#252525",
+      "$type": "color",
+      "$description": "Graphite — Card surfaces, nav bar, raised panels — the dominant mid-neutral"
+    },
+    "onyx": {
+      "$value": "#1f1f1f",
+      "$type": "color",
+      "$description": "Onyx — Subtle elevation layer between canvas and card"
+    },
+    "iron": {
+      "$value": "#313131",
+      "$type": "color",
+      "$description": "Iron — Box-shadow depth, elevated surface tint — provides warmth on hover and focus"
+    },
+    "slate": {
+      "$value": "#3d3d3d",
+      "$type": "color",
+      "$description": "Slate — Hairline borders on dense tables, row dividers"
+    },
+    "fog": {
+      "$value": "#525252",
+      "$type": "color",
+      "$description": "Fog — Low-emphasis borders, disabled control outlines"
+    },
+    "ash": {
+      "$value": "#7a7a7a",
+      "$type": "color",
+      "$description": "Ash — Muted body text, helper copy, link underlines — the workhorse mid-gray"
+    },
+    "smoke": {
+      "$value": "#8a8a8a",
+      "$type": "color",
+      "$description": "Smoke — Secondary captions, metadata text"
+    },
+    "pearl": {
+      "$value": "#c5c5c5",
+      "$type": "color",
+      "$description": "Pearl — Tertiary text, subtle heading tints"
+    },
+    "bone": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Bone — High-emphasis body text where pure white would vibrate against black"
+    },
+    "chalk": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Chalk — Display text, primary headings, icon strokes — the only text color permitted above #e5e5e5"
+    },
+    "signal-lime": {
+      "$value": "#c5ff4a",
+      "$type": "color",
+      "$description": "Signal Lime — Primary CTA fill, glowing borders, italic accent words in headlines — the single chromatic punctuation in an otherwise monochrome system; at 17.8:1 contrast against black it reads as emergency lighting"
+    },
+    "olive-depth": {
+      "$value": "#597321",
+      "$type": "color",
+      "$description": "Olive Depth — Dark green stroke for SVG world-map art and shadow glows under signal-lime elements"
+    },
+    "moss-shadow": {
+      "$value": "#314013",
+      "$type": "color",
+      "$description": "Moss Shadow — Deepest green used only as decorative stroke in dotted-globe illustrations"
+    }
+  },
+  "font": {
+    "pt-serif": {
+      "$value": "PT Serif",
+      "$type": "fontFamily",
+      "$description": "All display headlines, hero copy, section titles, and the italic accent words — the editorial voice. Weight 300 is anti-convention for a crypto site; most use 600-700, this whisper-weight signals authority through restraint, not volume."
+    },
+    "inter-tight": {
+      "$value": "Inter Tight",
+      "$type": "fontFamily",
+      "$description": "All UI chrome, body paragraphs, buttons, nav, tags, labels, links. Carries 500 for nav emphasis, 600 for button text. The uppercase tracked-out labels (0.18–0.26em) read as classified-document metadata stamps."
+    },
+    "jetbrains-mono": {
+      "$value": "JetBrains Mono",
+      "$type": "fontFamily",
+      "$description": "Code snippets, protocol names, terminal output, hex strings — the proof-of-cryptography evidence layer"
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "Inline monospace fallback, tiny hash strings, timestamps"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://zkpass.org",
+      "siteName": "zkPass",
+      "extractedAt": "2026-06-03T18:00:19.788Z",
+      "variant": "compact"
+    }
+  }
+}

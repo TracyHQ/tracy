@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3416bd14-96bb-4c23-bd01-b2ea178ba5ce",
+  "status": "complete",
+  "name": "Active Theory",
+  "url": "https://styles.refero.design/style/3416bd14-96bb-4c23-bd01-b2ea178ba5ce",
+  "sourceWebsite": "https://activetheory.net",
+  "extractedAt": "2026-07-03T03:21:07.573Z",
+  "capturedAt": "2026-10-08T05:10:02.891094+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "cosmic void with a single luminous portal — deep-space command deck where chrome whispers and the rendered world shouts",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/cc863ac2-3415-4e05-b30a-e2e8442c82b3.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/abcc776c-9c48-4816-a0b4-74b54391ae82.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/22c6dadd-10e0-45f0-b152-3110ea7ad3b7.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/8ddce8f1-b591-4b50-991e-cf2b7cb8ab58.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a7546dc3-de03-490c-bab0-3d1194b4e03b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9020c1cffe8737e023b389033f611d643f6f311cac70938bfa9cf0d5a5b64d67",
+      "bytes": 19238
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7feb5527f36964c687e4dd6d5d64f2baab6767df8d8b90e471075cab6a2b91d5",
+      "bytes": 62286
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "129c1d334b32888db0de0bb5cdd448657cbc02b009d4d8d0568b311c8a3ec450",
+      "bytes": 16735
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "74af4fe1aa286cdbd1950a099fe758f216f3eff185d25050d97dfdd0abcd484a",
+      "bytes": 7206
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8f1706e4abf5c53d14d5a80498b30a11d519426c359906691af8071aae9b0d7a",
+      "bytes": 12041
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "72036f08b4b36f76a548885975775a17f25ca790b87707315710aa4ab9bcb2e3",
+      "bytes": 2882
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4d694e050549d0a894797e4c350c4dcec3120691bf83f06b037b167d9dc664df",
+      "bytes": 617
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "fa90dff6720a3f890843d5fec29f33ba39667214f784eb21b66c9111af13d8e0",
+      "bytes": 634
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ab363af9d3e3851525da08872984aacceaca1ad8ce1fdd5528d9563b49dd9244",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "31f39c25239fe0121067a57ddca75d8d959251461f61934a871068b0f50e9f2b",
+      "bytes": 42718
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "aad152f82539ccce289bb01a4656602fd5873d7314eb32d38ff32d1a8b506443",
+      "bytes": 21645
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5c017557424d68a894a93530d67c51f9398b1666d87b701cdc3af8c0fe4339ec",
+      "bytes": 29597
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4b0d941e53511229326ab82d5efd8a252775c9d18ab3ce4fa40f9d8625e96e79",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "28c09a3576d8a6c7ae76b437ad74e6967fe54af8efae0e609eaa4ac06e00822d",
+      "bytes": 1068
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "8e9eacf6a122cdb31bdb3bb757a2ca992ad224e2a80363563eb277233078f4c9",
+      "bytes": 1591
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "004f4856-4b01-4c23-a9fb-866303d5013b",
+    "03e03554-d7aa-40da-9764-79320ecfa1d0",
+    "09e43758-12c5-4a2b-8ae8-ded156ef66bf",
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "145e70b3-e0a4-4fbd-8d9e-23bd93dd0021",
+    "1b44386e-31a8-40b0-a577-27c088b51264",
+    "1f0cc2ef-9de0-4cbb-909f-ca120ef6d0ae",
+    "225059ac-0450-49d3-b2b7-d0e98b7ae938",
+    "2d78835a-fffe-4416-8e3d-ac37207fbd6b",
+    "3416bd14-96bb-4c23-bd01-b2ea178ba5ce",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "82d52a5f-b1bb-4a69-91a3-15a7eb8bbe99",
+    "8875b14e-c59a-492f-8780-8027a480f21c",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "c406697b-677f-40c7-a3a2-10ea545278f1",
+    "e06224b2-6d52-4d06-bbde-115cec719b47",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

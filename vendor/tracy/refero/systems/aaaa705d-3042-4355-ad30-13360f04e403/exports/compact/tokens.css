@@ -1,0 +1,33 @@
+:root {
+  /* Colors */
+  --color-ink-black: #1d1d1c;
+  --color-parchment-cream: #f8f7f2;
+  --color-sand-gray: #d8d6ce;
+  --color-linen-beige: #edeae4;
+  --color-paper-white: #ffffff;
+  --color-charcoal-stone: #43423e;
+  --color-ash-gray: #99978f;
+  --color-slate-warm: #7a7974;
+  --color-electric-violet: #b26bf5;
+  --color-twilight-indigo: #190922;
+  --color-bubblegum-pink: #f788d2;
+  --color-tangerine: #ff9147;
+  --color-aqua-teal: #4ad5e8;
+  --color-sky-blue: #51b1fb;
+  --color-sunshine-yellow: #ffe747;
+  --color-lavender-glow: #b977f8;
+  --color-pale-violet: #dab2ff;
+  --color-lilac-mist: #f3e8ff;
+  --color-deep-violet: #8200db;
+  --color-coral-red: #ee5968;
+  --color-mint-green: #58df8c;
+  --color-forest-green: #00a63e;
+  --color-burnt-orange: #eb6928;
+  --color-deep-teal: #2c91af;
+  --color-magenta-bloom: #b036a4;
+  --color-mint-wash: #dcfce7;
+
+  /* Typography — Font Families */
+  --font-new-kansas: 'new-kansas', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-nunito-sans: 'Nunito Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

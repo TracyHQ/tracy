@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" class="j6" xml:lang="en-gb" lang="en-gb" dir="ltr">
+
+<head>
+  
+  <meta charset="utf-8">
+	<meta name="author" content="Arjun Mehta">
+	<meta name="description" content="The most tedious part of any postmortem is reconstructing what happened when. Your telemetry already knows. The timeline can assemble itself while you focus on why.">
+	<meta name="generator" content="Joomla! - Open Source Content Management">
+	<title>Building an incident timeline automatically from telemetry</title>
+	<link href="/templates/ja_kinetic/favicon.ico" rel="icon" type="image/vnd.microsoft.icon">
+<link href="/plugins/system/t4/themes/base/vendors/font-awesome5/css/all.min.css?97df81" rel="stylesheet">
+	<link href="/plugins/system/t4/themes/base/vendors/font-awesome/css/font-awesome.min.css?97df81" rel="stylesheet">
+	<link href="/templates/ja_kinetic/css/extras/com_docman.css?97df81" rel="stylesheet">
+	<link href="/templates/ja_kinetic/css/extras/com_easyblog.css?97df81" rel="stylesheet">
+	<link href="/templates/ja_kinetic/css/extras/com_easydiscuss.css?97df81" rel="stylesheet">
+	<link href="/templates/ja_kinetic/css/extras/com_virtuemart.css?97df81" rel="stylesheet">
+	<link href="/templates/ja_kinetic/css/extras/com_kunena.css?97df81" rel="stylesheet">
+	<link href="/templates/ja_kinetic/css/extras/com_jomsocial.css?97df81" rel="stylesheet">
+	<link href="/media/vendor/joomla-custom-elements/css/joomla-alert.min.css?0.4.1" rel="stylesheet">
+	<link href="/templates/ja_kinetic/css/single-article.css?1789354584" rel="stylesheet">
+	<link href="/templates/ja_kinetic/acm/cta/css/style.css?1789354584" rel="stylesheet">
+	<link href="/templates/ja_kinetic/acm/header-cta/css/style.css?1789354584" rel="stylesheet">
+	<link href="/templates/ja_kinetic/acm/social/css/style.css?1789354584" rel="stylesheet">
+	<link href="http://127.0.0.1:8216/media/com_acym/css/module.min.css?v=" rel="stylesheet">
+	<link href="/templates/ja_kinetic/acm/footerlegal/css/style.css?1789354584" rel="stylesheet">
+	<link href="/templates/ja_kinetic/css/template.css?c8bc605ba5b3938117afb364c949bc1f" rel="stylesheet">
+	<link href="/media/t4/css/36-sub.css?41b12baa9ecc67690433675e8a5aed8c" rel="stylesheet">
+<script src="/media/vendor/jquery/js/jquery.min.js?3.7.1"></script>
+	<script src="/templates/ja_kinetic/js/darkmode.js?1789354584" defer></script>
+	<script src="/media/vendor/jquery/js/jquery-noconflict.min.js?3.7.1"></script>
+	<script src="/media/vendor/jquery-migrate/js/jquery-migrate.min.js?3.6.0"></script>
+	<script type="application/json" class="joomla-script-options new">{"media-picker-api":{"apiBaseUrl":"http:\/\/127.0.0.1:8216\/index.php?option=com_media&format=json"},"joomla.jtext":{"ERROR":"Error","MESSAGE":"Message","NOTICE":"Notice","WARNING":"Warning","SUCCESS":"Success","JCLOSE":"Close","JOK":"OK","JOPEN":"Open"},"system.paths":{"root":"","rootFull":"http:\/\/127.0.0.1:8216\/","base":"","baseFull":"http:\/\/127.0.0.1:8216\/"},"csrf.token":"9d1c0e1f23844b693d0911b013e81d26"}</script>
+	<script src="/media/system/js/core.min.js?a3d8f8"></script>
+	<script src="/media/system/js/messages.min.js?9a4811" type="module"></script>
+	<script src="/media/vendor/bootstrap/js/dropdown.min.js?5.3.8" type="module"></script>
+	<script src="/media/vendor/bootstrap/js/collapse.min.js?5.3.8" type="module"></script>
+	<script src="/templates/ja_kinetic/js/template.js"></script>
+	<script src="/plugins/system/t4/themes/base/js/base.js?97df81"></script>
+	<script src="http://127.0.0.1:8216/media/com_acym/js/module.min.js?v="></script>
+	<script src="/plugins/system/t4/themes/base/js/megamenu.js"></script>
+	<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"http://127.0.0.1:8216/#/schema/Organization/base","name":"JA Kinetic","url":"http://127.0.0.1:8216/"},{"@type":"WebSite","@id":"http://127.0.0.1:8216/#/schema/WebSite/base","url":"http://127.0.0.1:8216/","name":"JA Kinetic","publisher":{"@id":"http://127.0.0.1:8216/#/schema/Organization/base"}},{"@type":"WebPage","@id":"http://127.0.0.1:8216/#/schema/WebPage/base","url":"http://127.0.0.1:8216/index.php/product/blog/136-automatic-incident-timeline","name":"Building an incident timeline automatically from telemetry","description":"The most tedious part of any postmortem is reconstructing what happened when. Your telemetry already knows. The timeline can assemble itself while you focus on why.","isPartOf":{"@id":"http://127.0.0.1:8216/#/schema/WebSite/base"},"about":{"@id":"http://127.0.0.1:8216/#/schema/Organization/base"},"inLanguage":"en-GB"},{"@type":"Article","@id":"http://127.0.0.1:8216/#/schema/com_content/article/136","name":"Building an incident timeline automatically from telemetry","headline":"Building an incident timeline automatically from telemetry","inLanguage":"en-GB","author":{"@type":"Person","name":"Arjun Mehta"},"thumbnailUrl":"images/blog/automatic-incident-timeline.jpg","image":"images/blog/automatic-incident-timeline.jpg","articleSection":"Field notes from the on-call","dateCreated":"2026-07-12T09:00:00+00:00","interactionStatistic":{"@type":"InteractionCounter","userInteractionCount":8},"isPartOf":{"@id":"http://127.0.0.1:8216/#/schema/WebPage/base"}}]}</script>
+	<script>(function(){document.documentElement.setAttribute('data-style',"terminal");var t="dark";document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);if(t==='dark'){document.documentElement.classList.add('t4-dark');}})();</script>
+	<script>window.jaKineticTheme={def:"dark",enabled:true,dir:"terminal"};</script>
+	<script>
+        if(typeof acymModule === 'undefined'){
+            var acymModule = [];
+			acymModule['emailRegex'] = /^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*\@([a-z0-9-]+\.)+[a-z0-9]{2,20}$/i;
+			acymModule['NAMECAPTION'] = 'Name';
+			acymModule['NAME_MISSING'] = 'Please enter your name';
+			acymModule['EMAILCAPTION'] = 'Email';
+			acymModule['VALID_EMAIL'] = 'Please enter a valid e-mail address';
+			acymModule['VALID_EMAIL_CONFIRMATION'] = 'Email field and email confirmation field must be identical';
+			acymModule['CAPTCHA_MISSING'] = 'The captcha is invalid, please try again';
+			acymModule['NO_LIST_SELECTED'] = 'Please select the lists you want to subscribe to';
+			acymModule['NO_LIST_SELECTED_UNSUB'] = 'Please select the lists you want to unsubscribe from';
+            acymModule['ACCEPT_TERMS'] = 'Please check the Terms and Conditions / Privacy policy';
+        }
+		</script>
+	<script>window.addEventListener("DOMContentLoaded", (event) => {
+acymModule["excludeValuesformAcym18871"] = [];
+acymModule["excludeValuesformAcym18871"]["2"] = "Email";  });</script>
+	<link rel="stylesheet" type="text/css" href="/templates/ja_kinetic/css/darkmode.css?1789354584">
+	<link rel="stylesheet" type="text/css" href="/templates/ja_kinetic/css/page-221.css?1789354584">
+
+
+  <meta name="viewport"  content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes"/>
+  <style>
+    @-webkit-viewport   { width: device-width; }
+    @-moz-viewport      { width: device-width; }
+    @-ms-viewport       { width: device-width; }
+    @-o-viewport        { width: device-width; }
+    @viewport           { width: device-width; }
+  </style>
+  <meta name="HandheldFriendly" content="true"/>
+  <meta name="apple-mobile-web-app-capable" content="YES"/>
+  <!-- //META FOR IOS & HANDHELD -->
+  
+</head>
+
+<body class="site-default navigation-default theme-default layout-no-sidebar nav-breakpoint-lg navigation-hide com_content view-article item-221 loaded-bs5" data-jver="6">
+  
+  
+  <div class="t4-wrapper">
+    <div class="t4-content">
+      <div class="t4-content-inner">
+        
+<div id="t4-header" class="t4-section  t4-header  t4-sticky"><!-- KINETIC HEADER BLOCK — theme-driven bar ($bg: #FBFCFA light / #0A0D0C dark), edge-to-edge, 66px -->
+<header class="kinetic-header">
+  <div class="hx-pad kinetic-header-inner">
+
+    <div class="hx-left">
+      <!-- ELEMENT: logo (kinetic glyph SVG + "Kinetic" wordmark; image fallback kept) -->
+      <div class="navbar-brand kinetic-brand logo-text">
+    <a href="http://127.0.0.1:8216/" title="Kinetic">
+      
+          <span class="kinetic-logo">
+        <svg class="kinetic-logo-glyph" width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M8 4 Q16 12 8 20 Q16 28 24 20" stroke="var(--chrome-primary)" stroke-width="2.4" stroke-linecap="round"></path>
+          <path d="M24 12 Q16 20 24 28 Q16 4 8 12" stroke="var(--chrome-primary)" stroke-width="2.4" stroke-linecap="round" opacity="0.5"></path>
+        </svg>
+        <span class="kinetic-logo-text">Kinetic</span>
+      </span>
+      <small class="site-slogan">observability, reimagined</small>    
+    </a>
+  </div>
+
+
+      <!-- DESKTOP NAV: the DB-driven megamenu (hidden @max-width:991.98px) -->
+      <div class="hx-desknav t4-navbar collapse-static">
+        
+<nav class="navbar navbar-expand-lg">
+<div id="t4-megamenu-mainmenu" class="t4-megamenu collapse navbar-collapse">
+
+<ul class="nav navbar-nav level0"  itemscope="itemscope" itemtype="http://www.schema.org/SiteNavigationElement">
+<li class="nav-item dropdown mega parent" data-id="213" data-level="1" data-align="left"><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false">
+	<span itemprop="name"><span class="menu-item-title">Home</span></span>
+	<i class="item-caret"></i></a>
+
+<div class="dropdown-menu mega-dropdown-menu" style="width: 420px;">
+	<div class="mega-dropdown-inner">
+	
+			<div class="row">
+																																	<div class="mega-sub-1 col-12 col-md">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Home Styles</span></h3>
+																
+<ul class="mega-nav level11">
+<li class="nav-item" data-id="214"><a href="/index.php" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Terminal</span></span></a></li><li class="nav-item" data-id="215"><a href="/index.php/home-menu/home-blueprint" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Blueprint</span></span></a></li><li class="nav-item" data-id="216"><a href="/index.php/home-menu/home-signal" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Signal</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																	</div>
+		
+	</div>
+</div>
+</li>
+<li class="nav-item active dropdown mega parent" data-id="217" data-level="1" data-align="left"><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false">
+	<span itemprop="name"><span class="menu-item-title">Product</span></span>
+	<i class="item-caret"></i></a>
+
+<div class="dropdown-menu mega-dropdown-menu" style="width: 760px;">
+	<div class="mega-dropdown-inner">
+	
+			<div class="row">
+																																	<div class="mega-sub-1 col-12 col-md">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Platform</span></h3>
+																
+<ul class="mega-nav level11">
+<li class="nav-item" data-id="218"><a href="/index.php/product/features" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Features</span></span></a></li><li class="nav-item" data-id="219"><a href="/index.php/product/integrations" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Integrations</span></span></a></li><li class="nav-item" data-id="220"><a href="/index.php/product/changelog" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Changelog</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																																							<div class="mega-sub-2 col-12 col-md">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Content</span></h3>
+																
+<ul class="mega-nav level11">
+<li class="nav-item active" data-id="221"><a href="/index.php/product/blog" itemprop="url" class="nav-link" aria-current="page"><span itemprop="name"><span class="menu-item-title">Blog</span></span></a></li><li class="nav-item" data-id="251"><a href="/index.php/product/article-archive" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Article Archive</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																																							<div class="mega-sub-3 col-12 col-md">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Discover</span></h3>
+																
+<ul class="mega-nav level11">
+<li class="nav-item" data-id="250"><a href="/index.php/product/all-categories" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">All Categories</span></span></a></li><li class="nav-item" data-id="252"><a href="/index.php/product/authors" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Our Writers</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																	</div>
+		
+	</div>
+</div>
+</li>
+<li class="nav-item" data-id="223" data-level="1"><a href="/index.php/pricing" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Pricing</span></span></a></li><li class="nav-item dropdown mega parent" data-id="224" data-level="1" data-align="left"><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false">
+	<span itemprop="name"><span class="menu-item-title">Company</span></span>
+	<i class="item-caret"></i></a>
+
+<div class="dropdown-menu mega-dropdown-menu" style="width: 300px;">
+	<div class="mega-dropdown-inner">
+	
+			<div class="row">
+																																	<div class="mega-sub-1 col-12 col-md">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Company</span></h3>
+																
+<ul class="mega-nav level11">
+<li class="nav-item" data-id="225"><a href="/index.php/company/about" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">About</span></span></a></li><li class="nav-item" data-id="226"><a href="/index.php/company/team" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Team</span></span></a></li><li class="nav-item" data-id="227"><a href="/index.php/company/contact" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Contact</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																	</div>
+		
+	</div>
+</div>
+</li>
+<li class="nav-item dropdown mega parent" data-id="228" data-level="1" data-align="left"><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false">
+	<span itemprop="name"><span class="menu-item-title">Pages</span></span>
+	<i class="item-caret"></i></a>
+
+<div class="dropdown-menu mega-dropdown-menu" style="width: 820px;">
+	<div class="mega-dropdown-inner">
+	
+			<div class="row">
+																																	<div class="mega-sub-1 col-12 col-md">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Account</span></h3>
+																
+<ul class="mega-nav level12">
+<li class="nav-item" data-id="233"><a href="/index.php/pages/login" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Login</span></span></a></li><li class="nav-item" data-id="234"><a href="/index.php/pages/register" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Register</span></span></a></li><li class="nav-item" data-id="236"><a href="/index.php/pages/reset" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Password Reset</span></span></a></li><li class="nav-item" data-id="237"><a href="/index.php/pages/remind" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Username Reminder</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																																							<div class="mega-sub-2 col-12 col-md">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Content</span></h3>
+																
+<ul class="mega-nav level12">
+<li class="nav-item" data-id="253"><a href="/index.php/pages/engineering" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Engineering</span></span></a></li><li class="nav-item" data-id="230"><a href="/index.php/pages/helixql" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Single Article</span></span></a></li><li class="nav-item" data-id="254"><a href="/index.php/index.php/product/authors/author/priya.raman" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Author</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																																							<div class="mega-sub-3 col-12 col-md">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Discover</span></h3>
+																
+<ul class="mega-nav level11">
+<li class="nav-item" data-id="231"><a href="/index.php/pages/tags" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">All Tags</span></span></a></li><li class="nav-item" data-id="232"><a href="/index.php/pages/search" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Search</span></span></a></li><li class="nav-item" data-id="229"><a href="/index.php/pages/landing" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Landing</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																	</div>
+		
+	</div>
+</div>
+</li>
+</ul></div>
+</nav>
+
+      </div>
+    </div>
+
+    <div class="hx-right">
+      <!-- ACM: "Sign in" link + "Start free" CTA pill (admin-editable). Hidden on mobile. -->
+      <div class="hx-right-links">
+        <div id="acm-header-cta-228" class="ja-acm acm-header-cta style-1 custom"><a class="hx-signin" href="/index.php/pages/login">Sign in</a> <a class="hx-btn hx-btn--primary hx-cta-pill" href="/index.php/pages/register">Start free<svg class="hx-cta-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a></div>
+
+      </div>
+
+      <!-- ELEMENT: dark-mode toggle (static button, .kinetic-theme-toggle wired by js/darkmode.js) -->
+      <button type="button" class="kinetic-theme-toggle" aria-label="Toggle dark mode" aria-pressed="false" title="Toggle light / dark">
+  <svg class="hx-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  <svg class="hx-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+
+
+      <!-- ELEMENT: the ONE mobile hamburger — off-canvas trigger (keeps id="triggerButton"). -->
+      <button type="button" class="t4-offcanvas-toggle" aria-label="Open menu" aria-controls="kinetic-drawer" aria-expanded="false">
+  <span class="toggle-bars" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </span>
+</button>
+
+    </div>
+
+  </div>
+</header>
+
+<!-- KINETIC OFF-CANVAS DRAWER (mobile, right-dock). Toggled by .t4-offcanvas-toggle via js/darkmode.js -->
+<div class="kinetic-oc-overlay" hidden></div>
+<aside id="kinetic-drawer" class="kinetic-offcanvas t4-offcanvas" aria-hidden="true" tabindex="-1">
+  <div class="t4-off-canvas-header">
+    <a href="/" class="kinetic-logo" aria-label="Kinetic home">
+      <svg class="kinetic-logo-glyph" width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M8 4 Q16 12 8 20 Q16 28 24 20" stroke="var(--chrome-primary)" stroke-width="2.6" stroke-linecap="round"></path>
+        <path d="M24 12 Q16 20 24 28 Q16 4 8 12" stroke="var(--chrome-primary)" stroke-width="2.6" stroke-linecap="round" opacity="0.5"></path>
+      </svg>
+      <span class="kinetic-logo-text">Kinetic</span>
+    </a>
+    <button type="button" class="close js-offcanvas-close" aria-label="Close menu">&times;</button>
+  </div>
+  <div class="t4-off-canvas-body">
+    <nav class="navbar">
+<ul  class="nav navbar-nav ">
+<li class="nav-item item-213 deeper dropdown parent" data-level=1><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false" data-bs-toggle = "dropdown">
+	<span itemprop="name"><span class="menu-item-title">Home</span></span>
+	</a>
+<ul class="dropdown-menu" data-bs-popper="static"><li class="nav-item item-214 default"><a href="/index.php" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Terminal</span></span></a></li><li class="nav-item item-215"><a href="/index.php/home-menu/home-blueprint" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Blueprint</span></span></a></li><li class="nav-item item-216"><a href="/index.php/home-menu/home-signal" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Signal</span></span></a></li></ul></li><li class="nav-item item-217 active deeper dropdown parent" data-level=1><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false" data-bs-toggle = "dropdown">
+	<span itemprop="name"><span class="menu-item-title">Product</span></span>
+	</a>
+<ul class="dropdown-menu" data-bs-popper="static"><li class="nav-item item-218"><a href="/index.php/product/features" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Features</span></span></a></li><li class="nav-item item-219"><a href="/index.php/product/integrations" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Integrations</span></span></a></li><li class="nav-item item-220"><a href="/index.php/product/changelog" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Changelog</span></span></a></li><li class="nav-item item-221 current active"><a href="/index.php/product/blog" itemprop="url" class="dropdown-item" aria-current="page"><span itemprop="name"><span class="menu-item-title">Blog</span></span></a></li><li class="nav-item item-222"><a href="/index.php/product/faq" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">FAQ</span></span></a></li><li class="nav-item item-250"><a href="/index.php/product/all-categories" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">All Categories</span></span></a></li><li class="nav-item item-251"><a href="/index.php/product/article-archive" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Article Archive</span></span></a></li><li class="nav-item item-252"><a href="/index.php/product/authors" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Our Writers</span></span></a></li></ul></li><li class="nav-item item-223"><a href="/index.php/pricing" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Pricing</span></span></a></li><li class="nav-item item-224 deeper dropdown parent" data-level=1><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false" data-bs-toggle = "dropdown">
+	<span itemprop="name"><span class="menu-item-title">Company</span></span>
+	</a>
+<ul class="dropdown-menu" data-bs-popper="static"><li class="nav-item item-225"><a href="/index.php/company/about" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">About</span></span></a></li><li class="nav-item item-226"><a href="/index.php/company/team" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Team</span></span></a></li><li class="nav-item item-227"><a href="/index.php/company/contact" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Contact</span></span></a></li></ul></li><li class="nav-item item-228 deeper dropdown parent" data-level=1><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false" data-bs-toggle = "dropdown">
+	<span itemprop="name"><span class="menu-item-title">Pages</span></span>
+	</a>
+<ul class="dropdown-menu" data-bs-popper="static"><li class="nav-item item-229"><a href="/index.php/pages/landing" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Landing</span></span></a></li><li class="nav-item item-230"><a href="/index.php/pages/helixql" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Single Article</span></span></a></li><li class="nav-item item-231"><a href="/index.php/pages/tags" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">All Tags</span></span></a></li><li class="nav-item item-232"><a href="/index.php/pages/search" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Search</span></span></a></li><li class="nav-item item-233"><a href="/index.php/pages/login" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Login</span></span></a></li><li class="nav-item item-234"><a href="/index.php/pages/register" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Register</span></span></a></li><li class="nav-item item-236"><a href="/index.php/pages/reset" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Password Reset</span></span></a></li><li class="nav-item item-237"><a href="/index.php/pages/remind" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Username Reminder</span></span></a></li><li class="nav-item item-253"><a href="/index.php/pages/engineering" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Engineering</span></span></a></li><li class="nav-item item-254"><a href="/index.php/index.php/product/authors/author/priya.raman" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Author</span></span></a></li></ul></li></ul></nav>
+    <div class="kinetic-oc-cta">
+      <div id="acm-header-cta-228" class="ja-acm acm-header-cta style-1 custom"><a class="hx-signin" href="/index.php/pages/login">Sign in</a> <a class="hx-btn hx-btn--primary hx-cta-pill" href="/index.php/pages/register">Start free<svg class="hx-cta-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a></div>
+
+    </div>
+  </div>
+</aside>
+<!-- // KINETIC HEADER BLOCK --></div>
+
+
+
+
+<div id="t4-main-body" class="t4-section  t4-main-body"><div id="system-message-container" aria-live="polite"></div>
+<article class="com-content-article item-page hx-article" itemscope itemtype="https://schema.org/Article">
+    <meta itemprop="inLanguage" content="en-GB">
+
+    <header class="hx-article__head hx-grid-bg">
+        <div class="hx-container hx-pad hx-article__head-inner">
+
+                        <nav class="hx-article__breadcrumb" aria-label="JGLOBAL_BREADCRUMB">
+                <a class="hx-bc-home" href="/index.php">Home</a>
+                <span class="hx-bc-sep">/</span>
+                <a class="hx-bc-cat" href="/index.php/product/blog">Field notes from the on-call</a>
+                <span class="hx-bc-sep">/</span>
+                <span class="hx-bc-current">Building an incident timeline a…</span>
+            </nav>
+
+                            <a class="hx-eyebrow hx-article__cat" href="/index.php/product/blog">Field notes from the on-call</a>
+            
+                            <h1 class="hx-h1 hx-article__title" itemprop="headline">Building an incident timeline automatically from telemetry</h1>
+            
+                            <p class="hx-article__sub">The most tedious part of any postmortem is reconstructing what happened when. Your telemetry already knows. The timeline can assemble itself while you focus on why.</p>
+            
+                                    
+                        
+            
+                    </div>
+    </header>
+
+    <div class="hx-section hx-article__bodywrap">
+        <div class="hx-container hx-pad">
+            <div class="hx-prose">
+
+                                    <div class="hx-author">
+                        <span class="hx-author__av" aria-hidden="true">AM</span>
+                        <div class="hx-author__c">
+                            <span class="hx-author__name">Arjun Mehta</span>
+                            <span class="hx-author__meta">12 July 2026 · 2 min read</span>
+                        </div>
+                    </div>
+                
+                
+                
+                                
+                                                    
+                                    <figure class="pull-left item-image">
+	<img src="/images/blog/automatic-incident-timeline.jpg" itemprop="image" alt="Building an incident timeline automatically from telemetry">	</figure>
+                                        
+                    <div class="com-content-article__body article-body" itemprop="articleBody">
+                        The most tedious part of any postmortem is reconstructing what happened when. Your telemetry already knows. The timeline can assemble itself while you focus on why. <p class="hx-lead">Half of every postmortem meeting is spent arguing about the order of events from memory. Meanwhile, the exact order sits in your telemetry, timestamped to the millisecond, waiting to be asked.</p>
+<h2>The timeline is a query, not a memory</h2>
+<p>Deploys, alerts, scaling events, config changes, and error spikes are all timestamped events in systems you already run. An incident timeline is just those events, for the relevant window, sorted. There is no reason to reconstruct it by hand.</p>
+<h2>Assemble the streams</h2>
+<pre><code>union deploys, alerts, scaling_events, config_changes
+| where ts between "2026-07-11 02:00" and "2026-07-11 03:30"
+| project ts, source, actor_role, summary
+| sort ts asc</code></pre>
+<h2>What automation gets right</h2>
+<ul>
+<li><strong>Accuracy</strong> — machine timestamps do not misremember which came first.</li>
+<li><strong>Completeness</strong> — the quiet config change nobody thought to mention is right there.</li>
+<li><strong>Speed</strong> — the timeline is ready before the meeting, so the meeting is about meaning.</li>
+</ul>
+<h2>Leave the "why" to humans</h2>
+<p>Automation should build the timeline, not interpret it. Once the sequence is on the table — deploy at 02:14, error spike at 02:16, alert at 02:19 — the human work of understanding causation gets sharper, because everyone is arguing about the same facts. The machine handles "what happened when"; the room handles "and why."</p>                    </div>
+
+                                                                
+                    
+<nav class="pagenavigation" aria-label="Page Navigation">
+    <span class="pagination ms-0">
+                    <a class="btn btn-sm btn-secondary next" href="/index.php/product/blog/135-detecting-slow-leaks" rel="next">
+            <span class="visually-hidden">
+                Next article: Detecting slow leaks: memory, goroutines, and file handles            </span>
+            <span aria-hidden="true">Next</span> <span class="icon-chevron-right" aria-hidden="true"></span>            </a>
+        </span>
+</nav>
+
+                    
+                                
+                                                                                <footer class="hx-article__foot">
+                            <dl class="article-info text-muted">
+
+	
+		<dt class="article-info-term">
+							Details					</dt>
+
+					<dd class="createdby" itemprop="author" itemscope itemtype="https://schema.org/Person">
+					<span  class="author-img">
+				<a href="/index.php/index.php/product/authors/author/arjun.mehta" title="Arjun Mehta">
+				<img src="http://127.0.0.1:8216//media/t4/author/default.jpg" alt="Arjun Mehta">				</a>
+				</span>
+				By <a href="/index.php/index.php/product/authors/author/arjun.mehta" itemprop="url"><span itemprop="name">Arjun Mehta</span></a>	</dd>
+
+<span style="display: none;" itemprop="publisher" itemtype="http://schema.org/Organization" itemscope>
+			<span itemprop="name">Arjun Mehta</span></span>
+		
+		
+					<dd class="category-name">
+						Category: <a href="/index.php/product/blog" itemprop="genre">Field notes from the on-call</a>	</dd>		
+		
+					<dd class="published">
+	<span class="fa fa-calendar" aria-hidden="true"></span>
+	<time datetime="2026-07-12T09:00:00+00:00" itemprop="datePublished">
+		12 July 2026	</time>
+</dd>
+		
+	
+						<dd class="create">
+	<span class="fa fa-calendar" aria-hidden="true"></span>
+	<time datetime="2026-07-12T09:00:00+00:00" itemprop="dateCreated">
+		12 July 2026	</time>
+</dd>
+		
+		
+					<dd class="hits">
+	<span class="fa fa-eye" aria-hidden="true"></span>
+	<meta itemprop="interactionCount" content="UserPageVisits:10">
+	Hits: 10</dd>
+			</dl>
+                        </footer>
+                                    
+                
+                                            </div>
+        </div>
+    </div>
+
+    <section class="hx-section hx-related">
+    <div class="hx-container hx-pad hx-related__inner">
+        <h2 class="hx-related__title">Related posts</h2>
+        <div class="hx-related__grid">
+                            <a class="hx-related__card" href="/index.php/product/blog/135-detecting-slow-leaks">
+                    <span class="hx-related__tag">FIELD NOTES FROM THE ON-CALL</span>
+                    <span class="hx-related__ti">Detecting slow leaks: memory, goroutines, and file handles</span>
+                    <span class="hx-related__m">08 July 2026 · 2 min read</span>
+                </a>
+                            <a class="hx-related__card" href="/index.php/product/blog/165-what-i-wish-someone-told-me-before-my-first-on-call-shift">
+                    <span class="hx-related__tag">INCIDENT</span>
+                    <span class="hx-related__ti">What I Wish Someone Told Me Before My First On-Call Shift</span>
+                    <span class="hx-related__m">08 July 2026 · 3 min read</span>
+                </a>
+                            <a class="hx-related__card" href="/index.php/product/blog/164-five-minutes-to-mitigate-the-anatomy-of-a-fast-recovery">
+                    <span class="hx-related__tag">INCIDENT</span>
+                    <span class="hx-related__ti">Five Minutes to Mitigate: The Anatomy of a Fast Recovery</span>
+                    <span class="hx-related__m">06 July 2026 · 3 min read</span>
+                </a>
+                    </div>
+    </div>
+</section>
+
+        <div id="acm-cta-235" class="ja-acm acm-cta style-1 cta-card">
+	<div class="hx-section">
+		<div class="hx-container">
+			<div class="hx-cta-inner">
+									<p class="hx-cta-eyebrow">// get started in minutes</p>
+				
+									<h2 class="hx-cta-title">Your next incident is coming. Be ready for it.</h2>
+				
+									<p class="hx-cta-sub">Free for 14 days. No credit card. Pipe your first logs in under five minutes.</p>
+				
+									<div class="hx-cta-actions">
+													<a class="hx-cta-btn hx-cta-btn-primary" href="/index.php/pages/register">
+								Start free<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>							</a>
+						
+													<a class="hx-cta-chip" href="/index.php/pages/register">
+								<span class="hx-cta-chip-sigil">$</span><span class="hx-cta-chip-text">helix init</span>
+							</a>
+						
+											</div>
+							</div>
+		</div>
+	</div>
+</div>
+</article>
+</div>
+
+
+<div id="t4-footer" class="t4-section  t4-footer"><!-- KINETIC FOOTER BLOCK — full-bleed, permanently-dark (--chrome-elevated) -->
+<footer class="kinetic-footer">
+  <div class="hx-pad kinetic-footer-inner">
+
+    <!-- top row: brand + 3 link columns (.pen Cols = 4 columns) -->
+    <div class="hx-foot-cols">
+      <!-- ACM: brand (logo + wordmark + tagline + social tiles) -->
+      <div class="hx-foot-brand">
+        <div id="acm-social-221" class="ja-acm acm-social style-1 size-sm align-left">
+      <a class="hx-brand-lock" href="http://127.0.0.1:8216/" aria-label="Helix">
+              <svg class="hx-brand-glyph" width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M8 4 Q16 12 8 20 Q16 28 24 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path>
+          <path d="M24 12 Q16 20 24 28 Q16 4 8 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" opacity="0.5"></path>
+        </svg>
+                    <span class="hx-brand-word">Helix</span>
+          </a>
+  
+      <p class="hx-social-label">Observability without the overhead. Logs, metrics and traces on one fast timeline.</p>
+  
+      <ul class="hx-social-row">
+              <li class="hx-social-item">
+          <a class="hx-social-tile" href="https://github.com/helix-labs"
+             aria-label="Source"
+             title="Source"
+             target="_blank" rel="noopener noreferrer">
+            <svg class="hx-social-svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" role="img"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></g></svg>
+          </a>
+        </li>
+              <li class="hx-social-item">
+          <a class="hx-social-tile" href="mailto:hello@helixlabs.dev"
+             aria-label="Email"
+             title="Email"
+             target="_blank" rel="noopener noreferrer">
+            <svg class="hx-social-svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" role="img"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/></g></svg>
+          </a>
+        </li>
+              <li class="hx-social-item">
+          <a class="hx-social-tile" href="/index.php?option=com_content&amp;view=category&amp;id=22&amp;format=feed&amp;type=rss"
+             aria-label="RSS feed"
+             title="RSS feed"
+             target="_blank" rel="noopener noreferrer">
+            <svg class="hx-social-svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" role="img"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></g></svg>
+          </a>
+        </li>
+          </ul>
+  </div>
+
+      </div>
+
+      <!-- mod_menu link columns: PRODUCT / DEVELOPERS / COMPANY
+           html5 chrome renders the (editable) module title as the column head -->
+      <div class="hx-foot-col">
+        <div class="moduletable ">
+            <h3 >Product</h3>        <nav class="navbar">
+<ul  class="nav navbar-nav ">
+<li class="nav-item item-238"><a href="/index.php/product/features" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">Features</span></span></a></li><li class="nav-item item-239"><a href="/index.php/pricing" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">Pricing</span></span></a></li><li class="nav-item item-240"><a href="/index.php/product/integrations" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">Integrations</span></span></a></li><li class="nav-item item-241"><a href="/index.php/product/changelog" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">Changelog</span></span></a></li></ul></nav></div>
+
+      </div>
+      <div class="hx-foot-col">
+        <div class="moduletable ">
+            <h3 >Developers</h3>        <nav class="navbar">
+<ul  class="nav navbar-nav ">
+<li class="nav-item item-242 current active"><a href="/index.php/product/blog" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">Blog</span></span></a></li><li class="nav-item item-243"><a href="/index.php/pages/helixql" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">HelixQL</span></span></a></li><li class="nav-item item-244"><a href="/index.php/pages/search" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">Search</span></span></a></li><li class="nav-item item-245"><a href="/index.php/pages/tags" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">All Tags</span></span></a></li></ul></nav></div>
+
+      </div>
+      <div class="hx-foot-col">
+        <div class="moduletable ">
+            <h3 >Company</h3>        <nav class="navbar">
+<ul  class="nav navbar-nav ">
+<li class="nav-item item-246"><a href="/index.php/company/about" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">About</span></span></a></li><li class="nav-item item-247"><a href="/index.php/company/team" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">Team</span></span></a></li><li class="nav-item item-248"><a href="/index.php/product/faq" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">FAQ</span></span></a></li><li class="nav-item item-249"><a href="/index.php/company/contact" itemprop="url" class=" nav-link"><span itemprop="name"><span class="menu-item-title">Contact</span></span></a></li></ul></nav></div>
+
+      </div>
+    </div>
+
+    <!-- ACM: newsletter — full-width band (title/desc left, form right) -->
+    <div class="hx-foot-news-band">
+      	<div class="acym_module " id="acym_module_formAcym18871">
+		<div class="acym_fulldiv" id="acym_fulldiv_formAcym18871" >
+			<form enctype="multipart/form-data"
+				  id="formAcym18871"
+				  name="formAcym18871"
+				  method="POST"
+				  action="/index.php/component/acym/frontusers?tmpl=component"
+				  onsubmit="return submitAcymForm('subscribe','formAcym18871', 'acymSubmitSubForm')">
+				<div class="acym_module_form">
+                    <div class="acym_introtext"><h3 class="hx-news-title">Monthly dispatch</h3><p class="hx-news-desc">Incident retros, query tips and product news. No spam, unsubscribe anytime.</p></div>
+<div class="acym_form">
+    <div class="onefield fieldacy2 acyfield_text" id="field_2"><label  class="cell margin-top-1"><span class="acym__users__creation__fields__title">Email</span><input placeholder="you@company.com" id="email_field_762"  name="user[email]" value="" data-authorized-content="{&quot;0&quot;:&quot;all&quot;,&quot;regex&quot;:&quot;&quot;,&quot;message&quot;:&quot;Incorrect value for the field Email&quot;}" required type="email" class="cell acym__user__edit__email  "></label><div class="acym__field__error__block" data-acym-field-id="2"></div></div></div>
+
+<p class="acysubbuttons">
+	<noscript>
+        Please enable the javascript to submit this form	</noscript>
+	<input type="button"
+		   class="btn btn-primary button subbutton"
+		   value="Subscribe"
+		   name="Submit"
+		   onclick="try{ return submitAcymForm('subscribe','formAcym18871', 'acymSubmitSubForm'); }catch(err){alert('The form could not be submitted '+err);return false;}" />
+    </p>
+				</div>
+
+				<input type="hidden" name="ctrl" value="frontusers" />
+				<input type="hidden" name="task" value="notask" />
+				<input type="hidden" name="option" value="com_acym" />
+
+                
+				<input type="hidden" name="ajax" value="1" />
+				<input type="hidden" name="successmode" value="replacetemp" />
+				<input type="hidden" name="acy_source" value="Footer newsletter" />
+				<input type="hidden" name="hiddenlists" value="1" />
+				<input type="hidden" name="fields" value="name,email" />
+				<input type="hidden" name="acyformname" value="formAcym18871" />
+				<input type="hidden" name="acysubmode" value="mod_acym" />
+				<input type="hidden" name="confirmation_message" value="" />
+
+                			</form>
+		</div>
+	</div>
+
+    </div>
+
+    <!-- ACM: copyright (editable year) + legal links — full-width band -->
+    <div class="hx-foot-bottom">
+      <div id="acm-footerlegal-226" class="ja-acm acm-footerlegal kinetic-legal-band">
+      <span class="hx-copy">© 2026 Helix Labs, Inc. All rights reserved.</span>
+  
+      <ul class="hx-legal">
+              <li><a href="/index.php/privacy-policy">Privacy</a></li>
+              <li><a href="/index.php/terms-of-service">Terms</a></li>
+              <li><a href="#">Status</a></li>
+          </ul>
+  </div>
+
+    </div>
+
+  </div>
+</footer>
+<!-- // KINETIC FOOTER BLOCK --></div><a href='javascript:' id='back-to-top'><i class='fa fa-chevron-up'></i></a>
+      </div>
+    </div>
+  </div>
+  
+</body>
+</html>

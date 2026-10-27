@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "wordpress",
+  "label": "JA Kinetic",
+  "version": "1.0.7",
+  "cms": "7.1.2",
+  "install": {
+    "webroot": {
+      "file": "ja-kinetic-wp7-webroot-1.0.7.tar.gz",
+      "sha256": "58b1d491fa6fa956e1674fe3fd4bac70b5b2b9712231d3f10401cfe2ca07803f"
+    },
+    "database": {
+      "file": "ja-kinetic-wp7-database-1.0.7.sql.gz",
+      "sha256": "7977ff437c056c1bc45a2042a7fac0b077ba3025666bc7a8254f2f98c696ae78"
+    }
+  },
+  "template": "ja-kinetic"
+}

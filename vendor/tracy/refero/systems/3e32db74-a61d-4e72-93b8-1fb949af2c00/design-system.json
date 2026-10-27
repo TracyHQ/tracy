@@ -1,0 +1,364 @@
+{
+  "dos": [
+    "Use the outlined button pattern: 1px #31263b border, 3px radius, white fill, IBM Plex Sans 500 14px #01011b. Never fill a CTA with brand color — the restraint is the brand.",
+    "Pair PP Editorial New 200 italic (78px) with PP Formula SemiExtended 700 (60px) for hero display lines. The serif/sans contrast at extreme weight asymmetry is the signature.",
+    "Apply the three-layer violet-tinted shadow stack to product cards: rgba(49,38,59,0.22) 1px outline + rgba(49,38,59,0.1) 26px close + rgba(49,38,59,0.09) 103px ambient. Never use pure black shadows.",
+    "Use 3px border-radius for buttons, nav items, and links. Use 6px for cards and inputs. Use 9999px for pill badges only.",
+    "Set the page background to #fffcfc (warm near-white), not #ffffff. The cream cast ties the canvas to the violet ink.",
+    "Embed product screenshots as the primary visual content in every section — notebook panels, AI agent threads, data visualizations. Stock photography and abstract renders should not appear.",
+    "Use IBM Plex Mono 400 at 11px for all code cells, with syntax colors in #544692 (keywords), #22863a (strings), #005cc5 (functions), and #89828d (comments)."
+  ],
+  "donts": [
+    "Don't use filled CTA buttons with brand-color backgrounds. The outlined/dark-text pattern is intentional — filling the button breaks the design language.",
+    "Don't use pure black (#000000) for body text or shadows. Use #01011b for text and rgba(49,38,59,*) for shadows. The violet undertone is what makes the system feel in-brand.",
+    "Don't pair the PP Editorial New hero with a standard bold sans. The weight 200 italic at 78px is anti-convention; using 600+ weight on the serif kills the editorial whisper.",
+    "Don't introduce a second serif or a third display font. The system is PP Editorial New (editorial) + PP Formula (display) + IBM Plex Sans (body) + IBM Plex Mono (code) + Cinetype (secondary UI). Adding more fragments the voice.",
+    "Don't use large border-radii (12px+) on cards or buttons. 3px and 6px are the system — bigger radii feel consumer-app, not data-workbench.",
+    "Don't alternate dark/light section bands. The page is one continuous parchment canvas. Section breaks are 80px gaps and hairlines, not color changes.",
+    "Don't apply the viridis chart colors (#472d7b, #21918c, #5ec962, #fde725, etc.) to UI elements. They are content/visualization colors, not interface tokens."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#01011b",
+      "name": "Ink Violet",
+      "role": "Primary text, body copy, heavy borders, data labels — the near-black ink with a violet undertone that makes charts and code blocks feel in-brand even at full contrast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#31263b",
+      "name": "Plum Charcoal",
+      "role": "Heavy borders, icon strokes, secondary text — a warm dark that softens harsh black and gives outlines a violet cast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#43394c",
+      "name": "Storm Mauve",
+      "role": "Nav borders, tertiary text, muted headings — sits between Ink Violet and Plum Charcoal for intermediate contrast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#717a94",
+      "name": "Slate Iris",
+      "role": "Muted body text, icon fills, table borders — cool blue-gray for de-emphasized UI elements",
+      "group": "neutral"
+    },
+    {
+      "hex": "#89828d",
+      "name": "Ash Lavender",
+      "role": "Placeholder text, disabled labels, subtle icon tints",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fffcfc",
+      "name": "Parchment",
+      "role": "Page background, card surfaces, input fills — the warm near-white canvas, never pure #fff",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ecedf2",
+      "name": "Bone Mist",
+      "role": "Subtle dividers, zebra-striped table rows, hairline section separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dbd7da",
+      "name": "Fog Border",
+      "role": "Default 1px border, card outlines, nav separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#473982",
+      "name": "Twilight Plum",
+      "role": "Brand-violet accent for focus rings (4px halo at 15% opacity), inset borders on elevated cards, decorative brand tints",
+      "group": "brand"
+    },
+    {
+      "hex": "#6f63b7",
+      "name": "Amethyst",
+      "role": "Mid-tone violet for chart series, illustration fills, and data visualization highlights",
+      "group": "brand"
+    },
+    {
+      "hex": "#9e91d6",
+      "name": "Wisteria",
+      "role": "Light violet for chart backgrounds, soft brand washes, and paired data fills",
+      "group": "brand"
+    },
+    {
+      "hex": "#544692",
+      "name": "Indigo Plum",
+      "role": "Deep accent violet for dark-mode callouts, gradient endpoints, and badge fills; Gradient start",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, #31263b 0%, #01011b 100%)"
+    }
+  ],
+  "layout": "Max-width 1200px centered, with the nav bar full-bleed and content blocks constrained. The hero is a centered stack (not split): editorial serif headline above bold sans subhead, subhead above CTA pair, hero product card below — all vertically stacked and centered. Below the hero: a full-width logo trust band, then alternating two-column feature blocks (text-left / product-right, then text-right / product-left). Sections are separated by 80px vertical gaps on the continuous parchment canvas — no dark bands, no color alternation. The page is a single scroll with no sidebar; the rhythm is hero → trust → features stacked vertically, each section getting one product screenshot as its visual anchor. Navigation is a flat sticky top bar with center-aligned wordmark, no mega-menu, no sidebar.",
+  "imagery": "Product UI screenshots dominate — notebook panels, AI agent chat threads, and data visualizations are the primary visual content, not stock photography. The embedded charts use a viridis color ramp (deep violet → teal → green → yellow) that is content-specific, not part of the UI palette. Decorative motifs are minimal: a small 4-point starburst in rose (#cd5973) marks the end of the editorial hero headline, and a subtle pink-to-plum gradient (rgb(205,160,165) → rgb(49,38,59) at 45deg) appears as an accent wash. No lifestyle photography, no abstract 3D renders. Customer logos in the trust bar are rendered in their native monochrome — treated as content, not branded into the system. The visual density is high: screenshots contain code, charts, chat threads, and UI chrome simultaneously, reinforcing the 'data workbench' identity.",
+  "similar": [
+    {
+      "why": "Same outlined-button + monochrome dark-on-light approach, compact density, and product-screenshot-as-hero strategy",
+      "business": "Linear"
+    },
+    {
+      "why": "Same near-white canvas with dark text, minimal color, and geometric sans typography for body",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same notebook/data-workbench visual identity with embedded code, charts, and AI panels in product screenshots",
+      "business": "Observable"
+    },
+    {
+      "why": "Same technical/devtools audience with compact layouts, dark text on light canvas, and violet-tinted UI accents",
+      "business": "Retool"
+    },
+    {
+      "why": "Same warm near-white parchment canvas (#fffcfc vs Notion's off-white) with editorial restraint and minimal elevation",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "6px",
+      "pills": "9999px",
+      "inputs": "6px",
+      "buttons": "3px",
+      "navItems": "3px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#fffcfc",
+      "name": "Parchment Canvas",
+      "level": 0,
+      "purpose": "Page background, the warm near-white that everything floats on"
+    },
+    {
+      "hex": "#ecedf2",
+      "name": "Bone Mist Card",
+      "level": 1,
+      "purpose": "Alternate band backgrounds, table row striping, soft section breaks"
+    },
+    {
+      "hex": "#fffcfc",
+      "name": "Plum-Tinted Card",
+      "level": 2,
+      "purpose": "Product screenshot cards with violet inset border (rgba(71,57,130,0.1) 0 0 0 1px inset) and layered dark shadows"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Elevated Product Panel",
+      "level": 3,
+      "purpose": "Notebook/app builder previews with white fill, 6px radius, and the signature three-layer shadow stack (border + 26px close shadow + 103px ambient)"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(49,38,59,0.22) 0px 0px 0px 1px, rgba(49,38,59,0.09) 0px 103px 103px 0px, rgba(49,38,59,0.1) 0px 26px 57px 0px",
+      "element": "Notebook Product Card"
+    },
+    {
+      "style": "rgba(49,38,59,0.22) 0px 0px 0px 1px, rgba(49,38,59,0.1) 0px 26px 57px 0px",
+      "element": "Elevated Card (lighter variant)"
+    },
+    {
+      "style": "rgba(71,57,130,0.1) 0px 0px 0px 1px inset",
+      "element": "Inset Brand Border"
+    },
+    {
+      "style": "rgba(71,57,130,0.15) 0px 0px 0px 4px",
+      "element": "Focus Ring"
+    },
+    {
+      "style": "rgb(255,255,255) 0px 0px 0px 1px inset",
+      "element": "Input Field"
+    }
+  ],
+  "northStar": "alchemy lab on cream parchment — literary serif headline over dense data notebook",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.7
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading",
+      "size": 26,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.65
+    },
+    {
+      "role": "heading-md",
+      "size": 28,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.7
+    },
+    {
+      "role": "heading-lg",
+      "size": 60,
+      "lineHeight": 1.3,
+      "letterSpacing": -1.86
+    },
+    {
+      "role": "display",
+      "size": 78,
+      "lineHeight": 1.3,
+      "letterSpacing": -1.87
+    }
+  ],
+  "components": [
+    {
+      "name": "Outlined CTA Button",
+      "role": "Primary action trigger (e.g. 'Get started for free')",
+      "description": "White fill, 1px border in #31263b (Plum Charcoal), 3px border-radius, 10px vertical / 20px horizontal padding. Text in IBM Plex Sans 500, #01011b (Ink Violet), 14px. No fill on hover — border thickens to 2px or shifts to #01011b. The button's restraint is the point: it never competes with the product screenshot beside it."
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Secondary action (e.g. 'Request a demo')",
+      "description": "No border, no fill. IBM Plex Sans 500 at 14px in #01011b, underline on hover. Sits to the right of the outlined CTA, creating a paired action pattern without visual weight competition."
+    },
+    {
+      "name": "Pill Badge",
+      "role": "Section eyebrow labels (e.g. 'Agentic data notebooks', 'Conversational self-serve')",
+      "description": "Pill shape (9999px radius), 4px 12px padding, 12px IBM Plex Sans 500 in #43394c. No fill — sits directly on the parchment canvas as a quiet typographic marker above section headings."
+    },
+    {
+      "name": "Notebook Product Card",
+      "role": "Hero and mid-page product screenshot containers",
+      "description": "White (#ffffff) fill, 6px border-radius, 1px inset border in rgba(71,57,130,0.1), and the signature three-layer shadow: rgba(49,38,59,0.22) 0 0 0 1px outline + rgba(49,38,59,0.1) 0 26px 57px close drop + rgba(49,38,59,0.09) 0 103px 103px ambient spread. The violet-tinted shadows (not pure black) are what make the panel feel in-brand. 20px internal padding, contains a notebook/app builder UI screenshot."
+    },
+    {
+      "name": "Editorial Hero Block",
+      "role": "Above-the-fold headline and subhead",
+      "description": "Centered stack on parchment canvas. Line 1: PP Editorial New 200 italic at 78px, #01011b, -1.87px tracking. Line 2: PP Formula SemiExtended 700 at 60px, #01011b, -1.86px tracking. Subhead in IBM Plex Sans 400 at 20px, #43394c, max-width ~640px. 48px gap between display lines, 24px to subhead, 32px to CTA row."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Sticky header with primary nav",
+      "description": "Transparent parchment background, 1px bottom border in #dbd7da. Center-aligned HEX wordmark in PP Formula at 24px. Nav links in IBM Plex Sans 500 at 14px, #31263b. Right side: 'Log in' ghost link + outlined 'Get started' button (3px radius, Plum Charcoal border). No background blur, no shadow — the nav is a flat hairline above the canvas."
+    },
+    {
+      "name": "Logo Trust Bar",
+      "role": "Social proof row below the hero",
+      "description": "Two rows of customer logos in monochrome black or near-black, 24px column gap, centered. Small caps label 'TRUSTED BY LEADING DATA COMPANIES' in IBM Plex Sans 600 at 11px, #89828d, letter-spaced +0.08em. Logos are not recolored to brand — they sit in their native grays, treated as content rather than UI."
+    },
+    {
+      "name": "Code Cell Block",
+      "role": "Embedded notebook cells within product cards",
+      "description": "No background fill. IBM Plex Mono 400 at 11px, line-height 1.50. Syntax coloring uses a muted palette: keywords in #544692, strings in #22863a, function names in #005cc5, comments in #89828d. Python comment line '# Start from Q3 rows only' in #22863a. Cell border: none — code floats as a continuation of the notebook UI."
+    },
+    {
+      "name": "AI Agent Chat Panel",
+      "role": "Conversational interface preview in product cards",
+      "description": "White fill, 6px top-left radius, sits flush right inside the notebook card. Header: 'NexaCorp product line performance (Q3)' in IBM Plex Sans 600 at 14px, #01011b. Share / Continue in project link buttons in #717a94. Agent messages in IBM Plex Sans 400 at 13px, #31263b, with a small avatar circle (20px, Plum Charcoal fill) and 'Thought for 11 seconds' timestamp in #89828d. Input field at bottom: 1px border in #dbd7da, 6px radius, IBM Plex Sans 400 placeholder at 13px in #89828d."
+    },
+    {
+      "name": "Data Visualization Panel",
+      "role": "Bar charts and scatter plots embedded in product cards",
+      "description": "Chart titles in IBM Plex Sans 600 at 13px, #01011b. Bar fills use a viridis-style ramp: #472d7b → #21918c → #5ec962 → #fde725. Scatter plots use the same ramp across data points. Axis labels in IBM Plex Sans 400 at 10px, #89828d. No chart background — the chart sits on white inside the notebook card."
+    },
+    {
+      "name": "Two-Column Feature Block",
+      "role": "Text-left / product-right feature sections",
+      "description": "Max-width 1200px, 80px vertical gap between sections. Left column: 40% width, contains a pill eyebrow badge, 60px PP Formula SemiExtended heading, 20px IBM Plex Sans body in #43394c, and a ghost outlined button. Right column: 60% width, contains a Notebook Product Card. Alternates left/right by section."
+    },
+    {
+      "name": "Section Divider",
+      "role": "Visual break between page sections",
+      "description": "1px horizontal hairline in #ecedf2, full-width, no margin collapse. Alternatively, a 80px vertical gap with no rule — the parchment canvas itself acts as the separator. Decorative asterisk/sparkle motif (4-point star) in #cd5973 (rose accent) marks the end of the editorial hero headline."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Hero display headline — ultra-light italic serif floats above the page, an anti-convention whisper-voice where competitors use bold sans. The 200 weight at 78px with -0.024em tracking gives the italic terminals room to breathe. Substitute: Cormorant Garamond Italic 200, or Playfair Display Italic 300 as fallback.",
+      "sizes": "78px",
+      "family": "PP Editorial New",
+      "weight": "200",
+      "lineHeight": "1.30",
+      "substitute": "Cormorant Garamond Italic 200",
+      "letterSpacing": "-1.87px"
+    },
+    {
+      "role": "Section display headings — semi-condensed industrial sans at 60px balances the editorial hero. Tight -0.031em tracking makes the letterforms lock together for a compressed, engineered read.",
+      "sizes": "60px",
+      "family": "PP Formula SemiExtended",
+      "weight": "700",
+      "lineHeight": "1.30",
+      "substitute": "Archivo Narrow 700",
+      "letterSpacing": "-1.86px"
+    },
+    {
+      "role": "Mid-weight display subheadings — condensed 800 weight for tight, headline-grade labels",
+      "sizes": "28px",
+      "family": "PP Formula",
+      "weight": "800",
+      "lineHeight": "1.30",
+      "substitute": "Archivo Black",
+      "letterSpacing": "-0.70px"
+    },
+    {
+      "role": "Primary UI and body — the workhorse. 400 for body, 500/600 for nav and subheadings, 700 for emphasized labels. Tracking tightens with size: -0.70px at 20px, -0.65px at 26px. Letterforms stay technical and neutral so the violet ink color does the brand work.",
+      "sizes": "10px, 12px, 16px, 20px, 24px, 26px",
+      "family": "IBM Plex Sans",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.20–2.33",
+      "substitute": "Inter",
+      "letterSpacing": "-0.0350em at 20px, -0.0250em at 26px"
+    },
+    {
+      "role": "Secondary UI — nav links, button text, badges, inline labels. A geometric companion to Plex Sans, used when slightly more character is needed in controls.",
+      "sizes": "12px, 14px, 16px, 20px, 24px",
+      "family": "Cinetype",
+      "weight": "300, 400, 500, 700",
+      "lineHeight": "1.00–1.57",
+      "substitute": "DM Sans"
+    },
+    {
+      "role": "Code snippets, query cells, technical annotations — confined to 11px in product screenshots and embedded code blocks",
+      "sizes": "11px",
+      "family": "IBM Plex Mono",
+      "weight": "400",
+      "lineHeight": "1.50",
+      "substitute": "JetBrains Mono"
+    },
+    {
+      "role": "Tertiary small text — footers, fine print, logo-grid captions",
+      "sizes": "10px, 12px, 14px",
+      "family": "Lato",
+      "weight": "400, 600, 700",
+      "lineHeight": "1.20–2.20",
+      "substitute": "Source Sans 3",
+      "letterSpacing": "-0.0140em"
+    }
+  ],
+  "description": "Hex treats its marketing site like a research notebook: a warm cream canvas, a near-black violet ink, and a hand-drawn editorial headline floating above crisp sans-serif body copy. The hero pairs PP Editorial New italic at weight 200 with PP Formula's compressed 800-weight — a tension between literary softness and engineered density that recurs throughout. CTAs are intentionally quiet: thin dark outlines and dark text on white, no filled buttons, no drop-shadows that would shout over the product. Violet-tinted borders and shadows (rgba(71,57,130,0.1)) are the only chromatic warmth on the surface, while product screenshots and data visualizations carry the real color — viridis-style purples, teals, greens, and yellows blooming inside the notebook panels. The site reads as compact, technical, and confident: dense info blocks, 3px micro-radii on controls, and generous breathing room only between sections.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Background (canvas): #fffcfc\n- Card surface: #ffffff with #ecedf2 dividers\n- Border (default): #dbd7da\n- Border (heavy/brand): #31263b\n- Text (primary): #01011b\n- Text (secondary/muted): #43394c\n- Accent (brand violet): #473982\n- primary action: #31263b (outlined action border)\n\nExample Component Prompts:\n1. Build a hero section on a #fffcfc canvas. Display headline: PP Editorial New 200 italic at 78px, #01011b, letter-spacing -1.87px, centered. Second line: PP Formula SemiExtended 700 at 60px, #01011b, letter-spacing -1.86px. Subhead: IBM Plex Sans 400 at 20px, #43394c, max-width 640px. CTA row centered: outlined button (1px #31263b border, 3px radius, 10px 20px padding, IBM Plex Sans 500 14px #01011b) reading 'Get started for free', then ghost text link 'Request a demo' in IBM Plex Sans 500 14px #01011b.\n2. Build a notebook product card: white #ffffff fill, 6px radius, 1px inset border in rgba(71,57,130,0.1), 20px padding, and the three-layer shadow (rgba(49,38,59,0.22) 0 0 0 1px, rgba(49,38,59,0.1) 0 26px 57px 0px, rgba(49,38,59,0.09) 0 103px 103px 0px). Inside, embed a code cell with IBM Plex Mono 400 at 11px and a scatter plot using viridis-ramp points (#472d7b → #21918c → #5ec962 → #fde725).\n3. Build a pill eyebrow badge: no fill, 9999px radius, 4px 12px padding, IBM Plex Sans 500 at 12px in #43394c. Place above a 60px PP Formula SemiExtended 700 heading in #01011b.\n4. Build a two-column feature block: left column 40% width with a pill badge, 60px heading, 20px body text in #43394c, and a ghost outlined button. Right column 60% width with a notebook product card. 80px vertical gap to the next section.\n5. Build a top navigation bar: transparent #fffcfc background, 1px bottom border in #dbd7da, 12px vertical padding. Center: HEX wordmark in PP Formula at 24px #01011b. Left: nav links in IBM Plex Sans 500 14px #31263b. Right: 'Log in' ghost link + outlined 'Get started' button (3px radius, #31263b 1px border, IBM Plex Sans 500 14px #01011b)."
+    }
+  ],
+  "elevationPhilosophy": "Shadows are tinted with brand violets (rgba(49,38,59,*) and rgba(71,57,130,*)) rather than pure black, so even elevation reads as on-brand. The signature notebook card uses a three-layer stack — a 1px outline for crispness, a 26px close drop for lift, and a 103px ambient spread for softness — that creates a 'floating paper' effect on the parchment canvas. Flat nav, no drop-shadows on buttons, and a deliberate absence of elevation on interactive controls keep the visual hierarchy driven by the product screenshots, not chrome."
+}

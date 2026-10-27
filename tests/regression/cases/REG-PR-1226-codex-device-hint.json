@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1226-codex-device-hint",
+  "kind": "fix",
+  "title": "A ChatGPT Codex device code says ChatGPT accepts it only with Device code sign-in on, linking ChatGPT Settings › Security; other vendors' codes carry no such line",
+  "pr": 1226,
+  "area": "settings/ai-accounts",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-model-plan accounts-pane tests (node:test, jsdom page, fake /api/seat-plan doors): pick ChatGPT Codex, press Connect now with a device answer, read the panel; then the same with GitHub Copilot."
+  ],
+  "expect": [
+    "The Codex device panel holds [data-hint='device-security'] reading 'ChatGPT accepts the code only when Device code sign-in is on in ChatGPT Settings › Security.'",
+    "Its link reads 'ChatGPT Settings › Security', href https://chatgpt.com/#settings/Security, target _blank, rel 'noopener noreferrer'; on the web a press follows the anchor itself into a new tab (no popup), in the desktop app it opens through openExternal (since #1227).",
+    "The GitHub Copilot device panel has no [data-hint='device-security']."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-model-plan/test/accounts-pane.test.mjs"
+    ],
+    "tests": [
+      "a ChatGPT Codex code says ChatGPT takes it only with Device code sign-in on, linking ChatGPT's Security settings",
+      "a GitHub Copilot code carries no such hint"
+    ],
+    "timeout_s": 180
+  },
+  "evidence": "dev cowork.tracy.site 12/10/2026: OpenAI's consent page refused the first try with 'Enable device code sign-in for Codex, Excel, PowerPoint, and Word in ChatGPT Security Settings' (a per-account switch, off by default); the panel said nothing. Screens: tasks/evidence/device-poll-transient/codex-device-hint-{light,dark}.png",
+  "fence": "the per-vendor note map in AccountsPane.tsx (DEVICE_NOTES) draws the note only for the vendor it names",
+  "selectors": {
+    "panel": ".tv-ob-connect[data-connect='device']",
+    "hint": "[data-hint='device-security']",
+    "link": "[data-hint='device-security'] a"
+  }
+}

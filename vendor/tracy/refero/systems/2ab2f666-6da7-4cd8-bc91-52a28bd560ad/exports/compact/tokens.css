@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-olive-ink: #393c2a;
+  --color-sage-type: #737955;
+  --color-linen: #efe6d9;
+  --color-sienna: #d6b292;
+  --color-driftwood: #afa199;
+  --color-riverstone: #7b8785;
+
+  /* Typography — Font Families */
+  --font-ranade: 'Ranade', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-switzer: 'Switzer', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

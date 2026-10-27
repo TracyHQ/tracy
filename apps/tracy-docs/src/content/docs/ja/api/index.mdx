@@ -1,0 +1,71 @@
+---
+title: Tracy API
+description: Tracy がホストするウェブサイト（Joomla、WordPress、EmDash）を、そのサイト上のご自身のシートに紐づいたキーを使って HTTPS 経由で読み取り、変更します。
+template: splash
+hero:
+  tagline: Tracy がホストするすべてのウェブサイトを扱う 1 つの REST API。シートに紐づいたキー、すでにご存じのリソース（ページ、コンテンツ、レコード）、そしてすべての書き込みは取り消し可能です。
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: クイックスタート
+      link: /ja/quickstart/
+      icon: right-arrow
+    - text: API リファレンス
+      link: /ja/reference/
+      icon: open-book
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+## 5 分でできること
+
+1. シートを持つサイトの **Settings → API keys** で API キーを作成します。
+2. `GET /v1/me` — キーが誰として、どのサイト上で、どのスコープで動作するかを確認します。
+3. `GET /v1/sites/{key}/pages` — サイトの公開済みページとそのコンテンツ id を一覧します。
+4. `PATCH /v1/sites/{key}/records/{kind}/{id}` — タイトルを 1 つ変更し、`apply_id` の下に記録します。
+5. `POST /v1/sites/{key}/applies/{apply_id}/revert` — それを元に戻します。
+
+[クイックスタート](/ja/quickstart/)では、まさにこの 5 つの呼び出しを `curl` で順に実行します。
+
+<CardGrid>
+  <Card title="シートに紐づいたキー" icon="seti:lock">
+    キーは、それを作成した人として、1 つのサイト上で、その人のロールが付与するツールセットの範囲内で動作します。シートを取り消すと、そのシートに属するすべてのキーも取り消されます。[認証](/ja/authentication/)を参照してください。
+  </Card>
+  <Card title="3 つの CMS に 1 つの形" icon="puzzle">
+    ページ、コンテンツ、ブロック、フィールドは Joomla、WordPress、EmDash のいずれでも同じ形で読み取れます。レコードは CMS 自身の行であり、必要なときに使います。[コンセプト](/ja/concepts/)を参照してください。
+  </Card>
+  <Card title="すべての書き込みは取り消し可能" icon="rocket">
+    各変更は `apply_id` の下に記録されます。`POST …/applies/{id}/revert` は、その下に書き込まれたすべてを新しいものから順に元に戻します。
+  </Card>
+  <Card title="バージョン管理と変更履歴" icon="document">
+    API のバージョンはパス中の `v1` です。追加は日付付きの 1 行として[変更履歴](/ja/changelog/)に記載され、意味の変更は新しいバージョンになります。
+  </Card>
+</CardGrid>
+
+## システムの構成
+
+```text
+Bearer trk_…  (you, your agent, a partner's integration)      cookie tracy_sess (a browser on cowork.*)
+      |  /v1/*  — Bearer only, no cookie                              |  /api/sites/{key}/apply, /api/me/keys
+  api.tracy.ai ── API host ── allowlist ──┐                           |
+                 └─ /docs/api/<document>   (this site: docs.tracy.ai) |
+                                          ▼                           ▼
+                        applyDoor(siteKey, action, params, principal)   ← ONE path: seat · effective permissions ∩ scopes · lease · audit
+                                          |
+                  Claude Cowork plugin (Joomla, WordPress) · Tracy reader (EmDash)
+```
+
+- **`api.tracy.ai`** は `/v1/*` と、`/docs/api/` 以下の機械可読な 3 つのドキュメント（OpenAPI、Claude Cowork プラグイン、llms.txt）に応答します。このドキュメントとインタラクティブなリファレンスは **`docs.tracy.ai`** にあります。それ以外は何もありません。サインイン、ワークスペース、Ops ツールは Tracy 自身のホスト名上にあり、どちらのホストでも `404 NOT_ON_THIS_HOST` を返します。
+- **1 つのドア。** すべての `/v1` ルートは Apply ドアのアクションの薄いエイリアスであり、Tracy エージェントが通るのと同じ経路です。あなたが誰か（キーの所有者）、シートが何を許可するか、サイトの書き込みリース、そして監査ログ。
+- **サイトが応答します。** Joomla と WordPress では、呼び出しはサイトにインストールされた Claude Cowork プラグインに届きます。EmDash では Tracy 自身のリーダーに届きます。サイトが拒否したものは、文書化された[エラー](/ja/reference/errors/)として返されます。
+
+## 各リソースの場所
+
+| | |
+|---|---|
+| ベース URL | `https://api.tracy.ai/v1`（開発環境：`https://api.tracy.site/v1`） |
+| OpenAPI 3.1 | [`/api/openapi.json`](/api/openapi.json) |
+| インタラクティブリファレンス | [`/api/reference/`](/api/reference/) |
+| 言語モデル向け | [`/api/llms.txt`](/api/llms.txt) |
+| ヘルスチェック | `GET /health` → `{ "ok": true }` |

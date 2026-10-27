@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-charcoal-ink: #303030;
+  --color-paper-white: #ffffff;
+  --color-concrete-gray: #dbdbdb;
+  --color-fog-mist: #f2f2f2;
+  --color-ash-border: #ededed;
+  --color-smoke: #c2c2c2;
+  --color-graphite: #808080;
+  --color-pure-black: #000000;
+  --color-sand-wash: #e2ceb8;
+  --color-slate-veil: #6a728e;
+  --color-highlight-yellow: #f9f5a2;
+  --color-highlight-cyan: #c7f6ff;
+
+  /* Typography — Font Families */
+  --font-ibm-plex-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-helvetica: 'Helvetica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-cosmic-violet: #1b2978;
+  --color-twilight-indigo: #19366c;
+  --color-aurora-teal: #75cdd6;
+  --color-cyan-glow: #84cdee;
+  --gradient-cyan-glow: radial-gradient(at 5.62% 33.12%, rgb(255, 255, 255) 30%, rgb(132, 205, 238) 100%);
+  --color-cosmic-violet-wash: #3a3cb5;
+  --gradient-cosmic-violet-wash: linear-gradient(174deg, rgb(42, 57, 142) 5%, rgb(85, 102, 197) 100%);
+  --color-polar-white: #ffffff;
+  --color-obsidian: #000000;
+  --color-silver-slate: #7488a5;
+  --color-cerulean-mist: #579dc0;
+  --color-storm-shadow: #466187;
+
+  /* Typography — Font Families */
+  --font-twklausanne-250: 'TWKLausanne-250', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twklausanne-200: 'TWKLausanne-200', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neosanspro-medium: 'NeoSansPro-Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

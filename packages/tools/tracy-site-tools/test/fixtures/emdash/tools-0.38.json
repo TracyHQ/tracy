@@ -1,0 +1,366 @@
+[
+  {
+    "name": "content_list",
+    "readOnlyHint": true,
+    "destructiveHint": null,
+    "args": ["collection", "status", "limit", "cursor", "orderBy", "order", "locale", "markdown"]
+  },
+  {
+    "name": "content_get",
+    "readOnlyHint": true,
+    "destructiveHint": null,
+    "args": ["collection", "id", "locale", "markdown"]
+  },
+  {
+    "name": "content_create",
+    "readOnlyHint": null,
+    "destructiveHint": false,
+    "args": ["collection", "data", "slug", "status", "locale", "translationOf", "bylines", "taxonomies"]
+  },
+  {
+    "name": "content_update",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": [
+      "collection",
+      "id",
+      "locale",
+      "data",
+      "slug",
+      "status",
+      "seo",
+      "bylines",
+      "taxonomies",
+      "publishedAt",
+      "_rev"
+    ]
+  },
+  { "name": "content_delete", "readOnlyHint": null, "destructiveHint": true, "args": ["collection", "id"] },
+  { "name": "content_restore", "readOnlyHint": null, "destructiveHint": null, "args": ["collection", "id"] },
+  {
+    "name": "content_permanent_delete",
+    "readOnlyHint": null,
+    "destructiveHint": true,
+    "args": ["collection", "id"]
+  },
+  {
+    "name": "content_publish",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["collection", "id", "_rev", "publishedAt"]
+  },
+  {
+    "name": "content_unpublish",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["collection", "id", "_rev"]
+  },
+  {
+    "name": "content_schedule",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["collection", "id", "scheduledAt"]
+  },
+  {
+    "name": "content_unschedule",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["collection", "id"]
+  },
+  { "name": "content_compare", "readOnlyHint": true, "destructiveHint": null, "args": ["collection", "id"] },
+  {
+    "name": "content_discard_draft",
+    "readOnlyHint": null,
+    "destructiveHint": true,
+    "args": ["collection", "id", "_rev"]
+  },
+  {
+    "name": "content_list_trashed",
+    "readOnlyHint": true,
+    "destructiveHint": null,
+    "args": ["collection", "limit", "cursor"]
+  },
+  {
+    "name": "content_duplicate",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["collection", "id"]
+  },
+  {
+    "name": "content_translations",
+    "readOnlyHint": true,
+    "destructiveHint": null,
+    "args": ["collection", "id"]
+  },
+  {
+    "name": "byline_list",
+    "readOnlyHint": true,
+    "destructiveHint": null,
+    "args": ["search", "isGuest", "userId", "locale", "limit", "cursor"]
+  },
+  { "name": "byline_get", "readOnlyHint": true, "destructiveHint": null, "args": ["id"] },
+  {
+    "name": "byline_create",
+    "readOnlyHint": null,
+    "destructiveHint": false,
+    "args": [
+      "slug",
+      "displayName",
+      "bio",
+      "avatarMediaId",
+      "websiteUrl",
+      "userId",
+      "isGuest",
+      "locale",
+      "translationOf",
+      "customFields"
+    ]
+  },
+  {
+    "name": "byline_update",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": [
+      "id",
+      "slug",
+      "displayName",
+      "bio",
+      "avatarMediaId",
+      "websiteUrl",
+      "userId",
+      "isGuest",
+      "customFields"
+    ]
+  },
+  { "name": "byline_delete", "readOnlyHint": null, "destructiveHint": true, "args": ["id"] },
+  { "name": "byline_translations", "readOnlyHint": true, "destructiveHint": null, "args": ["id"] },
+  { "name": "schema_list_collections", "readOnlyHint": true, "destructiveHint": null, "args": [] },
+  { "name": "schema_get_collection", "readOnlyHint": true, "destructiveHint": null, "args": ["slug"] },
+  {
+    "name": "schema_create_collection",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": [
+      "slug",
+      "label",
+      "labelSingular",
+      "description",
+      "icon",
+      "supports",
+      "routable",
+      "editLocking",
+      "group"
+    ]
+  },
+  {
+    "name": "schema_delete_collection",
+    "readOnlyHint": null,
+    "destructiveHint": true,
+    "args": ["slug", "force"]
+  },
+  {
+    "name": "schema_update_collection",
+    "readOnlyHint": null,
+    "destructiveHint": false,
+    "args": [
+      "slug",
+      "label",
+      "labelSingular",
+      "description",
+      "icon",
+      "supports",
+      "urlPattern",
+      "routable",
+      "hasSeo",
+      "group",
+      "commentsEnabled",
+      "commentsModeration",
+      "commentsClosedAfterDays",
+      "commentsAutoApproveUsers",
+      "editLocking",
+      "titleField",
+      "dateField"
+    ]
+  },
+  {
+    "name": "schema_create_field",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": [
+      "collection",
+      "slug",
+      "label",
+      "type",
+      "required",
+      "unique",
+      "defaultValue",
+      "validation",
+      "options",
+      "searchable",
+      "indexed",
+      "translatable"
+    ]
+  },
+  {
+    "name": "schema_delete_field",
+    "readOnlyHint": null,
+    "destructiveHint": true,
+    "args": ["collection", "fieldSlug"]
+  },
+  {
+    "name": "schema_update_field",
+    "readOnlyHint": null,
+    "destructiveHint": false,
+    "args": [
+      "collection",
+      "fieldSlug",
+      "label",
+      "type",
+      "required",
+      "unique",
+      "defaultValue",
+      "validation",
+      "widget",
+      "options",
+      "sortOrder",
+      "searchable",
+      "translatable",
+      "indexed"
+    ]
+  },
+  {
+    "name": "media_list",
+    "readOnlyHint": true,
+    "destructiveHint": null,
+    "args": ["mimeType", "limit", "cursor"]
+  },
+  {
+    "name": "media_create",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": [
+      "filename",
+      "mimeType",
+      "storageKey",
+      "size",
+      "width",
+      "height",
+      "contentHash",
+      "blurhash",
+      "dominantColor"
+    ]
+  },
+  {
+    "name": "media_upload",
+    "readOnlyHint": null,
+    "destructiveHint": false,
+    "args": ["filename", "base64", "url", "contentType", "alt"]
+  },
+  { "name": "media_get", "readOnlyHint": true, "destructiveHint": null, "args": ["id"] },
+  {
+    "name": "media_update",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["id", "alt", "caption", "width", "height"]
+  },
+  { "name": "media_delete", "readOnlyHint": null, "destructiveHint": true, "args": ["id"] },
+  {
+    "name": "media_usage_repair",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["scope", "collection"]
+  },
+  {
+    "name": "search",
+    "readOnlyHint": true,
+    "destructiveHint": null,
+    "args": ["query", "collections", "locale", "limit", "cursor"]
+  },
+  { "name": "taxonomy_list", "readOnlyHint": true, "destructiveHint": null, "args": ["locale"] },
+  { "name": "taxonomy_get", "readOnlyHint": true, "destructiveHint": null, "args": ["name", "locale"] },
+  {
+    "name": "taxonomy_create",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["name", "label", "labelSingular", "hierarchical", "collections", "locale", "translationOf"]
+  },
+  {
+    "name": "taxonomy_update",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["name", "label", "labelSingular", "hierarchical", "collections", "locale"]
+  },
+  { "name": "taxonomy_delete", "readOnlyHint": null, "destructiveHint": true, "args": ["name"] },
+  {
+    "name": "taxonomy_list_terms",
+    "readOnlyHint": true,
+    "destructiveHint": null,
+    "args": ["taxonomy", "limit", "cursor", "locale"]
+  },
+  {
+    "name": "taxonomy_create_term",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["taxonomy", "slug", "label", "parentId", "description", "locale", "translationOf"]
+  },
+  {
+    "name": "taxonomy_update_term",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["taxonomy", "termSlug", "slug", "label", "parentId", "description"]
+  },
+  {
+    "name": "taxonomy_delete_term",
+    "readOnlyHint": null,
+    "destructiveHint": true,
+    "args": ["taxonomy", "termSlug"]
+  },
+  { "name": "taxonomy_term_translations", "readOnlyHint": true, "destructiveHint": null, "args": ["id"] },
+  { "name": "menu_list", "readOnlyHint": true, "destructiveHint": null, "args": ["locale"] },
+  { "name": "menu_get", "readOnlyHint": true, "destructiveHint": null, "args": ["name", "locale"] },
+  { "name": "menu_translations", "readOnlyHint": true, "destructiveHint": null, "args": ["id"] },
+  {
+    "name": "menu_create",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["name", "label", "locale", "translationOf"]
+  },
+  {
+    "name": "menu_update",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["name", "label", "locale"]
+  },
+  { "name": "menu_delete", "readOnlyHint": null, "destructiveHint": true, "args": ["name", "locale"] },
+  {
+    "name": "menu_set_items",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": ["name", "locale", "items"]
+  },
+  {
+    "name": "revision_list",
+    "readOnlyHint": true,
+    "destructiveHint": null,
+    "args": ["collection", "id", "limit"]
+  },
+  { "name": "revision_restore", "readOnlyHint": null, "destructiveHint": null, "args": ["revisionId"] },
+  { "name": "settings_get", "readOnlyHint": true, "destructiveHint": null, "args": [] },
+  {
+    "name": "settings_update",
+    "readOnlyHint": null,
+    "destructiveHint": null,
+    "args": [
+      "title",
+      "tagline",
+      "logo",
+      "favicon",
+      "url",
+      "postsPerPage",
+      "dateFormat",
+      "timezone",
+      "social",
+      "seo"
+    ]
+  }
+]

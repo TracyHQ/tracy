@@ -1,0 +1,332 @@
+{
+  "dos": [
+    "Use #ff4d00 exclusively for functional emphasis: CTA fills, active states, highlight words in headlines, badge dots, and the fire icon. Never use it for large decorative areas.",
+    "Set body text at 14px Suisse weight 400 and reserve weight 500 for headings and interactive elements — the 450 weight is not used in interface copy.",
+    "Apply 999px radius to all buttons, tags, and interactive pills; use 8px for inputs and code windows; use 16px for cards. Never mix these tiers.",
+    "Use #e5e7eb 1px borders as the primary visual structure — they do the work that shadows would in other systems.",
+    "Pair Suisse for prose with Geist Mono for any technical content (code, URLs, API names, file paths) to create a clear semantic split between documentation and copy.",
+    "Tighten letter-spacing on display sizes (-0.005em at 40-52px, -0.01em at 60px) and open it on small sizes (+0.01-0.02em below 14px) — do not apply uniform tracking.",
+    "Keep shadow stacks at 2-3% black alpha; depth comes from layering and ambient rings (rgb(249,249,249) 0px 0px 0px 6px), never from heavy drop shadows."
+  ],
+  "donts": [
+    "Don't introduce any chromatic color other than #ff4d00. Greens, blues, and purples are absent from the palette by design.",
+    "Don't use filled colored backgrounds for large surface areas. Orange belongs on small interactive elements, not on section backgrounds or hero washes.",
+    "Don't use sharp corners (0-4px radius) on buttons or tags. The pill shape is a core identity signal.",
+    "Don't apply shadows with dark alpha above 5%. The system is deliberately flat — aggressive shadows break the blueprint feel.",
+    "Don't use the 450 weight in headings. Headings are weight 500; the intermediate weight is only for body emphasis in long-form prose.",
+    "Don't use color to convey hierarchy in body text. Hierarchy comes from weight (400 vs 500), size, and the Slate→Ink gray gradient (#727272→#262626).",
+    "Don't place text directly on the dot/grid background without a card or surface layer — the gridlines are structural, not a backdrop for copy."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ff4d00",
+      "name": "Ember Orange",
+      "role": "Primary action background, accent text, highlight words in headlines, fire icon, active tab underline, badge dots, link strokes — the system's only chromatic signal",
+      "group": "brand"
+    },
+    {
+      "hex": "#fcddcc",
+      "name": "Ember Glow (light)",
+      "role": "Soft orange-tinted shadow halos behind orange buttons and badges, giving them a warm bloom without raising elevation",
+      "group": "brand"
+    },
+    {
+      "hex": "#febec2",
+      "name": "Ember Wash (deep)",
+      "role": "Secondary warm-tinted shadow wash, used for outer glow rings on highlighted cards and code windows",
+      "group": "brand"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Gridline",
+      "role": "Dominant hairline border, card outlines, input strokes, code window dividers, grid background lines — the structural skeleton of every screen",
+      "group": "neutral"
+    },
+    {
+      "hex": "#262626",
+      "name": "Ink",
+      "role": "Primary text, heading fills, icon strokes, button text on light surfaces, code text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f9f9f9",
+      "name": "Vellum",
+      "role": "Page and card background, the softest surface in the stack; inset shadow fields use a vellum-tinted ring to create depth without darkening",
+      "group": "neutral"
+    },
+    {
+      "hex": "#727272",
+      "name": "Slate",
+      "role": "Secondary text, muted body copy, placeholder labels, disabled-state copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#616161",
+      "name": "Graphite",
+      "role": "Link text in body copy, supporting paragraphs, slightly lighter than Ink for inline emphasis",
+      "group": "neutral"
+    },
+    {
+      "hex": "#949494",
+      "name": "Ash",
+      "role": "Tertiary text, helper text, subtle icon strokes, caption-tier metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c7c7c7",
+      "name": "Stone",
+      "role": "Placeholder text in inputs and code blocks, very light body text where contrast is deliberately reduced",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b5b5b5",
+      "name": "Mist",
+      "role": "Decorative strokes, faint dividers, background-pattern dots and crosses",
+      "group": "neutral"
+    },
+    {
+      "hex": "#838383",
+      "name": "Pebble",
+      "role": "Muted button text on neutral surfaces, subtle UI labels",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered container, but hero and decorative bands extend full-bleed. Navigation is a sticky top bar with center-aligned product links. The hero is a centered stack: announcement banner → nav → badge → oversized display headline (52-60px) with one orange highlight phrase → 2-line subhead at 16px → URL input with action chips. Below the hero, the page alternates between: (1) a 3-column feature card grid with equal-width cards separated by #e5e7eb borders; (2) a full-bleed code-window section showing a 2-column split (code left, output right) with a language tab switcher floating above; (3) a logo cloud in a single horizontal row of 5-6 equal cells; (4) a dot-map section header with a large centered display heading below. Section gaps are generous (80-120px). The grid is always 3-column at desktop for feature cards, and the overall rhythm is vertical-stack with centered content rather than asymmetric or zig-zag.",
+  "imagery": "The visual language is nearly entirely text and UI — no photography, no illustration, no 3D. The only graphical elements are: (1) a subtle dot/grid pattern that tiles the hero background in #e5e7eb, reading as engineering graph paper; (2) a dotted world-map silhouette (#e5e7eb dots on white) behind section headers; (3) the fire icon logo in solid #ff4d00; (4) stroke-based orange icons inside feature cards (search/scraping/AI glyphs). The code window UI itself functions as a visual element — the embedded Python/Node.js code block is rendered as a realistic editor with traffic-light dots, line numbers, and syntax highlighting, making the product's technical capability the primary visual proof. All imagery is monochrome or single-color; no gradients, no multicolor illustrations, no photographic content anywhere.",
+  "similar": [
+    {
+      "why": "Same monochrome light surface with a single black-accented UI, Suisse-adjacent grotesque typography, and pill-shaped controls; differs in using black instead of orange for emphasis",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same minimal light-mode workspace with hairline #e5e7eb borders doing structural work and flat components; differs in tighter density and purple accent",
+      "business": "Linear"
+    },
+    {
+      "why": "Same developer-first aesthetic with monospace code windows, clean grotesque type, and a single warm accent color; differs in more compact information density",
+      "business": "Modal"
+    },
+    {
+      "why": "Same off-white canvas with hairline grid lines, warm single-color accent (Resend uses a similar warm tone), and embedded code-as-hero pattern",
+      "business": "Resend"
+    },
+    {
+      "why": "Same light developer-tooling language with pill buttons, generous section gaps, and a single chromatic accent against near-white surfaces",
+      "business": "Render"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "999px",
+      "cards": "16px",
+      "icons": "999px",
+      "inputs": "8px",
+      "buttons": "999px",
+      "code-windows": "8px"
+    },
+    "elementGap": "12px",
+    "sectionGap": "96px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Base page background, cleanest surface"
+    },
+    {
+      "hex": "#f9f9f9",
+      "name": "Vellum",
+      "level": 1,
+      "purpose": "Card surfaces, code windows, subtle elevation from canvas"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Gridline",
+      "level": 2,
+      "purpose": "Hairline borders, grid pattern lines, dividers"
+    },
+    {
+      "hex": "#fcddcc",
+      "name": "Shadow Tint",
+      "level": 3,
+      "purpose": "Warm ambient shadow ring around orange elements"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.02) 0px 40px 48px -20px, rgba(0, 0, 0, 0.03) 0px 32px 32px -20px, rgba(0, 0, 0, 0.03) 0px 16px 24px -12px, rgba(0, 0, 0, 0.03) 0px 0px 0px 1px",
+      "element": "Elevated marketing card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.03) 0px 24px 32px -12px, rgba(0, 0, 0, 0.03) 0px 16px 24px -8px, rgba(0, 0, 0, 0.03) 0px 8px 16px -4px, rgba(0, 0, 0, 0.03) 0px 0px 0px 1px",
+      "element": "Medium card lift"
+    },
+    {
+      "style": "0 0 0 6px #fcddcc",
+      "element": "Orange button glow"
+    },
+    {
+      "style": "rgb(249, 249, 249) 0px 0px 0px 6px",
+      "element": "Ambient vellum ring"
+    }
+  ],
+  "northStar": "Technical blueprint on warm vellum. A developer tool that swaps cold gray for a single burning orange signal, sitting on near-white surfaces stitched together by hairline grid lines.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.2
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.33,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading",
+      "size": 24,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-lg",
+      "size": 40,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "display",
+      "size": 52,
+      "lineHeight": 1.07,
+      "letterSpacing": -0.26
+    },
+    {
+      "role": "display-xl",
+      "size": 60,
+      "lineHeight": 1,
+      "letterSpacing": -0.6
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button (Pill)",
+      "role": "Filled orange pill button for highest-priority actions (Sign up, Get started)",
+      "description": "Background #ff4d00, text #ffffff, font Suisse 14px weight 500, letter-spacing +0.01em. Padding 10px 18px. Radius 999px. Wrapped in a soft outer glow: box-shadow using #fcddcc at 0px 0px 0px 6px, creating a warm bloom without a hard drop shadow. No border."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Header action button for secondary navigation (GitHub star count, Sign in)",
+      "description": "Transparent background, text #262626, font Suisse 14px weight 500. Padding 8px 12px. Radius 999px. Hover: light Vellum (#f9f9f9) background fill. No border by default."
+    },
+    {
+      "name": "Code Tab Pill",
+      "role": "Language selector in the embedded code block (Python, Node.js, cURL, CLI)",
+      "description": "Background transparent, text #727272, font Geist Mono 13px weight 500. Padding 6px 12px. Radius 999px. Active state: background #262626, text #ffffff. Inactive tabs separated by 2px gap."
+    },
+    {
+      "name": "Search/Scrape Input Bar",
+      "role": "Hero interaction: URL input with action buttons",
+      "description": "Container: white #ffffff background, border 1px #e5e7eb, radius 999px, padding 8px 8px 8px 20px. URL input: font Suisse 14px, placeholder #c7c7c7, no border. Inline action chips (Search, Scrape, Map, Crawl): Geist Mono 13px, text #262626, each in its own pill with #f9f9f9 background and radius 999px. Trailing submit button: #ff4d00 background, white text, radius 999px, 36px square, containing a right-arrow icon. Overall shadow: faint vellum ring (rgb(249,249,249) 0px 0px 0px 6px) for depth."
+    },
+    {
+      "name": "Feature Card (Centered Icon)",
+      "role": "Three-column feature card (Search, Scrape, Interact)",
+      "description": "Background #f9f9f9, border 1px #e5e7eb, radius 16px, padding 32px 24px. Centered orange icon (#ff4d00, stroke-based) at 24px size inside a 40px circle. Title: Suisse 16px weight 500, #262626, centered. Description: Suisse 14px weight 400, #727272, centered. Three cards in a row separated by 24px gap."
+    },
+    {
+      "name": "Code Window",
+      "role": "Embedded code editor showing API usage example",
+      "description": "Background #f9f9f9, border 1px #e5e7eb, radius 8px. Header bar: 40px tall, contains 3 traffic-light dots (6px, #e5e7eb) left-aligned, Geist Mono 12px filename center, copy-code button right-aligned with #f9f9f9 background and #262626 text. Body: Geist Mono 13px weight 400, line-height 1.57, padding 20px. Line numbers: Geist Mono 12px, #b5b5b5, right-aligned. Syntax: #262626 default, #ff4d00 for keywords/strings, #616161 for comments. Outer shadow: rgb(253,253,253) 0px 0px 0px 8px for ambient depth."
+    },
+    {
+      "name": "Announcement Banner",
+      "role": "Top-of-page promotional bar (orange background)",
+      "description": "Full-width, background #ff4d00, text #ffffff, font Suisse 14px weight 500, centered. Padding 10px 16px. Contains inline link with underline. No border or radius. Appears flush above the nav."
+    },
+    {
+      "name": "Logo Cloud Card",
+      "role": "Horizontal row of partner/company logos",
+      "description": "Each logo sits in a #f9f9f9 card with 1px #e5e7eb border, radius 8px, padding 24px. Logos rendered in #262626 monochrome. Cards are full-height and equal-width across the row, separated by 1px borders that form a continuous grid effect. Left side has a 2-line label in Suisse 14px (#262626 with #ff4d00 for the number)."
+    },
+    {
+      "name": "Section Header (Numbered)",
+      "role": "Section divider with index and label (e.g. \"01 / MAIN FEATURES\")",
+      "description": "Layout: orange 4px dot + Geist Mono 12px #727272 index + \"/\" separator + uppercase Geist Mono 12px #727272 label. Left-aligned with a 2px orange vertical line. Followed by large display heading (Suisse 40-52px, #262626, weight 500) with optional orange highlight words."
+    },
+    {
+      "name": "Pill Badge (Tag)",
+      "role": "Small status or feature tags (e.g. \"NEW\")",
+      "description": "Background #ff4d00, text #ffffff, font Suisse 12px weight 500, letter-spacing +0.01em. Padding 2px 8px. Radius 999px. No border."
+    },
+    {
+      "name": "Action Card Button (Scraping Selector)",
+      "role": "Inline action chip within the hero input (Search/Scrape/Map/Crawl)",
+      "description": "Background #f9f9f9, text #262626, font Geist Mono 13px weight 500. Padding 4px 10px. Radius 999px. Small left icon (12px) in #727272. Gap between chips: 4px."
+    },
+    {
+      "name": "Elevated Card (Marketing)",
+      "role": "Prominent content card with multi-layer shadow stack",
+      "description": "Background #ffffff, border 1px #e5e7eb, radius 16px, padding 32px. Shadow stack: rgba(0,0,0,0.02) 0px 40px 48px -20px, rgba(0,0,0,0.03) 0px 32px 32px -20px, rgba(0,0,0,0.03) 0px 16px 24px -12px, rgba(0,0,0,0.03) 0px 0px 0px 1px — creates a gentle lift without darkening the card itself. Used sparingly for hero-adjacent promotional cards."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Sticky top navigation header",
+      "description": "Background white, height ~64px, padding 0 24px. Left: fire icon logo (orange #ff4d00) + wordmark \"Firecrawl\" in Suisse 15px weight 500 #262626. Center: nav items in Suisse 14px weight 500 #262626, each with a chevron-down icon for dropdowns, 24px gap. Right: GitHub star count in Geist Mono 13px #262626 (255 label suffix in Slate #727272) + orange Sign up pill button. Border-bottom 1px #e5e7eb."
+    },
+    {
+      "name": "World Map Background",
+      "role": "Decorative dot-map behind section headers",
+      "description": "Full-width, height ~400px, composed of tiny #e5e7eb dots forming a world map silhouette. No labels or interactivity. Provides geographic atmosphere without competing with foreground text."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary interface and headline face. The 450 weight (a custom intermediate between regular and medium) is distinctive — it gives body text a slightly denser feel than a standard 400, and headings carry weight 500 for calm authority rather than boldness. Tracking tightens at display sizes (-0.01em at 60px, -0.005em at 40-52px) and opens slightly (+0.01-0.02em) at caption sizes for legibility.",
+      "sizes": "10, 12, 13, 14, 15, 16, 20, 24, 40, 52, 60",
+      "family": "Suisse",
+      "weight": "400, 450, 500",
+      "lineHeight": "1.00, 1.07, 1.10, 1.20, 1.33, 1.40, 1.50, 1.60",
+      "substitute": "Inter, Söhne, or Untitled Sans (close humanist grotesques with similar x-height and tracking behavior)",
+      "letterSpacing": "-0.01em at 60px, -0.005em at 40-52px, normal at 16-24px, +0.01em at 12-14px, +0.02em at 10-13px",
+      "fontFeatureSettings": ""
+    },
+    {
+      "role": "Code, technical labels, and any developer-facing micro-copy. Used for code blocks, tab labels in code-switcher UI, URL examples, and inline code snippets. Geist Mono's clean monospace geometry pairs with Suisse's humanist proportions without visual conflict.",
+      "sizes": "12, 13, 14",
+      "family": "Geist Mono",
+      "weight": "400, 500",
+      "lineHeight": "1.33, 1.54, 1.57",
+      "substitute": "JetBrains Mono, IBM Plex Mono, or Berkeley Mono",
+      "letterSpacing": "normal",
+      "fontFeatureSettings": ""
+    }
+  ],
+  "description": "Firecrawl operates as a developer-first workspace: a pale near-white canvas overlaid with a fine grid of hairline borders, a single vivid orange accent (#ff4d00) that acts as functional punctuation, and typography set in Suisse — a humanist grotesque whose tight tracking and generous x-height keep everything feeling engineered rather than editorial. Components are flat and quiet: pill-shaped controls (999px radius), 8px card corners, and shadow stacks that are barely perceptible (black at 2-3% alpha) so that depth comes from layering and the orange border-glow, not from drop shadows. The orange is never decorative — it appears on the CTA, the fire icon, highlight words in headlines, badge dots, and tab underlines. Everything else is a calibrated gray scale, with #e5e7eb doing the work of a thousand borders and #262626 carrying the full weight of body and heading text at AAA contrast against the off-white surfaces.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Page background: #ffffff\n- Card/code surface: #f9f9f9\n- Primary text: #262626\n- Secondary/muted text: #727272\n- Border/gridline: #e5e7eb\n- primary action: #ff4d00 (filled action)\n- Brand glow/halo: #fcddcc\n\n## 5 Example Component Prompts\n\n1. Create a Primary Action Button: #ff4d00 background, #262626 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Search input bar**: White background, 1px #e5e7eb border, border-radius 999px, padding 8px 8px 8px 20px. Contains a URL input (Suisse 14px, placeholder #c7c7c7) followed by inline action chips (Geist Mono 13px #262626 on #f9f9f9, radius 999px, 4px gaps) and a trailing 36px square #ff4d00 submit button with a white arrow icon. Outer ring: box-shadow rgb(249,249,249) 0px 0px 0px 6px.\n\n3. **Feature card**: Background #f9f9f9, border 1px #e5e7eb, border-radius 16px, padding 32px 24px, text centered. Orange stroke icon (24px) inside a 40px circle at top. Title in Suisse 16px weight 500 #262626. Description in Suisse 14px weight 400 #727272.\n\n4. **Code window**: Background #f9f9f9, border 1px #e5e7eb, border-radius 8px. Header bar 40px tall with 3 #e5e7eb traffic-light dots (6px) and Geist Mono 12px filename centered. Body padding 20px, Geist Mono 13px weight 400 line-height 1.57, line numbers in #b5b5b5 right-aligned. Syntax: #262626 default, #ff4d00 for keywords/strings, #616161 for comments. Outer shadow: rgb(253,253,253) 0px 0px 0px 8px.\n\n5. **Section header (numbered)**: Layout left-aligned with 2px #ff4d00 vertical line. Orange 4px dot, then Geist Mono 12px #727272 text: \"01 / MAIN FEATURES\". Below, display heading in Suisse 52px weight 500 #262626, letter-spacing -0.26px, line-height 1.07, with one phrase in #ff4d00."
+    },
+    {
+      "title": "Orange Discipline",
+      "content": "The single most important rule in this system: #ff4d00 is rationed. It appears on approximately 3-4 element types per page — the primary CTA, the fire icon, 1-2 highlight words in the headline, and occasionally a badge or active-tab indicator. It never fills large surfaces, never appears in illustrations, and never tints background sections. The restraint is what makes it feel intentional rather than branded. When in doubt, use #262626."
+    },
+    {
+      "title": "Typography Pairing Logic",
+      "content": "Suisse carries all human-facing copy: headlines, body, nav, buttons, card titles. Geist Mono appears the moment content becomes technical: code blocks, API examples, file names, URL strings, language switcher tabs. The split is binary — if a string could appear in a README, it should be mono. If it could appear in a brochure, it's Suisse. This binary creates a clear developer-first voice without needing additional visual cues."
+    }
+  ]
+}

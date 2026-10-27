@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1498-import-install-cause",
+  "kind": "fix",
+  "title": "A Joomla import that cannot install Claude Cowork keeps each road's evidence and names the host limit (memory, upload size) instead of a bare install_failed",
+  "pr": 1498,
+  "area": "add-site/import",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the real joomla.installCowork (packages/site/tracy-add-site/src/host/joomla.ts) with fetch mocked: phpinfo shows memory_limit 128M, upload_max_filesize 8M, post_max_size 8M; the URL install POST answers 500; the package is about 60 MB.",
+    "S2: Same, but the URL install POST answers 500 with PHP's 'Allowed memory size of … bytes exhausted' in its body.",
+    "S3: Same as S1, but phpinfo shows no limits and the upload answers 200 with nothing installed.",
+    "S4: The URL install POST answers 500 and the upload installs the component.",
+    "S5: Sanitize an install diagnostic with tracy-web importDiagnostic and render it with signalText.",
+    "S6: Run installCowork with a package 8 KB under an 8M post_max_size; with a URL 500 whose single 100 KB chunk starts with the memory error; with a URL memory error then a failed package download; with a 403 on the upload POST then a URL 500 (the upload road goes first since #1568)."
+  ],
+  "expect": [
+    "S1: reason upload_too_large; no upload POST is sent; diagnostic.roads.url_install.post_status is 500 and roads.upload_install.cause is over_limit; php_limits and package_bytes are kept.",
+    "S2: reason site_resource_limit with check memory_exhausted; no page text is kept in the diagnostic.",
+    "S3: the upload is sent and the result is install_failed, its diagnostic carrying both roads.",
+    "S4: the result is ok.",
+    "S5: only known road names, causes and limit names survive; the alert shows a Roads line and a Sizes line.",
+    "S6: a package 8 KB under an 8M post_max_size is still uploaded; a 100 KB first chunk starting with the memory error is still read; a failed download after a URL memory error is site_resource_limit; a 403 on the upload then a URL 500 keeps both roads, the limits and the 403."
+  ],
+  "selectors": {
+    "test": "packages/site/tracy-add-site/test/import-gates.test.mjs",
+    "code": "joomla.installCowork roads/readPhpInfo/uploadBlockedBy, diagnostic.mjs DIAGNOSTIC_ROADS, apps/tracy-web/src/lib/import-diagnostic.js, ops-signal.js installRoads"
+  },
+  "evidence": "Joomla 6.1.3 with memory_limit 128M and upload/post limits 8M, ~60 MB package (19/10/2026): the URL install POST died with a 500 (memory exhausted), the upload came back 200 with nothing installed, and the diagnostic kept only the later 200",
+  "fence": "installCowork's per-road evidence and the phpinfo limit check before the upload road",
+  "run": {
+    "cwd": "packages/site/tracy-add-site",
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/import-gates.test.mjs"],
+    "tests": [
+      "a URL 500 then a package over the known upload limits is upload_too_large, the 500 kept",
+      "a POST whose answer carries PHP memory exhaustion is site_resource_limit",
+      "limits phpinfo does not show change nothing: the upload is sent and its failure is install_failed",
+      "an upload that lands is a success, and the URL road that would die is never asked",
+      "a package under the known limits still goes over the upload road",
+      "phpinfo limits are read as PHP reads them: K, M, G, -1, and unknown when missing",
+      "an install stopped by a host limit names the limit, not \"install it yourself\"",
+      "a package just under post_max_size is still sent: the envelope counted is the real one",
+      "PHP's memory error at the head of a large first chunk is still read",
+      "a package that cannot be downloaded after a URL memory error is site_resource_limit",
+      "a 403 on the upload then a URL 500 keeps both roads, the PHP limits and the 403"
+    ]
+  }
+}

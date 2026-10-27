@@ -1,0 +1,424 @@
+{
+  "kind": "gradient-stop",
+  "about": "Probe data cut from real Add site previews (preview-check.mjs PREVIEW_DATA=1), kept to the tags masthead gradient (its stops and the texts drawn on it) and the page ground. Regenerate by re-running the probe; never edit values by hand.",
+  "broken": [
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 (https://ja-kinetic-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, page /index.php/pages/tags, scripts off as in the preview frame, captured 15/10/2026 with preview-check.mjs PREVIEW_DATA=1, with the contract before the masthead was given the system surface (title and lead cream on the #f2f5ee wash)",
+      "systemColours": [
+        "#858273",
+        "#f4efd4",
+        "#868474",
+        "#93b6fb",
+        "#b7b39f",
+        "#7a786a",
+        "#84acfb",
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "base": {
+          "page": {
+            "r": 251,
+            "g": 252,
+            "b": 250,
+            "a": 1
+          },
+          "said": {
+            "--ds-c-bg": "",
+            "--ds-c-fg": "",
+            "--wp--preset--color--bg": "",
+            "color-scheme": "normal"
+          },
+          "blocks": [],
+          "texts": []
+        },
+        "data": [
+          {
+            "path": "div:1/div:1/div:1/div:2/div:2/div:1",
+            "at": "div.com-tags__masthead.kinetic-tags-masthead.hx-grid-bg",
+            "area": 399848,
+            "clip": false,
+            "stops": [
+              {
+                "r": 163,
+                "g": 230,
+                "b": 53,
+                "a": 0.06
+              },
+              {
+                "r": 242,
+                "g": 245,
+                "b": 238,
+                "a": 1
+              },
+              {
+                "r": 16,
+                "g": 20,
+                "b": 15,
+                "a": 0.04
+              },
+              {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 0
+              },
+              {
+                "r": 16,
+                "g": 20,
+                "b": 15,
+                "a": 0.04
+              },
+              {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 0
+              }
+            ],
+            "texts": [
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/span:1",
+                "at": "span.hx-eyebrow.kinetic-eyebrow.kinetic-tags-eyebrow",
+                "text": "TAGS",
+                "fg": {
+                  "r": 77,
+                  "g": 124,
+                  "b": 15,
+                  "a": 1
+                },
+                "size": 11.5
+              },
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/h1:1",
+                "at": "h1.hx-h1.com-tags__title.kinetic-tags-h1",
+                "text": "Browse by tag",
+                "fg": {
+                  "r": 16,
+                  "g": 20,
+                  "b": 15,
+                  "a": 1
+                },
+                "size": 46
+              },
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/p:1",
+                "at": "p.hx-mast-sub.com-tags__sub.kinetic-tags-sub",
+                "text": "Find posts by the topics that ",
+                "fg": {
+                  "r": 70,
+                  "g": 81,
+                  "b": 75,
+                  "a": 1
+                },
+                "size": 17
+              }
+            ]
+          }
+        ]
+      },
+      "worn": {
+        "base": {
+          "page": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 1
+          },
+          "said": {
+            "--ds-c-bg": "#000000",
+            "--ds-c-fg": "#f4efd4",
+            "--wp--preset--color--bg": "",
+            "color-scheme": "dark"
+          },
+          "blocks": [],
+          "texts": []
+        },
+        "data": [
+          {
+            "path": "div:1/div:1/div:1/div:2/div:2/div:1",
+            "at": "div.com-tags__masthead.kinetic-tags-masthead.hx-grid-bg",
+            "area": 401175,
+            "clip": false,
+            "stops": [
+              {
+                "r": 163,
+                "g": 230,
+                "b": 53,
+                "a": 0.06
+              },
+              {
+                "r": 242,
+                "g": 245,
+                "b": 238,
+                "a": 1
+              },
+              {
+                "r": 16,
+                "g": 20,
+                "b": 15,
+                "a": 0.04
+              },
+              {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 0
+              },
+              {
+                "r": 16,
+                "g": 20,
+                "b": 15,
+                "a": 0.04
+              },
+              {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 0
+              }
+            ],
+            "texts": [
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/span:1",
+                "at": "span.hx-eyebrow.kinetic-eyebrow.kinetic-tags-eyebrow",
+                "text": "TAGS",
+                "fg": {
+                  "r": 132,
+                  "g": 172,
+                  "b": 251,
+                  "a": 1
+                },
+                "size": 11.5
+              },
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/h1:1",
+                "at": "h1.hx-h1.com-tags__title.kinetic-tags-h1",
+                "text": "Browse by tag",
+                "fg": {
+                  "r": 183,
+                  "g": 179,
+                  "b": 159,
+                  "a": 1
+                },
+                "size": 46
+              },
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/p:1",
+                "at": "p.hx-mast-sub.com-tags__sub.kinetic-tags-sub",
+                "text": "Find posts by the topics that ",
+                "fg": {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                "size": 17
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 (https://ja-kinetic-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, page /index.php/pages/tags, scripts off as in the preview frame, captured 15/10/2026 with preview-check.mjs PREVIEW_DATA=1, with the fixed contract",
+      "systemColours": [
+        "#858273",
+        "#f4efd4",
+        "#868474",
+        "#93b6fb",
+        "#b7b39f",
+        "#7a786a",
+        "#84acfb",
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "base": {
+          "page": {
+            "r": 251,
+            "g": 252,
+            "b": 250,
+            "a": 1
+          },
+          "said": {
+            "--ds-c-bg": "",
+            "--ds-c-fg": "",
+            "--wp--preset--color--bg": "",
+            "color-scheme": "normal"
+          },
+          "blocks": [],
+          "texts": []
+        },
+        "data": [
+          {
+            "path": "div:1/div:1/div:1/div:2/div:2/div:1",
+            "at": "div.com-tags__masthead.kinetic-tags-masthead.hx-grid-bg",
+            "area": 399848,
+            "clip": false,
+            "stops": [
+              {
+                "r": 163,
+                "g": 230,
+                "b": 53,
+                "a": 0.06
+              },
+              {
+                "r": 242,
+                "g": 245,
+                "b": 238,
+                "a": 1
+              },
+              {
+                "r": 16,
+                "g": 20,
+                "b": 15,
+                "a": 0.04
+              },
+              {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 0
+              },
+              {
+                "r": 16,
+                "g": 20,
+                "b": 15,
+                "a": 0.04
+              },
+              {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 0
+              }
+            ],
+            "texts": [
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/span:1",
+                "at": "span.hx-eyebrow.kinetic-eyebrow.kinetic-tags-eyebrow",
+                "text": "TAGS",
+                "fg": {
+                  "r": 77,
+                  "g": 124,
+                  "b": 15,
+                  "a": 1
+                },
+                "size": 11.5
+              },
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/h1:1",
+                "at": "h1.hx-h1.com-tags__title.kinetic-tags-h1",
+                "text": "Browse by tag",
+                "fg": {
+                  "r": 16,
+                  "g": 20,
+                  "b": 15,
+                  "a": 1
+                },
+                "size": 46
+              },
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/p:1",
+                "at": "p.hx-mast-sub.com-tags__sub.kinetic-tags-sub",
+                "text": "Find posts by the topics that ",
+                "fg": {
+                  "r": 70,
+                  "g": 81,
+                  "b": 75,
+                  "a": 1
+                },
+                "size": 17
+              }
+            ]
+          }
+        ]
+      },
+      "worn": {
+        "base": {
+          "page": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 1
+          },
+          "said": {
+            "--ds-c-bg": "#000000",
+            "--ds-c-fg": "#f4efd4",
+            "--wp--preset--color--bg": "",
+            "color-scheme": "dark"
+          },
+          "blocks": [],
+          "texts": []
+        },
+        "data": [
+          {
+            "path": "div:1/div:1/div:1/div:2/div:2/div:1",
+            "at": "div.com-tags__masthead.kinetic-tags-masthead.hx-grid-bg",
+            "area": 401175,
+            "clip": false,
+            "stops": [
+              {
+                "r": 136,
+                "g": 170,
+                "b": 255,
+                "a": 0.059
+              },
+              {
+                "r": 26,
+                "g": 26,
+                "b": 26,
+                "a": 1
+              }
+            ],
+            "texts": [
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/span:1",
+                "at": "span.hx-eyebrow.kinetic-eyebrow.kinetic-tags-eyebrow",
+                "text": "TAGS",
+                "fg": {
+                  "r": 132,
+                  "g": 172,
+                  "b": 251,
+                  "a": 1
+                },
+                "size": 11.5
+              },
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/h1:1",
+                "at": "h1.hx-h1.com-tags__title.kinetic-tags-h1",
+                "text": "Browse by tag",
+                "fg": {
+                  "r": 183,
+                  "g": 179,
+                  "b": 159,
+                  "a": 1
+                },
+                "size": 46
+              },
+              {
+                "path": "div:1/div:1/div:1/div:2/div:2/div:1/div:1/p:1",
+                "at": "p.hx-mast-sub.com-tags__sub.kinetic-tags-sub",
+                "text": "Find posts by the topics that ",
+                "fg": {
+                  "r": 244,
+                  "g": 239,
+                  "b": 212,
+                  "a": 1
+                },
+                "size": 17
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

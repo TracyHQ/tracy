@@ -1,0 +1,20 @@
+@theme {
+  /* Colors */
+  --color-workable-ink: #0f161e;
+  --color-page-canvas: #fbfaf8;
+  --color-pure-white: #ffffff;
+  --color-body-graphite: #3d3e45;
+  --color-muted-slate: #6f7073;
+  --color-hairline-gray: #efefef;
+  --color-forest-teal: #004038;
+  --color-midnight-violet: #1d0953;
+  --color-lavender-wash: #e5d3f7;
+  --color-peach-cream: #fef1e1;
+  --color-butter-yellow: #fde8ce;
+  --color-periwinkle: #c6c4f4;
+  --color-sky-tint: #bee9f4;
+  --color-agent-spectrum: #00f5dc;
+
+  /* Typography */
+  --font-proxima-nova: 'Proxima Nova', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

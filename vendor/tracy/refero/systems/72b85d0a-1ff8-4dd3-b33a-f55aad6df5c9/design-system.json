@@ -1,0 +1,287 @@
+{
+  "dos": [
+    "Use the mint pill button (#11ee92 fill, 45px radius) as the single primary action on every screen — never introduce a second chromatic action color.",
+    "Anchor every full-bleed hero or banner with the indigo-to-sky-blue linear gradient (90deg, #3b1e9 → #5a3cc4 → #3a6ef0) when an energetic landing moment is needed.",
+    "Set page backgrounds to #f2f7fd and float cards on #ffffff to preserve the cool, calm, blue-tinted workspace mood.",
+    "Reach for Nista weight 800 at 36-40px for display and weight 400 at 14-16px for body — the bold/regular contrast is the system's voice.",
+    "Frame all language or category choices in circular containers (border-radius 9999px) with a 1px shadow at rgba(0,0,0,0.1) 0px 1px 2px — circles are the system's signature shape.",
+    "Use #116eee exclusively for brand identity moments (logo, links, nav accents) — never as a filled action background.",
+    "Apply 20px padding to cards, 64px between sections, and 10-20px between elements to maintain the comfortable, breathable rhythm."
+  ],
+  "donts": [
+    "Don't use mint (#11ee92) for anything other than the primary filled CTA — it must stay rare to retain its punch.",
+    "Don't stack multiple shadows or use heavy elevation — the system is intentionally flat with a single 1px shadow as the deepest depth cue.",
+    "Don't introduce a second brand blue or replace #116eee — Signal Blue is the only blue that carries brand meaning.",
+    "Don't use sharp corners on primary controls — buttons must be 45px pill, tiles must be circles, and cards must be 16px or rounder.",
+    "Don't set body text in pure black (#000000) for long-form copy — use #252b2f charcoal for reading comfort; reserve black for icons and illustration linework.",
+    "Don't put yellow anywhere except the Trustpilot star — #ffcf00 is reserved for the rating context only.",
+    "Don't break the illustrated, playful tone with stock photography, corporate gradients, or dense data tables — the system is character-driven, not chart-driven."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#3b1e90",
+      "name": "Deep Indigo",
+      "role": "Left edge of hero gradient — anchors the purple sky of the landing banner",
+      "group": "brand"
+    },
+    {
+      "hex": "#116eee",
+      "name": "Signal Blue",
+      "role": "Brand links, nav accents, heading highlights, logo wordmark — the only blue that carries brand meaning",
+      "group": "brand"
+    },
+    {
+      "hex": "#11ee92",
+      "name": "Spring Mint",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#3a6ef0",
+      "name": "Hero Sky Blue",
+      "role": "Right edge of hero gradient — transitions from deep indigo to a cleaner blue, softening the landing page mood",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, #3b1e9 0%, #5a3cc4 30%, #3a6ef0 100%)"
+    },
+    {
+      "hex": "#252b2f",
+      "name": "Charcoal",
+      "role": "Primary body text and heading color — softer than pure black, keeps long-form copy comfortable",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Icon strokes, decorative illustration linework, highest-contrast text — used where maximum weight is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2f7fd",
+      "name": "Canvas Mist",
+      "role": "Page background — barely-blue tinted near-white, the calm base layer below the hero",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Card surfaces, nav background, content panels — sits one level above the mist canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d6dee6",
+      "name": "Steel Border",
+      "role": "Input borders, dividers, subtle structural lines — cool-toned to harmonize with the mist canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666e7e",
+      "name": "Slate Caption",
+      "role": "Muted helper text, secondary body copy, metadata — readable but recedes against charcoal",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b3b3b3",
+      "name": "Shadow Gray",
+      "role": "Soft elevation wash and button shadow base — used in the subtle 1px shadow stack",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffcf00",
+      "name": "Trustpilot Star",
+      "role": "Review star fill on the Trustpilot social-proof line — the only yellow in the system, used exclusively for ratings",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page model is max-width contained (~1200px) on a full-bleed light mist canvas. The hero breaks the container with a full-width gradient banner containing a two-column composition: text stack left (headline, body, CTA, social proof) and illustration right. Below the hero, content sections sit on #f2f7fd with white cards and generous 64px vertical gaps. The 'I want to learn' section uses a centered heading above a horizontal scrollable row of circular language tiles with chevron controls flanking it. Section rhythm is consistent: generous breathing room, no heavy dividers, seamless flow between bands. Navigation is a simple sticky white top bar with logo left, action buttons right — no mega-menu, no sidebar. The footer is a single light band with locale controls.",
+  "imagery": "The visual language is illustration-first: flat, colorful character art with rounded forms, dark hair and simplified facial features, set against circular pastel halos. Speech bubbles containing greeting words in different scripts ('Ciao!', 'Bonjour!', 'Hello!', '你好') float around the characters, reinforcing the multilingual theme visually. A faint world map outline in lighter blue sits behind the hero illustration. No photography appears in the visible interface — every human or contextual element is drawn. Icons are minimal and geometric (chevrons, flags in circles, star ratings). The overall treatment is bright, friendly, and slightly cartoonish, with primary colors used liberally within illustrations while the surrounding UI stays neutral and calm.",
+  "similar": [
+    {
+      "why": "Same playful illustrated-character hero, vivid single-accent CTA (Duolingo's green vs Busuu's mint), and circular tile vocabulary for language selection",
+      "business": "Duolingo"
+    },
+    {
+      "why": "Same edtech language-learning category with a single bold display headline over a colorful hero, though Babbel leans warmer/red while Busuu is cooler/blue-purple",
+      "business": "Babbel"
+    },
+    {
+      "why": "Same light-mist canvas, white card surfaces, and generous 64px section breathing room with a single trustpilot-style social proof strip under the primary CTA",
+      "business": "Khan Academy"
+    },
+    {
+      "why": "Same quiet, near-white workspace aesthetic with white cards floating on a very light tinted background, and the same restraint of using shadows as a single 1px hint rather than heavy elevation",
+      "business": "Notion"
+    },
+    {
+      "why": "Same friendly, illustration-driven hero with a bold gradient and rounded character art, paired with a calm pastel content area below",
+      "business": "Headspace"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "inputs": "5px",
+      "buttons": "45px",
+      "circles": "9999px"
+    },
+    "elementGap": "10-20px",
+    "sectionGap": "64px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#f2f7fd",
+      "name": "Canvas Mist",
+      "level": 0,
+      "purpose": "Page background — the calm base layer for all content below the hero"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 1,
+      "purpose": "Card surfaces, language tile backgrounds, nav bar"
+    },
+    {
+      "hex": "#3b1e9",
+      "name": "Hero Gradient",
+      "level": 2,
+      "purpose": "Full-bleed landing banner — deep indigo to sky blue gradient with illustrated character art"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 1px 2px 0px",
+      "element": "Language flag tiles and card surfaces"
+    }
+  ],
+  "northStar": "playful passport of global connection. Vivid gradient skies, bubble greetings, and circular flags make the whole interface feel like a warm invitation to the world.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.14
+    },
+    {
+      "role": "display",
+      "size": 40,
+      "lineHeight": 1.14
+    }
+  ],
+  "components": [
+    {
+      "name": "Hero Gradient Banner",
+      "role": "Full-bleed landing section",
+      "description": "Deep indigo to sky blue linear gradient (90deg, #3b1e9 → #5a3cc4 → #3a6ef0), full viewport width, contains white headline at 40px/1.14 weight 800, body text at 16px in white, and illustrated character art with speech bubbles floating on a faint world map outline. No card chrome — the gradient IS the surface."
+    },
+    {
+      "name": "Primary CTA Button (Spring Mint)",
+      "role": "Main conversion action",
+      "description": "Filled pill button: background #11ee92, text #252b2f weight 700, 14-16px, padding 20px horizontal by ~12px vertical, border-radius 45px. On the gradient hero it pops vividly; on white sections it reads as energetic. This is the ONLY chromatic filled action in the system."
+    },
+    {
+      "name": "Outlined Nav Button (Learn for free)",
+      "role": "Secondary nav action with brand border",
+      "description": "Transparent fill, 1.5-2px solid #116eee border, #116eee text, 45px pill radius, padding ~20px horizontal. Mirrors the mint CTA in shape but uses the brand blue to signal a lighter-weight entry point."
+    },
+    {
+      "name": "Ghost Nav Button (Log in)",
+      "role": "Tertiary text-level action",
+      "description": "No fill, no border, #252b2f text, pill radius 45px, padding ~20px horizontal. Sits inline with the outlined button, creating a filled → outlined → ghost hierarchy."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Site-wide header",
+      "description": "White (#ffffff) background, logo lockup left ('Busuu' in #116eee + 'A Chegg service' tag), nav links and action buttons right-aligned. Horizontal padding ~20px, subtle 1px shadow or no shadow. Fixed/sticky on scroll."
+    },
+    {
+      "name": "Language Flag Tile",
+      "role": "Language selection card in carousel",
+      "description": "Circular container (border-radius 9999px), white background, contains a circular flag image (also full radius). Language name below in 14px #252b2f. Shadow: rgba(0,0,0,0.1) 0px 1px 2px 0px. Tiles arranged in a horizontal scrollable row with chevron controls on the edges."
+    },
+    {
+      "name": "Trustpilot Rating Strip",
+      "role": "Social proof under primary CTA",
+      "description": "Inline horizontal layout: 'Excellent' wordmark in 12px #252b2f, five green stars (#00b67a Trustpilot green or system green) in a row, review count in 12px #666e7, small Trustpilot logo at the end. Sits directly below the hero CTA."
+    },
+    {
+      "name": "Carousel Navigation Arrows",
+      "role": "Scroll controls for language row",
+      "description": "Circular ghost buttons flanking the language tile row. Light gray (#d6dee6) chevron icon, no fill, 40px diameter. Purely directional, minimal visual weight."
+    },
+    {
+      "name": "Section Heading",
+      "role": "Section title text",
+      "description": "'I want to learn' at 24-36px, weight 700, color #252b2f, centered above content rows. Uses the heading-sm to heading range from the type scale."
+    },
+    {
+      "name": "Display Hero Headline",
+      "role": "Landing page hero title",
+      "description": "40px Nista weight 800, line-height 1.14, color white on the gradient hero, left-aligned within the content column. Bold and confident without being corporate."
+    },
+    {
+      "name": "Hero Body Copy",
+      "role": "Supporting paragraph under hero headline",
+      "description": "16px Nista weight 400, line-height 1.5, white at ~90% opacity, max-width ~480px. Sits between headline and CTA with a 20px gap."
+    },
+    {
+      "name": "Language Selector Dropdown",
+      "role": "Footer-level locale picker",
+      "description": "Standard native select element, 5px border-radius, 1px #d6dee6 border, #252b2f text, 14px. Label 'Display Language:' above in bold #252b2f 14px. Sits on the canvas mist background in the footer area."
+    },
+    {
+      "name": "Footer Band",
+      "role": "Page footer with locale controls",
+      "description": "Light mist background (#f2f7fd), generous vertical padding (~40-60px), contains the language selector and links. No heavy borders or dividers — flows naturally from the canvas."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Sole typeface for the entire system — Nista's geometric warmth and bold-friendly weight stack carries everything from 10px metadata to 40px display headlines. The 800 weight on hero text gives authority without feeling heavy or corporate; the 400 body keeps long lesson descriptions breathable. Substitute: 'Poppins' or 'Nunito' for the friendly geometric quality, or 'DM Sans' for a cleaner alternative.",
+      "sizes": "10, 12, 14, 16, 18, 24, 36, 40",
+      "family": "Nista",
+      "weight": "400, 700, 800",
+      "lineHeight": "1.14, 1.20, 1.30, 1.33, 1.50, 1.70",
+      "substitute": "Poppins",
+      "letterSpacing": "normal across all sizes — Nista's natural metrics are tight enough that no tracking adjustment is needed"
+    }
+  ],
+  "description": "Busuu's design system radiates warm, approachable energy through a vivid purple-to-blue gradient hero that bleeds confidence before settling into a calm, near-white workspace. The dominant interface is built on a very pale blue-tinted canvas (#f2f7fd) with white cards floating above it, and a single saturated spring-green (#11ee92) acts as the primary action accent — an unconventional choice that immediately distinguishes it from the sea of blue CTAs in edtech. Typography is custom (Nista) with a compact, bold-friendly weight stack: heavy 800 for display, 700 for headings, and a clean 400 for body, giving the system a confident, slightly geometric voice. The visual language is heavily illustrated — flat, colorful character art with circular framing devices — and the layout relies on generous padding, pill-shaped controls, and circular flag tiles to make global language learning feel tactile and inviting rather than academic.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #252b2f (charcoal body), #000000 (icons/illustration), #666e7e (muted/helper)\n- background: #f2f7fd (canvas), #ffffff (cards/nav)\n- border: #d6dee6 (inputs, dividers)\n- accent: #116eee (Signal Blue — links, logo, nav highlights)\n- primary action: no distinct CTA color\n- hero gradient: #3b1e90 → #5a3cc4 → #3a6ef0 (90deg)\n- shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px\n- radius: 45px (buttons), 9999px (circles/tiles), 16px (cards), 5px (inputs)\n\n**3-5 Example Component Prompts**\n\n1. **Create a hero banner:** Full-bleed background with linear-gradient(90deg, #3b1e90 0%, #5a3cc4 30%, #3a6ef0 100%). Left column: headline 'Learn a language, live a new life' in Nista 40px weight 800, white, line-height 1.14. Below it, body text 16px weight 400, white, max-width 480px, 20px gap. Below that, a filled mint pill button — background #11ee92, text #252b2f, 14px weight 700, padding 12px 20px, border-radius 45px. Right column: flat illustration of a character with speech bubble. Padding 64px vertical.\n\n2. **Create a language selection carousel:** Background #f2f7fd. Centered heading 'I want to learn' in Nista 24px weight 700, #252b2f, 40px margin-bottom. Horizontal row of 6 circular tiles, each 80px diameter, border-radius 9999px, background #ffffff, box-shadow rgba(0,0,0,0.1) 0px 1px 2px 0px, containing a circular flag image. Language name below each tile in 14px #252b2f, 10px gap. Chevron arrows in 40px ghost circles flanking the row.\n\n3. **Create a top navigation bar:** White (#ffffff) background, horizontal padding 20px, height ~64px. Left: logo — blue rounded-square icon + 'Busuu' wordmark in Nista 18px weight 700, #116eee, with 'A Chegg service' subtitle in 10px #666e7e. Right: two pill buttons — outlined (#116eee border 1.5px, transparent fill, #116eee text, 45px radius, 20px horizontal padding) labeled 'Learn for free', then ghost button (#252b2f text, no border, 45px radius) labeled 'Log in'.\n\n4. **Create a card grid for course categories:** Page background #f2f7fd. Three-column grid of white cards (#ffffff), border-radius 16px, padding 20px, box-shadow rgba(0,0,0,0.1) 0px 1px 2px 0px, 20px gap. Each card has a circular 60px icon container at the top-left, a heading in Nista 18px weight 700 #252b2f, and body text in 14px weight 400 #666e7e.\n\n5. **Create a footer with locale selector:** Background #f2f7fd, padding 40px 20px. 'Display Language:' label in Nista 14px weight 700, #252b2f, 10px margin-bottom. Native select element below — border 1px solid #d6dee6, border-radius 5px, padding 8px 12px, text 14px #252b2f, options for English (UK), Español, Français, Deutsch, etc."
+    },
+    {
+      "title": "Signature Choices",
+      "content": "Three choices make this system immediately recognizable and must be preserved across all new screens:\n\n1. **Mint as the only action color.** A vivid spring green (#11ee92) for the primary CTA against a purple-blue gradient hero is a deliberate anti-corporate choice. Most edtech defaults to blue CTAs — Busuu's mint reads as fresh, encouraging, and non-transactional. Never dilute it by adding other chromatic action colors.\n\n2. **Circles as the structural shape.** Language flags, icon containers, and decorative elements are almost always circular (border-radius 9999px). This circular vocabulary ties directly to the globe/world-map hero motif and makes the interface feel like a passport or a set of collectible stamps rather than a standard SaaS dashboard.\n\n3. **Blue-tinted near-white canvas.** The page background is #f2f7fd — not pure white, not gray, but a barely-perceptible cool blue tint. This creates a calm, slightly dreamy workspace that complements the bold gradient hero without competing with it. Cards float on #ffffff above this tint, and the two-tone surface stack gives just enough layering without any heavy shadows."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is whisper-quiet — a single 1px offset shadow at 10% black is the only depth cue in the system. The design prefers color, gradient, and illustration to create visual layering rather than shadow stacking, which keeps the interface feeling flat, friendly, and illustration-driven rather than corporate."
+}

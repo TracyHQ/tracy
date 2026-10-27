@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-ink-black: #1a1a1a;
+  --color-charcoal: #262626;
+  --color-graphite: #666666;
+  --color-ash: #999999;
+  --color-fog: #e6e6e6;
+  --color-mist: #f2f2f2;
+  --color-paper: #ffffff;
+  --color-pure-black: #000000;
+
+  /* Typography — Font Families */
+  --font-riformallweb: 'RiformaLLWeb', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

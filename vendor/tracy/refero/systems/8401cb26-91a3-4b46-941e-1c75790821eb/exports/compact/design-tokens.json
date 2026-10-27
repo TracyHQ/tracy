@@ -1,0 +1,104 @@
+{
+  "color": {
+    "electric-cyan": {
+      "$value": "#19d0e8",
+      "$type": "color",
+      "$description": "Electric Cyan — Accent text, accent borders, the video card surface, the gradient highlight on the product screen — the only chromatic pulse in an otherwise achromatic system"
+    },
+    "sky-signal": {
+      "$value": "#44ccff",
+      "$type": "color",
+      "$description": "Sky Signal — Secondary cyan for gradient stops and product screen illumination"
+    },
+    "deep-teal": {
+      "$value": "#062f34",
+      "$type": "color",
+      "$description": "Deep Teal — Card surface base, gradient shadow stop — anchors the teal product card in darkness"
+    },
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, primary background — the uninterrupted dark field"
+    },
+    "obsidian": {
+      "$value": "#010101",
+      "$type": "color",
+      "$description": "Obsidian — Alternative near-black surface when the canvas shifts fractionally off-pure-black"
+    },
+    "midnight-surface": {
+      "$value": "#191919",
+      "$type": "color",
+      "$description": "Midnight Surface — Elevated surface — cards, panels, overlay containers sitting one step above the void"
+    },
+    "graphite": {
+      "$value": "#282828",
+      "$type": "color",
+      "$description": "Graphite — Mid-tier surface and neutral button fills — the interactive control surface"
+    },
+    "charcoal": {
+      "$value": "#363636",
+      "$type": "color",
+      "$description": "Charcoal — Secondary card surface for stacked or grouped containers"
+    },
+    "slate": {
+      "$value": "#3f3f3f",
+      "$type": "color",
+      "$description": "Slate — Deep shadow surface and tertiary elevation"
+    },
+    "steel-gray": {
+      "$value": "#7f7f7f",
+      "$type": "color",
+      "$description": "Steel Gray — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary text, light surface fills, download button, high-contrast elements"
+    },
+    "ghost-gray": {
+      "$value": "#c0c0c0",
+      "$type": "color",
+      "$description": "Ghost Gray — Subtle highlight wash and faint surface luminosity"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "instrument-serif": {
+      "$value": "Instrument Serif",
+      "$type": "fontFamily",
+      "$description": "Display and heading — italicized editorial serif at dramatic scale. The brand wordmark reaches 400px filling the viewport; section headlines land at 64–96px. Negative letter-spacing tightens the serif into compact magazine-display density."
+    },
+    "dm-mono": {
+      "$value": "DM Mono",
+      "$type": "fontFamily",
+      "$description": "Mono UI chrome — labels, tags, metadata, button text, the 'MADE BY EVERY' stamp, the download button label, feature annotations. Reads as system metadata. The 32px usage appears in product device labels."
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Body text — 17px single weight for paragraphs and descriptions. The slightly larger-than-default body size (17 vs 16) gives copy room to breathe against the dense UI chrome."
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "Fallback body and link text — appears in utility contexts where a system font is appropriate"
+    },
+    "sf-pro-display-regular": {
+      "$value": "SF Pro Display Regular",
+      "$type": "fontFamily",
+      "$description": "SF Pro Display Regular — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.monologue.to",
+      "siteName": "Monologue",
+      "extractedAt": "2026-06-03T15:39:04.388Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#f7f6f5",
+      "$type": "color",
+      "$description": "Paper — Page background, navigation bar, footer background"
+    },
+    "carbon": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Carbon — Primary text, dark buttons, outlines, dark iconography, and dark feature surfaces"
+    },
+    "tile-gray": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Tile Gray — Logo tiles, integration cards, pale product modules"
+    },
+    "mist": {
+      "$value": "#e7e7e7",
+      "$type": "color",
+      "$description": "Mist — Inverse text on dark surfaces and subdued pale interface areas"
+    },
+    "graphite": {
+      "$value": "#1f1f1f",
+      "$type": "color",
+      "$description": "Graphite — Dark bento-card surfaces"
+    },
+    "steel": {
+      "$value": "#7d7d7d",
+      "$type": "color",
+      "$description": "Steel — Eyebrows, muted labels, and monochrome partner marks"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Text and icons on Carbon or Electric Blue controls"
+    },
+    "electric-blue": {
+      "$value": "#2200ff",
+      "$type": "color",
+      "$description": "Electric Blue — Highlighted headline words, inline product links, selected icon strokes, and rare filled controls — the hard violet-blue creates a technical interruption in the otherwise grayscale system"
+    }
+  },
+  "font": {
+    "nbinternationalpro": {
+      "$value": "nbInternationalPro",
+      "$type": "fontFamily",
+      "$description": "The sole interface and display family: 400 handles compact navigation, links, and reading text; 500 carries headings from 24px through the 70px hero. The 64px and 70px displays use -2.56px and -2.816px tracking respectively; the 24px subheads use -0.48px. This compressed display tracking makes the large statements feel engineered rather than promotional."
+    },
+    "geistmono": {
+      "$value": "geistMono",
+      "$type": "fontFamily",
+      "$description": "Sparse code-like and product-detail text inside technical interface content; use it only where a software artifact needs a distinct machine-readable texture."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://devin.ai",
+      "siteName": "Devin",
+      "extractedAt": "2026-09-20T22:02:07.054Z",
+      "variant": "compact"
+    }
+  }
+}

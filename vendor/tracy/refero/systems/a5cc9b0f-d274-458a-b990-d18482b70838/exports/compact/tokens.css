@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-onyx-canvas: #08090a;
+  --color-carbon-surface: #141516;
+  --color-graphite-surface: #1c1c1f;
+  --color-smoke-surface: #23252a;
+  --color-iron-surface: #2d2e31;
+  --color-ash-border: #34343a;
+  --color-ferrite-border: #3e3e44;
+  --color-steel-text: #62666d;
+  --color-pewter-text: #7f7f80;
+  --color-fog-text: #8a8f98;
+  --color-mist-text: #d0d6e0;
+  --color-chalk-border: #e4e5e9;
+  --color-snow: #f7f8f8;
+  --color-void: #030404;
+
+  /* Typography — Font Families */
+  --font-inter-variable: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-berkeley-mono: 'Berkeley Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

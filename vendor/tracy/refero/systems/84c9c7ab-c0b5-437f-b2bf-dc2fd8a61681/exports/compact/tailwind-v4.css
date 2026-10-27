@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-vellum-cream: #fff9eb;
+  --color-linen: #f0e7d7;
+  --color-buttered-gold: #f8e47d;
+  --color-ink: #000000;
+  --color-warm-graphite: #4d4b47;
+  --color-oxblood: #370808;
+
+  /* Typography */
+  --font-roslindale-display-condensed: 'Roslindale Display Condensed', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-intl: 'Suisse Intl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

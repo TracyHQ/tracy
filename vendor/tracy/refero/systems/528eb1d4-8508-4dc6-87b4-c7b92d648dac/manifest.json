@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "528eb1d4-8508-4dc6-87b4-c7b92d648dac",
+  "status": "complete",
+  "name": "Quizlet",
+  "url": "https://styles.refero.design/style/528eb1d4-8508-4dc6-87b4-c7b92d648dac",
+  "sourceWebsite": "https://quizlet.com",
+  "extractedAt": "2026-06-03T15:12:21.890Z",
+  "capturedAt": "2026-10-08T05:11:40.460986+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "color-coded classroom on white — a quiet study desk where four pastel flashcards are the only splash of color against cool gray walls and a single indigo highlighter mark.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f116898c-8782-436c-90b9-261f0f9d1657.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "17106bbc021a668e111d793cbb0a7beef3d3cb50f44837a7adfc8ec4388223da",
+      "bytes": 19062
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1ca71a7a502eacba53ff2287aa3abccd67b02db0773e1b1db60a5ccaad705923",
+      "bytes": 93290
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c131822c990d794bdd367a0cc113111d355efe6f447c0644d2c0d6656d8c47f1",
+      "bytes": 16114
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "85e54d8268c9645ff5bc2698019801e3c566f49a8d9dc76dc94a472ca25a15d8",
+      "bytes": 9798
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f217c07351f6834af3b216d4019073233e413746d044bc299517c5b93d02b810",
+      "bytes": 11936
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "facb1157a071c15bcac2443a7da6eae96699a75fb774225a1fd4e6c2251ed9db",
+      "bytes": 2894
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "89ba86be6df7a45c9e121008a2ce71a7197e18d31d934e1cb5d2985bfb19526e",
+      "bytes": 648
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7adaf89a21c5cb0df77a4e164955be573c15f788fa1e50a8238833a831a08013",
+      "bytes": 665
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7e6abda2110b19a24773f3f62142216f8c103a366323d420a411bdb3f813fb7c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3d52aa889face7e1c151ebca4d6ba8050bdb6684c19bb7192b0e61587a86f583",
+      "bytes": 42728
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "da3bf33933e65a96946ab23fe4a1b497220ddca88c3653e0d5bde5bec111545b",
+      "bytes": 22008
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e8d57cacd167f2c361101ab356084b8a1c372f8a18511ab2791ab0edf9a35273",
+      "bytes": 39515
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b9df0d521619eb5ed5befbe4e2cc21afa9fce0c708a0dbc6e9723158b8563cd5",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "124f6c5b70bbda9b77c7f303912bdd34accea84ff46c2b1e275100892ad60731",
+      "bytes": 1492
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "459406bd45a8cc225aff0570ee79192594c26d4c480fc4959f9e23683f899704",
+      "bytes": 2083
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "162e9ba9-7487-4b57-aee8-0bbeadcc586d",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "528eb1d4-8508-4dc6-87b4-c7b92d648dac",
+    "6b2a0513-df80-4140-87a8-38b1fef34313",
+    "7088d695-362b-4e09-b325-fa8136d4f350",
+    "72b85d0a-1ff8-4dd3-b33a-f55aad6df5c9",
+    "72da35d5-1cfd-41a3-94f6-cb6b8c07a670",
+    "7c984a81-a08f-41a3-b790-8d4a9ed92031",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "90b8631c-4e2c-407e-86a3-d2bff456dc93",
+    "95b472c5-fc07-46a8-a11f-c5432e290fcd",
+    "a521abb9-d84b-4870-b5a8-363be7c3f94a",
+    "bc2c6ecc-7a0d-4693-86e5-9fa93b165601",
+    "c03afcbd-96ed-4b7f-8d0a-277fc0042ba7",
+    "c57ba3f8-1d76-4660-8ba4-48ddce26e759",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

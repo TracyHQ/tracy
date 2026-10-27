@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1145-desktop-onboarding-0-5-1",
+  "kind": "fix",
+  "title": "First-run screen 0.5.1: Linux \"Open System Settings\" opens GNOME's panel or is hidden; a reopened screen shows the look step as done after a previous Done",
+  "pr": 1145,
+  "area": "desktop/onboarding",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1a: run packages/desktop/tracy-desktop/test/notify-bridge.test.mjs — on linux with gnome-control-center on PATH the open-settings channel starts `gnome-control-center notifications` and status says settingsTarget true; without it status says false and nothing starts; macOS/Windows open their settings URL.",
+    "S1b: run packages/ui/tracy-onboard/test/flow.test.mjs + mount.test.mjs — stepsDone({priorCompleted:true}) marks the look step done; a reopened panel starts at the first step not done.",
+    "S2: node scripts/build-client.mjs --check in packages/ui/tracy-onboard."
+  ],
+  "expect": ["S1a/S1b exit 0 with 0 failures.", "S2 reports the bundle matches its source."],
+  "selectors": {
+    "bridge": "NOTIFY_CHANNELS.status.settingsTarget / NOTIFY_CHANNELS.openSettings",
+    "page": "[data-action=open-settings] absent when settingsTarget is false"
+  },
+  "fence": "No change to what a notification says or when it is shown; only where the settings button goes and whether the look step reads Done.",
+  "found_by": "release session smoke on Windows 11 + Ubuntu VMs (tasks/evidence/desktop-onboard/2026-10-11-winlinux-smoke/, branch test/desktop-0-5-0-winlinux-smoke), 11/10/2026",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1145-desktop-onboarding-0-5-1.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

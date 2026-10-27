@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-aubergine: #300c41;
+  --color-royal-plum: #5b1f76;
+  --color-lime-spark: #dee948;
+  --color-bright-violet: #8034bf;
+  --color-lavender-glow: #b375f4;
+  --color-ink: #1c1e20;
+  --color-frost: #f0f4fe;
+  --color-pale-lilac: #e2dcf6;
+  --color-stone: #dedfe2;
+  --color-slate: #5b5d63;
+  --color-pewter: #7c8088;
+  --color-ash: #8e929b;
+  --color-midnight-navy: #0d1d39;
+  --color-lavender-whisper: #d0c6f0;
+  --color-deep-olive: #1d1f04;
+
+  /* Typography — Font Families */
+  --font-suisse-intl: 'Suisse Intl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-works: 'Suisse Works', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

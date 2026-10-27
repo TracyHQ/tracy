@@ -1,0 +1,79 @@
+{
+  "color": {
+    "amber-pulse": {
+      "$value": "#ffbe3c",
+      "$type": "color",
+      "$description": "Amber Pulse — Yellow supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "cream-paper": {
+      "$value": "#f9f9f8",
+      "$type": "color",
+      "$description": "Cream Paper — Page background and outer canvas. Borrowed from Notion's own workspace palette to position Super as its native publishing layer"
+    },
+    "white-card": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White Card — Card and elevated surface that sits on Cream Paper. Provides subtle separation through brightness contrast rather than shadow"
+    },
+    "ink-charcoal": {
+      "$value": "#262a2e",
+      "$type": "color",
+      "$description": "Ink Charcoal — Primary text, dominant foreground color, nav elements, and high-emphasis UI. The workhorse neutral of the entire system"
+    },
+    "notion-charcoal": {
+      "$value": "#37352f",
+      "$type": "color",
+      "$description": "Notion Charcoal — Secondary text and borders within card contexts. Slightly warmer than Ink Charcoal, echoes Notion's native text color"
+    },
+    "steel-body": {
+      "$value": "#66707a",
+      "$type": "color",
+      "$description": "Steel Body — Supporting neutral for secondary UI, dividers, and muted labels."
+    },
+    "slate-mute": {
+      "$value": "#808c99",
+      "$type": "color",
+      "$description": "Slate Mute — Near-gray with a faint cool tint, used for very low-emphasis body content and subtle borders"
+    },
+    "carbon": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Carbon — Heading emphasis, high-contrast dark surface for footer and dark feature sections, near-black for strong typographic moments"
+    },
+    "black": {
+      "$value": "#090909",
+      "$type": "color",
+      "$description": "Black — Footer background and deepest dark surface. The maximum darkness level in the surface stack"
+    },
+    "hairline": {
+      "$value": "#ebebeb",
+      "$type": "color",
+      "$description": "Hairline — Hairline borders, dividers, and subtle structural lines. The lightest visible neutral that still reads as a defined edge"
+    },
+    "silver-divider": {
+      "$value": "#ccd1d6",
+      "$type": "color",
+      "$description": "Silver Divider — Secondary borders and dividers where more visual weight is needed than Hairline"
+    },
+    "warm-taupe": {
+      "$value": "#787673",
+      "$type": "color",
+      "$description": "Warm Taupe — Subtle warm-toned text for tertiary content, gives body copy a slight paper-on-desk warmth without being obviously chromatic"
+    }
+  },
+  "font": {
+    "beausite": {
+      "$value": "Beausite",
+      "$type": "fontFamily",
+      "$description": "Custom display and body typeface used across every UI context — nav, headings, body, buttons, cards, badges. Beausite is a contemporary neo-grotesque with humanist proportions; its tight tracking at large sizes gives the hero editorial confidence, while its open counters at body sizes maintain readability. A close substitute would be Inter, Söhne, or General Sans."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://super.so",
+      "siteName": "Super",
+      "extractedAt": "2026-06-03T20:19:44.960Z",
+      "variant": "compact"
+    }
+  }
+}

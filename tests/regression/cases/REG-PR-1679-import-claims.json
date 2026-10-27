@@ -1,0 +1,75 @@
+{
+  "id": "REG-PR-1679-import-claims",
+  "kind": "fix",
+  "title": "A finished import leaves no resume pointer behind, and a claim no start can still be on its way under no longer refuses every later import",
+  "pr": 1679,
+  "area": "sites/import",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL pointing at a throwaway PostgreSQL, run the command in `run`.",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "#1664: in the creation workspace, where the handover swaps the import wizard for the build console, the resume pointer `tracy.import.active` is gone after the handover — host-filed, wizard-filed, or a manual handover retry — and Add site opened again shows the clean form and follows no finished run.",
+    "#1664: a read still going when the tab closed is offered again on reopen (Follow it), followed, handed over, and its pointer then cleared (C3).",
+    "#1665: the claim door answers a press that finds its claim standing with `idleMs`, the time since the press before on the server's clock (from the row's birth when no press was recorded), and the press is still the activity the abandoned-import sweep reads.",
+    "#1665: a start the hold refused (IMPORT_REMOVING), then the page opened again, starts under the claim once it sat idle for UNANSWERED_START_MS with no build job and no run on the host; a start a redeploy cut off is followed by Start again that sends a start; no claim is deleted from the wizard.",
+    "#1665 no second read: every start carries its claim press (strictly increasing, the row locked per press) and a take-over names the press it supersedes; the host answers the site's latest run, opening none, to a start whose press a run already carries or a newer one, or to a take-over when a run carries a press at or before the one it supersedes (A late, B pressed with no start, C took over: one read) — a start delayed past another tab's ended read (either order), the same press twice, and the same after a restart from runs.json; a newer press, Retry and Continue still open a run.",
+    "#1665 guard kept: a claim pressed less than the wait ago, with a build job, with no idle time named, whose site has a finished read, or whose status is unreadable sends no start; an idle claim whose read is live is followed, never started twice; a start still on its way when the wizard reopens sends no second start.",
+    "Related flows unchanged: Remove during a read is refused (IMPORT_RUNNING), the hold refuses every start until the deletion is done, the host handover (#1652) is followed, filing none."
+  ],
+  "selectors": {
+    "function": "packages/site/tracy-add-site/src/client/import-wizard.tsx forgetImport, begin (abandoned); packages/site/tracy-add-site/src/client/import.ts claimSite, UNANSWERED_START_MS; apps/tracy-web/src/sites/route.js POST /api/sites origin import; apps/tracy-web/src/sites/import-address.js pressImportClaim; packages/site/tracy-add-site/src/host/run.ts superseded",
+    "test": "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs; packages/site/tracy-add-site/test/error-next-step.test.mjs; packages/site/tracy-add-site/test/import-watch.test.mjs; apps/tracy-web/test/sites-route.test.mjs; apps/tracy-web/test/import-remove.test.mjs; packages/site/tracy-add-site/test/start-press.test.mjs",
+    "storage": "localStorage tracy.import.active"
+  },
+  "evidence": "Dev pass 24/10/2026 (#1664): the Add site tab kept showing 'Building … Getting a machine ready…' for an import whose job was already done/ready, because the pointer written while the read ran was cleared only by a `handed_over` step that never lands once the build console replaces the wizard. (#1665): an import started within 15 min of a Remove was refused with 'This import is being removed…' and left an accepted row with no run (RUN_UNKNOWN); every later start answered claim_stands until DELETE /api/sites/:key/import removed the row; a start cut off by a redeploy left the same row.",
+  "fence": "The wizard's resume pointer; the wizard's rule for starting under a claim that already stood; the claim door's press identity; and startRun's refusal to open a read for a superseded start. The host's one-run-per-site check, the hold, and the Remove path are unchanged",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs",
+      "packages/site/tracy-add-site/test/error-next-step.test.mjs",
+      "packages/site/tracy-add-site/test/import-watch.test.mjs",
+      "packages/site/tracy-add-site/test/start-press.test.mjs",
+      "apps/tracy-web/test/sites-route.test.mjs",
+      "apps/tracy-web/test/import-remove.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "creation workspace: a handover clears the resume pointer (the wizard filed the build, #1664)",
+      "creation workspace: a handover clears the resume pointer (the host filed the build, #1664)",
+      "creation workspace: a manual handover retry clears the resume pointer (#1664)",
+      "a read still going when the tab closed is followed again on reopen (C3)",
+      "wizard renders an import handover and a failed build",
+      "#1665: a start the hold refused, then the page opened again, starts once the claim is idle",
+      "#1665: a start a redeploy cut off leaves no claim that refuses Start again",
+      "#1665: a claim pressed less than the wait ago still sends no start",
+      "#1665: a claim with a build job (not retryable) still sends no start",
+      "#1665: a claim with no idle time named still sends no start",
+      "#1665: a claim whose site has a finished read still sends no start",
+      "#1665: a claim whose status is unreadable still sends no start",
+      "#1665: an idle claim whose read is live is followed, never started twice",
+      "S4-F003: a wizard opened again while the first start is still on its way to the host sends no second start",
+      "an unconfirmed import can reopen the form after two minutes without authorizing a duplicate start",
+      "POST /api/sites import: a press that finds its claim standing answers how long it sat idle",
+      "#1652 tab open: the wizard waits for the host and follows the job it filed, filing none",
+      "#1652 tab reopened mid-build: the first poll already names the host job, and it is followed",
+      "Remove while the host reports a read running: refused, nothing deleted, the mark lifted",
+      "the hold stands until every deletion is done: a host start meanwhile, or after, is refused",
+      "a start delayed past a take-over read that ended joins that read and opens none (A late after B)",
+      "a take-over start delayed past the read it took over from joins that read (B late after A)",
+      "the same press arriving twice opens one read, even after the first ended",
+      "after a restart the press identities still hold: a late start joins the read restored from the book",
+      "a newer press opens a new read after one ended, with or without retryOf; a press-less start is as before",
+      "#1665: a claim with no earlier press named still sends no start",
+      "a take-over supersedes every press up to the one it names: A late, B pressed without a start, C took over",
+      "after Remove forgets the site, a take-over under the new claim opens a read again"
+    ]
+  }
+}

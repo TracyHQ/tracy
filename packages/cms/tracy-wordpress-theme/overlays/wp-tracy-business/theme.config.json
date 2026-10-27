@@ -1,0 +1,39 @@
+{
+  "slug": "wp-tracy-business",
+  "themeName": "Tracy Business",
+  "textDomain": "wp-tracy-business",
+  "description": "Northgate Industrial: the Tracy Business company site as a WordPress block theme.",
+  "rootTokens": "tokens.css",
+  "nav": "top-left",
+  "hero": "split",
+  "variations": [],
+  "updateSlug": "wp-tracy-business",
+  "version": "1.1.10",
+  "roleReads": {
+    "--bg": "--ds-c-bg",
+    "--surface": "--ds-c-surface",
+    "--surface-warm": "--ds-c-surface-warm",
+    "--fg": "--ds-c-fg",
+    "--fg-2": "--ds-c-fg-2",
+    "--muted": "--ds-c-muted",
+    "--meta": "--ds-c-meta",
+    "--border": "--ds-c-border",
+    "--border-soft": "--ds-c-border-soft",
+    "--accent": "--ds-c-accent-text",
+    "--accent-on": "--ds-c-accent-on",
+    "--accent-hover": "--ds-c-accent-hover",
+    "--accent-active": "--ds-c-accent-active",
+    "--success": "--ds-c-success",
+    "--warn": "--ds-c-warn",
+    "--danger": "--ds-c-danger",
+    "--font-display": "--ds-font-display",
+    "--font-body": "--ds-font-body",
+    "--radius-sm": "--ds-input-radius",
+    "--radius-md": "--ds-btn-radius",
+    "--radius-lg": "--ds-card-radius",
+    "--radius-pill": "--ds-pill-radius",
+    "--elev-raised": {
+      "keep": "shadow depth, not a colour role"
+    }
+  }
+}

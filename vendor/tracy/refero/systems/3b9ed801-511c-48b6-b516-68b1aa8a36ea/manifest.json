@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+  "status": "complete",
+  "name": "B—Line",
+  "url": "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+  "sourceWebsite": "https://www.b-line.it",
+  "extractedAt": "2026-06-03T19:45:37.229Z",
+  "capturedAt": "2026-10-08T05:10:33.511386+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Monospaced editorial museum catalog — achromatic typographic grid where the wordmark out-sizes every product.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/88a4346d-3380-4501-8350-49105423716f.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5cc64da5681c565893c55a973c3b1f60c635f9603e1eb791d4de47299532fb9d",
+      "bytes": 15925
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1d0c58f5d35a488d871a40b74de7d09b52c0d02818a2cb02a67403931d436ccb",
+      "bytes": 140761
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "876b497289dde815131693d35ed691a9be4fc79459fe872eb2ccbc5201c1982d",
+      "bytes": 13259
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "50080ee38a874082ad0cef8b930191284d3ff632631f1702fc85467ae65fb54d",
+      "bytes": 4996
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "64dfd6267a3423b374ce4559a06a31f63db4b309de8597521b90c4e593a5c4c7",
+      "bytes": 10388
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c4a3fbc037e45507247388f16f8838e763909dbae905d449c6ec1fcf245f36e5",
+      "bytes": 1756
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "aee522c9879c4bafd379f635d1b83f6fa93832f0cb37eb02be4dee827f997414",
+      "bytes": 490
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d4120281bc15f6418a06e5a466241dfa9a00f57d7b58a50d5a0ae88f06c52335",
+      "bytes": 507
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4198e0bac43c243ed677fe11eb1d3162cd683bfb8839ac87e004efec26f59be9",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8be8026c1f1c7f22427f2538e74a2acfc53aa2a008c5d577b1b5f5791d8d0ec7",
+      "bytes": 37681
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c45ac830cf11e2ec6eb41e99c293488307d999dcbeaa856064994f3e30576503",
+      "bytes": 19347
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f8b4b49365c21c5b31ccf3a45e4a15ee0794db0068da91dd1ed5960ca552bbb4",
+      "bytes": 23246
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "04eacc432c539fc5b8db7c8bb54ff5179fd0c7bac367ba52467673a8a5ab2e0a",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9b1fedbdd910dc5095fc5a27e8ef5223611586c9aacf27b9c95aab8507f8253f",
+      "bytes": 985
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9e964c06de3d9eaa2ece188410d2ac758ac9d25a1f3b2bf7eacabc9951e9f0a5",
+      "bytes": 1381
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "17824ea8-ac7d-42ca-97e2-9bf92ebea7e1",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "27a4a4fa-4b1a-4e7e-b2c3-3e5bf57f00e5",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "39105d96-3cb1-497a-8f9f-507a1bed4d30",
+    "3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "73359194-de93-436e-af53-81d4029f5e7a",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "d75a643b-a518-4550-b430-679cd989a447",
+    "e67ac20e-6497-4756-b7e2-17859a794fb6",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268"
+  ]
+}

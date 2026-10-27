@@ -1,0 +1,91 @@
+{
+  "status": true,
+  "id": "54775783265",
+  "username": "tamarel.hoian",
+  "full_name": "Tamarel Restaurant & Bar",
+  "is_private": false,
+  "is_business_account": false,
+  "is_verified": false,
+  "category_name": null,
+  "edge_followed_by": {
+    "count": 11
+  },
+  "edge_follow": {
+    "count": 10
+  },
+  "edge_owner_to_timeline_media": {
+    "count": 7,
+    "edges": [
+      {
+        "node": {
+          "__typename": "GraphImage",
+          "id": "3902823006281326597",
+          "shortcode": "C7QwnWDw9u8",
+          "is_video": false,
+          "taken_at_timestamp": 1718373515,
+          "pinned_for_users": []
+        }
+      },
+      {
+        "node": {
+          "__typename": "GraphSidecar",
+          "id": "3383199831497158077",
+          "shortcode": "C7PL-rscwj8",
+          "is_video": false,
+          "taken_at_timestamp": 1700901808,
+          "pinned_for_users": []
+        }
+      },
+      {
+        "node": {
+          "__typename": "GraphImage",
+          "id": "3225476498725446964",
+          "shortcode": "Chkhb5oAb7Y",
+          "is_video": false,
+          "taken_at_timestamp": 1693913937,
+          "pinned_for_users": []
+        }
+      },
+      {
+        "node": {
+          "__typename": "GraphSidecar",
+          "id": "3634361766309262479",
+          "shortcode": "Cg6z9PxA40A",
+          "is_video": false,
+          "taken_at_timestamp": 1692097894,
+          "pinned_for_users": []
+        }
+      },
+      {
+        "node": {
+          "__typename": "GraphSidecar",
+          "id": "3407464188826638077",
+          "shortcode": "Cg9PRymg5LT",
+          "is_video": false,
+          "taken_at_timestamp": 1691843750,
+          "pinned_for_users": []
+        }
+      },
+      {
+        "node": {
+          "__typename": "GraphSidecar",
+          "id": "3484889163256775590",
+          "shortcode": "Cg9OBDCAglp",
+          "is_video": false,
+          "taken_at_timestamp": 1691843305,
+          "pinned_for_users": []
+        }
+      },
+      {
+        "node": {
+          "__typename": "GraphSidecar",
+          "id": "3678623468878166196",
+          "shortcode": "CgkdO7GAceZ",
+          "is_video": false,
+          "taken_at_timestamp": 1691764036,
+          "pinned_for_users": []
+        }
+      }
+    ]
+  }
+}

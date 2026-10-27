@@ -1,0 +1,352 @@
+{
+  // Biome here is a FORMATTER, not a linter.
+  // Right/wrong rules belong to oxlint (`.oxlintrc.json`); biome only keeps the form consistent and
+  // sorts Tailwind classes.
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      // Captured from a release archive by `capture-inventory.mjs`, compared byte for byte by its `--check`.
+      // Every WordPress profile file is byte-pinned (sha256 in quickstarts.json / the receiver zip):
+      // the generators write them, a formatter pass would be a breaking change.
+      "!packages/cms/tracy-wordpress-quickstart/contracts/**",
+      // Theme docs inventory written by the skill's `generate-docs.mjs`, whose `--check` compares it byte
+      // for byte: a formatter pass makes that gate report it stale (measured 27/09 on wp-ja-vega).
+      "!packages/cms/tracy-wordpress-theme/**/docs/generated/**",
+      // Evidence is what a tool printed (result.json of a driver, a door's answer): never reformatted.
+      "!tasks/evidence/**",
+      // The desktop app's window shell, bundled from shell/ and the dsh submodule at start and package time
+      // (build/build-shell.mjs); gitignored, so only a local run ever has it.
+      "!packages/desktop/tracy-desktop/src/generated/**",
+      // Tool state, not source code.
+      "!.teamshare/**",
+      "!.claude/**",
+      // Build jobs and seeder receipts are runtime state, not authored source.
+      "!docs/agents/**",
+      // 🔒 SECRETS AND BACKUPS OF DELETE OPERATIONS — not source code, and not to be read any more
+      // closely than necessary. `.secrets/` is already in `.gitignore`, so `git status` is clean,
+      // and that is exactly where the trap sprang once: biome does NOT read `.gitignore` (it just
+      // doesn't — there is no switch here to turn it on), so it still scanned, tripped over three JSON
+      // dump files on 04/09, and `pnpm test:lint` went red on three files nobody wrote. The error only
+      // said "format", never that they were machine-made and outside git.
+      "!.secrets/**",
+
+      // Wrangler's cache — `workers/*/.wrangler/cache/cf.json` is written on EVERY `wrangler` run
+      // inside a Worker folder, even `secret list` or `kv key get`. It IS already in `.gitignore`, so
+      // `git status` is clean, and that is again exactly where the trap sprang: biome does not read
+      // `.gitignore` (see the `.secrets/` note just above), so it still scanned, saw Cloudflare's JSON
+      // not following the repo's format, and turned the `lint` gate RED over a file nobody wrote.
+      // Measured 08/09 — the gate went red right after a perfectly harmless secret read.
+      "!**/.wrangler/**",
+      // Turborepo's run logs and `--summarize` JSON (`.turbo/`, one per package and at the root).
+      // Gitignored, and biome does not read `.gitignore`: one local `turbo run … --summarize` left a
+      // 2000-line summary that turned the `lint` gate red (12/10/2026).
+      "!**/.turbo/**",
+      // 🔒 THE RETIRED VERDACCIO STORE IS STILL ON DISK. The private registry was retired 06/09 (ADR 0014)
+      // and `infra/` left git with it — but any machine that ever ran verdaccio still keeps
+      // `infra/registry/storage/` with thousands of npmjs `package.json` files. Biome does NOT read
+      // `.gitignore` (see the `.secrets/` note above), so "left git" is not enough for it to stop
+      // scanning: measured 06/09, `pnpm test:lint` went red on `@asamuzakjp/nwsapi/package.json`, a file
+      // nobody in this repo wrote. Exclude all of `infra/`, not just `storage/`, because that folder
+      // is NO longer this repo's code in any sense.
+      // See the note of the same name in `.oxlintrc.json`: another repo's code, another repo's
+      // formatting conventions.
+      "!gitpush-noti/**",
+      "!infra/**",
+      // 🔒 GENERATED FILES, NOT CODE: `contract.mjs init` moves the old canonical copy into
+      // `tasks/<site>/attempts/superseded-<stamp>/` on every run — 24 folders after one day of building
+      // (15/09). They are in `.gitignore`, but biome does NOT read `.gitignore` (see the
+      // `.secrets/` note above), so they must be excluded here, or `pnpm test:lint` goes red on the JSON
+      // layout of a snapshot nobody may edit.
+      "!tasks/*/attempts/**",
+      // 🔒 GENERATED FILE WITH EXACTLY ONE OWNER (27/09): `skill-sets.json` is written by `scripts/gen-presets.ts`
+      // and the `presets` gate compares it byte for byte — same reason as `multilingual-map.json` below.
+      "!packages/fleet/tracy-fleet-operation/dsh/skill-sets.json",
+      // Same reason (29/09): `design-tokens.json` is written by `scripts/build-design-tokens.mjs` and the
+      // `design-tokens` gate compares it byte for byte — biome reformatting it means a tug-of-war forever.
+      "!apps/tracy-web/src/design-tokens.json",
+      // 🔒 GENERATED FILE WITH EXACTLY ONE OWNER. `multilingual-map.json` is written by
+      // `scripts/build-joomla-multilingual.mjs` and checked by the `joomla-multilingual` gate. Letting
+      // biome format it gives it two owners: the generator decides the content, biome decides the
+      // layout, and the bytes belong to nobody — generate then format and the gate is red, format then
+      // generate and it is red too. Measured 12/09: biome folded `"translate": [...]` onto one line and the gate went red.
+      // (That gate compares STRUCTURE, so a missing key is still red; only the layout is no longer contested.)
+      //
+      // ⚠ THE OTHER THREE FILES IN THE SAME FOLDER ARE STRICTER STILL: THEIR BYTES ARE PINNED BY SHA256.
+      // `scripts/provision/quickstarts.json` keeps a `contractFiles` entry per profile, and it
+      // pins all four names — `content-map.json`, `manifest.json`, `multilingual-map.json`,
+      // `presentation-lock.json`. There the hash IS the contract, so a format run does not turn a gate red
+      // (no gate compares their layout) but makes the PROVISION RUN refuse the contract, i.e. it breaks
+      // as far as possible from where you typed. Measured 14/09: biome wanted to fold a `"jsonPath": [...]` in
+      // `tracy-base/j6/1.0.0/content-map.json` onto one line; that file's hash is
+      // `260d23c9…` and sits at line 73 of `quickstarts.json`.
+      //
+      // So exclude by EXTENSION rather than by name: every `.json` under `contracts/` is contract
+      // data. `README.md` is the only other file in that tree, and it is still scanned.
+      "!packages/cms/tracy-joomla-quickstart/contracts/*/*/*/*.json",
+      // Same reason, other tree: a template patch is the file the archive ships, byte for byte (gate
+      // quickstart-overrides holds it against the profile's presentation-lock hash). T4 site
+      // profiles are one-line JSON in the archive; reformatting them breaks that hash.
+      "!packages/cms/tracy-joomla-quickstart/template-patches/**/*.json",
+      // A JA template's own script with a Tracy block appended (template-patches/README.md): JoomlArt's file in
+      // its own style, applied over the release when it is cut; formatting it rewrites what the release ships
+      "!packages/cms/tracy-joomla-quickstart/template-patches/ja-dark-mode/**/js/template.js",
+      // 🔒 OTHER PEOPLE'S CODE. `vendor/` is subtrees and a submodule — reformatting them makes
+      // every later upstream pull show up as "whole file changed", hiding exactly the change that needs
+      // review. BOUNDARY RULE #5 in CLAUDE.md.
+      "!vendor/**",
+      // 🔒 $DSH_HOME. `tch/profiles/*` is owned by dsh, which writes into it itself (`initProfile` writes
+      // its own `pnpm-workspace.yaml`). Reformatting it means fighting the owner.
+      "!tch/**",
+      // 🔒 STORYBOOK'S STATIC BUILD — 11 MB generated by `storybook build`, not source code.
+      //
+      // It IS already in `.gitignore`, so `git status` is clean, and that is exactly the trap:
+      // biome does not read `.gitignore` (see the `.secrets/` note above), so it still scans and
+      // `pnpm test:lint` goes red on four minified bundles — `sb-manager/runtime.js`,
+      // `assets/iframe-*.js`… Nobody wrote those files, and the error never says they are
+      // machine-made. Measured 03/09, after a session ran `storybook build`.
+      //
+      // Exclude by path rather than turning on `vcs.useIgnoreFile`: `.gitignore` also hides things
+      // WE want formatted when they come back (`lib/client.js` is one — it IS committed,
+      // see RULE #3).
+      "!packages/dev/tracy-design/storybook-static/**",
+      // 🔒 BIOME DOES NOT READ `.gitignore` (see the `.secrets/` and `infra/` notes above), so a generated
+      // folder is still scanned even though git has ignored it for ages. `.astro/` is Astro's cache: it
+      // appears on the first `astro dev` in the theme package and brings `.d.ts` + `settings.json` +
+      // font metadata generated by Astro. Measured 14/09: 7 format errors in `.astro/`, enough to turn the
+      // `lint` gate red on the machine of anyone who just ran that theme once — red over files NOBODY in the repo wrote.
+      "!packages/cms/tracy-emdash-theme-business/.astro/**",
+      // Same cache, one more Astro project: the API documentation site (`apps/tracy-docs`, S5).
+      "!apps/tracy-docs/.astro/**",
+      // Same class, same reason: `scripts/gen-ops-cms-snapshot.mjs` writes one JSON per
+      // environment into `apps/tracy-web/static/ops-cms/` before every tracy-web image build, and
+      // `.gitignore` already has it. Nobody writes those bytes by hand — measured 15/09, two files
+      // were enough to turn the `lint` gate red on a machine that had built the image once.
+      "!apps/tracy-web/static/ops-cms/**",
+      // The Welcome popup's animated scenes (`apps/tracy-web/src/welcome/route.js`): copied as they are
+      // from the approved prototype (bao-cao/onboarding-tracy, 25/10/2026) so the next change to it is a
+      // plain copy again. A formatter pass would turn every later copy into a diff of the whole tree.
+      "!apps/tracy-web/src/welcome/scenes/**",
+      // Fixture of the harness screen — `scripts/gen-presets.ts` overwrites it on every run, and the
+      // `presets` gate compares it VERBATIM with the regenerated copy. Formatting it turns that gate red on
+      // the next run, with a message saying "matrix drift" while the matrix has not changed at all. Same
+      // reason as the client bundle below.
+      "!packages/web/tracy-harness/src/matrix.generated.ts",
+      // tracy-brand's palette — `scripts/gen-palette.mjs` rewrites it (JSON.stringify, double quotes)
+      // before EVERY build, and the `bundles` gate rebuilds and compares verbatim. The formatter switching to
+      // single quotes makes the next build drift by 64 lines over quote marks alone (measured 14/09).
+      "!packages/brand/tracy-brand/src/client/generated.ts",
+      // Generated by scripts/build-od-slots.mjs and compared byte-for-byte by the od-slots gate;
+      // a formatter pass over it is a gate failure, not tidiness.
+      "!packages/design/tracy-design-inspiration/src/host/artifact-slots.json",
+      // Same kind: `tracy-cms-sections/scripts/build.mjs` generates it on every build from the sections'
+      // own markup, and the `cms-sections` gate compares VERBATIM. It is not about indentation —
+      // biome folds short arrays onto one line, which `JSON.stringify` cannot produce at any
+      // `indent` level, so the two never meet: build writes → biome rewrites → gate red →
+      // build writes again. Measured 10/09, three commits in a row on the same file.
+      "!packages/cms/tracy-cms-sections/regions.json",
+      // The public design page's copy of the 152 systems (ADR 0011): 1 515 files split out of vendor
+      // by `scripts/build-assets.mjs` before every build, gitignored, and one hash-checked gate says
+      // when they drift. Formatting them would be formatting vendor — see `!vendor/**` above.
+      "!packages/web/tracy-design-page/public/systems/**",
+      "!packages/web/tracy-design-page/public/data/**",
+      // 🔒 CMS BUILD OUTPUT, STAGED BEFORE EVERY `docker build`, NOT CODE ANYONE WROTE.
+      // `scripts/tools/stage-cms-seeder.sh` writes `seed.mjs` here — a 1.8 MB bundle — plus two
+      // wrappers, for the image's `COPY … /opt/tracy/cms/` layer to pick up. (Until 07/09 it also wrote two
+      // theme zips and was named `stage-cms-themes.sh`; themes now ship from TracyHQ/claude-cowork.)
+      // The folder is in
+      // `.gitignore`, but biome does NOT read `.gitignore` (see the `.secrets/` note above), so
+      // on any machine that just ran staging, `pnpm test:lint` goes red over a file nobody typed. Measured 08/09,
+      // and the `language` gate had gone red for the same reason minutes earlier — same folder, two gates, twice.
+      "!packages/fleet/tracy-fleet-operation/dsh/cms/**",
+      // The dsh plugin's client bundle — built by esbuild, overwritten on every build. Formatting it
+      // turns `check-bundles` red at once, because that gate compares verbatim with the rebuilt copy.
+      "!packages/*/*/lib/*.js",
+      // The motion library emitted by `packages/cms/tracy-cms-motion` — a minified esbuild bundle,
+      // copied byte-identical into both themes. Reformatting it makes the copies drift from the source,
+      // and the `cms-motion --check` gate goes red at once. `.oxlintrc.json` excludes exactly these two files.
+      "!packages/cms/tracy-wordpress-theme/src/tracy/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/tracy-base/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-tracy-business/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-kinetic/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-morgan/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-vega/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-nova/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-essence/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-impact/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-restaurant/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-diner/assets/js/tracy-motion.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-fresco/assets/js/tracy-motion.js",
+      // The `tracy-base` target's `theme.json` is a GENERATED file (rootVariation → JSON.stringify with 2
+      // spaces); biome folds short arrays onto one line and the `wordpress-theme --check` gate goes red.
+      "!packages/cms/tracy-wordpress-theme/src/tracy-base/theme.json",
+      // A build run's spec-pack: written-out data, not code; large content/sections JSON
+      // (~2 MB), and one format pass makes prek abort the commit ("Hook changes conflicted").
+      "!tasks/*/spec/**",
+      // Run records of ja-morgan-wp7 written by skill tools: `freeze.json` is bound by sha256 to the
+      // first event of `run.jsonl`, and the two contracts are canonical tool output whose identity
+      // (hash) later runs compare; a formatter pass would break both bindings.
+      "!tasks/ja-morgan-wp7/freeze.json",
+      "!tasks/ja-morgan-wp7/freeze-epoch1.json",
+      "!tasks/ja-morgan-wp7/design-contract.json",
+      "!tasks/ja-morgan-wp7/visual.contract.json",
+      // Machine record of the last `check-port finish` run (UTC per step, argv, exit, hashes): written once by the
+      // check and compared by its `records` mode; a formatter pass would only churn the arrays.
+      "!tasks/ja-morgan-wp7/finish-steps.json",
+      // Written by `release.mjs` and listed by sha256 in the release's SHA256SUMS: a formatter pass would break that binding.
+      "!tasks/ja-morgan-wp7/release/VERIFICATION.json",
+      // Canonical contract written by `visual/contract.mjs`; its bytes are bound by hash in the release evidence.
+      "!tasks/ja-nova-wp7/visual.contract.json",
+      "!tasks/ja-nova-wp7/design-contract.json",
+      // Written by the skill's release and audit tools and bound by hash (SHA256SUMS, the audit
+      // receipt named in VERIFICATION.json): reformatting them would break the binding.
+      "!tasks/ja-nova-wp7/release/**",
+      "!tasks/ja-nova-wp7/port-audit.json",
+      "!tasks/ja-kinetic-wp7/visual.contract.json",
+      "!tasks/ja-kinetic-wp7/design-contract.json",
+      // Written by the skill's release and audit tools and bound by hash (see ja-nova-wp7 above).
+      "!tasks/ja-kinetic-wp7/release/**",
+      "!tasks/ja-kinetic-wp7/port-audit.json",
+      // Same for ja-vega-wp7: canonical contracts written by `visual/contract.mjs` / `design-contract.mjs adopt`, bound by hash.
+      "!tasks/ja-vega-wp7/visual.contract.json",
+      "!tasks/ja-vega-wp7/design-contract.json",
+      // Release files and the finish-audit receipt written by the skill tools and hashed into the release (a reformat makes them stale).
+      "!tasks/ja-vega-wp7/release/**",
+      "!tasks/ja-vega-wp7/port-audit.json",
+      // Run records and canonical contracts of ja-impact-wp7 written by skill tools; their bytes are bound by hash.
+      "!tasks/ja-impact-wp7/freeze.json",
+      "!tasks/ja-impact-wp7/design-contract.json",
+      "!tasks/ja-impact-wp7/visual.contract.json",
+      "!tasks/ja-impact-wp7/release/**",
+      "!tasks/ja-impact-wp7/measured/**",
+      // Run records and canonical contracts of ja-restaurant-wp7 written by skill tools; their bytes are bound by hash.
+      "!tasks/ja-restaurant-wp7/freeze.json",
+      "!tasks/ja-restaurant-wp7/freeze-epoch1.json",
+      "!tasks/ja-restaurant-wp7/design-contract.json",
+      "!tasks/ja-restaurant-wp7/parity-accepted.json",
+      "!tasks/ja-restaurant-wp7/port-audit.json",
+      "!tasks/ja-restaurant-wp7/groups/*/port-audit.json",
+      "!tasks/ja-restaurant-wp7/visual.contract.json",
+      "!tasks/ja-restaurant-wp7/target-map.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-tracy-business/theme.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-kinetic/theme.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-morgan/theme.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-vega/theme.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-nova/theme.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-essence/theme.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-impact/theme.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-restaurant/theme.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-diner/theme.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-fresco/theme.json",
+      // The package docs index is a GENERATED file (`generate-docs.mjs` of the WordPress skill); its `--check`
+      // compares byte for byte, so one biome format pass makes it report "stale".
+      "!packages/cms/tracy-wordpress-theme/overlays/wp-ja-kinetic/docs/generated/inventory.json",
+      // Contract and release files written by the skill tools and hashed into the release (a reformat makes them stale).
+      "!tasks/ja-essence-wp7/design-contract.json",
+      "!tasks/ja-essence-wp7/parity-accepted.json",
+      "!tasks/ja-essence-wp7/visual.contract.json",
+      "!tasks/ja-essence-wp7/release/**",
+      "!tasks/ja-essence-wp7/port-audit.json",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-kinetic/docs/generated/inventory.json",
+      "!packages/cms/tracy-joomla-template/src/tpl_tracy/media/js/tracy-motion.js",
+      // Agent live preview: the same generation run, the same byte-comparing gate (`cms-preview --check`).
+      "!packages/cms/tracy-wordpress-theme/src/tracy/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/tracy-base/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-tracy-business/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-kinetic/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-morgan/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-vega/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-nova/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-essence/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-impact/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-restaurant/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-diner/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-wordpress-theme/src/wp-ja-fresco/assets/js/tracy-preview.js",
+      "!packages/cms/tracy-joomla-template/src/tpl_tracy/media/js/tracy-preview.js",
+      // The same bundle as a string module for the site proxy; same run, same gate.
+      "!apps/tracy-web/src/bar/tracy-preview.generated.js",
+      // The same generation run: the motion library's text module, written by the package's `scripts/build.mjs`
+      // and compared VERBATIM with the regenerated copy by the `cms-motion --check` gate. Formatting it turns
+      // that gate red on the next run — same reason as `matrix.generated.ts` above.
+      "!packages/cms/tracy-cms-motion/src/text.generated.ts",
+      // 🔒 ALSO A BUNDLE, AND ITS SOURCE IS NOT IN THIS REPO — the header says so plainly:
+      // `// src/shared/utils/webrootZonesCli.ts`, a file of `tracy-desk`.
+      //
+      // This is not hypothetical: the first `biome format --write` run (30/08) reformatted
+      // it, 338 lines added / 321 removed, and it had to be reverted. `tracy-infra` excludes exactly this file
+      // with the note "already formatted once, 29/08" — the same trap, two repos, twice.
+      // Formatting it makes every later copy-over show up as "whole file changed", hiding exactly the
+      // zone-rule change that needs review.
+      "!packages/fleet/tracy-fleet-operation/scripts/lib/webroot-zones.cjs"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 110,
+    "useEditorconfig": true,
+    // CSS stays out: biome cannot yet parse Tailwind v4 syntax (`@theme`, `@custom-variant`,
+    // `@source`) and gives up halfway. Formatting part of `tokens.css` is worse than not formatting
+    // it — DESIGN.md §1.1 says its three selector tiers must keep their order.
+    "includes": ["**", "!**/*.md", "!**/*.yml", "!**/*.yaml", "!.github/**", "!**/*.css"]
+  },
+  "javascript": {
+    "formatter": {
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "bracketSpacing": true,
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "quoteStyle": "single",
+      "semicolons": "asNeeded",
+      "trailingCommas": "none"
+    }
+  },
+  "json": {
+    "parser": { "allowComments": true }
+  },
+  // 🔒 GENERATED FILE THAT OUTGREW THE DEFAULT SIZE LIMIT. `apps/tracy-web/api-reference.snapshot.json`
+  // is written by `scripts/build-api-spec.mjs` (`pnpm api:snapshot`) and crossed biome's default
+  // `files.maxSize` (1 MiB) on 29/09/2026 at ~1.006 MiB, so `biome format --write` on it started
+  // failing with "No files were processed" instead of formatting it — breaking `pnpm api:snapshot`
+  // for everyone, not just CI. The `api-spec` gate (`scripts/check-api-spec.ts`) compares this file
+  // SEMANTICALLY (parses both sides and diffs the parsed documents), not byte-for-byte, so raising
+  // the limit here is safe: nothing downstream depends on biome's exact array-collapsing layout.
+  // 4 MiB gives ~4x headroom before the next API surface growth trips this again.
+  "overrides": [
+    {
+      "includes": ["apps/tracy-web/api-reference.snapshot.json"],
+      "files": { "maxSize": 4194304 }
+    }
+  ],
+  "linter": {
+    // Only one rule: sort Tailwind classes. Every other rule belongs to oxlint.
+    //
+    // 🔒 THIS RULE IS AT `warn` LEVEL, SO IT MUST NOT REWRITE THE TREE BY ITSELF IN `pnpm lint`.
+    // `format:check` — what the gate actually runs — lets `warn` through, i.e. the repo does NOT require the
+    // tree to have sorted classes. But `pnpm format` used to run `biome lint --write` over all of `packages/**`,
+    // so the command meant for people writing code produced a **341-file** diff no gate asked for. Several
+    // agent sessions can share one checkout, so one `pnpm lint` run swallowed another session's files
+    // into its own diff and they had to be removed by hand with `git checkout --`.
+    // That sweep is now `pnpm format:classes`, run when WANTED. To make it mandatory, raise
+    // `level` to `error` — and then re-sort the 341 files in the same pass, on purpose.
+    "enabled": true,
+    "includes": ["packages/**/*.{ts,tsx}", "!**/node_modules/**", "!**/*.test.{ts,tsx}"],
+    "rules": {
+      "preset": "none",
+      "nursery": {
+        "useSortedClasses": {
+          "fix": "safe",
+          "level": "warn",
+          "options": { "functions": ["cn"] }
+        }
+      }
+    }
+  },
+  "vcs": { "clientKind": "git", "enabled": false, "useIgnoreFile": false }
+}

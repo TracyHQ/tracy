@@ -1,0 +1,55 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "emdash-playground",
+	"compatibility_date": "2026-02-24",
+	"compatibility_flags": ["nodejs_compat"],
+	"preview_urls": true,
+	// Custom entrypoint that exports EmDashPreviewDB
+	"main": "./src/worker.ts",
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "PLAYGROUND_DB",
+				"class_name": "EmDashPreviewDB",
+			},
+		],
+	},
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_sqlite_classes": ["EmDashPreviewDB"],
+		},
+	],
+	"observability": {
+		"enabled": true,
+	},
+	"routes": [
+		{
+			"pattern": "try.emdashcms.com",
+			"custom_domain": true,
+			"previews_enabled": true,
+		},
+	],
+	"kv_namespaces": [
+		{
+			"binding": "SESSION",
+			"id": "753be2785dfb4da886e837a90cd9a21a",
+		},
+	],
+	"previews": {
+		"kv_namespaces": [
+			{
+				"binding": "SESSION",
+				"id": "efd741f1e4d1443e841a187b3a4cb023",
+			},
+		],
+		"durable_objects": {
+			"bindings": [
+				{
+					"name": "PLAYGROUND_DB",
+					"class_name": "EmDashPreviewDB",
+				},
+			],
+		},
+	},
+}

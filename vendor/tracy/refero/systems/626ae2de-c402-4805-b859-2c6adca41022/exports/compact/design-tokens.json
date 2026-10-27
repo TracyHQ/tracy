@@ -1,0 +1,74 @@
+{
+  "color": {
+    "plaster": {
+      "$value": "#f2f3f5",
+      "$type": "color",
+      "$description": "Plaster — Page background, full-bleed canvas"
+    },
+    "mist": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Mist — Card surfaces, placeholder image wells, subtle inset zones"
+    },
+    "chalk": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Chalk — Elevated card surfaces when differentiation from Plaster is needed"
+    },
+    "hairline": {
+      "$value": "#d1d5db",
+      "$type": "color",
+      "$description": "Hairline — Stronger dividers, disabled icon strokes, secondary borders"
+    },
+    "inkstone": {
+      "$value": "#0f172a",
+      "$type": "color",
+      "$description": "Inkstone — Primary heading text, high-emphasis body copy, nav logo wordmark"
+    },
+    "slate": {
+      "$value": "#334155",
+      "$type": "color",
+      "$description": "Slate — Secondary headings, medium-emphasis text, icon strokes"
+    },
+    "graphite": {
+      "$value": "#475569",
+      "$type": "color",
+      "$description": "Graphite — Body text, nav links, button labels — the everyday workhorse neutral"
+    },
+    "pewter": {
+      "$value": "#64748b",
+      "$type": "color",
+      "$description": "Pewter — Muted helper text, secondary links, metadata"
+    },
+    "fog": {
+      "$value": "#939eae",
+      "$type": "color",
+      "$description": "Fog — Disabled state text, tertiary captions, low-emphasis labels"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Maximum-contrast text where #0f172a still feels too soft (rare)"
+    },
+    "spark-violet": {
+      "$value": "#6d4aff",
+      "$type": "color",
+      "$description": "Spark Violet — Wordmark icon and the sole chromatic accent in the entire system — used at the smallest possible size to mark the brand without coloring the interface"
+    }
+  },
+  "font": {
+    "greycliff": {
+      "$value": "Greycliff",
+      "$type": "fontFamily",
+      "$description": "Single-family system. Weight 300 carries display (60px) and large headings (36px) for a quiet, editorial whisper. Weight 400–500 handles body (16–18px) and UI labels. Weight 600–700 reserved for emphasis and the wordmark. Because there is no secondary face, the system creates rhythm purely through weight and size contrast inside one typeface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://limitless.ai",
+      "siteName": "Limitless",
+      "extractedAt": "2026-06-03T20:03:56.439Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,482 @@
+{
+  "schemaVersion": "tracy-quickstart-demo-trim/wordpress/v1",
+  "extensionVersion": "1.0.0",
+  "contract": "ja-restaurant/wp7/1.0.1",
+  "baseHash": "51b2c3be9e54e048c04295541f0dc2e70486fafe3ec809c10f474d4f129a0f70",
+  "baseFiles": {
+    "manifest.json": "d545bdc5de13d0f634beaacda01aa17f77417748861619ff055a9ff3bef76f67",
+    "content-map.json": "3da2500fa124dc4b363d22db547db65f129c9770ca6e2d276324132bc09f49e0",
+    "presentation-lock.json": "b08cf515fdb57e491c25899eeeace02877d4ab136630c9b77403d889bf579d14"
+  },
+  "kept": [
+    {
+      "key": "page-3",
+      "kind": "page",
+      "id": 3,
+      "language": null,
+      "reason": "a utility page the theme keeps as a draft"
+    },
+    {
+      "key": "page-96",
+      "kind": "page",
+      "id": 96,
+      "language": null,
+      "reason": "a utility page the theme keeps as a draft"
+    },
+    {
+      "key": "page-97",
+      "kind": "page",
+      "id": 97,
+      "language": null,
+      "reason": "contract maps it as page-homepage"
+    },
+    {
+      "key": "page-98",
+      "kind": "page",
+      "id": 98,
+      "language": null,
+      "reason": "contract maps it as page-your-profile"
+    },
+    {
+      "key": "page-99",
+      "kind": "page",
+      "id": 99,
+      "language": null,
+      "reason": "contract maps it as page-about-us"
+    },
+    {
+      "key": "page-100",
+      "kind": "page",
+      "id": 100,
+      "language": null,
+      "reason": "contract maps it as page-menu"
+    },
+    {
+      "key": "page-101",
+      "kind": "page",
+      "id": 101,
+      "language": null,
+      "reason": "contract maps it as page-offers"
+    },
+    {
+      "key": "page-102",
+      "kind": "page",
+      "id": 102,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-103",
+      "kind": "page",
+      "id": 103,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-104",
+      "kind": "page",
+      "id": 104,
+      "language": null,
+      "reason": "contract maps it as page-blog"
+    },
+    {
+      "key": "page-105",
+      "kind": "page",
+      "id": 105,
+      "language": null,
+      "reason": "contract maps it as page-gallery"
+    },
+    {
+      "key": "page-106",
+      "kind": "page",
+      "id": 106,
+      "language": null,
+      "reason": "contract maps it as page-our-history"
+    },
+    {
+      "key": "page-107",
+      "kind": "page",
+      "id": 107,
+      "language": null,
+      "reason": "contract maps it as page-phone-reservation"
+    },
+    {
+      "key": "page-108",
+      "kind": "page",
+      "id": 108,
+      "language": null,
+      "reason": "contract maps it as page-contact-us"
+    },
+    {
+      "key": "page-109",
+      "kind": "page",
+      "id": 109,
+      "language": null,
+      "reason": "contract maps it as page-simple-menu"
+    },
+    {
+      "key": "page-110",
+      "kind": "page",
+      "id": 110,
+      "language": null,
+      "reason": "contract maps it as page-menu-with-image"
+    },
+    {
+      "key": "page-111",
+      "kind": "page",
+      "id": 111,
+      "language": null,
+      "reason": "contract maps it as page-2-column-menu"
+    },
+    {
+      "key": "page-112",
+      "kind": "page",
+      "id": 112,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-113",
+      "kind": "page",
+      "id": 113,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-114",
+      "kind": "page",
+      "id": 114,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-115",
+      "kind": "page",
+      "id": 115,
+      "language": null,
+      "reason": "contract maps it as page-login"
+    },
+    {
+      "key": "page-116",
+      "kind": "page",
+      "id": 116,
+      "language": null,
+      "reason": "contract maps it as page-registration"
+    },
+    {
+      "key": "page-117",
+      "kind": "page",
+      "id": 117,
+      "language": null,
+      "reason": "contract maps it as page-user-profile"
+    },
+    {
+      "key": "page-118",
+      "kind": "page",
+      "id": 118,
+      "language": null,
+      "reason": "contract maps it as page-category-blog"
+    },
+    {
+      "key": "page-119",
+      "kind": "page",
+      "id": 119,
+      "language": null,
+      "reason": "contract maps it as page-offline-page"
+    },
+    {
+      "key": "page-120",
+      "kind": "page",
+      "id": 120,
+      "language": null,
+      "reason": "contract maps it as page-erro-page"
+    },
+    {
+      "key": "page-121",
+      "kind": "page",
+      "id": 121,
+      "language": null,
+      "reason": "contract maps it as page-reminder"
+    },
+    {
+      "key": "page-122",
+      "kind": "page",
+      "id": 122,
+      "language": null,
+      "reason": "contract maps it as page-featured-articles"
+    },
+    {
+      "key": "page-123",
+      "kind": "page",
+      "id": 123,
+      "language": null,
+      "reason": "navigation 133 opens it"
+    },
+    {
+      "key": "page-124",
+      "kind": "page",
+      "id": 124,
+      "language": null,
+      "reason": "contract maps it as page-blue-color"
+    },
+    {
+      "key": "page-125",
+      "kind": "page",
+      "id": 125,
+      "language": null,
+      "reason": "contract maps it as page-green-color"
+    },
+    {
+      "key": "page-126",
+      "kind": "page",
+      "id": 126,
+      "language": null,
+      "reason": "contract maps it as page-pink-color"
+    },
+    {
+      "key": "page-127",
+      "kind": "page",
+      "id": 127,
+      "language": null,
+      "reason": "contract maps it as page-purple-color"
+    },
+    {
+      "key": "page-128",
+      "kind": "page",
+      "id": 128,
+      "language": null,
+      "reason": "contract maps it as page-reset-password"
+    },
+    {
+      "key": "page-129",
+      "kind": "page",
+      "id": 129,
+      "language": null,
+      "reason": "navigation 133 opens it"
+    },
+    {
+      "key": "page-130",
+      "kind": "page",
+      "id": 130,
+      "language": null,
+      "reason": "contract maps it as page-tagged-items"
+    }
+  ],
+  "hide": [
+    {
+      "key": "post-75",
+      "kind": "post",
+      "id": 75,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-76",
+      "kind": "post",
+      "id": 76,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-77",
+      "kind": "post",
+      "id": 77,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-78",
+      "kind": "post",
+      "id": 78,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-79",
+      "kind": "post",
+      "id": 79,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-80",
+      "kind": "post",
+      "id": 80,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-81",
+      "kind": "post",
+      "id": 81,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-82",
+      "kind": "post",
+      "id": 82,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-83",
+      "kind": "post",
+      "id": 83,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-84",
+      "kind": "post",
+      "id": 84,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-85",
+      "kind": "post",
+      "id": 85,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-86",
+      "kind": "post",
+      "id": 86,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-87",
+      "kind": "post",
+      "id": 87,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-88",
+      "kind": "post",
+      "id": 88,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-89",
+      "kind": "post",
+      "id": 89,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-90",
+      "kind": "post",
+      "id": 90,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-91",
+      "kind": "post",
+      "id": 91,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-92",
+      "kind": "post",
+      "id": 92,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-93",
+      "kind": "post",
+      "id": 93,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-94",
+      "kind": "post",
+      "id": 94,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-95",
+      "kind": "post",
+      "id": 95,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    }
+  ],
+  "counts": {
+    "hide": 21,
+    "kept": 36,
+    "languages": 1
+  }
+}

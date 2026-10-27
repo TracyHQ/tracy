@@ -1,0 +1,3332 @@
+/* wp-ja-morgan — the JA Morgan look, written from the computed styles of the running source
+   (Joomla 6, T3, measured 29/09/2026 on :8281 at 1440 and 390 px, light and dark; probes kept
+   outside the repository). No rule is copied from the source template: its CSS is not
+   redistributable. Class names follow the source markup (t3-*, acm-*) where the patterns mirror
+   it, so the same element answers to the same name on both sides; jm-* is this theme's own.
+   Colours go through the presets theme.overlay.json declares with light-dark(), so dark mode
+   follows the root attribute without a second rule for most elements. */
+
+/* ---- Fonts: PT Root UI (SIL OFL 1.1), Ionicons 4.4.7 (MIT), Font Awesome 4.5 (SIL OFL 1.1) ---- */
+@font-face {
+	font-family: "PTRootUI";
+	src: url("../fonts/pt-root-ui-regular.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "PTRootUI";
+	src: url("../fonts/pt-root-ui-medium.woff") format("woff");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "PTRootUI";
+	src: url("../fonts/pt-root-ui-bold.woff") format("woff");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+/* Vietnamese: PT Root UI has none of its letters (no ă, đ, ơ, ư, ề…), so a page in Vietnamese
+   (html lang="vi") draws its text in Be Vietnam Pro (SIL OFL 1.1), a sans close to PT Root UI that
+   has them. Medium (500) is drawn by the 600 face. */
+@font-face {
+	font-family: "Be Vietnam Pro";
+	src: url("../fonts/be-vietnam-pro-400.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Be Vietnam Pro";
+	src: url("../fonts/be-vietnam-pro-600.woff2") format("woff2");
+	font-weight: 500 600;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Be Vietnam Pro";
+	src: url("../fonts/be-vietnam-pro-700.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Ionicons";
+	src: url("../fonts/ionicons.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: block;
+}
+@font-face {
+	font-family: "FontAwesome";
+	src: url("../fonts/fontawesome-webfont.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: block;
+}
+
+/* ds-not-used: --ds-c-disabled-bg — the template paints no disabled ground: a disabled pager step is hidden, a disabled tab or pill only greys its words (read through --ds-c-disabled-fg) */
+:root {
+	--jm-font: var(--ds-font-body, "PTRootUI", Helvetica, Arial, sans-serif);
+	--jm-navy: light-dark(var(--ds-c-accent, #1b3060), var(--ds-c-accent, #1b3060));
+	--jm-navy-fg: var(--ds-c-heading, light-dark(#1b3060, #cdd4e0));
+	--jm-heading: var(--wp--preset--color--fg-2, var(--ds-c-fg-2, #333333));
+	--jm-text: var(--wp--preset--color--fg, var(--ds-c-fg, #777777));
+	--jm-bg: var(--wp--preset--color--bg, var(--ds-c-bg, #ffffff));
+	--jm-gray: light-dark(var(--ds-c-surface, #f2f3f7), var(--ds-c-surface, #141927));
+	--jm-card: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-bg, #1a2032));
+	--jm-line: light-dark(var(--ds-c-border, #eaeaea), var(--ds-c-border, #2a3247));
+	--jm-soft: light-dark(var(--ds-c-muted, #aaaaaa), var(--ds-c-muted, #8b93a4));
+	--jm-footer: light-dark(var(--ds-c-ink, #111111), var(--ds-c-bg, #111111));
+	/* The red of buttons and section kickers stays #d93030 in dark too (measured); links take --ja-accent. */
+	--jm-red: var(--ds-c-accent, #d93030);
+	--jm-lead: light-dark(var(--ds-c-fg, #777777), var(--ds-c-fg, #f2f4f8));
+	--jm-gutter: 15px;
+	/* Translucent light over the ink bands (topbar, footer, the secondary band): only defined when a system sets --ds-c-on-ink;
+	   with no system they are invalid and every reader falls back to the template's own rgba(255, 255, 255, a). */
+	--jm-mix-on-ink-5: color-mix(in srgb, var(--ds-c-on-ink) 5%, transparent);
+	--jm-mix-on-ink-10: color-mix(in srgb, var(--ds-c-on-ink) 10%, transparent);
+	--jm-mix-on-ink-20: color-mix(in srgb, var(--ds-c-on-ink) 20%, transparent);
+	--jm-mix-on-ink-40: color-mix(in srgb, var(--ds-c-on-ink) 40%, transparent);
+	--jm-mix-on-ink-50: color-mix(in srgb, var(--ds-c-on-ink) 50%, transparent);
+	--jm-mix-on-ink-60: color-mix(in srgb, var(--ds-c-on-ink) 60%, transparent);
+}
+html:lang(vi),
+html:lang(vi) body {
+	--jm-font: var(--ds-font-body, "Be Vietnam Pro", Helvetica, Arial, sans-serif);
+	--wp--preset--font-family--display: "Be Vietnam Pro", Helvetica, Arial, sans-serif;
+	--wp--preset--font-family--body: var(--ds-font-body, "Be Vietnam Pro", Helvetica, Arial, sans-serif);
+}
+
+/* ---- Base ---- */
+body {
+	font-family: var(--jm-font);
+	font-size: 16px;
+	line-height: 25px;
+	color: var(--jm-text);
+	background: var(--jm-bg);
+	-webkit-font-smoothing: antialiased;
+}
+body :where(h1, h2, h3, h4, h5, h6) {
+	font-family: var(--jm-font);
+	color: var(--jm-heading);
+	font-weight: 500;
+	letter-spacing: -0.6px;
+	margin: 0;
+}
+body :where(h4, h5, h6) {
+	letter-spacing: normal;
+}
+body :where(p) {
+	margin: 0 0 25px;
+}
+body a {
+	color: var(--ds-c-accent-text, var(--ja-accent));
+	text-decoration: none;
+}
+.screen-reader-text {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+/* WordPress flow layouts space every child by the block gap; the source stacks its blocks with
+   their own margins only. */
+.jm-header :where(.is-layout-flow, .is-layout-constrained) > *,
+.jm-main :where(.is-layout-flow, .is-layout-constrained) > *,
+.jm-footer :where(.is-layout-flow, .is-layout-constrained) > * {
+	margin-block-start: 0;
+}
+.jm-main,
+.jm-sections {
+	margin: 0;
+	padding: 0;
+}
+.tracy-header.jm-header,
+.tracy-footer.jm-footer {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	background: none;
+	position: relative;
+}
+
+/* ---- Container: Bootstrap 3 steps of the source (750 / 970 / 1260 at 768 / 992 / 1200) ---- */
+.container {
+	box-sizing: border-box;
+	width: auto;
+	max-width: 100%;
+	margin-inline: auto;
+	padding-inline: var(--jm-gutter);
+}
+@media (min-width: 768px) {
+	.container {
+		width: 750px;
+	}
+}
+@media (min-width: 992px) {
+	.container {
+		width: 970px;
+	}
+}
+@media (min-width: 1200px) {
+	.container {
+		width: 1260px;
+	}
+}
+.jm-fluid > .container {
+	width: auto;
+	padding-inline: 0;
+}
+
+/* ---- Buttons ---- */
+.wp-block-button.btn .wp-block-button__link,
+.jm-quick-contact .btn {
+	display: inline-block;
+	box-sizing: border-box;
+	font-family: var(--jm-font);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 18.08px;
+	padding: 20px 30px;
+	border: 1px solid var(--jm-red);
+	border-radius: var(--ds-btn-radius, 4px);
+	background: var(--jm-red);
+	color: var(--ds-c-accent-on, #ffffff);
+	text-decoration: none;
+	transition: background-color 0.2s, border-color 0.2s;
+}
+.wp-block-button.btn .wp-block-button__link:hover,
+.wp-block-button.btn .wp-block-button__link:focus-visible {
+	background: var(--wp--preset--color--accent-hover, var(--ds-c-accent-hover, #b22323));
+	border-color: var(--wp--preset--color--accent-hover, var(--ds-c-accent-hover, #b22323));
+}
+.jm-arrow .wp-block-button__link::after,
+.jm-quick-contact .jm-arrow::after {
+	content: "\f119";
+	font-family: "Ionicons";
+	font-weight: 400;
+	margin-left: calc(6.25px + 0.25em); /* the source has a space before its icon */
+	line-height: 1;
+}
+.wp-block-buttons {
+	gap: 0;
+}
+
+/* The arrow link a card draws: a 30 px accent square. */
+.action-link-icon {
+	margin: 30px 0 0;
+	line-height: 30px;
+}
+.action-link-icon a {
+	vertical-align: top;
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	border-radius: var(--ds-btn-radius, 4px);
+	background: var(--jm-red);
+	color: var(--ds-c-accent-on, #ffffff);
+	text-align: center;
+	font-size: 0;
+	text-decoration: none;
+}
+.action-link-icon a::before {
+	content: "\f119";
+	font-family: "Ionicons";
+	font-size: 16px;
+}
+
+/* ---- Topbar ---- */
+.t3-topbar {
+	background: var(--ds-c-ink, #1b3060);
+	color: var(--jm-mix-on-ink-50, var(--ds-c-on-ink, rgba(255, 255, 255, 0.5)));
+	font-size: 13px;
+	line-height: 40px;
+	height: 40px;
+}
+.t3-topbar > .container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 40px;
+}
+.t3-topbar .list-info {
+	display: flex;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.t3-topbar .topbar-left li {
+	padding: 0 25px;
+	border-right: 1px solid var(--jm-mix-on-ink-10, var(--ds-c-on-ink, rgba(255, 255, 255, 0.1)));
+}
+.t3-topbar .topbar-left li:first-child {
+	border-left: 1px solid var(--jm-mix-on-ink-10, var(--ds-c-on-ink, rgba(255, 255, 255, 0.1)));
+}
+.t3-topbar .topbar-left li::before {
+	font-family: "Ionicons";
+	margin-right: 6.25px;
+}
+.t3-topbar .jm-icon-pin::before {
+	content: "\f1e5";
+}
+.t3-topbar .jm-icon-call::before {
+	content: "\f13e";
+}
+.t3-topbar .wp-block-social-links {
+	gap: 0;
+	margin: 0;
+}
+.t3-topbar .wp-block-social-links .wp-social-link {
+	width: 40px;
+	height: 40px;
+	border-left: 1px solid var(--jm-mix-on-ink-10, var(--ds-c-on-ink, rgba(255, 255, 255, 0.1)));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--jm-mix-on-ink-50, var(--ds-c-on-ink, rgba(255, 255, 255, 0.5)));
+	background: none;
+}
+.t3-topbar .wp-block-social-links .wp-social-link a {
+	padding: 0;
+	color: inherit;
+}
+.t3-topbar .wp-block-social-links .wp-social-link svg {
+	width: 14px;
+	height: 14px;
+	fill: currentColor;
+}
+.jm-route-front-page .t3-topbar,
+.jm-route-home-style-3 .t3-topbar,
+.jm-route-home-style-4 .t3-topbar {
+	display: none;
+}
+
+/* ---- Header ---- */
+.t3-header {
+	background: var(--jm-bg);
+	height: 90px;
+	position: relative;
+	z-index: 50;
+}
+.t3-header > .container {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 90px;
+}
+.t3-header .logo {
+	margin: 0;
+	font-size: 24px;
+	line-height: 24px;
+	font-weight: 700;
+	letter-spacing: -1px;
+}
+.t3-header .logo a {
+	color: var(--jm-navy-fg);
+}
+.t3-header .logo strong {
+	color: var(--ds-c-accent-text, var(--ja-accent));
+	font-weight: 700;
+}
+.t3-header .header-inner {
+	display: flex;
+	align-items: center;
+	height: 90px;
+}
+.t3-mainnav.wp-block-navigation {
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 25px;
+	gap: 0;
+}
+.t3-mainnav .wp-block-navigation__container {
+	gap: 0;
+}
+.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+	display: block;
+	padding: 32.5px 15px 32.5px 0;
+	margin-left: 30px;
+	color: light-dark(var(--jm-heading), var(--ds-c-fg, #cdd4e0));
+}
+.t3-mainnav .current-menu-item > .wp-block-navigation-item__content,
+.t3-mainnav .current-menu-ancestor > .wp-block-navigation-item__content,
+.t3-mainnav .wp-block-navigation-item__content:hover {
+	color: var(--ds-c-accent-text, var(--ja-accent));
+}
+/* The top-level colour rule above is (0,4,0): restate the lit states at the same weight and later (audit 03/10, defect 3).
+   Measured on the source: the current item is #d93030 in light and dark; hover reddens in light and leaves the colour alone in dark. */
+.t3-mainnav .wp-block-navigation__container > .current-menu-item > .wp-block-navigation-item__content,
+.t3-mainnav .wp-block-navigation__container > .current-menu-ancestor > .wp-block-navigation-item__content {
+	color: var(--ds-c-accent-text, var(--jm-red));
+}
+.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:hover,
+.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-submenu:hover > .wp-block-navigation-item__content,
+.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-submenu:focus-within > .wp-block-navigation-item__content {
+	color: light-dark(var(--ds-c-accent-text, var(--jm-red)), var(--ds-c-fg, #cdd4e0));
+}
+.t3-mainnav .wp-block-navigation__container > .current-menu-item > .wp-block-navigation-item__content:hover,
+.t3-mainnav .wp-block-navigation__container > .current-menu-ancestor > .wp-block-navigation-item__content:hover,
+.t3-mainnav .wp-block-navigation__container > .current-menu-ancestor:hover > .wp-block-navigation-item__content {
+	color: var(--ds-c-accent-text, var(--jm-red));
+}
+/* Escape closed the dropdown (assets/js/wp-ja-morgan.js): it stays closed until the pointer leaves. */
+.t3-mainnav .wp-block-navigation-submenu.jm-submenu-closed > .wp-block-navigation__submenu-container {
+	visibility: hidden !important;
+	opacity: 0 !important;
+}
+/* The source draws its caret inside the link's right padding (8 px caret, 2 px gap, 15 px pad). */
+.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation-item__content {
+	padding-right: 29px;
+}
+.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle {
+	position: absolute;
+	right: 15px;
+	top: 50%;
+	/* A 24 px square (WCAG 2.5.8) that owns its centre; the glyph keeps the source's place (8 px caret, 6 px from the box edge). */
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	margin: -12px 0 0;
+	padding: 0;
+	transform: translateX(6px);
+}
+.t3-mainnav .wp-block-navigation-submenu.jm-touch-open > .wp-block-navigation__submenu-container {
+	visibility: visible;
+	opacity: 1;
+	height: auto;
+	width: 200px;
+	overflow: visible;
+}
+.t3-mainnav .wp-block-navigation__submenu-container {
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 23.4375px;
+	border: 1px solid light-dark(var(--ds-c-border, rgba(0, 0, 0, 0.15)), var(--ds-c-border, #2a3247)) !important;
+	border-radius: 0 0 var(--ds-card-radius, 4px) var(--ds-card-radius, 4px);
+	padding: 15px;
+	width: 200px;
+	min-width: 200px !important;
+	box-sizing: border-box;
+	/* The border is translucent over the page, as the source's Bootstrap dropdown draws it. */
+	background-color: var(--jm-card) !important;
+	background-clip: padding-box !important;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+}
+:root[data-theme="dark"] .t3-mainnav .wp-block-navigation__submenu-container {
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-container {
+	left: 0;
+}
+.t3-mainnav .wp-block-navigation__submenu-container .wp-block-navigation-item {
+	width: 100%;
+}
+.t3-mainnav .wp-block-navigation__submenu-container .wp-block-navigation-item__content.wp-block-navigation-item__content {
+	padding: 5px !important;
+	width: 100%;
+	box-sizing: border-box;
+	color: light-dark(var(--ds-c-fg-2, #333333), var(--ds-c-fg-2, #cdd4e0));
+}
+.t3-mainnav .wp-block-navigation__submenu-container .current-menu-item > .wp-block-navigation-item__content {
+	color: light-dark(var(--ds-c-accent-text, var(--ja-accent)), var(--ds-c-fg, #cdd4e0));
+}
+.headright {
+	display: flex;
+	align-items: center;
+}
+.head-search.wp-block-search {
+	margin: 0 0 0 15px;
+}
+.head-search .wp-block-search__button {
+	width: 30px;
+	height: 30px;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	background: none;
+	color: var(--jm-navy-fg);
+}
+.head-search .wp-block-search__button svg {
+	width: 22px;
+	height: 22px;
+	fill: currentColor;
+}
+.head-search .wp-block-search__input {
+	width: 120px;
+	min-width: 0;
+	font-size: 14px;
+	height: 30px;
+	border: 1px solid var(--jm-line);
+	border-radius: var(--ds-input-radius, 4px);
+	background: var(--jm-bg);
+	color: var(--jm-text);
+}
+.theme-toggle {
+	width: 36px;
+	height: 40px;
+	margin-left: 6px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--jm-navy-fg);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+.theme-toggle__sun {
+	display: none;
+}
+/* The script reports what the page shows (data-theme-state), so auto on a dark OS shows the sun too. */
+.theme-toggle[data-theme-state="dark"] .theme-toggle__moon,
+:root[data-theme="dark"] .theme-toggle__moon {
+	display: none;
+}
+.theme-toggle[data-theme-state="dark"] .theme-toggle__sun,
+:root[data-theme="dark"] .theme-toggle__sun {
+	display: inline;
+}
+.off-canvas-toggle {
+	position: relative;
+	width: 30px;
+	height: 30px;
+	margin-left: 14px;
+	padding: 9px 8px;
+	border: 0;
+	border-radius: var(--ds-btn-radius, 4px);
+	background: var(--jm-red);
+	cursor: pointer;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+/* The source's three bars: 14 px wide, 1 px thick, 5 px apart, centred in the button. */
+.off-canvas-toggle span {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	display: block;
+	width: 14px;
+	height: 1px;
+	margin-left: -7px;
+	background: var(--ds-c-accent-on, #ffffff);
+	transform: translateY(-1px);
+}
+.off-canvas-toggle span:first-child {
+	margin-top: -5px;
+}
+.off-canvas-toggle span:last-child {
+	margin-top: 5px;
+}
+/* The bars take the words of the bar the toggle sits in: on-ink on home style 2's ink header, the white of
+   the photograph on the transparent headers of home styles 3 and 4. */
+body.jm-route-home-style-2 .off-canvas-toggle span {
+	background: var(--ds-c-on-ink, #ffffff);
+}
+body:is(.jm-route-home-style-3, .jm-route-home-style-4) .off-canvas-toggle span {
+	background: rgb(255, 255, 255); /* ds-keep: the bars stand on the hero photograph, which keeps its tones under a system */
+}
+
+/* While the panel is open the source turns the three bars into a cross: the middle bar goes, the other two cross at 45 degrees. */
+html.jm-off-canvas-open .off-canvas-toggle span:nth-child(2) {
+	display: none;
+}
+html.jm-off-canvas-open .off-canvas-toggle span:first-child {
+	margin-top: 0;
+	transform: translateY(-1px) rotate(45deg);
+}
+html.jm-off-canvas-open .off-canvas-toggle span:last-child {
+	margin-top: 0;
+	transform: translateY(-1px) rotate(-45deg);
+}
+
+/* ---- Off-canvas sidebar (the source's "Sidebar" panel with the Site Pages menu) ---- */
+.t3-off-canvas {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 250px;
+	z-index: 1001;
+	overflow-y: auto;
+	background: var(--jm-bg);
+	transform: translateX(100%);
+	visibility: hidden;
+	transition: transform 0.3s ease, visibility 0s 0.3s;
+}
+html.jm-off-canvas-open .t3-off-canvas {
+	transform: none;
+	visibility: visible;
+	transition: transform 0.3s ease;
+}
+.wp-site-blocks {
+	transition: transform 0.3s ease;
+}
+html.jm-off-canvas-open .wp-site-blocks {
+	transform: translateX(-250px);
+}
+html.jm-off-canvas-open body::after {
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	background: rgba(0, 0, 0, 0.2);
+}
+.t3-off-canvas-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 40px;
+	padding: 0 0 0 30px;
+	background: var(--ds-c-ink, #1b3060);
+}
+.t3-off-canvas-header-title {
+	flex: 1;
+	letter-spacing: -0.6px;
+	font-size: 15px;
+	line-height: 40px;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.t3-off-canvas-header .close {
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	border: 0;
+	background: var(--ds-c-ink, #192c58);
+	color: var(--ds-c-on-ink, #ffffff);
+	font-family: inherit;
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 40px;
+	text-shadow: 0 1px 0 #ffffff;
+	cursor: pointer;
+}
+.t3-off-canvas-body {
+	padding: 30px;
+}
+.t3-off-canvas-body .module-title {
+	font-size: 16px;
+	line-height: 23.328px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: -0.6px;
+	margin: 0 0 12.5px;
+}
+.t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container .wp-block-navigation-item .wp-block-navigation-item__content {
+	display: block;
+	padding: 5px 20px 5px 0;
+	color: var(--jm-heading);
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 23.4375px;
+}
+/* A group heading of the menu (a menu item with no link). */
+.t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+	padding: 0;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 25px;
+}
+.jm-off-canvas-nav .wp-block-navigation__container > .wp-block-navigation-item + .wp-block-navigation-item {
+	margin-top: 12.5px;
+}
+.jm-off-canvas-nav .wp-block-navigation__submenu-container {
+	position: static !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	width: auto !important;
+	height: auto !important;
+	border: 0 !important;
+	padding: 0 0 0 15px !important;
+	margin: 2px 0 0;
+	background: none !important;
+}
+.jm-off-canvas-nav .wp-block-navigation-submenu__toggle {
+	display: none;
+}
+
+/* ---- Sections (T3Section chrome: t3-section, padding-*, border-*, mod-bg-*) ---- */
+.jm-acm {
+	position: relative;
+	margin: 0;
+}
+.jm-acm > .container,
+.jm-acm .acm-hero-inner {
+	position: relative;
+	z-index: 1;
+}
+.t3-section.padding-top {
+	padding-top: 150px;
+}
+.t3-section.padding-bottom {
+	padding-bottom: 150px;
+}
+.t3-section.border-top {
+	border-top: 1px solid var(--jm-line);
+}
+.t3-section.border-bottom {
+	border-bottom: 1px solid var(--jm-line);
+}
+.mod-bg-white {
+	background-color: var(--jm-bg);
+}
+.mod-bg-gray {
+	background-color: light-dark(var(--jm-gray), var(--ds-c-bg, var(--jm-gray)));
+}
+.mod-bg-secondary {
+	background-color: light-dark(var(--ds-c-ink, #1b3060), var(--ds-c-bg, #1b3060));
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.mod-bg-secondary :where(h1, h2, h3, h4, .lead) {
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.mod-bg-secondary .section-title .sub-heading {
+	color: var(--ds-c-on-ink, #ffffff);
+}
+/* The T3Section background picture (a faint world map) sits behind the section content. */
+.jm-section-bg {
+	position: absolute;
+	inset: 0;
+	margin: 0 !important;
+	z-index: 0;
+	pointer-events: none;
+}
+.jm-section-bg img {
+	width: 100%;
+	height: 100%;
+	object-fit: none;
+	object-position: center top;
+}
+.jm-bg-left-bottom .jm-section-bg img {
+	object-position: left bottom;
+}
+.jm-bg-center-center .jm-section-bg img {
+	object-position: center center;
+}
+.section-title .sub-heading {
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 25px;
+	color: var(--ds-c-accent-text, var(--jm-red));
+	margin: 0 0 25px;
+}
+.section-title h3 {
+	font-size: 36px;
+	font-weight: 400;
+	line-height: 45px;
+}
+.align-center > .section-title,
+.acm-features.style-2 > .section-title,
+.acm-testimonial.style-1 > .section-title {
+	max-width: 520px;
+	margin: 0 auto 60px;
+	text-align: center;
+}
+.home .acm-teams > .section-title h3 {
+	font-size: 48px;
+	font-weight: 700;
+	line-height: 60px;
+}
+.lead {
+	font-size: 18px;
+	line-height: 30px;
+	color: var(--jm-lead);
+}
+.mod-bg-secondary .lead {
+	color: var(--ds-c-on-ink, light-dark(#ffffff, #f2f4f8));
+}
+
+/* ---- hero style-1 ---- */
+.acm-hero {
+	position: relative;
+	overflow: hidden;
+	color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+}
+.acm-hero .ft-bg,
+.acm-hero .ft-bg-xs {
+	position: absolute;
+	inset: 0;
+	margin: 0 !important;
+	z-index: 0;
+}
+.acm-hero .ft-bg img,
+.acm-hero .ft-bg-xs img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: 50% 50%; /* the source's hero picture: background-position 50% 50% */
+}
+/* The home hero only: the source shifts its picture 90 px left below 1200 px. */
+@media (min-width: 768px) and (max-width: 1199px) {
+	.jm-route-front-page .acm-hero .ft-bg img {
+		object-position: -90px 50%;
+	}
+}
+.acm-hero .ft-bg-xs {
+	display: none;
+}
+.acm-hero > .container {
+	position: relative;
+	z-index: 1;
+}
+.acm-hero.hero-large {
+	padding: 200px 0 180px;
+}
+.acm-hero.hero-extra-large {
+	padding: 250px 0 230px;
+}
+.acm-hero.hero-normal {
+	padding: 125px 0;
+}
+.acm-hero .wrap-content {
+	max-width: 560px;
+}
+.acm-hero.align-center .wrap-content {
+	max-width: 760px;
+	margin-inline: auto;
+	text-align: center;
+}
+.acm-hero .sub-heading {
+	color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+	font-weight: 500;
+	margin-bottom: 25px;
+}
+.acm-hero :where(h1, h2) {
+	font-size: 60px;
+	font-weight: 700;
+	line-height: 75px;
+	letter-spacing: -0.6px;
+	color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+	margin: 0 0 30px;
+}
+.acm-hero .lead {
+	color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+	padding-right: 60px;
+	margin: 0 0 60px;
+}
+.acm-hero.align-center .lead {
+	padding-right: 0;
+}
+.acm-hero .btn-action {
+	margin: 0;
+}
+.acm-hero.align-center .btn-action {
+	justify-content: center;
+}
+.acm-hero.mod-bg-secondary .jm-section-bg img {
+	object-fit: cover;
+}
+
+/* ---- slideshow style-owl ---- */
+.acm-slideshow {
+	position: relative;
+	overflow: hidden;
+}
+.acm-slideshow.tracy-motion-carousel {
+	overflow: hidden;
+}
+.acm-slideshow .tracy-motion-track {
+	display: flex;
+	flex-wrap: nowrap;
+}
+.acm-slideshow .slider-content {
+	position: relative;
+	flex: 0 0 100%;
+	box-sizing: border-box;
+	padding: 180px 0;
+	min-height: 770px;
+	margin: 0;
+}
+.acm-slideshow .slider-bg {
+	position: absolute;
+	inset: 0;
+	margin: 0 !important;
+}
+.acm-slideshow .slider-bg img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: 0 0; /* the source's background-position: 0% 0% */
+}
+.acm-slideshow .slider-content > .container {
+	position: relative;
+	z-index: 1;
+}
+.acm-slideshow .slider-content-inner {
+	max-width: 480px;
+}
+.acm-slideshow .title {
+	font-size: 60px;
+	font-weight: 700;
+	line-height: 75px;
+	letter-spacing: -0.6px;
+	color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+}
+.acm-slideshow .description {
+	margin: 50px 0 0;
+	font-size: 18px;
+	line-height: 30px;
+	color: rgba(255, 255, 255, 0.75); /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+}
+.acm-slideshow .wp-block-buttons {
+	margin: 60px 0 0;
+}
+.jm-slide-tabs {
+	border-bottom: 1px solid var(--jm-line);
+	background: var(--jm-bg);
+}
+.jm-slide-tabs > .container {
+	display: flex;
+	width: 100%;
+	max-width: none;
+	padding: 0;
+}
+.jm-slide-tab {
+	flex: 1 1 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 90px;
+	margin: 0 6px !important;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 31.25px;
+	color: var(--jm-heading);
+	cursor: pointer;
+	position: relative;
+	text-align: center;
+}
+.jm-slide-tab.is-current {
+	color: light-dark(var(--ds-c-fg-2, #333333), var(--ds-c-fg-2, #ffffff));
+}
+:root[data-theme="dark"] .jm-slide-tab:not(.is-current) {
+	color: var(--ds-c-fg, #dfe4ec);
+}
+.jm-slide-tab + .jm-slide-tab {
+	border-left: 1px solid var(--jm-line);
+}
+/* The source's notch: a white triangle on the active tab that points up into the picture. */
+.jm-slide-tab::before {
+	content: "";
+	position: absolute;
+	box-sizing: border-box;
+	left: 50%;
+	top: -15px;
+	width: 30px;
+	height: 30px;
+	margin-left: -15px;
+	border: 15px solid transparent;
+	border-bottom-color: var(--ds-c-border-soft, #ffffff);
+}
+.jm-slide-tab.is-current::before {
+	top: -30px;
+}
+/* The library's own dots stand behind the titled tabs above (they step the same carousel). */
+.acm-slideshow > .tracy-motion-dots,
+.acm-slideshow .tracy-motion-dots {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+}
+
+/* ---- features-intro style-1 ---- */
+.acm-features.style-1 {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: 0;
+	margin: 0 -15px;
+}
+.acm-features.style-1 > .section-title {
+	padding: 0 45px 0 15px;
+	margin: 0 0 60px;
+}
+.acm-features.style-1 .acm-feature-slide.tracy-motion-carousel {
+	margin: 0;
+}
+.acm-features.style-1 > .section-title > :last-child {
+	margin-bottom: 0;
+}
+.acm-features.style-1 .acm-features-intro {
+	margin: 30px 0 25px;
+}
+.acm-feature-slide.tracy-motion-carousel {
+	overflow: hidden;
+	margin: 0 -15px;
+}
+.acm-feature-slide .tracy-motion-track {
+	display: flex;
+	flex-wrap: nowrap;
+}
+.acm-feature-slide .features-item {
+	flex: 0 0 50%;
+	box-sizing: border-box;
+	padding: 0 15px;
+	margin: 0;
+}
+.acm-feature-slide .features-img img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+	border-radius: var(--ds-card-radius, 4px);
+}
+.acm-feature-slide .features-img {
+	margin: 0 !important;
+}
+.acm-features :where(.features-item) h4 {
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 30px;
+}
+.acm-feature-slide h4 {
+	margin: 30px 0 12.5px !important;
+}
+.acm-feature-slide p:not(.action-link-icon) {
+	padding-right: 30px;
+	margin-bottom: 25px;
+}
+.acm-feature-slide .action-link-icon {
+	margin-top: 0;
+}
+
+/* ---- features-intro style-2 ---- */
+.acm-features.style-2 .jm-cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 0 30px;
+}
+.acm-features.style-2 .jm-cards.acm-features-intro--cols-4 {
+	grid-template-columns: repeat(4, 1fr);
+}
+.acm-features.style-2 .features-item {
+	background: var(--jm-card);
+	padding: 60px 30px 30px;
+	margin: 0 0 30px;
+	border-radius: var(--ds-card-radius, 4px);
+	text-align: center;
+}
+.style-normal .acm-features.style-2 .features-item {
+	background: none;
+	padding: 0;
+}
+.align-left .acm-features.style-2 .features-item {
+	text-align: left;
+}
+.acm-features.style-2 .features-item .jm-description {
+	margin-bottom: 25px;
+}
+.align-left .acm-features.style-2 > .section-title {
+	margin: 0 0 60px;
+	text-align: left;
+}
+.acm-features.style-2 .font-icon {
+	font-size: 60px;
+	line-height: 93.75px;
+	color: var(--jm-navy-fg);
+	margin: 0 0 25px;
+}
+@media (max-width: 767px) {
+	/* One card per row: the source's icon box is 93.75 px; the glyph's line box would grow to 96 px. */
+	.acm-features.style-2 .font-icon {
+		height: 93.75px;
+	}
+}
+.acm-features.style-2 .font-icon::before {
+	font-family: "Ionicons";
+}
+.hx-ico-ion-ios-crop::before {
+	content: "\f41e";
+}
+.hx-ico-ion-ios-color-wand::before {
+	content: "\f416";
+}
+.hx-ico-ion-ios-create::before {
+	content: "\f165";
+}
+.hx-ico-ion-ios-timer::before {
+	content: "\f4c1";
+}
+.hx-ico-ion-ios-speedometer::before {
+	content: "\f4b0";
+}
+.hx-ico-ion-ios-checkmark-circle-outline::before {
+	content: "\f149";
+}
+.acm-features.style-2 .img-icon {
+	margin: 0 0 25px !important;
+}
+.acm-features.style-2 .img-icon img {
+	width: 75px;
+	height: 75px;
+	display: inline-block;
+}
+.acm-features.style-2 .features-item h4 {
+	margin: 0 0 30px;
+}
+.acm-features.style-2 .link-action {
+	justify-content: center;
+	margin-top: 30px;
+}
+
+/* ---- features-intro style-3 (picture half, text half) ---- */
+.acm-features.style-3 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	min-height: 600px;
+}
+.content-left .acm-features.style-3 .features-image {
+	order: 2;
+}
+.acm-features.style-3 .features-image {
+	position: relative;
+	margin: 0 !important;
+	overflow: hidden;
+}
+.acm-features.style-3 .features-image img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.acm-features.style-3 .features-content {
+	box-sizing: border-box;
+	max-width: 615px;
+	padding: 120px 0 120px 180px;
+}
+.content-left .acm-features.style-3 .features-content {
+	margin-left: auto;
+	padding: 150px 180px 150px 0;
+}
+.acm-features.style-3 .lead {
+	margin: 30px 0 25px;
+}
+.acm-features.style-3 .features-content > .section-title {
+	margin-bottom: 40px;
+}
+.acm-features.style-3 .features-module-wrap:not(:empty) {
+	margin-bottom: 25px;
+}
+.acm-features.style-3 .list-check {
+	list-style: none;
+	margin: 40px 0 25px;
+	padding: 0;
+}
+.acm-features.style-3 .list-check li {
+	display: flex;
+	align-items: center;
+	margin-top: 20px;
+	font-weight: 500;
+	line-height: 26.67px;
+	color: light-dark(var(--ds-c-fg-2, #333333), var(--ds-c-fg-2, #cdd4e0));
+}
+.acm-features.style-3 .list-check li::before {
+	content: "\f00c";
+	font-family: "FontAwesome";
+	font-size: 11px;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	margin-right: 15px;
+	flex: none;
+	border-radius: 50%;
+	background: var(--jm-red);
+	color: var(--ds-c-accent-on, #ffffff);
+	text-align: center;
+}
+.acm-features.style-3 .features-action {
+	margin-top: 35px;
+}
+.acm-accordion .panel {
+	background: var(--jm-card);
+	border-radius: var(--ds-card-radius, 4px);
+	margin: 15px 0 0;
+}
+.acm-accordion .panel:first-child {
+	margin-top: 0;
+}
+.acm-accordion .panel summary {
+	position: relative;
+	list-style: none;
+	display: block;
+	height: 60px;
+	line-height: 60px;
+	padding: 0 60px 0 25px;
+	border-radius: var(--ds-card-radius, 4px);
+	background: var(--jm-gray);
+	color: var(--jm-heading);
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+}
+.acm-accordion .panel summary::-webkit-details-marker {
+	display: none;
+}
+.acm-accordion .panel summary::after {
+	content: "\f067";
+	font-family: "FontAwesome";
+	position: absolute;
+	right: 15px;
+	top: 15px;
+	width: 30px;
+	height: 30px;
+	border-radius: var(--ds-card-radius, 4px);
+	background: var(--ja-accent);
+	font-size: 11px;
+	line-height: 31px;
+	text-align: center;
+	color: var(--ds-c-accent-on, #ffffff);
+}
+.acm-accordion .panel[open] summary {
+	background: var(--ds-c-ink, #1b3060);
+	color: var(--ds-c-on-ink, #ffffff);
+	border-radius: var(--ds-card-radius, 4px) var(--ds-card-radius, 4px) 0 0;
+}
+.acm-accordion .panel[open] summary::after {
+	content: "\f068";
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.acm-accordion .panel-body {
+	margin: 0;
+	padding: 25px;
+	border: 1px solid var(--jm-line);
+	border-top: 0;
+	border-radius: 0 0 var(--ds-card-radius, 4px) var(--ds-card-radius, 4px);
+}
+/* The quick contact form of the source (JA Quick Contact): underlined fields on the navy band. */
+.jm-quick-contact {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0;
+	margin: 0 -7.5px;
+	padding-top: 25px;
+}
+.jm-quick-contact .jm-field {
+	box-sizing: border-box;
+	flex: 1 1 100%;
+	margin: 0;
+	padding: 25px 7.5px 15px;
+}
+.jm-quick-contact .jm-field--half {
+	flex: 0 0 50%;
+}
+.jm-quick-contact .jm-field:has(.btn) {
+	padding: 35px 7.5px 0;
+}
+.jm-quick-contact label {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+}
+.jm-quick-contact :where(input, textarea) {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	font-family: var(--jm-font);
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 36px;
+	color: var(--ds-c-on-ink, #ffffff);
+	background: transparent;
+	border: 0;
+	border-bottom: 1px solid var(--jm-mix-on-ink-40, var(--ds-c-on-ink, rgba(255, 255, 255, 0.1)));
+	padding: 0 10px 15px 0;
+	height: 36px;
+}
+.jm-quick-contact :where(input, textarea)::placeholder {
+	color: var(--ds-c-on-ink, #ffffff);
+	opacity: 1;
+}
+.jm-quick-contact textarea {
+	height: 60px;
+	min-height: 60px;
+	line-height: 25px;
+	padding-top: 10px;
+}
+.jm-quick-contact .btn {
+	font-weight: 700;
+	border-radius: var(--ds-btn-radius, 3px);
+	cursor: pointer;
+}
+
+/* ---- teams style-1 ---- */
+.acm-teams .jm-cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 30px;
+}
+.acm-teams .jm-cards.acm-teams--cols-4 {
+	grid-template-columns: repeat(4, 1fr);
+}
+.acm-teams .teams-item {
+	background: var(--jm-card);
+	border-radius: var(--ds-card-radius, 4px);
+	overflow: hidden;
+	text-align: center;
+	box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
+}
+.acm-teams .avatar {
+	margin: 0 !important;
+}
+.acm-teams .avatar img {
+	display: block;
+	width: 100%;
+	border-radius: var(--ds-card-radius, 4px) var(--ds-card-radius, 4px) 0 0;
+}
+.acm-teams--cols-3 .avatar img {
+	height: 482px;
+	object-fit: cover;
+	object-position: top;
+}
+.acm-teams .member-info {
+	padding: 25px;
+}
+.acm-teams .member-info h4 {
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 30px;
+	margin: 0 0 12.5px;
+}
+.home .acm-teams .member-info h4 {
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 24px;
+	text-transform: uppercase;
+	margin: 0;
+}
+.acm-teams .position {
+	font-size: 13px;
+	line-height: 20.3px;
+	color: var(--jm-soft);
+	margin: 0;
+}
+.acm-teams .action-link-icon {
+	display: none;
+}
+.acm-teams .teams-action {
+	justify-content: center;
+	margin-top: 60px;
+}
+.acm-teams .teams-action .wp-block-button__link {
+	font-size: 18px;
+	line-height: 20.34px;
+	padding: 30px 75px;
+}
+.jm-link-warning .teams-action .wp-block-button__link {
+	background: var(--ds-c-warn, #ffbb22);
+	border-color: var(--ds-c-warn, #ffbb22);
+}
+
+/* ---- testimonials style-1 (case study cards) ---- */
+/* The module runs full width (container-fluid) and the tmpl draws its own container inside. */
+.acm-testimonial.style-1 {
+	box-sizing: border-box;
+	max-width: 100%;
+	margin-inline: auto;
+	padding-inline: var(--jm-gutter);
+	overflow: hidden;
+}
+@media (min-width: 768px) {
+	.acm-testimonial.style-1 {
+		width: 750px;
+	}
+}
+@media (min-width: 992px) {
+	.acm-testimonial.style-1 {
+		width: 970px;
+	}
+}
+@media (min-width: 1200px) {
+	.acm-testimonial.style-1 {
+		width: 1260px;
+	}
+}
+.acm-testimonial.style-1 .testimonial-content {
+	overflow: hidden;
+	margin: 0 -15px;
+}
+.acm-testimonial.style-1 .tracy-motion-track {
+	display: flex;
+	flex-wrap: nowrap;
+}
+.acm-testimonial.style-1 .testimonial-item {
+	position: relative;
+	flex: 0 0 33.3333%;
+	box-sizing: border-box;
+	border: solid transparent;
+	border-width: 0 15px;
+	background: var(--jm-bg);
+	background-clip: padding-box;
+	padding: 0 0 52px;
+	text-align: center;
+	margin: 0;
+}
+.acm-testimonial.style-1 .testimonial-item:has(.action-link-icon) {
+	padding-bottom: 98px;
+}
+.acm-testimonial.style-1 .testimonial-img {
+	position: relative;
+	margin-bottom: 45px;
+}
+.acm-testimonial.style-1 .action-link-icon {
+	position: absolute;
+	bottom: 60px;
+	left: 50%;
+	width: 30px;
+	margin: 0 0 0 -15px;
+}
+.acm-testimonial.style-1 .testimonial-img figure {
+	margin: 0;
+}
+.acm-testimonial.style-1 .testimonial-img img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+}
+.acm-testimonial.style-1 .label-highlight {
+	position: absolute;
+	left: 50%;
+	bottom: -15px;
+	transform: translateX(-50%);
+	max-width: 90%;
+	margin: 0;
+	padding: 0 15px;
+	border-radius: var(--ds-pill-radius, 4px);
+	background: var(--ds-c-ink, #1b3060);
+	color: var(--ds-c-on-ink, #ffffff);
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 30px;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+.acm-testimonial.style-1 h4 {
+	font-size: 20px;
+	line-height: 30px;
+	margin: 0 45px 12.5px;
+}
+.acm-testimonial.style-1 p:not(.action-link-icon, .label-highlight) {
+	margin: 0 45px 25px;
+}
+.acm-testimonial.style-1 .link-action {
+	justify-content: center;
+	margin-top: 60px;
+}
+
+/* ---- carousel dots (motion library) ---- */
+.tracy-motion-dots {
+	display: flex;
+	justify-content: center;
+	gap: 0;
+	margin-top: 60px;
+}
+/* The source's Owl dot: an 8 px ring with a 4 px dot inside; the current one keeps the ring and loses the dot. */
+.tracy-motion-dots button {
+	position: relative;
+	box-sizing: border-box;
+	width: 8px;
+	height: 8px;
+	margin: 0 6px;
+	padding: 0;
+	border: 2px solid transparent;
+	border-radius: 50%;
+	background: transparent;
+	cursor: pointer;
+}
+.tracy-motion-dots button::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: var(--ds-c-fg, #d2d3d7);
+}
+/* The dot is 8 px, the target around it is not: it reaches 24 px. */
+.tracy-motion-dots button::before {
+	content: "";
+	position: absolute;
+	inset: -8px;
+}
+.tracy-motion-dots button[aria-current="true"] {
+	border-color: var(--jm-secondary, var(--ds-c-heading, #1b3060));
+}
+.tracy-motion-dots button[aria-current="true"]::after {
+	background: transparent;
+}
+
+/* ---- testimonials style-2 (the quote over the footer) ---- */
+.t3-section-footer.jm-acm {
+	background: var(--jm-footer);
+	color: var(--jm-mix-on-ink-60, var(--ds-c-on-ink, #888888));
+}
+.t3-section-footer > .container {
+	padding-top: 150px;
+	padding-bottom: 60px;
+	/* The source's rule sits inside the container's padding (105-1335 px at 1440), not across the whole container. */
+	background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)) 15px 100% / calc(100% - 30px) 1px no-repeat;
+}
+.acm-testimonial.style-2 {
+	overflow: hidden;
+}
+.acm-testimonial.style-2 .tracy-motion-track {
+	display: flex;
+	flex-wrap: nowrap;
+}
+.acm-testimonial.style-2 .testimonial-item {
+	flex: 0 0 100%;
+	display: flex;
+	align-items: center;
+	gap: 30px;
+	margin: 0;
+}
+.acm-testimonial.style-2 .testimonial-avatar {
+	margin: 0 !important;
+	flex: none;
+}
+.acm-testimonial.style-2 .testimonial-avatar img {
+	width: 180px;
+	height: 180px;
+	object-fit: cover;
+	border-radius: 50%;
+}
+.acm-testimonial.style-2 .testimonial-content-wrap {
+	max-width: 615px;
+}
+.acm-testimonial.style-2 .testimonial-content {
+	font-size: 24px;
+	line-height: 37.5px;
+	color: var(--ds-c-on-ink, #ffffff);
+	margin: 0 0 30px;
+}
+.acm-testimonial.style-2 .testimonial-detail {
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 31.25px;
+	color: var(--ds-c-on-ink, #ffffff);
+	margin: 0;
+}
+.acm-testimonial.style-2 .testimonial-role {
+	display: block;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 20.3px;
+	color: var(--ds-c-on-ink, #ffffff);
+	margin: 6.25px 0 0;
+}
+.acm-testimonial.style-2 .tracy-motion-dots {
+	justify-content: flex-start;
+	margin: 25px 0 0 210px;
+}
+.acm-testimonial.style-2 .tracy-motion-dots button[aria-current="true"] {
+	border-color: var(--ds-c-border-soft, #ffffff);
+}
+
+/* ---- clients style-1 ---- */
+.acm-cliens.style-1 {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+}
+.acm-cliens .client-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 200px;
+	margin: 0;
+}
+.acm-cliens .client-img {
+	margin: 0 !important;
+}
+.acm-cliens .client-img img {
+	width: 100%;
+	max-width: 152px;
+	height: auto;
+	aspect-ratio: 1;
+	object-fit: contain;
+}
+.jm-opacity-30 .client-img img {
+	opacity: 0.3;
+	transition: opacity 0.3s;
+}
+.jm-opacity-30 .client-item:hover .client-img img {
+	opacity: 1;
+}
+
+/* ---- Footer ---- */
+.t3-footer {
+	background: var(--jm-footer);
+	color: var(--jm-mix-on-ink-60, var(--ds-c-on-ink, #888888));
+}
+.t3-spotlight {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 30px;
+	padding-top: 150px; /* measured on the source: 150 px, plus 12.5 px above each module */
+}
+.t3-footnav .jm-foot-col {
+	margin-top: 12.5px;
+	margin-bottom: 12.5px;
+}
+/* The source's footer columns are floats: a second row starts right under the tallest column of the first, with no row gap. */
+.t3-footnav {
+	row-gap: 0;
+}
+/* With the quote above it the footer columns start 60 px under the rule; without it, 150 px under the top. */
+body:has(.t3-section-footer) .t3-footnav {
+	padding-top: 60px;
+}
+.t3-footnav .module-title {
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 23.33px;
+	letter-spacing: -0.6px;
+	color: var(--ds-c-on-ink, #ffffff);
+	margin: 0 0 12.5px;
+}
+.t3-footnav .wp-block-navigation {
+	gap: 0;
+}
+.t3-footnav .wp-block-navigation-item + .wp-block-navigation-item {
+	margin-top: 2px;
+}
+.t3-footnav .wp-block-navigation-item__content {
+	display: block;
+	font-size: 16px;
+	line-height: 30px;
+	color: var(--jm-mix-on-ink-60, var(--ds-c-on-ink, #888888));
+}
+.t3-footnav .wp-block-navigation-item__content:hover {
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.social-follow.wp-block-social-links {
+	gap: 5px;
+	margin: 0;
+}
+.social-follow .wp-social-link {
+	width: 30px;
+	height: 30px;
+	border-radius: var(--ds-btn-radius, 4px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.social-follow .wp-social-link a {
+	padding: 0;
+}
+.social-follow .wp-social-link svg {
+	width: 13px;
+	height: 13px;
+}
+/* The source's icons are white on the brand fill; core's logos-only style paints them in the brand colour. */
+.social-follow.wp-block-social-links.is-style-logos-only .wp-social-link,
+.social-follow.wp-block-social-links.is-style-logos-only .wp-social-link a {
+	color: #ffffff;
+}
+.social-follow.wp-block-social-links.is-style-logos-only .wp-social-link svg {
+	fill: #ffffff;
+}
+.social-follow .wp-social-link-facebook {
+	background: #3b5999;
+}
+/* Twitter is the `twitter` service, whose core icon is the source's bird; `x` stays for a footer edited before 1.1.19. */
+.social-follow .wp-social-link-twitter,
+.social-follow .wp-social-link-x {
+	background: #55acee;
+}
+.social-follow .wp-social-link-instagram {
+	background: #e4405f;
+}
+.t3-copyright {
+	font-size: 13px;
+	line-height: 20.3px;
+	color: var(--jm-mix-on-ink-60, var(--ds-c-on-ink, #777777));
+	padding: 50px 0 150px;
+}
+.t3-copyright small {
+	display: block;
+	font-size: 13px;
+	margin-bottom: 5px;
+}
+.t3-copyright .copyright {
+	margin: 0;
+}
+.t3-copyright a {
+	color: var(--jm-mix-on-ink-60, var(--ds-c-on-ink, #888888));
+	border-bottom: 1px solid var(--jm-mix-on-ink-5, var(--ds-c-on-ink, rgba(255, 255, 255, 0.05)));
+}
+
+/* ---- Masthead (mod_jamasthead): the page's picture behind its title, darkened 58 % ---- */
+.ja-masthead.wp-block-cover {
+	min-height: 0;
+	padding: 120px 0;
+	margin: 0;
+	align-items: stretch;
+}
+.ja-masthead.wp-block-cover .wp-block-cover__background {
+	opacity: 0.58;
+	background: var(--ds-c-ink, #000000);
+}
+.ja-masthead .wp-block-cover__inner-container {
+	width: 100%;
+	color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+}
+.ja-masthead-detail {
+	position: relative;
+	z-index: 2;
+	max-width: 500px;
+	margin-inline: auto;
+	color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+}
+.ja-masthead-title.wp-block-post-title,
+.ja-masthead .ja-masthead-title {
+	font-size: 60px;
+	font-weight: 600;
+	line-height: 90px;
+	letter-spacing: -0.6px;
+	color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+	margin: 0 0 12.5px;
+}
+.ja-masthead-description {
+	margin: 25px 0 0;
+	font-size: 20px;
+	line-height: 31.25px;
+	color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+}
+.ja-masthead-description p {
+	margin: 0;
+}
+/* The article's masthead: its full-text picture (inc/extra.php) behind category, title and meta. */
+.jm-article-masthead {
+	position: relative;
+	padding: 120px 0;
+	background-size: cover;
+	background-position: 0 0;
+	background-color: var(--ds-c-ink, #1b3060);
+}
+.jm-article-masthead::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.58);
+}
+.jm-article-masthead > .container {
+	position: relative;
+	z-index: 1;
+}
+.jm-article-masthead .ja-masthead-detail {
+	/* The source's meta block holds its own bottom margin (25 px inside the box). */
+	display: flow-root;
+	max-width: 800px;
+	margin: 0;
+}
+.jm-article-masthead .ja-masthead-title {
+	line-height: 75px;
+}
+.category-name a {
+	display: inline-block;
+	padding: 6.5px 15px;
+	border-radius: var(--ds-pill-radius, 4px);
+	background: var(--ds-c-ink, #1b3060);
+	color: var(--ds-c-on-ink, #ffffff);
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 17.19px;
+	text-transform: uppercase;
+}
+.jm-article-masthead .category-name {
+	margin: 0 0 25px;
+}
+.article-info {
+	gap: 0 10px;
+	font-size: 12px;
+	line-height: 18.75px;
+	color: var(--ds-c-meta, #999999);
+}
+.jm-article-masthead .article-info {
+	font-size: 14px;
+	line-height: 21.875px;
+	color: var(--ds-c-on-ink, #f2f3f7);
+	margin: 50px 0 25px;
+}
+.article-info .createdby::before,
+.article-info .published::before {
+	font-family: "FontAwesome";
+	margin-right: 4px;
+}
+.article-info .createdby::before {
+	content: "\f007";
+}
+.article-info .published::before {
+	content: "\f073";
+}
+
+/* ---- Main body with the sidebar (col-md-9 / col-md-3 of the source) ---- */
+.t3-mainbody {
+	padding-top: 75px;
+	padding-bottom: 75px;
+}
+.jm-with-sidebar > .t3-content {
+	min-width: 0;
+}
+/* From 768 px the source already puts content (col-sm-8) and sidebar (col-sm-4) side by side, 15 px column padding. */
+@media (min-width: 768px) and (max-width: 991px) {
+	.container.jm-with-sidebar {
+		display: grid;
+		grid-template-columns: 66.6667% 33.3333%;
+		align-items: stretch;
+		padding-inline: 0;
+	}
+	.jm-with-sidebar > .t3-content {
+		padding-inline: 15px;
+	}
+	.jm-with-sidebar > .jm-sidebar-part,
+	.jm-with-sidebar > .t3-sidebar {
+		margin: 0;
+		padding: 0 15px;
+		box-sizing: border-box;
+		border-left: 1px solid var(--jm-line);
+	}
+}
+/* From 992 px the source lays the content (col-md-9) and the sidebar (col-md-3) in a row with 30 px
+   gutters: the row is the container plus one gutter, the columns 75% and 25% of it. */
+@media (min-width: 992px) {
+	.container.jm-with-sidebar {
+		display: grid;
+		grid-template-columns: 75% 25%;
+		align-items: stretch;
+		width: 1000px;
+		padding-inline: 0;
+	}
+	.jm-with-sidebar > .t3-content {
+		padding-inline: 30px;
+	}
+	.jm-with-sidebar > .jm-sidebar-part,
+	.jm-with-sidebar > .t3-sidebar {
+		margin: 0;
+		padding: 0 30px;
+		box-sizing: border-box;
+		border-left: 1px solid var(--jm-line);
+	}
+}
+/* 992-1199: the row is the 970 px container itself (columns 75% / 25%, 15 px column padding). */
+@media (min-width: 992px) and (max-width: 1199px) {
+	.container.jm-with-sidebar {
+		width: 970px;
+	}
+	.jm-with-sidebar > .t3-content {
+		padding-inline: 15px;
+	}
+	.jm-with-sidebar > .jm-sidebar-part,
+	.jm-with-sidebar > .t3-sidebar {
+		padding: 0 15px;
+	}
+}
+@media (min-width: 1200px) {
+	.container.jm-with-sidebar {
+		width: 1290px;
+	}
+}
+.item-page p {
+	margin: 0 0 25px;
+}
+.item-page h3 {
+	font-size: 24px;
+	line-height: 35px;
+	margin: 25px 0 12.5px;
+}
+.item-page .wp-block-image,
+.item-page figure {
+	/* A picture on its own sits like the source's `<p><img></p>`: no top margin, 25 px below. */
+	margin: 0 0 25px;
+}
+.item-page .row .wp-block-image,
+.item-page .row figure {
+	margin: 12.5px 0;
+}
+@media (max-width: 991px) {
+	/* Stacked columns (one column below 992): the source's picture margins collapse between columns (12.5 px, not 25). */
+	.item-page .row .wp-block-image,
+	.item-page .row figure {
+		margin: 12.5px 0 0;
+	}
+	.item-page .row > :last-child figure {
+		margin-bottom: 12.5px;
+	}
+}
+/* The article's last paragraph keeps its 25 px like the source's (WordPress zeroes the last child of a flow group). */
+.single-post .item-page .is-layout-flow > p.wp-block-paragraph:last-child {
+	margin-block-end: 25px;
+}
+.item-page img {
+	max-width: 100%;
+	height: auto;
+	border-radius: var(--ds-card-radius, 4px);
+}
+/* Bootstrap rows in an article: one column below 992 px, equal columns from there. */
+.item-page .row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-inline: -15px;
+}
+.item-page .row > [class*="col-"] {
+	box-sizing: border-box;
+	width: 100%;
+	padding-inline: 15px;
+}
+@media (min-width: 992px) {
+	.item-page .row > .col-md-4 {
+		width: 33.33333333%;
+	}
+	.item-page .row > .col-md-6 {
+		width: 50%;
+	}
+}
+.tags.wp-block-post-terms {
+	/* The source's tag boxes are inline-blocks with a 6.25 px bottom margin: one row is 31 px. */
+	margin: 0 0 12.5px;
+}
+.tags a {
+	/* Inline like the source's `.label`: its box is the font's content area plus the padding (21 px), not the 12 px line plus the padding. */
+	display: inline;
+	padding: 2.4px 7.2px 3.6px;
+	margin-right: 5px;
+	border-radius: var(--ds-pill-radius, 3px);
+	background: var(--jm-gray);
+	color: var(--jm-text);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 12px;
+}
+.tags.wp-block-post-terms a {
+	/* Inline-block like the source's tag boxes, so a row of tags wraps inside the column instead of running past it. */
+	display: inline-block;
+	vertical-align: top;
+	box-sizing: border-box;
+	/* The chip is the source's 21 px `.label` box, sitting 2 px into a 31.25 px row pitch. */
+	height: 21px;
+	padding: 0 7.2px;
+	line-height: 21px;
+	margin: 2px 10px 8.25px 0;
+}
+.tags .wp-block-post-terms__separator {
+	display: none;
+}
+.item-page > .pagenav.pagenav {
+	/* The source's pager: 25 px above and 30 px (the item's own margin) below the Next link (the flow layout zeroes the last child's bottom margin). */
+	margin: 25px 0 30px;
+	margin-block-end: 30px;
+}
+.pagenav {
+	gap: 3.9px;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 13.56px;
+}
+.pagenav .wp-block-post-navigation-link:empty {
+	display: none;
+}
+.pagenav .wp-block-post-navigation-link a {
+	display: inline-block;
+	box-sizing: border-box;
+	padding: 5px 10px;
+	border: 1px solid transparent;
+	border-radius: var(--ds-btn-radius, 4px);
+	background: transparent;
+	color: light-dark(var(--ds-c-accent-text, var(--jm-red)), var(--ds-c-accent-text, #cdd4e0));
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 13.56px;
+	text-decoration: none;
+}
+.pagenav .previous a::before,
+.pagenav .next a::after {
+	display: inline-block;
+	width: 12px;
+	font-family: "FontAwesome";
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1;
+	text-align: center;
+	vertical-align: top;
+}
+.pagenav .previous a::before {
+	content: "\f053";
+	margin-right: 4.8px;
+}
+.pagenav .next a::after {
+	content: "\f054";
+	margin-left: 4.8px;
+}
+
+/* ---- Sidebar modules ---- */
+.t3-sidebar .t3-module {
+	margin: 0 0 30px;
+}
+.t3-sidebar .module-title {
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 26.24px;
+	letter-spacing: -0.6px;
+	color: light-dark(var(--ds-c-accent-text, var(--jm-red)), var(--ds-c-heading, #f2f4f8));
+	margin: 0 0 15px;
+}
+/* Below 768 px the source's sidebar modules use the xs spacing: 25 px between modules, 12.5 px under the title. */
+@media (max-width: 767px) {
+	.t3-sidebar .t3-module {
+		margin-bottom: 25px;
+	}
+	.t3-sidebar .module-title {
+		margin-bottom: 12.5px;
+	}
+}
+.jm-login .login-username label,
+.jm-login .login-password label {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+}
+.jm-login form {
+	display: flow-root;
+}
+.jm-login form p {
+	margin: 0 0 25px;
+}
+.jm-login .login-submit {
+	margin-bottom: 12.5px;
+}
+.jm-login input[type="text"],
+.jm-login input[type="password"] {
+	box-sizing: border-box;
+	width: 100%;
+	height: 60px;
+	padding: 20px 30px 20px 90px;
+	border: 1px solid var(--jm-line);
+	border-radius: var(--ds-input-radius, 4px);
+	background: var(--jm-card) no-repeat;
+	font-family: var(--jm-font);
+	font-size: 16px;
+	color: var(--ds-c-muted, #555555);
+}
+.jm-login .login-username,
+.jm-login .login-password {
+	position: relative;
+}
+.jm-login .login-username::before,
+.jm-login .login-password::before {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 1;
+	width: 60px;
+	height: 60px;
+	line-height: 60px;
+	text-align: center;
+	border-radius: var(--ds-input-radius, 4px) 0 0 var(--ds-input-radius, 4px);
+	background: var(--ds-c-surface-warm, #eeeeee);
+	color: var(--ds-c-muted, #555555);
+	font-family: "FontAwesome";
+}
+.jm-login .login-username::before {
+	content: "\f007";
+}
+.jm-login .login-password::before {
+	content: "\f023";
+}
+.jm-login .login-remember {
+	margin-bottom: 25px;
+}
+.jm-login .login-submit input,
+.jm-login .button-primary {
+	font-family: var(--jm-font);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 18.08px;
+	padding: 20px 30px;
+	border: 1px solid var(--jm-red);
+	border-radius: var(--ds-btn-radius, 4px);
+	background: var(--jm-red);
+	color: var(--ds-c-accent-on, #ffffff);
+	cursor: pointer;
+}
+.jm-login .unstyled {
+	margin: 25px 0 12.5px;
+	padding-left: 25px;
+	font-size: 16px;
+	line-height: 25px;
+}
+.jm-login .unstyled a {
+	color: var(--jm-text);
+	font-size: 15px;
+	line-height: 1.5625;
+}
+.mostread.wp-block-latest-posts {
+	padding: 0;
+	margin: 0;
+}
+.mostread.wp-block-latest-posts li {
+	margin: 0 0 25px;
+}
+.mostread .wp-block-latest-posts__featured-image {
+	margin: 0 0 15px;
+}
+.mostread .wp-block-latest-posts__featured-image img {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+	border-radius: var(--ds-card-radius, 4px);
+}
+.mostread .wp-block-latest-posts__post-title {
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 23.44px;
+	color: var(--jm-heading);
+}
+.categories-module.wp-block-categories {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.categories-module li {
+	position: relative;
+	padding: 10px 0 10px 23px;
+	line-height: 24px;
+	color: var(--jm-text);
+}
+/* The folder icon hangs in the margin, so a wrapped name stays under its first word (as in the source). */
+.categories-module li::before {
+	content: "\f07b";
+	font-family: "FontAwesome";
+	position: absolute;
+	left: 0;
+	top: 10px;
+	color: var(--ds-c-meta, #999999);
+}
+.categories-module li a {
+	color: var(--jm-text);
+}
+.tagspopular.wp-block-tag-cloud {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0;
+}
+.tagspopular.wp-block-tag-cloud a {
+	margin: 0;
+	padding: 5px 10px;
+	border-radius: var(--ds-pill-radius, 4px);
+	background: var(--jm-gray);
+	color: var(--jm-text);
+	font-size: 14px !important;
+	font-weight: 500;
+	line-height: 14px;
+}
+
+/* ---- Category blog cards (patterns/cards.php) ---- */
+.blog .tracy-grid.items-row {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 30px;
+	padding: 0;
+	margin: 0;
+}
+.blog .item.tracy-card {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	height: 100%;
+	padding: 30px 30px 60px;
+	border: 1px solid var(--jm-line);
+	border-radius: var(--ds-card-radius, 4px);
+	background: none;
+	box-shadow: none;
+}
+.blog .item-image {
+	margin: -30px -30px 30px !important;
+}
+.blog .item-image img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--ds-card-radius, 4px) var(--ds-card-radius, 4px) 0 0;
+}
+.blog .category-name {
+	margin: -45px 0 25px;
+	position: relative;
+}
+.blog .article-title {
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 30px;
+	letter-spacing: -0.6px;
+	margin: 0 0 25px;
+}
+.blog .article-title a {
+	color: var(--jm-heading);
+}
+.blog .article-intro {
+	margin: 0;
+}
+.blog .article-intro p {
+	margin: 0 0 25px;
+}
+.blog .article-info {
+	margin: 0 0 25px;
+}
+.blog .readmore.wp-block-read-more {
+	display: inline-block;
+	align-self: flex-start;
+	width: 30px;
+	height: 30px;
+	overflow: hidden;
+	border-radius: var(--ds-btn-radius, 4px);
+	background: var(--jm-red);
+	color: var(--ds-c-accent-on, #ffffff);
+	font-size: 0;
+	line-height: 30px;
+	text-align: center;
+}
+.blog .readmore.wp-block-read-more::before {
+	content: "\f119";
+	font-family: "Ionicons";
+	font-size: 16px;
+}
+.blog .pagination.wp-block-query-pagination {
+	margin-top: 30px;
+	gap: 6.25px;
+	align-items: center;
+}
+.blog .pagination .page-numbers,
+.blog .pagination a {
+	display: inline-block;
+	padding: 12.5px 25px;
+	border: 1px solid var(--jm-line);
+	border-radius: var(--ds-btn-radius, 4px);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 25px;
+	color: var(--jm-heading);
+}
+.blog .pagination .page-numbers.current {
+	background: var(--jm-red);
+	border-color: var(--jm-red);
+	color: var(--ds-c-accent-on, #ffffff);
+}
+
+/* ---- The not-found page (the source's error.php, in the site frame) ---- */
+.jm-404 .jm-error.wp-block-cover {
+	padding: 30px;
+	min-height: 100vh;
+	margin: 0;
+	text-align: center;
+}
+.jm-error .error-code {
+	font-size: 300px;
+	line-height: 1;
+	font-weight: 400;
+	color: var(--ds-c-danger-text, #ffffff);
+	margin: 0 0 36px;
+}
+.jm-error .error-message {
+	font-size: 48px;
+	font-weight: 700;
+	line-height: 60px;
+	color: var(--ds-c-danger-text, #ffffff);
+	margin: 0 0 25px;
+}
+.jm-error .error-text {
+	color: rgba(255, 255, 255, 0.5); /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+	margin: 0 0 30px;
+}
+.jm-error .error-actions {
+	justify-content: center;
+}
+
+/* ---- Below the desktop width ---- */
+@media (max-width: 1199px) {
+	.t3-section.padding-top {
+		padding-top: 60px;
+	}
+	.t3-section.padding-bottom {
+		padding-bottom: 60px;
+	}
+	.acm-features.style-3 .features-content,
+	.content-left .acm-features.style-3 .features-content {
+		padding: 90px 60px;
+	}
+}
+@media (max-width: 991px) {
+	.acm-teams .jm-cards,
+	.acm-teams .jm-cards.acm-teams--cols-4,
+	.acm-features.style-2 .jm-cards,
+	.acm-features.style-2 .jm-cards.acm-features-intro--cols-4 {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.t3-spotlight {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	.acm-testimonial.style-1 .testimonial-item {
+		flex-basis: 50%;
+	}
+	.acm-features.style-1 {
+		grid-template-columns: 1fr;
+	}
+	.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+		margin-left: 0;
+	}
+}
+@media (max-width: 767px) {
+	.t3-topbar .topbar-left {
+		display: none;
+	}
+	.t3-topbar > .container {
+		justify-content: flex-end;
+	}
+	.t3-header,
+	.t3-header > .container,
+	.t3-header .header-inner {
+		height: 63px;
+	}
+	.hidden-xs {
+		display: none !important;
+	}
+	.t3-spotlight {
+		grid-template-columns: 1fr;
+	}
+	.acm-hero.hero-large,
+	.acm-hero.hero-extra-large {
+		padding: 120px 0;
+	}
+	.acm-hero.hero-normal {
+		padding: 60px 0;
+	}
+	/* The source swaps to the small picture only where one is set (home-style-2's hero sets none). */
+	.acm-hero:has(.ft-bg-xs img) .ft-bg {
+		display: none;
+	}
+	.acm-hero .ft-bg-xs:has(img) {
+		display: block;
+	}
+	.acm-hero :where(h1, h2),
+	.acm-slideshow .title {
+		font-size: 28px;
+		line-height: 35px;
+	}
+	.acm-slideshow .title {
+		font-size: 36px;
+		line-height: 45px;
+	}
+	.acm-hero .lead {
+		padding-right: 0;
+		margin-bottom: 30px;
+	}
+	.acm-slideshow .slider-content {
+		padding: 60px 0;
+		min-height: 440px;
+	}
+	.acm-slideshow .description {
+		margin-top: 50px;
+	}
+	.acm-slideshow .wp-block-buttons {
+		margin-top: 30px;
+	}
+	.jm-slide-tabs {
+		display: none;
+	}
+	.acm-slideshow .tracy-motion-dots {
+		position: absolute !important;
+		width: auto;
+		height: auto;
+		overflow: visible;
+		clip: auto;
+		left: 0;
+		right: 0;
+		bottom: 20px;
+		margin: 0;
+	}
+	.section-title h3 {
+		font-size: 28px;
+		line-height: 35px;
+	}
+	.home .acm-teams > .section-title h3 {
+		font-size: 24px;
+		line-height: 30px;
+	}
+	.acm-testimonial.style-2 .testimonial-content {
+		font-size: 20px;
+		line-height: 31.25px;
+	}
+	.align-center > .section-title,
+	.acm-features.style-2 > .section-title,
+	.acm-testimonial.style-1 > .section-title {
+		margin-bottom: 30px;
+	}
+	.acm-teams .jm-cards,
+	.acm-teams .jm-cards.acm-teams--cols-4,
+	.acm-features.style-2 .jm-cards,
+	.acm-features.style-2 .jm-cards.acm-features-intro--cols-4 {
+		grid-template-columns: 1fr;
+	}
+	.acm-feature-slide .features-item,
+	.acm-testimonial.style-1 .testimonial-item {
+		flex-basis: 100%;
+	}
+	.acm-features.style-3 {
+		grid-template-columns: 1fr;
+		min-height: 0;
+	}
+	.acm-features.style-3 .features-image {
+		order: 0 !important;
+		min-height: 300px;
+	}
+	.acm-features.style-3 .features-content,
+	.content-left .acm-features.style-3 .features-content {
+		max-width: none;
+		padding: 60px 15px;
+	}
+	.acm-teams--cols-3 .avatar img {
+		height: auto;
+	}
+	.acm-cliens.style-1 {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.acm-testimonial.style-2 .testimonial-item {
+		flex-direction: column;
+	}
+	.acm-testimonial.style-2 .tracy-motion-dots {
+		margin-left: 0;
+	}
+	.ja-masthead.wp-block-cover,
+	.jm-article-masthead {
+		padding: 60px 0;
+	}
+	.ja-masthead-title.wp-block-post-title,
+	.ja-masthead .ja-masthead-title {
+		font-size: 36px;
+		line-height: 45px;
+	}
+	.ja-masthead-detail {
+		max-width: none;
+	}
+	.t3-mainbody {
+		padding-top: 45px;
+		padding-bottom: 45px;
+	}
+	.jm-with-sidebar {
+		grid-template-columns: 1fr;
+	}
+	.jm-with-sidebar > .t3-content {
+		padding-right: 0;
+	}
+	.jm-with-sidebar > .jm-sidebar-part,
+	.jm-with-sidebar > .t3-sidebar {
+		padding-left: 0;
+		border-left: 0;
+	}
+	.blog .tracy-grid.items-row {
+		grid-template-columns: 1fr;
+	}
+	.jm-error .error-code {
+		font-size: 150px;
+	}
+	.t3-section-footer > .container {
+		padding-top: 60px;
+	}
+	/* Below 768 px the source's copyright band is 30 px top and bottom. */
+	.t3-copyright {
+		padding: 30px 0;
+	}
+}
+
+/* ---- Dark mode: the surfaces the source repaints under html[data-theme="dark"] ---- */
+:root[data-theme="dark"] .t3-header {
+	background: var(--ds-c-bg, #0f1320);
+}
+:root[data-theme="dark"] .acm-accordion .panel[open] summary {
+	background: var(--ds-c-ink, #1b3060);
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) .t3-header {
+		background: var(--ds-c-bg, #0f1320);
+	}
+}
+
+/* Core grows a social icon on hover; the source's icons do not move. */
+.wp-block-social-links .wp-social-link:hover {
+	transform: none;
+}
+/* The off-canvas panel in dark: its own surface, quieter group headings than links (measured). */
+.t3-off-canvas {
+	background: light-dark(var(--jm-bg), var(--ds-c-surface, #141927));
+}
+.t3-off-canvas-header {
+	background: light-dark(var(--ds-c-ink, #1b3060), var(--ds-c-ink, #0c1019));
+}
+.t3-off-canvas-header .close {
+	color: var(--ds-c-on-ink, light-dark(#ffffff, #cdd4e0));
+}
+.t3-off-canvas-body .module-title,
+.t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content,
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content .wp-block-navigation-item__label {
+	color: light-dark(var(--jm-heading), var(--ds-c-heading, #a7b0c2));
+}
+.t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container .wp-block-navigation-item .wp-block-navigation-item__content,
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation-item__label {
+	color: light-dark(var(--jm-heading), var(--ds-c-fg, #cdd4e0));
+}
+
+/* The listing's category chip uses the page font (the base theme sets its eyebrow in mono). */
+.blog .category-name.tracy-eyebrow,
+.blog .category-name.tracy-eyebrow a {
+	font-family: var(--jm-font);
+	letter-spacing: normal;
+}
+/* The card closes on its arrow button; the excerpt's own "Read more" link is not drawn. */
+.blog .article-intro .wp-block-post-excerpt__more-text {
+	display: none;
+}
+/* Pagination as the source's Joomla pager: page boxes, the current one filled; no first/prev arrows
+   when there is nothing before. */
+.blog .pagination .wp-block-query-pagination-numbers {
+	display: flex;
+	gap: 6.25px;
+}
+.blog .pagination .page-numbers.dots {
+	border: 0;
+}
+.blog .pagination .wp-block-query-pagination-previous:empty,
+.blog .pagination .tracy-pager-disabled,
+.blog .pagination [aria-disabled="true"] {
+	display: none;
+}
+/* Social icons: a centred white glyph in a coloured square. */
+.wp-block-social-links .wp-social-link a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+.social-follow .wp-social-link a {
+	color: #ffffff; /* ds-keep: white glyph on the social service's own brand colour */
+	fill: #ffffff; /* ds-keep: white glyph on the social service's own brand colour */
+}
+/* The seeder's Joomla pager (tracy-pager): boxes as the source's, the current page filled, the
+   disabled steps not drawn, the page counter boxed on the right. */
+.tracy-joomla-pager {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	padding: 25px 0;
+}
+.tracy-joomla-pager .tracy-pager__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6.25px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.tracy-joomla-pager .tracy-pager__item.is-disabled {
+	display: none;
+}
+.tracy-joomla-pager .tracy-pager__link {
+	display: block;
+	margin-bottom: 6.25px;
+	padding: 12.5px 25px;
+	border: 1px solid var(--jm-line);
+	border-radius: var(--ds-btn-radius, 4px);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 25px;
+	color: var(--jm-heading);
+}
+.tracy-joomla-pager .is-current .tracy-pager__link {
+	background: var(--jm-red);
+	border-color: var(--jm-red);
+	color: var(--ds-c-accent-on, #ffffff);
+}
+.tracy-joomla-pager .tracy-pager__counter {
+	margin: 0;
+	padding: 12.5px 25px;
+	border: 1px solid var(--jm-line);
+	border-radius: var(--ds-btn-radius, 4px);
+	line-height: 25px;
+}
+
+/* ---- Fast Gate round 1 (measured deltas against the source, light and dark) ---- */
+.blog .article-intro,
+.blog .article-intro p,
+.blog .tracy-card__text {
+	font-size: 16px;
+	line-height: 25px;
+	color: var(--jm-text);
+}
+.blog .item .category-name a,
+.jm-article-masthead .category-name a {
+	display: inline-block;
+	padding: 6.5px 15px;
+	border-radius: var(--ds-pill-radius, 4px);
+	background: var(--ds-c-ink, #1b3060);
+	color: var(--ds-c-on-ink, light-dark(#ffffff, #f2f4f8));
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 17.19px;
+	text-transform: uppercase;
+}
+.jm-login .unstyled li,
+.jm-login .unstyled a {
+	color: var(--ds-c-fg, #777777);
+}
+.mostread .wp-block-post-template {
+	list-style: none;
+	margin: 0 0 12.5px;
+	padding: 0;
+}
+.mostread .wp-block-post-template > li {
+	margin: 0 0 30px;
+}
+.mostread .wp-block-post-template > li:last-child {
+	margin-bottom: 0;
+}
+.mostread .mostread-image {
+	margin: 0 0 15px;
+}
+.mostread .mostread-image img {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+	border-radius: var(--ds-card-radius, 4px);
+}
+.mostread .mostread-title {
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 23.44px;
+	letter-spacing: normal;
+	margin: 0;
+}
+.mostread .mostread-title a {
+	color: light-dark(var(--ds-c-fg-2, #333333), var(--ds-c-fg-2, #e6e9ef));
+}
+.categories-module li,
+.categories-module li a {
+	color: light-dark(var(--ds-c-fg, #777777), var(--ds-c-fg, #cdd4e0));
+}
+.tagspopular.wp-block-tag-cloud a,
+.tags a {
+	color: light-dark(var(--ds-c-fg, #777777), var(--ds-c-fg, #cdd4e0));
+	background: light-dark(var(--ds-c-surface, #f2f3f7), var(--ds-c-surface, #20283c));
+}
+.jm-error .error-message {
+	font-size: 50px;
+	letter-spacing: normal;
+	line-height: 83.5px;
+	margin: 0 0 10px;
+	color: var(--ds-c-danger-text, light-dark(#ffffff, #f2f4f8));
+}
+.jm-error .error-text {
+	font-size: 18px;
+	line-height: 30.06px;
+	color: var(--ds-c-danger-text, light-dark(#888888, #a7b0c2));
+}
+.jm-error .error-actions .wp-block-button__link::after {
+	margin-left: 7.05px;
+	line-height: 1;
+}
+.jm-error .error-actions .wp-block-button__link {
+	display: block;
+	border: 0;
+	padding: 20px 40px;
+	line-height: 18.4px;
+	color: var(--ds-c-danger-text, light-dark(#ffffff, #e0463f));
+}
+@media (max-width: 767px) {
+	.ja-masthead-description {
+		font-size: 16px;
+		line-height: 25px;
+	}
+	.jm-error .error-code {
+		margin-bottom: 48px;
+	}
+	.jm-error .error-message {
+		font-size: 30px;
+		line-height: 50.1px;
+	}
+	.jm-error .error-actions .wp-block-button__link {
+		padding: 16px 32px;
+	}
+	.jm-error .error-actions {
+		margin-bottom: 28px;
+	}
+	.jm-error .error-text {
+		font-size: 16px;
+		line-height: 26.72px;
+	}
+}
+
+/* The popular tags as the source lists them (one list item a tag), and the masthead picture
+   anchored top-left as the source's background (background-position 0% 0%). */
+ul.tagspopular.wp-block-tag-cloud {
+	list-style: none;
+	padding: 0;
+}
+ul.tagspopular li {
+	margin: 0 5px 10px 0;
+}
+ul.tagspopular.wp-block-tag-cloud {
+	gap: 0;
+}
+.ja-masthead .wp-block-cover__image-background {
+	object-position: 0 0;
+}
+
+/* ---- Navigation below 992 px (the source's collapse point) ---- */
+/* The off-canvas menu is a plain vertical list: WordPress's flex items would put a heading and its
+   children side by side. */
+.jm-off-canvas-nav.wp-block-navigation,
+.jm-off-canvas-nav .wp-block-navigation__container,
+.jm-off-canvas-nav .wp-block-navigation-item {
+	display: block;
+}
+.jm-off-canvas-nav .wp-block-navigation__container {
+	gap: 0;
+}
+@media (max-width: 991px) {
+	.t3-header,
+	.t3-header > .container,
+	.t3-header .header-inner {
+		height: 63px;
+	}
+	.t3-header .header-inner,
+	.t3-mainnav.wp-block-navigation {
+		position: static;
+	}
+	.head-search {
+		display: none;
+	}
+	/* The source orders the header controls theme toggle, sidebar, menu; the menu button is last. */
+	.t3-mainnav.wp-block-navigation {
+		order: 3;
+		gap: 0;
+	}
+	.headright {
+		order: 2;
+	}
+	.off-canvas-toggle {
+		margin-left: 29px;
+		margin-top: -3px; /* the source sits the button at 15 px in the 63 px bar; centring gives 16.5 */
+	}
+	/* WordPress collapses the menu below 600 px; the source collapses it below 992 px. */
+	.t3-mainnav .wp-block-navigation__responsive-container:not(.is-menu-open) {
+		display: none;
+	}
+	.t3-mainnav .wp-block-navigation__responsive-container-open,
+	.t3-mainnav .wp-block-navigation__responsive-container-close {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 30px;
+		height: 30px;
+		margin: 0 0 0 15px;
+		padding: 0;
+		border: 0;
+		border-radius: var(--ds-btn-radius, 4px);
+		background: var(--jm-red);
+		color: var(--ds-c-accent-on, #ffffff);
+	}
+	/* The source's menu button is the solid three-bar glyph (Font Awesome "bars"); WordPress draws two thin lines.
+	   The button keeps its bars while the menu is open; the close button draws the same glyph, not a cross. */
+	.t3-mainnav .wp-block-navigation__responsive-container-open svg,
+	.t3-mainnav .wp-block-navigation__responsive-container-close svg {
+		display: none;
+	}
+	.t3-mainnav .wp-block-navigation__responsive-container-open::before,
+	.t3-mainnav .wp-block-navigation__responsive-container-close::before {
+		content: "";
+		width: 14px;
+		height: 12px;
+		background: linear-gradient(var(--ds-c-bg, #ffffff) 0 0) 0 0 / 100% 2px no-repeat, linear-gradient(var(--ds-c-bg, #ffffff) 0 0) 0 5px / 100% 2px no-repeat, linear-gradient(var(--ds-c-bg, #ffffff) 0 0) 0 10px / 100% 2px no-repeat;
+	}
+	/* The open panel is the source's collapse: a full-width list under the header, in the page
+	   surface. The close button takes the open button's place. */
+	.t3-header .t3-mainnav.wp-block-navigation .wp-block-navigation__responsive-container.is-menu-open:not(.disable-default-overlay) {
+		position: absolute;
+		inset: 60px 0 auto 0;
+		z-index: 100;
+		width: auto;
+		height: auto;
+		padding: 0;
+		overflow: visible;
+		background: var(--jm-bg);
+		color: inherit;
+	}
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-close,
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-dialog,
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+		width: 100%;
+		max-width: none;
+		padding: 0;
+		margin: 0;
+		display: block;
+	}
+	/* The source's toggle stays where it is and closes the menu (assets/js/wp-ja-morgan.js), so the panel's own close
+	   button is kept for the script and drawn nowhere: two red boxes would show otherwise (audit 03/10, defect 12). */
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-close {
+		position: absolute;
+		top: -45px;
+		right: 15px;
+		visibility: hidden;
+		pointer-events: none;
+	}
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container {
+		display: block;
+		padding: 1px 0 0;
+		border-top: 1px solid light-dark(var(--ds-c-border-soft, #f2f3f7), var(--ds-c-border-soft, #2a3247));
+		border-bottom: 1px solid light-dark(var(--ds-c-border-soft, #f2f3f7), var(--ds-c-border-soft, #2a3247));
+		font-size: 16px;
+		font-weight: 700;
+		line-height: 25px;
+	}
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item {
+		display: block;
+		position: relative;
+		width: 100%;
+		padding: 0 15px;
+		box-sizing: border-box;
+		border-top: 1px solid light-dark(var(--ds-c-border-soft, #f2f3f7), var(--ds-c-border-soft, #2a3247));
+	}
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .wp-block-navigation-item:first-child {
+		border-top: 0;
+	}
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+		display: block;
+		margin: 0;
+		padding: 10px 0;
+		color: light-dark(var(--ds-c-fg, #777777), var(--ds-c-fg, #cdd4e0));
+	}
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .current-menu-item > .wp-block-navigation-item__content,
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .current-menu-ancestor > .wp-block-navigation-item__content {
+		color: light-dark(var(--ds-c-accent-text, var(--jm-red)), var(--ja-accent));
+	}
+	/* The submenu stays folded until its caret is opened, as in the source. */
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__submenu-container {
+		display: none;
+		position: static;
+		width: auto;
+		min-width: 0 !important;
+		padding: 0 0 10px 15px !important;
+		border: 0 !important;
+		box-shadow: none;
+		background: none !important;
+		visibility: visible;
+		opacity: 1;
+	}
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-submenu.jm-sub-open > .wp-block-navigation__submenu-container {
+		display: block;
+	}
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle {
+		position: absolute;
+		top: 0;
+		right: 15px;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		width: 40px;
+		height: 40px;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: var(--ds-c-accent-text, var(--ja-accent));
+		font-size: 0;
+	}
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-submenu__toggle svg {
+		display: none;
+	}
+	.t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-submenu__toggle::after {
+		content: "";
+		display: block;
+		border-top: 4px solid currentColor;
+		border-right: 4px solid transparent;
+		border-left: 4px solid transparent;
+	}
+}
+
+/* The current page in the off-canvas menu is in the accent; the group that holds it is too in light,
+   and keeps its quiet heading colour in dark (measured). */
+.t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container .wp-block-navigation-item.current-menu-item > .wp-block-navigation-item__content,
+.t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container .wp-block-navigation-item.current-menu-item > .wp-block-navigation-item__content .wp-block-navigation-item__label {
+	color: var(--ds-c-accent-text, var(--ja-accent));
+}
+.t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container > .wp-block-navigation-item:has(.current-menu-item) > .wp-block-navigation-item__content,
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__container > .wp-block-navigation-item:has(.current-menu-item) > .wp-block-navigation-item__content .wp-block-navigation-item__label {
+	color: light-dark(var(--ds-c-accent-text, var(--ja-accent)), var(--ds-c-fg, #a7b0c2));
+}
+
+@media (max-width: 767px) {
+	.t3-spotlight {
+		padding-top: 30.5px; /* measured on the source: heading 43 px below the footer top at 480-576 px */
+	}
+}
+
+/* ---- Back to top (source `.back-to-top`: 60 px square, 30 px from the corner, from 200 px of scroll, 992 px and up) ---- */
+.back-to-top {
+	display: none;
+}
+@media (min-width: 992px) {
+	.back-to-top {
+		display: block;
+		position: fixed;
+		right: 30px;
+		bottom: 30px;
+		z-index: 99;
+		width: 60px;
+		height: 60px;
+		/* In dark the source's wrapper is painted (#1a2032) behind the tile, so the tile's rounded corners show it, not the page. */
+		background: light-dark(transparent, var(--ds-c-surface, #1a2032));
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.3s, visibility 0.3s;
+	}
+	.back-to-top.is-visible {
+		opacity: 1;
+		visibility: visible;
+	}
+	.back-to-top .btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 60px;
+		height: 60px;
+		padding: 0;
+		border: 0;
+		border-radius: var(--ds-btn-radius, 4px);
+		background: var(--jm-navy);
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		color: var(--ds-c-accent-on, #ffffff);
+		cursor: pointer;
+		font-size: 20px;
+		font-weight: 400;
+		line-height: 60px;
+	}
+	/* The mark is the source's icon-font arrow (Ionicons "arrow-round-up"), thin like its glyph. */
+	.back-to-top .btn span::before {
+		content: "\f11a";
+		font-family: "Ionicons";
+		font-style: normal;
+		font-weight: 400;
+	}
+	/* The tile follows the home style, as the source's `#back-to-top .btn` does per template style. */
+	.jm-route-home-style-2 .back-to-top .btn {
+		background: var(--ds-c-accent, #1e375c);
+	}
+	.jm-route-home-style-3 .back-to-top .btn {
+		background: var(--ds-c-accent, #67615c);
+	}
+	.jm-route-home-style-4 .back-to-top .btn {
+		background: var(--ds-c-accent, #333399);
+	}
+}
+
+/* ---- Footers of Home Style 3 and 4: the source's own column splits (3/4/3/2 and 3/3/3/3 of 12), logo "Morgan." in 24 px bold ---- */
+.t3-footnav:is(.jm-foot-hs3, .jm-foot-hs4) {
+	grid-template-columns: repeat(4, 1fr);
+	gap: 0;
+	margin: 0 -15px;
+}
+/* The source's col-lg-3/4/3/2 split only applies from 1200 px; below it the four columns are equal (col-md-3). */
+@media (min-width: 1200px) {
+	.t3-footnav.jm-foot-hs3 {
+		grid-template-columns: 3fr 4fr 3fr 2fr;
+	}
+}
+.t3-footnav.jm-foot-hs4 {
+	grid-template-columns: repeat(4, 1fr);
+}
+.t3-footnav:is(.jm-foot-hs3, .jm-foot-hs4) .jm-foot-col {
+	padding: 0 15px;
+	margin-bottom: 12.5px;
+}
+.t3-footnav:is(.jm-foot-hs3, .jm-foot-hs4) .logo-footer {
+	display: inline;
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 37.5px;
+	color: #ffffff;
+}
+.t3-footnav:is(.jm-foot-hs3, .jm-foot-hs4) p {
+	margin: 0 0 25px;
+	font-size: 16px;
+	line-height: 25px;
+	color: var(--jm-mix-on-ink-60, var(--ds-c-on-ink, #888888));
+}
+.t3-footnav:is(.jm-foot-hs3, .jm-foot-hs4) p a {
+	color: inherit;
+}
+.jm-footer-hs4 .t3-footnav p,
+.jm-footer-hs4 .t3-copyright,
+.jm-footer-hs4 .t3-copyright small {
+	color: var(--ds-c-on-ink, #aaaaaa);
+}
+@media (max-width: 767px) {
+	.t3-footnav:is(.jm-foot-hs3, .jm-foot-hs4) {
+		grid-template-columns: 1fr;
+	}
+}
+/* The copyright row is as tall as the source's (its T3 logo column keeps 76 px under the two lines). */
+.t3-copyright > .container {
+	min-height: 76px;
+	box-sizing: border-box;
+}
+/* The source's copyright and logo columns stack below 992 px, so the row holds both. */
+@media (max-width: 991px) {
+	.t3-copyright > .container {
+		min-height: 101px;
+	}
+}
+
+/* A social link's label is read by screen readers only. Its clipped 1 px box sat on a different line from the icon, so the narrow-screen
+   probe counted the 30 px square as a control wrapping to three lines; at font-size 0 the text has no box and keeps its name for assistive tech. */
+.wp-block-social-links .wp-block-social-link-label {
+	font-size: 0;
+	white-space: nowrap;
+}
+
+/* The focus of a field is the source's, never the base ring: its `.form-control:focus` darkens the border to #999999 and shows no ring
+ * (the quick-contact fields have no focus rule of their own, so they keep the lightest indicator, the same border change). The base
+ * rule `.tracy :focus-visible` paints a 4 px translucent ring on every focusable element; text fields, text areas and selects of the
+ * sidebar log-in, the listing filters, the finder and the quick contact take the border instead. The header search keeps its own rule. */
+.tracy :is(input:not([type='checkbox'], [type='radio'], [type='submit'], [type='button'], [type='reset'], [type='image'], [type='range'], [type='file'], [type='color'], [type='hidden']), textarea, select):not(.wp-block-search__input):is(:focus, :focus-visible) {
+	border-color: var(--ds-c-border, light-dark(#999999, #2a3247));
+	box-shadow: none;
+}
+.tracy .jm-quick-contact .jm-field :is(input, textarea):is(:focus, :focus-visible):not(.wp-block-search__input) {
+	border-bottom-color: var(--jm-mix-on-ink-60, var(--ds-c-on-ink, rgba(255, 255, 255, 0.6)));
+}
+/* Typography page: the source puts an empty paragraph (25 px + 25 px margin) between two sections, the port has the block gap (25 px) only. */
+.core-typo > .docs-section + .docs-section {
+	margin-block-start: 50px;
+}
+/* The same empty paragraph sits inside the sections between two example blocks and before a sub-title. */
+.core-typo .docs-section > .example-row + .example-row,
+.core-typo .example-row + h3.sub-title,
+.core-typo .docs-section + h3.sub-title {
+	margin-block-start: 50px;
+}
+/* The source's example inputs are a fixed 60 px (border-box); the port's follow the 25 px line. */
+.core-typo input.form-control {
+	height: 60px;
+}
+/* The source's example blocks are divs (no paragraph margin below); an alert's title has no top margin. */
+.t3-content .core-typo p.example,
+.t3-content .core-typo p.example-button {
+	margin-block-end: 0;
+}
+.t3-content .core-typo .alert > h4.wp-block-heading {
+	margin-block-start: 0;
+}
+/* Two alert rows follow each other without the empty paragraph; list-group item text has no paragraph margins. */
+.core-typo .docs-section > .example-row:has(.alert) + .example-row:has(.alert) {
+	margin-block-start: 0;
+}
+.t3-content .core-typo h4.list-group-item-heading {
+	margin-block: 0 5px;
+}
+.t3-content .core-typo p.list-group-item-text {
+	margin-block: 0;
+}
+/* Panels: a title inside the panel heading has no margins and the body is a div in the source. */
+.t3-content .core-typo h3.panel-title {
+	margin: 0;
+}
+.t3-content .core-typo p.panel-body {
+	margin-block-end: 0;
+}
+/* A paragraph list-group in the port is a block of links in the source: the items overlap their borders. */
+.core-typo a.list-group-item {
+	margin-bottom: -1px;
+}
+.core-typo a.list-group-item:last-child {
+	margin-bottom: 0;
+}
+/* The typography page's tag list: the source separates its tags by the space between them only, and its wrapper is a div. */
+.core-typo .tags .tag a {
+	margin-right: 0;
+}
+.t3-content .core-typo p.tags {
+	margin-block-end: 18.75px;
+}
+/* Inline code as the source styles it (the port left the browser default). */
+.t3-content code {
+	padding: 2px 4px;
+	border-radius: var(--ds-input-radius, 4px);
+	background: var(--ds-c-surface-warm, #f9f2f4);
+	color: var(--ds-c-accent-text, #c7254e);
+	font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+	font-size: 90%;
+	line-height: 1.6667;
+}
+/* The source's one-time system message (joomla-alert): 37 px box, 10 px below, a close cross on the right. */
+.jm-system-message {
+	position: relative;
+	margin: 0 0 10px;
+	padding: 5px 12.5px;
+	border: 1px solid var(--ds-c-border, #f4cfce);
+	border-radius: var(--ds-card-radius, 2.5px);
+	background: var(--ds-c-surface-warm, #f7dddc);
+	color: var(--ds-c-danger-text, #712b29);
+	font-size: 16px;
+	line-height: 25px;
+}
+.jm-system-message__close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 2px 10px;
+	border: 0;
+	background: transparent;
+	color: var(--ds-c-fg, #000);
+	font-size: 15px;
+	line-height: 15px;
+	opacity: 0.5;
+	cursor: pointer;
+}
+/* The spacing the source gets from its stray paragraphs and line break: the tag list's own margin (18.75 px) plus the empty paragraph before the Color Swatches, and two paragraphs plus a break before Navigations. */
+.core-typo > .docs-section:has(> .tags, > p.tags) + .docs-section {
+	margin-block-start: 68.75px;
+}
+.t3-content .core-typo > p + .docs-section {
+	margin-block-start: 125px;
+}
+/* Below 768 px the source's article block keeps 30 px under it. */
+@media (max-width: 767px) {
+	.jm-route-offline-page .t3-content.item-page,
+	.jm-route-error-page .t3-content.item-page,
+	.jm-route-typography .t3-content.item-page {
+		margin-bottom: 30px;
+	}
+}
+/* Registration: the source's last row has no margin below it. */
+.registration.jm-form .form-actions {
+	margin-bottom: 0;
+}
+/* Page cards on the front page: from 768 px the source's card is 2 px taller than picture + text (the picture's baseline gap); below it they are flush. */
+@media (min-width: 768px) {
+	.jm-cards > .teams-item {
+		padding-bottom: 2px;
+	}
+}
+@media (min-width: 768px) {
+	/* The source's card grid keeps 15 px under its last row. */
+	.jm-cards.acm-teams--cols-3 {
+		padding-bottom: 15px;
+	}
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+	/* The source's feature boxes are 30 px taller at this width. */
+	.jm-cards.acm-features-intro--cols-3 {
+		padding-bottom: 30px;
+	}
+	.jm-cards.acm-features-intro--cols-3 > .features-item {
+		padding-bottom: 30px;
+	}
+}
+/* On a phone the source stacks its "Page 1 of 2" box above the page boxes; the markup has them the other way round. */
+@media (max-width: 767px) {
+	.blog .pagination.tracy-joomla-pager.wp-block-query-pagination {
+		margin: 3px 0 25px;
+		flex-direction: column-reverse;
+		flex-wrap: nowrap;
+		align-items: flex-start;
+		justify-content: flex-end;
+		gap: 25px;
+		padding: 25px 0 0;
+	}
+	.tracy-joomla-pager .tracy-pager__counter { margin: 0; }
+	/* The featured list has no sidebar after it, so the source keeps the 25 px inside the pager box. */
+	.jm-route-featured-articles .pagination.tracy-joomla-pager.wp-block-query-pagination {
+		margin-bottom: 0;
+		padding-bottom: 25px;
+	}
+}
+@media (max-width: 767px) {
+	/* Stacked blog cards: the source's last column keeps 30 px under its card. */
+	.jm-route-category-blog ul.tracy-grid.items-row,
+	.jm-route-featured-articles ul.tracy-grid.items-row {
+		padding-bottom: 30px;
+	}
+}
+
+/* ---- 1.1.8 icon glyphs ---- The source draws its header and footer icons with Font Awesome fonts (4.5 for the theme button, the
+   menu bars and the sidebar; 6 brands for the footer) and a PNG for the search. The port drew other shapes (a thin moon and sun, a
+   mirrored search ring, the X mark for Twitter, smaller social glyphs), so the same outlines are drawn here as masks. The ink sizes
+   are the source's: moon 14.8 x 15.4, sun 17.2 x 18, bars 13.7 x 11.4, Facebook 13 x 13, Twitter 13 x 10.6, Instagram 11.4 x 11.4. */
+.theme-toggle[data-tracy-theme-toggle] svg.theme-toggle__moon,
+.theme-toggle[data-tracy-theme-toggle] svg.theme-toggle__sun {
+	display: none;
+}
+.theme-toggle::before {
+	content: "";
+	width: 14.77px;
+	height: 15.42px;
+	background: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -1407 1471 1535'%3E%3Cpath transform='scale(1,-1)' d='M1262 233Q1208 224 1152 224Q970 224 815 314Q660 404 570 559Q480 714 480 896Q480 1088 584 1253Q383 1193 255.5 1024Q128 855 128 640Q128 510 179 391.5Q230 273 315.5 187.5Q401 102 519.5 51Q638 0 768 0Q912 0 1041.5 61.5Q1171 123 1262 233ZM1465 318Q1371 115 1181.5 -6.5Q992 -128 768 -128Q612 -128 470 -67Q328 -6 225 97Q122 200 61 342Q0 484 0 640Q0 793 57.5 932.5Q115 1072 213.5 1174Q312 1276 449 1338.5Q586 1401 739 1407Q783 1409 800 1368Q818 1327 785 1296Q699 1218 653.5 1114.5Q608 1011 608 896Q608 748 681 623Q754 498 879 425Q1004 352 1152 352Q1270 352 1380 403Q1421 421 1452 390Q1466 376 1469.5 356Q1473 336 1465 318Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -1407 1471 1535'%3E%3Cpath transform='scale(1,-1)' d='M1262 233Q1208 224 1152 224Q970 224 815 314Q660 404 570 559Q480 714 480 896Q480 1088 584 1253Q383 1193 255.5 1024Q128 855 128 640Q128 510 179 391.5Q230 273 315.5 187.5Q401 102 519.5 51Q638 0 768 0Q912 0 1041.5 61.5Q1171 123 1262 233ZM1465 318Q1371 115 1181.5 -6.5Q992 -128 768 -128Q612 -128 470 -67Q328 -6 225 97Q122 200 61 342Q0 484 0 640Q0 793 57.5 932.5Q115 1072 213.5 1174Q312 1276 449 1338.5Q586 1401 739 1407Q783 1409 800 1368Q818 1327 785 1296Q699 1218 653.5 1114.5Q608 1011 608 896Q608 748 681 623Q754 498 879 425Q1004 352 1152 352Q1270 352 1380 403Q1421 421 1452 390Q1466 376 1469.5 356Q1473 336 1465 318Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.theme-toggle[data-theme-state="dark"]::before,
+:root[data-theme="dark"] .theme-toggle::before {
+	width: 17.15px;
+	height: 17.99px;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='42 -1535 1708 1791'%3E%3Cpath transform='scale(1,-1)' d='M1426.5 416.5Q1426.5 416.5 1449.2 469.8Q1472 523 1472 640Q1472 757 1426.5 863.5Q1381 970 1303.5 1047.5Q1226 1125 1119.5 1170.5Q1013 1216 896 1216Q779 1216 672.5 1170.5Q566 1125 488.5 1047.5Q411 970 365.5 863.5Q320 757 320 640Q320 523 365.5 416.5Q411 310 488.5 232.5Q566 155 672.5 109.5Q779 64 896 64Q1013 64 1119.5 109.5Q1226 155 1303.5 232.5Q1381 310 1426.5 416.5ZM1748 363Q1744 348 1728 343L1436 247L1436 -59Q1436 -75 1423 -85Q1408 -95 1394 -89L1102 5L922 -243Q912 -256 896 -256Q880 -256 870 -243L690 5L398 -89Q384 -95 369 -85Q356 -75 356 -59L356 247L64 343Q48 348 44 363Q39 380 48 392L228 640L48 888Q39 901 44 917Q48 932 64 937L356 1033L356 1339Q356 1355 369 1365Q384 1375 398 1369L690 1275L870 1523Q879 1535 896 1535Q913 1535 922 1523L1102 1275L1394 1369Q1408 1375 1423 1365Q1436 1355 1436 1339L1436 1033L1728 937Q1744 932 1748 917Q1753 901 1744 888L1564 640L1744 392Q1753 380 1748 363Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='42 -1535 1708 1791'%3E%3Cpath transform='scale(1,-1)' d='M1426.5 416.5Q1426.5 416.5 1449.2 469.8Q1472 523 1472 640Q1472 757 1426.5 863.5Q1381 970 1303.5 1047.5Q1226 1125 1119.5 1170.5Q1013 1216 896 1216Q779 1216 672.5 1170.5Q566 1125 488.5 1047.5Q411 970 365.5 863.5Q320 757 320 640Q320 523 365.5 416.5Q411 310 488.5 232.5Q566 155 672.5 109.5Q779 64 896 64Q1013 64 1119.5 109.5Q1226 155 1303.5 232.5Q1381 310 1426.5 416.5ZM1748 363Q1744 348 1728 343L1436 247L1436 -59Q1436 -75 1423 -85Q1408 -95 1394 -89L1102 5L922 -243Q912 -256 896 -256Q880 -256 870 -243L690 5L398 -89Q384 -95 369 -85Q356 -75 356 -59L356 247L64 343Q48 348 44 363Q39 380 48 392L228 640L48 888Q39 901 44 917Q48 932 64 937L356 1033L356 1339Q356 1355 369 1365Q384 1375 398 1369L690 1275L870 1523Q879 1535 896 1535Q913 1535 922 1523L1102 1275L1394 1369Q1408 1375 1423 1365Q1436 1355 1436 1339L1436 1033L1728 937Q1744 932 1748 917Q1753 901 1744 888L1564 640L1744 392Q1753 380 1748 363Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.social-follow .wp-social-link svg {
+	display: none;
+}
+.social-follow .wp-social-link a::before {
+	content: "";
+	background: rgb(255, 255, 255); /* ds-keep: the white glyph on the social service's own brand colour */
+}
+.social-follow .wp-social-link-facebook a::before {
+	transform: translate(-0.5px, -1.25px);
+	width: 13px;
+	height: 12.95px;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -448 512 510'%3E%3Cpath transform='scale(1,-1)' d='M512 192Q511 264 477 321L477 321L477 321Q443 379 385 413L385 413L385 413Q328 447 256 448Q184 447 127 413Q69 379 35 321Q1 264 0 192Q2 100 55 33Q109 -34 194 -57L194 114L194 114L141 114L141 114L141 192L141 192L194 192L194 192L194 226L194 226Q193 355 319 353Q332 353 349 351Q365 349 375 347L375 276L375 276Q365 277 345 277Q314 277 300 264Q287 250 287 220L287 192L287 192L371 192L371 192L356 114L356 114L287 114L287 114L287 -62L287 -62Q384 -48 447 22Q510 92 512 192L512 192Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -448 512 510'%3E%3Cpath transform='scale(1,-1)' d='M512 192Q511 264 477 321L477 321L477 321Q443 379 385 413L385 413L385 413Q328 447 256 448Q184 447 127 413Q69 379 35 321Q1 264 0 192Q2 100 55 33Q109 -34 194 -57L194 114L194 114L141 114L141 114L141 192L141 192L194 192L194 192L194 226L194 226Q193 355 319 353Q332 353 349 351Q365 349 375 347L375 276L375 276Q365 277 345 277Q314 277 300 264Q287 250 287 220L287 192L287 192L371 192L371 192L356 114L356 114L287 114L287 114L287 -62L287 -62Q384 -48 447 22Q510 92 512 192L512 192Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.social-follow .wp-social-link-twitter a::before,
+.social-follow .wp-social-link-x a::before {
+	transform: translate(-0.5px, -0.75px);
+	width: 13px;
+	height: 10.56px;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -400 512 416'%3E%3Cpath transform='scale(1,-1)' d='M459 296Q460 289 460 283L460 283L460 283Q460 283 460 283Q460 212 425 144Q391 76 324 31Q258 -14 161 -16Q71 -15 0 31Q12 30 25 30Q100 31 156 75Q120 76 94 96Q68 116 58 147Q67 146 77 146Q92 146 105 149Q68 157 45 185Q22 213 21 252L21 254L21 254Q42 242 68 240Q24 271 21 328Q22 357 36 381Q75 333 131 304Q186 275 252 271Q250 283 250 295Q251 339 280 369Q310 399 354 400Q401 399 431 367Q467 374 498 392Q485 355 452 334Q483 338 512 351Q490 319 459 296Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -400 512 416'%3E%3Cpath transform='scale(1,-1)' d='M459 296Q460 289 460 283L460 283L460 283Q460 283 460 283Q460 212 425 144Q391 76 324 31Q258 -14 161 -16Q71 -15 0 31Q12 30 25 30Q100 31 156 75Q120 76 94 96Q68 116 58 147Q67 146 77 146Q92 146 105 149Q68 157 45 185Q22 213 21 252L21 254L21 254Q42 242 68 240Q24 271 21 328Q22 357 36 381Q75 333 131 304Q186 275 252 271Q250 283 250 295Q251 339 280 369Q310 399 354 400Q401 399 431 367Q467 374 498 392Q485 355 452 334Q483 338 512 351Q490 319 459 296Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.social-follow .wp-social-link-instagram a::before {
+	transform: translate(0, -1px);
+	width: 11.375px;
+	height: 11.375px;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -416 448 448'%3E%3Cpath transform='scale(1,-1)' d='M224 307Q175 306 143 273L143 273L143 273Q110 241 109 192Q110 143 143 111Q175 78 224 77Q273 78 305 111Q338 143 339 192Q338 241 305 273Q273 306 224 307ZM224 117Q192 118 171 139L171 139L171 139Q150 160 149 192Q150 224 171 245Q192 266 224 267Q256 266 277 245Q298 224 299 192Q298 160 277 139Q256 118 224 117ZM371 312Q368 287 344 285Q319 287 317 312Q317 323 325 331Q332 338 344 338Q355 338 363 331Q370 323 371 312ZM447 284Q447 339 410 378Q371 415 317 415Q297 416 260 416Q224 416 188 416Q151 416 132 415Q78 415 38 378Q1 339 2 285Q0 265 0 228Q0 192 0 156Q0 120 2 100Q1 45 38 6Q77 -31 132 -30Q151 -31 188 -32Q224 -32 260 -32Q297 -31 317 -30Q371 -31 410 6Q447 45 447 100Q448 120 448 156Q448 192 448 228Q448 265 447 285ZM399 60Q386 30 356 17Q336 10 302 9Q268 8 240 8Q231 8 224 8Q217 8 208 8Q180 8 146 9Q113 10 92 17Q62 30 49 60Q42 81 41 114Q40 148 40 176Q40 185 40 192Q40 199 40 208Q40 236 41 270Q42 304 49 324Q62 354 92 367Q113 374 146 375Q180 377 208 376Q217 376 224 376Q231 376 240 376Q268 376 302 375Q336 374 356 367Q386 354 399 324Q406 304 407 270Q409 236 408 208Q408 199 408 192Q408 185 408 176Q409 148 407 114Q406 80 399 60Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -416 448 448'%3E%3Cpath transform='scale(1,-1)' d='M224 307Q175 306 143 273L143 273L143 273Q110 241 109 192Q110 143 143 111Q175 78 224 77Q273 78 305 111Q338 143 339 192Q338 241 305 273Q273 306 224 307ZM224 117Q192 118 171 139L171 139L171 139Q150 160 149 192Q150 224 171 245Q192 266 224 267Q256 266 277 245Q298 224 299 192Q298 160 277 139Q256 118 224 117ZM371 312Q368 287 344 285Q319 287 317 312Q317 323 325 331Q332 338 344 338Q355 338 363 331Q370 323 371 312ZM447 284Q447 339 410 378Q371 415 317 415Q297 416 260 416Q224 416 188 416Q151 416 132 415Q78 415 38 378Q1 339 2 285Q0 265 0 228Q0 192 0 156Q0 120 2 100Q1 45 38 6Q77 -31 132 -30Q151 -31 188 -32Q224 -32 260 -32Q297 -31 317 -30Q371 -31 410 6Q447 45 447 100Q448 120 448 156Q448 192 448 228Q448 265 447 285ZM399 60Q386 30 356 17Q336 10 302 9Q268 8 240 8Q231 8 224 8Q217 8 208 8Q180 8 146 9Q113 10 92 17Q62 30 49 60Q42 81 41 114Q40 148 40 176Q40 185 40 192Q40 199 40 208Q40 236 41 270Q42 304 49 324Q62 354 92 367Q113 374 146 375Q180 377 208 376Q217 376 224 376Q231 376 240 376Q268 376 302 375Q336 374 356 367Q386 354 399 324Q406 304 407 270Q409 236 408 208Q408 199 408 192Q408 185 408 176Q409 148 407 114Q406 80 399 60Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+/* The search is the source's grey magnifier (its PNG) in the light scheme and its thin ring and handle in the dark one, 7 px in from the left of the 30 px button. */
+.head-search .wp-block-search__button {
+	position: relative;
+}
+.head-search .wp-block-search__button svg {
+	display: none;
+}
+.head-search .wp-block-search__button::before {
+	content: "";
+	position: absolute;
+	left: 7px;
+	top: 8px;
+	width: 16px;
+	height: 15px;
+	background: url("../img/search.png") 0 0 / 16px 15px no-repeat;
+}
+.head-search .wp-block-search__button::after {
+	content: "";
+	position: absolute;
+	left: 7px;
+	top: 7px;
+	width: 16px;
+	height: 16px;
+	display: none;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%23cdd4e0' stroke-width='1.4'%3E%3Ccircle cx='6.8' cy='6.8' r='4.6'/%3E%3Cline x1='10.4' y1='10.4' x2='14' y2='14'/%3E%3C/svg%3E") no-repeat;
+}
+:root[data-theme="dark"] .head-search .wp-block-search__button::before {
+	display: none;
+}
+:root[data-theme="dark"] .head-search .wp-block-search__button::after {
+	display: block;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) .head-search .wp-block-search__button::before {
+		display: none;
+	}
+	:root:not([data-theme]) .head-search .wp-block-search__button::after {
+		display: block;
+	}
+}
+@media (max-width: 991px) {
+	/* The menu button sits at 15 px in the bar like the sidebar button, and draws the source's rounded bars. */
+	.t3-mainnav .wp-block-navigation__responsive-container-open {
+		margin-top: -3px;
+	}
+	.t3-mainnav .wp-block-navigation__responsive-container-open::before,
+	.t3-mainnav .wp-block-navigation__responsive-container-close::before {
+		width: 13.71px;
+		height: 11.43px;
+		background: var(--ds-c-bg, #ffffff);
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -1280 1536 1280'%3E%3Cpath transform='scale(1,-1)' d='M1536 192L1536 64Q1536 38 1517 19Q1498 0 1472 0L64 0Q38 0 19 19Q0 38 0 64L0 192Q0 218 19 237Q38 256 64 256L1472 256Q1498 256 1517 237Q1536 218 1536 192ZM1536 704L1536 576Q1536 550 1517 531Q1498 512 1472 512L64 512Q38 512 19 531Q0 550 0 576L0 704Q0 730 19 749Q38 768 64 768L1472 768Q1498 768 1517 749Q1536 730 1536 704ZM1536 1216L1536 1088Q1536 1062 1517 1043Q1498 1024 1472 1024L64 1024Q38 1024 19 1043Q0 1062 0 1088L0 1216Q0 1242 19 1261Q38 1280 64 1280L1472 1280Q1498 1280 1517 1261Q1536 1242 1536 1216Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -1280 1536 1280'%3E%3Cpath transform='scale(1,-1)' d='M1536 192L1536 64Q1536 38 1517 19Q1498 0 1472 0L64 0Q38 0 19 19Q0 38 0 64L0 192Q0 218 19 237Q38 256 64 256L1472 256Q1498 256 1517 237Q1536 218 1536 192ZM1536 704L1536 576Q1536 550 1517 531Q1498 512 1472 512L64 512Q38 512 19 531Q0 550 0 576L0 704Q0 730 19 749Q38 768 64 768L1472 768Q1498 768 1517 749Q1536 730 1536 704ZM1536 1216L1536 1088Q1536 1062 1517 1043Q1498 1024 1472 1024L64 1024Q38 1024 19 1043Q0 1062 0 1088L0 1216Q0 1242 19 1261Q38 1280 64 1280L1472 1280Q1498 1280 1517 1261Q1536 1242 1536 1216Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	}
+}
+/* The source's sidebar log-in module: the checkbox sits flush left with only a 4 px top margin, and the "Create an account" link ends with a
+   Font Awesome arrow (outline cut from the font, 12.3 x 13 px, one space after the words). */
+.jm-login .login-remember input[type="checkbox"] {
+	margin: 4px 0 0;
+}
+.jm-login ul a[href*="/j-pages/registration"]::after {
+	content: "";
+	display: inline-block;
+	width: 12.32px;
+	height: 13.04px;
+	margin: 0 0.54px 0 4.2px;
+	vertical-align: top;
+	margin-top: 4.5px;
+	background: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -1355 1472 1558'%3E%3Cpath transform='scale(1,-1)' d='M1472 576Q1472 522 1435 485L784 -166Q745 -203 693 -203Q642 -203 603 -166L528 -91Q490 -53 490 0Q490 53 528 91L821 384L117 384Q65 384 32.5 421.5Q0 459 0 512L0 640Q0 693 32.5 730.5Q65 768 117 768L821 768L528 1062Q490 1098 490 1152Q490 1206 528 1242L603 1317Q641 1355 693 1355Q746 1355 784 1317L1435 666Q1472 631 1472 576Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -1355 1472 1558'%3E%3Cpath transform='scale(1,-1)' d='M1472 576Q1472 522 1435 485L784 -166Q745 -203 693 -203Q642 -203 603 -166L528 -91Q490 -53 490 0Q490 53 528 91L821 384L117 384Q65 384 32.5 421.5Q0 459 0 512L0 640Q0 693 32.5 730.5Q65 768 117 768L821 768L528 1062Q490 1098 490 1152Q490 1206 528 1242L603 1317Q641 1355 693 1355Q746 1355 784 1317L1435 666Q1472 631 1472 576Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+/* 1.1.11 (Q8) — the header brand: the site's logo when it has one, else the name in Morgan's own text style ("Name."
+   with the accent full stop). Two Site Logo blocks: the light one on the light header, the dark one where the header is
+   dark (dark mode, and home styles 3 and 4 whose header sits over the dark hero). The text shows whenever the logo of
+   the current ground is missing. */
+.t3-header .jm-brand { display: flex; align-items: center; margin: 0; }
+.t3-header .jm-logo { margin: 0; line-height: 0; }
+.t3-header .jm-logo img { display: block; width: auto; height: auto; max-height: 40px; max-width: 200px; }
+.t3-header .jm-logo--dark { display: none; }
+.t3-header .jm-brand:has(> .jm-logo--light img) > .logo-text { display: none; }
+:root[data-theme="dark"] .t3-header .jm-logo--light,
+body:is(.jm-route-home-style-3, .jm-route-home-style-4) .t3-header .jm-logo--light { display: none; }
+:root[data-theme="dark"] .t3-header .jm-logo--dark,
+body:is(.jm-route-home-style-3, .jm-route-home-style-4) .t3-header .jm-logo--dark { display: block; }
+:root[data-theme="dark"] .t3-header .jm-brand > .logo-text,
+body:is(.jm-route-home-style-3, .jm-route-home-style-4) .t3-header .jm-brand > .logo-text { display: block; }
+:root[data-theme="dark"] .t3-header .jm-brand:has(> .jm-logo--dark img) > .logo-text,
+body:is(.jm-route-home-style-3, .jm-route-home-style-4) .t3-header .jm-brand:has(> .jm-logo--dark img) > .logo-text { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .t3-header .jm-logo--light { display: none; }
+  :root:not([data-theme]) .t3-header .jm-logo--dark { display: block; }
+  :root:not([data-theme]) .t3-header .jm-brand > .logo-text { display: block; }
+  :root:not([data-theme]) .t3-header .jm-brand:has(> .jm-logo--dark img) > .logo-text { display: none; }
+}
+/* The footers of home styles 3 and 4 (dark): the dark-background logo when the site has one, else the name in the same
+   text style ("Name."). */
+.t3-footnav:is(.jm-foot-hs3, .jm-foot-hs4) .jm-footer-logo { margin: 0 0 12px; line-height: 0; }
+.t3-footnav:is(.jm-foot-hs3, .jm-foot-hs4) .jm-footer-logo img { display: block; width: auto; height: auto; max-height: 40px; max-width: 200px; }
+.t3-footnav:is(.jm-foot-hs3, .jm-foot-hs4) .jm-foot-col:has(> .jm-footer-logo img) .logo-footer { display: none; }

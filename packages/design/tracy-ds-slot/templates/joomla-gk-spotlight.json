@@ -1,0 +1,199 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "minVersion": {
+    "quickstart/gavick-gk-spotlight/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/gavick-gk-spotlight/j6": "1.0.1"
+  },
+  "applies": "a GavickPro Gavern (gk_*) quickstart: the same site module as the JA families, in the earliest position its layout renders. Gavern has no runtime colour variables: its compiled stylesheets read the slot once tokenized (a JoomlArt re-release), and the slot's own selector rules do the rest",
+  "tokenScope": ":root",
+  "runtime": {},
+  "selectors": {
+    "headingsAll": [":is(h1, h2, h3, h4)"],
+    "display": "h1",
+    "body": ["body"],
+    "themeToggle": "[data-tracy-theme-toggle]",
+    "heading": ["#gkBg-main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "bodyFace": ["body"],
+    "inkImages": [".header-right .icon"]
+  },
+  "specificity": "Rules are prefixed :root×6 (0,6,0): above every template rule, below an element's own inline style.",
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#333333",
+      "fg-2": "#111111",
+      "accent": "#e42525",
+      "accent-hover": "#ea5252",
+      "meta": "#777777",
+      "border": "#e5e5e5",
+      "muted": "#636565",
+      "surface": "#ffffff"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#333333",
+      "muted": "#777777",
+      "fg-2": "#111111"
+    },
+    {
+      "accent": "#e42525"
+    },
+    {
+      "border": "#dddddd",
+      "border-soft": "#e9e8e8",
+      "surface-warm": "#f2f2f2",
+      "accent-hover": "#ee5f5b",
+      "danger": "#d51a1a"
+    },
+    {
+      "border-soft": "#eeeeee",
+      "surface-warm": "#f5f5f5"
+    },
+    {
+      "surface-warm": "#f9f9f9"
+    },
+    {
+      "surface": "#fdfbf8"
+    },
+    {
+      "surface": "#fdf8fa"
+    },
+    {
+      "surface": "#f8f9fd"
+    }
+  ],
+  "genericTokens": false,
+  "genericNote": "the slot writes no short token names (--bg, --accent…) here; everything reads --ds-c-*",
+  "classifyText": true,
+  "template": "joomla/gk-spotlight",
+  "release": "quickstart/gavick-gk-spotlight/j6@1.0.1",
+  "roles": {
+    "page": "#gkTemplateTop",
+    "heading": "h2",
+    "body": "div.introtext p",
+    "input": "#email_field_539"
+  },
+  "discovered": {
+    "page": "body",
+    "heading": "first section heading: 24px",
+    "body": "first body paragraph",
+    "input": "first text field"
+  },
+  "keepScopes": [],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on quickstart/gavick-gk-spotlight/j6 1.0.0 with its stylesheets tokenized as 1.0.1 ships them (tasks/evidence/ds-contracts-gk-2026-10-11): 12/12, controls 0 differences, no text made less readable than the template's own under the four systems tried, 96%–100% of the page follows; the 1.0.1 build itself (restored from its zip) measured the same: 12/12 (its default look: 0 computed differences against 1.0.0, 39/39 pages; the pixels differ because three home modules list articles in random order). Spotlight's default style ships Gavern's \"Recompile CSS\" on, which compiles less/ over css/ on every request and would erase the tokenized sheets: 1.0.1 ships it off (gavernRecompileOff, one row of installation/sql), and the css/ it ships is byte for byte what its LESS compiled to on the stand. The three pastel grounds of its top bands are surfaces, so a dark system darkens them under its light text. The page colours follow only from 1.0.1 (~/tracy-bench-work/RELEASE-DS-GAVICK.sh, not yet uploaded); minVersion keeps 1.0.0 sites out (TEMPLATE_NEEDS_UPDATE)",
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "pairVarFill": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#333333",
+    "--fg-2": "#111111",
+    "--accent": "#e42525",
+    "--accent-hover": "#ea5252",
+    "--meta": "#777777",
+    "--border": "#e5e5e5",
+    "--muted": "#777777",
+    "--surface": "#ffffff",
+    "--font-display": "\"Calistoga\", sans-serif",
+    "--font-body": "\"Jost\", sans-serif"
+  },
+  "darkTokens": {},
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (61 line colours, 112 text colours seen)",
+  "contrast": {
+    "accent-text": "#gkPageContent a:not([class*=btn]):not(:has(img))",
+    "muted": "#gkBg-main p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#gkPageContent p, #gkPageContent li",
+    "heading": "#gkBg-main :is(h1, h2, h3, h4)",
+    "logo": ".gkLogo",
+    "footer": "#gkFooter a, #gkFooterNavWrap a"
+  },
+  "gavernRecompileOff": true,
+  "module": {
+    "title": "Tracy design system",
+    "position": "social",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 25 tried (byte 16199); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#dddddd",
+      "uses": 26,
+      "kind": "line",
+      "role": "border",
+      "near": "#e5e5e5",
+      "distance": 14
+    },
+    {
+      "hex": "#e9e8e8",
+      "uses": 24,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 20,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 17
+    },
+    {
+      "hex": "#ee5f5b",
+      "uses": 15,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#ea5252",
+      "distance": 16
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 14,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#f5f5f5",
+      "uses": 12,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 12
+    },
+    {
+      "hex": "#d51a1a",
+      "uses": 11,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#dc2626",
+      "distance": 18
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "alphaVars": ["fg-50"],
+  "paletteNote": "the three pastel grounds of the home page top bands (#gkTop1 #FDFBF8, #gkTop2 #FDF8FA, #gkTop3 #F8F9FD) are surfaces: under a dark system they follow its surface, so the text that follows its foreground stays readable on them",
+  "licence": "gk_spotlight 1.1.1 (GavickPro, templateDetails.xml: \"Copyright (C) 2007 - 2022 GavickPro. All rights reserved.\", <license> empty). GavickPro's template business belongs to JoomlArt since October 2017, JoomlArt publishes this quickstart itself (JoomlArt-Products/ja-products), and its less/ sources carry JoomlArt's $JA#COPYRIGHT$ header: re-releasing it with tokenized stylesheets is JoomlArt's call, taken by David (product owner, 11/10/2026), who runs the release",
+  "followRules": {
+    "#static-aside-menu-toggler > span": {
+      "background-color": "fg-2!"
+    }
+  },
+  "followNote": "13/10/2026: the phone header's menu toggle draws its three bars #000 and its search and account icons are dark PNGs, so under a dark system (Moxie, Spotify, Linear) all three vanished on the black header: the bars take the system's strongest ink, the icons are inverted on a dark page (inkImages)"
+}

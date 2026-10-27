@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-parchment-cream: #eeede5;
+  --color-ink-black: #232323;
+  --color-pure-white: #ffffff;
+  --color-iron-gray: #4a4a4a;
+  --color-soft-stone: #ddddda;
+
+  /* Typography — Font Families */
+  --font-spezia-semi-mono: 'Spezia Semi-Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-spezia-medium: 'Spezia Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-figtree: 'Figtree', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-spezia-semi-mono-light: 'Spezia Semi-Mono Light', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

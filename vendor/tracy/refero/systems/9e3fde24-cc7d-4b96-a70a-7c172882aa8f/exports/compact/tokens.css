@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-bright-white: #ffffff;
+  --color-carbon: #2e2e30;
+  --color-obsidian: #18181b;
+  --color-ash: #969696;
+  --color-pure-black: #000000;
+  --color-lime-cream: #eef0b1;
+
+  /* Typography — Font Families */
+  --font-greedstandard: 'GreedStandard', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,116 @@
+.usage-screen {
+  min-height: 0;
+  min-width: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+/* Theme colors must switch with the page, rather than briefly keeping the previous theme's text. */
+.usage-screen :is(button, input, select, [data-slot="table-row"]) {
+  transition-property: border-color, outline-color, transform;
+}
+.usage-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 32px 40px;
+}
+.usage-kpis {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.usage-token-kpis {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.usage-token-missing .signals-kpi-number {
+  color: var(--muted-foreground);
+}
+.usage-funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.usage-section-title h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.usage-section-title p,
+.usage-site-undos {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+.usage-error,
+.usage-loading {
+  margin: 0 32px 24px;
+}
+.usage-loading {
+  display: grid;
+  gap: 16px;
+}
+.usage-sample-request {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.usage-sample-reply {
+  border-left: 1px solid var(--border);
+  padding-left: 10px;
+  color: var(--muted-foreground);
+}
+@media (max-width: 1100px) {
+  .usage-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .usage-content { padding: 16px 16px 24px; }
+  .usage-kpis,
+  .usage-token-kpis { grid-template-columns: minmax(0, 1fr); }
+}
+
+.usage-updated {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted-foreground);
+  font-size: 13px;
+}
+
+.usage-screen .signals-kpi {
+  border-top: 2px solid color-mix(in srgb, var(--signals-series) 55%, var(--border));
+}
+.usage-screen .signals-kpi-heading {
+  min-height: 24px;
+}
+.usage-screen .signals-kpi-note {
+  min-height: 0;
+}
+.usage-screen .signals-kpi-scope {
+  padding-top: 8px;
+}
+.usage-screen .signals-panel-header {
+  padding-bottom: 8px;
+}
+.usage-screen .signals-panel-sub {
+  margin-top: 0;
+}
+.usage-screen .signals-panel-header h2,
+.usage-section-title h2 {
+  letter-spacing: -0.15px;
+}
+.usage-screen .signals-empty {
+  padding-block: 24px;
+}
+.usage-section-title {
+  border-left: 3px solid var(--signals-purple-ink);
+  padding-left: 12px;
+}
+@media (max-width: 640px) {
+  .usage-screen .signals-panel-header {
+    gap: 4px;
+    padding: 14px 18px 8px;
+  }
+  .usage-screen .signals-panel-sub {
+    padding-inline: 18px;
+  }
+  .usage-error,
+  .usage-loading {
+    margin-inline: 16px;
+  }
+}

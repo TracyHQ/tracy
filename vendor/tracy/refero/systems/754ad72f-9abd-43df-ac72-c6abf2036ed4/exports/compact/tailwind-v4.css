@@ -1,0 +1,23 @@
+@theme {
+  /* Colors */
+  --color-indigo-voltage: #4d4dff;
+  --color-mint-whisper: #c5fbee;
+  --color-cyan-pulse: #00caf2;
+  --color-cyan-mist: #66dff7;
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-fog-veil: #f8f9fa;
+  --color-ash-border: #c8c9cf;
+  --color-graphite-depth: #333333;
+  --color-steel-caption: #7f8087;
+  --color-haze-card: #e3e6ec;
+
+  /* Typography */
+  --font-silka-semibold: 'Silka SemiBold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-hk-sentiments: 'HK Sentiments', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-silka: 'Silka', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-silka-italic: 'Silka Italic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-ui-sans-serif: 'system-ui sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-silka-regular: 'Silka Regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-silka-medium-italic: 'Silka Medium Italic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

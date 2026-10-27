@@ -1,0 +1,138 @@
+/* wp-ja-restaurant: account + contact group (login, registration, reminder, reset, contact). The carried source rules draw the forms;
+   this file only undoes the page frame (the off-canvas wrapper colour, flow gaps) and keeps the source's 30px content padding. */
+
+/* off-canvas.css paints .t3-wrapper with the ink colour for the panel's push effect; on these pages <main> is the page. */
+.jr-main:has(.t3-mainbody) {
+  background-color: var(--wp--preset--color--bg);
+}
+/* The source's .t3-content (30px top and bottom). Not given the class itself: the generic .t3-content rules of the content group repaint buttons and inputs. */
+.jr-content {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+/* The source's base field rule (Roboto Mono 14px, transparent, 50px high) is a LESS mixin the carried template.css lost. */
+:where(.jr-content) :is(select, textarea, input[type='text'], input[type='password'], input[type='email'], input[type='url'], input[type='tel'], input[type='date']) {
+  background-color: transparent;
+  color: var(--ds-c-fg, light-dark(#3a352f, #e9e4d6));
+  font-weight: 700;
+  font-family: 'Roboto Mono', sans-serif;
+  height: 50px;
+  padding: 8px 15px;
+  font-size: 14px;
+  line-height: 30px;
+  border-radius: var(--ds-input-radius, 0);
+}
+.jr-content textarea {
+  height: auto;
+}
+.jr-content .page-header h1 {
+  letter-spacing: 6px;
+}
+/* The carried rule falls back to a fixed #222222 when no design-system slot is set, which vanishes on the dark ground. */
+.login-wrap .page-header h1 {
+  color: var(--ds-c-fg-2, light-dark(#222222, #f0ece2));
+}
+@media (max-width: 767px) {
+  .jr-content .page-header h1 {
+    letter-spacing: 3px;
+  }
+}
+.jr-content .input-password-toggle {
+  flex: 0 0 50px;
+  width: 50px;
+  height: 50px;
+  background-color: var(--ds-c-surface-warm, light-dark(#efefef, #26231f));
+  border-color: transparent;
+}
+
+/* A visitor without JavaScript still reaches the password: the toggle is a plain button. */
+.jr-content .input-password-toggle {
+  cursor: pointer;
+}
+.jr-content .form-control:focus-visible,
+.jr-content .btn:focus-visible {
+  outline: 1px solid var(--ds-c-accent, currentColor);
+  outline-offset: 0;
+}
+/* The "login first" message of the Login page. */
+.jr-content .jm-system-message {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 15px 40px 15px 15px;
+  border: 1px solid var(--ds-c-accent, currentColor);
+}
+.jr-content .jm-system-message__close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.jr-content .input-group {
+  display: flex;
+  width: 100%;
+}
+.jr-content .input-group > input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+}
+
+/* Reminder and Reset: Joomla names both forms #user-registration and stacks the label over the field. */
+.jr-content #user-registration .control-group .controls {
+  margin-left: 0;
+}
+.jr-content #user-registration .control-group .control-label,
+.jr-content #user-registration .form-horizontal .control-label {
+  text-align: left;
+}
+
+/* The Contact message box keeps the plain Bootstrap field look in the source (white, 16px, muted text). */
+.jr-content .contact-mes textarea {
+  background-color: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+  color: var(--ds-c-muted, light-dark(#555555, #b5ad9e));
+  font-size: 16px;
+}
+
+/* Show/hide password button: the source draws the eye with its icon font; here the same code points come from the carried Font Awesome 4.6.3. */
+.jr-content .input-password-toggle .icon-eye,
+.jr-content .input-password-toggle .icon-eye-slash {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  width: 1.28571429em;
+  text-align: center;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+.jr-content .input-password-toggle .icon-eye::before {
+  content: '\f06e';
+}
+.jr-content .input-password-toggle .icon-eye-slash::before {
+  content: '\f070';
+}
+
+/* Contact page. The source's inline `.contact-map { padding-top: 55px }` sits behind the menu band (its page flow starts 55px higher);
+   here the header part ends under the band, so the padding is a visible gap. */
+.jr-page-content > .contact-map {
+  padding-top: 0;
+}
+/* The page content already carries the map; the masthead module the layout appends after it would draw it a second time at the foot of the page. */
+.jr-page-content > .contact-map ~ .contact-map-module {
+  display: none;
+}
+/* The honest "(not available)" note stays, in a smaller size, so the label fits on one line as the source's does. */
+.jr-content .contact-form .checkbox label .jr-copy-note {
+  font-size: 11px;
+  white-space: nowrap;
+}
+.jr-content .contact-form .checkbox label {
+  white-space: nowrap;
+}
+
+/* Dark only (the source has no dark): the icons of the address card mid-grey on the card were too faint. */
+.plain-style .box-contact:not(.box-primary) i {
+  color: var(--ds-c-muted, light-dark(#a6a6a6, #b5ad9e));
+}

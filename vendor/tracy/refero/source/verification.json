@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "styles": 1342,
+  "filesHashed": 20130,
+  "bytesHashed": 408932126,
+  "themes": {
+    "light": 916,
+    "dark": 293,
+    "mixed": 133
+  },
+  "componentsWithHtmlField": 165,
+  "checks": [
+    "discovery/catalog/snapshot counts and UUID sets",
+    "all manifest file SHA-256 and byte counts",
+    "all JSON files parse",
+    "original HTTP capture hash",
+    "React Flight source resolves to stored result",
+    "design-system JSON equals source result",
+    "extended DESIGN.md equals public rendered export",
+    "required exports and screenshot present"
+  ]
+}

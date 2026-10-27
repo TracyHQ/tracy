@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "47cb86b6-cb2d-41c8-94ba-8607cd7c41cd",
+  "status": "complete",
+  "name": "Claude",
+  "url": "https://styles.refero.design/style/47cb86b6-cb2d-41c8-94ba-8607cd7c41cd",
+  "sourceWebsite": "https://claude.ai",
+  "extractedAt": "2026-07-03T03:15:32.032Z",
+  "capturedAt": "2026-10-08T05:11:09.600087+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Warm parchment printed artifact — ink on bone paper, clay as the only chromatic breath.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/be52e148-6949-47cd-ab27-ace581462478.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/84891e90-1b6b-43ce-a431-02f18b758b70.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/75da6d16-4bc7-43a8-b736-65510f2e61a1.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/0acd25a3-b705-44ff-8a15-d93d5f8fd527.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/faab4ca5-166c-49b3-893b-fd2eb8f0647d.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "582f4cb82fc2df321fd83b4fad33bc7ca9a96a369241d34309dd309b8c7c9f42",
+      "bytes": 19799
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "cae8c9e7da0e106776b0bbff2ec4fa13b15111138f869ef3e66dc31a8365eebe",
+      "bytes": 20573
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "796a9acce2faf0b00abd485b240b528b5e808a2e21e0884b338b2affbe465968",
+      "bytes": 17530
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c9c16549dc7e714dfe12369de90b081286f5d0482ac206854d12689b76e4650d",
+      "bytes": 9301
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "797bafa11cd533ea26d38a6947a374aa0d0138a74d93db8ad7a35274fd150db9",
+      "bytes": 11738
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "65c89de76dbd0f20216b8168c52ea92f22d1f9714cc4d3b7b194c7b67f262a9a",
+      "bytes": 2909
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "6fd0a3149e35f4493ca62b3c98e12699083df7ac83ee6e77f0f52fa493640434",
+      "bytes": 603
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "6793ecd47ccb6f2f7b955611166bbde9c25f8ac2cc55d119ce8f41cb9802a0c7",
+      "bytes": 620
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4d092cab575302e956d14fd3e1e6a82e97bc12a01b7883c211a01c28909910cc",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "70d25f4c3f69200edf5c99938d599c7307952c7b92dfed1ee4902b8e0313d877",
+      "bytes": 43990
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5c5ac9e0ac2e62d0ca8b4ab6cf25bd860c08f56a8960ee482ebc310ecfa0466c",
+      "bytes": 22974
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "044e2b390be8bb741bcf09a9c77f99808f13f221e2d7228d6aabf9d6d706d9da",
+      "bytes": 42293
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "35db8a429bfa868df42667938e371af62ffc7ba33eaa98c7dc4e02ba14866a01",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f66d05855146c9de4dcede4b8046bd2eb96c8b074c0dc682fb6ed9eb03723380",
+      "bytes": 1258
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b76478177546466484d39ed5ca130758e467ba83c4e004b88ce40d47b76e44f8",
+      "bytes": 1896
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "01771d1f-43c6-4e91-88c5-e4d213fe4ff2",
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "47cb86b6-cb2d-41c8-94ba-8607cd7c41cd",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "9623a699-230d-4ee2-a174-8209e1e9ef16",
+    "b5ca4e9a-2322-4796-b4c5-3b3bf194821f",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d3caa7bf-2e2e-489a-845d-5cab274e7a92",
+    "d469cba4-c448-4a43-a033-883f8bfcdc42",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8"
+  ]
+}

@@ -1,0 +1,137 @@
+---
+import { getEmDashCollection, getEmDashEntry, getTaxonomyTerms, getTermsForEntries } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import Chips from '@/components/site/Chips.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Photo from '@/components/site/Photo.astro'
+import StatsGrid from '@/components/site/StatsGrid.astro'
+import NumberedList from '@/components/site/NumberedList.astro'
+import CtaBox from '@/components/site/CtaBox.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor, stampsFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const slots = Object.fromEntries(((site.slots ?? []) as any[]).map((s) => [s.key, s.text]))
+const dept = Astro.url.searchParams.get('department') || null
+const [{ entry }, depts] = await Promise.all([
+  getEmDashEntry('careers', 'careers', { locale }),
+  getTaxonomyTerms('department', { locale })
+])
+if (!entry) return Astro.rewrite(href(locale, '/404'))
+const c = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'careers', entry)
+const $site = stampFor(Astro.request, 'site', site)
+const $ = stampsFor(Astro.request)
+const { entries: jobs } = await getEmDashCollection('vacancies', {
+  locale,
+  status: 'published',
+  orderBy: { sort: 'asc' },
+  limit: 200,
+  ...(dept ? { where: { department: dept } } : {})
+})
+const jobDepts = await getTermsForEntries(
+  'vacancies',
+  jobs.map((j: any) => j.data.id),
+  'department',
+  { locale }
+)
+const chips = [
+  { label: c.all_label ?? 'All', url: href(locale, '/careers'), active: !dept, stamp: $page('all_label') },
+  ...depts.map((d) => ({
+    label: d.label,
+    url: href(locale, `/careers?department=${d.slug}`),
+    active: d.slug === dept
+  }))
+]
+const contactUrl = (title: string) => `${href(locale, '/contact')}?role=${encodeURIComponent(title)}`
+// D33: every "N open roles" figure on the page is the real count of published vacancies, never the
+// canvas mock. `{n}` in the seed's `more_label` and in a stat value is filled here. The list shows
+// the first VISIBLE rows; "Show all N roles" expands the rest in place (with a department filter it
+// is the link back to the full list, as before).
+const VISIBLE = 4
+const total = dept
+  ? (await getEmDashCollection('vacancies', { locale, status: 'published', limit: 200 })).entries.length
+  : jobs.length
+const fill = (s: unknown) => String(s ?? '').replaceAll('{n}', String(total))
+const stats = ((c.stats ?? []) as Array<{ value: string; label: string }>).map((s) => ({
+  ...s,
+  value: fill(s.value)
+}))
+const moreLabel = fill(c.more_label)
+const collapsible = !dept && jobs.length > VISIBLE
+---
+
+<Base chrome={chrome} title={c.breadcrumb || c.title} description={c.lede} heroImage={mediaUrl(c.hero_image)} currentPath="/careers" content={{ collection: "careers", id: entry.data.id, slug: "careers", toPath: () => "/careers" }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={[{ label: site.home_label, url: href(locale, "/"), stamp: $site("home_label") }, { label: c.breadcrumb, stamp: $page("breadcrumb") }]} />
+		<section class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-14 pb-12 pt-16">
+			<div><h1 class="h-page mb-5" {...$page("title")}>{c.title}</h1><p class="max-w-[40em] text-[17.5px] leading-[1.68] text-fg-2" {...$page("lede")}>{c.lede}</p></div>
+			<Photo image={c.hero_image} stamp={$page("hero_image")} alt="" placeholder={slots.team} class="h-[clamp(240px,28vw,330px)] min-w-0" priority />
+		</section>
+		<StatsGrid stats={stats} stamp={$page} field="stats" />
+		<section class="band-paper2" id="open-roles">
+			<div class="container-site py-16">
+				<h2 class="h-section mb-[22px]" {...$page("open_title")}>{c.open_title}</h2>
+				<Chips items={chips} class="mb-6" />
+				<div class="border border-line-card bg-paper" id="open-roles-list">
+					{jobs.length === 0 && <div class="px-6 py-5 text-[15px] text-fg-meta">—</div>}
+					{jobs.map((j: any, i: number) => (
+						<div class="grid grid-cols-1 items-center gap-2 border-b border-line-soft px-6 py-5 last:border-b-0 hover:bg-signal-tint md:grid-cols-[minmax(0,2.4fr)_minmax(0,1fr)_minmax(0,1.3fr)_auto] md:gap-5" data-more-row={collapsible && i >= VISIBLE ? "" : undefined} {...$("vacancies", j)()}>
+							<div><div class="text-[17px] font-semibold leading-[1.35]" {...$('vacancies', j)("title")}>{j.data.title}</div><div class="mt-[5px] text-[13px] text-fg-meta">{[(jobDepts.get(j.data.id) ?? [])[0]?.label, j.data.type].filter(Boolean).join(" · ")}</div></div>
+							<div class="text-[14.5px] text-fg-2" {...$('vacancies', j)("city")}>{j.data.city}</div>
+							<div class="text-[15px] font-semibold text-forest-text" {...$('vacancies', j)("pay")}>{j.data.pay}</div>
+							<a href={contactUrl(j.data.title)} class="link-underline justify-self-start" {...$page("apply_label")}>{c.apply_label}</a>
+						</div>
+					))}
+					{dept && <div class="px-6 py-[18px]"><a href={href(locale, "/careers")} class="link-underline !text-[14.5px]" {...$page("more_label")}>{moreLabel}</a></div>}
+					{collapsible && <div class="px-6 py-[18px]" data-more-wrap hidden><button type="button" class="link-underline cursor-pointer !text-[14.5px]" data-more-toggle aria-expanded="false" aria-controls="open-roles-list" {...$page("more_label")}>{moreLabel}</button></div>}
+				</div>
+			</div>
+		</section>
+		<section class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-14 py-[72px]">
+			<div><h2 class="h-section-sm mb-5" {...$page("benefits_title")}>{c.benefits_title}</h2>{(c.benefits ?? []).map((b: any) => <div class="border-b border-line-soft py-4" {...$page.block("benefits")}><div class="text-[16.5px] font-semibold" {...$page("benefits.title")}>{b.title}</div><div class="mt-[5px] text-[15px] leading-[1.6] text-fg-muted" {...$page("benefits.text")}>{b.text}</div></div>)}</div>
+			<div><h2 class="h-section-sm mb-5" {...$page("process_title")}>{c.process_title}</h2><NumberedList items={c.steps} stamp={$page} field="steps" /></div>
+		</section>
+		<section class="band-ink">
+			<div class="container-site py-16">
+				<h2 class="h-section-sm mb-7 text-[color:var(--ds-c-on-ink,#F5F3EE)]" {...$page("life_title")}>{c.life_title}</h2>
+				<div class="mb-11 grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
+					{(c.life ?? []).map((g: any) => <div {...$page.block("life")}><Photo image={g.image} stamp={$page("life.image")} alt={g.caption} placeholder={slots.team} class="h-[220px] !border-on-ink-line" /><div class="mt-2 text-[13px] text-on-ink-meta" {...$page("life.caption")}>{g.caption}</div></div>)}
+				</div>
+				{c.quote && <blockquote class="max-w-[44em] border-l-[3px] border-signal py-1 pl-[26px]"><p class="mb-3 font-serif text-[clamp(21px,2.4vw,27px)] leading-[1.4] text-[color:var(--ds-c-on-ink,var(--color-white))]" {...$page("quote")}>{c.quote}</p>{c.quote_by && <div class="text-[13.5px] text-on-ink-meta" {...$page("quote_by")}>{c.quote_by}</div>}</blockquote>}
+			</div>
+		</section>
+		<CtaBox title={c.cta_title} text={c.cta_text} button={c.cta_button} url={c.cta_url || (c.cta_mail ? `mailto:${c.cta_mail}` : href(locale, "/contact"))} note={c.cta_mail} stamp={$page} fields={{ title: "cta_title", text: "cta_text", button: "cta_button", note: "cta_mail" }} />
+	</main>
+</Base>
+
+<script>
+	// "Show all N roles": progressive enhancement. The server renders every row and hides the
+	// toggle; only once JS runs are the rows past the first four hidden and the toggle shown, so
+	// without JS the full list is visible and there is no dead control.
+	const wrap = document.querySelector<HTMLElement>("[data-more-wrap]");
+	const toggle = wrap?.querySelector<HTMLButtonElement>("[data-more-toggle]");
+	const rows = [...document.querySelectorAll<HTMLElement>("[data-more-row]")];
+	if (wrap && toggle && rows.length) {
+		for (const r of rows) r.hidden = true;
+		wrap.hidden = false;
+		toggle.addEventListener("click", () => {
+			for (const r of rows) r.hidden = false;
+			toggle.setAttribute("aria-expanded", "true");
+			// Removing (not hiding) the wrap makes the last row the list's last child again, so its
+			// `last:border-b-0` applies and the list does not end on a doubled rule.
+			wrap.remove();
+			rows[0]?.querySelector<HTMLElement>("a")?.focus({ preventScroll: true });
+		});
+	}
+</script>

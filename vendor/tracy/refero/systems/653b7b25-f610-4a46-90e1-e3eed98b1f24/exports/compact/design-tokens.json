@@ -1,0 +1,84 @@
+{
+  "color": {
+    "indigo-switch": {
+      "$value": "#374fd5",
+      "$type": "color",
+      "$description": "Indigo Switch — Violet action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, button surfaces, card backgrounds, reverse text on dark blocks"
+    },
+    "soft-mist": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Soft Mist — Secondary card surfaces, subtle fill blocks beneath product showcases"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Primary text, heavy icon strokes, structural borders, divider lines"
+    },
+    "ink-black": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Ink Black — Heading text, deep borders where pure black feels too sharp"
+    },
+    "shadow-gray": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Shadow Gray — Body text secondary weight, supporting borders"
+    },
+    "steel": {
+      "$value": "#89909a",
+      "$type": "color",
+      "$description": "Steel — Muted helper text, ghost button borders, icon strokes at lower prominence"
+    },
+    "midnight": {
+      "$value": "#0b1118",
+      "$type": "color",
+      "$description": "Midnight — Dark showcase card surfaces, near-black panels for gallery contrast"
+    },
+    "fog": {
+      "$value": "#ced3d9",
+      "$type": "color",
+      "$description": "Fog — Hairline borders, button shadow ambient layer, subtle dividers"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "euclid-circular-a": {
+      "$value": "Euclid Circular A",
+      "$type": "fontFamily",
+      "$description": "Display and heading — the site loads heavy custom geometric type at 700+ for hero and section titles. The slightly tight tracking (-0.01em) and condensed geometric forms give headlines a monolithic, confident feel against the white field"
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "Captions, micro-labels, badge text — tiny, quiet, never decorative"
+    },
+    "p22-mackinac-pro": {
+      "$value": "P22 Mackinac Pro",
+      "$type": "fontFamily",
+      "$description": "Editorial body accent — a slab-influenced serif used sparingly in testimonial or contextual blocks, adding human warmth where the geometric display would feel cold"
+    },
+    "p22-mackinac-pro-medium-italic": {
+      "$value": "P22 Mackinac Pro Medium Italic",
+      "$type": "fontFamily",
+      "$description": "P22 Mackinac Pro Medium Italic — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.aninix.com",
+      "siteName": "Aninix",
+      "extractedAt": "2026-06-03T21:45:20.886Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "id": "QA-UNIT-REG-PR-1100-p4-joomla-page-style-happy",
+  "itemIds": ["regression:REG-PR-1100-p4-joomla-page-style"],
+  "requirement": "Joomla page.create gives the new page's menu item the template style the site's own article pages wear, and a page whose words do not show is never reported as shown",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1100-p4-joomla-page-style.json",
+    "ref": "PR #1100 (fix); fix evidence: dskeepjo (tracy-base j6, T4), 10/10/2026: 'Tạo thêm một trang Dịch vụ có ba mục … và thêm trang này vào menu chính' made menu item 347 with template_style_id 0; Joomla rendered /dich-vu in the default style 110 'Tracy — base · Home' (body class layout-home, no itemprop=articleBody, none of the article's words), while the call reported 'shown on /dich-vu' because the new menu link carries the title.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# skipped 0'. 'Joomla: the menu item wears the style the site’s article pages wear, never a default home layout that prints no article' is ok: on a site whose DEFAULT style is a home layout (no component), the new menu item is written with template_style_id 14 (the style About us and Contact wear, the home page skipped), the page renders its article body, and verified is ['shown on /en/common-questions', 'its menu link shows on /en/ at desktop 1440 and phone 390'] (the menu line since REG-PR-1100-p4-wp-menu-link-visible). 'Joomla: a page whose words do not show is never \"shown\" on its menu link, and the receipt does not call it live' is ok: when every article page wears the default, no template_style_id is written, verified[0] is the bodyHidden sentence (not 'shown on'), and next is the receiptHidden sentence, without the word 'live'.",
+    "productSources": [
+      "apps/tracy-web/src/sites/content-where.js:94",
+      "packages/tools/tracy-site-tools/src/host/emdash-call.mjs:1049",
+      "packages/tools/tracy-site-tools/src/host/page-create.mjs:1330",
+      "packages/tools/tracy-site-tools/src/host/replace-wordpress.mjs:384",
+      "packages/tools/tracy-site-tools/src/host/site-call.mjs:3361",
+      "packages/tools/tracy-site-tools/src/host/site.mjs:243",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:269",
+      "packages/tools/tracy-site-tools/src/host/tiers.mjs:94"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "Joomla: the menu item wears the style the site’s article pages wear, never a default home layout that prints no article",
+    "Joomla: a page whose words do not show is never \"shown\" on its menu link, and the receipt does not call it live"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1100-p4-joomla-page-style"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1100-p4-joomla-page-style",
+    "pr": 1100,
+    "kind": "fix",
+    "area": "site-tools/page-create",
+    "file": "tests/regression/cases/REG-PR-1100-p4-joomla-page-style.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/page-create.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "Joomla: the menu item wears the style the site’s article pages wear, never a default home layout that prints no article",
+    "Joomla: a page whose words do not show is never \"shown\" on its menu link, and the receipt does not call it live"
+  ],
+  "timeoutS": 600
+}

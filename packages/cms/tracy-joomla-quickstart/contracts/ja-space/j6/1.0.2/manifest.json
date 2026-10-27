@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-space/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_space",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-space",
+    "id": "quickstart/ja-space/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_space",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-space-j6-webroot-1.0.2.tar.gz",
+        "bytes": 35379591,
+        "sha256": "33e82a25f2b6e19be55f034e16f243289e95b2bddc2579349ce6a2d1979afdc0"
+      },
+      "database": {
+        "file": "ja-space-j6-database-1.0.2.sql.gz",
+        "bytes": 78687,
+        "sha256": "6513c06d1028140275e87c136e08bf0ad8eff3dc8f76699c846e3b9d4306c223"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-02T04:28:03.262Z",
+    "builtFrom": {
+      "site": "ja-space-j6",
+      "tag": "quickstart/ja-space/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-space/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.20.3",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,3653 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "Derived from quickstart/ja-fresco/wp7 1.0.0's own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain. A block is found by its metadata.name, never by position.",
+  "entities": [
+    {
+      "key": "option-blogname",
+      "kind": "option",
+      "identity": {
+        "name": "blogname"
+      },
+      "initial": "fresco"
+    },
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": {
+        "name": "blogdescription"
+      },
+      "initial": "Restaurant template"
+    },
+    {
+      "key": "page-front-page",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "front-page"
+      }
+    },
+    {
+      "key": "page-about",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "about"
+      }
+    },
+    {
+      "key": "page-gallery",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "gallery"
+      }
+    },
+    {
+      "key": "page-chiefs",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "chiefs"
+      }
+    },
+    {
+      "key": "page-menu",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "menu"
+      }
+    },
+    {
+      "key": "page-offer",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "offer"
+      }
+    },
+    {
+      "key": "page-home-2",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-2"
+      }
+    },
+    {
+      "key": "page-home-3",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-3"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "key": "site.name",
+      "entity": "option-blogname",
+      "target": {
+        "option": "blogname"
+      },
+      "type": "text",
+      "sample": "fresco",
+      "maxCharacters": 80,
+      "input": "name",
+      "label": "Site name"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": {
+        "option": "blogdescription"
+      },
+      "type": "text",
+      "sample": "Restaurant template",
+      "maxCharacters": 160,
+      "input": "tagline",
+      "label": "Tagline"
+    },
+    {
+      "key": "front-page.hero.sub-title.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "hero.sub-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Welcome to fresco",
+      "maxCharacters": 80,
+      "label": "front-page — hero.sub-title.1"
+    },
+    {
+      "key": "front-page.hero.title.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "hero.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Restaurant & Fresco",
+      "maxCharacters": 80,
+      "label": "front-page — hero.title.1"
+    },
+    {
+      "key": "front-page.hero.desc.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "hero.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Craving some delicious Paris food? Maybe you’re in the mood for a juicy steak? No matter what kind of meal you have in mind.",
+      "maxCharacters": 268,
+      "label": "front-page — hero.desc.1"
+    },
+    {
+      "key": "front-page.hero.button.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "hero.button.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "see menu ",
+      "maxCharacters": 80,
+      "label": "front-page — hero.button.1"
+    },
+    {
+      "key": "front-page.hero.button.1.url",
+      "entity": "page-front-page",
+      "target": {
+        "block": "hero.button.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/menu",
+      "maxCharacters": 2048,
+      "label": "front-page — hero.button.1 (link)"
+    },
+    {
+      "key": "front-page.hero.button-2.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "hero.button-2.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "book your table ",
+      "maxCharacters": 80,
+      "label": "front-page — hero.button-2.1"
+    },
+    {
+      "key": "front-page.hero.button-2.1.url",
+      "entity": "page-front-page",
+      "target": {
+        "block": "hero.button-2.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/contact",
+      "maxCharacters": 2048,
+      "label": "front-page — hero.button-2.1 (link)"
+    },
+    {
+      "key": "front-page.features-intro.top-desc",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.top-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Fresco, founded in 2022, is dedicated to all those who love to wander far and wide. We invite you on a wholesome culinary adventure, where you’ll explore undiscovered gourmet experiences.",
+      "maxCharacters": 394,
+      "label": "front-page — features-intro.top-desc"
+    },
+    {
+      "key": "front-page.features-intro.top-desc-2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.top-desc-2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Thank you for creating lasting memories with us.",
+      "maxCharacters": 116,
+      "label": "front-page — features-intro.top-desc-2"
+    },
+    {
+      "key": "front-page.features-intro.description.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Learn More",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.description.1"
+    },
+    {
+      "key": "front-page.features-intro.description.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "See Menu",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.description.2"
+    },
+    {
+      "key": "front-page.features-intro.description.3",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore the Bar",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.description.3"
+    },
+    {
+      "key": "front-page.menu.module-title",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore",
+      "maxCharacters": 80,
+      "label": "front-page — menu.module-title"
+    },
+    {
+      "key": "front-page.menu.main-section",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our Menu & More",
+      "maxCharacters": 80,
+      "label": "front-page — menu.main-section"
+    },
+    {
+      "key": "front-page.menu.top-desc",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.top-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Picky eaters, adventurous eaters, whatever your taste, we have something for you.",
+      "maxCharacters": 182,
+      "label": "front-page — menu.top-desc"
+    },
+    {
+      "key": "front-page.menu.dish-name.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chili Chicken",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-name.1"
+    },
+    {
+      "key": "front-page.menu.dish-description.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "tempura style, cool cucumbers, chili sauce",
+      "maxCharacters": 104,
+      "label": "front-page — menu.dish-description.1"
+    },
+    {
+      "key": "front-page.menu.dish-price.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-price.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$30",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-price.1"
+    },
+    {
+      "key": "front-page.menu.dish-name.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Calamari Fritti ",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-name.2"
+    },
+    {
+      "key": "front-page.menu.dish-description.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "tempura vegetables, spicy aioli",
+      "maxCharacters": 82,
+      "label": "front-page — menu.dish-description.2"
+    },
+    {
+      "key": "front-page.menu.dish-price.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-price.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$47",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-price.2"
+    },
+    {
+      "key": "front-page.menu.dish-name.3",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Japanese Gyoza",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-name.3"
+    },
+    {
+      "key": "front-page.menu.dish-description.3",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "pork dumplings with hot mustard",
+      "maxCharacters": 82,
+      "label": "front-page — menu.dish-description.3"
+    },
+    {
+      "key": "front-page.menu.dish-price.3",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-price.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$56",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-price.3"
+    },
+    {
+      "key": "front-page.menu.dish-name.4",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Trio of Dips",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-name.4"
+    },
+    {
+      "key": "front-page.menu.dish-description.4",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+      "maxCharacters": 138,
+      "label": "front-page — menu.dish-description.4"
+    },
+    {
+      "key": "front-page.menu.dish-price.4",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-price.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$33",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-price.4"
+    },
+    {
+      "key": "front-page.menu.dish-name.5",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Szechuan Edamame",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-name.5"
+    },
+    {
+      "key": "front-page.menu.dish-description.5",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "wok tossed with chilies, garlic, soy sauce",
+      "maxCharacters": 104,
+      "label": "front-page — menu.dish-description.5"
+    },
+    {
+      "key": "front-page.menu.dish-price.5",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-price.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$47",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-price.5"
+    },
+    {
+      "key": "front-page.menu.dish-name.6",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-name.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Cheeseburger Sliders",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-name.6"
+    },
+    {
+      "key": "front-page.menu.dish-description.6",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "secret sauce & American cheese + additional sliders $4/each",
+      "maxCharacters": 138,
+      "label": "front-page — menu.dish-description.6"
+    },
+    {
+      "key": "front-page.menu.dish-price.6",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-price.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$58",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-price.6"
+    },
+    {
+      "key": "front-page.menu.dish-name.7",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-name.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lettuce Wraps",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-name.7"
+    },
+    {
+      "key": "front-page.menu.dish-description.7",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
+      "maxCharacters": 160,
+      "label": "front-page — menu.dish-description.7"
+    },
+    {
+      "key": "front-page.menu.dish-price.7",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-price.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$89",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-price.7"
+    },
+    {
+      "key": "front-page.menu.dish-name.8",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-name.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pesto Shrimp Flatbread",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-name.8"
+    },
+    {
+      "key": "front-page.menu.dish-description.8",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "whole milk mozzarella, sundried tomatoes, chipotle aioli",
+      "maxCharacters": 132,
+      "label": "front-page — menu.dish-description.8"
+    },
+    {
+      "key": "front-page.menu.dish-price.8",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-price.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$29",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-price.8"
+    },
+    {
+      "key": "front-page.menu.dish-name.9",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-name.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tandoori Chicken Flatbread",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-name.9"
+    },
+    {
+      "key": "front-page.menu.dish-description.9",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "chutney, red onion, cilantro, yogurt",
+      "maxCharacters": 92,
+      "label": "front-page — menu.dish-description.9"
+    },
+    {
+      "key": "front-page.menu.dish-price.9",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-price.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$30",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-price.9"
+    },
+    {
+      "key": "front-page.menu.dish-name.10",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-name.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hot Wings",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-name.10"
+    },
+    {
+      "key": "front-page.menu.dish-description.10",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-description.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frank's hot sauce, creamy blue cheese dip",
+      "maxCharacters": 102,
+      "label": "front-page — menu.dish-description.10"
+    },
+    {
+      "key": "front-page.menu.dish-price.10",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.dish-price.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$30",
+      "maxCharacters": 80,
+      "label": "front-page — menu.dish-price.10"
+    },
+    {
+      "key": "front-page.features-intro.link-title.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.link-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "on sale now!",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.link-title.1"
+    },
+    {
+      "key": "front-page.features-intro.link-sub.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.link-sub.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "For $50",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.link-sub.1"
+    },
+    {
+      "key": "front-page.features-intro.link-title.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.link-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Monday - Friday",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.link-title.2"
+    },
+    {
+      "key": "front-page.features-intro.link-sub.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.link-sub.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "7:00 am - 22:00 pm",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.link-sub.2"
+    },
+    {
+      "key": "front-page.menu.menu-type",
+      "entity": "page-front-page",
+      "target": {
+        "block": "menu.menu-type",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "The Sea",
+      "maxCharacters": 80,
+      "label": "front-page — menu.menu-type"
+    },
+    {
+      "key": "front-page.gallery.gallery-alt.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-alt.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "hand made spring rolls",
+      "maxCharacters": 80,
+      "label": "front-page — gallery.gallery-alt.1"
+    },
+    {
+      "key": "front-page.gallery.gallery-alt.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-alt.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "chili rice paper chips",
+      "maxCharacters": 80,
+      "label": "front-page — gallery.gallery-alt.2"
+    },
+    {
+      "key": "front-page.gallery.gallery-alt.3",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-alt.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Citrus, wild rocket condiment.",
+      "maxCharacters": 80,
+      "label": "front-page — gallery.gallery-alt.3"
+    },
+    {
+      "key": "front-page.gallery.gallery-alt.4",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-alt.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ricotta, goat cheese, beetroot",
+      "maxCharacters": 80,
+      "label": "front-page — gallery.gallery-alt.4"
+    },
+    {
+      "key": "front-page.gallery.gallery-alt.5",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-alt.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Culatello, Spalla Cotta, Mortadella",
+      "maxCharacters": 90,
+      "label": "front-page — gallery.gallery-alt.5"
+    },
+    {
+      "key": "front-page.gallery.gallery-alt.6",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-alt.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Porcini purée, parmesan, basil.",
+      "maxCharacters": 82,
+      "label": "front-page — gallery.gallery-alt.6"
+    },
+    {
+      "key": "front-page.testimonials.desc.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "testimonials.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“The views and the atmosphere are breathtaking, the food is spectacular and cooked to perfection. All around just a wonderful place to visit.”",
+      "maxCharacters": 304,
+      "label": "front-page — testimonials.desc.1"
+    },
+    {
+      "key": "front-page.testimonials.author.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "testimonials.author.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Christine Q., 2022, via Tripadvisor",
+      "maxCharacters": 90,
+      "label": "front-page — testimonials.author.1"
+    },
+    {
+      "key": "front-page.testimonials.desc.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "testimonials.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“Customer service was on point and the food was out of this world. Every single dish had so much flavour. It was a great experience and we will definitely come back.”",
+      "maxCharacters": 352,
+      "label": "front-page — testimonials.desc.2"
+    },
+    {
+      "key": "front-page.testimonials.author.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "testimonials.author.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Kim and David R., 2021",
+      "maxCharacters": 80,
+      "label": "front-page — testimonials.author.2"
+    },
+    {
+      "key": "front-page.testimonials.desc.3",
+      "entity": "page-front-page",
+      "target": {
+        "block": "testimonials.desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“The chef's tasting menu is outstanding, drinks are excellent and staff is attentive and very friendly. No details missed here.”",
+      "maxCharacters": 276,
+      "label": "front-page — testimonials.desc.3"
+    },
+    {
+      "key": "front-page.testimonials.author.3",
+      "entity": "page-front-page",
+      "target": {
+        "block": "testimonials.author.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Jason V., 2022",
+      "maxCharacters": 80,
+      "label": "front-page — testimonials.author.3"
+    },
+    {
+      "key": "front-page.features-intro.module-title",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Visit Us",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.module-title"
+    },
+    {
+      "key": "front-page.features-intro.main-section",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "HOW TO FIND US?",
+      "maxCharacters": 80,
+      "label": "front-page — features-intro.main-section"
+    },
+    {
+      "key": "about.features-intro.title",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Efforts to curb soda consumption bring ",
+      "maxCharacters": 98,
+      "label": "about — features-intro.title"
+    },
+    {
+      "key": "about.features-intro.button",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join Now",
+      "maxCharacters": 80,
+      "label": "about — features-intro.button"
+    },
+    {
+      "key": "about.features-intro.button.url",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/contact",
+      "maxCharacters": 2048,
+      "label": "about — features-intro.button (link)"
+    },
+    {
+      "key": "about.features-intro.main-section",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We make the most of all our customers.",
+      "maxCharacters": 96,
+      "label": "about — features-intro.main-section"
+    },
+    {
+      "key": "about.features-intro.top-desc",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.top-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Phasellus enim libero, blandit vel sapien vitae, condimentum ultricies magna et. Quisque euismod orci ut.",
+      "maxCharacters": 230,
+      "label": "about — features-intro.top-desc"
+    },
+    {
+      "key": "about.features-intro.description.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
+      "maxCharacters": 210,
+      "label": "about — features-intro.description.1"
+    },
+    {
+      "key": "about.features-intro.description.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
+      "maxCharacters": 210,
+      "label": "about — features-intro.description.2"
+    },
+    {
+      "key": "about.features-intro.description.3",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
+      "maxCharacters": 210,
+      "label": "about — features-intro.description.3"
+    },
+    {
+      "key": "about.features-intro.description.4",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
+      "maxCharacters": 210,
+      "label": "about — features-intro.description.4"
+    },
+    {
+      "key": "about.features-intro.description.5",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
+      "maxCharacters": 210,
+      "label": "about — features-intro.description.5"
+    },
+    {
+      "key": "about.features-intro.description.6",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
+      "maxCharacters": 210,
+      "label": "about — features-intro.description.6"
+    },
+    {
+      "key": "about.testimonials.desc.1",
+      "entity": "page-about",
+      "target": {
+        "block": "testimonials.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“The views and the atmosphere are breathtaking, the food is spectacular and cooked to perfection. All around just a wonderful place to visit.”",
+      "maxCharacters": 304,
+      "label": "about — testimonials.desc.1"
+    },
+    {
+      "key": "about.testimonials.author.1",
+      "entity": "page-about",
+      "target": {
+        "block": "testimonials.author.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Christine Q., 2022, via Tripadvisor",
+      "maxCharacters": 90,
+      "label": "about — testimonials.author.1"
+    },
+    {
+      "key": "about.testimonials.desc.2",
+      "entity": "page-about",
+      "target": {
+        "block": "testimonials.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“Customer service was on point and the food was out of this world. Every single dish had so much flavour. It was a great experience and we will definitely come back.”",
+      "maxCharacters": 352,
+      "label": "about — testimonials.desc.2"
+    },
+    {
+      "key": "about.testimonials.author.2",
+      "entity": "page-about",
+      "target": {
+        "block": "testimonials.author.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Kim and David R., 2021",
+      "maxCharacters": 80,
+      "label": "about — testimonials.author.2"
+    },
+    {
+      "key": "about.testimonials.desc.3",
+      "entity": "page-about",
+      "target": {
+        "block": "testimonials.desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“The chef's tasting menu is outstanding, drinks are excellent and staff is attentive and very friendly. No details missed here.”",
+      "maxCharacters": 276,
+      "label": "about — testimonials.desc.3"
+    },
+    {
+      "key": "about.testimonials.author.3",
+      "entity": "page-about",
+      "target": {
+        "block": "testimonials.author.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Jason V., 2022",
+      "maxCharacters": 80,
+      "label": "about — testimonials.author.3"
+    },
+    {
+      "key": "about.teams.main-section",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet our awesome team",
+      "maxCharacters": 80,
+      "label": "about — teams.main-section"
+    },
+    {
+      "key": "about.teams.top-desc",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.top-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Phasellus enim libero, blandit vel sapien vitae, condimentum ultricies magna et. Quisque euismod orci ut.",
+      "maxCharacters": 230,
+      "label": "about — teams.top-desc"
+    },
+    {
+      "key": "about.teams.name-member.1",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.name-member.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brandy Welch",
+      "maxCharacters": 80,
+      "label": "about — teams.name-member.1"
+    },
+    {
+      "key": "about.teams.name-office.1",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.name-office.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder",
+      "maxCharacters": 80,
+      "label": "about — teams.name-office.1"
+    },
+    {
+      "key": "about.teams.description.1",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+      "maxCharacters": 280,
+      "label": "about — teams.description.1"
+    },
+    {
+      "key": "about.teams.name-member.2",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.name-member.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Robyn Ford",
+      "maxCharacters": 80,
+      "label": "about — teams.name-member.2"
+    },
+    {
+      "key": "about.teams.name-office.2",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.name-office.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder",
+      "maxCharacters": 80,
+      "label": "about — teams.name-office.2"
+    },
+    {
+      "key": "about.teams.description.2",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+      "maxCharacters": 280,
+      "label": "about — teams.description.2"
+    },
+    {
+      "key": "about.teams.name-member.3",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.name-member.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Amos Paul",
+      "maxCharacters": 80,
+      "label": "about — teams.name-member.3"
+    },
+    {
+      "key": "about.teams.name-office.3",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.name-office.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder",
+      "maxCharacters": 80,
+      "label": "about — teams.name-office.3"
+    },
+    {
+      "key": "about.teams.description.3",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+      "maxCharacters": 280,
+      "label": "about — teams.description.3"
+    },
+    {
+      "key": "about.teams.button",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "View All",
+      "maxCharacters": 80,
+      "label": "about — teams.button"
+    },
+    {
+      "key": "about.teams.button.url",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/chiefs",
+      "maxCharacters": 2048,
+      "label": "about — teams.button (link)"
+    },
+    {
+      "key": "gallery.gallery.main-section",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Gallery 1",
+      "maxCharacters": 80,
+      "label": "gallery — gallery.main-section"
+    },
+    {
+      "key": "chiefs.teams.name-member.1",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-member.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brandy Welch",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-member.1"
+    },
+    {
+      "key": "chiefs.teams.name-office.1",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-office.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-office.1"
+    },
+    {
+      "key": "chiefs.teams.description.1",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+      "maxCharacters": 280,
+      "label": "chiefs — teams.description.1"
+    },
+    {
+      "key": "chiefs.teams.name-member.2",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-member.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Robyn Ford",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-member.2"
+    },
+    {
+      "key": "chiefs.teams.name-office.2",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-office.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-office.2"
+    },
+    {
+      "key": "chiefs.teams.description.2",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+      "maxCharacters": 280,
+      "label": "chiefs — teams.description.2"
+    },
+    {
+      "key": "chiefs.teams.name-member.3",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-member.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Amos Paul",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-member.3"
+    },
+    {
+      "key": "chiefs.teams.name-office.3",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-office.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-office.3"
+    },
+    {
+      "key": "chiefs.teams.description.3",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+      "maxCharacters": 280,
+      "label": "chiefs — teams.description.3"
+    },
+    {
+      "key": "chiefs.teams.name-member.4",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-member.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Johnnie Huff ",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-member.4"
+    },
+    {
+      "key": "chiefs.teams.name-office.4",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-office.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-office.4"
+    },
+    {
+      "key": "chiefs.teams.description.4",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+      "maxCharacters": 280,
+      "label": "chiefs — teams.description.4"
+    },
+    {
+      "key": "chiefs.teams.name-member.5",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-member.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lena Lambert ",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-member.5"
+    },
+    {
+      "key": "chiefs.teams.name-office.5",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-office.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-office.5"
+    },
+    {
+      "key": "chiefs.teams.description.5",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+      "maxCharacters": 280,
+      "label": "chiefs — teams.description.5"
+    },
+    {
+      "key": "chiefs.teams.name-member.6",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-member.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Susan Mcguire ",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-member.6"
+    },
+    {
+      "key": "chiefs.teams.name-office.6",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.name-office.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder",
+      "maxCharacters": 80,
+      "label": "chiefs — teams.name-office.6"
+    },
+    {
+      "key": "chiefs.teams.description.6",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+      "maxCharacters": 280,
+      "label": "chiefs — teams.description.6"
+    },
+    {
+      "key": "menu.menu.main-section",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Multi Column Layout",
+      "maxCharacters": 80,
+      "label": "menu — menu.main-section"
+    },
+    {
+      "key": "menu.menu.top-desc",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.top-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Picky eaters, adventurous eaters, whatever your taste, we have something for you.",
+      "maxCharacters": 182,
+      "label": "menu — menu.top-desc"
+    },
+    {
+      "key": "menu.menu.dish-name.1",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chili Chicken",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-name.1"
+    },
+    {
+      "key": "menu.menu.dish-description.1",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "tempura style, cool cucumbers, chili sauce",
+      "maxCharacters": 104,
+      "label": "menu — menu.dish-description.1"
+    },
+    {
+      "key": "menu.menu.dish-price.1",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-price.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$30",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-price.1"
+    },
+    {
+      "key": "menu.menu.dish-name.2",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Calamari Fritti ",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-name.2"
+    },
+    {
+      "key": "menu.menu.dish-description.2",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "tempura vegetables, spicy aioli",
+      "maxCharacters": 82,
+      "label": "menu — menu.dish-description.2"
+    },
+    {
+      "key": "menu.menu.dish-price.2",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-price.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$47",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-price.2"
+    },
+    {
+      "key": "menu.menu.dish-name.3",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Japanese Gyoza",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-name.3"
+    },
+    {
+      "key": "menu.menu.dish-description.3",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "pork dumplings with hot mustard",
+      "maxCharacters": 82,
+      "label": "menu — menu.dish-description.3"
+    },
+    {
+      "key": "menu.menu.dish-price.3",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-price.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$56",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-price.3"
+    },
+    {
+      "key": "menu.menu.dish-name.4",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Trio of Dips",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-name.4"
+    },
+    {
+      "key": "menu.menu.dish-description.4",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+      "maxCharacters": 138,
+      "label": "menu — menu.dish-description.4"
+    },
+    {
+      "key": "menu.menu.dish-price.4",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-price.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$33",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-price.4"
+    },
+    {
+      "key": "menu.menu.dish-name.5",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Szechuan Edamame",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-name.5"
+    },
+    {
+      "key": "menu.menu.dish-description.5",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "wok tossed with chilies, garlic, soy sauce",
+      "maxCharacters": 104,
+      "label": "menu — menu.dish-description.5"
+    },
+    {
+      "key": "menu.menu.dish-price.5",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-price.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$47",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-price.5"
+    },
+    {
+      "key": "menu.menu.dish-name.6",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-name.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Cheeseburger Sliders",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-name.6"
+    },
+    {
+      "key": "menu.menu.dish-description.6",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "secret sauce & American cheese + additional sliders $4/each",
+      "maxCharacters": 138,
+      "label": "menu — menu.dish-description.6"
+    },
+    {
+      "key": "menu.menu.dish-price.6",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-price.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$58",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-price.6"
+    },
+    {
+      "key": "menu.menu.dish-name.7",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-name.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lettuce Wraps",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-name.7"
+    },
+    {
+      "key": "menu.menu.dish-description.7",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-description.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
+      "maxCharacters": 160,
+      "label": "menu — menu.dish-description.7"
+    },
+    {
+      "key": "menu.menu.dish-price.7",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-price.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$89",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-price.7"
+    },
+    {
+      "key": "menu.menu.dish-name.8",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-name.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pesto Shrimp Flatbread",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-name.8"
+    },
+    {
+      "key": "menu.menu.dish-description.8",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-description.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "whole milk mozzarella, sundried tomatoes, chipotle aioli",
+      "maxCharacters": 132,
+      "label": "menu — menu.dish-description.8"
+    },
+    {
+      "key": "menu.menu.dish-price.8",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-price.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$29",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-price.8"
+    },
+    {
+      "key": "menu.menu.dish-name.9",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-name.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tandoori Chicken Flatbread",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-name.9"
+    },
+    {
+      "key": "menu.menu.dish-description.9",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-description.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "chutney, red onion, cilantro, yogurt",
+      "maxCharacters": 92,
+      "label": "menu — menu.dish-description.9"
+    },
+    {
+      "key": "menu.menu.dish-price.9",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.dish-price.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$30",
+      "maxCharacters": 80,
+      "label": "menu — menu.dish-price.9"
+    },
+    {
+      "key": "menu.menu.price.1",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.price.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "11$",
+      "maxCharacters": 80,
+      "label": "menu — menu.price.1"
+    },
+    {
+      "key": "menu.menu.title.1",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Green papaya salad",
+      "maxCharacters": 80,
+      "label": "menu — menu.title.1"
+    },
+    {
+      "key": "menu.menu.description.1",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shrimp, chili & lime",
+      "maxCharacters": 80,
+      "label": "menu — menu.description.1"
+    },
+    {
+      "key": "menu.menu.price.2",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.price.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "4$",
+      "maxCharacters": 80,
+      "label": "menu — menu.price.2"
+    },
+    {
+      "key": "menu.menu.title.2",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Black pepper calamari",
+      "maxCharacters": 80,
+      "label": "menu — menu.title.2"
+    },
+    {
+      "key": "menu.menu.description.2",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Galangal dressing, roasted rice, thai basil",
+      "maxCharacters": 106,
+      "label": "menu — menu.description.2"
+    },
+    {
+      "key": "menu.menu.price.3",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.price.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "12$",
+      "maxCharacters": 80,
+      "label": "menu — menu.price.3"
+    },
+    {
+      "key": "menu.menu.title.3",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tumeric spiced cauliflower",
+      "maxCharacters": 80,
+      "label": "menu — menu.title.3"
+    },
+    {
+      "key": "menu.menu.description.3",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Sesame tofu dressing",
+      "maxCharacters": 80,
+      "label": "menu — menu.description.3"
+    },
+    {
+      "key": "menu.menu.price.4",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.price.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "2$",
+      "maxCharacters": 80,
+      "label": "menu — menu.price.4"
+    },
+    {
+      "key": "menu.menu.title.4",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Kingfish sashimi",
+      "maxCharacters": 80,
+      "label": "menu — menu.title.4"
+    },
+    {
+      "key": "menu.menu.description.4",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ponzu, sriracha",
+      "maxCharacters": 80,
+      "label": "menu — menu.description.4"
+    },
+    {
+      "key": "menu.menu.price.5",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.price.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "24$",
+      "maxCharacters": 80,
+      "label": "menu — menu.price.5"
+    },
+    {
+      "key": "menu.menu.title.5",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.title.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shishito Peppers",
+      "maxCharacters": 80,
+      "label": "menu — menu.title.5"
+    },
+    {
+      "key": "menu.menu.description.5",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Yuzu, sesame",
+      "maxCharacters": 80,
+      "label": "menu — menu.description.5"
+    },
+    {
+      "key": "menu.menu.price.6",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.price.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "12$",
+      "maxCharacters": 80,
+      "label": "menu — menu.price.6"
+    },
+    {
+      "key": "menu.menu.title.6",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.title.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Edamame",
+      "maxCharacters": 80,
+      "label": "menu — menu.title.6"
+    },
+    {
+      "key": "menu.menu.description.6",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Maldon sea salt",
+      "maxCharacters": 80,
+      "label": "menu — menu.description.6"
+    },
+    {
+      "key": "menu.menu.menu-type",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.menu-type",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Menu List With Image",
+      "maxCharacters": 80,
+      "label": "menu — menu.menu-type"
+    },
+    {
+      "key": "offer.happyhours.main-section",
+      "entity": "page-offer",
+      "target": {
+        "block": "happyhours.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Happy Hour 1",
+      "maxCharacters": 80,
+      "label": "offer — happyhours.main-section"
+    },
+    {
+      "key": "offer.happyhours.hp-title",
+      "entity": "page-offer",
+      "target": {
+        "block": "happyhours.hp-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Happy Hours",
+      "maxCharacters": 80,
+      "label": "offer — happyhours.hp-title"
+    },
+    {
+      "key": "offer.happyhours.hp-desc",
+      "entity": "page-offer",
+      "target": {
+        "block": "happyhours.hp-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Donec convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque ...",
+      "maxCharacters": 266,
+      "label": "offer — happyhours.hp-desc"
+    },
+    {
+      "key": "offer.happyhours.hp-badge",
+      "entity": "page-offer",
+      "target": {
+        "block": "happyhours.hp-badge",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "35% OFF",
+      "maxCharacters": 80,
+      "label": "offer — happyhours.hp-badge"
+    },
+    {
+      "key": "offer.happyhours.button",
+      "entity": "page-offer",
+      "target": {
+        "block": "happyhours.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join now",
+      "maxCharacters": 80,
+      "label": "offer — happyhours.button"
+    },
+    {
+      "key": "offer.happyhours.button.url",
+      "entity": "page-offer",
+      "target": {
+        "block": "happyhours.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/contact",
+      "maxCharacters": 2048,
+      "label": "offer — happyhours.button (link)"
+    },
+    {
+      "key": "home-2.features-intro.sub-title",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.sub-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "ENJOY AN UNFORGETTABLE EXPIRIENCE",
+      "maxCharacters": 86,
+      "label": "home-2 — features-intro.sub-title"
+    },
+    {
+      "key": "home-2.features-intro.info-title",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.info-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Restaurant & Fresco",
+      "maxCharacters": 80,
+      "label": "home-2 — features-intro.info-title"
+    },
+    {
+      "key": "home-2.features-intro.button",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Book your Table",
+      "maxCharacters": 80,
+      "label": "home-2 — features-intro.button"
+    },
+    {
+      "key": "home-2.features-intro.button.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/contact",
+      "maxCharacters": 2048,
+      "label": "home-2 — features-intro.button (link)"
+    },
+    {
+      "key": "home-2.features-intro.link-title.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.link-title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "on sale now!",
+      "maxCharacters": 80,
+      "label": "home-2 — features-intro.link-title.1"
+    },
+    {
+      "key": "home-2.features-intro.link-sub.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.link-sub.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "For $50",
+      "maxCharacters": 80,
+      "label": "home-2 — features-intro.link-sub.1"
+    },
+    {
+      "key": "home-2.features-intro.link-title.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.link-title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Monday - Friday",
+      "maxCharacters": 80,
+      "label": "home-2 — features-intro.link-title.2"
+    },
+    {
+      "key": "home-2.features-intro.link-sub.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.link-sub.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "7:00 am - 22:00 pm",
+      "maxCharacters": 80,
+      "label": "home-2 — features-intro.link-sub.2"
+    },
+    {
+      "key": "home-3.features-intro.sub-title",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.sub-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "ENJOY AN UNFORGETTABLE EXPIRIENCE",
+      "maxCharacters": 86,
+      "label": "home-3 — features-intro.sub-title"
+    },
+    {
+      "key": "home-3.features-intro.info-title",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.info-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Restaurant & Fresco",
+      "maxCharacters": 80,
+      "label": "home-3 — features-intro.info-title"
+    },
+    {
+      "key": "home-3.features-intro.button",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Book your Table",
+      "maxCharacters": 80,
+      "label": "home-3 — features-intro.button"
+    },
+    {
+      "key": "home-3.features-intro.button.url",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "/contact",
+      "maxCharacters": 2048,
+      "label": "home-3 — features-intro.button (link)"
+    },
+    {
+      "key": "home-3.text-slider.title.1",
+      "entity": "page-home-3",
+      "target": {
+        "block": "text-slider.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We deliver to your home",
+      "maxCharacters": 80,
+      "label": "home-3 — text-slider.title.1"
+    },
+    {
+      "key": "home-3.text-slider.title.2",
+      "entity": "page-home-3",
+      "target": {
+        "block": "text-slider.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow on social media",
+      "maxCharacters": 80,
+      "label": "home-3 — text-slider.title.2"
+    },
+    {
+      "key": "home-3.text-slider.title.3",
+      "entity": "page-home-3",
+      "target": {
+        "block": "text-slider.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "From Farm to Table",
+      "maxCharacters": 80,
+      "label": "home-3 — text-slider.title.3"
+    },
+    {
+      "key": "home-3.text-slider.title.4",
+      "entity": "page-home-3",
+      "target": {
+        "block": "text-slider.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We’d love to hear from you!",
+      "maxCharacters": 80,
+      "label": "home-3 — text-slider.title.4"
+    },
+    {
+      "key": "home-3.features-intro.module-title",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore",
+      "maxCharacters": 80,
+      "label": "home-3 — features-intro.module-title"
+    },
+    {
+      "key": "home-3.features-intro.main-section",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "About Restaurant",
+      "maxCharacters": 80,
+      "label": "home-3 — features-intro.main-section"
+    },
+    {
+      "key": "home-3.features-intro.top-desc",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.top-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Where you’ll explore undiscovered gourmet experiences",
+      "maxCharacters": 126,
+      "label": "home-3 — features-intro.top-desc"
+    },
+    {
+      "key": "home-3.features-intro.description.1",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Learn More",
+      "maxCharacters": 80,
+      "label": "home-3 — features-intro.description.1"
+    },
+    {
+      "key": "home-3.features-intro.description.2",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "See Menu",
+      "maxCharacters": 80,
+      "label": "home-3 — features-intro.description.2"
+    },
+    {
+      "key": "home-3.features-intro.description.3",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore the Bar",
+      "maxCharacters": 80,
+      "label": "home-3 — features-intro.description.3"
+    },
+    {
+      "key": "home-3.menu.menu-type",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.menu-type",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Small Bites",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.menu-type"
+    },
+    {
+      "key": "home-3.menu.dish-name.1",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Green papaya salad",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-name.1"
+    },
+    {
+      "key": "home-3.menu.dish-description.1",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shishito Peppers, Jalapeño Crème",
+      "maxCharacters": 84,
+      "label": "home-3 — menu.dish-description.1"
+    },
+    {
+      "key": "home-3.menu.dish-price.1",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-price.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$20",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-price.1"
+    },
+    {
+      "key": "home-3.menu.dish-name.2",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Black pepper calamari",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-name.2"
+    },
+    {
+      "key": "home-3.menu.dish-description.2",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chinese eggplant, sweet chili soy glaze",
+      "maxCharacters": 98,
+      "label": "home-3 — menu.dish-description.2"
+    },
+    {
+      "key": "home-3.menu.dish-price.2",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-price.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$35",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-price.2"
+    },
+    {
+      "key": "home-3.menu.dish-name.3",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tumeric spiced cauliflower",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-name.3"
+    },
+    {
+      "key": "home-3.menu.dish-description.3",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "House made kimchi, sriracha mayo",
+      "maxCharacters": 84,
+      "label": "home-3 — menu.dish-description.3"
+    },
+    {
+      "key": "home-3.menu.dish-price.3",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-price.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$45",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-price.3"
+    },
+    {
+      "key": "home-3.menu.dish-name.4",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-name.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Kingfish sashimi",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-name.4"
+    },
+    {
+      "key": "home-3.menu.dish-description.4",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Shishito Peppers, Jalapeño Crème",
+      "maxCharacters": 84,
+      "label": "home-3 — menu.dish-description.4"
+    },
+    {
+      "key": "home-3.menu.dish-price.4",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-price.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$78",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-price.4"
+    },
+    {
+      "key": "home-3.menu.dish-name.5",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-name.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Caramelised betel leaf",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-name.5"
+    },
+    {
+      "key": "home-3.menu.dish-description.5",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "House made kimchi, sriracha mayo",
+      "maxCharacters": 84,
+      "label": "home-3 — menu.dish-description.5"
+    },
+    {
+      "key": "home-3.menu.dish-price.5",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-price.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$36",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-price.5"
+    },
+    {
+      "key": "home-3.menu.module-title",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.module-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Explore",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.module-title"
+    },
+    {
+      "key": "home-3.menu.main-section",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our Menu & More",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.main-section"
+    },
+    {
+      "key": "home-3.menu.top-desc",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.top-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Picky eaters, adventurous eaters, whatever your taste, we have something for you.",
+      "maxCharacters": 182,
+      "label": "home-3 — menu.top-desc"
+    },
+    {
+      "key": "home-3.menu.dish-name.6",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-name.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Cheeseburger Sliders",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-name.6"
+    },
+    {
+      "key": "home-3.menu.dish-description.6",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "secret sauce & American cheese + additional sliders $4/each",
+      "maxCharacters": 138,
+      "label": "home-3 — menu.dish-description.6"
+    },
+    {
+      "key": "home-3.menu.dish-price.6",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-price.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$58",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-price.6"
+    },
+    {
+      "key": "home-3.menu.dish-name.7",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-name.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Lettuce Wraps",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-name.7"
+    },
+    {
+      "key": "home-3.menu.dish-description.7",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-description.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
+      "maxCharacters": 160,
+      "label": "home-3 — menu.dish-description.7"
+    },
+    {
+      "key": "home-3.menu.dish-price.7",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-price.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$89",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-price.7"
+    },
+    {
+      "key": "home-3.menu.dish-name.8",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-name.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Pesto Shrimp Flatbread",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-name.8"
+    },
+    {
+      "key": "home-3.menu.dish-description.8",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-description.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "whole milk mozzarella, sundried tomatoes, chipotle aioli",
+      "maxCharacters": 132,
+      "label": "home-3 — menu.dish-description.8"
+    },
+    {
+      "key": "home-3.menu.dish-price.8",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-price.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$29",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-price.8"
+    },
+    {
+      "key": "home-3.menu.dish-name.9",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-name.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tandoori Chicken Flatbread",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-name.9"
+    },
+    {
+      "key": "home-3.menu.dish-description.9",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-description.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "chutney, red onion, cilantro, yogurt",
+      "maxCharacters": 92,
+      "label": "home-3 — menu.dish-description.9"
+    },
+    {
+      "key": "home-3.menu.dish-price.9",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-price.9",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$30",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-price.9"
+    },
+    {
+      "key": "home-3.menu.dish-name.10",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-name.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Hot Wings",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-name.10"
+    },
+    {
+      "key": "home-3.menu.dish-description.10",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-description.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frank's hot sauce, creamy blue cheese dip",
+      "maxCharacters": 102,
+      "label": "home-3 — menu.dish-description.10"
+    },
+    {
+      "key": "home-3.menu.dish-price.10",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.dish-price.10",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$30",
+      "maxCharacters": 80,
+      "label": "home-3 — menu.dish-price.10"
+    },
+    {
+      "key": "home-3.testimonials.desc.1",
+      "entity": "page-home-3",
+      "target": {
+        "block": "testimonials.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“The views and the atmosphere are breathtaking, the food is spectacular and cooked to perfection. All around just a wonderful place to visit.”",
+      "maxCharacters": 304,
+      "label": "home-3 — testimonials.desc.1"
+    },
+    {
+      "key": "home-3.testimonials.author.1",
+      "entity": "page-home-3",
+      "target": {
+        "block": "testimonials.author.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Christine Q., 2022, via Tripadvisor",
+      "maxCharacters": 90,
+      "label": "home-3 — testimonials.author.1"
+    },
+    {
+      "key": "home-3.testimonials.desc.2",
+      "entity": "page-home-3",
+      "target": {
+        "block": "testimonials.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“Customer service was on point and the food was out of this world. Every single dish had so much flavour. It was a great experience and we will definitely come back.”",
+      "maxCharacters": 352,
+      "label": "home-3 — testimonials.desc.2"
+    },
+    {
+      "key": "home-3.testimonials.author.2",
+      "entity": "page-home-3",
+      "target": {
+        "block": "testimonials.author.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Kim and David R., 2021",
+      "maxCharacters": 80,
+      "label": "home-3 — testimonials.author.2"
+    },
+    {
+      "key": "home-3.testimonials.desc.3",
+      "entity": "page-home-3",
+      "target": {
+        "block": "testimonials.desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "“The chef's tasting menu is outstanding, drinks are excellent and staff is attentive and very friendly. No details missed here.”",
+      "maxCharacters": 276,
+      "label": "home-3 — testimonials.desc.3"
+    },
+    {
+      "key": "home-3.testimonials.author.3",
+      "entity": "page-home-3",
+      "target": {
+        "block": "testimonials.author.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Jason V., 2022",
+      "maxCharacters": 80,
+      "label": "home-3 — testimonials.author.3"
+    },
+    {
+      "key": "front-page.hero.image-decor.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "hero.image-decor.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.jpg",
+      "sampleId": 24,
+      "maxCharacters": 255,
+      "label": "front-page — hero.image-decor.1"
+    },
+    {
+      "key": "front-page.features-intro.img-icon.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-4.jpg",
+      "sampleId": 25,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.img-icon.1"
+    },
+    {
+      "key": "front-page.features-intro.img-icon.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.jpg",
+      "sampleId": 26,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.img-icon.2"
+    },
+    {
+      "key": "front-page.features-intro.img-icon.3",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.jpg",
+      "sampleId": 27,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.img-icon.3"
+    },
+    {
+      "key": "front-page.features-intro.img-bg.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.img-bg.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.jpg",
+      "sampleId": 32,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.img-bg.1"
+    },
+    {
+      "key": "front-page.features-intro.img-bg.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "features-intro.img-bg.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-2.jpg",
+      "sampleId": 33,
+      "maxCharacters": 255,
+      "label": "front-page — features-intro.img-bg.2"
+    },
+    {
+      "key": "front-page.gallery.gallery-image.1",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-5.jpg",
+      "sampleId": 34,
+      "maxCharacters": 255,
+      "label": "front-page — gallery.gallery-image.1"
+    },
+    {
+      "key": "front-page.gallery.gallery-image.2",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-3.jpg",
+      "sampleId": 35,
+      "maxCharacters": 255,
+      "label": "front-page — gallery.gallery-image.2"
+    },
+    {
+      "key": "front-page.gallery.gallery-image.3",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-3.jpg",
+      "sampleId": 36,
+      "maxCharacters": 255,
+      "label": "front-page — gallery.gallery-image.3"
+    },
+    {
+      "key": "front-page.gallery.gallery-image.4",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-2.jpg",
+      "sampleId": 33,
+      "maxCharacters": 255,
+      "label": "front-page — gallery.gallery-image.4"
+    },
+    {
+      "key": "front-page.gallery.gallery-image.5",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-3.jpg",
+      "sampleId": 37,
+      "maxCharacters": 255,
+      "label": "front-page — gallery.gallery-image.5"
+    },
+    {
+      "key": "front-page.gallery.gallery-image.6",
+      "entity": "page-front-page",
+      "target": {
+        "block": "gallery.gallery-image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.jpg",
+      "sampleId": 32,
+      "maxCharacters": 255,
+      "label": "front-page — gallery.gallery-image.6"
+    },
+    {
+      "key": "about.features-intro.img",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-2.jpg",
+      "sampleId": 29,
+      "maxCharacters": 255,
+      "label": "about — features-intro.img"
+    },
+    {
+      "key": "about.features-intro.img-icon.1",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/ic-chef.png",
+      "sampleId": 99,
+      "maxCharacters": 255,
+      "label": "about — features-intro.img-icon.1"
+    },
+    {
+      "key": "about.features-intro.img-icon.2",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/food-delivery.png",
+      "sampleId": 100,
+      "maxCharacters": 255,
+      "label": "about — features-intro.img-icon.2"
+    },
+    {
+      "key": "about.features-intro.img-icon.3",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/menu.png",
+      "sampleId": 101,
+      "maxCharacters": 255,
+      "label": "about — features-intro.img-icon.3"
+    },
+    {
+      "key": "about.features-intro.img-icon.4",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.img-icon.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/online-order.png",
+      "sampleId": 102,
+      "maxCharacters": 255,
+      "label": "about — features-intro.img-icon.4"
+    },
+    {
+      "key": "about.features-intro.img-icon.5",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.img-icon.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/quality.png",
+      "sampleId": 103,
+      "maxCharacters": 255,
+      "label": "about — features-intro.img-icon.5"
+    },
+    {
+      "key": "about.features-intro.img-icon.6",
+      "entity": "page-about",
+      "target": {
+        "block": "features-intro.img-icon.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/entrances.png",
+      "sampleId": 104,
+      "maxCharacters": 255,
+      "label": "about — features-intro.img-icon.6"
+    },
+    {
+      "key": "about.teams.img.1",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-1.jpg",
+      "sampleId": 15,
+      "maxCharacters": 255,
+      "label": "about — teams.img.1"
+    },
+    {
+      "key": "about.teams.img.2",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-4.jpg",
+      "sampleId": 107,
+      "maxCharacters": 255,
+      "label": "about — teams.img.2"
+    },
+    {
+      "key": "about.teams.img.3",
+      "entity": "page-about",
+      "target": {
+        "block": "teams.img.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-9-3.jpg",
+      "sampleId": 108,
+      "maxCharacters": 255,
+      "label": "about — teams.img.3"
+    },
+    {
+      "key": "gallery.gallery.gallery-image.1",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.gallery-image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-5.jpg",
+      "sampleId": 34,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.gallery-image.1"
+    },
+    {
+      "key": "gallery.gallery.gallery-image.2",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.gallery-image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-10-2.jpg",
+      "sampleId": 40,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.gallery-image.2"
+    },
+    {
+      "key": "gallery.gallery.gallery-image.3",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.gallery-image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-3.jpg",
+      "sampleId": 35,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.gallery-image.3"
+    },
+    {
+      "key": "gallery.gallery.gallery-image.4",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.gallery-image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-3.jpg",
+      "sampleId": 36,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.gallery-image.4"
+    },
+    {
+      "key": "gallery.gallery.gallery-image.5",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.gallery-image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-9-2.jpg",
+      "sampleId": 105,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.gallery-image.5"
+    },
+    {
+      "key": "gallery.gallery.gallery-image.6",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.gallery-image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-2.jpg",
+      "sampleId": 33,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.gallery-image.6"
+    },
+    {
+      "key": "gallery.gallery.gallery-image.7",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.gallery-image.7",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-3.jpg",
+      "sampleId": 37,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.gallery-image.7"
+    },
+    {
+      "key": "gallery.gallery.gallery-image.8",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.gallery-image.8",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-8-1.jpg",
+      "sampleId": 39,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.gallery-image.8"
+    },
+    {
+      "key": "gallery.gallery.gallery-image.9",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.gallery-image.9",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-7-1.jpg",
+      "sampleId": 38,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.gallery-image.9"
+    },
+    {
+      "key": "gallery.gallery.gallery-image.10",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.gallery-image.10",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.jpg",
+      "sampleId": 32,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.gallery-image.10"
+    },
+    {
+      "key": "chiefs.teams.img.1",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-1.jpg",
+      "sampleId": 15,
+      "maxCharacters": 255,
+      "label": "chiefs — teams.img.1"
+    },
+    {
+      "key": "chiefs.teams.img.2",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-4.jpg",
+      "sampleId": 107,
+      "maxCharacters": 255,
+      "label": "chiefs — teams.img.2"
+    },
+    {
+      "key": "chiefs.teams.img.3",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.img.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-9-3.jpg",
+      "sampleId": 108,
+      "maxCharacters": 255,
+      "label": "chiefs — teams.img.3"
+    },
+    {
+      "key": "chiefs.teams.img.4",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.img.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-4.jpg",
+      "sampleId": 109,
+      "maxCharacters": 255,
+      "label": "chiefs — teams.img.4"
+    },
+    {
+      "key": "chiefs.teams.img.5",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.img.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-3.jpg",
+      "sampleId": 110,
+      "maxCharacters": 255,
+      "label": "chiefs — teams.img.5"
+    },
+    {
+      "key": "chiefs.teams.img.6",
+      "entity": "page-chiefs",
+      "target": {
+        "block": "teams.img.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.jpg",
+      "sampleId": 18,
+      "maxCharacters": 255,
+      "label": "chiefs — teams.img.6"
+    },
+    {
+      "key": "menu.menu.img-icon.1",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-5.jpg",
+      "sampleId": 34,
+      "maxCharacters": 255,
+      "label": "menu — menu.img-icon.1"
+    },
+    {
+      "key": "menu.menu.img-icon.2",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-3.jpg",
+      "sampleId": 35,
+      "maxCharacters": 255,
+      "label": "menu — menu.img-icon.2"
+    },
+    {
+      "key": "menu.menu.img-icon.3",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-3.jpg",
+      "sampleId": 36,
+      "maxCharacters": 255,
+      "label": "menu — menu.img-icon.3"
+    },
+    {
+      "key": "menu.menu.img-icon.4",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.img-icon.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-2.jpg",
+      "sampleId": 33,
+      "maxCharacters": 255,
+      "label": "menu — menu.img-icon.4"
+    },
+    {
+      "key": "menu.menu.img-icon.5",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.img-icon.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.jpg",
+      "sampleId": 32,
+      "maxCharacters": 255,
+      "label": "menu — menu.img-icon.5"
+    },
+    {
+      "key": "menu.menu.img-icon.6",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.img-icon.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-10-2.jpg",
+      "sampleId": 40,
+      "maxCharacters": 255,
+      "label": "menu — menu.img-icon.6"
+    },
+    {
+      "key": "menu.menu.menu-image",
+      "entity": "page-menu",
+      "target": {
+        "block": "menu.menu-image",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-10-3.jpg",
+      "sampleId": 106,
+      "maxCharacters": 255,
+      "label": "menu — menu.menu-image"
+    },
+    {
+      "key": "offer.happyhours.hp-img",
+      "entity": "page-offer",
+      "target": {
+        "block": "happyhours.hp-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/pic-6.jpg",
+      "sampleId": 112,
+      "maxCharacters": 255,
+      "label": "offer — happyhours.hp-img"
+    },
+    {
+      "key": "offer.happyhours.logo-img",
+      "entity": "page-offer",
+      "target": {
+        "block": "happyhours.logo-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/logo-1.png",
+      "sampleId": 111,
+      "maxCharacters": 255,
+      "label": "offer — happyhours.logo-img"
+    },
+    {
+      "key": "home-2.features-intro.intro-img",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.intro-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-3.jpg",
+      "sampleId": 95,
+      "maxCharacters": 255,
+      "label": "home-2 — features-intro.intro-img"
+    },
+    {
+      "key": "home-2.features-intro.img-bg.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.img-bg.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.jpg",
+      "sampleId": 32,
+      "maxCharacters": 255,
+      "label": "home-2 — features-intro.img-bg.1"
+    },
+    {
+      "key": "home-2.features-intro.img-bg.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "features-intro.img-bg.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-2.jpg",
+      "sampleId": 33,
+      "maxCharacters": 255,
+      "label": "home-2 — features-intro.img-bg.2"
+    },
+    {
+      "key": "home-3.features-intro.intro-img",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.intro-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-3.jpg",
+      "sampleId": 95,
+      "maxCharacters": 255,
+      "label": "home-3 — features-intro.intro-img"
+    },
+    {
+      "key": "home-3.features-intro.img-icon.1",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.img-icon.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-2.jpg",
+      "sampleId": 29,
+      "maxCharacters": 255,
+      "label": "home-3 — features-intro.img-icon.1"
+    },
+    {
+      "key": "home-3.features-intro.img-icon.2",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.img-icon.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-2.jpg",
+      "sampleId": 30,
+      "maxCharacters": 255,
+      "label": "home-3 — features-intro.img-icon.2"
+    },
+    {
+      "key": "home-3.features-intro.img-icon.3",
+      "entity": "page-home-3",
+      "target": {
+        "block": "features-intro.img-icon.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-9-1.jpg",
+      "sampleId": 31,
+      "maxCharacters": 255,
+      "label": "home-3 — features-intro.img-icon.3"
+    },
+    {
+      "key": "home-3.menu.menu-image",
+      "entity": "page-home-3",
+      "target": {
+        "block": "menu.menu-image",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-10-3.jpg",
+      "sampleId": 106,
+      "maxCharacters": 255,
+      "label": "home-3 — menu.menu-image"
+    },
+    {
+      "key": "home-3.gallery.img.1",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-2.jpg",
+      "sampleId": 29,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.img.1"
+    },
+    {
+      "key": "home-3.gallery.img.2",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-10-2.jpg",
+      "sampleId": 40,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.img.2"
+    },
+    {
+      "key": "home-3.gallery.img.3",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.img.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-3.jpg",
+      "sampleId": 35,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.img.3"
+    },
+    {
+      "key": "home-3.gallery.img.4",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.img.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-7-2.jpg",
+      "sampleId": 97,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.img.4"
+    },
+    {
+      "key": "home-3.gallery.img.5",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.img.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-8-1.jpg",
+      "sampleId": 39,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.img.5"
+    },
+    {
+      "key": "home-3.gallery.img.6",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.img.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-3.jpg",
+      "sampleId": 37,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.img.6"
+    }
+  ]
+}

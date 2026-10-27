@@ -1,0 +1,278 @@
+{
+  "dos": [
+    "Use LabilVariable for any headline or display text, with tracking opening from 0.025em at 11px up to 0.091em at 40px — the wide spacing is non-negotiable.",
+    "Set all buttons, tags, and nav pills to 75px border-radius — the pill shape is the system's primary control signature.",
+    "Use Signal Violet (#8147ff) exclusively for the search button and active states; let the rest of the interface stay achromatic.",
+    "Stack surfaces by lightness alone: #f0efef canvas → #ffffff cards → #faead9 warm bands. Never use shadows to create depth.",
+    "Set body copy in Bradford at 15–17px with tight tracking (0.005–0.027em) — the contrast with LabilVariable's wide tracking is the typographic rhythm.",
+    "Keep vertical rhythm compact: 10px element gaps, 20px card padding, 40px section gaps. The site is an editorial feed, not a landing page.",
+    "Let photography and illustration carry all visual color. Resist the urge to add chromatic UI elements — the art is the color."
+  ],
+  "donts": [
+    "Don't apply drop shadows, glows, or blur to any component. Depth comes from surface value, not elevation.",
+    "Don't use Signal Violet for decorative purposes (backgrounds, borders, illustrations) — it signals interactivity and loses meaning if scattered.",
+    "Don't set body or UI text with wide tracking — reserve LabilVariable's open spacing for headlines, tags, and nav labels only.",
+    "Don't add border-radius to cards, images, or thumbnails. The 75px pill is reserved for interactive controls.",
+    "Don't introduce new neutrals — work within the existing scale: #2b2b2b (primary), #676767 (secondary), #555555 (tertiary), #c2c2c2 (dividers), #929292 (placeholders).",
+    "Don't use bright chromatic colors on text, borders, or backgrounds outside the editorial photography itself.",
+    "Don't stretch line-height above 1.53 for body text — the compact vertical rhythm is core to the feed-density feel."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f0efef",
+      "name": "Page Mist",
+      "role": "Page canvas — the warm off-white that holds the entire site. Cards and content float on top of this",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card White",
+      "role": "Card surfaces, input fields, elevated panels — the brighter layer stacked above Page Mist",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2b2b2b",
+      "name": "Ink",
+      "role": "Primary text, body copy, headings, icons, link defaults. Slightly softer than pure black, warming the type against the off-white canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#676767",
+      "name": "Graphite",
+      "role": "Secondary text, metadata (dates, bylines), footer labels, muted descriptions",
+      "group": "neutral"
+    },
+    {
+      "hex": "#555555",
+      "name": "Slate",
+      "role": "Tertiary text, image captions, disabled-adjacent labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c2c2c2",
+      "name": "Faint Line",
+      "role": "Hairline dividers, subtle borders between feed items and card edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#929292",
+      "name": "Ash",
+      "role": "Placeholder text, low-emphasis labels, very muted helper copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#faead9",
+      "name": "Banner Cream",
+      "role": "Top promotional bar background, soft warm callouts. The only non-violet warmth in the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8147ff",
+      "name": "Signal Violet",
+      "role": "Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#6219ff",
+      "name": "Deep Iris",
+      "role": "Pressed/hover state of Signal Violet, chromatic text emphasis, link text in article contexts. Sits one step darker on the same hue",
+      "group": "brand"
+    },
+    {
+      "hex": "#ffd519",
+      "name": "Hi-Vis Yellow",
+      "role": "Yellow supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "accent"
+    }
+  ],
+  "layout": "Centered, max-width 1200px content column on a #f0efef page canvas. The page reads top-to-bottom as a continuous editorial feed rather than discrete marketing sections. The top 40px is a full-width warm cream banner (#faead9) with three partner link clusters. Below: a centered masthead with wordmark and tagline, no nav bar above content. The first content zone is a horizontal 3-item feed row with square thumbnails. Then a full-bleed triptych: three edge-to-edge image panels with no gaps, each on a saturated color ground. Then a featured article block: two-column with oversized headline left, description and tags right. Then a 3-column article card grid with vertical thumbnails, repeating downward. A floating pill-shaped nav bar (75px radius, white) sits docked at bottom-center of the viewport, persistent across the page. The overall rhythm alternates between wide horizontal bands (triptych) and compact grid blocks (article cards), with 40px vertical spacing between zones. Navigation is minimal — a single hamburger in the masthead plus the floating bottom pill bar — no top nav, no sidebar, no mega-menu.",
+  "imagery": "Photography and illustration are the primary content and the dominant source of all color in the system. The editorial feed is image-heavy: square and rectangular thumbnails carry every article card, and the triptych feature panels are full-bleed illustrated Risograph prints on saturated color grounds (violet, cyan, olive). Photography is product-and-process-focused — studio shots of printed matter, artist hands, tools, objects — rather than lifestyle imagery. Color treatment is full-saturation, not desaturated or duotone; the images arrive vivid and the UI recedes to let them speak. Icons are monochrome (filled, no outline style), small, and functional. No 3D renders, no abstract gradient graphics outside editorial content. The visual density of imagery relative to text is high — roughly 50/50 in card grids, tipping toward image-dominant in the triptych sections.",
+  "similar": [
+    {
+      "why": "Same custom-display-typeface-with-wide-tracking approach on a near-white canvas, single violet accent for interactive controls, pill-shaped navigation as the sole persistent UI element.",
+      "business": "It's Nice That"
+    },
+    {
+      "why": "Editorial media layout with a 3-column article grid, achromatic chrome, and full-bleed editorial photography carrying all the color.",
+      "business": "Dezeen"
+    },
+    {
+      "why": "Same near-white canvas philosophy, compact content density, and restraint in using color — the content blocks are the visual interest.",
+      "business": "Are.na"
+    },
+    {
+      "why": "Similar quiet editorial layout with wide-tracked display type, compact body text, and warm off-white background tones.",
+      "business": "The Creative Independent"
+    },
+    {
+      "why": "Same editorial-discovery feel with monochrome UI, vivid editorial photography as the hero, and pill-shaped interactive controls.",
+      "business": "WePresent (by WeTransfer)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "75px",
+      "cards": "0px",
+      "inputs": "0px",
+      "buttons": "75px",
+      "navPills": "75px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "40px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "media",
+  "surfaces": [
+    {
+      "hex": "#f0efef",
+      "name": "Page Canvas",
+      "level": 1,
+      "purpose": "Warm off-white base that fills the viewport behind all content."
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card White",
+      "level": 2,
+      "purpose": "Article cards, image frames, input fields — the primary content surface."
+    },
+    {
+      "hex": "#faead9",
+      "name": "Banner Cream",
+      "level": 3,
+      "purpose": "Top promotional partner bar, soft warm zone separating the masthead from the feed."
+    }
+  ],
+  "elevation": [],
+  "northStar": "Art-school broadsheet on a desk. A near-white page dressed in monochrome type, with one violet accent for navigation and vivid Risograph prints exploding through the grid.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.47,
+      "letterSpacing": 0.09
+    },
+    {
+      "role": "body",
+      "size": 15,
+      "lineHeight": 1.53,
+      "letterSpacing": 0.08
+    },
+    {
+      "role": "heading",
+      "size": 25,
+      "lineHeight": 1.2,
+      "letterSpacing": 1.93
+    },
+    {
+      "role": "display",
+      "size": 40,
+      "lineHeight": 1.2,
+      "letterSpacing": 3.64
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Partner Banner",
+      "role": "Full-width warm strip at the very top of the page, promoting partner content sections.",
+      "description": "Background #faead9, 40px tall, centered max-width content. Three link clusters left/center/right: bold text in #2b2b2b (Bradford 500, 11px) with a lighter descriptor below (Bradford 400, 11px, #676767). No border, no shadow — just a warm horizontal band separating the masthead from the feed."
+    },
+    {
+      "name": "Masthead with Wordmark",
+      "role": "Centered brand identity block below the partner banner.",
+      "description": "Page Mist (#f0efef) background. Wordmark 'It's Nice That' in Labil 400, large weight, with tagline 'Inspiring Creativity Since 2001' below in Labil 400 at ~11px with wide tracking. Hamburger menu icon at right in #2b2b2b. No border or divider below — whitespace provides separation."
+    },
+    {
+      "name": "The Nice Feed Header",
+      "role": "Label row for the horizontal feed of latest articles.",
+      "description": "Background #ffffff or #f0efef. Left-aligned label 'The Nice Feed' in Labil 400 bold-ish, followed by 'Refreshed 22h ago' in #676767. Right-aligned 'Explore All' link in #2b2b2b with a small dark square icon. Padding 10px vertical, minimal horizontal."
+    },
+    {
+      "name": "Feed Article Card (Horizontal Row)",
+      "role": "Compact article preview in the top horizontal feed.",
+      "description": "Square thumbnail (no radius), article title in Bradford 500 ~15px #2b2b2b, source attribution in Labil 400 ~11px #2b2b2b, small page-number indicator at right. 10px gap between thumbnail and text. No card background, no border — items sit directly on the page surface."
+    },
+    {
+      "name": "Editorial Feature Triptych",
+      "role": "Full-width three-panel image grid showcasing a visual story.",
+      "description": "Three equal-width panels with no gap, each with a solid background (saturated purple, blue, olive) and a centered illustrated postcard. This is the loudest visual moment on the page — the only place where large color blocks appear. No text overlay, no captions inside the panels."
+    },
+    {
+      "name": "Featured Article (Large Title Block)",
+      "role": "Lead story with oversized headline and description.",
+      "description": "Left column: display headline in LabilVariable 400 at 40px, #2b2b2b, letter-spacing 3.64px, line-height ~1.20. Right column: 2-3 line description in Bradford 400 at 15px, #2b2b2b. Below description: '4 days ago' in Labil 400 at 11px, #676767. Tags appear as pill badges."
+    },
+    {
+      "name": "Article Card Grid (3-Column)",
+      "role": "Standard article listing grid below the featured story.",
+      "description": "Three columns, equal width, 16–20px row gap. Each card: vertical thumbnail on top (no border-radius), title in Bradford 500 ~15px #2b2b2b below, date in Labil 400 ~11px #676767 at the bottom, optional category tag. No card background or border — the white card surface is the thumbnail frame itself, set against the #f0efef page."
+    },
+    {
+      "name": "Category Tag Pill",
+      "role": "Small badge labeling an article's category.",
+      "description": "Pill shape with 75px border-radius, no background fill (transparent). Text in Labil 400 at 11px, #6219ff or #2b2b2b depending on context. Sometimes a #ffd519 left border (2px) to mark highlighted tags. Padding 5px 10px."
+    },
+    {
+      "name": "Floating Bottom Nav Bar",
+      "role": "Pill-shaped navigation docked to the bottom center of the viewport.",
+      "description": "White (#ffffff) background, 75px border-radius (full pill), sits floating above content with no shadow. Contains 4 category links in Labil 400 at 13px, #2b2b2b, separated by '·' dots, followed by a violet Search button at the right end. The pill shape and absence of shadow is the signature — it reads as a physical chip resting on the page."
+    },
+    {
+      "name": "Violet Search Button",
+      "role": "Primary interactive element in the floating nav.",
+      "description": "Background #8147ff, 75px border-radius, padding 10px 20px. Icon (magnifying glass) + 'Search' label in Labil 400 at 13px, #ffffff. This is the only filled-violet button in the system — its rarity makes it the most clickable thing on screen."
+    },
+    {
+      "name": "Navigation Category Link",
+      "role": "Text-only link in the floating nav bar.",
+      "description": "No background, no border. Labil 400 at 13px, #2b2b2b, letter-spacing ~0.33px. Active/hover state: #6219ff text. Padding 10px horizontal for tap target, no vertical background change."
+    },
+    {
+      "name": "Article Image Thumbnail",
+      "role": "Visual preview for each article card.",
+      "description": "No border-radius, no border, no shadow. The image fills its frame edge-to-edge. Aspect ratio roughly 1:1 in the feed row, roughly 4:3 or 3:4 in the card grid. The image IS the card chrome — there is no padding or frame around it."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and heading face. Set at 40px for article hero titles and 25px for section headings, with aggressively wide tracking (up to 0.091em at display size). The wide letter-spacing is the single most recognizable typographic signal of the brand — it forces whitespace between letters, giving headlines a printed-poster cadence. Also used for navigation labels, tags, and the floating nav bar.",
+      "sizes": "11px, 13px, 15px, 18px, 25px, 40px",
+      "family": "LabilVariable",
+      "weight": "400",
+      "lineHeight": "1.20–1.73",
+      "substitute": "Inter Tight (variable), or DM Sans with letter-spacing manually opened",
+      "letterSpacing": "3.64px at 40px (0.091em), tapering down to 0.33px at 11px (0.025em)"
+    },
+    {
+      "role": "Body and UI face. Tight tracking (0.005–0.027em) at 15–17px for article descriptions, card metadata, button labels, and dense UI chrome. The contrast with LabilVariable's wide tracking is deliberate: LabilVariable announces, Bradford explains. Weight 500 appears for emphasis in metadata and button labels.",
+      "sizes": "11px, 15px, 17px",
+      "family": "Bradford",
+      "weight": "400, 500",
+      "lineHeight": "1.15–2.27",
+      "substitute": "Inter, or Söhne (close to Bradford's proportions)",
+      "letterSpacing": "0.46px at 17px (0.027em), 0.08px at 15px (0.005em), 0.09px at 11px (0.008em)"
+    },
+    {
+      "role": "Masthead and logo lockup, plus secondary UI labels. A static companion to LabilVariable — same family, different cuts — used where the variable axis isn't needed (wordmark, fixed-size badges).",
+      "sizes": "11px, 13px, 17px",
+      "family": "Labil",
+      "weight": "400, 500",
+      "lineHeight": "1.40–1.47",
+      "substitute": "Inter Tight, or DM Sans",
+      "letterSpacing": "0.09px at 11px to 1.55px at 17px (up to 0.091em)"
+    }
+  ],
+  "description": "It's Nice That operates as a quiet editorial newsroom: a near-white canvas with a single violet pulse. Almost every surface is achromatic — warm off-white, pure white, near-black text — and color is rationed like ink, appearing only as functional punctuation on the search button, on hover, or in full-bleed editorial photography. Typography does the heavy lifting: a wide-tracked display face (LabilVariable) floats generous air around every headline and label, creating a magazine-like cadence, while Bradford sets compact body and UI text tight to the grid. Components are deliberately flat and compact — no shadows, pill-shaped controls at 75px radius, tight 10–20px padding — so the colorful illustration and photography content always reads as the hero. The result feels like flipping through a printed art-school broadsheet: restrained chrome, loud art.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- canvas: #f0efef (Page Mist)\n- card surface: #ffffff (Card White)\n- text primary: #2b2b2b (Ink)\n- text secondary: #676767 (Graphite)\n- border/divider: #c2c2c2 (Faint Line)\n- brand accent: #8147ff (Signal Violet) — used only for the search button and active state\n- primary action: no distinct CTA color\n\n## Example Component Prompts\n\n**Floating Bottom Nav Bar:** A white (#ffffff) pill-shaped bar, 75px border-radius, floating at bottom-center of the viewport. Contains 4 category links set in LabilVariable 400 at 13px, #2b2b2b, letter-spacing 0.33px, separated by middle dots. Right end: a violet (#8147ff) search button, 75px radius, padding 10px 20px, white magnifying glass icon + 'Search' label in Labil 400 13px #ffffff. No shadow on the pill.\n\n**Featured Article Block:** Two-column layout. Left: display headline in LabilVariable 400 at 40px, #2b2b2b, letter-spacing 3.64px, line-height 1.20. Right: 2-line description in Bradford 400 at 15px, #2b2b2b, tight letter-spacing 0.08px. Below description: '4 days ago' in Labil 400 at 11px, #676767. Two category tag pills below: transparent background, 75px radius, Labil 400 11px, 5px 10px padding, one with a 2px #ffd519 left border.\n\n**Article Card Grid Item:** Vertical card on #f0efef page. Top: full-bleed thumbnail with no border-radius, aspect ratio ~4:3. Below: title in Bradford 500 at 15px, #2b2b2b, letter-spacing 0.08px. Bottom: date in Labil 400 at 11px, #676767. No card background, no border, no shadow — the image is the visual frame.\n\n**Editorial Triptych Panel:** Full-bleed image panel, one-third viewport width, no gap between panels. Background in a saturated editorial color (violet #8147ff, cyan, or olive). Centered Risograph-style illustration or print filling most of the frame. No text overlay.\n\n**Top Partner Banner:** Full-width strip, #faead9 background, 40px tall, centered max-width content. Three link clusters in a row: bold label in Bradford 500 11px #2b2b2b with a lighter sub-label in Bradford 400 11px #676767 directly below."
+    },
+    {
+      "title": "Editorial Tone",
+      "content": "This is a creative-discovery publication, not a product interface. Pages should feel like browsing a curated magazine — every screen is a feed of stories, not a funnel. The UI chrome should be quiet enough that the artwork and photography dominate. If a page section doesn't feature rich visual content, it's probably over-designed. The floating bottom nav is the only persistent UI; everything else is content-first."
+    }
+  ],
+  "elevationPhilosophy": "The design intentionally avoids shadows. Depth is communicated purely through surface-value contrast (#f0efef canvas vs #ffffff cards vs #faead9 banner). No drop shadows, no glow effects — the layout reads as flat editorial print rather than a skeuomorphic software UI. This keeps the colorful illustration and photography content visually unshadowed and unambiguous."
+}

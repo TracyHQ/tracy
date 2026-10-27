@@ -1,0 +1,20 @@
+{
+  "action.decide": "Decidi tu per me",
+  "action.followUp": "Fammi prima altre domande",
+  "action.submit": "Invia risposta",
+  "ask.languagePlaceholder": "Scegli una lingua…",
+  "ask.other": "Altro",
+  "ask.otherPlaceholder": "Oppure scrivi la tua risposta",
+  "ask.recommended": "Consigliato",
+  "ask.rewrite": "Riscrivi con l’IA",
+  "ask.rewriteFailed": "Riscrittura non riuscita. Riprova.",
+  "ask.rewriteUndo": "Annulla",
+  "ask.rewriting": "Riscrittura in corso…",
+  "empty.title": "Nessuna domanda in attesa",
+  "error.answer": "La tua risposta non è arrivata all’agent. Riprova.",
+  "pane.lead": "Tracy ha bisogno della tua risposta per continuare",
+  "pointer.many": "{count} domande ti aspettano nel pannello a destra",
+  "pointer.one": "Una domanda ti aspetta nel pannello a destra",
+  "pointer.open": "Apri",
+  "tab.title": "Domande"
+}

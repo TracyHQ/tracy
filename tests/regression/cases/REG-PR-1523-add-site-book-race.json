@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1523-add-site-book-race",
+  "kind": "fix",
+  "title": "Concurrent Add site imports in one dsh process keep every site's line in the JSON books and never fail on a shared temp file",
+  "pr": 1523,
+  "area": "add-site/import",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run packages/site/tracy-add-site/test/book-race.test.mjs: three sites write upload cursors 40 times each at once (rememberUpload), one site is forgotten while the others write (forgetUpload), and the same for site-tokens.json (rememberToken/forgetToken) and handovers.json (rememberPartial/rememberHandover/forgetHandover); the same import result is queued 20 times at once (reportImportResult). Also: a sweep (takeOrSweep) paused inside remove while a new run writes its own dump for the same site.",
+    "S2: Run the cold-cache concurrent read test in packages/design/tracy-design-inspiration/test/library-remote.test.mjs: 20 reads of one system file at once before it is cached.",
+    "S3: Run the two-undos test in apps/tracy-host/test/ds-slot.test.mjs: two undo jobs of one design-system entry at once."
+  ],
+  "expect": [
+    "S1: no call throws; each book holds exactly the sites still remembered; no *.tmp file is left; no 'could not queue import operation result' warning. The same-site sweep removes only the old dump and the new line survives.",
+    "S2: every reader gets the file's bytes; no *.tmp file is left.",
+    "S3: one undo answers ok, the other {ok:false, code:'DS_UNDO_USED'}; the manifest is marked reverted; no *.tmp file is left."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-add-site/src/host/json-book.mjs, packages/design/tracy-design-inspiration/src/host/library-remote.mjs, apps/tracy-host/src/ds-slot.js"
+  },
+  "evidence": "Production dsh log 20/10/2026: a Joomla import failed at reading_files with ENOENT rename uploads.json.1.tmp -> uploads.json while a WordPress import was uploading parts; uploads.json then held only the other site's entry",
+  "fence": "Per-write unique temp names and a per-file serialised read-modify-write in the plugin's book helper; per-entry serialised undo in the ds-slot job",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/book-race.test.mjs",
+      "packages/design/tracy-design-inspiration/test/library-remote.test.mjs",
+      "apps/tracy-host/test/ds-slot.test.mjs"
+    ],
+    "tests": [
+      "upload cursors of several sites written at once all survive",
+      "forgetting one site while others write keeps the others",
+      "site tokens written and forgotten at once keep every remembered site",
+      "handover lines of several sites written at once all survive",
+      "the same import result queued twice at once does not lose its temp file",
+      "the same system file read many times at once, before it is cached, answers every reader",
+      "two undos of one entry at once: one puts it back, the other is refused, neither throws",
+      "a new line written for the same site while the sweep deletes the old dump is kept"
+    ]
+  }
+}

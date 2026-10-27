@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1646-wo-manual-build-keeps-fill",
+  "kind": "fix",
+  "title": "A manual Website Opportunities build of a quickstart-first revision keeps its action open until the site's fill ends, instead of closing it and killing the fill",
+  "pr": 1646,
+  "area": "opportunities/demo-runner",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Start a disposable Postgres and set TEST_DATABASE_URL.",
+    "S2: From the TCH checkout run the command in `run`.",
+    "S3: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "A manual quickstart-first action stays queued while the fill runs, completes when it applies and fails with SITE_FILL_FAILED when it fails, without QA retry or hand-off.",
+    "A manual action whose site access is lost or whose site is deleted stops instead of waiting for the timeout.",
+    "A manual legacy action still completes as soon as its site is built; automatic actions are unchanged."
+  ],
+  "selectors": {
+    "function": "apps/tracy-web/src/opportunities/demo-runner.js createDemoRunner",
+    "test": "apps/tracy-web/test/website-opportunities-demo-runner.test.mjs"
+  },
+  "evidence": "Dev, 23/10/2026: a manual build of a quickstart-first WordPress revision ended its action completed 5 seconds after the site build; one second later the site's fill failed with QUICKSTART_ACTION_CLOSED because the fill writes only while its action is queued.",
+  "fence": "The demo runner's handling of non-automatic actions; the fill guard quickstartActionOpen and the automatic path are unchanged",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-demo-runner.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a manual quickstart-first build keeps its action open until the fill applies, then stops without QA or hand-off",
+      "a manual quickstart-first build whose fill fails ends SITE_FILL_FAILED",
+      "a manual Retry resumes the failed fill once, waits for it and completes without hand-off",
+      "a manual Retry that lost site access stops before resuming the fill",
+      "a manual quickstart-first build whose site is deleted while its fill runs stops",
+      "a manual legacy build still completes as soon as its site is built"
+    ]
+  }
+}

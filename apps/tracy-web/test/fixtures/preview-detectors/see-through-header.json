@@ -1,0 +1,245 @@
+{
+  "about": "see-through-header: probe data cut from the Add site preview under Moxie, light visitor scheme, 14/10/2026 (preview-check.mjs PREVIEW_DATA=1, no script as the frame runs, fleet01 demos). broken: JA Social II and JA Resume Joomla, a fixed T3 header with no ground (no script turns it solid on scroll); clean: Tracy Base EmDash and Tracy Apple Joomla (sticky headers, 80 % fill with a backdrop blur), JA Voyara, JA Smallbiz.",
+  "broken": [
+    {
+      "source": "quickstart/ja-social-ii/j6@1.0.3 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#060605",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#858273",
+        "#1a1a1a",
+        "#7a786a",
+        "#868474",
+        "#b7b39f",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/header:1",
+            "at": "header.wrap.t3-header.t3-header-features",
+            "position": "fixed",
+            "w": 1440,
+            "h": 98,
+            "ground": 0,
+            "text": "JA Social II Meet New People"
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/header:1",
+            "at": "header.wrap.t3-header.t3-header-features",
+            "position": "fixed",
+            "w": 1440,
+            "h": 98,
+            "ground": 0,
+            "text": "JA Social II Meet New People"
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-resume/j6@1.0.3 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#858273",
+        "#1a1a1a",
+        "#868474",
+        "#7a786a",
+        "#b7b39f",
+        "#9fbefc",
+        "#060605"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/header:1",
+            "at": "header.wrap.t3-header",
+            "position": "fixed",
+            "w": 1440,
+            "h": 120,
+            "ground": 0,
+            "text": "CV\n \nHOME\nABOUT ME\nWORKS\nTESTIMONIAL\nCON"
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/header:1",
+            "at": "header.wrap.t3-header",
+            "position": "fixed",
+            "w": 1440,
+            "h": 120,
+            "ground": 0,
+            "text": "CV\n \nHOME\nABOUT ME\nWORKS\nTESTIMONIAL\nCON"
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "tracy-base/emdash-0.x@0.5.4 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#eae5cc",
+        "#eee9cf",
+        "#000000",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1",
+        "#4e6695",
+        "#4e6594"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/header:1",
+            "at": "header.sticky.top-0.z-40",
+            "position": "sticky",
+            "w": 1440,
+            "h": 81,
+            "ground": 1,
+            "text": "Tracy Base\nPrecision, in every surface\nH"
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/header:1",
+            "at": "header.sticky.top-0.z-40",
+            "position": "sticky",
+            "w": 1440,
+            "h": 81,
+            "ground": 1,
+            "text": "Tracy Base\nPrecision, in every surface\nH"
+          }
+        ]
+      }
+    },
+    {
+      "source": "tracy-apple/j6@1.3.0 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#eae5cc",
+        "#eee9cf",
+        "#000000",
+        "#3d3c35",
+        "#5d5b51",
+        "#69665b",
+        "#d2ceb6",
+        "#e3dfc5",
+        "#6786c4",
+        "#5b76ac",
+        "#5e75a1",
+        "#4e6695",
+        "#4e6594"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1",
+            "at": "div.t4-section.t4-header.t4-sticky",
+            "position": "sticky",
+            "w": 1440,
+            "h": 81,
+            "ground": 1,
+            "text": "Tracy Apple\nPrecision, in every surface\n"
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1",
+            "at": "div.t4-section.t4-header.t4-sticky",
+            "position": "sticky",
+            "w": 1440,
+            "h": 81,
+            "ground": 1,
+            "text": "Tracy Apple\nPrecision, in every surface\n"
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-voyara/j6@1.0.8 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#84acfb",
+        "#b7b39f",
+        "#000000",
+        "#858273",
+        "#1a1a1a",
+        "#f4efd4",
+        "#93b6fb",
+        "#060605",
+        "#7a786a",
+        "#868474",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1",
+            "at": "header.header-block.voy-header.w-100",
+            "position": "sticky",
+            "w": 1440,
+            "h": 77,
+            "ground": 1,
+            "text": "Voyara\nHome\nDestinations\nExperiences\nPri"
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1",
+            "at": "header.header-block.voy-header.w-100",
+            "position": "sticky",
+            "w": 1440,
+            "h": 77,
+            "ground": 1,
+            "text": "Voyara\nHome\nDestinations\nExperiences\nPri"
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-smallbiz/j6@1.0.2 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#1a1a1a",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#7a786a",
+        "#858273",
+        "#868474",
+        "#b7b39f",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": []
+      },
+      "worn": {
+        "data": []
+      }
+    }
+  ]
+}

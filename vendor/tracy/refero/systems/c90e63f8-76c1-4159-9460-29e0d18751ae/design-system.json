@@ -1,0 +1,286 @@
+{
+  "dos": [
+    "Use Exposure30 at weight 350 for all display-level headings (42px+); the thin serif at scale is the brand's signature voice",
+    "Anchor all primary actions in Ink Black (#1f1c1b) filled buttons with white text — never use the orange as a filled button background",
+    "Use Highlighter Orange (#ff7714) exclusively for outlines, links, icon strokes, and decorative accents — it marks, never fills",
+    "Layer white cards (#ffffff) on the cream canvas (#ebe9e1) with 1px Hairline (#d9d6ce) borders at 0px radius for the editorial 'pinned to paper' effect",
+    "Set body text in Geist at 16px weight 400 with 0.01em letter-spacing and line-height 1.50 for the comfortable editorial rhythm",
+    "Use 4px as the base spacing unit; apply 8px and 12px for button padding, 16px for element gaps, 24px for card padding, 80px for section gaps",
+    "Let photography carry the hero — full-bleed warm-lit portraiture with gradient overlay, never abstract graphics or illustrations in the hero position"
+  ],
+  "donts": [
+    "Don't use the orange (#ff7714) as a filled button or large background block — it kills the editorial subtlety and turns the design into a generic tech site",
+    "Don't introduce box-shadows or drop-shadows on cards — the design relies on flat surfaces with hairline borders, not elevation",
+    "Don't use bold (600+) weights for headings — the serif at 350-400 is the entire point; bolding it destroys the whisper-quiet authority",
+    "Don't apply border-radius above 4px on any element — the near-zero radii (0-2px) keep the design feeling like print, not app",
+    "Don't use pure black (#000000) for body text or large surfaces — Ink Black (#1f1c1b) maintains the warm print quality",
+    "Don't place colored backgrounds (blue, green, purple) beneath cards or sections — the entire system is warm cream + dark + orange, no cool tones",
+    "Don't use bold or vivid colors for body text — all text should be Ink Black, Stone (#a69b92), or Hairline (#d9d6ce); the orange is never for paragraphs"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1f1c1b",
+      "name": "Ink Black",
+      "role": "Primary text, filled action buttons, dark surfaces — warm near-black replaces pure black so the entire palette feels printed on cream rather than rendered on glass",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Card surfaces, button text on dark fills — the only true white in the system, reserved for elements that need to lift off the warm canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ebe9e1",
+      "name": "Canvas Cream",
+      "role": "Page background — the dominant warm neutral that makes the entire site feel like uncoated stock paper rather than a screen",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f4f0",
+      "name": "Linen",
+      "role": "Nav bar background, subtle section alternation, heading hairlines — a lighter cream that layers on the canvas without breaking warmth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a69b92",
+      "name": "Stone",
+      "role": "Muted text, input borders, heading underlines — warm gray for secondary information that should recede into the paper",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d6ce",
+      "name": "Hairline",
+      "role": "Link underlines, card borders, subtle dividers — the lightest warm border, almost invisible against the canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2d2724",
+      "name": "Espresso",
+      "role": "Dark surface accent, input fills — slightly lighter than Ink Black for the announcement bar and secondary dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Charcoal",
+      "role": "SVG icon fills, pure black instances — used sparingly in vector icons where absolute black is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c7c1b7",
+      "name": "Cobblestone",
+      "role": "Secondary border, decorative dividers — warmer than Hairline, used for borders that need slightly more presence",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ff7714",
+      "name": "Highlighter Orange",
+      "role": "Accent for links, icon strokes, outlined callouts — vivid warm orange that only outlines, never fills, keeping the energy of a marker on paper rather than a UI button",
+      "group": "accent"
+    }
+  ],
+  "layout": "Page model: max-width ~1200px centered content, but hero and announcement bar are full-bleed. Navigation: sticky dark bar with centered nav items, logo left, CTA right. Hero: full-viewport-height photograph with overlaid serif headline bottom-left. Section rhythm: alternating cream/white bands with 80px vertical gaps between major sections. Content arrangement: two-column splits (heading-left, visual-right) followed by horizontal-scrolling 4-column card rows. Below the logo trust bar, layout moves into single-column heading + card grid pattern. Density: spacious — large type, generous padding (24px cards, 80px sections), few elements per row. The scrollable card rows (logo bar, industry solutions) create horizontal movement that breaks the otherwise editorial vertical flow.",
+  "imagery": "Photography is the primary visual asset. Style: warm-lit, intimate portraiture with golden-hour tones — close crops of faces with natural smiles, often slightly backlit to create lens flare and warmth. Treatment: full-bleed with a diagonal gradient overlay (transparent to cream) that softens the image edge into the page. No illustrations, no abstract graphics in content areas, no 3D renders. Icons are exclusively outlined/stroked (thin black strokes), never filled, never multicolor. The lone decorative non-photographic element is a blue circular abstract graphic inside product preview cards. Overall: image-heavy hero, text-dominant body, no lifestyle stock-photo energy — the photography is candid and human, not staged or corporate.",
+  "similar": [
+    {
+      "why": "Same editorial pairing of refined display type with clean grotesque UI, and the same confidence in dark navigation bars anchoring a light content canvas",
+      "business": "Linear"
+    },
+    {
+      "why": "Warm cream-paper canvas with a single high-energy accent color and editorial serif headings — same print-inspired aesthetic applied to a digital product",
+      "business": "Arc Browser"
+    },
+    {
+      "why": "Editorial-grade serif display type at massive scale, warm neutral backgrounds, and the restraint to use color only as punctuation rather than filling",
+      "business": "Stripe"
+    },
+    {
+      "why": "Full-bleed warm-lit photography as hero, near-flat card surfaces with hairline borders, and a single vivid accent color that only outlines",
+      "business": "Runway"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "2px",
+      "cards": "0px",
+      "inputs": "2px",
+      "buttons": "2px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#ebe9e1",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Full page background — the warm cream that everything sits on"
+    },
+    {
+      "hex": "#f5f4f0",
+      "name": "Linen",
+      "level": 2,
+      "purpose": "Nav bar fill, subtle section banding"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 3,
+      "purpose": "Card surfaces that float above the canvas"
+    },
+    {
+      "hex": "#2d2724",
+      "name": "Espresso",
+      "level": 4,
+      "purpose": "Dark surface for announcement bar"
+    },
+    {
+      "hex": "#1f1c1b",
+      "name": "Ink",
+      "level": 5,
+      "purpose": "Deepest dark — navigation bar, filled buttons, heading text"
+    }
+  ],
+  "northStar": "warm editorial paper with ink and highlighter",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.2
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.16
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.18
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.24
+    },
+    {
+      "role": "heading",
+      "size": 42,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.42
+    },
+    {
+      "role": "heading-lg",
+      "size": 82,
+      "lineHeight": 1.05,
+      "letterSpacing": -0.82
+    },
+    {
+      "role": "display",
+      "size": 96,
+      "lineHeight": 1,
+      "letterSpacing": -0.96
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Announcement Bar",
+      "role": "Site-wide promotional strip",
+      "description": "Full-bleed dark bar (#2d2724 background), Geist 14px weight 400 in Highlighter Orange (#ff7714) for the headline, white for body text, and an orange 'Learn more →' link at the right. No padding emphasis — sits as a single line at 8px vertical padding."
+    },
+    {
+      "name": "Primary Navigation",
+      "role": "Sticky dark header with menu and CTA",
+      "description": "Full-width bar with #1f1c1b background (or #2d2724), Geist 14px weight 400 in white for nav links with 2px column gaps between items. Logo (Parloa wordmark with angled bracket mark) left-aligned, nav center-aligned, search icon + language selector + 'Book a demo' filled dark button (white border on dark, white text) right-aligned. 8px vertical padding, 11-12px horizontal padding on items."
+    },
+    {
+      "name": "Hero with Image Overlay",
+      "role": "Full-bleed first impression",
+      "description": "Full-viewport-height photograph (warm-lit portraiture) with a diagonal gradient overlay transitioning from transparent to the cream canvas. Exposure30 at 82-96px weight 350 in Ink Black (#1f1c1b) overlays the bottom-left quadrant. No card chrome — the image IS the surface, the text floats on it."
+    },
+    {
+      "name": "Logo Trust Bar",
+      "role": "Social proof strip",
+      "description": "Horizontal row of 7-8 partner/client logos (Booking.com, Accenture, SwissLife, KPMG, Microsoft, SAP, TeamViewer) rendered in grayscale on the cream canvas. Geist caption text or no label. Even spacing with 2px-8px gaps, no card backgrounds."
+    },
+    {
+      "name": "Feature Split Section",
+      "role": "Two-column content block",
+      "description": "Left column: Exposure30 at 42px weight 400 heading in Ink Black, followed by Geist 16px body text, then a dark filled CTA button. Right column: white card (#ffffff) with 0px radius containing a blue circular abstract icon and description text. 24px padding inside card, 1px Hairline (#d9d6ce) border."
+    },
+    {
+      "name": "Industry Solution Card",
+      "role": "Category tile in horizontal scroller",
+      "description": "White card (#ffffff), 0px radius, 24px padding, 1px Hairline (#d9d6ce) border. Outlined icon (stroke only) in Ink Black at top, Exposure30 24px heading in Ink Black, Geist 14px body in Stone (#a69b92). Cards arranged in a 4-column row with 16px gaps, leftmost card has a small orange (#ff7714) dot accent top-left."
+    },
+    {
+      "name": "Primary CTA Button (Filled Dark)",
+      "role": "Main action trigger",
+      "description": "Ink Black (#1f1c1b) background, white text, Geist 14px weight 500, 12px vertical padding, 11px horizontal padding, 2px border-radius. No hover lift — maintains flat editorial feel. Used for 'Book a demo', 'How our platform works'."
+    },
+    {
+      "name": "Ghost/Text Button",
+      "role": "Secondary action",
+      "description": "No background, Ink Black text, Geist 14px weight 400, 2px radius, often paired with an arrow (→) in Highlighter Orange (#ff7714). Inline with text, minimal padding."
+    },
+    {
+      "name": "Navigation CTA Button",
+      "role": "Header-level action",
+      "description": "Dark or white surface, 1px white border, white text on dark nav, Geist 14px weight 400, 8px vertical padding, 12px horizontal padding, 2px radius. Functions as an outlined button on the dark navigation bar."
+    },
+    {
+      "name": "Outlined Accent Element",
+      "role": "Orange-bordered callout or link",
+      "description": "1px border in Highlighter Orange (#ff7714), no fill, Ink Black or orange text. Used for 'Learn more' links, icon badges, and decorative accents. Never used as a filled button."
+    },
+    {
+      "name": "Section Heading (Serif)",
+      "role": "Display-level content heading",
+      "description": "Exposure30 at 42px weight 400, Ink Black color, line-height 1.10, -0.01em letter-spacing. Left-aligned, often sitting alone above a two-column or card grid section. No decorative elements above or beside — the serif weight and scale do the work."
+    },
+    {
+      "name": "Product Preview Card",
+      "role": "Inline UI element showcase",
+      "description": "White surface (#ffffff), 0px radius, 1px Hairline border, 24px padding. Contains a circular blue-toned abstract graphic (left) and short descriptive text in Geist 16px (right). Represents product UI or concept imagery."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display serif for all headings — the 350 weight at 82-96px is the signature move: a thin editorial serif at massive scale that whispers authority instead of shouting in bold. Used exclusively for headlines, never for body or UI.",
+      "sizes": "24px, 28px, 42px, 82px, 96px",
+      "family": "Exposure30",
+      "weight": "350, 400",
+      "lineHeight": "1.00, 1.10, 1.20, 1.30",
+      "substitute": "Fraunces, Playfair Display, or DM Serif Display",
+      "letterSpacing": "-0.01em at display sizes, 0.01em at 24-28px"
+    },
+    {
+      "role": "Body and UI grotesque — handles all navigation, buttons, body copy, labels, and metadata. The 300-400 weights dominate; 500-600 are reserved for button labels and emphasis. Tracking opens up at 10-11px (0.02em) for caps metadata, closes at body sizes (0.01em) for density.",
+      "sizes": "10px, 11px, 13px, 14px, 16px, 18px",
+      "family": "Geist",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.20, 1.30, 1.33, 1.40, 1.50",
+      "substitute": "Inter, Manrope, or system-ui",
+      "letterSpacing": "0.01em at 14-16px, 0.02em at 10-11px"
+    }
+  ],
+  "description": "Parloa uses a warm editorial language: cream paper backgrounds, deep ink-black typography, and a single vivid orange that punctuates like a highlighter. The pairing of a display serif (Exposure30) with a precise grotesque (Geist) gives every screen the cadence of a premium magazine spread rather than a typical SaaS dashboard. Dark navigation and announcement bars anchor the warm cream canvas, while white cards float on that canvas as if pinned to a designer's moodboard. The orange accent never fills buttons — it only outlines, links, and marks icons — keeping the surface warm but the actions grounded in dark fills. The overall feeling is editorial-confidence, not tech-dashboard.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #1f1c1b\n- background: #ebe9e1\n- card surface: #ffffff\n- border: #d9d6ce\n- accent (outlined only): #ff7714\n- primary action: #1f1c1b (filled action)\n\n## Example Component Prompts\n1. **Hero Section**: Full-bleed warm-lit photograph with diagonal gradient overlay fading to cream (#ebe9e1). Display headline in Exposure30 weight 350, 96px, #1f1c1b, letter-spacing -0.01em, positioned bottom-left. No card or container around the text.\n\n2. **Navigation Bar**: Full-width bar, #1f1c1b background. Logo left in white. Nav links center in Geist 14px weight 400, white, 2px column gaps. Right side: search icon, 'EN' language selector, then an outlined 'Book a demo' button (1px white border, white text, 2px radius, 8px 12px padding).\n\n3. **Industry Solution Card**: White card (#ffffff), 0px radius, 1px #d9d6ce border, 24px padding. Outlined icon (stroke only) in #1f1c1b at top. Heading in Exposure30 24px weight 400, #1f1c1b. Body in Geist 14px weight 400, #a69b92.\n\n4. **Primary CTA Button**: #1f1c1b background, white text, Geist 14px weight 500, 12px 11px padding, 2px border-radius. No shadow, no hover lift.\n\n5. **Announcement Bar**: Full-width #2d2724 background, single line. Headline text in Geist 14px weight 400, #ff7714. Body text in white. 'Learn more →' link in #ff7714 at the right."
+    },
+    {
+      "title": "Elevation Philosophy",
+      "content": "Parloa intentionally avoids shadows. All depth is created through color contrast between the cream canvas (#ebe9e1), white cards (#ffffff), and dark surfaces (#1f1c1b/#2d2724). Cards use 1px Hairline (#d9d6ce) borders to define edges, not shadow blur. Buttons are flat. The only 'elevation' is a slight orange (#ff7714) outlined accent on the leftmost industry card. This flatness reinforces the editorial/print metaphor — nothing floats, everything is pressed onto the page."
+    }
+  ]
+}

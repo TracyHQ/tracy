@@ -1,0 +1,104 @@
+{
+  "color": {
+    "cosmic-void": {
+      "$value": "#06051d",
+      "$type": "color",
+      "$description": "Cosmic Void — Primary page background and hero fill — the violet undertone separates it from neutral black, making darkness feel galactic rather than empty"
+    },
+    "abyssal-blue": {
+      "$value": "#0f1c36",
+      "$type": "color",
+      "$description": "Abyssal Blue — Secondary surface backgrounds, button background variant — a step lighter than Cosmic Void for subtle depth layering"
+    },
+    "steel-navy": {
+      "$value": "#1d293d",
+      "$type": "color",
+      "$description": "Steel Navy — Card surfaces, nav background, interactive container backgrounds"
+    },
+    "deep-slate": {
+      "$value": "#314062",
+      "$type": "color",
+      "$description": "Deep Slate — Elevated card or hover state backgrounds"
+    },
+    "mist": {
+      "$value": "#cad5e2",
+      "$type": "color",
+      "$description": "Mist — Primary body text, general UI text — slightly blue-gray rather than pure white, reducing harshness against the dark void backgrounds"
+    },
+    "fog": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Fog — Borders, dividers, icon strokes throughout the UI"
+    },
+    "ash": {
+      "$value": "#2e3038",
+      "$type": "color",
+      "$description": "Ash — Secondary text, subdued labels"
+    },
+    "ghost-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Ghost White — Heading text at maximum contrast"
+    },
+    "ice-blue": {
+      "$value": "#ebf8ff",
+      "$type": "color",
+      "$description": "Ice Blue — High-brightness text on dark surfaces, link contrast text"
+    },
+    "portal-blue": {
+      "$value": "#63b3ed",
+      "$type": "color",
+      "$description": "Portal Blue — Hyperlinks, inline text links — the single fully saturated accent visible in body content, connecting to Midjourney's Discord/community ecosystem"
+    },
+    "bioluminescent-green": {
+      "$value": "#004f3b",
+      "$type": "color",
+      "$description": "Bioluminescent Green — Sign Up pill button background (20% opacity tint) — deep green specimen glow against void"
+    },
+    "terminal-amber": {
+      "$value": "#733e0a",
+      "$type": "color",
+      "$description": "Terminal Amber — Explore pill button background (20% opacity tint) — amber specimen variant"
+    },
+    "crimson-depth": {
+      "$value": "#8b0836",
+      "$type": "color",
+      "$description": "Crimson Depth — Log In pill button background (20% opacity tint) — deep red specimen variant"
+    },
+    "specimen-green": {
+      "$value": "#00bc7d",
+      "$type": "color",
+      "$description": "Specimen Green — Icon strokes and decorative SVG fills — vivid but used sparingly in iconography only"
+    },
+    "warning-amber": {
+      "$value": "#f0b100",
+      "$type": "color",
+      "$description": "Warning Amber — Icon and UI accent strokes — section heading icons (Projects ⚙, About ℹ)"
+    },
+    "fault-red": {
+      "$value": "#ff2056",
+      "$type": "color",
+      "$description": "Fault Red — Icon strokes, error-adjacent SVG fills"
+    }
+  },
+  "font": {
+    "jetbrains-mono": {
+      "$value": "JetBrains Mono",
+      "$type": "fontFamily",
+      "$description": "Every typographic role on this site — navigation labels, body copy, headings, buttons, links. Using a monospace font as the universal typeface (not just for code) makes the entire interface read as an active terminal output. 30px at lineHeight 1.25 serves section headings; 16px at 1.50 serves body and UI labels; 14px at 1.63 serves captions and metadata."
+    },
+    "dm-sans": {
+      "$value": "DM Sans",
+      "$type": "fontFamily",
+      "$description": "Secondary UI copy and body text in prose sections — appears at 16px only. Weight 500 for emphasis within body blocks. Provides a subtle humanist contrast against the monospace primary, used sparingly so the terminal character of JetBrains Mono dominates."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://midjourney.com",
+      "siteName": "Midjourney",
+      "extractedAt": "2026-04-11T18:05:53.023Z",
+      "variant": "compact"
+    }
+  }
+}

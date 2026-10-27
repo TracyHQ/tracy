@@ -1,0 +1,28 @@
+{
+  "id": "REG-015",
+  "kind": "fix",
+  "title": "JA Nova wp7: toggle, touch submenus, registration, logos, career icons, drawer, wording, login, search behave like the source",
+  "pr": 813,
+  "area": "wordpress-theme/wp-ja-nova",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-nova theme under test (local stand from the quickstart pack, or https://ja-nova-wordpress.tracy.site once released) and the Joomla source (local stand from quickstart/ja-nova/j6, or https://ja-nova-joomla.tracy.site).",
+    "S2: From the TCH checkout run: node tasks/ja-nova-wp7/tools/measure115.mjs --site <site> --source <source> --out <dir> --mode after --wp '<wp-cli prefix for the site>' (add --zip <theme.zip> --record <BROWSER.json> to bind the run to the theme bytes).",
+    "S3: Read the TOTAL line and each PASS/FAIL line."
+  ],
+  "expect": [
+    "TOTAL 11/11 pass.",
+    "theme: the first click on the theme toggle changes the page background on a light OS and on a dark OS (1440 and 390).",
+    "touch-nav: at 1024 and 1180 with touch, the first tap on a parent menu item opens its submenu and keeps the URL; the second tap navigates.",
+    "registration: the registration form creates a subscriber account.",
+    "logos, header-order, career-icons, drawer, wording, login-required, passkey, advanced-search: each PASS with an empty bad list."
+  ],
+  "selectors": {
+    "tool": "tasks/ja-nova-wp7/tools/measure115.mjs",
+    "evidence": "tasks/ja-nova-wp7/release/BROWSER.json"
+  },
+  "evidence": "Independent audit 03/10/2026; measure115 0/11 on 1.1.3, 11/11 on 1.1.5 bound to wp-ja-nova-1.1.5.zip a1a1201f (tasks/ja-nova-wp7/release/BROWSER.json)",
+  "fence": "Browser-measured behaviour of the shipped theme against the source; the tool fails closed on a crash"
+}

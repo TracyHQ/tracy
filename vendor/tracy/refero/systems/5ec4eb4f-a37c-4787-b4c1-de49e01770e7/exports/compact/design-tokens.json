@@ -1,0 +1,154 @@
+{
+  "color": {
+    "deep-cosmos": {
+      "$value": "#201547",
+      "$type": "color",
+      "$description": "Deep Cosmos — Hero section background — the darkest brand surface, houses white headlines and violet accent text"
+    },
+    "violet-mid": {
+      "$value": "#5938b7",
+      "$type": "color",
+      "$description": "Violet Mid — CTA buttons in hero context, pill backgrounds — saturated mid-violet bridges cosmos and accent"
+    },
+    "lavender-pulse": {
+      "$value": "#a98df6",
+      "$type": "color",
+      "$description": "Lavender Pulse — Headline accent text ('anywhere.') in dark hero — vivid violet pops against #201547"
+    },
+    "pale-amethyst": {
+      "$value": "#c4b1f9",
+      "$type": "color",
+      "$description": "Pale Amethyst — Soft violet surface tint, used as background on secondary dark panels"
+    },
+    "indigo-shadow": {
+      "$value": "#381f89",
+      "$type": "color",
+      "$description": "Indigo Shadow — Deep violet body text or decorative elements within dark sections"
+    },
+    "electric-lime": {
+      "$value": "#ffcf25",
+      "$type": "color",
+      "$description": "Electric Lime — Product screenshot accent, border highlights — the neon counterpoint to deep purple creating visual tension"
+    },
+    "amber-core": {
+      "$value": "#faaf00",
+      "$type": "color",
+      "$description": "Amber Core — Icon fills and body-level accent color in light sections — warm, confident"
+    },
+    "butter-glow": {
+      "$value": "#ffe27c",
+      "$type": "color",
+      "$description": "Butter Glow — Light amber for icon strokes, decorative fills — softer version of Amber Core"
+    },
+    "sky-mist": {
+      "$value": "#d8ebff",
+      "$type": "color",
+      "$description": "Sky Mist — Button and panel backgrounds in light sections — very pale blue-gray tint"
+    },
+    "celadon-check": {
+      "$value": "#53a945",
+      "$type": "color",
+      "$description": "Celadon Check — Success state chip background (e.g. green checkmark on Crypto selection chip)"
+    },
+    "powder-blue": {
+      "$value": "#b1d8fc",
+      "$type": "color",
+      "$description": "Powder Blue — UI illustration fill in product screenshots"
+    },
+    "midnight-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, icon fills, borders — near-universal dark token"
+    },
+    "graphite": {
+      "$value": "#1b1b1b",
+      "$type": "color",
+      "$description": "Graphite — Body text, nav labels, CTA button background (dark pill), footer text"
+    },
+    "obsidian": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Obsidian — Dark section backgrounds, deepest surface in light-theme stacks"
+    },
+    "charcoal": {
+      "$value": "#404040",
+      "$type": "color",
+      "$description": "Charcoal — Mid-dark surface, secondary panel backgrounds"
+    },
+    "slate": {
+      "$value": "#5f5f5f",
+      "$type": "color",
+      "$description": "Slate — Secondary body text, metadata, captions"
+    },
+    "fog": {
+      "$value": "#767676",
+      "$type": "color",
+      "$description": "Fog — Tertiary text, muted labels"
+    },
+    "ash": {
+      "$value": "#a4a4a4",
+      "$type": "color",
+      "$description": "Ash — Disabled states, light icon tones"
+    },
+    "bone": {
+      "$value": "#dbdbdb",
+      "$type": "color",
+      "$description": "Bone — Border separators, input outlines, card dividers"
+    },
+    "linen": {
+      "$value": "#d9d0ca",
+      "$type": "color",
+      "$description": "Linen — Warm-toned rule lines and subtle separators in cream body sections"
+    },
+    "warm-cream": {
+      "$value": "#fffbf4",
+      "$type": "color",
+      "$description": "Warm Cream — Page body background — warm off-white gives light sections a tactile, paper-like quality vs pure white"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, nav background, input backgrounds, button text on dark"
+    },
+    "near-black": {
+      "$value": "#101828",
+      "$type": "color",
+      "$description": "Near Black — High-contrast body text alternative to pure black"
+    }
+  },
+  "font": {
+    "bagosscondensedfont": {
+      "$value": "BagossCondensedFont",
+      "$type": "fontFamily",
+      "$description": "Primary display and hero headlines — the condensed cut lets oversized text fill wide containers without breaking; the -0.005em tracking tightens the text mass. This is Deel's most distinctive typographic voice: large, dense, confident headlines that compress horizontal space."
+    },
+    "bagossextendedfont": {
+      "$value": "BagossExtendedFont",
+      "$type": "fontFamily",
+      "$description": "Section headers where width is the feature — extended cut fills horizontal space at large sizes, used for spread-out banner headlines like 'The Global People Platform'"
+    },
+    "bagossstandardfont": {
+      "$value": "BagossStandardFont",
+      "$type": "fontFamily",
+      "$description": "UI labels, badge text, small captions — the workhorse standard cut at utility sizes"
+    },
+    "bagossstandardvf": {
+      "$value": "BagossStandardVF",
+      "$type": "fontFamily",
+      "$description": "Navigation items and button labels — variable-font version allows optical tuning at this critical interactive size"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All body copy, subheadings, stats, footer text, input values — Inter handles everything below headline level. The wide weight range (400–700) creates internal hierarchy without switching families. ss01/ss02 features keep it feeling designed rather than default."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://deel.com",
+      "siteName": "Deel",
+      "extractedAt": "2026-04-11T19:19:36.969Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "143d553e-d71f-4e86-98ed-b80b9ef78ea9",
+  "status": "complete",
+  "name": "AREA 17",
+  "url": "https://styles.refero.design/style/143d553e-d71f-4e86-98ed-b80b9ef78ea9",
+  "sourceWebsite": "https://area17.com",
+  "extractedAt": "2026-06-03T18:59:39.509Z",
+  "capturedAt": "2026-10-08T05:08:31.997673+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Monochrome editorial struck yellow — a typographic monolith on white marble interrupted by a single flash of electric yellow.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/2d2153af-d94a-449a-940b-90a39816d709.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/a87e7a76-e14a-4403-9b8b-7f22eb466c78.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/4eb303f9-c577-4ce8-a32d-c40922b0310a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/165d7d76-939e-45eb-af67-a09a0dd28edb.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0f89e62e-4510-49b8-a125-7a195ceba6fc.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2c810ea4fffb0841de58e5048d3df5c27b75b5467d1f88ba9616bb325d9b012b",
+      "bytes": 19837
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "caee055b8417f904aaa570f9f6407cbefa1192cb862bc985cb22b4d095f84ed1",
+      "bytes": 84248
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "62021a09f78b71266c5f06e56c5397b944b192805f2803096fa1a8a2dbdb839c",
+      "bytes": 16920
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7c72ee190ca96426b3312bc3d847d8b7d7fe217ff41afe1e0eeb1a344c6bb8a1",
+      "bytes": 7466
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e07fab365ecc882a3b4ba63e9384a71523f73f87c4c442d1d9811d1167570772",
+      "bytes": 12236
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7b36b40b2349066909a5bdab6483defc13c135263e7f1cd14df185a2f3c94164",
+      "bytes": 2895
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "31481c5307bf454a83fc7ab19ff9998af49fb194503e64038cad861e5f3c28d3",
+      "bytes": 742
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0e8495499de51921a5144896801cd6ef4910ea2e96db94fc2e6607c6427c5c53",
+      "bytes": 759
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3e911b01d38f10838b3f4cbc1d367230f7be42aa150dc1110c2c05fb9b4d0456",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1b7e1a120a6b369154cd3371554e615174b07e2290033d47a687b15a0c172c3e",
+      "bytes": 41410
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a317392b4b68a1e5210ea6c086e42b0ae67789516deb84f0f0024d0f922364a2",
+      "bytes": 21404
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "64a1e6779e38601d2abdbccee1744c6a069dd12d6c699aca99973aa3ecd2a308",
+      "bytes": 38662
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "28cdccfbf8c53826bfd357e75ad0b9836bfd73a67d7e23b36f3d905449f312c0",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "86e7a2bb49388704088c868c7f91506c0509ba13392caaf4c2dd736ea48aa4ea",
+      "bytes": 1547
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "066f5c012f241ff676a8193bbf0115013a58d0966721113092e6605179f27923",
+      "bytes": 2149
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "143d553e-d71f-4e86-98ed-b80b9ef78ea9",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "3e52dd36-6ab1-48c6-bc40-47ef6d33abc2",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "8e26bf8a-44b8-4fe1-9b4b-188dd5827c0f",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c43237e3-dae2-4fc6-a917-519b25c870e5",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "f352b093-1ba7-49c7-9ce3-ad73cf9a1aee",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

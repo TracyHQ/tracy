@@ -1,0 +1,44 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, all borders, icon strokes, the dominant UI color — every word and divider is this near-black"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, surface background, button fills for outlined ghost controls"
+    },
+    "blush-wash": {
+      "$value": "#f9d9f7",
+      "$type": "color",
+      "$description": "Blush Wash — Hero art backdrop, accent surface — the soft pink that hosts the fluid color-shape composition"
+    }
+  },
+  "font": {
+    "monumentextended-ultrabold": {
+      "$value": "MonumentExtended UltraBold",
+      "$type": "fontFamily",
+      "$description": "Display and heading voice — used at extreme sizes (94–419px) with crushed line-height (0.75–0.85) to create block-of-ink typographic moments. This is the site's signature: oversized, nearly touching, black slab letterforms that read as physical print objects, not web text. At smaller sizes (18–21px) it serves nav and icon labels."
+    },
+    "monumentextended-regular": {
+      "$value": "MonumentExtended Regular",
+      "$type": "fontFamily",
+      "$description": "Secondary display weight — used for subheadings and link labels where UltraBold would be excessive. The Regular cut retains the same wide proportions but with thinner strokes, creating a secondary rhythm below the UltraBold roars."
+    },
+    "swiss": {
+      "$value": "Swiss",
+      "$type": "fontFamily",
+      "$description": "Body and utility voice — the invisible workhorse for paragraphs, button labels, footer text, list items. At 31px it steps into subheading territory. Its neutral, humanist sans character prevents the MonumentExtended from exhausting the reader."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.martin-laxenaire.fr",
+      "siteName": "Martin Laxenaire",
+      "extractedAt": "2026-06-03T20:39:31.114Z",
+      "variant": "compact"
+    }
+  }
+}

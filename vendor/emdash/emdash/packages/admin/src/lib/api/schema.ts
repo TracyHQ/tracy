@@ -1,0 +1,533 @@
+/**
+ * Schema/collection/field management APIs (Content Type Builder)
+ */
+
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
+import { API_BASE, apiFetch, parseApiResponse, throwResponseError } from "./client.js";
+
+export type FieldType =
+	| "string"
+	| "text"
+	| "url"
+	| "number"
+	| "integer"
+	| "boolean"
+	| "datetime"
+	| "select"
+	| "multiSelect"
+	| "portableText"
+	| "image"
+	| "file"
+	| "reference"
+	| "json"
+	| "slug"
+	| "repeater"
+	| "blocks";
+
+export interface BlockFieldDefinition {
+	slug: string;
+	label: string;
+	type: Exclude<FieldType, "reference" | "json" | "slug" | "blocks">;
+	required?: boolean;
+	defaultValue?: unknown;
+	validation?: Record<string, unknown>;
+	options?: { darkVariant?: boolean };
+}
+
+export interface BlockTypeVersion {
+	id: string;
+	blockTypeId: string;
+	version: number;
+	fields: BlockFieldDefinition[];
+	fingerprint: string;
+	active: boolean;
+	unsupportedTypes?: Array<{ type: string; path: string }>;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface BlockType {
+	id: string;
+	slug: string;
+	label: string;
+	description?: string;
+	icon?: string;
+	category?: string;
+	currentVersion: number;
+	source: "user" | "seed";
+	versions: BlockTypeVersion[];
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface SchemaCollection {
+	id: string;
+	slug: string;
+	label: string;
+	labelSingular?: string;
+	description?: string;
+	icon?: string;
+	admin?: CollectionAdminConfig;
+	supports: string[];
+	source?: string;
+	urlPattern?: string;
+	/** Published entries require a slug unless this is false. */
+	routable?: boolean;
+	hasSeo: boolean;
+	/** Sidebar entry and dashboard quick action omitted in the admin; the collection stays reachable by URL */
+	hidden: boolean;
+	/** Explicit sidebar position; absent means the alphabetical fallback */
+	sortOrder?: number;
+	/** Sidebar folder shared with other collections of the same group */
+	group?: string;
+	commentsEnabled: boolean;
+	commentsModeration: "all" | "first_time" | "none";
+	commentsClosedAfterDays: number;
+	commentsAutoApproveUsers: boolean;
+	/** Opening an entry takes an edit lock unless this is false. */
+	editLocking: boolean;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface CollectionAdminConfig {
+	listColumns?: string[];
+	/** Show a "new entry" quick action on the dashboard. Defaults to true. */
+	quickCreate?: boolean;
+}
+
+export interface SchemaField {
+	id: string;
+	collectionId: string;
+	slug: string;
+	label: string;
+	type: FieldType;
+	unsupportedType?: { type: string; path: string };
+	columnType: string;
+	required: boolean;
+	unique: boolean;
+	searchable: boolean;
+	indexed: boolean;
+	defaultValue?: unknown;
+	validation?: {
+		min?: number;
+		max?: number;
+		minLength?: number;
+		maxLength?: number;
+		pattern?: string;
+		options?: string[];
+		allowedMimeTypes?: string[];
+		targetCollection?: string;
+		multiple?: boolean;
+		relation?: string;
+		relationSide?: "parent" | "child";
+		allowedTypes?: string[];
+		retiredTypes?: string[];
+		minItems?: number;
+		maxItems?: number;
+	};
+	blockTypes?: BlockType[];
+	blockTypeFingerprint?: string;
+	widget?: string;
+	options?: Record<string, unknown>;
+	sortOrder: number;
+	createdAt: string;
+}
+
+export interface SchemaCollectionWithFields extends SchemaCollection {
+	fields: SchemaField[];
+}
+
+export interface CreateCollectionInput {
+	slug: string;
+	label: string;
+	labelSingular?: string;
+	description?: string;
+	icon?: string;
+	admin?: CollectionAdminConfig;
+	supports?: string[];
+	urlPattern?: string;
+	routable?: boolean;
+	hasSeo?: boolean;
+	hidden?: boolean;
+	sortOrder?: number | null;
+	editLocking?: boolean;
+	group?: string | null;
+}
+
+export interface UpdateCollectionInput {
+	label?: string;
+	labelSingular?: string;
+	description?: string;
+	icon?: string;
+	admin?: CollectionAdminConfig;
+	supports?: string[];
+	urlPattern?: string;
+	routable?: boolean;
+	hasSeo?: boolean;
+	hidden?: boolean;
+	sortOrder?: number | null;
+	group?: string | null;
+	commentsEnabled?: boolean;
+	commentsModeration?: "all" | "first_time" | "none";
+	commentsClosedAfterDays?: number;
+	commentsAutoApproveUsers?: boolean;
+	editLocking?: boolean;
+}
+
+export interface CreateFieldInput {
+	slug: string;
+	label: string;
+	type: FieldType;
+	required?: boolean;
+	unique?: boolean;
+	searchable?: boolean;
+	indexed?: boolean;
+	defaultValue?: unknown;
+	validation?: {
+		min?: number;
+		max?: number;
+		minLength?: number;
+		maxLength?: number;
+		pattern?: string;
+		options?: string[];
+		allowedMimeTypes?: string[];
+		targetCollection?: string;
+		multiple?: boolean;
+		relation?: string;
+		relationSide?: "parent" | "child";
+		allowedTypes?: string[];
+		retiredTypes?: string[];
+		minItems?: number;
+		maxItems?: number;
+	} | null;
+	widget?: string;
+	options?: Record<string, unknown>;
+}
+
+export interface UpdateFieldInput {
+	label?: string;
+	required?: boolean;
+	unique?: boolean;
+	searchable?: boolean;
+	indexed?: boolean;
+	defaultValue?: unknown;
+	validation?: {
+		min?: number;
+		max?: number;
+		minLength?: number;
+		maxLength?: number;
+		pattern?: string;
+		options?: string[];
+		allowedMimeTypes?: string[];
+		targetCollection?: string;
+		multiple?: boolean;
+		relation?: string;
+		allowedTypes?: string[];
+		retiredTypes?: string[];
+		minItems?: number;
+		maxItems?: number;
+	} | null;
+	widget?: string;
+	options?: Record<string, unknown>;
+	sortOrder?: number;
+}
+
+export interface CreateBlockTypeInput {
+	slug: string;
+	label: string;
+	description?: string;
+	icon?: string;
+	category?: string;
+	fields: BlockFieldDefinition[];
+}
+
+export interface UpdateBlockTypeInput {
+	expectedFingerprint: string;
+	label?: string;
+	description?: string | null;
+	icon?: string | null;
+	category?: string | null;
+	fields?: BlockFieldDefinition[];
+	breaking?: boolean;
+}
+
+export async function fetchBlockTypes(): Promise<BlockType[]> {
+	const response = await apiFetch(`${API_BASE}/schema/block-types`);
+	const data = await parseApiResponse<{ items: BlockType[] }>(
+		response,
+		"Failed to fetch block types",
+	);
+	return data.items;
+}
+
+export async function fetchBlockType(slug: string): Promise<BlockType> {
+	const response = await apiFetch(`${API_BASE}/schema/block-types/${slug}`);
+	const data = await parseApiResponse<{ item: BlockType }>(response, "Failed to fetch block type");
+	return data.item;
+}
+
+export async function createBlockType(input: CreateBlockTypeInput): Promise<BlockType> {
+	const response = await apiFetch(`${API_BASE}/schema/block-types`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(input),
+	});
+	const data = await parseApiResponse<{ item: BlockType }>(response, "Failed to create block type");
+	return data.item;
+}
+
+export async function updateBlockType(
+	slug: string,
+	input: UpdateBlockTypeInput,
+): Promise<BlockType> {
+	const response = await apiFetch(`${API_BASE}/schema/block-types/${slug}`, {
+		method: "PUT",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(input),
+	});
+	const data = await parseApiResponse<{ item: BlockType }>(response, "Failed to update block type");
+	return data.item;
+}
+
+export async function activateBlockTypeVersion(
+	slug: string,
+	version: number,
+	expectedFingerprint: string,
+): Promise<BlockType> {
+	const response = await apiFetch(
+		`${API_BASE}/schema/block-types/${slug}/versions/${version}/activate`,
+		{
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ expectedFingerprint }),
+		},
+	);
+	const data = await parseApiResponse<{ item: BlockType }>(
+		response,
+		"Failed to activate block type version",
+	);
+	return data.item;
+}
+
+/**
+ * Fetch all collections
+ */
+export async function fetchCollections(): Promise<SchemaCollection[]> {
+	const response = await apiFetch(`${API_BASE}/schema/collections`);
+	const data = await parseApiResponse<{ items: SchemaCollection[] }>(
+		response,
+		"Failed to fetch collections",
+	);
+	return data.items;
+}
+
+/**
+ * Fetch a single collection with fields
+ */
+export async function fetchCollection(
+	slug: string,
+	includeFields = true,
+): Promise<SchemaCollectionWithFields> {
+	const url = includeFields
+		? `${API_BASE}/schema/collections/${slug}?includeFields=true`
+		: `${API_BASE}/schema/collections/${slug}`;
+	const response = await apiFetch(url);
+	if (!response.ok) {
+		if (response.status === 404) {
+			throw new Error(`Collection "${slug}" not found`);
+		}
+		await throwResponseError(response, i18n._(msg`Failed to fetch collection`));
+	}
+	const data = await parseApiResponse<{ item: SchemaCollectionWithFields }>(
+		response,
+		i18n._(msg`Failed to fetch collection`),
+	);
+	return data.item;
+}
+
+/**
+ * Create a collection
+ */
+export async function createCollection(input: CreateCollectionInput): Promise<SchemaCollection> {
+	const response = await apiFetch(`${API_BASE}/schema/collections`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(input),
+	});
+	const data = await parseApiResponse<{ item: SchemaCollection }>(
+		response,
+		"Failed to create collection",
+	);
+	return data.item;
+}
+
+/**
+ * Update a collection
+ */
+export async function updateCollection(
+	slug: string,
+	input: UpdateCollectionInput,
+): Promise<SchemaCollection> {
+	const response = await apiFetch(`${API_BASE}/schema/collections/${slug}`, {
+		method: "PUT",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(input),
+	});
+	const data = await parseApiResponse<{ item: SchemaCollection }>(
+		response,
+		"Failed to update collection",
+	);
+	return data.item;
+}
+
+/**
+ * Delete a collection
+ */
+export async function deleteCollection(slug: string, force = false): Promise<void> {
+	const url = force
+		? `${API_BASE}/schema/collections/${slug}?force=true`
+		: `${API_BASE}/schema/collections/${slug}`;
+	const response = await apiFetch(url, { method: "DELETE" });
+	if (!response.ok) await throwResponseError(response, i18n._(msg`Failed to delete collection`));
+}
+
+/**
+ * Fetch fields for a collection
+ */
+export async function fetchFields(collectionSlug: string): Promise<SchemaField[]> {
+	const response = await apiFetch(`${API_BASE}/schema/collections/${collectionSlug}/fields`);
+	const data = await parseApiResponse<{ items: SchemaField[] }>(response, "Failed to fetch fields");
+	return data.items;
+}
+
+/**
+ * Create a field
+ */
+export async function createField(
+	collectionSlug: string,
+	input: CreateFieldInput,
+): Promise<SchemaField> {
+	const response = await apiFetch(`${API_BASE}/schema/collections/${collectionSlug}/fields`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(input),
+	});
+	const data = await parseApiResponse<{ item: SchemaField }>(response, "Failed to create field");
+	return data.item;
+}
+
+/**
+ * Update a field
+ */
+export async function updateField(
+	collectionSlug: string,
+	fieldSlug: string,
+	input: UpdateFieldInput,
+): Promise<SchemaField> {
+	const response = await apiFetch(
+		`${API_BASE}/schema/collections/${collectionSlug}/fields/${fieldSlug}`,
+		{
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(input),
+		},
+	);
+	const data = await parseApiResponse<{ item: SchemaField }>(response, "Failed to update field");
+	return data.item;
+}
+
+/**
+ * Delete a field
+ */
+export async function deleteField(
+	collectionSlug: string,
+	fieldSlug: string,
+	options: { deleteRelation?: boolean } = {},
+): Promise<void> {
+	const qs = options.deleteRelation ? "?deleteRelation=true" : "";
+	const response = await apiFetch(
+		`${API_BASE}/schema/collections/${collectionSlug}/fields/${fieldSlug}${qs}`,
+		{ method: "DELETE" },
+	);
+	if (!response.ok) await throwResponseError(response, i18n._(msg`Failed to delete field`));
+}
+
+/**
+ * Reorder fields
+ */
+export async function reorderFields(collectionSlug: string, fieldSlugs: string[]): Promise<void> {
+	const response = await apiFetch(
+		`${API_BASE}/schema/collections/${collectionSlug}/fields/reorder`,
+		{
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ fieldSlugs }),
+		},
+	);
+	if (!response.ok) await throwResponseError(response, i18n._(msg`Failed to reorder fields`));
+}
+
+/**
+ * Reorder collections in the admin sidebar.
+ *
+ * `slugs` is the full desired order — collections left out lose their
+ * explicit position and fall back to alphabetical order after the ordered
+ * ones.
+ */
+export async function reorderCollections(slugs: string[]): Promise<void> {
+	const response = await apiFetch(`${API_BASE}/schema/collections/reorder`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ slugs }),
+	});
+	if (!response.ok)
+		await throwResponseError(response, i18n._(msg`Failed to reorder content types`));
+}
+
+// ============================================
+// Orphaned Tables
+// ============================================
+
+export interface OrphanedTable {
+	slug: string;
+	tableName: string;
+	rowCount: number;
+}
+
+/**
+ * Fetch orphaned content tables
+ */
+export async function fetchOrphanedTables(): Promise<OrphanedTable[]> {
+	const response = await apiFetch(`${API_BASE}/schema/orphans`);
+	const data = await parseApiResponse<{ items: OrphanedTable[] }>(
+		response,
+		"Failed to fetch orphaned tables",
+	);
+	return data.items;
+}
+
+/**
+ * Register an orphaned table as a collection
+ */
+export async function registerOrphanedTable(
+	slug: string,
+	options?: {
+		label?: string;
+		labelSingular?: string;
+		description?: string;
+	},
+): Promise<SchemaCollection> {
+	const response = await apiFetch(`${API_BASE}/schema/orphans/${slug}`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(options || {}),
+	});
+	const data = await parseApiResponse<{ item: SchemaCollection }>(
+		response,
+		"Failed to register orphaned table",
+	);
+	return data.item;
+}

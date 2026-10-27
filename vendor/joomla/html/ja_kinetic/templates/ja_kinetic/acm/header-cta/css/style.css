@@ -1,0 +1,40 @@
+/* ja_kinetic — ACM header-cta (style-1). Self-contained, block-scoped.
+   Base layout/color for .hx-signin + .hx-btn--primary.hx-cta-pill lives in
+   scss/_kinetic-chrome.scss (desktop .hx-right-links + off-canvas .kinetic-oc-cta
+   both render this SAME .acm-header-cta markup) — do not duplicate it here.
+   This file only fills the micro-interactions.md gaps: a focus-visible ring
+   on the CTA button (§3b) and on the Sign in link (§3c), plus named-property
+   transitions. Selectors are scoped under .acm-header-cta so they win
+   regardless of stylesheet load order without touching the scss. */
+
+.acm-header-cta .hx-btn--primary,
+.acm-header-cta .hx-cta-pill {
+  transition: background-color .15s ease, color .15s ease, box-shadow .2s ease;
+}
+
+.acm-header-cta .hx-btn--primary:hover,
+.acm-header-cta .hx-btn--primary:focus-visible,
+.acm-header-cta .hx-cta-pill:hover,
+.acm-header-cta .hx-cta-pill:focus-visible {
+  background: var(--primary-hover);
+  color: var(--primary-ink);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 77, 124, 15), .25);
+  outline: none;
+}
+
+/* "Sign in" — micro-interactions.md §3c LINK gesture (hover already color-only
+   via scss); add the visible focus-visible ring keyboard users are missing. */
+.acm-header-cta .hx-signin {
+  transition: color .15s ease;
+}
+
+.acm-header-cta .hx-signin:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Reduced motion (micro-interactions.md §4) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; }
+}

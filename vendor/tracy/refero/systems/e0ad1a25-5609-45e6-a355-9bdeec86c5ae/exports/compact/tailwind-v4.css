@@ -1,0 +1,25 @@
+@theme {
+  /* Colors */
+  --color-cream-parchment: #f8f9eb;
+  --color-pure-white: #ffffff;
+  --color-obsidian: #000000;
+  --color-charcoal: #202020;
+  --color-sage-mist: #c0c2a9;
+  --color-olive-slate: #5a5a4f;
+  --color-pebble: #7c7d76;
+  --color-bone: #edeee1;
+  --color-forest-depths: #003d21;
+  --color-mint-sprout: #aafdc0;
+  --color-cobalt-ink: #041668;
+  --color-plum-depth: #2d0078;
+  --color-wine-shadow: #3f0929;
+  --color-lilac-wash: #d3beff;
+  --color-sky-wash: #b0f4ff;
+  --color-rose-wash: #ffc0e6;
+
+  /* Typography */
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-monument-grotesk-custom: 'Monument Grotesk (custom)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-jetbrains-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-system-ui-sans: 'System UI Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

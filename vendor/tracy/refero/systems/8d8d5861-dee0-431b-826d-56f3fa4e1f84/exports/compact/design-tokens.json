@@ -1,0 +1,84 @@
+{
+  "color": {
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button fills on dark — the entire layout sits on flat white without competing surface tones"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Primary text, display headlines, nav borders, icon strokes — near-universal ink color, the dominant chromatic presence"
+    },
+    "hairline-gray": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Hairline Gray — Borders, dividers, subtle button outlines, muted surface backgrounds — the structural neutral that defines card edges without adding weight"
+    },
+    "shadow-gray": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Shadow Gray — Soft drop-shadow tint and secondary borders — only used in shadow stacks, never as a fill"
+    },
+    "terracotta": {
+      "$value": "#bc5346",
+      "$type": "color",
+      "$description": "Terracotta — Decorative outline accent on headings, body links, and section borders — the warm architectural counterweight to the cool palette"
+    },
+    "magenta-pencil": {
+      "$value": "#ff00bc",
+      "$type": "color",
+      "$description": "Magenta Pencil — High-frequency outline accent on borders and links — vivid magenta used as fine 1–2px strokes, never as a fill or background"
+    },
+    "olive-foliage": {
+      "$value": "#51633c",
+      "$type": "color",
+      "$description": "Olive Foliage — Muted green text and border accent — evokes plant material and landscape, used sparingly on body copy and decorative dividers"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "helvetica-neue-lt-pro-md": {
+      "$value": "Helvetica Neue LT Pro (Md)",
+      "$type": "fontFamily",
+      "$description": "Display and large headings — the 105px size defines the masthead scale, while 18–21px handles subheadings. The medium weight at extreme sizes is signature: heavy enough to anchor the page, never so heavy it becomes a poster."
+    },
+    "helvetica-neue-lt-pro-roman": {
+      "$value": "Helvetica Neue LT Pro (Roman)",
+      "$type": "fontFamily",
+      "$description": "Body text, nav, buttons, lists — the everyday workhorse at 16–20px, with 39px available for feature headings"
+    },
+    "helvetica-neue-lt-pro-lt": {
+      "$value": "Helvetica Neue LT Pro (Lt)",
+      "$type": "fontFamily",
+      "$description": "Fine-print body variant — used only at 12px for secondary micro-copy and captions"
+    },
+    "helvetica-neue-lt-pro-bd": {
+      "$value": "Helvetica Neue LT Pro (Bd)",
+      "$type": "fontFamily",
+      "$description": "Bold body emphasis at 16px — sparingly used for in-paragraph highlights and label-like text"
+    },
+    "new-century-schoolbook-lt-std-roman": {
+      "$value": "New Century Schoolbook LT Std (Roman)",
+      "$type": "fontFamily",
+      "$description": "The editorial serif: body paragraphs, editorial headings, and section titles. Its slab-serif warmth counterbalances the industrial Helvetica display, giving long-form reading a literary feel. Used at 16–18px for body and 39–43px for editorial headings."
+    },
+    "newcenturyschlbkltstd-roman": {
+      "$value": "NewCenturySchlbkLTStd-Roman",
+      "$type": "fontFamily",
+      "$description": "NewCenturySchlbkLTStd-Roman — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://idheal.fr",
+      "siteName": "IDHEAL",
+      "extractedAt": "2026-06-03T21:08:01.797Z",
+      "variant": "compact"
+    }
+  }
+}

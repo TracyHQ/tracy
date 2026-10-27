@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "cef9a300-8513-46c2-9c2c-c0016e5a5d30",
+  "status": "complete",
+  "name": "Cards Against Humanity",
+  "url": "https://styles.refero.design/style/cef9a300-8513-46c2-9c2c-c0016e5a5d30",
+  "sourceWebsite": "https://www.climatecatastrophepack.com",
+  "extractedAt": "2026-06-03T21:06:36.930Z",
+  "capturedAt": "2026-10-08T05:17:42.731068+00:00",
+  "theme": "dark",
+  "industry": "media",
+  "description": "Apocalypse broadcast on blackout paper",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/9ab8a575-8c30-4d80-9aee-c387dbd6bfb6.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "055d69daa4e81249ad338dd9a9af9c0caa46c97514a2af32270c55783f04a128",
+      "bytes": 16114
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ca17afa53e7f571d2eafee455b24233db7897e1294a335f8176e47fbb4904568",
+      "bytes": 114504
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a29eec9c43fdbfcb9550f81f3dd0ed95df94afb9cb992a66722eb5ea86b55d49",
+      "bytes": 13599
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "808fb8d5b05901f6019310a2b246a5afabe35c0b10ea2d636ffc9d1acc47aa7a",
+      "bytes": 7614
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0c208fcc04224b9464f36fac000bb4d85e5539aae7d001299fb722f092913046",
+      "bytes": 10180
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "190214cb4574f06b1f993a903a92fcfce91c8cde0b74d1ec6577b30a98c9aff4",
+      "bytes": 1681
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3c7e1a1a6cb2e2ed206620172a21ee0508e15fc38d07362cd3a1b3ccfd5bbe3f",
+      "bytes": 431
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3a51fc4b7047a19b678b93296ef172dd040fb6067fd759ac25817212924512cb",
+      "bytes": 448
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "594d98f990549480d0bd4d21bff071f00873558202a10e287a7f5a8b554272a0",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "62e6c92abb32ee95e3e09ac664257977a0f06b8eb5372aa5fd22df3445cbc201",
+      "bytes": 40067
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6520588608455b319df2dee4caf01d85eda1313d4895b0ac5887977a25958829",
+      "bytes": 20854
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ad952353648a25c01a71cc8bf7ecda4779a8e53607b87ede0b17cdd1624cbf0e",
+      "bytes": 30661
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2cc692c9dd9596661aae1fd2ee44ec02471250efb4573ac94a8523400725e26b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "196e55452b3293e0270c28b56f2c48e6edd2d138e51c1f9577a55e09fe478c15",
+      "bytes": 1300
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "532057828973851087b7378ab979792ab78e616a06c2fc93c9494a7c63ce448b",
+      "bytes": 1768
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "12db22d6-7738-4aee-ab6b-6d6731c7e1e0",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "51b5d80e-d898-4d70-bd16-9e50406e014c",
+    "5d210b76-702a-45cf-97ed-ed90c47b1eb0",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "77a193de-2472-4637-802f-d930ec61c180",
+    "7d254296-6817-487a-a58c-4d5eca89cbf3",
+    "8512e28d-5385-4c20-a336-214568c4370c",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "c01ccb7b-46c9-487c-8a4e-0e9d6627f0d6",
+    "cef9a300-8513-46c2-9c2c-c0016e5a5d30",
+    "d9a60077-619a-4cb7-95ed-0c428c2b51ed",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

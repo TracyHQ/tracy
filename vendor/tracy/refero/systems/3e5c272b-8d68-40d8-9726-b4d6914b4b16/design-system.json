@@ -1,0 +1,323 @@
+{
+  "dos": [
+    "Use the peach #e1c19 ground for every full-bleed page and section background — it is the system's signature surface",
+    "Use 100px pill radius for every button, tag, and the navigation capsule — sharp corners break the scrapbook feel",
+    "Set display headlines at 50-110px in SquadEasy Black with line-height 0.87-1.00 and letter-spacing -0.025em to -0.032em",
+    "Use #e4ff60 lime exclusively for the primary filled CTA — no other filled action color exists in the system",
+    "Place polaroid photo cards at slight rotation angles (-8° to +8°) around hero compositions to preserve the hand-pinned craft feel",
+    "Apply -0.014em to -0.018em letter-spacing to all body, nav, and button text — even at 14px the type stays visually tight",
+    "Use #6fb853 moss green for all text links and their underlines, never blue — moss is the navigational accent"
+  ],
+  "donts": [
+    "Don't use white (#ffffff) as the page canvas — the peach ground is the system's identity layer",
+    "Don't introduce additional filled CTA colors — the lime is the single primary action; everything else is ghost or outlined",
+    "Don't use system fonts (Arial, Helvetica) for display headlines — the compressed Black family at 0.87 line-height is the brand voice",
+    "Don't set body text line-height above 1.21 — the system depends on tight vertical rhythm",
+    "Don't add drop shadows to lavender or white cards — the system relies on flat color contrast against the peach, not elevation",
+    "Don't use the magenta #ea5da3 for anything other than a single emphasis word inside a headline — it loses its punch as a body color",
+    "Don't square off buttons or cards — the 100px and 14px radii are the only shapes the system uses"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#e1c19e",
+      "name": "Peach Ground",
+      "role": "Page canvas, hero and section backgrounds — the warm tan base that ties the whole site together like craft paper",
+      "group": "brand"
+    },
+    {
+      "hex": "#e4ff60",
+      "name": "Lime Pop",
+      "role": "Green action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "brand"
+    },
+    {
+      "hex": "#adabff",
+      "name": "Lavender Card",
+      "role": "Card and surface panels, soft-tinted blocks that lift content off the peach canvas without going cold",
+      "group": "brand"
+    },
+    {
+      "hex": "#ea5da3",
+      "name": "Magenta Marker",
+      "role": "Highlight words inside headlines, decorative strokes and borders — the hand-marker pink that punches single words out of the black display type",
+      "group": "accent"
+    },
+    {
+      "hex": "#6fb853",
+      "name": "Moss Link",
+      "role": "Text link color and inline underline borders — the only green in the system, reserved for navigational emphasis",
+      "group": "accent"
+    },
+    {
+      "hex": "#7fb6e6",
+      "name": "Sky Note",
+      "role": "Secondary tag and occasional button fill — a cool counterpoint that keeps the palette from feeling monochromatically warm",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Primary text, display headlines, card and section borders, icon strokes — the structural neutral that carries 90% of the type",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Card body backgrounds, icon contrast fills, inverted-button text — bright clean white for surfaces that need to detach from the peach ground",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f6f6f6",
+      "name": "Fog Gray",
+      "role": "Quiet secondary surface for input fields and soft panel fills — used where pure white would feel too clinical",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Pages are full-width with a max content width of ~1200px. The hero is a full-bleed peach canvas with a centered headline stack (220px display type) and CTA, framed by scattered polaroid portraits at the edges. Sections flow as continuous peach bands with 100px vertical gaps — no alternating dark/light bands, no dividers. Mid-page product showcase is a single centered phone mockup. Testimonial section shifts to a 3-column card grid (lavender cards) with a left-aligned 50-80px editorial headline. The sticky pill capsule nav floats centered at the top of every section. No sidebars, no mega-menus, no asymmetric zig-zag — composition is centered and confident.",
+  "imagery": "Photography is human-first and warm: candid portraits of diverse, smiling people in natural light, no lifestyle staging, no corporate context. Images are cropped to portrait, framed as polaroid cards with white borders and 14px radius, then scattered at slight rotation angles to create a hand-pinned scrapbook composition. Product visuals are limited to a single phone mockup on the peach ground. No illustration, no abstract graphics, no 3D renders — the people and the bold type carry the visual weight.",
+  "similar": [
+    {
+      "why": "Same warm pastel canvas with scattered illustrated/photo tiles and oversized bold sans-serif display type at tight line-heights",
+      "business": "LottieFiles"
+    },
+    {
+      "why": "Same pill-shaped navigation capsule, rounded-soft cards on a warm colored ground, and energetic pop-accent CTA color",
+      "business": "Cuvva"
+    },
+    {
+      "why": "Same generous peach-warm page canvas with flat-color cards and tight-tracked sans body type — though SquadEasy pushes display sizes much larger",
+      "business": "Notion"
+    },
+    {
+      "why": "Same scattered-portrait hero treatment with large compressed display headlines and pill CTA buttons",
+      "business": "Loom careers page"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "10px",
+      "cards": "14px",
+      "buttons": "100px",
+      "navCapsule": "100px",
+      "photoCards": "14px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "100px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#e1c19",
+      "name": "Peach Page",
+      "level": 0,
+      "purpose": "Dominant page canvas across hero, mid-page, and testimonial sections"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper Card",
+      "level": 1,
+      "purpose": "Polaroid photo cards, white surface panels, nav capsule interior"
+    },
+    {
+      "hex": "#adabff",
+      "name": "Lavender Block",
+      "level": 2,
+      "purpose": "Tinted testimonial and content cards sitting on the peach ground"
+    },
+    {
+      "hex": "#f6f6f6",
+      "name": "Fog Input",
+      "level": 3,
+      "purpose": "Form fields, quiet supporting surfaces"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 4px 16px rgba(0,0,0,0.08)",
+      "element": "Pill Navigation Capsule"
+    },
+    {
+      "style": "0 12px 40px rgba(0,0,0,0.15)",
+      "element": "Phone Mockup"
+    }
+  ],
+  "northStar": "Polaroid scrapbook on sunlit peach paper",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.252
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.154
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.21,
+      "letterSpacing": -0.224
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.252
+    },
+    {
+      "role": "heading-sm",
+      "size": 22,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.396
+    },
+    {
+      "role": "heading",
+      "size": 50,
+      "lineHeight": 1.05,
+      "letterSpacing": -0.8
+    },
+    {
+      "role": "heading-lg",
+      "size": 80,
+      "lineHeight": 1,
+      "letterSpacing": -2
+    },
+    {
+      "role": "display",
+      "size": 110,
+      "lineHeight": 0.87,
+      "letterSpacing": -3.52
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Navigation Capsule",
+      "role": "Sticky top-of-page navigation",
+      "description": "Floating rounded capsule (100px radius) with white background, thin black hairline border, ~16px vertical padding, horizontal layout: brand mark on left, centered menu items in 16px weight 500, lime CTA pill on right. Sits centered on the peach ground with generous top margin, visually floating like a sticker."
+    },
+    {
+      "name": "Lime Primary CTA Button",
+      "role": "Filled primary action (nav and hero)",
+      "description": "100px pill radius, #e4ff60 lime fill, #000000 text in 16px weight 500 with -0.016em tracking, ~14-16px vertical padding, 24-32px horizontal padding. Black 1px border optional. Arrow icon (→) appended in black at 16px. The only filled button in the system."
+    },
+    {
+      "name": "Outlined Black Button",
+      "role": "Secondary nav action",
+      "description": "100px pill radius, transparent or white fill, #000000 1px border, #000000 text at 16px weight 500. Same vertical/horizontal padding as the Lime CTA. Used for 'Demander une démo' in the top nav on white backgrounds."
+    },
+    {
+      "name": "Polaroid Photo Card",
+      "role": "Scattered hero image tile",
+      "description": "White (#ffffff) surface, 14px radius, ~12-16px padding around the photo, optional thin black hairline border. Deployed at slight rotation angles (-8° to +8°) around hero and section compositions. Photos crop to portrait, no rounded inner mask — the card itself is the shape."
+    },
+    {
+      "name": "Lavender Testimonial Card",
+      "role": "Customer quote panel",
+      "description": "Lavender (#adabff) fill, 14px radius, generous 20-24px padding, inline portrait image at top-left, large pull-quote in 18-22px weight 500 black, moss-green (#6fb853) 'VOIR LE CAS CLIENT →' link at bottom with 1px moss underline."
+    },
+    {
+      "name": "Phone Mockup Frame",
+      "role": "Product preview container",
+      "description": "Vertically centered device frame on the peach ground, slight drop shadow or no shadow, screen content shows app UI in white with a black bottom nav bar. Functions as a single product showcase element, not a repeating component."
+    },
+    {
+      "name": "Section Headline Block",
+      "role": "Large editorial headline",
+      "description": "Full-width left-aligned, #000000 display type at 50-110px SquadEasy Black, line-height 0.87-1.00, letter-spacing -0.018em to -0.032em. Optional single word or phrase replaced with #ea5da3 magenta for hand-marker emphasis. No eyebrow or subhead required — the headline stands alone."
+    },
+    {
+      "name": "Moss Underline Link",
+      "role": "Inline text link",
+      "description": "#6fb853 1px bottom border, #6fb853 text color, 16-18px weight 400-500. Trailing arrow (→) at the end. Padding-bottom ~2px to seat the underline. Never colored blue — the moss green is the system's link signal."
+    },
+    {
+      "name": "Circle Pagination Button",
+      "role": "Carousel control",
+      "description": "40-48px circle, 1px black border, white or transparent fill, centered black arrow icon (← / →). Used in pairs below card carousels."
+    },
+    {
+      "name": "Logo Wordmark",
+      "role": "Brand identity",
+      "description": "Stacked two-line wordmark 'squad' / 'easy' in lowercase, custom Black weight at ~16px, #000000 on white surface. Tight tracking matches the display family."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Medium — detected in extracted data but not described by AI",
+      "sizes": "12px, 14px, 16px",
+      "family": "Medium",
+      "weight": "400",
+      "lineHeight": "1.2",
+      "letterSpacing": "-0.021, -0.018, -0.016"
+    },
+    {
+      "role": "Display headlines and hero statements — the brand's signature voice. 220px hero text at line-height 0.87 with letter-spacing -0.036em creates compressed, poster-grade blocks that dominate the peach canvas. No body text uses this family.",
+      "sizes": "16, 50, 56, 62, 80, 110, 220px",
+      "family": "SquadEasy Black (custom display)",
+      "weight": "400, 700",
+      "lineHeight": "0.87–1.20",
+      "substitute": "Druk Wide Bold, or Inter Display 900 condensed",
+      "letterSpacing": "-0.036em at 220px, -0.032em at 110px, -0.025em at 80px, -0.018em at 56px, -0.016em at 50px, -0.005em at 16px"
+    },
+    {
+      "role": "Body, nav, card, button and link text — the working sans. Weight 500 is the default for nav and labels, 700 for emphasized inline phrases, 400 for paragraphs. Tracking runs -0.011em to -0.018em, keeping even 22px body text visually tight.",
+      "sizes": "14, 16, 17, 18, 19, 22px",
+      "family": "SquadEasy Body (custom sans)",
+      "weight": "400, 500, 700",
+      "lineHeight": "1.00–1.21",
+      "substitute": "Inter, or GT America Standard",
+      "letterSpacing": "-0.018em at 22px, -0.016em at 18px, -0.015em at 17px, -0.014em at 16px, -0.013em at 16px, -0.011em at 14px"
+    },
+    {
+      "role": "Button labels, micro-labels, small icon-adjacent text — slightly tighter tracking than Body (-0.021em at 12px) so 12px still reads as a deliberate label, not body copy shrunk down",
+      "sizes": "12, 14, 16px",
+      "family": "SquadEasy Regular (custom small text)",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "Inter, or Söhne Buch",
+      "letterSpacing": "-0.0180em, -0.0160em, -0.0140em, -0.0110em"
+    },
+    {
+      "role": "Decorative handwritten accent on small annotation labels — used sparingly as a craft-paper footnote device, never for functional UI",
+      "sizes": "16px",
+      "family": "SquadEasy Sharpie (custom handwriting)",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "Caveat, or Permanent Marker",
+      "letterSpacing": "-0.0160em"
+    },
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "13px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Epilogue — detected in extracted data but not described by AI",
+      "sizes": "18px",
+      "family": "Epilogue",
+      "weight": "400",
+      "lineHeight": "1.2",
+      "letterSpacing": "-0.014"
+    }
+  ],
+  "description": "SquadEasy uses a sun-drenched, scrapbook-like language: a warm tan canvas anchors every screen, scattered polaroid photos sit at jaunty angles, and oversized black display type carries the brand voice. Color works as a small but vivid palette — lime CTA, lavender cards, pink headline punctuation, green link underlines — deployed sparingly against the peach ground. Components are pill-shaped and rounded-soft; the floating capsule navigation and 9999px-radius buttons create a sticker-on-paper feel. The system favors warmth, confidence, and craft over minimalism: every screen should feel hand-pinned, not templated.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #000000\n- background: #e1c19e (peach page canvas)\n- surface: #ffffff (white card), #adabff (lavender panel), #f6f6f6 (fog input)\n- border: #000000 (structural), #6fb853 (link underline)\n- accent: #ea5da3 (magenta highlight word), #7fb6e6 (sky blue secondary)\n- primary action: #000000 (filled action)\n\n**3-5 Example Component Prompts**\n\n1. Create a Primary Action Button: #000000 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. Create a testimonial card: lavender #adabff surface, 14px radius, 24px padding. Top-left: 64px circular portrait. Quote text at 22px weight 500, #000000, letter-spacing -0.396px. Bottom: 'VOIR LE CAS CLIENT →' link at 16px #6fb853 with 1px moss underline.\n\n3. Create a sticky pill nav: white #ffffff background, 100px border-radius, 1px #000000 border, 12px 24px padding, centered on top of peach canvas. Left: stacked 'squad / easy' wordmark in 16px Black. Center: menu items in 16px weight 500 #000000. Right: lime #e4ff60 pill CTA 'DEMANDER UNE DÉMO →' (100px radius, 16px weight 500 #000000).\n\n4. Create a body text block: peach #e1c19e background, max-width 720px, 18px weight 400 #000000, line-height 1.20, letter-spacing -0.252px. Inline moss link with #6fb853 text and 1px moss underline.\n\n5. Create a carousel pagination control: 44px circle, 1px #000000 border, white #ffffff fill, centered 16px black arrow icon. Two buttons side by side, 12px gap."
+    },
+    {
+      "title": "Photo Treatment Rules",
+      "content": "All photography lives inside a polaroid frame: white #ffffff surface, 14px corner radius, 12-16px internal padding around the photo, optional 1px #000000 hairline border. Cards are placed at -8° to +8° rotation and should slightly overlap adjacent cards. Never place a photo on a raw rectangle — the white frame is mandatory. Portraits crop to face-and-shoulders, eye-level, with warm natural lighting. Avoid studio backdrops, avoid full-body shots, avoid black-and-white treatment."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is minimal and reserved for floating overlays only. The system avoids card-on-card shadows; depth is achieved by stacking saturated flat color surfaces (peach ground → lavender card → white inner panel) rather than by adding drop shadows to UI cards."
+}

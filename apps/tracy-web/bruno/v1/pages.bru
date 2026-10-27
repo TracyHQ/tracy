@@ -1,0 +1,27 @@
+meta {
+  name: pages
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}/pages?locale={{locale}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  const body = res.body || {};
+  if (body.version) bru.setVar("version", body.version);
+  if (Array.isArray(body.pages) && body.pages.length > 0) bru.setVar("contentId", body.pages[0].id);
+  const etag = res.getHeader("etag");
+  if (etag) bru.setVar("pagesEtag", etag);
+}
+
+docs {
+  # Every page with an address
+
+  The `tracy-content-pages/v1` document. Its `version` is the ETag (`W/"cv1..."`). After the
+  answer, runtime variables `version`, `contentId` (the first page) and `pagesEtag` are set for
+  later requests.
+}

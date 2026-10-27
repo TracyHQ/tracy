@@ -1,0 +1,104 @@
+{
+  "color": {
+    "deep-indigo": {
+      "$value": "#0a0449",
+      "$type": "color",
+      "$description": "Deep Indigo — Primary brand color, all display headlines, logo, dominant borders — the gravitational center of the system; Dark-to-light gradient — midnight indigo dissolving into vivid violet for dramatic panels"
+    },
+    "vivid-violet": {
+      "$value": "#6b5ee0",
+      "$type": "color",
+      "$description": "Vivid Violet — Accent fills, gradient endpoints, decorative highlights, secondary text emphasis; Signature hero gradient — translucent violet dissolving into pure white"
+    },
+    "midnight-iris": {
+      "$value": "#0a0163",
+      "$type": "color",
+      "$description": "Midnight Iris — Darkest accent, gradient start, heavy emphasis text and fills in dark contexts"
+    },
+    "slate-lavender": {
+      "$value": "#706e87",
+      "$type": "color",
+      "$description": "Slate Lavender — Body text, muted UI labels, secondary navigation, link borders, ghost button strokes — near-gray with a violet cast"
+    },
+    "soft-mauve": {
+      "$value": "#a89fc7",
+      "$type": "color",
+      "$description": "Soft Mauve — Shadow tint, filled surface accents, decorative washes — bridges neutral and brand"
+    },
+    "dusty-rose": {
+      "$value": "#a085a6",
+      "$type": "color",
+      "$description": "Dusty Rose — Secondary muted text, subtle decorative strokes, soft border accents"
+    },
+    "blush-petal": {
+      "$value": "#efb9fd",
+      "$type": "color",
+      "$description": "Blush Petal — Decorative highlight, soft glow accents, illustration fills"
+    },
+    "lavender-mist": {
+      "$value": "#f7f6fd",
+      "$type": "color",
+      "$description": "Lavender Mist — Card and elevated surface backgrounds — the quietest off-white with a violet undertone"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary page canvas, card surfaces, inverse text on dark backgrounds"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Hairline borders, high-frequency structural lines, icon strokes"
+    },
+    "pale-wisteria": {
+      "$value": "#e2e0f9",
+      "$type": "color",
+      "$description": "Pale Wisteria — Gradient surface tone, soft glow backgrounds; Atmospheric gradient — soft lilac into deeper morning-lilac for depth panels"
+    },
+    "morning-lilac": {
+      "$value": "#cfccf5",
+      "$type": "color",
+      "$description": "Morning Lilac — Gradient surface tone, atmospheric depth washes"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across the entire system. Geist Bold (weight 600) carries all display and heading sizes from 36-88px with aggressive -0.04em tracking; Geist SemiBold handles subheadings and card titles at 14-36px; Geist Regular flows body and caption text at 10-24px. The geometric precision of Geist pairs with the deep indigo to create a research-terminal feel — the letterforms feel measured and exact, which suits an AI research product. The extreme size range (10px to 88px) is a signature: display headlines at 88px are nearly 9x the smallest text, creating dramatic scale contrast."
+    },
+    "geist-regular": {
+      "$value": "Geist Regular",
+      "$type": "fontFamily",
+      "$description": "Geist Regular — detected in extracted data but not described by AI"
+    },
+    "geist-semibold": {
+      "$value": "Geist SemiBold",
+      "$type": "fontFamily",
+      "$description": "Geist SemiBold — detected in extracted data but not described by AI"
+    },
+    "geist-bold": {
+      "$value": "Geist Bold",
+      "$type": "fontFamily",
+      "$description": "Geist Bold — detected in extracted data but not described by AI"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Inter — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.genway.ai",
+      "siteName": "Genway",
+      "extractedAt": "2026-06-03T19:13:40.204Z",
+      "variant": "compact"
+    }
+  }
+}

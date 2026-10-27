@@ -1,0 +1,329 @@
+{
+  "dos": [
+    "Use #7a40ed for the singular hero CTA on a page — it should appear alone, not repeated across multiple action surfaces.",
+    "Set border-radius to 50px on all buttons and 40px on all cards, badges, and preview tiles — the capsule/pillow geometry is the signature.",
+    "Use TWK Lausanne (or Inter Tight as substitute) at 80px weight 750+ for hero display with letter-spacing -0.032em and line-height 0.95.",
+    "Use the four-layer diffused shadow stack on all elevated cards — the 150px+ vertical spread is what makes elements feel like they float.",
+    "Keep body and UI copy in Inter at 14–18px weight 400–500 in #19171c, reserving #6e6e73 for secondary descriptive text.",
+    "Apply the lilac pill badge (#cab3f8) above section headings as a category kicker — one badge per section, never stacked.",
+    "Limit accent color usage: one violet CTA per view, optional cyan-blue (#00b2ff) and Volt (#f5ff63) reserved for tag/status contexts only."
+  ],
+  "donts": [
+    "Do not use sharp corners or radii below 20px anywhere — the rounded geometry is non-negotiable.",
+    "Do not place the violet CTA (#7a40ed) in the navigation bar; nav-level CTAs should be the dark #19171c fill.",
+    "Do not use raw #000000 for body text or button fills — always use #19171c to keep the brand-violet undertone alive.",
+    "Do not apply shadows with hard edges or single-layer low-blur values; the multi-layer diffuse stack at low opacity is the system.",
+    "Do not use the Volt yellow (#f5ff63) on a dark background without confirming it has a dark text label — the contrast is so extreme it functions as a warning.",
+    "Do not set display type above 26px in Inter — Inter is for UI, TWK Lausanne owns everything 36px and up.",
+    "Do not introduce a fourth chromatic accent beyond violet, blue, and Volt — the system runs on chromatic scarcity."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f2f1f3",
+      "name": "Studio Off-White",
+      "role": "Page canvas and recessed section backgrounds — the base layer on which every card and panel sits",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Card surfaces, elevated panels, text on dark fills, button labels on filled buttons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e4e7",
+      "name": "Hairline Gray",
+      "role": "Subtle borders, divider lines, and muted card backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#97979b",
+      "name": "Soft Mist",
+      "role": "Muted secondary text and placeholder labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6e6e73",
+      "name": "Slate",
+      "role": "Body copy in card contexts, secondary descriptive text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#19171c",
+      "name": "Ink",
+      "role": "Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Icon fills, footer text, maximum-contrast dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7a40ed",
+      "name": "Eclipse Violet",
+      "role": "Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#17082c",
+      "name": "Deep Plum",
+      "role": "Dark violet, near-black with purple cast — headings on light surfaces where an extra brand warmth is needed",
+      "group": "brand"
+    },
+    {
+      "hex": "#a981ff",
+      "name": "Lilac Wash",
+      "role": "Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "accent"
+    },
+    {
+      "hex": "#cab3f8",
+      "name": "Lavender Mist",
+      "role": "Pale violet — secondary link backgrounds and highlight washes",
+      "group": "accent"
+    },
+    {
+      "hex": "#00b2ff",
+      "name": "Electric Blue",
+      "role": "Secondary accent — animated highlight rings, icon accents, card border highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#e6f4ff",
+      "name": "Sky Tint",
+      "role": "Cool blue-tinted card backgrounds and soft highlight washes",
+      "group": "accent"
+    },
+    {
+      "hex": "#a9dbff",
+      "name": "Ice Blue",
+      "role": "Mid-saturation blue — decorative fills inside illustration and animated graphics",
+      "group": "accent"
+    },
+    {
+      "hex": "#f5ff63",
+      "name": "Volt",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1200px centered, generous 80–120px vertical breathing room between sections. The page is a vertical stack of horizontal bands on the #f2f1f3 canvas. Each band is either: (1) a centered hero stack (badge → headline → CTA → logo cloud), (2) a two-column asymmetric block (text-left/media-right alternating), or (3) a horizontal-scrolling card row of animation previews. No sidebar, no persistent navigation rail — navigation is a single sticky top bar. The hero is typographic (no hero image); the visual interest escalates as the user scrolls into the animation preview cards. Sections flow seamlessly without dividers, separated only by whitespace.",
+  "imagery": "Visuals are dominated by product-generated animation previews — short looping motion clips rendered as rounded-corner video tiles. No lifestyle photography, no human subjects, no environment shots. The motion previews are the imagery: abstract geometric loops, type animations, icon morphs, and UI mockups in motion. All sit on pure white with 40px radius. Supporting graphics include flat duotone illustrations in violet-to-plum gradient (#7a40ed → #17082c) and lilac-to-lavender gradient (#a981ff → #cab3f8) used for section backgrounds. No raster photography appears anywhere.",
+  "similar": [
+    {
+      "why": "Same white-canvas design-tool aesthetic with pill buttons, soft rounded cards, and tight geometric typography at display sizes",
+      "business": "Figma"
+    },
+    {
+      "why": "Identical playfulness: off-white canvas, violet brand accent, oversized display headlines with aggressive negative tracking, and a focus on motion as the primary content",
+      "business": "Framer"
+    },
+    {
+      "why": "Same near-black ink (#19171c variant) for primary surfaces, pill-shaped controls, and a strict approach to accent color as functional punctuation rather than decoration",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar Swiss-design type treatment, generous vertical section gaps, and a violet-forward brand palette on a light canvas",
+      "business": "Pitch"
+    },
+    {
+      "why": "Same product-showcase-first approach where motion previews replace photography, on rounded white cards floating over soft off-white",
+      "business": "Spline"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "40px",
+      "badges": "40px",
+      "inputs": "26px",
+      "buttons": "50px",
+      "nav-elements": "20px"
+    },
+    "elementGap": "8-12px",
+    "sectionGap": "80-120px",
+    "cardPadding": "24-40px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#f2f1f3",
+      "name": "Studio Off-White",
+      "level": 0,
+      "purpose": "Page canvas — the base layer everything else sits on"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "level": 1,
+      "purpose": "Card surfaces and animation preview tiles"
+    },
+    {
+      "hex": "#e5e4e7",
+      "name": "Hairline Gray",
+      "level": 2,
+      "purpose": "Muted recessed panels and subtle background shifts"
+    },
+    {
+      "hex": "#19171c",
+      "name": "Ink",
+      "level": 3,
+      "purpose": "Dark surface — filled buttons, header on dark mode, high-contrast blocks"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0px 152px 61px 0px rgba(25,23,28,0.01), 0px 85px 51px 0px rgba(25,23,28,0.05), 0px 38px 38px 0px rgba(25,23,28,0.09), 0px 9px 21px 0px rgba(25,23,28,0.10)",
+      "element": "Animation Preview Card (hovered)"
+    },
+    {
+      "style": "0px 119px 48px 0px rgba(0,0,0,0.01), 0px 67px 40px 0px rgba(0,0,0,0.05), 0px 30px 30px 0px rgba(0,0,0,0.09), 0px 7px 16px 0px rgba(0,0,0,0.10)",
+      "element": "Template Card (resting)"
+    },
+    {
+      "style": "0px 63px 25px 0px rgba(0,0,0,0.01), 0px 35px 21px 0px rgba(0,0,0,0.05), 0px 16px 16px 0px rgba(0,0,0,0.09), 0px 4px 9px 0px rgba(0,0,0,0.10)",
+      "element": "Floating overlay element"
+    }
+  ],
+  "northStar": "kinetic playground in a Swiss design studio — soft white surfaces, pill-shaped cards, and a violet spark firing on near-black ink.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 21,
+      "lineHeight": 1.38
+    },
+    {
+      "role": "heading-sm",
+      "size": 26,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.15
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 0.95,
+      "letterSpacing": -2.56
+    }
+  ],
+  "components": [
+    {
+      "name": "Navigation Header",
+      "role": "Top-level site navigation",
+      "description": "White background, 20px radius on grouped link containers, logo on the left in #19171c, nav links at 14–16px Inter weight 500 in #19171c, a ghost 'Log in' text link, and a dark filled CTA button on the right edge. Sticky on scroll. Height approximately 64px."
+    },
+    {
+      "name": "Dark Filled Pill Button",
+      "role": "Primary navigation and high-emphasis action",
+      "description": "50px border-radius (full pill), fill #19171c, text #ffffff at 14–16px Inter weight 500–600, horizontal padding 20–24px, vertical padding 10–12px. Used for the 'Try for free' nav CTA and 'Browse 300+ free templates' overlay button. The 50px radius forces a capsule shape regardless of label length."
+    },
+    {
+      "name": "Violet Filled Pill Button",
+      "role": "Hero call-to-action and brand-forward action",
+      "description": "50px border-radius, fill #7a40ed, text #ffffff at 16px Inter weight 600, padding 16px 32px. Larger scale than the dark button — sits alone in the hero as the singular brand-colored action on the page."
+    },
+    {
+      "name": "Pill Badge / Tag",
+      "role": "Section label and category tag",
+      "description": "40px border-radius, small padding 4–8px vertical, 12–16px horizontal. Background varies: lilac wash #cab3f8 for category tags, Volt #f5ff63 for attention/warning tags, lilac #a981ff for highlighted labels. Text at 12–14px Inter weight 500 in #17082c or #19171c. Always appears above a section heading as a kicker."
+    },
+    {
+      "name": "Circular Menu Button",
+      "role": "Mobile/overlay menu toggle",
+      "description": "Perfectly circular (375px radius equivalent), fill #19171c, white hamburger icon centered. Sits flush to the top-right of the header alongside the dark CTA."
+    },
+    {
+      "name": "Animation Preview Card",
+      "role": "Animated content showcase tile",
+      "description": "White #ffffff fill, 40px border-radius, padding 0 (edge-to-edge media). Rises off the canvas via the signature layered shadow: rgba(25,23,28,0.01) 0 152px 61px, rgba(25,23,28,0.05) 0 85px 51px, rgba(25,23,28,0.09) 0 38px 38px, rgba(25,23,28,0.10) 0 9px 21px. The shadow extends 150px+ vertically — cards feel like they hover far above the page."
+    },
+    {
+      "name": "Logo Cloud Strip",
+      "role": "Social proof band of partner/customer logos",
+      "description": "Sits on the page canvas (#f2f1f3), one-line intro text centered above in 14px Inter weight 500 #6e6e73. Logos in #19171c at roughly 20–24px height, evenly spaced with 40–60px gap. No dividers between logos — the row is one continuous line of trust signals."
+    },
+    {
+      "name": "Hero Section",
+      "role": "Above-the-fold introduction",
+      "description": "Centered layout on the off-white canvas. A small pill badge at the top, an 80px TWK Lausanne headline below in #19171c, a single violet CTA centered beneath, then the logo cloud. No hero image — the visual weight comes from the large display type alone."
+    },
+    {
+      "name": "Two-Column Feature Section",
+      "role": "Text + media content blocks",
+      "description": "Asymmetric split: left column holds a 40–48px TWK Lausanne heading and Inter body copy, right column holds an Animation Preview Card. On alternate sections the order flips. Gap between columns approximately 40–64px, section padding 80–120px vertical."
+    },
+    {
+      "name": "Template Card Grid",
+      "role": "Browseable template gallery",
+      "description": "Horizontal-scrolling row of Animation Preview Cards, 4–5 visible at once on desktop. Each card is 40px radius with the same hover-shadow elevation. Overlay dark pill button ('Browse 300+ free templates') floats above the row as a forward action."
+    },
+    {
+      "name": "Inline Text Link",
+      "role": "Standalone text link with brand color",
+      "description": "14–16px Inter weight 500 in #7a40ed, no underline by default, underline appears on hover. Used for 'Learn more' inline CTAs and footer links."
+    },
+    {
+      "name": "Dark Input Field",
+      "role": "Text input on dark surface",
+      "description": "26px border-radius, fill #2d2933, text #ffffff at 14–16px Inter weight 400, padding 12–16px. Placeholder text in a muted desaturated tone of the dark surface."
+    },
+    {
+      "name": "Hamburger Overlay Panel",
+      "role": "Mobile/expanded navigation menu",
+      "description": "Full-viewport overlay in #ffffff with 40px outer padding, list of nav items at 24–32px TWK Lausanne weight 600 in #19171c, stacked vertically with 16–24px gap. Closes via a circular dark button in the top-right corner."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and heading typeface — handles everything from 16px subheads up to a 200px hero. The 750/800 weights carry the brand voice at large sizes; the condensed letter-spacing pulls characters tight so headlines feel engineered rather than set. Line-heights compress below 1.0 at display sizes (0.85–0.95), making the hero feel dense and architectural rather than airy.",
+      "sizes": "16, 18, 20, 21, 24, 36, 40, 48, 72, 80, 200",
+      "family": "TWK Lausanne",
+      "weight": "500, 600, 700, 750, 800",
+      "lineHeight": "0.85, 0.90, 0.95, 1.00, 1.20, 1.38, 1.50, 2.50",
+      "substitute": "Inter Tight, Switzer, or General Sans",
+      "letterSpacing": "-0.044em at 200px display, -0.032em at 80px, -0.037em at 72px, -0.030em at 48px, -0.020em at 24px, -0.010em at 16px"
+    },
+    {
+      "role": "UI and body typeface — nav labels, button text, card descriptions, badge copy, form inputs, and the 26px sub-heading tier. Inter carries the weight of small-to-medium text across the entire interface while TWK Lausanne does the display work above 36px. Negative tracking is modest (-0.017 to -0.023em) and only applied at 15px and above.",
+      "sizes": "12, 13, 14, 15, 16, 17, 18, 26",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700, 800",
+      "lineHeight": "1.10, 1.14, 1.15, 1.20, 1.25, 1.40, 1.41, 1.50, 1.60",
+      "substitute": "Inter (already on Google Fonts)",
+      "letterSpacing": "-0.023em at 18px, -0.020em at 16–17px, -0.017em at 15px, 0 at 12–14px"
+    }
+  ],
+  "description": "Jitter reads as a kinetic playground rendered in Swiss-design precision. The canvas is a soft off-white (#f2f1f3) with bright white cards floating on it via diffuse, multi-layer shadows that bleed across more than 150px of vertical space. A near-black ink (#19171c) carries the majority of the UI — headlines, nav, buttons, body — with a deeply saturated violet (#7a40ed) acting as a brand spark for hero CTAs, tags, and feature highlights. Secondary punctuation comes from a vivid cyan-blue (#00b2ff) and an electric yellow-green (#f5ff63). Typography splits the work: TWK Lausanne (a custom geometric grotesque) takes the stage at 48–200px with aggressive negative tracking, while Inter handles everything 26px and below with quiet competence. The geometry is rounded to the point of pill-shaped — cards and buttons share 40–50px radii, so every surface feels like a soft cushion rather than a hard tile.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #19171c\n- background: #f2f1f3\n- card surface: #ffffff\n- border: #e5e4e7\n- accent: #7a40ed\n- primary action: no distinct CTA color\n\n## Example Component Prompts\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. **Animation preview card**: Pure white #ffffff fill, 40px border-radius, edge-to-edge video content. Hovered state applies the four-layer shadow: rgba(25,23,28,0.01) 0 152px 61px, rgba(25,23,28,0.05) 0 85px 51px, rgba(25,23,28,0.09) 0 38px 38px, rgba(25,23,28,0.10) 0 9px 21px. No visible border.\n\n\n4. **Template card grid row**: Five Animation Preview Cards in a horizontal row with 20px gap, each 40px radius on the #f2f1f3 canvas. A dark filled pill button ('Browse 300+ free templates', #19171c fill, white text, 50px radius) floats centered over the row.\n\n5. **Pill badge above section heading**: Background #a981ff, text #17082c, 12px Inter weight 600, 40px border-radius, padding 4px 14px. Sits 8–12px above a 40–48px TWK Lausanne heading in #19171c."
+    }
+  ]
+}

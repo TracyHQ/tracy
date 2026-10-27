@@ -1,0 +1,74 @@
+{
+  "color": {
+    "fidle-blue": {
+      "$value": "#1664eb",
+      "$type": "color",
+      "$description": "Fidèle Blue — Headlines, nav links, brand asterisk, announcement bar fill, body borders — the single chromatic ink of the system; whenever color appears, this is it"
+    },
+    "lighter-press-blue": {
+      "$value": "#4f89ec",
+      "$type": "color",
+      "$description": "Lighter Press Blue — Secondary blue used for subtle borders, icon tints, and decorative strokes where Fidèle Blue would dominate"
+    },
+    "link-blue": {
+      "$value": "#006ce5",
+      "$type": "color",
+      "$description": "Link Blue — Deeper blue for inline hyperlinks within running text, slightly darker than the primary to read as a separate interactive state"
+    },
+    "paper-white": {
+      "$value": "#f8f7ef",
+      "$type": "color",
+      "$description": "Paper White — Page canvas and card surfaces — a warm off-white that gives the entire system its print-stock identity; never use pure #ffffff for page background"
+    },
+    "card-cream": {
+      "$value": "#e2e2df",
+      "$type": "color",
+      "$description": "Card Cream — Elevated surface for cards, panels, and product tiles — one step warmer/darker than Paper White for layering without shadows"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "press-black": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Press Black — Body text, dark backgrounds, and the rare filled button — near-black rather than pure black, softening contrast on the cream stock"
+    }
+  },
+  "font": {
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "baselgrotesk": {
+      "$value": "BaselGrotesk",
+      "$type": "fontFamily",
+      "$description": "The sole typeface of the system. Book weight (400) for body and most UI; Regular (400) for lists and some headings; Bold (700) for the rarest emphasis. Display sizes (62px) use line-height 0.92 with -0.049em tracking — characters nearly touch. Small labels (14px) use +0.063em tracking — wide, airy, stamped. The contrast between these two tracking regimes is the type signature."
+    },
+    "otmagister": {
+      "$value": "OTMagister",
+      "$type": "fontFamily",
+      "$description": "Occasional display headlines where a more editorial/serif-leaning voice is wanted. Same 62px display size and tight 0.92 leading as BaselGrotesk display, -0.016em tracking."
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "GTStandard-M — detected in extracted data but not described by AI"
+    },
+    "assistant": {
+      "$value": "Assistant",
+      "$type": "fontFamily",
+      "$description": "Assistant — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://fidele-editions.com",
+      "siteName": "Fidèle Editions",
+      "extractedAt": "2026-06-03T19:47:11.904Z",
+      "variant": "compact"
+    }
+  }
+}

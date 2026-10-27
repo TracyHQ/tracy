@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "joomla",
+  "label": "JA Phio",
+  "version": "1.0.3",
+  "cms": "6.1.2",
+  "install": {
+    "webroot": {
+      "file": "ja-phio-j6-webroot-1.0.3.tar.gz",
+      "sha256": "8701a0ba929951de66c75bd413cea3034f7d064d9a102f0a088fad0126b3f843"
+    },
+    "database": {
+      "file": "ja-phio-j6-database-1.0.3.sql.gz",
+      "sha256": "b395f7c297b4c1325f5da101208ed9f70f0f28c8b8903f15ff247a3e6d829707"
+    }
+  },
+  "template": "ja_phio"
+}

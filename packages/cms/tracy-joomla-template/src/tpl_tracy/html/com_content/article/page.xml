@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <layout title="TPL_TRACY_LAYOUT_PAGE" option="TPL_TRACY_LAYOUT_PAGE_OPTION">
+        <message>TPL_TRACY_LAYOUT_PAGE_DESC</message>
+    </layout>
+</metadata>

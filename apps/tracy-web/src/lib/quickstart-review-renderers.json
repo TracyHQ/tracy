@@ -1,0 +1,26 @@
+{
+  "tracy-base": {
+    "version": 1,
+    "renderer": "plain-topic-cards",
+    "sourceProof": {
+      "src/components/sections/Quotes.astro": "eb207a151715467c312d2eaf97fb2aa3303db1a763ee94e0b90a8550b1145cd0",
+      "src/views/Home.astro": "761a3366cabea237a46246f33cf332a1172757393ffc2e70963ca8ab09ee429d",
+      "src/views/Landing.astro": "e7ecd1d8d2e9db2dbd8e64433a32b544d4b84f0e7e830624b4dec349865841e1"
+    },
+    "sourceLink": false,
+    "rating": false,
+    "reviewStructuredData": false,
+    "groups": [
+      {
+        "collection": "home",
+        "field": "team_quotes",
+        "labels": ["team_eyebrow", "team_title", "team_lead", "team_note"]
+      },
+      {
+        "collection": "landing",
+        "field": "testimonials_quotes",
+        "labels": ["testimonials_eyebrow", "testimonials_heading"]
+      }
+    ]
+  }
+}

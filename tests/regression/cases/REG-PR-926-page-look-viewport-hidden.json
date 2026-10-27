@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-926-page-look-viewport-hidden",
+  "kind": "fix",
+  "title": "page.look reads a style at the viewport an agent names (\"390x844\", \"phone\", \"tablet\", \"1440x900\") and answers an element it holds but hides with hidden: display:none, not STYLE_TARGET_NOT_FOUND",
+  "pr": 926,
+  "area": "site-tools/look",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/tools/tracy-site-tools in the TCH checkout run: node --test --test-reporter=tap test/look-style.test.mjs",
+    "S2: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "'viewportOf: a name, a device word or a size, each read at the viewport of its width class' passes: `390x844`, `phone 390×844` and `phone` read as mobile, `tablet` and `768x1024` as tablet (768×1024), `1440x900` and `1280x900` as desktop; `sideways` is still BAD_STYLE.",
+    "'🔒 findTarget + describeTarget: an element hidden on this viewport is found by its exact words and said hidden, not \"not found\"' passes: the words of a button under a `display:none` wrapper find it, `hidden` is `display:none on <div.wtb-actions>`, a partial match never reaches a hidden element, and styleAnswer carries the reason.",
+    "'BROWSER_SCRIPT (style): a tablet read at 768×1024…' passes: Emulation.setDeviceMetricsOverride gets width 768, height 1024, mobile true."
+  ],
+  "selectors": {
+    "action": "tracy_site {action:\"page.look\", params:{path, style:{text|selector, props?, viewport?}}}",
+    "answer": "`viewport` (\"mobile 390×844\" / \"tablet 768×1024\" / \"desktop 1440×900\"), `hidden`"
+  },
+  "evidence": "Flow D 05/10/2026: WordPress hide-mobile `viewport:\"phone 390×844\"` → BAD_STYLE then STYLE_TARGET_NOT_FOUND for the button it had just hidden; Joomla hide-mobile `\"390x844\"` and `\"1440x900\"` → BAD_STYLE ×2 (maxSameRefusal failed), then STYLE_TARGET_NOT_FOUND; EmDash hide-mobile `\"390x844\"`, `\"1280x900\"` → BAD_STYLE ×2, then STYLE_TARGET_NOT_FOUND.",
+  "fence": "Mechanism only, no stand: findTarget and describeTarget run on a small fake page under node's vm, the browser script against a scripted CDP. Not covered: a real Chromium's layout (box sizes, innerText) on the three templates.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-926-page-look-viewport-hidden.mjs"]
+  }
+}

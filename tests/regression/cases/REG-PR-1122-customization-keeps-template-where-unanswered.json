@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1122-customization-keeps-template-where-unanswered",
+  "kind": "fix",
+  "title": "Customization keeps the template where the customer said nothing (blank About keeps demo facts; demo entries, posts and contact lines are rewritten or kept, never cut) on EmDash, WordPress and Joomla",
+  "pr": 1122,
+  "area": "site-build/customize",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the command in run.cmd from the repository root.",
+    "S2: The tests run the WordPress and Joomla brief engines and the Tracy Business EmDash personalize tool against site doubles with a blank About and with full answers, and read what was written, unpublished or cut."
+  ],
+  "expect": [
+    "S1: every named test reports ok.",
+    "S2: a blank About cuts no section, module or demo fact; with About given demo entries and posts are rewritten (never trimmed or unpublished), kit pages keep their words, untyped contact lines keep the demo, and an empty fact draws no empty section."
+  ],
+  "selectors": {
+    "engines": "apps/tracy-web/src/sites/brief-engines/ (wordpress.js, wp-residue.js, wp-posts.js, wp-kit.js, joomla.js, joomla-blog-articles.js, joomla-demo-contacts.js)",
+    "tool": "packages/cms/tracy-emdash-theme-business/tools/personalize.mjs",
+    "tests": "apps/tracy-web/test/{brief-wordpress,brief-joomla,brief-wp-posts,joomla-demo-articles,joomla-demo-contacts}.test.mjs, packages/cms/tracy-emdash-theme-business/tests/{personalize-keeps-structure,personalize-facts,empty-claims}.test.mjs"
+  },
+  "evidence": "Measured on dev 11/10/2026 (#1013): g56-biz-emd-blank lost the client logo strip and card tags; g57-biz-emd-full kept 2 of 6 vacancies and an empty /news; g57-ess-wp-full lost four post bodies (~2,100 characters) and the kit page cards.",
+  "fence": "The customization engines change only what the customer answered: removal of demo facts is gated on About, pruning cuts only blocks naming the demo company, and demo entries are rewritten or kept, never cut.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-wordpress.test.mjs",
+      "apps/tracy-web/test/brief-joomla.test.mjs",
+      "apps/tracy-web/test/brief-wp-posts.test.mjs",
+      "apps/tracy-web/test/joomla-demo-articles.test.mjs",
+      "apps/tracy-web/test/joomla-demo-contacts.test.mjs",
+      "packages/cms/tracy-emdash-theme-business/tests/personalize-keeps-structure.test.mjs",
+      "packages/cms/tracy-emdash-theme-business/tests/personalize-facts.test.mjs",
+      "packages/cms/tracy-emdash-theme-business/tests/empty-claims.test.mjs"
+    ],
+    "tests": [
+      "About blank on the facts design cuts nothing: every section stays as in the demo",
+      "About blank: no section of the template is cut, in the pages or the header; the demo stays, renamed",
+      "About given and no contact detail typed: the demo contact lines are neither rewritten nor taken off",
+      "About given: the demo posts are said again, once per line, their pictures, blocks, slugs and categories kept",
+      "About given, in the template’s language: a kit page keeps its words, and the model is never asked about them",
+      "a page heading answered with only the business's name keeps the template's heading",
+      "About left blank: the six modules of the template's facts stay published, as in the demo",
+      "About given: every demo article has its title, intro and body written for the business; pictures and links kept (D10)",
+      "a planned line whose demo sample is a contact detail the customer did not give keeps the demo words (D12)",
+      "FULL answers: every open role of the demo stays on /careers, rewritten for the business",
+      "FULL answers with Projects and News ticked: every demo project and post stays, rewritten, with its pictures",
+      "FULL answers: an entry whose title the model always hands back as the demo’s stays published, unchanged, reported",
+      "end to end, About left blank: every demo claim stays as the template has it, renamed",
+      "home: the clients strip is drawn only with a logo to show"
+    ]
+  }
+}

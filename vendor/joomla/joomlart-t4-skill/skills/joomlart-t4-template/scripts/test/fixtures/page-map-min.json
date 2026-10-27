@@ -1,0 +1,50 @@
+{
+  "template": {
+    "name": "ja_acme",
+    "title": "Acme",
+    "bootstrap": "bs5"
+  },
+  "theme": {
+    "palette": {
+      "light": {
+        "primary": "#2b6cb0",
+        "secondary": "#718096",
+        "body_bg": "#ffffff",
+        "text": "#1a202c"
+      },
+      "dark": {
+        "primary": "#63b3ed",
+        "secondary": "#a0aec0",
+        "body_bg": "#1a202c",
+        "text": "#e2e8f0"
+      }
+    },
+    "fonts": {
+      "body": "Inter",
+      "heading": "Poppins"
+    }
+  },
+  "positions": [
+    "menu",
+    "section-1",
+    "footer"
+  ],
+  "extends": [],
+  "pages": [
+    {
+      "file": "index.html",
+      "view": "com_content.featured",
+      "layout": "home"
+    },
+    {
+      "file": "single.html",
+      "view": "com_content.article"
+    },
+    {
+      "file": "contact.html",
+      "view": "com_contact.contact"
+    }
+  ],
+  "reference": "reference.json",
+  "provenance": "provenance.json"
+}

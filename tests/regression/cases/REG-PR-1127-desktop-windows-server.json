@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1127-desktop-windows-server",
+  "kind": "feat",
+  "title": "The desktop update host serves Windows and Linux feeds, signatures and installers, records each install's platform and each browser download per OS, while a Mac app gets the same answers as before",
+  "pr": 1127,
+  "area": "desktop/auto-update",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set to a Postgres the tests may create schemas in, run node --test apps/tracy-web/test/desktop-update.test.mjs apps/tracy-web/test/desktop-download.test.mjs apps/tracy-web/test/desktop-install-platform.test.mjs apps/tracy-web/test/ops-app-statistic.test.mjs."
+  ],
+  "expect": [
+    "S1: stable.yml (win), dev-linux.yml and dev-linux-arm64.yml (linux) stream with no-store and record the install with platform win / linux and the x-arch header.",
+    "S1: <channel file>.sig for the four channel-file names streams with no-store as application/octet-stream and records nothing.",
+    "S1: .exe, .AppImage and .deb, flat or under <channel>/<version>/<build id>/, stream with their IANA content types and no-store; a GET writes no desktop_install row.",
+    "S1: .blockmap, latest.yml, latest-mac.yml, stable-win.yml, stable-linux-armv7l.yml, a .sig of anything but a channel file, a channel file or manifest.json inside a release folder, .msi, .rpm and lowercase .appimage answer 404 without asking the store.",
+    "S1: stable-mac.yml, flat and foldered zip and dmg answer the same status, body and headers as before; the mac read records platform mac; the two dmg GETs record two downloads.",
+    "S1: migration 086 files a desktop_install row written before it as mac and refuses a platform outside mac/win/linux; /ops/desktop/installs has an OS column (macOS / Windows / Linux + version) and no macOS column; App Statistic installs report macos / windows / linux.",
+    "S1: a browser GET of Tracy-Cowork-<v>-win-<arch>-setup.exe, -linux-<arch>.AppImage or .deb writes a desktop_download row with platform windows/linux, arch, channel, version and utm source; the same GET carrying App-Name or App-Version (the app's updater) writes nothing and sets no cookie; dmg metadata is unchanged.",
+    "S1: App Statistic filters downloads, installs and users by platform=macos|windows|linux, lists the platforms in options, and refuses any other value."
+  ],
+  "selectors": {
+    "feed": "GET https://update.<zone>/desktop/{stable,dev}{-mac,,-linux,-linux-arm64}.yml[.sig]",
+    "artifacts": "GET https://update.<zone>/desktop/[<channel>/<version>/<build id>/]<name>.{zip,dmg,exe,AppImage,deb}",
+    "ops": "GET /api/ops/desktop/installs (platform), GET /ops/desktop/installs (OS column)"
+  },
+  "fence": "The update host refuses every name outside the per-platform contract before the store is asked; only a channel-file read records an install; an updater fetch of an installer is never a download",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/desktop-update.test.mjs",
+      "apps/tracy-web/test/desktop-download.test.mjs",
+      "apps/tracy-web/test/desktop-install-platform.test.mjs",
+      "apps/tracy-web/test/ops-app-statistic.test.mjs"
+    ],
+    "tests": [
+      "the Windows channel file is streamed",
+      "the Linux channel files",
+      "each channel file has a detached signature",
+      "exe, AppImage and deb stream",
+      "names outside the contract are refused",
+      "a Mac app gets byte-for-byte",
+      "/ops/desktop/installs shows each install",
+      "086 files every install recorded before it as mac",
+      "an install reports the platform whose channel file it read",
+      "Windows and Linux installer names give platform",
+      "a browser GET of an exe, AppImage or deb counts",
+      "Windows and Linux downloads are stored with platform",
+      "downloads and installs filter by operating system"
+    ],
+    "needs": ["postgres"]
+  }
+}

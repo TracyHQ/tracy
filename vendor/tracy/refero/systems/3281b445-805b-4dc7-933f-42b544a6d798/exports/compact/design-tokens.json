@@ -1,0 +1,99 @@
+{
+  "color": {
+    "aubergine": {
+      "$value": "#300c41",
+      "$type": "color",
+      "$description": "Aubergine — Page canvas, hero backgrounds, nav background — the single dominant surface color that gives Front its unmistakable identity"
+    },
+    "royal-plum": {
+      "$value": "#5b1f76",
+      "$type": "color",
+      "$description": "Royal Plum — Pink supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "lime-spark": {
+      "$value": "#dee948",
+      "$type": "color",
+      "$description": "Lime Spark — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "bright-violet": {
+      "$value": "#8034bf",
+      "$type": "color",
+      "$description": "Bright Violet — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "lavender-glow": {
+      "$value": "#b375f4",
+      "$type": "color",
+      "$description": "Lavender Glow — Decorative borders, accent strokes on illustrations, gradient terminus in the chat widget"
+    },
+    "ink": {
+      "$value": "#1c1e20",
+      "$type": "color",
+      "$description": "Ink — Primary body and heading text on light surfaces — near-black with a faint warm cast"
+    },
+    "frost": {
+      "$value": "#f0f4fe",
+      "$type": "color",
+      "$description": "Frost — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "pale-lilac": {
+      "$value": "#e2dcf6",
+      "$type": "color",
+      "$description": "Pale Lilac — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "stone": {
+      "$value": "#dedfe2",
+      "$type": "color",
+      "$description": "Stone — Borders on light surfaces, table dividers, inactive outlines"
+    },
+    "slate": {
+      "$value": "#5b5d63",
+      "$type": "color",
+      "$description": "Slate — Secondary text, helper copy, metadata labels"
+    },
+    "pewter": {
+      "$value": "#7c8088",
+      "$type": "color",
+      "$description": "Pewter — Tertiary text, placeholder copy, disabled labels"
+    },
+    "ash": {
+      "$value": "#8e929b",
+      "$type": "color",
+      "$description": "Ash — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "midnight-navy": {
+      "$value": "#0d1d39",
+      "$type": "color",
+      "$description": "Midnight Navy — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "lavender-whisper": {
+      "$value": "#d0c6f0",
+      "$type": "color",
+      "$description": "Lavender Whisper — Inset focus ring color, soft hover wash, tinted shadow on elevated cards"
+    },
+    "deep-olive": {
+      "$value": "#1d1f04",
+      "$type": "color",
+      "$description": "Deep Olive — Rare dark text accent on the lime button and light surfaces with maximum contrast"
+    }
+  },
+  "font": {
+    "suisse-intl": {
+      "$value": "Suisse Intl",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all UI — body, headings, buttons, navigation. The custom neo-grotesque gives Front its machined, Swiss-instrument feel; weight 500 carries both body and display, so the system relies on tracking and size to create hierarchy rather than weight contrast."
+    },
+    "suisse-works": {
+      "$value": "Suisse Works",
+      "$type": "fontFamily",
+      "$description": "Rare serif accent — appears as a single contextual flourish, not a structural face"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://front.com",
+      "siteName": "Front",
+      "extractedAt": "2026-06-03T18:24:36.831Z",
+      "variant": "compact"
+    }
+  }
+}

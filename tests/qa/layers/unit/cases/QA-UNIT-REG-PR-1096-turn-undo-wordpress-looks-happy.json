@@ -1,0 +1,81 @@
+{
+  "id": "QA-UNIT-REG-PR-1096-turn-undo-wordpress-looks-happy",
+  "itemIds": ["regression:REG-PR-1096-turn-undo-wordpress-looks"],
+  "requirement": "Undoing a chat turn puts a WordPress look's Additional CSS back, refuses when it changed since, and the host's copy of the compare-and-set PHP cannot drift from the plugin's",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1096-turn-undo-wordpress-looks.json",
+    "ref": "PR #1096 (fix); fix evidence: none recorded",
+    "invariant": "0 failures. 'a WordPress look turn: changed, undoable with the code toolset, its look named; the plan puts it back' passes. 'a look already put back — a look.revert recorded after it, or the host saying so — is undone' passes. 'undo: c0 goes back while the site holds c1, the entry is marked used, and the plugin’s look.revert then refuses it' and 'undo: the Additional CSS changed since (a person saved it) — nothing written, nothing marked' pass. '🔒 the PHP, its argv, the store and the id shape are the plugin’s own — the copy cannot drift' passes.",
+    "productSources": [
+      "apps/tracy-host/src/app.js:1138",
+      "apps/tracy-host/src/look-css.js:91",
+      "apps/tracy-web/src/host/client.js:34",
+      "apps/tracy-web/src/sites/turn-undo.js:661",
+      "packages/tools/tracy-site-tools/src/host/look-undo.mjs:49"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-host/src/ds-slot.js:439 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:440 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:582 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:583 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:584 readFile() with a computed path",
+      "apps/tracy-host/src/jobs.js:224 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:144 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:151 readFile() with a computed path",
+      "apps/tracy-host/src/provision.js:503 import() with a computed specifier",
+      "apps/tracy-host/src/site-files.js:413 readFile() with a computed path",
+      "apps/tracy-host/src/webroot.js:1628 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:919 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:995 open() with a computed path",
+      "apps/tracy-host/test/look-css.test.mjs:61 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a WordPress look turn: changed, undoable with the code toolset",
+    "a look already put back",
+    "undo: c0 goes back while the site holds c1",
+    "undo: the Additional CSS changed since",
+    "🔒 the PHP, its argv, the store and the id shape are the plugin’s own"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1096-turn-undo-wordpress-looks"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1096-turn-undo-wordpress-looks",
+    "pr": 1096,
+    "kind": "fix",
+    "area": "site-changes/turn-undo",
+    "file": "tests/regression/cases/REG-PR-1096-turn-undo-wordpress-looks.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/turn-undo.test.mjs",
+    "apps/tracy-host/test/look-css.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a WordPress look turn: changed, undoable with the code toolset",
+    "a look already put back",
+    "undo: c0 goes back while the site holds c1",
+    "undo: the Additional CSS changed since",
+    "🔒 the PHP, its argv, the store and the id shape are the plugin’s own"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+  "status": "complete",
+  "name": "Adora",
+  "url": "https://styles.refero.design/style/26a9840f-f128-4cfc-84a5-feb7db1bf577",
+  "sourceWebsite": "https://www.adora.so",
+  "extractedAt": "2026-06-03T15:03:57.303Z",
+  "capturedAt": "2026-10-08T05:09:28.356428+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "impressionist museum behind frosted glass",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/5cd60dbd-5c82-4ae8-9172-62c36602340d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c85dec46-940f-44c1-adfe-8ffae77c5bc0.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/685f8881-9b83-4e4f-a162-ed4a7f6d269c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f68e7ecc-7bb8-4402-a905-37623df150fc.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e2746af5-1fa4-44c0-9f8b-7134a1b3cd38.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f070f3ea20ca2aa3f42bc44e392960ebfb5a79bab35eee661ede59a8a8c3e7e1",
+      "bytes": 23383
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d374ef47be1fa51a6378d86f26f163dabca7243ccfa8b213e1ec92d618a31f9a",
+      "bytes": 93175
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "5e61671b4c1af9bd5a0d45aef4c1c3e208bc7201bf0eec673bda5af0ceb709fb",
+      "bytes": 19620
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "5b4b31b7836b447888b6c0f92455bb2aef3d4609b3ad1c7a4d11c958c9d7abef",
+      "bytes": 12531
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "a0f75ba2fc9519ecbd145cef954317008ae84c6b3f2940b2bc1e0c56cfbd4e1f",
+      "bytes": 13184
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d9cd1aecc71ea6527b35433afd343e7e938978a0813dc69ae54df53f34e683c3",
+      "bytes": 4060
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1d26ac774adbf8dcb51eb2c87b5502f9d10192e24ec4a400382e2a6ca40f55bd",
+      "bytes": 734
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7a21eee4e686425533fe00830e89b7d38e9b16597dfb6b2080ac4c6c8622a8ec",
+      "bytes": 751
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f65d2fa9658d8ca124d947785746ddfdf9a7803fd741e215acb72ad3edb79677",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8631a8634ea51166852927d7a496689ab656f3cd03cbb5d7e63ee929f857e924",
+      "bytes": 48803
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "528b1cd2b18e84d0d0d7a8c617f458389a70d6244569de4a76429ae2e6a4bb35",
+      "bytes": 26246
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8daf3c34702a934565d835d1b5f252818844c87cd131e3255c2320dca479035a",
+      "bytes": 65590
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e0a4431348b8d1542a7059410dfc9c9c2e2b4a4ae87668b55695fb0a8794448d",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d67c7fba73828439c3ff63fd4bba915838283fc56809fc978780417e6fb6d816",
+      "bytes": 1966
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f3f5ac74823eab46f361bdc8f0caf4d483e1c1cdd9ee2308524c572b774bd364",
+      "bytes": 2588
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1ab3cde9-0833-4e38-8ada-fc23156f730e",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "337ade6a-4bae-49ba-b4aa-8994ac805a81",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "7f9eabb2-3f76-477d-849f-e868e698f421",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d5ed8712-0e42-4c6c-83b1-b3d7f27d1d10",
+    "d7fb1721-1878-4cbb-a24b-051800557c75",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-paper-warm-gray: #dbdad9;
+  --color-graphite-border: #808080;
+  --color-bleach-white: #ffffff;
+
+  /* Typography */
+  --font-haasr: 'HaasR', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-haast: 'HaasT', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pt-mono: 'PT Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

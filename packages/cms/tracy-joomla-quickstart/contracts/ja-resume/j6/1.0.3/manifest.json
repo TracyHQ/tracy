@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resume/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_resume",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resume",
+    "id": "quickstart/ja-resume/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_resume",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-resume-j6-webroot-1.0.3.tar.gz",
+        "bytes": 69229042,
+        "sha256": "133484bf381741ef964e3a77b010f19605f0480a2a5a3a52e10151d4461c692d"
+      },
+      "database": {
+        "file": "ja-resume-j6-database-1.0.3.sql.gz",
+        "bytes": 203333,
+        "sha256": "e650522479bbaf5697b4b4fc59adcb2877992bc6e516e4993346657a7d8a5657"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T11:11:10.331Z",
+    "builtFrom": {
+      "site": "resume-rp",
+      "tag": "local:ja-resume-j6-1.0.3",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-resume/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.21",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,79 @@
+{
+  "color": {
+    "voltage-violet": {
+      "$value": "#471cff",
+      "$type": "color",
+      "$description": "Voltage Violet — Primary action buttons, active nav items, key links, brand emphasis — the single chromatic pulse of the interface; everything else defers to it"
+    },
+    "deep-iris": {
+      "$value": "#0f0733",
+      "$type": "color",
+      "$description": "Deep Iris — Dark section backgrounds, hero canvas, high-contrast text on light surfaces — the midnight counterpart that anchors alternating dark bands"
+    },
+    "signal-red": {
+      "$value": "#eb0130",
+      "$type": "color",
+      "$description": "Signal Red — Promotional accents, sale/urgency indicators, highlight strokes — used sparingly to flag attention without competing with the primary violet"
+    },
+    "lilac-whisper": {
+      "$value": "#dbd3ff",
+      "$type": "color",
+      "$description": "Lilac Whisper — Soft card and container borders — a low-contrast violet edge that brands outlines without adding visual weight"
+    },
+    "periwinkle-mist": {
+      "$value": "#bbc5fa",
+      "$type": "color",
+      "$description": "Periwinkle Mist — Cooler card border tone for grouping and container edges — second step in the violet border scale for layered cards"
+    },
+    "coral-burst": {
+      "$value": "#ff5a43",
+      "$type": "color",
+      "$description": "Coral Burst — Error and warning badge fills, alert pills — warm contrast against the cool violet system"
+    },
+    "aqua-pop": {
+      "$value": "#7ae7fb",
+      "$type": "color",
+      "$description": "Aqua Pop — Decorative badge backgrounds, hero trust-pill fill — cool cyan that brightens dark sections"
+    },
+    "ink-black": {
+      "$value": "#18181f",
+      "$type": "color",
+      "$description": "Ink Black — Primary body and heading text, dominant border color, icon strokes — the near-black that carries all readable content"
+    },
+    "carbon": {
+      "$value": "#494949",
+      "$type": "color",
+      "$description": "Carbon — Secondary text, muted nav, supporting borders — the mid-gray step between ink and white"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page and card backgrounds, text on dark surfaces, button fills for ghost variants"
+    },
+    "frost-blue": {
+      "$value": "#f0f5fa",
+      "$type": "color",
+      "$description": "Frost Blue — Subtle surface tint for alternating bands, header backgrounds — barely-there cool wash"
+    },
+    "linen-gray": {
+      "$value": "#eaecf7",
+      "$type": "color",
+      "$description": "Linen Gray — Table dividers, hairline borders in data-heavy layouts — a cool neutral that doesn't fight the violet palette"
+    }
+  },
+  "font": {
+    "haffer": {
+      "$value": "Haffer",
+      "$type": "fontFamily",
+      "$description": "Single-family system for everything from body to display. Weight 400 carries body, nav, and table text; weight 600 handles headings, buttons, and emphasis. The custom geometric construction gives a contemporary financial-tech voice — rounder apertures than Inter, tighter terminals than Geist."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.quicken.com",
+      "siteName": "Quicken",
+      "extractedAt": "2026-06-03T20:07:56.407Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "$comment": "Profile extraction, not a live response. blockKinds: packages/cms/tracy-content-api/describe-map.mjs joomlaSlotField + slotBlockKinds over content-map.json: kind = entity.kind; key = \"<slot.column>:<slot.type>\" because one column (module params) holds text, url and image slots; constraints stated only where every slot of the field agrees. Locales are the entity languages of the content map. types follow the content-api-v1 section 4 table (menu route page, article, module shared); counts are unknown. Site id/url are synthetic.",
+  "schemaVersion": "tracy-content-describe/v1",
+  "view": "authenticated",
+  "site": {
+    "id": "s-fixture-joomla",
+    "name": null,
+    "url": "https://example.invalid",
+    "defaultLocale": "en-GB",
+    "locales": ["en-GB", "ru-RU"]
+  },
+  "provenance": {
+    "quickstartTag": "tracy-business/j6",
+    "quickstartVersion": "1.2.0",
+    "contractId": "tracy-business/j6/1.2.0",
+    "contractHash": null
+  },
+  "protocol": {
+    "selected": "tracy-content/v1",
+    "relayExtensions": ["writable", "constraints", "next", "protocol"],
+    "cowork": {
+      "kind": "joomla",
+      "capability": "v1"
+    }
+  },
+  "scope": "published",
+  "i18n": {
+    "mode": "entity",
+    "defaultLocale": "en-GB",
+    "locales": ["en-GB", "ru-RU"],
+    "fallback": null
+  },
+  "presentation": {
+    "state": "unlocked",
+    "reason": "content recommendation: keep the design baseline in contract profile tracy-business/j6/1.2.0"
+  },
+  "permissions": {
+    "role": "owner",
+    "toolsets": {
+      "content": true,
+      "code": true,
+      "site": true,
+      "lifecycle": true
+    },
+    "read": true,
+    "apply": true,
+    "note": "This seat may apply slot writes through tracy_site content.contract."
+  },
+  "types": [
+    {
+      "type": "page",
+      "count": null
+    },
+    {
+      "type": "article",
+      "count": null
+    },
+    {
+      "type": "shared",
+      "count": null
+    }
+  ],
+  "blockKinds": [
+    {
+      "kind": "module",
+      "label": null,
+      "root": null,
+      "nestable": null,
+      "fields": [
+        {
+          "key": "content:url",
+          "type": "url",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 2048,
+            "requiresEvidence": false,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "content:text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": false,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "params:text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "params:url",
+          "type": "url",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 2048,
+            "requiresEvidence": false,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "params:image",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "article",
+      "label": null,
+      "root": null,
+      "nestable": null,
+      "fields": [
+        {
+          "key": "introtext:text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": false,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "title:text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": false,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "fulltext:text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": false,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "fulltext:image",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": false,
+            "emptyAllowed": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "menuItem",
+      "label": null,
+      "root": null,
+      "nestable": null,
+      "fields": [
+        {
+          "key": "title:text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": false,
+            "emptyAllowed": null
+          }
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "ai.tracy.content.read",
+      "version": "1"
+    },
+    {
+      "name": "ai.tracy.content.describe",
+      "version": "1"
+    },
+    {
+      "name": "ai.tracy.content.slot-write",
+      "version": "1"
+    }
+  ],
+  "guidance": "Read content with content.read, then write one slot with tracy_site content.contract operation apply, using the next call a writable field carries. Respect maxCharacters and requiresEvidence. The quickstart’s design is a recommendation: reuse its sections and styles; new text 0.75×–1.25× the length it replaces.",
+  "links": {
+    "read": "/content.json",
+    "schema": "urn:tracy:content:v1"
+  }
+}

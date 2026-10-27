@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-obsidian-canvas: #151515;
+  --gradient-obsidian-canvas: radial-gradient(at -5% 105%, rgba(27, 46, 68, 0.5) 26%, rgba(51, 45, 43, 0.5) 44%, rgba(74, 43, 17, 0.5) 62%, rgba(73, 31, 22, 0.5) 66%, rgba(21, 21, 21, 0) 85%, rgba(21, 21, 21, 0.03) 100%);
+  --color-void-black: #0e0e0e;
+  --color-ember-surface: #242424;
+  --color-charcoal-rim: #3f403d;
+  --color-copper-wire: #8b867f;
+  --color-ash-text: #94958e;
+  --color-fog-text: #cbccc4;
+  --color-limestone: #b6b8af;
+  --color-parchment: #e9ebdf;
+  --color-forest-deep: #185849;
+  --color-midnight-moss: #0e352c;
+  --color-spectrum-shimmer: #e87650;
+  --gradient-spectrum-shimmer: linear-gradient(90deg, rgb(233, 235, 223) 0%, rgb(233, 235, 223) 40%, rgb(232, 118, 94) 50%, rgb(81, 141, 210) 58%, rgba(233, 235, 223, 0.4) 64%, rgba(233, 235, 223, 0.4) 100%);
+
+  /* Typography — Font Families */
+  --font-saansfont: 'saansFont', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pxgroteskfont: 'pxGroteskFont', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

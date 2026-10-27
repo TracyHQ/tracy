@@ -1,0 +1,7233 @@
+{
+  "schemaVersion": "tracy-quickstart-slot-roles/v1",
+  "roleVocabularyVersion": "place-content-roles/1",
+  "contract": "tracy-base/j6/1.0.5",
+  "cms": "joomla",
+  "baseHash": "d5b07f9c9ca5ceb0a5cc1e22a0af66f38af78885dea9b0677bcdea280133b7d9",
+  "baseFiles": {
+    "manifest.json": "061c08ec00594186a6b2d5202408c7dd37109339ae1075c6ecc440feb264b7e6",
+    "content-map.json": "d56b1b6826e70efb8ffbb8e0f1a7edc1fb901eed7841cdf2b3552b172aa3e873",
+    "presentation-lock.json": "effe7ea90ebffd2b700dc66d0c707e373c0503b70713e2c676b9bd110026fadf"
+  },
+  "status": "checked",
+  "groups": [
+    {
+      "id": "module-174.section.0",
+      "groupId": "module-174.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "contact.social_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-174.social.0",
+      "groupId": "module-174.social.0",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "contact.social_url"
+      ],
+      "neutral": {
+        "contact.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-174.social.1",
+      "groupId": "module-174.social.1",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "contact.social_url"
+      ],
+      "neutral": {
+        "contact.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-174.social.2",
+      "groupId": "module-174.social.2",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "contact.social_url"
+      ],
+      "neutral": {
+        "contact.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-174.social.3",
+      "groupId": "module-174.social.3",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "contact.social_url"
+      ],
+      "neutral": {
+        "contact.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-175.section.0",
+      "groupId": "module-175.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "contact.email": {
+          "policy": "empty"
+        },
+        "contact.hours": {
+          "policy": "empty"
+        },
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-175.social.0",
+      "groupId": "module-175.social.0",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "contact.social_label"
+      ],
+      "neutral": {
+        "contact.social_label": {
+          "policy": "empty"
+        },
+        "contact.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-175.social.1",
+      "groupId": "module-175.social.1",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "contact.social_label"
+      ],
+      "neutral": {
+        "contact.social_label": {
+          "policy": "empty"
+        },
+        "contact.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-175.social.2",
+      "groupId": "module-175.social.2",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "contact.social_label"
+      ],
+      "neutral": {
+        "contact.social_label": {
+          "policy": "empty"
+        },
+        "contact.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-178.section.0",
+      "groupId": "module-178.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-179.section.0",
+      "groupId": "module-179.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-180.section.0",
+      "groupId": "module-180.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-181.section.0",
+      "groupId": "module-181.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-181.stat.0",
+      "groupId": "module-181.stat.0",
+      "entityKind": "step",
+      "allowedKinds": [
+        "step"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "step.index",
+        "step.title"
+      ],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "module-181.stat.1",
+      "groupId": "module-181.stat.1",
+      "entityKind": "step",
+      "allowedKinds": [
+        "step"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "step.index",
+        "step.title"
+      ],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "module-181.stat.2",
+      "groupId": "module-181.stat.2",
+      "entityKind": "step",
+      "allowedKinds": [
+        "step"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "step.index",
+        "step.title"
+      ],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "module-181.stat.3",
+      "groupId": "module-181.stat.3",
+      "entityKind": "step",
+      "allowedKinds": [
+        "step"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "step.index",
+        "step.title"
+      ],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "module-182.section.0",
+      "groupId": "module-182.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-183.section.0",
+      "groupId": "module-183.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-183.tier.0",
+      "groupId": "module-183.tier.0",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-183.tier.1",
+      "groupId": "module-183.tier.1",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-183.tier.2",
+      "groupId": "module-183.tier.2",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-184.section.0",
+      "groupId": "module-184.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-184.quote.0",
+      "groupId": "module-184.quote.0",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_name": {
+          "policy": "empty"
+        },
+        "quote.author_context": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-184.quote.1",
+      "groupId": "module-184.quote.1",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_name": {
+          "policy": "empty"
+        },
+        "quote.author_context": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-184.quote.2",
+      "groupId": "module-184.quote.2",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_name": {
+          "policy": "empty"
+        },
+        "quote.author_context": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-185.section.0",
+      "groupId": "module-185.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-185.client.0",
+      "groupId": "module-185.client.0",
+      "entityKind": "claim",
+      "allowedKinds": [
+        "claim"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "claim.entity_name"
+      ],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-185.client.1",
+      "groupId": "module-185.client.1",
+      "entityKind": "claim",
+      "allowedKinds": [
+        "claim"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "claim.entity_name"
+      ],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-185.client.2",
+      "groupId": "module-185.client.2",
+      "entityKind": "claim",
+      "allowedKinds": [
+        "claim"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "claim.entity_name"
+      ],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-185.client.3",
+      "groupId": "module-185.client.3",
+      "entityKind": "claim",
+      "allowedKinds": [
+        "claim"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "claim.entity_name"
+      ],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-185.client.4",
+      "groupId": "module-185.client.4",
+      "entityKind": "claim",
+      "allowedKinds": [
+        "claim"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "claim.entity_name"
+      ],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-185.client.5",
+      "groupId": "module-185.client.5",
+      "entityKind": "claim",
+      "allowedKinds": [
+        "claim"
+      ],
+      "itemIndex": 5,
+      "requiredRoles": [
+        "claim.entity_name"
+      ],
+      "neutral": {
+        "claim.entity_logo": {
+          "policy": "empty"
+        },
+        "claim.entity_name": {
+          "policy": "empty"
+        },
+        "claim.entity_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-186.section.0",
+      "groupId": "module-186.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "contact.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "contact.cta_url": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-187.section.0",
+      "groupId": "module-187.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-188.section.0",
+      "groupId": "module-188.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-189.section.0",
+      "groupId": "module-189.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "contact.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        }
+      }
+    },
+    {
+      "id": "module-189.member.0",
+      "groupId": "module-189.member.0",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-189.member.1",
+      "groupId": "module-189.member.1",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-189.member.2",
+      "groupId": "module-189.member.2",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-189.member.3",
+      "groupId": "module-189.member.3",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-190.section.0",
+      "groupId": "module-190.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-190.faq.0",
+      "groupId": "module-190.faq.0",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-190.faq.1",
+      "groupId": "module-190.faq.1",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-190.faq.2",
+      "groupId": "module-190.faq.2",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-190.faq.3",
+      "groupId": "module-190.faq.3",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-190.faq.4",
+      "groupId": "module-190.faq.4",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-191.section.0",
+      "groupId": "module-191.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-191.stat.0",
+      "groupId": "module-191.stat.0",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-191.stat.1",
+      "groupId": "module-191.stat.1",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-191.stat.2",
+      "groupId": "module-191.stat.2",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-192.section.0",
+      "groupId": "module-192.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "contact.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "contact.cta_url": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-193.section.0",
+      "groupId": "module-193.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-194.section.0",
+      "groupId": "module-194.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-195.section.0",
+      "groupId": "module-195.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-195.tier.0",
+      "groupId": "module-195.tier.0",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-195.tier.1",
+      "groupId": "module-195.tier.1",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-195.tier.2",
+      "groupId": "module-195.tier.2",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-196.section.0",
+      "groupId": "module-196.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-196.quote.0",
+      "groupId": "module-196.quote.0",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_name": {
+          "policy": "empty"
+        },
+        "quote.author_context": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-196.quote.1",
+      "groupId": "module-196.quote.1",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_name": {
+          "policy": "empty"
+        },
+        "quote.author_context": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-196.quote.2",
+      "groupId": "module-196.quote.2",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_name": {
+          "policy": "empty"
+        },
+        "quote.author_context": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-197.section.0",
+      "groupId": "module-197.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "contact.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "contact.cta_url": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-198.section.0",
+      "groupId": "module-198.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-199.section.0",
+      "groupId": "module-199.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-199.stat.0",
+      "groupId": "module-199.stat.0",
+      "entityKind": "step",
+      "allowedKinds": [
+        "step"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "step.index",
+        "step.title"
+      ],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "module-199.stat.1",
+      "groupId": "module-199.stat.1",
+      "entityKind": "step",
+      "allowedKinds": [
+        "step"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "step.index",
+        "step.title"
+      ],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "module-199.stat.2",
+      "groupId": "module-199.stat.2",
+      "entityKind": "step",
+      "allowedKinds": [
+        "step"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "step.index",
+        "step.title"
+      ],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "module-199.stat.3",
+      "groupId": "module-199.stat.3",
+      "entityKind": "step",
+      "allowedKinds": [
+        "step"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "step.index",
+        "step.title"
+      ],
+      "neutral": {
+        "step.index": {
+          "policy": "index_padded"
+        },
+        "step.title": {
+          "policy": "neutral_key",
+          "key": "neutral.step.title"
+        }
+      }
+    },
+    {
+      "id": "module-200.section.0",
+      "groupId": "module-200.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-201.section.0",
+      "groupId": "module-201.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "contact.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        }
+      }
+    },
+    {
+      "id": "module-201.member.0",
+      "groupId": "module-201.member.0",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-201.member.1",
+      "groupId": "module-201.member.1",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-201.member.2",
+      "groupId": "module-201.member.2",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-201.member.3",
+      "groupId": "module-201.member.3",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-202.section.0",
+      "groupId": "module-202.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "contact.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "contact.cta_url": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-203.section.0",
+      "groupId": "module-203.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-203.tier.0",
+      "groupId": "module-203.tier.0",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-203.tier.1",
+      "groupId": "module-203.tier.1",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-203.tier.2",
+      "groupId": "module-203.tier.2",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.features_list": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-204.section.0",
+      "groupId": "module-204.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-204.faq.0",
+      "groupId": "module-204.faq.0",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-204.faq.1",
+      "groupId": "module-204.faq.1",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-204.faq.2",
+      "groupId": "module-204.faq.2",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-204.faq.3",
+      "groupId": "module-204.faq.3",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-204.faq.4",
+      "groupId": "module-204.faq.4",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-205.section.0",
+      "groupId": "module-205.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "contact.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "contact.cta_url": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-206.section.0",
+      "groupId": "module-206.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-206.faq.0",
+      "groupId": "module-206.faq.0",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-206.faq.1",
+      "groupId": "module-206.faq.1",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-206.faq.2",
+      "groupId": "module-206.faq.2",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-206.faq.3",
+      "groupId": "module-206.faq.3",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-206.faq.4",
+      "groupId": "module-206.faq.4",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-207.section.0",
+      "groupId": "module-207.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-207.faq.0",
+      "groupId": "module-207.faq.0",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-207.faq.1",
+      "groupId": "module-207.faq.1",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-207.faq.2",
+      "groupId": "module-207.faq.2",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-208.section.0",
+      "groupId": "module-208.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "contact.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "contact.cta_url": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-213.section.0",
+      "groupId": "module-213.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-214.section.0",
+      "groupId": "module-214.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-214.slide.0",
+      "groupId": "module-214.slide.0",
+      "entityKind": "service",
+      "allowedKinds": [
+        "service",
+        "menu_item",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.image": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-214.slide.1",
+      "groupId": "module-214.slide.1",
+      "entityKind": "service",
+      "allowedKinds": [
+        "service",
+        "menu_item",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.image": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-214.slide.2",
+      "groupId": "module-214.slide.2",
+      "entityKind": "service",
+      "allowedKinds": [
+        "service",
+        "menu_item",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.image": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-214.slide.3",
+      "groupId": "module-214.slide.3",
+      "entityKind": "service",
+      "allowedKinds": [
+        "service",
+        "menu_item",
+        "package"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.image": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-214.slide.4",
+      "groupId": "module-214.slide.4",
+      "entityKind": "service",
+      "allowedKinds": [
+        "service",
+        "menu_item",
+        "package"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.image": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-215.section.0",
+      "groupId": "module-215.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-215.tab.0",
+      "groupId": "module-215.tab.0",
+      "entityKind": "service",
+      "allowedKinds": [
+        "service",
+        "menu_item",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-215.tab.1",
+      "groupId": "module-215.tab.1",
+      "entityKind": "service",
+      "allowedKinds": [
+        "service",
+        "menu_item",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-215.tab.2",
+      "groupId": "module-215.tab.2",
+      "entityKind": "service",
+      "allowedKinds": [
+        "service",
+        "menu_item",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-216.section.0",
+      "groupId": "module-216.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-216.stat.0",
+      "groupId": "module-216.stat.0",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-216.stat.1",
+      "groupId": "module-216.stat.1",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-216.stat.2",
+      "groupId": "module-216.stat.2",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-216.stat.3",
+      "groupId": "module-216.stat.3",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-217.section.0",
+      "groupId": "module-217.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "contact.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "contact.cta_url": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-218.section.0",
+      "groupId": "module-218.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-218.event.0",
+      "groupId": "module-218.event.0",
+      "entityKind": "event",
+      "allowedKinds": [
+        "event"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "event.title"
+      ],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-218.event.1",
+      "groupId": "module-218.event.1",
+      "entityKind": "event",
+      "allowedKinds": [
+        "event"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "event.title"
+      ],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-218.event.2",
+      "groupId": "module-218.event.2",
+      "entityKind": "event",
+      "allowedKinds": [
+        "event"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "event.title"
+      ],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-218.event.3",
+      "groupId": "module-218.event.3",
+      "entityKind": "event",
+      "allowedKinds": [
+        "event"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "event.title"
+      ],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-219.section.0",
+      "groupId": "module-219.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "contact.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "contact.cta_url": {
+          "policy": "empty"
+        },
+        "offering.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        },
+        "offering.cta_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-224.section.0",
+      "groupId": "module-224.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-225.section.0",
+      "groupId": "module-225.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-226.section.0",
+      "groupId": "module-226.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-235.stat.0",
+      "groupId": "module-235.stat.0",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-235.stat.1",
+      "groupId": "module-235.stat.1",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-235.stat.2",
+      "groupId": "module-235.stat.2",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-235.stat.3",
+      "groupId": "module-235.stat.3",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        },
+        "stat.label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-237.faq.0",
+      "groupId": "module-237.faq.0",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-237.faq.1",
+      "groupId": "module-237.faq.1",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-237.faq.2",
+      "groupId": "module-237.faq.2",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-237.faq.3",
+      "groupId": "module-237.faq.3",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-237.faq.4",
+      "groupId": "module-237.faq.4",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-246.member.0",
+      "groupId": "module-246.member.0",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-246.member.1",
+      "groupId": "module-246.member.1",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-246.member.2",
+      "groupId": "module-246.member.2",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-246.member.3",
+      "groupId": "module-246.member.3",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.image": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-247.faq.0",
+      "groupId": "module-247.faq.0",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-247.faq.1",
+      "groupId": "module-247.faq.1",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-247.faq.2",
+      "groupId": "module-247.faq.2",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-247.faq.3",
+      "groupId": "module-247.faq.3",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-247.faq.4",
+      "groupId": "module-247.faq.4",
+      "entityKind": "faq",
+      "allowedKinds": [
+        "faq"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "faq.question",
+        "faq.answer"
+      ],
+      "neutral": {
+        "faq.question": {
+          "policy": "empty"
+        },
+        "faq.answer": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-251.section.0",
+      "groupId": "module-251.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-252.section.0",
+      "groupId": "module-252.section.0",
+      "entityKind": "claim",
+      "allowedKinds": [
+        "claim"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "claim.notice"
+      ],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-254.section.0",
+      "groupId": "module-254.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "contact.email": {
+          "policy": "empty"
+        },
+        "contact.hours": {
+          "policy": "empty"
+        },
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-254.social.0",
+      "groupId": "module-254.social.0",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "contact.social_label"
+      ],
+      "neutral": {
+        "contact.social_label": {
+          "policy": "empty"
+        },
+        "contact.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-254.social.1",
+      "groupId": "module-254.social.1",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "contact.social_label"
+      ],
+      "neutral": {
+        "contact.social_label": {
+          "policy": "empty"
+        },
+        "contact.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-254.social.2",
+      "groupId": "module-254.social.2",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "contact.social_label"
+      ],
+      "neutral": {
+        "contact.social_label": {
+          "policy": "empty"
+        },
+        "contact.social_url": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "article-47.section.0",
+      "groupId": "article-47.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menuItem-250.section.0",
+      "groupId": "menuItem-250.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menuItem-251.section.0",
+      "groupId": "menuItem-251.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menuItem-307.section.0",
+      "groupId": "menuItem-307.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menuItem-313.section.0",
+      "groupId": "menuItem-313.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menuItem-335.section.0",
+      "groupId": "menuItem-335.section.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.category_label"
+      ],
+      "neutral": {
+        "business.category_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-236.member.0",
+      "groupId": "module-236.member.0",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-236.member.1",
+      "groupId": "module-236.member.1",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-236.member.2",
+      "groupId": "module-236.member.2",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-236.section.0",
+      "groupId": "module-236.section.0",
+      "entityKind": "claim",
+      "allowedKinds": [
+        "claim"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "claim.notice"
+      ],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "module-238.tier.0",
+      "groupId": "module-238.tier.0",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.feature_item": {
+          "policy": "empty"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        }
+      }
+    },
+    {
+      "id": "module-238.tier.1",
+      "groupId": "module-238.tier.1",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.feature_item": {
+          "policy": "empty"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        }
+      }
+    },
+    {
+      "id": "module-238.tier.2",
+      "groupId": "module-238.tier.2",
+      "entityKind": "package",
+      "allowedKinds": [
+        "package",
+        "service",
+        "menu_item"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "package.name",
+        "package.price"
+      ],
+      "neutral": {
+        "package.name": {
+          "policy": "empty"
+        },
+        "package.summary": {
+          "policy": "empty"
+        },
+        "package.price": {
+          "policy": "empty"
+        },
+        "package.period": {
+          "policy": "empty"
+        },
+        "package.feature_item": {
+          "policy": "empty"
+        },
+        "package.cta_url": {
+          "policy": "empty"
+        },
+        "package.cta_label": {
+          "policy": "neutral_key",
+          "key": "neutral.cta.contact",
+          "requires": "contact-target"
+        }
+      }
+    },
+    {
+      "id": "module-238.section.0",
+      "groupId": "module-238.section.0",
+      "entityKind": "claim",
+      "allowedKinds": [
+        "claim"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "claim.notice"
+      ],
+      "neutral": {
+        "claim.notice": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "article-18.person.0",
+      "groupId": "article-18.person.0",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "article-19.person.0",
+      "groupId": "article-19.person.0",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "article-20.person.0",
+      "groupId": "article-20.person.0",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "article-21.person.0",
+      "groupId": "article-21.person.0",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.name": {
+          "policy": "empty"
+        }
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "slotKey": "module-174.0",
+      "groupId": "module-174.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-174.1",
+      "groupId": "module-174.section.0",
+      "role": "contact.social_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-174.2",
+      "groupId": "module-174.social.0",
+      "role": "contact.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-174.3",
+      "groupId": "module-174.social.1",
+      "role": "contact.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-174.4",
+      "groupId": "module-174.social.2",
+      "role": "contact.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-174.5",
+      "groupId": "module-174.social.3",
+      "role": "contact.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-175.0",
+      "groupId": "module-175.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-175.1",
+      "groupId": "module-175.section.0",
+      "role": "contact.email",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-175.2",
+      "groupId": "module-175.section.0",
+      "role": "contact.hours",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-175.3",
+      "groupId": "module-175.section.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-175.6",
+      "groupId": "module-175.social.0",
+      "role": "contact.social_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-175.7",
+      "groupId": "module-175.social.1",
+      "role": "contact.social_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-175.8",
+      "groupId": "module-175.social.2",
+      "role": "contact.social_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-175.9",
+      "groupId": "module-175.social.0",
+      "role": "contact.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-175.10",
+      "groupId": "module-175.social.1",
+      "role": "contact.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-175.11",
+      "groupId": "module-175.social.2",
+      "role": "contact.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-178.0",
+      "groupId": "module-178.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-179.0",
+      "groupId": "module-179.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-179.1",
+      "groupId": "module-179.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-179.4",
+      "groupId": "module-179.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-179.5",
+      "groupId": "module-179.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-180.0",
+      "groupId": "module-180.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-181.0",
+      "groupId": "module-181.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-181.1",
+      "groupId": "module-181.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-181.2",
+      "groupId": "module-181.stat.0",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-181.3",
+      "groupId": "module-181.stat.1",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-181.4",
+      "groupId": "module-181.stat.2",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-181.5",
+      "groupId": "module-181.stat.3",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-181.6",
+      "groupId": "module-181.stat.0",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-181.7",
+      "groupId": "module-181.stat.1",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-181.8",
+      "groupId": "module-181.stat.2",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-181.9",
+      "groupId": "module-181.stat.3",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-182.0",
+      "groupId": "module-182.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-182.1",
+      "groupId": "module-182.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-182.4",
+      "groupId": "module-182.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-182.5",
+      "groupId": "module-182.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.0",
+      "groupId": "module-183.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.1",
+      "groupId": "module-183.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.2",
+      "groupId": "module-183.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.3",
+      "groupId": "module-183.tier.0",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.4",
+      "groupId": "module-183.tier.1",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.5",
+      "groupId": "module-183.tier.2",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.6",
+      "groupId": "module-183.tier.0",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.7",
+      "groupId": "module-183.tier.1",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.8",
+      "groupId": "module-183.tier.2",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.9",
+      "groupId": "module-183.tier.0",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-183.10",
+      "groupId": "module-183.tier.1",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-183.11",
+      "groupId": "module-183.tier.2",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-183.12",
+      "groupId": "module-183.tier.0",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.13",
+      "groupId": "module-183.tier.1",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.14",
+      "groupId": "module-183.tier.2",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.15",
+      "groupId": "module-183.tier.0",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.16",
+      "groupId": "module-183.tier.1",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.17",
+      "groupId": "module-183.tier.2",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.18",
+      "groupId": "module-183.tier.0",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.19",
+      "groupId": "module-183.tier.1",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.20",
+      "groupId": "module-183.tier.2",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.21",
+      "groupId": "module-183.tier.0",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.22",
+      "groupId": "module-183.tier.1",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.23",
+      "groupId": "module-183.tier.2",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.24",
+      "groupId": "module-183.tier.0",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.25",
+      "groupId": "module-183.tier.1",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-183.26",
+      "groupId": "module-183.tier.2",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.0",
+      "groupId": "module-184.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.1",
+      "groupId": "module-184.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.2",
+      "groupId": "module-184.quote.0",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.3",
+      "groupId": "module-184.quote.1",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.4",
+      "groupId": "module-184.quote.2",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.5",
+      "groupId": "module-184.quote.0",
+      "role": "quote.author_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.6",
+      "groupId": "module-184.quote.1",
+      "role": "quote.author_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.7",
+      "groupId": "module-184.quote.2",
+      "role": "quote.author_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.8",
+      "groupId": "module-184.quote.0",
+      "role": "quote.author_context",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.9",
+      "groupId": "module-184.quote.1",
+      "role": "quote.author_context",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.10",
+      "groupId": "module-184.quote.2",
+      "role": "quote.author_context",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-184.11",
+      "groupId": "module-184.quote.0",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-184.12",
+      "groupId": "module-184.quote.1",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-184.13",
+      "groupId": "module-184.quote.2",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-185.0",
+      "groupId": "module-185.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.1",
+      "groupId": "module-185.client.0",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-185.2",
+      "groupId": "module-185.client.1",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-185.3",
+      "groupId": "module-185.client.2",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-185.4",
+      "groupId": "module-185.client.3",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-185.5",
+      "groupId": "module-185.client.4",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-185.6",
+      "groupId": "module-185.client.5",
+      "role": "claim.entity_logo",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-185.7",
+      "groupId": "module-185.client.0",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.8",
+      "groupId": "module-185.client.1",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.9",
+      "groupId": "module-185.client.2",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.10",
+      "groupId": "module-185.client.3",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.11",
+      "groupId": "module-185.client.4",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.12",
+      "groupId": "module-185.client.5",
+      "role": "claim.entity_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.13",
+      "groupId": "module-185.client.0",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.14",
+      "groupId": "module-185.client.1",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.15",
+      "groupId": "module-185.client.2",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.16",
+      "groupId": "module-185.client.3",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.17",
+      "groupId": "module-185.client.4",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-185.18",
+      "groupId": "module-185.client.5",
+      "role": "claim.entity_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-186.0",
+      "groupId": "module-186.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-186.1",
+      "groupId": "module-186.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-186.2",
+      "groupId": "module-186.section.0",
+      "role": "contact.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-186.3",
+      "groupId": "module-186.section.0",
+      "role": "contact.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-186.4",
+      "groupId": "module-186.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-186.5",
+      "groupId": "module-186.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-187.0",
+      "groupId": "module-187.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-188.0",
+      "groupId": "module-188.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-188.1",
+      "groupId": "module-188.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-188.4",
+      "groupId": "module-188.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-188.5",
+      "groupId": "module-188.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.0",
+      "groupId": "module-189.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.1",
+      "groupId": "module-189.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.2",
+      "groupId": "module-189.section.0",
+      "role": "contact.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.3",
+      "groupId": "module-189.member.0",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-189.4",
+      "groupId": "module-189.member.1",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-189.5",
+      "groupId": "module-189.member.2",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-189.6",
+      "groupId": "module-189.member.3",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-189.7",
+      "groupId": "module-189.member.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.8",
+      "groupId": "module-189.member.1",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.9",
+      "groupId": "module-189.member.2",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.10",
+      "groupId": "module-189.member.3",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.11",
+      "groupId": "module-189.member.0",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.12",
+      "groupId": "module-189.member.1",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.13",
+      "groupId": "module-189.member.2",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.14",
+      "groupId": "module-189.member.3",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.15",
+      "groupId": "module-189.member.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.16",
+      "groupId": "module-189.member.1",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.17",
+      "groupId": "module-189.member.2",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.18",
+      "groupId": "module-189.member.3",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.19",
+      "groupId": "module-189.member.0",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.20",
+      "groupId": "module-189.member.1",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.21",
+      "groupId": "module-189.member.2",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-189.22",
+      "groupId": "module-189.member.3",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.0",
+      "groupId": "module-190.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.1",
+      "groupId": "module-190.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.2",
+      "groupId": "module-190.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.3",
+      "groupId": "module-190.faq.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.4",
+      "groupId": "module-190.faq.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.5",
+      "groupId": "module-190.faq.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.6",
+      "groupId": "module-190.faq.3",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.7",
+      "groupId": "module-190.faq.4",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.8",
+      "groupId": "module-190.faq.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.9",
+      "groupId": "module-190.faq.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.10",
+      "groupId": "module-190.faq.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.11",
+      "groupId": "module-190.faq.3",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-190.12",
+      "groupId": "module-190.faq.4",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-191.0",
+      "groupId": "module-191.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-191.1",
+      "groupId": "module-191.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-191.2",
+      "groupId": "module-191.stat.0",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-191.3",
+      "groupId": "module-191.stat.1",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-191.4",
+      "groupId": "module-191.stat.2",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-191.5",
+      "groupId": "module-191.stat.0",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-191.6",
+      "groupId": "module-191.stat.1",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-191.7",
+      "groupId": "module-191.stat.2",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-192.0",
+      "groupId": "module-192.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-192.1",
+      "groupId": "module-192.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-192.2",
+      "groupId": "module-192.section.0",
+      "role": "contact.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-192.3",
+      "groupId": "module-192.section.0",
+      "role": "contact.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-192.4",
+      "groupId": "module-192.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-192.5",
+      "groupId": "module-192.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-193.0",
+      "groupId": "module-193.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-194.0",
+      "groupId": "module-194.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.0",
+      "groupId": "module-195.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.1",
+      "groupId": "module-195.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.2",
+      "groupId": "module-195.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.3",
+      "groupId": "module-195.tier.0",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.4",
+      "groupId": "module-195.tier.1",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.5",
+      "groupId": "module-195.tier.2",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.6",
+      "groupId": "module-195.tier.0",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.7",
+      "groupId": "module-195.tier.1",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.8",
+      "groupId": "module-195.tier.2",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.9",
+      "groupId": "module-195.tier.0",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-195.10",
+      "groupId": "module-195.tier.1",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-195.11",
+      "groupId": "module-195.tier.2",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-195.12",
+      "groupId": "module-195.tier.0",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.13",
+      "groupId": "module-195.tier.1",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.14",
+      "groupId": "module-195.tier.2",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.15",
+      "groupId": "module-195.tier.0",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.16",
+      "groupId": "module-195.tier.1",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.17",
+      "groupId": "module-195.tier.2",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.18",
+      "groupId": "module-195.tier.0",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.19",
+      "groupId": "module-195.tier.1",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.20",
+      "groupId": "module-195.tier.2",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.21",
+      "groupId": "module-195.tier.0",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.22",
+      "groupId": "module-195.tier.1",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.23",
+      "groupId": "module-195.tier.2",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.24",
+      "groupId": "module-195.tier.0",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.25",
+      "groupId": "module-195.tier.1",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-195.26",
+      "groupId": "module-195.tier.2",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.0",
+      "groupId": "module-196.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.1",
+      "groupId": "module-196.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.2",
+      "groupId": "module-196.quote.0",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.3",
+      "groupId": "module-196.quote.1",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.4",
+      "groupId": "module-196.quote.2",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.5",
+      "groupId": "module-196.quote.0",
+      "role": "quote.author_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.6",
+      "groupId": "module-196.quote.1",
+      "role": "quote.author_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.7",
+      "groupId": "module-196.quote.2",
+      "role": "quote.author_name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.8",
+      "groupId": "module-196.quote.0",
+      "role": "quote.author_context",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.9",
+      "groupId": "module-196.quote.1",
+      "role": "quote.author_context",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.10",
+      "groupId": "module-196.quote.2",
+      "role": "quote.author_context",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-196.11",
+      "groupId": "module-196.quote.0",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-196.12",
+      "groupId": "module-196.quote.1",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-196.13",
+      "groupId": "module-196.quote.2",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-197.0",
+      "groupId": "module-197.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-197.1",
+      "groupId": "module-197.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-197.2",
+      "groupId": "module-197.section.0",
+      "role": "contact.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-197.3",
+      "groupId": "module-197.section.0",
+      "role": "contact.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-197.4",
+      "groupId": "module-197.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-197.5",
+      "groupId": "module-197.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-198.0",
+      "groupId": "module-198.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-198.1",
+      "groupId": "module-198.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-198.4",
+      "groupId": "module-198.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-198.5",
+      "groupId": "module-198.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-199.0",
+      "groupId": "module-199.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-199.1",
+      "groupId": "module-199.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-199.2",
+      "groupId": "module-199.stat.0",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-199.3",
+      "groupId": "module-199.stat.1",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-199.4",
+      "groupId": "module-199.stat.2",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-199.5",
+      "groupId": "module-199.stat.3",
+      "role": "step.index",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-199.6",
+      "groupId": "module-199.stat.0",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-199.7",
+      "groupId": "module-199.stat.1",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-199.8",
+      "groupId": "module-199.stat.2",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-199.9",
+      "groupId": "module-199.stat.3",
+      "role": "step.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-200.0",
+      "groupId": "module-200.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-200.1",
+      "groupId": "module-200.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-200.4",
+      "groupId": "module-200.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-200.5",
+      "groupId": "module-200.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.0",
+      "groupId": "module-201.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.1",
+      "groupId": "module-201.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.2",
+      "groupId": "module-201.section.0",
+      "role": "contact.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.3",
+      "groupId": "module-201.member.0",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-201.4",
+      "groupId": "module-201.member.1",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-201.5",
+      "groupId": "module-201.member.2",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-201.6",
+      "groupId": "module-201.member.3",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-201.7",
+      "groupId": "module-201.member.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.8",
+      "groupId": "module-201.member.1",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.9",
+      "groupId": "module-201.member.2",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.10",
+      "groupId": "module-201.member.3",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.11",
+      "groupId": "module-201.member.0",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.12",
+      "groupId": "module-201.member.1",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.13",
+      "groupId": "module-201.member.2",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.14",
+      "groupId": "module-201.member.3",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.15",
+      "groupId": "module-201.member.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.16",
+      "groupId": "module-201.member.1",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.17",
+      "groupId": "module-201.member.2",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.18",
+      "groupId": "module-201.member.3",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.19",
+      "groupId": "module-201.member.0",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.20",
+      "groupId": "module-201.member.1",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.21",
+      "groupId": "module-201.member.2",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-201.22",
+      "groupId": "module-201.member.3",
+      "role": "person.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-202.0",
+      "groupId": "module-202.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-202.1",
+      "groupId": "module-202.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-202.2",
+      "groupId": "module-202.section.0",
+      "role": "contact.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-202.3",
+      "groupId": "module-202.section.0",
+      "role": "contact.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-202.4",
+      "groupId": "module-202.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-202.5",
+      "groupId": "module-202.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.0",
+      "groupId": "module-203.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.1",
+      "groupId": "module-203.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.2",
+      "groupId": "module-203.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.3",
+      "groupId": "module-203.tier.0",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.4",
+      "groupId": "module-203.tier.1",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.5",
+      "groupId": "module-203.tier.2",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.6",
+      "groupId": "module-203.tier.0",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.7",
+      "groupId": "module-203.tier.1",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.8",
+      "groupId": "module-203.tier.2",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.9",
+      "groupId": "module-203.tier.0",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-203.10",
+      "groupId": "module-203.tier.1",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-203.11",
+      "groupId": "module-203.tier.2",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-203.12",
+      "groupId": "module-203.tier.0",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.13",
+      "groupId": "module-203.tier.1",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.14",
+      "groupId": "module-203.tier.2",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.15",
+      "groupId": "module-203.tier.0",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.16",
+      "groupId": "module-203.tier.1",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.17",
+      "groupId": "module-203.tier.2",
+      "role": "package.features_list",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.18",
+      "groupId": "module-203.tier.0",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.19",
+      "groupId": "module-203.tier.1",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.20",
+      "groupId": "module-203.tier.2",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.21",
+      "groupId": "module-203.tier.0",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.22",
+      "groupId": "module-203.tier.1",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.23",
+      "groupId": "module-203.tier.2",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.24",
+      "groupId": "module-203.tier.0",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.25",
+      "groupId": "module-203.tier.1",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-203.26",
+      "groupId": "module-203.tier.2",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.0",
+      "groupId": "module-204.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.1",
+      "groupId": "module-204.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.2",
+      "groupId": "module-204.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.3",
+      "groupId": "module-204.faq.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.4",
+      "groupId": "module-204.faq.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.5",
+      "groupId": "module-204.faq.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.6",
+      "groupId": "module-204.faq.3",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.7",
+      "groupId": "module-204.faq.4",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.8",
+      "groupId": "module-204.faq.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.9",
+      "groupId": "module-204.faq.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.10",
+      "groupId": "module-204.faq.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.11",
+      "groupId": "module-204.faq.3",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-204.12",
+      "groupId": "module-204.faq.4",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-205.0",
+      "groupId": "module-205.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-205.1",
+      "groupId": "module-205.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-205.2",
+      "groupId": "module-205.section.0",
+      "role": "contact.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-205.3",
+      "groupId": "module-205.section.0",
+      "role": "contact.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-205.4",
+      "groupId": "module-205.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-205.5",
+      "groupId": "module-205.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.0",
+      "groupId": "module-206.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.1",
+      "groupId": "module-206.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.2",
+      "groupId": "module-206.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.3",
+      "groupId": "module-206.faq.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.4",
+      "groupId": "module-206.faq.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.5",
+      "groupId": "module-206.faq.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.6",
+      "groupId": "module-206.faq.3",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.7",
+      "groupId": "module-206.faq.4",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.8",
+      "groupId": "module-206.faq.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.9",
+      "groupId": "module-206.faq.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.10",
+      "groupId": "module-206.faq.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.11",
+      "groupId": "module-206.faq.3",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-206.12",
+      "groupId": "module-206.faq.4",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-207.0",
+      "groupId": "module-207.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-207.1",
+      "groupId": "module-207.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-207.2",
+      "groupId": "module-207.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-207.3",
+      "groupId": "module-207.faq.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-207.4",
+      "groupId": "module-207.faq.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-207.5",
+      "groupId": "module-207.faq.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-207.6",
+      "groupId": "module-207.faq.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-207.7",
+      "groupId": "module-207.faq.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-207.8",
+      "groupId": "module-207.faq.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-208.0",
+      "groupId": "module-208.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-208.1",
+      "groupId": "module-208.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-208.2",
+      "groupId": "module-208.section.0",
+      "role": "contact.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-208.3",
+      "groupId": "module-208.section.0",
+      "role": "contact.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-208.4",
+      "groupId": "module-208.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-208.5",
+      "groupId": "module-208.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-213.0",
+      "groupId": "module-213.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.0",
+      "groupId": "module-214.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.1",
+      "groupId": "module-214.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.2",
+      "groupId": "module-214.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.3",
+      "groupId": "module-214.slide.0",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-214.4",
+      "groupId": "module-214.slide.1",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-214.5",
+      "groupId": "module-214.slide.2",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-214.6",
+      "groupId": "module-214.slide.3",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-214.7",
+      "groupId": "module-214.slide.4",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-214.8",
+      "groupId": "module-214.slide.0",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.9",
+      "groupId": "module-214.slide.1",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.10",
+      "groupId": "module-214.slide.2",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.11",
+      "groupId": "module-214.slide.3",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.12",
+      "groupId": "module-214.slide.4",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.13",
+      "groupId": "module-214.slide.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.14",
+      "groupId": "module-214.slide.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.15",
+      "groupId": "module-214.slide.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.16",
+      "groupId": "module-214.slide.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.17",
+      "groupId": "module-214.slide.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.18",
+      "groupId": "module-214.slide.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.19",
+      "groupId": "module-214.slide.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.20",
+      "groupId": "module-214.slide.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.21",
+      "groupId": "module-214.slide.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-214.22",
+      "groupId": "module-214.slide.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.0",
+      "groupId": "module-215.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.1",
+      "groupId": "module-215.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.2",
+      "groupId": "module-215.tab.0",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.3",
+      "groupId": "module-215.tab.1",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.4",
+      "groupId": "module-215.tab.2",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.5",
+      "groupId": "module-215.tab.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.6",
+      "groupId": "module-215.tab.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.7",
+      "groupId": "module-215.tab.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.8",
+      "groupId": "module-215.tab.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.9",
+      "groupId": "module-215.tab.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.10",
+      "groupId": "module-215.tab.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-215.11",
+      "groupId": "module-215.tab.0",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-215.12",
+      "groupId": "module-215.tab.1",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-215.13",
+      "groupId": "module-215.tab.2",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-216.0",
+      "groupId": "module-216.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-216.1",
+      "groupId": "module-216.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-216.2",
+      "groupId": "module-216.stat.0",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-216.3",
+      "groupId": "module-216.stat.1",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-216.4",
+      "groupId": "module-216.stat.2",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-216.5",
+      "groupId": "module-216.stat.3",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-216.6",
+      "groupId": "module-216.stat.0",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-216.7",
+      "groupId": "module-216.stat.1",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-216.8",
+      "groupId": "module-216.stat.2",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-216.9",
+      "groupId": "module-216.stat.3",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-217.0",
+      "groupId": "module-217.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-217.1",
+      "groupId": "module-217.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-217.2",
+      "groupId": "module-217.section.0",
+      "role": "contact.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-217.3",
+      "groupId": "module-217.section.0",
+      "role": "contact.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-217.4",
+      "groupId": "module-217.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-217.5",
+      "groupId": "module-217.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.0",
+      "groupId": "module-218.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.1",
+      "groupId": "module-218.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.2",
+      "groupId": "module-218.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.3",
+      "groupId": "module-218.event.0",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-218.4",
+      "groupId": "module-218.event.1",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-218.5",
+      "groupId": "module-218.event.2",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-218.6",
+      "groupId": "module-218.event.3",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-218.7",
+      "groupId": "module-218.event.0",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.8",
+      "groupId": "module-218.event.1",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.9",
+      "groupId": "module-218.event.2",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.10",
+      "groupId": "module-218.event.3",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.11",
+      "groupId": "module-218.event.0",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.12",
+      "groupId": "module-218.event.1",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.13",
+      "groupId": "module-218.event.2",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-218.14",
+      "groupId": "module-218.event.3",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-219.0",
+      "groupId": "module-219.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-219.1",
+      "groupId": "module-219.section.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-219.2",
+      "groupId": "module-219.section.0",
+      "role": "contact.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-219.3",
+      "groupId": "module-219.section.0",
+      "role": "contact.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-219.4",
+      "groupId": "module-219.section.0",
+      "role": "offering.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-219.5",
+      "groupId": "module-219.section.0",
+      "role": "offering.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-224.2",
+      "groupId": "module-224.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-225.2",
+      "groupId": "module-225.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-226.0",
+      "groupId": "module-226.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-235.0",
+      "groupId": "module-235.stat.0",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-235.1",
+      "groupId": "module-235.stat.0",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-235.2",
+      "groupId": "module-235.stat.1",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-235.3",
+      "groupId": "module-235.stat.1",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-235.4",
+      "groupId": "module-235.stat.2",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-235.5",
+      "groupId": "module-235.stat.2",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-235.6",
+      "groupId": "module-235.stat.3",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-235.7",
+      "groupId": "module-235.stat.3",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-237.2",
+      "groupId": "module-237.faq.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-237.4",
+      "groupId": "module-237.faq.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-237.5",
+      "groupId": "module-237.faq.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-237.7",
+      "groupId": "module-237.faq.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-237.8",
+      "groupId": "module-237.faq.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-237.10",
+      "groupId": "module-237.faq.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-237.11",
+      "groupId": "module-237.faq.3",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-237.13",
+      "groupId": "module-237.faq.3",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-237.14",
+      "groupId": "module-237.faq.4",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-237.16",
+      "groupId": "module-237.faq.4",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.3",
+      "groupId": "module-246.member.0",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-246.5",
+      "groupId": "module-246.member.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.6",
+      "groupId": "module-246.member.0",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.7",
+      "groupId": "module-246.member.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.8",
+      "groupId": "module-246.member.1",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-246.10",
+      "groupId": "module-246.member.1",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.11",
+      "groupId": "module-246.member.1",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.12",
+      "groupId": "module-246.member.1",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.13",
+      "groupId": "module-246.member.2",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-246.15",
+      "groupId": "module-246.member.2",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.16",
+      "groupId": "module-246.member.2",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.17",
+      "groupId": "module-246.member.2",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.18",
+      "groupId": "module-246.member.3",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "module-246.20",
+      "groupId": "module-246.member.3",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.21",
+      "groupId": "module-246.member.3",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-246.22",
+      "groupId": "module-246.member.3",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-247.2",
+      "groupId": "module-247.faq.0",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-247.4",
+      "groupId": "module-247.faq.0",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-247.5",
+      "groupId": "module-247.faq.1",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-247.7",
+      "groupId": "module-247.faq.1",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-247.8",
+      "groupId": "module-247.faq.2",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-247.10",
+      "groupId": "module-247.faq.2",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-247.11",
+      "groupId": "module-247.faq.3",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-247.13",
+      "groupId": "module-247.faq.3",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-247.14",
+      "groupId": "module-247.faq.4",
+      "role": "faq.question",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-247.16",
+      "groupId": "module-247.faq.4",
+      "role": "faq.answer",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-251.0",
+      "groupId": "module-251.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-251.1",
+      "groupId": "module-251.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-252.0",
+      "groupId": "module-252.section.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-254.0",
+      "groupId": "module-254.section.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-254.1",
+      "groupId": "module-254.section.0",
+      "role": "contact.email",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-254.2",
+      "groupId": "module-254.section.0",
+      "role": "contact.hours",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "module-254.3",
+      "groupId": "module-254.section.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-254.6",
+      "groupId": "module-254.social.0",
+      "role": "contact.social_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-254.7",
+      "groupId": "module-254.social.1",
+      "role": "contact.social_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-254.8",
+      "groupId": "module-254.social.2",
+      "role": "contact.social_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-254.9",
+      "groupId": "module-254.social.0",
+      "role": "contact.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-254.10",
+      "groupId": "module-254.social.1",
+      "role": "contact.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-254.11",
+      "groupId": "module-254.social.2",
+      "role": "contact.social_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-47.0",
+      "groupId": "article-47.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menuItem-250.0",
+      "groupId": "menuItem-250.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menuItem-251.0",
+      "groupId": "menuItem-251.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menuItem-307.0",
+      "groupId": "menuItem-307.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menuItem-313.0",
+      "groupId": "menuItem-313.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menuItem-335.0",
+      "groupId": "menuItem-335.section.0",
+      "role": "business.category_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-236.3",
+      "groupId": "module-236.member.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-236.5",
+      "groupId": "module-236.member.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-236.6",
+      "groupId": "module-236.member.0",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-236.7",
+      "groupId": "module-236.member.1",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-236.9",
+      "groupId": "module-236.member.1",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-236.10",
+      "groupId": "module-236.member.1",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-236.11",
+      "groupId": "module-236.member.2",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-236.13",
+      "groupId": "module-236.member.2",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-236.14",
+      "groupId": "module-236.member.2",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-236.15",
+      "groupId": "module-236.section.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.3",
+      "groupId": "module-238.tier.0",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.4",
+      "groupId": "module-238.tier.0",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.5",
+      "groupId": "module-238.tier.0",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-238.6",
+      "groupId": "module-238.tier.0",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.8",
+      "groupId": "module-238.tier.0",
+      "role": "package.feature_item",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.10",
+      "groupId": "module-238.tier.0",
+      "role": "package.feature_item",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.12",
+      "groupId": "module-238.tier.0",
+      "role": "package.feature_item",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.13",
+      "groupId": "module-238.tier.0",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.14",
+      "groupId": "module-238.tier.0",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.15",
+      "groupId": "module-238.tier.1",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.16",
+      "groupId": "module-238.tier.1",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.17",
+      "groupId": "module-238.tier.1",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.18",
+      "groupId": "module-238.tier.1",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-238.19",
+      "groupId": "module-238.tier.1",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.21",
+      "groupId": "module-238.tier.1",
+      "role": "package.feature_item",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.23",
+      "groupId": "module-238.tier.1",
+      "role": "package.feature_item",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.25",
+      "groupId": "module-238.tier.1",
+      "role": "package.feature_item",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.26",
+      "groupId": "module-238.tier.1",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.27",
+      "groupId": "module-238.tier.1",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.28",
+      "groupId": "module-238.tier.2",
+      "role": "package.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.29",
+      "groupId": "module-238.tier.2",
+      "role": "package.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.30",
+      "groupId": "module-238.tier.2",
+      "role": "package.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "module-238.31",
+      "groupId": "module-238.tier.2",
+      "role": "package.period",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.33",
+      "groupId": "module-238.tier.2",
+      "role": "package.feature_item",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.35",
+      "groupId": "module-238.tier.2",
+      "role": "package.feature_item",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.37",
+      "groupId": "module-238.tier.2",
+      "role": "package.feature_item",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.38",
+      "groupId": "module-238.tier.2",
+      "role": "package.cta_url",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.39",
+      "groupId": "module-238.tier.2",
+      "role": "package.cta_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.40",
+      "groupId": "module-238.section.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "module-238.41",
+      "groupId": "module-238.section.0",
+      "role": "claim.notice",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-18.0",
+      "groupId": "article-18.person.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-18.2",
+      "groupId": "article-18.person.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-18.3",
+      "groupId": "article-18.person.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-19.0",
+      "groupId": "article-19.person.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-19.2",
+      "groupId": "article-19.person.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-19.3",
+      "groupId": "article-19.person.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-20.0",
+      "groupId": "article-20.person.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-20.2",
+      "groupId": "article-20.person.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-20.3",
+      "groupId": "article-20.person.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-21.0",
+      "groupId": "article-21.person.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-21.2",
+      "groupId": "article-21.person.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "article-21.3",
+      "groupId": "article-21.person.0",
+      "role": "person.name",
+      "mode": "copy"
+    }
+  ],
+  "unplaced": []
+}

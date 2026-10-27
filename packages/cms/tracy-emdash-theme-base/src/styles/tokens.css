@@ -1,0 +1,179 @@
+/*
+ * Tracy Base design tokens -- every value read from the source template's stylesheet
+ * (vendor/joomla/html/tracy_base/templates/tracy/css/styles/base.css, the OpenDesign "apple" system:
+ * vendor/tracy/od-design-system/systems/apple/tokens.css). Light values on :root, dark values
+ * under html[data-theme="dark"], exactly the pairs the source's dark hook remaps. Provenance and
+ * the type/spacing scale: tasks/emdash-tracy-base/visual-contract.md.
+ */
+@theme {
+	/* SF Pro on Apple platforms; the same system stack the source declares (no webfont, D8). */
+	--font-sans: var(--ds-font-body, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, Inter, Arial, sans-serif);
+	--font-mono: var(--ds-font-mono, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace);
+
+	/* Neutral surfaces and text -- the source's four-stop neutral ramp. */
+	--color-bg: var(--ds-c-bg, #ffffff);
+	--color-surface: var(--ds-c-surface, #f5f5f7);
+	--color-surface-warm: var(--ds-c-surface-warm, #fbfbfd);
+	--color-fg: var(--ds-c-fg, #1d1d1f);
+	--color-fg-2: var(--ds-c-fg-2, #424245);
+	--color-fg-muted: var(--ds-c-muted, #6e6e73);
+	--color-fg-meta: var(--ds-c-meta, #86868b);
+	--color-line: var(--ds-c-border, #d2d2d7);
+	--color-line-soft: var(--ds-c-border-soft, #e8e8ed);
+	/* The rim of a card or panel: the soft border role. Unworn it is the line the cards always drew. */
+	--color-line-card: var(--ds-c-border-soft, #d2d2d7);
+	/* A decorative kicker (the proof strip's "Strategy · Design · Development"): the readable accent of
+	   a worn system; unworn the amber the source draws, which is no warning. */
+	--color-kicker: var(--ds-c-accent-text, #9a6700);
+
+	/* The one accent: Apple action blue, lifting (not darkening) on hover. */
+	--color-accent: var(--ds-c-accent, #0071e3);
+	--color-accent-on: var(--ds-c-accent-on, #ffffff);
+	--color-accent-hover: var(--ds-c-accent-hover, #0077ed);
+	--color-accent-active: var(--ds-c-accent-active, #0066cc);
+	/* The accent as TEXT (links, eyebrows, ghost buttons): the readable accent of a worn system, the
+	   accent itself unworn. The accent as a GROUND (buttons, fills) stays --color-accent. */
+	--color-accent-text: var(--ds-c-accent-text, var(--ds-accent-text, var(--color-accent)));
+	--color-accent-text-hover: var(--ds-c-accent-text-hover, var(--ds-accent-text-hover, var(--color-accent-hover)));
+	/* The accent as a whole BAND (statistics, final CTA) and the words on it. */
+	--color-accent-band: var(--ds-c-accent-band, var(--color-accent));
+	--color-on-accent-band: var(--ds-c-on-accent-band, var(--color-accent-on));
+	/* A tenth of the accent over the page (the same mix the slot writes). */
+	--color-accent-tint: var(--base-ds-accent-tint, var(--ds-c-accent, color-mix(in srgb, #0071e3 10%, #ffffff)));
+	--color-success: var(--ds-c-success, #16a34a);
+	--color-warn: var(--ds-c-warn, #eab308);
+	/* Warn as TEXT on the page ground: the source's #eab308 reads 1.9:1 on white (flag SOURCE, D22). */
+	--color-warn-text: var(--ds-c-warn-text, #9a6700);
+	--color-danger: var(--ds-c-danger, #dc2626);
+	/* Status words and grounds: the source sets no separate value, so unworn each is the colour the
+	   component used before (the status fill itself, or the body text on a tinted ground). */
+	--color-success-text: var(--ds-c-success-text, var(--color-success));
+	--color-warn-bg: var(--ds-c-warn-bg, color-mix(in oklab, var(--color-warn) 10%, transparent));
+	--color-success-bg: var(--ds-c-success-bg, color-mix(in oklab, var(--color-success) 10%, transparent));
+	--color-danger-text: var(--ds-c-danger-text, var(--color-danger));
+
+	/* Inverted "scene" band (source --tracy-scene-*): black stage with light text, both themes. */
+	--color-scene-bg: var(--ds-c-ink, #000000);
+	--color-scene-fg: var(--ds-c-on-ink, #f8f8f8);
+
+	/* shadcn semantic tokens mapped onto the design; no preset values kept. */
+	--color-background: var(--color-bg);
+	--color-foreground: var(--color-fg);
+	--color-primary: var(--color-accent);
+	--color-primary-foreground: var(--color-accent-on);
+	--color-secondary: var(--color-surface);
+	--color-secondary-foreground: var(--color-fg);
+	--color-muted: var(--color-surface);
+	--color-muted-foreground: var(--color-fg-muted);
+	--color-accent-foreground: var(--color-fg);
+	--color-popover: var(--color-bg);
+	--color-popover-foreground: var(--color-fg);
+	--color-card: var(--color-bg);
+	--color-card-foreground: var(--color-fg);
+	--color-border: var(--color-line);
+	--color-input: var(--color-line);
+	--color-ring: var(--ds-c-focus-ring, color-mix(in oklab, var(--color-accent), transparent 65%));
+	--color-destructive: var(--color-danger);
+
+	/* Type scale (source --text-*), body 17px / 1.47, display tracking -0.015em. */
+	--text-xs: 12px;
+	--text-sm: 14px;
+	--text-base: 17px;
+	--text-lg: 21px;
+	--text-xl: 28px;
+	--text-2xl: 40px;
+	--text-3xl: 56px;
+	--text-4xl: 80px;
+	--leading-body: 1.47;
+	--leading-tight: 1.05;
+	--tracking-display: -0.015em;
+
+	/* Radii: 8 / 12 / 18 / 32 and the 980px capsule the brand is known for. The scale stays the
+	   template's own: every component reads its corner role where it uses a step
+	   (var(--ds-card-radius, var(--radius-lg))), so a step never stands for one role. */
+	/* ds-keep: radius scale step, components read their corner role at the use site */
+	--radius: 12px;
+	/* ds-keep: radius scale step, components read their corner role at the use site */
+	--radius-sm: 8px;
+	/* ds-keep: radius scale step, components read their corner role at the use site */
+	--radius-md: 12px;
+	/* ds-keep: radius scale step, components read their corner role at the use site */
+	--radius-lg: 18px;
+	/* ds-keep: radius scale step, components read their corner role at the use site */
+	--radius-xl: 32px;
+	/* ds-keep: radius scale step, components read their corner role at the use site */
+	--radius-pill: 980px;
+
+	/* Elevation, focus, motion. */
+	--shadow-ring: 0 0 0 1px var(--color-line);
+	--shadow-ring-card: 0 0 0 1px var(--color-line-card);
+	--shadow-raised: 0 12px 32px rgba(0, 0, 0, 0.08);
+	--shadow-focus: 0 0 0 4px var(--ds-c-focus-ring, color-mix(in oklab, var(--color-accent), transparent 65%));
+	--ease-standard: cubic-bezier(0.28, 0, 0.22, 1);
+
+	/* Layout: 1024px measure, 22/18/16 gutters, 100/64/40 band rhythm. */
+	--container-site: 1024px;
+	--gutter: 22px;
+	--gutter-tablet: 18px;
+	--gutter-phone: 16px;
+	--band-y: 100px;
+	--band-y-tablet: 64px;
+	--band-y-phone: 40px;
+}
+
+/*
+ * Shades a worn design system derives from its own roles, defined only while a system is worn
+ * (html[data-ds-worn], Base.astro and the preview door): with no design system the place that reads
+ * one falls back to the template's own value, so the default look does not change. Each role read keeps
+ * the template's own value as its fallback (DEF-1).
+ */
+:root[data-ds-worn] {
+	/* the third bar of the hero's drawn chart: a deeper step of the accent */
+	/* headings on the page ground (global.css): unworn a heading inherits its colour */
+	--base-ds-heading: var(--ds-c-heading, #1d1d1f);
+	--base-ds-accent-deep: color-mix(in srgb, var(--ds-c-accent, #0071e3) 70%, black);
+	/* the accent tint: a tenth (light) or a sixth (dark) of the accent over the page */
+	--base-ds-accent-tint: color-mix(in srgb, var(--ds-c-accent, #0071e3) 10%, var(--ds-c-bg, #ffffff));
+	--base-ds-accent-tint-dark: color-mix(in srgb, var(--ds-c-accent, #2997ff) 16%, var(--ds-c-bg, #000000));
+}
+
+html[data-theme="dark"] {
+	/* the scene band is the page's own black in dark (1.00:1), so a worn system gives it its quiet raised
+	   ground; its ink role is a card surface on a dark system (1.21:1 under Moxie: grey blocks, GROUND-2) */
+	--color-scene-bg: var(--ds-c-surface-warm, #000000);
+	--color-bg: var(--ds-c-bg, #000000);
+	--color-surface-warm: var(--ds-c-surface-warm, #0e0e0e);
+	--color-surface: var(--ds-c-surface, #1d1d1f);
+	--color-line-soft: var(--ds-c-border-soft, #262629);
+	--color-line: var(--ds-c-border, #2f2f30);
+	--color-line-card: var(--ds-c-border-soft, #2f2f30);
+	--color-kicker: var(--ds-c-accent-text, #f5c451);
+	--color-fg-meta: var(--ds-c-meta, #6f6f73);
+	--color-fg-muted: var(--ds-c-muted, #87878b);
+	--color-fg-2: var(--ds-c-fg-2, #c0c0c1);
+	--color-fg: var(--ds-c-fg, #f8f8f8);
+	--color-accent: var(--ds-c-accent, #2997ff);
+	--color-accent-on: var(--ds-c-accent-on, #000000);
+	--color-accent-hover: var(--ds-c-accent-hover, #349cff);
+	--color-accent-active: var(--ds-c-accent-active, #278ff1);
+	--color-accent-tint: var(--base-ds-accent-tint-dark, var(--ds-c-accent, color-mix(in srgb, #2997ff 16%, #000000)));
+	--color-danger: var(--ds-c-danger, #e45858);
+	--color-warn-text: var(--ds-c-warn-text, #f5c451);
+	--color-background: var(--color-bg);
+	--color-foreground: var(--color-fg);
+	--color-primary: var(--color-accent);
+	--color-primary-foreground: var(--color-accent-on);
+	--color-secondary: var(--color-surface);
+	--color-secondary-foreground: var(--color-fg);
+	--color-muted: var(--color-surface);
+	--color-muted-foreground: var(--color-fg-muted);
+	--color-popover: var(--color-surface);
+	--color-popover-foreground: var(--color-fg);
+	--color-card: var(--color-surface-warm);
+	--color-card-foreground: var(--color-fg);
+	--color-border: var(--color-line);
+	--color-input: var(--color-line);
+	--shadow-ring: 0 0 0 1px var(--color-line);
+	--shadow-ring-card: 0 0 0 1px var(--color-line-card);
+	--shadow-raised: 0 12px 32px rgba(0, 0, 0, 0.5);
+}

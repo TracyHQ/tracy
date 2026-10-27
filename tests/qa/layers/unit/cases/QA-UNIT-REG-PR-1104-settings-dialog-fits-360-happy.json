@@ -1,0 +1,66 @@
+{
+  "id": "QA-UNIT-REG-PR-1104-settings-dialog-fits-360-happy",
+  "itemIds": ["regression:REG-PR-1104-settings-dialog-fits-360"],
+  "requirement": "Settings dialog at 360x740 is one column: every section fits, Sign out does not cover its words, Connect account is whole",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1104-settings-dialog-fits-360.json",
+    "ref": "PR #1104 (fix); fix evidence: Measured on dev 09/10/2026 at 360x740 (account-menu acceptance hc-hca-360-*-9-account.jpg, -9-ai-accounts.jpg): the 196px nav beside the section left it about 100px; Sign out covered its help line and Connect account was cut off",
+    "invariant": "S1: at 360x740 the section (.ts-content) is as wide as the dialog (.ts-surface) less its border, nothing in it sticks out sideways, the page does not scroll sideways, in every section, light and dark. S1: Settings > Account: no line of the Session row's words lies under the Sign out button. S1: Settings > AI accounts: both Connect account buttons lie inside the section and show their whole label. S1: the open section's tab is in view; every section is reachable from the strip. S1: at 1280x800 the nav stays 196px beside the section in a 760px dialog.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-settings/test/e2e/settings-fits-360.test.mjs:32 execFileSync() runs a computed path",
+      "packages/ui/tracy-settings/test/fixtures/open-harness.mjs:128 readFileSync() with a computed path",
+      "packages/ui/tracy-settings/test/fixtures/open-harness.mjs:62 import() with a computed specifier",
+      "packages/ui/tracy-settings/test/fixtures/open-harness.mjs:90 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "at 360x740: the dialog is one column",
+    "at 360x740, dark: the dialog is one column",
+    "at 360x740, Settings > Account",
+    "at 360x740, Settings > AI accounts",
+    "at 360x740 every section is reachable",
+    "at 1280x800 the dialog keeps its two columns"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1104-settings-dialog-fits-360"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-settings", "tracy-settings"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1104-settings-dialog-fits-360",
+    "pr": 1104,
+    "kind": "fix",
+    "area": "settings/layout",
+    "file": "tests/regression/cases/REG-PR-1104-settings-dialog-fits-360.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=120000",
+    "packages/ui/tracy-settings/test/e2e/settings-fits-360.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "at 360x740: the dialog is one column",
+    "at 360x740, dark: the dialog is one column",
+    "at 360x740, Settings > Account",
+    "at 360x740, Settings > AI accounts",
+    "at 360x740 every section is reachable",
+    "at 1280x800 the dialog keeps its two columns"
+  ],
+  "timeoutS": 600
+}

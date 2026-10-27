@@ -1,0 +1,66 @@
+{
+  "id": "REG-PR-1621-import-site-offline",
+  "kind": "fix",
+  "title": "A live site that stops answering mid-import (Cloudflare's own page for a dead origin — 521/522/523/530 or the edge-drawn 502 a quick tunnel answers — or a connection that fails on every retry) ends the run as site_offline with 'check the site is online and start again', not site_resource_limit and 'raise PHP limits'; the site's own PHP 500 and nginx's own 502 Bad Gateway, bare or relayed through Cloudflare, stay site_resource_limit",
+  "pr": 1621,
+  "area": "add-site/import",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "gateway": "packages/site/tracy-add-site/src/host/firewall.mjs gatewayOf",
+    "export": "packages/site/tracy-add-site/src/host/export.ts callPlugin, overloadAware",
+    "wizard": "packages/site/tracy-add-site/src/client/import-problems.tsx importProblemCase site_offline → p55"
+  },
+  "steps": [
+    "S1: exportDatabase against a fake engine whose db.dump answers, on every attempt, the 502 page Cloudflare's edge drew for a quick tunnel whose origin refused connections (test/fixtures/cloudflare-tunnel-origin-down-502.html, measured 22/10/2026; server: cloudflare, cf-ray, retry-after: 60).",
+    "S2: The same with a PHP fatal 500 ('Allowed memory size … exhausted') served through Cloudflare.",
+    "S3: The same with nginx's own '502 Bad Gateway' page, once with server: nginx and once with server: cloudflare (relayed).",
+    "S4: exportFiles where parts 1 and 2 land and every call for part 3 answers the S1 page.",
+    "S5: The same where every call for part 3 throws fetch failed with cause UND_ERR_SOCKET (the site closed the socket).",
+    "S6: The same where every call for part 3 answers a PHP 500 'Maximum execution time … exceeded'.",
+    "S7: gatewayOf on the S1 page with server: cloudflare and without it, Cloudflare 521/522/523/530, nginx's 502 page bare and relayed, an Apache 504 Gateway Time-out page, a PHP 500, a 503 with Retry-After and a Cloudflare 524.",
+    "S8: importProblemCase and importErrorKey for site_offline and site_resource_limit.",
+    "S9: exportDatabase against a real local server whose db.dump sends 200 with content-length 4096, writes part of the JSON and destroys the socket."
+  ],
+  "expect": [
+    "S1: ExportFailed reason site_offline, detail 'cloudflare 502'; db.dump asked 4 times at limit 5000 (retried, not halved).",
+    "S2: ExportFailed reason site_resource_limit.",
+    "S3: ExportFailed reason site_resource_limit in both.",
+    "S4: ExportFailed reason site_offline, detail 'cloudflare 502'; part 3 asked 6 times (the part ladder); the upload is not abandoned and the cursor in uploads.json still names upload up-1.",
+    "S5: ExportFailed reason site_offline, detail UND_ERR_SOCKET; part 3 asked 6 times; the cursor is kept.",
+    "S6: ExportFailed reason site_resource_limit; the cursor is kept.",
+    "S7: 'cloudflare' for the S1 page with server: cloudflare and for 521/522/523/530; null for everything else, including the S1 page without server: cloudflare.",
+    "S8: site_offline → problem p55 and key import_error_site_offline; site_resource_limit → p35 and import_error_site_resource_limit.",
+    "S9: ExportFailed reason site_offline, detail UND_ERR_SOCKET; db.dump asked 4 times."
+  ],
+  "evidence": "Dev, 22/10/2026 (#1616): a Joomla 4.4 site behind a Cloudflare quick tunnel; its web container was stopped while files part 3 was read. The tunnel log showed connection refused / EOF to the origin; the run ended state error, error site_resource_limit, step reading_files, and the wizard told the customer the site ran out of memory or time and to ask the host to raise PHP limits. Seen in two imports.",
+  "fence": "The export's engine calls against a fake engine (real HTTP for the database, mocked fetch for the files), the gateway reading with a measured Cloudflare page, and the wizard's code-to-case mapping. Not shown: a run on the dev machine with the origin stopped, and the wizard rendering p55 in a browser. A refused or reset connection after the site has answered in the run still stops as blocked_by_host (the ban check), unchanged.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/export-site-limits.test.mjs",
+      "test/files-export-slow.test.mjs",
+      "test/firewall.test.mjs",
+      "test/import-problems.test.mjs",
+      "test/import-gates.test.mjs"
+    ],
+    "cwd": "packages/site/tracy-add-site",
+    "tests": [
+      "#1616: a Cloudflare 502 for a dead origin, past every retry, is site_offline, not site_resource_limit",
+      "#1616: a PHP fatal 500 behind Cloudflare is still site_resource_limit",
+      "#1616: nginx's own 502 Bad Gateway (bare), past every retry, stays site_resource_limit",
+      "#1616: nginx's own 502 Bad Gateway (relayed through Cloudflare), past every retry, stays site_resource_limit",
+      "#1616: a site that sends its headers and then closes the socket mid-body is site_offline",
+      "a site that answers 500 to every page, past every retry, is site_resource_limit",
+      "#1616: a Cloudflare tunnel whose origin went down mid-files is site_offline, retried, cursor kept",
+      "#1616: a socket the site closes on every attempt is site_offline once the ladder runs out",
+      "#1616: the site's own PHP 500 mid-files is still site_resource_limit",
+      "sign-in, firewall, and install causes select only what the evidence establishes",
+      "an install stopped by a host limit names the limit, not \"install it yourself\"",
+      "#1616 gatewayOf: only a page Cloudflare drew for a dead origin, never a proxy's own 502"
+    ]
+  }
+}

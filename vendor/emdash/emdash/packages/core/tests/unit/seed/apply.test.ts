@@ -1,0 +1,2619 @@
+import type {
+	CompiledQuery,
+	Kysely,
+	KyselyPlugin,
+	PluginTransformQueryArgs,
+	PluginTransformResultArgs,
+	QueryResult,
+	RootOperationNode,
+	UnknownRow,
+} from "kysely";
+import { SqliteQueryCompiler, sql } from "kysely";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+
+import { BylineRepository } from "../../../src/database/repositories/byline.js";
+import { ContentRepository } from "../../../src/database/repositories/content.js";
+import { OptionsRepository } from "../../../src/database/repositories/options.js";
+import { RedirectRepository } from "../../../src/database/repositories/redirect.js";
+import { RelationRepository } from "../../../src/database/repositories/relation.js";
+import { selectTaxonomyDefs } from "../../../src/database/repositories/taxonomy-def.js";
+import { TaxonomyRepository } from "../../../src/database/repositories/taxonomy.js";
+import type { Database } from "../../../src/database/types.js";
+import { SchemaRegistry } from "../../../src/schema/registry.js";
+import { applySeed } from "../../../src/seed/apply.js";
+import type { SeedFile } from "../../../src/seed/types.js";
+import { setupTestDatabase, teardownTestDatabase } from "../../utils/test-db.js";
+
+class QueryCountingPlugin implements KyselyPlugin {
+	count = 0;
+
+	transformQuery(args: PluginTransformQueryArgs): RootOperationNode {
+		this.count += 1;
+		return args.node;
+	}
+
+	transformResult(args: PluginTransformResultArgs): Promise<QueryResult<UnknownRow>> {
+		return Promise.resolve(args.result);
+	}
+}
+
+class SqlRecordingPlugin implements KyselyPlugin {
+	readonly queries: CompiledQuery[] = [];
+	readonly #compiler = new SqliteQueryCompiler();
+
+	transformQuery(args: PluginTransformQueryArgs): RootOperationNode {
+		this.queries.push(this.#compiler.compileQuery(args.node, args.queryId));
+		return args.node;
+	}
+
+	transformResult(args: PluginTransformResultArgs): Promise<QueryResult<UnknownRow>> {
+		return Promise.resolve(args.result);
+	}
+}
+
+describe("applySeed", () => {
+	let db: Kysely<Database>;
+
+	beforeEach(async () => {
+		db = await setupTestDatabase();
+	});
+
+	afterEach(async () => {
+		await teardownTestDatabase(db);
+	});
+
+	describe("validation", () => {
+		it("should reject invalid seed file", async () => {
+			const invalidSeed = { version: "99" } as SeedFile;
+
+			await expect(applySeed(db, invalidSeed)).rejects.toThrow("Invalid seed file");
+		});
+
+		it("should accept minimal valid seed", async () => {
+			const seed: SeedFile = { version: "1" };
+
+			const result = await applySeed(db, seed);
+
+			expect(result.collections.created).toBe(0);
+			expect(result.settings.applied).toBe(0);
+		});
+	});
+
+	describe("settings", () => {
+		it("should apply site settings", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				settings: {
+					title: "Test Site",
+					tagline: "A test site",
+				},
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.settings.applied).toBe(2);
+
+			// Verify settings were saved under the real site:* keys
+			const row = await db
+				.selectFrom("options")
+				.selectAll()
+				.where("name", "=", "site:title")
+				.executeTakeFirst();
+
+			expect(row?.value).toBe('"Test Site"');
+		});
+
+		it("should skip existing settings and create missing ones in skip mode", async () => {
+			const options = new OptionsRepository(db);
+			await options.set("site:title", "Admin Title");
+
+			const seed: SeedFile = {
+				version: "1",
+				settings: {
+					title: "Seed Title",
+					tagline: "A seeded tagline",
+				},
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.settings.applied).toBe(1);
+			expect(await options.get("site:title")).toBe("Admin Title");
+			expect(await options.get("site:tagline")).toBe("A seeded tagline");
+		});
+
+		it("should apply each setting independently when a later key conflicts", async () => {
+			const options = new OptionsRepository(db);
+			await options.set("site:title", "Admin Title");
+
+			const seed: SeedFile = {
+				version: "1",
+				settings: {
+					tagline: "A seeded tagline",
+					title: "Seed Title",
+				},
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.settings.applied).toBe(1);
+			expect(await options.get("site:title")).toBe("Admin Title");
+			expect(await options.get("site:tagline")).toBe("A seeded tagline");
+		});
+
+		it("should overwrite settings in update mode", async () => {
+			const options = new OptionsRepository(db);
+			await options.set("site:title", "Admin Title");
+
+			const seed: SeedFile = {
+				version: "1",
+				settings: {
+					title: "Seed Title",
+					tagline: "A seeded tagline",
+				},
+			};
+
+			const result = await applySeed(db, seed, { onConflict: "update" });
+
+			expect(result.settings.applied).toBe(2);
+			expect(await options.get("site:title")).toBe("Seed Title");
+			expect(await options.get("site:tagline")).toBe("A seeded tagline");
+		});
+
+		it("should throw in error mode when a seeded setting already exists", async () => {
+			const options = new OptionsRepository(db);
+			await options.set("site:title", "Admin Title");
+
+			const seed: SeedFile = {
+				version: "1",
+				settings: {
+					title: "Seed Title",
+					tagline: "A seeded tagline",
+				},
+			};
+
+			await expect(applySeed(db, seed, { onConflict: "error" })).rejects.toThrow(
+				'Conflict: site setting "site:title" already exists',
+			);
+		});
+	});
+
+	describe("collections", () => {
+		it("creates wide collection schemas within the D1 query budget", async () => {
+			const counter = new QueryCountingPlugin();
+			const fields = Array.from({ length: 74 }, (_, index) => ({
+				slug: `field_${index}`,
+				label: `Field ${index}`,
+				type: "string" as const,
+			}));
+			const seed: SeedFile = {
+				version: "1",
+				collections: [{ slug: "site_info", label: "Site Info", fields }],
+			};
+
+			const result = await applySeed(db.withPlugin(counter), seed);
+
+			expect(result.collections.created).toBe(1);
+			expect(result.fields.created).toBe(74);
+			expect(counter.count).toBeLessThan(50);
+
+			const collection = await new SchemaRegistry(db).getCollection("site_info");
+			expect(collection).not.toBeNull();
+			const storedFields = await new SchemaRegistry(db).listFields(collection!.id);
+			expect(storedFields).toHaveLength(74);
+
+			const tableInfo = await sql<{
+				name: string;
+			}>`PRAGMA table_info(${sql.ref("ec_site_info")})`.execute(db);
+			expect(tableInfo.rows.map((column) => column.name)).toContain("field_73");
+		});
+
+		it("creates reference fields that target a later seed collection", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{
+								slug: "author",
+								label: "Author",
+								type: "reference",
+								validation: { targetCollection: "authors" },
+							},
+						],
+					},
+					{ slug: "authors", label: "Authors", fields: [] },
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const field = await new SchemaRegistry(db).getField("posts", "author");
+			const relation = await new RelationRepository(db).findBySlug("posts_author");
+			expect(relation?.childCollection).toBe("authors");
+			expect(field?.validation?.relation).toBe(relation?.slug);
+		});
+
+		it("creates reference-heavy schemas within the D1 query budget", async () => {
+			const counter = new QueryCountingPlugin();
+			const fields = Array.from({ length: 20 }, (_, index) => ({
+				slug: `related_${index}`,
+				label: `Related ${index}`,
+				type: "reference" as const,
+				validation: { targetCollection: "posts" },
+			}));
+			const seed: SeedFile = {
+				version: "1",
+				collections: [{ slug: "posts", label: "Posts", fields }],
+			};
+
+			const result = await applySeed(db.withPlugin(counter), seed);
+
+			expect(result.fields.created).toBe(20);
+			expect(counter.count).toBeLessThan(50);
+			const relations = await new RelationRepository(db).list();
+			expect(relations).toHaveLength(20);
+		});
+
+		it("should create collections and fields", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						labelSingular: "Post",
+						fields: [
+							{
+								slug: "title",
+								label: "Title",
+								type: "string",
+								required: true,
+								defaultValue: "Untitled",
+							},
+							{ slug: "content", label: "Content", type: "portableText" },
+						],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.collections.created).toBe(1);
+			expect(result.fields.created).toBe(2);
+
+			// Verify collection exists
+			const registry = new SchemaRegistry(db);
+			const collection = await registry.getCollection("posts");
+			expect(collection).not.toBeNull();
+			expect(collection?.label).toBe("Posts");
+
+			await sql`
+				INSERT INTO ${sql.ref("ec_posts")} (${sql.ref("id")})
+				VALUES (${"post-1"})
+			`.execute(db);
+			const row = await sql<{
+				title: string;
+			}>`
+				SELECT ${sql.ref("title")} AS title
+				FROM ${sql.ref("ec_posts")}
+				WHERE ${sql.ref("id")} = ${"post-1"}
+			`.execute(db);
+			expect(row.rows[0]?.title).toBe("Untitled");
+		});
+
+		it("applies the hidden flag from the seed", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "contact_submissions",
+						label: "Contact Submissions",
+						hidden: true,
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const registry = new SchemaRegistry(db);
+			expect((await registry.getCollection("contact_submissions"))?.hidden).toBe(true);
+			expect((await registry.getCollection("posts"))?.hidden).toBe(false);
+		});
+
+		it("updates the hidden flag when re-applying with onConflict update", async () => {
+			const collection = {
+				slug: "contact_submissions",
+				label: "Contact Submissions",
+				fields: [{ slug: "title", label: "Title", type: "string" as const }],
+			};
+			await applySeed(db, { version: "1", collections: [collection] });
+
+			await applySeed(
+				db,
+				{ version: "1", collections: [{ ...collection, hidden: true }] },
+				{
+					onConflict: "update",
+				},
+			);
+
+			const registry = new SchemaRegistry(db);
+			expect((await registry.getCollection("contact_submissions"))?.hidden).toBe(true);
+		});
+
+		it("applies and updates collection routability", async () => {
+			const collection = {
+				slug: "contact_submissions",
+				label: "Contact Submissions",
+				routable: false,
+				fields: [{ slug: "title", label: "Title", type: "string" as const }],
+			};
+			await applySeed(db, { version: "1", collections: [collection] });
+
+			const registry = new SchemaRegistry(db);
+			expect((await registry.getCollection("contact_submissions"))?.routable).toBe(false);
+
+			await applySeed(
+				db,
+				{ version: "1", collections: [{ ...collection, routable: true }] },
+				{ onConflict: "update" },
+			);
+			expect((await registry.getCollection("contact_submissions"))?.routable).toBe(true);
+		});
+
+		it("applies sortOrder from the seed and orders the list by it", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "education",
+						label: "Education",
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+					{
+						slug: "projects",
+						label: "Projects",
+						sortOrder: 0,
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const registry = new SchemaRegistry(db);
+			expect((await registry.getCollection("projects"))?.sortOrder).toBe(0);
+			expect((await registry.getCollection("education"))?.sortOrder).toBeUndefined();
+			expect((await registry.listCollections()).map((c) => c.slug)).toEqual([
+				"projects",
+				"education",
+			]);
+		});
+
+		it("should skip existing collections", async () => {
+			// Create collection first
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({
+				slug: "posts",
+				label: "Existing Posts",
+			});
+
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "New Posts",
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.collections.created).toBe(0);
+			expect(result.collections.skipped).toBe(1);
+			expect(result.fields.skipped).toBe(1);
+
+			// Original label should be preserved
+			const collection = await registry.getCollection("posts");
+			expect(collection?.label).toBe("Existing Posts");
+		});
+
+		it("should create multiple collections", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{ slug: "posts", label: "Posts", fields: [] },
+					{ slug: "pages", label: "Pages", fields: [] },
+					{ slug: "products", label: "Products", fields: [] },
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.collections.created).toBe(3);
+		});
+	});
+
+	describe("relations", () => {
+		/** Two collections, and a relation joining them, declared up front. */
+		function seedWithRelation(overrides: Partial<SeedFile> = {}): SeedFile {
+			return {
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+					{
+						slug: "authors",
+						label: "Authors",
+						fields: [{ slug: "name", label: "Name", type: "string" }],
+					},
+				],
+				relations: [
+					{
+						slug: "post_authors",
+						parentCollection: "posts",
+						childCollection: "authors",
+						parentLabel: "Posts",
+						parentLabelSingular: "Post",
+						childLabel: "Authors",
+						childLabelSingular: "Author",
+						maxChildrenPerParent: 2,
+					},
+				],
+				...overrides,
+			};
+		}
+
+		it("creates a declared relation with its labels and limits", async () => {
+			const result = await applySeed(db, seedWithRelation());
+
+			expect(result.relations).toMatchObject({ created: 1, updated: 0, skipped: 0 });
+			const relation = await new RelationRepository(db).findBySlug("post_authors");
+			expect(relation).toMatchObject({
+				parentCollection: "posts",
+				childCollection: "authors",
+				parentLabel: "Posts",
+				parentLabelSingular: "Post",
+				childLabel: "Authors",
+				childLabelSingular: "Author",
+				maxChildrenPerParent: 2,
+				maxParentsPerChild: null,
+			});
+		});
+
+		it("binds a field that names a relation instead of creating a second one", async () => {
+			const seed = seedWithRelation();
+			seed.collections![0]!.fields.push({
+				slug: "author",
+				label: "Author",
+				type: "reference",
+				validation: { relation: "post_authors" },
+			});
+
+			await applySeed(db, seed);
+
+			expect(await new RelationRepository(db).list()).toHaveLength(1);
+			const field = await new SchemaRegistry(db).getField("posts", "author");
+			expect(field?.validation).toMatchObject({
+				relation: "post_authors",
+				relationSide: "parent",
+				targetCollection: "authors",
+			});
+		});
+
+		it("binds a field on the other collection to the child side of the same relation", async () => {
+			const seed = seedWithRelation();
+			seed.collections![1]!.fields.push({
+				slug: "posts",
+				label: "Posts",
+				type: "reference",
+				validation: { relation: "post_authors" },
+			});
+
+			await applySeed(db, seed);
+
+			const field = await new SchemaRegistry(db).getField("authors", "posts");
+			expect(field?.validation).toMatchObject({
+				relation: "post_authors",
+				relationSide: "child",
+				targetCollection: "posts",
+			});
+		});
+
+		it("keeps the declared side for a relation whose ends are the same collection", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{ slug: "title", label: "Title", type: "string" },
+							{
+								slug: "referenced_by",
+								label: "Referenced by",
+								type: "reference",
+								validation: { relation: "related_posts", relationSide: "child" },
+							},
+						],
+					},
+				],
+				relations: [
+					{
+						slug: "related_posts",
+						parentCollection: "posts",
+						childCollection: "posts",
+						parentLabel: "Referenced by",
+						childLabel: "Related posts",
+					},
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const field = await new SchemaRegistry(db).getField("posts", "referenced_by");
+			expect(field?.validation).toMatchObject({
+				relationSide: "child",
+				targetCollection: "posts",
+			});
+		});
+
+		it("updates labels and limits on re-apply, and leaves them on skip", async () => {
+			await applySeed(db, seedWithRelation());
+
+			const changed = seedWithRelation();
+			changed.relations![0]!.childLabel = "Bylines";
+			changed.relations![0]!.maxChildrenPerParent = null;
+
+			const skipped = await applySeed(db, changed);
+			expect(skipped.relations).toMatchObject({ created: 0, updated: 0, skipped: 1 });
+			expect((await new RelationRepository(db).findBySlug("post_authors"))?.childLabel).toBe(
+				"Authors",
+			);
+
+			const updated = await applySeed(db, changed, { onConflict: "update" });
+			expect(updated.relations).toMatchObject({ created: 0, updated: 1, skipped: 0 });
+			expect(await new RelationRepository(db).findBySlug("post_authors")).toMatchObject({
+				childLabel: "Bylines",
+				maxChildrenPerParent: null,
+			});
+		});
+
+		it("refuses to move a relation onto different collections", async () => {
+			await applySeed(db, seedWithRelation());
+
+			const moved = seedWithRelation();
+			moved.relations![0]!.childCollection = "posts";
+
+			// The links it already holds point into the collection it is leaving.
+			await expect(applySeed(db, moved, { onConflict: "update" })).rejects.toThrow(
+				/collections cannot change/,
+			);
+		});
+
+		it("refuses a relation naming a collection that does not exist", async () => {
+			const seed = seedWithRelation();
+			seed.relations![0]!.childCollection = "ghosts";
+
+			await expect(applySeed(db, seed)).rejects.toMatchObject({ code: "COLLECTION_NOT_FOUND" });
+		});
+
+		it("refuses a field naming a relation that does not exist", async () => {
+			const seed = seedWithRelation();
+			seed.collections![0]!.fields.push({
+				slug: "author",
+				label: "Author",
+				type: "reference",
+				validation: { relation: "nope" },
+			});
+
+			await expect(applySeed(db, seed)).rejects.toMatchObject({ code: "RELATION_NOT_FOUND" });
+		});
+
+		it("refuses a field naming a relation that does not touch its collection", async () => {
+			const seed = seedWithRelation();
+			seed.collections!.push({
+				slug: "pages",
+				label: "Pages",
+				fields: [
+					{
+						slug: "author",
+						label: "Author",
+						type: "reference",
+						validation: { relation: "post_authors" },
+					},
+				],
+			});
+
+			await expect(applySeed(db, seed)).rejects.toThrow(/has no child end on collection "pages"/);
+		});
+
+		it("drops a forward $ref that names a collection seeded later", async () => {
+			const seed = seedWithRelation();
+			seed.collections![0]!.fields.push({
+				slug: "author",
+				label: "Author",
+				type: "reference",
+				validation: { relation: "post_authors" },
+			});
+			// `posts` is emitted before `authors`, which is what an export produces
+			// whenever a reference points at a collection later in the file.
+			seed.content = {
+				posts: [{ id: "post-1", slug: "hello", data: { title: "Hello", author: "$ref:author-1" } }],
+				authors: [{ id: "author-1", slug: "ada", data: { name: "Ada" } }],
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.content.created).toBe(2);
+		});
+
+		it("binds an existing unbound reference field when a re-applied seed names a target", async () => {
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({ slug: "posts", label: "Posts" });
+			await registry.createField("posts", { slug: "title", label: "Title", type: "string" });
+			await registry.createCollection({ slug: "authors", label: "Authors" });
+			await registry.createField("authors", { slug: "name", label: "Name", type: "string" });
+			// A reference field from before relations existed: no relation on it.
+			await registry.createField("posts", { slug: "author", label: "Author", type: "reference" });
+
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{ slug: "title", label: "Title", type: "string" },
+							{
+								slug: "author",
+								label: "Author",
+								type: "reference",
+								validation: { targetCollection: "authors" },
+							},
+						],
+					},
+					{
+						slug: "authors",
+						label: "Authors",
+						fields: [{ slug: "name", label: "Name", type: "string" }],
+					},
+				],
+			};
+
+			await applySeed(db, seed, { onConflict: "update" });
+
+			const field = await registry.getField("posts", "author");
+			expect(field?.validation).toMatchObject({ targetCollection: "authors" });
+			expect(field?.validation?.relation).toEqual(expect.any(String));
+		});
+
+		it("seeds content for a reference field bound to the child side", async () => {
+			const seed = seedWithRelation();
+			seed.collections![1]!.fields.push({
+				slug: "posts",
+				label: "Posts",
+				type: "reference",
+				validation: { relation: "post_authors" },
+			});
+			seed.content = {
+				posts: [{ id: "post-1", slug: "hello", data: { title: "Hello" } }],
+				authors: [{ id: "author-1", slug: "ada", data: { name: "Ada", posts: ["$ref:post-1"] } }],
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.content.created).toBe(2);
+			const relation = await new RelationRepository(db).findBySlug("post_authors");
+			const author = await new ContentRepository(db).findBySlug("authors", "ada");
+			const parents = await new RelationRepository(db).getParentsPage(
+				relation!.id,
+				author!.translationGroup!,
+			);
+			expect(parents.items).toHaveLength(1);
+		});
+	});
+
+	describe("taxonomies", () => {
+		it("should create taxonomy definitions", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{
+						name: "topics",
+						label: "Topics",
+						hierarchical: true,
+						collections: ["posts"],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.taxonomies.created).toBe(1);
+
+			// Verify taxonomy exists
+			const row = await db
+				.selectFrom("_emdash_taxonomy_defs")
+				.selectAll()
+				.where("name", "=", "topics")
+				.executeTakeFirst();
+
+			expect(row).not.toBeNull();
+			expect(row?.label).toBe("Topics");
+			expect(row?.hierarchical).toBe(1);
+			expect(row?.translation_group).toBe(row?.id);
+		});
+
+		it("should not create terms by default", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{
+						name: "tags",
+						label: "Tags",
+						hierarchical: false,
+						collections: ["posts"],
+						terms: [{ slug: "javascript", label: "JavaScript" }],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.taxonomies.created).toBe(1);
+			expect(result.taxonomies.terms).toBe(0);
+
+			const termRepo = new TaxonomyRepository(db);
+			const term = await termRepo.findBySlug("tags", "javascript");
+			expect(term).toBeFalsy();
+		});
+
+		it("should create flat taxonomy terms when includeContent is true", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{
+						name: "tags",
+						label: "Tags",
+						hierarchical: false,
+						collections: ["posts"],
+						terms: [
+							{ slug: "javascript", label: "JavaScript" },
+							{ slug: "typescript", label: "TypeScript" },
+							{ slug: "rust", label: "Rust" },
+						],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.taxonomies.created).toBe(1);
+			expect(result.taxonomies.terms).toBe(3);
+		});
+
+		it("should create hierarchical taxonomy terms with parents", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{
+						name: "topics",
+						label: "Topics",
+						hierarchical: true,
+						collections: ["posts"],
+						terms: [
+							{ slug: "tech", label: "Technology" },
+							{ slug: "web", label: "Web Development", parent: "tech" },
+							{ slug: "mobile", label: "Mobile Development", parent: "tech" },
+							{ slug: "react", label: "React", parent: "web" },
+						],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.taxonomies.terms).toBe(4);
+
+			// Verify parent-child relationship
+			const termRepo = new TaxonomyRepository(db);
+			const webTerm = await termRepo.findBySlug("topics", "web");
+			const techTerm = await termRepo.findBySlug("topics", "tech");
+
+			expect(webTerm?.parentId).toBe(techTerm?.id);
+		});
+
+		it("should skip existing terms", async () => {
+			// Create taxonomy and term first
+			await db
+				.insertInto("_emdash_taxonomy_defs")
+				.values({
+					id: "def-1",
+					name: "tags",
+					label: "Tags",
+					hierarchical: 0,
+					collections: JSON.stringify(["posts"]),
+				})
+				.execute();
+
+			const termRepo = new TaxonomyRepository(db);
+			await termRepo.create({
+				name: "tags",
+				slug: "javascript",
+				label: "Existing JS",
+			});
+
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{
+						name: "tags",
+						label: "Tags",
+						hierarchical: false,
+						collections: ["posts"],
+						terms: [
+							{ slug: "javascript", label: "New JavaScript" },
+							{ slug: "typescript", label: "TypeScript" },
+						],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			// Definition already exists, so not created
+			expect(result.taxonomies.created).toBe(0);
+			// Only typescript is new
+			expect(result.taxonomies.terms).toBe(1);
+
+			// Original label should be preserved
+			const term = await termRepo.findBySlug("tags", "javascript");
+			expect(term?.label).toBe("Existing JS");
+		});
+	});
+
+	describe("menus", () => {
+		it("should create menus with items", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				menus: [
+					{
+						name: "main",
+						label: "Main Navigation",
+						items: [
+							{ type: "custom", label: "Home", url: "/" },
+							{ type: "custom", label: "About", url: "/about" },
+							{ type: "custom", label: "Contact", url: "/contact" },
+						],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.menus.created).toBe(1);
+			expect(result.menus.items).toBe(3);
+
+			// Verify menu exists
+			const menu = await db
+				.selectFrom("_emdash_menus")
+				.selectAll()
+				.where("name", "=", "main")
+				.executeTakeFirst();
+
+			expect(menu).not.toBeNull();
+			expect(menu?.label).toBe("Main Navigation");
+			expect(menu?.translation_group).toBe(menu?.id);
+
+			const items = await db
+				.selectFrom("_emdash_menu_items")
+				.selectAll()
+				.where("menu_id", "=", menu?.id ?? "")
+				.execute();
+			for (const item of items) {
+				expect(item.translation_group, `item ${item.label}`).toBe(item.id);
+			}
+		});
+
+		it("should create nested menu items", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				menus: [
+					{
+						name: "main",
+						label: "Main",
+						items: [
+							{
+								type: "custom",
+								label: "Products",
+								url: "/products",
+								children: [
+									{
+										type: "custom",
+										label: "Software",
+										url: "/products/software",
+									},
+									{
+										type: "custom",
+										label: "Hardware",
+										url: "/products/hardware",
+									},
+								],
+							},
+						],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.menus.items).toBe(3); // 1 parent + 2 children
+
+			// Verify parent-child relationship
+			const items = await db.selectFrom("_emdash_menu_items").selectAll().execute();
+
+			const parent = items.find((i) => i.label === "Products");
+			const child = items.find((i) => i.label === "Software");
+
+			expect(child?.parent_id).toBe(parent?.id);
+		});
+
+		it("should replace items in existing menu", async () => {
+			// Create menu with items first
+			await db
+				.insertInto("_emdash_menus")
+				.values({
+					id: "menu-1",
+					name: "main",
+					label: "Main",
+					created_at: new Date().toISOString(),
+					updated_at: new Date().toISOString(),
+				})
+				.execute();
+
+			await db
+				.insertInto("_emdash_menu_items")
+				.values({
+					id: "item-1",
+					menu_id: "menu-1",
+					parent_id: null,
+					sort_order: 0,
+					type: "custom",
+					label: "Old Item",
+					custom_url: "/old",
+					created_at: new Date().toISOString(),
+				})
+				.execute();
+
+			const seed: SeedFile = {
+				version: "1",
+				menus: [
+					{
+						name: "main",
+						label: "Main",
+						items: [{ type: "custom", label: "New Item", url: "/new" }],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			// Menu not created (existed), but items are replaced
+			expect(result.menus.created).toBe(0);
+			expect(result.menus.items).toBe(1);
+
+			// Old item should be gone
+			const items = await db
+				.selectFrom("_emdash_menu_items")
+				.selectAll()
+				.where("menu_id", "=", "menu-1")
+				.execute();
+
+			expect(items).toHaveLength(1);
+			expect(items[0].label).toBe("New Item");
+		});
+	});
+
+	describe("widget areas", () => {
+		it("should create widget areas with widgets", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				widgetAreas: [
+					{
+						name: "sidebar",
+						label: "Sidebar",
+						description: "The main sidebar",
+						widgets: [
+							{
+								type: "content",
+								title: "About",
+								content: [{ _type: "block", children: [{ text: "About us" }] }],
+							},
+						],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.widgetAreas.created).toBe(1);
+			expect(result.widgetAreas.widgets).toBe(1);
+
+			// Verify area exists
+			const area = await db
+				.selectFrom("_emdash_widget_areas")
+				.selectAll()
+				.where("name", "=", "sidebar")
+				.executeTakeFirst();
+
+			expect(area).not.toBeNull();
+			expect(area?.description).toBe("The main sidebar");
+		});
+
+		it("should create menu widgets", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				widgetAreas: [
+					{
+						name: "footer",
+						label: "Footer",
+						widgets: [{ type: "menu", title: "Footer Nav", menuName: "footer-menu" }],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.widgetAreas.widgets).toBe(1);
+
+			const widget = await db.selectFrom("_emdash_widgets").selectAll().executeTakeFirst();
+
+			expect(widget?.type).toBe("menu");
+			expect(widget?.menu_name).toBe("footer-menu");
+		});
+
+		it("should create component widgets", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				widgetAreas: [
+					{
+						name: "sidebar",
+						label: "Sidebar",
+						widgets: [
+							{
+								type: "component",
+								componentId: "recent-posts",
+								props: { count: 5, showDate: true },
+							},
+						],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.widgetAreas.widgets).toBe(1);
+
+			const widget = await db.selectFrom("_emdash_widgets").selectAll().executeTakeFirst();
+
+			expect(widget?.type).toBe("component");
+			expect(widget?.component_id).toBe("recent-posts");
+			expect(JSON.parse(widget?.component_props ?? "{}")).toEqual({
+				count: 5,
+				showDate: true,
+			});
+		});
+
+		it("should replace widgets in existing area", async () => {
+			// Create area with widget first
+			await db
+				.insertInto("_emdash_widget_areas")
+				.values({
+					id: "area-1",
+					name: "sidebar",
+					label: "Sidebar",
+					description: null,
+				})
+				.execute();
+
+			await db
+				.insertInto("_emdash_widgets")
+				.values({
+					id: "widget-1",
+					area_id: "area-1",
+					sort_order: 0,
+					type: "content",
+					title: "Old Widget",
+					content: null,
+					menu_name: null,
+					component_id: null,
+					component_props: null,
+				})
+				.execute();
+
+			const seed: SeedFile = {
+				version: "1",
+				widgetAreas: [
+					{
+						name: "sidebar",
+						label: "Sidebar",
+						widgets: [{ type: "content", title: "New Widget" }],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.widgetAreas.created).toBe(0);
+			expect(result.widgetAreas.widgets).toBe(1);
+
+			// Old widget should be gone
+			const widgets = await db
+				.selectFrom("_emdash_widgets")
+				.selectAll()
+				.where("area_id", "=", "area-1")
+				.execute();
+
+			expect(widgets).toHaveLength(1);
+			expect(widgets[0]!.title).toBe("New Widget");
+		});
+	});
+
+	describe("redirects", () => {
+		it("should create redirects", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				redirects: [
+					{ source: "/old-about", destination: "/about" },
+					{
+						source: "/temp",
+						destination: "/new-temp",
+						type: 302,
+						enabled: false,
+						groupName: "migration",
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.redirects.created).toBe(2);
+			expect(result.redirects.skipped).toBe(0);
+
+			const redirects = await db
+				.selectFrom("_emdash_redirects")
+				.selectAll()
+				.orderBy("source", "asc")
+				.execute();
+
+			expect(redirects).toHaveLength(2);
+			expect(redirects[0]!.source).toBe("/old-about");
+			expect(redirects[0]!.destination).toBe("/about");
+			expect(redirects[0]!.type).toBe(301);
+			expect(redirects[0]!.enabled).toBe(1);
+			expect(redirects[1]!.source).toBe("/temp");
+			expect(redirects[1]!.type).toBe(302);
+			expect(redirects[1]!.enabled).toBe(0);
+			expect(redirects[1]!.group_name).toBe("migration");
+		});
+
+		it("should skip redirects when source already exists", async () => {
+			const redirectRepo = new RedirectRepository(db);
+			await redirectRepo.create({
+				source: "/old-about",
+				destination: "/existing-about",
+			});
+
+			const seed: SeedFile = {
+				version: "1",
+				redirects: [
+					{ source: "/old-about", destination: "/about" },
+					{ source: "/old-contact", destination: "/contact" },
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.redirects.created).toBe(1);
+			expect(result.redirects.skipped).toBe(1);
+
+			const existing = await redirectRepo.findBySource("/old-about");
+			expect(existing?.destination).toBe("/existing-about");
+
+			const created = await redirectRepo.findBySource("/old-contact");
+			expect(created?.destination).toBe("/contact");
+		});
+	});
+
+	describe("content", () => {
+		it("should create bylines and assign ordered credits to content", async () => {
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({ slug: "posts", label: "Posts" });
+			await registry.createField("posts", {
+				slug: "title",
+				label: "Title",
+				type: "string",
+			});
+
+			const seed: SeedFile = {
+				version: "1",
+				bylines: [
+					{ id: "editorial", slug: "editorial", displayName: "Editorial" },
+					{ id: "guest", slug: "guest-writer", displayName: "Guest Writer", isGuest: true },
+				],
+				content: {
+					posts: [
+						{
+							id: "post-1",
+							slug: "hello",
+							data: { title: "Hello World" },
+							bylines: [{ byline: "editorial" }, { byline: "guest", roleLabel: "Guest essay" }],
+						},
+					],
+				},
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.bylines.created).toBe(2);
+			expect(result.content.created).toBe(1);
+
+			const contentRepo = new ContentRepository(db);
+			const bylineRepo = new BylineRepository(db);
+			const entry = await contentRepo.findBySlug("posts", "hello");
+			expect(entry).not.toBeNull();
+
+			const credits = await bylineRepo.getContentBylines("posts", entry!.id);
+			expect(credits).toHaveLength(2);
+			expect(credits[0]?.byline.slug).toBe("editorial");
+			expect(credits[1]?.byline.slug).toBe("guest-writer");
+			expect(credits[1]?.roleLabel).toBe("Guest essay");
+			expect(entry?.primaryBylineId).toBe(credits[0]?.byline.id);
+		});
+
+		it("should not create bylines by default", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				bylines: [{ id: "editorial", slug: "editorial", displayName: "Editorial" }],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.bylines.created).toBe(0);
+
+			const bylineRepo = new BylineRepository(db);
+			const byline = await bylineRepo.findBySlug("editorial");
+			expect(byline).toBeFalsy();
+		});
+
+		it("should seed a byline avatar as a media row and link it", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				bylines: [
+					{
+						id: "ada",
+						slug: "ada-lovelace",
+						displayName: "Ada Lovelace",
+						avatar: {
+							storageKey: "avatars/ada.jpg",
+							alt: "Ada Lovelace",
+							width: 200,
+							height: 200,
+						},
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.bylines.created).toBe(1);
+			// The avatar created a backing media row.
+			expect(result.media.created).toBe(1);
+
+			const bylineRepo = new BylineRepository(db);
+			const byline = await bylineRepo.findBySlug("ada-lovelace");
+			expect(byline?.avatarMediaId).toBeTruthy();
+
+			// The media row carries the supplied storage key (nothing downloaded).
+			const media = await db
+				.selectFrom("media")
+				.selectAll()
+				.where("id", "=", byline!.avatarMediaId!)
+				.executeTakeFirst();
+			expect(media?.storage_key).toBe("avatars/ada.jpg");
+			expect(media?.alt).toBe("Ada Lovelace");
+			expect(media?.status).toBe("ready");
+		});
+
+		it("links a byline avatar on update (onConflict: update)", async () => {
+			const bylineRepo = new BylineRepository(db);
+
+			// First seed: no avatar.
+			await applySeed(
+				db,
+				{
+					version: "1",
+					bylines: [{ id: "grace", slug: "grace-hopper", displayName: "Grace Hopper" }],
+				},
+				{ includeContent: true },
+			);
+			const before = await bylineRepo.findBySlug("grace-hopper");
+			expect(before?.avatarMediaId).toBeNull();
+
+			// Re-seed the same slug with an avatar in update mode.
+			const result = await applySeed(
+				db,
+				{
+					version: "1",
+					bylines: [
+						{
+							id: "grace",
+							slug: "grace-hopper",
+							displayName: "Grace Hopper",
+							avatar: { storageKey: "avatars/grace.jpg" },
+						},
+					],
+				},
+				{ onConflict: "update", includeContent: true },
+			);
+
+			expect(result.bylines.updated).toBe(1);
+			expect(result.media.created).toBe(1);
+			const after = await bylineRepo.findBySlug("grace-hopper");
+			expect(after?.avatarMediaId).toBeTruthy();
+
+			// Idempotency: re-running the same update reuses the existing media
+			// row (by storage key) rather than creating a duplicate.
+			const rerun = await applySeed(
+				db,
+				{
+					version: "1",
+					bylines: [
+						{
+							id: "grace",
+							slug: "grace-hopper",
+							displayName: "Grace Hopper",
+							avatar: { storageKey: "avatars/grace.jpg" },
+						},
+					],
+				},
+				{ onConflict: "update", includeContent: true },
+			);
+			expect(rerun.media.created).toBe(0);
+			const mediaRows = await db
+				.selectFrom("media")
+				.select("id")
+				.where("storage_key", "=", "avatars/grace.jpg")
+				.execute();
+			expect(mediaRows).toHaveLength(1);
+			const afterRerun = await bylineRepo.findBySlug("grace-hopper");
+			expect(afterRerun?.avatarMediaId).toBe(after?.avatarMediaId);
+		});
+
+		it("rejects a malformed byline avatar", async () => {
+			await expect(
+				applySeed(db, {
+					version: "1",
+					bylines: [{ id: "y", slug: "y", displayName: "Y", avatar: { storageKey: "" } }],
+				}),
+			).rejects.toThrow("Invalid seed file");
+
+			// whitespace-only storage key, and an explicitly empty filename, are
+			// both rejected.
+			await expect(
+				applySeed(db, {
+					version: "1",
+					bylines: [{ id: "z", slug: "z", displayName: "Z", avatar: { storageKey: "   " } }],
+				}),
+			).rejects.toThrow("Invalid seed file");
+
+			await expect(
+				applySeed(db, {
+					version: "1",
+					bylines: [
+						{
+							id: "w",
+							slug: "w",
+							displayName: "W",
+							avatar: { storageKey: "avatars/w.jpg", filename: "" },
+						},
+					],
+				}),
+			).rejects.toThrow("Invalid seed file");
+		});
+
+		it("should not create content by default", async () => {
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({ slug: "posts", label: "Posts" });
+			await registry.createField("posts", {
+				slug: "title",
+				label: "Title",
+				type: "string",
+			});
+
+			const seed: SeedFile = {
+				version: "1",
+				content: {
+					posts: [{ id: "post-1", slug: "hello", data: { title: "Hello World" } }],
+				},
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.content.created).toBe(0);
+
+			const contentRepo = new ContentRepository(db);
+			const entries = await contentRepo.findMany("posts", {});
+			expect(entries.items).toHaveLength(0);
+		});
+
+		it("should create content when includeContent is true", async () => {
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({ slug: "posts", label: "Posts" });
+			await registry.createField("posts", {
+				slug: "title",
+				label: "Title",
+				type: "string",
+			});
+
+			const seed: SeedFile = {
+				version: "1",
+				content: {
+					posts: [
+						{ id: "post-1", slug: "hello", data: { title: "Hello World" } },
+						{ id: "post-2", slug: "goodbye", data: { title: "Goodbye World" } },
+					],
+				},
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.content.created).toBe(2);
+
+			const contentRepo = new ContentRepository(db);
+			const entry = await contentRepo.findBySlug("posts", "hello");
+			expect(entry?.data.title).toBe("Hello World");
+		});
+
+		it("idempotently publishes slugless content for a non-routable collection", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "blocks",
+						label: "Blocks",
+						routable: false,
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+				],
+				content: {
+					blocks: [{ id: "hero", status: "published", data: { title: "Hero" } }],
+				},
+			};
+
+			const first = await applySeed(db, seed, { includeContent: true });
+			expect(first.content.created).toBe(1);
+			const contentRepo = new ContentRepository(db);
+			const created = await contentRepo.findById("blocks", "hero");
+			expect(created).toMatchObject({ id: "hero", slug: null, status: "published" });
+			expect(created?.liveRevisionId).not.toBeNull();
+
+			const second = await applySeed(db, seed, { includeContent: true });
+			expect(second.content).toEqual({ created: 0, skipped: 1, updated: 0 });
+			expect((await contentRepo.findMany("blocks", {})).items).toHaveLength(1);
+
+			const updatedSeed: SeedFile = {
+				...seed,
+				content: {
+					blocks: [{ id: "hero", status: "published", data: { title: "Updated Hero" } }],
+				},
+			};
+			const updated = await applySeed(db, updatedSeed, {
+				includeContent: true,
+				onConflict: "update",
+			});
+			expect(updated.content.updated).toBe(1);
+			expect((await contentRepo.findById("blocks", "hero"))?.data.title).toBe("Updated Hero");
+		});
+
+		it("should skip existing content entries", async () => {
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({ slug: "posts", label: "Posts" });
+			await registry.createField("posts", {
+				slug: "title",
+				label: "Title",
+				type: "string",
+			});
+
+			const contentRepo = new ContentRepository(db);
+			await contentRepo.create({
+				type: "posts",
+				slug: "hello",
+				data: { title: "Existing" },
+			});
+
+			const seed: SeedFile = {
+				version: "1",
+				content: {
+					posts: [
+						{ id: "post-1", slug: "hello", data: { title: "New Title" } },
+						{ id: "post-2", slug: "world", data: { title: "World" } },
+					],
+				},
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.content.created).toBe(1);
+			expect(result.content.skipped).toBe(1);
+
+			// Original should be preserved
+			const entry = await contentRepo.findBySlug("posts", "hello");
+			expect(entry?.data.title).toBe("Existing");
+		});
+
+		it("skips an entry whose slug an earlier entry of the same seed took", async () => {
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({ slug: "posts", label: "Posts" });
+			await registry.createField("posts", { slug: "title", label: "Title", type: "string" });
+
+			const seed: SeedFile = {
+				version: "1",
+				content: {
+					posts: [
+						{ id: "post-1", slug: "hello", data: { title: "First" } },
+						{ id: "post-2", slug: "hello", data: { title: "Second" } },
+					],
+				},
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.content).toMatchObject({ created: 1, skipped: 1 });
+			const entry = await new ContentRepository(db).findBySlug("posts", "hello");
+			expect(entry?.data.title).toBe("First");
+		});
+
+		it("should resolve $ref: references between content into reference edges", async () => {
+			// Reference fields are storage-less (migration 043): a seed defines the
+			// field (with its target collection), apply creates the backing relation,
+			// and a `$ref:` value in the field's data is written as a content-reference
+			// edge rather than a column value.
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{ slug: "title", label: "Title", type: "string" },
+							{
+								slug: "related_post",
+								label: "Related Post",
+								type: "reference",
+								validation: { targetCollection: "posts" },
+							},
+						],
+					},
+				],
+				content: {
+					posts: [
+						{ id: "post-1", slug: "first", data: { title: "First" } },
+						{
+							id: "post-2",
+							slug: "second",
+							data: { title: "Second", related_post: "$ref:post-1" },
+						},
+					],
+				},
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.content.created).toBe(2);
+
+			const contentRepo = new ContentRepository(db);
+			const first = await contentRepo.findBySlug("posts", "first");
+			const second = await contentRepo.findBySlug("posts", "second");
+
+			// Storage-less: the reference value is not persisted as a column.
+			expect(second?.data).not.toHaveProperty("related_post");
+
+			// It is stored as an edge, keyed at the translation group on both ends.
+			const relationRepo = new RelationRepository(db);
+			const relation = await relationRepo.findBySlug("posts_related_post");
+			expect(relation).toBeTruthy();
+			const edges = await relationRepo.getChildrenPage(relation!.id, second!.translationGroup!);
+			expect(edges.items.map((e) => e.childGroup)).toEqual([first!.translationGroup]);
+		});
+
+		it("writes $ref: to the column for a reference field that names no target collection", async () => {
+			// The shape a seed had before relations existed: the target sits in
+			// `options.collection`, so apply forms no relation and the resolved entry
+			// id is a plain column value.
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{ slug: "title", label: "Title", type: "string" },
+							{
+								slug: "related_post",
+								label: "Related Post",
+								type: "reference",
+								options: { collection: "posts" },
+							},
+						],
+					},
+				],
+				content: {
+					posts: [
+						{ id: "post-1", slug: "first", data: { title: "First" } },
+						{
+							id: "post-2",
+							slug: "second",
+							data: { title: "Second", related_post: "$ref:post-1" },
+						},
+					],
+				},
+			};
+
+			await applySeed(db, seed, { includeContent: true });
+
+			const contentRepo = new ContentRepository(db);
+			const first = await contentRepo.findBySlug("posts", "first");
+			const second = await contentRepo.findBySlug("posts", "second");
+			expect(second?.data.related_post).toBe(first!.id);
+			expect(await new RelationRepository(db).findBySlug("posts_related_post")).toBeNull();
+		});
+
+		it("should assign taxonomy terms to content", async () => {
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({ slug: "posts", label: "Posts" });
+			await registry.createField("posts", {
+				slug: "title",
+				label: "Title",
+				type: "string",
+			});
+
+			// Create taxonomy
+			await db
+				.insertInto("_emdash_taxonomy_defs")
+				.values({
+					id: "def-1",
+					name: "tags",
+					label: "Tags",
+					hierarchical: 0,
+					collections: JSON.stringify(["posts"]),
+				})
+				.execute();
+
+			const termRepo = new TaxonomyRepository(db);
+			await termRepo.create({ name: "tags", slug: "javascript", label: "JS" });
+			await termRepo.create({ name: "tags", slug: "typescript", label: "TS" });
+
+			const seed: SeedFile = {
+				version: "1",
+				content: {
+					posts: [
+						{
+							id: "post-1",
+							slug: "hello",
+							data: { title: "Hello" },
+							taxonomies: { tags: ["javascript", "typescript"] },
+						},
+					],
+				},
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.content.created).toBe(1);
+
+			// Check taxonomy assignments
+			const contentRepo = new ContentRepository(db);
+			const entry = await contentRepo.findBySlug("posts", "hello");
+
+			const assignments = await db
+				.selectFrom("content_taxonomies")
+				.selectAll()
+				.where("entry_id", "=", entry!.id)
+				.execute();
+
+			expect(assignments).toHaveLength(2);
+		});
+
+		it("reads the site timezone and field definitions as often for ten entries as for one", async () => {
+			const lookupsFor = async (entriesPerCollection: number) => {
+				const target = await setupTestDatabase();
+				const recorder = new SqlRecordingPlugin();
+				const collections = ["pages", "posts"];
+				const seed: SeedFile = {
+					version: "1",
+					collections: collections.map((slug) => ({
+						slug,
+						label: slug,
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					})),
+					content: Object.fromEntries(
+						collections.map((slug) => [
+							slug,
+							Array.from({ length: entriesPerCollection }, (_, i) => ({
+								id: `${slug}-${i}`,
+								slug: `${slug}-${i}`,
+								data: { title: `${slug} ${i}` },
+							})),
+						]),
+					),
+				};
+				try {
+					await applySeed(target.withPlugin(recorder), seed, { includeContent: true });
+					await applySeed(target.withPlugin(recorder), seed, {
+						includeContent: true,
+						onConflict: "update",
+					});
+				} finally {
+					await teardownTestDatabase(target);
+				}
+				return {
+					timezone: recorder.queries.filter((query) => query.parameters.includes("site:timezone"))
+						.length,
+					fields: recorder.queries.filter((query) => query.sql.includes('from "_emdash_fields"'))
+						.length,
+				};
+			};
+
+			const single = await lookupsFor(1);
+
+			expect(single.timezone).toBeGreaterThan(0);
+			expect(await lookupsFor(10)).toEqual(single);
+		});
+
+		it("resolves seeded datetimes in the timezone and fields of the seed being applied", async () => {
+			await applySeed(
+				db,
+				{
+					version: "1",
+					collections: [
+						{
+							slug: "events",
+							label: "Events",
+							fields: [{ slug: "title", label: "Title", type: "string" }],
+						},
+					],
+					content: { events: [{ id: "first", slug: "first", data: { title: "First" } }] },
+				},
+				{ includeContent: true },
+			);
+
+			await applySeed(
+				db,
+				{
+					version: "1",
+					settings: { timezone: "Asia/Tokyo" },
+					collections: [
+						{
+							slug: "events",
+							label: "Events",
+							fields: [
+								{ slug: "title", label: "Title", type: "string" },
+								{ slug: "starts_at", label: "Starts at", type: "datetime" },
+							],
+						},
+					],
+					content: {
+						events: [
+							{
+								id: "second",
+								slug: "second",
+								data: { title: "Second", starts_at: "2026-03-01T09:00" },
+							},
+						],
+					},
+				},
+				{ includeContent: true, onConflict: "update" },
+			);
+
+			const entry = await new ContentRepository(db).findBySlug("events", "second");
+			expect(entry?.data.starts_at).toBe("2026-03-01T00:00:00.000Z");
+		});
+	});
+
+	describe("apply order", () => {
+		it("should create content before menus so refs resolve", async () => {
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({ slug: "pages", label: "Pages" });
+			await registry.createField("pages", {
+				slug: "title",
+				label: "Title",
+				type: "string",
+			});
+
+			const seed: SeedFile = {
+				version: "1",
+				content: {
+					pages: [{ id: "about-page", slug: "about", data: { title: "About Us" } }],
+				},
+				menus: [
+					{
+						name: "main",
+						label: "Main",
+						items: [
+							{
+								type: "page",
+								label: "About",
+								ref: "about-page",
+								collection: "pages",
+							},
+						],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed, { includeContent: true });
+
+			expect(result.content.created).toBe(1);
+			expect(result.menus.items).toBe(1);
+
+			// Menu item should reference the content
+			const contentRepo = new ContentRepository(db);
+			const aboutPage = await contentRepo.findBySlug("pages", "about");
+
+			const menuItem = await db.selectFrom("_emdash_menu_items").selectAll().executeTakeFirst();
+
+			expect(menuItem?.reference_id).toBe(aboutPage?.id);
+		});
+	});
+
+	describe("sections", () => {
+		it("should create sections", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				sections: [
+					{
+						slug: "hero-centered",
+						title: "Centered Hero",
+						description: "A centered hero section",
+						keywords: ["hero", "banner"],
+						content: [
+							{
+								_type: "block",
+								style: "h1",
+								children: [{ _type: "span", text: "Welcome" }],
+							},
+						],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.sections.created).toBe(1);
+			expect(result.sections.skipped).toBe(0);
+
+			// Verify section exists
+			const section = await db
+				.selectFrom("_emdash_sections")
+				.selectAll()
+				.where("slug", "=", "hero-centered")
+				.executeTakeFirst();
+
+			expect(section).not.toBeNull();
+			expect(section?.title).toBe("Centered Hero");
+			expect(section?.description).toBe("A centered hero section");
+			expect(section?.source).toBe("theme");
+			expect(JSON.parse(section?.keywords ?? "[]")).toEqual(["hero", "banner"]);
+		});
+
+		it("should skip existing sections", async () => {
+			// Create section first
+			await db
+				.insertInto("_emdash_sections")
+				.values({
+					id: "sec-1",
+					slug: "hero-centered",
+					title: "Existing Hero",
+					description: null,
+					keywords: null,
+					content: "[]",
+					preview_media_id: null,
+					source: "theme",
+					theme_id: "hero-centered",
+					created_at: new Date().toISOString(),
+					updated_at: new Date().toISOString(),
+				})
+				.execute();
+
+			const seed: SeedFile = {
+				version: "1",
+				sections: [
+					{
+						slug: "hero-centered",
+						title: "New Hero",
+						content: [],
+					},
+					{
+						slug: "cta-newsletter",
+						title: "Newsletter CTA",
+						content: [],
+					},
+				],
+			};
+
+			const result = await applySeed(db, seed);
+
+			expect(result.sections.created).toBe(1);
+			expect(result.sections.skipped).toBe(1);
+
+			// Original title should be preserved
+			const section = await db
+				.selectFrom("_emdash_sections")
+				.selectAll()
+				.where("slug", "=", "hero-centered")
+				.executeTakeFirst();
+
+			expect(section?.title).toBe("Existing Hero");
+		});
+	});
+
+	describe("idempotency", () => {
+		it("should be safe to run multiple times", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				settings: { siteTitle: "Test Site" },
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+				],
+				taxonomies: [
+					{
+						name: "tags",
+						label: "Tags",
+						hierarchical: false,
+						collections: ["posts"],
+						terms: [{ slug: "test", label: "Test" }],
+					},
+				],
+				menus: [
+					{
+						name: "main",
+						label: "Main",
+						items: [{ type: "custom", label: "Home", url: "/" }],
+					},
+				],
+				widgetAreas: [
+					{
+						name: "sidebar",
+						label: "Sidebar",
+						widgets: [{ type: "content", title: "About" }],
+					},
+				],
+				redirects: [{ source: "/legacy-post", destination: "/posts/test" }],
+			};
+
+			// First application
+			const result1 = await applySeed(db, seed);
+			expect(result1.collections.created).toBe(1);
+			expect(result1.taxonomies.created).toBe(1);
+			expect(result1.menus.created).toBe(1);
+			expect(result1.widgetAreas.created).toBe(1);
+			expect(result1.redirects.created).toBe(1);
+
+			// Second application - should skip existing
+			const result2 = await applySeed(db, seed);
+			expect(result2.collections.created).toBe(0);
+			expect(result2.collections.skipped).toBe(1);
+			expect(result2.taxonomies.created).toBe(0);
+			// Menus and widgets replace items but don't duplicate
+			expect(result2.menus.created).toBe(0);
+			expect(result2.widgetAreas.created).toBe(0);
+			expect(result2.redirects.created).toBe(0);
+			expect(result2.redirects.skipped).toBe(1);
+		});
+	});
+
+	describe("i18n round-trip", () => {
+		it("imports menu translations sharing one translation_group", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				menus: [
+					{
+						id: "menu:primary:en",
+						name: "primary",
+						label: "Primary",
+						locale: "en",
+						items: [{ type: "custom", label: "Home", url: "/" }],
+					},
+					{
+						id: "menu:primary:es",
+						name: "primary",
+						label: "Principal",
+						locale: "es",
+						translationOf: "menu:primary:en",
+						items: [{ type: "custom", label: "Inicio", url: "/" }],
+					},
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const rows = await db
+				.selectFrom("_emdash_menus")
+				.selectAll()
+				.where("name", "=", "primary")
+				.orderBy("locale", "asc")
+				.execute();
+
+			expect(rows).toHaveLength(2);
+			expect(rows[0]?.locale).toBe("en");
+			expect(rows[1]?.locale).toBe("es");
+			expect(rows[0]?.translation_group).toBe(rows[1]?.translation_group);
+			expect(rows[0]?.translation_group).toBe(rows[0]?.id);
+		});
+
+		it("imports taxonomy def translations sharing one translation_group", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{
+						id: "tax:topics:en",
+						name: "topics",
+						label: "Topics",
+						hierarchical: false,
+						collections: ["posts"],
+						locale: "en",
+					},
+					{
+						id: "tax:topics:es",
+						name: "topics",
+						label: "Temas",
+						hierarchical: false,
+						collections: ["posts"],
+						locale: "es",
+						translationOf: "tax:topics:en",
+					},
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const rows = await db
+				.selectFrom("_emdash_taxonomy_defs")
+				.selectAll()
+				.where("name", "=", "topics")
+				.orderBy("locale", "asc")
+				.execute();
+
+			expect(rows).toHaveLength(2);
+			expect(rows[0]?.translation_group).toBe(rows[1]?.translation_group);
+		});
+
+		it("takes a taxonomy translation's structure from the taxonomy", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{
+						id: "tax:topics:en",
+						name: "topics",
+						label: "Topics",
+						hierarchical: true,
+						collections: ["posts"],
+						locale: "en",
+					},
+					{
+						id: "tax:topics:es",
+						name: "topics",
+						label: "Temas",
+						locale: "es",
+						translationOf: "tax:topics:en",
+					},
+					{
+						id: "tax:topics:fr",
+						name: "topics",
+						label: "Sujets",
+						hierarchical: false,
+						collections: [],
+						locale: "fr",
+						translationOf: "tax:topics:en",
+					},
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const rows = await selectTaxonomyDefs(db)
+				.where("d.name", "=", "topics")
+				.orderBy("d.locale", "asc")
+				.execute();
+			expect(
+				rows.map(({ locale, hierarchical, collections }) => ({
+					locale,
+					hierarchical,
+					collections,
+				})),
+			).toEqual(
+				["en", "es", "fr"].map((locale) => ({
+					locale,
+					hierarchical: 1,
+					collections: JSON.stringify(["posts"]),
+				})),
+			);
+		});
+
+		it("takes a taxonomy's structure from its source entry when translations come first", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{
+						name: "topics",
+						label: "Sujets",
+						hierarchical: false,
+						collections: [],
+						locale: "fr",
+						translationOf: "tax:topics:en",
+					},
+					{ name: "topics", label: "Temas", locale: "es", translationOf: "tax:topics:en" },
+					{
+						id: "tax:topics:en",
+						name: "topics",
+						label: "Topics",
+						hierarchical: true,
+						collections: ["posts"],
+						locale: "en",
+					},
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const rows = await selectTaxonomyDefs(db).where("d.name", "=", "topics").execute();
+			expect(rows).toHaveLength(3);
+			for (const row of rows) {
+				expect(row).toMatchObject({ hierarchical: 1, collections: JSON.stringify(["posts"]) });
+			}
+		});
+
+		it("follows a chain of taxonomy translations to the entry that declares the structure", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{ name: "topics", label: "Sujets", locale: "fr", translationOf: "tax:topics:es" },
+					{
+						id: "tax:topics:es",
+						name: "topics",
+						label: "Temas",
+						locale: "es",
+						translationOf: "tax:topics:en",
+					},
+					{
+						id: "tax:topics:en",
+						name: "topics",
+						label: "Topics",
+						hierarchical: true,
+						collections: ["posts"],
+						locale: "en",
+					},
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const rows = await selectTaxonomyDefs(db).where("d.name", "=", "topics").execute();
+			expect(rows).toHaveLength(3);
+			for (const row of rows) {
+				expect(row).toMatchObject({ hierarchical: 1, collections: JSON.stringify(["posts"]) });
+			}
+		});
+
+		it("imports menu item translations sharing one translation_group", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				menus: [
+					{
+						id: "menu:primary:en",
+						name: "primary",
+						label: "Primary",
+						locale: "en",
+						items: [
+							{ id: "item:primary:home:en", type: "custom", label: "Home", url: "/", locale: "en" },
+							{
+								id: "item:primary:about:en",
+								type: "custom",
+								label: "About",
+								url: "/about",
+								locale: "en",
+							},
+						],
+					},
+					{
+						id: "menu:primary:es",
+						name: "primary",
+						label: "Principal",
+						locale: "es",
+						translationOf: "menu:primary:en",
+						items: [
+							{
+								id: "item:primary:home:es",
+								type: "custom",
+								label: "Inicio",
+								url: "/",
+								locale: "es",
+								translationOf: "item:primary:home:en",
+							},
+							{
+								id: "item:primary:about:es",
+								type: "custom",
+								label: "Acerca",
+								url: "/about",
+								locale: "es",
+								translationOf: "item:primary:about:en",
+							},
+						],
+					},
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const items = await db
+				.selectFrom("_emdash_menu_items")
+				.selectAll()
+				.orderBy(["label", "locale"])
+				.execute();
+
+			expect(items).toHaveLength(4);
+
+			const enHome = items.find((i) => i.label === "Home");
+			const esHome = items.find((i) => i.label === "Inicio");
+			const enAbout = items.find((i) => i.label === "About");
+			const esAbout = items.find((i) => i.label === "Acerca");
+
+			expect(enHome?.translation_group).toBe(esHome?.translation_group);
+			expect(enHome?.translation_group).toBe(enHome?.id);
+			expect(enAbout?.translation_group).toBe(esAbout?.translation_group);
+			expect(enAbout?.translation_group).not.toBe(enHome?.translation_group);
+		});
+
+		it("falls back to fresh group when item translationOf is missing", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				menus: [
+					{
+						id: "menu:primary:es",
+						name: "primary",
+						label: "Principal",
+						locale: "es",
+						items: [
+							{
+								id: "item:primary:home:es",
+								type: "custom",
+								label: "Inicio",
+								url: "/",
+								locale: "es",
+								translationOf: "item:primary:home:en",
+							},
+						],
+					},
+				],
+			};
+
+			await applySeed(db, seed);
+
+			const item = await db
+				.selectFrom("_emdash_menu_items")
+				.selectAll()
+				.where("label", "=", "Inicio")
+				.executeTakeFirst();
+
+			expect(item?.translation_group).toBe(item?.id);
+		});
+
+		it("imports term translations sharing one translation_group", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{
+						id: "tax:topics:en",
+						name: "topics",
+						label: "Topics",
+						hierarchical: false,
+						collections: ["posts"],
+						locale: "en",
+						terms: [{ id: "term:topics:tech:en", slug: "tech", label: "Tech", locale: "en" }],
+					},
+					{
+						id: "tax:topics:es",
+						name: "topics",
+						label: "Temas",
+						hierarchical: false,
+						collections: ["posts"],
+						locale: "es",
+						translationOf: "tax:topics:en",
+						terms: [
+							{
+								id: "term:topics:tech:es",
+								slug: "tecnologia",
+								label: "Tecnología",
+								locale: "es",
+								translationOf: "term:topics:tech:en",
+							},
+						],
+					},
+				],
+			};
+
+			await applySeed(db, seed, { includeContent: true });
+
+			const terms = await db
+				.selectFrom("taxonomies")
+				.selectAll()
+				.where("name", "=", "topics")
+				.orderBy("locale", "asc")
+				.execute();
+
+			expect(terms).toHaveLength(2);
+			expect(terms[0]?.slug).toBe("tech");
+			expect(terms[1]?.slug).toBe("tecnologia");
+			expect(terms[0]?.translation_group).toBe(terms[1]?.translation_group);
+		});
+
+		it("keeps a term translation that names no parent under its term's parent", async () => {
+			const seed: SeedFile = {
+				version: "1",
+				taxonomies: [
+					{
+						id: "tax:topics:en",
+						name: "topics",
+						label: "Topics",
+						hierarchical: true,
+						collections: ["posts"],
+						locale: "en",
+						terms: [
+							{ id: "term:news:en", slug: "news", label: "News", locale: "en" },
+							{ id: "term:local:en", slug: "local", label: "Local", parent: "news", locale: "en" },
+						],
+					},
+					{
+						id: "tax:topics:es",
+						name: "topics",
+						label: "Temas",
+						hierarchical: true,
+						collections: ["posts"],
+						locale: "es",
+						translationOf: "tax:topics:en",
+						terms: [
+							{
+								slug: "local-es",
+								label: "Local ES",
+								locale: "es",
+								translationOf: "term:local:en",
+							},
+						],
+					},
+				],
+			};
+
+			await applySeed(db, seed, { includeContent: true });
+
+			const repo = new TaxonomyRepository(db);
+			const news = await repo.findBySlug("topics", "news", "en");
+			const localEs = await repo.findBySlug("topics", "local-es", "es");
+			expect(localEs?.parentId).toBe(news?.translationGroup);
+		});
+	});
+
+	it.each(["skip", "update"] as const)(
+		"honors %s for trashed slugless seed IDs",
+		async (onConflict) => {
+			const seed: SeedFile = {
+				version: "1",
+				collections: [
+					{
+						slug: "blocks",
+						label: "Blocks",
+						routable: false,
+						fields: [{ slug: "title", type: "string", label: "Title" }],
+					},
+				],
+				content: { blocks: [{ id: "hero", data: { title: "Original" } }] },
+			};
+			await applySeed(db, seed, { includeContent: true });
+			const repo = new ContentRepository(db);
+			await repo.delete("blocks", "hero");
+			seed.content!.blocks![0]!.data.title = "Replacement";
+			const apply = applySeed(db, seed, { includeContent: true, onConflict });
+			expect((await apply).content).toEqual({ created: 0, skipped: 1, updated: 0 });
+			expect(await repo.findById("blocks", "hero")).toBeNull();
+			expect((await repo.findByIdIncludingTrashed("blocks", "hero"))?.data.title).toBe("Original");
+		},
+	);
+
+	describe("content conflicts with trashed entries", () => {
+		async function setupTrashedEntry(): Promise<string> {
+			const registry = new SchemaRegistry(db);
+			await registry.createCollection({
+				slug: "posts",
+				label: "Posts",
+				labelSingular: "Post",
+			});
+			await registry.createField("posts", {
+				slug: "title",
+				label: "Title",
+				type: "string",
+			});
+
+			const contentRepo = new ContentRepository(db);
+			const created = await contentRepo.create({
+				type: "posts",
+				slug: "hello",
+				status: "published",
+				data: { title: "Hello" },
+				locale: "en",
+			});
+			await contentRepo.delete("posts", created.id);
+			return created.id;
+		}
+
+		const seed: SeedFile = {
+			version: "1",
+			content: {
+				posts: [{ id: "post-1", slug: "hello", data: { title: "Hello again" } }],
+			},
+		};
+
+		it("skips entries whose slug collides with a trashed row (onConflict: skip)", async () => {
+			const trashedId = await setupTrashedEntry();
+
+			const result = await applySeed(db, seed, { includeContent: true, onConflict: "skip" });
+
+			expect(result.content.created).toBe(0);
+			expect(result.content.skipped).toBe(1);
+
+			// The trashed row is untouched — not resurrected, not duplicated.
+			const rows = await db
+				.selectFrom("ec_posts" as never)
+				.select(["id", "deleted_at"] as never)
+				.execute();
+			expect(rows).toHaveLength(1);
+			expect((rows[0] as { id: string }).id).toBe(trashedId);
+			expect((rows[0] as { deleted_at: string | null }).deleted_at).not.toBeNull();
+		});
+
+		it("does not resurrect trashed content (onConflict: update)", async () => {
+			await setupTrashedEntry();
+
+			const result = await applySeed(db, seed, { includeContent: true, onConflict: "update" });
+
+			expect(result.content.created).toBe(0);
+			expect(result.content.updated).toBe(0);
+			expect(result.content.skipped).toBe(1);
+
+			const rows = await db
+				.selectFrom("ec_posts" as never)
+				.select(["title", "deleted_at"] as never)
+				.execute();
+			expect(rows).toHaveLength(1);
+			// Field data unchanged — the seed's "Hello again" must not overwrite
+			// content an operator deliberately deleted.
+			expect((rows[0] as { title: string }).title).toBe("Hello");
+			expect((rows[0] as { deleted_at: string | null }).deleted_at).not.toBeNull();
+		});
+
+		it("reports a clear conflict for trashed collisions (onConflict: error)", async () => {
+			await setupTrashedEntry();
+
+			await expect(
+				applySeed(db, seed, { includeContent: true, onConflict: "error" }),
+			).rejects.toThrow(/already exists/);
+		});
+
+		it("does not resolve references through a skipped trashed entry", async () => {
+			await setupTrashedEntry();
+
+			const seedWithTranslation: SeedFile = {
+				version: "1",
+				content: {
+					posts: [
+						{ id: "post-1", slug: "hello", data: { title: "Hello again" } },
+						{
+							id: "post-2",
+							slug: "hola",
+							locale: "es",
+							translationOf: "post-1",
+							data: { title: "Hola" },
+						},
+					],
+				},
+			};
+
+			const result = await applySeed(db, seedWithTranslation, {
+				includeContent: true,
+				onConflict: "skip",
+			});
+
+			expect(result.content.skipped).toBe(1);
+			expect(result.content.created).toBe(1);
+
+			// The sibling exists but is not linked to the trashed row's
+			// translation group.
+			const contentRepo = new ContentRepository(db);
+			const sibling = await contentRepo.findBySlug("posts", "hola", "es");
+			expect(sibling).not.toBeNull();
+
+			const trashedRows = await db
+				.selectFrom("ec_posts" as never)
+				.select(["slug", "translation_group"] as never)
+				.execute();
+			const trashed = (trashedRows as { slug: string; translation_group: string }[]).find(
+				(r) => r.slug === "hello",
+			);
+			expect(sibling!.translationGroup).not.toBe(trashed?.translation_group);
+		});
+
+		it("does not create relation edges to a skipped trashed entry", async () => {
+			await setupTrashedEntry();
+
+			const result = await applySeed(
+				db,
+				{
+					version: "1",
+					collections: [
+						{
+							slug: "posts",
+							label: "Posts",
+							fields: [
+								{ slug: "title", label: "Title", type: "string" },
+								{
+									slug: "related",
+									label: "Related",
+									type: "reference",
+									validation: { targetCollection: "posts" },
+								},
+							],
+						},
+					],
+					content: {
+						posts: [
+							{ id: "post-1", slug: "hello", data: { title: "Hello again" } },
+							{
+								id: "post-2",
+								slug: "referrer",
+								data: { title: "Referrer", related: "$ref:post-1" },
+							},
+						],
+					},
+				},
+				{ includeContent: true, onConflict: "update" },
+			);
+
+			expect(result.content).toMatchObject({ created: 1, skipped: 1 });
+			const repo = new ContentRepository(db);
+			const referrer = await repo.findBySlug("posts", "referrer");
+			const relation = await new RelationRepository(db).findBySlug("posts_related");
+			const children = await new RelationRepository(db).getChildrenPage(
+				relation!.id,
+				referrer!.translationGroup!,
+			);
+			expect(children.items).toEqual([]);
+		});
+	});
+});

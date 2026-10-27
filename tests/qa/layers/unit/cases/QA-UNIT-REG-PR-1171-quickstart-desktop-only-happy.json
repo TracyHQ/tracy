@@ -1,0 +1,46 @@
+{
+  "id": "QA-UNIT-REG-PR-1171-quickstart-desktop-only-happy",
+  "itemIds": ["regression:REG-PR-1171-quickstart-desktop-only"],
+  "requirement": "The web landing offers Tracy Desktop beside the zip; the app is sent to the waiting template",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1171-quickstart-desktop-only.json",
+    "ref": "PR #1171 (feat); fix evidence: none recorded",
+    "invariant": "S1: exit 0, 0 failures. S2: exit 0, 0 failures (the Postgres case may be skipped without TEST_DATABASE_URL); the no-session-401 and signed-in-stream cases pass. S3: exit 0, 0 failures, 0 skipped; the web-landing (zip then offer), no-zip, app-landing, root-in-app and root-on-web cases pass. S4: apps/tracy-web/src/db/migrations/091-desktop-intent-platform.sql present; apps/tracy-web/src/quickstarts/download.js does not import lib/desktop-surface.js.",
+    "productSources": ["apps/tracy-web/src/quickstarts/download.js:17"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1171-quickstart-desktop-only.mjs:22 spawnSync() runs a computed path",
+      "tests/regression/scripts/REG-PR-1171-quickstart-desktop-only.mjs:27 spawnSync() runs a computed path",
+      "tests/regression/scripts/REG-PR-1171-quickstart-desktop-only.mjs:32 spawnSync() runs a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1171-quickstart-desktop-only.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1171-quickstart-desktop-only"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1171-quickstart-desktop-only",
+    "pr": 1171,
+    "kind": "feat",
+    "area": "quickstarts/download",
+    "file": "tests/regression/cases/REG-PR-1171-quickstart-desktop-only.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1171-quickstart-desktop-only.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The minimum entitlements for Electron's hardened runtime.
+
+  The four keys below are NOT there just to be safe — with any one missing, macOS kills the app right
+  at launch, and the message only says "quit unexpectedly":
+
+    allow-jit + allow-unsigned-executable-memory  V8 compiles JavaScript to machine code at run time.
+                                                   Hardened runtime forbids that by default.
+    allow-dyld-environment-variables               Electron uses DYLD_* to load its frameworks.
+    disable-library-validation                     Electron's frameworks are signed by Electron,
+                                                   not by our Developer ID.
+
+  Add nothing beyond these four. Every extra entitlement is one the app does not need but that someone
+  who takes over the process can use.
+
+  One more, for a feature, not for startup: device.audio-input lets the page record when the person
+  presses the chat box's microphone (voice input, 15/10/2026). Without it hardened runtime refuses
+  the microphone silently: no prompt, no sound. macOS still asks the person once, in the words of
+  NSMicrophoneUsageDescription (build/package.sh).
+
+  And personal-information.location: Website Opportunities' "Use my location" (18/10/2026). Without it
+  hardened runtime refuses geolocation silently; macOS asks once in the words of NSLocationUsageDescription.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>com.apple.security.cs.allow-jit</key>
+  <true/>
+  <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+  <true/>
+  <key>com.apple.security.cs.allow-dyld-environment-variables</key>
+  <true/>
+  <key>com.apple.security.cs.disable-library-validation</key>
+  <true/>
+  <key>com.apple.security.device.audio-input</key>
+  <true/>
+  <key>com.apple.security.personal-information.location</key>
+  <true/>
+</dict>
+</plist>

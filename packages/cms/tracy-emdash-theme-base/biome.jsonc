@@ -1,0 +1,26 @@
+// Generated files — by `astro dev`/`astro sync` every time the schema is read, and by tools/build-seed.mjs,
+// tools/artifact.mjs, tools/generate-docs.mjs: the formatter must not
+// rewrite them, or the working tree (tabs, double quotes — Astro's output) differs from the commit
+// (biome's output) by the same two files on every machine, and a packed artifact never hashes the
+// same as the tree it was packed from. Measured 2026-09-14 on artifact-7: emdash-env.d.ts alone.
+{
+  "root": false,
+  "extends": "//",
+  "files": {
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!.astro/**",
+      "!.emdash/**",
+      "!.teamshare/**",
+      "!emdash-env.d.ts",
+      "!artifact.json",
+      "!docs/generated/**",
+      "!seed/**",
+      "!evidence/**",
+      "!data/**",
+      "!uploads/**"
+    ]
+  }
+}

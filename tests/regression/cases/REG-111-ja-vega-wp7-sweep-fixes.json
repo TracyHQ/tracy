@@ -1,0 +1,27 @@
+{
+  "id": "REG-111",
+  "kind": "fix",
+  "pr": 907,
+  "title": "JA Vega wp7: category chips are set like the source (no letter-spacing), section pills are pure black, the project band chip is 30px tall, and the site sweep passes on every route",
+  "area": "wordpress-theme/wp-ja-vega",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-vega theme under test (local stand from the quickstart pack) and the Joomla source (local stand from quickstart/ja-vega/j6, web fonts loaded).",
+    "S2: From the TCH checkout run: node vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/visual/site-sweep.mjs --site <site> --source <source> --run-root tasks/ja-vega-wp7 --zip <theme.zip> --out <dir>",
+    "S3: Then run: node tasks/ja-vega-wp7/tools/measure117.mjs --site <site> --source <source> --sweep <dir> --zip <theme.zip> --out <dir>/fix-measure.json",
+    "S4: Read the summary table and the final line of each command."
+  ],
+  "expect": [
+    "site-sweep: overflow, scheme, background, header and chips all report 0 defects and 0 not-measured over 34 routes x 6 widths x light and dark.",
+    "Category chips on /portfolio and the six category pages are not letter-spaced (128px wide, not 152px), section pills print in #000, and the 'More our projects' band chip is 30px tall, each as on the source.",
+    "measure117: chips-repeated passes (the style guide's repeated 'New' badges equal the source, paired by order); the merged fix-measure.json is 6/6."
+  ],
+  "selectors": {
+    "tool": "tasks/ja-vega-wp7/tools/measure117.mjs",
+    "evidence": "tasks/ja-vega-wp7/release/fix-measure.json"
+  },
+  "evidence": "Sweeps of 04/10/2026 against the local Joomla source: on 1.1.6 the chips check found 208 letter-spacing cases on 7 routes and 38 section-pill colour cases on 13 routes; on 1.1.7 all checks pass, 0 not measured (fix-measure.json 6/6, bound to wp-ja-vega-1.1.7.zip c894e323)",
+  "fence": "Browser-measured behaviour of the shipped theme against the source; the sweep exits non-zero on a defect and on anything it could not measure"
+}

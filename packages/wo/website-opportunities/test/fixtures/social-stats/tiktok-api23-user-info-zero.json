@@ -1,0 +1,33 @@
+{
+  "statusCode": 0,
+  "status_code": 0,
+  "status_msg": "",
+  "userInfo": {
+    "user": {
+      "id": "7452287584697295140",
+      "uniqueId": "brewlet.coffee",
+      "secUid": "MS4wLjABAAAANPtBPsnYfWeB6FSCnogors1quhZeUWFU2kZnYMHXBC37eCGr1XuBhga7RGYSUgps",
+      "nickname": "brewlet.coffee",
+      "privateAccount": false,
+      "verified": false
+    },
+    "stats": {
+      "followerCount": 0,
+      "followingCount": 0,
+      "heart": 0,
+      "heartCount": 0,
+      "videoCount": 0,
+      "diggCount": 0,
+      "friendCount": 0
+    },
+    "statsV2": {
+      "followerCount": "0",
+      "followingCount": "0",
+      "heart": "0",
+      "heartCount": "0",
+      "videoCount": "0",
+      "diggCount": "0",
+      "friendCount": "0"
+    }
+  }
+}

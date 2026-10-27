@@ -1,0 +1,469 @@
+/**
+ * Marketplace API client
+ *
+ * Calls the site-side proxy endpoints (/_emdash/api/admin/plugins/marketplace/*)
+ * which forward to the marketplace Worker. This avoids CORS issues since the
+ * admin UI doesn't need to know the marketplace URL.
+ */
+
+import { i18n } from "@lingui/core";
+import { msg } from "@lingui/core/macro";
+
+import { API_BASE, apiFetch, parseApiResponse, throwResponseError } from "./client.js";
+
+// ---------------------------------------------------------------------------
+// Types — matches the marketplace REST API response shapes
+// ---------------------------------------------------------------------------
+
+export interface MarketplaceAuthor {
+	name: string;
+	verified: boolean;
+}
+
+export interface MarketplaceAuditSummary {
+	verdict: "pass" | "warn" | "fail";
+	riskScore: number;
+}
+
+export interface MarketplaceImageAuditSummary {
+	verdict: "pass" | "warn" | "fail";
+}
+
+export interface MarketplaceVersion {
+	version: string;
+	minEmDashVersion?: string;
+	bundleSize: number;
+	changelog?: string;
+	readme?: string;
+	screenshotUrls?: string[];
+	audit?: MarketplaceAuditSummary;
+	imageAudit?: MarketplaceImageAuditSummary;
+	publishedAt: string;
+}
+
+/** Summary shown in browse cards */
+export interface MarketplacePluginSummary {
+	id: string;
+	name: string;
+	description?: string;
+	author: MarketplaceAuthor;
+	capabilities: string[];
+	keywords?: string[];
+	installCount: number;
+	iconUrl?: string;
+	latestVersion?: {
+		version: string;
+		audit?: MarketplaceAuditSummary;
+		imageAudit?: MarketplaceImageAuditSummary;
+	};
+	createdAt: string;
+	updatedAt: string;
+}
+
+/** Full detail returned by GET /plugins/:id */
+export interface MarketplacePluginDetail extends MarketplacePluginSummary {
+	license?: string;
+	repositoryUrl?: string;
+	homepageUrl?: string;
+	latestVersion?: MarketplaceVersion;
+}
+
+export interface MarketplaceSearchResult {
+	items: MarketplacePluginSummary[];
+	nextCursor?: string;
+}
+
+export interface MarketplaceSearchOpts {
+	q?: string;
+	capability?: string;
+	sort?: "installs" | "updated" | "created" | "name";
+	cursor?: string;
+	limit?: number;
+}
+
+/** Update check result per plugin */
+export interface PluginUpdateInfo {
+	pluginId: string;
+	installed: string;
+	latest: string;
+	hasCapabilityChanges: boolean;
+}
+
+/** Install request body */
+export interface InstallPluginOpts {
+	version?: string;
+	confirmMcpTools?: boolean;
+	acknowledgedPublicRoutes?: string[];
+}
+
+export interface PluginMcpConsentTool {
+	name: string;
+	description: string;
+	route: string;
+	permission: string;
+	destructive: boolean;
+}
+
+export class PluginMcpConsentRequiredError extends Error {
+	constructor(readonly tools: PluginMcpConsentTool[]) {
+		super(i18n._(msg`Plugin MCP tools require explicit consent`));
+		this.name = "PluginMcpConsentRequiredError";
+	}
+}
+
+export class PluginInstallConsentRequiredError extends PluginMcpConsentRequiredError {
+	constructor(
+		tools: PluginMcpConsentTool[],
+		readonly newlyPublicRoutes: string[],
+	) {
+		super(tools);
+		this.message = i18n._(msg`Plugin installation requires explicit consent`);
+		this.name = "PluginInstallConsentRequiredError";
+	}
+}
+
+export class MarketplaceUpdateEscalationError extends Error {
+	readonly code: "CAPABILITY_ESCALATION" | "ROUTE_VISIBILITY_ESCALATION";
+	readonly capabilityChanges: { added: string[]; removed: string[] };
+	readonly routeVisibilityChanges?: { newlyPublic: string[] };
+	readonly mcpTools: PluginMcpConsentTool[];
+
+	constructor(
+		code: "CAPABILITY_ESCALATION" | "ROUTE_VISIBILITY_ESCALATION",
+		message: string,
+		capabilityChanges: { added: string[]; removed: string[] },
+		routeVisibilityChanges?: { newlyPublic: string[] },
+		mcpTools: PluginMcpConsentTool[] = [],
+	) {
+		super(message);
+		this.name = "MarketplaceUpdateEscalationError";
+		this.code = code;
+		this.capabilityChanges = capabilityChanges;
+		this.routeVisibilityChanges = routeVisibilityChanges;
+		this.mcpTools = mcpTools;
+	}
+}
+
+export class MarketplaceUpdateMcpConsentRequiredError extends PluginMcpConsentRequiredError {
+	constructor(
+		tools: PluginMcpConsentTool[],
+		readonly capabilityChanges: { added: string[]; removed: string[] },
+		readonly routeVisibilityChanges?: { newlyPublic: string[] },
+	) {
+		super(tools);
+		this.name = "MarketplaceUpdateMcpConsentRequiredError";
+	}
+}
+
+function isPluginMcpConsentTool(value: unknown): value is PluginMcpConsentTool {
+	if (!value || typeof value !== "object") return false;
+	return (
+		typeof Reflect.get(value, "name") === "string" &&
+		typeof Reflect.get(value, "description") === "string" &&
+		typeof Reflect.get(value, "route") === "string" &&
+		typeof Reflect.get(value, "permission") === "string" &&
+		typeof Reflect.get(value, "destructive") === "boolean"
+	);
+}
+
+function getMcpConsentTools(body: unknown): PluginMcpConsentTool[] | null {
+	if (!body || typeof body !== "object") return null;
+	const error = Reflect.get(body, "error");
+	if (!error || typeof error !== "object") return null;
+	if (Reflect.get(error, "code") !== "MCP_TOOL_CONSENT_REQUIRED") return null;
+	const details = Reflect.get(error, "details");
+	if (!details || typeof details !== "object") return null;
+	const tools = Reflect.get(details, "mcpTools");
+	if (!Array.isArray(tools) || tools.length === 0) return null;
+	const valid = tools.filter(isPluginMcpConsentTool);
+	return valid.length > 0 ? valid : null;
+}
+
+function getInstallConsent(body: unknown): PluginInstallConsentRequiredError | null {
+	if (!body || typeof body !== "object") return null;
+	const error = Reflect.get(body, "error");
+	if (!error || typeof error !== "object") return null;
+	const code = Reflect.get(error, "code");
+	if (code !== "MCP_TOOL_CONSENT_REQUIRED" && code !== "ROUTE_VISIBILITY_ESCALATION") {
+		return null;
+	}
+	const details = Reflect.get(error, "details");
+	if (!details || typeof details !== "object") return null;
+	const mcpTools = Reflect.get(details, "mcpTools");
+	const tools = Array.isArray(mcpTools) ? mcpTools.filter(isPluginMcpConsentTool) : [];
+	const routeVisibilityChanges = Reflect.get(details, "routeVisibilityChanges");
+	const newlyPublicRoutes =
+		routeVisibilityChanges && typeof routeVisibilityChanges === "object"
+			? normaliseStringArray(Reflect.get(routeVisibilityChanges, "newlyPublic"))
+			: [];
+	return tools.length > 0 || newlyPublicRoutes.length > 0
+		? new PluginInstallConsentRequiredError(tools, newlyPublicRoutes)
+		: null;
+}
+
+function normaliseStringArray(value: unknown): string[] {
+	return Array.isArray(value)
+		? value.filter((item): item is string => typeof item === "string")
+		: [];
+}
+
+function getMarketplaceUpdateEscalation(body: unknown): MarketplaceUpdateEscalationError | null {
+	if (!body || typeof body !== "object") return null;
+	const error = Reflect.get(body, "error");
+	if (!error || typeof error !== "object") return null;
+	const code = Reflect.get(error, "code");
+	if (code !== "CAPABILITY_ESCALATION" && code !== "ROUTE_VISIBILITY_ESCALATION") return null;
+	const details = Reflect.get(error, "details");
+	if (!details || typeof details !== "object") return null;
+	const capabilityChanges = Reflect.get(details, "capabilityChanges");
+	if (!capabilityChanges || typeof capabilityChanges !== "object") return null;
+	const added = normaliseStringArray(Reflect.get(capabilityChanges, "added"));
+	const removed = normaliseStringArray(Reflect.get(capabilityChanges, "removed"));
+	const routeVisibilityChanges = Reflect.get(details, "routeVisibilityChanges");
+	const newlyPublic =
+		routeVisibilityChanges && typeof routeVisibilityChanges === "object"
+			? normaliseStringArray(Reflect.get(routeVisibilityChanges, "newlyPublic"))
+			: [];
+	const message = Reflect.get(error, "message");
+	const mcpTools = Reflect.get(details, "mcpTools");
+	const validMcpTools = Array.isArray(mcpTools) ? mcpTools.filter(isPluginMcpConsentTool) : [];
+	return new MarketplaceUpdateEscalationError(
+		code,
+		typeof message === "string" ? message : i18n._(msg`Plugin update requires re-consent`),
+		{ added, removed },
+		newlyPublic.length > 0 ? { newlyPublic } : undefined,
+		validMcpTools,
+	);
+}
+
+function getMarketplaceUpdateMcpConsent(
+	body: unknown,
+): MarketplaceUpdateMcpConsentRequiredError | null {
+	const tools = getMcpConsentTools(body);
+	if (!tools || !body || typeof body !== "object") return null;
+	const error = Reflect.get(body, "error");
+	if (!error || typeof error !== "object") return null;
+	const details = Reflect.get(error, "details");
+	if (!details || typeof details !== "object") return null;
+	const capabilityChanges = Reflect.get(details, "capabilityChanges");
+	const added =
+		capabilityChanges && typeof capabilityChanges === "object"
+			? normaliseStringArray(Reflect.get(capabilityChanges, "added"))
+			: [];
+	const removed =
+		capabilityChanges && typeof capabilityChanges === "object"
+			? normaliseStringArray(Reflect.get(capabilityChanges, "removed"))
+			: [];
+	const routeVisibilityChanges = Reflect.get(details, "routeVisibilityChanges");
+	const newlyPublic =
+		routeVisibilityChanges && typeof routeVisibilityChanges === "object"
+			? normaliseStringArray(Reflect.get(routeVisibilityChanges, "newlyPublic"))
+			: [];
+	return new MarketplaceUpdateMcpConsentRequiredError(
+		tools,
+		{ added, removed },
+		newlyPublic.length > 0 ? { newlyPublic } : undefined,
+	);
+}
+
+/** Update request body */
+export interface UpdatePluginOpts {
+	/** Exact version reviewed by the user */
+	version?: string;
+	/** User has confirmed new capabilities */
+	confirmCapabilityChanges?: boolean;
+	/** Exact newly public route names reviewed by the user */
+	acknowledgedPublicRoutes?: string[];
+	confirmMcpTools?: boolean;
+}
+
+/** Uninstall request body */
+export interface UninstallPluginOpts {
+	/** Delete plugin storage data */
+	deleteData?: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// API functions — proxy through site endpoints
+// ---------------------------------------------------------------------------
+
+const MARKETPLACE_BASE = `${API_BASE}/admin/plugins/marketplace`;
+
+/**
+ * Search the marketplace catalog.
+ * Proxied through /_emdash/api/admin/plugins/marketplace
+ */
+export async function searchMarketplace(
+	opts: MarketplaceSearchOpts = {},
+): Promise<MarketplaceSearchResult> {
+	const params = new URLSearchParams();
+	if (opts.q) params.set("q", opts.q);
+	if (opts.capability) params.set("capability", opts.capability);
+	if (opts.sort) params.set("sort", opts.sort);
+	if (opts.cursor) params.set("cursor", opts.cursor);
+	if (opts.limit) params.set("limit", String(opts.limit));
+
+	const qs = params.toString();
+	const url = `${MARKETPLACE_BASE}${qs ? `?${qs}` : ""}`;
+	const response = await apiFetch(url);
+	return parseApiResponse<MarketplaceSearchResult>(response, "Marketplace search failed");
+}
+
+/**
+ * Get full plugin detail.
+ * Proxied through /_emdash/api/admin/plugins/marketplace/:id
+ */
+export async function fetchMarketplacePlugin(id: string): Promise<MarketplacePluginDetail> {
+	const response = await apiFetch(`${MARKETPLACE_BASE}/${encodeURIComponent(id)}`);
+	if (response.status === 404) {
+		throw new Error(`Plugin "${id}" not found in marketplace`);
+	}
+	return parseApiResponse<MarketplacePluginDetail>(response, "Failed to fetch plugin");
+}
+
+/**
+ * Install a plugin from the marketplace.
+ * POST /_emdash/api/admin/plugins/marketplace/:id/install
+ */
+export async function installMarketplacePlugin(
+	id: string,
+	opts: InstallPluginOpts = {},
+): Promise<void> {
+	const response = await apiFetch(`${MARKETPLACE_BASE}/${encodeURIComponent(id)}/install`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(opts),
+	});
+	if (!response.ok) {
+		const body: unknown = await response
+			.clone()
+			.json()
+			.catch(() => null);
+		const consent = getInstallConsent(body);
+		if (consent) throw consent;
+		await throwResponseError(response, i18n._(msg`Failed to install plugin`));
+	}
+}
+
+/**
+ * Update a marketplace plugin to a newer version.
+ * POST /_emdash/api/admin/plugins/:id/update
+ */
+export async function updateMarketplacePlugin(
+	id: string,
+	opts: UpdatePluginOpts = {},
+): Promise<void> {
+	const response = await apiFetch(`${API_BASE}/admin/plugins/${encodeURIComponent(id)}/update`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(opts),
+	});
+	if (!response.ok) {
+		const body: unknown = await response
+			.clone()
+			.json()
+			.catch(() => null);
+		const escalation = getMarketplaceUpdateEscalation(body);
+		if (escalation) throw escalation;
+		const mcpConsent = getMarketplaceUpdateMcpConsent(body);
+		if (mcpConsent) throw mcpConsent;
+		await throwResponseError(response, i18n._(msg`Failed to update plugin`));
+	}
+}
+
+/**
+ * Uninstall a marketplace plugin.
+ * POST /_emdash/api/admin/plugins/:id/uninstall
+ */
+export async function uninstallMarketplacePlugin(
+	id: string,
+	opts: UninstallPluginOpts = {},
+): Promise<void> {
+	const response = await apiFetch(`${API_BASE}/admin/plugins/${encodeURIComponent(id)}/uninstall`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(opts),
+	});
+	if (!response.ok) await throwResponseError(response, i18n._(msg`Failed to uninstall plugin`));
+}
+
+/**
+ * Check all marketplace plugins for available updates.
+ * GET /_emdash/api/admin/plugins/updates
+ */
+export async function checkPluginUpdates(): Promise<PluginUpdateInfo[]> {
+	const response = await apiFetch(`${API_BASE}/admin/plugins/updates`);
+	const result = await parseApiResponse<{ items: PluginUpdateInfo[] }>(
+		response,
+		"Failed to check for updates",
+	);
+	return result.items;
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Human-readable labels for plugin capabilities.
+ *
+ * Canonical names are the keys; legacy names alias to the same labels so
+ * old manifests still render meaningful copy until they're republished.
+ */
+import type { MessageDescriptor } from "@lingui/core";
+
+export const CAPABILITY_LABELS: Record<string, MessageDescriptor> = {
+	// Canonical
+	"content:read": msg`Read your content`,
+	"content:revisions:read": msg`Read retained content revision history`,
+	"content:write": msg`Create, update, and delete content`,
+	"content:publish": msg`Publish, unpublish, schedule, and unschedule content`,
+	"content:restore": msg`Read and restore trashed content`,
+	"comments:read": msg`Read comment bodies, author email addresses, pseudonymous IP hashes, user agents, and moderation metadata`,
+	"comments:moderate": msg`Approve comments and mark them as pending or spam`,
+	"schema:read": msg`Read collection and field definitions`,
+	"admin.editor-draft:read": msg`Read selected unsaved editor content after you explicitly invoke the plugin`,
+	"admin.editor-draft:patch": msg`Propose unsaved changes to selected editor fields for your review`,
+	"hooks.content-policy:register": msg`Review and block publishing, scheduling, and unpublishing content`,
+	"taxonomies:read": msg`Read your taxonomies and terms`,
+	"taxonomies:write": msg`Create taxonomy terms and change content classifications`,
+	"bylines:read": msg`Read public byline profiles and content credits`,
+	"redirects:read": msg`Read redirect rules`,
+	"redirects:write": msg`Change where visitors are sent`,
+	"media:read": msg`Access your media library`,
+	"media:bytes:read": msg`Read media file contents`,
+	"media:metadata:write": msg`Edit media alt text, captions, and focal points`,
+	"media:write": msg`Upload and manage media`,
+	"users:read": msg`Read user accounts`,
+	"network:request": msg`Connect to network hosts and load external plugin admin images`,
+	"network:request:unrestricted": msg`Connect to any network host and load external plugin admin images (unrestricted)`,
+	// Legacy aliases (still emitted by older installed manifests)
+	"read:content": msg`Read your content`,
+	"write:content": msg`Create, update, and delete content`,
+	"read:media": msg`Access your media library`,
+	"write:media": msg`Upload and manage media`,
+	"read:users": msg`Read user accounts`,
+	"network:fetch": msg`Connect to network hosts and load external plugin admin images`,
+	"network:fetch:any": msg`Connect to any network host and load external plugin admin images (unrestricted)`,
+};
+
+/** Capability names that grant scoped network access (legacy + canonical). */
+const NETWORK_REQUEST_CAPABILITIES = new Set(["network:request", "network:fetch"]);
+
+/**
+ * Get a human-readable description for a capability.
+ * For scoped network capabilities, appends the allowed hosts if provided.
+ *
+ * Module-scope so calls outside React components work; uses the global i18n
+ * instance for translation. Components that have access to `useLingui` can
+ * also resolve `CAPABILITY_LABELS[capability]` directly with `t(...)` if they
+ * need the translated string without the host suffix.
+ */
+export function describeCapability(capability: string, allowedHosts?: string[]): string {
+	const descriptor = CAPABILITY_LABELS[capability];
+	const base = descriptor ? i18n._(descriptor) : capability;
+	if (NETWORK_REQUEST_CAPABILITIES.has(capability) && allowedHosts && allowedHosts.length > 0) {
+		return i18n._(msg`${base} to: ${allowedHosts.join(", ")}`);
+	}
+	return base;
+}

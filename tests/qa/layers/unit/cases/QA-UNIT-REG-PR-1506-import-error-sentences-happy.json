@@ -1,0 +1,63 @@
+{
+  "id": "QA-UNIT-REG-PR-1506-import-error-sentences-happy",
+  "itemIds": ["regression:REG-PR-1506-import-error-sentences"],
+  "requirement": "A refused Joomla import sign-in says Joomla needs the username, not the email; the operator signal records whether the username was an email and how the run came in, never the value",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1506-import-error-sentences.json",
+    "ref": "PR #1506 (fix); fix evidence: A production Joomla customer's import stopped on invalid_credential (Joomla: 'Username and password do not match'); the customer most likely typed the email address, which Joomla's backend does not accept, and the sentence did not say so",
+    "invariant": "S1: Joomla gets import_error_invalid_credential_joomla; WordPress keeps import_error_invalid_credential; message_unread stays import_error_signin_unclear; no_backend_access keeps its own sentence. S2: the wizard shows the Joomla sentence. S3: diagnostic is {at: login_post, check: invalid_credential, username_is_email: true|false}; the queued report carries sign_in: password beside that detail; neither the run state nor the report contains the username. S4: only invalid_credential and no_backend_access gain username_is_email; owner@localhost is not an email shape; signInWay returns password, code, saved. S5: a boolean username_is_email survives, everything else (including sign_in, which belongs to the result) is dropped; importSignIn keeps only password/code/saved; the alert ends with 'Sign-in: password · username is an email address' and contains no @. S6: the queued report carries sign_in saved and no detail; the stored site.stuck row keeps sign_in and has no detail, its alert ends 'Reason: call_failed\\nSign-in: password' with no Where line; an unknown sign_in is not stored; the site.result row keeps sign_in.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-add-site/test/import-signin-data.test.mjs:52 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/import-signin-data.test.mjs:61 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/import-signin-data.test.mjs:62 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/site-link-pacing.test.mjs:48 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/site-link-pacing.test.mjs:552 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a wrong password on Joomla says Joomla needs the username; WordPress keeps its sentence",
+    "a refused WordPress sign-in reports whether the username was an email and how the run came in, never the username",
+    "signInRefusal marks only a refused account, and signInWay names how the run came in",
+    "a run that fails with no diagnostic still reports how it came in, and no made-up detail"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1506-import-error-sentences"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-add-site", "tracy-add-site"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1506-import-error-sentences",
+    "pr": 1506,
+    "kind": "fix",
+    "area": "add-site/import",
+    "file": "tests/regression/cases/REG-PR-1506-import-error-sentences.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "test/import-signin-data.test.mjs",
+    "test/site-link-pacing.test.mjs"
+  ],
+  "cwd": "packages/site/tracy-add-site",
+  "needs": [],
+  "tests": [
+    "a wrong password on Joomla says Joomla needs the username; WordPress keeps its sentence",
+    "a refused WordPress sign-in reports whether the username was an email and how the run came in, never the username",
+    "signInRefusal marks only a refused account, and signInWay names how the run came in",
+    "a run that fails with no diagnostic still reports how it came in, and no made-up detail"
+  ],
+  "timeoutS": 600
+}

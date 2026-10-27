@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "b5532c58-620a-4d69-8861-35b2b6443956",
+  "status": "complete",
+  "name": "Escape Coffee Company",
+  "url": "https://styles.refero.design/style/b5532c58-620a-4d69-8861-35b2b6443956",
+  "sourceWebsite": "https://escape.cafe",
+  "extractedAt": "2026-06-03T21:24:15.747Z",
+  "capturedAt": "2026-10-08T05:16:31.177873+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Frost-bleached editorial broadsheet — large display type cut into warm off-white, all atmosphere carried by raw photography.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/77706ed3-8284-45d3-b0e7-2fc6e7e8938e.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2fdacecb09d3859529b9cd48e7e64c5c41c60d73db5726456118471396a35401",
+      "bytes": 22905
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d0bd01d0ecb003cfe4bc24de07ad2550a8e09e3797408bbb3f92e632465e98be",
+      "bytes": 277470
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "80f85e3ec9a16efd7dc4dee0f0b063cd40f1a632952f0ad6c847fcfc27c568d3",
+      "bytes": 18574
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "4997ee8373ef4307e2b95a0613f47642346588c041fad5f60513f8d293507c01",
+      "bytes": 13761
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "dc0be1c906fc172a5746a89ddbd3075f85e2e5d86aa9fa270ee1b77a89dc7ff2",
+      "bytes": 12860
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "695b3d829db2cd7138e83c5afd31340ceb975daf944cb917616c45adb31fa720",
+      "bytes": 3063
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1e6981c8cad684cbbd4083be8ef1c910952af06622976ebe57e8e4802c811e43",
+      "bytes": 849
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8fc19da3ea9d0827388705c44ae942b613dc84cd695a22e5481f255a5a8e4b56",
+      "bytes": 866
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "57f69b90cde5859375f70ec56c328a684a95355a1860e3ca46d240bda11a1851",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "2d45d310ecf6cc7598fa2177d2f44eb5e89b6f91d32cf5a8a954eec4576422f9",
+      "bytes": 45236
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "47d42af37a05f01b47696ab28a4ff63e804dbf8d71a6eb5daff3ae57bf30b92c",
+      "bytes": 23457
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f384ef276cc60ba5c4a0868a71e909248c368b180031e508461a81722ded392c",
+      "bytes": 55328
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "09eca2c112b9ebec219b0fe37c17bab849d5770994bc714cea73795f111d042d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9152934d37f76102fdeb9ea30b5519e5ca4d6b7c135321a10b188086402466a3",
+      "bytes": 2010
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "afeff7c2c71d350b58fb1df4cd90c37a9f96c3f2aca8539d7bcca143ffb1520b",
+      "bytes": 2646
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "1f9089e1-4170-482f-b988-afe1124a70a9",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "8288950a-2731-44fd-85ef-211aecd8091d",
+    "9307193e-7ce3-48c1-b650-8ab77aa83c3f",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "b5532c58-620a-4d69-8861-35b2b6443956",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "fb6ac216-c11a-47c3-88e8-0423541da69c"
+  ]
+}

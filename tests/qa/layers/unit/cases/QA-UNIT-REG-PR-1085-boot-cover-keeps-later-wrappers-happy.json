@@ -1,0 +1,52 @@
+{
+  "id": "QA-UNIT-REG-PR-1085-boot-cover-keeps-later-wrappers-happy",
+  "itemIds": ["regression:REG-PR-1085-boot-cover-keeps-later-wrappers"],
+  "requirement": "The boot cover's network wait no longer removes fetch/XHR wrappers other plugins installed after it",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1085-boot-cover-keeps-later-wrappers.json",
+    "ref": "PR #1085 (fix); fix evidence: tasks/evidence/passwords-mount-followups/README.md — on tracy-srd 09/10 a window.fetch setter trap showed @tracy/dsh-brand's finish() assigning back the fetch it saved, dropping dsh-passwords' picker wrapper installed after it (the owner's delete-folder button never attached, even at the root).",
+    "invariant": "'a wrapper another plugin installed after it survives the restore' passes: after networkSettles resolves, scope.fetch is still the later wrapper and a call through it reaches the real fetch. 'it puts fetch back the way it found it' still passes: with no later wrapper, fetch is restored to the original.",
+    "productSources": ["packages/brand/tracy-brand/src/shared/network-settles.mjs:79"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a wrapper another plugin installed after it survives the restore",
+    "it puts fetch back the way it found it"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1085-boot-cover-keeps-later-wrappers"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/brand/tracy-brand", "tracy-brand"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1085-boot-cover-keeps-later-wrappers",
+    "pr": 1085,
+    "kind": "fix",
+    "area": "brand/boot-cover",
+    "file": "tests/regression/cases/REG-PR-1085-boot-cover-keeps-later-wrappers.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/brand/tracy-brand/test/network-settles.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a wrapper another plugin installed after it survives the restore",
+    "it puts fetch back the way it found it"
+  ],
+  "timeoutS": 600
+}

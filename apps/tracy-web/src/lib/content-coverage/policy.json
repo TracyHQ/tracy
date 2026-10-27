@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-content-coverage-policy/v1",
+  "about": "How the measured content coverage of a contract (content-coverage.json beside it, written by packages/cms/tracy-quickstart-tools/content-coverage) weighs on the Road to live step Content coverage. A hole is a piece of demo text, an image or a link a visitor sees that the content map does not declare. capture: the value sits in the site database (locked: the presentation lock pins its field, which keeps demo CONTENT the customer can never change, so it is still a hole; undeclared: in neither file). template: written in the template's own files or language strings. core: Joomla or framework strings, never a hole. unknown: found in no source the audit could read. Page hygiene (hygiene list): things a customer must never see, found in the same crawl: a raw language constant, PHP error text, an unfilled placeholder; what counts as one is packages/cms/tracy-quickstart-tools/content-coverage/hygiene-rules.json. Edit this file to change the threshold; no code change is needed.",
+  "platforms": ["joomla"],
+  "rolesPlatforms": ["joomla", "wordpress", "emdash"],
+  "blockingClasses": ["capture", "template", "unknown"],
+  "lockedCaptureIsHole": true,
+  "maxUnacceptedHoles": 0,
+  "minAcceptedReasonLength": 12,
+  "blockingHygieneKinds": ["language-constant", "php-error", "placeholder"],
+  "maxUnacceptedHygiene": 0,
+  "maxFailedPages": 0,
+  "capReachedHolds": true,
+  "minToolVersion": "1.1.0",
+  "rolesHoldNewRelease": true,
+  "reasons": {
+    "platforms": "Only the Joomla audit exists (it reads the Joomla database dump and template sources); holes and page hygiene of a WordPress or EmDash contract are not measured yet.",
+    "rolesPlatforms": "ADR 0038: the slot roles group is judged for every platform that binds slot roles, whether or not the audit measures it: a new release without roles is held from Publish, a live one warns.",
+    "blockingClasses": "Start strict (owner, 24/10/2026): every unexplained hole a customer could not change through the contract holds Publish. Joomla core strings never do.",
+    "lockedCaptureIsHole": "Only true presentation may be locked; demo text or images pinned by the lock stay on the customer's site for good.",
+    "maxUnacceptedHoles": "Any hole without an accepted reason holds Publish; raise this only by a decision of the owner.",
+    "maxFailedPages": "A page that did not render was not measured, so the result is incomplete.",
+    "capReachedHolds": "The page cap cut the crawl: pages were left unmeasured.",
+    "blockingHygieneKinds": "Owner, 24/10/2026: a raw constant, a PHP error or a placeholder on a page a customer gets is never fine; each holds Publish like a hole, and takes the same accepted reason only when it is not something a customer sees.",
+    "maxUnacceptedHygiene": "Any page problem without an accepted reason holds Publish.",
+    "rolesHoldNewRelease": "ADR 0038 decision Q2: a release not shown on Design inspiration whose content map leaves text or image slots without a role, or declares no roles at all (every template released before ADR 0038), is held from Publish; a release already shown only warns. Set false to make the roles group warn only.",
+    "minToolVersion": "1.1.0 measures page hygiene; a file from 1.0.0 never looked, so it is measured again."
+  }
+}

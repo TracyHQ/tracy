@@ -1,0 +1,46 @@
+{
+  "id": "QA-UNIT-REG-PR-1049-stop-beside-send-happy",
+  "itemIds": ["regression:REG-PR-1049-stop-beside-send"],
+  "requirement": "While the agent runs and the person has typed a draft, a Stop button stays beside Queue Send",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1049-stop-beside-send.json",
+    "ref": "PR #1049 (fix); fix evidence: A customer, 08/10/2026: sent a wrong prompt and could not stop the running process. Measured: Stop works with an empty box (button 107 ms after Enter, run stops in 0.5 s) but disappears as soon as the next message is being typed. Evidence: tasks/bang-chung/lan-7-nut-stop-khi-dang-go/KET-QUA.md.",
+    "invariant": "S1 exits 0 with 'ALL CHECKS PASSED': InputBar carries `interruptible = running && (continuable || (subagent === null && !primaryStops))`, and the two fork cases 'Tracy: a running ordinary session keeps a Stop button beside Queue Send while a draft is typed' and 'Tracy: an idle session never draws Stop, with or without a draft' pass. S3: with a draft typed the chat box shows Add files, Stop generating, Queue message (before: Add files, Queue message only); pressing Stop ends the run with the label Stopped, keeps the typed text, and the only session call is cancel; with an empty box there is exactly one Stop.",
+    "productSources": [
+      "vendor/tracy/deepseek-harness/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx:16"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1049-stop-beside-send.mjs:33 spawnSync() passes vendor/tracy/deepseek-harness/packages/client/ui-conversation/tests/input-bar.client.spec.tsx to vendor/tracy/deepseek-harness/node_modules/.bin/vitest; not proven to run it"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1049-stop-beside-send.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1049-stop-beside-send"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1049-stop-beside-send",
+    "pr": 1049,
+    "kind": "fix",
+    "area": "chat",
+    "file": "tests/regression/cases/REG-PR-1049-stop-beside-send.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1049-stop-beside-send.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

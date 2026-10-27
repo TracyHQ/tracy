@@ -1,0 +1,469 @@
+---
+/**
+ * Site header: brand, primary navigation (megamenu island on desktop, drawer island below 992px),
+ * sign-in link, call to action and theme switch. Words and links come from `chrome`.
+ */
+import { getSiteSettings } from 'emdash'
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import MegaMenu from '@/components/islands/MegaMenu'
+import MobileNav from '@/components/islands/MobileNav'
+import ThemeToggle from '@/components/site/ThemeToggle.astro'
+import LogoMark from '@/components/site/LogoMark.astro'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { ui } from '@/lib/ui'
+import { islandMarks, stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  currentPath: string
+}
+const { chrome, currentPath } = Astro.props
+const settings = await getSiteSettings()
+const siteTitle = String(settings.title ?? '').trim()
+// The customer's logo (core `settings.logo`, the footer brand entry's `logo_dark`): the header follows the theme.
+const logos = brandLogos(settings, chrome.brand?.logo_dark, siteTitle)
+const homeUrl = href(chrome.locale, '/')
+// The template's own words, in the site's language (`src/lib/ui.ts`).
+const { w } = ui(chrome.locale)
+const drawerLabels = { openMenu: w.openMenu, closeMenu: w.closeMenu, menu: w.menu, backTo: w.backTo }
+const h = chrome.header
+const hasLink = (url: unknown) => typeof url === 'string' && url.trim() !== '' && url !== '#'
+// "Sign in" without a destination is hidden; "Start free" stays as a button even without one.
+const signin =
+  h.show_signin !== '0' && h.signin_label && hasLink(h.signin_link)
+    ? { label: String(h.signin_label), url: String(h.signin_link) }
+    : null
+const cta = h.cta_label ? { label: String(h.cta_label), url: String(h.cta_link ?? '#') } : null
+const items = chrome.primary
+// Provenance stamps of the header entry's fields (`src/lib/stamps.ts`); empty on an ordinary request.
+// The wordmark is the site title (settings) and the navigation is a menu: neither is a Content API
+// record, so neither carries a stamp.
+const $h = stampFor(Astro.request, chrome.sources.header.collection, chrome.sources.header.entry)
+const mobileMarks = islandMarks({ signin: $h('signin_label'), cta: $h('cta_label') })
+---
+
+<header class="k-header">
+	<LogoMark sprite />
+	<div class="k-container k-header-row">
+		<a href={homeUrl} class="k-brand" aria-label={siteTitle || logos.light || logos.dark ? undefined : w.home}>
+			<BrandLogo spots={logoSpots(logos, "themed")} alt={logos.alt} imgClass="h-8 w-auto max-w-[200px] object-contain">
+				<LogoMark size={26} />
+				{siteTitle && <span class="k-wordmark">{siteTitle}</span>}
+			</BrandLogo>
+		</a>
+
+		<div class="k-header-nav">
+			<MegaMenu client:load items={items} currentPath={currentPath} label={w.primary} />
+		</div>
+
+		<div class="k-header-actions">
+			{signin && <a href={signin.url} class="k-signin" {...$h('signin_label')}>{signin.label}</a>}
+			{
+				cta &&
+					(hasLink(cta.url) ? (
+						<a href={cta.url} class="k-btn k-btn-primary k-btn-sm k-header-cta" {...$h('cta_label')}>
+							{cta.label}
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+						</a>
+					) : (
+						<button type="button" class="k-btn k-btn-primary k-btn-sm k-header-cta" {...$h('cta_label')}>
+							{cta.label}
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+						</button>
+					))
+			}
+			<ThemeToggle label={w.darkMode} />
+			<div class="k-header-burger">
+				<MobileNav client:load items={items} currentPath={currentPath} siteTitle={siteTitle} homeUrl={homeUrl} signin={signin} cta={cta} labels={drawerLabels} {...mobileMarks} />
+			</div>
+		</div>
+	</div>
+</header>
+
+<style>
+	.k-header {
+		position: relative;
+		z-index: 50;
+		background: var(--k-bg);
+		border-bottom: 1px solid var(--k-border);
+	}
+	.k-header-row {
+		display: flex;
+		align-items: center;
+		height: 66px;
+	}
+	.k-brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 9px;
+		margin-right: 38px;
+		flex: none;
+		color: var(--k-heading);
+	}
+	.k-wordmark {
+		font-family: var(--font-heading);
+		font-size: 19px;
+		font-weight: 700;
+		letter-spacing: -0.5px;
+		line-height: 1;
+	}
+	.k-header-actions {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		margin-left: auto;
+	}
+	.k-signin {
+		font-size: 14px;
+		color: var(--k-text);
+		transition: color 0.15s;
+	}
+	.k-signin:hover {
+		color: var(--k-heading);
+	}
+	/* Source header pill, measured: padding 9px 16px, no border, 33px tall with its 15px icon. */
+	.k-header-cta {
+		gap: 7px;
+		padding: 9px 16px;
+		border: 0;
+		min-height: 0;
+	}
+	.k-header-cta svg {
+		width: 15px;
+		height: 15px;
+	}
+	.k-header-burger {
+		display: none;
+	}
+	@media (max-width: 991.98px) {
+		.k-header-row {
+			height: 60px;
+		}
+		.k-header-nav,
+		.k-signin,
+		.k-header-cta {
+			display: none;
+		}
+		.k-header-actions {
+			gap: 10px;
+		}
+		.k-header-burger {
+			display: contents;
+		}
+	}
+
+	/* Megamenu island (desktop). */
+	.k-header :global(.k-nav-link) {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 8px 12px;
+		border: 0;
+		border-radius: 8px;
+		background: transparent;
+		font-family: var(--font-sans);
+		font-size: 14px;
+		line-height: 1.2;
+		color: var(--k-text);
+		cursor: pointer;
+		transition: color 0.15s;
+	}
+	.k-header :global(.k-nav-link:hover),
+	.k-header :global(.k-nav-link.is-open) {
+		color: var(--k-heading);
+	}
+	.k-header :global(.k-nav-link.is-active) {
+		color: var(--k-heading);
+		font-weight: 500;
+	}
+	.k-header :global(.k-nav-caret) {
+		color: var(--k-muted);
+		transition: transform 0.15s;
+	}
+	.k-header :global(.k-nav-link.is-open .k-nav-caret) {
+		transform: rotate(180deg);
+	}
+	/* The wrapper's top padding is the hover bridge between the trigger and the panel. */
+	.k-header :global(.k-mega-wrap) {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		padding-top: 31px;
+	}
+	.k-header :global(.k-mega-wrap[hidden]) {
+		display: none;
+	}
+	.k-header :global(.k-mega-panel) {
+		padding: 28px;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 14px;
+		box-shadow: var(--k-shadow);
+		animation: k-mega-in 0.16s ease-out;
+	}
+	.k-header :global(.k-mega-grid) {
+		display: grid;
+		grid-auto-flow: column;
+		column-gap: 56px;
+		row-gap: 13px;
+		white-space: nowrap;
+	}
+	/* Titled columns; panel width follows its content, as measured on the rendered source. */
+	.k-header :global(.k-mega-cols) {
+		display: flex;
+		gap: 56px;
+		white-space: nowrap;
+	}
+	.k-header :global(.k-mega-title) {
+		display: block;
+		margin-bottom: 16px;
+		padding-bottom: 8px;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		font-weight: 600;
+		line-height: 11px;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.k-header :global(.k-mega-list) {
+		display: flex;
+		flex-direction: column;
+		gap: 13px;
+	}
+	/* Plain links after the columns line up with the column links, under no title. */
+	.k-header :global(.k-mega-col-plain) {
+		padding-top: 35px;
+	}
+	.k-header :global(.k-mega-link) {
+		display: block;
+		border-radius: 6px;
+		font-size: 14px;
+		line-height: 1.55;
+		color: var(--k-text);
+		transition: color 0.15s;
+	}
+	.k-header :global(a.k-mega-link:hover) {
+		color: var(--k-heading);
+	}
+	.k-header :global(.k-mega-link.is-active) {
+		color: var(--k-primary);
+	}
+	@keyframes k-mega-in {
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+	}
+
+	/* Mobile drawer island. */
+	.k-header :global(.k-icon-btn) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border: 1px solid var(--k-border);
+		border-radius: 9px;
+		background: var(--k-surface);
+		color: var(--k-heading);
+		cursor: pointer;
+	}
+	.k-header :global(.k-drawer-root) {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+	}
+	.k-header :global(.k-drawer-root[hidden]) {
+		display: none;
+	}
+	.k-header :global(.k-drawer-overlay) {
+		position: absolute;
+		inset: 0;
+		background: color-mix(in srgb, var(--k-panel) 60%, transparent);
+		animation: k-fade-in 0.2s ease-out;
+	}
+	.k-header :global(.k-drawer) {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		flex-direction: column;
+		width: min(100%, 400px);
+		background: var(--k-surface);
+		border-left: 1px solid var(--k-border);
+		box-shadow: var(--k-shadow);
+		animation: k-drawer-in 0.25s ease-out;
+	}
+	.k-header :global(.k-drawer-top) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 18px 20px;
+		border-bottom: 1px solid var(--k-border);
+	}
+	.k-header :global(.k-drawer-brand) {
+		display: inline-flex;
+		align-items: center;
+		gap: 9px;
+		font-family: var(--font-heading);
+		font-size: 17px;
+		font-weight: 700;
+		letter-spacing: -0.5px;
+		color: var(--k-heading);
+	}
+	.k-header :global(.k-drawer-close) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border: 0;
+		border-radius: 50%;
+		background: transparent;
+		color: var(--k-text);
+		cursor: pointer;
+	}
+	.k-header :global(.k-drawer-close:hover) {
+		background: var(--k-elevated);
+		color: var(--k-heading);
+	}
+	.k-header :global(.k-drawer-body) {
+		flex: 1;
+		overflow-y: auto;
+		padding: 18px 20px;
+	}
+	/* Slide track: the visible panel is in flow, the other sits on top of it, translated out. */
+	.k-header :global(.k-drawer-track) {
+		position: relative;
+		overflow-x: clip;
+		margin: -3px;
+		padding: 3px;
+	}
+	.k-header :global(.k-drawer-main),
+	.k-header :global(.k-drawer-sub) {
+		transition: transform 0.25s ease;
+	}
+	.k-header :global(.k-drawer-main.is-away),
+	.k-header :global(.k-drawer-sub:not(.is-in)) {
+		position: absolute;
+		top: 3px;
+		left: 3px;
+		right: 3px;
+		visibility: hidden;
+		transition:
+			transform 0.25s ease,
+			visibility 0s 0.25s;
+	}
+	.k-header :global(.k-drawer-main.is-away) {
+		transform: translateX(-110%);
+	}
+	.k-header :global(.k-drawer-sub:not(.is-in)) {
+		transform: translateX(110%);
+	}
+	.k-header :global(.k-drawer-list) {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.k-header :global(.k-drawer-row) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		padding: 13px 14px;
+		border: 1px solid var(--k-border);
+		border-radius: 10px;
+		background: var(--k-bg);
+		font-family: var(--font-heading);
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 1.55;
+		text-align: left;
+		color: var(--k-heading);
+		cursor: pointer;
+		transition: border-color 0.15s;
+	}
+	.k-header :global(.k-drawer-row:hover) {
+		border-color: var(--k-muted);
+	}
+	.k-header :global(.k-drawer-row.is-active) {
+		background: var(--k-elevated);
+		color: var(--k-primary);
+	}
+	.k-header :global(.k-drawer-chev) {
+		color: var(--k-muted);
+	}
+	.k-header :global(.k-drawer-label) {
+		padding: 12px 2px 4px;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.k-header :global(.k-drawer-label:first-child) {
+		padding-top: 4px;
+	}
+	.k-header :global(.k-drawer-back) {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		width: 100%;
+		margin-bottom: 14px;
+		padding: 2px 2px 12px;
+		border: 0;
+		border-bottom: 1px solid var(--k-border);
+		background: transparent;
+		font-family: var(--font-heading);
+		font-size: 15px;
+		font-weight: 600;
+		color: var(--k-heading);
+		cursor: pointer;
+	}
+	.k-header :global(.k-drawer-back svg) {
+		color: var(--k-primary);
+	}
+	.k-header :global(.k-drawer-actions) {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		margin-top: 18px;
+		padding-top: 18px;
+		border-top: 1px solid var(--k-border);
+	}
+	.k-header :global(.k-drawer-signin) {
+		padding: 4px 0;
+		font-size: 14px;
+		text-align: center;
+		color: var(--k-text);
+	}
+	.k-header :global(.k-drawer-actions .k-btn) {
+		min-height: 41px;
+	}
+	@keyframes k-fade-in {
+		from {
+			opacity: 0;
+		}
+	}
+	@keyframes k-drawer-in {
+		from {
+			transform: translateX(100%);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.k-header :global(.k-mega-panel),
+		.k-header :global(.k-drawer),
+		.k-header :global(.k-drawer-overlay) {
+			animation: none;
+		}
+		.k-header :global(.k-drawer-main),
+		.k-header :global(.k-drawer-sub) {
+			transition: none;
+		}
+	}
+</style>

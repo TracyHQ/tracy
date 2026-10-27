@@ -1,0 +1,289 @@
+{
+  "dos": [
+    "Use 8px radius for all buttons, cards, and inputs — the only deviation is 4px for small tags and inline chips.",
+    "Set page background to #0a0a0a and reserve #1e1e1 exclusively for card and button surfaces so the surface hierarchy reads through tone alone.",
+    "Use #6798ff only for functional accents: announcement bars, feature icons, active nav states, and data highlight strokes — never as a background fill for content blocks.",
+    "Set display headlines at 56-64px Inter 600 with tracking between -2.0 and -2.3px so they feel engineered, not editorial.",
+    "Reserve JetBrains Mono for eyebrows, BETA tags, and small data labels with positive 0.85-1.0px tracking — never use it for body or headings.",
+    "Keep section gaps between 64-96px and element gaps between 8-16px to maintain the compact, technical density.",
+    "Default to white filled buttons for primary actions and dark outlined (1px #454545) for secondary — never use the blue accent on a button background."
+  ],
+  "donts": [
+    "Do not introduce a second chromatic color — the system is monochrome with a single blue accent.",
+    "Do not use shadows or elevation to separate surfaces — rely on tone shifts between #0a0a0a, #141414, and #1e1e1e.",
+    "Do not use gradients on any surface, button, or background.",
+    "Do not use #6798ff as a filled button background — it belongs only on icons, the announcement bar, and small accent strokes.",
+    "Do not use 66px or pill radii on cards or buttons — the 8px corner is the system signature.",
+    "Do not set body text below 14px or use weights lighter than 400 — the type stack is deliberately compact, not delicate.",
+    "Do not use pure #000000 as a page background — it is reserved for SVG illustration fills; pages live on #0a0a0a or #141414."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#6798ff",
+      "name": "Blue Cornflower",
+      "role": "Accent for announcement bar, feature icons, active states, and data highlight strokes",
+      "group": "accent"
+    },
+    {
+      "hex": "#0a0a0a",
+      "name": "Page Ink",
+      "role": "Primary page background — the dark canvas that everything sits on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1e1e1e",
+      "name": "Card Carbon",
+      "role": "Card surfaces, button backgrounds, and key borders that delineate panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#141414",
+      "name": "Deep Coal",
+      "role": "Alternate surface level for nested cards and section backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Onyx",
+      "role": "Pure black used in SVG illustration fills and contrast anchors",
+      "group": "neutral"
+    },
+    {
+      "hex": "#313131",
+      "name": "Steel Border",
+      "role": "Hairline borders on image frames and subtle dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#454545",
+      "name": "Graphite",
+      "role": "Mid-tone borders on outline buttons and input frames",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7c7c7c",
+      "name": "Fog",
+      "role": "Disabled or de-emphasized button text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a7a7a7",
+      "name": "Ash",
+      "role": "Secondary body text, borders on muted elements, icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Snow",
+      "role": "Primary text, primary filled button background, icon fills, nav links",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Pages are max-width 1200px centered with generous side padding. The hero uses an asymmetric 50/50 split: left column carries headline, subtext, and dual CTAs; right column holds a product preview card. Section rhythm is uniform — dark background continues throughout with no alternating bands, separated only by vertical spacing. Stat highlights and feature grids use 3-column or 4-column card rows at equal widths. Navigation is a single top bar with logo, product/use-cases/resources/enterprise/customers/pricing links center-left, and Log in + Contact sales right-aligned. No sidebar, no mega-menu. Footer is a 4-column link grid plus a single illustration card on the right. The overall density is compact and consistent — every section breathes the same amount.",
+  "imagery": "Imagery is minimal and functional: greyscale customer logos in a single trust strip, one or two product-screenshot cards showing real dashboard UI (charts, tables, data bars), and sparse flat illustrations in the footer (a pixel smiley face on a #6798ff tile). No lifestyle photography, no hero video, no decorative 3D. The grid wireframe pattern overlaid on the dark background is the only repeated visual motif — it signals \"blueprint\" and gives the dark surface structure. Icons are small, single-color (white or #6798ff), 16-20px, stroke-based with a 1.5-2px weight, and sit inline with text rather than floating as decoration.",
+  "similar": [
+    {
+      "why": "Same dark canvas, single vivid blue accent, Inter typeface, 8px radii, and zero-shadow flat surfaces with tone-based hierarchy.",
+      "business": "Linear"
+    },
+    {
+      "why": "Dark-first instrument-panel aesthetic with tight Inter tracking on display sizes, monochrome palette, and minimal blue functional accents.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Compact dark UI with a single cool accent color, compact density, and a product-preview-led hero layout.",
+      "business": "Cursor"
+    },
+    {
+      "why": "Developer-tool dark theme with neutral primary buttons, hairline borders, and product UI inlined directly into marketing sections.",
+      "business": "Retool"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "4px",
+      "cards": "8px",
+      "inputs": "8px",
+      "buttons": "8px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "64-96px",
+    "cardPadding": "24-32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#0a0a0a",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background"
+    },
+    {
+      "hex": "#141414",
+      "name": "Section",
+      "level": 1,
+      "purpose": "Alternate band or inset section background"
+    },
+    {
+      "hex": "#1e1e1",
+      "name": "Card",
+      "level": 2,
+      "purpose": "Card, button fill, and bordered component surface"
+    },
+    {
+      "hex": "#313131",
+      "name": "Raised Edge",
+      "level": 3,
+      "purpose": "Image frames and fine separators"
+    }
+  ],
+  "northStar": "blueprint control room at midnight.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.85
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.17
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.19
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.42
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.5
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.84
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1.14,
+      "letterSpacing": -2.02
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1.13,
+      "letterSpacing": -2.3
+    }
+  ],
+  "components": [
+    {
+      "name": "White Filled Button (Primary)",
+      "role": "Primary action — the most prominent CTA on a page",
+      "description": "White background (#ffffff), near-black text (#0a0a0a), 8px radius, 16px horizontal / 10px vertical padding. Inter 500 at 14px. Used for \"Contact sales\" and \"Try Dovetail free\" in high-priority positions. No border, no shadow."
+    },
+    {
+      "name": "Dark Outlined Button (Secondary)",
+      "role": "Secondary action paired beside a primary",
+      "description": "Transparent or #0a0a0a background, 1px border at #454545, white text (#ffffff), 8px radius, 16px / 10px padding. Inter 500 at 14px. The lower-emphasis counterpart to the white filled button."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Top-bar utility actions like \"Log in\"",
+      "description": "No background, no border, white text at 14px Inter 500. Sits inline with nav items. Padding matches nav height rhythm."
+    },
+    {
+      "name": "Stat Card",
+      "role": "Highlights a single metric in the \"How it works\" section",
+      "description": "#1e1e1 background, 1px border at #1e1e1 (or transparent — separation comes from surface tone), 8px radius, 24px padding. A small #6798ff icon sits above a 40px Inter 600 metric value in white, followed by a 14px label in #a7a7a7. No shadow, no hover lift."
+    },
+    {
+      "name": "Section Eyebrow Label",
+      "role": "Small uppercase label above section headlines (e.g. \"HOW IT WORKS\")",
+      "description": "JetBrains Mono 400 at 12px, white or #a7a7a7 text, letter-spacing 0.85px. No background, sits directly above headline with 16-24px gap."
+    },
+    {
+      "name": "Product Preview Card",
+      "role": "Inset mockup of the Dovetail dashboard inside the hero",
+      "description": "#1e1e1 surface with 8px radius, contains a real product UI rendering with charts, tables, and colored data bars. Acts as a flat, borderless visual element — no shadow or frame chrome."
+    },
+    {
+      "name": "BETA Tag",
+      "role": "Marks features in early release (e.g. \"AI Docs BETA\")",
+      "description": "Inline text tag, no background, #a7a7a7 text at 12px Inter 400, with \"BETA\" uppercase in JetBrains Mono 400 at 12px. Sits beside the feature name with 8px gap."
+    },
+    {
+      "name": "Logo Strip Item",
+      "role": "Customer logo in the trust bar",
+      "description": "Greyscale SVG, roughly 80px wide, 8-16px gap between items. Logos sit on transparent background at ~60% opacity to stay subordinate to the page."
+    },
+    {
+      "name": "Footer Link Column",
+      "role": "Site map columns in the footer",
+      "description": "Column header in 12px Inter 500 uppercase at #a7a7a7 (letter-spacing ~0.5px). Links below in 14px Inter 400 white, 8-12px vertical gap between links. No bullet markers."
+    },
+    {
+      "name": "Social Icon Button",
+      "role": "LinkedIn, X, Instagram, YouTube in footer",
+      "description": "24px square, white stroke or fill, no background, no border, no hover chrome — flat icon-on-dark."
+    },
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page promo strip",
+      "description": "Full-width #6798ff blue background, white text at 14px Inter 500, centered content with a small dismiss icon on the right. 8px vertical padding."
+    },
+    {
+      "name": "Rating Badge",
+      "role": "G2 and Capterra star ratings below the logo strip",
+      "description": "5 white stars at 12-14px, followed by \"4.5/5 · 62\" or similar in 12px Inter 400 #a7a7a7. Inline horizontal layout with 16px gap."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All UI and editorial text. Weight 400 for body and meta, 500 for nav and button labels, 600 for headings. Display sizes (56–64px) carry heavy negative tracking to feel engineered and compact.",
+      "sizes": "14, 16, 20, 24, 40, 56, 64",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.13–1.57",
+      "substitute": "Inter is freely available on Google Fonts",
+      "letterSpacing": "-0.17px at 14px, -0.19px at 16px, -0.50px at 24px, -0.84px at 40px, -2.02px at 56px, -2.30px at 64px",
+      "fontFeatureSettings": "\"liga\" on"
+    },
+    {
+      "role": "Monospaced labels for section eyebrows (e.g. \"HOW IT WORKS\"), BETA tags, and small data codes. Wide positive tracking (0.071–0.083em) gives these labels a technical, instrument-panel feel.",
+      "sizes": "12, 14",
+      "family": "JetBrains Mono",
+      "weight": "400",
+      "lineHeight": "1.00, 1.40",
+      "substitute": "JetBrains Mono via Google Fonts",
+      "letterSpacing": "1.0px at 14px, 0.85px at 12px",
+      "fontFeatureSettings": "\"liga\" on"
+    }
+  ],
+  "description": "Dovetail's design language is a dark command center: near-black canvas, subtle grid wireframes, and cool gray type that recedes so charts and data can lead. A single vivid cornflower blue (#6798ff) acts as the system's only chromatic accent — it appears on the announcement bar, feature icons, and active highlights, never as decorative noise. Typography is Inter at every layer with progressively tighter tracking as sizes grow (from -0.012em at 14px to -0.036em at 64px), giving headlines a compressed, engineered quality rather than a marketing gloss. Components are weightless: 8px radii, hairline borders at #1e1e1 or #313131, zero shadows, and flat surfaces that stack through tone rather than elevation. The overall rhythm is compact, technical, and instrument-like — a tool room, not a pitch deck.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #ffffff (primary), #a7a7a7 (secondary), #7c7c7c (disabled)\n- background: #0a0a0a (page), #1e1e1e (card/button)\n- border: #1e1e1e (subtle), #454545 (outlined button), #313131 (image frame)\n- accent: #6798ff (icons, announcement bar, active states)\n- primary action: #1e1e1e (filled action)\n\n**Example Component Prompts**\n1. Create a Primary Action Button: #1e1e1e background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n2. Build a 3-column stat row: each cell is a #1e1e1e card with 8px radius and 24px padding. Inside, a #6798ff icon (16px, stroke) sits above a 40px Inter 600 white metric value, followed by a 14px Inter 400 #a7a7a7 label.\n3. Build a top navigation bar: #0a0a0a background, logo on the left, nav links in 14px Inter 500 #ffffff, spaced 24px apart, centered. On the right, a ghost \"Log in\" text link and a white filled \"Contact sales\" button (8px radius, 16px/10px padding). Height 64px.\n4. Build a section with a JetBrains Mono eyebrow: 12px uppercase label in #a7a7a7 with 0.85px letter-spacing, 24px gap below to a 40px Inter 600 #ffffff headline with -0.84px tracking.\n5. Build a footer link column: 12px Inter 500 uppercase #a7a7a7 header with 0.5px tracking, followed by 14px Inter 400 white links stacked at 12px vertical gap. No bullets, no separators."
+    },
+    {
+      "title": "Grid Wireframe Motif",
+      "content": "A subtle 1px grid pattern at #1e1e1e sits behind the dark canvas across hero and feature sections. The grid is square (roughly 40-60px cells), very low contrast, and never carries content — it exists to give the otherwise flat dark surface a sense of structure and engineering intent. When recreating this system, overlay a 1px #1e1e1e linear-gradient or repeating-linear-gradient grid on the page background; do not attempt to recreate it with borders on individual elements."
+    }
+  ],
+  "elevationPhilosophy": "The system deliberately avoids box-shadows entirely. Surface separation is achieved through flat tone shifts (#0a0a0a → #141414 → #1e1e1 → #313131) and 1px hairline borders at #1e1e1 or #454545. Components feel like instrument panels — flush, parallel, and dimensional only through color value, not depth."
+}

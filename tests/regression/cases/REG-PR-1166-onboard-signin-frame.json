@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1166-onboard-signin-frame",
+  "kind": "feat",
+  "title": "Desktop first run: /login?onboard=1 draws the sign-in in the Setup frame; /login, the web and old users are unchanged",
+  "pr": 1166,
+  "area": "identity/desktop-onboard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: boot this checkout's tracy-web (memory store, console mail) on a free port.",
+    "S2: GET /login?onboard=1, /login, /login?onboard=0, /login?onboard=true and read the HTML.",
+    "S3: GET /signin/email with a good address, then with a malformed one and a foreign next.",
+    "S4: POST /auth/link/browser with an email on a desktop round, on a lane round, malformed, and over 254 characters."
+  ],
+  "expect": [
+    "onboard=1: the Setup frame, four steps, step 1 current, steps 2-4 disabled, no Skip/Continue, the email form a GET to /signin/email and no sign-in script.",
+    "/login, onboard=0 and onboard=true: no Setup frame, the classic POST /login form with its script.",
+    "/signin/email: 302 to /login?email=<lowercased address>; a malformed address and a foreign next are dropped (302 /login); nothing is mailed.",
+    "A desktop round accepts an email (200); a lane round with one, a malformed one and one over 254 characters are refused (400)."
+  ],
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1166-onboard-signin-frame.mjs"],
+    "timeout_s": 120
+  },
+  "fence": "the onboard page is opt-in by exactly onboard=1 and carries no script; the email hint is desktop-only and validated",
+  "selectors": {
+    "frame": ".setup",
+    "rail": ".setup-rail button.setup-step",
+    "form": "form#email-form[action='/signin/email']"
+  }
+}

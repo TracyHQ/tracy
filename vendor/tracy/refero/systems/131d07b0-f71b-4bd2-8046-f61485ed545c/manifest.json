@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "131d07b0-f71b-4bd2-8046-f61485ed545c",
+  "status": "complete",
+  "name": "Locomotive",
+  "url": "https://styles.refero.design/style/131d07b0-f71b-4bd2-8046-f61485ed545c",
+  "sourceWebsite": "https://locomotive.ca",
+  "extractedAt": "2026-06-03T19:14:07.711Z",
+  "capturedAt": "2026-10-08T05:08:27.990749+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Monochrome zine between blood-red slides. Black ink and white paper form the structural grammar; only photography is allowed to scream.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/84f912c7-b35b-41cd-883f-2e9133116dff.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/26459528-f566-4bf0-a5ec-8aaf6da0bc87.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/02a6484a-bfea-44bf-b029-ebfe0b9c880b.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/d9691ab9-e83b-4ee6-861c-de7f374fc5ab.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/04c608bb-c7f1-4ca3-b288-c4e48dfc1c84.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "981f8ff11c557abb8c5df392bc3afcb6defc96eaf49dc658bf776fb20c2fb3cc",
+      "bytes": 14569
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "5a597aad81d0bf326a76f3bd553f6a96347fad5040f92f2466ec10ca6716f18b",
+      "bytes": 88248
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "fa2fe3e5ed0dfea0937fc93dc3415017706bd588cb069b3c879839ee404722ce",
+      "bytes": 12350
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "791a5bbd1a7d72e5e12472f02ef52ed80e41913b0e79a5d2aa45be661137e84a",
+      "bytes": 4101
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f1c2cc9be793bcded7946af09b5a3c6c892b5562f219daf9690f64cb4e3e862a",
+      "bytes": 9659
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "fe4c4773a5b7b353da6607daf31ba64bbebb88b5e8126832490770206a9e3a4e",
+      "bytes": 1582
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b5dbe9f0b9df5f7072772c10ce62526c5737b8cb5c1b74cfd3a6ca9c9739e23f",
+      "bytes": 375
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4b6f9be47b129b7141e49c1d1f8631a24212ea0f4f6af2df5ae910a0ac9acf81",
+      "bytes": 392
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8d88e1c3a2b975d8ebee27bf062799dc984b2be8bb99adffa8794f1d1e4a7489",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b5ad55b3a67be77cf968fad5e48df5e88679a50d07a8f14d6c7e0228cf273edd",
+      "bytes": 36286
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c778727a11e3cf77d3b0a0af8430121ca96d8b469e3fe2122b3ac08b1d871ea0",
+      "bytes": 18802
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "548d3b59513c8753cfb93fe5e14e0be8a6f2c3fd604544641d74abd1894bd91c",
+      "bytes": 20175
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "951844ede3ffda4daa29937438c02e697928c5524f45c2b72a0deb528b3962e2",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ec8309aaf80832b5719d911682d6c20555144e809fe548827718f22fd0f22e70",
+      "bytes": 735
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b0983f0ebfb414f266839b8e44a3e0c325573641513084d8d0bdeb12fd563203",
+      "bytes": 1114
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "131d07b0-f71b-4bd2-8046-f61485ed545c",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "3e52dd36-6ab1-48c6-bc40-47ef6d33abc2",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "50f0b6d5-9e96-42a1-9564-a6e99c289f98",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "8e26bf8a-44b8-4fe1-9b4b-188dd5827c0f",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c0a3f588-74b7-4fad-b557-1fc7cd7bd777",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

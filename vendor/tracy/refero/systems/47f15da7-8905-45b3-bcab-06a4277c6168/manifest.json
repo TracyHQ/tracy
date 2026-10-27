@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "47f15da7-8905-45b3-bcab-06a4277c6168",
+  "status": "complete",
+  "name": "Hungry Tiger",
+  "url": "https://styles.refero.design/style/47f15da7-8905-45b3-bcab-06a4277c6168",
+  "sourceWebsite": "https://www.eathungrytiger.com",
+  "extractedAt": "2026-06-03T19:04:45.766Z",
+  "capturedAt": "2026-10-08T05:11:11.031589+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "Turmeric-bright graffiti on a tandoor wall. A single gold-on-rust palette with display type so large it reads as a spice market sign, not a webpage.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/42ddcb40-b143-41fa-b4ce-3e865c08a0b6.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/09746af2-d7b4-465f-900d-17d3e662a980.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a32b8b9b-da9f-47fb-8695-3d7aa1cba204.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6cd45311-6e5a-4da7-ac71-6cca8096c141.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/b465c17d-9622-4925-ac45-524e25a75563.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b5ec6f08218ce7fbfc124ceb69ef8779f172bd42b9ef73e6852f7c55e0dc226b",
+      "bytes": 18790
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b93e87608c531c4014a866f4fad5fc807489e24454cc47ce01ecf0dd38fba0dd",
+      "bytes": 204925
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e3ee5f6b10f60f9985f1db6bfa61b689d3ea24f4d4228e7d2cd12a4bfd3ad8ba",
+      "bytes": 15632
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c887b6eec3ce5907000cc7bd944fdf8143b92f5201cdc3d1f2f284ff269a9780",
+      "bytes": 14936
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c2c5f39af19f3095279e3ce0db0b7c6e4ce554f96c5db87045da3b2d1f513e78",
+      "bytes": 11580
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c12f5795feee0719a279d48d1d052c1d3b8c85e61515500f5cf41944a0c33d92",
+      "bytes": 2763
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "529ffb0fcbff13cf3d8c11f4fa5ed0ed579d42c79ba740e92354a27676db509a",
+      "bytes": 516
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "da060ae9ba4bd442cab90454841a49e0335550bce5eb37dc9c8bba57fcaf73ed",
+      "bytes": 533
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d4d8c9675e43997438706b2c7168ae1132c36fe780e117dbd327ced6b356abd4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d1327e05a391717634876c8b4de240896bf84c9cdb2a9f4a6585b136b333e514",
+      "bytes": 44838
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "af65723f75d0db86f7d868444055fb48a4cb17a468e7a55d25fa6320c73f9ff7",
+      "bytes": 23903
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "41502ef77edc5c01dc94d158cf7c38c178faa2f13e5f80599709fb9906027ca0",
+      "bytes": 46399
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "fb01342dc7bbf2612c75c5d46cdc0d335edbc072dfe3756ffd2fa991a17c589f",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "42f9f612caf1cc196eedd53426c3ce1921c800f7a0bcaddcf7bae5392c30cc88",
+      "bytes": 1574
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e30a47b931310ff78611d52d7905055722f752db5e60f1c340c05694ad3f94e7",
+      "bytes": 2079
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "04961c7d-8ca6-4e87-ba88-6ad7ffa3b245",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "21da2822-cfe3-4a6a-b333-1be48e855e36",
+    "22cc86bc-6c5f-4413-a4a2-66b8ddc82ad0",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "47f15da7-8905-45b3-bcab-06a4277c6168",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "71a9583d-1710-4696-9269-50ca8c9a2cfa",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "9836e7c2-ac8e-453d-bdef-2677eb078d59",
+    "b753dfda-cbe1-41e4-b341-b98d69c8422f",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "db451eca-8de6-43a9-a5d5-35271befdffd",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495",
+    "f63bf016-5b53-4ddf-9f8c-da43f75a9e2b",
+    "fb812ddb-d7c0-4540-82d7-1562dff16f09"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-signin-code-locale",
+  "itemIds": [
+    "direct:signin-code:en",
+    "direct:signin-code:vi",
+    "direct:signin-code:de",
+    "direct:signin-code:it",
+    "direct:signin-code:fr",
+    "direct:signin-code:nl",
+    "direct:signin-code:zh",
+    "direct:signin-code:es"
+  ],
+  "requirement": "the sign-in code letter reads in eight languages; others read as English",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 5",
+    "invariant": "the 8 interface languages, else English"
+  },
+  "edgeTags": ["locale"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.locale:signin-code"],
+  "redProof": null,
+  "legacyIds": []
+}

@@ -1,0 +1,59 @@
+{
+  "color": {
+    "sunbeam-yellow": {
+      "$value": "#ffc500",
+      "$type": "color",
+      "$description": "Sunbeam Yellow — Section backgrounds, the product itself, display wordmarks — the page's primary brand canvas and the loudest single color in the system"
+    },
+    "electric-violet": {
+      "$value": "#7700ff",
+      "$type": "color",
+      "$description": "Electric Violet — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "carbon": {
+      "$value": "#312f27",
+      "$type": "color",
+      "$description": "Carbon — Body text, heading text, icon strokes, form labels — a warm near-black chosen over pure #000 to sit comfortably against yellow and white without vibrating"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, text on violet buttons, text on dark bands — the default light surface"
+    },
+    "slate-gray": {
+      "$value": "#788086",
+      "$type": "color",
+      "$description": "Slate Gray — Hero section background — a desaturated mid-gray that lets the yellow product pop without competing with it"
+    },
+    "fog": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Fog — Light alternate surface, input fill on white sections, subtle dividers"
+    },
+    "sand": {
+      "$value": "#e9e4d9",
+      "$type": "color",
+      "$description": "Sand — Input backgrounds, callout bubbles, warm light surface — bridges between the cool neutrals and the yellow brand"
+    },
+    "ash": {
+      "$value": "#b1afa7",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, secondary borders, subdued metadata — the quietest visible neutral"
+    }
+  },
+  "font": {
+    "roobert": {
+      "$value": "Roobert",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the system — a humanist geometric that handles the 68px 'playdate' wordmark and 22px body copy in the same family. Weight 400 carries UI and running text; weight 700/800 anchors display words, prices, and CTAs. The custom -0.007em tracking is applied globally so even body text sits a touch tighter than system defaults."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://play.date",
+      "siteName": "Playdate",
+      "extractedAt": "2026-06-03T17:10:18.598Z",
+      "variant": "compact"
+    }
+  }
+}

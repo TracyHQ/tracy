@@ -1,0 +1,166 @@
+---
+// Home/landing hero: copy column + the direction's terminal panel, on the grid background.
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import { panelImage } from './a/panel'
+import { stampFor, type Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  /** True inside the inner-page 760px column (views/Sections.astro). */
+  narrow?: boolean
+}
+const { data, index, style } = Astro.props
+// Only the first section of a page owns the page's h1.
+const Heading = index === 0 ? 'h1' : 'h2'
+const panel = panelImage(data, style)
+// The panel shows the image field of the page's colour direction, so its stamp names that field.
+const panelField = `image_${style}`
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'hero', null)
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [
+  data.cta1_link,
+  data.cta2_link
+])
+const show1 = Boolean(data.cta1_label) && live(data.cta1_link)
+const show2 = Boolean(data.cta2_label) && live(data.cta2_link)
+const hasActions = show1 || show2
+---
+
+<section class="hero" {...s()}>
+	<div class="k-container hero-inner">
+		<div class="hero-copy">
+			{data.eyebrow && <p class="k-eyebrow hero-eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+			{data.title && <Heading class="k-h1 hero-title" {...s('title')}>{data.title}</Heading>}
+			{data.sub && <p class="k-sub hero-sub" {...s('sub')}>{data.sub}</p>}
+			{
+				hasActions && (
+					<div class="hero-actions">
+						{show1 && (
+							<a class="k-btn k-btn-primary hero-btn" href={data.cta1_link || '#'} {...s('cta1_label')}>
+								{data.cta1_label}
+								<Icon name="arrow-right" size={16} />
+							</a>
+						)}
+						{show2 && (
+							<a class="k-btn k-btn-ghost hero-btn hero-btn-ghost" href={data.cta2_link || '#'}>
+								<span class="k-prompt" aria-hidden="true">$</span>
+								<span {...s('cta2_label')}>{data.cta2_label}</span>
+							</a>
+						)}
+					</div>
+				)
+			}
+			{data.trust && <p class="hero-trust" {...s('trust')}>{data.trust}</p>}
+		</div>
+		{
+			panel && (
+				<div class="hero-visual">
+					<img
+						src={panel.src}
+						width={panel.width}
+						height={panel.height}
+						alt={panel.alt}
+						loading={index === 0 ? 'eager' : 'lazy'}
+						decoding="async"
+						{...s(panelField)}
+					/>
+				</div>
+			)
+		}
+	</div>
+</section>
+
+<style>
+	.hero {
+		background-color: var(--k-bg);
+		/* Grid plus a faint glow from the top right. The glow mixes the direction's bright accent
+		   (--k-tint, DECISIONS D33) at 12%, as the source does; the darker light-theme primary made it olive-grey. */
+		background-image:
+			linear-gradient(var(--k-grid) 1px, transparent 1px),
+			linear-gradient(90deg, var(--k-grid) 1px, transparent 1px),
+			radial-gradient(120% 100% at 80% 0%, color-mix(in srgb, var(--k-tint) 12%, transparent), transparent 60%);
+		background-size:
+			32px 32px,
+			32px 32px,
+			100% 100%;
+	}
+	.hero-inner {
+		display: grid;
+		grid-template-columns: minmax(0, 526fr) minmax(0, 590fr);
+		column-gap: 60px;
+		align-items: center;
+		padding-block: 80px 64px;
+	}
+	.hero-eyebrow {
+		margin: 0 0 22px;
+	}
+	/* Fixed steps measured on the source (every width 1440→360, all four hero pages), replacing the
+	   fluid .k-h1 size: heading 52px from 861px and 38px at 860px and below; lede 17px from 621px and
+	   15px at 620px and below. */
+	/* --ds-*: a worn design system (lib/ds-slot.ts); unset, the measured steps below */
+	.hero-title {
+		margin: 0 0 22px;
+		font-size: var(--ds-size-display, 52px);
+		line-height: var(--ds-leading-display, 1.04);
+		letter-spacing: var(--ds-tracking-display, -1.5px);
+	}
+	.hero-sub {
+		margin: 0 0 32px;
+		font-size: 17px;
+		line-height: 1.6;
+	}
+	@media (max-width: 860px) {
+		.hero-title {
+			font-size: var(--ds-size-display-phone, var(--ds-size-display, 38px));
+		}
+	}
+	@media (max-width: 620px) {
+		.hero-sub {
+			font-size: 15px;
+		}
+	}
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px;
+	}
+	.hero-btn {
+		border-radius: var(--ds-btn-radius, 9px);
+		padding-inline: 22px;
+		font-size: 15px;
+	}
+	.hero-btn-ghost {
+		font-size: 14px;
+		color: var(--k-heading);
+		background: color-mix(in srgb, var(--k-surface) 70%, transparent);
+	}
+	.hero-trust {
+		margin: 34px 0 0;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		line-height: 1.55;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.hero-visual img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 12px;
+		box-shadow: var(--k-shadow);
+	}
+	@media (max-width: 991px) {
+		.hero-inner {
+			grid-template-columns: minmax(0, 1fr);
+			row-gap: 60px;
+		}
+	}
+</style>

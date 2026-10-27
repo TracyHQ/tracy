@@ -1,0 +1,94 @@
+{
+  "color": {
+    "inkwell-teal": {
+      "$value": "#001d21",
+      "$type": "color",
+      "$description": "Inkwell Teal — Primary text, heading fill, hero background, card backgrounds for high-contrast panels"
+    },
+    "vellum-lavender": {
+      "$value": "#bdbbff",
+      "$type": "color",
+      "$description": "Vellum Lavender — Signature accent — highlight washes behind text, section badges, decorative strokes, the right-hand terminus of display gradients"
+    },
+    "sage-mist": {
+      "$value": "#ccd5d6",
+      "$type": "color",
+      "$description": "Sage Mist — Dominant canvas background, hairline borders, dividers"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, image panels, inverse text on dark"
+    },
+    "bone": {
+      "$value": "#f9f9f7",
+      "$type": "color",
+      "$description": "Bone — Warm off-white alt surface, muted body text on dark backgrounds"
+    },
+    "driftwood": {
+      "$value": "#eaebea",
+      "$type": "color",
+      "$description": "Driftwood — Subtle banded sections, tertiary surface layer"
+    },
+    "slate-veil": {
+      "$value": "#647577",
+      "$type": "color",
+      "$description": "Slate Veil — Mid-gray supporting text, muted UI labels"
+    },
+    "pewter-deep": {
+      "$value": "#43585a",
+      "$type": "color",
+      "$description": "Pewter Deep — Dark banded section fills, layered surface"
+    },
+    "gunmetal": {
+      "$value": "#213a3d",
+      "$type": "color",
+      "$description": "Gunmetal — Even darker banded fills, image overlay scrim base"
+    },
+    "patina": {
+      "$value": "#002b31",
+      "$type": "color",
+      "$description": "Patina — Deepest teal — link backgrounds, footer anchors"
+    },
+    "frost": {
+      "$value": "#a7b0b1",
+      "$type": "color",
+      "$description": "Frost — Cool mid-gray surface accent"
+    },
+    "pebble": {
+      "$value": "#859394",
+      "$type": "color",
+      "$description": "Pebble — Muted surface layer for stacked color bands"
+    },
+    "mist": {
+      "$value": "#b2bfc1",
+      "$type": "color",
+      "$description": "Mist — Secondary border tone"
+    },
+    "olive-violet-wash": {
+      "$value": "#898ee5",
+      "$type": "color",
+      "$description": "Olive Violet Wash — Display type gradient — mid-stop of the olive→violet hero fill"
+    }
+  },
+  "font": {
+    "angellistdisplay": {
+      "$value": "angellistDisplay",
+      "$type": "fontFamily",
+      "$description": "Display headlines — the brand's signature voice. Used from 28px section openers up to 288px hero type. Single weight (400) carries the system; size alone does the shouting. Tabular lining numerals and three stylistic sets (ss01–ss03) make this a purpose-built editorial face, not a system font fallback."
+    },
+    "angellist": {
+      "$value": "angellist",
+      "$type": "fontFamily",
+      "$description": "Body, UI, and supporting type. 400 for body copy, 500/550 for labels, nav, and button text. The 550 weight is a half-step — a quiet way to add emphasis without bolding. Same stylistic sets as the display face keep the two families visually stitched together."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.angellist.com/2024",
+      "siteName": "Angellist",
+      "extractedAt": "2026-06-03T21:34:31.745Z",
+      "variant": "compact"
+    }
+  }
+}

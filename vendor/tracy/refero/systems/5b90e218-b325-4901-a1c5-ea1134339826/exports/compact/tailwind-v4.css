@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-brand-violet: #5727e7;
+  --color-tinted-highlight: #f2f2ff;
+  --color-ink-black: #030712;
+  --color-graphite: #222222;
+  --color-slate: #4b5563;
+  --color-mid-gray: #5c5c5c;
+  --color-steel: #6b7280;
+  --color-mist: #d1d5db;
+  --color-fog: #e5e7eb;
+  --color-cloud: #f9fafb;
+  --color-paper: #ffffff;
+
+  /* Typography */
+  --font-satoshi: 'Satoshi', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

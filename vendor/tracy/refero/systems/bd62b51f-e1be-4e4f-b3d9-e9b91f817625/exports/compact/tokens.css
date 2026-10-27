@@ -1,0 +1,9 @@
+:root {
+  /* Colors */
+  --color-pure-black: #000000;
+  --color-pure-white: #ffffff;
+
+  /* Typography — Font Families */
+  --font-arial-narrow: 'Arial Narrow', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times-now: 'Times Now', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

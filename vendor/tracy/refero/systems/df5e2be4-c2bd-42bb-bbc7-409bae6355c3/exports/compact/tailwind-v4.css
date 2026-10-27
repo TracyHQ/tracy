@@ -1,0 +1,20 @@
+@theme {
+  /* Colors */
+  --color-coinbase-blue: #0052ff;
+  --color-interactive-blue: #578bfa;
+  --color-pure-white: #ffffff;
+  --color-midnight: #0a0b0d;
+  --color-slate: #5b616;
+  --color-ash: #8a919;
+  --color-frost: #f7f8f9;
+  --color-cloud: #eef0f3;
+  --color-pewter: #dedfe2;
+  --color-charcoal: #141519;
+  --color-positive-green: #27ad75;
+  --color-negative-red: #f0616d;
+
+  /* Typography */
+  --font-coinbasedisplay: 'CoinbaseDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-coinbasesans: 'CoinbaseSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-coinbasetext: 'CoinbaseText', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

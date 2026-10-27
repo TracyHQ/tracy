@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1477-voice-p1p2",
+  "kind": "feat",
+  "title": "Voice: STT sessions capped per service, per-turn trace door, microphone choice, ending Voice by a whole phrase, Vietnamese pronouns in the reply rule",
+  "pr": 1477,
+  "area": "voice/relay",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the run.cmd below (node --test over the relay, trace door, config, reply-language and chat-input voice suites; no database, no speech key, no audio).",
+    "S2: Read the exit code and the pass/fail counts."
+  ],
+  "expect": [
+    "Exit 0, 0 failures.",
+    "A fifth STT session at one service with SPEECH_STT_MAX_CONCURRENT=4 ends provider-busy before any handshake, and a place is given back once by the session's own id; a fallback into a full pool ends provider-busy.",
+    "POST /api/speech/trace: 401 signed out, 400 on a non-number span, 413 past 1024 bytes, 429 past 600 an hour, one row per account and turn id, refused from another origin.",
+    "isVoiceOff/isGoodbye match only a whole finished phrase (not 'đổi chữ tạm biệt thành xin chào', not 'ciao'); with a card waiting only the turn-off phrases count.",
+    "replyLanguageRule asks for 'mình'/'bạn' whenever the reply is Vietnamese; the Voice rule has no copy of it."
+  ],
+  "selectors": {
+    "relay": "apps/tracy-web/src/speech/relay.js sttSlots",
+    "trace_door": "POST /api/speech/trace (apps/tracy-web/src/speech/trace.js)",
+    "turn_taking": "packages/ui/tracy-chat-input/src/client/voice-turn-taking.mjs isVoiceOff isGoodbye",
+    "pronouns": "packages/tools/tracy-site-tools/src/host/prompter.mjs replyLanguageRule"
+  },
+  "evidence": "Council 19/10/2026 (Codex gpt-6.1-sol, xhigh), voice backlog after #1414/#1430: cap and trace are the operational half; pronouns, mic choice and ending by voice from the 17/10 stand runs.",
+  "fence": "The relay's slot pool, the trace door's limits, the phrase matchers and the reply rule, through their own tests. Not exercised: a real speech service, a real microphone, a live stand.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/speech-relay.test.mjs",
+      "apps/tracy-web/test/speech-provider.test.mjs",
+      "apps/tracy-web/test/speech-trace.test.mjs",
+      "apps/tracy-web/test/config.test.mjs",
+      "apps/tracy-web/test/ops-speech.test.mjs",
+      "packages/tools/tracy-site-tools/test/reply-language.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-turn-taking.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-mode.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-mic.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-trace.test.mjs"
+    ],
+    "needs": []
+  }
+}

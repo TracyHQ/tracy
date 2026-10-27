@@ -1,0 +1,23 @@
+# node
+node_modules/
+npm-debug.log*
+
+# macOS
+.DS_Store
+
+# build scratch — a template under construction never belongs in this repo
+*-build/
+evidence/
+backups/
+.playwright-mcp/
+
+# never
+.env
+.env.*
+!.env.example
+*.token
+*.db
+*.sql
+*.dump
+__pycache__/
+*.pyc

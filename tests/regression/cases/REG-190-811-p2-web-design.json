@@ -1,0 +1,34 @@
+{
+  "id": "REG-190",
+  "kind": "fix",
+  "title": "Three P2 findings of #811: the sign-in code step claims no sent mail, the Build tab counts the host's stages, and the public design page reads in the visitor's language",
+  "pr": 906,
+  "area": "web/design",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap --test-timeout=120000 apps/tracy-web/test/beta-login-copy.test.mjs apps/tracy-web/test/issue-811-status.test.mjs packages/site/tracy-site-build-core/test/client-stage-order.test.mjs packages/web/tracy-design-page/test/public-locale.test.mjs",
+    "S2: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below.",
+    "S3: In each of packages/site/tracy-site-build-joomla and packages/site/tracy-site-build-emdash run: node scripts/build-client.mjs --check and read its exit code."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "'F-S1-008: beta on and rate-limited — the code step shows and does not say a mail was sent', 'no language claims a mail on the rate-limited beta branch', 'beta answers a queued and a rate-limited request with the same page and the same JSON', 'the queue’s own cap sends nothing, and the page still makes no claim' and 'with script, the step the page moves to makes no claim — first request and resend' pass: #code-step's description is login.codeFor in all eight languages, nothing is sent or queued on the rate-limited branch, and the beta answer is the same for a queued and a rate-limited address.",
+    "'outside beta the limiter still refuses with 429 and the email step', 'beta off: one mail leaves and the code step names the address it is for', 'local preview keeps its own words and its code on the page' and 'a missing, empty or malformed address is refused as before, beta on or off' pass: the door's refusals are unchanged.",
+    "Every 'F-S4-001' test passes for the three Build plugins: the client's `stages` equals the host's STAGES in order (Joomla 7 with `language` before `shot`, EmDash 3 with `personalize` before `shot`), the count never exceeds the total, and a paused job points at an unsettled stage inside the list.",
+    "Every 'F-S5-004' test passes: the header and the loading line read in the language picked by ?lang, then the tracy_lang cookie, then the browser, then English; api/read and api/words carry that `lang`; 'NOT TRANSLATED: the page’s own sentences are English in every language' passes and lists the sentences that still have no translation.",
+    "'F-S3-010 (already fixed): the row menu offers Site changes, not Releases', 'F-S3-010 (already fixed): the switch catalogue has the changes pair and no releases pair' and 'F-S3-012 (not fixed here): the approval guard for a sandboxed seat is still in the gateway' pass.",
+    "S3 exits 0 in both packages: each committed lib/client.js is the build of its source."
+  ],
+  "selectors": {
+    "codeStep": "#code-step .card-description and #code-step-email on GET/POST /login (apps/tracy-web/src/identity/pages.js)",
+    "stages": "`stages:` in packages/site/tracy-site-build-{joomla,emdash,wordpress}/src/client/index.tsx against STAGES in src/host/stages.mjs",
+    "publicLocale": "packages/web/tracy-design-page/src/locale.ts; `lang` on api/read and api/words (src/doors.ts)"
+  },
+  "evidence": "Issue #811 (F-S1-008, F-S4-001, F-S5-004); tasks/nhat-ky/2026-10-04-811-p2-web-design.md holds the red-on-base and green-on-branch counts of each suite.",
+  "fence": "Mechanism only, no stand: the real route handlers and client modules run under node --test with linkedom and a stub fetch. Not covered: a real browser, PostgreSQL, a real host or dsh, a real seat, anything an edge adds. F-S5-004 is partly fixed (the page's own sentences stay English); F-S3-012 and the three findings that need their own task (version choice, Brand failures, advert preview) are not fixed by this case's change.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-190.mjs"]
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-boxing",
+  "release": "quickstart/ja-boxing/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.hero-title",
+    "heading": "h2.cta-title.h1",
+    "body": "p",
+    "container": "div.t4-section > div.t4-section-inner.container",
+    "section": "#Mod157",
+    "input": "#email_field_371"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 80px",
+    "displayFace": "Bebas Neue 400, tracking 0em",
+    "heading": "first section heading: 80px",
+    "body": "first body paragraph",
+    "container": "first content container, max-width 1568px",
+    "section": "first padded full-width section, padding-top 128px",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 28px"
+  },
+  "keepScopes": [".t4-hero", ".acm-cta"],
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "baseTokens": {
+    "--bg": "#121111",
+    "--fg": "#6c757d",
+    "--fg-2": "#ffffff",
+    "--accent": "#f44141",
+    "--accent-hover": "#f44141",
+    "--surface": "#181717",
+    "--surface-warm": "#1f1e1e",
+    "--meta": "#ffffff",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#373b3e",
+    "--muted": "#666666",
+    "--font-display": "\"Bebas Neue\", sans-serif",
+    "--font-body": "\"Space Grotesk\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#121111",
+      "fg": "#6c757d",
+      "fg-2": "#181717",
+      "accent": "#f44141",
+      "accent-hover": "#f44141",
+      "surface": "#f8f9fa",
+      "surface-warm": "#1f1e1e",
+      "meta": "#ffffff",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#373b3e",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#121111",
+      "surface": "#181717",
+      "fg": "#6c757d",
+      "fg-2": "#ffffff",
+      "surface-warm": "#1f1e1e"
+    },
+    {
+      "accent": "#f44141"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "fg-2": "#ffffff",
+      "fg": "#6c757d",
+      "surface-warm": "#212529",
+      "border-soft": "#ecf0f1",
+      "border": "#343a40"
+    },
+    {
+      "border-soft": "#dee2e6"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (56 line colours, 39 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["#Mod157"],
+    "bodyFace": ["body"],
+    "themeToggle": ".ja-dark-mode"
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section p, .t4-section li",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 16 tried (byte 5955); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 90,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#ffffff",
+      "distance": 0
+    },
+    {
+      "hex": "#6c757d",
+      "uses": 25,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#6c757d",
+      "distance": 0
+    },
+    {
+      "hex": "#212529",
+      "uses": 16,
+      "kind": "custom",
+      "role": "surface-warm",
+      "near": "#1f1e1e",
+      "distance": 13
+    },
+    {
+      "hex": "#ecf0f1",
+      "uses": 12,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 10
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 8,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#343a40",
+      "uses": 6,
+      "kind": "custom",
+      "role": "border",
+      "near": "#373b3e",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "alphaVars": ["fg-2-40", "fg-2-50", "fg-2-60", "fg-2-87"],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-boxing/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip: tasks/evidence/ds-contracts-r3c-2026-10-11/templates/ja-boxing-j6): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 89% or more of the page follows; round 1 failed because T4's --color-dark (this dark template's card fill) followed the text colour, and --headings-color (#fff, declared again in its footer bands) stayed literal: --color-dark takes the surface (templateVars), --headings-color is fg-2 wherever declared (varRoles); hero and call-to-action photo bands kept with their own text (keepText, keepDefaults read off the released page); footer social chips follow (followRules); its visitor light mode is hidden under a system (themeToggle .ja-dark-mode, tokenScope body.light-active) and a light system shows its own dark wordmark (sideRules); container probe on a top-level section container (a nested one is capped by its parent); checked by eye on the Toggl Track (dark), MotherDuck and Apple (light) screenshots, top and lower page. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 90% or more of the page follows, every contrast kind sampled at 1440 and 390; checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-boxing-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-boxing 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 90-100% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-boxing-j6",
+  "templateVars": {
+    "--color-dark": "var(--ds-c-surface)",
+    "--heading-font-family": "var(--ds-font-heading)",
+    "--body-font-family": "var(--ds-font-body)"
+  },
+  "templateVarsNote": "--color-dark is this template's card and panel fill (.bg-dark, .light-transparent: #181717 on its #121111 page), never its text: it takes the surface, not the T4 family's text role; 24/10/2026: --heading-font-family and --body-font-family (T4 sets them to Bebas Neue and Space Grotesk, read by .h2/.h3 section titles and the newsletter block) take the system's heading and body faces, so no text keeps the template's own font",
+  "varRoles": {
+    "--headings-color": "fg-2"
+  },
+  "varRolesNote": "--headings-color (#fff, declared on :root and again inside the footer bands of css/template.css) paints headings and .link-underline: fg-2 wherever it is declared",
+  "keepNote": "24/10/2026: the two call-to-action buttons (.btn-secondary) inside the hero and the call-to-action band wear the system pair on the band ground (keptButtons), they kept T4's literal #212529 fill; kept after measuring 11/10/2026: the hero and the call-to-action band (white titles and the red 'NO1' on their own photos), their page text given back (keepText)",
+  "followRules": {
+    ".acm-social .social-inner a": {
+      "background-color": "surface-warm",
+      "color": "fg"
+    },
+    ".acm-social .social-inner a:hover": {
+      "background-color": "surface-hover",
+      "color": "accent-text"
+    },
+    ".acm-social .social-inner a:focus": {
+      "background-color": "surface-hover",
+      "color": "accent-text"
+    },
+    "input.acym__user__edit__email": {
+      "background-color": "surface",
+      "border-color": "border",
+      "color": "fg"
+    }
+  },
+  "followRulesNote": "24/10/2026 (preview probe v10): the email field of the Acym newsletter block takes the surface, border and text of the system (it had no visible shape under a light system), and the social chips change on hover and focus (surface-hover and accent-text); the footer's social chips are a literal #343a40 fill (no palette colour) under white text: the chip takes the warm surface and the page text, so a light system's footer does not carry dark chips with light text",
+  "keepText": [".t4-hero", ".acm-cta"],
+  "keepDefaults": {
+    "--body-bg-color": "#121111",
+    "--body-text-color": "#6c757d",
+    "--body-link-color": "#f44141",
+    "--body-link-hover-color": "#f44141",
+    "--color-primary": "#f44141",
+    "--color-secondary": "#212529",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#181717",
+    "--mainnav-text-color": "#ffffff",
+    "--mainnav-link-color": "#ffffff",
+    "--mainnav-link-hover-color": "#f44141",
+    "--mainnav-link-active-color": "#f44141",
+    "--footer-bg-color": "#1f1e1e",
+    "--footer-text-color": "#ffffff",
+    "--footer-link-color": "#6c757d",
+    "--footer-link-hover-color": "#ffffff",
+    "--headings-color": "#ffffff"
+  },
+  "tokenScope": ":root, html[data-theme=\"dark\"], html.t4-dark, [data-bs-theme=\"dark\"], body.light-active",
+  "sideRules": {
+    "light": {
+      ".navbar-brand .d-light": {
+        "display": "none"
+      },
+      ".navbar-brand .d-dark": {
+        "display": "inline-block"
+      },
+      ".navbar-brand .d-dark img": {
+        "filter": "invert(1) hue-rotate(180deg) brightness(0.7)"
+      },
+      ".t4-mod-wrap.bg-dark.light-transparent": {
+        "--color-dark": "color-mix(in srgb, var(--ds-c-bg) 96%, var(--ds-c-fg-2))"
+      },
+      "a > img[src*=\"logo/item-1.png\"]:not(.logo-img)": {
+        "filter": "invert(1) hue-rotate(180deg) brightness(0.7)"
+      }
+    },
+    "dark": {
+      ".t4-mod-wrap.bg-dark.light-transparent": {
+        "--color-dark": "color-mix(in srgb, var(--ds-c-bg) 96%, var(--ds-c-fg-2))"
+      },
+      "body.light-active": {
+        "--bg-item-1": "var(--ds-c-surface)",
+        "--bg-item-2": "var(--ds-c-surface)",
+        "--bg-item-3": "var(--ds-c-surface-warm)",
+        "--color-social": "var(--ds-c-fg-2)",
+        "--white": "var(--ds-c-fg-2)",
+        "--border-color": "var(--ds-c-border)",
+        "--border-color-2": "var(--ds-c-border)",
+        "--border-color-focus": "color-mix(in srgb, var(--ds-c-fg) 20%, transparent)",
+        "--placeholder-color": "color-mix(in srgb, var(--ds-c-fg) 70%, transparent)",
+        "--bg-input": "color-mix(in srgb, var(--ds-c-fg) 10%, transparent)"
+      },
+      "body.light-active .bg-dark": {
+        "--border-color": "var(--ds-c-border)"
+      }
+    }
+  },
+  "darkModeNote": "24/10/2026 (modes, 1.0.2+): the footer logo module (item-1.png, no .logo-img class) is inverted like the header wordmark under a light system; on the dark side the template runtime colours of body.light-active (hairlines #f2f2f2, --white #212529, input and placeholder tints) are given their dark values back, because the popup press only toggles body.dark-active and a page opened on the light side keeps body.light-active, which drew #f2f2f2 lines on the derived dark page (BORDER-1); under a light system the header wordmark is the transparent white one (item-1.png, .d-dark) inverted to dark with its hues kept and dimmed to 0.7, because the .d-light file (item-2.png) is an opaque white rectangle that disappears on a white page; the raised section band (.t4-mod-wrap.bg-dark.light-transparent) is the page ground lifted 4% toward the heading colour, as the template lifts it 1.05:1; the template is dark by default (body.dark-active) with a visitor light mode (.ja-dark-mode button, body.light-active redeclaring T4's runtime colours in css/tpl/theme.tpl.css): under a worn system the button is hidden (themeToggle) and the slot writes its variables on body.light-active too (tokenScope), as JA Titan; under a light system the template's own light wordmark (.d-light) shows instead of the white one (sideRules)",
+  "minVersion": {
+    "quickstart/ja-boxing/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-boxing/j6": "1.0.1"
+  },
+  "maxVersionNote": "1.0.3 24/10/2026: the 1.0.2 stylesheets unchanged (release-joomla.mjs --no-tokenize; 1.0.2 carries the tokenized CSS of 1.0.1 plus one JS fix), T4 2.6.4, demo copy without the TITLE placeholder and three PHP-warning fixes; the 15 featured systems measured 34/34 PASS on a stand built from the 1.0.3 installer (design-system-measurement.json of 1.0.3). From 1.0.2 on the release is covered by joomla-ja-boxing-modes (the range here ends at 1.0.1 so the shorter name does not win the overlap in contractFor), which extends this contract and keeps the Light/Dark switch.",
+  "keptButtons": {
+    ".t4-hero": {
+      "ground": "#121111",
+      "buttons": [".btn-secondary"]
+    },
+    ".acm-cta": {
+      "ground": "#121111",
+      "buttons": [".btn-secondary"]
+    }
+  },
+  "bands": {
+    ".t4-hero": {
+      "ground": "#121111",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        ".hero-title span": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".acm-cta": {
+      "ground": "#121111",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours"
+}

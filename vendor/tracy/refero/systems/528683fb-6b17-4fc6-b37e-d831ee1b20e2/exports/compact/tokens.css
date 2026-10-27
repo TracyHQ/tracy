@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-canvas-white: #ffffff;
+  --color-gallery-gray: #f9f9f9;
+  --color-hairline-gray: #cfcfcf;
+  --color-caption-gray: #888888;
+  --color-ink-black: #111111;
+  --color-true-black: #000000;
+  --color-signature-red: #ff0000;
+
+  /* Typography — Font Families */
+  --font-times-new-roman: 'Times New Roman', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial-narrow: 'Arial Narrow', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

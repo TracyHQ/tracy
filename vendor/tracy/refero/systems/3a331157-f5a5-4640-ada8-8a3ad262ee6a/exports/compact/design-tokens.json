@@ -1,0 +1,54 @@
+{
+  "color": {
+    "warm-parchment": {
+      "$value": "#ffebd0",
+      "$type": "color",
+      "$description": "Warm Parchment — Gray accent for outlined action borders, linked labels, and lightweight interactive emphasis."
+    },
+    "candlelight": {
+      "$value": "#fff8e9",
+      "$type": "color",
+      "$description": "Candlelight — Lighter cream for elevated surfaces and secondary text on dark — a half-step above Parchment for subtle layering"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Structural borders, section dividers, image edge treatments — used as a hairline, never as a fill"
+    },
+    "walnut-shell": {
+      "$value": "#2f2116",
+      "$type": "color",
+      "$description": "Walnut Shell — Dark canvas behind full-bleed photographs, footer backgrounds, and dark editorial sections — the deep brown that makes white type glow warm"
+    },
+    "aged-bronze": {
+      "$value": "#4f3622",
+      "$type": "color",
+      "$description": "Aged Bronze — Secondary dark surface and border on dark sections — a half-step lighter than Walnut for subtle layering on dark"
+    },
+    "amber-glow": {
+      "$value": "#fee197",
+      "$type": "color",
+      "$description": "Amber Glow — Navigation borders, active state accents, warning/attention states, and the single chromatic punctuation in an otherwise warm-neutral system"
+    },
+    "muted-gold": {
+      "$value": "#987f61",
+      "$type": "color",
+      "$description": "Muted Gold — Link borders and heading underlines on dark sections — a desaturated brass for typographic detail without breaking the monochrome feel"
+    }
+  },
+  "font": {
+    "modernera": {
+      "$value": "ModernEra",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for body, navigation, buttons, links, headings, and overlay captions — a custom humanist sans that sits at 400 for body and 500 for emphasis. The entire type scale tops out at 40px, which is anti-SaaS: no 56px or 72px display sizes, no dramatic weight jumps. Authority comes from restraint, not volume."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.aspelineiendom.no",
+      "siteName": "Aspelin Reitan",
+      "extractedAt": "2026-06-03T21:33:24.654Z",
+      "variant": "compact"
+    }
+  }
+}

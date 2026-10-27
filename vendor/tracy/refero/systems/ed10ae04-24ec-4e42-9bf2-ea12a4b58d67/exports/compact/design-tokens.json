@@ -1,0 +1,109 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#131316",
+      "$type": "color",
+      "$description": "Void Black — Primary text, headings, and high-contrast body copy across light surfaces"
+    },
+    "fog-white": {
+      "$value": "#f7f7f8",
+      "$type": "color",
+      "$description": "Fog White — Page canvas and light section backgrounds"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, modal backgrounds, form inputs on light sections"
+    },
+    "graphite": {
+      "$value": "#5e5f6e",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text, muted labels, icon fills on light surfaces"
+    },
+    "ash": {
+      "$value": "#747686",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, nav punctuation, disabled state text"
+    },
+    "hairline": {
+      "$value": "#d9d9de",
+      "$type": "color",
+      "$description": "Hairline — Borders, dividers, input outlines, table rules"
+    },
+    "mist": {
+      "$value": "#eeeef0",
+      "$type": "color",
+      "$description": "Mist — Subtle section dividers, link icon backgrounds, hover wash backgrounds"
+    },
+    "stone": {
+      "$value": "#9394a1",
+      "$type": "color",
+      "$description": "Stone — Placeholder text, code comments, muted helper copy"
+    },
+    "obsidian-card": {
+      "$value": "#212126",
+      "$type": "color",
+      "$description": "Obsidian Card — Dark product demo card backgrounds in mixed-mode sections"
+    },
+    "dark-surface": {
+      "$value": "#2f3037",
+      "$type": "color",
+      "$description": "Dark Surface — Elevated dark panel backgrounds, code block surfaces"
+    },
+    "slate-mid": {
+      "$value": "#696a78",
+      "$type": "color",
+      "$description": "Slate Mid — Mid-tone icon fills and body copy inside dark card contexts"
+    },
+    "electric-violet": {
+      "$value": "#6c47ff",
+      "$type": "color",
+      "$description": "Electric Violet — Primary CTA button fill, active heading accents — the single chromatic action color; its mid-spectrum violet reads developer-brand without borrowing blue from infrastructure tools; Atmospheric hero background gradient blending violet and yellow; Brand gradient for decorative text highlights and horizontal accent rules"
+    },
+    "violet-soft": {
+      "$value": "#615cf6",
+      "$type": "color",
+      "$description": "Violet Soft — Decorative list and tag backgrounds, subtle brand surface tints"
+    },
+    "cyan-spark": {
+      "$value": "#5de3ff",
+      "$type": "color",
+      "$description": "Cyan Spark — Heading accent text inside dark sections, code string highlights, decorative icon glow"
+    }
+  },
+  "font": {
+    "soehnemono": {
+      "$value": "soehneMono",
+      "$type": "fontFamily",
+      "$description": "soehneMono — detected in extracted data but not described by AI"
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all marketing copy, UI labels, headings, and CTAs. The custom numeric tables (geistNumbers variant) keep digit spacing consistent inside product demos. Negative tracking at -0.035em at large sizes and -0.015em at mid sizes compresses display headlines into a dense technical block — a deliberate contrast to softer marketing type."
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "System fallback font used in browser-rendered components, OS UI widgets, and the Clerk-embedded auth modal. Its presence signals authentic native-UI feel in interactive demos."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "UI micro-labels, product card annotations, and icon captions within embedded component previews."
+    },
+    "shne-mono": {
+      "$value": "Söhne Mono",
+      "$type": "fontFamily",
+      "$description": "Code snippets, JSX component labels (<SignUp />, <UserButton />), and terminal output. The +0.10em positive tracking at mono sizes makes angle-bracket syntax air out instead of colliding — a purposeful readability choice at 10-12px."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://clerk.com",
+      "siteName": "Clerk",
+      "extractedAt": "2026-05-07T17:08:20.967Z",
+      "variant": "compact"
+    }
+  }
+}

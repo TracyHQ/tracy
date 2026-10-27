@@ -1,0 +1,144 @@
+{
+  "color": {
+    "voltage-violet": {
+      "$value": "#693edf",
+      "$type": "color",
+      "$description": "Voltage Violet — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-iris": {
+      "$value": "#4f1bb7",
+      "$type": "color",
+      "$description": "Deep Iris — Mid-gradient stop in hero band and platform diagram backgrounds. Bridges Voltage Violet to darker violet depths"
+    },
+    "plum-voltage": {
+      "$value": "#4514a6",
+      "$type": "color",
+      "$description": "Plum Voltage — Deeper gradient stop, card-on-violet backgrounds in platform architecture diagram"
+    },
+    "royal-purple": {
+      "$value": "#3b0d96",
+      "$type": "color",
+      "$description": "Royal Purple — Even deeper gradient stop; used in platform diagram cells and hero band lower section"
+    },
+    "indigo-abyss": {
+      "$value": "#29007a",
+      "$type": "color",
+      "$description": "Indigo Abyss — Deepest gradient stop; anchors the bottom of the hero band and provides shadow depth in violet illustrations"
+    },
+    "lavender-mist": {
+      "$value": "#c1b9f4",
+      "$type": "color",
+      "$description": "Lavender Mist — Soft violet tint — decorative washes, subtle highlights on violet illustrations, muted violet borders on light backgrounds"
+    },
+    "cobalt-vein": {
+      "$value": "#7249f1",
+      "$type": "color",
+      "$description": "Cobalt Vein — Slightly lighter violet stroke for illustration linework and decorative connectors in hero graphics"
+    },
+    "ink": {
+      "$value": "#000b0f",
+      "$type": "color",
+      "$description": "Ink — Primary text color on light backgrounds; near-black with a barely perceptible cool cast. Used for body copy and headings"
+    },
+    "obsidian": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Obsidian — Dominant text and icon color across the entire interface. The workhorse neutral for headings, body, nav, and icon fills"
+    },
+    "graphite": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Graphite — Secondary heading weight and nav text; darker than mid-gray but lighter than Obsidian"
+    },
+    "slate": {
+      "$value": "#364045",
+      "$type": "color",
+      "$description": "Slate — Muted heading and button text on light surfaces; cool gray with blue undertone"
+    },
+    "iron": {
+      "$value": "#566b76",
+      "$type": "color",
+      "$description": "Iron — Body text secondary level, descriptive paragraphs, and muted helper text. Highest frequency gray"
+    },
+    "steel": {
+      "$value": "#5d5d5d",
+      "$type": "color",
+      "$description": "Steel — Utility text and less-prominent body content; neutral mid-gray with no color cast"
+    },
+    "fog": {
+      "$value": "#878787",
+      "$type": "color",
+      "$description": "Fog — Icon strokes and decorative linework in illustrations"
+    },
+    "ash": {
+      "$value": "#a6a6a6",
+      "$type": "color",
+      "$description": "Ash — Light decorative strokes and illustration linework"
+    },
+    "mist": {
+      "$value": "#ccd9e0",
+      "$type": "color",
+      "$description": "Mist — Button borders on light surfaces; cool pale gray with slight blue cast"
+    },
+    "cloud": {
+      "$value": "#e2e8eb",
+      "$type": "color",
+      "$description": "Cloud — Dividers, subtle borders, and box-shadow base color; the universal hairline gray"
+    },
+    "ice": {
+      "$value": "#e4edf1",
+      "$type": "color",
+      "$description": "Ice — Input borders and card edge dividers; slightly cooler than Cloud"
+    },
+    "snow": {
+      "$value": "#f6fafb",
+      "$type": "color",
+      "$description": "Snow — Page canvas background; off-white with the faintest cool tint to soften the page without going gray"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, button text on dark fills, and nav background; pure white for maximum contrast"
+    },
+    "midnight-steel": {
+      "$value": "#1d2130",
+      "$type": "color",
+      "$description": "Midnight Steel — Dark surface accent borders; used as outline color on dark elements"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Nav and UI utility text; near-black neutral"
+    },
+    "jet": {
+      "$value": "#535866",
+      "$type": "color",
+      "$description": "Jet — Stroke color for illustrations and decorative SVG linework; cool dark gray"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Universal UI and body typeface. Handles navigation, body copy, button labels, badges, card descriptions, and all interface text. Weight 400 for body, 500 for emphasized text and labels, 600 for buttons and nav, 700 for high-emphasis callouts. The tight -0.005em tracking at body sizes keeps dense text crisp without feeling mechanical."
+    },
+    "abc-normal": {
+      "$value": "ABC Normal",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface. Custom geometric grotesque with tight tracking (-0.02em) and aggressive sizing from 24px subheadings up to 88px hero display. Weight 600 for maximum impact headlines, 500 for sub-headings. The negative letter-spacing and sharp geometric forms give the brand its architectural, almost engineering-drawing feel. Substitute: Space Grotesk, then Plus Jakarta Sans."
+    },
+    "abc-normal-regular": {
+      "$value": "ABC Normal Regular",
+      "$type": "fontFamily",
+      "$description": "ABC Normal Regular — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://copy.ai",
+      "siteName": "Copy",
+      "extractedAt": "2026-06-03T16:40:12.632Z",
+      "variant": "compact"
+    }
+  }
+}

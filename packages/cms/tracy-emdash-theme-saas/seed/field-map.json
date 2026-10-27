@@ -1,0 +1,740 @@
+{
+	"generatedAt": "2026-09-15T21:05:09.023Z",
+	"fields": {
+		"pages.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"pages.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"pages.view": {
+			"source": "text",
+			"target": "string",
+			"label": "View"
+		},
+		"pages.filter": {
+			"source": "text",
+			"target": "string",
+			"label": "Filter"
+		},
+		"pages.path": {
+			"source": "text",
+			"target": "string",
+			"label": "Path"
+		},
+		"pages.style": {
+			"source": "text",
+			"target": "string",
+			"label": "Style"
+		},
+		"pages.sections": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Sections"
+		},
+		"pages.heading": {
+			"source": "text",
+			"target": "string",
+			"label": "Heading"
+		},
+		"pages.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"posts.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"posts.excerpt": {
+			"source": "prose",
+			"target": "text",
+			"label": "Excerpt"
+		},
+		"posts.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"posts.date": {
+			"source": "date",
+			"target": "datetime",
+			"label": "Date"
+		},
+		"posts.cover": {
+			"source": "image",
+			"target": "image",
+			"label": "Cover"
+		},
+		"posts.author": {
+			"source": "text",
+			"target": "string",
+			"label": "Author"
+		},
+		"posts.author_role": {
+			"source": "text",
+			"target": "string",
+			"label": "Author role"
+		},
+		"posts.featured": {
+			"source": "boolean",
+			"target": "boolean",
+			"label": "Featured"
+		},
+		"hero.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"hero.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"hero.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"hero.cta1_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Cta1 label"
+		},
+		"hero.cta1_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Cta1 link"
+		},
+		"hero.cta2_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Cta2 label"
+		},
+		"hero.cta2_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Cta2 link"
+		},
+		"hero.trust": {
+			"source": "text",
+			"target": "string",
+			"label": "Trust"
+		},
+		"hero.image_terminal": {
+			"source": "image",
+			"target": "image",
+			"label": "Image terminal"
+		},
+		"hero.image_blueprint": {
+			"source": "image",
+			"target": "image",
+			"label": "Image blueprint"
+		},
+		"hero.image_signal": {
+			"source": "image",
+			"target": "image",
+			"label": "Image signal"
+		},
+		"clients.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"clients.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"clients.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"clients.caption": {
+			"source": "text",
+			"target": "string",
+			"label": "Caption"
+		},
+		"clients.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"clients.ticker_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Ticker label"
+		},
+		"clients.ticker": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Ticker"
+		},
+		"bento.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"bento.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"bento.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"bento.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"incident_timeline.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"incident_timeline.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"incident_timeline.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"incident_timeline.columns": {
+			"source": "text",
+			"target": "string",
+			"label": "Columns"
+		},
+		"incident_timeline.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"kineticql_split.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"kineticql_split.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"kineticql_split.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"kineticql_split.cta_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Cta label"
+		},
+		"kineticql_split.cta_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Cta link"
+		},
+		"kineticql_split.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"kineticql_split.image_terminal": {
+			"source": "image",
+			"target": "image",
+			"label": "Image terminal"
+		},
+		"kineticql_split.image_blueprint": {
+			"source": "image",
+			"target": "image",
+			"label": "Image blueprint"
+		},
+		"kineticql_split.image_signal": {
+			"source": "image",
+			"target": "image",
+			"label": "Image signal"
+		},
+		"features_ledger.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"features_ledger.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"features_ledger.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"features_ledger.layout": {
+			"source": "text",
+			"target": "string",
+			"label": "Layout"
+		},
+		"features_ledger.card_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Card label"
+		},
+		"features_ledger.card_badge": {
+			"source": "text",
+			"target": "string",
+			"label": "Card badge"
+		},
+		"features_ledger.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"testimonials.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"testimonials.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"testimonials.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"testimonials.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"cta.variant": {
+			"source": "text",
+			"target": "string",
+			"label": "Variant"
+		},
+		"cta.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"cta.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"cta.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"cta.btn1_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Btn1 label"
+		},
+		"cta.btn1_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Btn1 link"
+		},
+		"cta.btn2_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Btn2 label"
+		},
+		"cta.btn2_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Btn2 link"
+		},
+		"cta.chip": {
+			"source": "text",
+			"target": "string",
+			"label": "Chip"
+		},
+		"cta.chip_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Chip link"
+		},
+		"page_masthead.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"page_masthead.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"page_masthead.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"page_masthead.align": {
+			"source": "text",
+			"target": "string",
+			"label": "Align"
+		},
+		"pricing.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"pricing.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"pricing.meta": {
+			"source": "text",
+			"target": "string",
+			"label": "Meta"
+		},
+		"pricing.inc_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Inc title"
+		},
+		"pricing.inc_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Inc desc"
+		},
+		"pricing.inc_cta_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Inc cta label"
+		},
+		"pricing.inc_cta_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Inc cta link"
+		},
+		"pricing.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"pricing_matrix.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"pricing_matrix.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"pricing_matrix.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"pricing_matrix.col1_name": {
+			"source": "text",
+			"target": "string",
+			"label": "Col1 name"
+		},
+		"pricing_matrix.col2_name": {
+			"source": "text",
+			"target": "string",
+			"label": "Col2 name"
+		},
+		"pricing_matrix.col3_name": {
+			"source": "text",
+			"target": "string",
+			"label": "Col3 name"
+		},
+		"pricing_matrix.corner_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Corner label"
+		},
+		"pricing_matrix.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"accordion.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"accordion.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"accordion.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"accordion.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"features_intro.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"features_intro.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"features_intro.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"features_intro.columns": {
+			"source": "text",
+			"target": "string",
+			"label": "Columns"
+		},
+		"features_intro.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"prose_quote.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"prose_quote.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"prose_quote.quote": {
+			"source": "text",
+			"target": "string",
+			"label": "Quote"
+		},
+		"prose_quote.attribution": {
+			"source": "text",
+			"target": "string",
+			"label": "Attribution"
+		},
+		"prose_quote.number": {
+			"source": "text",
+			"target": "string",
+			"label": "Number"
+		},
+		"prose_quote.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"prose_quote.meta": {
+			"source": "text",
+			"target": "string",
+			"label": "Meta"
+		},
+		"teams.eyebrow": {
+			"source": "text",
+			"target": "string",
+			"label": "Eyebrow"
+		},
+		"teams.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"teams.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"teams.columns": {
+			"source": "text",
+			"target": "string",
+			"label": "Columns"
+		},
+		"teams.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"social.heading": {
+			"source": "text",
+			"target": "string",
+			"label": "Heading"
+		},
+		"social.size": {
+			"source": "text",
+			"target": "string",
+			"label": "Size"
+		},
+		"social.align": {
+			"source": "text",
+			"target": "string",
+			"label": "Align"
+		},
+		"social.brand": {
+			"source": "text",
+			"target": "string",
+			"label": "Brand"
+		},
+		"social.logo": {
+			"source": "image",
+			"target": "image",
+			"label": "Logo"
+		},
+		"social.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"footerlegal.copyright": {
+			"source": "text",
+			"target": "string",
+			"label": "Copyright"
+		},
+		"footerlegal.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"header_cta.show_signin": {
+			"source": "text",
+			"target": "string",
+			"label": "Show signin"
+		},
+		"header_cta.signin_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Signin label"
+		},
+		"header_cta.signin_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Signin link"
+		},
+		"header_cta.cta_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Cta label"
+		},
+		"header_cta.cta_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Cta link"
+		},
+		"faq_support.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"faq_support.sub": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub"
+		},
+		"faq_support.btn_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Btn label"
+		},
+		"faq_support.btn_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Btn link"
+		},
+		"newsletter.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"newsletter.text": {
+			"source": "text",
+			"target": "string",
+			"label": "Text"
+		},
+		"newsletter.placeholder": {
+			"source": "text",
+			"target": "string",
+			"label": "Placeholder"
+		},
+		"newsletter.button_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Button label"
+		},
+		"newsletter.form_id": {
+			"source": "text",
+			"target": "string",
+			"label": "Form id"
+		},
+		"writers.name": {
+			"source": "text",
+			"target": "string",
+			"label": "Name"
+		},
+		"writers.username": {
+			"source": "text",
+			"target": "string",
+			"label": "Username"
+		},
+		"writers.role": {
+			"source": "text",
+			"target": "string",
+			"label": "Role"
+		},
+		"writers.bio": {
+			"source": "text",
+			"target": "string",
+			"label": "Bio"
+		},
+		"writers.tagline": {
+			"source": "text",
+			"target": "string",
+			"label": "Tagline"
+		},
+		"writers.avatar": {
+			"source": "image",
+			"target": "image",
+			"label": "Avatar"
+		},
+		"writers.sort": {
+			"source": "number",
+			"target": "integer",
+			"label": "Sort"
+		},
+		"contact_block.heading": {
+			"source": "text",
+			"target": "string",
+			"label": "Heading"
+		},
+		"contact_block.form_id": {
+			"source": "text",
+			"target": "string",
+			"label": "Form id"
+		},
+		"contact_block.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		}
+	}
+}

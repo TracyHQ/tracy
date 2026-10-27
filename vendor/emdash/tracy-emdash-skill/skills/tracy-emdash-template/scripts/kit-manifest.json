@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "note": "Who owns which file in the kit -> template copy. Read by check-kit-sync.mjs. Without this, the checker has only one rule (must match) and reports a template's own test fixtures as drift, which is how a permanently-red gate is built.",
+  "rules": {
+    "kitOwned": {
+      "means": "The kit is the source. The template carries a copy; its CODE must match (prose and formatting may differ - see check-kit-sync.mjs). A template that needs a change here changes the kit and takes the copy. src/** is compared byte for byte (TypeScript and Astro files have no parser here), so the template copies the kit's bytes.",
+      "globs": [
+        "tools/**",
+        "contract/**",
+        "ingest/**",
+        "tests/mock-emdash.mjs",
+        "tests/foreign-words.mjs",
+        "src/**"
+      ]
+    },
+    "templateOwned": {
+      "means": "The kit ships these as a STARTING POINT, not as a contract: every template tests its own site, so its fixture HTML, its timings and its own constants are meant to differ. Reported for the record, never counted as drift.",
+      "globs": [
+        "tests/*.test.mjs"
+      ]
+    },
+    "optional": {
+      "means": "A template may not carry these at all. base does no source ingestion, so it has no ingest/ and no tests for them. Absent is fine FOR THE TEMPLATES LISTED; present and different is still drift. Scoped per template on purpose: business's compile-seed imports contract/validate.mjs, so 'optional for base' must not read as 'optional for everyone'.",
+      "perTemplate": {
+        "tracy-emdash-theme-base": [
+          "contract/**",
+          "ingest/**",
+          "tools/compile-seed.mjs",
+          "tools/from-emdash-seed.mjs",
+          "tests/compile-seed.test.mjs",
+          "tests/detect-source.test.mjs",
+          "tests/from-url.test.mjs",
+          "tests/from-wp-spec.test.mjs",
+          "tests/site-model.test.mjs",
+          "tests/foreign-words.mjs"
+        ],
+        "tracy-emdash-theme-business": []
+      }
+    }
+  },
+  "exceptions": [
+    {
+      "file": "tools/release.mjs",
+      "template": "tracy-emdash-theme-business",
+      "declarations": [
+        "import ../../../site/tracy-site-build-core/src/questions.mjs",
+        "import ../../../site/tracy-site-build-core/src/tracy-setting.mjs",
+        "questionsFor",
+        "settingName",
+        "questionsName",
+        "seededQuestions",
+        "setting",
+        "questionsRaw",
+        "import node:fs",
+        "manifest",
+        "sums",
+        "stmt:8d236396a4",
+        "stmt:86a6b472f6",
+        "stmt:89cafbd41b",
+        "stmt:25e7439e12",
+        "stmt:e25d0d6670",
+        "import ../../../design/tracy-ds-slot/src/release-role-scan.mjs",
+        "roleScanFor",
+        "stmt:69c835f042",
+        "stmt:a77cfd524b",
+        "stmt:cd7f085627"
+      ],
+      "why": "Reaches into @tracy/site-build-core for the question bank and the tracy setting name and seeds them into the release, and signs its own asset list. Since 20/09 the question set is also parsed with TCH's stricter parseQuestions (stmt:89cafbd41b) right after the kit's own refusal; the kit's read, refusal and write of tracy_site_question.json are the kit's statements, unchanged. That import cannot live in the kit: the kit ships to a customer's machine where no TCH workspace exists. NAMED, not whole-file — replacing anything else in this file (artifact verification, the Dockerfile requirement, the scrub, any future shared fix) still fails. Verified 19/09/2026 by replacing the file body: the check went red. Since 16/10/2026 (PR #1398, VARS-1) the release also scans the packed theme for role variables with @tracy/ds-slot's roleScanFor and writes design-system-roles.json beside the release (stmt:69c835f042, stmt:a77cfd524b, stmt:cd7f085627): the scanner and the role list are TCH's, so they cannot ship in the kit either."
+    },
+    {
+      "file": "tools/release.mjs",
+      "template": "tracy-emdash-theme-base",
+      "declarations": [
+        "import ../../../site/tracy-site-build-core/src/tracy-setting.mjs",
+        "settingName",
+        "setting",
+        "sums",
+        "stmt:8d236396a4",
+        "stmt:86a6b472f6",
+        "import ../../../design/tracy-ds-slot/src/release-role-scan.mjs",
+        "roleScanFor",
+        "stmt:69c835f042",
+        "stmt:a77cfd524b",
+        "stmt:cd7f085627"
+      ],
+      "why": "Same precedent as the business entry above, narrower: since 13/10/2026 (PR #1301, A3) this release composes and validates tracy_setting.json with @tracy/site-build-core's SETTING_SCHEMA and validateSetting so `languages` is no longer typed by hand after every release, and adds that file to SHA256SUMS. The import cannot live in the kit for the reason the business entry gives: the kit ships to a customer's machine where no TCH workspace exists. No question bank here (base seeds none), so questionsFor/questionsName and their statements stay the kit's. NAMED, not whole-file: every other statement of this file must still match the kit. Since 16/10/2026 (PR #1398, VARS-1) the release also scans the packed theme for role variables with @tracy/ds-slot's roleScanFor and writes design-system-roles.json beside the release (stmt:69c835f042, stmt:a77cfd524b, stmt:cd7f085627): the scanner and the role list are TCH's, so they cannot ship in the kit either."
+    },
+    {
+      "file": "tools/visual-qa.mjs",
+      "template": "tracy-emdash-theme-business",
+      "declarations": [
+        "HINT",
+        "measureAxis",
+        "import ./visual-lib.mjs",
+        "report",
+        "stmt:9c85c0f848",
+        "stmt:d4ba9e2d49"
+      ],
+      "why": "⚠ THE COARSEST ENTRY HERE, AND THE REASON IS A LIMIT OF THE CHECK, NOT A DECISION. This tool's whole run is ONE top-level statement, so declaration-level granularity cannot separate its parts: any edit anywhere inside the loop changes the key. What is genuinely this template's: its own HINT table (product vocabulary; a customer running the kit gets the kit's) and a measureAxis that knows this template's section markup. What was RECONCILED on 19/09 rather than hidden behind this entry: the lazy-image scroll and networkidle pass, which lived only in the kit and base and is now here too. What is STILL open: this copy defaults `rendered` to design.images.sourceSlot + data-filled while the kit defaults to plain `img` — the kit's comment argues this copy's form asks a custom element whether it decoded, which it never did. Changing it alters what this template MEASURES and moves contractHash, so it belongs to the template's owner, not to a sync pass."
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

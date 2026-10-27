@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1166-onboard-email-round-one-press",
+  "kind": "feat",
+  "title": "Desktop first-run email round: one press verifies the typed address and approves the round, only with the round's own code from Tracy's origin",
+  "pr": 1166,
+  "area": "identity/desktop-onboard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: boot this checkout's tracy-web (memory store, console mail) on a free port.",
+    "S2: open a desktop round with email Y (POST /auth/link/browser); GET /signin?n= with no session; read the page, its token and the host-only tracy_signin_browser cookie.",
+    "S3: POST /signin/code without Origin, from another origin, and with a second round's token.",
+    "S4: POST /signin/code properly; also send an ordinary web code (POST /login) and a second round's code; POST /signin/verify on round 1 with the web code, with round 2's code, and with the right code but no Origin.",
+    "S5: POST /signin/verify with the right code from Tracy; read the session, the round status, redeem the round as the app, press again.",
+    "S6: on round 2 send a new code; verify with the old one, then the new one."
+  ],
+  "expect": [
+    "The GET names Y and the match code, offers 'Email me a code', mails nothing, and is served with Referrer-Policy same-origin; so is the code step POST /signin/code answers (under no-referrer Chrome posts its form with Origin: null and every press is refused).",
+    "Missing Origin, foreign Origin and another round's token are 403 and mail nothing.",
+    "The web sign-in code and round 2's code are refused (401); the right code without Origin is 403; the round stays pending.",
+    "The right code from Tracy answers 200 with no Approve page, sets tracy_sess for Y, the round is approved, the app's redeem is 204 with a session for Y, a second press is refused.",
+    "A new code kills the previous one (401); the new one works (200)."
+  ],
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1166-onboard-email-round-one-press.mjs"],
+    "timeout_s": 120
+  },
+  "fence": "council (a): Origin exact even without a session, round-bound form token, round-bound challenge, one transaction for consume+approve",
+  "selectors": {
+    "send": "form[action='/signin/code']",
+    "verify": "form[action='/signin/verify'] input[name='code']"
+  }
+}

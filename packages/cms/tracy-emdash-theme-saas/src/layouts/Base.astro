@@ -1,0 +1,145 @@
+---
+import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from 'emdash/ui'
+import { createPublicPageContext } from 'emdash/page'
+import { getSiteSettings, getTranslations } from 'emdash'
+import { DEFAULT_LOCALE, LOCALES, href, isLocale, splitPath, type Locale } from '@/lib/i18n'
+import { ALTERNATES_KEY, type Alternate } from '@/lib/hreflang'
+import { publicOrigin } from '@/lib/public-origin'
+import { templateIconWanted } from '@/lib/brand'
+import { uiTag } from '@/lib/ui'
+import { readDsSlot } from '@/lib/ds-slot'
+import type { Style } from '@/lib/sections'
+import { Font } from 'astro:assets'
+import fonts from '@/fonts.json'
+import type { Chrome } from '@/lib/chrome'
+import Header from '@/components/site/Header.astro'
+import Footer from '@/components/site/Footer.astro'
+// The only place the storefront stylesheet is imported: the admin never receives it.
+import '@/styles/global.css'
+
+interface Props {
+  chrome: Chrome
+  title: string
+  description?: string | null
+  image?: string | null
+  /** Site-relative path (no locale prefix) of the current page, for the active menu state. */
+  currentPath: string
+  /** Colour direction of this page (DECISIONS D7). */
+  style?: Style
+  content?: { collection: string; id: string; slug?: string | null; toPath: (slug: string) => string } | null
+  type?: 'website' | 'article'
+  robots?: string
+}
+const {
+  chrome,
+  title,
+  description = null,
+  image = null,
+  currentPath,
+  style = 'terminal',
+  content = null,
+  type = 'website',
+  robots
+} = Astro.props
+const settings = await getSiteSettings()
+// The design-system slot: one file Tracy writes when the customer picks a system (lib/ds-slot.ts).
+const dsSlot = await readDsSlot()
+const siteTitle = settings.title ?? 'Kinetic'
+const fullTitle = title && title !== siteTitle ? `${title} — ${siteTitle}` : siteTitle
+// Canonical: path + `page` when > 1; filters and tracking parameters are views of the same page.
+const canonicalParams = new URLSearchParams()
+const pageParam = Astro.url.searchParams.get('page')
+if (pageParam && pageParam !== '1') canonicalParams.set('page', pageParam)
+const canonicalSuffix = canonicalParams.toString() ? `?${canonicalParams}` : ''
+const origin = publicOrigin(Astro.url)
+const canonical = `${origin}${Astro.url.pathname}${canonicalSuffix}`
+const noindex = /noindex/.test(robots ?? '')
+const alternates: Alternate[] = []
+if (!noindex) {
+  const paths: Partial<Record<Locale, string>> = {}
+  if (content) {
+    paths[chrome.locale as Locale] = content.slug
+      ? content.toPath(content.slug)
+      : splitPath(Astro.url.pathname).path
+    const { translations } = await getTranslations(content.collection, content.id)
+    for (const t of translations)
+      if (t.status === 'published' && t.slug && isLocale(t.locale))
+        paths[t.locale as Locale] = content.toPath(t.slug)
+  } else {
+    for (const l of LOCALES) paths[l] = splitPath(Astro.url.pathname).path
+  }
+  for (const l of LOCALES)
+    if (paths[l])
+      alternates.push({
+        hreflang: uiTag(l),
+        href: `${origin}${href(l, paths[l] as string)}${canonicalSuffix}`
+      })
+  const xDefault = alternates.find((a) => a.hreflang === uiTag(DEFAULT_LOCALE)) ?? alternates[0]
+  if (xDefault) alternates.push({ hreflang: 'x-default', href: xDefault.href })
+}
+const pageCtx = createPublicPageContext({
+  Astro,
+  kind: content ? 'content' : 'custom',
+  pageType: type,
+  title: fullTitle,
+  pageTitle: title,
+  description: description ?? undefined,
+  canonical,
+  image: image ? new URL(image, origin).href : undefined,
+  content: content ? { collection: content.collection, id: content.id, slug: content.slug } : undefined,
+  seo: { robots: robots ?? 'index, follow' },
+  siteName: siteTitle,
+  siteUrl: origin
+})
+;(pageCtx as unknown as Record<string, unknown>)[ALTERNATES_KEY] = alternates
+// Default theme per direction, as the source configures it (etc/site/*.json other_default_theme).
+// A worn design system opens on its own side of light: the sheet's mode line (TCH #1315, a sheet with
+// both sides), else the slot's color-scheme (a one-look sheet), so the logo spot drawn for that side
+// shows. The visitor's switch still works, the other side being derived from the system.
+const defaultTheme = dsSlot
+  ? (dsSlot.mode ?? (/color-scheme:\s*dark/.test(dsSlot.css) ? 'dark' : 'light'))
+  : style === 'blueprint'
+    ? 'light'
+    : 'dark'
+---
+
+<!doctype html>
+<html lang={uiTag(chrome.locale)} data-style={style} data-theme={defaultTheme} data-ds-worn={dsSlot ? '' : undefined}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		{fonts.map((f) => <Font cssVariable={f.cssVariable as any} preload />)}
+		<title>{fullTitle}</title>
+		{/* The template's icon only while the customer has none: EmDashHead prints theirs from settings.favicon. */}
+		{templateIconWanted(settings) && <link rel="icon" href="/favicon.svg" type="image/svg+xml" />}
+		<EmDashHead page={pageCtx} />
+		{dsSlot?.fontsHref && <link rel="stylesheet" href={dsSlot.fontsHref} />}
+		{dsSlot && <style id="tracy-ds-slot" data-ds={dsSlot.id ?? ''} set:html={dsSlot.css} />}
+		<script is:inline>
+			// Apply the visitor's saved theme before first paint; without one the direction's default stays.
+			(function () {
+				try {
+					// A choice made while a design system is worn is stored under that system's own key
+					// ("kinetic-theme@<id>", the id the slot's <style data-ds> names), so taking the system off
+					// gives the template's own default back, or the visitor's choice from before the system
+					// (ADR 0031 decision 12, UNDO-1). ThemeToggle.astro uses the same key.
+					const ds = document.getElementById("tracy-ds-slot")?.getAttribute("data-ds");
+					const worn = document.documentElement.hasAttribute("data-ds-worn");
+					const t = localStorage.getItem(worn && ds ? "kinetic-theme@" + ds : "kinetic-theme");
+					if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+				} catch (e) {}
+			})();
+		</script>
+	</head>
+	<body>
+		<EmDashBodyStart page={pageCtx} />
+		<div class="flex min-h-screen flex-col">
+			<Header chrome={chrome} currentPath={currentPath} />
+			<main id="main" class="flex-1">
+				<slot />
+			</main>
+			<Footer chrome={chrome} currentPath={currentPath} />
+		</div>
+		<EmDashBodyEnd page={pageCtx} />
+	</body>
+</html>

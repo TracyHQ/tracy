@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-essence/j6/1.0.9",
+  "platform": "joomla",
+  "template": "ja_essence",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-essence",
+    "id": "quickstart/ja-essence/j6",
+    "version": "1.0.9",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_essence",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-essence-j6-webroot-1.0.9.tar.gz",
+        "bytes": 58408957,
+        "sha256": "53e29911c89eb845d90268e9ff0c1f07a7e2001f28b58d99e6bfa38ce3da4dc0"
+      },
+      "database": {
+        "file": "ja-essence-j6-database-1.0.9.sql.gz",
+        "bytes": 103527,
+        "sha256": "890fc10c4ad8ce068e525c2c390f0f8efbf142e1e7ca6ed25e1cb27876448c26"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-18T02:24:45.971Z",
+    "builtFrom": {
+      "from": "quickstart/ja-essence/j6@1.0.8",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 717 files replaced (templates/ja_essence/AGENTS.md, templates/ja_essence/CLAUDE.md, templates/ja_essence/README.md, templates/ja_essence/component.php, templates/ja_essence/error-t4.php, templates/ja_essence/error.php, templates/ja_essence/favicon.ico, templates/ja_essence/helper.php, templates/ja_essence/index.php, templates/ja_essence/layout.json, templates/ja_essence/offline.php, templates/ja_essence/templateDetails.xml, templates/ja_essence/templateInfo.php, templates/ja_essence/template_preview.png, templates/ja_essence/template_thumbnail.png, templates/ja_essence/contenttype, templates/ja_essence/css, templates/ja_essence/docs, templates/ja_essence/etc, templates/ja_essence/fonts, templates/ja_essence/html, templates/ja_essence/images, templates/ja_essence/js, templates/ja_essence/scss, templates/ja_essence/acm, templates/ja_essence/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-essence/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

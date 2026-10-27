@@ -1,0 +1,34 @@
+---
+/**
+ * A team profile card (Team grid): portrait, name, role, excerpt, "Read more". Sibling of
+ * PostCard, kept separate because a person has no author/date/category meta and a taller portrait.
+ */
+import Photo from '@/components/site/Photo.astro'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  person: { slug: string; data: Record<string, any> }
+  locale: Locale
+  site: Record<string, any>
+}
+const { person, locale, site } = Astro.props
+const d = person.data
+// `title` is the required field; `name` is the display name when the editor filled it.
+const name = d.name || d.title
+const url = href(locale, `/team/${person.slug}`)
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $p = stampFor(Astro.request, 'people', person)
+const $site = stampFor(Astro.request, 'site', site)
+const nameField = d.name ? 'name' : 'title'
+---
+
+<article class="card flex flex-col overflow-hidden" {...$p()}>
+	<a href={url} class="block" tabindex="-1" aria-hidden="true"><Photo image={d.image} stamp={$p("image")} alt={d.image_alt ?? ""} class="aspect-[4/5]" width={800} height={1000} /></a>
+	<div class="flex flex-1 flex-col gap-2 p-5">
+		<h2 class="h-card-sm"><a href={url} class="text-fg hover:text-accent" {...$p(nameField)}>{name}</a></h2>
+		{d.role && <p class="meta" {...$p("role")}>{d.role}</p>}
+		{d.excerpt && <p class="text-[17px] leading-[1.47] text-fg-2" {...$p("excerpt")}>{d.excerpt}</p>}
+		<a href={url} class="btn btn-xs mt-auto self-start px-0 text-accent hover:text-accent-hover" {...$site("read_more")}>{site.read_more}<span class="sr-only">: {name}</span></a>
+	</div>
+</article>

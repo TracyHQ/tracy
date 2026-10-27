@@ -1,0 +1,124 @@
+{
+  "command": "node tests/qa/layers/harness/generate.mjs",
+  "oracles": {
+    "CONTEXT-isolation": {
+      "source": "CONTEXT.md",
+      "quote": "The AI only touches the site it was given",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "ce4142df10f98973667a5a0792606d9e13ad722252d607f3ad087b0fb4518445"
+    },
+    "CONTEXT-visible": {
+      "source": "CONTEXT.md",
+      "quote": "everything it changes shows in Site changes",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "ce4142df10f98973667a5a0792606d9e13ad722252d607f3ad087b0fb4518445"
+    },
+    "SYSTEM-4a-guard": {
+      "source": "SYSTEM.md",
+      "quote": "refuses a `workdir`",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "4757fcf9280a3b8b47d4ee826dbfe0e92b8353df552f5b23d36d87bdd61071be"
+    },
+    "SYSTEM-4a-container": {
+      "source": "SYSTEM.md",
+      "quote": "runs `docker exec -u www-data|nobody` into `<label>-web-1`",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "4757fcf9280a3b8b47d4ee826dbfe0e92b8353df552f5b23d36d87bdd61071be"
+    },
+    "SYSTEM-4a-dotdot": {
+      "source": "SYSTEM.md",
+      "quote": "the provider's label and `..` check",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "4757fcf9280a3b8b47d4ee826dbfe0e92b8353df552f5b23d36d87bdd61071be"
+    },
+    "SYSTEM-4b-fence": {
+      "source": "SYSTEM.md",
+      "quote": "must lie inside `<sitesRoot>/<the session's label>`",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "4757fcf9280a3b8b47d4ee826dbfe0e92b8353df552f5b23d36d87bdd61071be"
+    },
+    "SYSTEM-4c-apply": {
+      "source": "SYSTEM.md",
+      "quote": "on behalf of the person typing",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "4757fcf9280a3b8b47d4ee826dbfe0e92b8353df552f5b23d36d87bdd61071be"
+    },
+    "SYSTEM-4d-changed": {
+      "source": "SYSTEM.md",
+      "quote": "success to `POST /api/sites/:key/changed`",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "4757fcf9280a3b8b47d4ee826dbfe0e92b8353df552f5b23d36d87bdd61071be"
+    },
+    "SYSTEM-5-turn": {
+      "source": "SYSTEM.md",
+      "quote": "One chat or comment turn: who, what words",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "4757fcf9280a3b8b47d4ee826dbfe0e92b8353df552f5b23d36d87bdd61071be"
+    },
+    "ADR0014-3": {
+      "source": "docs/adr/0014-one-dsh-per-host-commands-in-web-container.md",
+      "quote": "Files go through the MOUNT, not through exec",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "d2148073cfdaf22b62e66382cbee2be44b3033b720caee09173fdb636b948e93"
+    },
+    "MATRIX-union": {
+      "source": "config/mode-matrix.json",
+      "quote": "a real preset = role ∪ platform",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "b7805df0b97afec58fcd5ea669db12af125065d77f900c80960b73e440ad77ca"
+    },
+    "MATRIX-skills": {
+      "source": "config/mode-matrix.json",
+      "quote": "a skill with a platform column follows the platform; the rest follow the role",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "b7805df0b97afec58fcd5ea669db12af125065d77f900c80960b73e440ad77ca"
+    },
+    "NATIVE-approval": {
+      "source": "packages/bundle/tracy-native/cordis.patch.yml",
+      "quote": "So every preset says `approval: never`",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "c24a373d178f8cd2dda4765a2b1f395b006c556dc2d496a6616276164dc390f9"
+    },
+    "FLEET-container": {
+      "source": "packages/fleet/tracy-fleet-operation/dsh/profile/cordis.patch.yml",
+      "quote": "The container is the sandbox (Plan 1)",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "c6331e3d017d310102b369720315a5a834bc138549bfc745b99f189d1055f00f"
+    },
+    "CATALOGUE-surfaces": {
+      "source": "apps/tracy-web/src/api-reference/sources/agent-tools.json",
+      "quote": "\"applyDoor\": \"POST /api/sites/{key}/apply\"",
+      "external": false,
+      "verified": true,
+      "sourceSha256": "2c80a8d63e39cab7d78499bcc192f22cb038e0d7cab4d50cceca178193e8716a"
+    },
+    "PLAN-approval": {
+      "source": "qa-suite plan §4 `harness` (outside the repository, translated from Vietnamese)",
+      "quote": "Add no Approve step for the customer. Check `approval: never`, that escalation is refused and that a legacy `ask` session is answered `rejected` without hanging.",
+      "external": true,
+      "verified": null,
+      "sourceSha256": null
+    },
+    "PLAN-lifecycle": {
+      "source": "qa-suite plan §4 `harness` (outside the repository, translated from Vietnamese)",
+      "quote": "Check routing to the right site/CMS, tool schema, traversal/symlink, missing cwd, permission revoked mid-session, retry/cancel, stream errors, provider loss and that Site changes records the right actor/source.",
+      "external": true,
+      "verified": null,
+      "sourceSha256": null
+    }
+  }
+}

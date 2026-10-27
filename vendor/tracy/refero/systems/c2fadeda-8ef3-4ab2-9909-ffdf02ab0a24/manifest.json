@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+  "status": "complete",
+  "name": "Aevi Wellness",
+  "url": "https://styles.refero.design/style/c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+  "sourceWebsite": "https://liveaevi.com",
+  "extractedAt": "2026-06-03T18:25:10.432Z",
+  "capturedAt": "2026-10-08T05:17:07.525690+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Nordic apothecary, weightless type. A muted slate-blue accent interrupts an otherwise achromatic, light-as-air editorial layout where product photography overlaps hairline-bordered cards on warm white.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/494bccd1-5ef9-4457-8008-bdcf92be8990.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/2084157f-f47b-4f63-a8a3-21f29ca653a3.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/b10139cc-447a-456f-b253-2f9ef1ca1c9c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b6bf9767-1f9c-4e76-bcde-e964838382e4.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c6bff352-2934-4704-a607-6fabadafe463.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c80050831aecf6f52a7a0bbf3a34fbd75ed2fe6446ab85b6e64213cf3f79ad8b",
+      "bytes": 20689
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "cec2860d8fd7acb511391744ff3967ffb6f6ee8b0d6515eb7c64602242c2989d",
+      "bytes": 128303
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "bf4ac331249dc88e6e8de88c8228fa5a06f4659c751c7f84fc46d79a8d2c3496",
+      "bytes": 16144
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3b3d12e35bf7df4da016f3775f6c38df6ea56965685613cc454424f8da28c805",
+      "bytes": 10368
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "69f21b67e7180d16df62c440dc5437c2d62115d46fbadd3189a1ee61ec0fa788",
+      "bytes": 12307
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "103ddcb5cc0caa0ec40d9686905172fed2b437b05dfdac4a08dff9cebb3984b7",
+      "bytes": 3333
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "bebd03466579bcbddb276017e171bab766ad97a27cc393e83d284f3f7e632a6d",
+      "bytes": 1228
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "59af57dcbf039fa9850eb1a148245022f69ea24b390406c4221a55847af958b1",
+      "bytes": 1245
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "bf6dbdc8b7cfd50cc66d9f80de98667dc1946713f0bb5037b838c2d9f57c4985",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "14611dd1845461dcd45e6f2f89349f38dd218817f4001738e364d98e24cc5623",
+      "bytes": 43844
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0873b774ee0dfec165002b9551d54cc22399b7d124534b7f0d386653014cf21a",
+      "bytes": 23391
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "0d3216b280699bee229e7f88fef82bb13f0631ae87e6449e465d0d95a61201ff",
+      "bytes": 53431
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c13ffdda40b19d0f39da627ce5baafa1c4e9b6d1328be7a330424895e645122b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "bbf308d398a69dd8b7deea51ab448cf013cff0a4fbdd8d80c1926069d4a553d9",
+      "bytes": 2198
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5079be4b555605b975014218b8fc595d261f77408db166f51bf5232f57e1ec0a",
+      "bytes": 2713
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "21b71be3-78a0-4681-a5b9-64cc4b40eb67",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "3b080dc3-1992-43fe-91d6-2a721f934435",
+    "3f56ea4d-ed9d-4a36-8fb5-a801519ef80b",
+    "51a9246f-9238-47dd-b254-48983b8713a2",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "8b4a1a95-9dbf-4565-ace7-c4cf48eb028a",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

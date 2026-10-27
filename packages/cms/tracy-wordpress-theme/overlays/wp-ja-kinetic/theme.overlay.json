@@ -1,0 +1,69 @@
+{
+  "styles": {
+    "css": "/* wp-ja-kinetic: dark mode. The source (JA Kinetic, `default` site style) is dark by default: assets/js/wp-ja-kinetic-dark.js puts data-theme=\"dark\" on the root before the first paint unless the tracy_theme cookie says light, and color-scheme follows it here, as the source's own html does (dark -> `dark`, light -> `normal`). Each colour preset carries both halves through light-dark(): light = the palette of theme.json, dark = the source's html.t4-dark terminal block (css/darkmode.css:1-26, chrome :80-88), with meta, border-soft and accent-active from the design system's dark block (systems/ja-kinetic/tokens.css:367). success, warn and danger are not remapped by the source. The rest of the dark block is not a colour, or is declared by the sections sheet, so it is restated under the attribute. */ :root{--wp--preset--color--bg:light-dark(var(--ds-c-bg, #FBFCFA),var(--ds-c-bg, #0A0D0C));--wp--preset--color--surface:light-dark(var(--ds-c-surface, #FFFFFF),var(--ds-c-surface, #121614));--wp--preset--color--surface-warm:light-dark(var(--ds-c-surface-warm, #F2F5EE),var(--ds-c-surface-warm, #0F1311));--wp--preset--color--fg:light-dark(var(--ds-c-fg, #46514B),var(--ds-c-fg, #9AA6A1));--wp--preset--color--fg-2:light-dark(var(--ds-c-heading, #10140F),var(--ds-c-heading, #F2F5F3));--wp--preset--color--muted:light-dark(var(--ds-c-muted, #66716A),var(--ds-c-muted, #7F8B86));--wp--preset--color--meta:light-dark(var(--ds-c-meta, #66716A),var(--ds-c-meta, #7F8B86));--wp--preset--color--border:light-dark(var(--ds-c-border, #E4E8E0),var(--ds-c-border, #232A27));--wp--preset--color--border-soft:light-dark(var(--ds-c-border-soft, #E4E8E0),var(--ds-c-border-soft, #232A27));--wp--preset--color--accent:light-dark(var(--ds-c-accent, #4D7C0F),var(--ds-c-accent, #A3E635));--wp--preset--color--accent-on:light-dark(var(--ds-c-accent-on, #FFFFFF),var(--ds-c-accent-on, #0A0D0C));--wp--preset--color--accent-hover:light-dark(var(--ds-c-accent-hover, #3F6A0A),var(--ds-c-accent-hover, #BCF25A));--wp--preset--color--accent-active:light-dark(var(--ds-c-accent-active, #3F6A0A),var(--ds-c-accent-active, #BCF25A));}:root[data-theme=\"dark\"]{color-scheme:dark;--wp--custom--elev--raised:0 20px 50px -18px rgba(0,0,0,.6);--grid:rgba(255,255,255,.035) /* ds-keep: decorative grid backdrop of the masthead */;--bg-rgb:10,13,12;--text-rgb:154,166,161;--chrome-elevated:var(--ds-c-surface-warm, #161B18);}"
+  },
+  "customTemplates": [
+    {
+      "name": "page-landing",
+      "title": "Landing",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-contact",
+      "title": "Contact",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-login",
+      "title": "Login",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-register",
+      "title": "Register",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-account",
+      "title": "Account",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-password",
+      "title": "Password",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-authors",
+      "title": "Authors directory",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-categories",
+      "title": "Categories index",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-tags",
+      "title": "Tags cloud",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-article",
+      "title": "Article (source com_content article view)",
+      "postTypes": ["page"]
+    }
+  ],
+  "templateParts": [
+    {
+      "name": "header",
+      "title": "Header",
+      "area": "header"
+    },
+    {
+      "name": "footer",
+      "title": "Footer",
+      "area": "footer"
+    }
+  ]
+}

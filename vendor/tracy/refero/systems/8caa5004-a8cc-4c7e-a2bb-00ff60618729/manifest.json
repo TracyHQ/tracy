@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8caa5004-a8cc-4c7e-a2bb-00ff60618729",
+  "status": "complete",
+  "name": "Figma Config",
+  "url": "https://styles.refero.design/style/8caa5004-a8cc-4c7e-a2bb-00ff60618729",
+  "sourceWebsite": "https://config.figma.com/events/figma-config-2022",
+  "extractedAt": "2026-06-03T18:01:59.688Z",
+  "capturedAt": "2026-10-08T05:14:38.320261+00:00",
+  "theme": "dark",
+  "industry": "design",
+  "description": "modernist poster on black velvet",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1e478043-e192-4f29-a84a-81a0945e5236.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "caef049299aec62935310ff93cac3c732b1c1cc9c2d22dce22ac4ba61bb7c3cb",
+      "bytes": 16125
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "87ebf86ff2e50b85a4c9ba0c6b17f060a1558d1cb35aa73b863e629d098f2ed7",
+      "bytes": 86425
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1489156e89e2cc0dd81ac9792a973b858a643b2967341fed162753f652785d6d",
+      "bytes": 13367
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "5726c134b0e8092947e833fdb36b5a06d120183a51711676df494c1368743a8b",
+      "bytes": 5816
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6d14b73835d2b011fcf62cb98fd7cf873696aa2c408362f018014a19b1d4d9a3",
+      "bytes": 9767
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8364fb9a36552ef21da12ab35548dbda1788364d1af53134837730afedb3e0b2",
+      "bytes": 1926
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b1afdc7829591b57a335e93fa164c4b31ff02cc9612c770dad10736d752499f6",
+      "bytes": 380
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "067e7384f89c4e0911115d2665ee1bed4659496320f3d974541e75e8f5f55db0",
+      "bytes": 397
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9a134f3a0f36bcb0d765bd89fac243f4e291cfa32880dee8cdf0b1a5a948d688",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "02857c5d99aa56f7557de2dca5d424e9c75f836c578494e196f65d6adc9fcf10",
+      "bytes": 38694
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c98a62070174991171b91864c9f1e66b3497b79665bdd9fc9acebf5b06c3ebe8",
+      "bytes": 20056
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "010f994a5703c38dfb49b24f1f76e85810a79ae147d125294e89ed1be50b52dc",
+      "bytes": 26302
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "42f9b2501ae5d406edcc278f8b875e5c78ad468e67d743b72b8c7cc0bcb27252",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e6708c730cc0bcce53de356249f42fe57bfd3c6cc022573ecb1173c996918869",
+      "bytes": 1075
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "22d34b59bb637bd3cc6e4bca7707666253943bf3951a0013a0f77c7f0931986e",
+      "bytes": 1469
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "155dbf6e-1187-424e-9ce8-59ffecff7e6b",
+    "2b07d62c-d706-4c9d-a3fb-9c163da09f03",
+    "4acc13a0-c553-40d7-b78d-a9b6a4e94486",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5e427a82-a223-4b69-be7f-01c6656ce823",
+    "5fd3b3b4-02ab-456a-87aa-e4395636b671",
+    "60793669-28e2-41bd-bf9d-972151630f7c",
+    "653b7b25-f610-4a46-90e1-e3eed98b1f24",
+    "786f99e5-8c40-4205-a878-bf006b330f4e",
+    "87da9872-f6cc-4354-bf6a-1c02f0394d45",
+    "8caa5004-a8cc-4c7e-a2bb-00ff60618729",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "a865ac1d-a4c2-425b-90db-2a7ec6d461a3",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b634cbce-b4db-44a6-b2a4-b58d9d2fe93d",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "d417b42f-824d-45ba-a02e-cbef3b8ea0d8",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

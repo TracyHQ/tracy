@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "813be405-c2b9-41be-9864-7b53d66483dc",
+  "status": "complete",
+  "name": "Toggl Track",
+  "url": "https://styles.refero.design/style/813be405-c2b9-41be-9864-7b53d66483dc",
+  "sourceWebsite": "https://toggl.com",
+  "extractedAt": "2026-06-03T20:34:31.164Z",
+  "capturedAt": "2026-10-08T05:14:11.113011+00:00",
+  "theme": "mixed",
+  "industry": "productivity",
+  "description": "Plum theater marquee — a deep aubergine stage where a single magenta spotlight word illuminates each headline.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/74b3aae0-1978-4802-a991-9c725f1dcbe4.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/7214521d-887b-46a7-99c6-913aa0a937dc.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/83b6360e-57b9-4c4d-9701-f5a47dff28a8.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/164b57d0-4a71-40d2-85ad-e117bc800331.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5e010e52-48b9-42d6-b162-86d96682005f.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "788bcf4f4ee45487f612986ae613badbcbbf6abb0ede24b545d80dc12f0f75d7",
+      "bytes": 22487
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "dfd60b1003d60052dbef45a3009e6aeeb1787e38473ae58a12d74ca32c8e5a57",
+      "bytes": 117598
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e69bfc274360f3500cc45fc42db60bb5d001bb0abb5b8e3ccaac5a87982079d3",
+      "bytes": 18425
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6df33b58aef81eb927b878c106a5578478d0346a7d6cbd60dd0dbabccbcae59c",
+      "bytes": 17642
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c32078c04793aff00cfb56628beb4fe2bf110d7e130632a2c8b1d335473914b2",
+      "bytes": 14631
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "68e5260a7a3a9c7ee4e268ab565f0d3dcbca9d24fd966de8ba987c06e6c55e92",
+      "bytes": 4900
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "009ec95c8c88ce72c0cebe9b388965009818655f0737f53f9155192d7583984d",
+      "bytes": 1013
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8b393094ac55456d72d213c2e529f74899d9a1e17b3ed4c528c73b3365dfa4a2",
+      "bytes": 1030
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "0d1571afad92a834cd8fab899dfb1bbb60150a34024c1fadcc7b0f36dd49143c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "85562d6116dac3cfa9ef801e11135393589646b7b7171b0b65bbf563edef9ae0",
+      "bytes": 48340
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "919589c7ea3b27ebecd5f941bee399c3608d0df2dcf1d61111a73d087aea8062",
+      "bytes": 25840
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "94a12544ca73bd13811636e9bd56a06759dbeadfd75bf519bae793fe2a4d6031",
+      "bytes": 67406
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4503b46266fde2aa16d3066b13417b6c7e4ca39f9300829d9e7a5338ba382c0a",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e25fac9eb3a657cba2eda1bbc31a5174605b730ac2102c9e3e9672b545b44e92",
+      "bytes": 1993
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "50f8d0a4fbf2bb5827595e4665778347f3ac5e7aab017293608bad759cd2edfb",
+      "bytes": 2611
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1003d7c5-536c-485d-b191-a34178415eac",
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2186dddd-60ee-4898-b11d-88483daf477e",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "813be405-c2b9-41be-9864-7b53d66483dc",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "a80cb179-2d90-4896-b52d-4e674b421498",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130"
+  ]
+}

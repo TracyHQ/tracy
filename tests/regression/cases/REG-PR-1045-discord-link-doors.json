@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1045-discord-link-doors",
+  "kind": "feat",
+  "title": "Tracy's Discord bot proves a member's address, and their Discord activity reaches /ops Signals",
+  "pr": 1045,
+  "area": "ops/discord",
+  "cms": ["any"],
+  "needs": ["node", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL set to a scratch PostgreSQL, run: node --test --test-reporter=tap apps/tracy-web/test/discord-doors.test.mjs apps/tracy-web/test/discord-store.test.mjs apps/tracy-web/test/ops-beta.test.mjs",
+    "S2: Record the exit code and the cases named under expect."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Doors: with no DISCORD_LINK_SECRET every door is 404; a missing or wrong secret is 404 and mails nothing; the start door answers {ok:true} whether or not the beta gate admits the address; a code is the member's own, spent once, dead after expiry or too many guesses; one member is capped per hour; the username rides beside the id, cut at 32 characters.",
+    "PostgreSQL: the real migrations (080-discord-link.sql) apply; pgDiscordStore replaces codes, moves a link between members both ways and unlinks; through the three doors the round records discord.linked, one discord.bug_report per thread and discord.left in ops_signal, and nothing once the member left.",
+    "Signals: GET /api/ops/beta/signals counts discordLinked and discordBugs in totals, the window before and by Vietnam day; discord.left is not counted."
+  ],
+  "selectors": {
+    "doors": "POST /api/discord/link/start, /api/discord/link/verify, /api/discord/events",
+    "tile": "[data-signal-tile='Discord verified']"
+  },
+  "fence": "x-tracy-discord-secret compared in constant time; discord_link_code apart from otp_code; discord.left removes the link so linked = holds the beta role.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/discord-doors.test.mjs",
+      "apps/tracy-web/test/discord-store.test.mjs",
+      "apps/tracy-web/test/ops-beta.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "no secret configured: every door answers 404",
+      "a missing or wrong secret is 404, and nothing is mailed",
+      "the round: the code mailed to the address links the member and records discord.linked",
+      "beta gate on: an address the gate would refuse gets the same answer and no mail",
+      "one member cannot ask for more than its hourly codes",
+      "the Discord username rides beside the id on every signal",
+      "pgDiscordStore: codes, links moving between members, and unlink",
+      "the three doors on PostgreSQL",
+      "signals: by day in Vietnam time"
+    ]
+  }
+}

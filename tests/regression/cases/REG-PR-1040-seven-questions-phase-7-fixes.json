@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1040-seven-questions-phase-7-fixes",
+  "kind": "fix",
+  "title": "Seven default questions, fixes from dev round 2: everything of #1034 plus a page is hidden only when the customer unticks it, Apply never removes a contract slot block (no drift on a fresh site), the written language is explicit and binding, tone definitions reach every copy prompt, EmDash menus and chrome labels follow the written language, ticked WordPress pages stay, entities and null answers are never written literally, and the 0.24.2 Joomla contracts are pinned",
+  "pr": 1040,
+  "area": "add-site/questions",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node tests/regression/scripts/REG-PR-1034-seven-questions-phase-6-fixes.mjs",
+    "S2: Run: node --test apps/tracy-web/test/brief-wp-slot-blocks.test.mjs apps/tracy-web/test/brief-wp-kept-pages.test.mjs apps/tracy-web/test/brief-wp-repair.test.mjs apps/tracy-web/test/contracts.test.mjs",
+    "S3: Run: node --test packages/cms/tracy-seeder/test/plan-wordpress-contract-language.test.mjs packages/cms/tracy-seeder/test/tone.test.mjs packages/cms/tracy-seeder/test/plan-wordpress-contract.test.mjs",
+    "S4: From packages/cms/tracy-emdash-theme-business run: node --test tests/personalize-labels.test.mjs tests/personalize-tone.test.mjs",
+    "S5: Read the exit code and the fail/skipped counts of each run."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures and 0 skipped tests.",
+    "Only pages the customer unticked are hidden; a ticked or never-named page stays published.",
+    "A fresh WordPress build keeps every block a contract slot writes into, so the plugin reports no blocking drift.",
+    "Every copy batch names the chosen language; an answer in another script is asked again and never written.",
+    "Each tone has a concrete definition in every copy prompt; HTML entities and the word null are never written literally.",
+    "EmDash menu and chrome labels are written in the site's language and --revert restores them.",
+    "Contracts of JA Social II 1.0.1, JA Donate 1.0.1, JA Rent 1.0.1, JA Essence 1.0.2, JA Vogue 1.0.3 and Tracy Business j6 1.2.1 are sealed and pinned to Claude Cowork 0.24.2."
+  ],
+  "selectors": {
+    "wp_sweep": "apps/tracy-web/src/sites/brief-engines/wp-residue.js sweepWordPress",
+    "wp_planner": "packages/cms/tracy-seeder/src/plan-wordpress-contract.mjs",
+    "tone": "packages/cms/tracy-seeder/src/tone.mjs",
+    "emdash_tool": "packages/cms/tracy-emdash-theme-*/tools/personalize.mjs"
+  },
+  "evidence": "Measured on cowork.tracy.site 08/10/2026 (sites tamq-7q-tbwp5/6, bizwp4/5, kinwp, tone-wa/wb, edvi, tbusj); it was decided 08/10 that a page is hidden only when the customer unticks it.",
+  "fence": "Units and fixtures over the real contracts. Not exercised here: a live build on the dev surface after merge, Polylang locale on a live site, the re-released templates' switch flip.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1040-seven-questions-phase-7-fixes.mjs"],
+    "needs": []
+  }
+}

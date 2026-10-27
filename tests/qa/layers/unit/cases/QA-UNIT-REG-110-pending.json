@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-110-pending",
+  "itemIds": ["regression:REG-110"],
+  "requirement": "JA Nova wp7: a dark-OS visitor with no saved choice gets the whole page dark (typography cards), and the About Us expertise tag pills match the source in dark",
+  "oracle": {
+    "source": "tests/regression/cases/REG-110-ja-nova-wp7-sweep-fixes.json",
+    "ref": "PR #908 (fix); fix evidence: Sweeps of 04/10/2026 against the local Joomla source stand: 1.1.5 had 1 scheme defect (/typography .card white, source rgb(30,35,43)), 119 element-colour groups differing between no choice and saved dark (all on /typography) and 8 chip rows; 1.1.6 has 0 (6/6 checks on the clean restore, bound to wp-ja-nova-1.1.6.zip 88c86b00; tasks/ja-nova-wp7/release/fix-measure.json)",
+    "invariant": "site-sweep: no defect in overflow, scheme, background or header; the only owed case is chips that repeat a label in a section (the tool cannot pair them), which sweep-extra pairs by order. sweep-extra: 'auto = chosen' reports 0 defect groups over 30 routes x 2 systems (a system with no saved choice looks exactly like the same choice saved, on every element); 'chips by order' reports 0 unmeasured and 0 defect rows. merged measure: 6/6 checks pass (overflow, scheme, background, header, chips, auto-equals-chosen); the previous version passes 3/6 (typography cards white under a dark system, expertise tag pill background rgb(26,30,37) against the source's rgb(30,35,43)).",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-110"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-110",
+    "pr": 908,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-nova",
+    "file": "tests/regression/cases/REG-110-ja-nova-wp7-sweep-fixes.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

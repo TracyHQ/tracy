@@ -1,0 +1,478 @@
+{
+  "schemaVersion": "tracy-design-templates/v1",
+  "version": "1.1.0",
+  "platform": "joomla",
+  "defaultDesign": "apple",
+  "library": {
+    "source": "vendor/tracy/od-design-system/catalog.json",
+    "count": 154,
+    "ids": [
+      "agentic",
+      "airbnb",
+      "airtable",
+      "ant",
+      "apple",
+      "application",
+      "arc",
+      "artistic",
+      "atelier-zero",
+      "bento",
+      "binance",
+      "bmw",
+      "bmw-m",
+      "bold",
+      "brutalism",
+      "bugatti",
+      "cafe",
+      "cal",
+      "canva",
+      "cisco",
+      "claude",
+      "clay",
+      "claymorphism",
+      "clean",
+      "clickhouse",
+      "cloudflare-kumo",
+      "cohere",
+      "coinbase",
+      "colorful",
+      "composio",
+      "contemporary",
+      "corporate",
+      "cosmic",
+      "creative",
+      "cursor",
+      "dashboard",
+      "default",
+      "discord",
+      "dithered",
+      "doodle",
+      "dramatic",
+      "duolingo",
+      "editorial",
+      "elegant",
+      "elevenlabs",
+      "energetic",
+      "enterprise",
+      "expo",
+      "expressive",
+      "fantasy",
+      "ferrari",
+      "figma",
+      "flat",
+      "framer",
+      "friendly",
+      "futuristic",
+      "github",
+      "glassmorphism",
+      "gradient",
+      "hashicorp",
+      "hud",
+      "huggingface",
+      "ibm",
+      "intercom",
+      "ja-kinetic",
+      "ja-voyara",
+      "kami",
+      "kraken",
+      "lamborghini",
+      "levels",
+      "linear-app",
+      "lingo",
+      "loom",
+      "lovable",
+      "luxury",
+      "mastercard",
+      "material",
+      "meta",
+      "minimal",
+      "minimax",
+      "mintlify",
+      "miro",
+      "mission-control",
+      "mistral-ai",
+      "modern",
+      "mongodb",
+      "mono",
+      "neobrutalism",
+      "neon",
+      "neumorphism",
+      "nike",
+      "notion",
+      "nvidia",
+      "ollama",
+      "openai",
+      "opencode-ai",
+      "pacman",
+      "paper",
+      "perplexity",
+      "perspective",
+      "pinterest",
+      "playstation",
+      "posthog",
+      "premium",
+      "professional",
+      "publication",
+      "raycast",
+      "refined",
+      "renault",
+      "replicate",
+      "resend",
+      "retro",
+      "revolut",
+      "runwayml",
+      "sanity",
+      "sentry",
+      "shadcn",
+      "shopify",
+      "simple",
+      "skeumorphism",
+      "slack",
+      "sleek",
+      "spacex",
+      "spacious",
+      "spotify",
+      "starbucks",
+      "storytelling",
+      "stripe",
+      "supabase",
+      "superhuman",
+      "tesla",
+      "tetris",
+      "theverge",
+      "together-ai",
+      "tom-modern",
+      "totality-festival",
+      "trading-terminal",
+      "uber",
+      "urdu",
+      "vercel",
+      "vibrant",
+      "vintage",
+      "vodafone",
+      "voltagent",
+      "warm-editorial",
+      "warp",
+      "webex",
+      "webflow",
+      "wechat",
+      "wired",
+      "wise",
+      "x-ai",
+      "xiaohongshu",
+      "zapier"
+    ]
+  },
+  "designs": {
+    "apple": {
+      "state": "served",
+      "name": "Apple",
+      "base": {
+        "quickstart": "tracy-apple/j6",
+        "version": "1.3.1"
+      },
+      "template": {
+        "element": "tracy",
+        "version": "1.2.0",
+        "source": "bundled"
+      },
+      "contractProfile": "tracy-apple/j6/1.3.1",
+      "contractFiles": {
+        "content-map.json": "ace00671b7c1256c5517624c111cb6bee471697a7227ed20ffd8d85909050fbd",
+        "design-system-measurement.json": "83fd8af1303ee0d471114ca434da92a0295c2f8b385fb6b5a4d6dc716a46c2ce",
+        "manifest.json": "8c67ed945a7370ee8d6933fcb93a31822443ecc58150b2f86f4a14a868400d7c",
+        "multilingual-map.json": "82272a64e92888c5fe8b570d6e66373bf1751d03b511a16d2c3d53e263e8473c",
+        "presentation-lock.json": "cd14634ce213667f0c4ea24be1c3aaba814666a250fc108287af567a0f3a3ee9",
+        "showcase-nav-map.json": "e1a81b7cd7217f8593f0dbb390f72187f5817ee9274a04a7f370053e0d92129a"
+      },
+      "coworkMinVersion": "0.24.37"
+    },
+    "airbnb": {
+      "state": "served",
+      "name": "Airbnb",
+      "base": {
+        "quickstart": "tracy-apple/j6",
+        "version": "1.3.1"
+      },
+      "template": {
+        "element": "tracy_airbnb",
+        "version": "1.2.0",
+        "source": "artifact"
+      },
+      "artifact": {
+        "file": "tpl_tracy_airbnb-j6-1.2.0.zip",
+        "kind": "joomla-extension",
+        "bytes": 845130,
+        "sha256": "63f349bed5758de02dcb4261936be2fc66967e91e5b113d51a673bd923a97d6c",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-airbnb%2Fj6/tpl_tracy_airbnb-j6-1.2.0.zip"
+      },
+      "requires": [
+        {
+          "type": "plugin",
+          "folder": "system",
+          "element": "t4"
+        }
+      ],
+      "activation": {
+        "id": "tracy-airbnb/j6/1.2.0",
+        "fromTemplate": "tracy",
+        "replaceDirectory": "templates/tracy_airbnb",
+        "dropInstallerStyle": true,
+        "styles": [
+          {
+            "sourceStyleId": 110,
+            "layout": "home",
+            "title": "Tracy — airbnb · Home",
+            "params": {
+              "typelist-site": "airbnb",
+              "typelist-theme": "airbnb"
+            }
+          },
+          {
+            "sourceStyleId": 111,
+            "layout": "default",
+            "title": "Tracy — airbnb · Inner",
+            "params": {
+              "typelist-site": "airbnb",
+              "typelist-theme": "airbnb"
+            }
+          },
+          {
+            "sourceStyleId": 112,
+            "layout": "home-2",
+            "title": "Tracy — airbnb · Home 2",
+            "params": {
+              "typelist-site": "airbnb",
+              "typelist-theme": "airbnb"
+            }
+          },
+          {
+            "sourceStyleId": 113,
+            "layout": "landing",
+            "title": "Tracy — airbnb · Landing",
+            "params": {
+              "typelist-site": "airbnb",
+              "typelist-theme": "airbnb"
+            }
+          },
+          {
+            "sourceStyleId": 114,
+            "layout": "no-sidebar",
+            "title": "Tracy — airbnb · No sidebar",
+            "params": {
+              "typelist-site": "airbnb",
+              "typelist-theme": "airbnb"
+            }
+          },
+          {
+            "sourceStyleId": 115,
+            "layout": "sidebar-left",
+            "title": "Tracy — Airbnb · Sidebar left",
+            "params": {
+              "typelist-site": "airbnb",
+              "typelist-theme": "airbnb"
+            }
+          }
+        ]
+      },
+      "contractProfile": "tracy-airbnb/j6/1.2.0",
+      "contractFiles": {
+        "content-map.json": "1f10e94a7316d65e85f2d41d95ae2310e5e9625257096ee5eff7f6b3835a95d8",
+        "manifest.json": "f595ea9c39aaf5972d309ca668e4bdbe430cd7ed182c65d6746bafbd47a03a07",
+        "multilingual-map.json": "24ebc85bca867c3aabe01c752a6fb6a48cb4d644606136e2214b131912862957",
+        "presentation-lock.json": "5d10e28838b64ce23521c1b5e0780fd7b3d7a40936918d42f789bf9f971ad018",
+        "showcase-nav-map.json": "5671ad01e369e83802b28fcedb28cb3e90a6bbd8a39958570a67d7ef477e16d6"
+      },
+      "coworkMinVersion": "0.17.4"
+    },
+    "ja-voyara": {
+      "state": "served",
+      "name": "JA Voyara",
+      "base": {
+        "quickstart": "quickstart/ja-voyara/j6",
+        "version": "1.0.10"
+      },
+      "template": {
+        "element": "ja_voyara",
+        "version": "1.0.4",
+        "source": "bundled"
+      },
+      "preparedTemplate": false,
+      "multilingual": false,
+      "contractProfile": "ja-voyara/j6/1.0.10",
+      "contractFiles": {
+        "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
+        "design-system-measurement.json": "29d2fb6569974436a7a6c0d02b351cba2bb381da1161f3e669c008f76e6d2566",
+        "manifest.json": "bb39773bffdece97fbe9b9e6b91c30dd96a56ee73897bae286cc98692e072103",
+        "presentation-lock.json": "07ed4984cdafa54b25f244e226160b4ae790964d8ab51076c7cfb8b4a6576b13",
+        "showcase-nav-map.json": "750443739beab176510698cf09681e69688d2f641b20659e78ddbc5a103cf0fd"
+      },
+      "coworkMinVersion": "0.24.37",
+      "requires": [
+        {
+          "type": "plugin",
+          "folder": "system",
+          "element": "t4"
+        }
+      ],
+      "activation": {
+        "id": "ja-voyara/j6/1.0.10",
+        "styles": [
+          {
+            "sourceStyleId": 14,
+            "layout": "home",
+            "title": "JA Voyara · Home",
+            "params": {
+              "typelist-site": "default",
+              "typelist-theme": "default"
+            }
+          },
+          {
+            "sourceStyleId": 15,
+            "layout": "home-2",
+            "title": "JA Voyara · Home 2",
+            "params": {
+              "typelist-site": "default",
+              "typelist-theme": "default"
+            }
+          },
+          {
+            "sourceStyleId": 16,
+            "layout": "default",
+            "title": "JA Voyara · Inner",
+            "params": {
+              "typelist-site": "default",
+              "typelist-theme": "default"
+            }
+          },
+          {
+            "sourceStyleId": 17,
+            "layout": "no-sidebar",
+            "title": "JA Voyara · Full Width",
+            "params": {
+              "typelist-site": "default",
+              "typelist-theme": "default"
+            }
+          },
+          {
+            "sourceStyleId": 18,
+            "layout": "landing",
+            "title": "JA Voyara · Landing",
+            "params": {
+              "typelist-site": "default",
+              "typelist-theme": "default"
+            }
+          }
+        ]
+      }
+    },
+    "ja-kinetic": {
+      "state": "served",
+      "name": "JA Kinetic",
+      "base": {
+        "quickstart": "quickstart/ja-kinetic/j6",
+        "version": "1.0.9"
+      },
+      "template": {
+        "element": "ja_kinetic",
+        "version": "1.0.0",
+        "source": "bundled"
+      },
+      "preparedTemplate": false,
+      "multilingual": false,
+      "demoTrim": true,
+      "demoTrimKeep": ["pages/kineticql"],
+      "contractProfile": "ja-kinetic/j6/1.0.9",
+      "contractFiles": {
+        "content-map.json": "17d45a7d2108280eb68f8478b5023b75b1249d520900e0578fcf53427ef87435",
+        "demo-trim-map.json": "f2b53cb30bae6913c64894f2a48eb3a9268f2fb1872c863da2bf779aaf967033",
+        "design-system-measurement.json": "1749aa13fac2a4f0f0dd8a1a2fb2628e4f9830d97fcf903f801b141a9eeca4cc",
+        "manifest.json": "dec0c251ba7e4ce99a3053d42fa127bb7f03c41f8a7ac4b0ead49f3aca692724",
+        "presentation-lock.json": "00f09a8c2ef3b330da240579f5655c41abc7603afa1adef8fde27d04d4b07b3e",
+        "showcase-nav-map.json": "30a3a64b526b2b350b597b069394c7fb2ce8e1fba13833c007198e0363890c3d"
+      },
+      "coworkMinVersion": "0.24.43",
+      "requires": [
+        {
+          "type": "plugin",
+          "folder": "system",
+          "element": "t4"
+        }
+      ],
+      "activation": {
+        "id": "ja-kinetic/j6/1.0.9",
+        "styles": [
+          {
+            "sourceStyleId": 32,
+            "layout": "default",
+            "title": "JA Kinetic · Default",
+            "params": {
+              "typelist-site": "default",
+              "typelist-theme": "default"
+            }
+          },
+          {
+            "sourceStyleId": 33,
+            "layout": "home",
+            "title": "JA Kinetic · Terminal",
+            "params": {
+              "typelist-site": "default",
+              "typelist-theme": "default"
+            }
+          },
+          {
+            "sourceStyleId": 34,
+            "layout": "home",
+            "title": "JA Kinetic · Blueprint",
+            "params": {
+              "typelist-site": "blueprint",
+              "typelist-theme": "default"
+            }
+          },
+          {
+            "sourceStyleId": 35,
+            "layout": "home",
+            "title": "JA Kinetic · Signal",
+            "params": {
+              "typelist-site": "signal",
+              "typelist-theme": "default"
+            }
+          },
+          {
+            "sourceStyleId": 36,
+            "layout": "no-sidebar",
+            "title": "JA Kinetic · Inner",
+            "params": {
+              "typelist-site": "default",
+              "typelist-theme": "default"
+            }
+          },
+          {
+            "sourceStyleId": 37,
+            "layout": "landing",
+            "title": "JA Kinetic · Landing",
+            "params": {
+              "typelist-site": "default",
+              "typelist-theme": "default"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "defaultBase": "tracy-base/j6",
+  "bases": {
+    "tracy-base/j6": {
+      "name": "Tracy Base",
+      "version": "1.0.1",
+      "template": {
+        "element": "tracy",
+        "version": "1.0.0",
+        "source": "bundled"
+      },
+      "baselineProfile": "tracy-base/j6/1.0.1",
+      "coworkMinVersion": "0.19.1",
+      "workflow": "template-build"
+    }
+  }
+}

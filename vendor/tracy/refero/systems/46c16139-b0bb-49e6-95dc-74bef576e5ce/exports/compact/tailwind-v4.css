@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-cerulean-surge: #60CDFF;
+  --color-cobalt-vault: #002991;
+  --color-ice-mist: #B8E9FF;
+  --color-cobalt-fade: #002991;
+  --color-midnight: #000000;
+  --color-snow: #FFFFFF;
+  --color-parchment: #F1EFEA;
+  --color-ash: #B3B3B3;
+  --color-fog: #CCCCCC;
+
+  /* Typography */
+  --font-plain: 'Plain', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-paypal-pro: 'PayPal Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@tracy/dsh-fleet-operation",
+  "version": "0.2.1",
+  "description": "Fleet operations: provisioning scripts, the host dsh image and the site web images. Not a dsh plugin (its plugin entry was removed)",
+  "type": "module",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/fleet/tracy-fleet-operation"
+  }
+}

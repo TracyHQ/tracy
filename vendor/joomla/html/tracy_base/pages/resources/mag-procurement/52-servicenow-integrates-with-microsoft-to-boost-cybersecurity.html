@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" class="j6" xml:lang="en-gb" lang="en-gb" dir="ltr">
+
+<head>
+  
+  <meta charset="utf-8">
+	<meta name="author" content="Demo User">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Each integration adds a dependency to the website. Map the data it receives and the task it serves before deciding whether to include it.">
+	<meta name="generator" content="Joomla! - Open Source Content Management">
+	<title>Reviewing third-party integrations</title>
+	<link href="/templates/tracy/favicon.ico" rel="icon" type="image/vnd.microsoft.icon">
+<link href="/plugins/system/t4/themes/base/vendors/font-awesome5/css/all.min.css?8198c7" rel="stylesheet">
+	<link href="/plugins/system/t4/themes/base/vendors/font-awesome/css/font-awesome.min.css?8198c7" rel="stylesheet">
+	<link href="/media/vendor/joomla-custom-elements/css/joomla-alert.min.css?0.4.1" rel="stylesheet">
+	<link href="/media/t4/optimize/css/3d6edd8782618c482b3b522e6814c6ca.css?2584969b5b0ce1bdbf7ed16c3a3a70a2" rel="stylesheet">
+<script src="/media/vendor/jquery/js/jquery.min.js?3.7.1"></script>
+	<script src="/templates/tracy/js/darkmode.js?1789145696" defer></script>
+	<script src="/media/vendor/jquery/js/jquery-noconflict.min.js?3.7.1"></script>
+	<script src="/media/vendor/jquery-migrate/js/jquery-migrate.min.js?3.6.0"></script>
+	<script type="application/json" class="joomla-script-options new">{"media-picker-api":{"apiBaseUrl":"http:\/\/127.0.0.1:8216\/index.php?option=com_media&format=json"},"joomla.jtext":{"ERROR":"Error","MESSAGE":"Message","NOTICE":"Notice","WARNING":"Warning","JCLOSE":"Close","JOK":"OK","JOPEN":"Open"},"system.paths":{"root":"","rootFull":"http:\/\/127.0.0.1:8216\/","base":"","baseFull":"http:\/\/127.0.0.1:8216\/"},"csrf.token":"e25d6a59e541b0357f3e700af7070d35"}</script>
+	<script src="/media/system/js/core.min.js?a3d8f8"></script>
+	<script src="/media/system/js/messages.min.js?9a4811" type="module"></script>
+	<script src="/media/vendor/bootstrap/js/dropdown.min.js?5.3.8" type="module"></script>
+	<script src="/media/vendor/bootstrap/js/collapse.min.js?5.3.8" type="module"></script>
+	<script src="/media/t4/optimize/js/9ea88e57bca2f4fa4c12279a9aed4c81.js?9bcc98a9a244138cca95ad92bb4a1b1a"></script>
+	<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"http://127.0.0.1:8216/#/schema/Organization/base","name":"Tracy Base","url":"http://127.0.0.1:8216/"},{"@type":"WebSite","@id":"http://127.0.0.1:8216/#/schema/WebSite/base","url":"http://127.0.0.1:8216/","name":"Tracy Base","publisher":{"@id":"http://127.0.0.1:8216/#/schema/Organization/base"},"potentialAction":{"@type":"SearchAction","target":"http://127.0.0.1:8216/resources/search?q={search_term_string}","query-input":"required name=search_term_string"}},{"@type":"WebPage","@id":"http://127.0.0.1:8216/#/schema/WebPage/base","url":"http://127.0.0.1:8216/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity","name":"Reviewing third-party integrations","description":"Each integration adds a dependency to the website. Map the data it receives and the task it serves before deciding whether to include it.","isPartOf":{"@id":"http://127.0.0.1:8216/#/schema/WebSite/base"},"about":{"@id":"http://127.0.0.1:8216/#/schema/Organization/base"},"inLanguage":"en-GB"},{"@type":"Article","@id":"http://127.0.0.1:8216/#/schema/com_content/article/52","name":"Reviewing third-party integrations","headline":"Reviewing third-party integrations","inLanguage":"en-GB","author":{"@type":"Person","name":"Demo User"},"thumbnailUrl":"images/demo/magz/magz-3.jpg","image":"images/demo/magz/magz-3.jpg","articleSection":"Website planning","dateCreated":"2021-05-25T08:02:40+00:00","interactionStatistic":{"@type":"InteractionCounter","userInteractionCount":42},"isPartOf":{"@id":"http://127.0.0.1:8216/#/schema/WebPage/base"}}]}</script>
+	<script>(function(){try{var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;var t=d?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.setAttribute('data-bs-theme',t);if(d){document.documentElement.classList.add('t4-dark');}}catch(e){document.documentElement.setAttribute('data-theme','light');document.documentElement.setAttribute('data-bs-theme','light');}})();</script>
+	<script>window.tracyTheme={def:"auto",enabled:true};</script>
+	<link rel="stylesheet" type="text/css" href="/templates/tracy/css/styles/base.css?1789235700">
+	<link rel="stylesheet" href="/templates/tracy/css/site-repairs.css?1789237878">
+
+
+  <meta name="viewport"  content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes"/>
+  <style>
+    @-webkit-viewport   { width: device-width; }
+    @-moz-viewport      { width: device-width; }
+    @-ms-viewport       { width: device-width; }
+    @-o-viewport        { width: device-width; }
+    @viewport           { width: device-width; }
+  </style>
+  <meta name="HandheldFriendly" content="true"/>
+  <meta name="apple-mobile-web-app-capable" content="YES"/>
+  <!-- //META FOR IOS & HANDHELD -->
+  
+</head>
+
+<body class="site-base navigation-default theme-base layout-sidebar-left nav-breakpoint-lg navigation-hide com_content view-article item-320 loaded-bs5" data-jver="6">
+  
+  <div class="t4-offcanvas" data-offcanvas-options='{"modifiers":"left,push"}' id="off-canvas-left-push" role="complementary" style="display:none;">
+	<div class="t4-off-canvas-header">
+	 		  <a href="http://127.0.0.1:8216/" title="Tracy">
+	  	    	                            <span class="logo-img-sm d-block d-sm-none" role="img" aria-label="Tracy"><svg xmlns="http://www.w3.org/2000/svg" width="150" height="32" viewBox="0 0 150 32" role="img" aria-label="Tracy Base">
+  <title>Tracy Base</title>
+  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="9" fill="none" stroke="currentColor" stroke-opacity="0.22"/>
+  <circle cx="16" cy="16" r="6" fill="#0071e3"/>
+  <text x="42" y="21" font-family="SF Pro Display, -apple-system, Helvetica Neue, Arial, sans-serif"
+        font-size="17" font-weight="600" letter-spacing="-0.4" fill="currentColor">Tracy Base</text>
+</svg>
+</span>
+          	    	  	
+	    	      	      	        <span class="logo-img d-none d-sm-block" role="img" aria-label="Tracy"><svg xmlns="http://www.w3.org/2000/svg" width="150" height="32" viewBox="0 0 150 32" role="img" aria-label="Tracy Base">
+  <title>Tracy Base</title>
+  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="9" fill="none" stroke="currentColor" stroke-opacity="0.22"/>
+  <circle cx="16" cy="16" r="6" fill="#0071e3"/>
+  <text x="42" y="21" font-family="SF Pro Display, -apple-system, Helvetica Neue, Arial, sans-serif"
+        font-size="17" font-weight="600" letter-spacing="-0.4" fill="currentColor">Tracy Base</text>
+</svg>
+</span>
+	      	    
+	  	  </a>
+	  		<button type="button" class="close js-offcanvas-close" data-bs-dismiss="modal" aria-label="Close menu">×</button>
+	</div>
+
+	<div class="t4-off-canvas-body menu-item-drill" data-effect="drill">
+		<div class="t4-module module " id="Mod169"><div class="module-inner"><div class="module-ct"><nav class="navbar">
+<ul  class="nav navbar-nav ">
+<li class="nav-item item-247 default"><a href="/" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Home</span></span></a></li><li class="nav-item item-318"><a href="/product" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Product</span></span></a></li><li class="nav-item item-249 deeper dropdown parent" data-level=1><a href="/services" itemprop="url" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown"><span itemprop="name"><span class="menu-item-title">Service</span></span></a><ul class="dropdown-menu" data-bs-popper="static"><li class="nav-item item-273"><a href="/services/service-detail" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Website design &amp; build</span></span></a></li><li class="nav-item item-326"><a href="/services/website-strategy" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Website strategy</span></span></a></li><li class="nav-item item-327"><a href="/services/brand-and-interface-design" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Brand and interface design</span></span></a></li><li class="nav-item item-328"><a href="/services/website-development" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Website development</span></span></a></li><li class="nav-item item-329"><a href="/services/content-and-photography" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Content and photography</span></span></a></li></ul></li><li class="nav-item item-250"><a href="/pricing" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Pricing</span></span></a></li><li class="nav-item item-319 active deeper dropdown parent" data-level=1><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false" data-bs-toggle = "dropdown">
+	<span itemprop="name"><span class="menu-item-title">Resources</span></span>
+	</a>
+<ul class="dropdown-menu" data-bs-popper="static"><li class="nav-item item-254"><a href="/resources/blog" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Blog</span></span></a></li><li class="nav-item item-264"><a href="/resources/category-list" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">All articles</span></span></a></li><li class="nav-item item-253"><a href="/resources/archive" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Archive</span></span></a></li><li class="nav-item item-252"><a href="/resources/all-categories" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Topics</span></span></a></li><li class="nav-item item-320 current active"><a href="/resources/mag-procurement" itemprop="url" class="dropdown-item" aria-current="page"><span itemprop="name"><span class="menu-item-title">Website planning</span></span></a></li><li class="nav-item item-321"><a href="/resources/mag-datacenter" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Website operations</span></span></a></li><li class="nav-item item-322"><a href="/resources/mag-world" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Studio notes</span></span></a></li><li class="nav-item item-244"><a href="/resources/style-guide" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Design system</span></span></a></li><li class="nav-item item-241"><a href="/resources/typography" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Typography</span></span></a></li><li class="nav-item item-242"><a href="/resources/colors" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Colour</span></span></a></li><li class="nav-item item-243"><a href="/resources/spacing" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Spacing &amp; grid</span></span></a></li><li class="nav-item item-271"><a href="/resources/faq" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Help centre</span></span></a></li><li class="nav-item item-263"><a href="/resources/contact" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Contact us</span></span></a></li><li class="nav-item item-261"><a href="/resources/search" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Search</span></span></a></li><li class="nav-item item-262"><a href="/resources/tags" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Tags</span></span></a></li><li class="nav-item item-256"><a href="/resources/sign-in" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Sign in</span></span></a></li><li class="nav-item item-246"><a href="/resources/home-2" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Home — variant</span></span></a></li><li class="nav-item item-265"><a href="/resources/single-contact" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Talk to sales</span></span></a></li><li class="nav-item item-268"><a href="/resources/single-tag" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Browse by tag</span></span></a></li><li class="nav-item item-239"><a href="/resources/home-variation" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Home variation</span></span></a></li><li class="nav-item item-330"><a href="/resources/home-onepage" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Home - Onepage</span></span></a></li><li class="nav-item item-325"><a href="/resources/marketing-samples" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Marketing samples</span></span></a></li></ul></li><li class="nav-item item-323 deeper dropdown parent" data-level=1><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false" data-bs-toggle = "dropdown">
+	<span itemprop="name"><span class="menu-item-title">Company</span></span>
+	</a>
+<ul class="dropdown-menu" data-bs-popper="static"><li class="nav-item item-248"><a href="/company/about" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">About</span></span></a></li><li class="nav-item item-251"><a href="/company/team" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Team</span></span></a></li><li class="nav-item item-324"><a href="/company/careers" itemprop="url" class="dropdown-item"><span itemprop="name"><span class="menu-item-title">Careers</span></span></a></li></ul></li></ul></nav></div></div></div>
+	</div>
+
+	</div>
+  <div class="t4-wrapper">
+    <div class="t4-content">
+      <div class="t4-content-inner">
+        
+<div id="t4-header" class="t4-section  t4-header  t4-sticky"><!-- HEADER BLOCK — Tracy global nav.
+     DESIGN.md §4 "Navigation": a compact translucent bar with small-type links and restrained
+     iconography. Everything variable here is admin-editable: the brand is the `logo` element
+     (Template -> Settings -> site logo), the links are the mega menu, and the right-hand cluster is
+     the `header-r` module position. The only hard-coded control is the theme toggle, which is
+     chrome rather than content. -->
+<header class="header-block header-block-2 tracy-nav">
+  <div class="container">
+    <div class="header-wrap d-flex align-items-center justify-content-between collapse-static">
+      <div class="navbar-brand logo-image">
+    <a href="http://127.0.0.1:8216/" aria-label="Tracy">
+            <span class="tracy-logo"><svg xmlns="http://www.w3.org/2000/svg" width="150" height="32" viewBox="0 0 150 32" role="img" aria-label="Tracy Base">
+  <title>Tracy Base</title>
+  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="9" fill="none" stroke="currentColor" stroke-opacity="0.22"/>
+  <circle cx="16" cy="16" r="6" fill="#0071e3"/>
+  <text x="42" y="21" font-family="SF Pro Display, -apple-system, Helvetica Neue, Arial, sans-serif"
+        font-size="17" font-weight="600" letter-spacing="-0.4" fill="currentColor">Tracy Base</text>
+</svg>
+</span>
+    
+            <span class="site-slogan">Precision, in every surface</span>
+    
+    </a></div>
+
+
+      <div class="t4-navbar mx-auto collapse-static">
+        
+<nav class="navbar navbar-expand-lg">
+<div id="t4-megamenu-tracy" class="t4-megamenu collapse navbar-collapse slide animate" data-duration="400">
+
+<ul class="nav navbar-nav level0"  itemscope="itemscope" itemtype="http://www.schema.org/SiteNavigationElement">
+<li class="nav-item default" data-id="247" data-level="1"><a href="/" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Home</span></span></a></li><li class="nav-item" data-id="318" data-level="1"><a href="/product" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Product</span></span></a></li><li class="nav-item dropdown mega parent" data-id="249" data-level="1" data-align="justify"><a href="/services" itemprop="url" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-bs-toggle=""><span itemprop="name"><span class="menu-item-title">Service</span></span><i class="item-caret"></i></a>
+<div class="dropdown-menu mega-dropdown-menu tracy-mega-editorial tracy-mega-services" style="width: 100%;">
+	<div class="mega-dropdown-inner">
+	
+			<div class="row">
+																																	<div class="mega-sub-1 col-12 col-md-6">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Our services</span></h3>
+																
+<ul class="mega-nav level11">
+<li class="nav-item" data-id="326"><a href="/services/website-strategy" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Website strategy</span></span></a></li><li class="nav-item" data-id="327"><a href="/services/brand-and-interface-design" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Brand and interface design</span></span></a></li><li class="nav-item" data-id="328"><a href="/services/website-development" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Website development</span></span></a></li><li class="nav-item" data-id="329"><a href="/services/content-and-photography" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Content and photography</span></span></a></li><li class="nav-item" data-id="273"><a href="/services/service-detail" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Website design &amp; build</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																																							<div class="mega-sub-2 col-12 col-md-6">
+						<div class="mega-col-module">
+							<div class="mega-inner">
+																<a class="tracy-menu-feature" href="/services/service-detail">
+ <img class="tracy-menu-feature__image" src="/images/tracy-demo/studio-workspace.png" alt="Illustrative studio workspace with website concepts" width="640" height="400" loading="eager" decoding="async"> <span class="tracy-menu-feature__body">
+  <span class="tracy-menu-feature__eyebrow">From idea to launch</span>  <span class="tracy-menu-feature__title">Website design &amp; build</span>
+  <span class="tracy-menu-feature__description">A clear plan, a considered design and a site your team can maintain.</span>  <span class="tracy-menu-feature__action">Explore the service <span aria-hidden="true">↗</span></span>
+ </span>
+</a>
+							</div>
+						</div>
+					</div>
+																	</div>
+		
+	</div>
+</div>
+</li>
+<li class="nav-item" data-id="250" data-level="1"><a href="/pricing" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Pricing</span></span></a></li><li class="nav-item active dropdown mega parent" data-id="319" data-level="1" data-align="justify"><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false">
+	<span itemprop="name"><span class="menu-item-title">Resources</span></span>
+	<i class="item-caret"></i></a>
+
+<div class="dropdown-menu mega-dropdown-menu tracy-mega-editorial tracy-mega-resources" style="width: 100%;">
+	<div class="mega-dropdown-inner">
+	
+			<div class="row">
+																																	<div class="mega-sub-1 col-12 col-md-4">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Read & learn</span></h3>
+																
+<ul class="mega-nav level11">
+<li class="nav-item" data-id="254"><a href="/resources/blog" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Blog</span></span></a></li><li class="nav-item" data-id="264"><a href="/resources/category-list" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">All articles</span></span></a></li><li class="nav-item" data-id="253"><a href="/resources/archive" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Archive</span></span></a></li><li class="nav-item" data-id="252"><a href="/resources/all-categories" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Topics</span></span></a></li><li class="nav-item active" data-id="320"><a href="/resources/mag-procurement" itemprop="url" class="nav-link" aria-current="page"><span itemprop="name"><span class="menu-item-title">Website planning</span></span></a></li><li class="nav-item" data-id="321"><a href="/resources/mag-datacenter" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Website operations</span></span></a></li><li class="nav-item" data-id="322"><a href="/resources/mag-world" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Studio notes</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																																							<div class="mega-sub-2 col-12 col-md-4">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Design & inspiration</span></h3>
+																
+<ul class="mega-nav level11">
+<li class="nav-item" data-id="244"><a href="/resources/style-guide" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Design system</span></span></a></li><li class="nav-item" data-id="241"><a href="/resources/typography" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Typography</span></span></a></li><li class="nav-item" data-id="242"><a href="/resources/colors" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Colour</span></span></a></li><li class="nav-item" data-id="243"><a href="/resources/spacing" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Spacing &amp; grid</span></span></a></li><li class="nav-item" data-id="246"><a href="/resources/home-2" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Home — variant</span></span></a></li><li class="nav-item" data-id="239"><a href="/resources/home-variation" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Home variation</span></span></a></li><li class="nav-item" data-id="325"><a href="/resources/marketing-samples" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Marketing samples</span></span></a></li><li class="nav-item" data-id="330"><a href="/resources/home-onepage" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Home - Onepage</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																																							<div class="mega-sub-3 col-12 col-md-4">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>Help & support</span></h3>
+																
+<ul class="mega-nav level11">
+<li class="nav-item" data-id="271"><a href="/resources/faq" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Help centre</span></span></a></li><li class="nav-item" data-id="263"><a href="/resources/contact" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Contact us</span></span></a></li><li class="nav-item" data-id="261"><a href="/resources/search" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Search</span></span></a></li><li class="nav-item" data-id="262"><a href="/resources/tags" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Tags</span></span></a></li><li class="nav-item" data-id="256"><a href="/resources/sign-in" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Sign in</span></span></a></li><li class="nav-item" data-id="265"><a href="/resources/single-contact" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Talk to sales</span></span></a></li><li class="nav-item" data-id="268"><a href="/resources/single-tag" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Browse by tag</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																	</div>
+		
+	</div>
+</div>
+</li>
+<li class="nav-item dropdown mega parent" data-id="323" data-level="1" data-align="justify"><a itemprop="url" href="javascript:;" class="nav-header  nav-link dropdown-toggle"  role = "button" aria-haspopup = "true" aria-expanded = "false">
+	<span itemprop="name"><span class="menu-item-title">Company</span></span>
+	<i class="item-caret"></i></a>
+
+<div class="dropdown-menu mega-dropdown-menu tracy-mega-editorial tracy-mega-company" style="width: 100%;">
+	<div class="mega-dropdown-inner">
+	
+			<div class="row">
+																																	<div class="mega-sub-1 col-12 col-md-6">
+						<div class="mega-col-nav">
+							<div class="mega-inner">
+																<h3 class="mega-col-title"><span>The studio</span></h3>
+																
+<ul class="mega-nav level12">
+<li class="nav-item" data-id="248"><a href="/company/about" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">About</span></span></a></li><li class="nav-item" data-id="251"><a href="/company/team" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Team</span></span></a></li><li class="nav-item" data-id="324"><a href="/company/careers" itemprop="url" class="nav-link"><span itemprop="name"><span class="menu-item-title">Careers</span></span></a></li></ul>
+							</div>
+						</div>
+					</div>
+																																							<div class="mega-sub-2 col-12 col-md-6">
+						<div class="mega-col-module">
+							<div class="mega-inner">
+																<div class="tracy-menu-team">
+<p class="tracy-menu-team__heading">The people behind the work</p><ul class="tracy-menu-team__people">
+<li><a class="tracy-menu-team__person" href="/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat">
+<img src="/images/demo/members/mem-1.jpg" alt="Adam Hale" width="400" height="400" decoding="async"><span class="tracy-menu-team__name">Adam Hale</span>
+<span class="tracy-menu-team__role">Design Director</span></a></li>
+<li><a class="tracy-menu-team__person" href="/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices">
+<img src="/images/demo/members/mem-2.jpg" alt="Peter Lang" width="400" height="400" decoding="async"><span class="tracy-menu-team__name">Peter Lang</span>
+<span class="tracy-menu-team__role">Development Lead</span></a></li>
+<li><a class="tracy-menu-team__person" href="/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis">
+<img src="/images/demo/members/mem-3.jpg" alt="Sofia Lindqvist" width="400" height="400" decoding="async"><span class="tracy-menu-team__name">Sofia Lindqvist</span>
+<span class="tracy-menu-team__role">Brand Designer</span></a></li>
+<li><a class="tracy-menu-team__person" href="/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus">
+<img src="/images/demo/members/mem-4.jpg" alt="Lucas Meyer" width="400" height="400" decoding="async"><span class="tracy-menu-team__name">Lucas Meyer</span>
+<span class="tracy-menu-team__role">Research Lead</span></a></li>
+</ul>
+<a class="tracy-menu-team__all" href="/company/team">View all team <span aria-hidden="true">→</span></a>
+</div>
+							</div>
+						</div>
+					</div>
+																	</div>
+		
+	</div>
+</div>
+</li>
+</ul></div>
+</nav>
+
+      </div>
+
+      <div class="t4-header-r d-flex align-items-center">
+        
+
+<div class="custom"  >
+	<a class="btn btn-primary tracy-btn--primary" href="/resources/contact">Contact</a></div>
+
+
+        <button type="button"
+                class="tracy-theme-toggle"
+                data-tracy-theme-toggle
+                aria-pressed="false"
+                aria-label="Switch between light and dark">
+          <span class="tracy-theme-toggle__icon" aria-hidden="true"></span>
+        </button>
+
+        
+        <button type="button" aria-label="Open menu" id="triggerButton" class="btn js-offcanvas-trigger t4-offcanvas-toggle d-lg-none" data-offcanvas-trigger="off-canvas-left-push"><i class="fa fa-bars toggle-bars"></i></button>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- // HEADER BLOCK --></div>
+
+
+
+
+<div id="t4-main-body" class="t4-section  t4-main-body  tracy-main">
+<div class="t4-section-inner container"><div class="t4-row row">
+<div class="t4-col col-md">
+<div id="system-message-container" aria-live="polite"></div>
+<div class="com-content-article item-page tracy-article" itemscope itemtype="https://schema.org/Article">
+	<meta itemprop="inLanguage" content="en-GB">
+
+	
+	
+			<header class="page-header tracy-article__head">
+											<h1 class="tracy-article__title" itemprop="headline">
+					Reviewing third-party integrations				</h1>
+			
+						
+			
+			
+					</header>
+	
+	<div class="article-aside tracy-article__aside">
+					<dl class="article-info text-muted">
+
+	
+		<dt class="article-info-term">
+							Details					</dt>
+
+					<dd class="createdby" itemprop="author" itemscope itemtype="https://schema.org/Person">
+					<span  class="author-img">
+				<a href="/pages/authors/author/demo" title="Demo User">
+				<img src="http://127.0.0.1:8216/images/demo/author-avatars/avt-6.jpg" alt="Demo User">				</a>
+				</span>
+				By <a href="/pages/authors/author/demo" itemprop="url"><span itemprop="name">Demo User</span></a>	</dd>
+
+<span style="display: none;" itemprop="publisher" itemtype="http://schema.org/Organization" itemscope>
+			<span itemprop="name">Demo User</span></span>
+		
+		
+					<dd class="category-name">
+						Category: <a href="/resources/mag-procurement" itemprop="genre">Website planning</a>	</dd>		
+		
+					<dd class="published">
+	<span class="fa fa-calendar" aria-hidden="true"></span>
+	<time datetime="2021-09-14T00:00:00+00:00" itemprop="datePublished">
+		14 September 2021	</time>
+</dd>
+		
+	
+			
+		
+					<dd class="hits">
+	<span class="fa fa-eye" aria-hidden="true"></span>
+	<meta itemprop="interactionCount" content="UserPageVisits:42">
+	Hits: 42</dd>
+			</dl>
+		
+															</div>
+
+	
+		
+				
+					<div class="tracy-article__media">
+			<figure class="pull-left item-image">
+	<img src="/images/demo/magz/magz-3.jpg" itemprop="image" alt="Working at a desktop and laptop workstation">	</figure>
+		</div>
+
+		
+		
+		<div itemprop="articleBody" class="article-body tracy-prose">
+			<p>Each integration adds a dependency to the website. Map the data it receives and the task it serves before deciding whether to include it.</p> <h2>Putting it into practice</h2><p>Test failure states as well as successful requests. Identify who owns the external account, how access is managed and what the visitor sees when the service is unavailable.</p>		</div>
+
+		
+		
+<nav class="pagenavigation" aria-label="Page Navigation">
+    <span class="pagination ms-0">
+                <a class="btn btn-sm btn-secondary previous" href="/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action" rel="prev">
+            <span class="visually-hidden">
+                Previous article: Preparing an asset inventory            </span>
+            <span class="icon-chevron-left" aria-hidden="true"></span> <span aria-hidden="true">Prev</span>            </a>
+                    <a class="btn btn-sm btn-secondary next" href="/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo" rel="next">
+            <span class="visually-hidden">
+                Next article: Comparing proposals on the same basis            </span>
+            <span aria-hidden="true">Next</span> <span class="icon-chevron-right" aria-hidden="true"></span>            </a>
+        </span>
+</nav>
+
+		
+		
+	
+		</div>
+
+</div>
+<div class="t4-col sidebar-l col-sm col-md-3 order-md-first">
+<ul class="mod-articlescategories categories-module mod-list">
+    <li>
+        <a href="/resources/mag-procurement">
+        Website planning                    </a>
+
+                    </li>
+    <li>
+        <a href="/resources/mag-datacenter">
+        Website operations                    </a>
+
+                    </li>
+    <li>
+        <a href="/resources/mag-world">
+        Studio notes                    </a>
+
+                    </li>
+</ul>
+<ul class="tracy-article-list">
+                    <li class="tracy-article-list__item">
+            <a href="/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable" class="tracy-article-list__title ">Studio notes: making time for improvements</a>    
+        
+    
+    
+    </li>
+<li class="tracy-article-list__item">
+            <a href="/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton" class="tracy-article-list__title ">Studio notes: welcoming a new perspective</a>    
+        
+    
+    
+    </li>
+<li class="tracy-article-list__item">
+            <a href="/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading" class="tracy-article-list__title ">Studio notes: reviewing work together</a>    
+        
+    
+    
+    </li>
+<li class="tracy-article-list__item">
+            <a href="/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic" class="tracy-article-list__title ">Studio notes: a better project kickoff</a>    
+        
+    
+    
+    </li>
+<li class="tracy-article-list__item">
+            <a href="/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise" class="tracy-article-list__title ">Studio notes: starting with the customer</a>    
+        
+    
+    
+    </li>
+<li class="tracy-article-list__item">
+            <a href="/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger" class="tracy-article-list__title ">Reducing unnecessary page weight</a>    
+        
+    
+    
+    </li>
+    </ul>
+
+</div>
+</div></div>
+</div>
+
+<div id="t4-footnav" class="t4-section  t4-footnav  tracy-footnav">
+<div class="t4-section-inner container"><div class="t4-row row">
+<div class="t4-col footnav-1 col-sm col-md-3">
+
+
+<div class="custom"  >
+	<h3 class="tracy-footlinks__title">Product</h3><ul class="tracy-footlinks"><li><a href="/product">Product</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/services">Service</a></li><li><a href="/services/service-detail">Service detail</a></li></ul></div>
+
+</div>
+<div class="t4-col footnav-2 col-sm col-md-3">
+
+
+<div class="custom"  >
+	<h3 class="tracy-footlinks__title">Resources</h3><ul class="tracy-footlinks"><li><a href="/resources/blog">Blog</a></li><li><a href="/resources/mag-procurement">Website planning</a></li><li><a href="/resources/style-guide">Design system</a></li><li><a href="/resources/faq">Help centre</a></li></ul></div>
+
+</div>
+<div class="t4-col footnav-3 col-sm col-md-3">
+
+
+<div class="custom"  >
+	<h3 class="tracy-footlinks__title">Company</h3><ul class="tracy-footlinks"><li><a href="/company/about">About</a></li><li><a href="/company/team">Team</a></li><li><a href="/company/careers">Careers</a></li><li><a href="/resources/contact">Contact us</a></li></ul></div>
+
+</div>
+<div class="t4-col footnav-4 col-sm col-md-3">
+<div class="ja-acm acm-social-links style-1">
+  <h3 class="tracy-footlinks__title">Find us online</h3>
+  <ul class="tracy-social-links">
+      <li><a href="https://www.instagram.com/" rel="noopener noreferrer" aria-label="Instagram demo account"><svg class="tracy-social-links__icon tracy-social-links__icon--instagram" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="fill"/></svg><span>@tracybasedemo</span></a></li>
+      <li><a href="https://www.facebook.com/" rel="noopener noreferrer" aria-label="Facebook demo account"><svg class="tracy-social-links__icon tracy-social-links__icon--facebook" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4.5c-.5-.1-2.2-.2-4-.2-3 0-5 1.8-5 5.2V12H5v4h3v8h4v-8h3.2l.8-4h-4V9.9c0-1.2.3-1.9 2-1.9Z"/></svg><span>@tracybasedemo</span></a></li>
+      <li><a href="https://www.linkedin.com/" rel="noopener noreferrer" aria-label="Linkedin demo account"><svg class="tracy-social-links__icon tracy-social-links__icon--linkedin" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5H3.2V19h3.3V8.5ZM4.8 3A1.9 1.9 0 1 0 4.8 6.8 1.9 1.9 0 0 0 4.8 3ZM19.5 13c0-3.2-1.7-4.7-4-4.7a3.5 3.5 0 0 0-3.2 1.8V8.5H9V19h3.3v-5.2c0-1.4.3-2.8 2.1-2.8s1.8 1.7 1.8 2.9V19h3.3v-6Z"/></svg><span>@tracybasedemo</span></a></li>
+      <li><a href="https://www.youtube.com/" rel="noopener noreferrer" aria-label="Youtube demo account"><svg class="tracy-social-links__icon tracy-social-links__icon--youtube" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 7.2a2.8 2.8 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.5.5a2.8 2.8 0 0 0-2 2A29 29 0 0 0 2 12a29 29 0 0 0 .5 4.8 2.8 2.8 0 0 0 2 2c1.7.5 7.5.5 7.5.5s5.8 0 7.5-.5a2.8 2.8 0 0 0 2-2A29 29 0 0 0 22 12a29 29 0 0 0-.5-4.8ZM10 15.2V8.8l5.5 3.2-5.5 3.2Z"/></svg><span>@tracybasedemo</span></a></li>
+    </ul>
+</div>
+
+</div>
+</div></div>
+</div>
+
+<div id="t4-footer" class="t4-section  t4-footer  tracy-footer">
+<div class="t4-section-inner container"><div class="t4-row row">
+<div class="t4-col footer col-sm">
+<div class="ja-acm acm-site-notice style-1">
+  <p class="tracy-site-notice">Tracy Base is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy.</p>
+</div>
+
+</div>
+
+</div></div>
+</div><a href='javascript:' id='back-to-top'><i class='fa fa-chevron-up'></i></a>
+      </div>
+    </div>
+  </div>
+  
+</body>
+</html>

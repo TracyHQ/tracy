@@ -1,0 +1,54 @@
+{
+  "color": {
+    "off-black": {
+      "$value": "#0f1012",
+      "$type": "color",
+      "$description": "Off-Black — Primary text, hero and footer backgrounds, icon fills — near-pure black with a barely-perceptible cool cast that keeps it from feeling dead"
+    },
+    "pure-black": {
+      "$value": "#020201",
+      "$type": "color",
+      "$description": "Pure Black — Secondary text, icon strokes, emphasis fills where maximum contrast against white surfaces is needed"
+    },
+    "off-white": {
+      "$value": "#f2f2f4",
+      "$type": "color",
+      "$description": "Off-White — Page canvas, card surfaces, large background fills — the signature light that carries the entire light theme"
+    },
+    "pure-white": {
+      "$value": "#fdfdfd",
+      "$type": "color",
+      "$description": "Pure White — Elevated card surfaces, input backgrounds, secondary panels — brighter than the canvas for subtle layering without shadows"
+    },
+    "steel-gray": {
+      "$value": "#5e5e5e",
+      "$type": "color",
+      "$description": "Steel Gray — Muted body text, captions, inactive labels — meets AA at 6.4:1 for readable but clearly secondary content"
+    },
+    "ash-gray": {
+      "$value": "#8f8f8f",
+      "$type": "color",
+      "$description": "Ash Gray — Disabled button text, tertiary helper text, very low-emphasis labels"
+    },
+    "signal-blue": {
+      "$value": "#0071e3",
+      "$type": "color",
+      "$description": "Signal Blue — Blue outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "pp-neue-montreal": {
+      "$value": "PP Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "Sole typeface. Weight 350 (Book) carries everything from body to display headings — the entire site whispers at near-regular weight, avoiding bold/bolder entirely. Weight 400 appears only for tiny button/icon labels. The flat 350 across 27px headlines and 16px body creates a uniform typographic texture where size alone builds hierarchy, not weight. Substitute: Inter (350/400) or Söhne (350/400)."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://augen.pro",
+      "siteName": "Augen Pro",
+      "extractedAt": "2026-07-03T03:18:40.191Z",
+      "variant": "compact"
+    }
+  }
+}

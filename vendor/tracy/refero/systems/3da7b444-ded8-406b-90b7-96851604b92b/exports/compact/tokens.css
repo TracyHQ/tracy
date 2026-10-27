@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-deep-ink: #192830;
+  --color-parchment: #f5f5ee;
+  --color-linen: #e4e7da;
+  --color-pressed-cotton: #d7d7cb;
+  --color-graphite: #2f3136;
+  --color-slate: #535557;
+  --color-dusk: #424e52;
+  --color-white: #ffffff;
+  --color-ink: #000000;
+
+  /* Typography — Font Families */
+  --font-abc-arizona-sans: 'ABC Arizona Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-arizona-flare: 'ABC Arizona Flare', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

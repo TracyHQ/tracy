@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-ink-black: #0a1217;
+  --color-paper-white: #ffffff;
+  --color-frost-wash: #e4eff7;
+  --color-stone-gray: #85898b;
+  --color-obsidian: #000000;
+  --color-electric-lime: #cdfe00;
+
+  /* Typography — Font Families */
+  --font-sana-serif: 'Sana Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sana-sans: 'Sana Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

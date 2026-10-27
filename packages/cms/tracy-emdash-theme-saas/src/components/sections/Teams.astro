@@ -1,0 +1,298 @@
+---
+/**
+ * Team grid. `socials` is one "network|url" pair per line; `columns` sets the desktop column count.
+ * Two looks, chosen by the data: with a heading the cards are compact and left-aligned (the About
+ * page's team strip); without one they are larger and centred (the Team page's own grid).
+ * No avatar → the initials chip; neither → no media slot at all.
+ */
+import type { Style } from '@/lib/sections'
+import { mediaUrl } from '@/lib/media'
+import Col from './c/Col.astro'
+import SocialIcon from './c/SocialIcon.astro'
+import { stampFor, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  narrow?: boolean
+}
+const { data, narrow = false } = Astro.props
+
+const text = (value: unknown) => String(value ?? '').trim()
+const parsedCols = Number.parseInt(text(data.columns), 10)
+const columns = Number.isFinite(parsedCols) ? Math.min(Math.max(parsedCols, 1), 6) : 4
+
+function socials(value: unknown) {
+  return text(value)
+    .split(/\r?\n/)
+    .map((line) => {
+      const at = line.indexOf('|')
+      if (at < 0) return null
+      const network = line.slice(0, at).trim()
+      const url = line.slice(at + 1).trim()
+      return network && url ? { network, url } : null
+    })
+    .filter((s): s is { network: string; url: string } => s !== null)
+}
+
+const members = (Array.isArray(data.items) ? data.items : [])
+  .filter((m: any) => m && (text(m.name) || text(m.initials)))
+  .map((m: any) => ({
+    name: text(m.name),
+    role: text(m.role),
+    bio: text(m.bio),
+    initials: text(m.initials),
+    avatar: mediaUrl(m.avatar),
+    width: m.avatar?.width,
+    height: m.avatar?.height,
+    socials: socials(m.socials)
+  }))
+const hasHead = Boolean(data.eyebrow || data.title || data.sub)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'teams', null)
+---
+
+{
+	members.length > 0 && (
+		<section class:list={['k-section', 'teams', hasHead ? 'is-compact' : 'is-centered']} style={`--cols:${columns}`} {...s()}>
+			<Col narrow={narrow}>
+				{hasHead && (
+					<header class="head">
+						{data.eyebrow && <p class="k-eyebrow eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+						{data.title && <h2 class="title" {...s('title')}>{data.title}</h2>}
+						{data.sub && <p class="sub" {...s('sub')}>{data.sub}</p>}
+					</header>
+				)}
+				<ul class="grid">
+					{members.map((m) => (
+						<li class="card" {...s.block('items')}>
+							{m.avatar ? (
+								<img
+									class="avatar"
+									src={m.avatar}
+									alt=""
+									width={m.width || 128}
+									height={m.height || 128}
+									loading="lazy"
+									decoding="async"
+									{...s('items.avatar')}
+								/>
+							) : (
+								m.initials && (
+									<span class="avatar chip" aria-hidden="true" {...s('items.initials')}>
+										{m.initials}
+									</span>
+								)
+							)}
+							<div class="id">
+								{m.name && <h3 class="name" {...s('items.name')}>{m.name}</h3>}
+								{m.role && <p class="role" {...s('items.role')}>{m.role}</p>}
+								{m.bio && <p class="bio" {...s('items.bio')}>{m.bio}</p>}
+							</div>
+							{m.socials.length > 0 && (
+								<ul class="social">
+									{m.socials.map((s) => (
+										<li>
+											<a
+												class="social-link"
+												href={s.url}
+												aria-label={m.name ? `${m.name} · ${s.network}` : s.network}
+												rel="noopener"
+											>
+												<SocialIcon network={s.network} size={15} />
+											</a>
+										</li>
+									))}
+								</ul>
+							)}
+						</li>
+					))}
+				</ul>
+			</Col>
+		</section>
+	)
+}
+
+<style>
+	.head {
+		margin-bottom: 40px;
+	}
+	.eyebrow {
+		display: inline-block;
+		margin: 0 0 14px;
+	}
+	.title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 24px;
+		line-height: 1.08;
+		font-weight: 700;
+		letter-spacing: -0.5px;
+		color: var(--k-heading);
+	}
+	.sub {
+		margin: 12px 0 0;
+		font-size: 16px;
+		line-height: 1.6;
+		color: var(--k-text);
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+		gap: 18px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 14px;
+		transition: border-color 0.15s;
+	}
+	.card:hover {
+		border-color: color-mix(in srgb, var(--k-primary) 45%, var(--k-border));
+	}
+	.avatar {
+		display: block;
+		flex-shrink: 0;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+	.chip {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: color-mix(in srgb, var(--k-primary) 12%, transparent);
+		color: var(--k-primary);
+		font-family: var(--font-heading);
+		font-weight: 700;
+		text-transform: uppercase;
+	}
+	.id {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		min-width: 0;
+	}
+	.name {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-weight: 600;
+		letter-spacing: -0.5px;
+		color: var(--k-heading);
+		overflow-wrap: anywhere;
+	}
+	.role {
+		margin: 0;
+		font-family: var(--font-mono);
+		line-height: 1.75;
+		color: var(--k-muted);
+	}
+	.bio {
+		margin: 6px 0 0;
+		font-size: 14px;
+		line-height: 1.6;
+		color: var(--k-text);
+	}
+	.social {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: auto 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.social-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border: 1px solid var(--k-border);
+		border-radius: 8px;
+		transition:
+			border-color 0.15s,
+			color 0.15s;
+	}
+	.social-link:hover {
+		border-color: var(--k-primary);
+		color: var(--k-primary);
+	}
+
+	/* Compact: left-aligned, small avatar, tinted tiles. */
+	.is-compact .card {
+		gap: 16px;
+		padding: 24px;
+	}
+	.is-compact .avatar {
+		width: 64px;
+		height: 64px;
+		border: 1px solid var(--k-border);
+	}
+	.is-compact .chip {
+		font-size: 22px;
+	}
+	.is-compact .name {
+		font-size: 17px;
+		line-height: 1.3;
+	}
+	.is-compact .role {
+		font-size: 12.5px;
+	}
+	.is-compact .social {
+		padding-top: 4px;
+	}
+	.is-compact .social-link {
+		background: var(--k-elevated);
+		color: var(--k-primary);
+	}
+
+	/* Centred: larger avatar and name, outlined tiles. */
+	.is-centered .card {
+		align-items: center;
+		padding: 28px 24px;
+		text-align: center;
+	}
+	.is-centered .avatar {
+		width: 76px;
+		height: 76px;
+		margin-bottom: 16px;
+	}
+	.is-centered .chip {
+		font-size: 26px;
+	}
+	.is-centered .name {
+		font-size: 24px;
+		line-height: 1.3;
+	}
+	.is-centered .role {
+		font-size: 11.5px;
+	}
+	.is-centered .social {
+		justify-content: center;
+		padding-top: 14px;
+	}
+	.is-centered .social-link {
+		color: var(--k-text);
+	}
+
+	@media (max-width: 767px) {
+		.grid {
+			grid-template-columns: repeat(min(var(--cols), 2), minmax(0, 1fr));
+			gap: 12px;
+		}
+		.is-compact .card,
+		.is-centered .card {
+			padding: 20px 16px;
+		}
+		.is-centered .name {
+			font-size: 20px;
+		}
+	}
+</style>

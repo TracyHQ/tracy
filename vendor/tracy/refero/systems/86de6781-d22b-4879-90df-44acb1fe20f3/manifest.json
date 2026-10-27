@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "86de6781-d22b-4879-90df-44acb1fe20f3",
+  "status": "complete",
+  "name": "Discover",
+  "url": "https://styles.refero.design/style/86de6781-d22b-4879-90df-44acb1fe20f3",
+  "sourceWebsite": "https://fonts.ninja",
+  "extractedAt": "2026-06-03T20:57:16.917Z",
+  "capturedAt": "2026-10-08T05:14:25.182852+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Type museum on white marble — a near-black wordmark, a whisper of coral, and everything else recedes.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/19e830b6-fc9a-4c44-95bc-f22a194c0dcc.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/75874ef9-aaa3-41b9-93a5-0f19c3896938.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/fe58a281-983e-4734-b509-0c9fdc25e82c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/33a78428-e60d-41a7-be8e-5f2bd8887290.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a5817ec8-2dd8-4919-a028-c564e954c728.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "0867e8b515e9e9efdc66e19957ab3cf0686ebc2fe6f19843ca497a2c86993a0d",
+      "bytes": 16469
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "37a4aaff191ef247cf738c7177fe82a9f6cccae99d5723bd673040d5d63a2439",
+      "bytes": 71221
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0cc46f2e93641cec8ced2dc5000773f7106f111fc04a1f4bec5fa326af106d82",
+      "bytes": 14285
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "bbb931d6fa4f95b7f4ca6726ce6b23226b0a25deb325da7aca58b1342abd8dcf",
+      "bytes": 6946
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "d45fd63903d635169dc58a63a3df730bfc03c58418339dbda0b95ab1ee8f0a8c",
+      "bytes": 10171
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "0beb81eeb6aa4504ee59555d01563ab32996780da837980544a16a18215e43e8",
+      "bytes": 2075
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1576a89ee44eff73c75247562b08907145b476d248097fc91e328ddf4e65ca73",
+      "bytes": 328
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "96df9fc7d6ef31b4208be5ce926828a81f518559309d3d932a528b0d781ca84f",
+      "bytes": 345
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8c0ac329d3b47088d8fe411e19d062a3ae424c20a7ae21e43063f92a686fe84b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "fc488ebb689d37dafc29c6d532d3ef9c2f469f1db39df7a9407e942cac851ada",
+      "bytes": 40822
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ff2c9dee1b61a25adbceb30254875c68ab5542e4a9a01413da69d8cc3f02f69e",
+      "bytes": 21459
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "58a9ebac7cbaea0890e6fb29c8b4962b4ba67ef3ea8029b7f7db982629ddaad9",
+      "bytes": 30691
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "129eaba121ab3509792b263afda2e44bca98a2c529dc69f68d21fc7df302f0d6",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7b77088d3ea36c5f09ed5ee27d87344bf23bdb649cb24aa1a9de850683b9e213",
+      "bytes": 1333
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ac9db56d792d02d5087867fcf7bcc33beb3d1c1f73be52df26b207f4331ea7a4",
+      "bytes": 1848
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "134cfb76-12e0-4e2e-9995-5a1617190c56",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "348c83bc-bed3-4562-841a-26a30ee19a9b",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5e427a82-a223-4b69-be7f-01c6656ce823",
+    "6248749d-b440-4561-b4d7-2d39c0fd4fd3",
+    "67bb82e2-d81c-4ead-a882-a8a2534eb221",
+    "6d64a4da-ef40-453e-86f7-4bfabc0c9051",
+    "71db2a51-118e-42b1-879d-29872d52142f",
+    "86de6781-d22b-4879-90df-44acb1fe20f3",
+    "896f0ea9-6f1a-40a6-aba7-fdaa579c7352",
+    "973332dc-4e10-4e90-85d8-3bce9c3cd3ed",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "be5cf0d7-fc29-4b7f-bf86-f87185b122fc",
+    "d5931dff-2ae3-44c7-b76f-9e5936f90611",
+    "d991c31d-2ffa-4a94-ab37-7f7d8f7d6a0c",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

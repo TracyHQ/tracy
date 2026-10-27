@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1740-look-set-template-custom-css",
+  "kind": "fix",
+  "title": "look.set on Joomla T4 writes the template's own local/css/custom.css (never a plugin or lightbox icon sheet loaded after the winner) and treats a header menu link as site-wide",
+  "pr": 1740,
+  "area": "site-tools/look-set",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: look.set a colour on a T4 page whose winning rule sits in T4's bundle and whose last loaded template-folder sheet is templates/ja_boxing/js/html5lightbox/icons/css/fontello.css (saigon-iron-boxing on dev, 25/10/2026).",
+    "S2: look.set a header menu link colour on the same T4 layout, where T4 wraps the header section inside <main>."
+  ],
+  "expect": [
+    "S1: the rule lands in templates/ja_boxing/local/css/custom.css (created when missing, removed by its undo), made more specific than the winner; fontello.css is untouched.",
+    "S2: describeTarget reports the link as site chrome; one site-wide rule with no page class, and the every-page question is asked before the write."
+  ],
+  "selectors": {
+    "tool": "packages/tools/tracy-site-tools/src/host/look-set.mjs",
+    "evidence": "packages/tools/tracy-site-tools/test/look-set.test.mjs"
+  },
+  "evidence": "Dev turns on 25/10/2026: 4 of 6 look edits went into fontello.css or got a home-page-only scope, and the agent then rewrote them by hand in local/css/custom.css (~20 to 30 s per turn)",
+  "fence": "Unit tests over the tool's public entry (look.set with a fake site io) and describeTarget on the T4 page fixture",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs",
+      "packages/tools/tracy-site-tools/test/look-style.test.mjs"
+    ],
+    "tests": [
+      "🔒 Joomla T4: a look goes into the template’s local/css/custom.css",
+      "🔒 Joomla T4: no custom.css yet",
+      "🔒 Joomla T4: a template that ships css/custom.css",
+      "🔒 Joomla T4: a header menu link is the same on every page",
+      "🔒 describeTarget (look.set): T4 puts its header inside <main>"
+    ]
+  }
+}

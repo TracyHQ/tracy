@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1100-p6-ready-templates-measure-12",
+  "kind": "fix",
+  "title": "The four JA Joomla contracts marked ready that measured below 12/12 (Morgan, Vega, Social II, Smallbiz) measure 12/12 on their current releases: their probes read the running text, the page container and a section-sized title as a heading",
+  "pr": 1100,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, read templates/joomla-ja-{morgan,vega,social-ii,smallbiz}.json through loadContract: the body, container, heading and display probes and the container and displaySize rules.",
+    "S2: For ja-morgan, ja-vega, ja-social-ii and ja-smallbiz in turn: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs <slug> --port 52297 --cdp 9511 --evidence <tmp> (release restored in Docker, stylesheets tokenized, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed).",
+    "All of it: node tests/regression/scripts/REG-PR-1100-p6-ready-templates-measure-12.mjs"
+  ],
+  "expect": [
+    "S1: Morgan and Social II probe body as 'div.features-item > p', Vega as 'div.features-item div.desc'; Social II probes container as 'div.t3-section > div.container' and its container rule names no features-content column; Smallbiz has no display probe, probes 'div.title h2' as heading and has no displaySize rule; all four are ready.",
+    "S2: each of the four: verdicts 12/12, controls 0,0,0,0, no text under 4.5:1 worse than the template's own."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-{morgan,vega,social-ii,smallbiz}.json roles.body, roles.container, roles.heading, selectors.container, selectors.displaySize"
+  },
+  "evidence": "tasks/evidence/followups-2026-10-10/p6-dsdata/ready-templates.txt: before 10/12, 10/12, 5/12, 6/12 with the committed contracts; after 12/12 each.",
+  "fence": "four contracts' probes on their current releases; not the other ready Joomla templates (measured in joomla-kept-bands.txt) nor lead-paragraph weights (a template's own typographic role)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1100-p6-ready-templates-measure-12.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

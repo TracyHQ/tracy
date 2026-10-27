@@ -1,0 +1,119 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "wordpress-tracy-base",
+  "template": "wordpress/wp-ja-morgan",
+  "minVersion": {
+    "wp-ja-morgan": "1.1.13"
+  },
+  "maxVersion": {
+    "wp-ja-morgan": "1.1.20"
+  },
+  "maxVersionNote": "1.1.20 19/10/2026: the theme itself reads every design-system role variable (role scan 599 -> 0, VARS-1): navy grounds (topbar, off-canvas header, secondary band, accordion, tags) read ink with on-ink words, buttons accent/accent-on, corners card/button/field/pill; unworn every value resolves to 1.1.19 (static DEF-1). 1.1.17 13/10/2026: the dark half of every light-dark() whose light half reads the slot reads it too (darkArms, feat/ds-every-template-3), so a dark system no longer shows the template's own dark colours; unworn, both halves compute what they did. 1.1.14 checked 11/10/2026 (ds-minversion-audit): only style.css's header and readme.txt differ from 1.1.13; 1.1.15 checked 12/10/2026 (published-templates-green): the same var(--ds-*) reads as 1.1.14 and tracy_apply_inspiration kept; every role class is still drawn by the theme or the demo; the theme change is words, dates, fonts and links, no colour 13/10/2026: 1.1.16 = 1.1.15 with the theme's other stylesheets tokenized (TDSR CSS-2, fix/tdsr-css2); measured with flow.mjs before release. 1.1.18 16/10/2026 (#1375): a status colour set as text (the shared sections' plan ticks and form notes, the theme's own .text-danger, .text-success and required marks) reads the readable shade the slot makes for the worn page (--ds-c-<status>-text); unworn, every value is the theme's own. 1.1.19 15/10/2026 (fix/wp-ja-morgan-brand-twitter): the Twitter social links are core's `twitter` service instead of `x` and the footer square's selectors list `.wp-social-link-twitter` beside `.wp-social-link-x` with the same values; no colour, no var(--ds-*) read and no role selector changed.",
+  "release": "quickstart/ja-morgan/wp7",
+  "baseTokensFile": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-morgan/tokens.css",
+  "roles": {
+    "page": "body.home.wp-singular",
+    "display": "h1.wp-block-heading.jm-module-title",
+    "heading": "h2.wp-block-heading.jm-module-title",
+    "body": "p.lead.wp-block-paragraph",
+    "button-primary": "a.wp-block-button__link.wp-element-button",
+    "card": "div.wp-block-group.teams-item",
+    "section": "#acm-teams-170"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 60px",
+    "displayFace": "PTRootUI 700, tracking -0.01em",
+    "heading": "first section heading: 60px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(217, 48, 48)",
+    "card": "repeated rounded box ×9",
+    "section": "first padded full-width section, padding-top 150px"
+  },
+  "extraPalettes": [
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    }
+  ],
+  "selectors": {
+    "display": "h1.wp-block-heading.jm-module-title, .tracy-display",
+    "heading": ["main h2.wp-block-heading"],
+    "buttonPrimary": [
+      ".tracy a.wp-block-button__link.wp-element-button:not(:where(.wrap-last-article > .view-all *))"
+    ],
+    "button": [
+      ".tracy .wp-block-button__link:not(:where(.acm-cta-capsule .tracy-btn--ghost *, .acm-cta-capsule .is-style-outline *, .page-template-page-onepage .tracy-hero .wp-block-button + .wp-block-button *, .wrap-last-article > .view-all *))"
+    ],
+    "bodyFace": [
+      "body.tracy",
+      ".tracy p:not(:where([class*=\"brand\"], [class*=\"logo\"], .wp-block-site-title))",
+      ".tracy li"
+    ],
+    "section": [".tracy #acm-teams-170"],
+    "card": [".tracy-card", ".tracy div.wp-block-group.teams-item"]
+  },
+  "selectorsNote": "the card role is the theme's div.teams-item (the nine page previews), not .tracy-card: re-measured 11/10/2026 every system missed its radius (4px). No cardLike: the one drafted 12/10/2026 was .wp-block-group, every WordPress group, so under a round system (Eddie 40px) the full-width hero and section bands were rounded like cards (eye check 13/10/2026); the rounded boxes on the page are the previews, already the card role 19/10/2026: button is the base list without the latest-news \"View all Posts\": a ruled text link (padding 0, an underline), which the system button box grew from 116x22 to 161x41 under Figma (CLIP-1); buttonPrimary leaves it out too, or it took the accent fill as a square button (button-role).",
+  "contrast": {
+    "accent-text": "main .tracy-eyebrow, main a:not([class*=button]):not(:has(img))",
+    "muted": "main .has-muted-color, main .tracy-section__head p",
+    "body": "main p",
+    "card-text": "main .tracy-card p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "keepDefaults": {
+    "--wp--preset--color--bg": "light-dark(#ffffff,#0f1320)",
+    "--wp--preset--color--surface": "light-dark(#f6f7fb,#1a2032)",
+    "--wp--preset--color--surface-warm": "light-dark(#111111,#111111)",
+    "--wp--preset--color--fg": "light-dark(#777777,#a7b0c2)",
+    "--wp--preset--color--fg-2": "light-dark(#333333,#f2f4f8)",
+    "--wp--preset--color--muted": "light-dark(#777777,#8b93a4)",
+    "--wp--preset--color--meta": "#86868b",
+    "--wp--preset--color--border": "light-dark(#eaeaea,#2a3247)",
+    "--wp--preset--color--border-soft": "light-dark(#eaeaea,#2a3247)",
+    "--wp--preset--color--accent": "light-dark(#d93030,#e0463f)",
+    "--wp--preset--color--accent-on": "light-dark(#ffffff,#ffffff)",
+    "--wp--preset--color--accent-hover": "light-dark(#b22323,#f06b64)",
+    "--wp--preset--color--accent-active": "light-dark(#b22323,#e0463f)",
+    "--wp--preset--color--success": "#16a34a",
+    "--wp--preset--color--warn": "#eab308",
+    "--wp--preset--color--danger": "#dc2626",
+    "--jm-red": "#d93030"
+  },
+  "followNote": "19/10/2026 (1.1.20): no followRules any more. Every place they repainted (the current menu item, red sub-headings, sidebar titles and post navigation in accent-text, the words of every accent button, the phone menu bars, the team job titles in muted) the theme now paints itself through the role variables, per page: the transparent headers of home styles 3 and 4 keep their words over the hero photograph, and the off-canvas bars follow the bar they sit in. The contract rules painted all of them alike at :root x6 and beat those per-page choices. Before: the current menu item is the template's literal red (#d93030, 4.76:1 on its white header): on a system's header it read 3.51-4.42:1 (Moxie, MotherDuck, Toggl Track; re-measured 12/10/2026 with every heading and text judged), so it takes the readable accent; 15/10/2026: the team cards’ job titles (.acm-teams .position) paint --jm-soft, a literal #aaaaaa the tokenizer does not hold: 2.01:1 on Moxie’s cream (the template’s own 2.32 on white); they take muted",
+  "sideRules": {
+    "light": {
+      ".t3-mainnav :is(.wp-block-navigation__responsive-container-open, .wp-block-navigation__responsive-container-close)::before": {
+        "--ds-c-bg": "var(--ds-c-accent-on)"
+      }
+    },
+    "dark": {
+      ".t3-mainnav :is(.wp-block-navigation__responsive-container-open, .wp-block-navigation__responsive-container-close)::before": {
+        "--ds-c-bg": "var(--ds-c-accent-on)"
+      }
+    }
+  },
+  "sideNote": "the phone menu button is an accent square whose three bars the theme draws with the page colour (::before, a gradient or a mask filled with var(--ds-c-bg)): white bars on Mailchimp's yellow, Toggl Track's pink and MotherDuck's yellow accents barely showed (look review v6, 14/10/2026). The bars are no colour property a follow rule can reach, so the button's ::before reads the accent's own text colour as its --ds-c-bg, on both sides; the sidebar button beside it already follows (.off-canvas-toggle span)",
+  "ready": true,
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-ja-morgan): 12/12 on every release measured, controls 0 differences, lowest text 4.70:1, 90% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on theme 1.1.13 (its minVersion) over the ja-morgan/wp7 1.1.12 content (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-ja-morgan): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, kept bands unchanged, the lowest text 7.31:1, 91-95% of the page follows, screenshots read by a person. The first pass of this round missed the card radius under every system (the cards are div.teams-item: selectors.card); its screenshots also showed the hero photo and the page previews gone, which was the photograph taken before the lazy pictures loaded (the probe now fetches them first), not the slot. First measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-morgan-wp7)",
+  "bandsNote": "19/10/2026 (1.1.20): no bands any more: the theme paints the footer and the secondary band itself through the role variables (ink with on-ink words on the light side; on the dark side the page ground, where the template lifts them only 1.02-1.06:1, GROUND-2 under Moxie dark). No keepScopes either: they reset every --ds-c-* to initial inside the footer and the secondary band, so the theme's own reads fell back to the template navy there (kept + ACCENT-LEAK under Figma, Moxie dark). Before: drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours. .mod-bg-secondary is not a picture (14/10/2026): the drafter read the closing call band's faint world map (mask-map-3.png, a white pattern on the navy fill) as a photo, and the five other navy blocks of the release (features intros, statics, none with a picture) kept the template's #1b3060 under every system (look review v6: under Linear's lime and Mailchimp's yellow a navy block among the system's colours); an ink band, it takes the system's ink and the map stays laid over it",
+  "templateVars": {
+    "--jm-red": "var(--ds-c-accent)"
+  },
+  "templateVarsNote": "the theme's own red (--jm-red, #d93030) paints its action fills — buttons, the phone menu and off-canvas toggles, read-more, the current page of the pager — and, through followRules, its red words (sub-headings, sidebar titles, post navigation): under every system both stayed red (sweep 12/10/2026, 4.1% of the phone's first screen). It takes the worn accent; the words take the readable accent and the toggles' bars the accent's own text colour. The fills' own words take the accent's text colour (a white label on Spotify's green read 1.92:1); a kept band gets the red back (keepDefaults)",
+  "contractNotes1317": "13/10/2026 (#1317): the footer kept its grey words (#888 on 96 of the left paints at 1440) while its ground followed, so the desktop page followed 68-74%: the ink band repaints its words with the system text (titles text, the rest text-2). The social icons keep their own brand colours on purpose."
+}

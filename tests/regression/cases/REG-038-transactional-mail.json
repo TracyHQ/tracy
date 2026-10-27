@@ -1,0 +1,40 @@
+{
+  "id": "REG-038",
+  "kind": "fix",
+  "title": "Tracy's mail and the pages around it say what the code does: one sign-in code lifetime, no promised reply mail, a staff invitation with its link, HTML bodies delivered, and a Morgan contact form that mails only the site administrator",
+  "pr": 844,
+  "area": "tracy-web/mail",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL unset, run: node --test apps/tracy-web/test/transactional-mail.test.mjs apps/tracy-web/test/access-email-design.test.mjs apps/tracy-web/test/web-languages.test.mjs",
+    "S2: Run: node --test packages/cms/tracy-wordpress-theme/test/wp-contact-mail.test.mjs (needs `php` on PATH, or a docker daemon; with neither the suite skips and the verdict is BLOCKED, not PASS)",
+    "S3: Run: node --import tsx --test vendor/tracy/dsh-passwords/test/tracy/transactional-mail-copy.test.ts",
+    "S4: Read the exit code and the fail/skipped counts of each run, and the tests named below."
+  ],
+  "expect": [
+    "All three runs exit 0 with 0 failures and 0 skipped tests.",
+    "'F-S1-005: the login page, the local preview and the mail all state CODE_TTL_MS' passes: in each of the eight languages the code step of /login, the local preview note, the sign-in mail's text, HTML and preheader print CODE_TTL_MS in minutes and leave no {minutes} unfilled.",
+    "'F-S1-005: the rate-limit sentence is the restricted one, stored whole in each of the eight languages' and 'F-S1-005: every consumer of the rate-limit sentence prints the restricted text' pass: the form answer, the first-request and resend branches of the page script and the exported English message all print exactly 'Too many sign-in codes were asked for. Try again later.' (or its translation), with no slot and no number — nothing about an earlier code, its lifetime or a waiting time.",
+    "The six 'F-S1-005 state matrix: …' tests pass, each in all eight languages over the real memory store and the real limiter: an inbox never mailed a code, a code used up by wrong tries, a code already used, a code past its lifetime, a code replaced by 'Send a new code', and a latest valid code. In every state the request over the cap answers 429 (page) and 429 RATE_LIMITED (JSON), mails nothing and leaves the code table as it was; the used-up, used, expired and replaced codes are rejected with 401 afterwards, and the latest valid code still signs in with 303.",
+    "'the code page states no lifetime of its own, in any of the eight languages' passes for the lane gateway: no hour, no minute, no number; English and Chinese are written out, and 'the six catalogue files hold no unsourced translation of it: those languages read the English sentence' passes (no existing catalogue translates the sentence, so it stays a listed English fallback).",
+    "'F-S1-006: the \"request sent\" page makes no promise of a reply by mail, in any language' passes, and so does 'F-S1-006: reopening the join page shows what the note says: waiting, approved, and nothing for a declined request': the note promises no visible answer, an approved request shows the access page, a declined one shows the request form.",
+    "'every mail that carries a link refuses an address that does not parse, and keeps one that does' and 'F-S1-010: an origin that makes an unopenable link mails nothing and answers 202 notified:false' pass.",
+    "'F-S1-010 + F-S1-017: inviting Tracy staff mails the /ops/invite link, HTML and text' passes for an invitee with and without an account: the provider payload carries <origin>/ops/invite/<workspace id> in text and as an href. The three link tests pass: signed out redirects to /login?next=<the link>; the invited account accepts its own pending grant and lands on /ops; another account gets the 'no longer open' page and the UPDATE is only ever for the caller's own account id.",
+    "The four 'F-S1-017: … with the HTML the builder wrote' tests pass: team invitation, join request (every admin), staff invitation and removal code reach the provider payload with html equal to the builder's html; a provider rejection keeps notified:false / 201 / 202 / 502 MAIL_NOT_SENT as before.",
+    "For both overlays/ and src/ of wp-ja-morgan: '\"send me a copy\" selects no recipient, however it is posted' passes (exactly one message, to admin_email); the honeypot, field, nonce and administrator-address tests refuse before wp_mail with no PHP warning; 'one client address sends 5 an hour; the next is refused' passes; forwarding headers do not change the bucket; a store that cannot be written refuses the message; a failed wp_mail is reported as error-send; 'a request left over from the hour before cannot clear or reopen this hour’s places' passes for the Contact and Quick Contact handlers.",
+    "Not covered by this case: PostgreSQL (the database is a fixture that answers listed statements only), a real browser or mail client, a real mail provider, WordPress itself and its database (stubbed functions; add_option's real insert, the clean-up DELETE on MySQL, PHP's clock and two concurrent requests are not exercised), what a reverse proxy puts in REMOTE_ADDR, and the mail palette (F-S1-025, not changed)."
+  ],
+  "selectors": {
+    "policy": "CODE_TTL_MS and CODE_TTL_MINUTES in apps/tracy-web/src/lib/policy.js",
+    "staff_link": "staffInviteUrl in apps/tracy-web/src/lib/team-invite.js; door GET /ops/invite/:token",
+    "contact_handler": "wp_ja_morgan_handle_contact and wp_ja_morgan_contact_reserve in packages/cms/tracy-wordpress-theme/overlays/wp-ja-morgan/inc/groups/account.php",
+    "honeypot": "input[name=\"jform[contact_url]\"] in patterns/contact-form.php"
+  },
+  "evidence": "Issue #794 (QA audit, re-verified on develop f9c734938). On base 811108bd2 the same three runs are red by assertion: web 25 of 63 (one of them only because the base still answers 405 to a signed-in GET of the join page, which #843 made 200), Morgan 32 of 39, gateway 1 of 3. On the earlier wording of this branch ('If you already have a code … it still works until it expires') the eight rate-limit tests are red by assertion, 8 of 63: a first code replaced by a second one met every stated condition and was still rejected. The login page said 'a few minutes', the mail '10 minutes', the lane page 'one hour'; four send sites passed {to, subject, text} and dropped the built HTML; the staff invitation named no address; the Morgan handler called wp_mail a second time with the posted address when contact_email_copy was set, and died with a TypeError on a non-string field.",
+  "fence": "Pure renderers and the real routers over a statement-listing database fixture and the real Resend transport with fetch recorded; the real PHP handler and pattern over stubbed WordPress functions with a file-backed option store. Not exercised: PostgreSQL, a browser, a mail provider, a WordPress database, proxy-set client addresses. F-S1-025 (mail palette) is left for the brand owner.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-038.mjs"]
+  }
+}

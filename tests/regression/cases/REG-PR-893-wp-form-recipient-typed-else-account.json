@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-893-wp-form-recipient-typed-else-account",
+  "kind": "fix",
+  "title": "WordPress Apply: a form mails the typed email, else the account that pressed Apply, never Tracy’s site admin mailbox",
+  "pr": 893,
+  "area": "sites/apply/wordpress",
+  "cms": ["wp"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-wordpress.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"every published form mails the address the owner gave, the ones a page shows and the ones none does, and nothing else of their mail changes\"; \"with no mailbox typed, every published form mails the account of the person who pressed Apply, and no page shows it\"; \"with no mailbox typed and no account mailbox known, no form has its mail changed\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 61).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): every published Contact Form 7 form's _mail recipient becomes the typed address, else the account email of the person who pressed Apply (shown on no page), and nothing else of its mail changes; with neither known no form's mail is changed."
+  ],
+  "selectors": {
+    "sweep": "mailTo in apps/tracy-web/src/sites/brief-engines/wp-forms.js; `to: ctx.normalized.email || ctx.email` in wordpress.js",
+    "form": "Contact Form 7 _mail.recipient"
+  },
+  "evidence": "Ledger L05 (WordPress part), 05/10/2026: with no email typed every Contact Form 7 form kept [_site_admin_email], which on a site Tracy installs is tracy-agent@tracy.ai: a visitor's message reached nobody who runs the business. Red b8ab012fa, fix 295349016; guard of the last case 18ca3d03d.",
+  "fence": "The account mailbox is a recipient only, shown on no page; a typed email always wins.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-wordpress.test.mjs"],
+    "tests": [
+      "every published form mails the address the owner gave, the ones a page shows and the ones none does, and nothing else of their mail changes",
+      "with no mailbox typed, every published form mails the account of the person who pressed Apply, and no page shows it",
+      "with no mailbox typed and no account mailbox known, no form has its mail changed"
+    ]
+  }
+}

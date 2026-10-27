@@ -1,0 +1,99 @@
+---
+// One writer's page body: profile card beside their posts, paginated.
+import Avatar from './Avatar.astro'
+import Pagination from './Pagination.astro'
+import PostCard from './PostCard.astro'
+import type { Locale } from '@/lib/i18n'
+import type { Author, Post } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import { ui } from '@/lib/ui'
+import { fillWords, uiCount } from '@/lib/ui-words'
+
+interface Props {
+  writer: Author
+  posts: Post[]
+  locale: Locale
+  page: number
+  pages: number
+  url: (n: number) => string
+}
+const { writer, posts, locale, page, pages, url } = Astro.props
+const { tag, w } = ui(locale)
+const count = uiCount(tag, w.articles, writer.count)
+// Provenance stamps of the writers entry's fields (`src/lib/stamps.ts`); none for a bare byline and on
+// an ordinary request. The meta line joins the role with a count, so it is not one field's value.
+const $w = stampFor(Astro.request, 'writers', writer.entry)
+---
+
+<section class="ap">
+	<div class="k-container grid">
+		<aside class="profile">
+			<Avatar name={writer.name} src={writer.avatar} size={88} />
+			<h2 class="name" {...$w('name')}>{writer.name}</h2>
+			<p class="meta">{[writer.role, count].filter(Boolean).join(' · ')}</p>
+			{writer.bio && <p class="bio" {...$w('bio')}>{writer.bio}</p>}
+		</aside>
+		<div class="list">
+			{posts.map((p) => <PostCard post={p} locale={locale} variant="author" />)}
+			<Pagination page={page} pages={pages} url={url} counter={fillWords(w.pageOf, { page, pages })} locale={locale} />
+		</div>
+	</div>
+</section>
+
+<style>
+	.ap {
+		padding: 56px 0 72px;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: 300px minmax(0, 1fr);
+		gap: 40px;
+		align-items: start;
+	}
+	.profile {
+		position: sticky;
+		top: 96px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 28px;
+		text-align: center;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 16px;
+	}
+	.name {
+		margin: 16px 0 4px;
+		font-family: var(--font-heading);
+		font-size: 19px;
+		line-height: 1.5;
+		font-weight: 700;
+		color: var(--k-heading);
+	}
+	.meta {
+		margin: 0;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		line-height: 1.55;
+		color: var(--k-muted);
+	}
+	.bio {
+		margin: 14px 0 0;
+		font-size: 14px;
+		line-height: 1.57;
+		color: var(--k-text);
+	}
+	.list {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+	}
+	@media (max-width: 991px) {
+		.grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.profile {
+			position: static;
+		}
+	}
+</style>

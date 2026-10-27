@@ -1,0 +1,66 @@
+{
+  "id": "REG-PR-1134-design-system-button",
+  "kind": "feat",
+  "title": "The site browser's Design system button applies a gate-passing design system to a running EmDash, WordPress or Joomla site, records it, and Undo puts back exactly what the site wore before; a viewer and a template without a slot contract are refused before anything is written",
+  "pr": 1134,
+  "area": "design-system/apply",
+  "cms": ["em", "wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/design-system-door.test.mjs apps/tracy-host/test/ds-slot.test.mjs scripts/test/tracy-web-ds-slot-image.test.mjs packages/design/tracy-design-inspiration/test/design-system-button.test.mjs",
+    "S2: Read the result of each test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'emdash: apply puts the system on, records it, and undo puts the template's own look back', and the same for wordpress and joomla, pass.",
+    "'undo of the second apply brings the first system back, not \"none\"' and 'a site changed since the apply is not overwritten by undo' pass.",
+    "'a viewer reads but cannot apply or undo, and nothing reaches the host' and 'a template with no slot contract is refused before anything is written' pass.",
+    "'EmDash: apply writes the sheet, keeps what was there, undo puts it back exactly' passes (the host script run for real against a file).",
+    "'the emitters load and emit for every CMS from the image layout alone' passes.",
+    "'a press for the page's site opens its tab; a press for another site opens nothing', 'the toolbar is never told to draw a Design system button' and 'the operator's switch off: a press opens nothing' pass (since 12/10/2026 the toolbar no longer draws its own Design system button: it was removed on feat/design-system-ui; a press event for this site still opens only this site's tab, and the operator's switch off still opens nothing).",
+    "'contractFor judges the site’s release against the contract’s minVersion', 'every ready contract names the releases it wears (minVersion), keyed as the site reports them', 'Joomla built from an older quickstart: the panel says why, Apply is refused, nothing is written', 'WordPress on an older theme: the hinted write checks the version in its own run and writes nothing' and 'a site whose release is not known (no quickstart version on its row) is never guessed ready' pass.",
+    "'WordPress: the read says the running theme’s version (still one php run); an apply checks minTheme in its run' and 'a template release outside its contract: Try on off, and nothing said for it' pass (since 12/10/2026 the tab no longer says version reasons or release numbers to the customer: Apply/Try on stays off for TEMPLATE_NEEDS_UPDATE, TEMPLATE_VERSION_UNCHECKED and TEMPLATE_VERSION_UNKNOWN, a viewer is still told ds.viewer)."
+  ],
+  "selectors": {
+    "doorRead": "GET /api/sites/:key/design-system -> {worn, template, supported, reason?, canApply, last, refused}",
+    "doorWrite": "POST /api/sites/:key/design-system {id} -> {ok, applyId, worn, previous, seen}; POST /api/sites/:key/design-system/undo {applyId}",
+    "hostJob": "POST /_host/site {kind: 'site-ds-slot', mode: read|apply|undo, platform}",
+    "toolbarEvents": "tracy:design-system-toolbar-state / tracy:design-system-toolbar-press",
+    "switch": "toolbar-design-system (packages/core/tracy-core/src/ui-switches/catalogue.json)"
+  },
+  "evidence": "tasks/evidence/design-system-button-2026-10-11/README.md (stand run: apply, chat edits, second system, undo, per CMS)",
+  "fence": "The door's toolset gate, write lease, template-to-contract rule and newest-only undo; the host job's compare-and-set restore; the image layout the door loads the emitters from. No model, no Postgres, no Docker except the EmDash script run with node against a temporary file. The contract's minVersion rule: Joomla/EmDash judged by the site's quickstart release, WordPress by the running theme's Version read in the same run.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/design-system-door.test.mjs",
+      "apps/tracy-host/test/ds-slot.test.mjs",
+      "scripts/test/tracy-web-ds-slot-image.test.mjs",
+      "packages/design/tracy-design-inspiration/test/design-system-button.test.mjs"
+    ],
+    "tests": [
+      "emdash: apply puts the system on, records it, and undo puts the template's own look back",
+      "wordpress: apply puts the system on, records it, and undo puts the template's own look back",
+      "joomla: apply puts the system on, records it, and undo puts the template's own look back",
+      "undo of the second apply brings the first system back",
+      "a site changed since the apply is not overwritten by undo",
+      "a viewer reads but cannot apply or undo, and nothing reaches the host",
+      "a template with no slot contract is refused before anything is written",
+      "EmDash: apply writes the sheet, keeps what was there, undo puts it back exactly",
+      "the emitters load and emit for every CMS from the image layout alone",
+      "a press for the page's site opens its tab; a press for another site opens nothing",
+      "the toolbar is never told to draw a Design system button",
+      "the operator's switch off: a press opens nothing",
+      "contractFor judges the site’s release against the contract’s minVersion",
+      "every ready contract names the releases it wears (minVersion)",
+      "Joomla built from an older quickstart",
+      "WordPress on an older theme",
+      "a site whose release is not known",
+      "WordPress: the read says the running theme’s version",
+      "a template release outside its contract: Try on off"
+    ]
+  }
+}

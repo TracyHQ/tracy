@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1128-g58-fixes-released",
+  "kind": "fix",
+  "title": "The g58 round of the seven questions holds on JA Essence Joomla/WordPress and Tracy EmDash, and ships with its releases: Claude Cowork for Joomla 0.24.11, Tracy Business EmDash 1.7.7, Tracy SaaS EmDash 1.4.4 pinned, contract ja-essence/wp7/1.0.12 for theme 1.0.12",
+  "pr": 1128,
+  "area": "sites/brief",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test the round's tests: apps/tracy-web/test/{joomla-site-words,joomla-article-titles,joomla-button-labels,joomla-kit-pages,brief-joomla,brief-wordpress,brief-wp-posts,brief-wp-leaves,brief-emdash}.test.mjs; packages/cms/tracy-wordpress-theme/test/essence.test.mjs; the EmDash Business (personalize-kit-pictures, personalize-trim, page-gate, empty-claims), SaaS and Base personalize-facts tests.",
+    "S2: read both quickstarts.json: every Joomla pin's Claude Cowork version, and the tracy-business/emdash and tracy-saas/emdash entries.",
+    "S3: read packages/cms/tracy-wordpress-quickstart/contracts/ja-essence/wp7/1.0.12/{manifest,presentation-lock}.json and the quickstart/ja-essence/wp7 1.0.12 row of template-profiles.json."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped or cancelled.",
+    "S2: every Joomla pin on Claude Cowork 0.24.11; tracy-business/emdash 1.7.7 and tracy-saas/emdash 1.4.4, source and state files named for that version with a GitHub asset id.",
+    "S3: contract id ja-essence/wp7/1.0.12, quickstart version 1.0.12, the lock pins inc/words.php and style.css of theme 1.0.12; the profile row says logos pair, brandReady."
+  ],
+  "selectors": {
+    "tests": "tests/regression/scripts/REG-PR-1128-g58-fixes-released.mjs",
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-11-tcqr-g58-fixes.md",
+  "fence": "The brief engines' language and template-word rules of the g58 round, and the releases this repository pins for them.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1128-g58-fixes-released.mjs"],
+    "needs": []
+  }
+}

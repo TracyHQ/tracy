@@ -1,0 +1,39 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#f2edde",
+      "$type": "color",
+      "$description": "Bone — Primary canvas, page background, footer surface — warm off-white that reads as paper, not screen"
+    },
+    "rust": {
+      "$value": "#af6446",
+      "$type": "color",
+      "$description": "Rust — Full-bleed section panels, footer band — terracotta accent that anchors the page in earthy materiality"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — All text, image borders, hairline rules — pure black for maximum contrast against bone"
+    }
+  },
+  "font": {
+    "scto-grotesk-a": {
+      "$value": "Scto Grotesk A",
+      "$type": "fontFamily",
+      "$description": "Display and heading type. Weight 500 at ~60px for monumental section labels (MANNA, ABOUT) that anchor the bottom of the viewport; weight 300 for softer subheadings. The geometric grotesk proportions with high x-height give the display words architectural weight without becoming decorative."
+    },
+    "merlo": {
+      "$value": "Merlo",
+      "$type": "fontFamily",
+      "$description": "Body text, image captions, running copy. The humanist warmth of Merlo softens the grotesk display type and reads as editorial annotation — the voice of the architect narrating over the work. 26px for intro paragraphs, 16px for captions and metadata."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.mannaarchitects.com",
+      "siteName": "MANNA",
+      "extractedAt": "2026-06-03T20:42:05.874Z",
+      "variant": "compact"
+    }
+  }
+}

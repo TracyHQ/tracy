@@ -1,0 +1,59 @@
+{
+  "styles": {
+    "css": "/* wp-ja-impact: dark mode. The source (JA Impact, Joomla 6 T4) follows the OS until the visitor picks: its head script sets html[data-theme] from the ja_impact-theme cookie, else the default `auto` (prefers-color-scheme); the .t4-theme-toggle button switches it (css/darkmode.css, js/darkmode.js). Here every colour preset carries both halves through light-dark(): light = tokens.css (measured on the running source), dark = the source's --dm-* block (css/darkmode.css: bg #111a2c, surface #1e2a45, hover #28354f, band #141d33, border #33415e, text #c2c9d6, muted #8c97a8, heading #eef1f6; the primary navy and the green accent are kept as in the source), each read back as computed style in the design contract (desktop-dark). No attribute = auto, the OS decides; assets/js/wp-ja-impact-dark.js writes data-theme light|dark from the tracy_theme cookie before the first paint. */ :root{color-scheme:light dark;--wp--preset--color--bg:light-dark(var(--ds-c-bg, #ffffff),var(--ds-c-bg, #111a2c));--wp--preset--color--surface:light-dark(var(--ds-c-surface, #fbfbfb),var(--ds-c-surface, #1e2a45));--wp--preset--color--surface-warm:light-dark(var(--ds-c-surface-warm, #fff9ef),var(--ds-c-surface-warm, #141d33));--wp--preset--color--fg:light-dark(var(--ds-c-fg, #495057),var(--ds-c-fg, #c2c9d6));--wp--preset--color--fg-2:light-dark(var(--ds-c-heading, #1d3677),var(--ds-c-heading, #eef1f6));--wp--preset--color--muted:light-dark(var(--ds-c-muted, #6c757d),var(--ds-c-muted, #8c97a8));--wp--preset--color--meta:light-dark(var(--ds-c-meta, #6c757d),var(--ds-c-meta, #8c97a8));--wp--preset--color--border:light-dark(var(--ds-c-border, #e9ecef),var(--ds-c-border, #33415e));--wp--preset--color--border-soft:light-dark(var(--ds-c-border-soft, #e8e8ed),var(--ds-c-border-soft, #33415e));--wp--preset--color--accent:light-dark(var(--ds-c-accent, #0cb76d),var(--ds-c-accent, #0cb76d));--wp--preset--color--accent-on:light-dark(var(--ds-c-accent-on, #ffffff),var(--ds-c-accent-on, #ffffff));--wp--preset--color--accent-hover:light-dark(var(--ds-c-accent-hover, #0cb76d),var(--ds-c-accent-hover, #0cb76d));--wp--preset--color--accent-active:light-dark(var(--ds-c-accent-active, #0cb76d),var(--ds-c-accent-active, #0cb76d));--wp--preset--color--success:light-dark(var(--ds-c-success, #0cb76d),var(--ds-c-success, #0cb76d));--wp--preset--color--warn:light-dark(var(--ds-c-warn, #f48a29),var(--ds-c-warn, #f48a29));--wp--preset--color--danger:light-dark(var(--ds-c-danger, #dc3545),var(--ds-c-danger, #dc3545));}:root[data-theme=\"light\"]{color-scheme:light}:root[data-theme=\"dark\"]{color-scheme:dark}"
+  },
+  "customTemplates": [
+    {
+      "name": "page-landing",
+      "title": "Landing (sections, masthead)",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-contact",
+      "title": "Contact",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-login",
+      "title": "Sign-in form",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-register",
+      "title": "Registration form",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-account",
+      "title": "Account (visitors are sent to the sign-in page)",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-password",
+      "title": "Password reset and username reminder",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-no-sidebar",
+      "title": "Listing without sidebar",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-sidebar-left",
+      "title": "Listing with sidebar",
+      "postTypes": ["page"]
+    }
+  ],
+  "templateParts": [
+    {
+      "name": "header",
+      "title": "Header",
+      "area": "header"
+    },
+    {
+      "name": "footer",
+      "title": "Footer",
+      "area": "footer"
+    }
+  ]
+}

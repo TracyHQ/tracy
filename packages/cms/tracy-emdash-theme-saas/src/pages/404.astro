@@ -1,0 +1,13 @@
+---
+/**
+ * Astro's own not-found page. The catch-all router already answers 404 for unknown paths, but the
+ * literal `/404` URL is claimed by Astro's 404 convention before the catch-all runs.
+ */
+export const prerender = false
+import { loadChrome } from '@/lib/chrome'
+import NotFound from '@/views/NotFound.astro'
+const chrome = await loadChrome('en')
+Astro.response.status = 404
+---
+
+<NotFound chrome={chrome} locale="en" path="/404" />

@@ -1,0 +1,30 @@
+{
+  "id": "QA-STATIC-dsh-tokens-happy",
+  "itemIds": ["gate:dsh-tokens"],
+  "requirement": "Gate dsh-tokens (scripts/check-dsh-tokens.ts) exits 0 on the current tree and goes red on a tree that breaks the rule it enforces.",
+  "oracle": {
+    "source": "scripts/check-dsh-tokens.ts",
+    "ref": "header comment",
+    "invariant": "The tree satisfies the rule stated in the header comment of scripts/check-dsh-tokens.ts; the gate exits 0 only then.",
+    "productSources": ["scripts/check-all.ts:134", "scripts/check-dsh-tokens.ts:19"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["node", "tsx (node_modules)"],
+  "assertionIds": ["static.dsh-tokens.exit-0"],
+  "redProof": null,
+  "legacyIds": [],
+  "gate": "dsh-tokens",
+  "command": ["pnpm", "exec", "tsx", "scripts/check-all.ts", "--only", "dsh-tokens"],
+  "successMarker": "check-all: 1 gate(s) passed",
+  "gateScript": "scripts/check-dsh-tokens.ts",
+  "mode": "run",
+  "mutations": []
+}

@@ -1,0 +1,30 @@
+{
+  "id": "QA-STATIC-wordpress-demo-trim-happy",
+  "itemIds": ["gate:wordpress-demo-trim"],
+  "requirement": "Gate wordpress-demo-trim (scripts/build-wordpress-demo-trim.mjs --check) exits 0 on the current tree and goes red on a tree that breaks the rule it enforces.",
+  "oracle": {
+    "source": "scripts/build-wordpress-demo-trim.mjs",
+    "ref": "header comment",
+    "invariant": "The tree satisfies the rule stated in the header comment of scripts/build-wordpress-demo-trim.mjs; the gate exits 0 only then.",
+    "productSources": ["scripts/check-all.ts:215", "scripts/build-wordpress-demo-trim.mjs:19"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["node", "tsx (node_modules)"],
+  "assertionIds": ["static.wordpress-demo-trim.exit-0"],
+  "redProof": null,
+  "legacyIds": [],
+  "gate": "wordpress-demo-trim",
+  "command": ["pnpm", "exec", "tsx", "scripts/check-all.ts", "--only", "wordpress-demo-trim"],
+  "successMarker": "check-all: 1 gate(s) passed",
+  "gateScript": "scripts/build-wordpress-demo-trim.mjs",
+  "mode": "run",
+  "mutations": []
+}

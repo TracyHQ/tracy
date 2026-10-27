@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+  "status": "complete",
+  "name": "Peggy",
+  "url": "https://styles.refero.design/style/0ed4e85f-f3e9-438c-bc34-2a726863c602",
+  "sourceWebsite": "https://peggy.com/royalties",
+  "extractedAt": "2026-06-03T21:31:50.529Z",
+  "capturedAt": "2026-10-08T05:08:15.905412+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "monochrome art gallery on a winter morning — the only color comes from the work on the walls",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/2a6ca652-52ea-4179-8c73-54d1d30b2061.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "fef59e06cbe46b41264ab4bc12c84f6d32410a018d115e7210471747fd87ab73",
+      "bytes": 21348
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "11d6116af692c1b5a12fcf8cd14d9897ba85a2b7abe021f88680a04b1a258c2f",
+      "bytes": 111321
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "fa8bc3675dd5d28df484ff57c6673fb5870c27b170adc9c6504abf5d19c0ffac",
+      "bytes": 18015
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "faee91f978f3b329bfbe10bead51fef74794510cbfa7dcd50390b979e48c53f5",
+      "bytes": 8185
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b4cfff5afd678c273697680e54e0b4b46eb4e27fd8a4e04193df9feea84fee98",
+      "bytes": 14302
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e4971bd4cf8f442e7554a23bae81b2c4f2ffb1db938e8337d6d9adc1ede80224",
+      "bytes": 2871
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3a4174aa7cd586f7ebaaed3a2af1489a27978c7dbdb398ab504754ab9483d69b",
+      "bytes": 605
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e0fea04d9e88c08490ecd95bc64e8171ca35132fe4bf2275676eb0ed980f89c1",
+      "bytes": 622
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b464fb658437f0bd52e3ec6ebbe60c8ca28cd4690b7528d342a0274a8820b956",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "42dcb9b35f8c7a468bc20f61b27ad66e113a6b65b404bf13800ef008e8bf15dc",
+      "bytes": 43059
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ef8c5ae200f0b069454ce765716a45082c6a519ed62419adeff70b358f6c2418",
+      "bytes": 21857
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "24feacac90a3a38cf9a4b886803fb73251b03daf0ee37d24453977535871715f",
+      "bytes": 38730
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "748c3f8a02b35a1f884ef00c28b62805fb31b3e61f3260bca9bd42c4be29f4ea",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "43f8cf7563817122538a66bc3afe62f69f337b2809c00c7583cc424a7ef39fa3",
+      "bytes": 1335
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4102112436dc72e420c923af8f6aee5e25e9c79321e685f7dc98690679e5dc62",
+      "bytes": 1840
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "36ab47c3-3d47-42a5-af2e-1760bc348bcd",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "3c605c8e-daf2-4d46-94d7-2cb705a93b7b",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "667c59e3-aaba-46e8-a2b3-255254328b6e",
+    "6c0b77d3-71f9-469d-98aa-4ce1d6d76ac8",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "d7096101-d33c-43b8-8b0b-d9dfff802db2",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268"
+  ]
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <layout title="TPL_TRACY_LAYOUT_ARTIFACT" option="TPL_TRACY_LAYOUT_ARTIFACT_OPTION">
+        <message>TPL_TRACY_LAYOUT_ARTIFACT_DESC</message>
+    </layout>
+    <fields name="attribs">
+        <fieldset name="tracy_artifact" label="TPL_TRACY_LAYOUT_ARTIFACT">
+            <field name="tracy_artifact" type="list" label="TPL_TRACY_ARTIFACT_KIND" default="landing">
+                <option value="landing">Landing</option>
+                <option value="form">Form</option>
+                <option value="typography">Typography</option>
+            </field>
+        </fieldset>
+    </fields>
+</metadata>

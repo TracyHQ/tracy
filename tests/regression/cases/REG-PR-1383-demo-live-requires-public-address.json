@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1383-demo-live-requires-public-address",
+  "kind": "fix",
+  "title": "A demo whose public name does not reach tracy-web is not reported live: the install fails ADDRESS_SHADOWED",
+  "pr": 1383,
+  "area": "ops/demos",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test apps/tracy-web/test/demo-address-shadowed.test.mjs (no Postgres needed): advanceDemo on a provision the host reports done, on this process's own host, with a network that answers the probe with 502.",
+    "S2: Same, with a network that echoes the x-tracy-address-probe token.",
+    "S3: Same file: GET /__tracy/address-probe with the probe header on a demo's label through barRoutes."
+  ],
+  "expect": [
+    "S1: view.error is ADDRESS_SHADOWED, state failed, no update sets publish = 'published', the job is written failed at step address and failureReason reads the 'does not reach Tracy' message.",
+    "S2: the demo is marked live.",
+    "S3: 200, body equal to the token, cache-control no-store."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/lib/demo-sites.js (advanceDemo), apps/tracy-web/src/lib/address-probe.js, apps/tracy-web/src/bar/route.js",
+    "tool": "apps/tracy-web/test/demo-address-shadowed.test.mjs"
+  },
+  "evidence": "15/10/2026: business-joomla.tracy.ai and business-emdash.tracy.ai answered Cloudflare 502 on every path (stale DNS + tunnel 91b557ed rules outranking *.tracy.ai) while the /ops reinstall of tracy-business/j6 reported the demo live",
+  "fence": "advanceDemo requires tracy-web's echo of a fresh token on the demo's public name before markDemoLive",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/demo-address-shadowed.test.mjs"]
+  }
+}

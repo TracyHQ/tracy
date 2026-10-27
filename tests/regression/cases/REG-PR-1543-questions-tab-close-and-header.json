@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1543-questions-tab-close-and-header",
+  "kind": "feat",
+  "title": "Questions tab closes once its question is answered and the previous tab comes back; chat header stays one line when narrow",
+  "pr": 1543,
+  "area": "ask-form/questions-tab",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the ask-form controller tests: an answered request closes only its own session's Questions tab in dsh's column and focuses the tab that was active before it opened; a request of another session leaves this session's tabs alone.",
+    "S2: Run the header layout e2e of tracy-model-plan: the real dsh header with the job control and model chip at 800/400/300/220px in light and dark, with 1 and 12 jobs."
+  ],
+  "expect": [
+    "S1: all ask-form tests pass, including the two close-and-return cases.",
+    "S2: the job control is one line (height <= 32px) at every width, shows a count badge at 400px and below, and the model chip truncates at 300px and hides only at 220px."
+  ],
+  "selectors": {
+    "files": "packages/ui/tracy-ask-form/test/ask-state.test.mjs, packages/ui/tracy-model-plan/test/e2e/header-layout.test.mjs",
+    "attributes": "data-tracy-job-count, data-model-chip, data-ask-variant=list"
+  },
+  "evidence": "21/10/2026 local cluster: the Questions tab stayed open after Send answer; the narrow header wrapped '1 background job' one word per line",
+  "fence": "The ask controller's close-and-return on a settled request, and the header CSS container queries measured in Chromium",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=60000",
+      "packages/ui/tracy-ask-form/test/ask-state.test.mjs",
+      "packages/ui/tracy-model-plan/test/e2e/header-layout.test.mjs"
+    ]
+  }
+}

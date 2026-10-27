@@ -1,0 +1,1818 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracy:content:v1",
+  "title": "Tracy Content API v1 (pre-release) with describe, pages and changes documents",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/envelope"
+    },
+    {
+      "$ref": "#/$defs/describe"
+    },
+    {
+      "$ref": "#/$defs/pages"
+    },
+    {
+      "$ref": "#/$defs/notModified"
+    },
+    {
+      "$ref": "#/$defs/changes"
+    },
+    {
+      "$ref": "#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "pagination": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "budget": {
+          "type": "integer",
+          "minimum": 8192,
+          "maximum": 262144
+        },
+        "nextCursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "total": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": ["limit", "nextCursor", "total"]
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "self": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["self"]
+    },
+    "writable": {
+      "type": ["boolean", "null"]
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "maxCharacters": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "requiresEvidence": {
+          "type": ["boolean", "null"]
+        },
+        "emptyAllowed": {
+          "type": ["boolean", "null"]
+        }
+      },
+      "required": ["maxCharacters", "requiresEvidence", "emptyAllowed"]
+    },
+    "next": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "const": "tracy_site"
+            },
+            "action": {
+              "const": "content.contract"
+            },
+            "operation": {
+              "const": "apply"
+            },
+            "changes": {
+              "type": "object"
+            }
+          },
+          "required": ["tool", "action", "operation", "changes"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "const": "tracy_emdash"
+            },
+            "action": {
+              "const": "content_update"
+            },
+            "arguments": {
+              "type": "object",
+              "properties": {
+                "collection": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "locale": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "data": {
+                  "type": "object"
+                },
+                "status": {
+                  "const": "published"
+                }
+              },
+              "required": ["collection", "id", "locale", "data", "status"]
+            }
+          },
+          "required": ["tool", "action", "arguments"]
+        }
+      ]
+    },
+    "whereEntry": {
+      "type": "object",
+      "properties": {
+        "what": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "where": {
+          "type": "object"
+        },
+        "door": {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "enum": ["tracy_site", "tracy_emdash", "edit", "bash"]
+            },
+            "call": {
+              "type": "object"
+            },
+            "then": {
+              "type": "object"
+            }
+          },
+          "required": ["tool", "call"]
+        },
+        "toolset": {
+          "anyOf": [
+            {
+              "enum": ["content", "code", "site"]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "languages": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": ["what", "where", "door", "toolset", "languages"]
+    },
+    "whereTopic": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "$ref": "#/$defs/whereEntry"
+      }
+    },
+    "protocol": {
+      "type": "object",
+      "properties": {
+        "selected": {
+          "const": "tracy-content/v1"
+        },
+        "relayExtensions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "cowork": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": ["joomla", "wordpress", "emdash"]
+            },
+            "capability": {
+              "enum": ["v1", "unsupported"]
+            }
+          },
+          "required": ["kind", "capability"]
+        }
+      },
+      "required": ["selected", "relayExtensions", "cowork"]
+    },
+    "fieldType": {
+      "enum": ["text", "html", "url", "image", "number", "boolean", "json"]
+    },
+    "field": {
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "type": {
+                  "enum": ["text", "html", "url", "image"]
+                },
+                "value": {
+                  "type": ["string", "null"]
+                },
+                "slotKey": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "semanticKey": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": ["key", "type", "value", "slotKey", "semanticKey"]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "type": {
+                  "enum": ["number"]
+                },
+                "value": {
+                  "type": ["number", "null"]
+                },
+                "slotKey": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "semanticKey": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": ["key", "type", "value", "slotKey", "semanticKey"]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "type": {
+                  "enum": ["boolean"]
+                },
+                "value": {
+                  "type": ["boolean", "null"]
+                },
+                "slotKey": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "semanticKey": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": ["key", "type", "value", "slotKey", "semanticKey"]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "type": {
+                  "enum": ["json"]
+                },
+                "value": {},
+                "slotKey": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "semanticKey": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": ["key", "type", "value", "slotKey", "semanticKey"]
+            }
+          ]
+        },
+        {
+          "properties": {
+            "writable": {
+              "$ref": "#/$defs/writable"
+            },
+            "constraints": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/constraints"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "next": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/next"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "item": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "contentId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": ["id", "position", "fields", "contentId"]
+    },
+    "block": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": ["string", "null"]
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sharedContentId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "visibility": {
+          "enum": ["visible", "hidden", "unknown"]
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/item"
+          }
+        },
+        "itemsPagination": {
+          "$ref": "#/$defs/pagination"
+        },
+        "writable": {
+          "$ref": "#/$defs/writable"
+        }
+      },
+      "required": ["id", "key", "role", "position", "sharedContentId", "visibility", "fields", "items"],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "sharedContentId": {
+                "type": "string"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "fields": {
+                "maxItems": 0
+              },
+              "items": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "usage": {
+      "type": "object",
+      "properties": {
+        "contentId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blockId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "itemId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": ["contentId", "blockId", "itemId"]
+    },
+    "media": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "src": {
+          "type": ["string", "null"]
+        },
+        "alt": {
+          "type": ["string", "null"]
+        },
+        "width": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "height": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "usages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/usage"
+          }
+        }
+      },
+      "required": ["id", "src", "alt", "width", "height", "usages"]
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": ["translation", "related", "parent", "child"]
+        },
+        "contentId": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["type", "contentId"]
+    },
+    "content": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": ["page", "article", "service", "project", "shared", "generic"]
+        },
+        "title": {
+          "type": ["string", "null"]
+        },
+        "slug": {
+          "type": ["string", "null"]
+        },
+        "url": {
+          "type": ["string", "null"]
+        },
+        "locale": {
+          "type": ["string", "null"]
+        },
+        "translationGroupId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "summary": {
+          "type": ["string", "null"]
+        },
+        "publishedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updatedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detailState": {
+          "enum": ["summary", "complete", "partial"]
+        },
+        "links": {
+          "$ref": "#/$defs/links"
+        },
+        "bodyHtml": {
+          "type": ["string", "null"]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/block"
+          }
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/media"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relation"
+          }
+        },
+        "blocksPagination": {
+          "$ref": "#/$defs/pagination"
+        },
+        "publication": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "enum": ["published", "draft", "scheduled", "private", "archived", "unknown"]
+            },
+            "valueSource": {
+              "enum": ["published", "draft", "current", "unknown"]
+            },
+            "scheduledAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": ["status", "valueSource", "scheduledAt"]
+        },
+        "writable": {
+          "$ref": "#/$defs/writable"
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "truncatedFields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "blockId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "itemId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "key": {
+                "type": "string"
+              }
+            },
+            "required": ["key"]
+          }
+        },
+        "lockedBy": {
+          "$ref": "#/$defs/lockedBy"
+        },
+        "native": {
+          "$ref": "#/$defs/native"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "title",
+        "slug",
+        "url",
+        "locale",
+        "translationGroupId",
+        "summary",
+        "publishedAt",
+        "createdAt",
+        "updatedAt",
+        "revision",
+        "detailState",
+        "links",
+        "publication"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "detailState": {
+                "const": "complete"
+              }
+            }
+          },
+          "then": {
+            "required": ["bodyHtml", "tags", "fields", "blocks", "images", "relations"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "detailState": {
+                "const": "summary"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": ["bodyHtml"]
+                },
+                {
+                  "required": ["tags"]
+                },
+                {
+                  "required": ["fields"]
+                },
+                {
+                  "required": ["blocks"]
+                },
+                {
+                  "required": ["images"]
+                },
+                {
+                  "required": ["relations"]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "detailState": {
+                "const": "partial"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "links": {
+                "required": ["next"]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "issue": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["code", "message"]
+    },
+    "envelope": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "tracy-content/v1"
+        },
+        "view": {
+          "const": "authenticated"
+        },
+        "site": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "name": {
+              "type": ["string", "null"]
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1
+            },
+            "defaultLocale": {
+              "type": ["string", "null"]
+            },
+            "locales": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": ["id", "name", "url", "defaultLocale", "locales"]
+        },
+        "provenance": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "quickstartTag": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "quickstartVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "contractId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "contractHash": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": ["quickstartTag", "quickstartVersion", "contractId", "contractHash"]
+            }
+          ]
+        },
+        "snapshot": {
+          "type": "object",
+          "properties": {
+            "revision": {
+              "type": "string",
+              "minLength": 1
+            },
+            "readAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": ["revision", "readAt"]
+        },
+        "pagination": {
+          "$ref": "#/$defs/pagination"
+        },
+        "completeness": {
+          "type": "object",
+          "properties": {
+            "scope": {
+              "enum": ["mapped-content", "supported-content"]
+            },
+            "status": {
+              "enum": ["complete", "partial"]
+            },
+            "unresolved": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/issue"
+              }
+            }
+          },
+          "required": ["scope", "status", "unresolved"]
+        },
+        "contents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/content"
+          }
+        },
+        "protocol": {
+          "$ref": "#/$defs/protocol"
+        },
+        "projection": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "view",
+        "site",
+        "provenance",
+        "snapshot",
+        "pagination",
+        "completeness",
+        "contents"
+      ]
+    },
+    "describe": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "tracy-content-describe/v1"
+        },
+        "view": {
+          "const": "authenticated"
+        },
+        "site": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "name": {
+              "type": ["string", "null"]
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1
+            },
+            "defaultLocale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "locales": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": ["id", "name", "url", "defaultLocale", "locales"]
+        },
+        "provenance": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "quickstartTag": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "quickstartVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "contractId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "contractHash": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": ["quickstartTag", "quickstartVersion", "contractId", "contractHash"]
+            }
+          ]
+        },
+        "protocol": {
+          "$ref": "#/$defs/protocol"
+        },
+        "scope": {
+          "const": "published"
+        },
+        "i18n": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "const": "entity"
+            },
+            "defaultLocale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "locales": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "fallback": {
+              "type": "null"
+            }
+          },
+          "required": ["mode", "defaultLocale", "locales", "fallback"]
+        },
+        "presentation": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "enum": ["locked", "unlocked", "unknown"]
+            },
+            "reason": {
+              "type": ["string", "null"]
+            }
+          },
+          "required": ["state", "reason"]
+        },
+        "permissions": {
+          "type": "object",
+          "properties": {
+            "role": {
+              "enum": ["owner", "admin", "developer", "editor"]
+            },
+            "toolsets": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "boolean"
+                },
+                "code": {
+                  "type": "boolean"
+                },
+                "site": {
+                  "type": "boolean"
+                },
+                "lifecycle": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["content", "code", "site", "lifecycle"]
+            },
+            "read": {
+              "const": true
+            },
+            "apply": {
+              "type": "boolean"
+            },
+            "note": {
+              "type": "string"
+            }
+          },
+          "required": ["role", "toolsets", "read", "apply", "note"]
+        },
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": ["page", "article", "service", "project", "shared", "generic"]
+              },
+              "count": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "next": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "tool": {
+                        "const": "tracy_site"
+                      },
+                      "action": {
+                        "const": "content.read"
+                      },
+                      "params": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["type"]
+                      }
+                    },
+                    "required": ["tool", "action", "params"]
+                  }
+                ]
+              }
+            },
+            "required": ["type", "count"]
+          }
+        },
+        "blockKinds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "label": {
+                "type": ["string", "null"]
+              },
+              "root": {
+                "type": ["boolean", "null"]
+              },
+              "nestable": {
+                "type": ["boolean", "null"]
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "type": {
+                      "$ref": "#/$defs/fieldType"
+                    },
+                    "translatable": {
+                      "type": ["boolean", "null"]
+                    },
+                    "writable": {
+                      "$ref": "#/$defs/writable"
+                    },
+                    "constraints": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/constraints"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": ["key", "type", "translatable", "writable", "constraints"]
+                }
+              }
+            },
+            "required": ["kind", "label", "root", "nestable", "fields"]
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["name", "version"]
+          }
+        },
+        "guidance": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "links": {
+          "type": "object",
+          "properties": {
+            "read": {
+              "type": "string",
+              "minLength": 1
+            },
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["read", "schema"]
+        },
+        "where": {
+          "type": "object",
+          "properties": {
+            "quickstart": {
+              "type": "string",
+              "minLength": 1
+            },
+            "guidance": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "topics": {
+              "type": "object",
+              "properties": {
+                "seo": {
+                  "$ref": "#/$defs/whereTopic"
+                },
+                "design": {
+                  "$ref": "#/$defs/whereTopic"
+                },
+                "menus": {
+                  "$ref": "#/$defs/whereTopic"
+                },
+                "pages": {
+                  "$ref": "#/$defs/whereTopic"
+                },
+                "forms": {
+                  "$ref": "#/$defs/whereTopic"
+                },
+                "analytics": {
+                  "$ref": "#/$defs/whereTopic"
+                },
+                "robots": {
+                  "$ref": "#/$defs/whereTopic"
+                },
+                "redirects": {
+                  "$ref": "#/$defs/whereTopic"
+                },
+                "strings": {
+                  "$ref": "#/$defs/whereTopic"
+                }
+              }
+            }
+          },
+          "required": ["quickstart", "guidance", "topics"]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "view",
+        "site",
+        "provenance",
+        "protocol",
+        "scope",
+        "i18n",
+        "presentation",
+        "permissions",
+        "types",
+        "blockKinds",
+        "capabilities",
+        "guidance",
+        "links"
+      ]
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "enum": [
+                "CONTENT_BAD_QUERY",
+                "CONTENT_UNAUTHENTICATED",
+                "CONTENT_FORBIDDEN",
+                "CONTENT_NOT_FOUND",
+                "CONTENT_SOURCE_UNAVAILABLE",
+                "CONTENT_ADAPTER_UNSUPPORTED",
+                "CONTENT_SNAPSHOT_EXPIRED",
+                "CONTENT_FIELD_TOO_LARGE"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1
+            },
+            "field": {
+              "type": "object",
+              "properties": {
+                "contentId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "blockId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "itemId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": ["contentId", "blockId", "itemId", "key"]
+            },
+            "links": {
+              "type": "object",
+              "properties": {
+                "firstBlock": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": ["firstBlock"]
+            },
+            "snapshot": {
+              "type": "object",
+              "properties": {
+                "revision": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "readAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": ["revision", "readAt"]
+            }
+          },
+          "required": ["code", "message"],
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "code": {
+                    "const": "CONTENT_FIELD_TOO_LARGE"
+                  }
+                }
+              },
+              "then": {
+                "required": ["field"]
+              }
+            }
+          ]
+        }
+      },
+      "required": ["error"]
+    },
+    "pageRow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": ["page", "article", "service", "project", "shared", "generic"]
+        },
+        "title": {
+          "type": ["string", "null"]
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": ["string", "null"]
+        },
+        "locale": {
+          "type": ["string", "null"]
+        },
+        "translationGroupId": {
+          "type": ["string", "null"]
+        },
+        "alternates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "locale": {
+                "type": "string",
+                "minLength": 1
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["locale", "id"]
+          }
+        },
+        "status": {
+          "type": ["string", "null"]
+        },
+        "native": {
+          "$ref": "#/$defs/native"
+        }
+      },
+      "required": ["id", "type", "title", "url", "path", "locale", "translationGroupId", "status"]
+    },
+    "pages": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "tracy-content-pages/v1"
+        },
+        "site": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "name": {
+              "type": ["string", "null"]
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1
+            },
+            "defaultLocale": {
+              "type": ["string", "null"]
+            },
+            "locales": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": ["id", "name", "url", "defaultLocale", "locales"]
+        },
+        "link": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pageRow"
+          }
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next": {
+          "$ref": "#/$defs/readCall"
+        },
+        "later": {
+          "$ref": "#/$defs/readCall"
+        }
+      },
+      "required": ["schemaVersion", "site", "pages", "truncated"]
+    },
+    "readCall": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "const": "content.read"
+        },
+        "params": {
+          "type": "object"
+        },
+        "why": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["action", "params", "why"]
+    },
+    "notModified": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "tracy-content/v1"
+        },
+        "notModified": {
+          "const": true
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["schemaVersion", "notModified", "version"]
+    },
+    "changeRow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": ["page", "article", "service", "project", "shared", "generic"]
+        },
+        "title": {
+          "type": ["string", "null"]
+        },
+        "url": {
+          "type": ["string", "null"]
+        },
+        "locale": {
+          "type": ["string", "null"]
+        },
+        "revision": {
+          "type": ["string", "null"]
+        },
+        "updatedAt": {
+          "type": ["string", "null"]
+        },
+        "native": {
+          "$ref": "#/$defs/native"
+        }
+      },
+      "required": ["id", "type", "title", "url", "locale", "revision", "updatedAt"]
+    },
+    "changes": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "tracy-content-changes/v1"
+        },
+        "site": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "name": {
+              "type": ["string", "null"]
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1
+            },
+            "defaultLocale": {
+              "type": ["string", "null"]
+            },
+            "locales": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": ["id", "name", "url", "defaultLocale", "locales"]
+        },
+        "since": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "changed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/changeRow"
+          }
+        },
+        "removed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "truncated": {
+          "type": "boolean"
+        }
+      },
+      "required": ["schemaVersion", "site", "since", "version", "changed", "removed", "truncated"]
+    },
+    "lockedBy": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": ["admin-user", "seat"]
+            },
+            "name": {
+              "type": ["string", "null"]
+            },
+            "since": {
+              "type": ["string", "null"]
+            },
+            "until": {
+              "type": ["string", "null"]
+            }
+          },
+          "required": ["kind", "name", "since", "until"]
+        }
+      ]
+    },
+    "native": {
+      "title": "The CMS's own records this content is written through, in the kinds content.get, content.update and content.delete take (Joomla menuItem/article/module, WordPress post by id or templatePart by key, EmDash the collection). Empty when no single record is its own.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "minLength": 1
+          },
+          "id": {
+            "type": ["integer", "string"]
+          },
+          "key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["kind"],
+        "anyOf": [
+          {
+            "required": ["id"]
+          },
+          {
+            "required": ["key"]
+          }
+        ]
+      }
+    }
+  }
+}

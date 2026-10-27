@@ -1,0 +1,94 @@
+{
+  "color": {
+    "lime-volt": {
+      "$value": "#87ea5c",
+      "$type": "color",
+      "$description": "Lime Volt — Hero backgrounds, pill button fill, category tag backgrounds — the single most identifiable brand signal; vivid green against dark ink creates energy no fintech blue could achieve"
+    },
+    "forest-ink": {
+      "$value": "#083400",
+      "$type": "color",
+      "$description": "Forest Ink — Primary text, dark headlines on lime, nav links, icon fills — deep forest green instead of black keeps everything on-brand even at body size"
+    },
+    "volt-yellow": {
+      "$value": "#ffea4b",
+      "$type": "color",
+      "$description": "Volt Yellow — Accent headlines, decorative text color on dark backgrounds — electric yellow that pairs with deep burgundy for maximum punch"
+    },
+    "papaya": {
+      "$value": "#ffbd89",
+      "$type": "color",
+      "$description": "Papaya — Warm accent card backgrounds, decorative section highlights"
+    },
+    "cotton-candy": {
+      "$value": "#ffd5f0",
+      "$type": "color",
+      "$description": "Cotton Candy — Soft accent backgrounds, section highlights in the mosaic grid"
+    },
+    "aubergine-night": {
+      "$value": "#2a0831",
+      "$type": "color",
+      "$description": "Aubergine Night — Dark card backgrounds, high-contrast panels in the content grid — deep purple-black that isn't neutral"
+    },
+    "crimson-depth": {
+      "$value": "#370305",
+      "$type": "color",
+      "$description": "Crimson Depth — Dark editorial backgrounds, heading color on light panels — near-black red that reads as richly dark without being neutral"
+    },
+    "fog": {
+      "$value": "#58717a",
+      "$type": "color",
+      "$description": "Fog — Secondary body text, border colors, UI chrome"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Page backgrounds, card surfaces, section backgrounds between color blocks"
+    },
+    "positive": {
+      "$value": "#008026",
+      "$type": "color",
+      "$description": "Positive — Success states, positive transaction indicators"
+    },
+    "negative": {
+      "$value": "#cf2929",
+      "$type": "color",
+      "$description": "Negative — Error states, negative transaction indicators"
+    },
+    "accent-blue": {
+      "$value": "#0097c7",
+      "$type": "color",
+      "$description": "Accent Blue — Interactive accent links, focus states"
+    },
+    "warning": {
+      "$value": "#9a6500",
+      "$type": "color",
+      "$description": "Warning — Warning states, attention-needed transaction labels"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All UI text: nav links, body copy, subheadings, and medium display text. Weight 400 for body, 600 for subheadings and labels. The 'ss01' feature setting and negative letter-spacing at large sizes (-0.03em at 72px down to -0.005em at 22px) keep it tight without feeling condensed."
+    },
+    "wise-sans": {
+      "$value": "Wise Sans",
+      "$type": "fontFamily",
+      "$description": "Hero and section display headlines exclusively. Weight 900 at 0.85 line-height is the defining typographic move — lines of text stack so tightly the cap-height of one line nearly touches the descender zone of the line above, creating billboard-compressed stacked type. This is the visual signature of the design system."
+    },
+    "zen-kaku-gothic-new": {
+      "$value": "Zen Kaku Gothic New",
+      "$type": "fontFamily",
+      "$description": "Single-use mega-display for CJK character showcase — demonstrates multilingual typographic range of the system"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://wise.design",
+      "siteName": "Wise Design",
+      "extractedAt": "2026-04-11T21:48:17.504Z",
+      "variant": "compact"
+    }
+  }
+}

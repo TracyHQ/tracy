@@ -1,0 +1,44 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — All text, headings, icons, nav links, dividers, and borders. Unsoftened true black anchors every chromatic panel"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, default card surface, and the negative space that lets chromatic panels breathe. Never tinted"
+    },
+    "terracotta": {
+      "$value": "#a9553c",
+      "$type": "color",
+      "$description": "Terracotta — Full-bleed section panels and hero zones. Warm oxidized red-brown against pure black and white — evokes raw clay and printed editorial covers"
+    },
+    "lilac-veil": {
+      "$value": "#ddbdea",
+      "$type": "color",
+      "$description": "Lilac Veil — Full-bleed section panels, content cards, and soft surface tint. Muted chalky pink that cools the terracotta into a balanced two-color rhythm"
+    }
+  },
+  "font": {
+    "theinhardt": {
+      "$value": "Theinhardt",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all UI: nav, body, headings, buttons, labels. Positive letter-spacing (0.01em→0.024em) that grows with size is the anti-trend signature — tracking opens up rather than tightens, producing a Swiss neo-grotesque with editorial breathing room. The 700 weight appears only for micro-emphasis (tag labels), keeping the system light and even."
+    },
+    "theinhardt-medium": {
+      "$value": "Theinhardt Medium",
+      "$type": "fontFamily",
+      "$description": "Theinhardt Medium — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://fora-concept.com",
+      "siteName": "FORA",
+      "extractedAt": "2026-06-03T20:52:40.941Z",
+      "variant": "compact"
+    }
+  }
+}

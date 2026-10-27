@@ -1,0 +1,54 @@
+{
+  "color": {
+    "graphite": {
+      "$value": "#252525",
+      "$type": "color",
+      "$description": "Graphite — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "charcoal": {
+      "$value": "#313131",
+      "$type": "color",
+      "$description": "Charcoal — Secondary dark surface, nav panel background"
+    },
+    "slate": {
+      "$value": "#595959",
+      "$type": "color",
+      "$description": "Slate — Body text, secondary headings — the readable gray for paragraph copy"
+    },
+    "fog": {
+      "$value": "#949494",
+      "$type": "color",
+      "$description": "Fog — Muted helper text, captions, links at rest"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, text on dark fills"
+    },
+    "electric-violet": {
+      "$value": "#6100ff",
+      "$type": "color",
+      "$description": "Electric Violet — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "soft-violet": {
+      "$value": "#9d50ff",
+      "$type": "color",
+      "$description": "Soft Violet — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Single-family system: weight 400 for body and UI labels, weight 700 for section headings and button text, weight 900 reserved for display headlines (83px). The dramatic jump from 26px to 83px creates a two-tier hierarchy — page-heading-class copy lives at 22–26px, and only true hero moments reach 83px. Negative letter-spacing tightens with size: -0.012em at 14px scaling linearly to -0.039em at 83px, so display text optically squares up while small text stays crisp."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://vectary.com",
+      "siteName": "Vectary",
+      "extractedAt": "2026-06-03T21:00:39.373Z",
+      "variant": "compact"
+    }
+  }
+}

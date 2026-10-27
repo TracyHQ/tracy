@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+  "status": "complete",
+  "name": "Emmalewisham",
+  "url": "https://styles.refero.design/style/1e93f444-0b01-4412-aa2b-877be5ef08d7",
+  "sourceWebsite": "https://emmalewisham.co.uk",
+  "extractedAt": "2026-06-03T19:36:36.578Z",
+  "capturedAt": "2026-10-08T05:09:08.350297+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "porcelain apothecary at golden hour. Warm linen surfaces cradle jewel-toned glass vessels; the brand violet traces hairlines through the room; serif labels float over clean sans-serif UI like engraved pharmacy signs.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/76d7d82e-7912-4a2a-879c-ba49892fa267.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/1d8eca1e-5900-4219-b5fa-66ac03bb7d63.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/be7eef36-ef70-48b6-891f-ae8cc9aa70b1.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/61fc0104-d92a-4f58-b06e-f2dc3a8b7749.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/f943efd2-e84f-4354-b880-1123707293c3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "4ee01d30c77c794e1ca3f1591164f463ff26f4bab31e11ce9871cf54d9ab0394",
+      "bytes": 19370
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "e7105e616b672832d66d63672b95e54d9ac6e164e6efac1d9a96c8df677d9d6d",
+      "bytes": 74848
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "fb224caf44c15ea811ffaa9824025c4958d6f7473539410433cc8e94e35ab1e2",
+      "bytes": 16177
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "4f3f35c02e2164f7c83ec70d1402e75338747f694cf8e04aaab177cf4a7bb2ae",
+      "bytes": 12706
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ed6e315b78f407b587b0ce6767ad844dde83d1f3cac16810ce454a1c37aee741",
+      "bytes": 12733
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a9174dcae0639ed4d40bb64c3fa4d25cb4e2f3c69d27218190b82ba6fcc5dee4",
+      "bytes": 3280
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "8d76f7452a41aa6deb893e8b9c41853f8e6e2adccc2ecbd88f585feb19b46fee",
+      "bytes": 602
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "b133f5e66fd9fd0b7b0e184b76cf60ec014b7f76c98a7060a2daf6ca59a71da0",
+      "bytes": 619
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5ace9af1f5ef596ec58f4a0f8c62e0eaab89d33919bf3c6b68cc97a958662f40",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "df9cfdffdd441c0f54cd5138187298f459fdd24484b9f491c2c862b6dca5d0bf",
+      "bytes": 42789
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "34ff727e7d25fc945b667351bb03456c8452641b4bc5082aed0bd1c4d1f18707",
+      "bytes": 22303
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b6fb4b783861f9c420409bf4fb2905d49ae4a112d1361d66292ae5e2ce8a6bc0",
+      "bytes": 46142
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "5b98487374dfcbec307f44c7f8f19107ae21068b4b8ac9e65d6af9dbf09b73a7",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "20cb798ddc8e50e53fcbc1a7ba810f4e2054c556fd86f2cfffc1c29906abe962",
+      "bytes": 1371
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f139654e45af0fa20ef1356ffd23c644958f4e73eb01f02ce5f0776817560c50",
+      "bytes": 1943
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "3b080dc3-1992-43fe-91d6-2a721f934435",
+    "3f56ea4d-ed9d-4a36-8fb5-a801519ef80b",
+    "51a9246f-9238-47dd-b254-48983b8713a2",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "6fb648be-cc69-4a84-a798-9f0f006922a0",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "8e1c35bf-f0e8-4889-b869-d9883bb76767",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+    "e00519a1-7b8a-4171-b49b-550c64a57d3c",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

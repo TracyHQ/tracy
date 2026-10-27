@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-transport-console-dependency-failure-unconfigured",
+  "itemIds": ["transport:console"],
+  "requirement": "outside local preview an unconfigured transport rejects and its log line names neither recipient nor content",
+  "oracle": {
+    "source": "apps/tracy-web/src/mail/transport.js header (#804)",
+    "ref": "apps/tracy-web/src/mail/transport.js header (#804)",
+    "invariant": "rejects; the one line written names nothing the letter carries"
+  },
+  "edgeTags": ["dependency-failure", "transport-failure", "no-secret-leak"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.transport.reserved#unconfigured-transport-refuses"],
+  "redProof": null,
+  "legacyIds": []
+}

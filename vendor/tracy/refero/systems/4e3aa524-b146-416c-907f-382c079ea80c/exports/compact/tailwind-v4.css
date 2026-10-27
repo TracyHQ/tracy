@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-tally-magenta: #f81ce5;
+  --color-action-blue: #0070d7;
+  --color-ink: #37352f;
+  --color-paper: #e0e0df;
+  --color-white: #ffffff;
+  --color-mist: #f3f3f3;
+  --color-graphite: #898884;
+  --color-ash: #777672;
+  --color-charcoal: #45433e;
+  --color-black: #000000;
+  --color-purple-to-pink: #f81ce0;
+
+  /* Typography */
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

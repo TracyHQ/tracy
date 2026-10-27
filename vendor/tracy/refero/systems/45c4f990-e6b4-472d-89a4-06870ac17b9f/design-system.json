@@ -1,0 +1,323 @@
+{
+  "dos": [
+    "Use #1070ff Electric Blue exclusively for primary actions, active states, eyebrow labels, and the announcement band — no other color carries a functional role",
+    "Pair Ivar Text serif at 48–72px with Haas Grot Text sans at 14–16px; the serif-sans contrast is the system's signature typographic move",
+    "Set display headlines with negative tracking (-0.26 to -0.48px) and tight 1.0 line-height so the serif feels cut and editorial, not airy",
+    "Use 40px border-radius for all buttons and tags to maintain the pill-shaped language across every interactive element",
+    "Apply the six-layer diffuse shadow stack only to product screenshot cards and large elevated surfaces — never to buttons, text, or small UI elements",
+    "Alternate between Midnight Ink #14171f panels and Paper White #ffffff sections to create the dark-to-light editorial rhythm",
+    "Keep body copy at 16px Haas Grot Text with 1.38 line-height and -0.34px tracking for compact, readable density"
+  ],
+  "donts": [
+    "Do not introduce additional chromatic colors — the system is monochrome plus exactly one blue, and a second hue breaks the discipline",
+    "Do not use Ivar Text for body copy, UI labels, or navigation — the serif belongs only at 20px and above, never at functional text sizes",
+    "Do not use square or slightly-rounded buttons — every button is a 40px-radius pill, and sharp corners signal a different product",
+    "Do not apply the diffuse shadow to text, icons, or small elements — it is reserved for large floating surfaces and looks muddy at small scale",
+    "Do not use blue accent text on dark Midnight Ink backgrounds without testing contrast — use #ffffff for body text on dark panels",
+    "Do not break the editorial-print rhythm with full-bleed colored sections or decorative gradients — color appears only as small functional punctuation",
+    "Do not set letter-spacing wider than 0.25px on any text — tracking stays tight or negative throughout the entire type scale"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1070ff",
+      "name": "Electric Blue",
+      "role": "Primary action buttons, active nav, accent borders, eyebrow labels, full-width announcement band — the single chromatic voice in the system",
+      "group": "brand"
+    },
+    {
+      "hex": "#14171f",
+      "name": "Midnight Ink",
+      "role": "Dark hero panels, navigation bar, and logo strip backgrounds — creates high-contrast showcase zones before the light editorial sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#252525",
+      "name": "Charcoal",
+      "role": "Primary body text, display headlines in light sections, and strong borders — the workhorse text and edge color above the fold",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6d6b70",
+      "name": "Graphite",
+      "role": "Secondary body text, muted helper copy, and subtle borders — quiet supporting type that recedes behind Charcoal",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Primary canvas, product screenshot backgrounds, card surfaces, and inverse text on dark panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f9f8f7",
+      "name": "Cream",
+      "role": "Warm-tinted surface for subtle differentiation from pure white — used on alternate section bands and soft card fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Onyx",
+      "role": "Hairline borders, icon strokes, and high-emphasis outlines — the structural linework color",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-width dark hero at the top with left-aligned serif headline and right-side product screenshot, followed by a dark client-logo strip, then alternating light editorial sections (white and cream #f9f8f7) with a consistent 80–120px vertical rhythm. Each feature section uses a two-column layout: text stack on the left, product screenshot card on the right, max-width 1200px centered. Testimonial blocks break the grid as full-width centered quotes. Navigation is a sticky dark bar above all content, with a blue announcement band stacked above it. No sidebar, no mega-menu, no masonry — every section is either a two-column feature block, a centered quote, or a logo strip.",
+  "imagery": "Product screenshots are the dominant visual element, treated as first-class content rather than decoration: they float on a six-layer diffuse shadow, sit inside 16px-radius white cards, and are clipped with overflow hidden so the product UI fills the frame edge-to-edge. A dark client-logo strip appears once below the hero as social proof. No lifestyle photography, no abstract illustrations, no decorative gradients — the visual language is product UI, monochrome surfaces, and typographic weight.",
+  "similar": [
+    {
+      "why": "Same dark-hero-over-light-body structure with a single vivid accent color and near-zero decoration — both let the product screenshot do the talking",
+      "business": "Linear"
+    },
+    {
+      "why": "Editorial serif headlines paired with clean sans body, and a marketing site that reads like a print designer's portfolio rather than a SaaS template",
+      "business": "Webflow"
+    },
+    {
+      "why": "Marketing automation category peer with the same dark hero, monochrome palette, and blue accent — the products are direct competitors and the visual language reflects that positioning",
+      "business": "Customer.io"
+    },
+    {
+      "why": "Editorial presentation-product aesthetic: serif display type, generous whitespace, product screenshots treated as primary visuals, and a single accent color held in reserve",
+      "business": "Pitch"
+    },
+    {
+      "why": "Black-and-white system with one electric accent, product-forward marketing pages, and the same confidence in letting typography and spacing carry the design without chromatic noise",
+      "business": "Vercel"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "4px",
+      "tags": "999px",
+      "cards": "16px",
+      "icons": "50px",
+      "images": "16px",
+      "buttons": "40px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "80-120px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 0,
+      "purpose": "Primary page canvas and product screenshot backgrounds"
+    },
+    {
+      "hex": "#f9f8f7",
+      "name": "Cream",
+      "level": 1,
+      "purpose": "Warm-tinted section background for subtle differentiation from pure white"
+    },
+    {
+      "hex": "#14171f",
+      "name": "Midnight Ink",
+      "level": 2,
+      "purpose": "Dark hero, navigation, and logo strip panels"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.04) 0px 4px 4px 0px, rgba(0, 0, 0, 0.05) 0px 12px 12px 0px, rgba(0, 0, 0, 0.06) 0px 24px 24px 0px, rgba(0, 0, 0, 0.07) 0px 50px 50px 0px, rgba(0, 0, 0, 0.08) 0px 136px 136px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px",
+      "element": "Product Screenshot Card"
+    }
+  ],
+  "northStar": "blueprint on midnight paper",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.25
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": 0.15
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.38,
+      "letterSpacing": -0.34
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33,
+      "letterSpacing": 0.07
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "heading-lg",
+      "size": 64,
+      "lineHeight": 1,
+      "letterSpacing": -0.26
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1,
+      "letterSpacing": -0.29
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Banner",
+      "role": "Full-width promotional strip above the navigation",
+      "description": "Full-width #1070ff band, ~44px tall, centered 14px Haas Grot Text in #ffffff, with an optional inline link underlined. Used sparingly for product news."
+    },
+    {
+      "name": "Primary Navigation Bar",
+      "role": "Sticky dark header with brand, links, and CTA",
+      "description": "#14171f background, ~64px tall, sticky. White logotype left, white 14px Haas Grot Text nav links centered, blue filled CTA button (#1070ff, white text, 40px radius) right. No visible bottom border."
+    },
+    {
+      "name": "Primary CTA Button",
+      "role": "Filled action button for trial signup and demo requests",
+      "description": "#1070ff background, #ffffff text, 40px border-radius (pill shape), 12px vertical / 24px horizontal padding, 14px Haas Grot Text weight 700, 0.15px letter-spacing. No drop shadow. Used on both dark and light backgrounds."
+    },
+    {
+      "name": "Ghost Button",
+      "role": "Secondary outlined action paired with the primary CTA",
+      "description": "Transparent background, 1.5px #ffffff border, #ffffff text, 40px border-radius, 12px 24px padding, 14px Haas Grot Text weight 700. Sits beside the filled CTA in the hero. On light backgrounds, border and text switch to Charcoal #252525."
+    },
+    {
+      "name": "Hero Panel",
+      "role": "Dark above-the-fold showcase section",
+      "description": "Full-width #14171f background, ~560–640px tall. Left column: 64–72px Ivar Text weight 400 headline in #ffffff with -0.26 to -0.29px tracking, 18px body text in #ffffff at 70% opacity, CTA pair below. Right column: product screenshot card floating on the six-layer diffuse shadow."
+    },
+    {
+      "name": "Product Screenshot Card",
+      "role": "Embedded app capture treated as primary visual content",
+      "description": "16px border-radius, overflow hidden, sits on the six-layer diffuse shadow stack. White interior, 1px Onyx border at 8% opacity. The product UI itself uses white surfaces, hairline borders, and small green/blue/violet data accents."
+    },
+    {
+      "name": "Logo Strip",
+      "role": "Social proof band of client logos",
+      "description": "Full-width #14171f band, ~80–100px tall, centered horizontal row of 8–10 client logos in #ffffff at 60% opacity, evenly spaced with 40–60px gaps."
+    },
+    {
+      "name": "Feature Section",
+      "role": "Editorial product feature block with eyebrow, headline, screenshot, and bullet list",
+      "description": "#ffffff or #f9f8f7 background, max-width 1200px centered. Blue 12px uppercase eyebrow (#1070ff, 0.25px tracking), 48–64px Ivar Text headline in Charcoal #252525, product screenshot card on one side, 16px Haas Grot Text bullet list on the other. 80–120px vertical padding."
+    },
+    {
+      "name": "Eyebrow Label",
+      "role": "Small uppercase category tag above section headlines",
+      "description": "#1070ff color, 12px Haas Grot Text weight 700, uppercase, 0.25px letter-spacing. Sits 16px above the headline. Only chromatic text in the system besides links and CTAs."
+    },
+    {
+      "name": "Testimonial Block",
+      "role": "Full-width quote with attribution",
+      "description": "#ffffff background, max-width 900px centered. 24px Ivar Text italic in Charcoal #252525, 40px vertical padding to attribution: 50px circular avatar, 14px Haas Grot Text weight 700 name, 14px regular role in Graphite #6d6b70."
+    },
+    {
+      "name": "Dashboard Gauge Card",
+      "role": "Product UI metric card with semicircular progress gauge",
+      "description": "White surface, 16px border-radius, subtle hairline border. Contains a 11px caption label in Graphite, a 24px Ivar Text metric value in Charcoal, and a green (#2dbb6f) gauge arc at 270° representing progress."
+    },
+    {
+      "name": "Data Table Row",
+      "role": "Product UI row in the customer data platform",
+      "description": "White background, 14px Haas Grot Text in Charcoal, 1px #000000 border at 6% opacity between rows. Avatar (24px circle), name, organization, MRR value, ticket count, and a 5-dot product score row. 40px row height, 16px horizontal padding."
+    },
+    {
+      "name": "Workflow Builder Node",
+      "role": "Product UI decision node in the journey builder",
+      "description": "White card with 12px radius, 1px #000000 border at 8% opacity, purple #533afd diamond icon, 14px Haas Grot Text label, and a YES/NO branch split below. Connected by thin 1px gray lines to child email/SMS action cards."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px, 16px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Display and editorial headlines at 48–72px, subheading at 20–24px, and italic blockquotes — a humanist serif that lends marketing copy print-journalism weight",
+      "sizes": "20, 24, 48, 64, 72px",
+      "family": "Ivar Text",
+      "weight": "400",
+      "lineHeight": "1.00–1.40",
+      "substitute": "Source Serif 4, Lora, or Tiempos Text",
+      "letterSpacing": "-0.48px at 48px, -0.26px at 64px, -0.29px at 72px; -0.20px at 20px; 0.07px at 24px"
+    },
+    {
+      "role": "Body, navigation, UI labels, and secondary sans headings — a precise neo-grotesque that keeps product surfaces neutral and readable",
+      "sizes": "12, 13, 14, 16, 19, 24px",
+      "family": "Haas Grot Text R",
+      "weight": "400, 500, 700",
+      "lineHeight": "1.20–1.43",
+      "substitute": "Inter, Söhne, or Neue Haas Grotesk",
+      "letterSpacing": "0.25px at 12px, 0.20px at 13px, 0.15px at 14px, -0.34px at 16px, 0.22px at 24px"
+    },
+    {
+      "role": "Display-weight sans variant for bold sans headlines — secondary to Ivar Text, used when a sans display is preferred over the serif",
+      "sizes": "48, 64px",
+      "family": "Haas Grot Disp R",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "Inter, Söhne, or Helvetica Neue",
+      "letterSpacing": "-0.48px at 48px, -0.26px at 64px"
+    },
+    {
+      "role": "Haas Grot Text R Web 55 Roman — detected in extracted data but not described by AI",
+      "sizes": "12px, 13px, 14px, 16px, 24px",
+      "family": "Haas Grot Text R Web 55 Roman",
+      "weight": "400",
+      "lineHeight": "1.2, 1.33, 1.38, 1.4, 1.43",
+      "letterSpacing": "-0.021, 0.009, 0.011, 0.015, 0.021"
+    },
+    {
+      "role": "Haas Grot Text R Web 65 Medium — detected in extracted data but not described by AI",
+      "sizes": "14px, 16px",
+      "family": "Haas Grot Text R Web 65 Medium",
+      "weight": "400",
+      "lineHeight": "1.25, 1.38, 1.43",
+      "letterSpacing": "0.009, 0.011, 0.013"
+    },
+    {
+      "role": "Ivar Text Regular — detected in extracted data but not described by AI",
+      "sizes": "20px, 24px, 48px, 64px, 72px",
+      "family": "Ivar Text Regular",
+      "weight": "400",
+      "lineHeight": "1, 1.33, 1.4",
+      "letterSpacing": "-0.01, -0.004, 0.003"
+    },
+    {
+      "role": "Haas Grot Text R Web 75 Bold — detected in extracted data but not described by AI",
+      "sizes": "14px, 16px, 24px",
+      "family": "Haas Grot Text R Web 75 Bold",
+      "weight": "400",
+      "lineHeight": "1.2, 1.38, 1.43",
+      "letterSpacing": "-0.021, 0.009, 0.011"
+    }
+  ],
+  "description": "Ortto reads as a product brief on quality stock: near-black hero panels yield to warm-white editorial sections, held together by a single vivid blue that is the only chromatic voice in an otherwise monochrome system. Display headlines use a humanist serif (Ivar Text) at 64–72px with negative tracking, while body and UI sit in a precise neo-grotesque sans (Haas Grot Text) — the pairing gives marketing copy the gravity of print journalism and product surfaces the neutrality of a control panel. Buttons are pill-shaped and filled blue, product screenshots float on a six-layer diffuse shadow, and embedded app captures are treated as first-class content rather than decoration. The overall effect is a marketing site that feels like the product's own manual — confident, specific, almost entirely black-and-white with one electric blue accent.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #252525\n- background: #ffffff\n- border: #000000 (at 6–8% opacity for hairlines)\n- accent: #1070ff\n- dark surface: #14171f\n- muted text: #6d6b70\n- primary action: #1070ff (filled action)\n\n**Example Component Prompts**\n\n1. **Hero section**: #14171f background, full-width, ~600px tall. Headline at 64px Ivar Text weight 400, #ffffff, letter-spacing -0.26px. Body at 18px Haas Grot Text weight 400, #ffffff. Blue filled CTA (#1070ff, #ffffff text, 40px radius, 12px 24px padding, 14px weight 700) beside ghost button (transparent, 1.5px #ffffff border, #ffffff text, 40px radius). Product screenshot card on the right (16px radius, white interior, six-layer diffuse shadow).\n\n2. **Feature section**: #ffffff background, max-width 1200px centered, 100px vertical padding. Blue eyebrow (#1070ff, 12px uppercase, weight 700, 0.25px tracking). Headline at 48px Ivar Text weight 400, #252525, letter-spacing -0.48px. Product screenshot card on the right (16px radius, diffuse shadow). Bullet list on the left: 16px Haas Grot Text, #252525, 8px row gap, 2px square markers in #1070ff.\n\n3. **Primary CTA button**: #1070ff background, #ffffff text, 40px border-radius, 12px 24px padding, 14px Haas Grot Text weight 700, 0.15px letter-spacing. No shadow. No hover state change beyond a slight darken to #0d5fd6.\n\n4. **Ghost button**: transparent background, 1.5px #ffffff border, #ffffff text, 40px border-radius, 12px 24px padding, 14px Haas Grot Text weight 700. On light backgrounds, border and text switch to #252525.\n\n5. **Testimonial block**: #ffffff background, max-width 900px centered, 120px vertical padding. Quote at 24px Ivar Text italic, #252525, line-height 1.33. Attribution row below: 50px circular avatar, 14px Haas Grot Text weight 700 name in #252525, 14px regular role in #6d6b70."
+    }
+  ]
+}

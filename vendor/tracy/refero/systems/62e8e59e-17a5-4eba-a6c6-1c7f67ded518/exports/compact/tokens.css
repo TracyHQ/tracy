@@ -1,0 +1,23 @@
+:root {
+  /* Colors */
+  --color-obsidian: #0c0a09;
+  --color-graphite: #1c1917;
+  --color-charcoal: #292524;
+  --color-slate: #44403c;
+  --color-stone: #57534e;
+  --color-ash: #78716c;
+  --color-pebble: #a8a29e;
+  --color-mist: #d6d3d1;
+  --color-fog: #e5e7eb;
+  --color-bone: #f6f6f6;
+  --color-pure: #ffffff;
+  --color-pilot-gold: #cab16a;
+  --color-circuit-green: #89b482;
+  --color-signal-red: #ea6962;
+
+  /* Typography — Font Families */
+  --font-circularxx: 'CircularXX', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-whyte: 'Whyte', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-whyte-inktrap: 'Whyte Inktrap', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-circularxxmono: 'CircularXXMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

@@ -1,0 +1,460 @@
+{
+  "source": "bench v6 BEFORE r1, benchemdash02 V6-des-L4-01 (28/09/2026), turn 1: steps 12-13 content_get of pages/kit-slides en and ru (the shaped answers: liveRevisionId and translationGroup put back from the step 15-16 receipts' undo and step 12's content_translations), steps 15-16 the partial sample the model sent, which EmDash stored whole and /kit/slides answered HTTP 500",
+  "translationGroup": "01M3GF52NJHV3BKG8PA3S1FV20",
+  "entries": {
+    "en": {
+      "item": {
+        "id": "01M3GF52NJHV3BKG8PA3S1FV20",
+        "type": "pages",
+        "slug": "kit-slides",
+        "status": "published",
+        "data": {
+          "title": "Presentations and slides",
+          "lede": "Slide templates for the marketing team: sales decks, client progress reports and trade-show material. 16:9 format on a 12-column grid.",
+          "content": [],
+          "template": "kit-slides",
+          "sample": {
+            "h1": "Presentations and slides",
+            "sub": "Slide templates for the marketing team: sales decks, client progress reports and trade-show material. 16:9 format on a 12-column grid.",
+            "meta": [
+              {
+                "k": "Format",
+                "v": "16:9 · 1920×1080"
+              },
+              {
+                "k": "Fonts",
+                "v": "Archivo + Newsreader"
+              },
+              {
+                "k": "Grid",
+                "v": "12 columns · 80 px margins"
+              },
+              {
+                "k": "Min type",
+                "v": "24 px for captions"
+              }
+            ],
+            "libT": "Slide library",
+            "libP": "Click a slide to open it in the presentation editor.",
+            "use": "Use this slide →",
+            "slides": [
+              {
+                "n": "01",
+                "t": "Title slide",
+                "d": "Project name, client, date",
+                "kind": "cover",
+                "page": 1
+              },
+              {
+                "n": "02",
+                "t": "Contents",
+                "d": "Up to six sections",
+                "kind": "agenda",
+                "page": 2
+              },
+              {
+                "n": "03",
+                "t": "Facts and figures",
+                "d": "Four key metrics",
+                "kind": "stats",
+                "page": 3
+              },
+              {
+                "n": "04",
+                "t": "Project case",
+                "d": "Photo, scope, schedule",
+                "kind": "case",
+                "page": 4,
+                "image": {
+                  "id": "01M3GF56F47C0EPXM35GZT6GWT",
+                  "src": "/_emdash/api/media/file/01M3GF56F4HYZQYB0N08SWV4RQ.01M3GF56FADBGGQ075BYBX3578.png",
+                  "alt": "Frame erection, October 2024",
+                  "width": 1200,
+                  "height": 760,
+                  "filename": "factory-ru-1.png",
+                  "mimeType": "image/png",
+                  "provider": "local",
+                  "meta": {
+                    "storageKey": "01M3GF56F4HYZQYB0N08SWV4RQ.01M3GF56FADBGGQ075BYBX3578.png"
+                  }
+                }
+              },
+              {
+                "n": "05",
+                "t": "Work stages",
+                "d": "Linear timeline of 4–6 steps",
+                "kind": "process",
+                "page": 5
+              },
+              {
+                "n": "06",
+                "t": "Client quote",
+                "d": "Testimonial with name and role",
+                "kind": "quote",
+                "page": 6
+              },
+              {
+                "n": "07",
+                "t": "Coverage map",
+                "d": "Regions and delivered projects",
+                "kind": "map",
+                "page": 7,
+                "image": {
+                  "id": "01M3GF56XXG3BF6XA4VPNTCY2B",
+                  "src": "/_emdash/api/media/file/01M3GF56XXDPR8R85H3DJ43X2C.01M3GF56XZ9YCKQRMJSVKCDACF.png",
+                  "alt": "Map image / Yandex Maps iframe",
+                  "width": 1000,
+                  "height": 620,
+                  "filename": "map-ru.png",
+                  "mimeType": "image/png",
+                  "provider": "local",
+                  "meta": {
+                    "storageKey": "01M3GF56XXDPR8R85H3DJ43X2C.01M3GF56XZ9YCKQRMJSVKCDACF.png"
+                  }
+                }
+              },
+              {
+                "n": "08",
+                "t": "Contacts",
+                "d": "Closing slide with a CTA",
+                "kind": "contact",
+                "page": 8
+              }
+            ],
+            "deckT": "Ready-made decks",
+            "decks": [
+              {
+                "t": "Corporate Deck 2028 — full slide library",
+                "d": "8 slides · editable PDF (live text and vector)",
+                "f": "PDF · 14 KB",
+                "href": "/_emdash/api/media/file/01M3GF57097ZY82MQNWJ336NJ4.01M3GF570BXH54R5MD49YJC7VC.pdf"
+              },
+              {
+                "t": "Corporate deck 2026",
+                "d": "5 slides · updated 14 Aug 2026",
+                "f": "PDF · 273 KB",
+                "href": "/_emdash/api/media/file/01M3GF56VDH32QBEKDRGYAZRT0.01M3GF56VFYYH1TY7KCXK247TP.pdf"
+              },
+              {
+                "t": "Sales proposal: production building",
+                "d": "5 slides · client-ready template",
+                "f": "PDF · 239 KB",
+                "href": "/_emdash/api/media/file/01M3GF570PH49QJA1SBMW3D67D.01M3GF570TXFAF24AH2VQP61KW.pdf"
+              },
+              {
+                "t": "Construction progress report",
+                "d": "5 slides · monthly format",
+                "f": "PDF · 220 KB",
+                "href": "/_emdash/api/media/file/01M3GF571333Z4PJNQ378V971Z.01M3GF5715MBRREXKAXSK0WFTE.pdf"
+              },
+              {
+                "t": "Trade-show stand deck",
+                "d": "4 slides · exhibition screen",
+                "f": "PDF · 184 KB",
+                "href": "/_emdash/api/media/file/01M3GF571DV5Z0MX27NNYSSW8S.01M3GF571FXWARHYRN1FC5CW1Q.pdf"
+              }
+            ],
+            "assetT": "Brand assets",
+            "assets": [
+              {
+                "t": "Logos (SVG, PNG, EPS)",
+                "f": "ZIP · 4 MB"
+              },
+              {
+                "t": "Archivo and Newsreader fonts",
+                "f": "ZIP · 12 MB"
+              },
+              {
+                "t": "Project photo library 2024–2026",
+                "f": "Link"
+              },
+              {
+                "t": "Icons and detail diagrams",
+                "f": "ZIP · 3 MB"
+              }
+            ],
+            "palT": "Palette",
+            "pal": [
+              {
+                "n": "Ink",
+                "v": "#14171A",
+                "c": "rgba(20,23,26,.996)"
+              },
+              {
+                "n": "Paper",
+                "v": "#F5F3EE",
+                "c": "rgba(245,243,238,.996)"
+              },
+              {
+                "n": "Forest",
+                "v": "#14483A",
+                "c": "rgba(20,72,58,.996)"
+              },
+              {
+                "n": "Signal",
+                "v": "#DA5A2A",
+                "c": "rgba(218,90,42,.996)"
+              }
+            ],
+            "rulesT": "House rules",
+            "rules": [
+              "One idea per slide; headlines no longer than two lines.",
+              "Project photography from the internal library only — no stock imagery.",
+              "Every figure needs a source: contract, certificate or site report.",
+              "Signal orange is an accent only — one per slide at most."
+            ],
+            "ctaT": "Need a slide for a specific pitch?",
+            "ctaP": "Marketing builds bespoke decks within two working days.",
+            "ctaBtn": "Request a deck"
+          }
+        },
+        "liveRevisionId": "01M3GF59XAPB4PYPCJ7HQ2C4PB",
+        "draftRevisionId": null,
+        "locale": "en",
+        "translationGroup": "01M3GF52NJHV3BKG8PA3S1FV20"
+      },
+      "_rev": "NDoyMDI2LTA5LTI3VDAzOjM5OjU0LjE2MVo="
+    },
+    "ru": {
+      "item": {
+        "id": "01M3GF52NK6J42Q4WSZNC4YMEG",
+        "type": "pages",
+        "slug": "kit-slides",
+        "status": "published",
+        "data": {
+          "title": "Презентации и слайды",
+          "lede": "Шаблоны слайдов для отдела маркетинга: коммерческие презентации, отчёты для заказчика и материалы для отраслевых выставок. Формат 16:9, сетка 12 колонок.",
+          "content": [],
+          "template": "kit-slides",
+          "sample": {
+            "h1": "Презентации и слайды",
+            "sub": "Шаблоны слайдов для отдела маркетинга: коммерческие презентации, отчёты для заказчика и материалы для отраслевых выставок. Формат 16:9, сетка 12 колонок.",
+            "meta": [
+              {
+                "k": "Формат",
+                "v": "16:9 · 1920×1080"
+              },
+              {
+                "k": "Шрифты",
+                "v": "Archivo + Newsreader"
+              },
+              {
+                "k": "Сетка",
+                "v": "12 колонок · поля 80 px"
+              },
+              {
+                "k": "Мин. кегль",
+                "v": "24 px в подписях"
+              }
+            ],
+            "libT": "Библиотека слайдов",
+            "libP": "Кликните слайд, чтобы открыть его в редакторе презентаций.",
+            "use": "Использовать слайд →",
+            "slides": [
+              {
+                "n": "01",
+                "t": "Титульный слайд",
+                "d": "Название объекта, заказчик, дата",
+                "kind": "cover",
+                "page": 1
+              },
+              {
+                "n": "02",
+                "t": "Содержание",
+                "d": "До шести разделов презентации",
+                "kind": "agenda",
+                "page": 2
+              },
+              {
+                "n": "03",
+                "t": "Цифры и факты",
+                "d": "Четыре ключевых показателя",
+                "kind": "stats",
+                "page": 3
+              },
+              {
+                "n": "04",
+                "t": "Кейс объекта",
+                "d": "Фото, состав работ, сроки",
+                "kind": "case",
+                "page": 4,
+                "image": {
+                  "id": "01M3GF56F47C0EPXM35GZT6GWT",
+                  "src": "/_emdash/api/media/file/01M3GF56F4HYZQYB0N08SWV4RQ.01M3GF56FADBGGQ075BYBX3578.png",
+                  "alt": "Frame erection, October 2024",
+                  "width": 1200,
+                  "height": 760,
+                  "filename": "factory-ru-1.png",
+                  "mimeType": "image/png",
+                  "provider": "local",
+                  "meta": {
+                    "storageKey": "01M3GF56F4HYZQYB0N08SWV4RQ.01M3GF56FADBGGQ075BYBX3578.png"
+                  }
+                }
+              },
+              {
+                "n": "05",
+                "t": "Этапы работ",
+                "d": "Линейный график из 4–6 шагов",
+                "kind": "process",
+                "page": 5
+              },
+              {
+                "n": "06",
+                "t": "Цитата заказчика",
+                "d": "Отзыв с именем и должностью",
+                "kind": "quote",
+                "page": 6
+              },
+              {
+                "n": "07",
+                "t": "Карта присутствия",
+                "d": "Регионы и сданные объекты",
+                "kind": "map",
+                "page": 7,
+                "image": {
+                  "id": "01M3GF56XXG3BF6XA4VPNTCY2B",
+                  "src": "/_emdash/api/media/file/01M3GF56XXDPR8R85H3DJ43X2C.01M3GF56XZ9YCKQRMJSVKCDACF.png",
+                  "alt": "Map image / Yandex Maps iframe",
+                  "width": 1000,
+                  "height": 620,
+                  "filename": "map-ru.png",
+                  "mimeType": "image/png",
+                  "provider": "local",
+                  "meta": {
+                    "storageKey": "01M3GF56XXDPR8R85H3DJ43X2C.01M3GF56XZ9YCKQRMJSVKCDACF.png"
+                  }
+                }
+              },
+              {
+                "n": "08",
+                "t": "Контакты",
+                "d": "Финальный слайд с CTA",
+                "kind": "contact",
+                "page": 8
+              }
+            ],
+            "deckT": "Готовые презентации",
+            "decks": [
+              {
+                "t": "Corporate Deck 2028 — вся библиотека слайдов",
+                "d": "8 слайдов · редактируемый PDF (текст и вектор)",
+                "f": "PDF · 14 КБ",
+                "href": "/_emdash/api/media/file/01M3GF57097ZY82MQNWJ336NJ4.01M3GF570BXH54R5MD49YJC7VC.pdf"
+              },
+              {
+                "t": "Корпоративная презентация, 2026",
+                "d": "5 слайдов · обновлена 14.08.2026",
+                "f": "PDF · 282 КБ",
+                "href": "/_emdash/api/media/file/01M3GF56XM4W4C925W1RF4X46Q.01M3GF56XP77HJHK14WXDS9EBR.pdf"
+              },
+              {
+                "t": "Коммерческое предложение: производственный корпус",
+                "d": "5 слайдов · шаблон под заказчика",
+                "f": "PDF · 277 КБ",
+                "href": "/_emdash/api/media/file/01M3GF571QV8RSFX6A4YB8E5F3.01M3GF571ST8EQQW9JDBG62DTK.pdf"
+              },
+              {
+                "t": "Отчёт о ходе строительства",
+                "d": "5 слайдов · ежемесячный формат",
+                "f": "PDF · 229 КБ",
+                "href": "/_emdash/api/media/file/01M3GF5724VKTR2Y1TC1JQ1ZCR.01M3GF5725KD0T3F01KJDFKBDJ.pdf"
+              },
+              {
+                "t": "Стенд для выставки «Металлоконструкции»",
+                "d": "4 слайда · выставочный экран",
+                "f": "PDF · 194 КБ",
+                "href": "/_emdash/api/media/file/01M3GF572EPKCHM3GW3P8KKYSP.01M3GF572FKCD7T549HETD1VA4.pdf"
+              }
+            ],
+            "assetT": "Брендовые материалы",
+            "assets": [
+              {
+                "t": "Логотипы (SVG, PNG, EPS)",
+                "f": "ZIP · 4 МБ"
+              },
+              {
+                "t": "Шрифты Archivo и Newsreader",
+                "f": "ZIP · 12 МБ"
+              },
+              {
+                "t": "Фотобанк объектов, 2024–2026",
+                "f": "Ссылка"
+              },
+              {
+                "t": "Иконки и схемы узлов",
+                "f": "ZIP · 3 МБ"
+              }
+            ],
+            "palT": "Палитра",
+            "pal": [
+              {
+                "n": "Ink",
+                "v": "#14171A",
+                "c": "rgba(20,23,26,.996)"
+              },
+              {
+                "n": "Paper",
+                "v": "#F5F3EE",
+                "c": "rgba(245,243,238,.996)"
+              },
+              {
+                "n": "Forest",
+                "v": "#14483A",
+                "c": "rgba(20,72,58,.996)"
+              },
+              {
+                "n": "Signal",
+                "v": "#DA5A2A",
+                "c": "rgba(218,90,42,.996)"
+              }
+            ],
+            "rulesT": "Правила оформления",
+            "rules": [
+              "Один смысловой блок — один слайд; заголовок не длиннее двух строк.",
+              "Фотографии объектов только из фотобанка, без стоковых картинок.",
+              "Цифры подтверждаем источником: договор, акт или отчёт ПТО.",
+              "Signal-оранжевый — только для акцента, не более одного на слайд."
+            ],
+            "ctaT": "Нужен слайд под конкретную задачу?",
+            "ctaP": "Отдел маркетинга собирает индивидуальные презентации за два рабочих дня.",
+            "ctaBtn": "Запросить презентацию"
+          }
+        },
+        "liveRevisionId": "01M3GF59XS68JT17RNADCSZM95",
+        "draftRevisionId": null,
+        "locale": "ru",
+        "translationGroup": "01M3GF52NJHV3BKG8PA3S1FV20"
+      },
+      "_rev": "NDoyMDI2LTA5LTI3VDAzOjM5OjU0LjE3OVo="
+    }
+  },
+  "sent": {
+    "en": {
+      "sample": {
+        "pal": {
+          "3": {
+            "v": "#1F3A5F",
+            "c": "rgba(31,58,95,.996)"
+          }
+        },
+        "rules": {
+          "3": "Signal navy is an accent only — one per slide at most."
+        }
+      }
+    },
+    "ru": {
+      "sample": {
+        "pal": {
+          "3": {
+            "c": "rgba(31,58,95,.996)",
+            "v": "#1F3A5F"
+          }
+        },
+        "rules": {
+          "3": "Signal-синий — только для акцента, не более одного на слайд."
+        }
+      }
+    }
+  }
+}

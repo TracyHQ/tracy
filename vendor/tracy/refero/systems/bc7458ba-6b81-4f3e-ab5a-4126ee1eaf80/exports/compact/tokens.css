@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-forest-depths: #122314;
+  --color-moss-shadow: #273f2b;
+  --color-lichen-sage: #7e8371;
+  --color-pale-fern: #b7bda5;
+  --color-electric-sprout: #68ef3f;
+  --color-deep-verdant: #26a200;
+  --color-sprout-wash: #e7f9dd;
+  --color-mist-green: #d9deca;
+  --color-onyx-olive: #30322a;
+  --color-pure-white: #ffffff;
+  --color-bone-white: #f2f5eb;
+  --color-soft-mist: #dcdfe3;
+  --color-cool-stone: #d6d6d6;
+  --color-carbon: #222222;
+
+  /* Typography — Font Families */
+  --font-ozik: 'Ozik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-aeonik: 'Aeonik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-instrument-serif: 'Instrument Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}

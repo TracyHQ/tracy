@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-void: #000000;
+  --color-bone: #ffffff;
+  --color-charcoal: #252525;
+
+  /* Typography — Font Families */
+  --font-basis-grotesque-pro: 'Basis Grotesque Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pp-eiko: 'PP Eiko', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

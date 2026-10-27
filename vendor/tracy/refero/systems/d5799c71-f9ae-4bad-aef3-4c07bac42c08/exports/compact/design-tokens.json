@@ -1,0 +1,64 @@
+{
+  "color": {
+    "lime-volt": {
+      "$value": "#cfff69",
+      "$type": "color",
+      "$description": "Lime Volt — Primary action — filled CTA buttons, active tab underline, highlight chips. The only vivid color permitted against the dark hero; its near-fluorescent chroma against #051923 creates urgency without warmth or aggression"
+    },
+    "cobalt-iris": {
+      "$value": "#6289ff",
+      "$type": "color",
+      "$description": "Cobalt Iris — Violet outline accent for tags, dividers, and focused UI edges"
+    },
+    "midnight-abyss": {
+      "$value": "#051923",
+      "$type": "color",
+      "$description": "Midnight Abyss — Primary text, hero background, dark section canvas, button text on lime fills. Near-black with a cool teal undertone — not pure black, the slight blue cast keeps it feeling engineered rather than flat"
+    },
+    "abyssal-teal": {
+      "$value": "#004853",
+      "$type": "color",
+      "$description": "Abyssal Teal — Dark card surfaces and gradient endpoints — the bridge color between Midnight Abyss and the deep teal radial gradient. Used for elevated dark cards and inset panels"
+    },
+    "steel-mist": {
+      "$value": "#eef0f2",
+      "$type": "color",
+      "$description": "Steel Mist — Light neutral action fill for buttons on dark surfaces."
+    },
+    "charcoal-edge": {
+      "$value": "#27272a",
+      "$type": "color",
+      "$description": "Charcoal Edge — Muted body text and secondary borders. Zinc-family dark gray for hierarchy below the primary text level"
+    },
+    "zinc": {
+      "$value": "#a1a1aa",
+      "$type": "color",
+      "$description": "Zinc — Icon strokes, tertiary text, disabled states, and subtle dividers. The lightest chrome in the interface"
+    },
+    "slate": {
+      "$value": "#525252",
+      "$type": "color",
+      "$description": "Slate — Secondary body text, caption labels, metadata. Mid-gray for body content that must read but recede"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, button text, and form inputs — the brightest point in the surface stack. Cards on the Steel Mist canvas read as crisp white panels"
+    }
+  },
+  "font": {
+    "roobert": {
+      "$value": "roobert",
+      "$type": "fontFamily",
+      "$description": "Sole typeface — geometric sans used for everything from 11px captions to 64px display headlines. The tight line-height at large sizes (1.07–1.16) makes headlines feel architectural and stacked; the loose line-height at body (1.5–1.63) keeps long-form readable. Slightly positive tracking is deliberate — it gives the geometric letterforms breathing room at small sizes without looking loose at display sizes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.8returns.com",
+      "siteName": "8returns",
+      "extractedAt": "2026-06-03T19:56:23.510Z",
+      "variant": "compact"
+    }
+  }
+}

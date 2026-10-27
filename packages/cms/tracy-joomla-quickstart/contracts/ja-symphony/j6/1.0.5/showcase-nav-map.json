@@ -1,0 +1,322 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-symphony/j6/1.0.5",
+  "baseHash": "022f7adb78c065c153f83ba1fcf11a0984ea616bde8ed087b5c99d4dbe99b639",
+  "baseFiles": {
+    "manifest.json": "b3e3b32162f7eeb6d0ce41ca4420faf23634a834c04aa43b3d6f2d1ec7bb33e1",
+    "content-map.json": "64921ea1d5fe6cd77bc0531cb2eb9680c1197b4f6bb7a7669e7209b058b0aeb9",
+    "presentation-lock.json": "84350c0490dbd38437af1ed8fef5badcda517c82ef38ec456be256a7c4ba9259"
+  },
+  "inputs": {},
+  "decisionsHash": "8a8e8dc9ad82943e04c260ba3ef8601a923fd3c794a84f4f9b539aa0b1aa8014",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-118",
+      "identity": {
+        "path": "pages/joomla-content",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Joomla Content",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-119",
+      "identity": {
+        "path": "pages/joomla-content/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-120",
+      "identity": {
+        "path": "pages/joomla-content/category-blog",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Category View",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-121",
+      "identity": {
+        "path": "pages/joomla-content/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-122",
+      "identity": {
+        "path": "pages/joomla-content/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-126",
+      "identity": {
+        "path": "pages/other-pages/error-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-127",
+      "identity": {
+        "path": "pages/other-pages/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-128",
+      "identity": {
+        "path": "homepage/home-green",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home Green",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/homepage"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-129",
+      "identity": {
+        "path": "homepage/home-red",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home Red",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/homepage"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-130",
+      "identity": {
+        "path": "homepage/home-yellow",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home Yellow",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/homepage"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/homepage",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "Your Profile",
+      "where": "usermenu/your-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Site Administrator",
+      "where": "usermenu/2013-11-16-23-26-41",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Submit an Article",
+      "where": "usermenu/submit-an-article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Template Settings",
+      "where": "usermenu/template-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Site Settings",
+      "where": "usermenu/site-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-109",
+      "label": "User Pages",
+      "where": "mainmenu/pages/user-pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-110",
+      "label": "Login",
+      "where": "mainmenu/pages/user-pages/login",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-111",
+      "label": "Registration",
+      "where": "mainmenu/pages/user-pages/registration",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-112",
+      "label": "User Profile",
+      "where": "mainmenu/pages/user-pages/user-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "Edit User Profile",
+      "where": "mainmenu/pages/user-pages/edit-user-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-114",
+      "label": "Other Pages",
+      "where": "mainmenu/pages/other-pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-116",
+      "label": "Smart Search",
+      "where": "mainmenu/pages/other-pages/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Blog",
+      "where": "mainmenu/our-blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-123",
+      "label": "Contact us",
+      "where": "mainmenu/contact-us",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-124",
+      "label": "Releases",
+      "where": "mainmenu/releases",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-125",
+      "label": "Tours",
+      "where": "mainmenu/tours",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@position-1",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 13 entries stay (class \"_menu\")"
+    },
+    {
+      "key": "module-91",
+      "label": "User Menu",
+      "where": "mod_menu@position-7",
+      "rule": "keep.default",
+      "reason": "renders usermenu: 5 entries stay (class \"_menu\")"
+    },
+    {
+      "key": "module-108",
+      "label": "Main Menu",
+      "where": "mod_menu@offcanvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 13 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 10,
+    "modules": 0,
+    "kept": 21,
+    "unresolved": 0
+  }
+}

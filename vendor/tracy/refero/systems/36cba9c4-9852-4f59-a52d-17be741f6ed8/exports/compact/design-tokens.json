@@ -1,0 +1,44 @@
+{
+  "color": {
+    "deep-violet": {
+      "$value": "#0825c6",
+      "$type": "color",
+      "$description": "Deep Violet — Hero gradient anchor, decorative atmosphere — the singular chromatic note; fills the sky of the opening viewport"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Body text, headings, button text, border outlines — the only contrast color"
+    }
+  },
+  "font": {
+    "newyork": {
+      "$value": "_NewYork",
+      "$type": "fontFamily",
+      "$description": "Display wordmark and large headings — custom serif at 200px weight 400 creates monumentality through restraint; the thin strokes and high contrast of editorial serifs read as gallery signage, not web UI. Use at 200px for the brand mark, 50px for section anchors. No bold weight — the form itself carries presence."
+    },
+    "dm-sans": {
+      "$value": "DM Sans",
+      "$type": "fontFamily",
+      "$description": "UI labels, link text, body copy, and button text — the only working sans-serif. Weight 400 for labels and links, 700 for emphasized micro-copy. Generous line-height (1.5) for longer passages, tight (1.15) for button and nav text."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Orbital micro-labels — the curved text ring around the wordmark uses 10px Times at normal spacing. This deliberately anti-modern choice (serif at 10px) creates a vintage editorial annotation feel. Use sparingly for fine print and caption-level metadata only."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://atmos.leeroy.ca",
+      "siteName": "ATMOS",
+      "extractedAt": "2026-06-03T17:25:33.599Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+/* Settings › AI accounts (`AccountsPane.tsx`): what the pane adds around the shared cards
+   (`account-cards/account-cards.css`): the lead line, the fallback block with Move up / Move down,
+   the closing line, and the locked look when the administrator turned AI accounts off. From the
+   mock tasks/evidence/desktop-onboard/mock/settings-ai-accounts.html. Mode B: no reset, no Tailwind. */
+
+.tv-ac-pane { display: flex; flex-direction: column; gap: 14px; max-width: 640px; }
+.tv-ac-lead { margin: 0 0 2px; font-size: 13px; line-height: 1.5; color: var(--muted-foreground); }
+.tv-ac-error { margin: 0; font-size: 12px; line-height: 1.5; color: var(--destructive); }
+
+/* The fallback block: a rule under its head, then the numbered rows. */
+.tv-ob-fallback-head { margin-bottom: 4px; }
+.tv-ob-order-rule { margin: 0 0 10px; font-size: 12px; line-height: 1.5; color: var(--muted-foreground); }
+.tv-ob-order { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.tv-ob-order-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 12px; border-top: 1px solid var(--border); }
+.tv-ob-order-row:first-child { border-top: 0; }
+.tv-ob-order-n { width: 18px; height: 18px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--foreground); color: var(--background);
+  font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tv-ob-order-name { flex: none; font-size: 13px; font-weight: 500; white-space: nowrap; }
+.tv-ob-order-sub { flex: 1; min-width: 0; text-align: right; font-size: 12px; line-height: 1.35; color: var(--muted-foreground); }
+.tv-ob-order-btns { display: flex; gap: 2px; margin-left: 4px; }
+.tv-ob-icon-btn { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--muted-foreground); cursor: pointer; }
+.tv-ob-icon-btn:hover:not(:disabled) { background: color-mix(in oklab, var(--foreground) 6%, transparent); color: var(--foreground); }
+.tv-ob-icon-btn:disabled { opacity: .3; cursor: default; }
+
+.tv-ob-footnote { display: flex; align-items: center; gap: 8px; padding: 0 4px; font-size: 12px; color: var(--muted-foreground); }
+.tv-ob-footnote b { color: var(--foreground); font-weight: 500; }
+
+/* AI accounts turned off by the administrator: the cards stay to read, nothing to press. */
+.tv-ac-locked .tv-ob-agent, .tv-ac-locked .tv-ob-text-btn, .tv-ac-locked .tv-ob-disclosure { opacity: .5; pointer-events: none; }
+
+/* A browser sign-in under way (`CallbackForm`): three numbered steps BEFORE the paste box, so the
+   person knows the browser's "cannot be reached" page is expected. Indented like the paste box
+   (38px, account-cards.css), numbers drawn like the fallback rows' `.tv-ob-order-n`. */
+.tv-ac-steps { margin: 0; padding: 0 0 0 38px; list-style: none; counter-reset: tv-ac-step;
+  display: flex; flex-direction: column; gap: 8px; font-size: 12px; line-height: 1.5; color: var(--foreground); }
+.tv-ac-steps > li { position: relative; margin: 0; padding: 0 0 0 26px; counter-increment: tv-ac-step; }
+.tv-ac-steps > li::before { content: counter(tv-ac-step); position: absolute; left: 0; top: 1px;
+  width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%;
+  background: var(--muted); color: var(--muted-foreground); border: 1px solid var(--border);
+  font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
+.tv-ac-steps .tv-ob-link { font-size: 12px; color: var(--foreground); }
+/* Step 2's hint (a sign-in opened in a window with no address bar): a quieter line under the step. */
+.tv-ac-step-hint { display: block; margin-top: 4px; font-size: 11.5px; line-height: 1.45; color: var(--muted-foreground); }
+
+/* The address-bar picture under step 3: a rounded bar, an info glyph, the callback address in
+   monospace, and a bracket under the address saying "copy this". Tokens only, so both themes. */
+.tv-ac-addr { display: flex; flex-direction: column; width: fit-content; max-width: 100%; margin-top: 8px; }
+.tv-ac-addr-bar { display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 12px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); overflow: hidden; }
+.tv-ac-addr-glyph { flex: none; }
+.tv-ac-addr-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--foreground);
+  font: 500 11.5px/1 ui-monospace, "SF Mono", Menlo, monospace; background: none; padding: 0; }
+.tv-ac-addr-bracket { height: 7px; margin: 4px 12px 0 32px; border: 1.5px solid var(--primary); border-top: 0;
+  border-radius: 0 0 5px 5px; }

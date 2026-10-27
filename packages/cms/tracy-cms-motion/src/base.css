@@ -1,0 +1,29 @@
+/*
+ * Library base. Two jobs, and nothing else.
+ *
+ * 1. Hide what is about to make an entrance, so a unit cannot be seen sitting still before it
+ *    moves. The rule is structural and keyed on the root marker alone, because the generated
+ *    head-marker partial sets that marker synchronously in <head> while this file and the runtime
+ *    arrive later: anything keyed on a class the runtime adds would show the content, then hide
+ *    it, then animate it.
+ * 2. Show it again once the runtime is finished, through the one marker an entrance effect is
+ *    allowed to leave behind.
+ *
+ * Both sit inside the reduced-motion guard, so a visitor who asked for less motion is never handed
+ * a blank page — not even when the JS never runs at all.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html.tracy-motion main section {
+    opacity: 0;
+  }
+
+  /* Only outermost sections are targets; a nested one rides on its parent's opacity. */
+  html.tracy-motion main section section {
+    opacity: 1;
+  }
+
+  html.tracy-motion main section.tracy-motion-done {
+    opacity: 1;
+  }
+}

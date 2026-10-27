@@ -1,0 +1,97 @@
+# build output
+dist/
+
+# generated types
+.astro/
+
+/themes
+
+# dependencies
+node_modules
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+
+# database files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# uploads & EmDash data
+uploads/
+.emdash/
+!packages/core/tests/e2e/fixture/.emdash/
+!packages/core/tests/integration/fixture/.emdash/
+!e2e/fixture/.emdash/
+!e2e/fixture-cloudflare/.emdash/
+!templates/*/.emdash/seed.json
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+.wrangler
+
+# Playwright E2E testing
+playwright-report/
+test-results/
+playwright/.cache/
+
+# Visual regression baselines are platform-specific. CI (Linux) is the source
+# of truth and commits `-linux.png` via the visual-apply workflow; locally
+# generated macOS/Windows baselines must never be committed (they won't match).
+e2e/tests/*-snapshots/*-darwin.png
+e2e/tests/*-snapshots/*-win32.png
+
+# Debug screenshots
+debug-*.png
+
+# Template screenshots - only keep latest/, ignore dated folders
+assets/templates/*/[0-9]*
+
+# Vitest browser-mode failure screenshots
+__screenshots__/
+.vitest-attachments/
+
+# AI review artifacts
+*-review.md
+
+.chainlink/
+
+.emdash-bundle-tmp
+
+# Downloaded test data (fetched on demand in CI)
+examples/wp-theme-unit-test/
+# .opencode is local-only EXCEPT for agents/, which are shared with CI workflows
+# (review.yml, ultrareview.yml, bonk.yml, ultrabonk.yml). Use a contents-style
+# pattern so we can re-include the agents subdirectory.
+.opencode/*
+!.opencode/agents/
+
+# .claude is local-only EXCEPT for the symlinks pointing at AGENTS.md and skills/
+.claude/*
+!.claude/CLAUDE.md
+!.claude/skills
+
+.perf-query-counts
+query-counts-out/
+
+# Generated query-dump artefacts; tooling lives in scripts/query-dumps/ but
+# the per-run JSON and classification reports regenerate from the harness.
+scripts/query-dumps/sqlite/
+scripts/query-dumps/d1/
+scripts/query-dumps/classification.*.md

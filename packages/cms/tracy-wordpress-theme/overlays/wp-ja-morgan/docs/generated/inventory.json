@@ -1,0 +1,1958 @@
+{
+  "format": 1,
+  "scope": "Read from theme files, the spec-pack and the seed report only. No live site, no database, no ids. Counts under \"seed\" are at seed time, not live.",
+  "theme": {
+    "slug": "wp-ja-morgan",
+    "dir": "wp-ja-morgan",
+    "header": {
+      "License": "GNU General Public License v3",
+      "Requires at least": "7.0",
+      "Requires PHP": "8.1",
+      "Tested up to": "7.1",
+      "Text Domain": "wp-ja-morgan",
+      "Theme Name": "WP Morgan",
+      "Update URI": "https://github.com/TracyHQ/claude-cowork",
+      "Version": "1.1.2"
+    },
+    "themeJson": {
+      "version": 3,
+      "customTemplates": [
+        {
+          "name": "landing",
+          "title": "Landing",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "fixture",
+          "title": "Design system page",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "artifact",
+          "title": "Design page (engine)",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "pricing",
+          "title": "Pricing",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-landing",
+          "title": "Landing (sections only)",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-masthead",
+          "title": "Page with masthead",
+          "postTypes": [
+            "page"
+          ]
+        },
+        {
+          "name": "page-masthead-sidebar",
+          "title": "Page with masthead and sidebar",
+          "postTypes": [
+            "page"
+          ]
+        }
+      ],
+      "templateParts": [
+        {
+          "name": "header",
+          "title": "Header",
+          "area": "header"
+        },
+        {
+          "name": "footer",
+          "title": "Footer",
+          "area": "footer"
+        },
+        {
+          "name": "sidebar",
+          "title": "Sidebar",
+          "area": "uncategorized"
+        },
+        {
+          "name": "search-description",
+          "title": "Search page description",
+          "area": "uncategorized"
+        },
+        {
+          "name": "search-form",
+          "title": "Search page form and tips",
+          "area": "uncategorized"
+        }
+      ]
+    },
+    "presets": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta"
+        },
+        {
+          "slug": "border",
+          "name": "Border"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active"
+        },
+        {
+          "slug": "success",
+          "name": "Success"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger"
+        }
+      ],
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display"
+        },
+        {
+          "slug": "body",
+          "name": "Body"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono"
+        }
+      ],
+      "fontSizes": [
+        "xs",
+        "sm",
+        "base",
+        "lg",
+        "xl",
+        "xxl",
+        "xxxl",
+        "xxxxl"
+      ],
+      "spacingSizes": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "8",
+        "12"
+      ],
+      "layout": {
+        "contentSize": "1024px",
+        "wideSize": "1024px"
+      },
+      "customKeys": [
+        "container",
+        "ease",
+        "elev",
+        "focusRing",
+        "leading",
+        "motion",
+        "radius",
+        "sectionY",
+        "tracking",
+        "tracy"
+      ],
+      "inspiration": "wp-ja-morgan",
+      "stylesCss": 1811
+    },
+    "templates": [
+      {
+        "name": "404",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "archive",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [
+          "tracy/cards"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "artifact",
+        "own": false,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "fixture",
+        "own": false,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "front-page",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "home",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [
+          "tracy/cards"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "index",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [
+          "tracy/cards"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "landing",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-account",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-contact",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [
+          "wp-ja-morgan/contact-details"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-landing",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-masthead-sidebar",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-masthead",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page-password",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "page",
+        "own": true,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "pricing",
+        "own": false,
+        "parts": [
+          "footer",
+          "header"
+        ],
+        "patterns": [
+          "tracy/section-cta-final"
+        ],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "search",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "search-description",
+          "search-form",
+          "sidebar"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "single",
+        "own": true,
+        "parts": [
+          "footer",
+          "header",
+          "sidebar"
+        ],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      }
+    ],
+    "parts": [
+      {
+        "name": "footer",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 5,
+        "customBlocks": []
+      },
+      {
+        "name": "header",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 2,
+        "customBlocks": []
+      },
+      {
+        "name": "search-description",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "search-form",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      },
+      {
+        "name": "sidebar",
+        "own": true,
+        "parts": [],
+        "patterns": [],
+        "navigationBlocks": 0,
+        "customBlocks": []
+      }
+    ],
+    "patterns": [
+      {
+        "file": "patterns/cards.php",
+        "slug": "tracy/cards",
+        "title": "Cards",
+        "categories": [
+          "query"
+        ],
+        "blockTypes": [
+          "core/query"
+        ],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/landing.php",
+        "slug": "tracy/landing",
+        "title": "Landing page",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/pricing.php",
+        "slug": "tracy/pricing",
+        "title": "Pricing table",
+        "categories": [
+          "text"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-contact.php",
+        "slug": "tracy/section-contact",
+        "title": "Contact",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-cta-final.php",
+        "slug": "tracy/section-cta-final",
+        "title": "Call to action, final",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-cta-inline.php",
+        "slug": "tracy/section-cta-inline",
+        "title": "Call to action, inline",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-faq.php",
+        "slug": "tracy/section-faq",
+        "title": "FAQ",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-features.php",
+        "slug": "tracy/section-features",
+        "title": "Features",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-gallery.php",
+        "slug": "tracy/section-gallery",
+        "title": "Gallery",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-hero.php",
+        "slug": "tracy/section-hero",
+        "title": "Hero",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-how-it-works.php",
+        "slug": "tracy/section-how-it-works",
+        "title": "How it works",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-listing.php",
+        "slug": "tracy/section-listing",
+        "title": "Listing",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-pillars.php",
+        "slug": "tracy/section-pillars",
+        "title": "Value pillars",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-pricing.php",
+        "slug": "tracy/section-pricing",
+        "title": "Pricing plans",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-problem.php",
+        "slug": "tracy/section-problem",
+        "title": "Problem",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-proof.php",
+        "slug": "tracy/section-proof",
+        "title": "Proof",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-social-proof.php",
+        "slug": "tracy/section-social-proof",
+        "title": "Social proof",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-styleguide.php",
+        "slug": "tracy/section-styleguide",
+        "title": "Style guide",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/section-team.php",
+        "slug": "tracy/section-team",
+        "title": "Team",
+        "categories": [
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": false
+      },
+      {
+        "file": "patterns/a-features-4.php",
+        "slug": "wp-ja-morgan/a-features-4",
+        "title": "Colour tiles",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 11,
+        "namedBlocks": 15,
+        "own": true
+      },
+      {
+        "file": "patterns/a-features-5.php",
+        "slug": "wp-ja-morgan/a-features-5",
+        "title": "Panel over a picture",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 5,
+        "namedBlocks": 6,
+        "own": true
+      },
+      {
+        "file": "patterns/a-features-6.php",
+        "slug": "wp-ja-morgan/a-features-6",
+        "title": "Banner statement",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 4,
+        "namedBlocks": 5,
+        "own": true
+      },
+      {
+        "file": "patterns/a-statics.php",
+        "slug": "wp-ja-morgan/a-statics",
+        "title": "Number counters",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 2,
+        "namedBlocks": 5,
+        "own": true
+      },
+      {
+        "file": "patterns/a-testimonials-3.php",
+        "slug": "wp-ja-morgan/a-testimonials-3",
+        "title": "Quote cards",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 10,
+        "own": true
+      },
+      {
+        "file": "patterns/account-login.php",
+        "slug": "wp-ja-morgan/account-login",
+        "title": "Login form",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/account-register.php",
+        "slug": "wp-ja-morgan/account-register",
+        "title": "Registration form",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/account-remind.php",
+        "slug": "wp-ja-morgan/account-remind",
+        "title": "Username reminder form",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/account-reset.php",
+        "slug": "wp-ja-morgan/account-reset",
+        "title": "Password reset form",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-clients.php",
+        "slug": "wp-ja-morgan/acm-clients",
+        "title": "Client logos",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 2,
+        "namedBlocks": 5,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-1.php",
+        "slug": "wp-ja-morgan/acm-features-1",
+        "title": "Introduction with picture cards",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 8,
+        "namedBlocks": 11,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-2.php",
+        "slug": "wp-ja-morgan/acm-features-2",
+        "title": "Feature boxes",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 8,
+        "namedBlocks": 12,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-3.php",
+        "slug": "wp-ja-morgan/acm-features-3",
+        "title": "Picture and text",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 9,
+        "namedBlocks": 12,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-features-3-contact.php",
+        "slug": "wp-ja-morgan/acm-features-3-contact",
+        "title": "Picture and text with a quick contact form",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 10,
+        "namedBlocks": 13,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-hero.php",
+        "slug": "wp-ja-morgan/acm-hero",
+        "title": "Hero",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 7,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-latest.php",
+        "slug": "wp-ja-morgan/acm-latest",
+        "title": "Latest articles",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 4,
+        "namedBlocks": 5,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-slideshow.php",
+        "slug": "wp-ja-morgan/acm-slideshow",
+        "title": "Slideshow",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 5,
+        "namedBlocks": 8,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-teams.php",
+        "slug": "wp-ja-morgan/acm-teams",
+        "title": "Team or page cards",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 8,
+        "namedBlocks": 12,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-testimonials-1.php",
+        "slug": "wp-ja-morgan/acm-testimonials-1",
+        "title": "Case study cards",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 9,
+        "namedBlocks": 12,
+        "own": true
+      },
+      {
+        "file": "patterns/acm-testimonials-2.php",
+        "slug": "wp-ja-morgan/acm-testimonials-2",
+        "title": "Quote",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 3,
+        "namedBlocks": 6,
+        "own": true
+      },
+      {
+        "file": "patterns/b-category-list.php",
+        "slug": "wp-ja-morgan/b-category-list",
+        "title": "Category list",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/b-featured-articles.php",
+        "slug": "wp-ja-morgan/b-featured-articles",
+        "title": "Featured articles",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/b-tag-list.php",
+        "slug": "wp-ja-morgan/b-tag-list",
+        "title": "Tag list",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": false,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/b-tagged-items.php",
+        "slug": "wp-ja-morgan/b-tagged-items",
+        "title": "Tagged items",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 0,
+        "own": true
+      },
+      {
+        "file": "patterns/contact-details.php",
+        "slug": "wp-ja-morgan/contact-details",
+        "title": "Contact details",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 7,
+        "own": true
+      },
+      {
+        "file": "patterns/contact-form.php",
+        "slug": "wp-ja-morgan/contact-form",
+        "title": "Contact form",
+        "categories": [
+          "wp-ja-morgan",
+          "tracy"
+        ],
+        "blockTypes": [],
+        "postTypes": [
+          "page"
+        ],
+        "templateTypes": [],
+        "inserter": true,
+        "contentBlocks": 0,
+        "namedBlocks": 1,
+        "own": true
+      }
+    ],
+    "variations": [
+      {
+        "id": "wp-ja-morgan",
+        "title": "WP Morgan",
+        "inspiration": "wp-ja-morgan"
+      }
+    ],
+    "blocks": [],
+    "enqueued": [
+      {
+        "kind": "style",
+        "handle": "tracy",
+        "path": "assets/css/tracy.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy",
+        "path": "assets/js/tracy.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-fixture-page",
+        "path": "assets/css/fixture-page.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-layout",
+        "path": "assets/css/layout.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-motion",
+        "path": "assets/css/tracy-motion.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-motion",
+        "path": "assets/js/tracy-motion.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "script",
+        "handle": "tracy-preview",
+        "path": "assets/js/tracy-preview.js",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "tracy-sections",
+        "path": "assets/css/sections.css",
+        "file": "functions.php"
+      },
+      {
+        "kind": "style",
+        "handle": "wp-ja-morgan",
+        "path": "assets/css/wp-ja-morgan.css",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-morgan",
+        "path": "assets/js/wp-ja-morgan.js",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "script",
+        "handle": "wp-ja-morgan-dark",
+        "path": "assets/js/wp-ja-morgan-dark.js",
+        "file": "inc/extra.php"
+      }
+    ],
+    "optionsRead": [
+      "admin_email",
+      "tracy_contact_to",
+      "tracy_hero",
+      "tracy_inspiration",
+      "tracy_motion",
+      "tracy_nav",
+      "wp_ja_morgan_404_page",
+      "wp_ja_morgan_redirects"
+    ],
+    "hooks": [
+      {
+        "kind": "action",
+        "hook": "admin_post_…",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "admin_post_nopriv_…",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "after_setup_theme",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "after_setup_theme",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "auto_update_theme",
+        "file": "inc/update.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "body_class",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "body_class",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "content_save_pre",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "content_save_pre",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "default_option_tracy_motion",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "do_redirect_guess_404_permalink",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "init",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "parse_query",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "query_loop_block_query_vars",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "query_vars",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "query_vars",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "redirect_canonical",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/categories",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/group",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/group",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/image",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/navigation-link",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/navigation-link",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/post-title",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/post-title",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/search",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "render_block_core/tag-cloud",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "request",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "request",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "run_wptexturize",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "style_loader_src",
+        "file": "inc/asset-version.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "template_redirect",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "the_content",
+        "file": "functions.php"
+      },
+      {
+        "kind": "filter",
+        "hook": "update_themes_github.com",
+        "file": "inc/update.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_enqueue_scripts",
+        "file": "inc/extra.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_head",
+        "file": "functions.php"
+      },
+      {
+        "kind": "action",
+        "hook": "wp_head",
+        "file": "inc/extra.php"
+      }
+    ],
+    "overlay": {
+      "dir": "wp-ja-morgan",
+      "files": [
+        "assets/css/groups/account.css",
+        "assets/css/groups/content.css",
+        "assets/css/groups/dark.css",
+        "assets/css/groups/home.css",
+        "assets/css/groups/mobile.css",
+        "assets/css/groups/offcanvas.css",
+        "assets/css/wp-ja-morgan.css",
+        "assets/fonts/font-awesome-OFL.txt",
+        "assets/fonts/fontawesome-webfont.woff2",
+        "assets/fonts/ionicons-LICENSE.txt",
+        "assets/fonts/ionicons.woff2",
+        "assets/fonts/pt-root-ui-OFL.txt",
+        "assets/fonts/pt-root-ui-bold.woff",
+        "assets/fonts/pt-root-ui-medium.woff",
+        "assets/fonts/pt-root-ui-regular.woff",
+        "assets/img/placeholder.svg",
+        "assets/js/wp-ja-morgan-dark.js",
+        "assets/js/wp-ja-morgan.js",
+        "inc/extra.php",
+        "inc/groups/account.php",
+        "inc/groups/content.php",
+        "inc/groups/home.php",
+        "parts/footer.html",
+        "parts/header.html",
+        "parts/search-description.html",
+        "parts/search-form.html",
+        "parts/sidebar.html",
+        "patterns.map.json",
+        "patterns/a-features-4.php",
+        "patterns/a-features-5.php",
+        "patterns/a-features-6.php",
+        "patterns/a-statics.php",
+        "patterns/a-testimonials-3.php",
+        "patterns/account-login.php",
+        "patterns/account-register.php",
+        "patterns/account-remind.php",
+        "patterns/account-reset.php",
+        "patterns/acm-clients.php",
+        "patterns/acm-features-1.php",
+        "patterns/acm-features-2.php",
+        "patterns/acm-features-3-contact.php",
+        "patterns/acm-features-3.php",
+        "patterns/acm-hero.php",
+        "patterns/acm-latest.php",
+        "patterns/acm-slideshow.php",
+        "patterns/acm-teams.php",
+        "patterns/acm-testimonials-1.php",
+        "patterns/acm-testimonials-2.php",
+        "patterns/b-category-list.php",
+        "patterns/b-featured-articles.php",
+        "patterns/b-tag-list.php",
+        "patterns/b-tagged-items.php",
+        "patterns/cards.php",
+        "patterns/contact-details.php",
+        "patterns/contact-form.php",
+        "readme.txt",
+        "style.css",
+        "templates/404.html",
+        "templates/front-page.html",
+        "templates/page-account.html",
+        "templates/page-contact.html",
+        "templates/page-landing.html",
+        "templates/page-masthead-sidebar.html",
+        "templates/page-masthead.html",
+        "templates/page-password.html",
+        "templates/page.html",
+        "templates/search.html",
+        "templates/single.html",
+        "theme.config.json",
+        "theme.overlay.json",
+        "tokens.css"
+      ]
+    },
+    "fileCount": 110,
+    "fingerprints": {
+      "assets/css/fixture-page.css": "sha256:d2c9d7c59ba6ed16038ac7879d0a07813e3d46046f16dff44e51278087a3f173",
+      "assets/css/groups/account.css": "sha256:f437e4365a48fa4bf09b0e433633f8041dc3af473e5f05724ed9ce0df0f61891",
+      "assets/css/groups/content.css": "sha256:43ffeb0bf51886bc9a845c5f994e8173989b0895ea783715f2827fdc6c2f9b7f",
+      "assets/css/groups/dark.css": "sha256:2b71d7d66666e37260e94b34a50df8df06dcd23d8bf5a83e40d15e892bb91716",
+      "assets/css/groups/home.css": "sha256:3f0064ba06f7b56a2c468b2b02fd0c5ec92e89897acf980fbe8e90e40bba1852",
+      "assets/css/groups/mobile.css": "sha256:d163f18291f36341f4211d1635c7885811a893bbb4cdf5c2ecd215ac3b7fe718",
+      "assets/css/groups/offcanvas.css": "sha256:323780f493aee72e53d312cf092facd091e3a078332414c2880bce3dbcc3b8f3",
+      "assets/css/layout.css": "sha256:dca7d68d13067d81e306200f1ec08e2a5fa03b05bf3b46202ebe69ae86d9c06f",
+      "assets/css/sections.css": "sha256:d287eb0b26beee53654bdab114c23195e72b212240d9e5703d9546252a130a3f",
+      "assets/css/tracy-motion.css": "sha256:656642b63d46e2cb41fcd5af3437e25fed38175280bfcf14e9a1f6da5efb6bec",
+      "assets/css/tracy.css": "sha256:e4ff46badd4a022c1e0a0fcd742d5ce1acbcd329bc769de5a23f7d65381b0e71",
+      "assets/css/wp-ja-morgan.css": "sha256:35c963d5be5fcef1e14e197dab2a3dedeae3eddbcc9194dc8c81fe23db714662",
+      "assets/fonts/font-awesome-OFL.txt": "sha256:9988d3276c2fe788d117bd597830d43e52470046b81e0d6e9e545fe97c36c6f1",
+      "assets/fonts/fontawesome-webfont.woff2": "sha256:ff82aeed6b9bb6701696c84d1b223d2e682eb78c89117a438ce6cfea8c498995",
+      "assets/fonts/ionicons-LICENSE.txt": "sha256:c8713ab75f0493ac6e28dff0dcae91a7a7b2caadbf455b7f64370016f9e38694",
+      "assets/fonts/ionicons.woff2": "sha256:2d02d165cb720aec2fde78a93113a459729e0503951353f719076bc5b4a7a845",
+      "assets/fonts/pt-root-ui-bold.woff": "sha256:832fa2ae125ad3d9ccebfbd0d9fb4ad350be2e7354a361062789195fd680d9f3",
+      "assets/fonts/pt-root-ui-medium.woff": "sha256:70a7941f662745d3c7c46d65e98e83f255d9ba4de8a32fe04e192e66e198e158",
+      "assets/fonts/pt-root-ui-OFL.txt": "sha256:7b60db367b01852ed1a61b4a96469ab1f48bf8cbb80c06be479a2164e7176bc7",
+      "assets/fonts/pt-root-ui-regular.woff": "sha256:301d1fc1a34a968fdf902e8095e5cbeaab583f2eed9afdcc112890d34af69af0",
+      "assets/img/hero-placeholder.svg": "sha256:76cadc072b438fc2ec4e892db5f0d8146c4323b360f37a848c57193ecade5bf1",
+      "assets/img/placeholder.svg": "sha256:d27d72e99e7f2bfe3152c3e477a57a6cd39434de2ef7e638354c3e6fea7a3541",
+      "assets/js/tracy-motion.js": "sha256:e0de98821c906566fe3cb2e4ba7d4203375f61e1061a869fe5b53c566a796c36",
+      "assets/js/tracy-preview.js": "sha256:963089b30e6a825135a0fed7ade1f455a9e5b0e602ef53518fa98729eb43fd6c",
+      "assets/js/tracy.js": "sha256:88c0d89600b0320a54eb34f943c4f29f631a920eca0866a78e2f054837ae1df4",
+      "assets/js/wp-ja-morgan-dark.js": "sha256:a4b979b907c09327ad63ad37c330c0a1ad6be61b59145867ca2248b4041296d9",
+      "assets/js/wp-ja-morgan.js": "sha256:f30b9071074c5ccfd5a68b6d09c6fcf8ee77c79118bc4ae53b59b84fe7d70aa0",
+      "functions.php": "sha256:ebc3a7d36e7f786eaa1d4bf5fb92015f4bfbc294e3a67d019fdb25438d373149",
+      "inc/asset-version.php": "sha256:3a714c4a5c7cc86565cbafdb063a68340b09c58045962b8751ef3ed66c415b1d",
+      "inc/extra.php": "sha256:98cb78aaab69729a8969fc7076e9a54958bf7e7f2d0db24b3866440f98c1a88a",
+      "inc/groups/account.php": "sha256:8cf9c8ecf80753e9a4b5f8f256e649fa3bc0ae0b088ad458fc539c09f592826f",
+      "inc/groups/content.php": "sha256:e2da615df3c3c48d4cb462868639b669f0c981dfa89aa5ceac3e028bd29ea26c",
+      "inc/groups/home.php": "sha256:173f7c47bd10dd8c5f7c5a72dcee4dcd777e56ec4b45117878286f6a681e6723",
+      "inc/motion-head.php": "sha256:e8e3b5b22ac792cf8ce2ee97ff4dfdce949fc85d2f5aab34bdb8a21a498e41d5",
+      "inc/update.php": "sha256:6070b65ce12bff2f991a2611ceb89371ef175bef871ab62f582cb2da626a604d",
+      "inc/variations.php": "sha256:54eee8dcec3f61fcaaffa3ecde6887b2b467cec816cce873f47aa4389d79a447",
+      "inspirations.json": "sha256:fe005af8ae97a5ca92039d0c61d7414935ba3e6af2fdcae78067f575710141d9",
+      "parts/footer.html": "sha256:cc6f6fbca4007382386e381dca053c3f6fd3fdac943a82b56d40b74d3f2736e6",
+      "parts/header.html": "sha256:2e75ed5c5bf8c7ae716912a422063a85fb3819e28bcd7041521b52955c0fe8f3",
+      "parts/search-description.html": "sha256:7787d97f2256b036c2045d92acb85a8d32227328bf2f34e1d8b30f6263bfee75",
+      "parts/search-form.html": "sha256:f0cab1139e6ae18220f5dbbed871a5acc2794a89c7ab5140304b3c915e71aa65",
+      "parts/sidebar.html": "sha256:e122686752834669a6e026d05c723c34c5ba02a6ad949e783ac8ea685c6ad1b2",
+      "patterns/a-features-4.php": "sha256:7fe2c5b0c8bdc354826942a4d3c051ccbe549a4fabb0830054da7b59fad91f01",
+      "patterns/a-features-5.php": "sha256:1b3e112598b06770fbd88f7e7f25b96093ccac33cca22256ef56e270e8abbb2c",
+      "patterns/a-features-6.php": "sha256:0f25458414b04e896a824d5157188f741e4e5022166149755b38f523d47aab8c",
+      "patterns/a-statics.php": "sha256:04372d29d1d254e208786b9493300b092c2b9345b36deb2900daa0f61b5ac5a5",
+      "patterns/a-testimonials-3.php": "sha256:ae8d549441b25fae4c6c006f2c8a9e49ac1d27e3633bc18d5672dd6ee08ee5f3",
+      "patterns/account-login.php": "sha256:d22466b6abd43fd1edf25073d28425456eda304724de86bde38aae4fde6be074",
+      "patterns/account-register.php": "sha256:a7acfbc76573d56ecdd643e939d3fc1db21ebd35619428cafc33d3ad270a07be",
+      "patterns/account-remind.php": "sha256:56f097a127957060da20fed8fb7ffc2342129f1a444f6d1753f71615f915731e",
+      "patterns/account-reset.php": "sha256:6b71eb3c2441340ecc8c3139d84fb3f4d3eba1269e60d5f129adee3f70ff2517",
+      "patterns/acm-clients.php": "sha256:6c9fe6f38cc17bdbc26f303922aafd8c61986b00a1b799110f664708e52ad431",
+      "patterns/acm-features-1.php": "sha256:bf7b0b1459ac4bf62159c0790f63091b6641e4e01eb8389f951391bbfdc614da",
+      "patterns/acm-features-2.php": "sha256:80bac726cb2d7083b6859fa9f8a2e718aaa848e90149a8b139c247d13279b01a",
+      "patterns/acm-features-3-contact.php": "sha256:4febe5c89d4d277e18f4389faf079404d393f382896484a97ac2b01a96d56855",
+      "patterns/acm-features-3.php": "sha256:54c0ba8c9cf7635985f2bd024e2bff069a45aba993eaeb879812a7b0c451c664",
+      "patterns/acm-hero.php": "sha256:010b70f257026ac2703265b6e81e0516513f65f4a07a9a507d53cd952fa913e6",
+      "patterns/acm-latest.php": "sha256:52233aeaae116ba354c7f74bd054d4db28ee600ee419ed04ad1008d08a160091",
+      "patterns/acm-slideshow.php": "sha256:dbcf4d9374e3a0ad94d42dc13a047b5a5c9030800f6b34cbd6b5e3b2c06168bc",
+      "patterns/acm-teams.php": "sha256:64466746f2a93ae75c731ce28d37f5464c1fd35df01981a8010942757e95f838",
+      "patterns/acm-testimonials-1.php": "sha256:e8f787d750952e90d57c7db243d026d97c27d37c1df10e9129214ab1be0de77c",
+      "patterns/acm-testimonials-2.php": "sha256:e24d1b77135e1d80f17e316be10847f7c5f29431e8822662b65128f08b234def",
+      "patterns/b-category-list.php": "sha256:4a42458c2b97e53a0cd5791aabbcb8f6157fc3ade9ef53768900cb0a671da650",
+      "patterns/b-featured-articles.php": "sha256:5673e95e8b1f64301de8fead5d9408bb55000754809a87a403c20fcb0f663eab",
+      "patterns/b-tag-list.php": "sha256:b964650a273e1221cd244538a842d342dc8b9a1525184624910b256377be8004",
+      "patterns/b-tagged-items.php": "sha256:d611a89e033c22b123ff97ee1120f9f5f20dfe81f75da35e832b3420f702bdd6",
+      "patterns/cards.php": "sha256:4bfe55be4fab71f860114d5ddb5f8f293b74e134cde85f7b411f1f880ffd8c8a",
+      "patterns/contact-details.php": "sha256:ac96bffbdd8c371e6795d2cb222aff82e0e441b29834b99a95363be952a3be99",
+      "patterns/contact-form.php": "sha256:c1d84abae6e80a807c5c932062f9adf355ea197138a916bb2e549ec0de5edc1a",
+      "patterns/landing.php": "sha256:8d34c7c6c4385651fc63db98ad8dd380800aaf33e64821381b0b4b1754c8cde3",
+      "patterns/pricing.php": "sha256:31f9e291814519b99566250b97ac6d86011c41b5089da4a28ca0061348880e72",
+      "patterns/section-contact.php": "sha256:60fdcec2f10f1086a8049b1acebbd024978576af1c1080c838787105dd33b0eb",
+      "patterns/section-cta-final.php": "sha256:ecd60c0133ebf1d5a02cec4f4eca766ea449864f5c767e0c10a84745d61c547e",
+      "patterns/section-cta-inline.php": "sha256:462272c9187d7867520afc9879d39ca9863a890af69d807643caf879abb3cfdc",
+      "patterns/section-faq.php": "sha256:2559ac76347faf40b33af9cff183402c30b3ba49a1423015a7f940b39b2985e8",
+      "patterns/section-features.php": "sha256:abaf6c3abd70ae7dd515932371e4cb415a5c67cbe346695f697ce8534f23705a",
+      "patterns/section-gallery.php": "sha256:05eca35fed040a5da189dc458a03cd86a3c3000a50bc14ccc65f98e01976a0df",
+      "patterns/section-hero.php": "sha256:2b6d329d57d9f244e740dcf727d33c5b02a187c4fac52137aeb10760fe1a28be",
+      "patterns/section-how-it-works.php": "sha256:39585d44005856de0a97410d762cf6bcdd08aa24b1c6172bca8820a169e77a35",
+      "patterns/section-listing.php": "sha256:1e09d65604c6a63f380919b07ea7dbbc67e16c9fc98626d9e48babf45eaaeb76",
+      "patterns/section-pillars.php": "sha256:dc41ac8a3828a6c06b067bbbd7a338445ee0ae24176b8a6f1c14ff46d0bc0bd5",
+      "patterns/section-pricing.php": "sha256:54cbc560b36c4670dd6affd274d08100b02e016aa89a25bfab24073bce00db26",
+      "patterns/section-problem.php": "sha256:c83b7ecc47a79e61ae94bb8d960e802ccde630b1cb3ac6580508b66e218feda2",
+      "patterns/section-proof.php": "sha256:2ece2c6165809cfa08aeec8ec68620bcecd9a4762dfd7de8b1b1e1c060bcfc09",
+      "patterns/section-social-proof.php": "sha256:3f79e674bd377bb3e3496fb15faa2ff55bd6f4a58e3b7545491e0e72e3ab01bd",
+      "patterns/section-styleguide.php": "sha256:036a6b9a7967f56b06786e21cba76eaa4845b4ade1c36c03f4634c9e042140cf",
+      "patterns/section-team.php": "sha256:539399cdefc0989bfdc07cc6ef300e1a632db5d1c40e067cfcae545adff68092",
+      "readme.txt": "sha256:64288167b855ca745301981a08342ba0ed2d3370682c52bbe337bd81ad987c57",
+      "screenshot.png": "sha256:f02d6016b09875cbad0ce2db9a763a41b4aa11896ecfe4aba1872727d5181e00",
+      "style.css": "sha256:5ff685f5a7ff5163ed64f0538eabf94def9f048bbe49da455df9f2e87b4f7164",
+      "styles/wp-ja-morgan.json": "sha256:ef14929c724c51448c337719c0d19b63fb729086e3f1b7d76a3dc47f1e0d225e",
+      "templates/404.html": "sha256:e58da059df96d5294786ca5efba3ebb30f38f76ce4010768dc126a7018025951",
+      "templates/archive.html": "sha256:507d8a89c4a2e6f54c7155328a29d9f1cd8fe7fedfec79f1f8894141e34907cc",
+      "templates/artifact.html": "sha256:26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+      "templates/fixture.html": "sha256:26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+      "templates/front-page.html": "sha256:e330aec5926269ae56f728dc4fe70f613a18485a2835639abec9a289ce0ec25e",
+      "templates/home.html": "sha256:461fdfdeb3b1e2901d90c4a41781805d25f3bef6bc2044a30a5605c90881e3ca",
+      "templates/index.html": "sha256:275bb18326eaa50fd6661d6a29edd535e38a37ba2b9ed353ca8c02400d2ffe50",
+      "templates/landing.html": "sha256:f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+      "templates/page-account.html": "sha256:ff40e2d903ce768769408a318d4ad27158cc575f651b641043ba1fd70404c7d3",
+      "templates/page-contact.html": "sha256:0ebc72204a037c42f0180d07226bc0a2428f598c81c023154700f1feb9cc0708",
+      "templates/page-landing.html": "sha256:c5f62e437621fad64dd4ccada07840093513390a35af88ec642b0e1a3fd5d35e",
+      "templates/page-masthead-sidebar.html": "sha256:2698b2e12741b156966f5e2900c86bc7348749d8735f844c69412d27c2caaadc",
+      "templates/page-masthead.html": "sha256:fe9b53d5aa4e5450c30da0eb9df0ede931f04a76245b82b09b3a3988cc216f68",
+      "templates/page-password.html": "sha256:b512184f86b237c87e1506340663433d8b0c172d46233b82a0385c66b8712ecd",
+      "templates/page.html": "sha256:c5f62e437621fad64dd4ccada07840093513390a35af88ec642b0e1a3fd5d35e",
+      "templates/pricing.html": "sha256:4ec92f84723376773688c77dc42261c379b09ac2c78a539de894414c64d24fa7",
+      "templates/search.html": "sha256:2fdeaf1fca52f9facd4d64c798c829e2c3905d8900b0255c91f8a3fec61c32ae",
+      "templates/single.html": "sha256:7a453f422f11800d0799c1d45c4a63e34ec959ab2880ee7bc72911425c0b11f0",
+      "theme.json": "sha256:c04f15f8abb459dbcd083fcecf65da97b77c49ca39c35cf07c37fdfeb29fc023"
+    }
+  },
+  "spec": {
+    "dir": "spec",
+    "theme": {
+      "palette": {
+        "light": {
+          "primary": "#d93030",
+          "secondary": "#1b3060",
+          "body_bg": "#ffffff",
+          "text": "#777777"
+        },
+        "dark": {
+          "primary": "#e0463f",
+          "secondary": "#6f8fd6",
+          "body_bg": "#0f1320",
+          "text": "#a7b0c2"
+        }
+      },
+      "darkDerived": false,
+      "fonts": {
+        "body": "PT Root UI",
+        "heading": "PT Root UI"
+      },
+      "hook": {
+        "selector": "html",
+        "attribute": "data-theme",
+        "lightValue": "light",
+        "darkValue": "dark"
+      }
+    },
+    "routes": [
+      {
+        "path": "/",
+        "view": "front-page",
+        "title": "Home"
+      },
+      {
+        "path": "/404",
+        "view": "404",
+        "title": "Not found"
+      },
+      {
+        "path": "/about-us",
+        "view": "page-landing",
+        "title": "About Us"
+      },
+      {
+        "path": "/contact-us",
+        "view": "page-contact",
+        "title": "Contact Us"
+      },
+      {
+        "path": "/home/home-style-1",
+        "view": "page",
+        "title": "Getting Started"
+      },
+      {
+        "path": "/home/home-style-2",
+        "view": "page-landing",
+        "title": "Home Style 2"
+      },
+      {
+        "path": "/home/home-style-3",
+        "view": "page-landing",
+        "title": "Home Style 3"
+      },
+      {
+        "path": "/home/home-style-4",
+        "view": "page-landing",
+        "title": "Home Style 4"
+      },
+      {
+        "path": "/j-pages/edit-profile",
+        "view": "page-account",
+        "title": "Edit Profile"
+      },
+      {
+        "path": "/j-pages/login",
+        "view": "page-login",
+        "title": "Login"
+      },
+      {
+        "path": "/j-pages/profile",
+        "view": "page-account",
+        "title": "Profile"
+      },
+      {
+        "path": "/j-pages/registration",
+        "view": "page-register",
+        "title": "Registration"
+      },
+      {
+        "path": "/joomlart-content/category-blog",
+        "view": "category",
+        "title": "Category Blog"
+      },
+      {
+        "path": "/joomlart-content/featured-articles",
+        "view": "page-landing",
+        "title": "Featured Articles"
+      },
+      {
+        "path": "/joomlart-content/list-all-categories",
+        "view": "page",
+        "title": "List All Categories"
+      },
+      {
+        "path": "/joomlart-content/list-of-all-tags",
+        "view": "page",
+        "title": "List of all tags"
+      },
+      {
+        "path": "/joomlart-content/single-article",
+        "view": "single",
+        "title": "Strong job growth is back: Payrolls jump in June well above expectations"
+      },
+      {
+        "path": "/joomlart-content/tagged-items",
+        "view": "tag",
+        "title": "Tagged Items"
+      },
+      {
+        "path": "/joomlart-content/typography",
+        "view": "page",
+        "title": "Typography"
+      },
+      {
+        "path": "/other-pages/error-page",
+        "view": "page",
+        "title": "Error Page"
+      },
+      {
+        "path": "/other-pages/offline-page",
+        "view": "page",
+        "title": "Offline Page"
+      },
+      {
+        "path": "/other-pages/smart-search",
+        "view": "search",
+        "title": "Smart Search"
+      },
+      {
+        "path": "/password-reset",
+        "view": "page-password",
+        "title": "Password Reset"
+      },
+      {
+        "path": "/services-page",
+        "view": "page-landing",
+        "title": "Services"
+      },
+      {
+        "path": "/username-reminder-request",
+        "view": "page-password",
+        "title": "Username Reminder Request"
+      },
+      {
+        "path": "/your-profile",
+        "view": "page-account",
+        "title": "Your Profile"
+      }
+    ],
+    "routesByView": {
+      "404": 1,
+      "category": 1,
+      "front-page": 1,
+      "page": 6,
+      "page-account": 3,
+      "page-contact": 1,
+      "page-landing": 6,
+      "page-login": 1,
+      "page-password": 2,
+      "page-register": 1,
+      "search": 1,
+      "single": 1,
+      "tag": 1
+    },
+    "gaps": 3,
+    "menus": [
+      {
+        "slug": "mainmenu",
+        "title": "mainmenu",
+        "items": 9
+      },
+      {
+        "slug": "usermenu",
+        "title": "usermenu",
+        "items": 5
+      },
+      {
+        "slug": "joomla-pages",
+        "title": "joomla-pages",
+        "items": 16
+      },
+      {
+        "slug": "navigate",
+        "title": "navigate",
+        "items": 6
+      },
+      {
+        "slug": "services",
+        "title": "services",
+        "items": 5
+      },
+      {
+        "slug": "support",
+        "title": "support",
+        "items": 7
+      },
+      {
+        "slug": "careers",
+        "title": "careers",
+        "items": 4
+      },
+      {
+        "slug": "terms-privacy",
+        "title": "terms-privacy",
+        "items": 2
+      }
+    ],
+    "redirects": 3,
+    "inputs": {
+      "page-map.json": "sha256:ebbd1763eb5774d06c5f71abac7833b16a637fee8c4ac5f3e4b7a16a5ccb8d7f",
+      "menus.json": "sha256:f21bf2ad6293b0fcaebe60db6751f82e4518d227d5414c096d0956e95d7f91dc",
+      "redirects.json": "sha256:711c994d0ad4a0a698ee08944c82026403a908868045628d2673f4c150428f84"
+    }
+  },
+  "seed": null
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ea55601d-e953-48b3-99db-374b39bf2f56",
+  "status": "complete",
+  "name": "Waka Waka",
+  "url": "https://styles.refero.design/style/ea55601d-e953-48b3-99db-374b39bf2f56",
+  "sourceWebsite": "https://wakawaka.world",
+  "extractedAt": "2026-06-03T21:57:37.582Z",
+  "capturedAt": "2026-10-08T05:19:03.450714+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "museum poster in bone and ink — monumental black grotesk type printed on warm off-white paper, everything else recedes",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/64bb9b6d-733e-43b7-96cd-1e958976f769.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/3970dfdf-dc9a-4a1b-9637-24e7a50cad80.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/1269991e-e92e-409c-bfb2-4316fdca4672.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/1143fbdf-1449-4434-af63-825bfb51c7db.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/41f3fcc9-ae56-44b9-9f53-d797f78bf732.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5c502b65bd5ad2b9364b75ae7a2a82d133e3ff6130c776e8cc12781a4989fd64",
+      "bytes": 14318
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c011da464e04bff0f8185e415e644c504d7b3d0a8c335ecefdeb57b107681cd6",
+      "bytes": 48713
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "5a1013136b6447f89b21c1a2de94e4687d1cc6fe273560ff5c6924c633b23d00",
+      "bytes": 12577
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3f3e94bef005f455ee2c13e017e57cee0946355f912b86fd9efeab65843eaad9",
+      "bytes": 5693
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "425fce4c3b1dafed0dceeb9460a0f5db8c40276f11e0163ca6bdb0e0e224a79b",
+      "bytes": 9833
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7bafa8911e2b9a6ed2128c7f4d627575a70cad93f03ab5ee49c118ca17319c2a",
+      "bytes": 1484
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "213c19ac1a0d5eea65ec2e1958e877a7d1d9ef1c3cac7fbbca0a035bfcf61788",
+      "bytes": 263
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d59f69b7253e3f0e6f2fd34cdb37812b2d8bd2a2c3a2c508545aa61653874855",
+      "bytes": 280
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "0d031fc3c696b07480f37e24f0ecf8075e42df760230a747b1948a87617af409",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "9169afd499b595871f0edea0a07f3943137a9147ec78f9fdcf7e1bdd048ecb83",
+      "bytes": 36072
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "04be4eba4452f90fb0b52997925fe4cda868d6a65bde70800b2b1b311c0446db",
+      "bytes": 18716
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "898165f096aeafa3f408026f04dd7fc4d300ddcce944eaa5758067c0fd1655c5",
+      "bytes": 22824
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ab11e1cca0dd41e255996608865c41d86c9acde1dddcebcafad085638111cbd8",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "272de2b651a6969c6713b69a19e1fc5e552b8a189931bb65245a21baaa31dda4",
+      "bytes": 765
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c316892645207d8c9e5889dd04a5158b1301a0a68e5ef1599614fb3931135920",
+      "bytes": 1237
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "16be276a-d8ce-484e-8f7a-cbbb09f717f7",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "3af36935-8383-49e7-857e-9fb5caa06966",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4fc87190-9783-4a85-bdc1-35800a2ec690",
+    "5af60925-9c29-48fe-a19b-0f8cf12505ab",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "76bfda6b-125f-4d9b-96c0-356de1e9fc10",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bc4b420c-be08-4165-95a3-c8338b5a9c3c",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "e6c20874-c6f9-4c31-b6b2-2cb27cbf15f2",
+    "ea55601d-e953-48b3-99db-374b39bf2f56",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318"
+  ]
+}

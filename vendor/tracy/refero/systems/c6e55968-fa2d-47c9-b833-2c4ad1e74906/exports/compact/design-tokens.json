@@ -1,0 +1,54 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, borders, button outlines, structural strokes — the only color that ever carries information"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, thumbnail covers, inverted text on dark blocks"
+    },
+    "carbon": {
+      "$value": "#131313",
+      "$type": "color",
+      "$description": "Carbon — Dark project tile backgrounds, near-black surface for video panels"
+    },
+    "bone-gray": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Bone Gray — Page canvas, neutral button fills — the warm gray the whole composition sits on"
+    },
+    "studio-indigo": {
+      "$value": "#31338e",
+      "$type": "color",
+      "$description": "Studio Indigo — Sole chromatic accent — STUDIO pill badge, and any deep brand punctuation. The only saturated color in the system"
+    }
+  },
+  "font": {
+    "helvetica": {
+      "$value": "helvetica",
+      "$type": "fontFamily",
+      "$description": "Every utility, body, list, button, and link on the site. Stays at one weight — no bold, no medium. The decision to use weight 400 Helvetica at 20px for body (not 16px) is deliberate: text is meant to feel like printed matter, not a UI. Tighter letter-spacing on larger sizes (-0.03em) prevents the 40px from feeling airy."
+    },
+    "caslon": {
+      "$value": "Caslon",
+      "$type": "fontFamily",
+      "$description": "The hero wordmark and any serif accent. A single weight of a custom display serif — chosen because its high contrast strokes and ball terminals read as editorial print, not web type. This font IS the brand; everything else is scaffolding."
+    },
+    "sometimes-times": {
+      "$value": "Sometimes Times",
+      "$type": "fontFamily",
+      "$description": "Sometimes Times — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.butt-studio.com",
+      "siteName": "BUTT STUDIO",
+      "extractedAt": "2026-06-03T20:40:49.571Z",
+      "variant": "compact"
+    }
+  }
+}

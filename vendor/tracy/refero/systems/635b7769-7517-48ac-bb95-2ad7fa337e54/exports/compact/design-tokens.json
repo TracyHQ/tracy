@@ -1,0 +1,109 @@
+{
+  "color": {
+    "canvas-charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Canvas Charcoal — Page background, dark section bands, card surfaces on dark — the structural ground for 90% of the interface"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary text on dark, light section backgrounds, pill button fill, card backgrounds in light sections"
+    },
+    "border-stone": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Border Stone — Hairline dividers, card borders on dark surfaces, subtle structural lines"
+    },
+    "muted-graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Muted Graphite — Secondary text, helper copy, muted metadata on light backgrounds"
+    },
+    "whisper-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Whisper Gray — Tertiary text, icon fills, disabled states, low-emphasis borders"
+    },
+    "fog-line": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Fog Line — Light-mode section dividers, ghost button borders, soft borders on white surfaces"
+    },
+    "ifttt-signal-blue": {
+      "$value": "#0099ff",
+      "$type": "color",
+      "$description": "IFTTT Signal Blue — Brand accent — primary highlights, featured service tiles, active indicators"
+    },
+    "applet-green": {
+      "$value": "#2cbe60",
+      "$type": "color",
+      "$description": "Applet Green — Green action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "automate-violet": {
+      "$value": "#2c6efc",
+      "$type": "color",
+      "$description": "Automate Violet — Brand accent — Google service tiles, link emphasis, interactive hover on dark"
+    },
+    "deep-navy": {
+      "$value": "#23448b",
+      "$type": "color",
+      "$description": "Deep Navy — Brand accent — secondary blue for service tile variants, subtle elevated surfaces"
+    },
+    "alert-red": {
+      "$value": "#e44332",
+      "$type": "color",
+      "$description": "Alert Red — Red action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "forest-green": {
+      "$value": "#1d9a59",
+      "$type": "color",
+      "$description": "Forest Green — Green action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "ember-orange": {
+      "$value": "#ec7505",
+      "$type": "color",
+      "$description": "Ember Orange — Brand accent — RSS Feed tile, warm decorative accent"
+    },
+    "pure-red": {
+      "$value": "#ff0000",
+      "$type": "color",
+      "$description": "Pure Red — Brand accent — YouTube tile, high-saturation red service representation"
+    },
+    "slack-plum": {
+      "$value": "#4a154b",
+      "$type": "color",
+      "$description": "Slack Plum — Brand accent — Slack tile, purple-pink service representation"
+    },
+    "lime-pulse": {
+      "$value": "#8cc251",
+      "$type": "color",
+      "$description": "Lime Pulse — Brand accent — secondary green for Android Device-adjacent tiles"
+    },
+    "coral-warning": {
+      "$value": "#e8655c",
+      "$type": "color",
+      "$description": "Coral Warning — Red action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "magenta-pop": {
+      "$value": "#e4405f",
+      "$type": "color",
+      "$description": "Magenta Pop — Brand accent — Instagram tile, vivid pink-red service representation"
+    }
+  },
+  "font": {
+    "avenir-next": {
+      "$value": "Avenir Next",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all surfaces. Geometric humanist sans with strong weight range from 400 (body) to 900 (display). The italic display treatment at 68px is the signature moment — confident, slightly editorial. Body holds 400–500, UI controls jump to 600, headings claim 700–800, display goes 800–900."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ifttt.com",
+      "siteName": "IFTTT",
+      "extractedAt": "2026-06-03T22:04:39.318Z",
+      "variant": "compact"
+    }
+  }
+}

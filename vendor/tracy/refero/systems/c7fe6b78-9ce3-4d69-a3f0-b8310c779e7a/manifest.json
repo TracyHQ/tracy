@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c7fe6b78-9ce3-4d69-a3f0-b8310c779e7a",
+  "status": "complete",
+  "name": "Goodnotes",
+  "url": "https://styles.refero.design/style/c7fe6b78-9ce3-4d69-a3f0-b8310c779e7a",
+  "sourceWebsite": "https://www.goodnotes.com",
+  "extractedAt": "2026-05-11T13:17:05.961Z",
+  "capturedAt": "2026-10-08T05:17:23.509898+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Paper-white command canvas — a blank notebook page where every tool snap into place without decoration.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/2ea3f31d-a80e-40e7-a1d1-c1a765abe8e0.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/77774c7e-2307-4261-8662-a71115e74907.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ba1e39b7-897f-4f68-bf54-08480c59d032.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/881329e1-15f0-4caf-8d14-2b3aac9e86af.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/338c12c9-e158-4217-9783-9022b9295fed.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6bbf02d53b73f005b07102f0572dcfdb3d075b216d916f5adf486b71b99721a4",
+      "bytes": 20421
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f0ff4414a042a83f8b2a0e1be0481ebda8d282509340b29094a1de4e06304e52",
+      "bytes": 90162
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "428dc1b86dbf190d39a2a60a8a295c5b4dce0e46839e8fcd681a5af9983c13c4",
+      "bytes": 17325
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9f688dd2ca8afc30ae83875ecf8c4f8c46f65e3ce3f2ee62031df6279aac28ce",
+      "bytes": 12344
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8866c946108cc410fcdcd797be149ff76c4eb327b3829a5fa2c01d06fe1f7245",
+      "bytes": 13136
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "913f5eb97f5a9c17eef5935dd0dc9668244cb9e519b17af357f9c4faf1026851",
+      "bytes": 3631
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c08d42cf7289f5d8991ffbfeab185d5f1e444c31da31663a66cdf5fdcd2065cd",
+      "bytes": 800
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a10dfc01dd89c482036e81c87b51fd954107ba4eff7ef87d1d66f9489d557a3b",
+      "bytes": 817
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "41a1e97c03836e621fcd93bec62e7614eb7c5aa480c10277903b72f381fae97b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f6921d8c467e8a2f0d053a4b9e0f1c04def0081ac3e256b3c40f5d0863ec3e29",
+      "bytes": 45244
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "be9598c67060a9e9925a9d85ed6168027f30c46ee7580c0c26c047a28576e743",
+      "bytes": 23691
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "730ac16a877832f97c413393ec52cc590656b3e002e36612fea40d09982aeb18",
+      "bytes": 52953
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f219d74a1906aa8398fc37b9238b98bca03eea7ea818bca69da34fa98bd24cbc",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "40f7bd3652a49daf726b589b7e87573a5a32476350bcff82b6424fb68f609fc2",
+      "bytes": 1800
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "16ac840aa39c1c2f85eeebe8333de21d72b339fdd651724a3fe18e7894867542",
+      "bytes": 2434
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0c0b6140-2b6c-44f8-8bba-4ecfcadba420",
+    "24d3b281-04a6-4cc7-8a74-634b08472291",
+    "25863c92-a287-491e-bae7-4da37a1f9a98",
+    "2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+    "2db41cd9-c898-4f59-b704-3042c0d87f45",
+    "34c8dbee-f5d9-4495-a0e0-a25c6ca4b95b",
+    "5d8ad116-b3d8-4890-a969-5b856b35c678",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "67cdbe0a-a9d5-4a41-91a6-5b26550efc69",
+    "68d18deb-bb09-4258-8024-001af9c844c0",
+    "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+    "7368cfab-6313-4e50-97e5-c3318c52e7fe",
+    "754ad72f-9abd-43df-ac72-c6abf2036ed4",
+    "88e9d606-7e8f-479c-9508-1b081e254ed9",
+    "8d4a4e15-31f1-4509-8d13-7746f85c20d7",
+    "c7fe6b78-9ce3-4d69-a3f0-b8310c779e7a",
+    "cafcbe97-58eb-4331-9a0a-c5e6969e8a04",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ebbfbc6a-988b-4f33-b261-d431b2327545",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

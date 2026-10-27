@@ -1,0 +1,1391 @@
+{
+  "meta": {
+    "url": "https://bedouinsdaughter.com",
+    "siteName": "Bedouin's Daughter",
+    "extractedAt": "2026-09-20T19:29:36.676Z",
+    "durationMs": 55756,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "elementCount": 330,
+    "telemetry": {
+      "enrichment": {
+        "componentHtmlStatus": "pending",
+        "attempts": 0
+      }
+    }
+  },
+  "raw": {
+    "colors": {
+      "tokens": [
+        {
+          "hex": "#000000",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0
+          },
+          "contexts": [
+            "other",
+            "button"
+          ],
+          "frequency": 12,
+          "confidence": 1,
+          "prominence": 8134243.68094254,
+          "properties": [
+            "backgroundColor",
+            "boxShadow",
+            "color"
+          ],
+          "usageCounts": {
+            "button/color": 1,
+            "button/boxShadow": 7,
+            "other/backgroundColor": 4
+          }
+        },
+        {
+          "hex": "#333333",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.3210925111636326
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 1296000,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#080808",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.13696991618772067
+          },
+          "contexts": [
+            "link"
+          ],
+          "frequency": 6,
+          "confidence": 1,
+          "prominence": 548602.0694488088,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "link/backgroundColor": 6
+          }
+        },
+        {
+          "hex": "#f5e78d",
+          "oklch": {
+            "c": 0.11203834975757165,
+            "h": 100.55933916578822,
+            "l": 0.919858701525113
+          },
+          "contexts": [
+            "body",
+            "other",
+            "nav",
+            "button",
+            "link",
+            "badge",
+            "heading"
+          ],
+          "frequency": 56,
+          "confidence": 1,
+          "prominence": 436766.80426065583,
+          "properties": [
+            "color",
+            "borderColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "nav/color": 2,
+            "body/color": 22,
+            "link/color": 7,
+            "other/fill": 2,
+            "badge/color": 3,
+            "other/color": 2,
+            "button/color": 2,
+            "heading/color": 3,
+            "badge/borderColor": 12,
+            "other/borderColor": 1
+          }
+        },
+        {
+          "hex": "#ffffff",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 1.0000000000000002
+          },
+          "contexts": [
+            "button",
+            "body",
+            "heading"
+          ],
+          "frequency": 50,
+          "confidence": 1,
+          "prominence": 219573.9125623746,
+          "properties": [
+            "color",
+            "boxShadow",
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "body/color": 39,
+            "button/color": 8,
+            "heading/color": 1,
+            "button/boxShadow": 1,
+            "button/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#111111",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.17763777307657064
+          },
+          "contexts": [
+            "other",
+            "button"
+          ],
+          "frequency": 9,
+          "confidence": 1,
+          "prominence": 153074.44661240964,
+          "properties": [
+            "backgroundColor",
+            "boxShadow"
+          ],
+          "usageCounts": {
+            "button/boxShadow": 1,
+            "other/backgroundColor": 1,
+            "button/backgroundColor": 7
+          }
+        },
+        {
+          "hex": "#999999",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.6829534013134412
+          },
+          "contexts": [
+            "body"
+          ],
+          "frequency": 6,
+          "confidence": 1,
+          "prominence": 9904.348165019228,
+          "properties": [
+            "color"
+          ],
+          "usageCounts": {
+            "body/color": 6
+          }
+        }
+      ],
+      "isDarkMode": true,
+      "colorfulness": 0.12112254027845584,
+      "contrastPairs": [
+        {
+          "level": "AAA",
+          "ratio": 21,
+          "background": "#ffffff",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 20.03,
+          "background": "#080808",
+          "foreground": "#ffffff"
+        },
+        {
+          "level": "AAA",
+          "ratio": 18.88,
+          "background": "#111111",
+          "foreground": "#ffffff"
+        },
+        {
+          "level": "AAA",
+          "ratio": 16.7,
+          "background": "#000000",
+          "foreground": "#f5e78d"
+        },
+        {
+          "level": "AAA",
+          "ratio": 15.92,
+          "background": "#080808",
+          "foreground": "#f5e78d"
+        },
+        {
+          "level": "AAA",
+          "ratio": 15.01,
+          "background": "#111111",
+          "foreground": "#f5e78d"
+        },
+        {
+          "level": "AAA",
+          "ratio": 12.63,
+          "background": "#333333",
+          "foreground": "#ffffff"
+        },
+        {
+          "level": "AAA",
+          "ratio": 10.05,
+          "background": "#333333",
+          "foreground": "#f5e78d"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.37,
+          "background": "#000000",
+          "foreground": "#999999"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.03,
+          "background": "#080808",
+          "foreground": "#999999"
+        },
+        {
+          "level": "AA",
+          "ratio": 6.63,
+          "background": "#111111",
+          "foreground": "#999999"
+        },
+        {
+          "level": "fail",
+          "ratio": 4.43,
+          "background": "#333333",
+          "foreground": "#999999"
+        },
+        {
+          "level": "fail",
+          "ratio": 2.85,
+          "background": "#ffffff",
+          "foreground": "#999999"
+        },
+        {
+          "level": "fail",
+          "ratio": 1.66,
+          "background": "#333333",
+          "foreground": "#000000"
+        },
+        {
+          "level": "fail",
+          "ratio": 1.26,
+          "background": "#ffffff",
+          "foreground": "#f5e78d"
+        },
+        {
+          "level": "fail",
+          "ratio": 1.11,
+          "background": "#111111",
+          "foreground": "#000000"
+        },
+        {
+          "level": "fail",
+          "ratio": 1.05,
+          "background": "#080808",
+          "foreground": "#000000"
+        }
+      ]
+    },
+    "shapes": {
+      "radii": [
+        {
+          "value": 20,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 7
+        },
+        {
+          "value": 2,
+          "contexts": [
+            "badge"
+          ],
+          "frequency": 3
+        },
+        {
+          "value": 100,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 2
+        }
+      ],
+      "shadows": [
+        {
+          "value": "rgb(255, 255, 255) 0px 0px 0px 1px inset",
+          "contexts": [
+            "button"
+          ],
+          "frequency": 1
+        }
+      ]
+    },
+    "spacing": {
+      "tokens": [
+        {
+          "value": 3,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 12,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 4,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 24,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|body",
+            "paddingBottom|body"
+          ]
+        },
+        {
+          "value": 5,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "rowGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other"
+          ]
+        },
+        {
+          "value": 6,
+          "contexts": [
+            "body",
+            "badge",
+            "other"
+          ],
+          "frequency": 21,
+          "properties": [
+            "marginBottom",
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "marginBottom|body",
+            "paddingTop|badge",
+            "paddingBottom|badge",
+            "rowGap|body",
+            "columnGap|body",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 8,
+          "contexts": [
+            "other",
+            "button",
+            "heading"
+          ],
+          "frequency": 18,
+          "properties": [
+            "rowGap",
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "paddingTop|button",
+            "paddingBottom|button",
+            "paddingTop|other",
+            "paddingBottom|other",
+            "paddingTop|heading",
+            "paddingBottom|heading"
+          ]
+        },
+        {
+          "value": 10,
+          "contexts": [
+            "nav",
+            "badge"
+          ],
+          "frequency": 10,
+          "properties": [
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|nav",
+            "paddingLeft|nav",
+            "paddingRight|badge",
+            "paddingLeft|badge"
+          ]
+        },
+        {
+          "value": 11,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 12,
+          "contexts": [
+            "button",
+            "other"
+          ],
+          "frequency": 37,
+          "properties": [
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap",
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|button",
+            "paddingBottom|button",
+            "paddingTop|other",
+            "rowGap|other",
+            "columnGap|other",
+            "paddingRight|button",
+            "paddingLeft|button"
+          ]
+        },
+        {
+          "value": 14,
+          "contexts": [
+            "nav",
+            "other",
+            "list"
+          ],
+          "frequency": 10,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|nav",
+            "columnGap|nav",
+            "rowGap|other",
+            "columnGap|other",
+            "rowGap|list",
+            "columnGap|list"
+          ]
+        },
+        {
+          "value": 16,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 37,
+          "properties": [
+            "marginBottom",
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom",
+            "paddingLeft",
+            "marginTop",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "marginBottom|other",
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other",
+            "marginTop|other",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 20,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 10,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 22,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 4,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|nav",
+            "paddingBottom|nav"
+          ]
+        },
+        {
+          "value": 24,
+          "contexts": [
+            "button",
+            "other",
+            "list"
+          ],
+          "frequency": 14,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "paddingBottom",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|button",
+            "paddingLeft|button",
+            "paddingBottom|other",
+            "rowGap|other",
+            "columnGap|other",
+            "rowGap|list",
+            "columnGap|list"
+          ]
+        },
+        {
+          "value": 32,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 3,
+          "properties": [
+            "paddingBottom",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingBottom|other",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 40,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 47,
+          "contexts": [
+            "image"
+          ],
+          "frequency": 12,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|image",
+            "paddingBottom|image"
+          ]
+        },
+        {
+          "value": 64,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 32,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other",
+            "paddingTop|other",
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 71,
+          "contexts": [
+            "image"
+          ],
+          "frequency": 12,
+          "properties": [
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|image",
+            "paddingLeft|image"
+          ]
+        },
+        {
+          "value": 100,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 4,
+          "properties": [
+            "paddingBottom",
+            "marginTop",
+            "marginBottom",
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "paddingBottom|other",
+            "marginTop|other",
+            "marginBottom|other",
+            "paddingTop|other"
+          ]
+        }
+      ],
+      "density": "comfortable",
+      "baseUnit": 4
+    },
+    "gradients": [],
+    "typography": {
+      "fonts": [
+        {
+          "family": "ROM",
+          "source": "custom",
+          "weights": [
+            400,
+            700
+          ],
+          "frequency": 279,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "Gaisyr",
+          "source": "custom",
+          "weights": [
+            400,
+            700
+          ],
+          "frequency": 32,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "ABC ROM Extended",
+          "source": "custom",
+          "weights": [
+            500
+          ],
+          "frequency": 12,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "ROM Extended",
+          "source": "custom",
+          "weights": [
+            400,
+            700
+          ],
+          "frequency": 4,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "GTStandard-M",
+          "source": "custom",
+          "weights": [
+            400
+          ],
+          "frequency": 1,
+          "fontFeatureSettings": []
+        }
+      ],
+      "scale": {
+        "base": 16,
+        "name": "Major Second",
+        "ratio": 1.125,
+        "confidence": 1
+      },
+      "steps": [
+        {
+          "size": 10,
+          "family": "ABC ROM Extended",
+          "weight": 500,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 12,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 10,
+          "family": "ROM",
+          "weight": 700,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 2,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 10,
+          "family": "Gaisyr",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": 0.18,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 10,
+          "family": "ROM",
+          "weight": 400,
+          "contexts": [
+            "badge"
+          ],
+          "frequency": 3,
+          "lineHeight": 1,
+          "letterSpacing": 0.12,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 12,
+          "family": "ROM",
+          "weight": 700,
+          "contexts": [
+            "button",
+            "body"
+          ],
+          "frequency": 15,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 12,
+          "family": "ROM",
+          "weight": 700,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 6,
+          "lineHeight": 1,
+          "letterSpacing": 0.06,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 12,
+          "family": "ROM",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 6,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 13,
+          "family": "ROM",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 6,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "ROM",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "body",
+            "nav",
+            "hero",
+            "image",
+            "list",
+            "card",
+            "link",
+            "footer"
+          ],
+          "frequency": 220,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "ROM",
+          "weight": 700,
+          "contexts": [
+            "nav",
+            "link"
+          ],
+          "frequency": 9,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "lowercase"
+        },
+        {
+          "size": 14,
+          "family": "ROM",
+          "weight": 700,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 2,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "ROM",
+          "weight": 700,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 2,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "lowercase"
+        },
+        {
+          "size": 14,
+          "family": "ROM",
+          "weight": 700,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "Gaisyr",
+          "weight": 400,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": 0.12,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "ROM",
+          "weight": 400,
+          "contexts": [
+            "link",
+            "body"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.4,
+          "letterSpacing": 0.12,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "Gaisyr",
+          "weight": 700,
+          "contexts": [
+            "other",
+            "heading"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "ROM",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "lineHeight": 1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "ROM",
+          "weight": 700,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "GTStandard-M",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 15,
+          "family": "Gaisyr",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 6,
+          "lineHeight": 1.4,
+          "letterSpacing": 0.04,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 16,
+          "family": "Gaisyr",
+          "weight": 700,
+          "contexts": [
+            "other",
+            "body",
+            "heading"
+          ],
+          "frequency": 19,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "lowercase"
+        },
+        {
+          "size": 20,
+          "family": "Gaisyr",
+          "weight": 700,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.1,
+          "letterSpacing": 0.06,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 20,
+          "family": "Gaisyr",
+          "weight": 700,
+          "contexts": [
+            "other",
+            "heading"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.1,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 24,
+          "family": "ROM",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "body"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 24,
+          "family": "ROM Extended",
+          "weight": 400,
+          "contexts": [
+            "badge",
+            "body"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 48,
+          "family": "ROM Extended",
+          "weight": 700,
+          "contexts": [
+            "other",
+            "heading"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        }
+      ]
+    }
+  },
+  "designSystem": {
+    "dos": [
+      "Use #000000 as the default canvas and #080808 only as a distinct dark surface layer.",
+      "Set editorial headings in Desert Butter #f5e78d Gaisyr at 20px/700 and 22px line height.",
+      "Use ROM Extended 48px/700 with 57.6px line height for large uppercase promotional statements.",
+      "Keep standard utility actions in ROM 12px/700 uppercase at a 12px line height.",
+      "Use 100px radius with 12px 24px padding for white or white-outline pill links.",
+      "Use 20px radius with 8px 12px padding for #111111 add-to-bag buttons.",
+      "Maintain a 64px section gap and 12px local component rhythm."
+    ],
+    "donts": [
+      "Do not replace Desert Butter #f5e78d with a generic white or neon yellow for headings, navigation, borders, or badges.",
+      "Do not use rounded cards; product tiles use 0px radius, no shadow, and no container padding.",
+      "Do not introduce gradients.",
+      "Do not use soft drop shadows; retain flat black surface separation and occasional 1px rules.",
+      "Do not turn all actions into white filled pills; reserve the white pill treatment for inverted conversion links.",
+      "Do not use a radius between 20px and 100px for buttons.",
+      "Do not set large campaign headings in Gaisyr; use ROM Extended for the 48px display treatment."
+    ],
+    "theme": "dark",
+    "colors": [
+      {
+        "hex": "#000000",
+        "name": "Void",
+        "role": "Page canvas, footer backgrounds, and black text on white pill controls",
+        "group": "neutral"
+      },
+      {
+        "hex": "#080808",
+        "name": "Charcoal",
+        "role": "Dark product-link and secondary surface backgrounds",
+        "group": "neutral"
+      },
+      {
+        "hex": "#111111",
+        "name": "Ink",
+        "role": "Filled add-to-bag controls and raised dark UI surfaces",
+        "group": "neutral"
+      },
+      {
+        "hex": "#ffffff",
+        "name": "White",
+        "role": "Body copy, white outlined actions, and inverted pill action fills",
+        "group": "neutral"
+      },
+      {
+        "hex": "#999999",
+        "name": "Ash",
+        "role": "Muted supporting body copy",
+        "group": "neutral"
+      },
+      {
+        "hex": "#f5e78d",
+        "name": "Desert Butter",
+        "role": "Headings, navigation, hairline borders, badges, and editorial links — the warm yellow makes the black interface read like a night-lit printed zine",
+        "group": "brand"
+      }
+    ],
+    "layout": "The page begins with a narrow black announcement marquee, then a transparent or image-overlay utility navigation split between left-side browsing links and right-side account/bag controls. The hero is a full-bleed, sun-drenched photographic field with the oversized butter-yellow wordmark spanning the upper composition; the navigation rule overlays this image rather than sitting in a separate opaque header. Main content flows through dark, image-led product and editorial sections with generous 64px sectional pauses, borderless product tiles, and compact text clusters. Product content uses a repeated commerce grid, while editorial sections use short centered or image-overlaid statements; the footer continues as a deep black band.",
+    "imagery": "Photography is the primary visual material: grainy, low-resolution-feeling outdoor lifestyle imagery with a direct sun flare, saturated blue sky, deep shadow, and cropped human presence. Images are full-bleed or occupy wide, raw-edged rectangular fields with no rounding, allowing the butter-yellow wordmark and navigation to sit over them. Product imagery and product tiles carry explanatory commerce content; editorial photography supplies the atmosphere. Icons are minimal and largely text-led, with no illustrated icon system competing against the photography.",
+    "similar": [
+      {
+        "why": "Oversized editorial typography laid over raw, youth-culture photography with little container framing.",
+        "business": "Dazed"
+      },
+      {
+        "why": "Art-fashion ecommerce treatment using blunt type, dark product fields, and image-led commerce modules.",
+        "business": "Eckhaus Latta"
+      },
+      {
+        "why": "Editorial product storytelling where cropped lifestyle imagery carries as much visual weight as the merchandise.",
+        "business": "Paloma Wool"
+      },
+      {
+        "why": "Restrained monochrome product presentation and sparse utility navigation, though Bedouin's Daughter replaces cool neutrals with butter yellow.",
+        "business": "Jil Sander"
+      }
+    ],
+    "spacing": {
+      "radius": {
+        "cards": "0px",
+        "links": "0px",
+        "pills": "100px",
+        "badges": "2px",
+        "images": "0px",
+        "buttons": "20px"
+      },
+      "elementGap": "12px",
+      "sectionGap": "64px",
+      "cardPadding": "12px",
+      "pageMaxWidth": null
+    },
+    "industry": "ecommerce",
+    "surfaces": [
+      {
+        "hex": "#000000",
+        "name": "Void Canvas",
+        "level": 0,
+        "purpose": "Page background, footer, and deepest full-bleed section field."
+      },
+      {
+        "hex": "#080808",
+        "name": "Charcoal Surface",
+        "level": 1,
+        "purpose": "Dark link and product surface layer."
+      },
+      {
+        "hex": "#111111",
+        "name": "Ink Control",
+        "level": 2,
+        "purpose": "Filled purchase controls and raised dark UI."
+      },
+      {
+        "hex": "#ffffff",
+        "name": "White Inversion",
+        "level": 3,
+        "purpose": "Inverted pill links and light text."
+      }
+    ],
+    "northStar": "Sun flare over black velvet. Use luminous butter yellow, hard black surfaces, and grainy sunlit imagery as equal parts of the visual composition.",
+    "typeScale": [
+      {
+        "role": "announcement",
+        "size": 10,
+        "family": "ABC ROM Extended",
+        "weight": 500,
+        "lineHeight": 1,
+        "letterSpacing": 0
+      },
+      {
+        "role": "button-label",
+        "size": 12,
+        "family": "ROM",
+        "weight": 700,
+        "lineHeight": 1,
+        "letterSpacing": 0
+      },
+      {
+        "role": "body",
+        "size": 14,
+        "family": "ROM",
+        "weight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": 0
+      },
+      {
+        "role": "utility-link",
+        "size": 14,
+        "family": "ROM",
+        "weight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": 1.68
+      },
+      {
+        "role": "section-kicker",
+        "size": 14,
+        "family": "Gaisyr",
+        "weight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": 0
+      },
+      {
+        "role": "editorial-quote",
+        "size": 16,
+        "family": "Gaisyr",
+        "weight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": 0
+      },
+      {
+        "role": "editorial-heading",
+        "size": 20,
+        "family": "Gaisyr",
+        "weight": 700,
+        "lineHeight": 1.1,
+        "letterSpacing": 1.2
+      },
+      {
+        "role": "display",
+        "size": 48,
+        "family": "ROM Extended",
+        "weight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": 0
+      }
+    ],
+    "components": [
+      {
+        "name": "Announcement Marquee",
+        "role": "Full-width shipping or promotional strip above the main navigation.",
+        "description": "Use a #000000 bar with repeating #ffffff uppercase ABC ROM Extended text at 10px/500, 10px line height. Keep each message on a single line and animate the horizontal loop over 40s with linear motion."
+      },
+      {
+        "name": "Editorial Utility Navigation",
+        "role": "Top navigation for shop, about, account, and bag controls.",
+        "description": "Set navigation labels in ROM 14px/700 with a 19.6px line height and lowercase transformation, colored Desert Butter #f5e78d. Separate the navigation from the hero with a 1px solid #f5e78d rule; use 10px horizontal and 22px vertical padding where a padded nav row is needed."
+      },
+      {
+        "name": "Transparent Yellow Navigation Control",
+        "role": "Account, bag, and compact navigation actions on dark imagery.",
+        "description": "Use a transparent background, #f5e78d text and 1px #f5e78d border, 0px radius, and no internal padding. Keep the treatment text-like rather than turning it into a filled button."
+      },
+      {
+        "name": "White Outline Pill Link",
+        "role": "Image-overlay conversion link on dark photography.",
+        "description": "Use transparent fill, #ffffff text, and a 1px solid #ffffff border with a 100px radius. Apply 12px vertical and 24px horizontal padding; use ROM 12px/700 uppercase with 12px line height."
+      },
+      {
+        "name": "White Filled Pill Link",
+        "role": "Inverted conversion link placed on dark backgrounds.",
+        "description": "Use #ffffff fill with #000000 text and border, a 100px radius, and 12px 24px padding. Set the label in ROM 12px/700 uppercase with a 12px line height."
+      },
+      {
+        "name": "Add-to-Bag Button",
+        "role": "Product purchase control.",
+        "description": "Use #111111 fill, #ffffff text, and a 1px solid #ffffff border with 20px radius. Apply 8px vertical and 12px horizontal padding; retain a white 0 0 0 1px inset outline when the component needs an explicit edge."
+      },
+      {
+        "name": "Product Tile",
+        "role": "Borderless commerce card for product image, newness, product name, shade description, price, and purchase control.",
+        "description": "Keep the tile transparent with 0px radius, no border, no shadow, and 0px card padding. Place white product copy over or beneath the visual, use a 12px internal rhythm, and keep the add-to-bag control as its own #111111 rounded element."
+      },
+      {
+        "name": "New Product Badge",
+        "role": "Small product-status marker.",
+        "description": "Use transparent fill with #f5e78d text and a 1px #f5e78d border, 2px radius, and 6px vertical by 10px horizontal padding. Set ROM at 10px/400, 10px line height, uppercase, with 1.2px tracking."
+      },
+      {
+        "name": "Tracked Collection Link",
+        "role": "Collection navigation and view-all link.",
+        "description": "Use transparent fill and #f5e78d text with no radius; set ROM or Gaisyr at 14px/400 with 19.6px line height, uppercase transformation, and 1.68px letter spacing. Add only a text-decoration-color transition rather than a filled hover state."
+      },
+      {
+        "name": "Editorial Section Heading",
+        "role": "Compact label or chapter heading above product and brand content.",
+        "description": "Use Desert Butter #f5e78d Gaisyr at 20px/700 with 22px line height; use 1.2px tracking only for highly editorial uppercase labels. Keep the heading short and let the surrounding black space carry the scale."
+      },
+      {
+        "name": "Extended Display Statement",
+        "role": "Large product campaign heading.",
+        "description": "Use ROM Extended at 48px/700 with 57.6px line height, uppercase, normal tracking, and #ffffff text on a #080808 or photographic dark field."
+      }
+    ],
+    "typography": [
+      {
+        "role": "Core compact sans for navigation, body copy, buttons, product metadata, links, footer content, and uppercase utility labels. Its small, dense letterforms make the store language feel typographic rather than interface-default.",
+        "sizes": "10px, 12px, 13px, 14px, 24px",
+        "family": "ROM",
+        "weight": "400, 700",
+        "lineHeight": "1.00, 1.20, 1.40",
+        "substitute": "Arial, Helvetica, sans-serif",
+        "letterSpacing": "0.06em and 0.12em on tracked utility treatments; normal on navigation and controls."
+      },
+      {
+        "role": "Editorial serif for yellow section headings, compact quotes, and collection links. The mix of sturdy 700 weight and loose tracking makes short phrases feel like printed pull quotes rather than conventional ecommerce headings.",
+        "sizes": "10px, 14px, 15px, 16px, 20px",
+        "family": "Gaisyr",
+        "weight": "400, 700",
+        "lineHeight": "1.10, 1.20, 1.40",
+        "substitute": "Libre Baskerville, Georgia, serif",
+        "letterSpacing": "0.04em, 0.06em, 0.12em, 0.18em; 0.06em equals 1.2px at the 20px editorial heading step."
+      },
+      {
+        "role": "Ultra-compact extended sans reserved for the uppercase announcement marquee.",
+        "sizes": "10px",
+        "family": "ABC ROM Extended",
+        "weight": "500",
+        "lineHeight": "1.00",
+        "substitute": "Arial Narrow, Arial, sans-serif",
+        "letterSpacing": "normal"
+      },
+      {
+        "role": "Wide display sans for product-feature names and large promotional statements. The 48px, weight-700 display treatment is the largest measured type and stays blunt, uppercase, and untracked.",
+        "sizes": "24px, 48px",
+        "family": "ROM Extended",
+        "weight": "400, 700",
+        "lineHeight": "1.20",
+        "substitute": "Arial Narrow, Impact, sans-serif",
+        "letterSpacing": "normal"
+      },
+      {
+        "role": "One-off long-form supporting text treatment.",
+        "sizes": "14px",
+        "family": "GTStandard-M",
+        "weight": "400",
+        "lineHeight": "1.50",
+        "substitute": "Arial, Helvetica, sans-serif",
+        "letterSpacing": "normal"
+      }
+    ],
+    "description": "Bedouin's Daughter - sun flare over black velvet. The system pairs a near-black shop canvas with butter-yellow typography and borders, treating the yellow as a continuous editorial thread rather than a small accent. Large ROM Extended product statements sit beside compact, widely tracked ROM utility labels, while Gaisyr gives section titles and editorial fragments a distinctly literary voice. Product presentation is image-led and edge-to-edge; controls remain spare, outlined, or pill-shaped against the darkness.",
+    "customSections": [
+      {
+        "title": "Agent Prompt Guide",
+        "content": "Quick Color Reference:\n- Void: #000000 — Page canvas, footer backgrounds, and black text on white pill controls\n- Charcoal: #080808 — Dark product-link and secondary surface backgrounds\n- Ink: #111111 — Filled add-to-bag controls and raised dark UI surfaces\n- White: #ffffff — Body copy, white outlined actions, and inverted pill action fills\n- Ash: #999999 — Muted supporting body copy\n- Desert Butter: #f5e78d — Headings, navigation, hairline borders, badges, and editorial links — the warm yellow makes the black interface read like a night-lit printed zine\n\nCreate a full-bleed nocturnal lifestyle-photo hero with a #f5e78d oversized wordmark over the upper image; place a transparent utility nav in ROM 14px/700 and a #f5e78d 1px divider across the frame.\nCreate a dark product campaign panel on #080808 with a #ffffff ROM Extended 48px/700 uppercase display statement at 57.6px line height and a transparent #ffffff-outline pill link using 12px 24px padding and 100px radius.\nCreate a borderless product tile with raw-edge product imagery, a transparent #f5e78d NEW badge in ROM 10px/400 with 1.2px tracking, white metadata, and a #111111 add-to-bag button with a white 1px border and 20px radius.\nCreate an editorial chapter break on #000000 using a short #f5e78d Gaisyr 20px/700 heading at 22px line height, followed by a widely tracked #f5e78d ROM 14px/400 collection link."
+      }
+    ],
+    "elevationPhilosophy": "Surfaces stay flat and photographic. Separate layers with #f5e78d hairlines, tonal shifts from #000000 to #111111, and a single white inset keyline on dark purchase buttons rather than cast shadows."
+  },
+  "screenshot": {
+    "url": "https://images.refero.design/styles/refero.design/image/ddbd9696-d4a8-4697-8d73-bfae27ca12c2.jpg",
+    "thumbnail": "https://images.refero.design/styles/refero.design/image/0f3b8065-74a4-4cea-b40c-01f6e87b2c14.jpg"
+  }
+}

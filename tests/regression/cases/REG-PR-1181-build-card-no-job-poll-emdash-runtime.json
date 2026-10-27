@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1181-build-card-no-job-poll-emdash-runtime",
+  "kind": "fix",
+  "title": "The running card of a Build tool call stops asking for a job the site does not have",
+  "pr": 1181,
+  "area": "site-build/card",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/site/tracy-site-build-core/test/card-poll.test.mjs",
+    "S2: Read the summary lines `pass` and `fail`."
+  ],
+  "expect": [
+    "The run exits 0 and its summary reads `fail 0`.",
+    "`a running call with no job on the site stops after the first read` passes.",
+    "`a form-sending call never reads the job: its card is the form line` passes.",
+    "`a running site request with no build reads as an update, not as a build starting` passes.",
+    "`a first read that failed on the network keeps the running card polling, more slowly` passes (review fix M2: before it, a first read that failed read as no job and the card froze on \"Starting the build…\").",
+    "`only the host's NO_JOB answer reads as no job; every other failure is unreadable` passes: 200 → job, 404 NO_JOB → none; 404 without NO_JOB, 401, 500, 503, a thrown fetch and a non-JSON 404 → unreadable."
+  ],
+  "selectors": {
+    "door": "GET /<site>/api/tracy-site-build-emdash/job?session=<id>",
+    "card": "BuildCard in packages/site/tracy-site-build-core/src/client/BuildCard.tsx (tool.call.toolview key tracy_site_build_emdash)"
+  },
+  "evidence": "P1 stand 02/10/2026 (tasks/evidence/site-changes/P1/stand2/ui/browser-errors.txt): 53 404s, ~18 per session, on scem1002 — the agent's `tracy_site_build_emdash` call `request site.rebuild` (session-2b6ca9eb…) rendered BuildCard, which polled GET job every 1.5 s for the whole rebuild on a site that has no build job (no docs/agents/build on the site).",
+  "fence": "card-poll.mjs: no read for `ask`; stop only on the host's own 404 NO_JOB before any job was found (job-read.mjs tells it apart from a read that failed, which is read again after 5 s); follow a found job every 1.5 s while the call runs. One NO_JOB 404 per such card remains — it is the honest answer of the first read.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-site-build-core/test/card-poll.test.mjs"
+    ],
+    "tests": [
+      "a running call with no job on the site stops after the first read",
+      "a running call with a job keeps following it; a settled one reads once",
+      "a first read that failed on the network keeps the running card polling, more slowly",
+      "only the host's NO_JOB answer reads as no job; every other failure is unreadable"
+    ]
+  }
+}

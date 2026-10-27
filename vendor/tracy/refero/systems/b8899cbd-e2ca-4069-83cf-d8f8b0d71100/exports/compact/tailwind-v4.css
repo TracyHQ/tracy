@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-carbon: #262626;
+  --color-pure-white: #ffffff;
+  --color-concrete: #bbbbbb;
+  --color-fog: #f1f1f1;
+
+  /* Typography */
+  --font-bmwtypenextlatin: 'BMWTypeNextLatin', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-bmwtypenextlatin-light: 'BMWTypeNextLatin Light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

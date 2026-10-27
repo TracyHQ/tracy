@@ -1,0 +1,20 @@
+{
+  "action.decide": "Beslis voor mij",
+  "action.followUp": "Stel me eerst vervolgvragen",
+  "action.submit": "Antwoord versturen",
+  "ask.languagePlaceholder": "Kies een taal…",
+  "ask.other": "Anders",
+  "ask.otherPlaceholder": "Of typ uw eigen antwoord",
+  "ask.recommended": "Aanbevolen",
+  "ask.rewrite": "Herschrijven met AI",
+  "ask.rewriteFailed": "Herschrijven is niet gelukt. Probeer het opnieuw.",
+  "ask.rewriteUndo": "Ongedaan maken",
+  "ask.rewriting": "Bezig met herschrijven…",
+  "empty.title": "Er wachten geen vragen",
+  "error.answer": "Uw antwoord heeft de agent niet bereikt. Probeer het opnieuw.",
+  "pane.lead": "Tracy heeft je antwoord nodig om verder te gaan",
+  "pointer.many": "{count} vragen wachten in het rechterpaneel",
+  "pointer.one": "Er wacht één vraag in het rechterpaneel",
+  "pointer.open": "Openen",
+  "tab.title": "Vragen"
+}

@@ -1,0 +1,279 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-coach",
+  "release": "quickstart/ja-coach/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.hero-title",
+    "body": "p",
+    "button-primary": "div.acm-action a.btn.btn-primary",
+    "card": "div.testimonial-item-wrap div.description",
+    "container": "div.acm-hero div.container",
+    "section": "#t4-section-4",
+    "input": "input.cell"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 60px",
+    "displayFace": "Barlow 700, tracking 0em",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(0, 201, 167)",
+    "card": "repeated rounded box ×12",
+    "container": "first content container, max-width 1312px",
+    "section": "first padded full-width section, padding-top 159.6px",
+    "input": "first text field"
+  },
+  "keepScopes": [".t4-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#616161",
+    "--fg-2": "#212121",
+    "--accent": "#00c9a7",
+    "--accent-hover": "#0a8d77",
+    "--surface": "#f7f8f9",
+    "--surface-warm": "#172433",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#f7f8f9",
+    "--muted": "#9e9e9e",
+    "--font-display": "\"Barlow\", sans-serif",
+    "--font-body": "\"Barlow\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#616161",
+      "fg-2": "#212529",
+      "accent": "#00c9a7",
+      "accent-hover": "#0a8d77",
+      "surface": "#f8f9fa",
+      "surface-warm": "#172433",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#f7f8f9",
+      "muted": "#9e9e9e"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#f7f8f9",
+      "fg": "#616161",
+      "accent": "#00c9a7",
+      "accent-on": "#ffffff"
+    },
+    {
+      "accent": "#00c9a7"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface-warm": "#172433",
+      "danger": "#e93c4d",
+      "muted": "#9e9e9e",
+      "border-soft": "#dee2e6",
+      "surface": "#f7f8f9"
+    },
+    {
+      "border-soft": "#e9ecef"
+    },
+    {
+      "border-soft": "#eeeeee"
+    },
+    {
+      "accent": "#2c6ce8"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (62 line colours, 49 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "card": ["div.description", ".card"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["#t4-section-4"],
+    "bodyFace": ["body"],
+    "onAccent": [".cat-bg.cat-default", ".cat-bg.cat-blue", ".course-label:not(.hot):not(.free)"],
+    "pill": [".cat-bg"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t4-section p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 15 tried (byte 9387); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#172433",
+      "uses": 28,
+      "kind": "custom",
+      "role": "surface-warm",
+      "near": "#172433",
+      "distance": 0
+    },
+    {
+      "hex": "#e93c4d",
+      "uses": 21,
+      "kind": "custom",
+      "role": "danger",
+      "near": "#dc3545",
+      "distance": 17
+    },
+    {
+      "hex": "#2c6ce8",
+      "uses": 16,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#2c6ce8",
+      "distance": 0
+    },
+    {
+      "hex": "#9e9e9e",
+      "uses": 13,
+      "kind": "custom",
+      "role": "muted",
+      "near": "#9e9e9e",
+      "distance": 0
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 9,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#f7f8f9",
+      "uses": 5,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#f7f8f9",
+      "distance": 0
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 5,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-coach/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip so T4 regenerated media/t4/css on the first request: tasks/evidence/ds-contracts-r3d-2026-10-11/ja-coach-j6): 12/12, controls 0 differences, no text read worse than the template own (every visible heading and text judged element by element), 97% or more of the page follows, every contrast kind sampled; checked by eye on Moxie, Toggl Track (dark) and MotherDuck, Apple (light), the footer kept navy. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 97% or more of the page follows, every contrast kind sampled at 1440 and 390; checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-coach-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-coach 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 97-98% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-coach-j6",
+  "templateVars": {
+    "--gray-100": "var(--ds-c-surface)",
+    "--headings-color": "var(--ds-c-fg)",
+    "--color-secondary": "var(--ds-c-accent-text)",
+    "--white-theme": "var(--ds-c-bg)",
+    "--gray-theme": "var(--ds-c-surface)",
+    "--gray-theme-hover": "var(--ds-c-surface)"
+  },
+  "templateVarsNote": "its .bg-gray bands (hero, testimonials, three sections) paint var(--gray-100), a theme.tpl.css variable with no role in its name: the slot points it at the surface, so the band follows with the text on it; its headings read --headings-color (theme.tpl.css, from the theme body_heading_color #212121): the text colour; its eyebrows and statistics are .text-secondary, painted by T4 generated media/t4/css/<style>.css with var(--color-secondary)!important, which the T4 family points at the surface (a fill): here it is TEXT and takes the readable accent (11/10/2026: every eyebrow and number vanished, 1:1, under each system); its course cards and the theme fills read --white-theme / --gray-theme (always fills): the page and the surface",
+  "runtimeRgb": {
+    "--t4-link-color-rgb": "accent-text",
+    "--t4-link-hover-color-rgb": "accent-text-hover",
+    "--bs-link-color-rgb": "accent-text",
+    "--bs-link-hover-color-rgb": "accent-text-hover",
+    "--t4-primary-rgb": "accent-text",
+    "--bs-primary-rgb": "accent-text",
+    "--t4-body-color-rgb": "fg",
+    "--bs-body-color-rgb": "fg",
+    "--t4-body-bg-rgb": "bg",
+    "--bs-body-bg-rgb": "bg",
+    "--t4-dark-rgb": "fg",
+    "--bs-dark-rgb": "fg"
+  },
+  "runtimeRgbNote": "Bootstrap 5 inside T4 paints links, primary and the page through RGB triplets: each takes the triplet of its role's worn colour; the primary triplet takes the READABLE accent: Bootstrap's .link-primary paints text with it (JA Trip), and a fill a shade deeper still reads. JA Coach's card titles are Bootstrap .link-dark (rgba(var(--t4-dark-rgb))): the dark triplet takes the text colour, so a title stays readable on a card that follows (no .bg-dark on its home page)",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples)",
+  "paletteNote": "#2c6ce8 (its secondary blue: statistics, highlights) was drafted as the second text colour; it is an accent the template paints as text, so it takes the readable accent; the second text colour is its heading #212121",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#616161",
+    "--body-link-color": "#00c9a7",
+    "--body-link-hover-color": "#0a8d77",
+    "--color-primary": "#00c9a7",
+    "--color-secondary": "#2c6ce8",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#212121",
+    "--mainnav-link-color": "#212121",
+    "--mainnav-link-hover-color": "#00c9a7",
+    "--mainnav-link-active-color": "#00c9a7",
+    "--footer-bg-color": "#172433",
+    "--footer-text-color": "rgba(255, 255, 255, 0.8)",
+    "--footer-link-color": "rgba(255, 255, 255, 0.8)",
+    "--footer-link-hover-color": "#ffffff",
+    "--gray-100": "#F7F8F9",
+    "--headings-color": "#212121",
+    "--white-theme": "#fff",
+    "--gray-theme": "#F7F8F9",
+    "--gray-theme-hover": "#F5F5F5"
+  },
+  "keepNote": "the footer (.t4-footer: navy #172433, white text) is kept; its module titles read --headings-color, given back as #212121 like the released page computes it (keepDefaults; the family variable --body-headings-color is not what its h1-h6 rule reads)",
+  "onAccentNote": "category labels and the course card badge are white on var(--color-primary) (the accent): they take the accent own text colour (MotherDuck light blue: white 1.94:1)",
+  "minVersion": {
+    "quickstart/ja-coach/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-coach/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".t4-footer": {
+      "ground": "#172433",
+      "texts": ["#d1d3d6", "#ffffff"],
+      "picture": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "followRules": {
+    ".text-muted": {
+      "color": "fg!"
+    }
+  },
+  "followNote": "15/10/2026 (v10 inner measure, /index.php/blog): the blog bylines are T4's info block, <dl class=\"article-info text-muted\">, and Bootstrap's .text-muted paints them with the released sheet's literal --t4-secondary-color (rgba(33, 37, 41, 0.75)) !important, which no tokenizing reaches: under Moxie the author line and the date (dd.createdby, dd.published) stayed that dark grey on the black page, 1.36:1 where the template reads 15.43:1, desktop and phone, 12 samples a view. .text-muted takes the system's text in the role this template sets its body copy in (fg: its own #616161, the weaker of its two inks), !important to pass the utility's: 4.53:1 or more on the page across the 1334 systems (matrix: text), 9.96:1 under Moxie"
+}

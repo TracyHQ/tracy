@@ -1,0 +1,94 @@
+{
+  "color": {
+    "abyss-teal": {
+      "$value": "#002025",
+      "$type": "color",
+      "$description": "Abyss Teal — Page canvas and dominant surface — the deep-ocean background that carries every section; large bordered card fills also read as this token because the surface stack collapses into a single dark plane"
+    },
+    "slate-reef": {
+      "$value": "#244348",
+      "$type": "color",
+      "$description": "Slate Reef — Mid-tier surface and dividers — floating card fills slightly lighter than the canvas, section dividers, hairline borders around hero card and feature blocks"
+    },
+    "tidewater": {
+      "$value": "#455c60",
+      "$type": "color",
+      "$description": "Tidewater — Elevated surface and heavier borders — used for raised card surfaces and stroke weights where more separation from the canvas is needed"
+    },
+    "lichen": {
+      "$value": "#54696c",
+      "$type": "color",
+      "$description": "Lichen — Muted surface accent and softer card borders — for secondary container backgrounds and quieter stroke treatments"
+    },
+    "deep-kelp": {
+      "$value": "#05333a",
+      "$type": "color",
+      "$description": "Deep Kelp — Lowest-elevation surface behind content inside dark cards — used for card padding interior fills where the outer card is lighter"
+    },
+    "storm-glass": {
+      "$value": "#7d8f92",
+      "$type": "color",
+      "$description": "Storm Glass — Muted body text and secondary borders — helper text, captions, inactive icon strokes, and quiet UI labels"
+    },
+    "sea-mist": {
+      "$value": "#9eaeb0",
+      "$type": "color",
+      "$description": "Sea Mist — Tertiary text and border — for less-emphasized copy and fine dividers that should recede further than Storm Glass"
+    },
+    "pale-foam": {
+      "$value": "#b7c6c9",
+      "$type": "color",
+      "$description": "Pale Foam — Lightest neutral — icon outlines on dark surfaces and thin card borders where higher contrast is needed without using full white"
+    },
+    "bone": {
+      "$value": "#fffffa",
+      "$type": "color",
+      "$description": "Bone — Primary text and high-contrast iconography — headlines, body copy, button text, and reverse-mode icon fills; a warm off-white that softens against the teal canvas"
+    },
+    "lime-voltage": {
+      "$value": "#79fa4b",
+      "$type": "color",
+      "$description": "Lime Voltage — Primary brand accent — underline flourishes under display keywords, eyebrow labels in uppercase, decorative SVG fills, product-category icon glows, and the terminal stop of the signature gradient"
+    },
+    "pale-lime": {
+      "$value": "#a4ed8a",
+      "$type": "color",
+      "$description": "Pale Lime — Lighter lime used for subdued accent text and outlined-link borders where a softer hit of brand color is needed"
+    },
+    "voltage-dark": {
+      "$value": "#0b3222",
+      "$type": "color",
+      "$description": "Voltage Dark — Dark green surface — for solid-fill lime-tinted backgrounds and badge containers where the lime accent needs a darker anchor"
+    },
+    "cyan-pulse": {
+      "$value": "#30d7f1",
+      "$type": "color",
+      "$description": "Cyan Pulse — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    },
+    "solar-yellow": {
+      "$value": "#fce344",
+      "$type": "color",
+      "$description": "Solar Yellow — Secondary gradient stop — the warm tail of the tri-stop accent gradient used sparingly on decorative flows and a few product-card highlights"
+    }
+  },
+  "font": {
+    "gellix": {
+      "$value": "Gellix",
+      "$type": "fontFamily",
+      "$description": "Primary brand typeface — used for all display, heading, body, and UI copy. Weight 300 at 90–120px is the signature headline treatment: anti-convention for an enterprise platform, the whisper-weight display is what makes the dark canvas feel premium rather than heavy. The 0.35em tracking on 12-13px is reserved for uppercase eyebrow labels like 'OUR PRODUCTS'."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Rare legacy or fallback appearance — appears sparsely in the data, likely a system fallback for a single decorative or legal string; not a brand typeface and should not be propagated into new pages"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://boostinsurance.com",
+      "siteName": "Boostinsurance",
+      "extractedAt": "2026-06-03T21:33:18.271Z",
+      "variant": "compact"
+    }
+  }
+}

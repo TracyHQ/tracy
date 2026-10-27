@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-blush-canvas: #fef1ec;
+  --color-ink-navy: #11223f;
+  --color-coral-vermillion: #ff5734;
+  --color-dusty-peach: #f6bba4;
+  --color-forest-ink: #193c35;
+  --color-olive-grove: #7e813c;
+  --color-mustard-bloom: #e5ba2b;
+  --color-ember-orange: #ec4f22;
+  --color-sage-mist: #c6d7d0;
+  --color-deep-indigo: #092a49;
+  --color-pure-white: #ffffff;
+
+  /* Typography */
+  --font-canela-web: 'Canela Web', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-calibre: 'Calibre', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

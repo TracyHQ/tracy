@@ -1,0 +1,92 @@
+{
+  "id": "QA-UNIT-REG-PR-1026-delete-translation-group-happy",
+  "itemIds": ["regression:REG-PR-1026-delete-translation-group"],
+  "requirement": "Deleting a WordPress or Joomla record that lives in several languages is one door question and one call: content.delete with no locale names the record's N languages in its question, the yes authorises exactly that group, and one call deletes each member through the plugin's per-item delete under one apply_id; locale keeps a delete to one language",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1026-delete-translation-group.json",
+    "ref": "PR #1026 (fix); fix evidence: Local stand 09/10/2026, benchwp02 (news post in 41 languages), request 'Xoá bài tin \"Four common mistakes in heavy machine foundation design\" khỏi website': one run made 82 refused content.delete calls (CONFIRM_FIRST), 4 questions to the customer, 109 tool calls, 1.3M prompt tokens, 274 s, and left 39 translations live (~/tracy-bench-work/bench/out-v7-abl-hb-after3-noorder-r1-r1/benchwp02/V7-delete-chat-dev); other runs deleted with wp post delete in bash. benchjoomla02 showed the same loop at 12-17 calls.",
+    "invariant": "S2: every test named in run.tests reports ok. On a fake WordPress site (a post in 3 languages, Polylang group read from content.read) and a fake Joomla site (an article in 2 languages, associations): content.delete {kind, id} with no locale is refused CONFIRM_FIRST with languages:N and a question naming the title 'in all N languages', nothing deleted; after the customer's yes to that question one call sends one content.delete per member (the named one first) under one apply_id and answers deleted [{id, locale}] plus one undo; a member that fails is listed in failed with its code while the others go; the named record refused stops the rest; a lost answer stops the walk and lists the rest NOT_SENT; locale keeps the delete to one record and its answer names what stays online; a locale that is not the record's is refused LOCALE_NOT_THIS_RECORD with the right call; the yes never opens another record or a second call; a one-language site, a record not listed, or an unreadable listing leaves the plain one-record question. Every command exits 0.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/src/host/call-memory.mjs:306",
+      "packages/tools/tracy-site-tools/src/host/delete-group.mjs:141",
+      "packages/tools/tracy-site-tools/src/host/site-call.mjs:1134",
+      "packages/tools/tracy-site-tools/src/host/site.mjs:243"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/tools/tracy-site-tools/src/host/length-advice.mjs:87 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "group delete (wordpress): the door's question names the record and its 3 languages; nothing is deleted before the answer",
+    "group delete (wordpress): after one yes, one call deletes every language under one apply_id, and the answer lists each with its undo",
+    "group delete (wordpress): a language that fails is reported with its code, and the others still go",
+    "group delete (wordpress): the record named first refused — its answer is the answer, and no other language is touched",
+    "group delete (wordpress): with locale, one language only — asked as such, deleted alone, and the answer names what stays online",
+    "group delete (wordpress): a locale that is not the named record's is refused with the call that names the right one",
+    "group delete (wordpress): the yes opens that group once — never another record, never the same call twice",
+    "group delete (joomla): the door's question names the record and its 2 languages; nothing is deleted before the answer",
+    "group delete (joomla): after one yes, one call deletes every language under one apply_id, and the answer lists each with its undo",
+    "group delete (joomla): a language that fails is reported with its code, and the others still go",
+    "group delete (joomla): the record named first refused — its answer is the answer, and no other language is touched",
+    "group delete (joomla): with locale, one language only — asked as such, deleted alone, and the answer names what stays online",
+    "group delete (joomla): a locale that is not the named record's is refused with the call that names the right one",
+    "group delete (joomla): the yes opens that group once — never another record, never the same call twice",
+    "group delete: a site in one language, a record the listing does not hold, or a listing that cannot be read leaves the plain question",
+    "group delete: a group read is trusted only as the plugin builds it — two members in one language is no group",
+    "group delete: a language is matched by its tag or, when that names one member, by its primary language",
+    "group delete: a language whose answer is lost stops the walk — the rest are reported unsent, with the receipt that tells"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1026-delete-translation-group"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1026-delete-translation-group",
+    "pr": 1026,
+    "kind": "fix",
+    "area": "harness/delete-translation-group",
+    "file": "tests/regression/cases/REG-PR-1026-delete-translation-group.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/delete-group.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "group delete (wordpress): the door's question names the record and its 3 languages; nothing is deleted before the answer",
+    "group delete (wordpress): after one yes, one call deletes every language under one apply_id, and the answer lists each with its undo",
+    "group delete (wordpress): a language that fails is reported with its code, and the others still go",
+    "group delete (wordpress): the record named first refused — its answer is the answer, and no other language is touched",
+    "group delete (wordpress): with locale, one language only — asked as such, deleted alone, and the answer names what stays online",
+    "group delete (wordpress): a locale that is not the named record's is refused with the call that names the right one",
+    "group delete (wordpress): the yes opens that group once — never another record, never the same call twice",
+    "group delete (joomla): the door's question names the record and its 2 languages; nothing is deleted before the answer",
+    "group delete (joomla): after one yes, one call deletes every language under one apply_id, and the answer lists each with its undo",
+    "group delete (joomla): a language that fails is reported with its code, and the others still go",
+    "group delete (joomla): the record named first refused — its answer is the answer, and no other language is touched",
+    "group delete (joomla): with locale, one language only — asked as such, deleted alone, and the answer names what stays online",
+    "group delete (joomla): a locale that is not the named record's is refused with the call that names the right one",
+    "group delete (joomla): the yes opens that group once — never another record, never the same call twice",
+    "group delete: a site in one language, a record the listing does not hold, or a listing that cannot be read leaves the plain question",
+    "group delete: a group read is trusted only as the plugin builds it — two members in one language is no group",
+    "group delete: a language is matched by its tag or, when that names one member, by its primary language",
+    "group delete: a language whose answer is lost stops the walk — the rest are reported unsent, with the receipt that tells"
+  ],
+  "timeoutS": 600
+}

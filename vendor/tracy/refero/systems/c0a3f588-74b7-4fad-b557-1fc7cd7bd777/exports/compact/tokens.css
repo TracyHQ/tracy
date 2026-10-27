@@ -1,0 +1,10 @@
+:root {
+  /* Colors */
+  --color-ink-charcoal: #292a2c;
+  --color-vellum: #f2f2f2;
+  --color-full-black: #000000;
+
+  /* Typography — Font Families */
+  --font-ogg: 'ogg', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-telegraf: 'telegraf', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

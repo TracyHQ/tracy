@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e8c4206d-9a2a-4c08-9524-6f14a25e792f",
+  "status": "complete",
+  "name": "The Verge",
+  "url": "https://styles.refero.design/style/e8c4206d-9a2a-4c08-9524-6f14a25e792f",
+  "sourceWebsite": "https://theverge.com",
+  "extractedAt": "2026-06-03T18:39:56.188Z",
+  "capturedAt": "2026-10-08T05:18:57.870590+00:00",
+  "theme": "dark",
+  "industry": "media",
+  "description": "Midnight control room, mint alerts",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e00eae7c-b2fb-4683-93ff-c092aa07e13f.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ac6fc530-850b-4284-b1ff-ef752ca3ec30.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/43e2d081-4f11-4b75-a4bf-8735c8743ef8.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/da413212-d0d7-4522-a8b0-657f16e8b703.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/288ca6f0-265e-43d1-b2ac-6e5f70f4adca.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "479a9ff1143890086dba232468c00fcbfdaf8d94edff7f5543f3d1212f02c6ad",
+      "bytes": 23091
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fb540b5d86b6173c4775bffe2ab165a502356f785ea74b0af7107da2cdd7cdad",
+      "bytes": 158975
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "cc8bc9691bee0f250ae677a81333bf49aca994508c6b189ad7ce22436adc7d4b",
+      "bytes": 18921
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "558bce9ed293a833327ddaa1c6d24aadb2afd8fd7bc72fa0a6ecf8725c8b60e4",
+      "bytes": 16764
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7e56185ba426f2319942b87573f54314fc842e6d20533ded968bed3b7bf9c2ba",
+      "bytes": 13950
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "dc575ea9f9452318d70109733807140770ccc5af74eee236696ff277d86cf1b6",
+      "bytes": 3450
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "10627816f81699dbe413d0b8e9da38dd717149344ca2c8c091b347422b0b714f",
+      "bytes": 1006
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "47c0531c4f9176cc2b22c888b2e7eefb5283354b0b89daf150135fc71983e014",
+      "bytes": 1023
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f51ddd64d9c4cfd633d211cf576390567e79720e1a5ccc3fa115710e6cba58c7",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d826b4610d2cf3ab7d3871c664fd54b7500e876711a5eae7b36b11dcd059da80",
+      "bytes": 44760
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "60d5ced3a75405b239fd043ee99685c992a39bc80dd1cd430591c0036c5cbfd3",
+      "bytes": 23176
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c311362b2c67c075176f0f7fb07e16aac59fd966f25747e2d1b96b8c87706c4d",
+      "bytes": 50158
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6b4575b1b98393c2506f39a48867ea38212fe41ec8b4363c68f4b689d50ff86b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2183cfefca34203991910d76c8e4ffaab4d70992b193db8b986ad703c8e16fef",
+      "bytes": 2307
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "318596b547ca87d5757dd969c370e6008a6aa8a3e7bafe370557001a97a9c934",
+      "bytes": 2977
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "14e563d8-a35a-4867-b4bf-15d1620ddae7",
+    "1a03b8d7-9204-4c16-ad3c-16306f99fba9",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "5d9e1cc2-4b81-40fe-aa92-640f2e1d7420",
+    "6a8bf4c2-8cf2-463a-bcb9-36c15ea177c2",
+    "6f3652cf-583f-411d-a117-3a03f6342917",
+    "6f365ecd-a040-4533-88c1-3f60fe062632",
+    "8401cb26-91a3-4b46-941e-1c75790821eb",
+    "9c92c3d1-a2fe-4a27-a324-826b19501774",
+    "a3af7369-b61c-4923-a628-931861c8097f",
+    "ab201ed7-928f-4080-ba95-c3992311e39d",
+    "af3641fb-7d3c-40f4-aba1-42770dfaf091",
+    "d9a60077-619a-4cb7-95ed-0c428c2b51ed",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e8c4206d-9a2a-4c08-9524-6f14a25e792f"
+  ]
+}

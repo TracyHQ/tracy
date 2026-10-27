@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-inkstone: #0a0b0c;
+  --color-bone: #f9f9f9;
+  --color-paper: #ffffff;
+  --color-ash: #d8d8d8;
+  --color-plum-ash: #392c38;
+  --color-forest-depth: #00543d;
+  --color-periwinkle: #abcbf9;
+  --color-candy-pink: #ffbbfc;
+  --color-butter: #fce88b;
+
+  /* Typography — Font Families */
+  --font-roobert: 'Roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

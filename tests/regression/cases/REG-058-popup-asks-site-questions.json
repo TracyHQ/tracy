@@ -1,0 +1,41 @@
+{
+  "id": "REG-058",
+  "kind": "feat",
+  "title": "The Add site popup asks the questions of the chosen template's own questionnaire, offers AI rewrite on the long-text question, and its answers reach the site by question id",
+  "pr": 859,
+  "area": "add-site/popup",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test packages/site/tracy-add-site/test/site-brief.test.mjs apps/tracy-web/test/site-brief.test.mjs apps/tracy-web/test/site-brief-normalize.test.mjs",
+    "S2: With TEST_DATABASE_URL=postgres://tracy:tracy@127.0.0.1:51730/tracy (the dev stand's Postgres) run: node --test apps/tracy-web/test/sites-route.test.mjs",
+    "S3: Run: node --test packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs (a real browser over the fixture; needs Chrome or Playwright's chromium). Until #998 this was create-brief-popup.test.mjs: the popup became the \"Customize your site\" sheet.",
+    "S4: Read the exit code and the fail/skipped counts of each run."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures and 0 skipped tests.",
+    "e2e 'the sheet slides over the panel with the template's own questions…' passes: Tracy Business draws Sector (Recommended), Company name, What does the company do? and the Site language picker; the licence question that belongs to one sector is not drawn. 'the card sits quietly…' checks GET /api/sites/questions was asked with design=tracy-business.",
+    "e2e 'another template asks other questions…' passes: Tracy Base on WordPress draws exactly Business name and One line about your business.",
+    "e2e 'Create site sends the answers with the hash of the set they answer; a hidden answer does not travel' passes: choosing Construction draws the licence question, changing the sector removes it and its answer does not travel.",
+    "Same test: the POST /api/sites body carries brief = {answers: {name, about, sector}, questionnaire: <64 hex>}.",
+    "e2e 'when the questions cannot load the card says so…' passes: a 503 from the questions door shows the failed card and Create site sends no brief.",
+    "e2e 'AI rewrite is offered on the long-text question and not on the others; Undo puts the words back' passes: exactly one AI rewrite button, under the longtext question; off while the box is empty; pressing it asks POST /api/sites/brief/rewrite once with the typed words, the 200 answer replaces the text, and Undo brings the customer's own words back.",
+    "e2e 'a rewrite the door refuses with 429/503…' and 'a rewrite that comes back after the customer edited the text…' pass: a refusal is said beside the button and leaves the words as typed; a late answer never overwrites an edit.",
+    "sites-route 'POST /api/sites/brief/rewrite: capped per person per hour' passes (part of S2).",
+    "sites-route 'POST /api/sites with answers by question id…' passes: an unknown question and an option the question does not offer are dropped, a hash the server never served is judged against today's set, and answers to nothing the set asks start no brief.",
+    "site-brief-normalize 'a name typed into the name question…', 'the languages picked…' and 'the sector answer…' pass: the name and the languages are the customer's as typed, the sector is the option's label, and a phone typed into another question is found as a fact the customer gave.",
+    "Not covered by this case: a real model reading the answers, the text and pictures an Apply writes into a running site, and init time (measured with the apply bench kit, not here)."
+  ],
+  "selectors": {
+    "popup": "[data-questions-card] and [data-questions-sheet=\"1\"] in packages/site/tracy-add-site/src/client/questions-sheet.tsx (the popup [data-brief-dialog] is gone since #998)",
+    "questions_door": "GET /api/sites/questions in apps/tracy-web/src/sites/route.js",
+    "create_door": "briefOfPress in apps/tracy-web/src/sites/route.js; briefFromAnswers in apps/tracy-web/src/lib/site-brief.js"
+  },
+  "evidence": "04/10/2026: the popup asked three fixed questions (about, goal, style) while every template already has a questionnaire an administrator edits in /ops; a site with no shop was asked whether visitors should buy products. The popup now draws the questionnaire the Build form would draw, and /ops edits reach the next customer without a deploy.",
+  "fence": "The real wizard in a browser over a fetch double that serves three questionnaires, the real create door over a database with a runner double, and the real normalize step with a model double. Not exercised: a real model, a running CMS, init timing.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-058.mjs"],
+    "needs": ["postgres"]
+  }
+}

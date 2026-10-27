@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.site_deleted-recipient-no-self",
+  "itemIds": [
+    "letter:team.site_deleted:en",
+    "letter:team.site_deleted:vi",
+    "letter:team.site_deleted:de",
+    "letter:team.site_deleted:it",
+    "letter:team.site_deleted:fr",
+    "letter:team.site_deleted:nl",
+    "letter:team.site_deleted:zh",
+    "letter:team.site_deleted:es"
+  ],
+  "requirement": "team.site_deleted: nobody is notified of their own action",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "R2 and decision 3",
+    "invariant": "never notify the person who acted"
+  },
+  "edgeTags": ["recipient"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.no-self#team.site_deleted:"],
+  "redProof": null,
+  "legacyIds": []
+}

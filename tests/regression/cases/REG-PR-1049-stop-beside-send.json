@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1049-stop-beside-send",
+  "kind": "fix",
+  "title": "While the agent runs and the person has typed a draft, a Stop button stays beside Queue Send",
+  "pr": 1049,
+  "area": "chat",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node tests/regression/scripts/REG-PR-1049-stop-beside-send.mjs (the fork needs its own install: CI=true corepack pnpm install --ignore-scripts --frozen-lockfile inside vendor/tracy/deepseek-harness).",
+    "S2: Record the exit code and every line starting 'ok -' or 'not ok -'.",
+    "S3 (stand, tasks/bang-chung/lan-7-nut-stop-khi-dang-go/): dsh with fork tracy.26 + tracy-web + real model. On a site, send a long request, and while the agent runs type a new message without sending it. Read the buttons of the chat box, press Stop, read the box and the network."
+  ],
+  "expect": [
+    "S1 exits 0 with 'ALL CHECKS PASSED': InputBar carries `interruptible = running && (continuable || (subagent === null && !primaryStops))`, and the two fork cases 'Tracy: a running ordinary session keeps a Stop button beside Queue Send while a draft is typed' and 'Tracy: an idle session never draws Stop, with or without a draft' pass.",
+    "S3: with a draft typed the chat box shows Add files, Stop generating, Queue message (before: Add files, Queue message only); pressing Stop ends the run with the label Stopped, keeps the typed text, and the only session call is cancel; with an empty box there is exactly one Stop."
+  ],
+  "selectors": {
+    "chatBox": "[data-composer-input=true]",
+    "stopButton": "button[aria-label^=Stop]",
+    "source": "vendor/tracy/deepseek-harness/packages/client/ui-conversation/src/client/skeleton/InputBar.tsx"
+  },
+  "evidence": "A customer, 08/10/2026: sent a wrong prompt and could not stop the running process. Measured: Stop works with an empty box (button 107 ms after Enter, run stops in 0.5 s) but disappears as soon as the next message is being typed. Evidence: tasks/bang-chung/lan-7-nut-stop-khi-dang-go/KET-QUA.md.",
+  "fence": "Only whether an independent Stop is drawn changes; what Stop does (session/cancel, queue preserved) is dsh's own and untouched.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1049-stop-beside-send.mjs"],
+    "needs": []
+  }
+}

@@ -1,0 +1,23 @@
+:root {
+  /* Colors */
+  --color-midnight-navy: #011c42;
+  --color-canvas-white: #ffffff;
+  --color-obsidian: #0b100f;
+  --color-warm-sand: #f8f1e5;
+  --color-silver-mist: #c0c1c6;
+  --color-pewter: #c5beb2;
+  --color-bioluminescent-teal: #34e8bb;
+  --color-deep-teal: #003326;
+  --color-lavender-mist: #a95af8;
+  --color-bubblegum: #fb9ce5;
+  --color-plum-wine: #43045e;
+  --color-soft-blush: #ffccf3;
+  --color-cosmic-blue: #006aff;
+  --color-plum-statement: #5c0047;
+
+  /* Typography — Font Families */
+  --font-tomatogrotesk: 'tomatoGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dm-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

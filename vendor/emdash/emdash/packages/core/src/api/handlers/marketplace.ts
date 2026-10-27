@@ -1,0 +1,1131 @@
+/**
+ * Marketplace plugin handlers
+ *
+ * Business logic for installing, updating, uninstalling, and checking
+ * updates for marketplace plugins. Routes are thin wrappers around these.
+ */
+
+import type { Kysely } from "kysely";
+
+import type { Database } from "../../database/types.js";
+import { validatePluginIdentifier } from "../../database/validate.js";
+import { pluginManifestSchema, reconcileManifestAccess } from "../../plugins/manifest-schema.js";
+import { normalizeManifestRoute } from "../../plugins/manifest-schema.js";
+import {
+	createMarketplaceClient,
+	MarketplaceError,
+	MarketplaceUnavailableError,
+	type MarketplaceClient,
+	type MarketplacePluginDetail,
+	type MarketplaceSearchOpts,
+	type MarketplaceThemeSearchOpts,
+	type MarketplaceVersionSummary,
+	type PluginBundle,
+} from "../../plugins/marketplace.js";
+import { withUnavailableReason } from "../../plugins/sandbox/types.js";
+import type { SandboxRunner } from "../../plugins/sandbox/types.js";
+import { PluginStateRepository } from "../../plugins/state.js";
+import type { PluginState } from "../../plugins/state.js";
+import {
+	removeAllPluginIndexes,
+	syncDeclaredStorageIndexes,
+} from "../../plugins/storage-indexes.js";
+import { normalizeCapabilities, warnDeprecatedPluginCapabilities } from "../../plugins/types.js";
+import type { PluginManifest } from "../../plugins/types.js";
+import { EmDashStorageError } from "../../storage/types.js";
+import type { Storage } from "../../storage/types.js";
+import type { ApiResult } from "../types.js";
+
+// ── Types ──────────────────────────────────────────────────────────
+
+export interface MarketplaceInstallResult {
+	pluginId: string;
+	version: string;
+	capabilities: string[];
+}
+
+export interface MarketplaceUpdateResult {
+	pluginId: string;
+	oldVersion: string;
+	newVersion: string;
+	capabilityChanges: {
+		added: string[];
+		removed: string[];
+	};
+	routeVisibilityChanges?: {
+		newlyPublic: string[];
+	};
+}
+
+export interface PluginUpdateRollbackResult {
+	pluginId: string;
+	version: string;
+}
+
+export interface MarketplaceUpdateCheck {
+	pluginId: string;
+	installed: string;
+	latest: string;
+	hasUpdate: boolean;
+	hasCapabilityChanges: boolean;
+	capabilityChanges?: {
+		added: string[];
+		removed: string[];
+	};
+	hasRouteVisibilityChanges: boolean;
+	routeVisibilityChanges?: {
+		newlyPublic: string[];
+	};
+}
+
+export interface MarketplaceUninstallResult {
+	pluginId: string;
+	dataDeleted: boolean;
+}
+
+// ── Helpers ────────────────────────────────────────────────────────
+
+/** Semver-like pattern: digits, dots, hyphens, plus signs (e.g. 1.0.0, 1.0.0-beta.1) */
+const VERSION_PATTERN = /^[a-z0-9][a-z0-9._+-]*$/i;
+
+function validateVersion(version: string): void {
+	if (version.includes("..")) throw new Error("Invalid version format");
+	if (!VERSION_PATTERN.test(version)) {
+		throw new Error("Invalid version format");
+	}
+}
+
+function getClient(
+	marketplaceUrl: string | undefined,
+	siteOrigin?: string,
+): MarketplaceClient | null {
+	if (!marketplaceUrl) return null;
+	return createMarketplaceClient(marketplaceUrl, siteOrigin);
+}
+
+export function diffCapabilities(
+	oldCaps: string[],
+	newCaps: string[],
+): { added: string[]; removed: string[] } {
+	// Normalize both sides before diffing so that an installed v1 manifest
+	// declaring `read:content` and an upgrade v2 manifest declaring
+	// `content:read` produces an empty diff — users should not see a
+	// spurious "capability changed" prompt for a pure rename.
+	const oldNorm = normalizeCapabilities(oldCaps);
+	const newNorm = normalizeCapabilities(newCaps);
+	const oldSet = new Set(oldNorm);
+	const newSet = new Set(newNorm);
+	return {
+		added: newNorm.filter((c) => !oldSet.has(c)),
+		removed: oldNorm.filter((c) => !newSet.has(c)),
+	};
+}
+
+/**
+ * Diff route visibility between two manifests.
+ * Returns routes that changed from private to public (newly exposed).
+ */
+export function diffRouteVisibility(
+	oldManifest: PluginManifest | undefined,
+	newManifest: PluginManifest,
+): { newlyPublic: string[] } {
+	const oldPublicRoutes = new Set<string>();
+	if (oldManifest) {
+		for (const entry of oldManifest.routes) {
+			const normalized = normalizeManifestRoute(entry);
+			if (normalized.public === true) {
+				oldPublicRoutes.add(normalized.name);
+			}
+		}
+	}
+
+	const newlyPublic: string[] = [];
+	for (const entry of newManifest.routes) {
+		const normalized = normalizeManifestRoute(entry);
+		if (normalized.public === true && !oldPublicRoutes.has(normalized.name)) {
+			newlyPublic.push(normalized.name);
+		}
+	}
+
+	return { newlyPublic };
+}
+
+async function resolveVersionMetadata(
+	client: MarketplaceClient,
+	pluginId: string,
+	pluginDetail: MarketplacePluginDetail,
+	version: string,
+): Promise<MarketplaceVersionSummary | null> {
+	if (pluginDetail.latestVersion?.version === version) {
+		return {
+			version: pluginDetail.latestVersion.version,
+			minEmDashVersion: pluginDetail.latestVersion.minEmDashVersion,
+			bundleSize: pluginDetail.latestVersion.bundleSize,
+			checksum: pluginDetail.latestVersion.checksum,
+			changelog: pluginDetail.latestVersion.changelog,
+			capabilities: pluginDetail.latestVersion.capabilities,
+			status: pluginDetail.latestVersion.status,
+			auditVerdict: pluginDetail.latestVersion.audit?.verdict ?? null,
+			imageAuditVerdict: pluginDetail.latestVersion.imageAudit?.verdict ?? null,
+			publishedAt: pluginDetail.latestVersion.publishedAt,
+		};
+	}
+
+	const versions = await client.getVersions(pluginId);
+	return versions.find((v) => v.version === version) ?? null;
+}
+
+/** A null verdict means no audit ran, which is allowed; "fail" and "warn" are not. */
+function checkAuditVerdict(versionMetadata: MarketplaceVersionSummary): ApiResult<never> | null {
+	if (versionMetadata.auditVerdict !== "fail" && versionMetadata.auditVerdict !== "warn") {
+		return null;
+	}
+	return {
+		success: false,
+		error: {
+			code: "AUDIT_FAILED",
+			message:
+				versionMetadata.auditVerdict === "fail"
+					? "Plugin failed security audit and cannot be installed or updated"
+					: "Plugin audit was inconclusive and cannot be installed or updated until reviewed",
+		},
+	};
+}
+
+function validateBundleIdentity(
+	bundle: PluginBundle,
+	pluginId: string,
+	version: string,
+): ApiResult<never> | null {
+	if (bundle.manifest.id !== pluginId) {
+		return {
+			success: false,
+			error: {
+				code: "MANIFEST_MISMATCH",
+				message: `Bundle manifest ID (${bundle.manifest.id}) does not match requested plugin (${pluginId})`,
+			},
+		};
+	}
+
+	if (bundle.manifest.version !== version) {
+		return {
+			success: false,
+			error: {
+				code: "MANIFEST_VERSION_MISMATCH",
+				message: `Bundle manifest version (${bundle.manifest.version}) does not match requested version (${version})`,
+			},
+		};
+	}
+
+	return null;
+}
+
+/** Store a plugin bundle's files in site-local R2 storage */
+/**
+ * Storage source for an installed plugin bundle. Determines the R2
+ * key prefix and is used to keep marketplace and registry installs
+ * cleanly separated in object listings.
+ */
+export type PluginBundleSource = "marketplace" | "registry";
+
+function bundlePrefix(source: PluginBundleSource, pluginId: string, version: string): string {
+	return `${source}/${pluginId}/${version}`;
+}
+
+export async function storeBundleInR2(
+	storage: Storage,
+	pluginId: string,
+	version: string,
+	bundle: PluginBundle,
+	source: PluginBundleSource = "marketplace",
+): Promise<void> {
+	validatePluginIdentifier(pluginId, "plugin ID");
+	validateVersion(version);
+	const prefix = bundlePrefix(source, pluginId, version);
+
+	// Store manifest
+	await storage.upload({
+		key: `${prefix}/manifest.json`,
+		body: new TextEncoder().encode(JSON.stringify(bundle.manifest)),
+		contentType: "application/json",
+	});
+
+	// Store backend code
+	await storage.upload({
+		key: `${prefix}/backend.js`,
+		body: new TextEncoder().encode(bundle.backendCode),
+		contentType: "application/javascript",
+	});
+
+	// Store admin code if present
+	if (bundle.adminCode) {
+		await storage.upload({
+			key: `${prefix}/admin.js`,
+			body: new TextEncoder().encode(bundle.adminCode),
+			contentType: "application/javascript",
+		});
+	}
+}
+
+/** Read a ReadableStream to string */
+async function streamToText(stream: ReadableStream<Uint8Array>): Promise<string> {
+	return new Response(stream).text();
+}
+
+/**
+ * Load a plugin bundle from site-local R2 storage.
+ *
+ * `source` selects the R2 key prefix: marketplace plugins are stored
+ * under `marketplace/<id>/<version>/`, registry plugins under
+ * `registry/<id>/<version>/`. Defaults to `"marketplace"` for
+ * backwards compatibility with pre-registry call sites.
+ */
+export async function loadBundleFromR2(
+	storage: Storage,
+	pluginId: string,
+	version: string,
+	source: PluginBundleSource = "marketplace",
+): Promise<{ manifest: PluginManifest; backendCode: string; adminCode?: string } | null> {
+	validatePluginIdentifier(pluginId, "plugin ID");
+	validateVersion(version);
+	const prefix = bundlePrefix(source, pluginId, version);
+
+	try {
+		const manifestResult = await storage.download(`${prefix}/manifest.json`);
+		const backendResult = await storage.download(`${prefix}/backend.js`);
+
+		const manifestText = await streamToText(manifestResult.body);
+		const backendCode = await streamToText(backendResult.body);
+		const parsed: unknown = JSON.parse(manifestText);
+		const result = pluginManifestSchema.safeParse(parsed);
+		if (!result.success) return null;
+		const manifest = reconcileManifestAccess(result.data);
+		warnDeprecatedPluginCapabilities(manifest.id, manifest.capabilities);
+
+		// Try to load admin code (optional)
+		let adminCode: string | undefined;
+		try {
+			const adminResult = await storage.download(`${prefix}/admin.js`);
+			adminCode = await streamToText(adminResult.body);
+		} catch {
+			// admin.js is optional
+		}
+
+		return { manifest, backendCode, adminCode };
+	} catch {
+		return null;
+	}
+}
+
+/** Delete a plugin bundle from site-local R2 storage */
+export async function deleteBundleFromR2(
+	storage: Storage,
+	pluginId: string,
+	version: string,
+	source: PluginBundleSource = "marketplace",
+): Promise<void> {
+	validatePluginIdentifier(pluginId, "plugin ID");
+	validateVersion(version);
+	const prefix = bundlePrefix(source, pluginId, version);
+	const files = ["manifest.json", "backend.js", "admin.js"];
+
+	for (const file of files) {
+		try {
+			await storage.delete(`${prefix}/${file}`);
+		} catch {
+			// Ignore missing files
+		}
+	}
+}
+
+export async function rollbackPluginUpdate(
+	db: Kysely<Database>,
+	storage: Storage | null,
+	previousState: PluginState,
+	failedVersion: string,
+	source: PluginBundleSource,
+): Promise<ApiResult<PluginUpdateRollbackResult>> {
+	if (!storage) {
+		return {
+			success: false,
+			error: { code: "STORAGE_NOT_CONFIGURED", message: "Storage is required" },
+		};
+	}
+	if (previousState.source !== source) {
+		return {
+			success: false,
+			error: { code: "UPDATE_ROLLBACK_CONFLICT", message: "Plugin source changed during update" },
+		};
+	}
+
+	try {
+		const restored = await new PluginStateRepository(db).restoreIfVersion(
+			failedVersion,
+			previousState,
+		);
+		if (!restored) {
+			return {
+				success: false,
+				error: {
+					code: "UPDATE_ROLLBACK_CONFLICT",
+					message: "Plugin state changed before the failed update could be rolled back",
+				},
+			};
+		}
+
+		await deleteBundleFromR2(storage, previousState.pluginId, failedVersion, source);
+		return {
+			success: true,
+			data: { pluginId: previousState.pluginId, version: previousState.version },
+		};
+	} catch (error) {
+		console.error("Failed to roll back plugin update:", error);
+		return {
+			success: false,
+			error: { code: "UPDATE_ROLLBACK_FAILED", message: "Failed to roll back plugin update" },
+		};
+	}
+}
+
+// ── Install ────────────────────────────────────────────────────────
+
+export async function handleMarketplaceInstall(
+	db: Kysely<Database>,
+	storage: Storage | null,
+	sandboxRunner: SandboxRunner | null,
+	marketplaceUrl: string | undefined,
+	pluginId: string,
+	opts?: {
+		version?: string;
+		configuredPluginIds?: Set<string>;
+		siteOrigin?: string;
+		/**
+		 * When true, sandbox: false bypass mode is active. The sandbox runner
+		 * is the noop runner (isAvailable() === false) but the runtime will
+		 * load the marketplace plugin in-process via syncMarketplacePlugins().
+		 * Skip the SANDBOX_NOT_AVAILABLE gate so the install can proceed.
+		 */
+		sandboxBypassed?: boolean;
+		confirmMcpTools?: boolean;
+		acknowledgedPublicRoutes?: string[];
+	},
+): Promise<ApiResult<MarketplaceInstallResult>> {
+	const client = getClient(marketplaceUrl, opts?.siteOrigin);
+	if (!client) {
+		return {
+			success: false,
+			error: {
+				code: "MARKETPLACE_NOT_CONFIGURED",
+				message: "Marketplace is not configured",
+			},
+		};
+	}
+
+	if (!storage) {
+		return {
+			success: false,
+			error: {
+				code: "STORAGE_NOT_CONFIGURED",
+				message: "Storage is required for marketplace plugin installation",
+			},
+		};
+	}
+
+	// Sandbox availability check: skip when sandbox: false bypass is active.
+	// The runtime's syncMarketplacePlugins() will load the plugin in-process.
+	if (!opts?.sandboxBypassed && (!sandboxRunner || !sandboxRunner.isAvailable())) {
+		return {
+			success: false,
+			error: {
+				code: "SANDBOX_NOT_AVAILABLE",
+				message: withUnavailableReason(
+					"Sandbox runner is required for marketplace plugins",
+					sandboxRunner,
+				),
+			},
+		};
+	}
+
+	try {
+		// Check if already installed
+		const stateRepo = new PluginStateRepository(db);
+		const existing = await stateRepo.get(pluginId);
+		if (existing && existing.source === "marketplace") {
+			return {
+				success: false,
+				error: {
+					code: "ALREADY_INSTALLED",
+					message: `Plugin ${pluginId} is already installed`,
+				},
+			};
+		}
+
+		// Block installation if a configured (trusted) plugin with the same ID exists.
+		// Without this check, the sandboxed plugin could shadow the trusted plugin's
+		// route handlers while auth decisions are made against the trusted plugin's metadata.
+		if (opts?.configuredPluginIds?.has(pluginId)) {
+			return {
+				success: false,
+				error: {
+					code: "PLUGIN_ID_CONFLICT",
+					message: `Cannot install marketplace plugin "${pluginId}" — a configured plugin with the same ID already exists`,
+				},
+			};
+		}
+
+		// Fetch plugin detail from marketplace
+		const pluginDetail = await client.getPlugin(pluginId);
+		const version = opts?.version ?? pluginDetail.latestVersion?.version;
+		if (!version) {
+			return {
+				success: false,
+				error: {
+					code: "NO_VERSION",
+					message: `No published versions found for plugin ${pluginId}`,
+				},
+			};
+		}
+
+		const versionMetadata = await resolveVersionMetadata(client, pluginId, pluginDetail, version);
+		if (!versionMetadata) {
+			return {
+				success: false,
+				error: {
+					code: "NO_VERSION",
+					message: `Version ${version} was not found for plugin ${pluginId}`,
+				},
+			};
+		}
+
+		const auditError = checkAuditVerdict(versionMetadata);
+		if (auditError) return auditError;
+
+		// Download and extract bundle
+		const bundle = await client.downloadBundle(pluginId, version);
+
+		// Verify checksum matches marketplace-published checksum
+		if (versionMetadata.checksum && bundle.checksum !== versionMetadata.checksum) {
+			return {
+				success: false,
+				error: {
+					code: "CHECKSUM_MISMATCH",
+					message: "Bundle checksum does not match marketplace record. Download may be corrupted.",
+				},
+			};
+		}
+
+		const bundleIdentityError = validateBundleIdentity(bundle, pluginId, version);
+		if (bundleIdentityError) return bundleIdentityError;
+
+		const routeVisibilityChanges = diffRouteVisibility(undefined, bundle.manifest);
+		const hasPublicRoutes = routeVisibilityChanges.newlyPublic.length > 0;
+		const publicRoutes = routeVisibilityChanges.newlyPublic.toSorted();
+		const acknowledgedPublicRoutes = (opts?.acknowledgedPublicRoutes ?? []).toSorted();
+		const mcpTools = bundle.manifest.mcp?.tools.map(
+			({ inputSchema: _, outputSchema: __, ...tool }) => tool,
+		);
+		const consentDetails = {
+			routeVisibilityChanges: hasPublicRoutes ? { newlyPublic: publicRoutes } : undefined,
+			mcpTools,
+		};
+		if (
+			hasPublicRoutes &&
+			JSON.stringify(acknowledgedPublicRoutes) !== JSON.stringify(publicRoutes)
+		) {
+			return {
+				success: false,
+				error: {
+					code: "ROUTE_VISIBILITY_ESCALATION",
+					message: "Plugin install exposes public (unauthenticated) routes",
+					details: consentDetails,
+				},
+			};
+		}
+
+		if ((mcpTools?.length ?? 0) > 0 && !opts?.confirmMcpTools) {
+			return {
+				success: false,
+				error: {
+					code: "MCP_TOOL_CONSENT_REQUIRED",
+					message: "Plugin MCP tools require explicit consent",
+					details: consentDetails,
+				},
+			};
+		}
+
+		// Store bundle in site-local R2
+		await storeBundleInR2(storage, pluginId, version, bundle);
+
+		// Write plugin state
+		await stateRepo.upsert(pluginId, version, "active", {
+			source: "marketplace",
+			marketplaceVersion: version,
+			displayName: pluginDetail.name,
+			description: pluginDetail.description ?? undefined,
+		});
+
+		await syncDeclaredStorageIndexes(db, [bundle.manifest]);
+
+		// Fire-and-forget install stat
+		client.reportInstall(pluginId, version).catch(() => {
+			// Intentional: never fails the install
+		});
+		return {
+			success: true,
+			data: {
+				pluginId,
+				version,
+				capabilities: bundle.manifest.capabilities,
+			},
+		};
+	} catch (err) {
+		if (err instanceof MarketplaceUnavailableError) {
+			return {
+				success: false,
+				error: {
+					code: "MARKETPLACE_UNAVAILABLE",
+					message: "Plugin marketplace is currently unavailable",
+				},
+			};
+		}
+		if (err instanceof MarketplaceError) {
+			return {
+				success: false,
+				error: {
+					code: err.code ?? "MARKETPLACE_ERROR",
+					message: err.message,
+				},
+			};
+		}
+		if (err instanceof EmDashStorageError) {
+			return {
+				success: false,
+				error: {
+					code: err.code ?? "STORAGE_ERROR",
+					message: "Storage error while installing plugin",
+				},
+			};
+		}
+		if (err && typeof err === "object" && "code" in err) {
+			const code = (err as { code?: unknown }).code;
+			if (typeof code === "string" && code.trim()) {
+				return {
+					success: false,
+					error: {
+						code,
+						message: "Failed to install plugin from marketplace",
+					},
+				};
+			}
+		}
+		console.error("Failed to install marketplace plugin:", err);
+		return {
+			success: false,
+			error: {
+				code: "INSTALL_FAILED",
+				message: "Failed to install plugin from marketplace",
+			},
+		};
+	}
+}
+
+// ── Update ─────────────────────────────────────────────────────────
+
+export async function handleMarketplaceUpdate(
+	db: Kysely<Database>,
+	storage: Storage | null,
+	sandboxRunner: SandboxRunner | null,
+	marketplaceUrl: string | undefined,
+	pluginId: string,
+	opts?: {
+		version?: string;
+		confirmCapabilityChanges?: boolean;
+		acknowledgedPublicRoutes?: string[];
+		confirmMcpTools?: boolean;
+		/**
+		 * When true, sandbox: false bypass mode is active. The sandbox runner
+		 * is the noop runner (isAvailable() === false) but the runtime will
+		 * load the marketplace plugin in-process via syncMarketplacePlugins().
+		 * Skip the SANDBOX_NOT_AVAILABLE gate so the update can proceed.
+		 */
+		sandboxBypassed?: boolean;
+	},
+): Promise<ApiResult<MarketplaceUpdateResult>> {
+	const client = getClient(marketplaceUrl);
+	if (!client) {
+		return {
+			success: false,
+			error: { code: "MARKETPLACE_NOT_CONFIGURED", message: "Marketplace is not configured" },
+		};
+	}
+	if (!storage) {
+		return {
+			success: false,
+			error: { code: "STORAGE_NOT_CONFIGURED", message: "Storage is required" },
+		};
+	}
+	// Sandbox availability check: skip when sandbox: false bypass is active.
+	// The runtime's syncMarketplacePlugins() will load the plugin in-process.
+	if (!opts?.sandboxBypassed && (!sandboxRunner || !sandboxRunner.isAvailable())) {
+		return {
+			success: false,
+			error: {
+				code: "SANDBOX_NOT_AVAILABLE",
+				message: withUnavailableReason("Sandbox runner is required", sandboxRunner),
+			},
+		};
+	}
+
+	try {
+		const stateRepo = new PluginStateRepository(db);
+		const existing = await stateRepo.get(pluginId);
+		if (!existing || existing.source !== "marketplace") {
+			return {
+				success: false,
+				error: {
+					code: "NOT_FOUND",
+					message: `No marketplace plugin found: ${pluginId}`,
+				},
+			};
+		}
+
+		const oldVersion = existing.marketplaceVersion ?? existing.version;
+
+		// Get target version
+		const pluginDetail = await client.getPlugin(pluginId);
+		const newVersion = opts?.version ?? pluginDetail.latestVersion?.version;
+		if (!newVersion) {
+			return {
+				success: false,
+				error: { code: "NO_VERSION", message: "No newer version available" },
+			};
+		}
+
+		if (newVersion === oldVersion) {
+			return {
+				success: false,
+				error: { code: "ALREADY_UP_TO_DATE", message: "Plugin is already up to date" },
+			};
+		}
+
+		const versionMetadata = await resolveVersionMetadata(
+			client,
+			pluginId,
+			pluginDetail,
+			newVersion,
+		);
+		if (!versionMetadata) {
+			return {
+				success: false,
+				error: {
+					code: "NO_VERSION",
+					message: `Version ${newVersion} was not found for plugin ${pluginId}`,
+				},
+			};
+		}
+
+		const auditError = checkAuditVerdict(versionMetadata);
+		if (auditError) return auditError;
+
+		// Download new bundle
+		const bundle = await client.downloadBundle(pluginId, newVersion);
+
+		// Verify checksum matches marketplace-published checksum for this version
+		if (versionMetadata.checksum && bundle.checksum !== versionMetadata.checksum) {
+			return {
+				success: false,
+				error: {
+					code: "CHECKSUM_MISMATCH",
+					message: "Bundle checksum does not match marketplace record. Download may be corrupted.",
+				},
+			};
+		}
+
+		const bundleIdentityError = validateBundleIdentity(bundle, pluginId, newVersion);
+		if (bundleIdentityError) return bundleIdentityError;
+
+		// Diff capabilities and route visibility against old version
+		const oldBundle = await loadBundleFromR2(storage, pluginId, oldVersion);
+		const oldCaps = oldBundle?.manifest.capabilities ?? [];
+		const capabilityChanges = diffCapabilities(oldCaps, bundle.manifest.capabilities);
+		const hasEscalation = capabilityChanges.added.length > 0;
+		const routeVisibilityChanges = diffRouteVisibility(oldBundle?.manifest, bundle.manifest);
+		const hasNewPublicRoutes = routeVisibilityChanges.newlyPublic.length > 0;
+		const newlyPublicRoutes = routeVisibilityChanges.newlyPublic.toSorted();
+		const acknowledgedPublicRoutes = (opts?.acknowledgedPublicRoutes ?? []).toSorted();
+		const oldMcpTools = [...(oldBundle?.manifest.mcp?.tools ?? [])].toSorted((a, b) =>
+			a.name.localeCompare(b.name),
+		);
+		const newMcpTools = [...(bundle.manifest.mcp?.tools ?? [])].toSorted((a, b) =>
+			a.name.localeCompare(b.name),
+		);
+		const hasMcpChanges = JSON.stringify(oldMcpTools) !== JSON.stringify(newMcpTools);
+		const mcpTools = newMcpTools.map(({ inputSchema: _, outputSchema: __, ...tool }) => tool);
+		const consentDetails = {
+			capabilityChanges,
+			routeVisibilityChanges: hasNewPublicRoutes ? { newlyPublic: newlyPublicRoutes } : undefined,
+			mcpTools: hasMcpChanges ? mcpTools : undefined,
+		};
+
+		// If capabilities escalated, require explicit confirmation
+		if (hasEscalation && !opts?.confirmCapabilityChanges) {
+			return {
+				success: false,
+				error: {
+					code: "CAPABILITY_ESCALATION",
+					message: "Plugin update requires new capabilities",
+					details: consentDetails,
+				},
+			};
+		}
+
+		// Diff route visibility — routes going from private to public are a
+		// security-sensitive change that exposes unauthenticated endpoints.
+		if (
+			hasNewPublicRoutes &&
+			JSON.stringify(acknowledgedPublicRoutes) !== JSON.stringify(newlyPublicRoutes)
+		) {
+			return {
+				success: false,
+				error: {
+					code: "ROUTE_VISIBILITY_ESCALATION",
+					message: "Plugin update exposes new public (unauthenticated) routes",
+					details: consentDetails,
+				},
+			};
+		}
+
+		if (hasMcpChanges && !opts?.confirmMcpTools) {
+			return {
+				success: false,
+				error: {
+					code: "MCP_TOOL_CONSENT_REQUIRED",
+					message: "Plugin update changes its MCP tools",
+					details: consentDetails,
+				},
+			};
+		}
+
+		// Store new bundle
+		await storeBundleInR2(storage, pluginId, newVersion, bundle);
+
+		// Update state
+		await stateRepo.upsert(pluginId, newVersion, "active", {
+			source: "marketplace",
+			marketplaceVersion: newVersion,
+			displayName: pluginDetail.name,
+			description: pluginDetail.description ?? undefined,
+			mcpToolsEnabled: false,
+			mcpToolsConsent: null,
+		});
+
+		await syncDeclaredStorageIndexes(db, [bundle.manifest]);
+
+		return {
+			success: true,
+			data: {
+				pluginId,
+				oldVersion,
+				newVersion,
+				capabilityChanges,
+				routeVisibilityChanges: hasNewPublicRoutes ? routeVisibilityChanges : undefined,
+			},
+		};
+	} catch (err) {
+		if (err instanceof MarketplaceUnavailableError) {
+			return {
+				success: false,
+				error: { code: "MARKETPLACE_UNAVAILABLE", message: "Marketplace is unavailable" },
+			};
+		}
+		if (err instanceof MarketplaceError) {
+			return {
+				success: false,
+				error: { code: err.code ?? "MARKETPLACE_ERROR", message: err.message },
+			};
+		}
+		console.error("Failed to update marketplace plugin:", err);
+		return {
+			success: false,
+			error: { code: "UPDATE_FAILED", message: "Failed to update plugin" },
+		};
+	}
+}
+
+// ── Uninstall ──────────────────────────────────────────────────────
+
+export async function handleMarketplaceUninstall(
+	db: Kysely<Database>,
+	storage: Storage | null,
+	pluginId: string,
+	opts?: { deleteData?: boolean; beforeDelete?: () => Promise<void> },
+): Promise<ApiResult<MarketplaceUninstallResult>> {
+	try {
+		const stateRepo = new PluginStateRepository(db);
+		const existing = await stateRepo.get(pluginId);
+		if (!existing || existing.source !== "marketplace") {
+			return {
+				success: false,
+				error: {
+					code: "NOT_FOUND",
+					message: `No marketplace plugin found: ${pluginId}`,
+				},
+			};
+		}
+
+		const version = existing.marketplaceVersion ?? existing.version;
+		await opts?.beforeDelete?.();
+
+		// Optionally delete plugin storage data
+		let dataDeleted = false;
+		if (opts?.deleteData) {
+			try {
+				await db.deleteFrom("_plugin_storage").where("plugin_id", "=", pluginId).execute();
+				dataDeleted = true;
+			} catch {
+				// Plugin storage table may not have data for this plugin
+			}
+		}
+
+		try {
+			await removeAllPluginIndexes(db, pluginId);
+		} catch {
+			// Nothing to drop, or tracking table predates the feature
+		}
+
+		// Delete state row
+		await stateRepo.delete(pluginId);
+
+		// Delete the bundle after database state. A failed external cleanup can
+		// leave an inert orphan, but never an active row pointing at missing bytes.
+		if (storage) {
+			await deleteBundleFromR2(storage, pluginId, version);
+		}
+
+		return {
+			success: true,
+			data: { pluginId, dataDeleted },
+		};
+	} catch (err) {
+		console.error("Failed to uninstall marketplace plugin:", err);
+		return {
+			success: false,
+			error: {
+				code: "UNINSTALL_FAILED",
+				message: "Failed to uninstall plugin",
+			},
+		};
+	}
+}
+
+// ── Update check ───────────────────────────────────────────────────
+
+export async function handleMarketplaceUpdateCheck(
+	db: Kysely<Database>,
+	marketplaceUrl: string | undefined,
+): Promise<ApiResult<{ items: MarketplaceUpdateCheck[] }>> {
+	const client = getClient(marketplaceUrl);
+	if (!client) {
+		return {
+			success: false,
+			error: { code: "MARKETPLACE_NOT_CONFIGURED", message: "Marketplace is not configured" },
+		};
+	}
+
+	try {
+		const stateRepo = new PluginStateRepository(db);
+		const marketplacePlugins = await stateRepo.getMarketplacePlugins();
+
+		const items: MarketplaceUpdateCheck[] = [];
+
+		for (const plugin of marketplacePlugins) {
+			try {
+				const detail = await client.getPlugin(plugin.pluginId);
+				const latest = detail.latestVersion?.version;
+				const installed = plugin.marketplaceVersion ?? plugin.version;
+
+				if (!latest) continue;
+
+				const hasUpdate = latest !== installed;
+				let capabilityChanges: { added: string[]; removed: string[] } | undefined;
+				let hasCapabilityChanges = false;
+
+				if (hasUpdate && detail.latestVersion) {
+					const oldCaps = detail.capabilities ?? [];
+					const newCaps = detail.latestVersion.capabilities ?? [];
+					capabilityChanges = diffCapabilities(oldCaps, newCaps);
+					hasCapabilityChanges =
+						capabilityChanges.added.length > 0 || capabilityChanges.removed.length > 0;
+				}
+
+				items.push({
+					pluginId: plugin.pluginId,
+					installed,
+					latest: latest ?? installed,
+					hasUpdate,
+					hasCapabilityChanges,
+					capabilityChanges: hasCapabilityChanges ? capabilityChanges : undefined,
+					// Route visibility changes require downloading both bundles to compare
+					// manifests, which is too expensive for a preview check. The actual
+					// enforcement happens at update time in handleMarketplaceUpdate.
+					hasRouteVisibilityChanges: false,
+				});
+			} catch (err) {
+				// Skip plugins that can't be checked (marketplace down, plugin delisted)
+				console.warn(`Failed to check updates for ${plugin.pluginId}:`, err);
+			}
+		}
+
+		return { success: true, data: { items } };
+	} catch (err) {
+		if (err instanceof MarketplaceUnavailableError) {
+			return {
+				success: false,
+				error: { code: "MARKETPLACE_UNAVAILABLE", message: "Marketplace is unavailable" },
+			};
+		}
+		console.error("Failed to check marketplace updates:", err);
+		return {
+			success: false,
+			error: { code: "UPDATE_CHECK_FAILED", message: "Failed to check for updates" },
+		};
+	}
+}
+
+// ── Proxy ──────────────────────────────────────────────────────────
+
+export async function handleMarketplaceSearch(
+	marketplaceUrl: string | undefined,
+	query?: string,
+	opts?: MarketplaceSearchOpts,
+): Promise<ApiResult<unknown>> {
+	const client = getClient(marketplaceUrl);
+	if (!client) {
+		return {
+			success: false,
+			error: { code: "MARKETPLACE_NOT_CONFIGURED", message: "Marketplace is not configured" },
+		};
+	}
+
+	try {
+		const result = await client.search(query, opts);
+		return { success: true, data: result };
+	} catch (err) {
+		if (err instanceof MarketplaceUnavailableError) {
+			return {
+				success: false,
+				error: { code: "MARKETPLACE_UNAVAILABLE", message: "Marketplace is unavailable" },
+			};
+		}
+		console.error("Failed to search marketplace:", err);
+		return {
+			success: false,
+			error: { code: "SEARCH_FAILED", message: "Failed to search marketplace" },
+		};
+	}
+}
+
+export async function handleMarketplaceGetPlugin(
+	marketplaceUrl: string | undefined,
+	pluginId: string,
+): Promise<ApiResult<unknown>> {
+	const client = getClient(marketplaceUrl);
+	if (!client) {
+		return {
+			success: false,
+			error: { code: "MARKETPLACE_NOT_CONFIGURED", message: "Marketplace is not configured" },
+		};
+	}
+
+	try {
+		const result = await client.getPlugin(pluginId);
+		return { success: true, data: result };
+	} catch (err) {
+		if (err instanceof MarketplaceError && err.status === 404) {
+			return {
+				success: false,
+				error: { code: "NOT_FOUND", message: `Plugin not found: ${pluginId}` },
+			};
+		}
+		if (err instanceof MarketplaceUnavailableError) {
+			return {
+				success: false,
+				error: { code: "MARKETPLACE_UNAVAILABLE", message: "Marketplace is unavailable" },
+			};
+		}
+		console.error("Failed to get marketplace plugin:", err);
+		return {
+			success: false,
+			error: { code: "GET_PLUGIN_FAILED", message: "Failed to get plugin details" },
+		};
+	}
+}
+
+// ── Theme proxy handlers ──────────────────────────────────────────
+
+export async function handleThemeSearch(
+	marketplaceUrl: string | undefined,
+	query?: string,
+	opts?: MarketplaceThemeSearchOpts,
+): Promise<ApiResult<unknown>> {
+	const client = getClient(marketplaceUrl);
+	if (!client) {
+		return {
+			success: false,
+			error: { code: "MARKETPLACE_NOT_CONFIGURED", message: "Marketplace is not configured" },
+		};
+	}
+
+	try {
+		const result = await client.searchThemes(query, opts);
+		return { success: true, data: result };
+	} catch (err) {
+		if (err instanceof MarketplaceUnavailableError) {
+			return {
+				success: false,
+				error: { code: "MARKETPLACE_UNAVAILABLE", message: "Marketplace is unavailable" },
+			};
+		}
+		console.error("Failed to search themes:", err);
+		return {
+			success: false,
+			error: { code: "THEME_SEARCH_FAILED", message: "Failed to search themes" },
+		};
+	}
+}
+
+export async function handleThemeGetDetail(
+	marketplaceUrl: string | undefined,
+	themeId: string,
+): Promise<ApiResult<unknown>> {
+	const client = getClient(marketplaceUrl);
+	if (!client) {
+		return {
+			success: false,
+			error: { code: "MARKETPLACE_NOT_CONFIGURED", message: "Marketplace is not configured" },
+		};
+	}
+
+	try {
+		const result = await client.getTheme(themeId);
+		return { success: true, data: result };
+	} catch (err) {
+		if (err instanceof MarketplaceError && err.status === 404) {
+			return {
+				success: false,
+				error: { code: "NOT_FOUND", message: `Theme not found: ${themeId}` },
+			};
+		}
+		if (err instanceof MarketplaceUnavailableError) {
+			return {
+				success: false,
+				error: { code: "MARKETPLACE_UNAVAILABLE", message: "Marketplace is unavailable" },
+			};
+		}
+		console.error("Failed to get marketplace theme:", err);
+		return {
+			success: false,
+			error: { code: "GET_THEME_FAILED", message: "Failed to get theme details" },
+		};
+	}
+}

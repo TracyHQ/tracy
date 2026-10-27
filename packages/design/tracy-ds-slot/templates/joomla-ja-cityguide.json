@@ -1,0 +1,337 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-cityguide",
+  "release": "quickstart/ja-cityguide/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "display": "h1.search-title",
+    "body": "div.features-item-inner p",
+    "button-primary": "div.category-action.text-center a.btn.btn-primary",
+    "card": "div.item-inner",
+    "section": "#Section93",
+    "input": "#q"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 60px",
+    "displayFace": "IBM Plex Serif 600, tracking 0em",
+    "body": "first body paragraph",
+    "button-primary": "first filled call to action outside a kept band: rgb(249, 103, 107)",
+    "card": "repeated rounded box ×28",
+    "section": "first padded full-width section, padding-top 144px",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 30px"
+  },
+  "keepScopes": [".ja-topbar", ".search", ".categories-grid", ".t3-footer"],
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#757575",
+    "--fg-2": "#343648",
+    "--accent": "#f9676b",
+    "--accent-hover": "#f61d23",
+    "--surface": "#f8f8f8",
+    "--meta": "#999999",
+    "--success": "#00cc8b",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#eaeaea",
+    "--muted": "#555555",
+    "--font-display": "\"Archivo\", sans-serif",
+    "--font-body": "\"Archivo\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#486acd"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#757575",
+      "fg-2": "#343648",
+      "accent": "#f9676b",
+      "accent-hover": "#f61d23",
+      "surface": "#f8f8f8",
+      "meta": "#999999",
+      "success": "#00cc8b",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#eaeaea",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#757575",
+      "fg-2": "#343648",
+      "accent": "#f9676b",
+      "accent-on": "#ffffff",
+      "border": "#eaeaea",
+      "surface-warm": "#486acd"
+    },
+    {
+      "accent": "#f9676b"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "border": "#e5e5e5",
+      "surface": "#eeeeee",
+      "surface-warm": "#486acd",
+      "accent-hover": "#f72c32",
+      "border-soft": "#e1e1e1",
+      "danger": "#dd4b39"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border-soft": "#e0e2e3"
+    },
+    {
+      "surface": "#f9f9f9"
+    },
+    {
+      "surface": "#f7f7f7"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (62 line colours, 72 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.search-title",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "card": ["div.item-inner", ".card"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Section93"],
+    "bodyFace": ["body"],
+    "cardLike": [".category"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img)):not(.categories-grid *)",
+    "muted": ".t3-wrapper p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t3-wrapper p, .t3-wrapper li",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4):not(.categories-grid *)",
+    "footer": ".t3-footer a, #t3-footer a",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption):not(.categories-grid *):not(.mask-title)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar-left",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 17 tried (byte 9194); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#e5e5e5",
+      "uses": 65,
+      "kind": "line",
+      "role": "border",
+      "near": "#eaeaea",
+      "distance": 9
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 52,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f8f8",
+      "distance": 17
+    },
+    {
+      "hex": "#486acd",
+      "uses": 24,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#486acd",
+      "distance": 0
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 16,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f8f8",
+      "distance": 21
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f8f8",
+      "distance": 2
+    },
+    {
+      "hex": "#f72c32",
+      "uses": 6,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#f61d23",
+      "distance": 21
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f8f8",
+      "distance": 2
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#dd4b39",
+      "uses": 4,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#d9534f",
+      "distance": 24
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-cityguide/j6 1.0.0 tokenized by release-batch.mjs with T3 dev mode off, stood up from its own zip: tasks/evidence/ds-contracts-r3d-2026-10-11/ja-cityguide-j6): 12/12, controls 0 differences (the pixels differ from load to load: its Most Visited module orders its items at random), no text read worse than the template own (every visible heading and text judged element by element), 89% or more of the page follows, every contrast kind sampled; checked by eye on Moxie, Toggl Track (dark) and MotherDuck, Apple (light), desktop and phone: the logo is inverted on a dark page (sideRules), the testimonial band keeps its blue with white text. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 91% or more of the page follows, every contrast kind sampled at 1440 and 390; checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-cityguide-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-cityguide 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 91-95% of the page follows, every kind sampled (the empty band under Most Visited is the template's own default); MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-cityguide-j6",
+  "keepDefaults": {},
+  "keepColors": {
+    ".ja-topbar": "#ffffff",
+    ".search": "#757575",
+    ".categories-grid": "#757575",
+    ".t3-footer": "#a5a7af"
+  },
+  "t3DevmodeOff": true,
+  "followRules": {
+    ".intro-image .category": {
+      "background-color": "accent!"
+    },
+    ".intro-image .category a": {
+      "color": "accent-on"
+    },
+    ".t3-section .module-title .mask-title": {
+      "color": "surface-warm"
+    },
+    "#t3-mainnav a.btn-success": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    }
+  },
+  "sideRules": {
+    "dark": {
+      ".logo-image .logo-img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      }
+    }
+  },
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template's own look (flow.mjs samples); the kept categories grid (white labels on photos, the same colours as its default page: the kept-band check) is left out; the section watermarks (.mask-title: a 96 px word in the page's surface tone behind each section title, 1.05:1 on its default page by design) are decoration, not text to read",
+  "t3DevmodeOffNote": "traced 11/10/2026: the released template styles have T3 dev mode on, so the page is served LESS compiled on every request (t3-assets/dev) and the tokenized css/*.css never reached it: 24% of the page followed under every system. With dev mode off (the 1.0.1 release, every ja_cityguide style) 89% or more follows and the default look is unchanged (0 computed differences, release-batch.mjs verify)",
+  "keepNote": "kept: the top bar (.ja-topbar), the hero search box (.search), the categories grid (.categories-grid: white labels and coloured icon discs over photos) and the footer (.t3-footer), each with its own text colour as its default page computes it (keepColors); the Most Visited chips are not kept (the module orders its items at random, so a kept chip list never lines up): they take the accent with its own text colour (followRules, the chips colours are !important in the template)",
+  "followRulesNote": "the section watermarks (.mask-title, #f8f8f8 TEXT, which tokenize.mjs reads as a fill colour and leaves) take the surface tone, so they stay a faint word behind each title on a dark page; the Most Visited chips take the accent. 15/10/2026: the watermarks took the surface, which is the page itself under 429 of 1334 systems (Airbnb, Voiceflow, ElevenLabs, Figma, Mailchimp among the measured fifteen): the word vanished (1:1, read as the module title's first words: the h3's own text starts with the watermark span). They take the warm surface, one faint step off the page under every system (1.02-1.08:1 across the library, the template's own 1.06)",
+  "minVersion": {
+    "quickstart/ja-cityguide/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-cityguide/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".search": {
+      "ground": "#999999",
+      "texts": ["#ffffff", "#ebebeb"],
+      "picture": true,
+      "important": true,
+      "buttonGround": "#ffffff"
+    },
+    ".categories-grid": {
+      "ground": "#ffffff",
+      "texts": [],
+      "root": false,
+      "paint": {
+        ".icon": {
+          "background-color": "accent-fill"
+        },
+        ".t3-wrapper": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".t3-footer": {
+      "ground": "#343648",
+      "texts": ["#a5a7af", "#ffffff"],
+      "paint": {
+        ".facebook": {
+          "background-color": "accent-fill"
+        },
+        ".twitter": {
+          "background-color": "accent-fill"
+        },
+        ".vimeo": {
+          "background-color": "accent-fill"
+        },
+        ".rss": {
+          "background-color": "accent-fill"
+        },
+        ".acym_module_form input:is([type=email], [type=text])": {
+          "background-color": "ground",
+          "color": "text",
+          "border-color": "text"
+        }
+      },
+      "important": true
+    },
+    ".acm-features.style-1": {
+      "ground": "#486acd",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".description", ".info-user", ".info-user span"]
+    },
+    ".ja-topbar": {
+      "ground": "#343648",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".t3-navhelper": {
+      "ground": "#303242",
+      "texts": ["#ffffff", "#a5a7af"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "paint": {
+        ".breadcrumb > .active, .breadcrumb > .active *, .breadcrumb > li:last-child": {
+          "color": "text-2"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours. 15/10/2026: (1) the footer's newsletter field (mod_acym, .acym_module_form input) kept the template's white inside the kept footer (its --ds-c-* reset to the fallback) while the footer took the system's ground; its Subscribe button (input.btn-primary in td.acysubbuttons, absolute inside the field) wears the pair judged on the footer's ground, so on the white field a light accent stood 1.23-2.56:1 off it and a pair turned over to white vanished into it, 1:1 (11 of 15 systems, desktop and phone, home and both inner pages, v10). The field takes the footer's ground, its words and line the footer's words, as the template pairs them (a white field on its white form). (2) the breadcrumb strip above the footer (.t3-navhelper, mod_breadcrumbs) is the template's literal #303242 under every system while its 'You are here:' label (.breadcrumb > .active, var(--ds-c-meta)) took the system's meta text: 3.35:1 under Moxie, 2.61 under Stripe (inner pages, v10). The strip is an ink fill now: it takes the ground the footer below it takes, its words the system's words there, its label and current item the second words (text-2), as the template set them a step quieter than the links",
+  "followNote": "13/10/2026: the header's Sign Up call (#t3-mainnav a.btn-success) is the template's green #00cc8b under every system, a second accent beside the system's: it wears the system's accent and its words"
+}

@@ -1,0 +1,72 @@
+{
+  "id": "QA-UNIT-REG-PR-893-wp-form-recipient-typed-else-account-happy",
+  "itemIds": ["regression:REG-PR-893-wp-form-recipient-typed-else-account"],
+  "requirement": "WordPress Apply: a form mails the typed email, else the account that pressed Apply, never Tracy’s site admin mailbox",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-wp-form-recipient-typed-else-account.json",
+    "ref": "PR #893 (fix); fix evidence: Ledger L05 (WordPress part), 05/10/2026: with no email typed every Contact Form 7 form kept [_site_admin_email], which on a site Tracy installs is tracy-agent@tracy.ai: a visitor's message reached nobody who runs the business. Red b8ab012fa, fix 295349016; guard of the last case 18ca3d03d.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 61). Every named case is 'ok' (none 'not ok', none '# SKIP'): every published Contact Form 7 form's _mail recipient becomes the typed address, else the account email of the person who pressed Apply (shown on no page), and nothing else of its mail changes; with neither known no form's mail is changed.",
+    "productSources": [
+      "apps/tracy-web/src/lib/contracts.js:244",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "apps/tracy-web/src/sites/brief-engines/pictures.js:63",
+      "apps/tracy-web/src/sites/brief-engines/wordpress.js:340",
+      "apps/tracy-web/src/sites/route.js:730"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contract-copy.js:42 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:25 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:43 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/wordpress.js:161 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:1278 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:21 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:2869 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:3072 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "every published form mails the address the owner gave, the ones a page shows and the ones none does, and nothing else of their mail changes",
+    "with no mailbox typed, every published form mails the account of the person who pressed Apply, and no page shows it",
+    "with no mailbox typed and no account mailbox known, no form has its mail changed"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-wp-form-recipient-typed-else-account"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-wp-form-recipient-typed-else-account",
+    "pr": 893,
+    "kind": "fix",
+    "area": "sites/apply/wordpress",
+    "file": "tests/regression/cases/REG-PR-893-wp-form-recipient-typed-else-account.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-wordpress.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "every published form mails the address the owner gave, the ones a page shows and the ones none does, and nothing else of their mail changes",
+    "with no mailbox typed, every published form mails the account of the person who pressed Apply, and no page shows it",
+    "with no mailbox typed and no account mailbox known, no form has its mail changed"
+  ],
+  "timeoutS": 600
+}

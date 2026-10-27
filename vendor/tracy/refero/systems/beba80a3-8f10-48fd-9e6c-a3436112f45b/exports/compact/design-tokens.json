@@ -1,0 +1,59 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#121718",
+      "$type": "color",
+      "$description": "Ink — Primary text, icon strokes, hairline borders, default link text — near-black with a barely-warm cast that harmonizes with the cream canvas rather than fighting it"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Elevated card surfaces, button text on amber, icon fills — the brightest stop in the stack, used sparingly to lift content above the cream canvas"
+    },
+    "linen": {
+      "$value": "#f6f3ef",
+      "$type": "color",
+      "$description": "Linen — Card backgrounds, soft surface fill, inset panels — the warm off-white that sits one step above the page canvas"
+    },
+    "parchment": {
+      "$value": "#e4e0dd",
+      "$type": "color",
+      "$description": "Parchment — Page canvas, outer body background — the warm light gray that gives the entire interface its sunlit quality"
+    },
+    "graphite": {
+      "$value": "#2f2f2f",
+      "$type": "color",
+      "$description": "Graphite — Dark surface fill for inverted cards, footer band, contrast blocks — darker than Ink so it reads as a deliberate charcoal panel"
+    },
+    "slate": {
+      "$value": "#444444",
+      "$type": "color",
+      "$description": "Slate — Secondary neutral action background, muted utility surfaces — sits between Ink and the canvas for low-emphasis interactive fills"
+    },
+    "honey": {
+      "$value": "#ffcd6d",
+      "$type": "color",
+      "$description": "Honey — Primary action fill for the demo and get-started buttons, key brand moments — the single saturated color in the system, reserved for decisions that move the user forward"
+    },
+    "apricot": {
+      "$value": "#ffe2aa",
+      "$type": "color",
+      "$description": "Apricot — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "sans-serif-system": {
+      "$value": "sans-serif (system)",
+      "$type": "fontFamily",
+      "$description": "Full type system — weight 500/700 at 76–101px with tracking as tight as -0.043em gives headlines a quiet authority without resorting to a serif; weight 400 at 16–18px handles body; the huge size range (8px → 101px) is editorial in proportion, not product-UI proportions"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://zelt.app",
+      "siteName": "Zelt",
+      "extractedAt": "2026-06-03T21:05:17.361Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "color": {
+    "gallery-gray": {
+      "$value": "#eef0f2",
+      "$type": "color",
+      "$description": "Gallery Gray — Page background, header field, and low-contrast section canvas"
+    },
+    "porcelain": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Porcelain — Review cards, floating navigation surface, and light content panels"
+    },
+    "instrument-ink": {
+      "$value": "#04080d",
+      "$type": "color",
+      "$description": "Instrument Ink — Hero headlines, long-form headings, body copy, and dark product-media fields"
+    },
+    "charcoal-type": {
+      "$value": "#121317",
+      "$type": "color",
+      "$description": "Charcoal Type — Secondary headings, testimonial quotes, and strong supporting text"
+    },
+    "slate": {
+      "$value": "#6a6b6f",
+      "$type": "color",
+      "$description": "Slate — Muted explanatory copy and low-emphasis labels"
+    },
+    "graphite": {
+      "$value": "#4a4e52",
+      "$type": "color",
+      "$description": "Graphite — Footer links and subdued inline navigation"
+    },
+    "dial-teal": {
+      "$value": "#a1e5e4",
+      "$type": "color",
+      "$description": "Dial Teal — Large feature-card surface and illuminated dial treatment — a soft aqua interruption in the otherwise achromatic gallery"
+    },
+    "mint-glass": {
+      "$value": "#d5efef",
+      "$type": "color",
+      "$description": "Mint Glass — Text-highlight bands, pale feature surfaces, and the soft aqua wash behind selected review phrases"
+    },
+    "evergreen-dial": {
+      "$value": "#00753e",
+      "$type": "color",
+      "$description": "Evergreen Dial — Occasional clock-dial feature surface; reserve for isolated product artwork rather than general interface states"
+    },
+    "machine-night-gradient": {
+      "$value": "#6d6f73",
+      "$type": "color",
+      "$description": "Machine Night Gradient — Dark clock and product-media atmosphere, fading from metallic gray into Instrument Ink"
+    },
+    "icy-display-gradient": {
+      "$value": "#d6f6ff",
+      "$type": "color",
+      "$description": "Icy Display Gradient — Pale luminous treatment for aqua product callouts"
+    },
+    "luminous-teal-gradient": {
+      "$value": "#bfffff",
+      "$type": "color",
+      "$description": "Luminous Teal Gradient — Radial glow within dial-focused graphics and illuminated product details"
+    }
+  },
+  "font": {
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "Use the native system sans throughout. Headlines use 600 weight with increasingly negative tracking as they grow: -0.2px at 40px, -1px at 60px, and -1.2px at 96px; this makes the large statements feel cut from one dense typographic plane rather than like marketing display type. Quotes remain 400 at 32px/38.4px, preserving a conversational counterweight to the compact heavy headings."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bauhausclock.com",
+      "siteName": "Bauhaus Clock",
+      "extractedAt": "2026-09-20T19:29:14.731Z",
+      "variant": "compact"
+    }
+  }
+}

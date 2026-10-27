@@ -1,0 +1,62 @@
+{
+  "id": "REG-PR-1493-wo-bridged-first-run",
+  "kind": "feat",
+  "title": "EmDash first-run uses the right site address on a bridged host",
+  "pr": 1493,
+  "area": "website-opportunities/outreach-v3",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the generic setup with a working loopback, a broken loopback and an unknown container address."
+  ],
+  "expect": [
+    "An ordinary host POSTs setup over loopback; a bridged host POSTs to the site container's own IP.",
+    "If the IP cannot be determined, setup is not POSTed and no token is minted."
+  ],
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/test/emdash-post-up.test.mjs"
+  },
+  "fence": "Durable receipts, fixed identities, site permissions, leases and the daily-cap transaction; URLs are compose/copy only.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/emdash-post-up.test.mjs"
+    ],
+    "tests": [
+      "generic: a clean mint stores the PAT and reports ready",
+      "generic: first-run setup reaches the site on a bridged host",
+      "generic: an unknown site address fails before setup or mint",
+      "generic: a NONZERO mint with valid-looking stdout FAILS (status is not `|| true`d away)",
+      "generic: a malformed / missing PAT on stdout FAILS",
+      "generic: raw mint output never reaches the log",
+      "generic: a directory at the destination FAILS the write (the confirmed bug, via post_up)",
+      "generic: a symlink at the destination is REFUSED",
+      "generic: a failed root chown FAILS the store (permission step not swallowed, no non-root skip)",
+      "generic: a chown that \"succeeds\" but leaves a non-root owner FAILS (owner is verified)",
+      "generic: a failed mint-helper copy FAILS before minting",
+      "relay: a labelled image on the generic path registers the relay token, digest and identity",
+      "relay: an image without the label keeps the old first-run path (no relay step)",
+      "relay: a failed relay registration on the generic path FAILS the provision",
+      "relay: a labelled business image still registers the relay (once)",
+      "business: a clean bootstrap collects the PAT, cleans up, and reports ready",
+      "business: a failed bootstrap FAILS (full bootstrap failure prevents ready)",
+      "business: raw bootstrap output (even a fake PAT) never reaches the provision log",
+      "business: an invalid legacy token FAILS the store",
+      "business: a symlinked / non-regular legacy token in the container is REFUSED",
+      "business: a failed legacy cleanup FAILS — no readable copy may be left behind",
+      "business: cleanup that leaves the copy present (verify fails) FAILS",
+      "business: an exec error during the absence check is NOT read as \"gone\"",
+      "provision.sh takes --mail-sender (tracy-host sends it for a demo or a stock instance)",
+      "mail (macOS stack): no loopback answer — the helper dials the web container address docker reports",
+      "mail (macOS stack): an address docker cannot report, or one that is not an IPv4, FAILS before the helper",
+      "mail: a site that answers on loopback is never asked for its docker address",
+      "mail: a failed mint never reaches the mail step",
+      "mail: a failed image inspect FAILS before the mail step",
+      "mail (demo through provision.sh): a framed demo is configured, and one without the shim still FAILS",
+      "mail (demo through deploy-quickstart.sh): no mail step on that road, and it says the demo mails nobody"
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "id": "REG-PR-1138-help-in-chat",
+  "kind": "fix",
+  "title": "Help in the chat: suggestions leave at the next message, a bare /help after the chat began asks back, one orange button stops Help first and the agent second, /help is a claimed token (answers carry a rating again since PR #1188)",
+  "pr": 1138,
+  "area": "assistant/help",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Help controller: bare /help on the start screen, then a typed question; and bare /help, then a pressed suggestion.",
+    "S2: Help controller with a transcript shown: two bare /help.",
+    "S3: Help controller: an answer being written with two questions waiting, then the chat box stop (stopAll); then a new question.",
+    "S4: The plugin source and stylesheet: the row has no stop button; the composer seat conversation.input.activity holds the stop; dsh's disabled primary and every dsh stop (svg rect) are hidden beside it; /help declares a translated claim hint.",
+    "S5: Help controller restore and stream with a rated turn on the server (since PR #1188: the rating is kept and posted again).",
+    "S6: tracy-brand stylesheet against dsh's InputBar.module.css: hover, press and focus of the composer's round button and of Help's stop."
+  ],
+  "expect": [
+    "S1: the suggestions row is removed; only the question row stays.",
+    "S2: two askBack rows (the person's /help and one sentence), no suggestions row, no request.",
+    "S3: streamingRowOf names the row while it streams and nothing after stop; the answer row is 'stopped' with the text that arrived; the waiting questions are 'stopped' and never sent; a later question is sent.",
+    "S4: every source test passes (the row has no stop button; since PR #1188 a finished answer carries dsh's action row, REG-PR-1188-answer-actions).",
+    "S5: since PR #1188 the answer id and rating come back on a restore and from the done event; a press posts POST /api/assistant/turns/:id/rating (REG-PR-1188-answer-actions).",
+    "S6: hover/press use --dsw-alias-button-primary-hover (darker terracotta), no blue info hover; focus is a 1px --ring outline with no box-shadow."
+  ],
+  "selectors": {
+    "files": "packages/ui/tracy-assistant/src/client/{help.ts,HelpNode.tsx,HelpStop.tsx,index.tsx,styles.ts}, packages/brand/tracy-brand/src/client/styles.ts",
+    "slot": "conversation.input.activity",
+    "css": ".tv-help-stop"
+  },
+  "evidence": "tasks/evidence/help-in-chat-2026-10-11/ (before/after screenshots on a real dsh page, measures in after-measures.txt)",
+  "fence": "Help controller rows and the composer stop seat; the fork's claim of a text-taking command is covered by the fork's own tests (tracy.39)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-assistant/test/help.test.mjs",
+      "packages/ui/tracy-assistant/test/help-ui.test.mjs",
+      "packages/brand/tracy-brand/test/composer-primary-css.test.mjs"
+    ],
+    "tests": [
+      "the suggestions row goes away once a question is typed",
+      "pressing a suggestion asks it and takes the suggestions away",
+      "dropGreeting takes the suggestions away",
+      "once the chat has begun, a bare /help is answered like a chat message",
+      "streamingRowOf names the Help row being written",
+      "the stop of the chat box stops the answer being written",
+      "a Help row has no stop button of its own",
+      "the stop takes the seat of dsh primary",
+      "a bare /help after the chat began draws the person /help",
+      "/help claims its token in the chat box",
+      "Stop ends all of Help",
+      "one orange button",
+      "hover and press of the round button use the darker terracotta",
+      "focus of the round button is one 1px terracotta stroke",
+      "rating: the answer id comes from done"
+    ]
+  }
+}

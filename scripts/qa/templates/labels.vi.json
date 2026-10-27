@@ -1,0 +1,96 @@
+{
+  "none": "Không có.",
+  "reconciled": "đã đối chiếu",
+  "notReconciled": "CHƯA đối chiếu",
+  "reviewDetail": "sonnet đỏ {sonnet}, sol đỏ {sol}, trùng {both}; astra xác nhận {verified}",
+  "counts": {
+    "inconclusive": "Chưa kết luận",
+    "observedOk": "Quan sát thấy đúng tại T",
+    "notCheckable": "Không kiểm được",
+    "docsOnly": "Chỉ docs",
+    "notReached": "Chưa tới lượt",
+    "unclassified": "Chưa phân loại"
+  },
+  "health": {
+    "baseline": "baseline {state}",
+    "fenceOk": "hàng rào và canary phía stand đạt",
+    "fenceBad": "hàng rào hoặc canary phía stand LỆCH",
+    "chat": "chat: mồi {primer}, {turns} lượt, {hung} treo",
+    "primer": { "ok": "đạt", "failed": "hỏng", "off": "tắt" },
+    "duration": "{h} giờ {m} phút"
+  },
+  "model": {
+    "effort": "{model} effort {effort}"
+  },
+  "differsFromB": { "yes": "có", "no": "không", "unknown": "chưa rõ" },
+  "reviewTable": ["PR", "Ai", "Ca", "PR nói", "Stand tại T cho thấy", "Khác B?", "Làn đỏ", "Issue", "Tự xem"],
+  "laneTable": ["PR", "Ca", "sonnet", "sol"],
+  "laneStatus": {
+    "red": "đỏ",
+    "flaky": "chập chờn",
+    "green": "xanh",
+    "no-test": "không viết được test",
+    "timeout": "hết giờ",
+    "stand-error": "stand lỗi",
+    "not-checkable": "không kiểm được (fence chặn)"
+  },
+  "pending": {
+    "inconclusive": "Chưa kết luận",
+    "unclassified": "Chưa phân loại (hết quỹ)",
+    "following": "Đang theo dõi",
+    "followingItem": "đêm thứ {nights}"
+  },
+  "observedTable": ["PR", "Ca", "Câu trích", "Làn"],
+  "notChecked": {
+    "notCheckable": "Không kiểm được",
+    "docsOnly": "Chỉ docs",
+    "directCommits": "Commit không qua PR",
+    "notReached": "Chưa tới lượt",
+    "ended": "reverted / superseded / skipped"
+  },
+  "issues": {
+    "blocked": "Đêm nay không ghi gì lên issue: {reason}",
+    "created": "Mới",
+    "commented": "Thêm ca",
+    "notOpened": "Không mở",
+    "unassigned": "Chưa gán",
+    "unknown": "Issue chưa rõ (P0 đêm sau đối chiếu)",
+    "reasons": { "cap": "trần", "brake": "phanh", "switch": "tắt", "scanner": "dính bộ quét" },
+    "feedbackTable": ["Làn", "Người xác nhận", "Báo sai"]
+  },
+  "compare": {
+    "header": ["Chỉ số", "sonnet", "sol"],
+    "calibTrue": "calib-true (mong xanh)",
+    "calibFalse": "calib-false (mong đỏ, astra differs)",
+    "rows": {
+      "coverage": "Ca có test chạy được / ca Opus giao",
+      "redOnT": "Ca đỏ trên T",
+      "differs": "trong đó differs",
+      "testWrong": "trong đó test-wrong",
+      "confirmed": "Người xác nhận",
+      "falsePositive": "Người báo sai",
+      "timeouts": "PR hết giờ",
+      "minutesPerPr": "Phút mỗi PR",
+      "cost": "Chi phí (nguyên dạng)"
+    },
+    "smallSample": "Mẫu số nhỏ ({n} ca): chưa đủ để kết luận."
+  },
+  "regression": {
+    "core": "Bộ lõi: {state}",
+    "suite": "Bộ hồi quy: {passed}/{ran} xanh, {failed} đỏ",
+    "quarantined": "Cách ly"
+  },
+  "chat": {
+    "turns": "Lượt theo làn: sonnet {sonnet} · sol {sol} · verify {verify}",
+    "failures": "Lượt hỏng: treo {hung} · QUOTA 402 {quota} · MISSING_CREDENTIAL {credential} · lỗi nhà cung cấp {provider}",
+    "balance": "Số dư DeepSeek: đầu đêm {start}, cuối đêm {end}"
+  },
+  "troubles": {
+    "sites": "Site: tạo {created}, xoá {deleted}, orphan {orphans}"
+  },
+  "access": {
+    "human": "Vào stand: {url} rồi /login",
+    "otp": "Mã OTP: {cmd}",
+    "rerun": "Chạy lại một test trong hàng rào: {cmd}"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "color": {
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Primary text, navigation, icons, hairline borders, filled emphasis buttons, and the membership overlay surface"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, card surfaces, and inverse text on dark surfaces"
+    },
+    "linen": {
+      "$value": "#eaeae8",
+      "$type": "color",
+      "$description": "Linen — Outlined button borders, tag and chip backgrounds"
+    },
+    "mist": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Mist — Hairline dividers, input borders, subtle section separators"
+    },
+    "slate": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Slate — Button labels and secondary headings on light surfaces"
+    },
+    "graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Graphite — Input placeholder text and form helper copy"
+    },
+    "pewter": {
+      "$value": "#767676",
+      "$type": "color",
+      "$description": "Pewter — Muted metadata, tag fill, and secondary link underlines"
+    },
+    "obsidian": {
+      "$value": "#080808",
+      "$type": "color",
+      "$description": "Obsidian — Deep text and link stroke alternative — visually indistinguishable from Carbon but slightly softer on screen"
+    },
+    "indigo-whisper": {
+      "$value": "#3860be",
+      "$type": "color",
+      "$description": "Indigo Whisper — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "arket-sans": {
+      "$value": "Arket Sans",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface. Renders navigation, buttons, links, form labels, and product copy. Humanist proportions with generous x-height keep body text legible at 13–16px while the 18–24px steps carry section headings without visual weight."
+    },
+    "arketsansmono": {
+      "$value": "arketSansMono",
+      "$type": "fontFamily",
+      "$description": "The signature editorial label font. Used for navigation, product cards, tags, button text, and headings throughout the site. The monospace geometry contrasts the humanist sans and reinforces the museum-catalogue voice."
+    },
+    "arketscsansmono": {
+      "$value": "arketSCSansMono",
+      "$type": "fontFamily",
+      "$description": "Small-caps variant of the mono for editorial metadata like 'GUÍA DE CUIDADO', 'FEBRERO 2026', 'ENTREVISTAS'. Tighter letter-spacing (-0.05em) and uppercase transforms make category labels feel like archival wall text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://arket.com",
+      "siteName": "ARKET",
+      "extractedAt": "2026-06-03T18:04:39.057Z",
+      "variant": "compact"
+    }
+  }
+}

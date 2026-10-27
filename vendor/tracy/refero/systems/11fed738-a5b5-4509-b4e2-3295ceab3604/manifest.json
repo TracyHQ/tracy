@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "11fed738-a5b5-4509-b4e2-3295ceab3604",
+  "status": "complete",
+  "name": "Idle Finance",
+  "url": "https://styles.refero.design/style/11fed738-a5b5-4509-b4e2-3295ceab3604",
+  "sourceWebsite": "https://idle.finance",
+  "extractedAt": "2026-06-03T18:11:47.558Z",
+  "capturedAt": "2026-10-08T05:08:23.441183+00:00",
+  "theme": "dark",
+  "industry": "crypto",
+  "description": "Neon deep-sea trading floor — a dark navy terminal where a single cyan signal pierces the gloom.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e4bbf52e-e8e0-4f92-90d5-3b0eefd58f84.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/fee4292c-34e3-4b15-bda0-b7613ca390e6.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/95c9a581-f26c-43c6-92d7-0109aa8db2f5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/356d738b-a34c-44eb-a940-dbd656403183.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/23a5d388-b7c7-4b3a-ba4f-1f1c2619ea18.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "be3ebfd0f1bd44040668f22a5dc11b6c6cbd9687d15d5f3077bfb7669cadf5c7",
+      "bytes": 21723
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "55704afe587e06b364b6250a03598f759207af5dae54476cbac1c5bfc421403a",
+      "bytes": 92284
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e56285f939b8c3bf480dee98177ce546610d2ad457c99e2d5c60a0598b287f32",
+      "bytes": 17547
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "1c55a688c8f661f957df014b4eb716eaa82745d80377ff7d3dbb4dd637b49029",
+      "bytes": 12457
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "55b58a8f4afd674855939e86189a8630d0c98376840fa77991368c349a24fe79",
+      "bytes": 13025
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "dcd3b031ee7a4d51496006be7c6670e48a1c780f57cac53a229e1a7ee000a3a4",
+      "bytes": 3231
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "6b13ec652c9f8e91a4c94b049489cb5b569c66568216b19984aae6eea853e712",
+      "bytes": 683
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "217e25eb0074355ba109326a9784fd62b3f65fc131e1337a40e8187f00400fbf",
+      "bytes": 895
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "99d28cceb086e59b7a1f480f194efe6dd3d26f88610ac6066160b4d721ffb492",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d53a94cbcd3da36aed93f0f1c6dadea8cf0fdce3e70b57a112ca91827c5c32df",
+      "bytes": 45746
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "dce3a4962034fd04e128824dcfde6a556ee75874b9a293bff2a45e883026a55b",
+      "bytes": 23883
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "772bd62878b31cc6d53529947d36aed2f992fdedc02b1e8b3533ed153477588e",
+      "bytes": 51232
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8439f4344ad41c0941368f09ee76ce7df18970db71d76f95893294f51b5ddd37",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6dac8baa2b1d3a21e8ed03847fba436071d2310febb9eba79536ef6ed02c8222",
+      "bytes": 1892
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "2e8afe9eaa5a1ae7f1f8faa5c88baccfb52dc9de5459f25e17c45940e76cfee9",
+      "bytes": 2676
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0c55e725-e933-41b6-9fb7-2505a6659ee5",
+    "0e971626-ca51-45ba-acf6-35a53c561b2c",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "11fed738-a5b5-4509-b4e2-3295ceab3604",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "227ff379-9b46-44fc-8ff1-37e0472239a6",
+    "369ac603-c1e9-4231-9369-a198493f8e47",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "5d273906-0110-48cf-99cd-63a72eb9c586",
+    "60ee0386-cfad-409a-8310-762bfc2e4816",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a0630421-7b66-48b4-aa14-6194a3b2c2b9",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "a79b6a74-6b67-4c9f-9d69-bff80869b943",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "ccbb774f-d1a9-4cc6-b1be-31379ba0baf1",
+    "e352ec32-830a-4650-b7c2-d32a5f559f7e"
+  ]
+}

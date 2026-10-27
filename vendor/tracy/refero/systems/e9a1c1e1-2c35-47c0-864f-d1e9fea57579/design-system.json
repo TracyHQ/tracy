@@ -1,0 +1,317 @@
+{
+  "dos": [
+    "Use Paper (#f7f6f5) as the default page and navigation canvas.",
+    "Set public navigation in nbInternationalPro 14px/19.6px weight 400 with 4px micro-gaps.",
+    "Use Carbon (#141414) fill, White (#ffffff) text, 2px radius, and 6px 12px 5px padding for compact dark buttons.",
+    "Use 16px radius for Tile Gray (#efefef) tiles and Graphite (#1f1f1f) bento cards.",
+    "Set 64px display text at -2.56px tracking and 70.4px hero text at -2.816px tracking.",
+    "Reserve Electric Blue (#2200ff) for emphasized headline fragments, product links, icon strokes, and the rare 7.2px-radius saturated control.",
+    "Keep structural spacing on the 4px base unit; use 4px element gaps and 36px section gaps where the composition is not intentionally expansive."
+  ],
+  "donts": [
+    "Do not use bright color families beyond Electric Blue (#2200ff).",
+    "Do not round standard Carbon buttons beyond 2px; reserve 200px radius for pill filters only.",
+    "Do not give Tile Gray (#efefef) or Graphite (#1f1f1f) cards prominent drop shadows.",
+    "Do not set display headings in 600 or 700 weight; use nbInternationalPro 500.",
+    "Do not loosen large-heading tracking to normal; retain -0.04em on the 64px and 70px display steps.",
+    "Do not use White (#ffffff) as the default page background when Paper (#f7f6f5) is available.",
+    "Do not turn every link or button Electric Blue (#2200ff); most conversion controls remain Carbon (#141414)."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f7f6f5",
+      "name": "Paper",
+      "role": "Page background, navigation bar, footer background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#141414",
+      "name": "Carbon",
+      "role": "Primary text, dark buttons, outlines, dark iconography, and dark feature surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Tile Gray",
+      "role": "Logo tiles, integration cards, pale product modules",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e7e7e7",
+      "name": "Mist",
+      "role": "Inverse text on dark surfaces and subdued pale interface areas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1f1f1f",
+      "name": "Graphite",
+      "role": "Dark bento-card surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7d7d7d",
+      "name": "Steel",
+      "role": "Eyebrows, muted labels, and monochrome partner marks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White",
+      "role": "Text and icons on Carbon or Electric Blue controls",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2200ff",
+      "name": "Electric Blue",
+      "role": "Highlighted headline words, inline product links, selected icon strokes, and rare filled controls — the hard violet-blue creates a technical interruption in the otherwise grayscale system",
+      "group": "brand"
+    }
+  ],
+  "layout": "The site is a full-page Paper canvas with a shallow horizontal top bar and centered public navigation groups. The opening screen uses a centered two-line display headline, a compact paired-action row, and a wide contained product-workspace preview directly beneath it. Subsequent sections use generous vertical whitespace for centered statements, then introduce evidence in horizontal logo-tile rows, broad product panels, and a staggered field of integration tiles; dark Graphite bento panels punctuate the otherwise pale sequence. The page remains text-led and editorial at section openings, then resolves each statement with software UI or monochrome marks rather than lifestyle imagery.",
+  "imagery": "Imagery is product-first: large contained screenshots of a coding-agent workspace act as explanatory proof, with pale UI panes, thin dividers, small metadata, and restrained blue code/result highlights. Customer and integration sections replace photography with monochrome logos and simplified tool marks centered in oversized Tile Gray rounded rectangles. Icons are small, mostly mono near-black or Steel marks; Electric Blue appears selectively in product indicators and strokes. The page is text-dominant, with visual space allocated to software evidence and tiled marks rather than lifestyle scenes or decorative illustration.",
+  "similar": [
+    {
+      "why": "Shares dense product-interface proof, tightly tracked grotesk displays, and a restrained monochrome canvas punctuated by a saturated accent.",
+      "business": "Linear"
+    },
+    {
+      "why": "Shares near-black utility controls, sparse public navigation, and software demonstrations that function as the central visual material.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Shares developer-tool positioning through editor-like product screenshots, compact technical labels, and dark product surfaces against a pale marketing page.",
+      "business": "Cursor"
+    },
+    {
+      "why": "Shares warm off-white page fields, thin black outlines, small utility typography, and low-elevation interface cards.",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "links": "2px",
+      "pills": "200px",
+      "buttons": "2px",
+      "accentedControls": "7.2px"
+    },
+    "elementGap": "4px",
+    "sectionGap": "36px",
+    "cardPadding": "12px",
+    "pageMaxWidth": null
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#f7f6f5",
+      "name": "Paper",
+      "level": 0,
+      "purpose": "Page canvas, header, and footer"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Tile Gray",
+      "level": 1,
+      "purpose": "Pale cards, logo containers, and integration modules"
+    },
+    {
+      "hex": "#e7e7e7",
+      "name": "Mist",
+      "level": 2,
+      "purpose": "Light inverse text and subdued interface treatment"
+    },
+    {
+      "hex": "#1f1f1f",
+      "name": "Graphite",
+      "level": 3,
+      "purpose": "Dark bento feature panels"
+    }
+  ],
+  "northStar": "Electric ink on drafting paper. Let near-black type and pale technical surfaces do nearly all of the work, with #2200ff appearing as a deliberate switched-on signal.",
+  "typeScale": [
+    {
+      "role": "micro",
+      "size": 11,
+      "family": "nbInternationalPro",
+      "weight": 400,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "nav",
+      "size": 14,
+      "family": "nbInternationalPro",
+      "weight": 400,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "role": "code",
+      "size": 15,
+      "family": "geistMono",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-strong",
+      "size": 15,
+      "family": "nbInternationalPro",
+      "weight": 500,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "family": "nbInternationalPro",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-large",
+      "size": 17,
+      "family": "nbInternationalPro",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "eyebrow",
+      "size": 21,
+      "family": "nbInternationalPro",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-small",
+      "size": 24,
+      "family": "nbInternationalPro",
+      "weight": 500,
+      "lineHeight": 1.27,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "heading-inverse",
+      "size": 26,
+      "family": "nbInternationalPro",
+      "weight": 500,
+      "lineHeight": 1.25,
+      "letterSpacing": 0
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "family": "nbInternationalPro",
+      "weight": 500,
+      "lineHeight": 1.16,
+      "letterSpacing": -2.56
+    },
+    {
+      "role": "hero-display",
+      "size": 70,
+      "family": "nbInternationalPro",
+      "weight": 500,
+      "lineHeight": 1,
+      "letterSpacing": -2.8
+    }
+  ],
+  "components": [
+    {
+      "name": "Global Navigation Bar",
+      "role": "Persistent public-site header",
+      "description": "Use a Paper (#f7f6f5) horizontal bar with a 1px bottom divider in rgba(0,0,0,0.10). Navigation labels use nbInternationalPro 14px/19.6px weight 400 in Carbon (#141414), with 4px and 8px micro-gaps around chevrons and grouped controls."
+    },
+    {
+      "name": "Navigation Text Link",
+      "role": "Public navigation and utility link",
+      "description": "Set nbInternationalPro 14px/19.6px weight 400 in Carbon (#141414). Keep the control visually unfilled; use 4px internal icon/text separation when a chevron is present."
+    },
+    {
+      "name": "Outlined Utility Button",
+      "role": "Secondary navigation conversion control",
+      "description": "Use transparent fill, 1px solid Carbon (#141414), Carbon text, 2px radius, and padding 6px 8px 5px 12px. Keep the footprint compact rather than turning it into a large rounded CTA."
+    },
+    {
+      "name": "Carbon Compact Button",
+      "role": "Dark public-site conversion button",
+      "description": "Use Carbon (#141414) fill, White (#ffffff) text, 2px radius, and padding 6px 12px 5px. Button text follows nbInternationalPro 14px/19.6px weight 400 in navigation or 16px/22.4px weight 400 in main content."
+    },
+    {
+      "name": "Pill Filter Button",
+      "role": "Compact selector or segmented utility control",
+      "description": "Use transparent fill, Carbon (#141414) text and border, 200px radius, and padding 6px 8px 5px 12px. This is the only fully pill-shaped control treatment."
+    },
+    {
+      "name": "Electric Blue Control",
+      "role": "Rare product-level saturated action",
+      "description": "Use Electric Blue (#2200ff) fill with White (#ffffff) text and a 7.2px radius. Preserve the observed zero outer padding when it functions as a colored wrapper around a nested product control; do not substitute it for every public conversion button."
+    },
+    {
+      "name": "Hero Action Pair",
+      "role": "Centered hero conversion controls",
+      "description": "Place a Carbon Compact Button beside an Outlined Utility Button with a 8px gap. Use 16px body sizing for the central pair: Carbon fill with White text for the lead choice, then transparent fill with Carbon border and text for the alternate path."
+    },
+    {
+      "name": "Product Workspace Frame",
+      "role": "Large embedded product demonstration",
+      "description": "Build the software preview as a broad, pale interface composition with Tile Gray (#efefef) module surfaces, 16px outer corners, 1px dividers in rgba(0,0,0,0.10), and no card shadow. Use compact 11px to 17px nbInternationalPro UI text, with geistMono 15px/22.5px only for code-like details."
+    },
+    {
+      "name": "Pale Logo Tile",
+      "role": "Customer proof mark container",
+      "description": "Use Tile Gray (#efefef), 16px radius, no shadow, and 4px 0 padding. Center a monochrome Steel (#7d7d7d) partner mark; arrange repeated tiles in a horizontal multi-column band."
+    },
+    {
+      "name": "Integration Tile",
+      "role": "Tool ecosystem card",
+      "description": "Use Tile Gray (#efefef), 16px radius, no shadow, and 4px 0 padding. Place a subdued Steel (#7d7d7d) tool mark centrally and let repeated tiles form an irregular skyline rather than a dense icon list."
+    },
+    {
+      "name": "Dark Bento Feature Card",
+      "role": "Inverse product capability panel",
+      "description": "Use Graphite (#1f1f1f) fill, 16px radius, no shadow, and 0px padding on the outer card shell. Set headings in Mist (#e7e7e7) at 26.27px/32.84px weight 500; keep any contained interface or media inset rather than floating above the surface."
+    },
+    {
+      "name": "Electric Inline Link",
+      "role": "Product detail link",
+      "description": "Render nbInternationalPro in Electric Blue (#2200ff); use the 16px/24px body treatment where embedded in explanatory copy. Reserve this color for linked product names and selected textual emphasis, not all hyperlinks."
+    },
+    {
+      "name": "Footer Link Group",
+      "role": "Legal and utility navigation",
+      "description": "Use Paper (#f7f6f5) as the footer field with Carbon (#141414) links in nbInternationalPro 16px/24px weight 400. Separate items using 9px to 14px gaps and retain the same quiet, unfilled treatment as header links."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The sole interface and display family: 400 handles compact navigation, links, and reading text; 500 carries headings from 24px through the 70px hero. The 64px and 70px displays use -2.56px and -2.816px tracking respectively; the 24px subheads use -0.48px. This compressed display tracking makes the large statements feel engineered rather than promotional.",
+      "sizes": "11px, 14px, 15px, 16px, 17px, 21px, 24px, 26px, 27px, 64px, 70px",
+      "family": "nbInternationalPro",
+      "weight": "400, 500",
+      "lineHeight": "1.00, 1.16, 1.20, 1.25, 1.27, 1.35, 1.40, 1.50",
+      "substitute": "Inter",
+      "letterSpacing": "-2.816px at 70.4px, -2.56px at 64px, -0.48px at 24.16px; normal elsewhere"
+    },
+    {
+      "role": "Sparse code-like and product-detail text inside technical interface content; use it only where a software artifact needs a distinct machine-readable texture.",
+      "sizes": "15px",
+      "family": "geistMono",
+      "weight": "400",
+      "lineHeight": "1.50",
+      "substitute": "IBM Plex Mono",
+      "letterSpacing": "normal"
+    }
+  ],
+  "description": "Devin uses a warm off-white canvas, near-black typography, and a single electric violet-blue interruption. Large, tightly tracked grotesk headlines sit in expansive centered compositions, while the product is presented as pale, low-elevation software panels with compact utility text. The page alternates roomy editorial statements with dense interface evidence, dark bento panels, and repeated rounded gray tiles; blue is reserved for linked product names, selected words, and the occasional saturated control.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Paper: #f7f6f5 — Page background, navigation bar, footer background\n- Carbon: #141414 — Primary text, dark buttons, outlines, dark iconography, and dark feature surfaces\n- Tile Gray: #efefef — Logo tiles, integration cards, pale product modules\n- Mist: #e7e7e7 — Inverse text on dark surfaces and subdued pale interface areas\n- Graphite: #1f1f1f — Dark bento-card surfaces\n- Steel: #7d7d7d — Eyebrows, muted labels, and monochrome partner marks\n- White: #ffffff — Text and icons on Carbon or Electric Blue controls\n- Electric Blue: #2200ff — Highlighted headline words, inline product links, selected icon strokes, and rare filled controls — the hard violet-blue creates a technical interruption in the otherwise grayscale system\n\nCreate a centered hero on Paper (#f7f6f5) with Carbon (#141414) nbInternationalPro 70.4px/70.4px weight 500 display text at -2.816px tracking; place a Carbon Compact Button and an Outlined Utility Button 8px apart beneath it.\nCreate a customer-proof section on Paper (#f7f6f5) with a Steel (#7d7d7d) nbInternationalPro 21.018px/31.527px eyebrow above a Carbon (#141414) 64px/74.4px weight 500 heading at -2.56px tracking; color one short heading fragment Electric Blue (#2200ff), then add a centered Carbon button.\nCreate a broad coding-workspace showcase with a Tile Gray (#efefef) 16px-radius frame, 1px rgba(0,0,0,0.10) dividers, compact nbInternationalPro UI labels, and a small geistMono 15px/22.5px technical detail; keep the panel flat with no visible card shadow.\nCreate a Graphite (#1f1f1f) 16px-radius feature card with a Mist (#e7e7e7) nbInternationalPro 26.2725px/32.8406px weight 500 heading and an inset pale product module; do not use Electric Blue (#2200ff) as the panel background."
+    }
+  ],
+  "elevationPhilosophy": "Surfaces separate through Paper-to-Tile Gray contrast, 1px rgba(0,0,0,0.10) dividers, and 16px geometry rather than floating shadows. Keep cards flat; any product-frame lift should be limited to a faint ambient edge such as 0 1px 2px 0 rgb(0 0 0 / 0.05)."
+}

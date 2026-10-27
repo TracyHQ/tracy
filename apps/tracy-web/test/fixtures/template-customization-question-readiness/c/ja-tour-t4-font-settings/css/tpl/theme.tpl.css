@@ -1,0 +1,552 @@
+/**
+ *------------------------------------------------------------------------------
+ * @package       T4_Blank - Free Template for Joomla!
+ *------------------------------------------------------------------------------
+ * @copyright     Copyright (C) 2004-2019 JoomlArt.com. All Rights Reserved.
+ * @license       GNU General Public License version 2 or later; see LICENSE.txt
+ * @authors       JoomlArt
+ *------------------------------------------------------------------------------
+**/
+:root {
+  --blue: __color_blue;
+  --indigo: __color_indigo;
+  --purple: __color_purple;
+  --pink: __color_pink;
+  --red: __color_red;
+  --orange: __color_orange;
+  --yellow: __color_yellow;
+  --green: __color_green;
+  --teal: __color_teal;
+  --cyan: __color_cyan;
+  --primary: __color_primary;
+  --secondary: __color_secondary;
+  --success: __color_success;
+  --info: __color_info;
+  --warning: __color_warning;
+  --danger: __color_danger;
+  --light: __color_light;
+  --dark: __color_dark;
+  --white: __color_white;
+  --black: __color_black;
+  --breakpoint-xs: __bp_xs;
+  --breakpoint-sm: __bp_sm;
+  --breakpoint-md: __bp_md;
+  --breakpoint-lg: __bp_lg;
+  --breakpoint-xl: __bp_xl;
+  --breakpoint-hd: __bp_hd; }
+
+/* for megamenu animation duration */
+.t4-megamenu.animate .dropdown.animating > .dropdown-menu {
+  -webkit-transition-duration: __animation_duration;
+  -o-transition-duration: __animation_duration;
+  transition-duration: __animation_duration; }
+
+html {
+  font-size: __body_font_size; }
+
+body {
+  background-color: __color_white;
+  color: __body_text_color;
+  font-family: __body_font_family;
+  font-size: __body_font_size;
+  font-weight: __body_font_weight;
+  font-style: __body_font_style;
+  line-height: __body_line_height;
+  letter-spacing: __letter_spacing; }
+
+.t4-content {
+  background-image: url(__body_bg_img);
+  background-repeat: __body_bg_img_repeat;
+  background-position: __body_bg_img_position;
+  background-size: __body_bg_img_size;
+  background-attachment: __body_bg_img_attachment;
+  background-color: __body_bg_color; }
+
+a {
+  color: __link_color; }
+
+a:hover {
+  color: __link_hover_color; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: __heading_font_family;
+  font-weight: __heading_font_weight;
+  font-style: __heading_font_style;
+  line-height: __heading_line_height;
+  letter-spacing: __heading_letter_spacing; }
+
+h1, .h1 {
+  font-size: __h1_font_size; }
+
+h2, .h2 {
+  font-size: __h2_font_size; }
+
+h3, .h3 {
+  font-size: __h3_font_size; }
+
+h4, .h4 {
+  font-size: __h4_font_size; }
+
+h5, .h5 {
+  font-size: __h5_font_size; }
+
+h6, .h6 {
+  font-size: __h6_font_size; }
+
+/* COLORS
+--------------------------------------- */
+/* Backgrounds Colors */
+.bg-primary {
+  background-color: __color_primary !important; }
+
+.bg-secondary {
+  background-color: __color_secondary !important; }
+
+.bg-success {
+  background-color: __color_success !important; }
+
+.bg-info {
+  background-color: __color_info !important; }
+
+.bg-warning {
+  background-color: __color_warning !important; }
+
+.bg-danger {
+  background-color: __color_danger !important; }
+
+.bg-light {
+  background-color: __color_light !important; }
+
+.bg-dark {
+  background-color: __color_dark !important; }
+
+.bg-white {
+  background-color: __color_white !important; }
+
+.bg-black {
+  background-color: __color_black !important; }
+
+/* Buttons Colors */
+.btn.btn-primary {
+  background-color: __color_primary !important;
+  border-color: __color_primary !important; }
+
+.btn.btn-primary:hover {
+  opacity: 0.85; }
+
+.btn.btn-outline-primary {
+  border-color: __color_primary !important;
+  color: __color_primary !important; }
+
+.btn.btn-outline-primary:hover {
+  background-color: __color_primary !important; }
+
+.btn.btn-secondary {
+  background-color: __color_secondary !important;
+  border-color: __color_secondary !important; }
+
+.btn.btn-secondary:hover {
+  opacity: 0.85; }
+
+.btn.btn-outline-secondary {
+  border-color: __color_secondary !important;
+  color: __color_secondary !important; }
+
+.btn.btn-outline-secondary:hover {
+  background-color: __color_secondary !important; }
+
+.btn.btn-success {
+  background-color: __color_success !important;
+  border-color: __color_success !important; }
+
+.btn.btn-success:hover {
+  opacity: 0.85; }
+
+.btn.btn-outline-success {
+  border-color: __color_success !important;
+  color: __color_success !important; }
+
+.btn.btn-outline-success:hover {
+  background-color: __color_success !important; }
+
+.btn.btn-info {
+  background-color: __color_info !important;
+  border-color: __color_info !important; }
+
+.btn.btn-info:hover {
+  opacity: 0.85; }
+
+.btn.btn-outline-info {
+  border-color: __color_info !important;
+  color: __color_info !important; }
+
+.btn.btn-outline-info:hover {
+  background-color: __color_info !important; }
+
+.btn.btn-warning {
+  background-color: __color_warning !important;
+  border-color: __color_warning !important; }
+
+.btn.btn-warning:hover {
+  opacity: 0.85; }
+
+.btn.btn-outline-warning {
+  border-color: __color_warning !important;
+  color: __color_warning !important; }
+
+.btn.btn-outline-warning:hover {
+  background-color: __color_warning !important; }
+
+.btn.btn-danger {
+  background-color: __color_danger !important;
+  border-color: __color_danger !important; }
+
+.btn.btn-danger:hover {
+  opacity: 0.85; }
+
+.btn.btn-outline-danger {
+  border-color: __color_danger !important;
+  color: __color_danger !important; }
+
+.btn.btn-outline-danger:hover {
+  background-color: __color_danger !important; }
+
+.btn.btn-light {
+  background-color: __color_light !important;
+  border-color: __color_light !important; }
+
+.btn.btn-light:hover {
+  opacity: 0.85; }
+
+.btn.btn-outline-light {
+  border-color: __color_light !important;
+  color: __color_light !important; }
+
+.btn.btn-outline-light:hover {
+  background-color: __color_light !important; }
+
+.btn.btn-dark {
+  background-color: __color_dark !important;
+  border-color: __color_dark !important; }
+
+.btn.btn-dark:hover {
+  opacity: 0.85; }
+
+.btn.btn-outline-dark {
+  border-color: __color_dark !important;
+  color: __color_dark !important; }
+
+.btn.btn-outline-dark:hover {
+  background-color: __color_dark !important; }
+
+.btn.btn-white {
+  background-color: __color_white !important;
+  border-color: __color_white !important; }
+
+.btn.btn-white:hover {
+  opacity: 0.85; }
+
+.btn.btn-outline-white {
+  border-color: __color_white !important;
+  color: __color_white !important; }
+
+.btn.btn-outline-white:hover {
+  background-color: __color_white !important; }
+
+.btn.btn-black {
+  background-color: __color_black !important;
+  border-color: __color_black !important; }
+
+.btn.btn-black:hover {
+  opacity: 0.85; }
+
+.btn.btn-outline-black {
+  border-color: __color_black !important;
+  color: __color_black !important; }
+
+.btn.btn-outline-black:hover {
+  background-color: __color_black !important; }
+
+/* Text Colors */
+.text-primary {
+  color: __color_primary !important; }
+
+.text-secondary {
+  color: __color_secondary !important; }
+
+.text-success {
+  color: __color_success !important; }
+
+.text-info {
+  color: __color_info !important; }
+
+.text-warning {
+  color: __color_warning !important; }
+
+.text-danger {
+  color: __color_danger !important; }
+
+.text-light {
+  color: __color_light !important; }
+
+.text-dark {
+  color: __color_dark !important; }
+
+.text-white {
+  color: __color_white !important; }
+
+.text-black {
+  color: __color_black !important; }
+
+/* Badage Colors */
+.badge-primary {
+  background-color: __color_primary; }
+
+.badge-secondary {
+  background-color: __color_secondary; }
+
+.badge-success {
+  background-color: __color_success; }
+
+.badge-info {
+  background-color: __color_info; }
+
+.badge-warning {
+  background-color: __color_warning; }
+
+.badge-danger {
+  background-color: __color_danger; }
+
+.badge-light {
+  background-color: __color_light; }
+
+.badge-dark {
+  background-color: __color_dark; }
+
+.badge-white {
+  background-color: __color_white; }
+
+.badge-black {
+  background-color: __color_black; }
+
+.link-primary {
+  color: __color_primary !important; }
+  .link-primary:hover, .link-primary:focus, .link-primary:active {
+    opacity: 0.8; }
+
+.heading-link {
+  color: var(--ds-c-fg-2, #212C64); }
+  .heading-link:hover, .heading-link:focus, .heading-link:active {
+    color: __color_primary; }
+
+.dropdown-menu li.show > a,
+.dropdown-menu li.show > span, .dropdown-menu li.active > a,
+.dropdown-menu li.active > span {
+  color: __color_primary !important; }
+
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-menu li > a:active,
+.dropdown-menu li > span:hover,
+.dropdown-menu li > span:focus,
+.dropdown-menu li > span:active {
+  color: __color_primary !important; }
+
+.mod-highlight {
+  background: __color_secondary; }
+
+.vbmodroomsview a:hover,
+.vbmodroomsview a:focus,
+.vbmodroomsview a:active {
+  background: __color_secondary !important;
+  color: #fff !important; }
+
+.btn-light,
+.vbo-availability-room-details-last-inner .btn {
+  color: __color_secondary !important; }
+  .btn-light:hover, .btn-light:focus, .btn-light:active,
+  .vbo-availability-room-details-last-inner .btn:hover,
+  .vbo-availability-room-details-last-inner .btn:focus,
+  .vbo-availability-room-details-last-inner .btn:active {
+    color: __color_secondary !important; }
+
+.vbsearchinputmodhors {
+  background: __color_primary !important; }
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: __heading_font_family; }
+
+.com-finder .form-inline label,
+.vbmodroomsname,
+.vbo-pkglist-pkg-name {
+  font-family: __heading_font_family; }
+
+.acm-slideshow .owl-carousel .owl-nav button:hover, .acm-slideshow .owl-carousel .owl-nav button:focus, .acm-slideshow .owl-carousel .owl-nav button:active {
+  background: __color_primary;
+  color: #fff; }
+
+.acm-slideshow .owl-carousel .owl-dots .owl-dot span:hover, .acm-slideshow .owl-carousel .owl-dots .owl-dot span:focus, .acm-slideshow .owl-carousel .owl-dots .owl-dot span:active {
+  background: __color_primary; }
+
+.acm-slideshow .owl-carousel .owl-dots .owl-dot.active {
+  border-color: __color_primary; }
+  .acm-slideshow .owl-carousel .owl-dots .owl-dot.active span {
+    background: __color_primary; }
+
+.acm-testimonial.style-1 .owl-control > button:hover, .acm-testimonial.style-1 .owl-control > button:focus, .acm-testimonial.style-1 .owl-control > button:active {
+  background: __color_primary;
+  color: #fff; }
+
+.registration legend,
+.profile-edit legend,
+.profile legend {
+  font-family: __heading_font_family; }
+
+.login-wrap .other-links ul li a:hover {
+  color: __color_primary; }
+
+.search .btn-toolbar .btn-group button {
+  background: __color_primary; }
+  .search .btn-toolbar .btn-group button:hover {
+    background: __color_primary; }
+
+.search legend,
+.search .searchintro,
+.search .result-title {
+  font-family: __heading_font_family; }
+
+.com-finder #search-results .result-title a:hover,
+.com-finder .search-results .result-title a:hover,
+.search #search-results .result-title a:hover,
+.search .search-results .result-title a:hover {
+  color: __color_primary; }
+
+.readmore .btn {
+  color: __color_primary;
+  border-bottom-color: __color_primary; }
+
+.item-page .list-info ul li:before {
+  color: __color_primary; }
+
+#login-form ul li a:hover {
+  color: __color_primary; }
+
+ul.latestnews li a:before {
+  color: __color_primary; }
+
+ul.latestnews li a:hover {
+  color: __color_primary !important; }
+
+.item-content .page-header h2 a:hover,
+.item-page .page-header h2 a:hover {
+  color: __color_primary; }
+
+.item-content .article-info dd.category-name a,
+.item-page .article-info dd.category-name a {
+  font-family: __heading_font_family;
+  color: __color_primary !important; }
+
+.items-more .nav-tabs > li > a:hover {
+  color: __color_primary; }
+
+.contact .contact-address .fa, .contact .contact-address h4 {
+  color: __color_primary; }
+
+.contact #myTabTabs a:hover {
+  color: __color_primary; }
+
+.contact #myTabTabs li a.active {
+  color: __color_primary; }
+
+.contact .contact-articles ul li a:hover {
+  color: __color_primary; }
+
+.contact .contact-links ul.nav li a:hover, .contact .contact-links ul.nav li a:focus, .contact .contact-links ul.nav li a:active {
+  color: __color_primary;
+  border-color: __color_primary; }
+
+.contact .plain-style .content-left {
+  background: __color_secondary; }
+
+.contact .plain-style .submit .btn-primary {
+  background: __color_secondary !important;
+  border-color: __color_secondary !important; }
+
+.article-index ul li a:hover, .article-index ul li a.active {
+  color: __color_primary; }
+
+.article-index ul li a:hover {
+  color: __color_primary; }
+
+.tag-category ul.list-group li h3 a:hover {
+  color: __color_primary; }
+
+.latestnews li .content-article .wrap-info .category-name {
+  color: __color_primary;
+  font-family: __heading_font_family; }
+
+.latestnews li .content-article .title-article h4 a:hover {
+  color: __color_primary; }
+
+.categories-module.categories-module a:hover, .categories-module.categories-module a:focus, .categories-module.categories-module a:active {
+  color: __color_primary; }
+
+.tagspopular ul li a:hover {
+  color: __color_primary; }
+
+/*
+*
+* Vik Booking
+*
+*/
+.com_vikbooking .t4-main-body .btn,
+.com_vikbooking .t4-main-body input[type="submit"] {
+  background: __color_secondary; }
+
+.com_vikbooking .goback a {
+  background: __color_secondary; }
+
+.com_vikbooking .vblistroomcat:before {
+  color: __color_primary; }
+
+.com_vikbooking .vbdivsearch .input-group i {
+  background: __color_secondary; }
+
+.com_vikbooking .room_result .vblistroomblock .vbo-info-room .vbdescrlistdiv .vbrowcname {
+  font-family: __heading_font_family; }
+
+.com_vikbooking .room_result .vbcontdivtot .vbdivtot .vbdivtotinline .vbselectordiv a {
+  background: __color_secondary; }
+
+.com_vikbooking .vbrdetboxtop .vblistroomnamediv .vblistroomname {
+  font-family: __heading_font_family; }
+
+.com_vikbooking .vbo-pkgdet-topwrap .vbo-pkgdet-condsdates-block .vbo-pkgdet-dates {
+  background: __color_secondary; }
+
+.com_vikbooking .vbo-pkgdet-roomswrap .vbo-pkgdet-room-outer .vbo-pkgdet-room-booknow .vbo-pkgdet-room-booknow-btn {
+  background: __color_secondary; }
+
+.com_vikbooking .vbo-availcalendars-cont .vbcalsblock table tr.vbcaltrmonth td {
+  background: __color_secondary; }
+
+.com_vikbooking .vbo-seldates-cont .vbo-room-details-booking-wrapper input.vbdetbooksubmit {
+  background: __color_primary; }
+
+.com_vikbooking .vbstepsbarcont ol li.vbo-step-complete {
+  border-bottom-color: __color_secondary; }
+  .com_vikbooking .vbstepsbarcont ol li.vbo-step-complete:before {
+    background: __color_secondary; }
+
+.com_vikbooking .vbstepsbarcont ol li.vbo-step-current {
+  border-bottom-color: __color_secondary; }
+  .com_vikbooking .vbstepsbarcont ol li.vbo-step-current:before {
+    border-color: __color_secondary; }
+
+.com_vikbooking .room_buttons_box .booknow {
+  background: __color_primary; }
+
+.com_vikbooking .vbo-showprc-head-wrapper .vbo-showprc-wrapper .vbo-showprc-room-block .vbo-showprc-roomname {
+  font-family: __heading_font_family; }
+
+.com_vikbooking .vbo-pkglist-container .vbo-pkglist-pkg-bthree .vbo-pkglist-pkg-details a {
+  background: __color_secondary; }

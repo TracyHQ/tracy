@@ -1,0 +1,242 @@
+/**
+ * Database Adapter Functions
+ *
+ * These run at config time (astro.config.mjs) and return serializable descriptors.
+ * The actual dialect is created at runtime by loading the entrypoint.
+ *
+ * @example
+ * ```ts
+ * // astro.config.mjs
+ * import emdash from "emdash/astro";
+ * import { sqlite } from "emdash/db";
+ *
+ * export default defineConfig({
+ *   integrations: [
+ *     emdash({
+ *       database: sqlite({ url: "file:./data.db" }),
+ *     }),
+ *   ],
+ * });
+ * ```
+ */
+
+/**
+ * Dialect family identifier.
+ * Used at runtime to select dialect-specific SQL fragments.
+ */
+export type DatabaseDialectType = "sqlite" | "postgres";
+
+export type CollectionDeletionGuardInput =
+	| {
+			action: "fence";
+			collectionId: string;
+			collectionSlug: string;
+			leaseToken: string;
+			forceDelete: boolean;
+	  }
+	| {
+			action: "drop";
+			collectionId: string;
+			collectionSlug: string;
+			leaseToken: string;
+	  };
+
+export type CollectionDeletionGuardResult =
+	| { outcome: "fenced" }
+	| { outcome: "has_content" }
+	| { outcome: "stale" }
+	| { outcome: "dropped" };
+
+export type ExecuteCollectionDeletionGuard = (
+	config: unknown,
+	input: CollectionDeletionGuardInput,
+) => Promise<CollectionDeletionGuardResult>;
+
+const ENVIRONMENT_VARIABLE_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
+
+function migrationEnvironmentVariable(
+	value: string | undefined,
+	fallback: string,
+	optionName: string,
+): string {
+	const name = value ?? fallback;
+	if (!ENVIRONMENT_VARIABLE_PATTERN.test(name)) {
+		throw new Error(`${optionName} must be a valid environment variable name.`);
+	}
+	return name;
+}
+
+/**
+ * Database descriptor - serializable config for virtual modules
+ */
+export interface DatabaseDescriptor {
+	entrypoint: string;
+	config: unknown;
+	type: DatabaseDialectType;
+	/** Deployment migration capability with configuration safe for a build artifact. */
+	migrations?: {
+		entrypoint: string;
+		manifestConfig: unknown;
+	};
+	/**
+	 * When true, the adapter's runtime entrypoint MUST export a named
+	 * `createRequestScopedDb` function matching the signature declared in
+	 * `virtual:emdash/dialect`. The virtual-module generator re-exports it
+	 * by name, so a missing export becomes a build-time bundler error.
+	 *
+	 * The function is called once per request and decides — based on its own
+	 * runtime config (e.g. whether the user opted into D1 sessions) — whether
+	 * to return a per-request Kysely or null. Use this for features like D1
+	 * read-replica sessions, bookmark cookies, or any per-request DB handle.
+	 * The handle must address the configured database: core shares values it
+	 * caches from one handle, such as the preview secret, with later requests.
+	 *
+	 * When false or absent, the generator emits a stub that returns null and
+	 * the middleware takes its default (singleton) path.
+	 */
+	supportsRequestScope?: boolean;
+	/**
+	 * When true, request middleware resolves the last content-namespace
+	 * invalidation timestamp and passes it to `createRequestScopedDb`.
+	 *
+	 * Keep this unset unless request routing depends on that timestamp: reading
+	 * it may require an object-cache backend round trip.
+	 */
+	needsLastContentWriteAt?: boolean;
+	/**
+	 * When true, the adapter's runtime entrypoint MUST export a named
+	 * `createCoalescingDialect` function. The runtime uses this fresh dialect
+	 * only for its cold-start read batch.
+	 *
+	 * When false or absent, the virtual module exports `undefined` without
+	 * inspecting an optional entrypoint export.
+	 */
+	supportsCoalescing?: boolean;
+	/** The runtime entrypoint exports the deletion-specific atomic guard. */
+	supportsCollectionDeletionGuard?: boolean;
+}
+
+export interface SqliteConfig {
+	/**
+	 * Database URL (e.g., "file:./data.db")
+	 */
+	url: string;
+}
+
+export interface LibsqlConfig {
+	/**
+	 * Database URL (e.g., "file:./data.db" or "libsql://...")
+	 */
+	url: string;
+	/**
+	 * Auth token for remote libSQL
+	 */
+	authToken?: string;
+	migrationAuthTokenEnv?: string;
+}
+
+/**
+ * SQLite database adapter (node:sqlite)
+ *
+ * For local development and Node.js deployments. Requires Node.js 22.16 or later.
+ *
+ * @example
+ * ```ts
+ * database: sqlite({ url: "file:./data.db" })
+ * ```
+ */
+export function sqlite(config: SqliteConfig): DatabaseDescriptor {
+	return {
+		entrypoint: "emdash/db/sqlite",
+		config,
+		type: "sqlite",
+		migrations: {
+			entrypoint: "emdash/internal/db/sqlite-migrations",
+			manifestConfig: { url: config.url },
+		},
+	};
+}
+
+/**
+ * libSQL database adapter (Turso)
+ *
+ * For Turso hosted databases or local libSQL.
+ *
+ * @example
+ * ```ts
+ * database: libsql({
+ *   url: "libsql://my-db.turso.io",
+ *   authToken: process.env.TURSO_AUTH_TOKEN,
+ * })
+ * ```
+ */
+export function libsql(config: LibsqlConfig): DatabaseDescriptor {
+	const { migrationAuthTokenEnv, ...runtimeConfig } = config;
+	return {
+		entrypoint: "emdash/db/libsql",
+		config: runtimeConfig,
+		type: "sqlite",
+		migrations: {
+			entrypoint: "emdash/internal/db/libsql-migrations",
+			manifestConfig: {
+				url: config.url,
+				authTokenEnv: migrationEnvironmentVariable(
+					migrationAuthTokenEnv,
+					"TURSO_AUTH_TOKEN",
+					"migrationAuthTokenEnv",
+				),
+			},
+		},
+	};
+}
+
+/**
+ * PostgreSQL connection configuration
+ */
+export interface PostgresConfig {
+	connectionString?: string;
+	host?: string;
+	port?: number;
+	database?: string;
+	user?: string;
+	password?: string;
+	ssl?: boolean;
+	pool?: {
+		min?: number;
+		max?: number;
+		/** Maximum time to wait for a connection, in milliseconds. Uses the pg default when omitted. */
+		connectionTimeoutMillis?: number;
+		/** Time before an idle client is closed, in milliseconds. Uses the pg default when omitted. */
+		idleTimeoutMillis?: number;
+	};
+	migrationConnectionStringEnv?: string;
+}
+
+/**
+ * PostgreSQL database adapter
+ *
+ * For PostgreSQL deployments with connection pooling.
+ *
+ * @example
+ * ```ts
+ * database: postgres({ connectionString: process.env.DATABASE_URL })
+ * ```
+ */
+export function postgres(config: PostgresConfig): DatabaseDescriptor {
+	const { migrationConnectionStringEnv, ...runtimeConfig } = config;
+	return {
+		entrypoint: "emdash/db/postgres",
+		config: runtimeConfig,
+		type: "postgres",
+		migrations: {
+			entrypoint: "emdash/internal/db/postgres-migrations",
+			manifestConfig: {
+				connectionStringEnv: migrationEnvironmentVariable(
+					migrationConnectionStringEnv,
+					"DATABASE_URL",
+					"migrationConnectionStringEnv",
+				),
+			},
+		},
+	};
+}

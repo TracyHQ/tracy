@@ -1,0 +1,89 @@
+{
+  "color": {
+    "void": {
+      "$value": "#08080a",
+      "$type": "color",
+      "$description": "Void — Page canvas, deepest surface, card backgrounds — the base layer against which everything else floats"
+    },
+    "charcoal": {
+      "$value": "#0d0d12",
+      "$type": "color",
+      "$description": "Charcoal — Section backgrounds, elevated panels, modal surfaces — first step off the canvas"
+    },
+    "graphite": {
+      "$value": "#17171c",
+      "$type": "color",
+      "$description": "Graphite — Card surfaces, nested containers, secondary panels"
+    },
+    "slate": {
+      "$value": "#25252d",
+      "$type": "color",
+      "$description": "Slate — Elevated surface fill, subtle button hover states, dark interactive variant"
+    },
+    "iron": {
+      "$value": "#31313a",
+      "$type": "color",
+      "$description": "Iron — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "ash": {
+      "$value": "#62626f",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, inactive icons, low-emphasis body"
+    },
+    "fog": {
+      "$value": "#8b8e9c",
+      "$type": "color",
+      "$description": "Fog — Secondary text, placeholder copy, subheadings, icon strokes"
+    },
+    "pearl": {
+      "$value": "#aeaac0",
+      "$type": "color",
+      "$description": "Pearl — Primary body text, card borders, heading borders — the dominant foreground voice"
+    },
+    "chalk": {
+      "$value": "#dad7de",
+      "$type": "color",
+      "$description": "Chalk — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "lavender-beam": {
+      "$value": "#ab8ff1",
+      "$type": "color",
+      "$description": "Lavender Beam — Link borders, accent strokes, chromatic highlight — the violet signal that breaks the monochrome"
+    },
+    "iris-glow": {
+      "$value": "#8960f0",
+      "$type": "color",
+      "$description": "Iris Glow — Deeper violet for link hover, gradient endpoint, chromatic emphasis on interactive accents"
+    },
+    "webgl-aurora": {
+      "$value": "#8e6ce4",
+      "$type": "color",
+      "$description": "WebGL Aurora — Hero radial gradient — the signature prismatic light burst that defines the brand atmosphere"
+    }
+  },
+  "font": {
+    "overused-grotesk": {
+      "$value": "Overused Grotesk",
+      "$type": "fontFamily",
+      "$description": "Display and heading face — the signature voice. Aggressive negative tracking (up to -6.3%) pulls letters into near-contact, and near-1.0 line-height lets large sizes stack tight without descender collision. Weight stays at 400–500; the font does the shouting through size and tracking, not weight."
+    },
+    "sprat": {
+      "$value": "Sprat",
+      "$type": "fontFamily",
+      "$description": "Secondary display for select editorial moments. Same tight tracking philosophy as Overused Grotesk but with a different personality — more condensed, more fragile. Use sparingly for typographic variety, not as a workhorse."
+    },
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "Body, UI, navigation, buttons, cards. The system stack keeps file weight at zero and provides a neutral voice for everything that isn't display. Subtle -1% tracking tightens the default rendering without distorting it. Weight 500 is the default emphasis level, not 600 or 700."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.unicorn.studio",
+      "siteName": "Unicorn Studio",
+      "extractedAt": "2026-06-03T20:12:22.803Z",
+      "variant": "compact"
+    }
+  }
+}

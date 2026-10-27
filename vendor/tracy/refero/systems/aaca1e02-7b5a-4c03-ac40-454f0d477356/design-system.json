@@ -1,0 +1,274 @@
+{
+  "dos": [
+    "Set every headline in GT Walsheim 700 at 56-64px with 1.0 line-height",
+    "Apply 0.167em letter-spacing to all GT America text at every size — this tracking is the system's most recognizable choice",
+    "Use 32px border-radius on all cards, image containers, and product mocks",
+    "Apply the single shadow recipe rgba(0,0,0,0.1) 11px 11px 40px to floating product mock cards only",
+    "Keep all body text in #333333 on #ffffff or #f5f3f2",
+    "Use #7366fe exclusively as the chromatic accent — eyebrow labels, active states, icon strokes, link hover",
+    "Space major sections 80-96px apart to maintain the breathing, spacious rhythm"
+  ],
+  "donts": [
+    "Do not introduce additional accent colors — the system is monochromatic plus one violet",
+    "Do not use weight 600 or 800 — the type system uses 300/400/500/700 only",
+    "Do not set body text in GT Walsheim — it is headlines only",
+    "Do not use pure #000000 for text or borders — use #333333 for warmth",
+    "Do not use radii smaller than 8px on cards or images",
+    "Do not apply the radial violet gradient to the marketing page — it belongs only inside product UI mocks",
+    "Do not center-align body paragraphs wider than 640px — the open tracking needs a measure constraint"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Primary page background, card surfaces inside product mocks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f3f2",
+      "name": "Warm Linen",
+      "role": "Subtle warm surface tint, nav borders, gradient fade-out color — gives the page its paper-like quality",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c4c3c1",
+      "name": "Linen Stone",
+      "role": "Mid neutral for muted dividers and secondary structural elements",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Ink",
+      "role": "Primary text, dominant border color — near-black, not pure, softer on the eye",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8b8c96",
+      "name": "Fog",
+      "role": "Muted text, placeholder copy, link underlines when unhovered",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d5d1f4",
+      "name": "Lavender Mist",
+      "role": "Soft highlight wash behind inline highlighted phrases in headlines, pale violet surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7366fe",
+      "name": "Periwinkle",
+      "role": "Sole chromatic accent — eyebrow labels, active states, icon strokes, link hover, accent borders. The one color that earns attention",
+      "group": "brand"
+    },
+    {
+      "hex": "#6c77b0",
+      "name": "Steel Violet",
+      "role": "Secondary violet surface for muted card backgrounds and tonal variety within the violet family",
+      "group": "accent"
+    },
+    {
+      "hex": "#55269c",
+      "name": "Dusk Gradient",
+      "role": "Deepest stop in the product mock gradient (radial fade from #55269c to transparent warm linen) — used only inside product UI mocks, never on the marketing surface",
+      "group": "accent",
+      "gradient": "radial-gradient(circle farthest-side at 50% 100%, rgb(53, 28, 175), rgba(245, 244, 241, 0) 80%)"
+    }
+  ],
+  "layout": "Centered hero with max-width 1200px canvas, eyebrow label + massive GT Walsheim headline + short body paragraph stacked vertically and centered. Product mock cards break out below at full section width, floating with 32px radius and the soft shadow. Sections alternate between centered text blocks and left-aligned section headings with supporting product screenshots, always separated by 80-96px vertical gaps. Nav is a thin 64px top bar with brand wordmark left, user avatars right. The rhythm is: centered quiet text → large floating product visual → repeat. No sidebars, no multi-column layouts on the marketing surface — everything centers or flows left-to-right with generous breathing room.",
+  "imagery": "The site is UI-screenshot driven, not photography-driven. Product mocks show a dark-mode calendar app with gradient event cards, overlapping circular avatar photos, and a small embedded metrics table. Avatars are the only human imagery: tight 24px circular crops, overlapping in stacks, always 4px white-bordered. No lifestyle photography, no illustrations, no decorative graphics — the product UI IS the visual content. Mockups float on the warm linen canvas with the single soft shadow, edge-to-edge within 32px-radius frames, no inner border or chrome.",
+  "similar": [
+    {
+      "why": "Same light spacious marketing canvas with near-black text, one soft accent color, and the habit of letting product UI screenshots carry the visual weight",
+      "business": "Notion"
+    },
+    {
+      "why": "Same generous 24-32px radii, warm off-white backgrounds, and restrained single-accent approach to collaborative tool marketing",
+      "business": "Pitch"
+    },
+    {
+      "why": "Direct calendar-tool neighbor with similar clean light marketing surface and product-mock-driven hero sections",
+      "business": "Cron (Notion Calendar)"
+    },
+    {
+      "why": "Same typographic discipline and tight headline-to-body relationship, though Linear skews dark — the light-mode counterpart aesthetic",
+      "business": "Linear"
+    },
+    {
+      "why": "Same soft, spacious, almost-paper-like background quality with muted accent restraint",
+      "business": "Mem"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "32px",
+      "images": "32px",
+      "avatars": "9999px",
+      "buttons": "8-12px",
+      "productMocks": "32px"
+    },
+    "elementGap": "16-24px",
+    "sectionGap": "80-96px",
+    "cardPadding": "24-32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 0,
+      "purpose": "Main page background, base canvas"
+    },
+    {
+      "hex": "#f5f3f2",
+      "name": "Warm Linen",
+      "level": 1,
+      "purpose": "Subtle warm wash for nav borders and section transitions"
+    },
+    {
+      "hex": "#d5d1f4",
+      "name": "Lavender Mist",
+      "level": 2,
+      "purpose": "Inline highlight background within headlines, soft accent surface"
+    },
+    {
+      "hex": "#6c77b0",
+      "name": "Steel Violet",
+      "level": 3,
+      "purpose": "Mid-tone violet card surface, tonal step between mist and periwinkle"
+    },
+    {
+      "hex": "#7366fe",
+      "name": "Periwinkle",
+      "level": 4,
+      "purpose": "Saturated accent surface for tags, icon fills, active states"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.1) 11px 11px 40px 0px",
+      "element": "Product mock card / floating UI screenshot"
+    }
+  ],
+  "northStar": "violet daylight workspace — a warm off-white page where a single periwinkle accent marks what matters and everything else recedes",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.33,
+      "letterSpacing": 2
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": 2.3
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 2.7
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.5,
+      "letterSpacing": 3
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.25,
+      "letterSpacing": 4
+    },
+    {
+      "role": "display",
+      "size": 56,
+      "lineHeight": 1,
+      "letterSpacing": 0
+    },
+    {
+      "role": "display-lg",
+      "size": 64,
+      "lineHeight": 1,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Hero Headline with Highlighted Span",
+      "role": "Primary page and section headline",
+      "description": "GT Walsheim 700 at 64px (page) or 56px (section), 1.0 line-height, #333333 text. One inline span wrapped in #d5d1f4 background with slight padding and 8px radius for the highlighted phrase — the visual signature of the brand."
+    },
+    {
+      "name": "Eyebrow Label",
+      "role": "Small caps category label above headlines",
+      "description": "GT America 500 at 12px, uppercase, #7366fe, 0.167em letter-spacing, centered above hero. Sets up the headline with quiet chromatic punctuation."
+    },
+    {
+      "name": "Hero Body Paragraph",
+      "role": "Subheadline / supporting copy",
+      "description": "GT America 300 at 18px, 1.5 line-height, #333333, centered, max-width ~600px. The 0.167em tracking and light weight make it feel open, not dense."
+    },
+    {
+      "name": "Floating Product Mock Card",
+      "role": "Product UI screenshot embedded in marketing sections",
+      "description": "Product screenshot wrapped in white card, 32px border-radius, rgba(0,0,0,0.1) 11px 11px 40px shadow, no border. The card itself is invisible — the screenshot fills it edge to edge. Floating on the warm linen canvas with generous 80px+ margin above."
+    },
+    {
+      "name": "Calendar Event Card (Product UI)",
+      "role": "In-app event detail card",
+      "description": "Dark surface (near-black #1a1721) with radial violet gradient from #55269c, 24px radius, generous padding, white text, avatar stack in upper right with overlapping circular 24px photos. This is where the gradient drama lives — opposite of the quiet marketing surface."
+    },
+    {
+      "name": "Metrics Table",
+      "role": "Data display inside product UI",
+      "description": "GT America 400-500 at 14px, #333333 text on white, 1px #c4c3c1 horizontal row dividers, 16px row padding. Bold first column for metric names, right-aligned numeric values. Minimal, spreadsheet-like."
+    },
+    {
+      "name": "Section Heading",
+      "role": "Sub-page heading below hero",
+      "description": "GT Walsheim 700 at 56px, 1.0 line-height, #333333, left-aligned. The same headline family as the hero but at 56px, signaling section depth."
+    },
+    {
+      "name": "Avatar Stack",
+      "role": "Participant indicator in product UI",
+      "description": "Three to five 24px circular photos with 4px white border, overlapping 8px horizontally. The only photography in the system — small, contained, always circular."
+    },
+    {
+      "name": "Nav Bar",
+      "role": "Top-level navigation",
+      "description": "White background, 1px bottom border in #f5f3f2, 64px height, GT America 400 at 14px for links, 0.167em tracking, #333333 default with #7366fe on hover/active. Brand wordmark on left, account avatars on right."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All section and page headlines. Weight 700 at 56-64px with tight 1.0 leading gives a wide, architectural, confident voice. The custom geometric forms (rounded but precise) define the brand's headline personality",
+      "sizes": "56px, 64px",
+      "family": "GT Walsheim",
+      "weight": "700",
+      "lineHeight": "1.0",
+      "substitute": "Inter 700 or Space Grotesk 700",
+      "letterSpacing": "normal (0)"
+    },
+    {
+      "role": "Body, nav, labels, UI controls, everything below the headline. The signature 0.167em tracking applies across all sizes — this is the system's most distinctive typographic choice. Use 300 for body, 400 for UI/default, 500 for emphasized subheadings and nav",
+      "sizes": "12px, 14px, 16px, 18px, 24px",
+      "family": "GT America Standard",
+      "weight": "300, 400, 500",
+      "lineHeight": "1.25 - 1.50",
+      "substitute": "Inter or Söhne",
+      "letterSpacing": "0.167em across all sizes (≈2px at 12px, ≈2.3px at 14px, ≈2.7px at 16px, ≈3px at 18px, ≈4px at 24px)"
+    }
+  ],
+  "description": "Ready is a light, near-monochrome marketing surface where a single periwinkle violet (#7366fe) does all the chromatic work against warm off-white (#f5f3f2) and near-black text (#333333). The hierarchy is built by two contrasting type families: GT Walsheim 700 at 56-64px with 1.0 leading for headlines, and GT America at 300-500 for everything else, marked by a distinctive 0.167em tracking that gives body copy an open, slightly technical feel. Cards and product mocks sit on generous 32px radii with one soft shadow recipe, creating a gentle floating-above-paper effect rather than hard elevation. The product itself (shown in mocks) shifts into a darker, gradient-rich mode, but the marketing canvas stays quiet and confident — let the product screenshots carry the color drama.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- background: #ffffff\n- warm surface: #f5f3f2\n- text: #333333\n- muted text / borders: #8b8c96\n- accent: #7366fe\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n1. Hero section: #ffffff background. Eyebrow label in GT America 500 at 12px, uppercase, #7366fe, 0.167em tracking, centered. Headline in GT Walsheim 700 at 64px, 1.0 line-height, #333333, centered. One inline phrase wrapped in #d5d1f4 background with 4px vertical and 8px horizontal padding, 8px radius. Body paragraph in GT America 300 at 18px, 1.5 line-height, #333333, centered, max-width 600px.\n2. Product mock card: Product screenshot filling edge to edge, 32px border-radius, rgba(0,0,0,0.1) 11px 11px 40px shadow, no border, no padding, floating on #f5f3f2 canvas with 80px margin above and below.\n3. Section heading block: GT Walsheim 700 at 56px, 1.0 line-height, #333333, left-aligned, max-width 800px. Body in GT America 300 at 18px, 1.5 line-height, #333333, 24px top margin.\n4. Nav bar: #ffffff background, 1px bottom border in #f5f3f2, 64px height, 0 16px padding. Brand wordmark in GT America 500 at 14px, #333333. Nav links in GT America 400 at 14px, 0.167em tracking, #333333 default, #7366fe on hover.\n5. Avatar stack: Five 24px circular photos with 4px white border, overlapping 8px horizontally, aligned right. The only photographic element in the system."
+    }
+  ],
+  "elevationPhilosophy": "The system uses a single shadow recipe applied sparingly to product mockups and floating cards. Most interface elements rely on surface color and 32px radius to suggest depth rather than shadow — the page feels layered through tone and radius, not drop shadows."
+}

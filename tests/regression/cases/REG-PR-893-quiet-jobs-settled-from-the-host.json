@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-893-quiet-jobs-settled-from-the-host",
+  "kind": "fix",
+  "title": "A job row its caller stopped waiting for is settled from the host's answer: unanswerable rows rotate, a newer write is never overwritten, one sweep at a time",
+  "pr": 893,
+  "area": "tracy-web/cron settleQuietJobs + sites/store quietJobs",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["node", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL set to a Postgres the tests may write to, run: node --test --test-reporter=tap apps/tracy-web/test/job-settles.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail', '# skipped' lines."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0', '# skipped 0' and '# pass' equal to '# tests' (at least 9): a /moment row left running after its caller's 45 s wait ends as the host ended it; a row still being written is not asked; 404 and no-reply rows rotate instead of holding the window; a row on a host no longer configured is never asked; an answer never overwrites a write made after the sweep read the row, and never moves an ended row back to running; an ending older than a day sends no ops signal; a sweep never overlaps the next tick; a demo's jobs are left to the demo sweep."
+  ],
+  "selectors": {
+    "sweep": "apps/tracy-web/src/cron.js (settleQuietJobs)",
+    "store": "apps/tracy-web/src/sites/store.js (quietJobs, touchJob, updateJob ifUpdatedAt)",
+    "hosts": "apps/tracy-web/src/host/client.js (signedHosts)"
+  },
+  "evidence": "05/10/2026 local stand: 226 job rows (192 webroot-moment, 32 webroot-seal-outside, 2 provision) stayed queued/running forever while the host's own file for every one said done (207) or failed (19); 186 of the 192 moments stopped being written 45-48 s after creation, all 32 seals at 15-16 s, exactly runSiteJob's deadlines (ledger L27).",
+  "fence": "Only rows nobody wrote for 60 s are asked about, and only the host's answer is written; what the door would have done with the answer (closeTurn, the seal's records) is not done here (ledger L31).",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/job-settles.test.mjs"],
+    "needs": ["postgres"]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/kinetic-search-results",
+  "version": "0.1.0",
+  "title": "Kinetic search results",
+  "category": "design",
+  "icon": "search",
+  "description": "The source's result count, card list, URL breadcrumb, term highlighting and pager for the current WordPress search query.",
+  "textdomain": "wp-ja-kinetic",
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

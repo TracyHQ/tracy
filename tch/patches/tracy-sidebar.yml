@@ -1,0 +1,5 @@
+# Dev overlay for the native profile: the skill-explorer row Lee runs with. (ui-sidebar is
+# disabled by the native bundle itself since 0.7.30.)
+- insert:
+    - id: ui-skill-explorer
+      name: '@linxin666/dsh-client-ui-skill-explorer'

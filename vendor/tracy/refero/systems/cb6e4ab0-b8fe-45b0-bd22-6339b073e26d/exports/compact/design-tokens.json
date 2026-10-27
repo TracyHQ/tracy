@@ -1,0 +1,59 @@
+{
+  "color": {
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Primary text, logo mark, ghost button borders on dark — the highest-contrast color, used sparingly for headlines and active labels"
+    },
+    "ash-gray": {
+      "$value": "#c2c2c2",
+      "$type": "color",
+      "$description": "Ash Gray — Secondary headings, emphasis text on dark surfaces"
+    },
+    "mist": {
+      "$value": "#b5b5b5",
+      "$type": "color",
+      "$description": "Mist — Muted body text, sub-labels, metadata"
+    },
+    "smoke": {
+      "$value": "#919191",
+      "$type": "color",
+      "$description": "Smoke — Tertiary text, icon strokes, inactive nav items, secondary button text"
+    },
+    "graphite": {
+      "$value": "#606060",
+      "$type": "color",
+      "$description": "Graphite — Mid-tone surface, card backgrounds, chip fills, subtle dividers"
+    },
+    "obsidian": {
+      "$value": "#3b3b3b",
+      "$type": "color",
+      "$description": "Obsidian — Base canvas, section background, primary surface — the dominant dark that anchors all content sections"
+    },
+    "dusk-blue": {
+      "$value": "#5a7694",
+      "$type": "color",
+      "$description": "Dusk Blue — Hero gradient anchor — the start of the soft blue-to-gray wash that defines the first viewport and makes the brand feel atmospheric rather than corporate"
+    },
+    "dusk-highlight": {
+      "$value": "#abb7b5",
+      "$type": "color",
+      "$description": "Dusk Highlight — Gradient terminus — the pale gray-green endpoint of the hero wash that dissolves the page into the dark sections below"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "The sole typeface across all roles: captions, body, navigation, and display. The deliberate choice of a single weight (400) forces hierarchy through size and spacing alone, creating a quiet, anti-conventional rhythm where headlines feel like magnified body text rather than bold declarations. Substitute: Inter (Google Fonts)."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://tatem.com",
+      "siteName": "Tatem",
+      "extractedAt": "2026-06-03T16:45:56.334Z",
+      "variant": "compact"
+    }
+  }
+}

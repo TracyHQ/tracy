@@ -1,0 +1,27 @@
+User-Agent: anthropic-ai
+User-Agent: Applebot-Extended
+User-Agent: Bytespider
+User-Agent: CCBot
+User-Agent: Claude-Web
+User-Agent: ClaudeBot
+User-Agent: cohere-ai
+User-Agent: Diffbot
+User-Agent: FacebookBot
+User-Agent: Google-Extended
+User-Agent: GPTBot
+User-Agent: ImagesiftBot
+User-Agent: meta-externalagent
+User-Agent: Omgilibot
+User-Agent: PerplexityBot
+Disallow: /
+
+User-Agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /extract/
+Disallow: /playground/
+
+Sitemap: https://styles.refero.design/sitemap.xml
+Sitemap: https://styles.refero.design/sitemaps/collections.xml
+Sitemap: https://styles.refero.design/sitemaps/styles.xml

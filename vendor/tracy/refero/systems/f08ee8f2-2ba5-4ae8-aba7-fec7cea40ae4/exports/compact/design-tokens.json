@@ -1,0 +1,64 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#272421",
+      "$type": "color",
+      "$description": "Ink — Primary text, filled buttons, dark inverse surfaces, hairlines, logo mark. The single darkest token in the system — a warm near-black that reads as ink, not pure black"
+    },
+    "paper-warm": {
+      "$value": "#edebe8",
+      "$type": "color",
+      "$description": "Paper Warm — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "paper-cool": {
+      "$value": "#e3e3e2",
+      "$type": "color",
+      "$description": "Paper Cool — Tertiary surface tint, alternating row backgrounds, inset wells. Slightly cooler than Paper Warm — used sparingly to create layered depth without color"
+    },
+    "mist": {
+      "$value": "#eeeeed",
+      "$type": "color",
+      "$description": "Mist — Subtle dividers, low-contrast borders, badge fill backgrounds, hover wash on neutral surfaces. Sits one step lighter than Paper Warm for hairline detail work"
+    },
+    "stone": {
+      "$value": "#7d7c7a",
+      "$type": "color",
+      "$description": "Stone — Muted body copy, secondary metadata, disabled labels, low-emphasis icon strokes. The mid-warm-gray that keeps supporting text legible without competing with Ink"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Link text and link borders for in-content references. A step lighter than Ink, used only when a link needs to feel slightly less assertive than the primary type"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Page canvas, button text on Ink fills, nav background, card image overlay text. The paper the whole system is printed on"
+    }
+  },
+  "font": {
+    "egyptienne-f-lt": {
+      "$value": "Egyptienne F LT",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines. This serif is the signature voice — its classical bracketed serifs and even stroke contrast give the brand a printed-monograph feel that sans-serif alternatives cannot reproduce. Used only for editorial display text, never for body or UI."
+    },
+    "diatype": {
+      "$value": "Diatype",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface. Geometric humanist sans that carries navigation, body copy, buttons, subheadings, and large sans-serif display text. 500 for emphasized labels, 700 reserved for rare weight contrast, 400 as the workhorse."
+    },
+    "diatype-mono": {
+      "$value": "Diatype Mono",
+      "$type": "fontFamily",
+      "$description": "Micro-labels: step numbers, category tags (USE CASES, ADAPT, EVALUATE, SERVE), uppercase nav items, badge text. The wide tracking and mono face create the 'typographic furniture' that signals system structure without competing with the serif display."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.adaptive-ml.com",
+      "siteName": "Adaptive ML",
+      "extractedAt": "2026-06-03T20:15:57.196Z",
+      "variant": "compact"
+    }
+  }
+}

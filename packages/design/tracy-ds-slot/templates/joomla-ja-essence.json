@@ -1,0 +1,232 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-essence",
+  "minVersion": {
+    "quickstart/ja-essence/j6": "1.0.6"
+  },
+  "maxVersion": {
+    "quickstart/ja-essence/j6": "1.0.10"
+  },
+  "maxVersionNote": "1.0.10 21/10/2026 (TEXT-1 batch 2): built from 1.0.9 (release-batch.mjs --overlay); only css/template.css differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.8 16/10/2026 (#1375): re-cut of 1.0.7 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "minVersionNote": "1.0.5 was released by another line (TCH #1013/#1161: template ja_essence 1.3.4, Vietnamese heading fonts) untokenized, after round 2 had built and measured its own 1.0.5; the tokenized build was redone from that released 1.0.5 and ships as 1.0.6 (RELEASE-DS-REBUILD.sh, TCH #1180)",
+  "release": "quickstart/ja-essence/j6@1.0.6",
+  "roles": {
+    "page": "body.site-default.navigation-offcanvas-desktop",
+    "display": "h2.item-title",
+    "body": "p",
+    "button-primary": "div.gallery-action a.btn.btn-primary",
+    "container": "div.mod-view-article-slide div.container"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "h2.item-title, the article list's title (the home page has no hero; its first headings are card titles): 32px on the published release",
+    "displayFace": "Jost 400, tracking 0em",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(77, 107, 255)",
+    "container": "first content container, max-width 1164px",
+    "displayPhone": "the same title at 390 on the published release: 24px"
+  },
+  "modes": true,
+  "modesAuto": false,
+  "modesNote": "from 1.0.9 (role variables): the template has a light/dark switch (css/darkmode.css under html[data-theme=dark], the header theme toggle, js/darkmode.js) whose dark side reads the roles too (--dm-* read --ds-c-*), so the Add site popup offers Light | Dark and the switch stays shown under a system (TDSR MODE-3, MODE-2). index.php sets data-theme to light or dark before paint on every page (cookie, then the profile's default, then the OS), so there is no attribute-less auto state (modesAuto false)",
+  "keepScopes": [".mod-view-article-slide"],
+  "keepNote": "the dark button is no longer kept (16/10/2026, batch 2): since 1.0.9 the template's own .btn-dark reads the ink pair (--ds-c-ink / --ds-c-on-ink) and the shared Bootstrap block's worn rule gives it the system's border; kept, the band reset its roles to nothing and wore the page ground, so under Moxie the Dark button was a #1a1a1a box on #1a1a1a (lostButtons, typography page). Earlier (11/10/2026) it was kept because T4's --color-dark followed the system's text under white literal words",
+  "keepDefaults": {
+    "--body-bg-color": "#f8f8ff",
+    "--body-text-color": "rgba(37, 36, 36, 0.7)",
+    "--body-link-color": "#4d6bff",
+    "--body-link-hover-color": "#1a3eed",
+    "--color-primary": "#4d6bff",
+    "--color-secondary": "#fdf6f2",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#212529",
+    "--mainnav-link-color": "#212529",
+    "--mainnav-link-hover-color": "#4d6bff",
+    "--mainnav-link-active-color": "#1a3eed",
+    "--footer-bg-color": "#ffffff",
+    "--footer-text-color": "rgba(37, 36, 36, 0.7)",
+    "--footer-link-color": "#212529",
+    "--footer-link-hover-color": "#4d6bff",
+    "--t4-body-color": "#212529"
+  },
+  "templateVars": {
+    "--t4-body-color": "var(--ds-c-fg)"
+  },
+  "templateVarsNote": "Bootstrap's body colour inside T4 (template.css :root, #212529, a literal the stylesheets keep) is the text of every transparent .btn, such as the blog's \"Read more …\" (p.readmore a.btn-readmore), on the home page since 1.0.5: under a dark system it stayed #212529 on the dark page (1.04–1.31:1 under Toggl Track, Moxie and Spotify on the 1.0.6 build, 11/10/2026). It takes the system's text, as its triplet (--t4-body-color-rgb, runtimeRgb) already did",
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#f8f8ff",
+    "--fg-2": "#212529",
+    "--accent": "#4d6bff",
+    "--accent-hover": "#1a3eed",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#ffffff",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#dddddd",
+    "--muted": "#666666",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#f8f8ff",
+      "fg-2": "#212529",
+      "accent": "#4d6bff",
+      "accent-hover": "#1a3eed",
+      "surface": "#f8f9fa",
+      "surface-warm": "#ffffff",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#dddddd",
+      "muted": "#666666"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "fg-2": "#212529",
+      "border": "#dee2e6",
+      "bg": "#f8f8ff",
+      "border-soft": "#e9ecef"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (55 line colours, 50 text colours seen)",
+  "selectors": {
+    "displaySize": "h2.item-title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn:not(.btn-readmore)", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": [".t4-section .container", "div.container"],
+    "bodyFace": ["body"],
+    "inkImages": ["#t4-footer .mb-3.d-block img"],
+    "cardLike": [".item-content-wrap"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img)):not(.mod-view-article-slide a)",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .card p, .t4-section p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 15 tried (byte 6467); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#212529",
+      "uses": 27,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#212529",
+      "distance": 0
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 10,
+      "kind": "custom",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 10
+    },
+    {
+      "hex": "#f8f8ff",
+      "uses": 6,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#f8f8ff",
+      "distance": 0
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the published release 1.0.6 (quickstart/ja-essence/j6, stood up from its own files; tasks/evidence/ds-remeasure-2-2026-10-11/ja-essence-j6): 12/12, controls 0 differences, no text worse than the template’s own, 72% or more of the page follows, lowest 6.26:1. Before that: measured 11/10/2026 on the local build of ja-essence/j6 1.0.6, tokenized from the released 1.0.5 (tasks/evidence/ds-rebuild-collided-2026-10-11/ja-essence-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: accent-text, muted, body, footer), 71% or more of the page follows; without a system 1.0.6 computes exactly what 1.0.5 does (0 differences on five pages at 1440 and 390, same pixels, 36/36 pages as released); the dark button (.btn-dark) keeps its own pair, the blog's Read more buttons take the system's text (templateVars), and the slider titles over photos are judged in the screenshots, not by the probe. Sites built from 1.0.5 or older ignore it",
+  "contrastNote": "block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026; heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples) — added at the re-measure of 11/10/2026, the contract was ready on the four first-match probes only",
+  "followRules": {
+    ".item-content-wrap p.readmore .btn": {
+      "color": "fg"
+    },
+    ".header-bottom": {
+      "border-color": "border"
+    }
+  },
+  "followNote": "the article cards' text-only read-more button (.item-content-wrap p.readmore .btn) writes Bootstrap's literal #212529 while its card (--bg-content) follows the worn page: it takes the worn text colour (it read 1.3:1 under Moxie and 1.04:1 under Toggl Track on the dark card; re-measure of 11/10/2026)",
+  "inkNote": "the footer's Essence wordmark (#t4-footer .mb-3.d-block img) is a dark-ink image for the template's light footer: inverted with its hues kept under a dark system, where it all but vanished on the dark footer (seen on the Moxie screenshot, re-measure of 11/10/2026)",
+  "sideRules": {
+    "light": {
+      ".category-name a:is(:hover, :focus), a.mod-articles-category-title:is(:hover, :focus), a.btn-readmore:is(:hover, :focus), a.badge:is(:hover, :focus), .mod-tagspopular a:is(:hover, :focus), .t4-copyright a:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      }
+    },
+    "dark": {
+      ".category-name a:is(:hover, :focus), a.mod-articles-category-title:is(:hover, :focus), a.btn-readmore:is(:hover, :focus), a.badge:is(:hover, :focus), .mod-tagspopular a:is(:hover, :focus), .t4-copyright a:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".navbar-brand a span.d-light": {
+        "display": "none"
+      },
+      ".navbar-brand a span.d-dark": {
+        "display": "inline"
+      },
+      ".t4-off-canvas-header a span.d-light": {
+        "display": "none"
+      },
+      ".t4-off-canvas-header a span.d-dark": {
+        "display": "inline"
+      }
+    }
+  },
+  "sideNote": "16/10/2026 (batch 2, v9 IDENT-2): the Home 4 profile shows an image logo with a dark-mode counterpart (site_logo item-2.png in span.d-light, site_logo_dark item-2-dark.png in span.d-dark, the template's own logo element); under a dark system the dark wordmark sat on the dark header (1:1 under Moxie), so the dark-mode logo shows instead, in the header and the off-canvas header. The default profile has a text logo and no such spans",
+  "bands": {
+    ".mod-view-article-slide": {
+      "ground": "#fdf6f2",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true,
+      "paint": {
+        ".category-name a": {
+          "background-color": "accent-fill"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "displayNote": "the display role names the article list's title (h2.item-title), but its size was first read as 16px (the largest heading near the top of a page with no hero): a system's display was capped at 1.25× that and its phone size at 0.714 of the cap, 14px, smaller than the 16px excerpt under it (every system, visual review 14/10/2026). Re-read on the published release: 32px on a desktop, 24px on a phone",
+  "contractNotes1317": "13/10/2026 (#1317): the header rule follows the border. The 100 white article titles left under Moxie sit on photo overlays (.mod-articles-category-title on the card pictures): white words on a photo are the template design, not a contract fix; follows 73% under Moxie comes from them alone. Round 4 (14/10): the article carousel (.mod-view-article-slide) is a picture card: its white titles, authors and dates sit on the photo, over the card's own cream ground (--color-secondary) that the photo hides. The card ground followed under the photo while the words stayed white, so under Moxie 50 white texts counted as left behind (page 73-74%). The carousel is now a kept picture band: the ground under the photo stays, the words stay white on the photo, and the category pills wear the system's accent fill.",
+  "hoverNote": "21/10/2026 (HOVER-2, TEXT-1 batch 2): the category chips, article titles, Read more, tag badges, popular tags and footer menu hover in their rest role under a system: each is underlined on hover and focus."
+}

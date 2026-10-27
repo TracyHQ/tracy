@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a5089389-4220-4fc2-82d9-973203d2e2f5",
+  "status": "complete",
+  "name": "Navan",
+  "url": "https://styles.refero.design/style/a5089389-4220-4fc2-82d9-973203d2e2f5",
+  "sourceWebsite": "https://navan.com",
+  "extractedAt": "2026-06-03T17:52:13.655Z",
+  "capturedAt": "2026-10-08T05:15:37.792937+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Business-class cabin at violet twilight — a quiet, premium travel interior lit by a single signature violet glow.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f233878e-4ce5-4ad6-9c33-30525bbdb09d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/7c41d2f5-5fa1-4623-a3d9-e463253f66de.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/5c6a6cb0-7a5e-475a-8a4b-5437a93ecc5e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3665dd6b-8135-40ef-b1dc-1010e15ce331.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/f17a3238-deeb-4a3b-ab68-5f4c7cae1070.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "4d256340602557e585c33ce8d28669411de91d621281c567e86399051160998f",
+      "bytes": 23093
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f718bb14f7c579aaa8bcffb8c5dca3a0d7878cf8bd0b9032848af227a401690f",
+      "bytes": 191267
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6d3ba070097bbdf87cf4258c75ffddcef951173a0e8306578731c2cc12e82977",
+      "bytes": 18512
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "00e16ff02865d6e505bbc88f50438e2a7685cf9718262afe9cfa98b94e9aaa39",
+      "bytes": 19446
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "71b9727a972550b532aa1cefea2814f8dbaf79c2d578b887ce550c8b5b465060",
+      "bytes": 13216
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e9977195b1ef27fa836940ce93df0c6e019d7f4b9fc51b42a8e6d423c12d6363",
+      "bytes": 4594
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e6866a1f15282a088daeeac4b17e4f3ad29accb79ecf8c26d70aae51b8f404b2",
+      "bytes": 1177
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8ce57f040f8d625f88c34e1b4036eebc54f6aeb72351113157d11e3377d2c0ee",
+      "bytes": 1547
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6baf05a7bd333d600308c5e5b6d1388bfe64e260a86292914d47ccff935c9e7a",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3c0df9d9fa3f562f863bb78d15c76ed156edea6e0b7b5e3120b3a0f373b18003",
+      "bytes": 47383
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3f309800c6436e34d9570b785f7c9050c72ab9dcbb3a3929e2153f6bede0f24a",
+      "bytes": 24864
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e1989db1af96751ff5eaa399b949b5a119bbf4fbe3d90a75948b07cd7541f9bd",
+      "bytes": 61280
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e4980a95544c3e82b306d3427dc3b2f4c3c2022982db82e5d907b642014e3756",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "05e45114c4dc03c2ce3b8081deef1cf881d3955ff95eab137e2cc032c871bd70",
+      "bytes": 2128
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "89aed7845f28d5b36c9e6c3e7bdb097479114945534778067be6eb8bd189993d",
+      "bytes": 3140
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "1ae4bcfe-c613-42fc-aab7-f9583381e7cc",
+    "2e24c0ca-dd46-4519-b66e-cc03701d3b8c",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "41547c7a-3bbe-49f0-95d6-9701c9df9a5e",
+    "6b4c8ca5-476e-442b-b713-d5fc58cf04ac",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "a5089389-4220-4fc2-82d9-973203d2e2f5",
+    "a6d39bad-6e32-462e-afce-67c9cb76cf40",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a"
+  ]
+}

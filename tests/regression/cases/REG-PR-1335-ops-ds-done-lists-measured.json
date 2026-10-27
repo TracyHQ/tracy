@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1335-ops-ds-done-lists-measured",
+  "kind": "fix",
+  "title": "A done Design system step (Tracy Business EmDash 1.7.18, A 13/13) still lists its Passed rules, each with its Measured on line",
+  "pr": 1335,
+  "area": "ops/road-to-live",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the harness test 'Design system done (Tracy Business EmDash 1.7.18)' in packages/web/tracy-harness/test/template-presses.test.mjs.",
+    "S2: run the tracy-web test 'Tracy Business EmDash 1.7.18: all eight built-site rules pass' in apps/tracy-web/test/template-design-system-readiness.test.mjs.",
+    "Both: node --import tsx --test --test-name-pattern=EmDash 1.7.18 packages/web/tracy-harness/test/template-presses.test.mjs apps/tracy-web/test/template-design-system-readiness.test.mjs"
+  ],
+  "expect": [
+    "S1: the done design-system row has a Passed group with ROLE-1, SCREEN-1, CON-1, UNDO-1, FONT-1, IDENT-1, MODE-1, MODE-2, each with 'Measured on 1.7.18, 2026-10-13, imac'.",
+    "S2: the eight built-site rules of 1.7.18 are measured from contracts/1.7.18/design-system-measurement.json, all pass with that stamp, none is Not measured yet."
+  ],
+  "selectors": {
+    "row": "[data-road-step=design-system] [data-road-rules=passed] [data-road-rule-measured]"
+  },
+  "fence": "No stand, no model, no network. Reads the tree's measurement file and mounts RoadToLive on linkedom.",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=EmDash 1.7.18",
+      "packages/web/tracy-harness/test/template-presses.test.mjs",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs"
+    ],
+    "needs": [],
+    "timeout_s": 180
+  }
+}

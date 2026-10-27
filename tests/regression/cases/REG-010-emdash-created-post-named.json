@@ -1,0 +1,45 @@
+{
+  "id": "REG-010",
+  "kind": "fix",
+  "title": "A post Tracy creates on EmDash is named in Site changes — by its title, never a bare id",
+  "pr": 774,
+  "area": "site-changes/record",
+  "cms": ["em"],
+  "needs": ["stand", "site:em", "model", "seat:owner"],
+  "flaky_model": true,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, WEB, DSH, A and seat A's cookie COOKIE_A, pq (SELECT/WITH only). Case variables: KEY and LABEL = site key and container prefix of an EmDash site where seat A is owner (e.g. scv2em.scv2.tracy.test / scv2em); RUN=$(date +%s).",
+    "Check the build: docker exec $DSH grep -c 'emdashWriteTarget(args, answer)' /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.js must print a number >= 1; otherwise stop with BLOCKED note image-older-than-5620ebf24.",
+    "Define em() { docker exec -w /app $LABEL-web-1 node -e 'const {DatabaseSync}=require(\"node:sqlite\");const d=new DatabaseSync(\"/app/data/data.db\",{readOnly:true});console.log(JSON.stringify(d.prepare(process.argv[1]).all()))' \"$1\" 2>/dev/null; } (read-only; if node:sqlite is missing use new (require('better-sqlite3'))('/app/data/data.db',{readonly:true})).",
+    "Read em \"select count(*) n from ec_posts where title='REG-010-$RUN'\"; it must be 0.",
+    "Browser: run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; connect Playwright (repo copy node_modules/.pnpm/playwright@1.63.0) with chromium.connectOverCDP('http://127.0.0.1:9222'), never chromium.launch(); use a NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}, reducedMotion:'no-preference'} with cookie {name:'tracy_sess', value:COOKIE_A, domain:COOKIE_DOMAIN, path:'/', httpOnly:true}; never close a page, a context or the browser (let the script exit).",
+    "Set T0=$(pq \"select now()\"); in the new context page.goto(ORIGIN+'/'+KEY) and wait (<= 90 s) until page.url() contains '/s/session-' and the first [data-composer-input='true'] is visible.",
+    "Send 'Create a new draft post (do not publish it) with the exact title: REG-010-' + RUN + '. Use tracy_emdash content_create. Change nothing else.' (README § Send a chat message): box = page.locator(\"[data-composer-input='true']\").first(); await box.fill(text); wait (<= 10 s) until box.textContent() === text (else fill once more; still different → BLOCKED note composer-rejected-text); box.press('Enter'); wait (<= 15 s) until box.textContent() === '' (else BLOCKED note composer-did-not-send). Never type it as click, Meta+A, Backspace, page.keyboard.insertText in one go: the composer drops the text (7/7 on scv2, 03/10).",
+    "TURN = turn_id from pq \"select turn_id, state from site_turn where site_key='$KEY' and actor='$A' and opened_at > '$T0' order by opened_at desc limit 1\", polled every 5 s until its state is not 'open' (at most 10 min; else BLOCKED note turn-open-timeout).",
+    "POST_ID = id from em \"select id, status, title, deleted_at from ec_posts where title='REG-010-$RUN' and deleted_at is null\"; 0 rows → BLOCKED note agent-did-not-edit; 2 or more rows → BLOCKED note agent-created-twice.",
+    "Read pq \"select action, via, outcome, actor, coalesce(target->>'kind',''), coalesce(target->>'id','') from site_write where site_key='$KEY' and turn_id='$TURN' order by id\".",
+    "Read curl -s -H \"Cookie: tracy_sess=$COOKIE_A\" -H \"Origin: $ORIGIN\" \"$ORIGIN/api/sites/$KEY/activity?version=2&filter=chat&limit=50\" and take the item whose id = TURN; none → FAIL note no-row.",
+    "UI: goto page.url() with searchParams tab=tracy:changes and site=KEY; wait (<= 90 s) for [data-site-changes-v2] and until no [data-site-changes-v2] [data-reading] remains; read the textContent of li.tv-activity-event[data-event='<TURN>'] [data-cell='description'] .tv-activity-desc-text."
+  ],
+  "expect": [
+    "The build check prints a count >= 1.",
+    "site_write has a row action='content_create', via='emdash-mcp', outcome='ok', actor=A, target kind='posts', target id=POST_ID (before #774 the target was NULL: content_create carries no id; ACC-30.C4 on qaacc-em03, develop 1bf428e65).",
+    "API item: origin.source='chat', description.key='resource.op', description.params.type='post', description.params.id=POST_ID, and description.key is not 'change.recorded' (before #774: change.recorded, shown as 'Content change recorded').",
+    "API item: description.params.op='create' when the turn's only ok emdash-mcp row is that content_create.",
+    "API item: effects.content.resources has an entry with type='post', id=POST_ID and 'create' in ops.",
+    "The row's description text names the post by its title REG-010-<RUN> and never shows the bare POST_ID (en reads 'Created post “REG-010-<RUN>”'; since #900 E3.2, a ULID is never shown — before it read 'Created post <POST_ID>')."
+  ],
+  "selectors": {
+    "composer": "[data-composer-input='true'] (first)",
+    "siteToolsMarker": "'emdashWriteTarget(args, answer)' in /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.js (dsh container)",
+    "changedDoor": "POST /api/sites/:key/changed body {tool:'content_create', via:'emdash-mcp', target:{kind:'posts', id:<receipt result.entry.id>}}",
+    "writeRecord": "site_write(site_key, turn_id, action, via, outcome, actor, target jsonb {kind, id})",
+    "activityApi": "GET /api/sites/:key/activity?version=2&filter=chat&limit=50 → items[].description{key, params{op,type,id,title}}, items[].effects.content.resources[]",
+    "row": "li.tv-activity-event[data-event='<turnId>'][data-source='chat']",
+    "descriptionText": "[data-cell='description'] .tv-activity-desc-text",
+    "siteChanges": "[data-site-changes-v2] (still reading: [data-site-changes-v2] [data-reading])",
+    "emdashPosts": "ec_posts(id, title, status, deleted_at) in /app/data/data.db of <label>-web-1"
+  },
+  "evidence": "packages/tools/tracy-site-tools/test/emdash.test.mjs",
+  "fence": "emdashWriteTarget(args, answer) takes the id from the write's own receipt (answer.result.entry.id) when content_create carries none, so site_write.target.id is the newly minted ec_posts.id and the turn describes as resource.op / create / post / <id>."
+}

@@ -1,0 +1,63 @@
+{
+  "id": "QA-UNIT-REG-PR-1775-wo-name-not-a-handle-happy",
+  "itemIds": ["regression:REG-PR-1775-wo-name-not-a-handle"],
+  "requirement": "A social profile name equal to its handle is never suggested as the business name; the logo text in title case is",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1775-wo-name-not-a-handle.json",
+    "ref": "PR #1775 (fix); fix evidence: none recorded",
+    "invariant": "S1: the suggested name is Harbour Sport Club, never harbour.sportclub. S2: today's name (Padel & Tennis Coach) stays; a handle is never suggested. S3: the profile name is recorded as the handle only, and the read with the logo suggests Harbour Sport Club.",
+    "productSources": [
+      "packages/wo/website-opportunities/domain/brief.mjs:158",
+      "packages/wo/website-opportunities/domain/business-name.mjs:177",
+      "packages/wo/website-opportunities/src/business-name.js:62",
+      "packages/wo/website-opportunities/src/executor.js:795",
+      "packages/wo/website-opportunities/src/sources.js:28"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "Harbour Sport Club: a profile name equal to its handle is never shown; the logo text in title case is",
+    "sources agreeing through a handle with no logo text",
+    "a real display name beats the logo text; isSameHandle and logoNameSpelling",
+    "nameClaimsOf: an Instagram name equal to its handle is the handle, not a display name"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1775-wo-name-not-a-handle"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/wo/website-opportunities", "website-opportunities"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1775-wo-name-not-a-handle",
+    "pr": 1775,
+    "kind": "fix",
+    "area": "website-opportunities/name",
+    "file": "tests/regression/cases/REG-PR-1775-wo-name-not-a-handle.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/wo/website-opportunities/test/domain-business-name.test.mjs",
+    "packages/wo/website-opportunities/test/business-name-research.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "Harbour Sport Club: a profile name equal to its handle is never shown; the logo text in title case is",
+    "sources agreeing through a handle with no logo text",
+    "a real display name beats the logo text; isSameHandle and logoNameSpelling",
+    "nameClaimsOf: an Instagram name equal to its handle is the handle, not a display name"
+  ],
+  "timeoutS": 600
+}

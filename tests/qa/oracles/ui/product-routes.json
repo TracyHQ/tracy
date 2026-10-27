@@ -1,0 +1,5 @@
+{
+  "schema": "ui-product-routes/1",
+  "note": "Hand-maintained map of design-bench screen item id -> product route on QA_STAND_URL. An item with no entry has no verified product adapter and its contact sheet stays incomplete. Add an entry only after loading the route on a stand: { \"path\": \"/x\", \"identity\": { \"selector\": \"#x\", \"attribute\": \"data-screen\", \"value\": \"x\" }, \"revisionHeader\": \"x-tracy-revision\", \"locales\": { \"en\": \"\", \"vi\": \"?lang=vi\" }, \"localeProof\": { \"en\": { \"selector\": \"h1\", \"includes\": \"<English text>\" }, \"vi\": { \"selector\": \"h1\", \"includes\": \"<Vietnamese text>\" } } }. A capture counts only when the page stays on the path, the identity element carries the declared attribute value, the consumer shows the locale-proof text, the light theme is in effect and the named header states the revision.",
+  "routes": {}
+}

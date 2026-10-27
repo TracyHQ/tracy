@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-fresco/j6/1.0.4",
+  "platform": "joomla",
+  "template": "ja_fresco",
+  "quickstart": {
+    "product": "ja-fresco",
+    "platform": "joomla",
+    "version": "1.0.4",
+    "cms": {
+      "version": "6.1.1"
+    },
+    "template": "ja_fresco",
+    "parts": {
+      "installer": {
+        "file": "ja-fresco-j6-quickstart-1.0.4.zip",
+        "bytes": 59774221,
+        "sha256": "224c8dc881a8752328b6d6400851dd449e755f06757225c2abf67786e9ec40dc"
+      }
+    },
+    "createdAt": "2026-10-21T05:30:22.794Z",
+    "builtFrom": {
+      "from": "quickstart/ja-fresco/j6@1.0.3",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 737 files replaced (templates/ja_fresco/AGENTS.md, templates/ja_fresco/CLAUDE.md, templates/ja_fresco/README.md, templates/ja_fresco/component.php, templates/ja_fresco/error-t4.php, templates/ja_fresco/error.php, templates/ja_fresco/favicon.ico, templates/ja_fresco/index.php, templates/ja_fresco/layout.json, templates/ja_fresco/offline.php, templates/ja_fresco/templateDetails.xml, templates/ja_fresco/templateInfo.php, templates/ja_fresco/template_preview.png, templates/ja_fresco/template_thumbnail.png, templates/ja_fresco/css, templates/ja_fresco/docs, templates/ja_fresco/etc, templates/ja_fresco/fonts, templates/ja_fresco/html, templates/ja_fresco/images, templates/ja_fresco/js, templates/ja_fresco/scss, templates/ja_fresco/acm, templates/ja_fresco/language); 2 installed language files (language/en-GB/en-GB.tpl_ja_fresco.ini, language/en-GB/en-GB.tpl_ja_fresco.sys.ini); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-fresco/j6"
+  },
+  "coworkContractVersion": "0.24.43",
+  "mode": "content-recommendation"
+}

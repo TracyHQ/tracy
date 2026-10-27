@@ -1,0 +1,69 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#1e211e",
+      "$type": "color",
+      "$description": "Obsidian — Filled buttons, hero canvas, primary text on light surfaces — near-black with a barely-there green undertone that links it to the mint accent without announcing itself"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, card surfaces, button text on dark fills, nav background"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Hairline borders, icon strokes, sharpest outlines — provides the crispest edge against white surfaces"
+    },
+    "graphite": {
+      "$value": "#4b4d4b",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text, subdued borders — the middle voice between Obsidian and Ash"
+    },
+    "ash": {
+      "$value": "#d2d3d2",
+      "$type": "color",
+      "$description": "Ash — Hairline dividers, accordion separators, disabled and inactive states"
+    },
+    "neon-mint": {
+      "$value": "#90fc95",
+      "$type": "color",
+      "$description": "Neon Mint — Highlight section backgrounds, stat callout fills, wireframe geometry accents — the single chromatic moment that makes the brand instantly recognizable"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "alliance-no2": {
+      "$value": "Alliance No.2",
+      "$type": "fontFamily",
+      "$description": "Display and heading face for editorial moments — set large (52–80px) with aggressive negative tracking (-0.05em to -0.01em). The Light weight at 80px is used once for a hero statement, a deliberate whisper-quiet choice against the dark canvas. Enables stylistic set ss10 plus character variants 03, 04, 09, 11."
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Secondary display and large body — used at 72px for an alternative hero treatment and 19–21px for comfortable long-form reading. Weight 300 echoes the Alliance No.2 Light restraint."
+    },
+    "geist-variable": {
+      "$value": "Geist Variable",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body face — nav links, button labels, body copy, form fields, card text. Slightly negative tracking (-0.01 to -0.02em) tightens Geist's default spacing for a more engineered feel."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Eyebrow labels and monospaced micro-text — ALWAYS set in UPPERCASE with +0.06em tracking, used as the section-introduction line above every heading (e.g. 'AUTOMATE COLLECTIONS, YOUR WAY'). The only place tracking opens up."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.exante.app",
+      "siteName": "Exante",
+      "extractedAt": "2026-06-03T19:31:20.956Z",
+      "variant": "compact"
+    }
+  }
+}

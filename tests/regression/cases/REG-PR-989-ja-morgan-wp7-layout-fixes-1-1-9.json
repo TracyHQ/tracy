@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9",
+  "kind": "fix",
+  "title": "JA Morgan wp7 1.1.9: the narrow-width layout (footer column split, xs sidebar spacing, tag chip box, feature icon box) matches the source and the release records a passing site sweep",
+  "pr": 989,
+  "area": "wordpress-theme/wp-ja-morgan",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read packages/cms/tracy-wordpress-theme/src/wp-ja-morgan/style.css and the stylesheets assets/css/wp-ja-morgan.css of both the shipped theme (src/wp-ja-morgan) and its overlay (overlays/wp-ja-morgan); strip comments and flatten whitespace.",
+    "S2: Read tasks/ja-morgan-wp7/release/fix-measure.json (taken by site-sweep.mjs on the released zip) and the zip's line in tasks/ja-morgan-wp7/release/SHA256SUMS."
+  ],
+  "expect": [
+    "S1: style.css has exactly one 'Version: 1.1.9' line; both stylesheets split the Home Style 3 footer into four equal columns and use 3fr 4fr 3fr 2fr only from 1200 px, use the 25 px / 12.5 px sidebar module spacing below 768 px, draw the tag chip as a 21 px inline-block box, fix the feature icon box at 93.75 px below 768 px, and set row-gap 0 on the footer.",
+    "S2: fix-measure.json names site-sweep.mjs, its themeZipSha256 equals the zip line of SHA256SUMS, 11 of 11 checks pass with none failing and 0 heights defects, and its baseline is 1.1.8 with heights failing."
+  ],
+  "selectors": {
+    "overlay": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-morgan",
+    "evidence": "tasks/ja-morgan-wp7/release/fix-measure.json",
+    "tool": "tests/regression/scripts/REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9.mjs"
+  },
+  "evidence": "Sweeps of 06/10/2026 against the local Joomla source stand: the 1.1.8 baseline passed 10/11 (heights failed); the 1.1.9 clean restore passes 11/11 on the released zip.",
+  "fence": "Reads committed files only: the stylesheet rules and the recorded measurement. It does not re-measure a browser; the recorded sweep is bound to the released zip by its sha256.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9.mjs"]
+  }
+}

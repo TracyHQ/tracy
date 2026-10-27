@@ -1,0 +1,478 @@
+/* Hero showcase, tab 4 "Teamwork" (hero-showcase-tab4.js).
+
+   The screens are copies of the live app, rebuilt as absolutely placed
+   boxes; the hs4-s* classes at the end of this file are the computed styles
+   read from the app (cowork.tracy.site, 23/10/2026), one class per distinct
+   style, generated. Hand-written rules come first. */
+
+/* One layer per part of the app that changes (side bar, chat column,
+   browser, team, comment box, invite dialog), all the size of the screen. */
+.hs-win .hs4-l { position: absolute; left: 0; top: 0; width: 1280px; height: 696px; overflow: hidden; }
+.hs-win .hs4-off { display: none !important; }
+
+/* The outline the preview draws on a block of the page (tracy-cms-preview
+   runtime.mjs, colour 191,91,61, 4px outside the block): hovered 1px at 70%
+   with a faint fill, picked 2px with a stronger fill; a block that carries a
+   saved comment keeps 1px at 60% and no fill; once sent to Tracy 1px solid. */
+.hs-win .hs4-hover { border: 1px solid rgba(191, 91, 61, .7); background: rgba(191, 91, 61, .06); }
+.hs-win .hs4-sel { border: 2px solid rgb(191, 91, 61); background: rgba(191, 91, 61, .1); }
+.hs-win .hs4-done,
+.hs-win [data-hs4="out-d"],
+.hs-win [data-hs4="out-l"] { border: 1px solid rgba(191, 91, 61, .6); background: none; }
+.hs-win .hs4-sent { border: 1px solid rgb(191, 91, 61); background: none; }
+
+/* Hand-built parts (hero-showcase-tab4.js), values from the product source. */
+.hs-win .hs4-screen { --hs4-fg: oklch(0.145 0 0); --hs4-muted: oklch(0.556 0 0); --hs4-pop: #fff; --hs4-border: oklch(0.922 0 0); --hs4-card: #fff; }
+:root[data-theme="dark"] .hs-win .hs4-screen { --hs4-fg: oklch(0.985 0 0); --hs4-muted: oklch(0.708 0 0); --hs4-pop: oklch(0.205 0 0); --hs4-border: oklch(1 0 0 / .1); --hs4-card: oklch(0.205 0 0); }
+.hs-win .hs4-ic { width: 14px; height: 14px; }
+
+/* Comments row: hover tint and the fixed corner, Resolve and ⋯ (styles.ts .tv-ci-*). */
+.hs-win .hs4-rowhover { background: color-mix(in oklab, var(--hs4-fg) 4.5%, transparent); }
+.hs-win .hs4-acts { display: flex; align-items: center; justify-content: flex-end; gap: 4px; visibility: hidden; }
+.hs-win .hs4-rowhover .hs4-acts { visibility: visible; }
+.hs-win .hs4-act { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; color: var(--hs4-muted); }
+.hs-win .hs4-act.is-on { background: color-mix(in oklab, var(--hs4-fg) 8%, transparent); color: var(--hs4-fg); }
+
+/* Menus: the row's ⋯ menu (184px) and the site switch with its submenu. */
+.hs-win .hs4-menu {
+  position: absolute; z-index: 30; display: flex; flex-direction: column; width: 184px; padding: 4px; box-sizing: border-box;
+  border-radius: 10px; border: 1px solid var(--hs4-border); background: var(--hs4-pop); color: var(--hs4-fg);
+  box-shadow: 0 10px 28px rgb(0 0 0 / 18%); font-size: 12.5px; line-height: 17px;
+  font-family: -apple-system, 'system-ui', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+.hs-win .hs4-mi { display: flex; align-items: center; gap: 8px; padding: 6px 9px; border-radius: 6px; white-space: nowrap; }
+.hs-win .hs4-mi.is-hover, .hs-win .hs4-mi.is-sel { background: color-mix(in oklab, var(--hs4-fg) 5%, transparent); }
+.hs-win .hs4-mi > img { position: static; width: 14px; height: 14px; flex: none; }
+.hs-win .hs4-mic { flex: none; width: 14px; height: 14px; color: var(--hs4-muted); }
+.hs-win .hs4-mend { margin-left: auto; }
+.hs-win .hs4-danger, .hs-win .hs4-danger .hs4-mic { color: #dc2626; }
+.hs-win .hs4-msep { display: block; height: 1px; margin: 4px 2px; background: var(--hs4-border); }
+.hs-win .hs4-sitemenu { width: 216px; }
+.hs-win .hs4-submenu { width: 160px; }
+
+/* Chat after the send: the person's message and its element chip. */
+.hs-win .hs4-chatv { position: absolute; left: 0; top: 77.5px; width: 300px; height: 618.5px; display: none; }
+.hs-win .hs4-is-chat .hs4-chatv { display: block; }
+.hs-win .hs4-is-chat .hs4-s29 > div:nth-child(2) { display: none; }
+/* Pinned to the bottom like the app's thread: the message ends 16px above the composer (top 505.5px of .hs4-chatv). */
+.hs-win .hs4-flow { position: absolute; bottom: 129px; left: 32px; width: 229px; font-family: -apple-system, 'system-ui', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif; color: var(--hs4-fg); }
+.hs-win .hs4-bubble { margin-left: 17.2px; padding: 8px 12px; border-radius: 12px 12px 4px 12px; background: oklch(0.97 0 0); font-size: 14px; line-height: 22px; }
+.hs-win .hs4-bubble > span:first-child { display: block; line-height: 16.5px; margin-top: 2.5px; }
+.hs-win .hs4-ref {
+  display: flex; align-items: center; gap: 4px; max-width: 187.8px; height: 22px; margin-top: 3px; padding: 2px 6px; box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, .1); border-radius: 6px; background: rgb(237, 243, 254);
+  font-size: 11px; font-weight: 500; line-height: 16px; white-space: nowrap; overflow: hidden;
+}
+.hs-win .hs4-ref > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.hs-win .hs4-pinmini { display: grid; place-items: center; width: 16px; height: 16px; flex: none; border-radius: 8px 8px 8px 0; background: rgb(77, 124, 15); color: #fff; font-size: 9px; font-weight: 600; line-height: 16px; }
+.hs-win .hs4-refic { width: 11px; height: 11px; flex: none; color: var(--hs4-muted); }
+:root[data-theme="dark"] .hs-win .hs4-bubble { background: var(--a-muted-bg, oklch(0.269 0 0)); }
+:root[data-theme="dark"] .hs-win .hs4-ref { background: rgb(38, 44, 54); border-color: rgba(255, 255, 255, .12); }
+
+/* Refresh while Tracy works: the icon spins; the dark chip under it for 3 s. */
+@keyframes hs4-spin { to { transform: rotate(360deg); } }
+.hs-win .hs4-spin { animation: hs4-spin 1s linear infinite; transform-origin: 50% 50%; }
+.hs-win .hs4-rchip {
+  position: absolute; top: 40px; left: -6px; z-index: 20; padding: 4px 10px; border-radius: 6px; white-space: nowrap;
+  background: rgb(23, 27, 33); color: #fff; font: 600 12px/16px -apple-system, 'system-ui', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 18%);
+}
+.hs-win .hs4-rchip::before { content: ''; position: absolute; top: -4px; left: 16px; width: 8px; height: 8px; background: inherit; transform: translateX(-50%) rotate(45deg); }
+:root[data-theme="dark"] .hs-win .hs4-rchip { background: rgb(64, 70, 79); }
+
+/* Invite: the typed draft, then the committed address as a chip. */
+.hs-win [data-hs4="email-text"].is-typing, .hs-win .hs4-chips { color: var(--hs4-fg) !important; }
+.hs-win .hs4-chips { gap: 6px; }
+.hs-win .hs4-chip { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 4px 0 8px; border-radius: 999px; background: color-mix(in oklab, var(--hs4-fg) 7%, var(--hs4-card)); font-size: 12px; line-height: 16px; color: var(--hs4-fg); }
+.hs-win .hs4-chipx { display: inline-flex; padding: 2px; color: var(--hs4-muted); }
+.hs-win .hs4-chipx svg { width: 12px; height: 12px; }
+.hs-win .hs4-more { color: var(--hs4-muted); }
+
+/* Team, wide pane: the centred 720px card on its ground (site-tabs-rules.css). */
+.hs-win .hs4-teamground { background-color: color-mix(in oklab, var(--hs4-fg) 4.5%, oklch(1 0 0)) !important; }
+.hs-win .hs4-cardhead { background-color: var(--hs4-card) !important; border: 1px solid var(--hs4-border) !important; border-bottom: 1px solid var(--hs4-border) !important; border-radius: 12px 12px 0 0; }
+.hs-win .hs4-cardbody { background-color: var(--hs4-card) !important; border: 1px solid var(--hs4-border) !important; border-top: 0 !important; border-radius: 0 0 12px 12px; }
+:root[data-theme="dark"] .hs-win .hs4-teamground { background-color: color-mix(in oklab, oklch(0.985 0 0) 4.5%, oklch(0.145 0 0)) !important; }
+
+/* The dialog's overlay blurs what is under it (10% black, blur 4px). Drawn
+   as a filter on the layers under it: Chromium painted the backdrop-filter
+   of the copied overlay from a stale, offset copy of the Team card. */
+.hs-win .hs4-dim .hs4-s165 { backdrop-filter: none; }
+.hs-win .hs4-dim :is([data-hs4-l="comments"], [data-hs4-l="team"], [data-hs4-l="start"]) { filter: blur(4px); }
+
+/* Dark theme, where the shared dark map differs from the product tokens:
+   right panel and tab strip use the warm column surface (tracy-sidebar
+   styles.ts), the invite dialog is the popover, the role list the card with
+   7% terracotta on the picked row, role pills 8% foreground and the unfilled
+   step bars 18% foreground on the popover. */
+:root[data-theme="dark"] .hs-win .hs4-screen :is(.hs4-s98, .hs4-s111) { background-color: oklch(0.178 0.003 85); }
+:root[data-theme="dark"] .hs-win .hs4-screen .hs4-s166 { background-color: oklch(0.205 0 0); }
+:root[data-theme="dark"] .hs-win .hs4-screen .hs4-s173 { background-color: oklch(0.205 0 0); }
+:root[data-theme="dark"] .hs-win .hs4-screen .hs4-s174 { background-color: color-mix(in oklab, rgb(191, 91, 61) 7%, oklch(0.205 0 0)); }
+:root[data-theme="dark"] .hs-win .hs4-screen .hs4-s159 { background-color: oklch(0.985 0 0 / .08); }
+:root[data-theme="dark"] .hs-win .hs4-screen .hs4-s168 { background-color: color-mix(in oklab, oklch(0.985 0 0) 18%, oklch(0.205 0 0)); }
+
+/* Generated: the app's computed styles. */
+.hs-win .hs4-s0{position:absolute;box-sizing:border-box;background-color:oklch(0.985 0 0);border-right:0.5px solid oklch(0.922 0 0);overflow:hidden}
+.hs-win .hs4-s1{position:absolute;box-sizing:border-box;background-color:oklch(0.975 0.003 85);border-right:1px solid oklch(0.922 0 0)}
+.hs-win .hs4-s2{position:absolute;box-sizing:border-box}
+.hs-win .hs4-s3{position:absolute;box-sizing:border-box;border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+.hs-win .hs4-s4{position:absolute;color:oklch(0.145 0 0);fill:none}
+.hs-win .hs4-s5{position:absolute;box-sizing:border-box;overflow:hidden}
+.hs-win .hs4-s6{position:absolute;box-sizing:border-box;border-left:1px solid oklch(0.145 0 0);opacity:0.52}
+.hs-win .hs4-s7{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14.4px;font-weight:300;line-height:17px;color:oklch(0.145 0 0);letter-spacing:0.288px;white-space:pre}
+.hs-win .hs4-s8{position:absolute;box-sizing:border-box;border-top:1px solid rgba(0, 0, 0, 0);border-right:1px solid rgba(0, 0, 0, 0);border-bottom:1px solid rgba(0, 0, 0, 0);border-left:1px solid rgba(0, 0, 0, 0);border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-right-radius:10px;border-bottom-left-radius:10px}
+.hs-win .hs4-s9{position:absolute;color:oklch(0.145 0 0);fill:none;stroke:oklch(0.145 0 0)}
+.hs-win .hs4-s10{position:absolute;box-sizing:border-box;background-color:oklab(0.9086 0.00024055 0.0027495);border-top:1px solid rgba(0, 0, 0, 0);border-right:1px solid rgba(0, 0, 0, 0);border-bottom:1px solid rgba(0, 0, 0, 0);border-left:1px solid rgba(0, 0, 0, 0);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+.hs-win .hs4-s11{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:16.5px;color:oklch(0.145 0 0);white-space:pre}
+.hs-win .hs4-s12{position:absolute;color:oklab(0.38338 0 0);fill:none;stroke:oklab(0.38338 0 0)}
+.hs-win .hs4-s13{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:16.5px;color:oklab(0.38338 0 0);white-space:pre}
+.hs-win .hs4-s14{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top-left-radius:9999px;border-top-right-radius:9999px;border-bottom-right-radius:9999px;border-bottom-left-radius:9999px}
+.hs-win .hs4-s15{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;font-weight:600;line-height:13px;color:oklch(0.985 0 0);white-space:pre}
+.hs-win .hs4-s16{position:absolute;box-sizing:border-box;border-top-left-radius:12px;border-top-right-radius:12px;border-bottom-right-radius:12px;border-bottom-left-radius:12px;overflow:hidden}
+.hs-win .hs4-s17{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:16.5px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s18{position:absolute;box-sizing:border-box;border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px;overflow:hidden}
+.hs-win .hs4-s19{position:absolute;color:oklch(0.556 0 0);fill:none}
+.hs-win .hs4-s20{position:absolute;color:oklch(0.556 0 0);fill:none;stroke:oklch(0.556 0 0)}
+.hs-win .hs4-s21{position:absolute;box-sizing:border-box;border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-right-radius:10px;border-bottom-left-radius:10px}
+.hs-win .hs4-s22{position:absolute;color:rgb(191, 91, 61);fill:none}
+.hs-win .hs4-s23{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:500;line-height:16.5px;color:oklch(0.145 0 0);white-space:pre}
+.hs-win .hs4-s24{position:absolute;border-radius:50%;background-color:oklch(0.588 0.136 37.4)}
+.hs-win .hs4-s25{position:absolute;box-sizing:border-box;background-image:linear-gradient(rgba(0, 0, 0, 0), oklch(0.985 0 0));background-size:auto;background-position:0% 0%;background-repeat:repeat}
+.hs-win .hs4-s26{position:absolute;box-sizing:border-box;background-color:rgb(77, 124, 15);border-top-left-radius:50%;border-top-right-radius:50%;border-bottom-right-radius:50%;border-bottom-left-radius:50%;overflow:hidden}
+.hs-win .hs4-s27{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:600;line-height:15px;color:rgb(255, 255, 255);white-space:pre}
+.hs-win .hs4-s28{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:500;line-height:16.5px;color:oklab(0.38338 0 0);white-space:pre}
+.hs-win .hs4-s29{position:absolute;box-sizing:border-box;background-color:oklch(1 0 0);overflow:hidden}
+.hs-win .hs4-s30{position:absolute;color:oklch(0.145 0 0)}
+.hs-win .hs4-s31{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:600;line-height:16.5px;color:oklch(0.145 0 0);white-space:pre}
+.hs-win .hs4-s32{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:600;line-height:16.5px;color:oklch(0.145 0 0);overflow:hidden;text-overflow:ellipsis;white-space:pre}
+.hs-win .hs4-s33{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:21px;font-weight:600;line-height:25px;color:oklch(0.145 0 0);white-space:pre}
+.hs-win .hs4-s34{position:absolute;box-sizing:border-box;border-top-left-radius:4px;border-top-right-radius:4px;border-bottom-right-radius:4px;border-bottom-left-radius:4px}
+.hs-win .hs4-s35{position: absolute;font-family: -apple-system, "system-ui", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 13px;font-weight: 400;line-height: 15px;color: oklch(0.556 0 0);white-space: pre}
+.hs-win .hs4-s36{position:absolute;color:oklch(0.556 0 0);fill:none;stroke:oklch(0.556 0 0);opacity:0.6}
+.hs-win .hs4-s37{position:absolute;box-sizing:border-box;background-color:oklch(1 0 0);border-top:1px solid oklch(0.922 0 0);border-right:1px solid oklch(0.922 0 0);border-bottom:1px solid oklch(0.922 0 0);border-left:1px solid oklch(0.922 0 0);border-top-left-radius:999px;border-top-right-radius:999px;border-bottom-right-radius:999px;border-bottom-left-radius:999px}
+.hs-win .hs4-s38{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top-left-radius:50%;border-top-right-radius:50%;border-bottom-right-radius:50%;border-bottom-left-radius:50%}
+.hs-win .hs4-s39{position:absolute;color:rgb(255, 255, 255);fill:none;stroke:rgb(255, 255, 255)}
+.hs-win .hs4-s40{position: absolute;font-family: -apple-system, "system-ui", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 13px;font-weight: 500;line-height: 15px;color: oklch(0.145 0 0);white-space: pre}
+.hs-win .hs4-s41{position:absolute;box-sizing:border-box;background-color:rgb(102, 115, 58);border-top-left-radius:50%;border-top-right-radius:50%;border-bottom-right-radius:50%;border-bottom-left-radius:50%}
+.hs-win .hs4-s42{position:absolute;box-sizing:border-box;background-color:rgb(79, 111, 154);border-top-left-radius:50%;border-top-right-radius:50%;border-bottom-right-radius:50%;border-bottom-left-radius:50%}
+.hs-win .hs4-s43{position:absolute;box-sizing:border-box;background-color:rgb(154, 107, 47);border-top-left-radius:50%;border-top-right-radius:50%;border-bottom-right-radius:50%;border-bottom-left-radius:50%}
+.hs-win .hs4-s44{position:absolute;box-sizing:border-box;background-color:rgb(138, 74, 104);border-top-left-radius:50%;border-top-right-radius:50%;border-bottom-right-radius:50%;border-bottom-left-radius:50%}
+.hs-win .hs4-s45{position:absolute;box-sizing:border-box;background-color:oklch(1 0 0);border-top:1px solid oklab(0.5725 0 0);border-right:1px solid oklab(0.5725 0 0);border-bottom:1px solid oklab(0.5725 0 0);border-left:1px solid oklab(0.5725 0 0);border-top-left-radius:12px;border-top-right-radius:12px;border-bottom-right-radius:12px;border-bottom-left-radius:12px}
+.hs-win .hs4-s46{position: absolute;font-family: -apple-system, "system-ui", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 14px;font-weight: 400;line-height: 20px;color: oklch(0.556 0 0);white-space: normal;overflow: hidden}
+.hs-win .hs4-s47{position:absolute;box-sizing:border-box;border-top:1px solid oklch(0.922 0 0);border-right:1px solid oklch(0.922 0 0);border-bottom:1px solid oklch(0.922 0 0);border-left:1px solid oklch(0.922 0 0);border-top-left-radius:6px;border-top-right-radius:6px;border-bottom-right-radius:6px;border-bottom-left-radius:6px}
+.hs-win .hs4-s48{position:absolute;box-sizing:border-box;border-top-left-radius:999px;border-top-right-radius:999px;border-bottom-right-radius:999px;border-bottom-left-radius:999px}
+.hs-win .hs4-s49{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top-left-radius:999px;border-top-right-radius:999px;border-bottom-right-radius:999px;border-bottom-left-radius:999px;opacity:0.4}
+.hs-win .hs4-s50{position:absolute;color:oklch(0.985 0 0)}
+.hs-win .hs4-s51{position:absolute;box-sizing:border-box;border-bottom:0.5px solid oklch(0.922 0 0)}
+.hs-win .hs4-s52{position:absolute;box-sizing:border-box;border-top:1px solid oklch(0.922 0 0);border-right:1px solid oklch(0.922 0 0);border-bottom:1px solid oklch(0.922 0 0);border-left:1px solid oklch(0.922 0 0);border-top-left-radius:9999px;border-top-right-radius:9999px;border-bottom-right-radius:9999px;border-bottom-left-radius:9999px;overflow:hidden}
+.hs-win .hs4-s53{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:400;line-height:14px;color:oklch(0.556 0 0);overflow:hidden;text-overflow:ellipsis;white-space:pre}
+.hs-win .hs4-s54{position:absolute;color:oklch(0.556 0 0);fill:none;stroke:oklch(0.556 0 0);opacity:0.7}
+.hs-win .hs4-s55{position:absolute;box-sizing:border-box;overflow:hidden;z-index:1}
+.hs-win .hs4-s56{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:500;line-height:15px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s57{position:absolute;box-sizing:border-box;border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px}
+.hs-win .hs4-s58{position:absolute;box-sizing:border-box;background-color:oklch(0.97 0 0);border-top-left-radius:999px;border-top-right-radius:999px;border-bottom-right-radius:999px;border-bottom-left-radius:999px}
+.hs-win .hs4-s59{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:10px;font-weight:600;line-height:11.5px;color:oklch(0.556 0 0);font-variant-numeric:tabular-nums;white-space:pre}
+.hs-win .hs4-s60{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:500;line-height:15px;color:rgb(191, 91, 61);white-space:pre}
+.hs-win .hs4-s61{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px}
+.hs-win .hs4-s62{position:absolute;box-sizing:border-box;background-color:oklab(0.145 0 0 / 0.07);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+.hs-win .hs4-s63{position:absolute;box-sizing:border-box;background-color:oklch(1 0 0);border-top-left-radius:6px;border-top-right-radius:6px;border-bottom-right-radius:6px;border-bottom-left-radius:6px;box-shadow:rgba(0, 0, 0, 0.08) 0px 1px 2px 0px;overflow:hidden}
+.hs-win .hs4-s64{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:500;line-height:14px;color:oklch(0.145 0 0);white-space:pre}
+.hs-win .hs4-s65{position:absolute;box-sizing:border-box;background-color:oklab(0.145 0 0 / 0.08);border-top-left-radius:999px;border-top-right-radius:999px;border-bottom-right-radius:999px;border-bottom-left-radius:999px}
+.hs-win .hs4-s66{position:absolute;box-sizing:border-box;border-top-left-radius:6px;border-top-right-radius:6px;border-bottom-right-radius:6px;border-bottom-left-radius:6px;overflow:hidden}
+.hs-win .hs4-s67{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:400;line-height:14px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s68{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:600;line-height:14px;color:oklch(0.556 0 0);font-variant-numeric:tabular-nums;white-space:pre}
+.hs-win .hs4-s69{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:400;line-height:14px;color:oklch(0.556 0 0);font-variant-numeric:tabular-nums;white-space:pre}
+.hs-win .hs4-s70{position:absolute;box-sizing:border-box;border-top-left-radius:6px;border-top-right-radius:6px;border-bottom-right-radius:6px;border-bottom-left-radius:6px}
+.hs-win .hs4-s71{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:500;line-height:14px;color:oklch(0.556 0 0);font-variant-numeric:tabular-nums;white-space:pre}
+.hs-win .hs4-s72{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top-left-radius:6px;border-top-right-radius:6px;border-bottom-right-radius:6px;border-bottom-left-radius:6px}
+.hs-win .hs4-s73{position:absolute;color:oklch(0.985 0 0);fill:none;stroke:oklch(0.985 0 0)}
+.hs-win .hs4-s74{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:500;line-height:14px;color:oklch(0.985 0 0);white-space:pre}
+.hs-win .hs4-s75{position: absolute;box-sizing: border-box;background-color: oklab(0.978625 0 0);border-width: 1px;border-style: solid;border-color: oklch(0.922 0 0);border-radius: 12px;overflow: hidden}
+.hs-win .hs4-s76{position:absolute;box-sizing:border-box;background-color:oklab(0.92305 0 0);border-bottom:1px solid oklch(0.922 0 0);z-index:2}
+.hs-win .hs4-s77{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:600;line-height:14px;color:oklch(0.145 0 0);white-space:pre}
+.hs-win .hs4-s78{position:absolute;font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:10.5px;font-weight:400;line-height:12px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s79{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top-left-radius:999px;border-top-right-radius:999px;border-bottom-right-radius:999px;border-bottom-left-radius:999px}
+.hs-win .hs4-s80{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:10px;font-weight:400;line-height:11.5px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s81{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11.5px;font-weight:500;line-height:13.5px;color:oklch(0.556 0 0);font-variant-numeric:tabular-nums;white-space:pre}
+.hs-win .hs4-s82{position:absolute;font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11px;font-weight:400;line-height:12.5px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s83{position: absolute;box-sizing: border-box;background-color: rgb(2, 132, 199);border-radius: 50%;overflow: hidden}
+.hs-win .hs4-s84{position: absolute;font-family: -apple-system, "system-ui", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 8px;font-weight: 600;line-height: 9px;color: rgb(255, 255, 255);white-space: pre}
+.hs-win .hs4-s85{position: absolute;box-sizing: border-box;overflow: hidden}
+.hs-win .hs4-s86{position: absolute;font-family: -apple-system, "system-ui", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 12.5px;font-weight: 500;line-height: 14.5px;color: oklab(0.145 0 0 / 0.72);white-space: pre}
+.hs-win .hs4-s87{position: absolute;box-sizing: border-box}
+.hs-win .hs4-s88{position: absolute;font-family: -apple-system, "system-ui", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 11px;font-weight: 400;line-height: 13px;color: oklch(0.556 0 0);white-space: pre}
+.hs-win .hs4-s89{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:400;line-height:18.2px;color:oklab(0.145 0 0 / 0.68);white-space:normal;text-align:start;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.hs-win .hs4-s90{position:absolute;box-sizing:border-box;background-color:oklab(0.145 0 0 / 0.06);border-top-left-radius:999px;border-top-right-radius:999px;border-bottom-right-radius:999px;border-bottom-left-radius:999px}
+.hs-win .hs4-s91{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:10px;font-weight:600;line-height:11.5px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s92{position: absolute;box-sizing: border-box;background-color: rgb(219, 39, 119);border-radius: 50%;overflow: hidden}
+.hs-win .hs4-s93{position:absolute;box-sizing:border-box;background-image:linear-gradient(color(srgb 0 0 0 / 0) 0px, oklch(1 0 0) 36px);background-size:auto;background-position:0% 0%;background-repeat:repeat;box-shadow:oklch(0.922 0 0) 0px 1px 0px 0px inset;z-index:7}
+.hs-win .hs4-s94{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:400;line-height:20px;color:oklch(0.556 0 0);white-space:normal;text-align:start;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.hs-win .hs4-s95{position:absolute;box-sizing:border-box;background-color:oklch(1 0 0);border-top:1px solid oklch(0.922 0 0);border-right:1px solid oklch(0.922 0 0);border-bottom:1px solid oklch(0.922 0 0);border-left:1px solid oklch(0.922 0 0);border-top-left-radius:6px;border-top-right-radius:6px;border-bottom-right-radius:6px;border-bottom-left-radius:6px}
+.hs-win .hs4-s96{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:500;line-height:15px;color:oklch(0.145 0 0);white-space:pre}
+.hs-win .hs4-s97{position:absolute;box-sizing:border-box;z-index:0}
+.hs-win .hs4-s98{position:absolute;box-sizing:border-box;background-color:oklch(0.975 0.003 85);border-left:0.5px solid rgba(0, 0, 0, 0.16);overflow:hidden}
+.hs-win .hs4-s99{position:absolute;object-fit:contain;overflow:hidden}
+.hs-win .hs4-s100{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:400;line-height:15px;color:oklch(0.145 0 0);white-space:pre}
+.hs-win .hs4-s101{position:absolute;box-sizing:border-box;border-bottom:1px solid oklch(0.922 0 0)}
+.hs-win .hs4-s102{position:absolute;box-sizing:border-box;border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px;opacity:0.4}
+.hs-win .hs4-s103{position:absolute;color:oklab(0.145 0 0 / 0.58);fill:none}
+.hs-win .hs4-s104{position:absolute;box-sizing:border-box;background-color:oklab(0.145 0 0 / 0.06);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+.hs-win .hs4-s105{position:absolute;display:flex;align-items:center;padding-top:0;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:400;line-height:18px;color:rgba(0, 0, 0, 0);color:rgba(0, 0, 0, 0);white-space:pre;overflow:hidden}
+.hs-win .hs4-s106{position:absolute;color:oklab(0.145 0 0 / 0.58);fill:none;stroke:oklab(0.145 0 0 / 0.58)}
+.hs-win .hs4-s107{position:absolute;color:oklab(0.145 0 0 / 0.58);fill:oklab(0.145 0 0 / 0.58);stroke:oklab(0.145 0 0 / 0.58)}
+.hs-win .hs4-s108{position:absolute;box-sizing:border-box;background-color:oklch(0.97 0 0);border-top-left-radius:6px;border-top-right-radius:6px;border-bottom-right-radius:6px;border-bottom-left-radius:6px;box-shadow:oklab(0.145 0 0 / 0.14) 0px 0px 0px 1px}
+.hs-win .hs4-s109{position:absolute;box-sizing:border-box;background-color:oklch(0.97 0 0);border-top-left-radius:9px;border-top-right-radius:9px;border-bottom-right-radius:9px;border-bottom-left-radius:9px}
+.hs-win .hs4-s110{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;font-weight:500;line-height:13px;color:oklch(0.556 0 0);font-variant-numeric:tabular-nums;white-space:pre}
+.hs-win .hs4-s111{position:absolute;box-sizing:border-box;background-color:oklch(0.975 0.003 85);overflow:hidden}
+.hs-win .hs4-s112{position:absolute}
+.hs-win .hs4-s113{position:absolute;box-sizing:border-box;overflow:hidden;z-index:2}
+.hs-win .hs4-s114{position: absolute;box-sizing: border-box;background-color: rgb(2, 132, 199);border-top-right-radius: 50%;border-bottom-right-radius: 50%;border-bottom-left-radius: 50%;box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px, rgba(0, 0, 0, 0.18) 0px 0px 0px 3px}
+.hs-win .hs4-s115{position: absolute;box-sizing: border-box;background-color: rgb(2, 132, 199);border-top-right-radius: 50%;border-bottom-right-radius: 50%;border-bottom-left-radius: 50%;overflow: hidden}
+.hs-win .hs4-s116{position: absolute;font-family: -apple-system, "system-ui", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 12px;font-weight: 600;line-height: 14px;color: rgb(255, 255, 255);white-space: pre}
+.hs-win .hs4-s117{position: absolute;box-sizing: border-box;background-color: rgb(219, 39, 119);border-top-right-radius: 50%;border-bottom-right-radius: 50%;border-bottom-left-radius: 50%;box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px, rgba(0, 0, 0, 0.18) 0px 0px 0px 3px}
+.hs-win .hs4-s118{position: absolute;box-sizing: border-box;background-color: rgb(219, 39, 119);border-top-right-radius: 50%;border-bottom-right-radius: 50%;border-bottom-left-radius: 50%;overflow: hidden}
+.hs-win .hs4-s119{position:absolute;box-sizing:border-box;background-color:rgb(77, 124, 15);border-top-right-radius:50%;border-bottom-right-radius:50%;border-bottom-left-radius:50%;box-shadow:rgb(255, 255, 255) 0px 0px 0px 2px, rgba(0, 0, 0, 0.18) 0px 0px 0px 3px}
+.hs-win .hs4-s120{position:absolute;box-sizing:border-box;background-color:rgb(77, 124, 15);border-top-right-radius:50%;border-bottom-right-radius:50%;border-bottom-left-radius:50%;overflow:hidden}
+.hs-win .hs4-s121{position:absolute;box-sizing:border-box;background-color:oklch(0.145 0 0);border-top-left-radius:999px;border-top-right-radius:999px;border-bottom-right-radius:999px;border-bottom-left-radius:999px;box-shadow:rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.02) 0px 0px 4px 0px, rgba(0, 0, 0, 0.08) 0px 12px 32px 0px}
+.hs-win .hs4-s122{position:absolute;color:oklch(0.975 0.003 85);fill:none;stroke:oklch(0.975 0.003 85)}
+.hs-win .hs4-s123{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:400;line-height:14px;color:oklch(0.975 0.003 85);white-space:pre}
+.hs-win .hs4-s124{position:absolute;box-sizing:border-box;opacity:0.6}
+.hs-win .hs4-s125{position: absolute;box-sizing: border-box;background-color: oklch(0.97 0 0);border-width: 1px;border-style: solid;border-color: oklch(0.922 0 0);border-radius: 8px;box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 0px, rgba(0, 0, 0, 0.02) 0px 0px 4px 0px, rgba(0, 0, 0, 0.08) 0px 12px 32px 0px;overflow: hidden;z-index: 4}
+.hs-win .hs4-s126{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:500;line-height:16.5px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s127{position:absolute;box-sizing:border-box;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom-right-radius:5px;border-bottom-left-radius:5px}
+.hs-win .hs4-s128{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:400;line-height:14px;color:oklab(0.475 0 0);white-space:pre}
+.hs-win .hs4-s129{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:400;line-height:14px;color:oklab(0.6565 0 0);white-space:pre}
+.hs-win .hs4-s130{position:absolute;box-sizing:border-box;background-color:oklab(0.908909 0.0173198 0.0132464);border-top-left-radius:5px;border-top-right-radius:5px;border-bottom-right-radius:5px;border-bottom-left-radius:5px}
+.hs-win .hs4-s131{position: absolute;box-sizing: border-box;background-color: oklch(1 0 0);border-width: 1px;border-style: solid;border-color: rgb(120, 120, 120);border-radius: 8px;overflow: hidden}
+.hs-win .hs4-s132{position:absolute;display:flex;align-items:flex-start;padding-top:8px;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:22px;color:oklch(0.145 0 0);color:rgb(117, 117, 117);white-space:normal;overflow:hidden}
+.hs-win .hs4-s133{position:absolute;box-sizing:border-box;background-color:oklch(0.975 0.003 85);border-top:1px solid oklch(0.922 0 0);border-right:1px solid oklch(0.922 0 0);border-bottom:1px solid oklch(0.922 0 0);border-left:1px solid oklch(0.922 0 0);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+.hs-win .hs4-s134{position:absolute;box-sizing:border-box;background-color:oklch(0.975 0.003 85);border-top:1px solid oklch(0.922 0 0);border-right:1px solid oklch(0.922 0 0);border-bottom:1px solid oklch(0.922 0 0);border-left:1px solid oklch(0.922 0 0);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px;opacity:0.5}
+.hs-win .hs4-s135{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px;opacity:0.5}
+.hs-win .hs4-s136{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:500;line-height:15px;color:rgb(255, 255, 255);white-space:pre}
+.hs-win .hs4-s137{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;font-weight:400;line-height:13px;color:rgb(255, 255, 255);white-space:pre}
+.hs-win .hs4-s138{position:absolute;display:flex;align-items:flex-start;padding-top:8px;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:22px;color:oklch(0.145 0 0);color:oklch(0.145 0 0);white-space:normal;overflow:hidden}
+.hs-win .hs4-s139{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+.hs-win .hs4-s140{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:400;line-height:15px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s141{position:absolute;box-sizing:border-box;background-color:rgb(241, 243, 245);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+.hs-win .hs4-s142{position:absolute;box-sizing:border-box;background-color:oklab(0.961525 0 0);overflow:hidden}
+.hs-win .hs4-s143{position:absolute;box-sizing:border-box;background-color:oklch(1 0 0);border-bottom:1px solid oklch(0.922 0 0);z-index:10}
+.hs-win .hs4-s144{position:absolute;box-sizing:border-box;border-top:1px solid rgba(0, 0, 0, 0);border-right:1px solid rgba(0, 0, 0, 0);border-bottom:1px solid rgba(0, 0, 0, 0);border-left:1px solid rgba(0, 0, 0, 0);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+.hs-win .hs4-s145{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12.8px;font-weight:600;line-height:15px;color:oklch(0.145 0 0);white-space:pre}
+.hs-win .hs4-s146{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top:1px solid rgba(0, 0, 0, 0);border-right:1px solid rgba(0, 0, 0, 0);border-bottom:1px solid rgba(0, 0, 0, 0);border-left:1px solid rgba(0, 0, 0, 0);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+.hs-win .hs4-s147{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12.8px;font-weight:500;line-height:15px;color:oklch(0.985 0 0);white-space:pre}
+.hs-win .hs4-s148{position: absolute;box-sizing: border-box;background-color: oklch(1 0 0);border-bottom: 1px solid oklch(0.922 0 0)}
+.hs-win .hs4-s149{position: absolute;box-sizing: border-box;border-width: 1px;border-style: solid;border-color: oklch(0.922 0 0);border-radius: 10px;overflow: hidden}
+.hs-win .hs4-s150{position:absolute;box-sizing:border-box;background-color:oklab(0.97 0 0 / 0.4)}
+.hs-win .hs4-s151{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:500;line-height:14px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s152{position:absolute;box-sizing:border-box;background-color:oklab(0.145 0 0 / 0.05)}
+.hs-win .hs4-s153{position: absolute;font-family: -apple-system, "system-ui", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 14px;font-weight: 400;line-height: 16.5px;color: oklch(0.145 0 0);white-space: pre}
+.hs-win .hs4-s154{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;font-weight:400;line-height:13px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s155{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top:1px solid rgba(0, 0, 0, 0);border-right:1px solid rgba(0, 0, 0, 0);border-bottom:1px solid rgba(0, 0, 0, 0);border-left:1px solid rgba(0, 0, 0, 0);border-top-left-radius:32px;border-top-right-radius:32px;border-bottom-right-radius:32px;border-bottom-left-radius:32px;overflow:hidden}
+.hs-win .hs4-s156{position:absolute;box-sizing:border-box;background-color:oklch(0.696 0.17 162.48);border-top-left-radius:1.67772e+07px;border-top-right-radius:1.67772e+07px;border-bottom-right-radius:1.67772e+07px;border-bottom-left-radius:1.67772e+07px}
+.hs-win .hs4-s157{position: absolute;box-sizing: border-box;border-top: 1px solid oklch(0.922 0 0)}
+.hs-win .hs4-s158{position: absolute;font-family: -apple-system, "system-ui", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 13px;font-weight: 600;line-height: 15px;color: rgb(255, 255, 255);white-space: pre}
+.hs-win .hs4-s159{position: absolute;box-sizing: border-box;background-color: oklch(0.145 0 0 / 0.08);border-width: 1px;border-style: solid;border-color: transparent;border-radius: 32px;overflow: hidden}
+.hs-win .hs4-s160{position: absolute;font-family: -apple-system, "system-ui", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 12px;font-weight: 500;line-height: 14px;color: oklch(0.145 0 0);white-space: pre}
+.hs-win .hs4-s161{position: absolute;box-sizing: border-box;background-color: rgb(148, 163, 184);border-radius: 50%;overflow: hidden}
+.hs-win .hs4-s162{position: absolute;box-sizing: border-box;background-color: oklch(0.556 0 0);border-radius: 1.67772e+07px}
+.hs-win .hs4-s163{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12px;font-weight:400;line-height:16px;color:oklch(0.556 0 0);white-space:normal;text-align:start}
+.hs-win .hs4-s164{position:absolute;box-sizing:border-box;overflow:hidden;z-index:25}
+.hs-win .hs4-s165{position:absolute;box-sizing:border-box;background-color:oklab(0 0 0 / 0.1);backdrop-filter:blur(4px);z-index:50}
+.hs-win .hs4-s166{position:absolute;box-sizing:border-box;background-color:oklch(0.97 0 0);border-top:1px solid oklch(0.922 0 0);border-right:1px solid oklch(0.922 0 0);border-bottom:1px solid oklch(0.922 0 0);border-left:1px solid oklch(0.922 0 0);border-top-left-radius:14px;border-top-right-radius:14px;border-bottom-right-radius:14px;border-bottom-left-radius:14px;z-index:50}
+.hs-win .hs4-s167{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;font-weight:600;line-height:13px;color:oklch(0.556 0 0);white-space:pre}
+.hs-win .hs4-s168{position:absolute;box-sizing:border-box;background-color:oklab(0.8215 0 0);border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px}
+.hs-win .hs4-s169{position:absolute;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;font-weight:700;line-height:15px;color:oklch(0.145 0 0);white-space:pre}
+.hs-win .hs4-s170{position: absolute;box-sizing: border-box;border-width: 1px;border-style: solid;border-color: rgb(191, 91, 61);border-radius: 8px}
+.hs-win .hs4-s171{position:absolute;box-sizing:border-box;border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-right-radius:10px;border-bottom-left-radius:10px;overflow:hidden}
+.hs-win .hs4-s172{position:absolute;display:flex;align-items:center;padding-top:0;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:12.8px;font-weight:400;line-height:18.2857px;color:oklch(0.145 0 0);color:oklch(0.556 0 0);white-space:pre;overflow:hidden}
+.hs-win .hs4-s173{position:absolute;box-sizing:border-box;background-color:oklch(1 0 0);border-top:1px solid oklch(0.922 0 0);border-right:1px solid oklch(0.922 0 0);border-bottom:1px solid oklch(0.922 0 0);border-left:1px solid oklch(0.922 0 0);border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-right-radius:10px;border-bottom-left-radius:10px;overflow:hidden}
+.hs-win .hs4-s174{position:absolute;box-sizing:border-box;background-color:oklab(0.971173 0.00757743 0.00579532)}
+.hs-win .hs4-s175{position:absolute;box-sizing:border-box;background-color:oklab(0.925872 0.0194848 0.0149023);border-top-left-radius:999px;border-top-right-radius:999px;border-bottom-right-radius:999px;border-bottom-left-radius:999px}
+.hs-win .hs4-s176{position:absolute;color:oklab(0.508407 0.0887642 0.067888);fill:none;stroke:oklab(0.508407 0.0887642 0.067888)}
+.hs-win .hs4-s177{position:absolute;box-sizing:border-box;border-top:1px solid rgb(191, 91, 61);border-right:1px solid rgb(191, 91, 61);border-bottom:1px solid rgb(191, 91, 61);border-left:1px solid rgb(191, 91, 61);border-top-left-radius:1.67772e+07px;border-top-right-radius:1.67772e+07px;border-bottom-right-radius:1.67772e+07px;border-bottom-left-radius:1.67772e+07px}
+.hs-win .hs4-s178{position:absolute;border-radius:50%;background-color:rgb(191, 91, 61)}
+.hs-win .hs4-s179{position:absolute;display:flex;align-items:center;padding-top:0;font-family:-apple-system, 'system-ui', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:20px;color:oklch(0.145 0 0);color:oklch(0.145 0 0);white-space:pre;overflow:hidden}
+.hs-win .hs4-s180{position:absolute;box-sizing:border-box;border-top:1px solid oklch(0.922 0 0)}
+.hs-win .hs4-s181{position:absolute;box-sizing:border-box;background-color:oklab(0.94015 0 0);border-top-left-radius:999px;border-top-right-radius:999px;border-bottom-right-radius:999px;border-bottom-left-radius:999px}
+.hs-win .hs4-s182{position:absolute;box-sizing:border-box;border-top:1px solid oklch(0.922 0 0);border-right:1px solid oklch(0.922 0 0);border-bottom:1px solid oklch(0.922 0 0);border-left:1px solid oklch(0.922 0 0);border-top-left-radius:1.67772e+07px;border-top-right-radius:1.67772e+07px;border-bottom-right-radius:1.67772e+07px;border-bottom-left-radius:1.67772e+07px}
+.hs-win .hs4-s183{position:absolute;box-sizing:border-box;background-color:oklab(0.97 0 0 / 0.5);border-top:1px solid oklch(0.922 0 0);border-bottom-right-radius:14px;border-bottom-left-radius:14px}
+.hs-win .hs4-s184{position:absolute;box-sizing:border-box;background-color:rgb(191, 91, 61);border-top:1px solid rgba(0, 0, 0, 0);border-right:1px solid rgba(0, 0, 0, 0);border-bottom:1px solid rgba(0, 0, 0, 0);border-left:1px solid rgba(0, 0, 0, 0);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px;opacity:0.5}
+.hs-win .hs4-s185{position:absolute;box-sizing:border-box;background-color:oklab(0.145 0 0 / 0.08);border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+
+/* Round 42: the note typed in the box, with an @mention. The @ picker under the field (dsh-better-sidebar
+   sidebar.module.css .mentionPicker and rows: 8px card, rows of avatar 24px, address 12px strong, role 11px
+   muted, the active row a step darker, the hint line under a rule). The picked handle is drawn in the
+   brand colour, as the Comments list draws a mention (tracy-chat-input .tv-ci-mention). */
+.hs-win .hs4-mention { color: rgb(191, 91, 61); font-weight: 500; }
+.hs-win .hs4-caret { display: inline-block; width: 1px; height: 17px; margin: 0 0 -3px 1px; background: var(--hs4-fg); animation: hs3-blink 1s steps(1) infinite; vertical-align: baseline; }
+.hs-win .hs4-s138 { display: block; }
+.hs-win .hs4-clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.hs-win .hs4-mpick {
+  position: absolute; left: 10px; width: 318px; box-sizing: border-box; overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--hs4-fg) 12%, var(--hs4-card)); border-radius: 8px; background: var(--hs4-card);
+  font-family: -apple-system, 'system-ui', 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+.hs-win .hs4-mpick ul { margin: 0; padding: 4px; list-style: none; }
+.hs-win .hs4-mrow { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; }
+.hs-win .hs4-mrow[data-active] { background: color-mix(in oklab, var(--hs4-fg) 8%, var(--hs4-card)); }
+.hs-win .hs4-mav { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 600; }
+.hs-win .hs4-mav-D { background: rgb(79, 111, 154); }
+.hs-win .hs4-mav-L { background: rgb(102, 115, 58); }
+.hs-win .hs4-mwho { flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--hs4-fg); font-size: 12px; font-weight: 600; line-height: 16px; }
+.hs-win .hs4-mrole { flex: none; color: color-mix(in oklab, var(--hs4-fg) 60%, var(--hs4-card)); font-size: 11px; line-height: 15px; }
+.hs-win .hs4-mhint { padding: 6px 12px 8px; border-top: 1px solid color-mix(in oklab, var(--hs4-fg) 12%, var(--hs4-card)); color: color-mix(in oklab, var(--hs4-fg) 60%, var(--hs4-card)); font-size: 11px; line-height: 15px; }
+
+/* Round 45: the comment box path line, as flow layout with the real step box. The captured boxes were absolute with
+   widths measured in another font, so the current step's tint sat offset from its words. Real source:
+   dsh-better-sidebar sidebar.module.css .commentPathRow / .commentPathSep / .commentPathStep / .commentPathCurrent
+   (row flex, separator padding 0 3px, step height 22px padding 0 6px radius 5px, 12px; current step 600 weight). */
+.hs-win :is([data-hs4-l="popB"], [data-hs4-l="popC"]) .hs4-s5 > .hs4-s2 { position: static !important; display: flex; align-items: center; width: auto !important; height: 22px !important; white-space: nowrap; }
+.hs-win :is([data-hs4-l="popB"], [data-hs4-l="popC"]) .hs4-s5 > .hs4-s2 > .hs4-s2 { position: static !important; display: inline-flex; flex: none; align-items: center; width: auto !important; height: 22px !important; }
+.hs-win :is([data-hs4-l="popB"], [data-hs4-l="popC"]) .hs4-s5 > .hs4-s2 > .hs4-s2 > .hs4-s2 { position: static !important; display: block; width: auto !important; height: auto !important; padding: 0 3px; }
+.hs-win :is([data-hs4-l="popB"], [data-hs4-l="popC"]) .hs4-s5 :is(.hs4-s127, .hs4-s130) { position: static !important; display: inline-flex; align-items: center; flex: none; width: auto !important; height: 22px !important; padding: 0 6px; border-radius: 5px; }
+.hs-win :is([data-hs4-l="popB"], [data-hs4-l="popC"]) .hs4-s5 :is(.hs4-s128, .hs4-s129, .hs4-s77) { position: static !important; display: block; width: auto !important; height: auto !important; line-height: 14px; }
+/* The real composer is a plain textarea: a typed @mention is plain text in it (the brand colour is for sent threads). */
+.hs-win [data-hs4-l="popC"] .hs4-mention { color: inherit; font-weight: inherit; }
+
+/* Round 45: the site switch menu is the shared dropdown (tracy-ui dropdown-menu.tsx, as drawn in browser-site-picker.mock.stories.tsx):
+   content rounded-lg, border, p-1, shadow-md; label px-1.5 py-1 text-xs medium muted; items gap-1.5, rounded-md, px-1.5 py-1, text-sm,
+   16px icons; separator -mx-1 my-1; parent w-64, submenu w-52 with shadow-lg. (The row menu keeps its own .tv-ci-menu look.) */
+.hs-win :is(.hs4-sitemenu, .hs4-submenu) { padding: 4px; border-radius: 8px; font-size: 14px; line-height: 20px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%); }
+.hs-win .hs4-sitemenu { width: 256px; }
+.hs-win .hs4-submenu { width: 208px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%); }
+.hs-win :is(.hs4-sitemenu, .hs4-submenu) .hs4-mi { gap: 6px; padding: 4px 6px; }
+.hs-win :is(.hs4-sitemenu, .hs4-submenu) .hs4-mic { width: 16px; height: 16px; color: inherit; }
+.hs-win :is(.hs4-sitemenu, .hs4-submenu) .hs4-msep { margin: 4px -4px; }
+.hs-win .hs4-sitemenu .hs4-mcheck { width: 14px; height: 14px; }
+.hs-win .hs4-mlabel { display: block; padding: 4px 6px; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--hs4-muted); }
+
+/* Round 46: the Team page and the Invite people dialog as the develop build draws them
+   (tch tracy-core site-tabs/TeamView.tsx, team/team.tsx, team/wizard*.tsx; tracy-site-tabs site-tabs-rules.css .tv-page
+   81-87 and .tv-team-dialog 572-676; tracy-ui dialog, badge, button). Tracy tokens only, resolved to the values the dsh
+   host gives them (the same ones site-tab-scene.css uses), light and dark. */
+.hs-win .hs4-tmx {
+  --background: #fff; --foreground: #0a0a0a; --card: #fff; --popover: #fff;
+  --primary: #bf5b3d; --primary-foreground: oklch(0.985 0 0);
+  --muted: #f5f5f5; --muted-foreground: #737373; --border: #e5e5e5; --input: #e5e5e5; --success: oklch(0.696 0.17 162.48);
+  --tv-chip: color-mix(in oklab, var(--foreground) 7%, var(--card));
+  --tv-tile-request: color-mix(in oklab, var(--primary) 18%, var(--card));
+  --tv-icon-request: color-mix(in oklab, var(--primary) 82%, var(--foreground));
+  --tv-solid-in: #18804a;
+  font-family: var(--a-sans); font-size: 14px; line-height: 20px; color: var(--foreground); -webkit-font-smoothing: antialiased;
+}
+:root[data-theme="dark"] .hs-win .hs4-tmx {
+  --background: #0a0a0a; --foreground: #fafafa; --card: #171717; --popover: #1f1f1f;
+  --muted: #262626; --muted-foreground: #a1a1a1; --border: #2e2e2e; --input: #3a3a3a;
+  --tv-tile-request: color-mix(in oklab, var(--primary) 30%, var(--card));
+  --tv-icon-request: color-mix(in oklab, var(--primary) 50%, var(--foreground));
+}
+.hs-win .hs4-tmx *, .hs-win .hs4-tmx *::before, .hs-win .hs4-tmx *::after { box-sizing: border-box; }
+.hs-win .hs4-tmx svg { display: block; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hs-win .hs4-tmx p, .hs-win .hs4-tmx h2 { margin: 0; }
+.hs-win .hs4-tmx .tm-cms { width: 20px; height: 20px; flex: none; stroke: none; }
+
+/* The panel under the tab strip: TabHeader (site-tabs/pieces.tsx:65) then the page (TeamView.tsx TeamPage). */
+.hs-win .hs4-tm { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--card); }
+.hs-win .hs4-tm .tm-head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); }
+.hs-win .hs4-tm .tm-picker { display: inline-flex; align-items: center; gap: 6px; height: 28px; margin-left: -4px; padding: 0 8px; border-radius: 8px; font-size: 12.8px; font-weight: 600; }
+.hs-win .hs4-tm .tm-picker svg { width: 14px; height: 14px; color: var(--muted-foreground); }
+.hs-win .hs4-tmx .tm-btn { display: inline-flex; flex: none; align-items: center; justify-content: center; gap: 4px; height: 28px; padding: 0 10px; border: 1px solid transparent; border-radius: 8px; background: var(--primary); color: var(--primary-foreground); font-size: 12.8px; line-height: 20px; font-weight: 500; white-space: nowrap; }
+.hs-win .hs4-tmx .tm-btn svg { width: 14px; height: 14px; }
+.hs-win .hs4-tmx .tm-btn.is-outline { border-color: var(--border); background: var(--background); color: var(--foreground); }
+:root[data-theme="dark"] .hs-win .hs4-tmx .tm-btn.is-outline { border-color: var(--input); background: color-mix(in oklab, var(--input) 30%, transparent); }
+.hs-win .hs4-tmx .tm-btn.is-ghost { background: transparent; color: var(--foreground); }
+.hs-win .hs4-tmx .tm-btn.is-hover { background: color-mix(in oklab, var(--primary) 80%, transparent); }
+.hs-win .hs4-tmx .tm-btn.is-outline.is-hover, .hs-win .hs4-tmx .tm-btn.is-ghost.is-hover { background: var(--muted); }
+.hs-win .hs4-tmx .tm-btn.is-off { opacity: .5; }
+.hs-win .hs4-tmx .tm-page { flex: 1 0 auto; padding: 24px 0; background: var(--card); }
+.hs-win .hs4-tmx .tm-page > * { width: calc(100% - 64px); margin-inline: 32px; }
+.hs-win .hs4-tmx .tm-title { font-size: 20px; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; color: var(--foreground); }
+.hs-win .hs4-tmx .tm-lead { margin: 6px 0 0; font-size: 13px; line-height: 1.45; color: var(--muted-foreground); }
+.hs-win .hs4-tmx .tm-pagehead { margin-bottom: 20px; }
+
+/* Roster (team/team.tsx): one table, Member takes what is left, Role and Status as wide as their content. */
+.hs-win .hs4-tmx .tm-roster { overflow: hidden; border: 1px solid var(--border); border-radius: 10px; }
+.hs-win .hs4-tmx .tm-roster table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 20px; }
+.hs-win .hs4-tmx .tm-roster thead { background: color-mix(in oklab, var(--muted) 40%, transparent); color: var(--muted-foreground); font-size: 12px; line-height: 16px; }
+.hs-win .hs4-tmx .tm-roster th, .hs-win .hs4-tmx .tm-roster td { padding: 8px 12px; text-align: left; vertical-align: middle; }
+.hs-win .hs4-tmx .tm-roster th { font-weight: 500; }
+.hs-win .hs4-tmx .tm-roster tbody tr + tr { border-top: 1px solid var(--border); }
+.hs-win .hs4-tmx .tm-roster tr.is-you { background: color-mix(in oklab, var(--foreground) 5%, transparent); }
+.hs-win .hs4-tmx .tm-roster .tm-fit { width: 1px; white-space: nowrap; }
+.hs-win .hs4-tmx .tm-roster td.tm-acts, .hs-win .hs4-tmx .tm-roster th.tm-acts { width: 1px; white-space: nowrap; padding: 8px 8px 8px 4px; }
+.hs-win .hs4-tmx .tm-acts span { display: flex; align-items: center; justify-content: flex-end; gap: 2px; visibility: hidden; }
+.hs-win .hs4-tmx .tm-acts i { width: 30px; height: 28px; }
+.hs-win .hs4-tmx .tm-who { display: flex; min-width: 0; align-items: center; gap: 10px; }
+.hs-win .hs4-tmx .tm-text { display: grid; min-width: 0; flex: 1; gap: 2px; }
+.hs-win .hs4-tmx .tm-name { display: flex; align-items: center; gap: 8px; }
+.hs-win .hs4-tmx .tm-you { color: var(--muted-foreground); font-size: 12px; line-height: 16px; }
+.hs-win .hs4-tmx .tm-access { font-size: 11px; line-height: 1.4286; color: var(--muted-foreground); }
+.hs-win .hs4-tmx .tm-face { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; color: #fff; font-size: 13px; font-weight: 600; line-height: 15px; }
+.hs-win .hs4-tmx .tm-badge { display: inline-flex; flex: none; align-items: center; justify-content: center; height: 20px; padding: 2px 8px; border: 1px solid transparent; border-radius: 26px; background: var(--primary); color: var(--primary-foreground); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
+.hs-win .hs4-tmx .tm-badge.is-soft { background: color-mix(in oklab, var(--foreground) 8%, transparent); color: var(--foreground); }
+.hs-win .hs4-tmx .tm-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
+.hs-win .hs4-tmx .tm-status i { width: 6px; height: 6px; flex: none; border-radius: 50%; background: var(--muted-foreground); }
+.hs-win .hs4-tmx .tm-status.is-active i { background: var(--success); }
+
+/* The dialog (tracy-ui dialog.tsx, wizard.tsx): popover card, 16px padding and gap, muted footer. */
+.hs-win .hs4-back { position: absolute; inset: 0; background: rgba(0, 0, 0, .1); }
+.hs-win .hs4-dlg { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; gap: 16px; width: 560px; padding: 16px; border: 1px solid var(--border); border-radius: 14px; background: var(--popover); color: var(--foreground); }
+.hs-win .hs4-dlg .tm-close { position: absolute; top: 8px; right: 8px; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; }
+.hs-win .hs4-dlg .tm-close svg { width: 16px; height: 16px; }
+.hs-win .hs4-dlg .tm-dhead { display: flex; flex-direction: column; gap: 8px; padding-right: 28px; }
+.hs-win .hs4-dlg .tm-dtitle { font-size: 14px; line-height: 20px; font-weight: 600; }
+.hs-win .hs4-dlg .tm-ddesc { font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.hs-win .hs4-dlg .tm-steps { display: flex; align-items: center; gap: 10px; }
+.hs-win .hs4-dlg .tm-steps-label { font-size: 11px; line-height: 16px; font-weight: 600; color: var(--muted-foreground); white-space: nowrap; }
+.hs-win .hs4-dlg .tm-bars { display: flex; flex: 1; gap: 4px; }
+.hs-win .hs4-dlg .tm-bars i { flex: 1; height: 3px; border-radius: 2px; background: color-mix(in oklab, var(--foreground) 18%, var(--popover)); }
+.hs-win .hs4-dlg .tm-bars i.is-on { background: var(--primary); }
+.hs-win .hs4-dlg .tm-body { display: grid; gap: 14px; min-width: 0; }
+.hs-win .hs4-dlg .tm-sec { display: flex; align-items: baseline; gap: 8px; margin: 0 0 8px; padding: 0 2px; font-size: 13px; line-height: 18px; font-weight: 700; }
+.hs-win .hs4-dlg .tm-count { padding: 1px 7px; border-radius: 999px; background: var(--tv-chip); color: var(--muted-foreground); font-size: 11px; line-height: 16px; font-weight: 600; }
+.hs-win .hs4-dlg .tm-help { margin: 6px 2px 0; font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.hs-win .hs4-dlg .tm-field { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 36px; padding: 5px 8px; border: 1px solid var(--input); border-radius: 8px; }
+.hs-win .hs4-dlg .tm-field.is-focus { border-color: var(--primary); }
+.hs-win .hs4-dlg .tm-chip { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 4px 0 8px; border-radius: 999px; background: var(--tv-chip); font-size: 12px; line-height: 16px; }
+.hs-win .hs4-dlg .tm-chip svg { width: 12px; height: 12px; margin: 2px; color: var(--muted-foreground); }
+.hs-win .hs4-dlg .tm-input { flex: 1; min-width: 160px; height: 24px; display: flex; align-items: center; font-size: 12.8px; line-height: 18px; color: var(--foreground); white-space: pre; }
+.hs-win .hs4-dlg .tm-input.is-ph { color: var(--muted-foreground); }
+.hs-win .hs4-dlg .tm-caret { display: inline-block; width: 1px; height: 14px; margin-left: 1px; background: var(--foreground); animation: hs4-blink 1s steps(1) infinite; }
+.hs-win .hs4-dlg .tm-list { display: block; margin: 0; padding: 0; list-style: none; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+.hs-win .hs4-dlg .tm-list > * + * { border-top: 1px solid var(--border); }
+.hs-win .hs4-dlg .tm-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+.hs-win .hs4-dlg .tm-list > .is-sel { background: color-mix(in oklab, var(--primary) 7%, var(--card)); }
+.hs-win .hs4-dlg .tm-rtext { display: grid; flex: 1; min-width: 0; }
+.hs-win .hs4-dlg .tm-rtitle { font-size: 13px; line-height: 18px; font-weight: 500; }
+.hs-win .hs4-dlg .tm-rdesc { font-size: 12px; line-height: 17px; color: var(--muted-foreground); }
+.hs-win .hs4-dlg .tm-grow { flex: 1; min-width: 0; }
+.hs-win .hs4-dlg .tm-tile { display: flex; flex: none; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 999px; background: var(--tv-chip); color: var(--muted-foreground); }
+.hs-win .hs4-dlg .tm-tile svg { width: 15px; height: 15px; }
+.hs-win .hs4-dlg .is-sel .tm-tile, .hs-win .hs4-dlg .tm-card .tm-tile { background: var(--tv-tile-request); color: var(--tv-icon-request); }
+.hs-win .hs4-dlg .tm-tile.is-40 { width: 40px; height: 40px; }
+.hs-win .hs4-dlg .tm-tile.is-40 svg { width: 20px; height: 20px; }
+.hs-win .hs4-dlg .tm-radio { display: flex; flex: none; align-items: center; justify-content: center; width: 16px; height: 16px; border: 1px solid var(--input); border-radius: 50%; }
+:root[data-theme="dark"] .hs-win .hs4-dlg .tm-radio { background: color-mix(in oklab, var(--input) 30%, transparent); }
+.hs-win .hs4-dlg .is-sel .tm-radio { border-color: var(--primary); }
+.hs-win .hs4-dlg .is-sel .tm-radio::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+.hs-win .hs4-dlg .tm-check { display: flex; flex: none; align-items: center; justify-content: center; width: 16px; height: 16px; border: 1px solid var(--primary); border-radius: 4px; background: var(--primary); color: var(--primary-foreground); }
+.hs-win .hs4-dlg .tm-check svg { width: 14px; height: 14px; }
+.hs-win .hs4-dlg .tm-here { flex: none; padding: 1px 7px; border-radius: 999px; background: var(--tv-tile-request); color: var(--tv-icon-request); font-size: 11px; line-height: 16px; font-weight: 600; }
+.hs-win .hs4-dlg .tm-card { display: flex; align-items: flex-start; gap: 12px; padding: 14px; border: 1px solid color-mix(in oklab, var(--tv-icon-request) 40%, var(--border)); border-radius: 10px; background: color-mix(in oklab, var(--tv-icon-request) 9%, var(--card)); }
+.hs-win .hs4-dlg .tm-cname { font-size: 14px; line-height: 20px; font-weight: 600; overflow-wrap: anywhere; }
+.hs-win .hs4-dlg .tm-cline { margin-top: 3px; font-size: 12px; line-height: 17px; overflow-wrap: anywhere; }
+.hs-win .hs4-dlg .tm-verb { color: var(--tv-icon-request); font-weight: 600; }
+.hs-win .hs4-dlg .tm-cacts { display: flex; gap: 6px; margin-top: 8px; }
+.hs-win .hs4-dlg .tm-cacts .tm-btn { height: 28px; padding: 0 12px; }
+.hs-win .hs4-dlg .tm-done { padding: 14px 10px 4px; text-align: center; }
+.hs-win .hs4-dlg .tm-done .tm-tile { margin: 0 auto 10px; background: var(--tv-solid-in); color: #fff; }
+.hs-win .hs4-dlg .tm-done .tm-help { margin: 0; }
+.hs-win .hs4-dlg .tm-hints { margin-top: 14px; }
+.hs-win .hs4-dlg .tm-foot { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin: 0 -16px -16px; padding: 16px; border-top: 1px solid var(--border); border-radius: 0 0 14px 14px; background: color-mix(in oklab, var(--muted) 50%, transparent); }
+.hs-win .hs4-dlg .tm-foot-left { margin-right: auto; font-size: 12px; color: var(--muted-foreground); }
+@keyframes hs4-blink { 50% { opacity: 0; } }
+.is-seeking .hs-win .hs4-dlg .tm-caret { animation: none; }
+/* The mention picker's faces match the roster's. */
+.hs-win .hs4-mav-D { background: rgb(148, 163, 184); }
+.hs-win .hs4-mav-L { background: rgb(219, 39, 119); }

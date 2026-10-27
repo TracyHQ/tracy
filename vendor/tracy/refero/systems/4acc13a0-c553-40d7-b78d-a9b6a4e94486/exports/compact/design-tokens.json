@@ -1,0 +1,84 @@
+{
+  "color": {
+    "ember-red": {
+      "$value": "#ff1841",
+      "$type": "color",
+      "$description": "Ember Red — Red supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "bloodline": {
+      "$value": "#7b0016",
+      "$type": "color",
+      "$description": "Bloodline — Decorative dark red stroke, link hover states, secondary accent where a deeper red register is needed against white"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Hero section background, primary body text, icon strokes, input field text — the structural darkness"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas base, text on dark backgrounds, input field backgrounds"
+    },
+    "ash": {
+      "$value": "#e8e6e6",
+      "$type": "color",
+      "$description": "Ash — Card surfaces, subtle section backgrounds, hairline divider highlights on dark"
+    },
+    "steel": {
+      "$value": "#949494",
+      "$type": "color",
+      "$description": "Steel — Muted borders, inactive control outlines, secondary dividers"
+    },
+    "charcoal": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Charcoal — Deep surface layer — elevated panels, dark card backgrounds behind red sections"
+    },
+    "fog": {
+      "$value": "#bebcbc",
+      "$type": "color",
+      "$description": "Fog — Light border variant for input fields on white, subtle structural lines"
+    },
+    "mist": {
+      "$value": "#c7c7c7",
+      "$type": "color",
+      "$description": "Mist — Disabled control borders, tertiary structural lines"
+    }
+  },
+  "font": {
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Micro UI text — toggle labels, badge text, button micro-copy, fine print; Arial's universality here is deliberate, keeping tiny text neutral and system-native"
+    },
+    "10x-display-custom-madefor-text-variant": {
+      "$value": "10X Display (custom — madefor-text variant)",
+      "$type": "fontFamily",
+      "$description": "Hero display headline — the massive '10X HUB' wordmark and large section openers; weight 400 at near-300px with letter-spacing -0.064em creates a poster-scale compression that fills the viewport edge-to-edge"
+    },
+    "helvetica-w01-roman": {
+      "$value": "Helvetica W01 Roman",
+      "$type": "fontFamily",
+      "$description": "Workhorse for all body copy, form labels, subheadings, navigation, and secondary headings up to 45px; the only weight available is 400, forcing visual hierarchy to come from size and color contrast rather than weight shifts"
+    },
+    "wfont9aea05daebdda91ced4d119f7837b7bae26e19": {
+      "$value": "wfont_9aea05_daebdda91ced4d119f7837b7bae26e19",
+      "$type": "fontFamily",
+      "$description": "wfont_9aea05_daebdda91ced4d119f7837b7bae26e19 — detected in extracted data but not described by AI"
+    },
+    "madefor-text": {
+      "$value": "madefor-text",
+      "$type": "fontFamily",
+      "$description": "madefor-text — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://10xdesigners.co",
+      "siteName": "10X HUB",
+      "extractedAt": "2026-06-03T17:36:34.354Z",
+      "variant": "compact"
+    }
+  }
+}

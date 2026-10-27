@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1134-ds-remeasure-5",
+  "kind": "fix",
+  "title": "Fourteen ready Joomla slot contracts (JA Spa to JA Voyara, Purity III) re-measured with the per-element contrast probe on the release their minVersion names: still ready, with the fixes the re-measure found",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-{ja-spa,ja-space,ja-spark,ja-stark,ja-symphony,ja-teline-v,ja-titan,ja-tour,ja-trip,ja-vega,ja-vital,ja-vogue,ja-voyara,purity-iii}.json through loadContract; build the module sheet (joomlaSlot) under Moxie (dark) and MotherDuck (light) for Purity III, JA Voyara, JA Vogue and JA Teline V.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf(...), {key, version}) for each at its minVersion and at the version before it.",
+    "S4: the probe's picture rules (drawn, pictured) from scripts/flow.mjs, run against fake computed styles.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-remeasure-5.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: each of the fourteen is ready, its minVersion is the release re-measured (ja-spa 1.0.2, ja-space 1.0.3, ja-spark/stark/symphony/teline-v/titan/tour 1.0.1, ja-trip/vega/vogue 1.0.4, ja-vital 1.0.3, ja-voyara 1.0.5, purity-iii 1.0.1), its maxVersion is at or above it, its readyNote names tasks/evidence/ds-remeasure-5-2026-10-11/<slug> (whose after/verdicts.json exists), and it judges a running-text kind. Purity III's dark sheet gives .navbar color #444444 and .row-feature-primary #bbe6ff, keeps .row-feature a.thumbnail:has(img) white and inverts .poweredby .t3-logo, and its light sheet has no invert(; its text kinds read .features-intro. JA Voyara's .voy-price takes var(--ds-c-accent-text). JA Vogue's dark sheet inverts .logo-img and strokes .navbar-brand svg path with currentColor, its light sheet has no invert(. JA Teline V's dark sheet inverts .logo-img-sm. JA Tour's followRules give .article-more a accent-text and .link-primary accent-text!.",
+    "S3: each at its minVersion -> {contract:'joomla-<slug>'}; the version before -> reason TEMPLATE_NEEDS_UPDATE.",
+    "S4: a display:none ::before picture is not pictured; an inline static ::after icon is not; a positioned ::before picture covering the box is."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-<slug>.json ready, minVersion, maxVersion, contrast, keepColors, followRules, sideRules",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor / templateKeyOf",
+    "probe": "packages/design/tracy-ds-slot/scripts/flow.mjs contrastProbe (drawn, pictured, under, unsized, cut)"
+  },
+  "evidence": "tasks/evidence/ds-remeasure-5-2026-10-11/README.md — per-template table before/after, verdicts.json of each flow run and the eye montages (11/10/2026).",
+  "fence": "The measures on Docker stands are in the evidence, not re-run here (each takes 10-30 min on the shared VM). Not covered: the paint-stack reading under() and the unsized/cut skips (need a browser; their effect is in the evidence), and judging by eye.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-remeasure-5.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

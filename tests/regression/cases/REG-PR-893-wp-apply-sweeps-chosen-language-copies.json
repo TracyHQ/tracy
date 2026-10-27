@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-893-wp-apply-sweeps-chosen-language-copies",
+  "kind": "fix",
+  "title": "WordPress Apply hides and sweeps the copies of the languages the customer chose, not only the source pages",
+  "pr": 893,
+  "area": "sites/apply/wordpress",
+  "cms": ["wp"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-wp-residue.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines, and the result of the two cases named \"a language the site's page list does not show is still swept\" and \"the pages of the languages asked for are found in the release inventory\".",
+    "S3: Run: node -e \"import('./apps/tracy-web/src/sites/brief-engines/wp-residue.js').then(async (m) => { const inv = JSON.parse(require('node:fs').readFileSync('packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/inventory.json', 'utf8')); for (const l of ['vi', 'ru']) { const r = m.editionPageIds(inv, [l]); console.log(l, r.length, r.filter((x) => x.base === null).length) } })\" and record the output."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'; '# pass' equals '# tests' and is at least 28.",
+    "Both named cases are 'ok'.",
+    "S3 prints 'vi 17 0' and 'ru 17 0': every Vietnamese and Russian page of the release is found with the source page it translates, Russian ones included although their slugs carry no -ru."
+  ],
+  "selectors": {
+    "reader": "editionPageIds, readPages in apps/tracy-web/src/sites/brief-engines/wp-residue.js",
+    "engine": "editionPagesOf in apps/tracy-web/src/sites/brief-engines/wordpress.js",
+    "door": "content.get {kind:'post', id} (raw post fields ID, post_type, post_name, post_status, post_content)"
+  },
+  "evidence": "05/10/2026, local stand, develop b21c158bc: a Tracy Business wp7 site made with Apply (en-us + vi-vn) kept project-detail-vi ('Elektra … Lipetsk'), careers-vi, investor-relations-vi, style-guide-vi and five more demo copies published, 30 demo-company words on /vi/ pages, 0 on English ones. content.list of pages answered 17 rows, all of the source language (Polylang narrows it).",
+  "fence": "The sweep reads the chosen editions' pages by id from the release inventory and tags each with its edition and source page from the translation group, never from its slug; a copy is hidden with its source page and swept with its own language's words; an id that is not the release's page on the site (other post type or slug) is skipped and said.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-893-wp-apply-sweeps-chosen-language-copies.mjs"]
+  }
+}

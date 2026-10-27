@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1712-sync-same-record-two-ids",
+  "kind": "fix",
+  "title": "Sync from live: a copy-only row (in neither base nor live) that clashes on a unique key with a row the live site added, and equals it on every column but the number and the placing/stamp columns, is one record under two numbers: the copy takes the live number with its references and no conflict is reported; a copy row Tracy changed, or a different record, is still a unique-key conflict",
+  "pr": 1712,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+  ],
+  "expect": [
+    "S1: the copy's administrator menu items 101/102 (copy-only since a sync before #1699 kept them) and the live site's re-inserted 2400/2401 merge with no kept and no conflict: the copy ends with 2400/2401 (2401 under 2400), no 101/102, modules_menu (90, 2400), Tracy's edit of item 3 kept, and the next sync merges nothing",
+    "S1: when Tracy changed 101's title, 2400 stays a unique-key conflict and the copy keeps 101",
+    "S1: a different copy-only record (50 news, category 8) against a live one (60 news, category 9) stays a unique-key conflict beside the resolved menu items",
+    "S1: every other test of the file passes, the three #1699 tests among them"
+  ],
+  "selectors": {
+    "host": "live_sync.py DbMerge.join_same_records (before read_schemas), IdMap.renumber on the copy's schema"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-25-sync-same-record-two-ids.md",
+  "fence": "A sync never keeps reporting a conflict for a record both sides hold, identical, under two numbers",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+    ],
+    "tests": [
+      "a copy-only row that is the same record as a row the live site added under another number",
+      "a copy-only row Tracy changed is not the live row under another number",
+      "a different copy-only record clashing on the unique key with a live one is still a conflict",
+      "a row the live site deleted and inserted again under a new number"
+    ]
+  }
+}

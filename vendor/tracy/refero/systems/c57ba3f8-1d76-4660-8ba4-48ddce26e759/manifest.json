@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c57ba3f8-1d76-4660-8ba4-48ddce26e759",
+  "status": "complete",
+  "name": "Google for Education",
+  "url": "https://styles.refero.design/style/c57ba3f8-1d76-4660-8ba4-48ddce26e759",
+  "sourceWebsite": "https://classroom.google.com",
+  "extractedAt": "2026-06-03T17:37:16.469Z",
+  "capturedAt": "2026-10-08T05:17:17.532871+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Open notebook in morning light — a digital classroom where whitespace, type, and one blue accent do all the work.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/edf290fb-ea16-42fb-853c-4b59693a8725.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bfcb14d8446e3ea9687ddf5ed823adc979efecfbbd45e6fc01232011d4818988",
+      "bytes": 22829
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "da9e0b19bc5fcb27173b0f9bd795a60d951ba1edfafc2b5e18ae953340e52a2f",
+      "bytes": 110859
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8be60ddfa1023361020a4a80c1ee2c41e3cda26093308ae94abc8115ee47dc58",
+      "bytes": 19268
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "98cc5d26a35904b59a80e1ab3043c2f32d7971b311c2d80888799de08530280e",
+      "bytes": 13391
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "3fe2cd3bb2e5b7a708f568ad9c697b6803fe7bde83b98619f2a09cec2d9f2e87",
+      "bytes": 14420
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e495ef065641a5dbe9b293809daebd3bccc49c5a35068816b84e8b3c44b28a54",
+      "bytes": 3127
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2a52c4a7c037172f15b8ee98cf3140aa3089ef57437f7c9c1591959f1659dfc4",
+      "bytes": 615
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "557375bd6ce81cec94bf0bebfff8e455276b208726e44b8d22667df914fe552d",
+      "bytes": 632
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8c7b8afca063a34ca33d8211400d7d2c339f34756b00b41775f52092a977cb87",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "9384006bdfc99ddf4f4d7b880b87e508300cc993519ee6fff9c41a59ffb514de",
+      "bytes": 44375
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8b2f57ee224bcab618cb358328768f9bfac020e4e0abcaa852c665a61975d659",
+      "bytes": 23090
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "26e4b34c8f5e9708ddb00918af7e091f9ebe3269b549d3e9cc2286ffe02a6443",
+      "bytes": 46888
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7b4dfd3833baa6f7dc7bb9f3d4727567cec97efa61557d2938a13fc26f7b7925",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "8c18a55d58fc5a3bbf287f9deff561f9c8f87745c16d497169432de12e5803c3",
+      "bytes": 1762
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "27618d4eb0e293fa21325cb80374421ada6bac705accc953d41cf6089b37ddf7",
+      "bytes": 2404
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "206c6c51-df38-425f-8d07-b0cc9dd065cf",
+    "2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "528eb1d4-8508-4dc6-87b4-c7b92d648dac",
+    "62f89392-609d-45b7-b9df-7a5acd529864",
+    "7368cfab-6313-4e50-97e5-c3318c52e7fe",
+    "8d4a4e15-31f1-4509-8d13-7746f85c20d7",
+    "90b8631c-4e2c-407e-86a3-d2bff456dc93",
+    "95b472c5-fc07-46a8-a11f-c5432e290fcd",
+    "a521abb9-d84b-4870-b5a8-363be7c3f94a",
+    "be2af3f3-3886-4d70-973f-f7b5ab8d1a99",
+    "c57ba3f8-1d76-4660-8ba4-48ddce26e759",
+    "c7fe6b78-9ce3-4d69-a3f0-b8310c779e7a",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ea8a4150-e062-4c0e-94ca-668a3033eb63",
+    "ebbfbc6a-988b-4f33-b261-d431b2327545",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8"
+  ]
+}

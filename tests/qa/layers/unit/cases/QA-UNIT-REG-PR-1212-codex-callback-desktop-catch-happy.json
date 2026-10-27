@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-1212-codex-callback-desktop-catch-happy",
+  "itemIds": ["regression:REG-PR-1212-codex-callback-desktop-catch"],
+  "requirement": "Desktop: a ChatGPT Codex sign-in finishes without pasting, whichever way the page opens it",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1212-codex-callback-desktop-catch.json",
+    "ref": "PR #1212 (feat); fix evidence: none recorded",
+    "invariant": "The page asking the app to open the Codex authorize address (tracyDesktop.links.openExternal) starts the catcher, then opens the browser. A callback with the attempt's path and state gets a 200 HTML page, is delivered once as tracy-subscription-callback, and the catcher stops. A wrong state or another path gets a 404 and the catcher keeps listening; a busy port logs one line and leaves the paste path; the catcher stops after its time runs out; a second attempt replaces the first. The delivery script carries the URL as JSON data, whatever characters it holds.",
+    "productSources": ["packages/desktop/tracy-desktop/src/subscription-handoff.js:36"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a Codex callback with the expected state is answered, delivered once, and the catcher stops",
+    "a wrong state or another path gets a plain 404 and the catcher keeps listening",
+    "the catcher stops by itself when the attempt runs out of time",
+    "a busy port logs one line, still opens the browser, and never delivers",
+    "a second attempt replaces the first",
+    "the Codex authorize address names the callback path and state to catch",
+    "the page asking the app to open a Codex sign-in starts the catcher, then the browser",
+    "any other address the page opens goes to the browser with no catcher",
+    "the delivery script dispatches the callback event with the URL as data, whatever it holds"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1212-codex-callback-desktop-catch"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/desktop/tracy-desktop", "tracy-desktop"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1212-codex-callback-desktop-catch",
+    "pr": 1212,
+    "kind": "feat",
+    "area": "desktop/ai-accounts",
+    "file": "tests/regression/cases/REG-PR-1212-codex-callback-desktop-catch.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=20000",
+    "packages/desktop/tracy-desktop/test/subscription-handoff.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a Codex callback with the expected state is answered, delivered once, and the catcher stops",
+    "a wrong state or another path gets a plain 404 and the catcher keeps listening",
+    "the catcher stops by itself when the attempt runs out of time",
+    "a busy port logs one line, still opens the browser, and never delivers",
+    "a second attempt replaces the first",
+    "the Codex authorize address names the callback path and state to catch",
+    "the page asking the app to open a Codex sign-in starts the catcher, then the browser",
+    "any other address the page opens goes to the browser with no catcher",
+    "the delivery script dispatches the callback event with the URL as data, whatever it holds"
+  ],
+  "timeoutS": 120
+}

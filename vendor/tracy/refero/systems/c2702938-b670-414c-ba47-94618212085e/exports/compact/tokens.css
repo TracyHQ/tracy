@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-paper: #ffffff;
+  --color-frost: #f2f2f2;
+  --color-smoke: #858484;
+  --color-graphite: #333333;
+
+  /* Typography — Font Families */
+  --font-abc-oracle: 'ABC Oracle', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

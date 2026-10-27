@@ -1,0 +1,346 @@
+
+:root{
+--color-primary:#4D7C0F;
+--color-secondary:#65A30D;
+--color-success:#30A46C;
+--color-info:#56E0F4;
+--color-warning:#F5A623;
+--color-danger:#E5484D;
+--color-light:#F2F5EE;
+--color-dark:#10140F;
+--color-white:#ffffff;
+--color-black:#000000;
+--body-bg-color:#FBFCFA;
+--body-text-color:#46514B;
+--body-link-color:#4D7C0F;
+--body-link-hover-color:#3F6A0A;
+--mainnav-text-color:#9AA6A1;
+--mainnav-link-color:#9AA6A1;
+--mainnav-link-hover-color:#F2F5F3;
+--mainnav-link-active-color:#F2F5F3;
+--footer-bg-color:#161B18;
+--footer-text-color:#9AA6A1;
+--footer-link-color:#9AA6A1;
+--footer-link-hover-color:#F2F5F3;
+}
+/* Section: Header */
+#t4-header {
+	position: -webkit-sticky !important;
+	position: sticky;
+	sticky: 0;
+	z-index: 10;
+}
+#t4-header .bg-overlay {
+	opacity: 0.5;
+}
+
+/* Section: Landing */
+
+#t4-landing .bg-overlay {
+	opacity: 0.5;
+}
+
+/* Section: Footer */
+
+#t4-footer .bg-overlay {
+	opacity: 0.5;
+}
+/**
+ *------------------------------------------------------------------------------
+ * @package       T4_Blank_BS5 - Free Template for Joomla!
+ *------------------------------------------------------------------------------
+ * @copyright     Copyright (C) 2004-2021 JoomlArt.com. All Rights Reserved.
+ * @license       GNU General Public License version 2 or later; see LICENSE.txt
+ * @authors       JoomlArt
+ *------------------------------------------------------------------------------
+**/
+:root {
+  --body-font-family: IBM Plex Sans;
+  --body-font-size: 16px;
+  --body-font-weight: 400;
+  --body-font-style: normal;
+  --body-line-height: 1.55;
+  --body-letter-spacing: 0px;
+  --t4-font-family: IBM Plex Sans;
+  --t4-font-size: 16px;
+  --t4-font-weight: 400;
+  --t4-font-style: normal;
+  --t4-line-height: 1.55;
+  --t4-letter-spacing: 0px;
+  --heading-font-family: Space Grotesk;
+  --heading-font-weight: 700;
+  --heading-font-style: normal;
+  --heading-line-height: 1.06;
+  --heading-letter-spacing: -1px;
+  --h1-font-size: 52px;
+  --h2-font-size: 38px;
+  --h3-font-size: 23px;
+  --h4-font-size: 19px;
+  --h5-font-size: 16px;
+  --h6-font-size: 13px;
+}
+/* for megamenu animation duration */
+.t4-megamenu.animate .dropdown.animating > .dropdown-menu {
+  -webkit-transition-duration: 400ms;
+          transition-duration: 400ms;
+}
+html {
+  font-size: var(--body-font-size);
+}
+body {
+  background-color: var(--body-bg-color);
+  color: var(--body-text-color);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size);
+  font-weight: var(--body-font-weight);
+  font-style: var(--body-font-style);
+  line-height: var(--body-line-height);
+  letter-spacing: var(--body-letter-spacing);
+}
+.t4-content {
+  background-color: var(--body-bg-color);
+  background-repeat: repeat;
+  background-position: left top;
+  background-attachment: scroll;
+}
+a {
+  color: var(--body-link-color);
+}
+a:hover, a:focus, a:active {
+  color: var(--body-link-hover-color);
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight);
+  font-style: var(--heading-font-style);
+  line-height: var(--heading-line-height);
+  letter-spacing: var(--heading-letter-spacing);
+}
+h1, .h1 {
+  font-size: var(--h1-font-size);
+}
+h2, .h2 {
+  font-size: var(--h2-font-size);
+}
+h3, .h3 {
+  font-size: var(--h3-font-size);
+}
+h4, .h4 {
+  font-size: var(--h4-font-size);
+}
+h5, .h5 {
+  font-size: var(--h5-font-size);
+}
+h6, .h6 {
+  font-size: var(--h6-font-size);
+}
+/* MEGAMENU
+--------------------------------------- */
+.t4-megamenu {
+  font-family: var(--megamenu-font-family);
+  font-size: var(--megamenu-font-size);
+  font-weight: var(--megamenu-font-weight);
+  line-height: var(--megamenu-line-height);
+  letter-spacing: var(--megamenu-letter-spacing);
+}
+.t4-megamenu h1, .t4-megamenu h2, .t4-megamenu h3, .t4-megamenu h4, .t4-megamenu h5, .t4-megamenu h6 {
+  font-family: var(--megamenu-font-family);
+}
+/* COLORS
+--------------------------------------- */
+/* Backgrounds Colors */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+.bg-success {
+  background-color: var(--color-success);
+}
+.bg-info {
+  background-color: var(--color-info);
+}
+.bg-warning {
+  background-color: var(--color-warning);
+}
+.bg-danger {
+  background-color: var(--color-danger);
+}
+.bg-light {
+  background-color: var(--color-light);
+}
+.bg-dark {
+  background-color: var(--color-dark);
+}
+/* Buttons Colors */
+.btn.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.btn.btn-primary:hover {
+  opacity: 0.85;
+}
+.btn.btn-outline-primary {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.btn.btn-outline-primary:hover {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+.btn.btn-secondary {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+.btn.btn-secondary:hover {
+  opacity: 0.85;
+}
+.btn.btn-outline-secondary {
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+}
+.btn.btn-outline-secondary:hover {
+  background-color: var(--color-secondary);
+  color: #fff;
+}
+.btn.btn-success {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+}
+.btn.btn-success:hover {
+  opacity: 0.85;
+}
+.btn.btn-outline-success {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+.btn.btn-outline-success:hover {
+  background-color: var(--color-success);
+  color: #fff;
+}
+.btn.btn-info {
+  background-color: var(--color-info);
+  border-color: var(--color-info);
+}
+.btn.btn-info:hover {
+  opacity: 0.85;
+}
+.btn.btn-outline-info {
+  border-color: var(--color-info);
+  color: var(--color-info);
+}
+.btn.btn-outline-info:hover {
+  background-color: var(--color-info);
+  color: #000;
+}
+.btn.btn-warning {
+  background-color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+.btn.btn-warning:hover {
+  opacity: 0.85;
+}
+.btn.btn-outline-warning {
+  border-color: var(--color-warning);
+  color: var(--color-warning);
+}
+.btn.btn-outline-warning:hover {
+  background-color: var(--color-warning);
+  color: #000;
+}
+.btn.btn-danger {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+.btn.btn-danger:hover {
+  opacity: 0.85;
+}
+.btn.btn-outline-danger {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+.btn.btn-outline-danger:hover {
+  background-color: var(--color-danger);
+  color: #fff;
+}
+.btn.btn-light {
+  background-color: var(--color-light);
+  border-color: var(--color-light);
+}
+.btn.btn-light:hover {
+  opacity: 0.85;
+}
+.btn.btn-outline-light {
+  border-color: var(--color-light);
+  color: var(--color-light);
+}
+.btn.btn-outline-light:hover {
+  background-color: var(--color-light);
+  color: #000;
+}
+.btn.btn-dark {
+  background-color: var(--color-dark);
+  border-color: var(--color-dark);
+}
+.btn.btn-dark:hover {
+  opacity: 0.85;
+}
+.btn.btn-outline-dark {
+  border-color: var(--color-dark);
+  color: var(--color-dark);
+}
+.btn.btn-outline-dark:hover {
+  background-color: var(--color-dark);
+  color: #fff;
+}
+/* Text Colors */
+.text-primary {
+  color: var(--color-primary) !important;
+}
+.text-secondary {
+  color: var(--color-secondary) !important;
+}
+.text-success {
+  color: var(--color-success) !important;
+}
+.text-info {
+  color: var(--color-info) !important;
+}
+.text-warning {
+  color: var(--color-warning) !important;
+}
+.text-danger {
+  color: var(--color-danger) !important;
+}
+.text-light {
+  color: var(--color-light) !important;
+}
+.text-dark {
+  color: var(--color-dark) !important;
+}
+/* Badage Colors */
+.badge-primary {
+  background-color: var(--color-primary);
+}
+.badge-secondary {
+  background-color: var(--color-secondary);
+}
+.badge-success {
+  background-color: var(--color-success);
+}
+.badge-info {
+  background-color: var(--color-info);
+}
+.badge-warning {
+  background-color: var(--color-warning);
+}
+.badge-danger {
+  background-color: var(--color-danger);
+}
+.badge-light {
+  background-color: var(--color-light);
+}
+.badge-dark {
+  background-color: var(--color-dark);
+}

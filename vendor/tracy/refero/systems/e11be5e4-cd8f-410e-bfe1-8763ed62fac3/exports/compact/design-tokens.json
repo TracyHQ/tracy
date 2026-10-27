@@ -1,0 +1,34 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page background, full-bleed canvas for all content"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — All text, navigation, footer instructions, and thin UI strokes"
+    },
+    "ash-gray": {
+      "$value": "#888888",
+      "$type": "color",
+      "$description": "Ash Gray — Secondary or muted text, de-emphasized labels, inactive hints"
+    }
+  },
+  "font": {
+    "akzidenz-grotesk": {
+      "$value": "Akzidenz-Grotesk",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across navigation, body, footer, and brand mark. The weight 400/700 pairing is the entire hierarchy system — no color, no size jumps, no italic to differentiate roles. At 14–15px the grotesk reads as utilitarian editorial; at 20–21px it becomes signage. Normal tracking preserves the geometric, mechanical feel."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.eduardodelfraile.com",
+      "siteName": "Eduardo del Fraile",
+      "extractedAt": "2026-06-03T22:00:46.566Z",
+      "variant": "compact"
+    }
+  }
+}

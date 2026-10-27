@@ -1,0 +1,289 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-campaign",
+  "release": "quickstart/ja-campaign/j6@1.0.0",
+  "roles": {
+    "page": "body.site-home.navigation-default",
+    "display": "h1.display-4.mb-3",
+    "heading": "h2",
+    "body": "div.card p",
+    "button-primary": "a.btn.btn-primary",
+    "container": "div.t4-section.t4-hero-section div.t4-section-inner.container",
+    "section": "#t4-content-mass-bottom",
+    "input": "#email_field_222"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 52.5px",
+    "displayFace": "Roboto 600, tracking 0em",
+    "heading": "first section heading: 32px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(38, 127, 253)",
+    "container": "first content container, max-width 1152px",
+    "section": "first padded full-width section, padding-top 100px",
+    "input": "first text field"
+  },
+  "keepScopes": [".t4-section-3", ".t4-footnav", ".t4-footer"],
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#212529",
+    "--fg-2": "#212529",
+    "--accent": "#267ffd",
+    "--accent-hover": "#0056b3",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#f0f1f4",
+    "--meta": "#6c757d",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#d3d5df",
+    "--muted": "#6e7489",
+    "--font-display": "\"Roboto\", sans-serif",
+    "--font-body": "\"Roboto\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#212529",
+      "fg-2": "#212529",
+      "accent": "#267ffd",
+      "accent-hover": "#0056b3",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212529",
+      "meta": "#6c757d",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#d3d5df",
+      "muted": "#6e7489"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#212529",
+      "fg-2": "#212529",
+      "accent": "#267ffd",
+      "accent-on": "#ffffff",
+      "surface-warm": "#f0f1f4"
+    },
+    {
+      "accent": "#267ffd"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "border": "#dddddd",
+      "surface-warm": "#e4e4eb",
+      "warn": "#fdce03"
+    },
+    {
+      "border": "#ccd2dd",
+      "surface-warm": "#f2f2f2"
+    },
+    {
+      "surface-warm": "#e6e6e6"
+    },
+    {
+      "surface": "#f6f6f8"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (95 line colours, 145 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.display-4.mb-3",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["#t4-content-mass-bottom"],
+    "bodyFace": ["body"],
+    "inkImages": [".navbar-brand img"],
+    "cardLike": [".offer-inner", ".card"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section p, .t4-section li",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "header-right",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 17 tried (byte 7603); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#dddddd",
+      "uses": 9,
+      "kind": "line",
+      "role": "border",
+      "near": "#d3d5df",
+      "distance": 13
+    },
+    {
+      "hex": "#ccd2dd",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#d3d5df",
+      "distance": 8
+    },
+    {
+      "hex": "#e4e4eb",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f0f1f4",
+      "distance": 20
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f0f1f4",
+      "distance": 3
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 4,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    },
+    {
+      "hex": "#e6e6e6",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#f0f1f4",
+      "distance": 20
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "alphaVars": ["fg-30", "fg-40", "fg-50", "fg-70", "fg-80", "fg-90"],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-campaign/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip: tasks/evidence/ds-contracts-r3c-2026-10-11/templates/ja-campaign-j6): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 69% or more of the page follows (round 1 was 44%: the page ground, text, links and primary buttons are T4 placeholders); they follow through T4's own style template (t4Placeholders: css/tpl/theme.tpl.css), which survives T4 rewriting media/t4/css on install; the offer cards' #f6f6f8 reads as surface; the header's mainnav palette follows through followRules; weights !important (weightImportant: the hero title carries .font-weight-bold); probe body = a card paragraph (.lead keeps its own 300); the dark wordmark is inverted under a dark system (inkImages); newsletter band and footer kept; checked by eye on the Moxie and Toggl Track (dark) and MotherDuck/Apple (light) screenshots. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 72% or more of the page follows, every contrast kind sampled at 1440 and 390; the numbered steps 01-03 on the accent take its own text colour and the phone logo strip the page ground (followRules); checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-campaign-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-campaign 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 72-82% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-campaign-j6",
+  "t4Placeholders": {
+    "__color_white": "bg",
+    "__body_bg_color": "bg",
+    "__body_text_color": "fg",
+    "__link_color": "accent",
+    "__link_hover_color": "accent-hover",
+    "__color_primary": "accent",
+    "__color_light": "surface",
+    "__color_dark": "fg-2",
+    "__color_success": "success",
+    "__color_warning": "warn",
+    "__color_danger": "danger"
+  },
+  "weightImportant": true,
+  "followRules": {
+    ".t4-palette-mainnav .nav li a:not(.nav-link-signin)": {
+      "color": "fg"
+    },
+    ".t4-palette-mainnav .nav li.active a": {
+      "color": "accent-text"
+    },
+    ".t4-palette-mainnav .nav li a.nav-link-signin": {
+      "color": "accent-on",
+      "background-color": "accent",
+      "border-color": "accent"
+    },
+    ".bg-primary.text-white.number": {
+      "color": "accent-on!"
+    },
+    "#t4-header .t4-brand": {
+      "background-color": "bg"
+    },
+    ".com-content-article__body .article-extra-ct": {
+      "background-color": "surface",
+      "border-color": "border-soft"
+    },
+    ".readmore .btn:not(:hover, :focus, :active)": {
+      "background-color": "surface"
+    },
+    ".tagspopular ul > li": {
+      "background-color": "surface"
+    }
+  },
+  "followRulesNote": "T4 paints the header's mainnav palette (link #323748, active #267ffd) from its generated media/t4/css/<style>.css, which no release can tokenize: its links take the page text, the active one the readable accent, the filled 'Sign in' pill the accent and its own text colour; the numbered steps 01-03 (.number on .bg-primary, the accent, with .text-white !important) take the accent's own text colour, and the phone header's logo strip (#f9f9fa, T4 generated CSS under 768px) the page ground, so the inverted wordmark stays on a ground of its own side; 15/10/2026 (v10 inner measure): three fills the released sheet still writes as literals, while their words follow the system: the article's offer panel (.com-content-article__body .article-extra-ct, #fff5e6 with a #ffe0b3 line, /index.php/category-blog/73-sitegroundd) stayed cream under Moxie with its overview in Moxie's cream text (span.field-value #f4efd4 on #fff5e6, 1.07:1, the template's 14.29) and its offer in the light accent (2.10:1, the template's 3.51); the blog's Read more buttons (.readmore .btn, #d3d5df) and the popular tags (.tagspopular ul > li, #d3d5df) kept the template's grey under Moxie's muted words (#858273 on #d3d5df, 2.64:1, the template's 3.17-3.19), desktop and phone. Each takes the system's surface (the panel its soft line too), on which every text role reads 4.5:1 by construction (readableText); the buttons keep their accent hover",
+  "minVersion": {
+    "quickstart/ja-campaign/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-campaign/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-muted)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#212529",
+    "--body-link-color": "#267ffd",
+    "--body-link-hover-color": "#0056b3",
+    "--color-primary": "#267ffd",
+    "--color-secondary": "#6c757d",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#212529",
+    "--mainnav-link-color": "#212529",
+    "--mainnav-link-hover-color": "#007bff",
+    "--mainnav-link-active-color": "#007bff",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "#6c757d",
+    "--footer-link-color": "#6c757d",
+    "--footer-link-hover-color": "#fff"
+  },
+  "keepColors": {
+    ".t4-section-3": "rgb(255, 255, 255)",
+    ".t4-footnav": "rgb(255, 255, 255)",
+    ".t4-footer": "rgb(255, 255, 255)"
+  },
+  "bands": {
+    ".t4-section-3": {
+      "ground": "#444a5e",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".t4-footnav": {
+      "ground": "#323748",
+      "texts": ["#6e7489", "#ffffff"],
+      "important": true
+    },
+    ".t4-footer": {
+      "ground": "#323748",
+      "texts": ["#ffffff", "#858a9e"],
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours"
+}

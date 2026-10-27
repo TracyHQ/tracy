@@ -1,0 +1,491 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, hero surfaces, light cards"
+    },
+    "editorial-ink": {
+      "$value": "#181b22",
+      "$type": "color",
+      "$description": "Editorial Ink — Headlines, body text, navigation, icons, dark card surfaces, and 1px control outlines"
+    },
+    "soft-canvas": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Soft Canvas — Alternate section backgrounds and rounded quiet panels"
+    },
+    "washed-gray": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Washed Gray — Light neutral action fill for buttons on dark surfaces"
+    },
+    "rule-gray": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Rule Gray — 1px dividers, list separators, and understated outlined-control borders"
+    },
+    "charcoal-surface": {
+      "$value": "#1f232d",
+      "$type": "color",
+      "$description": "Charcoal Surface — Dark informational cards with white text"
+    },
+    "muted-steel": {
+      "$value": "#8b8d90",
+      "$type": "color",
+      "$description": "Muted Steel — Secondary text on dark cards"
+    },
+    "cyan-wash": {
+      "$value": "#dff9ff",
+      "$type": "color",
+      "$description": "Cyan Wash — Pale cyan category chips and highlighted institution controls — an icy marker within the otherwise paper-white document"
+    },
+    "mint-wash": {
+      "$value": "#dbffe7",
+      "$type": "color",
+      "$description": "Mint Wash — Gray action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "climate-blue": {
+      "$value": "#4098ff",
+      "$type": "color",
+      "$description": "Climate Blue — Text links, selection highlight, and blue environmental-image treatment"
+    },
+    "land-teal": {
+      "$value": "#00b595",
+      "$type": "color",
+      "$description": "Land Teal — Land-use system labels and coded graphic blocks"
+    },
+    "community-violet": {
+      "$value": "#5077ff",
+      "$type": "color",
+      "$description": "Community Violet — Community-emissions system labels and coded graphic blocks"
+    },
+    "market-orange": {
+      "$value": "#ff7b1b",
+      "$type": "color",
+      "$description": "Market Orange — Emissions-trading system labels and coded graphic blocks"
+    },
+    "cross-action-purple": {
+      "$value": "#a545e0",
+      "$type": "color",
+      "$description": "Cross-Action Purple — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    },
+    "signal-yellow": {
+      "$value": "#f8e645",
+      "$type": "color",
+      "$description": "Signal Yellow — Feature-card surface for a single high-attention content grouping"
+    }
+  },
+  "font": {
+    "gt-alpina-standard": {
+      "$value": "Gt Alpina Standard",
+      "$type": "fontFamily",
+      "$description": "Display and sectional headings. Weight 300 at 64px makes climate-policy headlines feel literary and measured rather than institutional; reserve it for large statements and major section names."
+    },
+    "abacaxilatinweb": {
+      "$value": "Abacaxilatinweb",
+      "$type": "fontFamily",
+      "$description": "Primary sans for navigation, long-form body copy, labels, links, controls, numeric content, and occasional condensed display figures. Its 18px / 1.5 body setting gives dense Icelandic text room without weakening the page’s compact control language."
+    },
+    "abacaxilatin": {
+      "$value": "Abacaxilatin",
+      "$type": "fontFamily",
+      "$description": "Navigation and compact inline metadata, including 16px / 1.32 navigation labels and 18px / 1.5 counts."
+    }
+  },
+  "typography": {
+    "sm": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.93,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.93,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.32,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": 1.32,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.69,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.32,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Abacaxilatin",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.32,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.69,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "Abacaxilatin",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.08,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.35,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 20px"
+    },
+    "xl-3": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "22px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-3 at 22px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "26px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 26px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "26px",
+        "fontWeight": 400,
+        "lineHeight": 1.32,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 26px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "Gt Alpina Standard",
+        "fontSize": "30px",
+        "fontWeight": 300,
+        "lineHeight": 1.32,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 30px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "36px",
+        "fontWeight": 400,
+        "lineHeight": 1.32,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 36px"
+    },
+    "4xl-2": {
+      "$value": {
+        "fontFamily": "Gt Alpina Standard",
+        "fontSize": "38px",
+        "fontWeight": 300,
+        "lineHeight": 1.32,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl-2 at 38px"
+    },
+    "4xl-3": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "40px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.075em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl-3 at 40px"
+    },
+    "4xl-4": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "44px",
+        "fontWeight": 400,
+        "lineHeight": 1.32,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl-4 at 44px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Gt Alpina Standard",
+        "fontSize": "56px",
+        "fontWeight": 400,
+        "lineHeight": 1.32,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 56px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Gt Alpina Standard",
+        "fontSize": "64px",
+        "fontWeight": 300,
+        "lineHeight": 1.08,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 64px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "Abacaxilatinweb",
+        "fontSize": "80px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.037em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 80px"
+    }
+  },
+  "spacing": {
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "96": {
+      "$value": "96px",
+      "$type": "dimension",
+      "$description": "Spacing 96px"
+    },
+    "128": {
+      "$value": "128px",
+      "$type": "dimension",
+      "$description": "Spacing 128px"
+    },
+    "144": {
+      "$value": "144px",
+      "$type": "dimension",
+      "$description": "Spacing 144px"
+    },
+    "192": {
+      "$value": "192px",
+      "$type": "dimension",
+      "$description": "Spacing 192px"
+    },
+    "224": {
+      "$value": "224px",
+      "$type": "dimension",
+      "$description": "Spacing 224px"
+    },
+    "unit": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "3xl": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "full": {
+      "$value": "99px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "999px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "surface": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Page canvas, hero, and default reading surface"
+    },
+    "soft-canvas": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Surface level 1: Quiet large panels and alternate content regions"
+    },
+    "washed-gray": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Surface level 2: Subtle utility and inactive-control surfaces"
+    },
+    "cyan-wash": {
+      "$value": "#dff9ff",
+      "$type": "color",
+      "$description": "Surface level 3: Highlighted institution labels and cyan content markers"
+    },
+    "charcoal-surface": {
+      "$value": "#1f232d",
+      "$type": "color",
+      "$description": "Surface level 4: High-contrast data-card surface"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.co2.is",
+      "siteName": "Co2",
+      "extractedAt": "2026-09-20T19:25:46.198Z",
+      "variant": "extended"
+    }
+  }
+}

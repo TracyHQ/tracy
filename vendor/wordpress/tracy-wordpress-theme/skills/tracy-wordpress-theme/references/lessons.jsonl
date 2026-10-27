@@ -1,0 +1,118 @@
+{"id":"L-001","area":"process","when":"always","sym":"Repo formatter rewrites generated theme files; build --check fails","fix":"$ exclude generated paths from the formatter","ref":"g1"}
+{"id":"L-002","area":"stand","when":"always","sym":"wordpress:cli runs wp shell without entrypoint [\"wp\"]","fix":"$ compose cli: entrypoint [\"wp\"], user 33:33","ref":"g2"}
+{"id":"L-003","area":"stand","when":"always","sym":"Compose without -p makes a second project and db volume","fix":"$ docker compose -p <project> …","ref":"g3"}
+{"id":"L-004","area":"stand","when":"host-disk","sym":"Host disk < 5 GB: Docker dies silently, docker calls hang","fix":"$ free disk (df -h /) before heavy runs","ref":"g4"}
+{"id":"L-005","area":"theme","when":"theme-overlay-meta","sym":"Overlay metadata files shipped in the built theme","fix":"$ add to build.mjs OVERLAY_META_FILES, rebuild","ref":"g5"}
+{"id":"L-006","area":"theme","when":"theme-block-path","sym":"register_block_type() on a missing blocks/ path","fix":"$ guard with is_readable(<block.json>)","ref":"g6"}
+{"id":"L-007","area":"theme","tool":"review/contrast-audit","sym":"Overlay header over a hero with no cover","fix":"$ pin tracy-nav-* in body_class","test":"contrast-audit~header words","ref":"g7"}
+{"id":"L-008","area":"review","status":"fixed-in-code","sym":"Absent data-theme is auto, not a broken hook","fix":"visual/visual-qa#theme-not-applied","test":"browser~dark hooks","ref":"g8"}
+{"id":"L-009","area":"package","status":"fixed-in-code","sym":"Theme Check is a soft gate; accepted REQUIRED named","fix":"package#accept-theme-check","test":"package-prune-regressions~Theme Check","ref":"g9"}
+{"id":"L-010","area":"ingest","when":"spec-orphan-modules","sym":"Modules the page layout never draws seeded as content","fix":"ingest/from-joomla#orphaned","ref":"g10"}
+{"id":"L-011","area":"ingest","when":"always","sym":"Renaming every route slug breaks source URLs","fix":"$ keep paths; a renamed path is a 301 in redirects.json","ref":"g11"}
+{"id":"L-012","area":"theme","tool":"visual/visual-qa","sym":"Cover class: hero text in page bg","fix":"$ pin tracy-hero-* in body_class","test":"visual-qa~hero words in the page","ref":"g12"}
+{"id":"L-013","area":"parity","status":"fixed-in-code","sym":"/x → /x/ 301 read as the page status","fix":"http-parity#samePath","test":"http-parity-status~matching redirect","ref":"g13"}
+{"id":"L-014","area":"parity","status":"fixed-in-code","sym":"Source run split into target blocks read as missing","fix":"http-parity#containment","test":"parity-extract~leaf mode","ref":"g14"}
+{"id":"L-015","area":"parity","status":"fixed-in-code","sym":"T4 chrome outside header/footer leaks as text","fix":"lib/parity-extract#CHROME","test":"visual-layout-boxes~T4 chrome","ref":"g15"}
+{"id":"L-016","area":"process","when":"always","sym":"Accepted parity deltas kept in memory, not in a file","fix":"$ http-parity --accept parity-accepted.json (G-number)","ref":"g16"}
+{"id":"L-017","area":"theme","when":"theme-docs-marker","sym":"Shipped theme docs still hold DOCS_REQUIRED: markers","fix":"$ generate-docs.mjs --check","ref":"g17"}
+{"id":"L-018","area":"stand","status":"fixed-in-code","sym":"Per-call wp-cli containers lose /tmp","fix":"lib/wp-cli#keepAlivePlan","test":"wp-cli~kept container","ref":"g18 #9"}
+{"id":"L-019","area":"package","status":"fixed-in-code","sym":"Theme Check exits ≠ 0 on accepted REQUIRED","fix":"package#accept-theme-check","test":"package-prune-regressions~REQUIRED","ref":"g19"}
+{"id":"L-020","area":"process","when":"always","sym":"git add of an untracked list sweeps other agents' files","fix":"$ stage your own files by name","ref":"g20"}
+{"id":"L-021","area":"process","when":"always","sym":"Dark shots equal light: the site's boot script reset the hook","fix":"$ hook as the site persists; compare mean-gray","ref":"g21"}
+{"id":"L-022","area":"seed","status":"fixed-in-code","sym":"core/html keeps light inline colours in dark","fix":"lib/inline-colors#presetInlineColors","test":"inline-colors~presetInline","ref":"g22"}
+{"id":"L-023","area":"seed","status":"fixed-in-code","sym":"A typed pattern drops source text silently","fix":"seed#typedCoverage","test":"typed-section~typed render drops","ref":"g23"}
+{"id":"L-024","area":"ingest","status":"fixed-in-code","sym":"One <section> with several h2 blocks read as one","fix":"lib/html-content#splitBlocks","test":"section-split~two h2-led","ref":"g24"}
+{"id":"L-025","area":"seed","status":"fixed-in-code","sym":"Cyrillic slug cut at 200 encoded chars; run 2 adds -2","fix":"seed#wpPostName","test":"seed~wpPostName of a TITLE","ref":"g25"}
+{"id":"L-026","area":"seed","status":"fixed-in-code","sym":"Breaks inside date, number+unit left to CSS","fix":"lib/typeset#typeset","test":"typeset~typeset","ref":"g26"}
+{"id":"L-027","area":"seed","status":"fixed-in-code","sym":"Tied post_date: listing HTML varies per request","fix":"lib/post-content#distinctDates","test":"post-content~distinctDates","ref":"g27 pr1"}
+{"id":"L-028","area":"visual","status":"fixed-in-code","sym":"spawnSync in a parallel runner stalls other jobs","fix":"lib/child#runChild","test":"child~event loop","ref":"g28 pr1"}
+{"id":"L-029","area":"visual","status":"fixed-in-code","sym":"One Chromium death makes every axis axis-error","fix":"lib/browser#restart","test":"browser~lazyBrowser.restart","ref":"g29 pr1"}
+{"id":"L-030","area":"visual","status":"fixed-in-code","sym":"Re-checking only failing pages misses new findings","fix":"visual/affected#dependentPages","test":"visual-round~fail closed","ref":"g30"}
+{"id":"L-031","area":"seed","status":"fixed-in-code","sym":"Category listing shows archived posts and foreign pages","fix":"seed#childPagesOutside","test":"seed~childPagesOutside","ref":"g31 pr2"}
+{"id":"L-032","area":"process","when":"always","sym":"Layout measured by hand misreads boxes","fix":"$ visual/layout-boxes.mjs before the layout lens","ref":"g32 pr2"}
+{"id":"L-033","area":"visual","status":"fixed-in-code","sym":"Contract's source address beat the run's","fix":"visual/visual-qa#sourceUrlOf","test":"visual-live-source~wins over","ref":"g33"}
+{"id":"L-034","area":"visual","status":"fixed-in-code","sym":"Label above a heading off-centre","fix":"visual/layout-boxes#label centre","test":"visual-layout-boxes~label centre","ref":"g34 pr3"}
+{"id":"L-035","area":"visual","status":"fixed-in-code","sym":"Animated pages differ between two measurements","fix":"lib/motion#freezeMotion","test":"motion~freezeMotion","ref":"g35 pr4"}
+{"id":"L-036","area":"visual","status":"fixed-in-code","sym":"Multi-line :is() split at every comma","fix":"visual/affected#splitSelectorList","test":"m1-regressions~top-level commas","ref":"g36"}
+{"id":"L-037","area":"quickstart","status":"fixed-in-code","sym":"Quickstart carries unused media and samples","fix":"quickstart/lib#classifyMedia","test":"m1-regressions~classifyMedia","ref":"g37 pr4"}
+{"id":"L-038","area":"quickstart","status":"fixed-in-code","sym":"Cycle dies late on a fact known early","fix":"quickstart/cycle#preflight","test":"quickstart-cycle~preflight","ref":"g38 pr4"}
+{"id":"L-039","area":"visual","status":"fixed-in-code","sym":"Bordered card missing on the site read as match","fix":"visual/layout-boxes#panel border","test":"m1-regressions~panel border","ref":"g39"}
+{"id":"L-040","area":"review","status":"fixed-in-code","sym":"No gate asks if links, forms and search work","fix":"review/functional#runFunctional","test":"functional~fails by name","ref":"g40 pr4"}
+{"id":"L-041","area":"visual","status":"fixed-in-code","sym":"motion.mjs blind to Tracy's motion library","fix":"lib/motion#TRACY_MOTION","test":"motion~TRACY_MOTION","ref":"g41 #5 pr6"}
+{"id":"L-042","area":"parity","status":"fixed-in-code","sym":"A correct /404 fails parity; functional skips it","fix":"lib/routes#declaredStatus","test":"functional~declared 404","ref":"g42 #7 pr11"}
+{"id":"L-043","area":"parity","status":"fixed-in-code","sym":"Renamed uploads read as missing images","fix":"http-parity#media-map","test":"http-parity-images~media-map","ref":"g43 #7 pr11"}
+{"id":"L-044","area":"review","status":"fixed-in-code","sym":"A missing named input read as empty","fix":"lib/routes#inputFile","test":"http-parity-inputs~--accept","ref":"g44 #7 pr11"}
+{"id":"L-045","area":"seed","status":"fixed-in-code","sym":"Category of child pages prints \"Nothing here yet.\"","fix":"seed#publishedPostCount","test":"seed~has no post query","ref":"g45 #9 pr12"}
+{"id":"L-046","area":"seed","status":"fixed-in-code","sym":"WordPress sample post/page still published","fix":"seed#installSamples","test":"seed-i18n~install samples","ref":"g46 #9 pr12"}
+{"id":"L-047","area":"seed","status":"fixed-in-code","sym":"Synthetic 404 gets no draft; template draws baked words","fix":"seed#notFoundDraft","test":"seed~notFoundDraft","ref":"g47 #7 #9 pr11 pr12"}
+{"id":"L-048","area":"ingest","when":"spec-list-class","sym":"Ingest drops the class of a <ul>/<ol>","fix":"lib/html-to-blocks#className","test":"html-to-blocks~list-special","ref":"g48 #9 pr12"}
+{"id":"L-049","area":"visual","status":"fixed-in-code","sym":"layout-boxes light only, exit 0 on differences","fix":"visual/layout-boxes#hooksOf","test":"visual-layout-boxes~theme dark","ref":"g49 #8 pr13"}
+{"id":"L-050","area":"review","status":"fixed-in-code","sym":"mega-hover clicked the label link and died","fix":"review/mega-hover#aria-expanded","test":"mega-hover~--trigger","ref":"g50 #8 pr13"}
+{"id":"L-051","area":"visual","status":"fixed-in-code","sym":"Parity read screen-reader words","fix":"visual/visual-qa#screen-reader-text","test":"visual-qa~screen-reader-text","ref":"g51 #8 pr13"}
+{"id":"L-052","area":"visual","status":"fixed-in-code","sym":"Hover scan hovered hidden links","fix":"visual/visual-qa#inPageHoverJump","test":"visual-qa~not show at rest","ref":"g52 #8 pr13"}
+{"id":"L-053","area":"visual","status":"fixed-in-code","sym":"A due lens skipped; deploy not refused","fix":"visual/rounds#missingLensNotes","test":"visual-round~failedStep","ref":"g53 #8 pr13"}
+{"id":"L-054","area":"seed","status":"fixed-in-code","sym":"Uploads image resolved by file name site-wide","fix":"seed#resolveMedia","test":"seed-identity~#14 item 1","ref":"g54 #14 pr16"}
+{"id":"L-055","area":"ingest","when":"spec-li-img","sym":"<img> inside <li> dropped by ingest","fix":"lib/html-to-blocks#convertHtml","test":"html-to-blocks~a list item","ref":"g55 #14 pr16"}
+{"id":"L-056","area":"seed","status":"fixed-in-code","sym":"Archive page took the footer's address as excerpt","fix":"seed#sectionsOfPage","test":"seed-identity~#14 item 6","ref":"g56 #14 pr16"}
+{"id":"L-057","area":"seed","status":"fixed-in-code","sym":"Image name equals a one-segment route","fix":"seed#checkMediaRoutes","test":"seed-identity~#14 item 8","ref":"g57 #14 pr16"}
+{"id":"L-058","area":"ingest","when":"spec-cat-slug","sym":"Categories sharing one slug merge into one term","fix":"ingest/from-joomla#wpSlug","test":"from-joomla~(#10)","ref":"g58 #10 pr16"}
+{"id":"L-059","area":"visual","status":"fixed-in-code","sym":"layout-boxes missed T4 section headings","fix":"visual/layout-boxes#t4-masthead","test":"visual-layout-boxes~T4 sections","ref":"g59 #15 pr17"}
+{"id":"L-060","area":"visual","status":"fixed-in-code","sym":"layout-boxes read the heading font, not the words","fix":"visual/layout-boxes#measureInPage","test":"visual-layout-boxes~the words","ref":"g60 #15 pr17"}
+{"id":"L-061","area":"visual","status":"fixed-in-code","sym":"Repeated CTA paired with another button","fix":"visual/visual-qa#pickSourceHit","test":"visual-qa~Learn more","ref":"g61 #15 pr17"}
+{"id":"L-062","area":"visual","status":"fixed-in-code","sym":"layout-boxes ignored the dark switch","fix":"visual/layout-boxes#hookFrom","test":"visual-layout-boxes~hookFrom","ref":"g62 #15 pr17"}
+{"id":"L-063","area":"visual","status":"fixed-in-code","sym":"Contract layout named a template not served","fix":"visual/contract#templateChecked","test":"visual-contract~templateChecked","ref":"g63 #15 pr17"}
+{"id":"L-064","area":"visual","status":"fixed-in-code","sym":"Lazy images below the fold blank in shots","fix":"visual/visual-qa#settle","test":"visual-qa~lazy pictures","ref":"#15 #19 pr24"}
+{"id":"L-065","area":"visual","status":"fixed-in-code","sym":"Dark tiers never shot the source in dark","fix":"visual/visual-qa#darkRequestHook","test":"visual-qa~source in dark","ref":"#19 pr24"}
+{"id":"L-066","area":"visual","status":"fixed-in-code","sym":"Dark scans not compared with the dark source","fix":"visual/visual-qa#sourceDark","test":"issue27~#27 item 2","ref":"#19 #27 pr24 pr30"}
+{"id":"L-067","area":"visual","status":"fixed-in-code","sym":"Two conflicting next steps after a churn round","fix":"visual/rounds#nextStep","test":"visual-rolling~#19 item 8","ref":"#19 pr26"}
+{"id":"L-068","area":"visual","status":"fixed-in-code","sym":"Text at 0 px or transparent counted as visible","fix":"visual/visual-qa#transparent","test":"issue27~#27 item 1","ref":"#27 pr30"}
+{"id":"L-069","area":"visual","status":"fixed-in-code","sym":"Interaction scans flip between runs","fix":"visual/visual-qa#tracy-motion-on","test":"issue27~#27 item 3","ref":"#27 pr30"}
+{"id":"L-070","area":"visual","status":"fixed-in-code","sym":"Repeated words paired with the source header button","fix":"visual/visual-qa#pickSourceHit","test":"issue27~#27 item 5","ref":"#27 pr30"}
+{"id":"L-071","area":"parity","status":"fixed-in-code","sym":"<aside> text dropped on one side only","fix":"lib/parity-extract#aside","test":"issue27~#27 item 8","ref":"#27 pr30"}
+{"id":"L-072","area":"visual","status":"fixed-in-code","sym":"round --pages measured nothing, said converged","fix":"visual/round#measuredPages","test":"issue27~#27 item 10","ref":"#27 pr30"}
+{"id":"L-073","area":"seed","status":"fixed-in-code","sym":"Two source fields on one line became two blocks","fix":"seed#applyComposed","test":"issue28~#28 item 4","ref":"#28 pr32"}
+{"id":"L-074","area":"seed","status":"fixed-in-code","sym":"Templates set on pages only, never on posts","fix":"seed#templateFor","test":"issue28~#28 item 6","ref":"#28 pr32"}
+{"id":"L-075","area":"seed","status":"fixed-in-code","sym":"Joomla authors not carried; bylines made users","fix":"seed#postAuthors","test":"issue28~#28 item 7","ref":"#28 pr32"}
+{"id":"L-076","area":"seed","status":"fixed-in-code","sym":"Category archive fixed at 12 per page","fix":"seed#perPage","test":"issue28~#28 item 9","ref":"#28 pr32"}
+{"id":"L-077","area":"quickstart","status":"fixed-in-code","sym":"prune listed sticky posts as trash","fix":"quickstart/prune-audit#collectFacts","test":"package-prune-regressions~sticky","ref":"#29 pr31"}
+{"id":"L-078","area":"package","status":"fixed-in-code","sym":"Runner stderr parsed as values","fix":"package#stdout","test":"package-prune-regressions~compose status","ref":"#29 pr31"}
+{"id":"L-079","area":"package","status":"fixed-in-code","sym":"Core update-check warning blamed on the theme","fix":"package#update","test":"package-prune-regressions~update check","ref":"#29 pr31"}
+{"id":"L-080","area":"seed","status":"fixed-in-code","sym":"<img> in post markup never imported","fix":"seed#collectImages","test":"issue33~M6-1","ref":"#33 pr35"}
+{"id":"L-081","area":"seed","status":"fixed-in-code","sym":"Old page at a single view's path shadows the post","fix":"seed#articleId","test":"issue33~M6-2","ref":"#33 pr35"}
+{"id":"L-082","area":"seed","status":"fixed-in-code","sym":"Article fields could not become post meta","fix":"seed#meta","test":"issue33~M6-3","ref":"#33 pr35"}
+{"id":"L-083","area":"ingest","status":"fixed-in-code","sym":"Image in a centred paragraph lost its centring","fix":"lib/html-to-blocks#center","test":"issue33~M6-4","ref":"#33 pr35"}
+{"id":"L-084","area":"ingest","status":"fixed-in-code","sym":"Template category blog read as a list, unpaged","fix":"ingest/from-joomla#layout_type","test":"issue33~M6-5","ref":"#33 pr35"}
+{"id":"L-085","area":"seed","status":"fixed-in-code","sym":"\"More Articles\" list of a category blog not drawn","fix":"seed#moreArticles","test":"issue33~M6-6","ref":"#33 pr35"}
+{"id":"L-086","area":"quickstart","status":"fixed-in-code","sym":"prune removed seeded authors, skipped drafts","fix":"quickstart/lib#SEEDED_AUTHOR_META","test":"issue33~M6-7","ref":"#33 pr35"}
+{"id":"L-087","area":"seed","status":"fixed-in-code","sym":"Featured image matched by name; lead dropped","fix":"lib/post-content#articleHead","test":"issue33~M6-8","ref":"#33 pr35"}
+{"id":"L-088","area":"seed","when":"spec-post-template","sym":"Post template declared for pages only","fix":"$ customTemplates postTypes add \"post\"","test":"issue33~M6-9","ref":"#33 pr35"}
+{"id":"L-089","area":"quickstart","when":"pack-modes","sym":"Pack members others cannot read","fix":"quickstart/lib#auditArchiveMembers","test":"quickstart-permissions~cannot read","ref":"#34 pr38"}
+{"id":"L-090","area":"form","status":"fixed-in-code","sym":"CF7 required * printed as plain label text","fix":"lib/form-embed#REQUIRED_MARK","test":"issue37~M6-11","ref":"#37 pr40"}
+{"id":"L-091","area":"seed","status":"fixed-in-code","sym":"<br> in a section field dropped or escaped","fix":"lib/block-fill#breaksAsMarkup","test":"issue37~M6-12","ref":"#37 pr40"}
+{"id":"L-092","area":"parity","status":"fixed-in-code","sym":"Source font smoothing not compared","fix":"visual/visual-qa#bodyRenderingFindings","test":"issue37~M6-13","ref":"#37 pr40"}
+{"id":"L-093","area":"visual","status":"fixed-in-code","sym":"Container breakpoints between 390 and 1440 unmeasured","fix":"visual/visual-qa#containerFindings","test":"issue37~M6-14","ref":"#37 pr40"}
+{"id":"L-094","area":"ingest","status":"fixed-in-code","sym":"Trashed categories joined slug groups","fix":"lib/joomla-inventory#categories","test":"from-joomla~#18 item 1","ref":"#18 pr21"}
+{"id":"L-095","area":"ingest","when":"spec-img-pct","sym":"Image file names kept percent-encoded (%20)","fix":"lib/html-to-blocks#decodeUrlPath","test":"html-to-blocks~#18 item 2","ref":"#18 pr21"}
+{"id":"L-096","area":"ingest","status":"fixed-in-code","sym":"T4 module spacing dropped from sections","fix":"ingest/from-joomla#spacing","test":"from-joomla~#18 item 4","ref":"#18 pr21"}
+{"id":"L-097","area":"seed","status":"fixed-in-code","sym":"Archive page ignored menu item display options","fix":"seed#buildArchiveContent","test":"seed~#18 item 5","ref":"#18 pr21"}
+{"id":"L-098","area":"quickstart","status":"fixed-in-code","sym":"Pack shipped stand-only root files, defines","fix":"quickstart/lib#rootStrangers","test":"quickstart~refuses a root entry","ref":"pr25"}
+{"id":"L-099","area":"visual","status":"fixed-in-code","sym":"Cancel killed Chromium before visual-qa","fix":"visual/round#SIGTERM","test":"visual-rolling~SIGTERM","ref":"pr26"}
+{"id":"L-100","area":"process","when":"always","sym":"Lens subagents on a cheaper model miss real differences","fix":"$ lens chunks on the main model","ref":"pr36 pr39"}
+{"id":"L-101","area":"seed","status":"fixed-in-code","sym":"Child pages in insertion order, not the source's","fix":"seed#pageMenuOrder","test":"seed~pageMenuOrder numbers child pages","ref":"g46 #9 pr12"}
+{"id":"L-102","area":"ingest","status":"fixed-in-code","sym":"Layout-override article fields not exported","fix":"ingest/from-joomla#checkArticleFields","test":"from-joomla~editable blocks","ref":"g48 #9 pr12"}
+{"id":"L-103","area":"ingest","status":"fixed-in-code","sym":"Subform image drawn where layout prints a number","fix":"ingest/from-joomla#__number","test":"from-joomla~numbers the rows","ref":"g55 #14 pr16"}
+{"id":"L-104","area":"theme","when":"spec-template-file","sym":"Declared page template has no file in the theme","fix":"$ add templates/<name>.html or drop the declaration","ref":"g63 #15 pr17"}
+{"id":"L-105","area":"visual","status":"fixed-in-code","sym":"Missing layout template read as drawing nothing","fix":"visual/fast-gate#layoutComponents","test":"visual-fast-gate~drawing nothing","ref":"g63 #15 pr17"}
+{"id":"L-106","area":"visual","status":"fixed-in-code","sym":"Parity paired a pill span with its heading","fix":"visual/visual-qa#pill","test":"visual-qa~one that paints it","ref":"g51 #8 pr13"}
+{"id":"L-107","area":"seed","status":"fixed-in-code","sym":"Pages seeded without their featured image","fix":"seed#pageThumb","test":"seed-identity~becomes its _thumbnail_id","ref":"g31 pr2"}
+{"id":"L-108","area":"visual","status":"fixed-in-code","sym":"Freeze leaves Tracy reveals hidden","fix":"lib/motion#freezeMotion","test":"motion~frozen, a Tracy page shows","ref":"g41 #5 pr6"}
+{"id":"L-109","area":"visual","status":"fixed-in-code","sym":"A loop that is never rendered counted","fix":"lib/motion#rendered","test":"motion~a loop that is not rendered","ref":"g41 #5 pr6"}
+{"id":"L-110","area":"visual","status":"fixed-in-code","sym":"Carousel labelled nav from a <body> class","fix":"lib/motion#:scope","test":"motion~never through <body> classes","ref":"g41 #5 pr6"}
+{"id":"L-111","area":"review","status":"fixed-in-code","sym":"Post-content copy blamed on a template","fix":"review/editability#POST_CONTENT","test":"editability~not blamed on a template","ref":"g44 #7 pr11"}
+{"id":"L-112","area":"visual","status":"fixed-in-code","sym":"Failed mega walk lost exit status, stderr","fix":"visual/visual-qa#megaScanOf","test":"visual-qa~keeps its exit status","ref":"g50 #8 pr13"}
+{"id":"L-113","area":"visual","status":"fixed-in-code","sym":"Contract hard-coded Tracy mega selectors","fix":"visual/contract#megaOf","test":"visual-contract~mega selectors from","ref":"g50 #8 pr13"}
+{"id":"L-114","area":"visual","status":"fixed-in-code","sym":"review.md, visual-qa.md: two stage orders","fix":"visual/contract#STAGES","test":"lessons-catalog~stage order","ref":"g53 #8 pr13"}
+{"id":"L-115","area":"visual","status":"fixed-in-code","sym":"scan:hover-* counted as churn","fix":"visual/rounds#isPointer","test":"visual-round~hover-* kind is a pointer","ref":"g52 #8 pr13"}
+{"id":"L-116","area":"visual","status":"fixed-in-code","sym":"Contract identity: listing on a served page","fix":"visual/contract#real?.served","test":"visual-contract~built as a page","ref":"g45 #9 pr12"}
+{"id":"L-117","area":"ingest","status":"fixed-in-code","sym":"archives[] had no masthead excerpt","fix":"ingest/from-joomla#mastheadFor","test":"from-joomla~carries the masthead","ref":"g56 #14 pr16"}
+{"id":"L-118","area":"visual","status":"fixed-in-code","sym":"bright-border not compared to source","fix":"review/border-scan#sourceCounterpart","test":"review-scan~border the source draws","ref":"#19 #27 pr24 pr30"}

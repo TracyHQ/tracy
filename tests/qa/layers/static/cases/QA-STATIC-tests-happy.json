@@ -1,0 +1,30 @@
+{
+  "id": "QA-STATIC-tests-happy",
+  "itemIds": ["gate:tests"],
+  "requirement": "Gate tests (scripts/check-tests.ts) exits 0 on the current tree and goes red on a tree that breaks the rule it enforces.",
+  "oracle": {
+    "source": "CLAUDE.md",
+    "ref": "§6 gates",
+    "invariant": "Every test file belongs to exactly one run group and every group is green.",
+    "productSources": ["scripts/check-all.ts:279", "scripts/check-tests.ts:40"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": ["node", "tsx (node_modules)", "heavy-gate:tests"],
+  "assertionIds": ["static.tests.exit-0"],
+  "redProof": null,
+  "legacyIds": [],
+  "gate": "tests",
+  "command": ["pnpm", "exec", "tsx", "scripts/check-all.ts", "--only", "tests"],
+  "successMarker": "check-all: 1 gate(s) passed",
+  "gateScript": "scripts/check-tests.ts",
+  "mode": "heavy",
+  "mutations": []
+}

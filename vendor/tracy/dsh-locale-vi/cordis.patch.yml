@@ -1,0 +1,6 @@
+# dsh bundle patch: mounts the Vietnamese language pack into a profile's layer
+# stack. `dsh-locale-vi` is a browser-side row (its host half is an empty
+# apply), so it needs no config and no inject.
+- insert:
+    - id: locale-vi
+      name: 'dsh-locale-vi'

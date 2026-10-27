@@ -1,0 +1,40 @@
+{
+  "id": "REG-060",
+  "kind": "feat",
+  "title": "Comment badge: the Comments card, the Comments tab pill and the Browser toolbar button show the OPEN thread count in grey and wear a red dot only while the viewer has an unread open thread; opening the thread clears the dot and keeps the number",
+  "pr": 858,
+  "area": "comments/badge",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner", "seat:editor"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, DSH, A (owner) and B (editor) with cookies COOKIE_A, COOKIE_B, api, pq. Case variable: KEY = (prefer a WordPress site, e.g. r1w1734, whose home page answers 200 through Chrome within 10 s; never an EmDash site that answered 502 or timed out earlier in this run) a site key where both A and B hold accepted seats (from GET /api/team as A and as B). Record BEFORE_OPEN = the number of rows of api a GET /api/sites/KEY/comments whose status !== 'resolved', deletedAt === null and replyTo === null.",
+    "Check the build: docker exec $DSH grep -c 'data-tracy-unread' /desk-home/profiles/native/node_modules/@tracy/dsh-chat-input/lib/client.js must print a number >= 1; otherwise stop with BLOCKED note image-without-unread-dot.",
+    "Seed: as B, api b POST /api/sites/KEY/comments with body {\"url\": ORIGIN-of-the-site's home page as the Browser tab opens it (the site's address from GET /api/sites, path '/'), \"element\": null, \"locate\": null, \"text\": \"REG-056 <ISO now>: a page comment from B\"} -> record NEW_ID = comment.id; HTTP must be 200/201. EXPECT_OPEN = BEFORE_OPEN + 1.",
+    "Browser as A: connect Playwright over CDP as the README says (never chromium.launch()); NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}} with cookie tracy_sess = COOKIE_A. page.goto(ORIGIN + '/' + KEY + '/?open=browser&page=%2F&mode=interactive') — a fresh session shows the start screen. Wait (<= 90 s) for .tv-start-card and until the Comments card's .tv-start-card-count exists and the read marks are in: poll (<= 60 s) until the card's .tv-start-card-count has attribute data-dot (B's new comment is unread for A). Record CARD_1 = {text, dot: hasAttribute('data-dot'), background: getComputedStyle(el).backgroundColor, title: el.getAttribute('title') || el.getAttribute('aria-label')}.",
+    "Click the Comments card. Wait (<= 30 s) for [data-conversation-tabs] [role='tab'][data-tracy-count]. Record PILL_1 = {count: data-tracy-count, unread: data-tracy-unread (or null), aria: aria-label or title} of the tab whose text starts with 'Comments'. Record FILTER_1 = the text and data-dot of the 'All pages' pill (.tv-cv-pill whose text starts with 'All pages').",
+    "Browser toolbar: the Browser tab's Comments button (fork dsh-better-sidebar, selector [class*='commentsCount'] or the button whose accessible name starts with 'Comments'): record TOOLBAR_1 (the page must be opened with ?open=browser&page=%2F so the Browser tab and its toolbar are on screen; wait up to 20 s, polling every second, for a button whose accessible name starts with \"Comments\" inside the Browser toolbar before reading it — the toolbar mounts after the page) = {text of the count, dot: the count element hasAttribute('data-dot'), aria-label}.",
+    "Open the thread: in the Comments view switch to 'All pages' if the new comment's page is not the current one, expand its page group if collapsed, and click the row of NEW_ID (the row whose text contains 'REG-056'). Wait (<= 15 s) for a POST /api/sites/KEY/comments/NEW_ID/read request to answer 200 (log requests), then poll (<= 20 s) until the Comments tab pill has no data-tracy-unread attribute. Record PILL_2 and TOOLBAR_2 the same way as step 5/6, and CARD_2 after pressing the site chip's start screen is not required — instead record pq \"select seen_n is not null from site_comment_read where comment_id = '<NEW_ID>'\" as READ_ROW.",
+    "Mark as unread (first make the row visible: switch to All pages if needed and expand its page group if it is collapsed — the same way the thread was opened; the row menu is .tv-ci-corner button[aria-label=\"More actions\"], never the first More actions button of the page) : in the open thread/row use the 'Mark as unread' action (the row's or card's menu); wait for POST /api/sites/KEY/comments/NEW_ID/unread -> 200; poll (<= 20 s) until the pill has data-tracy-unread again. Record PILL_3.",
+    "Clean up: as B, api b DELETE /api/sites/KEY/comments/NEW_ID (soft delete) -> 200.",
+    "Helper: GREY = the computed background of CARD_1 must NOT equal the primary terracotta rgb(191, 91, 61) and must equal getComputedStyle(document.documentElement).getPropertyValue('--muted') resolved, or at least differ from --primary; record both."
+  ],
+  "expect": [
+    "The build check prints a count >= 1.",
+    "CARD_1.text === String(EXPECT_OPEN) (the number is the OPEN thread count, not the unread count), CARD_1.dot === true, CARD_1.background is not the primary terracotta (grey), CARD_1.title contains '1 unread' or 'unread'.",
+    "PILL_1.count === String(EXPECT_OPEN), PILL_1.unread is a string >= '1', PILL_1.aria contains 'Comments', EXPECT_OPEN and 'unread'. FILTER_1 text ends with EXPECT_OPEN and has data-dot.",
+    "TOOLBAR_1.text === String(EXPECT_OPEN) and TOOLBAR_1.dot === true (the fork reads {count, open} from tracy:comment-unread).",
+    "After opening the thread: READ_ROW === 't'; PILL_2.count === String(EXPECT_OPEN) (unchanged) and PILL_2.unread === null; TOOLBAR_2.text === String(EXPECT_OPEN) and TOOLBAR_2.dot === false.",
+    "After Mark as unread: PILL_3.unread is a string >= '1' and PILL_3.count === String(EXPECT_OPEN).",
+    "No page error or console.error on the dsh pages whose message names tracy-chat-input, @tracy/core or dsh-better-sidebar, and no HTTP >= 400 to /api/sites/KEY/comments (any sub-path) (chrome-watch --errors --page KEY --json after the loads). Requests of the site’s own origin (KEY:8080 pages and assets, net::ERR_CACHE_MISS on back/forward, third-party analytics ERR_ABORTED) and errors of other doors are the site’s or another line’s: list them in the notes, do not fail on them."
+  ],
+  "selectors": {
+    "chatInputBuild": "/desk-home/profiles/native/node_modules/@tracy/dsh-chat-input/lib/client.js (dsh container)",
+    "card": ".tv-start-card .tv-start-card-count[data-dot]",
+    "pill": "[data-conversation-tabs] [role='tab'][data-tracy-count][data-tracy-unread]",
+    "filterPill": ".tv-cv-pill[data-dot]",
+    "toolbar": "fork dsh-better-sidebar CommentsButton, count element [class*='commentsCount'][data-dot]",
+    "doors": "GET /api/sites/:key/comments · GET /api/sites/:key/comments/reads · POST /api/sites/:key/comments/:id/read · POST …/:id/unread · window event tracy:comment-unread {count, open}"
+  },
+  "fence": "comment-view.mjs commentBadge(snapshot) → {open, unread}: open = badgeCount (open root threads site-wide), unread = unreadBadge (null until the read marks are in); the start card, the tab pill (data-tracy-count / data-tracy-unread) and comment-unread.mjs (tracy:comment-unread {count, open}, emitted when either number changes) all read it; the fork's CommentsButton draws open and a dot while count > 0, falling back to count only when open is absent."
+}

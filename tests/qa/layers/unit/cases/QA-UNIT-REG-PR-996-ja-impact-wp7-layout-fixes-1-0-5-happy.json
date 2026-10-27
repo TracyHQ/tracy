@@ -1,0 +1,44 @@
+{
+  "id": "QA-UNIT-REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5-happy",
+  "itemIds": ["regression:REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5"],
+  "requirement": "JA Impact wp7 1.0.5: page heights and layout match the Joomla source on the donations, contact, charity, author, blog and home views at phone and tablet widths",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5.json",
+    "ref": "PR #996 (fix); fix evidence: Full site sweep of 07/10/2026 against the local Joomla source stand on the clean restore of the packed 1.0.5 site: 11/11, heights 0 open and 22 accepted, 0 not measured; the 1.0.4 baseline failed overflow, background, fixed-widgets and heights",
+    "invariant": "S1: style.css reads Version: 1.0.5 once; the shipped theme and the overlay both hold the seven rules (donations footer columns, 94 px header bar, contact card title spacing, contact stack gap, author list row gap, donations pager counter, typography demo margin). S2: the measure names site-sweep.mjs, its zip sha256 equals the SHA256SUMS line of wp-ja-impact-1.0.5.zip, 11/11 checks pass, heights has 0 defects, and the baseline (1.0.4) had heights failing.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5.mjs:18 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5.mjs:23 packages/cms/tracy-wordpress-theme/src/wp-ja-impact/style.css has no code line to point at"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5",
+    "pr": 996,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-impact",
+    "file": "tests/regression/cases/REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

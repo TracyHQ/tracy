@@ -1,0 +1,54 @@
+{
+  "color": {
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Page background, card surfaces, negative space"
+    },
+    "lamp-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Lamp Black — Primary text, card and nav borders, link color — the only structural color in the system"
+    },
+    "ash-gray": {
+      "$value": "#dddddd",
+      "$type": "color",
+      "$description": "Ash Gray — Hairline dividers, subtle surface separation"
+    },
+    "concrete-gray": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Concrete Gray — Secondary borders, input outlines, disabled states"
+    },
+    "smoke-gray": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Smoke Gray — Muted helper text, metadata captions, placeholder labels"
+    },
+    "graphite": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Graphite — Secondary captions, timestamps, de-emphasized metadata"
+    },
+    "iron-gray": {
+      "$value": "#aaaaaa",
+      "$type": "color",
+      "$description": "Iron Gray — Tertiary captions, breadcrumb separators, fine print"
+    }
+  },
+  "font": {
+    "mediumllweb": {
+      "$value": "MediumLLWeb",
+      "$type": "fontFamily",
+      "$description": "All text across the site — UI, body, and display. A single neo-grotesque custom face from Production Type carrying every typographic role. Weight 400 is the default for body and navigation; weight 500 is reserved for artist names, prices, and emphasis in card metadata. Display sizes (48–72px) use the same 400 weight with tight line-height (1.00–1.15) to create the measured, catalog-page cadence."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.platformart.com",
+      "siteName": "PLATFORM",
+      "extractedAt": "2026-06-03T19:28:05.314Z",
+      "variant": "compact"
+    }
+  }
+}

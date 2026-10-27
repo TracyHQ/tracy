@@ -1,0 +1,79 @@
+{
+  "color": {
+    "coral-rose": {
+      "$value": "#ea587d",
+      "$type": "color",
+      "$description": "Coral Rose — Accent for heading text, hairline borders, and active-state markers — the single chromatic signal in an otherwise achromatic system"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, and inverted backgrounds"
+    },
+    "cloud": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Cloud — Pill nav background, subtle surface elevation, and inset border shadows"
+    },
+    "bone": {
+      "$value": "#d9d8d4",
+      "$type": "color",
+      "$description": "Bone — Warm-toned secondary surface tint for alternating bands"
+    },
+    "char": {
+      "$value": "#282828",
+      "$type": "color",
+      "$description": "Char — Primary text, body copy, and most interface strokes"
+    },
+    "ink": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Ink — Heavier headings, body text, and prominent borders"
+    },
+    "black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Black — Maximum-emphasis text, logo wordmark, and strong border lines"
+    },
+    "fog": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Fog — Muted helper text and disabled-state strokes"
+    },
+    "mist": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Mist — Lowest-emphasis borders and decorative dividers"
+    }
+  },
+  "font": {
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "System-font fallback for body text and rendering across platforms. Used wherever native OS fonts provide a reliable, performance-optimized default at body size."
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Primary display and UI typeface. The 300 weight at micro sizes (8–10px) creates whisper-quiet labels; the negative letter-spacing (-0.056em at 8px, -0.037em at 10px) tightens small type into dense, confident blocks. 400 at 16–18px serves body and subheadings with -0.025em to -0.011em tracking."
+    },
+    "wtqc-custom-display": {
+      "$value": "wtqc (custom display)",
+      "$type": "fontFamily",
+      "$description": "Reserved for prominent display headings (30px, 1.07 line-height, -0.033em tracking) and compact labels (12px, 1.33 line-height). The tight 1.07 line-height on the 30px size gives headings a condensed, editorial feel."
+    },
+    "custom166638": {
+      "$value": "custom_166638",
+      "$type": "fontFamily",
+      "$description": "custom_166638 — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://aaronpoeandco.com",
+      "siteName": "Aaron Poe & Co",
+      "extractedAt": "2026-06-03T20:57:46.568Z",
+      "variant": "compact"
+    }
+  }
+}

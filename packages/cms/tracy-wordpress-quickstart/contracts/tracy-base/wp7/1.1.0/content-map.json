@@ -1,0 +1,154 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "What a Build may write into a restored Tracy Base site, and where each value lands. Entities are located by identity (an option name, a theme mod, a synced pattern's slug), never by post id. A block inside a pattern is located by its metadata.name — the convention of overlays/tracy-base/patterns.map.json — never by position. `input` names the customer input the seeder fills the slot from (packages/cms/tracy-seeder/src/apply-wordpress-contract.mjs); a slot whose input is absent keeps the quickstart's own words.",
+  "entities": [
+    {
+      "key": "option-blogname",
+      "kind": "option",
+      "identity": { "name": "blogname" },
+      "initial": "Tracy Base"
+    },
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": { "name": "blogdescription" },
+      "initial": "A studio demo of the Tracy Base design"
+    },
+    {
+      "key": "theme-mod-custom_logo",
+      "kind": "themeMod",
+      "identity": { "theme": "tracy-base", "name": "custom_logo" },
+      "initial": null
+    },
+    {
+      "key": "option-tracy_contact_phone",
+      "kind": "option",
+      "identity": { "name": "tracy_contact_phone" },
+      "initial": ""
+    },
+    {
+      "key": "option-tracy_contact_address",
+      "kind": "option",
+      "identity": { "name": "tracy_contact_address" },
+      "initial": ""
+    },
+    {
+      "key": "pattern-contact-information",
+      "kind": "syncedPattern",
+      "identity": { "postType": "wp_block", "slug": "contact-information" },
+      "pattern": "tracy-base/section-contact-information"
+    },
+    {
+      "key": "pattern-home-hero",
+      "kind": "syncedPattern",
+      "identity": { "postType": "wp_block", "slug": "home-hero" },
+      "pattern": "tracy-base/section-hero-split"
+    }
+  ],
+  "slots": [
+    {
+      "key": "site.name",
+      "entity": "option-blogname",
+      "target": { "option": "blogname" },
+      "type": "text",
+      "sample": "Tracy Base",
+      "maxCharacters": 80,
+      "input": "name",
+      "label": "Site name"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": { "option": "blogdescription" },
+      "type": "text",
+      "sample": "A studio demo of the Tracy Base design",
+      "maxCharacters": 160,
+      "input": "tagline",
+      "label": "Tagline"
+    },
+    {
+      "key": "site.logo",
+      "entity": "theme-mod-custom_logo",
+      "target": { "themeMod": "custom_logo" },
+      "type": "image",
+      "sample": "",
+      "maxCharacters": 255,
+      "input": "logo",
+      "label": "Logo",
+      "note": "An attachment id in theme_mods_tracy-base.custom_logo. The seat door has media.upload but no theme-mod write yet; the seeder reports this slot as not written rather than guessing."
+    },
+    {
+      "key": "contact.email",
+      "entity": "pattern-contact-information",
+      "target": { "block": "contact-information.email", "attr": "content" },
+      "type": "text",
+      "sample": "hello@example.com",
+      "maxCharacters": 120,
+      "input": "contact.email",
+      "label": "Contact email",
+      "note": "Plain text; the pattern wraps a real address in mailto: itself (patterns.map.json rule)."
+    },
+    {
+      "key": "contact.phone",
+      "entity": "option-tracy_contact_phone",
+      "target": { "option": "tracy_contact_phone" },
+      "type": "text",
+      "sample": "",
+      "maxCharacters": 40,
+      "input": "contact.phone",
+      "label": "Contact phone",
+      "note": "Tracy Base's contact-information pattern has no phone block (patterns.map.json: heading, email-label, email, notice). Kept as an option the theme can read; not rendered by the theme (1.0.0, 1.1.0) — recorded in README as a gap."
+    },
+    {
+      "key": "contact.address",
+      "entity": "option-tracy_contact_address",
+      "target": { "option": "tracy_contact_address" },
+      "type": "text",
+      "sample": "",
+      "maxCharacters": 200,
+      "input": "contact.address",
+      "label": "Contact address",
+      "note": "Same as contact.phone: no block in the pattern; an option, not rendered by the theme (1.0.0, 1.1.0)."
+    },
+    {
+      "key": "home.hero.heading",
+      "entity": "pattern-home-hero",
+      "target": { "block": "hero.title", "attr": "content" },
+      "type": "text",
+      "sample": "Design that earns attention",
+      "maxCharacters": 90,
+      "input": "hero.heading",
+      "label": "Front page hero heading"
+    },
+    {
+      "key": "home.hero.paragraph",
+      "entity": "pattern-home-hero",
+      "target": { "block": "hero.lead", "attr": "content" },
+      "type": "text",
+      "sample": "Tracy Base is a studio demo. Company details, testimonials and figures are illustrative.",
+      "maxCharacters": 320,
+      "input": "hero.paragraph",
+      "label": "Front page hero paragraph"
+    },
+    {
+      "key": "home.hero.cta.label",
+      "entity": "pattern-home-hero",
+      "target": { "block": "hero.btn-1", "attr": "text" },
+      "type": "text",
+      "sample": "Talk to sales",
+      "maxCharacters": 40,
+      "input": "cta.label",
+      "label": "Front page call to action"
+    },
+    {
+      "key": "home.hero.cta.link",
+      "entity": "pattern-home-hero",
+      "target": { "block": "hero.btn-1", "attr": "url" },
+      "type": "url",
+      "sample": "/contact/",
+      "maxCharacters": 2048,
+      "input": "cta.link",
+      "label": "Front page call to action link"
+    }
+  ]
+}

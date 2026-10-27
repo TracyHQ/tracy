@@ -1,0 +1,460 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-tour/j6/1.0.5",
+  "baseHash": "39856fee047d81f65de4aaeca7087bab3137bc83e26ee8b6dfee799dd8797ad0",
+  "baseFiles": {
+    "manifest.json": "94bddc1708c7679eabd56c4f0f03c756614f9d01091e1e49efb298cdbc94a569",
+    "content-map.json": "e619a043550c9879a217a5942a58d9856e28af51c1da390fbecec4cb105aebc9",
+    "presentation-lock.json": "227d76d6f87a688a4ea313ca973948d94b96ad9487c4cf6be73d1cd1b7b590c0"
+  },
+  "inputs": {},
+  "decisionsHash": "8a8e8dc9ad82943e04c260ba3ef8601a923fd3c794a84f4f9b539aa0b1aa8014",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-118",
+      "identity": {
+        "path": "pages/joomla-content",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Joomla Content",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-119",
+      "identity": {
+        "path": "pages/joomla-content/category-blog",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Category Blog",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-120",
+      "identity": {
+        "path": "pages/joomla-content/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-121",
+      "identity": {
+        "path": "pages/joomla-content/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-122",
+      "identity": {
+        "path": "pages/joomla-content/typography",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla Content\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-126",
+      "identity": {
+        "path": "pages/other-pages/error-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-127",
+      "identity": {
+        "path": "pages/other-pages/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-177",
+      "identity": {
+        "path": "homepage/home-default",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home Default",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/homepage"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/homepage",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "Your Profile",
+      "where": "usermenu/your-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Site Administrator",
+      "where": "usermenu/2013-11-16-23-26-41",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Submit an Article",
+      "where": "usermenu/submit-an-article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Template Settings",
+      "where": "usermenu/template-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Site Settings",
+      "where": "usermenu/site-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "About Us",
+      "where": "mainmenu/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-109",
+      "label": "Tours",
+      "where": "mainmenu/tours",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-110",
+      "label": "Travel",
+      "where": "mainmenu/travel-guide",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-111",
+      "label": "Pages",
+      "where": "mainmenu/pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-112",
+      "label": "Contact",
+      "where": "mainmenu/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "User Page",
+      "where": "mainmenu/pages/user-page",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-114",
+      "label": "Login",
+      "where": "mainmenu/pages/user-page/login",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-115",
+      "label": "Registration",
+      "where": "mainmenu/pages/user-page/registration",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-116",
+      "label": "User Profile",
+      "where": "mainmenu/pages/user-page/user-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Privacy",
+      "where": "mainmenu/pages/user-page/privacy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-123",
+      "label": "Other Pages",
+      "where": "mainmenu/pages/other-pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-125",
+      "label": "Smart Search",
+      "where": "mainmenu/pages/other-pages/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-150",
+      "label": "London",
+      "where": "destinations/london",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-151",
+      "label": "California",
+      "where": "destinations/california",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-152",
+      "label": "Indonesia",
+      "where": "destinations/indonesia",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-153",
+      "label": "Oceania",
+      "where": "destinations/oceania",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-154",
+      "label": "Europe",
+      "where": "destinations/europe",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-155",
+      "label": "Home",
+      "where": "quick-link/home-ft",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-157",
+      "label": "About Us",
+      "where": "quick-link/about-us-ft",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-158",
+      "label": "Tour",
+      "where": "quick-link/tour-ft",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-159",
+      "label": "Services",
+      "where": "quick-link/services-ft",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-160",
+      "label": "Contact",
+      "where": "quick-link/contact-ft",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-161",
+      "label": "Booking",
+      "where": "partners/booking",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-163",
+      "label": "RentalCar",
+      "where": "partners/rentalcar",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-164",
+      "label": "HostelWorld",
+      "where": "partners/hostelworld",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-165",
+      "label": "Trivago",
+      "where": "partners/trivago",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-166",
+      "label": "TripAdvisor",
+      "where": "partners/tripadvisor",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-171",
+      "label": "Tours",
+      "where": "mainmenu/tours/tours-list",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-172",
+      "label": "Alaska",
+      "where": "mainmenu/tours/tours-list/alaska",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-173",
+      "label": "Asia",
+      "where": "mainmenu/tours/tours-list/asia",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-174",
+      "label": "Australia",
+      "where": "mainmenu/tours/tours-list/australia",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-175",
+      "label": "Bermuda",
+      "where": "mainmenu/tours/tours-list/bermuda",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-176",
+      "label": "Central America",
+      "where": "mainmenu/tours/tours-list/central-america",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-269",
+      "label": "Username Reminder Request",
+      "where": "usermenu/username-reminder-request",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=remind): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-270",
+      "label": "Password Reset",
+      "where": "usermenu/password-reset",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=reset): a working feature stays unless decided"
+    },
+    {
+      "key": "module-108",
+      "label": "Destinations",
+      "where": "mod_menu@footnav-1",
+      "rule": "keep.default",
+      "reason": "renders destinations: 5 entries stay"
+    },
+    {
+      "key": "module-109",
+      "label": "Quick Links",
+      "where": "mod_menu@footnav-2",
+      "rule": "keep.default",
+      "reason": "renders quick-link: 5 entries stay"
+    },
+    {
+      "key": "module-110",
+      "label": "Partners",
+      "where": "mod_menu@footnav-3",
+      "rule": "keep.default",
+      "reason": "renders partners: 5 entries stay"
+    },
+    {
+      "key": "module-135",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 19 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 8,
+    "modules": 0,
+    "kept": 45,
+    "unresolved": 0
+  }
+}

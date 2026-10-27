@@ -1,0 +1,67 @@
+{
+  "id": "REG-PR-1168-changelog-source",
+  "kind": "feat",
+  "title": "Desktop release notes come from one docs changelog page: prepare reads it at the release sha, publish waits for the docs host (which serves the page as raw markdown too), each build carries its own notes",
+  "pr": 1168,
+  "area": "desktop/release",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test on packages/desktop/tracy-desktop/test/release-notes-page.test.mjs and draft-release-notes.test.mjs (page format, notes of a minor and of a patch, bundle notes, the draft).",
+    "S2: Run node --test on packages/desktop/tracy-desktop/test/release.test.mjs (prepare reads the page at the sha; publish checks the docs host with a fake fetch).",
+    "S3: Run node --test on apps/tracy-docs/test/changelog-desktop.test.mjs (every committed changelog/desktop page passes the release rules).",
+    "S4: Run node --test on apps/tracy-docs/test/raw-changelog.test.mjs and apps/tracy-web/test/docs-host.test.mjs (the build copies each changelog page as raw markdown; the docs host serves it)."
+  ],
+  "expect": [
+    "S1: a minor release ships the page's Highlights, a patch its own ## X.Y.Z section without the 'Released' line; a page of another minor, a missing or empty section give no notes; a line naming a third party ('Bump dsh-passwords 2.7.7') or not in English, front matter without slug changelog/desktop/X.Y or with an unquoted version, more than 5 Highlights are problems; the draft never overwrites a page or section without --force; bundle notes are release-notes.txt + release-notes.json { version, page, docsOrigin }.",
+    "S2: stable prepare without the page section for its version (no page, no ## X.Y.Z, a page with 'Bump dsh-passwords') is refused before checkout and build, naming file and section; --notes is refused for stable; a dev build warns and ships the PR notes; the manifest records notes.source 'docs changelog/desktop/X.Y.md#<section>@<sha>' and notes.contentSha256; the build gets the frozen notes; stable publish is refused with 'deploy docs first' when the docs host does not answer 200 for /changelog/desktop/X.Y/ and X.Y.md or serves another text, with nothing written; --skip-docs-check is refused for stable; a real store refuses another docs origin than its channel's.",
+    "S3: every committed page passes; a copy with 'Bump dsh-passwords 2.7.7' fails.",
+    "S4: the build writes changelog/desktop/X.Y.md for every X.Y.md page and nothing else, without front matter, the rest verbatim with its _(Desktop only)_ badges; the release tooling reads the same notes for every version from the copy as from the page; publish's docs check accepts a host serving the copy and names the .md when it is missing; the docs host answers /changelog/desktop/0.5.md with 200 text/markdown; charset=utf-8 and cache-control no-cache."
+  ],
+  "selectors": {
+    "page": "apps/tracy-docs/src/content/docs/changelog/desktop/<X.Y>.md (slug changelog/desktop/<X.Y>)",
+    "manifest": "notes.source, notes.contentSha256 in <variant>/<version>/<build id>/manifest.json",
+    "bundle": "Contents/Resources/release-notes.txt, Contents/Resources/release-notes.json (resources/ on Windows and Linux)",
+    "commands": "node build/draft-release-notes.mjs --version X.Y[.Z]; node build/release.mjs prepare …; publish … [--docs-origin <url>] [--skip-docs-check]",
+    "raw page": "<DOCS_ORIGIN>/changelog/desktop/<X.Y>.md (apps/tracy-docs/scripts/raw-changelog.mjs, astro integration tracy-raw-changelog)"
+  },
+  "fence": "prepare takes stable notes only from the page section of its version at the release sha and refuses before building otherwise; publish refuses a stable feed move until the docs host serves the same section (hash)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/desktop/tracy-desktop/test/release-notes-page.test.mjs",
+      "packages/desktop/tracy-desktop/test/draft-release-notes.test.mjs",
+      "packages/desktop/tracy-desktop/test/release.test.mjs",
+      "apps/tracy-docs/test/changelog-desktop.test.mjs",
+      "apps/tracy-docs/test/raw-changelog.test.mjs",
+      "apps/tracy-web/test/docs-host.test.mjs"
+    ],
+    "tests": [
+      "a minor release ships the Highlights of its page",
+      "a patch release ships its own section",
+      "no notes for the version is null",
+      "a line that names a third party or is not English is a problem",
+      "the front matter names the page",
+      "a page or section already written is kept unless --force",
+      "a bundle without its notes, or with other notes than the release froze",
+      "a stable minor release ships the Highlights of its page as committed at the release sha",
+      "a stable patch release ships its own section of the page",
+      "stable without notes for its version on the page at that sha is refused before building",
+      "a --notes file is for a dev build only",
+      "a dev build reads the page section of the release it leads to",
+      "a stable publish is refused, nothing written, until the docs host serves the notes it froze",
+      "--skip-docs-check is for dev only",
+      "a real store checks the docs host of its own channel only",
+      "a page with a line the release notes may not carry is refused",
+      "copies each X.Y.md page to changelog/desktop/X.Y.md, and nothing else",
+      "a copied page has no front matter and is otherwise the page verbatim, badges included",
+      "0.5.md: the release tooling reads the same notes from the served copy as from the page",
+      "publish (E8) accepts a docs host serving the built copy, and names it when it does not",
+      "astro build writes the copies: the config carries the integration and its build:done hook does it",
+      "docs host: a changelog page is also served as raw markdown, never cached for long (E3)"
+    ]
+  }
+}

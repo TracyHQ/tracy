@@ -1,0 +1,84 @@
+{
+  "color": {
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Primary text, icons, hairline borders, nav typography, footer text — the dominant ink across every surface"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, product card backgrounds, hero text overlays, input fills"
+    },
+    "soot": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Soot — Dark feature sections, inverted text on light surfaces, high-contrast blocks"
+    },
+    "ink": {
+      "$value": "#161912",
+      "$type": "color",
+      "$description": "Ink — Near-black body text variant, deep borders — virtually indistinguishable from Onyx but carries a barely-warm cast"
+    },
+    "graphite": {
+      "$value": "#4c4c4c",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text, muted descriptions, helper copy beneath headlines"
+    },
+    "slate": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Slate — Tertiary text, captions, price labels, disabled links"
+    },
+    "ash": {
+      "$value": "#9b9b9b",
+      "$type": "color",
+      "$description": "Ash — Subtle borders, dividers between product tiles, low-emphasis separators"
+    },
+    "linen": {
+      "$value": "#c8c0b8",
+      "$type": "color",
+      "$description": "Linen — Warm taupe surface for editorial bands, soft section backgrounds — the only chromatic neutral"
+    },
+    "pistachio-wash": {
+      "$value": "#d9e9bb",
+      "$type": "color",
+      "$description": "Pistachio Wash — Promotional bar fill, seasonal event accent — the single chromatic note in the entire system, used sparingly for time-bound urgency"
+    }
+  },
+  "font": {
+    "maison-neue-book": {
+      "$value": "Maison Neue Book",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse for nav, body, labels, prices, and most UI — used at 400 for body, 700 for emphasized inline text and section anchors"
+    },
+    "maison-neue-demi": {
+      "$value": "Maison Neue Demi",
+      "$type": "fontFamily",
+      "$description": "Rare mid-weight emphasis for sub-headers and category labels — the half-step between Book and Book Bold"
+    },
+    "maison-neue": {
+      "$value": "Maison Neue",
+      "$type": "fontFamily",
+      "$description": "Secondary body variant for longer-form descriptive paragraphs in editorial sections"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "GTStandard-M — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://everlane.com",
+      "siteName": "Everlane",
+      "extractedAt": "2026-06-03T20:07:10.848Z",
+      "variant": "compact"
+    }
+  }
+}

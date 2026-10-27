@@ -1,0 +1,246 @@
+/**
+ * Unit tests for the URL helpers in `src/i18n/resolve.ts`.
+ *
+ * `localizePath` reads the resolved Astro i18n config from
+ * `astro:config/server` at runtime. In this unit-test environment
+ * the virtual module isn't resolvable, so these tests exercise the
+ * fallback path that reads from EmDash's runtime `setI18nConfig`.
+ * End-to-end coverage of the Astro virtual-module path lives in
+ * `tests/integration/seo/sitemap-route.test.ts` plus manual demo
+ * testing.
+ */
+
+import { afterEach, describe, expect, it } from "vitest";
+
+import { setI18nConfig } from "../../../src/i18n/config.js";
+import {
+	_resetAstroI18nCacheForTests,
+	interpolateUrlPattern,
+	localizePath,
+	resolveContentRoutePath,
+	resolveLocaleSegmentFromConfig,
+	resolveLocalizedContentRoutePath,
+} from "../../../src/i18n/resolve.js";
+
+describe("interpolateUrlPattern", () => {
+	it("substitutes {slug} and {id}", () => {
+		expect(
+			interpolateUrlPattern({
+				pattern: "/blog/{slug}",
+				collection: "post",
+				slug: "hello",
+				id: "abc",
+			}),
+		).toBe("/blog/hello");
+
+		expect(
+			interpolateUrlPattern({
+				pattern: "/p/{id}",
+				collection: "post",
+				slug: "hello",
+				id: "abc",
+			}),
+		).toBe("/p/abc");
+	});
+
+	it("falls back to /{collection}/{slug} when no pattern is configured", () => {
+		expect(
+			interpolateUrlPattern({
+				pattern: null,
+				collection: "post",
+				slug: "hello",
+				id: "abc",
+			}),
+		).toBe("/post/hello");
+	});
+
+	it("URL-encodes slug and id segments", () => {
+		expect(
+			interpolateUrlPattern({
+				pattern: "/blog/{slug}",
+				collection: "post",
+				slug: "hello world",
+				id: "abc",
+			}),
+		).toBe("/blog/hello%20world");
+	});
+
+	it("collapses repeated slashes and trims trailing slash", () => {
+		expect(
+			interpolateUrlPattern({
+				pattern: "//blog//{slug}/",
+				collection: "post",
+				slug: "hello",
+				id: "abc",
+			}),
+		).toBe("/blog/hello");
+	});
+
+	it("ensures a leading slash", () => {
+		expect(
+			interpolateUrlPattern({
+				pattern: "blog/{slug}",
+				collection: "post",
+				slug: "hello",
+				id: "abc",
+			}),
+		).toBe("/blog/hello");
+	});
+
+	it("substitutes WordPress-style date tokens from the publish date (zero-padded)", () => {
+		expect(
+			interpolateUrlPattern({
+				pattern: "/{year}/{month}/{day}/{slug}.html",
+				collection: "post",
+				slug: "hello",
+				id: "abc",
+				date: "2018-05-08T09:03:07Z",
+			}),
+		).toBe("/2018/05/08/hello.html");
+	});
+
+	it("treats offset-less SQLite datetimes as UTC regardless of server timezone", () => {
+		// "2018-05-08 23:30:00" parsed in a western local zone would land on
+		// May 8 local = correct only by luck; in an eastern zone it shifts to
+		// May 9. Stored values are UTC, so the URL must be /2018/05/08 always.
+		expect(
+			interpolateUrlPattern({
+				pattern: "/{year}/{month}/{day}/{slug}",
+				collection: "post",
+				slug: "hello",
+				id: "abc",
+				date: "2018-05-08 23:30:00",
+			}),
+		).toBe("/2018/05/08/hello");
+	});
+
+	it("supports hour/minute/second date tokens", () => {
+		expect(
+			interpolateUrlPattern({
+				pattern: "/{year}/{hour}{minute}{second}/{slug}",
+				collection: "post",
+				slug: "hello",
+				id: "abc",
+				date: "2018-05-08T09:03:07Z",
+			}),
+		).toBe("/2018/090307/hello");
+	});
+
+	it("leaves date tokens untouched when no valid date is provided", () => {
+		expect(
+			interpolateUrlPattern({
+				pattern: "/{year}/{month}/{slug}",
+				collection: "post",
+				slug: "hello",
+				id: "abc",
+			}),
+		).toBe("/{year}/{month}/hello");
+	});
+});
+
+describe("localizePath", () => {
+	afterEach(() => {
+		setI18nConfig(null);
+		_resetAstroI18nCacheForTests();
+	});
+
+	it("returns path unchanged when i18n is disabled", async () => {
+		setI18nConfig(null);
+		expect(await localizePath("/blog/hello", "en")).toBe("/blog/hello");
+	});
+
+	it("returns path unchanged when only one locale is configured", async () => {
+		// isI18nEnabled() requires >1 locale.
+		setI18nConfig({ defaultLocale: "en", locales: ["en"] });
+		expect(await localizePath("/blog/hello", "en")).toBe("/blog/hello");
+	});
+
+	it("does not prefix the default locale when prefixDefaultLocale is false", async () => {
+		setI18nConfig({
+			defaultLocale: "en",
+			locales: ["en", "fr"],
+			prefixDefaultLocale: false,
+		});
+		expect(await localizePath("/blog/hello", "en")).toBe("/blog/hello");
+	});
+
+	it("prefixes non-default locales when prefixDefaultLocale is false", async () => {
+		setI18nConfig({
+			defaultLocale: "en",
+			locales: ["en", "fr"],
+			prefixDefaultLocale: false,
+		});
+		expect(await localizePath("/blog/hello", "fr")).toBe("/fr/blog/hello");
+	});
+
+	it("prefixes every locale when prefixDefaultLocale is true", async () => {
+		setI18nConfig({
+			defaultLocale: "en",
+			locales: ["en", "fr"],
+			prefixDefaultLocale: true,
+		});
+		expect(await localizePath("/blog/hello", "en")).toBe("/en/blog/hello");
+		expect(await localizePath("/blog/hello", "fr")).toBe("/fr/blog/hello");
+	});
+
+	it("normalises adjacent slashes and trailing slash from the result", async () => {
+		setI18nConfig({
+			defaultLocale: "en",
+			locales: ["en", "fr"],
+			prefixDefaultLocale: false,
+		});
+		expect(await localizePath("//blog/hello/", "fr")).toBe("/fr/blog/hello");
+	});
+
+	it("returns null for drifted/legacy locales not in the configured list", async () => {
+		setI18nConfig({
+			defaultLocale: "en",
+			locales: ["en", "fr"],
+			prefixDefaultLocale: false,
+		});
+		// `de` isn't configured. The sitemap route would emit a link
+		// to `/de/blog/hello`, but the site has no route there -- the
+		// caller should drop the entry instead.
+		expect(await localizePath("/blog/hello", "de")).toBeNull();
+	});
+});
+
+describe("content route resolution", () => {
+	afterEach(() => {
+		setI18nConfig(null);
+		_resetAstroI18nCacheForTests();
+	});
+
+	it("shares pattern and trailing-slash behavior across relative and localized routes", async () => {
+		setI18nConfig({ defaultLocale: "en", locales: ["en", "fr"] });
+		const input = {
+			pattern: "/journal/{slug}",
+			collection: "posts",
+			slug: "hello",
+			id: "post-1",
+			trailingSlash: "always" as const,
+		};
+
+		expect(resolveContentRoutePath(input)).toBe("/journal/hello/");
+		expect(await resolveLocalizedContentRoutePath({ ...input, locale: "fr" })).toBe(
+			"/fr/journal/hello/",
+		);
+	});
+
+	it("recognizes custom locale paths as stored locale identities", () => {
+		const i18n = {
+			defaultLocale: "en",
+			locales: [
+				{ path: "english", codes: ["en", "en-GB"] },
+				{ path: "french", codes: ["fr", "fr-FR"] },
+			],
+			prefixDefaultLocale: true,
+		};
+
+		expect(resolveLocaleSegmentFromConfig(i18n, "english")).toBe("english");
+		expect(resolveLocaleSegmentFromConfig(i18n, "french")).toBe("french");
+		expect(resolveLocaleSegmentFromConfig({ ...i18n, prefixDefaultLocale: false }, "english")).toBe(
+			"",
+		);
+	});
+});

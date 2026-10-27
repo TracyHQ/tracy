@@ -1,0 +1,109 @@
+{
+  "color": {
+    "ember-red": {
+      "$value": "#e34432",
+      "$type": "color",
+      "$description": "Ember Red — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-ember": {
+      "$value": "#cf3520",
+      "$type": "color",
+      "$description": "Deep Ember — Brand text emphasis, eyebrow labels, decorative iconography, secondary brand presence"
+    },
+    "cobalt-link": {
+      "$value": "#0f66ae",
+      "$type": "color",
+      "$description": "Cobalt Link — Hyperlinks, app-internal priority labels, informational icons"
+    },
+    "ink": {
+      "$value": "#25221e",
+      "$type": "color",
+      "$description": "Ink — Primary text, headings, dark icon strokes, dark surface fills"
+    },
+    "paper": {
+      "$value": "#fefdfc",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, button text, elevated containers"
+    },
+    "cream": {
+      "$value": "#fff6f0",
+      "$type": "color",
+      "$description": "Cream — Decorative section bands, warm-tinted background washes, footer"
+    },
+    "stone": {
+      "$value": "#d7d6d4",
+      "$type": "color",
+      "$description": "Stone — Hairline borders, dividers, input borders, nav separators"
+    },
+    "pencil": {
+      "$value": "#6f6c69",
+      "$type": "color",
+      "$description": "Pencil — Secondary body text, helper text, muted descriptions"
+    },
+    "graphite": {
+      "$value": "#94928f",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text, disabled icon strokes, low-emphasis labels"
+    },
+    "charcoal": {
+      "$value": "#4a4744",
+      "$type": "color",
+      "$description": "Charcoal — Dark button hover/pressed state, inverted surface fills"
+    },
+    "teal-dusk": {
+      "$value": "#497d7e",
+      "$type": "color",
+      "$description": "Teal Dusk — Accent stroke in decorative wave illustrations, secondary brand mark"
+    },
+    "mint-wash": {
+      "$value": "#f0f6df",
+      "$type": "color",
+      "$description": "Mint Wash — Pale green decorative background wash, soft tinted band"
+    },
+    "sky-wash": {
+      "$value": "#dceaff",
+      "$type": "color",
+      "$description": "Sky Wash — Pale blue decorative background wash, soft tinted band"
+    },
+    "forest": {
+      "$value": "#446c3d",
+      "$type": "color",
+      "$description": "Forest — Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "graphik": {
+      "$value": "Graphik",
+      "$type": "fontFamily",
+      "$description": "Display and heading family. Owns hero headlines, section titles, nav links, and large body copy. Tight negative letter-spacing (-0.005em to -0.01em) at sizes 38px+ creates a compressed, confident display feel — headlines feel weighted rather than airy."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "UI and body family. Owns buttons, badges, inputs, form labels, secondary text, and inline UI. Slightly positive tracking (0.005em–0.025em) keeps small UI text crisp at 12–16px. Carries functional weight without competing with Graphik."
+    },
+    "caecilia": {
+      "$value": "Caecilia",
+      "$type": "fontFamily",
+      "$description": "Reserved for testimonial quotes. The serif cut and generous 1.8 line-height distinguish user voices from product copy without needing quotation marks."
+    },
+    "shantell-sans": {
+      "$value": "Shantell Sans",
+      "$type": "fontFamily",
+      "$description": "Handwritten accent for inline links inside announcement bars — introduces a human, informal voice inside otherwise neutral UI chrome."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://todoist.com",
+      "siteName": "Todoist",
+      "extractedAt": "2026-06-03T16:45:48.410Z",
+      "variant": "compact"
+    }
+  }
+}

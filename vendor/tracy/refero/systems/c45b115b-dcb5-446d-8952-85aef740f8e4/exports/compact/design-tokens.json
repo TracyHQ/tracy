@@ -1,0 +1,89 @@
+{
+  "color": {
+    "obsidian-canvas": {
+      "$value": "#151515",
+      "$type": "color",
+      "$description": "Obsidian Canvas — Primary page background, dominant surface across all sections; Hero background gradient — warm amber-rust bleeds from bottom-left into near-black"
+    },
+    "void-black": {
+      "$value": "#0e0e0e",
+      "$type": "color",
+      "$description": "Void Black — Deepest surface layer, card backgrounds that recede below canvas"
+    },
+    "ember-surface": {
+      "$value": "#242424",
+      "$type": "color",
+      "$description": "Ember Surface — Raised card and panel backgrounds — one step above canvas"
+    },
+    "charcoal-rim": {
+      "$value": "#3f403d",
+      "$type": "color",
+      "$description": "Charcoal Rim — Subtle borders and dividers on dark surfaces"
+    },
+    "copper-wire": {
+      "$value": "#8b867f",
+      "$type": "color",
+      "$description": "Copper Wire — Mid-tone icon fills, decorative borders, muted surface accents"
+    },
+    "ash-text": {
+      "$value": "#94958e",
+      "$type": "color",
+      "$description": "Ash Text — Secondary body text, nav subtitles, helper labels"
+    },
+    "fog-text": {
+      "$value": "#cbccc4",
+      "$type": "color",
+      "$description": "Fog Text — Subheadings, supporting body copy, secondary headings"
+    },
+    "limestone": {
+      "$value": "#b6b8af",
+      "$type": "color",
+      "$description": "Limestone — Tertiary text, eyebrow labels, captions"
+    },
+    "parchment": {
+      "$value": "#e9ebdf",
+      "$type": "color",
+      "$description": "Parchment — Primary text, headline color, outlined button borders and text, pill button fill — slightly warm off-white that softens the contrast against near-black ground"
+    },
+    "forest-deep": {
+      "$value": "#185849",
+      "$type": "color",
+      "$description": "Forest Deep — Decorative background wash — large-area teal tint used as atmospheric section color"
+    },
+    "midnight-moss": {
+      "$value": "#0e352c",
+      "$type": "color",
+      "$description": "Midnight Moss — Deeper teal wash, badge and label backgrounds in forest green"
+    },
+    "spectrum-shimmer": {
+      "$value": "#e87650",
+      "$type": "color",
+      "$description": "Spectrum Shimmer — Animated text shimmer gradient — parchment transitions through coral and steel blue, used on select highlight phrases"
+    }
+  },
+  "font": {
+    "saansfont": {
+      "$value": "saansFont",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all display, heading, body, and UI text. Weight 300 at 60-72px is anti-conventional — most platforms use 600-700 for hero text; the thin weight creates authority through mass (huge scale) rather than stroke weight. Weight 380 handles body and subheadings. Weight 570 for labels and small UI. Custom font unavailable externally."
+    },
+    "pxgroteskfont": {
+      "$value": "pxGroteskFont",
+      "$type": "fontFamily",
+      "$description": "Monospace-adjacent label font for nav, micro-copy, tags, and icon captions. The slight +0.010em tracking at small sizes distinguishes it from body text — reads like interface chrome rather than content."
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "Fallback system font for utility text, form inputs, and browser-native UI elements. Not a designed choice — appears only as system default context."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://retool.com",
+      "siteName": "Retool",
+      "extractedAt": "2026-04-29T23:05:34.544Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,244 @@
+{
+  "dos": [
+    "Set border-radius to 9999px on all buttons and tags; 0px on cards, inputs, tabs, and panels",
+    "Use #f35815 exclusively as a filled button background — never as text color, border, or decorative fill",
+    "Write all UI text in ui-monospace at weight 400 for body and 500–600 for headings; never use a proportional font",
+    "Anchor section headlines with a 2px #f35815 left bar before the text starts",
+    "Default link color to #0b6ec5; do not style links as buttons or add backgrounds to inline links",
+    "Keep page content within a 960px max-width centered column; let the canvas breathe with 56px section gaps",
+    "Use the announcement banner pattern (#111111 band with #f2b600 inline highlight) for top-of-page promotions"
+  ],
+  "donts": [
+    "Do not introduce proportional fonts (Inter, Helvetica, etc.) — the monospace-only identity is load-bearing",
+    "Do not use #0b6ec5 as a filled button or CTA background — it is link color only",
+    "Do not add drop shadows, glows, or elevation effects — surfaces must remain flat",
+    "Do not use #f2b600 as a background for cards, buttons, or large surfaces — it is an inline accent marker only",
+    "Do not round card corners, input fields, or tab panels — keep them sharp (0px radius)",
+    "Do not stack more than one chromatic color in a single component — the system is monochromatic plus one accent",
+    "Do not use color to indicate state (hover, active, disabled) — rely on weight changes, underlines, and background inversions"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#414141",
+      "name": "Charcoal",
+      "role": "Primary body text, icon strokes, footer copy, nav labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Headings, strong emphasis, logo mark, maximum-contrast text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#737373",
+      "name": "Graphite",
+      "role": "Muted body text, captions, secondary metadata, image alt text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c1c1c1",
+      "name": "Fog",
+      "role": "Hairline borders, table dividers, nav separators, disabled strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Off-White",
+      "role": "Page canvas, card surfaces, input backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#111111",
+      "name": "Obsidian",
+      "role": "Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f35815",
+      "name": "Ember",
+      "role": "Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#0b6ec5",
+      "name": "Signal Blue",
+      "role": "Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#f2b600",
+      "name": "Amber",
+      "role": "Announcement banner highlight, feature tag accent, promotional inline marker",
+      "group": "accent"
+    }
+  ],
+  "imagery": "The site is nearly imageless by design. The primary visual content is text itself, rendered in monospace to carry visual weight. The only repeated imagery is the customer logo grid, which displays partner brand logos in their native colors — a deliberate exception to the monochrome palette, since recognizability matters more than consistency in social proof. There is no photography, no illustration, no product screenshots, and no abstract graphics. Where a diagram would appear (e.g., the VTGate architecture block), a simple labeled rectangle in a neutral fill stands in for a real illustration.",
+  "similar": [
+    {
+      "why": "Same developer-targeted monospace-only interface with a near-monochrome palette and a single warm accent color for CTAs",
+      "business": "Fly.io"
+    },
+    {
+      "why": "Text-dense, documentation-flavored layout with minimal imagery, sharp corners, and hairline-bordered grid cells",
+      "business": "Tailscale"
+    },
+    {
+      "why": "Terminal-inspired type system with orange brand accent, flat surfaces, and code-block-centric content sections",
+      "business": "Cloudflare Workers"
+    },
+    {
+      "why": "Monospace-forward developer brand with a single emerald accent and generous whitespace between text sections",
+      "business": "Supabase"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tabs": "0px",
+      "cards": "0px",
+      "inputs": "0px",
+      "buttons": "9999px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "56px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "960px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#fafafa",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background, default surface for all content"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Card Cell",
+      "level": 1,
+      "purpose": "Logo grid cells and content panels — same as canvas, defined by hairline borders"
+    },
+    {
+      "hex": "#f2b600",
+      "name": "Accent Banner",
+      "level": 2,
+      "purpose": "Announcement highlight pill — inline emphasis, not a full surface"
+    },
+    {
+      "hex": "#111111",
+      "name": "Inverse Band",
+      "level": 3,
+      "purpose": "Dark announcement strip, active tab background, high-contrast panels"
+    }
+  ],
+  "northStar": "Terminal man-page in daylight",
+  "typeScale": [
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 21,
+      "letterSpacing": -0.084
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 24,
+      "letterSpacing": -0.096
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 27,
+      "letterSpacing": -0.108
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 32,
+      "letterSpacing": -0.144
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 40,
+      "letterSpacing": -0.192
+    }
+  ],
+  "components": [
+    {
+      "name": "Ember CTA Button",
+      "role": "Primary action trigger — highest-priority conversion element",
+      "description": "Filled pill button: #f35815 background, #fafafa text, 9999px border-radius, ui-monospace weight 600, ~14px size. Padding 8px 16px. No border. The only chromatic fill in the entire system — its orange warmth is deliberately the loudest thing on screen."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Secondary action in navigation bar",
+      "description": "Text-only button: #414141 text, transparent background, no border. ui-monospace weight 500, 14px. Sits beside the Ember CTA as the quieter \"Get started\" path."
+    },
+    {
+      "name": "Announcement Banner",
+      "role": "Top-of-page promotional strip",
+      "description": "Full-width dark band (#111111 or #000000 background), #fafafa text at 14px ui-monospace. A specific phrase is highlighted with #f2b600 background and #111111 text, creating an inline amber pill. Padding 8px vertical, centered content."
+    },
+    {
+      "name": "Inline Link",
+      "role": "Hyperlink within body copy and navigation",
+      "description": "#0b6ec5 text, no underline by default, ui-monospace inherits body size and weight. On hover, underline may appear. This is the only blue element in the system — it carries all navigational and reference linking."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "#fafafa background, no shadow or border. Logo (left), menu items (center, 14px ui-monospace #414141, separated by ~24px gaps with small dropdown carets), auth/CTA cluster (right: \"Log in\" ghost text, \"Get started\" ghost, \"Get in touch\" Ember CTA). Height ~56px."
+    },
+    {
+      "name": "Customer Logo Grid",
+      "role": "Social proof — displaying companies using the product",
+      "description": "Multi-row grid (5 columns, 4+ rows). Each cell has a thin #c1c1c1 or #e5e5e5 border, #fafafa fill, ~80px height, padding 16px. Logos are displayed at native brand colors (not monochrome) to preserve recognizability — this grid is the most colorful area of the entire site."
+    },
+    {
+      "name": "Testimonial Quote",
+      "role": "Single-customer endorsement with attribution",
+      "description": "#414141 quote text at 16px ui-monospace, indented with em-dash attribution line in #737373 at 14px. No card chrome, no background — sits directly on canvas. The quote may be wrapped in quotation marks or left bare."
+    },
+    {
+      "name": "Tabbed Content Panel",
+      "role": "Switchable product sections (Vitess / Postgres / Nekil)",
+      "description": "Horizontal tab bar: active tab has #111111 background with #fafafa text; inactive tabs have transparent background with #414141 text. No border-radius on tabs. Below the tabs, a content area with #fafafa background, body text, and optional code/diagram block. Tabs separated by hairline #c1c1c1 borders."
+    },
+    {
+      "name": "Code or Data Block",
+      "role": "Terminal output, SQL, or architecture diagram placeholder",
+      "description": "Light gray panel (#f2b600 or #e5e5e5 background variant), monospace text centered, represents system architecture or query output. No syntax highlighting complexity — simple monospaced label like \"VTGate\" on a neutral band."
+    },
+    {
+      "name": "Headline Block",
+      "role": "Section-level heading with supporting paragraph",
+      "description": "Heading at 24–32px ui-monospace weight 600, #000000. A vertical accent bar (2px #f35815) sits to the left of the headline — a signature decorative mark. Body copy follows at 16px weight 400, #414141, max-width constrained to reading measure."
+    },
+    {
+      "name": "Accent Bar",
+      "role": "Visual prefix marking a notable headline or callout",
+      "description": "2px wide, ~24px tall vertical bar in #f35815 (orange), positioned flush-left to a headline. Functions as the system's only decorative element — replaces the need for icons, badges, or colored headings."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Universal type family — used for ALL text including headings, body, nav, buttons, and tabs. The monospace-only choice is the system's signature: it forces uniform character widths across the entire interface, giving the page the rhythm of a code editor or man page rather than a traditional marketing site. Weight 500–600 for headings, 400 for body, 700 sparingly for emphasis. Negative letter-spacing (-0.006em) tightens glyphs just enough to avoid the loose feel of raw terminal output.",
+      "sizes": "16px",
+      "family": "ui-monospace",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.00, 1.25, 1.50",
+      "substitute": "SF Mono, Menlo, Consolas, \"Liberation Mono\", monospace",
+      "letterSpacing": "-0.006em"
+    }
+  ],
+  "description": "PlanetScale's design system is a developer-first, terminal-flavored monospace UI: the entire interface speaks in fixed-width type, giving every screen the texture of a well-formatted README. The palette is overwhelmingly achromatic — deep charcoal text on near-white canvas, with a vivid orange as the sole action accent and a restrained blue for links. Surfaces are flat and borderless; hierarchy is built through type weight, spacing, and the occasional hairline rule rather than shadow or elevation. Components feel lightweight and utilitarian: pill-shaped buttons, plain text links, raw grid tables, and no decorative chrome. The result reads like a developer tool's reference page, not a marketing brochure — confidence comes from typographic discipline and generous whitespace, not from color or illustration.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #414141\n- background: #fafafa\n- border: #c1c1c1\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n- link: #0b6ec5 (Signal Blue)\n- primary action: no distinct CTA color\n\n**3–5 Example Component Prompts**\n1. **Headline with accent bar**: Left-aligned 24px ui-monospace weight 600, #000000, preceded by a 2px-wide 24px-tall #f35815 vertical bar with 8px right gap. Body copy below at 16px weight 400, #414141, line-height 1.5.\n\n\n3. **Inline link**: #0b6ec5 text, ui-monospace inheriting body size/weight, no underline at rest. Sits flush within body copy at #414141.\n\n4. **Customer logo grid cell**: 960px container divided into 5 equal columns, each cell with 1px #c1c1c1 border, #fafafa fill, 16px padding, ~80px min-height. Logos rendered at native brand color.\n\n5. **Tabbed section header**: 3 equal-width tabs in a row. Active tab: #111111 background, #fafafa text. Inactive: transparent background, #414141 text. Tabs separated by 1px #c1c1c1 bottom border. No border-radius."
+    }
+  ],
+  "elevationPhilosophy": "The system is deliberately flat: no drop shadows, no glows, no z-axis layering. Depth is communicated through hairline borders, background color inversions, and typographic weight changes. Components sit directly on the canvas — borders separate regions, shadows do not."
+}

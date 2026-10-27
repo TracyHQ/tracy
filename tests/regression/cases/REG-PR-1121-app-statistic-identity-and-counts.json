@@ -1,0 +1,58 @@
+{
+  "id": "REG-PR-1121-app-statistic-identity-and-counts",
+  "kind": "feat",
+  "title": "App Statistic keeps downloads anonymous, preserves install linkage and filtered server totals",
+  "pr": 1121,
+  "area": "ops/app-statistic",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run PostgreSQL list/detail and download tracking tests against an isolated schema on the PR branch.",
+    "Verify admission, aggregate paging, attribution provenance, retry exclusion and stable install identity."
+  ],
+  "expect": [
+    "Only accepted staff seats can read list and detail; anonymous records never expose another account history.",
+    "Download GET requests are deduplicated within the recorded retry window; HEAD, range and update ZIP requests do not count, and recorder failures do not block download.",
+    "Public header/query claims never assign account or install ownership to sessionless downloads.",
+    "Server totals remain consistent with filters and pages beyond 500 installs; downloads never enrich account aggregates, version updates retain the same install and resolved issues no longer count as attention.",
+    "Account acquisition and legacy activity use verified account ownership, without assigning a source to anonymous downloads or installs."
+  ],
+  "selectors": {
+    "list": "/api/ops/app-statistic",
+    "detail": "/api/ops/app-statistic/:view/:id"
+  },
+  "fence": "Tests use isolated local PostgreSQL fixtures and the real application/router; no production user data or guessed attribution.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/ops-app-statistic.test.mjs",
+      "apps/tracy-web/test/desktop-download.test.mjs"
+    ],
+    "tests": [
+      "rejects malformed filters instead of broadening the requested scope",
+      "users aggregate real account-linked app copies; anonymous downloads never enrich people",
+      "pagination exceeds 500, remains stable, and preserves totals on an empty page",
+      "rolling date, unknown identity, literal search and account filters match their counts",
+      "anonymous detail never groups other anonymous records; sign-in linkage identifies one install",
+      "needs attention excludes resolved history and restores manually reopened issues",
+      "both list and detail require an accepted Tracy admin workspace seat",
+      "account source is attribution of first sign-in, not assigned to anonymous downloads or installs",
+      "full application serves the installed list and detail routes behind the same staff boundary",
+      "detail reports truncated account histories and version search matches users and installs",
+      "legacy email-only account events appear without stealing events assigned to another account",
+      "artifact metadata uses the served release path and permits unknown flat-name fields",
+      "retry token expires after a fixed 15 minutes, rejecting malformed and future tokens",
+      "installer GET sets a private short-lived retry cookie and leaves ZIP caching untouched",
+      "HEAD, range requests, ZIPs, failed storage responses and partial responses are not counted",
+      "tracking failure or a stalled recorder cannot prevent the installer response",
+      "one artifact/token pair writes once, another artifact or token counts separately",
+      "direct requests never trust account/install claims; source is sanitized, version uses the path",
+      "route plus database preserves retry dedupe and leaves install/user counts unchanged",
+      "the real app wires installer tracking before session middleware without inferring identity"
+    ],
+    "needs": ["postgres"]
+  }
+}

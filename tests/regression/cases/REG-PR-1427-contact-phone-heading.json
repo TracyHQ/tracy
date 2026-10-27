@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1427-contact-phone-heading",
+  "kind": "fix",
+  "title": "An explicitly labelled local phone heading accepts the exact frozen phone without weakening numeric guards",
+  "pr": 1427,
+  "area": "website-opportunities/quickstart-first",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the three declared Node test suites."],
+  "expect": [
+    "Formatted phone text in a bounded local phone-labelled container accepts only an exact business.phone claim.",
+    "Counters, dates, percent, thousands, explicit metric roles, numeric storage and one-digit phone drift remain rejected.",
+    "Phone intent evidence stays non-enumerable so model wire input and cached paid batch hashes remain unchanged."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/brief-engines/quickstart-editorial.js"
+  },
+  "fence": "No template names or classes; full source, layout and claim validation still apply.",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/brief-quickstart-first.test.mjs"],
+    "needs": []
+  }
+}

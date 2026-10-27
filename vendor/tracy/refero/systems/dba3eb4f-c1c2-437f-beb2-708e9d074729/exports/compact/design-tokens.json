@@ -1,0 +1,64 @@
+{
+  "color": {
+    "voltage-lime": {
+      "$value": "#d3fb52",
+      "$type": "color",
+      "$description": "Voltage Lime — Primary action fill, nav pill, active state, hero gradient endpoint — the single chromatic ignition point against an otherwise monochrome system"
+    },
+    "cyan-spark": {
+      "$value": "#7af3ff",
+      "$type": "color",
+      "$description": "Cyan Spark — Hero gradient start point, secondary glow tone — pairs with Voltage Lime to create the aurora-like radial background"
+    },
+    "mid-abyss": {
+      "$value": "#052326",
+      "$type": "color",
+      "$description": "Mid Abyss — Footer surface, dark section backgrounds — a near-black with a subtle teal undertone that keeps the dark mode on-brand"
+    },
+    "carbon-ink": {
+      "$value": "#14151c",
+      "$type": "color",
+      "$description": "Carbon Ink — Primary text, icon strokes, input borders — the slightly cool near-black used for the majority of foreground content"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text on lime fills, input interiors — the dominant surface tone (1590+ appearances)"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Nav borders, strong text emphasis, icon fills — used sparingly where maximum contrast is needed"
+    },
+    "ash": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Ash — Body helper text, muted body borders — the secondary text level for de-emphasized copy"
+    }
+  },
+  "font": {
+    "noigrotesk": {
+      "$value": "NoiGrotesk",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface — handles all navigation, buttons, inputs, cards, and headings up to 40px. Custom grotesque with active stylistic sets ss03, ss06, and ss12 that subtly shape letterforms across the entire system"
+    },
+    "sansplomb": {
+      "$value": "SansPlomb",
+      "$type": "fontFamily",
+      "$description": "Display-only typeface for hero and section-defining headlines. Used at 201px with ultra-tight 0.80 line-height and -0.020em tracking — the sheer scale makes the headline feel architectural, not typographic"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://joinhandshake.com",
+      "siteName": "Handshake",
+      "extractedAt": "2026-06-03T16:38:04.247Z",
+      "variant": "compact"
+    }
+  }
+}

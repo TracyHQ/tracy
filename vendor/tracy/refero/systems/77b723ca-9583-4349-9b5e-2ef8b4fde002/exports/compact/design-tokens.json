@@ -1,0 +1,74 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, hero background, primary action fill — the default stage for every screen"
+    },
+    "carbon-card": {
+      "$value": "#050607",
+      "$type": "color",
+      "$description": "Carbon Card — Card and elevated surface background — barely lighter than the canvas so cards read as recessed wells, not raised panels"
+    },
+    "ghost-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Ghost White — Primary text, filled button background, primary action fill — the highest-contrast color in the system, used to make actions unmistakable"
+    },
+    "bone-white": {
+      "$value": "#e8eaee",
+      "$type": "color",
+      "$description": "Bone White — Subtle surface washes and light contrast elements — sparingly used for tonal variation in dark sections"
+    },
+    "ash-gray": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Ash Gray — Secondary body text, table content, muted helper copy"
+    },
+    "steel-gray": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Steel Gray — Borders, dividers, icon strokes, disabled text — the workhorse neutral for structural lines"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Deep borders, subtle separators between heavy content blocks"
+    },
+    "lavender-pulse": {
+      "$value": "#9984d8",
+      "$type": "color",
+      "$description": "Lavender Pulse — Violet outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "mint-signal": {
+      "$value": "#3fcb7f",
+      "$type": "color",
+      "$description": "Mint Signal — Green state accent for badges, validation surfaces, and short status labels."
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All functional UI text: body copy, nav links, buttons, badges, table data, card labels. Inter carries the entire system at tight -0.03em tracking — its neutrality lets the single display serif do the editorial work."
+    },
+    "alpha-lyrae": {
+      "$value": "Alpha Lyrae",
+      "$type": "fontFamily",
+      "$description": "Display headlines only — hero h1 and major section titles at exactly 48px. This custom serif is the signature move: a quiet, engraved quality that contrasts with Inter's geometric clarity, giving the dark page a literary anchor."
+    },
+    "iowan-old-style": {
+      "$value": "Iowan Old Style",
+      "$type": "fontFamily",
+      "$description": "Testimonial pull-quote body — a light-weight old-style serif at 24px that humanizes the interface and breaks Inter's rhythm at key trust-building moments."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.basedash.com",
+      "siteName": "Basedash",
+      "extractedAt": "2026-06-03T22:36:46.988Z",
+      "variant": "compact"
+    }
+  }
+}

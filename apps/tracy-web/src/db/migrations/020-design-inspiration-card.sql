@@ -1,0 +1,21 @@
+-- The Design inspiration card of a release, as its own column — because it is its own file.
+--
+-- Until 16/09 a card was a `card` block inside `tracy_setting.json`, so it arrived inside `setting`
+-- and there was nothing to add. It is now `tracy_design_inspiration.json`, a second asset with its
+-- own schema (`tracy-design-inspiration/v1`), read and validated separately.
+--
+-- 🔒 WHY NOT LEAVE IT INSIDE `setting`. The two files answer to different owners and change on
+-- different days: the setting is install truth written once when a release is cut, the card is
+-- presentation an administrator edits from the operations page without re-cutting anything. Folded
+-- into one column, "the setting changed" would stop meaning "what a build installs changed" — and
+-- that sentence is the whole reason the setting is held to a validator before anything installs it.
+--
+-- Null means no card, which is a state and not a fault: a release with no card is a quickstart
+-- nobody put on Design inspiration. It is also what is written when the file IS there and is
+-- refused — the sentence then lives in `reason`, and the release stays choosable, because a wrong
+-- blurb is no reason to refuse to build somebody a site.
+--
+-- Nothing backfills. Like every other column of this table it is filled by the next read of GitHub
+-- (`syncReleases`), and the three releases still carrying the old `card` block keep working through
+-- the transition read in `templateCards`.
+alter table quickstart_releases add column if not exists inspiration jsonb;

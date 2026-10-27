@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-signin-otp-deduplicate-replaced",
+  "itemIds": ["flow:signin-otp"],
+  "requirement": "asking again replaces the code: the first one is refused",
+  "oracle": {
+    "source": "apps/tracy-web/src/lib/policy.js",
+    "ref": "MAX_ATTEMPTS and putCode",
+    "invariant": "one live code per address"
+  },
+  "edgeTags": ["deduplicate"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.signin.replay#replaced-code-refused"],
+  "redProof": null,
+  "legacyIds": []
+}

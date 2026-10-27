@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-893-failed-teardown-reason-reaches-deleter",
+  "kind": "fix",
+  "title": "A failed teardown's reason reaches the person deleting the site, cut to this site's own names",
+  "pr": 893,
+  "area": "sites/delete",
+  "cms": ["any"],
+  "needs": ["node", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: TEST_DATABASE_URL=postgres://tracy:tracy@127.0.0.1:51730/postgres node --test --test-reporter=tap apps/tracy-web/test/teardown-said.test.mjs apps/tracy-web/test/sites-route.test.mjs (any Postgres whose user may create databases will do — the tests make and drop their own; this one is the local stand's).",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail', '# skipped' lines and the result of each case whose name starts with: \"the verdict line wins over the lines before it, and the `!!` mark is not part of what is said\"; \"without a verdict line the last `!!` line is said; without any, nothing is\"; \"another site's verdict line is not this site's, and a label that merely starts the same is not this one\"; \"a path that does not run through this site's label, and a name that is not this site's, are left out\"; \"an `error` a host sends is said first, under the same rules\"; \"what is said is bounded, and says it was cut\"; \"DELETE /api/sites/:key: a teardown that failed says the script's verdict line, without the host's paths or anyone else's names\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# skipped 0', and '# pass' equal to '# tests' (at least 120): the database cases ran, none skipped.",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): the reason is the host's `error` when it sends one, else teardown.sh's verdict line ('teardown of <label> ...') or its last '!!' line from the job output; absolute paths are cut to tracy-private/<label>, names that are not this site's become '…', and it is bounded to 200 characters; DELETE /api/sites/:key says it after TEARDOWN_FAILED."
+  ],
+  "selectors": {
+    "reader": "teardownSaid(job, label) in apps/tracy-web/src/sites/teardown-said.js",
+    "door": "DELETE /api/sites/:key (teardownSettled in apps/tracy-web/src/sites/route.js), hostReason \"TEARDOWN_FAILED: <line>\""
+  },
+  "evidence": "05/10/2026: when the host could not finish deleting a site, the person deleting it read only TEARDOWN_FAILED, never teardown.sh's own '!! teardown of <label> did not finish ... still on this host ...' line: teardownSettled took the reason from the job's `error`, which tracy-host's teardown job never sets. Red f45c9b944 (the route case not ok on 8d635fc41), fix c18f9b484.",
+  "fence": "Only this site's label and names leave the host: no absolute path, no neighbour's volume or container name, no line longer than 200 characters.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/teardown-said.test.mjs",
+      "apps/tracy-web/test/sites-route.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the verdict line wins over the lines before it, and the `!!` mark is not part of what is said",
+      "without a verdict line the last `!!` line is said; without any, nothing is",
+      "another site's verdict line is not this site's, and a label that merely starts the same is not this one",
+      "a path that does not run through this site's label, and a name that is not this site's, are left out",
+      "an `error` a host sends is said first, under the same rules",
+      "what is said is bounded, and says it was cut",
+      "DELETE /api/sites/:key: a teardown that failed says the script's verdict line, without the host's paths or anyone else's names"
+    ]
+  }
+}

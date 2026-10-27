@@ -1,0 +1,90 @@
+{
+  "id": "QA-UNIT-REG-PR-1366-voice-chat-language-happy",
+  "itemIds": ["regression:REG-PR-1366-voice-chat-language"],
+  "requirement": "Voice input and replies follow the conversation's main language: a Vietnamese chat's hint reaches the speech service (a request that switches to English is kept whole), speech in another language reopens the session without it, words on screen never vanish at a switch, and the agent replies in the main language unless a message is entirely in another",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1366-voice-chat-language.json",
+    "ref": "PR #1366 (feat); fix evidence: 15/10/2026: voice sentences that mix languages, and a main language set by the chat's opening message; replies in the main language unless the message is entirely another, STT hinted with a rescue when nothing comes back, real time. Live ElevenLabs measurements and screenshots: tasks/evidence/voice-language-2026-10-15/.",
+    "invariant": "0 failures. 'a Vietnamese chat: its language rides the socket, and a phrase restarted at an English word keeps the Vietnamese' passes: the page opens the socket with language=vi, the service is asked with language_code=vi, and after Done the draft reads 'Đổi màu nền trang chủ sang xanh đậm. And add a contact button under the headline.' 'a hinted session that hears speech with no word is reopened without the hint, the phrase replayed' and 'a hinted phrase that comes back empty after speech is replayed without the hint, also after stop' pass. 'a phrase the service starts again where the language switched keeps the words already shown' passes. 'the reply language of a chat: its main language, unless the latest message is clearly another' and 'a conversation keeps its main language for a mixed or unsure message, and follows a message plainly in another' pass.",
+    "productSources": [
+      "apps/tracy-web/src/lib/speech-switch.js:22",
+      "apps/tracy-web/src/lib/speech.js:84",
+      "apps/tracy-web/src/speech/relay.js:289",
+      "packages/core/tracy-core/src/language/index.mjs:246",
+      "packages/tools/tracy-site-tools/src/host/prompter.mjs:359",
+      "packages/tools/tracy-site-tools/src/host/voice-reply.mjs:20",
+      "packages/ui/tracy-chat-input/src/client/voice-language.mjs:43",
+      "packages/ui/tracy-chat-input/src/client/voice-link.mjs:82"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs:182 readFileSync() with a computed path",
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs:194 readFileSync() with a computed path",
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs:53 import() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs:55 import() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs:57 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a Vietnamese chat: its language rides the socket, and a phrase restarted at an English word keeps the Vietnamese",
+    "an English chat names English; the relay keeps no hint it was not measured to help with",
+    "the hint: the chat’s language, else — no clear message yet — the interface’s",
+    "the chat’s language reaches the service only where it was measured to help (vi)",
+    "a hinted session that hears speech with no word is reopened without the hint, the phrase replayed",
+    "a hinted phrase that comes back empty after speech is replayed without the hint, also after stop",
+    "a phrase the service starts again where the language switched keeps the words already shown",
+    "unhinted, a restart that shares no word is the service taking back a wrong guess: not kept",
+    "the reply language of a chat: its main language, unless the latest message is clearly another",
+    "a conversation keeps its main language for a mixed or unsure message, and follows a message plainly in another"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1366-voice-chat-language"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-chat-input", "tracy-chat-input"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1366-voice-chat-language",
+    "pr": 1366,
+    "kind": "feat",
+    "area": "chat/voice",
+    "file": "tests/regression/cases/REG-PR-1366-voice-chat-language.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=180000",
+    "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs",
+    "packages/ui/tracy-chat-input/test/voice-language.test.mjs",
+    "packages/ui/tracy-chat-input/test/voice-link.test.mjs",
+    "apps/tracy-web/test/speech-relay.test.mjs",
+    "packages/core/tracy-core/test/language.test.mjs",
+    "packages/tools/tracy-site-tools/test/reply-language.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a Vietnamese chat: its language rides the socket, and a phrase restarted at an English word keeps the Vietnamese",
+    "an English chat names English; the relay keeps no hint it was not measured to help with",
+    "the hint: the chat’s language, else — no clear message yet — the interface’s",
+    "the chat’s language reaches the service only where it was measured to help (vi)",
+    "a hinted session that hears speech with no word is reopened without the hint, the phrase replayed",
+    "a hinted phrase that comes back empty after speech is replayed without the hint, also after stop",
+    "a phrase the service starts again where the language switched keeps the words already shown",
+    "unhinted, a restart that shares no word is the service taking back a wrong guess: not kept",
+    "the reply language of a chat: its main language, unless the latest message is clearly another",
+    "a conversation keeps its main language for a mixed or unsure message, and follows a message plainly in another"
+  ],
+  "timeoutS": 600
+}

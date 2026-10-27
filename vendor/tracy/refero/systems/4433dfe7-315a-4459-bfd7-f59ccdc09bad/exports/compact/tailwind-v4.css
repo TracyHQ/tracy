@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-champagne-gold: #c8ad86;
+  --color-candlelight-cream: #fff7dd;
+  --color-obsidian-black: #000000;
+  --color-ember-ash: #66635f;
+
+  /* Typography */
+  --font-switzer: 'Switzer', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-ui-sans-serif: 'system-ui sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

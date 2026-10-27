@@ -1,0 +1,64 @@
+{
+  "color": {
+    "obsidian-canvas": {
+      "$value": "#080808",
+      "$type": "color",
+      "$description": "Obsidian Canvas — Page background, deepest surface"
+    },
+    "onyx-card": {
+      "$value": "#181818",
+      "$type": "color",
+      "$description": "Onyx Card — Card fills, elevated surfaces above the canvas"
+    },
+    "graphite-layer": {
+      "$value": "#1e1e1e",
+      "$type": "color",
+      "$description": "Graphite Layer — Input backgrounds, subtle surface lift from Obsidian"
+    },
+    "slate-border": {
+      "$value": "#373737",
+      "$type": "color",
+      "$description": "Slate Border — Primary 1px hairline borders on cards, inputs, containers"
+    },
+    "iron-border": {
+      "$value": "#505050",
+      "$type": "color",
+      "$description": "Iron Border — Stronger border weight for emphasis on key containers"
+    },
+    "ash-mute": {
+      "$value": "#959595",
+      "$type": "color",
+      "$description": "Ash Mute — Muted body text, secondary labels, placeholder text, weak borders"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary text, primary CTA outline stroke, high-contrast borders on dark canvas"
+    },
+    "signal-blue": {
+      "$value": "#1d9bf0",
+      "$type": "color",
+      "$description": "Signal Blue — Outlined link/mention border and text — the only chromatic functional accent in the system"
+    },
+    "prism-gradient": {
+      "$value": "#ff00b8",
+      "$type": "color",
+      "$description": "Prism Gradient — Brand gradient — lime through amber to magenta, applied to logo, wordmark, and hero brand moments"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Single-family system. Weight 400 for body, labels, and buttons; weight 500 reserved for headings, emphasized labels, and nav. Negative tracking tightened with size: -0.033em at 8–12px caption scale, -0.030em at 14–18px body, -0.025em at 24–42px display. This monotone weight palette (only 400 and 500 exist) is a signature choice — the interface whispers hierarchy through size and tracking, not through bold/regular contrast."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://endlesstools.io",
+      "siteName": "Endlesstools",
+      "extractedAt": "2026-06-03T20:50:34.817Z",
+      "variant": "compact"
+    }
+  }
+}

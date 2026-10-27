@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1133-app-statistic-session-response",
+  "kind": "fix",
+  "title": "App Statistic handles session redirects and non-JSON responses without parsing login HTML",
+  "pr": 1133,
+  "area": "ops/app-statistic",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the statistics client tests against redirects, permission denial, HTML and malformed JSON responses.",
+    "Confirm list and detail use manual redirects and distinguish a sign-in requirement from server failures."
+  ],
+  "expect": [
+    "A valid JSON response retains credentials and is read without alteration.",
+    "A sign-in redirect including browser opaqueredirect requests sign-in and is never parsed as JSON.",
+    "Forbidden, HTTP failure, HTML and invalid JSON produce distinct readable errors.",
+    "Detail uses the same response protection and cancellation is preserved."
+  ],
+  "selectors": {
+    "list": "/api/ops/app-statistic",
+    "detail": "/api/ops/app-statistic/:view/:id"
+  },
+  "fence": "Deterministic fetch stubs assert the actual client helper contract; no session token, backend admission or user identity is fabricated.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/web/tracy-harness/test/app-statistic-api.test.mjs"
+    ],
+    "tests": [
+      "statistics reads keep credentials, request JSON and stop login redirects before parsing",
+      "expired session responses request sign-in without parsing HTML, including browser opaque redirects",
+      "forbidden, failed, HTML and invalid JSON statistics responses have distinct readable errors",
+      "detail reads share the same protection and preserve aborted request cancellation"
+    ],
+    "needs": []
+  }
+}

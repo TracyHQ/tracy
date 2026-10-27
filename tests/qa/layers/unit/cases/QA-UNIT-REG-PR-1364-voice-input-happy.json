@@ -1,0 +1,91 @@
+{
+  "id": "QA-UNIT-REG-PR-1364-voice-input-happy",
+  "itemIds": ["regression:REG-PR-1364-voice-input"],
+  "requirement": "Voice input: the chat box's microphone writes live words into the draft through tracy-web's speech relay, which enforces origin, session, one session per account, time, silence and minute limits",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1364-voice-input.json",
+    "ref": "PR #1364 (feat); fix evidence: 15/10/2026: speech to text in the chat box like Claude Design, live, in the language spoken (ElevenLabs Scribe). Live measurement and screenshots: tasks/evidence/voice-input-2026-10-15/.",
+    "invariant": "0 failures (the one live-service test is skipped without VOICE_E2E_REAL=1). 'dictation: words appear live in the draft, the language heard is shown, Done keeps them' passes: the draft reads 'Please: Đổi màu nền' mid-sentence, the badge reads VI, Done sends nothing. 'Enter while speaking: the last phrase is confirmed, then the message is sent once' passes. 'Escape takes the dictated words back out; the draft is as it was' and 'typing while speaking takes the draft back…' pass. 'a handshake is refused without a key (404), from another origin or site (403), and without a session (401)' passes, and nothing refused reaches the service. 'the first minute is counted before the service is called; over today’s budget, it never is' and 'a session ends after five minutes of audio (time-limit)…' pass. 'a page that is not a secure context (plain http): no microphone, since the browser offers none' passes. 'a phrase the service sends twice is told once, in either order; its copy only names the language' and 'a late copy of a finished phrase sent as a partial is dropped, so the phrase is never written twice' pass: the live service's order (stamped copy first) and its late partial never write a phrase twice.",
+    "productSources": [
+      "apps/tracy-web/src/lib/secret-box.js:30",
+      "apps/tracy-web/src/lib/session.js:101",
+      "apps/tracy-web/src/lib/speech-switch.js:22",
+      "apps/tracy-web/src/lib/speech.js:84",
+      "apps/tracy-web/src/speech/relay.js:289",
+      "apps/tracy-web/src/speech/route.js:43",
+      "packages/ui/tracy-chat-input/src/client/voice-draft.mjs:64",
+      "packages/ui/tracy-chat-input/src/client/voice-link.mjs:82",
+      "packages/ui/tracy-chat-input/src/client/voice-pcm.mjs:14"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs:182 readFileSync() with a computed path",
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs:194 readFileSync() with a computed path",
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs:53 import() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs:55 import() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs:57 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a page that is not a secure context (plain http): no microphone, since the browser offers none",
+    "dictation: words appear live in the draft, the language heard is shown, Done keeps them",
+    "Enter while speaking: the last phrase is confirmed, then the message is sent once",
+    "Escape takes the dictated words back out; the draft is as it was",
+    "typing while speaking takes the draft back: the words stay, nothing is written over the typing",
+    "a handshake is refused without a key (404), from another origin or site (403), and without a session (401)",
+    "the first minute is counted before the service is called; over today’s budget, it never is",
+    "a session ends after five minutes of audio (time-limit), and each started minute is counted",
+    "a phrase the service sends twice is told once, in either order; its copy only names the language",
+    "a late copy of a finished phrase sent as a partial is dropped, so the phrase is never written twice"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1364-voice-input"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-chat-input", "tracy-chat-input"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1364-voice-input",
+    "pr": 1364,
+    "kind": "feat",
+    "area": "composer/voice-input",
+    "file": "tests/regression/cases/REG-PR-1364-voice-input.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=120000",
+    "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs",
+    "apps/tracy-web/test/speech-relay.test.mjs",
+    "apps/tracy-web/test/speech-route.test.mjs",
+    "packages/ui/tracy-chat-input/test/voice-draft.test.mjs",
+    "packages/ui/tracy-chat-input/test/voice-link.test.mjs",
+    "packages/ui/tracy-chat-input/test/voice-pcm.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a page that is not a secure context (plain http): no microphone, since the browser offers none",
+    "dictation: words appear live in the draft, the language heard is shown, Done keeps them",
+    "Enter while speaking: the last phrase is confirmed, then the message is sent once",
+    "Escape takes the dictated words back out; the draft is as it was",
+    "typing while speaking takes the draft back: the words stay, nothing is written over the typing",
+    "a handshake is refused without a key (404), from another origin or site (403), and without a session (401)",
+    "the first minute is counted before the service is called; over today’s budget, it never is",
+    "a session ends after five minutes of audio (time-limit), and each started minute is counted",
+    "a phrase the service sends twice is told once, in either order; its copy only names the language",
+    "a late copy of a finished phrase sent as a partial is dropped, so the phrase is never written twice"
+  ],
+  "timeoutS": 600
+}

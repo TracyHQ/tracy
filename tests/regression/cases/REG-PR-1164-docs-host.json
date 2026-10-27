@@ -1,0 +1,54 @@
+{
+  "id": "REG-PR-1164-docs-host",
+  "kind": "feat",
+  "title": "The docs live at the root of DOCS_ORIGIN: /docs/* on Tracy's own hostname and the API host is a 302 there, a customer site's /docs is untouched, the docs host opens only its allowlist with no cookie in or out, Scalar there calls API_ORIGIN, and /v1 answers CORS for the docs origin alone",
+  "pr": 1164,
+  "area": "api/docs-host",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd`.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": ["0 failures.", "Every test named in run.tests reports ok."],
+  "selectors": {
+    "function": "apps/tracy-web/src/config.js readDocsOrigin; lib/docs-host.js isDocsHost; bar/route.js hostKind; docs/route.js docsHostRoutes, docsRedirects, docsLocation; api-reference/route.js docsReferenceRoutes; app.js docsCors; apps/tracy-docs/sidebar.mjs",
+    "test": "apps/tracy-web/test/docs-host.test.mjs, docs-route.test.mjs, api-host.test.mjs, api-reference-route.test.mjs, config.test.mjs; apps/tracy-docs/test/sidebar.test.mjs"
+  },
+  "fence": "The docs host is its own kind before the site-domain loop and its own gate before customer-site routing; the /docs redirect is mounted after site routing, so a customer hostname never reaches it; CORS headers are written only when Origin equals DOCS_ORIGIN and the path is /v1, never allow-credentials. No network, no database.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/docs-host.test.mjs",
+      "apps/tracy-web/test/docs-route.test.mjs",
+      "apps/tracy-web/test/api-host.test.mjs",
+      "apps/tracy-web/test/api-reference-route.test.mjs",
+      "apps/tracy-web/test/config.test.mjs",
+      "apps/tracy-docs/test/sidebar.test.mjs"
+    ],
+    "tests": [
+      "hostKind: the docs host is its own kind, before the site-domain loop",
+      "docs host: the site is served at the root, with its pages and assets",
+      "docs host: Tracy’s own doors are 404 NOT_ON_THIS_HOST, uncacheable, whatever the method",
+      "docs host: a signed-in cookie changes nothing and no answer sets one",
+      "docsLocation: the site loses its /docs prefix; the reference moved to /api/reference/",
+      "Tracy’s own hostname: every /docs… address is a 302 to the docs host, query kept, uncacheable",
+      "API host: pages go to the docs host; the three published documents stay where they were",
+      "a customer site’s own /docs is never redirected",
+      "API host: a preflight from the docs origin to /v1 is allowed — a key in Authorization, no credentials",
+      "API host: the answer to the docs origin carries its CORS headers; any other origin gets none",
+      "API host: CORS is opened for /v1 alone, and only where a docs host is configured",
+      "the page may call the API host and nothing else: connect-src names it, scripts stay self",
+      "GET /api/openapi.json is the /v1 document with the API host as its server",
+      "buildApp: the docs host draws the reference; its document serves the API host",
+      "DOCS_ORIGIN: required once this deployment carries the built documentation site, by name",
+      "DOCS_ORIGIN: set, it is normalised and must name a hostname of its own",
+      "the site is built for the root of docs.tracy.ai",
+      "the sidebar reads Get started · Using Tracy · Desktop app · Changelog · For developers",
+      "every sidebar label is translated in every _sidebar.json"
+    ]
+  }
+}

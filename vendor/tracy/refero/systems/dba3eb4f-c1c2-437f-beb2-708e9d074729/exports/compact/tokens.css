@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-voltage-lime: #d3fb52;
+  --color-cyan-spark: #7af3ff;
+  --gradient-cyan-spark: radial-gradient(at 55% 45%, rgb(122, 243, 255) 0%, rgb(211, 251, 82) 70%, rgba(0, 0, 0, 0) 76%);
+  --color-mid-abyss: #052326;
+  --color-carbon-ink: #14151c;
+  --color-pure-white: #ffffff;
+  --color-true-black: #000000;
+  --color-ash: #666666;
+
+  /* Typography — Font Families */
+  --font-noigrotesk: 'NoiGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sansplomb: 'SansPlomb', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,53 @@
+{
+  "id": "QA-UNIT-REG-PR-1390-wp-ja-morgan-twitter-bird-morgan-name-happy",
+  "itemIds": ["regression:REG-PR-1390-wp-ja-morgan-twitter-bird-morgan-name"],
+  "requirement": "WP JA Morgan 1.1.19 draws the source's Twitter bird (core's twitter service, not x) in the top bar and both footers, and the demo site name the seeder writes to blogname is \"Morgan\"",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1390-wp-ja-morgan-twitter-bird-morgan-name.json",
+    "ref": "PR #1390 (fix); fix evidence: Source pages draw `fa fa-twitter`; WordPress 7.1.2 core social-link.php draws the X mark for service x and the bird for service twitter (D-81, tasks/ja-morgan-wp7/DECISIONS.md).",
+    "invariant": "S1 exits 0 with 0 failures and 0 skipped tests. parts/header.html, parts/footer.html and patterns/part-footer-hs3.php in overlays/ and src/ carry \"service\":\"twitter\",\"label\":\"Twitter\" and no \"service\":\"x\". assets/css/wp-ja-morgan.css styles .social-follow .wp-social-link-twitter beside .wp-social-link-x for the square and the bird mask. tasks/ja-morgan-wp7/spec/content.json site.name and content-contract.json facts[\"site.name\"].value are both \"Morgan\"; parts/header.html still prints the site title.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/cms/tracy-wordpress-theme/test/wp-ja-morgan.test.mjs:15 readFileSync() with a computed path",
+      "packages/cms/tracy-wordpress-theme/test/wp-ja-morgan.test.mjs:17 readFileSync() with a computed path",
+      "packages/cms/tracy-wordpress-theme/test/wp-ja-morgan.test.mjs:201 spawnSync() runs a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "overlays: every Twitter social link is core's twitter service",
+    "src: every Twitter social link is core's twitter service",
+    "the demo site name the seeder writes to blogname is \"Morgan\""
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1390-wp-ja-morgan-twitter-bird-morgan-name"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/cms/tracy-wordpress-theme", "tracy-wordpress-theme"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1390-wp-ja-morgan-twitter-bird-morgan-name",
+    "pr": 1390,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-morgan",
+    "file": "tests/regression/cases/REG-PR-1390-wp-ja-morgan-twitter-bird-morgan-name.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "test/wp-ja-morgan.test.mjs"],
+  "cwd": "packages/cms/tracy-wordpress-theme",
+  "needs": [],
+  "tests": [
+    "overlays: every Twitter social link is core's twitter service",
+    "src: every Twitter social link is core's twitter service",
+    "the demo site name the seeder writes to blogname is \"Morgan\""
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-940-ops-beta-screens",
+  "kind": "feat",
+  "title": "User Data Analytics preserves growth counts by source and day, oldest-waiting stuck sites, and owner/admin case handling",
+  "pr": 940,
+  "area": "ops/beta",
+  "cms": ["any"],
+  "needs": ["postgres:TEST_DATABASE_URL", "build:harness-web", "browser:chrome", "playwright"],
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-940-ops-beta-screens.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 900
+  },
+  "flaky_model": false,
+  "steps": [
+    "S0: From the repo root at the commit under test run node tests/regression/run.mjs --no-codex --id REG-PR-940-ops-beta-screens with TEST_DATABASE_URL set. The driver builds @tracy/harness-web and runs tasks/evidence/ops-beta-screens/verify.mjs against the real buildApp and built /ops SPA on 127.0.0.1, with isolated fixtures and owner/developer session cookies in headless Google Chrome. Evidence is written to a temporary directory.",
+    "S1: As owner open /ops/signals: read the User Data Analytics rail, growth tiles, channel breakdown and latest sign-ins. Hover Source details, set daily rows per page to 50, read the 14-day rows, then switch to 7 days.",
+    "S2: As owner open /ops/stuck: read the oldest-waiting open rows and hover the customer details and reported problem. Press Mark handled on mara.tracy.test, open Closed in period, then Reopen. The site.create fixture occurs 25 minutes ago, before its failures 20 and 12 minutes ago, so it does not supersede the open case as a new site incarnation.",
+    "S3: As developer open /ops/stuck: read the disabled Mark handled button and its reason.",
+    "S4: As an account with no tracy_admin seat, GET /api/ops/beta/signals.",
+    "Also run node --test apps/tracy-web/test/ops-beta.test.mjs with the same TEST_DATABASE_URL; require every test to pass without skips and retain the five original named regression guards."
+  ],
+  "expect": [
+    "The browser driver prints verdict PASS checks 22 and writes checks.json and screenshots in its temporary evidence directory.",
+    "S1: User Data Analytics is above Agents, with User Growth Statistics and Stuck Customer Sites; the separate template attention link remains. [data-stuck-count] is 2. Of the five growth tiles, the original count guards remain: New users 4, New sites 2, Waitlist 2, Sites with failures 3 (sites, not 4 attempts). Channel buckets are email, blog, demo, site, forum, other, none. Latest sign-ins are mara, studio, ortiz, hello; hovering mara's Source details retains Email, joomlart, tracy-beta-2026-10 and members-cta. With page size 50 there are 14 day rows, then 7 after changing the window.",
+    "S2: Open rows are www.example.net then mara.tracy.test, oldest waiting first. Hover details retain customer, plan, first-sign-in source, reported problem and times. Mark handled removes mara, leaving one row and [data-stuck-count] 1; ops_signal records ops.handled with by owner@tracy.test and of site.stuck. Closed in period distinguishes Marked handled and Working again. Reopen restores two open rows.",
+    "S3: Mark handled is disabled and its title is Only an owner or admin can change case status.",
+    "S4: 403 with an empty body.",
+    "node --test: all tests pass with no skips; the original named guards for stuck event folding, Vietnam-day grouping, default date window, open-site ordering and owner close/reopen remain required. The suite may add tests without changing a fixed expected total."
+  ],
+  "selectors": {
+    "rail": "[data-slot=\"sidebar\"], [data-sidebar=\"sidebar\"]",
+    "badge": "[data-stuck-count]",
+    "tile": "[data-signal-tile=\"New users\"]",
+    "legend": ".signals-source-list [data-source]",
+    "signin": "[data-signal-latest] tbody tr",
+    "sourceDetails": "[data-slot=\"hover-card-content\"]",
+    "day": "[data-signal-days] tbody tr",
+    "row": "[data-signal-table=\"stuck-open\"] [data-signal-row]",
+    "press": "[data-stuck-press=\"handled\"], [data-stuck-press=\"reopen\"]",
+    "closed": "[data-signal-table=\"stuck-closed\"]",
+    "templateAttention": "a[href=\"/ops/attention\"]"
+  },
+  "evidence": "05/10/2026: operation signals reached Telegram only; no /ops screen read ops_signal or allowed handling stuck sites. PR #1594 intentionally renamed the Beta rail and growth pages, moved source/customer detail into hover cards, paginated daily rows and sorted the visible queue oldest waiting first. This case retains all 22 browser checks and the original five named unit guards. Each rerun writes isolated checks.json and screenshots to a temporary directory; the regression runner records its result separately.",
+  "fence": "apps/tracy-web/src/ops/beta.js folds stuck rows by events only (site.stuck opens, site.result done / site.delete / ops.handled close, ops.reopened opens); the only write door requires an owner or admin seat, the deployment's own origin and a JSON body; ops.handled and ops.reopened never notify Telegram (lib/ops-signal.js NOTIFY)."
+}

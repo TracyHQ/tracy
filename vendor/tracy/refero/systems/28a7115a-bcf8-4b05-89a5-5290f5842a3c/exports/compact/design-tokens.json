@@ -1,0 +1,54 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, heading strokes, card borders, filled CTA backgrounds — the sole carrier of visual weight in an otherwise empty palette"
+    },
+    "paper-cream": {
+      "$value": "#f2f1ed",
+      "$type": "color",
+      "$description": "Paper Cream — Page canvas, card surfaces, and the default background — warm off-white that distinguishes the brand from clinical SaaS whites"
+    },
+    "warm-border": {
+      "$value": "#dbd7cd",
+      "$type": "color",
+      "$description": "Warm Border — Elevated surface, hairline dividers, and card-on-card separation — one shade deeper than the canvas to create structure without contrast"
+    },
+    "stone-gray": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Stone Gray — Secondary body text, muted labels, subtle borders — never used for primary copy"
+    },
+    "ash-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Ash Gray — Tertiary text, helper copy, disabled states — the quietest voice in the type stack"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Text on dark filled CTAs, occasional card surface where higher contrast is needed against the cream canvas"
+    }
+  },
+  "font": {
+    "bureauserif": {
+      "$value": "bureauSerif",
+      "$type": "fontFamily",
+      "$description": "All headlines and display text. Weight 200 is anti-convention — most editorial sites use 300-400 for serif headlines; the extra-light whisper forces the serif to feel like quiet authority rather than declaration. Line-height pinned to 1.0 creates tight, overlapping baselines that read as deliberately set rather than browser-default. Tracking locked at -0.03em across every size, tightening the letterforms into a cohesive display voice."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body text, nav items, buttons, labels, metadata — the entire non-display UI. A single weight (400) with no bold variant keeps the sans side neutral so the serif can dominate. Tracking is slightly negative on body (-0.011em at 16px) and near-zero on small text, giving Inter a set, editorial feel rather than a default web feel."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://handhold.io",
+      "siteName": "Handhold",
+      "extractedAt": "2026-06-03T20:03:58.657Z",
+      "variant": "compact"
+    }
+  }
+}

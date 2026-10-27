@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1100-p2-look-undo-no-empty-post",
+  "kind": "fix",
+  "title": "Undoing a WordPress look write that created the site's Additional CSS post deletes that post instead of leaving it empty",
+  "pr": 1100,
+  "area": "site-tools/look",
+  "cms": ["wp"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/look-undo.test.mjs packages/tools/tracy-site-tools/test/look-set.test.mjs apps/tracy-host/test/look-css.test.mjs",
+    "S2: Read the tests named in run.tests (the plugin's look.revert and look.set, and tracy-host's site-look-css turn undo, against a WordPress that plays WP_CUSTOM_CSS_PHP)."
+  ],
+  "expect": [
+    "S1 exits 0.",
+    "A site with no custom_css post: the read says exists:false, the undo entry records customCss.existed:false, and look.revert (and a LOOK_SET_NO_EFFECT put-back) sends mode 'remove' — the post the write created is gone afterwards, restored ['Additional CSS'].",
+    "tracy-host's turn undo of such an entry sends mode 'remove' with expect = sha256 of c1, and the check then reads now == before.",
+    "An entry kept before `existed` was recorded (c0 empty, no flag) is put back as an empty post, as before; the plugin and tracy-host copies of WP_CUSTOM_CSS_PHP stay identical."
+  ],
+  "selectors": {
+    "php": "WP_CUSTOM_CSS_PHP in packages/tools/tracy-site-tools/src/host/look-undo.mjs and apps/tracy-host/src/look-css.js",
+    "code": "look-undo.mjs takeLookSnapshot / revertLook; look-css.js lookCss undo"
+  },
+  "evidence": "uiweekwp 09/10/2026: no custom_css post before look.set; after look.set + turn undo the site has post 2093 'wp-tracy-business' with empty content (created 18:17:28 by the write, emptied 18:18:00 by the undo); undo entry f737fe has c0 = 0 bytes and no way to tell 'none' from 'empty'.",
+  "fence": "the Additional CSS read reports whether the post exists; the undo record keeps it; a revert of a created post deletes it compare-and-set",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/look-undo.test.mjs",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs",
+      "apps/tracy-host/test/look-css.test.mjs"
+    ],
+    "tests": [
+      "🔒 WordPress Additional CSS a look write CREATED is deleted by its undo",
+      "🔒 WordPress: a site with no Additional CSS post gets none back",
+      "🔒 undo of a write that CREATED the Additional CSS post",
+      "🔒 the PHP, its argv, the store and the id shape are the plugin’s own"
+    ]
+  }
+}

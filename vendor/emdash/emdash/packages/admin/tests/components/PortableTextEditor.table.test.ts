@@ -1,0 +1,596 @@
+import { describe, it, expect } from "vitest";
+
+import {
+	_portableTextToProsemirror,
+	_prosemirrorToPortableText,
+} from "../../src/components/PortableTextEditor";
+
+describe("Table conversion: PortableText ↔ ProseMirror", () => {
+	describe("PortableText → ProseMirror", () => {
+		it("converts simple table with text", () => {
+			const ptBlocks = [
+				{
+					_type: "table",
+					_key: "t1",
+					hasHeaderRow: true,
+					rows: [
+						{
+							_type: "tableRow",
+							_key: "r1",
+							cells: [
+								{
+									_type: "tableCell",
+									_key: "c1",
+									isHeader: true,
+									content: [{ _type: "span", _key: "s1", text: "Header 1" }],
+								},
+								{
+									_type: "tableCell",
+									_key: "c2",
+									isHeader: true,
+									content: [{ _type: "span", _key: "s2", text: "Header 2" }],
+								},
+							],
+						},
+						{
+							_type: "tableRow",
+							_key: "r2",
+							cells: [
+								{
+									_type: "tableCell",
+									_key: "c3",
+									content: [{ _type: "span", _key: "s3", text: "Cell 1" }],
+								},
+								{
+									_type: "tableCell",
+									_key: "c4",
+									content: [{ _type: "span", _key: "s4", text: "Cell 2" }],
+								},
+							],
+						},
+					],
+				},
+			];
+
+			const result = _portableTextToProsemirror(ptBlocks);
+
+			expect(result.type).toBe("doc");
+			expect(result.content).toHaveLength(1);
+
+			const table = result.content[0];
+			expect(table.type).toBe("table");
+			expect(table.content).toHaveLength(2);
+
+			const headerRow = table.content[0];
+			expect(headerRow.type).toBe("tableRow");
+			expect(headerRow.content[0].type).toBe("tableHeader");
+			expect(headerRow.content[1].type).toBe("tableHeader");
+
+			const dataRow = table.content[1];
+			expect(dataRow.type).toBe("tableRow");
+			expect(dataRow.content[0].type).toBe("tableCell");
+		});
+
+		it("converts table with text formatting marks", () => {
+			const ptBlocks = [
+				{
+					_type: "table",
+					_key: "t1",
+					rows: [
+						{
+							_type: "tableRow",
+							_key: "r1",
+							cells: [
+								{
+									_type: "tableCell",
+									_key: "c1",
+									content: [{ _type: "span", _key: "s1", text: "Bold", marks: ["strong"] }],
+								},
+								{
+									_type: "tableCell",
+									_key: "c2",
+									content: [{ _type: "span", _key: "s2", text: "Italic", marks: ["em"] }],
+								},
+							],
+						},
+					],
+				},
+			];
+
+			const result = _portableTextToProsemirror(ptBlocks);
+
+			const table = result.content[0];
+			const cell1 = table.content[0].content[0];
+			const cell1Para = cell1.content[0];
+			const cell1Text = cell1Para.content[0];
+
+			expect(cell1Text.text).toBe("Bold");
+			expect(cell1Text.marks).toContainEqual({ type: "bold" });
+
+			const cell2 = table.content[0].content[1];
+			const cell2Para = cell2.content[0];
+			const cell2Text = cell2Para.content[0];
+
+			expect(cell2Text.text).toBe("Italic");
+			expect(cell2Text.marks).toContainEqual({ type: "italic" });
+		});
+
+		it("converts table with links (markDefs)", () => {
+			const ptBlocks = [
+				{
+					_type: "table",
+					_key: "t1",
+					markDefs: [
+						{
+							_type: "link",
+							_key: "link1",
+							href: "https://example.com",
+							blank: true,
+						},
+					],
+					rows: [
+						{
+							_type: "tableRow",
+							_key: "r1",
+							cells: [
+								{
+									_type: "tableCell",
+									_key: "c1",
+									content: [{ _type: "span", _key: "s1", text: "Click here", marks: ["link1"] }],
+								},
+							],
+						},
+					],
+				},
+			];
+
+			const result = _portableTextToProsemirror(ptBlocks);
+
+			const table = result.content[0];
+			const cell = table.content[0].content[0];
+			const para = cell.content[0];
+			const text = para.content[0];
+
+			expect(text.text).toBe("Click here");
+			expect(text.marks).toContainEqual({
+				type: "link",
+				attrs: { href: "https://example.com", target: "_blank" },
+			});
+		});
+	});
+
+	describe("ProseMirror → PortableText", () => {
+		it("converts simple table to PT", () => {
+			const pmDoc = {
+				type: "doc",
+				content: [
+					{
+						type: "table",
+						content: [
+							{
+								type: "tableRow",
+								content: [
+									{
+										type: "tableHeader",
+										content: [
+											{
+												type: "paragraph",
+												content: [{ type: "text", text: "Header 1" }],
+											},
+										],
+									},
+									{
+										type: "tableHeader",
+										content: [
+											{
+												type: "paragraph",
+												content: [{ type: "text", text: "Header 2" }],
+											},
+										],
+									},
+								],
+							},
+							{
+								type: "tableRow",
+								content: [
+									{
+										type: "tableCell",
+										content: [
+											{
+												type: "paragraph",
+												content: [{ type: "text", text: "Cell 1" }],
+											},
+										],
+									},
+									{
+										type: "tableCell",
+										content: [
+											{
+												type: "paragraph",
+												content: [{ type: "text", text: "Cell 2" }],
+											},
+										],
+									},
+								],
+							},
+						],
+					},
+				],
+			};
+
+			const result = _prosemirrorToPortableText(pmDoc);
+
+			expect(result).toHaveLength(1);
+			const table = result[0] as {
+				_type: string;
+				rows: Array<{
+					cells: Array<{ content: Array<{ text: string }>; isHeader: boolean }>;
+				}>;
+				hasHeaderRow: boolean;
+			};
+
+			expect(table._type).toBe("table");
+			expect(table.hasHeaderRow).toBe(true);
+			expect(table.rows).toHaveLength(2);
+			expect(table.rows[0].cells[0].isHeader).toBe(true);
+			expect(table.rows[0].cells[0].content[0].text).toBe("Header 1");
+			expect(table.rows[1].cells[0].isHeader).toBe(false);
+			expect(table.rows[1].cells[0].content[0].text).toBe("Cell 1");
+		});
+
+		it("preserves line breaks between paragraphs in a table cell", () => {
+			const pmDoc = {
+				type: "doc",
+				content: [
+					{
+						type: "table",
+						content: [
+							{
+								type: "tableRow",
+								content: [
+									{
+										type: "tableCell",
+										content: [
+											{
+												type: "paragraph",
+												content: [
+													{
+														type: "text",
+														text: "First line",
+														marks: [
+															{
+																type: "link",
+																attrs: { href: "https://example.com" },
+															},
+														],
+													},
+												],
+											},
+											{
+												type: "paragraph",
+												content: [{ type: "text", text: "Second line" }],
+											},
+										],
+									},
+								],
+							},
+						],
+					},
+				],
+			};
+
+			const result = _prosemirrorToPortableText(pmDoc);
+			const table = result[0] as {
+				rows: Array<{
+					cells: Array<{
+						content: Array<{ text: string; marks?: string[] }>;
+						markDefs?: Array<{ _key: string; _type: string; href: string }>;
+					}>;
+				}>;
+			};
+			const cell = table.rows[0].cells[0];
+			const spans = cell.content;
+
+			expect(table.rows).toHaveLength(1);
+			expect(spans.map((span) => span.text)).toEqual(["First line", "\n", "Second line"]);
+			expect(cell.markDefs?.[0]).toMatchObject({
+				_key: spans[0].marks?.[0],
+				_type: "link",
+				href: "https://example.com",
+			});
+			expect(spans[1].marks).toBeUndefined();
+
+			const roundTripped = _prosemirrorToPortableText(_portableTextToProsemirror(result));
+			const roundTrippedTable = roundTripped[0] as typeof table;
+			const roundTrippedSpans = roundTrippedTable.rows[0].cells[0].content;
+
+			expect(roundTrippedSpans.map((span) => span.text)).toEqual([
+				"First line",
+				"\n",
+				"Second line",
+			]);
+			expect(roundTrippedTable.rows[0].cells[0].markDefs?.[0]).toMatchObject({
+				_key: roundTrippedSpans[0].marks?.[0],
+				_type: "link",
+				href: "https://example.com",
+			});
+			expect(roundTrippedSpans[1].marks).toBeUndefined();
+		});
+
+		it("converts table with text marks to PT", () => {
+			const pmDoc = {
+				type: "doc",
+				content: [
+					{
+						type: "table",
+						content: [
+							{
+								type: "tableRow",
+								content: [
+									{
+										type: "tableCell",
+										content: [
+											{
+												type: "paragraph",
+												content: [
+													{
+														type: "text",
+														text: "Bold text",
+														marks: [{ type: "bold" }],
+													},
+												],
+											},
+										],
+									},
+								],
+							},
+						],
+					},
+				],
+			};
+
+			const result = _prosemirrorToPortableText(pmDoc);
+
+			const table = result[0] as {
+				rows: Array<{
+					cells: Array<{ content: Array<{ text: string; marks?: string[] }> }>;
+				}>;
+			};
+
+			expect(table.rows[0].cells[0].content[0].text).toBe("Bold text");
+			expect(table.rows[0].cells[0].content[0].marks).toContain("strong");
+		});
+
+		it("converts table links without collapsing different targets for one URL", () => {
+			const pmDoc = {
+				type: "doc",
+				content: [
+					{
+						type: "table",
+						content: [
+							{
+								type: "tableRow",
+								content: [
+									{
+										type: "tableCell",
+										content: [
+											{
+												type: "paragraph",
+												content: [
+													{
+														type: "text",
+														text: "Link text",
+														marks: [
+															{
+																type: "link",
+																attrs: {
+																	href: "https://example.com",
+																	target: "_blank",
+																},
+															},
+														],
+													},
+													{
+														type: "text",
+														text: "Same tab",
+														marks: [{ type: "link", attrs: { href: "https://example.com" } }],
+													},
+												],
+											},
+										],
+									},
+								],
+							},
+						],
+					},
+				],
+			};
+
+			const result = _prosemirrorToPortableText(pmDoc);
+
+			const table = result[0] as {
+				rows: Array<{
+					cells: Array<{
+						content: Array<{ text: string; marks?: string[] }>;
+						markDefs?: Array<{ _key: string; _type: string; href: string; blank?: boolean }>;
+					}>;
+				}>;
+			};
+
+			const cell = table.rows[0].cells[0];
+			expect(cell.markDefs).toBeDefined();
+			expect(cell.markDefs).toHaveLength(2);
+			expect(cell.markDefs![0]._type).toBe("link");
+			expect(cell.markDefs![0].href).toBe("https://example.com");
+
+			const linkMarkKey = cell.markDefs![0]._key;
+			expect(cell.content[0].marks).toContain(linkMarkKey);
+			expect(
+				cell.content.map(
+					(span) => cell.markDefs?.find((mark) => span.marks?.includes(mark._key))?.blank,
+				),
+			).toEqual([true, false]);
+		});
+	});
+
+	describe("Round-trip conversion", () => {
+		it("PT → PM → PT preserves table structure", () => {
+			const original = [
+				{
+					_type: "table",
+					_key: "t1",
+					hasHeaderRow: true,
+					rows: [
+						{
+							_type: "tableRow",
+							_key: "r1",
+							cells: [
+								{
+									_type: "tableCell",
+									_key: "c1",
+									isHeader: true,
+									content: [{ _type: "span", _key: "s1", text: "Header" }],
+								},
+							],
+						},
+						{
+							_type: "tableRow",
+							_key: "r2",
+							cells: [
+								{
+									_type: "tableCell",
+									_key: "c2",
+									content: [{ _type: "span", _key: "s2", text: "Data" }],
+								},
+							],
+						},
+					],
+				},
+			];
+
+			const pm = _portableTextToProsemirror(original);
+			const roundTripped = _prosemirrorToPortableText(pm);
+
+			const table = roundTripped[0] as {
+				_type: string;
+				hasHeaderRow: boolean;
+				rows: Array<{
+					cells: Array<{ content: Array<{ text: string }>; isHeader: boolean }>;
+				}>;
+			};
+
+			expect(table._type).toBe("table");
+			expect(table.hasHeaderRow).toBe(true);
+			expect(table.rows[0].cells[0].isHeader).toBe(true);
+			expect(table.rows[0].cells[0].content[0].text).toBe("Header");
+			expect(table.rows[1].cells[0].isHeader).toBe(false);
+			expect(table.rows[1].cells[0].content[0].text).toBe("Data");
+		});
+
+		it("preserves table identity, geometry, widths, alignment, and partial headers", () => {
+			const original = [
+				{
+					_type: "table",
+					_key: "table-stable",
+					rows: [
+						{
+							_type: "tableRow",
+							_key: "row-stable",
+							cells: [
+								{
+									_type: "tableCell",
+									_key: "cell-stable",
+									content: [{ _type: "span", _key: "span-1", text: "Wide" }],
+									isHeader: true,
+									colspan: 2,
+									rowspan: 2,
+									colwidth: [180, 240],
+									textAlign: "right",
+								},
+								{
+									_type: "tableCell",
+									_key: "cell-neighbor",
+									content: [{ _type: "span", _key: "span-2", text: "Neighbor" }],
+								},
+							],
+						},
+						{
+							_type: "tableRow",
+							_key: "row-second",
+							cells: [
+								{
+									_type: "tableCell",
+									_key: "cell-second",
+									content: [{ _type: "span", _key: "span-3", text: "Second" }],
+								},
+							],
+						},
+					],
+				},
+			];
+
+			const proseMirror = _portableTextToProsemirror(original);
+			const tableNode = proseMirror.content[0];
+			const firstRow = tableNode.content[0];
+			const firstCell = firstRow.content[0];
+
+			expect(tableNode.attrs).toMatchObject({ emdashKey: "table-stable" });
+			expect(firstRow.attrs).toMatchObject({ emdashKey: "row-stable" });
+			expect(firstCell.attrs).toMatchObject({
+				emdashKey: "cell-stable",
+				colspan: 2,
+				rowspan: 2,
+				colwidth: [180, 240],
+				textAlign: "right",
+			});
+
+			const roundTripped = _prosemirrorToPortableText(proseMirror);
+			const persisted = roundTripped[0] as {
+				_type: string;
+				_key: string;
+				rows: Array<{
+					_key: string;
+					cells: Array<Record<string, unknown>>;
+				}>;
+			};
+			expect(persisted).toMatchObject({ _type: "table", _key: "table-stable" });
+			expect(persisted.rows).toHaveLength(2);
+			expect(persisted.rows[0]?._key).toBe("row-stable");
+			expect(persisted.rows[0]?.cells).toHaveLength(2);
+			expect(persisted.rows[0]?.cells[0]).toMatchObject({
+				_key: "cell-stable",
+				isHeader: true,
+				colspan: 2,
+				rowspan: 2,
+				colwidth: [180, 240],
+				textAlign: "right",
+			});
+			expect(persisted).not.toHaveProperty("hasHeaderRow");
+		});
+
+		it("accepts legacy string cells without changing Contentful output", () => {
+			const legacy = [
+				{
+					_type: "table",
+					_key: "legacy-table",
+					rows: [
+						{
+							_type: "tableRow",
+							_key: "legacy-row",
+							cells: ["Name", "مرحبا"],
+						},
+					],
+					hasHeaderRow: true,
+				},
+			];
+
+			const proseMirror = _portableTextToProsemirror(legacy);
+			const cells = proseMirror.content[0].content[0].content;
+
+			expect(cells).toHaveLength(2);
+			expect(cells[0].type).toBe("tableHeader");
+			expect(cells[0].content[0].content[0].text).toBe("Name");
+			expect(cells[1].content[0].content[0].text).toBe("مرحبا");
+		});
+	});
+});

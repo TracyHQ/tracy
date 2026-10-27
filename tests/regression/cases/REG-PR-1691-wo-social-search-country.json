@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1691-wo-social-search-country",
+  "kind": "fix",
+  "title": "A place's social pages are searched as from its country, and a city Google names in another script than the place's name stays out of the query and the locality match",
+  "pr": 1691,
+  "area": "website-opportunities/social-search",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: read Kirami Sushi Bar's Google Place Details as fetched on dev (city and emirate in Arabic, neighbourhood Al Barari and country AE in Latin) into the search's place; also a Japanese name with a Japanese city.",
+    "S2: match the Kirami Facebook page as ScrapeCreators read it (address naming Al Barari and Dubai, the branch phone).",
+    "S3: search Kirami's Facebook page through a provider that records each query and what it was asked.",
+    "S4: call ScrapeCreators, Jina, Firecrawl and SerpApi search with a country, then without one.",
+    "S5: list the web-search providers an operator can order."
+  ],
+  "expect": [
+    "S1: Kirami has no locality, localities [Al Barari] and country AE; the Japanese place keeps its Japanese city.",
+    "S2: confirmed on the branch phone.",
+    "S3: one query, 'Kirami Sushi Bar facebook', asked with {country: 'AE'}; the page is confirmed.",
+    "S4: ScrapeCreators region=AE, Jina and SerpApi gl=ae, Firecrawl country ae; none of them sent without a country.",
+    "S5: scrapecreators-google, jina, firecrawl, serpapi-google-search."
+  ],
+  "selectors": {
+    "files": "packages/wo/website-opportunities/domain/social-search.mjs packages/wo/website-opportunities/domain/web-search.mjs packages/wo/website-opportunities/domain/capabilities.mjs packages/wo/website-opportunities/src/place-executor.js",
+    "dom": ""
+  },
+  "fence": "searchPlaceOf's sameScript locality and country, localityOf over localities, findSocialPages passing {country} to each searcher, the country parameter of each web search client",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/wo/website-opportunities/test/domain-social-search.test.mjs",
+      "packages/wo/website-opportunities/test/domain-web-search.test.mjs",
+      "packages/wo/website-opportunities/test/domain-capabilities.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "searchPlaceOf: a city in another script than the name is left out; the Latin areas and the country stay",
+      "searchPlaceOf: a name and city in the same non-Latin script keep the city",
+      "match: a page naming one of the Latin areas (the neighbourhood) matches the locality",
+      "find: every search carries the place's country, and no query carries a city in another script",
+      "scrapeCreatorsGoogleSearch: a country becomes the region parameter",
+      "each adapter searches as from the place's country when given one, and as before without"
+    ]
+  }
+}

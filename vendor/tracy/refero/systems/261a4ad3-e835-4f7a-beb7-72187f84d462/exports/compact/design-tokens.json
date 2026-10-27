@@ -1,0 +1,89 @@
+{
+  "color": {
+    "amp-orange": {
+      "$value": "#ff6105",
+      "$type": "color",
+      "$description": "Amp Orange — Primary action fill, active step badge, accent rule, and brand strokes — the only chromatic color in the interface. Used at high contrast on white surfaces (7.0:1 against #ffffff) and as a warm border tint on cards and inputs"
+    },
+    "amp-glow": {
+      "$value": "#ffa069",
+      "$type": "color",
+      "$description": "Amp Glow — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "peach-wash": {
+      "$value": "#ffdfcd",
+      "$type": "color",
+      "$description": "Peach Wash — Soft highlight surface for featured cards and step accents. A near-gray peach that stays quiet while adding warmth to a card stack"
+    },
+    "ink": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Ink — Primary text, logo mark, button text. 19.8:1 against white — the highest-contrast neutral in the stack"
+    },
+    "carbon": {
+      "$value": "#292b2a",
+      "$type": "color",
+      "$description": "Carbon — Secondary text and nav links, slightly softer than Ink. Icon strokes also draw from this level"
+    },
+    "slate": {
+      "$value": "#7a7b7b",
+      "$type": "color",
+      "$description": "Slate — Neutral form states, badge text, and quiet UI feedback where color should stay understated."
+    },
+    "ash": {
+      "$value": "#a2a3a2",
+      "$type": "color",
+      "$description": "Ash — Disabled link text and placeholder-level text — the quietest text tone before disappearing"
+    },
+    "graphite-hairline": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Graphite Hairline — The dominant border color across the site — dividers, card borders, button outlines, and structural rules. By far the most-used neutral (1628+ borderColor occurrences)"
+    },
+    "fog": {
+      "$value": "#dfe0df",
+      "$type": "color",
+      "$description": "Fog — Soft border for cards and body blocks where #e5e5e5 reads as too crisp against off-white"
+    },
+    "bone": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Bone — Neutral button fill (88 occurrences) — the ghost/secondary button background. A light step above canvas"
+    },
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, card surfaces, button text on dark and orange fills. The base of the surface stack"
+    },
+    "linen": {
+      "$value": "#f3f4f3",
+      "$type": "color",
+      "$description": "Linen — Off-white alt surface — secondary button fills and surface tints where pure white is too clinical"
+    },
+    "charcoal": {
+      "$value": "#202120",
+      "$type": "color",
+      "$description": "Charcoal — Dark elevated surface for cards, headers, and contained panels."
+    },
+    "smoke": {
+      "$value": "#3c3e3d",
+      "$type": "color",
+      "$description": "Smoke — Heading underline accent in dark sections, heavier than Carbon"
+    }
+  },
+  "font": {
+    "publicasans": {
+      "$value": "PublicaSans",
+      "$type": "fontFamily",
+      "$description": "The only typeface in the system. Light 300 for display headlines, Regular 400 for body and UI, Medium 500 for buttons and emphasis. Tracking tightens with size: -0.036em at 72-78px, -0.030em at 48px, -0.020em at 32px, -0.010em at 16-18px, near-zero at body. The progressive tightening gives display sizes a magazine-cover feel while body text stays open and readable."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ampfit.com",
+      "siteName": "amp",
+      "extractedAt": "2026-06-03T19:15:38.828Z",
+      "variant": "compact"
+    }
+  }
+}

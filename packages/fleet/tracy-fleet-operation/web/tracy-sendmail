@@ -1,0 +1,78 @@
+#!/bin/sh
+#
+# tracy-sendmail — the only "sendmail" a site's web container has. It does not deliver anything: it
+# hands the raw message to tracy-web, which decides whether this site may send at all (published,
+# mode, limits) and delivers it. Contract: tasks/todo-mail-site-khach.md, the contract section.
+#
+#   PHP      sendmail_path = /usr/local/bin/tracy-sendmail -t -i     (tracy-sendmail.ini)
+#   Joomla   mailer 'mail' goes through PHP mail(); mailer 'sendmail' finds /usr/sbin/sendmail
+#   EmDash   emdash-smtp's "PHP Mail / local sendmail" provider runs `sendmail -i -f <from> <to...>`
+#
+# Every sendmail flag and positional recipient is accepted and IGNORED: tracy-web reads the
+# recipients from the To/Cc/Bcc headers and rewrites From itself, so nothing on this command line
+# may change who receives the message or who it claims to be from. The message on stdin is posted
+# byte for byte.
+#
+# Three variables, set on the web service by render-compose.sh:
+#   TRACY_MAIL_URL     where tracy-web listens on the `tracy` network (…/_site-mail)
+#   TRACY_MAIL_LABEL   this site's label
+#   TRACY_MAIL_TOKEN   hex(HMAC-SHA256(HOST_SECRET, "site-mail:v1:" + label)), from the site's .env
+#
+# Exit status is what makes PHP's mail() return true or false, so it is exact:
+#   0    tracy-web answered 2xx (accepted)
+#   75   EX_TEMPFAIL: a variable is missing, tracy-web could not be reached, or it answered 429/5xx
+#   69   EX_UNAVAILABLE: tracy-web refused the message (any other 4xx: token, draft, mode, size)
+# The reason goes to stderr on every non-zero exit — PHP writes it to the site's error log.
+#
+# POSIX sh and curl only: the web images already carry curl, and this file must not need anything
+# a base image might drop.
+
+# Flags, read and thrown away. `-f`/`-F`/`-r` (and a few rarer ones) carry a value as the next word
+# when it is not joined (`-f addr` and `-faddr` are both legal); everything else is one word.
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --) shift; break ;;
+    -f|-F|-r|-B|-N|-R|-V|-X|-L|-O|-o) [ $# -ge 2 ] && shift ;;
+    -*) ;;
+    *) ;;  # a recipient on the command line: tracy-web takes recipients from the headers
+  esac
+  shift
+done
+
+missing=""
+[ -n "${TRACY_MAIL_URL:-}" ] || missing="$missing TRACY_MAIL_URL"
+[ -n "${TRACY_MAIL_LABEL:-}" ] || missing="$missing TRACY_MAIL_LABEL"
+[ -n "${TRACY_MAIL_TOKEN:-}" ] || missing="$missing TRACY_MAIL_TOKEN"
+if [ -n "$missing" ]; then
+  # Drain stdin first: a writer whose pipe closes mid-message sees EPIPE, not our exit status.
+  cat >/dev/null 2>&1
+  echo "tracy-sendmail: not configured (missing:$missing) — this site cannot send mail yet" >&2
+  exit 75
+fi
+
+# The status code is the last line; the JSON body (tracy-web's reason) comes before it.
+answer=$(curl -sS --max-time 30 -X POST "$TRACY_MAIL_URL" \
+  -H "x-tracy-site: $TRACY_MAIL_LABEL" \
+  -H "x-tracy-token: $TRACY_MAIL_TOKEN" \
+  -H 'content-type: message/rfc822' \
+  --data-binary @- \
+  -w '\n%{http_code}')
+rc=$?
+if [ "$rc" -ne 0 ]; then
+  echo "tracy-sendmail: could not reach $TRACY_MAIL_URL (curl exit $rc)" >&2
+  exit 75
+fi
+
+status=$(printf '%s\n' "$answer" | tail -n 1)
+body=$(printf '%s\n' "$answer" | sed '$d' | { head -c 300; cat >/dev/null; })
+case "$status" in
+  2??) exit 0 ;;
+  429|5??)
+    echo "tracy-sendmail: tracy-web answered $status, try later: $body" >&2
+    exit 75
+    ;;
+  *)
+    echo "tracy-sendmail: tracy-web refused the message ($status): $body" >&2
+    exit 69
+    ;;
+esac

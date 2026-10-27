@@ -1,0 +1,69 @@
+{
+  "color": {
+    "aurora-lilac": {
+      "$value": "#b9a3e8",
+      "$type": "color",
+      "$description": "Aurora Lilac — Hero gradient start, atmospheric section backgrounds — the soft entry tone of the brand's signature violet wash"
+    },
+    "deep-iris": {
+      "$value": "#7c4fb8",
+      "$type": "color",
+      "$description": "Deep Iris — Hero gradient deep stop, section transition anchors — the rich violet terminus that gives the gradient its weight"
+    },
+    "midnight-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, heading strokes, hairline borders, icon fills, link color"
+    },
+    "carbon-mist": {
+      "$value": "#2d2d2d",
+      "$type": "color",
+      "$description": "Carbon Mist — Secondary text, subdued headings — softer than pure black for less critical copy"
+    },
+    "frost-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Frost White — Page canvas, card surfaces, text on dark/gradient backgrounds, ghost button fill"
+    },
+    "ash-veil": {
+      "$value": "#b5b5b5",
+      "$type": "color",
+      "$description": "Ash Veil — Muted helper text, disabled states, tertiary metadata"
+    },
+    "smoke-line": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Smoke Line — Hairline dividers, subtle structural lines, secondary borders"
+    },
+    "pale-mist": {
+      "$value": "#e2e2e2",
+      "$type": "color",
+      "$description": "Pale Mist — Light borders, input field outlines, card edge definition"
+    },
+    "concrete-gray": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Concrete Gray — Surface variation, muted backgrounds, placeholder fills"
+    }
+  },
+  "font": {
+    "matter": {
+      "$value": "Matter",
+      "$type": "fontFamily",
+      "$description": "SemiBold display weight — reserved for the most prominent headings at 47px with -0.024em tracking. The jump from Medium to SemiBold at the same size is rare and intentional: it creates a deliberate weight tier for hero-level statements."
+    },
+    "ivarheadline": {
+      "$value": "IvarHeadline",
+      "$type": "fontFamily",
+      "$description": "Serif display face for editorial-style headings at 47px. The contrast with Matter's sans body creates a typographic duet — serif headlines anchor emotion and permanence, sans body delivers clarity. Tracking at -0.015em to -0.01em keeps the serif tight and contemporary rather than traditional."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.tripolis-park.com",
+      "siteName": "Tripolis-Park™",
+      "extractedAt": "2026-06-03T22:06:49.735Z",
+      "variant": "compact"
+    }
+  }
+}

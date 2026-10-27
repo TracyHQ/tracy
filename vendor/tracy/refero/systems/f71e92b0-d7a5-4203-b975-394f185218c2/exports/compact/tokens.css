@@ -1,0 +1,27 @@
+:root {
+  /* Colors */
+  --color-ink-black: #141414;
+  --color-paper-white: #ffffff;
+  --color-cream-surface: #f6f6f6;
+  --color-lilac-wash: #f7f1ff;
+  --color-charcoal-surface: #292929;
+  --color-graphite-border: #38383a;
+  --color-slate-text: #4f4f52;
+  --color-fog-text: #6d6d70;
+  --color-ash-text: #a9a9ac;
+  --color-mist-divider: #e5e5e5;
+  --color-signal-blue: #69bee2;
+  --color-plum-button: #8d2676;
+  --color-ember-orange: #de5d33;
+  --color-hot-pink: #fc618d;
+  --color-iris-violet: #948ae3;
+  --color-mint-green: #7bd88f;
+  --color-canary-yellow: #f8e67a;
+  --color-dusk-gradient: #221f1d;
+  --gradient-dusk-gradient: linear-gradient(135deg, rgb(34, 31, 29), rgb(49, 43, 43) 28%, rgba(41, 57, 105, 0.9) 50%);
+
+  /* Typography — Font Families */
+  --font-gt-america: 'GT America', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-monospace-monospace: 'ui-monospace / monospace', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-monospace: 'monospace', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

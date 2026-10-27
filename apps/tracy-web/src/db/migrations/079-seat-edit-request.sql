@@ -1,0 +1,14 @@
+-- A VIEWER ASKS FOR EDIT ACCESS (ADR 0028 §6, plan T5, 08/10/2026).
+--
+--   seat.edit_requested_at   when the holder of a live `viewer` seat asked the site's Owners to
+--                            make them an Editor; null = no request waiting. Cleared when an Owner
+--                            answers (approve: the role becomes `editor`; decline: only cleared),
+--                            and by any role change, since the question it asked is then answered.
+--
+-- WHY A COLUMN OF ITS OWN, NOT `requested_at`. `requested_at` already means "this row began as a
+-- request to join", and it is KEPT after the request is approved (`approveSiteJoinRequest`), so an
+-- accepted seat with `requested_at` set is a normal, common row. Every reader of the book decides
+-- "join request waiting" from `requested_at` with `accepted_at` null; a viewer's request written
+-- there would either be invisible to that rule or be taken for a join request by the Team tab's
+-- removal rule (`removalKindOf`). A second column keeps both questions answerable from one row.
+alter table seat add column if not exists edit_requested_at timestamptz;

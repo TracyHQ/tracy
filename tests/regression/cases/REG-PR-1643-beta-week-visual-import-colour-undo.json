@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1643-beta-week-visual-import-colour-undo",
+  "kind": "fix",
+  "title": "Beta week 16–23/10: a writing turn has its visual-check before (the page drawn as the turn begins, a 10 s hold, the reason kept), an imported copy is online, a design-system colour is changed where meant instead of refused, a comment reply never shows Undo: look.revert, and the agent knows the way from an imported copy to the real site",
+  "pr": 1643,
+  "area": "site-agent/beta-week-1023",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run packages/tools/tracy-site-tools/test/check-pages.test.mjs and visual-check-wiring.test.mjs: a write that names no page (a Joomla template file), a stylesheet every page loads, and a write on another page, each with an early picture; a stylesheet edited through the shipped bundle with no Browser tab; an early picture the site was written under; the 10 s default budget; checkReportOf with a no-before reason.",
+    "S2: run packages/fleet/tracy-fleet-operation/test/import-copy-online.test.mjs: render_configuration.py with and without --online on a configuration.php that says offline = true; live_sync's environment settings; platform/joomla.sh and platform/wordpress.sh.",
+    "S3: run packages/tools/tracy-site-tools/test/look-set.test.mjs: look.set at scope site on a token the design-system slot sets.",
+    "S4: run packages/tools/tracy-site-tools/test/plain-reply.test.mjs and packages/ui/tracy-chat-input/test/comment-turn-reply.test.mjs: the comment rule and the hint; many-comment turns sent until 23/10 read back.",
+    "S5: run packages/tools/tracy-site-tools/test/site-context.test.mjs: the imported-site context line."
+  ],
+  "expect": [
+    "S1: the early page is the fallback for the template file (a later write naming /?p=12 is still drawn on it) and the before for the stylesheet, compared once through the bundle; the write on /?p=12 is drawn on /?p=12; a picture drawn while the site was written is 'written-first' and never the before; BEFORE_HOLD_MS is 10000; 'no-before: capture-timeout' is stored as 'no-before-capture-timeout'.",
+    "S2: with --online the file says `public $offline = 0;`, without it `$offline = true` stays; 'offline' is in JOOMLA_ENVIRONMENT_SETTINGS; joomla.sh passes --online only when SITE_ORIGIN is imported; wordpress.sh removes .maintenance in the import's post_up.",
+    "S3: the refusal's next starts 'Never answer the customer that it cannot be changed' and offers another design system only as a choice.",
+    "S4: no comment rule or hint asks for `Undo: look.revert <id>` in the reply; turns sent with it parse to the same items as the regenerated ones.",
+    "S5: the imported line tells the agent to turn a maintenance/offline page off on the copy and to call tracy_guide (imported to live), never that it cannot be done."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/check-pages.mjs, packages/tools/tracy-site-tools/src/host/visual-check.mjs, packages/fleet/tracy-fleet-operation/scripts/provision/render_configuration.py, packages/tools/tracy-site-tools/src/host/look-set.mjs, packages/ui/tracy-chat-input/src/client/comment-turn.mjs, packages/tools/tracy-site-tools/src/host/site-context.mjs"
+  },
+  "evidence": "Beta week report 23/10/2026 (tracy-marketing strategy/launch/2026-10-16-tong-ket-tuan-beta/cai-thien-san-pham-tuan-2026-10-23.md): 42 of 42 writing turns skipped no-before; mfrasch six turns behind a maintenance page; wiebe refused 'make the signal colour red'; 8 replies with 'Undo: look.revert'; totot and Elad told publishing to the live site was not possible.",
+  "fence": "The early picture is never a before once the site was written under it (this turn's first write, or any write after it started); --online is passed only for an imported copy; the design-system lock still refuses a site-wide value over the slot",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/check-pages.test.mjs",
+      "packages/tools/tracy-site-tools/test/visual-check-wiring.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/import-copy-online.test.mjs",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs",
+      "packages/tools/tracy-site-tools/test/plain-reply.test.mjs",
+      "packages/ui/tracy-chat-input/test/comment-turn-reply.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs"
+    ],
+    "tests": [
+      "🔒 the early picture: a write naming no page keeps it as the fallback; a later write naming its page is still drawn",
+      "🔒 the early picture serves a stylesheet every page loads, and a write on its own page; never another page",
+      "🔒 the early picture is never a \"before\" once the site was written under it",
+      "🔒 the 10 s budget is shared by every hold of the turn, and is the default",
+      "🔒 a stylesheet edited with no Browser tab is compared on the page drawn as the turn began",
+      "checkReportOf keeps why a turn had no \"before\"; other reasons keep only their head",
+      "Joomla: an imported copy is rendered online; without --online the site keeps what it said",
+      "Joomla: Sync from live treats offline as the environment’s, so a sync never takes the copy offline",
+      "WordPress: the import removes a .maintenance file the archive carried",
+      "B7: many-comment turns sent until 23/10/2026, with `Undo: look.revert <id>`, read back as the same items",
+      "door: a contract line and an imported site each say what they forbid; another site’s marker is not this site’s"
+    ]
+  }
+}

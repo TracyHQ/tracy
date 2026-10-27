@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-comment.reply-happy-shape",
+  "itemIds": [
+    "letter:comment.reply:en",
+    "letter:comment.reply:vi",
+    "letter:comment.reply:de",
+    "letter:comment.reply:it",
+    "letter:comment.reply:fr",
+    "letter:comment.reply:nl",
+    "letter:comment.reply:zh",
+    "letter:comment.reply:es"
+  ],
+  "requirement": "comment.reply (C2) renders subject, HTML and text in all eight languages with no placeholder, raw key or printed hole",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 5, 7",
+    "invariant": "Every letter is complete in each language and rendered on the shared template; a sentence with a hole in it is never sent."
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.shape#comment.reply:"],
+  "redProof": null,
+  "legacyIds": []
+}

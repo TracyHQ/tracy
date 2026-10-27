@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1080-ops-ci-delivery-coverage",
+  "kind": "fix",
+  "title": "CI recognizes earlier PRs contained in later successful target deployments",
+  "pr": 1080,
+  "area": "ops/ci",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the deterministic delivery reader and dashboard helper tests on the PR branch.",
+    "Verify ancestry, both workflow deployments, environment identity and bounded cache warming."
+  ],
+  "expect": [
+    "A later successful app and dsh deployment containing the merge commit supersedes an old image failure.",
+    "An unrelated commit, another environment, open PR or missing merge SHA cannot establish Live.",
+    "Failed, skipped, partial or inaccessible evidence preserves the previous observation.",
+    "Old PRs outside bounded history require explicit ancestor comparisons; repeated reads warm remaining PRs without repeating cached evidence.",
+    "List and detail share coverage, deployment links and the target deployment completion used by the Live time column."
+  ],
+  "selectors": {
+    "list": "/api/ops/ci",
+    "detail": "/api/ops/ci/:number"
+  },
+  "fence": "Only successful target deployment jobs plus commit ancestry establish coverage; ordering and timestamps alone are not proof.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/ops-ci-delivery.test.mjs",
+      "packages/web/tracy-harness/test/ci-api.test.mjs"
+    ],
+    "tests": [
+      "later app and dsh deployments containing the merge commit supersede an old image failure",
+      "unrelated ancestry, missing workflow and wrong branch or target keep the original observation",
+      "failed, skipped, partial or inaccessible deployment evidence never makes a PR Live",
+      "old PRs beyond the history cap become Live only after an explicit ancestor comparison",
+      "delivery coverage enriches both list and detail and shares one reader across filter scopes",
+      "deployment coverage stays within the PR target environment",
+      "bounded comparisons warm remaining old PRs on the next refresh and coalesce identical deployed SHAs",
+      "filter timestamps reflect stage events and Live sorting uses the last target deployment completion"
+    ]
+  }
+}

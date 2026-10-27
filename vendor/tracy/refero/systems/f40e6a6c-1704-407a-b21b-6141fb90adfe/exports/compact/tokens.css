@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-newsprint: #f4f4f4;
+  --color-bone-white: #ffffff;
+  --color-press-black: #000000;
+  --color-foil-gray: #808080;
+  --color-ink-green: #306f09;
+
+  /* Typography — Font Families */
+  --font-basis: 'Basis', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-basis-mono: 'Basis Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

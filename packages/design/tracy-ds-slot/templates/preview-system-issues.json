@@ -1,0 +1,33 @@
+{
+  "lines": 40,
+  "share": 0.6,
+  "min": 10,
+  "systems": {
+    "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0": {
+      "harsh-border": {
+        "lines": 24,
+        "of": 40,
+        "examples": [
+          "emdash tracy-base/emdash-0.x",
+          "emdash tracy-business/emdash-0.x",
+          "joomla quickstart/ja-essence/j6",
+          "joomla quickstart/ja-kinetic/j6",
+          "joomla quickstart/ja-mood/j6"
+        ]
+      }
+    },
+    "stripe": {
+      "off-ground": {
+        "lines": 29,
+        "of": 40,
+        "examples": [
+          "emdash tracy-business/emdash-0.x",
+          "emdash tracy-saas/emdash-0.x",
+          "joomla quickstart/ja-directory/j6",
+          "joomla quickstart/ja-donate/j6",
+          "joomla quickstart/ja-impact/j6"
+        ]
+      }
+    }
+  }
+}

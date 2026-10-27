@@ -1,0 +1,104 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, hero surfaces, light cards"
+    },
+    "editorial-ink": {
+      "$value": "#181b22",
+      "$type": "color",
+      "$description": "Editorial Ink — Headlines, body text, navigation, icons, dark card surfaces, and 1px control outlines"
+    },
+    "soft-canvas": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Soft Canvas — Alternate section backgrounds and rounded quiet panels"
+    },
+    "washed-gray": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Washed Gray — Light neutral action fill for buttons on dark surfaces"
+    },
+    "rule-gray": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Rule Gray — 1px dividers, list separators, and understated outlined-control borders"
+    },
+    "charcoal-surface": {
+      "$value": "#1f232d",
+      "$type": "color",
+      "$description": "Charcoal Surface — Dark informational cards with white text"
+    },
+    "muted-steel": {
+      "$value": "#8b8d90",
+      "$type": "color",
+      "$description": "Muted Steel — Secondary text on dark cards"
+    },
+    "cyan-wash": {
+      "$value": "#dff9ff",
+      "$type": "color",
+      "$description": "Cyan Wash — Pale cyan category chips and highlighted institution controls — an icy marker within the otherwise paper-white document"
+    },
+    "mint-wash": {
+      "$value": "#dbffe7",
+      "$type": "color",
+      "$description": "Mint Wash — Gray action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "climate-blue": {
+      "$value": "#4098ff",
+      "$type": "color",
+      "$description": "Climate Blue — Text links, selection highlight, and blue environmental-image treatment"
+    },
+    "land-teal": {
+      "$value": "#00b595",
+      "$type": "color",
+      "$description": "Land Teal — Land-use system labels and coded graphic blocks"
+    },
+    "community-violet": {
+      "$value": "#5077ff",
+      "$type": "color",
+      "$description": "Community Violet — Community-emissions system labels and coded graphic blocks"
+    },
+    "market-orange": {
+      "$value": "#ff7b1b",
+      "$type": "color",
+      "$description": "Market Orange — Emissions-trading system labels and coded graphic blocks"
+    },
+    "cross-action-purple": {
+      "$value": "#a545e0",
+      "$type": "color",
+      "$description": "Cross-Action Purple — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    },
+    "signal-yellow": {
+      "$value": "#f8e645",
+      "$type": "color",
+      "$description": "Signal Yellow — Feature-card surface for a single high-attention content grouping"
+    }
+  },
+  "font": {
+    "gt-alpina-standard": {
+      "$value": "Gt Alpina Standard",
+      "$type": "fontFamily",
+      "$description": "Display and sectional headings. Weight 300 at 64px makes climate-policy headlines feel literary and measured rather than institutional; reserve it for large statements and major section names."
+    },
+    "abacaxilatinweb": {
+      "$value": "Abacaxilatinweb",
+      "$type": "fontFamily",
+      "$description": "Primary sans for navigation, long-form body copy, labels, links, controls, numeric content, and occasional condensed display figures. Its 18px / 1.5 body setting gives dense Icelandic text room without weakening the page’s compact control language."
+    },
+    "abacaxilatin": {
+      "$value": "Abacaxilatin",
+      "$type": "fontFamily",
+      "$description": "Navigation and compact inline metadata, including 16px / 1.32 navigation labels and 18px / 1.5 counts."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.co2.is",
+      "siteName": "Co2",
+      "extractedAt": "2026-09-20T19:25:46.198Z",
+      "variant": "compact"
+    }
+  }
+}

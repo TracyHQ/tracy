@@ -1,0 +1,94 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#090a1e",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, primary CTA fill, strong borders — the dominant brand dark; a slightly blue-tinted near-black that reads warmer than pure black on white"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on dark fills"
+    },
+    "ash-border": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Ash Border — Default hairline borders, button outlines, icon strokes"
+    },
+    "carbon-nav": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Carbon Nav — Navigation text and thin nav borders — sits one step lighter than Midnight Ink"
+    },
+    "mist-blue": {
+      "$value": "#c3dae3",
+      "$type": "color",
+      "$description": "Mist Blue — Cool-tinted card borders and subtle section dividers"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — SVG fills, icon glyphs, and high-contrast decorative shapes only — not used for UI text or backgrounds"
+    },
+    "prism-blue": {
+      "$value": "#2969ff",
+      "$type": "color",
+      "$description": "Prism Blue — Brand accent and logo mark — the cool anchor of the rainbow; also acts as info/state accent on badges and borders; Signature iridescent gradient — the through-line of the brand, sweeping pink → blue → yellow → green like light through a prism"
+    },
+    "prism-pink": {
+      "$value": "#f75cc3",
+      "$type": "color",
+      "$description": "Prism Pink — Accent stroke and badge accent — warm half of the prism spectrum"
+    },
+    "prism-yellow": {
+      "$value": "#ffd363",
+      "$type": "color",
+      "$description": "Prism Yellow — Accent stroke and warning/state highlight"
+    },
+    "prism-green": {
+      "$value": "#5ab040",
+      "$type": "color",
+      "$description": "Prism Green — Accent stroke and success state highlight"
+    },
+    "cream-wash": {
+      "$value": "#fffdea",
+      "$type": "color",
+      "$description": "Cream Wash — Soft tinted surface for cards and badges tied to the yellow accent"
+    },
+    "mint-wash": {
+      "$value": "#eaffed",
+      "$type": "color",
+      "$description": "Mint Wash — Soft tinted surface for cards and badges tied to the green accent"
+    },
+    "blush-wash": {
+      "$value": "#fff3fb",
+      "$type": "color",
+      "$description": "Blush Wash — Soft tinted surface for cards and badges tied to the pink accent"
+    },
+    "sky-wash": {
+      "$value": "#e5f5ff",
+      "$type": "color",
+      "$description": "Sky Wash — Soft tinted surface tied to the blue accent — appears in gradient fills and decorative washes"
+    }
+  },
+  "font": {
+    "noto-serif": {
+      "$value": "Noto Serif",
+      "$type": "fontFamily",
+      "$description": "All editorial headlines and section titles — the serif against a sans UI gives the brand an editorial, almost magazine-like voice. Used at 77px for hero display, scaling down through 63/49/42/35/26px for h1→h5."
+    },
+    "manrope": {
+      "$value": "Manrope",
+      "$type": "fontFamily",
+      "$description": "Body copy, UI controls, navigation, button labels, badges, and large numeric display. 18–19px for body, 14–16px for compact UI, 11px with +0.06em tracking for eyebrow labels like 'TRUSTED BY' and section kickers. The geometric construction balances the serif headlines."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://vetric.io",
+      "siteName": "Vetric",
+      "extractedAt": "2026-06-03T19:52:03.372Z",
+      "variant": "compact"
+    }
+  }
+}

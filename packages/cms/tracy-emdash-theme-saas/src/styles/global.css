@@ -1,0 +1,242 @@
+/*
+ * Storefront stylesheet. Imported ONLY by src/layouts/Base.astro (public pages): the EmDash admin at
+ * /_emdash/admin is a separate app and must never receive Tailwind's preflight or these tokens.
+ * Values come from the measured design system (tasks/emdash-ja-kinetic/visual-contract.md).
+ */
+@import "tailwindcss";
+@import "./tokens.css";
+
+@custom-variant dark (&:where(html[data-theme="dark"], html[data-theme="dark"] *));
+
+@layer base {
+	html {
+		font-family: var(--font-sans);
+		/* a worn design system's body weight (lib/ds-slot.ts); unset, the browser's normal */
+		font-weight: var(--ds-weight-body, normal);
+		-webkit-font-smoothing: antialiased;
+		background: var(--k-bg);
+		color: var(--k-text);
+	}
+	body {
+		margin: 0;
+		background: var(--k-bg);
+		color: var(--k-text);
+		font-size: 16px;
+		line-height: 1.55;
+	}
+	h1,
+	h2,
+	h3,
+	h4 {
+		font-family: var(--font-heading);
+		color: var(--k-heading);
+		font-weight: var(--ds-weight-heading, 700);
+	}
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+	::selection {
+		background: var(--k-primary-fill);
+		color: var(--k-primary-ink);
+	}
+	:focus-visible {
+		outline: 2px solid var(--k-primary);
+		outline-offset: 2px;
+	}
+	mark {
+		background: color-mix(in srgb, var(--k-primary) 22%, transparent);
+		color: inherit;
+	}
+}
+
+/* Recurring patterns of the design, named once. */
+/* The customer's logo (src/components/site/BrandLogo.astro): a spot drawn for one theme is hidden in the other.
+   Unlayered and important, so no utility on the same element can bring it back. */
+html[data-theme="dark"] .brand-when-light,
+html:not([data-theme="dark"]) .brand-when-dark {
+	display: none !important;
+}
+
+@layer components {
+	.k-container {
+		max-width: var(--container-site);
+		margin-inline: auto;
+		padding-inline: 32px;
+	}
+	@media (max-width: 620px) {
+		.k-container {
+			padding-inline: 20px;
+		}
+	}
+	.k-section {
+		padding-block: 80px;
+	}
+	@media (max-width: 767px) {
+		.k-section {
+			padding-block: 56px;
+		}
+	}
+	/* Inner pages: the source shows their sections inside a 760px article column (DECISIONS D18). */
+	.k-narrow {
+		max-width: 760px;
+		margin-inline: auto;
+	}
+	/* Alternate band: the source tints every other section with the elevated surface. */
+	.k-band {
+		background: var(--k-elevated);
+	}
+	.k-grid-bg {
+		background-image:
+			linear-gradient(var(--k-grid) 1px, transparent 1px),
+			linear-gradient(90deg, var(--k-grid) 1px, transparent 1px);
+		background-size: 32px 32px;
+	}
+	.k-eyebrow {
+		font-family: var(--font-mono);
+		font-size: 12.5px;
+		line-height: 1.55;
+		letter-spacing: 2px;
+		text-transform: uppercase;
+		color: var(--k-primary);
+	}
+	/* --ds-*: a worn design system (lib/ds-slot.ts); unset, each falls back to this template's own value */
+	.k-h1 {
+		font-family: var(--font-heading);
+		font-size: var(--ds-size-display, clamp(36px, 4.4vw, 52px));
+		line-height: var(--ds-leading-display, 1.04);
+		letter-spacing: var(--ds-tracking-display, -1.5px);
+		font-weight: var(--ds-weight-display, 700);
+		color: var(--k-heading);
+	}
+	/* Source `.hx-h2`, measured two-sided: 34px / 1.1 / -0.8px from 768 up, 28px below 576.
+	   Balanced wrapping: the source leaves one-word last lines ("moves", "pager"); the lens rule is to do
+	   better than the source (light-desktop N-ee5b73, SOURCE). */
+	.k-h2 {
+		font-family: var(--font-heading);
+		font-size: var(--ds-size-heading, 34px);
+		line-height: 1.1;
+		letter-spacing: -0.8px;
+		font-weight: var(--ds-weight-heading, 700);
+		color: var(--k-heading);
+		text-wrap: balance;
+	}
+	@media (max-width: 575.98px) {
+		.k-h2 {
+			font-size: var(--ds-size-heading-phone, var(--ds-size-heading, 28px));
+		}
+	}
+	@media (max-width: 639px) {
+		.k-h1 {
+			font-size: var(--ds-size-display-phone, var(--ds-size-display, clamp(36px, 4.4vw, 52px)));
+		}
+	}
+	.k-h3 {
+		font-family: var(--font-heading);
+		font-size: 19px;
+		line-height: 1.25;
+		letter-spacing: -0.2px;
+		font-weight: 600;
+		color: var(--k-heading);
+	}
+	.k-sub {
+		font-size: 17px;
+		line-height: 1.6;
+		color: var(--k-text);
+		max-width: 460px;
+	}
+	.k-muted {
+		color: var(--k-muted);
+	}
+	.k-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		min-height: 44px;
+		padding: 0 18px;
+		border-radius: var(--ds-btn-radius, var(--radius-btn));
+		font-family: var(--font-sans);
+		font-size: 14px;
+		font-weight: var(--ds-weight-button, 600);
+		line-height: 1;
+		white-space: nowrap;
+		border: 1px solid transparent;
+		transition:
+			background-color 0.15s,
+			border-color 0.15s,
+			color 0.15s;
+	}
+	.k-btn svg {
+		width: 16px;
+		height: 16px;
+	}
+	.k-btn-primary {
+		background: var(--k-primary-fill);
+		color: var(--k-primary-ink);
+	}
+	.k-btn-primary:hover {
+		background: var(--k-primary-fill-hover);
+		color: var(--k-primary-ink);
+	}
+	.k-btn-ghost {
+		font-family: var(--font-mono);
+		border-radius: var(--radius-ghost);
+		border-color: var(--k-border);
+		background: transparent;
+		color: var(--k-text);
+	}
+	.k-btn-ghost:hover {
+		border-color: var(--k-primary);
+		color: var(--k-heading);
+	}
+	.k-btn-sm {
+		min-height: 33px;
+		padding: 0 16px;
+	}
+	.k-prompt {
+		color: var(--k-primary);
+	}
+	.k-card {
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: var(--ds-card-radius, var(--radius-card));
+	}
+	/* Terminal / code panel: dark in both themes, tinted by direction. */
+	.k-panel {
+		background: var(--k-panel);
+		border: 1px solid var(--k-panel-border);
+		border-radius: 12px;
+		color: var(--k-panel-text);
+		font-family: var(--font-mono);
+		box-shadow: var(--k-shadow);
+		overflow: hidden;
+	}
+	html[data-theme="dark"] .k-panel {
+		background: var(--k-elevated);
+		border-color: var(--k-border);
+	}
+	.k-chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 4px 10px;
+		border-radius: 999px;
+		border: 1px solid var(--k-border);
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-primary);
+	}
+	.k-dot {
+		width: 6px;
+		height: 6px;
+		border-radius: 999px;
+		background: var(--k-primary-fill);
+	}
+	.k-rule {
+		border: 0;
+		border-top: 1px solid var(--k-border);
+	}
+}

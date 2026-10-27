@@ -1,0 +1,68 @@
+{
+  "id": "QA-UNIT-REG-PR-1019-seven-default-questions-happy",
+  "itemIds": ["regression:REG-PR-1019-seven-default-questions"],
+  "requirement": "Every template on every CMS is asked the same seven questions (name, logo, favicon, about, pages, language, tone), fitted to the template before hashing; brand pictures are checked, written in one undoable brand step; unticked pages are hidden by id",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1019-seven-default-questions.json",
+    "ref": "PR #1019 (feat); fix evidence: 07/10/2026: seven default questions must work on WordPress, Joomla and EmDash for every gallery template (issue #1013, plan tasks/plan-ten-logo-favicon.md).",
+    "invariant": "Every run exits 0 with 0 failures and 0 skipped tests. resolveQuestions serves the CMS standard file whatever per-quickstart set, choice or /ops default exists; the logo question carries variants from the template profile (JA Vega WP ['dark'], JA Nova Joomla ['light','dark'], JA Prodex Joomla ['single']); the pages question carries the release's tracy_site_pages.json ids with home locked; languages is 'one'; logo and favicon are left out when the switch site-brand-uploads is off. checkBrandImage refuses SVG/JPG/WebP/GIF even renamed .png (PNG_ONLY), a logo under 500 px, a favicon not square or under 512 px, a file over 8 MB; no favicon is ever generated. setSiteBrand writes WordPress site_logo/site_icon with one apply id brand-<ts>, and apply.revert of that id removes them all; a refused write is skipped with a reason and the others still run. unpickedById never returns the home page and hides exactly the unticked ids. The sheet shows seven numbered cards, several open at once; logo tiles follow variants; SVG shows 'PNG only.'; Pages lists the template's pages with Home locked; the language select keeps exactly one.",
+    "productSources": [
+      "apps/tracy-web/src/lib/build-questions.js:26",
+      "apps/tracy-web/src/lib/contracts.js:139",
+      "apps/tracy-web/src/lib/fit-questions.js:38",
+      "apps/tracy-web/src/lib/question-sets.js:72",
+      "apps/tracy-web/src/lib/questions-schema.mjs:221",
+      "apps/tracy-web/src/lib/site-brief.js:220",
+      "apps/tracy-web/src/lib/site-pages-schema.mjs:23",
+      "apps/tracy-web/src/lib/template-profiles.js:49",
+      "apps/tracy-web/src/sites/brief-engines/brand-images.js:18",
+      "apps/tracy-web/src/sites/brief-engines/brand-wordpress.js:71",
+      "apps/tracy-web/src/sites/brief-engines/brand.js:173",
+      "apps/tracy-web/src/sites/brief-engines/picked-pages.js:65",
+      "packages/site/tracy-add-site/src/client/brand-picture.mjs:21",
+      "packages/site/tracy-add-site/src/client/site-brief.mjs:247"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/build-questions.js:31 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/template-profiles.js:203 readFileSync() with a computed path",
+      "apps/tracy-web/test/template-profiles.test.mjs:89 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:28 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:42 execFileSync() passes packages/site/tracy-add-site/src/client/add-site.css to node; not proven to run it",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:640 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:65 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:83 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1019-seven-default-questions.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1019-seven-default-questions"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1019-seven-default-questions",
+    "pr": 1019,
+    "kind": "feat",
+    "area": "add-site/questions",
+    "file": "tests/regression/cases/REG-PR-1019-seven-default-questions.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1019-seven-default-questions.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

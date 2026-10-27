@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1479-lease-release-turn-fence",
+  "kind": "fix",
+  "title": "A late lease release of turn N does not free the lease turn N+1 renewed",
+  "pr": 1479,
+  "area": "site-changes/lease",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: turn N writes, turn N+1 writes, N's release arrives.", "S2: writes out of order."],
+  "expect": ["S1: lease still held by N+1; another chat is refused.", "S2: the highest turn is kept."],
+  "selectors": {
+    "test": "apps/tracy-web/test/write-lease.test.mjs",
+    "code": "sites/store.js takeWriteLease/releaseWriteLease holder_turn"
+  },
+  "evidence": "Review 19/10/2026: release freed by session only; a slow release could free the next turn's lease mid-request",
+  "fence": "Release compares the turn in the same UPDATE",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/write-lease.test.mjs"],
+    "tests": [
+      "a late release of turn N leaves the hold turn N+1 renewed",
+      "writes landing out of order keep the highest turn",
+      "a release with no turn, or of a lease that recorded none, behaves as before"
+    ],
+    "needs": ["postgres"]
+  }
+}

@@ -1,0 +1,27 @@
+/*
+ * REJECT-PATH FIXTURE — not a catalogue effect, and never emitted.
+ *
+ * hero-type-reveal types the headline out from the left. The only way to do that is to grow the
+ * element itself, so it writes `width` and `clip-path`: both outside the paintable list, both
+ * costing a layout pass on every frame of a customer's page. It lives here so the gate has
+ * something it must refuse; the day it stops being refused, this test goes red.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html.tracy-motion .tracy-motion-hero-type-reveal h1 {
+    --tracy-motion-dur: 900ms;
+    animation: tracy-motion-hero-type-reveal var(--tracy-motion-dur) steps(24) both;
+  }
+}
+
+@keyframes tracy-motion-hero-type-reveal {
+  from {
+    width: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    width: 100%;
+    clip-path: inset(0 0 0 0);
+  }
+}

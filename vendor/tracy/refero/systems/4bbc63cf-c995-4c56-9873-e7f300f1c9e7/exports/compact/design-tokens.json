@@ -1,0 +1,79 @@
+{
+  "color": {
+    "press-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Press Black — Primary text, nav borders, button fills, card backgrounds, footer — the single dominant ink color driving the entire system's contrast logic"
+    },
+    "charcoal-ink": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Charcoal Ink — Body copy, secondary headings, list items — one step off pure black for long-form text"
+    },
+    "blank-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Blank Canvas — Card backgrounds, button fills (secondary), icon fills — the pure white counterpart to Press Black"
+    },
+    "fog-sheet": {
+      "$value": "#f6f6f6",
+      "$type": "color",
+      "$description": "Fog Sheet — Page section backgrounds, hero overlay text, badge fills — the off-white that softens full-white sections"
+    },
+    "ash-border": {
+      "$value": "#d1d1d1",
+      "$type": "color",
+      "$description": "Ash Border — Nav dividers, separator lines"
+    },
+    "slate-text": {
+      "$value": "#a6a6a6",
+      "$type": "color",
+      "$description": "Slate Text — Muted link text, de-emphasized body labels"
+    },
+    "steel-gray": {
+      "$value": "#69727d",
+      "$type": "color",
+      "$description": "Steel Gray — Body text, icon strokes, link defaults — mid-gray for supporting content hierarchy"
+    },
+    "deep-void": {
+      "$value": "#0c0d0",
+      "$type": "color",
+      "$description": "Deep Void — Near-black nav text, alternate heading color"
+    },
+    "pixel-blush": {
+      "$value": "#FFB8E5",
+      "$type": "color",
+      "$description": "Pixel Blush — Token-defined accent — appears as CSS variable; reserved for product-feature highlights and gradient transitions"
+    },
+    "neon-loop": {
+      "$value": "#ED01EE",
+      "$type": "color",
+      "$description": "Neon Loop — Token-defined vivid accent — CSS variable; reserved for on-brand product UI illustrations and feature callouts"
+    },
+    "codeberry": {
+      "$value": "#620856",
+      "$type": "color",
+      "$description": "Codeberry — Token-defined dark magenta — CSS variable; reserved for deep accent backgrounds in product feature sections"
+    }
+  },
+  "font": {
+    "roobert": {
+      "$value": "Roobert",
+      "$type": "fontFamily",
+      "$description": "The site's entire typographic identity. Weight 900 at 56–88px drives hero headlines — the extreme weight creates impact that substitutes for color. Negative letter-spacing (-0.02em at display, -0.01em at subheading) compresses letterforms into a dense, printed-matter feel. 'ss14' feature setting activates alternate letterforms. Used for headings, nav, buttons, badges, body at every weight."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "System serif fallback — appears in nav, body, and footer contexts. Likely a browser fallback for edge cases rather than an intentional brand serif. Not a signature choice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://elementor.com",
+      "siteName": "Elementor",
+      "extractedAt": "2026-04-11T19:12:35.931Z",
+      "variant": "compact"
+    }
+  }
+}

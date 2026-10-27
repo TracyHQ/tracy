@@ -1,0 +1,75 @@
+{
+  "categories": [
+    {
+      "id": "10",
+      "title": "Security",
+      "wpSlug": "services-security",
+      "joomlaAlias": "security",
+      "parent": "services"
+    },
+    {
+      "id": "20",
+      "title": "Security",
+      "wpSlug": "portfolio-security",
+      "joomlaAlias": "security",
+      "parent": "portfolio"
+    }
+  ],
+  "pages": [
+    {
+      "slug": "home",
+      "path": "/",
+      "contentKind": "sections",
+      "content": [
+        {
+          "kind": "section",
+          "moduleId": "105"
+        }
+      ],
+      "orphaned": [
+        {
+          "position": "landing-1",
+          "module": "201"
+        }
+      ],
+      "images": [
+        {
+          "src": "/wp-content/uploads/paint%20bucket.png",
+          "file": "paint bucket.png",
+          "original": "images/icons/paint bucket.png"
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "path": "/about",
+      "content": "<!-- wp:paragraph --><p>About</p><!-- /wp:paragraph -->",
+      "meta": {
+        "_wp_page_template": "page-article"
+      },
+      "images": []
+    }
+  ],
+  "posts": [
+    {
+      "slug": "story",
+      "path": "/blog/story",
+      "content": "<!-- wp:list {\"className\":\"list-special\"} --><ul class=\"wp-block-list list-special\"><li><img src=\"/wp-content/uploads/tick.png\" alt=\"\">Fast</li></ul><!-- /wp:list -->",
+      "meta": {
+        "_wp_page_template": "page-article"
+      },
+      "images": [
+        {
+          "file": "tick.png",
+          "original": "images/tick.png"
+        }
+      ]
+    }
+  ],
+  "archives": [
+    {
+      "path": "/blog",
+      "view": "category"
+    }
+  ]
+}

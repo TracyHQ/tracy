@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c9cabb96-32fa-4896-837a-f2497ce1c856",
+  "status": "complete",
+  "name": "Apple (España)",
+  "url": "https://styles.refero.design/style/c9cabb96-32fa-4896-837a-f2497ce1c856",
+  "sourceWebsite": "https://www.apple.com/macbook-neo",
+  "extractedAt": "2026-07-03T02:39:54.993Z",
+  "capturedAt": "2026-10-08T05:17:28.784838+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Cathedral of white space with whispered headlines. A vast pale hall where massive weight-700 type hangs in the air, tethered only by pastel product colors and a single blue thread.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/18e025f9-4f53-42c7-9280-7d2e025ede98.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/0ef016fe-b276-4a79-aeaa-127634aeedab.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a02a9cf3-a983-4b21-8032-c04e9b7962c4.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/9842fe93-31ff-414f-840a-18b5863ed37a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e5d84710-566d-4fbb-9ccd-8240c00bfdb1.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "98f7f46eed98388c4bf35d807b4bd709cc16b181887ea1cc6517b447b8bd8064",
+      "bytes": 24292
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "819a130c6db5ba6dc6f99301032b7ad64db94b1b462c3a19a0ba75e4e284b8f5",
+      "bytes": 57303
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0e9fe14c54236165de4612b9639fc98ce1dfa3805e403c1468bd5865a0eb91cf",
+      "bytes": 20370
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "27aa59c5f9d7f076bb9e9c3558b68b82e4705c2034c05eac262678ae31761556",
+      "bytes": 16531
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c3b081a22176c6e1ba5b0dfee4bf8c5bceb31ff5e405dd20411efe32a6b57c5a",
+      "bytes": 15046
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "687c0112f33f0d9af4305388dae33773c40c8fbc395ebb6cec7d2f77c6da4943",
+      "bytes": 4434
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "248195b482de9e73cd3e1997f76aa3c3cc788de453f949c19d628048b0623a15",
+      "bytes": 894
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "1e883a82835be282aac3a5a277a8c7005a722823ce6cde0f66fb9f88d4660e3c",
+      "bytes": 1094
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c562f428ffd9cc9b7ade8fa9b1d6a426f6df5eb637a0d38854b6b5677463c28b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "475e9bb96b731dc384cc4124ae566be42d464f9ab0a4d7f4255b942e63146f76",
+      "bytes": 53351
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "cfa3eefe75d1e73690435dcc045412dbff5d5a8c6dde6783f9895f84035ab56e",
+      "bytes": 30038
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9b712fae455395c651a3095d54fc704c57852914fff1cd394487914320ddee6f",
+      "bytes": 96354
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "cd0e996a2bc2efc7f39e3713cd2be995cad19f649ec8f7ad3c722b423553d11e",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a11636d5e53320b572eda43bbbe8387a95d1befe1e875658ab86cf60b7670b3c",
+      "bytes": 2264
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9221df647d703aa77671b8115fe340e942ee9be434382550efd26c3b3d83f651",
+      "bytes": 3097
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+    "08c0ead0-1899-47b4-bfdc-865ab459bbe5",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "2b49d4b2-8461-4985-b7ee-cf9517e19803",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a73148b9-449b-42cd-9f38-86ef694f500e",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "cfcd001c-e812-4126-9bdf-1f16b68d182e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "ec0f5bca-8367-49e7-b8aa-73b3fa09a4a0"
+  ]
+}

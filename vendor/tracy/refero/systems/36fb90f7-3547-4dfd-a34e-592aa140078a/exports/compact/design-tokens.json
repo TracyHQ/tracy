@@ -1,0 +1,69 @@
+{
+  "color": {
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, inverse text on dark blocks"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, primary borders, hairline rules, icon strokes, logo"
+    },
+    "carbon": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Carbon — Dark surface blocks, inverse badges, input fields on dark"
+    },
+    "graphite": {
+      "$value": "#484a4c",
+      "$type": "color",
+      "$description": "Graphite — Footer borders, subtle dark dividers, secondary dark UI"
+    },
+    "steel": {
+      "$value": "#686c6d",
+      "$type": "color",
+      "$description": "Steel — Secondary body text, muted captions, low-emphasis borders"
+    },
+    "fog": {
+      "$value": "#a5a7a8",
+      "$type": "color",
+      "$description": "Fog — Disabled borders, lowest-emphasis outlines"
+    },
+    "ash": {
+      "$value": "#dbdbdb",
+      "$type": "color",
+      "$description": "Ash — Light dividers, icon borders, subtle field separators"
+    },
+    "mist": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Mist — Soft surface wash behind cards and tags, ghost link fill, badge background"
+    },
+    "smoke": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Smoke — Mid-tone surface for secondary panels, muted button fills"
+    },
+    "signal-blue": {
+      "$value": "#2749ff",
+      "$type": "color",
+      "$description": "Signal Blue — Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "suisse-intl": {
+      "$value": "Suisse Int'l",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across every context — navigation, body, display headlines, buttons, badges, inputs. The brand carries a single weight (400) and a single letterform language, creating typographic unity without hierarchy through weight. The tight line-heights (1.00–1.20) and negative tracking across all sizes make text feel architectural rather than comfortable."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.halfhelix.com",
+      "siteName": "Halfhelix",
+      "extractedAt": "2026-06-03T20:49:44.145Z",
+      "variant": "compact"
+    }
+  }
+}

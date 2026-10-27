@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1527-cloudflare-import-guidance",
+  "kind": "fix",
+  "title": "An import blocked by Cloudflare says what to switch off in the Cloudflare dashboard, with folded steps, instead of the manual-install sentence; every other firewall keeps the shared sentence",
+  "pr": 1527,
+  "area": "add-site/import",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run packages/site/tracy-add-site/test/error-next-step.test.mjs: the real ImportWizard starts a read (claim 201, start 202 run-1), and the status door answers the run failed with error 'blocked_by_firewall' and errorDetail {firewall:'cloudflare'}; press the 'How to do it' trigger. Then the same with firewall 'wordfence', 'modsecurity', 'firewall', no errorDetail, and '<b>cloudflare</b>'. Also call failedRunDetail on runs whose firewall is 'cloudflare', an unknown string, and a number.",
+    "S2: Run packages/site/tracy-add-site/test/import-gates.test.mjs: importErrorKey('blocked_by_firewall', {firewall, platform}) for cloudflare, wordfence, sucuri, imunify360, modsecurity, firewall and none, on no platform, wordpress and joomla; and importErrorKey('install_failed', {firewall:'cloudflare'}).",
+    "S3: Run the same error-next-step test: ImportErrorText with steps={false}, and the wizard after a Cloudflare failure followed by Back on the connect step."
+  ],
+  "expect": [
+    "S1: with cloudflare the alert starts with import_error_blocked_by_cloudflare and does not contain 'install Claude Cowork yourself'; the three steps and the skip-rule note are absent until 'How to do it' is pressed, then present, with three li under [data-cloudflare-steps]. Every other case shows exactly import_error_blocked_by_firewall, no 'How to do it' button and no [data-cloudflare-steps]. failedRunDetail keeps firewall 'cloudflare' and drops the unknown string and the number.",
+    "S2: cloudflare maps to import_error_blocked_by_cloudflare on every platform; every other firewall and none map to import_error_blocked_by_firewall; install_failed keeps import_error_install_failed.",
+    "S3: the inline red line under the address shows exactly import_error_blocked_by_cloudflare and no [data-cloudflare-steps] anywhere on the page."
+  ],
+  "selectors": {
+    "dom": "[role=alert], [data-cloudflare-steps], [data-cloudflare-steps] li",
+    "files": "packages/site/tracy-add-site/src/client/refusal.tsx, packages/site/tracy-add-site/src/client/import.ts, packages/site/tracy-add-site/src/client/import-wizard.tsx"
+  },
+  "evidence": "Production: after a manual install of Claude Cowork on a site behind Cloudflare, the engine door still answered 403 cf-mitigated: challenge ('Just a moment...'), so the shared sentence's 'install Claude Cowork yourself' could not help",
+  "fence": "importErrorKey picks import_error_blocked_by_cloudflare only for blocked_by_firewall with detail.firewall === 'cloudflare'; failedRunDetail keeps errorDetail.firewall only when it is one of the names firewallOf gives",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/error-next-step.test.mjs",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs"
+    ],
+    "tests": [
+      "a Cloudflare block names what to switch off, behind \"How to do it\", and never the manual install",
+      "a block by Wordfence keeps the shared firewall sentence, with no Cloudflare steps",
+      "a block by ModSecurity keeps the shared firewall sentence, with no Cloudflare steps",
+      "a block by an unnamed firewall keeps the shared firewall sentence, with no Cloudflare steps",
+      "a block by no firewall named keeps the shared firewall sentence, with no Cloudflare steps",
+      "a block by a name Tracy does not give keeps the shared firewall sentence, with no Cloudflare steps",
+      "a failed run hands the sentence a firewall only when it is a name firewallOf gives",
+      "a Cloudflare block has its own sentence on both platforms; every other firewall keeps the shared one",
+      "the inline line under the address keeps the Cloudflare sentence but never the folded steps"
+    ]
+  }
+}

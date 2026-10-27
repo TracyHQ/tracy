@@ -1,0 +1,23 @@
+{
+  "id": "QA-MAIL-whitelist-confirmation-suite-visual",
+  "itemIds": ["direct:whitelist-confirmation:en", "direct:whitelist-confirmation:vi"],
+  "requirement": "a person looks at the whitelist confirmation letter in English and Vietnamese",
+  "oracle": {
+    "source": "reviewed templates (templates/README.md)",
+    "ref": "contact sheet",
+    "invariant": "only a person can accept look and wording"
+  },
+  "edgeTags": [],
+  "targets": ["local"],
+  "effects": {
+    "reads": [],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["playwright-chromium"],
+  "assertionIds": ["manual:contact-sheet:whitelist-confirmation"],
+  "redProof": null,
+  "legacyIds": []
+}

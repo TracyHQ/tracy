@@ -1,0 +1,32 @@
+meta {
+  type: collection
+}
+
+headers {
+  content-type: application/json
+  cookie: tracy_sess={{session}}
+  user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+}
+
+auth {
+  mode: none
+}
+
+docs {
+  # Tracy Apply door
+
+  Every request here is `POST {{baseUrl}}/api/sites/{{site}}/apply` with a JSON body
+  `{"action": "...", "params": {...}}`. Tracy checks the seat behind the `tracy_sess` cookie,
+  then relays the call to the site's own component and returns its answer verbatim.
+
+  The three headers above are sent with every request:
+
+  - `cookie: tracy_sess={{session}}` signs you in. `session` is a SECRET environment variable:
+    Bruno keeps its value on your machine and never writes it into the environment file.
+  - `user-agent` looks like a browser because Cloudflare in front of the dev surface refuses
+    bare HTTP clients.
+  - `content-type: application/json` for the body.
+
+  Every request in this collection is a READ; none of them changes the site.
+  See `README.md` next to `bruno.json` for setup.
+}

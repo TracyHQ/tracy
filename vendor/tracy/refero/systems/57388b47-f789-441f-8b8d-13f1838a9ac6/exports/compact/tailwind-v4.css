@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-obsidian-ink: #212123;
+  --color-bone: #ffffff;
+  --color-carbon: #000000;
+  --color-ash: #999999;
+  --color-pebble: #a6a6a7;
+
+  /* Typography */
+  --font-sequel100wide: 'Sequel100Wide', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

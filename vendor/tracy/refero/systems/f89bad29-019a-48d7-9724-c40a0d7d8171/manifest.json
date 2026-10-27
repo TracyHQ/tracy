@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "f89bad29-019a-48d7-9724-c40a0d7d8171",
+  "status": "complete",
+  "name": "Legora",
+  "url": "https://styles.refero.design/style/f89bad29-019a-48d7-9724-c40a0d7d8171",
+  "sourceWebsite": "https://legora.com",
+  "extractedAt": "2026-06-03T15:41:10.801Z",
+  "capturedAt": "2026-10-08T05:19:46.220897+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Editorial law journal on warm cream",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/dbb1725b-7421-4a55-8612-1ae798bb7f5c.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "64891f624893effe1c133903e7cea86726b48c2b4587e4c7efbc5213bf97ac30",
+      "bytes": 23247
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "49dc9b0f1a489e9ccd279ce96e6fd0ae09eca0659dd2066ea6810cd20f85f368",
+      "bytes": 78363
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "86f6e28d6f9aabba91f449d0430c4b9dd0c163a248d6fc46ce1b3834def44071",
+      "bytes": 18150
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9961413e868d0ca50b3448a680c6c2dc5641994340bf0c61f12b42af65f086a6",
+      "bytes": 10689
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "06a5dec0d4e95d013991955c073937d85a7cf12eb1c509756e4f5c27bf6984d8",
+      "bytes": 13559
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f3cca95d37482b8fa7b509313181688eaac53255b4e613757b8795118fded9c1",
+      "bytes": 3856
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0383a19e81ea840362927896cf38132c7a2741bc326bc37b8b75dab256c0fb09",
+      "bytes": 1354
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5a22cb174708a753b2ff34fd21b03e4bca8270a918b69473988eccd0d1ff1444",
+      "bytes": 1371
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b738c700885617af041110de4f3ba997388f11ca91e2efcb7096625a4026f9aa",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "6276d0ce7d17ce8303382c7c8fb8be0e2e1372797b338675829a036ae729f7e0",
+      "bytes": 44767
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1acbe0714bed870516391e3e05147c97981d30c68047212aa7d498aaf7fd57b5",
+      "bytes": 23097
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b7b1e94d17ebebb9abee474d032faaad80d2e5bdae8d423123335375168b94fa",
+      "bytes": 44512
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "eabf1d749ccaf0a51a1484b96e431e4ae1184cb37352ab5c1b67d691cd7c057c",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "95378b58b10c67033209b2b1f92a957881bb67e6438d4651cfcbc80181d0f7aa",
+      "bytes": 2183
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "34434fa6f7570cf3ac34211d20c30a42b1e740d24b74c0fc0c4432e31ecbfdd0",
+      "bytes": 2708
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "28a7115a-bcf8-4b05-89a5-5290f5842a3c",
+    "34baa524-5d5b-4165-bbab-d01f05e6d6b9",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "478c8660-f1a0-4339-ac8c-4cf7ca4cf738",
+    "5af6b791-6cad-4497-9e94-ace28e4fbd51",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "7b083729-e694-4b66-82a3-befb08451722",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "94c4fc51-4323-4f06-a4a4-27517e190445",
+    "9623a699-230d-4ee2-a174-8209e1e9ef16",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "9dced8d7-3d19-45d3-9dc5-e5906c3e1578",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f89bad29-019a-48d7-9724-c40a0d7d8171"
+  ]
+}

@@ -1,0 +1,124 @@
+/** 
+ *------------------------------------------------------------------------------
+ * @package       TRACY_APPLE - Free Template for Joomla!
+ *------------------------------------------------------------------------------
+ * @copyright     Copyright (C) 2004-2016 JoomlArt.com. All Rights Reserved.
+ * @license       GNU General Public License version 2 or later; see LICENSE.txt
+ * @authors       JoomlArt
+ *------------------------------------------------------------------------------
+**/
+
+body {
+  background-color: var(--ds-c-bg, #fff);
+  font-size: 16px;
+  font-family: var(--ds-font-body, "PT Sans","Helvetica Neue", Helvetica, Arial, sans-serif);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.page-wrap {
+  background-color: var(--ds-c-bg, #fff);
+  border: 1px solid var(--ds-c-border, #ddd);
+  box-shadow: 5px 5px 0 rgba(0,0,0,0.05);
+  margin: 150px auto 0;
+  padding: 40px;
+  position: relative;
+  width: 680px;
+}
+
+.error-code {
+  border-top: 3px solid var(--ds-c-fg, #333);
+  font-size: 120px;
+  display: block;
+  font-weight: 600;
+  line-height: 1;
+  padding-top: 20px;
+  position: absolute;
+  left: 40px;
+  top: 0;
+}
+
+/* Page information */
+.page-info {
+  margin-left: 240px;
+}
+
+.page-info h2 {
+  color: var(--ds-c-danger-text, #c00);
+  font-size: 24px;
+  margin: 0 0 20px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.page-info p {
+  margin: 0 0 15px;
+}
+
+.page-info ul {
+  margin: 0 0 20px;
+  padding: 0 0 0 30px;
+}
+
+.page-info .page-redirect {
+  border-top: 1px solid var(--ds-c-border, #ddd);
+  padding-top: 20px;
+}
+
+.page-info .page-redirect a {
+  background-color: var(--ds-c-ink, #333);
+  color: var(--ds-c-on-ink, #ccc);
+  display: inline-block;
+  font-weight: 600;
+  margin-left: 5px;
+  padding: 5px 10px;
+  text-decoration: none;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
+  transition: color 0.35s;
+}
+
+.page-info .page-redirect a:hover,
+.page-info .page-redirect a:focus,
+.page-info .page-redirect a:active {
+  background-color: var(--ds-c-accent-hover, #069);
+  color: var(--ds-c-accent-on, #fff);
+}
+
+
+/* RESPONSIVE LAYOUT */
+@media (max-width: 780px) {
+  .page-wrap {
+    margin-left: 40px;
+    margin-right: 40px;
+    width: auto;
+  }
+}
+
+
+/* Mobile */
+@media (max-width: 780px) {
+  .error-code {
+    border-top: 0;
+    left: auto;
+    top: auto;
+    margin-bottom: 20px;
+    padding-top: 0;
+    position: relative;
+  }
+
+  .page-info {
+    margin-left: 0;
+  }
+}
+
+
+/* Mobile */
+@media (max-width: 480px) {
+  .page-wrap {
+    border: 0;
+    box-shadow: none;
+    margin-top: 50px;
+    padding: 0;
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-restaurant/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_restaurant",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-restaurant",
+    "id": "quickstart/ja-restaurant/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_restaurant",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-restaurant-j6-webroot-1.0.3.tar.gz",
+        "bytes": 49353605,
+        "sha256": "f1ead3a038554bff778120165bb81071fc639e7348f472952915f17196947bb1"
+      },
+      "database": {
+        "file": "ja-restaurant-j6-database-1.0.3.sql.gz",
+        "bytes": 174133,
+        "sha256": "023d62dc31d58862fbb28765099344b745b9d7ff67f52ff13820c190b8a0e73e"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-11T10:56:26.612Z",
+    "builtFrom": {
+      "site": "ja-restaurant-j6",
+      "tag": "quickstart/ja-restaurant/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-restaurant/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.17",
+  "mode": "content-recommendation"
+}

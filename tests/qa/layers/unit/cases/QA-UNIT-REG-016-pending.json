@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-016-pending",
+  "itemIds": ["regression:REG-016"],
+  "requirement": "A retired Releases or History tab, in an address or in a saved right column, opens Site changes",
+  "oracle": {
+    "source": "tests/regression/cases/REG-016-retired-tabs-open-site-changes.json",
+    "ref": "PR #812 (feat); fix evidence: packages/core/tracy-core/test/tab-link.test.mjs (RETIRED_TABS, parseTabLink, replaceRetiredTab)",
+    "invariant": "Both build checks print a count >= 1. The unit seam exits 0 and its TAP ends with '# fail 0'. Deep links, both T: [data-site-changes-v2] became visible; U.tab === 'tracy:changes' and U.site === KEY; V === false; W is empty (before this change the open was refused with only a console warning naming T, nothing opened, and the address lost its tab). Saved layout, all four rounds: KINDS contains 'tracy:changes' and no 'tracy:releases' or 'tracy:history'; [data-site-changes-v2] became visible; V2 === false. BEHIND rounds: CHIP === TITLE and KINDS0 still holds R (a retired tab out of sight keeps its chip until it is clicked). Before this change the IN SIGHT rounds lost the retired tab about 120 ms after the reload with nothing in its place (KINDS ['tracy:browser'], Site changes never shown: 431473d68 on scv2, 03/10).",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer ui, needs stand, seat:owner"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:seat:owner"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-016"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:ui"],
+  "regression": {
+    "id": "REG-016",
+    "pr": 812,
+    "kind": "feat",
+    "area": "site-tabs/retired-tabs",
+    "file": "tests/regression/cases/REG-016-retired-tabs-open-site-changes.json"
+  },
+  "ownerLayer": "ui",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "seat:owner"]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@tracy/wo-find-page",
+  "version": "0.1.0",
+  "description": "The sign-in-free Find page at /find — the Website Opportunities plugin's own Find view in public mode, on doors that need no seat",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/web/tracy-wo-find-page"
+  },
+  "dependencies": {
+    "@tracy/core": "workspace:^",
+    "@tracy/dsh-website-opportunities": "workspace:*",
+    "@tracy/ui": "workspace:^",
+    "@tracy/wo-views": "workspace:^",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^5.0.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0"
+  },
+  "license": "MIT"
+}

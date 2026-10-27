@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-pure-white: #ffffff;
+  --color-obsidian: #000000;
+  --color-soft-mist: #f2f2f2;
+  --color-pale-stone: #eaeaea;
+  --color-bone: #e5e5e5;
+  --color-graphite: #575757;
+  --color-smoke: #929292;
+  --color-charcoal: #212121;
+  --color-silhouette: #c7c7c7;
+  --color-warm-sandstone: #a8927c;
+  --color-forest-sovereignty: #193a29;
+  --color-dusty-iris: #79648c;
+  --color-slate-blue: #839cb2;
+
+  /* Typography — Font Families */
+  --font-aeonik: 'Aeonik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

@@ -1,0 +1,47 @@
+{
+  "id": "QA-UNIT-REG-PR-893-joomla-unreadable-batch-and-icon-markup-happy",
+  "itemIds": ["regression:REG-PR-893-joomla-unreadable-batch-and-icon-markup"],
+  "requirement": "Joomla planner: one unreadable batch keeps its words and the rest are written; icon markup never reaches the model",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-joomla-unreadable-batch-and-icon-markup.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026 local stand: Apply on Design inspiration ja-vega (Joomla) failed in 1 of 2 runs, 'Content mapping refused 3 times: ... not valid JSON', nothing written. Replaying that contract's plan with the real model: the same 33-slot batch was cut off 3/3 times in the middle of SVG path data (11 text slots hold ((svg ...)) icons up to 3.2 kB). After the fix: 3/3 Apply runs applied (397, 349 slots).",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 18). Both named cases are 'ok': a batch whose answer is cut off keeps its slots pending as 'model-unreadable' while the other batch is written; nothing readable at all still rejects with 'Content mapping refused 3 times'; a thrown model call still reaches the caller; an icon sample is neither asked about nor pending. S3 prints '11 11': every SVG icon text slot of ja-vega/j6/1.0.3 is recognised as markup with no words.",
+    "productSources": ["packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:733"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:165 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:198 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:300 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:614 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-893-joomla-unreadable-batch-and-icon-markup.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-joomla-unreadable-batch-and-icon-markup"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-893-joomla-unreadable-batch-and-icon-markup",
+    "pr": 893,
+    "kind": "fix",
+    "area": "seeder/joomla-plan",
+    "file": "tests/regression/cases/REG-PR-893-joomla-unreadable-batch-and-icon-markup.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-893-joomla-unreadable-batch-and-icon-markup.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

@@ -1,0 +1,51 @@
+{
+	"name": "@emdash-cms/plugin-embeds",
+	"version": "0.1.54",
+	"description": "Embed blocks for EmDash CMS - YouTube, Vimeo, Twitter, Bluesky, Mastodon, and more",
+	"type": "module",
+	"main": "src/index.ts",
+	"exports": {
+		".": "./src/index.ts",
+		"./astro": "./src/astro/index.ts"
+	},
+	"files": [
+		"src"
+	],
+	"keywords": [
+		"emdash",
+		"cms",
+		"plugin",
+		"embed",
+		"youtube",
+		"vimeo",
+		"twitter",
+		"bluesky"
+	],
+	"author": "Matt Kane",
+	"license": "MIT",
+	"peerDependencies": {
+		"astro": ">=6.0.0-beta.0",
+		"emdash": "workspace:>=0.15.0"
+	},
+	"dependencies": {
+		"@emdash-cms/blocks": "workspace:*",
+		"astro-embed": "^0.12.0",
+		"sanitize-html": "^2.17.1"
+	},
+	"devDependencies": {
+		"@types/sanitize-html": "^2.16.0",
+		"astro": "catalog:",
+		"playwright": "^1.61.1",
+		"vitest": "catalog:"
+	},
+	"scripts": {
+		"test": "vitest run",
+		"test:browser": "vitest run --config vitest.browser.config.ts",
+		"typecheck": "tsgo --noEmit"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/emdash-cms/emdash.git",
+		"directory": "packages/plugins/embeds"
+	}
+}

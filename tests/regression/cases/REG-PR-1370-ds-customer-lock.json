@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1370-ds-customer-lock",
+  "kind": "fix",
+  "title": "Customers wear a design system only on Tracy Business / Joomla (403 DS_TEMPLATE_LOCKED elsewhere, staff pass); JA Kinetic WordPress palette reads its header as bg, not band",
+  "pr": 1370,
+  "area": "design-system/customer-lock",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test apps/tracy-web/test/design-system-customer-lock.test.mjs apps/tracy-web/test/design-system-door.test.mjs.",
+    "S2: Run node --test packages/site/tracy-add-site/test/e2e/design-system-card.test.mjs packages/ui/tracy-chat-input/test/design-system-card.test.mjs.",
+    "S3: Run node --test packages/design/tracy-ds-slot/test/auto-palette.test.mjs and read packages/design/tracy-ds-slot/templates/palette/wordpress-ja-kinetic.json."
+  ],
+  "expect": [
+    "S1: every test passes: a customer on a template other than joomla/tracy-business gets supported:false, TEMPLATE_NOT_READY, locked:true from the support and site reads and 403 DS_TEMPLATE_LOCKED from both preview doors (template-default excepted), the apply door and POST /api/sites {designSystem}; a site already wearing a system keeps its name and undo; an accepted tracy_admin seat and the /ops probe pass.",
+    "S2: every test passes: Add site shows no Design system card for a build that cannot wear one; the start screen row hides for a locked, unworn site.",
+    "S3: every test passes, and in the Kinetic palette #0a0d0c maps to bg and #fbfcfa is not a band."
+  ],
+  "selectors": {
+    "lock": "apps/tracy-web/src/lib/design-system-customer-lock.js CUSTOMER_DESIGN_SYSTEM_TEMPLATES",
+    "error": "403 DS_TEMPLATE_LOCKED",
+    "palette": "packages/design/tracy-ds-slot/src/auto-palette.mjs PALETTE_PROBE lightDarkOf"
+  },
+  "evidence": "Customers could pick, preview and apply design systems on templates that are not design system ready and saw the results as bugs; on JA Kinetic WordPress the header light-dark() ground was read as a band on a dark demo and hid the nav text in light mode",
+  "fence": "joomla/tracy-business stays open to customers; staff are never locked; a worn system is never taken off",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/design-system-customer-lock.test.mjs",
+      "apps/tracy-web/test/design-system-door.test.mjs",
+      "packages/site/tracy-add-site/test/e2e/design-system-card.test.mjs",
+      "packages/ui/tracy-chat-input/test/design-system-card.test.mjs",
+      "packages/design/tracy-ds-slot/test/auto-palette.test.mjs"
+    ]
+  }
+}

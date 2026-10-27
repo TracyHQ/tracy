@@ -1,0 +1,225 @@
+/*
+ * airbnb — token layer and dark remap
+ * Made by scripts/make-style.mjs from vendor/od-design-system/systems/airbnb/, then edited by hand (15/10/2026):
+ * every colour, face and corner token reads its design-system role variable with the made value as
+ * the fallback (var(--ds-c-bg, #ffffff)), so nothing changes until a system is worn. A new run of
+ * the script drops those reads: put them back. A brand-specific COMPONENT goes in scss/_signature-airbnb.scss.
+ */
+:root {
+  --bg: var(--ds-c-bg, #ffffff);
+  --surface: var(--ds-c-surface, #ffffff);
+  --surface-warm: var(--ds-c-surface-warm, #f7f7f7);
+
+
+  --fg: var(--ds-c-fg, #222222);
+  --fg-2: var(--ds-c-fg-2, #3f3f3f);
+  --muted: var(--ds-c-muted, #6a6a6a);
+  --meta: var(--ds-c-meta, #929292);
+
+
+  --border: var(--ds-c-border, #dddddd);
+  --border-soft: var(--ds-c-border-soft, #ebebeb);
+
+
+  --accent: var(--ds-c-accent, #ff385c);
+  --accent-on: var(--ds-c-accent-on, #ffffff);
+  --accent-hover: var(--ds-c-accent-hover, #e31c5f);
+  --accent-active: var(--ds-c-accent-active, #e00b41);
+
+
+  --success: var(--ds-c-success, #008a05);
+  --warn: var(--ds-c-warn, #c47700);
+  --danger: var(--ds-c-danger, #c13515);
+
+
+  --font-display:
+  var(--ds-font-display, "Airbnb Cereal VF", "Airbnb Cereal App", Circular,
+  -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif);
+  --font-body:
+  var(--ds-font-body, "Airbnb Cereal VF", "Airbnb Cereal App", Circular,
+  -apple-system, system-ui, "Helvetica Neue", Roboto, sans-serif);
+  --font-mono:
+  var(--ds-font-mono, ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Monaco,
+  Consolas, monospace);
+
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+  --text-3xl: 44px;
+  --text-4xl: 56px;
+
+
+  --leading-body: 1.43;
+  --leading-tight: 1.2;
+  --tracking-display: -0.02em;
+
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+
+  --section-y-desktop: 64px;
+  --section-y-tablet: 48px;
+  --section-y-phone: 32px;
+
+
+  --radius-sm: var(--ds-input-radius, 8px);
+  --radius-md: var(--ds-btn-radius, 14px);
+  --radius-lg: var(--ds-card-radius, 20px);
+  --radius-pill: var(--ds-pill-radius, 9999px);
+
+
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--border);
+  --elev-raised:
+  rgba(0, 0, 0, 0.02) 0 0 0 1px,
+  rgba(0, 0, 0, 0.04) 0 2px 6px 0,
+  rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+
+
+  --focus-ring: 0 0 0 2px var(--ds-c-focus-ring, var(--fg));
+
+
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+
+  --container-max: 1280px;
+  --container-gutter-desktop: 40px;
+  --container-gutter-tablet: 24px;
+  --container-gutter-phone: 16px;
+
+  /* from tokens.gaps.css — declared in DESIGN.md, absent from tokens.css */
+  --radius-xl: 32px; /* ds-keep: declared for DESIGN.md, no rule of the template reads it */
+
+  --font-substitute-stack: var(--ds-font-body, Circular, -apple-system, system-ui, Roboto, "Helvetica Neue", sans-serif);
+
+  --text-4xl-phone: 40px;
+  --text-3xl-phone: 31px;
+
+  /* the nine the shared layer reads and never declares — see assets/shared-layer/STYLE-CONTRACT.md */
+  --tracy-band-y: 64px;
+  --tracy-band-y-tablet: 48px;
+  --tracy-band-y-phone: 32px;
+  --tracy-body-tracking: normal;
+  --tracy-capsule: var(--ds-pill-radius, 9999px);
+  --tracy-capsule-pad: var(--space-3) var(--space-5);
+  --tracy-ring: 0 0 0 1px var(--border);
+  --tracy-shell-radius: var(--ds-card-radius, 20px);
+  --tracy-quiet: var(--muted);
+  --tracy-scene-bg: var(--ds-c-ink, #000000);
+  --tracy-scene-fg: var(--ds-c-on-ink, #f5f5f5);
+}
+
+html[data-theme="dark"],
+[data-bs-theme="dark"] {
+  --bg: var(--ds-c-bg, #000000);  /* darkest neutral the system declares (L* 0.0) */
+  --surface: var(--ds-c-surface, #0e0e0e);  /* ground tier, 4.0 L* from the page ground (pushed out to stay clear of the tier below), interpolated — the system declares no stop at this tier */
+  --surface-warm: var(--ds-c-surface-warm, #181818);  /* ground tier, 8.0 L* from the page ground (pushed out to stay clear of the tier below), interpolated — the system declares no stop at this tier */
+  --border-soft: var(--ds-c-border-soft, #222222);  /* ground tier, 13.2 L* from the page ground (pushed out to stay clear of the tier below), matched to a declared stop */
+  --border: var(--ds-c-border, #2a2a2a);  /* ground tier, 17.2 L* from the page ground (pushed out to stay clear of the tier below), interpolated — the system declares no stop at this tier */
+  --meta: var(--ds-c-meta, #6a6a6a);  /* holds the light ratio 3.11 against the dark ground, snapped to a declared stop */
+  --muted: var(--ds-c-muted, #929292);  /* holds the light ratio 5.41 against the dark ground, snapped to a declared stop */
+  --fg-2: var(--ds-c-fg-2, #cbcbcb);  /* holds the light ratio 10.53 against the dark ground, interpolated — no declared stop at this tier, raised to clear the floor */
+  --fg: var(--ds-c-fg, #f5f5f5);  /* holds the light ratio 15.91 against the dark ground, interpolated — no declared stop at this tier, raised to clear the floor */
+  --accent: var(--ds-c-accent, #ff385c);  /* light accent already clears 4.5 on the dark ground */
+  --accent-on: var(--ds-c-accent-on, #000000);  /* whichever end of the dark ramp has more contrast on the new accent */
+  --accent-hover: var(--ds-c-accent-hover, #dd3050);  /* same direction and distance the light palette used (-0.069 luminance) */
+  --accent-active: var(--ds-c-accent-active, #d42e4c);  /* same direction and distance the light palette used (-0.084 luminance) */
+  --success: var(--ds-c-success, #209924);  /* lifted to clear 4.5 on the dark surface */
+  --warn: var(--ds-c-warn, #c47700);  /* already clears 4.5 on the dark surface */
+  --danger: var(--ds-c-danger, #d16850);  /* lifted to clear 4.5 on the dark surface */
+}
+
+
+/* T4 reads these at runtime from etc/theme/*.json as LITERALS, in a sheet that loads after
+   template.css. A literal does not flip, so the dark hook has to restate them in terms of the
+   tokens it just remapped — otherwise --bg is black and the page is white. */
+html[data-theme="dark"],
+html.t4-dark,
+[data-bs-theme="dark"] {
+  --body-bg-color: var(--bg);
+  --body-text-color: var(--fg);
+  --body-link-color: var(--ds-c-accent-text, var(--accent));
+  --body-link-hover-color: var(--ds-c-accent-text-hover, var(--accent-hover));
+  --color-primary: var(--accent);
+  --color-secondary: var(--surface);
+  --color-success: var(--success);
+  --color-info: var(--ds-c-info, var(--accent));
+  --color-warning: var(--warn);
+  --color-danger: var(--danger);
+  --color-light: var(--surface);
+  --color-dark: var(--fg);
+  --mainnav-text-color: var(--fg);
+  --mainnav-link-color: var(--fg);
+  --mainnav-link-hover-color: var(--ds-c-accent-text, var(--accent));
+  --mainnav-link-active-color: var(--ds-c-accent-text, var(--accent));
+  --footer-bg-color: var(--surface);
+  --footer-text-color: var(--meta);
+  --footer-link-color: var(--muted);
+  --footer-link-hover-color: var(--fg);
+}
+
+
+/* T4 compiled ONE design system into Bootstrap's own variables. This sheet loads after
+   template.css, and every value here is a var(), so it follows the dark remap above for free. */
+:root {
+  --t4-body-bg: var(--bg);
+  --t4-white: var(--bg);
+  --t4-body-color: var(--fg);
+  --t4-heading-color: var(--ds-c-heading, var(--fg));
+  --t4-emphasis-color: var(--fg);
+  --t4-dark: var(--fg);
+  --t4-secondary: var(--muted);
+  --t4-gray: var(--muted);
+  --t4-secondary-color: var(--muted);
+  --t4-tertiary-color: var(--meta);
+  --t4-body-color: var(--fg);
+  --t4-highlight-color: var(--fg);
+  --t4-border-color: var(--border);
+  --t4-gray-100: var(--surface-warm);
+  --t4-gray-200: var(--surface);
+  --t4-gray-300: var(--border-soft);
+  --t4-gray-400: var(--border);
+  --t4-gray-500: var(--meta);
+  --t4-gray-600: var(--muted);
+  --t4-gray-700: var(--fg-2);
+  --t4-gray-800: var(--fg);
+  --t4-gray-900: var(--fg);
+  --t4-gray-dark: var(--fg);
+  --t4-light: var(--surface-warm);
+  --t4-secondary-bg: var(--surface);
+  --t4-tertiary-bg: var(--surface-warm);
+  --t4-blue: var(--accent);
+  --t4-primary: var(--accent);
+  --t4-link-color: var(--ds-c-accent-text, var(--accent));
+  --t4-link-hover-color: var(--ds-c-accent-text-hover, var(--accent-hover));
+  --t4-success: var(--success);
+  --t4-green: var(--success);
+  --t4-warning: var(--warn);
+  --t4-yellow: var(--warn);
+  --t4-danger: var(--danger);
+  --t4-red: var(--danger);
+  --t4-box-shadow: 0 0 0 1px var(--border);
+  --t4-box-shadow-sm: 0 0 0 1px var(--border-soft);
+  /* Bootstrap's root corners and face, as template.css compiles them (the same values whichever
+     style sheet is chosen), read through their roles: every framework rule built on them follows. */
+  --t4-border-radius: var(--ds-btn-radius, 12px);
+  --t4-border-radius-sm: var(--ds-input-radius, 8px);
+  --t4-border-radius-lg: var(--ds-card-radius, 18px);
+  --t4-border-radius-xl: var(--ds-card-radius, 1rem);
+  --t4-border-radius-xxl: var(--ds-card-radius, 2rem);
+  --t4-border-radius-pill: var(--ds-pill-radius, 980px);
+  --t4-font-sans-serif: var(--ds-font-body, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+}

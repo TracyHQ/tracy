@@ -1,0 +1,563 @@
+/*
+ * Storefront stylesheet. Imported ONLY by src/layouts/Base.astro (public pages). The EmDash admin at
+ * /_emdash/admin is a separate app and must never receive Tailwind's preflight or these tokens.
+ * Values: tasks/emdash-tracy-base/visual-contract.md (measured on the Joomla source).
+ */
+@import "tailwindcss";
+@import "./tokens.css";
+
+@custom-variant dark (&:where(html[data-theme="dark"], html[data-theme="dark"] *));
+
+/* The design-system slot: accent used as TEXT reads its own role (--color-accent-text), so a system
+   whose accent is a light fill can still be read as a link. Unworn, it is the accent itself (no change). Declared after
+   tailwindcss's own utilities in the same layer, so it replaces `.text-accent`'s colour only. */
+@layer utilities {
+	.text-accent {
+		color: var(--color-accent-text);
+	}
+	@media (hover: hover) {
+		.hover\:text-accent:hover,
+		.group-hover\:text-accent:is(:where(.group):hover *) {
+			color: var(--color-accent-text);
+		}
+		.hover\:text-accent-hover:hover {
+			color: var(--color-accent-text-hover);
+		}
+	}
+}
+
+@layer base {
+	/* The root stays at 16px so Tailwind's rem utilities keep their nominal size (p-6 = 24px, as the
+	   source's spacing is measured); the 17px body size lives on <body>. */
+	html {
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+		color: var(--color-fg);
+		background: var(--color-bg);
+		scroll-behavior: smooth;
+	}
+	body {
+		margin: 0;
+		background: var(--color-bg);
+		color: var(--color-fg);
+		font-size: 17px;
+		line-height: 1.47;
+		font-weight: var(--ds-weight-body, 400);
+		letter-spacing: -0.022em;
+	}
+	a {
+		color: var(--color-accent-text);
+		text-decoration: none;
+	}
+	a:hover {
+		color: var(--color-accent-text-hover);
+	}
+	/* Headings on the page ground read the heading role (--base-ds-heading, tokens.css). With no design system it is
+	   invalid and a heading inherits, exactly as before; on a band the band's own text colour wins, so
+	   every band clears it. A heading with its own colour class keeps that class (utilities win). */
+	.scene,
+	.bg-scene-bg,
+	.band-accent,
+	.bg-accent,
+	.bg-primary {
+		--base-ds-heading: initial;
+	}
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		color: var(--base-ds-heading, inherit);
+	}
+	::selection {
+		background: color-mix(in srgb, var(--color-accent) 25%, transparent);
+	}
+	mark {
+		background: var(--color-accent-tint);
+		color: inherit;
+	}
+	:focus-visible {
+		outline: none;
+		box-shadow: var(--shadow-focus);
+		/* ds-keep: corner of the focus halo on whatever is focused; components set their own role corner */
+		border-radius: 8px;
+	}
+	/* Reduced motion also switches off smooth scrolling: the acceptance tools scroll pages with
+	   reducedMotion set, and an animated scroll never lets lazy images below the fold load. */
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+	}
+	details summary {
+		list-style: none;
+		cursor: pointer;
+	}
+	details summary::-webkit-details-marker {
+		display: none;
+	}
+}
+
+/* Recurring patterns of the design, named once (visual-contract §2–§3). */
+/* The customer's logo (src/components/site/BrandLogo.astro): a spot drawn for one theme is hidden in the other.
+   Unlayered and important, so no utility on the same element can bring it back. */
+html[data-theme="dark"] .brand-when-light,
+html:not([data-theme="dark"]) .brand-when-dark {
+	display: none !important;
+}
+
+@layer components {
+	.wrap {
+		max-width: calc(var(--container-site) + 2 * var(--gutter));
+		margin-inline: auto;
+		padding-inline: var(--gutter);
+	}
+	@media (max-width: 1023px) {
+		.wrap {
+			padding-inline: var(--gutter-tablet);
+		}
+	}
+	@media (max-width: 639px) {
+		.wrap {
+			padding-inline: var(--gutter-phone);
+		}
+	}
+	.band {
+		padding-block: var(--band-y);
+	}
+	@media (max-width: 1023px) {
+		.band {
+			padding-block: var(--band-y-tablet);
+		}
+	}
+	@media (max-width: 639px) {
+		.band {
+			padding-block: var(--band-y-phone);
+		}
+	}
+	.eyebrow {
+		display: block;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--color-accent-text);
+		margin-bottom: 12px;
+	}
+	.eyebrow--quiet {
+		color: var(--color-fg-meta);
+	}
+	.band-tight {
+		padding-block: calc(var(--band-y) * 0.6);
+	}
+	@media (max-width: 1023px) {
+		.band-tight {
+			padding-block: calc(var(--band-y-tablet) * 0.6);
+		}
+	}
+	@media (max-width: 639px) {
+		.band-tight {
+			padding-block: calc(var(--band-y-phone) * 0.6);
+		}
+	}
+	.scene {
+		background: var(--color-scene-bg);
+		color: var(--color-scene-fg);
+	}
+	.scene .btn-ghost {
+		box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-scene-fg) 35%, transparent);
+	}
+	.scene .lead,
+	.scene-muted {
+		color: color-mix(in srgb, var(--color-scene-fg) 70%, transparent);
+	}
+	.eyebrow-badge {
+		display: inline-flex;
+		align-items: center;
+		height: 24px;
+		padding-inline: 8px;
+		font-size: 12px;
+		font-weight: 400;
+		letter-spacing: -0.022em;
+		color: var(--color-accent-text);
+		background: var(--color-surface);
+		border: 1px solid var(--color-line);
+		border-radius: var(--ds-pill-radius, 8px);
+	}
+	/* Heading scale: the source keeps its desktop sizes down to the tablet width and switches to the
+	   phone stops (--text-*-phone: 40/28/20) under 640px; list titles and card titles never shrink. */
+	.h-hero,
+	.h-page,
+	.h-article {
+		font-family: var(--ds-font-display, inherit);
+		font-size: var(--ds-size-display, 56px);
+		line-height: 1.05;
+		font-weight: var(--ds-weight-display, 600);
+		letter-spacing: var(--ds-tracking-display, -0.015em);
+		text-wrap: pretty;
+	}
+	.h-article {
+		font-weight: 700;
+	}
+	/* Only the hero line takes a system's display line height: it is set for one large line, and a
+	   wrapped page title or section heading at that leading collides with itself. */
+	.h-hero {
+		line-height: var(--ds-leading-display, 1.05);
+	}
+	.h-section {
+		font-family: var(--ds-font-display, inherit);
+		font-size: var(--ds-size-heading, 40px);
+		line-height: 1.05;
+		font-weight: var(--ds-weight-heading, 600);
+		letter-spacing: var(--ds-tracking-display, -0.015em);
+		text-wrap: pretty;
+	}
+	.h-card {
+		font-family: var(--ds-font-display, inherit);
+		font-size: var(--ds-size-card, 28px);
+		line-height: 1.05;
+		font-weight: var(--ds-weight-heading, 600);
+		letter-spacing: -0.015em;
+		text-wrap: pretty;
+	}
+	.h-card-sm {
+		font-size: 25.5px;
+		line-height: 1.05;
+		font-weight: 600;
+		letter-spacing: -0.015em;
+		text-wrap: pretty;
+	}
+	@media (max-width: 639px) {
+		.h-hero,
+		.h-article {
+			font-size: var(--ds-size-display-phone, 40px);
+		}
+		/* A page title keeps 56px on phones unworn; a worn system's display size gets its phone size. */
+		.h-page {
+			font-size: var(--ds-size-display-phone, 56px);
+		}
+		.h-section {
+			font-size: var(--ds-size-heading-phone, 28px);
+		}
+		.h-card {
+			font-size: var(--ds-size-card-phone, 20px);
+		}
+	}
+	/* Kit pages: the source's fixture title is 40/700 and the type specimen 80/700 (40 on phones). */
+	.h-page--kit {
+		font-size: 40px;
+		font-weight: 700;
+	}
+	.h-hero--specimen {
+		font-size: 80px;
+		font-weight: 700;
+	}
+	@media (max-width: 639px) {
+		.h-hero--specimen {
+			font-size: 40px;
+			line-height: 1.15;
+		}
+	}
+	.lead--specimen {
+		color: var(--color-fg-2);
+		letter-spacing: normal;
+	}
+	/* ACM sections set the eyebrow tighter than the OpenDesign landing: 12px line, 0.08em tracking. */
+	.eyebrow--acm,
+	.section-head--acm .eyebrow {
+		line-height: 12px;
+		letter-spacing: 0.08em;
+	}
+	/* The intro under an ACM page title drops to body size on phones. */
+	@media (max-width: 639px) {
+		.section-head h1 + p,
+		[data-block="timeline"] p.lead,
+		[data-block="cta-capsule"] p.lead {
+			font-size: 17px;
+			line-height: 1.47;
+		}
+	}
+	/* An article's/service's/profile's intro paragraph is body-sized in the source. */
+	article p.lead.text-fg {
+		font-size: 17px;
+		line-height: 1.47;
+	}
+	/* The ACM capsule's supporting line is set tighter than a page lead. */
+	[data-block="cta-capsule"] p.lead {
+		line-height: 1.38;
+		letter-spacing: -0.011em;
+	}
+	.lead {
+		font-size: 21px;
+		line-height: 1.47;
+		color: var(--color-fg-muted);
+		text-wrap: pretty;
+	}
+	.section-head {
+		max-width: 680px;
+		margin-inline: auto;
+		margin-bottom: 48px;
+		text-align: center;
+	}
+	.section-head--left {
+		margin-inline: 0;
+		text-align: left;
+	}
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		padding: var(--ds-btn-pad-y, 12px) var(--ds-btn-pad-x, 20px);
+		border-radius: var(--ds-btn-radius, var(--radius-pill));
+		font-size: 17px;
+		line-height: 1.2;
+		font-weight: var(--ds-weight-button, 400);
+		letter-spacing: -0.005em;
+		border: 1px solid transparent;
+		transition:
+			background-color 150ms var(--ease-standard),
+			color 150ms var(--ease-standard),
+			border-color 150ms var(--ease-standard);
+		cursor: pointer;
+	}
+	.btn-primary {
+		background: var(--color-accent);
+		color: var(--color-accent-on);
+	}
+	.btn-primary:hover {
+		background: var(--color-accent-hover);
+		color: var(--color-accent-on);
+	}
+	.btn-primary:active {
+		background: var(--color-accent-active);
+	}
+	.btn-secondary {
+		background: var(--color-bg);
+		color: var(--color-fg);
+		border-color: var(--color-line);
+	}
+	.btn-secondary:hover {
+		color: var(--color-accent-text);
+		border-color: var(--color-accent);
+	}
+	.btn-ghost {
+		color: var(--color-accent-text);
+		box-shadow: var(--shadow-ring);
+		background: transparent;
+	}
+	.btn-ghost:hover {
+		color: var(--color-accent-text-hover);
+	}
+	/* The light button on an accent band: the band's words as its ground, the band as its words. */
+	/* The call band's button: the band's words as its fill and the band as its words (white on the blue
+	   band). On the dark side of a worn system the band is the accent deepened under light words, so that
+	   fill was a light slab on a dark page and a dark fill vanished on the band (button-dark, BTN-1,
+	   HOVER-1, 16/10/2026): there the button is drawn in the band's words, outline and label. */
+	.btn-on-accent {
+		background: var(--color-on-accent-band);
+		color: var(--ds-c-accent-band, var(--color-accent-text));
+	}
+	.btn-on-accent:hover {
+		color: var(--color-accent-active);
+	}
+	html[data-ds-worn][data-theme="dark"] .btn-on-accent {
+		background: transparent;
+		border-color: var(--ds-c-on-accent-band, currentColor);
+		color: var(--ds-c-on-accent-band, currentColor);
+	}
+	html[data-ds-worn][data-theme="dark"] .btn-on-accent:hover {
+		background: color-mix(in srgb, var(--ds-c-on-accent-band, currentColor) 14%, transparent);
+		color: var(--ds-c-on-accent-band, currentColor);
+	}
+	.btn-sm {
+		padding: 9px 16px;
+		font-size: 15px;
+	}
+	.btn-xs {
+		padding: 8px 14px;
+		font-size: 14px;
+	}
+	.card {
+		background: var(--color-bg);
+		border: 1px solid var(--color-line-soft);
+		border-radius: var(--ds-card-radius, var(--radius-lg));
+		box-shadow: var(--shadow-ring-card);
+	}
+	/* List cards (blog, services, team) sit on the surface tint without a border in the source. */
+	article.card {
+		background: var(--color-surface);
+		border: 0;
+		box-shadow: none;
+	}
+	.chip-outline {
+		display: inline-flex;
+		align-items: center;
+		padding: 6px 12px;
+		border-radius: var(--ds-pill-radius, var(--radius-pill));
+		border: 1px solid var(--color-line);
+		color: var(--color-fg-2);
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1;
+	}
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		padding: 4px 12px;
+		border-radius: var(--ds-pill-radius, var(--radius-pill));
+		background: var(--color-surface);
+		box-shadow: var(--shadow-ring);
+		color: var(--color-fg-2);
+		font-size: 12px;
+		font-weight: 700;
+		line-height: 1;
+	}
+	.meta {
+		font-size: 14px;
+		color: var(--color-fg-muted);
+	}
+	.photo-frame {
+		position: relative;
+		overflow: hidden;
+		background: var(--color-surface);
+	}
+	.photo-frame img {
+		position: absolute !important;
+		inset: 0;
+		width: 100% !important;
+		height: 100% !important;
+		object-fit: cover;
+	}
+	.grid-3 {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 20px;
+	}
+	.grid-4 {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 20px;
+	}
+	.card-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 32px;
+	}
+	@media (max-width: 1023px) {
+		.grid-3,
+		.card-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.grid-4 {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 639px) {
+		.grid-3,
+		.grid-4,
+		.card-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	/* Article body (Portable Text) */
+	.prose-article > * + * {
+		margin-top: 17px;
+	}
+	.prose-article h2 {
+		font-size: 28px;
+		line-height: 1.05;
+		font-weight: 600;
+		letter-spacing: -0.015em;
+		margin-top: 34px;
+		margin-bottom: 8.5px;
+	}
+	.prose-article h3 {
+		font-size: 21px;
+		line-height: 1.2;
+		font-weight: 600;
+		margin-top: 26px;
+	}
+	.prose-article p,
+	.prose-article li {
+		font-size: 17px;
+		line-height: 1.47;
+		color: var(--color-fg);
+	}
+	.prose-article ul {
+		list-style: disc;
+		padding-left: 1.4em;
+	}
+	.prose-article ol {
+		list-style: decimal;
+		padding-left: 1.4em;
+	}
+	.prose-article blockquote {
+		border-left: 3px solid var(--color-accent);
+		padding-left: 20px;
+		color: var(--color-fg-muted);
+		font-size: 21px;
+	}
+	.prose-article a {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.prose-article img {
+		border-radius: var(--ds-card-radius, var(--radius-lg));
+	}
+	/* Accent bands (statistics, final CTA) */
+	.band-accent {
+		background: var(--color-accent-band);
+		color: var(--color-on-accent-band);
+	}
+	.on-accent-muted {
+		color: color-mix(in srgb, var(--color-on-accent-band) 78%, transparent);
+	}
+	.on-accent-soft {
+		color: color-mix(in srgb, var(--color-on-accent-band) 88%, transparent);
+	}
+	/* Header nav */
+	.nav-link {
+		display: inline-flex;
+		align-items: center;
+		padding: 20px 17px;
+		font-size: 14px;
+		line-height: 40px;
+		letter-spacing: -0.016em;
+		color: var(--color-fg);
+	}
+	/* The source colours a nav item only on hover; the current section keeps the text colour and
+	   gets a 2px accent underline instead (better than the source, which marks nothing). */
+	.nav-link:hover {
+		color: var(--color-accent-text);
+	}
+	.nav-link[aria-current="page"] {
+		box-shadow: inset 0 -2px 0 0 var(--color-accent);
+	}
+	.footer-title {
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--color-fg);
+		margin-bottom: 16px;
+		line-height: 1.05;
+	}
+	.footer-link {
+		display: block;
+		font-size: 14px;
+		line-height: 32px;
+		color: var(--color-fg-muted);
+	}
+	.footer-link:hover {
+		color: var(--color-fg);
+	}
+	/* Sketch illustration frames (how / process) */
+	.sketch {
+		aspect-ratio: 124 / 108;
+		background: var(--color-bg);
+		border: 1px solid var(--color-line-soft);
+		border-radius: var(--ds-card-radius, var(--radius-md));
+		padding: 24px;
+		color: var(--color-line);
+	}
+}

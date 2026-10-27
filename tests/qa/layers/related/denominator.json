@@ -1,0 +1,131 @@
+{
+  "command": "node tests/qa/layers/related/generate.mjs",
+  "details": {
+    "extraction": "static list from the brief; nothing is discovered in the sibling clones at generation time, so the file is identical on a machine without them"
+  },
+  "items": [
+    {
+      "id": "chain:docs-adr-evidence-hash",
+      "kind": "handoff-contract",
+      "na": {},
+      "requiredTags": ["happy"]
+    },
+    {
+      "id": "chain:emdash-qa-contract",
+      "kind": "handoff-contract",
+      "na": {},
+      "requiredTags": ["happy", "invalid", "mixed-version"]
+    },
+    {
+      "id": "chain:joomla-producer-artifact",
+      "kind": "handoff-contract",
+      "na": {},
+      "requiredTags": ["happy"]
+    },
+    {
+      "id": "chain:vendor-pin:emdash-template",
+      "kind": "handoff-contract",
+      "na": {},
+      "requiredTags": ["happy", "mixed-version"]
+    },
+    {
+      "id": "chain:vendor-pin:joomla-template",
+      "kind": "handoff-contract",
+      "na": {},
+      "requiredTags": ["happy", "mixed-version"]
+    },
+    {
+      "id": "chain:vendor-pin:wordpress-theme",
+      "kind": "handoff-contract",
+      "na": {},
+      "requiredTags": ["happy", "mixed-version"]
+    },
+    {
+      "id": "chain:workers-history",
+      "kind": "handoff-contract",
+      "na": {},
+      "requiredTags": ["happy"]
+    },
+    {
+      "id": "chain:wp-setting-from-template",
+      "kind": "handoff-contract",
+      "na": {},
+      "requiredTags": [
+        "happy",
+        "invalid",
+        "empty",
+        "bad-hash",
+        "missing-asset",
+        "upgrade-compat",
+        "mixed-version"
+      ]
+    },
+    {
+      "id": "suite:tracy-docs/scripts/tests",
+      "kind": "sibling-suite",
+      "na": {},
+      "requiredTags": ["happy", "empty", "invalid", "boundary", "dependency-failure", "repeat", "cleanup"]
+    },
+    {
+      "id": "suite:tracy-emdash-template/skills/tracy-emdash-template/scripts/tests",
+      "kind": "sibling-suite",
+      "na": {},
+      "requiredTags": ["happy", "empty", "invalid", "boundary", "dependency-failure", "repeat", "cleanup"]
+    },
+    {
+      "id": "suite:tracy-fleet/provision/access/joomla/tests/run.php",
+      "kind": "sibling-suite",
+      "na": {},
+      "requiredTags": ["happy", "empty", "invalid", "boundary", "dependency-failure", "repeat", "cleanup"]
+    },
+    {
+      "id": "suite:tracy-fleet/tests",
+      "kind": "sibling-suite",
+      "na": {},
+      "requiredTags": ["happy", "empty", "invalid", "boundary", "dependency-failure", "repeat", "cleanup"]
+    },
+    {
+      "id": "suite:tracy-infra/fleet/tests",
+      "kind": "sibling-suite",
+      "na": {},
+      "requiredTags": ["happy", "empty", "invalid", "boundary", "dependency-failure", "repeat", "cleanup"]
+    },
+    {
+      "id": "suite:tracy-infra/mail/test/emails.test.mjs",
+      "kind": "sibling-suite",
+      "na": {},
+      "requiredTags": ["happy", "empty", "invalid", "boundary", "dependency-failure", "repeat", "cleanup"]
+    },
+    {
+      "id": "suite:tracy-joomla-template/skills/joomlart-t4-template/scripts/test",
+      "kind": "sibling-suite",
+      "na": {},
+      "requiredTags": ["happy", "empty", "invalid", "boundary", "dependency-failure", "repeat", "cleanup"]
+    },
+    {
+      "id": "suite:tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/test",
+      "kind": "sibling-suite",
+      "na": {},
+      "requiredTags": ["happy", "empty", "invalid", "boundary", "dependency-failure", "repeat", "cleanup"]
+    }
+  ],
+  "layer": "related",
+  "naReasons": {},
+  "revision": "specs:3e94586e71ea0f02",
+  "schema": "tracy-qa-denominator/v1",
+  "source": "the suite paths named by the W8 brief, plus the producer-to-consumer chains this layer builds",
+  "unresolved": [
+    {
+      "id": "chain:joomla-producer-artifact",
+      "reason": "the Joomla chain has no callable producer; see its PENDING case"
+    },
+    {
+      "id": "clones:contents",
+      "reason": "the test files of each suite, and the commit they run on, are read from the clones at run time and recorded per run; the clones may be older than the commits TCH pins"
+    },
+    {
+      "id": "suites:other-tests",
+      "reason": "tracy-infra holds further tests (.test.ts/.tsx, other .test.mjs) outside the directories the brief names; they are not wrapped"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "tracy-design-inspiration/v1",
+  "template": "ja-social-ii",
+  "provider": "JoomlArt",
+  "category": "Social & Messaging",
+  "blurb": "A community and social networking site template, with demo content about meeting new people, member profiles, and lifestyle articles.",
+  "image": "ja-social-ii-home-390.png",
+  "nav": "top-left",
+  "hero": "split",
+  "dark": false,
+  "layouts": [
+    {
+      "key": "home",
+      "label": "Home",
+      "path": "/",
+      "shots": {
+        "desktop": "ja-social-ii-home-1440.png",
+        "mobile": "ja-social-ii-home-390.png"
+      }
+    }
+  ]
+}

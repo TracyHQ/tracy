@@ -1,0 +1,37 @@
+/* Chrome group: rules for the shared frame (menu, footer, sidebar modules) that the carried source rules do not give
+   WordPress markup. */
+
+/* The short rule under a module title. The source draws it on `.module-title span::after`; a WordPress heading holds
+   its text bare, so the same rule is drawn on the heading itself when it has no span. */
+.module-title:not(:has(> span))::after {
+  content: '';
+  width: 20px;
+  height: 2px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -10px;
+  background-color: var(--ds-c-accent, #d24a24);
+}
+.t3-module.module-primary .module-title:not(:has(> span))::after {
+  background-color: var(--ds-c-accent, #ffd33d);
+}
+
+/* The source's parallax on the "Discover our story" section starts the picture at the left edge (skrollr
+   `background-position: 0px 50%` when the section is centred); the generic module picture is centred. */
+.t3-section-module:has(.acm-features.style-1) > .jr-section-bg img {
+  object-position: 0 50%;
+}
+
+/* Subscribe: the source's email field is set in the UI face (small, bold); the WordPress field inherits the body face. */
+.mod-subscribe input:not([type='submit'], [type='hidden'], [type='checkbox']),
+.mod-subscribe input:not([type='submit'], [type='hidden'], [type='checkbox'])::placeholder {
+  font-family: var(--ds-font-ui, 'Roboto Mono', sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+}
+/* The source's component sheet sets the typed text (and so the focus outline, which is `currentColor`) to the body ink; the
+   WordPress field kept the Bootstrap muted grey. */
+.mod-subscribe input:not([type='submit'], [type='hidden'], [type='checkbox']) {
+  color: inherit;
+}

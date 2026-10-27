@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-uniswap-pink: #ff37c7;
+  --color-midnight-ink: #131313;
+  --color-pure-white: #ffffff;
+  --color-carbon: #222222;
+  --color-slate: #6a6a6a;
+  --color-ash: #acacac;
+  --color-frost: #f2f2f2;
+  --color-true-black: #000000;
+  --color-blush-mist: #fef4ff;
+  --color-ember: #ff4d00;
+  --color-iris: #8251fb;
+  --color-magenta: #f50db4;
+  --color-sky: #2abdff;
+  --color-mint: #00c3a0;
+  --color-crimson: #e01a2b;
+  --color-forest: #0c8911;
+
+  /* Typography — Font Families */
+  --font-basel: 'Basel', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

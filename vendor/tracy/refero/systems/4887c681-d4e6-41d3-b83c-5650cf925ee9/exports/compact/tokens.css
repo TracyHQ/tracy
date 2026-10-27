@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-carbon: #222222;
+  --color-obsidian: #000000;
+  --color-graphite: #313131;
+  --color-frost: #ffffff;
+  --color-paper: #f7f7f7;
+  --color-mist: #e5e7eb;
+  --color-ash: #e0e0e0;
+
+  /* Typography — Font Families */
+  --font-unica77llweb: 'Unica77LLWeb', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-unica77mono: 'Unica77Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

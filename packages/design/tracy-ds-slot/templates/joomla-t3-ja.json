@@ -1,0 +1,43 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "joomla/t3-ja",
+  "applies": "the JA Joomla T3 quickstarts: the same site module as the T4 family, in the earliest position the template renders (pass-joomla.mjs finds it from tpls/blocks). T3 has no runtime colour variables and no dark set; a released template follows the system through its tokenized stylesheets (css/ and css/themes/*)",
+  "module": {
+    "title": "Tracy design system",
+    "position": "header-r",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "header-r is in the header block every JA T4 layout renders; the flow fails a template whose page never carries the slot marker, so a missing position cannot pass silently"
+  },
+  "tokenScope": ":root",
+  "runtime": {},
+  "selectors": {
+    "headingsAll": [":is(h1, h2, h3, h4)"],
+    "display": "h1",
+    "body": ["body"],
+    "themeToggle": "[data-tracy-theme-toggle]"
+  },
+  "specificity": "Rules are prefixed :root×6 (0,6,0): above every template rule, below an element's own inline style.",
+  "extraPalettes": [
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    }
+  ],
+  "extraNote": "Bootstrap 3 as T3 ships it under every JA T3 template: its colours in the roles they play there",
+  "genericTokens": false,
+  "genericNote": "the slot writes no short token names (--bg, --accent…) here: a JA template may define them itself; everything reads --ds-c-*",
+  "classifyText": true,
+  "classifyNote": "a text colour no palette names, on the page side of light, follows as body, muted or meta text by its contrast with the page"
+}

@@ -1,0 +1,89 @@
+{
+  "color": {
+    "electric-iris": {
+      "$value": "#3139fb",
+      "$type": "color",
+      "$description": "Electric Iris — Full-bleed section backgrounds, brand atmosphere, sidebar chrome inside the browser mockup — a single high-saturation violet floods entire bands so the page reads as editorial color blocking, not UI state"
+    },
+    "deep-violet": {
+      "$value": "#2702c2",
+      "$type": "color",
+      "$description": "Deep Violet — Darker accent layer within violet sections, pressed or active states inside the brand color, secondary headings on violet — deepens the iris without shifting hue"
+    },
+    "oat": {
+      "$value": "#fffadd",
+      "$type": "color",
+      "$description": "Oat — Primary page canvas and hero gradient base — warm cream that reads as paper rather than screen white, the default surface everything else sits on"
+    },
+    "linen": {
+      "$value": "#fffcec",
+      "$type": "color",
+      "$description": "Linen — Secondary warm surface for cards, nav backgrounds, and footer — a half-step warmer than Oat, used when a layer needs to lift off the canvas without going white"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Pure white for browser-mockup card interiors, text on dark surfaces, and the scalloped divider ridges that separate colored bands"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "granite": {
+      "$value": "#696969",
+      "$type": "color",
+      "$description": "Granite — Muted body copy, secondary descriptions, and helper text — mid-gray that recedes against Oat without disappearing"
+    },
+    "olive-stone": {
+      "$value": "#595853",
+      "$type": "color",
+      "$description": "Olive Stone — Subtle secondary text and warm-leaning gray for fine print — slightly olive-shifted to harmonize with the cream canvas instead of fighting it"
+    }
+  },
+  "font": {
+    "marlin-soft-sq": {
+      "$value": "Marlin Soft SQ",
+      "$type": "fontFamily",
+      "$description": "Softer variant of Marlin for nav, subheadings, and secondary display sizes (28–40px) — the rounded terminals feel friendly against Marlin's sharper display cuts"
+    },
+    "marlin": {
+      "$value": "Marlin",
+      "$type": "fontFamily",
+      "$description": "Primary display serif for hero headlines and large editorial pull-quotes at 46px; weight 400 for body 16px — the contrast between hairline serif body and heavy serif display is the site's typographic signature"
+    },
+    "intervariable": {
+      "$value": "InterVariable",
+      "$type": "fontFamily",
+      "$description": "UI text, labels, and interface annotations — the workhorse sans for everything inside the browser mockup and supporting copy around the page"
+    },
+    "abc-favorit-mono": {
+      "$value": "ABC Favorit Mono",
+      "$type": "fontFamily",
+      "$description": "Micro-labels, tags, and category markers at 12px with wide tracking (up to 0.15em) — the monospaced rhythm breaks the serif/sans pattern and signals 'metadata'"
+    },
+    "abc-oracle": {
+      "$value": "ABC Oracle",
+      "$type": "fontFamily",
+      "$description": "Secondary serif body at 20–24px for longer descriptive paragraphs that sit between the Marlin display headlines — bridges display and UI without switching families"
+    },
+    "exposure-var": {
+      "$value": "Exposure VAR",
+      "$type": "fontFamily",
+      "$description": "Tight display headline at 36px with 1.0 line-height — used sparingly for emphasis where a more compressed cut is needed than Marlin provides"
+    },
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "-apple-system — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://arc.net",
+      "siteName": "Arc",
+      "extractedAt": "2026-06-03T18:55:59.053Z",
+      "variant": "compact"
+    }
+  }
+}

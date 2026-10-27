@@ -1,0 +1,60 @@
+{
+  "id": "QA-UNIT-REG-PR-1195-onboard-scan-stops-looking-happy",
+  "itemIds": ["regression:REG-PR-1195-onboard-scan-stops-looking"],
+  "requirement": "Desktop first-run AI-account step stops \"Looking for AI tools…\" when the app cannot finish the scan (slow or failed login-shell read)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1195-onboard-scan-stops-looking.json",
+    "ref": "PR #1195 (fix); fix evidence: PR #1195 description: packaged 0.6.0-dev.1 on the iMac, SHELL = 6 s / 9 s zsh or /bin/tcsh stays Looking with Refresh disabled; fixed bundle settles at 11.1 s / 12.9 s",
+    "invariant": "scanAgents keeps asking every REPOLL_MS while scanComplete is false for MAX_REPOLLS * REPOLL_MS >= SCAN_CAP_MS > 10 000 ms (the app's login-shell limit), then returns the last incomplete answer. flow scanStopped turns an incomplete answer into a settled state: mode found (what was found so far) or popular with a count, note false, warn null; a complete answer and waiting are left as they are; rescan looks again. Mounted plugin with a bridge that never completes: data-mode starts 'looking' with Refresh disabled; after the cap data-mode is 'found', no .tv-ob-spinner, Refresh enabled, no .tv-ob-note, no [data-warn], detect asked at least 8 times.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-onboard/test/flow.test.mjs:31 require() with a computed specifier",
+      "packages/ui/tracy-onboard/test/mount.test.mjs:89 require() with a computed specifier",
+      "packages/ui/tracy-onboard/test/scan.test.mjs:37 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a scan that never completes is asked again until past the app",
+    "a scan stopped incomplete (the cap)",
+    "a scan the app never completes (slow or failed login-shell read)"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1195-onboard-scan-stops-looking"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-onboard", "tracy-onboard"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1195-onboard-scan-stops-looking",
+    "pr": 1195,
+    "kind": "fix",
+    "area": "desktop/onboard",
+    "file": "tests/regression/cases/REG-PR-1195-onboard-scan-stops-looking.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "test/scan.test.mjs",
+    "test/flow.test.mjs",
+    "test/mount.test.mjs"
+  ],
+  "cwd": "packages/ui/tracy-onboard",
+  "needs": [],
+  "tests": [
+    "a scan that never completes is asked again until past the app",
+    "a scan stopped incomplete (the cap)",
+    "a scan the app never completes (slow or failed login-shell read)"
+  ],
+  "timeoutS": 600
+}

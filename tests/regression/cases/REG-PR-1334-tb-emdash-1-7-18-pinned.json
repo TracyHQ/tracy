@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1334-tb-emdash-1-7-18-pinned",
+  "kind": "fix",
+  "title": "Tracy Business EmDash 1.7.18 (the two-mode design-system slot) is pinned on its published parts, and every place that names a Tracy Business version agrees",
+  "pr": 1334,
+  "area": "design/slot",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: read tracy-business/emdash in apps/tracy-web/src/quickstarts.json and packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json.",
+    "S2: read version of packages/cms/tracy-emdash-theme-business/package.json, template.config.json and the Dockerfile label.",
+    "S3: read template-profiles.json releases, the where map emdash-tracy-business.json and packages/design/tracy-ds-slot/templates/emdash-tracy-business.json.",
+    "S4: read src/lib/ds-slot.ts and src/layouts/Base.astro of the theme.",
+    "All of it: node tests/regression/scripts/REG-PR-1334-tb-emdash-1-7-18-pinned.mjs"
+  ],
+  "expect": [
+    "S1: both copies pin 1.7.18 on tracy-business-emdash-quickstart-1.7.18.zip (6472598 bytes, sha256 7804bad2...e291, asset 638263593) and tracy-business-emdash-state-1.7.18.tar.gz (8471674 bytes, sha256 974084e6...fc02, asset 638263592).",
+    "S2: all three say 1.7.18.",
+    "S3: a 1.7.18 profile row, the where map names 1.7.18, slot maxVersion 1.7.18 with modes true.",
+    "S4: ds-slot.ts reads the /* mode: light|dark */ line and Base.astro sets data-theme dark from it."
+  ],
+  "selectors": {
+    "pins": "apps/tracy-web/src/quickstarts.json, packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json",
+    "theme": "packages/cms/tracy-emdash-theme-business/src/lib/ds-slot.ts, src/layouts/Base.astro"
+  },
+  "fence": "No stand, no model, no network. The release itself is on JoomlArt-Products/ja-products tag tracy-business/emdash-0.x; this case reads only the repo.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1334-tb-emdash-1-7-18-pinned.mjs"],
+    "needs": [],
+    "timeout_s": 120
+  }
+}

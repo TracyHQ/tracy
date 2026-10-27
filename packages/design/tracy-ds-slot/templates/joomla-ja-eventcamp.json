@@ -1,0 +1,311 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-eventcamp",
+  "release": "quickstart/ja-eventcamp/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.slide-title.text-white",
+    "card": "div.item-inner.border-gray",
+    "container": "div.t4-section.t4-section-1 div.t4-section-inner.container",
+    "section": "#t4-section-2",
+    "input": "#email_field_837"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 60px",
+    "displayFace": "Be Vietnam Pro 700, tracking 0em",
+    "card": "repeated rounded box ×3",
+    "container": "first content container, max-width 1230px",
+    "section": "first padded full-width section, padding-top 150px",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 26px"
+  },
+  "keepScopes": [
+    ".t4-sideshow",
+    ".t4-section-4",
+    ".t4-section-11",
+    ".t4-section-12",
+    ".t4-section-13",
+    ".t4-footer",
+    ".event-day",
+    ".bg-gradient-primary"
+  ],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#666666",
+    "--fg-2": "#e812b8",
+    "--accent": "#e812b8",
+    "--accent-hover": "#ec0cba",
+    "--surface": "#edf5ff",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#edf5ff",
+    "--muted": "#7a7a7a",
+    "--font-display": "\"Be Vietnam Pro\", sans-serif",
+    "--font-body": "\"IBM Plex Sans\", sans-serif",
+    "--surface-warm": "#12114a"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#666666",
+      "fg-2": "#212529",
+      "accent": "#e812b8",
+      "accent-hover": "#ec0cba",
+      "surface": "#f8f9fa",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#edf5ff",
+      "muted": "#7a7a7a"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#edf5ff",
+      "fg": "#666666",
+      "fg-2": "#e812b8",
+      "border": "#edf5ff",
+      "surface-warm": "#12114a"
+    },
+    {
+      "accent": "#12114a"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#ebebeb",
+      "border-soft": "#dddddd",
+      "warn": "#fdce03"
+    },
+    {
+      "surface": "#f2f2f2"
+    },
+    {
+      "surface": "#ececec"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (86 line colours, 115 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.slide-title.text-white",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn:not(.action):not(.apply-link)"],
+    "buttonPrimary": [".btn-primary"],
+    "card": ["div.item-inner.border-gray", ".card"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["#t4-section-2"],
+    "bodyFace": ["body"],
+    "cardLike": [".event-detail-wrap"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 17 tried (byte 7958); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ebebeb",
+      "uses": 57,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#edf5ff",
+      "distance": 22
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 22
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#edf5ff",
+      "distance": 14
+    },
+    {
+      "hex": "#ececec",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#edf5ff",
+      "distance": 21
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 4,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the 1.0.1 release build itself (~/tracy-bench-work/release/ds-r3e/ja-eventcamp/release, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-eventcamp-j6 — 12/12, controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 72% or more of the page follows, checked by eye on the four systems' screenshots; no change needed beyond the new block kind. Earlier: measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-eventcamp/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip: tasks/evidence/ds-contracts-r3e-2026-10-11/templates/ja-eventcamp-j6): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 71% or more of the page follows; the section kickers take the accent made readable (followRules); the hero slider and the agenda's day tiles keep their own text and pink kicker (keepText, keepDefaults read off :root); its pink hero kicker on the hero photo (3.86:1 in the template's own look) is the template's text on the template's picture; checked by eye on the four systems' screenshots, light and dark",
+  "templateVars": {
+    "--heading_color": "var(--ds-c-fg)",
+    "--gray_light": "var(--ds-c-surface)",
+    "--gradient_primary_start": "var(--ds-c-accent)",
+    "--gradient_primary_end": "var(--ds-c-accent-hover)"
+  },
+  "templateVarsNote": "JA Eventcamp's T4 custom colours (etc/customcolors.json, written by T4 into its generated stylesheet as --heading_color and --gray_light): its headings and .link-dark titles read --heading_color (#12114a) and its light cards and buttons --gray_light (#edf5ff); the slot points them at the text and surface colours (11/10/2026: titles stayed #12114a on a page that turned dark); its primary gradient (calls to action, the header BUY TICKET link, the + speaker button, the off-canvas header, the menu underline, the active page) is painted !important from its own --gradient_primary_start / --gradient_primary_end (magenta to pink), which no button rule outranks: they stayed the template magenta under every system (visual review 14/10/2026). Both point at the system’s accent and its hover step; the buttons’ labels take the accent’s own text !important (buttonTextImportant, the template sets them white !important: white on a light accent), and the header’s BUY TICKET link (.head-action .navbar-nav li a, not a .btn) the same through followRules",
+  "paletteBands": {
+    ".t4-palette-light": "surface"
+  },
+  "paletteBandsNote": "its light bands (speakers, articles) are T4 palette sections painted by T4's generated stylesheet (#edf5ff, links #12114a): they take the surface and the text that reads on it",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples); block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#666666",
+    "--body-link-color": "#e812b8",
+    "--body-link-hover-color": "#ec0cba",
+    "--color-primary": "#e812b8",
+    "--color-secondary": "#1a175c",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--heading_color": "#12114a",
+    "--gray_light": "#edf5ff",
+    "--gradient_primary_start": "#ab01be",
+    "--gradient_primary_end": "#e400d0"
+  },
+  "keepDefaultsNote": "read off the released home page's :root (11/10/2026): the hero slider (.item) keeps its pink kicker (.text-primary reads --color-primary) and its #666 text",
+  "keepText": [".t4-sideshow", ".event-day"],
+  "keepTextNote": "the hero slider and the agenda's day tiles (an orange gradient picture with white labels and an 8%-opacity day number) keep the template's own page text, which they inherit",
+  "followRules": {
+    ".section-title span": {
+      "color": "accent-text"
+    },
+    ".head-action .navbar-nav li a": {
+      "color": "accent-on!"
+    },
+    ".wrap-effect .bg-border .bg-fixed": {
+      "background-color": "bg"
+    },
+    ".t4-offcanvas-toggle, .navbar-toggler": {
+      "color": "accent-on!"
+    },
+    ".t4-offcanvas-toggle .toggle-bars, .t4-offcanvas-toggle .toggle-bars::before, .t4-offcanvas-toggle .toggle-bars::after": {
+      "background-color": "accent-on"
+    }
+  },
+  "followRulesNote": "the section kicker (#e812b8, from T4's generated stylesheet, out of a release's reach) takes the accent made readable on the page (11/10/2026: pink on MotherDuck's cream, 3.53:1)",
+  "minVersion": {
+    "quickstart/ja-eventcamp/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-eventcamp/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".t4-sideshow": {
+      "ground": "#12114a",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        ".h3": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-section-4": {
+      "ground": "#12114a",
+      "texts": ["#9191a2", "#ffffff"],
+      "paint": {
+        ".section-title span": {
+          "color": "accent"
+        },
+        ".section-decor::before": {
+          "border-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".t4-section-11": {
+      "ground": "#12114a",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".t4-section-12": {
+      "ground": "#12114a",
+      "texts": ["#9191a2"],
+      "paint": {
+        ".section-decor::before": {
+          "border-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".t4-section-13": {
+      "ground": "#12114a",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".t4-footer": {
+      "ground": "#12114a",
+      "texts": ["#9191a2", "#ffffff"],
+      "important": true
+    },
+    ".bg-gradient-primary": {
+      "ground": "#ab01be",
+      "texts": ["#ffffff"],
+      "kind": "brand",
+      "gradient": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the countdown band under the hero (and the strip above the footer) is a decor block of its own, .bg-decor-mask.bg-gradient-primary, set behind white words (.text-white): kept, it wears the system’s ground as a gradient wherever the white words read on it (the accent, else the system’s ink), and its corner arcs (a magenta picture on its ::before) take that ground’s hue through mix-blend-mode: luminosity (sideRules). The hero band was keyed .item, a class every Joomla list item carries: on /about-us it kept the speakers’ cards, their names the template navy on a dark page (Moxie); it is keyed by the hero section itself, .t4-sideshow",
+  "buttonTextImportant": true,
+  "sideRules": {
+    "light": {
+      ".bg-decor-mask.bg-gradient-primary::before": {
+        "mix-blend-mode": "luminosity"
+      }
+    },
+    "dark": {
+      ".bg-decor-mask.bg-gradient-primary::before": {
+        "mix-blend-mode": "luminosity"
+      }
+    }
+  },
+  "followNote": "the round speaker portraits on /about-us sit in a ring whose top half is hidden by a white mask (.wrap-effect .bg-border .bg-fixed, the template’s page colour): under a dark system it showed as white square corners behind each portrait (visual review 14/10/2026); it takes the system’s page colour",
+  "buttonNote": "the icon-only round buttons (.action: the arrow in the features; .apply-link: the + in the speakers grid, a 200px circle) are not text buttons: the system’s button padding and radius made them squares with the icon off centre (visual review 14/10/2026). The button selector leaves them out; they keep their circle and take the accent as fills",
+  "reviewV8Note": "15/10/2026 (look review v8): the menu toggles (.t4-offcanvas-toggle, .navbar-toggler) are filled with the accent gradient and kept their grey bars, faint on a light accent: their words and bars take the accent’s own text. keepText named the slide items (.item), which keepRules drops (not a kept scope): it names the slideshow band, so the arrows on its white discs keep the template’s grey"
+}

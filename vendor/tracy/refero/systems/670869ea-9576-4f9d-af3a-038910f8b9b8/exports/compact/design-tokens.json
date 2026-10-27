@@ -1,0 +1,34 @@
+{
+  "color": {
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Body text, inline links, project titles, table row dividers, the arrow (→) glyph"
+    },
+    "drafting-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Drafting White — Page background, surface under all content — no tint, no gradient"
+    },
+    "index-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Index Gray — Table column headers (PROJECT, TYPE, LOCATION, YEAR), supporting metadata, secondary borders"
+    }
+  },
+  "font": {
+    "nhaasgrotesk": {
+      "$value": "NHaasGrotesk",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for every UI element — headlines, body, links, table cells, column headers, navigation. Single weight 400 across the entire system, with negative letter-spacing tightening at every size. The Neue Haas Grotesk DNA (geometric neutrality, grotesque proportions) is what carries the architectural-document feel; substitute Helvetica Neue or Inter as a free fallback."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://emmerer.com",
+      "siteName": "Studio Emmerer",
+      "extractedAt": "2026-06-03T20:51:35.223Z",
+      "variant": "compact"
+    }
+  }
+}

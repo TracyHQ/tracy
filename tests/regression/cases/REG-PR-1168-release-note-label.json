@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-1168-release-note-label",
+  "kind": "feat",
+  "title": "One release-note block for the whole product with one label: a desktop: PR line is Desktop only, shown as a badge on the changelog page; the shipped notes carry no label",
+  "pr": 1168,
+  "area": "desktop/release",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test on packages/desktop/tracy-desktop/test/collect-release-notes.test.mjs (the release-note block, the old desktop-release-note block, both in one PR, the desktop: prefix, a foreign label, the PR template).",
+    "S2: Run node --test on packages/desktop/tracy-desktop/test/draft-release-notes.test.mjs and release-notes-page.test.mjs (badge on the drafted page, prefix in the shipped notes, label rules on the page, the hash the docs host must match).",
+    "S3: Run node --test on apps/tracy-docs/test/changelog-desktop.test.mjs (committed pages, 0.5 marks Desktop only changes, a foreign label on a page fails)."
+  ],
+  "expect": [
+    "S1: lines of a release-note block and of an old desktop-release-note block in the same PR are both read, NONE dropped; 'Desktop:   x' and '- DESKTOP:x' become 'desktop: x' and '- desktop: x'; 'web: …' is rejected while 'Mac: now needs macOS 13 or later.' is kept; the PR template ships ```release-note with NONE, mentions desktop:, and no longer ships the old block.",
+    "S2: a 'desktop:' PR line drafts as '- <text> _(Desktop only)_' in Highlights, Changes and a patch section, an unlabelled line as a plain bullet; releaseNotesFromPage drops the badge and returns plain '- <text>' (no 'desktop:', no 'Desktop only'); docsServeNotes matches the sha256 of the plain notes and not of the badged text; a page bullet with 'desktop:', 'web:', 'mobile:', '_(Web only)_' or a badge that is not at the end of the bullet is a problem.",
+    "S3: every committed page passes; 0.5.md has at least one Desktop only line and its Highlights ship as plain text with no 'desktop:' and no 'Desktop only'; a copy with '- web: …' or '_(Web only)_' fails; the index says every change people see, on the web and in the desktop app, Desktop only marked."
+  ],
+  "selectors": {
+    "pr_block": "```release-note … ``` in the PR body (old name ```desktop-release-note``` still read)",
+    "page_badge": "' _(Desktop only)_' at the end of a bullet in apps/tracy-docs/src/content/docs/changelog/desktop/<X.Y>.md",
+    "convention": "packages/desktop/tracy-desktop/build/release-notes-page.mjs (DESKTOP_PREFIX, DESKTOP_BADGE)",
+    "shipped_notes": "the feed's releaseNotes and Resources/release-notes.txt: plain bullets, no label"
+  },
+  "fence": "one label only: desktop: in PR notes, _(Desktop only)_ at the end of a page bullet; any other label is refused; the notes a release ships and their hash carry no label at all",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/desktop/tracy-desktop/test/collect-release-notes.test.mjs",
+      "packages/desktop/tracy-desktop/test/draft-release-notes.test.mjs",
+      "packages/desktop/tracy-desktop/test/release-notes-page.test.mjs",
+      "apps/tracy-docs/test/changelog-desktop.test.mjs"
+    ],
+    "tests": [
+      "the release-note block gives one line per change, web or desktop",
+      "a PR carrying both the old desktop-release-note block and the new one gives the lines of both",
+      "the desktop: prefix is written one way whatever case or spacing the author used",
+      "a label other than desktop: is refused, while a capitalised word before a colon is just prose",
+      "the PR template ships the release-note block (not the old name), defaulting to NONE",
+      "a desktop: line drafts as a Desktop only bullet, an unlabelled one as a plain bullet, and both ship as plain text",
+      "a patch section drafts its Desktop only lines with the badge too",
+      "a Desktop only line ships as plain text: the label is for the web page only, never in the notes an app shows",
+      "the docs host serving a labelled page matches the hash of the clean notes the candidate froze",
+      "the page carries one label, as the badge at the end of a bullet: no prefix, no other label",
+      "a page line with a label other than the one Desktop only badge is refused",
+      "0.5 marks its Desktop only changes, and its Highlights ship them as plain text, with no label"
+    ]
+  }
+}

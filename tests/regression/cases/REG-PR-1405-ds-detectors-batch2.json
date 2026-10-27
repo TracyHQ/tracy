@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1405-ds-detectors-batch2",
+  "kind": "fix",
+  "title": "Batch 2 preview detectors: nine false findings of the JA templates stay gone, the real cases are still found, and Tracy Apple reads its own contract",
+  "pr": 1405,
+  "area": "design-system/preview-detectors",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run each batch 2 detector probe in headless Chrome on the page shapes that gave a false finding (a heading on a background picture, a header over a hero that is not its ancestor, a footnav logo, an accordion row, .text-hide words, a role=img SVG, a clipped icon path, an outline button with a rotated ::before, a visually hidden legend) and on the real case next to each.",
+    "S2: Ask quickstartContractOf and quickstartTemplateOf for tracy-apple/j6.",
+    "S3: Check a release whose preview rows are older than the current probe, and a version with no measurement file."
+  ],
+  "expect": [
+    "S1: no finding on any of the nine false shapes; the real case beside each is still one finding.",
+    "S2: joomla-tracy-base and joomla/tracy-base, never the Airbnb pack's contract.",
+    "S3: the older rows read 'not measured with the current preview probe' with both probes in the stamp, and the fix is the stand + flow + preview-check --write commands filled with the release's tag and version (preview only when only the preview is older)."
+  ],
+  "selectors": {
+    "tool": "apps/tracy-web/test/preview-detectors-batch2.test.mjs",
+    "evidence": "apps/tracy-web/scripts/preview-detectors/"
+  },
+  "evidence": "Batch 2 measurement of 31 JA templates at probe v8 (16/10/2026), findings grouped and looked at by eye",
+  "fence": "Detector probes, the contract lookup and the TDSR measured rules in tracy-web; no stand",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/preview-detectors-batch2.test.mjs",
+      "apps/tracy-web/test/ds-slot-ranges.test.mjs",
+      "apps/tracy-web/test/preview-detectors-layout.test.mjs",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs"
+    ]
+  }
+}

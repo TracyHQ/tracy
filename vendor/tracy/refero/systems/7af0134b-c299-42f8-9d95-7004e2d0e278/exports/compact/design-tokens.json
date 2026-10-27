@@ -1,0 +1,64 @@
+{
+  "color": {
+    "electric-indigo": {
+      "$value": "#1f00ff",
+      "$type": "color",
+      "$description": "Electric Indigo — Full-bleed hero canvas, section backgrounds, heading text on light surfaces, all primary borders and dividers — the single chromatic color that defines the entire system"
+    },
+    "patch-orange": {
+      "$value": "#ff622b",
+      "$type": "color",
+      "$description": "Patch Orange — Filled CTA buttons and active nav markers — the only warm color, reserved exclusively for conversion moments"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, hero reverse text, card surfaces, icon fills — the neutral that makes the indigo vibrate"
+    },
+    "fog-gray": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Fog Gray — Secondary card surfaces, subtle elevation between cards and canvas"
+    },
+    "bone": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Bone — Tertiary card backgrounds, muted surface layer"
+    },
+    "mist": {
+      "$value": "#ececec",
+      "$type": "color",
+      "$description": "Mist — Input backgrounds, hairline borders on light sections, disabled states"
+    },
+    "gridline": {
+      "$value": "#d3d3d3",
+      "$type": "color",
+      "$description": "Gridline — Major section dividers, muted heading accents, structural borders on the blue canvas"
+    },
+    "ink": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Ink — Primary body text, dark card backgrounds, button borders — near-black with a slight warmth"
+    }
+  },
+  "font": {
+    "pp-right": {
+      "$value": "PP Right",
+      "$type": "fontFamily",
+      "$description": "All display headings, hero text, section titles, and the bold '01' section markers. The tight sub-1.0 line height at 800-weight is the signature — headlines stack like concrete blocks, not flowing prose. Substitute: Bebas Neue for similar industrial condensed feel, or Anton for heavier display weight"
+    },
+    "archivo": {
+      "$value": "Archivo",
+      "$type": "fontFamily",
+      "$description": "Body copy, navigation, buttons, footer text, captions, form inputs. Weight 300 for subtle secondary text, 400 for body, 600 for small uppercase labels and nav. The low x-height and geometric forms keep it quiet against PP Right's display dominance"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://thepatchsystem.com",
+      "siteName": "Patch",
+      "extractedAt": "2026-06-03T21:15:15.868Z",
+      "variant": "compact"
+    }
+  }
+}

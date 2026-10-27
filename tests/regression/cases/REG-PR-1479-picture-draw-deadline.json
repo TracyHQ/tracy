@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1479-picture-draw-deadline",
+  "kind": "fix",
+  "title": "A picture model that never answers costs a place its drawing at the Apply's deadline, never the Apply its words",
+  "pr": 1479,
+  "area": "site-brief/pictures",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the real shapeReal (apps/tracy-web/src/sites/brief-engines/real-pictures.js) for a Joomla demo with one exterior photo, a picture door set, a chat stand-in that never resolves, drawMs 60 s and an Apply signal aborted after 100 ms.",
+    "S2: Run the real drawForPlace (apps/tracy-web/src/lib/picture-draw.js) with a chat that never resolves and a signal aborted after 50 ms."
+  ],
+  "expect": [
+    "S1: shapeReal resolves in under 10 s, notes 'a picture could not be drawn: the picture took too long', and no shaped place has receipt.kind 'drawn'.",
+    "S2: drawForPlace rejects with 'the picture took too long' in under 5 s."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/brief-real-pictures.test.mjs, apps/tracy-web/test/picture-draw.test.mjs",
+    "code": "drawForPlace signal race, shapeReal signal/drawMs, wordpress.js and joomla.js shapeReal signal: ctx.signal"
+  },
+  "evidence": "Review 19/10/2026: drawForPlace called the seeder's chat (240 s x 3 tries) with no race while the Apply's words wait for its pictures under a 180 s deadline (#1367 symptom on opportunity demos)",
+  "fence": "Every drawing for a real-pictures demo is bounded by DRAW_MS and by the Apply's own signal",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-real-pictures.test.mjs",
+      "apps/tracy-web/test/picture-draw.test.mjs"
+    ],
+    "tests": [
+      "a picture model that never answers costs the place its drawing, never the Apply its words",
+      "a model that never answers is given up at the signal, not waited on through its own retries"
+    ]
+  }
+}

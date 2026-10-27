@@ -1,0 +1,58 @@
+{
+  "name": "Tracy Base",
+  "summary": "An illustrative independent website studio bringing strategy, brand design and development together.",
+  "disclosure": "Tracy Base is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy.",
+  "contractId": "tracy-base-studio",
+  "contractHash": "32918ec0aceb94cdc929b0a0ab8f72c5c4d6cf050280c7c62d373d8da01745cd",
+  "inspiration": "apple",
+  "inspirationName": "Apple",
+  "samples": [
+    {
+      "kind": "newsletter",
+      "title": "Newsletter",
+      "description": "A studio digest: a lead story, three numbered services and one reading action."
+    },
+    {
+      "kind": "email",
+      "title": "Email",
+      "description": "A single announcement about the studio offer, with one next step."
+    },
+    {
+      "kind": "poster",
+      "title": "Poster",
+      "description": "A 3:4 campaign sheet stating what the studio does and where to start."
+    },
+    {
+      "kind": "slide",
+      "title": "Slide",
+      "description": "An eleven-slide studio introduction. Use the arrow keys or slide controls to explore."
+    },
+    {
+      "kind": "form",
+      "title": "Form",
+      "description": "A split-screen enquiry layout. It is a preview: nothing is sent."
+    },
+    {
+      "kind": "typography",
+      "title": "Typography",
+      "description": "Type specimens, colour roles and spacing, written in the studio voice."
+    }
+  ],
+  "files": {
+    "newsletter-light.html": "e0d87ec787ed5a91e1f53f83a5e19e4e32d4750772c42af3238ce20b23fa2e88",
+    "newsletter-dark.html": "66412d834a45952e1d6433e59c0888d0fcf2c816e341bac2bb063642693ec638",
+    "email-light.html": "a40c627853f5b49a2af09daa2b13ad3b77756c4ff4cb17fe5d548e9713d90aa7",
+    "email-dark.html": "34e074048db39cd5a34ee1b689e73b3361562147a9dd0f264593ba2086b5953e",
+    "poster-light.html": "b8ff44acd253323eeb7d426487bc7ca819c9a5bfcc66c7765a47979330da6ff3",
+    "poster-dark.html": "da53ba2615b23c76c7df3a825f2fd8913c5f90d1867d6b47e8f69b70ca036d8b",
+    "form-light.html": "c643c444a4158e8d333b8e1a523edefdfb5f3426ce36a04242f9daaec64b497b",
+    "form-dark.html": "7d1098e2e91b447821a4ca23177a6167b20e90448910302dbe8037371d89b8e3",
+    "typography-light.html": "3e429a925d47096a2e3ffad40ce11d002da55fe2f696fa682294dcce0557eed9",
+    "typography-dark.html": "3fc3c2596e7f188a3f9164f3ef1ca2e33db8420c0edf8114aa6ef6014c0801ba",
+    "slide-light.html": "8f9b7b95f695e94e51ea30f3ee1fd0b371acd4450be19b66b4570ab5611e6cc9",
+    "slide-dark.html": "c41236113b914ebe8bccd672920bb2ac4ea280a367dde9e2987c38991ac6831b"
+  },
+  "source": "vendor/tracy/od-design-system",
+  "renderer": "packages/cms/tracy-joomla-quickstart/marketing-artifacts.mjs",
+  "tokensSha256": "656eabbaf792e1614e13ff59336992c4ef0a5622a2ca3e07e13902ce0cf84370"
+}

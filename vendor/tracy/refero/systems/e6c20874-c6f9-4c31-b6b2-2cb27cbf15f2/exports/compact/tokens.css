@@ -1,0 +1,8 @@
+:root {
+  /* Colors */
+  --color-bone: #f7f7f7;
+  --color-pressed-ink: #000000;
+
+  /* Typography — Font Families */
+  --font-munken-sans-web: 'Munken Sans Web', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,32 @@
+meta {
+  name: describe
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.read",
+    "params": { "describe": true }
+  }
+}
+
+docs {
+  # What the site holds, and what this seat may do there
+
+  Answered by Tracy itself (not by the site's component). Start here: it tells you which
+  content types and locales the site has and which actions your seat's role allows.
+
+  Look for:
+  - the content types and locales listed, which the other requests filter by;
+  - what your role may read and write. A `403` with `TOOLSET_NOT_GRANTED` elsewhere means
+    the role lacks that toolset, not that the request is wrong.
+
+  `describe` is asked alone: adding any other parameter answers `400 CONTENT_BAD_QUERY`.
+}

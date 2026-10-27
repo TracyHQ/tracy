@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "022cf675-42d1-44e7-953a-68facc802117",
+  "status": "complete",
+  "name": "Apple (España)",
+  "url": "https://styles.refero.design/style/022cf675-42d1-44e7-953a-68facc802117",
+  "sourceWebsite": "https://www.apple.com/airpods-pro",
+  "extractedAt": "2026-06-03T15:31:53.040Z",
+  "capturedAt": "2026-10-08T05:07:47.378973+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "gallery vitrine in morning fog",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3a1cc591-bbf5-4d19-a574-1725c225df99.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ee4f9109-2337-49a8-b720-5f7f0f03da98.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/31a3c042-3a20-4c46-96d0-ae1a77235c9a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a9f9e89b-57ea-487f-b977-b20dd3010bf2.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ea49be19-21e6-4396-acd2-2cd9860eb71c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "dbdbd0b42e56ca58a9c9f7a83d81a18996c52ed53fa30e0c4a41bce4b72c4c15",
+      "bytes": 21631
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "49ecb764f13ee09584ee645d4d05ee52f5f377bbeba258ad260eaa1e79979fdd",
+      "bytes": 87110
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "19b400a7684d7f45685506e7554ba2dcdd9d44991061d1c209af44a0173d0d1b",
+      "bytes": 17634
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "94ac0726e9859d2318717cec97885c2d37b3d24d1a2ea67ca9960750d16f4c19",
+      "bytes": 14975
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b60d5151b20b1ef95c7045956584cb68640ecace45ad3cf4a0972084d45b3aed",
+      "bytes": 12906
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "16801f17d46063933351b54492483cc55b62427fe416c0cfaf67a04f60f68e54",
+      "bytes": 3384
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "db2665d4a2663cfa8e5f602cfc0c6d43e7a690b3287fae1912d9c4b1663d0cfd",
+      "bytes": 666
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f41dbe0fddee6adf1bcc650b1a9e4c71b6897afa4e636d5e2e812e6e9a131711",
+      "bytes": 830
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "be5b377be23a7337f3045922d405d365a5b5281913b2de927f5fd7b5a1bd01d9",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "61682af2e3b84a6f487f53c55c354f793ecbac59d71934b74a4c2659d2a7baeb",
+      "bytes": 45659
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3fded2cdcb0671040df656a6e65fcd780c5aa8720a339604e2950e9fa9af1cd0",
+      "bytes": 24506
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ec3c4b9518b85481314e39b902865fa0245c6efe1a26baa47d79a5f770e1e37e",
+      "bytes": 69411
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "70a38845964b1592fad4d70978bc71006fd603918076babfe5686fa7008e6576",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "08693834497e409f9d37c2952ad9fa0c42a35bfb1f902f298d697d53f2828fd2",
+      "bytes": 1944
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "138a7464f17bcba5846d4ab4ef77295a749aaac8d04902abd6e44b669051e096",
+      "bytes": 2629
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "27a4a4fa-4b1a-4e7e-b2c3-3e5bf57f00e5",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "8d315332-6267-4dc0-a14c-e8b49c26b0e1",
+    "96845df2-7ddb-420a-814e-c339f95a6554",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a73148b9-449b-42cd-9f38-86ef694f500e",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cfcd001c-e812-4126-9bdf-1f16b68d182e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e"
+  ]
+}

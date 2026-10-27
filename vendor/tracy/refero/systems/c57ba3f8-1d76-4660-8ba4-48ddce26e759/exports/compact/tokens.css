@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-canvas-white: #f8f9fa;
+  --color-charcoal-ink: #202124;
+  --color-graphite: #3c4043;
+  --color-slate: #5f6368;
+  --color-mist: #dadce0;
+  --color-cloud-shadow: #c4c6c7;
+  --color-google-blue: #1a73e8;
+  --color-google-blue-deep: #1967d2;
+  --color-classroom-green: #188038;
+
+  /* Typography — Font Families */
+  --font-google-sans-display: 'Google Sans Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-google-sans-text: 'Google Sans Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

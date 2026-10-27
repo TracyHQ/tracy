@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-obsidian: #0d0d0d;
+  --color-paper-white: #ffffff;
+  --color-graphite-hairline: #e3e3e3;
+  --color-smoke: #4d4d4d;
+  --color-ash: #6b6b6b;
+  --color-carbon: #272727;
+  --color-plasma-violet: #8a05ff;
+  --gradient-plasma-violet: linear-gradient(to right, #8a05ff, #d67f2e);
+  --color-wisteria-tint: #e6daff;
+  --gradient-wisteria-tint: linear-gradient(120deg, #ffffff 17.4%, #e6daff 36.67%);
+  --color-deep-indigo: #48008c;
+  --color-marigold: #d67f2e;
+  --color-coral: #e96770;
+  --color-mint-signal: #006d4c;
+  --color-sky-pulse: #33acff;
+  --color-fuchsia-pop: #f347ff;
+
+  /* Typography — Font Families */
+  --font-ppneuemontreal: 'PPNeueMontreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roobert: 'Roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ppneuemontrealmono: 'PPNeueMontrealMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

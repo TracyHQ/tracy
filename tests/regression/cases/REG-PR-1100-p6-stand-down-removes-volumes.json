@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1100-p6-stand-down-removes-volumes",
+  "kind": "fix",
+  "title": "stand.mjs down removes each stand container with its anonymous volumes, so a slot pass no longer leaves the database's MariaDB data (~180 MB) on the Docker disk",
+  "pr": 1100,
+  "area": "design/slot",
+  "cms": ["jo", "wp"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node tests/regression/scripts/REG-PR-1100-p6-stand-down-removes-volumes.mjs (a stand-in docker first on PATH records every call; no Docker needed)."
+  ],
+  "expect": [
+    "S1 exits 0; 'down' prints {\"down\":true}; the recorded calls include 'rm -f -v reg-down-probe-web', 'rm -f -v reg-down-probe-db' and 'network rm reg-down-probe'."
+  ],
+  "selectors": {
+    "script": "packages/design/tracy-ds-slot/scripts/stand.mjs (cmd down)"
+  },
+  "evidence": "10/10/2026: twelve dangling MariaDB volumes (a 'site' database each, 173–190 MB), created seconds after each stand this session raised, were left after stand.mjs down; removed by hand (Docker disk 8.4 GB → 9.3 GB free).",
+  "fence": "what stand.mjs down removes; not other sessions' stands",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1100-p6-stand-down-removes-volumes.mjs"]
+  }
+}

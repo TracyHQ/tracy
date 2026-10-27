@@ -1,0 +1,10 @@
+:root {
+  /* Colors */
+  --color-paper-white: #ffffff;
+  --color-graphite-ink: #000000;
+  --color-fog-hairline: #e5e7eb;
+
+  /* Typography — Font Families */
+  --font-alpha: 'Alpha', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-takt: 'Takt', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,41 @@
+---
+title: "Tracy Cowork — 用 AI 搭建和编辑你的网站"
+description: "Tracy Cowork 根据你在聊天中提出的需求，搭建和编辑你的 WordPress、Joomla 或 EmDash 网站，展示每一处更改，并让你撤销。"
+template: splash
+hero:
+  title: "Tracy Cowork — 用 AI 搭建和编辑你的网站"
+  tagline: "在聊天中提出需求，Tracy 直接在你真实的 WordPress、Joomla 或 EmDash 网站上修改 —— 并展示每一处更改，供你查看和撤销。"
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: "入门"
+      link: /zh-cn/get-started/
+      icon: right-arrow
+    - text: "下载应用"
+      link: /zh-cn/desktop/download/
+      icon: download
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+<CardGrid>
+  <Card title="入门" icon="rocket">
+    登录，添加你的第一个网站，让 Tracy 帮你改一处。 [入门](/zh-cn/get-started/)
+  </Card>
+  <Card title="桌面应用" icon="laptop">
+    适用于 macOS、Windows 和 Linux 的 Tracy，会自动更新。 [下载应用](/zh-cn/desktop/download/)
+  </Card>
+  <Card title="MCP Server" icon="puzzle">
+    将 ChatGPT、Claude、Claude Code、Cursor 或 Codex 连接到你的 Tracy 网站。 [设置 MCP](/zh-cn/mcp/getting-started/)
+  </Card>
+  <Card title="管理你的网站" icon="pencil">
+    聊天、页面评论、Site changes、撤销和 Backup。 [使用 Tracy](/zh-cn/using-tracy/)
+  </Card>
+  <Card title="更新日志" icon="document">
+    按日期记录改了什么、何时改的：[Tracy Cowork](/zh-cn/changelog/desktop/)（网页版和应用）以及 [API](/zh-cn/changelog/)。
+  </Card>
+  <Card title="面向开发者和 agent" icon="seti:json">
+    Tracy API：通过 HTTPS，用绑定到你席位的密钥读取和修改 Tracy 托管的网站。 [API 概览](/zh-cn/api/)
+  </Card>
+</CardGrid>

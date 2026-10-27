@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "emdash",
+  "label": "Tracy Business",
+  "version": "1.7.2",
+  "cms": "1.1.0",
+  "install": {
+    "source": {
+      "file": "tracy-business-emdash-quickstart-1.7.2.zip",
+      "sha256": "501e6810a5455ea89bb9592e2b6bf0e39a343f9168aa8668cba2423eb17b9552"
+    },
+    "state": {
+      "file": "tracy-business-emdash-state-1.7.2.tar.gz",
+      "sha256": "ee8f5c916ef908257df81099e061e7774368cbf0bfdaabc420fd9732b48bde68"
+    }
+  },
+  "template": "tracy-business",
+  "languages": [
+    "en",
+    "af",
+    "be",
+    "bg",
+    "ca",
+    "cs",
+    "cy",
+    "da",
+    "de",
+    "el",
+    "es",
+    "et",
+    "fi",
+    "fr",
+    "ga",
+    "hr",
+    "hu",
+    "it",
+    "ja",
+    "ka",
+    "lo",
+    "lt",
+    "lv",
+    "ms",
+    "nb",
+    "nl",
+    "pl",
+    "pt",
+    "ro",
+    "ru",
+    "sk",
+    "sl",
+    "sr",
+    "sv",
+    "ta",
+    "th",
+    "tr",
+    "uk",
+    "vi",
+    "zh"
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "color": {
+    "void-canvas": {
+      "$value": "#020618",
+      "$type": "color",
+      "$description": "Void Canvas — Page background, header field, dark controls, command surfaces"
+    },
+    "midnight-panel": {
+      "$value": "#080e21",
+      "$type": "color",
+      "$description": "Midnight Panel — Card surfaces, code-editor body, contained product panels"
+    },
+    "deep-slate": {
+      "$value": "#0f172b",
+      "$type": "color",
+      "$description": "Deep Slate — Selected dark tabs, secondary dark buttons, inset control surfaces"
+    },
+    "steel-outline": {
+      "$value": "#1d293d",
+      "$type": "color",
+      "$description": "Steel Outline — Hairline card outlines, image frames, dark raised button fills"
+    },
+    "blue-steel": {
+      "$value": "#314158",
+      "$type": "color",
+      "$description": "Blue Steel — Inset control rings, subdued control borders, navigation separators"
+    },
+    "muted-fog": {
+      "$value": "#90a1b9",
+      "$type": "color",
+      "$description": "Muted Fog — Body copy, inactive navigation, secondary labels, supporting metadata"
+    },
+    "pale-frost": {
+      "$value": "#e2e8f0",
+      "$type": "color",
+      "$description": "Pale Frost — High-emphasis navigation text, secondary button labels, light icon strokes"
+    },
+    "signal-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Signal White — Display headings, selected tab labels, inverted button fills"
+    },
+    "nuxt-signal": {
+      "$value": "#00dc82",
+      "$type": "color",
+      "$description": "Nuxt Signal — Filled getting-started buttons, logo, release markers, highlighted display words — vivid green acts as a precise activation signal in the blue-black interface"
+    },
+    "vue-link": {
+      "$value": "#42b883",
+      "$type": "color",
+      "$description": "Vue Link — Partner-technology links and small ecosystem references"
+    },
+    "vite-link": {
+      "$value": "#a156fe",
+      "$type": "color",
+      "$description": "Vite Link — Vite ecosystem links and compact technology references"
+    },
+    "nitro-link": {
+      "$value": "#fb848e",
+      "$type": "color",
+      "$description": "Nitro Link — Nitro ecosystem links and compact technology references"
+    }
+  },
+  "font": {
+    "public-sans": {
+      "$value": "Public Sans",
+      "$type": "fontFamily",
+      "$description": "The universal UI and editorial face: 16px/400 body text, 14px/500 navigation, 14px/600 section labels, 16px/500 buttons, and 48px or 72px/700 displays. The -0.025em tracking at 48px and 72px compresses the heavy display weight into framework-tool directness rather than oversized marketing softness."
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "Code editor content, terminal commands, and implementation snippets; the system monospace face makes product demonstrations read as live tooling rather than decorative mockups."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://nuxt.com",
+      "siteName": "Nuxt",
+      "extractedAt": "2026-09-24T17:43:43.467Z",
+      "variant": "compact"
+    }
+  }
+}

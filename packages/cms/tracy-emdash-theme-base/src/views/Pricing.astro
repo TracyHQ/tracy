@@ -1,0 +1,52 @@
+---
+/**
+ * /pricing — the pricing head is the page's h1, then the tiers, the FAQ as a rounded gray card
+ * (a painted block outside a band is a card in the source), then the CTA. The source ships the
+ * FAQ closed, so the first item does not open here either.
+ */
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import SectionHead from '@/components/sections/SectionHead.astro'
+import PricingTiers from '@/components/sections/PricingTiers.astro'
+import FaqList from '@/components/sections/FaqList.astro'
+import CtaBand from '@/components/sections/CtaBand.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { entry } = await getEmDashEntry('pricing', 'pricing', { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const d = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'pricing', entry)
+---
+
+<Base chrome={chrome} title={d.title} description={d.pricing_intro} currentPath="/pricing" content={{ collection: "pricing", id: entry.data.id, slug: "pricing", toPath: () => "/pricing" }}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<section class="band">
+			<div class="wrap">
+				<SectionHead as="h1" eyebrow={d.pricing_eyebrow} title={d.pricing_heading} lead={d.pricing_intro} class="section-head--acm max-w-[52ch] [&>.eyebrow]:text-fg-meta" stamp={$page} fields={{ eyebrow: "pricing_eyebrow", title: "pricing_heading", lead: "pricing_intro" }} />
+				<PricingTiers variant="acm" tiers={d.pricing_tiers ?? []} stamp={$page} field="pricing_tiers" />
+			</div>
+		</section>
+		<section class="wrap">
+			<div class="my-7 rounded-[var(--ds-card-radius,18px)] bg-surface px-4 py-8 sm:px-6">
+				<SectionHead eyebrow={d.faq_eyebrow} title={d.faq_heading} lead={d.faq_intro} class="section-head--acm [&>.eyebrow]:text-fg-meta" stamp={$page} fields={{ eyebrow: "faq_eyebrow", title: "faq_heading", lead: "faq_intro" }} />
+				<FaqList items={d.faq_items ?? []} firstOpen={false} width="wide" stamp={$page} field="faq_items" />
+			</div>
+		</section>
+		<section class="band">
+			<CtaBand variant="capsule" title={d.cta_statement} text={d.cta_support} btnLabel={d.cta_btn_label} btnUrl={d.cta_btn_url} linkLabel={d.cta_link_label} linkUrl={d.cta_link_url} stamp={$page} fields={{ title: "cta_statement", text: "cta_support", btnLabel: "cta_btn_label", linkLabel: "cta_link_label" }} />
+		</section>
+	</main>
+</Base>

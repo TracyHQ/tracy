@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-oxblood-ink: #4a0a05;
+  --color-cream-paper: #fafaf9;
+  --color-aged-linen: #f8f7f1;
+  --color-warm-stone: #bcb6a6;
+  --color-dusty-clay: #a2827f;
+
+  /* Typography */
+  --font-mier-a: 'Mier A', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-caslon-ionic: 'Caslon Ionic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

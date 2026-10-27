@@ -1,0 +1,84 @@
+{
+  "color": {
+    "deep-navy-void": {
+      "$value": "#161e29",
+      "$type": "color",
+      "$description": "Deep Navy Void — Page canvas, hero background, full-bleed sections — the near-black stage on which every other element sits"
+    },
+    "bone-white": {
+      "$value": "#fefcfb",
+      "$type": "color",
+      "$description": "Bone White — Primary text, pill CTA fill, highlight strokes — the only fully bright object against the dark canvas"
+    },
+    "warm-card-stock": {
+      "$value": "#eae5dd",
+      "$type": "color",
+      "$description": "Warm Card Stock — Isolated card or panel surface when a warm off-white is needed against the dark void"
+    },
+    "ink-black": {
+      "$value": "#1e1d1d",
+      "$type": "color",
+      "$description": "Ink Black — Deep text and border color for headings and body copy, warm-tinted alternative to pure black"
+    },
+    "carbon-border": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Border — Hairline borders, image edges, structural dividers — pure black defines outlines where the navy canvas needs edge"
+    },
+    "ash-gray": {
+      "$value": "#b8b9bc",
+      "$type": "color",
+      "$description": "Ash Gray — Muted body text and subdued borders for secondary information"
+    },
+    "silver-gray": {
+      "$value": "#d0d0d1",
+      "$type": "color",
+      "$description": "Silver Gray — Lighter body text and hairline borders for de-emphasized copy and inactive states"
+    },
+    "pewter": {
+      "$value": "#a1a3a7",
+      "$type": "color",
+      "$description": "Pewter — Sub-label, footer micro-text, disabled-state typography"
+    },
+    "smoke": {
+      "$value": "#8a8d92",
+      "$type": "color",
+      "$description": "Smoke — Tertiary metadata, timestamps, dimmed annotations"
+    },
+    "violet-aura": {
+      "$value": "#5f4dbd",
+      "$type": "color",
+      "$description": "Violet Aura — Deepest stop in the brand gradient — appears as the terminal indigo in the product UI mockup and the base of floating icon halos"
+    },
+    "lilac-wash": {
+      "$value": "#e9b3f2",
+      "$type": "color",
+      "$description": "Lilac Wash — Top stop of the brand gradient — the soft pink-violet that opens the glow behind floating platform icons and tints the product's glass panels"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "untitled-sans": {
+      "$value": "Untitled Sans",
+      "$type": "fontFamily",
+      "$description": "Sole brand typeface used for everything from 14px body to 64px display. Custom Klim Type grotesque; the signature is consistent 400 weight across the entire scale paired with aggressively negative tracking that tightens as size increases (-0.02em at body, -0.06em at display). This single-weight, tight-tracked approach is deliberate: without weight contrast, the hierarchy is carried by size and tracking alone, which gives the page its quiet, editorial monotone. System sans-serif and Inter appear only as functional fallbacks for micro-labels."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Inter — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.pally.com",
+      "siteName": "Pally",
+      "extractedAt": "2026-06-03T17:13:22.544Z",
+      "variant": "compact"
+    }
+  }
+}

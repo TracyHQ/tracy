@@ -1,0 +1,2112 @@
+{
+	"generatedAt": "2026-09-15T21:05:09.078Z",
+	"source": "quickstart images/ (ja-kinetic-j6-quickstart-1.0.0.zip)",
+	"items": [
+		{
+			"key": "blog/unified-telemetry",
+			"file": "blog/unified-telemetry.jpg",
+			"alt": "A single service emitting metrics, logs, and traces into one pipeline",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "unified-telemetry",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "sharding-traces-by-trace-id-vs-by-service-a-storage-tradeoff",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "sso-and-scim-are-now-generally-available",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "saml-rollout-notes-what-actually-broke",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-economics-of-one-store-why-we-dont-split-signals",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "instrumenting-your-first-service-with-the-helix-sdk",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/five-minute-mttr",
+			"file": "blog/five-minute-mttr.jpg",
+			"alt": "An interview scoring rubric next to a real incident timeline for comparison",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "five-minute-mttr",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "five-minutes-to-mitigate-the-anatomy-of-a-fast-recovery",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-rolling-deploy-that-dropped-connections-for-ninety-seconds",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "assembling-a-request-timeline-from-three-signal-types-by-hand",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "incident-command-101-who-does-what-in-the-first-15-minutes",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "training-the-second-seat-growing-more-incident-commanders",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-interview-question-that-predicts-good-incident-commanders",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/readable-postmortems",
+			"file": "blog/readable-postmortems.jpg",
+			"alt": "A retro scheduled a week after an incident with an automatically captured timeline",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "readable-postmortems",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "what-breaks-first-notes-from-50-incident-reviews",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "readable-postmortems-the-incident-we-almost-misdiagnosed",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-incident-review-that-changed-how-we-hire",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "what-six-months-of-on-call-retros-taught-us-about-trust",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-postmortem-nobody-wanted-to-write",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "what-a-bad-incident-commander-taught-us-about-training",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "why-our-best-incident-retros-happen-a-week-later-not-a-day-later",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/ingest-latency",
+			"file": "blog/ingest-latency.jpg",
+			"alt": "A trace span expanded to show a Postgres query statement and duration",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "ingest-latency",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "a-dns-ttl-nobody-remembered-set-off-a-three-hour-chase",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "from-otlp-to-wal-anatomy-of-the-ingestion-hot-path",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "watermarks-and-late-arriving-data-in-the-ingest-pipeline",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-write-ahead-log-durability-without-doubling-ingest-latency",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "backpressure-what-happens-when-ingestion-outruns-compaction",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "twenty-minutes-dark-a-dns-ttl-postmortem",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "s3-throttling-took-our-ingest-pipeline-sideways",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "multi-region-ingest-the-feature-that-took-a-year",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "connecting-your-postgres-instance-for-query-level-tracing",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/structured-logs",
+			"file": "blog/structured-logs.jpg",
+			"alt": "A raw log message rewritten as structured, queryable fields",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "structured-logs",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "parsing-structured-logs-at-ingest-vs-at-query-time",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "structured-logging-conventions-that-make-queries-fast",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/high-cardinality-metrics",
+			"file": "blog/high-cardinality-metrics.jpg",
+			"alt": "A Kubernetes cluster diagram with pod labels feeding into Helix",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "high-cardinality-metrics-without-the-bill-shock",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-the-columnar-store-packs-metric-points-into-128-point-chunks",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "indexing-labels-without-one-inverted-index-per-series",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "graphql-resolver-storm-the-dashboard-that-took-down-the-api",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "connecting-a-kubernetes-cluster-to-helix",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/changelog-routing",
+			"file": "blog/changelog-routing.jpg",
+			"alt": "A quarterly changelog summary of shipped features",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "changelog-routing",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "q1-changelog-sampling-profiling-faster-query-planner",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/cli-dashboards",
+			"file": "blog/cli-dashboards.jpg",
+			"alt": "A terminal window rendering a live-refreshing multi-panel dashboard",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "from-zero-to-dashboards-in-five-minutes-with-the-cli",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "six-months-of-on-call-taught-me-to-trust-dashboards-over-gut-feeling",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "announcing-hx-a-terminal-dashboard-for-on-call",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-a-terminal-dashboard-with-the-helix-cli",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/first-helixql",
+			"file": "blog/first-helixql.jpg",
+			"alt": "A trace joined to its log lines through a shared trace ID",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "first-helixql",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "why-we-didnt-build-a-second-query-language-for-logs",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "joining-traces-and-logs-in-a-single-helixql-query",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/alert-fatigue",
+			"file": "blog/alert-fatigue.jpg",
+			"alt": "A private dashboard showing an on-call load index with a threshold check-in trigger",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "alert-fatigue-is-a-design-problem-not-a-people-problem",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-3am-page-that-turned-out-to-be-a-clock-skew-bug",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-pager-that-never-should-have-fired-a-false-positive-autopsy",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "three-false-alarms-and-one-real-fire-a-friday-night-on-call-log",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-alerting-blind-spot-that-let-a-2am-outage-run-for-47-minutes",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-rate-limiter-that-rate-limited-itself",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "why-alert-fatigue-is-a-product-bug-not-a-tuning-problem",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "alert-hygiene-deleting-the-alerts-nobody-acts-on",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-pager-audit-three-months-of-alerts-in-one-afternoon",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-we-measure-on-call-load-before-someone-has-to-say-something",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/cutting-p95-by-40-a-checkout-api-retro",
+			"file": "blog/cutting-p95-by-40-a-checkout-api-retro.jpg",
+			"alt": "Before and after p95 latency chart for the checkout API",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "cutting-p95-by-40-a-checkout-api-retro",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-a-single-dropped-index-took-down-checkout-for-40-minutes",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "cutting-p95-by-40-on-the-checkout-api-the-full-retro",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/tracing-across-async-boundaries",
+			"file": "blog/tracing-across-async-boundaries.jpg",
+			"alt": "Tracing across async boundaries",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "tracing-across-async-boundaries",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/tail-based-sampling-without-the-storage-bill",
+			"file": "blog/tail-based-sampling-without-the-storage-bill.jpg",
+			"alt": "A tail sampling collector keeping error traces and sampling normal ones",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "tail-based-sampling-without-the-storage-bill",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "why-sampling-shipped-before-compaction-roadmap-sequencing",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "turning-on-tail-based-sampling-for-a-single-service",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/the-anatomy-of-a-five-minute-mttr",
+			"file": "blog/the-anatomy-of-a-five-minute-mttr.jpg",
+			"alt": "Incident timeline showing detection and rollback markers close together",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "the-anatomy-of-a-five-minute-mttr",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "five-minutes-to-detect-four-to-fix-anatomy-of-a-fast-mttr",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/introducing-tail-based-sampling-for-traces",
+			"file": "blog/introducing-tail-based-sampling-for-traces.jpg",
+			"alt": "A dry-run report comparing an old and new sampling policy",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "introducing-tail-based-sampling-for-traces",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "buffering-spans-in-memory-the-cost-model-behind-tail-based-sampling",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "tail-based-sampling-for-traces-is-now-generally-available",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "from-beta-to-ga-tail-based-sampling-six-months-of-customers",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/smarter-alert-routing-quieter-pagers",
+			"file": "blog/smarter-alert-routing-quieter-pagers.jpg",
+			"alt": "An escalation chain diagram with severity-based timing between primary, secondary, and manager",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "smarter-alert-routing-quieter-pagers",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-postmortem-that-changed-how-we-page-people",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "alert-routing-that-reads-your-on-call-schedule",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "alert-routing-that-respects-sleep",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "escalation-policies-that-do-not-wake-the-wrong-person",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/from-zero-to-dashboards-in-five-minutes",
+			"file": "blog/from-zero-to-dashboards-in-five-minutes.jpg",
+			"alt": "A dashboard template being cloned and retargeted at a new service",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "from-zero-to-dashboards-in-five-minutes",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "from-zero-to-a-dashboard-in-five-minutes",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/writing-your-first-helixql-query",
+			"file": "blog/writing-your-first-helixql-query.jpg",
+			"alt": "A list of saved HelixQL queries shared across a team",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "writing-your-first-helixql-query",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "saved-queries-and-query-history-land-in-helixql",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/the-slo-that-finally-stuck",
+			"file": "blog/the-slo-that-finally-stuck.jpg",
+			"alt": "A comparison chart of SLI value against support ticket volume over the same window",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "the-slo-that-finally-stuck",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-slo-that-finally-stuck-picking-targets-people-actually-believe",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "slis-that-measure-what-users-actually-feel",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/error-budgets-without-the-politics",
+			"file": "blog/error-budgets-without-the-politics.jpg",
+			"alt": "A burn-rate chart with a deploy marker overlaid on the spike",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "error-budgets-without-the-politics",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "writing-an-error-budget-policy-that-survives-a-launch-deadline",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-error-budget-freeze-when-to-actually-pull-the-brake",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "error-budgets-without-the-politics-2026",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/on-call-rotations-that-do-not-burn-people-out",
+			"file": "blog/on-call-rotations-that-do-not-burn-people-out.jpg",
+			"alt": "A rotation calendar with shift lengths and handoff windows highlighted",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "on-call-rotations-that-do-not-burn-people-out",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-on-call-rotation-that-finally-stopped-burning-us-out",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "rotating-off-call-after-a-bad-quarter-how-we-recovered-as-a-team",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-a-follow-the-sun-dashboard-for-multi-region-services",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-a-sane-on-call-rotation-from-scratch",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-on-call-rotation-math-how-many-engineers-do-you-need",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-rotation-we-rebuilt-after-burning-out-our-best-engineer",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-night-we-almost-lost-our-best-sre-to-a-bad-rotation",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "why-we-pay-an-on-call-stipend-and-why-it-isnt-enough",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-on-call-rotation-math-nobody-teaches-you",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "what-sustainable-on-call-actually-costs-and-who-pays-it",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "on-call-rotations-that-do-not-burn-people-out-2026",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/on-call-without-the-dread",
+			"file": "blog/on-call-without-the-dread.jpg",
+			"alt": "An interview candidate working through a debugging exercise with a visible countdown timer",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "on-call-without-the-dread",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "carrying-the-pager-during-a-hurricane-lessons-in-redundancy",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-on-call-week-where-nothing-went-wrong-and-what-that-taught-me",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "what-i-wish-someone-told-me-before-my-first-on-call-shift",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "hiring-sres-when-nobodys-resume-says-sre",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "career-growth-for-people-who-fix-things-nobody-sees",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-quarter-we-finally-fixed-on-call-dread",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "remote-reliability-trust-before-tooling",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "hiring-for-calm-under-pressure-not-just-kubernetes-trivia",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/what-carrying-the-pager-taught-us-about-product",
+			"file": "blog/what-carrying-the-pager-taught-us-about-product.jpg",
+			"alt": "A career ladder document showing named example engineers at each reliability level",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "what-carrying-the-pager-taught-us-about-product",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "what-carrying-the-pager-for-a-year-taught-me-about-writing-better-alerts",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "why-on-call-experience-became-our-roadmap-filter",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "what-carrying-the-pager-taught-us-about-the-roadmap",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "what-we-learned-promoting-our-first-sre-to-staff-engineer",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-sre-career-ladder-we-wrote-after-losing-two-engineers",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/cardinality-budgets",
+			"file": "blog/cardinality-budgets.jpg",
+			"alt": "A metric's series count growing past a set cardinality budget line",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "cardinality-budgets",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "capping-cardinality-at-the-write-path-before-it-reaches-the-index",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "dictionary-encoding-label-sets-cutting-metrics-storage-by-61-percent",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "compressing-high-cardinality-label-dictionaries-with-a-shared-vocabulary",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "cardinality-budgets-turning-a-limit-into-a-feature",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "setting-a-cardinality-budget-before-it-sets-you",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/golden-signals-plus-one",
+			"file": "blog/golden-signals-plus-one.jpg",
+			"alt": "A comparison of a burn-rate alert timeline and a static-threshold memory alert timeline",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "golden-signals-plus-one",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-incident-that-started-with-a-green-dashboard",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-incident-where-the-dashboard-was-right-and-i-wasnt",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-load-balancer-that-sent-all-traffic-to-one-az",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "we-killed-the-dashboard-nobody-looked-at",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-a-golden-signals-dashboard-from-scratch",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "golden-signals-plus-one-adding-saturation-to-the-big-four",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "multi-window-burn-rate-alerts-fast-and-slow-together",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "burn-rate-alerts-vs-threshold-alerts-why-you-need-both",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/exemplars-metrics-to-traces",
+			"file": "blog/exemplars-metrics-to-traces.jpg",
+			"alt": "A latency histogram spike linked directly to a backing trace via an exemplar",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "exemplars-metrics-to-traces",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "exemplars-under-the-hood-pinning-a-bucket-to-a-trace-id",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-exemplar-sampler-choosing-which-points-earn-a-trace-link",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "exemplars-one-click-from-metric-spike-to-trace",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "wiring-exemplars-from-a-metric-back-to-a-trace",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/surviving-a-retry-storm",
+			"file": "blog/surviving-a-retry-storm.jpg",
+			"alt": "Inbound webhook volume spiking to fourteen times baseline from one partner",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "surviving-a-retry-storm",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "debugging-a-retry-storm-at-2am-with-half-my-brain-asleep",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-retry-storm-that-took-checkout-down-for-eleven-minutes",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "connection-pool-exhaustion-the-3am-page-nobody-wanted",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-webhook-retry-storm-from-a-partner-integration",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/smart-log-sampling",
+			"file": "blog/smart-log-sampling.jpg",
+			"alt": "A log pipeline sampling info lines while keeping every error at full rate",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "smart-log-sampling",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "sampling-logs-without-losing-the-signal",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/better-runbooks",
+			"file": "blog/better-runbooks.jpg",
+			"alt": "A runbook verification dashboard flagging stale procedures by days since last check",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "better-runbooks",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-night-our-runbook-lied-to-us",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "writing-runbooks-your-alerts-can-actually-link-to",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "better-runbooks-turning-tribal-knowledge-into-a-page-anyone-can-run",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "runbook-rot-keeping-procedures-from-going-stale",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/dashboards-as-code",
+			"file": "blog/dashboards-as-code.jpg",
+			"alt": "A dashboard JSON definition diffed in a pull request",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "dashboards-as-code",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "downsampling-rollups-and-how-the-planner-picks-a-resolution",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "segment-compaction-merging-small-chunks-without-stalling-queries",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "dashboards-as-code-your-helixql-dashboards-now-live-in-git",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "what-200-internal-dashboards-taught-us-before-shipping",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "dashboards-as-code-version-controlling-your-helix-views",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/p99-latency-trap",
+			"file": "blog/p99-latency-trap.jpg",
+			"alt": "Query count per request spiking to thousands for one large account",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "p99-latency-trap",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-missing-index-that-turned-a-routine-deploy-into-a-forty-minute-outage",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "gc-pause-storms-how-one-bad-flag-doubled-our-p99",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-n-plus-1-query-that-shipped-on-a-tuesday",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/alert-routing-with-helixql",
+			"file": "blog/alert-routing-with-helixql.jpg",
+			"alt": "Alerts routed dynamically by team ownership tags to different paging destinations",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "alert-routing-with-helixql",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-certificate-that-expired-on-a-friday",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "mtls-cert-rotation-the-sidecar-that-stopped-trusting-itself",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "alert-routing-gets-a-brain-routing-rules-in-helixql",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "routing-alerts-by-service-owner-with-helixql",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/opentelemetry-tradeoffs",
+			"file": "blog/opentelemetry-tradeoffs.jpg",
+			"alt": "An OpenTelemetry Collector pipeline batching and exporting to Helix",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "opentelemetry-tradeoffs",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "span-deduplication-when-otel-collectors-retry",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "first-party-receivers-kubernetes-postgres-kafka",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "opentelemetry-parity-native-agent-now-optional",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "configuring-the-opentelemetry-collector-for-helix",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/instrumenting-a-monolith",
+			"file": "blog/instrumenting-a-monolith.jpg",
+			"alt": "A monolith request broken into HTTP, database, and internal module spans",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "instrumenting-a-monolith",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "adding-tracing-to-a-legacy-monolith-without-a-rewrite",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/observability-cost-model",
+			"file": "blog/observability-cost-model.jpg",
+			"alt": "Ingest cost broken down by service and signal type in a usage query",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "observability-cost-model",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "retention-tiers-hot-ssd-warm-object-storage-and-the-tier-aware-scan",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "introducing-cost-controls-budgets-alerts-ingest-caps",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "we-shipped-a-cost-model-before-a-cost-cutter",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "retention-tiers-hot-warm-cold-and-the-bill-each-saves",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "exporting-telemetry-data-to-your-own-data-lake",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "querying-your-own-ingest-cost-before-the-invoice-does",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/slos-without-meetings",
+			"file": "blog/slos-without-meetings.jpg",
+			"alt": "A self-serve SLO template with a pre-filled historical SLI value",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "slos-without-meetings",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "setting-up-your-first-slo-in-helix",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "reliability-reviews-the-meeting-that-isnt-a-status-update",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "slos-without-meetings-setting-targets-from-data-not-a-war-room",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/blameless-postmortem-playbook",
+			"file": "blog/blameless-postmortem-playbook.jpg",
+			"alt": "An anonymous postmortem addendum form separate from the public incident report",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "blameless-postmortem-playbook",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-blameless-postmortem-playbook-tested-live",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "why-we-stopped-asking-who-broke-it",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "psychological-safety-is-a-metric-not-a-vibe",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "blameless-doesnt-mean-consequence-free",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "blameless-postmortems-dont-work-if-your-manager-reads-them",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/trace-based-testing",
+			"file": "blog/trace-based-testing.jpg",
+			"alt": "A CI test asserting on the span structure of a checkout trace",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "trace-based-testing",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "writing-a-trace-based-test-for-your-checkout-flow",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/reducing-pager-volume",
+			"file": "blog/reducing-pager-volume.jpg",
+			"alt": "An alert retirement log showing a two-week silent demotion period before deletion",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "reducing-pager-volume",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-i-learned-to-page-myself-less-a-personal-alert-audit",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-health-check-that-flapped-400-pods",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "setting-up-your-first-alert-in-helix",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "reducing-pager-volume-a-90-day-plan",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "toil-reduction-measuring-the-work-nobody-wants-to-do",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "cutting-toil-with-automation-you-can-actually-justify",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "retiring-an-alert-a-short-ritual-that-saves-a-lot-of-sleep",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/correlating-logs-and-traces",
+			"file": "blog/correlating-logs-and-traces.jpg",
+			"alt": "401 error rate spike correlated to seven specific auth hosts",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "correlating-logs-and-traces",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "tracing-a-checkout-failure-through-five-services-before-coffee",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "joining-spans-to-logs-the-trace-id-and-time-window-algorithm",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "clock-skew-jwts-and-a-wave-of-401s",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/capacity-planning-from-telemetry",
+			"file": "blog/capacity-planning-from-telemetry.jpg",
+			"alt": "An automated capacity growth projection chart per service",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "capacity-planning-from-telemetry",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-day-a-rollout-evicted-half-our-on-call-runbook",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "kafka-consumer-lag-the-backlog-that-ate-our-slo",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "autoscaling-flapped-for-six-hours-a-capacity-postmortem",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "spot-reclamation-cascade-losing-a-third-of-the-fleet-at-once",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "setting-an-slo-for-a-service-nobody-agreed-to-own",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "capacity-headroom-how-much-slack-is-enough",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "quarterly-capacity-planning-without-the-spreadsheet-marathon",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/on-call-handoff-checklist",
+			"file": "blog/on-call-handoff-checklist.jpg",
+			"alt": "Two engineers on a short video call handing off an on-call shift",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "on-call-handoff-checklist",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-slack-thread-that-saved-an-incident-async-on-call-done-right",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "handing-off-a-live-incident-across-time-zones-without-losing-context",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-an-on-call-handoff-dashboard-from-scratch",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "running-reliability-across-five-time-zones",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-a-culture-where-a-junior-engineer-can-page-a-vp",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-follow-the-sun-rotation-that-actually-works",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-handoff-meeting-we-almost-cut-and-why-we-kept-it",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/continuous-profiling-intro",
+			"file": "blog/continuous-profiling-intro.jpg",
+			"alt": "A CPU profile flame graph scoped to a specific slow trace window",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "continuous-profiling-intro",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "profiling-data-as-a-fourth-signal-storing-stack-traces-as-flame-graph-deltas",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "why-we-built-continuous-profiling-into-the-trace-store",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "continuous-profiling-ships-without-a-second-agent",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "turning-on-continuous-profiling-for-a-go-service",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/detecting-slow-leaks",
+			"file": "blog/detecting-slow-leaks.jpg",
+			"alt": "Replica lag climbing to nine minutes during a bulk import",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "detecting-slow-leaks",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "chasing-a-memory-leak-that-only-appeared-on-tuesdays",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "a-postgres-connection-pool-exhausted-live-at-11pm",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-cache-stampede-that-took-down-three-services-at-once",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "replica-lag-and-the-stale-reads-nobody-caught",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/automatic-incident-timeline",
+			"file": "blog/automatic-incident-timeline.jpg",
+			"alt": "Canary pod request volume flatlined at zero for three weeks",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "automatic-incident-timeline",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "what-i-learned-running-my-first-incident-as-commander",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "reading-the-timeline-back-how-we-rebuilt-an-incident-from-raw-traces",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-cron-job-that-ran-twice-a-leader-election-postmortem",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-canary-that-never-got-traffic",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "blog/how-helixql-plans-a-query",
+			"file": "blog/how-helixql-plans-a-query.jpg",
+			"alt": "A PromQL query translated side by side into its HelixQL equivalent",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "why-helixql-picks-hash-join-over-merge-join-for-trace-log-correlation",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-cost-based-planner-how-helixql-estimates-row-counts-before-scanning",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "pushdown-how-summarize-and-where-move-into-the-storage-layer",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "a-bloom-filter-index-for-trace-id-lookups-at-40m-spans-a-day",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "vectorized-execution-batching-helixql-operators-over-column-batches",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-the-query-planners-join-order-search",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-helixql-resolves-by-clauses-into-group-keys",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "the-math-behind-our-sampling-error-bounds-for-approximate-summarize",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "helixql-gets-joins-across-signal-types",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "migrating-dashboards-from-prometheus-to-helixql",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "kinetic/bento-telemetry-chart",
+			"file": "kinetic/bento-telemetry-chart.webp",
+			"alt": "Unified telemetry, one timeline",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "bento",
+					"slug": "home-bento",
+					"locale": "en",
+					"path": "items[0].tile_image"
+				}
+			]
+		},
+		{
+			"key": "people/priya-raman",
+			"file": "people/priya-raman.jpg",
+			"alt": "Priya Raman",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "home-testimonials",
+					"locale": "en",
+					"path": "items[0].avatar"
+				},
+				{
+					"collection": "testimonials",
+					"slug": "landing-testimonials",
+					"locale": "en",
+					"path": "items[0].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "team-members",
+					"locale": "en",
+					"path": "items[6].avatar"
+				},
+				{
+					"collection": "writers",
+					"slug": "priya-raman",
+					"locale": "en",
+					"path": "avatar"
+				}
+			]
+		},
+		{
+			"key": "people/marcus-lee",
+			"file": "people/marcus-lee.jpg",
+			"alt": "Marcus Lee",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "home-testimonials",
+					"locale": "en",
+					"path": "items[1].avatar"
+				},
+				{
+					"collection": "testimonials",
+					"slug": "landing-testimonials",
+					"locale": "en",
+					"path": "items[1].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "team-members",
+					"locale": "en",
+					"path": "items[4].avatar"
+				}
+			]
+		},
+		{
+			"key": "people/sofia-alvarez",
+			"file": "people/sofia-alvarez.jpg",
+			"alt": "Sofia Alvarez",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "home-testimonials",
+					"locale": "en",
+					"path": "items[2].avatar"
+				},
+				{
+					"collection": "testimonials",
+					"slug": "landing-testimonials",
+					"locale": "en",
+					"path": "items[2].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "team-members",
+					"locale": "en",
+					"path": "items[5].avatar"
+				}
+			]
+		},
+		{
+			"key": "people/dana-whitfield",
+			"file": "people/dana-whitfield.jpg",
+			"alt": "Dana Whitfield",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[0].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "team-members",
+					"locale": "en",
+					"path": "items[0].avatar"
+				}
+			]
+		},
+		{
+			"key": "people/arjun-mehta",
+			"file": "people/arjun-mehta.jpg",
+			"alt": "Arjun Mehta",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[1].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "team-members",
+					"locale": "en",
+					"path": "items[1].avatar"
+				},
+				{
+					"collection": "writers",
+					"slug": "arjun-mehta",
+					"locale": "en",
+					"path": "avatar"
+				}
+			]
+		},
+		{
+			"key": "people/lena-park",
+			"file": "people/lena-park.jpg",
+			"alt": "Lena Park",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[2].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "team-members",
+					"locale": "en",
+					"path": "items[2].avatar"
+				},
+				{
+					"collection": "writers",
+					"slug": "lena-park",
+					"locale": "en",
+					"path": "avatar"
+				}
+			]
+		},
+		{
+			"key": "people/tomas-rivera",
+			"file": "people/tomas-rivera.jpg",
+			"alt": "Tomas Rivera",
+			"mime": "image/jpeg",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[3].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "team-members",
+					"locale": "en",
+					"path": "items[3].avatar"
+				},
+				{
+					"collection": "writers",
+					"slug": "tomas-rivera",
+					"locale": "en",
+					"path": "avatar"
+				}
+			]
+		},
+		{
+			"key": "kinetic/hero-terminal-panel-terminal",
+			"file": "kinetic/hero-terminal-panel-terminal.webp",
+			"alt": "Ship fast. Sleep through the night.",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "hero",
+					"slug": "home-hero",
+					"locale": "en",
+					"path": "image_terminal"
+				},
+				{
+					"collection": "hero",
+					"slug": "landing-hero",
+					"locale": "en",
+					"path": "image_terminal"
+				}
+			]
+		},
+		{
+			"key": "kinetic/hero-terminal-panel-blueprint",
+			"file": "kinetic/hero-terminal-panel-blueprint.webp",
+			"alt": "Ship fast. Sleep through the night.",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "hero",
+					"slug": "home-hero",
+					"locale": "en",
+					"path": "image_blueprint"
+				},
+				{
+					"collection": "hero",
+					"slug": "landing-hero",
+					"locale": "en",
+					"path": "image_blueprint"
+				}
+			]
+		},
+		{
+			"key": "kinetic/hero-terminal-panel-signal",
+			"file": "kinetic/hero-terminal-panel-signal.webp",
+			"alt": "Ship fast. Sleep through the night.",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "hero",
+					"slug": "home-hero",
+					"locale": "en",
+					"path": "image_signal"
+				},
+				{
+					"collection": "hero",
+					"slug": "landing-hero",
+					"locale": "en",
+					"path": "image_signal"
+				}
+			]
+		},
+		{
+			"key": "kinetic/kineticql-code-panel-terminal",
+			"file": "kinetic/kineticql-code-panel-terminal.webp",
+			"alt": "Ask your telemetry anything",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "kineticql_split",
+					"slug": "home-helixql-split",
+					"locale": "en",
+					"path": "image_terminal"
+				}
+			]
+		},
+		{
+			"key": "kinetic/kineticql-code-panel-blueprint",
+			"file": "kinetic/kineticql-code-panel-blueprint.webp",
+			"alt": "Ask your telemetry anything",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "kineticql_split",
+					"slug": "home-helixql-split",
+					"locale": "en",
+					"path": "image_blueprint"
+				}
+			]
+		},
+		{
+			"key": "kinetic/kineticql-code-panel-signal",
+			"file": "kinetic/kineticql-code-panel-signal.webp",
+			"alt": "Ask your telemetry anything",
+			"mime": "image/webp",
+			"targets": [
+				{
+					"collection": "kineticql_split",
+					"slug": "home-helixql-split",
+					"locale": "en",
+					"path": "image_signal"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-base/j6/1.0.5",
+  "platform": "joomla",
+  "template": "tracy",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "tracy-base",
+    "id": "tracy-base/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "tracy",
+    "framework": "t4",
+    "prefix": "tr_",
+    "parts": {
+      "webroot": {
+        "file": "tracy-base-j6-webroot-1.0.5.tar.gz",
+        "bytes": 90111616,
+        "sha256": "18c11f59d0f8dce84b0f9345b4d7a0c00e88db4bf7cfcd21f6a3a9f7c30c3612"
+      },
+      "database": {
+        "file": "tracy-base-j6-database-1.0.5.sql.gz",
+        "bytes": 206912,
+        "sha256": "1dff29c3aa8b905c1035e817082517ab233e228e0c20b6a38f111a3082ff8f5d"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-16T01:37:35.590Z",
+    "builtFrom": {
+      "from": "tracy-base/j6@1.0.4",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 10 files replaced (templates/tracy/css, templates/tracy/scss); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "tracy-base/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.21",
+  "mode": "content-recommendation"
+}

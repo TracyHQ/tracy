@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1553-chat-column-narrow-rest",
+  "kind": "fix",
+  "title": "Narrow chat column: trigger row fits, header controls stay in the column, clock hides while a question waits",
+  "pr": 1553,
+  "area": "chat/narrow-column",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the turn-trigger-row e2e of tracy-chat-input: dsh's trigger row with the plugin stylesheet in 300px and 250px columns, light and dark.",
+    "S2: Run the clock-while-waiting e2e of tracy-ask-form: a conversation with the pointer card and one without, then the card removed.",
+    "S3: Run the header-layout e2e of tracy-model-plan: the real dsh header with the site chip (short and long name), jobs, a Voice-sized utility and More, at 800 to 220px."
+  ],
+  "expect": [
+    "S1: every piece of the row ends inside its padding, the title wraps only between words, the time shows at 300px and hides at 250px.",
+    "S2: the clock is not displayed in the conversation with the card, is displayed in the other, and comes back once the card goes.",
+    "S3: no header control ends past the header's right edge at any width; with a short name the model chip still truncates at 300px and hides only at 220px."
+  ],
+  "selectors": {
+    "files": "packages/ui/tracy-chat-input/test/e2e/turn-trigger-row.test.mjs, packages/ui/tracy-ask-form/test/e2e/clock-while-waiting.test.mjs, packages/ui/tracy-model-plan/test/e2e/header-layout.test.mjs",
+    "attributes": "data-turn-trigger, data-chat-running, data-tracy-ask-pointer, data-conversation-scroll, --tracy-site-chip-max"
+  },
+  "evidence": "21/10/2026 cowork.tracy.site g66-ess-wp-blank: trigger row time past its border at 300px; More actions gone from 270px; Thinking for 1m 33s while a question waited",
+  "fence": "Tracy plugin CSS and the site chip's header-room measure, in Chromium against dsh's own CSS modules",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=60000",
+      "packages/ui/tracy-chat-input/test/e2e/turn-trigger-row.test.mjs",
+      "packages/ui/tracy-ask-form/test/e2e/clock-while-waiting.test.mjs",
+      "packages/ui/tracy-model-plan/test/e2e/header-layout.test.mjs"
+    ]
+  }
+}

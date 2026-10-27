@@ -1,0 +1,129 @@
+/* je-category — page-group stylesheet (loaded after wp-ja-essence.css).
+   Scope: listing pages seeded from an archive route (category styles, resources, lifestyle, category blog, tags,
+   author, search). Their body is the seeder's heading + description + `tracy/cards` query + Joomla pager; the
+   selectors key on that markup (`.tracy-query`, `.tracy-joomla-pager`), never on page ids. */
+
+/* the listing is as wide as the source's container, the heading block is centred */
+.je-narrow:has(.je-prose > .tracy-query) { max-width: 1164px; }
+.je-prose:has(> .tracy-query) > .tracy-eyebrow { text-align: center; font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); font-size: 40px; line-height: 52px; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ds-c-heading, light-dark(rgb(33, 37, 41), rgb(238, 241, 246))); margin: 36px 0 12px; }
+@media (max-width: 767px) { .je-prose:has(> .tracy-query) > .tracy-eyebrow { font-size: 28px; line-height: 36.4px; } }
+/* 1.0.8 pass 3: the source category title steps 36.4 / 42 / 49 / 52px line height at 320 / 576 / 768 / 1400 */
+@media (min-width: 576px) and (max-width: 767px) { .je-prose:has(> .tracy-query) > .tracy-eyebrow { font-size: 32.3px; line-height: 42px; } }
+@media (min-width: 768px) and (max-width: 1399px) { .je-prose:has(> .tracy-query) > .tracy-eyebrow { font-size: 37.7px; line-height: 49px; } }
+.je-prose:has(> .tracy-query) > .tracy-eyebrow::before { content: "•"; color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); font-size: 0.6em; vertical-align: middle; margin-right: 12px; }
+.je-prose:has(> .tracy-query) > .tracy-eyebrow + p { max-width: 640px; margin: 64px auto 36px; text-align: center; font-size: 16px; line-height: 24px; color: var(--ds-c-fg, light-dark(rgba(37, 36, 36, 0.7), rgb(194, 201, 214))); }
+
+/* the cards: white tile, picture on top, centred badge, title and byline */
+.tracy-query .tracy-grid { gap: 24px; list-style: none; padding: 0; margin: 0; align-items: start; }
+.tracy-query .tracy-card { display: flex; flex-direction: column; background: var(--wp--preset--color--surface); border: 0; border-radius: var(--ds-card-radius, 16px); padding: 12px 12px 24px; box-shadow: none; overflow: visible; }
+.tracy-query .tracy-card__media { margin: 0 0 8px; }
+.tracy-query .tracy-card__media img { display: block; width: 100%; height: auto !important; aspect-ratio: 3 / 2 !important; object-fit: cover; border-radius: var(--ds-card-radius, 8px); }
+.tracy-query .tracy-card__body { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding: 0 12px; }
+.tracy-query .tracy-card .wp-block-post-terms { margin: 0; }
+.tracy-query .tracy-card .wp-block-post-terms a { display: inline-block; padding: 0 8px; border-radius: var(--ds-card-radius, 8px); background: light-dark(var(--wp--preset--color--bg), var(--ds-c-surface, #222a3b)); font-size: 16px !important; line-height: 24px !important; text-decoration: none; }
+.tracy-query .tracy-card .wp-block-post-terms a::before { content: "•"; color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); font-size: 16px; margin-right: 4px; }
+.tracy-query .tracy-card__title { margin: 0; font-size: 24px; line-height: 1.3; font-weight: 400; }
+.tracy-query .tracy-card__title a { text-decoration: none; }
+.tracy-query .tracy-card__text { margin: 0; font-size: 14px; line-height: 21px; }
+.tracy-query .tracy-card__text .wp-block-post-excerpt__more-link { display: inline-block; margin-top: 8px; font-size: 14px; }
+@media (max-width: 1023px) { .tracy-query .tracy-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 639px) { .tracy-query .tracy-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* the Joomla pager: round numbered buttons, "Page N of M" chip above them */
+.tracy-query .tracy-joomla-pager { display: flex; flex-direction: column-reverse; align-items: center; gap: 12px; margin: 48px 0; }
+.tracy-joomla-pager .tracy-pager__list { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.tracy-joomla-pager .tracy-pager__link { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--wp--preset--color--border, var(--ds-c-border, #e5e5ea)); color: var(--wp--preset--color--fg-2); font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); font-size: 14px; text-decoration: none; }
+.tracy-joomla-pager .is-current .tracy-pager__link { background: var(--wp--preset--color--accent); color: var(--wp--preset--color--accent-on); }
+.tracy-joomla-pager .is-disabled .tracy-pager__link { opacity: 0.5; }
+.tracy-joomla-pager .tracy-pager__counter { margin: 0; padding: 6px 14px; border-radius: var(--ds-btn-radius, 8px); background: rgba(0, 0, 0, 0.1); font-family: var(--ds-font-display, var(--je-font-display, Jost), sans-serif); font-size: 16px; line-height: 24px; color: var(--ds-c-fg, light-dark(#000, rgb(140, 151, 168))); }
+
+/* tag cloud (tagged items): chips as in the module */
+.je-prose .wp-block-tag-cloud { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 36px; }
+.je-prose .wp-block-tag-cloud a { background: var(--wp--preset--color--surface); border-radius: var(--ds-pill-radius, 8px); padding: 2px 10px; font-size: 14px !important; text-decoration: none; color: var(--wp--preset--color--fg-2); }
+
+/* byline under the card title (author · date), as in the Joomla category views */
+.tracy-query .tracy-card .je-meta { display: flex; justify-content: center; gap: 8px; margin: 0; font-size: 16px; line-height: 24px; color: var(--wp--preset--color--muted); }
+.tracy-query .tracy-card .je-meta__author { color: var(--wp--preset--color--fg-2); }
+
+/* card titles: the link takes the body text colour in the source's dark mode; 22px on small screens */
+.tracy-query .tracy-card__title { color: var(--wp--preset--color--fg-2); }
+.tracy-query .tracy-card__title a { color: light-dark(var(--wp--preset--color--fg-2), var(--wp--preset--color--fg)); }
+@media (max-width: 767px) { .tracy-query .tracy-card__title { font-size: 22px; line-height: 1.3; } }
+
+/* listing variants, keyed on the page slug (body class from inc/extra.php): the source types each view its own size */
+.je-slug-category-style-2 .tracy-query .tracy-card__title { font-size: 32px; line-height: 1.3; }
+.je-slug-category-style-4 .tracy-query .tracy-card__title { font-size: 18px; line-height: 1.3; }
+.je-slug-tagged-items .tracy-query .tracy-card__title { font-size: 20px; line-height: 1.3; font-weight: 500; }
+
+/* dark: the chip text is body text (#c2c9d6) on every listing; the author listing draws it without a fill, style-3 titles stay at heading colour */
+.tracy-query .tracy-card .wp-block-post-terms a { color: light-dark(var(--wp--preset--color--fg-2), var(--wp--preset--color--fg)); }
+.je-slug-author-listting .tracy-query .tracy-card .wp-block-post-terms a { background: transparent; line-height: 22.5px !important; }
+.je-slug-category-style-1 .tracy-query .tracy-card__title, .je-slug-category-style-1 .tracy-query .tracy-card__title a, .je-slug-category-style-2 .tracy-query .tracy-card__title, .je-slug-category-style-2 .tracy-query .tracy-card__title a, .je-slug-category-style-3 .tracy-query .tracy-card__title, .je-slug-category-style-3 .tracy-query .tracy-card__title a, .je-slug-category-style-4 .tracy-query .tracy-card__title, .je-slug-category-style-4 .tracy-query .tracy-card__title a { color: var(--wp--preset--color--fg-2); }
+@media (max-width: 767px) { .je-slug-category-style-2 .tracy-query .tracy-card__title { font-size: 24px; line-height: 1.3; } }
+
+/* tag cloud on the style-4 listing: 16px serif chips; dark = #222a3b fill with body text (the light text colour was hard-coded) */
+.je-prose .wp-block-tag-cloud a.tag-cloud-link { font-size: 16px !important; background: light-dark(var(--wp--preset--color--surface), var(--ds-c-surface, #222a3b)); color: var(--ds-c-fg, light-dark(rgba(37, 36, 36, 0.7), #c2c9d6)) !important; }
+
+/* s14: the blog layout (category-blog) is a single column of large cards with intro, tags and "Read more"; every other listing hides the extra block. */
+.tracy-query .je-card__extra { display: none; }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .je-page--listing { padding-top: 40px; }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .tracy-grid { grid-template-columns: 1fr; gap: 24px; }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .tracy-card { padding: 12px 12px 28px; }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .tracy-card__media { margin-bottom: 20px; }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .tracy-card__body { align-items: flex-start; text-align: left; padding: 0 12px; }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .tracy-card .je-meta { justify-content: flex-start; }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .je-card__extra { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .je-card__intro { margin: 0; font-size: 14px; line-height: 21px; color: var(--wp--preset--color--fg-2); }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .je-card__intro p { margin: 0; }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .je-card__tags a { display: inline-block; margin-right: 12px; font-size: 12px; text-decoration: none; color: var(--wp--preset--color--fg-2); }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query a.je-card__more { font: 400 18px/20.7px var(--je-font-display, Jost), sans-serif; text-decoration: none; color: var(--ds-c-fg, light-dark(rgba(37, 36, 36, 0.7), rgb(194, 201, 214))); }
+:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .je-card__intro .wp-block-post-excerpt__more-link { display: none; }
+
+/* 1.0.1 — Author listing (the `wp-ja-essence/authors` block): photo, name, job title and bio on white cards, three to a row. */
+.je-authors__items { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; margin: 0; padding: 0; list-style: none; }
+@media (max-width: 991px) { .je-authors__items { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 575px) { .je-authors__items { grid-template-columns: 1fr; } }
+.je-author { padding: 18px; text-align: center; background: var(--wp--preset--color--surface); border-radius: var(--ds-card-radius, 16px); box-sizing: border-box; }
+.je-author__picture { display: block; margin-bottom: 18px; }
+.je-author__photo { display: block; width: 100%; height: auto; aspect-ratio: 1 / 0.83; object-fit: cover; border-radius: var(--ds-card-radius, 8px); }
+.je-author__name { margin: 0 0 4px; font-size: 18px; line-height: 1.3; }
+.je-author__name a { color: var(--wp--preset--color--fg-2); text-decoration: none; }
+.je-author__job { margin: 0 0 12px; font-size: 13px; color: var(--wp--preset--color--muted); }
+.je-author__bio { margin: 0; font-size: 13px; line-height: 1.5; color: var(--wp--preset--color--fg); }
+
+/* 1.0.1 — Tagged items (the `wp-ja-essence/tagged-list` block): a filter field over a plain list of titles. */
+
+/* the pager the two blocks above share */
+.je-authors, .je-taglist { padding-top: 72px; }
+
+/* 1.0.1 — measured against the source's own author, title-list and counter rows (Visual QA cp1) */
+.je-author__name { font-size: 24px; line-height: 24px; }
+@media (max-width: 767px) { .je-author__name { font-size: 22px; line-height: 22px; } }
+.je-author__job { font-size: 16px; line-height: 20.8px; color: var(--wp--preset--color--fg); }
+
+/* 1.0.8 pass 2 — author listing: Bootstrap's grid steps (1 column below 768, 2 below 992), the source's centred container
+   inset at 576/768, and the fixed 260px photo (the aspect-ratio rule above won over the 260px one in je-detail.css). */
+.je-authors .je-authors__items { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; }
+@media (max-width: 991px) { .je-authors .je-authors__items { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-inline: 24px; } }
+@media (max-width: 767px) { .je-authors .je-authors__items { grid-template-columns: minmax(0, 1fr); margin-inline: 0; } }
+.je-authors .je-author__photo { height: 260px; aspect-ratio: auto; }
+.je-authors .je-author__card { padding: 36px; }
+.je-authors .je-author__picture { margin: -18px -18px 24px; }
+
+/* 1.0.8 pass 2 — from 576 to 767 the source's Bootstrap container is 540px wide and its row gutter sits on top of the page margin,
+   so the main content is 36px in from each edge instead of the 18px of the phone layout, and the highlighted cards of style 3 and 4 are as tall as the source's. */
+@media (min-width: 576px) and (max-width: 767px) {
+  .je-main > .je-narrow { padding-inline: 36px; }
+  body.je-slug-category-style-4 .tracy-query .tracy-grid > li:nth-child(5) .tracy-card { min-height: 483.8px; }
+  body.je-slug-category-style-3 .tracy-query .tracy-grid > li:nth-child(3) .tracy-card { min-height: 372.6px; }
+}
+
+/* 1.0.8 pass 2 — the source keeps the 28px card title from 576 to 767 and drops to 24px only below 576. */
+@media (min-width: 576px) and (max-width: 767px) {
+  .je-main .je-list .je-card__title { font-size: 28px; line-height: 36.4px; }
+}
+
+/* 1.0.8 pass 2 — category-blog and category-style-4: the source's card title is 28px from 576 to 767 and spans the whole card. */
+@media (min-width: 576px) and (max-width: 767px) {
+  body:is(.je-slug-category-blog, .je-slug-category-style-4) .tracy-query .tracy-card .tracy-card__title { font-size: 28px; line-height: 36.4px; }
+}

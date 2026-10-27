@@ -1,0 +1,44 @@
+{
+  "id": "QA-UNIT-REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8-happy",
+  "itemIds": ["regression:REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8"],
+  "requirement": "JA Nova wp7 1.1.8: article, author, project, stat, related, video-intro, position and expertise blocks match the Joomla source heights at 320–1440px",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8.json",
+    "ref": "PR #991 (fix); fix evidence: Full site sweep of 07/10/2026 UTC on the clean restore of the packed 1.1.8 site against the local Joomla source: 11/11 checks, heights 0 open and 3 accepted (D-02, D-07, D-17), 0 not measured; the 1.1.7 baseline had 18 open heights groups",
+    "invariant": "S1: every rule is present in both stylesheets and the version line reads 1.1.8. S2: the release measure is bound to the released zip, 11/11 checks pass, heights has 0 open groups, and the 1.1.7 baseline failed heights.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8.mjs:17 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8.mjs:22 packages/cms/tracy-wordpress-theme/src/wp-ja-nova/style.css has no code line to point at"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8",
+    "pr": 991,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-nova",
+    "file": "tests/regression/cases/REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

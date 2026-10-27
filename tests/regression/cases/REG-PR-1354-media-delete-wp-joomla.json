@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1354-media-delete-wp-joomla",
+  "kind": "fix",
+  "title": "WordPress and Joomla pictures are deleted through media.delete: previewed, confirmed by the customer, reported honestly",
+  "pr": 1354,
+  "area": "site-tools/media",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/site-call.test.mjs",
+    "S2: Read the test lines named in run.tests."
+  ],
+  "expect": [
+    "The first media.delete call sends the plugin a dry_run and answers CONFIRM_FIRST with the files, total size and where the picture is used; the real delete reaches the plugin only after the customer answers that question.",
+    "A call with dry_run: true stays a preview even with confirm present, and its next names no receipt, no landed change and no apply_id for undo.",
+    "A preview of one attachment cannot confirm the delete of a different one.",
+    "With storageDeleted: false the next lists filesLeft and never says the file or the old URL is gone.",
+    "A dry run over the 8 MiB undo-copy cap answers too_large without asking the customer.",
+    "An older plugin's unknown-action refusal says the plugin needs updating and never falls back to shell or file tools."
+  ],
+  "selectors": {
+    "api": "tracy_site media.delete → POST /api/sites/:key/apply",
+    "code": "media.delete handling in packages/tools/tracy-site-tools/src/host/site-call.mjs"
+  },
+  "evidence": "Issue #1339: asked to delete a picture, the agent deleted it with the shell or file tools and said the old URL no longer worked while the CDN still served it (cache-control max-age=14400, second request cf-cache-status HIT).",
+  "fence": "tracy_site's call path with a fake plugin answer; not a proof against a live WordPress or Joomla site, which needs the Claude Cowork plugin release carrying media.delete.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-force-exit",
+      "packages/tools/tracy-site-tools/test/site-call.test.mjs"
+    ],
+    "tests": [
+      "media.delete previews first, then deletes once only after the door confirmation is answered",
+      "media.delete dry_run remains a preview even when confirm is present",
+      "a preview-only media.delete exchange cannot confirm a different attachment",
+      "media.delete with storageDeleted:false lists filesLeft and never claims storage or URL removal",
+      "media.delete refuses before confirmation when dry run exceeds undo-copy cap",
+      "media.delete on an old Claude Cowork plugin reports its refusal and never falls back"
+    ]
+  }
+}

@@ -1,0 +1,415 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "useRootPaddingAwareAlignments": false,
+    "layout": {
+      "contentSize": "1024px",
+      "wideSize": "1024px"
+    },
+    "color": {
+      "defaultPalette": false,
+      "defaultGradients": false,
+      "defaultDuotone": false,
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "var(--ds-c-bg, #ffffff)"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "var(--ds-c-surface, #f5f5f7)"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "var(--ds-c-surface-warm, #fbfbfd)"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "var(--ds-c-fg, #1d1d1f)"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "var(--ds-c-fg-2, #424245)"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "var(--ds-c-muted, #6e6e73)"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "var(--ds-c-meta, #86868b)"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "var(--ds-c-border, #d2d2d7)"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "var(--ds-c-border-soft, #e8e8ed)"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "var(--ds-c-accent, #0071e3)"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "var(--ds-c-accent-on, #ffffff)"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "var(--ds-c-accent-hover, #0077ed)"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "var(--ds-c-accent-active, #0066cc)"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "var(--ds-c-success, #16a34a)"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "var(--ds-c-warn, #eab308)"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "var(--ds-c-danger, #dc2626)"
+        }
+      ]
+    },
+    "typography": {
+      "fluid": false,
+      "defaultFontSizes": false,
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "var(--ds-font-display, \"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif)"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "var(--ds-font-body, \"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif)"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "\"SF Mono\", ui-monospace, \"JetBrains Mono\", Menlo, Monaco, Consolas, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "12px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "14px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "17px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "21px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "28px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "40px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "56px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "80px"
+        }
+      ]
+    },
+    "spacing": {
+      "units": [
+        "px",
+        "rem",
+        "em",
+        "%",
+        "vw",
+        "vh"
+      ],
+      "defaultSpacingSizes": false,
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "custom": {
+      "leading": {
+        "body": "1.47",
+        "tight": "1.05"
+      },
+      "tracking": {
+        "display": "-0.015em"
+      },
+      "sectionY": {
+        "desktop": "100px",
+        "tablet": "64px",
+        "phone": "40px"
+      },
+      "radius": {
+        "sm": "var(--ds-input-radius, 8px)",
+        "md": "var(--ds-btn-radius, 12px)",
+        "lg": "var(--ds-card-radius, 18px)",
+        "pill": "var(--ds-pill-radius, 980px)"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0 12px 32px rgba(0, 0, 0, 0.08) /* ds-keep: shadow depth, not a colour role */"
+      },
+      "focusRing": "0 0 0 4px var(--ds-c-focus-ring, color-mix(in oklab, var(--wp--preset--color--accent), transparent 65%))",
+      "motion": {
+        "fast": "150ms",
+        "base": "220ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.28, 0, 0.22, 1)"
+      },
+      "container": {
+        "max": "1024px",
+        "gutterDesktop": "22px",
+        "gutterTablet": "18px",
+        "gutterPhone": "16px"
+      },
+      "tracy": {
+        "inspiration": "apple"
+      }
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var:preset|color|bg",
+      "text": "var:preset|color|fg"
+    },
+    "typography": {
+      "fontFamily": "var:preset|font-family|body",
+      "fontSize": "var:preset|font-size|base",
+      "lineHeight": "var(--wp--custom--leading--body)"
+    },
+    "spacing": {
+      "padding": {
+        "top": "0",
+        "right": "0",
+        "bottom": "0",
+        "left": "0"
+      },
+      "blockGap": "var:preset|spacing|4"
+    },
+    "elements": {
+      "heading": {
+        "typography": {
+          "fontFamily": "var:preset|font-family|display",
+          "lineHeight": "var(--wp--custom--leading--tight)",
+          "letterSpacing": "var(--wp--custom--tracking--display)"
+        },
+        "color": {
+          "text": "var(--ds-c-heading, var(--wp--preset--color--fg))"
+        }
+      },
+      "h1": {
+        "typography": {
+          "fontSize": "var:preset|font-size|xxxl"
+        }
+      },
+      "h2": {
+        "typography": {
+          "fontSize": "var:preset|font-size|xxl"
+        }
+      },
+      "h3": {
+        "typography": {
+          "fontSize": "var:preset|font-size|xl"
+        }
+      },
+      "link": {
+        "color": {
+          "text": "var:preset|color|fg"
+        },
+        ":hover": {
+          "color": {
+            "text": "var(--ds-c-accent-text, var(--wp--preset--color--accent))"
+          }
+        }
+      },
+      "button": {
+        "color": {
+          "background": "var:preset|color|accent",
+          "text": "var:preset|color|accent-on"
+        },
+        "border": {
+          "radius": "var(--wp--custom--radius--md)"
+        },
+        "typography": {
+          "fontWeight": "600"
+        },
+        ":hover": {
+          "color": {
+            "background": "var:preset|color|accent-hover",
+            "text": "var:preset|color|accent-on"
+          }
+        }
+      }
+    },
+    "css": "/* tracy-base: dark mode. The palette values WordPress prints on :root are fixed hex, so `color-scheme` alone flips nothing; the dark set restates every colour preset. Values are the Joomla source's dark hook (capture/templates/tracy/css/styles/base.css, html[data-theme=dark]) mapped token for token, each read through its design-system role (var(--ds-c-..., <dark value>)) so a worn system reaches the dark scheme too; the same set applies under prefers-color-scheme when the root element carries no data-theme, which is the 'auto' state (T4 other_default_theme=auto). */\nhtml { color-scheme: light dark; }\nhtml[data-theme=\"light\"] { color-scheme: light; }\nhtml[data-theme=\"dark\"] { color-scheme: dark; }\nhtml[data-theme=\"dark\"] {\n  --wp--preset--color--bg: var(--ds-c-bg, #000000);\n  --wp--preset--color--surface: var(--ds-c-surface, #1d1d1f);\n  --wp--preset--color--surface-warm: var(--ds-c-surface-warm, #0e0e0e);\n  --wp--preset--color--fg: var(--ds-c-fg, #f8f8f8);\n  --wp--preset--color--fg-2: var(--ds-c-fg-2, #c0c0c1);\n  --wp--preset--color--muted: var(--ds-c-muted, #87878b);\n  --wp--preset--color--meta: var(--ds-c-meta, #6f6f73);\n  --wp--preset--color--border: var(--ds-c-border, #2f2f30);\n  --wp--preset--color--border-soft: var(--ds-c-border-soft, #262629);\n  --wp--preset--color--accent: var(--ds-c-accent, #2997ff);\n  --wp--preset--color--accent-on: var(--ds-c-accent-on, #000000);\n  --wp--preset--color--accent-hover: var(--ds-c-accent-hover, #349cff);\n  --wp--preset--color--accent-active: var(--ds-c-accent-active, #278ff1);\n  --wp--preset--color--success: var(--ds-c-success, #16a34a);\n  --wp--preset--color--warn: var(--ds-c-warn, #eab308);\n  --wp--preset--color--danger: var(--ds-c-danger, #e45858);\n}\n@media (prefers-color-scheme: dark) {\n  html:not([data-theme]) {\n    --wp--preset--color--bg: var(--ds-c-bg, #000000);\n    --wp--preset--color--surface: var(--ds-c-surface, #1d1d1f);\n    --wp--preset--color--surface-warm: var(--ds-c-surface-warm, #0e0e0e);\n    --wp--preset--color--fg: var(--ds-c-fg, #f8f8f8);\n    --wp--preset--color--fg-2: var(--ds-c-fg-2, #c0c0c1);\n    --wp--preset--color--muted: var(--ds-c-muted, #87878b);\n    --wp--preset--color--meta: var(--ds-c-meta, #6f6f73);\n    --wp--preset--color--border: var(--ds-c-border, #2f2f30);\n    --wp--preset--color--border-soft: var(--ds-c-border-soft, #262629);\n    --wp--preset--color--accent: var(--ds-c-accent, #2997ff);\n    --wp--preset--color--accent-on: var(--ds-c-accent-on, #000000);\n    --wp--preset--color--accent-hover: var(--ds-c-accent-hover, #349cff);\n    --wp--preset--color--accent-active: var(--ds-c-accent-active, #278ff1);\n    --wp--preset--color--success: var(--ds-c-success, #16a34a);\n    --wp--preset--color--warn: var(--ds-c-warn, #eab308);\n    --wp--preset--color--danger: var(--ds-c-danger, #e45858);\n  }\n}\n"
+  },
+  "customTemplates": [
+    {
+      "name": "landing",
+      "title": "Landing (section library)",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "fixture",
+      "title": "Design system page",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "artifact",
+      "title": "Design page (engine)",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "pricing",
+      "title": "Pricing",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-landing",
+      "title": "Landing",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-onepage",
+      "title": "One page",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-no-sidebar",
+      "title": "No sidebar",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-sidebar-left",
+      "title": "Sidebar left",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-titled",
+      "title": "Page with title",
+      "postTypes": [
+        "page"
+      ]
+    }
+  ],
+  "templateParts": [
+    {
+      "name": "header",
+      "title": "Header",
+      "area": "header"
+    },
+    {
+      "name": "footer",
+      "title": "Footer",
+      "area": "footer"
+    },
+    {
+      "name": "header-onepage",
+      "title": "Header (one page)",
+      "area": "header"
+    }
+  ]
+}

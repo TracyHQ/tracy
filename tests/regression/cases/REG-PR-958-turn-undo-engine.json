@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-958-turn-undo-engine",
+  "kind": "feat",
+  "title": "A chat turn is undone only when it is safe: the server refuses with the reason when content changed after it, files moved, a restore happened, a turn is open, the seat lacks the toolset, the change is shared, or the site runs EmDash; otherwise it undoes files then content, newest first, and stops at the first step that did not verifiably succeed",
+  "pr": 958,
+  "area": "chat/turn-undo",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/turn-undo.test.mjs",
+    "S2: Read the result of each test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'content changed after the turn in the CMS admin blocks it; a cron row does not' passes.",
+    "'files changed after: the host preflight conflict blocks that turn and every older one' passes.",
+    "'a restore after the turn blocks it, unless it is the undo of a turn of the run' passes.",
+    "'a turn open on the site blocks every turn, and outranks every other reason' passes.",
+    "'a missing toolset blocks with the toolset named; going back needs every toolset of the run' passes.",
+    "'EmDash: no undo at all' passes.",
+    "Both SHARED_CHANGE tests pass.",
+    "'latest vs from-here: the newest turn that changed something is latest, older ones go back to here' passes.",
+    "'runUndo: in order, files before content, and it stops at the first step that did not succeed' passes.",
+    "'revertOutcome: only ok:true is a revert; a clean no is failed; silence is unsure' and 'fileOutcome: a verified restore commit is undone; a refusal failed; anything that may have run unsure' pass."
+  ],
+  "selectors": {
+    "doorRead": "GET /api/sites/:key/turns?session=",
+    "doorWrite": "POST /api/sites/:key/turns/undo {session, turnId, scope}",
+    "function": "apps/tracy-web/src/sites/turn-undo.js turnsView, undoPlan, runUndo, revertOutcome, fileOutcome",
+    "test": "apps/tracy-web/test/turn-undo.test.mjs"
+  },
+  "evidence": "Measured 05/10/2026 on cowork.tracy.site: undo lived only in Site changes, undid files but not content, and was refused when a later turn touched the same files. WordPress content.replace reverts were measured to overwrite a later edit (tasks/evidence stand-e2e.md:477), so content undo must refuse when anything changed after the turn.",
+  "fence": "The decision function turnsView (every block reason and its priority), undoPlan (latest vs from-here, newest first) and runUndo (files before content, stop at the first step that did not verifiably succeed). Pure: no Postgres, no host, no site.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/turn-undo.test.mjs"],
+    "tests": [
+      "content changed after the turn in the CMS admin blocks it",
+      "files changed after: the host preflight conflict blocks",
+      "a restore after the turn blocks it",
+      "a turn open on the site blocks every turn",
+      "a missing toolset blocks with the toolset named",
+      "EmDash: no undo at all",
+      "SHARED_CHANGE apply-id",
+      "SHARED_CHANGE concurrent / unsealed",
+      "latest vs from-here",
+      "runUndo: in order, files before content",
+      "revertOutcome: only ok:true is a revert",
+      "fileOutcome: a verified restore commit is undone"
+    ]
+  }
+}

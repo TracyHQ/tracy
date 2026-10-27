@@ -1,0 +1,19 @@
+@theme {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-paper-white: #ffffff;
+  --color-ink: #171717;
+  --color-charcoal: #1f1f1f;
+  --color-graphite: #515151;
+  --color-slate: #979797;
+  --color-ash: #b9b9b9;
+  --color-fog: #cfcfcf;
+  --color-mist: #c5c5c5;
+
+  /* Typography */
+  --font-switzer-variable: 'Switzer Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-kibitz-pro-light: 'Kibitz Pro Light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-switzer: 'Switzer', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-space-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-system-sans-serif: 'System sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

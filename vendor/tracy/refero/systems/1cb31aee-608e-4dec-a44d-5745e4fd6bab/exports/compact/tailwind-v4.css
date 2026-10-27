@@ -1,0 +1,9 @@
+@theme {
+  /* Colors */
+  --color-celluloid-cream: #ece4b4;
+  --color-darkroom-shadow: #4f4d3c;
+  --color-projection-black: #000000;
+
+  /* Typography */
+  --font-changeling-neo: 'changeling-neo', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

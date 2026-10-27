@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1761-wp-showcase-revert-nothing-left",
+  "kind": "fix",
+  "title": "A WordPress showcase-navigation revert the Claude Cowork plugin refuses because nothing is left to bring back is said as 'nothing was left applied to revert', not as an unfinished revert that may have left the menus partly hidden",
+  "pr": 1761,
+  "area": "provision/showcase-nav",
+  "cms": ["wp"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": ["S1: node --test packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs"],
+  "expect": [
+    "S1: a revert answered ok:false contract_failed 'This site has no showcase navigation entries to bring back' (after an apply that hid nothing, and after an apply stopped part-way) logs and records 'nothing was left applied to revert, the menus are as they were', asks the revert once, and the phase still settles as failed; a contract_failed revert refusal with any other message still logs 'the revert did not complete — the menus may be partly hidden'"
+  ],
+  "selectors": {
+    "host": "scripts/provision/platform/wordpress.sh tracy_wp_showcase_job (revert verdict none:) and tracy_wp_showcase_nav (status 4)"
+  },
+  "evidence": "Claude Cowork PR 240 retest round 2 (26/10/2026): after two applies on a ja-morgan site, reverting the first request was refused with that message and tch logged an unfinished revert although the rows were restored",
+  "fence": "Mechanism only: the wording and phase state tch derives from the plugin's answer; the plugin's own revert is not exercised",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs"
+    ],
+    "tests": [
+      "a new site has its template showcase taken out of the menus; skips, losses and refusals are said"
+    ]
+  }
+}

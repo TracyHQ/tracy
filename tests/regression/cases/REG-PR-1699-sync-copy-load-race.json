@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-1699-sync-copy-load-race",
+  "kind": "fix",
+  "title": "Sync from live reads the copy's database into its scratch schema even while the copy is still settling after a chat turn (a table dropped, purged, created or truncated during the read is a change to read again, not a stop); a real stop names the server's error with no value of the site",
+  "pr": 1699,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs (real MariaDB in a container of its own)",
+    "S2: node --test packages/fleet/tracy-fleet-operation/test/live-sync-scratch-load.test.mjs"
+  ],
+  "expect": [
+    "S1: a site table or a _tracy_trash_ table dropped between the list and the dump: load_ours returns 0 and the scratch schema holds every table of the site",
+    "S1: a table created after the list is in the scratch schema (never left out silently)",
+    "S1: a TRUNCATE during the dump (Error 1412) is read again: load_ours returns 0",
+    "S1: a copy busy for ~3 s (snapshots, a listed table dropped and made again, rows written) loads once it settles: return 0",
+    "S1: a broken view still stops (return 2) and LOAD_OURS_WHY carries 1356 with no table or view name",
+    "S1: db_error_line keeps the error code, cuts at the first quote, skips the docker client's warnings",
+    "S2: merge's MERGE_FAILED for the copy's load carries LOAD_OURS_WHY"
+  ],
+  "selectors": {
+    "host": "webroot-sync.sh load_ours / ours_try / ours_moved / db_error_line"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-25-sync-copy-load-race.md",
+  "fence": "A copy that is merely busy never stops a sync; a stop always says why without a value of the site",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-scratch-load.test.mjs"
+    ],
+    "tests": [
+      "the copy at rest loads whole",
+      "a table that goes between the list and its dump",
+      "a table that comes after the list",
+      "a table emptied by TRUNCATE while the dump reads",
+      "a copy the server cannot read still stops",
+      "a copy busy for a few seconds after a chat turn",
+      "the reason is the first error line",
+      "both scripts check their scratch loads by hand"
+    ]
+  }
+}

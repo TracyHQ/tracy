@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1100-p6-tokenized-theme-css-is-current",
+  "kind": "fix",
+  "title": "The committed tokenized WordPress theme stylesheets are what the tokenizer makes of them today: wp-ja-vega.css (1.1.14) keeps its accordion toggle's literal pair, so a REG-PR-1087 run leaves no tracked diff",
+  "pr": 1100,
+  "area": "design/slot",
+  "cms": ["wp"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/design/tracy-ds-slot run: node --test --test-reporter=tap test/tokenize.test.mjs",
+    "S2: Record the exit code, '# fail' and the result of the test 'every tokenized WordPress theme stylesheet in the tree is what the tokenizer makes of it today'."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "'every tokenized WordPress theme stylesheet in the tree is what the tokenizer makes of it today' is ok: for every templates/wordpress-*.json whose theme's overlay stylesheet reads --ds-c-*, tokenizing that stylesheet again with the contract's palette changes no line, wp-ja-vega among at least six themes checked — so .jv-accordion__button::after paints color: #050505 on its literal #f0f1f2 disc (on 977cbb3e6 the test names wp-ja-vega.css as stale: that line read var(--ds-c-fg-2, #050505))."
+  ],
+  "selectors": {
+    "sheet": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-vega/assets/css/wp-ja-vega.css (.jv-accordion__button::after)",
+    "rule": "src/tokenize.mjs literalFill (a rule that keeps its fill literal keeps its text literal)"
+  },
+  "evidence": "10/10/2026: re-tokenizing the committed wp-ja-vega.css (1.1.13, released to TracyHQ/claude-cowork on 09/10 with the same bytes) changed line 2521 'color: var(--ds-c-fg-2, #050505)' to 'color: #050505' in the overlay and the built src copy; every REG-PR-1087 S4 run left that diff in the tree.",
+  "fence": "the tokenized stylesheets committed for the WordPress themes; not the Joomla releases (their tokenized sheets live in the release archives)",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/tokenize.test.mjs"],
+    "cwd": "packages/design/tracy-ds-slot",
+    "tests": [
+      "every tokenized WordPress theme stylesheet in the tree is what the tokenizer makes of it today"
+    ]
+  }
+}

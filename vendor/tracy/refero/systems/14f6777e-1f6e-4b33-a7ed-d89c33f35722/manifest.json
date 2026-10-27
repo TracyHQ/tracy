@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "14f6777e-1f6e-4b33-a7ed-d89c33f35722",
+  "status": "complete",
+  "name": "Acme Cups New Zealand",
+  "url": "https://styles.refero.design/style/14f6777e-1f6e-4b33-a7ed-d89c33f35722",
+  "sourceWebsite": "https://acmecups.nz",
+  "extractedAt": "2026-06-03T19:30:05.260Z",
+  "capturedAt": "2026-10-08T05:08:35.378209+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "editorial ceramics gallery. A stark white-walled room with a single massive black headline and quiet gray dividers, where handmade cups in terracotta, forest, and teal are the only vivid things visible.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d7bc7275-07aa-4432-93b4-2a46c53f6eba.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/42eff21e-b502-4bbf-9ed9-932f8326b461.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/3b44f74f-ec53-4879-bbd9-27ae286204c0.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/bd94e3d2-b03c-4d81-a023-ac1083a7ecfb.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/d68f733e-cc69-46a1-9d5b-600e4bd260b1.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d8a9a0dc9e54ea0b41cab9a9fee25c131776472401fea015b8c18a6d59faafae",
+      "bytes": 18631
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a04796d335c8a580c32c9e454764f94c420b90c2f0490f81f79dc2eda4d6bc13",
+      "bytes": 129571
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "82590869f0c2814aba292e1ec32d56cdc5facec88e33c626ae3ad73ea655bcd2",
+      "bytes": 15931
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "75df9b6b9b4e2cbe62120339ae06608074fd7cf0427b1c291027dc930ec833c4",
+      "bytes": 11015
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7f0102166ed256333a326ba91085541a616980a337f00f2e73556f160e6c1aed",
+      "bytes": 12095
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "da02c3126c835d3a0910bbad1c553477f5abdc005ebc5b3f6cf152f887e5508d",
+      "bytes": 2200
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "eb1964cd0d28d507e99b0233a4b7dca1cae4f694e49d819d2c6e2c5c866779fb",
+      "bytes": 415
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5058d32119ffa889870039a1c81d92ac28b50f52bf3db941f6f42ffc1df40d2c",
+      "bytes": 432
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8e33520b0d5999ad3dfb9f466670ddfd8e25f76bc27cb90d27c578395765e0ac",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "787e5e2bff94bc40a2d0e5b174055b1beec6d5f05c08d44dc7d6c590a1955b3a",
+      "bytes": 43882
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "852176d5695b192e74303ec012e2a321c981a3bef4c1044c90c4db663d872369",
+      "bytes": 23707
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "cd557235a9170f1937d2aebff5267357739ee91bff92efced701ade6ee96edd6",
+      "bytes": 61501
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "73575a2b46aca2700bd8c578f1f523ce80d9bf7da78477f40208280928281c50",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "47f1a14fcfbf0e7d223cd51c726e3200e9a348dc843015c505a52f8d8605d550",
+      "bytes": 1380
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a38d01f8f953bae915173b7ac815e112800d5a8eca7baa871c9216d5425afc3c",
+      "bytes": 1817
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "14f6777e-1f6e-4b33-a7ed-d89c33f35722",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "7cae43cd-dd0e-4658-86e6-d66935cfb213",
+    "8288950a-2731-44fd-85ef-211aecd8091d",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "d7096101-d33c-43b8-8b0b-d9dfff802db2",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268"
+  ]
+}

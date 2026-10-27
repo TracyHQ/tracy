@@ -1,0 +1,286 @@
+{
+  "dos": [
+    "Use 9999px radius for every button, tag, and input — pill geometry is the signature.",
+    "Keep display headlines at Aeonik Pro weight 500, never heavier — authority comes from size, not weight.",
+    "Reserve #1227fd→#6fa0ff gradient exclusively for the top promotional bar; never use it on buttons, cards, or section backgrounds.",
+    "Use #c9c9cd hairlines (1-2px) instead of shadows to separate cards and lists from the page canvas.",
+    "Let full-bleed photography carry all color and atmosphere — keep UI surfaces #ffffff, #f7f7f7, or #1f1f1f.",
+    "Apply tightening tracking at every display size: -0.024em at 88px through -0.010em at 24px, opening only at 12px uppercase (+0.015em).",
+    "Place pricing and conversion sections on #1f1f1f backgrounds with white cards — the dark/light flip is the pricing module's signature."
+  ],
+  "donts": [
+    "Don't introduce new chromatic colors — the palette is 7 neutrals and one blue gradient, and that's the whole system.",
+    "Don't apply shadows to cards or buttons — separation is achieved with #c9c9cd borders and surface color shifts, not elevation.",
+    "Don't use a heading weight above 500 on Aeonik Pro — going to 600/700 breaks the editorial calm.",
+    "Don't place the promo gradient on hero sections, buttons, or product cards — it loses its meaning if it appears more than once per page.",
+    "Don't use square or slightly-rounded corners on primary actions — pills (9999px) are the only acceptable control shape.",
+    "Don't mix Inter and Aeonik Pro at the same size — Aeonik Pro owns 18px and above, Inter owns 16px and below.",
+    "Don't use color to indicate state on neutral surfaces — use opacity shifts and border weight instead (e.g. #1f1f1f at 80% vs 100%)."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1f1f1f",
+      "name": "Ink",
+      "role": "Primary text, footer background, filled dark buttons. The near-black that carries all body and display copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Button text on light surfaces, pure-black background blocks. Used where maximum contrast is required",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bone",
+      "role": "Page canvas, card surfaces, button text on dark fills, button borders on light fills. The dominant surface color across all sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c9c9cd",
+      "name": "Ash Grey",
+      "role": "Hairline borders, disabled dividers, and the dominant link color at 80 occurrences. The neutral that defines edge separation without shadow",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f7f7",
+      "name": "Mist",
+      "role": "List and grouped-background fills — the recessed surface beneath cards, tables, and secondary containers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#717173",
+      "name": "Slate",
+      "role": "Neutral form states, badge text, and quiet UI feedback where color should stay understated.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4c4c4c",
+      "name": "Graphite",
+      "role": "Tertiary body text, inline badge copy, and minor muted surfaces between true ink and slate",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1227fd",
+      "name": "Cobalt Wash",
+      "role": "Promotional bar gradient start. The single chromatic accent in the entire system — only ever appears as part of the blue gradient on top-of-page offer strips",
+      "group": "brand",
+      "gradient": "linear-gradient(to right, rgb(18, 39, 253), rgb(111, 160, 255))"
+    }
+  ],
+  "imagery": "Photography is the primary color source. Hero sections use full-bleed, high-key sky-and-cloud photography — pale blues, whites, and warm skin tones — that acts as the canvas for white display headlines. People are shot close-up, looking off-camera, in soft natural light, with a candid editorial feel rather than staged commercial poses. No decorative graphics, no 3D renders, no illustrations. Icons throughout the product are monochrome line icons at 1.5-2px stroke weight, neutral-colored, never filled with brand color. Award logos in the trust section are full-color third-party brand marks on white. Product UI is shown via iPhone-frame overlays with 22.5px top radius, never as flat screenshots.",
+  "similar": [
+    {
+      "why": "Same full-bleed sky/cloud photography with massive light-weight display headlines overlaid, and the same near-black-on-white editorial restraint",
+      "business": "Apple"
+    },
+    {
+      "why": "Same monochrome fintech language with a single accent color, pill-shaped buttons, and oversized Aeonik-style display type",
+      "business": "Wise (TransferWise)"
+    },
+    {
+      "why": "Same achromatic banking palette and pill-button geometry, though N26 tends to use deeper blacks and heavier contrast",
+      "business": "N26"
+    },
+    {
+      "why": "Same editorial monochrome approach with full-bleed photography carrying all the color, though Cash App uses green as a brand accent where Revolut uses blue",
+      "business": "Cash App"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "22.5px",
+      "lists": "20px",
+      "buttons": "9999px",
+      "smallControls": "12px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Default page background for all editorial and content sections"
+    },
+    {
+      "hex": "#f7f7f7",
+      "name": "Recessed",
+      "level": 1,
+      "purpose": "List groups, grouped backgrounds, secondary containers below cards"
+    },
+    {
+      "hex": "#c9c9cd",
+      "name": "Edge",
+      "level": 2,
+      "purpose": "Hairline dividers and disabled-state borders, not a background"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 3,
+      "purpose": "Card and pricing tier surfaces (visually identical to canvas but defined by radius and border)"
+    },
+    {
+      "hex": "#1f1f1f",
+      "name": "Inverted",
+      "level": 4,
+      "purpose": "Dark section bands, footer, navigation, and filled dark buttons"
+    }
+  ],
+  "northStar": "Monochrome editorial banking on cloud photography — white ink, pill buttons, one blue ribbon of color in an otherwise grayscale world.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 18,
+      "letterSpacing": 0.18
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 22,
+      "letterSpacing": -0.07
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 19.2
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 24
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 28,
+      "letterSpacing": -0.24
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 38,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "heading-lg",
+      "size": 40,
+      "lineHeight": 48,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "display",
+      "size": 52,
+      "lineHeight": 52,
+      "letterSpacing": -0.624
+    },
+    {
+      "role": "display-xl",
+      "size": 88,
+      "lineHeight": 88,
+      "letterSpacing": -2.112
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Button (Light)",
+      "role": "Primary button on light surfaces and hero sections",
+      "description": "White background, #1f1f1f text, #1f1f1f 2px border, 9999px radius, 10px 24px padding. 16px Inter weight 600. The 'Explore Savings' and 'Sign up' variant."
+    },
+    {
+      "name": "Pill Button (Dark)",
+      "role": "Primary button on photo and light hero contexts",
+      "description": "#1f1f1f background, white text, 9999px radius, 0px 20px padding with vertical centering. The 'Download the app' CTA — appears as a solid dark pill that photographs cleanly against sky imagery."
+    },
+    {
+      "name": "Pill Button (Ghost on Photo)",
+      "role": "Secondary action over photographic backgrounds",
+      "description": "rgba(255,255,255,0.1) background, white text, white 1px border, 9999px radius, 10px 24px padding. Glassmorphic treatment for buttons sitting on top of hero photography."
+    },
+    {
+      "name": "Pill Button (Text Link)",
+      "role": "Inline interactive link styled as a button",
+      "description": "Transparent background, #1f1f1f at 80% opacity text, 12px radius, no padding. Smaller interactive elements inside body copy."
+    },
+    {
+      "name": "Promo Gradient Bar",
+      "role": "Top-of-page offer strip",
+      "description": "linear-gradient(to right, #1227fd, #6fa0ff), 16px Inter weight 400 white text, centered. The only chromatic surface in the entire design system. 32-40px tall. Contains an underlined white link."
+    },
+    {
+      "name": "Navigation Header",
+      "role": "Primary site navigation",
+      "description": "Dark #1f1f1f band across the top. White 'Revolut' wordmark left, 16px Inter nav items centered, 'Log in' text + 'Sign up' pill right. Sits above photo heroes without competing with them."
+    },
+    {
+      "name": "Location Selector Pill",
+      "role": "Country/region switcher in the top utility bar",
+      "description": "White background, 9999px radius, country flag emoji + label, 12-16px Inter. Sits inside a white utility strip above the dark nav."
+    },
+    {
+      "name": "Phone Preview Card",
+      "role": "Product screenshot overlay on hero sections",
+      "description": "22.5px top-left/top-right radius, 0px bottom radius. Full-bleed photo behind it, white card overlapping the photo bottom. Internal product UI shows on a clean white surface with a pill label like 'Accounts'."
+    },
+    {
+      "name": "Pricing Tier Card",
+      "role": "Three-column plan comparison on dark background",
+      "description": "White background, 22.5px radius, 24-40px internal padding. Tier name (Aeonik Pro 24px weight 500), price (Aeonik Pro 32px weight 500), description body. Sits on a #1f1f1f section background to maximize card contrast."
+    },
+    {
+      "name": "Trust Badge Block",
+      "role": "Award/social-proof cell in the social proof grid",
+      "description": "Transparent background, centered logo or icon, 12-14px Inter caption below in #717173. Arranged in 3-column or 4-column grids separated by 40-80px gaps."
+    },
+    {
+      "name": "Section Header (Muted)",
+      "role": "Section-level subheading above gridded content",
+      "description": "24-40px Aeonik Pro weight 500, color #717173 (not #1f1f1f). The choice to use slate for section titles instead of ink is deliberate — it creates a calm editorial rhythm between hero and content."
+    },
+    {
+      "name": "List Container",
+      "role": "Grouped content rows (feature lists, FAQ items)",
+      "description": "#f7f7f7 background, 20px radius, 16-24px internal padding. The recessed surface that sits one step below card white."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Marketing display and heading face. Weight 500 across the entire scale — never heavier. Used for hero headlines ('Banking & Beyond' at 88px), section headings, and emphasis paragraphs. The signature choice is that no heading goes bolder than 500: authority comes from size and tracking, not weight.",
+      "sizes": "16, 18, 24, 32, 40, 52, 88",
+      "family": "Aeonik Pro",
+      "weight": "400, 500",
+      "lineHeight": "1.00, 1.17, 1.19, 1.20, 1.33, 1.38",
+      "substitute": "Inter, DM Sans, or Manrope at matching weights",
+      "letterSpacing": "-0.0240em at 88px → -0.0120em at 52px → -0.0100em at 40-24px"
+    },
+    {
+      "role": "Product UI and body face. Carries all buttons, form labels, navigation, badges, and the 16px default body copy. Uppercase 12px labels open to +0.0150em — the only positive tracking in the system, reserved for micro-tags and button labels to add breathing room at small sizes.",
+      "sizes": "12, 14, 16",
+      "family": "Inter",
+      "weight": "400, 600, 700",
+      "lineHeight": "1.20, 1.50, 1.57",
+      "substitute": "System UI sans (already in the design tokens as fallback)",
+      "letterSpacing": "-0.0100em to -0.0050em for body, +0.0150em for uppercase 12px labels"
+    }
+  ],
+  "description": "Revolut runs an editorial-monochrome banking language: the product UI is nearly entirely achromatic — white surfaces, #1f1f1f ink, hairline #c9c9cd dividers — and the entire color budget is outsourced to full-bleed sky photography that washes across hero sections. Aeonik Pro at weight 500 carries every display moment with aggressively tightened tracking (-0.024em at 88px), while Inter at 16px handles all UI density. Controls are exclusively pill-shaped (9999px) in four restrained variants, and the only chromatic element in the entire system is a single blue gradient reserved for the promotional bar. Surfaces prefer to float without shadows — edges do the work that elevation usually would.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #1f1f1f\n- background: #ffffff\n- border: #c9c9cd\n- muted text: #717173\n- recessed surface: #f7f7f7\n- dark surface: #1f1f1f\n- primary action: #1f1f1f (filled action)\n- promo accent: linear-gradient(to right, #1227fd, #6fa0ff)\n\n**Example Component Prompts**\n\n1. **Hero headline overlay**: Full-bleed sky photograph as background. Display headline at 88px Aeonik Pro weight 500, white, letter-spacing -2.112px. Subtext at 18px Aeonik Pro weight 400, white, line-height 24px. Dark pill button below: #1f1f1f background, white text, 9999px radius, 10px 24px padding, 16px Inter weight 600.\n\n2. **Pricing tier card**: Three cards on a #1f1f1f section background. Each card: white background, 22.5px radius, 32px padding. Tier name at 24px Aeonik Pro weight 500 #1f1f1f, price at 32px Aeonik Pro weight 500 #1f1f1f, description at 16px Inter weight 400 #4c4c4c.\n\n3. **Promotional bar**: linear-gradient(to right, #1227fd, #6fa0ff) background, 40px tall, centered. Text: 16px Inter weight 400 white. Underlined white link inline.\n\n4. **Trust badge grid cell**: Transparent background, 40-80px gap to neighboring cells. Logo or icon centered, 12-14px Inter caption below in #717173.\n\n5. **Section header**: 24-40px Aeonik Pro weight 500, color #717173 (not #1f1f1f), centered, max-width 800px. This slate color for section titles is the system's calm editorial signature."
+    },
+    {
+      "title": "Photography Direction",
+      "content": "Full-bleed sky and cloud photography is the only color source in the system. Treatments should follow three rules: (1) high-key, overexposed skies with soft cumulus clouds — never moody or dark, (2) human subjects shot in editorial close-up, looking off-camera, in warm natural daylight, candid rather than posed, (3) crops that leave generous negative space in the upper portion of the frame so white display headlines can sit cleanly on top without competing with the subject. Product UI is never shown as a flat screenshot — it is always inside a white iPhone-frame card with 22.5px top radius, overlapping the bottom edge of the photograph."
+    }
+  ],
+  "elevationPhilosophy": "Revolut's design system deliberately avoids elevation shadows on standard cards and buttons. Surface separation is achieved through three mechanisms instead: (1) color shifts from #ffffff canvas to #f7f7f7 recessed, (2) hairline #c9c9cd 1-2px borders, and (3) full-bleed dark-to-light section bands (#1f1f1f pricing footer under white content). The shadow tokens exist in the system for popovers and modals only."
+}

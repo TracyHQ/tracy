@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ea11696a-17c0-41f8-9b08-c820851e0ea9",
+  "status": "complete",
+  "name": "BlueYard Capital",
+  "url": "https://styles.refero.design/style/ea11696a-17c0-41f8-9b08-c820851e0ea9",
+  "sourceWebsite": "https://www.blueyard.com",
+  "extractedAt": "2026-06-03T20:07:35.302Z",
+  "capturedAt": "2026-10-08T05:19:02.889047+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Sunset editorial observatory. A warm peach horizon bleeds into pure white, one oversized headline floats in the negative space, and a single 3D celestial body hangs below like a planet in a printed monograph.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3f6e6b99-9b09-43f8-bbb0-1509a2c8dbf6.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c7374232-17c4-48c6-8c10-50af27e3e4ec.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/9b88080b-6d84-437f-9a81-e0856c75fd2a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c473eb43-fb07-4749-b8eb-a134b598f77c.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e216ac53-6749-4b89-856f-436bed9c7ed3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7bcfb1a0d0e031f7f1c936bff650bbec4bcae541e0aa3bc7f8326a297fc65eea",
+      "bytes": 18124
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "5610652d71379889e7672be3620ca3119347603564512de5cec2a5d7714bd434",
+      "bytes": 112760
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8202975357ed7eb56338c6aeebf0c207c3025c2b5086fba0f71adf0c762faf25",
+      "bytes": 16456
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e0410ae840e7f2f6ccbc52074c08e19603d122229c2d63342625c3775268c357",
+      "bytes": 8289
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "64d85e49a8ee223c6425ca65079436c689fcdfe340eabe04bfc80b0b4154aa03",
+      "bytes": 11245
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "370d674ab972f6c8cbe092c8381204e036cca460d88adc5754c27de87d282bd3",
+      "bytes": 2727
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2413ebe84c80b8bad06eddb22b93a001eef78ab90a2063f8d8009c71ca159739",
+      "bytes": 438
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "dcf2135e062d0aa226c09997ad0abfe5f79ccbc913e7806da1bcb892a9221efb",
+      "bytes": 455
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "24d31d6a5db01e43fa69dcb9cf1ea9d7a0f34de21c5b17b73691c0c438783453",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "781e5a991da50c6ad5ea62dce16864e12e81c52ba5bec9b93fe2377464ec63e1",
+      "bytes": 42611
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6ce33f124a12cac721a739906f7b9258770e5e6ddf4072df9cf3974b339125a4",
+      "bytes": 22224
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "660f77855f0e739cc90de7be651f122496500196f55c191de027446e4f84d583",
+      "bytes": 34420
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "054cf7aee7c7e74fa28541d63a3383bae010f4be35a6736d5e5e6a426d375d18",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e837fd4525125414d4cc6b4d34d7736d358fcd6361fdea186fa647a19ba4c2b2",
+      "bytes": 1076
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b02fcb3961d828f5decc87fbb77e1749fe82a1555f31df5a3c077b879079f979",
+      "bytes": 1599
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "1f32d914-6fdd-4692-b4fc-fcee2c414766",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3634d5eb-ccfa-4881-b234-3dd735fb7ae4",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "6f365ecd-a040-4533-88c1-3f60fe062632",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8512e28d-5385-4c20-a336-214568c4370c",
+    "8cf4a580-bfb6-4090-a899-f734ffe62370",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "ea11696a-17c0-41f8-9b08-c820851e0ea9",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f9221afc-f5cb-4de8-89cd-40172e765124",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8"
+  ]
+}

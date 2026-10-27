@@ -1,0 +1,22 @@
+meta {
+  name: pages not modified
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}/pages?locale={{locale}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  If-None-Match: {{pagesEtag}}
+}
+
+docs {
+  # 304 when nothing moved
+
+  Sends the `ETag` "pages" answered as `If-None-Match` (run "pages" first). Unchanged site:
+  `304`, no body, the same `ETag`. Changed: the full document with a new one.
+}

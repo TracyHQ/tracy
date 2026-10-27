@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1706-wo-demo-sends-photos",
+  "kind": "fix",
+  "title": "Build it with Tracy sends the place’s own public photos, read from its research rows; a Places resource name is never sent",
+  "pr": 1706,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/tracy-builder",
+  "steps": ["S1: Run the package builder suite (fake Tracy) and the demo-request unit suite."],
+  "expect": ["S1: both pass with 0 failed/skipped; the photo test sends exactly the website photo address."],
+  "selectors": {
+    "door": "POST /api/website-opportunities/:id/tracy/demo",
+    "function": "toDemoRequest in packages/wo/website-opportunities/src/plugins/builders/tracy-request.js",
+    "tool": "tests/regression/scripts/REG-PR-1706-wo-demo-sends-photos.mjs"
+  },
+  "evidence": "Stranger run 25/10/2026: demo dff32d00 (29 website photos stored) sent 0 photos and failed QUICKSTART_PHOTOGRAPHS_REQUIRED",
+  "fence": "Photo addresses in the demo request",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1706-wo-demo-sends-photos.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

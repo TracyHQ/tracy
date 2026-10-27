@@ -1,0 +1,127 @@
+{
+  "$comment": "A fictional content map (an invented bakery, invented people) where every text and image slot carries a slot role and every fact slot a group (ADR 0038).",
+  "roleVocabularyVersion": "place-content-roles/2",
+  "entities": [],
+  "pages": [],
+  "slots": [
+    {
+      "key": "site.name",
+      "type": "text",
+      "sample": "Juniper Crumb Bakery",
+      "maxCharacters": 80,
+      "role": "business.name",
+      "group": { "id": "site.identity.0", "item": 0, "kind": "business" }
+    },
+    {
+      "key": "module-501.0",
+      "type": "text",
+      "sample": "Loaves baked before sunrise",
+      "maxCharacters": 120,
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-501.1",
+      "type": "text",
+      "sample": "Every morning the ovens start at four, so the shelves are full when the doors open.",
+      "maxCharacters": 400,
+      "role": "editorial.paragraph"
+    },
+    {
+      "key": "module-501.2",
+      "type": "text",
+      "sample": "See the bakes",
+      "maxCharacters": 40,
+      "role": "editorial.button_label"
+    },
+    {
+      "key": "module-501.3",
+      "type": "url",
+      "sample": "index.php?Itemid=901",
+      "maxCharacters": 2048
+    },
+    {
+      "key": "menuItem-12.title",
+      "type": "text",
+      "sample": "Our bakes",
+      "maxCharacters": 60,
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-502.0",
+      "type": "image",
+      "sample": "images/demo/flour-dust.jpg",
+      "maxCharacters": 2048,
+      "role": "editorial.decorative_image"
+    },
+    {
+      "key": "module-503.0",
+      "type": "text",
+      "sample": "Rye sourdough",
+      "maxCharacters": 60,
+      "requiresEvidence": true,
+      "role": "offering.name",
+      "group": { "id": "module-503.item.0", "item": 0, "kind": "menu_item" }
+    },
+    {
+      "key": "module-503.1",
+      "type": "text",
+      "sample": "7.50",
+      "maxCharacters": 20,
+      "requiresEvidence": true,
+      "role": "offering.price",
+      "group": { "id": "module-503.item.0", "item": 0, "kind": "menu_item" }
+    },
+    {
+      "key": "module-503.2",
+      "type": "image",
+      "sample": "images/demo/rye.jpg",
+      "maxCharacters": 2048,
+      "role": "offering.image",
+      "group": { "id": "module-503.item.0", "item": 0, "kind": "menu_item" }
+    },
+    {
+      "key": "module-503.3",
+      "type": "text",
+      "sample": "Seeded spelt",
+      "maxCharacters": 60,
+      "requiresEvidence": true,
+      "role": "offering.name",
+      "group": { "id": "module-503.item.1", "item": 1, "kind": "menu_item" }
+    },
+    {
+      "key": "module-503.4",
+      "type": "text",
+      "sample": "6.80",
+      "maxCharacters": 20,
+      "requiresEvidence": true,
+      "role": "offering.price",
+      "group": { "id": "module-503.item.1", "item": 1, "kind": "menu_item" }
+    },
+    {
+      "key": "module-503.5",
+      "type": "text",
+      "sample": "Order this loaf",
+      "maxCharacters": 40,
+      "role": "editorial.button_label",
+      "group": { "id": "module-503.item.1", "item": 1, "kind": "menu_item" }
+    },
+    {
+      "key": "module-504.0",
+      "type": "text",
+      "sample": "The crust crackles exactly the way it should.",
+      "maxCharacters": 300,
+      "requiresEvidence": true,
+      "role": "quote.text",
+      "group": { "id": "module-504.quote.0", "item": 0, "kind": "quote" }
+    },
+    {
+      "key": "module-504.1",
+      "type": "text",
+      "sample": "Wren Halloway",
+      "maxCharacters": 60,
+      "requiresEvidence": true,
+      "role": "quote.author_name",
+      "group": { "id": "module-504.quote.0", "item": 0, "kind": "quote" }
+    }
+  ]
+}

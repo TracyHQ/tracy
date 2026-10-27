@@ -1,0 +1,2108 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "Derived from quickstart/ja-vega/wp7 1.1.4's own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain. A block is found by its metadata.name, never by position.",
+  "entities": [
+    {
+      "key": "option-blogname",
+      "kind": "option",
+      "identity": {
+        "name": "blogname"
+      },
+      "initial": "JA Vega"
+    },
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": {
+        "name": "blogdescription"
+      },
+      "initial": ""
+    },
+    {
+      "key": "page-home",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home"
+      }
+    },
+    {
+      "key": "page-about-us",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "about-us"
+      }
+    },
+    {
+      "key": "page-portfolio",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "portfolio"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "key": "site.name",
+      "entity": "option-blogname",
+      "target": {
+        "option": "blogname"
+      },
+      "type": "text",
+      "sample": "JA Vega",
+      "maxCharacters": 80,
+      "input": "name",
+      "label": "Site name"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": {
+        "option": "blogdescription"
+      },
+      "type": "text",
+      "sample": "",
+      "maxCharacters": 160,
+      "input": "tagline",
+      "label": "Tagline"
+    },
+    {
+      "key": "home.hero.title.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Transforming IT Solutions  for a Digital World",
+      "maxCharacters": 112,
+      "label": "home — hero.title.1"
+    },
+    {
+      "key": "home.hero.desc.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our team of experts is dedicated to providing innovative, reliable, and scalable IT solutions tailored to meet the unique needs of each client.",
+      "maxCharacters": 306,
+      "label": "home — hero.desc.1"
+    },
+    {
+      "key": "home.hero.button.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.button.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Contact Us",
+      "maxCharacters": 80,
+      "label": "home — hero.button.1"
+    },
+    {
+      "key": "home.hero.button.1.url",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.button.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — hero.button.1 (link)"
+    },
+    {
+      "key": "home.hero.button-2.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.button-2.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Services",
+      "maxCharacters": 80,
+      "label": "home — hero.button-2.1"
+    },
+    {
+      "key": "home.hero.button-2.1.url",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.button-2.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — hero.button-2.1 (link)"
+    },
+    {
+      "key": "home.features-intro.title.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "20 Years",
+      "maxCharacters": 80,
+      "label": "home — features-intro.title.1"
+    },
+    {
+      "key": "home.features-intro.desc.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Proven track record",
+      "maxCharacters": 80,
+      "label": "home — features-intro.desc.1"
+    },
+    {
+      "key": "home.features-intro.title.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "20+",
+      "maxCharacters": 80,
+      "label": "home — features-intro.title.2"
+    },
+    {
+      "key": "home.features-intro.desc.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Team Members",
+      "maxCharacters": 80,
+      "label": "home — features-intro.desc.2"
+    },
+    {
+      "key": "home.features-intro.title.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "99%",
+      "maxCharacters": 80,
+      "label": "home — features-intro.title.3"
+    },
+    {
+      "key": "home.features-intro.desc.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Customer Satisfaction",
+      "maxCharacters": 80,
+      "label": "home — features-intro.desc.3"
+    },
+    {
+      "key": "home.features-intro.title.4",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "150+",
+      "maxCharacters": 80,
+      "label": "home — features-intro.title.4"
+    },
+    {
+      "key": "home.features-intro.desc.4",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Completed Projects",
+      "maxCharacters": 80,
+      "label": "home — features-intro.desc.4"
+    },
+    {
+      "key": "home.features-intro.title.5",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.title.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "80%+",
+      "maxCharacters": 80,
+      "label": "home — features-intro.title.5"
+    },
+    {
+      "key": "home.features-intro.desc.5",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.desc.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Client Retention",
+      "maxCharacters": 80,
+      "label": "home — features-intro.desc.5"
+    },
+    {
+      "key": "home.features-intro.section-title",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.section-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "What we do",
+      "maxCharacters": 80,
+      "label": "home — features-intro.section-title"
+    },
+    {
+      "key": "home.features-intro.main-section",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Simplifying IT for a complex world.",
+      "maxCharacters": 90,
+      "label": "home — features-intro.main-section"
+    },
+    {
+      "key": "home.features-intro.description.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Allow us to handle the day-to-day support services, management, and monitoring of your IT, freeing up your internal resources to focus on growing your business.",
+      "maxCharacters": 340,
+      "label": "home — features-intro.description.1"
+    },
+    {
+      "key": "home.features-intro.description.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Properly implemented, managed, and monitored, the right technology can drive significant growth.",
+      "maxCharacters": 212,
+      "label": "home — features-intro.description.2"
+    },
+    {
+      "key": "home.features-intro.description.3",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our experts can identify vulnerabilities, assess risks, and implement robust security measures to protect your systems and data.",
+      "maxCharacters": 276,
+      "label": "home — features-intro.description.3"
+    },
+    {
+      "key": "home.features-intro.description.4",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With our web development services, we can help you create an impactful online presence and effectively reach your target audience.",
+      "maxCharacters": 280,
+      "label": "home — features-intro.description.4"
+    },
+    {
+      "key": "home.features-intro.description.5",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.description.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Leveraging our expertise in various mobile platforms, we can help you develop a customized mobile app that aligns perfectly with your brand and goals.",
+      "maxCharacters": 320,
+      "label": "home — features-intro.description.5"
+    },
+    {
+      "key": "home.features-intro.title.6",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.title.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Database Security",
+      "maxCharacters": 80,
+      "label": "home — features-intro.title.6"
+    },
+    {
+      "key": "home.features-intro.description.6",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.description.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Leveraging our expertise in cloud technologies, we can assist you in identifying the optimal cloud solutions that align with your business needs and objectives.",
+      "maxCharacters": 340,
+      "label": "home — features-intro.description.6"
+    },
+    {
+      "key": "home.testimonials.section-title",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.section-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Testimonials",
+      "maxCharacters": 80,
+      "label": "home — testimonials.section-title"
+    },
+    {
+      "key": "home.testimonials.main-section",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Real Customer Experiences",
+      "maxCharacters": 80,
+      "label": "home — testimonials.main-section"
+    },
+    {
+      "key": "home.testimonials.description.1",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Helped navigate regulatory challenges. Valued advisors for strategic financial decisions.",
+      "maxCharacters": 198,
+      "label": "home — testimonials.description.1"
+    },
+    {
+      "key": "home.testimonials.author-name.1",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.author-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frederic Hill",
+      "maxCharacters": 80,
+      "label": "home — testimonials.author-name.1"
+    },
+    {
+      "key": "home.testimonials.author-position.1",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.author-position.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder & CEO",
+      "maxCharacters": 80,
+      "label": "home — testimonials.author-position.1"
+    },
+    {
+      "key": "home.testimonials.statics-number.1",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.statics-number.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "100%",
+      "maxCharacters": 80,
+      "label": "home — testimonials.statics-number.1"
+    },
+    {
+      "key": "home.testimonials.statics-desc.1",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.statics-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Client satisfaction rate",
+      "maxCharacters": 80,
+      "label": "home — testimonials.statics-desc.1"
+    },
+    {
+      "key": "home.testimonials.description.2",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Stellar support in navigating market complexities. Trusted partners for financial growth.",
+      "maxCharacters": 198,
+      "label": "home — testimonials.description.2"
+    },
+    {
+      "key": "home.testimonials.author-name.2",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.author-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Safaa Sampson",
+      "maxCharacters": 80,
+      "label": "home — testimonials.author-name.2"
+    },
+    {
+      "key": "home.testimonials.author-position.2",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.author-position.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Account Executive",
+      "maxCharacters": 80,
+      "label": "home — testimonials.author-position.2"
+    },
+    {
+      "key": "home.testimonials.statics-number.2",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.statics-number.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$4.8m",
+      "maxCharacters": 80,
+      "label": "home — testimonials.statics-number.2"
+    },
+    {
+      "key": "home.testimonials.statics-desc.2",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.statics-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "In pure profits for our clients",
+      "maxCharacters": 82,
+      "label": "home — testimonials.statics-desc.2"
+    },
+    {
+      "key": "home.testimonials.description.3",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Innovative solutions tailored to our needs. A reliable partner for our financial excellence.",
+      "maxCharacters": 204,
+      "label": "home — testimonials.description.3"
+    },
+    {
+      "key": "home.testimonials.author-name.3",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.author-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brendan Buck",
+      "maxCharacters": 80,
+      "label": "home — testimonials.author-name.3"
+    },
+    {
+      "key": "home.testimonials.author-position.3",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.author-position.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Business Manager",
+      "maxCharacters": 80,
+      "label": "home — testimonials.author-position.3"
+    },
+    {
+      "key": "home.testimonials.statics-number.3",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.statics-number.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "24h",
+      "maxCharacters": 80,
+      "label": "home — testimonials.statics-number.3"
+    },
+    {
+      "key": "home.testimonials.statics-desc.3",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.statics-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Claim resolution time",
+      "maxCharacters": 80,
+      "label": "home — testimonials.statics-desc.3"
+    },
+    {
+      "key": "home.features-intro.info-sub",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.info-sub",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Technology",
+      "maxCharacters": 80,
+      "label": "home — features-intro.info-sub"
+    },
+    {
+      "key": "home.features-intro.info-title",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.info-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Cutting-Edge Technology",
+      "maxCharacters": 80,
+      "label": "home — features-intro.info-title"
+    },
+    {
+      "key": "home.features-intro.info-desc",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.info-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.",
+      "maxCharacters": 268,
+      "label": "home — features-intro.info-desc"
+    },
+    {
+      "key": "home.features-intro.button",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Learn more",
+      "maxCharacters": 80,
+      "label": "home — features-intro.button"
+    },
+    {
+      "key": "home.features-intro.button.url",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.button",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — features-intro.button (link)"
+    },
+    {
+      "key": "home.features-intro.intro-text.1",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.intro-text.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "64+",
+      "maxCharacters": 80,
+      "label": "home — features-intro.intro-text.1"
+    },
+    {
+      "key": "home.features-intro.intro-text.2",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.intro-text.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "89+",
+      "maxCharacters": 80,
+      "label": "home — features-intro.intro-text.2"
+    },
+    {
+      "key": "home.teams.team-title",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.team-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our team",
+      "maxCharacters": 80,
+      "label": "home — teams.team-title"
+    },
+    {
+      "key": "home.teams.team-position.1",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.team-position.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Marketing Director",
+      "maxCharacters": 80,
+      "label": "home — teams.team-position.1"
+    },
+    {
+      "key": "home.teams.team-position.2",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.team-position.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Finance Manager",
+      "maxCharacters": 80,
+      "label": "home — teams.team-position.2"
+    },
+    {
+      "key": "home.teams.team-position.3",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.team-position.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Human Resources Manager",
+      "maxCharacters": 80,
+      "label": "home — teams.team-position.3"
+    },
+    {
+      "key": "home.teams.team-position.4",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.team-position.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Software Engineer",
+      "maxCharacters": 80,
+      "label": "home — teams.team-position.4"
+    },
+    {
+      "key": "home.teams.team-position.5",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.team-position.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Project Management Director",
+      "maxCharacters": 80,
+      "label": "home — teams.team-position.5"
+    },
+    {
+      "key": "home.teams.team-position.6",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.team-position.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Technical Department Head",
+      "maxCharacters": 80,
+      "label": "home — teams.team-position.6"
+    },
+    {
+      "key": "home.articles-category.section-title",
+      "entity": "page-home",
+      "target": {
+        "block": "articles-category.section-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Success Stories",
+      "maxCharacters": 80,
+      "label": "home — articles-category.section-title"
+    },
+    {
+      "key": "home.cta.cta-title",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get started now",
+      "maxCharacters": 80,
+      "label": "home — cta.cta-title"
+    },
+    {
+      "key": "home.cta.cta-desc",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.cta-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Are you ready to book your next shoot?",
+      "maxCharacters": 96,
+      "label": "home — cta.cta-desc"
+    },
+    {
+      "key": "home.cta.item.1",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.item.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Schedule a call",
+      "maxCharacters": 80,
+      "label": "home — cta.item.1"
+    },
+    {
+      "key": "home.cta.item.1.url",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.item.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — cta.item.1 (link)"
+    },
+    {
+      "key": "home.articles-category.title-btn",
+      "entity": "page-home",
+      "target": {
+        "block": "articles-category.title-btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "View all our blog",
+      "maxCharacters": 80,
+      "label": "home — articles-category.title-btn"
+    },
+    {
+      "key": "home.articles-category.title-btn.url",
+      "entity": "page-home",
+      "target": {
+        "block": "articles-category.title-btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home — articles-category.title-btn (link)"
+    },
+    {
+      "key": "about-us.hero.section-title",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.section-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Why us",
+      "maxCharacters": 80,
+      "label": "about-us — hero.section-title"
+    },
+    {
+      "key": "about-us.hero.main-section",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We’re the most trusted IT folks in NY",
+      "maxCharacters": 94,
+      "label": "about-us — hero.main-section"
+    },
+    {
+      "key": "about-us.hero.title.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "1995",
+      "maxCharacters": 80,
+      "label": "about-us — hero.title.1"
+    },
+    {
+      "key": "about-us.hero.desc.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are Founded",
+      "maxCharacters": 80,
+      "label": "about-us — hero.desc.1"
+    },
+    {
+      "key": "about-us.hero.title.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "600+",
+      "maxCharacters": 80,
+      "label": "about-us — hero.title.2"
+    },
+    {
+      "key": "about-us.hero.desc.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Clients Trust Us",
+      "maxCharacters": 80,
+      "label": "about-us — hero.desc.2"
+    },
+    {
+      "key": "about-us.hero.title.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "1,500 Projects\n",
+      "maxCharacters": 80,
+      "label": "about-us — hero.title.3"
+    },
+    {
+      "key": "about-us.hero.desc.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We Have Completed",
+      "maxCharacters": 80,
+      "label": "about-us — hero.desc.3"
+    },
+    {
+      "key": "about-us.hero.title.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Recognized\n",
+      "maxCharacters": 80,
+      "label": "about-us — hero.title.4"
+    },
+    {
+      "key": "about-us.hero.desc.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.desc.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Industry Leader",
+      "maxCharacters": 80,
+      "label": "about-us — hero.desc.4"
+    },
+    {
+      "key": "about-us.hero.bottom-desc",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.bottom-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "With an unwavering passion to help your people succeed, years of technical experience backed by our custom solutions, process and unparalleled customer service, we deliver every time.",
+      "maxCharacters": 386,
+      "label": "about-us — hero.bottom-desc"
+    },
+    {
+      "key": "about-us.hero.title-btn",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.title-btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Get In Touch",
+      "maxCharacters": 80,
+      "label": "about-us — hero.title-btn"
+    },
+    {
+      "key": "about-us.hero.title-btn.url",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.title-btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "about-us — hero.title-btn (link)"
+    },
+    {
+      "key": "about-us.cta.cta-title",
+      "entity": "page-about-us",
+      "target": {
+        "block": "cta.cta-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our core value",
+      "maxCharacters": 80,
+      "label": "about-us — cta.cta-title"
+    },
+    {
+      "key": "about-us.cta.cta-desc",
+      "entity": "page-about-us",
+      "target": {
+        "block": "cta.cta-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Passionate, expert-driven solutions and unmatched service.",
+      "maxCharacters": 136,
+      "label": "about-us — cta.cta-desc"
+    },
+    {
+      "key": "about-us.features-intro.title.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Passionate",
+      "maxCharacters": 80,
+      "label": "about-us — features-intro.title.1"
+    },
+    {
+      "key": "about-us.features-intro.description.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are intensely enthusiastic about providing a superior experience.",
+      "maxCharacters": 156,
+      "label": "about-us — features-intro.description.1"
+    },
+    {
+      "key": "about-us.features-intro.title.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Respectful",
+      "maxCharacters": 80,
+      "label": "about-us — features-intro.title.2"
+    },
+    {
+      "key": "about-us.features-intro.description.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are polite and kind to one another, even when it gets tough.",
+      "maxCharacters": 146,
+      "label": "about-us — features-intro.description.2"
+    },
+    {
+      "key": "about-us.features-intro.title.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Ownership",
+      "maxCharacters": 80,
+      "label": "about-us — features-intro.title.3"
+    },
+    {
+      "key": "about-us.features-intro.description.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We are empowered to do our jobs and work towards a common goal.",
+      "maxCharacters": 146,
+      "label": "about-us — features-intro.description.3"
+    },
+    {
+      "key": "about-us.features-intro.title.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Unified",
+      "maxCharacters": 80,
+      "label": "about-us — features-intro.title.4"
+    },
+    {
+      "key": "about-us.features-intro.description.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "features-intro.description.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "We work as a team and trust each other to create a seamless experience.",
+      "maxCharacters": 162,
+      "label": "about-us — features-intro.description.4"
+    },
+    {
+      "key": "about-us.teams.section-title",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.section-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Our Team",
+      "maxCharacters": 80,
+      "label": "about-us — teams.section-title"
+    },
+    {
+      "key": "about-us.teams.main-section",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Meet the leadership team",
+      "maxCharacters": 80,
+      "label": "about-us — teams.main-section"
+    },
+    {
+      "key": "about-us.teams.title.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.title.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Mat Zalman",
+      "maxCharacters": 80,
+      "label": "about-us — teams.title.1"
+    },
+    {
+      "key": "about-us.teams.team-position.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.team-position.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "CEO",
+      "maxCharacters": 80,
+      "label": "about-us — teams.team-position.1"
+    },
+    {
+      "key": "about-us.teams.title.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.title.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "John Salivan",
+      "maxCharacters": 80,
+      "label": "about-us — teams.title.2"
+    },
+    {
+      "key": "about-us.teams.team-position.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.team-position.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder and Co-President",
+      "maxCharacters": 80,
+      "label": "about-us — teams.team-position.2"
+    },
+    {
+      "key": "about-us.teams.title.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.title.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Megan Palms",
+      "maxCharacters": 80,
+      "label": "about-us — teams.title.3"
+    },
+    {
+      "key": "about-us.teams.team-position.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.team-position.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Marketing Director",
+      "maxCharacters": 80,
+      "label": "about-us — teams.team-position.3"
+    },
+    {
+      "key": "about-us.teams.title.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.title.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Caran Hamilton",
+      "maxCharacters": 80,
+      "label": "about-us — teams.title.4"
+    },
+    {
+      "key": "about-us.teams.team-position.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.team-position.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chief Marketing Officer",
+      "maxCharacters": 80,
+      "label": "about-us — teams.team-position.4"
+    },
+    {
+      "key": "about-us.teams.title.5",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.title.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Caran Hamilton",
+      "maxCharacters": 80,
+      "label": "about-us — teams.title.5"
+    },
+    {
+      "key": "about-us.teams.team-position.5",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.team-position.5",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chief Marketing Officer",
+      "maxCharacters": 80,
+      "label": "about-us — teams.team-position.5"
+    },
+    {
+      "key": "about-us.teams.title.6",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.title.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Caran Hamilton",
+      "maxCharacters": 80,
+      "label": "about-us — teams.title.6"
+    },
+    {
+      "key": "about-us.teams.team-position.6",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.team-position.6",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chief Marketing Officer",
+      "maxCharacters": 80,
+      "label": "about-us — teams.team-position.6"
+    },
+    {
+      "key": "about-us.teams.title.7",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.title.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Caran Hamilton",
+      "maxCharacters": 80,
+      "label": "about-us — teams.title.7"
+    },
+    {
+      "key": "about-us.teams.team-position.7",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.team-position.7",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chief Marketing Officer",
+      "maxCharacters": 80,
+      "label": "about-us — teams.team-position.7"
+    },
+    {
+      "key": "about-us.teams.title.8",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.title.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Caran Hamilton",
+      "maxCharacters": 80,
+      "label": "about-us — teams.title.8"
+    },
+    {
+      "key": "about-us.teams.team-position.8",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.team-position.8",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Chief Marketing Officer",
+      "maxCharacters": 80,
+      "label": "about-us — teams.team-position.8"
+    },
+    {
+      "key": "portfolio.testimonials.section-title",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.section-title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Testimonials",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.section-title"
+    },
+    {
+      "key": "portfolio.testimonials.description.1",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.description.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Helped navigate regulatory challenges. Valued advisors for strategic financial decisions.",
+      "maxCharacters": 198,
+      "label": "portfolio — testimonials.description.1"
+    },
+    {
+      "key": "portfolio.testimonials.author-name.1",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.author-name.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Frederic Hill",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.author-name.1"
+    },
+    {
+      "key": "portfolio.testimonials.author-position.1",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.author-position.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Founder & CEO",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.author-position.1"
+    },
+    {
+      "key": "portfolio.testimonials.statics-number.1",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.statics-number.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "+ 120%",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.statics-number.1"
+    },
+    {
+      "key": "portfolio.testimonials.statics-desc.1",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.statics-desc.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Increase in customer growth rate",
+      "maxCharacters": 84,
+      "label": "portfolio — testimonials.statics-desc.1"
+    },
+    {
+      "key": "portfolio.testimonials.description.2",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.description.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Stellar support in navigating market complexities. Trusted partners for financial growth.",
+      "maxCharacters": 198,
+      "label": "portfolio — testimonials.description.2"
+    },
+    {
+      "key": "portfolio.testimonials.author-name.2",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.author-name.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Safaa Sampson",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.author-name.2"
+    },
+    {
+      "key": "portfolio.testimonials.author-position.2",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.author-position.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Account Executive",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.author-position.2"
+    },
+    {
+      "key": "portfolio.testimonials.statics-number.2",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.statics-number.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "$ 250k",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.statics-number.2"
+    },
+    {
+      "key": "portfolio.testimonials.statics-desc.2",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.statics-desc.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Saved in operational costs",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.statics-desc.2"
+    },
+    {
+      "key": "portfolio.testimonials.description.3",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.description.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Innovative solutions tailored to our needs. A reliable partner for our financial excellence.",
+      "maxCharacters": 204,
+      "label": "portfolio — testimonials.description.3"
+    },
+    {
+      "key": "portfolio.testimonials.author-name.3",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.author-name.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Brendan Buck",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.author-name.3"
+    },
+    {
+      "key": "portfolio.testimonials.author-position.3",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.author-position.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Business Manager",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.author-position.3"
+    },
+    {
+      "key": "portfolio.testimonials.statics-number.3",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.statics-number.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "+ 25%",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.statics-number.3"
+    },
+    {
+      "key": "portfolio.testimonials.statics-desc.3",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.statics-desc.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Increase in company revenue",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.statics-desc.3"
+    },
+    {
+      "key": "portfolio.testimonials.title-btn",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.title-btn",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Read all testimonials",
+      "maxCharacters": 80,
+      "label": "portfolio — testimonials.title-btn"
+    },
+    {
+      "key": "portfolio.testimonials.title-btn.url",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.title-btn",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "portfolio — testimonials.title-btn (link)"
+    },
+    {
+      "key": "home.hero.hero-bg.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.hero-bg.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/bg-1.jpg",
+      "sampleId": 70,
+      "maxCharacters": 255,
+      "label": "home — hero.hero-bg.1"
+    },
+    {
+      "key": "home.hero.avatar.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.avatar.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-5.png",
+      "sampleId": 71,
+      "maxCharacters": 255,
+      "label": "home — hero.avatar.1"
+    },
+    {
+      "key": "home.hero.image-decor.1",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.image-decor.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1-8.jpg",
+      "sampleId": 72,
+      "maxCharacters": 255,
+      "label": "home — hero.image-decor.1"
+    },
+    {
+      "key": "home.hero.image-decor.2",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.image-decor.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-2-6.jpg",
+      "sampleId": 73,
+      "maxCharacters": 255,
+      "label": "home — hero.image-decor.2"
+    },
+    {
+      "key": "home.hero.image-decor.3",
+      "entity": "page-home",
+      "target": {
+        "block": "hero.image-decor.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-3-7.jpg",
+      "sampleId": 74,
+      "maxCharacters": 255,
+      "label": "home — hero.image-decor.3"
+    },
+    {
+      "key": "home.testimonials.section-bg",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/bg-wave-1.jpg",
+      "sampleId": 90,
+      "maxCharacters": 255,
+      "label": "home — testimonials.section-bg"
+    },
+    {
+      "key": "home.testimonials.avatar.1",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.avatar.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1-9.jpg",
+      "sampleId": 91,
+      "maxCharacters": 255,
+      "label": "home — testimonials.avatar.1"
+    },
+    {
+      "key": "home.testimonials.avatar.2",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.avatar.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-2-7.jpg",
+      "sampleId": 92,
+      "maxCharacters": 255,
+      "label": "home — testimonials.avatar.2"
+    },
+    {
+      "key": "home.testimonials.avatar.3",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.avatar.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-3-8.jpg",
+      "sampleId": 93,
+      "maxCharacters": 255,
+      "label": "home — testimonials.avatar.3"
+    },
+    {
+      "key": "home.testimonials.vote-brand",
+      "entity": "page-home",
+      "target": {
+        "block": "testimonials.vote-brand",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/vote.png",
+      "sampleId": 220,
+      "maxCharacters": 255,
+      "label": "home — testimonials.vote-brand"
+    },
+    {
+      "key": "home.features-intro.intro-img",
+      "entity": "page-home",
+      "target": {
+        "block": "features-intro.intro-img",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-5-7.jpg",
+      "sampleId": 76,
+      "maxCharacters": 255,
+      "label": "home — features-intro.intro-img"
+    },
+    {
+      "key": "home.teams.section-bg",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.section-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/bg-wave-1.jpg",
+      "sampleId": 90,
+      "maxCharacters": 255,
+      "label": "home — teams.section-bg"
+    },
+    {
+      "key": "home.teams.img.1",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1-10.jpg",
+      "sampleId": 94,
+      "maxCharacters": 255,
+      "label": "home — teams.img.1"
+    },
+    {
+      "key": "home.teams.img.2",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-2-8.jpg",
+      "sampleId": 95,
+      "maxCharacters": 255,
+      "label": "home — teams.img.2"
+    },
+    {
+      "key": "home.teams.img.3",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.img.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-3-9.jpg",
+      "sampleId": 96,
+      "maxCharacters": 255,
+      "label": "home — teams.img.3"
+    },
+    {
+      "key": "home.teams.img.4",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.img.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-4-8.jpg",
+      "sampleId": 97,
+      "maxCharacters": 255,
+      "label": "home — teams.img.4"
+    },
+    {
+      "key": "home.teams.img.5",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.img.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-6-8.jpg",
+      "sampleId": 98,
+      "maxCharacters": 255,
+      "label": "home — teams.img.5"
+    },
+    {
+      "key": "home.teams.img.6",
+      "entity": "page-home",
+      "target": {
+        "block": "teams.img.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-7-8.jpg",
+      "sampleId": 99,
+      "maxCharacters": 255,
+      "label": "home — teams.img.6"
+    },
+    {
+      "key": "home.clients.client-logo.1",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.client-logo.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1.png",
+      "sampleId": 108,
+      "maxCharacters": 255,
+      "label": "home — clients.client-logo.1"
+    },
+    {
+      "key": "home.clients.client-logo.2",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.client-logo.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-2.png",
+      "sampleId": 109,
+      "maxCharacters": 255,
+      "label": "home — clients.client-logo.2"
+    },
+    {
+      "key": "home.clients.client-logo.3",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.client-logo.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-3.png",
+      "sampleId": 110,
+      "maxCharacters": 255,
+      "label": "home — clients.client-logo.3"
+    },
+    {
+      "key": "home.clients.client-logo.4",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.client-logo.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-4.png",
+      "sampleId": 111,
+      "maxCharacters": 255,
+      "label": "home — clients.client-logo.4"
+    },
+    {
+      "key": "home.clients.client-logo.5",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.client-logo.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-5-1.png",
+      "sampleId": 112,
+      "maxCharacters": 255,
+      "label": "home — clients.client-logo.5"
+    },
+    {
+      "key": "home.clients.client-logo.6",
+      "entity": "page-home",
+      "target": {
+        "block": "clients.client-logo.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-6.png",
+      "sampleId": 113,
+      "maxCharacters": 255,
+      "label": "home — clients.client-logo.6"
+    },
+    {
+      "key": "home.cta.cta-bg",
+      "entity": "page-home",
+      "target": {
+        "block": "cta.cta-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/bg-cta.jpg",
+      "sampleId": 114,
+      "maxCharacters": 255,
+      "label": "home — cta.cta-bg"
+    },
+    {
+      "key": "about-us.hero.image",
+      "entity": "page-about-us",
+      "target": {
+        "block": "hero.image",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-4-7.jpg",
+      "sampleId": 75,
+      "maxCharacters": 255,
+      "label": "about-us — hero.image"
+    },
+    {
+      "key": "about-us.cta.cta-bg",
+      "entity": "page-about-us",
+      "target": {
+        "block": "cta.cta-bg",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/bg-cta.jpg",
+      "sampleId": 114,
+      "maxCharacters": 255,
+      "label": "about-us — cta.cta-bg"
+    },
+    {
+      "key": "about-us.teams.img.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.img.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-8-7.jpg",
+      "sampleId": 100,
+      "maxCharacters": 255,
+      "label": "about-us — teams.img.1"
+    },
+    {
+      "key": "about-us.teams.img.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.img.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-9-1.jpg",
+      "sampleId": 101,
+      "maxCharacters": 255,
+      "label": "about-us — teams.img.2"
+    },
+    {
+      "key": "about-us.teams.img.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.img.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-10.jpg",
+      "sampleId": 102,
+      "maxCharacters": 255,
+      "label": "about-us — teams.img.3"
+    },
+    {
+      "key": "about-us.teams.img.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.img.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-11.jpg",
+      "sampleId": 103,
+      "maxCharacters": 255,
+      "label": "about-us — teams.img.4"
+    },
+    {
+      "key": "about-us.teams.img.5",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.img.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-12.jpg",
+      "sampleId": 104,
+      "maxCharacters": 255,
+      "label": "about-us — teams.img.5"
+    },
+    {
+      "key": "about-us.teams.img.6",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.img.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-13.jpg",
+      "sampleId": 105,
+      "maxCharacters": 255,
+      "label": "about-us — teams.img.6"
+    },
+    {
+      "key": "about-us.teams.img.7",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.img.7",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-14.jpg",
+      "sampleId": 106,
+      "maxCharacters": 255,
+      "label": "about-us — teams.img.7"
+    },
+    {
+      "key": "about-us.teams.img.8",
+      "entity": "page-about-us",
+      "target": {
+        "block": "teams.img.8",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-15.jpg",
+      "sampleId": 107,
+      "maxCharacters": 255,
+      "label": "about-us — teams.img.8"
+    },
+    {
+      "key": "about-us.clients.client-logo.1",
+      "entity": "page-about-us",
+      "target": {
+        "block": "clients.client-logo.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1.png",
+      "sampleId": 108,
+      "maxCharacters": 255,
+      "label": "about-us — clients.client-logo.1"
+    },
+    {
+      "key": "about-us.clients.client-logo.2",
+      "entity": "page-about-us",
+      "target": {
+        "block": "clients.client-logo.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-2.png",
+      "sampleId": 109,
+      "maxCharacters": 255,
+      "label": "about-us — clients.client-logo.2"
+    },
+    {
+      "key": "about-us.clients.client-logo.3",
+      "entity": "page-about-us",
+      "target": {
+        "block": "clients.client-logo.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-3.png",
+      "sampleId": 110,
+      "maxCharacters": 255,
+      "label": "about-us — clients.client-logo.3"
+    },
+    {
+      "key": "about-us.clients.client-logo.4",
+      "entity": "page-about-us",
+      "target": {
+        "block": "clients.client-logo.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-4.png",
+      "sampleId": 111,
+      "maxCharacters": 255,
+      "label": "about-us — clients.client-logo.4"
+    },
+    {
+      "key": "about-us.clients.client-logo.5",
+      "entity": "page-about-us",
+      "target": {
+        "block": "clients.client-logo.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-5-1.png",
+      "sampleId": 112,
+      "maxCharacters": 255,
+      "label": "about-us — clients.client-logo.5"
+    },
+    {
+      "key": "about-us.clients.client-logo.6",
+      "entity": "page-about-us",
+      "target": {
+        "block": "clients.client-logo.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-6.png",
+      "sampleId": 113,
+      "maxCharacters": 255,
+      "label": "about-us — clients.client-logo.6"
+    },
+    {
+      "key": "portfolio.testimonials.avatar.1",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.avatar.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-1-9.jpg",
+      "sampleId": 91,
+      "maxCharacters": 255,
+      "label": "portfolio — testimonials.avatar.1"
+    },
+    {
+      "key": "portfolio.testimonials.avatar.2",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.avatar.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-2-7.jpg",
+      "sampleId": 92,
+      "maxCharacters": 255,
+      "label": "portfolio — testimonials.avatar.2"
+    },
+    {
+      "key": "portfolio.testimonials.avatar.3",
+      "entity": "page-portfolio",
+      "target": {
+        "block": "testimonials.avatar.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/item-3-8.jpg",
+      "sampleId": 93,
+      "maxCharacters": 255,
+      "label": "portfolio — testimonials.avatar.3"
+    }
+  ]
+}

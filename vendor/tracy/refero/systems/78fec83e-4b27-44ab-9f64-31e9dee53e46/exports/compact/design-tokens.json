@@ -1,0 +1,84 @@
+{
+  "color": {
+    "ember-orange": {
+      "$value": "#ff4d00",
+      "$type": "color",
+      "$description": "Ember Orange — Primary action background, accent text, highlight words in headlines, fire icon, active tab underline, badge dots, link strokes — the system's only chromatic signal"
+    },
+    "ember-glow-light": {
+      "$value": "#fcddcc",
+      "$type": "color",
+      "$description": "Ember Glow (light) — Soft orange-tinted shadow halos behind orange buttons and badges, giving them a warm bloom without raising elevation"
+    },
+    "ember-wash-deep": {
+      "$value": "#febec2",
+      "$type": "color",
+      "$description": "Ember Wash (deep) — Secondary warm-tinted shadow wash, used for outer glow rings on highlighted cards and code windows"
+    },
+    "gridline": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Gridline — Dominant hairline border, card outlines, input strokes, code window dividers, grid background lines — the structural skeleton of every screen"
+    },
+    "ink": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Ink — Primary text, heading fills, icon strokes, button text on light surfaces, code text"
+    },
+    "vellum": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Vellum — Page and card background, the softest surface in the stack; inset shadow fields use a vellum-tinted ring to create depth without darkening"
+    },
+    "slate": {
+      "$value": "#727272",
+      "$type": "color",
+      "$description": "Slate — Secondary text, muted body copy, placeholder labels, disabled-state copy"
+    },
+    "graphite": {
+      "$value": "#616161",
+      "$type": "color",
+      "$description": "Graphite — Link text in body copy, supporting paragraphs, slightly lighter than Ink for inline emphasis"
+    },
+    "ash": {
+      "$value": "#949494",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, helper text, subtle icon strokes, caption-tier metadata"
+    },
+    "stone": {
+      "$value": "#c7c7c7",
+      "$type": "color",
+      "$description": "Stone — Placeholder text in inputs and code blocks, very light body text where contrast is deliberately reduced"
+    },
+    "mist": {
+      "$value": "#b5b5b5",
+      "$type": "color",
+      "$description": "Mist — Decorative strokes, faint dividers, background-pattern dots and crosses"
+    },
+    "pebble": {
+      "$value": "#838383",
+      "$type": "color",
+      "$description": "Pebble — Muted button text on neutral surfaces, subtle UI labels"
+    }
+  },
+  "font": {
+    "suisse": {
+      "$value": "Suisse",
+      "$type": "fontFamily",
+      "$description": "Primary interface and headline face. The 450 weight (a custom intermediate between regular and medium) is distinctive — it gives body text a slightly denser feel than a standard 400, and headings carry weight 500 for calm authority rather than boldness. Tracking tightens at display sizes (-0.01em at 60px, -0.005em at 40-52px) and opens slightly (+0.01-0.02em) at caption sizes for legibility."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Code, technical labels, and any developer-facing micro-copy. Used for code blocks, tab labels in code-switcher UI, URL examples, and inline code snippets. Geist Mono's clean monospace geometry pairs with Suisse's humanist proportions without visual conflict."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.firecrawl.dev",
+      "siteName": "Firecrawl",
+      "extractedAt": "2026-06-03T15:14:52.109Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-PR-938-ja-impact-wp7-behaviour-layout-fixes-pending",
+  "itemIds": ["regression:REG-PR-938-ja-impact-wp7-behaviour-layout-fixes"],
+  "requirement": "JA Impact wp7 1.0.4: field focus, forms, drawer, back-to-top and footer icons behave and look like the Joomla source",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-938-ja-impact-wp7-behaviour-layout-fixes.json",
+    "ref": "PR #938 (fix); fix evidence: Sweeps of 05/10/2026 against a local copy of the Joomla source: baseline on the 1.0.3 restore passed 3 of 10 checks (defects in overflow..first-interaction); 1.0.4 on the clean restore passes 10 of 10 with 0 defects",
+    "invariant": "site-sweep: all ten checks pass with 0 defects on every route; the rows the dossier records as decided (D-13, D-27, D-32, D-39, D-43) are listed as not counted, and the not-measured causes recorded as not-measurable (no-counterpart-section, icon-covered, form-purpose-unknown, touch-control-not-found) carry their hand measurement. measure101: TOTAL 39/39 pass.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-PR-938-ja-impact-wp7-behaviour-layout-fixes"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-PR-938-ja-impact-wp7-behaviour-layout-fixes",
+    "pr": 938,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-impact",
+    "file": "tests/regression/cases/REG-PR-938-ja-impact-wp7-behaviour-layout-fixes.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

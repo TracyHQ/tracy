@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6bc9448b-5d39-4aba-9007-25c7a2aedbad",
+  "status": "complete",
+  "name": "Relate dot App",
+  "url": "https://styles.refero.design/style/6bc9448b-5d39-4aba-9007-25c7a2aedbad",
+  "sourceWebsite": "https://relate.app",
+  "extractedAt": "2026-06-03T22:09:31.766Z",
+  "capturedAt": "2026-10-08T05:12:54.967565+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Diversity mosaic behind frosted notes. A wall of color-blocked portraits carries every visual mood the system needs; every UI element is a clean white card or a flat colored chip floating above it.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b88128ed-ebb1-4898-bc1b-c288418bdad9.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6884114dadcbe3f2d9340beed3c9fbd3462cfc5b3f1d541d995a610582e1ae64",
+      "bytes": 21253
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6f7045a4e7c1ab27e03e0a5de7321ce8056bdc892914a9b75397c43e0c69dcef",
+      "bytes": 221590
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ad9b6337fb924c80842381ce09ea66e29ca0ff01f6954aae0f2fbec588225620",
+      "bytes": 17559
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "130198bea00dc9b0ed9036c465e07c6b038ee5bcbed7784f08c1da19e62f7492",
+      "bytes": 12014
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "acc6363aec92556ce22b417d22050cfbd9f4656840cc6f11a7358ad8f5c58816",
+      "bytes": 13354
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "3261d2129889cf969fbd1e3ca41b0503decd5d207460353f98d72e98f6695c9f",
+      "bytes": 3484
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a01264764a9060ac43afcb8650a084fb43297902bc4933b3cb1760649824732f",
+      "bytes": 1025
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7139a5181420d353a31ca5c0da970a2e6127bb832a7efb502f8bddd41c10d2db",
+      "bytes": 1042
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "af63c33a70d4ab5f1c087e5698d4560bc8c7079e1c9b7fa4c88f26217630477d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "48fc64761a0587383c3238b53addbdbc3861b21230da2615f1d4f707fd07bb4e",
+      "bytes": 44071
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5774ebc14228401061ed973775855c12aaec17f648753437d7aa2faed2ae2a45",
+      "bytes": 23065
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "83e9ee67ba8f87a62fb2c242a0522e8ebfdc7c478ac3baaf6c2cc4e5aad4d96d",
+      "bytes": 41712
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6e8aa9402fa87013b08b35ad276deb241c93a3f1dcd59240ad9d61671bcf5a9d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7381ba39f86de76e5c3b4d38b9c037b47dd92caac46871a207e8644e425dcca4",
+      "bytes": 1592
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "da8ea2e181ae8839ef39f8171b0eac7613eab80ac7833e02012cc6c2275ff6f7",
+      "bytes": 2179
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "155dbf6e-1187-424e-9ce8-59ffecff7e6b",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "2b6642d9-fa66-4c06-9804-30f56e544a6d",
+    "337ade6a-4bae-49ba-b4aa-8994ac805a81",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+    "6bc9448b-5d39-4aba-9007-25c7a2aedbad",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "7bbbf1bc-e375-4200-8d71-e373a3c78654",
+    "802bdc0e-ec2e-4d2d-bf5d-de98c0899f66",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "b0d80806-b724-4ed1-a1d1-074edd3c9bc9",
+    "c8c22958-ec50-47f1-aedc-a131d7aeb442",
+    "d7fb1721-1878-4cbb-a24b-051800557c75",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

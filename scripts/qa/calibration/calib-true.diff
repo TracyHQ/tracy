@@ -1,0 +1,11 @@
+diff --git a/apps/tracy-web/src/ops/route.js b/apps/tracy-web/src/ops/route.js
+--- a/apps/tracy-web/src/ops/route.js
++++ b/apps/tracy-web/src/ops/route.js
+@@ -117,6 +117,8 @@ export function opsRoutes(deps) {
+   // Unauthenticated on purpose, same as the Worker's own `/healthz`: an uptime probe is not a
+   // reason to publish who is allowed in. Registered ahead of the door below on purpose too.
++  // Calibration: this door and `GET /api/ui` are the two public read doors an uptime probe may
++  // use; neither needs a cookie.
+   app.get('/ops/healthz', (c) =>
+     c.body('ok\n', 200, { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' })
+   )

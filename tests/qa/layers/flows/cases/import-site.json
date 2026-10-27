@@ -1,0 +1,28 @@
+[
+  {
+    "assertionIds": [],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": true,
+      "mail": false,
+      "model": false,
+      "reads": ["http"],
+      "writes": ["site"]
+    },
+    "id": "QA-FLOWS-import-site-happy-import",
+    "itemIds": ["flow:import-site", "capability:build-a-new-site"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a source site is imported with its content",
+      "ref": "§6 Build a new site",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "ENV: the suite owns no source site to import (tests/e2e-dev/run.mjs marks J2c notCovered)",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Import an existing site — import (happy)",
+    "targets": ["local"]
+  }
+]

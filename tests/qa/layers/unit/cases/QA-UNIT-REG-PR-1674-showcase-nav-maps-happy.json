@@ -1,0 +1,64 @@
+{
+  "id": "QA-UNIT-REG-PR-1674-showcase-nav-maps-happy",
+  "itemIds": ["regression:REG-PR-1674-showcase-nav-maps"],
+  "requirement": "Showcase-navigation maps are current, hide only, and keep the account and search entries of Diner WP and Morgan WP",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1674-showcase-nav-maps.json",
+    "ref": "PR #1674 (feat); fix evidence: Before this change a customer install kept the template's demo navigation; an earlier map of Diner WP and Morgan WP swapped or removed the drawer holding the real Login and Smart Search pages",
+    "invariant": "S1: both exit 0. S2: at least 40 maps found; no operation listed. S3: neither map removes Login or Smart Search; neither repoints or removes a header drawer; each removes at least one link inside its drawer navigation. S4: present.",
+    "productSources": [
+      "packages/fleet/tracy-fleet-operation/scripts/provision/joomla-bootstrap.php:8",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/joomla-contract-fetch.php:22",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/platform/joomla.sh:6",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/platform/wordpress.sh:11",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/provision.sh:23",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/quickstart.py:3"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:1849 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:1852 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:2296 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:61 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-fetch.test.mjs:141 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-fetch.test.mjs:67 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:1073 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:128 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:199 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:200 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:833 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:976 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1674-showcase-nav-maps.mjs:15 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1674-showcase-nav-maps.mjs:18 spawnSync() runs a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1674-showcase-nav-maps.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1674-showcase-nav-maps"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1674-showcase-nav-maps",
+    "pr": 1674,
+    "kind": "feat",
+    "area": "quickstart/showcase-nav",
+    "file": "tests/regression/cases/REG-PR-1674-showcase-nav-maps.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1674-showcase-nav-maps.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

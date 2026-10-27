@@ -1,0 +1,79 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#151619",
+      "$type": "color",
+      "$description": "Ink — Primary text, icon strokes, hairline borders, footer text — the dominant non-background color in the system"
+    },
+    "smoke": {
+      "$value": "#7f8491",
+      "$type": "color",
+      "$description": "Smoke — Secondary/muted text, link text, subdued borders, placeholder labels — recedes so body copy reads first"
+    },
+    "fog": {
+      "$value": "#c8cad0",
+      "$type": "color",
+      "$description": "Fog — Card and component borders, subtle dividers, icon outlines at rest — the default hairline"
+    },
+    "ash": {
+      "$value": "#e1e2e5",
+      "$type": "color",
+      "$description": "Ash — Dividers between sections, secondary surface tint, input borders in resting state"
+    },
+    "mist": {
+      "$value": "#f3f3f5",
+      "$type": "color",
+      "$description": "Mist — Card surfaces, subtle elevated panels, button hover wash, input backgrounds"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, nav background, inverted button text, heading reverse-color treatments"
+    },
+    "charcoal": {
+      "$value": "#25272d",
+      "$type": "color",
+      "$description": "Charcoal — Primary action button fill and border, nav top-strip emphasis — the only dark surface, reserved for CTAs"
+    },
+    "graphite": {
+      "$value": "#363940",
+      "$type": "color",
+      "$description": "Graphite — Nav link text color, slightly lifted from #151619 for a softer navigation feel"
+    },
+    "pewter": {
+      "$value": "#b0b3bb",
+      "$type": "color",
+      "$description": "Pewter — Outlined button border at rest, ghost control stroke"
+    },
+    "signal-green": {
+      "$value": "#059669",
+      "$type": "color",
+      "$description": "Signal Green — Brand logo accent stroke, brand identity marker — vivid green checkmark against monochrome"
+    },
+    "electric-blue": {
+      "$value": "#0560fd",
+      "$type": "color",
+      "$description": "Electric Blue — Brand accent — the gradient highlight on hero keywords; also product UI project bars and chart accents"
+    }
+  },
+  "font": {
+    "sf-pro-display": {
+      "$value": "SF Pro Display",
+      "$type": "fontFamily",
+      "$description": "Headlines and display — used at 80px/700 for the hero, 48–64px/600–700 for section titles, 24–40px/500–600 for subheadings. Weight 700 at extreme size is the signature: massive bold sans against empty white space carries all the visual weight that color would on other sites."
+    },
+    "sf-pro-text": {
+      "$value": "SF Pro Text",
+      "$type": "fontFamily",
+      "$description": "Body, UI labels, buttons, nav links, card content, form fields — the workhorse at 16px/400 for paragraphs, 14px/500 for metadata and labels, 18–20px/600 for emphasized body. The 1.5 line-height at 16px is the default rhythm; tighter 1.2 only appears on compact UI rows."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.hellotime.io",
+      "siteName": "Hellotime",
+      "extractedAt": "2026-06-03T20:50:16.013Z",
+      "variant": "compact"
+    }
+  }
+}

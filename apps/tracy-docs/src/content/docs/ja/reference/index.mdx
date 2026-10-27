@@ -1,0 +1,28 @@
+---
+title: API リファレンス
+description: Tracy API のインタラクティブな OpenAPI リファレンスと、その元となる生のドキュメント — openapi.json、llms.txt、そして Claude Cowork プラグインのドキュメント。
+tableOfContents: false
+---
+
+以下のリファレンスは、`tracy-web` が自身のために構築する OpenAPI 3.1 ドキュメントからライブで描画されるため、
+ルートより遅れることは決してありません。**Test request** は、貼り付けたキーを使って API ホストへ呼び出しを送ります。
+キーはタブ内に留まり、どこにも保存されません。単独で開くには [`/api/reference/`](/api/reference/) を参照してください。
+
+<iframe
+  class="tracy-reference-frame"
+  src="/api/reference/"
+  title="Tracy API reference"
+  loading="lazy"
+></iframe>
+
+## ドキュメント
+
+| | |
+|---|---|
+| [`/api/openapi.json`](/api/openapi.json) | 公開 API の OpenAPI 3.1 ドキュメント。すべてのルート、パラメーター、ボディ、応答、拒否を含みます。`servers[0]` はAPI ホストです。 |
+| [`/api/llms.txt`](/api/llms.txt) | 同じリファレンスを [llms.txt](https://llmstxt.org) 形式のプレーンテキストで、操作ごとに 1 行ずつ、言語モデルが読むためのものです。 |
+| [`/api/claude-cowork.json`](/api/claude-cowork.json) | 顧客の Joomla または WordPress サイト上の Claude Cowork プラグインの HTTP サーフェス（そのアクションドアと `/content.json`）を OpenAPI ドキュメントとして。 |
+
+リファレンスは、各 Apply アクションに必要な **ツールセット**（`content`、`code`、`site`、
+`lifecycle`）と、それに応答するプラグインリリースを示します。これらの列はドア自身のテーブルから来ており、
+そのため[互換性](/ja/reference/compatibility/)ページではなくリファレンス内に置かれています。

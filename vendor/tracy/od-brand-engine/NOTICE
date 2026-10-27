@@ -1,0 +1,70 @@
+@tracy/od-brand-engine
+======================
+
+`src/` and `contracts/` in this package are third-party work, copied VERBATIM from
+
+    OpenDesign — https://github.com/nexu-io/open-design
+    Apache License 2.0 (see the accompanying LICENSE)
+    Copied on 2026-09-06 at commit 3d0d15fc55031e8e6cead709491e7b82565c4dee
+
+    src/                ← apps/daemon/src/brands/{prefetch,seed,provisional,validate,schema,safe-fetch,design-md,fonts,
+                          logo-fallback,imagery-fallback,seed-fallback}.ts (the three *-fallback files copied 06/09, same commit)
+    src/engine/         ← apps/daemon/src/brands/engine/ (seed, derive, palette, kit, build, export, types, artifacts/*, README)
+    contracts/api/      ← packages/contracts/src/api/{brands,connectionTest,app-config,reasoningExecution}.ts
+    contracts/runtime/  ← packages/contracts/src/runtime/html-injection-points.ts
+
+Tracy does NOT modify those files, EXCEPT for the places listed under "Tracy changes in src/engine" below. Updating from
+upstream = copy the whole tree again at a new commit, record it here, then re-apply that section (each place has the word
+`Tracy:` in a comment so it can be grepped).
+
+Tracy changes in src/engine (07/09/2026: "customise the vendored copy so it follows the standard, so every generated
+page is produced the same way"; engine 0.1.5):
+
+  · types.ts     DesignTokens adds `colorPrimaryContrast` (text ON the primary colour: white or black by WCAG
+                 contrast, 3:1 keeps white) and `colorPrimaryInk` (primary USED AS TEXT on the page background: itself
+                 when it reaches 4.5:1, otherwise the darker `colorPrimaryText` step); SeedToken adds
+                 `colorPrimaryContrast?` so a system in the library can feed its `--accent-on` in.
+  · derive.ts    `relativeLuminance`/`contrastRatio`/`onColor`/`inkColor` (exact WCAG arithmetic) and the two tokens
+                 above in the returned table; the seed wins when present.
+  · build.ts     `buildBrandSystem(brand, { seed })` — a seed overlay for callers that know more than Brand.
+  · artifacts/*  54 places: `color:#fff` / `stroke="#fff"` / `rgba(255,255,255,a)` on a primary background →
+                 `var(--brand-color-primary-contrast)` (rgba → `color-mix(... contrast a%, transparent)`);
+                 `color: var(--brand-color-primary)` as text → `--brand-color-primary-ink`; the "inverse" button on a
+                 primary background = a plate in the contrast colour, text in the primary colour.
+  · kit.ts       primary button, tag, pagination, steps: the same rule.
+
+  Measured reason: upstream hard-codes white text on primary; 47/152 systems in the library have an accent that is too
+  light (yellow, cream, pale blue — brutalism, binance, clickhouse, agentic, arc…) so the buttons and eyebrows of the six
+  artifacts lost their text, while that same system's own `components.html` uses `--accent-on` correctly. From now on
+  the six artifacts are readable on all 152 systems and on brands extracted from a URL (with no `--accent-on`, derive
+  picks by itself).
+
+Tracy changes in src/engine (07/09/2026, 22:44: "OpenDesign's branding is still in the footer, replace it with Tracy"):
+
+  · artifacts/_shared.ts  adds `creditHtml(brand)` — the last line of an artifact's footer:
+                          "Designed by Tracy · Inspired by <name>", the name linking to `brand.sourceUrl`. Wrapped in
+                          `<span data-tracy-credit>` because Tracy's text-fill step replaces the brand name in EVERY text
+                          node; unmarked, the page would credit the customer themselves for the design they are borrowing.
+  · landing.ts · form.ts · email.ts · _shared.ts (newsletter)
+                          the four footers that printed `sourceHost(brand)` (giving `opendesign.dev`) switch to `creditHtml`.
+
+  Measured reason: the home page of a customer site printed "© <customer name> · opendesign.dev / Generated brand
+  system" — an address the customer cannot open and a machine-generated line. Tracy's `library-brand.mjs` at the same
+  time changes the `sourceUrl` of the 152 systems to `https://cowork.tracy.ai/design-inspiration/<id>`, so "Inspired by"
+  opens the page that shows that system.
+
+NOT COPIED (deliberately): `index.ts`, `store.ts`, `memory.ts`, `kit-render.ts`, `kit-i18n.ts`, `system.ts`, `design-md-input.ts`
+— they hook into the app's daemon (db, project, transcript) or build prompts for an LLM; Tracy does LLM work through the
+customer's agent in chat (spec-huong-thiet-ke §4f decision 6). Correction 06/09: the three `*-fallback.ts` files do NOT call
+an LLM — they are deterministic harvesters (icon/favicon, og:image + large images, seed CSS) that run before the agent; they
+have been copied and are used in the pipeline.
+
+Tracy only adds, and everything it adds lies OUTSIDE `src/` and `contracts/`:
+
+  · index.ts          — entry point collecting the exports of engine + prefetch + provisional + design-md
+  · tracy-tokens.ts   — maps the engine's 218 `--brand-*` tokens → the 56 `tokens.css` tokens of the 152 systems (spec-brand-engine §3.1)
+  · NOTICE            — this file
+  · tsconfig.dts.json — config that generates `dist/types/*.d.ts` (type declarations only) for plugins consuming `dist/index.js`
+  · dist/             — single-file ESM build + `types/` (scripts/build-od-brand-engine.mjs), alias `@open-design/contracts` → `contracts/`
+
+The only external import at run time: `undici` (fetch with a custom Agent to block SSRF in safe-fetch.ts).

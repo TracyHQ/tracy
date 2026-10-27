@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1251-invitations-send-test",
+  "kind": "feat",
+  "title": "Test sends reach only the server list, are ledgered before one Gmail call, and an unanswered send is reconciled, never resent",
+  "pr": 1251,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the send ledger, config fence and mounted UI suites from this branch against a private PostgreSQL (TEST_DATABASE_URL), with the fake Google in the test that counts every messages.send."
+  ],
+  "expect": [
+    "An approved draft sent to a listed address makes exactly one messages.send; the same requestKey returns the first row with no second call; another payload under it answers REAL_REQUEST_KEY_REUSED.",
+    "Off, an unlisted address, a stale or unapproved draft, a disconnected mailbox and a reached cap are refused before any call.",
+    "A send with no answer is send_unknown; reconcile with no match keeps it unknown; one match makes it sent; the send count stays one.",
+    "A row left in sending while the mailbox lock is free becomes send_unknown with no call; two concurrent sends give one REAL_SEND_BUSY.",
+    "INVITATIONS_SENDING=test reads as off on staging and production and without a list.",
+    "Review content offers only the server list and posts one send per press with the current draft revision."
+  ],
+  "selectors": {
+    "sendTest": "/api/ops/invitations/real/campaigns/:id/recipients/:rid/send-test",
+    "reconcile": "/api/ops/invitations/real/campaigns/:id/sends/:sendId/reconcile",
+    "ledger": "invitations_real_send"
+  },
+  "fence": "Fake Google only; no credential, no real mailbox, no customer address. Private PostgreSQL and a temporary key vault.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-send.test.mjs",
+      "apps/tracy-web/test/config.test.mjs",
+      "packages/web/tracy-harness/test/invitations-real-flow.test.mjs"
+    ],
+    "tests": [
+      "the message is UTF-8 safe, carries managed images inline and refuses header injection",
+      "a test send goes to an allowed address once, is ledgered before the call, and a repeat changes nothing",
+      "only the server-held list, only approved drafts, only a usable mailbox, only within the daily cap",
+      "no answer means unknown, never a second send; reconcile by Message-ID settles it",
+      "a refusal is failed and frees the cap; a row a stopped process left in sending becomes unknown",
+      "two sends at once: one holds the mailbox, the other is told to wait and sends nothing",
+      "over HTTP: the doors exist for owners only, sending reads off by default, and no customer door opens",
+      "test sending opens only where real campaigns run, only with a list, and never on staging or production",
+      "Send a test lists only the server test addresses and sends the approved email once per press"
+    ]
+  }
+}

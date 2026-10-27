@@ -1,0 +1,15 @@
+{
+  "_about": "The two fixed answer sets a live build of Template Customization Question Readiness uses (09/10/2026, L3). FULL answers all seven questions; BLANK answers only the name, so every other part must stay as the template has it. `pages.untick` is resolved per release: the first page of tracy_site_pages.json that has children and that the home page links to, plus one page from a submenu.",
+  "full": {
+    "name": "Tiệm Bánh Tamarind & Co",
+    "logo": { "light": "logo-light.png", "dark": "logo-dark.png" },
+    "favicon": "favicon.png",
+    "about": "Tiệm bánh gia đình ở Dubai, nướng bánh mì sourdough và bánh mì Việt mỗi sáng.",
+    "pages": { "untick": ["first-page-with-children-linked-from-home", "one-submenu-page"] },
+    "languages": ["vi"],
+    "tone": "plain"
+  },
+  "blank": {
+    "name": "Tamarind Bakery"
+  }
+}

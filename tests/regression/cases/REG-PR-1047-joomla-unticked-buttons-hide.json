@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1047-joomla-unticked-buttons-hide",
+  "kind": "fix",
+  "title": "Joomla: a button or link to a page the customer unticked is taken off through empty_links where the plugin reviewed its layout, left and said elsewhere, and never relinked to Contact; every Joomla pin is Claude Cowork 0.24.4",
+  "pr": 1047,
+  "area": "sites/apply",
+  "cms": ["jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node tests/regression/scripts/REG-PR-1047-joomla-unticked-buttons-hide.mjs",
+    "S2: Record every 'ok -' / 'not ok -' line and the last line."
+  ],
+  "expect": [
+    "The script exits 0 and prints ALL CHECKS PASSED.",
+    "brief-joomla.test.mjs is clean and its five link cases pass: reviewed links go in empty_links with nothing sent to the contact page; an unreviewed (or pre-0.24.4) site leaves them and says so; a mix takes off only the reviewed one; a refusal is set aside by name; a link a person changed is left. The seeder's apply-joomla-contract.test.mjs is clean (empty_links alone or beside changes, request id unchanged without it, unmarked link refused before any write). Both quickstarts.json pin only joomla-v0.24.4 for Joomla and are identical."
+  ],
+  "selectors": {
+    "engine": "takeLinksOff, writeContract in apps/tracy-web/src/sites/brief-engines/joomla.js",
+    "seeder": "applyJoomlaContract (mapping.emptyLinks) in packages/cms/tracy-seeder/src/apply-joomla-contract.mjs",
+    "pins": "cowork.version of every joomla entry in apps/tracy-web/src/quickstarts.json and packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json"
+  },
+  "evidence": "08/10/2026: a button to an unticked page is removed, never relinked to Contact. Before this fix, Joomla's moveLinks wrote index.php?Itemid=<contact> into the 404 page's rows into the slide kit and careers page (brief-joomla.test.mjs, module-816.11 / module-816.14). Claude Cowork for Joomla 0.24.4 (stand, Tracy Business j6 1.2.1): emptying the 8 links to /en/services removed the hero button and 'All services', card titles became plain text, revert restored them.",
+  "fence": "Only links into pages the tidy-up took off are touched, and only those inspect marks emptyLink; a link a person changed since the write, a translated copy, or a line the words' write refused is left. The planner's redirect for demo-trim pages is not this case's.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1047-joomla-unticked-buttons-hide.mjs"],
+    "needs": []
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "dd8b7191-a992-4dab-88f8-f67e8819b461",
+  "status": "complete",
+  "name": "Karl",
+  "url": "https://styles.refero.design/style/dd8b7191-a992-4dab-88f8-f67e8819b461",
+  "sourceWebsite": "https://karlgonsalves.com",
+  "extractedAt": "2026-06-03T18:47:28.120Z",
+  "capturedAt": "2026-10-08T05:18:20.882727+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Pop-up storybook diorama on a sunny afternoon",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8ee0045b-c5f4-49e6-9f58-0803fd138356.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e2dc516d-0ff6-4777-aa18-c4fb338ffa27.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/044b5985-502c-4f0c-a910-39d631517bea.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/64de665b-d878-4962-b061-4e8220bb7a4b.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5145a3c7-89d6-466b-8965-3866ffdd5a55.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6bc8845ee6b20e8394b36f1504f4b85087380a0242da135a201da8ceaacd14d3",
+      "bytes": 17658
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6f8a0b7b820ce17f5d6206ac6ded9d97d1e72cef25ed723b3c7dcd8b470b9e50",
+      "bytes": 160107
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e05e6b2a8c629f1c98d4dd79d4b59b824cb671f63462b09943b3faf5f2d32c5f",
+      "bytes": 15545
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f86826bd5f4356690616d80dcad71ef6965b2485c4532389f392cdc5008a1423",
+      "bytes": 5036
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e94dbed4776076481df1e26cd00c1e755e6fb159f857d9a0ee226799b245bd2b",
+      "bytes": 11462
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "0601f94bc7d2ffa7f859627addd8442259914a04a3dae343e8e7591b6f57ee18",
+      "bytes": 2346
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "01f41c42c6fdaec36495b19653611336386c57fb05c1efc32c30bb5a7534f545",
+      "bytes": 453
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f93a9fe1c3299691793e9895e1e8d973747a80e0226d78026d531ef6e62fd3ba",
+      "bytes": 470
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "50025dbd5a635dce44ab132cf13c0365bb38117c84e10407a9abd1d200662165",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8f1c2319ec5494c21aa6539caf253f5383aead6126944dd2aab4f9838b5b9b96",
+      "bytes": 39374
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f1ba25d6cbae6e42ebd5f6a974642afaca4750945b3dfcf53184dd925084eeb0",
+      "bytes": 20133
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ccd4c6649045e955f38858dc988405fe3b69aa50edcac64241dd1f68a561618c",
+      "bytes": 22697
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c211b0fe7fb158e105904111a214a0838e1aff58324bf7dc09853357581409ce",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "534fa358d9f2b79f6b5f67f611cad5915e82b01af6bcf0a5e466a4ff9ccf3d1a",
+      "bytes": 914
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "65855ca52563da956a5dad93d824f90a41b9f0aa2d64550f51a452c6db68211b",
+      "bytes": 1304
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "004f4856-4b01-4c23-a9fb-866303d5013b",
+    "0e8db8d0-4d8f-48ac-a8e7-aaea9601e3ce",
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "14f10100-a102-427a-88d1-7cc80cbb332d",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6d0db1c7-5500-40cd-b2f3-d3d9abbd3a2f",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "8d1b6c70-e045-4ce6-891d-aba5d5c00e0d",
+    "9fe18d8b-58b7-404d-bcc6-9e8a73b8862c",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "b1e82907-d1cf-46cd-8ae7-3561c5b15fd0",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "bb63a015-b018-4bd9-be66-0973ac6be753",
+    "dd8b7191-a992-4dab-88f8-f67e8819b461",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "f1b76a42-050e-4c9e-96e3-a77fbd718c68",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916"
+  ]
+}

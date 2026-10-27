@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1a8ba699-24cb-4b35-8db1-c595c578199c",
+  "status": "complete",
+  "name": "Shopify",
+  "url": "https://styles.refero.design/style/1a8ba699-24cb-4b35-8db1-c595c578199c",
+  "sourceWebsite": "https://shopify.com",
+  "extractedAt": "2026-06-03T16:08:11.792Z",
+  "capturedAt": "2026-10-08T05:08:54.474440+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "midnight bazaar under mint lanterns",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f73c19f1-4da5-4936-a3bc-27bc3a0377c3.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4da87dc7-ecf0-4cd4-b738-f182c857f003.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/fd1befbe-3285-4551-8188-9f4215654a02.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c3d82ba5-f169-4eb7-ab9f-72c1fe7cf6cd.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/559fc862-5528-4ff1-bce7-3001b7372c7c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f71874f4dab6319a386d8dbaa85bd12c5e4cae29e553ba8cdfd38e37566b3cb2",
+      "bytes": 23002
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c9f03c76c593e8547cb67277ace4e71a86f673a89f3b95f34276b960c3595e4f",
+      "bytes": 193385
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b4b19f22699c5517b68233b1449432801ec5b3537c50fccd6ff2c9fe06c61902",
+      "bytes": 18317
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "82b00dd82c331cc3b7f41e0673809b8ad4deece361ee7f5d2ccd4baa7d5339a5",
+      "bytes": 15110
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "bed294c8cbf4f153d1de93ee11caebe20d01cf83210ddf5e3f0e6206b787538b",
+      "bytes": 14178
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "23fb1b4af8f4d44cd767590b61abe1fd91222be9929b1106869c63048d19ba9f",
+      "bytes": 4273
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c278d24f526d08dd46eaa69c39b97558e02156e307fb5f482babe3d0617cd1c5",
+      "bytes": 832
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8eb7a6d3d2c38c35826668667694c21ea0e05195f2e8024dc3ba1406a8ae58e7",
+      "bytes": 1044
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "004dea460d677fe109dce264bb88e3125cebaa70dec58db548ae1ef8069aac67",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8b5487b7dad1094daa3b00642b9409595dc703e435742762139710a807e87c97",
+      "bytes": 47201
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e1dd320c5e7fb0a6875f9285f1711fee1c4bf0d7fa08abf6f5c8c2ddb846b56d",
+      "bytes": 25033
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7cf7a5d619e4e4cc2eddb9127aecdef2ae437a2340a8f5b51e8d8f2653751505",
+      "bytes": 63154
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "edb27bf0234e0b77cecbe2635b0337576c0644eb2a159bd9fe7cc4f45d874a3b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "dfdb771f9c0a79eb196e94ae70fd7d5ff7c0125b5feccf692782b6c3c74a8ead",
+      "bytes": 2650
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5ceed3a4019dbba9a604fbc5f8d0372065ba45020675297fcbd504593f538d2d",
+      "bytes": 3571
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "350b1557-56f0-4361-8c8b-b7a88081982b",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "6f3652cf-583f-411d-a117-3a03f6342917",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "cfab7b43-ed24-41e9-9272-c858700b865b",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f212ff99-24fa-4646-a0f2-46a815736ecd",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a"
+  ]
+}

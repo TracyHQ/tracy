@@ -1,0 +1,8 @@
+/* Quiet by design: the notice must be readable on every page without competing with the footer. */
+.acm-site-notice .tracy-site-notice {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  opacity: 0.72;
+  max-width: 72ch;
+}

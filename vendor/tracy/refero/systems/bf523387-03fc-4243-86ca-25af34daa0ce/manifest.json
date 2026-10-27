@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "bf523387-03fc-4243-86ca-25af34daa0ce",
+  "status": "complete",
+  "name": "Heart Aerospace",
+  "url": "https://styles.refero.design/style/bf523387-03fc-4243-86ca-25af34daa0ce",
+  "sourceWebsite": "https://heartaerospace.com",
+  "extractedAt": "2026-06-03T18:44:12.211Z",
+  "capturedAt": "2026-10-08T05:16:57.723856+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "monumental type drifting through cloud-level gradient skies — the brand reads like an engineering manifesto printed on atmosphere.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/5c9f6d3d-75c4-4476-a2cf-c68a58b24db1.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/38aaa981-6e39-4718-a8e9-cf182bf22b2d.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/d756d57d-1929-4f1a-99f6-89138ded95c7.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/bafb67b2-f6a4-4b94-bfc6-0bc859eb41fb.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/23e307f4-6053-4c1e-a145-73957273defe.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8f01faea332e55be40b85f81a02ca85b7d97907b5ad94e08e754178fe3297f84",
+      "bytes": 17049
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2a83e06bdf4f0e14ab1e28c34a83baa81605f58b71636bb25fe048e2f1a1df31",
+      "bytes": 86372
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "896ec0b433c149f25868e3f3cb4ff701f0333438cc116d160f04efc0c53341c7",
+      "bytes": 14012
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b8a9683797cbb730aa0cc693bbfd045c828ee2e64ec3476b2fd3b31711f56bc4",
+      "bytes": 5401
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f372d1444a3e9e948fa557722a488a73920bb3ac55b3a3ef251b38e2b260ae24",
+      "bytes": 10909
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "fa7f409f1bc3ed956379ee27c81ac73bee0280e74906d6ddb931a775e6de4543",
+      "bytes": 2342
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c319c99f636417abec178ed9d5ffa3efb39987ea5a3dd8dee71e23b1a5a46395",
+      "bytes": 732
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "ee827f00df8a8a0b54ed8686c0b5d52d47e5794b1cecbed0a102d11a93b2da1e",
+      "bytes": 749
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b7fc3c666ff73f0d5695bd761fc6e2d15bff4cfeb871456ca21a41d5aad6f095",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5c0828544360b855a7ace4fee821f9d0c1bf0f66f6fc17efd85bf0c66aa40b79",
+      "bytes": 38843
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "d123ee88dc13a445f57d35980dfe3dfd303a674be793286d5fef32b1eb268e23",
+      "bytes": 20375
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3bef0333ffd1e0afb831b0931998e309656ca8c62c87d092a3da1dec07b5d84f",
+      "bytes": 25234
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7ac42e6390c20b891a7bb57315e99339a21b96ab8d8f22f4c3edf25e441e4180",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0a90b11f258517fee2f54f1be4a1b9fb874b440396014e9ee366d645f92a208b",
+      "bytes": 1195
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9d5ef0f9166c383564b0838f60f4a9ed9781ef2233682372154a5389db72eb37",
+      "bytes": 1636
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "2318d650-b229-4be0-9adc-9f17cecfd253",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "36cba9c4-9852-4f59-a52d-17be741f6ed8",
+    "4433dfe7-315a-4459-bfd7-f59ccdc09bad",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4a248569-2b5a-4416-bb2a-c78890218b9f",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "606d4af9-9d8c-41ea-a122-f515f38f20e5",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6665a3dd-606f-4fd1-80dd-a84e3b3a6226",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "bf523387-03fc-4243-86ca-25af34daa0ce",
+    "c1052d8d-3663-46a4-a882-e50d9b8a1166",
+    "d3289fe7-a85e-42d8-96b7-eb7faa62a104",
+    "f61cf515-ccd5-4494-bdd1-be9fe4d7258c",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

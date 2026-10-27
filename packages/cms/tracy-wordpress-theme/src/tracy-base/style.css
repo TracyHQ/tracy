@@ -1,0 +1,25 @@
+/*
+Theme Name: Tracy Base
+Theme URI: https://tracy.ai
+Update URI: https://github.com/TracyHQ/claude-cowork
+Description: Tracy Base: the reviewed Tracy company site as a WordPress block theme — light and dark, editable sections, and the Airbnb look as a second style.
+Version: 1.1.9
+Author: Tracy
+Author URI: https://tracy.ai
+Requires at least: 7.0
+Tested up to: 7.1
+Requires PHP: 8.1
+Text Domain: tracy-base
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+/*
+Tracy Base WordPress Theme, (C) 2026 Tracy (https://tracy.ai)
+Tracy Base is distributed under the terms of the GNU GPL v2 or later.
+Built from the Tracy block theme generator and the OpenDesign design-system
+library (Apache-2.0, https://github.com/nexu-io/open-design).
+*/
+
+/* The Version line above is rewritten by scripts/build.mjs from package.json.
+ * Styles live in assets/css/ (enqueued by functions.php) and in theme.json. */

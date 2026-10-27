@@ -1,0 +1,70 @@
+{
+  "src": "claude-cowork feat/wp-seo-title-without-plugin 5d05911 (TracyHQ/claude-cowork#119), wordpress/cowork/lib/SeoFields.php TITLE_KEY, DESCRIPTION_KEY, PLUGINS",
+  "todo": "re-pin src and since to the released wordpress-v tag once #119 is released",
+  "since": "0.18.0",
+  "sinceNote": "the first WordPress release carrying #119, proposed number; 0.17.4 and older hold neither key, so nothing prints one",
+  "title": "_claude_cowork_seo_title",
+  "description": "_claude_cowork_seo_description",
+  "printedWhen": "no SEO plugin of `plugins` runs; the title is the whole <title>, the description a <meta name=\"description\"> unless wp_head already printed one",
+  "plugins": [
+    {
+      "id": "yoast",
+      "name": "Yoast SEO",
+      "folders": ["wordpress-seo", "wordpress-seo-premium"],
+      "title": "_yoast_wpseo_title",
+      "description": "_yoast_wpseo_metadesc"
+    },
+    {
+      "id": "rank-math",
+      "name": "Rank Math",
+      "folders": ["seo-by-rank-math", "seo-by-rank-math-pro"],
+      "title": "rank_math_title",
+      "description": "rank_math_description"
+    },
+    {
+      "id": "aioseo",
+      "name": "All in One SEO",
+      "folders": ["all-in-one-seo-pack", "all-in-one-seo-pack-pro"],
+      "title": null,
+      "description": null
+    },
+    {
+      "id": "seopress",
+      "name": "SEOPress",
+      "folders": ["wp-seopress", "wp-seopress-pro"],
+      "title": null,
+      "description": null
+    },
+    {
+      "id": "the-seo-framework",
+      "name": "The SEO Framework",
+      "folders": ["autodescription"],
+      "title": null,
+      "description": null
+    },
+    { "id": "slim-seo", "name": "Slim SEO", "folders": ["slim-seo"], "title": null, "description": null },
+    {
+      "id": "squirrly",
+      "name": "Squirrly SEO",
+      "folders": ["squirrly-seo"],
+      "title": null,
+      "description": null
+    },
+    {
+      "id": "smartcrawl",
+      "name": "SmartCrawl",
+      "folders": ["smartcrawl-seo", "wpmu-dev-seo"],
+      "title": null,
+      "description": null
+    },
+    { "id": "surerank", "name": "SureRank", "folders": ["surerank"], "title": null, "description": null },
+    {
+      "id": "jetpack-seo",
+      "name": "Jetpack SEO",
+      "folders": ["jetpack"],
+      "module": "seo-tools",
+      "title": null,
+      "description": null
+    }
+  ]
+}

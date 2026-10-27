@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "tpl_tracy",
+  "version": "0.1.1",
+  "description": "Web assets of tpl_tracy. The per-design-system token file (media/css/inspirations/<id>.css) is registered at runtime by index.php, after template.tracy, so its :root values win. template.preview is the live-preview agent and declares no dependency for the same reason. template.motion declares no dependency on purpose: in Joomla a dependency activates the asset it names, which would drag tracy.css onto the design pages that deliberately carry none of the template's own styles.",
+  "license": "UNLICENSED",
+  "assets": [
+    {
+      "name": "template.tracy",
+      "type": "style",
+      "uri": "tracy.css"
+    },
+    {
+      "name": "template.layout",
+      "type": "style",
+      "uri": "layout.css",
+      "dependencies": ["template.tracy"]
+    },
+    {
+      "name": "template.sections",
+      "type": "style",
+      "uri": "sections.css",
+      "dependencies": ["template.tracy"]
+    },
+    {
+      "name": "template.motion",
+      "type": "style",
+      "uri": "tracy-motion.css"
+    },
+    {
+      "name": "template.tracy",
+      "type": "script",
+      "uri": "tracy.js",
+      "attributes": { "defer": true }
+    },
+    {
+      "name": "template.motion",
+      "type": "script",
+      "uri": "tracy-motion.js",
+      "attributes": { "defer": true }
+    },
+    {
+      "name": "template.preview",
+      "type": "script",
+      "uri": "tracy-preview.js",
+      "attributes": { "defer": true }
+    },
+    {
+      "name": "template.active",
+      "type": "style",
+      "dependencies": ["template.tracy", "template.layout", "template.sections"]
+    },
+    {
+      "name": "template.active",
+      "type": "script",
+      "dependencies": ["template.tracy"]
+    }
+  ]
+}

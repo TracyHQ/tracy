@@ -1,0 +1,276 @@
+---
+import { getSiteSettings } from "emdash";
+import MetaArrow from "./MetaArrow.astro";
+import Breadcrumbs from "./Breadcrumbs.astro";
+import type { Crumb } from "./Breadcrumbs.astro";
+import { resolveSiteOrigin } from "../utils/site-identity";
+/**
+ * Bravada inner-page header (#header-image-main, fullscreen): every
+ * non-landing page opens on a full-viewport image under the demo's
+ * gradient scrim, with the page title centered in Playfair — its
+ * letters running the same gold break-up animation as the slider —
+ * an optional meta line, and breadcrumbs pinned to the bottom edge.
+ * Pages using it pass overHero to Base so the menu floats on top.
+ */
+interface Props {
+	title: string;
+	/** Small line under the title (entry meta, result counts, …) */
+	subtitle?: string;
+	/**
+	 * The demo's hero "byline" slot (Bravada option
+	 * theme_meta_single_byline): the entry excerpt on posts/pages, the
+	 * term description on archives. Renders only when non-empty,
+	 * mirroring the demo's has_excerpt() gate.
+	 */
+	excerpt?: string | null;
+	/** Visual-editing attributes spread onto the excerpt */
+	excerptAttrs?: Record<string, string>;
+	/** Header image URL; defaults to the demo's lake panorama */
+	image?: string;
+	imageAlt?: string;
+	crumbs?: Crumb[];
+	/**
+	 * Emit BreadcrumbList JSON-LD alongside the chips. See Breadcrumbs
+	 * — off on pages that aren't a real position in the hierarchy.
+	 */
+	crumbSchema?: boolean;
+	/** Visual-editing attributes spread onto the title */
+	titleAttrs?: Record<string, string>;
+}
+
+const DEFAULT_IMAGE = "/images/demo/static.jpg";
+
+const {
+	title,
+	subtitle,
+	excerpt,
+	excerptAttrs = {},
+	image,
+	imageAlt = "",
+	crumbs = [],
+	crumbSchema = true,
+	titleAttrs = {},
+} = Astro.props;
+
+// Admins can swap every inner-page header photo from the admin
+// (Settings → SEO → default OG image); the demo panorama is the
+// fallback when neither a per-page image nor a site default is set.
+const settings = await getSiteSettings();
+const headerImage = image ?? settings?.seo?.defaultOgImage?.url ?? DEFAULT_IMAGE;
+// Resolved here rather than in Breadcrumbs so the settings load once.
+const siteOrigin = resolveSiteOrigin(settings, Astro.url.origin);
+
+// Local /images/demo/*.jpg assets ship pre-built AVIF/WebP siblings
+// (same basename) so the LCP header image can serve a modern format
+// without runtime image processing.
+const heroAvif = headerImage.startsWith("/images/")
+	? headerImage.replace(/\.jpg$/, ".avif")
+	: undefined;
+const heroWebp = headerImage.startsWith("/images/")
+	? headerImage.replace(/\.jpg$/, ".webp")
+	: undefined;
+---
+
+<section class="page-hero full-bleed">
+	{heroAvif && heroWebp ? (
+		<picture>
+			<source srcset={heroAvif} type="image/avif" />
+			<source srcset={heroWebp} type="image/webp" />
+			<img
+				class="page-hero-image"
+				src={headerImage}
+				alt={imageAlt}
+				loading="eager"
+				fetchpriority="high"
+			/>
+		</picture>
+	) : (
+		<img class="page-hero-image" src={headerImage} alt={imageAlt} loading="eager" fetchpriority="high" />
+	)}
+	<div class="page-hero-caption">
+		<div class="page-hero-caption-inside">
+			<slot name="pretitle" />
+			<h1 class="page-hero-title breakup-title" {...titleAttrs}>{title}</h1>
+			{subtitle && <p class="page-hero-sub">{subtitle}</p>}
+			<slot name="meta" />
+			{
+				excerpt && (
+					<p class="page-hero-excerpt" {...excerptAttrs}>
+						{excerpt}
+					</p>
+				)
+			}
+		</div>
+	</div>
+	{/* Theme meta-arrow: the bouncing chevron on every header-image
+	    page, scrolling the reader down to the content */}
+	<MetaArrow targetId="after-page-hero" />
+	{
+		crumbs.length > 0 && (
+			<Breadcrumbs crumbs={crumbs} schema={crumbSchema} siteOrigin={siteOrigin} />
+		)
+	}
+</section>
+{/* Chevron scroll target: offset by the fixed bar's height so the
+    scroll rests with the nav bottom exactly on the hero's last pixel
+    and no content is covered */}
+<span id="after-page-hero" class="after-hero-anchor"></span>
+
+<script>
+	import { initTitleBreakup } from "../utils/breakup-client";
+
+	initTitleBreakup(".page-hero-title");
+
+
+	// cryoutHeaderParallax: as the page scrolls, the scrim deepens
+	// toward black, the caption fades away, and the image crop drifts
+	const hero = document.querySelector<HTMLElement>(".page-hero");
+	const heroImg = hero?.querySelector<HTMLElement>(".page-hero-image");
+	const heroCap = hero?.querySelector<HTMLElement>(".page-hero-caption");
+	const heroCrumbs = hero?.querySelector<HTMLElement>(".page-hero-crumbs");
+	if (hero && heroImg) {
+		const baseOp = 0.6;
+		let ticking = false;
+		const update = () => {
+			ticking = false;
+			const h = heroImg.getBoundingClientRect().height || 1;
+			const ratio = Math.max(0, Math.min(100, (window.scrollY / h) * 100));
+			hero.style.setProperty(
+				"--scrim-op",
+				String(Math.min(1, baseOp + 1.5 * ((ratio * (1 - baseOp)) / 100))),
+			);
+			const fade = String(Math.max(0, 1 - ratio / 100));
+			if (heroCap) heroCap.style.opacity = fade;
+			if (heroCrumbs) heroCrumbs.style.opacity = fade;
+			heroImg.style.objectPosition = `center ${50 + ratio / 2}%`;
+		};
+		window.addEventListener(
+			"scroll",
+			() => {
+				if (!ticking) {
+					ticking = true;
+					requestAnimationFrame(update);
+				}
+			},
+			{ passive: true },
+		);
+		update();
+	}
+</script>
+
+<style>
+	.page-hero {
+		position: relative;
+		overflow: hidden;
+		text-align: center;
+		background-color: var(--tint-slider);
+	}
+
+	.page-hero-image {
+		display: block;
+		width: 100%;
+		/* Theme sizes header images to 100vh — the LARGE viewport on
+		   iOS; lvh matches that on browsers that shrink vh */
+		height: 100vh;
+		height: 100lvh;
+		min-height: 420px;
+		object-fit: cover;
+	}
+
+	/* The demo's blue→umber scrim at 0.6; deepens toward 1 as the
+	   page scrolls (cryoutHeaderParallax) via --scrim-op */
+	.page-hero::after {
+		content: "";
+		position: absolute;
+		z-index: 2;
+		inset: 0;
+		background: linear-gradient(180deg, color-mix(in srgb, var(--ink-band) 82%, var(--accent)) 0%, var(--ink-band) 100%);
+		opacity: var(--scrim-op, 0.6);
+		pointer-events: none;
+	}
+
+	.page-hero-caption {
+		position: absolute;
+		z-index: 3;
+		inset: 0;
+		display: flex;
+		flex-flow: column;
+		justify-content: center;
+		/* Theme #header-page-title: centred in the full image box with
+		   horizontal padding only (padding: 0 2em) */
+		padding: 0 2.5em;
+		color: var(--accent-on);
+	}
+
+	.page-hero-caption-inside {
+		max-width: 85%;
+		margin: 0 auto;
+	}
+
+	.page-hero-title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: clamp(2.5em, 5vw, 5em);
+		line-height: 1.3;
+		font-weight: 700;
+		color: var(--accent-on);
+		opacity: 0;
+		animation: 0.5s 0.25s page-hero-in ease-out forwards;
+	}
+
+	.page-hero-sub {
+		margin: 1.5em auto 0;
+		max-width: 80%;
+		font-size: 1.1em;
+		font-weight: 300;
+		letter-spacing: 1px;
+		opacity: 0;
+		animation: 0.5s 0.5s page-hero-in ease-out forwards;
+	}
+
+	.page-hero-caption-inside :global([slot="meta"]),
+	.page-hero-caption-inside :global(.page-hero-meta) {
+		opacity: 0;
+		animation: 0.5s 0.5s page-hero-in ease-out forwards;
+	}
+
+	/* Demo #header-page-title .byline: the entry excerpt / archive
+	   description, centered under the meta, capped at 70% width and
+	   fading in last (.45s delay in the demo's cascade). */
+	.page-hero-excerpt {
+		max-width: 70%;
+		min-width: 300px;
+		margin: 1.5em auto 1em;
+		font-size: 1em;
+		text-align: center;
+		color: var(--accent-on);
+		opacity: 0;
+		animation: 0.5s 0.65s page-hero-in ease-out forwards;
+	}
+
+	@keyframes page-hero-in {
+		from {
+			opacity: 0;
+			transform: translateX(-40px);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.page-hero-title,
+		.page-hero-sub {
+			animation: none;
+			opacity: 1;
+		}
+	}
+
+	@media (max-width: 800px) {
+		.page-hero-caption {
+			font-size: 0.8em;
+		}
+	}
+</style>

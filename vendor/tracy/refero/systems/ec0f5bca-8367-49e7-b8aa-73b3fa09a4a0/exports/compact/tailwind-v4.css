@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-ink: #303336;
+  --color-paper: #ffffff;
+  --color-mist: #f2f5f7;
+  --color-fog: #838b96;
+  --color-ash: #55606e;
+  --color-smoke: #44474b;
+  --color-silver: #9299a4;
+  --color-pebble: #8e9196;
+  --color-hairline: #dfe3e8;
+  --color-signal-blue: #2576eb;
+  --color-sky-blue: #5c9cf5;
+
+  /* Typography */
+  --font-ui-sans-serif-system-stack-apple-system-blinkmacsystemfont-sf-pro-text-sf-pro-display: 'ui-sans-serif (system stack: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display')', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

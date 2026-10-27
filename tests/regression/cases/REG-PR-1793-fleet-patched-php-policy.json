@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1793-fleet-patched-php-policy",
+  "kind": "fix",
+  "title": "Fleet rejects unpatched PHP bases before compose mutation",
+  "pr": 1793,
+  "area": "fleet/php-security",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the deterministic web image policy tests against this branch.",
+    "Verify both resolution stances, explicit overrides, stale mappings and direct image switches refuse unsupported PHP before writing compose."
+  ],
+  "expect": [
+    "All six policy tests run and pass.",
+    "PHP 8.1 and unpatched Joomla aliases produce no selected image.",
+    "Supported PHP branches retain their exact mappings; refused switches leave compose unchanged."
+  ],
+  "selectors": {
+    "tests": "packages/fleet/tracy-fleet-operation/test/web-image-policy.test.mjs"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/web-image-policy.test.mjs"
+    ],
+    "tests": [
+      "PHP 8.1 is refused for new and existing sites on both PHP platforms",
+      "an explicit image override cannot bypass the PHP 8.1 refusal or silently upgrade it",
+      "a stale mapping cannot resolve a supported request to a PHP 8.1 image",
+      "supported PHP branches still resolve exactly and unsupported 8.1 is absent from the catalogue",
+      "a direct PHP image switch refuses 8.1 before writing compose, including --no-start",
+      "Joomla aliases still on unpatched PHP 8.2.29 are refused without fallback"
+    ]
+  }
+}

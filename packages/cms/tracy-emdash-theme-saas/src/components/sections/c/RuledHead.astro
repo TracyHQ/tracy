@@ -1,0 +1,76 @@
+---
+/**
+ * Hairline + "(01) Title ........ META" row that opens the plans and prose sections.
+ * Every part is optional; the row collapses when a field is empty.
+ */
+import type { Attrs } from '@/lib/stamps'
+
+interface Props {
+  index?: string | null
+  title?: string | null
+  meta?: string | null
+  /** Space under the row before the section body. */
+  gap?: string
+  /** Provenance stamps of the three parts (`src/lib/stamps.ts`); empty on an ordinary request. */
+  marks?: { index?: Attrs; title?: Attrs; meta?: Attrs }
+}
+const { index, title, meta, gap = '28px', marks = {} } = Astro.props
+---
+
+<div class="rh" style={`--rh-gap:${gap}`}>
+	<hr class="rule" />
+	<div class="row">
+		<div class="left">
+			{index && <span class="idx" {...marks.index}>{index}</span>}
+			{title && <h2 class="title" {...marks.title}>{title}</h2>}
+		</div>
+		{meta && <span class="meta" {...marks.meta}>{meta}</span>}
+	</div>
+</div>
+
+<style>
+	.rh {
+		margin-bottom: var(--rh-gap);
+	}
+	.rule {
+		margin: 0 0 14px;
+		border: 0;
+		border-top: 1px solid var(--k-border);
+	}
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 8px 20px;
+	}
+	.left {
+		display: flex;
+		align-items: baseline;
+		gap: 12px;
+		min-width: 0;
+	}
+	.idx {
+		font-family: var(--font-mono);
+		font-size: 14px;
+		line-height: 1.4;
+		color: var(--k-primary);
+	}
+	.title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 24px;
+		line-height: 1;
+		font-weight: 700;
+		letter-spacing: -0.5px;
+		color: var(--k-heading);
+	}
+	.meta {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		line-height: 1.7;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+</style>

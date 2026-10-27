@@ -1,0 +1,222 @@
+{
+  "dos": [
+    "Use Oxblood (#472425) for all display headlines, nav links, and body text — it is the sole chromatic voice",
+    "Set display type at 135–188px in Neue Haas Display weight 400 with -0.025em letter-spacing and 0.86 line-height",
+    "Use SFUIDisplay weight 300 at 11–15px for body and caption copy; reserve weight 400 for navigation and active labels",
+    "Maintain 200px minimum vertical gap between major sections to preserve the editorial gallery rhythm",
+    "Separate content blocks with 1px Oxblood or Carbon hairlines — never with shadows, fills, or rounded containers",
+    "Keep all corners square (0px radius) across cards, buttons, and inputs — the system has no soft edges",
+    "Place the starburst mark once per page in the lower-left zone as a signature element"
+  ],
+  "donts": [
+    "Never introduce a second chromatic color — Oxblood is the only hue, with Crimson reserved exclusively for hover/error states",
+    "Don't use intermediate heading sizes between 27px and 135px — the system jumps from body text to monumental display with nothing in between",
+    "Don't apply box-shadows, glows, or drop effects to any element — hierarchy comes from scale and space, not depth",
+    "Don't round corners on cards, buttons, or images — 0px radius everywhere maintains the editorial sharpness",
+    "Don't use color blocks or filled backgrounds behind text — content sits directly on white with hairline borders at most",
+    "Don't center body copy or long-form text — the layout is flush-left and asymmetric, magazine-spread style",
+    "Don't add decorative gradients, blurs, or atmospheric effects — the visual language is flat, printed, and graphic"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#472425",
+      "name": "Oxblood",
+      "role": "The singular chromatic identity — display headlines, nav links, body text, borders, and the active theme toggle. This muted dark-wine red carries all brand presence; the system is monochrome with this one warm, desaturated red as the only color",
+      "group": "brand"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas and card surfaces. The background that the typography sits on; it reads as gallery white, not pure technical white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Carbon Black",
+      "role": "Secondary text, decorative borders, and structural hairlines. Used as the neutral companion to Oxblood when chromatic emphasis isn't needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#121212",
+      "name": "Graphite",
+      "role": "Tertiary text and body borders. A softer near-black for inline content where pure black feels too harsh",
+      "group": "neutral"
+    },
+    {
+      "hex": "#999999",
+      "name": "Ash",
+      "role": "Muted helper text, the inactive theme toggle label, and low-emphasis annotations",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e73737",
+      "name": "Crimson",
+      "role": "Red outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed editorial spread with no max-width container. The hero is a single screen composed of four zones: nameplate flush-left at 188px occupying the upper-left quadrant; vertical nav stack in the upper-right; a small uppercase manifesto caption in the lower-left; and a 135px role title ('CREATIVE DIRECTOR') flush-left in the lower-right. The composition is deliberately asymmetric — weight is distributed diagonally from upper-left (name) to lower-right (role). Section rhythm is built on 200px vertical gaps with 1px Oxblood hairlines marking transitions. Content blocks stack as full-width bands rather than columns; project work would be a single-column vertical flow. Navigation is minimal text links in the top-right corner, with a typographic theme toggle below. No sticky header, no sidebar, no card grids visible in the hero — the first screen is a typographic poster.",
+  "imagery": "The system is overwhelmingly text-dominant. Imagery is not present in the hero or structural regions — the nameplate and role title ARE the hero. Where project work appears, it will be contained within square-cornered frames bordered by 1px Oxblood hairlines, sitting flush on white. The only decorative graphic is a small radial starburst line illustration in Oxblood, used once as a signature mark. Photography or project visuals, if introduced, should be treated as gallery prints: full-bleed within the card frame, no rounded corners, no overlays, no captions integrated into the image itself.",
+  "similar": [
+    {
+      "why": "Same oversized editorial typography as the sole hero element, single-color brand identity, and aggressive negative space",
+      "business": "Tobias van Schneider"
+    },
+    {
+      "why": "Swiss-poster typographic approach with monumental name-as-headline and minimal color palette",
+      "business": "Pentagram partner sites"
+    },
+    {
+      "why": "Editorial full-bleed spreads with display-scale typography and no card grids or conventional UI chrome",
+      "business": "Locomotive (agency portfolio)"
+    },
+    {
+      "why": "Asymmetric single-screen compositions where the name and role title function as the entire page design",
+      "business": "Arnold St. (creative director portfolio)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "0px",
+      "cards": "0px",
+      "inputs": "0px",
+      "buttons": "0px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "200px",
+    "cardPadding": "12px",
+    "pageMaxWidth": null
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Full-bleed page background — the gallery wall"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 2,
+      "purpose": "Project cards and content blocks sit flush on the same white, separated only by 1px borders in Oxblood or Carbon"
+    }
+  ],
+  "northStar": "Wine-stained editorial gallery — oversized typographic statements floating on a white gallery wall, every mark a deliberate negative space.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "body",
+      "size": 19,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "subheading",
+      "size": 21,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "heading",
+      "size": 27,
+      "lineHeight": 1
+    },
+    {
+      "role": "heading-lg",
+      "size": 135,
+      "lineHeight": 0.86,
+      "letterSpacing": -2.7
+    },
+    {
+      "role": "display",
+      "size": 165,
+      "lineHeight": 0.86
+    }
+  ],
+  "components": [
+    {
+      "name": "Nameplate Headline",
+      "role": "Primary identity statement — the personal name at hero scale",
+      "description": "Neue Haas Display weight 400 at 165–188px, color Oxblood (#472425), letter-spacing -0.025em, line-height 0.86. Sits flush-left at the canvas edge. No other element competes at this scale."
+    },
+    {
+      "name": "Role Display Title",
+      "role": "Professional title, secondary hero element",
+      "description": "Neue Haas Display weight 400 at 135–143px, color Oxblood, letter-spacing -0.020em, line-height 0.86. Mirrors the nameplate in scale and treatment, creating a typographic diptych."
+    },
+    {
+      "name": "Editorial Caption Block",
+      "role": "Small uppercase body annotation — manifesto or description copy",
+      "description": "SFUIDisplay weight 300 at 11–12px, uppercase, color Oxblood, line-height 1.6. Tracks tightly, sits in narrow left-aligned columns beneath or beside the display type. The quiet voice that contrasts the monumental headlines."
+    },
+    {
+      "name": "Top-Right Navigation",
+      "role": "Primary site navigation",
+      "description": "Vertical stack of text links: Home, About, Projects, Awards, Contacts. SFUIDisplay weight 400 at 11–12px, color Oxblood, no bullets, no borders. Right-aligned, floats in the upper-right corner with the theme toggle below."
+    },
+    {
+      "name": "Theme Toggle",
+      "role": "Light/dark mode switcher",
+      "description": "Two stacked labels — DARK THEME (active option in Oxblood or Carbon) and LIGHT THEME (inactive in Ash #999999). SFUIDisplay weight 400 at 8–9px, uppercase. No checkbox, no switch UI — pure typographic toggle."
+    },
+    {
+      "name": "Starburst Mark",
+      "role": "Decorative personal signature",
+      "description": "Small radial line illustration (sun/starburst pattern) in Oxblood, approximately 40px diameter, placed in the lower-left near the editorial caption. The only illustration in the system — a visual autograph."
+    },
+    {
+      "name": "Project Card",
+      "role": "Portfolio work tile",
+      "description": "White surface with 1px border in Oxblood or Carbon Black, 12px internal padding, 0px radius. Image or content fills the frame; the border is the only container treatment. No shadow, no rounded corners."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Structural separation between content blocks",
+      "description": "1px line in Oxblood (#472425) or Carbon (#000000), full-width or section-width. The primary mechanism for breaking up the white canvas."
+    },
+    {
+      "name": "Inline Link",
+      "role": "Navigable text link within body copy",
+      "description": "SFUIDisplay weight 400 at body size, color Oxblood, underline offset 2px or none. No button chrome — links live as chromatic words in a monochrome stream."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The display face used for the nameplate and role titles. Sits at 135–188px with tight negative tracking (-0.025em to -0.020em) — the oversized scale is the signature; there is no intermediate heading tier, just utility text and then this monumental display.",
+      "sizes": "11px, 12px, 15px, 27px, 135px, 143px, 165px, 188px",
+      "family": "Neue Haas Display",
+      "weight": "400",
+      "lineHeight": "0.86–1.00",
+      "substitute": "Inter, Helvetica Neue, or Suisse Int'l at matching weight",
+      "letterSpacing": "-0.0250em at 188px, -0.0200em at 135px"
+    },
+    {
+      "role": "Body and utility type. Weight 300 whispers at body sizes for a quiet, label-like reading voice; weight 400 carries the uppercase tracked annotations (8–12px) that label sections and form microcopy. The narrow range (8–21px) confirms this is a system with two voices: monumental display or quiet label.",
+      "sizes": "8px, 9px, 11px, 12px, 15px, 18px, 19px, 20px, 21px",
+      "family": "SFUIDisplay",
+      "weight": "300, 400",
+      "lineHeight": "1.00–1.60",
+      "substitute": "Inter, SF Pro Text, or system-ui"
+    },
+    {
+      "role": "Rare fallback for button labels where the custom faces aren't available — not a designed choice, a system safety net.",
+      "sizes": "13px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "system-ui"
+    }
+  ],
+  "description": "Leonid Kostetskyi's site is a single-canvas editorial spread: a near-white gallery wall dominated by oversized Neue Haas Display headlines set in a muted dark-wine accent. The system runs on extreme contrast — one chromatic color (#472425, a desaturated oxblood) does all the brand work against pure white, with black and near-black handling secondary text and hairlines. Typography is the product: display faces reach 188px with negative tracking, sitting beside 8–15px uppercase utility labels. Spacing is expansive and editorial, with massive vertical breathing room between elements and no decorative ornamentation beyond one small radial starburst mark. The feel is Swiss-poster meets personal portfolio — confident, restrained, slightly austere, and unmistakably authored.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #472425 (Oxblood — all headings, body, links)\n- background: #ffffff (Paper White — full canvas)\n- border: #472425 or #000000 (1px hairlines only)\n- accent: #472425 (Oxblood — the singular brand color)\n- muted: #999999 (Ash — inactive toggles, helper text)\n- primary action: #472425 (outlined action border)\n\n**Example Component Prompts**\n1. *Create a nameplate headline:* Neue Haas Display weight 400, 188px, color #472425, letter-spacing -4.7px, line-height 0.86. Flush-left, no margin. The text fills the upper-left zone of a full-bleed white canvas.\n\n2. *Create a role display title:* Neue Haas Display weight 400, 135px, color #472425, letter-spacing -2.7px, line-height 0.86. Sits in the lower-right quadrant, flush-left, balancing the nameplate diagonally.\n\n3. *Create an editorial caption block:* SFUIDisplay weight 300, 11px, uppercase, color #472425, line-height 1.6, max-width 180px. Narrow column, flush-left, positioned in the lower-left zone.\n\n4. *Create a vertical navigation stack:* SFUIDisplay weight 400, 11px, color #472425, text-decoration underline, line-height 1.6. Items: Home, About, Projects, Awards, Contacts. Right-aligned, top-right corner of the canvas.\n\n5. *Create a project card frame:* White surface (#ffffff), 1px border in #472425, 12px padding, 0px border-radius. No shadow. Image or content sits flush within the frame against the same white canvas."
+    }
+  ],
+  "elevationPhilosophy": "No shadows. Elevation is expressed through generous negative space and 1px hairline borders in Oxblood or Carbon Black. Cards and content blocks sit flush on the white canvas — the system trusts typography and whitespace to create hierarchy rather than depth."
+}

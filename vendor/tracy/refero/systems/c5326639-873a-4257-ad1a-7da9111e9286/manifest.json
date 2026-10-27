@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c5326639-873a-4257-ad1a-7da9111e9286",
+  "status": "complete",
+  "name": "Wise Design",
+  "url": "https://styles.refero.design/style/c5326639-873a-4257-ad1a-7da9111e9286",
+  "sourceWebsite": "https://wise.design",
+  "extractedAt": "2026-04-11T21:48:17.504Z",
+  "capturedAt": "2026-10-08T05:17:15.610098+00:00",
+  "theme": "mixed",
+  "industry": null,
+  "description": "Neon market stall on a global street — electric lime signage that shouts across a crowded marketplace, then polished product UI slips in behind it.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/92d3a561-64bf-4848-b9b4-85865a58fb02.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/20c65e9a-da33-4c39-990f-c8424ffac086.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/00f1b106-ca8f-4609-bfd9-cd0b90cb177c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b1790f90-62ba-485d-b7db-0c14aaea00d2.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4919eba3-a8ae-43e0-81af-95cf4e2414f2.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "475655d04af735c7c3fb3dfe86d9cf56ecb92593905e804f867e2113fe147afd",
+      "bytes": 22403
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f71844341b2e10bb7fdec95381037ccad7dc3ca681d96967db32df0c07bd98a1",
+      "bytes": 54696
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "7a6e92d8324a7f1495466c14dab314a5ac3d1e9e36985e41bdb43f118a67cc52",
+      "bytes": 31615
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0cd8644d184a8814cd5f41ad6ec1605497c9435487df7a352048ad1620bd8e84",
+      "bytes": 10882
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "2dd96cf7bca97298e8c3cd3ffda0ea7711a0cf24336ae2dca4d537a17a4a1296",
+      "bytes": 12992
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "5784dbc5360b22d9ac0cb075cf2dff3e99ed0d79bbe5e724ac779371ea2949eb",
+      "bytes": 3900
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a7fddd12d8cde890327d36dca3ebd2b9099572a61eb99bd8da890983852e5632",
+      "bytes": 826
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "612162e335ddd0a76da78f6f023360346e88f61cfc0d3999f1e4e460686c6ce1",
+      "bytes": 843
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9720e3ed6555187a833d0306ca79e7a06ab7b774296f2431475c35d6920188e6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5f9254cb776942889678448a824a85d7b8c748699e156a2e8718c459050cc870",
+      "bytes": 51003
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "cf48edd9db53ebba358314ae12ebe3bcb7b6d9d1886a18d682971190796e234b",
+      "bytes": 25468
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "4edec1810c1e633208e3e45d610f4bb349234dfea651314523f41e366296f704",
+      "bytes": 50838
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "82ffc42299e6c2cfb3eb8a98c78c4a96c80b75da196fe269c59d141c063d1536",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ce58b623f06032b05739e8f03c02e770e6a0972232284b0702cec29ea5c9cbaa",
+      "bytes": 1961
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "049968d9d1035be1e41bcf38c45738b255f3b367ae7edbc1fee6734c83059ea6",
+      "bytes": 2395
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "1f32d914-6fdd-4692-b4fc-fcee2c414766",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "b04c379c-7c33-4d69-8882-8d85d7768654",
+    "c5326639-873a-4257-ad1a-7da9111e9286",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "e869e214-f672-4ac3-bfc2-bd25de7b003b",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fa8ecd97-5052-4909-a4b4-50419ad9d00a",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

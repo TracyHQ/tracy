@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1d51a2db-18fc-4de3-bff7-d1e73ace8b6e",
+  "status": "complete",
+  "name": "Dovetail",
+  "url": "https://styles.refero.design/style/1d51a2db-18fc-4de3-bff7-d1e73ace8b6e",
+  "sourceWebsite": "https://dovetail.no",
+  "extractedAt": "2026-06-03T18:20:22.789Z",
+  "capturedAt": "2026-10-08T05:09:05.292338+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Cream-paper editorial magazine on a sunlit table",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b3e6f293-9fd2-4cbf-a6e7-3f782db89f24.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/99ecfce8-059e-40f0-8e46-b01d6e64ff35.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/1ce56527-2b8b-4628-9978-fb0be80f55ff.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/24cca953-ceff-4d94-a50c-542b82766713.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/cd785534-e594-4365-b443-fc63e293c467.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f9ba4b7e7bccb66e70adaec89713082e3248b737997bd766c1db7fa569784fea",
+      "bytes": 17216
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8b7ef2f9b2b09ef86791495f953bcb39aad300baac70d0fa288c647c5c5260e7",
+      "bytes": 99961
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c22e4d56370ab40833f65a1981542ada090bbaf9b6a163e899531ef71f615be7",
+      "bytes": 14910
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2126efac77df847d67a3fb250df2e9c6461a4b222af149088cbf397b433bb425",
+      "bytes": 6705
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b78067c17723338339277657bb0abcac013503d23fec3039d4011eed745f5f86",
+      "bytes": 10663
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "60ac13864bff798a63a2412d2fa59141df2e8c1bef566a99646c32c452576094",
+      "bytes": 1903
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "896e4fc57c5c278f4ba7cb111b5aec5cd74a5558c9d68e4a4a4a644182742b98",
+      "bytes": 322
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "6147b309780a39528c8107ad6fe17ba7f7c36ace5a7560410947c4ef5f5606c3",
+      "bytes": 339
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c1b53def3cc1aa80b49d96bea55aa3ef1d6fd1eefba5183a52999245441e6cd6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "efa35048b98a1e94acaa559fcc127f0870e592aa23bd807fe1abc185c996ea0c",
+      "bytes": 41076
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f99f7fa48840ab17404ec036f1068a77441c02fda01f8249eb5c0786a2db7b9a",
+      "bytes": 21434
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "4c18764bf3d09233f3fbe3329046b30429edae885f44c41741b6041e68da6c35",
+      "bytes": 32014
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a8018a5b787c889b6ada92f9c5f21a62611d8a9ab5c5d1d2b1c49cc2b2c8659a",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b98fd80e1c55beb73c6d44cde14e49d903bc46272e2ed1515956579edd6322dc",
+      "bytes": 1082
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "054ee0e294dab960363f2082a40038de3c07928b5baac2a2a8559df14cf4d1e7",
+      "bytes": 1646
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0f0d4cb7-5109-4e81-8c8d-f6bd0441b27c",
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "1d51a2db-18fc-4de3-bff7-d1e73ace8b6e",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8f42603d-7ff9-446e-99a3-6bdd1f388ae5",
+    "9c92c3d1-a2fe-4a27-a324-826b19501774",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d2e327b2-1181-4203-82a6-2dc15a72078a",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "f1bff240-fa05-41db-9ae1-b165ea6ea2cb",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916"
+  ]
+}

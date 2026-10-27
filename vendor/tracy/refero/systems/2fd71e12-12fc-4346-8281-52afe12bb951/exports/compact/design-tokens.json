@@ -1,0 +1,49 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#fdfdfa",
+      "$type": "color",
+      "$description": "Paper — Page canvas and card surfaces — warm off-white reads as aged paper, not digital white"
+    },
+    "bone": {
+      "$value": "#f5f3ee",
+      "$type": "color",
+      "$description": "Bone — Elevated surface and subtle washes — used for card backgrounds and hover states, one step warmer than canvas"
+    },
+    "ink": {
+      "$value": "#2b2b2e",
+      "$type": "color",
+      "$description": "Ink — Primary text, navigation, borders, and outlined actions — near-black with a warm undertone, never pure #000"
+    },
+    "ash": {
+      "$value": "#bebcb4",
+      "$type": "color",
+      "$description": "Ash — Muted text and secondary borders — warm gray for metadata, subtitles, and hairline dividers"
+    },
+    "pebble": {
+      "$value": "#deddd8",
+      "$type": "color",
+      "$description": "Pebble — Light dividers and structural borders — barely visible rules between sections"
+    },
+    "mist": {
+      "$value": "#d9d7c9",
+      "$type": "color",
+      "$description": "Mist — Form input borders — slightly warmer than pebble to read as a distinct UI surface"
+    }
+  },
+  "font": {
+    "nomen-nescio-custom": {
+      "$value": "Nomen Nescio (custom)",
+      "$type": "fontFamily",
+      "$description": "Single-weight display and body sans-serif — a monoline custom face used for every text element on the site. No bold, no light, no italic variants exist; hierarchy is achieved through size and negative letter-spacing only. Substitutes with a similar monoline character: 'Neue Haas Grotesk Display Pro' or 'Söhne' at weight 400."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://nomennescio.fi",
+      "siteName": "Nomen Nescio",
+      "extractedAt": "2026-06-03T20:36:39.025Z",
+      "variant": "compact"
+    }
+  }
+}

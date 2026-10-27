@@ -1,0 +1,89 @@
+{
+  "color": {
+    "buttercream": {
+      "$value": "#fef9e6",
+      "$type": "color",
+      "$description": "Buttercream — Page canvas, card surfaces, light text on dark — the warm cream ground that unifies the entire site"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, hairlines, card borders, outlined button borders, link strokes — the only structural non-cream color in the neutral stack"
+    },
+    "carbon": {
+      "$value": "#060606",
+      "$type": "color",
+      "$description": "Carbon — Near-black surface for dark cards, filled button background, nav strip — slightly softer than pure ink for large fills"
+    },
+    "driftwood": {
+      "$value": "#c7c3b4",
+      "$type": "color",
+      "$description": "Driftwood — Muted hairline borders on cards and lists, warm gray that sits between buttercream and ink without breaking the warmth"
+    },
+    "stone": {
+      "$value": "#8d8b80",
+      "$type": "color",
+      "$description": "Stone — Secondary card text and tertiary borders — the warm mid-gray for de-emphasized copy"
+    },
+    "amber-pulse": {
+      "$value": "#fdc331",
+      "$type": "color",
+      "$description": "Amber Pulse — First sunset band (Font Generator) — warm yellow stripe signaling the start of the category stack"
+    },
+    "ember-glow": {
+      "$value": "#fe5722",
+      "$type": "color",
+      "$description": "Ember Glow — Second sunset band (Cool Symbols) — saturated orange that pushes the stack hotter"
+    },
+    "signal-red": {
+      "$value": "#f0353c",
+      "$type": "color",
+      "$description": "Signal Red — Third sunset band (Name Generator) — true red midway through the gradient"
+    },
+    "merlot-depth": {
+      "$value": "#b4213d",
+      "$type": "color",
+      "$description": "Merlot Depth — Fourth sunset band (Emoticons) — deep crimson cooling the stack"
+    },
+    "plum-shadow": {
+      "$value": "#671c3b",
+      "$type": "color",
+      "$description": "Plum Shadow — Fifth sunset band (PFP Maker) — the darkest plum, the bottom of the heat-map"
+    }
+  },
+  "font": {
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "neue-machina": {
+      "$value": "Neue Machina",
+      "$type": "fontFamily",
+      "$description": "Display and wordmark only — the 120px hero at line-height 0.75 creates the condensed, monumental block that defines the brand. Tighter than default, almost stack-cut. Used for the GL YPHY logotype and section display headlines."
+    },
+    "system85": {
+      "$value": "System85",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body sans — handles nav links, button labels, card text, section headers, and list items. The workhorse family covering 90% of text."
+    },
+    "pixel-m-plus-10": {
+      "$value": "Pixel M Plus 10",
+      "$type": "fontFamily",
+      "$description": "Japanese pixel-font eyebrows above English headlines (フォント, シンボル, グリフィー) and occasional decorative bits — a deliberate retro-arcade accent that contrasts the modern grotesque body face"
+    },
+    "system85-mono": {
+      "$value": "System85 Mono",
+      "$type": "fontFamily",
+      "$description": "Card labels and small metadata (Font Generator, Instagram Fonts captions) — monospace signals data/specimen identity"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://glyphy.io",
+      "siteName": "Glyphy",
+      "extractedAt": "2026-06-03T20:26:35.703Z",
+      "variant": "compact"
+    }
+  }
+}

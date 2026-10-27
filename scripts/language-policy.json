@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "translations": [
+    {
+      "path": "apps/tracy-web/src/lib/i18n/locales/*.json",
+      "reason": "Product interface translation dictionaries; values are localized text."
+    },
+    {
+      "path": "packages/web/tracy-harness/src/i18n/locales/*/*.json",
+      "reason": "Ops interface translation dictionaries; values are localized text."
+    },
+    {
+      "path": "packages/locale/tracy-i18n/src/locales/*.json",
+      "reason": "Shared interface translation dictionaries; values are localized text."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/translations/*/*/*/*.json",
+      "reason": "CMS content translations; explanatory README files are not translation data."
+    }
+  ],
+  "lines": [],
+  "objects": []
+}

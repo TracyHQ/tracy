@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-927-focus-no-halo",
+  "kind": "fix",
+  "title": "Focus draws one 1px stroke, never a halo, on Tracy surfaces",
+  "pr": 927,
+  "area": "design/focus",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test, run: git grep -nE \"(focus|focus-visible|focus-within):ring-(2|3|\\[)|ring-ring/|:focus[^{]*\\{[^}]*box-shadow: *0 0 0 [2-9]px\" -- packages apps ':!packages/cms' ':!**/dist/**' ':!**/test/**' ':!packages/**/lib/**' and record HALO = its stdout lines.",
+    "S2: Run: git grep -nE \":focus[^{]*\\{[^}]*outline: ?[2-9]px\" -- packages/site/tracy-site-tabs/src apps/tracy-web/src/lib/page-shell.js and record THICK = its stdout lines.",
+    "S3: Read packages/site/tracy-site-tabs/lib/client.js and record FIELD = every substring matching /tv-team-field:focus-within ?\\{[^}]*\\}/g; read packages/brand/tracy-brand/lib/client.js and record THUMB = every substring matching /aria-pressed=\\\\?\"true\\\\?\"\\]:focus-visible \\.tb-pv \\{[^}]*\\}/g.",
+    "S4: node --input-type=module -e \"import {loginPage} from './apps/tracy-web/src/identity/pages.js'; const h=loginPage({}); process.stdout.write(typeof h==='string'?h:await h.text())\" and record LOGIN = the output; record RING = whether LOGIN contains 'box-shadow:0 0 0 1px var(--ring)', AUTH = whether LOGIN contains '.auth-card input:focus-visible'."
+  ],
+  "expect": [
+    "HALO is empty (pre-fix: the Invite people field rule, the theme thumbnail rule, ChatPane ring-3 ring-ring/50, sidebar focus-visible:ring-2).",
+    "THICK is empty (pre-fix: six 2px outlines in site-tabs-rules.css, three in page-shell.js).",
+    "FIELD is non-empty and no entry contains 'box-shadow' (pre-fix: 'box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 18%, transparent)').",
+    "THUMB is non-empty and no entry contains 'box-shadow' (pre-fix: 'box-shadow: 0 0 0 5px ...').",
+    "RING === false and AUTH === true (pre-fix: true and false; .auth-card input overrode the focus border colour)."
+  ],
+  "selectors": {
+    "inviteField": ".tracy-site-tabs.tv-team-dialog .tv-team-field",
+    "themeThumb": ".tb-th[aria-pressed='true'] .tb-pv",
+    "loginEmail": ".auth-card input[type=email]"
+  },
+  "evidence": "Screenshot 05/10/2026 of the Invite people Emails field; measured on cowork.tracy.site: box-shadow oklab(0.588 0.108 0.083 / 0.18) 0 0 0 3px on focus.",
+  "fence": "DESIGN.md section 5 rule and grep; CSS in tracy-site-tabs site-tabs-rules.css, tracy-brand styles.ts, apps/tracy-web page-shell.js, tracy-ui sidebar.tsx.",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-PR-927-focus-no-halo.mjs"] }
+}

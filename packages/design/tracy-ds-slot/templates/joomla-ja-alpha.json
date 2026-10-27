@@ -1,0 +1,322 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-alpha",
+  "release": "quickstart/ja-alpha/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.text-white",
+    "body": "p.pr-sm-3",
+    "button-primary": "a.video-btn-115",
+    "container": "div.container",
+    "section": "#t4-section-1"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 56px",
+    "displayFace": "Archivo 700, tracking 0em",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(236, 78, 79)",
+    "container": "first content container, max-width 1260px",
+    "section": "first padded full-width section, padding-top 108px"
+  },
+  "keepScopes": [
+    ".t4-palette-mainnav",
+    ".t4-footnav",
+    ".t4-footer",
+    ".acm-cta",
+    "#t4-copyright",
+    ".ja-masthead"
+  ],
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#585858",
+    "--fg-2": "#3f3836",
+    "--accent": "#ec4e4f",
+    "--accent-hover": "#d60808",
+    "--surface": "#f8f9fa",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#ebebeb",
+    "--muted": "#585858",
+    "--font-display": "\"Archivo\", sans-serif",
+    "--font-body": "\"Archivo\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#585858",
+      "fg-2": "#3f3836",
+      "accent": "#ec4e4f",
+      "accent-hover": "#d60808",
+      "surface": "#f8f9fa",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#ebebeb",
+      "muted": "#9e9e9e"
+    },
+    {
+      "bg": "#ec4e4f",
+      "fg": "#ffffff",
+      "muted": "#585858",
+      "fg-2": "#ffffff",
+      "accent": "#ec4e4f",
+      "accent-on": "#ffffff",
+      "surface-warm": "#ffffff"
+    },
+    {
+      "accent": "#ec4e4f"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#fafafa",
+      "border": "#e9e9e9"
+    },
+    {
+      "surface": "#fff7f5"
+    },
+    {
+      "surface": "#f2f2f2"
+    },
+    {
+      "surface": "#eaedf1"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (87 line colours, 114 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.text-white",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.video-btn-115"],
+    "buttonPrimary": [".btn-primary", "a.video-btn-115"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["#t4-section-1"],
+    "bodyFace": ["body"],
+    "onAccent": [".t4-palette-primary .features-more", ".bg-primary", ".category-name a"],
+    "inkImages": [".acm-clients .client-img img"],
+    "eyebrow": [".sub-heading", ".hero-sub-title"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section p, .t4-section li",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 16 tried (byte 7165); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#fafafa",
+      "uses": 23,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 2
+    },
+    {
+      "hex": "#fff7f5",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 9
+    },
+    {
+      "hex": "#e9e9e9",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#ebebeb",
+      "distance": 3
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 12
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 21
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepNote": "kept after measuring 11/10/2026: the header (.t4-palette-mainnav: T4's generated nav colours are !important literals) and the dark footer, call to action and copyright bands (#2a2a2a), each with its own text colour (keepColors); 15/10/2026 (v10 inner measure, /index.php/services): the inner pages' page-title band (.ja-masthead: the photo bg-masthead.jpg under a dark veil) is kept as a picture band: the release tokenized its white title and breadcrumb as the page text (var(--ds-c-fg, #fff)), so they followed the system onto the dark photo: Stripe's #445465 at 1.06-2.28:1 and Moxie's #b7b39f at 3.82:1 where the template's white reads 8.23-17.04:1 (title, breadcrumb, desktop and phone). Inside the kept band the white comes back; the photo is the template's under every system",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-alpha/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip, T4 writing media/t4/css again from the tokenized style template: tasks/evidence/ds-contracts-r3b-2026-10-11/templates/ja-alpha-j6): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 85% or more of the page follows; round 1's 26 worse texts were the light #fff7f5 cards (the template's own --primary_light, now a surface), T4's red palette band and Bootstrap's .bg-primary bands with their text, and the dark call-to-action and copyright bands (kept); the header (T4 mainnav palette, its links !important from T4's generated pattern CSS) and the dark footer stay the template's own; checked by eye on the four systems' screenshots, desktop and phone. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 86% or more of the page follows, every contrast kind sampled at 1440 and 390; the dark client-story counter card (#3F3836, white text) follows as the page's inverse (followRules); checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-alpha-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-alpha 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 86-99% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-alpha-j6",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-fg)",
+    "--primary_light": "var(--ds-c-surface)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "alphaVars": ["fg-25", "fg-30", "fg-40", "fg-50", "fg-60", "fg-65", "fg-70", "fg-74", "fg-75", "fg-87"],
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#585858",
+    "--body-link-color": "#ec4e4f",
+    "--body-link-hover-color": "#d60808",
+    "--color-primary": "#ec4e4f",
+    "--color-secondary": "#1d1f22",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#3f3836",
+    "--primary_light": "#fff7f5"
+  },
+  "keepColors": {
+    ".t4-palette-mainnav": "rgb(63, 56, 54)",
+    ".t4-footer": "rgb(130, 130, 130)",
+    ".acm-cta": "rgb(88, 88, 88)",
+    "#t4-copyright": "rgb(130, 130, 130)"
+  },
+  "followRules": {
+    ".t4-palette-primary": {
+      "background-color": "accent",
+      "color": "fg"
+    },
+    ".bg-primary .text-white": {
+      "color": "accent-on!"
+    },
+    ".t4-palette-primary .features-more a": {
+      "color": "accent-on!"
+    },
+    ".play-icon a": {
+      "color": "accent-on!"
+    },
+    ".bg-primary .btn-outline-white": {
+      "color": "accent-on!",
+      "border-color": "accent-on!"
+    },
+    ".acm-features.style-5 .features-item-wrap .features-item:nth-child(2n)": {
+      "background-color": "fg",
+      "color": "bg"
+    },
+    ".acm-features.style-5 .features-item-wrap .features-item:nth-child(2n) :is(.ft-num, .ft-title, .ft-description)": {
+      "color": "bg!"
+    },
+    ".features-item .action": {
+      "color": "accent-text"
+    }
+  },
+  "t4Placeholders": {
+    "__color_primary": "accent"
+  },
+  "minVersion": {
+    "quickstart/ja-alpha/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-alpha/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "followNote": "T4 paints the red band behind the service cards (.t4-palette-primary: ground #ec4e4f, text #585858) from its generated pattern CSS: the band takes the accent and the cards' inherited text the page text; its 'Trusted By' link (white !important), the play button's icon and the outline buttons on the .bg-primary bands take the accent's own text colour",
+  "t4PlaceholdersNote": "css/tpl/theme.tpl.css paints links, chips (.category-name a), the play button and other accents with __color_primary: it reads the slot in the template file itself, so the sheet T4 writes out on a fresh install does too (tokenize.mjs gives a text the readable accent, a fill the accent)",
+  "onAccentNote": "text set on an accent fill: the 'Trusted By' line on the red band, the .bg-primary bands (client story, business planning hero) and the category chips",
+  "followRulesNote": "the client-story counters over the photo alternate a page-coloured card and a dark one (#3F3836 with white text, literals the tokenizer cannot read as a role): the dark one takes the page text as its fill and the page ground as its text, so the pair stays light/dark under every system (re-measure 11/10/2026: its 55+ read the system heading colour on #3F3836, 1.02:1 under MotherDuck)",
+  "bands": {
+    ".t4-palette-mainnav": {
+      "ground": "#ffffff",
+      "texts": ["#3f3836", "#2e2e2e", "#828282"],
+      "paint": {
+        ".link-primary": {
+          "color": "accent"
+        },
+        ".menu-item-title": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-footer": {
+      "ground": "#2a2a2a",
+      "texts": ["#828282", "#ffffff"],
+      "paint": {
+        ".contact-inner span": {
+          "color": "accent"
+        },
+        ".sub-heading": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".acm-cta": {
+      "ground": "#2a2a2a",
+      "texts": [],
+      "important": true
+    },
+    "#t4-copyright": {
+      "ground": "#2a2a2a",
+      "texts": ["#828282"],
+      "paint": {
+        ".footer2 a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-section.t4-section-1.section-overlap.t4-palette-primary": {
+      "ground": "#ec4e4f",
+      "texts": ["#2e2e2e", "#585858", "#f8c1c2", "#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand"
+    },
+    ".bg-primary": {
+      "ground": "#ec4e4f",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand"
+    },
+    ".acm-hero.style-2.bg-primary": {
+      "ground": "#ec4e4f",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand"
+    },
+    ".ja-masthead": {
+      "ground": "#413f3d",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 15/10/2026: .ja-masthead is a picture band (picture: its ground, read #413f3d under the title, is the photo and stays; it has no accent words or buttons)"
+}

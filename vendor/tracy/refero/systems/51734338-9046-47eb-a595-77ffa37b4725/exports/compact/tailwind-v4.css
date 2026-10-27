@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-ink: #1e1e1e;
+  --color-cream-canvas: #e3d7cd;
+  --color-warm-white: #f0e9e5;
+  --color-paper-white: #f5f2f0;
+  --color-pure-white: #ffffff;
+  --color-sand-border: #c9c9c7;
+  --color-stone-text: #767676;
+  --color-charcoal: #000000;
+  --color-terracotta: #ee884f;
+
+  /* Typography */
+  --font-archivo: 'Archivo', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

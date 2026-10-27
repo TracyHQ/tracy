@@ -1,0 +1,39 @@
+{
+  "color": {
+    "press-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Press Black — Body text, all borders, pill outlines, button strokes — the sole ink color, used at full opacity for every foreground element"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, card surfaces, pill fills — the only surface color, creating maximum contrast against Press Black"
+    },
+    "smoke-gray": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Smoke Gray — Hairline dividers, muted outlines, secondary borders where a softer separation is needed"
+    }
+  },
+  "font": {
+    "standard": {
+      "$value": "Standard",
+      "$type": "fontFamily",
+      "$description": "Display and heading type only — a custom geometric sans used at two large sizes with extreme negative tracking (-0.045em to -0.054em). Also sets link and button text. The single weight (400) and tight tracking create a compressed, poster-like presence that dominates the page. No bold variant exists; hierarchy is achieved through size and tracking alone."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Body and micro-copy type — the system serif at 13px, used in editorial contexts (footnotes, annotations, fine print). The serif/sans collision with Standard is deliberate: the sans shouts, the serif footnotes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://jun.works",
+      "siteName": "jun.works",
+      "extractedAt": "2026-06-03T21:16:05.032Z",
+      "variant": "compact"
+    }
+  }
+}

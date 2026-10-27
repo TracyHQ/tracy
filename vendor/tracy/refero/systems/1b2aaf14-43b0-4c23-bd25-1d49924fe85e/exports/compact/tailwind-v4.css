@@ -1,0 +1,20 @@
+@theme {
+  /* Colors */
+  --color-cream-paper: #faf8f0;
+  --color-card-white: #ffffff;
+  --color-hairline-gray: #e5e7eb;
+  --color-ink-black: #000000;
+  --color-charcoal: #222222;
+  --color-fog-gray: #717171;
+  --color-marigold: #ffdd00;
+  --color-buttercup: #f7d046;
+  --color-terracotta: #d8573f;
+  --color-blush-border: #f5d5cf;
+
+  /* Typography */
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-circular-bold: 'Circular Bold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-circular-medium: 'Circular Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-circular-regular: 'Circular Regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-circular-book: 'Circular Book', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

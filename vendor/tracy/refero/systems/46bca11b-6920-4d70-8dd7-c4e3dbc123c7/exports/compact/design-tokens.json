@@ -1,0 +1,79 @@
+{
+  "color": {
+    "abyss-ink": {
+      "$value": "#020617",
+      "$type": "color",
+      "$description": "Abyss Ink — Page canvas, hero background, section backgrounds — the base surface every other color sits on"
+    },
+    "deep-slate": {
+      "$value": "#0a0e1a",
+      "$type": "color",
+      "$description": "Deep Slate — Elevated surfaces, card backgrounds, subtle surface lift from the canvas"
+    },
+    "frost-white": {
+      "$value": "#f1f5f9",
+      "$type": "color",
+      "$description": "Frost White — Primary headline text, logo wordmark, highest-emphasis content"
+    },
+    "cloud-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Cloud Gray — Body text, secondary headlines, hairline borders, divider lines — the workhorse neutral that draws the structural lines of the page"
+    },
+    "slate-mist": {
+      "$value": "#64748b",
+      "$type": "color",
+      "$description": "Slate Mist — Tertiary text, muted sub-headlines, nav secondary items, icon fills at rest"
+    },
+    "graphite": {
+      "$value": "#475569",
+      "$type": "color",
+      "$description": "Graphite — Card body text, secondary paragraph copy, low-emphasis content"
+    },
+    "steel-border": {
+      "$value": "#353845",
+      "$type": "color",
+      "$description": "Steel Border — Outlined button borders, ghost control frames, subtle elevated dividers"
+    },
+    "pale-mist": {
+      "$value": "#cbd5e1",
+      "$type": "color",
+      "$description": "Pale Mist — Micro-copy, fine-print detail, rare light text accents"
+    },
+    "ember-glow": {
+      "$value": "#fa3812",
+      "$type": "color",
+      "$description": "Ember Glow — Supporting palette color for small decorative accents when the core palette needs contrast."
+    },
+    "ember-border": {
+      "$value": "#651a15",
+      "$type": "color",
+      "$description": "Ember Border — Deep red border tone for warm-bordered emphasis elements and the underside of the gradient wave"
+    },
+    "signal-green": {
+      "$value": "#34d399",
+      "$type": "color",
+      "$description": "Signal Green — Green text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "The sole display and body typeface. Weight 300 on hero and section headlines whispers rather than shouts — institutional confidence through restraint. Weight 400 for body, 500 for navigation, and 600 reserved for emphasized content. Negative letter-spacing (-0.025em) tightens display sizes while wide tracking (0.200–0.300em) on all-caps section labels gives them the cadence of architectural annotations."
+    },
+    "abcsynt": {
+      "$value": "ABCSynt",
+      "$type": "fontFamily",
+      "$description": "ABCSynt — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.coinshift.xyz",
+      "siteName": "iUSPC by Coinshift",
+      "extractedAt": "2026-06-03T21:17:51.997Z",
+      "variant": "compact"
+    }
+  }
+}

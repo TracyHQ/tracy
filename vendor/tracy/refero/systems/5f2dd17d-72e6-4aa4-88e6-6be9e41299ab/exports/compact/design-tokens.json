@@ -1,0 +1,39 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page canvas, card surfaces, footer background — the dominant black field that swallows everything except typography and accent"
+    },
+    "charcoal": {
+      "$value": "#131313",
+      "$type": "color",
+      "$description": "Charcoal — Elevated card surface above Void, hover-state surfaces — barely lighter than canvas, creates whisper-quiet depth"
+    },
+    "pure": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure — Hairline borders, dividers, input outlines, and card edges on light surfaces."
+    },
+    "acid-lime": {
+      "$value": "#d3de5d",
+      "$type": "color",
+      "$description": "Acid Lime — Decorative accent strip, highlight washes, section punctuation — chartreuse against matte black creates voltage; never used for text or buttons"
+    }
+  },
+  "font": {
+    "ak-monument-grotesk": {
+      "$value": "AK Monument Grotesk",
+      "$type": "fontFamily",
+      "$description": "Single typeface carries the entire system. Weight 200 for massive display creates a featherlight monumental effect at 102–160px; weight 700–800 for 'BUILDING.'-style statements; weight 400 for body and nav. Crushed line-heights (0.78–0.83 at display sizes) eliminate inter-line space and let type stack into graphic blocks rather than paragraphs. Tight letter-spacing (-0.02em to -0.03em) pulls letters into near-solidity at large sizes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://yuga.com",
+      "siteName": "Yuga",
+      "extractedAt": "2026-06-03T21:24:41.530Z",
+      "variant": "compact"
+    }
+  }
+}

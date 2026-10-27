@@ -1,0 +1,59 @@
+---
+import Photo from '@/components/site/Photo.astro'
+import { href } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+const { sample: s, news: n, investors = {}, locale } = Astro.props
+// 🔒 THE SUBSCRIBE CARD IS THE KIT PAGE'S OWN (TCH #1013, K3): its words ride in the sample, as the News page of the same
+// edition words them, so an unticked News page (its entry off the site) no longer leaves an empty green box. A sample from
+// before 1.7.7 has none, and the card reads the News page as it did. The form falls back to the one bound on investors.
+const card = s.subscribe ?? {
+  title: n.newsletter_title,
+  text: n.newsletter_text,
+  placeholder: n.newsletter_placeholder,
+  button: n.newsletter_button
+}
+const formId = n.newsletter_form_id || investors.newsletter_form_id
+// A button into an unticked page goes on its own; the mockup stays (TCH #1013, `src/lib/link-gate.ts`).
+const ctaUrl = s.ctaUrl ?? href(locale, '/news')
+const live = await liveLinks(Astro.request, locale, [ctaUrl])
+---
+<div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-12">
+	<div class="flex justify-center bg-paper-2 p-7">
+		<div class="w-full max-w-[600px] border border-line-card bg-card">
+			<div class="band-ink px-[26px] py-[22px]"><div class="text-[11px] font-bold tracking-[.2em] text-signal-text">{s.kicker}</div><div class="mt-1.5 text-[13px] text-on-ink-meta">{s.issue}</div></div>
+			<Photo image={s.image} alt={s.leadT} placeholder={s.leadT} class="h-[190px] !border-0 !border-b" width={600} height={190} />
+			<div class="p-[26px]">
+				<h2 class="mb-3 font-serif text-[25px] font-normal leading-[1.22] tracking-[-.02em]">{s.leadT}</h2>
+				<p class="mb-5 text-[15.5px] leading-[1.65] text-fg-2">{s.leadP}</p>
+				{live(ctaUrl) && <a href={ctaUrl} class="btn-primary !px-6 !py-[13px] !text-[14.5px]">{s.cta}</a>}
+			</div>
+			<div class="px-[26px] pb-[26px]">
+				<div class="mb-1.5 border-t border-line pt-[18px] text-[11px] font-bold uppercase tracking-[.18em] text-fg-meta">{s.itemsT}</div>
+				{(s.items ?? []).map((it: any) => <div class="border-b border-line-soft py-3.5"><span class="block text-[15px] font-semibold leading-[1.35]">{it.t}</span><span class="mt-1 block text-[13.5px] text-fg-muted">{it.d}</span></div>)}
+			</div>
+			<div class="bg-paper-2 px-[26px] py-5 text-[12.5px] leading-[1.6] text-fg-meta">{s.ftT}<div class="mt-2.5 flex gap-4"><span class="font-semibold text-forest-text">{s.unsub}</span><span class="font-semibold text-forest-text">{s.prefs}</span></div></div>
+		</div>
+	</div>
+	<div>
+		{/* Mobile stacks the subscribe box above the specs table (design source); md+ keeps specs above the subscribe box, so only reverse below md. */}
+		<div class="flex flex-col-reverse gap-8 md:flex-col">
+			<div>
+				<div class="column-label mb-1.5 border-b border-line pb-3">{s.specT}</div>
+				{(s.specs ?? []).map((sp: any) => <div class="grid grid-cols-[130px_1fr] gap-4 border-b border-line-soft py-[13px] text-[15px]"><span class="text-fg-meta">{sp.k}</span><span>{sp.v}</span></div>)}
+			</div>
+			<div class="bg-forest p-[26px] text-on-forest-band">
+				<div class="mb-2.5 font-serif text-[22px] leading-[1.25]">{card.title}</div>
+				<p class="mb-4 text-[14.5px] leading-[1.6] text-on-forest-muted">{card.text}</p>
+				{formId ? (
+					<form class="ng-newsletter" method="post" action="/_emdash/api/plugins/emdash-forms/submit" data-form-id={formId}>
+						<input type="email" name="email" required placeholder={card.placeholder} aria-label={card.placeholder} class="mb-2.5 w-full rounded-[var(--ds-input-radius,0px)] border border-forest-line bg-forest-deep px-3 py-[11px] font-sans text-[14.5px] text-[color:var(--ds-c-on-accent-band,var(--color-white))]" />
+						<input type="text" name="_hp" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" /><input type="hidden" name="formId" value={formId} />
+						<button type="submit" class="w-full rounded-[var(--ds-btn-radius,0px)] bg-[var(--ds-c-accent,var(--color-signal))] px-3 py-3 font-sans text-[14.5px] font-semibold text-[color:var(--ds-c-accent-on,var(--color-white))]">{card.button}</button>
+						<p class="ng-newsletter-status mt-2.5 text-[13px] text-on-forest-muted" aria-live="polite"></p>
+					</form>
+				) : null}
+			</div>
+		</div>
+	</div>
+</div>
+<script src="@/lib/newsletter-client.ts"></script>

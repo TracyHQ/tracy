@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "88a00b3e-1c1e-49d3-ae0f-9fbc1f35ad99",
+  "status": "complete",
+  "name": "15five",
+  "url": "https://styles.refero.design/style/88a00b3e-1c1e-49d3-ae0f-9fbc1f35ad99",
+  "sourceWebsite": "https://www.15five.com",
+  "extractedAt": "2026-06-03T19:15:20.969Z",
+  "capturedAt": "2026-10-08T05:14:29.315326+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Sunrise over a clean desk",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7026967d-d24e-4019-9f50-c919d4aefe1b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/eef6feed-8a9d-40aa-86d1-2125c9ac099a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/c49ed7f2-b6fe-4611-bab1-4053bbaea161.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f7ded4bc-b014-4686-8a0a-ddfb3bc0dd44.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/876db902-fc44-446b-83bf-55d738d37ff0.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bf7e94acfebdaa3caf373a9dbba27d41f32cef28553fcfeaa52b90f708a10aec",
+      "bytes": 18324
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "602a066dda603d15a7ac16a93fe1ebed0d340dec81a6778f3cddea7808201ce2",
+      "bytes": 107091
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "44800ed2dd75316a3c3c19da2f8e024b65277f6996439f755abd8a4f77b2ac2b",
+      "bytes": 15339
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "1e8b0d4b361805b77eefb50075a603ab63067955eafbef21860199fe691ebd39",
+      "bytes": 12854
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "63f81df92a3e98d5e37fb9dc9c434e15ac423fccca0635be14c1fa56b4f08cfa",
+      "bytes": 11242
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1130c077091f9bdeddcdfe8e3030a213c3b013285c7ff5cfb1b0f047a5f2e02d",
+      "bytes": 2833
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "6753933c426125259d3e2730d7ac4cf7361a09b52c97d6307d5e245afe2f6129",
+      "bytes": 520
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "30068cc2c3293f41ec222a6ed74b245d293fcd68c6c0dab0c9b202d8034ca818",
+      "bytes": 614
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8bc71804beb3b6efc53ab427e36d291bf83cef514deca427973a0b2c93b9597f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5485e6835486eb481b1d6b68886b92ba89fbb3927b36b7a32b8184eec2f96447",
+      "bytes": 44022
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a5be0d7d23d74da6e903dae61fe38e88dc74ccdaa93410eb3204342c8952932d",
+      "bytes": 23442
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "98e81f3d67450cebb91dddd5d9483d25c7c55583d590e5fd75c66c97ebf00411",
+      "bytes": 51356
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "79497a28d60003beb86b44d8136e01779dc9fb481cdf0add1adcfb117a99b680",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e9df9e60ebfd9c6e2500c475188ae2adbf373a63aa093c34455c2ee4f4456350",
+      "bytes": 1421
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "54fe974b4ed5b91ff9ae200f8aff313c1e0edfcf2258530382c3a18fd4106cb8",
+      "bytes": 2134
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "62f89392-609d-45b7-b9df-7a5acd529864",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "88a00b3e-1c1e-49d3-ae0f-9fbc1f35ad99",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "aaca1e02-7b5a-4c03-ac40-454f0d477356",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "da332394-784c-4df2-9e66-c3f7b1d28f28",
+    "dbc5ecba-7309-456f-93b4-4356c6b0d293",
+    "e869e214-f672-4ac3-bfc2-bd25de7b003b",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8"
+  ]
+}

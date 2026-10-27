@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "139c4bee-396d-494c-baf0-fe211bf4928d",
+  "status": "complete",
+  "name": "14islands",
+  "url": "https://styles.refero.design/style/139c4bee-396d-494c-baf0-fe211bf4928d",
+  "sourceWebsite": "https://14islands.com",
+  "extractedAt": "2026-06-03T16:07:43.014Z",
+  "capturedAt": "2026-10-08T05:08:29.245828+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Monochrome editorial gallery — A pristine gallery wall where oversized black typography and full-bleed photography exist without decoration, color, or UI noise.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7eaab214-4218-430d-a091-6ac6554c1415.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "59ab9d15e9bcdc095478163a0f32143eeef6e555bdb4664f867c35a9ccbaebc9",
+      "bytes": 16032
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ed241702dd3dce990d49b2e3a3b2abcbb48eb5c1024601b4133f8932111c2c69",
+      "bytes": 52587
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "070b59d15cb87e058924a27622abcab2b4b1d31a0fa376de064b6ed918351246",
+      "bytes": 13600
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "07f62eb2992fe81e08b03e55493797e75fa908f8b2fd2349d2756af80e80159e",
+      "bytes": 5520
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "dffa2e44d56cd0bedcd10458ff41d469b4ec6fd9422c699eace4889abf77c1ce",
+      "bytes": 10227
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "74db5b08637cdb80f425b67196a29f9119ed93a8dca9dad5bc0ecd16094bbd6b",
+      "bytes": 2140
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "702c33d6e0d2958e67229a4fe0cb706530989cb04f635932f1b3a3fcd281367b",
+      "bytes": 432
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "416a90e4a2c7fb129ab4ddf5fcf977b8b15794d6d44ae25511182b1c4f40c425",
+      "bytes": 449
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "e596f378ae21cfe5601149ce04e4c7f9de7c32388d263e4549f9325f35b9d091",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a45f9e14b1a74a08dd172bc81473e8429f15a2760695013e9f3e81b75a8df6b1",
+      "bytes": 38538
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ac5463939852438074209accf93f22a3363fdd34c6b5ffb3a37d6068207ae118",
+      "bytes": 19694
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "36dc0271c848333e8aee91f9c2f23fce88bab189ad732290c3d7a68afc72145f",
+      "bytes": 24286
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "686a5c27af5ecd6dc30b6e9f0abfd1cee380142b8bbf59330f8af42c1099dd7f",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0d19b7f85e2bffefdc70fdd0532c8e86c74294a04b190aecfbb2ee40c3f1ee3d",
+      "bytes": 1122
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "18edbb186794bdc92b8d626dd152114491710fee7f06640a386faae8da6544bd",
+      "bytes": 1561
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "143d553e-d71f-4e86-98ed-b80b9ef78ea9",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "3e52dd36-6ab1-48c6-bc40-47ef6d33abc2",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "58a36cba-3fc4-48fa-a7d9-7f14592b7857",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "73359194-de93-436e-af53-81d4029f5e7a",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "ab1b113a-ed21-4512-acc2-d10c8927c410",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "c0a3f588-74b7-4fad-b557-1fc7cd7bd777",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

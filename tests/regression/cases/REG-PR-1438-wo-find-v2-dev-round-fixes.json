@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1438-wo-find-v2-dev-round-fixes",
+  "kind": "fix",
+  "title": "Find places v2 on dev: the capabilities door reports the depth limits a search really runs with, geocoding skips a defunct historic boundary ranked first (Nha Trang centre was at sea), and site checks are queued as soon as results arrive instead of one poll period later",
+  "pr": 1438,
+  "area": "website-opportunities",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: read GET /api/website-opportunities/capabilities with the operator's place limit at its default, then lowered.",
+    "S2: geocode a city whose Nominatim answer ranks a defunct (historic) boundary first, with the place node of the same name further down.",
+    "S3: a search lands; the page polls /site-checks with a leading poll, a plain poll, a hidden page and a failing read."
+  ],
+  "expect": [
+    "S1: search.depths names the limit a search really runs with (quick 20, standard 60 by default; lowered when the operator lowers gmapsMaxPlaces).",
+    "S2: the place node's centre is used, not the historic boundary's.",
+    "S3: the leading poll reads at once then every period; a plain poll waits one period; a hidden page skips the read but keeps the loop; a failed read does not stop it."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities/route.js, apps/tracy-web/src/lib/wo-ops.js, vendor/tracy/tracy-website-opportunities/domain/discovery-osm.mjs, vendor/tracy/tracy-website-opportunities/src/client/poll.ts, vendor/tracy/tracy-website-opportunities/src/client/results.tsx",
+    "dom": ".tracy-wo-tab"
+  },
+  "evidence": "Dev round tasks/evidence-wo-find-v2/dev-round.md (19/10/2026, dev 11749238ad): V4 Đà Nẵng 10 km Standard returned 38 places / 2 pages while the screen promised 60; Nha Trang 3 km returned 1 place because Nominatim's first row was the dissolved city boundary centred at sea; a reload within 3 s of a search queued no site checks",
+  "fence": "The capabilities door computes depths from the same min(depth, gmapsMaxPlaces) the search uses; geocode prefers a place node over a historic boundary of the same name; usePoll's leading option fires the first read synchronously",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs",
+      "packages/wo/website-opportunities/test/domain-discovery-osm.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-poll.test.mjs"
+    ],
+    "tests": [
+      "geocode skips a defunct (historic) boundary for the place node of the same name",
+      "a leading poll reads at once, then every period",
+      "a plain poll waits one period before its first read",
+      "a hidden page skips the read but keeps the loop going; a failed read does not stop it"
+    ]
+  }
+}

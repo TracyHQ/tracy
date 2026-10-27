@@ -1,0 +1,21 @@
+{
+  "name": "joomlart-t4",
+  "version": "1.3.0",
+  "description": "Build a customer Joomla website from a selected JoomlArt T4 quickstart and any design input; verify and package the finished site.",
+  "author": {
+    "name": "JoomlArt"
+  },
+  "homepage": "https://www.joomlart.com/",
+  "keywords": [
+    "joomla",
+    "joomla6",
+    "t4",
+    "joomlart",
+    "template",
+    "pencil",
+    "figma",
+    "dark-mode",
+    "quickstart"
+  ],
+  "license": "Proprietary — see NOTICE.md"
+}

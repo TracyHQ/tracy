@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "604af0f7-b4c3-4921-93af-9da03df81493",
+  "status": "complete",
+  "name": "Home",
+  "url": "https://styles.refero.design/style/604af0f7-b4c3-4921-93af-9da03df81493",
+  "sourceWebsite": "https://www.swoosh.nike",
+  "extractedAt": "2026-06-03T20:50:19.014Z",
+  "capturedAt": "2026-10-08T05:12:19.670648+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "Neon-lit gaming arena at midnight — black floor, one electric lime, and tournament-scale typography screaming from the walls.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c3513ce3-6d9b-429b-b30e-7f934b5c6714.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6c3d1755b4f9799dc5f5ceca6858eda38f967c1a939755a5277ea731f7c94f4c",
+      "bytes": 19165
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "00ecb8c83cac4d050db25ef17b0ec55563616beac54cd793df24a7f7e5ce03f4",
+      "bytes": 148620
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b94f849aad67570fd11c8b6df3f3dc05b83192dea228e5edfa8d31ebf7b1d00d",
+      "bytes": 16334
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "85ffb39e107332acb0efa520f71dc3cd836508e8b097409dc8455bb716f122f1",
+      "bytes": 9599
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "93319a0754b3033e7dd0d6585102e492329aff1c45bee6d661eec40ae913c740",
+      "bytes": 12288
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "841dc91b06039fc9f21093eaf0f031fa95cad862f18d6e80507905116f7a0b12",
+      "bytes": 3178
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "93e0e9fbafde04bdf6ada2e0e4690550c5f407c4f106c31124f886bbd6cb84b8",
+      "bytes": 608
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e4a5ff7c637d30a90d2e6acd0d45ac9c295942226aa89fbfc295eefb614fabcc",
+      "bytes": 625
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d32ec2c2bb1d81fff0f050e9189f3c4e55832f0aa639892e63ca7ec8c658c314",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "59c505cd78d4a2efeb04062b4fd2cd73a9b2f638fecaebcef00bab10eb5c49f7",
+      "bytes": 42519
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f462273193776ea7559d83674544cb6e267a8944a04bb991b90abeac5029699a",
+      "bytes": 21914
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9867b856efa5fe328ccc164c946899cf6709a07dd79797263f0e78b46417bb39",
+      "bytes": 40751
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "00002320629d5af1218a2f2a2d93bae28bc22d0def700f795850ed012602d543",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f0caefb41de42dfd0e137021e28f4d3be83a41462c2e4a12c901178893c23cd1",
+      "bytes": 1323
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "2046ac92b4325d9affd74e2c4c97c4d33d41b99719db4a400cf8d37e739d141e",
+      "bytes": 1871
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "03e03554-d7aa-40da-9764-79320ecfa1d0",
+    "05053a60-1964-4154-9d58-ebdf6352ed3a",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "604af0f7-b4c3-4921-93af-9da03df81493",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "643f90ba-dc30-428b-a145-26f02fe70551",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "cf49b88a-fb38-4520-8fbb-ab3efa983517",
+    "d7ace114-0548-41f5-a2ff-2afbf32be94d",
+    "dba3eb4f-c1c2-437f-beb2-708e9d074729",
+    "e02671e1-ba31-465f-bb7f-b124bf91ab5e",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

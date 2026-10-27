@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-midnight-harbor: #0b3658;
+  --color-signal-blue: #4e9ad9;
+  --color-slate-channel: #486984;
+  --color-pale-steel: #688dac;
+  --color-sea-fog: #dde7ee;
+  --color-ice-tint: #e6f1fa;
+  --color-light-mist: #c8d8e4;
+  --color-canvas-white: #ffffff;
+  --color-active-teal: #42b3b1;
+
+  /* Typography — Font Families */
+  --font-figtree: 'Figtree', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

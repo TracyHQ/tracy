@@ -1,0 +1,9 @@
+@theme {
+  /* Colors */
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+
+  /* Typography */
+  --font-favorit-times: 'Favorit Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twklausanne: 'TWKLausanne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

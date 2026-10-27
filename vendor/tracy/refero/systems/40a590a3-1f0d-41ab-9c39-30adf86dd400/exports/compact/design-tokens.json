@@ -1,0 +1,44 @@
+{
+  "color": {
+    "warm-concrete": {
+      "$value": "#eaeaea",
+      "$type": "color",
+      "$description": "Warm Concrete — Page canvas — the warm light gray that makes the whole gallery feel architectural rather than digital"
+    },
+    "bone": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Bone — Card surface — barely distinguishable from the canvas, creating the illusion of cards floating in space"
+    },
+    "hairline": {
+      "$value": "#d8d8d8",
+      "$type": "color",
+      "$description": "Hairline — 1px card borders and dividers — structural, never decorative"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — All text, heading borders, and the top/bottom hairline rules that frame the page"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Nav text and link borders — appears in the hamburger menu area and link underlines"
+    }
+  },
+  "font": {
+    "gt-america": {
+      "$value": "GT America",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all contexts — nav, body, cards, headings, links. Weight 200 for display headlines is the signature anti-convention: most sites use 600-700 for headlines, this whisper-weight gains authority through restraint. Weight 300 for body and UI text, weight 400 reserved for occasional emphasis."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://petertarka.com",
+      "siteName": "Petertarka",
+      "extractedAt": "2026-06-03T21:25:42.998Z",
+      "variant": "compact"
+    }
+  }
+}

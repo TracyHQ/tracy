@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-voltage-yellow: #ffc700;
+  --color-radioactive-orange: #ff4e27;
+  --color-electric-cobalt: #0029ff;
+  --color-burnt-sienna: #4d170c;
+  --color-ink-black: #000000;
+  --color-bone-white: #ffffff;
+
+  /* Typography */
+  --font-morganite: 'Morganite', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-thunder: 'Thunder', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sentient: 'Sentient', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

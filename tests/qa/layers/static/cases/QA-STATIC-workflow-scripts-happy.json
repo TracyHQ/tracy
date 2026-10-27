@@ -1,0 +1,30 @@
+{
+  "id": "QA-STATIC-workflow-scripts-happy",
+  "itemIds": ["gate:workflow-scripts"],
+  "requirement": "Gate workflow-scripts (scripts/check-workflow-scripts.ts) exits 0 on the current tree and goes red on a tree that breaks the rule it enforces.",
+  "oracle": {
+    "source": "scripts/check-workflow-scripts.ts",
+    "ref": "header comment",
+    "invariant": "The tree satisfies the rule stated in the header comment of scripts/check-workflow-scripts.ts; the gate exits 0 only then.",
+    "productSources": ["scripts/check-all.ts:74", "scripts/check-workflow-scripts.ts:35"]
+  },
+  "edgeTags": ["happy", "invalid"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["node", "tsx (node_modules)"],
+  "assertionIds": ["static.workflow-scripts.exit-0", "static.workflow-scripts.missing-script-detected"],
+  "redProof": null,
+  "legacyIds": [],
+  "gate": "workflow-scripts",
+  "command": ["pnpm", "exec", "tsx", "scripts/check-all.ts", "--only", "workflow-scripts"],
+  "successMarker": "check-all: 1 gate(s) passed",
+  "gateScript": "scripts/check-workflow-scripts.ts",
+  "mode": "run",
+  "mutations": ["workflow-scripts-renamed-script"]
+}

@@ -1,0 +1,119 @@
+{
+  "color": {
+    "blurple": {
+      "$value": "#5865f2",
+      "$type": "color",
+      "$description": "Blurple — Primary CTA buttons, brand icon, active states — the single chromatic anchor in a near-monochrome blue-black space, creating instant recognition as the only saturated element in the layout"
+    },
+    "dark-blurple": {
+      "$value": "#3442d9",
+      "$type": "color",
+      "$description": "Dark Blurple — Hover state for primary buttons, pressed states"
+    },
+    "hover-blurple": {
+      "$value": "#8891f2",
+      "$type": "color",
+      "$description": "Hover Blurple — Button hover tint, elevated blurple interactions"
+    },
+    "spring-green": {
+      "$value": "#57f287",
+      "$type": "color",
+      "$description": "Spring Green — Online status indicators, success states"
+    },
+    "fuchsia": {
+      "$value": "#eb459",
+      "$type": "color",
+      "$description": "Fuchsia — Nitro gradient accents, special event highlights"
+    },
+    "vivid-cerulean": {
+      "$value": "#00b0f4",
+      "$type": "color",
+      "$description": "Vivid Cerulean — Voice/video channel indicators, info states"
+    },
+    "ember-orange": {
+      "$value": "#fda220",
+      "$type": "color",
+      "$description": "Ember Orange — Quest indicators, achievement highlights"
+    },
+    "ekko-red": {
+      "$value": "#de2761",
+      "$type": "color",
+      "$description": "Ekko Red — Destructive actions, critical alerts"
+    },
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Text on light surfaces, icon fills, overlay backgrounds"
+    },
+    "snow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Snow — Primary text on dark backgrounds, button text, nav links, card backgrounds"
+    },
+    "not-quite-black": {
+      "$value": "#23272a",
+      "$type": "color",
+      "$description": "Not Quite Black — Secondary button text and borders, dark UI surface color"
+    },
+    "dark-charcoal": {
+      "$value": "#2c2f33",
+      "$type": "color",
+      "$description": "Dark Charcoal — App UI chrome surfaces, elevated dark panels"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text on light surfaces, image overlays"
+    },
+    "fog": {
+      "$value": "#babcd9",
+      "$type": "color",
+      "$description": "Fog — Subdued headings and body text on dark backgrounds — a lavender-tinted neutral that stays on-brand while reducing contrast"
+    },
+    "greyple": {
+      "$value": "#99aab5",
+      "$type": "color",
+      "$description": "Greyple — Disabled states, placeholder text, muted metadata"
+    },
+    "dim-grey": {
+      "$value": "#50555f",
+      "$type": "color",
+      "$description": "Dim Grey — Input borders, dividers, secondary icon fills"
+    },
+    "off-white": {
+      "$value": "#f6f6f6",
+      "$type": "color",
+      "$description": "Off White — Light section backgrounds, card surfaces in light contexts"
+    }
+  },
+  "font": {
+    "abc-ginto-nord-discord": {
+      "$value": "ABC Ginto Nord Discord",
+      "$type": "fontFamily",
+      "$description": "All display headlines and section headings. Weight 800 is the signature move — combined with all-caps styling and -0.01em tracking, headlines compress into dense rectangular blocks. No other font or weight creates this stamped-label effect. Used at 56–61px for hero, 48px for section leads, 36px for subsections."
+    },
+    "abc-ginto-discord": {
+      "$value": "ABC Ginto Discord",
+      "$type": "fontFamily",
+      "$description": "Navigation labels, body copy, button text, UI labels. Letter-spacing at 0.013–0.016em adds subtle openness at small sizes — compensating for the condensed feel of the Nord headline font above. Weight 500 for buttons and nav emphasis, 400 for body and metadata."
+    },
+    "gg-sans": {
+      "$value": "GG Sans",
+      "$type": "fontFamily",
+      "$description": "Discord's proprietary UI font used inside product UI mock-ups and app interface screenshots embedded in marketing sections. Appears at 16px/1.5 exclusively — mirrors the in-product typeface to keep screenshots authentic."
+    },
+    "abc-ginto-normal": {
+      "$value": "ABC Ginto Normal",
+      "$type": "fontFamily",
+      "$description": "Long-form paragraph body text in feature sections, link lists in footer. Functionally identical metrics to ABC Ginto Discord but a separate optical variant for extended reading."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://discord.com",
+      "siteName": "Discord",
+      "extractedAt": "2026-04-11T18:08:26.644Z",
+      "variant": "compact"
+    }
+  }
+}

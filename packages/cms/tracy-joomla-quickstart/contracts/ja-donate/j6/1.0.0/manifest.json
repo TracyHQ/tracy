@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-donate/j6/1.0.0",
+  "platform": "joomla",
+  "template": "ja_donate",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-donate",
+    "id": "quickstart/ja-donate/j6",
+    "version": "1.0.0",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_donate",
+    "parts": {
+      "installer": {
+        "file": "ja-donate-j6-quickstart.zip",
+        "bytes": 56245875,
+        "sha256": "0e433c3863d1985fe45afe363518c099a8646de033dd17fefd394f9f608d9636"
+      }
+    },
+    "release": "quickstart/ja-donate/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

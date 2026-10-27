@@ -1,0 +1,1241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JA Kinetic reference components</title>
+    <meta
+      name="description"
+      content="Reference fixture for design-systems/ja-kinetic. Every visible colour,
+        size, radius, shadow and space comes from tokens.css; the page follows the
+        template's own developer-tool rules and renders the 20 ACM blocks ja_kinetic
+        ships: header CTA, hero, clients, bento, features intro, features ledger,
+        kineticql split, incident timeline, pricing, pricing matrix, accordion, FAQ
+        support, testimonials, teams, prose quote, page masthead, CTA, footer news,
+        social and footer legal."
+    />
+
+    <style>
+      /* :root paste, sourced verbatim from design-systems/ja-kinetic/tokens.css.
+         Keep this block in sync when tokens.css changes. The agent prompt
+         instructs the Designer panelist to paste this block as the FIRST thing
+         in their <style>, then reference everything below via var(...).
+         Nothing below this block is allowed to name a colour, a size, a radius,
+         a shadow or a space directly: the whole fixture has to survive a token
+         swap, including a direction swap and the dark remap at the end. */
+      :root {
+        --bg: #FBFCFA;
+        --surface: #FFFFFF;
+        --surface-warm: #F2F5EE;
+
+        --fg: #46514B;
+        --fg-2: #10140F;
+        --muted: #7C877F;
+        --meta: #7C877F;
+
+        --border: #E4E8E0;
+        --border-soft: #E4E8E0;
+
+        --accent: #4D7C0F;
+        --accent-on: #FFFFFF;
+        --accent-hover: #3F6A0A;
+        --accent-active: #3F6A0A;
+
+        --success: #30A46C;
+        --warn:    #F5A623;
+        --danger:  #E5484D;
+
+        --font-display: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+        --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+        --text-xs:   12.5px;
+        --text-sm:   14px;
+        --text-base: 16px;
+        --text-lg:   19px;
+        --text-xl:   23px;
+        --text-2xl:  28px;
+        --text-3xl:  38px;
+        --text-4xl:  52px;
+
+        --leading-body:  1.55;
+        --leading-tight: 1.04;
+
+        --tracking-display: -1.5px;
+
+        --space-1:  4px;
+        --space-2:  8px;
+        --space-3:  12px;
+        --space-4:  16px;
+        --space-5:  20px;
+        --space-6:  24px;
+        --space-8:  32px;
+        --space-12: 48px;
+
+        --section-y-desktop: 80px;
+        --section-y-tablet:  56px;
+        --section-y-phone:   56px;
+
+        --radius-sm:   8px;
+        --radius-md:   12px;
+        --radius-lg:   16px;
+        --radius-pill: 100px;
+
+        --elev-flat:   none;
+        --elev-card:   none;
+        --elev-ring:   0 0 0 3px rgba(77, 124, 15, .25);
+        --elev-raised: 0 18px 44px -20px rgba(20, 30, 15, .2);
+
+        --focus-ring: 0 0 0 3px rgba(77, 124, 15, .25);
+
+        --motion-fast:   0.15s;
+        --motion-base:   0.2s;
+        --ease-standard: ease;
+
+        --container-max:            1240px;
+        --container-gutter-desktop: 32px;
+        --container-gutter-tablet:  32px;
+        --container-gutter-phone:   20px;
+
+        --accent-secondary: #65A30D;
+        --grid: rgba(16, 20, 15, .04);
+        --chrome-elevated: #F2F5EE;
+      }
+
+      [data-theme="dark"],
+      html.t4-dark {
+        --bg: #0A0D0C;
+        --surface: #121614;
+        --surface-warm: #0F1311;
+
+        --fg: #9AA6A1;
+        --fg-2: #F2F5F3;
+        --muted: #5F6B66;
+        --meta: #5F6B66;
+
+        --border: #232A27;
+        --border-soft: #232A27;
+
+        --accent: #A3E635;
+        --accent-on: #0A0D0C;
+        --accent-hover: #BCF25A;
+        --accent-active: #BCF25A;
+
+        --elev-raised: 0 20px 50px -18px rgba(0, 0, 0, .6);
+
+        --grid: rgba(255, 255, 255, .035);
+        --chrome-elevated: #161B18;
+      }
+
+      /* --- Reset (minimal) --------------------------------------------- */
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--font-body);
+        font-size: var(--text-base);
+        line-height: var(--leading-body);
+        font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      img { max-width: 100%; display: block; }
+      a { color: var(--accent); text-decoration: none; transition: color var(--motion-fast) var(--ease-standard); }
+      a:hover { color: var(--accent-hover); }
+      :focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+      /* --- Layout primitives -------------------------------------------- */
+      .container {
+        width: 100%;
+        max-width: var(--container-max);
+        margin-inline: auto;
+        padding-inline: var(--container-gutter-desktop);
+      }
+      .section { padding-block: var(--section-y-desktop); }
+      .section-tight { padding-block: var(--section-y-tablet); }
+      .band { background: var(--surface-warm); }
+      .grid-bg {
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 30px 30px;
+      }
+      .stack-2 { display: grid; gap: var(--space-2); }
+      .stack-3 { display: grid; gap: var(--space-3); }
+      .stack-4 { display: grid; gap: var(--space-4); }
+      .stack-6 { display: grid; gap: var(--space-6); }
+
+      /* --- Type --------------------------------------------------------- */
+      h1, h2, h3, h4 {
+        margin: 0;
+        font-family: var(--font-display);
+        color: var(--fg-2);
+        font-weight: 700;
+      }
+      h1 { font-size: var(--text-4xl); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
+      h2 { font-size: var(--text-3xl); line-height: 1.08; letter-spacing: -1px; }
+      h3 { font-size: var(--text-xl); line-height: 1.3; letter-spacing: -0.5px; font-weight: 600; }
+      h4 { font-size: var(--text-lg); line-height: 1.3; letter-spacing: -0.3px; font-weight: 600; }
+      p { margin: 0; }
+      .h-block { font-size: var(--text-2xl); line-height: 1.08; letter-spacing: -1px; }
+      .eyebrow {
+        margin: 0;
+        color: var(--accent);
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        font-weight: 400;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        line-height: 1;
+      }
+      .lede { color: var(--fg); font-size: 17px; line-height: 1.6; max-width: 62ch; }
+      .muted { color: var(--muted); }
+      .meta { color: var(--meta); font-size: var(--text-sm); }
+      .mono { font-family: var(--font-mono); }
+
+      /* --- Controls ----------------------------------------------------- */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        cursor: pointer;
+        font-family: var(--font-body);
+        font-size: var(--text-sm);
+        font-weight: 600;
+        line-height: 1;
+        padding: 11px 18px;
+        border-radius: var(--radius-sm);
+        border: 1px solid transparent;
+        transition: background-color var(--motion-fast) var(--ease-standard),
+                    border-color var(--motion-fast) var(--ease-standard),
+                    color var(--motion-fast) var(--ease-standard);
+      }
+      .btn-primary { background: var(--accent); color: var(--accent-on); }
+      .btn-primary:hover { background: var(--accent-hover); color: var(--accent-on); }
+      .btn-primary:active { background: var(--accent-active); }
+      .btn-ghost { background: transparent; color: var(--fg-2); border-color: var(--border); }
+      .btn-ghost:hover { background: var(--surface-warm); color: var(--fg-2); }
+      .btn-link { background: none; border: 0; padding: 0; color: var(--fg); font-size: var(--text-sm); font-weight: 400; cursor: pointer; }
+      .btn-link:hover { color: var(--accent); }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+        padding: var(--space-1) 10px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: transparent;
+        color: var(--muted);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        line-height: 1.6;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+        padding: var(--space-1) 10px;
+        border-radius: var(--radius-pill);
+        background: var(--accent);
+        color: var(--accent-on);
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        line-height: 1.6;
+      }
+      .dot { width: var(--space-2); height: var(--space-2); border-radius: 50%; display: inline-block; flex: none; }
+      .dot-ok { background: var(--success); }
+      .dot-warn { background: var(--warn); }
+      .dot-err { background: var(--danger); }
+      .dot-live { background: var(--accent); }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 26px 28px;
+        box-shadow: var(--elev-card);
+      }
+      .card-lg { border-radius: var(--radius-lg); }
+      .icon-chip {
+        width: 38px; height: 38px;
+        display: grid; place-items: center;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--surface-warm);
+        color: var(--accent);
+        flex: none;
+      }
+      .icon { width: 18px; height: 18px; }
+      .icon-sm { width: 15px; height: 15px; }
+      .check { color: var(--accent); flex: none; }
+
+      /* --- Code panel (the signature component) -------------------------- */
+      .codepanel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        font-family: var(--font-mono);
+        box-shadow: var(--elev-raised);
+      }
+      .codepanel-bar {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: 11px 14px;
+        border-bottom: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .lights { display: flex; gap: 6px; }
+      .lights i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+      .codepanel-body { padding: var(--space-4); font-size: 13.5px; line-height: 1.6; color: var(--fg); margin: 0; white-space: pre; overflow-x: auto; }
+      .syn-key { color: var(--accent); }
+      .syn-str { color: var(--warn); }
+      .syn-com { color: var(--muted); }
+      .log-info { color: var(--accent); font-weight: 700; }
+      .log-warn { color: var(--warn); font-weight: 700; }
+      .log-err  { color: var(--danger); font-weight: 700; }
+
+      /* --- Header chrome -------------------------------------------------- */
+      .site-header {
+        position: sticky; top: 0; z-index: 30;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      .header-inner {
+        max-width: var(--container-max);
+        margin-inline: auto;
+        padding-inline: var(--container-gutter-desktop);
+        height: 66px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+      }
+      .header-left { display: flex; align-items: center; gap: 38px; min-width: 0; }
+      .logo { display: inline-flex; align-items: center; gap: 10px; }
+      .logo-glyph { width: 26px; height: 26px; color: var(--accent); flex: none; }
+      .logo-text { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 700; line-height: 1; letter-spacing: -0.5px; color: var(--fg-2); }
+      .nav-list { display: flex; align-items: center; gap: var(--space-1); list-style: none; margin: 0; padding: 0; }
+      .nav-list a {
+        display: inline-block;
+        font-size: var(--text-sm);
+        font-weight: 400;
+        color: var(--fg);
+        padding: var(--space-2) var(--space-3);
+        border-radius: var(--radius-sm);
+        line-height: 1.2;
+      }
+      .nav-list a:hover, .nav-list a[aria-current="page"] { color: var(--fg-2); background: var(--surface-warm); }
+      .header-right { display: flex; align-items: center; gap: 14px; }
+      .theme-toggle {
+        width: 34px; height: 34px;
+        display: grid; place-items: center;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: transparent;
+        color: var(--fg);
+        cursor: pointer;
+      }
+      .theme-toggle:hover { background: var(--surface-warm); }
+
+      /* --- Hero ----------------------------------------------------------- */
+      .hero { background-color: var(--bg); }
+      .hero-inner { max-width: var(--container-max); margin-inline: auto; padding: var(--section-y-desktop) var(--container-gutter-desktop) 64px; }
+      .hero-grid { display: grid; grid-template-columns: 1fr 1.12fr; gap: 60px; align-items: center; }
+      .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+      .trustline { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); color: var(--muted); font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 1px; text-transform: uppercase; }
+
+      /* --- Clients -------------------------------------------------------- */
+      .logo-strip { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-12); }
+      .logo-strip span { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 700; letter-spacing: -0.3px; color: var(--muted); }
+      .ticker { border-block: 1px solid var(--border); background: var(--surface-warm); overflow: hidden; }
+      .ticker-inner { display: flex; gap: var(--space-8); padding-block: 13px; padding-inline: var(--container-gutter-desktop); max-width: var(--container-max); margin-inline: auto; font-family: var(--font-mono); font-size: 12px; color: var(--muted); white-space: nowrap; overflow-x: auto; }
+      .ticker-inner b { color: var(--accent); font-weight: 400; }
+
+      /* --- Bento ---------------------------------------------------------- */
+      .bento { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+      .bento .tile { display: grid; gap: var(--space-3); align-content: start; }
+      .span-2 { grid-column: span 2; }
+      .tile-stat { font-family: var(--font-mono); font-size: var(--text-2xl); color: var(--fg-2); line-height: 1; letter-spacing: -1px; }
+
+      /* --- Feature and stat grids ------------------------------------------ */
+      .cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+      .cols-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+      .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+
+      /* --- Ledger ---------------------------------------------------------- */
+      .ledger-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--space-4); padding-bottom: var(--space-5); border-bottom: 1px solid var(--border); }
+      .specrow { display: grid; grid-template-columns: 54px 1fr 152px; gap: var(--space-6); align-items: baseline; padding: 26px 10px; border-bottom: 1px solid var(--border); transition: background-color var(--motion-fast) var(--ease-standard); }
+      .specrow:hover { background: var(--surface-warm); }
+      .specrow .num { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--muted); }
+      .specrow .val { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--accent); text-align: right; }
+
+      /* --- Split ------------------------------------------------------------ */
+      .split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: center; }
+      .bullets { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+      .bullets li { display: flex; gap: 10px; align-items: flex-start; }
+
+      /* --- Incident timeline -------------------------------------------------- */
+      .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+      .tl-step { position: relative; padding: 0 var(--space-5) 0 0; display: grid; gap: var(--space-3); align-content: start; }
+      .tl-node { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--accent); }
+      .tl-line { position: absolute; top: 19px; left: 38px; right: 0; height: 1px; background: var(--border); }
+      .tl-time { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+
+      /* --- Pricing ------------------------------------------------------------ */
+      .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); align-items: start; }
+      .plan { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 30px 26px; display: grid; gap: var(--space-4); }
+      .plan-popular { border-color: var(--accent); }
+      .price { font-family: var(--font-display); font-size: 40px; font-weight: 700; line-height: 1.04; letter-spacing: -1px; color: var(--fg-2); }
+      .price small { font-family: var(--font-body); font-size: 13.5px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+      .plan-features { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); font-size: var(--text-sm); }
+      .plan-features li { display: flex; gap: 10px; align-items: flex-start; }
+      .includes { margin-top: var(--space-8); padding: var(--space-8); border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface-warm); display: grid; gap: var(--space-4); }
+      .includes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); font-size: var(--text-sm); }
+
+      /* --- Matrix --------------------------------------------------------------- */
+      .matrix-wrap { overflow-x: auto; }
+      table.matrix { width: 100%; border-collapse: collapse; min-width: 560px; }
+      table.matrix th, table.matrix td { text-align: center; padding: 14px var(--space-4); border-bottom: 1px solid var(--border); font-size: var(--text-sm); }
+      table.matrix th:first-child, table.matrix td:first-child { text-align: left; }
+      table.matrix thead th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+      table.matrix tr.group td { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--fg-2); background: var(--surface-warm); }
+
+      /* --- Accordion ------------------------------------------------------------ */
+      details.acc { border-bottom: 1px solid var(--border); }
+      details.acc summary { cursor: pointer; list-style: none; padding: var(--space-5) 0; display: flex; justify-content: space-between; gap: var(--space-4); align-items: center; font-family: var(--font-display); font-size: var(--text-lg); font-weight: 600; letter-spacing: -0.3px; color: var(--fg-2); }
+      details.acc summary::-webkit-details-marker { display: none; }
+      details.acc summary .sign { font-family: var(--font-mono); color: var(--accent); font-size: var(--text-lg); }
+      details.acc p { padding-bottom: var(--space-5); color: var(--muted); max-width: 72ch; }
+
+      /* --- Testimonials ----------------------------------------------------------- */
+      .quotes { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-6); align-items: start; }
+      .quote-hero blockquote { margin: 0; font-family: var(--font-display); font-size: var(--text-xl); font-weight: 600; line-height: 1.35; letter-spacing: -0.5px; color: var(--fg-2); }
+      .byline { display: flex; align-items: center; gap: var(--space-3); }
+      .avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-warm); border: 1px solid var(--border); color: var(--accent); font-family: var(--font-mono); font-size: var(--text-sm); flex: none; }
+
+      /* --- Teams -------------------------------------------------------------------- */
+      .socials { display: flex; gap: var(--space-2); }
+      .social-tile { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--fg); }
+      .social-tile:hover { color: var(--accent); background: var(--surface-warm); }
+
+      /* --- Prose quote ---------------------------------------------------------------- */
+      .prose { max-width: 72ch; display: grid; gap: var(--space-4); }
+      .pullquote { margin: var(--space-4) 0; padding-left: var(--space-5); border-left: 2px solid var(--accent); font-family: var(--font-display); font-size: var(--text-xl); font-weight: 600; line-height: 1.35; letter-spacing: -0.5px; color: var(--fg-2); }
+
+      /* --- Masthead --------------------------------------------------------------------- */
+      .masthead { border-bottom: 1px solid var(--border); }
+      .masthead .container { padding-block: var(--section-y-tablet); display: grid; gap: var(--space-4); justify-items: center; text-align: center; }
+
+      /* --- Forms ------------------------------------------------------------------------ */
+      .field { display: grid; gap: var(--space-2); }
+      .field label { font-size: var(--text-sm); color: var(--fg-2); font-weight: 600; }
+      .field input, .field textarea {
+        width: 100%;
+        font-family: var(--font-body);
+        font-size: var(--text-sm);
+        color: var(--fg);
+        background: var(--surface);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        padding: 11px var(--space-3);
+        transition: border-color var(--motion-fast) var(--ease-standard), box-shadow var(--motion-base) var(--ease-standard);
+      }
+      .field input::placeholder, .field textarea::placeholder { color: var(--muted); }
+      .field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus-ring); }
+      .inline-form { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+      .inline-form input { flex: 1 1 240px; }
+
+      /* --- Footer ---------------------------------------------------------------------- */
+      .site-footer { background: var(--chrome-elevated); border-top: 1px solid var(--border); }
+      .footer-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-12); padding-block: var(--section-y-tablet); }
+      .footer-legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-4); padding-block: var(--space-5); border-top: 1px solid var(--border); font-size: var(--text-sm); color: var(--muted); }
+      .footer-legal ul { display: flex; flex-wrap: wrap; gap: var(--space-5); list-style: none; margin: 0; padding: 0; }
+      .footer-legal a { color: var(--muted); }
+      .footer-legal a:hover { color: var(--fg-2); }
+
+      /* --- Responsive ------------------------------------------------------------------- */
+      @media (max-width: 991.98px) {
+        .section-cta { padding-block: var(--section-y-tablet); }
+      }
+      @media (max-width: 979.98px) {
+        .cols-4 { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 879.98px) {
+        .bento { grid-template-columns: repeat(2, 1fr); }
+        .bento .span-2 { grid-column: span 1; }
+      }
+      @media (max-width: 859.98px) {
+        .hero-grid, .split, .quotes { grid-template-columns: 1fr; }
+        .plans { grid-template-columns: repeat(2, 1fr); }
+        h1 { font-size: var(--text-3xl); }
+        h2 { font-size: 30px; }
+        .lede { font-size: 15px; }
+      }
+      @media (max-width: 759.98px) {
+        .timeline { grid-template-columns: 1fr; gap: var(--space-6); }
+        .tl-line { display: none; }
+        .footer-grid { grid-template-columns: 1fr; gap: var(--space-8); }
+      }
+      @media (max-width: 619.98px) {
+        .container, .hero-inner, .header-inner, .ticker-inner { padding-inline: var(--container-gutter-phone); }
+        .section { padding-block: var(--section-y-phone); }
+        .hero-inner { padding-block: var(--section-y-phone); }
+        .bento, .cols-3, .cols-4, .stats, .plans, .includes-grid { grid-template-columns: 1fr; }
+        .specrow { grid-template-columns: 40px 1fr; }
+        .specrow .val { display: none; }
+        table.matrix th, table.matrix td { padding: 10px var(--space-2); font-size: 12px; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ACM: header-cta, inside the chrome header ------------------------- -->
+    <header class="site-header" data-od-id="nav">
+      <div class="header-inner">
+        <div class="header-left">
+          <a class="logo" href="#hero">
+            <svg class="logo-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 17 9 12 4 7" />
+              <path d="M13 17h7" />
+            </svg>
+            <span class="logo-text">Kinetic</span>
+          </a>
+          <nav aria-label="Primary">
+            <ul class="nav-list">
+              <li><a href="#hero" aria-current="page">Platform</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#incidents">Incidents</a></li>
+              <li><a href="#docs">Docs</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="header-right">
+          <button class="theme-toggle" type="button" aria-label="Switch theme">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+            </svg>
+          </button>
+          <button class="btn-link" type="button">Sign in</button>
+          <a class="btn btn-primary" href="#pricing">Start free</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- ACM: hero ---------------------------------------------------- -->
+      <section class="hero grid-bg" data-od-id="hero" id="hero">
+        <div class="hero-inner">
+          <div class="hero-grid">
+            <div class="stack-6">
+              <p class="eyebrow">// observability, reimagined</p>
+              <h1>Every trace, every span, one query away</h1>
+              <p class="lede">
+                Kinetic ingests traces, metrics and logs into one store and answers in
+                under a second, so the person on call reads a system instead of
+                assembling one.
+              </p>
+              <div class="hero-actions">
+                <a class="btn btn-primary" href="#pricing">Start free</a>
+                <a class="btn btn-ghost" href="#docs">Read the docs</a>
+              </div>
+              <p class="trustline">
+                <span>No card required</span>
+                <span>SOC 2 Type II</span>
+                <span>Self-host available</span>
+              </p>
+            </div>
+
+            <div class="codepanel">
+              <div class="codepanel-bar">
+                <span class="lights">
+                  <i style="background: var(--danger)"></i>
+                  <i style="background: var(--warn)"></i>
+                  <i style="background: var(--success)"></i>
+                </span>
+                <span>kinetic query -- checkout.p99</span>
+              </div>
+              <pre class="codepanel-body"><span class="syn-com">// slowest spans in the checkout service, last 15 minutes</span>
+<span class="syn-key">from</span> spans
+<span class="syn-key">where</span> service = <span class="syn-str">"checkout"</span> <span class="syn-key">and</span> duration &gt; <span class="syn-str">"200ms"</span>
+<span class="syn-key">order by</span> duration <span class="syn-key">desc</span>
+
+<span class="log-info">info </span> 12:04:31  payments.authorize    214ms
+<span class="log-warn">warn </span> 12:04:33  inventory.reserve     892ms
+<span class="log-err">error</span> 12:04:36  ledger.commit         timeout</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: clients (logo strip plus ticker band) --------------------- -->
+      <section data-od-id="clients">
+        <div class="container" style="padding-block: var(--space-12)">
+          <div class="stack-6">
+            <p class="meta muted">Running in production at</p>
+            <div class="logo-strip">
+              <span>Northwind</span>
+              <span>Halcyon</span>
+              <span>Meridian</span>
+              <span>Lattice</span>
+              <span>Orbital</span>
+            </div>
+          </div>
+        </div>
+        <div class="ticker">
+          <div class="ticker-inner">
+            <span><span class="dot dot-live"></span> api.eu-west  <b>99.99%</b></span>
+            <span><span class="dot dot-ok"></span> ingest  <b>1.2M spans/s</b></span>
+            <span><span class="dot dot-ok"></span> query p99  <b>214ms</b></span>
+            <span><span class="dot dot-warn"></span> replay queue  <b>3 pending</b></span>
+            <span><span class="dot dot-ok"></span> alerting  <b>operational</b></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: bento ------------------------------------------------------ -->
+      <section class="section band" data-od-id="bento" id="platform">
+        <div class="container stack-6">
+          <div class="stack-3">
+            <p class="eyebrow">// one platform</p>
+            <h2 class="h-block">Signals that already know about each other</h2>
+          </div>
+
+          <div class="bento">
+            <article class="card tile span-2">
+              <span class="icon-chip">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3 8 4-16 3 8h4" /></svg>
+              </span>
+              <h3>Traces, metrics and logs in one store</h3>
+              <p class="muted">
+                A single ingest path means a metric spike opens the trace that caused it
+                and the log line that explains it, without a second query language.
+              </p>
+            </article>
+
+            <article class="card tile">
+              <p class="tile-stat">1.2M</p>
+              <p class="meta">spans per second, sustained</p>
+            </article>
+
+            <article class="card tile">
+              <p class="tile-stat">214ms</p>
+              <p class="meta">query p99 across 30 days</p>
+            </article>
+
+            <article class="card tile">
+              <span class="icon-chip">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18" /><path d="M5 8h14" /><path d="M5 16h14" /></svg>
+              </span>
+              <h4>Cardinality without a bill shock</h4>
+              <p class="muted">Label freely; the store prices on bytes, not on series.</p>
+            </article>
+
+            <article class="card tile span-2">
+              <span class="icon-chip">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 10h18" /></svg>
+              </span>
+              <h4>Dashboards that are files</h4>
+              <p class="muted">
+                Every board is a checked-in document, so a change arrives through review
+                like any other change.
+              </p>
+            </article>
+
+            <article class="card tile">
+              <p class="tile-stat">30d</p>
+              <p class="meta">hot retention, included</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: features-intro --------------------------------------------- -->
+      <section class="section" data-od-id="features-intro">
+        <div class="container stack-6">
+          <div class="stack-3">
+            <p class="eyebrow">// how it works</p>
+            <h2 class="h-block">Three moving parts, and you own all of them</h2>
+          </div>
+
+          <div class="cols-3">
+            <article class="card stack-3">
+              <span class="icon-chip">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M4 21h16" /></svg>
+              </span>
+              <h3>Collect</h3>
+              <p class="muted">An OpenTelemetry endpoint and nothing proprietary in the agent.</p>
+              <p class="mono meta">14 SDKs</p>
+            </article>
+
+            <article class="card stack-3">
+              <span class="icon-chip">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3" /><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6" /></svg>
+              </span>
+              <h3>Store</h3>
+              <p class="muted">Columnar, object-store backed, and readable with plain SQL.</p>
+              <p class="mono meta">30d hot</p>
+            </article>
+
+            <article class="card stack-3">
+              <span class="icon-chip">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+              </span>
+              <h3>Query</h3>
+              <p class="muted">One language for all three signals, with a sub-second budget.</p>
+              <p class="mono meta">p99 214ms</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: features-ledger (stats layout, then ledger layout) ---------- -->
+      <section class="section band" data-od-id="features-ledger">
+        <div class="container stack-6">
+          <div class="stats">
+            <article class="card stack-2">
+              <p class="tile-stat">99.99%</p>
+              <p class="meta">ingest availability, trailing 12 months</p>
+            </article>
+            <article class="card stack-2">
+              <p class="tile-stat">4.1s</p>
+              <p class="meta">median time to first useful query</p>
+            </article>
+            <article class="card stack-2">
+              <p class="tile-stat">0</p>
+              <p class="meta">proprietary agents to install</p>
+            </article>
+          </div>
+
+          <div>
+            <div class="ledger-head">
+              <div class="stack-2">
+                <p class="eyebrow">// service level</p>
+                <h3>What we commit to in writing</h3>
+              </div>
+              <p class="meta">Effective 01 January</p>
+            </div>
+
+            <div class="specrow">
+              <span class="num">01</span>
+              <div class="stack-2">
+                <h4>Ingest availability</h4>
+                <p class="muted">Measured at the collector edge, per region, per minute.</p>
+              </div>
+              <span class="val">99.99%</span>
+            </div>
+            <div class="specrow">
+              <span class="num">02</span>
+              <div class="stack-2">
+                <h4>Query latency</h4>
+                <p class="muted">p99 over a 30 day window on the default retention tier.</p>
+              </div>
+              <span class="val">&lt; 500ms</span>
+            </div>
+            <div class="specrow">
+              <span class="num">03</span>
+              <div class="stack-2">
+                <h4>Data export</h4>
+                <p class="muted">Full Parquet export on request, at any point, at no charge.</p>
+              </div>
+              <span class="val">Always</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: kineticql-split --------------------------------------------- -->
+      <section class="section" data-od-id="kineticql-split" id="docs">
+        <div class="container">
+          <div class="split">
+            <div class="stack-6">
+              <p class="eyebrow">// kineticql</p>
+              <h2 class="h-block">One query language for all three signals</h2>
+              <p class="lede">
+                If you can read the query, you can read the incident. KineticQL is SQL
+                with three additions and no hidden rewriting.
+              </p>
+              <ul class="bullets">
+                <li>
+                  <svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg>
+                  Joins across traces, metrics and logs in one statement
+                </li>
+                <li>
+                  <svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg>
+                  Every dashboard panel shows the query that produced it
+                </li>
+                <li>
+                  <svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg>
+                  Saved queries are files, versioned beside the service they watch
+                </li>
+              </ul>
+              <div><a class="btn btn-primary" href="#docs">Open the language reference</a></div>
+            </div>
+
+            <div class="codepanel">
+              <div class="codepanel-bar">
+                <span class="lights">
+                  <i style="background: var(--danger)"></i>
+                  <i style="background: var(--warn)"></i>
+                  <i style="background: var(--success)"></i>
+                </span>
+                <span>slo/checkout.kql</span>
+              </div>
+              <pre class="codepanel-body"><span class="syn-key">select</span> percentile(duration, <span class="syn-str">0.99</span>) <span class="syn-key">as</span> p99,
+       count_if(status = <span class="syn-str">"error"</span>) <span class="syn-key">as</span> errors
+<span class="syn-key">from</span> spans
+<span class="syn-key">join</span> logs <span class="syn-key">using</span> (trace_id)
+<span class="syn-key">where</span> service = <span class="syn-str">"checkout"</span>
+<span class="syn-key">group by</span> bucket(ts, <span class="syn-str">"1m"</span>)</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: incident-timeline -------------------------------------------- -->
+      <section class="section band" data-od-id="incident-timeline" id="incidents">
+        <div class="container stack-6">
+          <div class="stack-3">
+            <p class="eyebrow">// incident 2412</p>
+            <h2 class="h-block">Ledger timeout, start to write-up</h2>
+          </div>
+
+          <div class="timeline">
+            <article class="tl-step">
+              <span class="tl-line" aria-hidden="true"></span>
+              <span class="tl-node">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+              </span>
+              <p class="tl-time">12:04 UTC</p>
+              <h4>Detected</h4>
+              <p><span class="chip"><span class="dot dot-err"></span> Outage</span></p>
+              <p class="muted">The SLO burn alert fired 41 seconds after the first timeout.</p>
+            </article>
+
+            <article class="tl-step">
+              <span class="tl-line" aria-hidden="true"></span>
+              <span class="tl-node">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v6" /><path d="M5.6 5.6 9.9 9.9" /><circle cx="12" cy="14" r="6" /></svg>
+              </span>
+              <p class="tl-time">12:09 UTC</p>
+              <h4>Scoped</h4>
+              <p><span class="chip"><span class="dot dot-warn"></span> Degraded</span></p>
+              <p class="muted">One shard, one region; checkout retried into a queue.</p>
+            </article>
+
+            <article class="tl-step">
+              <span class="tl-line" aria-hidden="true"></span>
+              <span class="tl-node">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+              </span>
+              <p class="tl-time">12:26 UTC</p>
+              <h4>Mitigated</h4>
+              <p><span class="chip"><span class="dot dot-ok"></span> Operational</span></p>
+              <p class="muted">Shard drained and rebalanced; the queue cleared in four minutes.</p>
+            </article>
+
+            <article class="tl-step">
+              <span class="tl-node">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z" /><path d="M9 12h6" /><path d="M9 16h4" /></svg>
+              </span>
+              <p class="tl-time">Next day</p>
+              <h4>Written up</h4>
+              <p><span class="chip">Public</span></p>
+              <p class="muted">Every incident gets a public write-up, including the ones nobody saw.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: pricing -------------------------------------------------------- -->
+      <section class="section" data-od-id="pricing" id="pricing">
+        <div class="container">
+          <div class="stack-3" style="margin-bottom: var(--space-8)">
+            <p class="eyebrow">// pricing</p>
+            <h2 class="h-block">Priced on bytes, not on seats or series</h2>
+          </div>
+
+          <div class="plans">
+            <article class="plan">
+              <div class="stack-2">
+                <h3>Solo</h3>
+                <p class="meta">For one service and one person on call.</p>
+              </div>
+              <p class="price">$0<small> / month</small></p>
+              <ul class="plan-features">
+                <li><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg> 20 GB ingest per month</li>
+                <li><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg> 7 day retention</li>
+                <li><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg> Community support</li>
+              </ul>
+              <a class="btn btn-ghost" href="#pricing">Start free</a>
+            </article>
+
+            <article class="plan plan-popular">
+              <div class="stack-2">
+                <p><span class="badge">Most popular</span></p>
+                <h3>Team</h3>
+                <p class="meta">For a platform team that owns the pager.</p>
+              </div>
+              <p class="price">$180<small> / month</small></p>
+              <ul class="plan-features">
+                <li><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg> 1 TB ingest per month</li>
+                <li><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg> 30 day hot retention</li>
+                <li><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg> SLO alerting and on-call routing</li>
+                <li><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg> Single sign-on</li>
+              </ul>
+              <a class="btn btn-primary" href="#pricing">Start the trial</a>
+            </article>
+
+            <article class="plan">
+              <div class="stack-2">
+                <h3>Self-hosted</h3>
+                <p class="meta">Your object store, your network, our binary.</p>
+              </div>
+              <p class="price">Talk<small> / to us</small></p>
+              <ul class="plan-features">
+                <li><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg> Unmetered ingest</li>
+                <li><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg> Retention you set</li>
+                <li><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg> Named support engineer</li>
+              </ul>
+              <a class="btn btn-ghost" href="#pricing">Book a call</a>
+            </article>
+          </div>
+
+          <div class="includes">
+            <h4>Every plan includes</h4>
+            <div class="includes-grid muted">
+              <p>OpenTelemetry ingest</p>
+              <p>Full Parquet export</p>
+              <p>Dashboards as files</p>
+              <p>Public incident write-ups</p>
+              <p>No per-seat pricing</p>
+              <p>No proprietary agent</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: pricing-matrix ---------------------------------------------- -->
+      <section class="section band" data-od-id="pricing-matrix">
+        <div class="container stack-6">
+          <div class="stack-3">
+            <p class="eyebrow">// compare</p>
+            <h2 class="h-block">Line by line</h2>
+          </div>
+
+          <div class="matrix-wrap">
+            <table class="matrix">
+              <thead>
+                <tr>
+                  <th scope="col">Capability</th>
+                  <th scope="col">Solo</th>
+                  <th scope="col">Team</th>
+                  <th scope="col">Self-hosted</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="group"><td colspan="4">Ingest</td></tr>
+                <tr>
+                  <th scope="row" style="font-weight: 400; color: var(--fg)">Monthly volume</th>
+                  <td class="mono muted">20 GB</td>
+                  <td class="mono muted">1 TB</td>
+                  <td class="mono muted">Unmetered</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="font-weight: 400; color: var(--fg)">OpenTelemetry endpoint</th>
+                  <td><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg></td>
+                  <td><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg></td>
+                  <td><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg></td>
+                </tr>
+                <tr class="group"><td colspan="4">Operations</td></tr>
+                <tr>
+                  <th scope="row" style="font-weight: 400; color: var(--fg)">SLO alerting</th>
+                  <td class="muted mono">no</td>
+                  <td><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg></td>
+                  <td><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg></td>
+                </tr>
+                <tr>
+                  <th scope="row" style="font-weight: 400; color: var(--fg)">Single sign-on</th>
+                  <td class="muted mono">no</td>
+                  <td><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg></td>
+                  <td><svg class="icon-sm check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg></td>
+                </tr>
+                <tr>
+                  <th scope="row" style="font-weight: 400; color: var(--fg)">Support</th>
+                  <td class="mono muted">Community</td>
+                  <td class="mono muted">8x5</td>
+                  <td class="mono muted">Named</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: testimonials -------------------------------------------------- -->
+      <section class="section" data-od-id="testimonials">
+        <div class="container stack-6">
+          <div class="stack-3">
+            <p class="eyebrow">// from the pager</p>
+            <h2 class="h-block">What on-call engineers say</h2>
+          </div>
+
+          <div class="quotes">
+            <article class="card card-lg quote-hero stack-6">
+              <blockquote>
+                We deleted three dashboards tools and one query language. The incident
+                that used to take forty minutes to scope now takes four, and the
+                write-up mostly writes itself.
+              </blockquote>
+              <div class="byline">
+                <span class="avatar">RC</span>
+                <span class="stack-2">
+                  <strong style="color: var(--fg-2); font-size: var(--text-sm)">Rae Castellan</strong>
+                  <span class="meta">Staff SRE, Northwind</span>
+                </span>
+              </div>
+            </article>
+
+            <div class="stack-4">
+              <article class="card stack-4">
+                <p>Priced on bytes meant we stopped rationing labels. That alone changed how we debug.</p>
+                <div class="byline">
+                  <span class="avatar">JO</span>
+                  <span class="stack-2">
+                    <strong style="color: var(--fg-2); font-size: var(--text-sm)">Jonas Ohm</strong>
+                    <span class="meta">Platform lead, Lattice</span>
+                  </span>
+                </div>
+              </article>
+              <article class="card stack-4">
+                <p>The self-hosted binary was running against our own object store in an afternoon.</p>
+                <div class="byline">
+                  <span class="avatar">MP</span>
+                  <span class="stack-2">
+                    <strong style="color: var(--fg-2); font-size: var(--text-sm)">Mira Pell</strong>
+                    <span class="meta">Infrastructure, Orbital</span>
+                  </span>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: teams -------------------------------------------------------- -->
+      <section class="section band" data-od-id="teams">
+        <div class="container stack-6">
+          <div class="stack-3">
+            <p class="eyebrow">// who builds it</p>
+            <h2 class="h-block">A small team that carries its own pager</h2>
+          </div>
+
+          <div class="cols-4">
+            <article class="card stack-3">
+              <span class="avatar">AV</span>
+              <div class="stack-2">
+                <h4>Ada Vlk</h4>
+                <p class="meta">Storage engine</p>
+              </div>
+              <p class="muted">Columnar layouts, and an unreasonable interest in compression ratios.</p>
+              <div class="socials">
+                <a class="social-tile" href="#teams" aria-label="Profile"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18" /></svg></a>
+              </div>
+            </article>
+
+            <article class="card stack-3">
+              <span class="avatar">TK</span>
+              <div class="stack-2">
+                <h4>Tomas Keel</h4>
+                <p class="meta">Query language</p>
+              </div>
+              <p class="muted">Believes a query you cannot read is a query you cannot trust.</p>
+              <div class="socials">
+                <a class="social-tile" href="#teams" aria-label="Profile"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18" /></svg></a>
+              </div>
+            </article>
+
+            <article class="card stack-3">
+              <span class="avatar">NS</span>
+              <div class="stack-2">
+                <h4>Noor Sahel</h4>
+                <p class="meta">Reliability</p>
+              </div>
+              <p class="muted">Writes the public incident reports, including the quiet ones.</p>
+              <div class="socials">
+                <a class="social-tile" href="#teams" aria-label="Profile"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18" /></svg></a>
+              </div>
+            </article>
+
+            <article class="card stack-3">
+              <span class="avatar">EF</span>
+              <div class="stack-2">
+                <h4>Erik Fold</h4>
+                <p class="meta">Developer experience</p>
+              </div>
+              <p class="muted">Owns the SDKs, the docs and the first four minutes of a trial.</p>
+              <div class="socials">
+                <a class="social-tile" href="#teams" aria-label="Profile"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18" /></svg></a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: accordion and faq-support ------------------------------------ -->
+      <section class="section" data-od-id="accordion">
+        <div class="container">
+          <div class="split" style="align-items: start">
+            <div class="stack-4">
+              <p class="eyebrow">// questions</p>
+              <h2 class="h-block">Asked often enough to answer here</h2>
+
+              <div style="border-top: 1px solid var(--border)">
+                <details class="acc" open>
+                  <summary>Do I have to install a proprietary agent? <span class="sign">+</span></summary>
+                  <p>No. The ingest endpoint speaks OpenTelemetry, and the collector we publish is the upstream one with a configuration file.</p>
+                </details>
+                <details class="acc">
+                  <summary>What happens when I exceed the plan volume? <span class="sign">+</span></summary>
+                  <p>Ingest keeps working and the overage is billed per gigabyte at the published rate. Nothing is dropped and nothing is sampled without you asking for it.</p>
+                </details>
+                <details class="acc">
+                  <summary>Can I get my data out? <span class="sign">+</span></summary>
+                  <p>A full Parquet export is available on every plan, at any point, at no charge. Export is not a retention feature, it is a right.</p>
+                </details>
+                <details class="acc">
+                  <summary>Is the self-hosted build the same code? <span class="sign">+</span></summary>
+                  <p>Same binary, same release tag. The difference is where the object store lives and who holds the keys.</p>
+                </details>
+              </div>
+            </div>
+
+            <!-- ACM: faq-support -->
+            <article class="card card-lg stack-4" data-od-id="faq-support" style="text-align: center; justify-items: center">
+              <span class="icon-chip">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" /><path d="m5 5 4 4" /><path d="m15 15 4 4" /><path d="m19 5-4 4" /><path d="m9 15-4 4" /></svg>
+              </span>
+              <h3>Still holding a question?</h3>
+              <p class="muted">A support engineer answers in the same channel you write in, and there is no tier that buys you a faster human.</p>
+              <a class="btn btn-primary" href="#docs">Talk to support</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: prose-quote --------------------------------------------------- -->
+      <section class="section band" data-od-id="prose-quote">
+        <div class="container">
+          <div class="prose">
+            <div class="ledger-head" style="border-bottom: 1px solid var(--border); margin-bottom: var(--space-4)">
+              <h3>Why we price on bytes</h3>
+              <p class="meta">Engineering note</p>
+            </div>
+            <p>
+              Series-based pricing asks an engineer to guess, at instrumentation time,
+              which label will matter during an incident that has not happened yet. That
+              guess is always wrong, and the cost of being wrong is paid at the worst
+              possible moment.
+            </p>
+            <blockquote class="pullquote">
+              A pricing model is a design decision. Ours says: label everything, and find
+              out later what mattered.
+            </blockquote>
+            <p>
+              Bytes are a number both sides can measure, and they move in the direction
+              engineers can actually control: sampling, retention, and what is worth
+              keeping hot.
+            </p>
+            <p class="meta">Noor Sahel, Reliability</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACM: page-masthead -------------------------------------------------- -->
+      <section class="masthead grid-bg" data-od-id="page-masthead">
+        <div class="container">
+          <p class="eyebrow">// changelog</p>
+          <h2 class="h-block">Everything that shipped this quarter</h2>
+          <p class="lede" style="text-align: center">
+            Release notes, deprecations and the incidents that caused them, in one list.
+          </p>
+        </div>
+      </section>
+
+      <!-- ACM: cta (band variant) --------------------------------------------- -->
+      <section class="section section-cta" data-od-id="cta">
+        <div class="container stack-6" style="justify-items: center; text-align: center">
+          <p class="eyebrow">// get started</p>
+          <h2 class="h-block">Point a collector at us and read your first trace</h2>
+          <p class="lede" style="text-align: center">
+            Twenty gigabytes a month, free, with no card and no call.
+          </p>
+          <p class="chip mono">$ kinetic init --otlp https://ingest.kinetic.dev</p>
+          <div class="hero-actions" style="justify-content: center">
+            <a class="btn btn-primary" href="#pricing">Start free</a>
+            <a class="btn btn-ghost" href="#docs">Read the docs</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ACM: footernews, social, footerlegal ---------------------------------- -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <!-- ACM: social (brand lockup and icon tiles) -->
+          <div class="stack-4" data-od-id="social">
+            <a class="logo" href="#hero">
+              <svg class="logo-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 17 9 12 4 7" />
+                <path d="M13 17h7" />
+              </svg>
+              <span class="logo-text">Kinetic</span>
+            </a>
+            <p class="muted" style="max-width: 48ch">
+              One store for traces, metrics and logs, priced on bytes and exportable on
+              demand.
+            </p>
+            <div class="socials">
+              <a class="social-tile" href="#hero" aria-label="Source"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 8-4 4 4 4" /><path d="m16 8 4 4-4 4" /></svg></a>
+              <a class="social-tile" href="#hero" aria-label="Updates"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="19" r="1.6" /><path d="M4 11a9 9 0 0 1 9 9" /><path d="M4 5a15 15 0 0 1 15 15" /></svg></a>
+              <a class="social-tile" href="#hero" aria-label="Status"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3 7 4-14 3 7h4" /></svg></a>
+            </div>
+          </div>
+
+          <!-- ACM: footernews (newsletter) -->
+          <div class="stack-4" data-od-id="footernews">
+            <h4>Release notes, once a month</h4>
+            <p class="muted">What shipped, what broke, what we removed. No product marketing.</p>
+            <form class="inline-form" onsubmit="event.preventDefault();">
+              <div class="field" style="flex: 1 1 240px">
+                <label class="meta" for="news-email">Email</label>
+                <input id="news-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" />
+              </div>
+              <button class="btn btn-primary" type="submit" style="align-self: end">Subscribe</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- ACM: footerlegal -->
+        <div class="footer-legal" data-od-id="footerlegal">
+          <p>Copyright Kinetic. All rights reserved.</p>
+          <ul>
+            <li><a href="#hero">Privacy</a></li>
+            <li><a href="#hero">Terms</a></li>
+            <li><a href="#incidents">Status</a></li>
+            <li><a href="#docs">Security</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

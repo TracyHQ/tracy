@@ -1,0 +1,69 @@
+{
+  "color": {
+    "pale-lemon": {
+      "$value": "#ffffa7",
+      "$type": "color",
+      "$description": "Pale Lemon — Primary action fill, brand accent, hero section wash, badge labels — the single chromatic voice of the entire system"
+    },
+    "electric-yellow": {
+      "$value": "#fddd05",
+      "$type": "color",
+      "$description": "Electric Yellow — Yellow outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, card surfaces, text on light fills, hairline dividers, image borders — the base everything floats on"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary text on dark, card surface alt, heading strokes, inverted button text"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Muted heading strokes, de-emphasized outline text, secondary borders on dark"
+    },
+    "mist": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Mist — Body subtext, link idle state, tertiary metadata — the only neutral that softens body copy without going silver"
+    },
+    "steel": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Steel — Captions, helper text, dense metadata rows, low-emphasis body"
+    }
+  },
+  "font": {
+    "pp-neue-montreal": {
+      "$value": "PP Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "Primary face across body, navigation, subheadings, and display. The custom geometric grotesque carries the entire brand voice: tight tracking at display sizes (up to -4.8px at 120px) compresses headlines into editorial-poster blocks, while relaxed tracking at body keeps 16px reading clean. Single weight 400 used throughout — weight does not differentiate hierarchy; size and color do."
+    },
+    "pp-neue-montreal-medium": {
+      "$value": "PP Neue Montreal Medium",
+      "$type": "fontFamily",
+      "$description": "Navigation and select body emphasis at the 16px size — the only place a medium weight appears, used to give nav links a subtle lift over body text without breaking the single-weight visual rhythm"
+    },
+    "abc-monument-grotesk": {
+      "$value": "ABC Monument Grotesk",
+      "$type": "fontFamily",
+      "$description": "Alternate display face for the largest hero statement — a wider, more architectural grotesque that provides a second editorial voice at maximum scale without competing with PP Neue Montreal elsewhere"
+    },
+    "system-sans-serif": {
+      "$value": "System Sans-Serif",
+      "$type": "fontFamily",
+      "$description": "Micro labels, copyright, legal footnotes — the only size at which the system stack appears, keeping fine print neutral and invisible"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://herokit.design",
+      "siteName": "HeroKit",
+      "extractedAt": "2026-06-03T20:45:06.494Z",
+      "variant": "compact"
+    }
+  }
+}

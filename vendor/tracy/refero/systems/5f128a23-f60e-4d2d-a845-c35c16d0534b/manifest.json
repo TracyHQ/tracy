@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "5f128a23-f60e-4d2d-a845-c35c16d0534b",
+  "status": "complete",
+  "name": "AZAK",
+  "url": "https://styles.refero.design/style/5f128a23-f60e-4d2d-a845-c35c16d0534b",
+  "sourceWebsite": "https://azak.co",
+  "extractedAt": "2026-09-20T19:24:35.459Z",
+  "capturedAt": "2026-10-08T05:12:12.742423+00:00",
+  "theme": "dark",
+  "industry": "other",
+  "description": "expedition vehicle in twilight. Build pages as a sequence of stark technical exhibits: black field, pale specification sheet, then a rendered mobility system.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c7e18ba5-1921-412c-8a6b-14604e9bc664.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4171bf1e-b354-4983-86fc-01d620b6805e.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/6b469b14-92f0-4b85-b829-b57673c16a90.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/29c35ff4-2904-4472-9f3a-2d51e498b898.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a413f402-6ef0-4e7a-bee1-274090020b65.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "640d16def965799472b72a7caea72f7130fa8567f4e888a6c2fd8a67475a79a2",
+      "bytes": 14867
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "048f2f2b4e68c55d46b43acbb6232d5d68dca0590faf97e99b7a423adc2381c5",
+      "bytes": 69178
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "9114d2bf063be2639b6b9f47a860427f2dbe8721d903ba3a5475542dcc7c0180",
+      "bytes": 12875
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "31cd31d5b58cc22ad948c8a19809349ec06394df19d3f4d74a287ecf23858b64",
+      "bytes": 6862
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "04cc176f088be962322f00ce4ec2f1614a7eab86036092466658e3a1975f4d86",
+      "bytes": 9188
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "0aedc27f50b8f4729337cb9376be55805ebb2ea722438dad7b6c95c6d0ac363c",
+      "bytes": 1421
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e22389f249983231f967183dc497073498e8304b385fa78e4b393cf6c69b9919",
+      "bytes": 320
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8d4350bb5b5d413f08fe22d0c27042bad30cb679fd6763fc6132ce790cb8788a",
+      "bytes": 337
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "759c0508e08dd262a4ff5094836d06708d613aa656db6645a224ed0e64e0d717",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "536e6cbc8fec196b59a7cd6ceb442f7ae62be4cce5ab5dc61209bc2a6d5f5736",
+      "bytes": 36115
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "4cdd6c7d9a64b7be8540db4723dc82a63f28d2c8b79f09d4d1414b0b20407576",
+      "bytes": 19065
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "298762aa7f2467d26a3a1ceef0d0ee955178091901b6909d91484a80da0c758b",
+      "bytes": 26783
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "bc9f166c2b214ac2d6c336090886a14e40d5c3cdab6bee266dbddb0110dc40cc",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5d137975767869983e21e64ad689b0880a2a420decf7d9b62937df5ff31ac6b0",
+      "bytes": 1248
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e8f477bebe035cd0c0c1b97f6af8cee20800fd68a340ab68c01c6d8416158f05",
+      "bytes": 1698
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "13b74e34-b824-4d1d-bd2c-bb9bfbc2d6e1",
+    "4433dfe7-315a-4459-bfd7-f59ccdc09bad",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4a248569-2b5a-4416-bb2a-c78890218b9f",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "5f128a23-f60e-4d2d-a845-c35c16d0534b",
+    "7266b546-2fb0-465c-acd6-79001c39829a",
+    "7aa1dbff-f5f1-4a64-9dba-f4caad7f1ebf",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "bf523387-03fc-4243-86ca-25af34daa0ce",
+    "c1052d8d-3663-46a4-a882-e50d9b8a1166",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "e79b761d-f476-4c5d-8943-e31a58664e4d",
+    "e85a82b1-c70e-42de-8c42-4bd95dd5e047",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d",
+    "fdcd4cbb-4db6-4138-9cfd-964795f1e1d6",
+    "fe7b8533-f56b-46bd-8713-f18886a1e986"
+  ]
+}

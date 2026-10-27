@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1615-sync-reload-previews",
+  "kind": "fix",
+  "title": "A Sync from live that brought the live site's changes reloads the site's previews, even with its dialog closed; a sync that brought nothing does not",
+  "pr": 1615,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/site/tracy-my-sites/test/live-sync-dialog.test.mjs apps/tracy-web/test/live-sync-timing.test.mjs packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs"
+  ],
+  "expect": [
+    "S1: tracy:site-synced is said once for an applied sync that brought something, after the dialog closed, and not for one that brought nothing; each sync's step seconds and live read parts are kept and shown as timing; a read whose files stood still lists once; one that moved during the read lists again; a files-unchanged read with no manifest lists by size and mtime, reading none"
+  ],
+  "selectors": {
+    "client": "live-sync-follow.ts followSyncToEnd broughtChanges, chat-input onSiteSynced reloadPreviews",
+    "host": "live-pull.mjs steady sameFiles stat.json, live_sync.py stat-manifest, live-sync.js timingOf"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-23-sync-fewer-listings.md",
+  "fence": "The preview shows what a sync brought without a reload by hand",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs",
+      "apps/tracy-web/test/live-sync-timing.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs"
+    ]
+  }
+}

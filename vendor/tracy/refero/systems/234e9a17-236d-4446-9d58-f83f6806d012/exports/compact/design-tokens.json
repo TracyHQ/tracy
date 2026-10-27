@@ -1,0 +1,54 @@
+{
+  "color": {
+    "electric-cobalt": {
+      "$value": "#0018a8",
+      "$type": "color",
+      "$description": "Electric Cobalt — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, logo wordmark, icon strokes, nav labels, and footer copy. Used at 21:1 contrast on white for absolute legibility"
+    },
+    "graphite": {
+      "$value": "#6b6b6b",
+      "$type": "color",
+      "$description": "Graphite — Supporting neutral for secondary UI, dividers, and muted labels."
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, product card backgrounds, and nav bar surface. The dominant ground that lets editorial photography breathe"
+    },
+    "bone": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Bone — Subtle box-shadow tint and hairline border for elevated overlays. Used minimally — the system prefers whitespace to tinted surfaces"
+    }
+  },
+  "font": {
+    "helvetica-monospaced-pro": {
+      "$value": "Helvetica Monospaced Pro",
+      "$type": "fontFamily",
+      "$description": "Helvetica Monospaced Pro — detected in extracted data but not described by AI"
+    },
+    "acne-studios-custom-wordmark": {
+      "$value": "Acne Studios (custom wordmark)",
+      "$type": "fontFamily",
+      "$description": "Oversized brand wordmark overlaid on hero photography. The custom face has geometric construction with humanist terminals; no system font replicates it, but its character is closest to a wide-aperture geometric sans."
+    },
+    "helvetica-neue-system-sans": {
+      "$value": "Helvetica Neue / system sans",
+      "$type": "fontFamily",
+      "$description": "All functional UI text: nav links, section labels, product captions, footer. Always rendered uppercase with generous tracking — this typographic treatment is the single most recognizable non-photographic element on the site."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://acnestudios.com",
+      "siteName": "Acne Studios",
+      "extractedAt": "2026-06-03T18:15:17.678Z",
+      "variant": "compact"
+    }
+  }
+}

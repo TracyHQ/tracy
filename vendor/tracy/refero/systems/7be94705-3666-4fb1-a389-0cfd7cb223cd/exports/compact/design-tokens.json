@@ -1,0 +1,59 @@
+{
+  "color": {
+    "deep-space-violet": {
+      "$value": "#151035",
+      "$type": "color",
+      "$description": "Deep Space Violet — Primary brand surface — hero background, navigation, dark panels, code/token sidebars, and the product UI shell. Sets the dark-mode identity and creates the canvas against which the teal accent glows"
+    },
+    "bright-teal": {
+      "$value": "#1ccac7",
+      "$type": "color",
+      "$description": "Bright Teal — Primary action fill, emphasis word in headlines, active tab indicator, and decorative spark. The single chromatic note — rationed to CTAs, highlights, and one word per headline — making each occurrence feel switched on"
+    },
+    "rich-violet": {
+      "$value": "#2f226c",
+      "$type": "color",
+      "$description": "Rich Violet — Secondary violet for subtle borders, dividers, and accent strokes within the dark panels. A bridge between Deep Space Violet and Bright Teal on the dark canvas"
+    },
+    "off-white": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Off-White — Page canvas, light card surfaces, body text on dark surfaces, icon fills. The light-mode workhorse — never pure white, slightly warm to soften the contrast against Deep Space Violet"
+    },
+    "light-gray": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Light Gray — Hairline borders, subtle dividers, and nav separators on light surfaces. The quietest neutral — present but never demanding attention"
+    },
+    "silver": {
+      "$value": "#d3d3d3",
+      "$type": "color",
+      "$description": "Silver — Button borders and disabled/secondary control outlines. Slightly heavier than Light Gray — used when a border needs to define a control edge"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Body text on light surfaces and maximum-contrast borders where the violet would be too soft. Sparingly used — the violet handles most dark roles"
+    }
+  },
+  "font": {
+    "work-sans": {
+      "$value": "Work Sans",
+      "$type": "fontFamily",
+      "$description": "The sole typeface — used for everything from 72px hero headlines down to 12px captions. Geometric humanist sans with friendly proportions; weight 400 for body, 500 for nav/buttons, 700 for headings and emphasis. The -0.028em tracking is a signature choice: it tightens the wide geometric forms of Work Sans at large sizes so headlines feel architectural rather than airy."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://penpot.app",
+      "siteName": "Penpot",
+      "extractedAt": "2026-06-03T21:57:44.239Z",
+      "variant": "compact"
+    }
+  }
+}

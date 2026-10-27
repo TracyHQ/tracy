@@ -1,0 +1,69 @@
+{
+  "color": {
+    "rust-hearth": {
+      "$value": "#892500",
+      "$type": "color",
+      "$description": "Rust Hearth — Brand logo, active navigation state, section underlines, the only chromatic punctuation in the interface — carries identity weight wherever it appears"
+    },
+    "blush-whisper": {
+      "$value": "#ea9195",
+      "$type": "color",
+      "$description": "Blush Whisper — Secondary chromatic accent for hover states, soft tags, and paired decorative elements — never standalone, always supporting Rust Hearth"
+    },
+    "linen": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Linen — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "raw-silk": {
+      "$value": "#f9f6f2",
+      "$type": "color",
+      "$description": "Raw Silk — Warm off-white page background — replaces sterile pure white to give the site a tactile, natural-fiber feel"
+    },
+    "sand-plaster": {
+      "$value": "#eee5d9",
+      "$type": "color",
+      "$description": "Sand Plaster — Card backgrounds, badge fills, soft surface lifts — the warm secondary tier that differentiates containers from the page canvas"
+    },
+    "charcoal-ink": {
+      "$value": "#0e0e0e",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary text, navigation text, filled action buttons, dark hero overlays — near-black reads softer than pure black against the warm neutrals"
+    },
+    "stone": {
+      "$value": "#868686",
+      "$type": "color",
+      "$description": "Stone — Mid-gray for hairline borders, dividers, secondary metadata, inactive UI scaffolding — the dominant structural neutral"
+    },
+    "ash": {
+      "$value": "#b7b7b7",
+      "$type": "color",
+      "$description": "Ash — Lighter borders, muted helper text, disabled states, subtle list separators"
+    },
+    "frost": {
+      "$value": "#d7d7d7",
+      "$type": "color",
+      "$description": "Frost — Faintest divider lines on links, barely-there separators"
+    }
+  },
+  "font": {
+    "raleway": {
+      "$value": "Raleway",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface — humanist sans with elegant terminals. Used for navigation, body copy, links, buttons, and footer. The 600 weight handles button labels and nav items; 400 carries running text with generous 1.67–1.79 line-height for editorial readability"
+    },
+    "poppins": {
+      "$value": "Poppins",
+      "$type": "fontFamily",
+      "$description": "Display and section-heading typeface — geometric sans used for hero-scale section labels like 'TRENDING' at 62px. Extreme letter-spacing (0.154em at display, 0.091em at 20px) transforms headlines into printed gallery signage, the signature typographic moment of the brand"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.letsbehonest.eu",
+      "siteName": "HNST Studio",
+      "extractedAt": "2026-06-03T19:22:18.964Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+@theme {
+  /* Colors */
+  --color-void-canvas: #020618;
+  --color-midnight-panel: #080e21;
+  --color-deep-slate: #0f172b;
+  --color-steel-outline: #1d293d;
+  --color-blue-steel: #314158;
+  --color-muted-fog: #90a1b9;
+  --color-pale-frost: #e2e8f0;
+  --color-signal-white: #ffffff;
+  --color-nuxt-signal: #00dc82;
+  --color-vue-link: #42b883;
+  --color-vite-link: #a156fe;
+  --color-nitro-link: #fb848e;
+
+  /* Typography */
+  --font-public-sans: 'Public Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-monospace: 'ui-monospace', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

@@ -1,0 +1,294 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-colab",
+  "release": "quickstart/ja-colab/j6@1.0.0",
+  "roles": {
+    "page": "div.t4-content",
+    "display": "h1.hero-title",
+    "heading": "h2.text-primary",
+    "body": "p.mb-0"
+  },
+  "discovered": {
+    "page": "outermost element painted the page colour (body is not)",
+    "display": "largest heading near the top: 60px",
+    "displayFace": "Manrope 700, tracking 0em",
+    "heading": "first section heading: 48px",
+    "body": "first body paragraph",
+    "displayPhone": "the same heading at 390 on the published release: 30px"
+  },
+  "keepScopes": [".bg-dark", "#t4-section-6", ".horizontal-nav"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#4f4f4f",
+    "--fg-2": "#212529",
+    "--accent": "#2748ac",
+    "--accent-hover": "#092579",
+    "--surface": "#fefce6",
+    "--surface-warm": "#201f1e",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#e0e0e0",
+    "--muted": "#828282",
+    "--font-display": "\"Manrope\", sans-serif",
+    "--font-body": "\"Manrope\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#4f4f4f",
+      "fg-2": "#212529",
+      "accent": "#2748ac",
+      "accent-hover": "#092579",
+      "surface": "#fefce6",
+      "surface-warm": "#201f1e",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#e0e0e0",
+      "muted": "#828282"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#212529",
+      "fg-2": "#ffffff"
+    },
+    {
+      "accent": "#0d6efd"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "bg": "#ffffff",
+      "surface-warm": "#201f1e",
+      "border": "#ced4da",
+      "fg": "#495057"
+    },
+    {
+      "border": "#dee2e6",
+      "bg": "#f8f9fa"
+    },
+    {
+      "border": "#dddddd"
+    },
+    {
+      "fg-2": "#201f1e"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (58 line colours, 49 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": [".t4-section .container"],
+    "bodyFace": ["body"],
+    "onAccent": [".acm-features.style-2 .feature-info", ".bg-primary .btn-outline-light"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t4-section p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 16 tried (byte 5773); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 59,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#ffffff",
+      "distance": 0
+    },
+    {
+      "hex": "#201f1e",
+      "uses": 47,
+      "kind": "custom",
+      "role": "surface-warm",
+      "near": "#201f1e",
+      "distance": 0
+    },
+    {
+      "hex": "#ced4da",
+      "uses": 10,
+      "kind": "custom",
+      "role": "border",
+      "near": "#e0e0e0",
+      "distance": 22
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 10,
+      "kind": "custom",
+      "role": "border",
+      "near": "#e0e0e0",
+      "distance": 7
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#ffffff",
+      "distance": 10
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 4,
+      "kind": "line",
+      "role": "border",
+      "near": "#e0e0e0",
+      "distance": 5
+    },
+    {
+      "hex": "#495057",
+      "uses": 4,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#4f4f4f",
+      "distance": 10
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-colab/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip so T4 regenerated media/t4/css on the first request: tasks/evidence/ds-contracts-r3d-2026-10-11/ja-colab-j6): 12/12, controls 0 differences, no text read worse than the template own (every visible heading and text judged element by element), 94% or more of the page follows, every contrast kind sampled; checked by eye on Moxie, Toggl Track (dark) and MotherDuck, Apple (light): the feature cards dark line icons are inverted on a dark page (sideRules); the fixed left rail keeps its own blue (decoration, its white icons read). Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 12/12 verdicts, controls 0 differences, no text made less readable than the template's own, 94% or more of the page follows, every contrast kind sampled at 1440 and 390; the navy follow-us strip is kept with its own icon colours (keepScopes, keepColors); checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-colab-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-colab 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts, controls 0 differences, no text below 4.5:1 worse than the template's own, 94-97% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-colab-j6",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-accent-on)",
+    "--headings-color": "var(--ds-c-fg)"
+  },
+  "templateVarsNote": "JA Colab paints its menu and highlights in var(--color-secondary) (#fff691) on its primary band: the slot gives it the text colour readable on the worn accent (the family maps --color-secondary to the surface, a fill); --color-dark follows the family (the text colour): its outline-dark buttons on the page read it, and its one dark band (.bg-dark) is kept; its headings read --headings-color (theme.tpl.css, 23 rules), a name tokenize.mjs cannot place: the text colour",
+  "metaNote": "white is not a meta text colour here: the draft took it from text painted on photos and coloured labels, which keep their white",
+  "paletteNote": "#201f1e is its heading text as well as its dark band's fill: as text it takes the second text colour",
+  "paletteBands": {
+    ".bg-primary": "accent"
+  },
+  "paletteBandsNote": "its top band is a .bg-primary section with white headings and features on it: the band takes the accent and the text readable on it",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples)",
+  "keepDefaultsYield": true,
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#212529",
+    "--body-link-color": "#2748ac",
+    "--body-link-hover-color": "#092579",
+    "--color-primary": "#2748ac",
+    "--color-secondary": "#fff691",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#fefce6",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#ffffff",
+    "--mainnav-link-color": "#ffffff",
+    "--mainnav-link-hover-color": "#fff691",
+    "--mainnav-link-active-color": "#fff691",
+    "--footer-bg-color": "#201f1e",
+    "--footer-text-color": "#ffffff",
+    "--footer-link-color": "rgba(255, 255, 255, 0.8)",
+    "--footer-link-hover-color": "#ffffff",
+    "--headings-color": "#201F1E"
+  },
+  "keepText": ["#t4-section-6"],
+  "sideRules": {
+    "dark": {
+      ".features-item .img-icon img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".logo-img[src$=\"logo-2.png\"]": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".logo-img-sm[src$=\"logo-mb-2.png\"]": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      }
+    }
+  },
+  "sideRulesNote": "its feature cards carry dark line icons drawn for its cream cards (.features-item .img-icon img): on a dark worn page they are shown inverted, hues kept",
+  "keepNote": "kept after measuring 11/10/2026: .bg-dark (the dark panel beside a photo: yellow eyebrow, white text and outline button on #212529; under a system the eyebrow took the accent text colour, black on #212529) and #t4-section-6 (the closing hero: white text and an outline-light button on a photo); keepDefaultsYield because .bg-dark declares its own --body-text-color and --headings-color; keepText for the hero, which paints no text colour of its own; .horizontal-nav kept after the eye check of 11/10/2026 (re-measure): the navy strip (rgb(32, 59, 142), a literal) is the left follow-us bar on desktop and the top bar on the phone; its social icons took the readable accent and stood dim on the navy under MotherDuck and Apple — kept, they keep the template's own colours on its own navy",
+  "onAccentNote": "text on its accent bands drawn by other rules: the \"Work your way\" feature intro (.acm-features.style-2, an accent fill from a tokenized literal, white text) and the outline-light button on the .bg-primary panel",
+  "minVersion": {
+    "quickstart/ja-colab/j6": "1.0.1"
+  },
+  "keepColors": {
+    ".horizontal-nav": "rgb(33, 37, 41)"
+  },
+  "maxVersion": {
+    "quickstart/ja-colab/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".bg-dark": {
+      "ground": "#212529",
+      "texts": ["#ffffff", "#d3d3d4", "#fefce6"],
+      "paint": {
+        ".section-title span": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    "#t4-section-6": {
+      "ground": "#ffffff",
+      "texts": ["#ffffff", "#fefce6"],
+      "picture": true,
+      "important": true
+    },
+    ".acm-features.style-2": {
+      "ground": "#2748ac",
+      "texts": ["#ffffff", "#fff691"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".section-title span", ".main-heading", ".short-desc"]
+    },
+    ".info-wrap.bg-primary": {
+      "ground": "#2748ac",
+      "texts": ["#fff691", "#ffffff", "#d4daee"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [
+        ".section-title span",
+        ".main-heading",
+        ".info-desc p",
+        ".info-desc",
+        ".feature-title",
+        ".item-info a",
+        ".icon"
+      ]
+    },
+    ".horizontal-nav": {
+      "ground": "#203b8e",
+      "texts": ["#ffffff"],
+      "kind": "ink",
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 13/10/2026 by scripts/bands.mjs; .horizontal-nav added by hand (a 60px follow-us bar on desktop, under the drafter's 240px): its white icons keep their colour on the system's ink, the reason it was kept (icons taking a dim accent on the navy) does not apply 13/10/2026: the contact box's feature titles, its phone and mail links and their icons inherit the box's colour; under a system whose accent is its ink (Airbnb, Eddie, ElevenLabs: #222 on #222) they vanished, so they are the fill's words too, as is the lead (a div).",
+  "reviewV8Note": "15/10/2026 (look review v8): the inner pages show the dark logo pictures (logo-2.png, logo-mb-2.png) on a header a dark system turns black; under a dark system they are inverted (the home shows the white logo-1.png and keeps it). The slot’s own logo flip stays off here: the contract filters pictures on the dark side"
+}

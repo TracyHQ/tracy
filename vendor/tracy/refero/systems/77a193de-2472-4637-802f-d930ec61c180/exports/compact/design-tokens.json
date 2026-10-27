@@ -1,0 +1,104 @@
+{
+  "color": {
+    "forest-ink": {
+      "$value": "#00381c",
+      "$type": "color",
+      "$description": "Forest Ink — Page canvas, section backgrounds — deep saturated green creates the base atmosphere; the page reads as forest-green, not black, which warms the dark theme and separates this system from generic dark-mode SaaS"
+    },
+    "forest-deep": {
+      "$value": "#002d16",
+      "$type": "color",
+      "$description": "Forest Deep — Shadow and recessed surface tone — used in card drop-shadows and inner depth layers, the slightly darker shade of the canvas adds dimension without breaking the monochrome green field"
+    },
+    "peach-cream": {
+      "$value": "#ffe0ce",
+      "$type": "color",
+      "$description": "Peach Cream — Primary text, hairline borders, outlined-action strokes — the system's only near-gray warm tone; carries the majority of legibility weight and acts as the universal border color across lists, cards, and images. Outlined ghost-button stroke color"
+    },
+    "bone": {
+      "$value": "#f6e9d9",
+      "$type": "color",
+      "$description": "Bone — Secondary text, decorative stroke and fill accents — a slightly cooler cream for subtle differentiation from Peach Cream without breaking the warm neutrals family"
+    },
+    "charcoal": {
+      "$value": "#272221",
+      "$type": "color",
+      "$description": "Charcoal — Card surface, elevated panels, secondary dark surface — sits one step off pure black, warm enough to harmonize with the green canvas, used for the back-layer of illustrated artwork tiles"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Deepest surface, button border, text on light card — true black reserved for max-contrast elements and neutral button outlines"
+    },
+    "slate": {
+      "$value": "#2c2f34",
+      "$type": "color",
+      "$description": "Slate — Neutral card surface variant for utility panels — cool-tinted alternative to Charcoal for sections that need to feel mechanical rather than warm"
+    },
+    "fog": {
+      "$value": "#c3bfbc",
+      "$type": "color",
+      "$description": "Fog — Muted neutral card surface — desaturated warm gray for low-emphasis panels"
+    },
+    "coral-flame": {
+      "$value": "#ff8370",
+      "$type": "color",
+      "$description": "Coral Flame — Display type accent, link text, emphasis headings — vivid warm orange that dominates the hero typography and section labels; against the green canvas it reads as high-energy poster ink, not a UI CTA color"
+    },
+    "lavender": {
+      "$value": "#d1adff",
+      "$type": "color",
+      "$description": "Lavender — Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis."
+    },
+    "sage": {
+      "$value": "#546f57",
+      "$type": "color",
+      "$description": "Sage — Body background panels, list dividers, utility surfaces — desaturated green that sits between Forest Ink and the cream text, used for secondary content blocks and list separators"
+    },
+    "ultraviolet": {
+      "$value": "#2d0458",
+      "$type": "color",
+      "$description": "Ultraviolet — Dramatic card surface for featured work tiles — deep saturated violet as an alternative canvas for highlight cards; high contrast with Peach Cream text"
+    },
+    "indigo-depth": {
+      "$value": "#1e1779",
+      "$type": "color",
+      "$description": "Indigo Depth — Accent card surface — vivid indigo for occasional card variants that need to feel different from the green field without going warm"
+    },
+    "heather": {
+      "$value": "#977eac",
+      "$type": "color",
+      "$description": "Heather — Muted card surface — dusty violet for low-priority cards and section dividers"
+    },
+    "navy-depths": {
+      "$value": "#002a3b",
+      "$type": "color",
+      "$description": "Navy Depths — Cool card surface — deep blue-teal for cards that need to break from the warm/green field with a cool note"
+    }
+  },
+  "font": {
+    "mango-grotesque": {
+      "$value": "Mango Grotesque",
+      "$type": "fontFamily",
+      "$description": "Display and heading — Mango Grotesque is a condensed grotesque used at near-illegible sizes (88–518px) with compressed line-height (0.80–0.85), intentionally bleeding off the viewport. The tight tracking plus compressed leading is what makes the type read as 'poster' rather than 'web headline'. Substitutes: Anton, Bebas Neue, Druk Wide for the mass, Archivo Black for smaller weights."
+    },
+    "nohemi": {
+      "$value": "Nohemi",
+      "$type": "fontFamily",
+      "$description": "UI body, navigation, buttons, meta text — Nohemi runs at a deliberately tiny 14–18px with generous +0.10em tracking, a signature move that makes the UI text feel like caption furniture rather than body copy. The +10% tracking is anti-convention: most body systems tighten tracking, this loosens it to keep the small text airy and readable against the dark green. Substitutes: Inter, General Sans, Satoshi."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback for the smallest UI metadata — 13px Arial is used purely as a safe baseline when custom fonts fail; treated as invisible utility, not a design choice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://flayks.com",
+      "siteName": "Flayks",
+      "extractedAt": "2026-06-03T21:31:04.571Z",
+      "variant": "compact"
+    }
+  }
+}

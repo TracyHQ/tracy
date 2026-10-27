@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-sunglow: #ffe845;
+  --color-sauce-bottle-black: #000000;
+  --color-pure-white: #ffffff;
+  --color-buttermilk: #fbfaf2;
+  --color-cool-link-blue: #007aff;
+
+  /* Typography — Font Families */
+  --font-gooper: 'Gooper', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-monument-grotesk: 'ABC Monument Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pitch-sans: 'Pitch Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

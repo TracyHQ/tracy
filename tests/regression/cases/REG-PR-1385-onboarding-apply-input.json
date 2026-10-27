@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1385-onboarding-apply-input",
+  "kind": "fix",
+  "title": "Apply stops at its deadline, a run that wrote nothing of a description fails, and the demo company's contacts, offices and prices do not stay on the customer's Joomla site",
+  "pr": 1385,
+  "area": "add-site/apply",
+  "cms": ["jo", "wp"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "With TEST_DATABASE_URL set as in the tracy-web suite, from apps/tracy-web run: node --test --test-reporter=tap test/brief-build.test.mjs test/brief-joomla.test.mjs test/joomla-site-words.test.mjs",
+    "Read the ok/not ok line of each test named in run.tests, and the fail count."
+  ],
+  "expect": [
+    "'an apply cut at its deadline writes nothing after it' is ok: the row ends failed 'took too long', the engine's write after the deadline is refused, and only the write before it reached the door.",
+    "'an Apply that wrote nothing of a description it was given fails, with what happened' is ok: state failed, error carries 'none of your text was written' and the engine's note, timings.wrote 0.",
+    "'an Apply that wrote nothing it had nothing to write from says so on the finished row and to the gate' is ok: a brief with no description in English still ends applied with the note.",
+    "'About given, no phone or address: the offices strip goes unwritten and the identity keeps no detail of the demo company' is ok: module-812 is among the hidden modules, none of module-812.4/5/6 is written, and module-4369.1/.2/.4/.5/.6/.7 are written as empty strings.",
+    "'the seven modules that are nothing but the template's facts, and the four lists of its places and prices, are unpublished' is ok: Tracy Business hides modules 447 810 812 837 840 841 842 844 847 849 855.",
+    "'About left blank, a name given' is ok: only the four lists 810 812 840 847 are hidden; the seven fact modules stay published.",
+    "The contact-record test 'a design that is not another company's is not judged' is ok: the visible record's telephone is emptied when no phone was given.",
+    "Every other test of the three files stays ok."
+  ],
+  "selectors": {
+    "deadline": "recordedDoor in apps/tracy-web/src/sites/brief-engines/shared.js refuses calls once ctx.signal fired; brief-build.js gives apply its own signal (applyStop)",
+    "nothing written": "wordsAsked and the wrote === 0 branch in apps/tracy-web/src/sites/brief-build.js",
+    "identity": "the emptied set in prepare of apps/tracy-web/src/sites/brief-engines/joomla.js (resolveChromeSlots of the seeder's chrome-slots)",
+    "lists": "isFactList in apps/tracy-web/src/lib/fact-fields.js; factModules in joomla.js",
+    "contact record": "contactSteps in apps/tracy-web/src/sites/brief-engines/joomla-tidy.js",
+    "overrides": "translateLanguageOverrides in apps/tracy-web/src/sites/brief-engines/joomla-site-strings.js"
+  },
+  "evidence": "TCH #1367 (production jurgens and ali-barber, 13/10/2026) re-run on the local stand at develop a1410fd154, 15/10/2026: ali-barber (Tracy Business Joomla, Dutch) ended failed at the 180 s apply deadline and the engine kept writing 19-23 s after; all 13 pages read showed 8 800 550-67-90, sales@northgate-ind.ru, the Kaluga address, three +7 offices and 'from ₽48,000/m²'.",
+  "fence": "The real brief engines and build over a scratch Postgres schema with model and CMS doubles. Not exercised here: a running CMS (covered by the stand re-run on the PR).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/brief-build.test.mjs",
+      "test/brief-joomla.test.mjs",
+      "test/joomla-site-words.test.mjs"
+    ],
+    "cwd": "apps/tracy-web",
+    "needs": ["postgres"],
+    "tests": [
+      "an apply cut at its deadline writes nothing after it",
+      "an Apply that wrote nothing of a description it was given fails, with what happened",
+      "an Apply that wrote nothing it had nothing to write from says so on the finished row and to the gate",
+      "About given, no phone or address: the offices strip goes unwritten and the identity keeps no detail of the demo company",
+      "the seven modules that are nothing but the template's facts, and the four lists of its places and prices, are unpublished",
+      "About left blank, a name given",
+      "a design that is not another company's is not judged",
+      "the template’s own strings become Vietnamese overrides"
+    ]
+  }
+}

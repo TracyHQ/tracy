@@ -1,0 +1,121 @@
+---
+import { getSiteSettings } from 'emdash'
+import MobileMenu from '@/components/islands/MobileMenu'
+import ResourcesMenu from '@/components/islands/ResourcesMenu'
+import SearchIcon from '@/components/site/SearchIcon.astro'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href } from '@/lib/i18n'
+import { uiLocale } from '@/lib/ui'
+import { wordsOf } from '@/lib/locale-words'
+import { mediaUrl } from '@/lib/media'
+import { islandMarks, stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  /** Site-relative path of the current page, for the active nav item. */
+  currentPath: string
+  /** True on kit/system pages: the Resources item shows as active (source: `resActive`). */
+  resourcesActive?: boolean
+}
+const { chrome, currentPath, resourcesActive = false } = Astro.props
+const { site, locale } = chrome
+// The customer's logo (core `settings.logo`, the chrome entry's `logo_dark`): the header follows the theme.
+const logos = brandLogos(await getSiteSettings(), site.logo_dark, site.brand_name)
+// Provenance stamps of the site chrome's fields (`src/lib/stamps.ts`); empty on an ordinary request.
+const s = stampFor(Astro.request, 'site', site)
+// A site field the islands fall back from (`?? 'Resources'`) is stamped only when it is set: the
+// fallback is a template word, not the field.
+const sIf = (key: string) => (site[key] ? s(key) : {})
+const isActive = (url: string) => {
+  const path = url.replace(/^\/ru(?=\/|$)/, '') || '/'
+  if (path === '/') return currentPath === '/'
+  return currentPath === path || currentPath.startsWith(`${path}/`)
+}
+// A link into an unticked page goes on its own (TCH #1013, `src/lib/link-gate.ts`): the quote button when Contact is
+// off, and the Resources columns that list Projects or News items when that page is off (their items answer 404 too).
+const quoteUrl = site.quote_url || href(locale, '/contact')
+const newsUrl = href(locale, '/news')
+const projectsUrl = href(locale, '/projects')
+const live = await liveLinks(Astro.request, locale, [quoteUrl, newsUrl, projectsUrl])
+const mega = {
+  label: site.resources_label ?? 'Resources',
+  active: resourcesActive,
+  kitTitle: site.kit_title ?? '',
+  projectsTitle: site.recent_projects_title ?? '',
+  newsTitle: site.news_column_title ?? '',
+  allLabel: site.resources_all_label ?? '',
+  allUrl: live(newsUrl) ? newsUrl : '',
+  // The kit column is a menu (`resources_kit`); menus are not Content API records, so its links
+  // carry no stamp.
+  kit: chrome.kit.map((k) => ({ label: k.label, url: k.url })),
+  projects: (live(projectsUrl) ? chrome.recentProjects : []).map((p) => {
+    const $p = stampFor(Astro.request, 'projects', p.entry)
+    return {
+      title: p.title,
+      meta: p.meta,
+      url: p.url,
+      src: mediaUrl(p.image),
+      ...islandMarks({ item: $p(), title: $p('title'), meta: p.meta ? $p('card_tag') : {} })
+    }
+  }),
+  news: (live(newsUrl) ? chrome.recentNews : []).map((n) => {
+    const $n = stampFor(Astro.request, 'posts', n.entry)
+    return {
+      title: n.title,
+      date: formatDate(n.date, uiLocale(locale)),
+      url: n.url,
+      ...islandMarks({ item: $n(), title: $n(n.titleField) })
+    }
+  }),
+  ...islandMarks({
+    label: sIf('resources_label'),
+    kitTitle: sIf('kit_title'),
+    projectsTitle: sIf('recent_projects_title'),
+    newsTitle: sIf('news_column_title'),
+    allLabel: sIf('resources_all_label')
+  })
+}
+// The drawer for narrow screens reads the SAME lists as the row above: primary menu, and the
+// Resources column of the mega panel flattened to links. Nothing is fetched twice.
+const drawer = {
+  label: wordsOf(uiLocale(locale)).menu,
+  items: chrome.primary.map((i) => ({ label: i.label, url: i.url, active: isActive(i.url) })),
+  resourcesLabel: mega.label,
+  resources: mega.kit.map((k) => ({ label: k.label, url: k.url })),
+  allLabel: mega.allLabel,
+  allUrl: mega.allUrl,
+  quoteLabel: site.quote_label,
+  quoteUrl: live(quoteUrl) ? quoteUrl : '',
+  ...islandMarks({
+    resourcesLabel: sIf('resources_label'),
+    allLabel: sIf('resources_all_label'),
+    quoteLabel: s('quote_label')
+  })
+}
+---
+
+<header class="relative z-40 border-b border-line bg-paper">
+	<div class="container-site flex min-h-[84px] flex-wrap items-center justify-between gap-x-[18px] gap-y-3.5 py-3.5">
+		<a href={href(locale, "/")} class="flex items-center gap-3.5 text-fg hover:text-fg">
+			<BrandLogo spots={logoSpots(logos, "themed")} alt={logos.alt} imgClass="h-10 w-auto max-w-[220px] object-contain">
+				<span class="flex h-10 w-10 items-center justify-center bg-forest text-[19px] font-bold tracking-tight text-[color:var(--ds-c-on-accent-band,var(--color-white))]" {...s("brand_mark")}>{site.brand_mark}</span>
+				<span>
+					<span class="block text-[20px] font-bold leading-none tracking-tight" {...s("brand_name")}>{site.brand_name}</span>
+					<span class="mt-[3px] block whitespace-nowrap text-[9px] uppercase tracking-[.13em] text-fg-meta" {...s("brand_sub")}>{site.brand_sub}</span>
+				</span>
+			</BrandLogo>
+		</a>
+		<nav class="hidden min-w-0 flex-auto flex-wrap items-center justify-end gap-x-4 gap-y-2 md:flex" aria-label="Primary">
+			{chrome.primary.map((i) => <a href={i.url} class="nav-link" aria-current={isActive(i.url) ? "page" : undefined}>{i.label}</a>)}
+			{(mega.kit.length > 0 || mega.projects.length > 0 || mega.news.length > 0) && <ResourcesMenu client:load {...mega} />}
+		</nav>
+		<div class="ml-auto flex shrink-0 items-center gap-2.5">
+			<MobileMenu client:load {...drawer} />
+			<a href={href(locale, "/search")} title={site.search_button} aria-label={site.search_button} class="tb-header-search flex h-[38px] w-[38px] items-center justify-center border border-line text-[15px] text-fg-2 hover:border-forest-text hover:text-forest-text" {...s("search_button")}><SearchIcon /></a>
+			{live(quoteUrl) && <a href={quoteUrl} class="btn-forest tb-quote" {...s("quote_label")}>{site.quote_label}</a>}
+		</div>
+	</div>
+</header>

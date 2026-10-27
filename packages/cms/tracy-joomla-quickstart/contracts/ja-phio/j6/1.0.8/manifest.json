@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-phio/j6/1.0.8",
+  "platform": "joomla",
+  "template": "ja_phio",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-phio",
+    "id": "quickstart/ja-phio/j6",
+    "version": "1.0.8",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_phio",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-phio-j6-webroot-1.0.8.tar.gz",
+        "bytes": 56581605,
+        "sha256": "26cc92a24e115fb8ef7fb455b7ef3b452d2e855ecedfa8886225f01a635a7897"
+      },
+      "database": {
+        "file": "ja-phio-j6-database-1.0.8.sql.gz",
+        "bytes": 130277,
+        "sha256": "b361f3f44aaa2a78d1298ef9c960d562dd49201d3e01b8f0cab06e0902466cd6"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T18:03:29.407Z",
+    "builtFrom": {
+      "from": "quickstart/ja-phio/j6@1.0.7",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 2 files replaced (templates/ja_phio/css, templates/ja_phio/scss); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-phio/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

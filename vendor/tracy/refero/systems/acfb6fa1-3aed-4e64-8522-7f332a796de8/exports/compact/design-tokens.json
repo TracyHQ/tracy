@@ -1,0 +1,49 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Bone — Page canvas, card surfaces, hairline dividers between sections, ghost-button borders — the lightest structural gray carries borders, surface, and the dominant background in a near-white mode"
+    },
+    "charcoal": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Charcoal — Primary body and heading text, nav links, footer text, filled button text — near-black for maximum legibility without the harshness of pure black"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, filled button backgrounds, image overlays, reverse text on dark sections — the brightest structural white"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Headings on light canvas where maximum contrast is required, nav background accents — used sparingly only where absolute black is needed"
+    },
+    "deep-current": {
+      "$value": "#031e25",
+      "$type": "color",
+      "$description": "Deep Current — Dark feature section backgrounds (alternating bands), large image containers — the navy-black that recedes like deep ocean water"
+    },
+    "slate-depth": {
+      "$value": "#1d1d1e",
+      "$type": "color",
+      "$description": "Slate Depth — Secondary dark section background, elevated panels over Deep Current — one step lighter to layer depth within dark bands"
+    }
+  },
+  "font": {
+    "soehne": {
+      "$value": "Soehne",
+      "$type": "fontFamily",
+      "$description": "All interface type: weight 300 reserved for display headings (48–140px) to create a quiet engineering voice, 400 for body and subheadings, 500 for nav and meta, 600 for button labels. Soehne's geometric neutrality with the extreme -0.043em tracking on display sizes is the signature — it makes headlines feel architectural rather than editorial. Substitute: Inter (closest free analog with matching weights and tracking) or Untitled Sans."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://arcboats.com",
+      "siteName": "Arc",
+      "extractedAt": "2026-06-03T18:21:23.122Z",
+      "variant": "compact"
+    }
+  }
+}

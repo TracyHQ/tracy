@@ -1,0 +1,8 @@
+@theme {
+  /* Colors */
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+
+  /* Typography */
+  --font-neuehaas-web: 'NeueHaas-web', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

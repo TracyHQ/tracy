@@ -1,0 +1,58 @@
+{
+  "seedSchema": "https://emdashcms.com/seed.schema.json",
+  "seedVersion": "1",
+  "meta": {
+    "name": "Helix (JA Kinetic)",
+    "description": "Tracy EmDash template built from the JA Kinetic Joomla 6 quickstart 1.0.0 (EN).",
+    "author": "Tracy"
+  },
+  "collections": {
+    "pages": {
+      "label": "Pages",
+      "labelSingular": "Page",
+      "sortOrder": 1,
+      "routable": false,
+      "description": "Every composed page: its URL path, colour direction and the ordered list of sections it shows.",
+      "supports": ["revisions", "seo"]
+    },
+    "posts": {
+      "label": "Blog posts",
+      "labelSingular": "Blog post",
+      "sortOrder": 2,
+      "urlPattern": "/product/blog/{slug}",
+      "supports": ["drafts", "revisions", "scheduling", "search", "seo"],
+      "dateField": "date",
+      "admin": { "listColumns": ["date", "author", "featured"] }
+    },
+    "header_cta": { "label": "Header buttons", "labelSingular": "Header buttons", "sortOrder": 10, "routable": false, "supports": ["revisions"] },
+    "social": { "label": "Footer brand", "labelSingular": "Footer brand", "sortOrder": 11, "routable": false, "supports": ["revisions"] },
+    "footerlegal": { "label": "Footer legal", "labelSingular": "Footer legal", "sortOrder": 12, "routable": false, "supports": ["revisions"] },
+    "newsletter": { "label": "Newsletter band", "labelSingular": "Newsletter band", "sortOrder": 13, "routable": false, "supports": ["revisions"] },
+    "contact_block": { "label": "Contact block", "labelSingular": "Contact block", "sortOrder": 36, "routable": false, "description": "Contact page: form heading, the form, and the contact method cards.", "supports": ["revisions"] },
+    "writers": { "label": "Writers", "labelSingular": "Writer", "sortOrder": 3, "routable": false, "description": "Blog authors: name as it appears on posts, role, one-line bio, photo.", "supports": ["revisions"] },
+    "hero": { "label": "Hero sections", "labelSingular": "Hero section", "sortOrder": 20, "routable": false, "supports": ["revisions"] },
+    "clients": { "label": "Logo & integration strips", "labelSingular": "Logo strip", "sortOrder": 21, "routable": false, "supports": ["revisions"] },
+    "bento": { "label": "Bento grids", "labelSingular": "Bento grid", "sortOrder": 22, "routable": false, "supports": ["revisions"] },
+    "incident_timeline": { "label": "Timelines", "labelSingular": "Timeline", "sortOrder": 23, "routable": false, "supports": ["revisions"] },
+    "kineticql_split": { "label": "Query splits", "labelSingular": "Query split", "sortOrder": 24, "routable": false, "supports": ["revisions"] },
+    "features_ledger": { "label": "Feature ledgers & metrics", "labelSingular": "Feature ledger", "sortOrder": 25, "routable": false, "supports": ["revisions"] },
+    "features_intro": { "label": "Feature grids", "labelSingular": "Feature grid", "sortOrder": 26, "routable": false, "supports": ["revisions"] },
+    "testimonials": { "label": "Testimonials", "labelSingular": "Testimonials section", "sortOrder": 27, "routable": false, "supports": ["revisions"] },
+    "cta": { "label": "Calls to action", "labelSingular": "Call to action", "sortOrder": 28, "routable": false, "supports": ["revisions"] },
+    "page_masthead": { "label": "Page mastheads", "labelSingular": "Page masthead", "sortOrder": 29, "routable": false, "supports": ["revisions"] },
+    "pricing": { "label": "Pricing plans", "labelSingular": "Pricing plans", "sortOrder": 30, "routable": false, "supports": ["revisions"] },
+    "pricing_matrix": { "label": "Plan comparison", "labelSingular": "Plan comparison", "sortOrder": 31, "routable": false, "supports": ["revisions"] },
+    "accordion": { "label": "FAQ lists", "labelSingular": "FAQ list", "sortOrder": 32, "routable": false, "supports": ["revisions"] },
+    "faq_support": { "label": "Support cards", "labelSingular": "Support card", "sortOrder": 33, "routable": false, "supports": ["revisions"] },
+    "prose_quote": { "label": "Story with quote", "labelSingular": "Story with quote", "sortOrder": 34, "routable": false, "supports": ["revisions"] },
+    "teams": { "label": "Team grids", "labelSingular": "Team grid", "sortOrder": 35, "routable": false, "supports": ["revisions"] }
+  },
+  "fields": {
+    "posts.body": { "type": "portableText", "searchable": true },
+    "posts.title": { "required": true, "searchable": true },
+    "posts.excerpt": { "searchable": true },
+    "posts.date": { "required": true },
+    "prose_quote.body": { "type": "portableText" },
+    "pages.body": { "type": "portableText", "searchable": true }
+  }
+}

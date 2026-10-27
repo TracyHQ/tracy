@@ -1,0 +1,63 @@
+{
+  "id": "QA-UNIT-REG-PR-1100-p4-wp-page-h1-happy",
+  "itemIds": ["regression:REG-PR-1100-p4-wp-page-h1"],
+  "requirement": "WordPress page.create opens a plain-blocks page with its h1 when the page template prints no title, and only then",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1100-p4-wp-page-h1.json",
+    "ref": "PR #1100 (fix); fix evidence: dskeepwp (tracy-base wp7), 10/10/2026: the page 'Dịch vụ' (post 264) made by page.create in plain blocks had no h1: its first heading is an h3, and tracy-base's templates/page.html is header + post-content + footer with no core/post-title.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# skipped 0'. 'WordPress: plain blocks open with the page’s h1 when its template prints no title, and only then' is ok: with tracy-base's page.html (no core/post-title), or only an index template like it, the written post_content starts with '<!-- wp:heading {\"level\":1} -->\\n<h1 class=\"wp-block-heading\">Common questions</h1>' and holds one h1; with a page template that prints core/post-title, or one that hands its body to a pattern, the body holds no h1. 'WordPress: no map pins page markup → plain blocks, and the answer says so' and 'WordPress: the FAQ page in the theme's own section markup …' stay ok (a component without the template kind, and a pinned recipe, are left as they were).",
+    "productSources": [
+      "apps/tracy-web/src/sites/content-where.js:94",
+      "packages/tools/tracy-site-tools/src/host/emdash-call.mjs:1049",
+      "packages/tools/tracy-site-tools/src/host/page-create.mjs:1330",
+      "packages/tools/tracy-site-tools/src/host/replace-wordpress.mjs:384",
+      "packages/tools/tracy-site-tools/src/host/site-call.mjs:3361",
+      "packages/tools/tracy-site-tools/src/host/site.mjs:243",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:269",
+      "packages/tools/tracy-site-tools/src/host/tiers.mjs:94"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "WordPress: plain blocks open with the page’s h1 when its template prints no title, and only then",
+    "WordPress: no map pins page markup → plain blocks, and the answer says so",
+    "WordPress: the FAQ page in the theme's own section markup"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1100-p4-wp-page-h1"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1100-p4-wp-page-h1",
+    "pr": 1100,
+    "kind": "fix",
+    "area": "site-tools/page-create",
+    "file": "tests/regression/cases/REG-PR-1100-p4-wp-page-h1.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/page-create.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "WordPress: plain blocks open with the page’s h1 when its template prints no title, and only then",
+    "WordPress: no map pins page markup → plain blocks, and the answer says so",
+    "WordPress: the FAQ page in the theme's own section markup"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1134-ds-remeasure-2",
+  "kind": "fix",
+  "title": "Fourteen JA Joomla j6 slot contracts (Company to Good) re-measured with the per-element probe: every visible text readable under Moxie, MotherDuck, Toggl Track and Apple, eleven fixed",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{company,conf,diner,directory,donate,educatsy,ego,essence,eventcamp,fit,focus,fresco,gamex,good}.json through loadContract; build the module sheets of Focus, Fresco, Gamex and Good under Moxie (joomlaSlot); read scripts/flow.mjs.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template:'ja_<name>'}), {key:'quickstart/ja-<name>/j6', version: <its minVersion>}) for each contract whose minVersion names a release.",
+    "S4: node packages/design/tracy-ds-slot/scripts/stand.mjs up quickstart/ja-good/j6 --port 53818 --name reg-dsrm2-good --version 1.0.1; flow.mjs --snap, then flow.mjs with Moxie, MotherDuck, Toggl Track and Apple (--joomla-db, --joomla-prefix, --joomla-login site); stand.mjs down.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-remeasure-2.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: all fourteen ready, each readyNote naming tasks/evidence/ds-remeasure-2-2026-10-11/<slug>-j6 (whose summary.json is committed), each contract judging text and block; Focus's sheet gives .ja-tabs-title li.active background-color var(--ds-c-bg); Fresco's gives .t4-footer .btn.btn-outline-light color and border-color var(--ds-c-fg) and keeps #t4-section-8; Gamex's gives .contact-info h4 and .testimonial-rating .rating-score color var(--ds-c-fg); Good's gives .article-slideshow .mod-articles-category-category a color var(--ds-c-accent-on), .ja-news-3 .news-big .article-info dd{color:#999999}, .t3-header and .brick-layout {color:rgb(85, 85, 85)}; flow.mjs skips .element-invisible words and reads a positioned text layer off the photo beside it.",
+    "S3: at each minVersion {contract:'joomla-<slug>'}.",
+    "S4: verdicts 12/12, controls 0,0,0,0, no text under 4.5:1 worse than the template's own, every worn view with half the page or more following."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-<slug>.json ready, minVersion, readyNote, contrast.text, contrast.block, followRules, sideRules, keepScopes, keepText, keepColors"
+  },
+  "evidence": "tasks/evidence/ds-remeasure-2-2026-10-11/README.md: each contract before and after on the release its minVersion names (published, or the local release build), desktop and phone screenshots of the four systems checked by eye.",
+  "fence": "which of these templates are offered and the contract fields and measuring rules that keep their text readable; not the releases (none changed)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-remeasure-2.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

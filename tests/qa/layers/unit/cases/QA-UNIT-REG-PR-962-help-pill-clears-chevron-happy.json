@@ -1,0 +1,91 @@
+{
+  "id": "QA-UNIT-REG-PR-962-help-pill-clears-chevron-happy",
+  "itemIds": ["regression:REG-PR-962-help-pill-clears-chevron"],
+  "requirement": "The Need help? pill steps left of dsh's scroll-to-bottom chevron when it appears, starting on the chevron's first frame, eases there, and returns when the chevron goes; My Sites shows the loading bar only for a slow seat book; the Comments tab shows its open count before the read marks are in and its unread dot after",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-962-help-pill-clears-chevron.json",
+    "ref": "PR #962 (fix); fix evidence: Screenshot, 06/10/2026: with the reader scrolled up, dsh's round chevron sat on top of the pill and covered the word \"help\". On the unfixed source this test fails 4 of 5 (the pill never moves). Issue #1010 (07/10/2026): with the pill's place set by a React state update, the slide started one task after the chevron's mount. Read from painted frames with nothing frozen (no pause, playbackRate or currentTime; the helper's unfrozen-proof run of 07/10/2026 22:05 UTC, 20 runs per side and rate under Chromium CPU throttling), the unfixed pill's slide started after the chevron's fade (lag inferred from the easing): up to one frame (about 17 ms) at rates 4 to 16, up to two frames (about 33 ms) at rates 20 and 30, and up to three (50 ms) at rate 50. Read directly at the first frame the chevron's opacity passed 0.05, the unfixed pill covered up to about 14.5px of it at rates 4 to 16, and more than 20px in 1 of 20 runs at rate 20 (22.6px), 3 of 20 at rate 30 (22.6px) and 12 of 20 at rate 50 (33.3px); those counts belong to that run, other runs of the check gave different ones. Writing the place directly in the observer brought the inferred lag to 0 ms and the first-sight overlap to about 8.3 to 8.4px at every one of these rates, with no run over 20px; the check fails if a fixed run goes over 20px or if no unfixed run does at rate 50.",
+    "invariant": "The run exits 0 with 29 tests passing and 0 failing (10 pill, 2 My Sites, 17 in the Comments list file). With the chevron on the page the pill ends 8px (+/-1) left of it, having moved aside by more than 30px. The pill's move is a transform transition with a finite duration that starts on the same frame as the chevron's fade (lag 0 ms: the new place is written in the observer that sees the chevron mount, not in a later task), starts where the pill was, never goes back, carries under 60% of the move in any twentieth of its time, and is past half the way at a quarter of its time (ease-out); at the first millisecond the chevron's opacity passes 0.05 the pill covers under 20px of it, and at the first millisecond it passes 0.95 the pill is clear of it. When the chevron goes the pill slides back (halfway between at half its time) to within 1px of its place; six toggles, each landing mid-slide, end beside the chevron (gap 8 +/-1) and then at rest (+/-1) with no transition left running. A pill that mounts beside a chevron already on screen starts no transform transition on any of its placements (appears in place, no slide-in). With the chevron beside it, moving the column's right edge 40px re-places the pill with no transform transition on any placement, still 8px (+/-1) left of the chevron. With the chat frame off the page when the pill mounts: a frame mounted later, and then a new frame replacing it, are both watched, so a chevron coming into either (in a later task, or in the same task as the new frame) slides the pill aside on the chevron's frame (lag 0) to 8px (+/-1) left of it, and the pill returns to within 1px of its place when the chevron goes. A chevron that comes 284px above the pill's band leaves the dock's style untouched; when it then moves down into the band (it neither came nor went) the pill is re-placed 8px (+/-1) left of it with no transform transition on any placement. Opening and closing the pill's panel (a React re-render) makes no change to the dock's style. After the pill is unmounted, a chevron coming and going writes nothing to the old dock; a pill mounted again sits where the old one did, slides aside on the chevron's frame (lag 0) and ends 8px (+/-1) left of it. With prefers-reduced-motion the pill starts no transform transition, the chevron no fade, and the pill still clears the chevron. My Sites with the seat book answering at 1500ms of the page clock: at 700ms one bar (role progressbar, label Loading, top 0, height 2) and an empty body; after the answer 8 rows and, 700ms later, no bar. My Sites with the seat book answering at 60ms of the page clock: 8 rows and no bar ever added to the page, with the clock run 1000ms past the answer. Comments tab with the /reads answer held: once the request is out the tab shows the open count 4 with no dot, title or name; after the answer is released the tab shows 4 with the dot, title \"3 unread\" and name \"Comments 4, 3 unread\".",
+    "productSources": [
+      "packages/site/tracy-site-tabs/src/client/site-tabs-rules.css:11",
+      "vendor/tracy/deepseek-harness/packages/client/ui-conversation/src/client/skeleton/ConversationRoot.module.css:1"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-my-sites/test/e2e/tab-loading.test.mjs:25 execFileSync() passes packages/site/tracy-my-sites/src/client/my-sites.css to node; not proven to run it",
+      "packages/site/tracy-my-sites/test/fixtures/open-harness.mjs:109 readFileSync() with a computed path",
+      "packages/site/tracy-my-sites/test/fixtures/open-harness.mjs:38 import() with a computed specifier",
+      "packages/site/tracy-my-sites/test/fixtures/open-harness.mjs:73 readFileSync() with a computed path",
+      "packages/ui/tracy-chat-input/test/e2e/comments-list-redesign.test.mjs:207 require() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/comments-list-redesign.test.mjs:219 require() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/comments-list-redesign.test.mjs:33 import() with a computed specifier",
+      "packages/ui/tracy-sidebar/test/e2e/help-pill-chevron.test.mjs:146 readFileSync() with a computed path",
+      "packages/ui/tracy-sidebar/test/e2e/help-pill-chevron.test.mjs:41 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the pill steps left of the chevron when it appears",
+    "the pill eases aside instead of jumping",
+    "the pill goes back to its place when the chevron goes",
+    "a pill that opens beside a chevron already on screen appears in place",
+    "a column that moves while the chevron stays moves the pill without sliding",
+    "a chat frame that mounts after the pill, or replaces the one it watched, still moves the pill on the chevron's frame",
+    "a chevron that came outside the pill's band and later moves into it moves the pill without sliding",
+    "opening and closing the panel re-renders the pill without touching its place",
+    "a pill taken off the page stops placing itself, and one mounted again places itself and steps aside",
+    "with reduced motion the pill moves aside at once",
+    "a slow seat book shows the loading bar",
+    "a fast seat book never shows the bar",
+    "04/10: the page filter and the Comments tab count OPEN threads in grey without waiting for the read marks"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-962-help-pill-clears-chevron"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-sidebar", "tracy-sidebar"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-962-help-pill-clears-chevron",
+    "pr": 962,
+    "kind": "fix",
+    "area": "ui/sidebar/community",
+    "file": "tests/regression/cases/REG-PR-962-help-pill-clears-chevron.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-force-exit",
+    "packages/ui/tracy-sidebar/test/e2e/help-pill-chevron.test.mjs",
+    "packages/site/tracy-my-sites/test/e2e/tab-loading.test.mjs",
+    "packages/ui/tracy-chat-input/test/e2e/comments-list-redesign.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the pill steps left of the chevron when it appears",
+    "the pill eases aside instead of jumping",
+    "the pill goes back to its place when the chevron goes",
+    "a pill that opens beside a chevron already on screen appears in place",
+    "a column that moves while the chevron stays moves the pill without sliding",
+    "a chat frame that mounts after the pill, or replaces the one it watched, still moves the pill on the chevron's frame",
+    "a chevron that came outside the pill's band and later moves into it moves the pill without sliding",
+    "opening and closing the panel re-renders the pill without touching its place",
+    "a pill taken off the page stops placing itself, and one mounted again places itself and steps aside",
+    "with reduced motion the pill moves aside at once",
+    "a slow seat book shows the loading bar",
+    "a fast seat book never shows the bar",
+    "04/10: the page filter and the Comments tab count OPEN threads in grey without waiting for the read marks"
+  ],
+  "timeoutS": 900
+}

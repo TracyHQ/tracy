@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "9130ad37-bf80-458f-b808-ac0ef6a8d1e9",
+  "status": "complete",
+  "name": "MindMarket",
+  "url": "https://styles.refero.design/style/9130ad37-bf80-458f-b808-ac0ef6a8d1e9",
+  "sourceWebsite": "https://mindmarket.com",
+  "extractedAt": "2026-06-03T22:39:57.287Z",
+  "capturedAt": "2026-10-08T05:14:53.502362+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Warm storybook on cream paper — a friendly editorial canvas where oversized Inter headlines and paper-cut characters share a sunlit, sticker-soft surface.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/5bde397c-d309-4ab1-80fc-cfe1ff285693.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/454116b6-1788-43e5-8410-7b43f5cf2b07.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/48b67ac1-b107-4de1-b25a-674699c5953f.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3da80f22-9f1c-42df-9c26-aa80e89e7502.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/51602e6c-ba11-468e-9e2a-c687e22c113a.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c32afd172d365679902eca0428076c6ac26d2b9614c8f3686be4d250e612b3ef",
+      "bytes": 19336
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "30ae6d4e4bf43cd9a4ce09f3b7b996a922da86de55dc220999ec44338fdbc609",
+      "bytes": 77695
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1170d482af2ee25223f09e1bdda2a9b8fa792240bb5a666b5063827d21a8ca1d",
+      "bytes": 16790
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "87c13d402509c03e718baa13fa937d4612c698e690b3e317a3dc25eba8655191",
+      "bytes": 8736
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4b44b7f8fdeb8bd3bff373f2f4241b0bd742f10d073c07f8e1dbf0c00aa92d0d",
+      "bytes": 13316
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d97d354c876de983e396542db846d26f295207e4b7af6d37d2979a4c28275021",
+      "bytes": 3332
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "564004b23e2da8addb5f2dfc7a4b9749390f022394cec70f2dd2c85d2612554d",
+      "bytes": 503
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "ef170d880749cb7db7760d966305706b06e0831bb1451165123d94afab721e0d",
+      "bytes": 520
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4c99ac7ab0e7af35b5bb41463a181dc92bcc95760469af16e3b5e1f89434e1b4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a356c53e4206614905eb2a352590b7f39ec4be3b967d658cd8c83c99d83bff27",
+      "bytes": 44931
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e8d42a1d02a2db50de1f3a5b9bef5a21f096866d80f852a7ad85ee52f080e3d7",
+      "bytes": 23960
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "09b6e958f22f63bff4cd283a2e0d3d4980674f82d000a18519de3a54a2568acd",
+      "bytes": 45870
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8170188674aa63ad991b1100ef2097f7f9461410124fc0dbb3cc86fa54ddf033",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7be7e212220ff1fa8d8912a499e19f434452acc3957dc006e7051fd668a1e6e1",
+      "bytes": 1362
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3fee5aeb78c5cf79bdb099759a86b8142473950ca59b6840d796065ef5f907eb",
+      "bytes": 1896
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "035a098b-5a27-48a3-8a3a-c68a698e3eab",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "34baa524-5d5b-4165-bbab-d01f05e6d6b9",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "5bfe6c1d-1b15-4f8d-b0c9-677a33291c5d",
+    "6024d069-8a74-4534-917f-5f5b11224cc5",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9130ad37-bf80-458f-b808-ac0ef6a8d1e9",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "f22f1195-837d-4b1d-a48c-9123b122bf87",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d"
+  ]
+}

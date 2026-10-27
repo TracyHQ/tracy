@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-893-apply-takes-off-pages-not-picked",
+  "kind": "fix",
+  "title": "Apply takes off the template pages of kinds the customer did not pick, never home or contact, with a products/services stand-in and system menus safe",
+  "pr": 893,
+  "area": "sites/apply",
+  "cms": ["wp", "jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-picked-pages.test.mjs apps/tracy-web/test/brief-joomla.test.mjs apps/tracy-web/test/brief-wordpress.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"a page is a kind only when every word of its address names that one kind\"; \"the pages of kinds the customer did not pick go; home, contact and the pages no kind names stay\"; \"products picked and none on the template: its services page stands in for them, and nothing is said\"; \"a note says a picked kind is missing only when every page could be read; a page no kind names is never taken off\"; \"no `pages` answer, an old brief, or an answer with no known page changes nothing\"; \"Joomla: the menu entries of unpicked pages go with their own entries under them, in every language a visitor reaches\"; \"Joomla: an entry of a menu no visitor navigates by, the home entry, and one the site cannot read are never unpublished\"; \"Joomla: nothing to hide when the customer did not answer `pages`\"; \"the menu entries of pages the customer did not pick go in the tidy-up, with the entries that only lead to them\"; \"an entry taken off because its page was not picked is not also retitled in the same batch\"; \"a tidy-up of more than 100 records goes in transactions of at most 100, not one record at a time\"; \"a menu that cannot be read is said, and the pages not picked stay\"; \"the pages of kinds the customer did not pick go; home and contact stay\"; \"products picked on a template that has services and no products: Services stays and nothing is said\"; \"the slots of a page the customer did not pick are not planned, and that page is taken off\"; \"a brief with no `pages` answer hides no page for it\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 124).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): a page is a kind only when every word of its address names that one kind; pages of unpicked kinds go (WordPress: drafted with the sweep, its slots not planned; Joomla: its menu entries and the ones under them unpublished in transactions of at most 100), home and contact never, Services stands in for picked Products and the reverse, a missing picked kind is noted only when every page could be read, no `pages` answer changes nothing, and a system-menu entry, the home entry or an unreadable menu is never unpublished."
+  ],
+  "selectors": {
+    "rules": "pageKind, pickedPages, unpickedPages, unpickedMenuItems in apps/tracy-web/src/sites/brief-engines/picked-pages.js",
+    "joomla": "writeSteps (BATCH_MAX 100) in apps/tracy-web/src/sites/brief-engines/joomla-tidy.js",
+    "answer": "brief answer `pages` (feed seed.pages)"
+  },
+  "evidence": "Ledger L04, 05/10/2026: a customer who picked only Home, Product, About and Contact still got Services, News and Projects published, and picking Pricing made no page: Apply turned the `pages` answer into a line of text. Reds 4a2262563, 2c81f358e, 3e2ecdbe6, 20affbbc3, 392cd54ac; fixes e6f510e5d, ef27d0272, fdf0a92e4, b81925f84, 70a25320c.",
+  "fence": "Only pages whose address clearly names an unpicked kind are taken off (unpublished/drafted, never deleted); a picked kind the template lacks is noted, never created.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-picked-pages.test.mjs",
+      "apps/tracy-web/test/brief-joomla.test.mjs",
+      "apps/tracy-web/test/brief-wordpress.test.mjs"
+    ],
+    "tests": [
+      "a page is a kind only when every word of its address names that one kind",
+      "the pages of kinds the customer did not pick go; home, contact and the pages no kind names stay",
+      "products picked and none on the template: its services page stands in for them, and nothing is said",
+      "a note says a picked kind is missing only when every page could be read; a page no kind names is never taken off",
+      "no `pages` answer, an old brief, or an answer with no known page changes nothing",
+      "Joomla: the menu entries of unpicked pages go with their own entries under them, in every language a visitor reaches",
+      "Joomla: an entry of a menu no visitor navigates by, the home entry, and one the site cannot read are never unpublished",
+      "Joomla: nothing to hide when the customer did not answer `pages`",
+      "the menu entries of pages the customer did not pick go in the tidy-up, with the entries that only lead to them",
+      "an entry taken off because its page was not picked is not also retitled in the same batch",
+      "a tidy-up of more than 100 records goes in transactions of at most 100, not one record at a time",
+      "a menu that cannot be read is said, and the pages not picked stay",
+      "the pages of kinds the customer did not pick go; home and contact stay",
+      "products picked on a template that has services and no products: Services stays and nothing is said",
+      "the slots of a page the customer did not pick are not planned, and that page is taken off",
+      "a brief with no `pages` answer hides no page for it"
+    ]
+  }
+}

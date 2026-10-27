@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-893-joomla-planner-compact-input",
+  "kind": "fix",
+  "title": "Joomla content planner: the model gets a slot's words and limits, not the page list or where Joomla stores the value",
+  "pr": 893,
+  "area": "tracy-seeder/plan-joomla-contract",
+  "cms": ["jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-seeder/test/plan-joomla-contract.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines, and whether the test 'the model is shown what it needs to write a slot, and nothing of where Joomla stores it' is 'ok'."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 19); the named test is 'ok': no page list in the model input, no JSON path, XPath, nested-JSON name or site-identity flag on a slot, `current` only when it differs from `sample`, `requiresEvidence` only when true, the element of an XPath slot kept."
+  ],
+  "selectors": {
+    "planner": "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs (the batch input)"
+  },
+  "evidence": "05/10/2026 local stand, planning tracy-business/j6/1.2.0 for one language as Apply does: 25 model calls carried 491k characters, 164k of them the same 78-page list in every call; 138.8k prompt tokens per plan. After the fix: 224.6k characters, 66.7k prompt tokens (median of 6 real runs, -52%), slots written 482 -> 514 (median), no demo words in written values (tasks/evidence/add-site-apply-audit/joomla-planner-tokens.md).",
+  "fence": "Only what the model is shown changes; which slots are planned, how answers are judged and what reaches the site do not.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-seeder/test/plan-joomla-contract.test.mjs"
+    ]
+  }
+}

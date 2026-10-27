@@ -1,0 +1,285 @@
+{
+  "dos": [
+    "Use #ffffff as the filled button background on the black canvas — this inversion is the system's signature action style",
+    "Set all headings at 48px in Alpha Lyrae weight 400 with line-height 1.0 — do not scale or weight-shift the display serif",
+    "Apply -0.03em letter-spacing to all Inter text regardless of size — the tight tracking is part of the system voice",
+    "Use 6px radius for buttons, 16px radius for cards — never swap or interpolate these values",
+    "Reserve the violet (#9984d8) and mint (#3fcb7f) for data/chart contexts and live status — never apply them to text or backgrounds as decoration",
+    "Center-align all hero and section headers — the layout rhythm is symmetric, not asymmetric",
+    "Render integration logos in their native brand colors on black — the multicolored grid is intentional visual proof of breadth"
+  ],
+  "donts": [
+    "Do not use violet or mint as a button fill — the primary action is always white-on-black",
+    "Do not add box-shadows to cards — the dark surface system relies on near-identical values and no shadow language",
+    "Do not break the 6px/16px radius rule by rounding buttons to match cards or vice versa",
+    "Do not use Inter for display headlines — Alpha Lyrae at 48px is reserved for h1/h2 hero moments only",
+    "Do not use full white (#ffffff) for body copy — use Ash Gray (#b3b3b3) for secondary text to establish hierarchy",
+    "Do not place light cards on the black canvas with hard edges — use #050607 to keep the surface language recessive",
+    "Do not use warm grays — all neutrals lean cool, matching the violet accent's temperature"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Void Black",
+      "role": "Page canvas, hero background, primary action fill — the default stage for every screen",
+      "group": "neutral"
+    },
+    {
+      "hex": "#050607",
+      "name": "Carbon Card",
+      "role": "Card and elevated surface background — barely lighter than the canvas so cards read as recessed wells, not raised panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Ghost White",
+      "role": "Primary text, filled button background, primary action fill — the highest-contrast color in the system, used to make actions unmistakable",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e8eaee",
+      "name": "Bone White",
+      "role": "Subtle surface washes and light contrast elements — sparingly used for tonal variation in dark sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b3b3b3",
+      "name": "Ash Gray",
+      "role": "Secondary body text, table content, muted helper copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#808080",
+      "name": "Steel Gray",
+      "role": "Borders, dividers, icon strokes, disabled text — the workhorse neutral for structural lines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Graphite",
+      "role": "Deep borders, subtle separators between heavy content blocks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9984d8",
+      "name": "Lavender Pulse",
+      "role": "Violet outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color",
+      "group": "accent"
+    },
+    {
+      "hex": "#3fcb7f",
+      "name": "Mint Signal",
+      "role": "Green state accent for badges, validation surfaces, and short status labels.",
+      "group": "semantic"
+    }
+  ],
+  "layout": "Full-page max-width 1200px centered layout on a pure black canvas. Hero is a centered vertical stack: announcement pill → serif headline → subhead → button pair → trust line, followed by a full-bleed product mockup image that bleeds beyond the content container. Sections alternate between centered text blocks and multi-column card grids, all with generous 80-120px vertical breathing room. Testimonials are a 2-column grid with avatar+quote pairs. Integration logos form a dense 6-8 column grid that fills the section width. Navigation is a fixed transparent top bar with left-aligned logo, centered nav links, and right-aligned auth actions. No sidebar, no mega-menu — the navigation is intentionally minimal to let the hero and product visuals dominate.",
+  "imagery": "The visual language is product-screenshot-dominant with a dark, atmospheric treatment. The hero features a 3D-perspective dashboard mockup with chart visualizations in violet and green, fading into the black canvas at edges — the product IS the hero image. Integration logos appear in a multicolored grid as native brand marks, serving as social proof of ecosystem breadth. Avatars in testimonials are circular crops on black. No lifestyle photography, no illustrations — the interface communicates through its own product visuals and typography alone. Iconography is minimal and geometric, rendered in white or Steel Gray line style at 16-20px.",
+  "similar": [
+    {
+      "why": "Same dark-mode-only interface with near-black canvas, white type at tight tracking, and a single display moment (Linear's gradient hero text vs Basedash's serif headlines) that breaks the monochrome rhythm",
+      "business": "Linear"
+    },
+    {
+      "why": "Identical pure-black canvas treatment with no card shadows, white pill buttons as the primary action, and grid layouts that let the void do the visual work",
+      "business": "Vercel"
+    },
+    {
+      "why": "Similar restrained color palette with one or two chromatic accents used only for data/illustration, and a preference for centered hero stacks with generous vertical breathing room",
+      "business": "Stripe"
+    },
+    {
+      "why": "Same dark technical-tool aesthetic with a single editorial serif accent, white-on-black action buttons, and integration-logo grids as social proof",
+      "business": "Resend"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "badges": "999px",
+      "inputs": "6px",
+      "buttons": "6px"
+    },
+    "elementGap": "12px",
+    "sectionGap": "80-120px",
+    "cardPadding": "16-20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Void Canvas",
+      "level": 0,
+      "purpose": "Page background — the default stage"
+    },
+    {
+      "hex": "#050607",
+      "name": "Carbon Card",
+      "level": 1,
+      "purpose": "Metric cards, dashboard preview surfaces — nearly black, reads as a recessed well"
+    },
+    {
+      "hex": "#e8eaee",
+      "name": "Tonal Wash",
+      "level": 2,
+      "purpose": "Rare light surface for tonal contrast in specific sections"
+    }
+  ],
+  "northStar": "Midnight data terminal with frosted type. A dark observatory where metrics glow in violet and green, serif headlines float above the noise, and white pill buttons are the only bright objects in a room of soft black surfaces.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.36
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.42
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.56,
+      "letterSpacing": -0.54
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.6
+    },
+    {
+      "role": "heading-sm",
+      "size": 30,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.9
+    },
+    {
+      "role": "heading",
+      "size": 34,
+      "lineHeight": 1.2,
+      "letterSpacing": -1.02
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Filled Primary Button",
+      "role": "Primary call-to-action in the header and hero",
+      "description": "White background (#ffffff), black text (#000000), Inter weight 500 at 14px, 6px border-radius, 12px vertical × 20px horizontal padding. No border, no shadow — the contrast against the black canvas is the elevation. Used for 'Sign up' and 'Start free'."
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Secondary action paired with the primary button",
+      "description": "No background, no border. White text (#ffffff) at Inter 14px weight 500 with a subtle underline on hover. Sits immediately right of the filled button with ~16px gap. Used for 'Book a demo' and 'Log in'."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent header across all pages",
+      "description": "Full-width transparent bar on black canvas. Left: 24×24px logo mark + 'Basedash' wordmark in Inter 16px weight 500 white. Center: nav links in Inter 14px weight 400 at Ash Gray (#b3b3b3), white on active/hover. Right: 'Log in' ghost text + white-filled 'Sign up' button. Height ~64px, no border-bottom."
+    },
+    {
+      "name": "Hero Centered Stack",
+      "role": "Above-the-fold headline section",
+      "description": "Vertically stacked, horizontally centered. Pill badge at top ('New: Basedash Automations') in Inter 13px with subtle border, 999px radius. Headline: Alpha Lyrae 48px weight 400 white, line-height 1.0. Subhead: Inter 18px weight 400 at Ash Gray, max-width ~640px. Button row below. Trust line at bottom in Inter 13px Ash Gray."
+    },
+    {
+      "name": "Dashboard Mockup Frame",
+      "role": "Hero visual / product showcase image",
+      "description": "Full-bleed dark image with subtle 3D perspective tilt. Contains chart visualizations using the violet (#9984d8) and green (#3fcb7f) accents as data colors. Sits beneath the hero text as a visual anchor, fading into the black canvas at edges."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Social proof quote with attribution",
+      "description": "No visible card border or background — sits directly on the black canvas. Layout: circular avatar (64px) on the left, quote text in Iowan Old Style 24px weight 300 white on the right. Below: company logo + name (Inter 14px weight 500 white) and role (Inter 13px Ash Gray). 'Read case study →' ghost link in Inter 14px."
+    },
+    {
+      "name": "Metric Display Card",
+      "role": "Dashboard preview cards showing key numbers",
+      "description": "16px border-radius, background #050607 (Carbon Card). Internal padding 16-20px. Title in Inter 14px Ash Gray. Large number in Inter 34px weight 600 white. Delta indicator: mint green (#3fcb7f) text with '+%' and absolute value below in smaller Ash Gray. Chart visualization fills the lower portion."
+    },
+    {
+      "name": "Section Header",
+      "role": "Standardized heading block for content sections",
+      "description": "Centered. H2 in Alpha Lyrae 48px weight 400 white, line-height 1.0. Subhead in Inter 18px weight 400 Ash Gray, max-width ~640px, centered. 24-32px gap between heading and subhead."
+    },
+    {
+      "name": "Pill Badge",
+      "role": "Status indicators, new feature announcements, live tags",
+      "description": "999px border-radius, 4px vertical × 12px horizontal padding, background transparent with 1px border in Steel Gray (#808080) or tinted with Mint Signal. Text in Inter 13px weight 500. Small dot prefix in matching color for 'Live' indicators."
+    },
+    {
+      "name": "Outlined Action Button",
+      "role": "Secondary action in section CTAs (e.g., 'See all 750+ integrations')",
+      "description": "Transparent background, 1px solid border in Steel Gray (#808080), 6px border-radius, 10px vertical × 20px horizontal padding. Text in Inter 14px weight 500 white. Hover: border lightens to white."
+    },
+    {
+      "name": "Integration Logo Grid",
+      "role": "Display of supported data source integrations",
+      "description": "Multi-row grid of third-party brand logos (6-8 per row) at ~40×40px each, rendered in their native brand colors on the black canvas. 12-16px gap between logos. Logos appear as-is, no monochrome treatment — the colorful grid is the visual statement of breadth."
+    },
+    {
+      "name": "Live Status Indicator",
+      "role": "Real-time / connected state badge",
+      "description": "Small (8px) mint green (#3fcb7f) filled circle with subtle glow, paired with 'Live' text in Inter 13px weight 500. Used in metric card headers to signal data freshness."
+    },
+    {
+      "name": "Gradient Accent Block",
+      "role": "Decorative purple wash behind hero mockup or section dividers",
+      "description": "Radial or linear gradient using the violet palette: rgba(163, 102, 255, 0.38) → rgba(123, 78, 245, 0.24) → rgba(82, 49, 184, 0.12) → transparent. Applied as background overlay to add atmospheric color without solid fills."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All functional UI text: body copy, nav links, buttons, badges, table data, card labels. Inter carries the entire system at tight -0.03em tracking — its neutrality lets the single display serif do the editorial work.",
+      "sizes": "12, 13, 14, 15, 16, 18, 30, 34, 48",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.0–1.56",
+      "substitute": "Inter (Google Fonts) or system-ui fallback",
+      "letterSpacing": "-0.03em across all sizes"
+    },
+    {
+      "role": "Display headlines only — hero h1 and major section titles at exactly 48px. This custom serif is the signature move: a quiet, engraved quality that contrasts with Inter's geometric clarity, giving the dark page a literary anchor.",
+      "sizes": "48",
+      "family": "Alpha Lyrae",
+      "weight": "400",
+      "lineHeight": "1.0",
+      "substitute": "Cormorant Garamond, EB Garamond, or PT Serif",
+      "fontFeatureSettings": "\"ss01\" on, \"ss02\" on"
+    },
+    {
+      "role": "Testimonial pull-quote body — a light-weight old-style serif at 24px that humanizes the interface and breaks Inter's rhythm at key trust-building moments.",
+      "sizes": "24",
+      "family": "Iowan Old Style",
+      "weight": "300",
+      "lineHeight": "1.25",
+      "substitute": "Source Serif Pro Light, Lora, or Palatino",
+      "letterSpacing": "-0.025em"
+    }
+  ],
+  "description": "Basedash presents a dark-mode command surface for data work: pure black canvas, near-black elevated cards, and white type that reads like a terminal. The brand voice is calm and technical — Inter does all functional labor at tight tracking, while a custom display serif (Alpha Lyrae) carries hero headlines at exactly 48px, giving the page a quiet editorial accent against the monochrome interface. Two chromatic notes — a vivid violet and a vivid green — appear sparingly as chart and accent fills, never as decoration. Buttons invert the usual dark-mode expectation: filled actions are white pills on black, outlined actions are ghost links, which makes the single primary action glow. Layout is centered and generous, with cards floating on the void at 16px radius and buttons cut to 6px, a split that signals 'card is a container, button is a tool.'",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (primary): #ffffff\n- text (secondary): #b3b3b3\n- background (canvas): #000000\n- background (card): #050607\n- border: #808080\n- accent (data): #9984d8\n- primary action: #000000 (filled action)\n\n**Example Component Prompts**\n1. *Hero section*: Black canvas (#000000). Centered stack. Pill badge: 999px radius, 1px border #808080, Inter 13px weight 500 white text, 4px 12px padding. Headline: Alpha Lyrae 48px weight 400 #ffffff, letter-spacing normal, line-height 1.0. Subhead: Inter 18px weight 400 #b3b3b3, max-width 640px. Filled button: #ffffff background, #000000 text, Inter 14px weight 500, 6px radius, 12px 20px padding. Ghost link beside it: no background, #ffffff text, Inter 14px weight 500.\n\n2. *Metric display card*: Background #050607, 16px border-radius, 20px padding. Title: Inter 14px weight 400 #b3b3b3. Large number: Inter 34px weight 600 #ffffff. Delta row: mint #3fcb7f Inter 14px weight 500 (+68%) with #b3b3b3 secondary value. 8px mint dot with 'Live' label in top-right corner.\n\n3. *Testimonial card*: No background or border. 64px circular avatar on left. Quote: Iowan Old Style 24px weight 300 #ffffff, line-height 1.25, letter-spacing -0.025em. Attribution block: company logo + Inter 14px weight 500 #ffffff name, Inter 13px #b3b3b3 role. 'Read case study →' ghost link in Inter 14px #ffffff.\n\n4. *Section header*: Centered. Alpha Lyrae 48px weight 400 #ffffff, line-height 1.0. Subhead: Inter 18px weight 400 #b3b3b3, max-width 640px, 24px margin-top.\n\n5. *Integration logo grid*: 6-column grid, 16px gap, logos at 40×40px rendered in their native brand colors on #000000 canvas. No borders, no card containers — logos float directly on the void."
+    }
+  ],
+  "elevationPhilosophy": "This design intentionally avoids drop shadows. Elevation is communicated through near-identical surface values (#000000 canvas → #050607 card) that read as recessed wells rather than raised panels. The contrast ratio between these two values is deliberately minimal (~0.5%) so cards feel carved into the void, not floating above it. The only 'elevation' in the system comes from color contrast: white buttons on black canvas are the brightest objects in any scene."
+}

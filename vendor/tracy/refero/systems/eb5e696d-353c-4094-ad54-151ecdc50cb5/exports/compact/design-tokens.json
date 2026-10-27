@@ -1,0 +1,79 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#231c33",
+      "$type": "color",
+      "$description": "Ink — Headlines, navigation, body copy, input text, play-control text, and dark button labels"
+    },
+    "paper": {
+      "$value": "#f9f7f5",
+      "$type": "color",
+      "$description": "Paper — Warm page canvas and large paper-like content sections"
+    },
+    "white-sheet": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White Sheet — Floating navigation, hero panels, cards, video controls, and reversed text"
+    },
+    "quiet-gray": {
+      "$value": "#736c83",
+      "$type": "color",
+      "$description": "Quiet Gray — Fine-print helper copy and low-emphasis supporting text"
+    },
+    "blurple": {
+      "$value": "#5522fa",
+      "$type": "color",
+      "$description": "Blurple — Links, emphasized headings, illustrated interface details, and the violet edge of expressive promotional gradients"
+    },
+    "mint-note": {
+      "$value": "#b3f4e0",
+      "$type": "color",
+      "$description": "Mint Note — Filled primary action backgrounds — mint against Ink labels keeps repeated conversion controls playful rather than forceful"
+    },
+    "salmon-glow": {
+      "$value": "#ec8580",
+      "$type": "color",
+      "$description": "Salmon Glow — Warm gradient endpoint for promotional surfaces and colorful product demonstrations"
+    },
+    "sky-wash": {
+      "$value": "#b6dbff",
+      "$type": "color",
+      "$description": "Sky Wash — Testimonial-card and soft interface background washes"
+    },
+    "canary-note": {
+      "$value": "#fff5ca",
+      "$type": "color",
+      "$description": "Canary Note — Occasional warm highlighted surface behind short content moments"
+    },
+    "stone": {
+      "$value": "#edeae6",
+      "$type": "color",
+      "$description": "Stone — Subdued neutral fills and secondary quiet surfaces"
+    }
+  },
+  "font": {
+    "really-sans-large": {
+      "$value": "Really Sans Large",
+      "$type": "fontFamily",
+      "$description": "Display and section headlines. The 850–900 weight is intentionally oversized and soft-edged; authority comes from chunky letterforms rather than tight, technical type."
+    },
+    "moniker": {
+      "$value": "Moniker",
+      "$type": "fontFamily",
+      "$description": "Navigation, buttons, long-form letter copy, labels, links, testimonials, and UI controls. Its slightly condensed negative tracking lets conversational copy remain compact beside oversized display type."
+    },
+    "shantell-sans": {
+      "$value": "Shantell Sans",
+      "$type": "fontFamily",
+      "$description": "Handwritten interjections, especially a single symbolic character inside a display headline. Use sparingly as an imperfect human interruption within the otherwise heavy sans system."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://hey.com",
+      "siteName": "HEY",
+      "extractedAt": "2026-09-24T17:39:03.126Z",
+      "variant": "compact"
+    }
+  }
+}

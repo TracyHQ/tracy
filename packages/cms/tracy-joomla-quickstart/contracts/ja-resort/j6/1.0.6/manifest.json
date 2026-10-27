@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resort/j6/1.0.6",
+  "platform": "joomla",
+  "template": "ja_resort",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resort",
+    "id": "quickstart/ja-resort/j6",
+    "version": "1.0.6",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_resort",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-resort-j6-webroot-1.0.6.tar.gz",
+        "bytes": 114068766,
+        "sha256": "376bf8b3eee13d43e049294b2943ccdfb11817fe0cdb7a13e45935b87a785a7e"
+      },
+      "database": {
+        "file": "ja-resort-j6-database-1.0.6.sql.gz",
+        "bytes": 174481,
+        "sha256": "b197e49c2aa0f268df18588a4b4fabd84a8e77a2394baff7957ff498905ab6eb"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-12T22:03:05.739186+00:00",
+    "builtFrom": {
+      "release": "quickstart/ja-resort/j6",
+      "version": "1.0.5",
+      "sourceCommit": "9823d1285b4018b0686971b08342b0d84f4827c1",
+      "method": "Canonical deduplicated archive; inject current agent documentation for JA Resort, T4 and ACM. Runtime code and database unchanged from 1.0.5."
+    },
+    "release": "quickstart/ja-resort/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.24",
+  "mode": "content-recommendation"
+}

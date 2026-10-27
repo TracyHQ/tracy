@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-893-db-dump-imported-into-server-that-stays",
+  "kind": "fix",
+  "title": "A site's dump is imported only into the database server its first boot keeps, on provision and on restore",
+  "pr": 893,
+  "area": "fleet/database-ready",
+  "cms": ["wp", "jo"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/db-ready.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"provision: the import never lands in the gap between the first boot temporary server and the real one\"; \"provision: a database that refuses its first connections is waited for, then imported into\"; \"provision: a database that never answers stops the run with the last refusal, before any import\"; \"provision: a server that stays the temporary one is never taken for ready\"; \"provision: a password the volume does not know is named as the reason\"; \"restore: the database is dropped and the dump poured in only on the server that stays up\"; \"restore: a database that never answers stops before DROP DATABASE\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 8).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): the wait answers ready only when the server says skip_networking is off through the import's own client and socket; a refusing server is waited for, a server that never answers or stays the temporary one stops the run with the last refusal before any import, a password the volume does not know is named, and restore drops the database and pours the dump only on the server that stays up, stopping before DROP DATABASE when it never answers."
+  ],
+  "selectors": {
+    "wait": "tracy_db_wait_ready in packages/fleet/tracy-fleet-operation/scripts/lib/db-ready.sh",
+    "callers": "provision.sh step 4 (WordPress, Joomla) and restore.sh step 5 in packages/fleet/tracy-fleet-operation/scripts/provision/"
+  },
+  "evidence": "05/10/2026 local stand: 1 of ~40 WordPress site creations (run initb-0510-wpx-v1) failed at 'importing database' with ERROR 2002 \"Can't connect to local server through socket '/run/mysqld/mysqld.sock'\" right after 'starting database' had passed its SELECT 1; docker logs of the db showed 'Creating database wordpress' and 'Stopping temporary server' in the same second (ledger L13). Red 65b7fa609 (6 of 7 cases not ok on 16063e8f8), fix de8adf7f4.",
+  "fence": "Ready means the MariaDB server that stays up (networking on) answers through the client and socket the import uses, within the old bound (90 tries 2 s apart); anything else ends provision or restore before the import or the DROP, saying the server's last answer.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/db-ready.test.mjs"
+    ],
+    "tests": [
+      "provision: the import never lands in the gap between the first boot temporary server and the real one",
+      "provision: a database that refuses its first connections is waited for, then imported into",
+      "provision: a database that never answers stops the run with the last refusal, before any import",
+      "provision: a server that stays the temporary one is never taken for ready",
+      "provision: a password the volume does not know is named as the reason",
+      "restore: the database is dropped and the dump poured in only on the server that stays up",
+      "restore: a database that never answers stops before DROP DATABASE"
+    ]
+  }
+}

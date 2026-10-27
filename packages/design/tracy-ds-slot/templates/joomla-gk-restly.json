@@ -1,0 +1,247 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "minVersion": {
+    "quickstart/gavick-gk-restly/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/gavick-gk-restly/j6": "1.0.1"
+  },
+  "applies": "a GavickPro Gavern (gk_*) quickstart: the same site module as the JA families, in the earliest position its layout renders. Gavern has no runtime colour variables: its compiled stylesheets read the slot once tokenized (a JoomlArt re-release), and the slot's own selector rules do the rest",
+  "tokenScope": ":root",
+  "runtime": {},
+  "selectors": {
+    "headingsAll": [":is(h1, h2, h3, h4)"],
+    "display": "h1",
+    "body": ["body"],
+    "themeToggle": "[data-tracy-theme-toggle]",
+    "heading": ["#gkBg h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "card": ["div.item", ".card"],
+    "bodyFace": ["body"],
+    "eyebrow": [".sub-heading"]
+  },
+  "specificity": "Rules are prefixed :root×6 (0,6,0): above every template rule, below an element's own inline style.",
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#4f4f4f",
+      "fg-2": "#281d70",
+      "accent": "#e62eef",
+      "accent-hover": "#d011d9",
+      "meta": "#aaaaaa",
+      "border": "#dddddd",
+      "muted": "#636565",
+      "surface": "#ffffff"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#f8f8fc",
+      "fg": "#4f4f4f",
+      "fg-2": "#281d70"
+    },
+    {
+      "accent": "#281d70"
+    },
+    {
+      "border-soft": "#eeeeee",
+      "surface-warm": "#f2f2f2"
+    },
+    {
+      "surface-warm": "#f5f5f5",
+      "border-soft": "#e5e5e5"
+    },
+    {
+      "surface-warm": "#f9f9f9"
+    }
+  ],
+  "genericTokens": false,
+  "genericNote": "the slot writes no short token names (--bg, --accent…) here; everything reads --ds-c-*",
+  "classifyText": true,
+  "template": "joomla/gk-restly",
+  "release": "quickstart/gavick-gk-restly/j6@1.0.1",
+  "roles": {
+    "page": "#gkTemplateTop",
+    "heading": "h2.cta-title",
+    "body": ".features-item p",
+    "card": "div.owl-item div.item",
+    "input": "input.required"
+  },
+  "discovered": {
+    "page": "body",
+    "heading": "first section heading: 41.0525px",
+    "body": "first body paragraph that is not a lead (p.lead is the template’s light intro text)",
+    "card": "repeated rounded box ×5",
+    "input": "first text field",
+    "keep": ".bg-gradient: the purple gradient band of the road map (white text on a gradient the tokenizer cannot read), kept as the template paints it"
+  },
+  "keepScopes": [".bg-gradient", "#gkFooter"],
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on quickstart/gavick-gk-restly/j6 1.0.0 with its stylesheets tokenized as 1.0.1 ships them (tasks/evidence/ds-contracts-gk-2026-10-11): 12/12, controls 0 differences, no text made less readable than the template's own under the four systems tried, 93%–97% of the page follows; the 1.0.1 build itself (restored from its zip) measured the same: 12/12; the road-map band (.bg-gradient, white text on a gradient the tokenizer cannot read) and the footer stay as the template paints them, and its muted text is the grey the stylesheets paint (#636565), not the white the home page's first muted text happens to be. The page colours follow only from 1.0.1 (~/tracy-bench-work/RELEASE-DS-GAVICK.sh, not yet uploaded); minVersion keeps 1.0.0 sites out (TEMPLATE_NEEDS_UPDATE). Re-measured 12/10/2026 with the unified probe (fix/ds-reverify-d) on the published 1.0.1: the logo kind (.gkLogo) found no text in any view — the logo is an image link, which the probe no longer reads as text — and is dropped; then 12/12, controls 0 differences, 93%–97% of the page follows, no text made less readable than the template's own (tasks/evidence/ds-reverify-d-2026-10-12/gk-restly)",
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "pairVarFill": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#4f4f4f",
+    "--fg-2": "#281d70",
+    "--accent": "#e62eef",
+    "--accent-hover": "#d011d9",
+    "--meta": "#aaaaaa",
+    "--border": "#dddddd",
+    "--muted": "#636565",
+    "--surface": "#ffffff",
+    "--font-display": "\"Manrope\", sans-serif",
+    "--font-body": "\"Manrope\", sans-serif"
+  },
+  "darkTokens": {},
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (63 line colours, 115 text colours seen)",
+  "contrast": {
+    "accent-text": "#gkPageContent a:not([class*=btn]):not(:has(img))",
+    "muted": "#gkBg p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#gkPageContent p, #gkPageContent li",
+    "heading": "#gkBg :is(h1, h2, h3, h4)",
+    "footer": "#gkFooter a, #gkFooterNavWrap a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "right-menu",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 24 tried (byte 8716); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 42,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 17,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 17
+    },
+    {
+      "hex": "#f5f5f5",
+      "uses": 15,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 12
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 5
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "alphaVars": [],
+  "keepDefaults": {},
+  "keepColors": {
+    ".bg-gradient": "rgb(255, 255, 255)",
+    "#gkFooter": "rgb(130, 130, 130)"
+  },
+  "licence": "gk_restly 1.1.0 (GavickPro, templateDetails.xml: \"Copyright (C) 2007 - 2021 GavickPro. All rights reserved.\", <license> empty). GavickPro's template business belongs to JoomlArt since October 2017, JoomlArt publishes this quickstart itself (JoomlArt-Products/ja-products): re-releasing it with tokenized stylesheets is JoomlArt's call, taken by David (product owner, 11/10/2026), who runs the release",
+  "bands": {
+    ".bg-gradient": {
+      "ground": "#5030b0",
+      "texts": ["#ffffff"],
+      "kind": "brand",
+      "repaint": true,
+      "gradient": true,
+      "important": true,
+      "paint": {
+        "&": { "color": "text" },
+        ":is(h1, h2, h3, h4, h5, h6)": { "color": "text" },
+        ".sub-heading": {
+          "color": "accent"
+        },
+        ".timeline-date": {
+          "color": "accent"
+        },
+        ".timeline-desc": {
+          "color": "text"
+        }
+      }
+    },
+    "#gkFooter": {
+      "ground": "#13161f",
+      "texts": ["#828282", "#ffffff"],
+      "paint": {
+        ".menu-social": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    "#gkHeader": {
+      "ground": "#611bb4",
+      "texts": ["#ffffff"],
+      "kind": "brand",
+      "repaint": true,
+      "gradient": true,
+      "fill": true,
+      "important": true,
+      "paint": {
+        ".gkLogo.text": { "color": "text" },
+        ".gkLogo.text .gkLogoSlogan": { "color": "text-2" },
+        ".gkMainMenu .gkmenu.level0 li a.active": { "color": "text" },
+        ".lead": {
+          "color": "text"
+        }
+      }
+    }
+  },
+  "bandsNote": "15/10/2026 (look review v8): under a light accent (Mailchimp, Linear) the header and the gradient band take the accent and dark words, but the text logo (.gkLogo.text, #fff), the active menu item (accent-to-pink gradient) and the gradient band’s headings (h1–h6 #fff) kept the template’s white: 1.3:1. They take the band’s words; the active item drops its gradient. drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 13/10/2026: the purple hero is a gradient (.bg-gradient, mean of its stops read off the screenshot #5030b0), drafted as the page under it (#f8f8fc): it wears the system's accent gradient, its white words the accent's text; #gkHeader, the purple gradient hero (linear-gradient #461d9d → #7c12cc, white words), wears the system's gradient (13/10/2026): it stayed the template's under every system, 46–85% of the first screen",
+  "sideRules": {
+    "light": {
+      "#gkHeader .gkMainMenu .gkmenu.level0 li a.active": {
+        "background-image": "none",
+        "-webkit-text-fill-color": "currentColor"
+      },
+      "#gkHeader::before": {
+        "opacity": "0"
+      },
+      "#gkHeader .highlight": {
+        "background-image": "none"
+      },
+      ".bg-gradient::before": {
+        "opacity": "0"
+      }
+    },
+    "dark": {
+      "#gkHeader .gkMainMenu .gkmenu.level0 li a.active": {
+        "background-image": "none",
+        "-webkit-text-fill-color": "currentColor"
+      },
+      "#gkHeader::before": {
+        "opacity": "0"
+      },
+      "#gkHeader .highlight": {
+        "background-image": "none"
+      },
+      ".bg-gradient::before": {
+        "opacity": "0"
+      }
+    }
+  },
+  "sideNote": "13/10/2026: the hero header wears the system's gradient (bands), but two pictures of the template's purple sat on it: a purple-to-blue wash at half opacity (#gkHeader::before) that turned Mailchimp's yellow and Linear's lime a muddy khaki, and the purple brush behind 'crypto coins' (hero-decor.png). Under a system both go; the lead line takes the band's words (it is a div, which a band's word rule does not reach), as do the timeline's descriptions on the gradient band; the timeline band (.bg-gradient) lays the template purple-blue gradient at 0.5 over its ground in ::before, as #gkHeader does: over a light accent it turned the worn ground a mid blue where the band words chosen for that accent read 3.75:1 (MotherDuck, final measure 14/10/2026); the overlay is off under every system"
+}

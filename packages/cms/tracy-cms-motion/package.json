@@ -1,0 +1,17 @@
+{
+  "name": "@tracy/cms-motion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The motion library both CMS themes ship — one runtime, one stylesheet and one head-marker script, written here and emitted byte-identically into the WordPress theme and the Joomla template; the same build writes the module the desk plugin imports.",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/cms/tracy-cms-motion"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

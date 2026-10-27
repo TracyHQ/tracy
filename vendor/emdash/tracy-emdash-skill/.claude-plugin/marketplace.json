@@ -1,0 +1,17 @@
+{
+  "name": "tracy-emdash-template",
+  "owner": {
+    "name": "Tracy"
+  },
+  "metadata": {
+    "description": "Turn a folder of design HTML into a running, acceptance-gated EmDash site.",
+    "version": "1.5.2"
+  },
+  "plugins": [
+    {
+      "name": "tracy-emdash-template",
+      "source": "./",
+      "description": "Turn a folder of design HTML into a running, acceptance-gated EmDash site."
+    }
+  ]
+}

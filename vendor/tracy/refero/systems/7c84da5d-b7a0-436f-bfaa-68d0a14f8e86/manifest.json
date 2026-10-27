@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7c84da5d-b7a0-436f-bfaa-68d0a14f8e86",
+  "status": "complete",
+  "name": "FRANKY'S",
+  "url": "https://styles.refero.design/style/7c84da5d-b7a0-436f-bfaa-68d0a14f8e86",
+  "sourceWebsite": "https://frankys-hats.com",
+  "extractedAt": "2026-06-03T22:39:52.730Z",
+  "capturedAt": "2026-10-08T05:13:53.720915+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Retro arcade kiosk on a skate-shop counter.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7b4e1368-3159-4e4e-b090-dfc5d9aea7b5.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/66854bda-841b-49ef-9f3b-4382cbdd6946.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/af6dd19e-c918-434d-897f-a3ea366b3907.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a3d8f694-3ead-46d5-a327-ee6dd86ab623.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/1de242de-6ae1-4994-919d-0748ba503e1b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "02f38b9c2f22c02bfc4ac5d11844736bdaaf1900195141c113580abe615d544b",
+      "bytes": 15811
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "525d0f8eb65ae606c6a58a962491d720e80eec74d385cd57842122264552a798",
+      "bytes": 309128
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "64df39852dec9fe64938cfe85c2ee4de58fd0dfe1fa7d27a03398dd991cdcc0d",
+      "bytes": 14879
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "406eb05ead65666c20ab493ab67bbec1845ceb929a4be765ea18afbcf953716f",
+      "bytes": 5872
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "9c3965bf78fc2db2c0c2261a51ba0d9763365f09a02bca5b1ad1a4565520e3de",
+      "bytes": 10449
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "3882da3492beee4b73ceea2a47521bbaf1fc1d1b4e3691d4c1287bb23efe70e3",
+      "bytes": 2015
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "954aaa632bec8e3100bdf197b0de4fd7770f7c996e53de7f50230748c82fedc7",
+      "bytes": 411
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "ee90e9d962bf932ea7a5fbb92a45542fe98697f76cacb7e2d482e4e2f95bd3a9",
+      "bytes": 428
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5f7a76628616a968dd811d158963b8af0dace59c8b9057ab6f70822935243b09",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e970c7408cf0ca1da3bf08cc21422ee1dfd5daf4f8b1e9fd64a1556eade4696e",
+      "bytes": 41115
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "fd82daae4558f5a3f44316aa4d2d279607bd11fac0b9431649f6736d64e4e179",
+      "bytes": 21776
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "21507016e841697e7c11c7339403ece3507eb6bfc708cd6136edd2b63df1e0d9",
+      "bytes": 36310
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "40d46a20c471e9d4f79286eb63f5f26009728ad0f7706f3150a5503fa68a365d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9946a03af9f6b6499d86b28a5ec8337f5f547389724a0a76c8c0e06b077e4be9",
+      "bytes": 933
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "75e1c8f0d19246a889d9d324c7f66edca95f65fc3bf9ac62c6a876479e6c1dfc",
+      "bytes": 1421
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "242db326-a6f3-482a-b12e-5e7f8af94981",
+    "3b742f76-25ad-446c-a942-09b09b93f6a3",
+    "3e497155-bd96-4134-a4a5-855bd885a25c",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "604af0f7-b4c3-4921-93af-9da03df81493",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "77a193de-2472-4637-802f-d930ec61c180",
+    "7c84da5d-b7a0-436f-bfaa-68d0a14f8e86",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "ab7996ed-e0ed-40a0-81a5-d37f19ef35b0",
+    "b22f68eb-7ed1-47b6-995e-2c0afc79ac7e",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "db451eca-8de6-43a9-a5d5-35271befdffd",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

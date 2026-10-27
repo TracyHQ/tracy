@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3b080dc3-1992-43fe-91d6-2a721f934435",
+  "status": "complete",
+  "name": "AATHER",
+  "url": "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+  "sourceWebsite": "https://aather.com",
+  "extractedAt": "2026-06-03T17:05:48.371Z",
+  "capturedAt": "2026-10-08T05:10:30.083148+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Open palm, single flame — quiet luxury held in stillness.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3a683030-b3a9-401c-95ae-b1d202694180.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "60f691678c9d83924fac02b50ba30f21043b1265f224ec47320a31458f5a06df",
+      "bytes": 17923
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "15efd01e9ad90e00eeeb548c445242d2a51996920533b72cb663bf7bd0072666",
+      "bytes": 85459
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ee9849d45e317e6557d98a247bd5fc53c76cbb4e70d3908ba0abcdcecc580f3e",
+      "bytes": 14702
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b3ef3a3879e7f55a1d59fee37e75cbfb1228f5aeea04d8d0256f0349793702db",
+      "bytes": 10024
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8e028b7d0c5121363ad02f7038dd9b6b637a9d5c2f42c9d46bae55715988fdec",
+      "bytes": 10855
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "290e886168e9e25a0e519884bae614640bcb0e5716c61857d49e409b49209a3a",
+      "bytes": 2947
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1e03469095b3ecadf3a7c0018bd256a86cab5808c7c7c18caf7ee35575e8a887",
+      "bytes": 769
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e8ef27fb83d5ef8faab11a9b929710a5be3fcc13f38b41a8e9c2d99f7e1d4d00",
+      "bytes": 786
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "e35027706d51d83a40d77af826d14076e87aa3f691c0b311bc4b2e1b9c492033",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "352a7e9820b920383ccd69234cde51f8ae910e8fde36605fcec2a0a7ebdcd014",
+      "bytes": 41619
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e35d0bbab59125e0a06ddb45c53d9ba5f603f036530d8932a93bc4ce3e08126b",
+      "bytes": 21602
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3b8aab6e7377843dcc8cb08bcfba448717416311a8e18571bd28a2b390f9cecc",
+      "bytes": 38194
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8e1916df3c9547756ed7fa7b10aa01356df84b9e2ba2f4d2280c6cbbea48779a",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "3f5e83bad3b51705ae3bddeb0da1b28eb3d96fd80ea3675aeabb2e7adfd142c1",
+      "bytes": 1382
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "38844f8eac9ca670f84db38921c078887e0a10ceb6895f4e030cacef5c01579a",
+      "bytes": 1814
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "391bd401-06d7-4444-8243-8573e96eab24",
+    "3b080dc3-1992-43fe-91d6-2a721f934435",
+    "3f56ea4d-ed9d-4a36-8fb5-a801519ef80b",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "76483bd1-37d3-4fb9-889b-aecf27b08b83",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268",
+    "f3f7122e-d8d3-48f7-9d9d-df6e71545010"
+  ]
+}

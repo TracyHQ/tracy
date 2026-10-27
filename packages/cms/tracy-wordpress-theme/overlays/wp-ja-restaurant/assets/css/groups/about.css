@@ -1,0 +1,260 @@
+/* About group: masthead, features-intro style-3, statistics, teams, timeline.
+   Only what the carried source rules do not give: WordPress wrappers and core block defaults. */
+
+/* ---------- Masthead (mod_jamasthead) ----------
+   The menu band lives in the header part, so the masthead is the first block of the page content;
+   it is pulled up under the band like `.t3-mainnav + .t3-masthead` in the source. */
+.jr-main .t3-masthead:first-child {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  margin-top: -55px;
+  z-index: 2;
+}
+.t3-mainnav {
+  position: relative;
+  z-index: 10;
+}
+@media (max-width: 991px) {
+  .jr-main .t3-masthead:first-child {
+    margin-top: -35px;
+  }
+}
+@media (max-width: 767px) {
+  .jr-main .t3-masthead:first-child {
+    margin-top: 0;
+  }
+}
+.t3-masthead .ja-masthead {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  color: #ffffff; /* ds-keep: words on a photo or scrim: the picture decides the ground, not a design role */
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.t3-masthead .ja-masthead::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--ds-c-ink, rgb(0 0 0));
+}
+.t3-masthead .ja-masthead > .jr-masthead-bg {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  z-index: 0;
+}
+/* The source paints the band with `background-attachment: fixed; background-size: cover`: the photo is sized to the VIEWPORT
+   and the band is a window onto it (zoomed, shifted as the page scrolls). The editable image block does the same by being
+   fixed to the viewport; the band's clip-path is the window (overflow does not clip a fixed child). */
+.t3-masthead .ja-masthead > .jr-masthead-bg {
+  clip-path: inset(0);
+}
+.t3-masthead .ja-masthead > .jr-masthead-bg img {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center center;
+}
+.t3-masthead .ja-masthead > .ja-masthead-detail {
+  position: relative;
+  z-index: 2;
+}
+.t3-masthead .ja-masthead .ja-masthead-title,
+.t3-masthead .ja-masthead .ja-masthead-description {
+  color: inherit;
+}
+.t3-masthead .ja-masthead .ja-masthead-description {
+  margin-bottom: 0;
+}
+/* the block gap is not the source's spacing: the detail box starts at the picture's top and the title keeps the source's 15px */
+.t3-masthead .ja-masthead > .ja-masthead-detail,
+.t3-masthead .ja-masthead-detail > * {
+  margin-block-start: 0;
+}
+.t3-masthead .ja-masthead-detail > .ja-masthead-title {
+  margin-block-end: 15px;
+}
+
+/* ---------- The Menu sheet carries bare .style-2 / .style-3 rules (S: acm/menu/css/style.css). Joomla loads that sheet only on a page
+   with a menu module, so on every other page the rules never reach the features section; here the sheet is global, so they are undone. ---------- */
+:root:not(:has(.menu-items)) :is(.acm-features, .acm-teams).style-2 {
+  padding-top: 0;
+}
+:root:not(:has(.menu-items)) .acm-features.style-3 {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
+}
+
+/* ---------- Features intro style-3 ---------- */
+.acm-features.style-3 .features-content > .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.acm-features.style-3 .features-image figure {
+  margin: 0;
+}
+.acm-features.style-3 .features-image img {
+  max-width: 100%;
+  height: auto;
+}
+@media (max-width: 767px) {
+  .acm-features.style-3 .features-content > .row > [class*="col-sm-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* ---------- Statistics style-1 ---------- */
+.uber-stats.style-1 .stats-list > .stats-asset {
+  float: none;
+  width: 100%;
+}
+.uber-stats.style-1 .stats-list p {
+  margin: 0;
+}
+.uber-stats.style-1 .stats-list .stats-item-subject {
+  display: block;
+}
+.uber-stats.style-1 .stats-list .progressbar {
+  display: block;
+  width: 100%;
+}
+.uber-stats.style-1 .stats-list .progressbar {
+  text-align: center;
+  font-size: 14px;
+  background-color: var(--ds-c-accent, var(--wp--preset--color--accent));
+  color: var(--ds-c-accent-on, var(--wp--preset--color--accent-on));
+}
+.uber-stats.style-1 .stats-list .progressbar > p {
+  display: block;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  background-color: inherit;
+  line-height: 26.25px;
+}
+.uber-stats.style-1 .stats-list .text-center {
+  clear: both;
+}
+.uber-stats.style-1 .jr-stats-button .wp-block-button__link::before {
+  content: "\f262";
+  font-family: FontAwesome;
+  margin-right: 0;
+}
+.uber-stats.style-1 .wp-block-buttons {
+  justify-content: center;
+}
+/* the link carries the source's .btn look (colour, padding, frame); the wrapper keeps only the font and the box */
+.uber-stats.style-1 .jr-stats-button.wp-block-button {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.uber-stats.style-1 .jr-stats-button > .wp-block-button__link {
+  display: inline-block;
+  padding: 13px 20px;
+  border: 1px solid var(--ds-c-accent, var(--wp--preset--color--accent));
+  border-radius: var(--ds-btn-radius, 0);
+  background-color: var(--ds-c-accent, var(--wp--preset--color--accent));
+  color: var(--ds-c-accent-on, var(--wp--preset--color--accent-on));
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+.uber-stats.style-1 .wp-block-group > * {
+  margin-block-start: 0;
+}
+
+/* ---------- Teams style-1 ---------- */
+.acm-teams .team-items > .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.acm-teams .team-items > .row > [class*="col-"] {
+  float: none;
+}
+.acm-teams > .container {
+  display: flow-root; /* the source's clearfix keeps the row's 50px top margin inside the container */
+}
+.acm-teams .team-items > .row {
+  row-gap: 50px;
+}
+.acm-teams .col-sm-6 {
+  margin-block-start: 0;
+}
+.acm-teams .member-image {
+  margin: 0;
+  text-align: center;
+}
+.acm-teams .item > h2 {
+  margin-block: 30px 0;
+}
+.acm-teams .item > p {
+  margin-block: 0 15px;
+}
+.acm-teams .member-image img {
+  max-width: 100%;
+  height: auto;
+}
+@media (max-width: 767px) {
+  .acm-teams .team-items > .row > [class*="col-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* ---------- Timeline style-1 ---------- */
+.acm-timeline .item-icon > p,
+.acm-timeline .item-date,
+.acm-timeline .item-ct {
+  margin: 0;
+}
+.acm-timeline .item-icon > p {
+  line-height: inherit;
+}
+.acm-timeline .timeline-list .media-object {
+  margin: 0 0 15px;
+}
+.acm-timeline .timeline-list .media-object img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.acm-timeline .item-body.media {
+  display: block;
+}
+
+/* The history page's body row sits straight in the page content here; the source has it inside the 1190px container
+   (its -25px margins cancel that container's gutters), so without this it bleeds 25px past each side. */
+.entry-content.jr-page-content > .row {
+  width: 100%;
+  max-width: 1190px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* ---------- Round 2 ---------- */
+/* Statistics: the track behind the bars is the counter's own 10% black (the source puts it on a span; here the counter is a group). */
+.uber-stats.style-1 .stats-list .stats-item-counter {
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.uber-stats.style-1 .jr-stats-button.wp-block-button {
+  display: inline-block;
+}
+/* Teams and features pictures are inline in the source, centred by the column's text-align. */
+.acm-teams .member-image img {
+  display: inline-block;
+}
+.acm-features.style-3 .features-image img {
+  display: inline-block;
+}

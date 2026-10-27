@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "b721fa94-72e6-49ad-a9bc-bab3d075f19c",
+  "status": "complete",
+  "name": "Oxide Computer Company",
+  "url": "https://styles.refero.design/style/b721fa94-72e6-49ad-a9bc-bab3d075f19c",
+  "sourceWebsite": "https://oxide.computer",
+  "extractedAt": "2026-06-03T15:49:13.609Z",
+  "capturedAt": "2026-10-08T05:16:36.242435+00:00",
+  "theme": "dark",
+  "industry": "devtools",
+  "description": "Datacenter rack at midnight with one green LED lit",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7d95319e-94f7-4a35-963d-c38e4f28f71d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/0081405f-854c-42e7-ba42-7a011e4d7233.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/5dea6b78-8f82-42d3-8644-5b2346328400.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a6608de2-b7bb-445f-ab4a-95821e2363ff.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0fdfc601-ba0c-487a-b522-0bcbe343f076.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f80a02bb180887bee19c627c9af92c322c9e62b7a9daad94d893629c8278e709",
+      "bytes": 25685
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9d0f9ce358771f6e2ec3eba4eb5972191c741eb544ef9c587a5a1de97d7a0899",
+      "bytes": 139673
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a7c4ca308ff1c3f1b52e3ade665fea4490cee8fb2c2024c1b22a60854a81c3ce",
+      "bytes": 22410
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9079a2739ae572f72b0ec7e0c635871067aada672b56d7d8b22bd2665e8b03d2",
+      "bytes": 14622
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "19955ae8c93b9ef236baef312a8c9cc38a7da255d915485193fe1925d7538654",
+      "bytes": 15668
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "df9115d615c89e471d99d218aeb837fd0c279cfc267ad2509d41a4e92d7fd3e0",
+      "bytes": 4560
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "8e9996afbd438017ff4395db0edf6f4a4f8f945bdfea8d9006b31cc169e7253f",
+      "bytes": 767
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7629ce954079b00cf0aec96581f62843429e8cd1054605e3e962d1351c18b870",
+      "bytes": 784
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6f3969b881cced0374bec1f03536d0329162a3cc6a16d99f0cb7f03a4e5dd634",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "610e39ed91ff002a7e09e73449730db58464f5e8fd3271fa2657729eb2711b20",
+      "bytes": 49496
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6994434a05fbee60166d75966cb83f041562082f5fec16c34f3a0bb13bcdd300",
+      "bytes": 26262
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "25e559dac68b76d6d7db217f4a0c597114897429bde398c32c73bb24388f1830",
+      "bytes": 64997
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3220ada28268a7f61c6f8322e67112e340ba1110432345ec20ad5805011eb621",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4183d4769eeae6a9002a90667a819cde31515fe556eb99521abac41e90baf1f2",
+      "bytes": 1905
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "dc03d2c9eceefdaae12fd719e0875a3985210bec8ba9c8b67b67792bf1046caa",
+      "bytes": 2392
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "4ef4a6dc-bee9-420a-b197-f20415b9caaa",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "5a7ec81f-03b6-4d21-a706-0d1d323d8899",
+    "7671d0fc-b9fc-462e-9c74-38511264aabd",
+    "78558b01-c101-4b8e-8401-db91269b1150",
+    "834ce97f-61f2-4b12-bf5c-e9fad2544456",
+    "a3af7369-b61c-4923-a628-931861c8097f",
+    "b721fa94-72e6-49ad-a9bc-bab3d075f19c",
+    "bd96c1a6-32ba-42e0-bd5c-23c70a23142c",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "d271a6c4-942f-4abf-a3de-66795f15f031",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "da6ad92d-4f29-4f92-a59a-3a46295d0d1c",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

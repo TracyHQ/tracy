@@ -1,0 +1,89 @@
+{
+  "color": {
+    "electric-iris": {
+      "$value": "#0036ff",
+      "$type": "color",
+      "$description": "Electric Iris — Primary CTA fill, active nav indicators — the only saturated hue on the entire page, it functions as a switch-on moment against an otherwise achromatic or deep-blue canvas"
+    },
+    "signal-cyan": {
+      "$value": "#0093ff",
+      "$type": "color",
+      "$description": "Signal Cyan — Blue state accent for badges, validation surfaces, and short status labels. Do not promote it to the primary CTA color"
+    },
+    "deep-void": {
+      "$value": "#05061b",
+      "$type": "color",
+      "$description": "Deep Void — Card surface within dark sections, box-shadow tone on dark cards — near-black with a violet undertone matching the hero gradient"
+    },
+    "ink-black": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Ink Black — Primary heading and body text on light surfaces, dark button labels"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary page canvas, card surface, button text on dark fills"
+    },
+    "hairline-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Hairline Gray — Default 1px borders, table dividers, icon strokes, card outlines — the structural line color that defines component edges"
+    },
+    "quiet-gray": {
+      "$value": "#c2c2c9",
+      "$type": "color",
+      "$description": "Quiet Gray — Card surface tint in dark sections, subtle shadow base"
+    },
+    "soft-mist": {
+      "$value": "#d6d6db",
+      "$type": "color",
+      "$description": "Soft Mist — Secondary surface fill, muted card backgrounds"
+    },
+    "dim-steel": {
+      "$value": "#656565",
+      "$type": "color",
+      "$description": "Dim Steel — Secondary body text, muted descriptions, icon fill"
+    },
+    "lavender-frost": {
+      "$value": "#e1ecff",
+      "$type": "color",
+      "$description": "Lavender Frost — Subtle blue-tinted surface wash for accent cards"
+    },
+    "mint-whisper": {
+      "$value": "#e6fff7",
+      "$type": "color",
+      "$description": "Mint Whisper — Cool green-tinted surface accent"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Dark button fill, high-contrast interactive surface"
+    }
+  },
+  "font": {
+    "aeonik-pro": {
+      "$value": "Aeonik Pro",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface — geometric humanist sans with distinctive flared characters. Used at 64-74px for hero headlines, 36-48px for section headings. The weight-500 (never bold 700) at massive sizes is a signature choice: authority through size and tracking, not weight. Alternate character sets (ss02, ss05) are activated — these swap specific glyphs for the brand's preferred letterforms."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body and UI typeface — handles everything from 9px micro-labels to 18px subheads. Weight 400 for body, 500 for emphasized text, 600 for nav and button labels. Features cv01 and ss01 are enabled, giving Inter's default character set subtle brand-specific alternates. Tight tracking (-0.01em) at body sizes keeps paragraphs dense without feeling cramped."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Code and technical accents — terminal mockups, version strings, and uppercase eyebrow labels like 'END-TO-END ELECTRON'. The wide tracking (+0.03em) on small caps creates the characteristic monospaced eyebrow tags. Geist Mono is a Vercel-designed face with a slightly geometric, modern stance."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.todesktop.com",
+      "siteName": "ToDesktop",
+      "extractedAt": "2026-06-03T17:11:15.635Z",
+      "variant": "compact"
+    }
+  }
+}

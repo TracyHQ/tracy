@@ -1,0 +1,59 @@
+{
+  "color": {
+    "warm-cream": {
+      "$value": "#f6f3f0",
+      "$type": "color",
+      "$description": "Warm Cream — Page canvas, hero and section backgrounds. This off-white with a barely-there pink undertone is the only surface tone used at scale — it warms the entire brand without ever calling attention to itself"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, modal backgrounds, and inverted text on dark buttons. Used sparingly against the cream canvas to create a single step of elevation without shadows"
+    },
+    "ink-charcoal": {
+      "$value": "#3c3c3c",
+      "$type": "color",
+      "$description": "Ink Charcoal — Primary body text, nav links, headings, and the dominant border color. Slightly softer than pure black — the entire interface reads as if printed in warm ink rather than digital black"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Maximum-contrast text and strong borders for emphasis moments. Used in place of Ink Charcoal when an element needs to read as a hard rule — list separators, selected states, bold emphasis"
+    },
+    "stone-border": {
+      "$value": "#dedfdb",
+      "$type": "color",
+      "$description": "Stone Border — Hairline dividers and subtle structural borders between sections. A warm pale gray-green that disappears into the cream canvas — visible only as a quiet structural gesture"
+    },
+    "ash-gray": {
+      "$value": "#939393",
+      "$type": "color",
+      "$description": "Ash Gray — Medium-contrast borders, control outlines, and structural separators."
+    },
+    "graphite": {
+      "$value": "#434343",
+      "$type": "color",
+      "$description": "Graphite — Button border and dark-mode modal backgrounds. A middle graphite that defines outlined actions without the harshness of pure black"
+    }
+  },
+  "font": {
+    "neue-haas-grotesk-text": {
+      "$value": "Neue Haas Grotesk Text",
+      "$type": "fontFamily",
+      "$description": "All functional UI typography: nav, body copy, links, buttons, product names, footer text. Weight 500 reserved for nav labels and small emphasis; weight 400 for body and descriptions. The 11px size with +0.023em tracking and uppercase is used for tracked micro-labels (nav, 'SCENT SELECTOR', category tags) — a signature editorial gesture that treats interface labels like magazine captions."
+    },
+    "martina-plant": {
+      "$value": "Martina Plant",
+      "$type": "fontFamily",
+      "$description": "Display serif for section headlines, feature titles, and the large editorial pull-quotes that anchor each page. The 42px display size with tight 1.10 leading and slight +0.014em positive tracking creates a distinctive 'perfume ad' voice — the line-height of 0.72 at this size pulls lines together for a condensed editorial block. Weight 500 adds quiet weight to the larger cuts without going bold."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ashleyandco.co",
+      "siteName": "Ashleyandco",
+      "extractedAt": "2026-06-03T21:31:08.203Z",
+      "variant": "compact"
+    }
+  }
+}

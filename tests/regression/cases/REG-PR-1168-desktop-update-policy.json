@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1168-desktop-update-policy",
+  "kind": "feat",
+  "title": "The desktop app installs updates on quit without a dialog, enforces the minimum version from the signed feed, and announces what's new in Help & about",
+  "pr": 1168,
+  "area": "desktop/update",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test on packages/desktop/tracy-desktop/test/{update-plan,policy-guard,feed-policy,updater,blocked-screen,whats-new,update-dialog}.test.mjs.",
+    "S2: Run node --test on packages/ui/tracy-settings/test/help-about.test.mjs."
+  ],
+  "expect": [
+    "S1: a version below minimumVersion is blocked (or warn before minimumVersionAfter); only a higher policyRevision replaces the stored policy; start decides from policy.json at once and waits at most 1.5 s for the feed; warn turns into blocked by its own timer at the deadline; a downloaded version on a Mac asks nothing and counts as staged only when Squirrel says so; Windows keeps its Restart question; a reminder comes after three days, at most one a day; no update question ever opens without a parent window; the blocked gate turns every way of opening a window into the blocked screen; a higher minor than the last run is pending news until seen.",
+    "S2: Help & about shows the running version's notes with Full changelog, the ready-to-install notes above them, no Later, the install line by installMode, and marks What's new seen once shown."
+  ],
+  "selectors": {
+    "policy file": "<userData>/policy.json { policy, revision, verifiedAt }",
+    "log": "<userData>/updater.log: 'policy: blocked|warn|ok', 'Squirrel prepared X', 'blocked screen: …'",
+    "page": "Settings › Help & about (tracy-help-about)"
+  },
+  "fence": "the policy is read only from a channel file whose Ed25519 signature verified under the pinned key; the blocked screen's IPC answers only its own local page",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/desktop/tracy-desktop/test/update-plan.test.mjs",
+      "packages/desktop/tracy-desktop/test/policy-guard.test.mjs",
+      "packages/desktop/tracy-desktop/test/feed-policy.test.mjs",
+      "packages/desktop/tracy-desktop/test/updater.test.mjs",
+      "packages/desktop/tracy-desktop/test/blocked-screen.test.mjs",
+      "packages/desktop/tracy-desktop/test/whats-new.test.mjs",
+      "packages/desktop/tracy-desktop/test/update-dialog.test.mjs"
+    ],
+    "tests": [
+      "below the minimum before its date: warn with the deadline; at the date: blocked",
+      "acceptPolicy takes only a higher revision than the stored one",
+      "start: the stored policy decides at once, before the network answers",
+      "warn turns into blocked at the deadline, by its own timer, without a poll",
+      "a downloaded update asks nothing on a Mac: no dialog, nothing installs until quit or Restart",
+      "install on quit: Mac (Squirrel) and AppImage yes; Windows NSIS keeps the Restart question; a copy that cannot replace itself never",
+      "a version ready for three days brings one reminder, then one a day — never two in a day",
+      "with no window there is never a dialog: a notification, and the quiet answer",
+      "blocked: the blocked screen opens and the product windows close; every way in shows the blocked screen",
+      "seen() clears it for good: the next start does not announce it again"
+    ]
+  }
+}

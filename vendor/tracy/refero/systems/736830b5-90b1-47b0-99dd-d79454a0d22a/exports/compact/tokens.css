@@ -1,0 +1,25 @@
+:root {
+  /* Colors */
+  --color-indigo-bolt: #4570ff;
+  --color-ember-orange: #ff6808;
+  --color-lime-highlighter: #c6ff94;
+  --color-lavender-mist: #ebdcff;
+  --color-ice-blue: #d6e0ff;
+  --color-lilac-bloom: #c293f1;
+  --color-deep-navy: #193f78;
+  --color-forest-sage: #244f47;
+  --color-warm-bone: #f1f0ec;
+  --color-paper-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-hairline: #e5e7eb;
+  --color-stone: #d1d5db;
+  --color-smoke: #6e6d6c;
+  --color-graphite: #555555;
+
+  /* Typography — Font Families */
+  --font-regular: 'Regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-a-geometric-grotesque-sans-serif-custom-marketed-as-the-site-font-inter-manrope-or-dm-sans-are-close-substitutes: 'A geometric grotesque sans-serif (custom-marketed as the site font — Inter, Manrope, or DM Sans are close substitutes)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-nanum-pen-script: 'Nanum Pen Script', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-medium: 'Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-bold: 'Bold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

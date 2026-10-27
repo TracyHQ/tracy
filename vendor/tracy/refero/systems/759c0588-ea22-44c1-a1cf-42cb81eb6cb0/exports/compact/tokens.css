@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-photo-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-fog-gray: #f2f2f2;
+  --color-graphite: #737373;
+  --color-ash: #b8b8b8;
+  --color-silver: #d9d9d9;
+  --color-steel: #999999;
+  --color-amber: #f1a900;
+  --color-goldenrod: #ffbc3c;
+
+  /* Typography — Font Families */
+  --font-vsco-gothic: 'VSCO Gothic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

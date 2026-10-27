@@ -1,0 +1,38 @@
+{
+  "user_data": {
+    "pk": "54775783265",
+    "id": "54775783265",
+    "username": "tamarel.hoian",
+    "full_name": "Tamarel Restaurant & Bar",
+    "follower_count": 11,
+    "following_count": 10,
+    "media_count": 7,
+    "is_private": false
+  },
+  "user_posts": [
+    {
+      "node": {
+        "media_dict": {
+          "code": "C7QwnWDw9u8",
+          "id": "3902823006281326597_54775783265"
+        }
+      }
+    },
+    {
+      "node": {
+        "media_dict": {
+          "code": "C7PL-rscwj8",
+          "id": "3383199831497158077_54775783265"
+        }
+      }
+    },
+    {
+      "node": {
+        "media_dict": {
+          "code": "Chkhb5oAb7Y",
+          "id": "3225476498725446964_54775783265"
+        }
+      }
+    }
+  ]
+}

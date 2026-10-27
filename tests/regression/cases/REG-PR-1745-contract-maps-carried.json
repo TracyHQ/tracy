@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1745-contract-maps-carried",
+  "kind": "fix",
+  "title": "Road to live STAB-1 fails a release whose Claude Cowork plugin, as a new site gets it, lacks a contract map; an unreadable plugin is Not checked",
+  "pr": 1745,
+  "area": "ops/readiness/stab-1",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/cowork-install.test.mjs apps/tracy-web/test/cowork-plugin-contracts.test.mjs — install selection order, and pluginAnswer/collectCoworkEvidence over built Joomla and WordPress plugin zips with and without showcase-nav-map.json / demo-trim-map.json, plus corrupt zips"
+  ],
+  "expect": [
+    "S1: a slim Joomla package as 0.24.62 shipped JA Boxing 1.0.3 (contract asset without showcase-nav-map) answers lacks, naming the missing file",
+    "S1: the fleet latest lacking the map while the floor carries it yields lacks",
+    "S1: a corrupt zip (length field past the archive, or an end record whose entry count disagrees with its directory) is not-checked, never lacks",
+    "S1: the release zip's install.cowork wins over a pin unless the pin says overridesRelease"
+  ],
+  "selectors": {
+    "seam": "collectCoworkEvidence / pluginAnswer (apps/tracy-web/src/lib/cowork-contract-evidence.js); STAB-1 rule stab-1-one-build"
+  },
+  "evidence": "25/10/2026: JA Boxing j6 1.0.3 and 1.0.4 passed STAB-1 while Claude Cowork Joomla 0.24.62 had no showcase-nav-map for them; read from the real release artifacts",
+  "fence": "STAB-1 reads the bytes of the plugin install would pick; missing map = fail (owner plugin), unreadable = Not checked",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/cowork-install.test.mjs",
+      "apps/tracy-web/test/cowork-plugin-contracts.test.mjs"
+    ],
+    "tests": [
+      "the release zip wins over a pin, unless the pin says overridesRelease",
+      "pluginAnswer: a slim Joomla package as 0.24.62 shipped JA Boxing 1.0.3",
+      "collectCoworkEvidence: the fleet latest lacks the map while the floor carries it",
+      "readZipStrict and pluginAnswer: a corrupt zip is not checked",
+      "readZipStrict: an end record whose entry count disagrees with its directory is corrupt"
+    ],
+    "timeout_s": 300
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4bcd0728-0d28-4835-ba9f-d61554f797b1",
+  "status": "complete",
+  "name": "Dot Inc.",
+  "url": "https://styles.refero.design/style/4bcd0728-0d28-4835-ba9f-d61554f797b1",
+  "sourceWebsite": "https://pad.dotincorp.com",
+  "extractedAt": "2026-06-03T20:18:32.038Z",
+  "capturedAt": "2026-10-08T05:11:18.309393+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "white laboratory with a single orange spark",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0142ed27-2db9-4d33-bee6-dce662a6a706.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/632d023b-af5c-448c-9c43-9e5cf721d014.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/71182e73-3cc8-4b4a-8886-9b2f9d5e7362.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/23c26f74-d0dc-45c5-a504-e1d417fc7a90.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/37538068-4f2b-4be9-b23b-920875b25a4f.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "94133350e75a0ebdf6c768481f1987175b327e7d233f9da6a5e3c33de0b1a6d7",
+      "bytes": 17431
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a6a8bcd4404e096f3cc68093586a831747c468093189f544c2fa8aaed673aa16",
+      "bytes": 91275
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6b3f4e5e6228488cc70da4e9e50e5b3d3bcedb12387275190ace5bca260d0c3a",
+      "bytes": 14458
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "1024d58c8ecb1739139d9009225b06fa04c8de2bf3664128db73213d2aa9f3fe",
+      "bytes": 15158
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "185775d901af6d7e5ed3bbae28d27ee6d3aa6ed02cf6666d342a5b05a60e3fa4",
+      "bytes": 10432
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d496f4c00ea1f2018e55c3d5d75811f5cd48cf064b8472e62672d85c6eb85272",
+      "bytes": 3250
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "194a52f7582a8a98d30d953d9eb07df416e6436ad46fe4f11130485c031616c5",
+      "bytes": 598
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2e3a183d780c526406af0b15e8dd5d87b22a58e6046a4410e18f3a348acf82ee",
+      "bytes": 615
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d963150cfe910f24847dc328d5c87445291bfee3f75adb650348ed6d9337fb85",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8be5e52c18b223966b2d70e194a0007b969da32f77991c9d8022862409358f38",
+      "bytes": 42607
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "738f1e7ddd721e5106a7fb053e00fb45dd3b71ee3683e3283da3e5532b96019d",
+      "bytes": 22850
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "2c3cbd76c222fd2257207260130fc74f0abc1f9a24388132f548e159beb1713d",
+      "bytes": 56277
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "2bbf64f6e18ee5de7f944023028e36269212ae139e0ec85847fe97ae34d8de8f",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f5ebdb0a6b8d56882ff7018d2bb7aace909981eab6d33d59c302718a2db5f7ae",
+      "bytes": 1693
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9ffa7c3f4e2e817df63931ec14f0313791c1a4203d901030018c8df97e73b4af",
+      "bytes": 2366
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0f0d4cb7-5109-4e81-8c8d-f6bd0441b27c",
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "4bcd0728-0d28-4835-ba9f-d61554f797b1",
+    "537641a0-5a24-4203-ae9b-cd29516aa3f8",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "7bbbf1bc-e375-4200-8d71-e373a3c78654",
+    "7eed2626-ab11-472c-b04a-603476ff8957",
+    "981d90e9-7be3-497f-a899-52a0a9ec16f4",
+    "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

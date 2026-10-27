@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "b490cff8-9d2c-4225-9118-6468e4f3213d",
+  "status": "complete",
+  "name": "TheyDo",
+  "url": "https://styles.refero.design/style/b490cff8-9d2c-4225-9118-6468e4f3213d",
+  "sourceWebsite": "https://www.theydo.com",
+  "extractedAt": "2026-06-03T21:18:29.859Z",
+  "capturedAt": "2026-10-08T05:16:29.879710+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Blush editorial spread with magenta confetti. Warm pink paper, serif headlines, a single hot-pink accent that only outlines and whispers — never shouts.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e3eec645-6378-47b3-847b-a076266a2997.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "467cd6519487457ec8f08ac443df871296b685331d6ae48c51568f1d6e128b66",
+      "bytes": 21916
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "23fc427f72a9efe1674e2c1594f216c80dd281b403614d343a3a5b4537e0765b",
+      "bytes": 122529
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "bb1afb3c05ece8b08f979b364c2f52ee209e89ff31b9e5f4a163353a4048f446",
+      "bytes": 18608
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "fff1bc0d57d89a4aa097edd790792321d1f42927efa7475c31e713847f1d50d1",
+      "bytes": 17047
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "26fddf3fe8306b6ce734abca1166577a29b493250d54efbac547c484ea19527c",
+      "bytes": 14847
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "050fd7565fc62dac9377b5ef43d3e6620da6ca9e98d3d853efc155204ac25078",
+      "bytes": 4198
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c786c5b59021478926d3e26f3ebc48d86e1c0e49e9c1c6e9eb748293f4bf6aa8",
+      "bytes": 781
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "cfa11c6c4f230ae872698b66b7fdad65e0d66e141a3309a007ba7a45b84af654",
+      "bytes": 798
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8ab4cefc938da7f1e4a74a7d3e2c2378fb97c92ba9f18f99a72686c728537fa7",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3a517356a511f1db04f2cb63827966c6d23bf0ecc6b4566e2937a30af24bd651",
+      "bytes": 47531
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "aa65588e38fff127094f13c7f3b76990294fea9b8a51295f3591e23f104d0d58",
+      "bytes": 24901
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f1f2ad4404a79c7aacd420def23104be89da3a80925ef4ab776c2dac35f535d5",
+      "bytes": 61117
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "66f6ebcfd3044fdefe5d0bf241157523c229c014c22fe7f59179f521b8a8e40a",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1948c8cf5531871b5e0e8352486c275c6c862d78a74af2f2fe0d3354cd8d641e",
+      "bytes": 1788
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d3bdf9ffb8c555295188b6c71c515525c91eb184d0786e435b2864d23f48835d",
+      "bytes": 2366
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "6b2777fd-7021-4a96-add3-ec4a32374214",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "b490cff8-9d2c-4225-9118-6468e4f3213d",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

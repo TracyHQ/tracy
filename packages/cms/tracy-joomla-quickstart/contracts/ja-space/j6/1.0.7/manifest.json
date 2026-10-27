@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-space/j6/1.0.7",
+  "platform": "joomla",
+  "template": "ja_space",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-space",
+    "id": "quickstart/ja-space/j6",
+    "version": "1.0.7",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_space",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-space-j6-webroot-1.0.7.tar.gz",
+        "bytes": 35494078,
+        "sha256": "bf6ba94f257f8f538071783bf9c37c7884e3c90da034d27dc69db2d27f82bdaf"
+      },
+      "database": {
+        "file": "ja-space-j6-database-1.0.7.sql.gz",
+        "bytes": 78788,
+        "sha256": "50b89438fcbcb6e672bc4fb765f2203d1c7135c57c18bcaa25796bb84ab55064"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T08:31:35.244Z",
+    "builtFrom": {
+      "from": "quickstart/ja-space/j6@1.0.6",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 2 files replaced (templates/ja_space/css); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-space/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1198-onboard-hide-menu",
+  "kind": "feat",
+  "title": "Getting started: × closes as Skip; Hide from account menu records the per-account flag (since #1216 the screen stays open); the row leaves the account menu and Help still reopens the screen",
+  "pr": 1198,
+  "area": "onboard/header",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-onboard mount and surface tests (node:test, jsdom page, fake /api/onboarding door) and the tracy-web onboarding door test (Postgres).",
+    "S2: the end-to-end form is S5 of tasks/evidence/ai-accounts-unify/stand/REPORT.md."
+  ],
+  "expect": [
+    "× closes the screen as dismissed, leads nowhere and leaves the menu flag untouched.",
+    "Hide posts to /api/onboarding/menu-hide with the session cookie; since #1216 it no longer closes the screen (the button turns into Show in account menu, REG-PR-1216-getting-started-menu-show); a refused door (403) or no network never throws and never hangs the screen.",
+    "The desktop surface takes the close from the device and the menu flag from the account; hideMenu goes to the account door.",
+    "GET /api/onboarding answers {completedAt, menuHiddenAt}; the first menu-hide wins; 401 without a session."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-onboard/test/mount.test.mjs",
+      "packages/ui/tracy-onboard/test/surface.test.mjs",
+      "apps/tracy-web/test/onboarding-door.test.mjs"
+    ],
+    "tests": [
+      "the header: × is Skip — closes as dismissed, leads nowhere, the menu flag untouched",
+      "the header: on a desktop app the toggle goes to the account door; a refused door (403) keeps the screen and says the flag did not change",
+      "hideMenu posts to /api/onboarding/menu-hide with the session cookie",
+      "hideMenu never fails the caller: a refused door and no network both resolve, warned once",
+      "the desktop surface: the close from this device, the menu flag from the account"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 240
+  },
+  "fence": "the hide flag lives on the account (one door for web and desktop); the screen's close never waits on it",
+  "selectors": {
+    "hide": "[data-action='hide-menu']",
+    "close": "[data-action='close']",
+    "door": "POST /api/onboarding/menu-hide"
+  }
+}

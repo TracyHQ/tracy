@@ -1,0 +1,600 @@
+/* g2 — the ACM `features` styles 2, 3, 4 and 7 of JA Impact: the card grid, the icon-card carousel with its
+ * call-to-action bar, the stat cards on the navy band, the video + subscribe panel.
+ * Every length, colour and size was read off the running source (http://127.0.0.1:8300, 01/10/2026) at 1440 and
+ * 390 px in light and dark: the template's css/template.css (.acm-features.style-N), css/darkmode.css and computed
+ * style. Colours come from the shared tokens (--jim-*), which carry both modes through light-dark(); the few the
+ * shared sheet has no row for are declared once below the same way. */
+
+:root {
+  --g2-white: #ffffff;
+  --g2-black: #000000;
+  --g2-on-card: var(--ds-c-on-ink, #e9ecef);
+  --g2-secondary: var(--ds-c-ink, #6c757d);
+  --g2-placeholder: var(--ds-c-meta, #adb5bd);
+  --g2-facebook: #1674ea;
+  --g2-twitter: #1c9cea;
+  --g2-tiktok: #000000;
+  --g2-pinterest: #cf3431;
+  /* The section picture behind the icon cards is veiled in dark (the source's .bg-overlay inset shadow). */
+  --g2-veil: light-dark(transparent, var(--ds-c-bg, rgba(17, 26, 44, 0.94)));
+  --g2-btn-white-bg: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-bg, #28354f));
+  --g2-btn-white-fg: light-dark(var(--ds-c-fg-2, #1d3677), var(--ds-c-fg-2, #eef1f6));
+  --g2-btn-white-line: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-border, #33415e));
+}
+:root { --g2-lift: light-dark(rgba(100, 100, 111, 0.2), rgba(0, 0, 0, 0.55)); } /* ds-keep: hover shadow tint: depth, not a role */
+
+/* Module spacing (top-/bottom- classes) is declared once in g3.css for every section. */
+
+body.tracy .acm-features { position: relative; box-sizing: border-box; }
+body.tracy .acm-features .text-start { text-align: left; }
+body.tracy .acm-features .text-center { text-align: center; }
+body.tracy .acm-features .text-end { text-align: right; }
+
+/* The heading the module draws above its content: a green eyebrow and a 40 px headline, in a 660 px column. */
+body.tracy .acm-features .section-title-wrap { max-width: 660px; margin: 0 auto 64px; text-align: center; }
+@media (max-width: 991.98px) { body.tracy .acm-features .section-title-wrap { margin-bottom: 32px; } }
+body.tracy .acm-features .section-title-wrap .sub-title {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.16px;
+  text-transform: uppercase;
+  color: var(--jim-eyebrow);
+}
+body.tracy .acm-features .section-title {
+  margin: 0 0 8px;
+  font-size: var(--jim-h2);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
+  color: var(--jim-heading);
+}
+
+/* Buttons the four styles draw: the shared green button, plus the colours the source's button-type offers. */
+body.tracy .acm-features .wp-block-buttons { margin: 0; gap: 0; }
+body.tracy .acm-features .wp-block-button.btn-white .wp-block-button__link {
+  background: var(--g2-btn-white-bg);
+  border-color: var(--g2-btn-white-line);
+  color: var(--g2-btn-white-fg);
+}
+body.tracy .acm-features .wp-block-button.btn-white .wp-block-button__link:hover,
+body.tracy .acm-features .wp-block-button.btn-white .wp-block-button__link:focus {
+  background: var(--jim-primary);
+  border-color: var(--jim-primary);
+  color: var(--ds-c-on-ink, var(--g2-white));
+  opacity: 1;
+}
+body.tracy .acm-features .wp-block-button.btn-primary .wp-block-button__link { background: var(--jim-primary); border-color: var(--jim-primary); }
+body.tracy .acm-features .wp-block-button.btn-warning .wp-block-button__link { background: var(--jim-warning); border-color: var(--jim-warning); }
+body.tracy .acm-features .wp-block-button.btn-dark .wp-block-button__link { background: var(--wp--preset--color--fg-2); border-color: var(--wp--preset--color--fg-2); color: var(--wp--preset--color--bg); }
+
+/* ── Style 2: the card grid ────────────────────────────────────────────────────────────────────── */
+
+body.tracy .acm-features.style-2 .feature-list { display: flex; flex-wrap: wrap; margin-inline: -16px; }
+body.tracy .acm-features.style-2 .ft-item {
+  box-sizing: border-box;
+  flex: 0 0 100%;
+  max-width: 100%;
+  margin: 0 0 32px;
+  padding-inline: 16px;
+}
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-2 .ft-item.col-md-3 { flex-basis: 25%; max-width: 25%; }
+  body.tracy .acm-features.style-2 .ft-item.col-md-4 { flex-basis: 33.3333%; max-width: 33.3333%; }
+  body.tracy .acm-features.style-2 .ft-item.col-md-6 { flex-basis: 50%; max-width: 50%; }
+  body.tracy .acm-features.style-2 .ft-item.col-md-8 { flex-basis: 66.6667%; max-width: 66.6667%; }
+  body.tracy .acm-features.style-2 .ft-item.col-md-9 { flex-basis: 75%; max-width: 75%; }
+  body.tracy .acm-features.style-2 .ft-item.col-md-12 { flex-basis: 100%; max-width: 100%; }
+}
+body.tracy .acm-features.style-2 .ft-item-detail {
+  --g2-card-bg: var(--jim-primary);
+  --g2-card-head: var(--ds-c-on-ink, var(--g2-white));
+  --g2-card-text: var(--g2-on-card);
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--ds-card-radius, 8px);
+  background: var(--g2-card-bg);
+  color: var(--g2-card-text);
+}
+body.tracy .acm-features.style-2 .ft-item-detail.bg-info { --g2-card-bg: var(--ds-c-accent, var(--jim-info)); --g2-card-head: var(--ds-c-accent-on, var(--g2-white)); --g2-card-text: var(--ds-c-accent-on, var(--g2-on-card)); }
+body.tracy .acm-features.style-2 .ft-item-detail.bg-primary { --g2-card-bg: var(--jim-primary); }
+body.tracy .acm-features.style-2 .ft-item-detail.bg-light {
+  --g2-card-bg: var(--jim-band);
+  --g2-card-head: var(--jim-heading);
+  --g2-card-text: var(--jim-text);
+}
+body.tracy .acm-features.style-2 .item-content { padding: 32px; }
+@media (min-width: 992px) {
+  body.tracy .acm-features.style-2 .ft-item.col-md-6 .item-content,
+  body.tracy .acm-features.style-2 .ft-item.col-md-12 .item-content { padding: 64px; }
+}
+body.tracy .acm-features.style-2 .item-title { margin: 0 0 16px; font-size: var(--jim-h3); color: var(--g2-card-head); }
+body.tracy .acm-features.style-2 .item-des { margin: 0; color: var(--g2-card-text); }
+body.tracy .acm-features.style-2 .item-media { position: relative; margin: 0; overflow: hidden; }
+body.tracy .acm-features.style-2 .item-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  transition: transform 2s ease-in-out;
+}
+body.tracy .acm-features.style-2 .ft-item-detail:hover .item-media img { transform: scale(1.1); }
+body.tracy .acm-features.style-2 .item-media::before { content: ''; display: none; position: absolute; inset: 0; z-index: 5; }
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-2 .ft-item-detail:has(> .item-media) { display: flex; align-items: center; }
+  body.tracy .acm-features.style-2 .ft-item-detail.media-left { flex-direction: row; gap: 32px; }
+  body.tracy .acm-features.style-2 .ft-item-detail.media-right { flex-direction: row-reverse; gap: 32px; }
+  body.tracy .acm-features.style-2 .ft-item-detail.media-top { flex-direction: column; }
+  body.tracy .acm-features.style-2 .ft-item-detail.media-bottom { flex-direction: column-reverse; }
+  body.tracy .acm-features.style-2 .ft-item-detail.media-left > .item-media,
+  body.tracy .acm-features.style-2 .ft-item-detail.media-left > .item-content,
+  body.tracy .acm-features.style-2 .ft-item-detail.media-right > .item-media,
+  body.tracy .acm-features.style-2 .ft-item-detail.media-right > .item-content { flex-basis: 50%; }
+  body.tracy .acm-features.style-2 .ft-item-detail.media-top > .item-media,
+  body.tracy .acm-features.style-2 .ft-item-detail.media-bottom > .item-media { width: 100%; }
+  body.tracy .acm-features.style-2 .item-media { height: 100%; }
+  body.tracy .acm-features.style-2 .item-media::before { display: block; }
+  /* The gradient that fades the picture into the card: the card's colour at the picture's far edge, clear at the middle. */
+  body.tracy .acm-features.style-2 .media-left .item-media::before {
+    background: linear-gradient(269deg, var(--g2-card-bg) 2.57%, color-mix(in srgb, var(--g2-card-bg) 0%, transparent) 52.57%);
+  }
+  body.tracy .acm-features.style-2 .media-top .item-media::before {
+    background: linear-gradient(360deg, var(--g2-card-bg) 2.57%, color-mix(in srgb, var(--g2-card-bg) 0%, transparent) 52.57%);
+  }
+  body.tracy .acm-features.style-2 .media-right .item-media::before {
+    background: linear-gradient(90deg, var(--g2-card-bg) 2.57%, color-mix(in srgb, var(--g2-card-bg) 0%, transparent) 52.57%);
+  }
+  body.tracy .acm-features.style-2 .media-bottom .item-media::before {
+    background: linear-gradient(180deg, var(--g2-card-bg) 2.57%, color-mix(in srgb, var(--g2-card-bg) 0%, transparent) 52.57%);
+  }
+}
+
+/* ── Style 3: the icon cards ───────────────────────────────────────────────────────────────────── */
+
+body.tracy .acm-features.style-3 { overflow: hidden; isolation: isolate; }
+body.tracy .acm-features.style-3 .jim-bg { position: absolute; inset: 0; z-index: 0; margin: 0; }
+body.tracy .acm-features.style-3 .jim-bg img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center; }
+body.tracy .acm-features.style-3::after { content: ''; position: absolute; inset: 0; z-index: 1; background: var(--g2-veil); pointer-events: none; }
+body.tracy .acm-features.style-3 > .jim-container { position: relative; z-index: 2; }
+
+body.tracy .acm-features.style-3 .owl-theme { position: relative; }
+body.tracy .acm-features.style-3 .features-carousel { overflow-x: auto; }
+body.tracy .acm-features.style-3 .features-carousel.tracy-motion-carousel-step { overflow: hidden; }
+body.tracy .acm-features.style-3 .tracy-motion-track { display: flex; gap: 32px; }
+body.tracy .acm-features.style-3 .features-item { display: flex; flex: 0 0 100%; min-width: 0; }
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-3 .features-item { flex-basis: calc((100% - 32px) / 2); }
+}
+@media (min-width: 1200px) {
+  body.tracy .acm-features.style-3 .features-item { flex-basis: calc((100% - 64px) / 3); }
+  body.tracy .acm-features.style-3 .acm-features--cols-4 .features-item { flex-basis: calc((100% - 96px) / 4); }
+}
+body.tracy .acm-features.style-3 .item-inner { display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; }
+body.tracy .acm-features.style-3 .img-icon {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  width: 104px;
+  height: 104px;
+  margin: 0;
+  border-radius: 100%; /* ds-keep: the round icon disc, a circle not a corner */
+}
+@media (min-width: 576px) {
+  body.tracy .acm-features.style-3 .img-icon { width: 120px; height: 120px; }
+}
+body.tracy .acm-features.style-3 .img-icon img { display: block; width: 100%; height: 100%; border-radius: 100%; object-fit: cover; object-position: center; } /* ds-keep: the round icon disc, a circle not a corner */
+/* Under a design system the icons' round navy disc follows its accent, as in the Joomla twin (acm/features style-3): the
+ * filter printed in the footer (inc/extra.php, #jim-disc-tint) repaints only the deep navy pixels with the flood colour.
+ * The helper reads the accent without a fallback, so with no design system it is invalid and the filter falls back to none. */
+:root { --jim-disc-filter: url(#jim-disc-tint) drop-shadow(0 0 0 color-mix(in srgb, var(--ds-c-accent) 0%, transparent)); }
+body.tracy .acm-features.style-3 .img-icon img { filter: var(--jim-disc-filter, none); }
+.jim-disc-tint-flood { flood-color: var(--ds-c-accent, transparent); }
+body.tracy .acm-features.style-3 .wrap-content {
+  position: relative;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  width: 100%;
+  margin-top: -64px;
+  padding: 120px 24px 32px;
+  border-radius: var(--ds-card-radius, 8px);
+  background: var(--jim-surface);
+  transition: box-shadow 0.5s ease-in-out;
+}
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-3 .wrap-content { padding-inline: 32px; }
+}
+@media (min-width: 1400px) {
+  body.tracy .acm-features.style-3 .wrap-content { padding: 120px 64px 64px; }
+  body.tracy .acm-features.style-3 .acm-features--cols-4 .wrap-content { padding: 104px 32px 32px; }
+}
+body.tracy .acm-features.style-3 .acm-features--cols-4 .img-icon { width: 104px; height: 104px; }
+body.tracy .acm-features.style-3 .item-inner:hover .wrap-content { box-shadow: var(--g2-lift) 0 7px 29px 0; }
+body.tracy .acm-features.style-3 .wrap-content.bg-primary { background: var(--jim-primary); }
+body.tracy .acm-features.style-3 .wrap-content.bg-secondary { background: var(--g2-secondary); }
+body.tracy .acm-features.style-3 .wrap-content.bg-success { background: var(--jim-success); }
+body.tracy .acm-features.style-3 .wrap-content.bg-warning { background: var(--jim-warning); }
+body.tracy .acm-features.style-3 .wrap-content:not(.bg-default) .item-title,
+body.tracy .acm-features.style-3 .wrap-content:not(.bg-default) .item-description { color: var(--ds-c-on-ink, var(--g2-white)); }
+body.tracy .acm-features.style-3 .item-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; height: 100%; text-align: center; }
+body.tracy .acm-features.style-3 .item-title { margin: 0 0 16px; font-size: var(--jim-h4); color: var(--jim-heading); }
+body.tracy .acm-features.style-3 .item-description { flex-grow: 1; margin: 0 0 32px; color: var(--jim-text); }
+body.tracy .acm-features.style-3 .item-content .wp-block-buttons { justify-content: center; }
+
+/* Previous / next: two square buttons at the edges of the cards, shown while the pointer or focus is in the carousel. */
+body.tracy .acm-features.style-3 .tracy-motion-nav-buttons {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+@media (min-width: 576px) {
+  body.tracy .acm-features.style-3 .tracy-motion-nav-buttons { margin-inline: -24px; }
+}
+body.tracy .acm-features.style-3 .owl-theme:hover .tracy-motion-nav-buttons,
+body.tracy .acm-features.style-3 .owl-theme:focus-within .tracy-motion-nav-buttons { opacity: 1; visibility: visible; }
+body.tracy .acm-features.style-3 .tracy-motion-nav-buttons .wp-block-button__link {
+  position: relative;
+  display: block;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ds-btn-radius, 8px);
+  background: var(--jim-raised);
+  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.05);
+  color: var(--jim-link);
+  font-size: 0;
+  pointer-events: auto;
+  cursor: pointer; /* since 1.0.9 the demo's two controls are buttons, not links to # */
+}
+body.tracy .acm-features.style-3 .tracy-motion-nav-buttons .wp-block-button__link::before {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Font Awesome 6 Free';
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+}
+body.tracy .acm-features.style-3 .tracy-motion-prev .wp-block-button__link::before { content: '\f104'; }
+body.tracy .acm-features.style-3 .tracy-motion-next .wp-block-button__link::before { content: '\f105'; }
+
+/* The call-to-action bar under the cards. */
+body.tracy .acm-features.style-3 .feature-block { margin-top: 16px; }
+@media (min-width: 576px) {
+  body.tracy .acm-features.style-3 .feature-block { margin-top: 32px; }
+}
+@media (min-width: 1200px) {
+  body.tracy .acm-features.style-3 .feature-block { margin-top: 64px; }
+}
+body.tracy .acm-features.style-3 .block-inner { padding: 32px; border-radius: var(--ds-card-radius, 8px); background: var(--jim-warning); }
+body.tracy .acm-features.style-3 .block-inner.bg-primary { background: var(--jim-primary); }
+body.tracy .acm-features.style-3 .block-inner.bg-secondary { background: var(--g2-secondary); }
+body.tracy .acm-features.style-3 .block-inner.bg-success { background: var(--jim-success); }
+body.tracy .acm-features.style-3 .block-inner.bg-warning { background: var(--jim-warning); }
+body.tracy .acm-features.style-3 .block-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 16px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+body.tracy .acm-features.style-3 .block-img { flex: 0 0 auto; width: 68px; height: 68px; margin: 0; }
+body.tracy .acm-features.style-3 .block-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+body.tracy .acm-features.style-3 .block-left .item-description { margin: 0; font-size: var(--jim-h4); color: var(--ds-c-on-ink, var(--g2-white)); }
+body.tracy .acm-features.style-3 .block-right { flex: 0 0 auto; text-align: center; }
+body.tracy .acm-features.style-3 .block-right .wp-block-button__link { white-space: nowrap; }
+body.tracy .acm-features.style-3 .block-right .wp-block-buttons { justify-content: center; }
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-3 .block-left .item-description { font-size: var(--jim-h3); }
+}
+@media (min-width: 1200px) {
+  body.tracy .acm-features.style-3 .block-inner { display: flex; align-items: center; justify-content: space-between; padding: 64px; }
+  body.tracy .acm-features.style-3 .block-left { flex-direction: row; column-gap: 32px; margin-bottom: 0; text-align: left; }
+}
+
+/* ── Style 4: the stat cards on the navy band ──────────────────────────────────────────────────── */
+
+body.tracy .acm-features.style-4 .feature-row { display: grid; grid-template-columns: repeat(12, 1fr); margin-inline: -16px; }
+body.tracy .acm-features.style-4 .feature-head { grid-column: 1 / -1; box-sizing: border-box; padding-inline: 16px; margin-bottom: 24px; }
+body.tracy .acm-features.style-4 .feature-list { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr; margin: 0; }
+@media (min-width: 992px) {
+  body.tracy .acm-features.style-4 .feature-head { grid-column: 1 / span 8; }
+}
+@media (min-width: 1400px) {
+  body.tracy .acm-features.style-4 .feature-head { grid-column: 1 / span 4; margin-bottom: 0; }
+  body.tracy .acm-features.style-4 .feature-list { grid-column: 5 / span 8; padding-left: 64px; }
+}
+body.tracy .acm-features.style-4 .feature-tag {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.16px;
+  text-transform: uppercase;
+  color: var(--ds-c-accent-on-ink, var(--jim-success));
+}
+body.tracy .acm-features.style-4 .feature-title { margin: 0 0 32px; font-size: var(--jim-h2); color: var(--ds-c-on-ink, var(--g2-white)); }
+body.tracy .acm-features.style-4 .lead { margin: 0; font-size: 16px; line-height: 1.6; color: var(--jim-on-band); }
+@media (min-width: 992px) {
+  body.tracy .acm-features.style-4 .lead { font-size: 18px; }
+}
+body.tracy .acm-features.style-4 .item { box-sizing: border-box; padding-inline: 16px; }
+body.tracy .acm-features.style-4 .item + .item { margin-top: 16px; }
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-4 .feature-list.sub-col-2 { grid-template-columns: repeat(2, 1fr); }
+  body.tracy .acm-features.style-4 .feature-list.sub-col-3 { grid-template-columns: repeat(3, 1fr); }
+  body.tracy .acm-features.style-4 .feature-list .item + .item { margin-top: 0; }
+  body.tracy .acm-features.style-4 .feature-list.sub-col-1 .item:nth-child(n + 2),
+  body.tracy .acm-features.style-4 .feature-list.sub-col-2 .item:nth-child(n + 3),
+  body.tracy .acm-features.style-4 .feature-list.sub-col-3 .item:nth-child(n + 4) { margin-top: 32px; }
+}
+body.tracy .acm-features.style-4 .item-detail {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 32px;
+  border-radius: var(--ds-card-radius, 8px);
+  background: var(--jim-raised);
+  text-align: center;
+}
+@media (min-width: 576px) {
+  body.tracy .acm-features.style-4 .item-detail { text-align: left; }
+  body.tracy .acm-features.style-4.text-center .item-detail { text-align: center; }
+}
+body.tracy .acm-features.style-4 .item-media { max-width: 64px; max-height: 64px; margin: 0 auto 32px; }
+@media (min-width: 576px) {
+  body.tracy .acm-features.style-4 .item-media { margin: 0 0 32px; }
+  body.tracy .acm-features.style-4.text-center .item-media { margin-inline: auto; }
+  body.tracy .acm-features.style-4.text-end .item-media { margin: auto 0 32px auto; }
+}
+body.tracy .acm-features.style-4 .item-media img { display: block; width: 100%; height: auto; }
+body.tracy .acm-features.style-4 .item-title { margin: 0 0 16px; font-size: var(--jim-h2); color: var(--jim-heading); }
+body.tracy .acm-features.style-4 .item-title.text-success { color: var(--jim-eyebrow); }
+body.tracy .acm-features.style-4 .item-title.text-warning { color: var(--ds-c-accent-on-ink, var(--jim-warning)); }
+body.tracy .acm-features.style-4 .item-title.text-primary { color: var(--jim-link); }
+body.tracy .acm-features.style-4 .item-des { margin: 0; color: var(--jim-text); }
+
+/* ── Style 7: the video and the subscribe panel ────────────────────────────────────────────────── */
+
+body.tracy .acm-features.style-7 { background: var(--jim-band); }
+body.tracy .acm-features.style-7 .feature-item { display: flex; flex-direction: column; }
+@media (min-width: 992px) {
+  body.tracy .acm-features.style-7 .feature-item { flex-direction: row; }
+  body.tracy .acm-features.style-7 .feature-item.align-right { flex-direction: row-reverse; }
+  body.tracy .acm-features.style-7 .feature-item > * { box-sizing: border-box; width: 50%; max-width: 50%; }
+}
+body.tracy .acm-features.style-7 .feature-image { position: relative; }
+body.tracy .acm-features.style-7 .video-intro {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+}
+@media (min-width: 576px) {
+  body.tracy .acm-features.style-7 .video-intro { height: 500px; }
+}
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-7 .video-intro { height: 600px; }
+}
+@media (min-width: 992px) {
+  body.tracy .acm-features.style-7 .video-intro { height: 100%; }
+}
+body.tracy .acm-features.style-7 .video-bg { position: absolute; inset: 0; z-index: 0; margin: 0; }
+body.tracy .acm-features.style-7 .video-bg img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center; }
+body.tracy .acm-features.style-7 .video-intro::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%); }
+body.tracy .acm-features.style-7 .video-play { position: relative; z-index: 2; }
+body.tracy .acm-features.style-7 .video-main { position: relative; width: 80px; height: 80px; }
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-7 .video-main { width: 100px; height: 100px; }
+}
+body.tracy .acm-features.style-7 .video-btn-wrap { position: relative; display: block; width: 100%; height: 100%; margin: 0; }
+body.tracy .acm-features.style-7 .video-btn { display: block; width: 100%; height: 100%; }
+body.tracy .acm-features.style-7 .video-btn .wp-block-button__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--g2-white);
+  color: var(--ds-c-accent-text, var(--jim-success));
+  font-size: 0;
+  cursor: pointer;
+}
+body.tracy .acm-features.style-7 .video-btn .wp-block-button__link::before {
+  content: '\f04b';
+  font-family: 'Font Awesome 6 Free';
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+}
+body.tracy .acm-features.style-7 .video-btn .wp-block-button__link:hover,
+body.tracy .acm-features.style-7 .video-btn .wp-block-button__link:focus { background: var(--g2-white); color: var(--ds-c-heading, var(--jim-primary)); }
+body.tracy .acm-features.style-7 .waves-block { position: absolute; inset: 0; }
+body.tracy .acm-features.style-7 .waves {
+  position: absolute;
+  right: -60px;
+  bottom: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 100%; /* ds-keep: the pulse ring around the video button, a circle */
+  background: var(--g2-white);
+  opacity: 0;
+}
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-7 .waves { right: -50px; bottom: -50px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  body.tracy .acm-features.style-7 .waves { animation: jim-g2-waves 5s ease-in-out infinite; }
+  body.tracy .acm-features.style-7 .wave-2 { animation-delay: 1s; }
+  body.tracy .acm-features.style-7 .wave-3 { animation-delay: 2s; }
+}
+@keyframes jim-g2-waves {
+  0% { transform: scale(0.2, 0.2); opacity: 0; }
+  50% { opacity: 0.6; }
+  100% { transform: scale(0.9, 0.9); opacity: 0; }
+}
+
+body.tracy .acm-features.style-7 .feature-info {
+  margin: auto;
+  padding: 48px 16px;
+  text-align: center;
+  background: url('../../img/g2-layer.png') right center / cover no-repeat;
+}
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-7 .feature-info { text-align: left; }
+}
+@media (min-width: 992px) {
+  body.tracy .acm-features.style-7 .feature-info { padding: 48px; }
+}
+@media (min-width: 1400px) {
+  body.tracy .acm-features.style-7 .feature-info { padding: 128px 144px; }
+}
+body.tracy .acm-features.style-7 .feature-content { margin-bottom: 32px; }
+body.tracy .acm-features.style-7 .section-title { margin: 0 0 8px; }
+body.tracy .acm-features.style-7 .mod-desc { margin: 0; font-size: 16px; line-height: 1.6; color: var(--jim-text); }
+@media (min-width: 992px) {
+  body.tracy .acm-features.style-7 .mod-desc { font-size: 18px; }
+}
+body.tracy .acm-features.style-7 .acymailing { margin-bottom: 64px; }
+
+/* The subscribe form (Contact Form 7, form "Newsletter"): white fields, the green button with its arrow. */
+body.tracy .acm-features.style-7 .acymailing .wpcf7 { margin: 0; }
+body.tracy .acm-features.style-7 .acymailing .wpcf7-form p { margin: 0; }
+body.tracy .acm-features.style-7 .acymailing .wtb-form__field { display: block; margin: 0 0 16px; }
+body.tracy .acm-features.style-7 .acymailing .wtb-form__field br { display: none; }
+body.tracy .acm-features.style-7 .acymailing .wpcf7-spinner { position: absolute; margin: 0; }
+body.tracy .acm-features.style-7 .acymailing .wpcf7-form-control-wrap { display: block; }
+body.tracy .acm-features.style-7 .acymailing :is(input[type='text'], input[type='email']) {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  padding: 14px;
+  border: 1px solid var(--g2-white);
+  border-radius: var(--ds-input-radius, 8px);
+  background: var(--jim-raised);
+  color: var(--jim-text);
+  font: inherit;
+  line-height: 1.6;
+  text-align: left;
+}
+body.tracy .acm-features.style-7 .acymailing :is(input[type='text'], input[type='email'])::placeholder { color: var(--g2-placeholder); opacity: 1; }
+body.tracy .acm-features.style-7 .acymailing .wtb-form__actions { position: relative; display: inline-block; }
+body.tracy .acm-features.style-7 .acymailing .wtb-form__actions::after {
+  content: '\f178';
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  font-family: 'Font Awesome 6 Free';
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--ds-c-accent-on, var(--g2-white));
+  pointer-events: none;
+}
+body.tracy .acm-features.style-7 .acymailing input[type='submit'] {
+  display: block;
+  box-sizing: border-box;
+  padding: 17px 48px 17px 32px;
+  border: 1px solid var(--jim-success);
+  border-radius: var(--ds-btn-radius, 8px);
+  background: var(--jim-success);
+  color: var(--ds-c-accent-on, var(--g2-white));
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.16px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+body.tracy .acm-features.style-7 .acymailing input[type='submit']:hover,
+body.tracy .acm-features.style-7 .acymailing input[type='submit']:focus { opacity: 0.85; }
+
+/* Follow us: a heading and four white tiles with the network's own colour. */
+body.tracy .acm-features.style-7 .social .title { margin: 0 0 16px; font-size: var(--jim-h4); color: var(--jim-link); }
+body.tracy .acm-features.style-7 .jim-follow { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 0; padding: 0; }
+@media (min-width: 768px) {
+  body.tracy .acm-features.style-7 .jim-follow { justify-content: flex-start; }
+}
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link {
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  border-radius: var(--ds-btn-radius, 4px);
+  background: var(--g2-white);
+  font-size: 20px;
+}
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link a { box-sizing: border-box; width: 100%; height: 100%; padding: 14px; justify-content: center; }
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link svg { display: none; }
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link a::before {
+  font-family: 'Font Awesome 6 Brands';
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 20px;
+}
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link-facebook a::before { content: '\f39e'; }
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link-twitter a::before { content: '\f099'; }
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link-tiktok a::before { content: '\e07b'; }
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link-pinterest a::before { content: '\f0d2'; }
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link-facebook { color: var(--g2-facebook); }
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link-twitter { color: var(--g2-twitter); }
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link-tiktok { color: var(--g2-tiktok); }
+body.tracy .acm-features.style-7 .jim-follow .wp-social-link-pinterest { color: var(--g2-pinterest); }
+
+/* The video dialog (assets/js/groups/g2.js): a white 864 px card with a round close button, as the source's modal. */
+.jim-video-dialog {
+  width: min(864px, calc(100% - 32px));
+  max-width: none;
+  padding: 8px;
+  border: 0;
+  border-radius: var(--ds-card-radius, 8px);
+  background: var(--g2-white);
+  overflow: visible;
+}
+.jim-video-dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
+.jim-video-dialog__frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--ds-card-radius, 8px); }
+.jim-video-dialog__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.jim-video-dialog__close {
+  position: absolute;
+  top: -6px;
+  right: -5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--g2-white);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  color: var(--g2-black);
+  font: 700 20px/1 sans-serif;
+  cursor: pointer;
+}

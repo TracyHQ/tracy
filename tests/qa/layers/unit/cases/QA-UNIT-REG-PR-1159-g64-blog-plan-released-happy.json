@@ -1,0 +1,46 @@
+{
+  "id": "QA-UNIT-REG-PR-1159-g64-blog-plan-released-happy",
+  "itemIds": ["regression:REG-PR-1159-g64-blog-plan-released"],
+  "requirement": "The g64 system fixes of the seven questions hold (WordPress and Joomla FULL demo blogs planned as a whole, one brief per published post, each post written from its own brief through the real Apply door and checked against disobedient models; the title and post tests moved to that flow; EmDash labels the model hands back unchanged or half translated asked again and reported) and ship with their releases: Tracy Business EmDash 1.7.12 and Tracy SaaS EmDash 1.4.9 pinned",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1159-g64-blog-plan-released.json",
+    "ref": "PR #1159 (fix); fix evidence: tasks/nhat-ky/2026-10-12-tcqr-g64-fixes.md",
+    "invariant": "S1: every test passes, none skipped or cancelled. S2: every test passes, none skipped or cancelled. S3: every test passes, none skipped or cancelled. S4: tracy-business/emdash 1.7.12 and tracy-saas/emdash 1.4.9, source and state files named for that version with a GitHub asset id.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1159-g64-blog-plan-released.mjs:25 spawnSync() runs a computed path",
+      "tests/regression/scripts/REG-PR-1159-g64-blog-plan-released.mjs:31 spawnSync() runs a computed path",
+      "tests/regression/scripts/REG-PR-1159-g64-blog-plan-released.mjs:49 spawnSync() runs a computed path",
+      "tests/regression/scripts/REG-PR-1159-g64-blog-plan-released.mjs:64 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1159-g64-blog-plan-released.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1159-g64-blog-plan-released"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1159-g64-blog-plan-released",
+    "pr": 1159,
+    "kind": "fix",
+    "area": "sites/brief",
+    "file": "tests/regression/cases/REG-PR-1159-g64-blog-plan-released.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1159-g64-blog-plan-released.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3d32f841-490d-4e5f-aba0-43c9d0c13130",
+  "status": "complete",
+  "name": "Eat Real Food",
+  "url": "https://styles.refero.design/style/3d32f841-490d-4e5f-aba0-43c9d0c13130",
+  "sourceWebsite": "https://realfood.gov",
+  "extractedAt": "2026-06-03T21:50:04.420Z",
+  "capturedAt": "2026-10-08T05:10:35.911409+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "government health brief on cream parchment",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/89af581b-1cd0-4c79-bbf0-345a4b1edfa5.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3581bae0d746fcf61157840170e1325db628b566f5a34f1133c1c7b322d99214",
+      "bytes": 21977
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "64fc93e41730c99637984c0f03bf3d91b73926834ec8bc9d0a001a5d40059f32",
+      "bytes": 71111
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c8769f5ea0256bee5d7ddec6d3f6cd5ea3b04eb3fbd53e84232b1e947090dff8",
+      "bytes": 17051
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6e64af9be6aec28635b315c44087d6b1323fbcfa352469faf94638824d446856",
+      "bytes": 17819
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "87b4d562e1f5d70069ad4acbff16d643b59139366d85eb9f3e2671c465bb6673",
+      "bytes": 12159
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "69ef4903d63730f18c470d4158327eb8ffa72bd7604a8f84c15e4bb784cb9425",
+      "bytes": 3577
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "414f5324a830b1e315aaae6982d5940c348116a53fc7d16e4893f057e8f6e90c",
+      "bytes": 817
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "6dbe296242799396ec9fdff123a784d5a1a02cae7fdf5cfacb6ed606a340e5fe",
+      "bytes": 834
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ce94f475e9dd115918dce35fcf013eec533a2b58a73f033b8720b1d545c0717c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8a195a101f43977d898c02085f349bdcd42f2c5cd3ca4c1766836d4b86944d1f",
+      "bytes": 45468
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "05f3f9f76823a55b57f67d651307a3382cc2901b9d20cec51ae4186543c4f8b6",
+      "bytes": 24135
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "02c3032d692bc05c6f9754f764d17071fab519408cf3a02f73ba9476e10fd2df",
+      "bytes": 60073
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "adb55f90ee82a27b3b7ebdaca412e2d0a1111bb9c5ac7f53fbc6967db7610d3b",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0dbe86756e3ace94b005ee9e4b22d191c97c11455774d576562542eed08e4632",
+      "bytes": 2247
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "86c4a8e80589b53539f1b4336e86fafc557652df9c27442e24f6911222930c86",
+      "bytes": 2884
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "1ded7f89-3df0-4e7c-9cac-28218d038575",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "3d32f841-490d-4e5f-aba0-43c9d0c13130",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "47b15ce2-34c8-46e3-b2de-f7eed0b6a3b9",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "9c92c3d1-a2fe-4a27-a324-826b19501774",
+    "9d16aa65-cef7-4bf7-83c8-91837a248cd9",
+    "c38d077b-3cdb-48c6-899c-e8a543508c31",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d9a60077-619a-4cb7-95ed-0c428c2b51ed",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

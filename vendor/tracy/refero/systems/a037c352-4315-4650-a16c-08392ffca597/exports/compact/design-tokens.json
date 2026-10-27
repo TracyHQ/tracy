@@ -1,0 +1,79 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#100f12",
+      "$type": "color",
+      "$description": "Ink — Primary text, dominant borders, filled CTA buttons, badge borders. Near-black with a barely-perceptible violet undertone that makes it warmer than pure black against the lavender-tinted canvas"
+    },
+    "snow": {
+      "$value": "#fbfaff",
+      "$type": "color",
+      "$description": "Snow — Page canvas and outer backgrounds. A whisper of violet lifts it above pure white so it harmonizes with the brand washes"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, elevated panels, secondary button fills. Pure white stacked on Snow creates depth without shadows"
+    },
+    "graphite": {
+      "$value": "#44434e",
+      "$type": "color",
+      "$description": "Graphite — Mid-weight borders and dividers, secondary text emphasis. Sits between Ink and the body grays for hierarchy layers"
+    },
+    "slate": {
+      "$value": "#65646e",
+      "$type": "color",
+      "$description": "Slate — Body text, helper copy, subdued labels. Neutral mid-gray that keeps copy readable without competing with headings"
+    },
+    "mist": {
+      "$value": "#787685",
+      "$type": "color",
+      "$description": "Mist — Lighter borders, muted text, form-field outlines. Carries the cool-violet cast that ties the gray scale to the brand washes"
+    },
+    "lavender-wash": {
+      "$value": "#ebe5ff",
+      "$type": "color",
+      "$description": "Lavender Wash — Soft highlight surfaces, tag fills, muted card backgrounds. The brand's pastel floor — used when a surface needs warmth without saturation"
+    },
+    "lilac-edge": {
+      "$value": "#d9cffa",
+      "$type": "color",
+      "$description": "Lilac Edge — Input borders, tag outlines, decorative hairlines. A mid-violet that reads as a line, not a fill — the border counterpart to the brand accent"
+    },
+    "iris": {
+      "$value": "#8d6fde",
+      "$type": "color",
+      "$description": "Iris — Brand accent — outlined actions, decorative borders, highlight strokes, iconography. Vivid enough to claim attention but used in thin strokes, not large fills, so it punctuates rather than floods"
+    },
+    "amethyst": {
+      "$value": "#4a3e8a",
+      "$type": "color",
+      "$description": "Amethyst — Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis."
+    },
+    "dawn-viol": {
+      "$value": "#7748f6",
+      "$type": "color",
+      "$description": "Dawn Viol — Gradient stop — hero sky anchor. The saturated violet that opens the morning gradient"
+    },
+    "rose-drift": {
+      "$value": "#f5bbc3",
+      "$type": "color",
+      "$description": "Rose Drift — Gradient stop — hero sky terminus. Warm rose that softens the violet into dawn warmth"
+    }
+  },
+  "font": {
+    "ppmori": {
+      "$value": "Ppmori",
+      "$type": "fontFamily",
+      "$description": "Single custom typeface driving the entire voice. Weight 200 at 52px for display creates the signature whisper-headline — anti-convention in a category that defaults to 600-700 hero type. Weight 500 carries all body, UI, and navigation copy. Weight 600 is reserved for active nav items and emphasized labels. The narrow weight gap between 200 and 500 means headings don't shout — they hover."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://rootly.com",
+      "siteName": "Rootly",
+      "extractedAt": "2026-06-03T19:22:51.200Z",
+      "variant": "compact"
+    }
+  }
+}

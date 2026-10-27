@@ -1,0 +1,105 @@
+---
+/**
+ * /product — centred hero (style-2), the carousel as a rounded gray card (a painted block outside
+ * a band), the tabs, the figures, then the CTA. The source renders no article header, so the
+ * `intro` field stays off the page; the order is the source's.
+ */
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { islandMarks, stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { mediaUrl } from '@/lib/media'
+import HeroAcm from '@/components/sections/HeroAcm.astro'
+import Carousel from '@/components/islands/Carousel'
+import Tabs from '@/components/islands/Tabs'
+import StatsBand from '@/components/sections/StatsBand.astro'
+import CtaBand from '@/components/sections/CtaBand.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const { entry } = await getEmDashEntry('product', 'product', { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const d = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'product', entry)
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  ((d.carousel_slides ?? []) as any[]).map((s) => s?.link_url)
+)
+// Islands take plain props: resolve media to URLs here, on the server.
+const slides = ((d.carousel_slides ?? []) as Array<Record<string, any>>).map((s) => ({
+  kicker: s.kicker,
+  title: s.title,
+  text: s.text,
+  image: mediaUrl(s.image),
+  link_label: s.link_label,
+  link_url: live(s.link_url) ? s.link_url : '',
+  // Islands redraw their DOM on hydration, so their stamps travel as props (none on an ordinary request).
+  ...islandMarks({
+    row: $page.block('carousel_slides'),
+    kicker: $page('carousel_slides.kicker'),
+    title: $page('carousel_slides.title'),
+    text: $page('carousel_slides.text'),
+    image: $page('carousel_slides.image'),
+    link_label: $page('carousel_slides.link_label')
+  })
+}))
+const tabs = ((d.tabs_tabs ?? []) as Array<Record<string, any>>).map((t) => ({
+  label: t.label,
+  title: t.title,
+  body: t.body,
+  image: mediaUrl(t.image),
+  ...islandMarks({
+    row: $page.block('tabs_tabs'),
+    label: $page('tabs_tabs.label'),
+    title: $page('tabs_tabs.title'),
+    body: $page('tabs_tabs.body'),
+    image: $page('tabs_tabs.image')
+  })
+}))
+const carouselMarks = islandMarks({
+  eyebrow: $page('carousel_eyebrow'),
+  heading: $page('carousel_heading'),
+  intro: $page('carousel_intro')
+})
+const tabsMarks = islandMarks({ eyebrow: $page('tabs_eyebrow'), heading: $page('tabs_heading') })
+---
+
+<Base chrome={chrome} title={d.title} description={d.hero_lead || d.intro} currentPath="/product" content={{ collection: "product", id: entry.data.id, slug: "product", toPath: () => "/product" }}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<HeroAcm align="center" class="band lg:pt-[calc(var(--band-y)*1.4)]" eyebrow={d.hero_eyebrow} title={d.hero_title} lead={d.hero_lead} cta1Label={d.hero_cta1_label} cta1Url={d.hero_cta1_url} cta2Label={d.hero_cta2_label} cta2Url={d.hero_cta2_url} image={d.hero_image} imageAlt={d.hero_image_alt} asideLabel={d.hero_aside_label} asideBadge={d.hero_aside_badge} asideState={d.hero_aside_state} notes={d.hero_notes ?? []} stamp={$page} fields={{ eyebrow: "hero_eyebrow", title: "hero_title", lead: "hero_lead", cta1Label: "hero_cta1_label", cta2Label: "hero_cta2_label", image: "hero_image", asideLabel: "hero_aside_label", asideBadge: "hero_aside_badge", notes: "hero_notes" }} />
+		{slides.length > 0 && (
+			<section class="wrap">
+				<div class="my-7 rounded-[var(--ds-card-radius,18px)] bg-surface px-4 py-8 sm:px-6">
+					<Carousel client:load eyebrow={d.carousel_eyebrow} heading={d.carousel_heading} intro={d.carousel_intro} slides={slides} prevLabel={site.prev_label} nextLabel={site.next_label} {...carouselMarks} />
+				</div>
+			</section>
+		)}
+		{tabs.length > 0 && (
+			<section class="band">
+				<div class="wrap"><Tabs client:load eyebrow={d.tabs_eyebrow} heading={d.tabs_heading} tabs={tabs} {...tabsMarks} /></div>
+			</section>
+		)}
+		{(d.stats_figures ?? []).length > 0 && (
+		<section class="band">
+			<div class="wrap"><StatsBand variant="plain" align="center" eyebrow={d.stats_eyebrow} heading={d.stats_heading} items={d.stats_figures ?? []} stamp={$page} fields={{ eyebrow: "stats_eyebrow", heading: "stats_heading", items: "stats_figures" }} /></div>
+		</section>
+		)}
+		<section class="band">
+			<CtaBand variant="capsule" title={d.cta_statement} text={d.cta_support} btnLabel={d.cta_btn_label} btnUrl={d.cta_btn_url} linkLabel={d.cta_link_label} linkUrl={d.cta_link_url} stamp={$page} fields={{ title: "cta_statement", text: "cta_support", btnLabel: "cta_btn_label", linkLabel: "cta_link_label" }} />
+		</section>
+	</main>
+</Base>

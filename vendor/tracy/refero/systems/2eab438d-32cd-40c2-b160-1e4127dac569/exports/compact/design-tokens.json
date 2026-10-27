@@ -1,0 +1,89 @@
+{
+  "color": {
+    "linen-canvas": {
+      "$value": "#edede8",
+      "$type": "color",
+      "$description": "Linen Canvas — Page background, section surfaces — warm off-white that pushes the whole system toward paper rather than screen"
+    },
+    "frosted-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Frosted White — Card surfaces, elevated panels, glass overlays — clean white floats above the linen canvas for primary content"
+    },
+    "warm-stone": {
+      "$value": "#dbdbd2",
+      "$type": "color",
+      "$description": "Warm Stone — Secondary card fills, secondary button backgrounds, accent surface — sage-tinted beige gives neutral elements warmth without becoming chromatic"
+    },
+    "pebble": {
+      "$value": "#c0c0c0",
+      "$type": "color",
+      "$description": "Pebble — Circular accent tiles, muted card backgrounds — cool gray that sits one step back from stone for de-emphasized surfaces"
+    },
+    "graphite-ink": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Graphite Ink — Primary action button background, dark text on light surfaces — near-black with a hair of warmth, anchors every CTA"
+    },
+    "charcoal-body": {
+      "$value": "#292929",
+      "$type": "color",
+      "$description": "Charcoal Body — Primary body and heading text — readable but softer than pure black, keeps long-form copy from feeling harsh"
+    },
+    "slate-caption": {
+      "$value": "#6f6f6e",
+      "$type": "color",
+      "$description": "Slate Caption — Secondary body, helper text, descriptive copy — carries the most volume of any text color"
+    },
+    "ash-subheading": {
+      "$value": "#8f8f8e",
+      "$type": "color",
+      "$description": "Ash Subheading — Subtle labels, muted headings, decorative type — sits between caption and hairline"
+    },
+    "iron-nav": {
+      "$value": "#353535",
+      "$type": "color",
+      "$description": "Iron Nav — Secondary body text, navigation labels, and subdued headings. Do not promote it to the primary CTA color"
+    },
+    "onyx-border": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx Border — Hairline borders, strong dividers, selected-state outlines — used at 1-2px to outline cards, buttons, and focus rings"
+    },
+    "quartz": {
+      "$value": "#d0d0c8",
+      "$type": "color",
+      "$description": "Quartz — Quietest surface tint, reserved for low-contrast dividers and hover-state hints"
+    },
+    "lime-pulse": {
+      "$value": "#4cc02b",
+      "$type": "color",
+      "$description": "Lime Pulse — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "switzer": {
+      "$value": "Switzer",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI, body, headings, and buttons. Weight 400 dominates even at display sizes — headlines whisper rather than shout, which gives the brand authority through restraint. The Minor Third scale (1.2) is unusually compressed for a SaaS site, so sizes cluster more tightly than a Major Third or Perfect Fourth system would produce."
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "Icon-internal text and OS-native labels — minimal usage, mostly decorative"
+    },
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://gleap.io",
+      "siteName": "Gleap",
+      "extractedAt": "2026-07-03T03:13:43.210Z",
+      "variant": "compact"
+    }
+  }
+}

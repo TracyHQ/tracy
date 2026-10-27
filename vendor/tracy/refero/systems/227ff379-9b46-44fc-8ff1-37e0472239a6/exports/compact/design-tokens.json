@@ -1,0 +1,79 @@
+{
+  "color": {
+    "obsidian-ember": {
+      "$value": "#190501",
+      "$type": "color",
+      "$description": "Obsidian Ember — Primary dark canvas — page background in dark sections, card surface, deepest borders. The black-with-warmth that defines the brand atmosphere"
+    },
+    "dark-cocoa": {
+      "$value": "#340a01",
+      "$type": "color",
+      "$description": "Dark Cocoa — Secondary dark surface, deep link borders, icon outlines — one step lifted from obsidian for layering depth"
+    },
+    "molten-core": {
+      "$value": "#631303",
+      "$type": "color",
+      "$description": "Molten Core — Inset glow shadow source, deep red-brown accents — the pressed-ember tone that gives buttons their internal fire"
+    },
+    "signal-red": {
+      "$value": "#951c04",
+      "$type": "color",
+      "$description": "Signal Red — Outlined/ghost action border, nav borders, icon strokes, interactive outlines — the chromatic action color used for outlined buttons and active control edges"
+    },
+    "flare-orange": {
+      "$value": "#fa5838",
+      "$type": "color",
+      "$description": "Flare Orange — Primary brand accent — links, decorative borders, the hero gradient spectrum, highlight washes. The single hottest color in the system; used sparingly as functional punctuation"
+    },
+    "warm-blush": {
+      "$value": "#fcac9c",
+      "$type": "color",
+      "$description": "Warm Blush — Soft surface wash, secondary peach background, decorative highlight fields — the diffused ember tone for breathing sections"
+    },
+    "vapor-peach": {
+      "$value": "#feeae6",
+      "$type": "color",
+      "$description": "Vapor Peach — Light section background, light-mode card surface, body text on dark, ghost button text — the warm off-white that breaks the dark rhythm"
+    },
+    "linen": {
+      "$value": "#f7f6ff",
+      "$type": "color",
+      "$description": "Linen — Primary text on dark, crisp borders on dark sections, inverse text. The near-white that carries most typography on dark surfaces"
+    },
+    "warm-ash": {
+      "$value": "#baadab",
+      "$type": "color",
+      "$description": "Warm Ash — Muted button borders on light sections, tertiary text, subtle dividers — a warm gray that softens edges without going cold"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Decorative SVG fills, icon line art, graphical accents — high-contrast details that read as deep-ink on the warm canvas"
+    },
+    "mist": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Mist — Input field borders on light backgrounds — the only cool-neutral in the system, used minimally for form controls"
+    }
+  },
+  "font": {
+    "matter": {
+      "$value": "Matter",
+      "$type": "fontFamily",
+      "$description": "Primary typeface — body, display, headings, buttons, navigation, icons. Weight 700 carries display headlines; 500 for emphasis in body; 400 for regular text. Tight tracking across all sizes creates a compressed, confident read."
+    },
+    "fabrikatmono": {
+      "$value": "Fabrikatmono",
+      "$type": "fontFamily",
+      "$description": "Monospace accent — section labels, tags, technical metadata, trust signals. Used in uppercase for eyebrow labels like 'THE PROBLEM' and 'SOLUTIONS'. The technical-utility voice that contrasts Matter's editorial confidence."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.altiuslabs.xyz",
+      "siteName": "Altius",
+      "extractedAt": "2026-06-03T21:39:22.697Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,308 @@
+{
+  "dos": [
+    "Use bearsansheadline at weight 400 only for all display and section headings — never set it bold.",
+    "Use Bear Red #dd4c4f only for the logo, links, the Pro badge, and decorative underlines — nothing else gets red.",
+    "Default all body text to Graphite #444444 at 16px bearsans 400 with the 0.031em tracking; reserve Ash Gray #888888 for muted/secondary text only.",
+    "Use the single shadow pattern (0 13px 34px rgba(0,0,0,0.12)) for the product screenshot frame; keep all other elements flat with hairline borders.",
+    "Set the hero CTA to the black Mac App Store badge — never invent a custom filled red button.",
+    "Alternate section bands between Linen White #ffffff and Mist #f3f5f7 with 64px vertical padding to create rhythm.",
+    "Render decorative elements (laurels, bear mascot, stars) as 1.5–2px Fog #e6e7eb line art only — no fills, no color."
+  ],
+  "donts": [
+    "Do not bold the display headlines — weight 400 is the signature; bolding them breaks the handwritten mood.",
+    "Do not introduce additional accent colors outside the three note-tag hues (Tag Indigo #456aa3, Tag Forest #2b6451, Tag Plum #884aa8) and the single Bear Red.",
+    "Do not use filled buttons with Bear Red backgrounds anywhere on the marketing site — the only filled red element is the Pro badge pill.",
+    "Do not add drop shadows to anything other than the product screenshot frame; the rest of the page must stay flat.",
+    "Do not use photography or lifestyle imagery — the product screenshot is the only image content allowed.",
+    "Do not use bold marketing adjectives in headlines; the voice is quiet and declarative (e.g. 'Write naturally', not 'Unlock your creative potential').",
+    "Do not set tight letter-spacing on body text — the +0.031em tracking on bearsans is the established rhythm."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#dd4c4f",
+      "name": "Bear Red",
+      "role": "Logo mark, link color, Pro badge fill, decorative underline on hero copy — the single chromatic voice in an otherwise achromatic system",
+      "group": "brand"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Icon fills, graphic strokes, max-contrast emphasis",
+      "group": "neutral"
+    },
+    {
+      "hex": "#444444",
+      "name": "Graphite",
+      "role": "Primary body and heading text, nav links — the dominant typographic color across the entire page",
+      "group": "neutral"
+    },
+    {
+      "hex": "#888888",
+      "name": "Ash Gray",
+      "role": "Muted body text, secondary labels, icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d5d6d9",
+      "name": "Stone Border",
+      "role": "Hairline borders on inputs, dividers, card edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6e7eb",
+      "name": "Fog",
+      "role": "Subtle fills, decorative stroke elements, pricing card backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f3f5f7",
+      "name": "Mist",
+      "role": "Page sections, soft surface lifts, alternating band backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Linen White",
+      "role": "Page canvas, card surfaces, input backgrounds, nav background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d3ffa4",
+      "name": "Marker Lime",
+      "role": "Highlight wash behind emphasized words (like a real highlighter stroke on text)",
+      "group": "accent"
+    },
+    {
+      "hex": "#456aa3",
+      "name": "Tag Indigo",
+      "role": "Note tag color in product preview, heading accent variant",
+      "group": "accent"
+    },
+    {
+      "hex": "#2b6451",
+      "name": "Tag Forest",
+      "role": "Note tag color in product preview, heading accent variant",
+      "group": "accent"
+    },
+    {
+      "hex": "#884aa8",
+      "name": "Tag Plum",
+      "role": "Note tag color in product preview, heading accent variant",
+      "group": "accent"
+    },
+    {
+      "hex": "#fcb827",
+      "name": "Warning Amber",
+      "role": "Yellow supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#44a2e5",
+      "name": "Info Sky",
+      "role": "Blue supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    }
+  ],
+  "layout": "Centered, max-width ~1100px content column with generous side padding. The hero is a vertical stack: nav → headline → platform tabs → download button → product screenshot, all center-aligned. Below the fold, sections alternate between Linen White and Mist #f3f5f7 bands with 64px vertical padding. The award laurels and pricing are centered, symmetrical arrangements. The pricing is a strict two-column compare (Free | Pro) with equal width and no asymmetric emphasis beyond the Pro card's white-vs-gray surface lift. No sidebar, no mega-menu, no sticky elements. Decorative illustrations sit loosely to the right of section content rather than in a grid, creating an editorial, magazine-like rhythm.",
+  "imagery": "Photography is absent — the site relies entirely on the product itself (actual Mac app window screenshots) as imagery, plus hand-drawn line-art decorations (laurel wreaths, sketched bear mascot, small star/sparkle marks). The product screenshots are the heaviest visual element on every screen. All decorative illustrations use a single Fog #e6e7eb stroke at 1.5–2px, no fills, giving the entire decorative layer a unified pencil-sketch quality. Icons are uniformly outline-style at 1.5px stroke in Graphite or Ash Gray. No lifestyle photography, no abstract gradient art, no 3D renders.",
+  "similar": [
+    {
+      "why": "Same minimalist single-product marketing approach, light theme, single warm accent color, and the actual app screenshot as the dominant hero visual",
+      "business": "Ulysses (writing app)"
+    },
+    {
+      "why": "Identical aesthetic — generous whitespace, achromatic body with one accent hue, no filled CTAs, hand-drawn decorative touches alongside product photography",
+      "business": "Things 3 (Cultured Code)"
+    },
+    {
+      "why": "Same paper-white canvas with a single accent color for emphasis and clean geometric typography in display weights",
+      "business": "Notion"
+    },
+    {
+      "why": "Light-themed notes-app marketing with the product UI as hero art, minimal decoration, and near-monochrome palette",
+      "business": "Obsidian"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "pills": "40px",
+      "badges": "4px",
+      "buttons": "8px"
+    },
+    "elementGap": "13px",
+    "sectionGap": "64px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1100px"
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Linen White",
+      "level": 0,
+      "purpose": "Page canvas, default section background"
+    },
+    {
+      "hex": "#f3f5f7",
+      "name": "Mist",
+      "level": 1,
+      "purpose": "Alternating section band, subtle surface lift"
+    },
+    {
+      "hex": "#e6e7eb",
+      "name": "Fog",
+      "level": 2,
+      "purpose": "Pricing card surface, decorative wash"
+    },
+    {
+      "hex": "#d3ffa4",
+      "name": "Marker Lime",
+      "level": 3,
+      "purpose": "Inline text highlight wash"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 13px 34px rgba(0, 0, 0, 0.12)",
+      "element": "Product screenshot frame"
+    }
+  ],
+  "northStar": "Quiet notebook on white linen",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.6,
+      "letterSpacing": 0.4
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.7,
+      "letterSpacing": 0.5
+    },
+    {
+      "role": "subheading",
+      "size": 19,
+      "lineHeight": 1.45,
+      "letterSpacing": 0.6
+    },
+    {
+      "role": "heading-sm",
+      "size": 22,
+      "lineHeight": 1.42,
+      "letterSpacing": 0.7
+    },
+    {
+      "role": "heading",
+      "size": 29,
+      "lineHeight": 1.36,
+      "letterSpacing": 0.9
+    },
+    {
+      "role": "display",
+      "size": 51,
+      "lineHeight": 1.1
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Linen White background, 64px height. Left-aligned bear logo + wordmark in Graphite. Right-aligned nav links (Features, Pricing, Blog, Community, Support) at 14px bearsans 400 in Graphite, no background or border on hover. No drop shadow, no sticky behavior visible."
+    },
+    {
+      "name": "Platform Tab Selector",
+      "role": "Switch between Mac/iPhone/iPad product views",
+      "description": "Inline group of three text labels with small device icons (16px outline icons in Graphite). Active tab has a Bear Red underline (2px) beneath the label. Tabs sit centered under the hero headline with 16px gap between icon and text, 32px between tabs."
+    },
+    {
+      "name": "App Store Download Button",
+      "role": "Primary download trigger on hero",
+      "description": "Black pill-shaped badge with Apple logo and 'Download on the Mac App Store' text. Standard App Store smart-banner dimensions. Centered below platform tabs with 24px gap. No custom button styling — the badge is the call to action."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Above-the-fold primary message",
+      "description": "51px bearsansheadline weight 400, Graphite color, centered. Underline accent (2px Bear Red) under a single keyword (e.g. 'love'). No subheadline. Sits 80px from the nav bar."
+    },
+    {
+      "name": "Product Screenshot Frame",
+      "role": "Hero visual showing the actual app",
+      "description": "Full app window screenshot (Mac window with traffic-light buttons) rendered at ~900px wide, 16px border-radius, single soft drop shadow (0 13px 34px rgba(0,0,0,0.12)). The screenshot IS the hero image — no marketing render, no device mockup."
+    },
+    {
+      "name": "Award Laurel",
+      "role": "Social proof / press recognition",
+      "description": "Light gray line-art laurel wreath (Fog #e6e7eb stroke), with two-line centered text inside: award name in bearsans 700 at 16px Graphite, year in bearsans 400 at 14px Ash Gray. Three laurels arranged in a horizontal row with 48px gap between them."
+    },
+    {
+      "name": "Pricing Card — Free",
+      "role": "Free plan feature list",
+      "description": "Fog #e6e7eb background, 16px radius, 32px padding. Plan title 'Free' at 29px bearsansheadline 400 in Graphite. Feature list as vertical stack of 13px-gapped rows, each with a Bear Red outlined checkmark (1.5px stroke, 16px square) and 16px bearsans 400 Graphite label. Crossed-out features (strikethrough, Ash Gray) indicate paid-only items."
+    },
+    {
+      "name": "Pricing Card — Pro",
+      "role": "Paid plan feature list with emphasis",
+      "description": "Same structure as Free card but with Linen White surface and a subtle Stone Border #d5d6d9 (1px) to create visual lift. Title 'Bear' at 29px followed by an inline Bear Red pill badge reading 'PRO' in 11px bearsans 700 white text, 4px radius, 8px horizontal / 3px vertical padding. All checkmarks are Bear Red filled (not outlined) to signal inclusion. Price line at bottom: $2.99/month struck through (Ash Gray) next to $29.99/year in Graphite, 22px bearsans 700."
+    },
+    {
+      "name": "Pro Badge",
+      "role": "Paid-plan indicator chip",
+      "description": "Bear Red #dd4c4f fill, 4px radius, white text in bearsans 700 at 11px. Inline next to plan title. The only filled color element on the pricing area."
+    },
+    {
+      "name": "Feature Checkmark List Row",
+      "role": "Pricing bullet item",
+      "description": "Horizontal row: 16px square checkmark + 12px gap + label text. Free card uses Bear Red outlined checkmark (#dd4c4f stroke, transparent fill); Pro card uses Bear Red filled checkmark. Label at 16px bearsans 400 Graphite. Row height ~32px with 8px vertical gap between rows."
+    },
+    {
+      "name": "Section Heading",
+      "role": "Interstitial section titles (e.g. 'Write naturally')",
+      "description": "42px bearsansheadline weight 400, Graphite, centered. No subtitle, no eyebrow — just the heading alone. 80px top padding from previous section."
+    },
+    {
+      "name": "Decorative Bear Illustration",
+      "role": "Ambient brand character in feature sections",
+      "description": "Line-art bear mascot in Fog #e6e7eb stroke, no fill, roughly 200px tall. Sits off to the side of section content as quiet decoration, not a focal point. Sparse, sketchy style — feels hand-drawn."
+    },
+    {
+      "name": "Input Field",
+      "role": "Text input (e.g. search, email capture)",
+      "description": "Linen White background, 1px Stone Border #d5d6d9, 8px radius, 12px vertical / 16px horizontal padding. Placeholder text in Ash Gray #888, bearsans 400 at 14px. No visible focus ring in extracted data."
+    },
+    {
+      "name": "Footer",
+      "role": "Site footer with secondary links",
+      "description": "Linen White background, 48px vertical padding. Multi-column text links in bearsans 400 at 13px Ash Gray. No social icons, no newsletter form visible in screenshots."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Body text, navigation, buttons, pricing lists, inputs, footnotes. Weight 700 is reserved for emphasis (feature names, Pro plan title); weight 400 carries everything else. Carries a uniform +0.031em tracking that gives the body a slightly airy, typeset feel.",
+      "sizes": "13px, 14px, 16px, 18px, 19px, 20px, 22px, 24px, 29px, 40px",
+      "family": "bearsans",
+      "weight": "400, 700",
+      "lineHeight": "1.13–1.89 depending on size",
+      "substitute": "Inter or Source Sans Pro",
+      "letterSpacing": "0.031em across all sizes"
+    },
+    {
+      "role": "Display headlines only — the singular 400 weight is the signature: no bold marketing-shout headlines, just quiet, confident regular weight at 42–51px. Creates the 'handwritten note on good paper' mood.",
+      "sizes": "16px, 30px, 42px, 51px",
+      "family": "bearsansheadline",
+      "weight": "400",
+      "lineHeight": "1.10",
+      "substitute": "Inter Tight or Manrope at weight 400"
+    }
+  ],
+  "description": "Bear's marketing site is a hushed, paper-white canvas where a single warm red acts as the only voice that matters. Almost everything is achromatic — graphite text on cool off-white, with hairline borders, no filled buttons, and decoration appearing as faint pencil sketches (laurels, stars, a sketched bear mascot) rather than as polished illustrations. Headlines use a custom display face at weight 400 only, which strips the usual marketing-shout cadence and makes the wordmark feel handwritten rather than sold. The product itself — Bear's actual app window — is the dominant visual asset, rendered at near-1:1 scale so visitors study the real interface, not a marketing render. Pricing is a flat two-column compare with a small red PRO pill as the only chromatic punctuation.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #444444 (Graphite)\n- background: #ffffff (Linen White)\n- border: #d5d6d9 (Stone Border)\n- accent: #dd4c4f (Bear Red) — for logo, links, Pro badge, underlines\n- highlight: #d3ffa4 (Marker Lime) — text highlight wash only\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n1. Hero section: Linen White canvas. Headline 'Markdown notes you'll love' at 51px bearsansheadline weight 400 in #444444, centered, with a 2px #dd4c4f underline beneath the word 'love'. Below it, three platform labels (Mac / iPhone / iPad) at 16px bearsans 400 with small device icons; the active label has a #dd4c4f 2px underline. Gap between headline and tabs: 32px. No subheadline.\n2. Pricing card (Pro variant): 16px radius, #ffffff background, 1px #d5d6d9 border, 32px padding. Title 'Bear' at 29px bearsansheadline 400 #444444, followed by an inline #dd4c4f pill badge reading 'PRO' in 11px bearsans 700 white, 4px radius. Below: a vertical list of features, each row a filled #dd4c4f 16px checkmark + 12px gap + label at 16px bearsans 400 #444444, rows 8px apart. Price at bottom: struck-through '$2.99/month' in #888888 next to '$29.99/year' in 22px bearsans 700 #444444.\n3. Product screenshot frame: Mac app window screenshot at ~900px wide, 16px border-radius, single drop shadow 0 13px 34px rgba(0,0,0,0.12). Centered on Linen White with 48px top padding. No device frame, no caption.\n4. Award laurel group: three centered columns, each a 2px #e6e7eb stroke laurel wreath containing two lines — award name in 16px bearsans 700 #444444 and year in 14px bearsans 400 #888888. 48px horizontal gap between laurels.\n5. Section heading: 'Write naturally' at 42px bearsansheadline weight 400 #444444, centered on a Mist #f3f5f7 band with 80px top padding. A 200px line-art bear illustration in 2px #e6e7eb stroke sits to the right of the heading, no fill."
+    }
+  ]
+}

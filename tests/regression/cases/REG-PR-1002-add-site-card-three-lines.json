@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1002-add-site-card-three-lines",
+  "kind": "fix",
+  "title": "The Customize your site card is a palette badge beside three single lines at every width (title + Optional, the count N questions / X of N answered, the description), the whole card is the button with a muted chevron, it never shows the answers, and the standard sets' name hint is no longer \"Claude Studio\"",
+  "pr": 1002,
+  "area": "add-site/questions",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-timeout=120000 packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs (a real browser over the wizard fixture)",
+    "S2: Read packages/site/tracy-site-build-{wordpress,joomla,emdash}/questions.json and apps/tracy-web/src/questions/{wordpress,joomla,emdash}.json: the hint of the question with id name, every locale.",
+    "S3: Read the exit code and the fail/skipped counts."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures and 0 skipped tests.",
+    "At 260, 320, 380, 480 and 900px the card draws exactly 3 text lines, before and after answering; [data-questions-count=\"1\"] is alone on line 2 and never clipped; lines 2 and 3 (.tas-qcard-l2, .tas-qcard-l3) start at the left edge of line 1 (.tas-qcard-l1); the icon badge (.tas-qcard-badge) is left of all three lines and the chevron (.tas-qcard-go) right of them, both centred across the three; there is no progress ring; the card's aria-label is 'Customize your site, 4 questions. Open' (then '..., 2 of 4 answered. Edit'); hovering turns its border to the primary colour.",
+    "Nothing answered the count reads '4 questions' and the card 'Receive a site tailored to you.'; after answering the count reads '2 of 4 answered' and the card contains neither 'Bakery' nor 'Golden Crust'.",
+    "After a change of template the kept/dropped line ([data-questions-note=\"1\"]) is absent from the card and present in the sheet.",
+    "No name hint in the six question files contains 'Claude Studio' or 'Tiệm bánh Cô Ba'; the en hint is 'Write it the way customers should see it, for example \"Harbor Build & Repair\".'",
+    "In de, vi and fr at 260 and 320px line 1 stays one line with the Optional tag whole (the title gives way first) and the card keeps 3 lines."
+  ],
+  "selectors": {
+    "card": "[data-questions-card], .tas-qcard-l1, .tas-qcard-l2, .tas-qcard-l3, .tas-qcard-go, .tas-qcard-badge, [data-questions-count=\"1\"] in packages/site/tracy-add-site/src/client/questions-sheet.tsx",
+    "note": "[data-questions-note=\"1\"] inside [data-questions-sheet=\"1\"]",
+    "question_sets": "packages/site/tracy-site-build-*/questions.json"
+  },
+  "evidence": "07/10/2026, review of the card shipped in #998 (issue #1001): three-line card on a narrow panel listing the customer's answers; leftover Claude Studio hint on Business name.",
+  "fence": "The real wizard bundle and its stylesheet in a browser over a fetch double. Not exercised: the dsh page around the panel and its fonts.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1002-add-site-card-three-lines.mjs"],
+    "needs": []
+  }
+}

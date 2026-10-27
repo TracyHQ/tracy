@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-obsidian: #101010;
+  --color-pure-white: #ffffff;
+  --color-carbon: #1a1a1a;
+  --color-mint-cream: #e5ede4;
+  --color-sage-mist: #c7d8c5;
+  --color-ash-gray: #9b9b9b;
+  --color-lavender-mist: #b8afda;
+  --color-ember-orange: #eb652b;
+  --color-electric-yellow: #f6f361;
+
+  /* Typography */
+  --font-abc-normal: 'ABC Normal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ivar-display: 'Ivar Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1003-ja-nova-wp7-theme-name-1-1-9",
+  "kind": "fix",
+  "title": "JA Nova wp7 1.1.9: the theme is listed in WordPress as \"WP Nova\" and the site is otherwise unchanged",
+  "pr": 1003,
+  "area": "wordpress-theme/wp-ja-nova",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read the shipped wp-ja-nova style.css and the overlay style.css in the checkout: both must read Theme Name: WP Nova; the shipped one reads Version: 1.1.9 and the overlay's theme.config.json carries version 1.1.9.",
+    "S2: Read tasks/ja-nova-wp7/release/fix-measure.json: it was taken by site-sweep.mjs on the released zip (its sha256 equals the wp-ja-nova-1.1.9.zip line of SHA256SUMS) and all 11 checks pass."
+  ],
+  "expect": [
+    "S1: both stylesheets carry the display name WP Nova and the version is 1.1.9.",
+    "S2: the release measure is bound to the released zip and 11/11 checks pass."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1003-ja-nova-wp7-theme-name-1-1-9.mjs",
+    "evidence": "tasks/ja-nova-wp7/release/fix-measure.json"
+  },
+  "evidence": "Full site sweep of 07/10/2026 UTC on the clean restore of the packed 1.1.9 site against the local Joomla source: 11/11 checks, 0 open groups, accepted groups unchanged from 1.1.8; wp theme list shows WP Nova 1.1.9 active",
+  "fence": "Static presence of the display name and version in the shipped and overlay sources plus the recorded release measure; the site's look is covered by the sweep that produced the measure",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1003-ja-nova-wp7-theme-name-1-1-9.mjs"]
+  }
+}

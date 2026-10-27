@@ -1,0 +1,398 @@
+/* ==========================================================================
+ * design-systems/ja-kinetic/tokens.css
+ *
+ * Structured token bindings for JA Kinetic, the developer-tool language of
+ * the JoomlArt ja_kinetic Joomla template (T4 framework, version 1.0.0).
+ * Near-neutral grounds, one saturated accent, a geometric sans for display
+ * over a humanist sans for reading, and a monospace that carries eyebrows,
+ * chips, stats and code panels. This file is the *machine-readable* form of
+ * the values described in `DESIGN.md`. Agents are expected to paste the
+ * `:root { ... }` block verbatim into the first `<style>` of every artifact
+ * they generate against this design system, then reference everything via
+ * var(--name) from then on.
+ *
+ * Where the values come from
+ * --------------------------
+ *   The template drives its whole design from one custom-property set with
+ *   NO brand prefix: `--bg`, `--surface`, `--elevated`, `--text`,
+ *   `--heading`, `--muted`, `--border`, `--primary`, `--primary-ink`,
+ *   `--primary-hover`, `--accent`, `--grid`, `--shadow`, `--logo`, declared
+ *   on `:root, html[data-style="terminal"]` in `scss/_kinetic.scss:15-33`
+ *   and compiled to `css/template.css:19310-19341`. Dark is a remap of the
+ *   same names under `html.t4-dark` in `scss/darkmode.scss:8-20`, compiled
+ *   to `css/darkmode.css:1-26`.
+ *
+ *   The T4 Theme keys in `etc/theme/default.json` and the Bootstrap
+ *   variables in `scss/_variables.scss` are admin and compile inputs. They
+ *   ship equal to the terminal light values and they only reach T4's own
+ *   generic classes (`.btn.btn-primary`, plain links, `.bg-*`), so they are
+ *   not the source here. The template's own `docs/design-system.md` states
+ *   the same split.
+ *
+ * THE THREE DIRECTIONS
+ * --------------------
+ *   ja_kinetic ships ONE grammar in THREE colourways, selected by a
+ *   `data-style` attribute that `index.php:54` always writes on `<html>`:
+ *
+ *     terminal   (default)  olive #4D7C0F light / lime  #A3E635 dark
+ *     blueprint             indigo #4F46E5 light / #6366F1 dark
+ *     signal                cyan  #0891B2 light / #22D3EE dark
+ *
+ *   Only `terminal` is bound below, because it is the shipped default and
+ *   the only direction that also matches the T4 Theme keys. The other two
+ *   are full palettes, not tints; `DESIGN.md` section 2 lists every value so
+ *   a re-skin can swap the whole set. Do NOT mix a blueprint accent into a
+ *   terminal ground: each direction is internally balanced.
+ *
+ * Brand-specific schema decisions (non-obvious bindings worth flagging for
+ * reviewers and downstream brand authors)
+ * ---------------------------------------------------------------------
+ *   1. --font-display is a SANS, not a serif: Space Grotesk at weight 700
+ *      with NEGATIVE tracking. --tracking-display is therefore -1.5px, the
+ *      real h1 value, and the tightening scales with size (h2 -1px, h3
+ *      -0.5px, h4 -0.3px). A display face set at 0 reads as a different
+ *      product.
+ *   2. --fg-2 is DARKER than --fg in light (#10140F against #46514B) and
+ *      LIGHTER in dark (#F2F5F3 against #9AA6A1). This is a heading ink, not
+ *      a second text step. Do not build a descending ramp out of it.
+ *   3. --surface-warm carries the template's `--elevated`, and in this
+ *      design it is COOL, not warm: a green-grey #F2F5EE in light and a
+ *      near-black #0F1311 in dark. The schema name is kept for portability;
+ *      the value is not warm. It is a real third tier (tinted bands, hover
+ *      rows), not an alias.
+ *   4. --meta has no separate token upstream. It is bound to the same value
+ *      as --muted and will stay locked to it: `--muted` is the only quiet
+ *      ink the template declares. Recorded rather than invented.
+ *   5. --border-soft likewise has no separate upstream token. Fields, cards,
+ *      rules and the header divider all draw `var(--border)`. Bound to the
+ *      same value in both modes.
+ *   6. --accent-active has no source value. The template declares no pressed
+ *      colour for `.hx-btn`; the press is inherited browser behaviour. Bound
+ *      to --accent-hover as the honest proposal (see DESIGN.md section 9).
+ *   7. --success / --warn / --danger are the template's SHARED LITERALS
+ *      `--ok #30A46C`, `--warn #F5A623`, `--err #E5484D`
+ *      (`scss/_kinetic.scss:31`). They are direction-independent AND they
+ *      are NOT remapped in dark. That is the design's decision, not an
+ *      omission: status colour is meant to read the same in every colourway.
+ *   8. --elev-card is `none`. Cards in this system are flat: a 1px
+ *      `var(--border)` on `var(--surface)` with no resting shadow
+ *      (`scss/_kinetic.scss:133`). The only shadow the design declares is
+ *      the single `--shadow` token, bound here to --elev-raised, and it is
+ *      used on the code panel (`scss/_kinetic.scss:149`) and little else.
+ *   9. --focus-ring is a BOX-SHADOW value, not an outline shorthand. Use it
+ *      as `box-shadow: var(--focus-ring);`. The template draws
+ *      `0 0 0 3px rgba(var(--primary-rgb, 77, 124, 15), .25)` in ten places.
+ *      `--primary-rgb` is never declared anywhere in the template, so the
+ *      fallback always wins and THE FOCUS RING IS ALWAYS OLIVE: it does not
+ *      follow --accent into dark, nor into blueprint or signal. The defect
+ *      is kept visible here rather than silently fixed. --elev-ring carries
+ *      the same value, so either schema name works.
+ *  10. --section-y-tablet has no global counterpart. The site rhythm is 80px
+ *      and it holds unbroken down to 620px, where it drops to 56px in one
+ *      move. The 56px bound as the tablet step is the CTA block's own
+ *      991px value (`acm/cta/css/style.css:196-199`), which is why tablet
+ *      and phone carry the same number. The design's tightest band is that
+ *      same block at 48px below 620px.
+ *
+ * C-extensions declared here (documented in DESIGN.md, outside the shared
+ * schema): --accent-secondary, --grid, --chrome-elevated.
+ *
+ * Deliberately NOT declared: --scrim. This design has no overlay. Nothing
+ * is laid over a photograph anywhere in the template; the hero, the
+ * mastheads and the split blocks sit on a line grid over the page ground.
+ * Inventing a scrim value would invent a component.
+ *
+ * Contract sources:
+ *   - Standard token names: design-systems/_schema/tokens.schema.ts
+ *   - A2 fallback values:   design-systems/_schema/defaults.css
+ *
+ * Keep this file additive: never invent token names not also documented in
+ * DESIGN.md or the shared schema.
+ * ====================================================================== */
+
+:root {
+  /* --- Surface (3 levels) -------------------------------------------
+   * Off-white page, pure-white card, tinted band. All three are real:
+   * `--bg` is body and every section ground (`scss/_kinetic.scss:17,79`),
+   * `--surface` is cards, code panels and the megamenu panel (:17, :133,
+   * :149), `--elevated` is tinted bands, hover rows and ghost-button
+   * hover (:17, :128, :183). The page is never pure white: the canvas is
+   * #FBFCFA so a #FFFFFF card reads as a card without a shadow. */
+  --bg: #FBFCFA;
+  --surface: #FFFFFF;
+  --surface-warm: #F2F5EE;  /* template `--elevated`; cool, not warm */
+
+  /* --- Foreground ramp (4 levels) -----------------------------------
+   * Two pairs, not one descent. --fg / --fg-2 are body ink and heading
+   * ink, and in light the heading is much the darker of the two. --muted
+   * / --meta are the quiet tier: captions, table meta, chip labels,
+   * code-panel comments. They are ONE token upstream
+   * (`scss/_kinetic.scss:19`) and are bound to the same value here. */
+  --fg: #46514B;
+  --fg-2: #10140F;
+  --muted: #7C877F;
+  --meta: #7C877F;
+
+  /* --- Border (2 levels) --------------------------------------------
+   * One hairline does everything: card edges, table rules, the header
+   * divider, form fields, the ghost button, the incident connector.
+   * There is no second border token upstream, so --border-soft is bound
+   * to the same value in both modes. */
+  --border: #E4E8E0;
+  --border-soft: #E4E8E0;
+
+  /* --- Accent -------------------------------------------------------
+   * Olive in light, lime in dark. It carries links, eyebrows, primary
+   * buttons, check bullets, active nav states and the logo glyph (61
+   * uses in the compiled CSS). It is the ONLY saturated colour in the
+   * chrome, and it is the one thing a direction swap moves. */
+  --accent: #4D7C0F;
+  --accent-on: #FFFFFF;  /* template `--primary-ink` */
+
+  /* --- Accent states ------------------------------------------------
+   * Hover is a fixed second value, not computed from --accent, so a
+   * re-skin has to move both. Active has no source value at all and is
+   * bound to hover as an honest proposal. */
+  --accent-hover: #3F6A0A;
+  --accent-active: #3F6A0A;
+
+  /* --- Semantic -----------------------------------------------------
+   * The template's shared status literals (`scss/_kinetic.scss:31`).
+   * They are direction-independent by design: a green "operational" dot
+   * has to stay green in the indigo and cyan colourways. They are also
+   * NOT remapped in dark, so they carry into the dark block unchanged.
+   * The template declares a fourth, `--up: #16A34A`, for upward metric
+   * deltas; the schema has no slot for it, so it is left out here and
+   * noted in DESIGN.md. Reserve all of these to under 5% of a surface. */
+  --success: #30A46C;  /* template `--ok` */
+  --warn:    #F5A623;
+  --danger:  #E5484D;  /* template `--err` */
+
+  /* --- Typography ---------------------------------------------------
+   * Three families, three jobs, all three sans-or-mono: a geometric sans
+   * for display, a humanist sans for reading and controls, a monospace
+   * for eyebrows, chips, stats, table headers and code panels. All three
+   * arrive through one Google Fonts @import at `scss/_kinetic.scss:9`
+   * (compiled to `css/template.css:20`); `fonts/` ships no local file, so
+   * the fallback stacks below are what renders when that request fails.
+   * The three Kinetic Site profiles set `dont_use_google_font: true`, so
+   * T4 itself adds no font request. */
+  --font-display: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Type scale (px), read from `scss/_kinetic.scss:80,87-90,99,122,135`.
+   * The body baseline is a declared 16px, not a browser default. Two real
+   * sizes sit outside this ladder and are left to component rules: the
+   * 11px monospace chip (`:135`) and the 13.5px code-panel line (`:153`).
+   * The ceiling is the h1 at 52px, which steps to 38px below 860px. */
+  --text-xs:   12.5px;  /* eyebrows: mono, uppercase, +2px tracked */
+  --text-sm:   14px;    /* buttons, header menu, table cells, meta */
+  --text-base: 16px;    /* body baseline */
+  --text-lg:   19px;    /* h4, card titles */
+  --text-xl:   23px;    /* h3, plan names */
+  --text-2xl:  28px;    /* block section titles */
+  --text-3xl:  38px;    /* h2 */
+  --text-4xl:  52px;    /* h1, hero title */
+
+  /* Body leading is 1.55, tight for an editorial page and right for a
+   * product page. Display leading is 1.04, which is what lets a 52px
+   * two-line headline stay a single block of shape. */
+  --leading-body:  1.55;
+  --leading-tight: 1.04;
+
+  /* NEGATIVE, and that is the signature. h1 -1.5px, h2 -1px, h3 -0.5px,
+   * h4 -0.3px: the tightening scales with size. The counter-move is the
+   * monospace eyebrow at +2px (`scss/_kinetic.scss:100`), the widest
+   * tracking in the system. */
+  --tracking-display: -1.5px;
+
+  /* --- Spacing ------------------------------------------------------
+   * An 8px base unit. T4 declares it as `--global-spacing: 8px` with a
+   * calc() ramp above it (`css/template.css:17632-17637`), and the
+   * template's own grids land on the same multiples: 4px rail gap
+   * (`scss/_kinetic.scss:181`), 8px button gap (:121), 16px stat and
+   * bento gap (:164,:167), 24px column gap (:162), 32px container gutter
+   * (:107), 48px split gap (:160). 12px and 20px are the odd steps: 20px
+   * is the phone container gutter (:109) and both appear as block gaps
+   * across `acm/*/css/style.css`. */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-12: 48px;
+
+  /* --- Section rhythm -----------------------------------------------
+   * 80px is the site rhythm (`scss/_kinetic.scss:108`) and it holds
+   * unbroken to 620px, where one redeclaration takes every section to
+   * 56px at once (:109). There is no global tablet step: the 56px bound
+   * below is the CTA block's own 991px value
+   * (`acm/cta/css/style.css:196-199`), which is why tablet and phone
+   * carry the same number. The tightest band in the design is that same
+   * block at 48px below 620px (`acm/cta/css/style.css:207-210`). */
+  --section-y-desktop: 80px;
+  --section-y-tablet:  56px;
+  --section-y-phone:   56px;
+
+  /* --- Radius -------------------------------------------------------
+   * Softly rounded and tiered, and the tiers mean different things:
+   *   sm   -> 8px    buttons, chips, header nav links, small tiles
+   *   md   -> 12px   cards, code panels
+   *   lg   -> 16px   large cards, pricing plans, the "includes" bar
+   *   pill -> 100px  the "MOST POPULAR" badge and other status pills
+   * A 10px step exists for Joomla alerts (`scss/_kinetic.scss:200`) and a
+   * 9px step for pricing feature rows; both are component-local. Nothing
+   * in this design is a hard square except the table rules, and the
+   * signature shape is a rounded RECTANGLE, not a pill: unlike many T4
+   * templates, the primary button here is an 8px rounded box. */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-pill: 100px;
+
+  /* --- Elevation ----------------------------------------------------
+   * Almost everything is flat. A card is a 1px border on --surface with
+   * NO resting shadow (`scss/_kinetic.scss:133`), which is why
+   * --elev-card is `none` rather than a whisper. The design declares
+   * exactly one shadow, `--shadow`, and spends it on the code panel
+   * (:149) and a handful of hovering tiles; it is bound to --elev-raised.
+   * --elev-ring is the focus ring, see below. */
+  --elev-flat:   none;
+  --elev-card:   none;
+  --elev-ring:   0 0 0 3px rgba(77, 124, 15, .25);
+  --elev-raised: 0 18px 44px -20px rgba(20, 30, 15, .2);
+
+  /* --- Focus --------------------------------------------------------
+   * A ring, not an outline. Apply it as
+   *   box-shadow: var(--focus-ring);
+   * The template writes `0 0 0 3px rgba(var(--primary-rgb, 77, 124, 15),
+   * .25)` in ten places (`css/template.css:13187`,
+   * `acm/hero/css/style.css:95,118`, `acm/cta/css/style.css:99,116,146`,
+   * `acm/faq-support/css/style.css:100`,
+   * `acm/header-cta/css/style.css:21`,
+   * `acm/footernews/css/style.css:20,33`,
+   * `acm/page-masthead/css/style.css:79`,
+   * `acm/kineticql-split/css/style.css:118`). `--primary-rgb` is never
+   * declared, so the olive fallback always wins: the ring does not follow
+   * --accent into dark, nor into blueprint or signal. Known defect, kept
+   * visible. There is no --focus-ring-offset because the ring sits flush
+   * against the element; no offset is declared anywhere. */
+  --focus-ring: 0 0 0 3px rgba(77, 124, 15, .25);
+
+  /* --- Motion -------------------------------------------------------
+   * Fast and mechanical. 0.15s moves colour, background and border;
+   * 0.2s moves transform, box-shadow and opacity. Both are ungated: the
+   * template ships no prefers-reduced-motion guard for them. The easing
+   * is the plain `ease` keyword; no custom curve appears anywhere in the
+   * SCSS or the block CSS. (`scss/_kinetic.scss:123,182` and the
+   * transition declarations across `acm/*/css/style.css`.) */
+  --motion-fast:   0.15s;
+  --motion-base:   0.2s;
+  --ease-standard: ease;
+
+  /* --- Layout -------------------------------------------------------
+   * One container for the whole site: 1240px, declared twice, as the
+   * `--content-max` token (`scss/_kinetic.scss:32`) and as the
+   * `.hx-container` max-width (:107). The gutter is 32px and it holds at
+   * every width down to 620px, where it drops to 20px (:109). There is no
+   * tablet gutter step, so the tablet token repeats the desktop value.
+   * The header uses the same 1240px and the same 32px
+   * (`scss/_kinetic-chrome.scss:78-80`). */
+  --container-max:            1240px;
+  --container-gutter-desktop: 32px;
+  --container-gutter-tablet:  32px;
+  --container-gutter-phone:   20px;
+
+  /* --- C-extensions -------------------------------------------------
+   * Three names outside the shared schema, all of them real tokens in the
+   * template.
+   *
+   * --accent-secondary is the template's own `--accent`
+   * (`scss/_kinetic.scss:20`), a second, brighter green used for
+   * decorative marks beside the primary. It is NOT the semantic success
+   * colour and it is NOT remapped in terminal dark, which is why it needs
+   * a name of its own here.
+   *
+   * --grid is the line-grid colour behind the hero and every page
+   * masthead (`scss/_kinetic.scss:21,112-115`): two 1px gradients on a
+   * 30px pitch (34px in the hero block). It is the single most
+   * recognisable surface treatment in this design.
+   *
+   * --chrome-elevated is the footer ground. The header, megamenu, drawer
+   * and footer run on a SEPARATE seven-token `--chrome-*` set
+   * (`scss/_kinetic.scss:27-28`, `css/darkmode.css:80-88`) that is
+   * direction-independent: blueprint and signal keep the terminal
+   * neutrals in their chrome. Six of those seven equal the terminal body
+   * tokens in both modes. The seventh does not: in dark the footer is
+   * #161B18, lighter than the body's #0F1311, so the footer lifts off
+   * the page. That one divergence is bound here. */
+  --accent-secondary: #65A30D;
+  --grid: rgba(16, 20, 15, .04);
+  --chrome-elevated: #F2F5EE;
+}
+
+/* ==========================================================================
+ * DARK
+ *
+ * `[data-theme="dark"]` is this repository's standard theme hook, and
+ * `html.t4-dark` is the selector the template itself ships. `index.php:42-70`
+ * sets it on the root element before paint, from the `ja_kinetic-theme`
+ * cookie, then the profile default, then the operating-system preference.
+ * Both are bound so a generated artifact and a real site flip from the same
+ * block. NOTE: ja_kinetic ships DARK BY DEFAULT in its `default` and
+ * `signal` Site profiles (`etc/site/default.json`, key `other_default_theme`),
+ * so dark is the design's home state, not an afterthought.
+ *
+ * Dark is a remap of the same names and nothing else. The template's dark
+ * file declares no font family, no font size, no radius, no container width,
+ * no duration and no easing.
+ *
+ * Four honest gaps, all inherited from the source:
+ *   - --success / --warn / --danger are NOT remapped. The status literals
+ *     are deliberately the same in both modes, so they are absent below.
+ *   - --elev-ring and --focus-ring are NOT remapped and cannot be: the
+ *     upstream ring hard-codes the olive fallback, so a focused field keeps
+ *     an olive ring on the near-black page.
+ *   - --accent-secondary is NOT remapped in terminal dark; the template
+ *     keeps #65A30D there (`css/darkmode.css:15`).
+ *   - --accent-on inverts to a near-black (#0A0D0C) because the dark accent
+ *     is a bright lime. A white label on lime would fail contrast.
+ *
+ * Values: `scss/darkmode.scss:8-20`, compiled to `css/darkmode.css:1-26`;
+ * chrome values `scss/darkmode.scss:50-53`, `css/darkmode.css:80-88`.
+ * ====================================================================== */
+[data-theme="dark"],
+html.t4-dark {
+  --bg: #0A0D0C;
+  --surface: #121614;
+  --surface-warm: #0F1311;
+
+  /* The ramp inverts: the heading ink is now the LIGHTER of the pair,
+   * which is the same relationship read from the other side. */
+  --fg: #9AA6A1;
+  --fg-2: #F2F5F3;
+  --muted: #5F6B66;
+  --meta: #5F6B66;
+
+  --border: #232A27;
+  --border-soft: #232A27;
+
+  /* Olive becomes lime, and the label on it becomes the page black. */
+  --accent: #A3E635;
+  --accent-on: #0A0D0C;
+  --accent-hover: #BCF25A;
+  --accent-active: #BCF25A;
+
+  /* The one shadow deepens: the same geometry, three times the alpha and
+   * a shorter spread, because a 20% shadow is invisible on #0A0D0C. */
+  --elev-raised: 0 20px 50px -18px rgba(0, 0, 0, .6);
+
+  /* C-extensions. The grid flips from a black wash to a white one; the
+   * footer ground lifts ABOVE the body's --surface-warm rather than
+   * sitting below it. */
+  --grid: rgba(255, 255, 255, .035);
+  --chrome-elevated: #161B18;
+}

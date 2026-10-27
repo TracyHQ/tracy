@@ -1,0 +1,49 @@
+{
+  "color": {
+    "void-ink": {
+      "$value": "#050311",
+      "$type": "color",
+      "$description": "Void Ink — Page canvas, section backgrounds, dark surface base — the near-black stage on which all content sits, carrying a barely-perceptible cool-violet undertone that keeps it from feeling clinical"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary text, headline color, hairline borders, icon strokes, button outlines — the only high-contrast voice in the system; when something needs to be seen, it is white"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Monochrome icon fills, brand marks, and high-contrast graphic details. Do not promote it to the primary CTA color"
+    },
+    "ash-gray": {
+      "$value": "#9b9aa0",
+      "$type": "color",
+      "$description": "Ash Gray — Muted body text, secondary headings, subtle borders, disabled states — carries all secondary information without competing with the white voice"
+    },
+    "graphite": {
+      "$value": "#44424d",
+      "$type": "color",
+      "$description": "Graphite — Dividers, low-emphasis borders, hairline separators between sections — quiet structural lines that organize the dark canvas without drawing attention"
+    }
+  },
+  "font": {
+    "fkgroteskneue": {
+      "$value": "FKGroteskNeue",
+      "$type": "fontFamily",
+      "$description": "Universal type family — used for navigation, body, headings, badges, buttons, cards, and the massive hero wordmark. A neo-grotesque sans with tabular numerals as a deliberate feature. The single weight (400) is the system's signature: the hero 'North Kingdom' wordmark achieves its cinematic weight through sheer size, not font weight. Substitute: Space Grotesk or Inter at matching weight."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback for button labels, icons, and input fields — used where the custom font license or loading constraints prevent the primary face from rendering"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.northkingdom.com",
+      "siteName": "North Kingdom",
+      "extractedAt": "2026-06-03T21:55:43.378Z",
+      "variant": "compact"
+    }
+  }
+}

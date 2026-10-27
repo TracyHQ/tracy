@@ -1,0 +1,601 @@
+{
+  "$comment": "Raw navigation markup of the release, captured by capture-navigation-source.mjs from its own database archive. Input of scripts/build-wordpress-showcase-nav.mjs; never edit by hand.",
+  "schemaVersion": "tracy-quickstart-navigation-source/wordpress/v1",
+  "contract": "ja-fresco/wp7/1.0.1",
+  "database": {
+    "file": "ja-fresco-wp7-database-1.0.1.sql.gz",
+    "sha256": "b26c64a5e0c8c8f4af90b7fbbd492781299c62a3b358f34fe4345cdecf4f18cc"
+  },
+  "stylesheet": "wp-ja-fresco",
+  "frontPage": 54,
+  "navigations": [
+    {
+      "id": 4,
+      "slug": "navigation",
+      "title": "Navigation",
+      "language": "en",
+      "sha256": "88dd77bdd43908fbb988625333df83b8739f87139b56e469ffda99bc50a0768e",
+      "content": "<!-- wp:page-list /-->"
+    },
+    {
+      "id": 80,
+      "slug": "mainmenu",
+      "title": "mainmenu",
+      "language": "en",
+      "sha256": "56326e0a61ace6480daedf81940200e17f6fd6c9553c8c179e13b016d5f4fa2e",
+      "content": "<!-- wp:navigation-submenu {\"label\":\"Home\",\"type\":\"page\",\"id\":54,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} -->\n<!-- wp:navigation-link {\"label\":\"Home 1\",\"type\":\"page\",\"id\":54,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home 2\",\"type\":\"page\",\"id\":63,\"url\":\"https://quickstart.invalid/home/home-2/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home 3\",\"type\":\"page\",\"id\":64,\"url\":\"https://quickstart.invalid/home/home-3/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-link {\"label\":\"Menu\",\"type\":\"page\",\"id\":59,\"url\":\"https://quickstart.invalid/menu/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"About\",\"type\":\"page\",\"id\":56,\"url\":\"https://quickstart.invalid/about/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Gallery\",\"type\":\"page\",\"id\":57,\"url\":\"https://quickstart.invalid/gallery/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Chiefs\",\"type\":\"page\",\"id\":58,\"url\":\"https://quickstart.invalid/chiefs/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Offer\",\"type\":\"page\",\"id\":60,\"url\":\"https://quickstart.invalid/offer/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact\",\"type\":\"page\",\"id\":55,\"url\":\"https://quickstart.invalid/contact/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 81,
+      "slug": "about",
+      "title": "about",
+      "language": "en",
+      "sha256": "27a3ae3d20507c2fc6b6b79e78686b0e7c5ffedeb67c159605ee0280367704b1",
+      "content": "<!-- wp:navigation-link {\"label\":\"Reservation Policy\",\"url\":\"index.php?Itemid=117\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Privacy Policy\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Health & Safety\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"FAQ\",\"url\":\"#\",\"kind\":\"custom\"} /-->"
+    },
+    {
+      "id": 82,
+      "slug": "tracy-footer-1",
+      "title": "Footer — footnav-1",
+      "language": "en",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content": ""
+    },
+    {
+      "id": 83,
+      "slug": "tracy-footer-2",
+      "title": "Footer — footnav-2",
+      "language": "en",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content": ""
+    },
+    {
+      "id": 84,
+      "slug": "tracy-footer-3",
+      "title": "Footer — footnav-3",
+      "language": "en",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content": ""
+    },
+    {
+      "id": 85,
+      "slug": "tracy-footer-3-2",
+      "title": "Footer — footnav-3",
+      "language": "en",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "content": ""
+    }
+  ],
+  "templateParts": [
+    {
+      "id": 86,
+      "slug": "header",
+      "theme": "wp-ja-fresco",
+      "area": "header",
+      "sha256": "a5877c0b42b48d94aef7e8c52bbd6e522b3bf3fcbeefea4694b7afc0bfbceae4",
+      "content": "<!-- wp:group {\"tagName\":\"header\",\"className\":\"t4-header\",\"layout\":{\"type\":\"default\"}} -->\n<header class=\"wp-block-group t4-header\">\n<!-- wp:group {\"className\":\"jf-container-fluid header-wrap\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-container-fluid header-wrap\">\n<!-- wp:site-logo {\"shouldSyncIcon\":false,\"className\":\"jf-logo tracy-logo-dark\"} /-->\n<!-- wp:navigation {\"ref\":80,\"overlayMenu\":\"mobile\",\"className\":\"t4-mainnav\",\"metadata\":{\"name\":\"nav.mainmenu\"},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} /-->\n<!-- wp:group {\"className\":\"t4-header-r\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t4-header-r\">\n<!-- wp:buttons {\"className\":\"jf-book-open\"} -->\n<div class=\"wp-block-buttons jf-book-open\"><!-- wp:button {\"className\":\"btn-primary\"} -->\n<div class=\"wp-block-button btn-primary\"><a class=\"wp-block-button__link wp-element-button\" href=\"#jf-book-table\"><span class=\"jf-book-label\">Book Table</span></a></div>\n<!-- /wp:button --></div>\n<!-- /wp:buttons -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</header>\n<!-- /wp:group -->\n<!-- wp:group {\"anchor\":\"jf-book-table\",\"className\":\"jf-book-modal\",\"metadata\":{\"name\":\"header.book-table\"},\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-book-modal\" id=\"jf-book-table\">\n<!-- wp:group {\"className\":\"jf-book-dialog\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-book-dialog\">\n<!-- wp:group {\"className\":\"jf-book-col jf-book-intro\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-book-col jf-book-intro\">\n<!-- wp:heading {\"className\":\"book-title\"} -->\n<h2 class=\"wp-block-heading book-title\">Book Table</h2>\n<!-- /wp:heading -->\n<!-- wp:paragraph {\"className\":\"book-desc\"} -->\n<p class=\"book-desc\">Book a table or just come along - we save space in every restaurant for walk-ins.</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jf-book-col\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-book-col\">\n<!-- wp:heading {\"level\":3,\"className\":\"book-phone-title\"} -->\n<h3 class=\"wp-block-heading book-phone-title\">Book via phone</h3>\n<!-- /wp:heading -->\n<!-- wp:paragraph {\"className\":\"book-phone\"} -->\n<p class=\"book-phone\"><a href=\"tel:+983 3839 493\">+983 3839 493</a></p>\n<!-- /wp:paragraph -->\n<!-- wp:heading {\"level\":3,\"className\":\"book-order-title\"} -->\n<h3 class=\"wp-block-heading book-order-title\">Book via OpenTable</h3>\n<!-- /wp:heading -->\n<!-- wp:buttons -->\n<div class=\"wp-block-buttons\"><!-- wp:button {\"className\":\"btn-outline-primary\"} -->\n<div class=\"wp-block-button btn-outline-primary\"><a class=\"wp-block-button__link wp-element-button\" href=\"/contact\">Book Table</a></div>\n<!-- /wp:button --></div>\n<!-- /wp:buttons -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->"
+    },
+    {
+      "id": 87,
+      "slug": "footer",
+      "theme": "wp-ja-fresco",
+      "area": "footer",
+      "sha256": "06aa4ca97f146b087e6af66e5448e53931595f5dabeec1cc14c3f633e074caab",
+      "content": "<!-- wp:group {\"tagName\":\"footer\",\"className\":\"t4-footer\",\"layout\":{\"type\":\"default\"}} -->\n<footer class=\"wp-block-group t4-footer\">\n<!-- wp:group {\"className\":\"jf-container\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-container\">\n<!-- wp:group {\"className\":\"jf-footnav\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-footnav\">\n<!-- wp:group {\"className\":\"jf-foot-col\",\"metadata\":{\"name\":\"footer.welcome\"},\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-foot-col\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">Welcome to Fresco</h3>\n<!-- /wp:heading -->\n<!-- wp:paragraph -->\n<p>Fresco, founded in 2022, is dedicated to all those who love to wander far and wide.</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph -->\n<p>We'd like to invite you on a culinary adventure, where you’ll explore undiscovered gourmet experiences.</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jf-foot-col\",\"metadata\":{\"name\":\"footer.visit\"},\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-foot-col\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">Visit</h3>\n<!-- /wp:heading -->\n<!-- wp:paragraph -->\n<p>317 Pacific C Hwy Huntington, CA 92648</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph -->\n<p><a href=\"tel:+0000\">123.456-7</a></p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph -->\n<p><a href=\"mailto:no-reply@fresco.com\">no-reply@fresco.com</a></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jf-foot-col\",\"metadata\":{\"name\":\"footer.reservations\"},\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-foot-col\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">Reservations</h3>\n<!-- /wp:heading -->\n<!-- wp:buttons -->\n<div class=\"wp-block-buttons\"><!-- wp:button {\"className\":\"btn-outline-light\"} -->\n<div class=\"wp-block-button btn-outline-light\"><a class=\"wp-block-button__link wp-element-button\" href=\"/contact\">Book you table</a></div>\n<!-- /wp:button --></div>\n<!-- /wp:buttons -->\n<!-- wp:heading {\"level\":3,\"className\":\"module-title jf-foot-hours\"} -->\n<h3 class=\"wp-block-heading module-title jf-foot-hours\">Hours</h3>\n<!-- /wp:heading -->\n<!-- wp:paragraph -->\n<p>MONDAY thru FRIDAY<br>11am - 9pm</p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph -->\n<p>SATURDAY/SUNDAY<br>10am - 11pm</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jf-foot-col\",\"metadata\":{\"name\":\"footer.about\"},\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jf-foot-col\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">About</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":81,\"overlayMenu\":\"never\",\"className\":\"jf-foot-menu\",\"metadata\":{\"name\":\"nav.about\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\",\"justifyContent\":\"center\"}} /-->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:paragraph {\"className\":\"copyright\"} -->\n<p class=\"copyright\">Copyright © {year} {site.title}. All Rights Reserved.<br>Released under the <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GNU General Public License.</a></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n</footer>\n<!-- /wp:group -->\n"
+    }
+  ],
+  "themeParts": [
+    {
+      "slug": "related",
+      "file": "parts/related.html",
+      "sha256": "f0029aac913bbc59068bd7338f3797f4c2ec8e04f19c6556cc21a143b2d295a6",
+      "content": "<!-- wp:pattern {\"slug\":\"wp-ja-fresco/related\"} /-->\n"
+    },
+    {
+      "slug": "topbar",
+      "file": "parts/topbar.html",
+      "sha256": "cabedf2f1ca4172e3907f4ba7c620ab145fff5c7bb504164375f7d7a5ea90ff6",
+      "content": "<!-- wp:pattern {\"slug\":\"wp-ja-fresco/topbar\"} /-->\n"
+    }
+  ],
+  "linkedPosts": [
+    {
+      "id": 54,
+      "type": "page",
+      "status": "publish",
+      "slug": "front-page",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 55,
+      "type": "page",
+      "status": "publish",
+      "slug": "contact",
+      "blocks": [
+        "core/shortcode"
+      ]
+    },
+    {
+      "id": 56,
+      "type": "page",
+      "status": "publish",
+      "slug": "about",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph",
+        "core/social-link",
+        "core/social-links"
+      ]
+    },
+    {
+      "id": 57,
+      "type": "page",
+      "status": "publish",
+      "slug": "gallery",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/image"
+      ]
+    },
+    {
+      "id": 58,
+      "type": "page",
+      "status": "publish",
+      "slug": "chiefs",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/social-link",
+        "core/social-links"
+      ]
+    },
+    {
+      "id": 59,
+      "type": "page",
+      "status": "publish",
+      "slug": "menu",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 60,
+      "type": "page",
+      "status": "publish",
+      "slug": "offer",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 63,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-2",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 64,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-3",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    }
+  ],
+  "listings": [
+    {
+      "id": 71,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "only",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 7,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "only",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "tracyMore"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              4
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 7,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              4
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "tracyMore"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 76,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    }
+  ],
+  "listedPosts": [
+    {
+      "id": 43,
+      "type": "post",
+      "slug": "valentines-day-at-soul-kitchen",
+      "author": 2,
+      "date": "2024-01-18 02:49:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": 44,
+      "type": "post",
+      "slug": "mother-s-day-lunch-special",
+      "author": 2,
+      "date": "2024-01-18 02:48:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": 45,
+      "type": "post",
+      "slug": "soul-kitchen-kumquat-and-thyme-cocktail",
+      "author": 3,
+      "date": "2024-01-18 02:47:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": 46,
+      "type": "post",
+      "slug": "an-interview-with-chef-milo-ferndandes",
+      "author": 3,
+      "date": "2024-01-18 02:46:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": 47,
+      "type": "post",
+      "slug": "culinary-journeys-around-the-world",
+      "author": 4,
+      "date": "2024-01-18 02:45:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": 48,
+      "type": "post",
+      "slug": "savoring-the-art-of-cooking",
+      "author": 4,
+      "date": "2024-01-18 02:44:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": 49,
+      "type": "post",
+      "slug": "farm-to-fork-sustainable-eating",
+      "author": 4,
+      "date": "2024-01-18 02:43:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": 50,
+      "type": "post",
+      "slug": "rediscovering-heirloom-recipes",
+      "author": 5,
+      "date": "2024-01-18 02:42:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": 51,
+      "type": "post",
+      "slug": "gastronomic-adventures-with-exotic-dishes",
+      "author": 5,
+      "date": "2024-01-18 02:41:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": 52,
+      "type": "post",
+      "slug": "healthy-eating-for-body-and-soul",
+      "author": 5,
+      "date": "2024-01-18 02:40:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          6,
+          7,
+          8
+        ]
+      }
+    }
+  ],
+  "terms": [
+    {
+      "id": 1,
+      "taxonomy": "category",
+      "slug": "uncategorized",
+      "parent": 0
+    },
+    {
+      "id": 2,
+      "taxonomy": "category",
+      "slug": "uncategorised",
+      "parent": 0
+    },
+    {
+      "id": 3,
+      "taxonomy": "category",
+      "slug": "blogs",
+      "parent": 0
+    },
+    {
+      "id": 4,
+      "taxonomy": "category",
+      "slug": "food",
+      "parent": 3
+    },
+    {
+      "id": 5,
+      "taxonomy": "category",
+      "slug": "recipe",
+      "parent": 3
+    },
+    {
+      "id": 6,
+      "taxonomy": "post_tag",
+      "slug": "food",
+      "parent": 0
+    },
+    {
+      "id": 7,
+      "taxonomy": "post_tag",
+      "slug": "eat",
+      "parent": 0
+    },
+    {
+      "id": 8,
+      "taxonomy": "post_tag",
+      "slug": "meat",
+      "parent": 0
+    }
+  ],
+  "stickyPosts": [
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52
+  ]
+}

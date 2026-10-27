@@ -1,0 +1,203 @@
+---
+// mika-template-version: 0.1.1
+import { actions } from "astro:actions";
+import { Button } from "@cloudflare/kumo";
+import type { SellableDTO } from "@bnomei/emdash-mika/types";
+import {
+  createMikaPurchaseModel,
+  mikaHiddenInput,
+  mikaReturnTo,
+  mikaReturnToInput
+} from "@bnomei/emdash-mika/astro";
+import type { MikaPurchaseModel } from "@bnomei/emdash-mika/astro";
+import AddToCartFormSync from "./AddToCartFormSync.astro";
+import LowStockNotice from "./LowStockNotice.astro";
+import StockBadge from "./StockBadge.astro";
+import UnavailableNotice from "./UnavailableNotice.astro";
+import VariantOptionGroups from "./VariantOptionGroups.astro";
+import VariantSelector from "./VariantSelector.astro";
+
+interface Props {
+  sellables: readonly SellableDTO[];
+  purchase?: MikaPurchaseModel;
+  showPurchaseControls?: boolean;
+  returnTo?: string;
+  quantity?: number;
+  buttonLabel?: string;
+  outOfStockLabel?: string;
+  unavailableLabel?: string;
+  chooseOptionLabel?: string;
+  purchaseLabel?: string;
+  quantityLabel?: string;
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const {
+  sellables,
+  purchase: purchaseInput,
+  showPurchaseControls = true,
+  returnTo = mikaReturnTo(Astro.url),
+  quantity = 1,
+  buttonLabel = "Add to cart",
+  outOfStockLabel = "Out of stock",
+  unavailableLabel = "Unavailable",
+  chooseOptionLabel = "Choose an available option",
+  purchaseLabel = "Purchase",
+  quantityLabel = "Quantity",
+  class: className,
+  ...attrs
+} = Astro.props;
+const purchase = purchaseInput ?? createMikaPurchaseModel(sellables);
+const syncAvailabilityPanels = !showPurchaseControls || purchase.useGroupedVariantControls;
+const needsAddToCartSync = showPurchaseControls && purchase.useGroupedVariantControls;
+const selectedAvailabilityStatus = purchase.selectedSellable?.availability?.status;
+const disabledButtonLabel = purchase.missingActivePrice
+  ? unavailableLabel
+  : selectedAvailabilityStatus === "out_of_stock"
+    ? outOfStockLabel
+    : !purchase.selectedOption && purchase.options.length > 0
+      ? chooseOptionLabel
+      : unavailableLabel;
+const resolvedButtonLabel = purchase.unavailable ? disabledButtonLabel : buttonLabel;
+---
+
+<form
+  {...attrs}
+  data-mika-add-to-cart
+  class:list={["mika-kumo-form", className]}
+  action={actions.mika.cart.add.queryString}
+  method="post"
+>
+  <input type="hidden" {...mikaReturnToInput(returnTo)} />
+  {!showPurchaseControls && (
+    <>
+      <input
+        type="hidden"
+        {...mikaHiddenInput("sellableId", purchase.selectedSellable?.id)}
+        data-mika-selected-sellable-id
+      />
+      <input
+        type="hidden"
+        {...mikaHiddenInput("priceId", purchase.selectedPrice?.id)}
+        data-mika-selected-price-id
+      />
+    </>
+  )}
+
+  {showPurchaseControls && purchase.useGroupedVariantControls ? (
+    <>
+      <VariantOptionGroups
+        variantGroups={purchase.variantGroups}
+        variantOptionMap={purchase.variantOptionMap}
+        selectedSellableId={purchase.selectedSellable?.id}
+        includePriceId
+        label={purchaseLabel}
+      />
+      <noscript>
+        <style>
+          [data-mika-add-to-cart] [data-mika-variant-groups] {
+            display: none;
+          }
+        </style>
+        <fieldset data-mika-purchase-options class="mika-kumo-fieldset">
+          <legend class="mika-kumo-legend">{purchaseLabel}</legend>
+          {purchase.options.map((option, index) => (
+            <label class="mika-kumo-choice">
+              <input
+                type="radio"
+                name="purchase"
+                value={option.fields.purchase}
+                checked={index === purchase.selectedOptionIndex}
+                disabled={option.disabled}
+              />
+              <span>{option.label}</span>
+            </label>
+          ))}
+        </fieldset>
+      </noscript>
+    </>
+  ) : showPurchaseControls && purchase.options.length > 1 ? (
+    <fieldset data-mika-purchase-options class="mika-kumo-fieldset">
+      <legend class="mika-kumo-legend">{purchaseLabel}</legend>
+      {purchase.options.map((option, index) => (
+        <label class="mika-kumo-choice">
+          <input
+            type="radio"
+            name="purchase"
+            value={option.fields.purchase}
+            checked={index === purchase.selectedOptionIndex}
+            disabled={option.disabled}
+          />
+          <span>{option.label}</span>
+        </label>
+      ))}
+    </fieldset>
+  ) : showPurchaseControls && purchase.selectedOption ? (
+    <input type="hidden" {...mikaHiddenInput("purchase", purchase.selectedOption.fields.purchase)} />
+  ) : showPurchaseControls ? (
+    <VariantSelector sellables={purchase.activeSellables} />
+  ) : null}
+
+  <label class="mika-kumo-field">
+    <span>{quantityLabel}</span>
+    <input
+      class="mika-kumo-input"
+      name="quantity"
+      type="number"
+      inputmode="numeric"
+      min="1"
+      max={purchase.maxQuantity}
+      value={String(quantity)}
+      disabled={purchase.unavailable}
+      data-mika-purchase-quantity
+      data-mika-initial-disabled={purchase.unavailable ? "true" : "false"}
+    />
+  </label>
+
+  {syncAvailabilityPanels ? (
+    purchase.activeSellables.map((sellable) => (
+      <div
+        class="mika-kumo-availability"
+        data-mika-availability-for={sellable.id}
+        hidden={sellable.id !== purchase.selectedSellable?.id}
+      >
+        <StockBadge availability={sellable.availability} />
+        <LowStockNotice availability={sellable.availability} />
+        <UnavailableNotice
+          availability={sellable.availability}
+          show={purchase.missingActivePrice || undefined}
+        />
+      </div>
+    ))
+  ) : (
+    <>
+      {purchase.selectedSellable && (
+        <StockBadge availability={purchase.selectedSellable.availability} />
+      )}
+      {purchase.selectedSellable && (
+        <LowStockNotice availability={purchase.selectedSellable.availability} />
+      )}
+      {purchase.selectedSellable && (
+        <UnavailableNotice
+          availability={purchase.selectedSellable.availability}
+          show={purchase.missingActivePrice || undefined}
+        />
+      )}
+    </>
+  )}
+
+  <Button
+    type="submit"
+    variant="primary"
+    disabled={purchase.unavailable}
+    data-mika-purchase-submit
+    data-mika-initial-disabled={purchase.unavailable ? "true" : "false"}
+    data-mika-enabled-label={buttonLabel}
+    data-mika-disabled-label={disabledButtonLabel}
+  >
+    {resolvedButtonLabel}
+  </Button>
+</form>
+
+{needsAddToCartSync && <AddToCartFormSync />}

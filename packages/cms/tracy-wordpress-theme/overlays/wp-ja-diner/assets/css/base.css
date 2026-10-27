@@ -1,0 +1,8 @@
+/* wp-ja-diner: loaded BEFORE the source's sheets (see inc/extra.php), so a rule of the same weight in them wins. */
+/* The global styles space a flow group's children by the preset gap (`:root :where(.is-layout-flow) > *`, specificity 0,1,0),
+   which would also beat the source's own element margins (h4 { margin-top: 12px }, 0,0,1). Same selector, later in the cascade than the
+   global styles but earlier than the source's sheets, takes the gap away so the source's rules decide. */
+:root :where(.is-layout-flow, .is-layout-constrained) > * {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}

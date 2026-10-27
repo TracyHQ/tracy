@@ -1,0 +1,134 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page background, card surfaces, overlay scrims — the entire canvas"
+    },
+    "graphite-hairline": {
+      "$value": "#292d30",
+      "$type": "color",
+      "$description": "Graphite Hairline — 1px borders on cards, inputs, buttons, code blocks, dividers — defines every layer separation"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Primary headings, hero text, button labels, icon fills on dark surfaces"
+    },
+    "bone-white": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Bone White — Body text, secondary headings, stroke outlines on icons — the primary reading color"
+    },
+    "ash-gray": {
+      "$value": "#a1a4a5",
+      "$type": "color",
+      "$description": "Ash Gray — Muted body text, badge labels, icon strokes — third-tier text and metadata"
+    },
+    "smoke-gray": {
+      "$value": "#abafb4",
+      "$type": "color",
+      "$description": "Smoke Gray — Link color, inactive button text, supporting captions — fourth-tier text"
+    },
+    "iron": {
+      "$value": "#6e727a",
+      "$type": "color",
+      "$description": "Iron — Subtle decorative strokes, disabled states, low-emphasis borders"
+    },
+    "charcoal": {
+      "$value": "#464a4d",
+      "$type": "color",
+      "$description": "Charcoal — Inline code text, muted labels — text that should disappear into the surface"
+    },
+    "iris-violet": {
+      "$value": "#9281f7",
+      "$type": "color",
+      "$description": "Iris Violet — Violet text accent for links, tags, and emphasized short phrases; Diagonal violet-to-magenta gradient on icon containers and brand badges"
+    },
+    "iris-violet-glow": {
+      "$value": "#baa7ff",
+      "$type": "color",
+      "$description": "Iris Violet Glow — Violet text accent for links, tags, and emphasized short phrases"
+    },
+    "signal-blue": {
+      "$value": "#3b9eff",
+      "$type": "color",
+      "$description": "Signal Blue — Blue action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "sky-blue": {
+      "$value": "#70b8ff",
+      "$type": "color",
+      "$description": "Sky Blue — Blue text accent for links, tags, and emphasized short phrases"
+    },
+    "pulse-green": {
+      "$value": "#3ad389",
+      "$type": "color",
+      "$description": "Pulse Green — Green text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color"
+    },
+    "alarm-red": {
+      "$value": "#ff9592",
+      "$type": "color",
+      "$description": "Alarm Red — Red text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color"
+    },
+    "crimson": {
+      "$value": "#ff6465",
+      "$type": "color",
+      "$description": "Crimson — Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    },
+    "amber": {
+      "$value": "#ffca16",
+      "$type": "color",
+      "$description": "Amber — Yellow text accent for links, tags, and emphasized short phrases. Use as a supporting accent, not as a status color"
+    },
+    "amber-glow": {
+      "$value": "#ffd60a",
+      "$type": "color",
+      "$description": "Amber Glow — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    },
+    "surface-gradient": {
+      "$value": "#0b0e14",
+      "$type": "color",
+      "$description": "Surface Gradient — Subtle card-to-canvas surface lift — used in edge fades and elevated panels"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body copy, UI labels, navigation, buttons, links. The workhorse — appears 1280 times across every non-code surface."
+    },
+    "domaine": {
+      "$value": "Domaine",
+      "$type": "fontFamily",
+      "$description": "Hero display type — weight 400 at 96px with -0.01em tracking creates an editorial, almost-printed feel. Only used twice on the entire page for the largest hero statement."
+    },
+    "abc-favorit": {
+      "$value": "aBC Favorit",
+      "$type": "fontFamily",
+      "$description": "Section headlines and sub-headlines. The 56px weight-400 with -0.05em tracking is the signature — extreme negative tracking on a geometric sans creates a compressed, confident display feel that contrasts the editorial Domaine hero."
+    },
+    "commit-mono": {
+      "$value": "Commit Mono",
+      "$type": "fontFamily",
+      "$description": "Code blocks, inline code, terminal-style badges, API labels. Monospaced presence is the developer's identity signal — appears 814 times, rivaling Inter."
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Helvetica — detected in extracted data but not described by AI"
+    },
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "-apple-system — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://resend.com",
+      "siteName": "Resend",
+      "extractedAt": "2026-07-03T03:05:25.246Z",
+      "variant": "compact"
+    }
+  }
+}

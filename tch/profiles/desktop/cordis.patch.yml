@@ -1,0 +1,28 @@
+# Last layer of the desktop profile — runs after every bundle.
+#
+# Port 51720, NOT the `web` profile's 51710. The two profiles share one $DSH_HOME, so they
+# share sessions, credentials and settings — but each opens its own webserver, and two on the
+# same port means the second dies with EADDRINUSE.
+- id: webserver
+  config:
+    host: 127.0.0.1
+    port: 51720
+
+# dsh operator screens, not for customers — same as the web profile.
+#
+# The two PLUGIN pages (`ui-settings-plugins`, `ui-settings-plugin-inventory`) are DELIBERATELY
+# absent from this list (30/08): desktop is the operator's bench, and being unable to inspect
+# the plugin tree in the very app built to inspect it is blinding yourself.
+#
+# ⚠ Their absence is a DECISION, not unfinished work — without this note the next reader sees
+# only an incomplete list and "fixes" it in either direction, both of which look reasonable.
+#
+# ⚠ Do not copy this block into a CUSTOMER profile. There those two pages MUST be off: they let
+# you install/uninstall plugins, i.e. run arbitrary code in the sidecar. Plugin Market was
+# measured overwriting `package.json` and dropping other dependencies twice in one morning.
+- id: ui-brand-official
+  disabled: true
+- id: ui-settings-models
+  disabled: true
+- id: ui-cordis
+  disabled: true

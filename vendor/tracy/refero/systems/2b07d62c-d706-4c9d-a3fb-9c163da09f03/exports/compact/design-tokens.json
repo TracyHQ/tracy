@@ -1,0 +1,74 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Hero canvas, heavy structural borders, icon strokes — sets the high-contrast keynote-stage mood for the opening fold"
+    },
+    "ink": {
+      "$value": "#0f0f0f",
+      "$type": "color",
+      "$description": "Ink — Body and heading text on light surfaces, dark section borders"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, speaker card surfaces, light-section text on dark hero"
+    },
+    "ash": {
+      "$value": "#e2e2e2",
+      "$type": "color",
+      "$description": "Ash — Hairline borders, subtle icon fills, structural dividers between UI regions"
+    },
+    "mint-wash": {
+      "$value": "#c7f8fb",
+      "$type": "color",
+      "$description": "Mint Wash — Teal wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "emerald-band": {
+      "$value": "#24cb71",
+      "$type": "color",
+      "$description": "Emerald Band — Full-bleed accent section background — a bright green horizontal band that closes the hero composition"
+    }
+  },
+  "font": {
+    "source-sans-pro": {
+      "$value": "Source Sans Pro",
+      "$type": "fontFamily",
+      "$description": "Source Sans Pro — detected in extracted data but not described by AI"
+    },
+    "figma-sans-display": {
+      "$value": "Figma Sans Display",
+      "$type": "fontFamily",
+      "$description": "Headlines and display copy — used at 56–86px for hero ('Schema by Figma', 'Meet our speakers!') with tight leading (0.90–1.10) and -0.02em tracking that makes type feel carved from a block. Weight 400 carries the design; 700 is reserved for emphasis."
+    },
+    "figma-sans-text": {
+      "$value": "Figma Sans Text",
+      "$type": "fontFamily",
+      "$description": "Body, nav, button labels, supporting text. The companion text face at modest sizes (13–18px) with weight 400 as default and 600 for buttons/labels. -0.02em at 13px prevents the small type from feeling loose; 0.03em at 18px gives labels air."
+    },
+    "figma-mono": {
+      "$value": "Figma Mono",
+      "$type": "fontFamily",
+      "$description": "Code or metadata snippets — used sparingly at 16px with 0.03em tracking for an architectural, monospaced accent in a world of proportional text"
+    },
+    "figma-vf-normal-700-75": {
+      "$value": "Figma VF-normal-700-75",
+      "$type": "fontFamily",
+      "$description": "Figma VF-normal-700-75 — detected in extracted data but not described by AI"
+    },
+    "figma-vf-normal-400-100": {
+      "$value": "Figma VF-normal-400-100",
+      "$type": "fontFamily",
+      "$description": "Figma VF-normal-400-100 — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://schema.figma.com",
+      "siteName": "Schema",
+      "extractedAt": "2026-06-03T21:47:01.755Z",
+      "variant": "compact"
+    }
+  }
+}

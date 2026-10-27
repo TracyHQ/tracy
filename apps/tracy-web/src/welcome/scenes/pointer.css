@@ -1,0 +1,33 @@
+/* The one pointer of every scene (pointer.js): scene 1's round dot, the same build as Orca's
+   (a dot, a halo and a soft aura), drawn dark on light and with a light aura on dark.
+   --hs-inv (set by the scene) undoes part of the window scale so the pointer stays visible when
+   the window is drawn small. Its top-left is the top-left of its 12px box, in window pixels. */
+.hs-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 700ms cubic-bezier(.45, .05, .2, 1), transform 500ms cubic-bezier(.45, .05, .2, 1);
+}
+.hs-cursor.is-on { opacity: 1; }
+/* Its way in from beyond the window's corner, over 1800ms so the path can be followed. */
+.hs-cursor.is-enter { transition: opacity 0s, transform 1800ms cubic-bezier(.42, 0, .58, 1); }
+.hs-cursor.no-move, .hs-cursor.is-driven { transition: none; }
+.hs-cursor > span { position: absolute; left: 50%; top: 50%; border-radius: 50%; transform: translate(-50%, -50%) scale(var(--hs-inv, 1)); pointer-events: none; }
+.hs-aura { width: 28px; height: 28px; background: rgba(0, 0, 0, .10); filter: blur(5px); }
+.hs-halo { width: 16px; height: 16px; background: rgba(255, 255, 255, .55); box-shadow: 0 0 0 1px rgba(0, 0, 0, .28); }
+.hs-dot { width: 8px; height: 8px; background: #111; box-shadow: 0 0 0 1.5px #fff, 0 0 6px rgba(0, 0, 0, .35); }
+/* The click ripple (pointer.js): 44px at full size, a terracotta ring with a thin white edge on both sides so it reads on
+   light and dark pages and on a terracotta button. */
+.hs-ring { width: 44px; height: 44px; box-sizing: border-box; border: 2px solid rgba(191, 91, 61, .85); background: rgba(191, 91, 61, .10);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .75), inset 0 0 0 1px rgba(255, 255, 255, .75); }
+:root[data-theme="dark"] .hs-aura { background: rgba(255, 255, 255, .12); }
+@media (prefers-reduced-motion: reduce) { .hs-cursor { transition: none; } }
+/* The change highlight (pointer.js highlight()): a soft terracotta outline glow around the changed element's box, no fill, so
+   the content under it stays exactly as it is. The element must be positioned. */
+.hs-change-hl { position: absolute; inset: -4px; border-radius: 8px; pointer-events: none; z-index: 2;
+  box-shadow: 0 0 0 1.5px rgba(191, 91, 61, .75), 0 0 14px 3px rgba(191, 91, 61, .35); }

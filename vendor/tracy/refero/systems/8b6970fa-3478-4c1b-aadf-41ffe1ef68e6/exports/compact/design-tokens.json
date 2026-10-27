@@ -1,0 +1,39 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#0c0c0c",
+      "$type": "color",
+      "$description": "Ink — All text, links, nav items, body copy, client names, list items, and icon strokes. The near-black rather than pure black keeps type from feeling harsh against the warm canvas"
+    },
+    "paper": {
+      "$value": "#f9f7f4",
+      "$type": "color",
+      "$description": "Paper — Page background and primary canvas. A warm off-white with a faint yellow-pink cast — replaces the coldness of #fff with the tactility of uncoated stock"
+    },
+    "stone": {
+      "$value": "#e3e1dd",
+      "$type": "color",
+      "$description": "Stone — Secondary surface tone, subtle dividers, and any banded section that needs a half-step away from the canvas without introducing a true contrast color"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Reserved for the highest-weight text moments where pure black is needed — typically the display headline and nav lockups. Slightly heavier than Ink for typographic emphasis rather than color contrast"
+    }
+  },
+  "font": {
+    "pp-neue-montreal": {
+      "$value": "PP Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "The single typeface carrying all text — nav, body, list items, section headers, and the 111px display headline. The fact that only weight 400 is used is the signature: no bold cuts exist, so hierarchy is built entirely through scale jumps (10→22→33→44→67→111) and the single tight line-height range. This produces a typeface system that reads as confident restraint rather than typographic volume. PP Neue Montreal's geometric-but-warm character pairs with the warm Paper canvas to feel editorial rather than corporate."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://twocreate.com",
+      "siteName": "Twocreate",
+      "extractedAt": "2026-06-03T18:04:20.123Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,332 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/purity-iii",
+  "minVersion": {
+    "quickstart/purity-iii/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/purity-iii/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/purity-iii/j6@1.0.1",
+  "roles": {
+    "page": "body",
+    "display": "h1",
+    "body": "div.col-md-4 p",
+    "button-primary": "div.wrap.btn-actions a.btn.btn-primary",
+    "section": "#Mod202"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 84px",
+    "displayFace": "Helvetica Neue 300, tracking 0em",
+    "body": "first body paragraph",
+    "button-primary": "first filled call to action outside a kept band: rgb(0, 119, 187)",
+    "section": "first padded full-width section, padding-top 60px"
+  },
+  "keepScopes": [".navbar", ".row-feature-primary"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#444444",
+    "--fg-2": "#444444",
+    "--accent": "#0077bb",
+    "--accent-hover": "#00466e",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#3e9b52",
+    "--warn": "#ff8800",
+    "--danger": "#cc0000",
+    "--border": "#eeeeee",
+    "--muted": "#666666",
+    "--font-display": "\"Helvetica Neue\", sans-serif",
+    "--font-body": "\"Helvetica Neue\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#0077bb"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#444444",
+      "fg-2": "#222222",
+      "accent": "#0077bb",
+      "accent-hover": "#00466e",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#3e9b52",
+      "warn": "#ff8800",
+      "danger": "#cc0000",
+      "border": "#eeeeee",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#ffffff",
+      "surface": "#f7f7f7",
+      "fg": "#666666",
+      "fg-2": "#444444",
+      "accent": "#0077bb",
+      "accent-on": "#ffffff",
+      "surface-warm": "#0077bb"
+    },
+    {
+      "accent": "#0077bb"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#eeeeee",
+      "success": "#468847",
+      "border-soft": "#e5e5e5",
+      "accent-hover": "#005875",
+      "accent": "#0086b3"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border-soft": "#e1e1e1",
+      "success": "#378948",
+      "accent-hover": "#004064"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border-soft": "#e3e3e3",
+      "success": "#44aa5a"
+    },
+    {
+      "surface": "#f9f2f4",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "surface": "#f0f0f0",
+      "border-soft": "#e5e7eb"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (73 line colours, 74 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Mod202"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".features-intro .row-feature a:not([class*=btn]):not(:has(img))",
+    "muted": ".features-intro .row-feature p:not(.lead)",
+    "body": ".features-intro .row-feature :is(p, li)",
+    "heading": ".features-intro .row-feature :is(h1, h2, h3, h4)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 18 tried (byte 5656); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 212,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 40,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 35,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#468847",
+      "uses": 32,
+      "kind": "line",
+      "role": "success",
+      "near": "#3e9b52",
+      "distance": 23
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 28,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#005875",
+      "uses": 18,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#00466e",
+      "distance": 19
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 18,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#378948",
+      "uses": 12,
+      "kind": "line",
+      "role": "success",
+      "near": "#3e9b52",
+      "distance": 22
+    },
+    {
+      "hex": "#0086b3",
+      "uses": 12,
+      "kind": "line",
+      "role": "accent",
+      "near": "#0077bb",
+      "distance": 17
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 7,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#004064",
+      "uses": 7,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#00466e",
+      "distance": 12
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 7,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 12
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 7,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#44aa5a",
+      "uses": 6,
+      "kind": "fill",
+      "role": "success",
+      "near": "#3e9b52",
+      "distance": 18
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 12
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "licence": "purity_III (JoomlArt, GNU/GPLv3, templateDetails.xml): a tokenized re-release is allowed",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on purity-iii/j6 1.0.0 with its stylesheets tokenized as 1.0.1 ships them (tasks/evidence/ds-contracts-batch4-2026-10-11): 12/12, controls 0 differences, no text made less readable than the template's own under the four systems tried, 87%–92% of the page follows. The page colours follow only from 1.0.1 (the re-release in ~/tracy-bench-work/RELEASE-DS-BATCH4.sh, not yet uploaded); a site still on 1.0.0 wearing a system was not measured. Re-measured 11/10/2026 with the per-element probe on quickstart/purity-iii/j6 1.0.1 (its minVersion, from the local build in ~/tracy-bench-work/release/ds-batch4/purity-iii, the same zip as the published one: sha256 feca6cdf…588a; tasks/evidence/ds-remeasure-5-2026-10-11/purity-iii): 12/12 with Moxie, MotherDuck, Toggl Track, Apple, controls 0 differences, no text made less readable than the template's own, 80%–92% of the page follows; checked by eye under Moxie and Toggl Track (dark), MotherDuck and Apple (light). Before the fixes 4/12: every contrast kind but the footer found no element (the home page has no #t3-mainbody or .t3-sl), and the blue header and intro band showed 18 kept-band differences (their texts took the system's colour, unseen); by eye the extension logo tiles and the footer T3 logo went dark on a dark system. Fixed with contrast kinds on .features-intro, keepColors and two dark sideRules",
+  "contrastNote": "the home page is one .t3-wrapper.features-intro of .row-feature modules (no #t3-mainbody, no .t3-sl): the contrast kinds read those, so every text of the page is judged (11/10/2026; before, only the footer was)",
+  "keepColors": {
+    ".navbar": "#444444",
+    ".row-feature-primary": "#bbe6ff"
+  },
+  "keepNote": "the blue header (.navbar) and the blue intro band (.row-feature-primary) keep the template's own colours; the texts they inherit get the band's own colour back (keepColors, read off the released page), where the header's computed colour followed the system's text (found 11/10/2026: 18 kept-band differences, none visible)",
+  "sideRules": {
+    "dark": {
+      ".row-feature a.thumbnail:has(img)": {
+        "background-color": "#ffffff"
+      },
+      ".poweredby .t3-logo": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      }
+    }
+  },
+  "sideNote": "the extension logos of Highly Compatible are pictures drawn for a white tile (a.thumbnail): under a dark system the tile stays white, as a frame, where the dark names in the pictures vanished on the dark tile (seen by eye 11/10/2026 under Moxie and Toggl Track); the footer's T3 Framework logo (.poweredby .t3-logo, a dark-grey picture drawn for the white footer; the template's light variant is a url() a rule may not carry) is inverted with its hue kept, where its name sank into a dark footer",
+  "bands": {
+    ".navbar": {
+      "ground": "#0077bb",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".caret": {
+          "border-color": "accent-fill"
+        },
+        ".dropdown-toggle": {
+          "color": "accent"
+        },
+        ".nav li a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".row-feature-primary": {
+      "ground": "#0077bb",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".jumbotron p": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".jumbotron.jumbotron-primary:not(.masthead)": {
+      "ground": "#0077bb",
+      "texts": ["#ffffff", "#bbe6ff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".container h1", ".container p"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent; reviewed 14/10/2026: the drafted fill .jumbotron.jumbotron-primary is the inner pages’ page-title band (/index.php/layout): its ground follows the accent while its title and lead were the template’s white and pale blue, white on a light accent (Mailchimp, Moxie); its words are now the fill’s (dark on Mailchimp’s yellow and Moxie’s light blue, white on Stripe’s indigo)",
+  "reviewV8Note": "15/10/2026 (look review v8): the fill band drafted from the layout page (.jumbotron.jumbotron-primary) also painted the home masthead, which the template draws transparent on its row: the band key leaves the masthead out (:not(.masthead))"
+}

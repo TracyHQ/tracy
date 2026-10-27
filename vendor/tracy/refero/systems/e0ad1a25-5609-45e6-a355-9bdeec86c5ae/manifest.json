@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e0ad1a25-5609-45e6-a355-9bdeec86c5ae",
+  "status": "complete",
+  "name": "Coda",
+  "url": "https://styles.refero.design/style/e0ad1a25-5609-45e6-a355-9bdeec86c5ae",
+  "sourceWebsite": "https://www.coda.co",
+  "extractedAt": "2026-06-03T16:57:55.775Z",
+  "capturedAt": "2026-10-08T05:18:28.850323+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Monumental letters on warm cream parchment — Coda reads like a hand-set marketplace poster, not a SaaS dashboard.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/20140c33-8ebb-41e4-88a4-ff797a702b93.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3c52f49aa724fc98a8e6001c28073a5874a609142f90cab97a3eec17922835eb",
+      "bytes": 25247
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ff06592a9e2463f609af59f45e9de70da820c7935abd5101a2e742d28ef277b8",
+      "bytes": 77855
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "848d4c6480f06738e828b22edbb4aca1752e6e740700344b19c0dfc3624d32b0",
+      "bytes": 20797
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f4491532e609d7ca4e8d873404c91ef8ff0ff5f19386624121e69c1ebea782a4",
+      "bytes": 15805
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "286e6098df22202d3c164dbdd9f6641bb8fcb4345549f4bbb1b7a05f7fcbc77b",
+      "bytes": 15015
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f732396868bcaefad273b2a63bb21e9b85367b3b09ce0facc6bc00906b301ed1",
+      "bytes": 4337
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "63258d602fee45df39e693aafba78a0fc8c3ecd4d79ca7d017665a4f25c1c489",
+      "bytes": 1069
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f282bc5e27c00bcf047835efe2266de3d7b902ca86df0ca6b78fbcd3300ae3aa",
+      "bytes": 1086
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "0094fb29e804b7df489f6cded308d51bb01b4cf1f1ecc5b6e2b594b98e108cd4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "6a90a2392814e7f6343feaa16d9fd00170946dd7566dd3589fc793eba823f641",
+      "bytes": 48485
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "d1dea382752bed2f4112a1ae0be4659dddf342037372bae1d27fae3b9357540b",
+      "bytes": 25337
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "2d30ed4e1e2018d5caf537274e063de7893ead93cb849c2b26bf2d3e0f38dbde",
+      "bytes": 60185
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "72f9f12d56aea30ca52a7f40042fa008e99e7f0dda1d566350a051de2acb0498",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6bb30c1bb190f02fea7471c21b0ec860a77bb87de345fb4dbc2526bc1bf7da97",
+      "bytes": 2389
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "993b8cbe41a978b8af3977b97dff8f1d00cf4e13ff846a17a392fd50c4bd02da",
+      "bytes": 3174
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "0f0d4cb7-5109-4e81-8c8d-f6bd0441b27c",
+    "2db41cd9-c898-4f59-b704-3042c0d87f45",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "d95a35c2-d3f7-49e7-9ba7-282d52d3211d",
+    "e0ad1a25-5609-45e6-a355-9bdeec86c5ae",
+    "f1bff240-fa05-41db-9ae1-b165ea6ea2cb",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fc84e9f0-2058-4a0a-8d26-9cc1ba84ec9c"
+  ]
+}

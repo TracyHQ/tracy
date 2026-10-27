@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1073-desktop-dev-profile-and-release-preflight",
+  "kind": "feat",
+  "title": "Desktop app source runs keep one profile per worktree, origin and instance; a release is prepared into a frozen manifest and published only after its checks pass",
+  "pr": 1073,
+  "area": "desktop/release",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test packages/desktop/tracy-desktop/test/dev-profile.test.mjs packages/desktop/tracy-desktop/test/release-preflight.test.mjs packages/desktop/tracy-desktop/test/server-contract.test.mjs packages/desktop/tracy-desktop/test/release.test.mjs",
+    "S2: Read the pass/fail counts and the named tests below."
+  ],
+  "expect": [
+    "0 failures.",
+    "Two worktrees, two origins and two instances give four different profile folders; a packaged app keeps Electron's own folder.",
+    "A second launch with an explicit TRACY_DESKTOP_INSTANCE on a busy profile fails loudly instead of driving the other process's window.",
+    "Preflight fails a dirty tree, a sha outside the channel branch, a sha without a successful Tracy CI run on exactly that sha, and a version not above the channel feed.",
+    "Prepare never writes a channel file and never builds a feed variant ad-hoc; publish writes the channel file exactly as the manifest froze it, refuses a wrong digest, a replaced artifact, a changed feed, a held lock, a second build of a published version, and stable without the stable key."
+  ],
+  "selectors": {
+    "profile": "packages/desktop/tracy-desktop/src/dev-profile.js",
+    "preflight": "packages/desktop/tracy-desktop/build/release-preflight.mjs preflight",
+    "contract": "packages/desktop/tracy-desktop/server-contract.json",
+    "release": "packages/desktop/tracy-desktop/build/release.mjs prepare publish"
+  },
+  "fence": "devProfile() folder derivation and the second-instance decision; preflight(facts) check list",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/desktop/tracy-desktop/test/dev-profile.test.mjs",
+      "packages/desktop/tracy-desktop/test/release-preflight.test.mjs",
+      "packages/desktop/tracy-desktop/test/server-contract.test.mjs",
+      "packages/desktop/tracy-desktop/test/release.test.mjs"
+    ],
+    "tests": [
+      "two worktrees, two origins and two instances give four different folders",
+      "a packaged app keeps Electron’s folder and ignores both variables, even invalid ones",
+      "a second launch with an explicit instance fails loudly, naming the profile",
+      "a dirty tree fails, and names what is dirty",
+      "a sha that is not in the channel branch history fails",
+      "only a completed, successful Tracy CI run on exactly this sha counts",
+      "the candidate version must be strictly greater than the one on the channel feed",
+      "prepare uploads the artifacts and a manifest into <variant>/<version>/<build-id>/, and never a channel file",
+      "prepare stops before building when this machine has no Developer ID — never ad-hoc for a feed build",
+      "publish refuses a manifest whose digest is not the one given, and writes nothing",
+      "a second build of a published version is refused",
+      "publish refuses when the feed changes between its checks and its write",
+      "publishing stable without the stable key stops before touching the target",
+      "release notes that name a third party fail; effects pass; no notes is not checked",
+      "prepare refuses release notes that name a third party, before building"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "color": {
+    "page-cream": {
+      "$value": "#fffef2",
+      "$type": "color",
+      "$description": "Page Cream — Universal page background and card surface — the warm, almost unbleached paper that defines the entire visual temperature"
+    },
+    "ink-black": {
+      "$value": "#191918",
+      "$type": "color",
+      "$description": "Ink Black — Primary text color, dark surface fills, and code-window backgrounds — warm near-black, never pure optical black"
+    },
+    "rule-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Rule Black — Structural hairlines and borders — 1px lines that define cards, separate sections, and replace shadow as the elevation language"
+    },
+    "warm-stone": {
+      "$value": "#75756f",
+      "$type": "color",
+      "$description": "Warm Stone — Muted body text, secondary borders, and inactive link states — a warm gray that recedes without going cool"
+    },
+    "linen-beige": {
+      "$value": "#edece0",
+      "$type": "color",
+      "$description": "Linen Beige — Secondary elevated surface — warm light beige for tags, subtle background panels, and hover washes that lift off the cream canvas"
+    },
+    "ash-gray": {
+      "$value": "#bab9b0",
+      "$type": "color",
+      "$description": "Ash Gray — Tertiary dividers and inactive UI elements — a mid-warm gray for the lightest structural lines"
+    },
+    "amber-signal": {
+      "$value": "#fcaa2d",
+      "$type": "color",
+      "$description": "Amber Signal — Yellow outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "parabole-trial": {
+      "$value": "Parabole Trial",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all display, heading, and body contexts. Regular weight 400 carries body and display; Medium 500 handles subheadings (20px) and emphasis captions (14px). The aggressively tight tracking at large sizes (-0.05em at 64px) is a signature choice — display headlines compress into a confident block rather than spreading airy. Substitute: 'Instrument Sans' or 'Space Grotesk' from Google Fonts for the closest free match to Parabole's geometric character"
+    },
+    "decima-mono-pro": {
+      "$value": "Decima Mono Pro",
+      "$type": "fontFamily",
+      "$description": "Monospace for all UI chrome: version labels, timeline ticks, navigation micro-text, code blocks, badge labels, and tag metadata. The slight positive tracking (0.03–0.04em) at small sizes is anti-default — monospace usually tightens at small sizes, but this opens up to read clearly as inline UI text. Substitute: 'JetBrains Mono' or 'IBM Plex Mono'"
+    },
+    "parabole-trial-regular-text": {
+      "$value": "Parabole Trial Regular Text",
+      "$type": "fontFamily",
+      "$description": "Parabole Trial Regular Text — detected in extracted data but not described by AI"
+    },
+    "parabole-trial-regular-display": {
+      "$value": "Parabole Trial Regular Display",
+      "$type": "fontFamily",
+      "$description": "Parabole Trial Regular Display — detected in extracted data but not described by AI"
+    },
+    "karla": {
+      "$value": "Karla",
+      "$type": "fontFamily",
+      "$description": "Karla — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://relace.ai",
+      "siteName": "Relace",
+      "extractedAt": "2026-06-03T20:56:46.633Z",
+      "variant": "compact"
+    }
+  }
+}

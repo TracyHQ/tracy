@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-unsubscribe-token-token-replay",
+  "itemIds": ["flow:unsubscribe-token"],
+  "requirement": "pressing the link again is harmless: the token is not consumed",
+  "oracle": {
+    "source": "apps/tracy-web/src/lib/unsubscribe-token.js header",
+    "ref": "apps/tracy-web/src/lib/unsubscribe-token.js header",
+    "invariant": "repeating it is harmless; no one-shot bookkeeping"
+  },
+  "edgeTags": ["token-replay", "repeat"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.unsubscribe.token#repeat-is-harmless"],
+  "redProof": null,
+  "legacyIds": []
+}

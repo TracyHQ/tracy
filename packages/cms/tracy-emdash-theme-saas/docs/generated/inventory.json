@@ -1,0 +1,1371 @@
+{
+  "format": 1,
+  "scope": "Source baseline only. No live IDs, credentials, entry bodies or runtime verification.",
+  "template": {
+    "id": "tracy-saas",
+    "label": "Tracy SaaS",
+    "version": "1.4.14"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "collections": [
+    {
+      "slug": "pages",
+      "label": "Pages",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "view",
+          "label": "View",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "filter",
+          "label": "Filter",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "style",
+          "label": "Style",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sections",
+          "label": "Sections",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 23
+    },
+    {
+      "slug": "posts",
+      "label": "Blog posts",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "slug": "cover",
+          "label": "Cover",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author_role",
+          "label": "Author role",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "featured",
+          "label": "Featured",
+          "type": "boolean",
+          "required": false
+        }
+      ],
+      "seedEntries": 240
+    },
+    {
+      "slug": "hero",
+      "label": "Hero sections",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta1_label",
+          "label": "Cta1 label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta1_link",
+          "label": "Cta1 link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta2_label",
+          "label": "Cta2 label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta2_link",
+          "label": "Cta2 link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "trust",
+          "label": "Trust",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image_terminal",
+          "label": "Image terminal",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "image_blueprint",
+          "label": "Image blueprint",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "image_signal",
+          "label": "Image signal",
+          "type": "image",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "clients",
+      "label": "Logo & integration strips",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "caption",
+          "label": "Caption",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "ticker_label",
+          "label": "Ticker label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "ticker",
+          "label": "Ticker",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 3
+    },
+    {
+      "slug": "bento",
+      "label": "Bento grids",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "incident_timeline",
+      "label": "Timelines",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "columns",
+          "label": "Columns",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 3
+    },
+    {
+      "slug": "kineticql_split",
+      "label": "Query splits",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_label",
+          "label": "Cta label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link",
+          "label": "Cta link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "image_terminal",
+          "label": "Image terminal",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "image_blueprint",
+          "label": "Image blueprint",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "image_signal",
+          "label": "Image signal",
+          "type": "image",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "features_ledger",
+      "label": "Feature ledgers & metrics",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "layout",
+          "label": "Layout",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "card_label",
+          "label": "Card label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "card_badge",
+          "label": "Card badge",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 5
+    },
+    {
+      "slug": "testimonials",
+      "label": "Testimonials",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "cta",
+      "label": "Calls to action",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "variant",
+          "label": "Variant",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn1_label",
+          "label": "Btn1 label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn1_link",
+          "label": "Btn1 link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn2_label",
+          "label": "Btn2 label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn2_link",
+          "label": "Btn2 link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chip",
+          "label": "Chip",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "chip_link",
+          "label": "Chip link",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 13
+    },
+    {
+      "slug": "page_masthead",
+      "label": "Page mastheads",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "align",
+          "label": "Align",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 8
+    },
+    {
+      "slug": "pricing",
+      "label": "Pricing plans",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "meta",
+          "label": "Meta",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "inc_title",
+          "label": "Inc title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "inc_desc",
+          "label": "Inc desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "inc_cta_label",
+          "label": "Inc cta label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "inc_cta_link",
+          "label": "Inc cta link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "pricing_matrix",
+      "label": "Plan comparison",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "col1_name",
+          "label": "Col1 name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "col2_name",
+          "label": "Col2 name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "col3_name",
+          "label": "Col3 name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "corner_label",
+          "label": "Corner label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "accordion",
+      "label": "FAQ lists",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "features_intro",
+      "label": "Feature grids",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "columns",
+          "label": "Columns",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 3
+    },
+    {
+      "slug": "prose_quote",
+      "label": "Story with quote",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "quote",
+          "label": "Quote",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "attribution",
+          "label": "Attribution",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "number",
+          "label": "Number",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "meta",
+          "label": "Meta",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "teams",
+      "label": "Team grids",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "eyebrow",
+          "label": "Eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "columns",
+          "label": "Columns",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "social",
+      "label": "Footer brand",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "size",
+          "label": "Size",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "align",
+          "label": "Align",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "brand",
+          "label": "Brand",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "logo",
+          "label": "Logo",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "footerlegal",
+      "label": "Footer legal",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "copyright",
+          "label": "Copyright",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "header_cta",
+      "label": "Header buttons",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "show_signin",
+          "label": "Show signin",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "signin_label",
+          "label": "Signin label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "signin_link",
+          "label": "Signin link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_label",
+          "label": "Cta label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link",
+          "label": "Cta link",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "faq_support",
+      "label": "Support cards",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_label",
+          "label": "Btn label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_link",
+          "label": "Btn link",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "newsletter",
+      "label": "Newsletter band",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "text",
+          "label": "Text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "placeholder",
+          "label": "Placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "button_label",
+          "label": "Button label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "writers",
+      "label": "Writers",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "name",
+          "label": "Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "username",
+          "label": "Username",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "role",
+          "label": "Role",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bio",
+          "label": "Bio",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "tagline",
+          "label": "Tagline",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "avatar",
+          "label": "Avatar",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "sort",
+          "label": "Sort",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "seedEntries": 4
+    },
+    {
+      "slug": "contact_block",
+      "label": "Contact block",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    }
+  ],
+  "menus": [
+    {
+      "name": "mainmenu",
+      "label": "mainmenu",
+      "locale": "en",
+      "items": 32
+    },
+    {
+      "name": "footer-product",
+      "label": "Product",
+      "locale": "en",
+      "items": 4
+    },
+    {
+      "name": "footer-dev",
+      "label": "Developers",
+      "locale": "en",
+      "items": 4
+    },
+    {
+      "name": "footer-company",
+      "label": "Company",
+      "locale": "en",
+      "items": 4
+    },
+    {
+      "name": "legal",
+      "label": "legal",
+      "locale": "en",
+      "items": 2
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 9
+    },
+    {
+      "name": "tag",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 12
+    }
+  ],
+  "formBindings": [
+    {
+      "form": "newsletter-{locale}",
+      "collection": "newsletter",
+      "slug": "footer-newsletter",
+      "field": "form_id"
+    },
+    {
+      "form": "contact-{locale}",
+      "collection": "contact_block",
+      "slug": "helix-support",
+      "field": "form_id"
+    }
+  ],
+  "dependencies": {
+    "@astrojs/node": "11.1.3",
+    "@astrojs/react": "6.0.0",
+    "@cloudflare/kumo": "2.6.0",
+    "@emdash-cms/auth": "1.1.0",
+    "@emdash-cms/plugin-audit-log": "0.2.3",
+    "@emdash-cms/plugin-forms": "0.2.9",
+    "@phosphor-icons/react": "2.1.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.2.8",
+    "better-sqlite3": "12.11.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "emdash": "1.1.0",
+    "emdash-smtp": "0.3.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0",
+    "lucide-react": "1.45.0",
+    "radix-ui": "1.6.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3"
+  },
+  "dependencyNotice": "Declared pins only; enabled plugin registration is owned by astro.config.mjs. Native CMS capabilities need not be separate dependencies.",
+  "routeFiles": [
+    "src/pages/404.astro",
+    "src/pages/[...path].astro"
+  ],
+  "routeNotice": "Route source files only, not expanded URLs. Dynamic/catch-all dispatch and CMS routes require authored guidance and runtime crawl evidence.",
+  "sourceFiles": [
+    "src/components/Icon.astro",
+    "src/components/blog/AuthorProfile.astro",
+    "src/components/blog/Avatar.astro",
+    "src/components/blog/Chips.astro",
+    "src/components/blog/CodeBlock.astro",
+    "src/components/blog/Masthead.astro",
+    "src/components/blog/Pagination.astro",
+    "src/components/blog/PostCard.astro",
+    "src/components/blog/Prose.astro",
+    "src/components/blog/ProseBlock.astro",
+    "src/components/blog/StaticPage.astro",
+    "src/components/islands/MegaMenu.tsx",
+    "src/components/islands/MobileNav.tsx",
+    "src/components/islands/Newsletter.tsx",
+    "src/components/islands/nav.ts",
+    "src/components/sections/Accordion.astro",
+    "src/components/sections/Bento.astro",
+    "src/components/sections/Clients.astro",
+    "src/components/sections/ContactBlock.astro",
+    "src/components/sections/Cta.astro",
+    "src/components/sections/FaqSupport.astro",
+    "src/components/sections/FeaturesIntro.astro",
+    "src/components/sections/FeaturesLedger.astro",
+    "src/components/sections/Hero.astro",
+    "src/components/sections/IncidentTimeline.astro",
+    "src/components/sections/KineticqlSplit.astro",
+    "src/components/sections/PageMasthead.astro",
+    "src/components/sections/Pricing.astro",
+    "src/components/sections/PricingMatrix.astro",
+    "src/components/sections/ProseQuote.astro",
+    "src/components/sections/Teams.astro",
+    "src/components/sections/Testimonials.astro",
+    "src/components/sections/a/panel.ts",
+    "src/components/sections/c/Col.astro",
+    "src/components/sections/c/RuledHead.astro",
+    "src/components/sections/c/SocialIcon.astro",
+    "src/components/sections/registry.ts",
+    "src/components/site/BrandLogo.astro",
+    "src/components/site/Footer.astro",
+    "src/components/site/FormWords.astro",
+    "src/components/site/Header.astro",
+    "src/components/site/LogoMark.astro",
+    "src/components/site/PageOwner.astro",
+    "src/components/site/ProseBlock.astro",
+    "src/components/site/ProseListItem.astro",
+    "src/components/site/ProseQuote.astro",
+    "src/components/site/ThemeToggle.astro",
+    "src/fonts.json",
+    "src/layouts/Base.astro",
+    "src/lib/brand.ts",
+    "src/lib/category-icons.ts",
+    "src/lib/chrome.ts",
+    "src/lib/display-locale.ts",
+    "src/lib/ds-slot.ts",
+    "src/lib/font-subsets.mjs",
+    "src/lib/form-embed-words.ts",
+    "src/lib/hreflang-plugin.ts",
+    "src/lib/hreflang.ts",
+    "src/lib/i18n.ts",
+    "src/lib/link-gate.ts",
+    "src/lib/listed-children.ts",
+    "src/lib/media.ts",
+    "src/lib/page-records.ts",
+    "src/lib/posts.ts",
+    "src/lib/public-origin.ts",
+    "src/lib/sections.ts",
+    "src/lib/stamps.ts",
+    "src/lib/ui-words.ts",
+    "src/lib/ui.ts",
+    "src/lib/utils.ts",
+    "src/live.config.ts",
+    "src/middleware.ts",
+    "src/pages/404.astro",
+    "src/pages/[...path].astro",
+    "src/styles/global.css",
+    "src/styles/tokens.css",
+    "src/views/Archive.astro",
+    "src/views/Article.astro",
+    "src/views/Authors.astro",
+    "src/views/Blog.astro",
+    "src/views/Legal.astro",
+    "src/views/NotFound.astro",
+    "src/views/Search.astro",
+    "src/views/Sections.astro",
+    "src/views/Terms.astro",
+    "src/views/partials/PageHead.astro"
+  ],
+  "inputs": {
+    "astro.config.mjs": "sha256:7cc314c4b87820302748be68e12231909682818b8a5c3169af1bd70659b2cb9e",
+    "package.json": "sha256:2957904b4a770800333d3272f86cacbc611fd3857807dff4f155d5dbdec0d3d4",
+    "pnpm-lock.yaml": "sha256:604c8a85fa3fe073389043da5dca2f78cb69aa33764b867de68a5b2024168610",
+    "seed/field-map.json": "sha256:26b1953aa4492dc523b83fce3c98e9a2de279a003f9e6e038f29a8619d6f885f",
+    "seed/media-map.json": "sha256:39f24f782e8ddeea43591a63dcebba5d0f22d96e17ba34eccc655fe5ce1b8990",
+    "seed/seed.json": "sha256:becf582ea6274450500763edab6b290f12e5940c40e9b558592b3d5b98b296ff",
+    "src/components/blog/AuthorProfile.astro": "sha256:c137c8e8325e8a5a5ed60dfe1a3dfaa81f7a79a5578aa148d1a623aff482eac7",
+    "src/components/blog/Avatar.astro": "sha256:0be28c471440fe629ffb0a2a3144c5aa8279498785826313ecaa1726c6ac4eeb",
+    "src/components/blog/Chips.astro": "sha256:46d5bff074352f498eda725e8a8a021ed152b48f57cae91a23b04cc3dc494321",
+    "src/components/blog/CodeBlock.astro": "sha256:75b08c888cbbf43b4bc6e52cf1184cc56363ba437f49f676afa0b262651e5cda",
+    "src/components/blog/Masthead.astro": "sha256:6d6e6159c822a12a896a586818a1fbe99037701e5f657eb2eaa587854152b1c0",
+    "src/components/blog/Pagination.astro": "sha256:35839ac2a7abe4f331ca1e49fec7261ffa78bf0f1657ba6352a6e2802d61b134",
+    "src/components/blog/PostCard.astro": "sha256:72f939147f8235f108255ce7eb16872b55c71f80279669c3316c8156d7f7dc25",
+    "src/components/blog/Prose.astro": "sha256:d3259a293f94b35c0d885c9fc6a38b1b30f92b7d7f4462fc681dc369143da96c",
+    "src/components/blog/ProseBlock.astro": "sha256:45fe5c35806bc09092ae53fccd8328d4cf604c9836664b7f7c9c0af357ef0ecd",
+    "src/components/blog/StaticPage.astro": "sha256:6f69f0915647bdb6e001b5dfbaa10a061bbc17cac0aa96782bc8acbb404ef69a",
+    "src/components/Icon.astro": "sha256:0cef95a26d113020d02c48be9ff499a3009e58081770a415b46a767f9c3c507b",
+    "src/components/islands/MegaMenu.tsx": "sha256:ef2b02a6ac291f09a033bd38f9038d003afbb06ff8e14c47cbeb939d895b3911",
+    "src/components/islands/MobileNav.tsx": "sha256:21b50a7de4f043f67647da4ff63285b9ba918012d04b94e608cde1f797e0e723",
+    "src/components/islands/nav.ts": "sha256:cc3df538215e7781b8ce61900325f1d2aaaeeaeecde517ce17f95bce98ca8bd0",
+    "src/components/islands/Newsletter.tsx": "sha256:96e1bd286526514ea701a89782770205e3689f60459f8d03d7c8f35c7c9a4bf4",
+    "src/components/sections/a/panel.ts": "sha256:62ff71d2a9811851d42cbc3ecdcfcf704ec6b54120d746688e4ef215f1e6a48a",
+    "src/components/sections/Accordion.astro": "sha256:5547b74c74441ac28376b89f2ae70ad5788919458c20c6202bcbd0b87fd54888",
+    "src/components/sections/Bento.astro": "sha256:1006455f9dd07008624e350cfa4560fd67125bfd3ebf65f5d634ca4651779290",
+    "src/components/sections/c/Col.astro": "sha256:3193608c2e6e43752dc734adac0a12d088db9f26d44773999f426f76b52ba0e4",
+    "src/components/sections/c/RuledHead.astro": "sha256:69a2b206fa262016b9bfc33a9fc7e812348db6557486aa4e4e9f978680fbc21d",
+    "src/components/sections/c/SocialIcon.astro": "sha256:bce1e4c553f8fc562a16f8f19c93ad0cdd9eadb0336c1f34a327f7154862e104",
+    "src/components/sections/Clients.astro": "sha256:33220cd87d719b068702e128b53332c033ca52e019cc1450eaf1620a3eaa2309",
+    "src/components/sections/ContactBlock.astro": "sha256:2178e3ad1b8072c76b5bbd0d84e0db9a05980cf99b709176f88f5a703b2ba129",
+    "src/components/sections/Cta.astro": "sha256:e86f0927cfc7a41594684f651606d5fcf3af99c5e30e80ae6b0d3d6458109b87",
+    "src/components/sections/FaqSupport.astro": "sha256:d0aa0c1cd01c72689883d08112a6746a237f50e40db908218295cfb6dcad2971",
+    "src/components/sections/FeaturesIntro.astro": "sha256:2fdefd6984338524f7815bf3dfe21c7268aad40fcbaacad98841e2a2da536de8",
+    "src/components/sections/FeaturesLedger.astro": "sha256:be4ffdf5579a99de3c90928faa1d7dc9af480cd5dd92da400d1a993423746b16",
+    "src/components/sections/Hero.astro": "sha256:f54db4792208e288c0de2723a1c38544119cad43e66b0b80719270b4669fbeea",
+    "src/components/sections/IncidentTimeline.astro": "sha256:56e5355e0b97a6a99d8c68441c575c4645c806695f099bc0c4dee1ce6dfba95a",
+    "src/components/sections/KineticqlSplit.astro": "sha256:7412e9fbb35d3a15b5f52ace88f5a09409ace83331123d87a46d136ff2ed4f6a",
+    "src/components/sections/PageMasthead.astro": "sha256:81a368bc008b9e2991276fea5fd1ec2b88661711d335916e9209040abd2b33bd",
+    "src/components/sections/Pricing.astro": "sha256:f1e137c4ae4417161603d091db6e72d06cfc8e5d236461317808be40ef0f3e3f",
+    "src/components/sections/PricingMatrix.astro": "sha256:5ed0cd6a2ea4d2581f96997d9b8fa7c1c4ff0e2127adeb63a677558344b11488",
+    "src/components/sections/ProseQuote.astro": "sha256:17348dcf92d697a3cdbb7b8dba24753d1f9a55f8ce8184008ac58350daebe1a9",
+    "src/components/sections/registry.ts": "sha256:4ee2cf2bf3c2d31844eb576051fc8a918c9d9d86e0fba61f563abfdf5b39245d",
+    "src/components/sections/Teams.astro": "sha256:b89c45996edea01f4c01448c175c67fdda69e4999e8bb31fab65eeaeeb9ff2c3",
+    "src/components/sections/Testimonials.astro": "sha256:a4eaac8f19198e14f7194df43b13ed3da6aad93592161352a3da79671cd14273",
+    "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
+    "src/components/site/Footer.astro": "sha256:5d53e48d5a5132031454576f7fd4b46708fc1ec08817f50f62d6ca92b747314f",
+    "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
+    "src/components/site/Header.astro": "sha256:454e2d8bb008f12cf70e3ef141b722b37e2f1b278f0ba5ee0d1ba33e52ae8a47",
+    "src/components/site/LogoMark.astro": "sha256:3e1d7b2faba82cfe05f537177787d02b50245489bb08ffee0ed8667eea2db814",
+    "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
+    "src/components/site/ProseBlock.astro": "sha256:aae09606433eaaa875e7b16087bc404ed440e95c9fb56cf764ad2ea530364240",
+    "src/components/site/ProseListItem.astro": "sha256:e2c0293803a3cc1337b84ec79f684d76be0819335d31b5d2528abef0661e5404",
+    "src/components/site/ProseQuote.astro": "sha256:2d5ecd7987f911a2b7b2497143ab99c2feb4dc14c3fb417327a7a1ca782bda62",
+    "src/components/site/ThemeToggle.astro": "sha256:a026645a0795d7990e1a8005dff4e980dfd92afb5fd6d5cd67378dff9ed879ce",
+    "src/fonts.json": "sha256:9d8ed7a2b2b6ffed959ded1ae1973e6c518baaf1e2a81db64a41e4895f1814b5",
+    "src/layouts/Base.astro": "sha256:7875a4eea55096232b58319395c229ff5f5f54abd4fd3147ba02df208f54ada9",
+    "src/lib/brand.ts": "sha256:38f8c2adeaa1e083f4ef5cabdd8e2ceac7d9243b9481414e41212c6d493e8939",
+    "src/lib/category-icons.ts": "sha256:feb637be8d661231a5d3560404872bce59d0f1afde54fe0b09cdcd513e03db59",
+    "src/lib/chrome.ts": "sha256:5308848190f7aa07e2532ad4c14a0ff8cb014e3fccf102506ec5208f8de68544",
+    "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
+    "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
+    "src/lib/font-subsets.mjs": "sha256:736e34fffe763d32ed64fbaf3892ef0a973f49c66d7534d3e3850d948552d37a",
+    "src/lib/form-embed-words.ts": "sha256:3e4125c2c21dda7ce8dabf9cced439e70112c498014904da07a6266708d372c5",
+    "src/lib/hreflang-plugin.ts": "sha256:24284c2861f5dbc8a61d0d308e2c215fbf34d7c9cf401e22424ed7904b8ed26e",
+    "src/lib/hreflang.ts": "sha256:259fdd499937508d8f43b963e80132dc7570171128ac3b1839b6d02ab28cc3aa",
+    "src/lib/i18n.ts": "sha256:88324cf24a73a748800d10606fd0d5e7086b523d7d385745831800d6efeab5fe",
+    "src/lib/link-gate.ts": "sha256:8edd88347548e364a2ea311f62357b50e52da4ab509686fea37bc6a113e4ec39",
+    "src/lib/listed-children.ts": "sha256:293330c79f7461add41f9c0c16a1665d7b21c7612b135ea70363f1567db1f79b",
+    "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
+    "src/lib/page-records.ts": "sha256:490bbe348ae80ac7e429e0342e2f898768e2c43c1331905b83c71e2f51eca1ea",
+    "src/lib/posts.ts": "sha256:e876f832864ed6b835e3028401e71294abb032ea1277ce0431d13f69b475386e",
+    "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
+    "src/lib/sections.ts": "sha256:a7fd5d3521fb3c765bcbd4beee03034e919e55001ee92db172ffa9f0381da258",
+    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/ui-words.ts": "sha256:f0c936a8d78dfc729d13793145876847b7512aaa230f5b9ca8a64153df6603cc",
+    "src/lib/ui.ts": "sha256:19959ee7c4a5e6b70385beea93fc26d7046bd36a695765808134e093c23cc680",
+    "src/lib/utils.ts": "sha256:0ca01a948ba414a7c7348bda63bf68803a73dbbb6f10b6e8183280e405d3aa13",
+    "src/live.config.ts": "sha256:52f0c8177d0e327ffdf28af8baf680d539d2aae444ba5ceace98baf095f7bf6c",
+    "src/middleware.ts": "sha256:ada97534ce48d3d6d1830024b6eebd1d09b120900be4a2495b9172a290a337fe",
+    "src/pages/[...path].astro": "sha256:1c3538bb8265e86f6e5b9289f15a3cf7d63c87623776be24cdfee127602a2e28",
+    "src/pages/404.astro": "sha256:91a039594b6de2003b08b6afb2b77ff74f0e72e069a20a4a316ea953cc728f6e",
+    "src/styles/global.css": "sha256:1b21cd90d2310c81e0f7257518513741e2c4b9826bca2e10ad2ec1613917c581",
+    "src/styles/tokens.css": "sha256:0ffaf25a8c612030c0638b811e69bf0d055f9eafe5968c030a0af366c1d9067f",
+    "src/views/Archive.astro": "sha256:5ce277606676c1e0d8b6ae97960e077c89611d9129a9e88271761e607cd69b79",
+    "src/views/Article.astro": "sha256:a5a615039bf54185f823eb5a37b2af66095d12e1a37fab057b3a588c81dd08a6",
+    "src/views/Authors.astro": "sha256:a9d771c388651cf50e9368ebe6ad2775c7ce96addfe86ae8dbbe0c0c50966f30",
+    "src/views/Blog.astro": "sha256:d8f210d88d582cc97746b3507fb37a070bffc685110c20d25761570c458226d0",
+    "src/views/Legal.astro": "sha256:9886d7ca77a41d9551224a6f787a2142fb4a39bf5d9a8098945e7069cf7ebb0f",
+    "src/views/NotFound.astro": "sha256:181cdd1d5bdd942333bc6f4b9c813d24bc50ecb2bc162929c0f25218f32ec5ba",
+    "src/views/partials/PageHead.astro": "sha256:4fb95e9a23edff19ce1f0287d1c4bc23a840d15abf80a1a53040c1bb531eb3ad",
+    "src/views/Search.astro": "sha256:8d1f6f822c0829026efcaa8c4aa700b1047b3a4687be0d53686ef9d3887815b1",
+    "src/views/Sections.astro": "sha256:a0234e9c87b62ca95db0196825eecdf6c53657a96bc22fdac5606ee61cf69533",
+    "src/views/Terms.astro": "sha256:e41a9001d5c49612da6aa361048e500de4054015dc2c62f61b81eb944b5626d1",
+    "template.config.json": "sha256:1bc366ae8ff4d3d6b04dd57535a2bf42a12bafea9042297591b0029a9f1d61f2",
+    "tools/forms.json": "sha256:0569d2bb0f4f243d6620c952bfbef389a13b033a6bbbf5edaf1064c796bbf390",
+    "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
+  }
+}

@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-pitch-black: #050505;
+  --color-midnight: #000000;
+  --color-charcoal: #151515;
+  --color-obsidian: #292929;
+  --color-graphite: #6b6b6b;
+  --color-pewter: #7e7e7e;
+  --color-ash: #929292;
+  --color-silver: #b3b3b3;
+  --color-fog: #e2e2e2;
+  --color-limestone: #f3f3f3;
+  --color-cloud: #ffffff;
+
+  /* Typography — Font Families */
+  --font-diatype: 'Diatype', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

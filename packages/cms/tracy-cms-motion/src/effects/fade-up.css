@@ -1,0 +1,52 @@
+/*
+ * fade-up — as a section below the hero scrolls into view, its units rise slightly and fade in.
+ *
+ * The section is never animated as one block: the runtime's unit walker finds the headings,
+ * paragraphs, images, buttons and card groups inside it and animates those, in document order. A
+ * section that yields no unit animates nothing and is simply shown.
+ *
+ * As with hero-stagger the delay is not in this file. Units sit under different parents once a
+ * section holds columns, and `:nth-child()` counts among siblings only, so the runtime reads the
+ * step off `--tracy-motion-step` below and hands each unit its own delay through the Web Animations
+ * API — eight rungs, with everything past the eighth sharing the last, so a long section settles
+ * instead of drifting. Nothing is written onto the customer's markup to carry it.
+ *
+ * The rise is larger and the step shorter than hero-stagger's: a section is met mid-scroll rather
+ * than on a still page, so the movement has to read at a glance without holding the reader up.
+ *
+ * The effect class also lifts the base sheet's hide off the section. It is added in the same task
+ * that starts the animations, so the section becomes visible only once its units are already
+ * moving.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html.tracy-motion .tracy-motion-fade-up {
+    --tracy-motion-dur: 460ms;
+    --tracy-motion-ease: cubic-bezier(0.2, 0, 0, 1);
+    --tracy-motion-step: 70ms;
+    --tracy-motion-rise: 16px;
+    opacity: 1;
+  }
+
+  html.tracy-motion .tracy-motion-fade-up.tracy-motion-bold {
+    --tracy-motion-dur: 640ms;
+    --tracy-motion-step: 120ms;
+    --tracy-motion-rise: 32px;
+  }
+
+  html.tracy-motion .tracy-motion-fade-up .tracy-motion-unit {
+    animation: tracy-motion-fade-up var(--tracy-motion-dur) var(--tracy-motion-ease) both;
+  }
+}
+
+@keyframes tracy-motion-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--tracy-motion-rise));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3e497155-bd96-4134-a4a5-855bd885a25c",
+  "status": "complete",
+  "name": "Roberta's Pizza",
+  "url": "https://styles.refero.design/style/3e497155-bd96-4134-a4a5-855bd885a25c",
+  "sourceWebsite": "https://www.robertaspizza.com",
+  "extractedAt": "2026-06-03T19:01:52.815Z",
+  "capturedAt": "2026-10-08T05:10:40.121231+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Brooklyn pizza punk parlor — a checkered tablecloth lit by neon red signage, where every screen is a poster.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/39334c36-dd83-48e8-8f2c-bb77fce96143.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bd59e697bb4fd29bcf517927dad74a17ea34146757e346c3f18fed6b066f8877",
+      "bytes": 21090
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "871490af1f6dd9121a7a6604623718fea4fc9b178da3b6f83e2d015bb28d3852",
+      "bytes": 85553
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "cba98414d45574d006c42f05209b69ff07e6d371ea0ebf78a8d7b786ca032c56",
+      "bytes": 18153
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "fb808eab76dbe6f777d749a711798d2fbbe12de9fceec568e47218d4576ebe4b",
+      "bytes": 8872
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "01fa919caffecef7d502239b68cbf46c2f79b1eb49746c3d03d44609d2b42a45",
+      "bytes": 13378
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a7118a4cfeedf0d2d496dd8b769062c37ea22c8c4bae94966bf17ec910572b5a",
+      "bytes": 2223
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ef299b9489eeecae6afd94563375f5635cc4e0e393804648d746463441fe3c61",
+      "bytes": 448
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3343a753c05ff2218dab47f62f339bbfc2bf74ceb3e9816c9a71a4f58ceed83c",
+      "bytes": 465
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "227118acb45a564ab23f814421c84d58788722ccb2c69629b590ddc3158d327d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e779c83f0fe0b9bcf3772cb08a54e9931924350659620abc74123b7ca598cc62",
+      "bytes": 44527
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a14d3b323a28ed6b8d50d31fbf61180f8d1c3814c796c9e75b8bcff2892bb0a1",
+      "bytes": 23202
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "cc7286e81c77066d3011830fed992febd1798a380b4d6f75afc2cc29c1eb5657",
+      "bytes": 40402
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "65ce334f7e57f10ac8f8d4e9e2c2c66f76f6703a041b85cb3aa3b7485f18b3b7",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "68b7d0d0009dca8813e818bce1542a6fba5205287c680a7cf101da767d6ee90b",
+      "bytes": 1625
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "97d061365e37c26bdd38f93e6c21b8d447da5e8c1c7f99af57560e6eaee64554",
+      "bytes": 2189
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "04961c7d-8ca6-4e87-ba88-6ad7ffa3b245",
+    "057d7c66-76b7-4272-849c-4058543e6799",
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "30dfffb4-ff6d-4128-b3e5-39046ba258f0",
+    "3e497155-bd96-4134-a4a5-855bd885a25c",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "7c84da5d-b7a0-436f-bfaa-68d0a14f8e86",
+    "9307193e-7ce3-48c1-b650-8ab77aa83c3f",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "ab7996ed-e0ed-40a0-81a5-d37f19ef35b0",
+    "b753dfda-cbe1-41e4-b341-b98d69c8422f",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d703d9f7-4821-468e-8fe4-c8b5790b00ed",
+    "d91841cf-c717-43ef-97a2-400778fa6e1a",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

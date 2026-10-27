@@ -1,0 +1,190 @@
+{
+  "about": "logo-doubled: probe data cut from the Add site preview under Moxie, light visitor scheme, 14/10/2026 (preview-check.mjs PREVIEW_DATA=1, the page run as the frame runs it: no script, the popup side painted). broken: JA Vega WordPress 1.1.15 shows its header logo and the drawer copy of it side by side (the template page in the preview shows both too). clean: templates whose header and footer show one logo each.",
+  "broken": [
+    {
+      "source": "quickstart/ja-vega/wp7@1.1.15 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "plain": {
+        "data": {
+          "header": [
+            {
+              "path": "div:1/header:1/div:1/div:1/div:1/a:1/img:1",
+              "at": "img.custom-logo",
+              "src": "09/item-1-1.png",
+              "sig": "09/item-1-1.png",
+              "x": 76,
+              "y": 20,
+              "w": 93,
+              "h": 40
+            },
+            {
+              "path": "div:1/header:1/div:1/div:1/div:2/div:1/a:1/img:1",
+              "at": "img.custom-logo",
+              "src": "09/item-1-1.png",
+              "sig": "09/item-1-1.png",
+              "x": 233,
+              "y": 24,
+              "w": 74,
+              "h": 32
+            }
+          ],
+          "footer": []
+        }
+      },
+      "worn": {
+        "data": {
+          "header": [
+            {
+              "path": "div:1/header:1/div:1/div:1/div:1/a:1/img:1",
+              "at": "img.custom-logo",
+              "src": "09/item-1-1.png",
+              "sig": "09/item-1-1.png",
+              "x": 76,
+              "y": 20,
+              "w": 93,
+              "h": 40
+            },
+            {
+              "path": "div:1/header:1/div:1/div:1/div:2/div:1/a:1/img:1",
+              "at": "img.custom-logo",
+              "src": "09/item-1-1.png",
+              "sig": "09/item-1-1.png",
+              "x": 233,
+              "y": 24,
+              "w": 74,
+              "h": 32
+            }
+          ],
+          "footer": []
+        }
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-essence/wp7@1.0.18 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "plain": {
+        "data": {
+          "header": [],
+          "footer": [
+            {
+              "path": "div:1/footer:1/div:1/div:1/div:1/div:1/a:1/img:1",
+              "at": "img.custom-logo",
+              "src": "10/item-1.png",
+              "sig": "10/item-1.png",
+              "x": 156,
+              "y": 4414,
+              "w": 132,
+              "h": 40
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "header": [],
+          "footer": [
+            {
+              "path": "div:1/footer:1/div:1/div:1/div:1/div:1/a:1/img:1",
+              "at": "img.custom-logo",
+              "src": "10/item-1.png",
+              "sig": "10/item-1.png",
+              "x": 156,
+              "y": 4414,
+              "w": 132,
+              "h": 40
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "tracy-base/wp7@1.1.4 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "plain": {
+        "data": {
+          "header": [],
+          "footer": []
+        }
+      },
+      "worn": {
+        "data": {
+          "header": [],
+          "footer": []
+        }
+      }
+    },
+    {
+      "source": "quickstart/ja-vogue/j6@1.0.5 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "plain": {
+        "data": {
+          "header": [
+            {
+              "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/div:1/a:1/span:1/img:1",
+              "at": "img.logo-img",
+              "src": "logo/item-1.svg",
+              "sig": "logo/item-1.svg",
+              "x": 681,
+              "y": 28,
+              "w": 79,
+              "h": 19
+            }
+          ],
+          "footer": [
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1/span:1/span:1/img:1",
+              "at": "img",
+              "src": "logo/item-1.svg",
+              "sig": "logo/item-1.svg",
+              "x": 48,
+              "y": 4290,
+              "w": 80,
+              "h": 19
+            }
+          ]
+        }
+      },
+      "worn": {
+        "data": {
+          "header": [
+            {
+              "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/div:1/a:1/span:1/img:1",
+              "at": "img.logo-img",
+              "src": "logo/item-1.svg",
+              "sig": "logo/item-1.svg",
+              "x": 681,
+              "y": 28,
+              "w": 79,
+              "h": 19
+            }
+          ],
+          "footer": [
+            {
+              "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1/span:1/span:1/img:1",
+              "at": "img",
+              "src": "logo/item-1.svg",
+              "sig": "logo/item-1.svg",
+              "x": 48,
+              "y": 4682,
+              "w": 80,
+              "h": 19
+            }
+          ]
+        }
+      }
+    },
+    {
+      "source": "tracy-business/j6@1.2.3 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "plain": {
+        "data": {
+          "header": [],
+          "footer": []
+        }
+      },
+      "worn": {
+        "data": {
+          "header": [],
+          "footer": []
+        }
+      }
+    }
+  ]
+}

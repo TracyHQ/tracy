@@ -1,0 +1,65 @@
+{
+  "id": "QA-UNIT-REG-PR-1686-wo-snapshot-fresh-not-cooldown-happy",
+  "itemIds": ["regression:REG-PR-1686-wo-snapshot-fresh-not-cooldown"],
+  "requirement": "A place snapshot whose source is past 30 days but whose last retry just failed is no longer reported fresh; the retry cooldown still keeps it from being run again",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1686-wo-snapshot-fresh-not-cooldown.json",
+    "ref": "PR #1686 (fix); fix evidence: Before the fix snapshotFresh returned !sourceDue for every source, so a 35-day-old source in its retry cooldown read fresh",
+    "invariant": "S1: snapshotFresh = false; snapshotDue = false now and true after SOURCE_RETRY_MS. S2: fresh only for the recent collection and the settled answer within 30 days. S3: the TripAdvisor freshness test passes.",
+    "productSources": [
+      "apps/tracy-web/src/opportunities-build/demo-qa.js:87",
+      "packages/wo/website-opportunities/domain/brief.mjs:1",
+      "packages/wo/website-opportunities/src/places.js:13"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a source collected long ago whose retry just failed is stale data",
+    "a recent collection is fresh and not due",
+    "a settled \"the place has nothing there\" answer is fresh within the max age",
+    "a source that failed on our setup and never collected is not fresh",
+    "an unpublished or background-only snapshot is neither fresh nor spared a run",
+    "fresh snapshot is enriched for a newly enabled source"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1686-wo-snapshot-fresh-not-cooldown"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/wo/website-opportunities", "website-opportunities"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1686-wo-snapshot-fresh-not-cooldown",
+    "pr": 1686,
+    "kind": "fix",
+    "area": "website-opportunities/places",
+    "file": "tests/regression/cases/REG-PR-1686-wo-snapshot-fresh-not-cooldown.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/wo/website-opportunities/test/place-freshness.test.mjs",
+    "apps/tracy-web/test/website-opportunities-tripadvisor.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a source collected long ago whose retry just failed is stale data",
+    "a recent collection is fresh and not due",
+    "a settled \"the place has nothing there\" answer is fresh within the max age",
+    "a source that failed on our setup and never collected is not fresh",
+    "an unpublished or background-only snapshot is neither fresh nor spared a run",
+    "fresh snapshot is enriched for a newly enabled source"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-sensei/j6/1.0.1",
+  "platform": "joomla",
+  "template": "ja_sensei",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-sensei",
+    "id": "quickstart/ja-sensei/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.3"
+    },
+    "template": "ja_sensei",
+    "parts": {
+      "installer": {
+        "file": "ja-sensei-j6-quickstart-1.0.1.zip",
+        "bytes": 63119132,
+        "sha256": "44391ef8d110291a10e2a37ec6e3b1ff5f7e291e891e8a0c3a473820548e6f1f"
+      }
+    },
+    "release": "quickstart/ja-sensei/j6",
+    "repository": "JoomlArt-Products/ja-products",
+    "createdAt": "2026-10-10T21:12:29.287Z",
+    "builtFrom": {
+      "from": "quickstart/ja-sensei/j6@1.0.0",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*); T3 dev mode off (1 template styles)"
+    }
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

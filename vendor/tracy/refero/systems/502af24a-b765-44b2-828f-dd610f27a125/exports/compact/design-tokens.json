@@ -1,0 +1,74 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#fdfcfe",
+      "$type": "color",
+      "$description": "Paper White — Page and hero backgrounds, card surfaces floating on dark sections, light theme canvas"
+    },
+    "carbon-black": {
+      "$value": "#0f0d13",
+      "$type": "color",
+      "$description": "Carbon Black — Dark section backgrounds, navigation bar, inverse canvas, pricing and FAQ arena"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Display headline text on light surfaces, icon fills, maximum-contrast text"
+    },
+    "ink-black": {
+      "$value": "#191922",
+      "$type": "color",
+      "$description": "Ink Black — Button text on light pill surfaces, subtle text on cards"
+    },
+    "graphite": {
+      "$value": "#555257",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, subdued meta labels, footer body copy"
+    },
+    "fog-gray": {
+      "$value": "#a9a6aa",
+      "$type": "color",
+      "$description": "Fog Gray — Muted body text, helper text, low-emphasis labels on light surfaces"
+    },
+    "steel-gray": {
+      "$value": "#6f6d71",
+      "$type": "color",
+      "$description": "Steel Gray — Subdued headings, section sub-labels, de-emphasized display elements"
+    },
+    "pearl-gray": {
+      "$value": "#d1d1d7",
+      "$type": "color",
+      "$description": "Pearl Gray — Hairline borders, thin dividers, subtle separators on cards"
+    },
+    "signal-violet": {
+      "$value": "#a238ff",
+      "$type": "color",
+      "$description": "Signal Violet — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "lilac-wash": {
+      "$value": "#d09aff",
+      "$type": "color",
+      "$description": "Lilac Wash — Soft violet tint for decorative washes, the banner background fill, and subtle highlight surfaces adjacent to Signal Violet elements"
+    }
+  },
+  "font": {
+    "deezer-brand-custom-condensed-display": {
+      "$value": "Deezer Brand (custom condensed display)",
+      "$type": "fontFamily",
+      "$description": "All display and heading sizes from 24px upward — the hero headline at 140px with line-height 0.71 is the signature moment, creating a compressed poster-stack effect. Subheading pill labels and small display accents use the 18–19px size with weight 700. The 700 weight carries subheadings and badges; 800 is reserved for the largest display type where the extra weight prevents the condensed letterforms from looking thin at 120–140px. Letter-spacing is consistently positive (0.0020em–0.0130em) — unusual for display type, which compensates for the tight line-heights by keeping glyphs from feeling cramped."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, UI controls, navigation, buttons, and small labels. Weight 400 is the default body; 500 appears in button labels and nav links; 600 is used for emphasized body and small headings; 700 for strong UI emphasis. Normal letter-spacing. Inter acts as the quiet functional partner to the display face — same brand family voice, but geometric and readable at small sizes where the condensed display would be illegible."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://deezer.com",
+      "siteName": "Deezer",
+      "extractedAt": "2026-06-03T19:18:55.080Z",
+      "variant": "compact"
+    }
+  }
+}

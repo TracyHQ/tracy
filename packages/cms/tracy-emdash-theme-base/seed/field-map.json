@@ -1,0 +1,3328 @@
+{
+	"generatedAt": "2026-09-15T21:01:23.624Z",
+	"roleVocabularyVersion": "place-content-roles/2",
+	"settings": {
+		"title": {
+			"role": "business.name",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		},
+		"tagline": {
+			"role": "business.tagline",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		}
+	},
+	"collections": [
+		{
+			"collection": "services",
+			"routable": true,
+			"urlPattern": "/services/{slug}",
+			"entriesPerLocale": 7,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "excerpt",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "content",
+					"type": "portableText",
+					"required": false
+				},
+				{
+					"slug": "sort",
+					"type": "integer",
+					"required": false
+				},
+				{
+					"slug": "listed",
+					"type": "boolean",
+					"required": false
+				},
+				{
+					"slug": "faq_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "faq_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"question:string",
+						"answer:text"
+					],
+					"subRoles": {
+						"question": "faq.question",
+						"answer": "faq.answer"
+					},
+					"group": {
+						"kind": "faq"
+					}
+				},
+				{
+					"slug": "cta_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_btn_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_btn_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_link_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "people",
+			"routable": true,
+			"urlPattern": "/team/{slug}",
+			"entriesPerLocale": 4,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "name",
+					"type": "string",
+					"required": false,
+					"role": "person.name",
+					"group": {
+						"kind": "person"
+					}
+				},
+				{
+					"slug": "role",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "excerpt",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "image_caption",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "content",
+					"type": "portableText",
+					"required": false
+				},
+				{
+					"slug": "sort",
+					"type": "integer",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "posts",
+			"routable": true,
+			"urlPattern": "/blog/{slug}",
+			"entriesPerLocale": 42,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "excerpt",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "image_caption",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "author",
+					"type": "string",
+					"required": false,
+					"role": "post.author",
+					"group": {
+						"kind": "post"
+					}
+				},
+				{
+					"slug": "date",
+					"type": "datetime",
+					"required": false
+				},
+				{
+					"slug": "content",
+					"type": "portableText",
+					"required": false
+				},
+				{
+					"slug": "featured",
+					"type": "boolean",
+					"required": false
+				},
+				{
+					"slug": "sort",
+					"type": "integer",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "site",
+			"routable": false,
+			"urlPattern": null,
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "brand_name",
+					"type": "string",
+					"required": false,
+					"role": "business.name",
+					"group": {
+						"kind": "business",
+						"name": "identity"
+					}
+				},
+				{
+					"slug": "brand_tagline",
+					"type": "string",
+					"required": false,
+					"role": "business.tagline",
+					"group": {
+						"kind": "business",
+						"name": "identity"
+					}
+				},
+				{
+					"slug": "contact_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "contact_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "theme_dark_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "theme_light_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "menu_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.menu_label"
+				},
+				{
+					"slug": "mega_service_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_service_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_service_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_service_text",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "mega_service_action",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "mega_service_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "mega_service_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "mega_service_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "mega_read_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_design_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_help_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_resources_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_resources_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_resources_text",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "mega_resources_action",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "mega_resources_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "mega_resources_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "mega_resources_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "mega_latest_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_search_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "mega_company_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_team_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "mega_team_all_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "footer_product_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "footer_resources_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "footer_company_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "social_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "social_handle",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "social",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"platform:select",
+						"url:string"
+					]
+				},
+				{
+					"slug": "notice",
+					"type": "text",
+					"required": false,
+					"role": "claim.notice",
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "breadcrumb_home",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "not_found_code",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "not_found_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "not_found_back_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "search_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "search_placeholder",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "search_button",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "search_results_line",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "search_empty",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "read_more",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "count_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "page_meta",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "prev_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "next_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "related_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "latest_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "sections_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "sitemap_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "skip_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "back_to_top",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				}
+			]
+		},
+		{
+			"collection": "home",
+			"routable": false,
+			"urlPattern": "/",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "hero_cta1_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_cta1_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_cta2_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_cta2_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_note",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "hero_mock_caption",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "proof_kicker",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "proof_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "proof_line",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "proof_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"label:string"
+					],
+					"subRoles": {
+						"label": "editorial.menu_label"
+					}
+				},
+				{
+					"slug": "problem_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "problem_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "problem_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "problem_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"title:string",
+						"text:text"
+					],
+					"subRoles": {
+						"title": "editorial.heading",
+						"text": "editorial.paragraph"
+					}
+				},
+				{
+					"slug": "value_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "value_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "value_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "value_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"icon:select",
+						"title:string",
+						"text:text"
+					],
+					"subRoles": {
+						"title": "editorial.heading",
+						"text": "editorial.paragraph"
+					}
+				},
+				{
+					"slug": "how_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "how_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "how_lead",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "how_steps",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"icon:select",
+						"number:string",
+						"title:string",
+						"text:text"
+					],
+					"subRoles": {
+						"number": "editorial.heading",
+						"title": "editorial.heading",
+						"text": "editorial.paragraph"
+					}
+				},
+				{
+					"slug": "inline_cta_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "inline_cta_text",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "inline_cta_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "inline_cta_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "features_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "features_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "features_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "features_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"icon:select",
+						"kicker:string",
+						"title:string",
+						"text:text",
+						"link_label:string",
+						"link_url:string"
+					],
+					"subRoles": {
+						"kicker": "editorial.heading",
+						"title": "editorial.heading",
+						"text": "editorial.paragraph",
+						"link_label": "editorial.button_label"
+					}
+				},
+				{
+					"slug": "stats",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"value:string",
+						"caption:string"
+					],
+					"subRoles": {
+						"value": "stat.value",
+						"caption": "stat.label"
+					},
+					"group": {
+						"kind": "stat_item"
+					}
+				},
+				{
+					"slug": "team_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "team_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "team_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "team_quotes",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"quote:text",
+						"initials:string",
+						"name:string",
+						"role:string"
+					],
+					"subRoles": {
+						"quote": "person.bio",
+						"name": "person.name",
+						"role": "person.role"
+					},
+					"group": {
+						"kind": "person"
+					}
+				},
+				{
+					"slug": "team_note",
+					"type": "string",
+					"required": false,
+					"role": "claim.notice",
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "faq_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"question:string",
+						"answer:text"
+					],
+					"subRoles": {
+						"question": "faq.question",
+						"answer": "faq.answer"
+					},
+					"group": {
+						"kind": "faq"
+					}
+				},
+				{
+					"slug": "pricing_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "pricing_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "pricing_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "pricing_tiers",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"name:string",
+						"badge:string",
+						"summary:text",
+						"price:string",
+						"period:string",
+						"features:text",
+						"cta_label:string",
+						"cta_url:string"
+					],
+					"subRoles": {
+						"name": "package.name",
+						"badge": "package.badge",
+						"summary": "package.summary",
+						"price": "package.price",
+						"period": "package.period",
+						"features": "package.features_list",
+						"cta_label": "package.cta_label",
+						"cta_url": "package.cta_url"
+					},
+					"group": {
+						"kind": "package"
+					}
+				},
+				{
+					"slug": "pricing_note",
+					"type": "string",
+					"required": false,
+					"role": "claim.notice",
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "pricing_disclaimer",
+					"type": "string",
+					"required": false,
+					"role": "claim.notice",
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "final_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "final_text",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "final_cta_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "final_cta_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "final_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "final_link_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "final_tail",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				}
+			]
+		},
+		{
+			"collection": "onepage",
+			"routable": false,
+			"urlPattern": "/onepage",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "nav_brand",
+					"type": "string",
+					"required": false,
+					"role": "business.name",
+					"group": {
+						"kind": "business",
+						"name": "identity"
+					}
+				},
+				{
+					"slug": "nav_sub",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "nav_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"label:string",
+						"anchor:string"
+					],
+					"subRoles": {
+						"label": "editorial.menu_label"
+					}
+				},
+				{
+					"slug": "nav_toggle_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.menu_label"
+				},
+				{
+					"slug": "hero_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_title_a",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_title_b",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "hero_cta1_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_cta1_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_cta2_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_cta2_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "hero_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "about_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "about_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "about_text_1",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "about_text_2",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "about_chips",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"label:string"
+					],
+					"subRoles": {
+						"label": "editorial.menu_label"
+					}
+				},
+				{
+					"slug": "services_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "services_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "services_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "services_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"icon:select",
+						"title:string",
+						"text:text"
+					],
+					"subRoles": {
+						"title": "offering.name",
+						"text": "offering.description"
+					},
+					"group": {
+						"kind": "service"
+					}
+				},
+				{
+					"slug": "product_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "product_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "product_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "product_parts",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"icon:select",
+						"kicker:string",
+						"title:string",
+						"text:text",
+						"cta_label:string",
+						"cta_url:string"
+					],
+					"subRoles": {
+						"kicker": "editorial.heading",
+						"title": "editorial.heading",
+						"text": "editorial.paragraph",
+						"cta_label": "editorial.button_label"
+					}
+				},
+				{
+					"slug": "process_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "process_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "process_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "process_steps",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"icon:select",
+						"number:string",
+						"title:string",
+						"text:text"
+					],
+					"subRoles": {
+						"number": "editorial.heading",
+						"title": "editorial.heading",
+						"text": "editorial.paragraph"
+					}
+				},
+				{
+					"slug": "team_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "team_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "team_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "team_members",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"image:image",
+						"image_alt:string",
+						"name:string",
+						"role:string",
+						"text:text"
+					],
+					"subRoles": {
+						"image": "person.image",
+						"image_alt": "person.role",
+						"name": "person.name",
+						"role": "person.role",
+						"text": "person.bio"
+					},
+					"group": {
+						"kind": "person"
+					}
+				},
+				{
+					"slug": "faq_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"question:string",
+						"answer:text"
+					],
+					"subRoles": {
+						"question": "faq.question",
+						"answer": "faq.answer"
+					},
+					"group": {
+						"kind": "faq"
+					}
+				},
+				{
+					"slug": "contact_kicker",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "contact_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "contact_text",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "contact_cta_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "contact_cta_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "contact_back_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "contact_back_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "footer_brand",
+					"type": "string",
+					"required": false,
+					"role": "business.name",
+					"group": {
+						"kind": "business",
+						"name": "identity"
+					}
+				},
+				{
+					"slug": "footer_links",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"label:string",
+						"anchor:string"
+					],
+					"subRoles": {
+						"label": "editorial.menu_label"
+					}
+				},
+				{
+					"slug": "footer_note",
+					"type": "string",
+					"required": false,
+					"role": "claim.notice",
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "footer_credit",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				}
+			]
+		},
+		{
+			"collection": "landing",
+			"routable": false,
+			"urlPattern": "/landing",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "hero_cta1_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_cta1_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_cta2_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_cta2_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "hero_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_aside_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_aside_badge",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_aside_state",
+					"type": "select",
+					"required": false,
+					"options": [
+						"success",
+						"neutral",
+						"warning"
+					]
+				},
+				{
+					"slug": "hero_notes",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"text:string"
+					],
+					"subRoles": {
+						"text": "claim.notice"
+					},
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "chapter1_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "chapter1_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "chapter1_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "chapter1_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "chapter1_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "chapter1_link_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "chapter1_link_style",
+					"type": "select",
+					"required": false,
+					"options": [
+						"secondary",
+						"primary",
+						"text"
+					]
+				},
+				{
+					"slug": "features_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "features_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "features_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "features_spotlight_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "features_cards",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"title:string",
+						"text:text",
+						"link_label:string",
+						"link_url:string"
+					],
+					"subRoles": {
+						"title": "editorial.heading",
+						"text": "editorial.paragraph",
+						"link_label": "editorial.button_label"
+					}
+				},
+				{
+					"slug": "stats_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "stats_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "stats_figures",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"value:string",
+						"caption:string"
+					],
+					"subRoles": {
+						"value": "step.index",
+						"caption": "step.title"
+					},
+					"group": {
+						"kind": "step"
+					}
+				},
+				{
+					"slug": "chapter2_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "chapter2_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "chapter2_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "chapter2_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "chapter2_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "chapter2_link_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "chapter2_link_style",
+					"type": "select",
+					"required": false,
+					"options": [
+						"secondary",
+						"primary",
+						"text"
+					]
+				},
+				{
+					"slug": "pricing_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "pricing_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "pricing_intro",
+					"type": "text",
+					"required": false,
+					"role": "package.summary",
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "pricing_tiers",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"name:string",
+						"badge:string",
+						"summary:text",
+						"price:string",
+						"period:string",
+						"features:text",
+						"cta_label:string",
+						"cta_url:string",
+						"recommended:boolean"
+					],
+					"subRoles": {
+						"name": "package.name",
+						"badge": "package.badge",
+						"summary": "package.summary",
+						"price": "package.price",
+						"period": "package.period",
+						"features": "package.features_list",
+						"cta_label": "package.cta_label",
+						"cta_url": "package.cta_url"
+					},
+					"group": {
+						"kind": "package"
+					}
+				},
+				{
+					"slug": "testimonials_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "testimonials_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "testimonials_quotes",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"quote:text",
+						"name:string",
+						"role:string"
+					],
+					"subRoles": {
+						"quote": "quote.text",
+						"name": "quote.author_name",
+						"role": "quote.author_context"
+					},
+					"group": {
+						"kind": "quote"
+					}
+				},
+				{
+					"slug": "clients_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "clients_marks",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"image:image",
+						"name:string",
+						"url:string"
+					],
+					"subRoles": {
+						"image": "claim.entity_logo",
+						"name": "claim.entity_name",
+						"url": "claim.entity_url"
+					},
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "cta_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_btn_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_btn_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_link_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "home_2",
+			"routable": false,
+			"urlPattern": "/home-2",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "hero_cta1_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_cta1_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_cta2_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_cta2_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "hero_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_aside_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_aside_badge",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_aside_state",
+					"type": "select",
+					"required": false,
+					"options": [
+						"success",
+						"neutral",
+						"warning"
+					]
+				},
+				{
+					"slug": "hero_notes",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"text:string"
+					],
+					"subRoles": {
+						"text": "editorial.paragraph"
+					}
+				},
+				{
+					"slug": "chapter_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "chapter_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "chapter_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "chapter_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "chapter_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "chapter_link_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "chapter_link_style",
+					"type": "select",
+					"required": false,
+					"options": [
+						"secondary",
+						"primary",
+						"text"
+					]
+				},
+				{
+					"slug": "team_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "team_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "team_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "team_members",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"image:image",
+						"name:string",
+						"role:string",
+						"text:text",
+						"url:string"
+					],
+					"subRoles": {
+						"image": "person.image",
+						"name": "person.name",
+						"role": "person.role",
+						"text": "person.bio",
+						"url": "person.social_url"
+					},
+					"group": {
+						"kind": "person"
+					}
+				},
+				{
+					"slug": "faq_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "faq_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"question:string",
+						"answer:text"
+					],
+					"subRoles": {
+						"question": "faq.question",
+						"answer": "faq.answer"
+					},
+					"group": {
+						"kind": "faq"
+					}
+				},
+				{
+					"slug": "stats_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "stats_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "stats_figures",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"value:string",
+						"caption:string"
+					],
+					"subRoles": {
+						"value": "stat.value",
+						"caption": "stat.label"
+					},
+					"group": {
+						"kind": "stat_item"
+					}
+				},
+				{
+					"slug": "cta_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_btn_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_btn_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_link_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "product",
+			"routable": false,
+			"urlPattern": "/product",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "hero_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "hero_cta1_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_cta1_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_cta2_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_cta2_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "hero_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "hero_aside_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "hero_aside_badge",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "hero_aside_state",
+					"type": "select",
+					"required": false,
+					"options": [
+						"success",
+						"neutral",
+						"warning"
+					]
+				},
+				{
+					"slug": "hero_notes",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"text:string"
+					],
+					"subRoles": {
+						"text": "editorial.paragraph"
+					}
+				},
+				{
+					"slug": "carousel_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "carousel_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "carousel_intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "carousel_slides",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"kicker:string",
+						"title:string",
+						"text:text",
+						"image:image",
+						"link_label:string",
+						"link_url:string"
+					],
+					"subRoles": {
+						"kicker": "editorial.heading",
+						"title": "editorial.heading",
+						"text": "editorial.paragraph",
+						"image": "editorial.decorative_image",
+						"link_label": "editorial.button_label"
+					}
+				},
+				{
+					"slug": "tabs_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "tabs_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "tabs_tabs",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"label:string",
+						"title:string",
+						"body:text",
+						"image:image"
+					],
+					"subRoles": {
+						"label": "editorial.menu_label",
+						"title": "editorial.heading",
+						"body": "editorial.paragraph",
+						"image": "editorial.decorative_image"
+					}
+				},
+				{
+					"slug": "stats_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "stats_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "stats_figures",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"value:string",
+						"caption:string"
+					],
+					"subRoles": {
+						"value": "stat.value",
+						"caption": "stat.label"
+					},
+					"group": {
+						"kind": "stat_item"
+					}
+				},
+				{
+					"slug": "cta_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_btn_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_btn_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_link_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "services_page",
+			"routable": false,
+			"urlPattern": "/services",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				}
+			]
+		},
+		{
+			"collection": "pricing",
+			"routable": false,
+			"urlPattern": "/pricing",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "pricing_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "pricing_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "pricing_intro",
+					"type": "text",
+					"required": false,
+					"role": "package.summary",
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "pricing_tiers",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"name:string",
+						"badge:string",
+						"summary:text",
+						"price:string",
+						"period:string",
+						"features:text",
+						"cta_label:string",
+						"cta_url:string",
+						"recommended:boolean"
+					],
+					"subRoles": {
+						"name": "package.name",
+						"badge": "package.badge",
+						"summary": "package.summary",
+						"price": "package.price",
+						"period": "package.period",
+						"features": "package.features_list",
+						"cta_label": "package.cta_label",
+						"cta_url": "package.cta_url"
+					},
+					"group": {
+						"kind": "package"
+					}
+				},
+				{
+					"slug": "faq_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "faq_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"question:string",
+						"answer:text"
+					],
+					"subRoles": {
+						"question": "faq.question",
+						"answer": "faq.answer"
+					},
+					"group": {
+						"kind": "faq"
+					}
+				},
+				{
+					"slug": "cta_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_btn_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_btn_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_link_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "blog",
+			"routable": false,
+			"urlPattern": "/blog",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "topics_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "topics_intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "all_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				}
+			]
+		},
+		{
+			"collection": "team",
+			"routable": false,
+			"urlPattern": "/team",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "notes_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				}
+			]
+		},
+		{
+			"collection": "about",
+			"routable": false,
+			"urlPattern": "/about",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "chapter1_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "chapter1_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "chapter1_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "chapter1_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "chapter1_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "chapter1_link_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "chapter1_link_style",
+					"type": "select",
+					"required": false,
+					"options": [
+						"secondary",
+						"primary",
+						"text"
+					]
+				},
+				{
+					"slug": "stats_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "stats_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "stats_figures",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"value:string",
+						"caption:string"
+					],
+					"subRoles": {
+						"value": "step.index",
+						"caption": "step.title"
+					},
+					"group": {
+						"kind": "step"
+					}
+				},
+				{
+					"slug": "chapter2_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "chapter2_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "chapter2_image",
+					"type": "image",
+					"required": false,
+					"role": "editorial.decorative_image"
+				},
+				{
+					"slug": "chapter2_image_alt",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "chapter2_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "chapter2_link_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "chapter2_link_style",
+					"type": "select",
+					"required": false,
+					"options": [
+						"secondary",
+						"primary",
+						"text"
+					]
+				},
+				{
+					"slug": "team_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "team_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "team_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "team_members",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"image:image",
+						"name:string",
+						"role:string",
+						"text:text",
+						"url:string"
+					],
+					"subRoles": {
+						"image": "person.image",
+						"name": "person.name",
+						"role": "person.role",
+						"text": "person.bio",
+						"url": "person.social_url"
+					},
+					"group": {
+						"kind": "person"
+					}
+				},
+				{
+					"slug": "cta_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_btn_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_btn_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_link_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "careers",
+			"routable": false,
+			"urlPattern": "/careers",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "timeline_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "timeline_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "timeline_intro",
+					"type": "text",
+					"required": false,
+					"role": "event.description",
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "timeline_entries",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"marker:string",
+						"title:string",
+						"text:text"
+					],
+					"subRoles": {
+						"marker": "event.date_or_year",
+						"title": "event.title",
+						"text": "event.description"
+					},
+					"group": {
+						"kind": "event"
+					}
+				},
+				{
+					"slug": "cta_statement",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_support",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "cta_btn_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_btn_url",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "cta_link_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "cta_link_url",
+					"type": "string",
+					"required": false
+				}
+			]
+		},
+		{
+			"collection": "help",
+			"routable": false,
+			"urlPattern": "/help",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "faq_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "faq_intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "faq_items",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"question:string",
+						"answer:text"
+					],
+					"subRoles": {
+						"question": "faq.question",
+						"answer": "faq.answer"
+					},
+					"group": {
+						"kind": "faq"
+					}
+				}
+			]
+		},
+		{
+			"collection": "contact",
+			"routable": false,
+			"urlPattern": "/contact",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "form_id",
+					"type": "string",
+					"required": false
+				},
+				{
+					"slug": "form_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "required_note",
+					"type": "string",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "info_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "email",
+					"type": "string",
+					"required": false,
+					"role": "contact.email",
+					"group": {
+						"kind": "contact",
+						"name": "identity"
+					}
+				},
+				{
+					"slug": "email_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "notice",
+					"type": "text",
+					"required": false,
+					"role": "claim.notice",
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "social_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "unavailable_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "social",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"label:string",
+						"url:string"
+					],
+					"subRoles": {
+						"label": "editorial.menu_label"
+					}
+				}
+			]
+		},
+		{
+			"collection": "design_system",
+			"routable": false,
+			"urlPattern": "/design-system",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "typography_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "typography_intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "colour_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "colour_intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "spacing_title",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "spacing_intro",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "specimen_eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "specimen_heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "specimen_lede",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "specimen_body",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				}
+			]
+		},
+		{
+			"collection": "marketing",
+			"routable": false,
+			"urlPattern": "/marketing",
+			"entriesPerLocale": 1,
+			"fields": [
+				{
+					"slug": "title",
+					"type": "string",
+					"required": true,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "eyebrow",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "heading",
+					"type": "string",
+					"required": false,
+					"role": "editorial.heading"
+				},
+				{
+					"slug": "lead",
+					"type": "text",
+					"required": false,
+					"role": "editorial.paragraph"
+				},
+				{
+					"slug": "note",
+					"type": "text",
+					"required": false,
+					"role": "claim.notice",
+					"group": {
+						"kind": "claim"
+					}
+				},
+				{
+					"slug": "appearance_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "light_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "dark_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "open_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "download_label",
+					"type": "string",
+					"required": false,
+					"role": "editorial.button_label"
+				},
+				{
+					"slug": "samples",
+					"type": "repeater",
+					"required": false,
+					"subFields": [
+						"key:string",
+						"title:string",
+						"description:text"
+					],
+					"subRoles": {
+						"title": "editorial.heading",
+						"description": "editorial.paragraph"
+					}
+				}
+			]
+		}
+	],
+	"taxonomies": [
+		{
+			"name": "category",
+			"collections": [
+				"posts"
+			],
+			"terms": [
+				"people",
+				"practical-guides",
+				"inside-the-studio",
+				"studio-life",
+				"content-guides",
+				"website-planning",
+				"website-operations",
+				"studio-notes"
+			]
+		},
+		{
+			"name": "tag",
+			"collections": [
+				"posts"
+			],
+			"terms": [
+				"joomla",
+				"t4-framework",
+				"joomla-3-9",
+				"jooma-4-x"
+			]
+		}
+	],
+	"menus": [
+		{
+			"name": "primary",
+			"items": 6
+		},
+		{
+			"name": "service",
+			"items": 5
+		},
+		{
+			"name": "resources_read",
+			"items": 5
+		},
+		{
+			"name": "resources_design",
+			"items": 8
+		},
+		{
+			"name": "resources_help",
+			"items": 3
+		},
+		{
+			"name": "company",
+			"items": 3
+		},
+		{
+			"name": "footer_product",
+			"items": 4
+		},
+		{
+			"name": "footer_resources",
+			"items": 4
+		},
+		{
+			"name": "footer_company",
+			"items": 4
+		}
+	],
+	"rewrites": [
+		{
+			"where": "home.features",
+			"from": "editable Joomla articles and modules",
+			"to": "editable content and page sections in the admin"
+		},
+		{
+			"where": "home.faq",
+			"from": "editable Joomla articles and modules",
+			"to": "editable content and page sections in the admin"
+		},
+		{
+			"where": "onepage.faq",
+			"from": "native Joomla content and modules",
+			"to": "editable content and page sections in the admin"
+		},
+		{
+			"where": "home_2.faq.items[1].answer",
+			"from": "editable Joomla articles and modules",
+			"to": "editable content and page sections in the admin"
+		},
+		{
+			"where": "pricing.faq.items[1].answer",
+			"from": "editable Joomla articles and modules",
+			"to": "editable content and page sections in the admin"
+		},
+		{
+			"where": "help.faq.items[1].answer",
+			"from": "editable Joomla articles and modules",
+			"to": "editable content and page sections in the admin"
+		}
+	],
+	"slugRenames": [
+		{
+			"article": 66,
+			"category": 13,
+			"from": "maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+			"to": "maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu-studio-life"
+		},
+		{
+			"article": 67,
+			"category": 13,
+			"from": "create-more-elit-nisi-egestas-vel-vestibulum-ut",
+			"to": "create-more-elit-nisi-egestas-vel-vestibulum-ut-studio-life"
+		},
+		{
+			"article": 68,
+			"category": 13,
+			"from": "vivamus-maximus-ante-in-ligula-egestas-fringilla",
+			"to": "vivamus-maximus-ante-in-ligula-egestas-fringilla-studio-life"
+		},
+		{
+			"article": 69,
+			"category": 13,
+			"from": "create-curabitur-tempus-lacus-id-orci-feugiat",
+			"to": "create-curabitur-tempus-lacus-id-orci-feugiat-studio-life"
+		},
+		{
+			"article": 71,
+			"category": 10,
+			"from": "vivamus-maximus-ante-in-ligula-egestas-fringilla",
+			"to": "vivamus-maximus-ante-in-ligula-egestas-fringilla-people"
+		}
+	],
+	"unresolvedLinks": []
+}

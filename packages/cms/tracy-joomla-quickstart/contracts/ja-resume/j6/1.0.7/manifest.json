@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resume/j6/1.0.7",
+  "platform": "joomla",
+  "template": "ja_resume",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resume",
+    "id": "quickstart/ja-resume/j6",
+    "version": "1.0.7",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_resume",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-resume-j6-webroot-1.0.7.tar.gz",
+        "bytes": 69281085,
+        "sha256": "8bbe104f02eff0d05d57963718eef935a047cdaba493d970c79b32e2183ad0ff"
+      },
+      "database": {
+        "file": "ja-resume-j6-database-1.0.7.sql.gz",
+        "bytes": 203674,
+        "sha256": "5b57541edae45d5baaf89e48304605bf5826cafdda863efc34add513f527788f"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T18:04:52.736Z",
+    "builtFrom": {
+      "from": "quickstart/ja-resume/j6@1.0.6",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 13 files replaced (templates/ja_resume/css, templates/ja_resume/less); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-resume/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,23 @@
+:root {
+  /* Colors */
+  --color-midnight-ink: #090b2b;
+  --color-obsidian: #151515;
+  --color-graphite: #1b1b1e;
+  --color-charcoal: #262626;
+  --color-steel: #808080;
+  --color-silver: #aaaaaa;
+  --color-fog: #d7d7d7;
+  --color-mist: #e5e7eb;
+  --color-parchment: #e5ebd3;
+  --color-linen: #f8f8f8;
+  --color-paper: #ffffff;
+  --color-slate-link: #8c8c8c;
+
+  /* Typography — Font Families */
+  --font-flatfilediatypevariable: 'FlatfileDiatypeVariable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-flatfile-diatype-variable: 'Flatfile Diatype (Variable)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-flatfile-diatype-static: 'Flatfile Diatype (Static)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-source-serif-4: 'Source Serif 4', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sharp-grotesk: 'Sharp Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-booton: 'Booton', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

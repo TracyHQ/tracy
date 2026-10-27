@@ -1,0 +1,103 @@
+{
+  "runId": "20261003a",
+  "range": { "from": "8e65e80aa", "to": "a1b2c3d44" },
+  "stand": { "sha": "a1b2c3d44", "reconciled": true, "baseline": "valid" },
+  "prCount": 37,
+  "directCommits": [{ "sha": "ffee001122", "subject": "chore: bump [x](https://evil.example)" }],
+  "durationMin": 252,
+  "fence": { "ok": true },
+  "standCanary": { "ok": true },
+  "models": {
+    "plan": "opus",
+    "sonnet": "sonnet",
+    "sol": { "model": "gpt-6.1-sol", "effort": "low" },
+    "verify": { "model": "gpt-6-astra", "effort": "high" }
+  },
+  "redSummary": { "sonnet": 2, "sol": 3, "both": 1, "verified": 2 },
+  "needsReview": [
+    {
+      "pr": 745,
+      "author": "leeknowsai",
+      "caseId": "pr745-k3",
+      "quote": "```\n</td> @TracyHQ/all [x](https://evil.example) | <img src=x>",
+      "observed": "GET /api/sites returned 500",
+      "differsFromB": "yes",
+      "redLanes": ["sonnet", "sol"],
+      "issue": 812,
+      "look": "qa-tool/scripts/qa/rerun sonnet 745 pr745-k3"
+    }
+  ],
+  "laneDisagreements": [{ "pr": 750, "caseId": "pr750-k1", "sonnet": "red", "sol": "no-test" }],
+  "inconclusive": [{ "pr": 751, "caseId": "pr751-k2", "reason": "verify could not log in" }],
+  "unclassified": [],
+  "following": [{ "pr": 700, "caseId": "pr700-k1", "issue": 790, "nights": 3 }],
+  "observedOk": [
+    { "pr": 752, "caseId": "pr752-k1", "quote": "The tab title shows the site name.", "lanes": ["sonnet"] }
+  ],
+  "notCheckable": [{ "pr": 753, "reason": "needs a Stripe account" }],
+  "docsOnly": [754, 755],
+  "notReached": [],
+  "ended": [{ "pr": 756, "state": "reverted", "reason": "Revert of 1a2b3c4" }],
+  "issues": {
+    "blocked": null,
+    "created": [{ "pr": 745, "issue": 812, "cases": ["pr745-k3"], "assignee": "leeknowsai" }],
+    "commented": [],
+    "notOpened": [{ "pr": 757, "cases": ["pr757-k1"], "reason": "scanner: JWT shape" }],
+    "unassigned": [],
+    "unknown": [],
+    "feedback": {
+      "sonnet": { "confirmed": 1, "falsePositive": 0 },
+      "sol": { "confirmed": 0, "falsePositive": 1 }
+    }
+  },
+  "lanes": {
+    "sonnet": {
+      "assigned": 40,
+      "ran": 31,
+      "redOnT": 4,
+      "differs": 2,
+      "testWrong": 1,
+      "confirmed": 1,
+      "falsePositive": 0,
+      "timeouts": 1,
+      "minutesPerPr": 9,
+      "cost": "$31.20"
+    },
+    "sol": {
+      "assigned": 40,
+      "ran": 35,
+      "redOnT": 6,
+      "differs": 3,
+      "testWrong": 2,
+      "confirmed": 0,
+      "falsePositive": 1,
+      "timeouts": 0,
+      "minutesPerPr": 7,
+      "cost": "8.1M tokens"
+    }
+  },
+  "calibration": {
+    "sonnet": { "true": "green", "false": "red", "falseVerdict": "differs" },
+    "sol": { "true": "green", "false": "red", "falseVerdict": "differs" }
+  },
+  "regression": {
+    "core": "green",
+    "ran": 12,
+    "passed": 11,
+    "failed": 1,
+    "quarantined": [{ "caseId": "pr690-k2", "reason": "flaky twice in 7 nights" }]
+  },
+  "chat": {
+    "primer": "ok",
+    "turns": { "sonnet": 14, "sol": 11, "verify": 4 },
+    "failures": { "hung": 1, "quota": 0, "credential": 0, "provider": 0 },
+    "balance": { "start": "41.20 USD", "end": "39.85 USD" }
+  },
+  "troubles": ["build: ok", "orphan site qa-x1 removed"],
+  "sites": { "created": 8, "deleted": 8, "orphans": 1 },
+  "access": {
+    "humanUrl": "http://qa.tracy.test:36080/__qa/human?k=abc",
+    "otp": "qa-tool/scripts/qa/otp <email>",
+    "rerun": "qa-tool/scripts/qa/rerun <lane> <pr> [case]"
+  }
+}

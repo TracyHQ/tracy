@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-roast-ink: #484036;
+  --color-bone-canvas: #faf5eb;
+  --color-linen-surface: #ecece4;
+  --color-sandstone: #cacab0;
+  --color-pebble: #d5d5c4;
+  --color-manilla-cream: #f2e9cf;
+  --color-slate-border: #666e72;
+  --color-charcoal-depth: #33302c;
+  --color-obsidian: #212529;
+
+  /* Typography — Font Families */
+  --font-surt: 'Surt', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-clashdisplay: 'ClashDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-bigdailyshort: 'BigDailyShort', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

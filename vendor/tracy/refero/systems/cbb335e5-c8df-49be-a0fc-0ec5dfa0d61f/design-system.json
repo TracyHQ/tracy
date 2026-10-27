@@ -1,0 +1,349 @@
+{
+  "dos": [
+    "Use #001f1f (Forest Ink) for all primary text, primary buttons, and structural borders — let one dark color carry the entire system's weight",
+    "Use Parchment #f7f6f2 as the page background on all screens — never substitute pure white for the body canvas",
+    "Assign each product module or section category its own pastel tint (Mint, Lime, Lavender, Blush) for its feature card background — the color-coding system is signature",
+    "Pair filled and outlined buttons side by side for every primary action: filled Forest Ink + outlined Forest Ink at 29px radius",
+    "Use the 11px caption size with 0.08em letter-spacing for uppercase category labels and micro-text — wide tracking is the system's way of signaling 'tag/label'",
+    "Apply the radial gradient (mint→lime→teal) only in the hero device frame area — it is a single-use atmospheric element, not a repeatable pattern",
+    "Use the soft forest-tinted shadow stack (4% alpha, negative spread) for all card and image elevation — the 1px final ring replaces explicit border declarations"
+  ],
+  "donts": [
+    "Don't use pure black (#000000) for text or UI elements — Forest Ink #001f1f is always the dark structural color, even though contrast ratios are identical",
+    "Don't apply the pastel surface tints to full-page sections — they belong only on contained feature cards and testimonial blocks",
+    "Don't use sharp corners (0px radius) on any interactive element — the system minimum is 7px, and most elements are 14-29px",
+    "Don't introduce additional accent colors beyond the defined palette — the multi-color chart system (Deep Forest, Deep Teal, Olive, Plum, Saffron, Iris) is reserved for data visualization and illustration, never for UI surfaces",
+    "Don't use heavy or high-opacity shadows — the entire shadow system stays at 0.04-0.08 alpha for the organic, paper-like lift",
+    "Don't place colored buttons (green, violet, etc.) as primary actions — the primary CTA is always Forest Ink filled, regardless of section context",
+    "Don't break the badge → heading → description section header rhythm — every section opens with the Category Pill Badge, then heading, then description"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f7f6f2",
+      "name": "Parchment",
+      "role": "Page background — the warm off-white canvas that gives the entire system its paper-like, non-clinical feel. Never use pure white for the body background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Card surfaces, product UI mockups, and embedded media containers — pure white lifted above the parchment canvas to create subtle elevation without shadows",
+      "group": "neutral"
+    },
+    {
+      "hex": "#001f1f",
+      "name": "Forest Ink",
+      "role": "Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#5c7070",
+      "name": "Lichen Gray",
+      "role": "Secondary text and medium-emphasis borders. Sits between Forest Ink and the lighter grays — use for body descriptions, supporting copy, and subtle dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6a7878",
+      "name": "Stone",
+      "role": "Muted body text, nav borders, and tertiary UI elements. The readable-but-quiet gray for descriptions and helper text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#455252",
+      "name": "Slate",
+      "role": "Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#889494",
+      "name": "Mist",
+      "role": "Lightest text tier — captions, metadata, tertiary labels. Use for timestamps, footnotes, and non-essential annotations",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cdface",
+      "name": "Meadow",
+      "role": "Pill badge fills, success highlights, and light accent surfaces. The signature light green for category tags, status indicators, and soft highlight washes",
+      "group": "accent"
+    },
+    {
+      "hex": "#2a4e1c",
+      "name": "Deep Forest",
+      "role": "Dark green accent for data visualization, illustration strokes, and secondary green elements. Distinct from Forest Ink in that it reads clearly as green, not near-black",
+      "group": "brand"
+    },
+    {
+      "hex": "#003d3d",
+      "name": "Deep Teal",
+      "role": "Secondary brand accent — teal-toned borders, illustration fills, and data visualization. Used alongside Deep Forest for multi-color charts and decorative elements",
+      "group": "brand"
+    },
+    {
+      "hex": "#515c0b",
+      "name": "Olive",
+      "role": "Chart and illustration accent — the yellow-green in the multi-color palette system. Used in data bars, category indicators, and decorative strokes",
+      "group": "accent"
+    },
+    {
+      "hex": "#7a2251",
+      "name": "Plum",
+      "role": "Magenta-pink accent for data visualization and illustration. The warm-cool counterpoint in the multi-color palette system",
+      "group": "accent"
+    },
+    {
+      "hex": "#a36a14",
+      "name": "Saffron",
+      "role": "Amber-gold accent for data visualization and illustration. The warm yellow in the multi-color palette system, used in charts and decorative strokes",
+      "group": "accent"
+    },
+    {
+      "hex": "#652ea3",
+      "name": "Iris",
+      "role": "Violet accent for data visualization, illustration strokes, and the integrations section gradient. The cool counterpoint in the multi-color palette",
+      "group": "accent"
+    },
+    {
+      "hex": "#e4f7f9",
+      "name": "Mint Surface",
+      "role": "Pastel feature card background — the pale aqua tint assigned to product modules like Performance. Each product area gets its own pastel home",
+      "group": "accent"
+    },
+    {
+      "hex": "#f8fbe7",
+      "name": "Lime Surface",
+      "role": "Pastel feature card background — the pale yellow-green tint for modules like Goals & OKRs. The warmest pastel in the system",
+      "group": "accent"
+    },
+    {
+      "hex": "#e1e1fa",
+      "name": "Lavender Surface",
+      "role": "Pastel card background — pale violet for testimonial cards, secondary feature blocks, and the cool side of the pastel system",
+      "group": "accent"
+    },
+    {
+      "hex": "#fcf2fe",
+      "name": "Blush Surface",
+      "role": "Pastel card background — near-white pink for subtle surface differentiation. The quietest of the pastel tints",
+      "group": "accent"
+    },
+    {
+      "hex": "#fff3c2",
+      "name": "Buttercream",
+      "role": "Warm pastel accent surface — soft yellow for tag backgrounds and light highlight zones",
+      "group": "accent"
+    },
+    {
+      "hex": "#eff5ce",
+      "name": "Sage Glow",
+      "role": "Green pastel accent for tag backgrounds and soft category highlights. A more saturated green than Lime Surface",
+      "group": "accent"
+    },
+    {
+      "hex": "#fde5ff",
+      "name": "Petal",
+      "role": "Pink pastel accent for tag backgrounds and soft category highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#dcc2eb",
+      "name": "Lilac Stroke",
+      "role": "Muted violet for illustration strokes and decorative outlines",
+      "group": "accent"
+    },
+    {
+      "hex": "#a9eba9",
+      "name": "Halo Gradient",
+      "role": "Hero radial gradient — the lime-to-teal aurora behind the product device frame. Evokes a natural, organic light source rather than a tech glow",
+      "group": "accent",
+      "gradient": "radial-gradient(circle, rgb(191, 241, 245) 32%, rgb(169, 235, 169) 64%, rgb(103, 226, 235))"
+    }
+  ],
+  "layout": "Max-width 1200px centered, never full-bleed. Every section follows the same opening rhythm: Category Pill Badge → bold heading at 47px → description paragraph → content. The hero uses a two-column split (headline + buttons on the left, description text on the right) rather than a centered stack. Product feature sections use a 2-column card grid where each card has its own pastel tint. Testimonials display in a horizontal carousel with 3-up cards and dot pagination. Section gaps are generous (~72px) creating breathing room between bands. Navigation is a sticky top bar with the announcement banner above it. The page reads top-to-bottom as: announcement → nav → hero (split layout + device frame) → logo strip → platform overview (2-col pastel cards) → customer stories (carousel) → integrations banner (gradient closer).",
+  "imagery": "Imagery is product-led, not lifestyle. The hero uses a device frame containing a real product UI screenshot set against a soft radial gradient — no stock photography of people. Feature cards embed actual product interface screenshots (performance review panels, OKR tracking lists) as the primary visual proof. Customer logos appear in a flat monochrome strip — no testimonials photography beyond circular avatar crops. The only non-product visual element is the multi-color petal flower icon in the logo, which hints at the botanical/growth metaphor. All imagery sits on rounded containers with the soft forest-tinted shadow. No full-bleed photography anywhere — the Parchment canvas always wraps the content.",
+  "similar": [
+    {
+      "why": "Same warm off-white canvas approach with a single dark text/button color and pastel-tinted feature blocks replacing section dividers",
+      "business": "Notion"
+    },
+    {
+      "why": "Compact geometric sans-serif typography with tight tracking on large headlines and a restrained color palette that lets one dark accent do the structural work",
+      "business": "Linear"
+    },
+    {
+      "why": "Product-led homepage with embedded UI screenshots in rounded device frames, pastel-tinted feature cards, and a dark single-color primary CTA",
+      "business": "Webflow"
+    },
+    {
+      "why": "Warm non-white canvas with soft shadows, pill-shaped badges, and a system of color-coded product cards each in its own pastel hue",
+      "business": "Intercom"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "14px",
+      "badges": "22px",
+      "inputs": "12px",
+      "buttons": "29px",
+      "feature-cards": "14-43px",
+      "small-elements": "7px"
+    },
+    "elementGap": "8-12px",
+    "sectionGap": "72px",
+    "cardPadding": "28px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#f7f6f2",
+      "name": "Parchment Canvas",
+      "level": 0,
+      "purpose": "Page background — the base layer everything sits on"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White Card",
+      "level": 1,
+      "purpose": "Product UI mockups, embedded content, and standard card surfaces lifted above the canvas"
+    },
+    {
+      "hex": "#e4f7f9",
+      "name": "Pastel Feature Card",
+      "level": 2,
+      "purpose": "Color-coded product module cards — mint, lime, lavender tints assign each feature area its own visual territory"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "color(srgb 0 0.121569 0.121569 / 0.04) 0px 12px 12px -6px, color(srgb 0 0.121569 0.121569 / 0.04) 0px 6px 6px -3px, color(srgb 0 0.121569 0.121569 / 0.04) 0px 3px 3px -1.5px, color(srgb 0 0.121569 0.121569 / 0.08) 0px 1px 1px -0.5px, color(srgb 0 0.121569 0.121569 / 0.04) 0px 0px 0px 1px",
+      "element": "Cards, images, icons, links"
+    }
+  ],
+  "northStar": "Botanical field journal on warm parchment — a quiet cream canvas where dark forest ink does the speaking and pastel specimen cards provide the color.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.88
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "subheading",
+      "size": 19,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 22,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading",
+      "size": 47,
+      "lineHeight": 1,
+      "letterSpacing": -1.13
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 0.9,
+      "letterSpacing": -1.73
+    }
+  ],
+  "components": [
+    {
+      "name": "Filled Primary Button",
+      "role": "Main call-to-action — the highest-emphasis interactive element",
+      "description": "Filled Forest Ink (#001f1f) background with white text. 29px border-radius (pill-like but slightly softened). 13px vertical / 11-18px horizontal padding. Matter 500 at 14-16px. Letter-spacing normal. This is the dark anchor that makes the warm cream canvas feel intentional."
+    },
+    {
+      "name": "Outlined Secondary Button",
+      "role": "Companion to the primary CTA — same hierarchy weight, different surface treatment",
+      "description": "Transparent background with 1.5px Forest Ink (#001f1f) border. Forest Ink text. 29px border-radius. Same padding as filled variant. Pairs directly beside the filled button (e.g. 'Request a demo' filled + 'Take a tour' outlined)."
+    },
+    {
+      "name": "Category Pill Badge",
+      "role": "Section labels and content taxonomy markers",
+      "description": "Meadow (#cdface) background fill with Forest Ink (#001f1f) text and a 1px Forest Ink border. 22px border-radius. ~9px vertical / 11px horizontal padding. Matter 500 at 13px. Always paired with a small arrow icon (→) inside a circular forest-ink container on the right."
+    },
+    {
+      "name": "Pastel Feature Card",
+      "role": "Product module showcase — each product area gets its own colored home",
+      "description": "Rounded card with a pastel tint background (Mint #e4f7f9, Lime #f8fbe7, Lavender #e1e1fa). 14-43px border-radius. Contains a category icon (circular, filled with a slightly deeper shade), a title in Forest Ink at 19-22px, a description in Lichen Gray, and an embedded product UI screenshot. The pastel tint is the card's identity — never apply gradients or patterns to these."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Social proof — customer quotes with quantified results",
+      "description": "Lavender (#e1e1fa) or pastel-tinted background. 14px border-radius. Contains: avatar (circular, ~48px), name in Forest Ink at 16px weight 500, role/company in Lichen Gray, quote text in Forest Ink at 14-16px, a large stat number (e.g. '30h', '2,000') in Forest Ink at 47px, and a 'Read the story →' link in Forest Ink."
+    },
+    {
+      "name": "Product Device Frame",
+      "role": "Hero visual — the product UI displayed inside a device/laptop frame",
+      "description": "A rounded-corner container (large radius ~14-29px) showing the product interface on a white card. Set against the Hero Gradient (radial mint→lime→teal). The frame has a subtle forest-tinted shadow. This is the only place where the radial gradient appears."
+    },
+    {
+      "name": "Integration Banner",
+      "role": "Section-level call-to-action linking to integrations",
+      "description": "Full-width card with a violet-to-blue gradient background. Contains a centered 'Integrations →' pill badge. Wide radius (~14-29px). This gradient is the cool counterpart to the hero's warm radial — used once per page as a section closer."
+    },
+    {
+      "name": "Top Navigation",
+      "role": "Primary site navigation — persistent across all pages",
+      "description": "Sticky top bar on Parchment background. Lattice logo (dark teal text + small multi-color petal icon) on the left. Center: nav items (Platform, Why Lattice, Customers, Resources, Pricing) in Slate (#455252) at 14px weight 500 with dropdown chevrons. Right: 'Log in' text link and a filled Forest Ink 'Request a demo' button with 11.5px radius."
+    },
+    {
+      "name": "Announcement Banner",
+      "role": "Top-of-page promotional strip",
+      "description": "Sits above the nav bar. Light mint/teal background. Contains event title in Forest Ink at 13px, a vertical divider, and a 'Register now →' link. Can be dismissed with a close button on the right."
+    },
+    {
+      "name": "Customer Logo Strip",
+      "role": "Social proof — trusted-by logos below the hero",
+      "description": "Horizontal row of customer logos (greenhouse, Robinhood, loom, duolingo, Discord, brooklinen, npr, gusto) in muted gray tones on the Parchment background. Logos sit at uniform size with even spacing. No background card — the logos float on the canvas."
+    },
+    {
+      "name": "Link with Arrow",
+      "role": "Inline navigation link — used in body copy and card footers",
+      "description": "Forest Ink text with an arrow character (→) trailing. Underlined on hover. 14-16px Matter 500. No background or border — color and weight carry the emphasis."
+    },
+    {
+      "name": "Section Header",
+      "role": "Page section title pattern — the universal section opener",
+      "description": "Category Pill Badge on top, then a heading at 47px Matter 500 in Forest Ink with -1.13px tracking, line-height 1.00. To the right or below: a description paragraph in Lichen Gray at 16-19px, optionally followed by a Link with Arrow. The badge → heading → description rhythm repeats across every section."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Sole typeface across the entire system — nav, body, buttons, headings, and display. A geometric sans with humanist warmth that keeps the warm-parchment aesthetic feeling organic rather than clinical. Weight 500 for headings and buttons, weight 400 for body and supporting text. Tight tracking (-0.024em) on display sizes creates a compact, confident headline; wide tracking (0.08em) on 11px labels gives uppercase tags breathing room.",
+      "sizes": "11, 13, 14, 16, 17, 18, 19, 22, 47, 72",
+      "family": "Matter",
+      "weight": "400, 500",
+      "lineHeight": "0.90, 1.00, 1.10, 1.20, 1.30",
+      "substitute": "Inter, DM Sans, or Switzer",
+      "letterSpacing": "-0.024em on display/headings (47–72px), 0.08em on 11px uppercase labels, normal at body sizes"
+    }
+  ],
+  "description": "Lattice reads like a botanical field journal rendered in product form: a warm parchment canvas (#f7f6f2) carries the entire site, with a single near-black forest ink (#001f1f) doing the heavy lifting as both primary text and primary action surface. The signature is a system of pastel-tinted feature cards — mint, lime, lavender, buttercream — each color-coding a product module like a specimen tray, paired with dark filled and outlined buttons in the same forest green. Typography is a single geometric sans (Matter) at compact sizes, with tight tracking on large display copy and wide tracking on small uppercase labels. Everything sits on generous rounded corners (14–29px), soft 1px-tinted shadows, and zero decorative noise — color appears as functional punctuation, not ornament.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Text: #001f1f (Forest Ink)\n- Background: #f7f6f2 (Parchment)\n- Border: #5c7070 (Lichen Gray) or #001f1f for structural borders\n- Accent: #cdface (Meadow) for badges and highlights\n- primary action: #cdface (filled action)\n- Card surface: #ffffff (Paper White) for product UI, pastel tints (#e4f7f9, #f8fbe7, #e1e1fa) for feature cards\n\n## Example Component Prompts\n\n1. **Hero Section**: Parchment (#f7f6f2) background. Headline at 72px Matter 500, #001f1f, letter-spacing -1.73px, line-height 0.90. Subtext at 19px Matter 400, #5c7070. Filled button: #001f1f background, white text, 29px radius, 13px 18px padding. Outlined button beside it: transparent, 1.5px #001f1f border, #001f1f text, 29px radius. Below: product device frame on a radial gradient (mint→lime→teal).\n\n2. **Pastel Feature Card**: Mint (#e4f7f9) background fill, 14px radius. Category icon in a circular container with a slightly deeper mint. Title at 22px Matter 500, #001f1f. Description at 16px Matter 400, #5c7070. Embedded white product UI card with soft forest-tinted shadow.\n\n3. **Category Pill Badge**: #cdface background, 1px #001f1f border, 22px radius, 9px 11px padding. Text at 13px Matter 500, #001f1f, with 0.08em letter-spacing. Small arrow icon in a circular #001f1f container on the right.\n\n4. **Testimonial Card**: Lavender (#e1e1fa) background, 14px radius. Circular avatar (48px) top-left. Name at 16px Matter 500, #001f1f. Role in #5c7070 at 14px. Quote in #001f1f at 14px. Large stat number at 47px Matter 500, #001f1f. 'Read the story →' link in #001f1f at 14px Matter 500.\n\n5. **Integration Banner**: Full-width card with violet-to-blue linear gradient background, 14px radius. Centered 'Integrations →' pill badge in white/forest-ink styling. 72px vertical padding."
+    },
+    {
+      "title": "Pastel System",
+      "content": "Each product module or content category is assigned a pastel tint that serves as its visual home. This is not a random color rotation — it is a deliberate taxonomy system where users begin to associate Mint = Performance, Lime = Goals & OKRs, Lavender = Testimonials. When creating a new section, pick the pastel that matches the content category and use it only for that section's feature card background. The full pastel set: Mint #e4f7f9, Lime #f8fbe7, Lavender #e1e1fa, Blush #fcf2fe, Buttercream #fff3c2, Sage #eff5ce, Petal #fde5ff. Never apply pastels to full-width sections or to non-card elements."
+    }
+  ],
+  "elevationPhilosophy": "Shadows are forest-green-tinted (not pure black) and extremely soft — the 0.04 alpha base and negative spread values create a diffuse, organic lift rather than a hard Material-style drop. The final 1px ring at 0.04 alpha acts as a border replacement, so cards appear to float on the parchment canvas without a visible outline. Elevation is used sparingly — most surface separation comes from the parchment-to-white-to-pastel color stack, not from shadows."
+}

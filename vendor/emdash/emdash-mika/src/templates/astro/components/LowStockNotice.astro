@@ -1,0 +1,38 @@
+---
+// mika-template-version: 0.1.1
+import { Banner } from "@cloudflare/kumo";
+import type { AvailabilityDTO } from "@bnomei/emdash-mika/types";
+
+interface Props {
+  availability?: AvailabilityDTO;
+  label?: string;
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const {
+  availability,
+  label,
+  class: className,
+  ...attrs
+} = Astro.props;
+const show =
+  availability?.status === "low_stock" ||
+  availability?.lowStock === true;
+const resolvedLabel = label ?? (
+  availability?.availableQuantity !== undefined
+    ? `Only ${availability.availableQuantity} left.`
+    : "Only a few left."
+);
+---
+
+{show && (
+  <Banner
+    {...attrs}
+    data-mika-low-stock
+    className={className}
+    role="status"
+    variant="alert"
+    text={resolvedLabel}
+  />
+)}

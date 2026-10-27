@@ -1,0 +1,81 @@
+{
+  "id": "QA-UNIT-REG-PR-1454-shard-sign-uutils-date-happy",
+  "itemIds": ["regression:REG-PR-1454-shard-sign-uutils-date"],
+  "requirement": "Shard and seat request signing sends a 13-digit millisecond timestamp even where uutils date prints nanoseconds for %3N",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1454-shard-sign-uutils-date.json",
+    "ref": "PR #1454 (fix); fix evidence: none recorded",
+    "invariant": "0 failures and 0 skipped. Every test named in run.tests reports ok. x-shard-timestamp has exactly 13 digits and is within 60 s of the test's clock.",
+    "productSources": ["packages/fleet/tracy-fleet-operation/dsh/host-dsh-init.sh:55"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/fleet/tracy-fleet-operation/test/host-dsh-init.test.mjs:125 import() with a computed specifier",
+      "packages/fleet/tracy-fleet-operation/test/host-dsh-init.test.mjs:390 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/host-dsh-init.test.mjs:427 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/host-dsh-init.test.mjs:438 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/host-dsh-init.test.mjs:451 readFileSync() with a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:104 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:124 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:14 import() with a computed specifier",
+      "scripts/test/shard-sign-interop.test.mjs:142 import() with a computed specifier",
+      "scripts/test/shard-sign-interop.test.mjs:15 import() with a computed specifier",
+      "scripts/test/shard-sign-interop.test.mjs:155 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:161 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:163 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:169 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:173 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:174 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:175 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:177 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:192 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:51 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:65 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:79 spawnSync() runs a computed path",
+      "scripts/test/shard-sign-interop.test.mjs:92 spawnSync() runs a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "with no --timestamp the signer uses 13-digit milliseconds, even under uutils date",
+    "step 6 signs with seconds x 1000, never date +%s%3N (uutils prints nanoseconds: 403 stale)",
+    "a POST signed in bash passes tracy-host verifyHostCall (the same string when the method is POST)"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1454-shard-sign-uutils-date"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "scripts", "scripts"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1454-shard-sign-uutils-date",
+    "pr": 1454,
+    "kind": "fix",
+    "area": "deploy/shard",
+    "file": "tests/regression/cases/REG-PR-1454-shard-sign-uutils-date.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-force-exit",
+    "--test-reporter=tap",
+    "scripts/test/shard-sign-interop.test.mjs",
+    "packages/fleet/tracy-fleet-operation/test/host-dsh-init.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "with no --timestamp the signer uses 13-digit milliseconds, even under uutils date",
+    "step 6 signs with seconds x 1000, never date +%s%3N (uutils prints nanoseconds: 403 stale)",
+    "a POST signed in bash passes tracy-host verifyHostCall (the same string when the method is POST)"
+  ],
+  "timeoutS": 600
+}

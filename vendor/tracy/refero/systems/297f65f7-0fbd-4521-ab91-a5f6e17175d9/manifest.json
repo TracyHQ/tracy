@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "297f65f7-0fbd-4521-ab91-a5f6e17175d9",
+  "status": "complete",
+  "name": "Electronic Materials Office®",
+  "url": "https://styles.refero.design/style/297f65f7-0fbd-4521-ab91-a5f6e17175d9",
+  "sourceWebsite": "https://electronicmaterialsoffice.com",
+  "extractedAt": "2026-06-03T20:53:44.735Z",
+  "capturedAt": "2026-10-08T05:09:34.384361+00:00",
+  "theme": "dark",
+  "industry": "ecommerce",
+  "description": "Incandescent ember in a charcoal gallery",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f76b49b5-559e-45d0-897b-7122d8b439de.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4c39c060-9dce-4e86-8a36-8b081fc67201.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a93832d3-3f98-4386-a769-27d4eaa5e0ee.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/549c4fda-b18d-41fb-bcc1-4e477b633edc.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/8bd96e37-9352-45d1-b54f-bcb7e29ff8a3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "caebe2699f15e63a3150153ae0c4d12eaf4c43986296e62e38a0848927d1c0e8",
+      "bytes": 19590
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fcc108a89301f33d6298d32c79e77206af877dfaac6e38251a2909c70310bffe",
+      "bytes": 107998
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c8f89ba8c378c24155a60ff8a2d1cec73e39c226fb8bdb60ebe166a9578a9f78",
+      "bytes": 16280
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7e066690e2c4214f912b376f82bbb7a3f124a9370fbe1da7905dc553283dd21b",
+      "bytes": 8815
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ac83dd43a9490faa78c2b3141f976757713150d92a0e85bf573bb8e070c48b36",
+      "bytes": 12625
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "de41a22adad2ba0d03869b669581b660f40b4ba2e68ae59e36b932560bf3d1a7",
+      "bytes": 3319
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f005a1657089612004dc68a090239e7bb2bb30f8dcc47f97dff4ed01cc6cfd1c",
+      "bytes": 638
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9cccd2c200351c893a3f448854c13848004e2af43d8f3f39281f471ae8cc8d3f",
+      "bytes": 655
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "535719b197d37035a1b45b78aa519052eb9248c34d1d61bd049a1ad5b4b483cd",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4dbc57997b03986ac2867e64bf5d8fdf7799b57eccb7c181724d969ba6c58edc",
+      "bytes": 42084
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "be3fa42b6f1ed554d8554993ea6c999b11b56c66ffeb1aa50be83e8488a7a382",
+      "bytes": 21815
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3e18f0e5c10d03f3546af01aa50b2d5630176cc7269c9a50656f1d355c8b2b96",
+      "bytes": 35471
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8344e8aeff61d52f751a08f57ae2852f624defe787536535c20fd0b3732ee7e2",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5abc17ce8891f8c0eefc1f119d187a4259db9d5d0d09cafa07104f0ed01a157e",
+      "bytes": 1680
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a566ffdfa9e4e4bce0b9d39ef756c7f042bca0793b7f787464bc7992552dd67f",
+      "bytes": 2153
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "297f65f7-0fbd-4521-ab91-a5f6e17175d9",
+    "2cfb738d-6c44-4628-a2f5-e9c9fc92a0ca",
+    "37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4bcd0728-0d28-4835-ba9f-d61554f797b1",
+    "5183054c-4c6e-4ecf-bd90-f7d794d5eb17",
+    "57160546-4cf7-4d52-bb05-cd8b88e1fbf9",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6b5a0bf4-3d2a-4c3b-aa2e-652f1acb82c0",
+    "6d1d19a3-294d-4bad-9f8b-f775cb24b47a",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "9e5bd4b1-0ba8-4592-a5ec-a935bd4ea9c6",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e9a1c1e1-2c35-47c0-864f-d1e9fea57579",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

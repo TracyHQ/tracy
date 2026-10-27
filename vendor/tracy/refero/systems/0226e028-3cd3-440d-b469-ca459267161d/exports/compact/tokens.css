@@ -1,0 +1,9 @@
+:root {
+  /* Colors */
+  --color-bone: #f0eeeb;
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+
+  /* Typography — Font Families */
+  --font-grotesk: 'Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

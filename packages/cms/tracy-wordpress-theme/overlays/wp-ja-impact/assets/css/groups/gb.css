@@ -1,0 +1,310 @@
+/* gb — the listing pages of JA Impact: donations, events, the blog views, the article table, the tagged items and the
+ * author list. Lengths and colours were read off the running source (http://127.0.0.1:8300, 01/10/2026) at 1440 and
+ * 390 px in light and dark. The cards reuse the home page's card classes (.jim-fund, .jim-evt, .jim-news), which the
+ * g3 sheet draws; this sheet lays them out as pages (grids instead of sliders), draws the Joomla pager and the three
+ * views the home page has no card for. Colours come from the shared --jim-* tokens (light-dark() carries both modes). */
+
+/* The listing section sits 128 px under the masthead and 256 px above the contact block (page padding 128 + the pager's space). */
+body.tracy .jim-gb { padding: 128px 0 96px; }
+
+/* ── Pager (Joomla com_content pagination, drawn with the theme's must-use pager markup) ─────────────── */
+
+body.tracy .jim-gb__pager,
+body.tracy .jim-gb-pager-host .tracy-pager {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  margin: 64px 0 0;
+  text-align: center;
+}
+body.tracy .jim-gb__pager .tracy-pager__counter { margin: 0 0 16px; color: var(--ds-c-muted, #6c757d); }
+body.tracy .jim-gb__pager .tracy-pager__list { display: flex; justify-content: center; gap: 16px; margin: 0; padding: 0; list-style: none; }
+body.tracy .jim-gb__pager .tracy-pager__item { margin: 0; }
+body.tracy .jim-gb__pager .tracy-pager__item.is-disabled { display: none; }
+body.tracy .jim-gb__pager .tracy-pager__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--jim-raised-2);
+  border-radius: var(--ds-pill-radius, var(--jim-radius));
+  background: var(--jim-raised-2);
+  color: var(--jim-link);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.16px;
+  transition: background-color 0.2s ease-in, color 0.2s ease-in;
+}
+body.tracy .jim-gb__pager a.tracy-pager__link:hover { border-color: var(--jim-success); background: var(--jim-success); color: var(--ds-c-accent-on, #ffffff); }
+body.tracy .jim-gb__pager .is-current .tracy-pager__link { border-color: var(--jim-success); background: var(--jim-success); color: var(--ds-c-accent-on, #ffffff); }
+/* The controls are icons in the source; the words stay for assistive technology. */
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='start' i],
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='previous' i],
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='next' i],
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='end' i] { font-size: 0; }
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='start' i]::before,
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='previous' i]::before,
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='next' i]::before,
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='end' i]::before {
+  font-family: 'Font Awesome 6 Free';
+  font-size: 16px;
+  font-weight: 900;
+}
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='start' i]::before { content: '\f100'; }
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='previous' i]::before { content: '\f104'; }
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='next' i]::before { content: '\f105'; }
+body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='end' i]::before { content: '\f101'; }
+
+/* ── Donations ────────────────────────────────────────────────────────────────────────────────────── */
+
+body.tracy .jim-gb--funds .jim-fund-list { padding-bottom: 0; }
+body.tracy .jim-gb--funds .jim-fund-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+body.tracy .jim-gb--funds .jim-fund-grid > li { box-sizing: border-box; margin: 0; padding: 0 16px; border-right: 1px solid var(--ds-c-border-soft, rgba(0, 0, 0, 0.1)); }
+@media (min-width: 768px) {
+  body.tracy .jim-gb--funds .jim-fund-grid { grid-template-columns: repeat(2, 1fr); }
+}
+/* The 1px divider eats into the card width; below 992 the 4/5 card is 1.2px too short without this. */
+@media (max-width: 991.98px) {
+  body.tracy .jim-gb--funds .jim-fund-grid > li { padding-right: 15px; }
+}
+@media (min-width: 1200px) {
+  body.tracy .jim-gb--funds .jim-fund-grid { grid-template-columns: repeat(3, 1fr); }
+  body.tracy .jim-gb--funds .jim-fund-grid > li:nth-child(3n) { border-right-color: transparent; }
+}
+@media (min-width: 1400px) {
+  body.tracy .jim-gb--funds .jim-fund-grid > li { padding: 0 32px; }
+}
+
+/* ── Events ───────────────────────────────────────────────────────────────────────────────────────── */
+
+/* The highlighted card spans two rows of the right column, as in the source (g3 draws it). Its picture fills what the
+ * two rows leave under the text and never sets the row heights itself. */
+@media (min-width: 1200px) {
+  body.tracy .jim-gb--events .jim-evt--hl .jim-evt__image { height: 0; min-height: 0; flex: 1 1 0; overflow: hidden; }
+  body.tracy .jim-gb--events .jim-evt--hl .jim-evt__image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+}
+
+/* ── Blog views: the cards are plain surfaces whatever colour field the article carries ───────────── */
+
+body.tracy .jim-gb.jim-gb--news.style-news .jim-news__content--success,
+body.tracy .jim-gb.jim-gb--news.style-news .jim-news__content--primary,
+body.tracy .jim-gb.jim-gb--news.style-news .jim-news__content--warning,
+body.tracy .jim-gb.jim-gb--news.style-news .jim-news__content--info { background: var(--jim-surface); }
+body.tracy .jim-gb.jim-gb--news.style-news :is(.jim-news__content--success, .jim-news__content--primary, .jim-news__content--warning, .jim-news__content--info) .jim-news__date { color: var(--jim-text); }
+body.tracy .jim-gb.jim-gb--news.style-news :is(.jim-news__content--success, .jim-news__content--primary, .jim-news__content--warning, .jim-news__content--info) .jim-news__by { color: var(--jim-text); }
+body.tracy .jim-gb.jim-gb--news.style-news :is(.jim-news__content--success, .jim-news__content--primary, .jim-news__content--warning, .jim-news__content--info) .jim-news__author { color: var(--ds-c-accent-text, var(--jim-success)); }
+body.tracy .jim-gb.jim-gb--news.style-news :is(.jim-news__content--success, .jim-news__content--primary, .jim-news__content--warning, .jim-news__content--info) .jim-news__title a { color: var(--jim-link); }
+body.tracy .jim-gb.jim-gb--news.style-news :is(.jim-news__content--success, .jim-news__content--primary, .jim-news__content--warning, .jim-news__content--info) .jim-news__date::after { background: var(--jim-muted); }
+
+body.tracy .jim-gb--news .jim-news__meta :is(.jim-news__date, .jim-news__by) { line-height: 1.2; }
+body.tracy .jim-gb.jim-gb--news.style-news .jim-news__by a { color: var(--ds-c-accent-text, var(--jim-success)); }
+body.tracy .jim-gb--news .jim-news__by { display: flex; align-items: center; gap: 4px; }
+body.tracy .jim-gb--news .jim-news__by a { color: var(--ds-c-accent-text, var(--jim-success)); font-weight: 400; text-transform: none; }
+
+/* ── Article table (category list) ────────────────────────────────────────────────────────────────── */
+
+body.tracy .jim-gb-table__head,
+body.tracy .jim-gb-table__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 289px 125px;
+  align-items: center;
+  border: 1px solid var(--jim-line);
+  border-bottom-width: 0;
+}
+@media (max-width: 575px) {
+  body.tracy .jim-gb-table__head,
+  body.tracy .jim-gb-table__row { grid-template-columns: minmax(0, 1fr) 94px 83px; }
+  body.tracy .jim-gb-table__th,
+  body.tracy .jim-gb-table__title,
+  body.tracy .jim-gb-table__author,
+  body.tracy .jim-gb-table__hits { min-width: 0; overflow-wrap: anywhere; }
+}
+body.tracy .jim-gb-table__head { background: rgba(0, 0, 0, 0.04); }
+body.tracy .jim-gb-table__rows { margin: 0 0 64px; padding: 0; list-style: none; }
+body.tracy .jim-gb-table__rows > li { margin: 0; }
+body.tracy .jim-gb-table__rows > li:last-child .jim-gb-table__row { border-bottom-width: 1px; }
+body.tracy .jim-gb-table__rows > li:nth-child(even) .jim-gb-table__row { background: rgba(0, 0, 0, 0.04); }
+body.tracy .jim-gb-table__th,
+body.tracy .jim-gb-table__title,
+body.tracy .jim-gb-table__author,
+body.tracy .jim-gb-table__hits { margin: 0; padding: 8px; font-size: 16px; line-height: 25.6px; letter-spacing: 0; }
+body.tracy .jim-gb-table__th { font-weight: 700; color: var(--jim-link); }
+body.tracy .jim-gb-table__author { color: light-dark(var(--ds-c-fg, #212529), var(--ds-c-fg, #c2c9d6)); }
+/* The source colours the author cell of the odd rows (cat-list-row0) black and the even ones #212529 (measured). */
+body.tracy .wp-block-post-template > li:nth-child(odd) .jim-gb-table__author { color: var(--ds-c-fg, light-dark(#000000, #eef1f6)); }
+body.tracy .jim-gb-table__title { font-weight: 400; color: var(--jim-text); }
+body.tracy .jim-gb-table__title a { color: var(--jim-text); }
+body.tracy .jim-gb-table__title a:hover { color: var(--ds-c-accent-text, var(--jim-success)); }
+body.tracy .jim-gb-table__hits:not(:empty) {
+  justify-self: start;
+  margin: 0 8px;
+  padding: 4.2px 7.8px;
+  border-radius: var(--ds-pill-radius, var(--jim-radius));
+  background: var(--jim-info);
+  color: var(--ds-c-on-ink, #ffffff);
+  font-size: 12px;
+  line-height: 12px;
+}
+
+/* ── Tagged items ─────────────────────────────────────────────────────────────────────────────────── */
+
+body.tracy .jim-gb--tagged .jim-gb-filter { margin: 0 0 16px; }
+body.tracy .jim-gb--tagged .jim-gb-filter .wp-block-search__inside-wrapper { display: flex; gap: 0; max-width: 374px; }
+body.tracy .jim-gb--tagged .jim-gb-filter .wp-block-search__input {
+  min-width: 0;
+  height: 56px;
+  padding: 14px;
+  border: 1px solid var(--jim-surface);
+  border-radius: var(--ds-input-radius, var(--jim-radius)) 0 0 var(--ds-input-radius, var(--jim-radius));
+  background: var(--jim-surface);
+  color: var(--jim-text);
+  font: inherit;
+}
+body.tracy .jim-gb--tagged .jim-gb-filter .wp-block-search__button {
+  height: 56px;
+  margin: 0;
+  padding: 17px 32px;
+  border: 1px solid var(--jim-muted);
+  border-radius: 0 var(--ds-btn-radius, 5px) var(--ds-btn-radius, 5px) 0;
+  background: var(--jim-muted);
+  color: var(--ds-c-on-ink, #ffffff);
+  font: inherit;
+  font-weight: 500;
+}
+body.tracy .jim-gb-tagged__list { margin: 0; padding: 0; overflow: hidden; border-radius: var(--jim-radius); list-style: none; }
+/* The source's list-group items are white rows with a dark text in both themes (measured in dark). */
+body.tracy .jim-gb-tagged__list > li { display: flow-root; margin: 0; padding: 16px 0 0; border-bottom: 1px solid var(--ds-c-border, #e9ecef); background: var(--ds-c-bg, #ffffff); color: var(--ds-c-fg, #212529); }
+body.tracy .jim-gb-tagged__title { margin: 0 0 16px; font-size: 16px; font-weight: 500; line-height: 19.2px; letter-spacing: -0.28px; }
+body.tracy .jim-gb-tagged__title a { color: var(--jim-heading); }
+body.tracy .jim-gb-tagged__title a:hover { color: var(--ds-c-accent-text, var(--jim-success)); }
+
+/* ── Authors ──────────────────────────────────────────────────────────────────────────────────────── */
+
+body.tracy .jim-gb--authors .jim-author-grid { display: grid; grid-template-columns: 1fr; gap: 32px; margin: 0; padding: 0; list-style: none; }
+@media (min-width: 768px) {
+  body.tracy .jim-gb--authors .jim-author-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 992px) {
+  body.tracy .jim-gb--authors .jim-author-grid { grid-template-columns: repeat(3, 1fr); }
+}
+body.tracy .jim-gb--authors .jim-author-grid { row-gap: 32px; }
+@media (min-width: 768px) { body.tracy .jim-gb--authors .jim-author-grid { row-gap: 64px; } }
+body.tracy .jim-gb--authors .jim-gb__pager { margin-top: 32px; }
+body.tracy .jim-gb--authors .jim-author { margin: 0; padding: 32px; border: 1px solid var(--jim-surface); border-radius: var(--jim-radius); background: var(--jim-surface); }
+body.tracy .jim-gb--authors .jim-author__image { display: block; margin: 0 0 16px; aspect-ratio: 1 / 1; overflow: hidden; border-radius: var(--jim-radius); }
+body.tracy .jim-gb--authors .jim-author__image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+body.tracy .jim-gb--authors .jim-author__info { padding: 0; }
+body.tracy .jim-gb--authors .jim-author__name { margin: 0 0 8px; font-size: 24px; font-weight: 600; line-height: 1.2; letter-spacing: -0.24px; }
+body.tracy .jim-gb--authors .jim-author__name a { color: var(--jim-heading); font-size: inherit; font-weight: inherit; line-height: inherit; letter-spacing: inherit; }
+body.tracy .jim-gb--authors .jim-author__job { margin: 0 0 16px; color: var(--ds-c-accent-text, var(--jim-success)); font-size: 14px; line-height: 1.6; text-transform: capitalize; }
+body.tracy .jim-gb--authors .jim-author__about { display: -webkit-box; margin: 0; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+
+/* ── Dark: the listing cards read the source's link colours (the home sheet's heading colour is for the home cards) ── */
+
+html[data-theme='dark'] body.tracy .jim-gb.jim-gb--funds .jim-fund__title,
+html[data-theme='dark'] body.tracy .jim-gb.jim-gb--funds .jim-fund__title a { color: var(--ds-c-heading, #ffffff); }
+html[data-theme='dark'] body.tracy .jim-gb.jim-gb--events .jim-evt__title,
+html[data-theme='dark'] body.tracy .jim-gb.jim-gb--events .jim-evt__title a,
+html[data-theme='dark'] body.tracy .jim-gb.jim-gb--news .jim-news__title a { color: var(--jim-link); }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) body.tracy .jim-gb.jim-gb--funds .jim-fund__title,
+  html:not([data-theme]) body.tracy .jim-gb.jim-gb--funds .jim-fund__title a { color: var(--ds-c-heading, #ffffff); }
+  html:not([data-theme]) body.tracy .jim-gb.jim-gb--events .jim-evt__title,
+  html:not([data-theme]) body.tracy .jim-gb.jim-gb--events .jim-evt__title a,
+  html:not([data-theme]) body.tracy .jim-gb.jim-gb--news .jim-news__title a { color: var(--jim-link); }
+}
+
+/* Author names: 20 px under 768 px, as in the source. */
+@media (max-width: 767px) {
+  body.tracy .jim-gb--authors .jim-author__name { font-size: 20px; }
+}
+
+/* The featured list prints its titles in the heading colour in dark (source: the other lists keep the link colour). */
+html[data-theme='dark'] body.tracy .jim-gb.jim-gb--featured .jim-news__title a { color: var(--jim-heading); }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) body.tracy .jim-gb.jim-gb--featured .jim-news__title a { color: var(--jim-heading); }
+}
+
+/* The tagged list sits directly in the page's main body (the source's component has no module spacing of its own). */
+body.tracy .jim-acm.jim-gb--tagged { padding-block: 0; }
+body.tracy .jim-main-body .jim-acm.jim-gb { padding-block: 0; }
+/* A picture closing a page's text keeps the paragraph margin under it (the source's article body ends with a <p> around it). */
+body.tracy .jim-main-body .jim-prose > figure:last-child { margin-bottom: 16px; }
+
+/* Pager under 576 px: 35 px buttons with an 8 px gap (the source's .page-link at 390 px, measured). */
+@media (max-width: 575.98px) {
+  body.tracy .jim-gb__pager .tracy-pager__list { gap: 8px; }
+  body.tracy .jim-gb__pager .tracy-pager__link { width: 35px; height: 35px; font-size: 14px; }
+  body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='start' i], body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='previous' i], body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='next' i], body.tracy .jim-gb__pager .tracy-pager__link[aria-label*='end' i] { font-size: 0; }
+}
+
+/* The listing's page padding follows the source's main body: 32 px under 768 px, 64 px under 1200 px, 128 px above (measured). */
+@media (max-width: 1199.98px) { body.tracy .jim-acm.jim-gb { padding-block: 64px; } }
+@media (max-width: 767.98px) { body.tracy .jim-acm.jim-gb { padding-block: 32px; } }
+@media (max-width: 991.98px) { body.tracy .jim-gb .jim-news__content { padding: 16px; } }
+@media (max-width: 991.98px) { body.tracy .jim-gb--authors .jim-author { padding: 16px; } }
+/* The pager's 64 px sits above the "Page n of m" line (the line is wrapped with the pager by inc/groups/ga.php), then 16 px to the buttons. */
+body.tracy .jim-pager-host .jim-gb__pager { margin-top: 0; }
+body.tracy .jim-pager-host .jim-pager-host__counter { margin: 64px 0 16px; }
+/* The source prints no "Page x of y" counter on the tag list. */
+body.tracy:not(.jim-route-donations) .jim-pager-host__counter { display: none; }
+body.tracy .jim-gb--tagged .jim-pager-host__counter { display: none; }
+
+/* Event cards keep the 32 px margin under every card, the last row included, and the pager sits 32 px under them (the source's .blog-item margin and navigation margin). */
+body.tracy .jim-gb--events .jim-evt-grid { padding-bottom: 32px; }
+body.tracy .jim-gb--events .jim-pager-host { margin-top: 32px; }
+@media (max-width: 991.98px) { body.tracy .jim-gb--events .jim-pager-host { margin-top: 0; } }
+
+/* Without the "Page n of m" line the list sits 128 px above the contact block (the source's main-body padding); donations keep it and the 96 px. */
+@media (min-width: 1200px) {
+  body.tracy:not(.jim-route-donations) .jim-gb { padding-bottom: 128px; }
+}
+
+/* Author list and tag list: the source's pagination wrap keeps 32 px under the buttons; the tag list's wrap has 32 px above (64 px from 1200 px). */
+body.tracy .jim-author-list .tracy-joomla-pager { margin-bottom: 32px; }
+body.tracy .jim-gb--tagged .jim-pager-host { margin: 32px 0; }
+@media (min-width: 1200px) { body.tracy .jim-gb--tagged .jim-pager-host { margin-top: 64px; } }
+
+/* The article table in the page body has 16 px under it (the source's list wrapper), not the 64 px of the full-width list sections. */
+body.tracy .jim-main-body .jim-gb-table__rows { margin-bottom: 16px; }
+
+/* Article table columns follow the source's auto-layout widths (author / hits) at each container width, so titles wrap where the source's do. */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  body.tracy .jim-gb-table__head, body.tracy .jim-gb-table__row { grid-template-columns: minmax(0, 1fr) 122px 82px; }
+}
+@media (min-width: 768px) and (max-width: 991.98px) {
+  body.tracy .jim-gb-table__head, body.tracy .jim-gb-table__row { grid-template-columns: minmax(0, 1fr) 155px 82px; }
+}
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  body.tracy .jim-gb-table__head, body.tracy .jim-gb-table__row { grid-template-columns: minmax(0, 1fr) 200px 85px; }
+}
+@media (min-width: 1200px) { body.tracy .jim-main-body .jim-gb-table__rows { margin-bottom: 64px; } }
+
+/* The source's pager buttons are 35 px up to 767 px, not 575 px. */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  body.tracy .jim-gb__pager .tracy-pager__list { gap: 8px; }
+  body.tracy .jim-gb__pager .tracy-pager__link { width: 35px; height: 35px; font-size: 14px; }
+}
+
+/* Under 768 px the source's blog wrapper has 16 px above and below the cards. */
+@media (max-width: 767.98px) {
+  body.tracy .jim-gb--news .jim-news-list { padding-block: 16px; }
+  body.tracy .jim-gb--news .jim-pager-host { margin-top: 0; }
+  body.tracy .jim-pager-host .tracy-pager__list { gap: 8px; }
+  body.tracy .jim-pager-host .tracy-pager__link { width: 35px; height: 35px; min-width: 35px; min-height: 35px; font-size: 14px; }
+  body.tracy .jim-gb--events .jim-evt-list { padding-block: 16px; }
+}
+
+/* Event cards under 576 px: 24 px between the intro and the button (the source's .item-intro margin). */
+@media (max-width: 575.98px) { body.tracy .style-events .jim-evt__intro { margin-bottom: 24px; } }

@@ -1,0 +1,104 @@
+{
+  "color": {
+    "indigo-voltage": {
+      "$value": "#4d4dff",
+      "$type": "color",
+      "$description": "Indigo Voltage — Primary action buttons, active nav states, accent borders, heading highlights — the sole chromatic brand color, making every interactive element unmistakable; Primary CTA button fill — the only gradient in the system, flowing from cyan to indigo vertically"
+    },
+    "mint-whisper": {
+      "$value": "#c5fbee",
+      "$type": "color",
+      "$description": "Mint Whisper — Signature section surface — replaces gray for feature panels, product wrappers, and comparison cards; a soft teal that reads as a colored canvas rather than a colored card; Radial hero wash — cyan blooming into neutral gray for ambient atmosphere on showcase sections"
+    },
+    "cyan-pulse": {
+      "$value": "#00caf2",
+      "$type": "color",
+      "$description": "Cyan Pulse — Gradient origin point and link glow shadow; appears only inside the cyan→indigo button gradient and the radial brand wash"
+    },
+    "cyan-mist": {
+      "$value": "#66dff7",
+      "$type": "color",
+      "$description": "Cyan Mist — Soft cyan used as a link-focus glow ring; bridges Mint Whisper and the gradient endpoints"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, icons, hairline borders, and image outlines — used at high frequency for structural edges rather than fills"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on indigo fills"
+    },
+    "fog-veil": {
+      "$value": "#f8f9fa",
+      "$type": "color",
+      "$description": "Fog Veil — Secondary card and section surface — the next step up from pure white before reaching Mint Whisper"
+    },
+    "ash-border": {
+      "$value": "#c8c9cf",
+      "$type": "color",
+      "$description": "Ash Border — Muted borders and dividers; structural edges that need to be visible but never assertive"
+    },
+    "graphite-depth": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite Depth — Deep accent for headings and section frames where pure black would feel too sharp"
+    },
+    "steel-caption": {
+      "$value": "#7f8087",
+      "$type": "color",
+      "$description": "Steel Caption — Body helper text, link base color, icon fills, and secondary metadata — the de facto mid-neutral for prose"
+    },
+    "haze-card": {
+      "$value": "#e3e6ec",
+      "$type": "color",
+      "$description": "Haze Card — Tertiary card surface for grouped content blocks and inner panels"
+    }
+  },
+  "font": {
+    "silka-semibold": {
+      "$value": "Silka SemiBold",
+      "$type": "fontFamily",
+      "$description": "Silka SemiBold — detected in extracted data but not described by AI"
+    },
+    "hk-sentiments": {
+      "$value": "HK Sentiments",
+      "$type": "fontFamily",
+      "$description": "Display and section headings — a bold serif-adjacent sans that carries the voice of headlines, tightened by negative tracking"
+    },
+    "silka": {
+      "$value": "Silka",
+      "$type": "fontFamily",
+      "$description": "All UI text, body copy, button labels, and inline links — a neutral geometric sans for the functional layer"
+    },
+    "silka-italic": {
+      "$value": "Silka Italic",
+      "$type": "fontFamily",
+      "$description": "Accent italic for emphasized phrases inside body copy"
+    },
+    "system-ui-sans-serif": {
+      "$value": "system-ui sans-serif",
+      "$type": "fontFamily",
+      "$description": "Micro UI text — tag labels, fine print, timestamp-style metadata"
+    },
+    "silka-regular": {
+      "$value": "Silka Regular",
+      "$type": "fontFamily",
+      "$description": "Silka Regular — detected in extracted data but not described by AI"
+    },
+    "silka-medium-italic": {
+      "$value": "Silka Medium Italic",
+      "$type": "fontFamily",
+      "$description": "Silka Medium Italic — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://viewport.co",
+      "siteName": "Viewport",
+      "extractedAt": "2026-06-03T21:49:47.714Z",
+      "variant": "compact"
+    }
+  }
+}

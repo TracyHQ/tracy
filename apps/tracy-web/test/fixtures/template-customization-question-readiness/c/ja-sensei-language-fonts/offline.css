@@ -1,0 +1,216 @@
+/**
+* $JA#COPYRIGHT$
+*/
+
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: #fff;
+  color: #69747f;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  font-family: "HKGrotesk", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+}
+
+.offline-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 30px;
+}
+
+.outline {
+  background: #fff;
+  border: 1px solid #d8e1e4;
+  border-radius: 5px;
+  margin: 0 auto;
+  max-width: 100%;
+  padding: 72px;
+  width: 480px;
+}
+
+.outline h1 {
+  color: #2a3642;
+  display: block;
+  line-height: 1.0666;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  margin-top: 0;
+  text-align: center;
+}
+
+.outline p.message {
+  text-align: center;
+  margin: 0 0 30px 0;
+  color: #69747f;
+}
+
+.input > p {
+  margin: 0 0 20px 0;
+}
+
+#form-login fieldset {
+  border: 0;
+  padding: 0;
+}
+
+#form-login-secretkey,
+#form-login-username,
+#form-login-password {
+  margin-bottom: 30px;
+  margin-top: 0;
+}
+
+#form-login-secretkey label,
+#form-login-username label,
+#form-login-password label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+#form-login-secretkey input,
+#form-login-username input,
+#form-login-password input {
+  background: #fff;
+  border: 1px solid #d8e1e4;
+  border-radius: 5px;
+  height: 54px;
+  width: 100%;
+  color: #fff;
+  font-size: 16px;
+  padding: 15px;
+}
+
+#form-login-secretkey input:focus,
+#form-login-username input:focus,
+#form-login-password input:focus {
+  box-shadow: none;
+  border-color: #bacacf;
+}
+
+#form-login-remember {
+  margin-bottom: 30px;
+}
+
+#submit-buton .button {
+  background: #4bd173;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: block;
+  padding: 16px 48px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: "HKGrotesk", Helvetica, Arial, sans-serif;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: background 800ms;
+  width: 100%;
+}
+
+#submit-buton .button:hover,
+#submit-buton .button:focus,
+#submit-buton .button:active {
+  background: #2fba59;
+  color: #fff;
+}
+
+/* Message Error */
+#system-message-container {
+  width: 100%;
+}
+
+#system-message .error,
+#system-message .alert {
+  background: #f2dede;
+  color: #b94a48;
+  margin: auto;
+  padding: 20px;
+  width: 700px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: left;
+  max-width: 100%;
+}
+
+.error.message ul {
+  padding: 0;
+  list-style: none;
+}
+
+.alert {
+  position: relative;
+}
+
+.alert h4 {
+  font-size: 18px;
+  margin: 0 0 5px;
+}
+
+.alert p {
+  margin: 5px 0 0 0;
+}
+
+.close {
+  right: 15px;
+  top: 15px;
+  position: absolute;
+  cursor: pointer;
+  height: 16px;
+  text-align: center;
+  width: 16px;
+  line-height: 16px;
+  font-size: 20px;
+}
+
+
+@media (max-width: 480px){
+  .offline-wrap {
+    padding: 0;
+  }
+
+  .outline {
+    padding: 36px;
+  }
+
+  .offline-container {
+    width: 100%;
+    border: none;
+    padding: 0;
+  }
+
+  .form-offline {
+    width: 100%;
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  /* Message Error */
+  #system-message .error,
+  #system-message .alert {
+    width: 100%;
+  }
+}

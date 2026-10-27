@@ -1,0 +1,262 @@
+/* Group A: the home variants (home-2, home-3). */
+
+/* ---- Features, style 3 (a picture filling one half, the words centred on the other) ----
+   The source's .info-wrap is drawn by .features-desc here and its .inner by .info-wrap. */
+.acm-features.style-3 {
+	position: relative;
+	z-index: 2;
+	margin-bottom: -1px;
+	border-top: 1px solid var(--ds-c-border-soft, rgba(255, 255, 255, 0.05));
+	border-bottom: 1px solid var(--ds-c-border-soft, rgba(255, 255, 255, 0.05));
+}
+.acm-features.style-3 .features-row {
+	display: flex;
+	flex-direction: column;
+}
+.acm-features.style-3 .features-row > * {
+	margin: 0;
+}
+.acm-features.style-3 .intro-img {
+	position: relative;
+	min-height: 350px;
+}
+.acm-features.style-3 .intro-img img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+}
+.acm-features.style-3 .features-desc {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* The source's gutter-xl / gutter-lg; 2rem, then 4rem, above and below until the row splits. */
+	padding: 2rem var(--jf-gap-lg) 2rem var(--jf-y-large);
+	box-sizing: border-box;
+	text-align: center;
+}
+.acm-features.style-3 .info-wrap {
+	max-width: 600px;
+}
+.acm-features.style-3 .info-wrap > * {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.acm-features.style-3 .sub-title {
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+.acm-features.style-3 .info-wrap .info-title {
+	margin: 16px 0 var(--jf-gap-md);
+	font-size: var(--jf-h1);
+	line-height: 1.3;
+}
+.acm-features.style-3 .info-wrap .acm-action {
+	margin-top: var(--jf-gap-md);
+}
+.acm-features.style-3 .content-center .acm-action {
+	justify-content: center;
+}
+.acm-features.style-3 .content-left .sub-title {
+	letter-spacing: 4px;
+}
+@media (min-width: 768px) {
+	.acm-features.style-3 .features-desc {
+		padding-top: 4rem;
+		padding-bottom: 4rem;
+	}
+}
+@media (min-width: 992px) {
+	.acm-features.style-3 .features-row {
+		flex-direction: row;
+	}
+	.acm-features.style-3 .features-row > * {
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+	.acm-features.style-3 .media-right .intro-img {
+		order: 2;
+	}
+	.acm-features.style-3 .features-desc {
+		padding: var(--jf-y-large) var(--jf-gap-lg) var(--jf-y-large) var(--jf-y-large);
+	}
+	.acm-features.style-3 .content-left {
+		text-align: left;
+	}
+	.acm-features.style-3 .content-left .acm-action {
+		justify-content: flex-start;
+	}
+	/* The eyebrow turns into a vertical label at the panel's left edge. */
+	.acm-features.style-3 .content-left .sub-title {
+		position: absolute;
+		top: 50%;
+		left: var(--jf-gap-sm);
+		writing-mode: vertical-rl;
+		transform: rotate(180deg) translateY(50%);
+	}
+}
+@media (min-width: 1200px) {
+	.acm-features.style-3 .intro-img {
+		min-height: 450px;
+	}
+}
+@media (min-width: 1420px) {
+	.acm-features.style-3 .features-desc {
+		min-height: 900px;
+	}
+	.acm-features.style-3 .content-left .sub-title {
+		left: var(--jf-gap-md);
+	}
+	.acm-features.style-3 .info-wrap .info-title {
+		font-size: 58px;
+	}
+}
+
+/* ---- Text slider, style 1 (a band of titles, each followed by an ampersand) ----
+   The source runs the band sideways on its own; here it stands still (D-05). */
+.acm-text-slider.style-1 {
+	overflow: hidden;
+	padding: var(--jf-gap-md) 0;
+	background: var(--jf-surface);
+}
+.acm-text-slider.style-1 .text-slider-track {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	row-gap: 8px;
+}
+.acm-text-slider.style-1 .text-slider-track > * {
+	margin: 0;
+}
+.acm-text-slider.style-1 .text-slider-title {
+	margin: 0;
+	font-size: var(--jf-h3);
+	color: var(--jf-heading);
+}
+.acm-text-slider.style-1 .text-slider-amp {
+	margin: 0 var(--jf-gap-sm);
+}
+
+/* ---- Gallery, style 3 (a mosaic: large pictures two cells wide and tall, small ones fill the gaps) ---- */
+.acm-gallery.style-3 .gallery-mosaic {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-auto-flow: dense;
+	gap: 16px;
+}
+.acm-gallery.style-3 .gallery-mosaic > * {
+	margin: 0;
+}
+@media (min-width: 768px) {
+	.acm-gallery.style-3 .gallery-mosaic.jf-dt-4 {
+		grid-template-columns: repeat(4, 1fr);
+	}
+	.acm-gallery.style-3 .gallery-mosaic.jf-gutter-32 {
+		gap: 32px;
+	}
+}
+.acm-gallery.style-3 .gallery-item {
+	position: relative;
+	aspect-ratio: 1;
+	overflow: hidden;
+}
+.acm-gallery.style-3 .gallery-item.item-2 {
+	grid-column: span 2;
+	grid-row: span 2;
+}
+
+/* ---- Menu, style 2 (a picture beside one column of dishes) ---- */
+.acm-menu.style-2 .menu-row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 16px 32px;
+}
+.acm-menu.style-2 .menu-row > * {
+	margin: 0;
+}
+.acm-menu.style-2 .menu-image img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+.acm-menu.style-2 .dish-list {
+	display: block;
+}
+.acm-menu.style-2 .dish-list > * {
+	margin: 0;
+}
+.acm-menu.style-2 .dish-item + .dish-item {
+	padding: 12px 0;
+	border-top: 1px dashed var(--ds-c-border-soft, rgba(255, 255, 255, 0.1));
+}
+@media (min-width: 992px) {
+	.acm-menu.style-2 .menu-row {
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+	}
+	.acm-menu.style-2 .menu-row.media-right .menu-image {
+		order: 2;
+	}
+}
+@media (min-width: 1420px) {
+	.acm-menu.style-2 .menu-row {
+		column-gap: 72px;
+	}
+}
+
+/* ---- Menu, style 3 (dish cards: a picture with its price on a dark tab, the name, a line) ---- */
+.acm-menu.style-3 .menu-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 16px 32px;
+}
+.acm-menu.style-3 .menu-grid > *,
+.acm-menu.style-3 .menu-card > *,
+.acm-menu.style-3 .menu-card-media > * {
+	margin: 0;
+}
+@media (min-width: 768px) {
+	.acm-menu.style-3 .menu-grid {
+		grid-template-columns: repeat(2, 1fr);
+		row-gap: 32px;
+	}
+}
+@media (min-width: 992px) {
+	.acm-menu.style-3 .menu-grid.acm-menu--cols-3 {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+.acm-menu.style-3 .menu-card-media {
+	position: relative;
+	margin-bottom: var(--jf-gap-sm);
+}
+.acm-menu.style-3 .menu-card-media img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+.acm-menu.style-3 .menu-card .menu-card-price {
+	position: absolute;
+	bottom: 1rem;
+	left: 0;
+	padding: 5px 16px;
+	background: var(--ds-c-ink, #212529);
+	color: var(--jf-accent);
+	font-size: var(--jf-h5);
+	font-weight: 500;
+	line-height: 1.5;
+}
+.acm-menu.style-3 .menu-card .menu-card-title {
+	margin: 8px 0;
+	font-size: var(--jf-h4);
+}
+.acm-menu.style-3 .menu-card .menu-card-desc {
+	margin: 0 0 16px;
+	font-size: 14px;
+	line-height: 21px;
+	text-transform: capitalize;
+	opacity: 0.7;
+}

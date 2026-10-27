@@ -1,0 +1,54 @@
+{
+  "color": {
+    "hi-vis-yellow": {
+      "$value": "#f0e226",
+      "$type": "color",
+      "$description": "Hi-Vis Yellow — Primary action buttons, wordmark, navigation pill borders, section badges, equalizer bars, brand asterisk, highlight underlines — the only chromatic color in the system, carrying 100% of brand voice and functional energy"
+    },
+    "ink-black": {
+      "$value": "#19181a",
+      "$type": "color",
+      "$description": "Ink Black — Primary page background — a warm near-black that sits behind every screen, softer than pure black and warmer against the yellow"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Hard borders, image outlines, logo grid dividers, text on yellow fills — the structural ink that gives the system its edges"
+    },
+    "bone": {
+      "$value": "#f5f4f0",
+      "$type": "color",
+      "$description": "Bone — Primary text color, body copy, headings, client logos, light surface fills — a warm off-white that reads as paper against the warm-black ground"
+    },
+    "charcoal": {
+      "$value": "#272727",
+      "$type": "color",
+      "$description": "Charcoal — Subtle dividers, secondary borders, low-contrast structural lines between grid cells"
+    },
+    "sand": {
+      "$value": "#d9d7ce",
+      "$type": "color",
+      "$description": "Sand — Muted helper text, secondary descriptive copy, low-emphasis labels"
+    }
+  },
+  "font": {
+    "apercu-pro": {
+      "$value": "Apercu Pro",
+      "$type": "fontFamily",
+      "$description": "Display and body sans-serif — carries the CASSETTE wordmark at 56–60px, section headings at 37px, and body text at 15px. The single weight (400) used across all sizes is deliberate: hierarchy comes from size jumps, not weight shifts, giving the type a calm, even voice."
+    },
+    "apercu-mono-pro": {
+      "$value": "Apercu Mono Pro",
+      "$type": "fontFamily",
+      "$description": "Monospace workhorse for all UI chrome: navigation pills, section badges, city labels, button text, footer, and small body annotations. The monospace proportions give every interactive element a technical, label-like quality — the chrome feels like equipment markings rather than marketing type."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://cassettemusic.com",
+      "siteName": "Cassette",
+      "extractedAt": "2026-06-03T18:27:04.829Z",
+      "variant": "compact"
+    }
+  }
+}

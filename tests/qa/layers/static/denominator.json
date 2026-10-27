@@ -1,0 +1,5288 @@
+{
+  "schema": "tracy-qa-denominator/v1",
+  "layer": "static",
+  "source": "scripts/check-all.ts GATES (TypeScript AST)",
+  "revision": "gates-sha256:7fb5d61aca38d6ae76e494cfb84a00ec8217f550447898f778e706d8a529cd2d",
+  "command": "node tests/qa/layers/static/generate.mjs",
+  "naReasons": {
+    "r0": "a gate is one child process spawned by check-all.ts runGate (spawnSync, no daemon, no lock file, nothing kept between runs); source: scripts/check-all.ts#runGate",
+    "r1": "the gate only reads the tree (a --check or check-* script; the GATES header says \"run with the repository root as cwd\"); a failed run leaves nothing to roll back; source: scripts/check-all.ts#GATES"
+  },
+  "items": [
+    {
+      "id": "gate:lint",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:doc-links",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:doc-frontmatter",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:doc-index",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:env-example",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:compose-yaml",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:skills",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:workflow-scripts",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:self-contained",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:plugin-identity",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:plugin-contracts",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:language",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:wo-public",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:vocabulary",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:test-quality",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:dsh-paths",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:tailwind-source",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:dsh-locale",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:kept-terms",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:interface-languages",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:guide-coverage",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:web-languages",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:ops-languages",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:dsh-tokens",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:seat-door",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:refusal-next",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:origins",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:presets",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:story-kinds",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:od-slots",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:design-tokens",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:od-dark",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:agent-tools",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:infra-contracts",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:cms-sections",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:cms-motion",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:cms-preview",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:joomla-template",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:wordpress-theme",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:joomla-multilingual",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:joomla-demo-trim",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:joomla-showcase-nav",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:wordpress-editions",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:wordpress-demo-trim",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:wordpress-showcase-nav",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:wordpress-superseded",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:emdash-diagrams",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:design-templates",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:quickstart-overrides",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:contracts",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:slot-roles",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:content-api",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:api-spec",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:questions",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:templates",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:story-strings",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:site-model",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:emdash-kit-sync",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:emdash-inventory",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:bundles",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:image-profile",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:passwords-core-diff",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0",
+        "rollback": "r1"
+      }
+    },
+    {
+      "id": "gate:tests",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "rollback",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0"
+      }
+    },
+    {
+      "id": "gate:boot-graph",
+      "kind": "gate",
+      "requiredTags": [
+        "happy",
+        "empty",
+        "invalid",
+        "boundary",
+        "dependency-failure",
+        "repeat",
+        "cleanup",
+        "cold-warm",
+        "idempotent",
+        "disk-permission",
+        "partial-failure",
+        "retry",
+        "rollback",
+        "resource-leak",
+        "version-mismatch"
+      ],
+      "na": {
+        "restart": "r0",
+        "stale-lock": "r0"
+      }
+    },
+    {
+      "id": "rule:focus-halo",
+      "kind": "rule-without-gate",
+      "requiredTags": ["invalid"],
+      "na": {}
+    }
+  ],
+  "unresolved": [
+    {
+      "id": "GATES[8]",
+      "reason": "args is not a literal string array"
+    }
+  ],
+  "details": {
+    "coverage": {
+      "gate:lint": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-lint-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:doc-links": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-doc-links-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "covered",
+          "cases": ["QA-STATIC-doc-links-happy"]
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:doc-frontmatter": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-doc-frontmatter-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:doc-index": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-doc-index-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:env-example": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-env-example-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:compose-yaml": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-compose-yaml-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "covered",
+          "cases": ["QA-STATIC-compose-yaml-happy"]
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:skills": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-skills-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:workflow-scripts": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-workflow-scripts-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "covered",
+          "cases": ["QA-STATIC-workflow-scripts-happy"]
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:self-contained": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-self-contained-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "covered",
+          "cases": ["QA-STATIC-self-contained-happy"]
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:plugin-identity": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-plugin-identity-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "covered",
+          "cases": ["QA-STATIC-plugin-identity-happy"]
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:plugin-contracts": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-plugin-contracts-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:language": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-language-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:wo-public": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-wo-public-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:vocabulary": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-vocabulary-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "covered",
+          "cases": ["QA-STATIC-vocabulary-happy"]
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:test-quality": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-test-quality-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:dsh-paths": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-dsh-paths-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:tailwind-source": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-tailwind-source-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:dsh-locale": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-dsh-locale-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:kept-terms": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-kept-terms-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:interface-languages": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-interface-languages-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "covered",
+          "cases": ["QA-STATIC-interface-languages-happy"]
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:guide-coverage": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-guide-coverage-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:web-languages": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-web-languages-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:ops-languages": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-ops-languages-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:dsh-tokens": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-dsh-tokens-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:seat-door": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-seat-door-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:refusal-next": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-refusal-next-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:origins": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-origins-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:presets": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-presets-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:story-kinds": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-story-kinds-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:od-slots": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-od-slots-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:design-tokens": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-design-tokens-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:od-dark": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-od-dark-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:agent-tools": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-agent-tools-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:infra-contracts": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-infra-contracts-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:cms-sections": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-cms-sections-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:cms-motion": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-cms-motion-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:cms-preview": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-cms-preview-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:joomla-template": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-joomla-template-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:wordpress-theme": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-wordpress-theme-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:joomla-multilingual": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-joomla-multilingual-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:joomla-demo-trim": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-joomla-demo-trim-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:joomla-showcase-nav": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-joomla-showcase-nav-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:wordpress-editions": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-wordpress-editions-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:wordpress-demo-trim": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-wordpress-demo-trim-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:wordpress-showcase-nav": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-wordpress-showcase-nav-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:wordpress-superseded": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-wordpress-superseded-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:emdash-diagrams": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-emdash-diagrams-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:design-templates": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-design-templates-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:quickstart-overrides": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-quickstart-overrides-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:contracts": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-contracts-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:slot-roles": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-slot-roles-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:content-api": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-content-api-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:api-spec": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-api-spec-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:questions": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-questions-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:templates": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-templates-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:story-strings": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-story-strings-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:site-model": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-site-model-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:emdash-kit-sync": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-emdash-kit-sync-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:emdash-inventory": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-emdash-inventory-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:bundles": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-bundles-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:image-profile": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-image-profile-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:passwords-core-diff": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-passwords-core-diff-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "na",
+          "reason": "r1"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:tests": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-tests-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "open"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "gate:boot-graph": {
+        "happy": {
+          "status": "covered",
+          "cases": ["QA-STATIC-boot-graph-happy"]
+        },
+        "empty": {
+          "status": "open"
+        },
+        "invalid": {
+          "status": "open"
+        },
+        "boundary": {
+          "status": "open"
+        },
+        "dependency-failure": {
+          "status": "open"
+        },
+        "repeat": {
+          "status": "open"
+        },
+        "cleanup": {
+          "status": "open"
+        },
+        "cold-warm": {
+          "status": "open"
+        },
+        "idempotent": {
+          "status": "open"
+        },
+        "restart": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "stale-lock": {
+          "status": "na",
+          "reason": "r0"
+        },
+        "disk-permission": {
+          "status": "open"
+        },
+        "partial-failure": {
+          "status": "open"
+        },
+        "retry": {
+          "status": "open"
+        },
+        "rollback": {
+          "status": "open"
+        },
+        "resource-leak": {
+          "status": "open"
+        },
+        "version-mismatch": {
+          "status": "open"
+        }
+      },
+      "rule:focus-halo": {
+        "invalid": {
+          "status": "open",
+          "note": "CLAUDE.md §8: \"No gate catches this\"; REG-PR-927-focus-no-halo is the unit layer's regression case"
+        }
+      }
+    }
+  }
+}

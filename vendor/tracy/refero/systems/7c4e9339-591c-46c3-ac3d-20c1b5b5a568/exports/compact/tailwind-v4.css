@@ -1,0 +1,21 @@
+@theme {
+  /* Colors */
+  --color-aged-sepia: #271a00;
+  --color-parchment: #faf8f5;
+  --color-fog: #d1cfc7;
+  --color-absolute-black: #000000;
+  --color-pure-white: #ffffff;
+  --color-moss-shadow: #7c7464;
+  --color-deep-forest: #23291b;
+  --color-teal-accent: #0f3639;
+  --color-ash-mist: #e5e5e3;
+  --color-slate-edge: #121516;
+
+  /* Typography */
+  --font-pplxsans: 'pplxSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pplxsansmono: 'pplxSansMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-pplxserif: 'pplxSerif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-pplx-serif-beta-v0-vf: 'PPLX Serif Beta v0 VF', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-pplx-mono: 'PPLX Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-pplx-mono-beta-v0-vf: 'PPLX Mono Beta v0 VF', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

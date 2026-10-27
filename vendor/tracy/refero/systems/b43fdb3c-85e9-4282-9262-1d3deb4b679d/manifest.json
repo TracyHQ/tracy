@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+  "status": "complete",
+  "name": "Stykka",
+  "url": "https://styles.refero.design/style/b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+  "sourceWebsite": "https://stykka.com",
+  "extractedAt": "2026-06-03T17:53:57.777Z",
+  "capturedAt": "2026-10-08T05:16:27.973805+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Scandi atelier under white light — a quiet, hand-built showroom where the only voice is the photograph",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/74c5717c-7b3c-4e5b-b03b-1db6c5ec0804.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/71ef7325-e73f-4bb7-8291-7f57b232fba1.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/851d0ae3-d674-40f0-b529-0432af8509d8.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/16f44738-371b-42a0-b720-8260053461a4.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/77ff91ed-e81b-4188-b470-8728d65da483.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "21cefbe1efea239735d3ee6c4127bceb7869658535e57ec4f1298d939cbec7c2",
+      "bytes": 21431
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "4aaf127f454845511ea0b8cde72941b9aabbb39c0048b81a6e09d066010021e4",
+      "bytes": 237622
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "23a714012116c434cd961a675270c02bc694ca74d5dd77e8bf399cad0f7041ad",
+      "bytes": 17308
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "31c170ac8b94d5dd23adc4b5d10d4fd83d1ae4c323d90fb134cca86307c8d6ab",
+      "bytes": 8486
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "422c3ef6640927c9b627c3b2b8bd8924b40f8bc24666760181c76c9aadd9c629",
+      "bytes": 13625
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "973baaeba92fc36932726a538928018e977d8ff91fe1b585ddb82596cee4b199",
+      "bytes": 2451
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b944c1048931f81fed2d7a9eaa05b73889ffdaaa1db4712dc44c607d01b98282",
+      "bytes": 641
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "88128ab70223dfb69f50996d4dedb1e754eccf93cba032d52d212fe506d6d0b2",
+      "bytes": 658
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "bfd14efa78ffdb7b030d0972a6a51a0ac0e9b70346e71fecfd043d8ce03d6048",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "62f96b92c9c13e534e24424d935c5ae33a951b57d02d0d552f5ef4e4335d0067",
+      "bytes": 42300
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "7ef375c7401f27e39d8429e79300d83c6d7410c2b645f51239fe6c18fb5f1533",
+      "bytes": 21534
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "07890aac6f751f7fe3a5412f948f1ea622df8e65da38f18fe12da1481c6cdcdf",
+      "bytes": 37802
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "199d0961bf017086c26c63e48a8130175247d0245b62eae30f03f30aa15760ff",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ee1fff63e43cb82d776cdc2e8eb80f4549970ef555753dd45b1de57b3718e5b0",
+      "bytes": 1674
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "772c6f7bd0e6d651a11cf9033ec9c7b08c5a4702c3cb91d882b9f70af4d94225",
+      "bytes": 2118
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0769ff4c-f719-4865-98df-de2f44c694a6",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "3b742f76-25ad-446c-a942-09b09b93f6a3",
+    "3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "73359194-de93-436e-af53-81d4029f5e7a",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "d1941450-00be-4988-beaa-76bb68ae09ff",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f451c085-f048-4c9c-ae3b-03acc88320ab"
+  ]
+}

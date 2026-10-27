@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-112-pending",
+  "itemIds": ["regression:REG-112"],
+  "requirement": "JA Essence wp7 1.0.6: link colours, current-item highlights, header insets, home-2 category pictures and social icons, badges and source-CMS wording match the Joomla source",
+  "oracle": {
+    "source": "tests/regression/cases/REG-112-ja-essence-wp7-sweep-audit-fixes.json",
+    "ref": "PR #911 (fix); fix evidence: Sweeps of 04/10/2026 against a local copy of the Joomla source: baseline on 1.0.5 failed header and chips; 1.0.6 on the clean restore passes overflow, scheme, background, wording, slider and icons, header and chips keep only the source's own groups (D-90, D-91); measure105 10/10 on the build stand with the 1.0.6 theme (wp-ja-essence-1.0.6.zip f261ca71)",
+    "invariant": "site-sweep: overflow, scheme and background pass with 0 defects on every route at 320, 390, 768, 1024, 1180 and 1440px, light and dark. site-sweep header: the only groups left are the source's own (its menu wraps to a second row at 1024px; its dark Home 4 logo picture answers 404), recorded as D-90; chips: 0 defects, the cases the tool cannot pair are listed as not measured. measure106: wording 2/2 (no page names Joomla), slider 13/13 widths (same cards per view and width as the source), icons 3/3 widths (glyph boxes within 1px). measure105: TOTAL 10/10 checks pass. The pack carries no upload file that belongs to nothing: the webroot of 1.0.6 has the same file list as 1.0.5's (5067 entries, 504 under wp-content/uploads/2026/10) and no '-2' duplicate; on 31 routes at 1440 and 390 no image, style, script or font request answers 4xx/5xx.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-112"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-112",
+    "pr": 911,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-essence",
+    "file": "tests/regression/cases/REG-112-ja-essence-wp7-sweep-audit-fixes.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

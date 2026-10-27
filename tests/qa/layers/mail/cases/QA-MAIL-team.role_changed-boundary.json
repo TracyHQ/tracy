@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.role_changed-boundary",
+  "itemIds": [
+    "letter:team.role_changed:en",
+    "letter:team.role_changed:vi",
+    "letter:team.role_changed:de",
+    "letter:team.role_changed:it",
+    "letter:team.role_changed:fr",
+    "letter:team.role_changed:nl",
+    "letter:team.role_changed:zh",
+    "letter:team.role_changed:es"
+  ],
+  "requirement": "team.role_changed stays well-formed for one-character, 10,000-character and Unicode facts",
+  "oracle": {
+    "source": "RFC 5322 section 2.2.3 (no line break in a header value)",
+    "ref": "RFC 5322 section 2.2.3 (no line break in a header value)",
+    "invariant": "subject has no CR/LF; the HTML document is complete"
+  },
+  "edgeTags": ["boundary"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.boundary#team.role_changed:"],
+  "redProof": null,
+  "legacyIds": []
+}

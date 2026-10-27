@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1375-ds-owed-status-text",
+  "kind": "fix",
+  "title": "What #1298 left owed: status text reads its readable shade in every tokenized sheet, a re-cut moves only what it was cut for, JA templates with a light/dark switch keep it from their next release, the agent ladder's faults",
+  "pr": 1375,
+  "area": "design-system/tokenize",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/design/tracy-ds-slot/test/tokenize.test.mjs packages/design/tracy-ds-slot/test/two-modes.test.mjs packages/design/tracy-ds-slot/test/contracts.test.mjs.",
+    "S2: Run node --test apps/tracy-web/test/ds-slot-ranges.test.mjs apps/tracy-web/test/template-design-system-readiness.test.mjs.",
+    "S3: Run node --test packages/tools/tracy-site-tools/test/page-pictures.test.mjs packages/tools/tracy-site-tools/test/removal-check.test.mjs packages/tools/tracy-site-tools/test/chat-design-route.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes: a status colour set as text takes --ds-c-<status>-text (fills and lines keep the status), through a variable only text reads too, a sheet tokenized before moves its status text and a second run moves nothing; reRole moves only the named slots by property; filePalettes gives one sheet its own palette; moveOnly tokenizes nothing new; a body-class dark hook scopes the two sides with no OS auto side.",
+    "S2: every test passes: a template line's contracts each hold their own releases (JA Podcast 1.0.4 one look, 1.0.5 both sides), the line's range is every contract's together.",
+    "S3: every test passes: a picture an element's own style paints is the picture beside its words, marked background; a removal receipt asks for one look at the page and the gap closed or said; the Design system row is named as the screen labels it."
+  ],
+  "selectors": {
+    "tokenize": "packages/design/tracy-ds-slot/src/tokenize.mjs",
+    "sides": "packages/design/tracy-ds-slot/src/sides.mjs sidesOf",
+    "ranges": "apps/tracy-web/src/lib/ds-slot.js contractFor"
+  },
+  "evidence": "Before this change form feedback, .text-* and outline buttons in 70 released templates read 2-3:1 under most systems, JA Podcast, Blockk, Boxing and Titan hid their light/dark switch under every system, and the agent sent a card out with its title alone and left a blank half row after a removal",
+  "fence": "Unworn, every page is the release's own (VERIFICATION.json of each re-cut); a site on a release before the two-mode contract keeps one look; a sheet's other slots never move in a re-cut",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/design/tracy-ds-slot/test/tokenize.test.mjs",
+      "packages/design/tracy-ds-slot/test/two-modes.test.mjs",
+      "packages/design/tracy-ds-slot/test/contracts.test.mjs",
+      "apps/tracy-web/test/ds-slot-ranges.test.mjs",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs",
+      "packages/tools/tracy-site-tools/test/page-pictures.test.mjs",
+      "packages/tools/tracy-site-tools/test/removal-check.test.mjs",
+      "packages/tools/tracy-site-tools/test/chat-design-route.test.mjs"
+    ]
+  }
+}

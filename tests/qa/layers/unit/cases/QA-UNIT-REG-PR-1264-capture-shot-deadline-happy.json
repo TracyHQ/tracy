@@ -1,0 +1,61 @@
+{
+  "id": "QA-UNIT-REG-PR-1264-capture-shot-deadline-happy",
+  "itemIds": ["regression:REG-PR-1264-capture-shot-deadline"],
+  "requirement": "A listing shot on a slow demo host keeps its own deadline: a timed-out shot is stopped and names its phase, and the waits fit what is left",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1264-capture-shot-deadline.json",
+    "ref": "PR #1264 (fix); fix evidence: cowork.tracy.site 12/10/2026 after #1262: ja-vogue j6 /index.php/category-2 'shot timed out after 30000ms' at 1440 and 390 on fleet01; the same capture takes 9-11 s from a Mac mini.",
+    "invariant": "The run exits 0 with 0 failures and 0 skipped tests. A shot that outlives its box rejects with 'shot timed out after <ms>ms while <phase>' and its AbortSignal is aborted; ok and failed shots both carry ms and timings. With a 10 s deadline no wait before the pictures asks for more than 2000 ms; with a 3 s deadline none runs and a picture still comes back. Aborting a shot closes its browser context.",
+    "productSources": [
+      "apps/tracy-host/src/app.js:1138",
+      "apps/tracy-host/src/browser.js:19",
+      "apps/tracy-host/src/capture.js:114",
+      "apps/tracy-web/src/host/client.js:34"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-host/src/ds-slot.js:439 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:440 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:582 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:583 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:584 readFile() with a computed path",
+      "apps/tracy-host/src/jobs.js:224 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:144 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:151 readFile() with a computed path",
+      "apps/tracy-host/src/provision.js:503 import() with a computed specifier",
+      "apps/tracy-host/src/site-files.js:413 readFile() with a computed path",
+      "apps/tracy-host/src/webroot.js:1628 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:919 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:995 open() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1264-capture-shot-deadline.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1264-capture-shot-deadline"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1264-capture-shot-deadline",
+    "pr": 1264,
+    "kind": "fix",
+    "area": "ops/capture",
+    "file": "tests/regression/cases/REG-PR-1264-capture-shot-deadline.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1264-capture-shot-deadline.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

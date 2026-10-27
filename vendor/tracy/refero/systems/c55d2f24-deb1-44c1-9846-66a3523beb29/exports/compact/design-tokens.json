@@ -1,0 +1,74 @@
+{
+  "color": {
+    "citrine-signal": {
+      "$value": "#e5ff5d",
+      "$type": "color",
+      "$description": "Citrine Signal — Primary action buttons, brand cube fills, accent icon strokes, decorative 3D cubes, featured logo marks — the single chromatic voice of the system"
+    },
+    "carbon-black": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Carbon Black — Page canvas, primary text on light sections, dominant border color, button fills on reversed (light) sections"
+    },
+    "bone-white": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Bone White — Primary text on dark canvas, nav and body text, light icon fills, ghost button text"
+    },
+    "graphite": {
+      "$value": "#2b2b2b",
+      "$type": "color",
+      "$description": "Graphite — Elevated surface above carbon, secondary panels, darker card variants"
+    },
+    "ash": {
+      "$value": "#6e6e6e",
+      "$type": "color",
+      "$description": "Ash — Muted card surface, tertiary background layers behind content blocks"
+    },
+    "stone": {
+      "$value": "#9c9c9c",
+      "$type": "color",
+      "$description": "Stone — Muted body text, secondary link text, low-priority borders, helper labels"
+    },
+    "smoke": {
+      "$value": "#565656",
+      "$type": "color",
+      "$description": "Smoke — Dividers, subtle borders, decorative strokes in illustrations"
+    },
+    "chalk": {
+      "$value": "#d6d6d6",
+      "$type": "color",
+      "$description": "Chalk — Card borders on dark sections, hairline dividers between content blocks"
+    },
+    "cream-paper": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Cream Paper — Light section background — the single warm reversal that breaks the dark rhythm"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Maximum contrast text, logo silhouettes, hard-edge decorative fills"
+    },
+    "sand": {
+      "$value": "#b7b3a2",
+      "$type": "color",
+      "$description": "Sand — Warm-tinted decorative fills, illustration accents — the only chromatic neutral"
+    }
+  },
+  "font": {
+    "neue-haas-grotesk-text": {
+      "$value": "Neue Haas Grotesk Text",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system. Weight 400 carries body, nav, and most UI; weight 500 reserved for emphasized labels and button text. Display headlines at 80px with 0.90 line-height create the signature monolithic rows. Small labels (10–12px) use positive tracking (+0.020 to +0.032em) to read as uppercase utility marks. The humanist geometry of Haas Grotesk — slightly humanist terminals, even stroke contrast — gives the dark interface a warm, editorial quality rather than feeling like a terminal."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.codex.io",
+      "siteName": "Codex.io",
+      "extractedAt": "2026-06-03T22:38:16.616Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+  "status": "complete",
+  "name": "Rains INT",
+  "url": "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+  "sourceWebsite": "https://www.rains.com",
+  "extractedAt": "2026-06-03T21:27:56.272Z",
+  "capturedAt": "2026-10-08T05:10:23.216067+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Nordic rain catalog on fog-gray paper.\n\nA Scandinavian weather report where massive editorial type sits over raincoat photography on a warm gray field — almost no color, all atmosphere, type as the only dramatic gesture.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/409d194d-fa13-4591-85a0-59ff596b3010.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c0d60187-6b13-41ba-b277-af11f7343f26.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e3f10a27-6f44-46cf-bfc6-44f48960a2f3.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/2ba53339-5dd0-4db7-aeb6-ba3b8b800c63.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/f0b62a9e-1558-4c81-996e-835815c16acd.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8275ea7871bfaf682eb7ca0947f26e121a0c2b9a59dd47c703a0637fe1fa9795",
+      "bytes": 17908
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "0331267b9b0a5f9f1fba0dd8add7366addc3ca93d4ebbbd1406d7135511853d4",
+      "bytes": 183387
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a53bd5e6325e4f695146399d32d71c5d0a1d196658a58bf171b0308a7d02fe60",
+      "bytes": 15418
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "72b4574b3d31419818c74d5d81285c20a4c4678f13c38e2a728105260caeb115",
+      "bytes": 8424
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "147f9c8ac86bb4fb76a2173f5dda8ff57a15c5f1dfa377bc278266eb9ed2ac0f",
+      "bytes": 11642
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2e97c0d9667c7c398cf0ac18d064b992ef5d33bcda7cef879626ab90e754093c",
+      "bytes": 2596
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c600b41692b3cb1d4023f129cfb090acb476bd6e3d7dca41296459d28903b82c",
+      "bytes": 532
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4131afc05d779af65983e72a64dd849706a6691d1003d84616b9725b71825166",
+      "bytes": 549
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "510cadee7493aa63be44cb96641b077e34aceb9851d1a34cfc7cc9675296f195",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "92dcab7931bba9677c871b006c36754844776b81989ff9cb0fec6988c94abec3",
+      "bytes": 42455
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "028ca603357a0cfc401408aa080b1bf0fc76e12186505a964d36b436ceb55ef4",
+      "bytes": 22458
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ed0482c5c6477ddfe118b65adeebd7c9ed8d1c02d09246da65c17346039c43b1",
+      "bytes": 45358
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "26b9ae698b2056ea4d28e256ea9777b5581e972d661f7b6defa60780d5728718",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "aaf86437d72f0ffcb326f80f7ac3fc79d2ff0d3968d53349ed6015c175b4b47a",
+      "bytes": 1190
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "18ef320f457bd7b48965bc49840f3e6aacb08f7d755cffbdbc3004cf542d1fa0",
+      "bytes": 1693
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0769ff4c-f719-4865-98df-de2f44c694a6",
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2fd71e12-12fc-4346-8281-52afe12bb951",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "76c761d8-4af1-4ed5-ba93-eeb60f7006b5",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "d75a643b-a518-4550-b430-679cd989a447",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f401f04f-c45b-4261-9441-f502c6569a29"
+  ]
+}

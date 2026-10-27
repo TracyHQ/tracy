@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-obsidian: #222326;
+  --color-carbon: #0d0d0e;
+  --color-charcoal-plate: #272c33;
+  --color-slate-body: #191c21;
+  --color-bone-white: #f4f4f5;
+  --color-ash-mute: #9ea0a9;
+  --color-smoke: #43454c;
+  --color-paper: #ffffff;
+  --color-magenta-spotlight: #e32652;
+  --color-editorial-gold: #eed37f;
+  --color-neon-volt: #dcff00;
+
+  /* Typography — Font Families */
+  --font-sohne: 'Sohne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sohne-schmal: 'Sohne Schmal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ivar-display-condensed: 'Ivar Display Condensed', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

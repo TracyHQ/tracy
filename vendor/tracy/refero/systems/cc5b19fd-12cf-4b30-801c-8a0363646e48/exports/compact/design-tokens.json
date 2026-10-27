@@ -1,0 +1,44 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, all borders, dark surface blocks, and the hero wordmark — the structural backbone of every screen"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "faint-ash": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Faint Ash — Subtle surface tint for secondary cards or de-emphasized blocks, barely distinguishable from Paper"
+    },
+    "steel": {
+      "$value": "#888a8b",
+      "$type": "color",
+      "$description": "Steel — Muted secondary text and ghost-list items in service lists — the only non-black text color, used to create tonal hierarchy without introducing hue"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Alternate dark surface for nav or panel backgrounds — a softer dark than Ink when full black is too severe"
+    }
+  },
+  "font": {
+    "suisse-intl": {
+      "$value": "Suisse Int'l",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system. Weight 700 carries all display and heading roles up to 211px for the hero wordmark; weight 400 handles body and link text. The 211px weight-700 wordmark with -0.057em tracking is the signature — it turns the brand name into a room-scale installation. Weight 500 appears in nav and transitional text. The aggressive negative tracking on display sizes (-0.057em at 211px, -0.020em at 55px) tightens the Swiss grotesque geometry into a denser, more monolithic block — the type is meant to read as architecture, not as text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://vucko.co",
+      "siteName": "Vucko",
+      "extractedAt": "2026-06-03T21:40:03.414Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "id": "QA-UNIT-REG-PR-1618-wo-wp-demo-leftovers-happy",
+  "itemIds": ["regression:REG-PR-1618-wo-wp-demo-leftovers"],
+  "requirement": "A WO WordPress build takes the demo kit off: no empty blog, RESERVE leads to contact, demo dropdowns and sample pages go, the name stands in for the picture logo",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1618-wo-wp-demo-leftovers.json",
+    "ref": "PR #1618 (fix); fix evidence: Dev WO build of a JA Restaurant WP site (22/10/2026): demo QA gate failed after three hand-off rounds (~1.95M tokens) on a demo blog, a RESERVE submenu with no URL, demo dropdowns and the template's picture logo.",
+    "invariant": "0 failures. demoKitOff on the JA Restaurant 1.0.1 menu cuts the Explore/Themes dropdowns whose links repeat other links or lead to unpublished pages, keeps the restaurant's links, and gives the Reservation dropdown (no URL or '#') its contact child's URL. A link by page id and a custom link to the same path are one destination; an absolute link to another host is never a page of this site, also when the site host is unknown. woNameAsLogo clears site_logo only when every header/footer logo block prints the site name; a failed read leaves it alone. The WO page plan does not keep a blog with no post of the business, or whose posts all went to other pages.",
+    "productSources": [
+      "apps/tracy-web/src/sites/brief-engines/wo-copy-pins.js:202",
+      "apps/tracy-web/src/sites/brief-engines/wp-blocks.js:41",
+      "apps/tracy-web/src/sites/brief-engines/wp-residue.js:383",
+      "apps/tracy-web/src/sites/brief-engines/wp-wo-logo.js:21",
+      "packages/wo/website-opportunities/domain/content-pool.mjs:112",
+      "packages/wo/website-opportunities/domain/page-plan.mjs:96"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "an opportunity's menu loses the demo kit's dropdowns once their own pages are gone, and keeps the restaurant's",
+    "a reservation dropdown that is only a label leads to the contact page it holds",
+    "a reservation dropdown with a placeholder address takes the contact page address instead of keeping \"#\"",
+    "a link by page id and a link by address lead to one place, and an address on another site is not this one",
+    "when the site host is not known, an absolute link to another host is never the home page, and its dropdown stays",
+    "the name stands in for the logo only where every logo spot of the header and footer prints it",
+    "a header or footer that could not be read leaves the logo alone; only a part the site does not have is left out",
+    "a blog with no post of the restaurant is taken off with its reason; a dated or recurring post is no post of the blog",
+    "a blog whose only posts went to other pages is taken off, and the kept list agrees with the row"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1618-wo-wp-demo-leftovers"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1618-wo-wp-demo-leftovers",
+    "pr": 1618,
+    "kind": "fix",
+    "area": "sites/brief-engines/wordpress",
+    "file": "tests/regression/cases/REG-PR-1618-wo-wp-demo-leftovers.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/brief-wp-wo-leftovers.test.mjs",
+    "packages/wo/website-opportunities/test/domain-page-plan.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "an opportunity's menu loses the demo kit's dropdowns once their own pages are gone, and keeps the restaurant's",
+    "a reservation dropdown that is only a label leads to the contact page it holds",
+    "a reservation dropdown with a placeholder address takes the contact page address instead of keeping \"#\"",
+    "a link by page id and a link by address lead to one place, and an address on another site is not this one",
+    "when the site host is not known, an absolute link to another host is never the home page, and its dropdown stays",
+    "the name stands in for the logo only where every logo spot of the header and footer prints it",
+    "a header or footer that could not be read leaves the logo alone; only a part the site does not have is left out",
+    "a blog with no post of the restaurant is taken off with its reason; a dated or recurring post is no post of the blog",
+    "a blog whose only posts went to other pages is taken off, and the kept list agrees with the row"
+  ],
+  "timeoutS": 600
+}

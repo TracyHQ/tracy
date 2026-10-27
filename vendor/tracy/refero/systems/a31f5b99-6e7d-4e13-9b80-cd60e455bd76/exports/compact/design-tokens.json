@@ -1,0 +1,114 @@
+{
+  "color": {
+    "pure-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure Canvas — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "slate-mist": {
+      "$value": "#f1f5f9",
+      "$type": "color",
+      "$description": "Slate Mist — Elevated surface tier, input backgrounds, subtle section panels"
+    },
+    "carbon-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Ink — Primary text, icon strokes, borders, dark button fills — the typographic and structural black"
+    },
+    "graphite": {
+      "$value": "#1c1d21",
+      "$type": "color",
+      "$description": "Graphite — Headline text alternative — slightly softened black for display type where pure black feels too clinical"
+    },
+    "ash-border": {
+      "$value": "#d0d0d0",
+      "$type": "color",
+      "$description": "Ash Border — Hairline dividers, card borders, structural separators"
+    },
+    "fog-border": {
+      "$value": "#e8e6e6",
+      "$type": "color",
+      "$description": "Fog Border — Subtle borders on less prominent elements"
+    },
+    "electric-blue": {
+      "$value": "#166aea",
+      "$type": "color",
+      "$description": "Electric Blue — Primary action button fill, selected nav indicator, link accents — the only saturated action color in the system"
+    },
+    "deep-violet": {
+      "$value": "#101585",
+      "$type": "color",
+      "$description": "Deep Violet — Brand violet for headings, link underlines, decorative accent — anchors the identity when blue is too functional"
+    },
+    "indigo-pulse": {
+      "$value": "#2c34af",
+      "$type": "color",
+      "$description": "Indigo Pulse — Gradient endpoint, section heading accent — lighter companion to Deep Violet for layered brand moments"
+    },
+    "lime-highlight": {
+      "$value": "#dff994",
+      "$type": "color",
+      "$description": "Lime Highlight — Surface wash, background tints, decorative highlight zones — injects energy into otherwise monochrome sections"
+    },
+    "lemon-note": {
+      "$value": "#fdf4a1",
+      "$type": "color",
+      "$description": "Lemon Note — Subtle highlight wash on text and borders, callout markers — warm counterpoint to cool brand colors"
+    },
+    "lavender-mist": {
+      "$value": "#bfc8e8",
+      "$type": "color",
+      "$description": "Lavender Mist — Soft section background gradient start, card shadow tint — atmospheric color for gradient washes"
+    },
+    "input-blue": {
+      "$value": "#538ab6",
+      "$type": "color",
+      "$description": "Input Blue — Input border on focus/active state — cool desaturated blue for form interactivity"
+    }
+  },
+  "font": {
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback for icon labels, micro-UI tags, and utility text at 10–13px. Functions as the safety net for extremely small UI where custom fonts may not load."
+    },
+    "madefor-display": {
+      "$value": "madefor-display",
+      "$type": "fontFamily",
+      "$description": "All display headlines from 21px sub-headings up to 184px hero text. Geometric, slightly condensed sans-serif with wide apertures. The negative letter-spacing (-0.01em to -0.03em) tightens as size grows, creating a distinctive compressed display look at 82–184px. Substantial line-height range (0.85 at 184px) lets oversized type sit close together — a signature of editorial display use."
+    },
+    "madefor-text": {
+      "$value": "madefor-text",
+      "$type": "fontFamily",
+      "$description": "Body text, nav links, list items, input fields, descriptions. Slightly looser than display at -0.01em. Generous line-heights (1.5–1.71) give body copy an airy, readable cadence. Pairs with display variant to create typographic contrast without switching families."
+    },
+    "madefor-text-mediumbold": {
+      "$value": "madefor-text-mediumbold",
+      "$type": "fontFamily",
+      "$description": "Semi-emphasis body and small headings (12–24px). Functions as the medium weight for nav, subheadings, and labeled sections where extra weight is needed without going to a full bold."
+    },
+    "wix-madefor-display-v2": {
+      "$value": "wix-madefor-display-v2",
+      "$type": "fontFamily",
+      "$description": "Alternate display variant for section headings at 53px and body emphasis at 20–21px. Provides a slightly different geometry for variety within sections."
+    },
+    "wix-madefor-text-v2": {
+      "$value": "wix-madefor-text-v2",
+      "$type": "fontFamily",
+      "$description": "Secondary text body for links and supporting copy where the primary text variant is too dense."
+    },
+    "madefor-text-bold": {
+      "$value": "madefor-text-bold",
+      "$type": "fontFamily",
+      "$description": "madefor-text-bold — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.wix.com",
+      "siteName": "wix.com",
+      "extractedAt": "2026-06-03T21:18:56.559Z",
+      "variant": "compact"
+    }
+  }
+}

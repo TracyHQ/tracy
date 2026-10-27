@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "655340ae-abff-4a90-8545-8feb62411f68",
+  "status": "complete",
+  "name": "X (formerly Twitter)",
+  "url": "https://styles.refero.design/style/655340ae-abff-4a90-8545-8feb62411f68",
+  "sourceWebsite": "https://create.video",
+  "extractedAt": "2026-06-03T19:32:01.467Z",
+  "capturedAt": "2026-10-08T05:12:34.023188+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "blue wire on white newsprint. A stark, content-first timeline where one vivid blue punctures an otherwise monochrome interface, and pill-shaped controls signal action without weight.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c829e152-2d31-4d36-a277-09084f01f38d.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e2631eaf8288c676a815a1ad1d7139d28cee6ee58eab1d5637a55cab6df3997e",
+      "bytes": 19707
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "e86eef2f5154473c323d39f2a251354b3c7ace9b6f94651c1906644bf921685e",
+      "bytes": 85530
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "db4dfd4ede7fb827cdcea7f941c029eaeca47dce4f8ad8134a7fbdf6843af824",
+      "bytes": 17237
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ed87f346c3a7974057cb94de743e6232039692f5797d5fe7fdfc7e11094e56fb",
+      "bytes": 9267
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "156e7b80d0807ad81be31bf470f3976d8f52e776d4692b30b56624f1b4b53e21",
+      "bytes": 12350
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "fb7fa1b4049914183c083daead745c082ee8311e62f5c03425548fcba7fc06f4",
+      "bytes": 2650
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "44643bf86249abf8a6990e35023ff9252a0a46d67ac0aae642fe97cefeecce10",
+      "bytes": 567
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "735757a24abdbd3e1e83ef8653bc55db7f564df34109df446fdad6051fd1d953",
+      "bytes": 584
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a188178ee0e24efedd798cf737ba2d48d965cc881a840ea46ba433ebebf59ff7",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "7e359eebef4331a8cd3dd49427ad2f2168cdf1a6af28542303f2a9d2bb9f226b",
+      "bytes": 43271
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "b11cd0d5315b39bd3a258fb61fd921d7ee3b1ede4c4681d3afabdbbbd5df9787",
+      "bytes": 22659
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b54ad2f3394d268b5b3a1a9421d92ff9451e5d5c99be37c0c20e80556045306a",
+      "bytes": 43128
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "73be0673300a0343524708ca8689f2a27a2d12cf5b7ea64bbc4186b07812b80c",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "cbf87853067fc0542fe637788dfae7a84bf49fe62a4ec184324b88106bacaa63",
+      "bytes": 1236
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ce4a5651740c985d51b32fbdadcf3f6da42ec2828481c28b528e9c3d2fb602a0",
+      "bytes": 1821
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "14e563d8-a35a-4867-b4bf-15d1620ddae7",
+    "182f8743-fe22-45d3-98bc-9fd29d058602",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3b46c64e-b733-4d70-8cd0-531ca1f92937",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "41c479a9-7b41-445b-9ea7-c7a6331828f0",
+    "52a007ed-ad1b-46a6-bd44-b76f91df6d0c",
+    "54bfd692-3299-48ab-8cf5-784e632227b1",
+    "655340ae-abff-4a90-8545-8feb62411f68",
+    "6a8bf4c2-8cf2-463a-bcb9-36c15ea177c2",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "aa87c258-0eb8-4c14-9f2f-96f16fb926b8",
+    "aa9234ca-0cc8-470b-bd38-398712de3e95",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e"
+  ]
+}

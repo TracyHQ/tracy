@@ -1,0 +1,89 @@
+{
+  "color": {
+    "raspberry-pulse": {
+      "$value": "#fd1774",
+      "$type": "color",
+      "$description": "Raspberry Pulse — Primary CTA fill, active states, colored shadow accents — the sole saturated hue in the system, creating urgency against matte pastels"
+    },
+    "ink-black": {
+      "$value": "#030712",
+      "$type": "color",
+      "$description": "Ink Black — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "lavender-mist": {
+      "$value": "#e5d6ff",
+      "$type": "color",
+      "$description": "Lavender Mist — Hero card background, testimonial card wash, section surface — the dominant pastel; Hero gradient base — soft lavender fading downward into white; Composite atmospheric glow — purple/pink/teal/amber radial halos blending on white canvas"
+    },
+    "mint-cream": {
+      "$value": "#e3f7d6",
+      "$type": "color",
+      "$description": "Mint Cream — Feature card surface, success-tinted badges, body wash — pastel green for nature/wellness cues"
+    },
+    "butter-cream": {
+      "$value": "#fff1cd",
+      "$type": "color",
+      "$description": "Butter Cream — Warning-tinted badges, warm section wash, pill highlights"
+    },
+    "sky-wash": {
+      "$value": "#ddf5fb",
+      "$type": "color",
+      "$description": "Sky Wash — Soft section background, alternate surface, and quiet card fill"
+    },
+    "sand-wash": {
+      "$value": "#f4efe9",
+      "$type": "color",
+      "$description": "Sand Wash — Warm neutral section surface, cream card backgrounds"
+    },
+    "carbon": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Carbon — Dark elevated surface for cards, headers, and contained panels. Do not promote it to the primary CTA color"
+    },
+    "steel": {
+      "$value": "#6b7280",
+      "$type": "color",
+      "$description": "Steel — Muted body text, secondary borders, de-emphasized labels"
+    },
+    "silver": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Silver — Hairline dividers, ghost button borders, list separators"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text, ghost button fill"
+    },
+    "lime-zest": {
+      "$value": "#64d71e",
+      "$type": "color",
+      "$description": "Lime Zest — Green decorative accent for icons, marks, and small graphic details. Use as a supporting accent, not as a status color"
+    },
+    "teal-current": {
+      "$value": "#4bb7cf",
+      "$type": "color",
+      "$description": "Teal Current — Blue decorative accent for icons, marks, and small graphic details. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "montreal-neue": {
+      "$value": "Montreal Neue",
+      "$type": "fontFamily",
+      "$description": "Sole interface typeface. Weight 500 for nav, buttons, and emphasis; weight 400 for body. Display sizes (56–104px) use line-heights under 1.0 (0.90–0.98) with aggressive negative tracking (-0.025em to -0.065em) — this is the system's signature move. Body sizes (14–23px) sit at 1.38–1.50 line-height with minimal tracking. The contrast between poster-tight headlines and airy body copy is the rhythm."
+    },
+    "georgia": {
+      "$value": "Georgia",
+      "$type": "fontFamily",
+      "$description": "Sporadic decorative serif used in one card context — appears to break the sans-only system intentionally, possibly for a quoted/styled statistic. Treat as accent-only, never body."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.tedy.app",
+      "siteName": "Tedy",
+      "extractedAt": "2026-06-03T19:32:34.444Z",
+      "variant": "compact"
+    }
+  }
+}

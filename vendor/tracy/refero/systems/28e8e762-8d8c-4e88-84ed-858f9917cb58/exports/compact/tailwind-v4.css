@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-obsidian-canvas: #1c1d20;
+  --color-bone-white: #ffffff;
+  --color-fog: #999d9e;
+  --color-graphite: #494a4d;
+  --color-electric-iris: #455ce9;
+  --color-deep-iris: #334bd3;
+
+  /* Typography */
+  --font-dennis-sans: 'Dennis Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

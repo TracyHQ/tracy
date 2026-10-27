@@ -1,0 +1,54 @@
+{
+  "id": "REG-039",
+  "kind": "fix",
+  "title": "The Team tab offers Invite to every accepted seat and the invite wizard offers only the roles the door accepts from that seat: an Editor or Developer invites Editors, an Owner or Admin picks any role",
+  "pr": 853,
+  "area": "team/invite",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL unset, run: node --test --test-reporter=tap --test-timeout=120000 packages/core/tracy-core/test/roster.test.mjs packages/core/tracy-core/test/team-invite.test.mjs apps/tracy-web/test/transactional-mail.test.mjs",
+    "S2: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below."
+  ],
+  "expect": [
+    "Exit code 0, 0 failures, 0 skipped, 0 cancelled.",
+    "'the Team tab offers Invite to an accepted owner', '… admin', '… developer' and '… editor' pass: button[title] of the Invite action is in the Team tab's header for each of the four roles, and pressing it opens the wizard.",
+    "'the Team tab offers no Invite while the viewer’s accepted seat is not established' passes: no Invite control, no wizard (even when the tab was asked to open one) and 0 POSTs when there is no accepted-sites row, the role is not one of the seat book's four, the book says the seat is pending, the book carries no role, the book answers 500 or 401, the book does not list the site, or the read is dropped.",
+    "'the wizard offers an editor seat the role Editor and no other' and the same for a developer seat pass: #tracy-mysites-role-editor is the only role option and the POST body is {emails, role: 'editor', siteKeys}. 'the wizard still offers an owner seat admin, developer and editor' and the same for an admin seat pass.",
+    "'across several sites the wizard offers only the roles every selected site would accept' passes: with an Owner seat and an Editor seat selected only Editor is offered; with the Owner site alone all three are; a role picked for the Owner site and then sent after the Editor site was added from Review goes out as 'editor'.",
+    "'a seat lowered on another site since the tab opened does not widen the roles offered there', 'a site whose seat the book no longer establishes is not offered, whatever the older list says' and 'a site the older list did not have is offered once the book establishes the seat' pass: the wizard opened from the Team tab takes every site's role and standing from the GET /api/team answer just read, not from the accepted-sites list the tab was opened with; an Owner seat that list still shows but the book gives as Editor leaves only Editor for both sites, and a site the book does not list, gives as pending, gives with no readable book or with no role has no row at Where and is in no POST.",
+    "'a wizard with nowhere to invite to, or no role to give, cannot be sent' and 'Where does not let the wizard go on with no site picked' pass: Continue is disabled and 0 POSTs for a preset naming a site the viewer cannot invite on, a preset with no site, no site at all, and a site whose seat has no known role.",
+    "'a refusal inside an HTTP-200 reply is drawn as a refusal with its next step, beside the sites that worked' and 'a reply where every site refused shows no invitation as sent' pass: [data-refusal=NOT_SITE_OWNER] and [data-refusal=SEAT_NOT_AUTHORIZED] each carry the refused label and their own next step, [data-outcome=invited] stays for the site that worked, and no refused row reads as invited.",
+    "'a refusal of the whole request is printed with its next step and nothing is drawn as sent' passes for 403 NOT_SITE_OWNER, 403 SEAT_NOT_AUTHORIZED, 429 with and without a body, 401 and 400 INVALID_REQUEST: one [data-invite-failure], the wizard stays at Review, no [data-outcome].",
+    "'an answer that never came, or cannot be read, is reported as unknown: not as sent, not as \"nothing changed\"' passes for a dropped request, a 500, a 502 that is not JSON, and a 200 that is empty, not JSON, null, a list, without results, with results that are not a list, empty, null, for another address, without sites, with an empty site list, for another site, with a null site row, with an unknown outcome, with no outcome, with a notified that is not a boolean, or with the same address twice: [data-invite-failure=unknown], no [data-outcome], and the tab is told to read the book again.",
+    "'pressing Send again while the invitation is on its way sends nothing more' and 'an answer that lands after the wizard was closed is not drawn in the next one' pass: 1 POST for four presses; the new wizard stays at Who with no [data-outcome].",
+    "In transactional-mail.test.mjs the F-S3-004 tests pass through the real router: an accepted editor or developer inviting an editor writes one seat (role editor, granted by the inviter, not accepted) and sends one mail; an accepted editor or developer inviting an admin or a developer answers 200 with outcome refused, code NOT_SITE_OWNER and writes nothing; an owner or admin still invites all three roles; a pending, revoked, declined or missing seat answers SEAT_NOT_AUTHORIZED for every role and writes nothing; two sites answer each for itself in one reply; a request the door cannot read answers 400 INVALID_REQUEST and writes nothing; a provider rejection keeps the seat with notified:false.",
+    "'F-S3-004: the roles the Team tab offers a seat are exactly the ones the door accepts from it' passes: for owner, admin, developer and editor, inviteRolesFor(role) equals the roles the router answered 'invited' for.",
+    "In roster.test.mjs 'the invitation rule left the roster rules and the permission table as they were' passes: runsSite is false for editor and developer, actionsFor offers them no row action, and PERMISSIONS is the same eight rows with permission.invite from editor.",
+    "Not covered by this case: PostgreSQL (the database is a fixture that answers listed statements only, so constraints and conflict clauses are not exercised), a real mail provider, a real browser (jsdom: no layout, no focus trap), the dsh page the tab is mounted in, and a deployed host."
+  ],
+  "selectors": {
+    "inviteControl": "button[title=<action.invite>] in the Team tab header",
+    "roleOption": "#tracy-mysites-role-<admin|developer|editor>",
+    "outcomeRow": "[data-outcome=<invited|approved|already_granted|refused>]",
+    "refusalRow": "[data-refusal=<code>]",
+    "failure": "[data-invite-failure=<refused|notSiteOwner|notAuthorized|rateLimited|signedOut|unknown>]",
+    "rule": "inviteRolesFor, canInvite, inviteRolesAcross and acceptedInviteRole in packages/core/tracy-core/src/team/roster.ts",
+    "door": "POST /api/team/invite {emails, role, siteKeys} -> {results: [{email, notified, sites: [{siteKey, outcome, code?}]}]}",
+    "tests": "packages/core/tracy-core/test/team-invite.test.mjs, packages/core/tracy-core/test/roster.test.mjs, apps/tracy-web/test/transactional-mail.test.mjs"
+  },
+  "evidence": "Issue #798, F-S3-004. The door let any accepted seat invite an Editor while TeamView showed Invite only where runsSite(role) held, and InviteWizard offered admin, developer and editor to whoever opened it. The final test files on the base commit 22b5e6999, sources from git archive (red-before/team-invite.base.tap, red-before/transactional-mail.base.tap): screen: tests=26 pass=8 fail=18 skipped=0 cancelled=0; door: tests=44 pass=43 fail=1 skipped=0 cancelled=0 (the one red test is the door/screen agreement test; every door rule test already passed). Every failure is an assertion. On the fix (green/final.tap): tests=92 pass=92 fail=0 skipped=0 cancelled=0 over the three files. The logs are in the task's artifact directory, not in the repository.",
+  "fence": "One description of the rule on the screen side, inviteRolesFor in @tracy/core/team, read by the Invite control (canInvite over the role the loaded book gives an accepted seat), by the wizard's site list (acceptedInviteRole over every site of the same GET /api/team answer, never the older accepted-sites list) and by its role options (inviteRolesAcross over the selected sites); the door test puts that function beside the real router's answers for the four roles. The wizard sends the role derived from the selected sites, guards a second send with a ref, and reaches its last step only with a 200 reply that names every address and every site sent with a known outcome. The server door, actingAdmin and the PERMISSIONS table are unchanged. Mounted with react-dom on jsdom with a fetch fixture and a fixture pool: no PostgreSQL, no mail provider, no real browser, no host.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "packages/core/tracy-core/test/roster.test.mjs",
+      "packages/core/tracy-core/test/team-invite.test.mjs",
+      "apps/tracy-web/test/transactional-mail.test.mjs"
+    ]
+  }
+}

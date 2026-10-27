@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1732-wo-site-read-tls",
+  "kind": "feat",
+  "title": "WO site checks read a homepage that refuses Node again with Chrome's TLS fingerprint (impit through the guarded loopback proxy), behind WO_SITE_READ_TLS",
+  "pr": 1732,
+  "area": "website-opportunities/site-checks",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/website-opportunities-site-checks.test.mjs (from apps/tracy-web) with the local-server tests: one local origin answers 403 + a Cloudflare challenge to any client but Chrome on guarded.test, a parked page on parked.test and a reCAPTCHA-only contact page on form.test; tier 1 is the real pinned fetch, tier 2 the real impit through the real startGuardedProxy; only DNS answers (127.0.0.1) and the allowed port are test seams",
+    "S2: node --test packages/wo/website-opportunities/test/guarded-connect-proxy.test.mjs, the SSRF tests: a name with any blocked answer, DNS rebinding, blocked IP literals"
+  ],
+  "expect": [
+    "S1 switch on: guarded.test is done, error null, read_via 'impit', cms WordPress, read_attempts tier 1 status 403 then tier 2 status 200; only guarded.test was read with a Chrome user agent",
+    "S1 switch off: guarded.test is blocked/challenge, read_via and read_attempts null, no Chrome request reached the origin",
+    "S1 SSRF: with the proxy's real isBlockedAddress and the name resolving to 127.0.0.1, the proxy refuses once, no Chrome request reaches the origin, the verdict stays blocked/challenge with read_via 'node'",
+    "S1: parked.test is failed/parked (also when PageSpeed answered); form.test (reCAPTCHA form only) is done, not blocked, and not escalated",
+    "S2: a name answering any blocked address is refused with no connection; one DNS lookup and the socket goes to that answer; blocked IP literals refused in every spelling"
+  ],
+  "selectors": {
+    "seam": "createSiteChecks({ startRead: createEscalatingFetch(...) }); startGuardedProxy({ isBlockedAddress, lookup, allowedPorts }); wo_site_check.read_via / read_attempts (WO migration 0009, Tracy 176)"
+  },
+  "evidence": "Dev 25/10/2026: 37 wo_site_check rows blocked (21 challenge, 15 http_403, 1 http_429); impit spike read 26/37 from the dev AWS IP (tasks/plan-wo-site-read-tls.md §1)",
+  "fence": "tier 2 runs only when the switch is on and only after a refusal or a confirmed challenge; every tier-2 connection goes through the proxy, which refuses private addresses at connect time",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/wo-site-read-tls.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 300
+  }
+}

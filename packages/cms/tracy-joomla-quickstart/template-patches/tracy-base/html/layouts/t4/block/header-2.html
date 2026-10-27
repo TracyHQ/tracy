@@ -1,0 +1,27 @@
+<!-- HEADER BLOCK — Tracy global nav.
+     DESIGN.md §4 "Navigation": a compact translucent bar with small-type links and restrained
+     iconography. Everything variable here is admin-editable: the brand is the `logo` element
+     (Template -> Settings -> site logo), the links are the mega menu, and the right-hand cluster is
+     the `header-r` module position. The only hard-coded control is the theme toggle, which is
+     chrome rather than content. -->
+<header class="header-block header-block-2 tracy-nav">
+  <div class="container">
+    <div class="header-wrap d-flex align-items-center justify-content-between collapse-static">
+      <jdoc:include type="element" name="logo" data-home="index.php" />
+
+      <div class="t4-navbar mx-auto collapse-static">
+        <jdoc:include type="element" name="megamenu" />
+      </div>
+
+      <div class="t4-header-r d-flex align-items-center">
+        <jdoc:include type="modules" name="header-r" style="raw" />
+
+        <jdoc:include type="element" name="theme-toggle" />
+
+        <jdoc:include type="element" name="megamenu-toggle" />
+        <jdoc:include type="element" name="offcanvas-toggle" />
+      </div>
+    </div>
+  </div>
+</header>
+<!-- // HEADER BLOCK -->

@@ -1,0 +1,89 @@
+{
+  "color": {
+    "ember-orange": {
+      "$value": "#ff7817",
+      "$type": "color",
+      "$description": "Ember Orange — Primary CTAs, feature tag pills, active states, and brand accent strokes — the only chromatic color in the system, used surgically to signal action and brand presence against the monochrome canvas"
+    },
+    "vellum": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Vellum — Page canvas background, card surfaces, and inverted text on dark sections"
+    },
+    "obsidian": {
+      "$value": "#18181b",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, dark section backgrounds, and strong borders — the structural near-black that defines all dark surfaces and high-contrast outlines"
+    },
+    "onyx": {
+      "$value": "#09090b",
+      "$type": "color",
+      "$description": "Onyx — Deepest dark — modal backgrounds, input borders on dark, the darkest UI layer above Obsidian"
+    },
+    "graphite": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Graphite — True black used for dominant text and structural borders in the light theme — renders as maximum-contrast text and outline work"
+    },
+    "pebble": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Pebble — Hairline borders, dividers, and subtle surface tints — the lightest structural gray"
+    },
+    "bone": {
+      "$value": "#ebebeb",
+      "$type": "color",
+      "$description": "Bone — Secondary surface fill for cards and inset panels — sits one step above the canvas"
+    },
+    "slate": {
+      "$value": "#71717a",
+      "$type": "color",
+      "$description": "Slate — Muted body text, secondary metadata, and disabled-state labels"
+    },
+    "mist": {
+      "$value": "#a1a1aa",
+      "$type": "color",
+      "$description": "Mist — Lightest muted text — placeholder, tertiary helper, and subtle border accents"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "ogg-text-light": {
+      "$value": "Ogg Text Light",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif — used exclusively for editorial headlines and section titles. The thin weight (300) is the signature: high-contrast strokes that feel like a luxury financial publication rather than a SaaS dashboard. Pairs with font-feature-settings for refined alternates (blwf, cv03, cv04, cv09, cv11)."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body text — handles navigation, descriptions, labels, and input fields. The workhorse of the system at 16px body / 14px secondary / 12px micro. Weight 500 for emphasis, 400 for default."
+    },
+    "pp-supply-mono": {
+      "$value": "PP Supply Mono",
+      "$type": "fontFamily",
+      "$description": "Data, metrics, and terminal-feeling accents — used for stat readouts, ticker labels, code-like UI text, and emphasis labels. Tighter letter-spacing (-0.04em at small sizes) gives a compressed, technical quality. Weight 500 for standout labels."
+    },
+    "pp-supply-mono-regular": {
+      "$value": "PP Supply Mono Regular",
+      "$type": "fontFamily",
+      "$description": "PP Supply Mono Regular — detected in extracted data but not described by AI"
+    },
+    "pp-supply-mono-medium": {
+      "$value": "PP Supply Mono Medium",
+      "$type": "fontFamily",
+      "$description": "PP Supply Mono Medium — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.gte.xyz",
+      "siteName": "GTE",
+      "extractedAt": "2026-06-03T18:14:15.268Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+  "status": "complete",
+  "name": "Ciridae",
+  "url": "https://styles.refero.design/style/a1b78a21-a304-482b-8ce5-f612d95d44fe",
+  "sourceWebsite": "https://www.ciridae.com",
+  "extractedAt": "2026-07-03T03:30:15.366Z",
+  "capturedAt": "2026-10-08T05:15:31.648494+00:00",
+  "theme": "dark",
+  "industry": "ai",
+  "description": "void chamber with ember pulse — a near-black cathedral where the only warm note is a thin line of ember rust, and every surface is defined by hairline borders rather than shadow.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1874ac76-0101-438c-9fab-6983248092a4.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/46b58b5f-a720-47de-b7ea-91a8a118324d.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/acb76e7a-0ea6-4c56-b4b3-d65abd9f0443.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3e41750c-a461-441b-af21-18d28b508b1a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/7e256b4f-1581-4013-bc62-e0e2c17472e8.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8f81a7363ee7acff2e7b9c5e028fef56af96e4ac9cd37c683e543b137fb2392b",
+      "bytes": 21858
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "27e68900cdbf6d59487334efaaa6ad769f181d8514dba5dbd96e58deed328007",
+      "bytes": 58743
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0a48804cd80ea3e209cf025ba92c3049c6eda468fb0cd7718eb723ad3af1fa87",
+      "bytes": 18031
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b9e0cd4544824994e4c69c6edfcfef021a257b2c9a164df86b954c3eb9c917d3",
+      "bytes": 12145
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0c1523abb0c87380a322253de8c1e36e4fa778b0e5d4e14e550b32229df6b250",
+      "bytes": 13649
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "dd55a27fa9ccb1e8f9d5241195565d4f2b815d3c07df3f391eb82e7969bfbec1",
+      "bytes": 3497
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0b1bf558f06a15f686b22919a57b34576fa7c41b72a93c7158b61d1f7defae4e",
+      "bytes": 677
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "87e61bee682cd0b57ea5527179e4e2746d1e6bc088121eb65d6e0946d95fb197",
+      "bytes": 694
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6d8515a78f3c5f7660f16e2df3e0e7c19c267a95ac699ef28bfa2d773bed53f3",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b8f3f4de2e38f5c5b4268765148a39107cf3b8865d961fe3452aa7e5ae094d54",
+      "bytes": 44724
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9afe0da50588db2f67ae0e37f6bb742bdbc1d80dd35d579f73947bc3249c5379",
+      "bytes": 23122
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a66b61f24852cdcb8fa35533a7b62369b6f1adeb85db99dc56d30cf9fcaf475c",
+      "bytes": 45402
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6c38152d58be10545db57f9413b30c54b692c5aba2c978d5e53fe1c485462c18",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ea2d4607b4eba2663d6bea814cb430bdba8f87caec67d4e6f3db59718d54e5ef",
+      "bytes": 1631
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "26dbd892be2fc0ce5baf1e1cc67d9f689f35ddb992bb90c189079be0221cf956",
+      "bytes": 2141
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "4e10797e-03eb-4efb-a16d-1d93272e1cab",
+    "57160546-4cf7-4d52-bb05-cd8b88e1fbf9",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "98a1ad40-90e2-4665-b49f-e5ffd4d4b90b",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0057e55a-8a66-4ffc-9c21-f0b757e580b3",
+  "status": "complete",
+  "name": "Haus Otto",
+  "url": "https://styles.refero.design/style/0057e55a-8a66-4ffc-9c21-f0b757e580b3",
+  "sourceWebsite": "https://hausotto.com",
+  "extractedAt": "2026-06-03T19:18:01.351Z",
+  "capturedAt": "2026-10-08T05:07:42.523392+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Monumental wordmark on white void",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d31d3fc2-8c8f-41b2-8824-789cb63090f2.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6503a9d8b65badd8d15f48f1d8bc1b846e78feee04808f292b07c7d5a0842428",
+      "bytes": 12696
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "cc1973c1a80661a1d42c3377a020743cea59d877891f4a2ce82b3ce013696ebf",
+      "bytes": 42661
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "843ff4e69b04cab6fda1443ec5a1e340facef9c5df9048ad2262f096331539d0",
+      "bytes": 10856
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "40dfb951c176c1774ad63fcca663ca6a3cb872f16d3083b966f860935fe85c89",
+      "bytes": 4090
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "48a27cf95e6208b355324caf9db2d62323ff9de4ba4173917611fc3108913397",
+      "bytes": 7420
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1cf8f346298be4620cb477cab9cf4aa137d1fbaf33f05e63d61000c8862619de",
+      "bytes": 1289
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1719c6506dec936760c00328e623331a9fced1bc96b0b308438184b0ff497ca2",
+      "bytes": 255
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "8fac0e73d964e07967f15d005afb7930067018f360c3524b98c8f6009b877c51",
+      "bytes": 272
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b7e5af323fdb3cbd3158b890977097bea01741120de2445807902ea08d70765b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "57737adb10692c89ecd905676c7b31d2ba77bd42f3396f6b38336086fe37001c",
+      "bytes": 34660
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c0104f1c4a31bc2dcef7a0eab94327d4adc5a3348ff599ab1c6a7f80498fafcd",
+      "bytes": 17790
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8736d8af37fb0a32e4a205ac6a6bf54571171ecb55094924ede65e3cca36c24e",
+      "bytes": 18618
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f0bf74b7a837c90294744714cad110d286ce1021001fc576815a93dcb78c5e2f",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5e544dd2fb4529e10be2d92428e8014bf5ab6919cb93d7ddec5232cf07ab967c",
+      "bytes": 761
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a9bbffd885a0dc05c860cbf9cee14ca428717830e6db26ee4ea24c42a7a07a3e",
+      "bytes": 1113
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0057e55a-8a66-4ffc-9c21-f0b757e580b3",
+    "04d2e256-61b0-4184-a834-e36c15d09ea5",
+    "15d57573-513b-49aa-91c7-1b7f87bb1a55",
+    "17e5ff99-38c1-4ad6-8910-648f5798b3a5",
+    "190d4a0b-0353-4fc8-be09-affa6e977146",
+    "1a2ca4fb-1087-4fd0-83ba-590bc63f54ee",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "5e9409c4-d130-42f3-b224-5bd66cdfbe28",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6665a3dd-606f-4fd1-80dd-a84e3b3a6226",
+    "6eb5fc89-d0db-4293-8bff-13c5aa530a28",
+    "6f428c12-ba43-48e3-9a52-299ec1ce509b",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "9568198a-5a51-4cbb-9dc3-b7610757cdd6",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "c43237e3-dae2-4fc6-a917-519b25c870e5",
+    "c6e55968-fa2d-47c9-b833-2c4ad1e74906",
+    "c90b584e-de5b-4971-9e13-8ab991bd96c0",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761"
+  ]
+}

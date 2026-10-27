@@ -1,0 +1,4860 @@
+{
+  "format": 1,
+  "scope": "Source baseline only. No live IDs, credentials, entry bodies or runtime verification.",
+  "template": {
+    "id": "tracy-business",
+    "label": "Tracy Business",
+    "version": "1.7.23"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en",
+      "af",
+      "be",
+      "bg",
+      "ca",
+      "cs",
+      "cy",
+      "da",
+      "de",
+      "el",
+      "es",
+      "et",
+      "fi",
+      "fr",
+      "ga",
+      "hr",
+      "hu",
+      "it",
+      "ja",
+      "ka",
+      "lo",
+      "lt",
+      "lv",
+      "ms",
+      "nb",
+      "nl",
+      "pl",
+      "pt",
+      "ro",
+      "ru",
+      "sk",
+      "sl",
+      "sr",
+      "sv",
+      "ta",
+      "th",
+      "tr",
+      "uk",
+      "vi",
+      "zh"
+    ]
+  },
+  "collections": [
+    {
+      "slug": "site",
+      "label": "Site chrome",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "brand_mark",
+          "label": "Brand mark",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "brand_name",
+          "label": "Brand name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "brand_sub",
+          "label": "Brand subtitle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "quote_label",
+          "label": "Header CTA label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "quote_url",
+          "label": "Header CTA URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "topbar_phone",
+          "label": "Topbar phone line",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "topbar_email",
+          "label": "Topbar email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "topbar_address",
+          "label": "Topbar address",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "home_label",
+          "label": "Breadcrumb home label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "resources_label",
+          "label": "Resources menu label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "kit_title",
+          "label": "Marketing kit column title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "recent_projects_title",
+          "label": "Recent projects column title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "news_column_title",
+          "label": "News column title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "resources_all_label",
+          "label": "All resources link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "all_projects_label",
+          "label": "All projects link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "all_label",
+          "label": "Filter: all",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "theme_dark_label",
+          "label": "Theme toggle: switch to dark",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "theme_light_label",
+          "label": "Theme toggle: switch to light",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "language_name",
+          "label": "Language name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_text",
+          "label": "Footer description",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "footer_legal_1",
+          "label": "Footer legal line 1",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_legal_2",
+          "label": "Footer legal line 2",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_services_title",
+          "label": "Footer column 1 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_company_title",
+          "label": "Footer column 2 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_contact_title",
+          "label": "Footer column 3 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hotline",
+          "label": "Hotline number",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sales_email",
+          "label": "Sales email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hours",
+          "label": "Office hours",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_book_label",
+          "label": "Footer booking link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "copyright",
+          "label": "Copyright line",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social",
+          "label": "Social profiles",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "search_title",
+          "label": "Search: title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_placeholder",
+          "label": "Search: placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_button",
+          "label": "Search: button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_next",
+          "label": "Search: next label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_results_line",
+          "label": "Search: results line ({count}, {query})",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_filter_title",
+          "label": "Search: filter title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_popular_title",
+          "label": "Search: popular title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_popular",
+          "label": "Search: popular terms",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "not_found_title",
+          "label": "404: title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_text",
+          "label": "404: text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "not_found_placeholder",
+          "label": "404: search placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_back",
+          "label": "404: back link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_suggestions_title",
+          "label": "404: suggestions title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_suggestions",
+          "label": "404: suggestions",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "slots",
+          "label": "Image placeholder hints",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 40
+    },
+    {
+      "slug": "home",
+      "label": "Home page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "hero_badge",
+          "label": "Hero badge",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_title_a",
+          "label": "Hero title (line 1)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_title_b",
+          "label": "Hero title (accent line)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_text",
+          "label": "Hero text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_label",
+          "label": "Hero CTA 1 label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta1_url",
+          "label": "Hero CTA 1 URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_label",
+          "label": "Hero CTA 2 label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_cta2_url",
+          "label": "Hero CTA 2 URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hero_image",
+          "label": "Hero image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "stats",
+          "label": "Stats",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "services_eyebrow",
+          "label": "Services eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "services_title",
+          "label": "Services title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "services_all_label",
+          "label": "Services link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "services_all_url",
+          "label": "Services link URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "services_items",
+          "label": "Services cards",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "projects_title",
+          "label": "Projects title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "project_big",
+          "label": "Large project card",
+          "type": "reference",
+          "required": false
+        },
+        {
+          "slug": "project_small_1",
+          "label": "Small project card 1",
+          "type": "reference",
+          "required": false
+        },
+        {
+          "slug": "project_small_2",
+          "label": "Small project card 2",
+          "type": "reference",
+          "required": false
+        },
+        {
+          "slug": "about_image",
+          "label": "About section image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "why_eyebrow",
+          "label": "Why eyebrow",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "why_title",
+          "label": "Why title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "why_items",
+          "label": "Why items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "band_title",
+          "label": "CTA band title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "band_text",
+          "label": "CTA band text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "band_button",
+          "label": "CTA band button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "band_url",
+          "label": "CTA band URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "news_title",
+          "label": "News title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "news_all_label",
+          "label": "News link label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "clients_label",
+          "label": "Clients label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "client_logos",
+          "label": "Client logos",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 40
+    },
+    {
+      "slug": "about",
+      "label": "About page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "breadcrumb",
+          "label": "Breadcrumb label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "lede",
+          "label": "Lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "hero_image",
+          "label": "Hero image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "stats_title",
+          "label": "Stats title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stats",
+          "label": "Stats",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "mission_title",
+          "label": "Mission title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "mission_text",
+          "label": "Mission text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "pillars",
+          "label": "Pillars",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "history_title",
+          "label": "History title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "history",
+          "label": "History",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "geo_title",
+          "label": "Geography title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "geo_text",
+          "label": "Geography text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "geo_list",
+          "label": "Locations",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "map_image",
+          "label": "Map image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "team_title",
+          "label": "Team title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "team",
+          "label": "Team",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cert_title",
+          "label": "Accreditations title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "certs",
+          "label": "Accreditations",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "safety_title",
+          "label": "Safety title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "safety_text",
+          "label": "Safety text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "safety_image",
+          "label": "Safety image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "cta_title",
+          "label": "CTA title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_text",
+          "label": "CTA text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_button",
+          "label": "CTA button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_url",
+          "label": "CTA URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_alt_label",
+          "label": "CTA secondary label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_alt_url",
+          "label": "CTA secondary URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 40
+    },
+    {
+      "slug": "services_page",
+      "label": "Services page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "breadcrumb",
+          "label": "Breadcrumb label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "lede",
+          "label": "Lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "stats",
+          "label": "Stats",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "services_title",
+          "label": "Services title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "includes_label",
+          "label": "Includes label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "process_title",
+          "label": "Process title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "process",
+          "label": "Process",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "pricing_title",
+          "label": "Pricing title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pricing_text",
+          "label": "Pricing note",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "pricing",
+          "label": "Pricing",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cta_title",
+          "label": "CTA title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_text",
+          "label": "CTA text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_button",
+          "label": "CTA button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_url",
+          "label": "CTA URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_alt_label",
+          "label": "CTA secondary label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_alt_url",
+          "label": "CTA secondary URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 40
+    },
+    {
+      "slug": "services",
+      "label": "Services",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "includes",
+          "label": "Covered by the contract",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "term",
+          "label": "Timeline",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sort",
+          "label": "Sort order",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "seedEntries": 240
+    },
+    {
+      "slug": "projects_page",
+      "label": "Projects page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "breadcrumb",
+          "label": "Breadcrumb label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "lede",
+          "label": "Lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "featured_label",
+          "label": "Featured label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "featured_project",
+          "label": "Featured project",
+          "type": "reference",
+          "required": false
+        },
+        {
+          "slug": "featured_image",
+          "label": "Featured image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "featured_title",
+          "label": "Featured title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "featured_text",
+          "label": "Featured text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "featured_facts",
+          "label": "Featured facts",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "featured_cta",
+          "label": "Featured CTA label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "grid_title",
+          "label": "Grid title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "grid_text",
+          "label": "Grid note",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "view_label",
+          "label": "View project label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sectors_title",
+          "label": "Sectors title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sectors",
+          "label": "Sectors",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "how_title",
+          "label": "How we work title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "how",
+          "label": "How we work",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "cta_title",
+          "label": "CTA title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_text",
+          "label": "CTA text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_button",
+          "label": "CTA button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_url",
+          "label": "CTA URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_alt_label",
+          "label": "CTA secondary label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_alt_url",
+          "label": "CTA secondary URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 40
+    },
+    {
+      "slug": "projects",
+      "label": "Projects",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "card_tag",
+          "label": "Card tag",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "type_label",
+          "label": "Type label (breadcrumb)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "year",
+          "label": "Year",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "area",
+          "label": "Area / size",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "city",
+          "label": "City",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "summary",
+          "label": "Card summary",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "lede",
+          "label": "Lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "facts",
+          "label": "Facts",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "scope_title",
+          "label": "Scope title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "scope",
+          "label": "Scope of work",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "gallery_title",
+          "label": "Gallery title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "gallery",
+          "label": "Gallery",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "quote",
+          "label": "Quote",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "quote_by",
+          "label": "Quote by",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_label",
+          "label": "CTA label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "next_title",
+          "label": "Other projects title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "featured",
+          "label": "Featured",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "slug": "sort",
+          "label": "Sort order",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "seedEntries": 400
+    },
+    {
+      "slug": "news_page",
+      "label": "News page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "breadcrumb",
+          "label": "Breadcrumb label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "lede",
+          "label": "Lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "count_label",
+          "label": "Count label ({count})",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "page_meta",
+          "label": "Page meta ({page}, {pages}, {perPage})",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "featured_label",
+          "label": "Featured label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "all_label",
+          "label": "All filter label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sidebar_search_title",
+          "label": "Sidebar: search title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sidebar_search_placeholder",
+          "label": "Sidebar: search placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "categories_title",
+          "label": "Sidebar: categories title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "latest_title",
+          "label": "Sidebar: latest title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_title",
+          "label": "Newsletter title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_text",
+          "label": "Newsletter text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "newsletter_placeholder",
+          "label": "Newsletter placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_button",
+          "label": "Newsletter button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_form_id",
+          "label": "Newsletter form id (set by the importer)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "tags_label",
+          "label": "Article: tags label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "prev_label",
+          "label": "Article: previous label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "next_label",
+          "label": "Article: next label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "related_title",
+          "label": "Article: related title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "toc_title",
+          "label": "Article: contents title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "downloads_title",
+          "label": "Article: downloads title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "aside_title",
+          "label": "Article: aside title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "aside_text",
+          "label": "Article: aside text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "aside_button",
+          "label": "Article: aside button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "aside_url",
+          "label": "Article: aside URL",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 40
+    },
+    {
+      "slug": "posts",
+      "label": "News",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "short_title",
+          "label": "Short title (breadcrumb)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "lede",
+          "label": "Lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "featured_image",
+          "label": "Featured image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "caption",
+          "label": "Image caption",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author_role",
+          "label": "Author role",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "reading_time",
+          "label": "Reading time (min)",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "slug": "content",
+          "label": "Content",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "downloads",
+          "label": "Downloads",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "toc",
+          "label": "Contents labels (one per H2, in order; empty = heading text)",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "featured",
+          "label": "Featured",
+          "type": "boolean",
+          "required": false
+        }
+      ],
+      "seedEntries": 480
+    },
+    {
+      "slug": "careers",
+      "label": "Careers page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "breadcrumb",
+          "label": "Breadcrumb label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "lede",
+          "label": "Lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "hero_image",
+          "label": "Hero image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "stats",
+          "label": "Stats ({n} in a value = number of published vacancies)",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "open_title",
+          "label": "Open roles title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "all_label",
+          "label": "All filter label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "apply_label",
+          "label": "Apply label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "more_label",
+          "label": "More roles label ({n} = number of published vacancies)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "benefits_title",
+          "label": "Benefits title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "benefits",
+          "label": "Benefits",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "process_title",
+          "label": "Hiring process title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "steps",
+          "label": "Hiring steps",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "life_title",
+          "label": "Life on site title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "life",
+          "label": "Life on site",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "quote",
+          "label": "Quote",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "quote_by",
+          "label": "Quote by",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_title",
+          "label": "CTA title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_text",
+          "label": "CTA text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "cta_button",
+          "label": "CTA button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_url",
+          "label": "CTA URL",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_mail",
+          "label": "CTA email",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 40
+    },
+    {
+      "slug": "vacancies",
+      "label": "Vacancies",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "city",
+          "label": "City",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "type",
+          "label": "Type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pay",
+          "label": "Pay",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sort",
+          "label": "Sort order",
+          "type": "integer",
+          "required": false
+        }
+      ],
+      "seedEntries": 240
+    },
+    {
+      "slug": "investors",
+      "label": "Investor relations page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "breadcrumb",
+          "label": "Breadcrumb label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "ticker",
+          "label": "Ticker",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "lede",
+          "label": "Lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "quote",
+          "label": "Share quote",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "fin_title",
+          "label": "Key figures title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "fin_note",
+          "label": "Key figures note",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "fin_headers",
+          "label": "Table headers",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "fin_rows",
+          "label": "Table rows",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "reports_title",
+          "label": "Reports title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "reports",
+          "label": "Reports",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "disclosures_title",
+          "label": "Disclosures title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "dividends_title",
+          "label": "Dividends title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "dividends_text",
+          "label": "Dividends text",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "dividends",
+          "label": "Dividends",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "calendar_title",
+          "label": "Calendar title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "calendar",
+          "label": "Calendar",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "governance_title",
+          "label": "Governance title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "governance",
+          "label": "Governance links",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "contact_title",
+          "label": "IR contact title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_name",
+          "label": "IR contact",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_mail",
+          "label": "IR email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "contact_phone",
+          "label": "IR phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subscribe_placeholder",
+          "label": "Subscribe placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subscribe_button",
+          "label": "Subscribe button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_form_id",
+          "label": "Newsletter form id (set by the importer)",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 40
+    },
+    {
+      "slug": "contact",
+      "label": "Contact page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "lede",
+          "label": "Lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "notice",
+          "label": "Form notice",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "form",
+          "label": "Form slug",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id (set by the importer)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "reset_label",
+          "label": "Clear form button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hq_title",
+          "label": "Head office title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hq_address_1",
+          "label": "Head office address 1",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hq_address_2",
+          "label": "Head office address 2",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hotline_label",
+          "label": "Hotline label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sales_label",
+          "label": "Sales label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hours_label",
+          "label": "Hours label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "map_image",
+          "label": "Map image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "branches_title",
+          "label": "Branches title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "branches",
+          "label": "Branches",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "social_title",
+          "label": "Social title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social_text",
+          "label": "Social text",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "seedEntries": 40
+    },
+    {
+      "slug": "pages",
+      "label": "Pages",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "lede",
+          "label": "Lede",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "content",
+          "label": "Content",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "template",
+          "label": "Template",
+          "type": "select",
+          "required": false
+        },
+        {
+          "slug": "sample",
+          "label": "Sample data (kit pages)",
+          "type": "json",
+          "required": false
+        }
+      ],
+      "seedEntries": 280
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": "Primary navigation",
+      "locale": "en",
+      "items": 6
+    },
+    {
+      "name": "primary",
+      "label": "Главное меню",
+      "locale": "ru",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Topbar links",
+      "locale": "en",
+      "items": 2
+    },
+    {
+      "name": "topbar",
+      "label": "Верхняя панель",
+      "locale": "ru",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Resources: marketing kit",
+      "locale": "en",
+      "items": 6
+    },
+    {
+      "name": "resources_kit",
+      "label": "Ресурсы: маркетинг-кит",
+      "locale": "ru",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Footer: services",
+      "locale": "en",
+      "items": 4
+    },
+    {
+      "name": "footer_services",
+      "label": "Подвал: услуги",
+      "locale": "ru",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Footer: company",
+      "locale": "en",
+      "items": 5
+    },
+    {
+      "name": "footer_company",
+      "label": "Подвал: компания",
+      "locale": "ru",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Footer: legal",
+      "locale": "en",
+      "items": 3
+    },
+    {
+      "name": "footer_legal",
+      "label": "Подвал: юридическое",
+      "locale": "ru",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Điều hướng chính",
+      "locale": "vi",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Liên kết thanh trên",
+      "locale": "vi",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Tài nguyên: bộ công cụ marketing",
+      "locale": "vi",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Chân trang: dịch vụ",
+      "locale": "vi",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Chân trang: công ty",
+      "locale": "vi",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Chân trang: pháp lý",
+      "locale": "vi",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "主导航",
+      "locale": "zh",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "顶栏链接",
+      "locale": "zh",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "资源：市场工具包",
+      "locale": "zh",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "页脚：服务",
+      "locale": "zh",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "页脚：公司",
+      "locale": "zh",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "页脚：法律",
+      "locale": "zh",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Primêre navigasie",
+      "locale": "af",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Topbalk-skakels",
+      "locale": "af",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Hulpbronne: bemarkingsstel",
+      "locale": "af",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Voetskrif: dienste",
+      "locale": "af",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Voetskrif: maatskappy",
+      "locale": "af",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Voetskrif: regtens",
+      "locale": "af",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Асноўная навігацыя",
+      "locale": "be",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Спасылкі верхняй панэлі",
+      "locale": "be",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Рэсурсы: маркетынгавы камплект",
+      "locale": "be",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Ніжні каланец: паслугі",
+      "locale": "be",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Ніжні каланец: кампанія",
+      "locale": "be",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Ніжні каланец: прававая інфармацыя",
+      "locale": "be",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Основна навигация",
+      "locale": "bg",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Връзки в горната лента",
+      "locale": "bg",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Ресурси: маркетинг комплект",
+      "locale": "bg",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Долен колонтитул: услуги",
+      "locale": "bg",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Долен колонтитул: компания",
+      "locale": "bg",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Долен колонтитул: правна информация",
+      "locale": "bg",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Navegació principal",
+      "locale": "ca",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Enllaços de la barra superior",
+      "locale": "ca",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Recursos: kit de màrqueting",
+      "locale": "ca",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Peu de pàgina: serveis",
+      "locale": "ca",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Peu de pàgina: empresa",
+      "locale": "ca",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Peu de pàgina: legal",
+      "locale": "ca",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Hlavní navigace",
+      "locale": "cs",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Odkazy v horní liště",
+      "locale": "cs",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Zdroje: marketingový kit",
+      "locale": "cs",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Zápatí: služby",
+      "locale": "cs",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Zápatí: společnost",
+      "locale": "cs",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Zápatí: právní informace",
+      "locale": "cs",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Prif lywio",
+      "locale": "cy",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Dolenni'r bar uchaf",
+      "locale": "cy",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Adnoddau: pecyn marchnata",
+      "locale": "cy",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Troedyn: gwasanaethau",
+      "locale": "cy",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Troedyn: cwmni",
+      "locale": "cy",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Troedyn: cyfreithiol",
+      "locale": "cy",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Primær navigation",
+      "locale": "da",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Links i topbjælken",
+      "locale": "da",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Ressourcer: marketingkit",
+      "locale": "da",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Sidefod: services",
+      "locale": "da",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Sidefod: virksomhed",
+      "locale": "da",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Sidefod: juridisk",
+      "locale": "da",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Hauptnavigation",
+      "locale": "de",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Topbar-Links",
+      "locale": "de",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Ressourcen: Marketing-Kit",
+      "locale": "de",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Footer: Leistungen",
+      "locale": "de",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Footer: Unternehmen",
+      "locale": "de",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Footer: Rechtliches",
+      "locale": "de",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Κύρια πλοήγηση",
+      "locale": "el",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Σύνδεσμοι επάνω γραμμής",
+      "locale": "el",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Πόροι: κιτ μάρκετινγκ",
+      "locale": "el",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Υποσέλιδο: υπηρεσίες",
+      "locale": "el",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Υποσέλιδο: εταιρεία",
+      "locale": "el",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Υποσέλιδο: νομικά",
+      "locale": "el",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Navegación principal",
+      "locale": "es",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Enlaces de la barra superior",
+      "locale": "es",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Recursos: kit de marketing",
+      "locale": "es",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Pie de página: servicios",
+      "locale": "es",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Pie de página: empresa",
+      "locale": "es",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Pie de página: legal",
+      "locale": "es",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Põhinavigatsioon",
+      "locale": "et",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Ülariba lingid",
+      "locale": "et",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Ressursid: turunduskomplekt",
+      "locale": "et",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Jalus: teenused",
+      "locale": "et",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Jalus: ettevõte",
+      "locale": "et",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Jalus: juriidiline",
+      "locale": "et",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Ensisijainen navigointi",
+      "locale": "fi",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Yläpalkin linkit",
+      "locale": "fi",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Resurssit: markkinointipaketti",
+      "locale": "fi",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Alatunniste: palvelut",
+      "locale": "fi",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Alatunniste: yritys",
+      "locale": "fi",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Alatunniste: oikeudelliset tiedot",
+      "locale": "fi",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Navigation principale",
+      "locale": "fr",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Liens de la barre supérieure",
+      "locale": "fr",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Ressources : kit marketing",
+      "locale": "fr",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Pied de page : services",
+      "locale": "fr",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Pied de page : entreprise",
+      "locale": "fr",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Pied de page : mentions légales",
+      "locale": "fr",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Príomhnascleanadh",
+      "locale": "ga",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Naisc an bharra uachtair",
+      "locale": "ga",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Acmhainní: feisteas margaíochta",
+      "locale": "ga",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Buntásc: seirbhísí",
+      "locale": "ga",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Buntásc: cuideachta",
+      "locale": "ga",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Buntásc: dlíthiúil",
+      "locale": "ga",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Primarna navigacija",
+      "locale": "hr",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Poveznice u gornjoj traci",
+      "locale": "hr",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Resursi: marketinški komplet",
+      "locale": "hr",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Podnožje: usluge",
+      "locale": "hr",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Podnožje: tvrtka",
+      "locale": "hr",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Podnožje: pravno",
+      "locale": "hr",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Elsődleges navigáció",
+      "locale": "hu",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Felső sáv hivatkozásai",
+      "locale": "hu",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Források: marketingcsomag",
+      "locale": "hu",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Lábléc: szolgáltatások",
+      "locale": "hu",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Lábléc: vállalat",
+      "locale": "hu",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Lábléc: jogi információk",
+      "locale": "hu",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Navigazione principale",
+      "locale": "it",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Link della barra superiore",
+      "locale": "it",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Risorse: kit di marketing",
+      "locale": "it",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Piè di pagina: servizi",
+      "locale": "it",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Piè di pagina: azienda",
+      "locale": "it",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Piè di pagina: note legali",
+      "locale": "it",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "メインナビゲーション",
+      "locale": "ja",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "トップバーリンク",
+      "locale": "ja",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "リソース: マーケティングキット",
+      "locale": "ja",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "フッター: サービス",
+      "locale": "ja",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "フッター: 会社",
+      "locale": "ja",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "フッター: 法務",
+      "locale": "ja",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "მთავარი ნავიგაცია",
+      "locale": "ka",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "ზედა ზოლის ბმულები",
+      "locale": "ka",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "რესურსები: მარკეტინგის კომპლექტი",
+      "locale": "ka",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "ქვედა კოლონტიტული: სერვისები",
+      "locale": "ka",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "ქვედა კოლონტიტული: კომპანია",
+      "locale": "ka",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "ქვედა კოლონტიტული: სამართლებრივი",
+      "locale": "ka",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "ການນຳທາງຫຼັກ",
+      "locale": "lo",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "ລິ້ງແຖບເທິງ",
+      "locale": "lo",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "ຊັບພະຍາກອນ: ຊຸດການຕະຫຼາດ",
+      "locale": "lo",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "ສ່ວນທ້າຍ: ການບໍລິການ",
+      "locale": "lo",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "ສ່ວນທ້າຍ: ບໍລິສັດ",
+      "locale": "lo",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "ສ່ວນທ້າຍ: ກົດໝາຍ",
+      "locale": "lo",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Pagrindinė navigacija",
+      "locale": "lt",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Viršutinės juostos nuorodos",
+      "locale": "lt",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Ištekliai: rinkodaros rinkinys",
+      "locale": "lt",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Poraštė: paslaugos",
+      "locale": "lt",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Poraštė: įmonė",
+      "locale": "lt",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Poraštė: teisinė informacija",
+      "locale": "lt",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Galvenā navigācija",
+      "locale": "lv",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Augšjoslas saites",
+      "locale": "lv",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Resursi: mārketinga komplekts",
+      "locale": "lv",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Kājene: pakalpojumi",
+      "locale": "lv",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Kājene: uzņēmums",
+      "locale": "lv",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Kājene: juridiskā informācija",
+      "locale": "lv",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Navigasi utama",
+      "locale": "ms",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Pautan bar atas",
+      "locale": "ms",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Sumber: kit pemasaran",
+      "locale": "ms",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Pengaki: perkhidmatan",
+      "locale": "ms",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Pengaki: syarikat",
+      "locale": "ms",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Pengaki: perundangan",
+      "locale": "ms",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Hovednavigasjon",
+      "locale": "nb",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Lenker i topplinjen",
+      "locale": "nb",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Ressurser: markedsføringspakke",
+      "locale": "nb",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Bunntekst: tjenester",
+      "locale": "nb",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Bunntekst: selskap",
+      "locale": "nb",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Bunntekst: juridisk",
+      "locale": "nb",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Primaire navigatie",
+      "locale": "nl",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Topbar-links",
+      "locale": "nl",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Resources: marketingkit",
+      "locale": "nl",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Footer: diensten",
+      "locale": "nl",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Footer: bedrijf",
+      "locale": "nl",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Footer: juridisch",
+      "locale": "nl",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Nawigacja główna",
+      "locale": "pl",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Linki w górnym pasku",
+      "locale": "pl",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Zasoby: zestaw marketingowy",
+      "locale": "pl",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Stopka: usługi",
+      "locale": "pl",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Stopka: firma",
+      "locale": "pl",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Stopka: informacje prawne",
+      "locale": "pl",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Navegação principal",
+      "locale": "pt",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Links da barra superior",
+      "locale": "pt",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Recursos: kit de marketing",
+      "locale": "pt",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Rodapé: serviços",
+      "locale": "pt",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Rodapé: empresa",
+      "locale": "pt",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Rodapé: jurídico",
+      "locale": "pt",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Navigare principală",
+      "locale": "ro",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Linkuri bară superioară",
+      "locale": "ro",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Resurse: kit de marketing",
+      "locale": "ro",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Subsol: servicii",
+      "locale": "ro",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Subsol: companie",
+      "locale": "ro",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Subsol: legal",
+      "locale": "ro",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Hlavná navigácia",
+      "locale": "sk",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Odkazy v hornej lište",
+      "locale": "sk",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Zdroje: marketingový balík",
+      "locale": "sk",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Pätička: služby",
+      "locale": "sk",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Pätička: spoločnosť",
+      "locale": "sk",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Pätička: právne informácie",
+      "locale": "sk",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Primarna navigacija",
+      "locale": "sl",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Povezave v zgornji vrstici",
+      "locale": "sl",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Viri: marketinški komplet",
+      "locale": "sl",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Noga: storitve",
+      "locale": "sl",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Noga: podjetje",
+      "locale": "sl",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Noga: pravno",
+      "locale": "sl",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Примарна навигација",
+      "locale": "sr",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Линкови у горњој траци",
+      "locale": "sr",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Ресурси: маркетиншки комплет",
+      "locale": "sr",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Подножје: услуге",
+      "locale": "sr",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Подножје: компанија",
+      "locale": "sr",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Подножје: правно",
+      "locale": "sr",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Primär navigering",
+      "locale": "sv",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Länkar i toppmenyn",
+      "locale": "sv",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Resurser: marknadsföringsmaterial",
+      "locale": "sv",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Sidfot: tjänster",
+      "locale": "sv",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Sidfot: företag",
+      "locale": "sv",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Sidfot: juridiskt",
+      "locale": "sv",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "முதன்மை வழிசெலுத்தல்",
+      "locale": "ta",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "மேல் பட்டி இணைப்புகள்",
+      "locale": "ta",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "வளங்கள்: சந்தைப்படுத்தல் தொகுப்பு",
+      "locale": "ta",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "அடிக்குறிப்பு: சேவைகள்",
+      "locale": "ta",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "அடிக்குறிப்பு: நிறுவனம்",
+      "locale": "ta",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "அடிக்குறிப்பு: சட்டம்",
+      "locale": "ta",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "การนำทางหลัก",
+      "locale": "th",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "ลิงก์แถบด้านบน",
+      "locale": "th",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "ทรัพยากร: ชุดการตลาด",
+      "locale": "th",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "ส่วนท้าย: บริการ",
+      "locale": "th",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "ส่วนท้าย: บริษัท",
+      "locale": "th",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "ส่วนท้าย: กฎหมาย",
+      "locale": "th",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Ana navigasyon",
+      "locale": "tr",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Üst çubuk bağlantıları",
+      "locale": "tr",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Kaynaklar: pazarlama kiti",
+      "locale": "tr",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Alt bilgi: hizmetler",
+      "locale": "tr",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Alt bilgi: şirket",
+      "locale": "tr",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Alt bilgi: yasal",
+      "locale": "tr",
+      "items": 3
+    },
+    {
+      "name": "primary",
+      "label": "Основна навігація",
+      "locale": "uk",
+      "items": 6
+    },
+    {
+      "name": "topbar",
+      "label": "Посилання верхньої панелі",
+      "locale": "uk",
+      "items": 2
+    },
+    {
+      "name": "resources_kit",
+      "label": "Ресурси: маркетинговий комплект",
+      "locale": "uk",
+      "items": 6
+    },
+    {
+      "name": "footer_services",
+      "label": "Нижній колонтитул: послуги",
+      "locale": "uk",
+      "items": 4
+    },
+    {
+      "name": "footer_company",
+      "label": "Нижній колонтитул: компанія",
+      "locale": "uk",
+      "items": 5
+    },
+    {
+      "name": "footer_legal",
+      "label": "Нижній колонтитул: юридична інформація",
+      "locale": "uk",
+      "items": 3
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "category",
+      "locale": "ru",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "tag",
+      "locale": "ru",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "en",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "sector",
+      "locale": "ru",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "en",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "department",
+      "locale": "ru",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "vi",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "vi",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "vi",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "vi",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "zh",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "zh",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "zh",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "zh",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "af",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "af",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "af",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "af",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "be",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "be",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "be",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "be",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "bg",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "bg",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "bg",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "bg",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "ca",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "ca",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "ca",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "ca",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "cs",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "cs",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "cs",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "cs",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "cy",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "cy",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "cy",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "cy",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "da",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "da",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "da",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "da",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "de",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "de",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "de",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "de",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "el",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "el",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "el",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "el",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "es",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "es",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "es",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "es",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "et",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "et",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "et",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "et",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "fi",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "fi",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "fi",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "fi",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "fr",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "fr",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "fr",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "fr",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "ga",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "ga",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "ga",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "ga",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "hr",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "hr",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "hr",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "hr",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "hu",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "hu",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "hu",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "hu",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "it",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "it",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "it",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "it",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "ja",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "ja",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "ja",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "ja",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "ka",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "ka",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "ka",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "ka",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "lo",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "lo",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "lo",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "lo",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "lt",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "lt",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "lt",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "lt",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "lv",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "lv",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "lv",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "lv",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "ms",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "ms",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "ms",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "ms",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "nb",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "nb",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "nb",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "nb",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "nl",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "nl",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "nl",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "nl",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "pl",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "pl",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "pl",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "pl",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "pt",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "pt",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "pt",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "pt",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "ro",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "ro",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "ro",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "ro",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "sk",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "sk",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "sk",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "sk",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "sl",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "sl",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "sl",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "sl",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "sr",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "sr",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "sr",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "sr",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "sv",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "sv",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "sv",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "sv",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "ta",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "ta",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "ta",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "ta",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "th",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "th",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "th",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "th",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "tr",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "tr",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "tr",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "tr",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "category",
+      "locale": "uk",
+      "collections": [
+        "posts"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "tag",
+      "locale": "uk",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    },
+    {
+      "name": "sector",
+      "locale": "uk",
+      "collections": [
+        "projects"
+      ],
+      "terms": 5
+    },
+    {
+      "name": "department",
+      "locale": "uk",
+      "collections": [
+        "vacancies"
+      ],
+      "terms": 4
+    }
+  ],
+  "formBindings": [
+    {
+      "form": "quote-request-{locale}",
+      "collection": "contact",
+      "slug": "contact",
+      "field": "form_id"
+    },
+    {
+      "form": "newsletter-{locale}",
+      "collection": "news_page",
+      "slug": "news",
+      "field": "newsletter_form_id"
+    },
+    {
+      "form": "newsletter-{locale}",
+      "collection": "investors",
+      "slug": "investors",
+      "field": "newsletter_form_id"
+    }
+  ],
+  "dependencies": {
+    "@astrojs/node": "11.1.3",
+    "@astrojs/react": "6.0.0",
+    "@cloudflare/kumo": "2.6.0",
+    "@emdash-cms/auth": "1.1.0",
+    "@emdash-cms/plugin-audit-log": "0.2.3",
+    "@emdash-cms/plugin-forms": "0.2.9",
+    "@phosphor-icons/react": "2.1.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.2.8",
+    "better-sqlite3": "12.11.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "emdash": "1.1.0",
+    "emdash-smtp": "0.3.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0",
+    "lucide-react": "1.45.0",
+    "radix-ui": "1.6.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3"
+  },
+  "dependencyNotice": "Declared pins only; enabled plugin registration is owned by astro.config.mjs. Native CMS capabilities need not be separate dependencies.",
+  "routeFiles": [
+    "src/pages/404.astro",
+    "src/pages/[...path].astro"
+  ],
+  "routeNotice": "Route source files only, not expanded URLs. Dynamic/catch-all dispatch and CMS routes require authored guidance and runtime crawl evidence.",
+  "sourceFiles": [
+    "src/components/islands/LanguageMenu.tsx",
+    "src/components/islands/MobileMenu.tsx",
+    "src/components/islands/ResourcesMenu.tsx",
+    "src/components/kit/KitEmail.astro",
+    "src/components/kit/KitForm.astro",
+    "src/components/kit/KitNewsletter.astro",
+    "src/components/kit/KitPosition.astro",
+    "src/components/kit/KitSlides.astro",
+    "src/components/kit/KitStyleGuide.astro",
+    "src/components/site/ArticleH2.astro",
+    "src/components/site/BodyImage.astro",
+    "src/components/site/BrandLogo.astro",
+    "src/components/site/Breadcrumb.astro",
+    "src/components/site/Chips.astro",
+    "src/components/site/CtaBox.astro",
+    "src/components/site/Figures.astro",
+    "src/components/site/Footer.astro",
+    "src/components/site/FormWords.astro",
+    "src/components/site/Header.astro",
+    "src/components/site/NumberedList.astro",
+    "src/components/site/PageIntro.astro",
+    "src/components/site/PageOwner.astro",
+    "src/components/site/Pagination.astro",
+    "src/components/site/Photo.astro",
+    "src/components/site/ProseBlock.astro",
+    "src/components/site/ProseListItem.astro",
+    "src/components/site/ProseQuote.astro",
+    "src/components/site/SearchIcon.astro",
+    "src/components/site/StatsGrid.astro",
+    "src/components/site/Topbar.astro",
+    "src/components/ui/button.tsx",
+    "src/components/ui/checkbox.tsx",
+    "src/components/ui/dialog.tsx",
+    "src/components/ui/dropdown-menu.tsx",
+    "src/components/ui/input.tsx",
+    "src/components/ui/label.tsx",
+    "src/components/ui/popover.tsx",
+    "src/components/ui/sheet.tsx",
+    "src/components/ui/textarea.tsx",
+    "src/fonts.json",
+    "src/layouts/Base.astro",
+    "src/lib/brand.ts",
+    "src/lib/chrome.ts",
+    "src/lib/display-locale.ts",
+    "src/lib/ds-slot.ts",
+    "src/lib/font-subsets.mjs",
+    "src/lib/form-embed-words.ts",
+    "src/lib/hreflang-plugin.ts",
+    "src/lib/hreflang.ts",
+    "src/lib/i18n.ts",
+    "src/lib/link-gate.ts",
+    "src/lib/listed-children.ts",
+    "src/lib/locale-gate.ts",
+    "src/lib/locale-words.ts",
+    "src/lib/media.ts",
+    "src/lib/newsletter-client.ts",
+    "src/lib/page-records.ts",
+    "src/lib/page-title.ts",
+    "src/lib/posts.ts",
+    "src/lib/public-origin.ts",
+    "src/lib/references.ts",
+    "src/lib/served-locales.ts",
+    "src/lib/share-image.ts",
+    "src/lib/stamps.ts",
+    "src/lib/swatch-role.ts",
+    "src/lib/toc.ts",
+    "src/lib/ui.ts",
+    "src/lib/utils.ts",
+    "src/live.config.ts",
+    "src/middleware.ts",
+    "src/pages/404.astro",
+    "src/pages/[...path].astro",
+    "src/styles/forms.css",
+    "src/styles/global.css",
+    "src/styles/tokens.css",
+    "src/views/About.astro",
+    "src/views/Article.astro",
+    "src/views/Careers.astro",
+    "src/views/Contact.astro",
+    "src/views/Home.astro",
+    "src/views/Investors.astro",
+    "src/views/Kit.astro",
+    "src/views/News.astro",
+    "src/views/NotFound.astro",
+    "src/views/Page.astro",
+    "src/views/Project.astro",
+    "src/views/Projects.astro",
+    "src/views/Search.astro",
+    "src/views/Service.astro",
+    "src/views/Services.astro",
+    "src/views/Sitemap.astro"
+  ],
+  "inputs": {
+    "astro.config.mjs": "sha256:424b334f280bfc54098b92c1abb5ea83ffec155d94a2ce25c1926535172c1686",
+    "package.json": "sha256:110e824d029ee09a2e31761f7aac93beadd8eb696fdc11c01689229ee293eff6",
+    "pnpm-lock.yaml": "sha256:604c8a85fa3fe073389043da5dca2f78cb69aa33764b867de68a5b2024168610",
+    "seed/field-map.json": "sha256:b463bc104be5dcf058893c8d2b9e333de95faf7791dd945dc2f28345af30d334",
+    "seed/media-map.json": "sha256:f62125be2fda732dfc8a4a9d05ff341d2f4ec4dab7cbf08f5900d9e12a929bd6",
+    "seed/seed.json": "sha256:f269c81281f22c5918ff298a0511b954c71813c0d44c61fcd19eabe37a20e7cf",
+    "src/components/islands/LanguageMenu.tsx": "sha256:d7dbe2b577acd1d14716f402d2084d045ebb62d4bc59509445a84981debbd8be",
+    "src/components/islands/MobileMenu.tsx": "sha256:2668c2f5a727dd7c3f63ca0bb5de20379f89b556b72f4e78965337b4bacad334",
+    "src/components/islands/ResourcesMenu.tsx": "sha256:79a8680187f08856422229d7354bf37a6869bcdfac0853d819a571e9a78c8869",
+    "src/components/kit/KitEmail.astro": "sha256:dca134a8d84cb5b935c5dc834d6f2d4173d5499eeb6bfd5cf9828003f507768b",
+    "src/components/kit/KitForm.astro": "sha256:4ca3bbd5eecf9587835e1d7e684cf3c97a5acc84ac05309e317d747d74066635",
+    "src/components/kit/KitNewsletter.astro": "sha256:a6fc823874464cc7948e2329648b1c0fdaa214930e5a092dc87f32a7416a0660",
+    "src/components/kit/KitPosition.astro": "sha256:5899d7fe18cfaa0cd5ecdbad72da4b78d41c732eead58a9a451521194607a13e",
+    "src/components/kit/KitSlides.astro": "sha256:8fcd60343daf0a523f876f06bea746f3a123439c2b79691a1f3db8e01d5bb4d4",
+    "src/components/kit/KitStyleGuide.astro": "sha256:7f620182f4733da66982fa68383a6a0c71eb4edab3b166a8082e633aee9c597a",
+    "src/components/site/ArticleH2.astro": "sha256:307628c34e08c9805a52608f433d6401f26f3f8ba2fbf68fdc249bfe57c010e3",
+    "src/components/site/BodyImage.astro": "sha256:d1a76f480031903ae90af699afb4e5fbfbc5598f878e0df358b5e89faa45142b",
+    "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
+    "src/components/site/Breadcrumb.astro": "sha256:bb56aafe1375bbc084ae6c8b48ad4a82121d19bcc8f3c5673a3f77d7e55b2f40",
+    "src/components/site/Chips.astro": "sha256:8ec7fa82337f18f04b6fd8d420572c7e663e4a41b441ff11016653b09abf2b6d",
+    "src/components/site/CtaBox.astro": "sha256:2de89a7a5cd602b7a6a704ddc22d2f552ccc853522edaf84135364f3becd5147",
+    "src/components/site/Figures.astro": "sha256:77b0849dabc72f3d4b2a49e9540c17bf028289af4555db9e49d200ee3e203f52",
+    "src/components/site/Footer.astro": "sha256:dea51b6700c9b21b026abf2aa35c263c7da88b81e51bd2312dfbd3df5cf764ae",
+    "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
+    "src/components/site/Header.astro": "sha256:fadf988efcb43bd7a5103a4cda5627f1e9dd3c58828d92f3784d605e1865de6a",
+    "src/components/site/NumberedList.astro": "sha256:6f5acd50790f1318a221a699e19ae18bab771587309f18a67361ad7b8e163a72",
+    "src/components/site/PageIntro.astro": "sha256:0cd104da0c5b5ff08a4d7510815bd8e59cff7e71745a5270c4750a61497bed63",
+    "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
+    "src/components/site/Pagination.astro": "sha256:603786d865e7a4779eb76c826db7ab42e953e5e4d2462b0216cb0fbec091d191",
+    "src/components/site/Photo.astro": "sha256:0b3aa8e86f3d1e722c079d22f1dc92735c0f1c20a764c9bb85ee107733bbce23",
+    "src/components/site/ProseBlock.astro": "sha256:aae09606433eaaa875e7b16087bc404ed440e95c9fb56cf764ad2ea530364240",
+    "src/components/site/ProseListItem.astro": "sha256:e2c0293803a3cc1337b84ec79f684d76be0819335d31b5d2528abef0661e5404",
+    "src/components/site/ProseQuote.astro": "sha256:2d5ecd7987f911a2b7b2497143ab99c2feb4dc14c3fb417327a7a1ca782bda62",
+    "src/components/site/SearchIcon.astro": "sha256:9c1feb6c7446f3543f98bb612e23534d49a4cbaf4c81e6a07b3b9cbf827e53d7",
+    "src/components/site/StatsGrid.astro": "sha256:a798a8bbb55685b60169963752d4253ea3cd67829ce17065c75493d8b6a5a086",
+    "src/components/site/Topbar.astro": "sha256:ec40ebbde98d46e8e1aee50225f64fdeebc5a4a139638e0a6a20424d102f457e",
+    "src/components/ui/button.tsx": "sha256:e9f32410c02140e66a162548414a349d3ef31e55afe334ef12179d65466b5e13",
+    "src/components/ui/checkbox.tsx": "sha256:33f41bfe203269e2eff8bdb10fb8590240bdfe94aa08e0a35ce290ac9c9edeff",
+    "src/components/ui/dialog.tsx": "sha256:32b8c5e83081184d8207d22d5d9ab6ae7bcd82535c47ef257c0e95f9d5c6dfa0",
+    "src/components/ui/dropdown-menu.tsx": "sha256:24bfddb0175f11abb605caaaf2f0527667661138391950b02a7353c330cc120a",
+    "src/components/ui/input.tsx": "sha256:da2ac6db289d76ea05d1363543a6c242191f77a3bade2e95ba92544afde51821",
+    "src/components/ui/label.tsx": "sha256:5428d0bddf31ce3d91c753c0f7a7a9c78054a680218d109ee2b0b6dc967044aa",
+    "src/components/ui/popover.tsx": "sha256:96d6d819e474ad38bb2fa11816bb20ea60f8c7370b102b64d5d0876e4043ddd3",
+    "src/components/ui/sheet.tsx": "sha256:ff58ec1e445426a91d5f3974242b22110f2a20ab95542064393fc1786623ad78",
+    "src/components/ui/textarea.tsx": "sha256:667ab4a52a4f408910a04e74f85c6773eef3fa517902d94d586caff6bb4e6731",
+    "src/fonts.json": "sha256:87bbf518d4334157b2d0b4ed3e4feb1227957fe74f19d09cb4e5434c048414c1",
+    "src/layouts/Base.astro": "sha256:b291207bc8a90d11929f572cc548699a01a9565c54ba7d72ab0f74ef20ea48bd",
+    "src/lib/brand.ts": "sha256:38f8c2adeaa1e083f4ef5cabdd8e2ceac7d9243b9481414e41212c6d493e8939",
+    "src/lib/chrome.ts": "sha256:1755047adab7fc022c1edc76536d32c6b1a6b28910e245a61568869057c61fe1",
+    "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
+    "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
+    "src/lib/font-subsets.mjs": "sha256:736e34fffe763d32ed64fbaf3892ef0a973f49c66d7534d3e3850d948552d37a",
+    "src/lib/form-embed-words.ts": "sha256:3e4125c2c21dda7ce8dabf9cced439e70112c498014904da07a6266708d372c5",
+    "src/lib/hreflang-plugin.ts": "sha256:379ded7b2e192b534db20031ac74a8e9d412c3c8bb99c2546cce214faf2faec0",
+    "src/lib/hreflang.ts": "sha256:0c81835d74f69b2c46a4c6783a0d832366c86d3bbc20389b57aad37962402902",
+    "src/lib/i18n.ts": "sha256:8a88a681ed0c1a3468698d5938ddfc46b47fc09b35f1221a98362793d375791d",
+    "src/lib/link-gate.ts": "sha256:638ac39cd290590d076bc6e3f3d73394fb71df2925c2cc4c3559650acb092557",
+    "src/lib/listed-children.ts": "sha256:e11d7602352bb13fd4b8906febb9b176de0ad1c971979b38fcae3e0640b2d459",
+    "src/lib/locale-gate.ts": "sha256:cba40b414dcfcf3d52b17778f5f05a681eb7767fe60ce3130fc7bbf7d7a7d645",
+    "src/lib/locale-words.ts": "sha256:e141dde900cc8f6bee2632a4154a66bbc83b1197e8c7643ad99b2ae9ad3d043e",
+    "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
+    "src/lib/newsletter-client.ts": "sha256:5c0e75da2bc1ba432097ad16228620d80fbfbe3429abfcf0570be1b6222ea61d",
+    "src/lib/page-records.ts": "sha256:490bbe348ae80ac7e429e0342e2f898768e2c43c1331905b83c71e2f51eca1ea",
+    "src/lib/page-title.ts": "sha256:7b103c2442deb7aa16a6375fb7327e05f79dcb0ee96cb1a6f8e268db4c138249",
+    "src/lib/posts.ts": "sha256:8c6e4099a3575b4ff262da2116084b95c62d9267f2d3a2d50e38977b6f0dfb9c",
+    "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
+    "src/lib/references.ts": "sha256:cd398e1ce6aa33731db1bbaf696fa68e843a760ad925d2f485d4ab938849b693",
+    "src/lib/served-locales.ts": "sha256:78db146d5feba94cfb5462affdb1466b5f5e4020d731b4acd73969a68106f7ca",
+    "src/lib/share-image.ts": "sha256:e3bd6e4c3dee664f806625d13e2c167d0ee521961f884e9b020f4a31b04188bb",
+    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/swatch-role.ts": "sha256:3b6349d400873c182bdb01d23ebf92c0e12de8d383e775d0d29273ca68897820",
+    "src/lib/toc.ts": "sha256:93cf47c5aaa7e3b7170fb944012e93dd0f58a7fedc9fd517721c4f6a884439ba",
+    "src/lib/ui.ts": "sha256:54b708e9b3779e95e6a2236c66e7be1b39307e8f580b3e2cef3d0ec3858b828c",
+    "src/lib/utils.ts": "sha256:0ca01a948ba414a7c7348bda63bf68803a73dbbb6f10b6e8183280e405d3aa13",
+    "src/live.config.ts": "sha256:52f0c8177d0e327ffdf28af8baf680d539d2aae444ba5ceace98baf095f7bf6c",
+    "src/middleware.ts": "sha256:8a4171c79080f46b2b2aa5335746bfc70fdb297ff9790b600a52ac859f60606a",
+    "src/pages/[...path].astro": "sha256:55075425680ccbbd45e78cf016ab05542c345ab14f2afcfe1cc906f12b6e2d29",
+    "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
+    "src/styles/forms.css": "sha256:d1efd84cc5101f800354f9d3a0f45eb34598242477681f1c3c849a20326bc233",
+    "src/styles/global.css": "sha256:a46314c0b78ef660d2f2333abfd785f0b693e641a862204fff0645414f0567ad",
+    "src/styles/tokens.css": "sha256:f8e956f2914307695b293d2b45de4a9a76abb3bd878f28155fa6d0c3d9581088",
+    "src/views/About.astro": "sha256:19c39017f8ab6d2141e9dd396ebf2abada0f7109ed364faf307abb899908780a",
+    "src/views/Article.astro": "sha256:99d1832df780e218f14967ca09d39ec5fcfc1752d1d0b1951e8bdbfa502f5885",
+    "src/views/Careers.astro": "sha256:098a815f91a32eb4846223728111a6f03329d23b920640d674cc765eb017833a",
+    "src/views/Contact.astro": "sha256:acce3debd1e3367e172dd391ae9c5342c29574a40a2ebf9175dcf9788d0a97a0",
+    "src/views/Home.astro": "sha256:9c86628cc8b6b588f67dbb641921163be524acd50b07ebfe3777772429f2c0fe",
+    "src/views/Investors.astro": "sha256:26b57e59c12283cc7f192290e4278b4611ff8247788902103be1ea7ffce92f17",
+    "src/views/Kit.astro": "sha256:174f95865683ef39e92aff33ace1a50ea06d835d83fc53aa604d34a57170a6bf",
+    "src/views/News.astro": "sha256:d385516cc87fa3b6430ab75aad82e8031c417ee76d55c9cdc93efc6fd08e0bf7",
+    "src/views/NotFound.astro": "sha256:b2ce20b4ed98ffe0b36e0cbfbc02377aaa226729b484c4ffc874205cbd8b1dda",
+    "src/views/Page.astro": "sha256:b5bdbce67c872b88e9ce538305cfb958137f98a0311f0d150f827e710adeb507",
+    "src/views/Project.astro": "sha256:6e1aba93410c75f5fb204c445dea83ab0f003cf826e0da23b008be4ea5f842ac",
+    "src/views/Projects.astro": "sha256:a3fb27ce6edcf58c1566d7681fba572e88569d9a956aac7c4938dc7b3c3de2da",
+    "src/views/Search.astro": "sha256:9b0c0160fa4606cc911fce16ef211ab09a77bba32be0fa5bba9967ed4725d76e",
+    "src/views/Service.astro": "sha256:dbbb49b29191625ee021626f2541439ef503a04c183002e48fadf6c28c4547fe",
+    "src/views/Services.astro": "sha256:d1d584e3e0d1b6cfa2f06c8f037148d599c10c1039606faaf57243f9bad403b8",
+    "src/views/Sitemap.astro": "sha256:979278a8534d9168abf53dcc2f66584627392b49af7c2dce9a70ca53557dfa7e",
+    "template.config.json": "sha256:3810e5356b7e04bd407634665e68d8ca10bb03b053a1faba6a024b0bda5d1d67",
+    "tools/forms.json": "sha256:75b8fadc91e8dc4991d588c06a9219b07fc4e36b7719eee6ebcb3ad3f49cdc85",
+    "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
+  }
+}

@@ -1,0 +1,45 @@
+---
+// mika-template-version: 0.1.1
+import { Link, Text } from "@cloudflare/kumo";
+import { createMika } from "@bnomei/emdash-mika/astro";
+import { createCheckoutSessionId } from "@bnomei/emdash-mika/types";
+import { api } from "../../lib/mika-api";
+import MikaKumoPage from "../../components/MikaKumoPage.astro";
+import { mikaTemplateCurrentCartItemCount } from "../../lib/cart";
+import { mikaTemplateCheckoutStatusMessage } from "../../lib/display";
+import {
+  mikaTemplateCheckoutSuccessHref,
+  mikaTemplateRoutes
+} from "../../lib/routes";
+
+export const prerender = false;
+
+const checkoutId = Astro.url.searchParams.get("checkoutId");
+const token = Astro.url.searchParams.get("token") ?? undefined;
+const Mika = createMika(Astro, { api });
+const result = checkoutId
+  ? await Mika.checkout.status({ checkoutId: createCheckoutSessionId(checkoutId), token })
+  : null;
+const checkout = result?.ok ? result.data : null;
+const status = checkout?.status ?? "pending";
+const statusMessage = !checkoutId
+  ? "Checkout status link is missing."
+  : result && !result.ok
+    ? result.error.message
+    : mikaTemplateCheckoutStatusMessage(status);
+const refreshHref =
+  status === "pending" && checkoutId && token
+    ? mikaTemplateCheckoutSuccessHref(checkoutId, token)
+    : undefined;
+const cartItemCount = await mikaTemplateCurrentCartItemCount(Astro);
+---
+
+<MikaKumoPage title="Checkout" pageSize="narrow" cartItemCount={cartItemCount} data-mika-checkout-success>
+  <section class="mika-kumo-panel mika-kumo-stack" data-mika-checkout-status={status}>
+    <Text as="p" aria-live="polite">{statusMessage}</Text>
+    <div class="mika-kumo-actions">
+      {refreshHref && <Link href={refreshHref}>Refresh status</Link>}
+      {checkout?.orderId && <Link href={mikaTemplateRoutes.accountOrders}>View orders</Link>}
+    </div>
+  </section>
+</MikaKumoPage>

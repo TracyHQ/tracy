@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.role_changed-unsubscribe",
+  "itemIds": [
+    "letter:team.role_changed:en",
+    "letter:team.role_changed:vi",
+    "letter:team.role_changed:de",
+    "letter:team.role_changed:it",
+    "letter:team.role_changed:fr",
+    "letter:team.role_changed:nl",
+    "letter:team.role_changed:zh",
+    "letter:team.role_changed:es"
+  ],
+  "requirement": "team.role_changed: carries a working one-click unsubscribe for its own group, none in the locked group",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "groups",
+    "invariant": "RFC 8058 headers for switchable groups only"
+  },
+  "edgeTags": ["unsubscribe"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.unsubscribe-header#team.role_changed:"],
+  "redProof": null,
+  "legacyIds": []
+}

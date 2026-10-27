@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+  "status": "complete",
+  "name": "Tomorro",
+  "url": "https://styles.refero.design/style/bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+  "sourceWebsite": "https://www.gotomorro.com",
+  "extractedAt": "2026-06-03T18:23:12.893Z",
+  "capturedAt": "2026-10-08T05:16:48.985065+00:00",
+  "theme": "mixed",
+  "industry": "saas",
+  "description": "lush greenhouse at midnight — Electric Sprout neon pierces the deep forest canvas and bone-white beds below. The brand lives in that contrast: the dark is the soil, the light is the greenhouse bench, the green is the growth.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/84d68ea8-07aa-4f2d-a24c-75d05fd0f12b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/964d6d74-e76e-4265-959c-a0edc32f0d03.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f6cecd19-ad47-459b-8743-b12939209884.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b4fbbe98-ea2f-482e-884f-19df9625733c.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/dff70680-41c2-4a88-95bb-60cb79a73664.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1a7e6923640755c6408317a73dc750c9202f7ea241bc41850459eca69d68df02",
+      "bytes": 25965
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "eeb8ff427351abe64deb45b48f6d3e15b64c0b7fae460524e1ad5ad8a0cb45eb",
+      "bytes": 133772
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e98ba991ef298fb476fbe3ae0a36df9be733faf38fc68f232b58395f3aab83b1",
+      "bytes": 21978
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7b38d1e9e9d63c2fbaf10d4374781cd2db343a0268dc15c1fd08300c3691058e",
+      "bytes": 16951
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0ccf1b83711bc5377249190512929b9946f049d7e9ce99e0e4ab168fb41b7520",
+      "bytes": 16068
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "07a81a9aa5a956cc090c707279d01b38d53ab28fd26fdb69908a0d4276314f82",
+      "bytes": 4595
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c13d82c151dbda14023d8217feff70e011e1404eadb0ad6fcc3a58efcd8f0f9a",
+      "bytes": 830
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5083f4eb2f7ecb3dbc2c29d330add7b023c76f2060b64923662347b13fb252ca",
+      "bytes": 847
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "2c0caed1bcd89c7cec3861efe8f47c4bdd4d054143872f11dc709730324be893",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1c46d3c9804eb16bc20982f05b7db097b762a0e680e1a573e5acd234c576d60e",
+      "bytes": 51094
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e475f0be853bcb32cd342e08381c795d0254cc05b724119accc2d3033f1142b2",
+      "bytes": 26905
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "82784cd171703ab6605f293e5b47cd692ff744529a1bfac99bddd708c6d55dce",
+      "bytes": 63993
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c507b44597d76ca8727f6ac2435d1d58ccc977dcbc249c10a49f73d895d048a9",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9dd6f4d4cd61eca4b84bfafe8faf1cc5330fe745f49d628cebe7b0dd24b71cbd",
+      "bytes": 2304
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f61b4c5e40a0452762541baeafc6909e6db8255adcea21855238d097f10cc72e",
+      "bytes": 3038
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "2186dddd-60ee-4898-b11d-88483daf477e",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "5a7ec81f-03b6-4d21-a706-0d1d323d8899",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "9501cfdc-3eb3-4b64-90f6-9afdded48945",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "abbaa70a-5fe2-44a9-9c5f-272e68c450c3",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d5799c71-f9ae-4bad-aef3-4c07bac42c08",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, hairline borders, filled button backgrounds, navigation rules — the structural line weight of the entire system"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, input fills, modal surfaces, inverted text on black buttons"
+    },
+    "bone": {
+      "$value": "#f0f1ef",
+      "$type": "color",
+      "$description": "Bone — Card surfaces, secondary canvas tone — gives the white-on-white system a warm paper-like quality rather than sterile digital white"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Secondary borders, subdued text — used when pure black is too heavy for hairline elements"
+    },
+    "ash": {
+      "$value": "#d7d7d7",
+      "$type": "color",
+      "$description": "Ash — Input field borders, dividers, placeholder affordance — the lightest structural gray in the stack"
+    }
+  },
+  "font": {
+    "nimbus-sans-d-ot": {
+      "$value": "Nimbus Sans D OT",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI and display — weights 400 for body and nav, 700 for headlines and button labels. The single sans-serif carries the entire brand voice; no serif, no display variant, no decorative cuts"
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "System fallback for form inputs and secondary body copy — only appears where native form rendering takes over"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://postevand.com",
+      "siteName": "Postevand",
+      "extractedAt": "2026-06-03T20:07:27.786Z",
+      "variant": "compact"
+    }
+  }
+}

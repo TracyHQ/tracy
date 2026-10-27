@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-1575-import-site-locale-grammar",
+  "kind": "fix",
+  "title": "Spanish and Italian import guidance keeps the six corrected grammatical forms",
+  "pr": 1575,
+  "area": "add-site/import-locales",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Load the committed locale bundle through its actual module factory and locale registration.",
+    "Compare the six approved Spanish and Italian values in both source and runtime dictionaries."
+  ],
+  "expect": [
+    "All four Spanish statements use pide while preserving their full text and link markup.",
+    "Both Italian noun positions use verifica while preserving their full text and placeholder.",
+    "The shipped runtime dictionaries equal the approved source sentences."
+  ],
+  "selectors": {},
+  "evidence": "All six incorrect words were reproduced on develop 8555cf3682 before editing. Only the six approved source values and their generated bundle entries change.",
+  "fence": "Exact approved source sentences and shipped bundle registration; no CMS import or credential access.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/import-site-locale-grammar.mjs"]
+  }
+}

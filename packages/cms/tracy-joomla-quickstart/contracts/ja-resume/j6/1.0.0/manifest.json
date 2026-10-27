@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resume/j6/1.0.0",
+  "platform": "joomla",
+  "template": "ja_resume",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resume",
+    "id": "quickstart/ja-resume/j6",
+    "version": "1.0.0",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_resume",
+    "parts": {
+      "installer": {
+        "file": "ja-resume-j6-quickstart.zip",
+        "bytes": 76629876,
+        "sha256": "7f959ffb57ea4e0d2a9343ec1659de47cc05f19276be7b4c2b9ccb2849dc252f"
+      }
+    },
+    "release": "quickstart/ja-resume/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

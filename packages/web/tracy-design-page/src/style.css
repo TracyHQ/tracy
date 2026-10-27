@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+/* Mode A: this page owns <html>. The plugin's components are scanned from their own source so the
+   utilities they use exist here too — same recipe as the design bench (`packages/dev/tracy-design`). */
+@source "./";
+@source "../../../design/tracy-design-inspiration/src/client";
+@source "../../../core/tracy-core/src";
+@source "../../../ui/tracy-ui/src";
+
+@import "@tracy/ui/tokens.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+html, body, #root { height: 100%; }
+body { background: var(--background); color: var(--foreground); }

@@ -1,0 +1,54 @@
+{
+  "color": {
+    "plaster-canvas": {
+      "$value": "#f4ede6",
+      "$type": "color",
+      "$description": "Plaster Canvas — Page backgrounds and project-index field"
+    },
+    "gallery-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Gallery White — Masthead surface and bright interface plane"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Headings, project captions, navigation, icons, hairline rules, and transparent text controls"
+    },
+    "footer-cream": {
+      "$value": "#eddbcc",
+      "$type": "color",
+      "$description": "Footer Cream — Footer copy, newsletter field treatment, and light arrow controls on navy — an aged-paper contrast against the dark endcap"
+    },
+    "reception-navy": {
+      "$value": "#001060",
+      "$type": "color",
+      "$description": "Reception Navy — Footer background and high-contrast closing surface — the single saturated architectural block in the composition"
+    },
+    "terracotta-wash": {
+      "$value": "#e5c0a4",
+      "$type": "color",
+      "$description": "Terracotta Wash — Large warm feature surface and decorative graphic fill"
+    }
+  },
+  "font": {
+    "stkbureau-sans": {
+      "$value": "STKBureau-Sans",
+      "$type": "fontFamily",
+      "$description": "All compact interface language: uppercase section labels, utility links, project captions, footer details, controls, and menu glyphs. The +0.48px tracked 12px uppercase treatment makes labels read as measured architectural annotation rather than navigation chrome."
+    },
+    "stkbureau-serif": {
+      "$value": "STKBureau-Serif",
+      "$type": "fontFamily",
+      "$description": "Editorial statements and expanded navigation links. Its modest 29px scale and tightened tracking make the serif feel like a composed printed line, not a conventional oversized display headline."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.basha-franklin.com",
+      "siteName": "Basha-Franklin",
+      "extractedAt": "2026-09-20T19:28:01.432Z",
+      "variant": "compact"
+    }
+  }
+}

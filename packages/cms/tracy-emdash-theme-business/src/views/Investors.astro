@@ -1,0 +1,123 @@
+---
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href, type Locale } from '@/lib/i18n'
+import { uiLocale } from '@/lib/ui'
+import { loadPosts } from '@/lib/posts'
+import { investorDisclosures } from '@/lib/listed-children'
+import { liveLinks } from '@/lib/link-gate'
+import { stampFor, stampsFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+// The newsletter form is bound on this page's own entry (template.config.json): an unticked News page takes the
+// News entry off the site, and a form read from it vanished with it (TCH #1013, measured 11/10/2026).
+const { entry } = await getEmDashEntry('investors', 'investors', { locale })
+if (!entry) return Astro.rewrite(href(locale, '/404'))
+const ir = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'investors', entry)
+const $site = stampFor(Astro.request, 'site', site)
+const $ = stampsFor(Astro.request)
+// An unticked News page takes its posts with it (TCH #1013, Akemi 11/10/2026, `src/lib/listed-children.ts`): the
+// disclosures are drawn only while News is published, and with no report either the whole part goes.
+const newsUrl = href(locale, '/news')
+const newsLive = (await liveLinks(Astro.request, locale, [newsUrl]))(newsUrl)
+const disclosures = newsLive ? investorDisclosures(await loadPosts(locale)) : []
+const headers = (ir.fin_headers ?? []).map((h: any) => h.label)
+// A part whose figures are gone draws nothing, not an empty table under its heading: `facts` in seed/personalize.json removes
+// the demo company's market data, reports, dividends, calendar and investor contact from a customer's copy (TCH #1013,
+// ABOUT-2), and the customer's own go in through the admin.
+const has = (v: unknown) => (Array.isArray(v) ? v.length > 0 : typeof v === 'string' && v.trim() !== '')
+const quote = (ir.quote ?? []) as any[]
+const finRows = (ir.fin_rows ?? []) as any[]
+const reports = (ir.reports ?? []) as any[]
+const dividends = (ir.dividends ?? []) as any[]
+const calendar = (ir.calendar ?? []) as any[]
+const governance = (ir.governance ?? []) as any[]
+const showDividends = has(ir.dividends_text) || dividends.length > 0
+const showCalendar = calendar.length > 0 || governance.length > 0
+const showContact = has(ir.contact_name) || has(ir.contact_mail) || has(ir.contact_phone)
+---
+
+<Base chrome={chrome} title={ir.breadcrumb || ir.title} description={ir.lede} currentPath="/investors" content={{ collection: "investors", id: entry.data.id, slug: "investors", toPath: () => "/investors" }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={[{ label: site.home_label, url: href(locale, "/"), stamp: $site("home_label") }, { label: ir.breadcrumb, stamp: $page("breadcrumb") }]} />
+		<section class="container-site pb-11 pt-16">
+			{has(ir.ticker) && <div class="eyebrow mb-4 !tracking-[.16em]" {...$page("ticker")}>{ir.ticker}</div>}
+			<h1 class="h-page mb-5 max-w-[24em]" {...$page("title")}>{ir.title}</h1>
+			<p class="max-w-[44em] text-[17.5px] leading-[1.68] text-fg-2" {...$page("lede")}>{ir.lede}</p>
+		</section>
+		{quote.length > 0 && <div class="container-site pb-16">
+			<div class="grid-lines grid-cols-[repeat(auto-fit,minmax(170px,1fr))]">
+				{quote.map((q: any) => <div class="p-6" {...$page.block("quote")}><div class="text-[12.5px] uppercase tracking-[.1em] text-fg-meta" {...$page("quote.key")}>{q.key}</div><div class="mt-2 font-serif text-[30px] leading-[1.1]" {...$page("quote.value")}>{q.value}</div></div>)}
+			</div>
+		</div>}
+		{finRows.length > 0 && <section class="band-paper2">
+			<div class="container-site py-16">
+				<h2 class="h-section mb-2" {...$page("fin_title")}>{ir.fin_title}</h2>
+				{has(ir.fin_note) && <p class="mb-6 text-[14.5px] text-fg-meta" {...$page("fin_note")}>{ir.fin_note}</p>}
+				<div class="table-scroll border border-line-card bg-paper [--table-scroll-surface:var(--color-paper)]">
+					<table class="data-table w-full border-collapse text-left">
+						<thead><tr class="bg-ink text-[12.5px] font-semibold uppercase tracking-[.1em] text-[color:var(--ds-c-on-ink,var(--color-white))]">{headers.map((h: string, i: number) => <th class:list={["px-2 py-2.5 font-semibold sm:px-[18px] sm:py-3.5", i === 0 && "sm:w-[40%]"]} {...$page("fin_headers.label")}>{h}</th>)}</tr></thead>
+						<tbody>{finRows.map((r: any) => <tr class="border-b border-line-soft text-[13px] last:border-b-0 sm:text-[15.5px]" {...$page.block("fin_rows")}><td class="px-2 py-2.5 font-medium sm:px-[18px] sm:py-[15px]" {...$page("fin_rows.metric")}>{r.metric}</td><td class="is-num px-2 py-2.5 text-fg-muted sm:px-[18px] sm:py-[15px]" {...$page("fin_rows.a")}>{r.a}</td><td class="is-num px-2 py-2.5 font-semibold sm:px-[18px] sm:py-[15px]" {...$page("fin_rows.b")}>{r.b}</td><td class="is-num px-2 py-2.5 font-semibold text-forest-text sm:px-[18px] sm:py-[15px]" {...$page("fin_rows.change")}>{r.change}</td></tr>)}</tbody>
+					</table>
+				</div>
+			</div>
+		</section>}
+		{(reports.length > 0 || disclosures.length > 0) && <section class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-14 py-[72px]">
+			{reports.length > 0 && <div>
+				<h2 class="h-section-sm mb-5" {...$page("reports_title")}>{ir.reports_title}</h2>
+				{reports.map((r: any) => { const inner = <><div {...$page.block("reports")}><div class="text-[16.5px] font-semibold leading-[1.4] text-fg" {...$page("reports.title")}>{r.title}</div><div class="mt-1 text-[13px] text-fg-meta">{[r.format, r.date].filter(Boolean).join(" · ")}</div></div><span class:list={["whitespace-nowrap text-[13px] font-semibold", r.url ? "text-signal-text" : "text-fg-faint"]} aria-hidden="true">↓</span></>; return r.url ? <a href={r.url} class="grid grid-cols-[1fr_auto] items-baseline gap-4 border-b border-line-soft py-4 hover:text-forest-text">{inner}</a> : <div class="grid grid-cols-[1fr_auto] items-baseline gap-4 border-b border-line-soft py-4">{inner}</div>; })}
+			</div>}
+			{disclosures.length > 0 && (
+			<div>
+				<h2 class="h-section-sm mb-5" {...$page("disclosures_title")}>{ir.disclosures_title}</h2>
+				{disclosures.map((d) => <a href={href(locale, `/news/${d.slug}`)} class="grid grid-cols-[1fr_auto] items-baseline gap-4 border-b border-line-soft py-4 text-fg hover:text-forest-text" {...$("posts", d)()}><span class="text-[16px] font-medium leading-[1.45]" {...$('posts', d)("title")}>{d.data.title}</span><span class="whitespace-nowrap text-[13px] text-fg-faint">{formatDate(d.data.date, uiLocale(locale))}</span></a>)}
+			</div>
+			)}
+		</section>}
+		{(showDividends || showCalendar) && <section class="band-ink">
+			<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-start gap-12 py-16">
+				{showDividends && <div>
+					<h2 class="h-section-sm mb-2.5 text-[color:var(--ds-c-on-ink,#F5F3EE)]" {...$page("dividends_title")}>{ir.dividends_title}</h2>
+					{has(ir.dividends_text) && <p class="mb-5 text-[15.5px] leading-[1.6] text-on-ink-muted" {...$page("dividends_text")}>{ir.dividends_text}</p>}
+					{dividends.map((d: any) => <div class="grid grid-cols-[1fr_auto] items-baseline gap-3.5 border-b border-on-ink-line py-3.5" {...$page.block("dividends")}><div><div class="text-[16px] font-semibold text-[color:var(--ds-c-on-ink,var(--color-white))]" {...$page("dividends.value")}>{d.value}</div><div class="mt-[3px] text-[13px] text-on-ink-meta" {...$page("dividends.status")}>{d.status}</div></div><span class="whitespace-nowrap text-[13.5px] text-on-ink-meta" {...$page("dividends.period")}>{d.period}</span></div>)}
+				</div>}
+				{showCalendar && <div>
+					{calendar.length > 0 && <h2 class="h-section-sm mb-5 text-[color:var(--ds-c-on-ink,#F5F3EE)]" {...$page("calendar_title")}>{ir.calendar_title}</h2>}
+					{calendar.map((c: any) => <div class="grid grid-cols-[112px_1fr] gap-4 border-b border-on-ink-line py-3.5" {...$page.block("calendar")}><span class="text-[13.5px] font-semibold text-signal-text" {...$page("calendar.date")}>{c.date}</span><span class="text-[15.5px] leading-[1.5] text-on-ink-soft" {...$page("calendar.text")}>{c.text}</span></div>)}
+					{governance.length > 0 && <h2 class:list={["mb-4 font-serif text-[clamp(22px,2.4vw,27px)] font-normal tracking-[-.02em] text-[color:var(--ds-c-on-ink,#F5F3EE)]", calendar.length > 0 && "mt-9"]} {...$page("governance_title")}>{ir.governance_title}</h2>}
+					{governance.length > 0 && <div class="flex flex-col gap-2.5">{governance.map((g: any) => (g.url ? <a href={g.url} class="text-[15px] text-on-ink-muted hover:text-[color:var(--ds-c-on-ink,var(--color-white))]" {...$page.block("governance")}>{g.label}</a> : <span class="text-[15px] text-on-ink-muted" {...$page("governance.label")}>{g.label}</span>))}</div>}
+				</div>}
+			</div>
+		</section>}
+		<section class="container-site py-16">
+			<div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-center gap-8 border border-line-card bg-paper-2 p-10">
+				{showContact && <div>
+					<div class="column-label mb-3 text-fg-meta" {...$page("contact_title")}>{ir.contact_title}</div>
+					{has(ir.contact_name) && <div class="mb-2.5 font-serif text-[26px] leading-[1.3]" {...$page("contact_name")}>{ir.contact_name}</div>}
+					<div class="flex flex-wrap gap-5 text-[15.5px] text-fg-2">{has(ir.contact_mail) && <a href={`mailto:${ir.contact_mail}`} class="text-fg-2" {...$page("contact_mail")}>{ir.contact_mail}</a>}{has(ir.contact_phone) && <span {...$page("contact_phone")}>{ir.contact_phone}</span>}</div>
+				</div>}
+				{ir.newsletter_form_id ? (
+					<form class="ng-newsletter flex flex-wrap gap-3" method="post" action="/_emdash/api/plugins/emdash-forms/submit" data-form-id={ir.newsletter_form_id}>
+						<input type="email" name="email" required placeholder={ir.subscribe_placeholder} aria-label={ir.subscribe_placeholder} {...$page("subscribe_placeholder")} class="field-input !flex-[1_1_200px] !border-line-strong !py-3.5" />
+						<input type="text" name="_hp" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+						<input type="hidden" name="formId" value={ir.newsletter_form_id} />
+						<button type="submit" class="rounded-[var(--ds-btn-radius,0px)] bg-[var(--ds-c-accent,var(--color-forest))] px-[26px] py-3.5 font-sans text-[15px] font-semibold text-[color:var(--ds-c-accent-on,var(--color-white))]" {...$page("subscribe_button")}>{ir.subscribe_button}</button>
+						<p class="ng-newsletter-status w-full text-[13px] text-fg-meta" aria-live="polite"></p>
+					</form>
+				) : <div class="text-[14px] text-fg-meta" {...$page("subscribe_button")}>{ir.subscribe_button}</div>}
+			</div>
+		</section>
+	</main>
+</Base>
+<script src="@/lib/newsletter-client.ts"></script>

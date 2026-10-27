@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "295beab5-cd8a-473b-ab7d-3df6cda30231",
+  "status": "complete",
+  "name": "CHRISTOPHER IRELAND CREATIVE",
+  "url": "https://styles.refero.design/style/295beab5-cd8a-473b-ab7d-3df6cda30231",
+  "sourceWebsite": "https://christopherireland.net",
+  "extractedAt": "2026-06-03T19:19:13.698Z",
+  "capturedAt": "2026-10-08T05:09:34.114597+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "bone-white gallery wall, editorial monograph in morning light",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e8353f1a-669b-42bd-93ad-6a424a646cad.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1ba41067c00096e1e8528aacc4133108a6eedc0863e4cb096af101e110483d0c",
+      "bytes": 14619
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7a47740ea80870439fa6e03ca466c2293a126d8c00a813354ce363260e466788",
+      "bytes": 91887
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "cb16f4e32e19de60c847f094fc51ed2f017cceba00e4d219fd515589866a5acb",
+      "bytes": 12419
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7e65db4f930f9ca5133d044b78740a3240617181c02fd665d73ff14156c6fb04",
+      "bytes": 4699
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "58b4d28a0e03139110f9d77432fbf13f8231f961e72d8e187a1bbb4bed307309",
+      "bytes": 10015
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "eecf19919282ed3c460ecd5b388d50ef54211ae1676877f8e9cfce032c82819b",
+      "bytes": 2207
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "40f81c3037dd18a1b24d0698254a682d16dbfee0379ba94b75ead48218bed3e1",
+      "bytes": 405
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e88f350f02089f5a32caa3953c843040d6351e4008c3bc5a41892606ddcbd1d4",
+      "bytes": 422
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "2bab047100a2635f3be9bf8600b9b7d2c757413998c733742a769bf398ff7f7c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4da6d6589982696d9f054a6fd0f64bbfa4df78761d121e425e3e283ee57bbb57",
+      "bytes": 35499
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "22285d64d2c265d295e87aa2e84fcfaffded66e66daea9040055fc06e2d29c6a",
+      "bytes": 18329
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d9d4ff0b6e62cc3a12dc08a7aac0ac6a5e8d9a932611f0acb8c902eafc184b46",
+      "bytes": 19538
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a542a7dabedb4903d4841f5abd5af4bab913d6e8ce118ac262828e26a8c5b5d2",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "3350b1bcdf8532cc66695f49857347a06c6a747b789578c353314fcb135da733",
+      "bytes": 742
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "174aa54c7e626783df6e36679334810c4ef1bc40c94b901b103a84279a257292",
+      "bytes": 1168
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0a2bcda6-b5b9-463d-bc8d-2c7ccaa2b776",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "16be276a-d8ce-484e-8f7a-cbbb09f717f7",
+    "295beab5-cd8a-473b-ab7d-3df6cda30231",
+    "3af36935-8383-49e7-857e-9fb5caa06966",
+    "4040f97b-42cf-49ef-ab2d-a77c00fe8285",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "597355de-6167-4f37-8f14-b3897919a94c",
+    "5af60925-9c29-48fe-a19b-0f8cf12505ab",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "76bfda6b-125f-4d9b-96c0-356de1e9fc10",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "a90dbcb6-e42c-4992-a83b-94879699dd4f",
+    "ab1b113a-ed21-4512-acc2-d10c8927c410",
+    "bc4b420c-be08-4165-95a3-c8338b5a9c3c",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "e6c20874-c6f9-4c31-b6b2-2cb27cbf15f2",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "e8eda526-d686-4e45-a60d-61b6503a8eda"
+  ]
+}

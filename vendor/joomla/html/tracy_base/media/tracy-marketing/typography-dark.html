@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-bs-theme="dark" class="t4-dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Type and colour at Tracy Base</title>
+    <style>
+    :root {
+      --brand-color-primary: #237ecf;
+      --brand-color-primary-bg: #111e2d;
+      --brand-color-primary-bg-hover: #0f2b48;
+      --brand-color-primary-border: #193a56;
+      --brand-color-primary-border-hover: #1c4c77;
+      --brand-color-primary-hover: #4ba2e5;
+      --brand-color-primary-active: #2065a3;
+      --brand-color-primary-text: #9fd7f8;
+      --brand-color-primary-contrast: #ffffff;
+      --brand-color-primary-ink: #9fd7f8;
+      --brand-color-success: #64b537;
+      --brand-color-success-bg: #192913;
+      --brand-color-success-border: #304d20;
+      --brand-color-success-hover: #87ca5c;
+      --brand-color-success-active: #518f2f;
+      --brand-color-warning: #dcaa37;
+      --brand-color-warning-bg: #312512;
+      --brand-color-warning-border: #5b4920;
+      --brand-color-warning-hover: #e8c35e;
+      --brand-color-warning-active: #ad872f;
+      --brand-color-error: #dc6966;
+      --brand-color-error-bg: #32191a;
+      --brand-color-error-border: #5b3231;
+      --brand-color-error-hover: #e89590;
+      --brand-color-error-active: #ad5553;
+      --brand-color-info: #237ecf;
+      --brand-color-info-bg: #111e2d;
+      --brand-color-info-border: #193a56;
+      --brand-color-link: #2584d8;
+      --brand-color-link-hover: #4ca4e8;
+      --brand-color-link-active: #216aaa;
+      --brand-color-text: #dcdcdc;
+      --brand-color-text-secondary: #adadad;
+      --brand-color-text-tertiary: #7e7e7e;
+      --brand-color-text-quaternary: #4f4f4f;
+      --brand-color-fill: #3e3e3e;
+      --brand-color-fill-secondary: #303030;
+      --brand-color-fill-tertiary: #272727;
+      --brand-color-fill-quaternary: #1d1d1d;
+      --brand-color-bg-layout: #1d1d1d;
+      --brand-color-bg-container: #141414;
+      --brand-color-bg-elevated: #272727;
+      --brand-color-border: #3e3e3e;
+      --brand-color-border-secondary: #303030;
+      --brand-font-family: 'SF Pro Text', ui-sans-serif, system-ui, sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+      --brand-font-family-code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      --brand-font-size: 14px;
+      --brand-font-size-sm: 12px;
+      --brand-font-size-lg: 18px;
+      --brand-font-size-xl: 22px;
+      --brand-font-size-heading-1: 38px;
+      --brand-font-size-heading-2: 32px;
+      --brand-font-size-heading-3: 26px;
+      --brand-font-size-heading-4: 22px;
+      --brand-font-size-heading-5: 18px;
+      --brand-line-height: 1.5714285714285714;
+      --brand-line-height-heading: 1.25;
+      --brand-font-weight-strong: 600;
+      --brand-size-xxs: 4px;
+      --brand-size-xs: 8px;
+      --brand-size-sm: 12px;
+      --brand-size: 16px;
+      --brand-size-md: 20px;
+      --brand-size-lg: 24px;
+      --brand-size-xl: 32px;
+      --brand-size-xxl: 48px;
+      --brand-border-radius-xs: 4px;
+      --brand-border-radius-sm: 8px;
+      --brand-border-radius: 12px;
+      --brand-border-radius-lg: 14px;
+      --brand-line-width: 1px;
+      --brand-control-height-xs: 16px;
+      --brand-control-height-sm: 24px;
+      --brand-control-height: 32px;
+      --brand-control-height-lg: 40px;
+      --brand-motion-duration-fast: 0.1s;
+      --brand-motion-duration-mid: 0.2s;
+      --brand-motion-duration-slow: 0.3s;
+      --brand-motion-ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+      --brand-motion-ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+      --brand-primary-palette-1: #111e2d;
+      --brand-primary-palette-2: #0f2b48;
+      --brand-primary-palette-3: #193a56;
+      --brand-primary-palette-4: #1c4c77;
+      --brand-primary-palette-5: #2065a3;
+      --brand-primary-palette-6: #237ecf;
+      --brand-primary-palette-7: #4ba2e5;
+      --brand-primary-palette-8: #75c1f3;
+      --brand-primary-palette-9: #9fd7f8;
+      --brand-primary-palette-10: #e2f1fa;
+      --brand-presets-red-1: #fff1f0;
+      --brand-presets-red-2: #ffcbc7;
+      --brand-presets-red-3: #ffa39e;
+      --brand-presets-red-4: #ff7775;
+      --brand-presets-red-5: #ff4d50;
+      --brand-presets-red-6: #f5222d;
+      --brand-presets-red-7: #cf1323;
+      --brand-presets-red-8: #a8071a;
+      --brand-presets-red-9: #820014;
+      --brand-presets-red-10: #5c0011;
+      --brand-presets-volcano-1: #fff2e8;
+      --brand-presets-volcano-2: #ffd8bf;
+      --brand-presets-volcano-3: #ffbb96;
+      --brand-presets-volcano-4: #ff9c6e;
+      --brand-presets-volcano-5: #ff7a45;
+      --brand-presets-volcano-6: #fa541c;
+      --brand-presets-volcano-7: #d4380d;
+      --brand-presets-volcano-8: #ad2202;
+      --brand-presets-volcano-9: #871500;
+      --brand-presets-volcano-10: #610c00;
+      --brand-presets-orange-1: #fff7e6;
+      --brand-presets-orange-2: #ffe7ba;
+      --brand-presets-orange-3: #ffd591;
+      --brand-presets-orange-4: #ffc069;
+      --brand-presets-orange-5: #ffa940;
+      --brand-presets-orange-6: #fa8c16;
+      --brand-presets-orange-7: #d46b08;
+      --brand-presets-orange-8: #ad4e00;
+      --brand-presets-orange-9: #873800;
+      --brand-presets-orange-10: #612500;
+      --brand-presets-gold-1: #fffbe6;
+      --brand-presets-gold-2: #fff1b8;
+      --brand-presets-gold-3: #ffe58f;
+      --brand-presets-gold-4: #ffd666;
+      --brand-presets-gold-5: #ffc53d;
+      --brand-presets-gold-6: #faad14;
+      --brand-presets-gold-7: #d48806;
+      --brand-presets-gold-8: #ad6800;
+      --brand-presets-gold-9: #874c00;
+      --brand-presets-gold-10: #613400;
+      --brand-presets-yellow-1: #feffe6;
+      --brand-presets-yellow-2: #ffffb8;
+      --brand-presets-yellow-3: #fffb8f;
+      --brand-presets-yellow-4: #fff566;
+      --brand-presets-yellow-5: #ffeb3d;
+      --brand-presets-yellow-6: #fadb14;
+      --brand-presets-yellow-7: #d4b106;
+      --brand-presets-yellow-8: #ad8a00;
+      --brand-presets-yellow-9: #876700;
+      --brand-presets-yellow-10: #614700;
+      --brand-presets-lime-1: #fcffe6;
+      --brand-presets-lime-2: #f4ffb8;
+      --brand-presets-lime-3: #eaff8f;
+      --brand-presets-lime-4: #d3f261;
+      --brand-presets-lime-5: #bae637;
+      --brand-presets-lime-6: #a0d911;
+      --brand-presets-lime-7: #7bb305;
+      --brand-presets-lime-8: #5b8c00;
+      --brand-presets-lime-9: #3f6600;
+      --brand-presets-lime-10: #254000;
+      --brand-presets-green-1: #f6ffed;
+      --brand-presets-green-2: #d9f7be;
+      --brand-presets-green-3: #b6eb8f;
+      --brand-presets-green-4: #94de64;
+      --brand-presets-green-5: #72d13d;
+      --brand-presets-green-6: #52c41a;
+      --brand-presets-green-7: #389e0d;
+      --brand-presets-green-8: #227804;
+      --brand-presets-green-9: #135200;
+      --brand-presets-green-10: #092b00;
+      --brand-presets-cyan-1: #e6fffb;
+      --brand-presets-cyan-2: #b5f5ec;
+      --brand-presets-cyan-3: #87e8de;
+      --brand-presets-cyan-4: #5cdbd3;
+      --brand-presets-cyan-5: #36cfc9;
+      --brand-presets-cyan-6: #13c2c2;
+      --brand-presets-cyan-7: #08979c;
+      --brand-presets-cyan-8: #006d75;
+      --brand-presets-cyan-9: #00474f;
+      --brand-presets-cyan-10: #002329;
+      --brand-presets-blue-1: #e6f4ff;
+      --brand-presets-blue-2: #bae0ff;
+      --brand-presets-blue-3: #91caff;
+      --brand-presets-blue-4: #69b1ff;
+      --brand-presets-blue-5: #4096ff;
+      --brand-presets-blue-6: #1677ff;
+      --brand-presets-blue-7: #0958d9;
+      --brand-presets-blue-8: #003eb3;
+      --brand-presets-blue-9: #002c8c;
+      --brand-presets-blue-10: #001d66;
+      --brand-presets-geekblue-1: #f0f5ff;
+      --brand-presets-geekblue-2: #d6e4ff;
+      --brand-presets-geekblue-3: #adc6ff;
+      --brand-presets-geekblue-4: #85a5ff;
+      --brand-presets-geekblue-5: #597df7;
+      --brand-presets-geekblue-6: #2f54eb;
+      --brand-presets-geekblue-7: #1d39c4;
+      --brand-presets-geekblue-8: #10229e;
+      --brand-presets-geekblue-9: #061178;
+      --brand-presets-geekblue-10: #030852;
+      --brand-presets-purple-1: #f9f0ff;
+      --brand-presets-purple-2: #efdbff;
+      --brand-presets-purple-3: #d4adf7;
+      --brand-presets-purple-4: #b37feb;
+      --brand-presets-purple-5: #9254de;
+      --brand-presets-purple-6: #722ed1;
+      --brand-presets-purple-7: #531dab;
+      --brand-presets-purple-8: #391085;
+      --brand-presets-purple-9: #22075e;
+      --brand-presets-purple-10: #120338;
+      --brand-presets-magenta-1: #fff0f6;
+      --brand-presets-magenta-2: #ffd6e7;
+      --brand-presets-magenta-3: #ffadd2;
+      --brand-presets-magenta-4: #ff85bf;
+      --brand-presets-magenta-5: #f759aa;
+      --brand-presets-magenta-6: #eb2f96;
+      --brand-presets-magenta-7: #c41d7e;
+      --brand-presets-magenta-8: #9e1067;
+      --brand-presets-magenta-9: #780650;
+      --brand-presets-magenta-10: #520339;
+      --brand-presets-grey-1: #a6a6a6;
+      --brand-presets-grey-2: #999999;
+      --brand-presets-grey-3: #8c8c8c;
+      --brand-presets-grey-4: #808080;
+      --brand-presets-grey-5: #737373;
+      --brand-presets-grey-6: #666666;
+      --brand-presets-grey-7: #404040;
+      --brand-presets-grey-8: #1a1a1a;
+      --brand-presets-grey-9: #000000;
+      --brand-presets-grey-10: #000000;
+    }
+    
+    :root {
+      --text-xs: 12px;
+      --text-sm: 14px;
+      --text-base: 17px;
+      --text-lg: 21px;
+      --text-xl: 28px;
+      --text-2xl: 40px;
+      --text-3xl: 56px;
+      --text-4xl: 80px;
+      --text-4xl-phone: 40px;
+      --text-3xl-phone: 28px;
+      --text-2xl-phone: 20px;
+      --leading-body: 1.47;
+      --leading-tight: 1.05;
+      --tracking-display: -0.015em;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-12: 48px;
+      --container-max: 1024px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-pill: 980px;
+      --bg: #000000;
+      --fg: #f8f8f8;
+      --surface: #1d1d1f;
+      --muted: #87878b;
+      --border: #2f2f30;
+      --accent: #2997ff;
+      --accent-on: #000000;
+      --font-body-stack: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif, Inter, "Inter Tight", sans-serif;
+      --font-display-stack: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --brand-font-family: var(--font-body-stack);
+      --brand-font-size: var(--text-base);
+      --brand-line-height: var(--leading-body);
+      --brand-font-weight-strong: 700;
+      --brand-color-text: var(--fg);
+      --brand-color-text-secondary: var(--muted);
+      --brand-color-text-tertiary: var(--muted);
+      --brand-color-text-quaternary: var(--muted);
+      --brand-color-bg-layout: var(--bg);
+      --brand-color-bg-container: var(--surface);
+      --brand-color-bg-elevated: var(--surface);
+      --brand-color-border: var(--border);
+      --brand-color-border-secondary: var(--border);
+      --brand-color-fill: var(--border);
+      --brand-color-fill-secondary: var(--border);
+      --brand-color-fill-tertiary: var(--border);
+      --brand-color-fill-quaternary: var(--surface);
+      --brand-color-primary: var(--accent);
+      --brand-color-primary-ink: var(--accent);
+      --brand-color-primary-border: var(--accent);
+      --brand-color-primary-bg: var(--surface);
+      --brand-color-primary-active: var(--accent);
+      --brand-color-primary-contrast: var(--accent-on);
+      --brand-color-link: var(--accent);
+      --brand-border-radius: var(--radius-md);
+      --brand-border-radius-lg: var(--radius-lg);
+      --brand-border-radius-sm: var(--radius-sm);
+      --brand-border-radius-xs: var(--radius-sm);
+      --brand-line-width: 1px;
+    }
+      :root { --display-family: var(--font-display-stack); }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: var(--brand-font-family);
+        font-size: var(--brand-font-size);
+        line-height: var(--brand-line-height);
+        color: var(--brand-color-text);
+        background: var(--brand-color-bg-layout);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+      a { color: var(--brand-color-link); text-decoration: none; }
+      h1, h2, h3, h4 {
+        margin: 0;
+        font-family: var(--display-family);
+        line-height: var(--brand-line-height-heading);
+        font-weight: var(--brand-font-weight-strong);
+        color: var(--brand-color-text);
+        overflow-wrap: break-word;
+      }
+      p, ul, ol { margin: 0; overflow-wrap: break-word; }
+      img, svg { max-width: 100%; display: block; }
+      .kicker {
+        display: block; text-transform: uppercase; letter-spacing: 0.14em;
+        font-size: var(--brand-font-size-sm); font-weight: var(--brand-font-weight-strong);
+        color: var(--brand-color-primary-ink);
+      }
+      .disclosure {
+        font-size: var(--brand-font-size-sm); line-height: 1.5; color: var(--brand-color-text-tertiary);
+      }
+
+
+      .t-wrap { max-width: 960px; margin: 0 auto; padding: clamp(28px, 6vw, 72px) clamp(20px, 4vw, 40px) 96px; }
+      .t-head { padding-bottom: var(--brand-size-xl); border-bottom: var(--brand-line-width) solid var(--brand-color-border-secondary); margin-bottom: var(--brand-size-xxl); }
+      .t-name { letter-spacing: var(--tracking-display); }
+      .t-tag { margin-top: var(--brand-size-sm); font-size: var(--brand-font-size-lg); color: var(--brand-color-text-secondary); max-width: 52ch; }
+      .t-sec { margin-bottom: var(--brand-size-xxl); }
+      .t-sec > h2 { margin-bottom: var(--brand-size-lg); }
+      .t-row { display: grid; grid-template-columns: 9rem 1fr; gap: var(--brand-size-md); align-items: baseline; padding: var(--brand-size-sm) 0; border-top: var(--brand-line-width) solid var(--brand-color-border-secondary); }
+      .t-meta { font-family: var(--brand-font-family-code); font-size: var(--brand-font-size-sm); color: var(--brand-color-text-tertiary); }
+      /* Specimen rows are paragraphs, not headings: a type specimen shows the ladder, it does not
+         structure the document, and a fake <h1> would have to obey the artifact headline role and
+         so could never show the display step. */
+      .t-spec { font-family: var(--font-display-stack); font-weight: 700; line-height: var(--leading-tight); letter-spacing: var(--tracking-display); }
+      .t-display { font-size: var(--text-4xl); }
+      .t-page { font-size: var(--text-3xl); }
+      .t-section { font-size: var(--text-2xl); }
+      .t-card { font-size: var(--text-xl); }
+      .t-lg { font-size: var(--text-lg); line-height: var(--leading-body); }
+      .t-base { font-size: var(--text-base); line-height: var(--leading-body); }
+      .t-sm { font-size: var(--text-sm); line-height: var(--leading-body); color: var(--brand-color-text-secondary); }
+      .t-faces { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--brand-size-md); }
+      .t-face { padding: var(--brand-size-lg); background: var(--brand-color-bg-container); border: var(--brand-line-width) solid var(--brand-color-border-secondary); border-radius: var(--brand-border-radius-lg); }
+      .t-face .glyphs { font-size: var(--text-xl); line-height: 1.1; margin-bottom: var(--brand-size-sm); overflow-wrap: anywhere; }
+      .t-face.display .glyphs { font-family: var(--display-family); font-weight: var(--brand-font-weight-strong); }
+      .t-face.body .glyphs { font-family: var(--brand-font-family); }
+      .t-face.mono .glyphs { font-family: var(--brand-font-family-code); }
+      .t-swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--brand-size-md); }
+      .t-swatch { border: var(--brand-line-width) solid var(--brand-color-border-secondary); border-radius: var(--brand-border-radius-lg); overflow: hidden; background: var(--brand-color-bg-container); }
+      .t-swatch .chip { height: 72px; }
+      .t-swatch .label { padding: var(--brand-size-sm) var(--brand-size-md); }
+      .t-swatch .label strong { display: block; font-size: var(--brand-font-size-sm); }
+      .t-ladder { display: flex; align-items: flex-end; gap: var(--brand-size-sm); flex-wrap: wrap; }
+      .t-step { background: var(--brand-color-primary); opacity: .85; border-radius: var(--brand-border-radius-xs); }
+      .t-radii { display: flex; gap: var(--brand-size-md); flex-wrap: wrap; margin-top: var(--brand-size-lg); }
+      .t-radius { width: 88px; height: 56px; border: 2px solid var(--brand-color-primary); display: grid; place-items: center; font-family: var(--brand-font-family-code); font-size: var(--brand-font-size-sm); color: var(--brand-color-text-secondary); }
+      .t-voice { display: flex; flex-direction: column; gap: var(--brand-size-sm); max-width: 72ch; }
+      .t-voice li { display: flex; gap: var(--brand-size-sm); align-items: flex-start; color: var(--brand-color-text-secondary); line-height: 1.55; }
+      .t-voice li::before { content: ""; flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--brand-color-primary); margin-top: 8px; }
+      .t-source { margin-top: var(--brand-size-lg); padding-top: var(--brand-size-lg); border-top: var(--brand-line-width) solid var(--brand-color-border-secondary); }
+      /* A display specimen at 80px cannot share a 144px label column on a 390px screen, and an
+         overflowing document makes Chrome report a zoomed-out viewport — the measurement of every
+         other property on the page goes with it. */
+      @media (max-width: 639px) {
+        .t-wrap { padding-left: 16px; padding-right: 16px; }
+        .t-row { grid-template-columns: 1fr; gap: 4px; }
+        .t-spec, .t-lg, .t-base, .t-sm { overflow-wrap: anywhere; }
+        .t-face .glyphs { overflow-wrap: anywhere; }
+        /* The site publishes phone steps for the three largest roles; a specimen that showed the
+           desktop step on a phone would document a size this design system never uses there. */
+        .t-display { font-size: var(--text-4xl-phone); }
+        .t-page { font-size: var(--text-4xl-phone); }
+        .t-section { font-size: var(--text-3xl-phone); }
+        .t-card { font-size: var(--text-2xl-phone); }
+      }
+
+
+      h1, h2, h3 {
+        font-family: var(--font-display-stack);
+        font-weight: 700;
+        line-height: var(--leading-tight);
+        letter-spacing: var(--tracking-display);
+      }
+      h1 { font-size: var(--text-2xl); }
+      h2 { font-size: var(--text-xl); }
+      h3 { font-size: var(--text-lg); }
+      @media (max-width: 639px) {
+        h1 { font-size: var(--text-xl); }
+        h2 { font-size: var(--text-lg); }
+        h3 { font-size: var(--text-lg); }
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="t-wrap">
+      <header class="t-head">
+        <span class="kicker">Design language</span>
+        <h1 data-field="title" class="t-name" style="margin-top:12px;">Type and colour at Tracy Base</h1>
+        <p data-field="summary" class="t-tag">An illustrative independent website studio bringing strategy, brand design and development together.</p>
+      </header>
+      <section class="t-sec">
+        <h2>Type scale</h2>
+        <div class="t-row"><span class="t-meta">Display · 80px / 40px</span><p data-field="specimen.display" class="t-spec t-display">Every Tracy Base page starts with one clear sentence.</p></div>
+        <div class="t-row"><span class="t-meta">Page title · 56px / 40px</span><p data-field="specimen.page" class="t-spec t-page">A page title names the page, never the whole studio.</p></div>
+        <div class="t-row"><span class="t-meta">Section · 40px / 28px</span><p data-field="specimen.section" class="t-spec t-section">Sections read as a sequence of assertions.</p></div>
+        <div class="t-row"><span class="t-meta">Card · 28px / 20px</span><p data-field="specimen.card" class="t-spec t-card">Service cards, plan cards and dialogs share this size.</p></div>
+        <div class="t-row"><span class="t-meta">Lead · 21px</span><p data-field="specimen.lead" class="t-lg">The lead paragraph sets the pace: one idea, said once, in the studio voice.</p></div>
+        <div class="t-row"><span class="t-meta">Body · 17px</span><p data-field="specimen.body" class="t-base">Body text carries the argument. It should read at arm’s length on a phone and stay calm on a wide screen, which is why the studio keeps a measure of about seventy characters.</p></div>
+        <div class="t-row"><span class="t-meta">Caption · 14px</span><p data-field="specimen.caption" class="t-sm">Captions carry metadata, labels and helper lines, never anything the reader must not miss.</p></div>
+      </section>
+      <section class="t-sec">
+        <h2>Faces</h2>
+        <div class="t-faces">
+          <div class="t-face display"><div class="glyphs">Aa Bb Qq 0123</div><strong>SF Pro Display</strong><p class="t-sm">Display · headings, 400 / 700</p></div>
+          <div class="t-face body"><div class="glyphs">Aa Bb Qq 0123</div><strong>SF Pro Text</strong><p class="t-sm">Body · paragraphs and UI, 400 / 700</p></div>
+          <div class="t-face mono"><div class="glyphs">Aa Bb Qq 0123</div><strong>SF Mono</strong><p class="t-sm">Mono · code, tabular figures</p></div>
+        </div>
+      </section>
+      <section class="t-sec">
+        <h2>Colour roles</h2>
+        <div class="t-swatches">
+          <div class="t-swatch"><div class="chip" style="background:var(--bg)"></div><div class="label"><strong>Background</strong><span class="t-meta">--bg</span><p class="t-sm">page canvas</p></div></div>
+          <div class="t-swatch"><div class="chip" style="background:var(--surface)"></div><div class="label"><strong>Surface</strong><span class="t-meta">--surface</span><p class="t-sm">cards and raised surfaces</p></div></div>
+          <div class="t-swatch"><div class="chip" style="background:var(--fg)"></div><div class="label"><strong>Foreground</strong><span class="t-meta">--fg</span><p class="t-sm">body text</p></div></div>
+          <div class="t-swatch"><div class="chip" style="background:var(--muted)"></div><div class="label"><strong>Muted</strong><span class="t-meta">--muted</span><p class="t-sm">secondary text</p></div></div>
+          <div class="t-swatch"><div class="chip" style="background:var(--border)"></div><div class="label"><strong>Border</strong><span class="t-meta">--border</span><p class="t-sm">hairlines and dividers</p></div></div>
+          <div class="t-swatch"><div class="chip" style="background:var(--accent)"></div><div class="label"><strong>Accent</strong><span class="t-meta">--accent</span><p class="t-sm">primary actions</p></div></div>
+          <div class="t-swatch"><div class="chip" style="background:var(--accent-on)"></div><div class="label"><strong>Accent on</strong><span class="t-meta">--accent-on</span><p class="t-sm">text on an accent surface</p></div></div>
+        </div>
+      </section>
+      <section class="t-sec">
+        <h2>Spacing and radius</h2>
+        <div class="t-ladder"><span class="t-step" style="width:4px;height:4px;" title="4px"></span><span class="t-step" style="width:8px;height:8px;" title="8px"></span><span class="t-step" style="width:12px;height:12px;" title="12px"></span><span class="t-step" style="width:16px;height:16px;" title="16px"></span><span class="t-step" style="width:20px;height:20px;" title="20px"></span><span class="t-step" style="width:24px;height:24px;" title="24px"></span><span class="t-step" style="width:32px;height:32px;" title="32px"></span><span class="t-step" style="width:48px;height:48px;" title="48px"></span></div>
+        <p class="t-sm" style="margin-top:12px;">4px · 8px · 12px · 16px · 20px · 24px · 32px · 48px</p>
+        <div class="t-radii"><span class="t-radius" style="border-radius:8px;">sm 8px</span><span class="t-radius" style="border-radius:12px;">md 12px</span><span class="t-radius" style="border-radius:18px;">lg 18px</span><span class="t-radius" style="border-radius:980px;">pill 980px</span></div>
+      </section>
+      <section class="t-sec">
+        <h2 data-field="voice.title">How the studio writes</h2>
+        <ul class="t-voice" style="list-style:none;padding:0;">
+          <li><span data-field="voice.rule1">Plain, specific English about the audience, the work and the next action.</span></li>
+          <li><span data-field="voice.rule2">Strategy, design, development, content and care are described as one offer: Website toolkit.</span></li>
+          <li><span data-field="voice.rule3">Plans, team profiles and imagery stay illustrative — never a customer endorsement.</span></li>
+        </ul>
+        <p data-field="services.summary" class="t-sm" style="margin-top:var(--brand-size-lg);">Website strategy · Brand and interface design · Website development · Content and photography · Website care · Planning a focused campaign page</p>
+        <div class="t-source">
+          <p data-field="company.name" style="font-weight:var(--brand-font-weight-strong);margin-bottom:6px;">Tracy Base</p>
+          <p data-field="disclosure" class="disclosure">Tracy Base is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy.</p>
+          <p class="t-sm" style="margin-top:10px;">Type, colour and spacing follow the Base design inspiration from Tracy's design library.</p>
+        </div>
+      </section>
+    </div>
+
+  </body>
+</html>

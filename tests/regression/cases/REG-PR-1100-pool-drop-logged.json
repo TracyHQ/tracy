@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1100-pool-drop-logged",
+  "kind": "fix",
+  "title": "A connection Postgres drops is logged by tracy-web's pool, never thrown, and the pool keeps answering",
+  "pr": 1100,
+  "area": "web/db",
+  "cms": ["any"],
+  "needs": ["checkout", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL set to a Postgres the run may use, run: node --test --test-concurrency=1 --test-reporter=tap apps/tracy-web/test/db.test.mjs",
+    "S2: Record the exit code, the '# pass', '# fail', '# skipped' lines and the result of the two 'createPool:' tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# skipped 0' (the database was really used).",
+    "'createPool: an idle connection the server ends is logged once, not thrown, and the pool keeps answering' is ok: after pg_terminate_backend of the pool's idle connection, no uncaughtException, exactly one '[db] a connection was dropped by the server: terminating connection due to administrator command' warning, and the next query answers 1.",
+    "'createPool: a checked-out connection the server ends between queries is logged, not thrown' is ok: no uncaughtException, at least one '[db] a connection was dropped by the server:' warning, and the pool answers after the dead client is released."
+  ],
+  "selectors": {
+    "pool": "createPool in apps/tracy-web/src/db/index.js",
+    "test": "apps/tracy-web/test/db.test.mjs serverDrops()"
+  },
+  "evidence": "CI run 37942879853 (#1089): proxy.test.mjs red with uncaughtException 'terminating connection due to administrator command'; local stand 10/10/2026: after a disk-full Postgres PANIC tracy-web exited 1 with an unhandled 'error' event emitted on BoundPool at Client.idleListener.",
+  "fence": "every pg pool tracy-web creates listens for 'error' on itself and on each client it connects",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/db.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "createPool: an idle connection the server ends is logged once, not thrown, and the pool keeps answering",
+      "createPool: a checked-out connection the server ends between queries is logged, not thrown"
+    ]
+  }
+}

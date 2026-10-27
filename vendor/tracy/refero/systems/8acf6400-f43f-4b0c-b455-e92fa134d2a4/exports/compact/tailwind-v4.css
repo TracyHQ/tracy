@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-baba-red: #bc2823;
+  --color-signal-red: #ea1111;
+  --color-red-light: #cc5c56;
+  --color-cream-paper: #faf9f1;
+  --color-white: #ffffff;
+  --color-ink: #2a1d18;
+  --color-soft-ink: #3e312c;
+  --color-warm-gray: #645953;
+  --color-paper-divider: #ede7e2;
+  --color-blush: #f8e2db;
+
+  /* Typography */
+  --font-shne: 'Söhne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-atkinson-hyperlegible-next: 'Atkinson Hyperlegible Next', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

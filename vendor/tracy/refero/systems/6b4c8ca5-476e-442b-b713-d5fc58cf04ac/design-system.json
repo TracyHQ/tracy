@@ -1,0 +1,310 @@
+{
+  "dos": [
+    "Use Reckless serif at 42–90px for any page-level headline; reserve Inter for everything below the h2.",
+    "Reach for #5e05c4 only on filled action buttons and active states — one saturated moment per view.",
+    "Set every button, input, and badge to 999px radius — the pill is the signature.",
+    "Use 1px #181822 hairlines for card and section borders instead of shadows.",
+    "Open the page with a #ddd6ff lavender hero band, then transition to #f7f8fa canvas for body content.",
+    "Pull #8f47d5 into body copy for inline links and outlined badges — never as a filled surface.",
+    "Keep the type scale tight: -1.62px tracking at 90px display, tightening proportionally as size grows."
+  ],
+  "donts": [
+    "Don't drop shadows on cards — the flat 1px-border treatment is the system.",
+    "Don't use #5e05c4 as decorative icon fill, section background, or text color — it's action-only.",
+    "Don't mix radii: avoid 8px on buttons or 4px on cards; the 999px/16px/8px triad must stay clean.",
+    "Don't use Reckless below 30px — the serif loses readability and the brand identity at small sizes.",
+    "Don't introduce blue, green, or red as accent colors — the system is monochromatic-warm-violet.",
+    "Don't stack the violet family on itself: never put a #5e05c4 button on a #ddd6ff background without white space separation.",
+    "Don't use corner-radius smaller than 4px anywhere — sharp corners fight the pill vocabulary."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#260048",
+      "name": "Indigo Ink",
+      "role": "Logo, brand wordmark, decorative icon fills, strong border accents",
+      "group": "brand"
+    },
+    {
+      "hex": "#5e05c4",
+      "name": "Vivid Violet",
+      "role": "Primary action button fills, active nav text, filled badges — the single saturated brand moment",
+      "group": "brand"
+    },
+    {
+      "hex": "#8f47d5",
+      "name": "Mid Violet",
+      "role": "Inline link text, outlined badge borders, icon accents, secondary emphasis",
+      "group": "brand"
+    },
+    {
+      "hex": "#ba9dff",
+      "name": "Soft Violet",
+      "role": "Decorative icon strokes, light borders, muted link treatments",
+      "group": "accent"
+    },
+    {
+      "hex": "#ddd6ff",
+      "name": "Lavender Wash",
+      "role": "Hero section background, soft highlight surfaces, card tints",
+      "group": "accent"
+    },
+    {
+      "hex": "#181822",
+      "name": "Carbon",
+      "role": "Primary text, card borders, dividers, all structural hairlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#484960",
+      "name": "Slate",
+      "role": "Secondary text, heading borders, muted borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6d6e87",
+      "name": "Graphite",
+      "role": "Tertiary text, icon fills, inactive borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9e9fb7",
+      "name": "Steel",
+      "role": "Placeholder text, disabled borders, divider lines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dfdfe9",
+      "name": "Ash",
+      "role": "Subtle borders, input resting borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eaeaf1",
+      "name": "Fog",
+      "role": "Section dividers, faint surface tint",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f8fa",
+      "name": "Parchment",
+      "role": "Page canvas background, recessed surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Card surfaces, input fills, button text on dark fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffbe0f",
+      "name": "Amber Signal",
+      "role": "Warning badge fill — status callouts only",
+      "group": "semantic"
+    }
+  ],
+  "layout": "Max-width 1200px centered container with full-bleed lavender hero band on top. Hero is a centered text stack: oversized Reckless headline (90px), single-line subhead, fused pill input+CTA — followed immediately by a large product mock that breaks the container edge slightly. Below the hero, content shifts to #f7f8fa canvas. Feature sections use a 3-column equal card grid (Compliance / Risk / Third Party Risk), each card a white bordered block with an inner product mini-mock. A 2-row logo strip band separates social proof from features. Navigation is a transparent-on-hero, white-on-scroll top bar with centered logo group and right-aligned actions. Section rhythm is generous — 80px vertical gaps between bands create the feel of a printed annual report rather than a scrolling landing page.",
+  "imagery": "Product UI mockups dominate the visual language — full-bleed white-framed screenshots of the Vanta dashboard with sidebar nav, compliance widgets, and risk heatmaps. No lifestyle photography, no stock imagery, no illustrations. The hero product mock is literally a photograph of the app itself, set against a lavender wash. Customer logos appear as monochrome black SVG lockups in a grid, never in color. The chat widget is a persistent UI element, not marketing imagery. Overall: the product IS the imagery — the site treats screenshots with the reverence a fashion brand gives editorial photography.",
+  "similar": [
+    {
+      "why": "Same restraint with hairline borders, single saturated accent, and confident serif/sans pairing for product UI",
+      "business": "Linear"
+    },
+    {
+      "why": "Pill-shaped controls, flat surface treatment, and a warm-neutral background canvas under the hero",
+      "business": "Notion"
+    },
+    {
+      "why": "Editorial serif display headlines over a light canvas, with a single brand color doing all the action work",
+      "business": "Mercury"
+    },
+    {
+      "why": "Large product-mock hero above the fold and bordered feature cards arranged in a 3-column grid",
+      "business": "Webflow"
+    },
+    {
+      "why": "Lavender hero wash, pill CTAs, and product UI as the primary visual asset rather than photography",
+      "business": "Stripe"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "4px",
+      "cards": "16px",
+      "icons": "8px",
+      "badges": "999px",
+      "inputs": "999px",
+      "buttons": "999px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#f7f8fa",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Body page background below the hero"
+    },
+    {
+      "hex": "#ddd6ff",
+      "name": "Hero Wash",
+      "level": 1,
+      "purpose": "Above-the-fold lavender background band"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Surface",
+      "level": 2,
+      "purpose": "Feature cards, product mocks, input fields"
+    },
+    {
+      "hex": "#eaeaf1",
+      "name": "Recessed Surface",
+      "level": 3,
+      "purpose": "Embedded blocks, chat input wells"
+    }
+  ],
+  "northStar": "Editorial violet ledger on parchment",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.02
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.02
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.02
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.35
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading-lg",
+      "size": 42,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.84
+    },
+    {
+      "role": "display",
+      "size": 90,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.62
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Filled Button",
+      "role": "Main conversion CTA",
+      "description": "Pill-shaped (999px radius), fill #5e05c4, text #ffffff in Inter 16px weight 500. Horizontal padding 24px, vertical 12px. On hover/active: 8% darker. Always accompanied by a leading arrow or trailing dot icon for directional momentum."
+    },
+    {
+      "name": "Outlined Ghost Button",
+      "role": "Secondary action",
+      "description": "Pill-shaped (999px), transparent fill, 1.5px border #181822, text #181822 in Inter 16px weight 500. Same padding as primary. Used for 'Log in' and less-pressured choices."
+    },
+    {
+      "name": "Email Capture Input",
+      "role": "Hero form field",
+      "description": "Pill-shaped (999px) white fill, border #dfdfe9 resting / #5e05c4 on focus. 48px tall, text Inter 16px #484960. Placeholder 'nodrama@flama.com' in #9e9fb7. The adjacent submit button is the same height, sharing the pill outline — the input+CTA reads as a single fused control."
+    },
+    {
+      "name": "Feature Card",
+      "role": "Product capability showcase",
+      "description": "White (#ffffff) fill, 1px hairline border in #181822, 16px radius. Internal padding 24–32px. Contains a Reckless heading at 30–42px, body copy at 16px #484960, and a product mock or visual at the bottom. No shadow — the border is the elevation."
+    },
+    {
+      "name": "Compliance Card",
+      "role": "Nested status block inside feature cards",
+      "description": "White fill, 16px radius, 1px #181822 border. Houses a status header (e.g. 'SOC 2', 'Inherent risk'), a percentage figure at 32px Inter weight 600, and a thin progress bar in #5e05c4 on #eaeaf1 track."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Site header",
+      "description": "Transparent on lavender hero, white on scroll. Logo 'Vanta' in Reckless 24px weight 500 #260048. Nav links Inter 14px weight 500 #181822 with chevron-down carets for dropdowns. Right side: ghost 'Log in' + filled 'Get a demo' button. 16px vertical padding, 1200px max-width container."
+    },
+    {
+      "name": "Vendor List Card",
+      "role": "Third-party risk display",
+      "description": "16px radius white card with 1px #181822 border. Lists vendor entries as 48px-tall rows with a square logo thumbnail (8px radius), vendor name in Inter 14px weight 500, and a small status chevron."
+    },
+    {
+      "name": "Chat Widget Panel",
+      "role": "Persistent conversational support",
+      "description": "Fixed bottom-right, ~360px wide, white surface with 16px radius and 1px #181822 border. Header 'Welcome to Vanta' uses Inter 16px weight 600. Suggested-question pills (#ddd6ff fill, #260048 text, 999px radius, 12px padding). Close X in #484960."
+    },
+    {
+      "name": "Logo Strip",
+      "role": "Social proof band",
+      "description": "Centered, 12px uppercase Inter weight 500 #484960 label 'TRUSTED BY 16,000+ CUSTOMERS'. Logo lockup grid: two rows of 5–6 monochrome #000000 SVG logos at uniform height (~24px), generous 48px column gap."
+    },
+    {
+      "name": "Hero Product Mock",
+      "role": "Above-the-fold product visualization",
+      "description": "Full-width, contained in a 1200px max-width frame. White product UI with a dark left sidebar (icons in #484960, active item in #5e05c4), centered canvas showing an ISO 42001 compliance widget with circular progress dial and segment grid in violet/yellow."
+    },
+    {
+      "name": "Status Badge",
+      "role": "Inline status indicator",
+      "description": "Pill shape (999px), 4px vertical / 12px horizontal padding, Inter 12px weight 500. Variants: filled #ddd6ff with #260048 text for informational, #5e05c4 fill with white text for active, #ffbe0f fill with #181822 text for warning."
+    },
+    {
+      "name": "Inline Link",
+      "role": "Text-embedded navigation",
+      "description": "Inter 16px weight 500 in #5e05c4, no underline at rest, 1px underline on hover. Used sparingly — Vanta prefers buttons over links for primary navigation."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Editorial display headlines. A contemporary serif chosen specifically to soften the compliance/security subject matter — the curves and high contrast strokes make 'Trust is everything' read like a magazine cover, not a vendor pitch.",
+      "sizes": "30px, 42px, 56px, 72px, 90px",
+      "family": "Reckless",
+      "weight": "400, 500",
+      "lineHeight": "1.10–1.25",
+      "substitute": "Source Serif 4, Lora, or DM Serif Display",
+      "letterSpacing": "-1.62px at 90px, -1.44px at 72px, -1.12px at 56px, -0.84px at 42px, -0.18px at 30px"
+    },
+    {
+      "role": "All UI, body, navigation, buttons, cards, badges. The single workhorse face — Inter's neutral geometry keeps the brand violet doing the emotional work while text stays invisible.",
+      "sizes": "10px, 12px, 14px, 16px, 18px, 20px, 24px, 32px, 40px",
+      "family": "Inter Variable",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.30–1.60",
+      "substitute": "Inter (Google Fonts), or Manrope",
+      "letterSpacing": "-0.02em uniform across sizes"
+    }
+  ],
+  "description": "Vanta presents a trust-forward enterprise language built on a deep violet palette and an editorial type system. Reckless serif headlines (weight 400, sizes 42–90px) carry warmth and authority, while Inter Variable at 400–700 handles every UI surface, keeping components functional and quiet. The visual identity hinges on a lavender hero wash (#ddd6ff), fully pill-shaped controls (999px radius), and a single deep-violet CTA color (#5e05c4) that never shouts — it punctuates. Cards float on white with 16px radii and hairline #181822 borders rather than shadows, producing a flat, architectural feel closer to a printed compliance report than a typical SaaS dashboard.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #181822\n- background: #f7f8fa\n- border: #181822\n- accent: #8f47d5\n- primary action: #5e05c4 (filled action)\n- hero wash: #ddd6ff\n\n## 3-5 Example Component Prompts\n\n1. Create a Primary Action Button: #5e05c4 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Feature card grid (3-column)**: White #ffffff cards on #f7f8fa canvas, 16px radius, 1px #181822 border, 32px padding. Each card: Reckless 30px #181822 heading, Inter 16px #484960 description, inner mini-mock at bottom with 8px radius on its sub-tiles.\n\n3. **Navigation bar**: Transparent on hero, white on scroll, 1200px container. Left: 'Vanta' wordmark in Reckless 24px weight 500 #260048. Center: 5 Inter 14px weight 500 #181822 links with chevron-down icons. Right: ghost pill button 'Log in' (1px #181822 border, 999px radius) + filled pill 'Get a demo' (#5e05c4 fill, white text, 999px radius, arrow icon).\n\n4. **Compliance status card**: 16px radius white card with 1px #181822 border, 24px padding. Header 'SOC 2' in Inter 14px weight 600 #181822, sublabel 'Refreshed 3 min ago' in #9e9fb7 12px. Big number '87%' at Inter 32px weight 600 #181822. Progress bar: 4px tall #eaeaf1 track, #5e05c4 fill at 87% width, full 999px radius.\n\n5. **Logo strip band**: 64px vertical padding, #f7f8fa background. Centered uppercase Inter 12px weight 500 #484960 label 'TRUSTED BY 16,000+ CUSTOMERS'. Two rows of 6 monochrome #000000 SVG logos each, 48px column gap, 24px logo height."
+    }
+  ],
+  "elevationPhilosophy": "Vanta rejects drop shadows entirely. Elevation is communicated through three tools: (1) 1px hairline borders in #181822 that frame every card and section, (2) surface contrast between #ffffff cards and #f7f8fa canvas, and (3) the lavender hero band that physically separates itself from the rest of the page by color alone. This produces a flat, editorial, almost printed-document feel — closer to a legal compliance report than a typical SaaS dashboard."
+}

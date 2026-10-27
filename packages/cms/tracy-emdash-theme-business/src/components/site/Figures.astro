@@ -1,0 +1,17 @@
+---
+/**
+ * A run of adjacent Portable Text `image` blocks rendered side by side (source: the article's
+ * two illustrations sit in a two-column grid, `.prose-article .figures`). Article.astro groups
+ * the run into this synthetic `figures` node; each image still renders through BodyImage.
+ */
+import BodyImage from './BodyImage.astro'
+
+interface Props {
+  node: { _type: 'figures'; _key: string; images: any[] }
+}
+const { node } = Astro.props
+---
+
+<div class="figures">
+	{node.images.map((image) => <BodyImage node={image} />)}
+</div>

@@ -1,0 +1,43 @@
+{
+  "id": "QA-UNIT-REG-PR-1181-emdash-sharp-emdash-runtime-happy",
+  "itemIds": ["regression:REG-PR-1181-emdash-sharp-emdash-runtime"],
+  "requirement": "Every Tracy EmDash quickstart lists sharp as its own dependency, so /_image does not answer 500 MissingSharp",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1181-emdash-sharp-emdash-runtime.json",
+    "ref": "PR #1181 (fix); fix evidence: Before: stand containers of tracy-business-emdash:1.5.1-tools, tracy-base-emdash:0.3.0-tools and tracy-saas-emdash:1.2.0-tools answered /_image 500 with `MissingSharp: Could not find Sharp` (loadSharp in dist/server/chunks/sharp_*.mjs); sharp sat only in node_modules/.pnpm as Astro's optional dependency, and Vite bundled it into dist because EmDash is ssr.noExternal. After: an image built from each fixed package has node_modules/sharp and answers 200 image/webp (measured 11/10/2026 on the Studio, throwaway containers).",
+    "invariant": "The run exits 0 and its summary reads `pass 6` and `fail 0`. For base, business and saas: `sharp is a direct dependency, pinned exactly` and `the lockfile installs sharp at the root, not as an optional extra` pass.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "scripts/test/emdash-templates-sharp.test.mjs:16 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1181-emdash-sharp-emdash-runtime.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1181-emdash-sharp-emdash-runtime"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "scripts", "scripts"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1181-emdash-sharp-emdash-runtime",
+    "pr": 1181,
+    "kind": "fix",
+    "area": "cms/emdash-image",
+    "file": "tests/regression/cases/REG-PR-1181-emdash-sharp-emdash-runtime.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "scripts/test/emdash-templates-sharp.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

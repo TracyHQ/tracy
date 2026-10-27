@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1427-template-title-roundtrip",
+  "kind": "fix",
+  "title": "WordPress template writes preserve title and area and Retry only repairs receipt-proven slug resets",
+  "pr": 1427,
+  "area": "website-opportunities/quickstart-first",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the three declared Node test suites."],
+  "expect": [
+    "Real template content updates send complete content/title/area and no-op updates make zero writes.",
+    "Filled Retry validates full projected structure and copyHash before repairing title defaults with exact raw and body revision receipts.",
+    "Unrelated structure or revision drift and uncertain writes block all corrections; Retry after one verified correction only writes the remaining correction."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/brief-engines/quickstart-template-metadata.js, apps/tracy-web/src/sites/brief-engines/quickstart-native.js"
+  },
+  "fence": "No title casefold or normalization; original copy receipts stay unchanged and repair receipts record their source hash.",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/brief-quickstart-first.test.mjs"],
+    "needs": []
+  }
+}

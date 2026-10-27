@@ -1,0 +1,40 @@
+{
+  "name": "@tracy/dsh-site-tools",
+  "version": "0.1.6",
+  "description": "One agent tool, tracy_site: every read and write of the site's content through the seat book's Apply door, as the person using the agent",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs && node scripts/build-host.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/tools/tracy-site-tools"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "typescript": "^5.9.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@tracy/core": "workspace:^",
+    "@tracy/site-build-core": "workspace:^",
+    "jpeg-js": "0.4.4"
+  }
+}

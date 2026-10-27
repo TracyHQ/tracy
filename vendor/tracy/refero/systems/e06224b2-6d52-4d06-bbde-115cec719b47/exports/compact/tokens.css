@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-ember-signal: #ff4d00;
+  --color-void: #000000;
+  --color-chalk: #ffffff;
+  --color-fog: #e5e7eb;
+  --color-ash: #c4c4c4;
+  --color-graphite: #757575;
+  --color-carbon: #454545;
+  --color-obsidian: #2e2e2;
+  --color-cinder: #1a1a1a;
+  --color-smudge: #666666;
+
+  /* Typography — Font Families */
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

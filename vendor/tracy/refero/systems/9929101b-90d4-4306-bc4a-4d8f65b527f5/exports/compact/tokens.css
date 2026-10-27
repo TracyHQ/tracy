@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-paper: #ffffff;
+  --color-terracotta: #a9553c;
+  --color-lilac-veil: #ddbdea;
+
+  /* Typography — Font Families */
+  --font-theinhardt: 'Theinhardt', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-theinhardt-medium: 'Theinhardt Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

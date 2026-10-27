@@ -1,0 +1,303 @@
+{
+  "dos": [
+    "Use #fffef2 for every page and card background — never #ffffff or any cool neutral",
+    "Set display heading tracking to -0.05em (-3.2px at 64px) to compress headlines into confident blocks",
+    "Use #fcaa2d exclusively for filled CTAs, single inline accent words in headlines, and left-border list indicators",
+    "Apply 2px border-radius to all rectangular components — buttons, cards, inputs, code windows",
+    "Use Decima Mono (or JetBrains Mono substitute) for all UI chrome: version labels, timestamps, metadata tags, and code",
+    "Separate sections with 1px #000000 hairlines rather than background color shifts or shadows",
+    "Left-align all headlines and body text — the editorial left-flow is a brand-defining layout choice"
+  ],
+  "donts": [
+    "Never use #ffffff as a background — the warm cream canvas is the brand's visual temperature",
+    "Do not round corners beyond 2px on rectangular components; reserve 800px only for badges and icon containers",
+    "Do not use #fcaa2d for body text, large background areas, or decorative fills — it is rationed for action and single-word emphasis only",
+    "Never add drop shadows or box-shadows — the design uses lines, not depth, for separation",
+    "Do not use cool grays, blues, or any non-warm neutrals — the entire palette is warm-toned",
+    "Do not center headlines or use centered text blocks — left-alignment is non-negotiable",
+    "Do not use system sans-serif (Arial, Helvetica) for headlines — always use Parabole or a geometric sans substitute at tight tracking"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fffef2",
+      "name": "Page Cream",
+      "role": "Universal page background and card surface — the warm, almost unbleached paper that defines the entire visual temperature",
+      "group": "neutral"
+    },
+    {
+      "hex": "#191918",
+      "name": "Ink Black",
+      "role": "Primary text color, dark surface fills, and code-window backgrounds — warm near-black, never pure optical black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Rule Black",
+      "role": "Structural hairlines and borders — 1px lines that define cards, separate sections, and replace shadow as the elevation language",
+      "group": "neutral"
+    },
+    {
+      "hex": "#75756f",
+      "name": "Warm Stone",
+      "role": "Muted body text, secondary borders, and inactive link states — a warm gray that recedes without going cool",
+      "group": "neutral"
+    },
+    {
+      "hex": "#edece0",
+      "name": "Linen Beige",
+      "role": "Secondary elevated surface — warm light beige for tags, subtle background panels, and hover washes that lift off the cream canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#bab9b0",
+      "name": "Ash Gray",
+      "role": "Tertiary dividers and inactive UI elements — a mid-warm gray for the lightest structural lines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fcaa2d",
+      "name": "Amber Signal",
+      "role": "Yellow outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color",
+      "group": "brand"
+    }
+  ],
+  "layout": "Max-width 1200px centered content with generous left/right padding (~40px). Header is full-width sticky with bottom border. Hero is a two-column split: left 60% headline, right 40% body text + CTA pair, no hero image. Sections are left-aligned stacks — never centered text blocks. Content rhythm alternates between text-only sections and full-bleed image bands, creating a breathing pattern of compressed text and wide visual resets. FAQ and feature lists use full-width single-column rows. No card grids, no masonry, no multi-column feature matrices — the layout stays in 1-2 column editorial flows.",
+  "imagery": "Photography appears as full-bleed landscape bands — warm-toned outdoor scenes (grasslands, mountains at golden hour) that break the monochrome text rhythm at major section transitions. Images always carry a dark code-window or UI element overlaid on top, creating a 'nature interrupted by interface' juxtaposition. Treatment is unfiltered, natural-color, no duotone or color grading. Product screenshots are absent — all visual storytelling is done through code overlays and abstract diagrams (concentric circles, timeline strips) rather than product UI captures. Icons are minimal: a small square logo glyph, ↗ arrows on CTUs, and a few line-style indicators. No illustration or 3D rendering.",
+  "similar": [
+    {
+      "why": "Same warm cream backgrounds, editorial left-aligned headlines, and rationed single-color accent strategy against a muted neutral canvas",
+      "business": "Anthropic"
+    },
+    {
+      "why": "Same sharp 2px radii, hairline-border separation, and monochrome-first approach with a single vivid accent reserved for action",
+      "business": "Linear"
+    },
+    {
+      "why": "Same geometric sans typography with tight tracking at display sizes, monospace for UI chrome, and flat no-shadow design language",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same left-aligned editorial layout flow, generous whitespace between sections, and confident typographic hierarchy as the primary visual tool",
+      "business": "Stripe"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "2px",
+      "icons": "800px",
+      "badges": "800px",
+      "inputs": "2px",
+      "buttons": "2px"
+    },
+    "elementGap": "8-20px",
+    "sectionGap": "40-60px",
+    "cardPadding": "20-40px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#fffef2",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Page-wide background — the warm paper field everything sits on"
+    },
+    {
+      "hex": "#edece0",
+      "name": "Linen",
+      "level": 2,
+      "purpose": "Subtle elevated wash for tags, secondary panels, and quiet hover states"
+    },
+    {
+      "hex": "#191918",
+      "name": "Ink",
+      "level": 3,
+      "purpose": "Code windows, dark feature blocks, and high-contrast content surfaces"
+    },
+    {
+      "hex": "#fcaa2d",
+      "name": "Amber",
+      "level": 4,
+      "purpose": "Accent surface for filled CTAs, active indicators, and brand-colored highlights"
+    }
+  ],
+  "elevation": [],
+  "northStar": "Warm paper notebook with amber ink — an editor's desk, not a dashboard.",
+  "typeScale": [
+    {
+      "role": "mono-xs",
+      "size": 10,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.4
+    },
+    {
+      "role": "mono-sm",
+      "size": 12,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.36
+    },
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.42
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.64
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.72
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.06,
+      "letterSpacing": -0.6
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.8
+    },
+    {
+      "role": "heading-lg",
+      "size": 40,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.6
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1.1,
+      "letterSpacing": -3.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Amber CTA Button",
+      "role": "Primary action trigger — the only filled button in the system",
+      "description": "Filled #fcaa2d background, #191918 or #000000 text, 2px border-radius, 10px 20px padding. Label in Decima Mono at 12px (0.04em tracking) or Parabole Medium at 14px. Often paired with a small ↗ arrow icon. No hover state elevation — the design trusts color to communicate action, not depth."
+    },
+    {
+      "name": "Ghost Outline Button",
+      "role": "Secondary action paired with the amber CTA",
+      "description": "Transparent or #fffef2 background, 1px #000000 border, #191918 text, 2px border-radius, 10px 20px padding. Same label typography as the amber button. Functions as the 'lighter weight sibling' in button pairs — never standalone."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Sticky top header across all pages",
+      "description": "Full-width #fffef2 background, ~60-80px height, 1px #000000 bottom border. Logo lockup left (small square icon + 'Relace' wordmark in Parabole), nav links in Parabole 16px left-of-center, amber CTA button + 'APP' text link far right. Generous horizontal padding (~40px) keeps the bar breathing."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Above-the-fold display headline",
+      "description": "64px Parabole Regular, #191918, tracking -3.2px, line-height 1.10, left-aligned. Sits beside a ~400px right-column of body text and CTA pair. Never centered — the editorial left-align is a brand-defining choice that separates Relace from typical SaaS hero conventions."
+    },
+    {
+      "name": "Section Header with Inline Accent",
+      "role": "Mid-page section titles with a single amber word",
+      "description": "Display or heading-lg Parabole, left-aligned, where one word switches to #fcaa2d color mid-sentence (e.g. 'Get started in minutes'). The amber word is the same size and weight as the surrounding text — it earns attention purely through color, not size or weight change."
+    },
+    {
+      "name": "Code Window with Image Overlay",
+      "role": "Product showcase — code floating over a landscape photograph",
+      "description": "Dark #191918 window with 3 traffic-light dots top-left, 12px Decima Mono code with syntax highlighting (keywords amber/white, strings green-tinted, comments muted), positioned over a full-bleed warm landscape image. The code window has 2px radius and no shadow — it sits ON the image as a flat overlay, not floating above it."
+    },
+    {
+      "name": "Horizontal Timeline Strip",
+      "role": "Version or milestone visualization",
+      "description": "Full-width band with dense vertical tick marks (hundreds of small 1px lines), short amber tick markers at key positions, version labels in 10px Decima Mono at corners (e.g. 'v3.001', 'v3.851'). The density of tick marks is the visual hook — it looks like a ruler or printer's registration mark, not a typical progress bar."
+    },
+    {
+      "name": "Concentric Circles Diagram",
+      "role": "Feature or capability explanation graphic",
+      "description": "Three nested circles with thin #000000 borders, innermost solid #75756f, outer two #edece0 and transparent fills. Labels in 12px Parabole sit outside each ring. A small stylized logo glyph sits in the center. 2px radius on any hard edges."
+    },
+    {
+      "name": "FAQ Accordion Item",
+      "role": "Expandable Q&A list",
+      "description": "Full-width row, 20px 40px padding, 1px #000000 bottom border separating items, question text in 16-18px Parabole left-aligned, '+' icon in 20px right-aligned. Expanded state reveals answer text below at 16px body. No background change on hover — the border IS the interaction affordance."
+    },
+    {
+      "name": "Brand Trust Strip",
+      "role": "Social proof row of customer/partner logos",
+      "description": "Horizontal row of grayscale brand logos (desaturated, ~60% opacity), preceded by a small mono label 'Trusted by the best leading brands' in 12px Decima Mono. Logos sit on the cream canvas with generous spacing (~40-60px gaps), no dividers between them."
+    },
+    {
+      "name": "List Item with Left Accent Border",
+      "role": "Feature list or navigation list item",
+      "description": "Left-aligned text with a 2px #fcaa2d vertical bar on the left edge (8-20px tall), 20px 40px padding, 16-18px Parabole text. The amber bar replaces traditional bullet points or icons — it is the only chromatic element in the list."
+    },
+    {
+      "name": "Pill Badge",
+      "role": "Tags, status indicators, and category labels",
+      "description": "800px (fully rounded) border-radius, #edece0 or #fcaa2d background, 10px 16px padding, 10-12px Decima Mono text at 0.04em tracking. Used sparingly — only for genuine metadata labels, not decorative chips."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Primary typeface across all display, heading, and body contexts. Regular weight 400 carries body and display; Medium 500 handles subheadings (20px) and emphasis captions (14px). The aggressively tight tracking at large sizes (-0.05em at 64px) is a signature choice — display headlines compress into a confident block rather than spreading airy. Substitute: 'Instrument Sans' or 'Space Grotesk' from Google Fonts for the closest free match to Parabole's geometric character",
+      "sizes": "14px, 20px",
+      "family": "Parabole Trial",
+      "weight": "400, 500",
+      "lineHeight": "1.06–1.50",
+      "substitute": "Instrument Sans",
+      "letterSpacing": "-0.0500em at 64px → -0.0400em at 40px → -0.0500em at 36px → -0.0300em at 20px → -0.0400em at 18px → -0.0400em at 16px → -0.0300em at 14px"
+    },
+    {
+      "role": "Monospace for all UI chrome: version labels, timeline ticks, navigation micro-text, code blocks, badge labels, and tag metadata. The slight positive tracking (0.03–0.04em) at small sizes is anti-default — monospace usually tightens at small sizes, but this opens up to read clearly as inline UI text. Substitute: 'JetBrains Mono' or 'IBM Plex Mono'",
+      "sizes": "10px, 12px, 16px",
+      "family": "Decima Mono Pro",
+      "weight": "400",
+      "lineHeight": "1.10–1.20",
+      "substitute": "JetBrains Mono",
+      "letterSpacing": "0.0400em at 10px → 0.0300em at 12px → 0.0300em at 16px"
+    },
+    {
+      "role": "Parabole Trial Regular Text — detected in extracted data but not described by AI",
+      "sizes": "10px, 12px, 16px, 18px, 36px, 40px, 64px",
+      "family": "Parabole Trial Regular Text",
+      "weight": "400",
+      "lineHeight": "1.1, 1.2, 1.5",
+      "letterSpacing": "-0.05, -0.04, 0.04"
+    },
+    {
+      "role": "Parabole Trial Regular Display — detected in extracted data but not described by AI",
+      "sizes": "36px, 40px, 64px",
+      "family": "Parabole Trial Regular Display",
+      "weight": "400",
+      "lineHeight": "1.1",
+      "letterSpacing": "-0.05, -0.04"
+    },
+    {
+      "role": "Karla — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "Karla",
+      "weight": "400",
+      "lineHeight": "1.2"
+    }
+  ],
+  "description": "Relace operates as a warm-paper devtool: a cream canvas (#fffef2) rather than cold white, with a single rationed amber accent (#fcaa2d) that punctuates CTAs and inline highlights. Typography carries the entire personality — a distinctive geometric sans (Parabole Trial) with aggressively tight tracking at display sizes produces editorial-weight, left-aligned headlines, while a monospace (Decima Mono Pro) handles all UI chrome, version labels, and code. The system is radically sharp: 2px radii dominate, hairlines replace shadows, and structural black borders (#000000) define separation rather than elevation. Landscape photography with code overlays breaks the monochrome rhythm, and the single warm accent is reserved for moments that must land — never decorative.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #191918\n- background: #fffef2\n- border: #000000\n- accent: #fcaa2d\n- muted text: #75756f\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. **Code window over image**: Full-bleed warm landscape photograph. Overlaid code window with #191918 background, 2px radius, positioned center-left. Three small traffic-light dots (8px) in top-left. Code in 12px JetBrains Mono, keywords in #fcaa2d, strings in #edece0, comments in #75756f. No shadow on the window — it sits flat on the image.\n\n3. **FAQ accordion row**: Full-width row on #fffef2 background, 20px 40px padding, 1px #000000 bottom border. Question text left-aligned in 18px Parabole #191918. '+' icon right-aligned in 20px #191918. No background change on hover.\n\n4. **Feature list item**: Text left-aligned in 18px Parabole #191918, with a 2px-wide #fcaa2d vertical bar on the left edge running the full height of the text. 20px 40px padding. 1px #000000 bottom border separating items in the list.\n\n5. **Section header with accent word**: Display headline at 40px Parabole #191918 left-aligned, where one word is colored #fcaa2d. Same size and weight — the color switch alone creates the emphasis. Subtext below at 18px #75756f."
+    }
+  ],
+  "elevationPhilosophy": "Relace uses 1px #000000 hairline borders as its sole separation language. There are no drop shadows, no layered surfaces, and no z-axis elevation — the design is deliberately flat. Structure comes from line weight, not from shadow depth. This is an intentional choice: the editorial paper aesthetic would be broken by any sense of digital depth or floating panels."
+}

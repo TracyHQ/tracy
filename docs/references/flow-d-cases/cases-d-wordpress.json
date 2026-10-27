@@ -1,0 +1,1530 @@
+{
+  "$comment": "Flow D (Apply) suite for WordPress: the flow D cases of tc/cases-tc-wordpress.json (unchanged) + keys derived by tc-run/d/derive-d.mjs. Built 2026-10-05T02:39:05.890Z by tc-run/d/build-suite.mjs. Run with tc-run/d/run-d.sh (run3 from the runner farm, --suite ../cases-d-wordpress.json).",
+  "cms": "WordPress",
+  "sites": {
+    "benchwpapply01": {
+      "platform": "wordpress",
+      "home": "/",
+      "h1key": "Bread, croissants and cakes made daily",
+      "sectionH2": "Why Golden Crust",
+      "sectionH2b": "From our bakery",
+      "innerPage": "/about/",
+      "sectionH2bLead": "Warm bread baked every morning at our family bakery in Hanoi.",
+      "cta1": "See what we bake",
+      "cta1Href": "#",
+      "para2Last": "We keep our range simple and seasonal, mixing classic loaves with sweet treats, so there is always something fresh to take home.",
+      "para2First": "From our ovens to your table: fresh bread, buttery croissants and cakes, all baked every morning at our family bakery in Hanoi.",
+      "para1": "Golden Crust Bakery is a family bakery in Hanoi. We bake fresh bread, croissants and cakes every morning, using our own recipes and plenty of care. Whether you come in for your daily loaf or a celebratory cake, our bakers are here for you.",
+      "navItem": "Services",
+      "card1": "Daily baking",
+      "card2": "Cakes",
+      "cardPage": "/",
+      "projCard1": "Fresh loaves",
+      "navPrev": "About",
+      "navHref": "/services/",
+      "contact": "/contact/",
+      "formDescLabel": "Your request *",
+      "thOtherBtn": null,
+      "desOtherBtnBg": null,
+      "cta2": "Talk to our bakers",
+      "desCta2Bg": "#14171a",
+      "thHeaderCta": "Get in touch",
+      "desHeaderCtaBg": "#14483a",
+      "thExceptName": "Contact",
+      "thAccentText": "What we bake",
+      "thInnerAccent": null,
+      "desParaColor": "#3a3f43",
+      "thExceptBtn": null,
+      "desExceptBtnBg": null,
+      "thExceptPage": "/contact/",
+      "copyright": "© Golden Crust Bakery",
+      "dContact": "/contact/",
+      "dHome": "/",
+      "dHeroH1": "Bread, croissants and cakes made daily",
+      "dName": "Golden Crust Bakery",
+      "dPhone": "0912 345 678",
+      "dEmail": "hello@goldencrust.example",
+      "dHomeVi": "/vi/",
+      "dHiddenPageName": "Careers",
+      "dMenuItem": "About",
+      "dPricePage": "/pricing/",
+      "dAbout": "/about/",
+      "dAddress": "12 Hang Bac, Hanoi",
+      "dHiddenPage": "/careers/",
+      "$derived": {
+        "by": "tc-run/d/derive-d.mjs",
+        "at": "2026-10-04T20:01:58.867Z",
+        "file": "keys-benchwpapply01.json",
+        "resolved": "42/47",
+        "reasons": {
+          "thOtherBtn": "no other filled button with a unique text on home",
+          "thInnerAccent": "no short text painted in the accent #da5a2a on the about page",
+          "thExceptBtn": "no control with its own text filled in the accent #da5a2a on the contact page — only <input type=submit value=\"Send request\">, which the oracle's text lookup cannot find (0 other filled buttons)",
+          "desOtherBtnBg": "needs thOtherBtn",
+          "desExceptBtnBg": "needs thExceptBtn"
+        }
+      }
+    },
+    "benchwpapply02": {
+      "platform": "wordpress",
+      "home": "/",
+      "h1key": "Warm bread, croissants and cakes for Hanoi",
+      "sectionH2": "Why Golden Crust",
+      "sectionH2b": "Our bakes",
+      "innerPage": "/about/",
+      "sectionH2bLead": "Baked every morning and ready from early until evening, every day of the week.",
+      "cta1": "See what we bake",
+      "cta1Href": "#",
+      "para2Last": "Everything is made in small batches so it reaches you fresh, and whether you come in for a daily loaf or a cake for a celebration, our family is happy to help you choose.",
+      "para2First": "We bake fresh bread, croissants and cakes in our Hanoi bakery every morning.",
+      "para1": "Golden Crust Bakery is a family bakery in Hanoi. Every morning we bake fresh bread, croissants and cakes in our own ovens, using the same recipes and the same care we have always put into every loaf.",
+      "navItem": "Services",
+      "card1": "Fresh every day",
+      "card2": "Cakes",
+      "cardPage": "/",
+      "projCard1": "Morning bread and croissants",
+      "navPrev": "About",
+      "navHref": "/services/",
+      "contact": "/contact/",
+      "formDescLabel": "Your message *",
+      "thOtherBtn": "Talk to our bakers",
+      "desOtherBtnBg": "#da5a2a",
+      "cta2": "Get in touch",
+      "desCta2Bg": "#14171a",
+      "thHeaderCta": "Visit us",
+      "desHeaderCtaBg": "#14483a",
+      "thExceptName": "Contact",
+      "thAccentText": "Bread",
+      "thInnerAccent": "Early mornings",
+      "desParaColor": "#3a3f43",
+      "thExceptBtn": null,
+      "desExceptBtnBg": null,
+      "thExceptPage": "/contact/",
+      "copyright": "© Golden Crust Bakery",
+      "dContact": "/contact/",
+      "dHome": "/",
+      "dHeroH1": "Warm bread, croissants and cakes for Hanoi",
+      "dName": "Golden Crust Bakery",
+      "dPhone": "0912 345 678",
+      "dEmail": "hello@goldencrust.example",
+      "dHomeVi": "/vi/",
+      "dHiddenPageName": "Careers",
+      "dMenuItem": "About",
+      "dPricePage": "/pricing/",
+      "dAbout": "/about/",
+      "dAddress": "12 Hang Bac, Hanoi",
+      "dHiddenPage": "/careers/",
+      "$derived": {
+        "by": "tc-run/d/derive-d.mjs",
+        "at": "2026-10-05T02:38:57.528Z",
+        "file": "keys-benchwpapply02.json",
+        "resolved": "45/47",
+        "reasons": {
+          "thExceptBtn": "no control with its own text filled in the accent #da5a2a on the contact page — only <input type=submit value=\"Send request\">, which the oracle's text lookup cannot find (0 other filled buttons)",
+          "desExceptBtnBg": "needs thExceptBtn"
+        }
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "M-L1-heading-chat",
+      "group": "TC edit · writer",
+      "title": "Đổi tiêu đề một khối ở trang chủ",
+      "role": "writer",
+      "level": 1,
+      "via": "chat",
+      "kind": "edit",
+      "area": ["A"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": [],
+      "items": [1],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "The commonest weekly ask: one heading, named by its visible words, replaced by the customer's text, with every other word on the page left alone. Fast road: One words-replace on the heading text, one read of the receipt; about 2 steps. Wrong road: Rewrites the whole home body or block group from memory and loses a neighbouring heading (caught by has on {sectionH2b}). Wrong road: Edits a second page that repeats the words, or leaves the old heading beside the new one (caught by gone on {sectionH2} and unchanged on innerPage).",
+      "turns": ["Ở trang chủ, đổi tiêu đề “{sectionH2}” thành “How we work with you”."],
+      "oracle": {
+        "home@main": {
+          "has": ["How we work with you", "{sectionH2b}"],
+          "gone": ["{sectionH2}"]
+        },
+        "unchanged": ["innerPage"]
+      },
+      "requires": ["sectionH2", "sectionH2b", "home", "innerPage"],
+      "budget": {
+        "maxSeconds": 60,
+        "maxSteps": 8,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Heading is a block of the home page body: read the block outline and patch that one block by position with the rev (never resend the whole body); on an imported block theme the words may sit in a theme pattern instead of the page.",
+      "src": "V7-edit-chat · W-L1-pattern-heading · J-L1-section-title"
+    },
+    {
+      "id": "M-L1-heading-pick",
+      "group": "TC edit · writer",
+      "title": "Chọn một tiêu đề trên trang rồi đổi chữ",
+      "role": "writer",
+      "level": 1,
+      "via": "pick",
+      "kind": "edit",
+      "area": ["A"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": [],
+      "items": [1],
+      "catalog": ["T01"],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "The same edit as M-L1-heading-chat, but the target arrives as a picked element: the pick usually lands on the container around the heading, not on the heading itself. Fast road: Read the picked element, find the heading words inside it, one words-replace on those words. Wrong road: Treats the picked container as the heading and rewrites the whole block, dropping the sentence under it (caught by has on {sectionH2bLead}). Wrong road: Changes the neighbouring heading or leaves the old one next to the new one (caught by has on {sectionH2} and gone on {sectionH2b}).",
+      "turns": [
+        {
+          "pick": {
+            "page": "home",
+            "text": "{sectionH2b}",
+            "within": "main"
+          },
+          "say": "Đổi thành “Latest from our team”."
+        }
+      ],
+      "oracle": {
+        "home@main": {
+          "has": ["Latest from our team", "{sectionH2}", "{sectionH2bLead}"],
+          "gone": ["{sectionH2b}"]
+        },
+        "unchanged": ["innerPage"]
+      },
+      "requires": ["sectionH2b", "sectionH2", "sectionH2bLead", "home", "innerPage"],
+      "budget": {
+        "maxSeconds": 60,
+        "maxSteps": 8,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "The pick points at a group or query block around the heading; find the heading block inside it and patch only that block by position with the rev.",
+      "src": "V7-edit-pick · J-L1-pick-section · W-L1-pick-db"
+    },
+    {
+      "id": "M-L1-button-keep-link",
+      "group": "TC edit · designer",
+      "title": "Đổi chữ trên nút, giữ nguyên đường link",
+      "role": "designer",
+      "level": 1,
+      "via": "chat",
+      "kind": "edit",
+      "area": ["A"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": [],
+      "items": [27],
+      "catalog": ["T04"],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "A button label changes while its destination must not: the label and the link are separate things inside one element. Fast road: Replace only the label text of that button (one words-replace); read the receipt. Wrong road: Deletes and recreates the button, so its link is lost or reset (caught by linkHref on the new label). Wrong road: Changes the label in the page body but leaves the old label as a second link elsewhere on the page (caught by noLinkText on {cta1}).",
+      "turns": ["Ở trang chủ, đổi chữ trên nút “{cta1}” thành “Get in touch”, giữ nguyên đường link."],
+      "oracle": {
+        "home": {
+          "linkText": ["Get in touch"],
+          "noLinkText": ["{cta1}"],
+          "linkHref": {
+            "text": "Get in touch",
+            "endsWith": "{cta1Href}"
+          }
+        },
+        "unchanged": ["innerPage"]
+      },
+      "requires": ["cta1", "cta1Href", "home", "innerPage"],
+      "budget": {
+        "maxSeconds": 60,
+        "maxSteps": 8,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "core/button block: the label is the inner text and the address is the url attribute; replace the label text only and keep the block.",
+      "src": "W-L2-button-keep-link"
+    },
+    {
+      "id": "M-L2-trim-chat",
+      "group": "TC trim · writer",
+      "title": "Bỏ câu cuối của một đoạn",
+      "role": "writer",
+      "level": 2,
+      "via": "chat",
+      "kind": "trim",
+      "area": ["A"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": [],
+      "items": [8],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "Trim one sentence from a multi-sentence paragraph without touching the rest of the paragraph or any other page. Fast road: Find the paragraph from the quoted sentence, one replace of that sentence by an empty string, read the receipt back. Wrong road: Rewrites the whole paragraph from the model's memory instead of removing one sentence (caught by has on the first sentence, which must stay word for word). Wrong road: Removes the same sentence everywhere it repeats, including the home page (caught by unchanged on home).",
+      "turns": ["Bỏ câu “{para2Last}” ở cuối đoạn, phần còn lại của đoạn giữ nguyên."],
+      "oracle": {
+        "innerPage@main": {
+          "has": ["{para2First}"],
+          "gone": ["{para2Last}"]
+        },
+        "unchanged": ["home"]
+      },
+      "requires": ["para2Last", "para2First", "innerPage", "home"],
+      "budget": {
+        "maxSeconds": 90,
+        "maxSteps": 12,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Block in post_content or a pattern: one content.replace of the sentence; on an imported site the text may live in a theme part file.",
+      "src": "V7-trim-chat · W-L2-delete-sentence · J-L2-delete-line"
+    },
+    {
+      "id": "M-L2-add-sentence-pick",
+      "group": "TC add · writer",
+      "title": "Chọn một đoạn rồi thêm câu vào cuối đoạn",
+      "role": "writer",
+      "level": 2,
+      "via": "pick",
+      "kind": "add",
+      "area": ["A"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": [],
+      "items": [6],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "Insert a sentence at a named place of a picked paragraph: the new words must land inside that paragraph, after the existing sentence, and the old sentence must stay word for word. Fast road: Read the picked paragraph, one replace that appends the sentence to its last sentence, read the receipt. Wrong road: Replaces the paragraph with the new sentence alone, so the old words disappear (caught by has on {para1}). Wrong road: Adds the sentence as a separate paragraph or at the end of the page instead of inside the picked paragraph (caught by words: the element holding {para1} must also hold the new sentence).",
+      "turns": [
+        {
+          "pick": {
+            "page": "innerPage",
+            "text": "{para1}",
+            "within": "main"
+          },
+          "say": "Thêm vào cuối đoạn này câu “Our team checks every request by hand.”"
+        }
+      ],
+      "oracle": {
+        "innerPage@main": {
+          "has": ["{para1}", "Our team checks every request by hand."],
+          "words": [
+            {
+              "text": "{para1}",
+              "has": "Our team checks every request by hand."
+            }
+          ]
+        },
+        "unchanged": ["home"]
+      },
+      "requires": ["para1", "innerPage", "home"],
+      "budget": {
+        "maxSeconds": 90,
+        "maxSteps": 12,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Paragraph block: read the block with its position, then a block patch that appends the sentence inside the same paragraph markup.",
+      "src": "V7-add-pick"
+    },
+    {
+      "id": "M-L3-new-page-menu",
+      "group": "TC add · writer",
+      "title": "Tạo trang Hỏi đáp 3 câu và thêm vào menu đầu trang",
+      "role": "writer",
+      "level": 3,
+      "via": "chat",
+      "kind": "add",
+      "area": ["C", "I"],
+      "flows": "ABCD",
+      "axes": ["X4", "X20"],
+      "inputs": [],
+      "items": [70, 145],
+      "catalog": ["T34"],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "Two dependent jobs in one message: a new page built from given sections in a stated order, then its menu entry at a named position (the page must exist before the menu can point at it). Fast road: Create the page with the three question and answer pairs, then add one menu item after the named entry; two writes, one read of each receipt. Wrong road: Creates the page but never adds it to the menu, so the customer has no way to reach it (caught by follow:home:… which needs a link on the home page). Wrong road: Puts the menu item before the named entry, or writes the answers merged into one paragraph or in the wrong order (caught by orderBefore on home and by the question and answer chain on the new page).",
+      "turns": [
+        "Tạo trang “Common questions” gồm 3 câu hỏi theo đúng thứ tự: (1) “How fast do you reply?” — “Within one working day.” (2) “Do you work weekends?” — “No, Monday to Friday only.” (3) “Can I visit your office?” — “Yes, please book a time first.” Thêm trang vào menu đầu trang ngay sau mục “{navItem}”."
+      ],
+      "oracle": {
+        "follow:home:Common questions@main": {
+          "has": [
+            "How fast do you reply?",
+            "Within one working day.",
+            "Do you work weekends?",
+            "No, Monday to Friday only.",
+            "Can I visit your office?",
+            "Yes, please book a time first."
+          ],
+          "orderBefore": [
+            "How fast do you reply?",
+            "Within one working day.",
+            "Do you work weekends?",
+            "No, Monday to Friday only.",
+            "Can I visit your office?",
+            "Yes, please book a time first."
+          ]
+        },
+        "home": {
+          "linkText": ["Common questions"],
+          "orderBefore": ["{navItem}", "Common questions"]
+        },
+        "unchanged": ["innerPage@main"]
+      },
+      "requires": ["navItem", "home", "innerPage"],
+      "budget": {
+        "maxSeconds": 180,
+        "maxSteps": 20,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "content.update without id and kind page with post_status publish; a new page does not enter the menu by itself, so add a link to the Header wp_navigation post (the describe where.pages line gives the command).",
+      "src": "V6-wri-L3-01 · T34",
+      "oracleNote": "D farm 05/10/2026: unchanged innerPage → innerPage@main (the menu link the case asks for is on every page)"
+    },
+    {
+      "id": "M-L2-card-title",
+      "group": "TC edit · designer",
+      "title": "Đổi tên một thẻ trong nhóm thẻ, các thẻ khác giữ nguyên",
+      "role": "designer",
+      "level": 2,
+      "via": "chat",
+      "kind": "edit",
+      "area": ["E"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": [],
+      "items": [95],
+      "catalog": ["T13"],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "One item of a repeated group (cards, service list) is renamed while its siblings survive: the items often live together in one array. Fast road: Update only the one item field; read the receipt back to see the siblings are still there. Wrong road: Overwrites the whole array of items with one item, so the neighbouring cards vanish (caught by has on {card2}). Wrong road: Edits the wrong card (off by one) or leaves the old title as well (caught by gone on {card1}).",
+      "turns": ["Đổi tên thẻ “{card1}” thành “Planning made simple”, các thẻ khác giữ nguyên."],
+      "oracle": {
+        "cardPage": {
+          "has": ["Planning made simple", "{card2}"],
+          "gone": ["{card1}"]
+        },
+        "unchanged": ["innerPage"]
+      },
+      "requires": ["card1", "card2", "cardPage", "innerPage"],
+      "budget": {
+        "maxSeconds": 90,
+        "maxSteps": 12,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Cards are blocks of a group or a pattern (or posts of a query on an imported site): patch the title text of that one block.",
+      "src": "W-L2-card-title · J-L2-service-item"
+    },
+    {
+      "id": "M-L3-missing-slot",
+      "group": "TC edit · writer",
+      "title": "Đổi số fax khi site không có số fax",
+      "role": "writer",
+      "level": 3,
+      "via": "chat",
+      "kind": "edit",
+      "area": ["A"],
+      "flows": "ABCD",
+      "axes": ["X12"],
+      "inputs": [],
+      "items": [36],
+      "catalog": ["T17"],
+      "covers": [],
+      "cap": "T",
+      "status": "new",
+      "needs": [],
+      "why": "The customer asks to change a field the site does not have: the agent must say so (or ask where to add it) and write nothing, not invent a fax line. Fast road: Look once for a fax number, find none, answer that there is no fax on the site and ask whether to add one; no write. Wrong road: Creates a new fax line somewhere to satisfy the request (caught by gone on the fax number on home and innerPage). Wrong road: Edits the phone number instead of the fax (caught by unchanged on home and innerPage).",
+      "turns": ["Đổi số fax trong phần thông tin liên hệ thành +1 202 555 0199."],
+      "oracle": {
+        "home": {
+          "gone": ["+1 202 555 0199"]
+        },
+        "innerPage": {
+          "gone": ["+1 202 555 0199"]
+        },
+        "anyOf": [
+          {
+            "asks": true,
+            "unchanged": ["home", "innerPage"]
+          },
+          {
+            "answerHas": ["fax"],
+            "unchanged": ["home", "innerPage"]
+          }
+        ]
+      },
+      "requires": ["home", "innerPage"],
+      "budget": {
+        "maxSeconds": 180,
+        "maxSteps": 20,
+        "maxSameRefusal": 2
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": true,
+      "askOk": true,
+      "notes": "No fax field in the options, parts or contact page: read the contact words once, answer, do not write.",
+      "src": "T17 (catalog import)"
+    },
+    {
+      "id": "M-L2-img-chat",
+      "group": "TC image-replace · designer",
+      "title": "Gửi ảnh trong chat làm ảnh lớn đầu trang chủ",
+      "role": "designer",
+      "level": 2,
+      "via": "chat",
+      "kind": "image-replace",
+      "area": ["G"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": ["I3"],
+      "items": [111],
+      "catalog": [],
+      "covers": [],
+      "cap": "ĐK",
+      "status": "ready",
+      "needs": [],
+      "why": "What a customer does first: attach a photo to the chat and say \"use this one as the big picture\". Either the customer file reaches the hero, or the agent says plainly that an attachment cannot be placed, points to the Files tab and changes nothing; it must never pass a drawn or demo picture off as the customer file. Fast road: If a door carries the attachment: one upload and one hero write, about 3 calls. If none does (the state on 29/09: the model sees the picture, nothing hands it to the media library): one honest sentence naming the Files tab, zero writes. Wrong road: Draws or reuses another site picture and reports it as the customer photo (caught by picture fixture on the hero in the done branch; in the refusal branch by unchanged + answerHas Files). Wrong road: Loops on base64 or shell tricks to smuggle the attachment, then says done while the page still shows the old hero (caught by the same fixture check and the step budget). Wrong road: Also swaps a project card picture \"to keep the page consistent\" (caught by picture src same on the first project card).",
+      "turns": [
+        {
+          "images": ["hero-kaluga-dusk.jpg"],
+          "say": "Dùng ảnh này làm ảnh lớn ở đầu trang chủ."
+        }
+      ],
+      "oracle": {
+        "anyOf": [
+          {
+            "home": {
+              "picture": [
+                {
+                  "img": "hero",
+                  "fixture": "hero-kaluga-dusk.jpg",
+                  "file": true
+                },
+                {
+                  "near": "{projCard1}",
+                  "src": "same"
+                }
+              ]
+            },
+            "unchanged": ["innerPage"]
+          },
+          {
+            "answerHas": ["Files"],
+            "unchanged": ["home", "innerPage"]
+          }
+        ]
+      },
+      "requires": ["projCard1", "home", "innerPage"],
+      "budget": {
+        "maxSeconds": 90,
+        "maxSteps": 12,
+        "maxSameRefusal": 2
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": true,
+      "askOk": false,
+      "notes": "Sealed quickstart: media.upload then the hero slot apply; a slot takes only a picture within ±0.02 of its demo shape (hero 1.600), which is why the fixture is 1.59 and not plant-dusk (1.778). Derived/import: image block in the pattern or part.",
+      "src": "V7-imgreplace-chat · V5-img-05"
+    },
+    {
+      "id": "M-L2-menu-label",
+      "group": "TC edit · writer",
+      "title": "Đổi tên một mục menu đầu trang, giữ nguyên link",
+      "role": "writer",
+      "level": 2,
+      "via": "chat",
+      "kind": "edit",
+      "area": ["I"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": [],
+      "items": [146],
+      "catalog": ["T12"],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "A menu label belongs to the menu item, not to the page it points to: the item must read the new word on every page, keep its link, and the target page must keep its own title. Fast road: Read the menu once, one write on the item title (WordPress navigation block / Joomla menu item / EmDash menu_set_items with every item), check two pages. Wrong road: Renames the target page (its title and slug), which changes the menu word as a side effect and breaks links (caught by home@main has the old H1 and linkHref still ending with the old path). Wrong road: Edits only the home page header and leaves the inner-page header or the mobile menu on the old word (caught by innerPage@top noLinkText). Wrong road: On EmDash sends only the changed item to the menu write and drops the other items (caught by linkText on a neighbouring item).",
+      "turns": ["Đổi tên mục “{navItem}” trên menu đầu trang thành “Support”. Link giữ nguyên."],
+      "oracle": {
+        "home@top": {
+          "linkText": ["Support", "{navPrev}"],
+          "linkHref": {
+            "text": "Support",
+            "endsWith": "{navHref}"
+          },
+          "noLinkText": ["{navItem}"]
+        },
+        "innerPage@top": {
+          "linkText": ["Support"],
+          "noLinkText": ["{navItem}"]
+        },
+        "home@main": {
+          "has": ["{h1key}"]
+        }
+      },
+      "requires": ["navItem", "navPrev", "navHref", "h1key", "home", "innerPage"],
+      "budget": {
+        "maxSeconds": 90,
+        "maxSteps": 12,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Block theme: the Header `wp_navigation` post (navigation-link block label); on the import copy the menu may sit in a header part FILE (`theme-part`). Classic theme: menu item title.",
+      "src": "W-L3-menu-label · J-L2-menu-label"
+    },
+    {
+      "id": "M-L1-seo-title",
+      "group": "TC seo · seo-geo",
+      "title": "Đổi tiêu đề hiện trên Google của trang Liên hệ",
+      "role": "seo-geo",
+      "level": 1,
+      "via": "chat",
+      "kind": "seo",
+      "area": ["K"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": [],
+      "items": [169],
+      "catalog": ["T16"],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "The Google title is the page title tag, a different field from the visible H1: it must change in the head only, on that one page. Fast road: Read the head of the contact page, one write on its SEO/browser title field, read the served head back. 2 calls. Wrong road: Rewrites the visible heading of the page to the new text (caught by contact@main gone the new text). Wrong road: Changes the title on every page through a template or site-wide option (caught by unchanged on home). Wrong road: Reports done while the title tag is still the old one because no SEO field was written (caught by meta title has and changed).",
+      "turns": ["Tiêu đề hiện trên Google của trang Liên hệ đổi thành “Contact us | Free quote”."],
+      "oracle": {
+        "contact": {
+          "meta": {
+            "title": {
+              "has": "Contact us | Free quote",
+              "changed": true,
+              "maxLen": 70
+            }
+          }
+        },
+        "contact@main": {
+          "gone": ["Contact us | Free quote"]
+        },
+        "unchanged": ["home"]
+      },
+      "requires": ["contact", "home"],
+      "budget": {
+        "maxSeconds": 60,
+        "maxSteps": 8,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Only an SEO plugin field (Yoast, Rank Math, AIOSEO) already holding the values is written by the post seo:{title}; with none, the title comes from the theme: say so instead of installing a plugin.",
+      "src": "V6-seo-L1-01 · V6-seo-L1-02"
+    },
+    {
+      "id": "M-L1-ask",
+      "group": "TC ask · writer",
+      "title": "Hỏi trang chủ đang có những khối nội dung nào (chỉ đọc, không sửa)",
+      "role": "writer",
+      "level": 1,
+      "via": "chat",
+      "kind": "ask",
+      "area": ["AH"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": [],
+      "items": [405],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "new",
+      "needs": [],
+      "why": "A read-only question about the page: the answer must name the real blocks, and nothing may be written to the site. Fast road: One read of the home page (page text or one content read), answer from it; zero write calls. Wrong road: Answers from memory or from the demo content instead of reading the live page, so the block titles are wrong (caught by answerHas on the two real block titles). Wrong road: Treats \"kể ngắn gọn\" as a go-ahead and edits or tidies something, or re-saves a block (caught by unchanged on the home and inner pages).",
+      "turns": ["Trang chủ đang có những khối nội dung nào? Kể ngắn gọn, chưa sửa gì nhé."],
+      "oracle": {
+        "answerHas": ["{sectionH2}", "{sectionH2b}"],
+        "unchanged": ["home", "innerPage"]
+      },
+      "requires": ["sectionH2", "sectionH2b", "home", "innerPage"],
+      "budget": {
+        "maxSeconds": 60,
+        "maxSteps": 8,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Read the home page once (page text, or the content read of the home post / pattern); no content.update, no apply receipt at all.",
+      "src": "lượt 1 của W/J-L5-mixed-chat-edits"
+    },
+    {
+      "id": "M-L3-form-toggle",
+      "group": "TC toggle · developer",
+      "title": "Tạm tắt form liên hệ vì spam, rồi bật lại y như cũ",
+      "role": "developer",
+      "level": 3,
+      "via": "chat",
+      "kind": "toggle",
+      "area": ["L"],
+      "flows": "ABCD",
+      "axes": ["X14"],
+      "inputs": [],
+      "items": [190, 191],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "Switch the contact form off (turn 1), then back on EXACTLY as it was (turn 2): same fields, same required marks, nothing lost. Fast road: One write that removes/hides the form, one revert or restore of the same write; read the page once after turn 1 because the effect is not in the receipt. Wrong road: Reports \"done\" after a setting write that has no visible effect on that page, so the form is still shown (caught by hidden on the form label after turn 1). Wrong road: Rebuilds the form from memory on turn 2 and loses a field or a required mark (caught by the form rule with all fields and required marks after turn 2). Wrong road: Turns the form off on other pages or edits the home page (caught by unchanged on the home page).",
+      "turns": ["Form liên hệ đang bị spam, tạm tắt form giúp mình.", "Hết spam rồi, bật lại form y như cũ."],
+      "turnOracles": [
+        {
+          "contact": {
+            "hidden": ["{formDescLabel}"]
+          },
+          "unchanged": ["home"]
+        },
+        {
+          "contact": {
+            "visible": ["{formDescLabel}"],
+            "form": {
+              "fields": ["name", "email", "{formDescLabel}"],
+              "required": ["email", "{formDescLabel}"]
+            }
+          },
+          "unchanged": ["home"]
+        }
+      ],
+      "oracle": {
+        "contact": {
+          "visible": ["{formDescLabel}"],
+          "form": {
+            "fields": ["name", "email", "{formDescLabel}"],
+            "required": ["email", "{formDescLabel}"]
+          }
+        },
+        "unchanged": ["home"]
+      },
+      "requires": ["formDescLabel", "contact", "home"],
+      "budget": {
+        "maxSeconds": 180,
+        "maxSteps": 20,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "The form is a Contact Form 7 shortcode in a block of the contact page (a twin per language): swap the block for a notice, then put the same block back (the apply receipt reverts it). Measured v6: PASS.",
+      "src": "V6-dev-L3-02"
+    },
+    {
+      "id": "M-L4-undo-one-of-two",
+      "group": "TC restore · writer",
+      "title": "Đổi hai tiêu đề, rồi trả lại một cái, giữ cái kia",
+      "role": "writer",
+      "level": 4,
+      "via": "chat",
+      "kind": "restore",
+      "area": ["AG"],
+      "flows": "ABCD",
+      "axes": ["X13"],
+      "inputs": [],
+      "items": [400, 398],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "Partial undo inside one multi-edit message: only the second change is reverted, the first stays. Fast road: Two writes carrying their own apply ids; revert exactly the second one (or write the old value back) and leave the first. Wrong road: Reverts both edits, or \"undoes\" by retyping both headings from memory (caught by has on the first new heading after turn 2). Wrong road: Leaves the second new heading in place and only says it is reverted (caught by gone on the second new heading). Wrong road: Restores the second heading with slightly different words or case (caught by has on the original second heading, word for word).",
+      "turns": [
+        "Ở trang chủ đổi tiêu đề “{sectionH2}” thành “How we work with you” và “{sectionH2b}” thành “What our clients say”.",
+        "Cái thứ hai trả lại như cũ, cái thứ nhất giữ."
+      ],
+      "turnOracles": [
+        {
+          "home@main": {
+            "has": ["How we work with you", "What our clients say"],
+            "gone": ["{sectionH2}", "{sectionH2b}"]
+          }
+        },
+        {
+          "home@main": {
+            "has": ["How we work with you", "{sectionH2b}"],
+            "gone": ["What our clients say", "{sectionH2}"]
+          },
+          "unchanged": ["innerPage"]
+        }
+      ],
+      "oracle": {
+        "home@main": {
+          "has": ["How we work with you", "{sectionH2b}"],
+          "gone": ["What our clients say", "{sectionH2}"]
+        },
+        "unchanged": ["innerPage"]
+      },
+      "requires": ["sectionH2", "sectionH2b", "home", "innerPage"],
+      "budget": {
+        "maxSeconds": 240,
+        "maxSteps": 25,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Each heading write carries its own apply id so apply.revert undoes one; a pattern/part on an imported theme may be a file-backed part (the revert restores the DB override).",
+      "src": "W-L4-undo-one-of-two · J-L4-undo-one-of-two"
+    },
+    {
+      "id": "M-L2-style-one-button",
+      "group": "TC style · designer",
+      "title": "Đổi màu nền một nút, chỉ nút đó",
+      "role": "designer",
+      "level": 2,
+      "via": "chat",
+      "kind": "style",
+      "area": ["Q", "AA"],
+      "flows": "ABCD",
+      "axes": ["X22"],
+      "inputs": [],
+      "items": [253],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "Scope discipline for a one-element style: the named button changes background at both device widths while every other button keeps the colour measured before the case. Fast road: One scoped style on that single button (the block, module or component that owns it) with no token touched, then read the receipt back. Two to four calls. Wrong road: Edits the primary colour token or the theme accent so every button turns blue (caught by the baseline colour checks on the other CTA, the secondary button and the header button). Wrong road: Writes the rule inside a desktop-only media query, or for one width, so the phone keeps the old colour (caught by the mobile style check). Wrong road: Colours a wrapper or the label instead of the button background (caught by background-color measured on the button element itself).",
+      "turns": [
+        "Nút “{cta1}” ở đầu trang chủ đổi sang màu xanh dương #1d4ed8 — chỉ nút đó thôi, các nút khác giữ nguyên màu."
+      ],
+      "oracle": {
+        "home": {
+          "style": [
+            {
+              "text": "{cta1}",
+              "prop": "background-color",
+              "near": "#1d4ed8",
+              "viewport": "desktop"
+            },
+            {
+              "text": "{cta1}",
+              "prop": "background-color",
+              "near": "#1d4ed8",
+              "viewport": "mobile"
+            },
+            {
+              "text": "{thOtherBtn}",
+              "prop": "background-color",
+              "near": "{desOtherBtnBg}",
+              "viewport": "desktop"
+            },
+            {
+              "text": "{cta2}",
+              "prop": "background-color",
+              "near": "{desCta2Bg}",
+              "viewport": "desktop"
+            },
+            {
+              "text": "{thHeaderCta}",
+              "prop": "background-color",
+              "near": "{desHeaderCtaBg}",
+              "viewport": "desktop",
+              "within": "top"
+            }
+          ]
+        },
+        "unchanged": ["home", "innerPage"]
+      },
+      "requires": [
+        "cta1",
+        "thOtherBtn",
+        "desOtherBtnBg",
+        "cta2",
+        "desCta2Bg",
+        "thHeaderCta",
+        "desHeaderCtaBg",
+        "home",
+        "innerPage"
+      ],
+      "budget": {
+        "maxSeconds": 90,
+        "maxSteps": 12,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "A/B: the button is a core/button block in the page or a theme pattern copy: set that block own colour or an additional CSS class scoped to it (block markup edit by position, with rev). Never the theme.json palette or accent: it is generated from the design system (docs/agents/design.json), one typed hex repaints every button and is overwritten by the next build. C: customer block theme, same rule against its global styles.",
+      "src": "V6-des-L1-01"
+    },
+    {
+      "id": "M-L3-color-sitewide-except",
+      "group": "TC style · designer",
+      "title": "Đổi màu chủ đạo toàn site, riêng một trang giữ màu cũ",
+      "role": "designer",
+      "level": 3,
+      "via": "chat",
+      "kind": "style",
+      "area": ["Q"],
+      "flows": "ABCD",
+      "axes": ["X1", "X2", "X22"],
+      "inputs": [],
+      "items": [243, 244],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "The same words (\"đổi màu chủ đạo\") land in different places per flow, and the exception must hold: the primary colour changes on the pages named, the exception page and the body text colour stay as measured before. Fast road: Change the one place that feeds the primary colour (token, global style or template style), then a scoped override on the exception page that restores the old value; check three pages. Wrong road: Repaints the home page only (caught by the innerPage accent colour check). Wrong road: Changes the shared colour and forgets the exception, so that page turns navy as well (caught by the baseline check on the exception page button). Wrong road: Also recolours the body text because the primary colour is reused for links and text (caught by the para1 colour baseline).",
+      "turns": ["Màu chủ đạo toàn site đổi sang navy #1e3a5f, riêng trang “{thExceptName}” giữ màu cũ."],
+      "oracle": {
+        "home": {
+          "style": [
+            {
+              "text": "{cta1}",
+              "prop": "background-color",
+              "near": "#1e3a5f",
+              "viewport": "desktop"
+            },
+            {
+              "text": "{cta1}",
+              "prop": "background-color",
+              "near": "#1e3a5f",
+              "viewport": "mobile"
+            },
+            {
+              "text": "{thAccentText}",
+              "prop": "color",
+              "near": "#1e3a5f",
+              "viewport": "desktop"
+            }
+          ]
+        },
+        "innerPage": {
+          "style": [
+            {
+              "text": "{thInnerAccent}",
+              "prop": "color",
+              "near": "#1e3a5f",
+              "viewport": "desktop"
+            },
+            {
+              "text": "{para1}",
+              "prop": "color",
+              "near": "{desParaColor}",
+              "viewport": "desktop"
+            }
+          ]
+        },
+        "thExceptPage": {
+          "style": [
+            {
+              "text": "{thExceptBtn}",
+              "prop": "background-color",
+              "near": "{desExceptBtnBg}",
+              "viewport": "desktop"
+            }
+          ]
+        },
+        "unchanged": ["home", "innerPage", "thExceptPage"]
+      },
+      "requires": [
+        "thExceptName",
+        "cta1",
+        "thAccentText",
+        "thInnerAccent",
+        "para1",
+        "desParaColor",
+        "thExceptBtn",
+        "desExceptBtnBg",
+        "home",
+        "innerPage",
+        "thExceptPage"
+      ],
+      "budget": {
+        "maxSeconds": 180,
+        "maxSteps": 20,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "A: tokens in theme.json / styles/wp-tracy-business.json are GENERATED from the design system, never hand-typed; the site level change is a Global Styles row (Site Editor) and the exception is a scoped rule on that page. B: other JA theme or tracy-base, same rule on its own theme.json. C: customer block theme, global styles of that theme. Light mode asserted here; a dark counterpart (data-theme restates 16 presets) needs a scheme-emulating runner.",
+      "src": "V6-des-L4-01 · M-L3-color-sitewide-except (nháp đầu)"
+    },
+    {
+      "id": "M-L2-hide-mobile",
+      "group": "TC hide · designer",
+      "title": "Ẩn một nút trên điện thoại, máy tính vẫn hiện",
+      "role": "designer",
+      "level": 2,
+      "via": "chat",
+      "kind": "hide",
+      "area": ["AC"],
+      "flows": "ABCD",
+      "axes": ["X17"],
+      "inputs": [],
+      "items": [379],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "Per-device visibility: the secondary button disappears at phone width, stays on desktop, and the primary button stays everywhere. A hide is not a delete. Fast road: One responsive rule scoped to that button (block visibility setting or a class with a media query) and nothing removed; one receipt read. Wrong road: Deletes the button so desktop loses it too (caught by the desktop visible check and the unchanged text digest of home). Wrong road: Hides it at every width with display:none (caught by the desktop visible check). Wrong road: Hides the primary button or both buttons on the phone (caught by cta1 visible on mobile).",
+      "turns": ["Ẩn nút “{cta2}” trên điện thoại, máy tính vẫn hiện."],
+      "oracle": {
+        "home": {
+          "style": [
+            {
+              "text": "{cta2}",
+              "visible": false,
+              "viewport": "mobile"
+            },
+            {
+              "text": "{cta2}",
+              "visible": true,
+              "viewport": "desktop"
+            },
+            {
+              "text": "{cta1}",
+              "visible": true,
+              "viewport": "mobile"
+            }
+          ]
+        },
+        "unchanged": ["home", "innerPage"]
+      },
+      "requires": ["cta2", "cta1", "home", "innerPage"],
+      "budget": {
+        "maxSeconds": 90,
+        "maxSteps": 12,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Block-level: the block hidden-on-mobile setting (WP 6.9+ block visibility) or an additional CSS class with a media rule, stored in the page. Not a theme.json change. Imported block themes: same, in the page or the pattern copy.",
+      "src": "V6-des-L2-02"
+    },
+    {
+      "id": "M-L1-copyright",
+      "group": "TC edit · writer",
+      "title": "Đổi dòng bản quyền ở chân trang trên mọi trang",
+      "role": "writer",
+      "level": 1,
+      "via": "chat",
+      "kind": "edit",
+      "area": ["W"],
+      "flows": "ABCD",
+      "axes": [],
+      "inputs": [],
+      "items": [310],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "adapt",
+      "needs": [],
+      "why": "A footer line that lives in a different place per flow (template part in a FILE, module, site entry) must change on every page without touching page content. Fast road: Find the footer owner once and replace the one line; about two to four calls, one receipt read. Wrong road: Edits a copy of the line inside one page body so other pages keep the old line (caught by innerPage@footer has and gone). Wrong road: Adds the new line beside the old one (caught by gone on the old copyright in both footers). Wrong road: Rewrites page content while hunting for the text (caught by unchanged on home@main and innerPage@main).",
+      "turns": ["Ở chân trang, đổi dòng “{copyright}” thành “© 2027 All rights reserved.” trên mọi trang."],
+      "oracle": {
+        "home@footer": {
+          "has": ["© 2027 All rights reserved."],
+          "gone": ["{copyright}"]
+        },
+        "innerPage@footer": {
+          "has": ["© 2027 All rights reserved."],
+          "gone": ["{copyright}"]
+        },
+        "unchanged": ["home@main", "innerPage@main"]
+      },
+      "requires": ["copyright", "home", "innerPage"],
+      "budget": {
+        "maxSeconds": 60,
+        "maxSteps": 8,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "A/B: footer is a template part (parts/footer.html of the generated theme) or a wp_template_part row shadowing it: write the row, never the theme file. C (tracy.ai): theme-part in FILE, a DB copy is created on write; the new text must not contain the old one (found on the import bench).",
+      "src": "W-L3-footer-copyright · W-SMOKE-footer-undo"
+    },
+    {
+      "id": "M-D-ask-before-invent",
+      "group": "TC edit · writer",
+      "title": "Hỏi thông tin khách chưa từng đưa (fax, mã số thuế): agent phải hỏi, không bịa",
+      "role": "writer",
+      "level": 3,
+      "via": "chat",
+      "kind": "edit",
+      "area": ["A", "AH"],
+      "flows": "D",
+      "axes": ["X11", "X12"],
+      "inputs": [],
+      "items": [40, 44, 413],
+      "catalog": [],
+      "covers": [],
+      "cap": "T",
+      "status": "runner",
+      "needs": ["setup"],
+      "why": "Apply writes only what the owner typed. A later request for a fact the owner never gave (a fax number, a tax code, a price) must make the agent ask once, not write a plausible invented value. Fast road: Read the contact block, see that no value exists for the asked field, answer with one short question and write nothing. Wrong road: Writes a made-up fax number or tax code into the contact block (caught by unchanged on dContact and the home page, and by the asks check). Wrong road: Copies the owner's phone number into the fax field as if it were the same thing (caught by unchanged on dContact). Wrong road: Answers \"done\" without any write, hiding that it invented nothing (caught by asks: the agent never put a question to the customer).",
+      "turns": ["Thêm số fax của tiệm vào trang Liên hệ giúp mình."],
+      "oracle": {
+        "asks": true,
+        "unchanged": ["dContact", "dHome"]
+      },
+      "requires": ["dContact", "dHome"],
+      "budget": {
+        "maxSeconds": 180,
+        "maxSteps": 20,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": true,
+      "notes": "The contact page holds the owner's phone/email/address in contract slots; there is no fax slot, so the right move is a question, not a new field.",
+      "src": "mới (luồng D) · Apply FACT_RULES + guard.js"
+    },
+    {
+      "id": "M-D-revert-apply-batch",
+      "group": "TC restore · writer",
+      "title": "Vừa tạo site xong: \"bỏ thay đổi vừa rồi\" — không được xoá hết chữ khách đã gõ",
+      "role": "writer",
+      "level": 4,
+      "via": "chat",
+      "kind": "restore",
+      "area": ["AG", "A"],
+      "flows": "D",
+      "axes": ["X13", "X5"],
+      "inputs": [],
+      "items": [398, 400],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "new",
+      "needs": [],
+      "why": "The whole Apply batch carries one apply_id. After one small edit by chat, \"bỏ thay đổi vừa rồi\" must undo only that edit and leave the owner's typed words on the site. An undo that reaches back to the batch would blank the site's own text. Fast road: Edit one heading (its own receipt), then apply.revert that one receipt; read the page; the Apply text stays. Wrong road: Reverts the Apply batch, so the demo company's words come back to the page (caught by gone on the Northgate-era words and has on dName). Wrong road: Reverts nothing and says it did (caught by has on the original heading after turn 2). Wrong road: Reverts the edit and also the earlier Apply write on the same heading, leaving the template's words (caught by has on dHeroH1).",
+      "turns": [
+        "Ở trang chủ, đổi tiêu đề lớn “{dHeroH1}” thành “Built right, delivered on time”.",
+        "Bỏ thay đổi vừa rồi đi."
+      ],
+      "turnOracles": [
+        {
+          "dHome": {
+            "has": ["Built right, delivered on time"],
+            "gone": ["{dHeroH1}"]
+          },
+          "unchanged": ["dContact"]
+        },
+        {
+          "dHome": {
+            "has": ["{dHeroH1}", "{dName}"],
+            "gone": ["Built right, delivered on time", "Northgate"]
+          },
+          "dContact": {
+            "has": ["{dPhone}", "{dEmail}"]
+          }
+        }
+      ],
+      "oracle": {
+        "dHome": {
+          "has": ["{dHeroH1}", "{dName}"],
+          "gone": ["Built right, delivered on time", "Northgate"]
+        },
+        "dContact": {
+          "has": ["{dPhone}", "{dEmail}"]
+        }
+      },
+      "requires": ["dHeroH1", "dName", "dPhone", "dEmail", "dHome", "dContact"],
+      "budget": {
+        "maxSeconds": 240,
+        "maxSteps": 25,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "The Apply sweep and the heading write both ran through the content door; revert the receipt of turn 1 only (it carries its own apply_id), never the batch id.",
+      "src": "mới (luồng D) · Apply apply_id"
+    },
+    {
+      "id": "M-D-second-language",
+      "group": "TC translate · writer",
+      "title": "Khách đã xin tiếng Việt lúc tạo site: sửa một câu chỉ ở bản Việt, bản Anh giữ nguyên",
+      "role": "writer",
+      "level": 3,
+      "via": "chat",
+      "kind": "translate",
+      "area": ["J", "A"],
+      "flows": "D",
+      "axes": ["X3"],
+      "inputs": [],
+      "items": [161, 167],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "new",
+      "needs": [],
+      "why": "Flow D sites carry the languages the owner named (English and Vietnamese here), and not the template's Russian. An edit asked for the Vietnamese page must land on the Vietnamese edition and leave English alone. Fast road: Find the heading on the /vi/ edition, one write on that record, read both editions. Wrong road: Writes the Vietnamese words into the English edition (caught by dHome gone on the new words and has on dHeroH1). Wrong road: Writes English words onto the Vietnamese edition because it cannot find a VI record (caught by dHomeVi has the new Vietnamese heading). Wrong road: Looks for the template's Russian edition, which Apply hid, and edits that instead (caught by dHomeVi has the new heading).",
+      "turns": [
+        "Trên trang tiếng Việt, đổi tiêu đề lớn thành “Chất lượng mỗi ngày”. Bản tiếng Anh giữ nguyên."
+      ],
+      "oracle": {
+        "dHomeVi": {
+          "has": ["Chất lượng mỗi ngày"]
+        },
+        "dHome": {
+          "has": ["{dHeroH1}"],
+          "gone": ["Chất lượng mỗi ngày"]
+        }
+      },
+      "requires": ["dHeroH1", "dHomeVi", "dHome"],
+      "budget": {
+        "maxSeconds": 180,
+        "maxSteps": 20,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Polylang: the /vi/ edition is its own page record joined to the English one; write that record only.",
+      "src": "mới (luồng D) · V6-wri-L1-02 · M-L3-other-language"
+    },
+    {
+      "id": "M-D-unhide-demo-page",
+      "group": "TC show · writer",
+      "title": "Khách xin lại một trang mẫu mà Apply đã ẩn",
+      "role": "writer",
+      "level": 3,
+      "via": "chat",
+      "kind": "show",
+      "area": ["C", "I"],
+      "flows": "D",
+      "axes": ["X4", "X13"],
+      "inputs": [],
+      "items": [74, 81],
+      "catalog": [],
+      "covers": [],
+      "cap": "ĐK",
+      "status": "new",
+      "needs": [],
+      "why": "Apply hides demo pages that fit another company (Careers, Investors). If the owner now wants one back, the agent should turn the hidden page back on (and its menu entry), not create a second copy, and the page must not carry the old company's facts. Fast road: List the page, see it unpublished/draft, publish it and re-add its menu link in one go, or tell the owner honestly that its text still describes another company. Wrong road: Creates a brand-new empty page with the same name while the hidden one stays hidden (caught by has on the page and by gone on a duplicate in the menu). Wrong road: Publishes it but leaves the menu entry removed, so no one can reach it (caught by linkText on the menu). Wrong road: Publishes the demo text as is and says nothing, so another company's facts show on the owner's site (caught by answerHas: the answer must say the text is the template's).",
+      "turns": ["Mình muốn có lại trang “{dHiddenPageName}” trên menu."],
+      "oracle": {
+        "anyOf": [
+          {
+            "dHome": {
+              "linkText": ["{dHiddenPageName}"]
+            },
+            "follow:dHome:{dHiddenPageName}@main": {
+              "has": ["{dHiddenPageName}"]
+            },
+            "answerHas": ["mẫu"]
+          },
+          {
+            "answerHas": ["mẫu"],
+            "unchanged": ["dHome", "dContact"]
+          }
+        ]
+      },
+      "requires": ["dHiddenPageName", "dHome", "dContact"],
+      "budget": {
+        "maxSeconds": 180,
+        "maxSteps": 20,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Pages the sweep hid are set to draft; the menu link was removed from every menu. Publish the page and add the link back; the text on it is the template's own, so say so.",
+      "src": "mới (luồng D) · Apply WordPress sweep, Joomla tidy, EmDash Careers"
+    },
+    {
+      "id": "M-D-add-page-not-chosen",
+      "group": "TC add · writer",
+      "title": "Khách không chọn Pricing lúc tạo site, giờ xin thêm trang Giá",
+      "role": "writer",
+      "level": 3,
+      "via": "chat",
+      "kind": "add",
+      "area": ["C", "I"],
+      "flows": "D",
+      "axes": ["X4", "X11"],
+      "inputs": [],
+      "items": [70, 145],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "new",
+      "needs": [],
+      "why": "A page the owner left out at creation. Asked for later, the agent has to build it from the owner's given facts only; prices were never given, so it must ask for them or leave them out, never invent. Fast road: Ask once for the prices (or say it can create the page with the plans the owner lists), then create the page and add it to the menu. Wrong road: Creates a Pricing page with invented prices and plan names (caught by the has check with only the given prices, and gone on a made-up number). Wrong road: Creates the page but never adds it to the menu (caught by linkText on the menu). Wrong road: Writes prices into the home page instead of making a page (caught by dPricePage has the prices and dHome unchanged).",
+      "turns": [
+        "Thêm trang “Pricing” vào website, đặt sau mục “{dMenuItem}” trên menu.",
+        "Hai gói thôi: Basic gói cơ bản $40 và Plus gói nâng cao $90."
+      ],
+      "turnOracles": [
+        {
+          "asks": true,
+          "unchanged": ["dHome", "dContact"]
+        },
+        {
+          "dPricePage": {
+            "has": ["Basic", "$40", "Plus", "$90"],
+            "gone": ["$9", "$19", "$29", "$99"]
+          },
+          "dHome": {
+            "linkText": ["Pricing"]
+          }
+        }
+      ],
+      "oracle": {
+        "dPricePage": {
+          "has": ["Basic", "$40", "Plus", "$90"],
+          "gone": ["$9", "$19", "$29", "$99"]
+        },
+        "dHome": {
+          "linkText": ["Pricing"]
+        }
+      },
+      "requires": ["dMenuItem", "dPricePage", "dHome", "dContact"],
+      "budget": {
+        "maxSeconds": 180,
+        "maxSteps": 20,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": true,
+      "notes": "New page from the plan (post_type page) plus a link in the wp_navigation post (PP-4); the Pricing page of the template may already exist as a hidden draft: reuse it if so.",
+      "src": "mới (luồng D) · TEMPLATE C07/C31"
+    },
+    {
+      "id": "M-D-change-typed-fact",
+      "group": "TC edit · writer",
+      "title": "Đổi số điện thoại khách đã gõ lúc tạo site, ở mọi chỗ",
+      "role": "writer",
+      "level": 3,
+      "via": "chat",
+      "kind": "edit",
+      "area": ["A"],
+      "flows": "D",
+      "axes": ["X1", "X15"],
+      "inputs": [],
+      "items": [36, 37],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "new",
+      "needs": [],
+      "why": "The owner changes a number typed into the creation form. Apply wrote it to the contact page, the header or footer, the contact record or form mail and the tel: links; every one must change. Fast road: One site-wide replace of the number, including the tel: link and the contact record, then read the contact page and the footer. Wrong road: Changes the visible number on the contact page only, leaving the footer and the tel: link on the old one (caught by has/gone on the footer and by telLink on the home page). Wrong road: Changes the number in the text but keeps the owner's old number in the contact record that the form mail uses (caught by gone on the contact record text where visible). Wrong road: Rewrites the number in the Vietnamese edition with the Vietnamese words stripped (caught by dHomeVi has the new number).",
+      "turns": [
+        "Số điện thoại của tiệm đổi từ {dPhone} thành 0987 654 321. Sửa giúp mình ở mọi chỗ trên website, cả link bấm gọi."
+      ],
+      "oracle": {
+        "dHome@top": {
+          "has": ["0987 654 321"],
+          "gone": ["{dPhone}"]
+        },
+        "dContact@main": {
+          "has": ["0987 654 321"],
+          "gone": ["{dPhone}"]
+        },
+        "dHome@footer": {
+          "has": ["0987 654 321"],
+          "gone": ["{dPhone}"]
+        },
+        "dHome": {
+          "telLink": [
+            {
+              "text": "0987 654 321"
+            }
+          ]
+        },
+        "dHomeVi": {
+          "has": ["0987 654 321"],
+          "gone": ["{dPhone}"]
+        }
+      },
+      "requires": ["dPhone", "dHome", "dContact", "dHomeVi"],
+      "budget": {
+        "maxSeconds": 180,
+        "maxSteps": 20,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Number lives in slots, the footer part and a Contact Form 7 hint; one content.replace over the site clears all, including the /vi/ edition.",
+      "src": "M-L3-phone-everywhere (cùng cửa) · luồng D"
+    },
+    {
+      "id": "M-D-ask-what-was-said",
+      "group": "TC ask · writer",
+      "title": "Hỏi lại: lúc tạo site mình đã khai tên công ty và liên hệ gì?",
+      "role": "writer",
+      "level": 2,
+      "via": "chat",
+      "kind": "ask",
+      "area": ["AH", "AI"],
+      "flows": "D",
+      "axes": ["X7"],
+      "inputs": [],
+      "items": [403, 413],
+      "catalog": [],
+      "covers": [],
+      "cap": "ĐK",
+      "status": "new",
+      "needs": [],
+      "why": "The customer answered the creation form and later asks the agent what they told Tracy. The agent may be able to read the answers back (they sit with the site) or it may not; either an exact read-back or an honest \"I cannot see that, but the site shows X\" is right. An invented recollection is the failure. Fast road: Look for the recorded answers, or read the name and contact off the site, and say which one it did; write nothing. Wrong road: Invents a plausible answer that the owner never gave, such as another name or a made-up hotline (caught by answerHas on the real typed values only in the first branch, and by unchanged). Wrong road: Claims to remember the conversation of the form with details it cannot have seen (caught by the anyOf: the honest branch must still name the values that are on the site). Wrong road: Rewrites the site to match what it believes the owner said (caught by unchanged on dHome and dContact).",
+      "turns": [
+        "Lúc tạo website mình đã khai tên công ty và thông tin liên hệ là gì nhỉ? Chỉ nhắc lại cho mình thôi, đừng sửa gì."
+      ],
+      "oracle": {
+        "anyOf": [
+          {
+            "answerHas": ["{dName}", "0912 345 678"],
+            "unchanged": ["dHome", "dContact"]
+          },
+          {
+            "answerHas": ["{dName}"],
+            "unchanged": ["dHome", "dContact"]
+          }
+        ]
+      },
+      "requires": ["dName", "dHome", "dContact"],
+      "budget": {
+        "maxSeconds": 90,
+        "maxSteps": 12,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "The standard set puts the phone and email inside the description; the site contract slots hold them. A read-back from the site is an acceptable answer.",
+      "src": "mới (luồng D) · gap: agent đọc câu trả lời form chưa xác minh (backlog cũ)"
+    },
+    {
+      "id": "M-D-no-demo-left",
+      "group": "TC ask · seo-geo",
+      "title": "Hỏi chỉ đọc: site đang ghi điện thoại, địa chỉ nào, và còn chữ nào của công ty mẫu không?",
+      "role": "seo-geo",
+      "level": 2,
+      "via": "chat",
+      "kind": "ask",
+      "area": ["AH", "A"],
+      "flows": "D",
+      "axes": ["X12"],
+      "inputs": [],
+      "items": [36, 39, 403, 405],
+      "catalog": [],
+      "covers": [],
+      "cap": "H",
+      "status": "new",
+      "needs": [],
+      "why": "After Apply the owner asks what contact details the site shows and whether any text of the template company is still visible. A trustworthy answer reports the phone and address the owner typed into the form (on Q1 they share one `contact` answer), names any template residue it actually found (or says it found none), and changes nothing. Fast road: One search across the pages for the template company's words, one answer, no write. Wrong road: Reports the template company's phone or email because it reads a hidden module, or says \"everything is yours\" without reading (caught by answerHas on the typed phone and address). Wrong road: Starts rewriting what it finds without being asked (caught by unchanged on dHome and dContact).",
+      "turns": [
+        "Cho mình xem trên website đang ghi số điện thoại và địa chỉ nào, và còn chữ nào của công ty mẫu (không phải công ty mình) không. Chỉ đọc cho mình thôi, đừng sửa gì."
+      ],
+      "oracle": {
+        "answerHas": ["{dName}", "0912 345 678", "Hang Bac"],
+        "unchanged": ["dHome", "dContact", "dAbout"]
+      },
+      "requires": ["dName", "dHome", "dContact", "dAbout"],
+      "budget": {
+        "maxSeconds": 90,
+        "maxSteps": 12,
+        "maxSameRefusal": 1
+      },
+      "unchangedPages": "oracle",
+      "continueAfterAsk": true,
+      "confirmOnce": true,
+      "refuseOk": false,
+      "askOk": false,
+      "notes": "Known residue after Apply: the News page heading printed by the theme, a note inside the Contact page raw HTML. A good answer finds or states these classes of text.",
+      "src": "mới (luồng D) · Apply doc §8.1–8.3 (phần còn sót)"
+    }
+  ]
+}

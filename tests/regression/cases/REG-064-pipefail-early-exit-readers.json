@@ -1,0 +1,33 @@
+{
+  "id": "REG-064",
+  "kind": "fix",
+  "title": "A shell check under pipefail whose reader quits early (grep -q, head -1) no longer turns a found match into 'not found': a second Initial backup says already, many backup points still pass the v1 check, an old database volume is still refused, an in-use image is not pruned",
+  "pr": 870,
+  "area": "fleet/shell",
+  "cms": ["any"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. Work in the TCH checkout at the commit under test, with its dependencies installed (pnpm install); bash, git and python3 on PATH. A docker daemon is optional: without one the MariaDB cases of site-backup are skipped, which does not touch this case.",
+    "S2: From the checkout root run each command below and keep its last 12 lines and its exit code: (a) node --test --test-name-pattern='runs on past its database line' packages/fleet/tracy-fleet-operation/test/site-backup.test.mjs (b) node --test --test-name-pattern='thousands of backup points' packages/fleet/tracy-fleet-operation/test/webroot-git.test.mjs (c) node --test --test-name-pattern='however long the answer' packages/fleet/tracy-fleet-operation/test/db-volume.test.mjs (d) node --test --test-name-pattern='however long the in-use list' packages/fleet/tracy-fleet-operation/test/prune-old-images.test.mjs (e) node --test scripts/test/pipefail-early-exit.test.mjs",
+    "S3: For each of (a)–(e) read the 'ℹ pass' and 'ℹ fail' lines. A command that cannot start (missing module, no bash) is BLOCKED, not FAIL."
+  ],
+  "expect": [
+    "(a) pass 1, fail 0: a second initial-backup on a v1 whose message runs on past its Tracy-Database line answers {ok:true, initial:true, already:true}. Before the fix: {version:1, database:{…}} — v1 re-dumped and re-tagged.",
+    "(b) pass 1, fail 0: with 5000 backup tags, webroot-git.sh --op ensure answers ok. Before the fix: \"fatal: tag 'tracy-release/v1' already exists\".",
+    "(c) pass 1, fail 0: tracy_db_volume_conflict refuses <label>_db when docker lists 20000 other volumes after it. Before the fix: status 0 (no conflict).",
+    "(d) pass 1, fail 0: prune-old-images keeps an image a container uses when the in-use list runs on after it; removed = app-2 and app-5 only. Before the fix: app-3 (in use) removed too.",
+    "(e) pass 3, fail 0: no shell file under pipefail and no workflow step pipes into grep -q, grep -m, head or an exiting awk without '|| true'.",
+    "Every command exits 0."
+  ],
+  "selectors": {
+    "backupCheck": "packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-backup.sh initial_backup",
+    "v1Check": "packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-git.sh ensure_initial_backup",
+    "volumeCheck": "packages/fleet/tracy-fleet-operation/scripts/lib/db-volume.sh tracy_db_volume_conflict",
+    "pruneCheck": "deploy/scripts/prune-old-images.sh (keep_tags / used_ids)",
+    "guard": "scripts/test/pipefail-early-exit.test.mjs"
+  },
+  "evidence": "PR #870: red runs of (a)–(d) on the pre-fix scripts, and the bash 5.2 stress of the old construct (1/5000 idle, 115/10000 under load), 04/10/2026",
+  "fence": "Under pipefail a reader that quits early lets its writer die of SIGPIPE (141); Tracy's shell reads pipes with readers that drain (grep … >/dev/null, sed -n 1p, { head -c N; cat >/dev/null; })",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-064.mjs"] }
+}

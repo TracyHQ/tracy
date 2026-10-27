@@ -1,0 +1,385 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "tracy-base/wp7/1.1.6",
+  "baseHash": "75de090024967098316570df028a1ba4ff2eec6927e8e4dacbde0618719221ea",
+  "baseFiles": {
+    "manifest.json": "47013a5130fa341672a48d6f5c4ea557d34e7f866bca589c9a45b363a0f649f7",
+    "content-map.json": "45b9d70c952510fede0461aee190f3a8c0c7f10e1dba21a0c77a441b58f32ae0",
+    "presentation-lock.json": "008d34dbd8cc6618ea20c25d4491b61efdd4a4dcb68be08eab101c5478376045"
+  },
+  "inputs": {
+    "navigation-source.json": "0a4c1d1f7593f62558fd8a32762e0a3062effb18ceef3657d0884cc8c94a50f3"
+  },
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [],
+  "finals": [],
+  "kept": [
+    {
+      "key": "navigation-137",
+      "where": "wp_navigation 137 (tracy)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 94,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-137",
+      "where": "wp_navigation 137 (tracy)",
+      "label": "Product",
+      "path": [
+        "Product"
+      ],
+      "pageId": 96,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-137",
+      "where": "wp_navigation 137 (tracy)",
+      "label": "Pricing",
+      "path": [
+        "Pricing"
+      ],
+      "pageId": 95,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-138",
+      "where": "wp_navigation 138 (tracy-utility)",
+      "label": "Pages",
+      "path": [
+        "Pages"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-138",
+      "where": "wp_navigation 138 (tracy-utility)",
+      "label": "Contact category",
+      "path": [
+        "Pages",
+        "Contact category"
+      ],
+      "pageId": 116,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-138",
+      "where": "wp_navigation 138 (tracy-utility)",
+      "label": "Featured contacts",
+      "path": [
+        "Pages",
+        "Featured contacts"
+      ],
+      "pageId": 116,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-138",
+      "where": "wp_navigation 138 (tracy-utility)",
+      "label": "News feeds",
+      "path": [
+        "Pages",
+        "News feeds"
+      ],
+      "pageId": 128,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-138",
+      "where": "wp_navigation 138 (tracy-utility)",
+      "label": "Wrapper",
+      "path": [
+        "Pages",
+        "Wrapper"
+      ],
+      "pageId": 94,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-138",
+      "where": "wp_navigation 138 (tracy-utility)",
+      "label": "Authors",
+      "path": [
+        "Pages",
+        "Authors"
+      ],
+      "pageId": 132,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-139",
+      "where": "wp_navigation 139 (tracy-onepage)",
+      "label": "About",
+      "path": [
+        "About"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-139",
+      "where": "wp_navigation 139 (tracy-onepage)",
+      "label": "Services",
+      "path": [
+        "Services"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-139",
+      "where": "wp_navigation 139 (tracy-onepage)",
+      "label": "Product",
+      "path": [
+        "Product"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-139",
+      "where": "wp_navigation 139 (tracy-onepage)",
+      "label": "Team",
+      "path": [
+        "Team"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-139",
+      "where": "wp_navigation 139 (tracy-onepage)",
+      "label": "Contact",
+      "path": [
+        "Contact"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-140",
+      "where": "wp_navigation 140 (tracy-footer-1)",
+      "label": "Product",
+      "path": [
+        "Product"
+      ],
+      "pageId": 96,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-140",
+      "where": "wp_navigation 140 (tracy-footer-1)",
+      "label": "Pricing",
+      "path": [
+        "Pricing"
+      ],
+      "pageId": 95,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-140",
+      "where": "wp_navigation 140 (tracy-footer-1)",
+      "label": "Service",
+      "path": [
+        "Service"
+      ],
+      "pageId": 100,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-140",
+      "where": "wp_navigation 140 (tracy-footer-1)",
+      "label": "Service detail",
+      "path": [
+        "Service detail"
+      ],
+      "pageId": 118,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-141",
+      "where": "wp_navigation 141 (tracy-footer-2)",
+      "label": "Blog",
+      "path": [
+        "Blog"
+      ],
+      "pageId": 128,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-141",
+      "where": "wp_navigation 141 (tracy-footer-2)",
+      "label": "Website planning",
+      "path": [
+        "Website planning"
+      ],
+      "pageId": 133,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-141",
+      "where": "wp_navigation 141 (tracy-footer-2)",
+      "label": "Design system",
+      "path": [
+        "Design system"
+      ],
+      "pageId": 106,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-141",
+      "where": "wp_navigation 141 (tracy-footer-2)",
+      "label": "Help centre",
+      "path": [
+        "Help centre"
+      ],
+      "pageId": 117,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-142",
+      "where": "wp_navigation 142 (tracy-footer-3)",
+      "label": "About",
+      "path": [
+        "About"
+      ],
+      "pageId": 108,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-142",
+      "where": "wp_navigation 142 (tracy-footer-3)",
+      "label": "Team",
+      "path": [
+        "Team"
+      ],
+      "pageId": 126,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-142",
+      "where": "wp_navigation 142 (tracy-footer-3)",
+      "label": "Careers",
+      "path": [
+        "Careers"
+      ],
+      "pageId": 119,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-142",
+      "where": "wp_navigation 142 (tracy-footer-3)",
+      "label": "Contact us",
+      "path": [
+        "Contact us"
+      ],
+      "pageId": 116,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-270",
+      "where": "template part 270 (header-onepage), inline navigation 0",
+      "label": "About",
+      "path": [
+        "About"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-270",
+      "where": "template part 270 (header-onepage), inline navigation 0",
+      "label": "Services",
+      "path": [
+        "Services"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-270",
+      "where": "template part 270 (header-onepage), inline navigation 0",
+      "label": "Product",
+      "path": [
+        "Product"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-270",
+      "where": "template part 270 (header-onepage), inline navigation 0",
+      "label": "Team",
+      "path": [
+        "Team"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "templatePart-270",
+      "where": "template part 270 (header-onepage), inline navigation 0",
+      "label": "Contact",
+      "path": [
+        "Contact"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "templatePart-143",
+      "where": "template part 143 (header), links outside its navigations",
+      "label": "Typography",
+      "path": [
+        "Typography"
+      ],
+      "pageId": null,
+      "rule": "unresolved.route-not-proven",
+      "reason": "\"Typography\" is one of the template's own screens; but what it opens cannot be read (the URL /resources/typography opens no page or post the contract carries), so no route that stays is proven"
+    }
+  ],
+  "counts": {
+    "links": 0,
+    "templateParts": 0,
+    "kept": 31,
+    "unresolved": 1
+  }
+}

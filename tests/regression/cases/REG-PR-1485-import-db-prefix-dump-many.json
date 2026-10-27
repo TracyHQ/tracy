@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1485-import-db-prefix-dump-many",
+  "kind": "feat",
+  "title": "An import keeps only the site's own tables when the extension names its prefix, and reads several tables per request with db.dump_many when the site advertises it, producing the same SQL as db.dump",
+  "pr": 1485,
+  "area": "add-site/import",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/site/tracy-add-site/test/export-site-limits.test.mjs",
+    "S2: Read the exit code, the `# fail` line, and the `ok` line of every test named in run.tests."
+  ],
+  "expect": [
+    "Exit code 0 and `# fail 0`.",
+    "Prefix: with a prefix from db.tables only that prefix's tables are dumped (WordPress by base_prefix, multisite subsite tables kept); another install under a longer nested prefix is dropped only when its core tables exist, and a plugin table ending in options does not drop anything; with no prefix every table is dumped as before.",
+    "db.dump_many: used only when info advertises db_dump_many; batches respect max_tables; byte, time and error stops resume at next_cursor with no row repeated or missed; the SQL and the progress the customer sees equal the db.dump path for the same rows; without the capability the db.dump loop runs as before.",
+    "Failures: dump_failed is call_failed after one call on both paths; site 5xx is retried with the row limit halved; a stopped error repeated at the same cursor ends as call_failed instead of looping."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-add-site/src/host/export.ts, packages/site/tracy-add-site/src/host/run.ts, packages/site/tracy-add-site/src/host/joomla.ts, packages/site/tracy-add-site/src/host/wordpress.ts"
+  },
+  "evidence": "Before this change an import dumped every table in the database, other sites' included when a database holds several, and read each table with its own requests; a site with many small tables made many requests. This case pins the new behaviour with the tests below.",
+  "fence": "The real export module against a fake engine that answers db.tables, db.dump and db.dump_many in the engine's documented shapes. Not shown: a real Joomla or WordPress database, a real multisite network.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/export-site-limits.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "filters to a site prefix and uses db.dump_many progress and cursors when advertised",
+      "prefix filtering covers Joomla, WordPress single, multisite, nested sites, plugin tables, and legacy engines",
+      "db.dump_many honors max_tables, resumes byte/time budgets and a stopped error without repeating SQL",
+      "db.dump_many SQL and progress match db.dump for the same fake rows; missing capability falls back",
+      "db.dump_many dump_failed is a table error and is not retried",
+      "db.dump_many site 5xx retries and halves the row limit",
+      "legacy db.dump dump_failed is call_failed after one dump call",
+      "db.dump_many dump_failed is call_failed without retrying",
+      "stopped error resumes at its cursor and completes without repeating SQL",
+      "repeated stopped error at the same cursor ends after two calls",
+      "stopped error followed by first-page dump_failed ends as call_failed",
+      "a site that answers 500 above 1250 rows: the page halves until it fits, and the dump is whole",
+      "a site that answers 500 to every page, past every retry, is site_resource_limit"
+    ]
+  }
+}

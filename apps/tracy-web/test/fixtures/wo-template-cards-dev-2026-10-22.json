@@ -1,0 +1,592 @@
+[
+  {
+    "id": "ja-restaurant",
+    "label": "JA Restaurant",
+    "card": {
+      "blurb": "A restaurant site template with menu, reservation, and gallery pages, demoing a Brooklyn bar and restaurant founded in 1982.",
+      "category": "Themed & Unique"
+    },
+    "platforms": [
+      {
+        "platform": "wordpress",
+        "tag": "quickstart/ja-restaurant/wp7",
+        "version": "1.0.0",
+        "wears": null
+      },
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-restaurant/j6",
+        "version": "1.0.6",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-impact",
+    "label": "JA Impact",
+    "card": {
+      "blurb": "A charity and non-profit site with pages for donations, events, blog and user accounts, demoing a helpline and donor-retention organisation.",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "wordpress",
+        "tag": "quickstart/ja-impact/wp7",
+        "version": "1.0.10",
+        "wears": null
+      },
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-impact/j6",
+        "version": "1.0.5",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-essence",
+    "label": "JA Essence",
+    "card": {
+      "blurb": "A blog and magazine theme with category feeds, author listings, and article pages, with demo posts about line art in design, fashion, and health.",
+      "category": "Editorial / Personal / Publication"
+    },
+    "platforms": [
+      {
+        "platform": "wordpress",
+        "tag": "quickstart/ja-essence/wp7",
+        "version": "1.0.19",
+        "wears": null
+      },
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-essence/j6",
+        "version": "1.0.9",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-morgan",
+    "label": "JA Morgan",
+    "card": {
+      "blurb": "A multipurpose business template with four homepage variants, service, about, contact and blog pages, using placeholder corporate copy.",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "wordpress",
+        "tag": "quickstart/ja-morgan/wp7",
+        "version": "1.1.16",
+        "wears": null
+      },
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-morgan/j6",
+        "version": "1.0.9",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-nova",
+    "label": "JA Nova",
+    "card": {
+      "blurb": "A Joomla business site template with pages for services, projects, blog and user accounts, demoing an IT and software consulting company for startups.",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "wordpress",
+        "tag": "quickstart/ja-nova/wp7",
+        "version": "1.1.13",
+        "wears": null
+      },
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-nova/j6",
+        "version": "1.0.8",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-vega",
+    "label": "JA Vega",
+    "card": {
+      "blurb": "A business template for an IT services company, with pages for services, portfolio, news, and account forms alongside consulting and cloud offerings.",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "wordpress",
+        "tag": "quickstart/ja-vega/wp7",
+        "version": "1.1.16",
+        "wears": null
+      },
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-vega/j6",
+        "version": "1.0.7",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "tracy",
+    "label": "Tracy Base",
+    "card": {
+      "blurb": "A business site template for a web design and development agency, with pages for products, services, pricing and company information.",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "wordpress",
+        "tag": "tracy-base/wp7",
+        "version": "1.1.6",
+        "wears": {
+          "id": "apple",
+          "source": "catalog",
+          "name": "Apple"
+        }
+      },
+      {
+        "platform": "emdash",
+        "tag": "tracy-base/emdash-0.x",
+        "version": "0.5.6",
+        "wears": {
+          "id": "apple",
+          "source": "catalog",
+          "name": "Apple"
+        }
+      },
+      {
+        "platform": "joomla",
+        "tag": "tracy-base/j6",
+        "version": "1.0.5",
+        "wears": {
+          "id": "apple",
+          "source": "catalog",
+          "name": "Apple"
+        }
+      }
+    ]
+  },
+  {
+    "id": "ja-kinetic",
+    "label": "JA Kinetic",
+    "card": {
+      "blurb": "A product marketing site for a developer observability platform, with terminal-style typography covering features, pricing, integrations, changelog and blog.",
+      "category": "Developer Tools"
+    },
+    "platforms": [
+      {
+        "platform": "wordpress",
+        "tag": "quickstart/ja-kinetic/wp7",
+        "version": "1.0.12",
+        "wears": {
+          "id": "ja-kinetic",
+          "source": "catalog",
+          "name": "JA Kinetic"
+        }
+      },
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-kinetic/j6",
+        "version": "1.0.10",
+        "wears": {
+          "id": "ja-kinetic",
+          "source": "catalog",
+          "name": "JA Kinetic"
+        }
+      }
+    ]
+  },
+  {
+    "id": "tracy-business",
+    "label": "Tracy Business",
+    "card": {
+      "blurb": "Industrial infrastructure company website",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "wordpress",
+        "tag": "tracy-business/wp7",
+        "version": "1.3.8",
+        "wears": {
+          "id": "tracy-business",
+          "source": "quickstart",
+          "name": "Tracy Business"
+        }
+      },
+      {
+        "platform": "emdash",
+        "tag": "tracy-business/emdash-0.x",
+        "version": "1.7.23",
+        "wears": null
+      },
+      {
+        "platform": "joomla",
+        "tag": "tracy-business/j6",
+        "version": "1.2.6",
+        "wears": {
+          "id": "tracy-business",
+          "source": "quickstart",
+          "name": "Tracy Business"
+        }
+      }
+    ]
+  },
+  {
+    "id": "ja-voyara",
+    "label": "JA Voyara",
+    "card": {
+      "blurb": "A consumer-facing travel brand site with hero booking prompt, press logos, feature highlights and featured trip cards for curated journeys and boutique stays.",
+      "category": "Media & Consumer"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-voyara/j6",
+        "version": "1.0.10",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-vogue",
+    "label": "JA Vogue",
+    "card": {
+      "blurb": "A blog and magazine template with category, author listing, and article pages, demoed with fashion, beauty, travel, and lifestyle posts.",
+      "category": "Editorial / Personal / Publication"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-vogue/j6",
+        "version": "1.0.7",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-vital",
+    "label": "JA Vital",
+    "card": {
+      "blurb": "A business site template for hospitals and clinics, with demo pages for services, an about section, blog, contact details and appointment booking.",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-vital/j6",
+        "version": "1.0.7",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-trip",
+    "label": "JA Trip",
+    "card": {
+      "blurb": "A travel agency site template with searchable tour listings, destination pages, package pricing and booking details for a trip-selling business.",
+      "category": "E-Commerce & Retail"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-trip/j6",
+        "version": "1.0.8",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-tour",
+    "label": "JA Tour",
+    "card": {
+      "blurb": "A travel agency website template with a full-screen hero slider, tour listings, travel guide pages, and booking calls-to-action for a tour operator.",
+      "category": "Themed & Unique"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-tour/j6",
+        "version": "1.0.5",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-symphony",
+    "label": "JA Symphony",
+    "card": {
+      "blurb": "A band website template with album tracklists, release listings, tour dates, member bios, and a blog, themed around an indie music group called Symphony.",
+      "category": "Themed & Unique"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-symphony/j6",
+        "version": "1.0.5",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-space",
+    "label": "JA Space",
+    "card": {
+      "blurb": "A portfolio site template for a design studio, with demo pages for projects, services like UX and identity design, a blog, and contact.",
+      "category": "Design & Creative"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-space/j6",
+        "version": "1.0.7",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-spa",
+    "label": "JA Spa",
+    "card": {
+      "blurb": "A themed business site for a beauty spa, with pages for the spa's story, a treatment and massage service list, a blog, and contact and booking details.",
+      "category": "Themed & Unique"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-spa/j6",
+        "version": "1.0.8",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-social-ii",
+    "label": "JA Social II",
+    "card": {
+      "blurb": "A community and social networking site template, with demo content about meeting new people, member profiles, and lifestyle articles.",
+      "category": "Social & Messaging"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-social-ii/j6",
+        "version": "1.0.5",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-smallbiz",
+    "label": "JA Smallbiz",
+    "card": {
+      "blurb": "A small-business website template with home, about, blog and contact pages, using demo content for a Brooklyn barbershop and its haircutting services.",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-smallbiz/j6",
+        "version": "1.0.4",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-seven",
+    "label": "JA Seven",
+    "card": {
+      "blurb": "A creative studio portfolio site with sections for about, services, team, stats, news and contact, built around agency demo content.",
+      "category": "Design & Creative"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-seven/j6",
+        "version": "1.0.4",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-sensei",
+    "label": "JA Sensei",
+    "card": {
+      "blurb": "A business-style education site template with course listings, pricing plans, team and blog pages for an online learning platform.",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-sensei/j6",
+        "version": "1.0.6",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-resume",
+    "label": "JA Resume",
+    "card": {
+      "blurb": "A single-page personal resume and portfolio site whose demo content presents a photographer's biography, education timeline, works, testimonials, and contact details.",
+      "category": "Editorial / Personal / Publication"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-resume/j6",
+        "version": "1.0.7",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-resort",
+    "label": "JA Resort",
+    "card": {
+      "blurb": "A Joomla hotel and resort website template with room listings, booking calls-to-action, blog and contact pages, demo content built around a luxury alpine resort.",
+      "category": "Themed & Unique"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-resort/j6",
+        "version": "1.0.8",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-rent",
+    "label": "JA Rent",
+    "card": {
+      "blurb": "A Joomla site template for a car rental company, with demo pages for vehicle booking, company info, rates, support and locations.",
+      "category": "Automotive"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-rent/j6",
+        "version": "1.0.5",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-prodex",
+    "label": "JA Prodex",
+    "card": {
+      "blurb": "A business Joomla template with home, about, pricing, news, and contact pages, demoing an all-in-one recruiting and hiring tool.",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-prodex/j6",
+        "version": "1.0.4",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-podcast",
+    "label": "JA Podcast",
+    "card": {
+      "blurb": "A Joomla template for a podcast or online radio site, with episode listings by category, blog posts, host bio and subscribe sections.",
+      "category": "Media & Consumer"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-podcast/j6",
+        "version": "1.0.7",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-phio",
+    "label": "JA Phio",
+    "card": {
+      "blurb": "A portfolio site template for a design studio, with demo pages for project work, services, team bios, a blog, and client testimonials.",
+      "category": "Design & Creative"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-phio/j6",
+        "version": "1.0.7",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-mood",
+    "label": "JA Mood",
+    "card": {
+      "blurb": "A community site template with member sign-in, video and blog sections, demoing a music-sharing network with trending song listings by popular artists.",
+      "category": "Social & Messaging"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-mood/j6",
+        "version": "1.0.4",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-fresco",
+    "label": "JA Fresco",
+    "card": {
+      "blurb": "A restaurant and bar website featuring dining information, food and drink menus, chef details, and table reservations.",
+      "category": "Themed & Unique"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-fresco/j6",
+        "version": "1.0.4",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-donate",
+    "label": "JA Donate",
+    "card": {
+      "blurb": "A Joomla template for a charity or nonprofit organization, with donation calls to action, campaign banners, volunteer signup, blog, and contact pages.",
+      "category": "Professional & Corporate"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-donate/j6",
+        "version": "1.0.7",
+        "wears": null
+      }
+    ]
+  },
+  {
+    "id": "ja-diner",
+    "label": "JA Diner",
+    "card": {
+      "blurb": "A restaurant website with pages for reservations, menu offers, location, opening hours, a gallery, and a blog.",
+      "category": "Themed & Unique"
+    },
+    "platforms": [
+      {
+        "platform": "joomla",
+        "tag": "quickstart/ja-diner/j6",
+        "version": "1.0.4",
+        "wears": null
+      }
+    ]
+  }
+]

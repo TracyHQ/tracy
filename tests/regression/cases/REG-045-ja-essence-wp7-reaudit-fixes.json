@@ -1,0 +1,29 @@
+{
+  "id": "REG-045",
+  "kind": "fix",
+  "title": "JA Essence wp7: front-page header below 1200px, gallery-post slider, home-4 masonry and home-2 chips behave like the source",
+  "pr": 851,
+  "area": "wordpress-theme/wp-ja-essence",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-essence theme under test (local stand from the quickstart pack) and the Joomla source (local stand from quickstart/ja-essence/j6).",
+    "S2: From the TCH checkout run: node tasks/ja-essence-wp7/tools/measure104.mjs --site <site> --source <source> --out <dir> (add --zip <theme.zip> --record <BROWSER.json> to bind the run to the theme bytes).",
+    "S3: Read the final line and each PASS/FAIL line."
+  ],
+  "expect": [
+    "measure104: TOTAL 7/7 checks pass.",
+    "A1: at 768, 900 and 991px the home header shows no menu row, the same controls as the source, a search icon with width and the source's height; A6: at 1024 and 1100px its side margin matches the source's.",
+    "A2: Natural Remedies, Capturing Essence and Beyond Black and White show a slider above the title with the source's pictures in the source's order at 1440 and 390; the arrows change the picture and a thumbnail selects it.",
+    "A3: the home-4 columns list the source's cards in the source's order and Beyond Black and White is the overlay card in column 2 under Trending.",
+    "A4, A5: the article chip and the previous/next links of the Natural Remedies and Fitness Tips articles equal the source's at the same address.",
+    "A7: the Editor's choice chips of home-2 have the source's colour, padding and radius against the source's page colour, light and dark; the contact strip has one active dot like the source."
+  ],
+  "selectors": {
+    "tool": "tasks/ja-essence-wp7/tools/measure104.mjs",
+    "evidence": "tasks/ja-essence-wp7/release/BROWSER.json"
+  },
+  "evidence": "Independent re-audit 03/10/2026 (seven items); measure104 7/7 on 1.0.4 bound to wp-ja-essence-1.0.4.zip 98f86b98 (tasks/ja-essence-wp7/release/BROWSER.json); 2/7 on 1.0.3",
+  "fence": "Browser-measured behaviour of the shipped theme against the source; the tool fails closed on a crash"
+}

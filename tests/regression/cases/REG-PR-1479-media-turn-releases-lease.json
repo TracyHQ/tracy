@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1479-media-turn-releases-lease",
+  "kind": "fix",
+  "title": "A turn whose only writes were media uploads gives the site's write lease back when it ends",
+  "pr": 1479,
+  "area": "site-changes/lease",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Through the shipped bundle, a turn makes one media.upload through the Apply door and ends.",
+    "S2: A turn makes only a media.delete dry_run preview and ends.",
+    "S3: A turn ends while its lease is no longer its own; watch the release."
+  ],
+  "expect": [
+    "S1: a lease release is sent for the session at turn end.",
+    "S2: no lease release is sent (the preview took none).",
+    "S3: no release is sent, the first try included."
+  ],
+  "selectors": {
+    "test": "packages/tools/tracy-site-tools/test/handler.test.mjs",
+    "code": "site-call.mjs doorTakesLease (mirrors tracy-web sites/route.js changesSite), index.ts relayRaw leaseHolders, releaseSiteLease stillOurs"
+  },
+  "evidence": "Review 19/10/2026: leaseHolders was recorded by makesReadsStale, which leaves out media.upload/media.delete, while the door takes the lease for them; the lease then held ~90 s after the turn",
+  "fence": "The client records a lease holder by the door's own write rule",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "packages/tools/tracy-site-tools/test/handler.test.mjs"],
+    "tests": [
+      "🔒 C3: a turn whose only write was a media upload gives the write lease back when it ends",
+      "🔒 C3: a media delete preview takes no lease, so the turn that only previewed releases none",
+      "🔒 C6: a lease release asks whether the lease is still this turn's before its FIRST send too"
+    ]
+  }
+}

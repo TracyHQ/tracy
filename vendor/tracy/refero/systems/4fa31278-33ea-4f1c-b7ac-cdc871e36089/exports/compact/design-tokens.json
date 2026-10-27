@@ -1,0 +1,59 @@
+{
+  "color": {
+    "cloud-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Cloud Gray — Page canvas, card borders, hairline dividers, image frames — the dominant neutral that defines the surface field"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, filled action buttons, hero overlays, footer — the anchor that gives the minimal palette its weight"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, content backgrounds, button text on dark fills"
+    },
+    "sand-beige": {
+      "$value": "#e2dfd8",
+      "$type": "color",
+      "$description": "Sand Beige — Soft section background, alternate surface, and quiet card fill."
+    },
+    "graphite": {
+      "$value": "#5e5d5c",
+      "$type": "color",
+      "$description": "Graphite — Muted body text, secondary links, helper text — recedes so Obsidian can lead"
+    },
+    "speedrun-gradient": {
+      "$value": "#a162ff",
+      "$type": "color",
+      "$description": "Speedrun Gradient — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color; Decorative radial gradient bloom — used as ambient atmosphere behind text, never as a functional fill"
+    }
+  },
+  "font": {
+    "messinasans": {
+      "$value": "messinaSans",
+      "$type": "fontFamily",
+      "$description": "Display, headings, body, navigation — the only voice. Weight 900 at display sizes with -0.074em tracking creates a condensed, almost stenciled confidence. The 243px hero size is anti-scale: most sites stop at 72–96px, this pushes to nearly a quarter of the viewport height for maximum editorial impact"
+    },
+    "messinasanscondensed": {
+      "$value": "messinaSansCondensed",
+      "$type": "fontFamily",
+      "$description": "Uppercase eyebrow labels, category tags, button text — the counter-rhythm to messinaSans. Where the display font compresses inward, this one expands outward with +0.06em tracking, creating a typographic call-and-response where labels feel like they're announcing the headline"
+    },
+    "messina-sans": {
+      "$value": "Messina Sans",
+      "$type": "fontFamily",
+      "$description": "Messina Sans — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://speedrun.a16z.com",
+      "siteName": "a16z speedrun",
+      "extractedAt": "2026-06-03T21:44:08.942Z",
+      "variant": "compact"
+    }
+  }
+}

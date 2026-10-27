@@ -1,0 +1,35 @@
+---
+import type { HumanSitemapLayout, HumanSitemapSectionItem } from "../types.js";
+
+interface Props {
+  items: HumanSitemapSectionItem[];
+  layout: HumanSitemapLayout;
+  showCounts: boolean;
+  nested?: boolean;
+}
+
+const { items, layout, showCounts, nested = false } = Astro.props as Props;
+---
+
+{items.length > 0 && (
+  <ul class:list={["emdash-human-sitemap__list", nested && "emdash-human-sitemap__list--nested"]}>
+    {items.map((item) => (
+      <li class="emdash-human-sitemap__item">
+        <div class="emdash-human-sitemap__item-row">
+          <a class="emdash-human-sitemap__link" href={item.href}>
+            {item.label}
+          </a>
+          {showCounts && typeof item.count === "number" && (
+            <span class="emdash-human-sitemap__item-count">{item.count}</span>
+          )}
+        </div>
+        {layout === "expanded" && item.description && (
+          <p class="emdash-human-sitemap__item-description">{item.description}</p>
+        )}
+        {item.children.length > 0 && (
+          <Astro.self items={item.children} layout={layout} showCounts={showCounts} nested={true} />
+        )}
+      </li>
+    ))}
+  </ul>
+)}

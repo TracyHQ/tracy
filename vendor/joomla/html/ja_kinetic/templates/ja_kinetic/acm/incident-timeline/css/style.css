@@ -1,0 +1,204 @@
+/* ja_kinetic — ACM incident-timeline (style-1). Self-contained, block-scoped.
+   Horizontal 4-step timeline with a connecting line. Reused for the home
+   "anatomy of an incident" section, the About journey and the Changelog
+   release timeline (the demo params decide the content).
+   All color/type/spacing routed through design-spec CSS vars (--surface
+   --elevated --border --heading --text --muted --primary). Tokens flip per
+   direction/theme on an ancestor (data-style/data-theme + html.t4-dark). */
+
+.acm-incident-timeline .hx-section {
+  background: var(--elevated);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  /* The vertical rhythm lives on .acm-incident-inner (80px == .pen IncidentWrap
+     padding [80,32]). Zero the base .hx-section 80px block padding or it STACKS
+     (80+80 top AND bottom) → a ~160px gap instead of the design's 80. */
+  padding-block: 0;
+}
+
+.acm-incident-timeline .acm-incident-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 80px 32px;
+}
+
+/* ---- header ---- */
+.acm-incident-timeline .acm-incident-head {
+  margin-bottom: 44px;
+  max-width: 560px;
+}
+
+.acm-incident-timeline .hx-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--primary);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.acm-incident-timeline .hx-h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--heading);
+  letter-spacing: -0.8px;
+  margin: 0;
+}
+
+.acm-incident-timeline .hx-sub {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 16px 0 0;
+}
+
+/* ---- timeline grid (port: design-css-pretty.css .hx-incident) ---- */
+.acm-incident-timeline .hx-incident {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.acm-incident-timeline .hx-incident.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.acm-incident-timeline .hx-inc-cell {
+  position: relative;
+  padding: 0 22px;
+}
+
+/* LIST ROW gesture (micro-interactions.md §3d): subtle bg tint + primary
+   border on hover, no lift. The tint/border live on a ::before "backdrop"
+   inset around the cell (not on the cell box itself) so the hover affordance
+   gets breathing room without touching the cell's own padding/height — which
+   is tuned to the .pen [80,32] rhythm and must stay identical at rest. */
+.acm-incident-timeline .hx-inc-cell::before {
+  content: "";
+  position: absolute;
+  inset: -16px -12px -20px;
+  border-radius: 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: background-color .15s ease, border-color .15s ease;
+  pointer-events: none;
+}
+.acm-incident-timeline .hx-inc-cell:hover::before {
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+  border-color: var(--primary);
+}
+
+/* connecting line across the row, behind the nodes */
+.acm-incident-timeline .hx-inc-line {
+  position: absolute;
+  top: 13px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border);
+}
+
+.acm-incident-timeline .hx-inc-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.acm-incident-timeline .hx-inc-node {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  z-index: 1;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+/* node glows on row hover — the node is already permanently accented (it's a
+   semantic timeline marker, not a highlighted sibling), so the reaction here
+   is a ring + scale rather than a color change. */
+.acm-incident-timeline .hx-inc-cell:hover .hx-inc-node {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.acm-incident-timeline .hx-inc-node svg {
+  width: 13px;
+  height: 13px;
+  color: var(--primary);
+}
+
+.acm-incident-timeline .hx-inc-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.5px;
+}
+
+.acm-incident-timeline .hx-inc-phase {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.acm-incident-timeline .hx-inc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--heading);
+  margin: 0 0 8px;
+}
+
+.acm-incident-timeline .hx-inc-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 0;
+  padding-right: 14px;
+}
+
+/* ---- responsive (port: stack @760, drop the connector) ---- */
+@media (max-width: 760px) {
+  .acm-incident-timeline .hx-incident,
+  .acm-incident-timeline .hx-incident.cols-3 {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .acm-incident-timeline .hx-inc-line {
+    display: none !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .acm-incident-timeline .acm-incident-inner {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  /* ease the 34px section title + 16px subcopy on small phones (no prior clamp) */
+  .acm-incident-timeline .hx-h2 {
+    font-size: 26px;
+    letter-spacing: -0.5px;
+  }
+  .acm-incident-timeline .hx-sub {
+    font-size: 15px;
+  }
+}
+
+/* Reduced motion (micro-interactions.md §4) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; }
+  .acm-incident-timeline .hx-inc-cell:hover .hx-inc-node { transform: none; }
+}

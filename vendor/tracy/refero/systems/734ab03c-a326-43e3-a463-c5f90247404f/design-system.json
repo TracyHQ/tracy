@@ -1,0 +1,297 @@
+{
+  "dos": [
+    "Use 20px border-radius on every card, button, and product image — consistency creates the rounded warm identity.",
+    "Default to the #f6ecc8 cream band for hero and alternating section backgrounds, and #fcfaf2 for the main page canvas.",
+    "Use Gilroy weight 700 for card titles and section headings, weight 600 for buttons and subheadings, weight 400 for body.",
+    "Pair the filled Electric Blue button (#0067e5) with the outlined black button on every hero — the duo is the signature action pattern.",
+    "Keep the Solution Card grid to 5 equal-width columns at desktop; the candy-bright color variety only works as a complete set.",
+    "Use the Dopper display face only at 58px or larger, weight 400, with tight 1.0 line-height — it's a poster face, not a body face.",
+    "Maintain 20px gaps within cards and 40-60px gaps between major layout elements for the comfortable spacious density."
+  ],
+  "donts": [
+    "Don't add drop shadows to cards or images — the system is intentionally flat, depth comes from color blocks.",
+    "Don't use pure white (#ffffff) for the canvas — always use #fcfaf2 to preserve the warm cream undertone.",
+    "Don't introduce more than one button style per screen — filled blue for primary, outlined black for secondary, nothing else.",
+    "Don't use the Dopper display face for anything smaller than 48px — it loses its quirky character at body sizes.",
+    "Don't dilute the cream hero band with images or gradients — the emptiness is the design.",
+    "Don't use gray neutrals for body text — Midnight Navy (#000f2e) and Heather Violet (#515a8a) are the two text tones.",
+    "Don't break the 20px radius rule with sharp 0px corners on cards or buttons; the 9999px pill is reserved for tags only."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#000f2e",
+      "name": "Midnight Navy",
+      "role": "Primary text, headings, dark surface cards, logo wordmark — the dominant ink of the system. Deep enough to anchor the cream canvas without going pure black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f6ecc8",
+      "name": "Warm Cream",
+      "role": "Hero band background, alternating section backdrop — sets the warm, sunlit atmosphere of the brand",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fcfaf2",
+      "name": "Soft Off-White",
+      "role": "Page canvas, card surfaces, button text on filled blue — the base layer everything sits on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0067e5",
+      "name": "Electric Blue",
+      "role": "Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#515a8a",
+      "name": "Heather Violet",
+      "role": "Muted secondary text, supporting body copy — keeps longer passages from competing with the Midnight Navy headings",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fed200",
+      "name": "Signal Yellow",
+      "role": "Solution card fill, decorative high-energy accent — one of the candy-bright poster colors for the product grid",
+      "group": "accent"
+    },
+    {
+      "hex": "#116973",
+      "name": "Deep Teal",
+      "role": "Solution card fill, decorative oceanic accent — reinforces the water brand narrative in the product grid",
+      "group": "accent"
+    },
+    {
+      "hex": "#8ab1e6",
+      "name": "Sky Wash",
+      "role": "Solution card fill, soft brand-blue companion — a lighter blue tone for visual variety in card blocks",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Black Ink",
+      "role": "Outlined button stroke, icon strokes, text in solid dark contexts — used sparingly for maximum contrast outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4183d9",
+      "name": "Brand Blue Drift",
+      "role": "Gradient terminus paired with Electric Blue — used in the subtle horizontal brand gradient for decorative washes",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, rgb(0, 103, 229) 0px, rgb(65, 131, 217) 100%)"
+    }
+  ],
+  "layout": "The page uses a centered max-width container (~1200-1280px) for all content, but hero and section backgrounds stretch full-bleed. The hero is left-aligned text on a cream band, no hero image — just typography breathing in space. Below the hero, a horizontal marquee strip breaks the vertical flow. Content sections alternate: the feature block is a 2-column text-right/image-left composition, then a 5-column card grid of equal-width colored tiles. Navigation is a minimal top bar with centered logo. Vertical rhythm is generous — ~70-80px between major sections — creating a poster-like pace rather than a dense information layout.",
+  "imagery": "Product photography is tight-cropped and dominant — bottles, taps, and map graphics fill their containers with no decorative context. The hero section uses massive whitespace instead of a hero image, letting the display headline own the frame. Solution cards mix product photography with a real lifestyle photo (paddleboarders) for human warmth. Colors in imagery are vibrant and saturated to match the candy-bright card palette. The only iconography is the Electric Blue water droplet, used as a small repeating brand mark in the marquee.",
+  "similar": [
+    {
+      "why": "Same warm cream aesthetic with rounded product photography and a single saturated accent — the water bottle space shares this sunlit clean palette.",
+      "business": "BKR"
+    },
+    {
+      "why": "Rounded 20px corners on every card, oversized display headlines, and a candy-bright product grid of colored tiles — the poster-card layout language is nearly identical.",
+      "business": "Chilly's"
+    },
+    {
+      "why": "Vivid full-bleed color blocks in the product grid and a flat no-shadow card system — both rely on color saturation instead of elevation for visual hierarchy.",
+      "business": "Hydroflask"
+    },
+    {
+      "why": "Generous whitespace, large custom-feeling display type for hero punch, and a single brand blue that appears in logo, CTA, and small repeated marks.",
+      "business": "S'well"
+    },
+    {
+      "why": "Warm cream hero bands with massive left-aligned display headlines and no hero image — the text-on-cream approach to opening pages.",
+      "business": "Boll & Branch"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "20px",
+      "images": "20px",
+      "buttons": "20px"
+    },
+    "elementGap": "20px",
+    "sectionGap": "80px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#fcfaf2",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Default page background, off-white warm base"
+    },
+    {
+      "hex": "#f6ecc8",
+      "name": "Hero Cream",
+      "level": 1,
+      "purpose": "Full-bleed hero band and alternating section backdrop"
+    },
+    {
+      "hex": "#0067e5",
+      "name": "Solution Cards",
+      "level": 2,
+      "purpose": "Colorful product solution tiles, each card a different brand hue"
+    },
+    {
+      "hex": "#000f2",
+      "name": "Navy Block",
+      "level": 3,
+      "purpose": "Dark surface for contrast sections, text-heavy blocks"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "none — zero shadow. Depth comes from 20px corner radius and color contrast against the cream canvas, not from drop shadows.",
+      "element": "Solution cards, feature block images, hero product imagery"
+    }
+  ],
+  "northStar": "Sunlit cream lagoon with a vivid blue current. A warm beige expanse where one electric blue channel and full-bleed candy-bright cards cut through like sunlight on water.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading-sm",
+      "size": 27,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading",
+      "size": 43,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Navigation Bar",
+      "role": "Header with centered logo, grouped nav items, utility links",
+      "description": "White-translucent bar on cream canvas. Left group: 'Bottle', 'Travel Mug', 'Tap', 'Mission', 'Get Involved' (each with dropdown chevrons). Center: Dopper wordmark in Electric Blue (#0067e5). Right group: 'Find a Store' (link), 'For Businesses' (bold link), 'EN' locale, cart icon. No background fill, sits on the cream page."
+    },
+    {
+      "name": "Filled Blue Action Button",
+      "role": "Primary action",
+      "description": "Background #0067e5, text #fcfaf2, weight 600, ~16px font, 20px border-radius, ~20px horizontal padding × ~12px vertical. Rounded pill-adjacent shape (20px not full pill). Used for the most important action on each screen."
+    },
+    {
+      "name": "Outlined Dark Action Button",
+      "role": "Secondary action paired with primary",
+      "description": "Transparent fill, 1.5px black (#000000) border, black text, weight 600, 20px border-radius, matching padding to filled button. Always appears alongside the filled blue button in hero and feature blocks."
+    },
+    {
+      "name": "Hero Band",
+      "role": "Full-bleed opening section",
+      "description": "Background #f6ecc8 cream, no max-width constraint — the band stretches edge to edge. Display headline (Dopper 72px weight 400) sits left-aligned in the lower half. Body subtext (18px, Midnight Navy) follows. Two-button CTA cluster left-aligned. Downward chevron at the bottom center hints at scroll."
+    },
+    {
+      "name": "Marquee Ticker",
+      "role": "Scrolling announcement strip",
+      "description": "Sits between the hero and the feature section. Repeating 'new' word (Gilroy 27px weight 700, Midnight Navy) alternating with Electric Blue water droplet icons. Single horizontal row, no background, just inline text + icon rhythm."
+    },
+    {
+      "name": "Feature Block (Image + Copy)",
+      "role": "Two-column product highlight",
+      "description": "Left: large product imagery with 20px rounded corners, no shadow. Right: heading (Gilroy 43px weight 600, Midnight Navy) and supporting body (18px). Vertically centered alignment, generous gap (40-60px) between columns."
+    },
+    {
+      "name": "Solution Card — Teal Variant",
+      "role": "Product solution tile",
+      "description": "Background #116973 Deep Teal, 20px radius, full-bleed colored surface. Card title (Gilroy 27px weight 700, white) at top, descriptive copy (16px, white) below, product image filling lower portion, 'Learn more' link (white, underlined) at bottom-left."
+    },
+    {
+      "name": "Solution Card — Yellow Variant",
+      "role": "Product solution tile",
+      "description": "Background #fed200 Signal Yellow, 20px radius. Same structure as teal variant: title, copy, product image, 'Learn more' link. Title and body in Midnight Navy (#000f2e) for contrast against the bright yellow."
+    },
+    {
+      "name": "Solution Card — Electric Blue Variant",
+      "role": "Product solution tile",
+      "description": "Background #0067e5 Electric Blue, 20px radius. Title and body in #fcfaf2 off-white. Features the Tap product image with a stylized water drop graphic."
+    },
+    {
+      "name": "Solution Card — Sky Blue Variant",
+      "role": "Product solution tile",
+      "description": "Background #8ab1e6 Sky Wash, 20px radius. Title and body in Midnight Navy (#000f2e) for readability against the lighter blue. Features the Map product with green location pins."
+    },
+    {
+      "name": "Solution Card — Photo Variant",
+      "role": "Product solution tile with real photography",
+      "description": "Full-bleed lifestyle photo (people on paddleboards) as card surface, 20px radius. White title and copy overlay the photograph at the top, 'Learn more' link in white at bottom."
+    },
+    {
+      "name": "Section Heading",
+      "role": "Intro for content grids",
+      "description": "Gilroy 48px weight 700, Midnight Navy (#000f2e), left-aligned. No underline or accent — relies on size and weight alone. Pairs with a max-width container and generous top margin (~70-80px) before the grid."
+    },
+    {
+      "name": "Inline Link / 'Learn More'",
+      "role": "Card-level navigation",
+      "description": "Underlined text link, Gilroy 16px weight 600, color matches the card surface context (white on dark/colored cards, Midnight Navy on light cards). Sits at the bottom-left of every solution card."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display hero headlines ('Hot, cold, or fizzy.') — a custom quirky face with tight line-height that sits like a poster cut-out. Substitute with Fraunces or a chunky display serif for close fidelity.",
+      "sizes": "58px, 72px",
+      "family": "Dopper",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "Fraunces"
+    },
+    {
+      "role": "Headlines, subheadings, card titles, body emphasis — the structural workhorse. Weight 600 for section headings ('Explore our solutions'), 700 for card titles, 400 for body. Substitute with Manrope or Outfit.",
+      "sizes": "18px, 20px, 24px, 27px, 43px, 48px",
+      "family": "Gilroy",
+      "weight": "400, 600, 700",
+      "lineHeight": "1.10, 1.20, 1.30",
+      "substitute": "Manrope"
+    },
+    {
+      "role": "System fallback for utility text and small body — inherits platform-native rhythm.",
+      "sizes": "16px",
+      "family": "-apple-system",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "system-ui"
+    }
+  ],
+  "description": "Dopper's visual language reads as a sunlit eco-counter: a warm cream canvas (#f6ecc8 hero, #fcfaf2 page body) carries generous whitespace and a single saturated blue (#0067e5) that snaps every interactive element into focus. The brand voice is confident but friendly — oversized display headlines in a custom 'Dopper' face, rounded 20px corners on every card and button, and solution blocks painted in candy-bright full fills (teal, yellow, sky, navy) that turn the product grid into a poster. Typography is dual-personality: a quirky custom display face for hero punch and a clean grotesque (Gilroy) for everything structural. The system avoids heavy shadows and decoration, instead using color blocks, generous 20px gaps, and large product imagery to create rhythm.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- canvas: #fcfaf2\n- hero/section band: #f6ecc8\n- text: #000f2e\n- border/stroke: #000000\n- accent: #0067e5\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. *Solution card (teal variant)*: 20px border-radius, background #116973, padding 20px. Title 27px Gilroy weight 700 #fcfaf2. Body 16px Gilroy weight 400 #fcfaf2. Product image filling lower 60% of card, 0px radius on image (rounded by parent overflow). 'Learn more' link at bottom: 16px Gilroy weight 600 #fcfaf2, underlined.\n\n3. *Section heading + card grid*: 48px Gilroy weight 700 #000f2e, left-aligned, 0-80px top margin. Below: 5-column equal-width grid with 20px column gap. Each card: 20px radius, full-bleed color fill, product image, title, 'Learn more' link.\n\n4. *Marquee ticker row*: Single horizontal flex row, no background, 20px row padding. Repeating pair: 'new' in 27px Gilroy weight 700 #000f2e, 20px gap, water droplet icon in #0067e5 at 24px size, 40px gap, repeat.\n\n5. *Feature block (image + copy)*: Two-column grid, 40px column gap. Left column: product image with 20px border-radius, no shadow. Right column: 43px Gilroy weight 600 #000f2e heading, 18px Gilroy weight 400 #000f2e body text, vertically centered. Outer container: max-width 1200px, 80px top/bottom margin."
+    }
+  ],
+  "elevationPhilosophy": "The system is flat-by-design. No drop shadows appear anywhere — the design creates hierarchy through color blocks (full-bleed card fills), generous whitespace, and rounded 20px corners. Elevation is implied by saturation, not by blur."
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e68d2972-4344-4954-b00c-56fdf97d9de4",
+  "status": "complete",
+  "name": "Applied Labs",
+  "url": "https://styles.refero.design/style/e68d2972-4344-4954-b00c-56fdf97d9de4",
+  "sourceWebsite": "https://appliedlabs.ai",
+  "extractedAt": "2026-06-03T19:12:30.874Z",
+  "capturedAt": "2026-10-08T05:18:46.401432+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Sunlit cream paper with cobalt punctuation and floating conversation cards",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/2a0de9bb-965a-4fe4-9f38-aae5d85a0f50.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/6a8e945c-a1b3-490a-b5e4-a93dcec60f7d.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/26551acb-cc40-4731-949b-a89970fad705.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/113a64f4-f67a-4d62-923e-46df6ee2f7bf.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/2e25bfc9-5d9c-4b66-9886-1d9c8292ddd0.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "676b2c3e55929feffa8e32bb746749a135a28a756a3c451c171a313831182976",
+      "bytes": 22517
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c8d63eb95b5edd5201b61556b3519fa7aef299ff4e968794b5761d99cf23ba7d",
+      "bytes": 93143
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4536ddca2b8cf7411624152af2528f3869906d98605c1213765d92a626189551",
+      "bytes": 20090
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9ee3c2af2209aa6f09b32fc8af1050afb2f18e4a80a2251f7f9b38892e79d358",
+      "bytes": 14313
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8ffec69a16c605eefb93a9077fe501c6ef9772d8bea07e3984c587e377c9ecc1",
+      "bytes": 13609
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d8424e82874ad934a20aa29ad3431494d727b58c99f34d6432ecbb7edb1fabb3",
+      "bytes": 3849
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e735dbe941d47b684215aa1237eb517d29a35587e3aa8914f7a1b17e2a8804df",
+      "bytes": 643
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "acddcec9d1ef14a0db5b71368b1771e51c6a824d386c663d62f802618aa563d8",
+      "bytes": 660
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "46258d9c9eae90685cb853e1933554c1ea233e77555e43ab11d4939ceef232a8",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f6c229659666fd65b8441b7bd51f885a0db1b7f0e6b09f067646a8bdef28ba86",
+      "bytes": 47846
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e52ec350a08a469d00b1141d15f0c9b8c2840b76d6d2074cef71ab1eb21475a0",
+      "bytes": 25388
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9787ebac9f3776a7c36d33557f16debca1163b3599cf13078a504a1e96f3591d",
+      "bytes": 61938
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "bddc3e57d60e013377f53ec581fcdd0515f656ffeea0353669c671330a63853d",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e0d9d93e403c8de752550ac3a8caf4d4004e8eb04b91e26ffbe59ca3eece7285",
+      "bytes": 1778
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "46d481df341348ef3f6fbd3ca99ab8f677f238d1d30f79510fa8e70ab024ce18",
+      "bytes": 2397
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "cbd8a058-6ecb-4f1b-9b5a-2bf2597826ee",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f1bff240-fa05-41db-9ae1-b165ea6ea2cb"
+  ]
+}

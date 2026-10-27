@@ -1,0 +1,104 @@
+{
+  "color": {
+    "forest-ink": {
+      "$value": "#14433d",
+      "$type": "color",
+      "$description": "Forest Ink — Teal supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "cream-paper": {
+      "$value": "#fdf7e7",
+      "$type": "color",
+      "$description": "Cream Paper — Page canvas, section backgrounds — the off-white that every surface sits on, slightly warm so type never feels clinical"
+    },
+    "mint-sage": {
+      "$value": "#d3e8e3",
+      "$type": "color",
+      "$description": "Mint Sage — Hero panel background, soft section washes — a desaturated mint that recedes so forest-teal text can lead"
+    },
+    "charcoal": {
+      "$value": "#3a3a3a",
+      "$type": "color",
+      "$description": "Charcoal — Body text, link text, secondary icons — softer than pure black to stay in harmony with the warm cream canvas"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces on cream sections, button text on forest-teal fills, input fields — the only true white in the system"
+    },
+    "hairline-gray": {
+      "$value": "#e3e3e3",
+      "$type": "color",
+      "$description": "Hairline Gray — Dividers, subtle borders — barely-there structural lines"
+    },
+    "wine-press": {
+      "$value": "#7e0022",
+      "$type": "color",
+      "$description": "Wine Press — Red supporting accent for decorative details and low-frequency emphasis."
+    },
+    "bright-teal": {
+      "$value": "#2ad2c9",
+      "$type": "color",
+      "$description": "Bright Teal — Teal supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "fountain-teal": {
+      "$value": "#008b70",
+      "$type": "color",
+      "$description": "Fountain Teal — Teal supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "cardinal-red": {
+      "$value": "#d32737",
+      "$type": "color",
+      "$description": "Cardinal Red — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "banana-cream": {
+      "$value": "#fdf4b5",
+      "$type": "color",
+      "$description": "Banana Cream — Product card background — Banana Cream flavor"
+    },
+    "watermelon-lime": {
+      "$value": "#a9df71",
+      "$type": "color",
+      "$description": "Watermelon Lime — Product card background — Watermelon Lime flavor"
+    },
+    "crisp-apple": {
+      "$value": "#febac4",
+      "$type": "color",
+      "$description": "Crisp Apple — Product card background — Crisp Apple flavor"
+    },
+    "classic-grape": {
+      "$value": "#e3d2ed",
+      "$type": "color",
+      "$description": "Classic Grape — Product card background — Classic Grape flavor"
+    },
+    "vintage-cola": {
+      "$value": "#f8d5c0",
+      "$type": "color",
+      "$description": "Vintage Cola — Product card background — Vintage Cola flavor"
+    }
+  },
+  "font": {
+    "windsoref": {
+      "$value": "WindsorEF",
+      "$type": "fontFamily",
+      "$description": "Display headlines, hero copy, section titles, and product card labels. This high-contrast retro serif is the brand's signature voice — it evokes vintage packaging and apothecary labels. Weight 800–900 at 48–80px for hero/section titles; weight 700 at 20–32px for product card names. The extremely tight 1.0 line-height and very large sizes make it command attention without feeling like a typical bold sans-serif. Substitute: Bagel Fat One, Cooper Black, or Playfair Display Black."
+    },
+    "ano": {
+      "$value": "Ano",
+      "$type": "fontFamily",
+      "$description": "Body text, navigation, button labels, form inputs, footer text, and all UI chrome. A clean, friendly sans-serif that does the quiet work of the interface while the display serif performs above. Weight 400 for body, 600 for emphasized body or nav, 700 for button text. Generous line-heights (1.5–1.82) keep body copy breathable on the cream background. Substitute: Inter, DM Sans, or Söhne."
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Fallback for icon labels and minor decorative text — present only in low-frequency decorative spots, not part of the core system"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://drinkolipop.com",
+      "siteName": "OLIPOP",
+      "extractedAt": "2026-06-03T17:12:16.293Z",
+      "variant": "compact"
+    }
+  }
+}

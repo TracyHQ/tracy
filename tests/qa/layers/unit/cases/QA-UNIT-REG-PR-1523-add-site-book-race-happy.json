@@ -1,0 +1,101 @@
+{
+  "id": "QA-UNIT-REG-PR-1523-add-site-book-race-happy",
+  "itemIds": ["regression:REG-PR-1523-add-site-book-race"],
+  "requirement": "Concurrent Add site imports in one dsh process keep every site's line in the JSON books and never fail on a shared temp file",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1523-add-site-book-race.json",
+    "ref": "PR #1523 (fix); fix evidence: Production dsh log 20/10/2026: a Joomla import failed at reading_files with ENOENT rename uploads.json.1.tmp -> uploads.json while a WordPress import was uploading parts; uploads.json then held only the other site's entry",
+    "invariant": "S1: no call throws; each book holds exactly the sites still remembered; no *.tmp file is left; no 'could not queue import operation result' warning. The same-site sweep removes only the old dump and the new line survives. S2: every reader gets the file's bytes; no *.tmp file is left. S3: one undo answers ok, the other {ok:false, code:'DS_UNDO_USED'}; the manifest is marked reverted; no *.tmp file is left.",
+    "productSources": [
+      "apps/tracy-host/src/app.js:1138",
+      "apps/tracy-host/src/ds-slot.js:48",
+      "apps/tracy-web/src/host/client.js:34",
+      "packages/design/tracy-design-inspiration/src/host/library-remote.mjs:123",
+      "packages/site/tracy-add-site/src/host/handover.ts:122",
+      "packages/site/tracy-add-site/src/host/operation-signal.ts:34",
+      "packages/site/tracy-add-site/src/host/resume.ts:95",
+      "packages/site/tracy-add-site/src/host/tokens.ts:58"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-host/src/ds-slot.js:439 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:440 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:582 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:583 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:584 readFile() with a computed path",
+      "apps/tracy-host/src/jobs.js:224 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:144 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:151 readFile() with a computed path",
+      "apps/tracy-host/src/provision.js:503 import() with a computed specifier",
+      "apps/tracy-host/src/site-files.js:413 readFile() with a computed path",
+      "apps/tracy-host/src/webroot.js:1628 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:919 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:995 open() with a computed path",
+      "apps/tracy-host/test/ds-slot.test.mjs:100 readFileSync() with a computed path",
+      "apps/tracy-host/test/ds-slot.test.mjs:138 readFileSync() with a computed path",
+      "apps/tracy-host/test/ds-slot.test.mjs:680 readFileSync() with a computed path",
+      "apps/tracy-host/test/ds-slot.test.mjs:76 readFileSync() with a computed path",
+      "apps/tracy-host/test/ds-slot.test.mjs:78 readFileSync() with a computed path",
+      "apps/tracy-host/test/ds-slot.test.mjs:91 readFileSync() with a computed path",
+      "packages/design/tracy-design-inspiration/test/library-remote.test.mjs:159 readFileSync() with a computed path",
+      "packages/design/tracy-design-inspiration/test/library-remote.test.mjs:85 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/src/host/json-book.mjs:70 readFile() with a computed path",
+      "packages/site/tracy-add-site/src/host/operation-signal.ts:55 readFile() with a computed path",
+      "packages/site/tracy-add-site/test/book-race.test.mjs:36 readFile() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "upload cursors of several sites written at once all survive",
+    "forgetting one site while others write keeps the others",
+    "site tokens written and forgotten at once keep every remembered site",
+    "handover lines of several sites written at once all survive",
+    "the same import result queued twice at once does not lose its temp file",
+    "the same system file read many times at once, before it is cached, answers every reader",
+    "two undos of one entry at once: one puts it back, the other is refused, neither throws",
+    "a new line written for the same site while the sweep deletes the old dump is kept"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1523-add-site-book-race"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-add-site", "tracy-add-site"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1523-add-site-book-race",
+    "pr": 1523,
+    "kind": "fix",
+    "area": "add-site/import",
+    "file": "tests/regression/cases/REG-PR-1523-add-site-book-race.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/site/tracy-add-site/test/book-race.test.mjs",
+    "packages/design/tracy-design-inspiration/test/library-remote.test.mjs",
+    "apps/tracy-host/test/ds-slot.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "upload cursors of several sites written at once all survive",
+    "forgetting one site while others write keeps the others",
+    "site tokens written and forgotten at once keep every remembered site",
+    "handover lines of several sites written at once all survive",
+    "the same import result queued twice at once does not lose its temp file",
+    "the same system file read many times at once, before it is cached, answers every reader",
+    "two undos of one entry at once: one puts it back, the other is refused, neither throws",
+    "a new line written for the same site while the sweep deletes the old dump is kept"
+  ],
+  "timeoutS": 600
+}

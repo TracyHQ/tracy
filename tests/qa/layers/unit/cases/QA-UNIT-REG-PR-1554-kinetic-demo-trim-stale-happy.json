@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-1554-kinetic-demo-trim-stale-happy",
+  "itemIds": ["regression:REG-PR-1554-kinetic-demo-trim-stale"],
+  "requirement": "The demo-trim map of ja-kinetic/j6/1.0.10 belongs to 1.0.10 (contract and baseHash of its own three files), and build-joomla-demo-trim.mjs --check turns red on any Joomla demo-trim map on disk that names another contract or another baseHash; --contract builds and checks a release its design is not pinned to yet",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1554-kinetic-demo-trim-stale.json",
+    "ref": "PR #1554 (fix); fix evidence: tasks/nhat-ky/2026-10-21-kinetic-demo-trim.md. ja-kinetic/j6/1.0.10 (cut in #1552) carried a copy of 1.0.9's map (contract ja-kinetic/j6/1.0.9, baseHash 60b5299b…); Claude Cowork's DemoTrimProfile refused it with 'The demo-trim profile does not belong to this contract', while --check exited 0 because it only read pinned contracts.",
+    "invariant": "The run exits 0 with 6 tests passing and 0 failing. The committed 1.0.10 map passes --check --contract ja-kinetic/j6/1.0.10. With 1.0.9's map copied into 1.0.10, plain --check exits 1 and names the wrong contract and the wrong baseHash. A map naming its own contract with a baseHash that is not the Claude Cowork plugin's formula over its three files fails --check. --contract ja-kinetic/j6/1.0.10 writes a map naming 1.0.10 whose baseHash is sha256 of 'manifest.json:<sha>\\ncontent-map.json:<sha>\\npresentation-lock.json:<sha>\\n', keeping the Kinetic design's demoTrimKeep page. A stale hide list with the right contract and baseHash passes plain --check but fails --check --contract ja-kinetic/j6/1.0.10; an id with no contract directory is refused.",
+    "productSources": ["scripts/build-joomla-demo-trim.mjs:47"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "scripts/test/build-joomla-demo-trim.test.mjs:38 readFileSync() with a computed path",
+      "scripts/test/build-joomla-demo-trim.test.mjs:44 readFileSync() with a computed path",
+      "scripts/test/build-joomla-demo-trim.test.mjs:57 readFileSync() with a computed path",
+      "scripts/test/build-joomla-demo-trim.test.mjs:90 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the committed maps pass --check, including the not-yet-pinned release",
+    "--check is red on a map copied from the previous release",
+    "--check is red on a map naming its own contract with a stale baseHash",
+    "--contract builds a release the design is not pinned to, with the design keep set",
+    "--contract is red when the pinned list leaves the release stale",
+    "--contract refuses an id with no contract"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1554-kinetic-demo-trim-stale"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "scripts", "scripts"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1554-kinetic-demo-trim-stale",
+    "pr": 1554,
+    "kind": "fix",
+    "area": "quickstart/contracts",
+    "file": "tests/regression/cases/REG-PR-1554-kinetic-demo-trim-stale.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-force-exit",
+    "scripts/test/build-joomla-demo-trim.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the committed maps pass --check, including the not-yet-pinned release",
+    "--check is red on a map copied from the previous release",
+    "--check is red on a map naming its own contract with a stale baseHash",
+    "--contract builds a release the design is not pinned to, with the design keep set",
+    "--contract is red when the pinned list leaves the release stale",
+    "--contract refuses an id with no contract"
+  ],
+  "timeoutS": 300
+}

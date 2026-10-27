@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "9e885c21-63ee-42c2-9b85-fd420948e9f4",
+  "status": "complete",
+  "name": "Shortverse",
+  "url": "https://styles.refero.design/style/9e885c21-63ee-42c2-9b85-fd420948e9f4",
+  "sourceWebsite": "https://www.shortverse.com",
+  "extractedAt": "2026-09-20T22:05:44.287Z",
+  "capturedAt": "2026-10-08T05:15:23.569125+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "Shortverse — projector beam on white. Let a single full-width film still create the opening drama, then return to a bright editorial index of titles, metadata, and thumbnail strips.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/27cd2696-b730-443f-9077-0fe66ffeb8b4.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/79e255f2-fba8-464a-818a-2d7464ab239c.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/2d0cbf83-4b0c-4455-863e-3139a70c814f.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/482b9188-858e-4278-8c5a-7274349010f9.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ea4e2c91-2830-43fa-8ae1-53925b272a79.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c53aeda88c086160de3648d53b94cf85329cf9da0080ecf2d7e87407de184410",
+      "bytes": 18983
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "12c024b618063200b3d359b0b5e4fcf78dd06e590be87cf126dcb3759ccab0f0",
+      "bytes": 136116
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4f7b6011b5b908704736c8b5f1681386937a7bb019e6bcbdba2dc2272057b7eb",
+      "bytes": 16081
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3dc33b2c2682aa060b7d6089d02001b30094af7e978955ea8b01b3c9f5550e7c",
+      "bytes": 12602
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "343022f2ccf6b822f19c0e10585e4d722cbabaf80e24fde44f4d2db4cd92036e",
+      "bytes": 11722
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "405848535c7f89e234ba5a980f0b6f6eaa9de5d499331954178ec7b9b9e06cdb",
+      "bytes": 2700
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c86aaadd896f024b86524481eb012e080958e7fc804b7b925f70d57180fa51c8",
+      "bytes": 553
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "43fee567e3feb5ac0eb83aee4f785ccfd0bea43fa6ecc00087f34b801082fee8",
+      "bytes": 570
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "58a25e09f81b5186e0f71eb65cb81ddbc5ed4c38e59d2161e48bfa64142c2f94",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "18ede84e9483e27120d95fbf9ec9239f3125d9e6603f0ec8bd7d3e8052802590",
+      "bytes": 40658
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "57ca4de79e9023a8a85c96f54b213c4db991fb9e863abf863dabf9c5d9a1da39",
+      "bytes": 21116
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "a3bf9c9a2f6ef7fb3cbeb55d35409682b03b9861022e414c00fbcbf99f3c9a75",
+      "bytes": 46051
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "865f93fc02954e016b8ce95c07602b2fc29af048b4431258ce0768d0cea82caf",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "51a51213994dd0a89a7d8d58183b5b553a3f524e5a59eeddeb19505c834ae93f",
+      "bytes": 1563
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7d615b0c795a31a18b2fad647d3bbb73e236ab0bb3e2a9e156f811379ada75f7",
+      "bytes": 2288
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1bd3b2ba-9ad9-44ed-9130-03f9d94de821",
+    "1cb31aee-608e-4dec-a44d-5745e4fd6bab",
+    "2d4fc4ba-2ea4-465f-8644-f3ff5c6713a2",
+    "30c3aa18-4323-4448-8ddd-3ca933fe5780",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "6afa22a6-bec8-47c3-b5ee-5d11d64902cb",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "9e885c21-63ee-42c2-9b85-fd420948e9f4",
+    "a6284fcd-fa69-4469-ac40-4239e5b84a39",
+    "b7fc2173-c9b1-45ed-bd3a-9999320b3248",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "be6c7488-9cea-43db-bb28-2606f53ade14",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "d7d9c36d-fec9-4218-9e17-3d129dfb2dee",
+    "d98dea0b-00a4-4c15-b4a9-d196e2c3e4b4",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e549766e-b8b1-48a2-bd72-8cc04e9e4e9d",
+    "edc0c03e-8c20-4e22-badd-2735fcb9f4a8",
+    "f68dd3d8-e8fa-4d2c-8c59-28aba06c9d8a"
+  ]
+}

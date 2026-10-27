@@ -1,0 +1,26 @@
+:root {
+  /* Colors */
+  --color-blurple: #5865f2;
+  --color-dark-blurple: #3442d9;
+  --color-hover-blurple: #8891f2;
+  --color-spring-green: #57f287;
+  --color-fuchsia: #eb459;
+  --color-vivid-cerulean: #00b0f4;
+  --color-ember-orange: #fda220;
+  --color-ekko-red: #de2761;
+  --color-void: #000000;
+  --color-snow: #ffffff;
+  --color-not-quite-black: #23272a;
+  --color-dark-charcoal: #2c2f33;
+  --color-graphite: #333333;
+  --color-fog: #babcd9;
+  --color-greyple: #99aab5;
+  --color-dim-grey: #50555f;
+  --color-off-white: #f6f6f6;
+
+  /* Typography — Font Families */
+  --font-abc-ginto-nord-discord: 'ABC Ginto Nord Discord', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-ginto-discord: 'ABC Ginto Discord', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gg-sans: 'GG Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-ginto-normal: 'ABC Ginto Normal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,64 @@
+{
+  "color": {
+    "charcoal": {
+      "$value": "#414141",
+      "$type": "color",
+      "$description": "Charcoal — Primary body text, icon strokes, footer copy, nav labels"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Headings, strong emphasis, logo mark, maximum-contrast text"
+    },
+    "graphite": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Graphite — Muted body text, captions, secondary metadata, image alt text"
+    },
+    "fog": {
+      "$value": "#c1c1c1",
+      "$type": "color",
+      "$description": "Fog — Hairline borders, table dividers, nav separators, disabled strokes"
+    },
+    "off-white": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Off-White — Page canvas, card surfaces, input backgrounds"
+    },
+    "obsidian": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Obsidian — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "ember": {
+      "$value": "#f35815",
+      "$type": "color",
+      "$description": "Ember — Orange supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "signal-blue": {
+      "$value": "#0b6ec5",
+      "$type": "color",
+      "$description": "Signal Blue — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "amber": {
+      "$value": "#f2b600",
+      "$type": "color",
+      "$description": "Amber — Announcement banner highlight, feature tag accent, promotional inline marker"
+    }
+  },
+  "font": {
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "Universal type family — used for ALL text including headings, body, nav, buttons, and tabs. The monospace-only choice is the system's signature: it forces uniform character widths across the entire interface, giving the page the rhythm of a code editor or man page rather than a traditional marketing site. Weight 500–600 for headings, 400 for body, 700 sparingly for emphasis. Negative letter-spacing (-0.006em) tightens glyphs just enough to avoid the loose feel of raw terminal output."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://planetscale.com",
+      "siteName": "PlanetScale",
+      "extractedAt": "2026-06-03T18:23:26.707Z",
+      "variant": "compact"
+    }
+  }
+}

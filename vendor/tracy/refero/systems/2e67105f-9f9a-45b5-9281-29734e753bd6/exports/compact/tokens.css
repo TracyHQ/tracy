@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-ink: #222222;
+  --color-paper: #ffffff;
+  --color-bone: #fff9f3;
+  --color-smoke: #7a7876;
+  --color-carbon: #000000;
+  --color-iris: #c094e4;
+  --gradient-iris: linear-gradient(90deg, #c094e4 0%, #f7bbe6 50%, #ffb760 100%);
+  --color-blush: #fce0ee;
+  --color-rose-mist: #fdebf7;
+  --color-meringue: #ffe9cf;
+  --color-mint: #daf7ee;
+  --color-seafoam: #cef1e1;
+  --color-slate-plum: #574853;
+
+  /* Typography — Font Families */
+  --font-fellix: 'Fellix', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pp-fraktion-mono: 'PP Fraktion Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

@@ -1,0 +1,84 @@
+{
+  "color": {
+    "deep-teal": {
+      "$value": "#006e75",
+      "$type": "color",
+      "$description": "Deep Teal — Primary filled action buttons (Sign up, primary CTAs), active nav state, brand mark — the single chromatic command on every page"
+    },
+    "ink": {
+      "$value": "#061d29",
+      "$type": "color",
+      "$description": "Ink — Primary heading and body text — the dominant non-neutral color, carries 17:1 contrast on white, near-black with a cool cast"
+    },
+    "midnight-teal": {
+      "$value": "#072626",
+      "$type": "color",
+      "$description": "Midnight Teal — Alternate heading ink and dark surface text — sits beside Ink for inverse text on light tinted surfaces"
+    },
+    "mist": {
+      "$value": "#425d6d",
+      "$type": "color",
+      "$description": "Mist — Muted body text, outlined/secondary action borders, supporting links — the soft spoken gray-teal for secondary chrome"
+    },
+    "hairline": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Hairline — Hairline borders, card outlines, image strokes, divider lines — the universal neutral separator at ~7,700 uses"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, button text on teal, card surfaces, nav background — the dominant light surface"
+    },
+    "cream": {
+      "$value": "#fffded",
+      "$type": "color",
+      "$description": "Cream — Warm-tinted card surface and section wash — a barely-there yellow that softens white without competing with mint"
+    },
+    "mint-glass": {
+      "$value": "#b9ffe8",
+      "$type": "color",
+      "$description": "Mint Glass — Teal action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "bright-teal": {
+      "$value": "#0b978e",
+      "$type": "color",
+      "$description": "Bright Teal — Mid-tone teal for hover states, link fills, and accent strokes — sits between the deep brand teal and the mint surface"
+    },
+    "plum": {
+      "$value": "#4d0037",
+      "$type": "color",
+      "$description": "Plum — Decorative accent for illustration, icon fills, and tinted card washes — provides a warm counterpoint to the cool teal system"
+    },
+    "blossom": {
+      "$value": "#ffc3e6",
+      "$type": "color",
+      "$description": "Blossom — Soft pink surface wash on product cards and decorative blocks — the third color in the tri-tone accent system (mint / cream / pink)"
+    },
+    "ember-ring": {
+      "$value": "#ff492c",
+      "$type": "color",
+      "$description": "Ember Ring — Orange decorative accent for icons, marks, and small graphic details"
+    }
+  },
+  "font": {
+    "grenette": {
+      "$value": "grenette",
+      "$type": "fontFamily",
+      "$description": "Display and large headlines only — a custom humanist serif used at three distinct sizes, always weight 400, never bold. Its exclusive domain is the editorial hero and section openers; it never appears in body copy or UI chrome. Gives the site its magazine-research character."
+    },
+    "mint": {
+      "$value": "mint",
+      "$type": "fontFamily",
+      "$description": "The workhorse sans for everything else — body, nav, buttons, subheadings, captions, icons. Weight 400 is default; weight 500 for emphasized UI labels and button text. 26px is its ceiling; beyond that, grenette takes over."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.lyssna.com",
+      "siteName": "Lyssna",
+      "extractedAt": "2026-06-03T15:51:13.926Z",
+      "variant": "compact"
+    }
+  }
+}

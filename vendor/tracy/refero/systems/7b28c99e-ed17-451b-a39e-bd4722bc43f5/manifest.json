@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7b28c99e-ed17-451b-a39e-bd4722bc43f5",
+  "status": "complete",
+  "name": "21 TSI",
+  "url": "https://styles.refero.design/style/7b28c99e-ed17-451b-a39e-bd4722bc43f5",
+  "sourceWebsite": "https://21tsi.com",
+  "extractedAt": "2026-06-03T19:02:16.068Z",
+  "capturedAt": "2026-10-08T05:13:51.287086+00:00",
+  "theme": "dark",
+  "industry": "other",
+  "description": "Crimson void, single silhouette — a high-fashion editorial spread where the UI dissolves into atmosphere.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/36e1047a-01ba-4ced-9504-26f40e6cfe3b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4da36ea8-3ecf-418a-9f54-81144b24a094.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/96ab8296-c915-4e98-b61c-58173555bcf1.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/9c567ead-b673-406a-bf78-344740d6f9ee.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/6e3b6066-8950-4d2e-aa05-3271d67b57d3.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7a6a2a1abbe83d0a37ab4678d8df95553de06d54e74d5cdfb913116982d530ca",
+      "bytes": 19654
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8c6a1a5496f1b8d8b316b4db13840f348364378ff820e0bae4889cff05b2300b",
+      "bytes": 33848
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c0c482d6e3080a701bd85506999d2fe04e57b194a989b225a1386d9f64b11a28",
+      "bytes": 16386
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0bd135bf2ac0727801daf6708747f334fa6e2c7c09806ab454ccc2ad7b85de48",
+      "bytes": 9485
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "bd38a823d360f8cfde7ec475de1a7ab0e5e45d1404a631cd2aab62809d436a97",
+      "bytes": 11829
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "94f31f03176bab32615ffb9f5a2648170467db22423736d076cb0cbc874f56af",
+      "bytes": 1522
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2356924db8f13d224810eeda7499fbe8df168cdc6181bd9eba514da93bae418f",
+      "bytes": 285
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "37d777d8c11209ccd50add35095b695b73a75f7c1cefcf5beeca2c2513174e81",
+      "bytes": 302
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "52923005e83ccdcadb53f8b9aa78a27467fcf231403b8422c3ad4055542ccb27",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8602f453765575e81abe2bdecf74b3468c39fe088d2a256fdb2fc433e5c9d4e7",
+      "bytes": 40883
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ad978a313d79ccc6b4af119dbbd440c9ac768f575a85591e9aee2dec189905fa",
+      "bytes": 20808
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7745aa48c4df822369fd148715fc4bf505962e48c421d585b6d94e008250f483",
+      "bytes": 32487
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ec32b74f3af07ab8ca93d4e14cc25a685ab03170a04a54429e8a3b623f543d4e",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "093fe0d47a955baae767baa4488d5b8ea859ae8ba11397d3ec2b239120902de8",
+      "bytes": 1604
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9687a8b87d5fc7f3ab66b8193cd176eb8fe1d9fd22c8ed5765c94daf27f33eec",
+      "bytes": 2081
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "017ce823-c338-417d-849d-497c97701c4c",
+    "234e9a17-236d-4446-9d58-f83f6806d012",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "44a6d2a5-16ef-42cd-a69c-33a7af16638d",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "50f0b6d5-9e96-42a1-9564-a6e99c289f98",
+    "58a36cba-3fc4-48fa-a7d9-7f14592b7857",
+    "643f90ba-dc30-428b-a145-26f02fe70551",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "7b28c99e-ed17-451b-a39e-bd4722bc43f5",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "bb2a2b0b-c84e-48ee-9dd9-7b623f81a422",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "f401f04f-c45b-4261-9441-f502c6569a29",
+    "fa157687-ee42-443e-a992-5f8a3fcdd48f"
+  ]
+}

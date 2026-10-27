@@ -1,0 +1,69 @@
+{
+  "color": {
+    "parchment": {
+      "$value": "#faf6f3",
+      "$type": "color",
+      "$description": "Parchment — Page canvas, body text on dark panels — a warm desaturated cream that makes the dark editorial cards feel inset rather than overlaid"
+    },
+    "ash": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Ash — Hairline borders, dividers, subtle surface separators — the workhorse neutral that defines the 1px structural rhythm across the page"
+    },
+    "smoke": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Smoke — Secondary borders and muted structural lines where Ash is too present"
+    },
+    "silver": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Silver — Input borders and disabled-state surfaces"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, icon strokes, and the darkest borders on light surfaces"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Reverse text on dark panels, card surfaces, and icon fills on dark backgrounds"
+    },
+    "olive-charcoal": {
+      "$value": "#3d3b2f",
+      "$type": "color",
+      "$description": "Olive Charcoal — Warm editorial panel surface (left card) and primary action background — a dusty olive-black that distinguishes DrawHistory's signature dark from generic #111"
+    },
+    "obsidian": {
+      "$value": "#1d1d1b",
+      "$type": "color",
+      "$description": "Obsidian — Deep display panel surface (right card) and button background — the second editorial tone, slightly cooler and deeper than Olive Charcoal"
+    },
+    "saffron-dot": {
+      "$value": "#ff6714",
+      "$type": "color",
+      "$description": "Saffron Dot — Sole chromatic accent — announcement indicators and small functional punctuation only. Never used for fills, buttons, or large areas"
+    }
+  },
+  "font": {
+    "eloquia-text": {
+      "$value": "Eloquia Text",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all UI text. Weight 300 in uppercase at display sizes (55–104px) creates the signature hushed editorial tone — the same approach as museum wall labels, where the label's weight is anti-authoritarian and confident. Body copy uses weight 400 at 16–18px. The negative tracking tightens as size increases, compressing display headlines while keeping body text optically normal."
+    },
+    "roboto-mono": {
+      "$value": "Roboto Mono",
+      "$type": "fontFamily",
+      "$description": "Monospace label typeface for technical or meta annotations — small captions, metadata, button labels in outlined buttons. Its geometric monospaced rhythm contrasts with Eloquia's editorial proportions, providing a secondary voice for system-level information."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://drawhistory.com",
+      "siteName": "DrawHistory",
+      "extractedAt": "2026-06-03T22:40:36.175Z",
+      "variant": "compact"
+    }
+  }
+}

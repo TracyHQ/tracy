@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1427-photo-retry-readback",
+  "kind": "fix",
+  "title": "WP photo Retry compares verified native readback and grants a fixed explicit Retry window",
+  "pr": 1427,
+  "area": "website-opportunities/quickstart-first",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the three declared Node test suites."],
+  "expect": [
+    "Verified legacy photo snapshots reconcile only known timestamps and synthetic featured media, with exact full raw equality plus live REST featured proof.",
+    "Real content changes, missing receipts and featured-media drift remain blocked. New snapshots use stable semantic hashes across JSONB member ordering.",
+    "Retry accepted immediately before or at original deadline retains its fixed bounded window without new spend allowance."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/brief-engines/quickstart-first.js, apps/tracy-web/src/opportunities/quickstart-retry-window.js"
+  },
+  "fence": "Original snapshots and counters stay unchanged; native readback, current scope and uncertain attempt protections remain.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/brief-quickstart-first.test.mjs",
+      "apps/tracy-web/test/wo-quickstart-retry-window.test.mjs"
+    ],
+    "needs": []
+  }
+}

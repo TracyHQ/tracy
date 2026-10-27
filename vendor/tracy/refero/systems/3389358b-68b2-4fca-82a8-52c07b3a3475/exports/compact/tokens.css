@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-bone-white: #ffffff;
+  --color-obsidian: #1a1a1a;
+  --color-lifted-charcoal: #3b3b3b;
+  --color-smoke: #606060;
+  --color-spectrum-beam: #004eff;
+  --gradient-spectrum-beam: linear-gradient(200deg, #004eff 0%, #710966 75%, #8e2e45 100%);
+
+  /* Typography — Font Families */
+  --font-cambon: 'Cambon', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-universalsans: 'UniversalSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-citrus-field: #d4e04a;
+  --color-carbon-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-moss-shadow: #535521;
+
+  /* Typography — Font Families */
+  --font-signifier: 'Signifier', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

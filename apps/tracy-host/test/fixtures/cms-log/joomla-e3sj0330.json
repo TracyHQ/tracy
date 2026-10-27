@@ -1,0 +1,213 @@
+{
+  "ok": true,
+  "platform": "joomla",
+  "now": "2026-10-01 19:43:44",
+  "maxId": 116,
+  "reset": false,
+  "enabled": {
+    "component": true,
+    "systemPlugin": true,
+    "joomlaPlugin": true
+  },
+  "rows": [
+    {
+      "id": 105,
+      "key": "PLG_ACTIONLOG_JOOMLA_EXTENSION_INSTALLED",
+      "extension": "com_content",
+      "userId": 0,
+      "itemId": 10201,
+      "logDate": "2026-09-29 23:26:53",
+      "typeTitle": null,
+      "message": {
+        "action": "install",
+        "type": "PLG_ACTIONLOG_JOOMLA_TYPE_COMPONENT",
+        "id": 10201,
+        "name": "COM_CLAUDECOWORK",
+        "extension_name": "COM_CLAUDECOWORK",
+        "username": null
+      }
+    },
+    {
+      "id": 106,
+      "key": "PLG_ACTIONLOG_JOOMLA_PLUGIN_INSTALLED",
+      "extension": "com_content",
+      "userId": 0,
+      "itemId": 10202,
+      "logDate": "2026-09-29 23:26:53",
+      "typeTitle": null,
+      "message": {
+        "action": "install",
+        "type": "PLG_ACTIONLOG_JOOMLA_TYPE_PLUGIN",
+        "id": 10202,
+        "name": "plg_system_tracyaccess",
+        "extension_name": "plg_system_tracyaccess",
+        "username": null
+      }
+    },
+    {
+      "id": 107,
+      "key": "PLG_ACTIONLOG_JOOMLA_PLUGIN_INSTALLED",
+      "extension": "com_content",
+      "userId": 0,
+      "itemId": 10203,
+      "logDate": "2026-09-29 23:26:53",
+      "typeTitle": null,
+      "message": {
+        "action": "install",
+        "type": "PLG_ACTIONLOG_JOOMLA_TYPE_PLUGIN",
+        "id": 10203,
+        "name": "plg_system_claudecoworkapi",
+        "extension_name": "plg_system_claudecoworkapi",
+        "username": null
+      }
+    },
+    {
+      "id": 108,
+      "key": "PLG_ACTIONLOG_JOOMLA_PLUGIN_INSTALLED",
+      "extension": "com_content",
+      "userId": 0,
+      "itemId": 10204,
+      "logDate": "2026-09-29 23:26:53",
+      "typeTitle": null,
+      "message": {
+        "action": "install",
+        "type": "PLG_ACTIONLOG_JOOMLA_TYPE_PLUGIN",
+        "id": 10204,
+        "name": "plg_system_claudecoworkupdate",
+        "extension_name": "plg_system_claudecoworkupdate",
+        "username": null
+      }
+    },
+    {
+      "id": 109,
+      "key": "PLG_ACTIONLOG_JOOMLA_EXTENSION_INSTALLED",
+      "extension": "com_content",
+      "userId": 0,
+      "itemId": 10205,
+      "logDate": "2026-09-29 23:26:53",
+      "typeTitle": null,
+      "message": {
+        "action": "install",
+        "type": "PLG_ACTIONLOG_JOOMLA_TYPE_PACKAGE",
+        "id": 10205,
+        "name": "Joomla Claude Cowork",
+        "extension_name": "Joomla Claude Cowork",
+        "username": null
+      }
+    },
+    {
+      "id": 110,
+      "key": "PLG_ACTIONLOG_JOOMLA_EXTENSION_INSTALLED",
+      "extension": "com_content",
+      "userId": 0,
+      "itemId": 10201,
+      "logDate": "2026-09-30 10:30:37",
+      "typeTitle": null,
+      "message": {
+        "action": "install",
+        "type": "PLG_ACTIONLOG_JOOMLA_TYPE_COMPONENT",
+        "id": 10201,
+        "name": "COM_CLAUDECOWORK",
+        "extension_name": "COM_CLAUDECOWORK",
+        "username": null
+      }
+    },
+    {
+      "id": 111,
+      "key": "PLG_ACTIONLOG_JOOMLA_PLUGIN_INSTALLED",
+      "extension": "com_content",
+      "userId": 0,
+      "itemId": 10202,
+      "logDate": "2026-09-30 10:30:37",
+      "typeTitle": null,
+      "message": {
+        "action": "install",
+        "type": "PLG_ACTIONLOG_JOOMLA_TYPE_PLUGIN",
+        "id": 10202,
+        "name": "plg_system_tracyaccess",
+        "extension_name": "plg_system_tracyaccess",
+        "username": null
+      }
+    },
+    {
+      "id": 112,
+      "key": "PLG_ACTIONLOG_JOOMLA_PLUGIN_INSTALLED",
+      "extension": "com_content",
+      "userId": 0,
+      "itemId": 10203,
+      "logDate": "2026-09-30 10:30:37",
+      "typeTitle": null,
+      "message": {
+        "action": "install",
+        "type": "PLG_ACTIONLOG_JOOMLA_TYPE_PLUGIN",
+        "id": 10203,
+        "name": "plg_system_claudecoworkapi",
+        "extension_name": "plg_system_claudecoworkapi",
+        "username": null
+      }
+    },
+    {
+      "id": 113,
+      "key": "PLG_ACTIONLOG_JOOMLA_PLUGIN_INSTALLED",
+      "extension": "com_content",
+      "userId": 0,
+      "itemId": 10204,
+      "logDate": "2026-09-30 10:30:37",
+      "typeTitle": null,
+      "message": {
+        "action": "install",
+        "type": "PLG_ACTIONLOG_JOOMLA_TYPE_PLUGIN",
+        "id": 10204,
+        "name": "plg_system_claudecoworkupdate",
+        "extension_name": "plg_system_claudecoworkupdate",
+        "username": null
+      }
+    },
+    {
+      "id": 114,
+      "key": "PLG_ACTIONLOG_JOOMLA_EXTENSION_INSTALLED",
+      "extension": "com_content",
+      "userId": 0,
+      "itemId": 10205,
+      "logDate": "2026-09-30 10:30:37",
+      "typeTitle": null,
+      "message": {
+        "action": "install",
+        "type": "PLG_ACTIONLOG_JOOMLA_TYPE_PACKAGE",
+        "id": 10205,
+        "name": "Joomla Claude Cowork",
+        "extension_name": "Joomla Claude Cowork",
+        "username": null
+      }
+    },
+    {
+      "id": 115,
+      "key": "PLG_USER_TERMS_LOGGING_CONSENT_TO_TERMS",
+      "extension": "plg_user_terms",
+      "userId": 546,
+      "itemId": 546,
+      "logDate": "2026-10-01 19:21:12",
+      "typeTitle": null,
+      "message": {
+        "action": "consent",
+        "id": 546,
+        "title": "owner@example.test",
+        "username": "owner@example.test"
+      }
+    },
+    {
+      "id": 116,
+      "key": "PLG_ACTIONLOG_JOOMLA_USER_LOGGED_IN",
+      "extension": "com_users",
+      "userId": 546,
+      "itemId": 0,
+      "logDate": "2026-10-01 19:21:12",
+      "typeTitle": null,
+      "message": {
+        "action": "login",
+        "username": null,
+        "app": "PLG_ACTIONLOG_JOOMLA_APPLICATION_ADMINISTRATOR"
+      }
+    }
+  ]
+}

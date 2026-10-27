@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "81afaa5c-73ac-4ef4-9a99-296da325ea6c",
+  "status": "complete",
+  "name": "Perplexity AI",
+  "url": "https://styles.refero.design/style/81afaa5c-73ac-4ef4-9a99-296da325ea6c",
+  "sourceWebsite": "https://perplexity.ai",
+  "extractedAt": "2026-07-03T03:24:13.114Z",
+  "capturedAt": "2026-10-08T05:14:12.776893+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "scholar's parchment behind clean glass",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/989e3161-4c99-4fe2-9ef7-2b672134c9b9.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/1fabb15b-1ae7-4bb0-995e-5b173acb048a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/bab5ad0c-01c8-4266-9b81-9a18860cabbc.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/ca3047f5-4512-46a2-8150-c25539d541ef.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/9406cb52-01b9-437e-88fc-a1db4d0c9c80.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9062aedb8cc9fe232736681883dd3408a2ac47619ed78a58b062d955e313492f",
+      "bytes": 14848
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "918805c7b8f4175a07ecf8c7095fbdee1fb4266c9d306578f85d371e43533d6e",
+      "bytes": 44538
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "01e0950f90e7ee444e210631fe7483f4508aff0c2c71f7b3c794038ecf4db777",
+      "bytes": 12917
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b0e79d4978fc3e09e86ae6a1d3adf2735cc1ae98384b8620d54e3808639c4af0",
+      "bytes": 6646
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6a888689a4700d9175b8eeb93d7cb7c3edbed2bfb55804d3a18dbce6e41fc360",
+      "bytes": 9835
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e416733a7a34f4f52e1d2b20d7b2b4710d65d4e73c2cc08b2d748c1f1a754df5",
+      "bytes": 2321
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "92c8d66861704918fad500773ecc1cc88734eb615fa7c1263c4b148cc774e000",
+      "bytes": 398
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3c26fe880e7c92af10aa789796490d21c66bb7b146f9edb158fe57161afab1dc",
+      "bytes": 415
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "43ce1ff79c530fe3692e458f07646645aeb4fc38102c39de5a4500cedd7d9f65",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "63f0a5b2b748e7a6492286ab9e83d6900994f8199a994307e9c9ad60bd50ed94",
+      "bytes": 39125
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8f3eb64bf7ecdeb059302c6745c72ffef38c19e4af7872d6219b4366a0e5f836",
+      "bytes": 20480
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6c9702bf6a64bc44fcc447f40f2c9a20117881fef0d3567c61417ea3083f3cba",
+      "bytes": 31618
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6846f9ed0c7860e1530cf952dbc7bab2aae8eb0f5793aeea19454895c22759f9",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "66c979df3f170596ac32e249f6c0db302d6f096d77ed4a470c055db7d8c6b9fe",
+      "bytes": 933
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5fe3f8ec41fb28d7516793594a7a6621ccfb0e7885112bfed84d17cf26fa83ef",
+      "bytes": 1450
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "1d4cbd69-ee0f-4f13-ba7d-14d3eaed7349",
+    "225059ac-0450-49d3-b2b7-d0e98b7ae938",
+    "30a8b128-a5bb-4d86-85eb-743b78091596",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "43c1b150-0dab-42f9-9bce-fe0be3dde26c",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "52a007ed-ad1b-46a6-bd44-b76f91df6d0c",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "68d18deb-bb09-4258-8024-001af9c844c0",
+    "7c4e9339-591c-46c3-ac3d-20c1b5b5a568",
+    "81afaa5c-73ac-4ef4-9a99-296da325ea6c",
+    "a81607e2-254f-4f53-b357-68c39c9cfc03",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "d5307f56-76de-4d13-9741-f969c42e9aa5",
+    "dc541737-8bf2-4b31-b729-0352f696e82f",
+    "e4b9d41a-8165-47dd-818a-5f6810046ea9",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "e9fff87a-63ce-4c19-840f-98233db62f58",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

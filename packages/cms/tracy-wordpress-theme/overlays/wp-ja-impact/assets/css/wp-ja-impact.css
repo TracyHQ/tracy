@@ -1,0 +1,426 @@
+/* wp-ja-impact — the JA Impact look on the Tracy block theme.
+ *
+ * Written for this theme, not copied: every length, colour and size below was read off the running
+ * source (JA Impact, Joomla 6 T4, http://127.0.0.1:8300, 01/10/2026) as computed style at 1440 and
+ * 390 px in light and dark, from its design-system notes (ja-products, ja_impact/source/docs/design-system.md)
+ * and from its screenshots. Type is the source's template settings (ja_impact 1.2.2 etc/site/default.json):
+ * Readex Pro for body and headings, body 16 px / 1.6, headings 500 / 1.2 on the T4 scale 72/40/28/24/18/16 px
+ * with letter-spacing fixed per level (scss/tpl/theme.tpl.scss:50-78). The font ships with the theme
+ * (assets/fonts, SIL OFL 1.1); no page asks Google for it.
+ *
+ * Colours come from the WordPress presets, which carry both halves through light-dark()
+ * (theme.overlay.json); the colours the palette has no row for are declared once below the same way.
+ * The navy bands (header top, contact, footer, `blue` pattern sections) stay navy in dark, as the source's do.
+ */
+
+/* ds-not-used: --ds-c-disabled-bg, --ds-c-disabled-fg — the template dims a disabled control with opacity only (the Contact Form 7 Send button) and hides a disabled page link (display: none); it paints no disabled ground or text colour */
+:root {
+  --jim-primary: var(--ds-c-ink, #1d3677);
+  --jim-success: var(--ds-c-accent, #0cb76d);
+  --jim-warning: var(--ds-c-warn, #f48a29);
+  --jim-info: var(--ds-c-info, #2970db);
+  --jim-heading: light-dark(var(--ds-c-fg-2, #1d3677), var(--ds-c-fg-2, #eef1f6));
+  --jim-text: light-dark(var(--ds-c-fg, #495057), var(--ds-c-fg, #c2c9d6));
+  --jim-muted: light-dark(var(--ds-c-muted, #6c757d), var(--ds-c-muted, #8c97a8));
+  --jim-surface: light-dark(var(--ds-c-surface, #fbfbfb), var(--ds-c-surface, #1e2a45));
+  --jim-raised: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-bg, #1e2a45));
+  --jim-raised-2: light-dark(var(--ds-c-surface, #f8f9fa), var(--ds-c-surface, #28354f));
+  --jim-band: light-dark(var(--ds-c-surface-warm, #fff9ef), var(--ds-c-surface-warm, #141d33));
+  --jim-line: light-dark(var(--ds-c-border, #e9ecef), var(--ds-c-border, #33415e));
+  --jim-link: light-dark(var(--ds-c-fg-2, #1d3677), var(--ds-c-fg-2, #6f9bf0));
+  --jim-link-hover: var(--ds-c-accent, #0cb76d);
+  --jim-eyebrow: light-dark(var(--ds-c-accent-text, #0cb76d), var(--ds-c-accent-text, #2fd98a));
+  --jim-on-band: var(--ds-c-on-ink, #dee2e6);
+  --jim-on-band-muted: var(--ds-c-on-ink, #ced4da);
+  --jim-radius: var(--ds-card-radius, 8px);
+  --jim-gutter: 16px;
+  --jim-font: var(--ds-font-body, 'Readex Pro');
+  --jim-h1: 72px;
+  --jim-h2: 40px;
+  --jim-h3: 28px;
+  --jim-h4: 24px;
+  --jim-h5: 18px;
+  --jim-h6: 16px;
+  --jim-section-y: 128px;
+}
+
+/* T4 redefines the heading scale below 1200 px (h1) and 992 px (h1–h5) (scss/tpl/theme.tpl.scss:24-36). */
+@media (max-width: 1199.98px) {
+  :root { --jim-h1: 56px; }
+}
+@media (max-width: 991.98px) {
+  :root { --jim-h1: 40px; --jim-h2: 28px; --jim-h3: 24px; --jim-h4: 20px; --jim-h5: 16px; --jim-section-y: 48px; }
+}
+
+/* Readex Pro, the latin, latin-ext and vietnamese subsets, one variable file each for the 200–700 the source loads
+   (the vietnamese one since 1.0.9: without it a page in Vietnamese drew its letters from another font). */
+@font-face {
+  font-family: 'Readex Pro';
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url('../fonts/readex-pro-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Readex Pro';
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url('../fonts/readex-pro-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Readex Pro';
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url('../fonts/readex-pro-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Font Awesome Free 6 (solid, brands): the icons the source's contact rows, buttons and social links draw. */
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url('../fonts/fa-solid-900.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('../fonts/fa-brands-400.woff2') format('woff2');
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────────────────────────── */
+
+body.tracy {
+  font-family: var(--jim-font);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: normal;
+  color: var(--jim-text);
+  background: var(--wp--preset--color--bg);
+}
+body.tracy :where(h1, h2, h3, h4, h5, h6) {
+  font-family: inherit;
+  line-height: 1.2;
+  color: var(--jim-heading);
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+body.tracy :where(h1) { font-size: var(--jim-h1); letter-spacing: -1.44px; }
+body.tracy :where(h2) { font-size: var(--jim-h2); letter-spacing: -0.8px; }
+body.tracy :where(h3) { font-size: var(--jim-h3); letter-spacing: -0.28px; }
+body.tracy :where(h4) { font-size: var(--jim-h4); letter-spacing: -0.24px; }
+body.tracy :where(h5) { font-size: var(--jim-h5); letter-spacing: -0.16px; }
+body.tracy :where(h6) { font-size: var(--jim-h6); letter-spacing: -0.16px; }
+body.tracy :where(p) { margin: 0 0 16px; }
+body.tracy :where(a) { color: var(--jim-link); text-decoration: none; }
+body.tracy :where(a):hover { color: var(--jim-link-hover); }
+body.tracy :where(img) { max-width: 100%; height: auto; }
+body.tracy :where(.wp-block-image) { margin: 0; }
+body.tracy .jim-main :where(.wp-block-group) { margin-block: 0; }
+body.tracy .jim-main .jim-sections > * + * { margin-block-start: 0; }
+
+body.tracy .jim-container {
+  width: 100%;
+  max-width: 1376px;
+  margin-inline: auto;
+  padding-inline: var(--jim-gutter);
+  box-sizing: border-box;
+}
+@media (max-width: 1399.98px) and (min-width: 1200px) {
+  body.tracy .jim-container { max-width: 1140px; }
+}
+@media (max-width: 1199.98px) and (min-width: 992px) {
+  body.tracy .jim-container { max-width: 960px; }
+}
+@media (max-width: 991.98px) and (min-width: 768px) {
+  body.tracy .jim-container { max-width: 720px; }
+}
+@media (max-width: 767.98px) and (min-width: 576px) {
+  body.tracy .jim-container { max-width: 540px; }
+}
+
+/* Bands: the navy sections stay navy in both modes. */
+body.tracy .jim-band--primary {
+  background: var(--jim-primary);
+  color: var(--jim-on-band);
+}
+body.tracy .jim-band--primary :where(h1, h2, h3, h4, h5, h6) { color: var(--ds-c-on-ink, #ffffff); }
+
+/* Buttons: the source's .btn is 56 px high (17 px 32 px padding, line 1.63), 8 px radius, 500 weight, the
+   green fills with white text; hover keeps the colour and drops opacity to .85 (theme.tpl.css:171-180). */
+body.tracy .jim-btn .wp-block-button__link,
+body.tracy .wp-block-button.btn .wp-block-button__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 17px 32px;
+  border: 1px solid var(--jim-success);
+  border-radius: var(--ds-btn-radius, var(--jim-radius));
+  background: var(--jim-success);
+  color: var(--ds-c-accent-on, #ffffff);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+body.tracy .jim-btn .wp-block-button__link:hover,
+body.tracy .jim-btn .wp-block-button__link:focus,
+body.tracy .wp-block-button.btn .wp-block-button__link:hover,
+body.tracy .wp-block-button.btn .wp-block-button__link:focus {
+  background: var(--ds-c-accent-hover, var(--jim-success));
+  color: var(--ds-c-accent-on, #ffffff);
+  opacity: 0.85;
+}
+body.tracy .jim-btn--white .wp-block-button__link {
+  background: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-bg, #28354f));
+  border-color: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-border, #33415e));
+  color: var(--ds-c-heading, var(--jim-primary));
+}
+body.tracy .jim-btn--white .wp-block-button__link:hover {
+  background: var(--jim-primary);
+  border-color: var(--jim-primary);
+  color: var(--ds-c-on-ink, #ffffff);
+  opacity: 1;
+}
+body.tracy .jim-btn--arrow .wp-block-button__link::after,
+body.tracy .jim-arrow .wp-block-button__link::after {
+  content: '\f178';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────────────────────────── */
+
+body.tracy .jim-header__top {
+  background: var(--jim-primary);
+  color: var(--jim-on-band-muted);
+}
+body.tracy .jim-header__top .jim-header__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 40px;
+}
+body.tracy .jim-logo { margin: 0; }
+body.tracy .jim-logo img { display: block; width: 210px; max-width: none; height: auto; }
+body.tracy .jim-contact {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0;
+  margin-left: auto;
+}
+body.tracy .jim-contact__item {
+  position: relative;
+  display: block;
+  min-height: 56px;
+  margin-left: 64px;
+  padding-left: 64px;
+}
+body.tracy .jim-contact__item::before {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  box-sizing: border-box;
+  padding: 12px;
+  border-radius: var(--ds-btn-radius, 4px);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--ds-c-accent-on-ink, var(--jim-success));
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 24px;
+  text-align: center;
+}
+body.tracy .jim-contact__item--address::before { content: '\f57d'; }
+body.tracy .jim-contact__item--mail::before { content: '\f0e0'; }
+body.tracy .jim-contact__item--phone::before { content: '\f095'; }
+body.tracy .jim-contact__sub { margin: 0 0 4px; font-size: 16px; line-height: 1.6; color: var(--ds-c-meta, #adb5bd); }
+body.tracy .jim-contact__title { margin: 0; font-size: 18px; font-weight: 500; line-height: 1.5; letter-spacing: -0.16px; color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .jim-contact__title a { color: var(--ds-c-on-ink, #ffffff); }
+
+body.tracy .jim-header__bar {
+  background: var(--wp--preset--color--bg);
+  border-bottom: 1px solid var(--jim-line);
+}
+body.tracy .jim-header__bar .jim-header__row {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  min-height: 66px;
+}
+body.tracy .jim-header__menu { display: flex; align-items: stretch; }
+body.tracy .jim-header__actions { display: flex; align-items: stretch; gap: 0; }
+body.tracy .jim-donate { margin: 0; display: flex; }
+body.tracy .jim-donate .wp-block-button { display: flex; }
+body.tracy .jim-donate .wp-block-button__link {
+  display: flex;
+  align-items: center;
+  height: 66px;
+  box-sizing: border-box;
+  padding: 17px 32px;
+  border-radius: var(--ds-btn-radius, 0);
+}
+body.tracy .jim-nav { font-size: 16px; font-weight: 500; letter-spacing: -0.16px; }
+body.tracy .jim-nav .wp-block-navigation__container { gap: 0; align-items: stretch; }
+body.tracy .jim-nav .wp-block-navigation-item { align-items: stretch; border-left: 1px solid var(--jim-line); }
+body.tracy .jim-nav .wp-block-navigation-item:last-child { border-right: 1px solid var(--jim-line); }
+body.tracy .jim-nav .wp-block-navigation-item__content {
+  display: inline-flex;
+  align-items: center;
+  padding: 22px 32px;
+  color: var(--jim-heading);
+  line-height: 20px;
+  text-decoration: none;
+}
+body.tracy .jim-nav .wp-block-navigation-item__content:hover,
+body.tracy .jim-nav .current-menu-item > .wp-block-navigation-item__content,
+body.tracy .jim-nav .current-menu-ancestor > .wp-block-navigation-item__content { color: var(--ds-c-accent-text, var(--jim-success)); }
+body.tracy .jim-nav .wp-block-navigation__submenu-icon { margin-left: 0; width: 22px; height: 22px; }
+
+/* Theme switch: light → dark → auto. */
+body.tracy .jim-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  border: 0;
+  border-left: 1px solid var(--jim-line);
+  background: transparent;
+  color: var(--jim-heading);
+  cursor: pointer;
+}
+body.tracy .jim-theme-toggle svg { display: block; }
+body.tracy .jim-theme-toggle__sun { display: none; }
+body.tracy .jim-theme-toggle[data-theme-state='dark'] .jim-theme-toggle__moon { display: none; }
+body.tracy .jim-theme-toggle[data-theme-state='dark'] .jim-theme-toggle__sun { display: block; }
+body.tracy .jim-theme-toggle:hover { color: var(--ds-c-accent-text, var(--jim-success)); }
+
+body.tracy .jim-drawer-toggle { display: none; }
+body.tracy .jim-drawer__head { display: none; }
+
+/* Below 992 px the menu is a drawer (the source's off-canvas), opened by the hamburger. */
+@media (max-width: 991.98px) {
+  body.tracy .jim-header__top .jim-header__row { padding-block: 12px; }
+  body.tracy .jim-logo img { width: 111px; }
+  body.tracy .jim-contact { display: none; }
+  body.tracy .jim-drawer-toggle {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border: 0;
+    border-radius: var(--ds-btn-radius, 4px);
+    background: transparent;
+    cursor: pointer;
+  }
+  body.tracy .jim-drawer-toggle span { display: block; height: 2px; background: var(--ds-c-bg, #ffffff); }
+  body.tracy .jim-header__bar { border: 0; min-height: 0; }
+  body.tracy .jim-header__bar .jim-header__row { min-height: 0; padding: 0; }
+  body.tracy .jim-header__actions { display: none; }
+  body.tracy .jim-header__menu {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 100002;
+    flex-direction: column;
+    width: 300px;
+    max-width: 85vw;
+    overflow-y: auto;
+    background: var(--jim-raised);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0.3s;
+  }
+  html.jim-drawer-open body.tracy .jim-header__menu { transform: none; visibility: visible; }
+  body.tracy .jim-drawer__head { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid var(--jim-line); }
+  body.tracy .jim-drawer__title { margin: 0; font-weight: 500; }
+  body.tracy .jim-drawer-close { width: 32px; height: 32px; border: 0; background: transparent; color: var(--jim-heading); font-size: 28px; line-height: 1; cursor: pointer; }
+  body.tracy .jim-nav .wp-block-navigation__container { flex-direction: column; align-items: stretch; width: 100%; }
+  body.tracy .jim-nav .wp-block-navigation-item { border: 0; border-bottom: 1px solid var(--jim-line); }
+  body.tracy .jim-nav .wp-block-navigation-item__content { padding: 16px 24px; }
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────────────────────────────── */
+
+body.tracy .jim-footer__contact { padding-block: var(--jim-section-y) 64px; }
+body.tracy .jim-fcontact__heading { max-width: 656px; margin: 0 0 72px; font-size: 40px; color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .jim-fcontact__items { display: flex; flex-wrap: wrap; gap: 96px; }
+body.tracy .jim-fcontact__sub { margin: 0 0 16px; font-size: 16px; line-height: 1.2; letter-spacing: -0.16px; text-transform: uppercase; color: var(--jim-on-band-muted); }
+body.tracy .jim-fcontact__title { margin: 0; font-size: 24px; font-weight: 500; line-height: 1.2; letter-spacing: -0.24px; color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .jim-fcontact__title a { color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .jim-footer__nav { padding-block: 80px 48px; }
+body.tracy .jim-footer__cols { display: flex; flex-wrap: wrap; gap: 32px 0; }
+body.tracy .jim-footer__col { flex: 0 0 50%; padding-inline: 16px; box-sizing: border-box; }
+body.tracy .jim-footer__col--about { flex: 1 0 100%; }
+body.tracy .jim-footer__logo { margin: 0 0 24px; }
+body.tracy .jim-footer__logo img { width: 210px; max-width: none; height: auto; }
+body.tracy .jim-footer__about { max-width: 380px; margin: 0; color: var(--jim-on-band); }
+body.tracy .jim-footer__title { margin: 0 0 32px; font-size: 24px; color: var(--ds-c-on-ink, #ffffff); }
+body.tracy .jim-footnav { font-size: 15px; line-height: 24px; }
+body.tracy .jim-footnav .wp-block-navigation__container { gap: 0; align-items: flex-start; }
+body.tracy .jim-footnav .wp-block-navigation-item__content { padding: 6.4px 0; color: var(--jim-on-band-muted); }
+body.tracy .jim-footnav .wp-block-navigation-item__content:hover { color: var(--ds-c-accent-on-ink, var(--jim-success)); }
+@media (min-width: 768px) {
+  body.tracy .jim-footer__col { flex: 0 0 25%; }
+}
+@media (min-width: 1200px) {
+  body.tracy .jim-footer__col--about { flex: 1 1 0; }
+  body.tracy .jim-footer__col:not(.jim-footer__col--about) { flex: 0 0 16.6667%; }
+}
+body.tracy .jim-footer__bar { padding-block: 32px; font-size: 14px; line-height: 1.6; color: var(--jim-on-band-muted); }
+body.tracy .jim-footer__row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+body.tracy .jim-footer__copy :where(p) { margin: 0; font-size: 14px; line-height: 1.6; }
+body.tracy .jim-footer__copy a { color: var(--jim-on-band-muted); }
+body.tracy .jim-footer__copy a:hover { color: var(--ds-c-accent-on-ink, var(--jim-success)); }
+body.tracy .jim-social { margin: 0; gap: 0; }
+body.tracy .jim-social .wp-social-link { background: transparent; color: var(--jim-on-band-muted); }
+body.tracy .jim-social .wp-social-link a { padding: 16px; }
+
+/* WordPress's flow layout adds a block gap above every child but the first; the source's header and footer lay
+   their rows out with flex and their own margins, so the gap is cancelled there. */
+body.tracy :is(.jim-header, .jim-footer) :is(.wp-block-group, .wp-block-buttons) > * { margin-block-start: 0; }
+body.tracy :is(.jim-logo, .jim-footer__logo) a { display: block; line-height: 0; }
+
+/* Home page layout rows. The source's `content-left` and `content-right` positions are the two columns (col-lg-7 and
+   col-lg-5 of one container) of the section that rises 128 px over the hero (`.t4-section-1`, margin-top -128 px);
+   the seeder places the three modules one after another, so from 1200 px up the post content becomes a grid whose
+   columns are the container's, and those three sections take their places in it (below that the source stacks them). */
+@media (min-width: 1200px) {
+  body.tracy .jim-sections:has(#acm-cta-157) {
+    --jim-cw: min(100%, 1376px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) calc(var(--jim-cw) * 7 / 12 - 32px) 32px calc(var(--jim-cw) * 5 / 12 - 32px) minmax(0, 1fr);
+    align-items: start;
+  }
+  body.tracy .jim-sections:has(#acm-cta-157) > * { grid-column: 1 / -1; }
+  body.tracy .jim-sections:has(#acm-cta-157) > #acm-cta-157 { grid-column: 2; grid-row: 2; margin-top: -128px; position: relative; z-index: 2; }
+  body.tracy .jim-sections:has(#acm-cta-157) > #acm-features-129 { grid-column: 2; grid-row: 3; }
+  body.tracy .jim-sections:has(#acm-cta-157) > #acm-features-161 { grid-column: 4; grid-row: 2 / span 2; margin-top: -128px; position: relative; z-index: 2; }
+  /* The rise over the hero replaces the modules' own top space: the source's call to action starts at the section's top edge,
+     the text block 64 px under it (the grid gap), and the side block keeps 64 px above and below (measured, source .t4-section-1). */
+  body.tracy .jim-sections:has(#acm-cta-157) > #acm-cta-157 { padding-top: 0; }
+  body.tracy .jim-sections:has(#acm-cta-157) > #acm-features-129 { padding-top: 0; }
+  body.tracy .jim-sections:has(#acm-cta-157) > #acm-features-161 { padding-top: 64px; padding-bottom: 64px; }
+}
+
+/* The logo spots are Site Logo blocks (1.0.7): a customer's logo keeps its own proportions inside the box the demo
+   logo was sized for, and a spot with no logo shows the site name as white text on the navy bar. */
+body.tracy :is(.jim-logo, .jim-drawer__logo, .jim-footer__logo) img.custom-logo { object-fit: contain; object-position: left center; }
+body.tracy :is(.jim-logo, .jim-drawer__logo, .jim-footer__logo).is-tracy-logo-text { color: #ffffff; }

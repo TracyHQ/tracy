@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-walnut: #321e1e;
+  --color-linen: #f4f1e0;
+  --color-graphite: #464545;
+  --color-espresso: #463938;
+  --color-onyx: #000000;
+  --color-soft-sand: #f4f4f4;
+
+  /* Typography */
+  --font-houseplant: 'Houseplant', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roboto: 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neuehelvetica55roman: 'NeueHelvetica55Roman', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtstandard-m: 'GTStandard-M', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

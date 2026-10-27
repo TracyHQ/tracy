@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1668-sync-wordpress-live-busy",
+  "kind": "fix",
+  "title": "A WordPress live site whose own housekeeping moves rows while it is read (auto-drafts, cron, transients, edit locks, per-user admin settings, plugin queues) still syncs; a live auto-draft never reaches the copy; a sync that stops as busy names the tables and option/meta names that kept changing, never their values",
+  "pr": 1668,
+  "area": "sync/live",
+  "cms": ["wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs && python3 packages/fleet/tracy-fleet-operation/test/live-sync-wordpress.test.py"
+  ],
+  "expect": [
+    "S1: wp-admin activity during the read is not busy and done in two reads; a real post/option edit that keeps landing answers LIVE_BUSY naming wp_options (blogname) and wp_posts without values; one extra read only for housekeeping-looking names; live auto-drafts stay off the copy until published"
+  ],
+  "selectors": {
+    "host": "live-pull.mjs rowsMove rowsMoved isIgnored pullDatabase pullWebroot; live_sync_wordpress.py VOLATILE_NAMES volatile_rows drop_auto_drafts; webroot-sync.sh read_live"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-24-sync-wordpress-live-busy.md",
+  "fence": "WordPress moving its own bookkeeping is never mistaken for the owner editing the live site",
+  "run": {
+    "cmd": [
+      "bash",
+      "-c",
+      "node --test packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs && python3 packages/fleet/tracy-fleet-operation/test/live-sync-wordpress.test.py"
+    ]
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "color": {
+    "deep-ink": {
+      "$value": "#0a090c",
+      "$type": "color",
+      "$description": "Deep Ink — Primary text, card borders, list dividers, nav labels"
+    },
+    "near-black-green": {
+      "$value": "#031403",
+      "$type": "color",
+      "$description": "Near-Black Green — Secondary text, heavy borders, code-adjacent content"
+    },
+    "bone-white": {
+      "$value": "#e6e6e5",
+      "$type": "color",
+      "$description": "Bone White — Page canvas, outer section backgrounds"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, button text, elevated content blocks"
+    },
+    "frost": {
+      "$value": "#f4f4f4",
+      "$type": "color",
+      "$description": "Frost — Subtle surface fill, decorative washes"
+    },
+    "stone": {
+      "$value": "#8a8a8a",
+      "$type": "color",
+      "$description": "Stone — Muted helper text, inactive borders"
+    },
+    "slate": {
+      "$value": "#696969",
+      "$type": "color",
+      "$description": "Slate — Body secondary text, disabled labels"
+    },
+    "ash": {
+      "$value": "#777777",
+      "$type": "color",
+      "$description": "Ash — Body borders at 1px, low-priority dividers"
+    },
+    "dust": {
+      "$value": "#d1d5db",
+      "$type": "color",
+      "$description": "Dust — Card borders on elevated surfaces, input frames"
+    },
+    "cinder": {
+      "$value": "#2d2d2d",
+      "$type": "color",
+      "$description": "Cinder — Dark mode accents, badge fills, strong contrast borders"
+    },
+    "smoke": {
+      "$value": "#5a5a5a",
+      "$type": "color",
+      "$description": "Smoke — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "iron": {
+      "$value": "#404040",
+      "$type": "color",
+      "$description": "Iron — Dark badges, dense contrast text on tinted chips"
+    },
+    "iris": {
+      "$value": "#7561b1",
+      "$type": "color",
+      "$description": "Iris — Signature emphasis color — hero word highlights, key callouts, brand accents — the only saturated chromatic voice in the system"
+    },
+    "coastal-teal": {
+      "$value": "#96beca",
+      "$type": "color",
+      "$description": "Coastal Teal — Gray action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "slate-blue": {
+      "$value": "#74a9b9",
+      "$type": "color",
+      "$description": "Slate Blue — Decorative borders, icon strokes, secondary blue accents"
+    },
+    "amber-glow": {
+      "$value": "#f4b811",
+      "$type": "color",
+      "$description": "Amber Glow — Yellow outline accent for tags, dividers, and focused UI edges"
+    },
+    "moss": {
+      "$value": "#9db161",
+      "$type": "color",
+      "$description": "Moss — Green outline accent for tags, dividers, and focused UI edges"
+    },
+    "lilac-mist": {
+      "$value": "#ccc6df",
+      "$type": "color",
+      "$description": "Lilac Mist — Tinted card borders, violet-tinted shadow glows"
+    },
+    "pale-aqua": {
+      "$value": "#d5e8ed",
+      "$type": "color",
+      "$description": "Pale Aqua — Cool surface wash, hover state for primary buttons"
+    },
+    "sand-sage": {
+      "$value": "#dfe4d1",
+      "$type": "color",
+      "$description": "Sand Sage — Warm neutral surface, decorative section tint"
+    },
+    "faded-aqua": {
+      "$value": "#b4cfd7",
+      "$type": "color",
+      "$description": "Faded Aqua — Muted border tone, low-contrast decorative strokes"
+    },
+    "dusk": {
+      "$value": "#3a344b",
+      "$type": "color",
+      "$description": "Dusk — Dark violet text — used for emphasis on light surfaces"
+    }
+  },
+  "font": {
+    "onest-variable": {
+      "$value": "Onest Variable",
+      "$type": "fontFamily",
+      "$description": "All interface text — display headlines at weight 300 create a technical-confident tone; body at 16–18px weight 400; labels and micro UI at 11–13px weight 500. Weight 300 headlines are a signature anti-convention choice that makes the system feel like an instrument panel rather than a marketing page"
+    },
+    "monospace-system": {
+      "$value": "monospace (system)",
+      "$type": "fontFamily",
+      "$description": "Telemetry values, code snippets, configuration keys, metric labels in the product UI. Used at 10–12px weight 500 for data density; 0.057em tracking gives a technical, terminal-like read"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.mezmo.com",
+      "siteName": "Mezmo",
+      "extractedAt": "2026-06-03T21:31:54.359Z",
+      "variant": "compact"
+    }
+  }
+}

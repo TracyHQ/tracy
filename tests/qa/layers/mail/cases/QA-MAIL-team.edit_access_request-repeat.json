@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.edit_access_request-repeat",
+  "itemIds": [
+    "letter:team.edit_access_request:en",
+    "letter:team.edit_access_request:vi",
+    "letter:team.edit_access_request:de",
+    "letter:team.edit_access_request:it",
+    "letter:team.edit_access_request:fr",
+    "letter:team.edit_access_request:nl",
+    "letter:team.edit_access_request:zh",
+    "letter:team.edit_access_request:es"
+  ],
+  "requirement": "team.edit_access_request renders identically twice and leaves its input unchanged",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 7",
+    "invariant": "a held or retried letter is rendered again at send time and must read the same"
+  },
+  "edgeTags": ["repeat"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.repeat#team.edit_access_request:"],
+  "redProof": null,
+  "legacyIds": []
+}

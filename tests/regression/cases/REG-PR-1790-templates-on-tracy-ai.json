@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1790-templates-on-tracy-ai",
+  "kind": "feat",
+  "title": "Production Templates pages state tracy.ai, move direct visits there with a 301, serve the tracy.ai Worker, and demos may be framed by tracy.ai",
+  "pr": 1790,
+  "area": "public/templates",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the tracy-web HTTP seam tests: node --test apps/tracy-web/test/public-templates-page.test.mjs (production default origin, 301 vs CF-Worker pass-through, dev unaffected, /templates/sitemap.xml and /templates/llms.txt, one-hop design-inspiration redirects).",
+    "S2: Run the fleet frame policy tests: node --test packages/fleet/tracy-fleet-operation/test/frame-policy.test.mjs packages/fleet/tracy-fleet-operation/test/site-apache-conf.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes, including 'the production deployment states https://tracy.ai by default' and 'a direct visit to a Templates address answers 301'.",
+    "S2: every test passes; the renderer prints frame-ancestors with https://tracy.ai beside https://*.tracy.ai, and a policy written before the apex upgrades."
+  ],
+  "selectors": {
+    "doors": "GET /templates/, /templates/<id>/, /templates/sitemap.xml, /templates/llms.txt, /robots.txt; header CF-Worker",
+    "files": "apps/tracy-web/src/public/templates-indexing.js, packages/fleet/tracy-fleet-operation/scripts/lib/frame-policy.sh"
+  },
+  "evidence": "Before this change production canonical/sitemap named cowork.tracy.ai, cowork served /templates/ itself, and demo sites refused to be framed by https://tracy.ai",
+  "fence": "templatesPublicOrigin default, the toPublicOrigin middleware and the managed frame-ancestors renderer",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/public-templates-page.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/frame-policy.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/site-apache-conf.test.mjs"
+    ]
+  }
+}

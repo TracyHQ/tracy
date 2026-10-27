@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-webflow-blue: #146ef5;
+  --color-indigo-ink: #1366e2;
+  --color-mercury-tint: #6ca7ff;
+  --color-mint-pulse: #60ed76;
+  --color-apricot-glow: #ffa666;
+  --color-obsidian: #080808;
+  --color-pure-white: #ffffff;
+  --color-slate: #5a5a5a;
+  --color-ash-border: #d8d8d8;
+  --color-smoke: #bdbdbd;
+  --color-graphite: #222222;
+  --color-onyx: #171717;
+  --color-mist: #f0f0f0;
+  --color-charcoal: #292929;
+
+  /* Typography — Font Families */
+  --font-wf-visual-sans-variable: 'WF Visual Sans Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wf-visual-sans-mono: 'WF Visual Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

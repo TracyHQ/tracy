@@ -1,0 +1,74 @@
+{
+  "color": {
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Page canvas, dominant background — absorbs everything so content and the warm gradient banner can command attention"
+    },
+    "surface-black": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Surface Black — Card backgrounds, elevated panels, filled neutral button surface — one step off the canvas creates depth without gray noise"
+    },
+    "lifted-charcoal": {
+      "$value": "#252525",
+      "$type": "color",
+      "$description": "Lifted Charcoal — Mid-elevation surfaces, hover states, and subtle card depth — bridges the page black and border tones"
+    },
+    "border-gray": {
+      "$value": "#343434",
+      "$type": "color",
+      "$description": "Border Gray — Hairline dividers, card outlines, table rules — defines structural edges in a flat world"
+    },
+    "edge-gray": {
+      "$value": "#4d4d4d",
+      "$type": "color",
+      "$description": "Edge Gray — Heavier borders on outlined buttons and grouped control frames"
+    },
+    "muted-text": {
+      "$value": "#888888",
+      "$type": "color",
+      "$description": "Muted Text — Secondary body text, metadata, timestamps, supporting copy"
+    },
+    "helper-gray": {
+      "$value": "#a0a0a0",
+      "$type": "color",
+      "$description": "Helper Gray — Body text borders and subtle helper text where full white feels too loud"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary headings, nav text, button text, logo fill — the only color allowed to compete with the gradient banner"
+    },
+    "amber-glow": {
+      "$value": "#ffc840",
+      "$type": "color",
+      "$description": "Amber Glow — Promotional banner start — the cool-yellow origin of the warm spotlight gradient (also gradient)"
+    },
+    "ember-orange": {
+      "$value": "#ff8a00",
+      "$type": "color",
+      "$description": "Ember Orange — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    },
+    "crimson-heat": {
+      "$value": "#fa3a19",
+      "$type": "color",
+      "$description": "Crimson Heat — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Sole typeface. Inter 700/800 for the wordmark and section headlines (confident, instructor-led); 600 for video titles and nav labels; 400 for body copy and metadata. No display-size font in the system — the brand keeps type compact (capped at 24px) and lets the gradient banner and video thumbnails carry visual weight instead."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://designfulltime.com",
+      "siteName": "Design Full-Time",
+      "extractedAt": "2026-06-03T21:30:15.398Z",
+      "variant": "compact"
+    }
+  }
+}

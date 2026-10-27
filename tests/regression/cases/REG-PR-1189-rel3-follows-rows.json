@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1189-rel3-follows-rows",
+  "kind": "fix",
+  "title": "REL-3 names the newest older JA Essence row (1.0.6), so the readiness test follows template-profiles.json",
+  "pr": 1189,
+  "area": "quickstarts/readiness",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: Run apps/tracy-web/test/template-customization-question-readiness-a.test.mjs."],
+  "expect": [
+    "S1: 'REL-3: a version with only a lower row borrowed fails' passes: JA Essence j6 1.0.9 fails REL-3 naming only the older 1.0.6 row."
+  ],
+  "selectors": {},
+  "evidence": "develop d4296ab5e8: tests 2/2 red on every PR after 3f217bacd0 pinned JA Essence 1.0.6 while the test still expected 1.0.5",
+  "fence": "the test expects the newest row below the asked version that template-profiles.json actually holds",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/template-customization-question-readiness-a.test.mjs"
+    ],
+    "cwd": "apps/tracy-web",
+    "tests": ["REL-3: a version with only a lower row borrowed fails"]
+  }
+}

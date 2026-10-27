@@ -1,0 +1,129 @@
+/* wp-ja-restaurant: acm/slideshow/css/style.css of the JA Restaurant 1.0.6 Joomla template (GPL v3, JoomlArt), carried rule for rule by tasks/ja-restaurant-wp7/tools/port-css.mjs (DECISIONS D-10). Colours read light-dark(<source>, <derived dark, D-03>); do not edit by hand, re-run the tool. */
+.acm-slideshow .owl-carousel {
+  cursor: move;
+  padding: 0;
+  overflow: hidden;
+  background: var(--ds-c-bg, #333333);
+}
+.acm-slideshow .owl-carousel .transition(all 400ms) .owl-wrapper-outer {
+  z-index: 0;
+}
+.acm-slideshow .owl-carousel .owl-controls {
+  margin: 0;
+}
+.acm-slideshow .owl-carousel .owl-controls .owl-pagination {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  padding-right: 50px;
+  text-align: right;
+  margin: 0;
+  width: 100%;
+}
+@media (max-width: 767px) {
+  .acm-slideshow .owl-carousel .owl-controls .owl-pagination {
+    bottom: 0;
+    padding-right: 15px;
+  }
+}
+@media (min-width: 992px) {
+  .acm-slideshow .owl-carousel .owl-controls .owl-pagination {
+    padding-right: 145px;
+  }
+}
+.acm-slideshow .owl-carousel .owl-controls .owl-pagination .owl-page span.owl-numbers {
+  border-radius: var(--ds-btn-radius, 0);
+  margin: 15px 7.5px;
+}
+@media (max-width: 767px) {
+  .acm-slideshow .owl-carousel .owl-controls .owl-pagination .owl-page span.owl-numbers {
+    min-width: 40px;
+    line-height: 36px;
+  }
+}
+.acm-slideshow .owl-carousel .owl-controls .owl-pagination .owl-page.active span.owl-numbers {
+  background: var(--ds-c-accent, #d24a24);
+  color: var(--ds-c-accent-on, #ffffff);
+}
+.acm-slideshow .owl-carousel .owl-controls .owl-buttons > div {
+  border-radius: var(--ds-btn-radius, 0);
+  background: var(--ds-c-accent, #d24a24);
+  position: absolute;
+  top: 50%;
+  line-height: 80px;
+  left: -80px;
+  font-size: 22px;
+  padding: 0;
+  margin: 0;
+  margin-top: -40px;
+  text-align: center;
+  height: 80px;
+  width: 80px;
+  filter: alpha(opacity=60);
+  opacity: 0.6;
+  -webkit-transition: all 500ms;
+  -o-transition: all 500ms;
+  transition: all 500ms;
+}
+.acm-slideshow .owl-carousel .owl-controls .owl-buttons > div:hover,
+.acm-slideshow .owl-carousel .owl-controls .owl-buttons > div:focus,
+.acm-slideshow .owl-carousel .owl-controls .owl-buttons > div:active {
+  filter: alpha(opacity=80);
+  opacity: 0.8;
+}
+.acm-slideshow .owl-carousel .owl-controls .owl-buttons > div.owl-next {
+  right: -80px;
+  left: auto;
+  margin-left: 0;
+}
+@media (max-width: 767px) {
+  .acm-slideshow .owl-carousel .owl-controls .owl-buttons {
+    display: none;
+  }
+}
+.acm-slideshow .owl-carousel:hover .owl-buttons > div {
+  left: 0;
+}
+.acm-slideshow .owl-carousel:hover .owl-buttons > div.owl-next {
+  right: 0;
+}
+.acm-slideshow .item {
+  position: relative;
+}
+.acm-slideshow .item .slide-content {
+  color: #ffffff ; /* ds-keep: words on a photo or scrim: the picture decides the ground, not a design role */
+  font-size: 58px;
+  line-height: 58px;
+  font-family: var(--ds-font-body, var(--ja-font-sans-serif, "Teko"), sans-serif);
+  font-weight: 700;
+  text-align: justify;
+  text-transform: uppercase;
+  position: absolute;
+  padding-right: 25px;
+  padding-left: 25px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+@media (min-width: 992px) {
+  .acm-slideshow .item .slide-content {
+    font-size: 100px;
+    line-height: 100px;
+    width: 595px;
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+@media (max-width: 767px) {
+  .acm-slideshow .item .slide-content {
+    font-size: 22px;
+    line-height: 1.3;
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+.acm-slideshow .item .slide-content .slide-title {
+  position: relative;
+  z-index: 1;
+}

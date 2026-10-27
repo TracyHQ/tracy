@@ -1,0 +1,79 @@
+{
+  "color": {
+    "hyperspace-violet": {
+      "$value": "#6100ff",
+      "$type": "color",
+      "$description": "Hyperspace Violet — Primary CTA fill, filled action backgrounds, and dominant accent border — a saturated electric violet that reads as powered-on against pure black"
+    },
+    "reactor-yellow": {
+      "$value": "#fcff76",
+      "$type": "color",
+      "$description": "Reactor Yellow — Green outline accent for tags, dividers, and focused UI edges."
+    },
+    "plasma-green": {
+      "$value": "#00ff85",
+      "$type": "color",
+      "$description": "Plasma Green — Secondary accent for headings, link text, and body emphasis — a neon mint that signals live/active states and reads as data flowing through the HUD"
+    },
+    "crimson-alert": {
+      "$value": "#ff003d",
+      "$type": "color",
+      "$description": "Crimson Alert — Red outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color"
+    },
+    "deep-indigo": {
+      "$value": "#29006c",
+      "$type": "color",
+      "$description": "Deep Indigo — Mid-tier surface fill for button backgrounds and elevated dark panels — sits between pure black and Hyperspace Violet"
+    },
+    "plum-void": {
+      "$value": "#1a0014",
+      "$type": "color",
+      "$description": "Plum Void — Pink state accent for badges, validation surfaces, and short status labels. Do not promote it to the primary CTA color"
+    },
+    "ember-violet": {
+      "$value": "#7000ff",
+      "$type": "color",
+      "$description": "Ember Violet — Decorative surface wash and large-area violet background — lighter and more luminous than Hyperspace Violet, used where broad violet fields appear"
+    },
+    "amber-signal": {
+      "$value": "#ff8a00",
+      "$type": "color",
+      "$description": "Amber Signal — Tertiary accent for table data, secondary highlights, and rare warm punctuation — used sparingly so it reads as a specific instrument indicator"
+    },
+    "photon-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Photon White — Primary text, hairline borders, and 1px box-shadow wireframes — functions as the structural linework of the entire interface, not just foreground text"
+    },
+    "null-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Null Black — Page canvas and button borders — the flat dark void from which all colored elements emerge"
+    },
+    "graphite": {
+      "$value": "#949494",
+      "$type": "color",
+      "$description": "Graphite — Muted text, nav borders, and secondary structural lines — the de-energized neutral for inactive labels and supporting metadata"
+    },
+    "carbon": {
+      "$value": "#606060",
+      "$type": "color",
+      "$description": "Carbon — Lowest-priority dividers and button outlines — the dimmest neutral, used where structure is needed but emphasis is not"
+    }
+  },
+  "font": {
+    "gt-planar": {
+      "$value": "GT Planar",
+      "$type": "fontFamily",
+      "$description": "The custom GT Planar face carries the entire brand — geometric, monospaced-influenced letterforms with multiple stylistic sets. Used at every level from 11px captions to 274px display. Weight 300 for light technical labels, 400 for body, 700 for emphasis and display. OpenType features include stylistic sets ss01–ss04 and tabular numerals (tnum) for data contexts."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://gt-planar.com",
+      "siteName": "Gt-planar",
+      "extractedAt": "2026-06-03T17:48:34.152Z",
+      "variant": "compact"
+    }
+  }
+}

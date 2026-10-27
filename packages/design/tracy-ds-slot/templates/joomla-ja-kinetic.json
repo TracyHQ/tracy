@@ -1,0 +1,525 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-kinetic",
+  "minVersion": {
+    "quickstart/ja-kinetic/j6": "1.0.4"
+  },
+  "maxVersionNote": "13/10/2026: 1.0.6 = 1.0.5 with its stylesheets tokenized again with today's contract (words on the accent read accent-on; TDSR CSS-2, fix/tdsr-css2), verified from its own archive: 0 computed differences in the default look, every page answers as 1.0.5. 1.0.7 16/10/2026 (#1375): re-cut of 1.0.6 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json). 1.0.8 16/10/2026 (feat/ds-role-variables): the 1.0.6 pair with the template read the standard role variables at its source (JoomlArt-Products/ja-products feat/ds-role-variables, through 9cd756912) laid over it and tokenized with this contract (release-joomla.mjs --overlay, --as 1.0.8 because #1375's 1.0.7 is cut but not uploaded; its contract starts from 1.0.7's regated content map), the role scan clean (design-system-roles.json, 0 unresolved), verified from its own archive: 0 computed differences in the default look against 1.0.6 as released.",
+  "maxVersion": {
+    "quickstart/ja-kinetic/j6": "1.0.8"
+  },
+  "release": "quickstart/ja-kinetic/j6@1.0.3",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.hx-h1",
+    "heading": "h2.acm-bento-title",
+    "body": "p.hx-sub",
+    "button-primary": "div.hx-btnrow a.hx-btn.hx-btn--primary",
+    "card": "div.hx-card.acm-bento-tile",
+    "container": "div.hx-container.hx-pad",
+    "section": "div.ja-acm.acm-bento section.hx-section.hx-pad"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 52px",
+    "displayFace": "Space Grotesk 700, tracking -0.029em",
+    "heading": "first section heading: 38px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(163, 230, 53)",
+    "card": "repeated rounded box ×6",
+    "container": "first content container, max-width 1240px",
+    "section": "first padded full-width section, padding-top 88px"
+  },
+  "keepScopes": [],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#0a0d0c",
+    "--fg": "#9aa6a1",
+    "--fg-2": "#f2f5f3",
+    "--accent": "#a3e635",
+    "--accent-hover": "#3f6a0a",
+    "--surface": "#121614",
+    "--surface-warm": "#161b18",
+    "--meta": "#9aa6a1",
+    "--success": "#30a46c",
+    "--warn": "#f5a623",
+    "--danger": "#e5484d",
+    "--border": "#232a27",
+    "--muted": "#666666",
+    "--font-display": "\"Space Grotesk\", sans-serif",
+    "--font-body": "\"IBM Plex Sans\", sans-serif",
+    "--accent-on": "#0a0d0c"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#fbfcfa",
+      "fg": "#46514b",
+      "fg-2": "#10140f",
+      "accent": "#4d7c0f",
+      "accent-hover": "#3f6a0a",
+      "surface": "#f2f5ee",
+      "surface-warm": "#161b18",
+      "meta": "#9aa6a1",
+      "success": "#30a46c",
+      "warn": "#f5a623",
+      "danger": "#e5484d",
+      "border": "#e4e8e0",
+      "muted": "#666666"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "fg-2": "#ffffff",
+      "bg": "#000000",
+      "border": "#212529",
+      "muted": "#5f6b66"
+    },
+    {
+      "bg": "#0a0d0c"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (24 line colours, 53 text colours seen)",
+  "selectors": {
+    "themeToggle": ".kinetic-theme-toggle",
+    "displaySize": "h1.hx-h1",
+    "heading": [".t4-section h2:not(:where(.acm-cta.cta-bar *))", "main h2:not(:where(.acm-cta.cta-bar *))"],
+    "button": [
+      ".btn",
+      "a.hx-btn.hx-btn--primary:not(:where(.hx-plan-cta))",
+      "div.hx-btnrow a.hx-btn.hx-btn--ghost"
+    ],
+    "buttonPrimary": [".btn-primary", "a.hx-btn.hx-btn--primary:not(:where(.hx-plan-cta))"],
+    "card": ["div.hx-card.acm-bento-tile", ".card"],
+    "container": [
+      ".t4-section .container",
+      "div.hx-container",
+      "div.kinetic-header-inner",
+      "div.kinetic-footer-inner"
+    ],
+    "section": ["section.hx-section.hx-pad:not(:where(.acm-clients *))"],
+    "bodyFace": ["body"],
+    "eyebrow": [".hx-eyebrow", ".acm-bento-eyebrow", ".acm-split-eyebrow", ".hx-cta-eyebrow"],
+    "cardLike": [".hx-card"],
+    "displayFace": [
+      ":is(.kinetic-footer .hx-foot-news-band .hx-news-title, .acm-clients .acm-clients-mark-letter, .acm-clients .acm-clients-card-name, .acm-bento .acm-bento-stat, .acm-bento.style-2 .acm-bento-stat-val, .acm-features-ledger .hx-stat-val, .acm-features-ledger .hx-spec-stat-val, .acm-features-ledger .hx-metric-value, .acm-testimonials .hx-testi-hero .hx-testi-q, .acm-testimonials .hx-testi-chip, .hx-prose blockquote, .com-content-article__body blockquote, .hx-prose-quote, .hx-auaside__n, .hx-aucard__n, .hx-method__title, .hx-pi-title, .hx-plan-name, .kinetic-finder__title, .hx-author__av, .hx-bloglist__title, .hx-cat-name, .hx-feat-head__l, .hx-featcard__title, .hx-fl-ruled-title, .acm-incident-timeline .hx-inc-time, .hx-plan-amount, .hx-related__ti, .acm-features-ledger .hx-spec-num, .hx-team-chip, .hxcat-row__title, th:not(.hx-pm-label), .hx-faq-qtext, blockquote)"
+    ],
+    "textFace": [
+      ":is(.kinetic-footer .hx-foot-brand .acm-social .hx-social-label, .kinetic-header .hx-desknav .t4-megamenu .nav > li > a, .kinetic-header .hx-desknav .t4-megamenu .nav > li > .nav-link, .kinetic-header .hx-desknav .t4-megamenu .dropdown-menu-inner ul > li > a, .kinetic-offcanvas.t4-offcanvas .t4-off-canvas-body li > a, .hx-btn, .kinetic-btn, .acm-features-ledger, .acm-testimonials, .acm-testimonials .hx-testi-small .hx-testi-q, .acm-testimonials .hx-testi-name, .acm-social, .acm-cta .hx-cta-sub, .acm-cta .hx-cta-btn, .kinetic-footer .hx-foot-news-band .hx-news-desc, .kinetic-footer .hx-foot-news-band .acysubbuttons .btn, .kinetic-footer .hx-foot-news-band .acysubbuttons input.button, .hx-pi-btn, .hx-sup-btn, .controls .btn, .com-users-registration__register, :is(.com-content-article__body, .hx-prose-body, .hx-blogmast__desc, .hxcat-sub) :is(p, li), .com-content-article__body, .hx-aucard__c, .hx-method__desc, .hx-pi-desc, .kinetic-contactform__field label, .hx-arch-empty, .hx-archmast__sub, .hx-article__sub, .hx-auaside__bio, .hx-aupost__e, .hx-author__sub, .hx-authors__sub, .hx-blogexcerpt, .hx-cats-sub, .hx-feat-text, .hx-inc-text, .hx-lead, .hx-mast-sub, .hx-plan-desc, .hx-sup-sub, .kinetic-auth-masthead__sub, .hx-railitem span, .hx-author__name, .hx-cat-desc, .hx-featcard__excerpt, .hx-monthrow__m, .hx-pm-cell, .hxcat-catrow__n, .hxcat-row__excerpt, .hx-pm-label, .hx-faq-a, .hx-plan-features :is(li, span), .kinetic-auth__checklist li span)"
+    ],
+    "featuredCard": {
+      ".acm-pricing .hx-plan.is-popular": "border"
+    }
+  },
+  "featuredCardNote": "15/10/2026: the popular plan (.hx-plan.is-popular) is marked by a border in the accent: under a system it takes the system's accent read 3:1 on the page, else its readable accent text (tokens56.mjs featuredCardRules), as on JA Kinetic WordPress",
+  "selectorsNote": "container: measured only, not worn (15/10/2026: the slot keeps the template's width on every column, tokens56 layoutRules); every div.hx-container, not only the padded ones, and the header's and footer's inner columns: when the slot still wore the system's width, the hero, timeline and testimonials took the system's width while \"What you get\", the metrics band, the header and the footer kept 1240px, so the sections started at two left edges (edge-split, LAYOUT-3, 14/10/2026). The logo strip (.acm-clients style-1) is a strip the template draws with no padding (padding-block 0, the ticker under it): with the system's section rhythm it grew to 337px, a tall empty band WordPress does not have (14/10/2026); it keeps its own. displayFace / textFace: the parts its stylesheets set in \"Space Grotesk\" / \"IBM Plex Sans\" by name, not through a variable (logo, client logos, testimonial quotes, stats; menu, buttons, metrics, testimonials): under a system with faces they kept the template's while the rest of the page moved (template-fonts-left 9 under Moxie, 29 under Figma and Toggl Track, 14/10/2026); WordPress paints them through its font presets and follows",
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .card p",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "header-cta",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 17 tried (byte 17328); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 222,
+      "kind": "text",
+      "role": "fg-2",
+      "near": "#f2f5f3",
+      "distance": 20
+    },
+    {
+      "hex": "#000000",
+      "uses": 66,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#0a0d0c",
+      "distance": 20
+    },
+    {
+      "hex": "#212529",
+      "uses": 14,
+      "kind": "custom",
+      "role": "border",
+      "near": "#232a27",
+      "distance": 6
+    },
+    {
+      "hex": "#5f6b66",
+      "uses": 5,
+      "kind": "custom",
+      "role": "muted",
+      "near": "#666666",
+      "distance": 9
+    },
+    {
+      "hex": "#0a0d0c",
+      "uses": 4,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#0a0d0c",
+      "distance": 0
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on a stand built from the published 1.0.4 (its minVersion), T4 sheets regenerated (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-kinetic-j6): first 8/12 under the light systems (incident-timeline band left near-black with the system's dark text 1.11:1 under Apple, footer grey #7F8B86 on the light chrome 2.96:1, sky-blue eyebrows 1.62:1 under MotherDuck, dark ink on Apple's blue 4.16:1); fixed module-side only, no new release: the template variables its dark look leaves literal (--elevated, --muted, --chrome-muted, --primary-ink) follow through a tokenScope that outranks html.t4-dark[data-style], eyebrows and timeline times take the readable accent, the KineticQL call to action the accent's own text, the closing card's eyebrow darkened under a light system; then 12/12, controls 0, follows 99-100%, no text worse than the template's own; eye check on Moxie, MotherDuck, Toggl Track, Apple desktop + phone passed; earlier: measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-kinetic-j6): default unchanged, no text made less readable than the template's own under the systems tried",
+  "tokenScope": ":root, html[data-theme=\"dark\"], html.t4-dark, [data-bs-theme=\"dark\"], html.t4-dark[data-style]:root",
+  "tokenScopeNote": "its dark look declares its own variables on html.t4-dark[data-style=terminal] (0,2,1), above the family's html.t4-dark: the last selector lets the system's values and the template variables below win there, on the same element",
+  "modes": true,
+  "modesNote": "the template has a light/dark switch (.kinetic-theme-toggle in the header; js/darkmode.js and the pre-paint resolver in index.php set data-theme light|dark on html, and t4-dark on the dark side; ?theme=light|dark on the address): the module sheet writes the system's own side under the template's matching mode and the other side derived from it (src/derive.mjs, src/sides.mjs), and does not hide the switch (Akemi 13/10/2026: hiding it is a bug; MODE-2). Without it the Design system preview offered no Light | Dark for JA Kinetic Joomla while its WordPress twin did (14/10/2026)",
+  "modesAuto": false,
+  "modesAutoNote": "the pre-paint resolver in index.php always sets data-theme (light or dark, from the cookie, ?theme= or the template's default) before the page paints, so no 'auto' state is left to the OS: the OS-dark copy is not written, and the module stays under its 64 KB column (85 KB with it, 14/10/2026)",
+  "modeHook": "[data-theme=\"dark\"][data-bs-theme=\"dark\"].t4-dark",
+  "modeHookNote": "js/darkmode.js and the pre-paint resolver in index.php mark the dark side with three marks on the root, set and cleared together: data-theme=\"dark\", data-bs-theme=\"dark\" (the Bootstrap colour-mode rules template.css carries, 29 of them) and the class t4-dark (the template and darkmode sheets key almost every dark rule on html.t4-dark, 79 selectors; light on html:not(.t4-dark)). The slot sides and the Design system popup Light | Dark read and set all three (src/sides.mjs, design-system-live-page.js). With the default data-theme hook a press set only data-theme: the template opens dark, so Light left t4-dark and data-bs-theme=dark on the page (header switch showing the dark side icon, headings in the dark side weight and grey, the integrations icons in the dark side lime on the light page; reproduced in the live frame on the published 1.0.8, 18/10/2026), and a page opened light (cookie or ?theme=light) pressed Dark got the system dark colours over the template light rules. Same marks and fix as the WordPress twin (d2aa12a507). The flow turns a hooked page with its own switch (selectors.themeToggle, .kinetic-theme-toggle in the header and the drawer), as a visitor does: without it the flow found no switch and left the page on the template dark side under every light system (MODE-1).",
+  "templateVars": {
+    "--surface": "var(--ds-c-surface)",
+    "--chrome-surface": "var(--ds-c-surface)",
+    "--elevated": "var(--ds-c-surface-warm)",
+    "--chrome-elevated": "var(--ds-c-surface-warm)",
+    "--muted": "var(--ds-c-muted)",
+    "--chrome-muted": "var(--ds-c-muted)",
+    "--primary-ink": "var(--ds-c-accent-on)",
+    "--heading": "var(--ds-c-fg)"
+  },
+  "templateNote": "JA Kinetic acceptance (14/10/2026): --elevated and --chrome-elevated (the timeline band, the closing card and the footer) take the system's quiet raised surface, surface-warm, as the WordPress twin's theme maps them: on the card surface they stood as grey blocks on Moxie's black page (loud-band, GROUND-2). Two-mode preview (14/10/2026): the light look writes --surface and --chrome-surface as literal #FFFFFF (its dark look reads var(--ds-c-surface)); the preview frame runs no script, so its dark side has data-theme but no t4-dark and kept the light look's white: the closing card faded from the system's ground to white (gradient-stop): both follow the system surface on either look. JA Kinetic paints with its own variables, and its dark look (the default) leaves four of them literal: --elevated #0F1311 (the incident-timeline and call-to-action bands), --muted and --chrome-muted #7F8B86 (labels, footer text) and --primary-ink #0A0D0C (text on its lime buttons). Under a light system the bands stayed near-black while their text took the system's dark text (1.11:1 under Apple), the footer's grey sat on the system's light chrome (2.96:1 under MotherDuck) and dark ink sat on Apple's blue (4.16:1; round-3 probe, 11/10/2026): the bands take the surface, the greys the system muted, the ink the accent's own text colour --heading takes the system text colour, var(--ds-c-fg): the template reads its headings from fg-2, its brighter heading colour, while the slot fg-2 is a softer secondary text, so every heading read quieter than the body under a system (HIER-2 heading-quiet, 82 issues, 15/10/2026).",
+  "followRules": {
+    ":is(.hx-eyebrow, .kinetic-eyebrow, .acm-kineticql-split .acm-split-eyebrow, .acm-testimonials .hx-eyebrow, .acm-bento .acm-bento-eyebrow, .acm-clients .acm-clients-eyebrow, .acm-features-ledger .hx-metrics-badge, .kinetic-auth__eyebrow, .hx-spec-cardhead-r, .acm-features-ledger .hx-spec-num, .hx-blogtopics__lbl, .hx-featcard__cat, .hx-team-chip, .hx-method__email, .hx-related__tag, .hx-monthrow__m, .hxcat-tag, .hx-aupost__tag)": {
+      "color": "accent-text"
+    },
+    ".acm-cta .hx-cta-eyebrow": {
+      "color": "accent-text"
+    },
+    ".acm-incident-timeline .hx-inc-time": {
+      "color": "accent-text"
+    },
+    ".acm-kineticql-split .acm-split-cta": {
+      "color": "accent-on"
+    },
+    ".hx-prose a:not([class*=btn])": {
+      "color": "accent-text"
+    },
+    ".kinetic-tags-pill": {
+      "background-color": "surface"
+    },
+    ".kinetic-tags-pill:hover": {
+      "background-color": "surface-warm"
+    },
+    ".kinetic-tags-pill:focus-visible": {
+      "background-color": "surface-warm"
+    },
+    ".hx-aucard:hover .hx-aucard__n": {
+      "color": "accent-text"
+    },
+    ".hx-aucard:focus-visible .hx-aucard__n": {
+      "color": "accent-text"
+    },
+    ":is(.hx-blogmast .hx-eyebrow, .kinetic-finder__masthead .kinetic-eyebrow, .hx-cats-pill, .hx-au-pill__t, .hxcat-pill)": {
+      "color": "accent-text!"
+    },
+    ":is(.hx-prose h2, .hx-prose h3, .hx-prose h4, .com-content-article__body h2, .com-content-article__body h3, .com-content-article__body h4, .acm-cta.cta-bar .hx-cta-title)": {
+      "color": "fg"
+    },
+    ":is(body.site-signal, body.site-signal .t4-content)": {
+      "background-color": "bg"
+    },
+    ".hx-sup-section": {
+      "background-color": "surface-warm!"
+    },
+    ".acm-cta.cta-bar .hx-section": {
+      "background-color": "bg"
+    }
+  },
+  "followNote": "its eyebrows (each block's own: hx, bento, clients, split, testimonials, call to action, sign-in), timeline times, metrics badge and article links are text in var(--primary), the system accent: MotherDuck's sky blue on its cream, 1.62:1: they take the readable accent; the KineticQL call to action writes its own dark ink (--split-primary-ink, declared on the block) on the accent: it takes the accent's own text colour The Signal home (body.site-signal) paints its page and content column in a hair-lifted tint the auto palette reads as the card surface: under a dark system the whole page stood 1.21:1 off its header and bands; it takes the page ground. The FAQ support band takes the quiet raised surface, as the other bands do (GROUND-2 loud-band, 15/10/2026). The Integrations page's closing call-to-action bar (.acm-cta.cta-bar .hx-section, page-219.css) paints its section in var(--ds-c-ink) while html carries .t4-dark (the template's own dark side, its default, which the class keeps in the Add site preview and on a site whose visitor stays dark under a light system) and var(--ds-c-bg) otherwise; the template draws it level with its page (1.00:1), but under a system ink is the system's text (light) or its lifted ink (dark): Moxie made it a pitch-black band under its light side and a grey one under its dark side (GROUND-2 loud-band, probe v10, 18/10/2026). It takes the page ground on both sides.",
+  "sideRules": {
+    "light": {
+      ".acm-cta .hx-cta-eyebrow": {
+        "color": "color-mix(in srgb, var(--ds-c-accent-text) 80%, #000)"
+      },
+      ".acm-incident-timeline .hx-inc-time": {
+        "background-color": "var(--elevated)",
+        "box-shadow": "0 0 0 6px var(--elevated)"
+      },
+      ".com-tags__masthead": {
+        "background-image": "radial-gradient(ellipse 150% 120% at 50% 0%, color-mix(in srgb, var(--ds-c-accent) 6%, transparent) 0%, var(--ds-c-surface) 55%)"
+      },
+      ".pagination .page-link": {
+        "border-radius": "var(--kinetic-ds-btn-radius, 8px) !important"
+      },
+      ":is(.kinetic-auth button[type=submit].btn-primary, .kinetic-finder .kinetic-finder__submit, .kinetic-contactform__actions button, .acm-cta .hx-cta-btn, .hx-sup-btn, .hx-pi-btn, .acm-kineticql-split .acm-split-cta, a.hx-btn.hx-plan-cta)": {
+        "border-radius": "var(--kinetic-ds-btn-radius, 9px) !important"
+      },
+      "a.hx-btn.hx-btn--primary.hx-plan-cta": {
+        "background-color": "var(--ds-c-accent)",
+        "background-image": "none",
+        "border-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      "pre code": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      ":is(.kinetic-contact .control-label, .kinetic-contactform label, .kinetic-finder .kinetic-finder__sub)": {
+        "font-family": "var(--ds-font-body) !important"
+      },
+      ":is(.kinetic-finder .kinetic-finder__title, .hx-article .hx-prose blockquote)": {
+        "font-family": "var(--ds-font-display-face) !important"
+      }
+    },
+    "dark": {
+      ".acm-incident-timeline .hx-inc-time": {
+        "background-color": "var(--elevated)",
+        "box-shadow": "0 0 0 6px var(--elevated)"
+      },
+      ".com-tags__masthead": {
+        "background-image": "radial-gradient(ellipse 150% 120% at 50% 0%, color-mix(in srgb, var(--ds-c-accent) 6%, transparent) 0%, var(--ds-c-surface) 55%)"
+      },
+      ".pagination .page-link": {
+        "border-radius": "var(--kinetic-ds-btn-radius, 8px) !important"
+      },
+      ":is(.kinetic-auth button[type=submit].btn-primary, .kinetic-finder .kinetic-finder__submit, .kinetic-contactform__actions button, .acm-cta .hx-cta-btn, .hx-sup-btn, .hx-pi-btn, .acm-kineticql-split .acm-split-cta, a.hx-btn.hx-plan-cta)": {
+        "border-radius": "var(--kinetic-ds-btn-radius, 9px) !important"
+      },
+      "a.hx-btn.hx-btn--primary.hx-plan-cta": {
+        "background-color": "var(--ds-c-accent)",
+        "background-image": "none",
+        "border-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      "pre code": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      ":is(.kinetic-contact .control-label, .kinetic-contactform label, .kinetic-finder .kinetic-finder__sub)": {
+        "font-family": "var(--ds-font-body) !important"
+      },
+      ":is(.kinetic-finder .kinetic-finder__title, .hx-article .hx-prose blockquote)": {
+        "font-family": "var(--ds-font-display-face) !important"
+      }
+    }
+  },
+  "sideNote": "the timeline's time labels (t+0s, t+30s…) sit on its connector line, which the template draws in its --border, a hairline 1.1:1 off its band; under a system with a hard border (Figma's black, Moxie dark's cream) the line struck through every label (struck-text, 14/10/2026): on both sides each label masks the line with the band's own ground (var(--elevated)) and a 6px ring of it, as the WordPress twin does. The closing call-to-action card tints its ground with 12% of the accent (a radial gradient over --elevated): under a light system the readable accent of its eyebrow lost a step on that tint (Apple #016edb on #e8eff7, 4.27:1): there it is darkened a fifth toward black Buttons the template draws with its own classes (ghost hero button, call-to-action buttons, support and pricing-intro buttons, the KineticQL docs link) and its form submit buttons (set 9px !important by the page sheets) take the system button corner through --kinetic-ds-btn-radius (tokenFromSlot), radius only so their size stays the template own; 9px when the system states no corner (BTN-1 button-role, 15/10/2026). The pricing cards' buttons (a.hx-btn.hx-plan-cta, ghost Free and Enterprise, primary Team) keep the template's size as one row: as a button role the primary Team button alone took the system's button padding and size (7px under Moxie, 16px under Figma) and stood 30px tall beside two 40px ghosts (BTN-2 uneven-row, 15/10/2026); it is out of the button roles and takes the accent pair here. Faces the page sheets set !important (the finder title, the article quote, the contact form labels, the finder sub-line) take the system faces !important through --ds-font-display-face / --ds-font-body; pre code takes --ds-font-mono (FONT-2, 15/10/2026).",
+  "tokenFromSlot": {
+    "--kinetic-ds-btn-radius": "--ds-btn-radius"
+  },
+  "paletteKeep": [
+    {
+      "selector": ".t4-content",
+      "reason": "the content area: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".t4-header",
+      "reason": "the T4 header shell: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".kinetic-header",
+      "reason": "the header chrome: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".t4-megamenu",
+      "reason": "the menu and its dropdowns: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".t4-offcanvas",
+      "reason": "the phone menu panel: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".kinetic-offcanvas",
+      "reason": "the phone menu panel: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".kinetic-footer",
+      "reason": "the footer chrome: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".acm-hero",
+      "reason": "the hero: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".acm-incident-timeline",
+      "reason": "the incident timeline section: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".acm-features-ledger",
+      "reason": "the metrics ledger: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".hx-card",
+      "reason": "the cards: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".hx-btn--ghost",
+      "reason": "the ghost button hover: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".acm-social",
+      "reason": "the social labels: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".onefield",
+      "reason": "the newsletter error block: a raised surface of the dark demo, read as a band (paletteKeepNote)"
+    },
+    {
+      "selector": ".hx-eyebrow",
+      "reason": "the eyebrows: classified as words on a band, so read the band text colour; the contract gives them the readable accent (followRules)"
+    },
+    {
+      "selector": ".kinetic-eyebrow",
+      "reason": "the eyebrows: classified as words on a band, so read the band text colour; the contract gives them the readable accent (followRules)"
+    },
+    {
+      "selector": ".hx-check",
+      "reason": "the check marks: classified as words on a band (the dark demo page), not a band of their own"
+    },
+    {
+      "selector": ".kinetic-logo",
+      "reason": "the logo word: classified as words on a band (the dark demo header); the contract keeps the logo"
+    }
+  ],
+  "paletteKeepNote": "The palette was read off the dark demo (page #0a0d0c): every raised surface of a dark page differs from the page and was classified a band, so under every light system it became the system's ink with the system's text on it (text 1:1 on 13 of 15 systems, the content area dark grey; final measure on the develop merge, 15/10/2026, 34/34 before the palette); the contract's own rules (templateVars, followRules, sideRules) keep ground and words one pair, as before the palette",
+  "displayImportant": true,
+  "importantNote": "15/10/2026 (v10 final measure: home 28/34, /index.php/pages/kineticql 4/8, /index.php/product/features 5/8; the two inner misses already in v8): the article page's display line is its title, h1.hx-h1.hx-article__title, which css/single-article.css sizes `!important` (44px / line height 1.1 on a desktop, 38px / 1.08 up to 860px, 30px / 1.12 up to 620px): it stayed 44px and 30px under every system where the slot writes the system's capped size plainly (55/39px under Moxie, 56/39px under Stripe; line height 48.4px for 60.5 and 57.7). The first container of the inner pages is the masthead's (.acm-page-masthead .hx-container), which css/template.css holds at `max-width: 1240px !important` (with .acm-cta and .acm-features-ledger.layout-metrics): 1176px of content under Moxie's 1200 and Stripe's 1320. displayImportant writes the display line's size, line height and letter spacing !important (the Vietnamese line height with them); containerImportant writes the content width !important; both outweigh the template's (0,7,1) and (0,8,1) against (0,2,0) and (0,2,0). The page ground under Moxie, MotherDuck and Spotify (the system's surface, #1a1a1a / #ffffff / #1f1f1f, for its page #000000 / #f4efea / #000000, home and both inner pages) is the auto palette's: the body was read on four demo homes against the first one's colour and its last reading (surface) won; fixed in auto-palette.mjs, not here",
+  "pictureRules": {
+    ".acm-clients.style-2 .acm-clients-mark img:is([src$=\"integrations/icon-code.svg\"], [src$=\"integrations/icon-cloud.svg\"], [src$=\"integrations/icon-container.svg\"], [src$=\"integrations/icon-server.svg\"], [src$=\"integrations/icon-message.svg\"], [src$=\"integrations/icon-bell.svg\"], [src$=\"integrations/icon-git.svg\"], [src$=\"integrations/icon-ticket.svg\"], [src$=\"integrations/icon-webhook.svg\"], [src$=\"integrations/icon-chart.svg\"])": {
+      "object-position": "-9999px 0",
+      "background-color": "var(--ds-c-accent-text)",
+      "mask-size": "contain",
+      "mask-repeat": "no-repeat",
+      "mask-position": "center",
+      "filter": "none"
+    },
+    ".acm-clients.style-2 .acm-clients-mark img[src$=\"integrations/icon-code.svg\"]": {
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23A3E635'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20width%3D'20'%20height%3D'20'%3E%3Cpath%20d%3D'm18%2016%204-4-4-4'%2F%3E%3Cpath%20d%3D'm6%208-4%204%204%204'%2F%3E%3Cpath%20d%3D'm14.5%204-5%2016'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-clients.style-2 .acm-clients-mark img[src$=\"integrations/icon-cloud.svg\"]": {
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23A3E635'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20width%3D'20'%20height%3D'20'%3E%3Cpath%20d%3D'M17.5%2019H9a7%207%200%201%201%206.71-9h1.79a4.5%204.5%200%201%201%200%209Z'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-clients.style-2 .acm-clients-mark img[src$=\"integrations/icon-container.svg\"]": {
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23A3E635'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20width%3D'20'%20height%3D'20'%3E%3Cpath%20d%3D'M22%207.7c0-.6-.4-1.2-.8-1.5l-6.3-3.9a1.72%201.72%200%200%200-1.7%200l-10.3%206c-.5.2-.9.8-.9%201.4v6.6c0%20.5.4%201.2.8%201.5l6.3%203.9a1.72%201.72%200%200%200%201.7%200l10.3-6c.5-.3.9-1%20.9-1.5Z'%2F%3E%3Cpath%20d%3D'M10%2021.9V14L2.1%209.1'%2F%3E%3Cpath%20d%3D'm10%2014%2011.9-6.9'%2F%3E%3Cpath%20d%3D'M14%2019.8v-8.1'%2F%3E%3Cpath%20d%3D'M18%2017.5V9.4'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-clients.style-2 .acm-clients-mark img[src$=\"integrations/icon-server.svg\"]": {
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23A3E635'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20width%3D'20'%20height%3D'20'%3E%3Crect%20width%3D'20'%20height%3D'8'%20x%3D'2'%20y%3D'2'%20rx%3D'2'%20ry%3D'2'%2F%3E%3Crect%20width%3D'20'%20height%3D'8'%20x%3D'2'%20y%3D'14'%20rx%3D'2'%20ry%3D'2'%2F%3E%3Cline%20x1%3D'6'%20x2%3D'6.01'%20y1%3D'6'%20y2%3D'6'%2F%3E%3Cline%20x1%3D'6'%20x2%3D'6.01'%20y1%3D'18'%20y2%3D'18'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-clients.style-2 .acm-clients-mark img[src$=\"integrations/icon-message.svg\"]": {
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23A3E635'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20width%3D'20'%20height%3D'20'%3E%3Cpath%20d%3D'M21%2015a2%202%200%200%201-2%202H7l-4%204V5a2%202%200%200%201%202-2h14a2%202%200%200%201%202%202z'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-clients.style-2 .acm-clients-mark img[src$=\"integrations/icon-bell.svg\"]": {
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23A3E635'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20width%3D'20'%20height%3D'20'%3E%3Cpath%20d%3D'M6%208a6%206%200%200%201%2012%200c0%207%203%209%203%209H3s3-2%203-9'%2F%3E%3Cpath%20d%3D'M10.3%2021a1.94%201.94%200%200%200%203.4%200'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-clients.style-2 .acm-clients-mark img[src$=\"integrations/icon-git.svg\"]": {
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23A3E635'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20width%3D'20'%20height%3D'20'%3E%3Cline%20x1%3D'6'%20x2%3D'6'%20y1%3D'3'%20y2%3D'15'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'6'%20r%3D'3'%2F%3E%3Ccircle%20cx%3D'6'%20cy%3D'18'%20r%3D'3'%2F%3E%3Cpath%20d%3D'M18%209a9%209%200%200%201-9%209'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-clients.style-2 .acm-clients-mark img[src$=\"integrations/icon-ticket.svg\"]": {
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23A3E635'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20width%3D'20'%20height%3D'20'%3E%3Cpath%20d%3D'M2%209a3%203%200%200%201%200%206v2a2%202%200%200%200%202%202h16a2%202%200%200%200%202-2v-2a3%203%200%200%201%200-6V7a2%202%200%200%200-2-2H4a2%202%200%200%200-2%202Z'%2F%3E%3Cpath%20d%3D'M13%205v2'%2F%3E%3Cpath%20d%3D'M13%2017v2'%2F%3E%3Cpath%20d%3D'M13%2011v2'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-clients.style-2 .acm-clients-mark img[src$=\"integrations/icon-webhook.svg\"]": {
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23A3E635'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20width%3D'20'%20height%3D'20'%3E%3Cpath%20d%3D'M18%2016.98h-5.99c-1.1%200-1.95.94-2.48%201.9A4%204%200%200%201%202%2017c.01-.7.2-1.4.57-2'%2F%3E%3Cpath%20d%3D'm6%2017%203.13-5.78c.53-.97.1-2.18-.5-3.1a4%204%200%201%201%206.89-4.06'%2F%3E%3Cpath%20d%3D'm12%206%203.13%205.73C15.66%2012.7%2016.9%2013%2018%2013a4%204%200%200%201%200%208'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-clients.style-2 .acm-clients-mark img[src$=\"integrations/icon-chart.svg\"]": {
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23A3E635'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20width%3D'20'%20height%3D'20'%3E%3Cpath%20d%3D'M3%203v16a2%202%200%200%200%202%202h16'%2F%3E%3Cpath%20d%3D'm19%209-5%205-4-4-3%203'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-hero .acm-hero-visual:has(> img.hx-panelimg.is-terminal[src$=\"images/kinetic/hero-terminal-panel-terminal.webp\"]):has(> img.hx-panelimg.is-blueprint[src$=\"images/kinetic/hero-terminal-panel-blueprint.webp\"]):has(> img.hx-panelimg.is-signal[src$=\"images/kinetic/hero-terminal-panel-signal.webp\"])": {
+      "position": "relative",
+      "isolation": "isolate"
+    },
+    ".acm-hero .acm-hero-visual:has(> img.hx-panelimg.is-terminal[src$=\"images/kinetic/hero-terminal-panel-terminal.webp\"]):has(> img.hx-panelimg.is-blueprint[src$=\"images/kinetic/hero-terminal-panel-blueprint.webp\"]):has(> img.hx-panelimg.is-signal[src$=\"images/kinetic/hero-terminal-panel-signal.webp\"])::before": {
+      "content": "\"\"",
+      "position": "absolute",
+      "inset": "0",
+      "z-index": "1",
+      "pointer-events": "none",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "background-image": "linear-gradient(#111514 16.33%, #0c110f 16.33%)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%201320%20490'%20preserveAspectRatio%3D'none'%20font-family%3D'ui-monospace%2CMenlo%2CConsolas%2Cmonospace'%3E%3Crect%20x%3D'1198'%20y%3D'24'%20width%3D'98'%20height%3D'36'%20fill%3D'%23fff'%2F%3E%3Crect%20x%3D'262'%20y%3D'386'%20width%3D'20'%20height%3D'79'%20fill%3D'%23fff'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-hero .acm-hero-visual:has(> img.hx-panelimg.is-terminal[src$=\"images/kinetic/hero-terminal-panel-terminal.webp\"]):has(> img.hx-panelimg.is-blueprint[src$=\"images/kinetic/hero-terminal-panel-blueprint.webp\"]):has(> img.hx-panelimg.is-signal[src$=\"images/kinetic/hero-terminal-panel-signal.webp\"])::after": {
+      "content": "\"\"",
+      "position": "absolute",
+      "inset": "0",
+      "z-index": "1",
+      "pointer-events": "none",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "background-color": "var(--ds-c-accent-on-ink)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%201320%20490'%20preserveAspectRatio%3D'none'%20font-family%3D'ui-monospace%2CMenlo%2CConsolas%2Cmonospace'%3E%3Ccircle%20cx%3D'1214'%20cy%3D'41'%20r%3D'6.5'%20fill%3D'%23fff'%2F%3E%3Ctext%20x%3D'1286'%20y%3D'49'%20font-size%3D'22'%20letter-spacing%3D'1.5'%20text-anchor%3D'end'%20fill%3D'%23fff'%3ELIVE%3C%2Ftext%3E%3Crect%20x%3D'266'%20y%3D'392'%20width%3D'12'%20height%3D'69'%20rx%3D'1'%20fill%3D'%23fff'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-kineticql-split .acm-split-panelcol:has(> img.hx-panelimg.is-terminal[src$=\"images/kinetic/kineticql-code-panel-terminal.webp\"]):has(> img.hx-panelimg.is-blueprint[src$=\"images/kinetic/kineticql-code-panel-blueprint.webp\"]):has(> img.hx-panelimg.is-signal[src$=\"images/kinetic/kineticql-code-panel-signal.webp\"])": {
+      "position": "relative",
+      "isolation": "isolate"
+    },
+    ".acm-kineticql-split .acm-split-panelcol:has(> img.hx-panelimg.is-terminal[src$=\"images/kinetic/kineticql-code-panel-terminal.webp\"]):has(> img.hx-panelimg.is-blueprint[src$=\"images/kinetic/kineticql-code-panel-blueprint.webp\"]):has(> img.hx-panelimg.is-signal[src$=\"images/kinetic/kineticql-code-panel-signal.webp\"])::before": {
+      "content": "\"\"",
+      "position": "absolute",
+      "inset": "0",
+      "z-index": "1",
+      "pointer-events": "none",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "background-image": "linear-gradient(#0c110f, #0c110f)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%201186%20542'%20preserveAspectRatio%3D'none'%20font-family%3D'ui-monospace%2CMenlo%2CConsolas%2Cmonospace'%3E%3Crect%20x%3D'34'%20y%3D'110'%20width%3D'72.8'%20height%3D'32'%20fill%3D'%23fff'%2F%3E%3Crect%20x%3D'34'%20y%3D'158'%20width%3D'120.7'%20height%3D'32'%20fill%3D'%23fff'%2F%3E%3Crect%20x%3D'34'%20y%3D'206'%20width%3D'152.6'%20height%3D'32'%20fill%3D'%23fff'%2F%3E%3Crect%20x%3D'34'%20y%3D'254'%20width%3D'152.6'%20height%3D'32'%20fill%3D'%23fff'%2F%3E%3Crect%20x%3D'34'%20y%3D'302'%20width%3D'120.7'%20height%3D'32'%20fill%3D'%23fff'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-kineticql-split .acm-split-panelcol:has(> img.hx-panelimg.is-terminal[src$=\"images/kinetic/kineticql-code-panel-terminal.webp\"]):has(> img.hx-panelimg.is-blueprint[src$=\"images/kinetic/kineticql-code-panel-blueprint.webp\"]):has(> img.hx-panelimg.is-signal[src$=\"images/kinetic/kineticql-code-panel-signal.webp\"])::after": {
+      "content": "\"\"",
+      "position": "absolute",
+      "inset": "0",
+      "z-index": "1",
+      "pointer-events": "none",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "background-color": "var(--ds-c-accent-on-ink)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%201186%20542'%20preserveAspectRatio%3D'none'%20font-family%3D'ui-monospace%2CMenlo%2CConsolas%2Cmonospace'%3E%3Cg%20font-size%3D'26.6'%20fill%3D'%23fff'%20xml%3Aspace%3D'preserve'%3E%3Ctext%20x%3D'39'%20y%3D'134'%3Efrom%3C%2Ftext%3E%3Ctext%20x%3D'39'%20y%3D'182'%3E%7C%20where%3C%2Ftext%3E%3Ctext%20x%3D'39'%20y%3D'230'%3E%7C%20groupby%3C%2Ftext%3E%3Ctext%20x%3D'39'%20y%3D'278'%3E%7C%20sort%20by%3C%2Ftext%3E%3Ctext%20x%3D'39'%20y%3D'326'%3E%7C%20limit%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-bento .acm-bento-media:has(> img[src$=\"images/kinetic/bento-telemetry-chart.webp\"])": {
+      "position": "relative",
+      "isolation": "isolate"
+    },
+    ".acm-bento .acm-bento-media:has(> img[src$=\"images/kinetic/bento-telemetry-chart.webp\"])::before": {
+      "content": "\"\"",
+      "position": "absolute",
+      "inset": "0",
+      "z-index": "1",
+      "pointer-events": "none",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "background-image": "linear-gradient(#161c18, #161c18)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%201114%20282'%20preserveAspectRatio%3D'none'%20font-family%3D'ui-monospace%2CMenlo%2CConsolas%2Cmonospace'%3E%3Crect%20x%3D'213'%20y%3D'39'%20width%3D'33'%20height%3D'27'%20fill%3D'%23fff'%2F%3E%3Cpolyline%20points%3D'152%2C120.5%20240%2C116.5%20334%2C118.5%20428%2C106.5%20520%2C112.5%20612%2C98.5%20706%2C104.5%20798%2C94.5%20890%2C102.5%20984%2C92.5%201076%2C100.5'%20fill%3D'none'%20stroke%3D'%23fff'%20stroke-width%3D'10'%20stroke-linejoin%3D'round'%20stroke-linecap%3D'round'%2F%3E%3Crect%20x%3D'133'%20y%3D'171'%20width%3D'288'%20height%3D'18'%20fill%3D'%23fff'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-bento .acm-bento-media:has(> img[src$=\"images/kinetic/bento-telemetry-chart.webp\"])::after": {
+      "content": "\"\"",
+      "position": "absolute",
+      "inset": "0",
+      "z-index": "1",
+      "pointer-events": "none",
+      "mask-size": "100% 100%",
+      "mask-repeat": "no-repeat",
+      "background-color": "var(--ds-c-accent-on-ink)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%201114%20282'%20preserveAspectRatio%3D'none'%20font-family%3D'ui-monospace%2CMenlo%2CConsolas%2Cmonospace'%3E%3Crect%20x%3D'217'%20y%3D'43'%20width%3D'25'%20height%3D'19'%20rx%3D'5'%20fill%3D'%23fff'%2F%3E%3Cpolyline%20points%3D'152%2C120.5%20240%2C116.5%20334%2C118.5%20428%2C106.5%20520%2C112.5%20612%2C98.5%20706%2C104.5%20798%2C94.5%20890%2C102.5%20984%2C92.5%201076%2C100.5'%20fill%3D'none'%20stroke%3D'%23fff'%20stroke-width%3D'4'%20stroke-linejoin%3D'round'%20stroke-linecap%3D'round'%2F%3E%3Crect%20x%3D'137'%20y%3D'175'%20width%3D'280'%20height%3D'10'%20rx%3D'5'%20fill%3D'%23fff'%20fill-opacity%3D'0.78'%2F%3E%3C%2Fsvg%3E\")"
+    },
+    ".acm-bento .acm-bento-media > img[src$=\"images/kinetic/bento-telemetry-chart.webp\"]": {
+      "filter": "none"
+    }
+  },
+  "pictureRulesNote": "20/10/2026 (PIC-1): the Integrations page (/index.php/product/integrations, module [Kinetic] Integrations - Logos, acm clients style-2) shows ten line icons as <img> SVGs stroked in the template lime #A3E635 (light: olive through a brightness filter): a worn system cannot reach inside a picture, so they stayed lime under every system. Under a system each icon is drawn as a mask (an inline percent-encoded copy of its own file, so it fetches nothing) painted with the accent text role (the picture itself pushed out of its box, the light-side filter dropped); the shared block names the ten files, so a card image the customer changes keeps its own look. No system worn: nothing of this is written (DEF-1). 20/10/2026: three demo pictures of the home are rasters drawn in the template lime, owner-swappable media fields whose template defaults are images/kinetic/*.webp: the hero terminal (LIVE dot and word, the highlighted bar of the sparkline), the KineticQL code panel (the query keywords) and the bento telemetry chart in content (the chip, the metrics line, the trace bar). Under Moxie and Figma they stayed lime (eye check; no detector named it). Under a system the box of each one lays two layers over the picture, which stays under them with its alt text: a ::before patch in the picture's own ground (title bar #111514, body #0c110f, chart #161c18) hides the lime and its anti-aliased edge, a ::after shape painted with --ds-c-accent-on-ink (the accent readable on a dark panel) draws the same marks; both shapes are inline SVG masks (the WordPress twin's geometry, theme 1.1.19). The layers sit at z-index 1 in the box's own stacking context (isolation): the hero and code-panel pictures carry a drop-shadow filter, which makes them a layer painted over a ::before at auto. The status colours (INFO, WARN, ERROR, the timings) and the window dots are the picture's own and stay. Only the template's own files are matched: the hero and code-panel boxes need all three direction pictures (terminal, blueprint, signal) to be the template's, the chart its own file; a picture the owner swapped keeps its look. The chart's hue filter of the Blueprint and Signal homes is dropped under a system, as the overlay already paints the system's accent. No system worn: nothing of this is written (DEF-1).",
+  "literalsNote": "The patches under the three demo pictures' recoloured marks (pictureRules ::before) are painted in each picture's own ground, so the lime they hide leaves no edge: the terminal window's title bar #111514 and body #0c110f, the telemetry chart's #161c18. They are colours of the template's own pictures, not of the page, and sit under the system's accent only."
+}

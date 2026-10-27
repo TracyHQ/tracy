@@ -1,0 +1,347 @@
+{
+  "dos": [
+    "Use Inter Bold 48–64px with -0.016em to -0.021em letter-spacing for every section and hero headline",
+    "Use the pill button (40px radius, 10px 20px padding, Inter SemiBold 14px) as the default action shape",
+    "Reserve #624de3 for accent text, icon strokes, and focal highlights — never as a full surface fill in chrome",
+    "Stack the surface hierarchy as #151718 (dark hero) → #ffffff (content) → #f6f7f9 (banded sections) → #f1eefe / #e5fbeb / #feeadd (testimonial cards)",
+    "Apply the dual-layer shadow stack (1px contact + 4–16px ambient) to all interactive elements",
+    "Keep spacing on the 8px grid — 8px element gap, 24px card padding, 40–80px section gap",
+    "Match button radius to 40px pills and card radius to 16px — never mix sharp 4px corners into a card or button"
+  ],
+  "donts": [
+    "Don't use solid violet (#624de3) as a full filled-button background — the primary action is the dark slate (#1a1d1e) pill",
+    "Don't introduce a second chromatic accent outside the iris/fern/cobalt trio used in the testimonial carousel",
+    "Don't apply heavy blur shadows — keep shadows to the 1–2px + 4–8px dual-layer pattern",
+    "Don't set body text above 16px or below 14px on white surfaces — the type scale is intentional",
+    "Don't use the soft pastel surface colors (#f1eefe, #e5fbeb, #feeadd) outside the testimonial carousel context",
+    "Don't use letter-spacing on sizes below 24px — negative tracking is only for display and heading levels",
+    "Don't add photography, gradients-as-backgrounds, or decorative illustration outside the hero 3D scene"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#624de3",
+      "name": "Iris",
+      "role": "Primary brand color — gradient headline text, icon strokes, accent borders, focal links. The only chromatic voice in the system; appears sparingly to make accents feel like punctuation rather than decoration",
+      "group": "brand"
+    },
+    {
+      "hex": "#8d4af7",
+      "name": "Soft Iris",
+      "role": "Gradient tail for the brand violet — the lighter stop in hero headline gradients. Paired with #1d58c0 and #009639 only inside the carousel card color-blocks, not in chrome",
+      "group": "brand"
+    },
+    {
+      "hex": "#1a1d1e",
+      "name": "Studio Slate",
+      "role": "Primary text, dark filled buttons, body borders, heading strokes. The working near-black that carries 90% of the interface's weight",
+      "group": "neutral"
+    },
+    {
+      "hex": "#151718",
+      "name": "Obsidian",
+      "role": "Hero and section background fill — the deep dark behind the gradient headline and 3D illustration. Slightly cooler/lighter than pure black to keep the violet legible",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Light-theme canvas, card surfaces, button text on dark fills, hero overlay text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f6f7f9",
+      "name": "Cloud",
+      "role": "Soft alternate surface — sits beneath white cards for subtle banding between content sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ebedef",
+      "name": "Mist",
+      "role": "Hairline card and stroke surface, secondary card backgrounds in quiet zones",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8d8e8f",
+      "name": "Graphite",
+      "role": "Medium-contrast borders, control outlines, and structural separators.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5f6162",
+      "name": "Iron",
+      "role": "Secondary text and secondary borders — one step stronger than Graphite for body sub-copy that still needs to recede",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Noir",
+      "role": "Highest-contrast text and the dominant border color across all surfaces. Used where maximum legibility or definition is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d58c0",
+      "name": "Cobalt Pop",
+      "role": "Carousel testimonial card accent background — appears as a solid color block beside the violet and green variants, not used in chrome",
+      "group": "accent"
+    },
+    {
+      "hex": "#009639",
+      "name": "Fern Pop",
+      "role": "Carousel testimonial card accent background — third slot in the rotating brand color trio. Decorative only",
+      "group": "accent"
+    },
+    {
+      "hex": "#f1eefe",
+      "name": "Lilac Wash",
+      "role": "Soft purple-tinted card surface used in the testimonial carousel — echoes the brand violet at 8% saturation",
+      "group": "accent"
+    },
+    {
+      "hex": "#e5fbeb",
+      "name": "Mint Wash",
+      "role": "Soft green-tinted card surface in the testimonial carousel — companion to the Fern Pop color block",
+      "group": "accent"
+    },
+    {
+      "hex": "#feeadd",
+      "name": "Apricot Wash",
+      "role": "Soft warm card surface in the testimonial carousel — third pastel slot matching the apricot color block",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page alternates between full-bleed dark bands and centered max-width-1200px white content bands. The hero is a full-viewport dark canvas with a centered gradient headline and the 3D illustration occupying the lower 50%. Below the hero, a dark logo bar runs edge-to-edge. All subsequent content sits in a centered 1200px container with 80px vertical section gaps: large centered headlines, then 2- or 3-column arrangements of text and cards. The testimonial carousel breaks the single-column rhythm with a 3-card horizontal spread. Navigation is a sticky top bar with no sidebar. The overall rhythm is generous on the dark sections and compact (8–24px gaps) inside the white content sections.",
+  "imagery": "Imagery is dominated by a single hero-scale 3D illustration: an isometric dark-surface workflow diagram of connected rounded tiles, glowing accent cubes, and a code output panel. Beyond the hero, the site is nearly text-only — monochrome client logos in the social-proof band, small app-icon glyphs in the carousel card footers, and icon-only navigation. No photography, no lifestyle imagery. The 3D scene is the brand's visual voice; everything else stays flat and typographic.",
+  "similar": [
+    {
+      "why": "Same dual-theme dark-hero-to-white-content narrative, Inter typeface, and pill-shaped dark filled buttons with subtle dual-layer shadows",
+      "business": "Linear"
+    },
+    {
+      "why": "Identical compact 8px-grid density, Inter type stack, and near-black (#1a1d1e) primary action pills on white surfaces",
+      "business": "Supabase"
+    },
+    {
+      "why": "Same editorial use of bold gradient text on a dark hero, followed by restrained monochrome content sections with generous section gaps",
+      "business": "Vercel"
+    },
+    {
+      "why": "Mirrors the 3D-isometric product hero, dark logo bar, and large centered Inter Bold headlines for section openers",
+      "business": "Figma Config"
+    },
+    {
+      "why": "Shares the dense 8px spacing rhythm, pill button (40px radius) primary action, and Inter SemiBold subheadings on near-black",
+      "business": "Cal.com"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "100px",
+      "cards": "16px",
+      "icons": "6px",
+      "inputs": "6px",
+      "buttons": "40px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#151718",
+      "name": "Dark Canvas",
+      "level": 0,
+      "purpose": "Hero band, logo bar, and any dark storytelling sections"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Light Canvas",
+      "level": 1,
+      "purpose": "Default content background for all white sections"
+    },
+    {
+      "hex": "#f6f7f9",
+      "name": "Soft Band",
+      "level": 2,
+      "purpose": "Alternate section background to create rhythm without heavy dividers"
+    },
+    {
+      "hex": "#f1eefe",
+      "name": "Tinted Card",
+      "level": 3,
+      "purpose": "Pastel card surface in testimonial carousel"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.2) 0px 1px 2px 0px, rgba(0, 0, 0, 0.08) 0px 6px 16px 0px",
+      "element": "Filled button"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.08) 0px 1px 2px 0px, rgba(0, 0, 0, 0.06) 0px 4px 8px 0px",
+      "element": "Card"
+    }
+  ],
+  "northStar": "Black studio wall with neon violet sign",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.71,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.6,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.74
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.99
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1.13,
+      "letterSpacing": -1.34
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Filled Button",
+      "role": "Primary action on light surfaces",
+      "description": "Dark fill (#1a1d1e), white text, Inter SemiBold 14px, padding 10px 20px, 40px radius, dual-layer shadow rgba(0,0,0,0.2) 0 1px 2px / rgba(0,0,0,0.08) 0 6px 16px. Used for 'Read vision', 'Watch video', 'Case study'."
+    },
+    {
+      "name": "White Outlined Button",
+      "role": "Action on dark hero backgrounds",
+      "description": "1px #ffffff border, white text, Inter SemiBold 14px, padding 10px 20px, 40px radius. Used for 'Sign in' and as a secondary action in the hero."
+    },
+    {
+      "name": "Pill Badge",
+      "role": "Status / announcement label",
+      "description": "White fill (#ffffff) with dark text (#1a1d1e), Inter Medium 14px, padding 6px 16px, 100px (full) radius. Optional small dot or icon to the left. Used for 'Saying Goodbye: The End of Specify'."
+    },
+    {
+      "name": "Gradient Headline",
+      "role": "Hero display text",
+      "description": "Inter Bold 64px at -0.016em, gradient fill running from #8d4af7 through #624de3 to #1d58c0 (270°). Sits on dark canvas (#151718). The gradient direction (left-to-right) is the signature."
+    },
+    {
+      "name": "Light Section Headline",
+      "role": "H1 on white content sections",
+      "description": "Inter Bold 48px at -0.021em, color #1a1d1, centered, max-width ~720px. Followed by Inter Regular 16px sub-copy in #5f6162."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "White background, 1px bottom border (#ebedef), height ~64px. Left: brand mark (violet hexagon + wordmark). Center: Solutions / Resources / Pricing text links with chevron-down icons. Right: 'Sign in' ghost button and 'Get started' filled button. Sticky on scroll."
+    },
+    {
+      "name": "Logo Bar",
+      "role": "Social proof — client logos",
+      "description": "Dark canvas (#151718) band, single row of 7–8 monochrome white logos with 'Specify is loved by' label above in Inter Medium 14px #8d8e8f. Logos sit at uniform height (~24px) with 40–80px gaps."
+    },
+    {
+      "name": "Testimonial Carousel Card",
+      "role": "Rotating case-study spotlight",
+      "description": "Three-card horizontal layout. Side cards: solid color block (Cobalt / Fern / Iris) with white client wordmark and 'Case study →' pill button. Center card: white surface, large quote in Inter SemiBold 16px #1a1d1, attribution beneath. Cards are 16px radius with subtle shadow rgba(0,0,0,0.08) 0 1px 2px / rgba(0,0,0,0.06) 0 4px 8px."
+    },
+    {
+      "name": "Token Workflow Illustration",
+      "role": "Hero product visualization",
+      "description": "3D isometric scene on dark canvas. Dark gray rounded squares (16px radius) connected by pipe/conduit segments, with a glowing orange-yellow cube cluster at left and a code-output panel at right reading 'Success14: File created tokens/text-styles'. Token names shown in Fira Code 14px inside the connector modules."
+    },
+    {
+      "name": "Section Header with CTA",
+      "role": "Reusable section opener",
+      "description": "Centered Inter Bold 48px headline, then 16px body in #5f6162, then a single pill button centered below with 40px margin-top. Pattern repeats across all white content sections."
+    },
+    {
+      "name": "Brand Mark",
+      "role": "Logo lockup",
+      "description": "Violet (#624de3) hexagon with internal cube/hex pattern glyph, followed by 'Specify' wordmark in Inter SemiBold 16px #1a1d1e. The hex pattern echoes the 3D illustration in the hero."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "The single typeface for the entire system. Regular (400) for body and micro-copy, Medium (500) for emphasized inline, SemiBold (600) for subheadings and UI labels at -0.031em tracking, Bold (700) reserved for the two display headlines (48px and 64px) at -0.021em / -0.016em. The negative letter-spacing on large sizes is what gives the wordmark its tight, poster-like feel; smaller sizes stay at normal tracking.",
+      "sizes": "8px, 10px, 12px, 14px, 16px, 20px, 24px, 32px, 48px, 64px",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.13–3.00 (tight for display, loose for body)",
+      "substitute": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+      "letterSpacing": "-0.016em to -0.031em on 24px+; normal below",
+      "fontFeatureSettings": "\"cv11\", \"ss01\""
+    },
+    {
+      "role": "Inline code and token-name strings in the product mockup illustration. The only monospace voice; appears only inside the hero 3D scene, not in body copy.",
+      "sizes": "14px",
+      "family": "Fira Code",
+      "weight": "400",
+      "lineHeight": "1.57",
+      "substitute": "'JetBrains Mono', 'Source Code Pro', monospace"
+    },
+    {
+      "role": "Inter-Medium — detected in extracted data but not described by AI",
+      "sizes": "8px, 12px, 14px, 16px",
+      "family": "Inter-Medium",
+      "weight": "500",
+      "lineHeight": "1.5, 1.71, 2, 3"
+    },
+    {
+      "role": "Inter-SemiBold — detected in extracted data but not described by AI",
+      "sizes": "8px, 12px, 14px, 16px, 20px, 24px, 32px",
+      "family": "Inter-SemiBold",
+      "weight": "600",
+      "lineHeight": "1, 1.2, 1.25, 1.5, 1.6, 1.71, 2, 3",
+      "letterSpacing": "-0.031"
+    },
+    {
+      "role": "Inter-Bold — detected in extracted data but not described by AI",
+      "sizes": "48px, 64px",
+      "family": "Inter-Bold",
+      "weight": "700",
+      "lineHeight": "1.13, 1.17",
+      "letterSpacing": "-0.021, -0.016"
+    }
+  ],
+  "description": "Specify operates as a dark-to-light narrative canvas: pitch-black hero sections with luminous violet gradient headlines command the top of the page, then flip to clean white surfaces for content and social proof. The visual identity is restrained SaaS geometry — compact 8px-grid spacing, Inter at every weight, subtle dual-layer shadows — with one signal breaking the monochrome: a vivid violet (#624de3) that lives inside text, icon strokes, and a handful of accent fills. Buttons are squat pills (40px radius) rather than the more common 6px chamfer; cards are 16px-rounded; the overall feel is dense, confident, and slightly editorial. The brand voice reads as engineer-adjacent: a product page for people who build design systems, not people who buy them.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #1a1d1e\n- background: #ffffff\n- border: #ebedef\n- accent: #624de3\n- dark surface: #151718\n- primary action: #1a1d1e (filled action)\n\n**Example Component Prompts**\n1. *Hero section*: #151718 full-bleed background. Centered gradient headline 'Your Design Token Engine' in Inter Bold 64px, letter-spacing -1.34px, fill running 270° from #8d4af7 → #624de3 → #1d58c0. White sub-copy in Inter Regular 16px, max-width 560px. Below, a 3D isometric illustration of dark rounded tiles connected by pipes, occupying the lower 50% of the viewport.\n2. *Pill button*: #1a1d1e fill, white text, Inter SemiBold 14px, padding 10px 20px, border-radius 40px, shadow rgba(0,0,0,0.2) 0 1px 2px / rgba(0,0,0,0.08) 0 6px 16px.\n3. *Testimonial card*: white surface, 16px radius, padding 24px, shadow rgba(0,0,0,0.08) 0 1px 2px / rgba(0,0,0,0.06) 0 4px 8px. Quote in Inter SemiBold 16px #1a1d1e, attribution in Inter Regular 14px #5f6162.\n4. *Pill badge*: #ffffff fill, Inter Medium 14px #1a1d1e, padding 6px 16px, border-radius 100px, with a small #624de3 dot to the left.\n5. *Navigation bar*: #ffffff background, 1px bottom border #ebedef, height 64px. Left: violet hex brand mark + 'Specify' wordmark in Inter SemiBold 16px. Right: 'Sign in' ghost button (1px #1a1d1e border, 40px radius) and 'Get started' filled pill (#1a1d1e fill, white text, 40px radius)."
+    }
+  ],
+  "elevationPhilosophy": "Shadows are tight and dual-layered — a 1–2px contact shadow paired with a 4–16px ambient shadow at low opacity. Never a single diffuse blur. The system avoids elevation for layout chrome (sections are separated by color bands, not shadows) and reserves shadow for interactive elements that need to feel pressable."
+}

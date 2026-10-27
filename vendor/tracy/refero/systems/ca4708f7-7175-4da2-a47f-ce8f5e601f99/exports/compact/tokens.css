@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-honk-blue: #008fff;
+  --color-honk-sky: #00a0ff;
+  --color-signal-yellow: #ffe400;
+  --color-honk-white: #ffffff;
+  --color-carbon: #111111;
+  --color-true-black: #000000;
+  --color-slate: #363636;
+  --color-game-green: #3fcc6b;
+
+  /* Typography — Font Families */
+  --font-honk-header: 'Honk Header', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-honk-sans: 'Honk Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

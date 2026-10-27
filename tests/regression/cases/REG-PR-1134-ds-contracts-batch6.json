@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1134-ds-contracts-batch6",
+  "kind": "feat",
+  "title": "Batch 6 of the JA Joomla j6 slot contracts: all eleven templates carry a contract; JA Purity IV, JA Spark and JA Mono are offered after measuring, the other eight say why not",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, read templates/joomla-{ja-lawfirm,ja-magz-ii,ja-mason,ja-mono,ja-purity-iv,ja-restaurant,ja-spark,ja-teline-v}.json (ja-rights, ja-stark, ja-titan moved to REG-PR-1134-ds-contracts-r2b) through loadContract: template key, ready, readyNote, templateVars, keepScopes, contrast.",
+    "S2: Build the Moxie module sheet (joomlaSlot) for joomla-ja-purity-iv and joomla-ja-spark.",
+    "S3: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs ja-purity-iv --port 53296 --cdp 9796 --evidence <tmp> (release restored in Docker, stylesheets tokenized, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-batch6.mjs"
+  ],
+  "expect": [
+    "S1: each contract's template is joomla/<slug> (JA Lawfirm, Magz II, Mason and Teline V left out: round 2 re-measured and offers them, REG-PR-1134-ds-contracts-r2a; JA Restaurant left out: made ready from its tokenized 1.0.4 build, REG-PR-1134-ds-contracts-r2d and REG-PR-1134-ds-remeasure-4); exactly ja-purity-iv, ja-spark and ja-mono are ready; every readyNote names tasks/evidence/ds-contracts-batch6-2026-10-11/templates/<slug>-j6, or for a ready one re-measured since a tasks/evidence/ds-remeasure-* folder of that template that exists (JA Spark: ds-remeasure-5, its 1.0.1 release build), and the not-ready ones start 'NOT offered yet'; Purity IV and Spark map --headings-color to var(--ds-c-fg-2) and --tpl-base-100 to var(--ds-c-surface) and judge heading contrast; Spark keeps .bg-white; Mono keeps .t3-footer, .style-dark and .style-highlight.",
+    "S2: both sheets set --headings-color:var(--ds-c-fg-2) and give a kept band the template's own heading colour back: --headings-color:#212529 for Purity IV, --headings-color:#18181b for Spark (its 1.0.1 build, ds-remeasure-5; round 1 read #212529 off 1.0.0).",
+    "S3: verdicts 12/12, controls 0,0,0,0, no text under 4.5:1 worse than the template's own, lowest page share following ≥ 0.5."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-*.json templateVars, keepScopes, contrast.heading, ready, readyNote"
+  },
+  "evidence": "tasks/evidence/ds-contracts-batch6-2026-10-11/README.md: first measure (single sample per kind) and second measure (every text judged) per template, screenshots checked by eye.",
+  "fence": "which batch-6 templates are offered and the contract fields that made three of them pass; not the eight not offered (their causes are recorded, not fixed) nor the release upload (RELEASE-DS-BATCH6.sh, a person runs it)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-batch6.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

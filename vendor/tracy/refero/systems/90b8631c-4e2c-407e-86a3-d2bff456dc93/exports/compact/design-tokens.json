@@ -1,0 +1,89 @@
+{
+  "color": {
+    "electric-iris": {
+      "$value": "#2727e6",
+      "$type": "color",
+      "$description": "Electric Iris — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ink-black": {
+      "$value": "#111118",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, dark secondary buttons, icon strokes, hairline borders — warmer than pure black, reads as ink rather than void"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, elevated panels, button text on dark fills, page sections that need to lift off the pale-blue canvas"
+    },
+    "chalk-blue": {
+      "$value": "#f0f6ff",
+      "$type": "color",
+      "$description": "Chalk Blue — Dominant page canvas — a barely-there blue tint that prevents the page from feeling clinical and ties the scattered blue shapes to the background"
+    },
+    "frost-blue": {
+      "$value": "#e1edff",
+      "$type": "color",
+      "$description": "Frost Blue — Secondary surface wash, input field backgrounds, footer tint — a step deeper than the canvas to create soft layering without shadows"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "marker-red": {
+      "$value": "#ff4141",
+      "$type": "color",
+      "$description": "Marker Red — Decorative shape fill — the large red semicircle, star bursts, and accent blobs scattered through the decorative layer"
+    },
+    "hi-yellow": {
+      "$value": "#ffda00",
+      "$type": "color",
+      "$description": "Hi-Yellow — Decorative shape fill — the yellow pentagon and sunny accents in the cutout composition; also used as a section wash behind featured content"
+    },
+    "powder-sky": {
+      "$value": "#91d8ec",
+      "$type": "color",
+      "$description": "Powder Sky — Decorative shape fill — soft powder-blue circles and cloud forms in the scattered cutout scene"
+    },
+    "bubblegum-pink": {
+      "$value": "#ffbac4",
+      "$type": "color",
+      "$description": "Bubblegum Pink — Red supporting accent for decorative details and low-frequency emphasis."
+    },
+    "jelly-green": {
+      "$value": "#16ab59",
+      "$type": "color",
+      "$description": "Jelly Green — Decorative shape fill — green triangle accents in the scattered cutout scene"
+    },
+    "sunbeam": {
+      "$value": "#ffe54d",
+      "$type": "color",
+      "$description": "Sunbeam — Decorative shape fill — a slightly warmer yellow variant for layering against Hi-Yellow in the cutout composition"
+    }
+  },
+  "font": {
+    "haas-grot-disp": {
+      "$value": "Haas Grot Disp",
+      "$type": "fontFamily",
+      "$description": "Display and headings only — the geometric grotesque has a sturdy, slightly condensed skeleton that holds 92px hero lines without losing legibility; weight stays at 400 because the tight letter-spacing (-0.03em at the largest sizes) does the heavy-lifting, not bold weight"
+    },
+    "haas-grot-text": {
+      "$value": "Haas Grot Text",
+      "$type": "fontFamily",
+      "$description": "Body, navigation, buttons, and smaller UI text — the text cut of the same family tuned for readability at small sizes with looser tracking than the display companion"
+    },
+    "martian-mono": {
+      "$value": "Martian Mono",
+      "$type": "fontFamily",
+      "$description": "Promotional ticker text, tag labels, and code-flavored micro-copy — a monospaced voice used sparingly for editorial texture, not for entire paragraphs"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://superhi.com",
+      "siteName": "SuperHi",
+      "extractedAt": "2026-06-03T17:49:35.630Z",
+      "variant": "compact"
+    }
+  }
+}

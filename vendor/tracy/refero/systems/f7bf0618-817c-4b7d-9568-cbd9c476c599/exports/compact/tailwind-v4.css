@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-void: #000000;
+  --color-charcoal: #0e0e0e;
+  --color-bone: #f0eded;
+  --color-ash: #b3b3b3;
+  --color-smoke: #808080;
+  --color-graphite: #606060;
+  --color-lime-signal: #e1f0bd;
+
+  /* Typography */
+  --font-sf-pro: 'SF Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-tanaclassic: 'tanaClassic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

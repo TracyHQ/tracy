@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-1217-invitations-review-ux",
+  "kind": "feat",
+  "title": "Real campaign review lists recipients beside the email, generation always progresses, subjects show, and decoded CSS strings cannot reopen <style>",
+  "pr": 1217,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the focused real-campaign server and mounted-UI suites from this branch against a private PostgreSQL (TEST_DATABASE_URL)."
+  ],
+  "expect": [
+    "A <style> font-family string whose escapes decode to </style><script>…<img src=https://…> is dropped; the output has no script, image or external host, and removed lists 'CSS value of font-family'.",
+    "Cleaning names removed kinds with counts (<meta> element, onclick attribute ×2, CSS !important, CSS property behavior, HTML comment) and never the removed text.",
+    "Without replaceExisting, a generate page without a cursor still creates a new draft after earlier pages; groupDrafted reaches groupTotal and drafts/progress agrees.",
+    "A blank subject is refused with REAL_SUBJECT_REQUIRED; the recipient list filters by content state and rejects unknown states.",
+    "GET /api/ops/invitations/real answers 200 when one campaign's key is missing: that campaign carries a REAL_* unavailable code and no private name, the other keeps its view.",
+    "Review content shows the first listed email with its subject without visiting Recipients; approving moves to the next recipient.",
+    "Generate missing drafts runs every page in one press, each write carrying the revision the previous one returned, and ends at 'All 318 recipients in this group have a draft'."
+  ],
+  "selectors": {
+    "real": "/api/ops/invitations/real",
+    "progress": "/api/ops/invitations/real/campaigns/:id/drafts/progress",
+    "generate": "/api/ops/invitations/real/campaigns/:id/generate"
+  },
+  "fence": "Synthetic customers only, private PostgreSQL and a temporary key vault; no credentials, live source or mail transport. Sending stays disabled.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-review-ux.test.mjs",
+      "apps/tracy-web/test/invitations-real-html.test.mjs",
+      "apps/tracy-web/test/invitations-real-content.test.mjs",
+      "apps/tracy-web/test/invitations-real-retention.test.mjs",
+      "packages/web/tracy-harness/test/invitations-real-flow.test.mjs",
+      "packages/web/tracy-harness/test/invitations-real-format.test.mjs"
+    ],
+    "tests": [
+      "a CSS string whose escapes decode to markup cannot reopen the raw <style> text",
+      "removed content is named by kind and counted, never by its text",
+      "generating missing drafts reads only recipients without a draft, so every page makes progress",
+      "one campaign that cannot be opened is listed with its code and does not hide the others",
+      "Review content lists recipients on its own and shows the first email with its subject, no Recipients tab needed",
+      "generating missing drafts runs every page in one press and shows group progress",
+      "template notes name what cleaning removed instead of showing a bare code"
+    ]
+  }
+}

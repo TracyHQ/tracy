@@ -1,0 +1,49 @@
+{
+  "color": {
+    "press-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Press Black — Headlines, body text, navigation links, hairline dividers — the single dark mark in the system"
+    },
+    "proof-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Proof White — Page canvas, tile backgrounds, the only surface tone in the system"
+    },
+    "galley-gray": {
+      "$value": "#878787",
+      "$type": "color",
+      "$description": "Galley Gray — Muted captions, secondary metadata, editorial sub-labels — appears sparingly under project titles"
+    },
+    "rule-line": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Rule Line — Hairline nav dividers, ultra-subtle structural separators — the faintest non-black non-white mark allowed"
+    }
+  },
+  "font": {
+    "old-standard-tt": {
+      "$value": "Old Standard TT",
+      "$type": "fontFamily",
+      "$description": "Editorial headlines and sub-labels — a 19th-century book serif that signals journalism heritage. Used at 32px for project titles, 21px for section intros, 18px for compact serif captions. The single weight (400) is deliberate: this is a display serif meant to be set large and let breathe, not bolded for emphasis."
+    },
+    "gt-america": {
+      "$value": "GT America",
+      "$type": "fontFamily",
+      "$description": "Body copy, navigation, descriptive text — a modern American grotesque with mechanical precision. The 700 weight handles project subtitle/agency statements; 400 handles longer descriptive paragraphs. Its geometric neutrality balances the warmth of Old Standard without competing."
+    },
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "Smallest body and link text — system stack fallback for the GT America role, providing a baseline reading experience at 15px with generous 1.65 leading"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://look.inc",
+      "siteName": "Look inc",
+      "extractedAt": "2026-06-03T17:34:00.444Z",
+      "variant": "compact"
+    }
+  }
+}

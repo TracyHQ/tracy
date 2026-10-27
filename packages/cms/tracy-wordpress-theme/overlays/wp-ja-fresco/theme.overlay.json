@@ -1,0 +1,64 @@
+{
+  "styles": {
+    "css": "/* wp-ja-fresco: one look in both schemes (D-01). The source (JA Fresco, Joomla 6 T4) has a single dark look: no data-theme, no dark sheet, no switch; measured in all four variants, dark = light on every rule. The light-dark() wiring of the base theme is kept (invariant 4) with both halves equal, so the tracy_theme cookie and data-theme still work and change nothing visible. Values: tokens.css (measured 21/10 on :8401). */ :root{color-scheme:light dark;--jf-accent:var(--ds-c-accent, #e6c9a2);--wp--preset--color--bg:light-dark(var(--ds-c-bg, #0a0b0a),var(--ds-c-bg, #0a0b0a));--wp--preset--color--surface:light-dark(var(--ds-c-surface, #1b1a1c),var(--ds-c-surface, #1b1a1c));--wp--preset--color--surface-warm:light-dark(var(--ds-c-ink, #1a191b),var(--ds-c-ink, #1a191b));--wp--preset--color--fg:light-dark(var(--ds-c-fg, #ffffffcc),var(--ds-c-fg, #ffffffcc));--wp--preset--color--fg-2:light-dark(var(--ds-c-heading, #ffffff),var(--ds-c-heading, #ffffff));--wp--preset--color--muted:light-dark(var(--ds-c-muted, #ffffffcc),var(--ds-c-muted, #ffffffcc));--wp--preset--color--border:light-dark(var(--ds-c-border, #ffffff12),var(--ds-c-border, #ffffff12));--wp--preset--color--border-soft:light-dark(var(--ds-c-border-soft, #ffffff12),var(--ds-c-border-soft, #ffffff12));--wp--preset--color--accent:light-dark(var(--ds-c-accent, #e6c9a2),var(--ds-c-accent, #e6c9a2));--wp--preset--color--accent-on:light-dark(var(--ds-c-accent-on, #0a0b0a),var(--ds-c-accent-on, #0a0b0a));--wp--preset--color--accent-hover:light-dark(var(--ds-c-accent-hover, #e6c9a2),var(--ds-c-accent-hover, #e6c9a2));--wp--preset--color--accent-active:light-dark(var(--ds-c-accent-active, #e6c9a2),var(--ds-c-accent-active, #e6c9a2));}:root[data-theme=\"light\"]{color-scheme:light}:root[data-theme=\"dark\"]{color-scheme:dark}"
+  },
+  "templateParts": [
+    {
+      "name": "topbar",
+      "title": "Top bar",
+      "area": "uncategorized"
+    },
+    {
+      "name": "header",
+      "title": "Header",
+      "area": "header"
+    },
+    {
+      "name": "footer",
+      "title": "Footer",
+      "area": "footer"
+    },
+    {
+      "name": "related",
+      "title": "Related Posts",
+      "area": "uncategorized"
+    }
+  ],
+  "customTemplates": [
+    {
+      "name": "page-landing",
+      "title": "Landing (sections only)",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-masthead",
+      "title": "Page with masthead",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-masthead-article",
+      "title": "Page with article heading",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-contact",
+      "title": "Contact page",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-login",
+      "title": "Sign-in page",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-register",
+      "title": "Registration page",
+      "postTypes": ["page"]
+    },
+    {
+      "name": "page-account",
+      "title": "Account page",
+      "postTypes": ["page"]
+    }
+  ]
+}

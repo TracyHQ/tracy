@@ -1,0 +1,79 @@
+{
+  "color": {
+    "canvas-mist": {
+      "$value": "#f2f4f5",
+      "$type": "color",
+      "$description": "Canvas Mist — Page background and secondary surface wash behind elevated cards"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary surface for cards, input fields, floating brand spotlights, and pill buttons"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, headings, icons, nav symbols, and dark mode product cards"
+    },
+    "faint-border": {
+      "$value": "#ebebeb",
+      "$type": "color",
+      "$description": "Faint Border — Hairline dividers on cards, input outlines, and pill button borders"
+    },
+    "muted-gray": {
+      "$value": "#787574",
+      "$type": "color",
+      "$description": "Muted Gray — Secondary text, navigation labels, icon strokes in idle state"
+    },
+    "cool-stone": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Cool Stone — Placeholder fills, disabled states, and inactive icon backgrounds"
+    },
+    "warm-fog": {
+      "$value": "#acb0aa",
+      "$type": "color",
+      "$description": "Warm Fog — Subtle surface tints for secondary product cards and section backgrounds"
+    },
+    "shop-violet": {
+      "$value": "#5433eb",
+      "$type": "color",
+      "$description": "Shop Violet — Search submit button, wordmark dot, brand logo — the single accent that makes action and identity pop against the white canvas"
+    },
+    "violet-wash": {
+      "$value": "#c0b5f3",
+      "$type": "color",
+      "$description": "Violet Wash — Translucent halo behind the violet submit button, extending its glow without changing hue"
+    },
+    "slate-ink": {
+      "$value": "#332f2d",
+      "$type": "color",
+      "$description": "Slate Ink — Dark product card surfaces and deep-tone overlay text"
+    },
+    "ash-veil": {
+      "$value": "#665a54",
+      "$type": "color",
+      "$description": "Ash Veil — Warm desaturated gray used in product imagery backdrops, not an active UI token"
+    }
+  },
+  "font": {
+    "gt-standard": {
+      "$value": "GT Standard",
+      "$type": "fontFamily",
+      "$description": "Primary typeface at all sizes — body and headings alike. GTStandard-MRegular at 16px/-0.031em is the workhorse for body, buttons, and labels. GTStandard-MSemibold at 20px/-0.05em powers the few display-scale headings; GTStandard-MMedium at 11–12px handles micro-labels. Every weight renders at 400 optical weight — the font family carries its hierarchy through subtle grade shifts and tight negative tracking, not bold contrast. This is the signature: Shop doesn't shout with bold, it shapes text with tracking."
+    },
+    "shopify-sans": {
+      "$value": "Shopify Sans",
+      "$type": "fontFamily",
+      "$description": "Reserved for system-level messaging like the app download banner and cookie consent copy"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://shop.app",
+      "siteName": "Shop",
+      "extractedAt": "2026-07-03T03:29:39.498Z",
+      "variant": "compact"
+    }
+  }
+}

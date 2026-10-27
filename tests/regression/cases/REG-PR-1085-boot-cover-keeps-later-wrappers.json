@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1085-boot-cover-keeps-later-wrappers",
+  "kind": "fix",
+  "title": "The boot cover's network wait no longer removes fetch/XHR wrappers other plugins installed after it",
+  "pr": 1085,
+  "area": "brand/boot-cover",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: node --test --test-reporter=tap packages/brand/tracy-brand/test/network-settles.test.mjs"],
+  "expect": [
+    "'a wrapper another plugin installed after it survives the restore' passes: after networkSettles resolves, scope.fetch is still the later wrapper and a call through it reaches the real fetch.",
+    "'it puts fetch back the way it found it' still passes: with no later wrapper, fetch is restored to the original."
+  ],
+  "selectors": {
+    "module": "packages/brand/tracy-brand/src/shared/network-settles.mjs networkSettles(scope)"
+  },
+  "evidence": "tasks/evidence/passwords-mount-followups/README.md — on tracy-srd 09/10 a window.fetch setter trap showed @tracy/dsh-brand's finish() assigning back the fetch it saved, dropping dsh-passwords' picker wrapper installed after it (the owner's delete-folder button never attached, even at the root).",
+  "fence": "network-settles.mjs finish(): restores fetch / XHR open / send only while they are still its own wrapper; a wrapper left under someone else's becomes a pass-through.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/brand/tracy-brand/test/network-settles.test.mjs"
+    ],
+    "tests": [
+      "a wrapper another plugin installed after it survives the restore",
+      "it puts fetch back the way it found it"
+    ]
+  }
+}

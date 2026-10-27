@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-fog: #eeeeee;
+  --color-signal-blue: #0000ff;
+  --color-coral: #ff8389;
+  --color-teal: #00d2be;
+
+  /* Typography */
+  --font-futura-pt: 'futura-pt', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,59 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Ink — Primary text, filled buttons (Be Pro), dark floating nav rail, icons, input borders, table borders"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, button labels, badge text, image backgrounds, content panels"
+    },
+    "canvas": {
+      "$value": "#e9e9e9",
+      "$type": "color",
+      "$description": "Canvas — Page background, card borders, section fills — the warm gray that makes the whole surface feel printed rather than digital"
+    },
+    "fog": {
+      "$value": "#dedede",
+      "$type": "color",
+      "$description": "Fog — Secondary borders, icon strokes, list dividers, subtle structural lines"
+    },
+    "smoke": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Smoke — Table borders, hairline dividers, muted structural lines"
+    },
+    "graphite": {
+      "$value": "#4d4d4d",
+      "$type": "color",
+      "$description": "Graphite — Secondary surfaces, link backgrounds in compact contexts, darker fills for nested elements"
+    },
+    "ash": {
+      "$value": "#b8b8b8",
+      "$type": "color",
+      "$description": "Ash — Badge borders, low-emphasis outlines"
+    },
+    "ember": {
+      "$value": "#fa5d29",
+      "$type": "color",
+      "$description": "Ember — Sporadic accent — appears as a single-color punctuation mark on rare UI elements and score indicators; the only chromatic color in the system, used sparingly to draw the eye"
+    }
+  },
+  "font": {
+    "inter-tight": {
+      "$value": "Inter Tight",
+      "$type": "fontFamily",
+      "$description": "The sole typeface. Weight 300 at 127px with 0.75 line-height for the project display title — the condensed, light weight lets 'ODD RITUAL' occupy the full viewport width as a single typographic gesture. Weight 400 covers body, nav, badges. Weight 500–600 for buttons, labels, and emphasis. The extreme size range (9px metadata to 127px display) within one family creates a deliberate mono-typographic system where hierarchy is scale, not style."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://awwwards.com",
+      "siteName": "Awwwards",
+      "extractedAt": "2026-06-03T20:17:37.638Z",
+      "variant": "compact"
+    }
+  }
+}

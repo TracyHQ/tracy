@@ -1,0 +1,73 @@
+{
+  "id": "REG-PR-1714-wo-post-slugs",
+  "kind": "feat",
+  "title": "A Website Opportunities template post whose title the sweep writes takes its slug from that title (WordPress post_name, Joomla alias, EmDash slug), the agent's slug is never overwritten, the demo QA reads each template post where it answers now and names one it cannot open, and links to a post's old route follow it",
+  "pr": 1714,
+  "area": "opportunities-build/residue-sweep",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, run: node --test --test-reporter=tap apps/tracy-web/test/wo-residue-sweep.test.mjs apps/tracy-web/test/wo-post-routes.test.mjs packages/tools/tracy-site-tools/test/sweep-resolve.test.mjs apps/tracy-host/test/demo-qa.test.mjs",
+    "S2: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "'a post whose title the sweep writes takes its slug from that title' passes: WordPress sends post_name 'reservations' with was.post_name, Joomla's alias is made unique within its category ('reservations-2'), EmDash's slug goes beside the data, unique per collection and locale with a trashed entry counted.",
+    "'a template post the agent retitled keeps the agent's slug' and 'a post whose slug the agent changed keeps it' pass: no slug is planned for a post whose title or slug the agent owns.",
+    "'links to a moved post's old route follow it' passes: WordPress page anchors and a navigation block url, a Joomla module, article and URL menu item, an EmDash entry field and menu are each relinked by one call with `expect`; no call carries `all`; an article-type Joomla menu item is left alone.",
+    "'a link to a moved post counted by the plan' passes with COUNT_MISMATCH and no write; the EmDash slug test drops the slug when the entry's slug changed; 'the slug a post write left is read back' answers WordPress's stored 'reservations-2'.",
+    "'runDemoQa: a renamed template post is read at its current route' passes: the post is opened at its new route, a 404 there and a post with no route found are named in pages-load with the post, its old route and what was tried; a non-post 404 route is still not judged.",
+    "The four wo-post-routes tests pass: slugOf, postMoves on the three CMSs, currentPostRoutes, movedHref.",
+    "\"a slug made of the sweep's title goes with that title\" passes: when the agent changed the title since the plan, neither the title nor its slug is written on WordPress (plain and body), Joomla (post and content.update) or EmDash (post and content_update).",
+    "\"a Joomla menu item's link is written only while it still holds the link the plan saw\" passes: a menu item whose link changed since the plan is refused CHANGED with no write.",
+    "\"a WordPress button's ... counted once\" (planner and resolver) passes: a button's block-comment url moves with its <a> and is counted once; an image block's link moves too.",
+    "Both 'pages-load: a template post route ...' tests pass: a post route also listed as a page that fails, and a post route that answers 5xx or lands home, are named with the post, its old route and what was tried.",
+    "\"a WordPress link scoped to one anchor's words moves only that anchor and its own block's comment\" passes: scoped to 'Book' the button's anchor and comment move (count 1) and the image block beside it keeps both its comment href and its anchor at /old/; scoped to the image's alt the image's comment and anchor move and 'Book' stays. The cover and navigation link test passes: a button inside a cover moves with its own comment, the cover keeps its picture url, a navigation link moves by its label."
+  ],
+  "selectors": {
+    "slug": "apps/tracy-web/src/opportunities-build/residue-sweep.js slugsWithTitles",
+    "links": "apps/tracy-web/src/opportunities-build/residue-sweep.js oldRouteLinks",
+    "routes": "apps/tracy-web/src/opportunities-build/post-routes.js postMoves currentPostRoutes movedHref",
+    "measure": "apps/tracy-web/src/opportunities-build/client-demo.js currentQaRoutes",
+    "resolve": "packages/tools/tracy-site-tools/src/host/sweep-resolve.mjs countRefused slugStill withSlugRead",
+    "qa": "apps/tracy-host/src/demo-qa.js postRoutesOf postRouteFindings checkPagesLoad"
+  },
+  "evidence": "Product owner, 26/10/2026: a rewritten template post kept the template's slug, so its address still named the template's article; the QA read the frozen inventory routes, and a post whose route moved was read at its old address and a 404 there was skipped as not a page.",
+  "fence": "Mechanism only, over fixtures. Not covered: a live build on a real site; writing a Joomla alias through content.update and EmDash's slug in the content_get answer against live components; a Joomla menu item's link in the content.get answer (if it is missing the write is refused NOT_FOUND); WordPress classic menu custom links (not in the inventory; WordPress's old-slug redirect covers them).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-residue-sweep.test.mjs",
+      "apps/tracy-web/test/wo-post-routes.test.mjs",
+      "packages/tools/tracy-site-tools/test/sweep-resolve.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs"
+    ],
+    "tests": [
+      "a template post the agent retitled keeps the agent's slug",
+      "a post whose title the sweep writes takes its slug from that title",
+      "a post whose slug the agent changed keeps it",
+      "links to a moved post's old route follow it",
+      "a link to a moved post counted by the plan",
+      "a post's slug written with its title",
+      "the slug a post write left is read back and answered",
+      "runDemoQa: a renamed template post is read at its current route",
+      "slugOf: lowercase ASCII words joined by hyphens",
+      "postMoves: each template post route with the route it answers at now",
+      "currentPostRoutes: the frozen routes keep their order",
+      "movedHref keeps the form the link was written in",
+      "a slug made of the sweep's title goes with that title",
+      "a Joomla menu item's link is written only while it still holds the link the plan saw",
+      "a WordPress button's block comment moves with its <a>",
+      "a WordPress button's address in its block comment and its <a> is one link a visitor sees",
+      "pages-load: a template post route read as a page and failing",
+      "pages-load: a template post route read as a route that fails another way",
+      "a WordPress link scoped to one anchor's words moves only that anchor and its own block's comment",
+      "a WordPress cover and a navigation link",
+      "blockUrlsOf counts a block's url only when its own markup shows no anchor to it"
+    ],
+    "needs": []
+  }
+}

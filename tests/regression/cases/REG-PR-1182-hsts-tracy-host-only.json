@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1182-hsts-tracy-host-only",
+  "kind": "fix",
+  "title": "Tracy's own https hostname answers with HSTS (max-age one year, no includeSubDomains); customer site hostnames, customer domains and http stands never do",
+  "pr": 1182,
+  "area": "web/security-headers",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap apps/tracy-web/test/hsts.test.mjs",
+    "S2: Read the lines for the tests named in expect."
+  ],
+  "expect": [
+    "'Tracy’s own https hostname answers with HSTS' is ok: /login, /auth/me and an unknown path on the TRACY_ORIGIN host carry strict-transport-security: max-age=31536000 (pre-fix: no such header anywhere).",
+    "'HSTS never names includeSubDomains or preload' is ok.",
+    "'a customer site’s hostname and a customer’s own domain never get HSTS' is ok.",
+    "'a laptop stand on http never gets HSTS' is ok.",
+    "'an answer relayed straight from fetch (immutable headers) still carries HSTS on Tracy’s host' is ok, and the same relay on a customer hostname is left untouched."
+  ],
+  "selectors": {
+    "header": "strict-transport-security",
+    "function": "apps/tracy-web/src/lib/security-headers.js strictTransportSecurity, mounted first in apps/tracy-web/src/app.js buildApp"
+  },
+  "evidence": "E2E 04/10/2026 J1.4: cowork.tracy.site/login and cowork.tracy.ai/login answered without strict-transport-security.",
+  "fence": "A middleware keyed on the request hostname equal to the https TRACY_ORIGIN host; any other hostname (customer sites, their own domains) is never touched, so HSTS cannot pin a customer's domain.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/hsts.test.mjs"],
+    "tests": [
+      "Tracy’s own https hostname answers with HSTS",
+      "HSTS never names includeSubDomains or preload",
+      "a customer site’s hostname and a customer’s own domain never get HSTS",
+      "a laptop stand on http never gets HSTS",
+      "an answer relayed straight from fetch (immutable headers) still carries HSTS"
+    ]
+  }
+}

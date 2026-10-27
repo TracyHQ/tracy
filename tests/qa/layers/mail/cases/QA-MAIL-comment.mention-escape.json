@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-comment.mention-escape",
+  "itemIds": [
+    "letter:comment.mention:en",
+    "letter:comment.mention:vi",
+    "letter:comment.mention:de",
+    "letter:comment.mention:it",
+    "letter:comment.mention:fr",
+    "letter:comment.mention:nl",
+    "letter:comment.mention:zh",
+    "letter:comment.mention:es"
+  ],
+  "requirement": "comment.mention: markup in user-supplied text is escaped in HTML",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "hostile",
+    "invariant": "a letter must not carry live markup from a person-supplied name, quote or site address"
+  },
+  "edgeTags": ["escape"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.escape#comment.mention:"],
+  "redProof": null,
+  "legacyIds": []
+}

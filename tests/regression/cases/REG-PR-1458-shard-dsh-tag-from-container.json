@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1458-shard-dsh-tag-from-container",
+  "kind": "fix",
+  "title": "The master names its own dsh tag from the running container when tracy-host cannot read host-dsh.env, so shard heartbeats are no longer held at TAG_UNKNOWN",
+  "pr": 1458,
+  "area": "shards/check",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd`. The test hands masterTags the answer a real master's tracy-host gives (image.tag null, container.image = ghcr.io/tracyhq/tracy-dsh:<tag>). Tests that need TEST_DATABASE_URL skip; none of them is named here.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": [
+    "0 failures.",
+    "Every test named in run.tests reports ok.",
+    "dshTagOf returns the container's tag for the tracy-dsh repository, keeps image.tag when present, and returns null for another repository or a digest."
+  ],
+  "selectors": {
+    "code": "apps/tracy-web/src/shards/check.js dshTagOf, masterTags",
+    "test": "apps/tracy-web/test/shards-check.test.mjs"
+  },
+  "fence": "No server, no network, no database: hostCall is a local double returning the measured answer shape.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/shards-check.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the master s dsh tag falls back to the running container when the host cannot read host-dsh.env",
+      "the master s tags: app from its env, dsh from its own host, asked once per ten minutes, the last good kept"
+    ]
+  }
+}

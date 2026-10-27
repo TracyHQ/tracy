@@ -1,0 +1,94 @@
+{
+  "color": {
+    "warm-canvas": {
+      "$value": "#fffdf9",
+      "$type": "color",
+      "$description": "Warm Canvas — Page background — a warm off-white that gives the entire site its paper-like quality"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, elevated panels, and product-screenshot backgrounds"
+    },
+    "ash-mist": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Ash Mist — Secondary surface for subtle differentiation — post bodies, sidebar items, input fields"
+    },
+    "soft-fog": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Soft Fog — Tertiary surface for nested elements, dividers, and inactive states"
+    },
+    "ink": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Ink — Primary text, icons, and headings — near-black warmth rather than pure black"
+    },
+    "graphite": {
+      "$value": "#525252",
+      "$type": "color",
+      "$description": "Graphite — Secondary text and metadata"
+    },
+    "steel": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Steel — Tertiary text, timestamps, and helper labels"
+    },
+    "silver": {
+      "$value": "#a3a3a3",
+      "$type": "color",
+      "$description": "Silver — Muted text, placeholders, and inactive icon fills"
+    },
+    "charcoal-card": {
+      "$value": "#1e1e1e",
+      "$type": "color",
+      "$description": "Charcoal Card — Dark-mode product card surface shown in feature sections"
+    },
+    "resolve-green": {
+      "$value": "#22c55e",
+      "$type": "color",
+      "$description": "Resolve Green — Green action color for filled buttons, selected navigation states, and focused conversion moments. Use as a supporting accent, not as a status color"
+    },
+    "highlight-wash": {
+      "$value": "#fef3c7",
+      "$type": "color",
+      "$description": "Highlight Wash — Soft warm-yellow background for highlighted callouts and quote blocks"
+    },
+    "sienna-brand": {
+      "$value": "#451a03",
+      "$type": "color",
+      "$description": "Sienna Brand — Decorative branding — paint-splash illustrations and brand-icon accents that frame content edges"
+    },
+    "alert-red": {
+      "$value": "#ef4444",
+      "$type": "color",
+      "$description": "Alert Red — Red action color for filled buttons, selected navigation states, and focused conversion moments. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for all UI, headings, body, and buttons. The 58px hero headline with weight 600 and -0.031em tracking is the typographic anchor — tight, confident, never thin. Body text settles at 14–16px with weight 400. No display serif or alternate families — the system achieves hierarchy purely through size and weight within Inter."
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "ui-monospace — detected in extracted data but not described by AI"
+    },
+    "emoji": {
+      "$value": "emoji",
+      "$type": "fontFamily",
+      "$description": "emoji — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.campsite.com",
+      "siteName": "Campsite",
+      "extractedAt": "2026-06-03T19:00:09.708Z",
+      "variant": "compact"
+    }
+  }
+}

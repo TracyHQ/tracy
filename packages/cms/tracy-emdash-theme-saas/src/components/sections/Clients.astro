@@ -1,0 +1,416 @@
+---
+/**
+ * Two shapes of one collection, chosen by the rows themselves:
+ * - rows with `item_name` → the integrations grid, grouped by `group_title` in first-seen order;
+ * - otherwise rows with `logo_name` / `logo_image` → the "trusted by" strip on a tinted band,
+ *   followed by the live ticker band when `ticker` has items (DECISIONS D19).
+ */
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import { image, rows } from './a/panel'
+import { stampFor, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  /** True inside the inner-page 760px column (views/Sections.astro). */
+  narrow?: boolean
+}
+const { data } = Astro.props
+const items = rows(data.items)
+const cards = items.filter((row) => row.item_name)
+const logos = items
+  .map((row) => ({
+    name: row.logo_name as string | undefined,
+    img: image(row.logo_image, row.logo_name ?? '')
+  }))
+  .filter((logo) => logo.name || logo.img)
+const ticker = rows(data.ticker).filter((row) => row.text)
+// Constant reading speed: the source runs its nine items in 42s, so the loop length follows the item count.
+const tickSeconds = Math.max(12, Math.round(ticker.length * 4.7))
+
+const groups: Array<{ title: string; items: Record<string, any>[] }> = []
+for (const card of cards) {
+  const title = String(card.group_title ?? '')
+  let group = groups.find((g) => g.title === title)
+  if (!group) groups.push((group = { title, items: [] }))
+  group.items.push(card)
+}
+const hasHead = Boolean(data.eyebrow || data.title || data.sub)
+// A heading alone is not a strip: with the demo's logos and caption emptied (seed/personalize.json `facts`) it would
+// stand over nothing.
+const hasStrip = logos.length > 0 || Boolean(data.caption)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'clients', null)
+---
+
+{
+	cards.length > 0 ? (
+		<section class="integ" {...s()}>
+			<div class="k-container integ-inner">
+				{hasHead && (
+					<div class="integ-head">
+						{data.eyebrow && <p class="k-eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+						{data.title && <h2 class="k-h2" {...s('title')}>{data.title}</h2>}
+						{data.sub && <p class="k-sub" {...s('sub')}>{data.sub}</p>}
+					</div>
+				)}
+				{groups.map((group) => (
+					<div class="integ-group">
+						{group.title && <h3 class="integ-group-title" {...s('items.group_title')}>{group.title}</h3>}
+						<ul class="integ-grid" role="list">
+							{group.items.map((card) => {
+								const Tag = card.item_url ? 'a' : 'div'
+								return (
+									<li {...s.block('items')}>
+										<Tag class="k-card integ-card" href={card.item_url || undefined}>
+											{card.item_icon && (
+												<span class="integ-mark" aria-hidden="true">
+													<Icon name={card.item_icon} size={22} />
+												</span>
+											)}
+											<span class="integ-body">
+												<span class="integ-name" {...s('items.item_name')}>{card.item_name}</span>
+												{card.item_desc && <span class="integ-desc" {...s('items.item_desc')}>{card.item_desc}</span>}
+											</span>
+											{card.item_url && (
+												<span class="integ-arrow" aria-hidden="true">
+													<Icon name="arrow-right" size={16} />
+												</span>
+											)}
+										</Tag>
+									</li>
+								)
+							})}
+						</ul>
+					</div>
+				))}
+			</div>
+		</section>
+	) : (
+		<Fragment>
+			{hasStrip && (
+				<section class="strip-band" {...s()}>
+					<div class="k-container">
+						{hasHead && (
+							<div class="strip-head">
+								{data.eyebrow && <p class="k-eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+								{data.title && <h2 class="k-h2" {...s('title')}>{data.title}</h2>}
+								{data.sub && <p class="k-sub" {...s('sub')}>{data.sub}</p>}
+							</div>
+						)}
+						{(data.caption || logos.length > 0) && (
+							<div class="strip">
+								{data.caption && <p class="strip-caption" {...s('caption')}>{data.caption}</p>}
+								{logos.map((logo) =>
+									logo.img ? (
+										<img
+											class="strip-img"
+											src={logo.img.src}
+											width={logo.img.width}
+											height={logo.img.height}
+											alt={logo.img.alt}
+											loading="lazy"
+											decoding="async"
+											{...s('items.logo_image')}
+										/>
+									) : (
+										<span class="strip-logo" {...s('items.logo_name')}>{logo.name}</span>
+									)
+								)}
+							</div>
+						)}
+					</div>
+				</section>
+			)}
+			{ticker.length > 0 && (
+				<section class="tick" aria-label={data.ticker_label || undefined} {...s()}>
+					<div class="k-container tick-inner">
+						{data.ticker_label && (
+							<span class="tick-live" {...s('ticker_label')}>
+								<span class="tick-dot" aria-hidden="true" />
+								{data.ticker_label}
+							</span>
+						)}
+						<div class="tick-viewport">
+							<div class="tick-track" style={`--tick-duration: ${tickSeconds}s`}>
+								{/* Two identical groups: sliding the track by half its width loops without a seam.
+								    The copy is hidden from assistive tech so the stats are read once. */}
+								{[0, 1].map((copy) => (
+									<ul class="tick-group" role="list" aria-hidden={copy === 1 ? 'true' : undefined}>
+										{ticker.map((row) => (
+											<li class:list={['tick-item', row.bright ? 'is-bright' : 'is-dim']} {...s.block('ticker')}>
+												<span {...s('ticker.text')}>{row.text}</span>
+												<span class="tick-sep" aria-hidden="true">
+													•
+												</span>
+											</li>
+										))}
+									</ul>
+								))}
+							</div>
+						</div>
+					</div>
+				</section>
+			)}
+		</Fragment>
+	)
+}
+
+<style>
+	/* Logo strip */
+	/* No border on the band itself: the source draws none, and the ticker below brings its own top rule
+	   (a second line there read as a doubled seam). */
+	.strip-band {
+		background: var(--k-elevated);
+		padding-block: 30px;
+	}
+	.strip-head {
+		display: grid;
+		justify-items: center;
+		gap: 12px;
+		margin-bottom: 28px;
+		text-align: center;
+	}
+	.strip {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 48px;
+	}
+	.strip-caption {
+		margin: 0;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		line-height: 1.55;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.strip-logo {
+		font-family: var(--font-heading);
+		font-size: 18px;
+		font-weight: 600;
+		line-height: 1.55;
+		color: var(--k-muted);
+		/* Names stand in for logo artwork: kept quiet so they read as marks, not as links. */
+		opacity: 0.65;
+	}
+	.strip-img {
+		display: block;
+		height: 28px;
+		width: auto;
+		opacity: 0.65;
+	}
+	@media (max-width: 767px) {
+		.strip {
+			gap: 28px;
+		}
+		.strip-caption {
+			flex-basis: 100%;
+			text-align: center;
+		}
+	}
+
+	/* Live ticker: a terminal-coloured band in both themes, like the panels. */
+	.tick {
+		overflow: hidden;
+		background: var(--k-panel);
+		border-block: 1px solid var(--k-panel-border);
+	}
+	.tick-inner {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+		padding-block: 13px;
+	}
+	.tick-live {
+		display: flex;
+		flex: none;
+		align-items: center;
+		gap: 7px;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		line-height: 1.55;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-panel-accent);
+	}
+	.tick-dot {
+		width: 7px;
+		height: 7px;
+		border-radius: 999px;
+		background: currentColor;
+		animation: k-tick-pulse 2s ease-in-out infinite;
+	}
+	.tick-viewport {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		/* Fade the items in and out at both ends instead of cutting them. */
+		-webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+		mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+	}
+	.tick-track {
+		display: flex;
+		width: max-content;
+		animation: k-tick-scroll var(--tick-duration, 42s) linear infinite;
+	}
+	.tick-group {
+		display: flex;
+		flex: none;
+		gap: 16px;
+		margin: 0;
+		/* Same space after the last bullet as between items, so the two copies join evenly. */
+		padding: 0 16px 0 0;
+		list-style: none;
+	}
+	.tick-item {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		white-space: nowrap;
+		font-family: var(--font-mono);
+		font-size: 12.5px;
+		line-height: 1.55;
+		letter-spacing: 0.5px;
+	}
+	.tick-item.is-bright {
+		color: color-mix(in srgb, var(--k-panel-text) 55%, white);
+	}
+	.tick-item.is-dim {
+		color: color-mix(in srgb, var(--k-panel-text) 80%, var(--k-panel));
+	}
+	.tick-sep {
+		font-size: 12px;
+		color: var(--k-panel-accent);
+	}
+	@keyframes k-tick-scroll {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+	@keyframes k-tick-pulse {
+		50% {
+			opacity: 0.45;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.tick-track,
+		.tick-dot {
+			animation: none;
+		}
+	}
+
+	/* Integrations grid: the source sets it in a reading-width column. */
+	.integ {
+		padding-block: 64px 40px;
+	}
+	.integ-inner {
+		max-width: 760px;
+	}
+	.integ-head {
+		display: grid;
+		gap: 12px;
+		margin-bottom: 40px;
+	}
+	.integ-group + .integ-group {
+		margin-top: 44px;
+	}
+	.integ-group-title {
+		margin: 0 0 16px;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		font-weight: 400;
+		line-height: 1.7;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.integ-grid {
+		display: grid;
+		/* Content-sized tracks, so a long name ("Elasticsearch") widens its column instead of breaking. */
+		grid-template-columns: repeat(3, auto);
+		gap: 14px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.integ-card {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		height: 100%;
+		padding: 18px 20px;
+		border-radius: 12px;
+		transition: border-color 0.15s;
+	}
+	a.integ-card:hover {
+		border-color: var(--k-primary);
+	}
+	.integ-mark {
+		display: flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		width: 42px;
+		height: 42px;
+		border-radius: 10px;
+		background: color-mix(in srgb, var(--k-primary) 12%, transparent);
+		color: var(--k-primary);
+	}
+	.integ-body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		min-width: 0;
+	}
+	.integ-name {
+		font-family: var(--font-heading);
+		font-size: 15px;
+		font-weight: 600;
+		line-height: 1.7;
+		color: var(--k-heading);
+	}
+	.integ-desc {
+		margin-top: 2px;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		line-height: 1.7;
+		color: var(--k-muted);
+	}
+	.integ-arrow {
+		display: flex;
+		flex: none;
+		color: var(--k-muted);
+		transition:
+			color 0.15s,
+			transform 0.15s;
+	}
+	a.integ-card:hover .integ-arrow {
+		color: var(--k-primary);
+		transform: translateX(2px);
+	}
+	@media (max-width: 767px) {
+		.integ {
+			padding-block: 40px;
+		}
+		.integ-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 560px) {
+		.integ-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.integ-name {
+			overflow-wrap: anywhere;
+		}
+		.integ-card {
+			padding: 16px 18px;
+		}
+	}
+</style>

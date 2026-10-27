@@ -1,0 +1,104 @@
+{
+  "color": {
+    "amber-flame": {
+      "$value": "#f06413",
+      "$type": "color",
+      "$description": "Amber Flame — Logo, brand mark, gradient start — the warm orange anchors the entire identity as the only chromatic element on a monochrome canvas"
+    },
+    "honey-glow": {
+      "$value": "#feab30",
+      "$type": "color",
+      "$description": "Honey Glow — Logo gradient end, warm highlight — lifts the amber into golden territory, visible in section headings and brand accents"
+    },
+    "signal-blue": {
+      "$value": "#0088ff",
+      "$type": "color",
+      "$description": "Signal Blue — Primary CTA buttons, interactive links — cool blue against warm-amber brand creates intentional temperature contrast that separates identity from action"
+    },
+    "bright-blue": {
+      "$value": "#1c95ff",
+      "$type": "color",
+      "$description": "Bright Blue — Hover/active state for blue CTAs, secondary interactive highlights"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary page background, card surfaces, hero sections"
+    },
+    "snow-gray": {
+      "$value": "#f5f5f7",
+      "$type": "color",
+      "$description": "Snow Gray — Alternating section backgrounds, subtle surface differentiation from white"
+    },
+    "mist": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Mist — Divider backgrounds, subtle containers"
+    },
+    "silver": {
+      "$value": "#d0d0d3",
+      "$type": "color",
+      "$description": "Silver — Borders, decorative dividers"
+    },
+    "pewter": {
+      "$value": "#ababb0",
+      "$type": "color",
+      "$description": "Pewter — Secondary body text, captions, muted labels"
+    },
+    "smoke": {
+      "$value": "#6e6e73",
+      "$type": "color",
+      "$description": "Smoke — Tertiary text, metadata, footnotes"
+    },
+    "charcoal": {
+      "$value": "#272727",
+      "$type": "color",
+      "$description": "Charcoal — Dark surface backgrounds in dark sections"
+    },
+    "ink": {
+      "$value": "#101010",
+      "$type": "color",
+      "$description": "Ink — Primary heading and body text color"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Maximum contrast text, nav links, icon color"
+    },
+    "vivid-green": {
+      "$value": "#34c759",
+      "$type": "color",
+      "$description": "Vivid Green — Feature category indicator, privacy/security highlights"
+    },
+    "electric-magenta": {
+      "$value": "#cb30e0",
+      "$type": "color",
+      "$description": "Electric Magenta — Feature category indicator, collaboration highlights"
+    },
+    "alert-red": {
+      "$value": "#ff383c",
+      "$type": "color",
+      "$description": "Alert Red — Feature category indicator, emphasis highlights"
+    }
+  },
+  "font": {
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all content — headlines, body, subheadings. Using the system font stack is a deliberate choice that makes the app feel native to macOS/iOS, reinforcing the clipboard-manager-as-OS-extension identity. Weight 400 for body, 600-700 for headlines."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Used for press/media logos section labels — small metadata text where system-ui's metrics may not be optimal"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://pasteapp.io",
+      "siteName": "Paste",
+      "extractedAt": "2026-04-11T23:07:11.731Z",
+      "variant": "compact"
+    }
+  }
+}

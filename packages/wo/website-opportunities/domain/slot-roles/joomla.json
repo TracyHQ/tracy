@@ -1,0 +1,46 @@
+{
+  "$comment": "Role -> slot keys of the Joomla content contracts (content-map.json), read from the release named in `checked`. Each role lists groups: a group is written whole or not at all. Fields: text/title/label are text slots, href a url slot. Only the default-language (en-GB) modules are named: a site's other editions are translated from them by the build.",
+  "tracy-base": {
+    "checked": "tracy-base/j6/1.0.5",
+    "locale": "en-GB",
+    "roles": {
+      "hero.title": [{ "text": "module-228.1" }, { "text": "module-193.1" }],
+      "hero.lead": [{ "text": "module-228.2" }, { "text": "module-193.2" }],
+      "hero.cta": [
+        { "label": "module-228.4", "href": "module-228.3" },
+        { "label": "module-193.3", "href": "module-193.4" }
+      ],
+      "about.story": [{ "title": "module-198.0", "text": "module-198.1" }],
+      "cards": [
+        { "title": "module-231.3", "text": "module-231.4" },
+        { "title": "module-231.5", "text": "module-231.6" },
+        { "title": "module-231.7", "text": "module-231.8" }
+      ]
+    },
+    "notes": {
+      "hero": "Home (menuItem-247, layout od-landing) carries two heroes: OpenDesign module-228 (od-landing-hero) and module-193 (masthead); both are written.",
+      "cards": "The home 'value' cards (module-231): a heading and a paragraph each, nothing else. Product carousel (214) is not used: each slide has a kicker label with no source; Product tabs (215) are process steps."
+    }
+  },
+  "tracy-business": {
+    "checked": "tracy-business/j6/1.2.6",
+    "locale": "en-GB",
+    "roles": {
+      "hero.title": [{ "text": "module-441.1" }],
+      "hero.lead": [{ "text": "module-441.3" }],
+      "hero.cta": [{ "label": "module-441.4", "href": "module-441.5" }],
+      "about.story": [{ "title": "module-838.0", "text": "module-838.1" }],
+      "cards": [
+        { "title": "module-838.2", "text": "module-838.6" },
+        { "title": "module-838.3", "text": "module-838.7" },
+        { "title": "module-838.4", "text": "module-838.8" },
+        { "title": "module-838.5", "text": "module-838.9" }
+      ]
+    },
+    "notes": {
+      "hero": "module-441's title-accent (441.2) is left to the planner: Joomla cannot empty it, and the name alone is the title.",
+      "cards": "About 'What we do' cards (module-838): a title and a description each. Services 844-848 hold stats, steps and priced rows: no dish fits them.",
+      "languages": "The ru-RU copies (861+, 868+, 461+) are not named: default language only."
+    }
+  }
+}

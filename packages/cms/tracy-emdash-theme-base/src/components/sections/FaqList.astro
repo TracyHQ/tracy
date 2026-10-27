@@ -1,0 +1,29 @@
+---
+/** `<details>` list, first item open, plus sign that turns when open. `width="wide"` is the ACM accordion's 52rem list. */
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  items: Array<{ question: string; answer: string }>
+  firstOpen?: boolean
+  width?: 'narrow' | 'wide'
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the repeater field the rows come from. */
+  stamp?: Stamp
+  field?: string
+}
+const { items, firstOpen = true, width = 'narrow', stamp, field } = Astro.props
+const none = {}
+const row = stamp && field ? stamp.block(field) : none
+const sub = (k: string) => (stamp && field ? stamp(`${field}.${k}`) : none)
+---
+
+<div class:list={["mx-auto divide-y divide-line-soft border-b border-line-soft", width === "wide" ? "max-w-[52rem]" : "max-w-[736px]"]} data-block="faq">
+	{items.map((it, i) => (
+		<details open={firstOpen && i === 0} class="group" {...row}>
+			<summary class:list={["flex items-center justify-between gap-5 leading-[1.47]", width === "wide" ? "py-5 text-[17px] font-normal sm:py-6" : "py-5 text-[21px] font-semibold"]}>
+				<span {...sub("question")}>{it.question}</span>
+				<span class="text-[22px] font-light text-accent transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+			</summary>
+			<div class="max-w-[662px] pb-5 text-[17px] leading-[1.47] text-fg-muted" {...sub("answer")}>{it.answer}</div>
+		</details>
+	))}
+</div>

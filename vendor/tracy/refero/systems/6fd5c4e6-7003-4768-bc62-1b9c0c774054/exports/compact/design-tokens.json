@@ -1,0 +1,114 @@
+{
+  "color": {
+    "spring-pulse": {
+      "$value": "#a7f175",
+      "$type": "color",
+      "$description": "Spring Pulse — Primary action buttons, active states, the single chromatic accent — a high-chroma lime-green that reads as switched-on against the black canvas"
+    },
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page canvas, hero background, deepest surface — the negative space everything floats on"
+    },
+    "obsidian": {
+      "$value": "#211d1d",
+      "$type": "color",
+      "$description": "Obsidian — Elevated surface, button fills, subtle card backgrounds — one step off true black to distinguish interactive elements"
+    },
+    "carbon": {
+      "$value": "#0f1015",
+      "$type": "color",
+      "$description": "Carbon — Card surfaces, body text on light flips, icon fills — the workhorse dark for contained components"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Headline text, body text on dark canvas, nav fill, button fills on dark — maximum-contrast white that never competes with the green accent"
+    },
+    "ash": {
+      "$value": "#373434",
+      "$type": "color",
+      "$description": "Ash — Card borders, hairline dividers on dark — barely visible structural lines"
+    },
+    "smoke": {
+      "$value": "#707477",
+      "$type": "color",
+      "$description": "Smoke — Muted body text, secondary copy, placeholder — readable but recedes"
+    },
+    "fog": {
+      "$value": "#c4c4c4",
+      "$type": "color",
+      "$description": "Fog — Subtle borders, disabled strokes, soft separators"
+    },
+    "taupe": {
+      "$value": "#b0a79e",
+      "$type": "color",
+      "$description": "Taupe — Footer dividers, warm-neutral hairline accents"
+    },
+    "sand": {
+      "$value": "#e0dcd6",
+      "$type": "color",
+      "$description": "Sand — Warm off-white for inverted button fills or light-section surfaces"
+    },
+    "slate": {
+      "$value": "#505050",
+      "$type": "color",
+      "$description": "Slate — Deep body text, pressed states"
+    },
+    "iris": {
+      "$value": "#9e9eff",
+      "$type": "color",
+      "$description": "Iris — Outlined-link borders, image accent strokes — the cool violet used for secondary chromatic borders"
+    },
+    "amethyst": {
+      "$value": "#a370fc",
+      "$type": "color",
+      "$description": "Amethyst — Outlined-link borders, body text accents — a warmer violet paired with Iris for link systems"
+    },
+    "cobalt": {
+      "$value": "#3860be",
+      "$type": "color",
+      "$description": "Cobalt — Link borders, hover-stroke accents — the deeper blue for interactive outlines"
+    },
+    "tide": {
+      "$value": "#83d9e1",
+      "$type": "color",
+      "$description": "Tide — Single-card background highlight, occasional surface wash — the teal that appears as a breathing accent"
+    },
+    "saffron": {
+      "$value": "#fdbd68",
+      "$type": "color",
+      "$description": "Saffron — Icon accents, body emphasis, warm stroke highlights — a yellow punctuation color used at micro scale"
+    }
+  },
+  "font": {
+    "times-system": {
+      "$value": "Times (system)",
+      "$type": "fontFamily",
+      "$description": "Captions, micro-meta text — the system serif fallback for fine print that should feel editorial, not utilitarian"
+    },
+    "affinity-serif-variable": {
+      "$value": "Affinity Serif Variable",
+      "$type": "fontFamily",
+      "$description": "Display headlines only. The signature element — tight 0.96–1.10 line-height lets descenders nearly touch the line below, creating an editorial poster feel. The italic 'all' in headlines is the brand's voice. At 112px with weight 400 it whispers authority; the type is the artwork."
+    },
+    "canva-sans": {
+      "$value": "Canva Sans",
+      "$type": "fontFamily",
+      "$description": "All UI, body, nav, buttons, subheads. The neutral workhorse with a subtle 0.01em tracking that gives it a slightly airy feel without feeling loose. Weight 500 for subheads, 600–700 for nav and button text."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.affinity.studio",
+      "siteName": "Affinity",
+      "extractedAt": "2026-06-03T22:01:38.639Z",
+      "variant": "compact"
+    }
+  }
+}

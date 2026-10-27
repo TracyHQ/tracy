@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-signal-coral: #ff5065;
+  --color-ember-wash: #ff7a59;
+  --color-persimmon: #ff5c35;
+  --color-coral-mist: #ffe9eb;
+  --color-carbon-ink: #0e0f10;
+  --color-pure-white: #ffffff;
+  --color-fog: #f4f4f8;
+  --color-graphite: #2f3133;
+  --color-slate: #7a7b7c;
+  --color-smoke: #666666;
+
+  /* Typography */
+  --font-gilroy: 'Gilroy', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

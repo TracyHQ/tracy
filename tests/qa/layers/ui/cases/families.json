@@ -1,0 +1,177 @@
+{
+  "byFile": {
+    "accessible-name": 476,
+    "console-network": 952,
+    "contact-sheets": 1008,
+    "dialog-recovery": 201,
+    "focus-stroke": 476,
+    "legacy": 1,
+    "outcomes": 72,
+    "overflow": 476,
+    "raw-keys": 252,
+    "switches": 256,
+    "tab-reach": 476,
+    "vocabulary": 252
+  },
+  "count": 4898,
+  "families": [
+    {
+      "assertionId": "ui.console-network.clean",
+      "key": "console-network",
+      "kinds": [
+        "real-screen",
+        "building-block"
+      ],
+      "oracle": "qa-brief-ui",
+      "tags": [
+        "console-network"
+      ],
+      "variants": [
+        "1440",
+        "390"
+      ]
+    },
+    {
+      "assertionId": "ui.overflow.none-at-390",
+      "key": "overflow",
+      "kinds": [
+        "real-screen",
+        "building-block"
+      ],
+      "oracle": "qa-brief-ui",
+      "tags": [
+        "overflow"
+      ],
+      "variants": [
+        "390"
+      ]
+    },
+    {
+      "assertionId": "ui.a11y.every-control-named",
+      "key": "accessible-name",
+      "kinds": [
+        "real-screen",
+        "building-block"
+      ],
+      "oracle": "design-icon-aria",
+      "tags": [
+        "keyboard"
+      ],
+      "variants": [
+        "1440"
+      ]
+    },
+    {
+      "assertionId": "ui.keyboard.every-control-reachable",
+      "key": "tab-reach",
+      "kinds": [
+        "real-screen",
+        "building-block"
+      ],
+      "oracle": "design-no-dead-button",
+      "tags": [
+        "keyboard"
+      ],
+      "variants": [
+        "1440"
+      ]
+    },
+    {
+      "assertionId": "ui.focus.one-px-stroke-no-halo",
+      "key": "focus-stroke",
+      "kinds": [
+        "real-screen",
+        "building-block"
+      ],
+      "oracle": "design-focus-stroke",
+      "tags": [
+        "focus"
+      ],
+      "variants": [
+        "1440"
+      ]
+    },
+    {
+      "assertionId": "ui.dialog.escape-closes-and-restores-focus",
+      "key": "dialog-recovery",
+      "kinds": [
+        "real-screen",
+        "building-block"
+      ],
+      "oracle": "design-no-dead-button",
+      "tags": [
+        "dialog-recovery"
+      ],
+      "variants": [
+        "1440"
+      ]
+    },
+    {
+      "assertionId": "ui.i18n.no-raw-key-or-placeholder",
+      "key": "raw-keys",
+      "kinds": [
+        "real-screen",
+        "building-block"
+      ],
+      "oracle": "i18n-placeholders",
+      "tags": [
+        "language-theme-viewport"
+      ],
+      "variants": [
+        "1440"
+      ]
+    },
+    {
+      "assertionId": "ui.vocabulary.no-banned-phrase",
+      "key": "vocabulary",
+      "kinds": [
+        "real-screen",
+        "building-block"
+      ],
+      "oracle": "vocabulary-banned",
+      "tags": [
+        "language-theme-viewport"
+      ],
+      "variants": [
+        "1440"
+      ]
+    }
+  ],
+  "generatedBy": "node tests/qa/layers/ui/generate.mjs",
+  "note": "The ui layer derives its case manifests from denominator.json and tables.mjs (cases.mjs deriveCases); they are not committed one by one. denominator.json records their count and sha256, and generate.mjs --check proves they regenerate identically.",
+  "sha256": "545cec5f83a140d4958eb4dcdd204ca3fd54139dcedc85f9da667b7a1f38a866",
+  "switchFamilies": [
+    {
+      "assertionId": "ui.switch.off-rides-on-html",
+      "key": "binding",
+      "oracle": "ui-switch-contract",
+      "tags": [
+        "happy"
+      ]
+    },
+    {
+      "assertionId": "ui.switch.door-failure-keeps-default",
+      "key": "door-down",
+      "oracle": "ui-switch-contract",
+      "tags": [
+        "dependency-failure"
+      ]
+    },
+    {
+      "assertionId": "ui.switch.has-a-product-consumer",
+      "key": "consumer",
+      "oracle": "claude-ui-switch-rule",
+      "tags": [
+        "disabled"
+      ]
+    },
+    {
+      "assertionId": "ui.switch.tab-policy-follows",
+      "key": "tab-policy",
+      "oracle": "ui-switch-contract",
+      "tags": [
+        "permission"
+      ]
+    }
+  ]
+}

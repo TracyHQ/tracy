@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "46c16139-b0bb-49e6-95dc-74bef576e5ce",
+  "status": "complete",
+  "name": "Enviar Dinero",
+  "url": "https://styles.refero.design/style/46c16139-b0bb-49e6-95dc-74bef576e5ce",
+  "sourceWebsite": "https://paypal.com",
+  "extractedAt": "2026-04-11T19:14:39.744Z",
+  "capturedAt": "2026-10-08T05:11:04.626260+00:00",
+  "theme": "mixed",
+  "industry": null,
+  "description": "Electric Sky Wallet — a sky that you can spend from.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b9ae4aad-eb30-46a1-9ee6-374aa419ea4d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d6c9308c-fa04-4cb1-9a13-b313b07f6c02.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/aa00e640-c8c8-407f-916c-ffcdb70d5748.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/0ab0a7a2-7fa5-43e9-92f0-2039e467801a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4eb4c694-2aaf-4e7c-9b82-a2dbee4202a6.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "30fe3fd1e213133e4671509fdfb0ae492ce0cbcc8905663996716b839502490d",
+      "bytes": 21349
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b782e8b611df854dbf575210ca5804bb53d0ce50f7ecb31e779e79ef9ce434db",
+      "bytes": 88894
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "5948f33348ba5ad8a468c34731cac262e96a5f0695a52075a57c3072d012bb4c",
+      "bytes": 29447
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7e05df33329bae70b506f2e852ddec2a76300d03970e7559a0d7608fe4193b1e",
+      "bytes": 11720
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "2862cf6f3f192f74813d62ff3a5eef72e66d4576588d0428d7d6861997afcf0d",
+      "bytes": 12708
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "0cbc5b5f65ea8ec833c6921fe37edd2db769829863e6ff78620f4af69f919a49",
+      "bytes": 3073
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0195cc2b29e57d13a4ee5c3fc8e49912ba28d4c54d352a6c5c3dc868242b5172",
+      "bytes": 552
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "492768463958c3d0a421ab12bfc0ade7a3c545130ffd45a13b9e8524962375b5",
+      "bytes": 756
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c2e21178a9242a8aeaa8fe77f86865a066087e329958f20ba4d13576d58d43c3",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "07634e77aede65a0fb68c296a76269c5d6c6ac4ccd8526d9b81027ffde91e7b9",
+      "bytes": 49572
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "73c240a3e69aa0dfe7b7600382fadfc0b69f746690ea9c1bc68e5a9b16385dc3",
+      "bytes": 24889
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9b428beacd4a4344670b141d0bbdac78fdcfa840c834cc873e211ef0f2eeac90",
+      "bytes": 50889
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "dab16b7aa356094b81d12b77e0685da4aec1c50ebf320b732b17a0be29bc9227",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "bd292d508a9b30e1a5521bf1d3625810a5c6c2fe7cac7617933ba7ffbcbe3af1",
+      "bytes": 1746
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5aa24b9922bb4114c3bc85cf55b8602ff4ad7dbd85b4ee0c9fc7309ec64e0f83",
+      "bytes": 2551
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "29392960-0acf-4891-ad33-28a72f6a9b75",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "46c16139-b0bb-49e6-95dc-74bef576e5ce",
+    "48ae4f04-21cb-4ab3-8752-33b626a48c95",
+    "49dba9e1-0d9d-4997-805a-bfea7525252d",
+    "4d1d50ff-18b8-4acf-a356-48eb5c414711",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "73ec75d6-edec-4ed2-bc09-debb261b6ee0",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a74d60e1-0a09-48a1-8721-13f1f45727f1",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "c25e8eb5-634d-4aca-b30b-d8ba5a50dc5a",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c"
+  ]
+}

@@ -1,0 +1,102 @@
+//
+// Tracy — design pages
+// ---------------------------------------------
+// The three Design articles (Typography, Colors, Spacing) mirror the OpenDesign reference fixtures
+// class for class, so Phase 8 can diff them against `reference/*.html` by computed style. The
+// fixture rules are transcribed here verbatim, scoped under `.tracy-fixture` so their generic
+// class names (`.grid`, `.row`, `.body`) cannot leak into the rest of the site. Every value is a
+// token; the fixtures themselves declare nothing else.
+
+.tracy-fixture {
+  max-width: var(--container-max);
+  margin: 0 auto;
+
+  > h2:first-child,
+  .tracy-fixture__title {
+    margin: 0 0 var(--space-6);
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 700; // the fixture's h1 carries the UA bold, not the display weight
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  // The fixtures style nothing on <body>, so their containers compute `line-height: normal`.
+  // Mirrored here so a bare container measures the same on both sides; every text element
+  // below sets its own leading, exactly as the fixtures do.
+  line-height: normal;
+  letter-spacing: normal; // the fixtures set no body tracking either
+
+  // ── typography.html ──
+  .type-stack { display: grid; gap: var(--space-4); max-width: 760px; }
+  .eyebrow {
+    margin: 0;
+    line-height: normal;
+    color: var(--accent);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
+  }
+  .type-stack h2,
+  .type-stack .display {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-4xl);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+  .lede { margin: 0; color: var(--fg-2); font-size: var(--text-lg); line-height: var(--leading-body); }
+  .body { margin: 0; color: var(--muted); font-size: var(--text-base); line-height: var(--leading-body); }
+
+  // ── colors.html ──
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-4); }
+  .swatch {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    overflow: hidden;
+    box-shadow: var(--elev-ring);
+  }
+  // `--value` is set INLINE on each swatch by the fixture markup, so it is legitimately absent
+  // from every stylesheet. The fallback says that out loud — and keeps token-scan honest,
+  // which reports any `var()` with no fallback that names nothing.
+  .color { height: 88px; background: var(--value, var(--surface)); }
+  .meta { padding: var(--space-3); color: var(--muted); font-size: var(--text-sm); }
+  .meta strong { display: block; margin-bottom: var(--space-1); color: var(--fg); }
+
+  // ── spacing.html ──
+  .stack { display: grid; gap: var(--space-3); margin-bottom: var(--space-8); }
+  .row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: var(--space-4);
+    color: var(--muted);
+    font-size: var(--text-sm);
+    margin: 0;
+  }
+  .bar { height: var(--space-4); min-width: 2px; background: var(--accent); }
+  .radii { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-4); }
+  .radii article {
+    min-height: 88px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--fg-2);
+    font-size: var(--text-sm);
+    box-shadow: var(--elev-ring);
+  }
+
+  // A stacked style guide separates its three fixtures by rhythm, not by rules.
+  & + .tracy-fixture { margin-top: var(--tracy-band-y); }
+}
+
+// The blank's article view wraps `.grid`-like markup in Bootstrap's `.row`, which also has a
+// negative margin. The fixture's `.row` is a two-column line, so inside the fixture the utility
+// has to stand down.
+.tracy-fixture .row {
+  margin-inline: 0;
+  --t4-gutter-x: 0;
+}

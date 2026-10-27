@@ -1,0 +1,240 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-purity-iv",
+  "minVersion": {
+    "quickstart/ja-purity-iv/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-purity-iv/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-purity-iv/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "heading": "div.section-heading h2.mod-title",
+    "body": "div.item-inner p.item-desc",
+    "button-primary": "div.feature-actions.mt-5 a.btn.btn-primary",
+    "container": "div.t4-section-inner.container",
+    "section": "#Mod185"
+  },
+  "discovered": {
+    "page": "body",
+    "heading": "a section title (the home page has no display heading: every h2 is 32px)",
+    "body": "running text of the gallery items (the section leads set their own weight)",
+    "button-primary": "first filled, coloured call to action: rgb(10, 88, 202)",
+    "container": "first content container, max-width 1200px",
+    "section": "first padded full-width section, padding-top 64px"
+  },
+  "keepScopes": [".t4-section-9"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#495057",
+    "--fg-2": "#212529",
+    "--accent": "#0a58ca",
+    "--accent-hover": "#084298",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#ffffff",
+    "--meta": "#495057",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#e9ecef",
+    "--muted": "#666666",
+    "--font-display": "\"Public Sans\", sans-serif",
+    "--font-body": "\"Karla\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#495057",
+      "fg-2": "#212529",
+      "accent": "#0a58ca",
+      "accent-hover": "#084298",
+      "surface": "#f8f9fa",
+      "surface-warm": "#ffffff",
+      "meta": "#495057",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#dddddd",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#495057",
+      "fg-2": "#212529",
+      "accent": "#0a58ca",
+      "accent-on": "#ffffff",
+      "border": "#e9ecef",
+      "surface-warm": "#6610f2"
+    },
+    {
+      "accent": "#0a58ca"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "fg-2": "#212529",
+      "fg": "#495057",
+      "surface": "#f8f9fa",
+      "border": "#e9ecef",
+      "accent": "#0a58ca"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (50 line colours, 60 text colours seen)",
+  "selectors": {
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["#Mod185"],
+    "bodyFace": ["body"],
+    "cardLike": [".item-desktop-image", ".item-mobile-image"],
+    "inkImages": [".acm-clients .client-image img"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .card p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 17 tried (byte 5704); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#212529",
+      "uses": 28,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#212529",
+      "distance": 0
+    },
+    {
+      "hex": "#495057",
+      "uses": 10,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#495057",
+      "distance": 0
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 0
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border",
+      "near": "#e9ecef",
+      "distance": 0
+    },
+    {
+      "hex": "#0a58ca",
+      "uses": 4,
+      "kind": "custom",
+      "role": "accent",
+      "near": "#0a58ca",
+      "distance": 0
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#495057",
+    "--body-link-color": "#0a58ca",
+    "--body-link-hover-color": "#084298",
+    "--color-primary": "#0a58ca",
+    "--color-secondary": "#6c757d",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#495057",
+    "--mainnav-link-color": "#495057",
+    "--mainnav-link-hover-color": "#0a58ca",
+    "--mainnav-link-active-color": "#0a58ca",
+    "--footer-bg-color": "#ffffff",
+    "--footer-text-color": "#495057",
+    "--footer-link-color": "#495057",
+    "--footer-link-hover-color": "#0a58ca",
+    "--headings-color": "#212529",
+    "--tpl-base-100": "#f8f9fa",
+    "--tpl-base-200": "#dee2e6",
+    "--tpl-base-300": "#6c757d",
+    "--masthead-bg-color": "#f8f9fa"
+  },
+  "keepColors": {
+    ".t4-section-9": "rgb(73, 80, 87)"
+  },
+  "keepColorsNote": "re-measured 11/10/2026: the kept purple band inherits its text colour from body (#495057, computed once there), so giving --body-text-color back inside it changed nothing and the band's own colour turned the worn page's text (2 kept-band differences under every system); keepColors gives it the colour its released page computed",
+  "sideRules": {
+    "dark": {
+      "a span.d-light": {
+        "display": "none"
+      },
+      "a span.d-dark": {
+        "display": "inline"
+      }
+    }
+  },
+  "sideNote": "re-measured 11/10/2026: the template ships a logo for each of its own light and dark modes (span.d-light / span.d-dark); under a dark system the dark wordmark sat on the dark page, so the dark-mode logo shows instead",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on the local build of quickstart/ja-purity-iv/j6 1.0.1 (~/tracy-bench-work/release/ds-batch6/ja-purity-iv/release), T4's generated CSS cleared and rebuilt as on a new site (tasks/evidence/ds-remeasure-4-2026-10-11/ja-purity-iv-j6): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, no text under 4.5:1 worse than the template's own (lowest 4.51), 94% or more of the page follows, every contrast kind sampled in every view. The first pass failed 8 of 8 system views on the kept purple band (.t4-section-9: its inherited text colour turned the worn page's; keepColors); under a dark system the template's dark-mode logo shows (sideRules); checked by eye on the four systems' screenshots, desktop and phone. Earlier: measured 11/10/2026 on quickstart/ja-purity-iv/j6 1.0.0, stylesheets tokenized as the next release ships them (tasks/evidence/ds-contracts-batch6-2026-10-11/templates/ja-purity-iv-j6): 12/12, default unchanged, no text made less readable than the template's own under the systems tried, 94% or more of the page follows; its headings and light surfaces follow through the T4 starter's --headings-color and --tpl-base-* (templateVars), checked by eye on the Moxie and Toggl Track screenshots",
+  "templateVars": {
+    "--headings-color": "var(--ds-c-fg-2)",
+    "--tpl-base-100": "var(--ds-c-surface)",
+    "--tpl-base-200": "var(--ds-c-border)",
+    "--tpl-base-300": "var(--ds-c-muted)",
+    "--masthead-bg-color": "var(--ds-c-surface)"
+  },
+  "templateVarsNote": "the T4 Bootstrap 5 starter colours its headings and light surfaces through these (media/t4/css/<style>.css: --headings-color: var(--t4-gray-900), --tpl-base-*: grays); a dark band or the template dark mode sets its own on a descendant, which still wins there",
+  "bands": {
+    ".t4-section-9": {
+      "ground": "#6610f2",
+      "texts": ["#ffffff", "#e0cffc"],
+      "important": true
+    },
+    ".t4-section.t4-section-7.border-top.bg-purple": {
+      "ground": "#6f42c1",
+      "texts": ["#ffffff", "#e2d9f3"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".hero-title", ".lead"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent",
+  "reviewV8Note": "15/10/2026 (look review v8): the client logos are dark-ink pictures: under a dark system they are inverted (inkImages), which also keeps the white dark-mode wordmark from a second inversion"
+}

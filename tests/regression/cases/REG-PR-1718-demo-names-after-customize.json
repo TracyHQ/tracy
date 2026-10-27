@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1718-demo-names-after-customize",
+  "kind": "fix",
+  "title": "Joomla Customize with a name and a description: no declared demo company name stays on the site, blog posts and keep slots included (JA Boxing 1.0.3: Studio Getfit, Systems Training Center, JA Boxing masthead)",
+  "pr": 1718,
+  "area": "site-creation/brief",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/brief-joomla.test.mjs with the name pattern 'JA Boxing, About and a name' (real JA Boxing j6 1.0.3 contract, About and Name given, a model double that echoes the demo words, prepare + apply through the site double)",
+    "S2: the same file, pattern 'a description given renames the demo company too' (Tracy Business with a copy file: About given renames, a name from the address or no names declared renames nothing)"
+  ],
+  "expect": [
+    "S1: no text slot of the JA Boxing content map that a visitor reads holds 'Studio Getfit', 'Getfit studio', 'JA Boxing' or 'Systems Training Center' after the writes, keep slots module-162.0/.1 and menuItem-101.1/.2 included",
+    "S2: module-674.3 is written '{site.name} wins the {site.name} 2 infrastructure tender' with About given; nothing is written there for nameFrom label or without declared names"
+  ],
+  "selectors": {
+    "engine": "brief-engines/joomla.js demoNameChanges block, prepared.renamedKeep, apply keepRenamed"
+  },
+  "evidence": "accept-boxing-1025.tracy.site, acceptance scan 25/10/2026",
+  "fence": "A name the customer gave replaces every declared demo company name, whatever About holds",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=JA Boxing, About and a name|a description given renames the demo company too",
+      "apps/tracy-web/test/brief-joomla.test.mjs"
+    ],
+    "tests": ["JA Boxing, About and a name given", "a description given renames the demo company too"],
+    "timeout_s": 600
+  }
+}

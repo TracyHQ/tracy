@@ -1,0 +1,523 @@
+/* tracy-base — the rules the ACM patterns (patterns/section-*.php) need beyond sections.css.
+ * Only what tracy.css, layout.css and sections.css do not already draw: the carousel's scroll
+ * track, the timeline's rule and dots, the tab row, the features spotlight track, the flipped
+ * story chapter, and the stretched link of the menu feature. Every value reads a WordPress
+ * variable, so the active style variation is the only source of colour, size and space.
+ *
+ * NOT enqueued by functions.php (shared with the source theme): the templates/parts owner wires
+ * it in after sections.css. Until then the patterns still render, on the utilities alone. */
+
+/* ── Carousel: a real scroll container with scroll-snap, three slides in view ─────────────── */
+
+.acm-carousel__track {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: var(--wp--preset--spacing--4);
+  scrollbar-width: thin;
+  scrollbar-color: var(--wp--preset--color--border) transparent;
+}
+
+.acm-carousel__track > .acm-carousel__slide {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  min-width: 0;
+  width: calc((100% - (var(--wp--preset--spacing--6) * 2)) / 3);
+}
+
+.acm-carousel--per-2 .acm-carousel__track > .acm-carousel__slide {
+  width: calc((100% - var(--wp--preset--spacing--6)) / 2);
+}
+
+.acm-carousel--per-4 .acm-carousel__track > .acm-carousel__slide {
+  width: calc((100% - (var(--wp--preset--spacing--6) * 3)) / 4);
+}
+
+@media (max-width: 40rem) {
+  .acm-carousel .acm-carousel__track > .acm-carousel__slide {
+    width: calc(100% - var(--wp--preset--spacing--8));
+  }
+}
+
+/* ── Timeline: a marker column, one rule drawn per entry, a dot on it ─────────────────────── */
+
+.acm-timeline__list {
+  --acm-timeline-gutter: var(--wp--preset--spacing--8);
+  --acm-timeline-dot: 9px;
+  max-width: 72ch;
+}
+
+.acm-timeline__entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 0 var(--acm-timeline-gutter);
+  padding-block: var(--wp--preset--spacing--6);
+}
+
+.acm-timeline__entry::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(6rem + (var(--acm-timeline-gutter) / 2));
+  width: 1px;
+  background: var(--wp--preset--color--border-soft);
+}
+
+.acm-timeline__entry:first-child::before {
+  inset-block-start: var(--wp--preset--spacing--6);
+}
+
+.acm-timeline__entry:last-child::before {
+  inset-block-end: calc(100% - var(--wp--preset--spacing--6) - 0.6em);
+}
+
+.acm-timeline__entry::after {
+  content: '';
+  position: absolute;
+  inset-block-start: calc(var(--wp--preset--spacing--6) + 0.35em);
+  inset-inline-start: calc(6rem + (var(--acm-timeline-gutter) / 2) - (var(--acm-timeline-dot) / 2) + 0.5px);
+  width: var(--acm-timeline-dot);
+  height: var(--acm-timeline-dot);
+  border-radius: 50%;
+  background: var(--wp--preset--color--bg);
+  box-shadow: 0 0 0 1px var(--wp--preset--color--border);
+}
+
+.acm-timeline__marker.tracy-eyebrow {
+  margin: 0;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 40rem) {
+  .acm-timeline__entry {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--wp--preset--spacing--2);
+    padding-inline-start: var(--wp--preset--spacing--6);
+  }
+
+  .acm-timeline__marker.tracy-eyebrow {
+    text-align: start;
+  }
+
+  .acm-timeline__entry::before {
+    inset-inline-start: 0;
+  }
+
+  .acm-timeline__entry::after {
+    inset-inline-start: calc((var(--acm-timeline-dot) / 2) * -1 + 0.5px);
+  }
+}
+
+/* ── Tabs: the label row; ink and a 2px rule, no box. Panels stay visible without a script ── */
+
+.acm-tabs__list.wp-block-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 0;
+}
+
+.acm-tabs__tab a {
+  display: inline-block;
+  padding-bottom: var(--wp--preset--spacing--4);
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  color: var(--wp--preset--color--muted);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.acm-tabs__tab a:hover,
+.acm-tabs__tab a:focus-visible,
+.acm-tabs__tab.is-active a {
+  color: var(--wp--preset--color--fg);
+  border-bottom-color: var(--wp--preset--color--fg);
+}
+
+/* ── Features intro: the spotlight takes the wide track ─────────────────────────────────── */
+
+@media (width >= 64rem) {
+  .acm-features-intro__grid {
+    grid-template-columns: 1.3fr 1fr 1fr;
+  }
+}
+
+/* ── Story chapter, media left: the wide track moves to the text's side ─────────────────── */
+
+@media (width >= 40rem) {
+  .acm-story-chapter--media-left .acm-story-chapter__grid {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+
+/* ── Clients: marks share one height and sit quiet until hovered ────────────────────────── */
+
+.acm-clients__mark img {
+  width: auto;
+  max-height: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--2));
+  opacity: 0.8;
+  transition: opacity var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.acm-clients__mark:hover img {
+  opacity: 1;
+}
+
+/* ── Menu feature: the whole card is the link, as the source's single <a> was ───────────── */
+
+.acm-menu-feature {
+  position: relative;
+}
+
+.acm-menu-feature__action a {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.acm-menu-feature__action a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* ── Page as a section stack: templates/page.html prints the post content bare, so every
+   section keeps its own rhythm (py-section-*) and gutter (px-container-*) and its inner box
+   sits on the container's line. Anything else typed into the page body — a prose paragraph,
+   a heading outside a section — gets the container's box here, so it does not bleed. ────── */
+
+.tracy-page-stack > .wp-block-post-content > :not(.tracy-section, .tracy-hero, .alignfull) {
+  max-width: var(--wp--custom--container--max);
+  margin-inline: auto;
+  padding-inline: var(--wp--custom--container--gutter-desktop);
+}
+
+@media (max-width: 1024px) {
+  .tracy-page-stack > .wp-block-post-content > :not(.tracy-section, .tracy-hero, .alignfull) {
+    padding-inline: var(--wp--custom--container--gutter-tablet);
+  }
+}
+
+@media (max-width: 640px) {
+  .tracy-page-stack > .wp-block-post-content > :not(.tracy-section, .tracy-hero, .alignfull) {
+    padding-inline: var(--wp--custom--container--gutter-phone);
+  }
+}
+
+/* ── Team: each member is a card — the source's .tracy-member: a ring, the large radius, the
+   page background, 24px inside; a 96px portrait; the role in plain body type, not the eyebrow. ── */
+
+.acm-team__member {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp--preset--spacing--2);
+  padding: var(--wp--preset--spacing--6);
+  border-radius: var(--wp--custom--radius--lg);
+  background: var(--wp--preset--color--bg);
+  box-shadow: var(--wp--custom--elev--ring);
+}
+
+.acm-team__member > * {
+  margin-block: 0;
+}
+
+.acm-team__member .acm-team__portrait {
+  width: calc(var(--wp--preset--spacing--12) * 2);
+  margin-bottom: var(--wp--preset--spacing--2);
+}
+
+.acm-team__member .tracy-eyebrow {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--sm);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--wp--preset--color--muted);
+}
+
+.acm-team__member .text-sm {
+  color: var(--wp--preset--color--muted);
+}
+
+.acm-team__grid {
+  gap: var(--wp--preset--spacing--12) var(--wp--preset--spacing--6);
+}
+
+/* ── CTA capsule: the source's .tracy-cta — a surface box with a ring, 18px radius, 48px inside,
+   the statement at display size beside the actions on one row; the second action is a plain
+   text link there, not a boxed button. ────────────────────────────────────────────────────── */
+
+.acm-cta-capsule .acm-cta-capsule__box {
+  padding: var(--wp--preset--spacing--12);
+  gap: var(--wp--preset--spacing--8);
+  border-radius: var(--wp--custom--radius--lg);
+  border: 0;
+  background: var(--wp--preset--color--surface);
+  box-shadow: var(--wp--custom--elev--ring);
+}
+
+.acm-cta-capsule__copy {
+  flex: 1 1 20rem;
+  max-width: 32rem;
+}
+
+.acm-cta-capsule .acm-cta-capsule__statement {
+  font-size: var(--wp--preset--font-size--xxl);
+  font-weight: 600;
+  letter-spacing: var(--wp--custom--tracking--display);
+  margin-bottom: 0;
+}
+
+.acm-cta-capsule .acm-cta-capsule__support {
+  font-size: var(--wp--preset--font-size--lg);
+  color: var(--wp--preset--color--muted);
+}
+
+.acm-cta-capsule .tracy-actions {
+  flex: 0 1 auto;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wp--preset--spacing--6);
+}
+
+.tracy .acm-cta-capsule .tracy-btn--ghost .wp-block-button__link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--wp--preset--color--fg);
+  box-shadow: none;
+}
+
+.tracy .acm-cta-capsule .tracy-btn--ghost .wp-block-button__link:hover {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+@media (max-width: 640px) {
+  .acm-cta-capsule .acm-cta-capsule__box {
+    padding: var(--wp--preset--spacing--8);
+  }
+
+  .acm-cta-capsule .acm-cta-capsule__statement {
+    font-size: var(--wp--preset--font-size--xl);
+  }
+}
+
+/* ── Carousel on the gray ground, as the source draws it: one rounded surface panel the width of
+   the content column (not a full-bleed band), slides without a card of their own, the heading
+   and the two step buttons (tracy-base-sections.js) on one row. ───────────────────────────── */
+
+.tracy .acm-carousel--gray.tracy-section--band {
+  max-width: var(--wp--custom--container--max);
+  margin-inline: auto;
+  padding: var(--wp--preset--spacing--8) var(--wp--preset--spacing--6);
+  border: 0;
+  border-radius: var(--wp--custom--radius--lg);
+}
+
+.tracy .acm-carousel.has-steps > .tracy-section__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  column-gap: var(--wp--preset--spacing--8);
+}
+
+.tracy .acm-carousel.has-steps .tracy-section__head {
+  margin-bottom: var(--wp--preset--spacing--12);
+}
+
+.tracy .acm-carousel.has-steps .acm-carousel__track {
+  grid-column: 1 / -1;
+}
+
+.acm-carousel__nav {
+  display: flex;
+  gap: var(--wp--preset--spacing--2);
+  margin-bottom: var(--wp--preset--spacing--12);
+}
+
+.acm-carousel__step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: var(--wp--preset--color--fg);
+  background: transparent;
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--pill);
+  cursor: pointer;
+}
+
+.acm-carousel__step::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border: solid currentColor;
+  border-width: 0 1.5px 1.5px 0;
+  transform: translateX(-2px) rotate(-45deg);
+}
+
+.acm-carousel__step--prev::before {
+  transform: translateX(2px) rotate(135deg);
+}
+
+/* An end step (no slide that way): quieter, in the disabled roles when a design system gives them;
+   the fill stays the rest rule's transparent without one. */
+.acm-carousel__step:disabled {
+  color: var(--ds-c-disabled-fg, var(--wp--preset--color--meta));
+  background: var(--ds-c-disabled-bg, transparent);
+  border-color: var(--wp--preset--color--border-soft);
+  cursor: default;
+}
+
+.acm-carousel__step:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+.tracy .acm-carousel .acm-carousel__slide.tracy-card {
+  padding: 0;
+  gap: var(--wp--preset--spacing--2);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.tracy .acm-carousel .acm-carousel__slide .tracy-eyebrow {
+  font-family: var(--wp--preset--font-family--body);
+  font-weight: 500;
+  line-height: var(--wp--custom--leading--body);
+  color: var(--wp--preset--color--muted);
+  margin: 0;
+}
+
+.tracy .acm-carousel .acm-carousel__slide h3 {
+  font-size: var(--wp--preset--font-size--lg);
+  margin: 0;
+}
+
+/* ── Tabs: the labels are plain words, the selected one in ink over a 2px rule. ─────────── */
+
+.tracy .acm-tabs__tab a {
+  font-size: var(--wp--preset--font-size--base);
+  text-decoration: none;
+}
+
+.tracy .acm-tabs__tab.is-active a {
+  color: var(--wp--preset--color--fg);
+  border-bottom-color: var(--wp--preset--color--fg);
+}
+
+.tracy .acm-tabs__panel[hidden] {
+  display: none;
+}
+
+/* ── Contact Form 7 messages: the plugin's own state colours (its styles.css: the neutral note
+   #00a0d2, sent #46b450, failed/aborted #dc3232, spam #f56e28, invalid/unaccepted/payment
+   #ffb900, the field tip #dc3232), read through the status roles so a worn design system tints
+   them; without one each line is the plugin's value, the words keep the form's colour and the
+   note draws no fill, as before. ─────────────────────────────────────────────────────────── */
+
+.tracy .wpcf7 form .wpcf7-response-output {
+  border-color: var(--ds-c-info, #00a0d2);
+  color: var(--ds-c-info-text, currentColor);
+  background: var(--ds-c-info-bg, transparent);
+}
+
+.tracy .wpcf7 form.sent .wpcf7-response-output {
+  border-color: var(--ds-c-success, #46b450);
+  color: var(--ds-c-success-text, currentColor);
+  background: var(--ds-c-success-bg, transparent);
+}
+
+.tracy .wpcf7 form.failed .wpcf7-response-output,
+.tracy .wpcf7 form.aborted .wpcf7-response-output {
+  border-color: var(--ds-c-danger, #dc3232);
+  color: var(--ds-c-danger-text, currentColor);
+  background: var(--ds-c-danger-bg, transparent);
+}
+
+.tracy .wpcf7 form.spam .wpcf7-response-output {
+  border-color: var(--ds-c-warn, #f56e28);
+  color: var(--ds-c-warn-text, currentColor);
+  background: var(--ds-c-warn-bg, transparent);
+}
+
+.tracy .wpcf7 form.invalid .wpcf7-response-output,
+.tracy .wpcf7 form.unaccepted .wpcf7-response-output,
+.tracy .wpcf7 form.payment-required .wpcf7-response-output {
+  border-color: var(--ds-c-warn, #ffb900);
+  color: var(--ds-c-warn-text, currentColor);
+  background: var(--ds-c-warn-bg, transparent);
+}
+
+.tracy .wpcf7-not-valid-tip {
+  color: var(--ds-c-danger-text, #dc3232);
+}
+
+/* ── Contact Form 7 fields and submit: the theme's own field (.tracy-field in sections.css) and
+   button (.wp-block-button__link in tracy.css and tracy-base.css), so the contact form is not the
+   browser's 18px boxes and grey "Send". The label reads like .tracy-field__label, a field like
+   .tracy-field input (its corner reads the input role), the submit like the core button: accent
+   fill, pill, body size. The acceptance checkbox keeps the browser's box. ───────────────────── */
+
+.tracy .wpcf7 form > p > label {
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--fg-2);
+}
+
+.tracy .wpcf7 form .wpcf7-form-control-wrap {
+  display: block;
+  margin-top: var(--wp--preset--spacing--1);
+}
+
+.tracy
+  .wpcf7
+  form
+  .wpcf7-form-control:is(
+    input:not([type='checkbox'], [type='radio'], [type='submit'], [type='file']),
+    textarea,
+    select
+  ) {
+  box-sizing: border-box;
+  width: 100%;
+  font: inherit;
+  font-size: var(--wp--preset--font-size--base);
+  padding: var(--wp--preset--spacing--3);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--ds-input-radius, var(--wp--custom--radius--md));
+  background: var(--wp--preset--color--bg);
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy .wpcf7 form .wpcf7-form-control:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+.tracy .wpcf7 form input.wpcf7-submit {
+  font: inherit;
+  font-size: var(--wp--preset--font-size--base);
+  font-weight: 400;
+  line-height: 1.2;
+  padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--5);
+  border: 0;
+  border-radius: var(--wp--custom--radius--pill);
+  background: var(--wp--preset--color--accent);
+  color: var(--wp--preset--color--accent-on);
+  cursor: pointer;
+  transition:
+    background var(--wp--custom--motion--base) var(--wp--custom--ease--standard),
+    box-shadow var(--wp--custom--motion--base) var(--wp--custom--ease--standard);
+}
+
+.tracy .wpcf7 form input.wpcf7-submit:hover {
+  background: var(--wp--preset--color--accent-hover);
+  box-shadow: var(--wp--custom--elev--raised);
+}
+
+.tracy .wpcf7 form input.wpcf7-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

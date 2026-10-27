@@ -1,0 +1,61 @@
+{
+  "id": "REG-PR-1448-wo-social-stats-dev-round",
+  "kind": "fix",
+  "title": "Find places social stats, dev round of 19/10: a page put off by the daily budget says until when and is not polled into the hourly cap, a page reserves its whole cost before its first call, Instagram's media count 0 for a followed account is unknown, Facebook account features are not pages, and the website-opportunities switch stops the background queues",
+  "pr": 1448,
+  "area": "website-opportunities",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: a page's provider cap is spent, so the row is deferred to the next UTC day; the door and the tab are asked about it; later the poll is refused with 429.",
+    "S2: the Facebook cap is 3 and two Facebook pages are queued; a page answers after one of its two calls.",
+    "S3: Instagram Looter2 answers media count 0 and no posts for an account with 59 010 followers, and for one with 0 followers.",
+    "S4: facebook.com/messages (and settings, me, marketplace…) reaches the parser and the site-check lift.",
+    "S5: the website-opportunities switch is off while a social-stats row and a site-check row are due, then on."
+  ],
+  "expect": [
+    "S1: the door answers {status: 'queued', deferredUntil}; the tab does not ask for that page before then, the cell shows 'Daily limit reached · <when>' with no spinner and no button; a stopped poll turns its pages to not_queued, so the cell offers 'Get social stats' instead of 'Checking…'.",
+    "S2: exactly two billable calls are made, the second page is deferred, the provider and account counters end at 2; the unspent unit of a one-call page is given back.",
+    "S3: the followed account has posts, lastPostAt and postsPerMonth null with coverage partial; the account with no followers keeps 0.",
+    "S4: no page is parsed, no stat key is made, and withSiteSocials does not lift the link.",
+    "S5: off: no provider, PageSpeed or crawl is asked and nothing is leased; on: both ticks run."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities/social-stats.js, apps/tracy-web/src/opportunities/durable-queue.js, apps/tracy-web/src/app.js, vendor/tracy/tracy-website-opportunities/domain/social-stats/providers.mjs, vendor/tracy/tracy-website-opportunities/domain/social-stats/handles.mjs, vendor/tracy/tracy-website-opportunities/domain/site-socials.mjs, vendor/tracy/tracy-website-opportunities/src/client/flow.ts, vendor/tracy/tracy-website-opportunities/src/client/check-polls.ts, packages/ui/tracy-wo-views/src/model.ts, packages/ui/tracy-wo-views/src/cells/social.tsx",
+    "dom": ".tracy-wo-tab"
+  },
+  "evidence": "Dev round on cowork.tracy.site, 19/10/2026 06:14–06:38Z: tasks/evidence-wo-social-stats/dev-round.md (L1: account A 22 → 61 calls then 3×429 at 06:32:33Z, cells stuck on 'Checking…'; L2: TikTok 2 → 3 and FB 2 → 3 on a deferred page; L3: 4/4 Instagram rows posts 0, thefarm_dubai 59 010 followers; L4: stat_key facebook:messages; L5: the ticks never read the switch)",
+  "fence": "statShape adds deferredUntil for a budget-deferred queued row; socialToAsk skips a page whose deferredUntil is ahead and askSocialStats answers a refusal with not_queued pages; fetchOne reserves TIER_COST units per budget on a tier's first call and gives back what it did not spend; instagramLooter2 reads count 0 + no edges + followers > 0 as unknown; FB_RESERVED lists account features and withSiteSocials lifts only parsed profiles; createDurableQueue asks `enabled` (the switch) before every claim, failing closed",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-social-stats.test.mjs",
+      "apps/tracy-web/test/durable-queue.test.mjs",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs",
+      "packages/wo/website-opportunities/test/domain-social-stats-providers.test.mjs",
+      "packages/wo/website-opportunities/test/domain-social-stats-handles.test.mjs",
+      "packages/wo/website-opportunities/test/domain-site-socials.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-social-stats.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-check-polls.test.mjs",
+      "packages/ui/tracy-wo-views/test/model.test.mjs"
+    ],
+    "tests": [
+      "a spent provider cap defers the row to the next day and never pays the fallback",
+      "a page reserves its whole cost before the first call: an odd cap pays no half page (dev round L2)",
+      "what a page reserved and did not spend is given back",
+      "a queue that is not `enabled` claims nothing, and a check that throws counts as off",
+      "switch off: the social-stats and site-checks ticks claim nothing; switch on: they run (dev round L5)",
+      "instagram/looter2: no media for an account with followers is unknown, not zero",
+      "facebook: account features (messages, settings, marketplace…) are not pages (dev round L4)",
+      "withSiteSocials drops links that are not a profile of that network (dev round L4)",
+      "a page deferred by the daily budget keeps its date and is not asked again until then (dev round L1)",
+      "askSocialStats: pages asked and left out of the answer read as not queued; a refusal stops",
+      "socialView: a page deferred by the daily budget does not spin, offers no button and says until when (dev round L1)",
+      "formatUntil: a time ahead in hours under a day, then in days"
+    ]
+  }
+}

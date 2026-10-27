@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "fa157687-ee42-443e-a992-5f8a3fcdd48f",
+  "status": "complete",
+  "name": "Ssense",
+  "url": "https://styles.refero.design/style/fa157687-ee42-443e-a992-5f8a3fcdd48f",
+  "sourceWebsite": "https://ssense.com",
+  "extractedAt": "2026-06-03T18:33:16.771Z",
+  "capturedAt": "2026-10-08T05:19:49.569456+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "White gallery wall with editorial serifs. A high-fashion magazine spread rendered as a single-page web experience — where the only color is photography and the only weight is restraint.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7b109301-9595-4763-a3ce-af959db6a4e3.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9acea1b9dea6f5a119c0ebffd4776be102e10b26c90b2817c769d41cf560539e",
+      "bytes": 21070
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "bd7c8bc73db217996f1432b4608bb718302830dec35c5ae97544e7d21dda4dcf",
+      "bytes": 156480
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4c7af2748fcac841bcd6d6906e20560a1ca20d2d95026d7959ea345fc671434e",
+      "bytes": 16708
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "eb26f27b9cf87380f8b99e201a36d349dccbf905d759e959346d9421fc1ddd53",
+      "bytes": 9759
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "1df736d0f422ae18cf1b4caf16132ec59a07345de1ec9a1249ab171cdb45bed7",
+      "bytes": 12788
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c44fc27efd56ef0bb13e96d1508676a8277232db9f1e1b854d0e3101eeade8c1",
+      "bytes": 3202
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "dfc73046889cb39f262f2fe6bb365da7ab1734bc24029a05f7fd83a1cd9b6bd9",
+      "bytes": 818
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "ab00ca8b067cdabdfe36e73fc9bfa0736743d2fa0ccf973e1c6b8fe233fc1ced",
+      "bytes": 835
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "0189a9a4a173c2eaf19208941ad16610b0e5981c8ec12b0784987139c0fbaf46",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ae77ccd42c3a017c81830d8cbde501f57bb4cd2c0d1dcbb507f565efa3ea894a",
+      "bytes": 40289
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5f46628a9fd721b714419a181a1abebb06d58dbf02e20870c9c9de274e3b2c5e",
+      "bytes": 20024
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5687ffb7b581b55e41eccc976a7c6135535b4deef23cc8428d033a150203fb0b",
+      "bytes": 32410
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b7cd1c3a381c281e15e69ac86778fa9142cc18551dfbea0b309a1ba16179d0ba",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "fbc624d8f889f402a76e22fafae364f50d8451a675023f5b88b5abb302fbf58f",
+      "bytes": 1816
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4e2952587f958a86e13066264bca3f9e32ed6cb7ce47ea87a609fff065ee27d8",
+      "bytes": 2293
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "17824ea8-ac7d-42ca-97e2-9bf92ebea7e1",
+    "234e9a17-236d-4446-9d58-f83f6806d012",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2fd71e12-12fc-4346-8281-52afe12bb951",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "3c605c8e-daf2-4d46-94d7-2cb705a93b7b",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "600002c5-c5f5-4df0-adf6-6324ee6255c0",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "7b28c99e-ed17-451b-a39e-bd4722bc43f5",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268",
+    "f401f04f-c45b-4261-9441-f502c6569a29",
+    "fa157687-ee42-443e-a992-5f8a3fcdd48f"
+  ]
+}

@@ -1,0 +1,3827 @@
+{
+  "$comment": "ACM type:style -> the wp-ja-kinetic pattern that renders it, field by field, for the seeder's ACM path (skills/tracy-wordpress-theme/scripts/seed.mjs renderAcm looks each instance up as `${type}:${style}`). Field names are the Joomla ACM field names VERBATIM, as references/templates-and-patterns.md:83-85 requires for a from-joomla adapter and as tracy-base writes them; the uniform eyebrow/heading/intro vocabulary in wp-tracy-business belongs to the from-html adapter and is not used here. metadata.name is <type>.<field>[.<n>], <n> being the 1-based row of a repeat group; the wrapper of a repeated row is <type>.item.<n> and carries no role, so cloning or deleting it changes the row count (accordion is the one exception: its wrapper is accordion.row.<n>, because accordion.item.<n> is already the details block a `summary`-attr field targets, and a row also carries an optional group header that must clone with it — see the accordion entry's `q` field note). A block is located by name, never by position. `attr` says where the value lands: content, text (a button label), href, src+alt, className (a value that is not text but selects a class), summary, table, links. A field the spec leaves empty removes its block; `dropped` names fields a pattern deliberately does not carry, and why. Two styles of one type (clients, bento) share the field vocabulary and differ only in which fields exist and which pattern renders them: each style is its own `<type>:<style>` entry. The stylesheet is assets/css/wp-ja-kinetic-sections.css, the source's own per-section sheets ported behind a bridge that declares the template's custom properties from this theme's presets; inc/extra.php enqueues it as wp-ja-kinetic-sections. The numeric keys at the end are the pages' section ids (page-map `sections[].modules`): the contract and Fast Gate read a page's pattern through them (contract.mjs patternSlugsOf), so each names the pattern its module renders (for features-ledger the layout the instance carries), its root, and only the fields whose row-1 block carries a className, i.e. the ones that can be paired with the source. The seeder reads the `<type>:<style>` entries above, never the numeric ones.",
+  "schemaVersion": "wp-ja-kinetic-patterns-map/v1",
+  "namespace": "wp-ja-kinetic",
+  "anchorConvention": "core/group (every pattern's root block, and the root of every style variant) already supports the standard `anchor` attribute with no change needed here — setting `\"anchor\":\"acm-<type>-<source id>\"` in the root wp:group's attrs (source id = the Joomla ACM module id the instance came from, e.g. `acm-features-intro-193`) makes it render `id=\"acm-<type>-<source id>\"` on the section, byte-identical to the source's own `id=\"acm-<type>-<mid>\"` (acm/<type>/tmpl/style-1.php, `echo $module->id`). The seeder must set this anchor on every instance it creates: several source pages carry per-instance overrides in css/page-<Itemid>.css scoped to that literal id (grep the stylesheet for `#acm-` to find them) that never match anything without it — verified on a probe (2026-09-22): setting the anchor on a features-intro instance made the already-ported `body.item-218 #acm-features-intro-193 .hx-section` rule apply and match the source's measured background exactly. One id in the ported CSS is dead regardless: `#acm-features-intro-194` in css/page-218.css was authored when module 194 was still a features-intro instance; it is now features-ledger (layout metrics) and no instance will ever carry that id again.",
+  "views": {
+    "$comment": "A view whose body the source draws with a component, not with ACM sections: the theme draws it with one of its blocks, placed after the named position. page-contact is com_contact (form#contact-form: name, email, subject, message, consent), drawn by blocks/kinetic-contact-form between the page-top masthead and the page-bottom call to action. Naming it here also tells the seeder the theme owns the contact form, so no Contact Form 7 is installed. A view the source answers with something other than 200 declares that answer under `expect`, which the seeder probes: page-account is com_users profile, which sends a visitor who is not logged in to the login page (source /index.php/pages/profile -> 303 -> /index.php/pages/login; the theme does the same). A view the theme serves at its own path declares `servedAtPath`, and the seeder adds no redirect for it: search is com_finder at /pages/search on the source, and the theme answers that path with its search view (inc/list-pages.php, D-35).",
+    "page-contact": {
+      "block": "wp-ja-kinetic/kinetic-contact-form",
+      "after": "page-top"
+    },
+    "page-account": {
+      "expect": {
+        "status": 303,
+        "to": "/pages/login"
+      }
+    },
+    "search": {
+      "servedAtPath": true
+    }
+  },
+  "types": {
+    "hero:style-1": {
+      "pattern": "wp-ja-kinetic/section-hero",
+      "root": ".acm-hero",
+      "item": null,
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "hero.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "hero.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "cta1_label": {
+          "block": "core/button",
+          "path": "hero.cta1",
+          "attr": "text",
+          "repeat": null,
+          "note": "one button carries both cta1 fields: cta1_label is its text, cta1_link its href"
+        },
+        "cta1_link": {
+          "block": "core/button",
+          "path": "hero.cta1",
+          "attr": "href",
+          "repeat": null
+        },
+        "cta2_label": {
+          "block": "core/button",
+          "path": "hero.cta2",
+          "attr": "text",
+          "repeat": null
+        },
+        "cta2_link": {
+          "block": "core/button",
+          "path": "hero.cta2",
+          "attr": "href",
+          "repeat": null
+        },
+        "trust": {
+          "block": "core/paragraph",
+          "path": "hero.trust",
+          "attr": "content",
+          "repeat": null
+        },
+        "image_terminal": {
+          "block": "core/image",
+          "path": "hero.image_terminal",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "the source names a per-direction panel image and falls back to images/kinetic/hero-terminal-panel-<direction>.webp when the field is empty; every measured instance is empty. attr stays src+alt on purpose: no spec instance carries a value for image_terminal, image_blueprint or image_signal, and the seeder removes a core/image whose src field is empty (seed.mjs `case 'src'`), so a `src` declaration would delete the panel. As src+alt the seeder leaves the block alone and the pattern's own image stays: the pattern points each direction at the source's fallback file, copied to assets/images/hero-terminal-panel-<terminal|blueprint|signal>.webp (step 6b)."
+        },
+        "image_blueprint": {
+          "block": "core/image",
+          "path": "hero.image_blueprint",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "see image_terminal"
+        },
+        "image_signal": {
+          "block": "core/image",
+          "path": "hero.image_signal",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "see image_terminal"
+        }
+      }
+    },
+    "cta:style-1": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "item": null,
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      }
+    },
+    "page-masthead:style-1": {
+      "pattern": "wp-ja-kinetic/section-page-masthead",
+      "root": ".acm-page-masthead",
+      "item": null,
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "page-masthead.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "page-masthead.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "page-masthead.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "align": {
+          "block": "core/group",
+          "path": "page-masthead",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: the wrapper class is-center / is-left. All 8 measured instances are center. Same root-targeting convention as cta.variant above (path equals the bare type name) — needs `metadata.name:\"page-masthead\"` on the pattern's own root wp:group; fixed the same way, same run (section-page-masthead.php)."
+        }
+      }
+    },
+    "clients:style-1": {
+      "pattern": "wp-ja-kinetic/section-clients",
+      "root": ".acm-clients",
+      "item": "clients.item.<n>",
+      "itemNote": "style-1 draws every logo as a sibling `clients.item.<n>` wrapper under the one `acm-clients-strip` parent, so the seeder's repeatItems keeps exactly the instance's logo count: the source prints `getRows('logo-name')` logos (`acm/clients/tmpl/style-1.php:16,62`) — 6 for module 178 on the three home pages, 12 for 216 on the landing page. With `item` null (the style-2 reason, which does not hold here) the home pages kept the pattern's 12 wrappers and printed six extra names (measured 2026-09-25).",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "clients.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "clients.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "clients.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "caption": {
+          "block": "core/paragraph",
+          "path": "clients.caption",
+          "attr": "content",
+          "repeat": null,
+          "note": "style-1 only; the style-2 field set has no caption"
+        },
+        "logo-name": {
+          "block": "core/paragraph",
+          "path": "clients.logo-name.<n>",
+          "attr": "content",
+          "repeat": "logos",
+          "note": "style-1"
+        },
+        "item-url": {
+          "block": "core/group",
+          "path": "clients.item.<n>",
+          "attr": "url",
+          "repeat": "items",
+          "note": "style-2. The card wrapper carries a custom `url` attribute (default `#`, matching the source's own default); `wp_ja_kinetic_clients_card_link()` in inc/extra.php reads it at render time and swaps the wrapper's rendered `<div>` for an `<a href>`, adding target=\"_blank\" rel=\"noopener noreferrer\" for an absolute http(s) value — core/group has no anchor-tag or href support of its own"
+        }
+      },
+      "dropped": {
+        "logo-image": "empty in both measured style-1 instances, so the source takes its text branch (is-text) and no image element exists",
+        "ticker-show": "a switch, not text. Neither measured instance carries the key, so the template default (on) applies and the pattern ships the ticker",
+        "ticker-label": "style-1, block `clients.ticker-label`. Neither measured instance (178, 216) carries the key; the source then renders its fallback `LIVE` (`acm/clients/tmpl/style-1.php:21-22`), which the pattern ships as the block's default. Mapped as a field, an absent key made the filler remove the block (empty value) and the ticker lost its label",
+        "ticker-items": "style-1, blocks `clients.ticker-items.<n>`. ONE newline-separated textarea in the source, not a per-logo value, so a `repeat` over the logo items could only ever read undefined and remove items 1..<logo count>. Neither measured instance carries the key; the source then renders its nine-line fallback (`acm/clients/tmpl/style-1.php:23-32`), which the pattern ships verbatim in both ticker halves",
+        "group-title": "the field belongs to the other style of this type: this style's pattern has no block named for it",
+        "item-image": "the field belongs to the other style of this type: this style's pattern has no block named for it",
+        "item-name": "the field belongs to the other style of this type: this style's pattern has no block named for it",
+        "item-desc": "the field belongs to the other style of this type: this style's pattern has no block named for it"
+      }
+    },
+    "clients:style-2": {
+      "pattern": "wp-ja-kinetic/section-clients-style-2",
+      "root": ".acm-clients",
+      "item": null,
+      "itemNote": "style-2's `clients.item.<n>` wrapper is a flat index across four groups, not one parent's child list. The toolkit's generic repeatItems (findAll across the whole pattern + a single parent's contiguous splice) finds all 24 wrappers under 4 different `acm-clients-grid` parents, picks group 1's grid as the splice target and clones the full set into it (measured: group 1 renders every card, groups 2-4 keep their stale defaults - SA-53). `item` is left null so the seeder skips that clone step and relies only on the per-field repeat pass below, which locates each `clients.item(-name|-desc|-image).<n>`/`clients.group-title.<n>` block by its already-correct flat index and never adds or removes a wrapper. The pattern ships one wrapper per index already (24, matching the sole style-2 instance measured, id 209); a future instance with a different item count needs its own wrapper count added to the pattern, the same way style-1's logo count does.",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "clients.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "clients.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "clients.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "group-title": {
+          "block": "core/paragraph",
+          "path": "clients.group-title.<n>",
+          "attr": "content",
+          "repeat": "items",
+          "note": "style-2. The source repeats the group label on every card; the pattern carries it on the first card of each group"
+        },
+        "item-image": {
+          "block": "core/image",
+          "path": "clients.item-image.<n>",
+          "attr": "src",
+          "repeat": "items",
+          "note": "style-2. Measured 2026-09-23 against the running source (instance 209, product/integrations): every item carries a real per-category SVG icon file (`images/integrations/icon-<code|cloud|container|server|message|bell|git|ticket|webhook|chart>.svg`, 10 files reused across the 24 cards) and the source renders it as a plain `<img src=\"...\">` (`acm/clients/tmpl/style-2.php:100-106`), not an inline `<svg>` and not the letter fallback — confirmed by curling the live page and the image URL directly (200, real SVG content). This is a real asset step 7 must seed into the WP media library and set on each card's `core/image` block; `wp_ja_kinetic_clients_mark_fallback` (inc/extra.php) already renders the source's own initial-letter fallback correctly for the interim unseeded state (matches `acm/clients/tmpl/style-2.php:104-106`'s own empty-image branch byte for byte) and becomes a no-op once a real image is seeded, so no pattern/CSS change is needed here — only the media import."
+        },
+        "item-name": {
+          "block": "core/paragraph",
+          "path": "clients.item-name.<n>",
+          "attr": "content",
+          "repeat": "items",
+          "note": "style-2"
+        },
+        "item-desc": {
+          "block": "core/paragraph",
+          "path": "clients.item-desc.<n>",
+          "attr": "content",
+          "repeat": "items",
+          "note": "style-2"
+        },
+        "item-url": {
+          "block": "core/group",
+          "path": "clients.item.<n>",
+          "attr": "url",
+          "repeat": "items",
+          "note": "style-2. The card wrapper carries a custom `url` attribute (default `#`, matching the source's own default); `wp_ja_kinetic_clients_card_link()` in inc/extra.php reads it at render time and swaps the wrapper's rendered `<div>` for an `<a href>`, adding target=\"_blank\" rel=\"noopener noreferrer\" for an absolute http(s) value — core/group has no anchor-tag or href support of its own"
+        }
+      },
+      "dropped": {
+        "logo-image": "empty in both measured style-1 instances, so the source takes its text branch (is-text) and no image element exists",
+        "ticker-show": "a switch, not text. Neither measured instance carries the key, so the template default (on) applies and the pattern ships the ticker",
+        "ticker-label": "style-1, block `clients.ticker-label`. Neither measured instance (178, 216) carries the key; the source then renders its fallback `LIVE` (`acm/clients/tmpl/style-1.php:21-22`), which the pattern ships as the block's default. Mapped as a field, an absent key made the filler remove the block (empty value) and the ticker lost its label",
+        "ticker-items": "style-1, blocks `clients.ticker-items.<n>`. ONE newline-separated textarea in the source, not a per-logo value, so a `repeat` over the logo items could only ever read undefined and remove items 1..<logo count>. Neither measured instance carries the key; the source then renders its nine-line fallback (`acm/clients/tmpl/style-1.php:23-32`), which the pattern ships verbatim in both ticker halves",
+        "caption": "the field belongs to the other style of this type: this style's pattern has no block named for it",
+        "logo-name": "the field belongs to the other style of this type: this style's pattern has no block named for it"
+      }
+    },
+    "bento:style-1": {
+      "pattern": "wp-ja-kinetic/section-bento",
+      "root": ".acm-bento",
+      "item": null,
+      "itemNote": "Both bento patterns draw their tiles in the source instance's own kind order with no `bento.item.<n>` wrapper (section-bento.php, section-bento-style-2.php header comments), so there is no wrapper to clone: `item` is null and each tile's named fields are filled in place.",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "bento.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "bento.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "bento.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "tile-title": {
+          "block": "core/heading",
+          "path": "bento.tile-title.<n>",
+          "attr": "content",
+          "repeat": "tiles"
+        },
+        "tile-text": {
+          "block": "core/paragraph",
+          "path": "bento.tile-text.<n>",
+          "attr": "content",
+          "repeat": "tiles"
+        },
+        "tile-stat": {
+          "block": "core/paragraph",
+          "path": "bento.tile-stat.<n>",
+          "attr": "content",
+          "repeat": "tiles"
+        },
+        "tile-icon": {
+          "block": "core/paragraph",
+          "path": "bento.tile-icon.<n>",
+          "attr": "className",
+          "repeat": "tiles",
+          "note": "not text: the icon key selects the wrapper class is-ico-<key> on the tile's icon leaf (an empty core/paragraph carrying a CSS mask — in both styles swapped at render time for the source's `span > svg`, inc/extra.php wp_ja_kinetic_bento_style2_svg; a filler's appended `hx-ico-<key>` wins as the last key class —, metadata.name bento.tile-icon.<n> — same cloning risk as tile-span, same fix: reapply per instance after repeatItems). Prefix: `is-ico-${value}`, remove any existing `is-ico-*` class first"
+        }
+      },
+      "dropped": {
+        "tile-eyebrow": "the field belongs to the other style of this type: this style's pattern has no block named for it",
+        "tile-unit": "the field belongs to the other style of this type: this style's pattern has no block named for it",
+        "tile-image": "the field belongs to the other style of this type: this style's pattern has no block named for it",
+        "tile-span": "the field belongs to the other style of this type: this style's pattern has no block named for it"
+      }
+    },
+    "bento:style-2": {
+      "pattern": "wp-ja-kinetic/section-bento-style-2",
+      "root": ".acm-bento",
+      "item": null,
+      "itemNote": "Both bento patterns draw their tiles in the source instance's own kind order with no `bento.item.<n>` wrapper (section-bento.php, section-bento-style-2.php header comments), so there is no wrapper to clone: `item` is null and each tile's named fields are filled in place.",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "bento.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "bento.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "bento.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "tile-title": {
+          "block": "core/heading",
+          "path": "bento.tile-title.<n>",
+          "attr": "content",
+          "repeat": "tiles"
+        },
+        "tile-text": {
+          "block": "core/paragraph",
+          "path": "bento.tile-text.<n>",
+          "attr": "content",
+          "repeat": "tiles"
+        },
+        "tile-image": {
+          "block": "core/image",
+          "path": "bento.tile-image.<n>",
+          "attr": "src",
+          "repeat": "tiles",
+          "note": "style-2 only; empty in the one measured style-1 instance. until step 7's seed run writes the real file (attr src), the feat tile keeps the pattern's placeholder svg, whose aspect ratio does not match the source's bento-telemetry-chart.webp — that alone accounted for the whole section-179 height gap (1013 vs 805 measured at 1440, 1623-1625 vs 1625 at 390): probed 2026-09-22 by importing the real webp and pointing the tile's img src at it, height then matched the source exactly (805/805 at 1440, 1623/1625 at 390) with zero remaining box diffs. Everything else about the tile grid (span/kind classes, per-item structure) is THEME: see tile-span for style-2."
+        },
+        "tile-icon": {
+          "block": "core/paragraph",
+          "path": "bento.tile-icon.<n>",
+          "attr": "className",
+          "repeat": "tiles",
+          "note": "not text: the icon key selects the wrapper class is-ico-<key> on the tile's icon leaf (an empty core/paragraph carrying a CSS mask — in both styles swapped at render time for the source's `span > svg`, inc/extra.php wp_ja_kinetic_bento_style2_svg; a filler's appended `hx-ico-<key>` wins as the last key class —, metadata.name bento.tile-icon.<n> — same cloning risk as tile-span, same fix: reapply per instance after repeatItems). Prefix: `is-ico-${value}`, remove any existing `is-ico-*` class first"
+        }
+      },
+      "dropped": {
+        "tile-span": "the field belongs to the other style of this type: this style's pattern has no block named for it",
+        "tile-stat": "only some rows of the one source instance carry it, so the pattern draws it on those rows alone (block names are not <field>.1); the contract pairs a field by its row-1 block and cannot see it, so the field is carried by the pattern's own default text",
+        "tile-eyebrow": "only some rows of the one source instance carry it, so the pattern draws it on those rows alone (block names are not <field>.1); the contract pairs a field by its row-1 block and cannot see it, so the field is carried by the pattern's own default text",
+        "tile-unit": "only some rows of the one source instance carry it, so the pattern draws it on those rows alone (block names are not <field>.1); the contract pairs a field by its row-1 block and cannot see it, so the field is carried by the pattern's own default text"
+      }
+    },
+    "incident-timeline:style-1": {
+      "pattern": "wp-ja-kinetic/section-incident-timeline",
+      "root": ".acm-incident-timeline",
+      "item": "incident-timeline.item.<n>",
+      "anchorSlug": "incident",
+      "anchorSlugNote": "the source module id is acm-incident-<id>, not acm-incident-timeline-<id>; parity-tools/fill.mjs derives the anchor as acm-${inst.type}-${id} (hardcoded, vendored dispatch not editable per D-17) so a probe run of that script alone still prints the type-length id — this key is what the real seeder must read instead",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "incident-timeline.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "step_time": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_time.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_phase": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_phase.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_badge": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_badge.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_title": {
+          "block": "core/heading",
+          "path": "incident-timeline.step_title.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_text": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_text.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_icon": {
+          "block": "core/group",
+          "path": "incident-timeline.step_icon.<n>",
+          "attr": "className",
+          "repeat": "steps",
+          "note": "the icon key becomes the node class hx-ico-<key>; on the front end inc/extra.php (wp_ja_kinetic_incident_timeline) prints the source's span.hx-inc-node > svg for that key, the CSS mask draws it in the editor only"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "incident-timeline.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: selects the grid's column count. Prefix hx-cols-<value> on the row wrapper (same wp-ja-kinetic-sections.css class family as bento tile-span / teams columns), remove any existing hx-cols-* class first; the source prints the row as div.hx-incident.cols-<n> with n clamped to 3-4 (anything else → 4), and inc/extra.php (wp_ja_kinetic_incident_timeline) renders the class back as that clamped cols-<n>"
+        }
+      },
+      "dropped": {
+        "sub": "no instance carries it"
+      }
+    },
+    "kineticql-split:style-1": {
+      "pattern": "wp-ja-kinetic/section-kineticql-split",
+      "root": ".acm-kineticql-split",
+      "item": null,
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "kineticql-split.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "kineticql-split.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "kineticql-split.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "bullet-text": {
+          "block": "core/list-item",
+          "path": "kineticql-split.bullet-text.<n>",
+          "attr": "content",
+          "repeat": "bullets"
+        },
+        "cta_label": {
+          "block": "core/button",
+          "path": "kineticql-split.cta_label",
+          "attr": "text",
+          "repeat": null
+        },
+        "cta_link": {
+          "block": "core/button",
+          "path": "kineticql-split.cta_label",
+          "attr": "href",
+          "repeat": null
+        },
+        "image_terminal": {
+          "block": "core/image",
+          "path": "kineticql-split.image_terminal",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "the panel beside the prose is an image in the source, not code text — one file per direction, the matching one revealed by CSS. Measured 2026-09-23: the unseeded placeholder's own aspect ratio (taller than the real image) is also the full and only cause of the copy column's 8-9px vertical shift at 1440 (`.hx-split` uses align-items:center, so a taller panel column pushes the shorter copy column down by half the height difference) — proved by swapping the real source images into the WP DOM: every box (root/`.hx-split`/`.acm-split-copy`/`.acm-split-panelcol`) then matches the source pixel-for-pixel (1440 root 535→519px = source's 519; 390 root 789→716px = source's 716; copy y-offset 89→81 = split's own top, matching source exactly). No CSS change needed once the real files are in — the shift is not a theme bug. attr stays src+alt on purpose: no spec instance carries a value for image_terminal, image_blueprint or image_signal, and the seeder removes a core/image whose src field is empty (seed.mjs `case 'src'`), so a `src` declaration would delete the panel. As src+alt the seeder leaves the block alone and the pattern's own image stays: the pattern points each direction at the source's fallback file (`acm/kineticql-split/tmpl/style-1.php:24-26`), copied to assets/images/kineticql-code-panel-<terminal|blueprint|signal>.webp (step 6b)."
+        },
+        "image_blueprint": {
+          "block": "core/image",
+          "path": "kineticql-split.image_blueprint",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "see image_terminal"
+        },
+        "image_signal": {
+          "block": "core/image",
+          "path": "kineticql-split.image_signal",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "see image_terminal"
+        }
+      }
+    },
+    "features-ledger:style-1": {
+      "pattern": "wp-ja-kinetic/section-features-ledger",
+      "layouts": {
+        "ledger": "wp-ja-kinetic/section-features-ledger",
+        "metrics": "wp-ja-kinetic/section-features-ledger-metrics",
+        "stats": "wp-ja-kinetic/section-features-ledger-stats",
+        "*": "wp-ja-kinetic/section-features-ledger-stats"
+      },
+      "root": ".acm-features-ledger",
+      "item": "features-ledger.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-ledger.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-ledger.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "features-ledger.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "card_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.card_label",
+          "attr": "content",
+          "repeat": null
+        },
+        "card_badge": {
+          "block": "core/paragraph",
+          "path": "features-ledger.card_badge",
+          "attr": "content",
+          "repeat": null
+        },
+        "number": {
+          "block": "core/paragraph",
+          "path": "features-ledger.number.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "item-title": {
+          "block": "core/heading",
+          "path": "features-ledger.item-title.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "item-text": {
+          "block": "core/paragraph",
+          "path": "features-ledger.item-text.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_value": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_value.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_label.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "icon": {
+          "block": "core/group",
+          "path": "features-ledger.icon.<n>",
+          "attr": "className",
+          "repeat": "rows",
+          "note": "icon key → hx-ico-<key>; on render inc/extra.php (wp_ja_kinetic_ledger_icon_svg) turns it into the source's span.hx-spec-icon / span.hx-stat-icon > svg (CSS mask in the editor only)"
+        }
+      },
+      "dropped": {
+        "layout": "layout, not text: selects the pattern (see \"layouts\" above) and the wrapper class layout-<value>, it does not fill a text slot in the chosen pattern"
+      },
+      "note": "three layouts share this one field set: \"pattern\" above is layout `ledger` (also the literal value one measured instance carries); \"layouts\" adds `metrics` and `stats`. Source fallback (acm/features-ledger/tmpl/style-1.php:50-52): any layout value NOT in ['stats','ledger','metrics'] -- including the empty string a section carries when the field was never set -- renders as `stats`, so an empty/unrecognised layout value goes to the `stats` pattern (`layouts[\"*\"]`), not to the default \"pattern\" entry. Field usage differs per layout: `metrics` reads eyebrow/title/sub/card_label/card_badge plus, per row, stat_label/stat_value/item-text (number, item-title and icon stay empty); `stats` reads eyebrow/title/sub plus, per row, icon/item-title/item-text/stat_value/stat_label (number and card_label/card_badge stay empty)."
+    },
+    "features-intro:style-1": {
+      "pattern": "wp-ja-kinetic/section-features-intro",
+      "root": ".acm-features-intro",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-intro.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "item-title": {
+          "block": "core/heading",
+          "path": "features-intro.item-title.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "item-text": {
+          "block": "core/paragraph",
+          "path": "features-intro.item-text.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "stat": {
+          "block": "core/paragraph",
+          "path": "features-intro.stat.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "icon": {
+          "block": "core/group",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": "items",
+          "note": "icon key → hx-ico-<key>, drawn as a CSS mask"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: selects the grid's column count. Prefix hx-cols-<value> on the grid wrapper (same class family as incident-timeline.columns), remove any existing hx-cols-* class first"
+        }
+      },
+      "dropped": {
+        "sub": "no instance carries it"
+      }
+    },
+    "testimonials:style-1": {
+      "pattern": "wp-ja-kinetic/section-testimonials",
+      "root": ".acm-testimonials",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "testimonials.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "testimonials.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "quote": {
+          "block": "core/paragraph",
+          "path": "testimonials.quote.<n>",
+          "attr": "content",
+          "repeat": "quotes"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "testimonials.avatar.<n>",
+          "attr": "src",
+          "repeat": "quotes"
+        },
+        "name": {
+          "block": "core/paragraph",
+          "path": "testimonials.name.<n>",
+          "attr": "content",
+          "repeat": "quotes"
+        },
+        "role": {
+          "block": "core/paragraph",
+          "path": "testimonials.role.<n>",
+          "attr": "content",
+          "repeat": "quotes",
+          "note": "one block draws two fields: the source joins role and company with \", \" inside one element (acm/testimonials/tmpl/style-1.php:51-54, role alone when company is empty). role and company both mapping to this same path independently overwrote each other (\"Northwind\" instead of \"Staff SRE, Northwind\"). seed.mjs writes role alone; the run's post-seed step (tasks/ja-kinetic-wp7/post-seed.mjs, D-34) rewrites this block to role and company joined, and each avatar's alt to its own person's name"
+        }
+      },
+      "dropped": {
+        "initials": "the source shows initials only when a quote has no avatar; all three measured quotes have one, and the chip rule stays in the stylesheet",
+        "company": "joined into role.<n> by the post-seed step, see the role field note — not written independently"
+      }
+    },
+    "teams:style-1": {
+      "pattern": "wp-ja-kinetic/section-teams",
+      "root": ".acm-teams",
+      "item": "teams.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "teams.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "teams.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "the grid class hx-cols-<n> stores the value; the source writes it as an inline grid-template-columns:repeat(<n>,1fr) on a bare .hx-cols, and inc/extra.php (wp_ja_kinetic_team_columns) renders the class back as that inline style"
+        },
+        "name": {
+          "block": "core/heading",
+          "path": "teams.name.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "role": {
+          "block": "core/paragraph",
+          "path": "teams.role.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "bio": {
+          "block": "core/paragraph",
+          "path": "teams.bio.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "teams.avatar.<n>",
+          "attr": "src",
+          "repeat": "members",
+          "note": "mutually exclusive with initials in the source: a member with a photo gets the image, one without gets the initials chip. The pattern carries both branches, on the members that measured that way"
+        },
+        "socials": {
+          "block": "core/social-links",
+          "path": "teams.socials.<n>",
+          "attr": "links",
+          "repeat": "members",
+          "note": "core/social-links, not a row of buttons: the links are icon-only, and the core block keeps a readable name for a screen reader and an editable URL"
+        }
+      },
+      "dropped": {
+        "initials": "only some rows of the one source instance carry it, so the pattern draws it on those rows alone (block names are not <field>.1); the contract pairs a field by its row-1 block and cannot see it, so the field is carried by the pattern's own default text"
+      }
+    },
+    "prose-quote:style-1": {
+      "pattern": "wp-ja-kinetic/section-prose-quote",
+      "root": ".acm-prose-quote",
+      "item": null,
+      "fields": {
+        "number": {
+          "block": "core/paragraph",
+          "path": "prose-quote.number",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "prose-quote.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "meta": {
+          "block": "core/paragraph",
+          "path": "prose-quote.meta",
+          "attr": "content",
+          "repeat": null
+        },
+        "body": {
+          "block": "core/paragraph",
+          "path": "prose-quote.body.<n>",
+          "attr": "content",
+          "repeat": null,
+          "note": "ONE rich-text field holding two paragraphs. The .<n> here indexes paragraphs inside the field, not rows of a repeat group: the seeder splits the field and fills them in order"
+        },
+        "quote": {
+          "block": "core/paragraph",
+          "path": "prose-quote.quote",
+          "attr": "content",
+          "repeat": null
+        }
+      },
+      "dropped": {
+        "eyebrow": "the source draws it only when title is empty (an elseif); the one measured instance has a title",
+        "attribution": "empty in the one measured instance, and an empty cite adds a margin the original does not have"
+      }
+    },
+    "pricing:style-1": {
+      "pattern": "wp-ja-kinetic/section-pricing",
+      "root": ".acm-pricing",
+      "item": "pricing.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "pricing.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "pricing.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "meta": {
+          "block": "core/paragraph",
+          "path": "pricing.meta",
+          "attr": "content",
+          "repeat": null
+        },
+        "name": {
+          "block": "core/paragraph",
+          "path": "pricing.name.<n>",
+          "attr": "content",
+          "repeat": "plans"
+        },
+        "popular": {
+          "block": "core/group",
+          "path": "pricing.item.<n>",
+          "attr": "className",
+          "repeat": "plans",
+          "note": "boolean flag (\"0\"/\"1\", present on every row) selecting is-popular + the primary-vs-ghost CTA class + the static \"MOST POPULAR\" badge (acm/pricing/tmpl/style-1.php: `$popular = (int) $helper->get('popular', $i) === 1`). Uses the class attr's own field-name dispatch in parity-tools/fill.mjs (the same technique the toolkit's own applyClassField uses for tier-recommended, vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/seed.mjs:792-802, read-only: derive a class on the field's own target AND flip a sibling button's class, both located by name from one flag) instead of a separate pricing-only pass run after the generic field loop. repeatItems (.../scripts/lib/block-fill.mjs:453-482, read-only, its own docstring: \"a pricing pattern's recommended tier carries the badge... a clone can drop a block, it cannot invent one\") clones whichever pricing.item.<n> has the most inner blocks — item 2 (\"Team\"), which carries the badge — as the template for every row, so every cloned row already has a pricing.popular.<n> badge block to keep or drop; this field only removes it on the non-popular rows and never has to invent one."
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "pricing.desc.<n>",
+          "attr": "content",
+          "repeat": "plans"
+        },
+        "price": {
+          "block": "core/paragraph",
+          "path": "pricing.price.<n>",
+          "attr": "content",
+          "repeat": "plans"
+        },
+        "period": {
+          "block": "core/paragraph",
+          "path": "pricing.period.<n>",
+          "attr": "content",
+          "repeat": "plans"
+        },
+        "features": {
+          "block": "core/list",
+          "path": "pricing.features.<n>",
+          "attr": "innerBlocks",
+          "repeat": "plans",
+          "note": "one field per plan holding a newline-separated feature list (acm/pricing/tmpl/style-1.php, one <li> per line). attr innerBlocks matches the toolkit's own applyField case 'innerBlocks' (vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/seed.mjs, read-only): split(/\\r?\\n/).map(trim).filter(Boolean), one core/list-item per line cloned from the list's own first item (setListItems, .../scripts/lib/block-fill.mjs:414). Previously attr 'content' -> setText wrote the whole newline-joined string as one text run inside <ul> (no <li> at all, measured live pricing 187, before this fix) and needed a pricing-only post-repeat rebuild; that rebuild is removed, this is now the same generic pass every other repeat field goes through."
+        },
+        "cta_label": {
+          "block": "core/button",
+          "path": "pricing.cta_label.<n>",
+          "attr": "text",
+          "repeat": "plans"
+        },
+        "cta_link": {
+          "block": "core/button",
+          "path": "pricing.cta_label.<n>",
+          "attr": "href",
+          "repeat": "plans"
+        },
+        "inc_title": {
+          "block": "core/paragraph",
+          "path": "pricing.inc_title",
+          "attr": "content",
+          "repeat": null
+        },
+        "inc_desc": {
+          "block": "core/paragraph",
+          "path": "pricing.inc_desc",
+          "attr": "content",
+          "repeat": null
+        },
+        "inc_cta_label": {
+          "block": "core/button",
+          "path": "pricing.inc_cta_label",
+          "attr": "text",
+          "repeat": null
+        },
+        "inc_cta_link": {
+          "block": "core/button",
+          "path": "pricing.inc_cta_label",
+          "attr": "href",
+          "repeat": null
+        }
+      }
+    },
+    "pricing-matrix:style-1": {
+      "pattern": "wp-ja-kinetic/section-pricing-matrix",
+      "root": ".acm-pricing-matrix",
+      "item": null,
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "pricing-matrix.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "pricing-matrix.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "pricing-matrix.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "corner_label": {
+          "block": "core/table",
+          "path": "pricing-matrix.rows",
+          "attr": "table",
+          "repeat": null
+        },
+        "col1_name": {
+          "block": "core/table",
+          "path": "pricing-matrix.rows",
+          "attr": "table",
+          "repeat": null
+        },
+        "col2_name": {
+          "block": "core/table",
+          "path": "pricing-matrix.rows",
+          "attr": "table",
+          "repeat": null
+        },
+        "col3_name": {
+          "block": "core/table",
+          "path": "pricing-matrix.rows",
+          "attr": "table",
+          "repeat": null
+        },
+        "items": {
+          "block": "core/table",
+          "path": "pricing-matrix.rows",
+          "attr": "table",
+          "repeat": "rows"
+        }
+      },
+      "note": "the whole matrix is ONE core/table block. A table cell is not a block, so it cannot carry a metadata name of its own: the seeder rebuilds the table body from the three column names, the corner label and the rows (label, group, free_cell, team_cell, ent_cell), and writes it to pricing-matrix.rows. The design contract pins a rule on .hx-matrix th, so that class must survive any rebuild"
+    },
+    "accordion:style-1": {
+      "pattern": "wp-ja-kinetic/section-accordion",
+      "root": ".acm-accordion",
+      "item": "accordion.row.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "accordion.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "accordion.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "accordion.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "q": {
+          "block": "core/details",
+          "path": "accordion.item.<n>",
+          "attr": "summary",
+          "repeat": "qa",
+          "note": "the question is the summary of the details block. The repeat wrapper (patterns.map.json `item`, above) is accordion.row.<n> — one row's optional group header plus its details — not the details block itself: a group header sits between rows in the source's flat list, and repeatItems clones one contiguous span of matched items, so a wrapper that is only the details drops every group header that is not the first block in the list. See patterns/section-accordion.php's header comment and wp-ja-kinetic-sections.css §accordion (\"port additions\")."
+        },
+        "a": {
+          "block": "core/paragraph",
+          "path": "accordion.a.<n>",
+          "attr": "content",
+          "repeat": "qa",
+          "note": "the answer paragraph inside that details block"
+        },
+        "group": {
+          "block": "core/paragraph",
+          "path": "accordion.group.<n>",
+          "attr": "content",
+          "repeat": "qa",
+          "note": "the mono sub-header that opens a group of questions; the source repeats the value on every row of the group, the pattern draws it once, on the first"
+        }
+      }
+    },
+    "faq-support:style-1": {
+      "pattern": "wp-ja-kinetic/section-faq-support",
+      "root": ".acm-faq-support",
+      "item": null,
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "faq-support.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "faq-support.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn-label": {
+          "block": "core/button",
+          "path": "faq-support.btn-label",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "faq-support.btn-label",
+          "attr": "href",
+          "repeat": null,
+          "note": "sections.json and the running page disagree on this link (a com_contact query string vs /index.php/company/contact); both are Joomla routes and neither survives the crossing, so the pattern ships the field default `#`"
+        }
+      }
+    },
+    "177": {
+      "pattern": "wp-ja-kinetic/section-hero",
+      "root": ".acm-hero",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "hero.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "hero.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "cta1_label": {
+          "block": "core/button",
+          "path": "hero.cta1",
+          "attr": "text",
+          "repeat": null,
+          "note": "one button carries both cta1 fields: cta1_label is its text, cta1_link its href"
+        },
+        "cta1_link": {
+          "block": "core/button",
+          "path": "hero.cta1",
+          "attr": "href",
+          "repeat": null
+        },
+        "cta2_label": {
+          "block": "core/button",
+          "path": "hero.cta2",
+          "attr": "text",
+          "repeat": null
+        },
+        "cta2_link": {
+          "block": "core/button",
+          "path": "hero.cta2",
+          "attr": "href",
+          "repeat": null
+        },
+        "trust": {
+          "block": "core/paragraph",
+          "path": "hero.trust",
+          "attr": "content",
+          "repeat": null
+        },
+        "image_terminal": {
+          "block": "core/image",
+          "path": "hero.image_terminal",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "the source names a per-direction panel image and falls back to images/kinetic/hero-terminal-panel-<direction>.webp when the field is empty; every measured instance is empty. attr stays src+alt on purpose: no spec instance carries a value for image_terminal, image_blueprint or image_signal, and the seeder removes a core/image whose src field is empty (seed.mjs `case 'src'`), so a `src` declaration would delete the panel. As src+alt the seeder leaves the block alone and the pattern's own image stays: the pattern points each direction at the source's fallback file, copied to assets/images/hero-terminal-panel-<terminal|blueprint|signal>.webp (step 6b)."
+        },
+        "image_blueprint": {
+          "block": "core/image",
+          "path": "hero.image_blueprint",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "see image_terminal"
+        },
+        "image_signal": {
+          "block": "core/image",
+          "path": "hero.image_signal",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "see image_terminal"
+        }
+      },
+      "coverage": "module 177: hero:style-1"
+    },
+    "178": {
+      "pattern": "wp-ja-kinetic/section-clients",
+      "root": ".acm-clients",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "clients.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "clients.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "clients.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "caption": {
+          "block": "core/paragraph",
+          "path": "clients.caption",
+          "attr": "content",
+          "repeat": null,
+          "note": "style-1 only; the style-2 field set has no caption"
+        },
+        "logo-name": {
+          "block": "core/paragraph",
+          "path": "clients.logo-name.<n>",
+          "attr": "content",
+          "repeat": "logos",
+          "note": "style-1"
+        },
+        "item-url": {
+          "block": "core/group",
+          "path": "clients.item.<n>",
+          "attr": "url",
+          "repeat": "items",
+          "note": "style-2. The card wrapper carries a custom `url` attribute (default `#`, matching the source's own default); `wp_ja_kinetic_clients_card_link()` in inc/extra.php reads it at render time and swaps the wrapper's rendered `<div>` for an `<a href>`, adding target=\"_blank\" rel=\"noopener noreferrer\" for an absolute http(s) value — core/group has no anchor-tag or href support of its own"
+        }
+      },
+      "coverage": "module 178: clients:style-1"
+    },
+    "179": {
+      "pattern": "wp-ja-kinetic/section-bento-style-2",
+      "root": ".acm-bento",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "bento.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "bento.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "bento.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "tile-title": {
+          "block": "core/heading",
+          "path": "bento.tile-title.<n>",
+          "attr": "content",
+          "repeat": "tiles"
+        },
+        "tile-text": {
+          "block": "core/paragraph",
+          "path": "bento.tile-text.<n>",
+          "attr": "content",
+          "repeat": "tiles"
+        },
+        "tile-image": {
+          "block": "core/image",
+          "path": "bento.tile-image.<n>",
+          "attr": "src",
+          "repeat": "tiles",
+          "note": "style-2 only; empty in the one measured style-1 instance. until step 7's seed run writes the real file (attr src), the feat tile keeps the pattern's placeholder svg, whose aspect ratio does not match the source's bento-telemetry-chart.webp — that alone accounted for the whole section-179 height gap (1013 vs 805 measured at 1440, 1623-1625 vs 1625 at 390): probed 2026-09-22 by importing the real webp and pointing the tile's img src at it, height then matched the source exactly (805/805 at 1440, 1623/1625 at 390) with zero remaining box diffs. Everything else about the tile grid (span/kind classes, per-item structure) is THEME: see tile-span for style-2."
+        },
+        "tile-icon": {
+          "block": "core/paragraph",
+          "path": "bento.tile-icon.<n>",
+          "attr": "className",
+          "repeat": "tiles",
+          "note": "not text: the icon key selects the wrapper class is-ico-<key> on the tile's icon leaf (an empty core/paragraph carrying a CSS mask — in both styles swapped at render time for the source's `span > svg`, inc/extra.php wp_ja_kinetic_bento_style2_svg; a filler's appended `hx-ico-<key>` wins as the last key class —, metadata.name bento.tile-icon.<n> — same cloning risk as tile-span, same fix: reapply per instance after repeatItems). Prefix: `is-ico-${value}`, remove any existing `is-ico-*` class first"
+        }
+      },
+      "coverage": "module 179: bento:style-2"
+    },
+    "180": {
+      "pattern": "wp-ja-kinetic/section-incident-timeline",
+      "root": ".acm-incident-timeline",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "incident-timeline.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "step_time": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_time.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_phase": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_phase.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_badge": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_badge.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_title": {
+          "block": "core/heading",
+          "path": "incident-timeline.step_title.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_text": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_text.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_icon": {
+          "block": "core/group",
+          "path": "incident-timeline.step_icon.<n>",
+          "attr": "className",
+          "repeat": "steps",
+          "note": "the icon key becomes the node class hx-ico-<key>; on the front end inc/extra.php (wp_ja_kinetic_incident_timeline) prints the source's span.hx-inc-node > svg for that key, the CSS mask draws it in the editor only"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "incident-timeline.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: selects the grid's column count. Prefix hx-cols-<value> on the row wrapper (same wp-ja-kinetic-sections.css class family as bento tile-span / teams columns), remove any existing hx-cols-* class first; the source prints the row as div.hx-incident.cols-<n> with n clamped to 3-4 (anything else → 4), and inc/extra.php (wp_ja_kinetic_incident_timeline) renders the class back as that clamped cols-<n>"
+        }
+      },
+      "coverage": "module 180: incident-timeline:style-1"
+    },
+    "181": {
+      "pattern": "wp-ja-kinetic/section-kineticql-split",
+      "root": ".acm-kineticql-split",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "kineticql-split.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "kineticql-split.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "kineticql-split.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "bullet-text": {
+          "block": "core/list-item",
+          "path": "kineticql-split.bullet-text.<n>",
+          "attr": "content",
+          "repeat": "bullets"
+        },
+        "cta_label": {
+          "block": "core/button",
+          "path": "kineticql-split.cta_label",
+          "attr": "text",
+          "repeat": null
+        },
+        "cta_link": {
+          "block": "core/button",
+          "path": "kineticql-split.cta_label",
+          "attr": "href",
+          "repeat": null
+        },
+        "image_terminal": {
+          "block": "core/image",
+          "path": "kineticql-split.image_terminal",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "the panel beside the prose is an image in the source, not code text — one file per direction, the matching one revealed by CSS. Measured 2026-09-23: the unseeded placeholder's own aspect ratio (taller than the real image) is also the full and only cause of the copy column's 8-9px vertical shift at 1440 (`.hx-split` uses align-items:center, so a taller panel column pushes the shorter copy column down by half the height difference) — proved by swapping the real source images into the WP DOM: every box (root/`.hx-split`/`.acm-split-copy`/`.acm-split-panelcol`) then matches the source pixel-for-pixel (1440 root 535→519px = source's 519; 390 root 789→716px = source's 716; copy y-offset 89→81 = split's own top, matching source exactly). No CSS change needed once the real files are in — the shift is not a theme bug. attr stays src+alt on purpose: no spec instance carries a value for image_terminal, image_blueprint or image_signal, and the seeder removes a core/image whose src field is empty (seed.mjs `case 'src'`), so a `src` declaration would delete the panel. As src+alt the seeder leaves the block alone and the pattern's own image stays: the pattern points each direction at the source's fallback file (`acm/kineticql-split/tmpl/style-1.php:24-26`), copied to assets/images/kineticql-code-panel-<terminal|blueprint|signal>.webp (step 6b)."
+        },
+        "image_blueprint": {
+          "block": "core/image",
+          "path": "kineticql-split.image_blueprint",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "see image_terminal"
+        },
+        "image_signal": {
+          "block": "core/image",
+          "path": "kineticql-split.image_signal",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "see image_terminal"
+        }
+      },
+      "coverage": "module 181: kineticql-split:style-1"
+    },
+    "182": {
+      "pattern": "wp-ja-kinetic/section-features-ledger-metrics",
+      "root": ".acm-features-ledger",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-ledger.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-ledger.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "features-ledger.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "card_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.card_label",
+          "attr": "content",
+          "repeat": null
+        },
+        "item-text": {
+          "block": "core/paragraph",
+          "path": "features-ledger.item-text.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_value": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_value.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_label.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        }
+      },
+      "coverage": "module 182: features-ledger:style-1 layout metrics"
+    },
+    "183": {
+      "pattern": "wp-ja-kinetic/section-testimonials",
+      "root": ".acm-testimonials",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "testimonials.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "testimonials.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "quote": {
+          "block": "core/paragraph",
+          "path": "testimonials.quote.<n>",
+          "attr": "content",
+          "repeat": "quotes"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "testimonials.avatar.<n>",
+          "attr": "src",
+          "repeat": "quotes"
+        },
+        "name": {
+          "block": "core/paragraph",
+          "path": "testimonials.name.<n>",
+          "attr": "content",
+          "repeat": "quotes"
+        },
+        "role": {
+          "block": "core/paragraph",
+          "path": "testimonials.role.<n>",
+          "attr": "content",
+          "repeat": "quotes",
+          "note": "one block draws two fields: the source joins role and company with \", \" inside one element (acm/testimonials/tmpl/style-1.php:51-54, role alone when company is empty). role and company both mapping to this same path independently overwrote each other (\"Northwind\" instead of \"Staff SRE, Northwind\"). seed.mjs writes role alone; the run's post-seed step (tasks/ja-kinetic-wp7/post-seed.mjs, D-34) rewrites this block to role and company joined, and each avatar's alt to its own person's name"
+        }
+      },
+      "coverage": "module 183: testimonials:style-1"
+    },
+    "184": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 184: cta:style-1"
+    },
+    "191": {
+      "pattern": "wp-ja-kinetic/section-page-masthead",
+      "root": ".acm-page-masthead",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "page-masthead.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "page-masthead.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "page-masthead.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "align": {
+          "block": "core/group",
+          "path": "page-masthead",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: the wrapper class is-center / is-left. All 8 measured instances are center. Same root-targeting convention as cta.variant above (path equals the bare type name) — needs `metadata.name:\"page-masthead\"` on the pattern's own root wp:group; fixed the same way, same run (section-page-masthead.php)."
+        }
+      },
+      "coverage": "module 191: page-masthead:style-1"
+    },
+    "192": {
+      "pattern": "wp-ja-kinetic/section-features-ledger",
+      "root": ".acm-features-ledger",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-ledger.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-ledger.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "features-ledger.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "card_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.card_label",
+          "attr": "content",
+          "repeat": null
+        },
+        "card_badge": {
+          "block": "core/paragraph",
+          "path": "features-ledger.card_badge",
+          "attr": "content",
+          "repeat": null
+        },
+        "number": {
+          "block": "core/paragraph",
+          "path": "features-ledger.number.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "item-title": {
+          "block": "core/heading",
+          "path": "features-ledger.item-title.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "item-text": {
+          "block": "core/paragraph",
+          "path": "features-ledger.item-text.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_value": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_value.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_label.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "icon": {
+          "block": "core/group",
+          "path": "features-ledger.icon.<n>",
+          "attr": "className",
+          "repeat": "rows",
+          "note": "icon key → hx-ico-<key>; on render inc/extra.php (wp_ja_kinetic_ledger_icon_svg) turns it into the source's span.hx-spec-icon / span.hx-stat-icon > svg (CSS mask in the editor only)"
+        }
+      },
+      "coverage": "module 192: features-ledger:style-1 layout ledger"
+    },
+    "193": {
+      "pattern": "wp-ja-kinetic/section-features-intro",
+      "root": ".acm-features-intro",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-intro.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "item-title": {
+          "block": "core/heading",
+          "path": "features-intro.item-title.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "item-text": {
+          "block": "core/paragraph",
+          "path": "features-intro.item-text.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "stat": {
+          "block": "core/paragraph",
+          "path": "features-intro.stat.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "icon": {
+          "block": "core/group",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": "items",
+          "note": "icon key → hx-ico-<key>, drawn as a CSS mask"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: selects the grid's column count. Prefix hx-cols-<value> on the grid wrapper (same class family as incident-timeline.columns), remove any existing hx-cols-* class first"
+        }
+      },
+      "coverage": "module 193: features-intro:style-1"
+    },
+    "194": {
+      "pattern": "wp-ja-kinetic/section-features-ledger-metrics",
+      "root": ".acm-features-ledger",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-ledger.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-ledger.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "features-ledger.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "card_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.card_label",
+          "attr": "content",
+          "repeat": null
+        },
+        "item-text": {
+          "block": "core/paragraph",
+          "path": "features-ledger.item-text.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_value": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_value.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_label.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        }
+      },
+      "coverage": "module 194: features-ledger:style-1 layout metrics"
+    },
+    "195": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 195: cta:style-1"
+    },
+    "208": {
+      "pattern": "wp-ja-kinetic/section-page-masthead",
+      "root": ".acm-page-masthead",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "page-masthead.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "page-masthead.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "page-masthead.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "align": {
+          "block": "core/group",
+          "path": "page-masthead",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: the wrapper class is-center / is-left. All 8 measured instances are center. Same root-targeting convention as cta.variant above (path equals the bare type name) — needs `metadata.name:\"page-masthead\"` on the pattern's own root wp:group; fixed the same way, same run (section-page-masthead.php)."
+        }
+      },
+      "coverage": "module 208: page-masthead:style-1"
+    },
+    "209": {
+      "pattern": "wp-ja-kinetic/section-clients-style-2",
+      "root": ".acm-clients",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "clients.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "clients.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "clients.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "group-title": {
+          "block": "core/paragraph",
+          "path": "clients.group-title.<n>",
+          "attr": "content",
+          "repeat": "items",
+          "note": "style-2. The source repeats the group label on every card; the pattern carries it on the first card of each group"
+        },
+        "item-image": {
+          "block": "core/image",
+          "path": "clients.item-image.<n>",
+          "attr": "src",
+          "repeat": "items",
+          "note": "style-2. Measured 2026-09-23 against the running source (instance 209, product/integrations): every item carries a real per-category SVG icon file (`images/integrations/icon-<code|cloud|container|server|message|bell|git|ticket|webhook|chart>.svg`, 10 files reused across the 24 cards) and the source renders it as a plain `<img src=\"...\">` (`acm/clients/tmpl/style-2.php:100-106`), not an inline `<svg>` and not the letter fallback — confirmed by curling the live page and the image URL directly (200, real SVG content). This is a real asset step 7 must seed into the WP media library and set on each card's `core/image` block; `wp_ja_kinetic_clients_mark_fallback` (inc/extra.php) already renders the source's own initial-letter fallback correctly for the interim unseeded state (matches `acm/clients/tmpl/style-2.php:104-106`'s own empty-image branch byte for byte) and becomes a no-op once a real image is seeded, so no pattern/CSS change is needed here — only the media import."
+        },
+        "item-name": {
+          "block": "core/paragraph",
+          "path": "clients.item-name.<n>",
+          "attr": "content",
+          "repeat": "items",
+          "note": "style-2"
+        },
+        "item-desc": {
+          "block": "core/paragraph",
+          "path": "clients.item-desc.<n>",
+          "attr": "content",
+          "repeat": "items",
+          "note": "style-2"
+        },
+        "item-url": {
+          "block": "core/group",
+          "path": "clients.item.<n>",
+          "attr": "url",
+          "repeat": "items",
+          "note": "style-2. The card wrapper carries a custom `url` attribute (default `#`, matching the source's own default); `wp_ja_kinetic_clients_card_link()` in inc/extra.php reads it at render time and swaps the wrapper's rendered `<div>` for an `<a href>`, adding target=\"_blank\" rel=\"noopener noreferrer\" for an absolute http(s) value — core/group has no anchor-tag or href support of its own"
+        }
+      },
+      "coverage": "module 209: clients:style-2"
+    },
+    "210": {
+      "pattern": "wp-ja-kinetic/section-features-intro",
+      "root": ".acm-features-intro",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-intro.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "item-title": {
+          "block": "core/heading",
+          "path": "features-intro.item-title.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "item-text": {
+          "block": "core/paragraph",
+          "path": "features-intro.item-text.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "stat": {
+          "block": "core/paragraph",
+          "path": "features-intro.stat.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "icon": {
+          "block": "core/group",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": "items",
+          "note": "icon key → hx-ico-<key>, drawn as a CSS mask"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: selects the grid's column count. Prefix hx-cols-<value> on the grid wrapper (same class family as incident-timeline.columns), remove any existing hx-cols-* class first"
+        }
+      },
+      "coverage": "module 210: features-intro:style-1"
+    },
+    "211": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 211: cta:style-1"
+    },
+    "212": {
+      "pattern": "wp-ja-kinetic/section-page-masthead",
+      "root": ".acm-page-masthead",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "page-masthead.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "page-masthead.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "page-masthead.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "align": {
+          "block": "core/group",
+          "path": "page-masthead",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: the wrapper class is-center / is-left. All 8 measured instances are center. Same root-targeting convention as cta.variant above (path equals the bare type name) — needs `metadata.name:\"page-masthead\"` on the pattern's own root wp:group; fixed the same way, same run (section-page-masthead.php)."
+        }
+      },
+      "coverage": "module 212: page-masthead:style-1"
+    },
+    "213": {
+      "pattern": "wp-ja-kinetic/section-incident-timeline",
+      "root": ".acm-incident-timeline",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "incident-timeline.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "step_time": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_time.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_phase": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_phase.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_badge": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_badge.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_title": {
+          "block": "core/heading",
+          "path": "incident-timeline.step_title.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_text": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_text.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_icon": {
+          "block": "core/group",
+          "path": "incident-timeline.step_icon.<n>",
+          "attr": "className",
+          "repeat": "steps",
+          "note": "the icon key becomes the node class hx-ico-<key>; on the front end inc/extra.php (wp_ja_kinetic_incident_timeline) prints the source's span.hx-inc-node > svg for that key, the CSS mask draws it in the editor only"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "incident-timeline.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: selects the grid's column count. Prefix hx-cols-<value> on the row wrapper (same wp-ja-kinetic-sections.css class family as bento tile-span / teams columns), remove any existing hx-cols-* class first; the source prints the row as div.hx-incident.cols-<n> with n clamped to 3-4 (anything else → 4), and inc/extra.php (wp_ja_kinetic_incident_timeline) renders the class back as that clamped cols-<n>"
+        }
+      },
+      "coverage": "module 213: incident-timeline:style-1"
+    },
+    "214": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 214: cta:style-1"
+    },
+    "234": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 234: cta:style-1"
+    },
+    "205": {
+      "pattern": "wp-ja-kinetic/section-page-masthead",
+      "root": ".acm-page-masthead",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "page-masthead.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "page-masthead.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "page-masthead.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "align": {
+          "block": "core/group",
+          "path": "page-masthead",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: the wrapper class is-center / is-left. All 8 measured instances are center. Same root-targeting convention as cta.variant above (path equals the bare type name) — needs `metadata.name:\"page-masthead\"` on the pattern's own root wp:group; fixed the same way, same run (section-page-masthead.php)."
+        }
+      },
+      "coverage": "module 205: page-masthead:style-1"
+    },
+    "206": {
+      "pattern": "wp-ja-kinetic/section-accordion",
+      "root": ".acm-accordion",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "accordion.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "accordion.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "accordion.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "q": {
+          "block": "core/details",
+          "path": "accordion.item.<n>",
+          "attr": "summary",
+          "repeat": "qa",
+          "note": "the question is the summary of the details block. The repeat wrapper (patterns.map.json `item`, above) is accordion.row.<n> — one row's optional group header plus its details — not the details block itself: a group header sits between rows in the source's flat list, and repeatItems clones one contiguous span of matched items, so a wrapper that is only the details drops every group header that is not the first block in the list. See patterns/section-accordion.php's header comment and wp-ja-kinetic-sections.css §accordion (\"port additions\")."
+        },
+        "a": {
+          "block": "core/paragraph",
+          "path": "accordion.a.<n>",
+          "attr": "content",
+          "repeat": "qa",
+          "note": "the answer paragraph inside that details block"
+        },
+        "group": {
+          "block": "core/paragraph",
+          "path": "accordion.group.<n>",
+          "attr": "content",
+          "repeat": "qa",
+          "note": "the mono sub-header that opens a group of questions; the source repeats the value on every row of the group, the pattern draws it once, on the first"
+        }
+      },
+      "coverage": "module 206: accordion:style-1"
+    },
+    "229": {
+      "pattern": "wp-ja-kinetic/section-faq-support",
+      "root": ".acm-faq-support",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "faq-support.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "faq-support.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn-label": {
+          "block": "core/button",
+          "path": "faq-support.btn-label",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "faq-support.btn-label",
+          "attr": "href",
+          "repeat": null,
+          "note": "sections.json and the running page disagree on this link (a com_contact query string vs /index.php/company/contact); both are Joomla routes and neither survives the crossing, so the pattern ships the field default `#`"
+        }
+      },
+      "coverage": "module 229: faq-support:style-1"
+    },
+    "207": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 207: cta:style-1"
+    },
+    "186": {
+      "pattern": "wp-ja-kinetic/section-page-masthead",
+      "root": ".acm-page-masthead",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "page-masthead.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "page-masthead.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "page-masthead.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "align": {
+          "block": "core/group",
+          "path": "page-masthead",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: the wrapper class is-center / is-left. All 8 measured instances are center. Same root-targeting convention as cta.variant above (path equals the bare type name) — needs `metadata.name:\"page-masthead\"` on the pattern's own root wp:group; fixed the same way, same run (section-page-masthead.php)."
+        }
+      },
+      "coverage": "module 186: page-masthead:style-1"
+    },
+    "187": {
+      "pattern": "wp-ja-kinetic/section-pricing",
+      "root": ".acm-pricing",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "pricing.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "pricing.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "meta": {
+          "block": "core/paragraph",
+          "path": "pricing.meta",
+          "attr": "content",
+          "repeat": null
+        },
+        "name": {
+          "block": "core/paragraph",
+          "path": "pricing.name.<n>",
+          "attr": "content",
+          "repeat": "plans"
+        },
+        "popular": {
+          "block": "core/group",
+          "path": "pricing.item.<n>",
+          "attr": "className",
+          "repeat": "plans",
+          "note": "boolean flag (\"0\"/\"1\", present on every row) selecting is-popular + the primary-vs-ghost CTA class + the static \"MOST POPULAR\" badge (acm/pricing/tmpl/style-1.php: `$popular = (int) $helper->get('popular', $i) === 1`). Uses the class attr's own field-name dispatch in parity-tools/fill.mjs (the same technique the toolkit's own applyClassField uses for tier-recommended, vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/seed.mjs:792-802, read-only: derive a class on the field's own target AND flip a sibling button's class, both located by name from one flag) instead of a separate pricing-only pass run after the generic field loop. repeatItems (.../scripts/lib/block-fill.mjs:453-482, read-only, its own docstring: \"a pricing pattern's recommended tier carries the badge... a clone can drop a block, it cannot invent one\") clones whichever pricing.item.<n> has the most inner blocks — item 2 (\"Team\"), which carries the badge — as the template for every row, so every cloned row already has a pricing.popular.<n> badge block to keep or drop; this field only removes it on the non-popular rows and never has to invent one."
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "pricing.desc.<n>",
+          "attr": "content",
+          "repeat": "plans"
+        },
+        "price": {
+          "block": "core/paragraph",
+          "path": "pricing.price.<n>",
+          "attr": "content",
+          "repeat": "plans"
+        },
+        "period": {
+          "block": "core/paragraph",
+          "path": "pricing.period.<n>",
+          "attr": "content",
+          "repeat": "plans"
+        },
+        "features": {
+          "block": "core/list",
+          "path": "pricing.features.<n>",
+          "attr": "innerBlocks",
+          "repeat": "plans",
+          "note": "one field per plan holding a newline-separated feature list (acm/pricing/tmpl/style-1.php, one <li> per line). attr innerBlocks matches the toolkit's own applyField case 'innerBlocks' (vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/seed.mjs, read-only): split(/\\r?\\n/).map(trim).filter(Boolean), one core/list-item per line cloned from the list's own first item (setListItems, .../scripts/lib/block-fill.mjs:414). Previously attr 'content' -> setText wrote the whole newline-joined string as one text run inside <ul> (no <li> at all, measured live pricing 187, before this fix) and needed a pricing-only post-repeat rebuild; that rebuild is removed, this is now the same generic pass every other repeat field goes through."
+        },
+        "cta_label": {
+          "block": "core/button",
+          "path": "pricing.cta_label.<n>",
+          "attr": "text",
+          "repeat": "plans"
+        },
+        "cta_link": {
+          "block": "core/button",
+          "path": "pricing.cta_label.<n>",
+          "attr": "href",
+          "repeat": "plans"
+        },
+        "inc_title": {
+          "block": "core/paragraph",
+          "path": "pricing.inc_title",
+          "attr": "content",
+          "repeat": null
+        },
+        "inc_desc": {
+          "block": "core/paragraph",
+          "path": "pricing.inc_desc",
+          "attr": "content",
+          "repeat": null
+        },
+        "inc_cta_label": {
+          "block": "core/button",
+          "path": "pricing.inc_cta_label",
+          "attr": "text",
+          "repeat": null
+        },
+        "inc_cta_link": {
+          "block": "core/button",
+          "path": "pricing.inc_cta_label",
+          "attr": "href",
+          "repeat": null
+        }
+      },
+      "coverage": "module 187: pricing:style-1"
+    },
+    "188": {
+      "pattern": "wp-ja-kinetic/section-pricing-matrix",
+      "root": ".acm-pricing-matrix",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "pricing-matrix.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "pricing-matrix.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "pricing-matrix.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "corner_label": {
+          "block": "core/table",
+          "path": "pricing-matrix.rows",
+          "attr": "table",
+          "repeat": null
+        },
+        "col1_name": {
+          "block": "core/table",
+          "path": "pricing-matrix.rows",
+          "attr": "table",
+          "repeat": null
+        },
+        "col2_name": {
+          "block": "core/table",
+          "path": "pricing-matrix.rows",
+          "attr": "table",
+          "repeat": null
+        },
+        "col3_name": {
+          "block": "core/table",
+          "path": "pricing-matrix.rows",
+          "attr": "table",
+          "repeat": null
+        },
+        "items": {
+          "block": "core/table",
+          "path": "pricing-matrix.rows",
+          "attr": "table",
+          "repeat": "rows"
+        }
+      },
+      "coverage": "module 188: pricing-matrix:style-1"
+    },
+    "189": {
+      "pattern": "wp-ja-kinetic/section-accordion",
+      "root": ".acm-accordion",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "accordion.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "accordion.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "accordion.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "q": {
+          "block": "core/details",
+          "path": "accordion.item.<n>",
+          "attr": "summary",
+          "repeat": "qa",
+          "note": "the question is the summary of the details block. The repeat wrapper (patterns.map.json `item`, above) is accordion.row.<n> — one row's optional group header plus its details — not the details block itself: a group header sits between rows in the source's flat list, and repeatItems clones one contiguous span of matched items, so a wrapper that is only the details drops every group header that is not the first block in the list. See patterns/section-accordion.php's header comment and wp-ja-kinetic-sections.css §accordion (\"port additions\")."
+        },
+        "a": {
+          "block": "core/paragraph",
+          "path": "accordion.a.<n>",
+          "attr": "content",
+          "repeat": "qa",
+          "note": "the answer paragraph inside that details block"
+        },
+        "group": {
+          "block": "core/paragraph",
+          "path": "accordion.group.<n>",
+          "attr": "content",
+          "repeat": "qa",
+          "note": "the mono sub-header that opens a group of questions; the source repeats the value on every row of the group, the pattern draws it once, on the first"
+        }
+      },
+      "coverage": "module 189: accordion:style-1"
+    },
+    "190": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 190: cta:style-1"
+    },
+    "196": {
+      "pattern": "wp-ja-kinetic/section-page-masthead",
+      "root": ".acm-page-masthead",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "page-masthead.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "page-masthead.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "page-masthead.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "align": {
+          "block": "core/group",
+          "path": "page-masthead",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: the wrapper class is-center / is-left. All 8 measured instances are center. Same root-targeting convention as cta.variant above (path equals the bare type name) — needs `metadata.name:\"page-masthead\"` on the pattern's own root wp:group; fixed the same way, same run (section-page-masthead.php)."
+        }
+      },
+      "coverage": "module 196: page-masthead:style-1"
+    },
+    "197": {
+      "pattern": "wp-ja-kinetic/section-prose-quote",
+      "root": ".acm-prose-quote",
+      "fields": {
+        "number": {
+          "block": "core/paragraph",
+          "path": "prose-quote.number",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "prose-quote.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "meta": {
+          "block": "core/paragraph",
+          "path": "prose-quote.meta",
+          "attr": "content",
+          "repeat": null
+        },
+        "body": {
+          "block": "core/paragraph",
+          "path": "prose-quote.body.<n>",
+          "attr": "content",
+          "repeat": null,
+          "note": "ONE rich-text field holding two paragraphs. The .<n> here indexes paragraphs inside the field, not rows of a repeat group: the seeder splits the field and fills them in order"
+        },
+        "quote": {
+          "block": "core/paragraph",
+          "path": "prose-quote.quote",
+          "attr": "content",
+          "repeat": null
+        }
+      },
+      "coverage": "module 197: prose-quote:style-1"
+    },
+    "233": {
+      "pattern": "wp-ja-kinetic/section-features-ledger-metrics",
+      "root": ".acm-features-ledger",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-ledger.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-ledger.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "features-ledger.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "card_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.card_label",
+          "attr": "content",
+          "repeat": null
+        },
+        "item-text": {
+          "block": "core/paragraph",
+          "path": "features-ledger.item-text.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_value": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_value.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_label.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        }
+      },
+      "coverage": "module 233: features-ledger:style-1 layout metrics"
+    },
+    "200": {
+      "pattern": "wp-ja-kinetic/section-incident-timeline",
+      "root": ".acm-incident-timeline",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "incident-timeline.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "step_time": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_time.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_phase": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_phase.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_badge": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_badge.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_title": {
+          "block": "core/heading",
+          "path": "incident-timeline.step_title.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_text": {
+          "block": "core/paragraph",
+          "path": "incident-timeline.step_text.<n>",
+          "attr": "content",
+          "repeat": "steps"
+        },
+        "step_icon": {
+          "block": "core/group",
+          "path": "incident-timeline.step_icon.<n>",
+          "attr": "className",
+          "repeat": "steps",
+          "note": "the icon key becomes the node class hx-ico-<key>; on the front end inc/extra.php (wp_ja_kinetic_incident_timeline) prints the source's span.hx-inc-node > svg for that key, the CSS mask draws it in the editor only"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "incident-timeline.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: selects the grid's column count. Prefix hx-cols-<value> on the row wrapper (same wp-ja-kinetic-sections.css class family as bento tile-span / teams columns), remove any existing hx-cols-* class first; the source prints the row as div.hx-incident.cols-<n> with n clamped to 3-4 (anything else → 4), and inc/extra.php (wp_ja_kinetic_incident_timeline) renders the class back as that clamped cols-<n>"
+        }
+      },
+      "coverage": "module 200: incident-timeline:style-1"
+    },
+    "198": {
+      "pattern": "wp-ja-kinetic/section-features-intro",
+      "root": ".acm-features-intro",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-intro.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "item-title": {
+          "block": "core/heading",
+          "path": "features-intro.item-title.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "item-text": {
+          "block": "core/paragraph",
+          "path": "features-intro.item-text.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "stat": {
+          "block": "core/paragraph",
+          "path": "features-intro.stat.<n>",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "icon": {
+          "block": "core/group",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": "items",
+          "note": "icon key → hx-ico-<key>, drawn as a CSS mask"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: selects the grid's column count. Prefix hx-cols-<value> on the grid wrapper (same class family as incident-timeline.columns), remove any existing hx-cols-* class first"
+        }
+      },
+      "coverage": "module 198: features-intro:style-1"
+    },
+    "199": {
+      "pattern": "wp-ja-kinetic/section-teams",
+      "root": ".acm-teams",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "teams.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "teams.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "the grid class hx-cols-<n> stores the value; the source writes it as an inline grid-template-columns:repeat(<n>,1fr) on a bare .hx-cols, and inc/extra.php (wp_ja_kinetic_team_columns) renders the class back as that inline style"
+        },
+        "name": {
+          "block": "core/heading",
+          "path": "teams.name.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "role": {
+          "block": "core/paragraph",
+          "path": "teams.role.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "bio": {
+          "block": "core/paragraph",
+          "path": "teams.bio.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "teams.avatar.<n>",
+          "attr": "src",
+          "repeat": "members",
+          "note": "mutually exclusive with initials in the source: a member with a photo gets the image, one without gets the initials chip. The pattern carries both branches, on the members that measured that way"
+        },
+        "socials": {
+          "block": "core/social-links",
+          "path": "teams.socials.<n>",
+          "attr": "links",
+          "repeat": "members",
+          "note": "core/social-links, not a row of buttons: the links are icon-only, and the core block keeps a readable name for a screen reader and an editable URL"
+        }
+      },
+      "coverage": "module 199: teams:style-1"
+    },
+    "201": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 201: cta:style-1"
+    },
+    "202": {
+      "pattern": "wp-ja-kinetic/section-page-masthead",
+      "root": ".acm-page-masthead",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "page-masthead.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "page-masthead.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "page-masthead.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "align": {
+          "block": "core/group",
+          "path": "page-masthead",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: the wrapper class is-center / is-left. All 8 measured instances are center. Same root-targeting convention as cta.variant above (path equals the bare type name) — needs `metadata.name:\"page-masthead\"` on the pattern's own root wp:group; fixed the same way, same run (section-page-masthead.php)."
+        }
+      },
+      "coverage": "module 202: page-masthead:style-1"
+    },
+    "203": {
+      "pattern": "wp-ja-kinetic/section-teams",
+      "root": ".acm-teams",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "teams.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "teams.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.columns",
+          "attr": "className",
+          "repeat": null,
+          "note": "the grid class hx-cols-<n> stores the value; the source writes it as an inline grid-template-columns:repeat(<n>,1fr) on a bare .hx-cols, and inc/extra.php (wp_ja_kinetic_team_columns) renders the class back as that inline style"
+        },
+        "name": {
+          "block": "core/heading",
+          "path": "teams.name.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "role": {
+          "block": "core/paragraph",
+          "path": "teams.role.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "bio": {
+          "block": "core/paragraph",
+          "path": "teams.bio.<n>",
+          "attr": "content",
+          "repeat": "members"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "teams.avatar.<n>",
+          "attr": "src",
+          "repeat": "members",
+          "note": "mutually exclusive with initials in the source: a member with a photo gets the image, one without gets the initials chip. The pattern carries both branches, on the members that measured that way"
+        },
+        "socials": {
+          "block": "core/social-links",
+          "path": "teams.socials.<n>",
+          "attr": "links",
+          "repeat": "members",
+          "note": "core/social-links, not a row of buttons: the links are icon-only, and the core block keeps a readable name for a screen reader and an editable URL"
+        }
+      },
+      "coverage": "module 203: teams:style-1"
+    },
+    "204": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 204: cta:style-1"
+    },
+    "230": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 230: cta:style-1"
+    },
+    "231": {
+      "pattern": "wp-ja-kinetic/section-page-masthead",
+      "root": ".acm-page-masthead",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "page-masthead.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "page-masthead.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "page-masthead.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "align": {
+          "block": "core/group",
+          "path": "page-masthead",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: the wrapper class is-center / is-left. All 8 measured instances are center. Same root-targeting convention as cta.variant above (path equals the bare type name) — needs `metadata.name:\"page-masthead\"` on the pattern's own root wp:group; fixed the same way, same run (section-page-masthead.php)."
+        }
+      },
+      "coverage": "module 231: page-masthead:style-1"
+    },
+    "232": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 232: cta:style-1"
+    },
+    "215": {
+      "pattern": "wp-ja-kinetic/section-hero",
+      "root": ".acm-hero",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "hero.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "hero.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "hero.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "cta1_label": {
+          "block": "core/button",
+          "path": "hero.cta1",
+          "attr": "text",
+          "repeat": null,
+          "note": "one button carries both cta1 fields: cta1_label is its text, cta1_link its href"
+        },
+        "cta1_link": {
+          "block": "core/button",
+          "path": "hero.cta1",
+          "attr": "href",
+          "repeat": null
+        },
+        "cta2_label": {
+          "block": "core/button",
+          "path": "hero.cta2",
+          "attr": "text",
+          "repeat": null
+        },
+        "cta2_link": {
+          "block": "core/button",
+          "path": "hero.cta2",
+          "attr": "href",
+          "repeat": null
+        },
+        "trust": {
+          "block": "core/paragraph",
+          "path": "hero.trust",
+          "attr": "content",
+          "repeat": null
+        },
+        "image_terminal": {
+          "block": "core/image",
+          "path": "hero.image_terminal",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "the source names a per-direction panel image and falls back to images/kinetic/hero-terminal-panel-<direction>.webp when the field is empty; every measured instance is empty. attr stays src+alt on purpose: no spec instance carries a value for image_terminal, image_blueprint or image_signal, and the seeder removes a core/image whose src field is empty (seed.mjs `case 'src'`), so a `src` declaration would delete the panel. As src+alt the seeder leaves the block alone and the pattern's own image stays: the pattern points each direction at the source's fallback file, copied to assets/images/hero-terminal-panel-<terminal|blueprint|signal>.webp (step 6b)."
+        },
+        "image_blueprint": {
+          "block": "core/image",
+          "path": "hero.image_blueprint",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "see image_terminal"
+        },
+        "image_signal": {
+          "block": "core/image",
+          "path": "hero.image_signal",
+          "attr": "src+alt",
+          "repeat": null,
+          "note": "see image_terminal"
+        }
+      },
+      "coverage": "module 215: hero:style-1"
+    },
+    "216": {
+      "pattern": "wp-ja-kinetic/section-clients",
+      "root": ".acm-clients",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "clients.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "clients.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "clients.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "caption": {
+          "block": "core/paragraph",
+          "path": "clients.caption",
+          "attr": "content",
+          "repeat": null,
+          "note": "style-1 only; the style-2 field set has no caption"
+        },
+        "logo-name": {
+          "block": "core/paragraph",
+          "path": "clients.logo-name.<n>",
+          "attr": "content",
+          "repeat": "logos",
+          "note": "style-1"
+        },
+        "item-url": {
+          "block": "core/group",
+          "path": "clients.item.<n>",
+          "attr": "url",
+          "repeat": "items",
+          "note": "style-2. The card wrapper carries a custom `url` attribute (default `#`, matching the source's own default); `wp_ja_kinetic_clients_card_link()` in inc/extra.php reads it at render time and swaps the wrapper's rendered `<div>` for an `<a href>`, adding target=\"_blank\" rel=\"noopener noreferrer\" for an absolute http(s) value — core/group has no anchor-tag or href support of its own"
+        }
+      },
+      "coverage": "module 216: clients:style-1"
+    },
+    "217": {
+      "pattern": "wp-ja-kinetic/section-bento",
+      "root": ".acm-bento",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "bento.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "bento.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "bento.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "tile-title": {
+          "block": "core/heading",
+          "path": "bento.tile-title.<n>",
+          "attr": "content",
+          "repeat": "tiles"
+        },
+        "tile-text": {
+          "block": "core/paragraph",
+          "path": "bento.tile-text.<n>",
+          "attr": "content",
+          "repeat": "tiles"
+        },
+        "tile-stat": {
+          "block": "core/paragraph",
+          "path": "bento.tile-stat.<n>",
+          "attr": "content",
+          "repeat": "tiles"
+        },
+        "tile-icon": {
+          "block": "core/paragraph",
+          "path": "bento.tile-icon.<n>",
+          "attr": "className",
+          "repeat": "tiles",
+          "note": "not text: the icon key selects the wrapper class is-ico-<key> on the tile's icon leaf (an empty core/paragraph carrying a CSS mask — in both styles swapped at render time for the source's `span > svg`, inc/extra.php wp_ja_kinetic_bento_style2_svg; a filler's appended `hx-ico-<key>` wins as the last key class —, metadata.name bento.tile-icon.<n> — same cloning risk as tile-span, same fix: reapply per instance after repeatItems). Prefix: `is-ico-${value}`, remove any existing `is-ico-*` class first"
+        }
+      },
+      "coverage": "module 217: bento:style-1"
+    },
+    "218": {
+      "pattern": "wp-ja-kinetic/section-features-ledger-stats",
+      "root": ".acm-features-ledger",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "features-ledger.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/paragraph",
+          "path": "features-ledger.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "features-ledger.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "item-title": {
+          "block": "core/heading",
+          "path": "features-ledger.item-title.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "item-text": {
+          "block": "core/paragraph",
+          "path": "features-ledger.item-text.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_value": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_value.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "stat_label": {
+          "block": "core/paragraph",
+          "path": "features-ledger.stat_label.<n>",
+          "attr": "content",
+          "repeat": "rows"
+        },
+        "icon": {
+          "block": "core/group",
+          "path": "features-ledger.icon.<n>",
+          "attr": "className",
+          "repeat": "rows",
+          "note": "icon key → hx-ico-<key>; on render inc/extra.php (wp_ja_kinetic_ledger_icon_svg) turns it into the source's span.hx-spec-icon / span.hx-stat-icon > svg (CSS mask in the editor only)"
+        }
+      },
+      "coverage": "module 218: features-ledger:style-1 layout default"
+    },
+    "219": {
+      "pattern": "wp-ja-kinetic/section-testimonials",
+      "root": ".acm-testimonials",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "testimonials.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "testimonials.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "quote": {
+          "block": "core/paragraph",
+          "path": "testimonials.quote.<n>",
+          "attr": "content",
+          "repeat": "quotes"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "testimonials.avatar.<n>",
+          "attr": "src",
+          "repeat": "quotes"
+        },
+        "name": {
+          "block": "core/paragraph",
+          "path": "testimonials.name.<n>",
+          "attr": "content",
+          "repeat": "quotes"
+        },
+        "role": {
+          "block": "core/paragraph",
+          "path": "testimonials.role.<n>",
+          "attr": "content",
+          "repeat": "quotes",
+          "note": "one block draws two fields: the source joins role and company with \", \" inside one element (acm/testimonials/tmpl/style-1.php:51-54, role alone when company is empty). role and company both mapping to this same path independently overwrote each other (\"Northwind\" instead of \"Staff SRE, Northwind\"). seed.mjs writes role alone; the run's post-seed step (tasks/ja-kinetic-wp7/post-seed.mjs, D-34) rewrites this block to role and company joined, and each avatar's alt to its own person's name"
+        }
+      },
+      "coverage": "module 219: testimonials:style-1"
+    },
+    "220": {
+      "pattern": "wp-ja-kinetic/section-cta",
+      "root": ".acm-cta",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "cta.title",
+          "attr": "content",
+          "repeat": null
+        },
+        "sub": {
+          "block": "core/paragraph",
+          "path": "cta.sub",
+          "attr": "content",
+          "repeat": null
+        },
+        "btn1-label": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn1-link": {
+          "block": "core/button",
+          "path": "cta.btn1",
+          "attr": "href",
+          "repeat": null
+        },
+        "chip": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "text",
+          "repeat": null,
+          "note": "the terminal-style code chip; the source draws it only on the 3 of 14 measured cta instances that carry a `chip` value (184, 234, 235) — the other 11 have no `chip` key in sections.json at all, not even empty. Measured 2026-09-22 run 3 (SB-21/SA-47): the generic field pass only calls put() `if (name in inst.fields)`, so an absent key (as opposed to an explicit empty string) left the pattern's own default \"helix init\" chip on every one of those 11 pages. Fixed 2026-09-22 (fix-patterns-b2) in parity-tools/fill.mjs with a cta-only branch that treats the absent key the same as an empty value (removes the block) — a future real seeder needs the same absent-key-is-empty handling for this field."
+        },
+        "chip-link": {
+          "block": "core/button",
+          "path": "cta.chip",
+          "attr": "href",
+          "repeat": null
+        },
+        "btn2-label": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "text",
+          "repeat": null
+        },
+        "btn2-link": {
+          "block": "core/button",
+          "path": "cta.btn2",
+          "attr": "href",
+          "repeat": null
+        },
+        "variant": {
+          "block": "core/group",
+          "path": "cta",
+          "attr": "className",
+          "repeat": null,
+          "note": "not text: it selects the wrapper class cta-<variant>. The pattern ships cta-card, the value 12 of 13 measured instances carry; id 211 carries `bar`, which neither tmpl/style-1.xml nor css/style.css knows. Targets the pattern's OWN root wp:group (path equals the bare type name, same convention as page-masthead.align below) — that block must carry `metadata.name:\"cta\"` for the filler's findBlock to locate it at all; measured live (2026-09-22, run 3) with the metadata missing: every one of the 14 captured cta instances logged \"no block for cta\", and instance 211 (variant bar) rendered with the cta-card class still on it. Fixed by adding the metadata name to section-cta.php's root block."
+        }
+      },
+      "coverage": "module 220: cta:style-1"
+    }
+  }
+}

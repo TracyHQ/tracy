@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1696-wo-hub-per-account-hub",
+  "kind": "feat",
+  "title": "Per-account research asks the shared hub before paying for Place Details, and a revoked hub copy leaves its briefs",
+  "pr": 1696,
+  "area": "website-opportunities/hub",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: A standalone client with WO_SHARED_RESEARCH=0 and a hub that already published place A researches A.",
+    "S2: The hub removes the business; the client runs its hub tick and builds the brief research of its opportunity."
+  ],
+  "expect": [
+    "S1: 0 Place Details calls; the brief research's googlePlace has the hub's name and via hub.",
+    "S2: the brief research has no googlePlace and hubRevoked of length 1."
+  ],
+  "selectors": {
+    "executor": "packages/wo/website-opportunities/src/executor.js placeFacts",
+    "revoked": "packages/wo/website-opportunities/src/hub/local-cache.js revokedHubCopy",
+    "brief": "packages/wo/website-opportunities/src/brief-research.js briefResearchOf"
+  },
+  "evidence": "Before: only the shared place path read the hub; per-account research always paid Google",
+  "fence": "executor placeFacts calls hub.placeFacts before fetchPlaceDetails behind the hub dep; held hub facts and per-account briefs are checked against wo_hub_client_place.revoked_at",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/hub-wiring.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "per-account research reads the hub before paying for Place Details too",
+      "a business removed on the hub leaves the client cache"
+    ]
+  }
+}

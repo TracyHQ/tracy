@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-893-tracy-host-teardown-job-dirs",
+  "kind": "fix",
+  "title": "tracy-host hands teardown its own job and log directories, and teardown keeps the records still running",
+  "pr": 893,
+  "area": "fleet/teardown",
+  "cms": ["any"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-host/test/provision.test.mjs packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"POST /_host/teardown: teardown.sh is handed the job and log directories this host really uses\"; \"step 5 drops this site's finished job records and keeps the ones still queued or running\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 70).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): POST /_host/teardown runs teardown.sh with JOBS_DIR = the host's jobsDir and HOOK_LOG_DIR = its logDir; step 5 drops only finished records of the label (state not queued or running; no state counts as finished)."
+  ],
+  "selectors": {
+    "host": "runTeardownJob in apps/tracy-host/src/provision.js (env.JOBS_DIR, env.HOOK_LOG_DIR)",
+    "script": "step 5 of packages/fleet/tracy-fleet-operation/scripts/provision/teardown.sh"
+  },
+  "evidence": "05/10/2026 local stand: deleting a site left its job records (whole slabs of its content in `output`) and its provision log on the host, and teardown's 'keeping .../teardown-<label>.log' named a file that did not exist: step 5 used the Python hooks' defaults /var/lib/tracy-jobs and /var/log/tracy-hooks, which the tracy-host container does not have. Red cbdc76842 (both cases not ok on 6c43f9c70), fix e0ed33a26.",
+  "fence": "A teardown's own running record, or a job still queued for the label, is never pruned, so the deploy drain cannot read the host as idle mid-teardown.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-host/test/provision.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs"
+    ],
+    "tests": [
+      "POST /_host/teardown: teardown.sh is handed the job and log directories this host really uses",
+      "step 5 drops this site's finished job records and keeps the ones still queued or running"
+    ]
+  }
+}

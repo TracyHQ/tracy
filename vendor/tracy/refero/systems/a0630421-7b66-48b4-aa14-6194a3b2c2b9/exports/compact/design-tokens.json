@@ -1,0 +1,94 @@
+{
+  "color": {
+    "fey-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Fey White — Primary text, decorative borders, hairlines — the dominant color of the system, used for typography and 554+ border occurrences"
+    },
+    "fey-ink": {
+      "$value": "#0b0b0b",
+      "$type": "color",
+      "$description": "Fey Ink — Primary canvas and card surfaces — the near-black that everything floats on"
+    },
+    "fey-charcoal": {
+      "$value": "#191919",
+      "$type": "color",
+      "$description": "Fey Charcoal — Elevated card surface, secondary panels — one step lighter than the canvas for nested depth"
+    },
+    "fey-obsidian": {
+      "$value": "#131313",
+      "$type": "color",
+      "$description": "Fey Obsidian — Tertiary surface, input backgrounds, subtle elevated layers"
+    },
+    "fey-graphite": {
+      "$value": "#868f97",
+      "$type": "color",
+      "$description": "Fey Graphite — Muted secondary text, subdued borders, disabled labels — the workhorse mid-gray for everything that is not the headline"
+    },
+    "fey-mist": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Fey Mist — Icon strokes, subtle links, tertiary borders — a step brighter than Graphite for elements that need more presence"
+    },
+    "fey-smoke": {
+      "$value": "#525252",
+      "$type": "color",
+      "$description": "Fey Smoke — Deep dividers, shadow-tinted borders, very low-emphasis strokes"
+    },
+    "fey-pale": {
+      "$value": "#e6e6e6",
+      "$type": "color",
+      "$description": "Fey Pale — Subtle body borders, ghost button outlines, light strokes — the lightest non-white neutral"
+    },
+    "fey-ash": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Fey Ash — Low-emphasis borders and secondary text — sits between Graphite and Smoke"
+    },
+    "fey-ember": {
+      "$value": "#ffa16c",
+      "$type": "color",
+      "$description": "Fey Ember — Warm accent for highlighted headline words and warm gradient terminus — orange-on-black reads as urgency and premium warmth; Warm hero gradient — Ember fading into deep brown for product showcase atmosphere"
+    },
+    "fey-signal": {
+      "$value": "#479ffa",
+      "$type": "color",
+      "$description": "Fey Signal — Navigation underline, active link border, cool accent — vivid blue draws the eye to current location and trust indicators"
+    },
+    "fey-growth": {
+      "$value": "#4ebe96",
+      "$type": "color",
+      "$description": "Fey Growth — Green outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color"
+    },
+    "fey-abyss": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Fey Abyss — Shadow base color, deepest possible background — used in 0.8-opacity halos and gradient termini"
+    },
+    "fey-frost": {
+      "$value": "#b6d6ff",
+      "$type": "color",
+      "$description": "Fey Frost — Cool gradient accent — pale blue fading into slate for secondary product showcase"
+    },
+    "fey-volt": {
+      "$value": "#d6fe51",
+      "$type": "color",
+      "$description": "Fey Volt — Highlight gradient — electric yellow-green fading into deep olive for standout elements"
+    }
+  },
+  "font": {
+    "calibre": {
+      "$value": "Calibre",
+      "$type": "fontFamily",
+      "$description": "The sole typeface — a geometric sans with slightly compressed proportions. Weight 400 carries body and most UI; 500–600 for nav and labels; 700 reserved for large display headlines. Tight tracking at -0.08em on 48–54px display creates the premium, compressed feel. Letter-spacing of -0.053em applies to mid-range headings. No secondary font family is used — Calibre does all roles from 10px captions to 54px heroes"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.fey.com",
+      "siteName": "Fey",
+      "extractedAt": "2026-06-03T17:41:40.011Z",
+      "variant": "compact"
+    }
+  }
+}

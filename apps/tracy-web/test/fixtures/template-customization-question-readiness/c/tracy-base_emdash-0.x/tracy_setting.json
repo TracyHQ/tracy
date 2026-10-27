@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "emdash",
+  "label": "Tracy Base",
+  "version": "0.5.2",
+  "cms": "1.1.0",
+  "install": {
+    "source": {
+      "file": "tracy-base-emdash-quickstart-0.5.2.zip",
+      "sha256": "9c5e414f797711833ef80612c0ce4bf084b6491e7a5285dac5d59c735a401214"
+    },
+    "state": {
+      "file": "tracy-base-emdash-state-0.5.2.tar.gz",
+      "sha256": "d1cd8d368df0b403252c988b7742b6111e3f995ae1314395ef4c4a8894b70fa9"
+    }
+  },
+  "template": "tracy-base",
+  "languages": ["en"]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "REG-005",
+  "kind": "fix",
+  "title": "Backup and restore dialogs fit a 360 px viewport",
+  "pr": 747,
+  "area": "site-changes/dialogs",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner", "viewport:360"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup (tests/regression/README.md § Common setup): O, seat A's cookie, api, the CDP browser; never close pages or contexts.",
+    "S2: Pick S = a site A owns (scv2 stand: qa1wp01.scv2.tracy.test); run api a POST /api/sites/<S>/backup '{\"title\":\"REG-005-point\",\"notes\":\"\"}' and record N = body.version (expect database.state 'full').",
+    "S3: Create browser.newContext({viewport:{width:360,height:800}, colorScheme:'dark', locale:'vi-VN'}) with A's cookie; open Site changes for S (goto O/<S>; wait URL '/s/session-' and \"[contenteditable='true']\"; goto with tab=tracy:changes&site=<S>; wait '.tv-activity-v2' and until '.tv-activity-v2 [data-reading]' is absent); wait for \"li.tv-backup[data-backup='<N>']\".",
+    "S4: Define measure(): page.evaluate returning {vw: documentElement.clientWidth, sw: documentElement.scrollWidth, boxSizing: getComputedStyle(d).boxSizing, offsetWidth: d.offsetWidth, dialog: rect(d), close: rect(d.querySelector(\"[data-slot='dialog-close']\")), controls: rects of d.querySelectorAll(\"input, textarea, [data-slot='dialog-footer'] button\")} where d = document.querySelector(\"[role=dialog][data-slot='dialog-content'].tracy-site-tabs\") and rect = {left, right} of getBoundingClientRect().",
+    "S5: Click '[data-create-backup]'; wait for '[role=dialog] [data-draft]'; wait 600 ms (open animation); record measure() as create; screenshot; press Escape and wait until no \"[role=dialog][data-slot='dialog-content']\" remains.",
+    "S6: Click \"li.tv-backup[data-backup='<N>'] button.tv-activity-event-main\" until aria-expanded is 'true'; click \"li.tv-backup[data-backup='<N>'] [data-detail] [data-restore='backup']\" (Restore…; Everything is chosen first); wait for '[role=dialog] [data-confirm-word]'; wait 600 ms; record measure() as everything (controls include the two scope radios, [data-confirm-word] and [data-confirm-everything]); screenshot. Then record WORD = [the trimmed text of the label for '[role=dialog] [data-confirm-word]', its placeholder, document.activeElement's trimmed text, '[role=dialog] [data-confirm-everything]'.disabled]; fill '[role=dialog] [data-confirm-word]' with 'restore' and record OPEN = '[role=dialog] [data-confirm-everything]'.disabled (never click it).",
+    "S7: In the same dialog click '[role=dialog] [data-scope-option=\"files\"] input'; wait until '[role=dialog] [data-confirm-word]' is gone; wait 600 ms; record measure() as files; press Escape without confirming."
+  ],
+  "expect": [
+    "Each recorded dialog (create, everything, files): vw == 360 and sw == 360 (no sideways scroll).",
+    "Each: boxSizing == 'border-box' (pre-fix: 'content-box' on the dialog root).",
+    "Each: offsetWidth ≤ 328 (stand after fix: 328 = 360 − 2rem; pre-fix: 394 with left −17).",
+    "Each: dialog.left ≥ 15 and dialog.right ≤ 345 (tracy-ui 1rem gutter kept).",
+    "Each: close.left ≥ 0 and close.right ≤ 345 (after fix: 307..335; pre-fix: 340..368).",
+    "Each: every control left ≥ 16 and right ≤ 344 (after fix: 33..327; pre-fix: 0..360).",
+    "WORD deep-equals ['Gõ “Restore” để xác nhận', 'Restore', 'Huỷ', true] (vi-VN: the instruction is translated, the word is English; Cancel holds the focus; was the site address); OPEN === false (any case)."
+  ],
+  "selectors": {
+    "createBackup": "[data-create-backup]",
+    "dialog": "[role=dialog][data-slot='dialog-content'].tracy-site-tabs",
+    "dialogClose": "[role=dialog] [data-slot='dialog-close']",
+    "dialogFooterButtons": "[role=dialog] [data-slot='dialog-footer'] button",
+    "backupTitleInput": "#tracy-backup-title",
+    "rowToggle": "li.tv-backup[data-backup='<N>'] button.tv-activity-event-main",
+    "confirmSiteInput": "[role=dialog] [data-confirm-word]",
+    "confirmEverything": "[role=dialog] [data-confirm-everything]",
+    "draft": "[role=dialog] [data-draft]",
+    "restore": "li.tv-backup[data-backup='<N>'] [data-detail] [data-restore='backup']",
+    "scopeFiles": "[role=dialog] [data-scope-option=\"files\"] input"
+  },
+  "evidence": "tasks/evidence/site-changes-v2/qa/r1/bugs/QA-I15.md (fix dba4b5960); the QA note is Studio-local (not in git), the fix commit is on develop",
+  "fence": "packages/site/tracy-site-tabs/src/client/site-tabs.css puts box-sizing:border-box on the .tracy-site-tabs root a dialog popup carries, and every site-tabs DialogContent uses sm:max-w-md so tracy-ui's max-w-[calc(100%-2rem)] gutter survives below 640 px."
+}

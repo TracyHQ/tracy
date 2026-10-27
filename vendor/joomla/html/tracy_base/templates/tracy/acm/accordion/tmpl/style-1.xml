@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Accordion Style 1</title>
+  <fields name="accordion">
+    <fieldset name="band" label="TPL_TRACY_BASE_ACM_ACCORDION_BAND_LABEL">
+      <field
+        name="eyebrow"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_ACCORDION_EYEBROW_LABEL"
+        description="TPL_TRACY_BASE_ACM_ACCORDION_EYEBROW_DESC"
+      />
+      <field
+        name="heading"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_ACCORDION_HEADING_LABEL"
+        description="TPL_TRACY_BASE_ACM_ACCORDION_HEADING_DESC"
+      />
+      <field
+        name="intro"
+        type="textarea"
+        rows="3"
+        default=""
+        label="TPL_TRACY_BASE_ACM_ACCORDION_INTRO_LABEL"
+        description="TPL_TRACY_BASE_ACM_ACCORDION_INTRO_DESC"
+      />
+      <field
+        name="surface"
+        type="list"
+        default="canvas"
+        label="TPL_TRACY_BASE_ACM_ACCORDION_SURFACE_LABEL"
+        description="TPL_TRACY_BASE_ACM_ACCORDION_SURFACE_DESC"
+      >
+        <option value="canvas">TPL_TRACY_BASE_ACM_ACCORDION_SURFACE_CANVAS</option>
+        <option value="warm">TPL_TRACY_BASE_ACM_ACCORDION_SURFACE_WARM</option>
+        <option value="gray">TPL_TRACY_BASE_ACM_ACCORDION_SURFACE_GRAY</option>
+      </field>
+      <field
+        name="first-open"
+        type="list"
+        default="1"
+        label="TPL_TRACY_BASE_ACM_ACCORDION_FIRST_OPEN_LABEL"
+        description="TPL_TRACY_BASE_ACM_ACCORDION_FIRST_OPEN_DESC"
+      >
+        <option value="0">TPL_TRACY_BASE_ACM_ACCORDION_FIRST_OPEN_NO</option>
+        <option value="1">TPL_TRACY_BASE_ACM_ACCORDION_FIRST_OPEN_YES</option>
+      </field>
+      <field
+        name="one-at-a-time"
+        type="list"
+        default="1"
+        label="TPL_TRACY_BASE_ACM_ACCORDION_EXCLUSIVE_LABEL"
+        description="TPL_TRACY_BASE_ACM_ACCORDION_EXCLUSIVE_DESC"
+      >
+        <option value="0">TPL_TRACY_BASE_ACM_ACCORDION_EXCLUSIVE_NO</option>
+        <option value="1">TPL_TRACY_BASE_ACM_ACCORDION_EXCLUSIVE_YES</option>
+      </field>
+    </fieldset>
+    <fieldset name="entries" label="TPL_TRACY_BASE_ACM_ACCORDION_ENTRIES_LABEL" multiple="1">
+      <field
+        name="entry-question"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_ACCORDION_ENTRY_QUESTION_LABEL"
+        description="TPL_TRACY_BASE_ACM_ACCORDION_ENTRY_QUESTION_DESC"
+      />
+      <field
+        name="entry-answer"
+        type="textarea"
+        rows="5"
+        default=""
+        label="TPL_TRACY_BASE_ACM_ACCORDION_ENTRY_ANSWER_LABEL"
+        description="TPL_TRACY_BASE_ACM_ACCORDION_ENTRY_ANSWER_DESC"
+      />
+    </fieldset>
+  </fields>
+</form>

@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-sunshine-highlight: #ffda6e;
+  --color-mint-signal: #6ece9d;
+  --color-cream-paper: #f8f5ed;
+  --color-ink: #000000;
+  --color-graphite: #707070;
+
+  /* Typography — Font Families */
+  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

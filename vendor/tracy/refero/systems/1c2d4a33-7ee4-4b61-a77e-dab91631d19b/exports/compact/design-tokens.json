@@ -1,0 +1,54 @@
+{
+  "color": {
+    "iris-violet": {
+      "$value": "#7373ff",
+      "$type": "color",
+      "$description": "Iris Violet — Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-iris": {
+      "$value": "#23234d",
+      "$type": "color",
+      "$description": "Deep Iris — Decorative SVG fill for large geometric shapes and map elements — a darker register of the brand violet used for tonal depth inside illustrations, not for UI"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, hairline borders on neutral actions and nav dividers, and the fill for the monumental hero shapes that overlap the headline"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text, and input backgrounds. The base layer everything else sits on"
+    },
+    "ash-gray": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Ash Gray — Subtle surface fill for link backgrounds, list rows, and secondary button states — a quiet wash that distinguishes hover/focus from pure white without introducing chroma"
+    },
+    "mist-gray": {
+      "$value": "#e7e7e7",
+      "$type": "color",
+      "$description": "Mist Gray — Nav panel background and low-emphasis surface tone — sits one step below Ash Gray for the overlapping side panel"
+    }
+  },
+  "font": {
+    "abcmonumentgrotesk": {
+      "$value": "ABCMonumentGrotesk",
+      "$type": "fontFamily",
+      "$description": "Primary grotesque used for nav, headings, event cards, buttons, and most UI labels. The geometric construction and tight tracking give the site its editorial, catalog-like authority. Weight 400 carries body and nav; 700 is reserved for section headings and emphasis. Line-heights collapse to near-1.0 at display sizes — the type sits as flat architectural mass on the page."
+    },
+    "bradfordll": {
+      "$value": "BradfordLL",
+      "$type": "fontFamily",
+      "$description": "Transitional serif used for long-form body copy, about-section paragraphs, and venue descriptions. Pairs with the grotesque to create a printed-publication rhythm — grotesque for chrome and headlines, serif for reading. The contrast between angular sans and humanist serif is the system's typographic signature."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://12.berlinbiennale.de",
+      "siteName": "12th Berlin Biennale for Contemporary Art",
+      "extractedAt": "2026-06-03T21:35:51.547Z",
+      "variant": "compact"
+    }
+  }
+}

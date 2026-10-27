@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-warm-bone: #fafaf9;
+  --color-paper-white: #ffffff;
+  --color-stone-mist: #e7e5e4;
+  --color-bark-grey: #79716b;
+  --color-charcoal: #292524;
+  --color-obsidian: #0c0a09;
+  --color-pebble: #a6a09b;
+  --color-electric-indigo: #615fff;
+  --color-deep-violet: #4f39f6;
+  --color-terracotta: #d97757;
+  --color-lichen-green: #5ea500;
+  --color-tide-teal: #22b8cd;
+  --color-alarm-red: #ff0000;
+  --color-sapphire-link: #007ebb;
+
+  /* Typography — Font Families */
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cooper-ltbt: 'Cooper LtBT', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-datatype: 'dataType', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

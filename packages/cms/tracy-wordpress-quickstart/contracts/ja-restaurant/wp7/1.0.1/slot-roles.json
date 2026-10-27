@@ -1,0 +1,5973 @@
+{
+  "schemaVersion": "tracy-quickstart-slot-roles/v1",
+  "roleVocabularyVersion": "place-content-roles/1",
+  "contract": "ja-restaurant/wp7/1.0.1",
+  "cms": "wordpress",
+  "baseHash": "51b2c3be9e54e048c04295541f0dc2e70486fafe3ec809c10f474d4f129a0f70",
+  "baseFiles": {
+    "manifest.json": "d545bdc5de13d0f634beaacda01aa17f77417748861619ff055a9ff3bef76f67",
+    "content-map.json": "3da2500fa124dc4b363d22db547db65f129c9770ca6e2d276324132bc09f49e0",
+    "presentation-lock.json": "b08cf515fdb57e491c25899eeeace02877d4ab136630c9b77403d889bf579d14"
+  },
+  "status": "checked",
+  "groups": [
+    {
+      "id": "site.identity.0",
+      "groupId": "site.identity.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.name"
+      ],
+      "neutral": {
+        "business.name": {
+          "policy": "empty"
+        },
+        "business.tagline": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.features-intro.item.0",
+      "groupId": "homepage.features-intro.item.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "business.hero_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.features-intro.item.1",
+      "groupId": "homepage.features-intro.item.1",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "business.hero_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.features-intro.item.2",
+      "groupId": "homepage.features-intro.item.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.menu.dish.0",
+      "groupId": "homepage.menu.dish.0",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.menu.dish.1",
+      "groupId": "homepage.menu.dish.1",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.menu.dish.2",
+      "groupId": "homepage.menu.dish.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.menu.dish.3",
+      "groupId": "homepage.menu.dish.3",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.menu.dish.4",
+      "groupId": "homepage.menu.dish.4",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.menu.dish.5",
+      "groupId": "homepage.menu.dish.5",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 5,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.menu.dish.6",
+      "groupId": "homepage.menu.dish.6",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 6,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.home-news.quote.0",
+      "groupId": "homepage.home-news.quote.0",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.home-news.quote.1",
+      "groupId": "homepage.home-news.quote.1",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.home-news.quote.2",
+      "groupId": "homepage.home-news.quote.2",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "homepage.home-news.quote.3",
+      "groupId": "homepage.home-news.quote.3",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "about-us.statistics.stat.0",
+      "groupId": "about-us.statistics.stat.0",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.label": {
+          "policy": "empty"
+        },
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        }
+      }
+    },
+    {
+      "id": "about-us.statistics.stat.1",
+      "groupId": "about-us.statistics.stat.1",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.label": {
+          "policy": "empty"
+        },
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        }
+      }
+    },
+    {
+      "id": "about-us.statistics.stat.2",
+      "groupId": "about-us.statistics.stat.2",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.label": {
+          "policy": "empty"
+        },
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        }
+      }
+    },
+    {
+      "id": "about-us.statistics.stat.3",
+      "groupId": "about-us.statistics.stat.3",
+      "entityKind": "stat_item",
+      "allowedKinds": [
+        "stat_item"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "stat.value",
+        "stat.label"
+      ],
+      "neutral": {
+        "stat.label": {
+          "policy": "empty"
+        },
+        "stat.value": {
+          "policy": "neutral_key",
+          "key": "neutral.stat.dash"
+        }
+      }
+    },
+    {
+      "id": "about-us.teams.member.0",
+      "groupId": "about-us.teams.member.0",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "about-us.teams.member.1",
+      "groupId": "about-us.teams.member.1",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "about-us.teams.member.2",
+      "groupId": "about-us.teams.member.2",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "about-us.teams.member.3",
+      "groupId": "about-us.teams.member.3",
+      "entityKind": "person",
+      "allowedKinds": [
+        "person"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "person.name"
+      ],
+      "neutral": {
+        "person.name": {
+          "policy": "empty"
+        },
+        "person.role": {
+          "policy": "empty"
+        },
+        "person.bio": {
+          "policy": "empty"
+        },
+        "person.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu.menu.dish.0",
+      "groupId": "menu.menu.dish.0",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.variant_meta": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu.menu.dish.1",
+      "groupId": "menu.menu.dish.1",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu.menu.dish.2",
+      "groupId": "menu.menu.dish.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.variant_meta": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu.menu.dish.3",
+      "groupId": "menu.menu.dish.3",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu.menu.dish.4",
+      "groupId": "menu.menu.dish.4",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu.menu.dish.5",
+      "groupId": "menu.menu.dish.5",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 5,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu.menu.dish.6",
+      "groupId": "menu.menu.dish.6",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 6,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu.menu.dish.7",
+      "groupId": "menu.menu.dish.7",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 7,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu.menu.dish.8",
+      "groupId": "menu.menu.dish.8",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 8,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu.menu.dish.9",
+      "groupId": "menu.menu.dish.9",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 9,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "offers.happyhours.promo.0",
+      "groupId": "offers.happyhours.promo.0",
+      "entityKind": "event",
+      "allowedKinds": [
+        "event"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "event.title"
+      ],
+      "neutral": {
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        },
+        "package.badge": {
+          "policy": "empty"
+        },
+        "event.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "our-history.timeline.event.0",
+      "groupId": "our-history.timeline.event.0",
+      "entityKind": "event",
+      "allowedKinds": [
+        "event"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "event.title"
+      ],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        },
+        "event.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "our-history.timeline.event.1",
+      "groupId": "our-history.timeline.event.1",
+      "entityKind": "event",
+      "allowedKinds": [
+        "event"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "event.title"
+      ],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        },
+        "event.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "our-history.timeline.event.2",
+      "groupId": "our-history.timeline.event.2",
+      "entityKind": "event",
+      "allowedKinds": [
+        "event"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "event.title"
+      ],
+      "neutral": {
+        "event.date_or_year": {
+          "policy": "empty"
+        },
+        "event.title": {
+          "policy": "empty"
+        },
+        "event.description": {
+          "policy": "empty"
+        },
+        "event.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "contact-us.contact-map.0",
+      "groupId": "contact-us.contact-map.0",
+      "entityKind": "contact",
+      "allowedKinds": [
+        "contact"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "contact.map_label"
+      ],
+      "neutral": {
+        "contact.map_label": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.0",
+      "groupId": "simple-menu.menu.dish.0",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.1",
+      "groupId": "simple-menu.menu.dish.1",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.2",
+      "groupId": "simple-menu.menu.dish.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.3",
+      "groupId": "simple-menu.menu.dish.3",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.4",
+      "groupId": "simple-menu.menu.dish.4",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.5",
+      "groupId": "simple-menu.menu.dish.5",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 5,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.6",
+      "groupId": "simple-menu.menu.dish.6",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 6,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.7",
+      "groupId": "simple-menu.menu.dish.7",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 7,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.8",
+      "groupId": "simple-menu.menu.dish.8",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 8,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.9",
+      "groupId": "simple-menu.menu.dish.9",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 9,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "simple-menu.menu.dish.10",
+      "groupId": "simple-menu.menu.dish.10",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 10,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu-with-image.menu.dish.0",
+      "groupId": "menu-with-image.menu.dish.0",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.variant_meta": {
+          "policy": "empty"
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu-with-image.menu.dish.1",
+      "groupId": "menu-with-image.menu.dish.1",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu-with-image.menu.dish.2",
+      "groupId": "menu-with-image.menu.dish.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.variant_meta": {
+          "policy": "empty"
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu-with-image.menu.dish.3",
+      "groupId": "menu-with-image.menu.dish.3",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu-with-image.menu.dish.4",
+      "groupId": "menu-with-image.menu.dish.4",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu-with-image.menu.dish.5",
+      "groupId": "menu-with-image.menu.dish.5",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 5,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "menu-with-image.menu.dish.6",
+      "groupId": "menu-with-image.menu.dish.6",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 6,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "2-column-menu.menu.dish.0",
+      "groupId": "2-column-menu.menu.dish.0",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "2-column-menu.menu.dish.1",
+      "groupId": "2-column-menu.menu.dish.1",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "2-column-menu.menu.dish.2",
+      "groupId": "2-column-menu.menu.dish.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "2-column-menu.menu.dish.3",
+      "groupId": "2-column-menu.menu.dish.3",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "2-column-menu.menu.dish.4",
+      "groupId": "2-column-menu.menu.dish.4",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "2-column-menu.menu.dish.5",
+      "groupId": "2-column-menu.menu.dish.5",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 5,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "2-column-menu.menu.dish.6",
+      "groupId": "2-column-menu.menu.dish.6",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 6,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "2-column-menu.menu.dish.7",
+      "groupId": "2-column-menu.menu.dish.7",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 7,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "2-column-menu.menu.dish.8",
+      "groupId": "2-column-menu.menu.dish.8",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 8,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "2-column-menu.menu.dish.9",
+      "groupId": "2-column-menu.menu.dish.9",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 9,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.features-intro.item.0",
+      "groupId": "blue-color.features-intro.item.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "business.hero_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.features-intro.item.1",
+      "groupId": "blue-color.features-intro.item.1",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "business.hero_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.features-intro.item.2",
+      "groupId": "blue-color.features-intro.item.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.menu.dish.0",
+      "groupId": "blue-color.menu.dish.0",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.menu.dish.1",
+      "groupId": "blue-color.menu.dish.1",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.menu.dish.2",
+      "groupId": "blue-color.menu.dish.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.menu.dish.3",
+      "groupId": "blue-color.menu.dish.3",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.menu.dish.4",
+      "groupId": "blue-color.menu.dish.4",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.menu.dish.5",
+      "groupId": "blue-color.menu.dish.5",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 5,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.menu.dish.6",
+      "groupId": "blue-color.menu.dish.6",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 6,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.home-news.quote.0",
+      "groupId": "blue-color.home-news.quote.0",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.home-news.quote.1",
+      "groupId": "blue-color.home-news.quote.1",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.home-news.quote.2",
+      "groupId": "blue-color.home-news.quote.2",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "blue-color.home-news.quote.3",
+      "groupId": "blue-color.home-news.quote.3",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.features-intro.item.0",
+      "groupId": "green-color.features-intro.item.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "business.hero_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.features-intro.item.1",
+      "groupId": "green-color.features-intro.item.1",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "business.hero_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.features-intro.item.2",
+      "groupId": "green-color.features-intro.item.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.menu.dish.0",
+      "groupId": "green-color.menu.dish.0",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.menu.dish.1",
+      "groupId": "green-color.menu.dish.1",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.menu.dish.2",
+      "groupId": "green-color.menu.dish.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.menu.dish.3",
+      "groupId": "green-color.menu.dish.3",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.menu.dish.4",
+      "groupId": "green-color.menu.dish.4",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.menu.dish.5",
+      "groupId": "green-color.menu.dish.5",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 5,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.menu.dish.6",
+      "groupId": "green-color.menu.dish.6",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 6,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.home-news.quote.0",
+      "groupId": "green-color.home-news.quote.0",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.home-news.quote.1",
+      "groupId": "green-color.home-news.quote.1",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.home-news.quote.2",
+      "groupId": "green-color.home-news.quote.2",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "green-color.home-news.quote.3",
+      "groupId": "green-color.home-news.quote.3",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.features-intro.item.0",
+      "groupId": "pink-color.features-intro.item.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "business.hero_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.features-intro.item.1",
+      "groupId": "pink-color.features-intro.item.1",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "business.hero_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.features-intro.item.2",
+      "groupId": "pink-color.features-intro.item.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.menu.dish.0",
+      "groupId": "pink-color.menu.dish.0",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.menu.dish.1",
+      "groupId": "pink-color.menu.dish.1",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.menu.dish.2",
+      "groupId": "pink-color.menu.dish.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.menu.dish.3",
+      "groupId": "pink-color.menu.dish.3",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.menu.dish.4",
+      "groupId": "pink-color.menu.dish.4",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.menu.dish.5",
+      "groupId": "pink-color.menu.dish.5",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 5,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.menu.dish.6",
+      "groupId": "pink-color.menu.dish.6",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 6,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.home-news.quote.0",
+      "groupId": "pink-color.home-news.quote.0",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.home-news.quote.1",
+      "groupId": "pink-color.home-news.quote.1",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.home-news.quote.2",
+      "groupId": "pink-color.home-news.quote.2",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "pink-color.home-news.quote.3",
+      "groupId": "pink-color.home-news.quote.3",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.features-intro.item.0",
+      "groupId": "purple-color.features-intro.item.0",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "business.hero_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.features-intro.item.1",
+      "groupId": "purple-color.features-intro.item.1",
+      "entityKind": "business",
+      "allowedKinds": [
+        "business"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "business.tagline"
+      ],
+      "neutral": {
+        "business.tagline": {
+          "policy": "empty"
+        },
+        "business.summary": {
+          "policy": "empty"
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "business.hero_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.features-intro.item.2",
+      "groupId": "purple-color.features-intro.item.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.category": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        },
+        "offering.image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.menu.dish.0",
+      "groupId": "purple-color.menu.dish.0",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.menu.dish.1",
+      "groupId": "purple-color.menu.dish.1",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.menu.dish.2",
+      "groupId": "purple-color.menu.dish.2",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.menu.dish.3",
+      "groupId": "purple-color.menu.dish.3",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.menu.dish.4",
+      "groupId": "purple-color.menu.dish.4",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 4,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.menu.dish.5",
+      "groupId": "purple-color.menu.dish.5",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 5,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.menu.dish.6",
+      "groupId": "purple-color.menu.dish.6",
+      "entityKind": "menu_item",
+      "allowedKinds": [
+        "menu_item",
+        "service",
+        "package"
+      ],
+      "itemIndex": 6,
+      "requiredRoles": [
+        "offering.name"
+      ],
+      "neutral": {
+        "offering.name": {
+          "policy": "neutral_by_kind",
+          "keysByKind": {
+            "dish": "neutral.offering.menu_item",
+            "drink": "neutral.offering.menu_item",
+            "menu_item": "neutral.offering.menu_item",
+            "service": "neutral.offering.service",
+            "product": "neutral.offering.product"
+          }
+        },
+        "offering.price": {
+          "policy": "empty"
+        },
+        "offering.description": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.home-news.quote.0",
+      "groupId": "purple-color.home-news.quote.0",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 0,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.home-news.quote.1",
+      "groupId": "purple-color.home-news.quote.1",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 1,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.home-news.quote.2",
+      "groupId": "purple-color.home-news.quote.2",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 2,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    },
+    {
+      "id": "purple-color.home-news.quote.3",
+      "groupId": "purple-color.home-news.quote.3",
+      "entityKind": "quote",
+      "allowedKinds": [
+        "quote"
+      ],
+      "itemIndex": 3,
+      "requiredRoles": [
+        "quote.text"
+      ],
+      "neutral": {
+        "quote.text": {
+          "policy": "empty"
+        },
+        "quote.author_image": {
+          "policy": "empty"
+        }
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "slotKey": "site.name",
+      "groupId": "site.identity.0",
+      "role": "business.name",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "site.tagline",
+      "groupId": "site.identity.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.features-intro.title.1",
+      "groupId": "homepage.features-intro.item.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.features-intro.description.1",
+      "groupId": "homepage.features-intro.item.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.features-intro.title.2",
+      "groupId": "homepage.features-intro.item.1",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.features-intro.description.2",
+      "groupId": "homepage.features-intro.item.1",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.features-intro.short-desc.1",
+      "groupId": "homepage.features-intro.item.0",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.features-intro.short-desc.2",
+      "groupId": "homepage.features-intro.item.1",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.features-intro.title.3",
+      "groupId": "homepage.features-intro.item.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.features-intro.short-desc.3",
+      "groupId": "homepage.features-intro.item.2",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.features-intro.description.3",
+      "groupId": "homepage.features-intro.item.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-name.1",
+      "groupId": "homepage.menu.dish.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-price.1",
+      "groupId": "homepage.menu.dish.0",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "homepage.menu.dish-description.1",
+      "groupId": "homepage.menu.dish.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-name.2",
+      "groupId": "homepage.menu.dish.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-price.2",
+      "groupId": "homepage.menu.dish.1",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "homepage.menu.dish-description.2",
+      "groupId": "homepage.menu.dish.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-name.3",
+      "groupId": "homepage.menu.dish.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-price.3",
+      "groupId": "homepage.menu.dish.2",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "homepage.menu.dish-description.3",
+      "groupId": "homepage.menu.dish.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-name.4",
+      "groupId": "homepage.menu.dish.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-price.4",
+      "groupId": "homepage.menu.dish.3",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "homepage.menu.dish-description.4",
+      "groupId": "homepage.menu.dish.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-name.5",
+      "groupId": "homepage.menu.dish.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-price.5",
+      "groupId": "homepage.menu.dish.4",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "homepage.menu.dish-description.5",
+      "groupId": "homepage.menu.dish.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-name.6",
+      "groupId": "homepage.menu.dish.5",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-price.6",
+      "groupId": "homepage.menu.dish.5",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "homepage.menu.dish-description.6",
+      "groupId": "homepage.menu.dish.5",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-name.7",
+      "groupId": "homepage.menu.dish.6",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.menu.dish-price.7",
+      "groupId": "homepage.menu.dish.6",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "homepage.menu.dish-description.7",
+      "groupId": "homepage.menu.dish.6",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.home-news.testimonial-text.1",
+      "groupId": "homepage.home-news.quote.0",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.home-news.testimonial-text.2",
+      "groupId": "homepage.home-news.quote.1",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.home-news.testimonial-text.3",
+      "groupId": "homepage.home-news.quote.2",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.home-news.testimonial-text.4",
+      "groupId": "homepage.home-news.quote.3",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.statistics.stats-name.1",
+      "groupId": "about-us.statistics.stat.0",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.statistics.stats-count.1",
+      "groupId": "about-us.statistics.stat.0",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "about-us.statistics.stats-name.2",
+      "groupId": "about-us.statistics.stat.1",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.statistics.stats-count.2",
+      "groupId": "about-us.statistics.stat.1",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "about-us.statistics.stats-name.3",
+      "groupId": "about-us.statistics.stat.2",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.statistics.stats-count.3",
+      "groupId": "about-us.statistics.stat.2",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "about-us.statistics.stats-name.4",
+      "groupId": "about-us.statistics.stat.3",
+      "role": "stat.label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.statistics.stats-count.4",
+      "groupId": "about-us.statistics.stat.3",
+      "role": "stat.value",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "about-us.teams.member-name.1",
+      "groupId": "about-us.teams.member.0",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-position.1",
+      "groupId": "about-us.teams.member.0",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-desc.1",
+      "groupId": "about-us.teams.member.0",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-name.2",
+      "groupId": "about-us.teams.member.1",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-position.2",
+      "groupId": "about-us.teams.member.1",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-desc.2",
+      "groupId": "about-us.teams.member.1",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-name.3",
+      "groupId": "about-us.teams.member.2",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-position.3",
+      "groupId": "about-us.teams.member.2",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-desc.3",
+      "groupId": "about-us.teams.member.2",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-name.4",
+      "groupId": "about-us.teams.member.3",
+      "role": "person.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-position.4",
+      "groupId": "about-us.teams.member.3",
+      "role": "person.role",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "about-us.teams.member-desc.4",
+      "groupId": "about-us.teams.member.3",
+      "role": "person.bio",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-name.1",
+      "groupId": "menu.menu.dish.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-price.1",
+      "groupId": "menu.menu.dish.0",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu.menu.dish-description.1",
+      "groupId": "menu.menu.dish.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-name.2",
+      "groupId": "menu.menu.dish.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-price.2",
+      "groupId": "menu.menu.dish.1",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu.menu.dish-description.2",
+      "groupId": "menu.menu.dish.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-name.3",
+      "groupId": "menu.menu.dish.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-price.3",
+      "groupId": "menu.menu.dish.2",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu.menu.dish-description.3",
+      "groupId": "menu.menu.dish.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-name.4",
+      "groupId": "menu.menu.dish.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-price.4",
+      "groupId": "menu.menu.dish.3",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu.menu.dish-description.4",
+      "groupId": "menu.menu.dish.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-name.5",
+      "groupId": "menu.menu.dish.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-price.5",
+      "groupId": "menu.menu.dish.4",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu.menu.dish-description.5",
+      "groupId": "menu.menu.dish.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-name.6",
+      "groupId": "menu.menu.dish.5",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-price.6",
+      "groupId": "menu.menu.dish.5",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu.menu.dish-description.6",
+      "groupId": "menu.menu.dish.5",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-extra-class.1",
+      "groupId": "menu.menu.dish.0",
+      "role": "offering.variant_meta",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-extra-class.3",
+      "groupId": "menu.menu.dish.2",
+      "role": "offering.variant_meta",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-name.7",
+      "groupId": "menu.menu.dish.6",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-price.7",
+      "groupId": "menu.menu.dish.6",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu.menu.dish-description.7",
+      "groupId": "menu.menu.dish.6",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-name.8",
+      "groupId": "menu.menu.dish.7",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-price.8",
+      "groupId": "menu.menu.dish.7",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu.menu.dish-description.8",
+      "groupId": "menu.menu.dish.7",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-name.9",
+      "groupId": "menu.menu.dish.8",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-price.9",
+      "groupId": "menu.menu.dish.8",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu.menu.dish-description.9",
+      "groupId": "menu.menu.dish.8",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-name.10",
+      "groupId": "menu.menu.dish.9",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu.menu.dish-price.10",
+      "groupId": "menu.menu.dish.9",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu.menu.dish-description.10",
+      "groupId": "menu.menu.dish.9",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "offers.happyhours.hp-title",
+      "groupId": "offers.happyhours.promo.0",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "offers.happyhours.hp-desc",
+      "groupId": "offers.happyhours.promo.0",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "offers.happyhours.hp-badge",
+      "groupId": "offers.happyhours.promo.0",
+      "role": "package.badge",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "our-history.timeline.date.1",
+      "groupId": "our-history.timeline.event.0",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "our-history.timeline.title.1",
+      "groupId": "our-history.timeline.event.0",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "our-history.timeline.description.1",
+      "groupId": "our-history.timeline.event.0",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "our-history.timeline.date.2",
+      "groupId": "our-history.timeline.event.1",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "our-history.timeline.title.2",
+      "groupId": "our-history.timeline.event.1",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "our-history.timeline.description.2",
+      "groupId": "our-history.timeline.event.1",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "our-history.timeline.date.3",
+      "groupId": "our-history.timeline.event.2",
+      "role": "event.date_or_year",
+      "mode": "verbatim"
+    },
+    {
+      "slotKey": "our-history.timeline.title.3",
+      "groupId": "our-history.timeline.event.2",
+      "role": "event.title",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "our-history.timeline.description.3",
+      "groupId": "our-history.timeline.event.2",
+      "role": "event.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "contact-us.contact-map.map-title",
+      "groupId": "contact-us.contact-map.0",
+      "role": "contact.map_label",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.1",
+      "groupId": "simple-menu.menu.dish.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.1",
+      "groupId": "simple-menu.menu.dish.0",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.1",
+      "groupId": "simple-menu.menu.dish.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.2",
+      "groupId": "simple-menu.menu.dish.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.2",
+      "groupId": "simple-menu.menu.dish.1",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.2",
+      "groupId": "simple-menu.menu.dish.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.3",
+      "groupId": "simple-menu.menu.dish.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.3",
+      "groupId": "simple-menu.menu.dish.2",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.3",
+      "groupId": "simple-menu.menu.dish.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.4",
+      "groupId": "simple-menu.menu.dish.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.4",
+      "groupId": "simple-menu.menu.dish.3",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.4",
+      "groupId": "simple-menu.menu.dish.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.5",
+      "groupId": "simple-menu.menu.dish.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.5",
+      "groupId": "simple-menu.menu.dish.4",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.5",
+      "groupId": "simple-menu.menu.dish.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.6",
+      "groupId": "simple-menu.menu.dish.5",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.6",
+      "groupId": "simple-menu.menu.dish.5",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.6",
+      "groupId": "simple-menu.menu.dish.5",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.7",
+      "groupId": "simple-menu.menu.dish.6",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.7",
+      "groupId": "simple-menu.menu.dish.6",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.7",
+      "groupId": "simple-menu.menu.dish.6",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.8",
+      "groupId": "simple-menu.menu.dish.7",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.8",
+      "groupId": "simple-menu.menu.dish.7",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.8",
+      "groupId": "simple-menu.menu.dish.7",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.9",
+      "groupId": "simple-menu.menu.dish.8",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.9",
+      "groupId": "simple-menu.menu.dish.8",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.9",
+      "groupId": "simple-menu.menu.dish.8",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.10",
+      "groupId": "simple-menu.menu.dish.9",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.10",
+      "groupId": "simple-menu.menu.dish.9",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.10",
+      "groupId": "simple-menu.menu.dish.9",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-name.11",
+      "groupId": "simple-menu.menu.dish.10",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-price.11",
+      "groupId": "simple-menu.menu.dish.10",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "simple-menu.menu.dish-description.11",
+      "groupId": "simple-menu.menu.dish.10",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-name.1",
+      "groupId": "menu-with-image.menu.dish.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-extra-class.1",
+      "groupId": "menu-with-image.menu.dish.0",
+      "role": "offering.variant_meta",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-price.1",
+      "groupId": "menu-with-image.menu.dish.0",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-description.1",
+      "groupId": "menu-with-image.menu.dish.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-name.2",
+      "groupId": "menu-with-image.menu.dish.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-price.2",
+      "groupId": "menu-with-image.menu.dish.1",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-description.2",
+      "groupId": "menu-with-image.menu.dish.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-name.3",
+      "groupId": "menu-with-image.menu.dish.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-extra-class.3",
+      "groupId": "menu-with-image.menu.dish.2",
+      "role": "offering.variant_meta",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-price.3",
+      "groupId": "menu-with-image.menu.dish.2",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-description.3",
+      "groupId": "menu-with-image.menu.dish.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-name.4",
+      "groupId": "menu-with-image.menu.dish.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-price.4",
+      "groupId": "menu-with-image.menu.dish.3",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-description.4",
+      "groupId": "menu-with-image.menu.dish.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-name.5",
+      "groupId": "menu-with-image.menu.dish.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-price.5",
+      "groupId": "menu-with-image.menu.dish.4",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-description.5",
+      "groupId": "menu-with-image.menu.dish.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-name.6",
+      "groupId": "menu-with-image.menu.dish.5",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-price.6",
+      "groupId": "menu-with-image.menu.dish.5",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-description.6",
+      "groupId": "menu-with-image.menu.dish.5",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-name.7",
+      "groupId": "menu-with-image.menu.dish.6",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-price.7",
+      "groupId": "menu-with-image.menu.dish.6",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-description.7",
+      "groupId": "menu-with-image.menu.dish.6",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-name.1",
+      "groupId": "2-column-menu.menu.dish.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-price.1",
+      "groupId": "2-column-menu.menu.dish.0",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-description.1",
+      "groupId": "2-column-menu.menu.dish.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-name.2",
+      "groupId": "2-column-menu.menu.dish.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-price.2",
+      "groupId": "2-column-menu.menu.dish.1",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-description.2",
+      "groupId": "2-column-menu.menu.dish.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-name.3",
+      "groupId": "2-column-menu.menu.dish.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-price.3",
+      "groupId": "2-column-menu.menu.dish.2",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-description.3",
+      "groupId": "2-column-menu.menu.dish.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-name.4",
+      "groupId": "2-column-menu.menu.dish.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-price.4",
+      "groupId": "2-column-menu.menu.dish.3",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-description.4",
+      "groupId": "2-column-menu.menu.dish.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-name.5",
+      "groupId": "2-column-menu.menu.dish.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-price.5",
+      "groupId": "2-column-menu.menu.dish.4",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-description.5",
+      "groupId": "2-column-menu.menu.dish.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-name.6",
+      "groupId": "2-column-menu.menu.dish.5",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-price.6",
+      "groupId": "2-column-menu.menu.dish.5",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-description.6",
+      "groupId": "2-column-menu.menu.dish.5",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-name.7",
+      "groupId": "2-column-menu.menu.dish.6",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-price.7",
+      "groupId": "2-column-menu.menu.dish.6",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-description.7",
+      "groupId": "2-column-menu.menu.dish.6",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-name.8",
+      "groupId": "2-column-menu.menu.dish.7",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-price.8",
+      "groupId": "2-column-menu.menu.dish.7",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-description.8",
+      "groupId": "2-column-menu.menu.dish.7",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-name.9",
+      "groupId": "2-column-menu.menu.dish.8",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-price.9",
+      "groupId": "2-column-menu.menu.dish.8",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-description.9",
+      "groupId": "2-column-menu.menu.dish.8",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-name.10",
+      "groupId": "2-column-menu.menu.dish.9",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-price.10",
+      "groupId": "2-column-menu.menu.dish.9",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-description.10",
+      "groupId": "2-column-menu.menu.dish.9",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.features-intro.title.1",
+      "groupId": "blue-color.features-intro.item.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.features-intro.description.1",
+      "groupId": "blue-color.features-intro.item.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.features-intro.title.2",
+      "groupId": "blue-color.features-intro.item.1",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.features-intro.description.2",
+      "groupId": "blue-color.features-intro.item.1",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.features-intro.short-desc.1",
+      "groupId": "blue-color.features-intro.item.0",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.features-intro.short-desc.2",
+      "groupId": "blue-color.features-intro.item.1",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.features-intro.title.3",
+      "groupId": "blue-color.features-intro.item.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.features-intro.short-desc.3",
+      "groupId": "blue-color.features-intro.item.2",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.features-intro.description.3",
+      "groupId": "blue-color.features-intro.item.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-name.1",
+      "groupId": "blue-color.menu.dish.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-price.1",
+      "groupId": "blue-color.menu.dish.0",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-description.1",
+      "groupId": "blue-color.menu.dish.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-name.2",
+      "groupId": "blue-color.menu.dish.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-price.2",
+      "groupId": "blue-color.menu.dish.1",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-description.2",
+      "groupId": "blue-color.menu.dish.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-name.3",
+      "groupId": "blue-color.menu.dish.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-price.3",
+      "groupId": "blue-color.menu.dish.2",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-description.3",
+      "groupId": "blue-color.menu.dish.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-name.4",
+      "groupId": "blue-color.menu.dish.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-price.4",
+      "groupId": "blue-color.menu.dish.3",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-description.4",
+      "groupId": "blue-color.menu.dish.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-name.5",
+      "groupId": "blue-color.menu.dish.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-price.5",
+      "groupId": "blue-color.menu.dish.4",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-description.5",
+      "groupId": "blue-color.menu.dish.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-name.6",
+      "groupId": "blue-color.menu.dish.5",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-price.6",
+      "groupId": "blue-color.menu.dish.5",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-description.6",
+      "groupId": "blue-color.menu.dish.5",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-name.7",
+      "groupId": "blue-color.menu.dish.6",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-price.7",
+      "groupId": "blue-color.menu.dish.6",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "blue-color.menu.dish-description.7",
+      "groupId": "blue-color.menu.dish.6",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.home-news.testimonial-text.1",
+      "groupId": "blue-color.home-news.quote.0",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.home-news.testimonial-text.2",
+      "groupId": "blue-color.home-news.quote.1",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.home-news.testimonial-text.3",
+      "groupId": "blue-color.home-news.quote.2",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "blue-color.home-news.testimonial-text.4",
+      "groupId": "blue-color.home-news.quote.3",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.features-intro.title.1",
+      "groupId": "green-color.features-intro.item.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.features-intro.description.1",
+      "groupId": "green-color.features-intro.item.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.features-intro.title.2",
+      "groupId": "green-color.features-intro.item.1",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.features-intro.description.2",
+      "groupId": "green-color.features-intro.item.1",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.features-intro.short-desc.1",
+      "groupId": "green-color.features-intro.item.0",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.features-intro.short-desc.2",
+      "groupId": "green-color.features-intro.item.1",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.features-intro.title.3",
+      "groupId": "green-color.features-intro.item.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.features-intro.short-desc.3",
+      "groupId": "green-color.features-intro.item.2",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.features-intro.description.3",
+      "groupId": "green-color.features-intro.item.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-name.1",
+      "groupId": "green-color.menu.dish.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-price.1",
+      "groupId": "green-color.menu.dish.0",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "green-color.menu.dish-description.1",
+      "groupId": "green-color.menu.dish.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-name.2",
+      "groupId": "green-color.menu.dish.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-price.2",
+      "groupId": "green-color.menu.dish.1",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "green-color.menu.dish-description.2",
+      "groupId": "green-color.menu.dish.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-name.3",
+      "groupId": "green-color.menu.dish.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-price.3",
+      "groupId": "green-color.menu.dish.2",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "green-color.menu.dish-description.3",
+      "groupId": "green-color.menu.dish.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-name.4",
+      "groupId": "green-color.menu.dish.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-price.4",
+      "groupId": "green-color.menu.dish.3",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "green-color.menu.dish-description.4",
+      "groupId": "green-color.menu.dish.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-name.5",
+      "groupId": "green-color.menu.dish.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-price.5",
+      "groupId": "green-color.menu.dish.4",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "green-color.menu.dish-description.5",
+      "groupId": "green-color.menu.dish.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-name.6",
+      "groupId": "green-color.menu.dish.5",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-price.6",
+      "groupId": "green-color.menu.dish.5",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "green-color.menu.dish-description.6",
+      "groupId": "green-color.menu.dish.5",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-name.7",
+      "groupId": "green-color.menu.dish.6",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.menu.dish-price.7",
+      "groupId": "green-color.menu.dish.6",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "green-color.menu.dish-description.7",
+      "groupId": "green-color.menu.dish.6",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.home-news.testimonial-text.1",
+      "groupId": "green-color.home-news.quote.0",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.home-news.testimonial-text.2",
+      "groupId": "green-color.home-news.quote.1",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.home-news.testimonial-text.3",
+      "groupId": "green-color.home-news.quote.2",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "green-color.home-news.testimonial-text.4",
+      "groupId": "green-color.home-news.quote.3",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.features-intro.title.1",
+      "groupId": "pink-color.features-intro.item.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.features-intro.description.1",
+      "groupId": "pink-color.features-intro.item.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.features-intro.title.2",
+      "groupId": "pink-color.features-intro.item.1",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.features-intro.description.2",
+      "groupId": "pink-color.features-intro.item.1",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.features-intro.short-desc.1",
+      "groupId": "pink-color.features-intro.item.0",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.features-intro.short-desc.2",
+      "groupId": "pink-color.features-intro.item.1",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.features-intro.title.3",
+      "groupId": "pink-color.features-intro.item.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.features-intro.short-desc.3",
+      "groupId": "pink-color.features-intro.item.2",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.features-intro.description.3",
+      "groupId": "pink-color.features-intro.item.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-name.1",
+      "groupId": "pink-color.menu.dish.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-price.1",
+      "groupId": "pink-color.menu.dish.0",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-description.1",
+      "groupId": "pink-color.menu.dish.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-name.2",
+      "groupId": "pink-color.menu.dish.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-price.2",
+      "groupId": "pink-color.menu.dish.1",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-description.2",
+      "groupId": "pink-color.menu.dish.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-name.3",
+      "groupId": "pink-color.menu.dish.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-price.3",
+      "groupId": "pink-color.menu.dish.2",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-description.3",
+      "groupId": "pink-color.menu.dish.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-name.4",
+      "groupId": "pink-color.menu.dish.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-price.4",
+      "groupId": "pink-color.menu.dish.3",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-description.4",
+      "groupId": "pink-color.menu.dish.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-name.5",
+      "groupId": "pink-color.menu.dish.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-price.5",
+      "groupId": "pink-color.menu.dish.4",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-description.5",
+      "groupId": "pink-color.menu.dish.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-name.6",
+      "groupId": "pink-color.menu.dish.5",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-price.6",
+      "groupId": "pink-color.menu.dish.5",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-description.6",
+      "groupId": "pink-color.menu.dish.5",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-name.7",
+      "groupId": "pink-color.menu.dish.6",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-price.7",
+      "groupId": "pink-color.menu.dish.6",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "pink-color.menu.dish-description.7",
+      "groupId": "pink-color.menu.dish.6",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.home-news.testimonial-text.1",
+      "groupId": "pink-color.home-news.quote.0",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.home-news.testimonial-text.2",
+      "groupId": "pink-color.home-news.quote.1",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.home-news.testimonial-text.3",
+      "groupId": "pink-color.home-news.quote.2",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "pink-color.home-news.testimonial-text.4",
+      "groupId": "pink-color.home-news.quote.3",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.features-intro.title.1",
+      "groupId": "purple-color.features-intro.item.0",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.features-intro.description.1",
+      "groupId": "purple-color.features-intro.item.0",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.features-intro.title.2",
+      "groupId": "purple-color.features-intro.item.1",
+      "role": "business.tagline",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.features-intro.description.2",
+      "groupId": "purple-color.features-intro.item.1",
+      "role": "business.summary",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.features-intro.short-desc.1",
+      "groupId": "purple-color.features-intro.item.0",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.features-intro.short-desc.2",
+      "groupId": "purple-color.features-intro.item.1",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.features-intro.title.3",
+      "groupId": "purple-color.features-intro.item.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.features-intro.short-desc.3",
+      "groupId": "purple-color.features-intro.item.2",
+      "role": "offering.category",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.features-intro.description.3",
+      "groupId": "purple-color.features-intro.item.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-name.1",
+      "groupId": "purple-color.menu.dish.0",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-price.1",
+      "groupId": "purple-color.menu.dish.0",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-description.1",
+      "groupId": "purple-color.menu.dish.0",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-name.2",
+      "groupId": "purple-color.menu.dish.1",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-price.2",
+      "groupId": "purple-color.menu.dish.1",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-description.2",
+      "groupId": "purple-color.menu.dish.1",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-name.3",
+      "groupId": "purple-color.menu.dish.2",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-price.3",
+      "groupId": "purple-color.menu.dish.2",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-description.3",
+      "groupId": "purple-color.menu.dish.2",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-name.4",
+      "groupId": "purple-color.menu.dish.3",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-price.4",
+      "groupId": "purple-color.menu.dish.3",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-description.4",
+      "groupId": "purple-color.menu.dish.3",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-name.5",
+      "groupId": "purple-color.menu.dish.4",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-price.5",
+      "groupId": "purple-color.menu.dish.4",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-description.5",
+      "groupId": "purple-color.menu.dish.4",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-name.6",
+      "groupId": "purple-color.menu.dish.5",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-price.6",
+      "groupId": "purple-color.menu.dish.5",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-description.6",
+      "groupId": "purple-color.menu.dish.5",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-name.7",
+      "groupId": "purple-color.menu.dish.6",
+      "role": "offering.name",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-price.7",
+      "groupId": "purple-color.menu.dish.6",
+      "role": "offering.price",
+      "mode": "format"
+    },
+    {
+      "slotKey": "purple-color.menu.dish-description.7",
+      "groupId": "purple-color.menu.dish.6",
+      "role": "offering.description",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.home-news.testimonial-text.1",
+      "groupId": "purple-color.home-news.quote.0",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.home-news.testimonial-text.2",
+      "groupId": "purple-color.home-news.quote.1",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.home-news.testimonial-text.3",
+      "groupId": "purple-color.home-news.quote.2",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "purple-color.home-news.testimonial-text.4",
+      "groupId": "purple-color.home-news.quote.3",
+      "role": "quote.text",
+      "mode": "copy"
+    },
+    {
+      "slotKey": "homepage.features-intro.img-icon.1",
+      "groupId": "homepage.features-intro.item.0",
+      "role": "business.hero_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "homepage.features-intro.img-icon.2",
+      "groupId": "homepage.features-intro.item.1",
+      "role": "business.hero_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "homepage.features-intro.img-icon.3",
+      "groupId": "homepage.features-intro.item.2",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "homepage.home-news.author-img.1",
+      "groupId": "homepage.home-news.quote.0",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "homepage.home-news.author-img.2",
+      "groupId": "homepage.home-news.quote.1",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "homepage.home-news.author-img.3",
+      "groupId": "homepage.home-news.quote.2",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "homepage.home-news.author-img.4",
+      "groupId": "homepage.home-news.quote.3",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "about-us.teams.member-image.1",
+      "groupId": "about-us.teams.member.0",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "about-us.teams.member-image.2",
+      "groupId": "about-us.teams.member.1",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "about-us.teams.member-image.3",
+      "groupId": "about-us.teams.member.2",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "about-us.teams.member-image.4",
+      "groupId": "about-us.teams.member.3",
+      "role": "person.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu.menu.dish-image.1",
+      "groupId": "menu.menu.dish.0",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu.menu.dish-image.2",
+      "groupId": "menu.menu.dish.1",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu.menu.dish-image.3",
+      "groupId": "menu.menu.dish.2",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu.menu.dish-image.4",
+      "groupId": "menu.menu.dish.3",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu.menu.dish-image.5",
+      "groupId": "menu.menu.dish.4",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu.menu.dish-image.6",
+      "groupId": "menu.menu.dish.5",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu.menu.dish-image.7",
+      "groupId": "menu.menu.dish.6",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu.menu.dish-image.8",
+      "groupId": "menu.menu.dish.7",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu.menu.dish-image.9",
+      "groupId": "menu.menu.dish.8",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu.menu.dish-image.10",
+      "groupId": "menu.menu.dish.9",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "offers.happyhours.hp-bg",
+      "groupId": "offers.happyhours.promo.0",
+      "role": "event.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "our-history.timeline.image.1",
+      "groupId": "our-history.timeline.event.0",
+      "role": "event.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "our-history.timeline.image.2",
+      "groupId": "our-history.timeline.event.1",
+      "role": "event.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "our-history.timeline.image.3",
+      "groupId": "our-history.timeline.event.2",
+      "role": "event.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-image.1",
+      "groupId": "menu-with-image.menu.dish.0",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-image.2",
+      "groupId": "menu-with-image.menu.dish.1",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-image.3",
+      "groupId": "menu-with-image.menu.dish.2",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-image.4",
+      "groupId": "menu-with-image.menu.dish.3",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-image.5",
+      "groupId": "menu-with-image.menu.dish.4",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-image.6",
+      "groupId": "menu-with-image.menu.dish.5",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "menu-with-image.menu.dish-image.7",
+      "groupId": "menu-with-image.menu.dish.6",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-image.1",
+      "groupId": "2-column-menu.menu.dish.0",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-image.2",
+      "groupId": "2-column-menu.menu.dish.1",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-image.3",
+      "groupId": "2-column-menu.menu.dish.2",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-image.4",
+      "groupId": "2-column-menu.menu.dish.3",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-image.5",
+      "groupId": "2-column-menu.menu.dish.4",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-image.6",
+      "groupId": "2-column-menu.menu.dish.5",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-image.7",
+      "groupId": "2-column-menu.menu.dish.6",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-image.8",
+      "groupId": "2-column-menu.menu.dish.7",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-image.9",
+      "groupId": "2-column-menu.menu.dish.8",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "2-column-menu.menu.dish-image.10",
+      "groupId": "2-column-menu.menu.dish.9",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "blue-color.features-intro.img-icon.1",
+      "groupId": "blue-color.features-intro.item.0",
+      "role": "business.hero_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "blue-color.features-intro.img-icon.2",
+      "groupId": "blue-color.features-intro.item.1",
+      "role": "business.hero_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "blue-color.features-intro.img-icon.3",
+      "groupId": "blue-color.features-intro.item.2",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "blue-color.home-news.author-img.1",
+      "groupId": "blue-color.home-news.quote.0",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "blue-color.home-news.author-img.2",
+      "groupId": "blue-color.home-news.quote.1",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "blue-color.home-news.author-img.3",
+      "groupId": "blue-color.home-news.quote.2",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "blue-color.home-news.author-img.4",
+      "groupId": "blue-color.home-news.quote.3",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "green-color.features-intro.img-icon.1",
+      "groupId": "green-color.features-intro.item.0",
+      "role": "business.hero_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "green-color.features-intro.img-icon.2",
+      "groupId": "green-color.features-intro.item.1",
+      "role": "business.hero_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "green-color.features-intro.img-icon.3",
+      "groupId": "green-color.features-intro.item.2",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "green-color.home-news.author-img.1",
+      "groupId": "green-color.home-news.quote.0",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "green-color.home-news.author-img.2",
+      "groupId": "green-color.home-news.quote.1",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "green-color.home-news.author-img.3",
+      "groupId": "green-color.home-news.quote.2",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "green-color.home-news.author-img.4",
+      "groupId": "green-color.home-news.quote.3",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "pink-color.features-intro.img-icon.1",
+      "groupId": "pink-color.features-intro.item.0",
+      "role": "business.hero_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "pink-color.features-intro.img-icon.2",
+      "groupId": "pink-color.features-intro.item.1",
+      "role": "business.hero_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "pink-color.features-intro.img-icon.3",
+      "groupId": "pink-color.features-intro.item.2",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "pink-color.home-news.author-img.1",
+      "groupId": "pink-color.home-news.quote.0",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "pink-color.home-news.author-img.2",
+      "groupId": "pink-color.home-news.quote.1",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "pink-color.home-news.author-img.3",
+      "groupId": "pink-color.home-news.quote.2",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "pink-color.home-news.author-img.4",
+      "groupId": "pink-color.home-news.quote.3",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "purple-color.features-intro.img-icon.1",
+      "groupId": "purple-color.features-intro.item.0",
+      "role": "business.hero_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "purple-color.features-intro.img-icon.2",
+      "groupId": "purple-color.features-intro.item.1",
+      "role": "business.hero_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "purple-color.features-intro.img-icon.3",
+      "groupId": "purple-color.features-intro.item.2",
+      "role": "offering.image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "purple-color.home-news.author-img.1",
+      "groupId": "purple-color.home-news.quote.0",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "purple-color.home-news.author-img.2",
+      "groupId": "purple-color.home-news.quote.1",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "purple-color.home-news.author-img.3",
+      "groupId": "purple-color.home-news.quote.2",
+      "role": "quote.author_image",
+      "mode": "asset"
+    },
+    {
+      "slotKey": "purple-color.home-news.author-img.4",
+      "groupId": "purple-color.home-news.quote.3",
+      "role": "quote.author_image",
+      "mode": "asset"
+    }
+  ],
+  "unplaced": []
+}

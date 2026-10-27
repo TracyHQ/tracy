@@ -1,0 +1,158 @@
+<!-- wp:group {"tagName":"div","className":"tracy-topbar","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-topbar">
+<!-- wp:group {"className":"tracy-topbar__inner","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
+<div class="wp-block-group tracy-topbar__inner">
+<!-- wp:group {"className":"tracy-topbar__contacts","layout":{"type":"flex","flexWrap":"wrap"}} -->
+<div class="wp-block-group tracy-topbar__contacts">
+<!-- wp:paragraph {"className":"tracy-topbar__item"} -->
+<p class="tracy-topbar__item" data-tracy-identity="contact.phone">Hotline: <a href="tel:{contact.tel}">{contact.phone}</a></p>
+<!-- /wp:paragraph -->
+<!-- wp:paragraph {"className":"tracy-topbar__item"} -->
+<p class="tracy-topbar__item" data-tracy-identity="contact.email"><a href="mailto:{contact.email}">{contact.email}</a></p>
+<!-- /wp:paragraph -->
+<!-- wp:paragraph {"className":"tracy-topbar__item"} -->
+<p class="tracy-topbar__item" data-tracy-identity="contact.address">{contact.address}</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"tracy-topbar__tools","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+<div class="wp-block-group tracy-topbar__tools">
+<!-- wp:navigation {"className":"tracy-topbar__nav","overlayMenu":"never","layout":{"type":"flex","flexWrap":"nowrap"},"metadata":{"name":"nav.topbar"}} /-->
+<!-- wp:group {"className":"tracy-topbar__lang","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+<div class="wp-block-group tracy-topbar__lang">
+<!-- wp:polylang/language-switcher {"dropdown":false,"show_names":true,"show_flags":true,"hide_if_no_translation":false,"className":"tracy-topbar__switcher"} /-->
+</div>
+<!-- /wp:group -->
+<!-- wp:html -->
+<button type="button" class="tracy-theme-toggle" data-tracy-theme-toggle data-theme-state="auto" aria-pressed="false" aria-label="Dark"><span class="tracy-theme-toggle__icon" aria-hidden="true"></span><span class="tracy-theme-toggle__text" data-tracy-theme-toggle-text data-text-dark="Dark" data-text-light="Light">Dark</span></button>
+<!-- /wp:html -->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"tagName":"div","className":"tracy-header__inner","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap"}} -->
+<div class="wp-block-group tracy-header__inner">
+<!-- wp:group {"className":"tracy-header__brand","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+<div class="wp-block-group tracy-header__brand">
+<!-- wp:html -->
+<img class="tracy-logo" src="" alt="{site.name}" data-tracy-identity="site.logo">
+<!-- /wp:html -->
+<!-- wp:paragraph {"className":"tracy-brand__mark"} -->
+<p class="tracy-brand__mark" aria-hidden="true">{site.monogram}</p>
+<!-- /wp:paragraph -->
+<!-- wp:html -->
+<img class="tracy-logo-dark" src="" alt="{site.name}" data-tracy-identity="site.logoDark">
+<!-- /wp:html -->
+<!-- wp:group {"className":"tracy-brand__text","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-brand__text">
+<!-- wp:site-title {"level":0,"className":"tracy-brand"} /-->
+<!-- wp:site-tagline {"className":"tracy-brand__tagline"} /-->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"tracy-header__menu","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
+<div class="wp-block-group tracy-header__menu">
+<!-- wp:navigation {"className":"tracy-nav","overlayMenu":"mobile","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"},"metadata":{"name":"nav.tracy"}} /-->
+<!-- wp:wp-tracy-business/mega-menu {"label":"Resources"} -->
+<!-- wp:columns {"className":"tracy-mega__columns"} -->
+<div class="wp-block-columns tracy-mega__columns">
+<!-- wp:column -->
+<div class="wp-block-column">
+<!-- wp:heading {"level":3,"className":"tracy-mega__title"} -->
+<h3 class="wp-block-heading tracy-mega__title">Marketing kit</h3>
+<!-- /wp:heading -->
+<!-- wp:list {"className":"tracy-mega__links tracy-mega__links--kit"} -->
+<ul class="wp-block-list tracy-mega__links tracy-mega__links--kit">
+<!-- wp:list-item -->
+<li><a href="/newsletter/">Newsletter</a><span class="tracy-mega__note">Digest email template</span></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><a href="/email/">Email</a><span class="tracy-mega__note">Transactional emails</span></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><a href="/form/">Form</a><span class="tracy-mega__note">Form and state library</span></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><a href="/slide/">Slide</a><span class="tracy-mega__note">Slide and presentation library</span></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><a href="/style-guide/">Style guide</a><span class="tracy-mega__note">Module positions, type scale</span></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<!-- /wp:list-item -->
+</ul>
+<!-- /wp:list -->
+</div>
+<!-- /wp:column -->
+<!-- wp:column -->
+<div class="wp-block-column">
+<!-- wp:heading {"level":3,"className":"tracy-mega__title"} -->
+<h3 class="wp-block-heading tracy-mega__title">Recent projects</h3>
+<!-- /wp:heading -->
+<!-- wp:list {"className":"tracy-mega__links tracy-mega__links--projects"} -->
+<ul class="wp-block-list tracy-mega__links tracy-mega__links--projects">
+<!-- wp:list-item -->
+<li><a href="/project-detail/">Elektra plant, Lipetsk SEZ</a><span class="tracy-mega__note">62,000 m² · 2025</span></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><a href="/project-detail/">Vorsino IP, phase 3</a><span class="tracy-mega__note">48 ha · 2024</span></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><a href="/project-detail/">110 kV Obninsk-2 substation</a><span class="tracy-mega__note">Utilities · 2024</span></li>
+<!-- /wp:list-item -->
+<!-- wp:list-item -->
+<li><a href="/project-detail/">Zavolzhye logistics building</a><span class="tracy-mega__note">24,000 m² · 2023</span></li>
+<!-- /wp:list-item -->
+</ul>
+<!-- /wp:list -->
+</div>
+<!-- /wp:column -->
+<!-- wp:column -->
+<div class="wp-block-column">
+<!-- wp:heading {"level":3,"className":"tracy-mega__title"} -->
+<h3 class="wp-block-heading tracy-mega__title">News &amp; updates</h3>
+<!-- /wp:heading -->
+<!-- wp:query {"queryId":11,"query":{"perPage":5,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":false},"className":"tracy-mega__latest"} -->
+<div class="wp-block-query tracy-mega__latest">
+<!-- wp:post-template {"layout":{"type":"default"}} -->
+<!-- wp:group {"className":"tracy-mega__post","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between","verticalAlignment":"top"}} -->
+<div class="wp-block-group tracy-mega__post">
+<!-- wp:post-title {"level":4,"isLink":true} /-->
+<!-- wp:post-date {"format":"j M Y"} /-->
+</div>
+<!-- /wp:group -->
+<!-- /wp:post-template -->
+<!-- wp:query-no-results -->
+<!-- wp:paragraph {"className":"tracy-mega__feature"} -->
+<p class="tracy-mega__feature">No news published yet.</p>
+<!-- /wp:paragraph -->
+<!-- /wp:query-no-results -->
+</div>
+<!-- /wp:query -->
+<!-- wp:paragraph {"className":"tracy-mega__all"} -->
+<p class="tracy-mega__all"><a href="/news/">All resources →</a></p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:column -->
+</div>
+<!-- /wp:columns -->
+<!-- /wp:wp-tracy-business/mega-menu -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"tracy-header__actions","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+<div class="wp-block-group tracy-header__actions">
+<!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search the site","buttonText":"Search","buttonPosition":"button-only","buttonUseIcon":true,"className":"tracy-header__search"} /-->
+<!-- wp:buttons {"className":"tracy-header__cta"} -->
+<div class="wp-block-buttons tracy-header__cta">
+<!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/contact/">Request a quote</a></div>
+<!-- /wp:button -->
+</div>
+<!-- /wp:buttons -->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:group -->

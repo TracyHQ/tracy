@@ -1,0 +1,69 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, icon strokes, high-contrast borders — the strongest voice in the system, used sparingly on headlines and glyphs"
+    },
+    "charcoal": {
+      "$value": "#3d3d3d",
+      "$type": "color",
+      "$description": "Charcoal — Default text, dividers, input and card borders — the workhorse gray carrying the entire UI structure"
+    },
+    "concrete": {
+      "$value": "#9e9e9e",
+      "$type": "color",
+      "$description": "Concrete — Subdued body text and secondary borders — the whisper layer beneath Charcoal"
+    },
+    "ash": {
+      "$value": "#b5b5b5",
+      "$type": "color",
+      "$description": "Ash — Disabled or resting-state button fills — surfaces that should recede"
+    },
+    "smoke": {
+      "$value": "#8d8d8d",
+      "$type": "color",
+      "$description": "Smoke — Active tab/segmented control background — the only gray used as a filled surface to indicate selected state"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page and panel backgrounds, card surfaces, icon fills, image borders — the base canvas and the glass-panel fill"
+    },
+    "bone": {
+      "$value": "#f0eeed",
+      "$type": "color",
+      "$description": "Bone — Warm off-white used for badge fills and subtle surface lifts — gives a paper-like warmth against the cool grays"
+    },
+    "liberty-navy": {
+      "$value": "#142161",
+      "$type": "color",
+      "$description": "Liberty Navy — Outlined-action border and link underline — the only chromatic stroke in the system, indicating navigation or interactive text"
+    },
+    "signal-red": {
+      "$value": "#ba2223",
+      "$type": "color",
+      "$description": "Signal Red — Red action color for filled buttons, selected navigation states, and focused conversion moments"
+    }
+  },
+  "font": {
+    "ntneuss": {
+      "$value": "NTNeuss",
+      "$type": "fontFamily",
+      "$description": "The workhorse grotesque for all UI: body copy, labels, tab text, button text, badges, product metadata, timestamps, counts. Tracks wide (0.036–0.122em) — especially at 8–11px — giving micro-text a monospace-like label feel. Weight 500 is reserved for emphasized labels and tab active states; weight 400 carries everything else."
+    },
+    "recklessneue-book": {
+      "$value": "RecklessNeue-Book",
+      "$type": "fontFamily",
+      "$description": "The editorial serif — used only for narrative titles (e.g. the 'NOW PLAYING' presentation headline). Its normal letter-spacing and serif detail cut through the utilitarian grotesque to signal editorial content. This is the ONLY moment the system speaks in anything other than UI voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.sneakinpeace.com",
+      "siteName": "Sneak in Peace",
+      "extractedAt": "2026-06-03T18:50:49.270Z",
+      "variant": "compact"
+    }
+  }
+}

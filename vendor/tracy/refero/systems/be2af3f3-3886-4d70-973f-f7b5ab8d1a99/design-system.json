@@ -1,0 +1,335 @@
+{
+  "dos": [
+    "Use Grammarly Teal (#027e6f) exclusively for primary buttons, links, active nav states, and full-bleed brand bands — never as a decorative fill on cards or illustrations",
+    "Set border-radius to 8px on all interactive surfaces (buttons, nav items, tags, inputs, cards) — this is the single shape value that defines the system's personality",
+    "Use matter weight 670 for all headings 20px and above; Glyph weight 700 for subheadings 22px and below — never mix these roles",
+    "Apply -0.0100em letter-spacing to all matter headings and scale it proportionally (e.g. -0.52px at 52px, -0.36px at 36px) to maintain the compressed editorial feel",
+    "Separate layers with 1px borders in #ebebeb or #d9d9d9 instead of box-shadows — Cloud (#f5f5f5) backgrounds work for subtle section alternation",
+    "Keep body copy at 16px with 1.5 line-height in Glyph 400; never go below 14px for any user-facing text",
+    "Use white outlined buttons (1px #ffffff border) as the secondary action on teal enterprise bands — never use a second teal shade"
+  ],
+  "donts": [
+    "Don't use drop shadows or elevation effects — the system is deliberately flat; use color contrast and hairline borders instead",
+    "Don't introduce additional accent colors beyond Grammarly Teal — the 90%+ achromatic palette is the system's defining trait",
+    "Don't use matter at body sizes (16px or below) — it's a display face with tight metrics that become illegible at small sizes; switch to Glyph",
+    "Don't use fully rounded (9999px) or large radii (20px+) on standard components — 8px is the only correct radius for buttons, cards, and tags",
+    "Don't place teal text on teal backgrounds, or Midnight Navy text on Ink Black — maintain the high-contrast pairings the contrast data confirms",
+    "Don't use centered layouts for anything other than hero blocks and modals — feature sections and card grids should be left-aligned or grid-based",
+    "Don't add gradients, illustrations, or decorative imagery to standard component surfaces — product screenshots and the teal band carry the only visual color"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#027e6f",
+      "name": "Grammarly Teal",
+      "role": "Primary buttons, links, active nav, dark enterprise hero bands, decorative icon strokes — a deep botanical teal that reads as both professional and approachable against white and near-black surfaces",
+      "group": "brand"
+    },
+    {
+      "hex": "#1f243c",
+      "name": "Midnight Navy",
+      "role": "Headings, navigation text, body copy, card text, icon strokes, footer copy — the dominant dark color carrying nearly all prose",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0e101a",
+      "name": "Ink Black",
+      "role": "Display headings, high-emphasis body text, link text — slightly cooler/deeper than Midnight Navy, used for the heaviest type",
+      "group": "neutral"
+    },
+    {
+      "hex": "#545454",
+      "name": "Graphite",
+      "role": "Muted body text, secondary button labels, helper copy, icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#707070",
+      "name": "Steel",
+      "role": "Tertiary text, disabled labels, low-emphasis metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b7b7b7",
+      "name": "Silver",
+      "role": "Disabled borders, placeholder icons, very low-emphasis strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d9d9",
+      "name": "Ash",
+      "role": "Hairline borders, subtle dividers, input rest states",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ebebeb",
+      "name": "Fog",
+      "role": "Lighter hairline borders, checkbox outlines, secondary dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Cloud",
+      "role": "Subtle surface backgrounds, hover washes, secondary panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1c1c1c",
+      "name": "Carbon",
+      "role": "Dark surface fills for footer or alternate bands — warmer than Ink Black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4d536e",
+      "name": "Slate",
+      "role": "Button hover states, secondary icon tinting, muted UI chrome",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Primary page background, card surfaces, button text on teal",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Page model is max-width 1200px centered with full-bleed bands. The hero is a centered headline stack on white Paper, followed by a 3-column product showcase carousel. Sections alternate: white Paper → logo cloud (white) → white feature section with right-aligned product card → full-bleed Grammarly Teal enterprise band with centered text and a row of stat cards. Navigation is a minimal top bar with logo left, centered links with chevron dropdowns, and a teal CTA anchored right. Section vertical rhythm is generous: 80px gaps between major sections, 32px card padding, 16px element gaps inside cards. The layout reads as a long-form editorial page — scrolling reveals alternating quiet white bands and one confident teal declaration, with stat cards providing quantitative punctuation.",
+  "imagery": "Photography and illustration are minimal. The primary visual device is pastel-tinted gradient backgrounds (soft teal-to-lavender, yellow-to-pink) behind floating white product UI cards in the hero carousel — these feel like editorial spreads rather than SaaS dashboards. Partner logos in the trust bar are monochrome wordmarks, never in brand colors. Product screenshots are tightly cropped UI mockups with no surrounding context, letting the suggestion tooltips (underline, tone labels, Accept/Dismiss) tell the story. Icons in the interface are simple geometric shapes — the Grammarly G mark, chevrons, arrows, and circle indicators — all in Midnight Navy or Teal, no multicolor iconography. The overall density is text-dominant: the system trusts typography and whitespace to create hierarchy over visual decoration.",
+  "similar": [
+    {
+      "why": "Same restrained near-white canvas, minimal shadows, hairline 1px borders, and a single restrained accent color applied to CTAs and key surfaces",
+      "business": "Notion"
+    },
+    {
+      "why": "Same editorial restraint — 8px radii, flat surfaces, tight geometric display typography paired with a humanist UI sans, and a confident single brand color",
+      "business": "Linear"
+    },
+    {
+      "why": "Same pattern of one vivid brand accent against a near-white canvas, with a custom geometric display face for headings and a neutral sans for body",
+      "business": "Figma"
+    },
+    {
+      "why": "Same hairline-border card system with no shadows, generous 80px section gaps, and dark full-bleed enterprise bands breaking up light editorial sections",
+      "business": "Webflow"
+    },
+    {
+      "why": "Same deep botanical color as a brand accent on white surfaces, with the same flat, paper-like component treatment and minimal elevation",
+      "business": "Mercury (banking)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "8px",
+      "tags": "8px",
+      "cards": "8px",
+      "inputs": "8px",
+      "buttons": "8px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 0,
+      "purpose": "Primary page background"
+    },
+    {
+      "hex": "#f5f5f5",
+      "name": "Cloud",
+      "level": 1,
+      "purpose": "Subtle alternating section backgrounds, hover washes"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card White",
+      "level": 2,
+      "purpose": "Elevated card surfaces with hairline borders"
+    },
+    {
+      "hex": "#027e6f",
+      "name": "Grammarly Teal Band",
+      "level": 3,
+      "purpose": "Dark enterprise hero sections, full-bleed brand bands"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "none — use 1px #ebebeb border and 8px radius instead of shadows",
+      "element": "Cards"
+    },
+    {
+      "style": "none — white card on teal background achieves separation through color contrast alone",
+      "element": "Stat Cards (on dark bands)"
+    }
+  ],
+  "northStar": "Thoughtful editor's desk — restrained, precise, one confident accent",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.45
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.45
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading-sm",
+      "size": 22,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.12,
+      "letterSpacing": -0.36
+    },
+    {
+      "role": "heading-lg",
+      "size": 46,
+      "lineHeight": 1.11,
+      "letterSpacing": -0.46
+    },
+    {
+      "role": "display",
+      "size": 52,
+      "lineHeight": 1.09,
+      "letterSpacing": -0.52
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Button (Teal Filled)",
+      "role": "Main conversion action — sign up, get started, subscribe",
+      "description": "Background #027e6f, text #ffffff, border none, border-radius 8px, padding 12px 24px. Font: Glyph weight 700, 16px. Includes a right arrow (→) icon in white. No shadow. Hover deepens to ~#026058."
+    },
+    {
+      "name": "Secondary Button (Outlined Dark)",
+      "role": "Alternative action — sign up with provider, secondary CTAs",
+      "description": "Background #ffffff, text #0e101a, border 1px #0e101a, border-radius 8px, padding 12px 24px. Font: Glyph weight 700, 16px. Includes provider icon (Google G) to the left of label."
+    },
+    {
+      "name": "Ghost Button (Outlined White on Dark)",
+      "role": "Secondary action on teal/dark enterprise bands",
+      "description": "Background transparent, text #ffffff, border 1px #ffffff, border-radius 8px, padding 12px 24px. Font: Glyph weight 700, 16px. Used on dark enterprise hero alongside filled white or teal alternatives."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Background #ffffff, height ~64px, full-width with inner max-width 1200px. Left: Grammarly logo (teal circle + wordmark). Center: nav links (Product, Work, Education, Pricing, Resources) in Glyph 16px weight 400, #1f243c, with chevron-down indicators on items with dropdowns. Right: 'Contact Sales' text link, 'Log in' text link, 'Get Grammarly — it's free' teal filled button (8px radius, Glyph 700 14px)."
+    },
+    {
+      "name": "Hero Headline Block",
+      "role": "Above-the-fold headline + subtext + dual CTA",
+      "description": "White background, centered layout. Headline: matter 670 at 52px, #0e101a, line-height 1.09, letter-spacing -0.52px. Subtext: Glyph 400 at 18px, #1f243c, max-width ~640px centered. CTAs stacked horizontally: teal filled 'Sign up — it's free →' and white outlined 'Sign up with Google'. Legal micro-copy below in Glyph 12px, #545454."
+    },
+    {
+      "name": "Product Showcase Card (Triptych)",
+      "role": "Feature demonstration cards in a 3-column carousel",
+      "description": "Background tinted gradient (teal-to-lavender, yellow-to-pink, etc.) with a white floating UI card on top. Each card has 8px radius, white background, and shows a sample Grammarly suggestion (underlined text, tone label, Accept/Dismiss buttons in teal). Carousel arrows on right edge."
+    },
+    {
+      "name": "Logo Cloud (Trust Bar)",
+      "role": "Social proof — trusted by N organizations",
+      "description": "White background, centered 'Trusted by 50,000 organizations and 40 million people' caption in Glyph 16px, #1f243c. Two rows of partner logos in monochrome (black or #1f243c), spaced with 48px row-gap. Logos are wordmarks with simple geometric marks."
+    },
+    {
+      "name": "Enterprise Dark Hero Band",
+      "role": "Full-bleed teal section for enterprise messaging",
+      "description": "Background #027e6f, full-width, padding 80px vertical. Eyebrow text 'For Enterprise' in Glyph 400 14px #ffffff, centered. Headline: matter 670 at 46px, #ffffff, centered. Body: Glyph 400 at 18px, #ffffff, max-width 720px centered. Two CTAs below: white outlined 'Explore Enterprise →' and white filled 'Contact Sales →'."
+    },
+    {
+      "name": "Stat Card",
+      "role": "Quantified proof point within enterprise section",
+      "description": "White background card with 1px #ebebeb border, 8px radius, padding 32px. Top: partner logo (grayscale). Middle: oversized stat number in matter 670 at 46px+, #027e6f. Bottom: descriptive label in Glyph 400 16px, #1f243c. Cards in horizontal row of 3-4."
+    },
+    {
+      "name": "Inline Suggestion Tooltip",
+      "role": "Product demonstration of Grammarly suggestions",
+      "description": "White card with 8px radius, 1px #ebebeb border, padding 16px. Header: small purple dot + 'Tone Suggestion' label in Glyph 12px, #545454. Suggestion word in matter 670, 20px, #0e101a. Context sentence in Glyph 400, 14px, #1f243c with underlined words in #027e6f. Footer: 'Accept' in #027e6f link, 'Dismiss' in #545454 link."
+    },
+    {
+      "name": "Footer / Legal Microcopy",
+      "role": "Terms and privacy acknowledgment under CTAs",
+      "description": "Centered text in Glyph 12px, #545454, line-height 1.45. Links in #027e6f (Terms, Privacy Policy, CA Notice). No background — sits directly on Paper white."
+    },
+    {
+      "name": "Cookie Consent Banner",
+      "role": "Bottom-fixed cookie notice",
+      "description": "White background, full-width bar with 1px top border in #ebebeb. Left: heading 'We use cookies' in Glyph 700 16px, #0e101a. Body in Glyph 400 14px, #1f243c. Right: two teal filled buttons 'Accept non-essential cookies' and 'Reject non-essential cookies', stacked, 8px radius. Bottom-center: 'Cookie Settings' and 'See our privacy policy' in #027e6f text links."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary UI and body typeface — a custom humanist sans with wider proportions and more open apertures than matter. Weight 400 for body, nav, buttons, labels; 700 for emphasis and subheadings. The 1.45 line-height is generous for reading comfort at 16px body size.",
+      "sizes": "12px, 13px, 14px, 16px, 18px, 20px, 22px",
+      "family": "Glyph",
+      "weight": "400, 700",
+      "lineHeight": "1.20, 1.25, 1.43, 1.44, 1.45, 1.50, 1.71, 2.29",
+      "substitute": "Inter 400/700 (free) — close match in humanist warmth and screen legibility"
+    },
+    {
+      "role": "Display and heading typeface — a custom geometric grotesque with a slight humanist warmth. Weight 670 (between bold and black) gives headlines visual weight without becoming heavy; the -0.0100em tracking and tight 1.09 line-height create a compressed, editorial feel. Used for h1–h3 and large stat numbers.",
+      "sizes": "20px, 36px, 46px, 52px",
+      "family": "matter",
+      "weight": "670",
+      "lineHeight": "1.09, 1.11, 1.12, 1.20",
+      "substitute": "Söhne (paid) or Manrope 700/800 (free) — both share the geometric proportions and tight metrics",
+      "letterSpacing": "-0.0100em"
+    },
+    {
+      "role": "Secondary body in card contexts — appears in product UI cards and embedded components",
+      "sizes": "16px",
+      "family": "Inter",
+      "weight": "400",
+      "lineHeight": "1.50",
+      "substitute": "Already free via Google Fonts",
+      "fontFeatureSettings": "\"cv08\", \"ss01\""
+    },
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "13px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    }
+  ],
+  "description": "Grammarly's design system reads like a considered editorial workspace: a near-white canvas, confident dark typography, and a single deep teal that signals action. The custom display face 'matter' (weight 670) carries a compressed, geometric authority at large sizes, while 'Glyph' handles body copy with a quieter, humanist warmth. Components are restrained — 8px corners, hairline borders, ghost controls, minimal elevation — letting the teal CTA and the occasional dark enterprise band do the emotional work. Surfaces are flat and paper-like; shadows are nearly absent. The palette is 90%+ achromatic, with teal appearing as functional punctuation for buttons, links, active states, and full-bleed brand sections.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #0e101a (headings) / #1f243c (body)\n- background: #ffffff (primary), #f5f5f5 (subtle), #027e6f (brand bands)\n- border: #ebebeb (hairline), #d9d9d9 (dividers)\n- accent: #027e6f (Grammarly Teal)\n- primary action: no distinct CTA color\n\n**3-5 Example Component Prompts**\n1. *Hero headline block*: White Paper background. Headline 'Transform your writing' in matter weight 670, 52px, #0e101a, letter-spacing -0.52px, line-height 1.09. Subtext in Glyph 400, 18px, #1f243c, max-width 640px centered. Two CTAs side by side: teal filled 'Get started — it's free →' (#027e6f bg, #ffffff text, 8px radius, 12px 24px padding, Glyph 700 16px) and white outlined 'Sign up with Google' (#ffffff bg, 1px #0e101a border, #0e101a text, 8px radius).\n2. *Enterprise dark band*: Full-bleed #027e6f background, 80px vertical padding. Eyebrow 'For Enterprise' in Glyph 400 14px #ffffff. Headline in matter 670, 46px, #ffffff, centered. Body in Glyph 400 18px #ffffff, max-width 720px. Two CTAs: white outlined 'Explore Enterprise →' and white filled 'Contact Sales →', both 8px radius, 12px 24px padding.\n3. *Stat card*: White background, 1px #ebebeb border, 8px radius, 32px padding. Partner logo top-left in grayscale. Stat number '20 days' in matter 670, 46px, #027e6f. Label 'saved annually per user' in Glyph 400 16px #1f243c.\n4. *Suggestion tooltip card*: White background, 1px #ebebeb border, 8px radius, 16px padding. Purple dot + 'Tone Suggestion' label in Glyph 12px #545454. Suggestion word 'Confident' in matter 670, 20px, #0e101a. Context sentence in Glyph 400 14px #1f243c with key phrase underlined in #027e6f. Footer: 'Accept' in #027e6f and 'Dismiss' in #545454.\n5. *Top navigation*: White background, 64px height, max-width 1200px inner. Grammarly logo (teal circle + wordmark) left. Nav links (Product, Work, Education, Pricing, Resources) in Glyph 400 16px #1f243c, with chevron-down icons. Right: 'Contact Sales' and 'Log in' text links in #1f243c, then teal filled 'Get Grammarly — it's free' button (8px radius, Glyph 700 14px, #027e6f bg, #ffffff text)."
+    },
+    {
+      "title": "Shape Philosophy",
+      "content": "The system uses 8px as its single shape constant — applied to buttons, nav items, tags, inputs, and cards. This 8px radius is deliberately moderate: not sharp enough to feel corporate/utilitarian, not rounded enough to feel playful/consumer. It signals 'considered professional tool' — closer to Linear or Notion than to a consumer app. The rare exceptions are product demo cards (8px) and the triptych showcase cards (8px with floating offset). Never use pill shapes (9999px) or large radii (20px+) — those would break the editorial restraint."
+    },
+    {
+      "title": "Type Pairing Logic",
+      "content": "The matter + Glyph pairing is the system's most distinctive choice. matter (weight 670 only) is reserved for display sizes 20px+ and carries the visual weight of headlines, stat numbers, and hero statements. Glyph (400/700) handles everything from 22px subheadings down to 12px captions. The contrast between matter's compressed geometric authority and Glyph's humanist warmth creates a two-register system: matter announces, Glyph explains. This is why the enterprise band uses matter at 46px for the headline but Glyph at 18px for the body — the same teal-on-teal hierarchy works because the typefaces themselves create the rhythm."
+    }
+  ],
+  "elevationPhilosophy": "Grammarly deliberately avoids drop shadows. Elevation is communicated through surface color contrast (white on teal, white on Cloud gray) and 1px hairline borders in #ebebeb or #d9d9d9. This keeps the interface flat, paper-like, and editorial — closer to a magazine layout than a typical SaaS dashboard. Components feel lightweight and fast."
+}

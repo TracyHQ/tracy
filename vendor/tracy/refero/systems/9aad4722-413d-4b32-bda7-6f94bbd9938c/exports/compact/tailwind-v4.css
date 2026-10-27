@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-periwinkle-field: #8e93ff;
+  --color-carbon-ink: #1a1a1a;
+  --color-paper-white: #ffffff;
+  --color-signal-green: #47f654;
+
+  /* Typography */
+  --font-beastly-clauworks: 'Beastly clauworks', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-intl-clauworks: 'Suisse Intl clauworks', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

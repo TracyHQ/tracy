@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1276-tdsr-css2",
+  "kind": "fix",
+  "title": "TDSR CSS-2 counts only palette colours left as literals or in the wrong role, reads the newest WordPress theme, and the re-tokenized themes keep their default look",
+  "pr": 1276,
+  "area": "ops/road-to-live/design-system",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test apps/tracy-web/test/template-design-system-readiness.test.mjs.",
+    "S2: Run node --test packages/cms/tracy-wordpress-theme/test/essence.test.mjs packages/cms/tracy-wordpress-theme/test/wp-ja-kinetic.test.mjs apps/tracy-web/test/design-system-door.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes, including a preset accent variable wrapped by accentVars not counted, a colour outside the palette not counted, a Tailwind variable not counted, a palette hex counted, and JA Impact's newest theme zip 1.0.10 read before the 1.0.9 one numbered like the release.",
+    "S2: every test passes: JA Essence's sheets read the slot with every read keeping a fallback, JA Kinetic declares 1.1.14, the door offers the moved maxVersion and refuses the next one."
+  ],
+  "selectors": {
+    "count": "apps/tracy-web/src/lib/template-design-system-readiness/readers/tokenized.js readsByRole",
+    "zip": "apps/tracy-web/src/lib/template-design-system-readiness/newest-theme.js",
+    "contracts": "packages/design/tracy-ds-slot/templates/{wordpress-ja-essence,wordpress-ja-impact,wordpress-ja-kinetic,wordpress-ja-morgan,wordpress-ja-nova,joomla-ja-donate,joomla-ja-kinetic,joomla-ja-podcast}.json maxVersion"
+  },
+  "evidence": "Before this fix the Design system step reported 13 releases failing CSS-2, 5 of them falsely (a preset variable, fenced design pages, a Tailwind variable, a colour outside the palette)",
+  "fence": "The default look of every re-tokenized release is unchanged: WordPress 0 differences under no system, Joomla 0 computed differences against the released version",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern",
+      "CSS-1|CSS-2|DEF-1|BAND-1|PLAT-1|SLOT-|newest theme zip|weighing|downloads the setting|read the design-system slot|declares 1\\.1\\.14|maxVersion|tokenized JA Joomla",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs",
+      "packages/cms/tracy-wordpress-theme/test/essence.test.mjs",
+      "packages/cms/tracy-wordpress-theme/test/wp-ja-kinetic.test.mjs",
+      "apps/tracy-web/test/design-system-door.test.mjs"
+    ]
+  }
+}

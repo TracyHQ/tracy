@@ -1,0 +1,29 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Page text, all border rules, signature arch fills — the entire graphical language. The 21:1 contrast against white is the system's only expressive tool"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Canvas, card surfaces, and all negative space — the field against which ink shapes register as architecture"
+    }
+  },
+  "font": {
+    "rondelle": {
+      "$value": "Rondelle",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for navigation links, body copy, and headings. Used at exactly one weight (400) across the entire site — the flat weight is deliberate; hierarchy is created by jumping from 14px to 30px (a 2.14× ratio) rather than by weight contrast. The custom face has architectural proportions: tall x-height, geometric construction, even stroke — it reads as drawn rather than typed. Substitute with a geometric humanist sans like 'Söhne' or 'Inter' if Rondelle is unavailable."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://mostlikely.at",
+      "siteName": "mostlikely",
+      "extractedAt": "2026-06-03T16:26:05.354Z",
+      "variant": "compact"
+    }
+  }
+}

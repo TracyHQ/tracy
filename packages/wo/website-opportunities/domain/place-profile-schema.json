@@ -1,0 +1,1563 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tracy.ai/schemas/website-opportunities/place-profile-1.json",
+  "title": "Place profile 1.0.0",
+  "description": "Source-backed facts and verbatim quotations, independent of a website template. Entity facts keep related values together; evidence is provenance, not an approval to publish.",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "website-opportunities/place-profile"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "madeAt": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "business": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "name": {
+          "$ref": "#/$defs/nameFact"
+        },
+        "branch": {
+          "$ref": "#/$defs/textFact"
+        },
+        "address": {
+          "$ref": "#/$defs/textFact"
+        },
+        "phone": {
+          "$ref": "#/$defs/textFact"
+        },
+        "email": {
+          "$ref": "#/$defs/textFact"
+        },
+        "nationalPhoneNumber": {
+          "$ref": "#/$defs/textFact"
+        },
+        "internationalPhoneNumber": {
+          "$ref": "#/$defs/textFact"
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "value": {
+              "type": "object",
+              "properties": {
+                "latitude": {
+                  "type": "number"
+                },
+                "longitude": {
+                  "type": "number"
+                }
+              },
+              "required": ["latitude", "longitude"],
+              "additionalProperties": false
+            },
+            "evidenceRefs": {
+              "$ref": "#/$defs/evidenceRefs"
+            },
+            "language": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "derivation": {
+              "$ref": "#/$defs/derivation"
+            }
+          },
+          "required": ["id", "value", "evidenceRefs"],
+          "additionalProperties": false
+        },
+        "addressComponents": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "value": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "evidenceRefs": {
+              "$ref": "#/$defs/evidenceRefs"
+            },
+            "language": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "derivation": {
+              "$ref": "#/$defs/derivation"
+            }
+          },
+          "required": ["id", "value", "evidenceRefs"],
+          "additionalProperties": false
+        },
+        "hours": {
+          "$ref": "#/$defs/listFact"
+        },
+        "serviceAreas": {
+          "$ref": "#/$defs/listFact"
+        },
+        "amenities": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "value": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "boolean"
+              }
+            },
+            "evidenceRefs": {
+              "$ref": "#/$defs/evidenceRefs"
+            },
+            "language": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "derivation": {
+              "$ref": "#/$defs/derivation"
+            }
+          },
+          "required": ["id", "value", "evidenceRefs"],
+          "additionalProperties": false
+        },
+        "reservable": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "value": {
+              "type": "boolean"
+            },
+            "evidenceRefs": {
+              "$ref": "#/$defs/evidenceRefs"
+            },
+            "language": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "derivation": {
+              "$ref": "#/$defs/derivation"
+            }
+          },
+          "required": ["id", "value", "evidenceRefs"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["id"],
+      "additionalProperties": false
+    },
+    "classification": {
+      "type": "object",
+      "properties": {
+        "providerCategories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/providerCategory"
+          }
+        },
+        "derivedCategories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/derivedCategory"
+          }
+        }
+      },
+      "required": ["providerCategories", "derivedCategories"],
+      "additionalProperties": false
+    },
+    "offerings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/offering"
+      }
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/person"
+      }
+    },
+    "faqs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/faq"
+      }
+    },
+    "quotes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/quote"
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/media"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "coverage": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/coverage"
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/conflict"
+      }
+    },
+    "claims": {
+      "type": "object",
+      "properties": {
+        "statistics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/statistic"
+          }
+        },
+        "recognitions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/recognition"
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relationship"
+          }
+        }
+      },
+      "required": ["statistics", "recognitions", "relationships"],
+      "additionalProperties": false
+    },
+    "brand": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/textFact"
+        },
+        "logo": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "value": {
+              "type": "object",
+              "properties": {
+                "mediaId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2048,
+                  "format": "http-url"
+                }
+              },
+              "required": ["mediaId"],
+              "additionalProperties": false
+            },
+            "evidenceRefs": {
+              "$ref": "#/$defs/evidenceRefs"
+            },
+            "language": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "derivation": {
+              "$ref": "#/$defs/derivation"
+            }
+          },
+          "required": ["id", "value", "evidenceRefs"],
+          "additionalProperties": false
+        },
+        "colors": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "value": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "hex": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                },
+                "required": ["hex"],
+                "additionalProperties": false
+              }
+            },
+            "evidenceRefs": {
+              "$ref": "#/$defs/evidenceRefs"
+            },
+            "language": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "derivation": {
+              "$ref": "#/$defs/derivation"
+            }
+          },
+          "required": ["id", "value", "evidenceRefs"],
+          "additionalProperties": false
+        },
+        "fonts": {
+          "$ref": "#/$defs/listFact"
+        },
+        "tagline": {
+          "$ref": "#/$defs/textFact"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "extensions": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9.-]*:[A-Za-z0-9._-]+$": {
+          "$ref": "#/$defs/fact"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema",
+    "schemaVersion",
+    "business",
+    "classification",
+    "offerings",
+    "people",
+    "faqs",
+    "quotes",
+    "events",
+    "media",
+    "links",
+    "sources",
+    "evidence",
+    "coverage",
+    "conflicts",
+    "claims",
+    "brand",
+    "extensions"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "uniqueItems": true
+    },
+    "derivation": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "inputRefs": {
+          "$ref": "#/$defs/refs"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      },
+      "required": ["method", "version"],
+      "additionalProperties": false
+    },
+    "textFact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "listFact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "fact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {},
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "duration": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": ["amount", "unit"],
+      "additionalProperties": false
+    },
+    "price": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": ["exact", "from", "range", "free", "on_request", "unknown"]
+        },
+        "raw": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "minAmount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxAmount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "priceScale": {
+          "type": ["number", "null"],
+          "exclusiveMinimum": 0
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "billingPeriod": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "conditions": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      },
+      "required": ["kind", "raw"],
+      "additionalProperties": false
+    },
+    "providerCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "primaryType": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "types": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "category": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "required": ["provider"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "derivedCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "taxonomy": {
+              "const": "tracy-trade"
+            },
+            "code": {
+              "enum": [
+                "food",
+                "beauty",
+                "health",
+                "fitness",
+                "hospitality",
+                "travel",
+                "professional",
+                "creative",
+                "education",
+                "retail",
+                "auto",
+                "home",
+                "events",
+                "nonprofit",
+                "other"
+              ]
+            },
+            "mappingVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "required": ["taxonomy", "code", "mappingVersion"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "offering": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": [
+                "dish",
+                "drink",
+                "service",
+                "class",
+                "membership",
+                "package",
+                "room",
+                "product",
+                "experience",
+                "unknown"
+              ]
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "section": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "variants": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "size": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "duration": {
+                    "$ref": "#/$defs/duration"
+                  },
+                  "price": {
+                    "$ref": "#/$defs/price"
+                  }
+                },
+                "required": [],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["kind", "name", "variants"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "person": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "bio": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "relationship": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "format": "http-url"
+            }
+          },
+          "required": ["name", "relationship"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "statistic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "number"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "asOf": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "restrictions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          },
+          "required": ["amount", "label", "scope"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "recognition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": ["award", "certification", "press", "other"]
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "issuer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "date": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "format": "http-url"
+            }
+          },
+          "required": ["kind", "name"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "relationship": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": ["client", "partner", "member", "sponsor", "other"]
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "format": "http-url"
+            }
+          },
+          "required": ["kind", "name"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "faq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "answer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            }
+          },
+          "required": ["question", "answer"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "quote": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": ["story", "post", "tagline", "review", "testimonial", "news"]
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "author": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "publishedAt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "language": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "attribution": {
+              "type": ["string", "object"],
+              "maxLength": 200
+            },
+            "restrictions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          },
+          "required": ["kind", "text", "restrictions"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": ["event", "promotion"]
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "startsAt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "endsAt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "format": "http-url"
+            },
+            "location": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "required": ["kind", "name"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "entityId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "relation": {
+          "enum": ["depicts", "logo-of", "portrait-of", "venue-of", "illustrates", "menu-of"]
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        }
+      },
+      "required": ["entityId", "relation", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "media": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": ["image", "video", "audio", "document", "unknown"]
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "format": "http-url"
+            },
+            "sha256": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "mime": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "width": {
+              "type": "number",
+              "minimum": 0
+            },
+            "height": {
+              "type": "number",
+              "minimum": 0
+            },
+            "duration": {
+              "type": "number",
+              "minimum": 0
+            },
+            "bytes": {
+              "type": "number",
+              "minimum": 0
+            },
+            "category": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "caption": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "postId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "publishedAt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "credit": {
+              "type": ["string", "object", "array"],
+              "maxLength": 200
+            },
+            "restrictions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "relations": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/relation"
+              }
+            }
+          },
+          "required": ["kind", "relations"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "link": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "format": "link-url"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "required": ["kind", "url"],
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "format": "source-ref"
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "collectedAt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "attemptedAt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "collectorVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": ["id", "kind"],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "locator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": ["url", "css", "xpath", "jsonPath", "pdfPage", "imageRegion", "post"]
+            },
+            "value": {
+              "type": ["string", "number", "object"],
+              "maxLength": 2048
+            }
+          },
+          "required": ["kind", "value"],
+          "additionalProperties": false
+        },
+        "excerpt": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "extraction": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "required": ["method", "version"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["id", "sourceId", "locator", "extraction"],
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "status": {
+          "enum": [
+            "found",
+            "partial",
+            "searched_not_found",
+            "not_researched",
+            "blocked",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "sourceRefs": {
+          "$ref": "#/$defs/refs"
+        },
+        "searchedAt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "methodVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      },
+      "required": ["target", "status", "sourceRefs"],
+      "additionalProperties": false
+    },
+    "conflict": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fact"
+          },
+          "minItems": 2
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      },
+      "required": ["id", "target", "values"],
+      "additionalProperties": false
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "nameFact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "evidenceRefs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "derivation": {
+          "$ref": "#/$defs/derivation"
+        }
+      },
+      "required": ["id", "value", "evidenceRefs"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1415-site-entered",
+  "kind": "feat",
+  "title": "Opening a site's workspace page is a visit: tracy-web records one site.entered per person, site and half hour, never for a fetch",
+  "pr": 1415,
+  "area": "workspace/usage",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: A seated person navigates (Accept text/html) to /<site>/ twice, then fetches it with Accept application/json.",
+    "S2: The clock moves on by half an hour; the person navigates again."
+  ],
+  "expect": [
+    "S1: one ops_signal site.entered for that site, carrying the person's address and nothing else.",
+    "S2: a second one; the dedupe key does not depend on the address's case."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/workspace/route.js (enteredKey, site.entered); apps/tracy-web/src/lib/ops-signal.js"
+  },
+  "evidence": "Plan tasks/todo-do-dung-that.md U3; council 17/10/2026: only a first visit cannot measure a return on another day",
+  "fence": "Never awaited by the page; one per half hour so a reload is not a visit",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=site.entered",
+      "apps/tracy-web/test/proxy.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": ["workspaceRoutes: a navigation to a site workspace records site.entered"]
+  }
+}

@@ -1,0 +1,627 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-resume/j6/1.0.7",
+  "baseHash": "1e2f50125addf52c2cd86d0d5a374864ac4bc68ee282cacb30831e259cd49288",
+  "baseFiles": {
+    "manifest.json": "891f05fdb3eabafffef7b87d0e1d724ad17a7774241acd1244cb60d211ef23ef",
+    "content-map.json": "bc000305016e4483272ecd3c443fa87c2d98fa2309f2b81d2777e60cdb2f900c",
+    "presentation-lock.json": "ca61b5c70ab4201842f77279a6d22fb9d9f17a61f631466568aa548d2e170265"
+  },
+  "inputs": {},
+  "decisionsHash": "eb6a81754b0f83b0bb22952d7994a93dca2e7d7dc73486274057c12debad48e1",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-133",
+      "identity": {
+        "path": "j-pages/login-form",
+        "menutype": "other-menu",
+        "language": "*"
+      },
+      "label": "Login Form",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-134",
+      "identity": {
+        "path": "j-pages/registration",
+        "menutype": "other-menu",
+        "language": "*"
+      },
+      "label": "Registration",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-136",
+      "identity": {
+        "path": "j-pages/smart-seach",
+        "menutype": "other-menu",
+        "language": "*"
+      },
+      "label": "Smart Seach",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-137",
+      "identity": {
+        "path": "content-page/tagged",
+        "menutype": "other-menu",
+        "language": "*"
+      },
+      "label": "Tagged",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing (com_tags view=tag) in other-menu, the drawer menu of module-127"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-138",
+      "identity": {
+        "path": "j-pages/error-page",
+        "menutype": "other-menu",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-139",
+      "identity": {
+        "path": "j-pages/offline-page",
+        "menutype": "other-menu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-141",
+      "identity": {
+        "path": "j-pages/typography",
+        "menutype": "other-menu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-149",
+      "identity": {
+        "path": "content-page/featured-articles",
+        "menutype": "other-menu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing (com_content view=featured) in other-menu, the drawer menu of module-127"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-152",
+      "identity": {
+        "path": "home-frontend",
+        "menutype": "sample-sites",
+        "language": "*"
+      },
+      "label": "Home FrontEnd Developer",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.variant-opens-sample",
+      "reason": "\"Home FrontEnd Developer\" reads as a home or colour demo and opens only sample content or what the home page opens (featured, article:165, article:167 (+3))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-158",
+      "identity": {
+        "path": "home-yoga",
+        "menutype": "sample-sites",
+        "language": "*"
+      },
+      "label": "Home Yoga",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.variant-opens-sample",
+      "reason": "\"Home Yoga\" reads as a home or colour demo and opens only sample content or what the home page opens (featured, article:165, article:167 (+3))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-168",
+      "identity": {
+        "path": "home-singer-2",
+        "menutype": "sample-sites",
+        "language": "*"
+      },
+      "label": "Home Singer",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.variant-opens-sample",
+      "reason": "\"Home Singer\" reads as a home or colour demo and opens only sample content or what the home page opens (featured, article:165, article:167 (+3))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-171",
+      "identity": {
+        "path": "home-model",
+        "menutype": "sample-sites",
+        "language": "*"
+      },
+      "label": "Home Model",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.variant-opens-sample",
+      "reason": "\"Home Model\" reads as a home or colour demo and opens only sample content or what the home page opens (featured, article:165, article:167 (+3))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-174",
+      "identity": {
+        "path": "home-blogger-2",
+        "menutype": "sample-sites",
+        "language": "*"
+      },
+      "label": "Home Blogger",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.variant-opens-sample",
+      "reason": "\"Home Blogger\" reads as a home or colour demo and opens only sample content or what the home page opens (featured, article:165, article:167 (+3))"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "About Me",
+      "where": "mainmenu/about-me",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Works",
+      "where": "mainmenu/works",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Testimonial",
+      "where": "mainmenu/testimonial",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-105",
+      "label": "Contact",
+      "where": "mainmenu/contact",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-140",
+      "label": "Contact Us",
+      "where": "other-menu/j-pages/contact-us",
+      "rule": "keep.decision",
+      "reason": "a contact form is a working feature of the business, not a sample screen; kept until the PO decides"
+    },
+    {
+      "key": "menuItem-182",
+      "label": "More",
+      "where": "mainmenu/2016-05-04-09-58-49",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-190",
+      "label": "Vimeo",
+      "where": "social-feed/vimeo",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-191",
+      "label": "Facebook",
+      "where": "social-feed/facebook",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-192",
+      "label": "Twitter",
+      "where": "social-feed/twitter",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-193",
+      "label": "Instagram",
+      "where": "social-feed/instagram",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-194",
+      "label": "Flickr",
+      "where": "social-feed/flickr",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-195",
+      "label": "Pinterest",
+      "where": "social-feed/pinterest",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-127",
+      "label": "Other Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders other-menu: 9 entries stay"
+    },
+    {
+      "key": "module-128",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 6 entries stay (class \"hidden-lg hidden-md\")"
+    },
+    {
+      "key": "module-136",
+      "label": "Sample Sites",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders sample-sites: 1 entry stays"
+    },
+    {
+      "key": "module-177",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders blogger: 6 entries stay (class \"hidden-lg hidden-md\")"
+    },
+    {
+      "key": "module-178",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders frontend-developer: 6 entries stay (class \"hidden-lg hidden-md\")"
+    },
+    {
+      "key": "module-179",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders model: 6 entries stay (class \"hidden-lg hidden-md\")"
+    },
+    {
+      "key": "module-180",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders singer: 5 entries stay (class \"hidden-lg hidden-md\")"
+    },
+    {
+      "key": "module-181",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders home-yoga: 5 entries stay (class \"hidden-lg hidden-md\")"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-106",
+      "label": "Home Photographer",
+      "where": "sample-sites/home-photographer",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in sample-sites, the drawer menu of module-136"
+    },
+    {
+      "key": "menuItem-130",
+      "label": "J! Pages",
+      "where": "other-menu/j-pages",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-140, which stays"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Social Feed",
+      "where": "other-menu/social-feed",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in other-menu, the drawer menu of module-127"
+    },
+    {
+      "key": "menuItem-132",
+      "label": "Blog",
+      "where": "other-menu/blog",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in other-menu, the drawer menu of module-127"
+    },
+    {
+      "key": "menuItem-144",
+      "label": "Content Page",
+      "where": "other-menu/content-page",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in other-menu, the drawer menu of module-127"
+    },
+    {
+      "key": "menuItem-145",
+      "label": "All Category",
+      "where": "other-menu/content-page/all-category",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in other-menu, the drawer menu of module-127"
+    },
+    {
+      "key": "menuItem-146",
+      "label": "Photography",
+      "where": "other-menu/content-page/all-category/photography",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Content Page\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    },
+    {
+      "key": "menuItem-147",
+      "label": "Designer",
+      "where": "other-menu/content-page/all-category/designer",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Content Page\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    },
+    {
+      "key": "menuItem-148",
+      "label": "Entertainment",
+      "where": "other-menu/content-page/all-category/entertainment",
+      "rule": "unresolved.stock-screens-branch",
+      "reason": "under \"Content Page\", whose entries are mostly Joomla's stock screens (users, search, tags, sample listings)"
+    },
+    {
+      "key": "menuItem-151",
+      "label": "Home",
+      "where": "frontend-developer/home-frontend-developer",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in frontend-developer, the drawer menu of module-178"
+    },
+    {
+      "key": "menuItem-153",
+      "label": "About Me",
+      "where": "frontend-developer/about-me-2",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in frontend-developer, the drawer menu of module-178"
+    },
+    {
+      "key": "menuItem-154",
+      "label": "Works",
+      "where": "frontend-developer/works-2",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in frontend-developer, the drawer menu of module-178"
+    },
+    {
+      "key": "menuItem-155",
+      "label": "Chart",
+      "where": "frontend-developer/2016-04-26-03-46-07",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in frontend-developer, the drawer menu of module-178"
+    },
+    {
+      "key": "menuItem-156",
+      "label": "Contact",
+      "where": "frontend-developer/contact-2",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in frontend-developer, the drawer menu of module-178"
+    },
+    {
+      "key": "menuItem-157",
+      "label": "Home",
+      "where": "home-yoga/yoga",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in home-yoga, the drawer menu of module-181"
+    },
+    {
+      "key": "menuItem-160",
+      "label": "About Me",
+      "where": "home-yoga/yoga-about",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in home-yoga, the drawer menu of module-181"
+    },
+    {
+      "key": "menuItem-161",
+      "label": "Experience",
+      "where": "home-yoga/yoga-experience",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in home-yoga, the drawer menu of module-181"
+    },
+    {
+      "key": "menuItem-162",
+      "label": "Testimonial",
+      "where": "home-yoga/yoga-testimonial",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in home-yoga, the drawer menu of module-181"
+    },
+    {
+      "key": "menuItem-163",
+      "label": "About Me",
+      "where": "singer/about-me-3",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in singer, the drawer menu of module-180"
+    },
+    {
+      "key": "menuItem-164",
+      "label": "Albums",
+      "where": "singer/albums",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in singer, the drawer menu of module-180"
+    },
+    {
+      "key": "menuItem-166",
+      "label": "Contact",
+      "where": "singer/contact-3",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in singer, the drawer menu of module-180"
+    },
+    {
+      "key": "menuItem-167",
+      "label": "Home",
+      "where": "singer/home-singer",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in singer, the drawer menu of module-180"
+    },
+    {
+      "key": "menuItem-170",
+      "label": "Home",
+      "where": "model/model",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in model, the drawer menu of module-179"
+    },
+    {
+      "key": "menuItem-172",
+      "label": "About Me",
+      "where": "model/2016-05-03-07-00-10",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in model, the drawer menu of module-179"
+    },
+    {
+      "key": "menuItem-173",
+      "label": "Home",
+      "where": "blogger/home-blogger",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in blogger, the drawer menu of module-177"
+    },
+    {
+      "key": "menuItem-175",
+      "label": "About Me",
+      "where": "blogger/blogger-about",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in blogger, the drawer menu of module-177"
+    },
+    {
+      "key": "menuItem-176",
+      "label": "Gallery",
+      "where": "blogger/photo-stories",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in blogger, the drawer menu of module-177"
+    },
+    {
+      "key": "menuItem-177",
+      "label": "Testimonial",
+      "where": "blogger/blogger-testimonial",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in blogger, the drawer menu of module-177"
+    },
+    {
+      "key": "menuItem-178",
+      "label": "Contact",
+      "where": "blogger/blogger-contact",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in blogger, the drawer menu of module-177"
+    },
+    {
+      "key": "menuItem-179",
+      "label": "gallery",
+      "where": "model/model-gallery",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in model, the drawer menu of module-179"
+    },
+    {
+      "key": "menuItem-180",
+      "label": "Education",
+      "where": "model/2016-05-04-07-29-00",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in model, the drawer menu of module-179"
+    },
+    {
+      "key": "menuItem-181",
+      "label": "Testimonial",
+      "where": "model/2016-05-04-07-30-01",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in model, the drawer menu of module-179"
+    },
+    {
+      "key": "menuItem-183",
+      "label": "more",
+      "where": "model/2016-05-05-02-13-15",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in model, the drawer menu of module-179"
+    },
+    {
+      "key": "menuItem-184",
+      "label": "More",
+      "where": "frontend-developer/2016-05-05-02-14-13",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in frontend-developer, the drawer menu of module-178"
+    },
+    {
+      "key": "menuItem-185",
+      "label": "More",
+      "where": "singer/2016-05-05-02-14-34",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in singer, the drawer menu of module-180"
+    },
+    {
+      "key": "menuItem-186",
+      "label": "More",
+      "where": "home-yoga/2016-05-05-02-14-55",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in home-yoga, the drawer menu of module-181"
+    },
+    {
+      "key": "menuItem-187",
+      "label": "More",
+      "where": "blogger/2016-05-05-03-24-40",
+      "rule": "unresolved.drawer-menu",
+      "reason": "in blogger, the drawer menu of module-177"
+    }
+  ],
+  "counts": {
+    "menuItems": 13,
+    "modules": 0,
+    "kept": 21,
+    "unresolved": 37
+  }
+}

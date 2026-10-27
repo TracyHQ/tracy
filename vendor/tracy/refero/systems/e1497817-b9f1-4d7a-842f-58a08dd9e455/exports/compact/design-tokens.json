@@ -1,0 +1,69 @@
+{
+  "color": {
+    "warm-parchment": {
+      "$value": "#faf9f6",
+      "$type": "color",
+      "$description": "Warm Parchment — Page canvas, body background — the base layer that gives the entire site its designed-by-hand warmth"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, floating navigation, elevated content blocks — pure white sits one step above the cream canvas"
+    },
+    "soft-linen": {
+      "$value": "#f2f0e9",
+      "$type": "color",
+      "$description": "Soft Linen — Hairline borders, subtle dividers, muted background washes — the warm-tinted replacement for #e5e5e5"
+    },
+    "ink-black": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, primary action button background, strong heading borders — the workhorse near-black that unifies copy and CTAs"
+    },
+    "jet-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Jet Black — Maximum-contrast icon strokes, dense border treatments where absolute weight is needed"
+    },
+    "carbon": {
+      "$value": "#212121",
+      "$type": "color",
+      "$description": "Carbon — Strong body borders, emphasis dividers — one shade softer than Ink Black for structural lines"
+    },
+    "stone": {
+      "$value": "#6e6e6e",
+      "$type": "color",
+      "$description": "Stone — Muted body text, secondary copy, ghost link color — the first step down from primary text"
+    },
+    "ash": {
+      "$value": "#878787",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, helper labels, company-logo grayscale treatment — the quietest readable gray"
+    },
+    "graphite": {
+      "$value": "#414141",
+      "$type": "color",
+      "$description": "Graphite — Heading borders, emphasis underlines — a mid-dark accent for typographic rules"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "The sole typeface across the system. Inter at 600/56px (-3.36px tracking) carries the display headline; 500/22px handles section headings; 400/16px is body. The weight ladder stops at 600 — semibold is the ceiling, which keeps the type from feeling corporate or heavy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.memorisely.com",
+      "siteName": "Memorisely",
+      "extractedAt": "2026-06-03T21:56:40.271Z",
+      "variant": "compact"
+    }
+  }
+}

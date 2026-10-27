@@ -1,0 +1,73 @@
+{
+ "rules": [
+  {
+   "from": "/404.html",
+   "to": "/404",
+   "status": 404
+  },
+  {
+   "from": "/About.html",
+   "to": "/about"
+  },
+  {
+   "from": "/Article.html",
+   "to": "/four-common-mistakes-in-heavy-machine-foundation-design/"
+  },
+  {
+   "from": "/Careers.html",
+   "to": "/careers"
+  },
+  {
+   "from": "/Contact.html",
+   "to": "/contact"
+  },
+  {
+   "from": "/Email.html",
+   "to": "/email"
+  },
+  {
+   "from": "/Form.html",
+   "to": "/form"
+  },
+  {
+   "from": "/Home.html",
+   "to": "/"
+  },
+  {
+   "from": "/Investor relations.html",
+   "to": "/investor-relations"
+  },
+  {
+   "from": "/News.html",
+   "to": "/news"
+  },
+  {
+   "from": "/Newsletter.html",
+   "to": "/newsletter"
+  },
+  {
+   "from": "/Project detail.html",
+   "to": "/project-detail"
+  },
+  {
+   "from": "/Projects.html",
+   "to": "/projects"
+  },
+  {
+   "from": "/Search.html",
+   "to": "/search"
+  },
+  {
+   "from": "/Services.html",
+   "to": "/services"
+  },
+  {
+   "from": "/Slide.html",
+   "to": "/slide"
+  },
+  {
+   "from": "/Style guide.html",
+   "to": "/style-guide"
+  }
+ ]
+}

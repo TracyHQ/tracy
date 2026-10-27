@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1328-joomla-write-by-entities",
+  "kind": "fix",
+  "title": "A Joomla contract write holds at most 300 entities: a large FULL Apply lands in parts instead of failing whole",
+  "pr": 1328,
+  "area": "add-site/apply",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "From apps/tracy-web run: node --test --test-reporter=tap test/joomla-contract-parts.test.mjs",
+    "Read the ok/not ok line of each test named in run.tests, and the fail count."
+  ],
+  "expect": [
+    "'1000 lines on 500 entities are written in parts of at most 300 entities, one entity never split across two' is ok: two writes, each at most 300 entities and 1500 lines, no entity in both, 1000 lines written.",
+    "'a part the language copies of its pictures take past 300 entities is written as two halves, never again whole' is ok: the seeder double refuses 280 pictured entities with one language copy each; every one of the 560 lines is written exactly once.",
+    "'3200 lines are written in three parts of at most 1500, each read again before it is written' and 'a plan within one write is written once, as before' stay ok."
+  ],
+  "selectors": {
+    "writer": "writeContract, WRITE_SLOTS, WRITE_ENTITIES in apps/tracy-web/src/sites/brief-engines/joomla.js",
+    "plugin": "Engine.php of the Claude Cowork Joomla plugin: 'Split the revision into at most 300 entities'"
+  },
+  "evidence": "Local stand, run j2 (14/10/2026): JA Voyara Joomla, FULL and FULL + design system, briefState failed with 'Split the revision into at most 300 entities' (1,833 lines on 348 entities); the site kept the template's words.",
+  "fence": "writeContract over a seeder double that refuses as the seeder (1500 lines) and the plugin (300 entities, picture copies per language) do. Not exercised: a running Joomla (the local-stand rerun of JA Voyara).",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/joomla-contract-parts.test.mjs"],
+    "cwd": "apps/tracy-web",
+    "tests": [
+      "1000 lines on 500 entities are written in parts of at most 300 entities, one entity never split across two",
+      "a part the language copies of its pictures take past 300 entities is written as two halves, never again whole",
+      "3200 lines are written in three parts of at most 1500, each read again before it is written",
+      "a plan within one write is written once, as before"
+    ]
+  }
+}

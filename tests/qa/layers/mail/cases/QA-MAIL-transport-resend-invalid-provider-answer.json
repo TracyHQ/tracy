@@ -1,0 +1,30 @@
+{
+  "id": "QA-MAIL-transport-resend-invalid-provider-answer",
+  "itemIds": ["transport:resend"],
+  "requirement": "a malformed acknowledgement or a network error rejects; the abort signal reaches fetch",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 7",
+    "invariant": "never reported as sent"
+  },
+  "edgeTags": ["invalid"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "mail.transport.failure#malformed-acknowledgement|network-failure|abort-signal-reaches-fetch"
+  ],
+  "redProof": null,
+  "legacyIds": []
+}

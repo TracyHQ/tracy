@@ -1,0 +1,15 @@
+# Marker: this template is a standalone pnpm project (its own lockfile).
+packages: []
+allowBuilds:
+  better-sqlite3: true
+  esbuild: true
+  sharp: true
+  "@parcel/watcher": true
+minimumReleaseAgeExclude:
+  - '@emdash-cms/admin@1.1.0'
+  - '@emdash-cms/auth@1.1.0'
+  - '@emdash-cms/blocks@1.1.0'
+  - '@emdash-cms/gutenberg-to-portable-text@1.1.0'
+  - '@emdash-cms/plugin-audit-log@0.2.3'
+  - '@emdash-cms/plugin-forms@0.2.9'
+  - emdash@1.1.0

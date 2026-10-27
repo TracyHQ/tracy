@@ -1,0 +1,53 @@
+{
+  "id": "QA-UNIT-REG-PR-1547-conversation-tabs-narrow-happy",
+  "itemIds": ["regression:REG-PR-1547-conversation-tabs-narrow"],
+  "requirement": "Conversation tab labels stay on one line in a narrow chat column",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1547-conversation-tabs-narrow.json",
+    "ref": "PR #1547 (fix); fix evidence: 21/10/2026 local cluster: below a ~290px column the tabs wrapped to 'Ch/at', 'Comm/ents', 'Traject/ory'",
+    "invariant": "S1: every label renders on one line at every width; the gap is 20px at 340/300, 12px at 250/240, 8px with 12px labels at 220; the strip scrolls sideways rather than wrapping and does not clip the selection bar.",
+    "productSources": [
+      "vendor/tracy/deepseek-harness/packages/client/ui-conversation/src/client/skeleton/ConversationRoot.module.css:1"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-chat-input/test/e2e/conversation-tabs-narrow.test.mjs:29 import() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/conversation-tabs-narrow.test.mjs:68 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1547-conversation-tabs-narrow.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1547-conversation-tabs-narrow"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-chat-input", "tracy-chat-input"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1547-conversation-tabs-narrow",
+    "pr": 1547,
+    "kind": "fix",
+    "area": "chat-input/conversation-tabs",
+    "file": "tests/regression/cases/REG-PR-1547-conversation-tabs-narrow.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=60000",
+    "packages/ui/tracy-chat-input/test/e2e/conversation-tabs-narrow.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

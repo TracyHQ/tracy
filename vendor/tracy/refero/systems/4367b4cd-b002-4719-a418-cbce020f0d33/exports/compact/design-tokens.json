@@ -1,0 +1,84 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#222326",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas and primary background — the stage floor from which all content rises"
+    },
+    "carbon": {
+      "$value": "#0d0d0e",
+      "$type": "color",
+      "$description": "Carbon — Elevated surface for secondary panels and the sticky bottom promotional bar"
+    },
+    "charcoal-plate": {
+      "$value": "#272c33",
+      "$type": "color",
+      "$description": "Charcoal Plate — Card surfaces and raised containers — one step lighter than canvas to define interactive zones"
+    },
+    "slate-body": {
+      "$value": "#191c21",
+      "$type": "color",
+      "$description": "Slate Body — Nested surface for body blocks and form panels within cards"
+    },
+    "bone-white": {
+      "$value": "#f4f4f5",
+      "$type": "color",
+      "$description": "Bone White — Secondary text, hairline borders, and inactive outlines on dark surfaces"
+    },
+    "ash-mute": {
+      "$value": "#9ea0a9",
+      "$type": "color",
+      "$description": "Ash Mute — Muted helper text, icon strokes, and low-emphasis dividers"
+    },
+    "smoke": {
+      "$value": "#43454c",
+      "$type": "color",
+      "$description": "Smoke — Inactive button fills and dormant control surfaces"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary text, icon fills, and high-contrast borders — the dominant ink on the dark stage"
+    },
+    "magenta-spotlight": {
+      "$value": "#e32652",
+      "$type": "color",
+      "$description": "Magenta Spotlight — Primary action buttons, active states, and key interactive accents — warm crimson against matte black creates theatrical urgency"
+    },
+    "editorial-gold": {
+      "$value": "#eed37f",
+      "$type": "color",
+      "$description": "Editorial Gold — Decorative category pill borders, subtle brand warmth, and section highlights — adds luxury through restraint"
+    },
+    "neon-volt": {
+      "$value": "#dcff00",
+      "$type": "color",
+      "$description": "Neon Volt — Green action color for filled buttons, selected navigation states, and focused conversion moments."
+    }
+  },
+  "font": {
+    "sohne": {
+      "$value": "Sohne",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface. Sohne handles navigation, buttons, form fields, body copy, card titles, and subheadings up to 32px. Weight 400 for body, 600 for buttons and emphasis. The wide range of sizes (8px micro-labels to 48px section heads) with consistent tracking gives the system editorial flexibility without changing its visual key."
+    },
+    "sohne-schmal": {
+      "$value": "Sohne Schmal",
+      "$type": "fontFamily",
+      "$description": "Hero and display headlines. The condensed (Schmal = 'narrow') cut with sub-unity line-height creates dramatic vertical compression — headlines stack tight and feel architectural rather than airy. Used at full 80px for the primary hero statement, 64px for section openers. This is the system's most distinctive type choice: it says 'editorial magazine' more than 'SaaS product'."
+    },
+    "ivar-display-condensed": {
+      "$value": "Ivar Display Condensed",
+      "$type": "fontFamily",
+      "$description": "Alternative display face for editorial sub-headlines and class-section titles. The serif contrast adds old-money texture to an otherwise grotesque system — a deliberate pairing of new (Sohne) and classic (Ivar) for genre contrast."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.masterclass.com",
+      "siteName": "MasterClass",
+      "extractedAt": "2026-06-03T17:00:47.834Z",
+      "variant": "compact"
+    }
+  }
+}

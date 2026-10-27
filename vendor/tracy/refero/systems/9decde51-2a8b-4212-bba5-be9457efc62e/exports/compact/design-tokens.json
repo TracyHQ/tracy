@@ -1,0 +1,79 @@
+{
+  "color": {
+    "cream": {
+      "$value": "#f7f1e8",
+      "$type": "color",
+      "$description": "Cream — Page canvas, hero backgrounds, card surfaces — the warm paper-white that makes every photograph feel tactile"
+    },
+    "soft-charcoal": {
+      "$value": "#4a4741",
+      "$type": "color",
+      "$description": "Soft Charcoal — Body copy, secondary headings, button borders, input borders — warm near-black that sits softer than pure #000"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "bone-white": {
+      "$value": "#fefaef",
+      "$type": "color",
+      "$description": "Bone White — Secondary card surface, button border tint, subtle elevated panels"
+    },
+    "stone-border": {
+      "$value": "#ececec",
+      "$type": "color",
+      "$description": "Stone Border — Hairline dividers, image borders, card outlines, input borders — the structural 1px that holds the system together"
+    },
+    "ash-mist": {
+      "$value": "#a8a5a0",
+      "$type": "color",
+      "$description": "Ash Mist — Muted helper text, secondary metadata, inactive nav, sub-labels"
+    },
+    "slate-stone": {
+      "$value": "#838280",
+      "$type": "color",
+      "$description": "Slate Stone — Tertiary text, icon secondary states, disabled button text"
+    },
+    "dusk": {
+      "$value": "#d3d1ce",
+      "$type": "color",
+      "$description": "Dusk — Subtle background fills for alternating sections, muted surface layer"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Text on dark fills, inverted button text, clean card highlights"
+    },
+    "onyx-pill": {
+      "$value": "#222428",
+      "$type": "color",
+      "$description": "Onyx Pill — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "sage-whisper": {
+      "$value": "#5b6550",
+      "$type": "color",
+      "$description": "Sage Whisper — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "akkuratll": {
+      "$value": "AkkuratLL",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse — body text, navigation, buttons, labels, UI chrome. Weight 400 for body, 500 for labels, 700 for emphasis. Light weights (200/300) appear in large display sizes for an airy editorial feel. Custom alternative: Inter, Neue Haas Grotesk, or Söhne."
+    },
+    "editorial-new": {
+      "$value": "Editorial New",
+      "$type": "fontFamily",
+      "$description": "Display serif reserved for hero headlines and emotional section titles. Light weight (100/300) with negative tracking creates high-contrast elegance. Italic cuts deliver the poetic 'Made for you.' moments. Custom alternative: GT Super, Canela, or Domaine Display."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ouraring.com",
+      "siteName": "Oura Ring",
+      "extractedAt": "2026-06-03T17:08:52.901Z",
+      "variant": "compact"
+    }
+  }
+}

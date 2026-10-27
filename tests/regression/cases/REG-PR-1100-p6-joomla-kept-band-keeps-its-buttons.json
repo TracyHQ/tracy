@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1100-p6-joomla-kept-band-keeps-its-buttons",
+  "kind": "fix",
+  "title": "A Joomla band the page keeps (keepScopes) keeps its own buttons and links under a worn system: the module sheet's primary-button and accent-text rules stop at its edge, where var(--ds-c-accent) is reset to no colour",
+  "pr": 1100,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/design/tracy-ds-slot run: node --test --test-reporter=tap test/cms.test.mjs",
+    "S2: Record the exit code, '# fail' and the result of the test named in expect."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "'Joomla: a kept band keeps its own buttons and links — the primary-button rule stops at its edge' is ok: in the Moxie module sheet for templates/joomla-ja-mood.json the primary-button rule (background-color var(--ds-c-accent)) carries exactly the contract's buttonPrimary selectors, each ending in :not(.ja-topbar, .ja-topbar *, .t3-masthead-mask, .t3-masthead-mask *, .t3-footer, .t3-footer *); the joomla-tracy-base sheet (no kept band) carries no such exclusion."
+  ],
+  "selectors": {
+    "rule": "src/joomla.mjs: sel.buttonPrimary and sel.accentText through outsideKept(contract)",
+    "keep": "src/tokens56.mjs keepRules (--ds-c-*: initial inside a kept band)"
+  },
+  "evidence": "tasks/evidence/followups-2026-10-10/p6-dsdata/joomla-kept-bands.txt",
+  "fence": "the Joomla module sheet's colour rules at kept bands; not the band's own inherited text colour (measured separately, see the evidence)",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/cms.test.mjs"],
+    "cwd": "packages/design/tracy-ds-slot",
+    "tests": [
+      "Joomla: a kept band keeps its own buttons and links — the primary-button rule stops at its edge"
+    ]
+  }
+}

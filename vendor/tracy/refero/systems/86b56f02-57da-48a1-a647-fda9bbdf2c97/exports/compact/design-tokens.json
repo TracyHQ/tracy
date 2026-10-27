@@ -1,0 +1,64 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, text on dark bands"
+    },
+    "ink": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Ink — Primary body text, heading text, hairline borders, link color — the near-black that carries 90% of all strokes"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Solid surface fills for dark bands, inverted text backgrounds, inverted footer"
+    },
+    "graphite": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Graphite — Elevated dark surface, input field fills on dark contexts"
+    },
+    "carbon": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Carbon — Card border on light surfaces, subtle structural dividers"
+    },
+    "ash": {
+      "$value": "#767676",
+      "$type": "color",
+      "$description": "Ash — Muted body text, secondary metadata, less-prominent captions"
+    },
+    "fog": {
+      "$value": "#8c8c8c",
+      "$type": "color",
+      "$description": "Fog — Light borders, low-emphasis dividers, placeholder text"
+    },
+    "mist": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Mist — Tinted light surface between pure white and true black bands"
+    },
+    "haze": {
+      "$value": "#e3e4e5",
+      "$type": "color",
+      "$description": "Haze — Subtle alt-row surface, hover wash, low-contrast card fill"
+    }
+  },
+  "font": {
+    "plain": {
+      "$value": "Plain",
+      "$type": "fontFamily",
+      "$description": "All roles — display, headings, body, caption, nav, button. The single typeface carries the entire site. Weight contrast is limited (400 vs 500) so hierarchy comes from size and tracking, not boldness. The 52px display at -0.02em tracking is anti-display: it whispers instead of shouts. Line-heights under 1.1 on 32–52px create stacked, compressed blocks where headings read as solid slabs. Open features 'kern' and 'case' hint at a typeface with carefully spaced uppercase alternates — the 'case' feature likely gives access to stylistic capital forms."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://pentagram.com",
+      "siteName": "Pentagram",
+      "extractedAt": "2026-06-03T20:37:31.688Z",
+      "variant": "compact"
+    }
+  }
+}

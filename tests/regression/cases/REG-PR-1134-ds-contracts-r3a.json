@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1134-ds-contracts-r3a",
+  "kind": "feat",
+  "title": "Round 3 of the JA Joomla j6 slot contracts (r3a): JA Resort, JA Symphony, JA Vital, JA Company and JA Civica, not ready in round 1, wear a design system from the release that first carries it (1.0.2, 1.0.1, 1.0.3, 1.0.1, 1.0.1)",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-{ja-resort,ja-symphony,ja-vital,ja-company,ja-civica}.json through loadContract; build the module sheet (joomlaSlot) under Moxie for JA Company, JA Civica, JA Symphony and JA Resort; read the tch contracts ja-vital/j6/1.0.3, ja-symphony/j6/1.0.1 and ja-resort/j6/1.0.2 and their template-profiles rows.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf(...), {key, version}) for each ready template at its minVersion and at the version before it.",
+    "S4: the measuring probe's ground rules from scripts/flow.mjs (drawn, pictured, flat, pfill), run against fake computed styles.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-r3a.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped (among them: an ink palette band takes var(--ds-c-fg-2) as ground and var(--ds-c-bg) as its text).",
+    "S2: every one of the five judges contrast heading and text; ready ones carry minVersion {'quickstart/<slug>/j6': v} (ja-company 1.0.1, ja-civica 1.0.1, ja-vital 1.0.3, ja-symphony 1.0.1, ja-resort 1.0.2) and a readyNote naming tasks/evidence/ds-contracts-r3a-2026-10-11/<slug>-j6. JA Company's sheet colours its menu bar items var(--ds-c-accent-on), sets .acm-features.style-1 .owl-controls static, has measureStill and no displaySize; JA Civica's keeps the numbers band width; JA Symphony's paints .t4-content with var(--ds-c-bg) and keeps #t4-hero and #t4-header; JA Resort's paints .t4-section-1 and .t4-section-3 with var(--ds-c-fg-2) and var(--ds-c-bg) (ink) and no longer keeps .t4-palette-dark whole. Each tch contract's id is <slug>/j6/<v>, built from tokenized stylesheets, with a template-profiles row.",
+    "S3: each ready template at minVersion → {contract:'joomla-<slug>'}; the version before → reason TEMPLATE_NEEDS_UPDATE.",
+    "S4: a one-colour linear-gradient is that fill ([0,113,227]); a two-colour one is a picture (null); a 2 x 32 px positioned ::before is no picture; a ::before picture covering the box is a picture; a positioned 2000 x 40 px ::before with an opaque fill is the text's ground ([26,68,68]); a 80 x 4 px ::after is not."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-{ja-resort,ja-symphony,ja-vital,ja-company,ja-civica}.json ready, minVersion, keepScopes, followRules, paletteBands, measureStill, sideRules",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor / templateKeyOf",
+    "probe": "packages/design/tracy-ds-slot/scripts/flow.mjs contrastProbe (drawn, pictured, flat, pfill, under)"
+  },
+  "evidence": "tasks/evidence/ds-contracts-r3a-2026-10-11/README.md — per-template table, screenshots, flow.json of each release build measured and its VERIFICATION.json (11/10/2026).",
+  "fence": "The measures on Docker stands are in the evidence, not re-run here (each takes 10–30 min on the shared VM). Not covered: the release builds themselves (VERIFICATION.json in each pack), the paint-stack reading under() (needs a browser; its effect is in the evidence) and publishing (no upload is made). Judging by eye is in the evidence.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-r3a.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

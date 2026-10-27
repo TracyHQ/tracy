@@ -1,0 +1,296 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-stark",
+  "release": "quickstart/ja-stark/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "div#acm-hero-101 h1.hero-heading",
+    "heading": "div#t4-section-3 h2.sub-title",
+    "body": "div#t4-section-3 p.sub-desc",
+    "button-primary": "div#acm-hero-104 a.btn.btn-secondary",
+    "container": "div.t4-section.t4-hero div.t4-section-inner.container",
+    "section": "div.t4-section.t4-section-4 div.t4-section-inner.container"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "the hero title: 60px (h1.hero-heading in #acm-hero-101; the animate.css classes it carries change while it plays, so they are not part of the selector)",
+    "displayFace": "louis_george_cafebold 400, tracking 0em",
+    "heading": "the 'Our Services' section title (h2.sub-title, 32px, a light section)",
+    "body": "the running text under it (p.sub-desc)",
+    "button-primary": "the green call to action of the light 'Our Missions' section (Stark paints its buttons .btn-secondary #22cc99; the hero's sits in a kept band)",
+    "container": "first content container, max-width 1260px",
+    "section": "first padded full-width section, padding-top 140.625px"
+  },
+  "keepScopes": [".t4-hero", ".t4-section-1", ".t4-section-8", ".t4-footer", ".t4-footnav", ".t4-section-7"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--fg": "#888888",
+    "--fg-2": "#111111",
+    "--accent": "#2e3d96",
+    "--accent-hover": "#22cc99",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#2e3d96",
+    "--meta": "#6c757d",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#dddddd",
+    "--muted": "#797b7c",
+    "--font-display": "\"louis_george_cafebold\", sans-serif",
+    "--bg": "#ffffff",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "fg": "#888888",
+      "fg-2": "#111111",
+      "accent": "#2e3d96",
+      "accent-hover": "#22cc99",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212529",
+      "meta": "#6c757d",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#dddddd",
+      "muted": "#797b7c"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#888888",
+      "fg-2": "#333333",
+      "accent": "#22cc99",
+      "accent-on": "#ffffff",
+      "surface-warm": "#2e3d96"
+    },
+    {
+      "accent": "#22cc99"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "border": "#ced4da",
+      "accent-hover": "#22cc99",
+      "surface": "#eaedf1",
+      "border-soft": "#f7f7f7"
+    },
+    {
+      "surface": "#f9fafb"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (68 line colours, 89 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-heading.fadeInRight",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-lg.btn-secondary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-lg.btn-secondary"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": [
+      ":is(#t4-section-1, #t4-section-2, #t4-section-3, #t4-section-4, #t4-section-5, #t4-section-6) div.t4-section-inner.container"
+    ],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section p, .t4-section li",
+    "heading": ".t4-section :is(h1, h2, h3, h4)",
+    "footer": ".t4-footer a, .t4-footnav a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 12 tried (byte 4626); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ced4da",
+      "uses": 16,
+      "kind": "line",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 18
+    },
+    {
+      "hex": "#22cc99",
+      "uses": 11,
+      "kind": "custom",
+      "role": "accent-hover",
+      "near": "#22cc99",
+      "distance": 0
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 21
+    },
+    {
+      "hex": "#f9fafb",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 2
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 23
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-bg-color": "rgba(255, 255, 255, 0)",
+    "--body-text-color": "#888888",
+    "--body-link-color": "#22cc99",
+    "--body-link-hover-color": "#22cc99",
+    "--color-primary": "#2e3d96",
+    "--color-secondary": "#22cc99",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#111111",
+    "--mainnav-text-color": "#212529",
+    "--mainnav-link-color": "#212529",
+    "--mainnav-link-hover-color": "#007bff",
+    "--mainnav-link-active-color": "#007bff",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "#6c757d",
+    "--footer-link-color": "#6c757d",
+    "--footer-link-hover-color": "#fff"
+  },
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-stark/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip: tasks/evidence/ds-contracts-r2b-2026-10-11/templates/ja-stark-j6): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 57% or more of the page follows; the page ground, text and green call to action follow through T4's own style template (t4Placeholders: css/tpl/theme.tpl.css), which survives T4 rewriting media/t4/css on install; roles re-pointed to stable elements (the hero's animate.css classes change while it plays), section padding through its #t4-section-N rule, heading sizes !important (utilitiesImportant: its Bootstrap 4 phone sizes are !important); the 'A Design Agency' band is text on a fixed-attachment photo (a full-page screenshot shows the page behind it in every look, the default included); checked by eye on the four systems' screenshots. Re-measured 11/10/2026 with the per-element probe on the same 1.0.1 build (stand.mjs --from-dir, fresh install so T4 generated its theme CSS from the tokenized theme.tpl.css): 12/12, controls 0, no text worse than the template's own, 57%–84% follows, checked by eye (tasks/evidence/ds-remeasure-5-2026-10-11/ja-stark)",
+  "selectorsNote": "section: the template pads its sections by id (#t4-section-1 … -6 .container, 9.375em): the slot's rule names them the same way (:is(#…) carries an id's weight). buttonPrimary: Stark's call to action is .btn-secondary",
+  "utilitiesImportant": true,
+  "utilitiesNote": "Stark's compiled Bootstrap 4 sets heading sizes under 992 px !important (h1 2.8125rem!, h2 1.6875rem!): the system's display and heading sizes reach the phone only !important too",
+  "t4Placeholders": {
+    "__color_white": "bg",
+    "__body_bg_color": "bg",
+    "__body_text_color": "fg",
+    "__link_color": "accent",
+    "__link_hover_color": "accent-hover",
+    "__color_primary": "accent",
+    "__color_secondary": "accent",
+    "__color_light": "surface",
+    "__color_dark": "fg-2",
+    "__color_success": "success",
+    "__color_warning": "warn",
+    "__color_danger": "danger"
+  },
+  "t4PlaceholdersNote": "the template style's sheet (media/t4/css/<style id>.css) is generated on the site from css/tpl/theme.tpl.css and rewritten whenever it changes — on a fresh install too: it paints the page ground and text (body{background-color:__color_white;color:__body_text_color}) and Bootstrap's colour utilities (.btn-secondary{background-color:__color_secondary!important}) from placeholders. Each placeholder named here reads the slot in the template file itself (tokenize.mjs t4Placeholders), so what T4 writes out does too; __color_secondary is Stark's green call to action, __color_dark only ever as text (a fill keeps its own)",
+  "keepText": [".t4-section-7"],
+  "keepScopesNote": "the hero, the two navy bands (.t4-section-1, -8: T4 palette 'primary') and the footer keep the template's colours; .t4-section-7 ('Careers at Stark') too: its light grey ground is written by T4's layout settings into the generated style sheet (#t4-section-7{background:#f8f9fa}), which no template file carries, so its text keeps the template's own pair (keepText)",
+  "minVersion": {
+    "quickstart/ja-stark/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-stark/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "templateVars": {},
+  "templateVarsNote": "none beyond the family's: measured so (11/10/2026, round 2 r2b) — an empty map also keeps pass-joomla.mjs from deriving T4 theme variables (and dropping keepDefaults) on a later run",
+  "bands": {
+    ".t4-hero": {
+      "ground": "#000000",
+      "texts": ["#f8f9fa"],
+      "picture": true,
+      "paint": {
+        ".bg-overlay": {
+          "background-color": "ground"
+        },
+        ".t4-section-inner": {
+          "background-color": "ground"
+        },
+        ".t4-row": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".t4-section-1": {
+      "ground": "#2e3d96",
+      "texts": ["#f8f9fa"],
+      "picture": true,
+      "paint": {
+        ".hero-heading a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-section-8": {
+      "ground": "#2e3d96",
+      "texts": ["#f8f9fa"],
+      "important": true
+    },
+    ".t4-footer": {
+      "ground": "#111111",
+      "texts": ["#f8f9fa"],
+      "paint": {
+        ".hero-heading a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-footnav": {
+      "ground": "#111111",
+      "texts": ["#ffffff", "#e9ecef"],
+      "important": true
+    },
+    ".t4-section-7": {
+      "ground": "#f8f9fa",
+      "texts": ["#111111", "#888888"],
+      "paint": {
+        ".module-title span": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-section.t4-section-1.t4-section-inview.gutter-big.t4-palette-primary": {
+      "ground": "#2e3d96",
+      "texts": ["#f8f9fa", "#22cc99"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".module-title span", ".hero-heading", ".hero-heading a", ".lead"]
+    },
+    "#t4-header.t4-palette-primary": {
+      "ground": "#2e3d96",
+      "texts": ["#ffffff", "#f8f9fa"],
+      "kind": "brand",
+      "fill": true,
+      "important": true,
+      "media": "(max-width: 991px)"
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 15/10/2026 (v11 final measure, w15-v11-jo-b/ja-stark-j6, 28/34, phone only, home and /index.php/blog): under 992px the header (#t4-header.t4-palette-primary) is a solid brand bar: the template's _navigations.scss paints it $primary under body.nav-open (1,2,1, over T4's transparent home header), which the release tokenized as var(--ds-c-accent, #2e3d96), while its words stay literal white (#t4-header .logo .logo-text a .site-name #fff, T4 palette text #f8f9fa). On the system's accent the logo link read Moxie 2.26, MotherDuck 1.94, Toggl Track 2.56, Mailchimp 1.32, Spotify 1.92, Linear 1.23 (the template's white on its navy 10.6). It is now a brand fill at phone widths only (media): the accent where the system's own words on it read, its words repainted with them (accent-on): 4.52 (Voiceflow) to 21 under the fifteen, Moxie 9.28, MotherDuck 6.05, Mailchimp 12.56, Linear 16.15. On a desktop the header stays the template's (its T4 palette navy, or transparent over the home hero)"
+}

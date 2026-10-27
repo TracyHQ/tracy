@@ -1,0 +1,64 @@
+{
+  "color": {
+    "walnut": {
+      "$value": "#321e1e",
+      "$type": "color",
+      "$description": "Walnut — Primary text color, filled action buttons, dark hero sections, footer wordmark. Deep warm brown that reads as near-black while carrying the brand's earthy warmth — used as both foreground and background surface"
+    },
+    "linen": {
+      "$value": "#f4f1e0",
+      "$type": "color",
+      "$description": "Linen — Page canvas, card surfaces, light text on dark backgrounds. Warm aged-cream that gives the entire system its paper-like, vintage quality"
+    },
+    "graphite": {
+      "$value": "#464545",
+      "$type": "color",
+      "$description": "Graphite — Secondary borders, muted helper text, subtle dividers. Neutral medium gray providing quiet separation without competing with the Walnut/Linen pair"
+    },
+    "espresso": {
+      "$value": "#463938",
+      "$type": "color",
+      "$description": "Espresso — Button text on light surfaces, alternate dark fill. Slightly lighter brown variant for typographic contrast within the dark family"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Icon strokes, true-black accents on borders. Used sparingly where absolute contrast is needed"
+    },
+    "soft-sand": {
+      "$value": "#f4f4f4",
+      "$type": "color",
+      "$description": "Soft Sand — Alternate light surface, hover-state wash. Neutral off-white for slight tonal shifts away from the cream canvas"
+    }
+  },
+  "font": {
+    "houseplant": {
+      "$value": "Houseplant",
+      "$type": "fontFamily",
+      "$description": "Custom display and body typeface used for all UI text — headlines at 30-70px with tight negative tracking, body at 16-20px, captions at 14px. The custom font carries geometric warmth that off-the-shelf alternatives cannot replicate"
+    },
+    "roboto": {
+      "$value": "Roboto",
+      "$type": "fontFamily",
+      "$description": "Fallback body text — minimal usage, system-safe default"
+    },
+    "neuehelvetica55roman": {
+      "$value": "NeueHelvetica55Roman",
+      "$type": "fontFamily",
+      "$description": "NeueHelvetica55Roman — detected in extracted data but not described by AI"
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "GTStandard-M — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.houseplant.com",
+      "siteName": "HOUSEPLANT",
+      "extractedAt": "2026-06-03T19:46:52.215Z",
+      "variant": "compact"
+    }
+  }
+}

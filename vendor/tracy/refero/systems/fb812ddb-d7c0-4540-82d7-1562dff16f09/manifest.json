@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "fb812ddb-d7c0-4540-82d7-1562dff16f09",
+  "status": "complete",
+  "name": "Textla",
+  "url": "https://styles.refero.design/style/fb812ddb-d7c0-4540-82d7-1562dff16f09",
+  "sourceWebsite": "https://www.textla.com",
+  "extractedAt": "2026-06-03T20:53:52.002Z",
+  "capturedAt": "2026-10-08T05:19:54.479948+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Sunlit retro botanical almanac — a cream-yellow page printed in deep forest green, illustrated with cactus line art, stamped with hard offset shadows.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f2c2da0e-64aa-449f-bd91-aed23613ac2f.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/f7b9e2a9-f6b3-4c7f-8c81-5b172eed81bc.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/464d7dd9-fac9-40fe-b5bb-2f83e4c14b04.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/317a9d12-7030-4a7c-a100-f04e7cb62a3f.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/8ee71775-6146-402c-a694-7ccd408e702f.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f99e35cc3ccb012a1e31f338b94fa511cd7ff7341ad4726a78f490dcd11b2d81",
+      "bytes": 20323
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "3f48ec0a33004d4a2c2229b559a5ba9d05d8e34ef7a873717ccaf8d2888876d3",
+      "bytes": 144228
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3642bb94a3ded272d709683bbef5bfec428ac5f6951ce14e33c481b86b8f4554",
+      "bytes": 17232
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2797c4f04b9c02ee760329e1e8db93f25c22571f0d63a5ba65a7f69970aa63c1",
+      "bytes": 12544
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ba6d44a254c02fccb47a38dc0a68d8b2a2998eb77434a92c33c35a8011b02c2f",
+      "bytes": 12508
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e264a22b75a8d025accd73ba3a04c4deb5bfcc44e8810ffa8eced8712c126b5a",
+      "bytes": 2673
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "5d2d8b57bb05972023faa63431eb609ea8022ad8b37ab9cfb15ea4467168a798",
+      "bytes": 535
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "63f52975bb79c54782f88ba911915832bc5912e2317595b30dbbe5bb6353c6b9",
+      "bytes": 552
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "176b7af869155fa794dc7682c6c449af7cbb3c3f61481eb6c17f2469ee27b4aa",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "7c2a362db179918eabb844775d80ce71b0f44bf5b0eb098f667cd46a266af5e6",
+      "bytes": 44203
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e9f888fb028e3dfd3e4b2ed19edcb8104d5d666781c425a9cc2e87f159fdccf9",
+      "bytes": 23438
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "fed50b46116cca3e5b16c84ff88e78f3a6263deec94947be7082d359c5eb396f",
+      "bytes": 45997
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "afc6126c130fca1b19738ce89c00487d2d83483abb49093937eb34ad73424b4d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "24dc6f537c80aef91db0a2c0e0fefe8a734c0fa07c41bc15468dbfb991ce8506",
+      "bytes": 1623
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "42e9ce8c1e5190acf1ddb171813ca2291937982d0937450fa7c577ed18e3b91b",
+      "bytes": 2283
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "24929007-7e62-4c96-a940-7de65438a578",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "312423bf-72ea-42fb-b8f5-ab0104e778f3",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "db451eca-8de6-43a9-a5d5-35271befdffd",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "e9001d5a-504d-47ed-aef0-d0d35fa86418",
+    "f22f1195-837d-4b1d-a48c-9123b122bf87",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d",
+    "fb812ddb-d7c0-4540-82d7-1562dff16f09"
+  ]
+}

@@ -1,0 +1,107 @@
+---
+/**
+ * /landing — the "Home variation": nine ACM blocks on alternating bands, in the source's order
+ * (hero · chapter · features · figures · chapter · pricing · testimonials · clients · CTA). Band
+ * grounds follow the source's rows: warm, gray, gray-tight, scene, canvas-around-warm, gray,
+ * canvas-tight, scene.
+ */
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+import HeroAcm from '@/components/sections/HeroAcm.astro'
+import Chapter from '@/components/sections/Chapter.astro'
+import FeaturesIntro from '@/components/sections/FeaturesIntro.astro'
+import StatsBand from '@/components/sections/StatsBand.astro'
+import SectionHead from '@/components/sections/SectionHead.astro'
+import PricingTiers from '@/components/sections/PricingTiers.astro'
+import Quotes from '@/components/sections/Quotes.astro'
+import Clients from '@/components/sections/Clients.astro'
+import CtaBand from '@/components/sections/CtaBand.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { entry } = await getEmDashEntry('landing', 'landing', { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const d = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'landing', entry)
+---
+
+<Base chrome={chrome} title={d.title} description={d.hero_lead} image={mediaUrl(d.hero_image)} currentPath="/landing" content={{ collection: "landing", id: entry.data.id, slug: "landing", toPath: () => "/landing" }}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<HeroAcm eyebrow={d.hero_eyebrow} title={d.hero_title} lead={d.hero_lead} cta1Label={d.hero_cta1_label} cta1Url={d.hero_cta1_url} cta2Label={d.hero_cta2_label} cta2Url={d.hero_cta2_url} image={d.hero_image} imageAlt={d.hero_image_alt} asideLabel={d.hero_aside_label} asideBadge={d.hero_aside_badge} asideState={d.hero_aside_state} notes={d.hero_notes ?? []} stamp={$page} fields={{ eyebrow: "hero_eyebrow", title: "hero_title", lead: "hero_lead", cta1Label: "hero_cta1_label", cta2Label: "hero_cta2_label", image: "hero_image", asideLabel: "hero_aside_label", asideBadge: "hero_aside_badge", notes: "hero_notes" }} />
+		<section class="band bg-surface-warm">
+			<Chapter statement={d.chapter1_statement} support={d.chapter1_support} image={d.chapter1_image} imageAlt={d.chapter1_image_alt} linkLabel={d.chapter1_link_label} linkUrl={d.chapter1_link_url} linkStyle={d.chapter1_link_style} stamp={$page} fields={{ statement: "chapter1_statement", support: "chapter1_support", image: "chapter1_image", linkLabel: "chapter1_link_label" }} />
+		</section>
+		<section class="band bg-surface">
+			<FeaturesIntro eyebrow={d.features_eyebrow} title={d.features_title} lead={d.features_lead} cards={d.features_cards ?? []} stamp={$page} fields={{ eyebrow: "features_eyebrow", title: "features_title", lead: "features_lead", cards: "features_cards" }} />
+		</section>
+		{(d.stats_figures ?? []).length > 0 && (
+		<section class="band-tight bg-surface">
+			<div class="wrap"><StatsBand variant="plain" align="center" eyebrow={d.stats_eyebrow} heading={d.stats_heading} items={d.stats_figures ?? []} stamp={$page} fields={{ eyebrow: "stats_eyebrow", heading: "stats_heading", items: "stats_figures" }} /></div>
+		</section>
+		)}
+		<section class="band bg-scene-bg text-scene-fg">
+			<Chapter statement={d.chapter2_statement} support={d.chapter2_support} image={d.chapter2_image} imageAlt={d.chapter2_image_alt} linkLabel={d.chapter2_link_label} linkUrl={d.chapter2_link_url} linkStyle={d.chapter2_link_style} flip scene stamp={$page} fields={{ statement: "chapter2_statement", support: "chapter2_support", image: "chapter2_image", linkLabel: "chapter2_link_label" }} />
+		</section>
+		{(d.pricing_tiers ?? []).length > 0 && (
+		<section class="band">
+			<div class="band bg-surface-warm">
+				<div class="wrap">
+					<SectionHead eyebrow={d.pricing_eyebrow} title={d.pricing_heading} lead={d.pricing_intro} class="section-head--acm max-w-[52ch] [&>.eyebrow]:text-fg-meta" stamp={$page} fields={{ eyebrow: "pricing_eyebrow", title: "pricing_heading", lead: "pricing_intro" }} />
+					<PricingTiers variant="acm" tiers={d.pricing_tiers ?? []} stamp={$page} field="pricing_tiers" />
+				</div>
+			</div>
+		</section>
+		)}
+		{(d.testimonials_quotes ?? []).length > 0 && (
+		<section class="band bg-surface">
+			<div class="wrap">
+				{(d.testimonials_eyebrow || d.testimonials_heading) && (
+					<div class="mb-8 max-w-[717px] lg:mb-12">
+						{d.testimonials_eyebrow && <p class="eyebrow eyebrow--acm text-fg-meta" {...$page("testimonials_eyebrow")}>{d.testimonials_eyebrow}</p>}
+						{d.testimonials_heading && <h2 class="h-card" {...$page("testimonials_heading")}>{d.testimonials_heading}</h2>}
+					</div>
+				)}
+				<Quotes items={d.testimonials_quotes ?? []} ring={false} stamp={$page} field="testimonials_quotes" />
+			</div>
+		</section>
+		)}
+		{(d.clients_marks ?? []).length > 0 && (
+		<section class="band-tight">
+			<Clients eyebrow={d.clients_eyebrow} marks={d.clients_marks ?? []} stamp={$page} fields={{ eyebrow: "clients_eyebrow", marks: "clients_marks" }} />
+		</section>
+		)}
+		<section class="band bg-scene-bg">
+			<CtaBand variant="capsule" title={d.cta_statement} text={d.cta_support} btnLabel={d.cta_btn_label} btnUrl={d.cta_btn_url} linkLabel={d.cta_link_label} linkUrl={d.cta_link_url} stamp={$page} fields={{ title: "cta_statement", text: "cta_support", btnLabel: "cta_btn_label", linkLabel: "cta_link_label" }} />
+		</section>
+	</main>
+</Base>
+
+<style>
+	/* The source's `tracy-band--tight`: 0.6 of the band on every breakpoint. */
+	.band-tight {
+		padding-block: calc(var(--band-y) * 0.6);
+	}
+	@media (max-width: 1023px) {
+		.band-tight {
+			padding-block: calc(var(--band-y-tablet) * 0.6);
+		}
+	}
+	@media (max-width: 639px) {
+		.band-tight {
+			padding-block: calc(var(--band-y-phone) * 0.6);
+		}
+	}
+</style>

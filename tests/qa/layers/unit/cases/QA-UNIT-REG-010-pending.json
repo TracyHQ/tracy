@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-010-pending",
+  "itemIds": ["regression:REG-010"],
+  "requirement": "A post Tracy creates on EmDash is named in Site changes — by its title, never a bare id",
+  "oracle": {
+    "source": "tests/regression/cases/REG-010-emdash-created-post-named.json",
+    "ref": "PR #774 (fix); fix evidence: packages/tools/tracy-site-tools/test/emdash.test.mjs",
+    "invariant": "The build check prints a count >= 1. site_write has a row action='content_create', via='emdash-mcp', outcome='ok', actor=A, target kind='posts', target id=POST_ID (before #774 the target was NULL: content_create carries no id; ACC-30.C4 on qaacc-em03, develop 1bf428e65). API item: origin.source='chat', description.key='resource.op', description.params.type='post', description.params.id=POST_ID, and description.key is not 'change.recorded' (before #774: change.recorded, shown as 'Content change recorded'). API item: description.params.op='create' when the turn's only ok emdash-mcp row is that content_create. API item: effects.content.resources has an entry with type='post', id=POST_ID and 'create' in ops. The row's description text names the post by its title REG-010-<RUN> and never shows the bare POST_ID (en reads 'Created post “REG-010-<RUN>”'; since #900 E3.2, a ULID is never shown — before it read 'Created post <POST_ID>').",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer harness, needs stand, site:em, model, seat:owner"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:site:em", "need:model", "need:seat:owner"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-010"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "flaky-model", "owner:harness"],
+  "regression": {
+    "id": "REG-010",
+    "pr": 774,
+    "kind": "fix",
+    "area": "site-changes/record",
+    "file": "tests/regression/cases/REG-010-emdash-created-post-named.json"
+  },
+  "ownerLayer": "harness",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": true,
+  "command": [],
+  "needs": ["stand", "site:em", "model", "seat:owner"]
+}

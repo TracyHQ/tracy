@@ -1,0 +1,19 @@
+@theme {
+  /* Colors */
+  --color-lime-pulse: #7bd428;
+  --color-signal-blue: #2484f2;
+  --color-deep-signal: #2374c4;
+  --color-carbon: #222222;
+  --color-graphite: #444444;
+  --color-ink: #000000;
+  --color-mist: #eeeeee;
+  --color-paper: #ffffff;
+
+  /* Typography */
+  --font-roboto: 'roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-proximacapsbold: 'proximacapsbold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-proxima: 'proxima', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-georgia: 'Georgia', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sourcesanspro: 'sourcesanspro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1104-ai-accounts-row-first-open",
+  "kind": "fix",
+  "title": "The account menu's AI accounts row shows the vendor marks and \"Not connected\" on the FIRST opening of the menu",
+  "pr": 1104,
+  "area": "account-menu/ai-accounts",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/ui/tracy-model-plan/test/ai-accounts-row-first-open.test.mjs",
+    "S2: Read the pass/fail counts and the four tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "Starting the plugin (`apply`) asks GET /api/seat-plan/status once, before any menu opens.",
+    "A row mounted before the answer shows \"AI accounts\" alone, then the marks and \"Not connected\" when the answer lands, without being mounted again.",
+    "A row mounted after the answer shows the marks at once.",
+    "Two copies of the client bundle on one page make one read and share one status: a Connect published by one shows on the row of the other."
+  ],
+  "selectors": {
+    "function": "packages/ui/tracy-model-plan/src/client/account-status.ts accountStatus, prefetchAccountStatus",
+    "test": "packages/ui/tracy-model-plan/test/ai-accounts-row-first-open.test.mjs"
+  },
+  "evidence": "Measured on dev 09/10/2026 (tasks/evidence/account-menu/dev/hc-*.json): the first opening of the menu listed the AI accounts row as \"AI accounts\" alone; later openings showed the marks. The status read started only when the row mounted, i.e. when the menu opened.",
+  "fence": "The read starts when the plugin applies; the status lives once per document under Symbol.for('tracy.model-plan.account-status')",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=30000",
+      "packages/ui/tracy-model-plan/test/ai-accounts-row-first-open.test.mjs"
+    ],
+    "tests": [
+      "the status is asked for when the plugin starts, before any menu opens",
+      "a row mounted before the answer shows the name alone, then the marks when it lands",
+      "a row mounted after the answer landed shows it at once",
+      "two copies of the client on one page share one read and one copy of the status"
+    ]
+  }
+}

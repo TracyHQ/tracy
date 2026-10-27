@@ -1,0 +1,139 @@
+{
+  "color": {
+    "signal-blue": {
+      "$value": "#3b82f6",
+      "$type": "color",
+      "$description": "Signal Blue — Primary brand accent — links, active nav indicators, icon highlights, the inner play-button of the product mockup. Saturated enough to be the one color users remember, restrained enough to never compete with copy"
+    },
+    "action-blue": {
+      "$value": "#2563eb",
+      "$type": "color",
+      "$description": "Action Blue — Filled CTA buttons (Upgrade to Cap Pro), focus rings, and the strongest interactive state. One shade deeper than Signal Blue to give pressed actions a subtle weight shift"
+    },
+    "ink-black": {
+      "$value": "#202020",
+      "$type": "color",
+      "$description": "Ink Black — Headings, body text, the dark CTA button fill (Download for free). Off-black rather than pure #000 to avoid harsh edges on white"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Pure black reserved for the highest-emphasis text and icon fills where maximum contrast is required"
+    },
+    "paper": {
+      "$value": "#fcfcfc",
+      "$type": "color",
+      "$description": "Paper — Page and card canvas — the dominant surface across the entire site. Near-white, not pure white, to soften the reading field"
+    },
+    "mist": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Mist — Secondary surface for subtle differentiation — the segmented control track, inset highlights, and muted button backgrounds"
+    },
+    "fog": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Fog — Hairline borders on cards, buttons, and the nav bar. The structural divider of the design system"
+    },
+    "ash": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Ash — Borders and dividers at the lowest visual layer; also appears as a subtle backdrop wash behind the footer card"
+    },
+    "steel": {
+      "$value": "#c2c2c2",
+      "$type": "color",
+      "$description": "Steel — Mid-gray for secondary icon strokes and placeholder-like elements that should recede but remain visible"
+    },
+    "graphite": {
+      "$value": "#838383",
+      "$type": "color",
+      "$description": "Graphite — Muted captions, helper text, and de-emphasized UI labels."
+    },
+    "slate": {
+      "$value": "#646464",
+      "$type": "color",
+      "$description": "Slate — Button text on light surfaces, tertiary metadata text. One step deeper than Graphite for buttons that need a touch more presence"
+    },
+    "outlined-indigo": {
+      "$value": "#1e40af",
+      "$type": "color",
+      "$description": "Outlined Indigo — Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis."
+    },
+    "spark-violet": {
+      "$value": "#7c3aed",
+      "$type": "color",
+      "$description": "Spark Violet — Violet text accent for links, tags, and emphasized short phrases"
+    },
+    "spark-violet-soft": {
+      "$value": "#8b5cf6",
+      "$type": "color",
+      "$description": "Spark Violet Soft — Lighter violet companion to Spark Violet for secondary decorative strokes and gradient endpoints"
+    },
+    "ember": {
+      "$value": "#d97706",
+      "$type": "color",
+      "$description": "Ember — Orange text accent for links, tags, and emphasized short phrases."
+    },
+    "sky": {
+      "$value": "#0d74ce",
+      "$type": "color",
+      "$description": "Sky — Icon stroke variant within the mode selector — the paired companion to Ember for the three-mode icon set"
+    },
+    "ice": {
+      "$value": "#e0ecfc",
+      "$type": "color",
+      "$description": "Ice — Tinted blue surface wash — a barely-perceptible cool tint used for soft highlight backgrounds and the outer glow ring on the product mockup play button"
+    },
+    "cyan-glow": {
+      "$value": "#0090ff",
+      "$type": "color",
+      "$description": "Cyan Glow — Bright cyan accent for the glow/shadow halo behind the play button overlay in the product mockup"
+    },
+    "alert-red": {
+      "$value": "#ef4444",
+      "$type": "color",
+      "$description": "Alert Red — Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    },
+    "macos-red": {
+      "$value": "#ff5f57",
+      "$type": "color",
+      "$description": "macOS Red — Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    },
+    "macos-yellow": {
+      "$value": "#ffbd2e",
+      "$type": "color",
+      "$description": "macOS Yellow — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    },
+    "macos-green": {
+      "$value": "#28c840",
+      "$type": "color",
+      "$description": "macOS Green — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "defaultfont": {
+      "$value": "defaultFont",
+      "$type": "fontFamily",
+      "$description": "defaultFont — detected in extracted data but not described by AI"
+    },
+    "cap-sans-custom-geometric-sans-similar-to-general-sans-or-inter-display": {
+      "$value": "Cap Sans (custom geometric sans, similar to General Sans or Inter Display)",
+      "$type": "fontFamily",
+      "$description": "Single-family system. Weight 700 at 52–60px for hero and section display headings — tight tracking, almost no letter-spacing, confident and unornamented. Weight 500 at 18–20px for subheadings and feature titles. Weight 400 at 14–16px for body and descriptions. Weight 500 at 11–12px for uppercase eyebrow labels with +0.2em tracking creates the only typographic accent in the system."
+    },
+    "ui-monospace-sfmono-regular-menlo-consolas": {
+      "$value": "ui-monospace, SFMono-Regular, Menlo, Consolas",
+      "$type": "fontFamily",
+      "$description": "Used sparingly for micro-labels and version numbers in the product mockup. Not part of the marketing surface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://cap.so",
+      "siteName": "Cap",
+      "extractedAt": "2026-06-03T21:34:36.449Z",
+      "variant": "compact"
+    }
+  }
+}

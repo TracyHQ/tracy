@@ -1,0 +1,46 @@
+---
+import Base from '@/layouts/Base.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+Astro.response.status = 404
+// Provenance stamps of the site chrome's fields (`src/lib/stamps.ts`); empty on an ordinary request.
+const $site = stampFor(Astro.request, 'site', site)
+// A suggestion into an unticked page goes (TCH #1013, `src/lib/link-gate.ts`).
+const suggestions = (site.not_found_suggestions ?? []) as any[]
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  suggestions.map((s) => s.url)
+)
+---
+
+<Base chrome={chrome} title={site.not_found_title ?? "404"} currentPath="/404" resourcesActive robots="noindex, nofollow">
+	<main class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-16 pb-[120px] pt-[110px]">
+		<div>
+			<div class="mb-5 font-serif text-[clamp(80px,12vw,130px)] leading-[.9] tracking-[-.04em] text-signal-text">404</div>
+			<h1 class="h-section-lg mb-3.5" {...$site("not_found_title")}>{site.not_found_title}</h1>
+			<p class="mb-[30px] max-w-[36em] text-[17px] leading-[1.65] text-fg-muted" {...$site("not_found_text")}>{site.not_found_text}</p>
+			<form action={href(locale, "/search")} method="get" class="mb-[26px] flex max-w-[420px]" role="search">
+				<input type="search" name="q" placeholder={site.not_found_placeholder} aria-label={site.search_title} {...$site("not_found_placeholder")} class="min-w-0 flex-1 rounded-l-[var(--ds-input-radius,0px)] border border-fg bg-card px-[15px] py-3.5 font-sans text-[15.5px] text-fg" />
+				<button type="submit" class="rounded-r-[var(--ds-input-radius,0px)] bg-ink px-6 font-sans text-[15px] font-semibold text-[color:var(--ds-c-on-ink,var(--color-white))]" {...$site("search_button")}>{site.search_button}</button>
+			</form>
+			<a href={href(locale, "/")} class="link-underline !text-[15px]" {...$site("not_found_back")}>{site.not_found_back}</a>
+		</div>
+		<div class="border border-line-card bg-card">
+			<div class="column-label border-b border-line px-6 py-5" {...$site("not_found_suggestions_title")}>{site.not_found_suggestions_title}</div>
+			{suggestions.filter((s) => live(s.url)).map((s) => {
+				const inner = <>{s.label} <span class="text-fg-faint" aria-hidden="true">→</span></>;
+				return s.url ? <a href={s.url} class="flex justify-between border-b border-line-soft px-6 py-[18px] text-[16px] text-fg last:border-b-0 hover:bg-signal-tint" {...$site("not_found_suggestions.label")}>{inner}</a> : <div class="flex justify-between border-b border-line-soft px-6 py-[18px] text-[16px] text-fg last:border-b-0" {...$site("not_found_suggestions.label")}>{inner}</div>;
+			})}
+		</div>
+	</main>
+</Base>

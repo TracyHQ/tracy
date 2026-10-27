@@ -1,0 +1,46 @@
+{
+  "id": "QA-UNIT-REG-099-pending",
+  "itemIds": ["regression:REG-099"],
+  "requirement": "After a site rename the Browser tab moves to the new host with no reload (WordPress and Joomla); a comment reopened by a reply after Tracy's write loses \"Done by Tracy\"; translated Site changes Source labels wrap instead of being cut, and a long restore dialog title stays clear of its close button",
+  "oracle": {
+    "source": "tests/regression/cases/REG-099-renamed-browser-tab-reopened-comment-translated-layout.json",
+    "ref": "PR #899 (fix); fix evidence: tasks/evidence/e2e-dev-0410 (worktree e2e-dev-0410): bugs.md items 5 (E4.4b), 6 (E7.2c, E11.d), 11 (E10.2 c, d); vendor/tracy/dsh-better-sidebar/tests/native-surface.spec.ts ('keeps an address a plugin wrote over the url seed…'); packages/ui/tracy-chat-input/test/comment-auto-resolve.test.mjs ('…reopened by a reply, loses \"Done by Tracy\"…'); packages/site/tracy-site-tabs/test/e2e/changes-v2.test.mjs ('E10.2: …').",
+    "invariant": "Preconditions hold and the build check prints a count >= 1. The three unit seams exit 0 (TAP '# fail 0'; vitest 'Tests  N passed', no failed). All four rename runs print PASS: after.inputs and after.frames name the TO host, reloaded is false, ms <= 10000. Before this fix (stand 7ab09f35, 04/10): the chip read the new name but address field and frame stayed on the FROM host ('STAYED' after 10.5 s), and the WordPress page on the old host loaded fonts and script modules from the new one, blocked by CORS. After each pair: the site's name is KEY again, no site_name row is applying or pending, http://<KEY>:8080/ answers 200 (WordPress) or 301 to /en/ (Joomla), and wp-config.php's WP_HOME and WP_SITEURL read http://e2e3js.tracy.test:8080. The error log has no CORS line from the renamed host after the first rename run. comments prints PASS: comment #2's tag is not 'done' (it reads 'note'), comment #3's tag is 'done' ('Done by Tracy'). Before this fix both were 'done'. Both layout runs print PASS: lang is vi / de, at least one Source label listed, cut is empty. Before this fix: vi cut 'Khung chat' (7 rows), de cut 'Kommentar' (2 rows).",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer ui, needs stand, site:wp, site:jo, seat:owner, browser:cdp-9222, playwright"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [
+    "need:stand",
+    "need:site:wp",
+    "need:site:jo",
+    "need:seat:owner",
+    "need:browser:cdp-9222",
+    "need:playwright"
+  ],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-099"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:ui"],
+  "regression": {
+    "id": "REG-099",
+    "pr": 899,
+    "kind": "fix",
+    "area": "site-tabs/site-address",
+    "file": "tests/regression/cases/REG-099-renamed-browser-tab-reopened-comment-translated-layout.json"
+  },
+  "ownerLayer": "ui",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "site:wp", "site:jo", "seat:owner", "browser:cdp-9222", "playwright"]
+}

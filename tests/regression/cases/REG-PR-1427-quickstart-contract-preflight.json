@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-1427-quickstart-contract-preflight",
+  "kind": "fix",
+  "title": "Quickstart contract resolves native empty values and individual HTML and block occurrences before paid calls",
+  "pr": 1427,
+  "area": "website-opportunities/contract-preflight",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run node --test apps/tracy-web/test/brief-quickstart-first.test.mjs."],
+  "expect": [
+    "Missing native paths are unresolved even when contract sample is empty.",
+    "Observed empty values remain empty and unpublished entities require native proof.",
+    "XPath metadata applies only to the correct text occurrence after photo URL lengths change.",
+    "Media descriptors cannot override editorial roles; missing block attributes remain unresolved.",
+    "All picture preflight problems are reported before vision or uploads."
+  ],
+  "selectors": {
+    "file": "apps/tracy-web/src/sites/brief-engines/quickstart-contract-plan.js"
+  },
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/brief-quickstart-first.test.mjs"],
+    "needs": []
+  }
+}

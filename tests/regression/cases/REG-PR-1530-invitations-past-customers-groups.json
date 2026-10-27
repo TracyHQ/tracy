@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1530-invitations-past-customers-groups",
+  "kind": "feat",
+  "title": "A real campaign can send to past customers and has its own renamable groups",
+  "pr": 1530,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the campaign settings and send ledger suites against a private PostgreSQL (TEST_DATABASE_URL) from this branch."
+  ],
+  "expect": [
+    "A CSV whose group column holds only non-baseline values gives the campaign those values as groups; one baseline value keeps the baseline five and a typo answers unknown_group.",
+    "POST /campaigns/:id/settings sets audience and group names and refuses an unknown audience, a group the campaign does not have, an empty or over-long name and a stale revision.",
+    "A past_customers campaign sends to a customer aMember says has no plan; aMember failing still answers REAL_MEMBERSHIP_UNKNOWN; an active_plan campaign still answers REAL_NOT_MEMBER."
+  ],
+  "selectors": {
+    "settings": "/api/ops/invitations/real/campaigns/:id/settings",
+    "send": "/api/ops/invitations/real/campaigns/:id/recipients/:rid/send-invitation"
+  },
+  "fence": "Private test database only; no mailbox, no customer address.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-campaign-settings.test.mjs",
+      "apps/tracy-web/test/invitations-real-send.test.mjs"
+    ],
+    "tests": [
+      "a CSV with its own group values makes the campaign groups",
+      "a baseline CSV keeps the five baseline groups",
+      "settings set the audience and rename groups",
+      "a campaign for past customers invites a customer with no plan"
+    ]
+  }
+}

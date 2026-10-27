@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1427-technical-content-preserved",
+  "kind": "fix",
+  "title": "Native shortcode bytes and structural sibling ordinals survive quickstart editorial and cached replay",
+  "pr": 1427,
+  "area": "website-opportunities/quickstart-first",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the three declared Node test suites."],
+  "expect": [
+    "Only ranges inside valid parsed core shortcode blocks are trusted technical content; their original bytes remain unchanged.",
+    "A complete sibling group with the same DOM path and zero-padded sequential ordinals is preserved, excluding quantitative captions and declared numeric or metric fields.",
+    "Gap, duplicate, mixed padding and statistics are not inferred structural; model wire hashes remain unchanged."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/brief-engines/quickstart-technical-text.js, apps/tracy-web/src/sites/brief-engines/quickstart-editorial.js"
+  },
+  "fence": "No hardcoded template classes or names; trusted technical evidence is non-enumerable and native bytes are never re-escaped.",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/brief-quickstart-first.test.mjs"],
+    "needs": []
+  }
+}

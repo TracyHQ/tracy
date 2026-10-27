@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resort/j6/1.0.7",
+  "platform": "joomla",
+  "template": "ja_resort",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resort",
+    "id": "quickstart/ja-resort/j6",
+    "version": "1.0.7",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_resort",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-resort-j6-webroot-1.0.7.tar.gz",
+        "bytes": 115310325,
+        "sha256": "f2245185c40286e124f56ccd5e7200acef311f6a2ec2ab6f698af6b56970db6d"
+      },
+      "database": {
+        "file": "ja-resort-j6-database-1.0.7.sql.gz",
+        "bytes": 174481,
+        "sha256": "b197e49c2aa0f268df18588a4b4fabd84a8e77a2394baff7957ff498905ab6eb"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-19T14:46:45.006Z",
+    "builtFrom": {
+      "from": "quickstart/ja-resort/j6@1.0.6",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 755 files replaced (templates/ja_resort/AGENTS.md, templates/ja_resort/CHANGELOG.md, templates/ja_resort/CLAUDE.md, templates/ja_resort/README.md, templates/ja_resort/component.php, templates/ja_resort/error-t4.php, templates/ja_resort/error.php, templates/ja_resort/favicon.ico, templates/ja_resort/index.php, templates/ja_resort/layout.json, templates/ja_resort/offline.php, templates/ja_resort/templateDetails.xml, templates/ja_resort/templateInfo.php, templates/ja_resort/template_preview.png, templates/ja_resort/template_thumbnail.png, templates/ja_resort/css, templates/ja_resort/docs, templates/ja_resort/etc, templates/ja_resort/fonts, templates/ja_resort/html, templates/ja_resort/images, templates/ja_resort/js, templates/ja_resort/params, templates/ja_resort/scss, templates/ja_resort/acm, templates/ja_resort/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-resort/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.24",
+  "mode": "content-recommendation"
+}

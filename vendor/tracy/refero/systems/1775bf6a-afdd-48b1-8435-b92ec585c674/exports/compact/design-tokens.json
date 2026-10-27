@@ -1,0 +1,44 @@
+{
+  "color": {
+    "pitch-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pitch Black — Page canvas, hero backgrounds, card fills — the default surface for the entire site; every other element floats on this"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Primary text, hairline borders on dark surfaces, nav wordmark, overlay labels on imagery"
+    },
+    "charcoal-whisper": {
+      "$value": "#313130",
+      "$type": "color",
+      "$description": "Charcoal Whisper — Near-invisible secondary borders and dividers — just enough to separate layers without breaking the black-box illusion"
+    },
+    "electric-cobalt": {
+      "$value": "#1200e3",
+      "$type": "color",
+      "$description": "Electric Cobalt — The circular nav toggle button and the only chromatic surface in the UI — a single stage light against an otherwise dark room"
+    }
+  },
+  "font": {
+    "maligna": {
+      "$value": "Maligna",
+      "$type": "fontFamily",
+      "$description": "Display serif used for the wordmark, hero statement, and work-card overlay titles. A humanist serif with warmth and character in a system otherwise built on a cold grotesque — it signals craft, editorial confidence, and refusal of the default SaaS look. The -0.03em tracking tightens optical spacing at display sizes."
+    },
+    "founders-grotesk": {
+      "$value": "Founders Grotesk",
+      "$type": "fontFamily",
+      "$description": "The workhorse sans covering body copy, UI labels, the 'HWC' monogram, eyebrow text like 'FEATURED WORK', and all button text. Weight 300 carries body, 500 holds subheadings, 700 is reserved for small-caps eyebrows and emphasis. The tight -0.03em tracking across all sizes gives text a slightly condensed, editorial rhythm."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.hardworkclub.com",
+      "siteName": "Hardworkclub",
+      "extractedAt": "2026-06-03T21:38:44.624Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,108 @@
+/* Native pages inherit the active Joomla template's design system, including its dark remap.
+   The artifact renderer supplies structure; it must not establish a second site-wide palette. */
+.tracy-native-landing.tracy-native-landing.tracy-native-landing {
+  --brand-color-primary: var(--accent);
+  --brand-color-primary-hover: var(--accent-hover);
+  --brand-color-primary-active: var(--accent-active);
+  --brand-color-primary-contrast: var(--accent-on);
+  --brand-color-primary-ink: var(--accent);
+  --brand-color-primary-text: var(--accent);
+  --brand-color-primary-bg: var(--surface);
+  --brand-color-primary-bg-hover: var(--surface-warm);
+  --brand-color-primary-border: var(--border);
+  --brand-color-primary-border-hover: var(--accent);
+  --brand-color-link: var(--accent);
+  --brand-color-link-hover: var(--accent-hover);
+  --brand-color-link-active: var(--accent-active);
+  --brand-color-text: var(--fg);
+  --brand-color-text-secondary: var(--muted);
+  --brand-color-text-tertiary: var(--meta);
+  --brand-color-text-quaternary: var(--meta);
+  --brand-color-fill: var(--border);
+  --brand-color-fill-secondary: var(--surface);
+  --brand-color-fill-tertiary: var(--surface-warm);
+  --brand-color-fill-quaternary: var(--surface-warm);
+  --brand-color-bg-layout: var(--bg);
+  --brand-color-bg-container: var(--bg);
+  --brand-color-bg-elevated: var(--surface);
+  --brand-color-border: var(--border);
+  --brand-color-border-secondary: var(--border-soft);
+  --brand-color-success: var(--success);
+  --brand-color-warning: var(--warn);
+  --brand-color-error: var(--danger);
+  --brand-color-info: var(--accent);
+  --brand-font-family: var(--font-body);
+  --brand-font-family-code: var(--font-mono);
+  --display-family: var(--font-display);
+  --brand-font-size: var(--text-base);
+  --brand-font-size-sm: var(--text-xs);
+  --brand-font-size-lg: var(--text-lg);
+  --brand-font-size-xl: var(--text-lg);
+  --brand-line-height: var(--leading-body);
+  --brand-line-height-heading: var(--leading-tight);
+  --brand-border-radius: var(--radius-md);
+  --brand-border-radius-sm: var(--radius-sm);
+  --brand-border-radius-lg: var(--radius-lg);
+  --brand-motion-duration-mid: var(--motion-base);
+  --brand-motion-ease-in-out: var(--ease-standard);
+  --native-title-size: var(--text-3xl);
+  --native-section-size: var(--text-2xl);
+  --native-gutter: var(--container-gutter-desktop);
+  --native-section-space: var(--section-y-desktop);
+
+  .wrap {
+    max-width: calc(var(--container-max) + 2 * var(--native-gutter));
+    padding-inline: var(--native-gutter);
+  }
+  .section, [data-od-block="hero"] { padding-block: var(--native-section-space) !important; }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: var(--tracking-display) !important;
+    line-height: var(--leading-tight) !important;
+  }
+  h1 { font-size: var(--native-title-size) !important; }
+  h2 { font-size: var(--native-section-size) !important; }
+  h3 { font-size: var(--text-xl) !important; }
+  .kicker { letter-spacing: .06em; }
+  .op-lead { font-size: var(--text-lg); line-height: var(--leading-body); }
+  .op-hero-image, .op-team img, .op-contact { border-radius: var(--radius-lg); }
+  /* Inline dimensions belong to the imported artifact; native CTAs follow .tracy-btn. */
+  a[style*="--brand-control-height"], .op-button {
+    font-family: var(--font-body) !important;
+    font-size: var(--text-base) !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -.005em;
+    height: auto !important;
+    min-height: 44px;
+    padding: var(--tracy-capsule-pad) !important;
+    border-radius: var(--tracy-capsule) !important;
+    box-shadow: none !important;
+    white-space: normal !important;
+    text-align: center;
+  }
+  a[style*="background:var(--brand-color-primary)"], .op-button {
+    background: var(--accent) !important;
+    color: var(--accent-on) !important;
+    border-color: transparent !important;
+  }
+  a[style*="background:var(--brand-color-primary)"]:hover, .op-button:hover {
+    background: var(--accent-hover) !important;
+  }
+  a:focus-visible, button:focus-visible, summary:focus-visible {
+    outline: 0;
+    box-shadow: var(--focus-ring) !important;
+  }
+  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); }
+  @media (max-width:1023px) {
+    --native-gutter: var(--container-gutter-tablet);
+    --native-section-space: var(--section-y-tablet);
+  }
+  @media (max-width:639px) {
+    --native-gutter: var(--container-gutter-phone);
+    --native-section-space: var(--section-y-phone);
+    --native-title-size: var(--text-4xl-phone);
+    --native-section-size: var(--text-3xl-phone);
+    h3 { font-size: var(--text-2xl-phone) !important; }
+  }
+}

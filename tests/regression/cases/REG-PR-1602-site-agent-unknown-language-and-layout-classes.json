@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1602-site-agent-unknown-language-and-layout-classes",
+  "kind": "fix",
+  "title": "A request in a Latin language the reading does not know (Norwegian, Danish, Swedish, German, French, Spanish, Italian, Portuguese) is never read as Dutch and so never makes the agent reply in Dutch; the agent is shown every class that lays an element out (a menu's pill class) and told to look for a layout in the settings of the record that prints it",
+  "pr": 1602,
+  "area": "site-agent/language-and-layout",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run packages/core/tracy-core/test/language.test.mjs: 75 sentences in 12 languages the reading does not know, and real Dutch with short words other languages also use.",
+    "S2: run packages/tools/tracy-site-tools/test/look-style.test.mjs: describeTarget on a Joomla menu list whose class list is `mod-menu mod-list nav nav-pills`.",
+    "S3: run packages/tools/tracy-site-tools/test/ds-slot-worn.test.mjs: the LOOK line carries the layout sentence on every platform and only in the modes that can change a look."
+  ],
+  "expect": [
+    "S1: no sentence of the 75 reads as 'nl'; the four Dutch sentences still read 'nl'; Vietnamese is unchanged.",
+    "S2: the agent is told <ul.mod-menu.mod-list.nav.nav-pills>, not <ul.mod-menu.mod-list>; no name is longer than 79 characters.",
+    "S3: the sentence is present for wordpress, joomla and emdash with the designer mode and absent for a mode that cannot change a look."
+  ],
+  "selectors": {
+    "files": "packages/core/tracy-core/src/language/index.mjs, packages/tools/tracy-site-tools/src/host/look-style.mjs, packages/tools/tracy-site-tools/src/host/site-context.mjs"
+  },
+  "evidence": "22/10/2026, a real imported Joomla site (customer in Norway): six requests for a horizontal menu answered 'done' with no change on the page (the menu module carried the class nav-pills), and the customer reported the site had switched to Dutch. Measured on the unchanged code: 18 of 75 (Norwegian 6 of 11, Danish 5 of 8, Swedish 5 of 8, Italian 2 of 8) sentences of 12 other languages read as Dutch. After: 0 of 75.",
+  "fence": "Dutch wins only while its words outnumber the signs of another Latin language; describeTarget names up to six classes per element and still cuts a name at 78 characters; the layout sentence is the LOOK_CHECK's own and names no platform or template",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/language.test.mjs",
+      "packages/tools/tracy-site-tools/test/look-style.test.mjs",
+      "packages/tools/tracy-site-tools/test/ds-slot-worn.test.mjs"
+    ],
+    "tests": [
+      "a sentence in a Latin language the reading does not know is never read as Dutch",
+      "Dutch with short words other languages also use still reads as Dutch",
+      "describeTarget names an element with every class that lays it out, so a menu pill class is seen",
+      "LOOK line: a layout is sought in the settings of the record that prints it, and done is said for what was asked: joomla"
+    ]
+  }
+}

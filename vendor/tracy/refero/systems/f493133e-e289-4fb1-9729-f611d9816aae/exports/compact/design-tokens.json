@@ -1,0 +1,79 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, deepest background layer — the void against which everything else floats"
+    },
+    "obsidian": {
+      "$value": "#0d0c11",
+      "$type": "color",
+      "$description": "Obsidian — Card surfaces, elevated panels — a barely-perceptible warm purple-black lift from the canvas"
+    },
+    "charcoal-press": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Charcoal Press — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "onyx": {
+      "$value": "#12151d",
+      "$type": "color",
+      "$description": "Onyx — Navigation bar background, sticky header surface"
+    },
+    "smoke": {
+      "$value": "#050505",
+      "$type": "color",
+      "$description": "Smoke — Secondary canvas tone, gradient terminus — the deepest non-pure-black"
+    },
+    "graphite": {
+      "$value": "#3e3c41",
+      "$type": "color",
+      "$description": "Graphite — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "ash": {
+      "$value": "#848895",
+      "$type": "color",
+      "$description": "Ash — Muted text, secondary navigation labels, icon strokes in resting state"
+    },
+    "fog": {
+      "$value": "#ababba",
+      "$type": "color",
+      "$description": "Fog — Body text, descriptions, secondary copy — warm gray that softens white's intensity"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Primary headings, high-emphasis text, icon fills, reversed button text"
+    },
+    "hairline": {
+      "$value": "#eaecf0",
+      "$type": "color",
+      "$description": "Hairline — Ultra-subtle borders at low opacity — defines card edges and input fields against the void"
+    }
+  },
+  "font": {
+    "diatype": {
+      "$value": "Diatype",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI — body text, headings, buttons, navigation. The geometric, slightly condensed forms paired with aggressively negative letter-spacing give every line a compressed, technical authority. Weight 300 for display headlines creates a whisper-confident tone; weight 400 for body; weight 500 for emphasis. Letter-spacing tightens proportionally: -0.04em at display sizes, -0.01em at body sizes."
+    },
+    "dsemi": {
+      "$value": "DSemi",
+      "$type": "fontFamily",
+      "$description": "Reserved for the Solana wordmark and select nav micro-labels at 12-14px. The heavy weight at micro sizes acts as a brand signature — a condensed monospaced bold that contrasts Diatype's lighter geometric forms."
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "ui-sans-serif — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://solana.com",
+      "siteName": "Solana",
+      "extractedAt": "2026-06-03T19:16:23.963Z",
+      "variant": "compact"
+    }
+  }
+}

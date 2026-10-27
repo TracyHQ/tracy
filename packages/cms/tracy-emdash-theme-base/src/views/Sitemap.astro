@@ -1,0 +1,114 @@
+---
+/**
+ * `/sitemap`: every menu the chrome carries, grouped under the site entry's panel titles, then
+ * every published entry of the three routable collections under its own list page's title.
+ * The source has no sitemap page; the lists use the footer's column idiom.
+ */
+import { getEmDashCollection, getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { type Attrs, stampFor, stampsFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { loadPosts } from '@/lib/posts'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request. Menu links carry none: the
+// menus are not Content API records, only the site fields titling them are.
+const $site = stampFor(Astro.request, 'site', site)
+const $ = stampsFor(Astro.request)
+const [services, people, posts, servicesPage, blogPage, teamPage] = await Promise.all([
+  getEmDashCollection('services', { locale, status: 'published', orderBy: { sort: 'asc' }, limit: 500 }),
+  getEmDashCollection('people', { locale, status: 'published', orderBy: { sort: 'asc' }, limit: 500 }),
+  loadPosts(locale),
+  getEmDashEntry('services_page', 'services_page', { locale }),
+  getEmDashEntry('blog', 'blog', { locale }),
+  getEmDashEntry('team', 'team', { locale })
+])
+type Link = { label: string; url: string; stamp?: Attrs }
+// A link into an unticked page or one of its children is not listed, and a group left empty goes (TCH #1013).
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  [
+    chrome.primary,
+    chrome.service,
+    chrome.resourcesRead,
+    chrome.resourcesDesign,
+    chrome.resourcesHelp,
+    chrome.company
+  ]
+    .flat()
+    .map((l) => l.url)
+    .concat([href(locale, '/services'), href(locale, '/blog'), href(locale, '/team')])
+)
+const menus: Array<{ title: string; stamp: Attrs; items: Link[] }> = [
+  { title: site.menu_label, stamp: $site('menu_label'), items: chrome.primary },
+  { title: site.mega_service_title, stamp: $site('mega_service_title'), items: chrome.service },
+  { title: site.mega_read_title, stamp: $site('mega_read_title'), items: chrome.resourcesRead },
+  { title: site.mega_design_title, stamp: $site('mega_design_title'), items: chrome.resourcesDesign },
+  { title: site.mega_help_title, stamp: $site('mega_help_title'), items: chrome.resourcesHelp },
+  { title: site.mega_company_title, stamp: $site('mega_company_title'), items: chrome.company }
+]
+  .map((g) => ({ ...g, items: g.items.filter((i) => live(i.url)) }))
+  .filter((g) => g.items.length > 0)
+const collections: Array<{ title: string | undefined; stamp: Attrs; url: string; items: Link[] }> = [
+  {
+    title: servicesPage.entry?.data.title,
+    stamp: $('services_page', servicesPage.entry)('title'),
+    url: href(locale, '/services'),
+    items: services.entries.map((e: any) => ({
+      label: e.data.title,
+      url: href(locale, `/services/${e.slug}`),
+      stamp: $('services', e)('title')
+    }))
+  },
+  {
+    title: blogPage.entry?.data.title,
+    stamp: $('blog', blogPage.entry)('title'),
+    url: href(locale, '/blog'),
+    items: posts.map((p) => ({
+      label: p.data.title,
+      url: href(locale, `/blog/${p.slug}`),
+      stamp: $('posts', p)('title')
+    }))
+  },
+  {
+    title: teamPage.entry?.data.title,
+    stamp: $('team', teamPage.entry)('title'),
+    url: href(locale, '/team'),
+    items: people.entries.map((e: any) => ({
+      label: e.data.name || e.data.title,
+      url: href(locale, `/team/${e.slug}`),
+      stamp: $('people', e)(e.data.name ? 'name' : 'title')
+    }))
+  }
+].filter((g) => g.items.length > 0 && live(g.url))
+---
+
+<Base chrome={chrome} title={site.sitemap_title} currentPath="/sitemap">
+	<Breadcrumb items={[{ label: site.breadcrumb_home, url: href(locale, "/"), stamp: $site("breadcrumb_home") }, { label: site.sitemap_title, stamp: $site("sitemap_title") }]} />
+	<main id="main" class="wrap pb-[var(--band-y)] pt-6">
+		<h1 class="h-page mb-10" {...$site("sitemap_title")}>{site.sitemap_title}</h1>
+		<div class="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+			{menus.map((g) => (
+				<section>
+					<h2 class="footer-title" {...g.stamp}>{g.title}</h2>
+					<ul>{g.items.map((l) => <li><a href={l.url} class="footer-link">{l.label}</a></li>)}</ul>
+				</section>
+			))}
+		</div>
+		{collections.map((g) => (
+			<section class="mt-14 border-t border-line-soft pt-10">
+				<h2 class="h-card mb-6"><a href={g.url} class="text-fg hover:text-accent" {...g.stamp}>{g.title}</a></h2>
+				<ul class="grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">{g.items.map((l) => <li><a href={l.url} class="footer-link" {...l.stamp}>{l.label}</a></li>)}</ul>
+			</section>
+		))}
+	</main>
+</Base>

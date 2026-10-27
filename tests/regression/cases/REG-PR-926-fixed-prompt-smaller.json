@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-926-fixed-prompt-smaller",
+  "kind": "fix",
+  "title": "The fixed prompt every step re-sends is smaller and still correct: AGENTS.md carries no unanswered team questions and no contract line the site context repeats, the skill catalog stops at 200 characters a line and lists no image-generation skill, the brand/design/build tool schemas fit a budget and keep their parameters, refusals and rules, and a typed turn is no longer told to end with a look.revert id it never gets",
+  "pr": 926,
+  "area": "agent/prompt",
+  "cms": ["any"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. Work in the TCH checkout at the commit under test, with its dependencies installed (pnpm install) and the dsh build done (pnpm dsh:build); node and git on PATH.",
+    "S2: From the checkout root run each command below and keep its last 12 lines and its exit code: (a) node --test packages/tools/tracy-site-tools/test/plain-reply.test.mjs (b) node --test packages/fleet/tracy-fleet-operation/test/site-folder.test.mjs (c) node --test scripts/test/skill-catalog.test.mjs (d) node --test scripts/test/tool-schema-budget.test.mjs (e) pnpm exec tsx scripts/gen-presets.ts --check (f) node scripts/build-agent-tools.mjs --check",
+    "S3: For (a)-(d) read the 'ℹ pass' and 'ℹ fail' lines; for (e) and (f) read the one line they print. A command that cannot start (missing module, missing dsh build) is BLOCKED, not FAIL."
+  ],
+  "expect": [
+    "(a) fail 0: PLAIN_REPLY, the rule a typed turn gets, names no look.revert; COMMENT_WRITES_ONLY, the comment turn's rule, still ends with 'Undo: look.revert <id>'. Before the fix: PLAIN_REPLY ended with 'only a look change ends with its `Undo: look.revert <id>`', and agents grepped the site folder and called look.revert {} for an id a typed turn never earns.",
+    "(b) fail 0: a new AGENTS.md has an empty tracy:agents-md fence, no 'About this site' / 'Skills to reach for' / 'Hand to a person', no 'content contract', 'slots' or '0.75×' in the platform brief of a Joomla or WordPress quickstart site; a frozen file with the shipped questions is emptied ('hint block emptied') and a file whose team answered one is left whole. Before the fix: ~520 characters of unanswered questions and ~560 of contract text on every step.",
+    "(c) fail 0, and the four tests that hold this pass (the file has 6 since PR #1026 and PR #1071 each added one): every preset of both bundles sets catalogDescriptionMaxLength 200, every Tracy skill description fits it, no preset lists brandkit, imagegen-frontend-web or image-to-code-skill, every preset catalog is at most 5,300 characters and every designer preset still lists tracy-design-inspiration. Before the fix: Designer catalogs were 6,695-7,506 characters.",
+    "(d) pass 6, fail 0: tracy_brand <= 1,600 characters of schema, tracy_design_copy <= 1,500, tracy_design_propose <= 950, tracy_design_library <= 520, tracy_site_build_wordpress <= 4,400, _joomla <= 5,200, _emdash <= 5,700, each still naming its actions, parameters, refusals and rules. Before the fix: 2,823 / 2,384 / 1,036 / 599 / 5,099 / 5,838 / 6,381.",
+    "(e) prints 'Preset gate: 4 files match the matrix.'; (f) prints 'agent-tools.json matches the site-tools plugin.'",
+    "Every command exits 0."
+  ],
+  "selectors": {
+    "plainReply": "packages/tools/tracy-site-tools/src/host/prompter.mjs PLAIN_REPLY",
+    "agentsMd": "packages/fleet/tracy-fleet-operation/scripts/provision/siteFolder.mjs agentsMd / topUpAgentsMd / QUICKSTART_BRIEFS",
+    "skillCatalog": "scripts/gen-presets.ts tool-skill row (catalogDescriptionMaxLength) and tasks/mode-matrix.json skills",
+    "toolSchemas": "scripts/test/tool-schema-budget.test.mjs BUDGET"
+  },
+  "evidence": "Bench flow D, 05/10/2026 (55 runs, 445 steps, 3 CMS): fixed prompt about 16k tokens a step, tools 57%, skill catalog 11%, AGENTS.md 6%; tracy_brand, the design tools, tracy_find_definition and the build tools were never called for a build; two Joomla look cases hunted for a look.revert id. Red runs of (a)-(d) are the test commits of PR 926 before their fix commits.",
+  "fence": "Mechanism only: the text a step-1 prompt carries and what must stay in it. Not covered: whether the agent behaves better or worse on the shorter prompt; that is measured by re-running flow D.",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-PR-926-fixed-prompt-smaller.mjs"] }
+}

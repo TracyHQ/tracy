@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "wordpress",
+  "label": "JA Essence",
+  "version": "1.0.9",
+  "cms": "7.1.2",
+  "install": {
+    "webroot": {
+      "file": "ja-essence-wp7-webroot-1.0.9.tar.gz",
+      "sha256": "4cdff2d528e8f1ef41f213ce13b14e44bd8f5cf447d118010c05abdcfcd8ab59"
+    },
+    "database": {
+      "file": "ja-essence-wp7-database-1.0.9.sql.gz",
+      "sha256": "70d401e11d1b48e8f1d18c39c0cd8e533a533a387eba8b2b5121bcde058da476"
+    }
+  },
+  "template": "ja-essence"
+}

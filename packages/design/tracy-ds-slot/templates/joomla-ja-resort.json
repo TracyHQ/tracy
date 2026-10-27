@@ -1,0 +1,671 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-resort",
+  "release": "quickstart/ja-resort/j6@1.0.2",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.slide-title.text-white",
+    "heading": "h2.mt-0.mb-3",
+    "body": "p.pr-xl-3",
+    "button-primary": "button.btn.btn-primary",
+    "container": "div.container",
+    "section": "#t4-section-1",
+    "input": "input.checkin_module.datefield"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 96px",
+    "displayFace": "Frank Ruhl Libre 400, tracking 0em",
+    "heading": "first section heading: 44px",
+    "body": "first body paragraph",
+    "button-primary": "first filled call to action outside a kept band: rgb(211, 178, 152)",
+    "container": "first content container, max-width 1260px",
+    "section": "first padded full-width section, padding-top 144px",
+    "input": "first text field"
+  },
+  "keepScopes": [".owl-item > .item", ".has-bg"],
+  "keepText": [".owl-item > .item", ".has-bg"],
+  "keepColors": {},
+  "paletteBands": {
+    ".t4-section-1": "ink",
+    ".t4-section-3": "ink",
+    ".t4-palette-gray": "surface"
+  },
+  "paletteBandsNote": "its dark green brand bands (the welcome band and the rooms band, T4 palette dark) are drawn in the template brand ink to stand against a light page: under a system they take the system strongest text colour as their ground and its page colour as their text (ink), so they stay bands and follow; the blog band (T4 palette gray, #e1dbd5 with #294138 links from T4 generated stylesheet) takes the surface and the text that reads on it",
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#fbf6f3",
+    "--fg": "#7b8383",
+    "--fg-2": "#294138",
+    "--accent": "#d3b298",
+    "--accent-hover": "#0056b3",
+    "--surface": "#f8f9fa",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#e1dbd5",
+    "--muted": "#75726f",
+    "--font-display": "\"Frank Ruhl Libre\", sans-serif",
+    "--font-body": "\"Poppins\", sans-serif",
+    "--accent-on": "#294138",
+    "--surface-warm": "#294138"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#fbf6f3",
+      "fg": "#7b8383",
+      "fg-2": "#122223",
+      "accent": "#d3b298",
+      "accent-hover": "#0056b3",
+      "surface": "#f8f9fa",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#e1dbd5",
+      "muted": "#75726f"
+    },
+    {
+      "bg": "#fbf6f3",
+      "fg": "#7b8383",
+      "fg-2": "#294138",
+      "accent": "#d3b298",
+      "accent-on": "#294138",
+      "surface-warm": "#294138"
+    },
+    {
+      "accent": "#a95514"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface-warm": "#1a4444",
+      "border": "#dddddd",
+      "bg": "#f2f2f2",
+      "warn": "#fdce03"
+    },
+    {
+      "surface-warm": "#294138"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (88 line colours, 119 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.slide-title.text-white",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "button.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "button.btn.btn-primary"],
+    "container": [".t4-section .container", "div.container"],
+    "section": ["#t4-section-1"],
+    "bodyFace": ["body"],
+    "landingButton": [".sr-checkavailability-wrap button.btn.btn-primary"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t4-section p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 14 tried (byte 7401); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#1a4444",
+      "uses": 15,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#294138",
+      "distance": 19
+    },
+    {
+      "hex": "#dddddd",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#e1dbd5",
+      "distance": 9
+    },
+    {
+      "hex": "#294138",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#294138",
+      "distance": 0
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fbf6f3",
+      "distance": 10
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 4,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-bg-color": "#fbf6f3",
+    "--body-text-color": "#7b8383",
+    "--body-link-color": "#d3b298",
+    "--body-link-hover-color": "#0056b3",
+    "--color-primary": "#d3b298",
+    "--color-secondary": "#294138",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#122223",
+    "--heading_color": "#294138",
+    "--title_module": "#a95514",
+    "--footer_color": "#dbcbbe"
+  },
+  "keptButtons": {
+    "#t4-header": {
+      "ground": "#294138",
+      "buttons": ["a.btn.btn-primary"]
+    },
+    ".owl-item > .item": {
+      "ground": "#122223",
+      "buttons": ["a.btn.btn-primary"]
+    }
+  },
+  "keptButtonsNote": "re-measured 11/10/2026: every primary button of the home page ('Book Now' in the header, the slider and the feature band, 'Check' in the booking form) sits in a band the contract keeps, so none wore the system and the button role failed under every system (it had in round 3 too: 14/16, the committed flow.json); the buttons now follow inside their kept bands, checked against each band's ground; 15/10/2026 (v10): since the 14/10 keepScopes trim only .item is a kept band, so these entries judged buttons the slot no longer pairs. The header stays judged and is worn as a fill (bands) so its Book Now! takes the pair judged on the header's worn ink: left to the page's pair it vanished on that ink under Airbnb, Eddie and ElevenLabs, whose accent is their ink (1:1), and stood 2.81-2.9:1 under Stripe and Pitch. The room card (.acm-feature-intro) and the booking form (.sr-checkavailability-wrap) are page panels now (the palette's surface and white): their buttons are the page's own, judged by the button role; as kept buttons they were read on the dark band behind the card's ::before (1:1 for a dark button the Airbnb shot shows on the white card) and asked a turned pair on the form that the slot does not write there (MotherDuck, Toggl Track, Mailchimp)",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on the release build 1.0.2 (stand.mjs --from-dir; tasks/evidence/ds-remeasure-4-2026-10-11/ja-resort-j6): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, kept bands 0 differences, no text under 4.5:1 worse than the template's own (lowest 4.48, the hero title on its photo, as in the template), 62-86% of the page follows, every contrast kind sampled in every view, dark and light screenshots looked at. The round-3 measure had in fact failed 4/12 (73 kept-band elements changed colour, the primary button never wore the system): the kept bands that paint no text colour of their own now take the template's page text back (keepText; the slider, blog card, video band, testimonial and booking form had turned near-white, the booking selects light on white under Moxie), the room card band keeps its white (keepColors), every Book Now / Check button follows inside its kept band (keptButtons, judged on the cream room card #e1dbd5 a ::before paints: flow.mjs now reads that ground), and the Read more link keeps the template's brown (no regression measured on the photo). Earlier: measured 11/10/2026 on the release build 1.0.2 itself (stand.mjs --from-dir, tasks/evidence/ds-contracts-r3a-2026-10-11/ja-resort-j6): controls 0 differences before and after, 0 texts (every heading and text element, desktop and phone) less readable than the template’s own under Moxie, MotherDuck, Toggl Track and Apple, 55-79% of the page follows (round 1: 49-59%), no sideways scroll. The dark green intro and rooms bands now follow as ink bands (the system’s strongest text colour as ground, its page colour as text) instead of staying the template’s; the header, the rooms card, the testimonial card, the photo blog card, the video band, the booking form and the footer keep the template’s look. Dark and light screenshots looked at, desktop and phone",
+  "templateVars": {
+    "--heading_color": "var(--ds-c-fg-2)",
+    "--title_module": "var(--ds-c-accent-text)",
+    "--heading-font-family": "var(--ds-font-heading)",
+    "--body-font-family": "var(--ds-font-body)",
+    "--t4-font-family": "var(--ds-font-body)"
+  },
+  "templateNote": "T4 custom colours on :root (--heading_color #294138 for every .heading-link, --title_module #a95514): under a system the headings take the system heading colour and module titles the readable accent; inside kept bands they are given back (keepDefaults)",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples)",
+  "measureStill": true,
+  "followRules": {
+    ":is(.t4-section-1, .t4-section-3) .text-primary": {
+      "color": "on-band!"
+    },
+    ".btn-outline-secondary": {
+      "color": "fg-2!",
+      "border-color": "fg-2!"
+    },
+    ".owl-dots > button span": {
+      "background-color": "border!"
+    },
+    ".owl-dots > button.active > span": {
+      "background-color": "accent!"
+    },
+    "body": {
+      "background-color": "bg",
+      "color": "fg"
+    },
+    ".acm-features.style-3 .acm-feature-intro :is(p, div, span, li, small, strong, em):not(.btn, .btn *)": {
+      "color": "fg"
+    },
+    ".acm-features.style-3 .acm-feature-intro :is(h1, h2, h3, h4, h5, h6)": {
+      "color": "fg-2"
+    },
+    ".acm-features.style-3 .acm-feature-intro .feature-title h2 span": {
+      "color": "accent-text"
+    },
+    ".acm-testimonial.style-1 :is(.desc, .quote-mask span)": {
+      "color": "on-band"
+    },
+    ".acm-testimonial.style-1 .text-primary": {
+      "color": "on-band!"
+    },
+    ".module-title span:not(.t4-footnav *, .t4-footer *)": {
+      "color": "accent-text"
+    },
+    ".items-leading .item-content": {
+      "background-color": "surface"
+    },
+    ".items-row .item": {
+      "background-color": "surface"
+    },
+    ".com_solidres #solidres .btn.trigger_checkinoutform, .com_solidres #solidres .btn.btn-success": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".com_solidres #solidres .btn.trigger_checkinoutform:hover, .com_solidres #solidres .btn.trigger_checkinoutform:focus, .com_solidres #solidres .btn.trigger_checkinoutform:active, .com_solidres #solidres .btn.btn-success:hover, .com_solidres #solidres .btn.btn-success:focus, .com_solidres #solidres .btn.btn-success:active": {
+      "color": "accent-on!"
+    },
+    ".readmore .btn-readmore": {
+      "color": "accent-text"
+    },
+    "#login-form li a:hover, .categories-module li a:hover, .latestnews li a:hover, .page-header a:hover, .items-more a:hover, .contact .contact-articles ul li a:hover, .article-index ul li a:hover, .page-about .member-hover-desc .scoial_icons ul li:hover a": {
+      "color": "accent-text-hover!"
+    },
+    ".dropdown-menu li.show > a, .dropdown-menu li.show > span, .dropdown-menu li.active > a, .dropdown-menu li.active > span, .dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-menu li > a:active, .dropdown-menu li > span:hover, .dropdown-menu li > span:focus, .dropdown-menu li > span:active": {
+      "color": "accent-text!"
+    },
+    ".heading-link:hover, .heading-link:focus, .heading-link:active": {
+      "color": "accent-text-hover"
+    },
+    ".btn-outline-secondary:hover, .btn-outline-secondary:focus, .btn-outline-secondary:active": {
+      "background-color": "fg-2!",
+      "border-color": "fg-2!",
+      "color": "bg!"
+    },
+    ".btn-outline-primary": {
+      "color": "accent-text!",
+      "border-color": "accent!"
+    },
+    ".btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active": {
+      "background-color": "accent!",
+      "color": "accent-on!"
+    },
+    "select:not(.sr-checkavailability-wrap *)": {
+      "border-color": "border"
+    },
+    ".registration legend, .profile-edit legend, .profile legend, .search legend, .search .searchintro": {
+      "color": "fg-2!"
+    },
+    ".registration fieldset legend": {
+      "background-color": "bg"
+    },
+    ".text-secondary": {
+      "color": "fg-2!"
+    },
+    ".bg-primary": {
+      "background-color": "accent!"
+    },
+    ".bg-primary.text-white, .bg-primary .text-white": {
+      "color": "accent-on!"
+    },
+    ".bg-dark": {
+      "background-color": "ink!"
+    },
+    ".bg-dark.text-white, .bg-dark .text-white, .bg-dark.text-light, .text-light": {
+      "color": "on-ink!"
+    },
+    ".t4-palette-gray .section-title-wrap .sub-heading": {
+      "color": "fg-2"
+    },
+    ".com-tags-tag.tag-category .category li:hover": {
+      "background-color": "surface-warm!"
+    },
+    ".pagenav li a": {
+      "background-color": "surface-warm",
+      "color": "fg"
+    },
+    ".pagenav li a:hover, .pagenav li a:focus, .pagenav li a:active": {
+      "background-color": "surface"
+    },
+    "#login-form .form-group .input-group-text:hover, #login-form .control-group .input-group-text:hover, #login-form .form-group .input-group-addon > span:hover, #login-form .control-group .input-group-addon > span:hover": {
+      "background-color": "surface-warm"
+    },
+    ".createdby [itemprop=\"name\"]": {
+      "color": "fg-2"
+    },
+    ".action a:hover, .action a:focus, .action a:active": {
+      "color": "accent-text-hover!"
+    }
+  },
+  "followNote": "on the two ink bands the eyebrows and the welcome title are .text-primary, which the template paints with !important: they take the band text colour; the View all buttons are outlined in #294138 with !important (T4 color-secondary): they take the strongest text colour of the system; 15/10/2026 (v10 4/34; v8 18/34, before the auto palette and the 14/10 keepScopes trim): (1) the palette's `body` rule is Bootstrap's literal body (color #7b8383 → muted, #fff → surface), which the template's own T4 body rule outranks; written as `:root body` it won, so the page wore the system's surface and its second ink: page.backgroundColor/page.color missed under 12 of 15 systems (Moxie #1a1a1a for #000000, Notion #3e3d3d for #6c6c6c). The body takes the page colour and the template's body-text role, as T4 writes them (--body-bg-color, --body-text-color). (2) The room card (.acm-feature-intro, a cream ::before inside the dark rooms band .t4-section-3) is painted surface by the palette, while paletteBands' ink rule gives every word of .t4-section-3 the band's light text: title, price, intro and amenity titles went white on the white card under the light systems (h2, h5 1.0-1.14:1 under Notion, Airbnb, Eddie, Pitch, Stripe, Apple…; the template's #294138 on #e1dbd5 reads 8.02:1). Its words take the card's: the strongest ink (fg-2, textOrder) for its headings, the page text for the rest, the readable accent for the price. (3) The testimonial card (.acm-testimonial, a #1a4444 ::before) is painted a band by the palette, while its quote (h4.desc) was classified as page muted text and the name (.text-primary) keeps the accent made for the page: 1.0-4.02:1 under the light systems (5.42:1 in the template). They take the band's text, as the ink bands' .text-primary do 19/10/2026 (hover sweep, 1.0.7): the features' Read More links hover in T4's compiled colour primary (.action a:hover, the template tan #d3b298 printed into the T4 stylesheet): they take the readable accent hover.",
+  "keepNote": "kept: the header (dark green bar with the logo and the light menu), the rooms slider (.item) and its cream card with the room facts (.acm-feature-intro, #e1dbd5), the photo blog card (.has-bg: its text sits on the photo under a dark wash), the testimonial card (#1A4444 drawn by a ::before), the video band (#t4-section-7: text on a photo), the booking form (white box with a dark green tab) and the footer",
+  "sideRules": {
+    "light": {
+      ".alert-info, .contact .contact-miscinfo": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-info :is(strong, a), .contact .contact-miscinfo :is(strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".readmore .btn-readmore:hover, .readmore .btn-readmore:focus": {
+        "text-decoration-color": "currentColor"
+      },
+      ".font-heading-family, .registration legend, .profile-edit legend, .profile legend, .search legend, .search .searchintro": {
+        "font-family": "var(--ds-font-heading) !important"
+      },
+      ".font-body-family, .module-title span, .t4-offcanvas .t4-off-canvas-header h3, div[class*=sidebar-] .sr-checkavailability-wrap .font-heading-family": {
+        "font-family": "var(--ds-font-body) !important"
+      },
+      "#t4-header .head-action a.btn": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      "[id^=acm-slideshow] .owl-item .item": {
+        "background-color": "var(--ds-c-ink, var(--ds-c-fg))"
+      },
+      "#t4-header .item-caret::before": {
+        "border-top-color": "var(--ds-c-on-ink) !important"
+      },
+      ".readmore .btn.btn-readmore": {
+        "padding": "0 !important"
+      },
+      ".carousel-control-prev, .carousel-control-next": {
+        "background-color": "var(--ds-c-fg-2)",
+        "border": "0",
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".acm-testimonial.style-1 .testimonial-rating": {
+        "filter": "grayscale(1) brightness(1.7)"
+      },
+      "#t4-header .item-caret": {
+        "color": "var(--ds-c-on-ink) !important"
+      },
+      ".btn.btn-secondary:not(.trigger_checkinoutform)": {
+        "background-color": "transparent !important",
+        "border-color": "var(--ds-c-fg-2) !important",
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-secondary:not(.trigger_checkinoutform) :is(i, span)": {
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-secondary:not(.trigger_checkinoutform):hover, .btn.btn-secondary:not(.trigger_checkinoutform):focus, .btn.btn-secondary:not(.trigger_checkinoutform):active": {
+        "background-color": "var(--ds-c-fg-2) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ":is(.btn.btn-secondary:not(.trigger_checkinoutform):hover, .btn.btn-secondary:not(.trigger_checkinoutform):focus, .btn.btn-secondary:not(.trigger_checkinoutform):active) :is(i, span)": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".acm-testimonial.style-1 .testimonial-rating .stars-vote": {
+        "filter": "grayscale(1)"
+      },
+      ".com-finder .form-inline .input-group .input-group-append .btn, .com-finder .form-inline .input-group .input-group-addon .btn": {
+        "border-radius": "var(--ds-btn-radius) !important"
+      },
+      "pre, code, kbd, samp": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      "mark": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".mark": {
+        "color": "var(--ds-c-fg)"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".owl-item > .item a.btn.btn-primary": {
+        "background-color": "var(--tracy-slide-accent) !important",
+        "border-color": "var(--tracy-slide-accent) !important",
+        "color": "var(--tracy-slide-on) !important"
+      },
+      ".owl-item > .item a.btn.btn-primary:is(:hover, :focus)": {
+        "background-color": "var(--tracy-slide-accent-hover) !important",
+        "border-color": "var(--tracy-slide-accent-hover) !important",
+        "color": "var(--tracy-slide-on) !important"
+      },
+      "body.site-default": {
+        "--tracy-slide-accent": "var(--ds-c-accent)",
+        "--tracy-slide-accent-hover": "var(--ds-c-accent-hover, var(--ds-c-accent))",
+        "--tracy-slide-on": "var(--ds-c-accent-on)"
+      }
+    },
+    "dark": {
+      ".alert-info, .contact .contact-miscinfo": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-info :is(strong, a), .contact .contact-miscinfo :is(strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".readmore .btn-readmore:hover, .readmore .btn-readmore:focus": {
+        "text-decoration-color": "currentColor"
+      },
+      ".font-heading-family, .registration legend, .profile-edit legend, .profile legend, .search legend, .search .searchintro": {
+        "font-family": "var(--ds-font-heading) !important"
+      },
+      ".font-body-family, .module-title span, .t4-offcanvas .t4-off-canvas-header h3, div[class*=sidebar-] .sr-checkavailability-wrap .font-heading-family": {
+        "font-family": "var(--ds-font-body) !important"
+      },
+      "#t4-header .head-action a.btn": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      "[id^=acm-slideshow] .owl-item .item": {
+        "background-color": "var(--ds-c-ink, var(--ds-c-fg))"
+      },
+      "#t4-header .item-caret::before": {
+        "border-top-color": "var(--ds-c-on-ink) !important"
+      },
+      ".readmore .btn.btn-readmore": {
+        "padding": "0 !important"
+      },
+      ".carousel-control-prev, .carousel-control-next": {
+        "background-color": "var(--ds-c-fg-2)",
+        "border": "0",
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".logo-img": {
+        "filter": "none"
+      },
+      ".acm-testimonial.style-1 .testimonial-rating": {
+        "filter": "grayscale(1) brightness(1.7)"
+      },
+      "#t4-header .item-caret": {
+        "color": "var(--ds-c-on-ink) !important"
+      },
+      ".btn.btn-secondary:not(.trigger_checkinoutform)": {
+        "background-color": "transparent !important",
+        "border-color": "var(--ds-c-fg-2) !important",
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-secondary:not(.trigger_checkinoutform) :is(i, span)": {
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-secondary:not(.trigger_checkinoutform):hover, .btn.btn-secondary:not(.trigger_checkinoutform):focus, .btn.btn-secondary:not(.trigger_checkinoutform):active": {
+        "background-color": "var(--ds-c-fg-2) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ":is(.btn.btn-secondary:not(.trigger_checkinoutform):hover, .btn.btn-secondary:not(.trigger_checkinoutform):focus, .btn.btn-secondary:not(.trigger_checkinoutform):active) :is(i, span)": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".acm-testimonial.style-1 .testimonial-rating .stars-vote": {
+        "filter": "grayscale(1)"
+      },
+      ".com-finder .form-inline .input-group .input-group-append .btn, .com-finder .form-inline .input-group .input-group-addon .btn": {
+        "border-radius": "var(--ds-btn-radius) !important"
+      },
+      ".carousel-control-prev-icon, .carousel-control-next-icon": {
+        "filter": "invert(1)"
+      },
+      "pre, code, kbd, samp": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      ".img-icon img, .ft-icon-item img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      "mark": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".mark": {
+        "color": "var(--ds-c-fg)"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      "body a:not([class*=btn], .dropdown-item, .logo, .navbar-brand, .page-link):is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".owl-item > .item a.btn.btn-primary": {
+        "background-color": "var(--tracy-slide-accent) !important",
+        "border-color": "var(--tracy-slide-accent) !important",
+        "color": "var(--tracy-slide-on) !important"
+      },
+      ".owl-item > .item a.btn.btn-primary:is(:hover, :focus)": {
+        "background-color": "var(--tracy-slide-accent-hover) !important",
+        "border-color": "var(--tracy-slide-accent-hover) !important",
+        "color": "var(--tracy-slide-on) !important"
+      },
+      "body.site-default": {
+        "--tracy-slide-accent": "var(--ds-c-accent)",
+        "--tracy-slide-accent-hover": "var(--ds-c-accent-hover, var(--ds-c-accent))",
+        "--tracy-slide-on": "var(--ds-c-accent-on)"
+      }
+    }
+  },
+  "sideNote": "the photo blog card keeps the template faces under every system. Its Read more link once took the card's white (a system can change the card width and move the link onto another part of the photo, where the template brown #a95514 read 3.19:1 at best); re-measured 11/10/2026 element by element, the brown link reads no worse than in the template's own look under any of the four systems, so it keeps the template's brown and the kept card stays exactly the template's; 15/10/2026: the faces are the template’s own variables (T4 site profile: body Poppins, headings Frank Ruhl Libre), not their names: the release’s :root:lang(vi) block points them at Be Vietnam Pro and Noto Serif, and the names at :root×6 had beaten it, so a Vietnamese site drew the card’s words with fallback marks 19/10/2026 (1.0.7, role-variable template): the status grounds (.bg-success/.bg-warning/.bg-info/.bg-danger and their .text-white/.text-dark words) are the template's own now (the shared Bootstrap 4 role block in css/template.css: status-text fill, page-colour words), so the contract no longer paints them a pale status ground: the two together put the block's white words on the contract's pale warn ground (.bg-warning 1.11:1 under Figma, typography page). mark keeps the browser's black words (MarkText) on its surface-warm wash: it reads the page text, so it stays readable when the wash goes dark (1.11:1 under Moxie).",
+  "minVersion": {
+    "quickstart/ja-resort/j6": "1.0.2"
+  },
+  "maxVersion": {
+    "quickstart/ja-resort/j6": "1.0.8"
+  },
+  "maxVersionNote": "1.0.8 21/10/2026 (TEXT-1 batch 3): built from 1.0.7 (release-batch.mjs --overlay); only css/template.css differ (and their SCSS/LESS sources): text that read a ground role (TEXT-1) now reads its text role with its own colour as the fallback, and words on a status fill pair with it (page-colour words on the status text shade, or the status text on its pale fill); unworn the page is the release's own (VERIFICATION.json). 19/10/2026 (dot 3, feat/ds-dot3-a2): 1.0.7 = 1.0.6 with the template reading the standard role variables at its source (JoomlArt-Products/ja-products feat/ds-dot3-a2 7efcaf4df: the shared Bootstrap 4 role block, every colour, corner and face reading its --ds-* role with the template value as fallback) laid over it (release-batch.mjs build --overlay --from 1.0.6), same database; role scan clean (design-system-roles.json, 0 unresolved); verified from its own archive against 1.0.6 as released: 0 computed differences desktop and phone, same pixels, 21/21 pages as released.",
+  "minVersionNote": "1.0.2 = 1.0.1 with its stylesheets tokenized (release-batch.mjs build from this contract, installer zip sha256 fe6bd64d19e56a167d543fba61f17920c25555b467fb7cdab6509b0548026b1a; verified 0 computed differences, same pixels, 21/21 pages as released; tch contract ja-resort/j6/1.0.2 and a template-profiles row); not yet published: ~/tracy-bench-work/RELEASE-DS-R3A.sh, after the Claude Cowork plugin carries the contract",
+  "bands": {
+    "#t4-header": {
+      "ground": "#294138",
+      "texts": ["#d3b298", "#ffffff"],
+      "important": true,
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ".menu-item-title": {
+          "color": "text"
+        }
+      },
+      "fill": true,
+      "words": [".menu-item-title"]
+    },
+    ".owl-item > .item": {
+      "ground": "#122223",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    ".acm-feature-intro": {
+      "ground": "#294138",
+      "texts": ["#294138", "#7b8383"],
+      "root": false,
+      "paint": {
+        ".feature-title h2 span": {
+          "color": "accent"
+        },
+        ".t4-section": {
+          "background-color": "ground"
+        },
+        ".feature-title h2": {
+          "color": "text"
+        },
+        ".feature-intro": {
+          "color": "text-2"
+        },
+        ".feature-info :is(h3, h4, h5, h6)": {
+          "color": "text"
+        }
+      },
+      "important": true
+    },
+    ".has-bg": {
+      "ground": "#fbf6f3",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        ".action a span": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    "#t4-section-7": {
+      "ground": "#fbf6f3",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    ".acm-testimonial": {
+      "ground": "#fbf6f3",
+      "texts": ["#d3b298", "#e1dbd5"],
+      "root": false,
+      "paint": {
+        ".t4-content": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".sr-checkavailability-wrap": {
+      "ground": "#ffffff",
+      "texts": ["#294138"],
+      "important": true,
+      "paint": {
+        ".form-control, .form-select": {
+          "background-color": "ground",
+          "border-color": "text-2",
+          "color": "text"
+        }
+      }
+    },
+    ".t4-footnav": {
+      "ground": "#122223",
+      "texts": ["#dbcbbe"],
+      "paint": {
+        ".module-title span::before": {
+          "background-color": "accent-fill"
+        },
+        "&": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        }
+      },
+      "important": true,
+      "kind": "ink",
+      "repaint": true
+    },
+    ".t4-footer": {
+      "ground": "#122223",
+      "texts": ["#dbcbbe"],
+      "important": true,
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        }
+      }
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 15/10/2026: #t4-header is a fill (it left keepScopes on 14/10 and its band went unworn): it wears the system's ink as the palette's band does and its buttons the pair judged on it; its words stay the palette's (light-dark band text) but for the menu titles the band paints (words: .menu-item-title), so the header's dropdowns are not repainted",
+  "contractNotes1317": "13/10/2026 (#1317): the page followed 59-82% because the kept bands kept their words (footer and footnav #dbcbbe, header menu #d3b298, the feature intro headings #294138: 160 of the left paints): the ink bands repaint their words with the system text; .acm-feature-intro was drafted with its own heading colour as its ground (an overlay by that reading): it is the cream panel (#fbf6f3) and repaints its headings and intro text. Carousel dots and the outline button follow. Second run (21:46): the feature intro band repainted its headings with the system text while the cream under them stayed (its .t4-section paint reaches nothing: 1.19:1 under Moxie, 6 headings), so it goes back to its first shape until the ground element is found; the outline button rule lost its ! and the template colour stayed under Moxie (1.58:1), restored. Round 4 (14/10): the room card's cream panel is not an ancestor of its words (the measured ground is the section's #294138, which the words match), so the band reads as an overlay and its text roles are the system's dark words for a light panel: the headings and intro text repaint with them and read on the kept cream (the 21:46 attempt used the light words of a dark band). The carousel dots are painted on the button's span (the active one with !important), and the outline button's line also needs !important. The room card's amenity titles (h5) repaint the same way, and the booking form's fields (white, kept) take the booking panel's worn ground, line and words.",
+  "keepScopesNote": "the rooms slider (.item) and the blocks with a background photograph (.has-bg) are the template's own pictures: kept. The header, the room facts card, the testimonials, the availability form and the footers follow the system through the auto palette (14/10/2026: they were kept only to reach ROLE-1).",
+  "v10Note": "19/10/2026 (probe v10, 1.0.4 as released: 15 rules failed, 0 after): keepScopes .item narrowed to .owl-item > .item (the two photo sliders); .item also kept the blog cards, whose white ground stayed under the system's light words. The palette read .module-title span as band words (white on white under Figma): the page's module titles take the readable accent. btn-secondary (T4 --color-secondary fill, white words) is an outline in the strongest text colour, filled on hover; the Solidres select button takes the accent pair. T4 hover literals (#d3b298) take accent-text-hover; header caret on-ink; legends, .text-secondary, .bg-*, .alert-info, select borders and hover grounds follow. The header logo (made for the dark header) is never inverted on the dark side; the line icons (.img-icon, .ft-icon-item, drawn for a light page) are inverted there; the PNG rating stars are greyed. Faces: --heading-font-family / --body-font-family point at the system faces and T4's literal face rules follow; the booking Check button takes the system button weight (landingButton, ROLE-1); header menu words take the band's strongest text (CON-1 under Airbnb, Eddie, ElevenLabs).",
+  "hoverNote": "21/10/2026 (HOVER-2, TEXT-1 batch 3): the header menu links, article titles and the currency links in the booking form read one role at rest and on hover under some systems (Moxie, 5fd3), so hover and focus also underline; buttons, dropdown items, the logo and pagination keep their own states. The same underline is written on the link's inner words (span, strong, em, b, small, headings, p): the probe reads the cue on the element that holds the words, and an underline set on the link alone does not change that element's computed style. The slider's primary button sits in a kept band, which resets every --ds-c-* to the template's, so it kept the template's #d3b298 fill under 5fd3 (ACCENT-LEAK) and no system's button (BTN-1) on the home page (1.0.8 measure, 21/10/2026): it takes the system's accent and its words from aliases set on the body, outside the reset."
+}

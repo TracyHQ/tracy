@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "82d52a5f-b1bb-4a69-91a3-15a7eb8bbe99",
+  "status": "complete",
+  "name": "ThoughtLab",
+  "url": "https://styles.refero.design/style/82d52a5f-b1bb-4a69-91a3-15a7eb8bbe99",
+  "sourceWebsite": "https://www.thoughtlab.com",
+  "extractedAt": "2026-07-03T03:42:08.490Z",
+  "capturedAt": "2026-10-08T05:14:15.646713+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "Obsidian monument with crimson signal. A void-black canvas where a single saturated red pill is the only chromatic object in a cathedral of oversized white type.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6c356f1e-aa20-4428-8b02-1ff99c6a2454.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/aa4d859d-fd3b-4a72-a75f-ec4be35fcb99.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/86e7ce83-4caa-4348-90a0-20811a956baa.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/504bf76a-aab7-459c-9496-1f520fd0324a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/2de089ec-c0c2-475f-8c62-75b5b81933a5.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "217eefc18f5732addc49a9f2a8310927adce7273f8320b843e635b9157685209",
+      "bytes": 16677
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "57ece3bf4c15e693e620514a347695d4b8c8333fda19a9ca324031e0716eac00",
+      "bytes": 83341
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "dfd4f037668aac0523e8a8d56d977ed15cd0c4f92fb746e22f56c0faf623e7a6",
+      "bytes": 14121
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "384cb0b748e6cef6d889a3ee5f64c4f207df104d8381a6cdf032d5f7e1fa3744",
+      "bytes": 9379
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7bb070acf9e908ced03cf1d563b38fe640530f451d59b115b98984120b3224db",
+      "bytes": 10470
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a8960d8b1fa9963ff50b035a2bdfd539c5b31e37ae94d8292b3aa791ead18d30",
+      "bytes": 1747
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "af3000cc742d3d8deb158e66cc81549b9800ae6892ad9c2d991a875ff328c24b",
+      "bytes": 298
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "419cb3124a80cb434be4f0cbfb28fc1c743bc4e6438fe02064b9d7e2e7b5b875",
+      "bytes": 315
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ecbca6d97fdcec35b4e572d8e3b99c6715c7c97a65422f37aa91f2d695f472ec",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e397df4fbaf741d639a9a03ac82fc780d3bf94ab0419d803dd923065ed033133",
+      "bytes": 39902
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6d888631690b84f05c0a7a06da72620e5e0b4bb11458e0d3180609de775bd82f",
+      "bytes": 20910
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ee8999044c5cbade88cb3afd631c5625901d00e6a27bb9bf681e739f11778a5d",
+      "bytes": 33278
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "de4d9c90ff4eb765bb7244570132b99d940c72a948f25e637106a4c18a4faa55",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "546f676705d6eff3d8f9f0254bafc44a73691ba68703d93092c4e8ef803c1555",
+      "bytes": 1167
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ee83a0d05f2feddfaafce08fef180604d224cbedc4c30a462331936920b3b5b1",
+      "bytes": 1654
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "1b44386e-31a8-40b0-a577-27c088b51264",
+    "225059ac-0450-49d3-b2b7-d0e98b7ae938",
+    "3389358b-68b2-4fca-82a8-52c07b3a3475",
+    "3416bd14-96bb-4c23-bd01-b2ea178ba5ce",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "64ba8e77-d1be-48a2-a47d-bdd46e139b8f",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "82d52a5f-b1bb-4a69-91a3-15a7eb8bbe99",
+    "8875b14e-c59a-492f-8780-8027a480f21c",
+    "8eb9c53e-d69c-497a-b640-610856cf3a60",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "d271a6c4-942f-4abf-a3de-66795f15f031",
+    "e5f5f8cf-e68d-4ed1-bbf5-6b67569af648",
+    "f68dd3d8-e8fa-4d2c-8c59-28aba06c9d8a"
+  ]
+}

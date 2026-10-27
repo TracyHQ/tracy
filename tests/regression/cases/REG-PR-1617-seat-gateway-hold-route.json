@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1617-seat-gateway-hold-route",
+  "kind": "fix",
+  "title": "The seat gateway lets tracy-web's signed POST /api/tracy-add-site/hold through to the add-site plugin, so Remove of an unfinished import and the abandoned-import sweep reach the host; every other unlisted add-site path and verb is still refused",
+  "pr": 1617,
+  "area": "add-site/import",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "gateway": "vendor/tracy/dsh-passwords/src/tracy/routes.ts SEAT_PLUGIN_ROUTES",
+    "host": "packages/site/tracy-add-site/src/host/hold-door.ts",
+    "web": "apps/tracy-web/src/lib/add-site-host.js addSiteHostCall"
+  },
+  "steps": [
+    "S1: Through the real dsh-passwords gateway with a stub dsh behind it, a seat shaped like the onboarding seat (home folder, no session, no upload grant) sends POST /api/tracy-add-site/hold with a JSON body and the three x-seat-* signature headers.",
+    "S2: The same seat sends GET /api/tracy-add-site/hold, POST /api/tracy-add-site/holds and POST /api/tracy-add-site/hold/forget."
+  ],
+  "expect": [
+    "S1: the stub dsh receives the request with the body byte-for-byte and all three x-seat-* headers; the gateway does not answer 403 gw.adminOnly.",
+    "S2: each is refused with 403 before dsh hears of it."
+  ],
+  "evidence": "Re-test on the dev machine (cowork.tracy.site), 22/10/2026, develop 7cdf942264: Remove on an unfinished import always showed 'could not remove… right now'; the API answered 503 HOST_UNAVAILABLE because the gateway refused tracy-web's signed hold call with 403 gw.adminOnly (route missing from SEAT_PLUGIN_ROUTES). REG-PR-1598's fence listed 'a real dsh gateway passing the signed hold call through' as not shown.",
+  "fence": "The real gateway code against a stub dsh, the host half's signature check is covered by REG-PR-1598 S10. Not shown: Remove on the dev machine with a rebuilt dsh image (checked by hand after the merge), the cron's hourly timer.",
+  "run": {
+    "cmd": ["node", "--import", "tsx", "--test", "test/tracy/seat-unknown-routes.test.ts"],
+    "cwd": "vendor/tracy/dsh-passwords"
+  }
+}

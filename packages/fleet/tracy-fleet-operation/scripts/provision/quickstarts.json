@@ -1,0 +1,1670 @@
+{
+  "tracy-apple/j6": {
+    "platform": "joomla",
+    "version": "1.3.1",
+    "webroot": {
+      "file": "tracy-apple-j6-webroot-1.3.1.tar.gz",
+      "bytes": 64213177,
+      "sha256": "fa35e19f63652e59e3e4bb0969beb17a2350f55f551867ec854c8f35bf10e83d",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-webroot-1.3.1.tar.gz"
+    },
+    "database": {
+      "file": "tracy-apple-j6-database-1.3.1.sql.gz",
+      "bytes": 192141,
+      "sha256": "f5cc2959c6e934985e698f6e232bf3bbdb3d82739f4a7a8537bc859166dcbfd0",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-database-1.3.1.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.66.zip",
+      "overridesRelease": true,
+      "version": "0.24.66",
+      "bytes": 521761,
+      "sha256": "3258e6459beee9b5bba426112cf5c74d3dc522b656f54481db75799b0ca47a0e",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.66/pkg_claudecowork-0.24.66.zip",
+      "contractFiles": {
+        "content-map.json": "ace00671b7c1256c5517624c111cb6bee471697a7227ed20ffd8d85909050fbd",
+        "manifest.json": "8c67ed945a7370ee8d6933fcb93a31822443ecc58150b2f86f4a14a868400d7c",
+        "multilingual-map.json": "82272a64e92888c5fe8b570d6e66373bf1751d03b511a16d2c3d53e263e8473c",
+        "presentation-lock.json": "cd14634ce213667f0c4ea24be1c3aaba814666a250fc108287af567a0f3a3ee9",
+        "showcase-nav-map.json": "e1a81b7cd7217f8593f0dbb390f72187f5817ee9274a04a7f370053e0d92129a"
+      },
+      "contractVersions": ["1.3.0"],
+      "alsoCarries": {
+        "tracy-apple/j6/1.3.0": {
+          "content-map.json": "ace00671b7c1256c5517624c111cb6bee471697a7227ed20ffd8d85909050fbd",
+          "manifest.json": "7fb97dde34517f2126bbdb4589eb1488963cf7024bc2cd9c11d74717b6e23188",
+          "multilingual-map.json": "c7b984de1c161d03649b6e7814426eaa8442233b4f4f2c029caceefab70aca57",
+          "presentation-lock.json": "f13cec58de565396c202c7c19ed64e15c2c16d6a559daa4e8b337548f8cd600b"
+        }
+      }
+    }
+  },
+  "tracy-business/j6": {
+    "platform": "joomla",
+    "version": "1.2.6",
+    "webroot": {
+      "file": "tracy-business-j6-webroot-1.2.6.tar.gz",
+      "bytes": 88296322,
+      "sha256": "40aced149273812ddaeec58b6134f3dcc037c1e35187323b1f920be6e9c4e274",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-webroot-1.2.6.tar.gz",
+      "githubAssetId": 657278269
+    },
+    "database": {
+      "file": "tracy-business-j6-database-1.2.6.sql.gz",
+      "bytes": 1191923,
+      "sha256": "c441667e7b570a895edfb50e8dcfbc3e95ab13fe1c4f4191f617e758b3afc4d2",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-database-1.2.6.sql.gz",
+      "githubAssetId": 657278268
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.66.zip",
+      "overridesRelease": true,
+      "version": "0.24.66",
+      "bytes": 521761,
+      "sha256": "3258e6459beee9b5bba426112cf5c74d3dc522b656f54481db75799b0ca47a0e",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.66/pkg_claudecowork-0.24.66.zip",
+      "contractVersions": ["1.2.0", "1.2.1", "1.2.2", "1.2.3", "1.2.4", "1.2.5"],
+      "contractFiles": {
+        "content-map.json": "55497d7a13229d24266dc2b61d75d6e574d1161f33644b46511003f3a91e073b",
+        "demo-trim-map.json": "0078ab0e62261c8ff4810d445a08b476d6f2ee9254f2a9185a98d5a19b285b0d",
+        "editions.json": "60f89f99dd1aedec1d0a30c0b672ef8a06dfcb3b81465b837115806a217dc883",
+        "manifest.json": "d12fe761b02dec521bef5146b1e4cc4506ec79533ff115de34fb0a45d634e248",
+        "multilingual-map.json": "78f278e0597c9fdc0cfcdda60d76e0e07941d57e6b9f0536e611b5f0cba948cb",
+        "presentation-lock.json": "f7fdc481c4f1f8b3953663e80077f7380d727770a7c2cbad9a467f61442830d1",
+        "showcase-nav-map.json": "b9ba9e2fc848b8267b286d5eb4f36b93a3e88d93e3374a4a6b184f0e5f52cca6"
+      },
+      "alsoCarries": {
+        "tracy-business/j6/1.2.0": {
+          "content-map.json": "7f1a7f0b641907a999c847a8a387cb5e936c437d184572a4d59a479e79a9a4ce",
+          "demo-trim-map.json": "8ff43c3129e0ce45aa6cc402164d9f3b256ebdd813fc3811c380c64f1fd35f02",
+          "editions.json": "bbc68d2f549d56f0c36ae8b6fcd8635f192fce9cc50d5d5cb123a3e2283e7352",
+          "manifest.json": "8a027d2d0b67cfea1d3213e20d828380511d8d8ce396756ecf2f63619e4626d7",
+          "multilingual-map.json": "a159015fe3f0e6505ca50eb2e85cbf745e5771c6ef53d078fef7253a8d13ffb2",
+          "presentation-lock.json": "9bf6afbe55baca6c9499730397a9d6c42baa0cb595776b652a2e997bb382a355"
+        },
+        "tracy-business/j6/1.2.1": {
+          "content-map.json": "7f1a7f0b641907a999c847a8a387cb5e936c437d184572a4d59a479e79a9a4ce",
+          "demo-trim-map.json": "9c398b6e8860b0e130422ee4e619d39f89c85d9f46d861e63464df44f886ce64",
+          "editions.json": "3ce09c927b416b08d13907bf05da1949b8a3a8d36934e1abc932c976196b5eb5",
+          "manifest.json": "230f1246345f0a483e17061d1d22b8c5386ffd6243daa5a44961510d37f28437",
+          "multilingual-map.json": "03581d8ddd0496281dea63b328b0d80abf60b5ad808558f157f2601afcb8c616",
+          "presentation-lock.json": "03d74aa9118adeb24a518fb20d9569c64afedaeaac8fd5f544d560036a3ea545"
+        },
+        "tracy-business/j6/1.2.2": {
+          "content-map.json": "7723564c244bbb1701ba446c4df8ef4f29f3e9658a8d03a409199db80f931ae6",
+          "demo-trim-map.json": "31f14960f60e41da8803fc2ffdf57034e7723d74eb8de8294aa0d072b177ae27",
+          "editions.json": "5e02081cca5272a7e3dd8a93da1a90c58bf41849b5a69d4b7b12efdd078e56c1",
+          "manifest.json": "c6def29c1870de7fd83b2a40b6de62bb46729f54384c4dcdc156476acb1b0adf",
+          "multilingual-map.json": "cf6b40f90196e8951b12d8ffd077047e033afea1f1ea6c2a73068035f14d3602",
+          "presentation-lock.json": "e470780fe58a1d266b90609d0bb31402d6c4fbaf868e5bc7dbaf8996f3a64e33"
+        },
+        "tracy-business/j6/1.2.3": {
+          "content-map.json": "7723564c244bbb1701ba446c4df8ef4f29f3e9658a8d03a409199db80f931ae6",
+          "demo-trim-map.json": "4a69995cb876c536def8da201558aad4b50dff3f824e6f3d69e4b4845fc97886",
+          "editions.json": "56059ea64e64bc726f4085d8051021f95ace4b8b57aceda7bf1113a369edd67d",
+          "manifest.json": "7a6c55c1be88dd11383000bc987da555e9c4430efc54be93004ac6c773a04e75",
+          "multilingual-map.json": "6d1146c88013887a3113e3b4f1a174e9d25618456325388fdb91f87d3099284a",
+          "presentation-lock.json": "ac24f930b3f1e79f01dcc1ddcf26d129f55889b6833a00f838cdc767232f3cbd"
+        },
+        "tracy-business/j6/1.2.4": {
+          "content-map.json": "55497d7a13229d24266dc2b61d75d6e574d1161f33644b46511003f3a91e073b",
+          "demo-trim-map.json": "8eb77d3ad06137f8923486c1ba0a6669f33eb05ce0c6a6b22321389f221e3ff8",
+          "editions.json": "3233aa9f1f03947609daf9e1abdd3178dbd26af31a48b78074e540f9f802266c",
+          "manifest.json": "b9824caeee5a820706352a4b263f835224989ffd6debd0be228e0cb3214f7096",
+          "multilingual-map.json": "1a260ae5e92e0a4bbf82dbcca206dc76d63c59892dc17f841aac2986fc35a6b8",
+          "presentation-lock.json": "a21ab6dd72f243289138ebbdca30990faf9023d3e4e7ceb269413641082356ab"
+        },
+        "tracy-business/j6/1.2.5": {
+          "content-map.json": "55497d7a13229d24266dc2b61d75d6e574d1161f33644b46511003f3a91e073b",
+          "demo-trim-map.json": "8705231409f0e6a6961dd2f6ee33411237e475919a92c64f59cf36b46c930cab",
+          "editions.json": "556ad09c8e81757fc101017c9e240b8aed1930572e9381a14af4292600ac1944",
+          "manifest.json": "be97fb34cd0b9c8f8cd68b70a5ec18a2216bf634c5513473217c85830e1a84c5",
+          "multilingual-map.json": "fa1d352116e0fe9938794ee31a3fa4629548b14dc2c331f9c8e6d94296c9b444",
+          "presentation-lock.json": "27a2a5d55369e968ca54973289e85cf44446ed9f6d07f021a646cfc345a4a46d"
+        }
+      }
+    },
+    "note": "Bound to a content contract (21/09/2026 evening; a content recommendation, not a lock, since ADR 0022): the Build pipeline's `check` stage needs a bound contract, and an unbound site is inspected against DEFAULT_CONTRACT tracy-apple/j6/1.1.0 (measured on site-iwvn3w: \"Presentation asset changed: templates/tracy/acm/accordion/config.xml\"). tracy-web attaches `contract` from the profile whose quickstart.release@version matches this tag (lib/contracts.js); the Claude Cowork plugin pinned here (0.16.7) bundles the tracy-business/j6 profiles. The webroot itself carries Cowork 0.15.0; provision upgrades it to the pinned package. From 0.16.6 the 1.1.0 profile also carries multilingual-map.json in the 1.1.0 extension shape, so the `language` stage works through the Claude Cowork plugin: the map translates the en-GB edition only and declares the archive’s authored ru-RU rows and its `language=*` rows shared — they are never copied. From 08/10/2026 the entry pins 1.2.1 (the dark-logo cut: 1.2.0 plus the template patch, same content map; its database asset is byte-identical to 1.2.0's, sha256 4132d1ad…): the release's `tracy_setting.json` switch names 1.2.1, and version, webroot and database here are the 1.2.1 assets as served (asset ids from the release, sha256 checked by download). Claude Cowork 0.24.2 (pinned 08/10/2026) carries both profiles, and so does 0.24.5 (pinned 09/10/2026, adds the ja-essence/j6/1.0.3 contract, every 0.24.4 contract unchanged): contractFiles holds the 1.2.1 bytes `contract` names (the seeder build and the design-templates gate check that pair); contractVersions [\"1.2.0\"] and alsoCarries keep the pin and the record for a 1.2.0 archive still restored somewhere (a local pack, a deployment that read the switch before the flip). From 13/10/2026 (TracyHQ/tch#1318) the entry pins 1.2.3: 1.2.2 with three template stylesheets repaired (the topbar contacts wrap on a phone) and tokenized again by tracy-ds-slot release-joomla.mjs, the same database asset as 1.2.2 (sha256 c441667e…); the release's tracy_setting.json switch names 1.2.3, Claude Cowork for Joomla 0.24.27 carries the 1.2.3 profile (every earlier contract unchanged), contractVersions and alsoCarries keep 1.2.0, 1.2.1 and 1.2.2 for archives still restored somewhere. From 16/10/2026 (feat/ds-role-variables) the entry pins 1.2.4: 1.2.3 with the template reading the standard design-system role variables at its source (tracy-ds-slot release-joomla.mjs --overlay), the same database asset as 1.2.3; Claude Cowork for Joomla 0.24.33 carries the 1.2.4 profile (every earlier contract unchanged), contractVersions and alsoCarries keep 1.2.0 to 1.2.3. From 16/10/2026 (feat/ds-role-variables) the entry pins 1.2.5: 1.2.4 with six template files changed so the Add site preview wears a design system cleanly, the same database asset as 1.2.4; Claude Cowork for Joomla 0.24.35 carries the 1.2.5 profile (every earlier contract unchanged), contractVersions and alsoCarries keep 1.2.0 to 1.2.4. The pin moved to Claude Cowork for Joomla 0.24.36 the same day (it adds the JA Kinetic 1.0.8 demo-trim map; every contract unchanged).",
+    "template": {
+      "id": "tracy-business",
+      "label": "Tracy Business"
+    },
+    "demoTrim": true,
+    "contract": "tracy-business/j6/1.2.6"
+  },
+  "tracy-base/j6": {
+    "platform": "joomla",
+    "version": "1.0.5",
+    "webroot": {
+      "file": "tracy-base-j6-webroot-1.0.5.tar.gz",
+      "bytes": 90111616,
+      "sha256": "18c11f59d0f8dce84b0f9345b4d7a0c00e88db4bf7cfcd21f6a3a9f7c30c3612",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Fj6/tracy-base-j6-webroot-1.0.5.tar.gz",
+      "githubAssetId": 645856852
+    },
+    "database": {
+      "file": "tracy-base-j6-database-1.0.5.sql.gz",
+      "bytes": 206912,
+      "sha256": "1dff29c3aa8b905c1035e817082517ab233e228e0c20b6a38f111a3082ff8f5d",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Fj6/tracy-base-j6-database-1.0.5.sql.gz",
+      "githubAssetId": 645856855
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.66.zip",
+      "version": "0.24.66",
+      "bytes": 521761,
+      "sha256": "3258e6459beee9b5bba426112cf5c74d3dc522b656f54481db75799b0ca47a0e",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.66/pkg_claudecowork-0.24.66.zip",
+      "contractVersions": ["1.0.0", "1.0.1", "1.0.2", "1.0.3", "1.0.4"],
+      "contractFiles": {
+        "content-map.json": "d56b1b6826e70efb8ffbb8e0f1a7edc1fb901eed7841cdf2b3552b172aa3e873",
+        "manifest.json": "061c08ec00594186a6b2d5202408c7dd37109339ae1075c6ecc440feb264b7e6",
+        "presentation-lock.json": "effe7ea90ebffd2b700dc66d0c707e373c0503b70713e2c676b9bd110026fadf",
+        "showcase-nav-map.json": "41f09da02dce3db648fa0be64be6191541802a77f6d5aa5ce6ec6f5e2d7f15f5"
+      },
+      "alsoCarries": {
+        "tracy-base/j6/1.0.0": {
+          "content-map.json": "260d23c95f632ec374eb6af2bda6039edc4bfcd9ef65cf97a7e436ea2b8a6cd8",
+          "manifest.json": "e829caf23c9e808510e8e4fe52bc989fa37cf25e3b4b108cbf15f6970bd4bde9",
+          "presentation-lock.json": "c3db63f6b1a20de45cc6cf5d3176d3efb186c8a50ffa4b4cf16dcf269a9a8217"
+        },
+        "tracy-base/j6/1.0.1": {
+          "content-map.json": "260d23c95f632ec374eb6af2bda6039edc4bfcd9ef65cf97a7e436ea2b8a6cd8",
+          "manifest.json": "c87da89113e291d3ce77182515971ba0d41e25c73ee6bfe8cc8576dd720e7fd9",
+          "presentation-lock.json": "e6e46c1d79b3b8b16fab1235248e02b4ba99f9869c84137bc5faab85b3ea317d"
+        },
+        "tracy-base/j6/1.0.2": {
+          "content-map.json": "27e71c26442ea3edad2214b3b468e95473fb6cbc5a928bbb1afaa8d35a0be635",
+          "manifest.json": "b2bcd0b0d2efcb5c31270d2c7a35560ece54b26d0c690c0c2c1cf9b16723797f",
+          "presentation-lock.json": "db355a2ceeb60ba60b6e8de25637820fcc3c443137aafd6c1fff042e72575985"
+        },
+        "tracy-base/j6/1.0.3": {
+          "content-map.json": "fd55f891919e035ef659546f235b908b1daa26da98332b5c8d191736c842b942",
+          "manifest.json": "c1c8b049e0e45ae6cf09ab9e2d1a6d992785c485110da0bb45beaa766d1794ad",
+          "presentation-lock.json": "794e59b9a55bd655484856eee633a20d57a1466a9d868dea6623e707be860e4c"
+        },
+        "tracy-base/j6/1.0.4": {
+          "content-map.json": "d56b1b6826e70efb8ffbb8e0f1a7edc1fb901eed7841cdf2b3552b172aa3e873",
+          "manifest.json": "2306febcf76d59040933875d5662b94a025c8da6224798b6b76a61d8a4b34cdb",
+          "presentation-lock.json": "49fc6c07e28401afc781694ab46ae74d9b41069b3d690521617ce6244ea27aba"
+        }
+      }
+    },
+    "note": "1.0.1 is the 1.0.0 site plus the template fix that lets ?theme=dark|light win for one load (tasks/tracy-base-theme-param/STATUS.md). The release changed shape at 1.0.1: webroot tar + database dump instead of the Akeeba bundle. Claude Cowork 0.19.1 carries both tracy-base/j6/1.0.0 and 1.0.1, so this pin holds on either side of the release switch (contractVersions). From 16/10/2026 (feat/ds-role-variables) the entry pins 1.0.4: 1.0.3 with the template reading the standard design-system role variables and two demo edits (module 229's kicker, module 236's initials); Claude Cowork for Joomla 0.24.33 carries the 1.0.4 profile and every earlier one (contractVersions, alsoCarries). From 16/10/2026 the entry pins 1.0.5: 1.0.4 with the text it painted in its accent fill reading the readable accent, the same database asset as 1.0.4; Claude Cowork for Joomla 0.24.35 carries the 1.0.5 profile and every earlier one (contractVersions, alsoCarries). The pin moved to Claude Cowork for Joomla 0.24.36 the same day (it adds the JA Kinetic 1.0.8 demo-trim map; every contract unchanged)."
+  },
+  "tracy-business/emdash": {
+    "platform": "emdash",
+    "version": "1.7.23",
+    "format": "tracy-quickstart/v1",
+    "release": "tracy-business/emdash-0.x",
+    "template": {
+      "id": "tracy-business",
+      "label": "Tracy Business",
+      "cmsVersion": "1.1.0",
+      "languages": [
+        "en",
+        "af",
+        "be",
+        "bg",
+        "ca",
+        "cs",
+        "cy",
+        "da",
+        "de",
+        "el",
+        "es",
+        "et",
+        "fi",
+        "fr",
+        "ga",
+        "hr",
+        "hu",
+        "it",
+        "ja",
+        "ka",
+        "lo",
+        "lt",
+        "lv",
+        "ms",
+        "nb",
+        "nl",
+        "pl",
+        "pt",
+        "ro",
+        "ru",
+        "sk",
+        "sl",
+        "sr",
+        "sv",
+        "ta",
+        "th",
+        "tr",
+        "uk",
+        "vi",
+        "zh"
+      ]
+    },
+    "source": {
+      "file": "tracy-business-emdash-quickstart-1.7.23.zip",
+      "bytes": 6482343,
+      "sha256": "01973cb90881c6f84918e7fd3d9ae36453fda3dd5d6b0cf961fa203199111f6a",
+      "githubAssetId": 656955179,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Femdash-0.x/tracy-business-emdash-quickstart-1.7.23.zip"
+    },
+    "state": {
+      "file": "tracy-business-emdash-state-1.7.23.tar.gz",
+      "bytes": 8485789,
+      "sha256": "8d6eaff4dfc267822319d795054a27543a10e03400a9f6658f7d075b48c63e55",
+      "githubAssetId": 656955181,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Femdash-0.x/tracy-business-emdash-state-1.7.23.tar.gz"
+    },
+    "questions": {
+      "schemaVersion": "tracy-questions/v1",
+      "owner": "tracy-business/emdash",
+      "languages": [
+        "ar",
+        "de",
+        "en",
+        "es",
+        "fr",
+        "hi",
+        "id",
+        "it",
+        "ja",
+        "ko",
+        "nl",
+        "pl",
+        "pt",
+        "ru",
+        "sv",
+        "th",
+        "tr",
+        "vi",
+        "zh",
+        "zh-HK",
+        "zh-MO",
+        "zh-TW"
+      ],
+      "questions": [
+        {
+          "id": "name",
+          "kind": "text",
+          "step": 1,
+          "label": {
+            "en": "Company name",
+            "vi": "Tên công ty",
+            "de": "Firmenname",
+            "fr": "Raison sociale",
+            "es": "Nombre de la empresa",
+            "it": "Ragione sociale",
+            "nl": "Naam van het bedrijf",
+            "pt": "Razão social",
+            "pl": "Pełna nazwa firmy",
+            "sv": "Företagets namn",
+            "ru": "Юридическое название",
+            "tr": "Şirket adı",
+            "id": "Nama perusahaan",
+            "th": "ชื่อบริษัท",
+            "ja": "会社名",
+            "ko": "회사명",
+            "ar": "اسم الشركة",
+            "hi": "कंपनी का नाम",
+            "zh": "公司名称",
+            "zh-TW": "公司名稱",
+            "zh-HK": "公司名稱",
+            "zh-MO": "公司名稱"
+          },
+          "hint": {
+            "en": "Northgate Industrial",
+            "vi": "Công ty Cổ phần Công nghiệp Bắc Môn",
+            "de": "Nordtor Industrie GmbH",
+            "fr": "Industries Porte-Nord",
+            "es": "Industrias Puerta Norte",
+            "it": "Industrie Portanord",
+            "nl": "Noorderpoort Industrie",
+            "pt": "Indústrias Portal Norte",
+            "pl": "Zakłady Brama Północna",
+            "sv": "Norrport Industri",
+            "ru": "«Северные ворота» промышленная группа",
+            "tr": "Kuzey Kapı Sanayi",
+            "id": "Industri Gerbang Utara",
+            "th": "อุตสาหกรรมประตูเหนือ",
+            "ja": "北門工業株式会社",
+            "ko": "북문산업",
+            "ar": "صناعات البوابة الشمالية",
+            "hi": "नॉर्थगेट इंडस्ट्रीज़",
+            "zh": "北门实业",
+            "zh-TW": "北門實業",
+            "zh-HK": "北門實業",
+            "zh-MO": "北門實業"
+          },
+          "feeds": ["site.name", "agent"]
+        },
+        {
+          "id": "languages",
+          "kind": "languages",
+          "label": {
+            "en": "Site language",
+            "vi": "Ngôn ngữ của site",
+            "de": "Sprache der Website",
+            "fr": "Langue du site",
+            "es": "Idioma del sitio",
+            "it": "Lingua del sito",
+            "nl": "Taal van de site",
+            "pt": "Idioma do site",
+            "pl": "Język strony",
+            "sv": "Webbplatsens språk",
+            "ru": "Язык сайта",
+            "tr": "Site dili",
+            "id": "Bahasa situs",
+            "th": "ภาษาของเว็บไซต์",
+            "ja": "サイトの言語",
+            "ko": "사이트 언어",
+            "ar": "لغة الموقع",
+            "hi": "साइट की भाषा",
+            "zh": "网站语言",
+            "zh-TW": "網站語言",
+            "zh-HK": "網站語言",
+            "zh-MO": "網站語言"
+          },
+          "options": [
+            "en",
+            "en-us",
+            "en-gb",
+            "en-au",
+            "en-ca",
+            "en-nz",
+            "af",
+            "be",
+            "bg",
+            "ca",
+            "cs",
+            "cy",
+            "da",
+            "de",
+            "el",
+            "es",
+            "et",
+            "fi",
+            "fr",
+            "ga",
+            "hr",
+            "hu",
+            "it",
+            "ja",
+            "ka",
+            "lo",
+            "lt",
+            "lv",
+            "ms",
+            "nb",
+            "nl",
+            "pl",
+            "pt",
+            "ro",
+            "ru",
+            "sk",
+            "sl",
+            "sr",
+            "sv",
+            "ta",
+            "th",
+            "tr",
+            "uk",
+            "vi",
+            "zh"
+          ],
+          "feeds": ["site.languages"],
+          "step": 2
+        },
+        {
+          "id": "sector",
+          "kind": "choice",
+          "step": 2,
+          "label": {
+            "en": "Sector",
+            "vi": "Ngành",
+            "de": "Branche",
+            "fr": "Secteur",
+            "es": "Sector",
+            "it": "Settore",
+            "nl": "Branche",
+            "pt": "Setor",
+            "pl": "Branża",
+            "sv": "Bransch",
+            "ru": "Отрасль",
+            "tr": "Sektör",
+            "id": "Sektor",
+            "th": "อุตสาหกรรม",
+            "ja": "業種",
+            "ko": "업종",
+            "ar": "القطاع",
+            "hi": "क्षेत्र",
+            "zh": "行业",
+            "zh-TW": "產業",
+            "zh-HK": "行業",
+            "zh-MO": "行業"
+          },
+          "options": ["construction", "logistics", "manufacturing", "energy", "other"],
+          "optionLabels": {
+            "construction": {
+              "en": "Construction",
+              "vi": "Xây dựng",
+              "de": "Bau",
+              "fr": "Construction",
+              "es": "Construcción",
+              "it": "Edilizia",
+              "nl": "Bouw",
+              "pt": "Construção",
+              "pl": "Budownictwo",
+              "sv": "Bygg",
+              "ru": "Строительство",
+              "tr": "İnşaat",
+              "id": "Konstruksi",
+              "th": "ก่อสร้าง",
+              "ja": "建設",
+              "ko": "건설",
+              "ar": "الإنشاءات",
+              "hi": "निर्माण",
+              "zh": "建筑",
+              "zh-TW": "建築",
+              "zh-HK": "建築",
+              "zh-MO": "建築"
+            },
+            "logistics": {
+              "en": "Logistics",
+              "vi": "Logistics",
+              "de": "Logistik",
+              "fr": "Logistique",
+              "es": "Logística",
+              "it": "Logistica",
+              "nl": "Logistiek",
+              "pt": "Logística",
+              "pl": "Logistyka",
+              "sv": "Logistik",
+              "ru": "Логистика",
+              "tr": "Lojistik",
+              "id": "Logistik",
+              "th": "โลจิสติกส์",
+              "ja": "物流",
+              "ko": "물류",
+              "ar": "الخدمات اللوجستية",
+              "hi": "लॉजिस्टिक्स",
+              "zh": "物流",
+              "zh-TW": "物流",
+              "zh-HK": "物流",
+              "zh-MO": "物流"
+            },
+            "manufacturing": {
+              "en": "Manufacturing",
+              "vi": "Sản xuất",
+              "de": "Fertigung",
+              "fr": "Industrie",
+              "es": "Industria",
+              "it": "Produzione",
+              "nl": "Productie",
+              "pt": "Indústria",
+              "pl": "Produkcja",
+              "sv": "Tillverkning",
+              "ru": "Производство",
+              "tr": "Üretim",
+              "id": "Manufaktur",
+              "th": "การผลิต",
+              "ja": "製造",
+              "ko": "제조",
+              "ar": "التصنيع",
+              "hi": "विनिर्माण",
+              "zh": "制造",
+              "zh-TW": "製造",
+              "zh-HK": "製造",
+              "zh-MO": "製造"
+            },
+            "energy": {
+              "en": "Energy",
+              "vi": "Năng lượng",
+              "de": "Energie",
+              "fr": "Énergie",
+              "es": "Energía",
+              "it": "Energia",
+              "nl": "Energie",
+              "pt": "Energia",
+              "pl": "Energetyka",
+              "sv": "Energi",
+              "ru": "Энергетика",
+              "tr": "Enerji",
+              "id": "Energi",
+              "th": "พลังงาน",
+              "ja": "エネルギー",
+              "ko": "에너지",
+              "ar": "الطاقة",
+              "hi": "ऊर्जा",
+              "zh": "能源",
+              "zh-TW": "能源",
+              "zh-HK": "能源",
+              "zh-MO": "能源"
+            },
+            "other": {
+              "en": "Other",
+              "vi": "Khác",
+              "de": "Sonstiges",
+              "fr": "Autre",
+              "es": "Otro",
+              "it": "Altro",
+              "nl": "Overig",
+              "pt": "Outro",
+              "pl": "Inne",
+              "sv": "Övrigt",
+              "ru": "Другое",
+              "tr": "Diğer",
+              "id": "Lainnya",
+              "th": "อื่น ๆ",
+              "ja": "その他",
+              "ko": "기타",
+              "ar": "أخرى",
+              "hi": "अन्य",
+              "zh": "其他",
+              "zh-TW": "其他",
+              "zh-HK": "其他",
+              "zh-MO": "其他"
+            }
+          },
+          "feeds": ["agent"]
+        },
+        {
+          "id": "contact",
+          "kind": "text",
+          "step": 2,
+          "label": {
+            "en": "Address and hotline",
+            "vi": "Địa chỉ và số hotline",
+            "de": "Adresse und Hotline",
+            "fr": "Adresse et ligne directe",
+            "es": "Dirección y línea directa",
+            "it": "Indirizzo e numero verde",
+            "nl": "Adres en telefoonnummer",
+            "pt": "Endereço e telefone",
+            "pl": "Adres i infolinia",
+            "sv": "Adress och telefon",
+            "ru": "Адрес и горячая линия",
+            "tr": "Adres ve destek hattı",
+            "id": "Alamat dan hotline",
+            "th": "ที่อยู่และสายด่วน",
+            "ja": "住所と電話番号",
+            "ko": "주소와 대표번호",
+            "ar": "العنوان والخط الساخن",
+            "hi": "पता और हॉटलाइन",
+            "zh": "地址与热线",
+            "zh-TW": "地址與熱線",
+            "zh-HK": "地址與熱線",
+            "zh-MO": "地址與熱線"
+          },
+          "hint": {
+            "en": "12 Northgate Road, Hai Phong · +84 225 000 000",
+            "vi": "Số 12 đường Bắc Môn, Hải Phòng · 0225 000 000",
+            "de": "Nordtorstraße 12, Hamburg · +49 40 000000",
+            "fr": "12 rue de la Porte-Nord, Lyon · +33 4 00 00 00 00",
+            "es": "Calle Puerta Norte 12, Valencia · +34 960 000 000",
+            "it": "Via Portanord 12, Milano · +39 02 0000 0000",
+            "nl": "Noorderpoortweg 12, Rotterdam · +31 10 000 0000",
+            "pt": "Rua do Portal Norte 12, Porto · +351 22 000 0000",
+            "pl": "ul. Bramy Północnej 12, Gdańsk · +48 58 000 00 00",
+            "sv": "Norrportsvägen 12, Göteborg · +46 31 000 000",
+            "ru": "ул. Северные ворота, 12, Санкт-Петербург · +7 812 000-00-00",
+            "tr": "Kuzey Kapı Cad. No:12, İzmir · +90 232 000 00 00",
+            "id": "Jl. Gerbang Utara No. 12, Surabaya · +62 31 000 0000",
+            "th": "12 ถนนประตูเหนือ ชลบุรี · 038 000 000",
+            "ja": "東京都北門町1-2-3 · 03-0000-0000",
+            "ko": "서울시 북문로 12 · 02-000-0000",
+            "ar": "شارع البوابة الشمالية 12، جدة · +966 12 000 0000",
+            "hi": "12 नॉर्थगेट रोड, मुंबई · +91 22 0000 0000",
+            "zh": "上海市北门路12号 · +86 21 0000 0000",
+            "zh-TW": "台北市北門路12號 · +886 2 0000 0000",
+            "zh-HK": "香港北門道12號 · +852 0000 0000",
+            "zh-MO": "澳門北門街12號 · +853 0000 0000"
+          },
+          "feeds": ["agent"]
+        },
+        {
+          "id": "email",
+          "kind": "text",
+          "step": 2,
+          "label": {
+            "en": "Contact email",
+            "vi": "Email liên hệ",
+            "de": "Kontakt-E-Mail",
+            "fr": "E-mail de contact",
+            "es": "Correo electrónico de contacto",
+            "it": "E-mail di contatto",
+            "nl": "Contact-e-mail",
+            "pt": "E-mail de contato",
+            "pl": "E-mail kontaktowy",
+            "sv": "Kontakt-e-post",
+            "ru": "Контактный e-mail",
+            "tr": "İletişim e-postası",
+            "id": "Email kontak",
+            "th": "อีเมลติดต่อ",
+            "ja": "連絡先メールアドレス",
+            "ko": "연락처 이메일",
+            "ar": "البريد الإلكتروني للتواصل",
+            "hi": "संपर्क ईमेल",
+            "zh": "联系邮箱",
+            "zh-TW": "聯絡信箱",
+            "zh-HK": "聯絡電郵",
+            "zh-MO": "聯絡電郵"
+          },
+          "hint": {
+            "en": "hello@example.com",
+            "vi": "hello@example.com",
+            "de": "hello@example.com",
+            "fr": "hello@example.com",
+            "es": "hello@example.com",
+            "it": "hello@example.com",
+            "nl": "hello@example.com",
+            "pt": "hello@example.com",
+            "pl": "hello@example.com",
+            "sv": "hello@example.com",
+            "ru": "hello@example.com",
+            "tr": "hello@example.com",
+            "id": "hello@example.com",
+            "th": "hello@example.com",
+            "ja": "hello@example.com",
+            "ko": "hello@example.com",
+            "ar": "hello@example.com",
+            "hi": "hello@example.com",
+            "zh": "hello@example.com",
+            "zh-TW": "hello@example.com",
+            "zh-HK": "hello@example.com",
+            "zh-MO": "hello@example.com"
+          },
+          "feeds": ["agent"]
+        }
+      ]
+    },
+    "note": "EmDash pair, not the PHP one: `source` is the packed template (the host builds an image from it, no registry per ADR 0014) and `state` is the scrubbed SQLite + uploads restored ONCE on the first provision. No `cowork` on purpose — EmDash has no Cowork extension; guard: the lane; since ADR 0022 (replacing ADR 0020) the template's design is a content recommendation, not a lock; the resident agent gets a PAT minted per site by tools/bootstrap-site.sh, and nothing in this release carries one."
+  },
+  "tracy-base/emdash": {
+    "platform": "emdash",
+    "version": "0.5.6",
+    "format": "tracy-quickstart/v1",
+    "release": "tracy-base/emdash-0.x",
+    "template": {
+      "id": "tracy-base",
+      "label": "Tracy Base",
+      "cmsVersion": "1.1.0",
+      "languages": ["en"]
+    },
+    "source": {
+      "file": "tracy-base-emdash-quickstart-0.5.6.zip",
+      "bytes": 7075290,
+      "sha256": "fe2ed1d0f7195791e59494c3d7f860893b0fed2ec4c7ba0a9121141ee6c7e02b",
+      "githubAssetId": 645551553,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Femdash-0.x/tracy-base-emdash-quickstart-0.5.6.zip"
+    },
+    "state": {
+      "file": "tracy-base-emdash-state-0.5.6.tar.gz",
+      "bytes": 6168464,
+      "sha256": "31ef8740a8e762d50dedd0cbdb6c4fb10bb51c12071fe0e0f993ce2b38330d52",
+      "githubAssetId": 645551554,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Femdash-0.x/tracy-base-emdash-state-0.5.6.tar.gz"
+    },
+    "questions": {
+      "schemaVersion": "tracy-questions/v1",
+      "owner": "tracy-base/emdash",
+      "languages": [
+        "ar",
+        "de",
+        "en",
+        "fr",
+        "hi",
+        "id",
+        "it",
+        "ja",
+        "ko",
+        "nl",
+        "pl",
+        "pt",
+        "ru",
+        "sv",
+        "th",
+        "tr",
+        "vi",
+        "zh",
+        "zh-HK",
+        "zh-MO",
+        "zh-TW"
+      ],
+      "questions": [
+        {
+          "id": "name",
+          "kind": "text",
+          "label": {
+            "en": "Company name",
+            "vi": "Tên công ty",
+            "de": "Firmenname",
+            "fr": "Raison sociale",
+            "it": "Ragione sociale",
+            "nl": "Naam van het bedrijf",
+            "pt": "Razão social",
+            "pl": "Pełna nazwa firmy",
+            "sv": "Företagets namn",
+            "ru": "Юридическое название",
+            "tr": "Şirket adı",
+            "id": "Nama perusahaan",
+            "th": "ชื่อบริษัท",
+            "ja": "会社名",
+            "ko": "회사명",
+            "ar": "اسم الشركة",
+            "hi": "कंपनी का नाम",
+            "zh": "公司名称",
+            "zh-TW": "公司名稱",
+            "zh-HK": "公司名稱",
+            "zh-MO": "公司名稱"
+          },
+          "hint": {
+            "en": "Tracy Base",
+            "vi": "Tracy Base",
+            "de": "Tracy Base",
+            "fr": "Tracy Base",
+            "it": "Tracy Base",
+            "nl": "Tracy Base",
+            "pt": "Tracy Base",
+            "pl": "Tracy Base",
+            "sv": "Tracy Base",
+            "ru": "Tracy Base",
+            "tr": "Tracy Base",
+            "id": "Tracy Base",
+            "th": "Tracy Base",
+            "ja": "Tracy Base",
+            "ko": "Tracy Base",
+            "ar": "Tracy Base",
+            "hi": "Tracy Base",
+            "zh": "Tracy Base",
+            "zh-TW": "Tracy Base",
+            "zh-HK": "Tracy Base",
+            "zh-MO": "Tracy Base"
+          },
+          "feeds": ["site.name", "agent"]
+        },
+        {
+          "id": "sector",
+          "kind": "choice",
+          "label": {
+            "en": "Sector",
+            "vi": "Ngành",
+            "de": "Branche",
+            "fr": "Secteur",
+            "it": "Settore",
+            "nl": "Branche",
+            "pt": "Setor",
+            "pl": "Branża",
+            "sv": "Bransch",
+            "ru": "Отрасль",
+            "tr": "Sektör",
+            "id": "Sektor",
+            "th": "อุตสาหกรรม",
+            "ja": "業種",
+            "ko": "업종",
+            "ar": "القطاع",
+            "hi": "क्षेत्र",
+            "zh": "行业",
+            "zh-TW": "產業",
+            "zh-HK": "行業",
+            "zh-MO": "行業"
+          },
+          "options": ["construction", "logistics", "manufacturing", "energy", "other"],
+          "optionLabels": {
+            "construction": {
+              "en": "Construction",
+              "vi": "Xây dựng",
+              "de": "Bau",
+              "fr": "Construction",
+              "it": "Edilizia",
+              "nl": "Bouw",
+              "pt": "Construção",
+              "pl": "Budownictwo",
+              "sv": "Bygg",
+              "ru": "Строительство",
+              "tr": "İnşaat",
+              "id": "Konstruksi",
+              "th": "ก่อสร้าง",
+              "ja": "建設",
+              "ko": "건설",
+              "ar": "الإنشاءات",
+              "hi": "निर्माण",
+              "zh": "建筑",
+              "zh-TW": "建築",
+              "zh-HK": "建築",
+              "zh-MO": "建築"
+            },
+            "logistics": {
+              "en": "Logistics",
+              "vi": "Logistics",
+              "de": "Logistik",
+              "fr": "Logistique",
+              "it": "Logistica",
+              "nl": "Logistiek",
+              "pt": "Logística",
+              "pl": "Logistyka",
+              "sv": "Logistik",
+              "ru": "Логистика",
+              "tr": "Lojistik",
+              "id": "Logistik",
+              "th": "โลจิสติกส์",
+              "ja": "物流",
+              "ko": "물류",
+              "ar": "الخدمات اللوجستية",
+              "hi": "लॉजिस्टिक्स",
+              "zh": "物流",
+              "zh-TW": "物流",
+              "zh-HK": "物流",
+              "zh-MO": "物流"
+            },
+            "manufacturing": {
+              "en": "Manufacturing",
+              "vi": "Sản xuất",
+              "de": "Fertigung",
+              "fr": "Industrie",
+              "it": "Produzione",
+              "nl": "Productie",
+              "pt": "Indústria",
+              "pl": "Produkcja",
+              "sv": "Tillverkning",
+              "ru": "Производство",
+              "tr": "Üretim",
+              "id": "Manufaktur",
+              "th": "การผลิต",
+              "ja": "製造",
+              "ko": "제조",
+              "ar": "التصنيع",
+              "hi": "विनिर्माण",
+              "zh": "制造",
+              "zh-TW": "製造",
+              "zh-HK": "製造",
+              "zh-MO": "製造"
+            },
+            "energy": {
+              "en": "Energy",
+              "vi": "Năng lượng",
+              "de": "Energie",
+              "fr": "Énergie",
+              "it": "Energia",
+              "nl": "Energie",
+              "pt": "Energia",
+              "pl": "Energetyka",
+              "sv": "Energi",
+              "ru": "Энергетика",
+              "tr": "Enerji",
+              "id": "Energi",
+              "th": "พลังงาน",
+              "ja": "エネルギー",
+              "ko": "에너지",
+              "ar": "الطاقة",
+              "hi": "ऊर्जा",
+              "zh": "能源",
+              "zh-TW": "能源",
+              "zh-HK": "能源",
+              "zh-MO": "能源"
+            },
+            "other": {
+              "en": "Other",
+              "vi": "Khác",
+              "de": "Sonstiges",
+              "fr": "Autre",
+              "it": "Altro",
+              "nl": "Overig",
+              "pt": "Outro",
+              "pl": "Inne",
+              "sv": "Övrigt",
+              "ru": "Другое",
+              "tr": "Diğer",
+              "id": "Lainnya",
+              "th": "อื่น ๆ",
+              "ja": "その他",
+              "ko": "기타",
+              "ar": "أخرى",
+              "hi": "अन्य",
+              "zh": "其他",
+              "zh-TW": "其他",
+              "zh-HK": "其他",
+              "zh-MO": "其他"
+            }
+          },
+          "feeds": ["agent"]
+        },
+        {
+          "id": "contact",
+          "kind": "text",
+          "label": {
+            "en": "Address and hotline",
+            "vi": "Địa chỉ và số hotline",
+            "de": "Adresse und Hotline",
+            "fr": "Adresse et ligne directe",
+            "it": "Indirizzo e numero verde",
+            "nl": "Adres en telefoonnummer",
+            "pt": "Endereço e telefone",
+            "pl": "Adres i infolinia",
+            "sv": "Adress och telefon",
+            "ru": "Адрес и горячая линия",
+            "tr": "Adres ve destek hattı",
+            "id": "Alamat dan hotline",
+            "th": "ที่อยู่และสายด่วน",
+            "ja": "住所と電話番号",
+            "ko": "주소와 대표번호",
+            "ar": "العنوان والخط الساخن",
+            "hi": "पता और हॉटलाइन",
+            "zh": "地址与热线",
+            "zh-TW": "地址與熱線",
+            "zh-HK": "地址與熱線",
+            "zh-MO": "地址與熱線"
+          },
+          "hint": {
+            "en": "12 Northgate Road, Hai Phong · +84 225 000 000",
+            "vi": "Số 12 đường Bắc Môn, Hải Phòng · 0225 000 000",
+            "de": "Nordtorstraße 12, Hamburg · +49 40 000000",
+            "fr": "12 rue de la Porte-Nord, Lyon · +33 4 00 00 00 00",
+            "it": "Via Portanord 12, Milano · +39 02 0000 0000",
+            "nl": "Noorderpoortweg 12, Rotterdam · +31 10 000 0000",
+            "pt": "Rua do Portal Norte 12, Porto · +351 22 000 0000",
+            "pl": "ul. Bramy Północnej 12, Gdańsk · +48 58 000 00 00",
+            "sv": "Norrportsvägen 12, Göteborg · +46 31 000 000",
+            "ru": "ул. Северные ворота, 12, Санкт-Петербург · +7 812 000-00-00",
+            "tr": "Kuzey Kapı Cad. No:12, İzmir · +90 232 000 00 00",
+            "id": "Jl. Gerbang Utara No. 12, Surabaya · +62 31 000 0000",
+            "th": "12 ถนนประตูเหนือ ชลบุรี · 038 000 000",
+            "ja": "東京都北門町1-2-3 · 03-0000-0000",
+            "ko": "서울시 북문로 12 · 02-000-0000",
+            "ar": "شارع البوابة الشمالية 12، جدة · +966 12 000 0000",
+            "hi": "12 नॉर्थगेट रोड, मुंबई · +91 22 0000 0000",
+            "zh": "上海市北门路12号 · +86 21 0000 0000",
+            "zh-TW": "台北市北門路12號 · +886 2 0000 0000",
+            "zh-HK": "香港北門道12號 · +852 0000 0000",
+            "zh-MO": "澳門北門街12號 · +853 0000 0000"
+          },
+          "feeds": ["agent"]
+        }
+      ]
+    },
+    "note": "EmDash pair like tracy-business/emdash: `source` is the packed template the host builds an image from, `state` the scrubbed SQLite + uploads restored once on the first provision, no `cowork` (EmDash has no Cowork extension; the resident agent gets a PAT minted per site). No `card`: the Design-inspiration grid needs a public demo site and per-layout shots, and Tracy Base has neither yet (tasks/emdash-tracy-base/DECISIONS.md D31)."
+  },
+  "tracy-saas/emdash": {
+    "platform": "emdash",
+    "version": "1.4.14",
+    "format": "tracy-quickstart/v1",
+    "release": "tracy-saas/emdash-0.x",
+    "template": {
+      "id": "tracy-saas",
+      "label": "Tracy SaaS",
+      "cmsVersion": "1.1.0",
+      "languages": ["en"]
+    },
+    "source": {
+      "file": "tracy-saas-emdash-quickstart-1.4.14.zip",
+      "bytes": 7808844,
+      "sha256": "1cacc1f52d7c504bb313a39b7f194e1fa6e6da7744da63674843f11b6b770071",
+      "githubAssetId": 639438922,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-saas%2Femdash-0.x/tracy-saas-emdash-quickstart-1.4.14.zip"
+    },
+    "state": {
+      "file": "tracy-saas-emdash-state-1.4.14.tar.gz",
+      "bytes": 7674704,
+      "sha256": "6ce7750f76600d246ff01fae12b64ff81ed498b545247e9f4bc406bdebb80f5b",
+      "githubAssetId": 639438924,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-saas%2Femdash-0.x/tracy-saas-emdash-state-1.4.14.tar.gz"
+    },
+    "note": "EmDash pair like tracy-business/emdash: `source` is the packed template (built into an image on the host, no registry per ADR 0014), `state` the scrubbed SQLite + uploads restored ONCE. The package ships no Dockerfile; provision completes it from the fleet’s stock one (provision/emdash/quickstart.Dockerfile). Questions: the CMS default — this release carries no questionnaire of its own."
+  },
+  "tracy-base/wp7": {
+    "platform": "wordpress",
+    "version": "1.1.5",
+    "webroot": {
+      "file": "tracy-base-wp7-webroot-1.1.5.tar.gz",
+      "bytes": 45470061,
+      "sha256": "908103594c242b7451a680e443fbd87afd6b056472cb01505f4abde8bfe4e1e4",
+      "githubAssetId": 635159824,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base/wp7/tracy-base-wp7-webroot-1.1.5.tar.gz"
+    },
+    "database": {
+      "file": "tracy-base-wp7-database-1.1.5.sql.gz",
+      "bytes": 59567,
+      "sha256": "9b73c0d77bd92138d9b73ec9c36038819ca74b9a9fe1c0329cf59c70b1f04ecd",
+      "githubAssetId": 635159785,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base/wp7/tracy-base-wp7-database-1.1.5.sql.gz"
+    },
+    "cowork": {
+      "file": "claude-cowork-0.18.14.zip",
+      "version": "0.18.14",
+      "bytes": 1306429,
+      "sha256": "e8000344c8deeed4cf8d7379747d416336d83c7ea4b96508e6da422b08ff7d3b",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.18.14/claude-cowork-0.18.14.zip",
+      "contractVersions": ["1.0.0", "1.1.0", "1.1.1", "1.1.2", "1.1.3", "1.1.4", "1.1.5"],
+      "contractFiles": {
+        "manifest.json": "dd217e154a0a3a6b5374cd412fbe39bd66e449964ca169a580a12f620f9525f6",
+        "content-map.json": "ca613b233927b67916f5be54a6d7472a2722e310de8a93280a1c495b81302ec8",
+        "presentation-lock.json": "88393aa0f9617a503e47179bdf9d15009b53b918418c7d986fa11e67b2b233e4",
+        "superseded.json": "1fe535cbaccc61c7d1afaccd044591dd452e90f9b5e6c7c8ffdc283c1f3fcc16"
+      },
+      "alsoCarries": {
+        "tracy-base/wp7/1.0.0": {
+          "manifest.json": "36fdc3089606765814a0eb2f11c7cc0e8b69f76d6094fa96f1ac5bc6c576ca91",
+          "content-map.json": "b73076aead0a387d66fd0b4be771d249673e143f77ea41fd341a3aa8bfc69e0f",
+          "presentation-lock.json": "855213c1a5d6dd005a39da08e033b2cd2c8c9cdafb4c3423387ce0d0b9d0cdfd",
+          "superseded.json": "7713482dc360edbbbca0b5c4692ee55ac0c1c75862456abdec251ba33df3cf16"
+        },
+        "tracy-base/wp7/1.1.0": {
+          "manifest.json": "83d068708bc63e2b7f742b4bf96272c1016e5845ff0870bedb429ddca905aff7",
+          "content-map.json": "9272efa61d9724fc6b4769e4dc400d2365d33f9a96280f69b6ff1ab93a08e894",
+          "presentation-lock.json": "269f96f44987b5b10156d6f4311edc580c5ae3d11ce2b4f6620e20b0f6a5a8d2",
+          "superseded.json": "395fd7f198b2827cf5dc71abd10d04ccb51654780c9eb4d6f91999718693118f"
+        },
+        "tracy-base/wp7/1.1.1": {
+          "manifest.json": "23f249a5c351ee2a16a8962cb64835f257c348fe1fbc3bfe5bfda250939a0fe5",
+          "content-map.json": "9272efa61d9724fc6b4769e4dc400d2365d33f9a96280f69b6ff1ab93a08e894",
+          "presentation-lock.json": "98f88fa5a1f144f627afc9e812d996aad0b3e0ffd43d74be44f76b63627c589b",
+          "superseded.json": "f1f9057459ef74cc13b5388c5d746bbf4410d1ccf2e7282404c8102dc4f2e3b6"
+        },
+        "tracy-base/wp7/1.1.2": {
+          "manifest.json": "4599c18a17af02bbd02cdf8fe1f59004faa7d044b7e3354a9839500fa0fd6f42",
+          "content-map.json": "ca613b233927b67916f5be54a6d7472a2722e310de8a93280a1c495b81302ec8",
+          "presentation-lock.json": "a85f795d627d0ec7e805f9f938afc7469028348a65514b8add3ec76c5b3dc739",
+          "superseded.json": "9b987018f4d4e3eeae73b20fbea3a15fe148a810276f2627917264d253196c09"
+        },
+        "tracy-base/wp7/1.1.3": {
+          "manifest.json": "a245f6d6a68f43f34c38c9bda1d7f85dcabeddfcca35eb06609d24a34c4ee0a9",
+          "content-map.json": "ca613b233927b67916f5be54a6d7472a2722e310de8a93280a1c495b81302ec8",
+          "presentation-lock.json": "434a941368deb393f7e00d4a09ed90b025f53e8773ad0baa3d53fde4846afa3d",
+          "superseded.json": "914ef69766624d280b2bd97eac1a13ffc133070a759699d6bf7370c01bcee926"
+        },
+        "tracy-base/wp7/1.1.4": {
+          "manifest.json": "c884541130c702a07368819f1d699723555be2850e8a3f1edea50bb5a921d570",
+          "content-map.json": "ca613b233927b67916f5be54a6d7472a2722e310de8a93280a1c495b81302ec8",
+          "presentation-lock.json": "434a941368deb393f7e00d4a09ed90b025f53e8773ad0baa3d53fde4846afa3d",
+          "superseded.json": "6a38609d088a00122e520715d0ff59ab694565812e9d5e78ef8a86a062b983bd"
+        }
+      }
+    },
+    "note": "Acceptance release: verified clean restore, content contract binding and real slot editing. Earlier immutable contract profiles remain carried by the pinned plugin.",
+    "contract": "tracy-base/wp7/1.1.5"
+  },
+  "tracy-business/wp7": {
+    "platform": "wordpress",
+    "version": "1.1.0",
+    "webroot": {
+      "file": "tracy-business-wp7-webroot-1.1.0.tar.gz",
+      "bytes": 67804392,
+      "sha256": "f5f59dddfab4e5988f00864bc7d9036e69bf8b13104decc25dc5edb97e6a8a24",
+      "githubAssetId": 580628062,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fwp7/tracy-business-wp7-webroot-1.1.0.tar.gz"
+    },
+    "database": {
+      "file": "tracy-business-wp7-database-1.1.0.sql.gz",
+      "bytes": 1898060,
+      "sha256": "7863f8a5f6cab97b7c97a1647ce4447a0c1ea298b3703e0c278c972424a83212",
+      "githubAssetId": 580628061,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fwp7/tracy-business-wp7-database-1.1.0.sql.gz"
+    },
+    "cowork": {
+      "file": "claude-cowork-0.15.3.zip",
+      "version": "0.15.3",
+      "bytes": 417610,
+      "sha256": "9515d7c52767051889ad5ad30f49edd90d69773864f75e5ee128b9fa503f095f",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.15.3/claude-cowork-0.15.3.zip",
+      "contractVersions": ["1.1.0", "1.2.0", "1.3.0", "1.3.1", "1.3.2"],
+      "contractFiles": {
+        "content-map.json": "77d14d2b65f58a95f81286f41b1c7d7f3995692faeee63640830ec32bae890cf",
+        "demo-trim-map.json": "d618458134e68e085bfb3106da6b74225a9f8c03e4c6265243d5173b380ff612",
+        "editions.json": "1d6251232e74c792b5d1ba1f1f3f4b8b5cb8c450fe6856b3b94bf74cef6f4002",
+        "manifest.json": "6bd17ac8f00954c361413303b1bf962b329264023d1748182b9792aee8611926",
+        "presentation-lock.json": "80890db70a5c45ef76c04d743ad4df1730ca8fe0755e8f99406f64fbfe4bce4e",
+        "superseded.json": "58e354f91b9e74b8f857443e2510f9e3364d3dde147b11ba0c11ed6337d26264"
+      },
+      "alsoCarries": {
+        "tracy-business/wp7/1.2.0": {
+          "content-map.json": "908472cbdd1024bd7fd4e14848518c9900e6c2b28552732d876c6106d9703fdf",
+          "demo-trim-map.json": "ec88fec5261f1602122bff1dfd8a3ceb2dc902301ffbdce5141daf44c53b1129",
+          "editions.json": "86908edb81e2eaf6f0cefdfd5e562c1aeb1dacb477e44117457793c62526e672",
+          "manifest.json": "61607db55bcaccd4050e8d5797642393450cc06e0c1abf0ba7f3977b939e63a9",
+          "presentation-lock.json": "3af8fe159e221a8753dad6be1ef76aac9f64e6973f32badf0d0a0b2bcc130a50",
+          "superseded.json": "0b8c7325ce5c510560705bd295f7ada9d77fba42e646125b6ebe4c3ebdfb7ac6"
+        },
+        "tracy-business/wp7/1.3.0": {
+          "content-map.json": "aa063df015dd68e8a0b655387b99c58d96d7b124f0d7bfae34a60e4554d9cc9e",
+          "demo-trim-map.json": "88ea89658922ab5c5ea84112377d13ba94c291bba0e19633a4db8188253f01d9",
+          "editions.json": "434e957a75abd334863ff69cdc39d573c5dae6fe4fa5422e36788ab82b55d861",
+          "manifest.json": "6ba01caa297516fc6a028c4d54a98eb97a14d9f053cff0b46084edb0fc6c6ec9",
+          "presentation-lock.json": "a6e688162463b20e4db3b050d84d64c5d48e29b94c57056ddf38641e8a401001",
+          "superseded.json": "129fdb892e7f1f5c0114eee1e16c0dd629384d306dd79a274b0e3b5e7253b12d"
+        },
+        "tracy-business/wp7/1.3.1": {
+          "content-map.json": "0bdeb407fb009b686e57540d4e501a83fe21d441491767f719f20d682260e328",
+          "demo-trim-map.json": "6b5c5f7cca07cf9e57d32c15e7ddf847f37ef7d233ee92d47f490cb8b6c98b2c",
+          "editions.json": "df0d6a9a7caeaa39a241041c7b1537d0c902a757f756669143b73e54bbf0b54c",
+          "manifest.json": "5e06dc89649261baf4010926ee0c9b0165b8911b37757e82603685af8d41301e",
+          "presentation-lock.json": "814e2469866336d078575fc0f786690e61262c3240d930a579dec24c16cc1b3b",
+          "superseded.json": "f013f2bcce04df729e442c8355ef32b6fc9c087437c5854e31649767918dbaa5"
+        },
+        "tracy-business/wp7/1.3.2": {
+          "content-map.json": "33f2ae24e24ab12fd3e98b317d320df2ded4f60323833f65e905f6633616a72c",
+          "demo-trim-map.json": "31d888d9421756689d07dcbdcacc26075b448a31d870e81f69d9665ca1955473",
+          "editions.json": "26cf8aec67bbd11e5397626fcd5bb876ef2b9983de61e9334f6ed79779b4d57e",
+          "manifest.json": "7247e58943c1f4addbee4cdae14224989548add0f03cdc2007f61878702e0ceb",
+          "presentation-lock.json": "5654f08b6c3a6026f9adebdfb521c831b876262ec92683b6476a55894274d87b",
+          "superseded.json": "917f9232c474624b941a586441f6281f42b6c13bf72cc54e34dfba9987739173"
+        }
+      }
+    },
+    "contract": "tracy-business/wp7/1.1.0",
+    "demoTrim": true,
+    "note": "Sealed since Claude Cowork plugin 0.12.x (decision 3b of the WordPress Business parity plan): provision installs THIS zip (its lib/contracts carries the 1.1.0 and 1.2.0 profiles, hash for hash with packages/cms/tracy-wordpress-quickstart) and binds the site through content.contract before handing it over. The 1.2.0 archive (identity tokens in header/footer) is on the release; tracy_setting.json still names 1.1.0 until the validator that accepts install.cowork reaches production."
+  },
+  "quickstart/ja-voyara/j6": {
+    "platform": "joomla",
+    "version": "1.0.10",
+    "webroot": {
+      "file": "ja-voyara-j6-webroot-1.0.10.tar.gz",
+      "bytes": 196029350,
+      "sha256": "3a14efae170be5d4f998dc92d8f6befaf888dc2a3095cf528e04fb34a96d5d8d",
+      "githubAssetId": 653104164,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-voyara%2Fj6/ja-voyara-j6-webroot-1.0.10.tar.gz"
+    },
+    "database": {
+      "file": "ja-voyara-j6-database-1.0.10.sql.gz",
+      "bytes": 356059,
+      "sha256": "6482a528fd611110262708ab96825259545000096a2fc2e95d166bc3eb632351",
+      "githubAssetId": 653104159,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-voyara%2Fj6/ja-voyara-j6-database-1.0.10.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.37.zip",
+      "version": "0.24.37",
+      "bytes": 58117565,
+      "sha256": "34a591e8abbd3568a705291b2fcbf0c70bb0667419763e281888ceda76426d10",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.37/pkg_claudecowork-0.24.37.zip",
+      "overridesRelease": true,
+      "contractVersions": ["1.0.1", "1.0.2", "1.0.3", "1.0.4", "1.0.5", "1.0.6", "1.0.7", "1.0.8", "1.0.9"],
+      "contractFiles": {
+        "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
+        "manifest.json": "bb39773bffdece97fbe9b9e6b91c30dd96a56ee73897bae286cc98692e072103",
+        "presentation-lock.json": "07ed4984cdafa54b25f244e226160b4ae790964d8ab51076c7cfb8b4a6576b13"
+      },
+      "alsoCarries": {
+        "ja-voyara/j6/1.0.1": {
+          "content-map.json": "4422fb8ca1626da61e270b04095c494743e5a6a461c8aaed74039cdf5ac73b3b",
+          "manifest.json": "9b166dd9ab25deab00719b6fca7f46749c342b8fec67e59c999bd01d9fe70e26",
+          "presentation-lock.json": "84aa9c55480c17b6b7f5162e282a0ab637621992cf9ca94717153e105703e891"
+        },
+        "ja-voyara/j6/1.0.2": {
+          "content-map.json": "4422fb8ca1626da61e270b04095c494743e5a6a461c8aaed74039cdf5ac73b3b",
+          "manifest.json": "193a45c7715c552441ceb178f4617e42e1f0f5b62f0766db81f9df7ed2e7c6b0",
+          "presentation-lock.json": "10973243fc21e15f8441225a6533b94d74fb5fe2b670a94fa3c0c257d2bf1389"
+        },
+        "ja-voyara/j6/1.0.3": {
+          "content-map.json": "4422fb8ca1626da61e270b04095c494743e5a6a461c8aaed74039cdf5ac73b3b",
+          "manifest.json": "80b92ac9ae776f1a01ff4dd5749beca6ecd99993a69ed1d86313aa4198d6589b",
+          "presentation-lock.json": "1e7941b69fcedf8f442ec44ba048128eae64273fdf04004b24135f7281356c76"
+        },
+        "ja-voyara/j6/1.0.4": {
+          "content-map.json": "7d83a23b12dcec059d372c81f26898d233688baf9209644a6f0c17e44250e01d",
+          "manifest.json": "aa2a68f1411e76419bdbe3b3a006b7f2de9bab870cb40d62643a4b5163d8caed",
+          "presentation-lock.json": "a7d9848de0964f830b6d502dd893838997d6964471ebcff8624e50bb9b837342"
+        },
+        "ja-voyara/j6/1.0.5": {
+          "content-map.json": "7d83a23b12dcec059d372c81f26898d233688baf9209644a6f0c17e44250e01d",
+          "manifest.json": "d5629b4f5c9c6d5131bebecba5b07a739486b2788ec4aa07411b527261469435",
+          "presentation-lock.json": "c13d1e3859efa364b11d1ebe88abbb96bf4af2244c3be7b9d12f4904f1d6abf2"
+        },
+        "ja-voyara/j6/1.0.6": {
+          "content-map.json": "7d83a23b12dcec059d372c81f26898d233688baf9209644a6f0c17e44250e01d",
+          "manifest.json": "0f9decddea2a067b4deb1a8fa2fa7bc2bee5f9ff16ca4bb73a2ff85364a6b1aa",
+          "presentation-lock.json": "6921e70fdd4dd49340432818feccf6e369b4828068dc42f24198febd3c241cc7"
+        },
+        "ja-voyara/j6/1.0.7": {
+          "content-map.json": "3d6ad5d85476b4bf7084838f2ad18b06058ac49f6d47f34f2264aa9a2233dd3c",
+          "manifest.json": "8d392900cc0b1a76a2a57eb179c0eefffdab475844da0b1b4bd6e4abc284d8c4",
+          "presentation-lock.json": "4c8e5294b201902c478c24a7c5be487acb6b4bc153d35914efb25e99cb846de6"
+        },
+        "ja-voyara/j6/1.0.8": {
+          "content-map.json": "819d67a98f811f150dea9f162de39450ccc77403531cdcfca15e616909c85a85",
+          "manifest.json": "7104e72263b10c7fedf197bc4e0ea24ea93804d41f6dd929c49c41db58bb5f6e",
+          "presentation-lock.json": "3623a3fdc7549042b6a401dba9010aaab5f254ac404fc7171989abd558e7c6f7"
+        },
+        "ja-voyara/j6/1.0.9": {
+          "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
+          "manifest.json": "005f8492935cddc1990a007c5e207b4d2b759c4adc7fc3134a95a0732ab7df77",
+          "presentation-lock.json": "633d5599873e26fca5b5c8ff65152aca7ed67d7f2f392bf858a694b61f0846fe"
+        }
+      }
+    },
+    "contract": "ja-voyara/j6/1.0.10"
+  },
+  "quickstart/ja-kinetic/j6": {
+    "platform": "joomla",
+    "version": "1.0.9",
+    "webroot": {
+      "file": "ja-kinetic-j6-webroot-1.0.9.tar.gz",
+      "bytes": 69441897,
+      "sha256": "7bc7b8d33ac72777ba90399f73b474da6bbad68a9bd1c5e7f7065a00c8327f6a",
+      "githubAssetId": 657134109,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-kinetic%2Fj6/ja-kinetic-j6-webroot-1.0.9.tar.gz"
+    },
+    "database": {
+      "file": "ja-kinetic-j6-database-1.0.9.sql.gz",
+      "bytes": 1020266,
+      "sha256": "b350db659eda371a17066518ced10d26649ffec15e23c0f8ff876643b6305128",
+      "githubAssetId": 657134108,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-kinetic%2Fj6/ja-kinetic-j6-database-1.0.9.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.43.zip",
+      "version": "0.24.43",
+      "bytes": 60457318,
+      "sha256": "bb21fba2fbd6b7914c5199e22579528106f01df6c97ecf753d1172b0b5cee341",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.43/pkg_claudecowork-0.24.43.zip",
+      "contractVersions": ["1.0.0", "1.0.2", "1.0.3", "1.0.4", "1.0.5", "1.0.8"],
+      "contractFiles": {
+        "content-map.json": "17d45a7d2108280eb68f8478b5023b75b1249d520900e0578fcf53427ef87435",
+        "demo-trim-map.json": "f2b53cb30bae6913c64894f2a48eb3a9268f2fb1872c863da2bf779aaf967033",
+        "manifest.json": "dec0c251ba7e4ce99a3053d42fa127bb7f03c41f8a7ac4b0ead49f3aca692724",
+        "presentation-lock.json": "00f09a8c2ef3b330da240579f5655c41abc7603afa1adef8fde27d04d4b07b3e"
+      },
+      "alsoCarries": {
+        "ja-kinetic/j6/1.0.0": {
+          "content-map.json": "1b98f922255badd543cc435ba9d4c8e8a04855d34e1a1ddc8ba9445a1529dc47",
+          "demo-trim-map.json": "6eef5f454650be3b1693e3e17c3ea7f9580b1576c31dc12c1cc55c8bd3c20744",
+          "manifest.json": "43c21b7efd9a5c2a5de4928dc5a7cd6e88ce7f5efe5c9ec84070cc31813a8d69",
+          "presentation-lock.json": "48831dc5ebac5685e1611bff018c0b605d0514538fd16f75077e71e3d4f5f735"
+        },
+        "ja-kinetic/j6/1.0.2": {
+          "content-map.json": "9b4cedb0855af76ff689c5b4c8f512477baffdc215a4485b997543f7433e2285",
+          "manifest.json": "8a7a6f46477628df251fb33be356b00c1d765504b70535709d396218e190a97d",
+          "presentation-lock.json": "6d8be81c6f387bc9b3f7e61b6eec0bb7bf8a26b48242d173b28e93b74acf21e8"
+        },
+        "ja-kinetic/j6/1.0.3": {
+          "content-map.json": "9b4cedb0855af76ff689c5b4c8f512477baffdc215a4485b997543f7433e2285",
+          "manifest.json": "ba78127890761833effdd67a523310ee29900a64481b19486978d5cc390e3a33",
+          "presentation-lock.json": "104f17b94c7f0842bca0dc83d7e69634daee88696df5c1e0842402dd8f7500fa"
+        },
+        "ja-kinetic/j6/1.0.4": {
+          "content-map.json": "9b4cedb0855af76ff689c5b4c8f512477baffdc215a4485b997543f7433e2285",
+          "demo-trim-map.json": "963cfc42dfe6333cb0610bb54160ab1ac008f28d35551c137898dc53bf43beec",
+          "manifest.json": "bb73ba0b10efd346bed9b74d562540e3711e6c9041e5711e759076cd2899dc0a",
+          "presentation-lock.json": "565ae03e63469a85ef1f93a64e405836a4fde63eb0925849c16e33d854b32195"
+        },
+        "ja-kinetic/j6/1.0.5": {
+          "content-map.json": "3fb5b4c2acf1d1d12bbff580e141f640caca02fe8acf6bd3865e860799e65c83",
+          "manifest.json": "d8e5e20e9fd905ffd68b6dcfdb5c8afce1f6a13ccc9d4b0bdc2e1ac12fb9ab16",
+          "presentation-lock.json": "e455c3ff9be658542e347247b19ae2600fadba53804fe19cdaa1ac7441c594de"
+        },
+        "ja-kinetic/j6/1.0.8": {
+          "content-map.json": "17d45a7d2108280eb68f8478b5023b75b1249d520900e0578fcf53427ef87435",
+          "demo-trim-map.json": "7b31d59a164539981c2bc4658d28b3d5180dfda4c81a0c7182292495fa2e3606",
+          "manifest.json": "e6709a7c56bae4dc335d2e085bbbba507f71053fec60726d7266ee877b2f859f",
+          "presentation-lock.json": "20a809456e8d85d24b4846be41a1a90e676288d706dab5488bd09454b5d19038"
+        }
+      }
+    },
+    "contract": "ja-kinetic/j6/1.0.9"
+  },
+  "quickstart/ja-spa/j6": {
+    "platform": "joomla",
+    "version": "1.0.7",
+    "webroot": {
+      "file": "ja-spa-j6-webroot-1.0.7.tar.gz",
+      "bytes": 43334520,
+      "sha256": "3ca58abe2bb3f7aa0b6f814ce99408c627b8a4189f4be31c21d07a27a9c567e0",
+      "githubAssetId": 653102304,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-spa%2Fj6/ja-spa-j6-webroot-1.0.7.tar.gz"
+    },
+    "database": {
+      "file": "ja-spa-j6-database-1.0.7.sql.gz",
+      "bytes": 80335,
+      "sha256": "0c0ebd4dff0d3ba872887892d262a029ff4ed5eeeb30596beb6d9c4e4db430eb",
+      "githubAssetId": 653102305,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-spa%2Fj6/ja-spa-j6-database-1.0.7.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.37.zip",
+      "version": "0.24.37",
+      "bytes": 58117565,
+      "sha256": "34a591e8abbd3568a705291b2fcbf0c70bb0667419763e281888ceda76426d10",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.37/pkg_claudecowork-0.24.37.zip",
+      "contractVersions": ["1.0.1", "1.0.2", "1.0.3", "1.0.4", "1.0.5", "1.0.6"],
+      "contractFiles": {
+        "content-map.json": "92b30c38278cf43da27d9761e2d9ec10dade7b351245953b2f62f9d6a5b06378",
+        "manifest.json": "f20fe2e139832381051d849864f8c8102027b3d0e34973cd50b6eaca595476a0",
+        "presentation-lock.json": "067334a145dd4a32a6ae84750a2074c5f932ea7709aa60541e31abcee5f2b3f0"
+      },
+      "alsoCarries": {
+        "ja-spa/j6/1.0.1": {
+          "content-map.json": "c07066f7792ad4671ddb428fe87cb146cbe8fb94fb25566dca818d8061e03c49",
+          "manifest.json": "fe3166709899a0456e610411615198fd67a86805d8cb5ab35a3b9e8a118062ac",
+          "presentation-lock.json": "9aaea5db79facd4a6e2e7de22391f43c583d58139f75018baec788661dbf1362"
+        },
+        "ja-spa/j6/1.0.2": {
+          "content-map.json": "c07066f7792ad4671ddb428fe87cb146cbe8fb94fb25566dca818d8061e03c49",
+          "manifest.json": "cf6b27f23d516f30be736ad7444bdf84a4b122aaaa879e1ca4cbb4452e6cecf4",
+          "presentation-lock.json": "836612fbde563cbe4ab4524a122ab17fa382378f4c10528466e1b19aaf110863"
+        },
+        "ja-spa/j6/1.0.3": {
+          "content-map.json": "c07066f7792ad4671ddb428fe87cb146cbe8fb94fb25566dca818d8061e03c49",
+          "manifest.json": "ed8f5387ebe75a888a8f5acd36557f99fae2e503fce01a932ce663df064bc386",
+          "presentation-lock.json": "8c7989ce6af9de9f3b57b1331ac23c2469034400ceaac196f841e1359e91371e"
+        },
+        "ja-spa/j6/1.0.4": {
+          "content-map.json": "c07066f7792ad4671ddb428fe87cb146cbe8fb94fb25566dca818d8061e03c49",
+          "manifest.json": "fede1cf316e6305426bc59f06de1d124d9792112b3a1556c8851283df24e706a",
+          "presentation-lock.json": "bb78f588f3f41893b8521c5669920bd6699aa22c4e72485296ca9d96e45e67f7"
+        },
+        "ja-spa/j6/1.0.5": {
+          "content-map.json": "92b30c38278cf43da27d9761e2d9ec10dade7b351245953b2f62f9d6a5b06378",
+          "manifest.json": "c5a0a40e7251c08c9bd96b594ac67bf9a9fd38886b481cf7699493392a17b743",
+          "presentation-lock.json": "78db1f702f23ada2c2a7a10a8ced98afe408e75efb12e91de4f2d3c9d8976786"
+        },
+        "ja-spa/j6/1.0.6": {
+          "content-map.json": "92b30c38278cf43da27d9761e2d9ec10dade7b351245953b2f62f9d6a5b06378",
+          "manifest.json": "cfd57e507863870fa6ea5db1de4d40429f4666ca25d7a6fa74394e764a1722e5",
+          "presentation-lock.json": "b6e667b60c1e78cbba8ac16c1cd2626172f6a92328c0f470296434d066662c87"
+        }
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-spa/j6/1.0.7"
+  },
+  "quickstart/ja-trip/j6": {
+    "platform": "joomla",
+    "version": "1.0.7",
+    "webroot": {
+      "file": "ja-trip-j6-webroot-1.0.7.tar.gz",
+      "bytes": 67831318,
+      "sha256": "19e499beba7b13442cfb178e9a488a85de37bbf6b9b0cf9e81fde2079a7691ad",
+      "githubAssetId": 653102789,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-trip%2Fj6/ja-trip-j6-webroot-1.0.7.tar.gz"
+    },
+    "database": {
+      "file": "ja-trip-j6-database-1.0.7.sql.gz",
+      "bytes": 106629,
+      "sha256": "52a7ef0c7a839f9ebf929d2d238b3d0f3ccf7f36124810382a5c37bf0b2b7841",
+      "githubAssetId": 653102790,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-trip%2Fj6/ja-trip-j6-database-1.0.7.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.37.zip",
+      "version": "0.24.37",
+      "bytes": 58117565,
+      "sha256": "34a591e8abbd3568a705291b2fcbf0c70bb0667419763e281888ceda76426d10",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.37/pkg_claudecowork-0.24.37.zip",
+      "contractVersions": ["1.0.2", "1.0.3", "1.0.4", "1.0.5", "1.0.6"],
+      "contractFiles": {
+        "content-map.json": "3336d43718349979740e84e0fc4714ba35f71a660f8b7c243549bc169859bb62",
+        "manifest.json": "768b217b42068bdcb4fe6e6b7e9d92a9f66008ca4a27eed2f575826e2b4c1c64",
+        "presentation-lock.json": "d29853b89318cb639d7986213aac4a8c05cd5b33ec2417d59c97dcf9cd9d4827"
+      },
+      "alsoCarries": {
+        "ja-trip/j6/1.0.2": {
+          "content-map.json": "35437f596663741e02ea27164cf9f3913e2437673a6f0a43b27eb5c20633ac46",
+          "manifest.json": "230be4967af943eec3f0eab3a27aa19da07a7d8294b92390c2b576ebda36de06",
+          "presentation-lock.json": "2dc960e1f9450772781f0766048f01929ba42e5c0a90643c0a848f8aed3d2f88"
+        },
+        "ja-trip/j6/1.0.3": {
+          "content-map.json": "35437f596663741e02ea27164cf9f3913e2437673a6f0a43b27eb5c20633ac46",
+          "manifest.json": "970cb72aed20ac6ae13d9576fc658420e1f3db3b5e3543b31fae8a95696035bf",
+          "presentation-lock.json": "1e0ba0c4af323571b7e85cad62e514eafbd79904537876f514b65192589e03a4"
+        },
+        "ja-trip/j6/1.0.4": {
+          "content-map.json": "35437f596663741e02ea27164cf9f3913e2437673a6f0a43b27eb5c20633ac46",
+          "manifest.json": "404317be9e580380b20cd8ca1791f0bef404a7a1ed742ac035e54cd06e9e7e3b",
+          "presentation-lock.json": "e459b22b5ca4c72810052541ecda99455d7eb8eb33a5d74d68aaac7b34a19231"
+        },
+        "ja-trip/j6/1.0.5": {
+          "content-map.json": "0b4e9d98807c3a84f842549c5ce68012ba38bd821e0429592b653969e83b1982",
+          "manifest.json": "2289ff60e0f771de0d92043c420b39ef8b97ffee3dc2206d40007d84a8e4fe38",
+          "presentation-lock.json": "d10ccc99bb6ce2816cd9627cb319e2ed84b3d22b15689f963ded88230b69e5b9"
+        },
+        "ja-trip/j6/1.0.6": {
+          "content-map.json": "3336d43718349979740e84e0fc4714ba35f71a660f8b7c243549bc169859bb62",
+          "manifest.json": "358ee1cbb5ece9b1deb3bca62d3611bdb096c71c4c54eb84e35d5985f3ac217a",
+          "presentation-lock.json": "bf6a462548cde1c0d485eb9c8198bb0f0dcbb899313134e5c0e471dbf2cf341b"
+        }
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-trip/j6/1.0.7"
+  },
+  "quickstart/ja-space/j6": {
+    "platform": "joomla",
+    "version": "1.0.3",
+    "webroot": {
+      "file": "ja-space-j6-webroot-1.0.3.tar.gz",
+      "bytes": 36056099,
+      "sha256": "027cc755e78088442dfe86e9a9fb00827b8250fa686b931e8e59a7066186b033",
+      "githubAssetId": 625534379,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-space%2Fj6/ja-space-j6-webroot-1.0.3.tar.gz"
+    },
+    "database": {
+      "file": "ja-space-j6-database-1.0.3.sql.gz",
+      "bytes": 78687,
+      "sha256": "6513c06d1028140275e87c136e08bf0ad8eff3dc8f76699c846e3b9d4306c223",
+      "githubAssetId": 625534389,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-space%2Fj6/ja-space-j6-database-1.0.3.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.37.zip",
+      "version": "0.24.37",
+      "bytes": 58117565,
+      "sha256": "34a591e8abbd3568a705291b2fcbf0c70bb0667419763e281888ceda76426d10",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.37/pkg_claudecowork-0.24.37.zip",
+      "contractVersions": ["1.0.2", "1.0.4"],
+      "contractFiles": {
+        "content-map.json": "52e93fbf53ec0924bb3cf8471c2794ae9d76672691e50ad9cb2d1bde8da5c61b",
+        "manifest.json": "94ead10592b070ae20dca7ad441520d4882f2ba8f641d5b1a696d1c9a56a0770",
+        "presentation-lock.json": "b2e1cf79ab7a6390e193cecbe6cc214dfa7305b41bc74e0b268dfa9278969f39"
+      },
+      "alsoCarries": {
+        "ja-space/j6/1.0.2": {
+          "content-map.json": "52e93fbf53ec0924bb3cf8471c2794ae9d76672691e50ad9cb2d1bde8da5c61b",
+          "manifest.json": "5755122df25a2bd1b2872cbdba2192cad41e2d703e5b9634c41659f29b90409f",
+          "presentation-lock.json": "73cadee3f77dac7a5802ce34d4bc45679fc925c1f6c23468bfac0b20bc93a841"
+        },
+        "ja-space/j6/1.0.4": {
+          "content-map.json": "14a6c3047ec82c29cdd9a42908cb352635b52d70a41327b0b1f769c0942f80ce",
+          "manifest.json": "92ee9d8cfb4dfced2f6aecd3e922cd3a769683ababf48c522db36a957dc8582a",
+          "presentation-lock.json": "f142b35a904171e68e61c9351c719899b8796b962cf861d9acd8a2a62ae57e42"
+        }
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-space/j6/1.0.3"
+  },
+  "quickstart/ja-essence/j6": {
+    "platform": "joomla",
+    "version": "1.0.9",
+    "webroot": {
+      "file": "ja-essence-j6-webroot-1.0.9.tar.gz",
+      "bytes": 58408957,
+      "sha256": "53e29911c89eb845d90268e9ff0c1f07a7e2001f28b58d99e6bfa38ce3da4dc0",
+      "githubAssetId": 653099690,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-essence%2Fj6/ja-essence-j6-webroot-1.0.9.tar.gz"
+    },
+    "database": {
+      "file": "ja-essence-j6-database-1.0.9.sql.gz",
+      "bytes": 103527,
+      "sha256": "890fc10c4ad8ce068e525c2c390f0f8efbf142e1e7ca6ed25e1cb27876448c26",
+      "githubAssetId": 653099691,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-essence%2Fj6/ja-essence-j6-database-1.0.9.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.37.zip",
+      "version": "0.24.37",
+      "bytes": 58117565,
+      "sha256": "34a591e8abbd3568a705291b2fcbf0c70bb0667419763e281888ceda76426d10",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.37/pkg_claudecowork-0.24.37.zip",
+      "contractVersions": ["1.0.5", "1.0.6", "1.0.7", "1.0.8"],
+      "contractFiles": {
+        "content-map.json": "836b332e6c76f5f97d537f4d4f6984f3d2386f3ec8dfd952d2654faaf2570f77",
+        "manifest.json": "8dea6832496a627763802dbda8434d9390fb9f18700e337df24ed3193b5f79d3",
+        "presentation-lock.json": "30767e65f2e45816b615c81913e6aa1dd3a9b1ad858ebd3c709823c81f0aa9ce"
+      },
+      "alsoCarries": {
+        "ja-essence/j6/1.0.5": {
+          "content-map.json": "836b332e6c76f5f97d537f4d4f6984f3d2386f3ec8dfd952d2654faaf2570f77",
+          "manifest.json": "e80957606ac50c36f88b2b95465ceb1279bc00d504eb60acbf7680545512428d",
+          "presentation-lock.json": "3fe80bf5983787787c041cf83e682c0bc0831e044e73c3cbb490ec9352345344"
+        },
+        "ja-essence/j6/1.0.6": {
+          "content-map.json": "836b332e6c76f5f97d537f4d4f6984f3d2386f3ec8dfd952d2654faaf2570f77",
+          "manifest.json": "2f133afef812d51ce149fc22542289bf1540a38b481a91bef94c859ac0e19309",
+          "presentation-lock.json": "dc519613aff6513bbecb7e372947842fad2ccf1be6f53da17c834bc1d2eda267"
+        },
+        "ja-essence/j6/1.0.7": {
+          "content-map.json": "836b332e6c76f5f97d537f4d4f6984f3d2386f3ec8dfd952d2654faaf2570f77",
+          "manifest.json": "51fc61ab505582305aa97c588e0d6a01c47e87c57770c9760dd797be49869ab5",
+          "presentation-lock.json": "dc2644320970110c333c1663136189369e8f2280b8ea50d205616e29f63ff88c"
+        },
+        "ja-essence/j6/1.0.8": {
+          "content-map.json": "836b332e6c76f5f97d537f4d4f6984f3d2386f3ec8dfd952d2654faaf2570f77",
+          "manifest.json": "e716bd6e2e1175a2b2186a5f30216c8e19354fcafb999eff34fd89a2de61cdc1",
+          "presentation-lock.json": "a5ebbf992992d42a35fff954a093c5687c26c91ff93021a70a58a005e200fe20"
+        }
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-essence/j6/1.0.9"
+  },
+  "quickstart/ja-diner/wp7": {
+    "platform": "wordpress",
+    "version": "1.0.1",
+    "webroot": {
+      "file": "ja-diner-wp7-webroot-1.0.1.tar.gz",
+      "bytes": 59642060,
+      "sha256": "2b4e826d69bc84d92c00d5707455caa813fbab2548b9b71c964a65b0d40d05cf",
+      "githubAssetId": 665414274,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-webroot-1.0.1.tar.gz"
+    },
+    "database": {
+      "file": "ja-diner-wp7-database-1.0.1.sql.gz",
+      "bytes": 63376,
+      "sha256": "771e7fdac6777e7f664585a0c3eb2ccb042698d6ca24eeeec86a30efd2e450ef",
+      "githubAssetId": 665414272,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-database-1.0.1.sql.gz"
+    },
+    "cowork": {
+      "file": "claude-cowork-0.18.29.zip",
+      "version": "0.18.29",
+      "bytes": 1824050,
+      "sha256": "15ac0a9a6ae305e8366e358201a19df5f5bd7e842399d2e8d3aa0591c382af93",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.18.29/claude-cowork-0.18.29.zip",
+      "contractVersions": ["1.0.0"],
+      "alsoCarries": {
+        "ja-diner/wp7/1.0.0": {
+          "content-map.json": "e81737fc88f5618c8357c3772348c48b4361a9c85069bfe6bcf201283f737697",
+          "demo-trim-map.json": "d416a1ff9e6f32397452cdb98431895ed7a2774a565e9ef2912f6323f4bc5285",
+          "editions.json": "843b29261989dc9b57b7bcf0793cd1b888eabd227ac6fb4739a8126a4ed66ab8",
+          "manifest.json": "0e25baf2becdd1f9c5128bc963a5193eedd76d82d864d213ebd8a8f8f59a3b54",
+          "presentation-lock.json": "af6697dff5ece0d0c2678d0218583fbde8372a33049a945af43e9b2375ab7939",
+          "superseded.json": "4c67f2ad167d42d1597c7629cebfa8a83455e9fd042dcb4408d762e862af2b15"
+        }
+      },
+      "contractFiles": {
+        "content-map.json": "e81737fc88f5618c8357c3772348c48b4361a9c85069bfe6bcf201283f737697",
+        "demo-trim-map.json": "2018bf1fdfbb57e16a2ccf6b903c4b5fb14e5c7accdbea52cecaf1cc87518eed",
+        "editions.json": "3585bdf7be73c16c091f338a5612b4a912ee20c27e983348257e4579891c3e8a",
+        "manifest.json": "2c1d7d96495aa954f752376692384d6919f95319cead0f75f79f50bf38c245ed",
+        "presentation-lock.json": "e17873f139d2ce0ef91be648347a448d5b0ed641e2d985578905556cc856497b",
+        "showcase-nav-map.json": "99e54244c0f1481be519aa21c1e28696e17f71714b76f1ddcbcea1fe0ed7a6cf",
+        "superseded.json": "d9a496c209755e4051ce2d068d4317d0f79ceb7682ce5d63d99750a305a0c06c"
+      }
+    },
+    "contract": "ja-diner/wp7/1.0.1"
+  },
+  "quickstart/ja-fresco/wp7": {
+    "platform": "wordpress",
+    "version": "1.0.1",
+    "webroot": {
+      "file": "ja-fresco-wp7-webroot-1.0.1.tar.gz",
+      "bytes": 51153577,
+      "sha256": "fe6f597bd5ed71afa3cf9e664d25d2ed63d5884ddd0f84029eaa89b2463f768a",
+      "githubAssetId": 665394200,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-fresco%2Fwp7/ja-fresco-wp7-webroot-1.0.1.tar.gz"
+    },
+    "database": {
+      "file": "ja-fresco-wp7-database-1.0.1.sql.gz",
+      "bytes": 43916,
+      "sha256": "b26c64a5e0c8c8f4af90b7fbbd492781299c62a3b358f34fe4345cdecf4f18cc",
+      "githubAssetId": 665394204,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-fresco%2Fwp7/ja-fresco-wp7-database-1.0.1.sql.gz"
+    },
+    "cowork": {
+      "file": "claude-cowork-0.18.29.zip",
+      "version": "0.18.29",
+      "bytes": 1824050,
+      "sha256": "15ac0a9a6ae305e8366e358201a19df5f5bd7e842399d2e8d3aa0591c382af93",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.18.29/claude-cowork-0.18.29.zip",
+      "contractVersions": ["1.0.0"],
+      "alsoCarries": {
+        "ja-fresco/wp7/1.0.0": {
+          "content-map.json": "8b7bbb5f3041e034f4af9b1b9ade53a4e449bd218a8a2d02cbafed9a4f2ce51d",
+          "demo-trim-map.json": "a39428b186b5c23059487e38db39aaae59ec523ca69232b5a87a54e5d87d2f1c",
+          "editions.json": "62a45bde3568a82ddbe3609ab5bd2a33dad870d806a568518a9d3802264a9a00",
+          "manifest.json": "85209ec644a3337668969caa60977146d616336fdbc6f2790fb6f8752c2748ee",
+          "presentation-lock.json": "ff7203a437c1454234258412682fde810aee2d214dc7ad862f7f015d5631e0bd",
+          "superseded.json": "bca35e50b2bc55b4de065fd728be044ac73f8608054400b2ba453abf15cc2648"
+        }
+      },
+      "contractFiles": {
+        "content-map.json": "8b7bbb5f3041e034f4af9b1b9ade53a4e449bd218a8a2d02cbafed9a4f2ce51d",
+        "demo-trim-map.json": "044b852c01113d5dc04e1c1e40ed0af9910d2b78219d653fc51a145b2621f88e",
+        "editions.json": "6fa858194cbfde2a28aac142d029d58d779e529d040d2bcfa6e634c3facfc55e",
+        "manifest.json": "3c38425d695af115421d28568a383bf71c07746378ee55683439536cc4fbc4cd",
+        "presentation-lock.json": "ff7203a437c1454234258412682fde810aee2d214dc7ad862f7f015d5631e0bd",
+        "showcase-nav-map.json": "4070baa4bf2d4ab44b9cf43a91cc6d8a220083d31ade743ee503b887b5f94f33",
+        "superseded.json": "7c2119b66fec0a8c3831769bf8ae425b25bdcc7c07165c1ba56146c59e0dbb78"
+      }
+    },
+    "contract": "ja-fresco/wp7/1.0.1"
+  },
+  "quickstart/ja-restaurant/wp7": {
+    "platform": "wordpress",
+    "version": "1.0.1",
+    "webroot": {
+      "file": "ja-restaurant-wp7-webroot-1.0.1.tar.gz",
+      "bytes": 55886818,
+      "sha256": "171712e0a901b833aa9bcd1fe3a65cab345fa8da6f575e636565b0e9754fd201",
+      "githubAssetId": 664754944,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-restaurant%2Fwp7/ja-restaurant-wp7-webroot-1.0.1.tar.gz"
+    },
+    "database": {
+      "file": "ja-restaurant-wp7-database-1.0.1.sql.gz",
+      "bytes": 83753,
+      "sha256": "61314673b80414fb1455f8cd82a4ecd6d7d1dda21e158497afe163ace1aca7dc",
+      "githubAssetId": 664754943,
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-restaurant%2Fwp7/ja-restaurant-wp7-database-1.0.1.sql.gz"
+    },
+    "cowork": {
+      "file": "claude-cowork-0.18.29.zip",
+      "version": "0.18.29",
+      "bytes": 1824050,
+      "sha256": "15ac0a9a6ae305e8366e358201a19df5f5bd7e842399d2e8d3aa0591c382af93",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.18.29/claude-cowork-0.18.29.zip",
+      "contractVersions": ["1.0.0"],
+      "alsoCarries": {
+        "ja-restaurant/wp7/1.0.0": {
+          "content-map.json": "3da2500fa124dc4b363d22db547db65f129c9770ca6e2d276324132bc09f49e0",
+          "demo-trim-map.json": "4b1cbb7064e4a96cbd630923bcb0f237456e984c83567a62852705a189dd9e24",
+          "editions.json": "6ab0213f7cc251db109c94a00e3365cb1e70ae9a4bfe627523f88d70e09b08c5",
+          "manifest.json": "416250ac3b37b65f0cf258706d525323c4732c20f3c078baea7a7d744af454d2",
+          "presentation-lock.json": "32da7d95a095c3c550205cfebb3ec187718d1b69c9c4a770ec76391126cea00b",
+          "superseded.json": "9092d796307f312785301e3cb3b0301a35c7f462057d70c421b2e1f538e2090e"
+        }
+      },
+      "contractFiles": {
+        "content-map.json": "3da2500fa124dc4b363d22db547db65f129c9770ca6e2d276324132bc09f49e0",
+        "demo-trim-map.json": "ed18f1a2ead23ad9422bd10dc743be85d5e983a1b57a0e844eab6bda5d6a8913",
+        "editions.json": "edc65daa5a1c02d99dcbe8a64b1278efe36c6ba63dd4e884e6ed72ef160e9e94",
+        "manifest.json": "d545bdc5de13d0f634beaacda01aa17f77417748861619ff055a9ff3bef76f67",
+        "presentation-lock.json": "b08cf515fdb57e491c25899eeeace02877d4ab136630c9b77403d889bf579d14",
+        "showcase-nav-map.json": "1270728ac8a763957b8909cf908045eef1aea8a954fea0146f909f99d8b5d7fc",
+        "superseded.json": "ef5aa99133e2681907cf45919116093115e380507cccd5ec0d55a5c75aa81b88"
+      }
+    },
+    "contract": "ja-restaurant/wp7/1.0.1"
+  }
+}

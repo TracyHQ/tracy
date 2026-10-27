@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1479-site-agent-scope",
+  "kind": "fix",
+  "title": "The site agent is told to change only what was asked, asks before writing anything shared, and is told about a change nobody asked for",
+  "pr": 1479,
+  "area": "site-changes/scope",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: build the site context for each CMS and mode.",
+    "S2: run consequenceOf on model writes to a WordPress template part, a Joomla module, an EmDash site entry.",
+    "S3: send a WordPress whole-body write changing two blocks.",
+    "S4: a visual-check judge stand-in answers shown with also."
+  ],
+  "expect": [
+    "S1: every session's context carries the SCOPE line; all:true only when asked.",
+    "S2: each asks first, nothing sent.",
+    "S3: refused BODY_WIDE, nothing written.",
+    "S4: exactly one notice telling the agent to put back just that."
+  ],
+  "selectors": {
+    "test": "packages/tools/tracy-site-tools/test/{site-context,consequence,site-call,visual-check}.test.mjs",
+    "code": "site-context.mjs SCOPE, consequence.mjs shared, site-call.mjs BODY_WIDE, visual-check.mjs also"
+  },
+  "evidence": "Staff report 20/10/2026: 'when Tracy fixes one place it often breaks another'; no scope rule, shared records written without asking, visual check had no verdict for unasked changes",
+  "fence": "Scope rule in context, ask-first on shared records, whole-body guard, visual-check also",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/consequence.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-call.test.mjs",
+      "packages/tools/tracy-site-tools/test/visual-check.test.mjs"
+    ],
+    "tests": [
+      "an update of a record other pages show asks first: WordPress part, template, synced pattern, menu",
+      "a Joomla module update asks first, naming that it shows on every page it is assigned to; a new one does not",
+      "EmDash: an update of the site entry asks first; any other collection's entry does not",
+      "a whole body that changes two blocks is refused BODY_WIDE, nothing written, and sent to blocks with the rev",
+      "🔒 a judge naming an unasked change steers ONE notice; cannot_tell or shown without it steers none"
+    ]
+  }
+}

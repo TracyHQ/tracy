@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ab650279-aa18-43e5-a998-34190d7bedc7",
+  "status": "complete",
+  "name": "Fable",
+  "url": "https://styles.refero.design/style/ab650279-aa18-43e5-a998-34190d7bedc7",
+  "sourceWebsite": "https://fable.co",
+  "extractedAt": "2026-06-03T19:18:53.735Z",
+  "capturedAt": "2026-10-08T05:16:04.081644+00:00",
+  "theme": "mixed",
+  "industry": "media",
+  "description": "a literary reading nook with cream paper and ink — the book is the art",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7e95c0d9-9c30-4e28-8b50-b20f0abed910.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/fcee3994-bbe5-4334-956c-a734b2702880.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f7c8e8b5-eb2a-47ca-b299-df040e0070cd.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/835bc34a-0e34-4c07-a479-1b6c5c4d3f44.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/b60c2639-131b-4baf-9544-ff328ce19db0.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9d4ae85f00999740d03fc3e1051d7e5b46e130f28d64fe2bd38d948a67046d1d",
+      "bytes": 22482
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9bc99e600403305973c61d3cac4a8a45290dd7996f17d7d96330c5db7ce28d07",
+      "bytes": 227629
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "7478f5f67537df06a5f1fc174e522f3269c55d7f8f8341593c8727622c3d7880",
+      "bytes": 18891
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d8bed006e5f33ca94475e0520a3f383b075f6592a024c7b128093eef72a87846",
+      "bytes": 13106
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "9ad750b875dd58b014e5cf3049a72b6db090fce4e3a14c799ed5d95dcde78bfd",
+      "bytes": 13106
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2b7c55cccd12b9e97bb0f53d106c7f7d7e2f31eaf0c1d5199af8fda99ca345f7",
+      "bytes": 3162
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "5f492cf907319b1a621115bbd94e21945bb24eede7fee71975f581a8cac35949",
+      "bytes": 701
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "dcfb7f009136a7846f3c4e715c7aaf083d22ad1e6f8bdff38bdc43249e27778b",
+      "bytes": 718
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "1ad64e413cac783ccf0831cfad6525ac66ea12742150424da693c634c3b1c4ce",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "93df049a56530563ae4b1877a4b9a69f1fd853e54d58c141900184efb7543bc6",
+      "bytes": 46592
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "6a05f89dfda17100f43121694b18183fa19b488ea121a0c8a2252d902656e7e0",
+      "bytes": 24562
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "765abca2400e39b3ec863bf588966c96b0d73429c0b7358d80bef6f967693753",
+      "bytes": 53326
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4128af5057977093cfafe88ecf08cae72976e678761fc666e7090d53ed7d4740",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "54f92a1f44d6ea62897b849a6d71c5c00b6ba3ac4e59bd4ba8cd5c7b6cde19d1",
+      "bytes": 1949
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "531cab52aa74ac5c3983623aa2defb752a1cb5c451b7cac01ba188b61e909c4f",
+      "bytes": 2602
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "1d51a2db-18fc-4de3-bff7-d1e73ace8b6e",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "34baa524-5d5b-4165-bbab-d01f05e6d6b9",
+    "34c8dbee-f5d9-4495-a0e0-a25c6ca4b95b",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "7b083729-e694-4b66-82a3-befb08451722",
+    "7e698bf6-6b31-40ed-a89a-40f4c37ade38",
+    "8f42603d-7ff9-446e-99a3-6bdd1f388ae5",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "957da5c3-7063-4992-9d25-e255752dc9b3",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "9c92c3d1-a2fe-4a27-a324-826b19501774",
+    "ab650279-aa18-43e5-a998-34190d7bedc7",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916"
+  ]
+}

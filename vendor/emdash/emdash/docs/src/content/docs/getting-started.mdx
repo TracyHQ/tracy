@@ -1,0 +1,183 @@
+---
+title: Create your first EmDash site
+description: Scaffold a local EmDash site, complete setup, and publish an edit.
+---
+
+import { Aside, Steps, TabItem, Tabs } from "@astrojs/starlight/components";
+
+This tutorial creates a Node.js site from the Starter template. The result uses SQLite and local
+media storage, so you can complete the tutorial without a cloud account.
+
+If you already have an Astro site, follow [Add EmDash to an existing Astro
+project](/existing-project/) instead.
+
+## Prerequisites
+
+Install Node.js 22.16 or later and npm. Check the installed Node.js version before continuing:
+
+```bash
+node --version
+```
+
+The command must report `v22.16.0` or a later version.
+
+## Scaffold the site
+
+<Steps>
+
+1. Start the interactive scaffolder:
+
+   <Tabs syncKey="package-manager">
+   <TabItem label="npm">
+   ```bash
+   npm create emdash@latest
+   ```
+   </TabItem>
+   <TabItem label="pnpm">
+   ```bash
+   pnpm create emdash@latest
+   ```
+   </TabItem>
+   <TabItem label="yarn">
+   ```bash
+   yarn create emdash
+   ```
+   </TabItem>
+   <TabItem label="bun">
+   ```bash
+   bun create emdash@latest
+   ```
+   </TabItem>
+   </Tabs>
+
+2. Choose the following options when prompted:
+
+   - **Project name:** `my-emdash-site`
+   - **Where will you deploy?** **Node.js**
+   - **Which template?** **Starter**
+   - **Which package manager?** Keep the package manager detected from the command in step 1.
+   - **Install dependencies?** **Yes**
+
+   These choices create a general-purpose Node.js site with Posts and Pages. The scaffolder also
+   writes a generated `EMDASH_ENCRYPTION_KEY` to the gitignored `.env` file.
+
+   If dependency installation fails, the project files remain in place. Run the retry command
+   printed by the scaffolder before continuing.
+
+3. Enter the project directory and start the development server:
+
+   <Tabs syncKey="package-manager">
+   <TabItem label="npm">
+   ```bash
+   cd my-emdash-site
+   npm run dev
+   ```
+   </TabItem>
+   <TabItem label="pnpm">
+   ```bash
+   cd my-emdash-site
+   pnpm dev
+   ```
+   </TabItem>
+   <TabItem label="yarn">
+   ```bash
+   cd my-emdash-site
+   yarn dev
+   ```
+   </TabItem>
+   <TabItem label="bun">
+   ```bash
+   cd my-emdash-site
+   bun dev
+   ```
+   </TabItem>
+   </Tabs>
+
+   Keep this terminal open. Astro prints the local site URL, normally `http://localhost:4321/`.
+
+</Steps>
+
+<Aside type="caution" title="Keep the encryption key private">
+	Do not commit `.env`. Back up `EMDASH_ENCRYPTION_KEY` before deploying the site. EmDash cannot
+	decrypt stored plugin secrets without the key.
+</Aside>
+
+## Complete setup
+
+Open `http://localhost:4321/_emdash/admin/`. A new site redirects to the setup wizard.
+
+<Steps>
+
+1. Enter a **Site Title** and optional **Tagline**. Leave **Include sample content** selected so the
+   tutorial starts with the template's Welcome post and About page, then select **Continue**.
+
+2. Enter **Your Email** and an optional **Your Name**, then select **Continue**.
+
+3. Register a passkey when the browser opens its credential prompt. After registration, select
+   **Open the dashboard**.
+
+</Steps>
+
+The dashboard opens with Posts and Pages in the navigation. The setup wizard has applied the
+Starter template's content model and sample content to the local SQLite database.
+
+## Publish an edit
+
+<Steps>
+
+1. Open **Posts**, then open **Welcome**.
+
+2. Change the title to `Hello from EmDash`, then select **Save**.
+
+3. Select **Publish changes** so the saved draft becomes the version shown to visitors.
+
+4. Open `http://localhost:4321/` in another tab. The home page lists **Hello from EmDash**.
+
+</Steps>
+
+The Starter template calls `getEmDashCollection("posts")` when Astro renders the home page. Reloading
+the page reads the published version from EmDash at runtime.
+
+## How the generated site works
+
+The scaffold produces a normal Astro project with EmDash connected in three places.
+
+`astro.config.mjs` enables server rendering and the Node.js adapter. It also registers React for the
+admin panel and gives EmDash a SQLite database and a directory for uploaded media. The
+`src/live.config.ts` file connects that database-backed content to Astro's Live Content Collections.
+
+The home page then queries the `posts` collection. Its query is equivalent to the following part of
+the generated page:
+
+```astro title="src/pages/index.astro"
+---
+import { getEmDashCollection } from "emdash";
+
+const { entries: posts, cacheHint } = await getEmDashCollection("posts", {
+	orderBy: { published_at: "desc" },
+});
+
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+---
+
+<ul>
+	{posts.map((post) => <li>{post.data.title}</li>)}
+</ul>
+```
+
+`seed/seed.json` defines the Posts and Pages collections, their fields, and the sample content that
+the setup wizard applied. During local development, EmDash reads that model and refreshes
+`emdash-env.d.ts`, so your editor can check collection names and fields in query code.
+
+The generated `.env` supplies the encryption key at runtime. It is separate from the SQLite file
+that stores the model and content.
+
+## Next steps
+
+Read [Architecture](/concepts/architecture/) for how these parts work together. To add EmDash to a
+site that already exists, follow [Add EmDash to an existing Astro project](/existing-project/).
+The [Querying content guide](/guides/querying-content/) covers filters, pagination, drafts, and error
+handling. When the site is ready to leave your machine, deploy it to [Cloudflare
+Workers](/deployment/cloudflare/) or [Node.js](/deployment/nodejs/).
+The [Media library guide](/guides/media-library/) explains uploads, media fields, replacement, and
+deletion.

@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-ink-black: #0c0c0c;
+  --color-carbon: #1a1a1a;
+  --color-graphite: #2a2a2a;
+  --color-slate: #404040;
+  --color-steel: #6b7280;
+  --color-silver: #999999;
+  --color-bone: #e5e7eb;
+  --color-cloud: #eef1f5;
+  --color-pure-white: #ffffff;
+  --color-cobalt-signal: #2b22fa;
+
+  /* Typography — Font Families */
+  --font-abcnormal: 'abcNormal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,64 @@
+{
+  "color": {
+    "voltage-lime": {
+      "$value": "#e3fc03",
+      "$type": "color",
+      "$description": "Voltage Lime — Primary CTA fill, active state, accent badges, and decorative highlights — the single chromatic moment in an otherwise monochrome system. Sits at 18.2:1 contrast against black, so it doubles as a high-visibility call-to-action and a hover indicator without needing a second hue"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, hairline borders, icon strokes, image borders, and footer background. Carries 2,045 border usages — this system uses black lines to structure space more than boxes or cards"
+    },
+    "graphite": {
+      "$value": "#323232",
+      "$type": "color",
+      "$description": "Graphite — Secondary text and softer borders — slightly lifted from pure black to create a visible hierarchy without introducing color"
+    },
+    "carbon": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Carbon — Icon strokes, link underlines, and low-priority UI marks — the third step of the dark scale, reserved for fine detail that should recede from primary text"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary page and card surface — the canvas everything else is drawn onto"
+    },
+    "concrete": {
+      "$value": "#e6e6e6",
+      "$type": "color",
+      "$description": "Concrete — Soft section background, alternate surface, and quiet card fill."
+    }
+  },
+  "font": {
+    "whyteregular": {
+      "$value": "WhyteRegular",
+      "$type": "fontFamily",
+      "$description": "WhyteRegular — detected in extracted data but not described by AI"
+    },
+    "whyte": {
+      "$value": "Whyte",
+      "$type": "fontFamily",
+      "$description": "Display and section headings — used at 72px hero scale and 32px section scale. Tight 1.1 leading and a regular (not bold) weight are anti-convention: most sports brands shout with 800-weight display type, but Whyte Regular at 72px carries authority through letterform precision and negative space alone. The headlines never need a second style. Substitute: Inter Tight or Neue Haas Grotesk Display Pro at 400."
+    },
+    "whyte-book": {
+      "$value": "Whyte Book",
+      "$type": "fontFamily",
+      "$description": "Universal workhorse — body copy, subheadings, product captions, navigation, and buttons. One weight, one family, used at seven sizes. The 38px tier handles product card titles; 16px is the default body; 13px is the fine-print and footer size. Line-height tightens from 1.60 at body to 1.30 at 38px. Substitute: Inter or Söhne at 400."
+    },
+    "whyte-inktrap": {
+      "$value": "Whyte Inktrap",
+      "$type": "fontFamily",
+      "$description": "Secondary detail typeface with inktrap terminals — used for fine UI labels, tag monograms, and small monospace-feeling metadata. The inktrap cuts prevent the letterforms from filling in at small sizes, giving tags and micro-copy a distinct technical voice. Substitute: JetBrains Mono or IBM Plex Mono at 400."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://twotwo-official.com",
+      "siteName": "TWOTWO",
+      "extractedAt": "2026-06-03T20:00:42.943Z",
+      "variant": "compact"
+    }
+  }
+}

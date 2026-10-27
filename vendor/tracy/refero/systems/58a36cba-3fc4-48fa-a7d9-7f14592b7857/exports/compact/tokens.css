@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-paper-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-soft-ink: #0a0a0a;
+  --color-graphite: #767676;
+  --color-smoke: #b3b3b3;
+  --color-ash: #cccccc;
+
+  /* Typography — Font Families */
+  --font-saol-display: 'saol-display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-soehne: 'soehne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-soehne-mono: 'soehne-mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

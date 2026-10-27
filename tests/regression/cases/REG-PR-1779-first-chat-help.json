@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1779-first-chat-help",
+  "kind": "fix",
+  "title": "First onboarding Help needs no agent session and attachments survive retry and reload with owner-only access",
+  "pr": 1779,
+  "area": "onboarding/help",
+  "cms": ["any"],
+  "needs": ["database"],
+  "flaky_model": false,
+  "steps": [
+    "Run tests/regression/scripts/REG-PR-1779-first-chat-help.mjs with TEST_DATABASE_URL pointing at an owned PostgreSQL database."
+  ],
+  "expect": [
+    "Fresh authenticated email can ask and upload before an account exists; conversation GET creates nothing.",
+    "Onboarding composer sends Help without an agent session; allowed actions require a click.",
+    "Owner files persist, foreign reads and claims fail, cleanup retries failed deletes, and retry restores the completed answer for the original question."
+  ],
+  "selectors": {
+    "composer": ".tv-onboarding-input textarea",
+    "upload": "/api/assistant/attachments",
+    "conversation": "/api/assistant/conversation?session=tracy-onboarding-help&start=1"
+  },
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1779-first-chat-help.mjs"]
+  }
+}

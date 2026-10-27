@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1134-ds-contracts-r2d",
+  "kind": "feat",
+  "title": "Round 2 batch D of the slot contracts: JA Essence (Joomla) and Tracy Base (EmDash) wear a design system from the release that first carries it (1.0.5, 0.5.0); JA Restaurant ships with T3 dev mode off and is measured whole (OpenTable's hanging script blocked)",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo", "em"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs test/release-manifest.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-essence.json, emdash-base.json and joomla-ja-restaurant.json through loadContract.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf(...), {key, version}) for ja_essence at 1.0.4 and 1.0.5, Tracy Base EmDash at 0.4.0 and 0.5.0, ja_restaurant at 1.0.3.",
+    "S4: joomlaSlot (src/joomla.mjs) for JA Essence under od:spotify and JA Restaurant under MotherDuck.",
+    "S5: read packages/cms/tracy-joomla-quickstart/contracts/ja-essence/j6/1.0.5/manifest.json.",
+    "S6: cdp.mjs browser(port, { block }) on a local page whose parser-blocking script is served by a host that never answers.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-r2d.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: joomla-ja-essence ready, minVersion {'quickstart/ja-essence/j6': null}, or a release after 1.0.5 once the tokenized rebuild shipped (1.0.6, #1180), with a minVersionNote (another line released a different, untokenized 1.0.5 first — #1013/#1161), keepScopes contains '.btn-dark', keepDefaults['--color-dark'] '#212529', readyNote names tasks/evidence/ds-contracts-r2d-2026-10-11 (or, for a template re-measured since, a tasks/evidence/ds-remeasure-*/ds-reverify-* folder of it that exists, as the later pass rewrote the readyNote on 11-12/10/2026); emdash-base ready with minVersion {'tracy-base/emdash-0.x': '0.5.0'}; joomla-ja-restaurant has t3DevmodeOff true and a measureBlock naming opentable.com; ready with minVersion null or a release after 1.0.3 (1.0.4 since #1180), or ready:false with a readyNote starting 'NOT offered yet — '.",
+    "S3: ja_essence 1.0.5 → {reason:'TEMPLATE_NEEDS_UPDATE', need:<minVersion or null>, have:'1.0.5'}; EmDash base 0.4.0 → need '0.5.0'; 0.5.0 → {contract:'emdash-base'}; ja_restaurant 1.0.3 (released by another line, #1175) → {reason:'TEMPLATE_NEEDS_UPDATE', need:<minVersion or null>, have:'1.0.3'} when ready, else TEMPLATE_NOT_READY.",
+    "S4: JA Essence's module CSS has a .btn-dark rule setting --color-dark:#212529; JA Restaurant's has '.features-item.odd .features-item-inner{color:var(--ds-c-accent-on)}' and '.tags .label-info{color:var(--ds-c-accent-on)}'.",
+    "S5: the tch contract of ja-essence 1.0.5 is the published release (its manifest does not name tracy-ds-slot release-joomla.mjs).",
+    "S6: the page reaches readyState complete with the element after the script, in under 60 s."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/{joomla-ja-essence,emdash-base,joomla-ja-restaurant}.json ready, minVersion, keepScopes, keepDefaults, t3DevmodeOff, measureBlock, followRules",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor / templateKeyOf",
+    "measuring browser": "packages/design/tracy-ds-slot/scripts/cdp.mjs browser(port, { block })"
+  },
+  "evidence": "tasks/evidence/ds-contracts-r2d-2026-10-11/README.md — per-template table, screenshots, flow.json and verification of each measure (11/10/2026).",
+  "fence": "The measures on Docker stands and the local EmDash build are in the evidence, not re-run here (each takes 20–60 min on the shared VM). Not covered: the release builds themselves (VERIFICATION.json in each pack) and publishing (no upload is made). Judging by eye is in the evidence.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-r2d.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

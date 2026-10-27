@@ -1,0 +1,312 @@
+{
+  "dos": [
+    "Use #ecf956 lime as the only filled button color — it must remain the single chromatic action accent against the warm neutral system",
+    "Set all buttons to 100px pill radius; cards to 30px radius; never mix sharp corners with this system",
+    "Pair Tobias weight 300 serif displays (54-70px) with ABC Favorit weight 350-400 body — the serif/sans contrast is the system's editorial signature",
+    "Use #482317 espresso for all text — never pure #000000, the warm brown is what makes the system feel approachable",
+    "Apply pastel washes (#f3fb9a, #efd8f0, #c6e57d) to section backgrounds, not to text or interactive elements",
+    "Set hero and section headings to line-height 1.03 with negative letter-spacing — the tight rhythm is essential to the editorial feel",
+    "Use uppercase ABC Favorit weight 700 with positive tracking for nav items and button labels"
+  ],
+  "donts": [
+    "Don't introduce a second action color — the lime CTA only works because everything else is neutral or pastel decorative",
+    "Don't use Tobias serif for body text or UI labels — reserve it for displays and large section headings only",
+    "Don't apply shadows to cards — the system uses flat surfaces with borders; the only shadow is the nav bar drop shadow",
+    "Don't use pure white #ffffff or pure black #000000 — cream #fafafa and espresso #482317 define the warm palette",
+    "Don't set card radius below 15px — the generous rounding (15-30px) is core to the friendly creator-economy feel",
+    "Don't add gradient text effects or color overlays to the serif headings — keep them flat espresso on cream",
+    "Don't use more than one pastel wash per section — multiple competing pastels will flatten the visual hierarchy"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#482317",
+      "name": "Espresso Ink",
+      "role": "Primary text, headings, nav links, body copy, and outlined button borders — a warm dark brown that replaces pure black and gives the whole system a softer, editorial voice",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Fog Border",
+      "role": "Hairline borders, dividers, input outlines, and icon strokes across cards, nav, and body containers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Cream Canvas",
+      "role": "Page background and card surfaces — the off-white that everything sits on, warmer than pure white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ecf956",
+      "name": "Lime Spark",
+      "role": "Green action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "brand"
+    },
+    {
+      "hex": "#efd8f0",
+      "name": "Lilac Whisper",
+      "role": "Decorative pastel surface used inside product mockups and gradient washes — soft lavender that recedes behind content",
+      "group": "accent"
+    },
+    {
+      "hex": "#c6e57d",
+      "name": "Mint Tint",
+      "role": "Decorative pastel surface — light green used in card backgrounds and gradient endpoints",
+      "group": "accent"
+    },
+    {
+      "hex": "#f3fb9a",
+      "name": "Lemon Cream",
+      "role": "Decorative pastel surface — pale lemon used in testimonial card washes and gradient stops",
+      "group": "accent"
+    },
+    {
+      "hex": "#b1dcfc",
+      "name": "Sky Hush",
+      "role": "Decorative pastel surface — muted blue used as occasional card background accent",
+      "group": "accent"
+    }
+  ],
+  "layout": "Centered max-width container (1200px) with generous side padding. Hero is full-bleed with a two-column split: left text block (headline + subhead + CTA), right floating product card mockup at slight rotation. Sections alternate between cream canvas and pastel washes (lavender-to-mint gradient, solid lemon, solid mint) creating visual rhythm. How-it-works section uses centered text above a 2-step illustration flow with connecting arrow. Testimonials are a 3-column card grid on a lavender-mint gradient background. Vertical spacing is generous (80px section gaps) with comfortable density throughout. Navigation is a minimal top bar — no sidebar, no mega-menu, just centered text links with dropdown chevrons.",
+  "imagery": "Lifestyle photography of real creators (not stock models) is the primary visual: warm, candid, individual personality. Product mockups are the secondary visual: phone screens, link-in-bio cards, and course previews with pastel gradient backgrounds. Decorative elements are hand-drawn and playful — sketchy arrows, star stickers, organic shapes in lime and yellow. No 3D renders, no corporate stock photography, no abstract gradient meshes. Icons are thin-stroke (1px) line icons in espresso brown, no filled icon variants.",
+  "similar": [
+    {
+      "why": "Same warm-creator palette approach with editorial serif displays paired with simple sans body, generous card rounding, and a single accent color",
+      "business": "Substack"
+    },
+    {
+      "why": "Same creator-economy friendliness with pastel washes, pill buttons, and approachable rounded cards targeting individual sellers",
+      "business": "Gumroad"
+    },
+    {
+      "why": "Same warm neutral base with a single vivid accent color, generous spacing, and editorial typography mixing serif and sans",
+      "business": "Kit (ConvertKit)"
+    },
+    {
+      "why": "Same link-in-bio creator platform visual language with bold serif headlines, lime/bright CTAs, and pastel decorative cards",
+      "business": "Stan Store"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "20px",
+      "body": "6px",
+      "cards": "30px",
+      "links": "9px",
+      "buttons": "100px",
+      "smallCards": "15px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "30px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#fafafa",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Off-white page background"
+    },
+    {
+      "hex": "#fafafa",
+      "name": "Card Surface",
+      "level": 1,
+      "purpose": "Testimonial cards, product cards, content blocks"
+    },
+    {
+      "hex": "#efd8f0",
+      "name": "Decorative Wash",
+      "level": 2,
+      "purpose": "Pastel lavender section or card accent"
+    },
+    {
+      "hex": "#f3fb9a",
+      "name": "Accent Wash",
+      "level": 2,
+      "purpose": "Pastel lemon section or card accent"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px",
+      "element": "Navigation bar"
+    }
+  ],
+  "gradients": [
+    {
+      "hex": "#efd8f0",
+      "name": "Lilac to Mint Wash",
+      "role": "Hero and section background gradient — soft pastel transition",
+      "gradient": "linear-gradient(129deg, rgb(243, 232, 243) 24.01%, rgb(223, 245, 221) 96.01%)"
+    },
+    {
+      "hex": "#c6e57d",
+      "name": "Lime to Neutral",
+      "role": "Decorative gradient blending lime into warm gray",
+      "gradient": "linear-gradient(323deg, rgb(198, 229, 125) 17.8%, rgb(239, 237, 238) 70.54%)"
+    }
+  ],
+  "northStar": "espresso ink on warm cream",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.13
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.13
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.16
+    },
+    {
+      "role": "heading-sm",
+      "size": 27,
+      "lineHeight": 1.07,
+      "letterSpacing": -0.54
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.6
+    },
+    {
+      "role": "heading-lg",
+      "size": 54,
+      "lineHeight": 1.03,
+      "letterSpacing": -1.08
+    },
+    {
+      "role": "display",
+      "size": 70,
+      "lineHeight": 1.03,
+      "letterSpacing": -1.4
+    }
+  ],
+  "components": [
+    {
+      "name": "Lime CTA Button",
+      "role": "Primary action — sign up, get started, submit",
+      "description": "Pill-shaped button with 100px border-radius, #ecf956 lime-yellow fill, #482317 espresso text, ABC Favorit weight 700 at 14-15px, 16px horizontal × 8px vertical padding. The only filled chromatic button in the system; its acid green against warm cream creates visual urgency without aggression"
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Secondary action — learn more, sign in",
+      "description": "No background fill, #482317 espresso text, uppercase tracking, weight 700, sits inline with CTAs. Used for 'SIGN IN' in nav and secondary flow actions"
+    },
+    {
+      "name": "Outlined Brown Button",
+      "role": "Tertiary action with border emphasis",
+      "description": "1px #482317 espresso border, transparent fill, espresso text, 100px pill radius. Used when a secondary action needs more weight than a ghost link but less than the lime CTA"
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Social proof — customer review display",
+      "description": "30px border-radius, #fafafa cream background, 1px #e5e7eb fog border, 30px padding. Contains: review title (Favorit-Bold 18px), body text (Favorit 14-16px), 5 yellow stars, reviewer name and Trustpilot link. Cards sit in a 3-column grid with 16-24px gaps"
+    },
+    {
+      "name": "Product Card Mockup",
+      "role": "Hero visual — creator link-in-bio preview",
+      "description": "30px border-radius, floating card with pastel gradient fill (lavender to mint), contains avatar, creator name, social icons, and embedded product cards. Slightly rotated for playful composition, sits on the hero section"
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Horizontal bar with logo left, center nav links (FEATURES, PRICING, DISCOVER, RESOURCES) in uppercase ABC Favorit weight 350, right side has ghost 'SIGN IN' and lime CTA 'SIGN UP FREE'. Subtle drop shadow: rgba(0,0,0,0.1) 0px 4px 6px -1px. No background fill — transparent over page canvas"
+    },
+    {
+      "name": "Section Heading Group",
+      "role": "Section title and subtitle stack",
+      "description": "Tobias serif 54-60px for main heading, espresso ink color, -1.08 to -1.2px letter-spacing, line-height 1.03. Subtitle below in Favorit 16-20px, espresso ink, max-width ~600px, centered or left-aligned depending on section"
+    },
+    {
+      "name": "Step Illustration Block",
+      "role": "How-it-works step with phone mockup",
+      "description": "Numbered step (Tobias serif numeral), short label (Favorit), phone mockup with UI screenshot, decorative hand-drawn arrow connecting steps. Pastel background washes (mint, lavender) for visual separation"
+    },
+    {
+      "name": "Star Rating Display",
+      "role": "Review rating indicator",
+      "description": "5 solid yellow/gold stars (approximately #f5b800 implied), inline with testimonial cards. No container, no background — stars sit directly on cream card surface"
+    },
+    {
+      "name": "Pastel Section Background",
+      "role": "Decorative section wash",
+      "description": "Full-width section with gradient or solid pastel fill (lemon #f3fb9a, lavender #efd8f0, mint #c6e57d), 30px border-radius on contained content blocks, creates visual rhythm between white sections"
+    },
+    {
+      "name": "Creator Profile Badge",
+      "role": "Inline creator attribution",
+      "description": "Small pill badge with 20px border-radius, #fafafa background, 1px fog border, contains circular avatar + creator name + role. Used floating over product mockups in hero"
+    },
+    {
+      "name": "Nav Dropdown Indicator",
+      "role": "Expandable nav item chevron",
+      "description": "Small downward chevron icon (stroke #482317, 1px) next to nav items with submenus (FEATURES, RESOURCES). No background, sits inline with nav text"
+    }
+  ],
+  "typography": [
+    {
+      "role": "Body text, links, nav items, card content — same family as ABC Favorit with slightly looser line-height (1.5) for reading comfort",
+      "sizes": "13px, 15px, 16px, 20px, 29px",
+      "family": "Favorit",
+      "weight": "350, 400",
+      "lineHeight": "1.00, 1.50",
+      "substitute": "Inter",
+      "letterSpacing": "+0.01em at 13px, +0.008em at 16px"
+    },
+    {
+      "role": "Display serif for hero and section headlines — large sizes with tight tracking (-0.02em) create editorial gravitas. The light weight (300) is anti-convention for hero text; most sites use 600-700, this whisper-weight signals confidence and restraint",
+      "sizes": "54px, 60px, 70px",
+      "family": "Tobias",
+      "weight": "300",
+      "lineHeight": "1.03, 1.20",
+      "substitute": "Source Serif Pro",
+      "letterSpacing": "-1.4px at 70px, -1.2px at 60px, -1.08px at 54px"
+    },
+    {
+      "role": "Primary UI and body typeface — neo-grotesque with slight warmth, weight 350 for body and 400 for emphasis. Tight tracking (-0.02em) at larger sizes gives headings a compressed, modern feel",
+      "sizes": "14px, 15px, 16px, 20px, 22px, 25px, 27px, 30px",
+      "family": "ABC Favorit",
+      "weight": "350, 400",
+      "lineHeight": "1.00, 1.07, 1.20",
+      "substitute": "Inter",
+      "letterSpacing": "-0.02em at 30px, -0.015em at 16px, +0.008em at 14px"
+    },
+    {
+      "role": "Emphasis headings and subheads — bold weight with aggressive tracking (-0.037em) creates a tight, assertive counterpoint to the light serif displays",
+      "sizes": "18px, 24px",
+      "family": "Favorit-Bold",
+      "weight": "700",
+      "lineHeight": "1.00, 1.20",
+      "substitute": "Inter Bold",
+      "letterSpacing": "-0.89px at 24px, -0.67px at 18px"
+    },
+    {
+      "role": "Favorit-Regular — detected in extracted data but not described by AI",
+      "sizes": "20px",
+      "family": "Favorit-Regular",
+      "weight": "400",
+      "lineHeight": "1.2",
+      "letterSpacing": "0.008"
+    }
+  ],
+  "description": "The Leap uses a warm-creator economy visual language: near-white canvas, espresso-brown text instead of black, a single acid lime-yellow CTA that pops against muted surfaces, and serif display headlines paired with a contemporary neo-grotesque body. Decorative pastels (lavender, mint, sky blue, lemon) appear inside product mockups and section washes rather than chrome. Cards are generously rounded (30px), buttons are fully pill-shaped (100px), and the whole system reads approachable and editorial — the opposite of corporate SaaS. The brown-on-cream + lime accent palette signals a brand built for individual creators, not enterprise buyers.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Text: #482317 (Espresso Ink)\n- Background: #fafafa (Cream Canvas)\n- Border: #e5e7eb (Fog Border)\n- Accent: #ecf956 (Lime Spark)\n- Pastel washes: #efd8f0, #c6e57d, #f3fb9a\n- primary action: #ecf956 (filled action)\n\nExample Component Prompts:\n\n1. Create a hero section: cream #fafafa background. Two-column layout (55/45 split). Left: Tobias serif headline at 60px weight 300, #482317, letter-spacing -1.2px, line-height 1.03. Subtitle in ABC Favorit 20px weight 400, #482317, max-width 500px. Lime CTA button (#ecf956 fill, 100px radius, 16px×40px padding, #482317 text weight 700, 15px uppercase). Right: floating product card mockup at 5° rotation, 30px radius, pastel gradient fill.\n\n2. Create a testimonial card grid: 3-column grid, 24px gap. Each card: #fafafa background, 1px #e5e7eb border, 30px border-radius, 30px padding. Title in Favorit-Bold 18px #482317. Body in Favorit 15px weight 350 #482317, line-height 1.5. Five yellow stars (solid #f5b800, 16px each) at bottom-left. Reviewer name in Favorit 14px weight 400.\n\n3. Create a Primary Action Button: #ecf956 background, high-contrast text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n4. Create a section with pastel background: full-width lavender-to-mint gradient background (linear-gradient 129deg, #f3e8f3 to #dff5dd). Centered max-width 1200px content. Heading: Tobias 54px weight 300, #482317, centered. 80px top/bottom padding on the section.\n\n5. Create a how-it-works step block: numbered '1.' in Tobias 70px weight 300 #482317, label 'Discovers you' in Favorit 20px weight 400 below. Phone mockup centered, 15px radius, cream #fafafa fill, contains UI screenshot. Decorative lime hand-drawn arrow connecting to next step."
+    }
+  ]
+}

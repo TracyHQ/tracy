@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "tracy-quickstart-presentation-lock/wordpress/v1",
+  "$comment": "What a content-only build must leave alone on a restored Tracy Business site. Only the active theme identity and essential WP settings are locked; the archive is the design, so no theme file hashes are carried here.",
+  "options": {
+    "stylesheet": "wp-tracy-business",
+    "template": "wp-tracy-business",
+    "show_on_front": "page",
+    "permalink_structure": "/%postname%/",
+    "users_can_register": "0"
+  },
+  "themeMods": {
+    "theme": "wp-tracy-business",
+    "protected": [
+      "custom_css_post_id",
+      "nav_menu_locations"
+    ]
+  },
+  "fileRoots": [
+    "wp-content/themes/wp-tracy-business"
+  ],
+  "files": {
+    "wp-content/themes/wp-tracy-business/assets/css/fixture-page.css": "d2c9d7c59ba6ed16038ac7879d0a07813e3d46046f16dff44e51278087a3f173",
+    "wp-content/themes/wp-tracy-business/assets/css/layout.css": "dca7d68d13067d81e306200f1ec08e2a5fa03b05bf3b46202ebe69ae86d9c06f",
+    "wp-content/themes/wp-tracy-business/assets/css/sections.css": "dfd8ea4a8175881bf33729777db04ff27339fef9b70b1aa8324804f94d18e7cd",
+    "wp-content/themes/wp-tracy-business/assets/css/tracy-motion.css": "6a13c448d945837ad0b6fc02502060a43d02112f700b4912142f7f3a49de5e81",
+    "wp-content/themes/wp-tracy-business/assets/css/tracy.css": "e4ff46badd4a022c1e0a0fcd742d5ce1acbcd329bc769de5a23f7d65381b0e71",
+    "wp-content/themes/wp-tracy-business/assets/css/wp-tracy-business-fonts.css": "9ad8c2c96e1437412daaad42f42c43259840f8eaaf41be2a042e7ce63c69461f",
+    "wp-content/themes/wp-tracy-business/assets/css/wp-tracy-business.css": "3722f206adf8eb6273e5ca742382e4d885f7d07b97aa835a6e81a69dffec1f1a",
+    "wp-content/themes/wp-tracy-business/assets/fonts/archivo-italic-latin-ext.woff2": "0a51e43d6bd180202e12161a1ea0c4cbb368fe3ab74b09b72da86b026e7427bd",
+    "wp-content/themes/wp-tracy-business/assets/fonts/archivo-italic-latin.woff2": "8cb0b0b3477030958c55b226c2cf389504421a9b007eaaaf6351b4d7caa2a608",
+    "wp-content/themes/wp-tracy-business/assets/fonts/archivo-normal-latin-ext.woff2": "a999e009fdcd0f939c138e04043b3b2ad083b26252b644e8f94c083d48b77af0",
+    "wp-content/themes/wp-tracy-business/assets/fonts/archivo-normal-latin.woff2": "7150c0ec5ad356453013d11affec1fbab95de0dd2dcecb043b4f1cb7f87c4ba4",
+    "wp-content/themes/wp-tracy-business/assets/fonts/newsreader-italic-latin-ext.woff2": "89e1d530cc551a0f1476bac4983b8c3f9d4842e414dc624fcff16e31acf17c35",
+    "wp-content/themes/wp-tracy-business/assets/fonts/newsreader-italic-latin.woff2": "e384e31812c1d580b5ae2217ade8ca5fe9e5135ea9c27423359d00a954c28488",
+    "wp-content/themes/wp-tracy-business/assets/fonts/newsreader-normal-latin-ext.woff2": "cbca001188852d514d8654be7ddc97868f039bdf986b926ec5c985c117853cfd",
+    "wp-content/themes/wp-tracy-business/assets/fonts/newsreader-normal-latin.woff2": "01817351be3edfc1714fe6d60ddea6a22a169a5ebd033b50c7f9495e5d9c386a",
+    "wp-content/themes/wp-tracy-business/assets/img/hero-placeholder.svg": "76cadc072b438fc2ec4e892db5f0d8146c4323b360f37a848c57193ecade5bf1",
+    "wp-content/themes/wp-tracy-business/assets/js/tracy-motion.js": "5e683668832ee13a1b80ecb9a460ef9c34a14cdfe9ff7361e68be489dd1b8c5e",
+    "wp-content/themes/wp-tracy-business/assets/js/tracy-preview.js": "b0b1916d5a7a7bef48ebbd992ac569c60ca0d6d85903c2bd1b9497b6a5f344ba",
+    "wp-content/themes/wp-tracy-business/assets/js/tracy.js": "88c0d89600b0320a54eb34f943c4f29f631a920eca0866a78e2f054837ae1df4",
+    "wp-content/themes/wp-tracy-business/assets/js/wp-tracy-business-dark.js": "09944bec4f0b2b393c397f63e0b5a0df6e20c020c97a55582f3ff0ea85c8cfa3",
+    "wp-content/themes/wp-tracy-business/assets/js/wp-tracy-business-lang.js": "616bc233ca09138a5e6e9475cb448e7f7298bc36e518a8c3f48e00a9552d6e5f",
+    "wp-content/themes/wp-tracy-business/assets/js/wp-tracy-business-mega.js": "87f9da218e039080e5d6ffe65af9d2c5e9590095915b053fadf5e9ad6b531c04",
+    "wp-content/themes/wp-tracy-business/blocks/mega-menu/block.json": "75fb0f35bcf1151675f1bef9367b3d8d305e0a06a3b0f21205c3c6f884be606e",
+    "wp-content/themes/wp-tracy-business/blocks/mega-menu/editor.asset.php": "4576f0dea36cb2f6231d9bb59278b52e2669ed27376f2373a4e02e048a19b1d0",
+    "wp-content/themes/wp-tracy-business/blocks/mega-menu/editor.js": "41047efb54558c4117595cc6f8d7f73949dc66f65ed0cd15337cdb62f9a3db0e",
+    "wp-content/themes/wp-tracy-business/blocks/mega-menu/render.php": "aa411ae7313f96ecc02e8a977398a3dba585df72db99b8bb2e4fda4651bfdb9c",
+    "wp-content/themes/wp-tracy-business/functions.php": "434bbc5801013b3bf527ec1f7d2fa6f6c1407bdfcdbf60da72018e94730f6183",
+    "wp-content/themes/wp-tracy-business/inc/extra.php": "21ba0996c23de0f71ab87ee93d27de0f58ee65f19eb8ba783a545c92868bec2d",
+    "wp-content/themes/wp-tracy-business/inc/motion-head.php": "e8e3b5b22ac792cf8ce2ee97ff4dfdce949fc85d2f5aab34bdb8a21a498e41d5",
+    "wp-content/themes/wp-tracy-business/inc/update.php": "5dbc0eb50f4a926d42e5c12e7173d2141b6ef9b3c25482563a0f5091a3819114",
+    "wp-content/themes/wp-tracy-business/inspirations.json": "f7629732746a6cb35e4f9356cf9b41c73338b7cc6b59fec9f7d105047055300a",
+    "wp-content/themes/wp-tracy-business/parts/footer.html": "2079ffe9531d360d5ad6afc0c0feb36b3ae78e7ffebd5fb6606bfeacd439714e",
+    "wp-content/themes/wp-tracy-business/parts/header.html": "55200452b6f4dca0f8a54bc612c6136c12c72aad2d051465c420b1c048dd63f1",
+    "wp-content/themes/wp-tracy-business/parts/sidebar-article.html": "a94631681e17a0f11fe3975f65131cfa08b19d36334aa2a69325d42c59764411",
+    "wp-content/themes/wp-tracy-business/parts/sidebar-news.html": "84775b8f2fefdb4005252be1c3f73503b873aa047595ccac3d33880f2fb2f2eb",
+    "wp-content/themes/wp-tracy-business/parts/sidebar-search.html": "7a4f0fd30b77b5edaeac7b048956767e236f2784760fdbafacf44ef8720c8377",
+    "wp-content/themes/wp-tracy-business/patterns/cards.php": "b9cff6d1aebcff1665eb25508e27b38d9527e406740683b56035a715b57b3f85",
+    "wp-content/themes/wp-tracy-business/patterns/landing.php": "8d34c7c6c4385651fc63db98ad8dd380800aaf33e64821381b0b4b1754c8cde3",
+    "wp-content/themes/wp-tracy-business/patterns/pricing.php": "31f9e291814519b99566250b97ac6d86011c41b5089da4a28ca0061348880e72",
+    "wp-content/themes/wp-tracy-business/patterns/section-contact.php": "e0384e265ff2a358eb09c4ac3ecf3b6d17df3e036222ac144730b364197ed8c3",
+    "wp-content/themes/wp-tracy-business/patterns/section-cta-final.php": "ecd60c0133ebf1d5a02cec4f4eca766ea449864f5c767e0c10a84745d61c547e",
+    "wp-content/themes/wp-tracy-business/patterns/section-cta-inline.php": "462272c9187d7867520afc9879d39ca9863a890af69d807643caf879abb3cfdc",
+    "wp-content/themes/wp-tracy-business/patterns/section-cta.php": "87c0022ce7413f8d244df7b0587193439d61baaa4d93881953ab19b3cade3b15",
+    "wp-content/themes/wp-tracy-business/patterns/section-faq.php": "2559ac76347faf40b33af9cff183402c30b3ba49a1423015a7f940b39b2985e8",
+    "wp-content/themes/wp-tracy-business/patterns/section-features.php": "abaf6c3abd70ae7dd515932371e4cb415a5c67cbe346695f697ce8534f23705a",
+    "wp-content/themes/wp-tracy-business/patterns/section-form.php": "36aeaf7d1b75821fe2f69d4efc3394e7543f5a9b35ad734e7759b3c77bff46c3",
+    "wp-content/themes/wp-tracy-business/patterns/section-gallery.php": "eca9e5715946f9b878ac288d0f939ee938eff6228cbc87c5652fbf55bbe58629",
+    "wp-content/themes/wp-tracy-business/patterns/section-hero.php": "c8beac56fc85733dd92c070bc0da195e15e652358a3152896bbce3ac8f5462b0",
+    "wp-content/themes/wp-tracy-business/patterns/section-how-it-works.php": "39585d44005856de0a97410d762cf6bcdd08aa24b1c6172bca8820a169e77a35",
+    "wp-content/themes/wp-tracy-business/patterns/section-links.php": "a60021dfe39a20f39abeb1c486838d188d6b3ec4c408913c8a3cfc831f7265b6",
+    "wp-content/themes/wp-tracy-business/patterns/section-listing.php": "1e09d65604c6a63f380919b07ea7dbbc67e16c9fc98626d9e48babf45eaaeb76",
+    "wp-content/themes/wp-tracy-business/patterns/section-news.php": "6cb2e65ef852d684f6075ae1851252f9c7529dcb4b0aea46cad13a921bb4529e",
+    "wp-content/themes/wp-tracy-business/patterns/section-pillars.php": "dc41ac8a3828a6c06b067bbbd7a338445ee0ae24176b8a6f1c14ff46d0bc0bd5",
+    "wp-content/themes/wp-tracy-business/patterns/section-pricing.php": "54cbc560b36c4670dd6affd274d08100b02e016aa89a25bfab24073bce00db26",
+    "wp-content/themes/wp-tracy-business/patterns/section-problem.php": "c83b7ecc47a79e61ae94bb8d960e802ccde630b1cb3ac6580508b66e218feda2",
+    "wp-content/themes/wp-tracy-business/patterns/section-projects.php": "eb02ec8db2c57ed7cdecfbabe705ff1c6c3a2a184caf411ae133fa4adac9e205",
+    "wp-content/themes/wp-tracy-business/patterns/section-proof.php": "2ece2c6165809cfa08aeec8ec68620bcecd9a4762dfd7de8b1b1e1c060bcfc09",
+    "wp-content/themes/wp-tracy-business/patterns/section-services.php": "056525267e0d54538cdeadc1fbc4da42ca2bc106aa433546b4424c4ff63f3420",
+    "wp-content/themes/wp-tracy-business/patterns/section-slide.php": "3e87327520c1b56b00bc6a78dec427661b4074db9ad47e2caba82e741a659a16",
+    "wp-content/themes/wp-tracy-business/patterns/section-social-proof.php": "3f79e674bd377bb3e3496fb15faa2ff55bd6f4a58e3b7545491e0e72e3ab01bd",
+    "wp-content/themes/wp-tracy-business/patterns/section-stats.php": "615c21d3a1f3c792c1f05e80dfb6f6019c44a06cd1eb34c55345e32477965619",
+    "wp-content/themes/wp-tracy-business/patterns/section-styleguide.php": "036a6b9a7967f56b06786e21cba76eaa4845b4ade1c36c03f4634c9e042140cf",
+    "wp-content/themes/wp-tracy-business/patterns/section-team.php": "42bf1e115a877d6b7400496f13b81e62ce77324ee70cbb78509b79f43cc1974c",
+    "wp-content/themes/wp-tracy-business/patterns/section-text.php": "8fbdaea2432bcc052f2c2fd0451c740634be0799bfe2407c9e17f7975a640de7",
+    "wp-content/themes/wp-tracy-business/readme.txt": "35859bf8d61ad634e7d60150eba862e592e2bda1b9e3a088c8834b6b58ff1c05",
+    "wp-content/themes/wp-tracy-business/screenshot.png": "f02d6016b09875cbad0ce2db9a763a41b4aa11896ecfe4aba1872727d5181e00",
+    "wp-content/themes/wp-tracy-business/style.css": "94732f36985ba6144dc629eeb372c4432bf219a808b2e13fa81b577c052b2b3b",
+    "wp-content/themes/wp-tracy-business/styles/wp-tracy-business.json": "2d03aea954d022b20a377dbab8c69ec1431b294e8abe46de6f44e0466c50ef08",
+    "wp-content/themes/wp-tracy-business/templates/404.html": "ff3f0cdbe1914fe4ae1bf59570148e4fca309052eeff7bf40e2a2b9c9e0df2dd",
+    "wp-content/themes/wp-tracy-business/templates/archive.html": "507d8a89c4a2e6f54c7155328a29d9f1cd8fe7fedfec79f1f8894141e34907cc",
+    "wp-content/themes/wp-tracy-business/templates/artifact.html": "26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+    "wp-content/themes/wp-tracy-business/templates/category.html": "d6014fc3cb91176aa31c4ac2a39bd03cb5a77a17995097b3cabbadecd5de86fc",
+    "wp-content/themes/wp-tracy-business/templates/fixture.html": "26f34a59573ab4bc9d858c5898b8eeddd0041b548f31a5615ab6266d7eab3625",
+    "wp-content/themes/wp-tracy-business/templates/front-page.html": "6cb9abec049fd3b216666f113e2ace956ffb4fbf7c6912d749b92a96cff3d8b6",
+    "wp-content/themes/wp-tracy-business/templates/home.html": "1f810329e4415d40dd8f46db62784c71329d6515f63de3063ee275fcd7f9bec5",
+    "wp-content/themes/wp-tracy-business/templates/index.html": "e67ce84d4997395117b831c66e0a31578e5195f8164ef27449fa861a5034f1bb",
+    "wp-content/themes/wp-tracy-business/templates/landing.html": "f51c1e44c4ec15aaa6693cb968b9a410ada1b651c94dffa79dfa7c30c28ddcf4",
+    "wp-content/themes/wp-tracy-business/templates/page-contact.html": "375c54e552086f67ece3b94d4905bb47778aac5f89fffb3aad14fcbbf4dc886e",
+    "wp-content/themes/wp-tracy-business/templates/page-email.html": "b639e51091474326cab30c609d41f7d90364b2211fc612a99db8db45a1fd183e",
+    "wp-content/themes/wp-tracy-business/templates/page-form.html": "d520d50191c0be3b2a5ba519d2eaaae5bb389f55f3f8ce293b180319c86dcb4e",
+    "wp-content/themes/wp-tracy-business/templates/page-newsletter.html": "6efd65e3b5f4de193658d3055db69399295e39cc0e489d8b2ca1ad1cbf158b45",
+    "wp-content/themes/wp-tracy-business/templates/page-slide.html": "b0364c3b7be6a149fc326264a2dcfc2196cd71e13f08ef17a5459ad5385cf680",
+    "wp-content/themes/wp-tracy-business/templates/page-style-guide.html": "bf781c3242673f5787b276fc879cdff9527b22943caec7ae4e45336d4b243cf5",
+    "wp-content/themes/wp-tracy-business/templates/page.html": "830867502131f4bb293c7b2d79e5da25151d6c5ec70c6e83d392dec9071daec5",
+    "wp-content/themes/wp-tracy-business/templates/pricing.html": "4ec92f84723376773688c77dc42261c379b09ac2c78a539de894414c64d24fa7",
+    "wp-content/themes/wp-tracy-business/templates/search.html": "88041bfee654e7442190ad9b26d0c310ac258addc7b0c81a172bf563baad3f6b",
+    "wp-content/themes/wp-tracy-business/templates/single.html": "463c92b41aaf9f9317df73969142e9b557915782862fb31c92afa38aeae0e611",
+    "wp-content/themes/wp-tracy-business/theme.json": "164e6faf34faea8f000751f6a4447f91eef70b91a9ea69b111c2eb3892c76241"
+  },
+  "templateParts": {
+    "header": {
+      "sha256": "3d47962125c8e94f9e9605d5cd3dfdecce969d9a832f325d638973413c962e8a"
+    },
+    "footer": {
+      "sha256": "44ef1d15762d6a37e5f15b2a0de863a42c5890d976f9b2f804c1b8f0c16f0119"
+    }
+  },
+  "entities": {
+    "option-blogname": {},
+    "option-blogdescription": {},
+    "page-home": {
+      "post_type": "page",
+      "post_name": "home",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": "en",
+      "skeleton": "4fbad832558b28e3e4c56a6ef3bb6e98817eb4a8402546082d624f17de093bdc"
+    },
+    "page-about": {
+      "post_type": "page",
+      "post_name": "about",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": "en",
+      "skeleton": "76149d0295aebc340ac94e70477d2dcc42d48d929e09af21a3b07e9b8873a75f"
+    },
+    "page-services": {
+      "post_type": "page",
+      "post_name": "services",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": "en",
+      "skeleton": "72cbb5a01607192c952906e1a72a97ce6cd5c3a4cd3e6606a136a4b23014c32b"
+    },
+    "page-projects": {
+      "post_type": "page",
+      "post_name": "projects",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": "en",
+      "skeleton": "6393b78853ec00e310c94a71601e273ab800c6873660e8c8f38a17a9efb97c39"
+    },
+    "page-contact": {
+      "post_type": "page",
+      "post_name": "contact",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": "en",
+      "skeleton": "0a0fdaa3304498d0208292db2a3a031829dcc237cc8a98fcd5add09da3fa79e6"
+    },
+    "page-careers": {
+      "post_type": "page",
+      "post_name": "careers",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": "en",
+      "skeleton": "4b44f03320daa88ac40a9411a97c857b3722bbfbb1f8d73e22fddab618969213"
+    },
+    "page-investor-relations": {
+      "post_type": "page",
+      "post_name": "investor-relations",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": "en",
+      "skeleton": "f35a6efb07299f70ba736c05c0a748169a4bb38871b4def899844ec3366854ea"
+    },
+    "page-project-detail": {
+      "post_type": "page",
+      "post_name": "project-detail",
+      "post_status": "publish",
+      "post_parent": 0,
+      "language": "en",
+      "skeleton": "c6d1a16715b8f5ecbb055864c29a67a6b6b1043ba8ed06278b4be6d9573daeec"
+    }
+  }
+}

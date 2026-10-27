@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1241-published-joomla-green",
+  "kind": "fix",
+  "title": "The 29 Published Joomla quickstarts keep their template-layer fixes: a profile row and demo names per new version, translated T4 header blocks in the Tracy templates, maps pinned to their own contract, Claude Cowork 0.24.21 pinned",
+  "pr": 1241,
+  "area": "joomla-quickstart/published-green",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: For every contract in packages/cms/tracy-joomla-quickstart/contracts whose manifest names coworkContractVersion 0.24.21 or 0.24.22 (JA Resort 1.0.4, #1248), read its template-profiles.json row and its <version>.copy.json.",
+    "S2: Read every file of template-patches/{tracy-base,tracy_business}/html/layouts/t4/{block,element} through the readiness reader hard-coded-words.js.",
+    "S3: For the same contracts, compare the baseHash of each demo-trim-map.json, multilingual-map.json and editions.json with the hash of its manifest, content map and presentation lock.",
+    "S4: Read both quickstarts.json."
+  ],
+  "expect": [
+    "S1: 30 contracts; each has a row for its version and at least one demoCompanyNames entry.",
+    "S2: no interface word written outside a translation.",
+    "S3: every map is pinned to its own contract's bytes.",
+    "S4: no 0.24.20 Joomla pin is left, and every pinned release pins 0.24.21 or later for its new version."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1241-published-joomla-green.mjs"
+  },
+  "evidence": "12/10/2026: Template Customization Question Readiness on the 29 new packs, with #1239 merged in a check tree: 0 FAIL on 24, LANG-2 body-selector pairing on 5 (rule fix #1240); joomla-v0.24.21 carries the 29 contracts byte for byte; claude-cowork tests refused the first tracy-business 1.2.2 maps (stale baseHash)",
+  "fence": "Contract data, template patches and pins in the tree, read with the readiness check's own reader; the script exits non-zero when any step finds a problem",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1241-published-joomla-green.mjs"]
+  }
+}

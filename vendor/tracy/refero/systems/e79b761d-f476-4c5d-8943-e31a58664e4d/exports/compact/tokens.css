@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-vellum: #f0efe9;
+  --color-paper-white: #ffffff;
+  --color-carbon-warm: #322d2a;
+  --color-onyx-depth: #0f0e12;
+  --color-mercury: #8b8b8b;
+  --color-pure-black: #000000;
+
+  /* Typography — Font Families */
+  --font-t1-sans: 'T1 Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

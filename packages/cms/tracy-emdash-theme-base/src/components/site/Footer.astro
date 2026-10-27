@@ -1,0 +1,80 @@
+---
+import type { Chrome } from '@/lib/chrome'
+import SocialIcon from '@/components/site/SocialIcon.astro'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const { site } = chrome
+// Provenance stamps of the site chrome's fields (`src/lib/stamps.ts`); empty on an ordinary request.
+// The column links are menus, not Content API records: only the column titles are stamped.
+const s = stampFor(Astro.request, 'site', site)
+// A menu link into an unticked page's child (`/services/<slug>`, `/blog/<slug>`) is not one Apply drops, so the columns go
+// through the link gate, and a column left with no link goes (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(
+  Astro.request,
+  chrome.locale,
+  [...chrome.footerProduct, ...chrome.footerResources, ...chrome.footerCompany].map((l) => l.url)
+)
+const cols = [
+  { title: site.footer_product_title, links: chrome.footerProduct, stamp: s('footer_product_title') },
+  { title: site.footer_resources_title, links: chrome.footerResources, stamp: s('footer_resources_title') },
+  { title: site.footer_company_title, links: chrome.footerCompany, stamp: s('footer_company_title') }
+]
+  .map((c) => ({ ...c, links: c.links.filter((l) => live(l.url)) }))
+  .filter((c) => c.links.length > 0)
+---
+
+<footer class="bg-surface">
+	<div class="wrap grid grid-cols-2 gap-8 pb-10 pt-16 md:grid-cols-4">
+		{cols.map((c) => (
+			<div>
+				<h3 class="footer-title" {...c.stamp}>{c.title}</h3>
+				<ul>{c.links.map((l) => <li><a href={l.url} class="footer-link">{l.label}</a></li>)}</ul>
+			</div>
+		))}
+		<div>
+			<h3 class="footer-title" {...s("social_heading")}>{site.social_heading}</h3>
+			<ul>
+				{((site.social ?? []) as any[]).map((one) => (
+					<li {...s.block("social")}>
+						{/* An item with no link yet (K6: the demo's items stay, their links emptied) is drawn, as plain words. */}
+						{typeof one.url === "string" && one.url.trim() !== "" && one.url.trim() !== "#" ? (
+							<a href={one.url} target="_blank" rel="noopener" class="footer-link flex items-center gap-3" aria-label={`${one.platform}: ${site.social_handle}`}>
+								<SocialIcon name={one.platform} />
+								<span {...s("social_handle")}>{site.social_handle}</span>
+							</a>
+						) : (
+							<span class="flex items-center gap-3">
+								<SocialIcon name={one.platform} />
+								<span {...s("social_handle")}>{site.social_handle}</span>
+							</span>
+						)}
+					</li>
+				))}
+			</ul>
+		</div>
+	</div>
+	<div class="border-t border-line-soft">
+		<div class="wrap py-6">
+			<p class="max-w-[520px] text-[12px] leading-[1.47] text-fg-muted" {...s("notice")}>{site.notice}</p>
+		</div>
+	</div>
+	<a href="#top" class="sr-only" {...s("back_to_top")}>{site.back_to_top}</a>
+</footer>
+
+<style>
+	footer ul {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	@media (max-width: 639px) {
+		.footer-link {
+			min-height: 44px;
+		}
+	}
+</style>

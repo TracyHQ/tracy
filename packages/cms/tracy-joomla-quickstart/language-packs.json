@@ -1,0 +1,483 @@
+{
+  "schemaVersion": "tracy-joomla-language-packs/v1",
+  "version": "1.1.0",
+  "discovery": {
+    "list": "https://update.joomla.org/language/translationlist_6.xml",
+    "details": "https://update.joomla.org/language/details6/{tag}_details.xml",
+    "downloadHost": "downloads.joomla.org",
+    "verifiedAt": "2026-09-21",
+    "note": "Joomla's own accredited-translation feed declares sha256/sha384/sha512 per release; every pin below was re-measured by downloading the archive. Admission into this file is a reviewed commit, never a runtime lookup. Re-measured 21/09/2026 across the whole Joomla 6 list: 52 packs published, fa-IR is the only right-to-left one and is left out, and vi-VN is pinned from the Joomla 4 feed because Joomla 6 publishes none (see its own note).",
+    "listJoomla4": "https://update.joomla.org/language/translationlist_4.xml"
+  },
+  "packs": {
+    "af-ZA": {
+      "tag": "af-ZA",
+      "name": "Afrikaans",
+      "version": "6.0.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-afrikaans/6-0-3-1/af-za_joomla_lang_full_6-0-3v1-zip?format=zip",
+      "sha256": "72a531ba81d1b46c7896fd54788a57b06f6250c18c558abe8b0803b0ba4e278d",
+      "bytes": 564463,
+      "platformMajors": [6]
+    },
+    "be-BY": {
+      "tag": "be-BY",
+      "name": "Belarusian",
+      "version": "6.1.1.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla-6-belarusian/6-1-1-1/be-by_joomla_lang_full_6-1-1v1-zip?format=zip",
+      "sha256": "856b8ec327fb91068e15c24fee8a1d3aa5dd07f58208e8aa2a2422d0fe3ca372",
+      "bytes": 691045,
+      "platformMajors": [6]
+    },
+    "bg-BG": {
+      "tag": "bg-BG",
+      "name": "Bulgarian",
+      "version": "6.0.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-bulgarian/6-0-3-1/bg-bg_joomla_lang_full_6-0-3v1-zip?format=zip",
+      "sha256": "ead7478264d85c4877d1922bb3e8fbb4cc8001fc5c1a01b9701da0900dab4574",
+      "bytes": 629937,
+      "platformMajors": [6]
+    },
+    "ca-ES": {
+      "tag": "ca-ES",
+      "name": "Catalan",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-catalan/6-1-3-1/ca-es_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "27a033445ff447080b82dc97df6a1086dee2416ff33a869ce5e2193ddbc2e442",
+      "bytes": 601848,
+      "platformMajors": [6]
+    },
+    "cs-CZ": {
+      "tag": "cs-CZ",
+      "name": "Czech",
+      "version": "6.1.1.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-czech/6-1-1-1/cs-cz_joomla_lang_full_6-1-1v1-zip?format=zip",
+      "sha256": "be840f6008d3aaac7c6398c9e9a9f45b29bcfdaed1375312f3f291813f969c72",
+      "bytes": 573350,
+      "platformMajors": [6]
+    },
+    "cy-GB": {
+      "tag": "cy-GB",
+      "name": "Welsh",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-welsh/6-1-3-1/cy-gb_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "98f523d592214902cd9943616f0ea6759dd81089248b1d1b9dcbdd3cdd98b8d7",
+      "bytes": 555280,
+      "platformMajors": [6]
+    },
+    "da-DK": {
+      "tag": "da-DK",
+      "name": "Danish",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-danish/6-1-3-1/da-dk_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "2417c4ba1d46a5392bbb9cf58eb946607f28c70951cdd4e045d54d7ac502fc29",
+      "bytes": 568438,
+      "platformMajors": [6]
+    },
+    "de-AT": {
+      "tag": "de-AT",
+      "name": "German (Austria)",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-german-austria/6-1-3-1/de-at_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "234b2f2726a84543d1a53c6342571bdddc22e2bf1ae10d8b6070692ac4a1315d",
+      "bytes": 595877,
+      "platformMajors": [6]
+    },
+    "de-CH": {
+      "tag": "de-CH",
+      "name": "German (Switzerland)",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-german-switzerland/6-1-3-1/de-ch_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "f0e824cb900e10b5a24ed50b207d2721742dd7e01be9aac6b64d0f48b37271da",
+      "bytes": 595519,
+      "platformMajors": [6]
+    },
+    "de-DE": {
+      "tag": "de-DE",
+      "name": "German",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-german/6-1-3-1/de-de_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "6068b8feb0a8af0fa18a254087df6a9f4ea16c1c3b6844a30e542c6ae339db8f",
+      "bytes": 595746,
+      "platformMajors": [6]
+    },
+    "de-LI": {
+      "tag": "de-LI",
+      "name": "German (Liechtenstein)",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-german-liechtenstein/6-1-3-1/de-li_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "115680781d52a70e815699755c37883808e813cdb16f962466b250898c9a2aae",
+      "bytes": 595505,
+      "platformMajors": [6]
+    },
+    "de-LU": {
+      "tag": "de-LU",
+      "name": "German (Luxembourg)",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-german-luxembourg/6-1-3-1/de-lu_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "8c02013646d2e0917870b4191e66b93470eafa32ed72c29c4a38b7e24da0d8b7",
+      "bytes": 595836,
+      "platformMajors": [6]
+    },
+    "el-GR": {
+      "tag": "el-GR",
+      "name": "Greek",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-greek/6-1-3-1/el-gr_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "e70d3c47876322c1c2fe64bf19adde6ff8d42d8773209390e1024099432fc59d",
+      "bytes": 679385,
+      "platformMajors": [6]
+    },
+    "en-AU": {
+      "tag": "en-AU",
+      "name": "English (Australia)",
+      "version": "6.1.1.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-english-australia/6-1-1-1/en-au_joomla_lang_full_6-1-1v1-zip?format=zip",
+      "sha256": "45fa805dd8126435daf3cd2a9c100fe4a6a619feef8265511241f9b112142fad",
+      "bytes": 530008,
+      "platformMajors": [6]
+    },
+    "en-CA": {
+      "tag": "en-CA",
+      "name": "English (Canada)",
+      "version": "6.1.1.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-english-canada/6-1-1-1/en-ca_joomla_lang_full_6-1-1v1-zip?format=zip",
+      "sha256": "c4aec2ef5c601856a0ad0f907b05f1e992372f6998a0905f165944e9d5bc28fb",
+      "bytes": 530087,
+      "platformMajors": [6]
+    },
+    "en-NZ": {
+      "tag": "en-NZ",
+      "name": "English (New Zealand)",
+      "version": "6.1.1.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-english-new-zealand/6-1-1-1/en-nz_joomla_lang_full_6-1-1v1-zip?format=zip",
+      "sha256": "fc8c0cfefefa735138f85e04aa3c3bdb6dd8133bc568fe7400d93b953b9a872a",
+      "bytes": 530117,
+      "platformMajors": [6]
+    },
+    "en-US": {
+      "tag": "en-US",
+      "name": "English (USA)",
+      "version": "6.1.1.2",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-english-us/6-1-1-2/en-us_joomla_lang_full_6-1-1v2-zip?format=zip",
+      "sha256": "a1eeeb5f079ae0f788dc20a4eae6ac7604a170aede05f3260521bd2c637df352",
+      "bytes": 530597,
+      "platformMajors": [6]
+    },
+    "es-ES": {
+      "tag": "es-ES",
+      "name": "Spanish",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-spanish/6-1-3-1/es-es_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "c7c402d3f7d022b880d416ed9a9c03e4fab6ca7d8b4dddb821c69646a3396997",
+      "bytes": 594130,
+      "platformMajors": [6]
+    },
+    "et-EE": {
+      "tag": "et-EE",
+      "name": "Estonian",
+      "version": "6.0.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-estonian/6-0-3-1/et-ee_joomla_lang_full_6-0-3v1-zip?format=zip",
+      "sha256": "2425fa13967ad1acdbe8bc966432089e2b9eedcf06205b7ad977b78682c40dc2",
+      "bytes": 534932,
+      "platformMajors": [6]
+    },
+    "fi-FI": {
+      "tag": "fi-FI",
+      "name": "Finnish",
+      "version": "6.1.2.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-finnish/6-1-2-1/fi-fi_joomla_lang_full_6-1-2v1-zip?format=zip",
+      "sha256": "535a49b501058a002dcd8b560320bd3440750983d9fccece835a80b1f759907c",
+      "bytes": 570613,
+      "platformMajors": [6]
+    },
+    "fr-CA": {
+      "tag": "fr-CA",
+      "name": "French (Canada)",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-french-canada/6-1-3-1/fr-ca_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "541d8fb6b2f3df85b15454a71bbed8ed2c09970e94e67129c1950ea409fc420d",
+      "bytes": 571213,
+      "platformMajors": [6]
+    },
+    "fr-FR": {
+      "tag": "fr-FR",
+      "name": "French",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-french/6-1-3-1/fr-fr_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "7b4d1d2b5df5bb05c979e007ef850fc755d94546cadeeda706e28593bfe3d97c",
+      "bytes": 571380,
+      "platformMajors": [6]
+    },
+    "ga-IE": {
+      "tag": "ga-IE",
+      "name": "Irish",
+      "version": "6.1.2.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-irish/6-1-2-1/ga-ie_joomla_lang_full_6-1-2v1-zip?format=zip",
+      "sha256": "d8e4c5782e3273f2f0020f93c6e6e1663fa462830309050545a8fd6b1660c791",
+      "bytes": 373428,
+      "platformMajors": [6]
+    },
+    "hr-HR": {
+      "tag": "hr-HR",
+      "name": "Croatian",
+      "version": "6.0.3.2",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-croatian/6-0-3-2/hr-hr_joomla_lang_full_6-0-3v2-zip?format=zip",
+      "sha256": "203b055114c7c2ee309041c50bec94540b0d8a17d3a0e507a1341c7e817fb1a9",
+      "bytes": 543897,
+      "platformMajors": [6]
+    },
+    "hu-HU": {
+      "tag": "hu-HU",
+      "name": "Hungarian",
+      "version": "6.1.2.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-hungarian/6-1-2-1/hu-hu_joomla_lang_full_6-1-2v1-zip?format=zip",
+      "sha256": "fe8092a1571df57db1de3a20aed47082efad7520a9faa2b143894f35ab686f94",
+      "bytes": 573376,
+      "platformMajors": [6]
+    },
+    "it-IT": {
+      "tag": "it-IT",
+      "name": "Italian",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-italian/6-1-3-1/it-it_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "080ef6780805ba6b75cfbc9ee4886df41bc2ad0af4e7549924b2e3be568a39b2",
+      "bytes": 671724,
+      "platformMajors": [6]
+    },
+    "ja-JP": {
+      "tag": "ja-JP",
+      "name": "Japanese",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-japanese/6-1-3-1/ja-jp_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "3990966e55498551d63328070afa9abb45a8d73bc58683a3a34e758c796d3f4e",
+      "bytes": 595365,
+      "platformMajors": [6]
+    },
+    "ka-GE": {
+      "tag": "ka-GE",
+      "name": "Georgian",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-georgian/6-1-3-1/ka-ge_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "6a93e827e22522a9974620fea3547da0aeebee5046f3998d2c8ae65f6224e90b",
+      "bytes": 648806,
+      "platformMajors": [6]
+    },
+    "lo-LA": {
+      "tag": "lo-LA",
+      "name": "Laotian",
+      "version": "6.0.4.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla-6-laotian/6-0-4-1/lo-la_joomla_lang_full_6-0-4v1-zip?format=zip",
+      "sha256": "78c4e577815c5c9b9b14ce40545fbc354a48f501f91fc460386aedd45abbc06c",
+      "bytes": 626127,
+      "platformMajors": [6]
+    },
+    "lt-LT": {
+      "tag": "lt-LT",
+      "name": "Lithuanian",
+      "version": "6.1.3.2",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-lithuanian/6-1-3-2/lt-lt_joomla_lang_full_6-1-3v2-zip?format=zip",
+      "sha256": "433d56b12795a2a25d4ed57eb1495e20eb930c854500a80aeaf210c6c6d760c5",
+      "bytes": 568496,
+      "platformMajors": [6]
+    },
+    "lv-LV": {
+      "tag": "lv-LV",
+      "name": "Latvian",
+      "version": "6.0.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-latvian/6-0-3-1/lv-lv_joomla_lang_full_6-0-3v1-zip?format=zip",
+      "sha256": "871090a75a9931bb242c1a584813debef3d56b7e2530b76bedfebe1491ad1656",
+      "bytes": 567522,
+      "platformMajors": [6]
+    },
+    "ms-MY": {
+      "tag": "ms-MY",
+      "name": "Malay",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-malay/6-1-3-1/ms-my_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "2a3cf5578be0eb0631fc5dd8ee41b195f851ca1612aabf20185b7d131cfe6510",
+      "bytes": 466753,
+      "platformMajors": [6]
+    },
+    "nb-NO": {
+      "tag": "nb-NO",
+      "name": "Norwegian (Bokmål)",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-norwegian-bokmal/6-1-3-1/nb-no_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "f1c0936adbc90b1d6103c905db8098f074adf018cebe81c47cb2c45caf5c3218",
+      "bytes": 565639,
+      "platformMajors": [6]
+    },
+    "nl-BE": {
+      "tag": "nl-BE",
+      "name": "Flemish",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-flemish/6-1-3-1/nl-be_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "3d1564b3cb9abcf747bccd19791dfec5172fb4e3c6a273f60f55318aa551adbc",
+      "bytes": 555273,
+      "platformMajors": [6]
+    },
+    "nl-NL": {
+      "tag": "nl-NL",
+      "name": "Dutch",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-dutch/6-1-3-1/nl-nl_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "28ef30f9686f6da9d60481b3708c33bdf660650baf4f027bdf5a58629575f85d",
+      "bytes": 571869,
+      "platformMajors": [6]
+    },
+    "pl-PL": {
+      "tag": "pl-PL",
+      "name": "Polish",
+      "version": "6.0.0.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-polish/6-0-0-1/pl-pl_joomla_lang_full_6-0-0v1-zip?format=zip",
+      "sha256": "26a94b0ca5e86231c066089779cd0b72132be7c648a2681e282376d125f7cfea",
+      "bytes": 471906,
+      "platformMajors": [6]
+    },
+    "pt-BR": {
+      "tag": "pt-BR",
+      "name": "Portuguese (Brazil)",
+      "version": "6.0.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-portuguese-brazil/6-0-3-1/pt-br_joomla_lang_full_6-0-3v1-zip?format=zip",
+      "sha256": "07187e1e87f862aa94bbf3bf675837dc18bff1b6e0d89d74b539c724181b1000",
+      "bytes": 553785,
+      "platformMajors": [6]
+    },
+    "pt-PT": {
+      "tag": "pt-PT",
+      "name": "Portuguese (Portugal)",
+      "version": "6.1.0.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-portuguese-portugal/6-1-0-1/pt-pt_joomla_lang_full_6-1-0v1-zip?format=zip",
+      "sha256": "48659cbce54affa14b8df268cc18556cf391e4ae3ba82e29c4445e0a9162bc37",
+      "bytes": 562460,
+      "platformMajors": [6]
+    },
+    "ro-RO": {
+      "tag": "ro-RO",
+      "name": "Romanian",
+      "version": "6.0.0.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-romanian/6-0-0-1/ro-ro_joomla_lang_full_6-0-0v1-zip?format=zip",
+      "sha256": "cc646a8738c703b17208c95fde59605c975a63b42d302f4d33f65ff96dca2c2a",
+      "bytes": 498045,
+      "platformMajors": [6]
+    },
+    "ru-RU": {
+      "tag": "ru-RU",
+      "name": "Russian",
+      "version": "6.1.1.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-russian/6-1-1-1/ru-ru_joomla_lang_full_6-1-1v1-zip?format=zip",
+      "sha256": "c7d8b970379211d86461bc1449a16be69c6270eb9d088ee5875a9e2d2111d05d",
+      "bytes": 625677,
+      "platformMajors": [6]
+    },
+    "sk-SK": {
+      "tag": "sk-SK",
+      "name": "Slovak",
+      "version": "6.1.0.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-slovak/6-1-0-1/sk-sk_joomla_lang_full_6-1-0v1-zip?format=zip",
+      "sha256": "8c138ad033e127017e2544d4f93f5efe4966b84e5dde10e5244e3a08648e200b",
+      "bytes": 830493,
+      "platformMajors": [6]
+    },
+    "sl-SI": {
+      "tag": "sl-SI",
+      "name": "Slovenian",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-slovenian/6-1-3-1/sl-si_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "ff932a227e7f5902d58237ddbac2ac660c0d806ba1d423b02352885c7de179fd",
+      "bytes": 627747,
+      "platformMajors": [6]
+    },
+    "sr-RS": {
+      "tag": "sr-RS",
+      "name": "Serbian (Cyrillic)",
+      "version": "6.1.1.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-serbian-cyrillic/6-1-1-1/sr-rs_joomla_lang_full_6-1-1v1-zip?format=zip",
+      "sha256": "496fcf1a90b7c256e5927cd05fc630d312c8540d8db443bcb371eaefd41f7341",
+      "bytes": 628791,
+      "platformMajors": [6]
+    },
+    "sr-YU": {
+      "tag": "sr-YU",
+      "name": "Serbian (Latin)",
+      "version": "6.0.4.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-serbian-latin/6-0-4-1/sr-yu_joomla_lang_full_6-0-4v1-zip?format=zip",
+      "sha256": "5dd2127d196929b4f71831316df4475fdb6657092c5bd53a563d300044dffe27",
+      "bytes": 547773,
+      "platformMajors": [6]
+    },
+    "sv-SE": {
+      "tag": "sv-SE",
+      "name": "Swedish",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-swedish/6-1-3-1/sv-se_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "603a4109e17915111749af279d784b2fe8ca256d07d5e92e66c00a27ed2e3e6a",
+      "bytes": 540820,
+      "platformMajors": [6]
+    },
+    "ta-IN": {
+      "tag": "ta-IN",
+      "name": "Tamil (India)",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-tamil-india/6-1-3-1/ta-in_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "180ae9a93a10816a18a836bdb84880ec2aadbff351e80d5960c7e5b1a8e24b1f",
+      "bytes": 912468,
+      "platformMajors": [6]
+    },
+    "th-TH": {
+      "tag": "th-TH",
+      "name": "Thai",
+      "version": "6.0.0.2",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-thai/6-0-0-2/th-th_joomla_lang_full_6-0-0v2-zip?format=zip",
+      "sha256": "7989b025272a1ae5aeb38395d969e3f614abd7b43e508bca5f96d3940f7202af",
+      "bytes": 854291,
+      "platformMajors": [6]
+    },
+    "tr-TR": {
+      "tag": "tr-TR",
+      "name": "Turkish",
+      "version": "6.1.3.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-turkish/6-1-3-1/tr-tr_joomla_lang_full_6-1-3v1-zip?format=zip",
+      "sha256": "560a7c8405151b927ec99fd070f16b9a9be5624705bd1e3da940b8fb9078f46c",
+      "bytes": 588979,
+      "platformMajors": [6]
+    },
+    "uk-UA": {
+      "tag": "uk-UA",
+      "name": "Ukrainian",
+      "version": "6.1.2.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-ukrainian/6-1-2-1/uk-ua_joomla_lang_full_6-1-2v1-zip?format=zip",
+      "sha256": "2d744b92adccfea2756d96aa3449a92f70f5776a41a6ff9645026a7f23e0ebe4",
+      "bytes": 693794,
+      "platformMajors": [6]
+    },
+    "vi-VN": {
+      "tag": "vi-VN",
+      "name": "Vietnamese",
+      "version": "4.2.2.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla4/downloads/joomla-4-vietnamese/4-2-2-1/vi-vn_joomla_lang_full_4-2-2v1-zip?format=zip",
+      "sha256": "c01a57e2ef44c805975517e179f3011c586befe0137ea40a0ce7cac617db4964",
+      "bytes": 754892,
+      "platformMajors": [4, 6],
+      "note": "Joomla 6 publishes no vi-VN pack: the accredited feed carries Vietnamese for Joomla 4 only, and 4.2.2.1 is its last release. The archive declares no <targetplatform>, so Joomla 6 installs it without complaint — and that is the decision (Lee, 21/09/2026): `platformMajors` names 6 as well, so `packFor(\"vi-VN\", 6)` and `supportedLocales(6)` treat it as installable rather than refusing a language the 1.1.0 archive already ships. Measured coverage against a current Joomla 6 pack: 8,857 of 10,329 keys, 81.1% — the 1,948 missing keys are what Joomla added after 4.2 (guided tours, fields, update site) and they fall back to English, mostly in admin. ⚠ Its details4 feed declares a sha256 this archive does not have; two downloads agreed with each other, so the pin below is the measured bytes, not the feed."
+    },
+    "zh-CN": {
+      "tag": "zh-CN",
+      "name": "Chinese (Simplified)",
+      "version": "6.0.1.4",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-chinese-simplified/6-0-1-4/zh-cn_joomla_lang_full_6-0-1v4-zip?format=zip",
+      "sha256": "d2758165800993b060dc4c4c5fda25951ddb75aec506b5ed7201bb9e8e276bca",
+      "bytes": 619023,
+      "platformMajors": [6]
+    },
+    "zh-TW": {
+      "tag": "zh-TW",
+      "name": "Chinese (Traditional)",
+      "version": "6.0.4.1",
+      "url": "https://downloads.joomla.org/language-packs/translations-joomla6/downloads/joomla6-chinese-traditional/6-0-4-1/zh-tw_joomla_lang_full_6-0-4v1-zip?format=zip",
+      "sha256": "1cb38ab03ca47cddbc6beedb0ae8372ebd31675ec207f331a009f42299a98a60",
+      "bytes": 830802,
+      "platformMajors": [6]
+    }
+  }
+}

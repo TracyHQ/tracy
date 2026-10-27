@@ -1,0 +1,19 @@
+{
+  "acm": [
+    {
+      "id": "111",
+      "fields": {
+        "title": "Meet the team"
+      },
+      "items": []
+    }
+  ],
+  "custom": [
+    {
+      "id": "103",
+      "html": "<ul class=\"list-special\"><li><img src=\"/images/a.png\">One</li></ul>",
+      "blocks": "<!-- wp:list {\"className\":\"list-special\"} --><ul class=\"wp-block-list list-special\"><li><img src=\"/wp-content/uploads/a.png\" alt=\"\">One</li></ul><!-- /wp:list -->",
+      "images": []
+    }
+  ]
+}

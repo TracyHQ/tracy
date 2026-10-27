@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-1632-harness-turbo-inputs-happy",
+  "itemIds": ["regression:REG-PR-1632-harness-turbo-inputs"],
+  "requirement": "Harness growth runtime tests hash every backend source they read",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1632-harness-turbo-inputs.json",
+    "ref": "PR #1632 (fix); fix evidence: CI run 39911298412 job 120274842065 and the local audit both reported 17 uncovered backend paths before the fix.",
+    "invariant": "The harness suite passes without skipped tests. Every backend source read by growth-report-runtime.test.mjs is covered by its Turbo inputs, including new matching files discovered by listing lib/. The audit exits zero.",
+    "productSources": [
+      "scripts/check-tests.ts:40",
+      "scripts/ci/related-tests.mjs:45",
+      "scripts/ci/turbo-inputs.mjs:191",
+      "scripts/ci/turbo-setup.mjs:75"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "scripts/ci/turbo-setup.mjs:1203 spawn() runs a computed command",
+      "scripts/ci/turbo-setup.mjs:1203 spawn() runs computed arguments",
+      "scripts/ci/turbo-setup.mjs:397 readFileSync() with a computed path",
+      "scripts/ci/turbo-setup.mjs:414 readFileSync() with a computed path",
+      "scripts/ci/turbo-setup.mjs:480 readFileSync() with a computed path",
+      "scripts/ci/turbo-setup.mjs:606 readFileSync() with a computed path",
+      "scripts/ci/turbo-setup.mjs:673 readFileSync() with a computed path",
+      "scripts/ci/turbo-setup.mjs:750 readFileSync() with a computed path",
+      "scripts/ci/turbo-setup.mjs:932 readFileSync() with a computed path",
+      "scripts/ci/turbo-setup.mjs:936 readFileSync() with a computed path",
+      "scripts/ci/turbo-setup.mjs:976 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1632-harness-turbo-inputs.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1632-harness-turbo-inputs"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "scripts", "scripts"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1632-harness-turbo-inputs",
+    "pr": 1632,
+    "kind": "fix",
+    "area": "ci/turbo",
+    "file": "tests/regression/cases/REG-PR-1632-harness-turbo-inputs.json"
+  },
+  "command": [
+    "node",
+    "--import",
+    "tsx",
+    "scripts/ci/turbo-setup.mjs",
+    "--check",
+    "--task-part",
+    "owner=packages/web/tracy-harness"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

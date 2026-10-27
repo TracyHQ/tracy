@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a90dbcb6-e42c-4992-a83b-94879699dd4f",
+  "status": "complete",
+  "name": "Simon Liesinger",
+  "url": "https://styles.refero.design/style/a90dbcb6-e42c-4992-a83b-94879699dd4f",
+  "sourceWebsite": "https://www.liesingers.com",
+  "extractedAt": "2026-06-03T18:49:45.007Z",
+  "capturedAt": "2026-10-08T05:15:58.355282+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Drafting table on bone paper. A designer’s monograph rendered as a website — serif body type sitting on a vast off-white canvas, punctuated by a single stroke of red.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b0651150-45fa-45d3-a4d0-e4de28e2c4fc.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a931c81d23d4fd453bc0039c5396957f8e9843e4ea3b61a66114b02b3aa583fc",
+      "bytes": 16056
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fa6fc4a6adb03278fb62637f28ef154dc939b70f87173badb9d5242cbe5d7bc5",
+      "bytes": 73066
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d9af5df719edaff2a6d7d0f050f0a5a6823eba04c61683a722f7983a87c8073b",
+      "bytes": 13425
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "208fc3582fc4233998e5a4da1a059a25002905f545caec1942f28ec138f613c6",
+      "bytes": 7446
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "a6c4d765ef10de9f2ed0933f7ab9f7d4bdb8d041a7ae487ff752c131a28c2c66",
+      "bytes": 10140
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6c86bad4390c5ea7642f607b163665dfe1c1c5555bc0dec8bc1936aa709cb4de",
+      "bytes": 2195
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "842675bff63d7248f386536114087e686cc27d1682a45ecac883ae75b96c2111",
+      "bytes": 546
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "18b2811e11880b7bf5cef543a632d948424d1eb3b43a8d34cca2609368064e1a",
+      "bytes": 563
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d3abf921ddbffa2020d2c5d0fb472c7524f21f248063568fc333d12e9e6f5be2",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "78ca30fdf03cce1d8b867be16f398a11d1c851b1d4ab6d43c818052fc8051aea",
+      "bytes": 38493
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f0c609287c2212f69de4b5fea2d0df71aaf00c159b02d8e70342ec94c2628dfd",
+      "bytes": 19731
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "71cb7e4193c39be1e7aef2129a0ed74a3331234b57511e34f4dd17102d3d3deb",
+      "bytes": 27806
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3525af60fef2a3be8c1d3756d2c52e8e675b1955a9fd6f1574929a4a298501d7",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6a5799c1a694f37199c9263a7c165afa5ef3c2396cadbe901b75d7d1d4cb68f2",
+      "bytes": 1104
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d179c7c081cc8ee4e9e812db8aabf54901c6b0169e8e9be5eacc9679db08937e",
+      "bytes": 1497
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "16be276a-d8ce-484e-8f7a-cbbb09f717f7",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "65c01b0f-7ae5-42ff-ad5b-162bbdce8e01",
+    "6d0db1c7-5500-40cd-b2f3-d3d9abbd3a2f",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "a90dbcb6-e42c-4992-a83b-94879699dd4f",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c47654a9-7d7a-4b2c-8e0a-cd9296719c69",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "e8eda526-d686-4e45-a60d-61b6503a8eda",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318"
+  ]
+}

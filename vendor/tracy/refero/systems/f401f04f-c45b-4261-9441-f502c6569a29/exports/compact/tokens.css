@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-paper-white: #ffffff;
+  --color-hairline-gray: #e5e7eb;
+  --color-stone: #efefef;
+  --color-driftwood: #bfbfbf;
+  --color-slate: #6b7280;
+  --color-ink-wash: #241f20;
+
+  /* Typography — Font Families */
+  --font-favorit: 'favorit', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,37 @@
+{
+  // 🔒 TRACY FORK. Upstream's tsconfig extended `../dsh/tsconfig.base.client.json` and carried
+  // ~35 `paths` entries hardcoded to `C:/Users/Administrator/.dsh/source/current/...` — the
+  // plugin author's own machine. It builds nowhere else, which is exactly what
+  // `scripts/check-self-contained.ts` exists to forbid in this repository.
+  //
+  // Here it extends the dsh checkout TCH already carries as a submodule
+  // (`vendor/deepseek-harness`, pinned to the same `0.1.2-alpha.1` the profiles run), so the
+  // bundle builds on any clone rather than on one laptop.
+  //
+  // The `paths` map is dropped rather than translated. It served upstream's `typecheck` — the
+  // drift engine that compares the dictionaries against dsh's own locale sources — and that
+  // needs the harness BUILT (`lib/types/**`), not merely checked out. Running it is a
+  // maintenance task for whoever updates the dictionaries, not a condition of shipping the
+  // bundle: `bundle:client` marks every `@deepseek-ai/*` external, so it never resolves them.
+  //
+  // What that costs us, said out loud: `pnpm typecheck` in this package does NOT pass here, so
+  // the drift engine is not a gate for TCH. Upgrading dsh will not turn it red the way it does
+  // for upstream. Until that is wired, coverage drift shows up the way it always did — as an
+  // English string in the middle of a Japanese interface.
+  "extends": "../deepseek-harness/tsconfig.base.client.json",
+  "compilerOptions": {
+    "outDir": "lib/types",
+    "rootDir": "src",
+    "composite": false,
+    "incremental": false,
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+    "exactOptionalPropertyTypes": false,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node"]
+  },
+  "include": ["src"]
+}

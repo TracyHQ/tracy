@@ -1,0 +1,169 @@
+/* Kinetic — Accordion (FAQ) ACM block (self-contained, block-scoped).
+   All color/type/spacing route through the template design tokens, so light +
+   dark (and the 3 directions) resolve automatically with the active
+   [data-style]/[data-theme] / html.t4-dark. */
+
+.acm-accordion {
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--text);
+}
+.acm-accordion .hx-section {
+  padding: 80px 0;
+}
+.acm-accordion .hx-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+/* ---- head ---- */
+.acm-accordion .hx-faq-head {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+.acm-accordion .hx-eyebrow {
+  margin: 0 0 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.acm-accordion .hx-h2 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 38px;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--heading);
+}
+.acm-accordion .hx-faq-sub {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* ---- list (constrained, left-aligned) ---- */
+.acm-accordion .hx-faq-list {
+  max-width: 820px;
+}
+
+/* ---- group heading ---- */
+.acm-accordion .hx-faq-group {
+  margin: 32px 0 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.acm-accordion .hx-faq-group:first-child {
+  margin-top: 0;
+}
+
+/* ---- disclosure row ---- */
+.acm-accordion .hx-faq-item {
+  border-bottom: 1px solid var(--border);
+}
+.acm-accordion .hx-faq-item:first-of-type {
+  border-top: 1px solid var(--border);
+}
+
+.acm-accordion .hx-faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 4px;
+  cursor: pointer;
+  list-style: none;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.3px;
+  color: var(--heading);
+  transition: color .15s ease, background-color .15s ease;
+}
+/* LIST ROW gesture: subtle bg tint on header hover (accordion variant) */
+.acm-accordion .hx-faq-q:hover,
+.acm-accordion .hx-faq-q:focus-visible {
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+.acm-accordion .hx-faq-q:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+.acm-accordion .hx-faq-q::-webkit-details-marker {
+  display: none;
+}
+.acm-accordion .hx-faq-q::marker {
+  content: "";
+}
+.acm-accordion .hx-faq-qtext {
+  min-width: 0;
+}
+
+.acm-accordion .hx-faq-ico {
+  flex: 0 0 18px;
+  color: var(--muted);
+  transition: transform .2s ease, color .2s ease;
+}
+
+.acm-accordion .hx-faq-item[open] > .hx-faq-q {
+  color: var(--primary);
+}
+.acm-accordion .hx-faq-item[open] > .hx-faq-q .hx-faq-ico,
+.acm-accordion .hx-faq-q:hover .hx-faq-ico,
+.acm-accordion .hx-faq-q:focus-visible .hx-faq-ico {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+
+.acm-accordion .hx-faq-a {
+  padding: 0 4px 22px;
+  max-width: 70ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+}
+.acm-accordion .hx-faq-a p {
+  margin: 0 0 12px;
+}
+.acm-accordion .hx-faq-a p:last-child {
+  margin-bottom: 0;
+}
+.acm-accordion .hx-faq-a a {
+  color: var(--primary);
+}
+.acm-accordion .hx-faq-a a:hover {
+  color: var(--primary-hover);
+}
+
+/* ---- responsive ---- */
+@media (max-width: 620px) {
+  .acm-accordion .hx-section {
+    padding: 56px 0;
+  }
+  .acm-accordion .hx-pad {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .acm-accordion .hx-h2 {
+    font-size: 30px;
+  }
+  .acm-accordion .hx-faq-q {
+    font-size: 16.5px;
+  }
+}
+
+/* ---- reduced motion: guard the chevron-rotate transition ---- */
+@media (prefers-reduced-motion: reduce) {
+  .acm-accordion .hx-faq-ico { transition-duration: .01ms !important; }
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-social-ii/j6/1.0.4",
+  "platform": "joomla",
+  "template": "ja_social_ii",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-social-ii",
+    "id": "quickstart/ja-social-ii/j6",
+    "version": "1.0.4",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_social_ii",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-social-ii-j6-webroot-1.0.4.tar.gz",
+        "bytes": 95943971,
+        "sha256": "50e73d45f751955f3b1d19344ecf12d3a9e4b5bb1dea8ae22dc1c26b4814b628"
+      },
+      "database": {
+        "file": "ja-social-ii-j6-database-1.0.4.sql.gz",
+        "bytes": 85125,
+        "sha256": "dc687a953eeeb91e44bd2e089f474be0577e030278ffa993c5810b29ded50d4f"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-15T17:03:17.334Z",
+    "builtFrom": {
+      "from": "quickstart/ja-social-ii/j6@1.0.3",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-social-ii/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

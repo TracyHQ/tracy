@@ -1,0 +1,84 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#f5f4f0",
+      "$type": "color",
+      "$description": "Bone — Page canvas, footer, secondary button fills — warm off-white replaces cold digital white, giving every screen a paper-like base"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, elevated panels, input fields — the bright layer above bone"
+    },
+    "ink": {
+      "$value": "#1c1c1c",
+      "$type": "color",
+      "$description": "Ink — Primary text, dark filled buttons, heading color — the default ink, warm near-black rather than #000"
+    },
+    "charcoal": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Charcoal — Hairline borders, icon strokes, the announcement bar — the thinnest line work"
+    },
+    "fossil": {
+      "$value": "#706f6c",
+      "$type": "color",
+      "$description": "Fossil — Secondary text, muted borders, body annotations"
+    },
+    "pebble": {
+      "$value": "#9e9b94",
+      "$type": "color",
+      "$description": "Pebble — Input field borders, disabled controls"
+    },
+    "smoke": {
+      "$value": "#3c3c3c",
+      "$type": "color",
+      "$description": "Smoke — Body annotations, meta labels"
+    },
+    "sand": {
+      "$value": "#eae6e1",
+      "$type": "color",
+      "$description": "Sand — Active tab background, subtle surface lift, button hover on bone"
+    },
+    "ash": {
+      "$value": "#d2cec6",
+      "$type": "color",
+      "$description": "Ash — Hairline dividers, footer borders, low-contrast separators"
+    },
+    "chartreuse": {
+      "$value": "#dbf570",
+      "$type": "color",
+      "$description": "Chartreuse — Highlight badges, study tags, the globe motif, card accent fills — the only chromatic note in the system, used sparingly to draw the eye to research signals"
+    },
+    "olive": {
+      "$value": "#4b5b0a",
+      "$type": "color",
+      "$description": "Olive — Decorative border accent, chromatic link underline — the only deep color, appears in the olive outline treatments and the heading underline on the hero"
+    }
+  },
+  "font": {
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "ui-sans-serif — detected in extracted data but not described by AI"
+    },
+    "phonic": {
+      "$value": "Phonic",
+      "$type": "fontFamily",
+      "$description": "Display, headings, body — the brand's signature humanist serif set aggressively tight at large sizes (–0.09em at 130px down to +0.03em at 12px). Weight 300 dominates for display, 400 for body. The custom typeface carries the editorial voice; weight 300 at 130px is the signature move — most brands use 600–700 here, Maze whispers in a light serif to claim authority through restraint."
+    },
+    "system-ui-sans": {
+      "$value": "System UI Sans",
+      "$type": "fontFamily",
+      "$description": "Secondary UI text, fallback for browser contexts — only used sparingly; Phonic carries the brand"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://maze.co",
+      "siteName": "Maze",
+      "extractedAt": "2026-06-03T21:16:17.741Z",
+      "variant": "compact"
+    }
+  }
+}

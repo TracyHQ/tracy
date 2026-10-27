@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-signal-blue: #1868db;
+  --color-pale-wash: #e9f2fe;
+  --color-paper-white: #ffffff;
+  --color-ink-black: #101214;
+  --color-graphite: #292a2e;
+  --color-charcoal: #000000;
+  --color-ash-border: #cccccc;
+  --color-steel: #7d818a;
+  --color-deep-plum: #48245d;
+  --color-orchid: #bf63f3;
+  --color-ember: #ff613d;
+  --color-leaf: #82b536;
+  --color-butter: #fff5d4;
+  --color-mint: #efffd6;
+  --color-navy-field: #123263;
+
+  /* Typography — Font Families */
+  --font-charlie-display: 'Charlie Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-charlie-text: 'Charlie Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

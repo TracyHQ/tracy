@@ -1,0 +1,134 @@
+{
+  "color": {
+    "electric-violet": {
+      "$value": "#432dd7",
+      "$type": "color",
+      "$description": "Electric Violet — Primary brand accent — icon strokes, card borders, active link underlines, connection lines, and the dominant chromatic signal across product surfaces"
+    },
+    "bright-indigo": {
+      "$value": "#4f39f6",
+      "$type": "color",
+      "$description": "Bright Indigo — Interactive links, active nav items, icon highlights, and secondary borders — a slightly lighter sibling to Electric Violet for hover/active states"
+    },
+    "deep-indigo": {
+      "$value": "#312c85",
+      "$type": "color",
+      "$description": "Deep Indigo — Pressed/visited state of brand accent, dark text on light-violet surfaces, and the deepest chromatic token in the brand scale"
+    },
+    "soft-violet": {
+      "$value": "#a6a5fe",
+      "$type": "color",
+      "$description": "Soft Violet — Outlined button borders, light icon strokes, and lavender-toned hairlines — the pastel end of the brand ramp"
+    },
+    "lavender-mist": {
+      "$value": "#d7defd",
+      "$type": "color",
+      "$description": "Lavender Mist — Filled primary action background, soft chip/badge fills, and tinted section washes — the chromatic surface that makes CTAs feel warm without shouting"
+    },
+    "periwinkle-wash": {
+      "$value": "#c6d2ff",
+      "$type": "color",
+      "$description": "Periwinkle Wash — Soft tinted body backgrounds and gentle section highlights — used sparingly to break up white space"
+    },
+    "signal-green": {
+      "$value": "#00c950",
+      "$type": "color",
+      "$description": "Signal Green — Green decorative accent for icons, marks, and small graphic details"
+    },
+    "paper": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Paper — Page canvas and card surface — the lightest layer, sits behind everything"
+    },
+    "fog": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Fog — Secondary surface, button hover fills, and section backgrounds — the step below Paper"
+    },
+    "cloud": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Cloud — Subtle button borders, inset surface fills, and the faintest hairline dividers"
+    },
+    "mist": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Mist — Card borders, subtle dividers, and disabled surfaces — the first gray that reads as a visible line"
+    },
+    "pale-steel": {
+      "$value": "#d4d4d4",
+      "$type": "color",
+      "$description": "Pale Steel — Icon fills and decorative shapes on light surfaces"
+    },
+    "silver": {
+      "$value": "#b7b7b7",
+      "$type": "color",
+      "$description": "Silver — Soft shadows, placeholder text in dark mode, and muted decorative fills"
+    },
+    "mid-gray": {
+      "$value": "#a1a1a1",
+      "$type": "color",
+      "$description": "Mid Gray — Muted icon fills, secondary button borders, and de-emphasized text"
+    },
+    "steel": {
+      "$value": "#828282",
+      "$type": "color",
+      "$description": "Steel — Caption text, nav meta, and medium-emphasis supporting copy"
+    },
+    "slate": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Slate — Body subtext, icon inactive state, and heading accents — the most-used muted text color"
+    },
+    "graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Graphite — Body text on light tinted surfaces where pure black would feel too heavy"
+    },
+    "iron": {
+      "$value": "#525252",
+      "$type": "color",
+      "$description": "Iron — Primary text on light surfaces, most-used border color, and structural hairlines — the workhorse neutral"
+    },
+    "charcoal": {
+      "$value": "#404040",
+      "$type": "color",
+      "$description": "Charcoal — Secondary heading text and body emphasis"
+    },
+    "dark-steel": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Dark Steel — Heading text and strong body copy"
+    },
+    "onyx": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Onyx — Primary heading text, logo fill, and the darkest body text — near-black without the harshness of pure #000"
+    },
+    "near-black": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Near Black — Display headline text, primary button labels, and maximum-contrast text"
+    }
+  },
+  "font": {
+    "marund": {
+      "$value": "Marund",
+      "$type": "fontFamily",
+      "$description": "Display and heading face — a humanist serif with personality. Used for hero headlines, section titles, and editorial moments. Tight tracking (-0.05em at 96px) pulls letters close for a confident, considered feel. Weights 400–450 for body, 500–600 for headlines. The custom stylistic sets 'ss00' and 'ss03' define its distinctive character."
+    },
+    "inter-variable": {
+      "$value": "Inter Variable",
+      "$type": "fontFamily",
+      "$description": "Body, UI, and secondary heading face — the operational typeface. Inter handles navigation, buttons, body copy, captions, labels, and supporting metadata. Weight 300 is used for light emphasis moments; 500–600 for button labels and nav links. The 0.14em tracking on small uppercase text creates the spaced-eyebrow label pattern seen above section headings."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://fuser.studio",
+      "siteName": "Fuser",
+      "extractedAt": "2026-06-03T17:14:30.145Z",
+      "variant": "compact"
+    }
+  }
+}

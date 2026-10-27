@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-spa/j6/1.0.4",
+  "platform": "joomla",
+  "template": "ja_spa",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-spa",
+    "id": "quickstart/ja-spa/j6",
+    "version": "1.0.4",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_spa",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-spa-j6-webroot-1.0.4.tar.gz",
+        "bytes": 42774483,
+        "sha256": "96e56b3e2985c8caa8b3eb8d6e41d8ea9e6699b0f43e94d4833d64e171fcbae6"
+      },
+      "database": {
+        "file": "ja-spa-j6-database-1.0.4.sql.gz",
+        "bytes": 80371,
+        "sha256": "afd31c307e4d8bb129d9aabe4f46b6293e05013a21f066b31e2c683314f9b6ae"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-10T12:45:53.000Z",
+    "builtFrom": {
+      "from": "quickstart/ja-spa/j6@1.0.3",
+      "by": "coding-workflow task 0aac4aa1de31",
+      "change": "the error and offline pages request and use Mulish (weights 400, 600) instead of Muli; packaged AGENTS.md and docs/design-system.md follow the template source; ja_spa 2.2.1 -> 2.2.2; no other payload change"
+    },
+    "release": "quickstart/ja-spa/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.16",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,99 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, structural borders, and outline contours that define all surface edges"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, inverted text on dark surfaces, and button labels on green fills"
+    },
+    "gridline": {
+      "$value": "#d2d2d2",
+      "$type": "color",
+      "$description": "Gridline — Subtle dividers and light borders on secondary surfaces"
+    },
+    "slate": {
+      "$value": "#3d3d3d",
+      "$type": "color",
+      "$description": "Slate — Secondary text and muted UI elements"
+    },
+    "smoke": {
+      "$value": "#c6c6c0",
+      "$type": "color",
+      "$description": "Smoke — Mid-tier borders and inactive form strokes"
+    },
+    "fog": {
+      "$value": "#babab9",
+      "$type": "color",
+      "$description": "Fog — Hairline borders and tertiary dividers"
+    },
+    "ash": {
+      "$value": "#acaca6",
+      "$type": "color",
+      "$description": "Ash — Faint outlines and placeholder chrome"
+    },
+    "graphite": {
+      "$value": "#606060",
+      "$type": "color",
+      "$description": "Graphite — Deemphasized body text and metadata"
+    },
+    "stone": {
+      "$value": "#828282",
+      "$type": "color",
+      "$description": "Stone — Tertiary captions and disabled states"
+    },
+    "concrete": {
+      "$value": "#7a7a7a",
+      "$type": "color",
+      "$description": "Concrete — Disabled button surfaces"
+    },
+    "bone": {
+      "$value": "#f5f5f4",
+      "$type": "color",
+      "$description": "Bone — Card surfaces and elevated panel backgrounds — one shade off white"
+    },
+    "voltage-green": {
+      "$value": "#01ea40",
+      "$type": "color",
+      "$description": "Voltage Green — Primary action buttons, active states, and live UI feedback — saturated green on black-and-white canvas reads as switched-on electricity"
+    },
+    "ember-orange": {
+      "$value": "#ff5c02",
+      "$type": "color",
+      "$description": "Ember Orange — Orange action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "highlighter-yellow": {
+      "$value": "#ffdb4d",
+      "$type": "color",
+      "$description": "Highlighter Yellow — Decorative borders, selection marks, and editorial accent strokes — never used as fill"
+    }
+  },
+  "font": {
+    "melange": {
+      "$value": "Melange",
+      "$type": "fontFamily",
+      "$description": "Display and headline type. Set at extreme sizes (71–146px) with aggressive negative tracking (-0.05 to -0.058em). The medium weight is deliberate — heavy enough to anchor, not so heavy it shouts. Brings editorial magazine energy; no system sans substitutes this"
+    },
+    "favorit-mono": {
+      "$value": "Favorit Mono",
+      "$type": "fontFamily",
+      "$description": "Micro-labels, UI chrome, and metadata. Tiny uppercase tracking at -0.03 to -0.037em creates Swiss editorial caption feel. Line-heights stretch to 2.4 for dense vertical stacks. Always set small — this is a caption font, never a body font"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Fallback system body text. Likely a detection artifact; real product body is handled by the headline and mono systems. Treat as last-resort stack"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://cntrl.site",
+      "siteName": "Control",
+      "extractedAt": "2026-06-03T21:15:16.959Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "b634cbce-b4db-44a6-b2a4-b58d9d2fe93d",
+  "status": "complete",
+  "name": "V–A–C Sreda",
+  "url": "https://styles.refero.design/style/b634cbce-b4db-44a6-b2a4-b58d9d2fe93d",
+  "sourceWebsite": "https://sreda.v-a-c.org",
+  "extractedAt": "2026-06-03T20:20:50.378Z",
+  "capturedAt": "2026-10-08T05:16:34.036446+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "white-cube exhibition diagram — pencil-thin connectors link floating type against a white field, like a curator's wall label meets a constellation chart",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/73b4e359-4682-4854-b4aa-4173040795c2.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "97bc8b2fd9cd384148be402ff248cd1f0632ba61ca9d5e881b5a8882d88517e4",
+      "bytes": 17353
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d6a8a6d53ac11d5add907040f58b6a46de533106a7c9117e402a44de9eebf31e",
+      "bytes": 116607
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "09cf5fde999f075d449e616a404223d73a33d22d75106b62665604b923d9412f",
+      "bytes": 14655
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "af1eb4257efa9aa973bb03adcacf1fe10c3f357d55c85f4f6206a1f039d0928e",
+      "bytes": 7289
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "fdde931cd4069cce58ddd42c16b8b09b538560db86859572795602f989ac6805",
+      "bytes": 11666
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ec32a91d8c8640a3602b32edcaae53bbdaae6d5c6800b6349750eeb14c0cd5f4",
+      "bytes": 1863
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3418dc1a3d97bcb51ff594cb11d46a28bf6f4d88697ecbd4589ed372d596c512",
+      "bytes": 547
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9b24ebc7565c5a75e3205adc990b6d3ac72a4120caafdf37473a8e89712837cc",
+      "bytes": 564
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "2b5f0051e91fc12b43559d46954b80550d878be2d70a48b8b591aed28c221398",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "df5562a69431b5c41fe8c52a27d23891a8bf6b06c8bb430a70aafe3e08efb593",
+      "bytes": 39298
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1007c48113e75e9e9324a66c544de185412cf4bf5f6ff4624e47741e6a97c0dc",
+      "bytes": 20268
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "0b9e315b4b121c1a389926af3a8cb7f2d9279a3491acd6c31eadace97570739c",
+      "bytes": 26850
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d484d7d4b9be20decc600cb7c8af398b552a3796edc412464b53120972b5129f",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5bb2438302f237fc92b7a5b84733c1b2e4df3688f4b2b47f6b7ce840630f1358",
+      "bytes": 1068
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d27dc32cafcc4b2fa249ab028249793b866ea572d5f3a8c45bed806ab6710460",
+      "bytes": 1459
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "40154dc4-e681-4df9-be01-a6681d5887a6",
+    "47b15ce2-34c8-46e3-b2de-f7eed0b6a3b9",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5b7ecaf1-de2d-4fb9-9995-9f0665e77862",
+    "5d79f0c2-526e-4c37-b780-08404f60839b",
+    "7d66c966-6cee-4c82-b2e4-2bf1ca7b2ccd",
+    "7eed2626-ab11-472c-b04a-603476ff8957",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "86de6781-d22b-4879-90df-44acb1fe20f3",
+    "a90dbcb6-e42c-4992-a83b-94879699dd4f",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b634cbce-b4db-44a6-b2a4-b58d9d2fe93d",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

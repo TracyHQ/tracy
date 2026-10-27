@@ -1,0 +1,155 @@
+{
+  "$comment": "Words the JA Kinetic layouts print from their own markup, not from the database, captured from the RENDERED local quickstart (http://127.0.0.1:8216, package 1.0.0) so they can become CMS fields. Re-capture with the command in tasks/emdash-ja-kinetic/DECISIONS.md D19; never edit by hand.",
+  "capturedAt": "2026-09-15T20:57:02.262Z",
+  "clientsTicker": {
+    "home-trust-logos": {
+      "label": "LIVE",
+      "items": [
+        {
+          "text": "1.2M EVENTS/MIN",
+          "bright": true
+        },
+        {
+          "text": "p95 <400ms",
+          "bright": false
+        },
+        {
+          "text": "99.99% UPTIME",
+          "bright": true
+        },
+        {
+          "text": "10B EVENTS SCANNED",
+          "bright": false
+        },
+        {
+          "text": "SOC 2 TYPE II",
+          "bright": true
+        },
+        {
+          "text": "OPENTELEMETRY-NATIVE",
+          "bright": false
+        },
+        {
+          "text": "ZERO SEAT FEES",
+          "bright": true
+        },
+        {
+          "text": "30-DAY HOT RETENTION",
+          "bright": false
+        },
+        {
+          "text": "TAIL-BASED SAMPLING",
+          "bright": true
+        }
+      ]
+    },
+    "landing-clients": {
+      "label": "LIVE",
+      "items": [
+        {
+          "text": "1.2M EVENTS/MIN",
+          "bright": true
+        },
+        {
+          "text": "p95 <400ms",
+          "bright": false
+        },
+        {
+          "text": "99.99% UPTIME",
+          "bright": true
+        },
+        {
+          "text": "10B EVENTS SCANNED",
+          "bright": false
+        },
+        {
+          "text": "SOC 2 TYPE II",
+          "bright": true
+        },
+        {
+          "text": "OPENTELEMETRY-NATIVE",
+          "bright": false
+        },
+        {
+          "text": "ZERO SEAT FEES",
+          "bright": true
+        },
+        {
+          "text": "30-DAY HOT RETENTION",
+          "bright": false
+        },
+        {
+          "text": "TAIL-BASED SAMPLING",
+          "bright": true
+        }
+      ]
+    }
+  },
+  "writers": [
+    {
+      "username": "priya.raman",
+      "role": "Staff SRE",
+      "bio": "Spent a decade on call before joining Helix. Now writes about the incidents averages hide.",
+      "tagline": "Staff SRE. Writes about incident response, tracing and the tail latencies nobody watches."
+    },
+    {
+      "username": "arjun.mehta",
+      "role": "Co-founder & CTO",
+      "bio": "Builds the query engine behind Helix. Writes about telemetry internals and the cost of cardinality.",
+      "tagline": "Co-founder & CTO. Writes about the query engine, telemetry internals and the cost of cardinality."
+    },
+    {
+      "username": "lena.park",
+      "role": "VP Engineering",
+      "bio": "Runs platform engineering at Helix. Cares about error budgets, onboarding and quiet pagers.",
+      "tagline": "VP Engineering. Writes about error budgets, on-call health and scaling teams without scaling pain."
+    },
+    {
+      "username": "tomas.rivera",
+      "role": "Head of Product",
+      "bio": "Shapes what Helix ships next. Writes about alerting, sampling and product decisions.",
+      "tagline": "Head of Product. Writes about alerting, sampling and the product decisions behind every dashboard."
+    }
+  ],
+  "writersCapturedFrom": "/index.php/product/authors → each /author/<username> page (the bio is printed by the template override html/com_content/author/author_info.php, not stored in the database)",
+  "pages": {
+    "/pages/tags": {
+      "heading": "Browse by tag",
+      "sub": "Find posts by the topics that matter to your stack."
+    },
+    "/product/article-archive": {
+      "heading": "Article archive",
+      "sub": "Everything we have published, organised by month."
+    },
+    "/product/authors": {
+      "heading": "Our writers",
+      "sub": "The engineers and operators behind the Kinetic blog."
+    },
+    "/product/all-categories": {
+      "heading": "All Categories",
+      "sub": "Browse every topic we write about, from incident retros to product tutorials."
+    },
+    "/pages/search": {
+      "heading": "Search Helix",
+      "sub": "Find docs, blog posts and changelog entries in one place."
+    }
+  },
+  "pagesCapturedFrom": "h1 and the sub line printed under it by the template list layouts (com_tags, com_content author/archive/categories, com_finder), not stored in the database",
+  "contactForm": {
+    "heading": "Send us a message",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "subjectLabel": "Subject",
+    "messageLabel": "Message",
+    "consentLabel": "Privacy Note",
+    "consentText": "By submitting this form you agree to the Privacy Policy of this website and the storing of the submitted information.",
+    "submitLabel": "Send Email"
+  },
+  "contactFormCapturedFrom": "/index.php/company/contact — heading and field labels printed by com_contact and the privacy-consent plugin (language strings, not database rows)",
+  "contactIcons": {
+    "Support": "life-buoy",
+    "Sales": "briefcase",
+    "Security": "shield"
+  },
+  "contactIconsNote": "Support matches lucide 1.45 life-buoy exactly (shape score 1.00); Sales and Security are the earlier lucide briefcase and shield drawings, redrawn in 1.45"
+}

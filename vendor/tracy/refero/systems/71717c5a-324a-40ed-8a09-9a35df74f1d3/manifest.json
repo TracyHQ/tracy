@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "71717c5a-324a-40ed-8a09-9a35df74f1d3",
+  "status": "complete",
+  "name": "Anna Jóna",
+  "url": "https://styles.refero.design/style/71717c5a-324a-40ed-8a09-9a35df74f1d3",
+  "sourceWebsite": "https://annajona.is",
+  "extractedAt": "2026-06-03T20:46:14.875Z",
+  "capturedAt": "2026-10-08T05:13:15.389515+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "a love letter on blush paper",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c5d92a7a-676a-4c9e-9b34-9e7cba4e3364.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/fa304741-d81a-4e7c-baeb-0fa87632fe15.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/7cc8fa8f-c8d4-4582-9e8f-6a5ae3273966.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/22fceb74-52fd-45c4-8b25-93e9f524d3eb.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/41b6a01d-4734-4c9a-a711-a63a309555e4.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e15a97f988037299e5ecd6c09a8ac0baa89d52bc485e604f08d9fee678762004",
+      "bytes": 17210
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d42725ca4ea64323aaab70c9e8af252efcbdacf8ba08ce9c09c4ea81573d9b32",
+      "bytes": 83047
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ee7b799e3860944228dcc3716c96d4dab9eb3a0bddc2a891e665d0aea8485434",
+      "bytes": 13840
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f2449400a7be2346f37455fd2823c68266c3e0986139d073ffd1d53da7899e9c",
+      "bytes": 7816
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e5820ad796242967d791a731ff30eabfd8021b81b5f418182d6b272a3bd7be11",
+      "bytes": 10801
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6d42a4f6e85912b05b112ee2e6aab75c159cda11ce1f61e9d259cd8b472bdb7c",
+      "bytes": 2131
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0a048481e756a2f16337f54eef76357c7593d90ba5cac392ca5235320b96f955",
+      "bytes": 582
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a40227ed41765da2d092df630ac7f5c926d35c7efbd51eddba3fbcf6fbab90b9",
+      "bytes": 599
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d818450089ba2de98738a801fcef5c968d16cfc3a40eff69ddadfa2d552ac2d3",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "175244d09d668092cf29604ae0c6d30131c35de9b5838a658408c3c41dd21038",
+      "bytes": 39915
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "7f1f18c5c432f78b475d745dafb2033265f84c7225d2d4dc41e7716ea787906e",
+      "bytes": 20449
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "aed12c177ce8c6f5c8894defcce18c42b9e85c80f0de046ff85281192329640d",
+      "bytes": 29564
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b37e107a3d8204796b752a3eeeba99d82675bacce4bdfaffd234626bc2f6c630",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "28185936853e628a778ef59138a89bac095906949eef5914272edd2fe3db1b50",
+      "bytes": 1459
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "17cadfdf04b248e3fe6cfeed6758b2b25ad88c92277bd60961bcc6475c2b09b1",
+      "bytes": 1924
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "3b080dc3-1992-43fe-91d6-2a721f934435",
+    "5fbdad0a-d102-41c2-8253-f201ad6a6673",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "71717c5a-324a-40ed-8a09-9a35df74f1d3",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "8e1c35bf-f0e8-4889-b869-d9883bb76767",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "b490cff8-9d2c-4225-9118-6468e4f3213d",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f1a690c7-234d-4ee9-9806-5790934e7043"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1161-tcqr-final-released",
+  "kind": "fix",
+  "title": "The final-round fixes of the seven questions hold (OpenRouter in-flight 402 waited out; truthful WordPress/Joomla blog build report, business named once per post, blog categories renamed for the trade, WordPress embeds kept; EmDash capitalised address words and one name per page, legal pages keep the template text renamed, seed language rows keep no English address noun; JA Essence WordPress Vietnamese heading font; the readiness checker accepts a template's own replacement font for a language) and ship with their releases: Tracy Business EmDash 1.7.13 and Tracy SaaS EmDash 1.4.10 pinned, contract ja-essence/wp7/1.0.16; contract ja-essence/j6/1.0.5 with Claude Cowork for Joomla 0.24.15 pinned on every Joomla quickstart",
+  "pr": 1161,
+  "area": "sites/brief",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/seed-model.test.mjs (an in-flight 402 that clears, one known by its message, one too big or out of credit, one that never clears).",
+    "S2: node --test apps/tracy-web/test/{blog-truthful-g64,joomla-blog-categories,brief-wordpress,brief-wp-leaves}.test.mjs (out-of-credit models, a writer that names the business everywhere, a namer that only translates or repeats names, an embed block).",
+    "S3: node --test the EmDash themes' tests/personalize-labels-{echoed,destination}.test.mjs (Business, SaaS, Base and the kit), and Business's personalize-legal-pages, personalize-keeps-structure and seed-language-leftovers tests.",
+    "S4: node --test packages/cms/tracy-wordpress-theme/test/essence.test.mjs.",
+    "S5: read both quickstarts.json: the tracy-business/emdash and tracy-saas/emdash entries.",
+    "S6: compare contracts ja-essence/wp7/1.0.16 and 1.0.15, and read the 1.0.16 profile row.",
+    "S7: node --test apps/tracy-web/test/template-customization-question-readiness-fonts.test.mjs (a font replaced on vi pages by one that draws the letters, in the WordPress 1.0.16 and Joomla 1.3.4 forms; a replacement for another language or one lacking the letters; a per-language cut).",
+    "S8: compare contracts ja-essence/j6/1.0.5 and 1.0.4, read the 1.0.5 profile row, and read every Joomla pin and the quickstart/ja-essence/j6 entry of both quickstarts.json."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped or cancelled.",
+    "S2: every test passes, none skipped or cancelled.",
+    "S3: every test passes, none skipped or cancelled.",
+    "S4: every test passes, none skipped or cancelled.",
+    "S5: tracy-business/emdash 1.7.13 and tracy-saas/emdash 1.4.10, source and state files named for that version with a GitHub asset id.",
+    "S6: content map equal to 1.0.15's; the presentation lock differs only in the eleven theme files 1.0.16 changed or added; template parts and entities equal; a 1.0.16 profile row with a logo pair.",
+    "S7: every test passes, none skipped or cancelled.",
+    "S8: content map equal to 1.0.4's, floor plugin 0.24.15, a 1.0.5 profile row with a logo pair; every Joomla pin on 0.24.15; the j6 entry at 1.0.5 on contract ja-essence/j6/1.0.5, webroot and database 1.0.5 with asset ids, still carrying 1.0.4."
+  ],
+  "selectors": {
+    "tests": "tests/regression/scripts/REG-PR-1161-tcqr-final-released.mjs",
+    "model": "apps/tracy-web/src/lib/seed-model.js",
+    "blog": "apps/tracy-web/src/sites/brief-engines/blog-plan.js, blog-name-once.js, blog-categories.js, wp-leaves.js",
+    "labels": "translateLabels, wordsLeft and oneLabelPerDestination in the EmDash themes' tools/personalize.mjs",
+    "seed": "packages/cms/tracy-emdash-theme-business/seed/seed.json and site-model.json",
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy",
+    "contract": "packages/cms/tracy-wordpress-quickstart/contracts/ja-essence/wp7/1.0.16, packages/cms/tracy-joomla-quickstart/contracts/ja-essence/j6/1.0.5",
+    "readiness": "apps/tracy-web/src/lib/template-customization-question-readiness/rules/lang-2-font-glyphs.js, readers/template-fonts.js"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-12-tcqr-final.md",
+  "fence": "The model call retry, the WordPress and Joomla FULL blog stages and build report, the EmDash label re-asks and legal pages, Tracy Business's seed language rows, the JA Essence WordPress theme fonts, the readiness checker's LANG-2 font rule, and the releases this repository pins or describes for them.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1161-tcqr-final-released.mjs"],
+    "needs": []
+  }
+}

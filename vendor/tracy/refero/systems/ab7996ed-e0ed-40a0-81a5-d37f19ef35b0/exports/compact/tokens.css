@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-cherry-marquee: #b00e2f;
+  --color-cream-bisque: #fee5ca;
+  --color-canvas-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-slate-mid: #aaaaaa;
+
+  /* Typography — Font Families */
+  --font-cervo: 'Cervo', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helveticaneuecyr: 'HelveticaNeueCyr', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,19 @@
+@theme {
+  /* Colors */
+  --color-ember-orange: #ff6600;
+  --color-architect-violet: #5c2999;
+  --color-lichen-green: #00cc88;
+  --color-sandstone: #aa8855;
+  --color-bark-brown: #665233;
+  --color-honey-bronze: #eec07a;
+  --color-obsidian: #000000;
+  --color-paper-white: #ffffff;
+  --color-warm-cream: #f6f3ee;
+  --color-lavender-mist: #f6f1fe;
+  --color-mint-whisper: #ebfef6;
+  --color-ash-gray: #888888;
+  --color-smoke: #e5e5e5;
+
+  /* Typography */
+  --font-abc-monument-grotesk: 'ABC Monument Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

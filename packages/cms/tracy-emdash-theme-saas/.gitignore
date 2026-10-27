@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+data/
+uploads/
+.emdash/types.ts
+.env
+.env.*
+!.env.example
+*.token
+evidence/
+backups/

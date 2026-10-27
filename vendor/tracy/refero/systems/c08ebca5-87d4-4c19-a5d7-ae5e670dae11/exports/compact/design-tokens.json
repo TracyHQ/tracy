@@ -1,0 +1,79 @@
+{
+  "color": {
+    "atlassian-blue": {
+      "$value": "#1868db",
+      "$type": "color",
+      "$description": "Atlassian Blue — Primary action buttons, active links, focus states, icon accents — the single chromatic action color across the entire system, providing directional clarity against monochrome surfaces"
+    },
+    "midnight-navy": {
+      "$value": "#101214",
+      "$type": "color",
+      "$description": "Midnight Navy — Primary text, heading fills on light surfaces, dark hero panel backgrounds, link text — the dominant ink color"
+    },
+    "carbon-edge": {
+      "$value": "#292a2e",
+      "$type": "color",
+      "$description": "Carbon Edge — Card borders on light surfaces, body text, input borders, secondary heading text"
+    },
+    "slate-current": {
+      "$value": "#1c2b42",
+      "$type": "color",
+      "$description": "Slate Current — Outlined action borders, icon strokes, list dividers, tertiary text — a blue-tinted near-gray that hints at brand without committing to color"
+    },
+    "muted-indigo": {
+      "$value": "#42526e",
+      "$type": "color",
+      "$description": "Muted Indigo — Helper text, form labels, info badges, icon tints, secondary metadata"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text on dark fills, dark-section backgrounds where contrast demands it"
+    },
+    "fog-white": {
+      "$value": "#f0f1f2",
+      "$type": "color",
+      "$description": "Fog White — Muted button backgrounds, secondary surface fills, hairline section dividers"
+    },
+    "ash-gray": {
+      "$value": "#b7b9be",
+      "$type": "color",
+      "$description": "Ash Gray — Disabled borders, subtle list separators, card shadow tints"
+    },
+    "taxicab-yellow": {
+      "$value": "#fca700",
+      "$type": "color",
+      "$description": "Taxicab Yellow — Sporadic CTA alternative (event registration), decorative fill in geometric confetti, accent punctuation in dark banners"
+    },
+    "lavender-wash": {
+      "$value": "#eed7fc",
+      "$type": "color",
+      "$description": "Lavender Wash — Soft purple section backgrounds, highlight bands, decorative geometric fills"
+    },
+    "confetti-gradient": {
+      "$value": "#bf63f3",
+      "$type": "color",
+      "$description": "Confetti Gradient — Decorative geometric borders around video and hero blocks — conic gradient sweeps violet → yellow → blue"
+    }
+  },
+  "font": {
+    "charlie-display": {
+      "$value": "Charlie Display",
+      "$type": "fontFamily",
+      "$description": "Editorial headlines, hero text, section titles — scales from 24px sub-headings to 80px display. Weight 400-500 creates a humanist warmth uncommon in enterprise tools; letter-spacing tightens to 0.012em at large sizes for optical correction."
+    },
+    "charlie-text": {
+      "$value": "Charlie Text",
+      "$type": "fontFamily",
+      "$description": "Body copy, UI labels, navigation, button text, input fields, footer text. Weight 400 for body, 500 for emphasized labels, 700 reserved for inline strong elements. Tight line-heights (1.20-1.25) at UI sizes maximize information density without feeling cramped."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.atlassian.com",
+      "siteName": "Atlassian",
+      "extractedAt": "2026-06-03T22:08:59.894Z",
+      "variant": "compact"
+    }
+  }
+}

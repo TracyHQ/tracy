@@ -1,0 +1,59 @@
+{
+  "color": {
+    "paper": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Paper — Page canvas, base surface behind text — off-white, never pure white, to soften photographic edges"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, hairline borders, link underlines — the only chromatic accent in the system is its absence of color"
+    },
+    "charcoal": {
+      "$value": "#1c1c1c",
+      "$type": "color",
+      "$description": "Charcoal — Dark content surface for text-only sections — warm-leaning black that softens contrast against pure ink"
+    },
+    "midnight-soil": {
+      "$value": "#141109",
+      "$type": "color",
+      "$description": "Midnight Soil — Deepest dark surface, used for the most recessed bands — barely distinguishable from charcoal but warmer"
+    },
+    "ash": {
+      "$value": "#dcdcdc",
+      "$type": "color",
+      "$description": "Ash — Hairline borders, disabled borders, subtle dividers — a neutral gray that whispers structure without drawing the eye"
+    },
+    "driftwood": {
+      "$value": "#c2b5ae",
+      "$type": "color",
+      "$description": "Driftwood — Warm taupe accent surface, used sparingly as a tonal break in dark sections — the only non-achromatic hint in the palette"
+    }
+  },
+  "font": {
+    "favorit": {
+      "$value": "FAVORIT",
+      "$type": "fontFamily",
+      "$description": "The single typeface for everything: hero titles at 41px weight 400, body at 17px weight 400, captions at 15px weight 300. Weight 300 is the signature choice for secondary text — it creates hierarchy through restraint rather than bold contrast. Slight negative tracking (-0.02em to -0.022em) tightens the grotesque's default rhythm. The same family voices headlines, navigation, buttons, and body, which is unusual — most systems differentiate roles through typefaces. Here, FAVORIT's dual weight and tight letterforms carry the entire hierarchy alone."
+    },
+    "clarkson": {
+      "$value": "Clarkson",
+      "$type": "fontFamily",
+      "$description": "Reserved for micro-copy or supporting text in specific contexts — appears at low frequency and never headlines. Could be a FAVORIT alternate cut rather than a true second family."
+    },
+    "halyard-display": {
+      "$value": "halyard-display",
+      "$type": "fontFamily",
+      "$description": "Rare accent — appears in button or micro-label contexts. Functions as a display-only voice when FAVORIT needs to step aside."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.freytaganderson.com",
+      "siteName": "Freytag Anderson",
+      "extractedAt": "2026-06-03T19:39:45.491Z",
+      "variant": "compact"
+    }
+  }
+}

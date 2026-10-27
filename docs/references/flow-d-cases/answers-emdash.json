@@ -1,0 +1,10 @@
+{
+  "answers": {
+    "name": "Red River Construction",
+    "languages": ["en", "vi"],
+    "sector": "construction",
+    "contact": "12 Hang Bac, Hanoi · 0912 345 678",
+    "email": "info@redriver.example"
+  },
+  "questionnaire": "80e42e66580bb053cc384a9055c0296344e67e4f72611f57c8e60bb2ffb0401f"
+}

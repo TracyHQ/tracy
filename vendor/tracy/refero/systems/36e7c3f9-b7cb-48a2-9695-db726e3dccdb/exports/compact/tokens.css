@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-photocopy-black: #000000;
+  --color-newsprint-white: #ffffff;
+  --color-muted-ash: #666666;
+  --color-highlighter-yellow: #ffff01;
+  --color-link-cobalt: #2b4dff;
+
+  /* Typography — Font Families */
+  --font-archivo-black: 'Archivo Black', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

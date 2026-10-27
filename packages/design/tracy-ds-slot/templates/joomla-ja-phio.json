@@ -1,0 +1,205 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-phio",
+  "minVersion": {
+    "quickstart/ja-phio/j6": "1.0.4"
+  },
+  "maxVersion": {
+    "quickstart/ja-phio/j6": "1.0.8"
+  },
+  "maxVersionNote": "1.0.8 21/10/2026 (TEXT-1 batch 2): built from 1.0.7 (release-batch.mjs --overlay); only css/template.css differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.6 16/10/2026 (#1375): re-cut of 1.0.5 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-phio/j6@1.0.3",
+  "roles": {
+    "page": "div.t4-content",
+    "heading": "h2",
+    "body": "div.hero-desc",
+    "container": "div.container-xl"
+  },
+  "discovered": {
+    "page": "outermost element painted the page colour (body is not: the template frames the page in #333, html body + a 36px .t4-wrapper border)",
+    "heading": "first section heading: 56px",
+    "body": "the hero's body text (the first p on the home page is the footer's .lead, set at 300 by Bootstrap)",
+    "container": "first content container, max-width 1320px"
+  },
+  "keepScopes": [],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#4f4f4f",
+    "--fg-2": "#333333",
+    "--accent": "#df4040",
+    "--accent-hover": "#db2020",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#ffffff",
+    "--meta": "#4f4f4f",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#f2f2f2",
+    "--muted": "#828282",
+    "--font-display": "\"Archivo\", sans-serif",
+    "--font-body": "\"Archivo\", sans-serif"
+  },
+  "darkTokens": {},
+  "modes": true,
+  "modesNote": "the template has a light/dark switch (button.t4-theme-toggle in the header; js/darkmode.js and the pre-paint resolver in index.php set data-theme light|dark on html, and t4-dark on the dark side; css/darkmode.css paints the dark side under html[data-theme=dark]): the module sheet writes the system's own side under the template's matching mode and the other side derived from it (src/derive.mjs, src/sides.mjs), and keeps the switch shown (MODE-2). With one mode a light system on a visitor whose OS is dark showed the template's dark-mode pictures on the light page: the white logo and the inverted client logos and hero arrow vanished on white (batch 2, 17/10/2026)",
+  "modesAuto": false,
+  "modesAutoNote": "the pre-paint resolver in index.php always sets data-theme (the stored choice, else the OS preference; light when it fails) before the page paints, so no 'auto' state is left: the OS-dark copy is not written, as for JA Trip",
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#4f4f4f",
+      "fg-2": "#212529",
+      "accent": "#df4040",
+      "accent-hover": "#db2020",
+      "surface": "#f8f9fa",
+      "surface-warm": "#ffffff",
+      "meta": "#4f4f4f",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#f2f2f2",
+      "muted": "#828282"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#4f4f4f",
+      "fg-2": "#333333"
+    },
+    {
+      "accent": "#df4040"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#f2f2f2",
+      "border-soft": "#dee2e6",
+      "fg": "#4f4f4f"
+    },
+    {
+      "border-soft": "#e9ecef",
+      "fg": "#495057"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (59 line colours, 51 text colours seen)",
+  "selectors": {
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": [".t4-section .container", "div.container-xl"],
+    "bodyFace": ["body"],
+    "themeToggle": ".t4-theme-toggle"
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t4-section p, main p, div.hero-desc",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 15 tried (byte 6139); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#f2f2f2",
+      "uses": 27,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 12
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 10,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#4f4f4f",
+      "uses": 7,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#4f4f4f",
+      "distance": 0
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 5,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#495057",
+      "uses": 5,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#4f4f4f",
+      "distance": 10
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "sideRules": {
+    "dark": {
+      "a span.d-light": {
+        "display": "none"
+      },
+      "a span.d-dark": {
+        "display": "inline"
+      },
+      ".acm-features.style-2 .features-item .item-inner": {
+        "background-color": "color-mix(in srgb, var(--ds-c-bg) 90%, transparent)"
+      },
+      ".testimonial-left .img-avatar img": {
+        "border-radius": "50%"
+      },
+      ":is(div[id*=t4-footer], div[id*=t4-footnav]) a:not(.btn):is(:hover, :focus), .contact .contact-address dd > span a:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      }
+    },
+    "light": {
+      ".acm-features.style-2 .features-item .item-inner": {
+        "background-color": "color-mix(in srgb, var(--ds-c-bg) 90%, transparent)"
+      },
+      ":is(div[id*=t4-footer], div[id*=t4-footnav]) a:not(.btn):is(:hover, :focus), .contact .contact-address dd > span a:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      }
+    }
+  },
+  "sideNote": "re-measured 11/10/2026: the template ships a logo for each of its own light and dark modes (span.d-light / span.d-dark); under a dark system the dark wordmark sat on the dark page, so the dark-mode logo shows instead",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on quickstart/ja-phio/j6 1.0.4 as published, T4's generated CSS cleared and rebuilt as on a new site (tasks/evidence/ds-remeasure-4-2026-10-11/ja-phio-j6): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, no text under 4.5:1 worse than the template's own (lowest 4.51), 96% or more of the page follows, every contrast kind sampled in every view. The 09/10 verdicts had failed on the page role (5/7: body is the template's #333 frame, html body + a 36px .t4-wrapper border, which stays the template's) and on p.lead's weight (the footer lead, 300 by Bootstrap): the page role now reads div.t4-content, the body role the hero text; under a dark system the template's own dark-mode logo shows (sideRules), the dark wordmark had sat on the dark page; checked by eye on the four systems' screenshots, desktop and phone. Earlier: measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-phio-j6): default unchanged, no text made less readable than the template's own under the systems tried",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-muted)",
+    "--footer-bg-color": "var(--ds-c-bg)",
+    "--footer-link-color": "var(--ds-c-fg)",
+    "--footer-link-hover-color": "var(--ds-c-accent-text)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs. The footer is the page colour in every profile (it stands 1.00:1 off the page), so it reads the page ground, not the raised surface the T4 default gives it (batch 2, 17/10/2026). The footer's links are the header menu's pair (both #333333 at rest, both the accent red on hover: #df4040 / #d81818 in etc/theme/*.json), so they read the menu's roles (--mainnav-link-color / --mainnav-link-hover-color in joomla-t4-ja), not the muted / text pair the T4 default gives a footer: under a system the footer hover is the accent like the header's (Akemi, 17/10/2026: the footer hover kept a non-accent colour while the header's followed the system)",
+  "sideRulesNote": "visual review 14/10/2026: the services cards over their photos (.acm-features.style-2 .features-item .item-inner) are a literal white at 90% made for the white page, while their titles and Learn More links follow the page text: under a dark system pale words on the near-white card (1.16:1 under Moxie). The card is the page colour at 90% on both sides. The testimonial portrait (.testimonial-left .img-avatar img) is a circle drawn in a square picture with white corners: on a dark page the picture is clipped to its circle (border-radius 50%)",
+  "hoverNote": "21/10/2026 (HOVER-2, TEXT-1 batch 2): the contact page's address links hover in var(--ds-c-accent-text), their rest role (the template moves #333 to its red there), and on Home 3 the dark footer's links rest and hover in one heading role under a system (the template's own footer moves #fff to #d81818). Under a system each such hover and focus is underlined, as batch 1 did on JA Space; the footer's other pages keep their colour change and gain the same cue."
+}

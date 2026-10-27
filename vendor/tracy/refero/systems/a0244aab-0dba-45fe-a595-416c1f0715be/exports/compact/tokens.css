@@ -1,0 +1,30 @@
+:root {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-ash-gray: #dbdbdb;
+  --color-carbon: #242424;
+  --color-graphite: #545454;
+  --color-smoke: #969696;
+  --color-slate: #7a7a7a;
+  --color-bone: #e7e7e7;
+  --color-iron: #414141;
+  --color-obsidian: #333333;
+  --color-mist: #f1f1f1;
+  --color-cinder: #121212;
+  --color-signal-green: #009966;
+  --color-spring-mint: #00bc7d;
+  --color-fern: #00d492;
+  --color-ember-orange: #e17100;
+  --color-marigold: #fe9a00;
+  --gradient-marigold: linear-gradient(90deg, rgb(51, 15, 31) 0%, rgb(200, 50, 40) 12.56%, rgb(251, 136, 65) 25.06%, rgb(211, 221, 146) 37.56%, rgb(89, 130, 79) 50.06%, rgb(0, 36, 20) 62.06%, rgb(0, 20, 61) 74.06%, rgb(40, 116, 215) 86.06%, rgb(153, 194, 255) 97.06%);
+  --color-amber: #ffb900;
+  --color-coral: #ff6467;
+  --color-iris-blue: #155dfc;
+
+  /* Typography — Font Families */
+  --font-ui-sans-serif-system: 'ui-sans-serif (system)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-tobias: 'Tobias', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-diatype: 'Diatype', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-speakeasyascii: 'speakeasyAscii', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

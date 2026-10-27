@@ -1,0 +1,45 @@
+{
+  "id": "QA-UNIT-REG-PR-1038-sidebar-quiet-failures-happy",
+  "itemIds": ["regression:REG-PR-1038-sidebar-quiet-failures"],
+  "requirement": "The sidebar never pins a red failure strip on a customer page, and stays silent when DSH's tab registry unloads under a re-sync",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1038-sidebar-quiet-failures.json",
+    "ref": "PR #1038 (fix); fix evidence: Desktop app (native profile), 08/10/2026 10:13 after a restart of dsh and the app: white window with the strip '[dsh-better-sidebar] native relist files error: cannot create effect on inactive context'.",
+    "invariant": "S1 exits 0 with 5 passed and 0 failed. After the host fiber unloads, neither the Files relist nor the new registration reaches reportFailure or console.error. A live registry that refuses a duplicate id is still reported as 'register git'. The client failure reporter only logs to the console; it never creates or appends a page element.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1038-sidebar-quiet-failures.mjs:12 spawnSync() passes vendor/tracy/dsh-better-sidebar/tests/native-host-teardown.spec.ts to vendor/tracy/dsh-better-sidebar/node_modules/.bin/vitest; not proven to run it",
+      "tests/regression/scripts/REG-PR-1038-sidebar-quiet-failures.mjs:12 spawnSync() passes vendor/tracy/dsh-better-sidebar/tests/no-diagnostic-strip.spec.ts to vendor/tracy/dsh-better-sidebar/node_modules/.bin/vitest; not proven to run it",
+      "tests/regression/scripts/vitest.mjs:44 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1038-sidebar-quiet-failures.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1038-sidebar-quiet-failures"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1038-sidebar-quiet-failures",
+    "pr": 1038,
+    "kind": "fix",
+    "area": "sidebar/native",
+    "file": "tests/regression/cases/REG-PR-1038-sidebar-quiet-failures.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1038-sidebar-quiet-failures.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

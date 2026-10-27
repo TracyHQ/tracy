@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1489-quickstart-refresh-etag",
+  "kind": "fix",
+  "title": "The releases refresh asks GitHub with If-None-Match, reads each asset once, and waits for the reset when the quota is low",
+  "pr": 1489,
+  "area": "web/quickstart-releases",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap apps/tracy-web/test/quickstart-releases-etag.test.mjs",
+    "S2: Read the ok/not ok line of each of the four tests."
+  ],
+  "expect": [
+    "All four tests report ok: an unchanged list is one conditional request answered 304 with no release row rewritten; a changed list downloads no asset already read under the same id; a token under 10% of its quota makes no request until X-RateLimit-Reset; a 403 with x-ratelimit-remaining 0 is logged as the rate limit with its reset time (pre-fix: every 10-minute cycle re-downloaded ~95 assets, four stands on one token spent 5,000 requests an hour and provisioning got 403 on the quickstart download)."
+  ],
+  "selectors": {},
+  "evidence": "19/10/2026: stands wo2 (09:52Z) and wodsft (12:30Z, 12:55Z) failed provisioning with 'quickstart download failed' (403) while four stands shared one GitHub token.",
+  "fence": "apps/tracy-web/src/lib/quickstart-releases.js listPage/assetText/syncReleases/refreshReleases with apps/tracy-web/src/lib/github-read-budget.js.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/quickstart-releases-etag.test.mjs"],
+    "tests": [
+      "an unchanged list is asked with If-None-Match",
+      "a list that changed re-reads only the assets",
+      "a token below 10% of its quota waits",
+      "a 403 with x-ratelimit-remaining: 0 is logged"
+    ]
+  }
+}

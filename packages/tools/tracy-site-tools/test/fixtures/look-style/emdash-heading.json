@@ -1,0 +1,825 @@
+{
+  "source": "benchemdash02 / \"Four core service lines\" — Chromium CDP CSS.getMatchedStylesForNode, desktop 1440×900, light; captured 28/09/2026, minimized to the asked properties and the custom properties their var()s reach",
+  "props": ["color", "background-color", "font-family"],
+  "info": {
+    "el": "<h2.h-section-lg>",
+    "text": "Four core service lines",
+    "matches": 1,
+    "how": "exact",
+    "hidden": false,
+    "computed": {
+      "color": "rgb(20, 23, 26)",
+      "background-color": "rgb(245, 243, 238)",
+      "font-family": "Newsreader-5026112b9dab194e, Georgia, \"Times New Roman\", serif, Georgia, serif"
+    },
+    "hex": {
+      "color": "#14171a",
+      "background-color": "#f5f3ee"
+    },
+    "paint": 5,
+    "chain": [
+      "<div>",
+      "<div.mb-10.flex>",
+      "<section#sec-services.container-site.py-[88px]>",
+      "<main>",
+      "<div.min-h-screen.bg-paper>",
+      "<body>",
+      "<html>"
+    ]
+  },
+  "matched": {
+    "matchedCSSRules": [
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-77146-6",
+          "selectorList": {
+            "text": ".h-section-lg",
+            "selectors": [
+              {
+                "text": ".h-section-lg",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "layers": [
+            {
+              "text": "components"
+            }
+          ],
+          "style": {
+            "cssProperties": [
+              {
+                "name": "font-family",
+                "value": "var(--font-serif)",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "font-family",
+                "value": "var(--font-serif)"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "inherited": [
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-6",
+              "selectorList": {
+                "text": ".bg-paper",
+                "selectors": [
+                  {
+                    "text": ".bg-paper",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "utilities"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "background-color",
+                    "value": "var(--color-paper)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": "var(--color-paper)"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-6",
+              "selectorList": {
+                "text": "body",
+                "selectors": [
+                  {
+                    "text": "body",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "base"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "background",
+                    "value": "var(--color-paper)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": ""
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-6",
+              "selectorList": {
+                "text": ":root, :host",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "text": ":host",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "theme"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--font-sans",
+                    "value": "var(--font-archivo), system-ui, sans-serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--font-serif",
+                    "value": "var(--font-newsreader), Georgia, serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--default-font-family",
+                    "value": "var(--font-sans)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-paper",
+                    "value": "#f5f3ee",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-fg",
+                    "value": "#14171a",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--font-sans",
+                    "value": "var(--font-archivo), system-ui, sans-serif"
+                  },
+                  {
+                    "name": "--font-serif",
+                    "value": "var(--font-newsreader), Georgia, serif"
+                  },
+                  {
+                    "name": "--default-font-family",
+                    "value": "var(--font-sans)"
+                  },
+                  {
+                    "name": "--color-paper",
+                    "value": "#f5f3ee"
+                  },
+                  {
+                    "name": "--color-fg",
+                    "value": "#14171a"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-6",
+              "selectorList": {
+                "text": "html, :host",
+                "selectors": [
+                  {
+                    "text": "html",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "text": ":host",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "base"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "font-family",
+                    "value": "var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\")",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\")"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-6",
+              "selectorList": {
+                "text": "html",
+                "selectors": [
+                  {
+                    "text": "html",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "base"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "font-family",
+                    "value": "var(--font-archivo), system-ui, sans-serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background",
+                    "value": "var(--color-paper)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--font-archivo), system-ui, sans-serif"
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)"
+                  },
+                  {
+                    "name": "background-color",
+                    "value": ""
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-2",
+              "selectorList": {
+                "text": ":root",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--font-archivo",
+                    "value": "Archivo-d7009d10e90b12ba,system-ui,-apple-system,\"Segoe UI\",Roboto,sans-serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--font-archivo",
+                    "value": "Archivo-d7009d10e90b12ba,system-ui,-apple-system,\"Segoe UI\",Roboto,sans-serif"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-4",
+              "selectorList": {
+                "text": ":root",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--font-newsreader",
+                    "value": "Newsreader-5026112b9dab194e,Georgia,\"Times New Roman\",serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--font-newsreader",
+                    "value": "Newsreader-5026112b9dab194e,Georgia,\"Times New Roman\",serif"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "painter": {
+    "matchedCSSRules": [
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-77146-6",
+          "selectorList": {
+            "text": ".bg-paper",
+            "selectors": [
+              {
+                "text": ".bg-paper",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "layers": [
+            {
+              "text": "utilities"
+            }
+          ],
+          "style": {
+            "cssProperties": [
+              {
+                "name": "background-color",
+                "value": "var(--color-paper)",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "background-color",
+                "value": "var(--color-paper)"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "inherited": [
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-6",
+              "selectorList": {
+                "text": "body",
+                "selectors": [
+                  {
+                    "text": "body",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "base"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "background",
+                    "value": "var(--color-paper)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": ""
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-6",
+              "selectorList": {
+                "text": ":root, :host",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "text": ":host",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "theme"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--font-sans",
+                    "value": "var(--font-archivo), system-ui, sans-serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--font-serif",
+                    "value": "var(--font-newsreader), Georgia, serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--default-font-family",
+                    "value": "var(--font-sans)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-paper",
+                    "value": "#f5f3ee",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--color-fg",
+                    "value": "#14171a",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--font-sans",
+                    "value": "var(--font-archivo), system-ui, sans-serif"
+                  },
+                  {
+                    "name": "--font-serif",
+                    "value": "var(--font-newsreader), Georgia, serif"
+                  },
+                  {
+                    "name": "--default-font-family",
+                    "value": "var(--font-sans)"
+                  },
+                  {
+                    "name": "--color-paper",
+                    "value": "#f5f3ee"
+                  },
+                  {
+                    "name": "--color-fg",
+                    "value": "#14171a"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-6",
+              "selectorList": {
+                "text": "html, :host",
+                "selectors": [
+                  {
+                    "text": "html",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "text": ":host",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "base"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "font-family",
+                    "value": "var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\")",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\")"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-6",
+              "selectorList": {
+                "text": "html",
+                "selectors": [
+                  {
+                    "text": "html",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "layers": [
+                {
+                  "text": "base"
+                }
+              ],
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "font-family",
+                    "value": "var(--font-archivo), system-ui, sans-serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background",
+                    "value": "var(--color-paper)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--font-archivo), system-ui, sans-serif"
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--color-fg)"
+                  },
+                  {
+                    "name": "background-color",
+                    "value": ""
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-2",
+              "selectorList": {
+                "text": ":root",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--font-archivo",
+                    "value": "Archivo-d7009d10e90b12ba,system-ui,-apple-system,\"Segoe UI\",Roboto,sans-serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--font-archivo",
+                    "value": "Archivo-d7009d10e90b12ba,system-ui,-apple-system,\"Segoe UI\",Roboto,sans-serif"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-77146-4",
+              "selectorList": {
+                "text": ":root",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--font-newsreader",
+                    "value": "Newsreader-5026112b9dab194e,Georgia,\"Times New Roman\",serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--font-newsreader",
+                    "value": "Newsreader-5026112b9dab194e,Georgia,\"Times New Roman\",serif"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "sheets": {
+    "style-sheet-77146-6": {
+      "styleSheetId": "style-sheet-77146-6",
+      "sourceURL": "http://benchemdash02.tracy.test:51710/_astro/NotFound.NMFWnc7f.css",
+      "origin": "regular",
+      "isInline": false,
+      "ownerNode": 15
+    },
+    "style-sheet-77146-2": {
+      "styleSheetId": "style-sheet-77146-2",
+      "sourceURL": "http://benchemdash02.tracy.test:51710/",
+      "origin": "regular",
+      "isInline": true,
+      "ownerNode": 11
+    },
+    "style-sheet-77146-4": {
+      "styleSheetId": "style-sheet-77146-4",
+      "sourceURL": "http://benchemdash02.tracy.test:51710/",
+      "origin": "regular",
+      "isInline": true,
+      "ownerNode": 13
+    }
+  }
+}

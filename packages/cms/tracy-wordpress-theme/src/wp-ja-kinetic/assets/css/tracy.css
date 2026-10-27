@@ -1,0 +1,484 @@
+/* tracy — component styles, written once against the WordPress variables that carry the 56
+ * OpenDesign tokens (--wp--preset--* from the palette / font / size / spacing presets,
+ * --wp--custom--* for the rest). No literal colours: the active style variation is the only
+ * source of every colour, font, size, radius and shadow. Structure lives in layout.css. */
+
+/* The same box model as the Joomla template and the section library's utilities assume: a
+   swatch of w-[9rem] h-[6rem] with padding is 9rem by 6rem, not 9rem plus padding. Lowest
+   specificity, so any block that sets its own box-sizing keeps it. */
+:where(.tracy) *,
+:where(.tracy) *::before,
+:where(.tracy) *::after {
+  box-sizing: border-box;
+}
+
+:where(.tracy) img,
+:where(.tracy) svg,
+:where(.tracy) video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* WordPress puts the root block gap between header, main and footer, and the flow gap between
+   main's children; the sections and page frames carry their own spacing. */
+.tracy .wp-site-blocks > * + *,
+.tracy .tracy-main > * + * {
+  margin-block-start: 0;
+}
+
+.tracy :focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+.tracy code,
+.tracy pre,
+.tracy kbd {
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--sm);
+}
+
+/* Type roles */
+
+.tracy-display {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--xxxxl);
+  line-height: var(--wp--custom--leading--tight);
+  letter-spacing: var(--wp--custom--tracking--display);
+  margin: 0 0 var(--wp--preset--spacing--5);
+}
+
+.tracy-eyebrow {
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--wp--preset--color--meta);
+  margin: 0 0 var(--wp--preset--spacing--3);
+}
+
+.tracy-eyebrow a {
+  text-decoration: none;
+}
+
+.tracy-lead {
+  font-size: var(--wp--preset--font-size--lg);
+  color: var(--wp--preset--color--fg-2);
+  max-width: 60ch;
+  margin: 0 0 var(--wp--preset--spacing--6);
+}
+
+.tracy-meta {
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--muted);
+  gap: var(--wp--preset--spacing--3);
+}
+
+.tracy-muted {
+  color: var(--wp--preset--color--muted);
+}
+
+/* Date · author, the way the Joomla layout separates them. */
+.tracy-meta > * + *::before {
+  content: '·';
+  margin-inline-end: var(--wp--preset--spacing--3);
+}
+
+/* Buttons: the core button block, in the design system's own shape */
+
+.tracy .wp-block-button__link {
+  border: 1px solid var(--wp--preset--color--accent);
+  border-radius: var(--wp--custom--radius--md);
+  padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--5);
+  font-weight: 600;
+  box-shadow: var(--wp--custom--elev--flat);
+  transition:
+    background var(--wp--custom--motion--base) var(--wp--custom--ease--standard),
+    box-shadow var(--wp--custom--motion--base) var(--wp--custom--ease--standard);
+}
+
+.tracy .wp-block-button__link:hover {
+  box-shadow: var(--wp--custom--elev--raised);
+}
+
+.tracy .wp-block-button.is-style-outline .wp-block-button__link,
+.tracy .tracy-btn--ghost .wp-block-button__link {
+  background: transparent;
+  color: var(--wp--preset--color--fg);
+  border-color: var(--wp--preset--color--border);
+}
+
+/* A plain .tracy-btn element (a <button> in the section library's contact form, a link outside
+   a button block): the same shape as the button block's link. The block's wrapper div carries
+   tracy-btn too, for its modifiers — excluded, or it would draw a second box around the link. */
+.tracy .tracy-btn:not(.wp-block-button) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--2);
+  padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--5);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--md);
+  background: var(--wp--preset--color--surface);
+  color: var(--wp--preset--color--fg);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--wp--custom--elev--flat);
+  transition:
+    background var(--wp--custom--motion--base) var(--wp--custom--ease--standard),
+    box-shadow var(--wp--custom--motion--base) var(--wp--custom--ease--standard),
+    transform var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy .tracy-btn:not(.wp-block-button):hover {
+  box-shadow: var(--wp--custom--elev--raised);
+}
+
+.tracy .tracy-btn:not(.wp-block-button):active {
+  transform: translateY(1px);
+}
+
+.tracy .tracy-btn--primary:not(.wp-block-button) {
+  background: var(--wp--preset--color--accent);
+  color: var(--wp--preset--color--accent-on);
+  border-color: var(--wp--preset--color--accent);
+}
+
+.tracy .tracy-btn--primary:not(.wp-block-button):hover {
+  background: var(--wp--preset--color--accent-hover);
+}
+
+.tracy .tracy-btn--primary:not(.wp-block-button):active {
+  background: var(--wp--preset--color--accent-active);
+}
+
+.tracy-actions {
+  gap: var(--wp--preset--spacing--3);
+}
+
+/* Header and navigation */
+
+.tracy-header {
+  background: var(--wp--preset--color--bg);
+  border-bottom: 1px solid var(--wp--preset--color--border-soft);
+}
+
+.tracy-header__inner {
+  max-width: var(--wp--custom--container--max);
+  margin-inline: auto;
+  min-height: calc(var(--wp--preset--spacing--12) + var(--wp--preset--spacing--4));
+  align-items: center;
+}
+
+.tracy-brand,
+.tracy-brand a {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--lg);
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: var(--wp--custom--tracking--display);
+}
+
+.tracy-nav .wp-block-navigation-item__content {
+  padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--3);
+  border-radius: var(--wp--custom--radius--sm);
+  color: var(--wp--preset--color--fg-2);
+  text-decoration: none;
+  transition: background var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+/* The page the visitor is on, marked the way the Joomla template marks it. */
+.tracy-nav .current-menu-item > .wp-block-navigation-item__content,
+.tracy-nav .current-menu-ancestor > .wp-block-navigation-item__content {
+  color: var(--wp--preset--color--fg);
+  box-shadow: inset 0 -2px 0 var(--wp--preset--color--accent);
+}
+
+.tracy-nav .wp-block-navigation-item__content:hover {
+  background: color-mix(in oklab, var(--wp--preset--color--accent), transparent 80%);
+  color: var(--wp--preset--color--fg);
+}
+
+/* The items sit as close as the Joomla menu's. The block's own flex gap is wider and is printed
+   in the page body, after this sheet, so the selector has to outrank it. */
+.tracy .tracy-nav.wp-block-navigation__container.wp-block-navigation,
+.tracy .tracy-nav .wp-block-navigation__container.wp-block-navigation {
+  gap: var(--wp--preset--spacing--1);
+}
+
+/* Hero (geometry per variant in layout.css) */
+
+.tracy-hero {
+  padding-block: var(--wp--custom--section-y--desktop);
+  background: var(--wp--preset--color--bg);
+}
+
+.tracy-hero__inner {
+  max-width: var(--wp--custom--container--max);
+  margin-inline: auto;
+  display: grid;
+  gap: var(--wp--preset--spacing--8);
+  align-items: center;
+}
+
+.tracy-hero__media {
+  margin: 0;
+}
+
+.tracy-hero__media img {
+  width: 100%;
+  border-radius: var(--wp--custom--radius--lg);
+  box-shadow: var(--wp--custom--elev--raised);
+}
+
+/* Cards and grid */
+
+.tracy-grid {
+  gap: var(--wp--preset--spacing--6);
+}
+
+.tracy-card {
+  background: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--wp--custom--radius--lg);
+  box-shadow: var(--wp--custom--elev--ring);
+  overflow: hidden;
+  transition: box-shadow var(--wp--custom--motion--base) var(--wp--custom--ease--standard);
+}
+
+.tracy-card:hover {
+  box-shadow: var(--wp--custom--elev--raised);
+}
+
+.tracy-card__media img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.tracy-card__body {
+  padding: var(--wp--preset--spacing--5);
+}
+
+.tracy-card__title {
+  font-size: var(--wp--preset--font-size--lg);
+  margin: 0 0 var(--wp--preset--spacing--2);
+}
+
+.tracy-card__title a {
+  text-decoration: none;
+}
+
+.tracy-card__text {
+  color: var(--wp--preset--color--fg-2);
+  font-size: var(--wp--preset--font-size--sm);
+  margin: 0;
+}
+
+.tracy-pagination {
+  margin-top: var(--wp--preset--spacing--8);
+  gap: var(--wp--preset--spacing--2);
+}
+
+/* Listing, article, pricing, sections */
+
+/* Gutters: the root has no padding (sections bleed and carry their own); the framed pages carry theirs here. */
+.tracy-listing,
+.tracy-article,
+.tracy-page,
+.tracy-pricing-page {
+  padding-block: var(--wp--custom--section-y--desktop);
+}
+
+/* The container: the same box on both themes and in the section library — the system's
+   container max, with its gutter inside that width (border-box), so chrome, page heads and
+   sections all start on the same line. */
+.tracy-container,
+.tracy-header__inner,
+.tracy-footer__inner,
+.tracy-hero__inner {
+  max-width: var(--wp--custom--container--max);
+  margin-inline: auto;
+  padding-inline: var(--wp--custom--container--gutter-desktop);
+}
+
+.tracy-listing__head,
+.tracy-page__head,
+.tracy-pricing-page__head {
+  margin-bottom: var(--wp--preset--spacing--8);
+}
+
+
+.tracy-article {
+  max-width: min(var(--wp--custom--container--max), 72ch);
+}
+
+.tracy-article__head {
+  margin-bottom: var(--wp--preset--spacing--8);
+}
+
+.tracy-article__title {
+  font-size: var(--wp--preset--font-size--xxxl);
+}
+
+.tracy-article__media {
+  margin: 0 0 var(--wp--preset--spacing--8);
+}
+
+.tracy-article__media img {
+  border-radius: var(--wp--custom--radius--lg);
+}
+
+/* Links are bare in chrome and sections; inside running text they are underlined, where nothing
+   else tells a link from a word. Same as the Joomla template. */
+.tracy-prose a:not([class]) {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--wp--preset--color--accent), transparent 30%);
+  text-underline-offset: 0.15em;
+}
+
+.tracy-prose > p:first-child {
+  font-size: var(--wp--preset--font-size--lg);
+  color: var(--wp--preset--color--fg-2);
+}
+
+.tracy-prose img {
+  border-radius: var(--wp--custom--radius--md);
+}
+
+.tracy-cta {
+  background: var(--wp--preset--color--accent);
+  color: var(--wp--preset--color--accent-on);
+  padding-block: var(--wp--custom--section-y--desktop);
+}
+
+.tracy-cta h2 {
+  color: inherit;
+}
+
+.tracy-cta .wp-block-button__link {
+  background: var(--wp--preset--color--accent-on);
+  color: var(--wp--preset--color--accent);
+  border-color: var(--wp--preset--color--accent-on);
+}
+
+.tracy-pricing table,
+table.tracy-pricing {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--wp--custom--radius--lg);
+  overflow: hidden;
+}
+
+.tracy-pricing th,
+.tracy-pricing td {
+  padding: var(--wp--preset--spacing--4) var(--wp--preset--spacing--5);
+  text-align: start;
+  border: 0;
+  border-bottom: 1px solid var(--wp--preset--color--border-soft);
+  vertical-align: top;
+}
+
+.tracy-pricing thead th {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--lg);
+}
+
+.tracy-pricing thead th small {
+  display: block;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--xs);
+  color: var(--wp--preset--color--muted);
+  margin-top: var(--wp--preset--spacing--1);
+}
+
+.tracy-pricing tbody th {
+  font-weight: 500;
+  color: var(--wp--preset--color--fg-2);
+}
+
+.tracy-pricing tr:last-child th,
+.tracy-pricing tr:last-child td {
+  border-bottom: 0;
+}
+
+.tracy-pricing .is-hot {
+  background: color-mix(in oklab, var(--wp--preset--color--accent), var(--wp--preset--color--surface) 85%);
+  box-shadow: inset 2px 0 0 var(--wp--preset--color--accent), inset -2px 0 0 var(--wp--preset--color--accent);
+}
+
+.tracy-pricing thead .is-hot {
+  box-shadow: inset 2px 2px 0 var(--wp--preset--color--accent), inset -2px 0 0 var(--wp--preset--color--accent);
+}
+
+/* Footer */
+
+.tracy-footer {
+  border-top: 1px solid var(--wp--preset--color--border-soft);
+  padding-block: var(--wp--preset--spacing--8);
+  color: var(--wp--preset--color--muted);
+  font-size: var(--wp--preset--font-size--sm);
+}
+
+.tracy-footer__inner {
+  max-width: var(--wp--custom--container--max);
+  margin-inline: auto;
+}
+
+.tracy-footer__brand,
+.tracy-footer__brand a {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.tracy-footer__note {
+  margin: 0;
+}
+
+/* Responsive tokens */
+
+@media (max-width: 1024px) {
+  .tracy-container,
+  .tracy-header__inner,
+  .tracy-footer__inner,
+  .tracy-hero__inner {
+    padding-inline: var(--wp--custom--container--gutter-tablet);
+  }
+
+  .tracy-hero,
+  .tracy-listing,
+  .tracy-article,
+  .tracy-pricing-page,
+  .tracy-cta {
+    padding-block: var(--wp--custom--section-y--tablet);
+  }
+}
+
+@media (max-width: 640px) {
+  .tracy-container,
+  .tracy-header__inner,
+  .tracy-footer__inner,
+  .tracy-hero__inner {
+    padding-inline: var(--wp--custom--container--gutter-phone);
+  }
+
+  .tracy-hero,
+  .tracy-listing,
+  .tracy-article,
+  .tracy-pricing-page,
+  .tracy-cta {
+    padding-block: var(--wp--custom--section-y--phone);
+  }
+
+  .tracy-display {
+    font-size: var(--wp--preset--font-size--xxxl);
+  }
+
+  .tracy-pricing {
+    overflow-x: auto;
+  }
+}

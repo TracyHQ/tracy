@@ -1,0 +1,84 @@
+{
+  "color": {
+    "inkwell-navy": {
+      "$value": "#1a2b3b",
+      "$type": "color",
+      "$description": "Inkwell Navy — Primary text, nav text, icon strokes, hairline borders — the structural graphite of every screen. Used as filled button background for primary actions to project institutional weight rather than enthusiasm"
+    },
+    "slate-600": {
+      "$value": "#314352",
+      "$type": "color",
+      "$description": "Slate 600 — Secondary borders and supporting text where Inkwell Navy is too heavy — outlines on cards, tertiary headings, subdued dividers"
+    },
+    "abyss": {
+      "$value": "#0d1726",
+      "$type": "color",
+      "$description": "Abyss — Dark code-block and terminal surfaces — deeper than Inkwell Navy so syntax highlighting reads with high voltage against the near-black"
+    },
+    "graphite": {
+      "$value": "#687887",
+      "$type": "color",
+      "$description": "Graphite — Muted helper text, inactive nav links, secondary button outlines — recedes so the navy headlines and mint accents can carry the hierarchy"
+    },
+    "steel": {
+      "$value": "#8995a1",
+      "$type": "color",
+      "$description": "Steel — Tertiary text and disabled-state borders — the quietest navy in the scale, used where information is supplementary"
+    },
+    "fog": {
+      "$value": "#edf0f2",
+      "$type": "color",
+      "$description": "Fog — Page canvas — the warm off-white that holds all content; section bands alternate with pure white to create quiet vertical rhythm"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, form inputs, nav background — the elevated layer that floats above Fog with minimal shadow"
+    },
+    "silver": {
+      "$value": "#caced2",
+      "$type": "color",
+      "$description": "Silver — Hairline dividers, input borders at rest, table separators — the thread that separates without announcing itself"
+    },
+    "mist": {
+      "$value": "#e1e5e9",
+      "$type": "color",
+      "$description": "Mist — Card edges and subtle surface tints where a second neutral step is needed between white and Fog"
+    },
+    "pewter": {
+      "$value": "#bdc2c8",
+      "$type": "color",
+      "$description": "Pewter — Body-level borders, subtle rule lines, the quietest non-white neutral"
+    },
+    "voltage": {
+      "$value": "#e4ff33",
+      "$type": "color",
+      "$description": "Voltage — Announcement bar, high-attention data highlights, occasional feature accent — the single chromatic punctuation that earns the eye's attention by being used sparingly. Never decorates, always signals"
+    },
+    "mint-signal": {
+      "$value": "#31f2bf",
+      "$type": "color",
+      "$description": "Mint Signal — Green outline accent for tags, dividers, and focused UI edges"
+    }
+  },
+  "font": {
+    "untitled-sans": {
+      "$value": "Untitled Sans",
+      "$type": "fontFamily",
+      "$description": "Primary interface and display typeface — custom geometric grotesque. Weight 400 runs the body and UI; weight 500 lifts subheadings; weight 700 anchors the wordmark. Negative letter-spacing (-0.04em at display sizes, -0.01em at body) tightens the grotesque into a dense, architectural feel — the closer the eye gets to a heading, the more the letters close ranks, producing a precise, financial-document quality."
+    },
+    "input-mono": {
+      "$value": "Input Mono",
+      "$type": "fontFamily",
+      "$description": "Code, API identifiers, numerical data, and inline technical labels. Alternates and stylistic sets ss01/ss02/ss12 are active — these micro-detailed glyph variants give the monospace a humanist, designed quality rather than a default-terminal feel, reinforcing that the product is engineered with intention."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://increase.com",
+      "siteName": "Increase",
+      "extractedAt": "2026-06-03T21:11:54.277Z",
+      "variant": "compact"
+    }
+  }
+}

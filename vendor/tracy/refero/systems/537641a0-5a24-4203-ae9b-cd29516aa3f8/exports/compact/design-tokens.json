@@ -1,0 +1,94 @@
+{
+  "color": {
+    "atoms-blue": {
+      "$value": "#4267ff",
+      "$type": "color",
+      "$description": "Atoms Blue — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "atoms-blue-deep": {
+      "$value": "#425ce1",
+      "$type": "color",
+      "$description": "Atoms Blue Deep — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "mac-red": {
+      "$value": "#ff5f56",
+      "$type": "color",
+      "$description": "Mac Red — Red supporting accent for decorative details and low-frequency emphasis"
+    },
+    "mac-yellow": {
+      "$value": "#ffbd2e",
+      "$type": "color",
+      "$description": "Mac Yellow — Decorative window-chrome dot on template preview thumbnails"
+    },
+    "mac-green": {
+      "$value": "#27c93f",
+      "$type": "color",
+      "$description": "Mac Green — Decorative window-chrome dot on template preview thumbnails"
+    },
+    "canvas-mist": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Canvas Mist — Page-level background, hairline dividers, icon strokes — the dominant neutral that defines the system's floor"
+    },
+    "surface-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface White — Card backgrounds, input fields, elevated surfaces — the top layer of the surface stack"
+    },
+    "surface-fog": {
+      "$value": "#f6f6f6",
+      "$type": "color",
+      "$description": "Surface Fog — Subtle recessed surfaces, secondary card backgrounds, image overlays"
+    },
+    "ink-black": {
+      "$value": "#0d0d0d",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, heading text, icon fills, input borders — near-black rather than pure black for less harshness"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Maximum-contrast text, dark template preview surfaces, image elements requiring true black"
+    },
+    "charcoal": {
+      "$value": "#3c3c3c",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text, badge labels, muted icon fills — sits between Ink Black and the mid-grays"
+    },
+    "mid-gray": {
+      "$value": "#767676",
+      "$type": "color",
+      "$description": "Mid Gray — Tertiary text, placeholder text, disabled button labels, input helper text"
+    },
+    "silver": {
+      "$value": "#b0b0b0",
+      "$type": "color",
+      "$description": "Silver — Muted icon fills, decorative text, low-emphasis UI marks"
+    },
+    "border-gray": {
+      "$value": "#d1d1d1",
+      "$type": "color",
+      "$description": "Border Gray — Subtle borders and dividers where Canvas Mist feels too prominent"
+    }
+  },
+  "font": {
+    "ibm-plex-sans": {
+      "$value": "IBM Plex Sans",
+      "$type": "fontFamily",
+      "$description": "The workhorse — body, buttons, nav, cards, badges, inputs, small headings. Plex Sans brings a technical, slightly geometric quality that reads as 'builder tool' rather than 'marketing page.' 400 for body, 500 for nav and button labels, 600 for card titles and section headings."
+    },
+    "ibm-plex-serif": {
+      "$value": "IBM Plex Serif",
+      "$type": "fontFamily",
+      "$description": "The hero headline voice — used at 48px/600 exactly once on the page. A serif on a dev-tool site is anti-convention; it gives the main promise editorial weight while the rest of the UI stays in the sans-serif workshop tone. This single serif moment is the brand's typographic signature."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://atoms.dev",
+      "siteName": "Atoms",
+      "extractedAt": "2026-06-03T18:28:58.687Z",
+      "variant": "compact"
+    }
+  }
+}

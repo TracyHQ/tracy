@@ -1,0 +1,54 @@
+{
+  "id": "REG-PR-1403-backup-pending",
+  "kind": "fix",
+  "title": "A backup still being made when the door's wait runs out answers 202 and is said as still being made, a second press starts no second backup, and a failed backups read is said instead of an empty list",
+  "pr": 1403,
+  "area": "site-changes/backup-pending",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: POST /api/sites/:key/backup on a WordPress, a Joomla and an EmDash site whose host job is still running when the two-minute wait ends; press again while the host still says running.",
+    "S2: POST /backup when an older webroot-backup row says running but the host says done; and when the host fails the job.",
+    "S3: Classify Create a backup answers: 202, no answer, a proxy's 504, an unreadable answer, FLEET_JOB_FAILED, 4xx, 429.",
+    "S4: In the Site changes tab (browser fixture): press Create backup against 202, against a 504, against FLEET_JOB_FAILED; Restore everything against a failed operation; open the tab while /backups answers 502, and while it answers 404."
+  ],
+  "expect": [
+    "S1: 202 {code: BACKUP_PENDING} both times, one host job filed, no site.backup audit row.",
+    "S2: a new backup is made (200, version 4) and the old row reads done; a failed job is still 502 FLEET_JOB_FAILED.",
+    "S3: pending, unconfirmed, unconfirmed, unconfirmed, failed, failed, rate-limited.",
+    "S4: [data-backup-outcome=pending] \"Still making the backup\"; [data-backup-outcome=unconfirmed] \"Result not confirmed yet\"; neither says \"Nothing on the site was changed\", the host failure does; Restore everything failed reads \"The restore did not go through\"; [data-backups-failed] above the list on 502, nothing on 404."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/{route.js,store.js}, packages/core/tracy-core/src/site-tabs/{backup-list.ts,BackupDialogs.tsx,ChangesView.tsx}",
+    "dom": "[data-backup-outcome], [data-backups-failed], [data-refusal=\"failed\"]"
+  },
+  "evidence": "Plan #1403 item 9 (code read 16/10/2026): runSiteJob returns pending:true at the 120 s deadline but the door answered 502 FLEET_JOB_FAILED reason timeout; the dialog read it as \"The backup could not be made. Nothing on the site was changed.\" while the host went on, so a second press made a second backup; Restore everything showed the files undo's \"The undo did not go through\"; a failed /backups read drew the list with no backup at all, the Initial backup included",
+  "fence": "One backup at a time per site, checked against the host; only a refusal says nothing was made",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=300000",
+      "apps/tracy-web/test/sites-route.test.mjs",
+      "packages/core/tracy-core/test/backup-list.test.mjs",
+      "packages/site/tracy-site-tabs/test/e2e/changes-v2.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "POST /api/sites/:key/backup (wordpress): still being made at the deadline is 202 BACKUP_PENDING with no audit row, and a second press starts no second backup",
+      "POST /api/sites/:key/backup (joomla): still being made at the deadline is 202 BACKUP_PENDING with no audit row, and a second press starts no second backup",
+      "POST /api/sites/:key/backup (emdash): still being made at the deadline is 202 BACKUP_PENDING with no audit row, and a second press starts no second backup",
+      "POST /api/sites/:key/backup: once the host ended the backup that held the door, the next press makes a new one",
+      "POST /api/sites/:key/backup: a host that failed the backup is still a 502 FLEET_JOB_FAILED",
+      "Create a backup: only a refusal is \"failed\"; a 202, a lost answer or an unreadable one may still end in a backup",
+      "Create a backup still being made (202): says so, never \"Nothing on the site was changed\"; the list watches for it",
+      "Create a backup with no answer that proves anything (a proxy’s 504): not confirmed, never \"Nothing was changed\"",
+      "Create a backup the host failed: \"could not be made\", the dialog stays",
+      "Restore everything failed on the host: its own words, not the undo’s",
+      "the backups could not be read: the list says so above everything, instead of showing a site with no backup",
+      "no backups door (404): no milestones and nothing said, as before"
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+	"lexicon": 1,
+	"id": "com.emdashcms.experimental.aggregator.resolvePackage",
+	"description": "Resolve a (handle, slug) pair to its canonical (did, slug) identity and return the package view. EXPERIMENTAL.",
+	"defs": {
+		"main": {
+			"type": "query",
+			"description": "Convenience endpoint that combines bidirectionally verified handle-to-DID resolution with a package lookup. Useful when the user-facing identifier is `@example.dev/gallery-plugin` rather than a DID. The aggregator maintains a short-lived handle projection and refreshes stale identities in the background.",
+			"parameters": {
+				"type": "params",
+				"required": ["handle", "slug"],
+				"properties": {
+					"handle": {
+						"type": "string",
+						"format": "handle",
+						"description": "Publisher's handle (e.g. 'example.dev')."
+					},
+					"slug": {
+						"type": "string",
+						"description": "Package slug.",
+						"minLength": 1,
+						"maxLength": 64
+					}
+				}
+			},
+			"output": {
+				"encoding": "application/json",
+				"schema": {
+					"type": "ref",
+					"ref": "com.emdashcms.experimental.aggregator.defs#packageView"
+				}
+			},
+			"errors": [
+				{
+					"name": "HandleNotFound",
+					"description": "The handle could not be resolved to a DID."
+				},
+				{
+					"name": "NotFound",
+					"description": "No package indexed under the resolved (did, slug)."
+				},
+				{
+					"name": "ListingUnavailable",
+					"description": "The resolved package is indexed but has no profile revision available under the aggregator's listing policy. No publisher-controlled content is returned."
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "be5cf0d7-fc29-4b7f-bf86-f87185b122fc",
+  "status": "complete",
+  "name": "Monotype.",
+  "url": "https://styles.refero.design/style/be5cf0d7-fc29-4b7f-bf86-f87185b122fc",
+  "sourceWebsite": "https://variable-fonts.com",
+  "extractedAt": "2026-06-03T20:23:34.786Z",
+  "capturedAt": "2026-10-08T05:16:55.604717+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Curated typography showcase on paper. Monotype's interface behaves like a gallery wall: white surfaces, hairline dividers, generous whitespace, and type itself as the only ornament.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/213d0c2b-4bf7-4649-926e-7b4467553d06.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "df0882d0e92eda4f8c012dd3f1aa0d3b002250765f1a283854ef5f2d481eec82",
+      "bytes": 18224
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "771ff245d51067bd7f015057d84624c0e319ba5e745b840d45970d9bab7b0d83",
+      "bytes": 118438
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c866810bad8c7fa869c7c5dbb79da0276814f2064342d291869780b902d07551",
+      "bytes": 14567
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "25df8fb38ba1d0348cdea74c42e366060b4cfb916823166e2ac89b1f4315a5eb",
+      "bytes": 11611
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "587baf06c6a9cf96e48f175a6390a651ba7eefaaafafdfb2aa8255de944ecbcc",
+      "bytes": 10796
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "93d5762afd3faa5ab18f9e89a91a5aeacddad5a25210159ca0a34df4f8b99ca5",
+      "bytes": 3416
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "cd8dc91e180c70bc6b703f956ad280be47aeafab4b5b891d4cf5eb301798eb42",
+      "bytes": 1141
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "005b9b29b276eaf651b626918849abee0d25aca35a5346e00086054720464147",
+      "bytes": 1158
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "1003e2d0f16cbd6fa9d5755ce3fb37d5ddaa1f3a0be8eb3ab718b61184695afa",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "90e70ff42cd4b74647d5dcf4273ec6b0203d2b92ace4669eacbeede688cfb9f1",
+      "bytes": 40660
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9e05020ccaf1389757d66e2d112b7525128d5d05766a2961ff23a2401195ae30",
+      "bytes": 21253
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "35d08263198ed6883a0bfdbe3a5b5ba0b2cf4ce819be2910e4f016c4da01feb4",
+      "bytes": 42503
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a8f2067ea62c4560a637a074b2d0d9c2d5dd914ade3d317f5e5e59d1105a3255",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ad5fca75f4889a0a2169672322f5cffebe3a369f1f4d34ccad158840975d36e6",
+      "bytes": 1753
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c3bd025612c631b483eb38a2e97990b9cc00b2671656a3f768b1458e889674d2",
+      "bytes": 2253
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "134cfb76-12e0-4e2e-9995-5a1617190c56",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "348c83bc-bed3-4562-841a-26a30ee19a9b",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "47b15ce2-34c8-46e3-b2de-f7eed0b6a3b9",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "86de6781-d22b-4879-90df-44acb1fe20f3",
+    "94c4fc51-4323-4f06-a4a4-27517e190445",
+    "9afa0254-423b-4354-a852-8894c33d2e6b",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "be5cf0d7-fc29-4b7f-bf86-f87185b122fc",
+    "c521be99-14af-4d57-8f8f-34c76c9ade61",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318"
+  ]
+}

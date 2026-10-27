@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-soprano-white: #ffffff;
+  --color-studio-mist: #f8f8f8;
+  --color-warm-porcelain: #f1efee;
+  --color-bass-black: #131317;
+  --color-countertenor-gray: #b4bec7;
+  --color-steel-gray: #949494;
+  --color-charcoal-helper: #40464b;
+  --color-pure-black: #000000;
+  --color-quiet-placeholder: #545454;
+  --color-chord-blue: #005bff;
+
+  /* Typography — Font Families */
+  --font-bose-headline: 'Bose Headline', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-bose-text: 'Bose Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

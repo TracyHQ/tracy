@@ -1,0 +1,79 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, footer, white cards, upload controls, and outlined public controls"
+    },
+    "air-wash": {
+      "$value": "#effbff",
+      "$type": "color",
+      "$description": "Air Wash — Pale editor surfaces, soft feature-media cards, and quiet selected-control fills"
+    },
+    "mist-border": {
+      "$value": "#e8eff2",
+      "$type": "color",
+      "$description": "Mist Border — Low-contrast section rules, upload-zone boundaries, and recessed editor framing"
+    },
+    "steel-inset": {
+      "$value": "#d0d6d7",
+      "$type": "color",
+      "$description": "Steel Inset — Fine outlined-control borders and 0.5px inset outlines"
+    },
+    "ash-copy": {
+      "$value": "#7e8486",
+      "$type": "color",
+      "$description": "Ash Copy — Supporting paragraphs, legal text, secondary links, and muted metadata"
+    },
+    "graphite-copy": {
+      "$value": "#434647",
+      "$type": "color",
+      "$description": "Graphite Copy — Secondary headings, inline links, and medium-emphasis explanatory text"
+    },
+    "editorial-ink": {
+      "$value": "#2a2c2d",
+      "$type": "color",
+      "$description": "Editorial Ink — Exposure display headlines, compact editor labels, and hero text"
+    },
+    "charcoal": {
+      "$value": "#1d1f20",
+      "$type": "color",
+      "$description": "Charcoal — Navigation text, body copy, dark filled controls, icon strokes, and strong borders"
+    },
+    "prism-cyan": {
+      "$value": "#00d0ff",
+      "$type": "color",
+      "$description": "Prism Cyan — Selected in-product tool labels and small editor icon details — a cool digital cue inside otherwise monochrome controls"
+    },
+    "sky-fade": {
+      "$value": "#a6ecff",
+      "$type": "color",
+      "$description": "Sky Fade — Feature-panel atmosphere and pale blue visual transitions"
+    },
+    "cyan-halo": {
+      "$value": "#ccf6ff",
+      "$type": "color",
+      "$description": "Cyan Halo — Subtle Prism Cyan control halo and selected-tool inset accent"
+    }
+  },
+  "font": {
+    "exposure-09cb373df0d2138c": {
+      "$value": "Exposure-09cb373df0d2138c",
+      "$type": "fontFamily",
+      "$description": "Display and section headlines. The 48px headings use -0.48px tracking; their broad, editorial forms make the product proposition feel typeset rather than software-standard."
+    },
+    "denimink-fc4757ccf169d42a": {
+      "$value": "DenimINK-fc4757ccf169d42a",
+      "$type": "fontFamily",
+      "$description": "Navigation, buttons, body copy, FAQs, labels, and feature titles. Its restrained 400-weight controls and lightly spaced 13–14px utility text make the editing interface feel like a toolset rather than a campaign page."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://captions.ai",
+      "siteName": "Captions",
+      "extractedAt": "2026-09-24T17:33:54.842Z",
+      "variant": "compact"
+    }
+  }
+}

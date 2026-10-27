@@ -1,0 +1,70 @@
+{
+  "id": "REG-PR-1088-desktop-help-about",
+  "kind": "feat",
+  "title": "Settings › Help & about shows the server build, the desktop app's update state with Later/Restart/automatic-check switch, What's new as plain text and links per language, over an IPC bridge only the product top frame may use",
+  "pr": 1088,
+  "area": "settings/help-about",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the update-state reducer, preferences store, updater (fake clock) and update bridge suites of packages/desktop/tracy-desktop.",
+    "S2: Run the Help & about render and model suite of packages/ui/tracy-settings.",
+    "S3: Run the GET /api/build door suite of apps/tracy-web."
+  ],
+  "expect": [
+    "S1: a fresh updater is idle (never 'up to date'); Later keeps the version downloaded; a refusal after Restart is install-error, not a network error; release notes lose CR, control and bidi characters and HTML tags and are capped at 20000; the menu, page and timer share one check; switching automatic checks off cancels the start-up, 4-hour and backoff timers and a running check schedules nothing, on again gives exactly one early check, a save that fails changes nothing; the dmg address must stay on the feed origin; the bridge refuses a subframe, another window and another origin, takes only a boolean for the switch, coalesces a burst of checks and sends the listed DTO fields only.",
+    "S2: the web shows the honest update line and no switch; an app from before the bridge shows its version and asks for an update; each update state draws its line and only its buttons; What's new shows only for a waiting version with notes, as escaped text in a scrollable region; links follow the interface language and open a new tab with noopener noreferrer; Help & about sits last with a dot from a badge source the nav follows while another section is open, though dsh drops extra registration options; ?settings=help opens it.",
+    "S3: a signed-in person reads the full commit and build time with no-store; signed out is 401 NOT_SIGNED_IN; a missing or malformed value is null."
+  ],
+  "selectors": {
+    "door": "GET /api/build",
+    "bridge": "window.tracyDesktop.app (packages/desktop/tracy-desktop/src/update-bridge.js, shell/preload.ts)",
+    "section": ".ts-help, .ts-help-status, .ts-help-actions, .ts-help-notes-box, .ts-nav-badge"
+  },
+  "evidence": "tasks/evidence/desktop-help-about/ (real Electron IPC guard 20/20, stand screenshots, packaged app 0.3.0-dev.900 → 901 29/29)",
+  "fence": "Deterministic in-process suites: the update state machine, the switch and schedule on a fake clock, the IPC guard against stand-in frames, the section rendered to markup, the build door. The real Electron frames, the stand and the packaged app run are recorded once in the evidence folder; they need a display, a stand and self-signed signing.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/desktop/tracy-desktop/test/update-state.test.mjs",
+      "packages/desktop/tracy-desktop/test/preferences.test.mjs",
+      "packages/desktop/tracy-desktop/test/updater.test.mjs",
+      "packages/desktop/tracy-desktop/test/update-bridge.test.mjs",
+      "packages/ui/tracy-settings/test/help-about.test.mjs",
+      "apps/tracy-web/test/build-info-door.test.mjs"
+    ],
+    "timeout_s": 180,
+    "tests": [
+      "a fresh updater has not checked yet",
+      "Later only postpones",
+      "Restart installs only a downloaded version; a refusal after it is an install error",
+      "release notes are capped before they cross IPC",
+      "one check at a time: the menu, the page and the timer share the one that runs",
+      "switching automatic checks off cancels the start-up, the 4-hour and the backoff timers",
+      "a check already running when the switch goes off finishes, and schedules nothing after it",
+      "switching it back on brings exactly one early check",
+      "a switch that could not be saved says so and changes nothing",
+      "the dmg address must stay on the feed",
+      "a subframe, another window, or the page after it left the origin is refused",
+      "the switch takes a boolean and nothing else",
+      "a burst of check requests starts one check",
+      "what crosses IPC is the listed fields only",
+      "a write that cannot land rejects",
+      "on the web: the server build, the honest update line",
+      "an app from before the bridge shows its version",
+      "app, downloaded: the status line and its buttons",
+      "app, install-error: the status line and its buttons",
+      "What’s new shows only with a waiting version and notes",
+      "five help links and two legal links, localized",
+      "Help & about sits last, under no heading",
+      "the nav follows a badge source while the section is not open",
+      "?settings=help opens Help & about",
+      "a signed-in person reads the full commit and the build time",
+      "nobody signed in: 401",
+      "a value missing or not of its shape answers null"
+    ]
+  }
+}

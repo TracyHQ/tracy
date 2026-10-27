@@ -1,0 +1,59 @@
+{
+  "id": "REG-PR-1456-wo-demo-retention",
+  "kind": "feat",
+  "title": "An unused Website Opportunities demo freezes after its term, is torn down through the site's own delete after the grace, and Extend/Reopen/Rebuild and the Demo column follow it",
+  "pr": 1456,
+  "area": "website-opportunities/demo-retention",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL set: node --test apps/tracy-web/test/website-opportunities-demo-retention.test.mjs apps/tracy-web/test/website-opportunities-doors.test.mjs apps/tracy-web/test/ops-wo.test.mjs apps/tracy-web/test/site-publish.test.mjs packages/ui/tracy-wo-views/test/demo.test.mjs packages/ui/tracy-wo-views/test/place-card-demo.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "A demo whose demo_expires_at passed is frozen by the sweep; one frozen longer than demoFreezeGraceDays goes through teardownSiteAs and gets demo_deleted_at only once its site row is gone; the build row, revision and opportunity stay.",
+    "Over demoMaxPerAccount / demoMaxPerHost / demoDiskHighWaterPct the least recently touched live demos are frozen, never deleted; a sweep does at most demoSweepBatch operations; a second instance holding the advisory lock makes the run answer {ran:false, reason:'busy'}; demoRetentionEnabled false changes nothing.",
+    "PUT /api/ops/wo/settings with a demo key out of range answers 400 INVALID_DEMO_RETENTION; a save of some keys keeps the others.",
+    "POST /api/website-opportunities/:id/demo/reopen thaws a frozen demo (409 DEMO_NOT_FROZEN on a live one); /extend pushes a live one (409 DEMO_FROZEN on a frozen one); /rebuild answers 409 DEMO_NOT_DELETED until deleted, then builds the same revision once per requestId; hand-off of a frozen demo answers 409 DEMO_FROZEN.",
+    "The Demo column's countdown: > 3 days calm, ≤ 3 days soon with Extend, < 24 hours urgent in hours with Extend; frozen shows days until deletion; deleted shows Rebuild.",
+    "Stand wo2 fixes: the website-opportunities switch off stops the sweep ({ran:false, reason:\"switch-off\"}); a deleted demo has wo_build.state \"deleted\", is not stage \"demo\", and Rebuild takes it; the grid card shows the Demo line after Website; a demo just built on a 14-day term says 14 days left."
+  ],
+  "selectors": {
+    "module": "apps/tracy-web/src/opportunities/demo-retention.js",
+    "doors": "POST /api/website-opportunities/:id/demo/{reopen,extend,rebuild}, GET /api/ops/wo/demos/summary",
+    "view": "packages/ui/tracy-wo-views/src/demo.ts demoView"
+  },
+  "fence": "sweepDemos under pg_try_advisory_lock(DEMO_RETENTION_LOCK_ID); deletion only through the site delete operation (teardownSiteAs); the demo doors' state refusals",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-demo-retention.test.mjs",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs",
+      "apps/tracy-web/test/ops-wo.test.mjs",
+      "apps/tracy-web/test/site-publish.test.mjs",
+      "packages/ui/tracy-wo-views/test/demo.test.mjs",
+      "packages/ui/tracy-wo-views/test/place-card-demo.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the sweep freezes demos whose term ran out",
+      "a demo frozen past the grace goes through the teardown",
+      "over demoMaxPerAccount the coldest live demos",
+      "a second instance finds the sweep taken",
+      "switched off, the sweep changes nothing",
+      "demo retention settings: documented defaults",
+      "reopen thaws a frozen demo; extend pushes a live one",
+      "rebuild makes a new demo from the old revision",
+      "teardownSiteAs (the demo sweep)",
+      "3 days or less: soon, with Extend",
+      "switch off: the demo retention tick freezes nothing",
+      "a deleted demo is not \"Demo built\"",
+      "a grid card draws the Demo line right after Website",
+      "a demo just built with a 14-day term says 14 days left"
+    ]
+  }
+}

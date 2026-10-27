@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4fa67bd1-f01d-454a-b522-4a0359ff9815",
+  "status": "complete",
+  "name": "Shop",
+  "url": "https://styles.refero.design/style/4fa67bd1-f01d-454a-b522-4a0359ff9815",
+  "sourceWebsite": "https://shop.app",
+  "extractedAt": "2026-07-03T03:29:39.498Z",
+  "capturedAt": "2026-10-08T05:11:30.154752+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Floating shopping constellation on white marble",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7c8f5784-e1ca-4cdd-9b3b-802e5f9fc166.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/7b4e3209-f303-4b00-9c45-a15af3602309.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/edca446a-36c3-4176-930c-cc17eb941808.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f75a7135-78a7-41da-a0ac-c5f94c49d3a9.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/9510f0eb-3e68-480a-8a89-0ed57eba517d.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a3de63fa3b13cec082dd908d9d9f33b796fc8edcb6c6e1d562ef65fc7c070595",
+      "bytes": 22761
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2338c50086557bdfed8f432d9c6a27f4493335225fe240bec8d3c96c3796e057",
+      "bytes": 130958
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b6b5e636992bf3e9957e8c8a153df326dec02293386fe0742c7103402a164d09",
+      "bytes": 19433
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "45b710932f9e873de28f50eda6a9c0e4f8d9b0744ee320cc5d6b9e44ee741e03",
+      "bytes": 11676
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8b38561bfd460913db6edc61ca55f918ab64516c140787cee58dc901782317c2",
+      "bytes": 13389
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f0c132897b80b186873cc0027360b90dcdd494ebdccf8c9ca28b7a08c4d340ed",
+      "bytes": 3193
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "6981fefe5163bb8824564af49a12fedde9b7cea326f8dd98d7b8e326b34a6ad2",
+      "bytes": 647
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "bdc6362a7c77ce0415eeb77070c6f31adcb216c8efe3aab1d6af4a861fe4a476",
+      "bytes": 664
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "256bb28564d9bef46e5d1cac4c440954eb3c44c73a7403b3aee280f58841b67e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "25cc1cfd984cebe4e4e1d0fba7ffa096d2fae4e30a7b0e9499c05fc94e579566",
+      "bytes": 48318
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "122864eb33d142075d1baae8716f15477efd020dcfcc475e9036c0550850e81b",
+      "bytes": 26340
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9829bb49f0492174b935f8c5277bdf1bc7dc9ea5299b73bf9c9f53885968f6dd",
+      "bytes": 79975
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7e3888fbf99edc4797117f651c9ee3225bbb2f3b2fd1e6c1ea52ad3afd8229fb",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "66c899bc718b71dcd4749fc52d703334d3cf7854ba099c1a0a5114fc36df67a6",
+      "bytes": 1706
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "dc4443ab22ca1d0b8f3cb243f4adf8189377319f7c24cf2b4f963d6e45908ae3",
+      "bytes": 2258
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "0231caf5-0347-4f2d-ba20-5bab8fcaf2ce",
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "17824ea8-ac7d-42ca-97e2-9bf92ebea7e1",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "3c605c8e-daf2-4d46-94d7-2cb705a93b7b",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "4fa67bd1-f01d-454a-b522-4a0359ff9815",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "6fb648be-cc69-4a84-a798-9f0f006922a0",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "d7096101-d33c-43b8-8b0b-d9dfff802db2",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f212ff99-24fa-4646-a0f2-46a815736ecd",
+    "fa157687-ee42-443e-a992-5f8a3fcdd48f"
+  ]
+}

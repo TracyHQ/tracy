@@ -1,0 +1,36 @@
+---
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  eyebrow?: string
+  title?: string
+  lead?: string
+  align?: 'center' | 'left'
+  as?: 'h1' | 'h2'
+  class?: string
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: { eyebrow?: string; title?: string; lead?: string }
+}
+const {
+  eyebrow,
+  title,
+  lead,
+  align = 'center',
+  as: Tag = 'h2',
+  class: className = '',
+  stamp,
+  fields
+} = Astro.props
+const none = {}
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+---
+
+<div class:list={["section-head", align === "left" && "section-head--left", className]}>
+	{eyebrow && <span class="eyebrow" {...at("eyebrow")}>{eyebrow}</span>}
+	{title && <Tag class="h-section mb-3" {...at("title")}>{title}</Tag>}
+	{lead && <p class="lead" {...at("lead")}>{lead}</p>}
+</div>

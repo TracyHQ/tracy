@@ -1,0 +1,77 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"tracy-header","area":"header"} /-->
+<!-- wp:group {"tagName":"main","className":"tracy-main tracy-listing","layout":{"type":"default"}} -->
+<main class="wp-block-group tracy-main tracy-listing">
+<!-- wp:group {"className":"tracy-crumbs","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-crumbs">
+<!-- wp:group {"className":"tracy-container","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-container">
+<!-- wp:breadcrumbs {"prefersTaxonomy":true,"showHomeItem":true,"showCurrentItem":true,"separator":"/"} /-->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"tracy-container","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-container">
+<!-- wp:query {"queryId":1,"query":{"perPage":8,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"className":"tracy-query tracy-news","layout":{"type":"default"}} -->
+<div class="wp-block-query tracy-query tracy-news">
+<!-- wp:group {"className":"tracy-listing__head","layout":{"type":"default"}} -->
+<div class="wp-block-group tracy-listing__head">
+<!-- wp:query-title {"type":"archive","level":1,"className":"tracy-display","showPrefix":false} /-->
+<!-- wp:group {"className":"tracy-listing__intro","layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"bottom","flexWrap":"wrap"}} -->
+<div class="wp-block-group tracy-listing__intro">
+<!-- wp:term-description {"className":"tracy-lead"} /-->
+<!-- wp:query-total {"displayType":"total-results","className":"tracy-listing__count tracy-listing__intro-count"} /-->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"className":"tracy-chips-row","layout":{"type":"flex","flexWrap":"wrap"}} -->
+<div class="wp-block-group tracy-chips-row">
+<!-- wp:pattern {"slug":"wp-tracy-business/news-chip-all"} /-->
+<!-- wp:categories {"className":"tracy-chips","showOnlyTopLevel":true} /-->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+<!-- wp:columns {"className":"tracy-split tracy-split--listing","style":{"spacing":{"blockGap":{"left":"3.5rem"}}}} -->
+<div class="wp-block-columns tracy-split tracy-split--listing">
+<!-- wp:column {"className":"tracy-split__main"} -->
+<div class="wp-block-column tracy-split__main">
+<!-- wp:post-template {"className":"tracy-news__grid tracy-news__grid--2","layout":{"type":"grid","columnCount":2}} -->
+<!-- wp:group {"tagName":"article","className":"tracy-news-card","layout":{"type":"default"}} -->
+<article class="wp-block-group tracy-news-card">
+<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"16/9","className":"tracy-news-card__media"} /-->
+<!-- wp:post-terms {"term":"category","className":"tracy-news-card__eyebrow"} /-->
+<!-- wp:post-title {"level":3,"isLink":true,"className":"tracy-news-card__title"} /-->
+<!-- wp:post-excerpt {"excerptLength":22,"className":"tracy-news-card__text"} /-->
+<!-- wp:post-date {"format":"j M Y","className":"tracy-news-card__date"} /-->
+</article>
+<!-- /wp:group -->
+<!-- /wp:post-template -->
+<!-- wp:query-no-results -->
+<!-- wp:pattern {"slug":"wp-tracy-business/empty-listing"} /-->
+<!-- /wp:query-no-results -->
+<!-- wp:group {"className":"tracy-listing__foot","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
+<div class="wp-block-group tracy-listing__foot">
+<!-- wp:query-pagination {"className":"tracy-pagination","layout":{"type":"flex"}} -->
+<!-- wp:query-pagination-previous /-->
+<!-- wp:query-pagination-numbers /-->
+<!-- wp:query-pagination-next /-->
+<!-- /wp:query-pagination -->
+<!-- wp:query-total {"displayType":"range-display","className":"tracy-listing__count"} /-->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:column -->
+<!-- wp:column {"width":"340px","className":"tracy-split__aside"} -->
+<div class="wp-block-column tracy-split__aside" style="flex-basis:340px">
+<!-- wp:template-part {"slug":"sidebar-news","tagName":"aside","className":"tracy-aside","area":"uncategorized"} /-->
+</div>
+<!-- /wp:column -->
+</div>
+<!-- /wp:columns -->
+</div>
+<!-- /wp:query -->
+</div>
+<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"tracy-footer","area":"footer"} /-->

@@ -1,0 +1,29 @@
+/* wp-ja-restaurant: acm/teams/css/style.css of the JA Restaurant 1.0.6 Joomla template (GPL v3, JoomlArt), carried rule for rule by tasks/ja-restaurant-wp7/tools/port-css.mjs (DECISIONS D-10). Colours read light-dark(<source>, <derived dark, D-03>); do not edit by hand, re-run the tool. */
+.acm-teams .team-items .row {
+  margin-top: 50px;
+}
+@media (max-width: 767px) {
+  .acm-teams .team-items .row .col-sm-6 + .col-sm-6 {
+    margin-top: 30px;
+  }
+}
+.acm-teams .team-items img {
+  max-width: 100%;
+}
+.acm-teams .team-items .item {
+  background: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+  padding: 50px;
+  text-align: center;
+}
+@media (max-width: 767px) {
+  .acm-teams .team-items .item {
+    padding: 30px;
+  }
+}
+.acm-teams .team-items .item h2 {
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+.acm-teams .team-items .item .member-title {
+  color: var(--ds-c-muted, light-dark(#555555, #b5ad9e));
+}

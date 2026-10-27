@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-canvas-white: #ffffff;
+  --color-wordmark-black: #000000;
+  --color-vermillion-frame: #e21715;
+  --color-cobalt-frame: #086392;
+  --color-marigold-frame: #f2572c;
+  --color-fern-frame: #5bc52c;
+  --color-brass-frame: #b3813c;
+  --color-signal-red: #f11216;
+  --color-cyan-blue: #2e99c9;
+
+  /* Typography */
+  --font-helvetica: 'Helvetica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

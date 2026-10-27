@@ -1,0 +1,95 @@
+{
+  "id": "QA-UNIT-REG-PR-1698-pd-builder-happy",
+  "itemIds": ["regression:REG-PR-1698-pd-builder"],
+  "requirement": "The open repo's tracy builder connects to a Tracy account with the OAuth device flow and builds a demo with one press, without a second demo after a timeout",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1698-pd-builder.json",
+    "ref": "PR #1698 (feat); fix evidence: Before: builders/tracy.js was a planned stub that threw BUILDER_PLANNED; the place page only linked to tracy.ai",
+    "invariant": "S1: the page sees the user code and link but never a token or device code; slow_down adds 5 s before the next poll; denied and expired end with error access_denied / expired_token; the token file has mode 0600. S2: exactly one refresh for the five calls, the rotated pair written before use; revoked → state reconnect with no token kept; disconnect posts the refresh token to /oauth/revoke and deletes the file. S3: the request body is website-opportunities/demo-request/v1 with the business name and location; a second press answers the same demo; ready → demo url, editUrl, expiresAt on GET /:id, the row in the Outreach stage with a draft carrying the link. S4: one demo only after the timeout (same Idempotency-Key and bytes); 409 with live and limit kept on the demo as refused; 503 surfaced; cancel reaches Tracy.",
+    "productSources": [
+      "packages/wo/website-opportunities/domain/demo-request.mjs:86",
+      "packages/wo/website-opportunities/src/plugins/builders/tracy-request.js:363",
+      "packages/wo/website-opportunities/src/schema/index.js:67",
+      "packages/wo/website-opportunities/src/standalone/config.js:31",
+      "packages/wo/website-opportunities/src/standalone/operator-principal.js:10",
+      "packages/wo/website-opportunities/src/standalone/server.js:70",
+      "packages/wo/website-opportunities/src/tracy-connection.js:34",
+      "packages/wo/website-opportunities/src/tracy-token-file.js:21",
+      "packages/wo/website-opportunities/ui/public/tracy-view-models.js:54"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/wo/website-opportunities/src/schema/index.js:28 readFile() with a computed path",
+      "packages/wo/website-opportunities/src/standalone/disk-objects.js:55 createReadStream() with a computed path",
+      "packages/wo/website-opportunities/test/tracy-connection.test.mjs:110 readFile() with a computed path",
+      "packages/wo/website-opportunities/test/tracy-connection.test.mjs:114 readFile() with a computed path",
+      "packages/wo/website-opportunities/test/tracy-connection.test.mjs:146 readFile() with a computed path",
+      "packages/wo/website-opportunities/test/tracy-connection.test.mjs:162 readFile() with a computed path",
+      "packages/wo/website-opportunities/test/tracy-connection.test.mjs:166 readFile() with a computed path",
+      "packages/wo/website-opportunities/test/tracy-connection.test.mjs:176 readFile() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "connect shows a code and a link",
+    "slow_down makes the next poll wait five seconds longer",
+    "a denied code ends the flow",
+    "an expired code ends the flow",
+    "many calls that find the token expired share ONE refresh",
+    "a grant revoked in Tracy turns the connection to Reconnect",
+    "disconnect revokes the grant in Tracy",
+    "Build it with Tracy sends the place, then the tick follows the demo to ready",
+    "a timeout never makes a second demo",
+    "the live demo limit comes back with its numbers",
+    "cancel reaches Tracy",
+    "Build: the live demo limit names both numbers"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1698-pd-builder"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/wo/website-opportunities", "website-opportunities"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1698-pd-builder",
+    "pr": 1698,
+    "kind": "feat",
+    "area": "website-opportunities/builder",
+    "file": "tests/regression/cases/REG-PR-1698-pd-builder.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/wo/website-opportunities/test/tracy-connection.test.mjs",
+    "packages/wo/website-opportunities/test/plugins-builder-tracy.test.mjs",
+    "packages/wo/website-opportunities/test/tracy-request.test.mjs",
+    "packages/wo/website-opportunities/test/ui-tracy-view-models.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "connect shows a code and a link",
+    "slow_down makes the next poll wait five seconds longer",
+    "a denied code ends the flow",
+    "an expired code ends the flow",
+    "many calls that find the token expired share ONE refresh",
+    "a grant revoked in Tracy turns the connection to Reconnect",
+    "disconnect revokes the grant in Tracy",
+    "Build it with Tracy sends the place, then the tick follows the demo to ready",
+    "a timeout never makes a second demo",
+    "the live demo limit comes back with its numbers",
+    "cancel reaches Tracy",
+    "Build: the live demo limit names both numbers"
+  ],
+  "timeoutS": 600
+}

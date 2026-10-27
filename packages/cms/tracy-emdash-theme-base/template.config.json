@@ -1,0 +1,78 @@
+{
+  "id": "tracy-base",
+  "label": "Tracy Base",
+  "version": "0.5.6",
+  "locales": ["en"],
+  "defaultLocale": "en",
+  "site": {
+    "title": "Tracy Base",
+    "tagline": "Precision, in every surface"
+  },
+  "contentOrder": [
+    "site",
+    "services",
+    "people",
+    "posts",
+    "home",
+    "onepage",
+    "landing",
+    "home_2",
+    "product",
+    "services_page",
+    "pricing",
+    "blog",
+    "team",
+    "about",
+    "careers",
+    "help",
+    "contact",
+    "design_system",
+    "marketing"
+  ],
+  "forms": {
+    "file": "tools/forms.json",
+    "bindings": [
+      {
+        "form": "contact-{locale}",
+        "collection": "contact",
+        "slug": "contact",
+        "field": "form_id"
+      }
+    ]
+  },
+  "mail": {
+    "fromEmail": "no-reply@tracy-base.example",
+    "fromName": "Tracy Base",
+    "notifyTest": "hello@tracy-base.example"
+  },
+  "audit": {
+    "indexable": ["^/(?!search)(?!404$).*"],
+    "noindex": ["^/search"],
+    "notFound": ["^/404$"],
+    "canonicalQuery": ["page"],
+    "unknownProbes": [
+      "/services/nope",
+      "/blog/nope",
+      "/blog/category/nope",
+      "/team/nope",
+      "/marketing/nope",
+      "/design-system/nope"
+    ],
+    "alternates": "all-locales"
+  },
+  "qa": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": null,
+        "dark": "dark"
+      },
+      "storageKey": "tracy-base-theme"
+    },
+    "expectedStatus": {
+      "/404": 404
+    }
+  },
+  "$comment": "Template identity and site-specific wiring read by the generic tools (tools/*.mjs, *.sh). Demo content is the Tracy Base studio site; the template product is Tracy Base."
+}

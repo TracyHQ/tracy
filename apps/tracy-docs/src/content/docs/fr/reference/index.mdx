@@ -1,0 +1,29 @@
+---
+title: Référence de l'API
+description: La référence OpenAPI interactive de l'API Tracy, et les documents bruts dont elle est tirée — openapi.json, llms.txt et le document du plugin Claude Cowork.
+tableOfContents: false
+---
+
+La référence ci-dessous est tirée en direct du document OpenAPI 3.1 que `tracy-web` construit pour
+lui-même, si bien qu'elle ne peut jamais être en retard sur les routes. **Test request** envoie l'appel à l'hôte de l'API avec la clé que vous collez — la clé reste dans
+votre onglet et n'est stockée nulle part. Ouvrez-la seule à l'adresse [`/api/reference/`](/api/reference/).
+
+<iframe
+  class="tracy-reference-frame"
+  src="/api/reference/"
+  title="Tracy API reference"
+  loading="lazy"
+></iframe>
+
+## Les documents
+
+| | |
+|---|---|
+| [`/api/openapi.json`](/api/openapi.json) | Le document OpenAPI 3.1 de l'API publique — chaque route, paramètre, corps, réponse et refus ; `servers[0]` est l'hôte de l'API. |
+| [`/api/llms.txt`](/api/llms.txt) | La même référence en texte brut au format [llms.txt](https://llmstxt.org), une ligne par opération, pour qu'un modèle de langage la lise. |
+| [`/api/claude-cowork.json`](/api/claude-cowork.json) | La surface HTTP du plugin Claude Cowork sur un site Joomla ou WordPress client — sa porte d'actions et son `/content.json` — sous forme de document OpenAPI. |
+
+La référence marque chaque action Apply du **jeu d'outils** qu'elle exige (`content`, `code`, `site`,
+`lifecycle`) et de la version du plugin qui la sert ; ces colonnes proviennent des tables propres de
+la porte, et c'est pourquoi elles vivent dans la référence et non sur la page
+[Compatibilité](/fr/reference/compatibility/).

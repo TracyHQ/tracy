@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1535-shard-installer-ubuntu-2604",
+  "kind": "fix",
+  "title": "The shard installer passes preflight on Ubuntu 26.04 and keeps apt keyrings readable when started under umask 077",
+  "pr": 1535,
+  "area": "deploy/shard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd` (bash and node on the PATH). One test extracts os_supported from deploy/scripts/install-shard.sh and calls it with several (ID, VERSION_ID) pairs; the other reads install-shard.sh and install-shard-steps.sh as text.",
+    "S2: Read the result of each test named in `run.tests`."
+  ],
+  "expect": [
+    "0 failures and 0 skipped.",
+    "Every test named in run.tests reports ok.",
+    "ubuntu 24.04 and ubuntu 26.04 are accepted; ubuntu 22.04, 25.10, 26.04.1, debian 24.04 and empty values are refused.",
+    "install-shard.sh sets umask 022 before main runs, and both apt keyrings (docker.asc, cloudflare-public-v2.gpg) are chmod a+r after download."
+  ],
+  "selectors": {
+    "script": "deploy/scripts/install-shard.sh (os_supported, umask 022); deploy/scripts/install-shard-steps.sh (step_host_base, step_cloudflared)",
+    "test": "scripts/test/install-shard.test.mjs"
+  },
+  "fence": "No server, no network, no apt: the predicate runs in a local bash; the rest is read as text.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "--test-reporter=tap",
+      "scripts/test/install-shard.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "preflight accepts Ubuntu 24.04 and 26.04 only",
+      "apt keyrings stay readable by _apt under a caller umask 077"
+    ]
+  }
+}

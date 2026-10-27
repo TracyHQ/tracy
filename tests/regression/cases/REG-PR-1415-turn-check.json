@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1415-turn-check",
+  "kind": "feat",
+  "title": "The visual check's verdict on a turn reaches tracy-web (POST /turn/check) as the person who typed and is kept on the turn; a skip is kept by the head of its reason only",
+  "pr": 1415,
+  "area": "site-tools/visual-check",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Boot the shipped site-tools bundle with a session that knows who typed; run a turn that wrote and whose check says not_shown, then one that wrote nothing.",
+    "S2: checkReportOf on a verdict, an unknown verdict, judge-failed with a detail, capture-TIMEOUT, an error, nothing.",
+    "S3: POST /turn/check to tracy-web: a verdict, a skip with its note, refused shapes, another turn."
+  ],
+  "expect": [
+    "S1: one POST to /api/sites/_conversation/turn/check signed as that person: {turnId: session-a:3, visual: not_shown, note: null}; then {visual: skipped, note: no-write}.",
+    "S2: the verdict as is; skipped with judge-failed, capture-TIMEOUT, error; never the detail after the colon.",
+    "S3: kept on site_turn.visual / visual_note, the latest word wins; 400 INVALID_TURN, INVALID_VISUAL, INVALID_NOTE; 404 TURN_UNKNOWN for a turn this site does not hold; the column takes only the five verdicts."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/index.ts (reportTurnCheck); visual-check.mjs (checkReportOf); apps/tracy-web/src/sites/route.js (/turn/check); turns.js (checkTurn); migration 114"
+  },
+  "evidence": "Plan tasks/todo-do-dung-that.md U2: the verdict lived only in one site-tools log line, so nobody could say how often a change was seen on the page",
+  "fence": "Never awaited by the turn; the skip's detail (it may name a model or a path) stays in the plugin's log",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/visual-check-wiring.test.mjs",
+      "apps/tracy-web/test/turn-work.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the verdict reaches tracy-web as the person who typed",
+      "checkReportOf: a verdict as it is",
+      "the verdicts and notes the check door takes",
+      "checkTurn keeps the latest verdict"
+    ]
+  }
+}

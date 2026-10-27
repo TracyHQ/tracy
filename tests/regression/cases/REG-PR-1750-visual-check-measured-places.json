@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1750-visual-check-measured-places",
+  "kind": "fix",
+  "title": "The visual check is told where the two pictures' pixels changed and sees each small changed place enlarged, so a recoloured menu link is not read as unchanged; a not_shown whose target is outside the window is no claim",
+  "pr": 1750,
+  "area": "site-agent/visual-check",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run packages/tools/tracy-site-tools/test/picture-diff.test.mjs: the same window twice; a 52x14 link recoloured white to #2E86DE on a 1043x807 dark window; four spots far apart; a full-width banner beside a small link; a window that mostly changed; two pictures of different sizes and a non-JPEG.",
+    "S2: run packages/tools/tracy-site-tools/test/visual-check.test.mjs: parseVerdict with inWindow false / true / absent; judgeMessage with and without a measurement; runVisualCheck on two JPEG windows that differ in one link, and on a picture drawn back at another scroll."
+  ],
+  "expect": [
+    "S1: identical pictures give share 0 and no place; the recoloured link gives exactly one place covering it, cut out of both pictures at 4x with white in the middle before and blue after; the four spots stay four places in reading order and only three are cut out; the banner is named but only the link is cut out; a mostly changed window has no cut; mismatched or unreadable pictures give null.",
+    "S2: not_shown with inWindow false reads cannot_tell, with inWindow true or absent stays not_shown, shown stays shown; the judge message carries the MEASURED line right after the main pair and a BEFORE/AFTER pair per cut place, before other pages; the check stores four pictures, sends four images and reports measured {places: 1, zoomed: 1}; at another scroll nothing is measured and the message has two images; every test of both files passes."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/picture-diff.mjs, packages/tools/tracy-site-tools/src/host/visual-check.mjs"
+  },
+  "evidence": "cowork.tracy.site 25/10/2026, saigon-iron-boxing: five turns asked a top-menu link (ABOUT, PLANS, CLASSES) in another colour; site_turn.visual = not_shown for all five, the stored picture after showed the new colour each time and the comparison said 'still white'. Replay of 18 dev picture pairs x 3 against deepseek-flash: 39/54 right before, 52/54 after.",
+  "fence": "Where the pixels changed is measured, never judged; a not_shown the comparison itself places outside the window is cannot_tell; nothing is measured for pictures of different size or scroll",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/picture-diff.test.mjs",
+      "packages/tools/tracy-site-tools/test/visual-check.test.mjs"
+    ],
+    "cwd": ".",
+    "timeout_s": 300
+  }
+}

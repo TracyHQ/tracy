@@ -1,0 +1,70 @@
+# check-public.mjs allowlist: `<path glob> | <rule or *> | <exact match or *> | <reason>`.
+# Every entry needs a reason. Prefer a narrow entry (one file, one rule, one match) over a wide one; an entry that
+# matches nothing in a full tree scan fails the run, so remove it with the code it covered.
+
+# Vietnamese as language data: Website Opportunities reads and writes for Vietnamese businesses, so these files hold
+# keyword lists, letter classes and templates in Vietnamese on purpose. Prose (comments, messages) stays English.
+domain/brand-social.mjs | vietnamese | * | letter class that recognises Vietnamese captions
+domain/chain-brands.json | vietnamese | * | real chain brand names, kept verbatim
+domain/chains.mjs | vietnamese | * | a real outlet name quoted as the example of an outlet marker
+domain/content-pool.mjs | vietnamese | * | Vietnamese keywords for opening hours, address, hiring and prices
+domain/menu-reader.mjs | vietnamese | * | Vietnamese menu size words and the dong currency sign
+domain/pinned-copy.mjs | vietnamese | * | letter class and price shapes for Vietnamese captions
+domain/website-crawler.mjs | vietnamese | * | Vietnamese words for menu and booking pages
+src/outreach-templates.json | vietnamese | * | the Vietnamese outreach message template, shipped as a language
+domain/neutral-copy/*.json | vietnamese | * | neutral demo wording in the site languages, including forbidden filler wording for QA
+domain/stat-labels.json | vietnamese | * | the label of a printed figure in each site language
+
+# Tests and fixtures that hold real Vietnamese place names, addresses, captions and menus verbatim.
+test/domain-brand-social.test.mjs | vietnamese | * | a Vietnamese social bio as input
+test/domain-brief.test.mjs | vietnamese | * | a Vietnamese dish name and the dong sign as input
+test/domain-chains.test.mjs | vietnamese | * | real chain brands and Vietnamese outlet markers as input
+test/domain-content-pool.test.mjs | vietnamese | * | Vietnamese captions for the language test and the Vietnamese hiring word
+test/domain-dedupe.test.mjs | vietnamese | * | a Vietnamese place name with and without its accents as input
+test/domain-discovery-gplaces.test.mjs | vietnamese | * | a Vietnamese city name
+test/domain-discovery-osm.test.mjs | vietnamese | * | real Vietnamese OSM tags and geocoder labels
+test/domain-gplaces-details.test.mjs | vietnamese | * | a Vietnamese dish name in a Google summary
+test/domain-media.test.mjs | vietnamese | * | a Vietnamese alt text as input
+test/domain-menu-reader.test.mjs | vietnamese | * | real Vietnamese menu items and prices
+test/domain-neutral-copy.test.mjs | vietnamese | * | neutral demo wording in the site languages
+test/domain-slot-fill-reviews.test.mjs | vietnamese | * | a figure's label in the Vietnamese site language
+test/domain-slot-fill-manifest.test.mjs | vietnamese | * | forbidden filler examples in the site languages
+test/domain-pinned-copy.test.mjs | vietnamese | * | a Vietnamese bio as input
+test/domain-site-label.test.mjs | vietnamese | * | Vietnamese place names turned into site labels
+test/domain-website-crawler.test.mjs | vietnamese | * | a Vietnamese street address in crawled HTML
+test/domain-youtube-public.test.mjs | vietnamese | * | a Vietnamese city name in a channel description
+test/fixtures/content-pool-posts.json | vietnamese | * | one Vietnamese post and one bilingual hiring ad in a fictional English feed, for the language and hiring filters
+test/fixtures/menu/menu-page.html | vietnamese | * | a Vietnamese menu page with dong prices
+
+# The published ja-* website templates keep their demo pictures under a folder named after their vendor; the name is
+# part of that public product, quoted from its release data.
+test/domain-agent-prompt.test.mjs | internal-name | joomlart | demo picture paths of a published template
+test/domain-pictures-slot-map.test.mjs | internal-name | joomlart | demo picture paths of a published template
+test/fixtures/pictures/ja-impact-j6-1.0.3.json | internal-name | joomlart | release data of a published template
+test/fixtures/pictures/ja-restaurant-j6-1.0.5.json | internal-name | joomlart | release data of a published template
+test/fixtures/pictures/ja-spa-j6-1.0.6.json | internal-name | joomlart | release data of a published template
+
+# Tests of IP address handling need addresses on both sides of each private range boundary.
+test/domain-url-guard.test.mjs | private-ip | * | the SSRF guard is tested against private ranges
+test/domain-url-guard.test.mjs | public-ip | * | addresses just outside each private range
+test/domain-website-crawler.test.mjs | private-ip | 192.168.1.10 | the crawler must refuse a private address
+test/domain-geoip.test.mjs | private-ip | * | a private client address has no country
+test/domain-geoip.test.mjs | public-ip | * | sample client addresses in the UAE and Vietnam blocks
+test/domain-trades.test.mjs | public-ip | 142.250.0.1 | a sample address of a public search engine block
+
+# Pagination cursors and etags returned by third-party APIs, captured verbatim; they are not credentials.
+test/fixtures/social-stats/facebook-scraper3-posts-page1.json | high-entropy | * | a posts pagination cursor
+test/fixtures/social-stats/facebook-scraper3-posts-page2.json | high-entropy | * | a posts pagination cursor
+test/fixtures/social-stats/instagram-looter2-user-feeds2-large.json | high-entropy | * | a feed pagination cursor
+test/fixtures/social-stats/youtube-official-channels-forusername.json | high-entropy | * | a response etag
+test/fixtures/social-stats/youtube-official-channels-missing.json | high-entropy | * | a response etag
+test/fixtures/social-stats/yt-api-channel-videos.json | high-entropy | * | a videos continuation token
+test/guarded-connect-proxy.test.mjs | private-ip | * | the proxy must refuse each private range
+test/guarded-connect-proxy.test.mjs | public-ip | * | X.509 OIDs in the TLS fixture and sample addresses of a public host
+domain/dish-photos-generic.json | vietnamese | * | generic menu words in several languages, matched against real menus
+domain/dish-photos.mjs | vietnamese | * | Vietnamese negation, comparison and side-dish words read in real posts
+test/brief-research-dish-photos.test.mjs | vietnamese | * | real Vietnamese dish names as input
+test/domain-agent-prompt-dish-photos.test.mjs | vietnamese | * | real Vietnamese dish names as input
+test/domain-brief-dish-photos.test.mjs | vietnamese | * | real Vietnamese dish names and posts as input
+test/domain-dish-photos.test.mjs | vietnamese | * | Vietnamese accents are the subject: two dishes that differ by one tone mark stay apart
+test/domain-pictures-dish.test.mjs | vietnamese | * | real Vietnamese dish names as input

@@ -1,0 +1,219 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-spark",
+  "minVersion": {
+    "quickstart/ja-spark/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-spark/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-spark/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "body": "div.item-inner p.item-desc",
+    "button-primary": "a.btn.btn-secondary",
+    "card": "div.fd-item-inner.bg-white",
+    "container": "div.t4-section-inner.container",
+    "section": "#Mod197",
+    "heading": "div.section-heading h2.mod-title"
+  },
+  "discovered": {
+    "page": "body",
+    "body": "running text of the gallery items (the section leads set their own weight)",
+    "button-primary": "first filled, coloured call to action: rgb(177, 227, 70)",
+    "card": "repeated rounded box ×17",
+    "container": "first content container, max-width 1200px",
+    "section": "first padded full-width section, padding-top 96px",
+    "heading": "a section title (the home page has no display heading)"
+  },
+  "keepScopes": [".bg-white"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#18181b",
+    "--fg-2": "#212529",
+    "--accent": "#18181b",
+    "--accent-hover": "#b1e346",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#ffffff",
+    "--meta": "#18181b",
+    "--success": "#20bb8c",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#dce0d3",
+    "--muted": "#666666",
+    "--accent-on": "#1e1e1e"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#18181b",
+      "fg-2": "#212529",
+      "accent": "#18181b",
+      "accent-hover": "#b1e346",
+      "surface": "#f8f9fa",
+      "surface-warm": "#ffffff",
+      "meta": "#18181b",
+      "success": "#20bb8c",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#dce0d3",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#18181b",
+      "fg-2": "#212529",
+      "accent": "#b1e346",
+      "accent-on": "#1e1e1e",
+      "border": "#dce0d3",
+      "surface-warm": "#f6f8f1"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "bg": "#ffffff",
+      "fg-2": "#212529",
+      "surface": "#f8f9fa",
+      "border-soft": "#e9ecef"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (56 line colours, 58 text colours seen)",
+  "selectors": {
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-secondary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-secondary"],
+    "card": ["div.fd-item-inner.bg-white", ".card"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["#Mod197"],
+    "bodyFace": ["body"],
+    "cardLike": [".fd-item-inner", ".item-desktop-image", ".item-mobile-image"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "main p, .t4-section .card p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": ".t4-section :is(h1, h2, h3, h4)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 17 tried (byte 4419); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 128,
+      "kind": "custom",
+      "role": "bg",
+      "near": "#ffffff",
+      "distance": 0
+    },
+    {
+      "hex": "#212529",
+      "uses": 29,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#212529",
+      "distance": 0
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 0
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on the 1.0.1 release build itself (stand.mjs --from-dir ~/tracy-bench-work/release/ds-batch6/ja-spark/release; tasks/evidence/ds-remeasure-5-2026-10-11/ja-spark): 12/12 with Moxie, MotherDuck, Toggl Track, Apple, controls 0 differences, no text made less readable than the template's own, 76%–97% of the page follows; checked by eye under Moxie and Toggl Track (dark), MotherDuck and Apple (light). Round 1 (batch 6) measured 1.0.0 tokenized in place; on the build the kept white cards (.bg-white) changed 34 colours (their dashed border through --t4-border-color, their titles through --headings-color, which the band computes as #18181b, not the root's #212529): both given back in keepDefaults. The per-element probe found the light-green glows (.bg-shape, -2, -3) lifting the ground under two headings on a dark page (Toggl Track 3.55 and 3.90): a dark system does not show them (sideRules). A site still on 1.0.0 wearing a system was not measured",
+  "templateVars": {
+    "--headings-color": "var(--ds-c-fg-2)",
+    "--tpl-base-100": "var(--ds-c-surface)",
+    "--tpl-base-200": "var(--ds-c-border)",
+    "--tpl-base-300": "var(--ds-c-muted)",
+    "--masthead-bg-color": "var(--ds-c-surface)"
+  },
+  "templateVarsNote": "the T4 Bootstrap 5 starter colours its headings and light surfaces through these (media/t4/css/<style>.css: --headings-color: var(--t4-gray-900), --tpl-base-*: grays); a dark band sets its own on a descendant, which still wins there",
+  "keepNote": "the feature cards are white through Bootstrap's .bg-white utility (!important, not a palette colour): they keep the template's dark text",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#18181b",
+    "--body-link-color": "#000000",
+    "--body-link-hover-color": "#b1e346",
+    "--color-primary": "#18181b",
+    "--color-secondary": "#b1e346",
+    "--color-success": "#20bb8c",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#18181b",
+    "--mainnav-link-color": "#18181b",
+    "--mainnav-link-hover-color": "#b1e346",
+    "--mainnav-link-active-color": "#b1e346",
+    "--footer-bg-color": "#ffffff",
+    "--footer-text-color": "#18181b",
+    "--footer-link-color": "#18181b",
+    "--footer-link-hover-color": "#b1e346",
+    "--headings-color": "#18181b",
+    "--tpl-base-100": "#f8f9fa",
+    "--tpl-base-200": "#dee2e6",
+    "--tpl-base-300": "#6c757d",
+    "--masthead-bg-color": "#f8f9fa",
+    "--t4-border-color": "#DCE0D3"
+  },
+  "sideRules": {
+    "dark": {
+      ".bg-shape": {
+        "background-image": "none"
+      },
+      ".bg-shape-2": {
+        "background-image": "none"
+      },
+      ".bg-shape-3": {
+        "background-image": "none"
+      }
+    }
+  },
+  "sideNote": "the light-green glows behind three sections (.bg-shape, .bg-shape-2, .bg-shape-3: bg-shape-*.png) are drawn for a light page: on a dark worn page they lift the ground under the headings (Toggl Track, 11/10/2026: the pink section heading 3.55 and the support hero title 3.90 on them); a dark system does not show them",
+  "bands": {
+    ".bg-white": {
+      "ground": "#ffffff",
+      "texts": ["#18181b"],
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours"
+}

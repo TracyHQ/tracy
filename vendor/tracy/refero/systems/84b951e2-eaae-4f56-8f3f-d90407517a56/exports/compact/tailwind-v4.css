@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-pure-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-slate: #737582;
+  --color-iron: #4e525e;
+  --color-mist: #ebeff2;
+  --color-current-spectrum: #f4cb45;
+
+  /* Typography */
+  --font-soehne: 'soehne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-proxima-nova: 'proxima-nova', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

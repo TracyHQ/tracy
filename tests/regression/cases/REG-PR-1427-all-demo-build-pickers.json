@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1427-all-demo-build-pickers",
+  "kind": "fix",
+  "title": "Every new WO demo build opens the shared template picker, including legacy briefs",
+  "pr": 1427,
+  "area": "website-opportunities/template-picker",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the gallery picker E2E suite and WO client action/API suites.",
+    "On the local stand open Build demo from table, grid, inspector, details and selected rows; cancel each popup with all POST writes intercepted."
+  ],
+  "expect": [
+    "Every entry opens the existing template picker before any build request.",
+    "Cancel creates no build; selected CMS/design/quickstart are forwarded explicitly.",
+    "Legacy brief build uses the place demo action with the entered site label; its old revision build door is never called.",
+    "Retry retains its original selection without opening the picker."
+  ],
+  "selectors": {
+    "popup": "[data-template-picker]",
+    "build": "/api/website-opportunities/:id/demo/build",
+    "bulk": "/api/website-opportunities/demo/builds/bulk"
+  },
+  "run": {
+    "cmd": ["node", "--test", "packages/design/tracy-design-inspiration/test/e2e/template-picker.test.mjs"],
+    "needs": []
+  }
+}

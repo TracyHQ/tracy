@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-arcade-cream: #f3e5df;
+  --color-ink-black: #000000;
+  --color-pixel-gray: #e5e7eb;
+  --color-charcoal: #333333;
+  --color-carbon: #151515;
+  --color-muted-gray: #737373;
+  --color-marquee-orange: #faa21f;
+  --color-buy-green: #128e44;
+
+  /* Typography */
+  --font-arcade: 'Arcade', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

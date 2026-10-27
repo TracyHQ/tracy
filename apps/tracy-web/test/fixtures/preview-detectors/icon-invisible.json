@@ -1,0 +1,876 @@
+{
+  "kind": "icon-invisible",
+  "about": "Icon controls the system painted into their ground: JA Spa Joomla's sidebar hamburger (bars #1a1a1a on #1a1a1a), JA Vital Joomla's white social icons on the periwinkle footer.",
+  "broken": [
+    {
+      "source": "quickstart/ja-spa/j6@1.0.5 (https://ja-spa-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#000000",
+        "#868474",
+        "#858273",
+        "#b7b39f",
+        "#7a786a",
+        "#1a1a1a",
+        "#060605",
+        "#93b6fb",
+        "#84acfb",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/a:1",
+            "at": "a.d-none.d-lg-flex",
+            "w": 152,
+            "h": 152,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [
+              { "r": 26, "g": 26, "b": 26, "a": 1 },
+              { "r": 26, "g": 26, "b": 26, "a": 1 },
+              { "r": 26, "g": 26, "b": 26, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.icon-action",
+            "w": 64,
+            "h": 64,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "outer": [{ "r": 26, "g": 26, "b": 26, "a": 1 }],
+            "inner": [{ "r": 42, "g": 119, "b": 104, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:1/a:1",
+            "at": "a.icon-action",
+            "w": 64,
+            "h": 64,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "outer": [{ "r": 26, "g": 26, "b": 26, "a": 1 }],
+            "inner": [{ "r": 42, "g": 119, "b": 104, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 0, "g": 0, "b": 0, "a": 1 },
+            "own": null,
+            "outer": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 }
+            ],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:2/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 0, "g": 0, "b": 0, "a": 1 },
+            "own": null,
+            "outer": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 }
+            ],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:3/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 0, "g": 0, "b": 0, "a": 1 },
+            "own": null,
+            "outer": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 }
+            ],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:4/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 0, "g": 0, "b": 0, "a": 1 },
+            "own": null,
+            "outer": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 }
+            ],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:5/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 0, "g": 0, "b": 0, "a": 1 },
+            "own": null,
+            "outer": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 }
+            ],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/a:1",
+            "at": "a.d-none.d-lg-flex",
+            "w": 152,
+            "h": 152,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [
+              { "r": 26, "g": 26, "b": 26, "a": 1 },
+              { "r": 26, "g": 26, "b": 26, "a": 1 },
+              { "r": 26, "g": 26, "b": 26, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.icon-action",
+            "w": 64,
+            "h": 64,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": { "r": 240, "g": 255, "b": 252, "a": 1 },
+            "outer": [{ "r": 240, "g": 255, "b": 252, "a": 1 }],
+            "inner": [{ "r": 42, "g": 119, "b": 104, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:2/div:1/div:1/div:1/a:1",
+            "at": "a.icon-action",
+            "w": 64,
+            "h": 64,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": { "r": 240, "g": 255, "b": 252, "a": 1 },
+            "outer": [{ "r": 240, "g": 255, "b": 252, "a": 1 }],
+            "inner": [{ "r": 42, "g": 119, "b": 104, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 255, "g": 248, "b": 245, "a": 1 },
+            "own": null,
+            "outer": [
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 }
+            ],
+            "inner": [{ "r": 158, "g": 158, "b": 158, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:2/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 255, "g": 248, "b": 245, "a": 1 },
+            "own": null,
+            "outer": [
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 }
+            ],
+            "inner": [{ "r": 158, "g": 158, "b": 158, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:3/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 255, "g": 248, "b": 245, "a": 1 },
+            "own": null,
+            "outer": [
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 }
+            ],
+            "inner": [{ "r": 158, "g": 158, "b": 158, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:4/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 255, "g": 248, "b": 245, "a": 1 },
+            "own": null,
+            "outer": [
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 }
+            ],
+            "inner": [{ "r": 158, "g": 158, "b": 158, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:1/div:2/div:1/div:5/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 255, "g": 248, "b": 245, "a": 1 },
+            "own": null,
+            "outer": [
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 },
+              { "r": 158, "g": 158, "b": 158, "a": 1 }
+            ],
+            "inner": [{ "r": 158, "g": 158, "b": 158, "a": 1 }]
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-vital/j6@1.0.4 (https://ja-vital-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#b7b39f",
+        "#000000",
+        "#868474",
+        "#f4efd4",
+        "#858273",
+        "#7a786a",
+        "#1a1a1a",
+        "#060605",
+        "#93b6fb",
+        "#84acfb",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/div:2/span:1",
+            "at": "span.theme-toggle-slot.theme-toggle-slot--desktop",
+            "w": 47,
+            "h": 40,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [
+              { "r": 111, "g": 111, "b": 111, "a": 1 },
+              { "r": 111, "g": 111, "b": 111, "a": 1 },
+              { "r": 111, "g": 111, "b": 111, "a": 1 },
+              { "r": 111, "g": 111, "b": 111, "a": 1 },
+              { "r": 111, "g": 111, "b": 111, "a": 1 },
+              { "r": 111, "g": 111, "b": 111, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.html5lightbox.bg-primary",
+            "w": 142,
+            "h": 142,
+            "ground": { "r": 0, "g": 0, "b": 0, "a": 1 },
+            "own": { "r": 132, "g": 172, "b": 251, "a": 1 },
+            "outer": [{ "r": 132, "g": 172, "b": 251, "a": 1 }],
+            "inner": [
+              { "r": 38, "g": 176, "b": 235, "a": 1 },
+              { "r": 38, "g": 176, "b": 235, "a": 1 },
+              { "r": 38, "g": 176, "b": 235, "a": 1 },
+              { "r": 38, "g": 176, "b": 235, "a": 1 },
+              { "r": 0, "g": 0, "b": 0, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "w": 125,
+            "h": 60,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": { "r": 132, "g": 172, "b": 251, "a": 1 },
+            "outer": [
+              { "r": 132, "g": 172, "b": 251, "a": 1 },
+              { "r": 132, "g": 172, "b": 251, "a": 1 },
+              { "r": 132, "g": 172, "b": 251, "a": 1 },
+              { "r": 132, "g": 172, "b": 251, "a": 1 },
+              { "r": 132, "g": 172, "b": 251, "a": 1 }
+            ],
+            "inner": []
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:2/div:1/div:4/div:2/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a",
+            "w": 10,
+            "h": 23,
+            "ground": { "r": 132, "g": 172, "b": 251, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 255, "g": 255, "b": 255, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:2/div:1/div:4/div:2/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a",
+            "w": 15,
+            "h": 23,
+            "ground": { "r": 132, "g": 172, "b": 251, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 255, "g": 255, "b": 255, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:2/div:1/div:4/div:2/div:1/div:1/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 17,
+            "h": 23,
+            "ground": { "r": 132, "g": 172, "b": 251, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 255, "g": 255, "b": 255, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:2/div:1/div:4/div:2/div:1/div:1/div:1/div:1/div:4/a:1",
+            "at": "a",
+            "w": 15,
+            "h": 23,
+            "ground": { "r": 132, "g": 172, "b": 251, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 255, "g": 255, "b": 255, "a": 1 }]
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/div:2/span:1",
+            "at": "span.theme-toggle-slot.theme-toggle-slot--desktop",
+            "w": 47,
+            "h": 40,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [
+              { "r": 51, "g": 51, "b": 51, "a": 1 },
+              { "r": 51, "g": 51, "b": 51, "a": 1 },
+              { "r": 51, "g": 51, "b": 51, "a": 1 },
+              { "r": 51, "g": 51, "b": 51, "a": 1 },
+              { "r": 51, "g": 51, "b": 51, "a": 1 },
+              { "r": 51, "g": 51, "b": 51, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.html5lightbox.bg-primary",
+            "w": 142,
+            "h": 142,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": { "r": 38, "g": 176, "b": 235, "a": 1 },
+            "outer": [{ "r": 38, "g": 176, "b": 235, "a": 1 }],
+            "inner": [
+              { "r": 38, "g": 176, "b": 235, "a": 1 },
+              { "r": 38, "g": 176, "b": 235, "a": 1 },
+              { "r": 38, "g": 176, "b": 235, "a": 1 },
+              { "r": 38, "g": 176, "b": 235, "a": 1 },
+              { "r": 255, "g": 255, "b": 255, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:11/div:1/div:1/div:1/div:1/div:1/div:1/form:1/div:1/table:1/tbody:1/tr:1/td:2/input:1",
+            "at": "input.btn.btn-primary.button",
+            "w": 185,
+            "h": 60,
+            "ground": { "r": 38, "g": 176, "b": 235, "a": 1 },
+            "own": { "r": 50, "g": 49, "b": 131, "a": 1 },
+            "outer": [
+              { "r": 50, "g": 49, "b": 131, "a": 1 },
+              { "r": 50, "g": 49, "b": 131, "a": 1 },
+              { "r": 50, "g": 49, "b": 131, "a": 1 },
+              { "r": 50, "g": 49, "b": 131, "a": 1 },
+              { "r": 50, "g": 49, "b": 131, "a": 1 }
+            ],
+            "inner": []
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:2/div:1/div:4/div:2/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a",
+            "w": 10,
+            "h": 21,
+            "ground": { "r": 50, "g": 49, "b": 131, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 255, "g": 255, "b": 255, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:2/div:1/div:4/div:2/div:1/div:1/div:1/div:1/div:2/a:1",
+            "at": "a",
+            "w": 15,
+            "h": 21,
+            "ground": { "r": 50, "g": 49, "b": 131, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 255, "g": 255, "b": 255, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:2/div:1/div:4/div:2/div:1/div:1/div:1/div:1/div:3/a:1",
+            "at": "a",
+            "w": 17,
+            "h": 21,
+            "ground": { "r": 50, "g": 49, "b": 131, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 255, "g": 255, "b": 255, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:12/div:2/div:1/div:4/div:2/div:1/div:1/div:1/div:1/div:4/a:1",
+            "at": "a",
+            "w": 15,
+            "h": 21,
+            "ground": { "r": 50, "g": 49, "b": 131, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 255, "g": 255, "b": 255, "a": 1 }]
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-smallbiz/j6@1.0.2 (https://ja-smallbiz-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#f4efd4",
+        "#1a1a1a",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#7a786a",
+        "#858273",
+        "#868474",
+        "#b7b39f",
+        "#060605",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:1/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "w": 14,
+            "h": 18,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "w": 14,
+            "h": 18,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "w": 12,
+            "h": 18,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:2/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "w": 14,
+            "h": 18,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:2/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "w": 14,
+            "h": 18,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:2/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "w": 18,
+            "h": 18,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:3/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "w": 12,
+            "h": 18,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:3/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "w": 14,
+            "h": 18,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:3/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "w": 18,
+            "h": 18,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 183, "g": 179, "b": 159, "a": 1 }]
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:1/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "w": 14,
+            "h": 16,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 29, "g": 29, "b": 29, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "w": 14,
+            "h": 16,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 29, "g": 29, "b": 29, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "w": 12,
+            "h": 16,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 29, "g": 29, "b": 29, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:2/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "w": 14,
+            "h": 16,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 29, "g": 29, "b": 29, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:2/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "w": 14,
+            "h": 16,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 29, "g": 29, "b": 29, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:2/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "w": 18,
+            "h": 16,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 29, "g": 29, "b": 29, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:3/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "w": 12,
+            "h": 16,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 29, "g": 29, "b": 29, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:3/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "w": 14,
+            "h": 16,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 29, "g": 29, "b": 29, "a": 1 }]
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:3/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "w": 18,
+            "h": 16,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": null,
+            "outer": [],
+            "inner": [{ "r": 29, "g": 29, "b": 29, "a": 1 }]
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-voyara/j6@1.0.8 (https://ja-voyara-joomla.tracy.site/), Add site preview under refero Moxie, visitor scheme dark, scripts off as in the preview frame, captured 14/10/2026 with preview-check.mjs PREVIEW_DATA=1",
+      "systemColours": [
+        "#84acfb",
+        "#b7b39f",
+        "#000000",
+        "#858273",
+        "#1a1a1a",
+        "#f4efd4",
+        "#93b6fb",
+        "#060605",
+        "#7a786a",
+        "#868474",
+        "#9fbefc"
+      ],
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/button:1",
+            "at": "button.t4-theme-toggle.voy-theme-toggle",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "own": { "r": 6, "g": 6, "b": 5, "a": 1 },
+            "outer": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 6, "g": 6, "b": 5, "a": 1 }
+            ],
+            "inner": [{ "r": 244, "g": 239, "b": 212, "a": 1 }, { "r": 244, "g": 239, "b": 212, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a",
+            "w": 36,
+            "h": 36,
+            "ground": { "r": 6, "g": 6, "b": 5, "a": 1 },
+            "own": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "outer": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 26, "g": 26, "b": 26, "a": 1 }
+            ],
+            "inner": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:2",
+            "at": "a",
+            "w": 36,
+            "h": 36,
+            "ground": { "r": 6, "g": 6, "b": 5, "a": 1 },
+            "own": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "outer": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 26, "g": 26, "b": 26, "a": 1 }
+            ],
+            "inner": [{ "r": 244, "g": 239, "b": 212, "a": 1 }, { "r": 244, "g": 239, "b": 212, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:3",
+            "at": "a",
+            "w": 36,
+            "h": 36,
+            "ground": { "r": 6, "g": 6, "b": 5, "a": 1 },
+            "own": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "outer": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 26, "g": 26, "b": 26, "a": 1 }
+            ],
+            "inner": [{ "r": 244, "g": 239, "b": 212, "a": 1 }, { "r": 244, "g": 239, "b": 212, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:4",
+            "at": "a",
+            "w": 36,
+            "h": 36,
+            "ground": { "r": 6, "g": 6, "b": 5, "a": 1 },
+            "own": { "r": 26, "g": 26, "b": 26, "a": 1 },
+            "outer": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 26, "g": 26, "b": 26, "a": 1 }
+            ],
+            "inner": [
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 },
+              { "r": 244, "g": 239, "b": 212, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/form:1/div:1/p:1/input:1",
+            "at": "input.btn.btn-primary.button",
+            "w": 42,
+            "h": 42,
+            "ground": { "r": 6, "g": 6, "b": 5, "a": 1 },
+            "own": { "r": 132, "g": 172, "b": 251, "a": 1 },
+            "outer": [{ "r": 132, "g": 172, "b": 251, "a": 1 }],
+            "inner": []
+          }
+        ]
+      },
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/button:1",
+            "at": "button.t4-theme-toggle.voy-theme-toggle",
+            "w": 40,
+            "h": 40,
+            "ground": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "own": { "r": 242, "g": 235, "b": 225, "a": 1 },
+            "outer": [
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 242, "g": 235, "b": 225, "a": 1 }
+            ],
+            "inner": [{ "r": 43, "g": 36, "b": 32, "a": 1 }, { "r": 43, "g": 36, "b": 32, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a",
+            "w": 36,
+            "h": 36,
+            "ground": { "r": 242, "g": 235, "b": 225, "a": 1 },
+            "own": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "outer": [
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 255, "g": 255, "b": 255, "a": 1 }
+            ],
+            "inner": [
+              { "r": 43, "g": 36, "b": 32, "a": 1 },
+              { "r": 43, "g": 36, "b": 32, "a": 1 },
+              { "r": 43, "g": 36, "b": 32, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:2",
+            "at": "a",
+            "w": 36,
+            "h": 36,
+            "ground": { "r": 242, "g": 235, "b": 225, "a": 1 },
+            "own": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "outer": [
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 255, "g": 255, "b": 255, "a": 1 }
+            ],
+            "inner": [{ "r": 43, "g": 36, "b": 32, "a": 1 }, { "r": 43, "g": 36, "b": 32, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:3",
+            "at": "a",
+            "w": 36,
+            "h": 36,
+            "ground": { "r": 242, "g": 235, "b": 225, "a": 1 },
+            "own": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "outer": [
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 255, "g": 255, "b": 255, "a": 1 }
+            ],
+            "inner": [{ "r": 43, "g": 36, "b": 32, "a": 1 }, { "r": 43, "g": 36, "b": 32, "a": 1 }]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:4",
+            "at": "a",
+            "w": 36,
+            "h": 36,
+            "ground": { "r": 242, "g": 235, "b": 225, "a": 1 },
+            "own": { "r": 255, "g": 255, "b": 255, "a": 1 },
+            "outer": [
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 229, "g": 220, "b": 208, "a": 1 },
+              { "r": 255, "g": 255, "b": 255, "a": 1 }
+            ],
+            "inner": [
+              { "r": 43, "g": 36, "b": 32, "a": 1 },
+              { "r": 43, "g": 36, "b": 32, "a": 1 },
+              { "r": 43, "g": 36, "b": 32, "a": 1 }
+            ]
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/form:1/div:1/p:1/input:1",
+            "at": "input.btn.btn-primary.button",
+            "w": 42,
+            "h": 42,
+            "ground": { "r": 242, "g": 235, "b": 225, "a": 1 },
+            "own": { "r": 194, "g": 86, "b": 47, "a": 1 },
+            "outer": [{ "r": 194, "g": 86, "b": 47, "a": 1 }],
+            "inner": []
+          }
+        ]
+      }
+    }
+  ]
+}

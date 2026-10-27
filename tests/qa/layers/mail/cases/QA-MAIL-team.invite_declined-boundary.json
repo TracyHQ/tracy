@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.invite_declined-boundary",
+  "itemIds": [
+    "letter:team.invite_declined:en",
+    "letter:team.invite_declined:vi",
+    "letter:team.invite_declined:de",
+    "letter:team.invite_declined:it",
+    "letter:team.invite_declined:fr",
+    "letter:team.invite_declined:nl",
+    "letter:team.invite_declined:zh",
+    "letter:team.invite_declined:es"
+  ],
+  "requirement": "team.invite_declined stays well-formed for one-character, 10,000-character and Unicode facts",
+  "oracle": {
+    "source": "RFC 5322 section 2.2.3 (no line break in a header value)",
+    "ref": "RFC 5322 section 2.2.3 (no line break in a header value)",
+    "invariant": "subject has no CR/LF; the HTML document is complete"
+  },
+  "edgeTags": ["boundary"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.boundary#team.invite_declined:"],
+  "redProof": null,
+  "legacyIds": []
+}

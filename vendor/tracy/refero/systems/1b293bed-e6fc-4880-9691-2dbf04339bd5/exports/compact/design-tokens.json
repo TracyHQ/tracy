@@ -1,0 +1,34 @@
+{
+  "color": {
+    "obsidian-canvas": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Obsidian Canvas — Page background, all surface layers — the flat dark base every element sits on"
+    },
+    "chalk": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Chalk — Headlines, primary body text, active nav text, active nav underline border, project titles"
+    },
+    "ash": {
+      "$value": "#9a9a9a",
+      "$type": "color",
+      "$description": "Ash — Muted secondary text — project descriptions, section labels, inactive supporting copy"
+    }
+  },
+  "font": {
+    "helveticanowdisplay-light": {
+      "$value": "HelveticaNowDisplay-Light",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for the entire site — headlines, body, navigation, descriptions. The single weight (400, marketed as 'Light') at tight negative tracking gives the site its quiet, editorial voice. Display sizes pull in to -0.010em while body sits at -0.003em, creating a compression gradient that intensifies at scale."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://thms.works",
+      "siteName": "Thomas Vimare",
+      "extractedAt": "2026-06-03T17:44:25.253Z",
+      "variant": "compact"
+    }
+  }
+}

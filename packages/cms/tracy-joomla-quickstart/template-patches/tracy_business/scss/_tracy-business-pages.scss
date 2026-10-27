@@ -1,0 +1,535 @@
+//
+// Tracy Business — the four content pages: About · Services · Careers · Investor relations.
+// Owned by the pages build agent. Shared pieces (page intro, stats strip, CTA box, process,
+// arrow list, chips) live in _tracy-business-shared.scss / _tracy-business-home.scss and are only scoped here.
+// Numbers measured on About.html / Services.html / Careers.html / Investor relations.html at 1440.
+//
+// Every page body is `<div class="tb-pg tb-pg--<page>">` around its {loadposition} tags, so all of
+// this is scoped to those four pages and leaks nowhere else. A `.tb-pg-band` is a full-bleed band
+// (paper-2 or ink) living INSIDE the main-body container: it is pulled out to the viewport edges
+// with viewport-relative margins, and the main body clips the scrollbar-width remainder.
+//
+
+// ---------------------------------------------------------------- scaffolding
+.t4-main-body:has(.tb-pg) { overflow-x: clip; }
+
+.tb-pg {
+  // a shared ACM that ends the page: the main body adds 3rem under it, the source has none
+  > .tb-ctabox--paper:last-child { padding-bottom: 28px; }
+  > .tb-ctabox--ink-band:last-child { @include media-breakpoint-up(md) { margin-bottom: -3rem; } }
+
+  // the shared process block sits in a split row here, where the source H2 is 32px not 40px
+  .tb-process .tb-section__title { font-size: 32px; margin-bottom: 20px; @include media-breakpoint-down(md) { font-size: 26px; } }
+  .tb-process__step { grid-template-columns: 50px minmax(0, 1fr); gap: 18px; padding: 16px 0; }
+  .tb-process__num { font-size: 24px; line-height: 1.1; }
+  .tb-process__step-title { font-size: 16.5px; }
+  .tb-process__step-desc { font-size: 15px; }
+
+  // stats strip → next band: the source keeps 64px under the strip
+  .tb-stats + .tb-pg-band { margin-top: 24px; }
+}
+
+.tb-pg-band {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 64px 0;
+
+  @include media-breakpoint-down(md) { padding: 40px 0; }
+
+  &--paper2 { background: var(--surface); border-bottom: 1px solid var(--border); border-top: 1px solid var(--border); }
+
+  &--ink {
+    background: var(--tb-ink-band);
+    color: var(--ds-c-on-ink, #F5F3EE);
+
+    .tb-pg-h2 { color: var(--ds-c-on-ink, #F5F3EE); }
+  }
+}
+
+// two ACM columns side by side (process | pricing, benefits | hiring, reports | disclosures)
+.tb-pg-split {
+  align-items: start;
+  display: grid;
+  gap: 56px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding-block: 72px;                     // block only: the wrapper is also an .tb-container and keeps its gutters
+
+  @include media-breakpoint-down(md) { gap: 40px; grid-template-columns: minmax(0, 1fr); padding-block: 40px; }
+}
+
+// section H2s on these pages: 36 / 32 / 28 at desktop, Newsreader
+.tb-pg-h2 {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+  margin: 0 0 24px;
+
+  @include media-breakpoint-down(md) { font-size: 28px; }
+
+  &--sm { font-size: 32px; margin-bottom: 20px; @include media-breakpoint-down(md) { font-size: 26px; } }
+  &--xs { font-size: 28px; margin-bottom: 14px; @include media-breakpoint-down(md) { font-size: 23px; } }
+  &--rule { border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+}
+
+// ---------------------------------------------------------------- About · What we do (paper-2 band)
+.tb-pg-what {
+  &__inner {
+    align-items: start;
+    display: grid;
+    gap: 56px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @include media-breakpoint-down(md) { gap: 32px; grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .tb-pg-h2 { margin-bottom: 18px; }
+  &__text { color: var(--fg-2); font-size: 16.5px; line-height: 1.7; margin: 0; }
+}
+
+.tb-pg-cards {
+  background: var(--border);
+  border: 1px solid var(--border);
+  display: grid;
+  gap: 1px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  &__card { background: var(--bg); margin: 0; padding: 22px 24px; }
+  &__title { color: var(--fg); display: block; font-size: 16.5px; font-weight: 600; line-height: 1.35; }
+  &__desc { color: var(--muted); font-size: 15px; line-height: 1.6; margin: 6px 0 0; }
+}
+
+// ---------------------------------------------------------------- About · History
+.tb-pg-timeline {
+  padding: 72px 0 0;
+
+  @include media-breakpoint-down(md) { padding-top: 40px; }
+
+  &__list { list-style: none; margin: 0; padding: 0; }
+
+  &__row {
+    align-items: baseline;
+    border-bottom: 1px solid var(--border-soft);
+    display: grid;
+    gap: 28px;
+    grid-template-columns: minmax(90px, 120px) minmax(0, 1fr) minmax(0, 1.6fr);
+    margin: 0;
+    padding: 20px 0;
+
+    @include media-breakpoint-down(md) { gap: 6px 16px; grid-template-columns: 72px minmax(0, 1fr); padding: 16px 0; }
+  }
+
+  &__year { color: var(--tb-signal); font-family: var(--font-display); font-size: 27px; line-height: 1; @include media-breakpoint-down(md) { font-size: 24px; } }
+  &__title { color: var(--fg); font-size: 16.5px; font-weight: 600; line-height: 1.35; }
+  &__desc { color: var(--muted); font-size: 15.5px; line-height: 1.62; margin: 0; @include media-breakpoint-down(md) { grid-column: 2; } }
+}
+
+// ---------------------------------------------------------------- About · Where we work
+.tb-pg-where {
+  padding: 72px 0;
+
+  @include media-breakpoint-down(md) { padding: 40px 0; }
+
+  &__inner {
+    align-items: start;
+    display: grid;
+    gap: 56px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @include media-breakpoint-down(md) { gap: 28px; grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .tb-pg-h2 { margin-bottom: 16px; }
+  &__text { color: var(--fg-2); font-size: 16px; line-height: 1.68; margin: 0 0 22px; }
+
+  &__map {
+    border: 1px solid var(--border);
+    height: clamp(260px, 30vw, 360px);
+    margin: 0;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+
+    @include media-breakpoint-down(md) { height: clamp(220px, 60vw, 300px); order: -1; }
+  }
+}
+
+.tb-pg-places {
+  border-collapse: collapse;
+  margin: 0;
+  width: 100%;
+
+  tr { border-bottom: 1px solid var(--border-soft); }
+  th, td { padding: 13px 0; text-align: left; vertical-align: top; width: 50%; }
+  th + td { padding-left: 16px; }
+
+  &__place { color: var(--fg); font-size: 15.5px; font-weight: 600; }
+  &__role { color: var(--meta); font-size: 14.5px; }
+}
+
+// ---------------------------------------------------------------- About · Leadership (ink band)
+.tb-pg-lead {
+  .tb-pg-h2 { margin-bottom: 28px; }
+
+  &__grid {
+    display: grid;
+    gap: 26px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @include media-breakpoint-down(md) { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  &__card { margin: 0; }
+
+  &__photo {
+    border: 1px solid var(--tb-ink-band-line);
+    height: 230px;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+
+    &--empty { align-items: center; border-style: dashed; color: var(--tb-ink-band-meta); display: flex; font-size: 13px; justify-content: center; }
+  }
+
+  &__name { color: var(--ds-c-on-ink, #fff); display: block; font-size: 16.5px; font-weight: 600; line-height: 1.3; margin-top: 12px; }
+  &__role { color: var(--tb-signal-on-ink); display: block; font-size: 13.5px; margin-top: 3px; }
+  &__bio { color: var(--tb-ink-band-meta); font-size: 14px; line-height: 1.55; margin: 7px 0 0; }
+}
+
+// ---------------------------------------------------------------- About · Accreditations + Safety
+.tb-pg-cert {
+  padding: 72px 0;
+
+  @include media-breakpoint-down(md) { padding: 40px 0; }
+
+  &__inner {
+    align-items: start;
+    display: grid;
+    gap: 56px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @include media-breakpoint-down(md) { gap: 32px; grid-template-columns: minmax(0, 1fr); }
+  }
+
+  &__rows { list-style: none; margin: 0; padding: 0; }
+  &__row { border-bottom: 1px solid var(--border-soft); display: grid; gap: 12px; grid-template-columns: 24px minmax(0, 1fr); margin: 0; padding: 14px 0; }
+  &__arrow { color: var(--accent); font-family: var(--font-display); font-size: 18px; line-height: 1.2; }
+  &__title { color: var(--fg); display: block; font-size: 16px; font-weight: 600; line-height: 1.35; }
+  &__desc { color: var(--muted); display: block; font-size: 14.5px; margin-top: 4px; }
+}
+
+.tb-pg-safety {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px;
+
+  @include media-breakpoint-down(md) { padding: 22px; }
+
+  &__text { color: var(--fg-2); font-size: 16px; line-height: 1.68; margin: 0 0 20px; }
+
+  &__visual {
+    border: 1px solid var(--border);
+    height: 200px;
+    margin: 0;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+}
+
+// ---------------------------------------------------------------- Services · What we offer (paper-2 band)
+.tb-pg-services {
+  .tb-pg-h2 { margin-bottom: 26px; }
+
+  &__grid {
+    background: var(--border);
+    border: 1px solid var(--border);
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @include media-breakpoint-down(lg) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @include media-breakpoint-down(md) { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  &__card { background: var(--bg); display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 28px; @include media-breakpoint-down(md) { padding: 22px; } }
+  &__name { color: var(--fg); font-family: var(--font-display); font-size: 23px; font-weight: 400; line-height: 1.2; margin: 0; }
+  &__desc { color: var(--muted); font-size: 15.5px; line-height: 1.62; margin: 0; }
+  &__label { color: var(--accent); font-size: 11.5px; font-weight: 700; letter-spacing: .14em; margin: 0 0 9px; text-transform: uppercase; }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li { color: var(--fg-2); display: grid; font-size: 14.5px; gap: 9px; grid-template-columns: 18px minmax(0, 1fr); line-height: 1.5; margin: 0; padding: 5px 0; }
+    li::before { color: var(--tb-signal); content: "·"; }
+  }
+
+  &__timeline { border-top: 1px solid var(--border); color: var(--accent); font-size: 13.5px; font-weight: 600; margin: auto 0 0; padding-top: 12px; }
+}
+
+// ---------------------------------------------------------------- Services · Indicative pricing (column)
+.tb-pg-pricing {
+  &__title { margin-bottom: 12px; }
+  &__intro { color: var(--meta); font-size: 14.5px; line-height: 1.6; margin: 0 0 18px; }
+  &__list { border: 1px solid var(--border); list-style: none; margin: 0; padding: 0; }
+
+  &__row {
+    align-items: baseline;
+    border-bottom: 1px solid var(--border-soft);
+    display: grid;
+    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin: 0;
+    padding: 17px 20px;
+
+    &:last-child { border-bottom: 0; }
+
+    @include media-breakpoint-down(lg) { gap: 6px; grid-template-columns: minmax(0, 1fr); padding: 14px 16px; }
+  }
+
+  &__name { color: var(--fg); display: block; font-size: 16px; font-weight: 600; line-height: 1.35; }
+  &__desc { color: var(--meta); display: block; font-size: 13.5px; margin-top: 4px; }
+  &__price { color: var(--accent); font-size: 16px; font-weight: 600; white-space: nowrap; }
+}
+
+// ---------------------------------------------------------------- Careers · Open roles (paper-2 band) + Vacancies page
+.tb-pg-roles {
+  .tb-pg-h2 { margin-bottom: 22px; }
+  &__chips { gap: 8px; margin-bottom: 24px; }
+  &--page &__chips { margin-top: -8px; }
+
+  &__box { background: var(--bg); border: 1px solid var(--border); }
+  &__list { list-style: none; margin: 0; padding: 0; }
+
+  &__row {
+    align-items: center;
+    border-bottom: 1px solid var(--border-soft);
+    display: grid;
+    gap: 20px;
+    grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr) minmax(0, 1.3fr) auto;
+    margin: 0;
+    padding: 20px 24px;
+
+    &:last-child { border-bottom: 0; }
+
+    // the source keeps four columns on a phone and crushes them; below lg a role is a card
+    // (lg, not md: at 768 the four columns still fit only by wrapping the salary onto two lines)
+    @include media-breakpoint-down(lg) {
+      gap: 8px 16px;
+      grid-template-areas: "main main" "city pay" "apply apply";
+      grid-template-columns: minmax(0, 1fr) auto;
+      padding: 18px 20px;
+    }
+  }
+
+  &__main { min-width: 0; @include media-breakpoint-down(lg) { grid-area: main; } }
+  &__title { color: var(--fg); display: block; font-size: 17px; font-weight: 600; line-height: 1.35; }
+  &__meta { color: var(--meta); display: block; font-size: 13px; margin-top: 5px; }
+  &__city { color: var(--fg-2); font-size: 14.5px; @include media-breakpoint-down(lg) { grid-area: city; } }
+  &__pay { color: var(--accent); font-size: 15px; font-weight: 600; @include media-breakpoint-down(lg) { grid-area: pay; text-align: right; } }
+  &__apply { border-bottom: 1px solid var(--accent); color: var(--accent); font-size: 14px; font-weight: 600; justify-self: end; padding-bottom: 2px; text-decoration: none; white-space: nowrap; &:hover { border-bottom-color: var(--tb-signal); color: var(--tb-signal); } @include media-breakpoint-down(lg) { grid-area: apply; justify-self: start; margin-top: 4px; } }
+  &__foot { border-top: 1px solid var(--border-soft); padding: 18px 24px; }
+  &__empty { color: var(--muted); margin: 0; }
+}
+
+// ---------------------------------------------------------------- Careers · What we offer (column)
+.tb-pg-benefits {
+  &__list { list-style: none; margin: 0; padding: 0; }
+  &__row { border-bottom: 1px solid var(--border-soft); margin: 0; padding: 16px 0; }
+  &__name { color: var(--fg); display: block; font-size: 16.5px; font-weight: 600; line-height: 1.35; }
+  &__desc { color: var(--muted); font-size: 15px; line-height: 1.6; margin: 5px 0 0; }
+}
+
+// ---------------------------------------------------------------- Careers · Life on our sites (ink band)
+.tb-pg-life {
+  .tb-pg-h2 { margin-bottom: 28px; }
+
+  &__grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    list-style: none;
+    margin: 0 0 44px;
+    padding: 0;
+
+    @include media-breakpoint-down(md) { gap: 20px; grid-template-columns: minmax(0, 1fr); margin-bottom: 32px; }
+  }
+
+  &__item { margin: 0; }
+
+  &__photo {
+    border: 1px solid var(--tb-ink-band-line);
+    height: 220px;
+    margin: 0;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+
+    &--empty { border-style: dashed; }
+  }
+
+  &__caption { color: var(--tb-ink-band-meta); display: block; font-size: 13px; margin-top: 8px; }
+}
+
+.tb-pg-quote {
+  border-left: 3px solid var(--tb-signal);
+  margin: 0;
+  max-width: 44em;
+  padding: 4px 0 4px 26px;
+
+  &__text { color: var(--ds-c-on-ink, #fff); font-family: var(--font-display); font-size: 27px; line-height: 1.4; margin: 0 0 12px; @include media-breakpoint-down(md) { font-size: 21px; } }
+  &__by { color: var(--tb-ink-band-meta); font-size: 13.5px; }
+}
+
+// ---------------------------------------------------------------- IR · share strip
+.tb-pg-quote-strip {
+  padding: 8px 0 64px;
+
+  @include media-breakpoint-down(md) { padding-bottom: 40px; }
+
+  &__grid {
+    background: var(--border);
+    border: 1px solid var(--border);
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+
+    @include media-breakpoint-down(md) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  &__cell { background: var(--bg); padding: 24px; @include media-breakpoint-down(md) { padding: 18px; } }
+  &__label { color: var(--meta); font-size: 12.5px; font-weight: 400; letter-spacing: .1em; text-transform: uppercase; }
+  &__value { color: var(--fg); font-family: var(--font-display); font-size: 30px; line-height: 1.1; margin: 8px 0 0; @include media-breakpoint-down(md) { font-size: 24px; } @include media-breakpoint-down(sm) { font-size: 21px; } }
+}
+
+// ---------------------------------------------------------------- IR · Key figures (paper-2 band, scrolling table)
+.tb-pg-figures {
+  &__title { margin-bottom: 8px; }
+  &__note { color: var(--meta); font-size: 14.5px; margin: 0 0 24px; }
+
+  // the source grid has no horizontal scroll and loses the CHANGE column on a phone
+  &__scroll { -webkit-overflow-scrolling: touch; background: var(--bg); border: 1px solid var(--border); margin: 0; overflow-x: auto; }
+
+  &__table {
+    border-collapse: collapse;
+    margin: 0;
+    min-width: 560px;
+    width: 100%;
+
+    @include media-breakpoint-down(md) { min-width: 480px; thead th { padding: 12px 14px; } tbody th, tbody td { font-size: 14.5px; padding: 13px 14px; } }
+
+    thead th { background: var(--tb-ink-band); color: var(--ds-c-on-ink, #fff); font-size: 12.5px; font-weight: 600; letter-spacing: .1em; padding: 14px 18px; text-align: left; text-transform: uppercase; }
+    tbody tr { border-bottom: 1px solid var(--border-soft); }
+    tbody tr:last-child { border-bottom: 0; }
+    tbody th, tbody td { font-size: 15.5px; padding: 15px 18px; text-align: left; vertical-align: top; }
+    tbody th { color: var(--fg); font-weight: 500; width: 40%; }
+    tbody td { color: var(--muted); width: 20%; }
+  }
+
+  &__now { color: var(--fg) !important; font-weight: 600; }
+  &__change { color: var(--accent) !important; font-weight: 600; }
+}
+
+// ---------------------------------------------------------------- IR · Reports (column)
+.tb-pg-downloads {
+  &__list { list-style: none; margin: 0; padding: 0; }
+  &__item { margin: 0; }
+
+  &__row {
+    align-items: baseline;
+    border-bottom: 1px solid var(--border-soft);
+    color: inherit;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 16px 0;
+    text-decoration: none;
+
+    &:hover .tb-pg-downloads__name { color: var(--accent); }
+    &--nofile:hover .tb-pg-downloads__name { color: var(--fg); }
+  }
+
+  &__name { color: var(--fg); display: block; font-size: 16.5px; font-weight: 600; line-height: 1.4; }
+  &__meta { color: var(--meta); display: block; font-size: 13px; margin-top: 4px; }
+  &__arrow { color: var(--tb-signal); font-size: 13px; font-weight: 600; white-space: nowrap; }
+}
+
+// ---------------------------------------------------------------- IR · Material disclosures (column)
+.tb-pg-datelist {
+  &__list { list-style: none; margin: 0; padding: 0; }
+  &__row { align-items: baseline; border-bottom: 1px solid var(--border-soft); display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) auto; margin: 0; padding: 16px 0; }
+  &__name { color: var(--fg); font-size: 16px; font-weight: 500; line-height: 1.45; text-decoration: none; }
+  a.tb-pg-datelist__name:hover { color: var(--accent); }
+  &__date { color: var(--tb-meta); font-size: 13px; white-space: nowrap; }
+}
+
+// ---------------------------------------------------------------- IR · Dividends / calendar / governance (ink band)
+.tb-pg-irink {
+  &__inner {
+    align-items: start;
+    display: grid;
+    gap: 48px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @include media-breakpoint-down(md) { gap: 36px; grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .tb-pg-h2 { margin-bottom: 10px; }
+  &__text { color: var(--tb-ink-band-text); font-size: 15.5px; line-height: 1.6; margin: 0 0 20px; }
+
+  &__divs, &__cal, &__gov { list-style: none; margin: 0; padding: 0; }
+
+  &__div { align-items: baseline; border-bottom: 1px solid var(--tb-ink-band-line); display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) auto; margin: 0; padding: 14px 0; }
+  &__amount { color: var(--ds-c-on-ink, #fff); display: block; font-size: 16px; font-weight: 600; }
+  &__paid { color: var(--tb-ink-band-meta); display: block; font-size: 13px; margin-top: 3px; }
+  &__year { color: var(--tb-ink-band-meta); font-size: 13.5px; white-space: nowrap; }
+
+  &__event { border-bottom: 1px solid var(--tb-ink-band-line); display: grid; gap: 16px; grid-template-columns: 112px minmax(0, 1fr); margin: 0; padding: 14px 0; @include media-breakpoint-down(sm) { gap: 4px; grid-template-columns: minmax(0, 1fr); } }
+  &__date { color: var(--tb-signal-on-ink); font-size: 13.5px; font-weight: 600; }
+  &__what { color: var(--tb-ink-band-chip); font-size: 15.5px; line-height: 1.5; }
+
+  &__govtitle { font-size: 27px; margin: 36px 0 16px; }
+  &__gov { display: flex; flex-direction: column; gap: 10px; }
+  &__gov li { color: var(--tb-ink-band-text); font-size: 15px; margin: 0; }
+  &__gov a { color: var(--tb-ink-band-text); text-decoration: none; &:hover { color: var(--ds-c-on-ink, #fff); } }
+}
+
+// ---------------------------------------------------------------- IR · contact + subscribe sample
+.tb-pg-irc {
+  padding: 64px 0 12px;
+
+  @include media-breakpoint-down(md) { padding: 40px 0 0; }
+
+  &__box {
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: grid;
+    gap: 32px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 40px;
+
+    @include media-breakpoint-down(md) { gap: 24px; grid-template-columns: minmax(0, 1fr); padding: 24px 20px; }
+  }
+
+  &__label { color: var(--meta); font-size: 12px; font-weight: 700; letter-spacing: .16em; margin: 0 0 12px; text-transform: uppercase; }
+  &__name { color: var(--fg); font-family: var(--font-display); font-size: 26px; line-height: 1.3; margin: 0 0 10px; @include media-breakpoint-down(md) { font-size: 22px; } }
+  &__lines { color: var(--fg-2); display: flex; flex-wrap: wrap; font-size: 15.5px; gap: 8px 20px; margin: 0; a { color: inherit; text-decoration: none; &:hover { color: var(--accent); } } }
+
+  &__sub { display: flex; flex-wrap: wrap; gap: 12px; }
+  &__input { background: var(--bg); border: 1px solid var(--border); color: var(--fg); flex: 1 1 200px; font-family: var(--font-body); font-size: 15px; min-width: 0; padding: 14px; &::placeholder { color: var(--meta); } &:focus { border-color: var(--accent); outline: none; } }
+  &__btn { white-space: nowrap; }
+}

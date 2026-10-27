@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-012-pending",
+  "itemIds": ["regression:REG-012"],
+  "requirement": "Joomla content.update {patch} that re-types a JSON-text param as a string and drops ':type' is refused PARAMS_KEYS_LOST; nothing is written",
+  "oracle": {
+    "source": "tests/regression/cases/REG-012-joomla-json-param-keys-lost.json",
+    "ref": "PR #786 (fix); fix evidence: tasks/evidence/bug-0310-leemood/issue1 (Studio-local, not in git); fix f9c734938 (#786) is on develop",
+    "invariant": "The build check prints a count >= 1. The unit seam exits 0 with TAP '# pass 4' and '# fail 0'. ANSWER.ok === false, ANSWER.code === 'PARAMS_KEYS_LOST', ANSWER.action === 'content.update', ANSWER.platform === 'joomla', ANSWER.kind === 'module', ANSWER.id === M, ANSWER.field === 'params', ANSWER.key === 'jatools-config', ANSWER.lost deep-equals [':type']. ANSWER.error === 'fields.params.patch[\"jatools-config\"] is a string that drops \":type\" of the stored JSON text; nothing was written'. ANSWER.next contains 'fields.params:{patch:{\"jatools-config\":{' and ends with 'Nothing was written.' SENT deep-equals ['content.get']: no content.update reached the Apply door (before #786 the same call answered ok:true and the stored config lost ':type': evidence site-state.txt VERDICT=EMPTY(no :type)). P1 === P0 byte for byte, and HTML1 still has id=\"Mod<M>\" with a 'hero-heading' element inside it. Positive control: ANSWER2.ok === true; SENT deep-equals ['content.get', 'content.update']; C2[':type'] === C0[':type'] and C2.hero['hero-style[hero-heading]'] deep-equals ['REG-012-' + RUN]; after the revert C3 deep-equals C0.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer harness, needs stand, site:jo, seat:owner, fixture:ja-mood-site"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:site:jo", "need:seat:owner", "need:fixture:ja-mood-site"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-012"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:harness"],
+  "regression": {
+    "id": "REG-012",
+    "pr": 786,
+    "kind": "fix",
+    "area": "site-tools/joomla",
+    "file": "tests/regression/cases/REG-012-joomla-json-param-keys-lost.json"
+  },
+  "ownerLayer": "harness",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "site:jo", "seat:owner", "fixture:ja-mood-site"]
+}

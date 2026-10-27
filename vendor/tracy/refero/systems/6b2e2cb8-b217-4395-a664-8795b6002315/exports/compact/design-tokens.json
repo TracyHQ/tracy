@@ -1,0 +1,74 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — All text, hairline borders, nav dividers, the structural skeleton of the page"
+    },
+    "ash": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Ash — Email link, secondary metadata text"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, card surfaces — the unbroken gallery wall"
+    },
+    "crimson-pop": {
+      "$value": "#ff0000",
+      "$type": "color",
+      "$description": "Crimson Pop — Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "bubblegum": {
+      "$value": "#ffbbff",
+      "$type": "color",
+      "$description": "Bubblegum — Illustration surface — flat shapes and product packaging accents"
+    },
+    "cotton-candy": {
+      "$value": "#f7b2de",
+      "$type": "color",
+      "$description": "Cotton Candy — Illustration surface — character skin, hair, soft fills"
+    },
+    "sour-grape": {
+      "$value": "#ffa3fe",
+      "$type": "color",
+      "$description": "Sour Grape — Illustration surface and link hover highlight — bright magenta accent within artwork"
+    },
+    "pool-blue": {
+      "$value": "#72c2f2",
+      "$type": "color",
+      "$description": "Pool Blue — Illustration surface — ice, sky, cooling tones in product photography context"
+    },
+    "ice-blue": {
+      "$value": "#96d6ff",
+      "$type": "color",
+      "$description": "Ice Blue — Illustration surface — soft blue fills, atmospheric tones"
+    },
+    "acid-green": {
+      "$value": "#32c24d",
+      "$type": "color",
+      "$description": "Acid Green — Illustration accent — rare punctuation green in character and product art"
+    }
+  },
+  "font": {
+    "helvetica-now": {
+      "$value": "Helvetica Now",
+      "$type": "fontFamily",
+      "$description": "The single typeface for everything: nav links, body, project titles, labels. The 600 weight appears only for project section headers; everything else stays at 400. The uppercase letter-spacing (0.0420em) is reserved for the smallest caption-like text — it reads as a label tag, not body copy"
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "GTStandard-M — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://maryloufaure.com",
+      "siteName": "Marylou Faure",
+      "extractedAt": "2026-06-03T19:55:07.092Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-pure-canvas: #ffffff;
+  --color-frost-surface: #f7f8fb;
+  --color-midnight-ink: #000000;
+  --color-deep-charcoal: #13151b;
+  --color-graphite: #2d313f;
+  --color-slate: #525769;
+  --color-ash: #777d90;
+  --color-fog: #9fa5ba;
+  --color-modal-veil: #0c2970;
+
+  /* Typography — Font Families */
+  --font-title-custom-serif: 'Title (custom serif)', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-base-variable-custom-sans: 'Base-Variable (custom sans)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

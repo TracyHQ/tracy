@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3cc1d30c-3b08-48af-bbf0-df195d77835f",
+  "status": "complete",
+  "name": "Piet Oudolf",
+  "url": "https://styles.refero.design/style/3cc1d30c-3b08-48af-bbf0-df195d77835f",
+  "sourceWebsite": "https://oudolf.com",
+  "extractedAt": "2026-06-03T21:03:23.292Z",
+  "capturedAt": "2026-10-08T05:10:35.780495+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Botanical index on white paper.\nA field guide to gardens, set in light type with the restraint of a museum wall label.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0e303380-7c04-41c3-b7af-558ab7e61501.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "af7d6ba092c7cdfb0cd45758d25102ef690622816219a11325f211beabca8e63",
+      "bytes": 14154
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8ef755bd580b18d51c1e28e5a3c7f8e898e1179e771c2856e699e224a30375e7",
+      "bytes": 148418
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a98781aba5330561fa58bffd620d7de3e7772eedaf2d7555a7695dd29f4b3956",
+      "bytes": 12123
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "106295b2b1c71cd47eeaee7ec302e3e87e0a0bb96947b150616750a74a24dbb6",
+      "bytes": 4111
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f1ed7d1f5541eefa6491d53c48f103b24571080b0bf0aa0c1a02d4c1f08e0120",
+      "bytes": 9171
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d4750f8e8fc7368c02f5a33d8c2b43de0edc2a284a858659e29bec100a112395",
+      "bytes": 2028
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f47537b20e541562655ec4a8d15873d897ce25f709072fb720deec2e7f85620b",
+      "bytes": 481
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "12d2190f9087079f7ba620e47721bf82e2fd235a87334c02bc63ec722a53e384",
+      "bytes": 498
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7253dbd498cdba60b9b2e74d07678edb065d38b6244481c7712c9cd26768ef80",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4404ecb22c69ea8cfac602679cae523ad53aa8dd428fba01e95c1e2a8220b08d",
+      "bytes": 36123
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "68eb43346f1ed16f52f5cb262fb49c1add8fbe6984fc79d54f1d3d664c09cf0c",
+      "bytes": 18617
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8215819c98db65c90449dedeb979c8a9514790cd2b4971b822db04eb88b909d5",
+      "bytes": 21040
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "adb7bc399ce1efb61cbe521a68a28692ed8cf10044a285dd5b45212e7c9f4e61",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d640afb25eeca23fe88c426f9036321f746eddf46a033028d1944b8fe5c68c9a",
+      "bytes": 831
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "2f8afbdba6652cd6e440f4baac6143a52e3315c84d25e56723a327d912380a7b",
+      "bytes": 1160
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "348c83bc-bed3-4562-841a-26a30ee19a9b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "3cc1d30c-3b08-48af-bbf0-df195d77835f",
+    "4e616d96-14ea-43d6-9662-0ad3fa19ef7c",
+    "515da65c-f9e3-4296-a05d-0d921f5cdab1",
+    "5d79f0c2-526e-4c37-b780-08404f60839b",
+    "670869ea-9576-4f9d-af3a-038910f8b9b8",
+    "6f428c12-ba43-48e3-9a52-299ec1ce509b",
+    "73359194-de93-436e-af53-81d4029f5e7a",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "81a66e75-23af-4525-8a4e-f4a54c2700e7",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "8d8d5861-dee0-431b-826d-56f3fa4e1f84",
+    "a639fa6c-1705-47c2-b452-d4479469a734",
+    "a90dbcb6-e42c-4992-a83b-94879699dd4f",
+    "b634cbce-b4db-44a6-b2a4-b58d9d2fe93d",
+    "c90b584e-de5b-4971-9e13-8ab991bd96c0",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761"
+  ]
+}

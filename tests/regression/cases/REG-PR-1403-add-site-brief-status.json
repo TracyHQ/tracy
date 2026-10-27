@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1403-add-site-brief-status",
+  "kind": "fix",
+  "title": "Add site says it is writing the Customize answers while it does, and a run that did not get them all in keeps the ready screen up to say so",
+  "pr": 1403,
+  "area": "add-site/brief-status",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read the console steps (stepsFrom) of a job that went baseline → \"writing your text and pictures\" → \"placing your text and pictures on the site\", for WordPress, Joomla and EmDash.",
+    "S2: Read briefOutcomeOf for failed, applied and anything else.",
+    "S3: In the real wizard (browser fixture), create a site whose job answers running \"writing your text and pictures\", then done with briefState failed, the agent up."
+  ],
+  "expect": [
+    "S1: two steps of their own after the starting point (step_writing, step_placing), the last one running.",
+    "S2: 'failed', 'applied', null.",
+    "S3: the console shows \"Writing your text and pictures\"; the ready screen shows [data-brief-outcome=\"failed\"] (\"could not finish writing your answers\") and the page does not land on the site."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-add-site/src/client/{steps.mjs,brief-outcome.mjs,create.ts,wizard.tsx}",
+    "dom": "[data-brief-outcome=\"failed\"]"
+  },
+  "evidence": "16/10/2026 local stand (Joomla, Dutch answers): the console spun \"Recording a starting point\" for about five minutes while the brief ran; the client never read briefState, and prod incident #1367 landed two customers on half-demo sites with no word",
+  "fence": "The brief's stage words are console steps; a failed brief stops the automatic landing, as a design system that could not be put on does",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=240000",
+      "packages/site/tracy-add-site/test/steps.test.mjs",
+      "packages/site/tracy-add-site/test/brief-outcome.test.mjs",
+      "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs"
+    ],
+    "tests": [
+      "the Customize answers being written are a step of their own",
+      "the ready screen stays only for Customize answers that did not all go in",
+      "Customize answers that did not all go in"
+    ]
+  }
+}

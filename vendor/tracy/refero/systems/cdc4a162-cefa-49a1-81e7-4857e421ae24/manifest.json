@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+  "status": "complete",
+  "name": "Adam Lippes",
+  "url": "https://styles.refero.design/style/cdc4a162-cefa-49a1-81e7-4857e421ae24",
+  "sourceWebsite": "https://adamlippes.com",
+  "extractedAt": "2026-06-03T20:35:20.727Z",
+  "capturedAt": "2026-10-08T05:17:41.306628+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Monochrome editorial atelier on cream paper — a Vogue spread where the layout grid, not the color palette, is the only decoration.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e551c472-d545-40c7-a675-dfc5f99feec6.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "695f8c872b848f6112ee7640d38fa2c8877a89cb7df6d8398c6b52a529cd3833",
+      "bytes": 19464
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fa261acac77317a36422fd35ef150777d5f9328911258b4805493478492f65db",
+      "bytes": 162652
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "5d987f55554eb18a39d765c16e9a96e8686986ccdf6e50618f10cfdf525fc64e",
+      "bytes": 16448
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "8f88838174c006ca39cfcf9ed0d146b77ba26a2afe9307f9fca55e61a10a62a0",
+      "bytes": 10860
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "bba983fa3f250344f8f20a799b7ac206b074850d60585896187d79428a4e1c12",
+      "bytes": 11758
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "92b0483595975c79d1cc7d06b56ee9de0b5846eb0a14d70a654b87b1293d4453",
+      "bytes": 3021
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "45209fb7fd62f8eb6440ac5b5e3cbd09ccdce4a3fc1a84b20bb1cd9b39d27d68",
+      "bytes": 667
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e8ce992ce04237351ca6d76b1ea3e7cd9e7e9a525906ebd381392dd1e28f49a6",
+      "bytes": 684
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6c133a488997d64cdcf69922e136d2bba2984c9fec4e3cca265241aec5877502",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f1231f89c810164f73838801d6ac29dd78f380783bf57adadf62928c1eea3bc9",
+      "bytes": 42282
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "dee4ca38d732135d352e3c2a50d3e7516f4ff7dbaebde0a2da67d8d2047c33fe",
+      "bytes": 22129
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "55edf6670a5417456d11cb5442244873ccb3b83681935cf60881a01ddddaf6ee",
+      "bytes": 49528
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "1f5e103df95864da9538df5a233ae8d491ac4311907d3aaaff65e347974efa28",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "258f885892624f9fa3167429d06944c49123bce765e651461d80309e233c5484",
+      "bytes": 1504
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ba6a1c9b248e3c69a0d966930345c8bc841f4b75cc20d8ae793787ada906643b",
+      "bytes": 1903
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "234e9a17-236d-4446-9d58-f83f6806d012",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2b9e90ad-51d9-4f29-8f7e-a343dc741eab",
+    "2e4ce685-9f49-47a3-9577-bc4f196bd8f7",
+    "2fd71e12-12fc-4346-8281-52afe12bb951",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "7b28c99e-ed17-451b-a39e-bd4722bc43f5",
+    "a4dcee26-dd31-415a-ac99-64299959e7f1",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "cd3fbf9d-8d35-411b-9e69-89a03018b677",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f401f04f-c45b-4261-9441-f502c6569a29"
+  ]
+}

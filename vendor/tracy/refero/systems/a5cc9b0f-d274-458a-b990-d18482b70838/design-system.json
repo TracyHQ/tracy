@@ -1,0 +1,307 @@
+{
+  "dos": [
+    "Use 9999px radius for all action buttons, nav items, and tag pills — pill-shaped controls are the signature geometry.",
+    "Set primary text and borders to #f7f8f8 against #08090a canvas — the near-white-on-near-black contrast is the entire brand.",
+    "Use Inter Variable at weight 510 for headings and 590 for emphasis — avoid 600/700 bold, the half-step weights are the signature.",
+    "Apply negative letter-spacing across all sizes: -0.010em for body, scaling to -0.022em at display 48px.",
+    "Layer surfaces with the gray stack: #08090a → #141516 → #1c1c1f → #23252a → #2d2e31. Each level is exactly one step lighter.",
+    "Use 1px hairline borders in #23252a or #34343a for all dividers, card edges, and input frames — never use drop shadows for separation.",
+    "Reserve Berkeley Mono for inline code references and command examples only — it should appear sparingly as a technical accent."
+  ],
+  "donts": [
+    "Do not introduce chromatic brand colors, accent fills, or gradient CTAs — the 3% colorfulness is a discipline, not a limitation.",
+    "Do not use 600/700 font weights for headings — Linear's typographic voice is weight 510/590, not bold.",
+    "Do not apply drop shadows to cards or panels — use surface-level gray shifts instead. The only shadow is the 1px stroke pattern.",
+    "Do not use filled buttons with solid backgrounds for primary actions — outlined pill buttons (1px #f7f8f8 border) are the only action style.",
+    "Do not break the compact 4px base spacing rhythm with large gaps — section gaps stay at 48px, element gaps at 6–8px.",
+    "Do not use rounded corners larger than 8px on cards or images — 4–5px and 8px are the only card radii; 9999px is pill-only.",
+    "Do not use 600/700 bold for inline emphasis in body text — use weight 590 or rely on color shift to #f7f8f8 for highlight."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#08090a",
+      "name": "Onyx Canvas",
+      "role": "Page background, primary surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#141516",
+      "name": "Carbon Surface",
+      "role": "Elevated card, input field, subtle surface layer",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1c1c1f",
+      "name": "Graphite Surface",
+      "role": "Mid-elevation panels, nested surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#23252a",
+      "name": "Smoke Surface",
+      "role": "Hover state, deeper card, button surface tone",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2d2e31",
+      "name": "Iron Surface",
+      "role": "Pressed/active surface, highest tier elevation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#34343a",
+      "name": "Ash Border",
+      "role": "Primary hairline border — dividers, table rows, list separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3e3e44",
+      "name": "Ferrite Border",
+      "role": "Inner shadow stroke, focus-adjacent borders, subtle 1px outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#62666d",
+      "name": "Steel Text",
+      "role": "Tertiary text, icon muted state, low-emphasis helper text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7f7f80",
+      "name": "Pewter Text",
+      "role": "Disabled text, placeholder-tier secondary content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8a8f98",
+      "name": "Fog Text",
+      "role": "Muted body text, metadata, timestamps, nav sub-items",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d0d6e0",
+      "name": "Mist Text",
+      "role": "Secondary text, descriptions, list body, paragraph fallback",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e4e5e9",
+      "name": "Chalk Border",
+      "role": "Light icon accent, rare light-tone dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f8f8",
+      "name": "Snow",
+      "role": "Primary text, headings, logo, pill button border — the only near-white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#030404",
+      "name": "Void",
+      "role": "Deepest recess, box-shadow tint, absolute dark accent",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed dark canvas with a max-width content column (~640–720px) centered for prose, expanding to ~1080px for wider sections. The page is single-column changelog: a sticky top nav, then a large section title ('Now') with inline tab nav, followed by dated entries stacked vertically with generous 48px section gaps. Each entry uses a left-aligned date marker and right-flowing content. No multi-column grids in the main flow — the icon grid is the only matrix layout, centered as a contained block. Navigation is minimal: a single top bar with logo, 6 text links, and a outlined pill CTA. No sidebar, no mega-menu, no footer in viewport.",
+  "imagery": "Visual language is UI-dominant with minimal decorative imagery. The page features inline product screenshots and app connector icon grids — small rounded squares (8px radius) showing brand glyphs in white on dark surfaces. Product illustrations are contained, not full-bleed, and sit within the content column at modest sizes. The only gradient is a subtle horizontal shimmer (#e4e5e9 → #9c9da1) likely used on the logo or a brand mark. No lifestyle photography, no abstract atmospheric renders — the interface itself is the visual.",
+  "similar": [
+    {
+      "why": "Same near-black canvas, monochrome palette, pill-shaped outlined CTAs, and hairline-border surface treatment with no drop shadows.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Dark-mode product UI with 9999px pill buttons, compact density, and Inter-based typography with custom weight steps.",
+      "business": "Raycast"
+    },
+    {
+      "why": "Developer-tool aesthetic with stacked gray surfaces, minimal chromatic accent, and typographic discipline over decorative imagery.",
+      "business": "Cursor"
+    },
+    {
+      "why": "Restrained dark UI with subtle surface elevation via gray shifts, though Notion uses more whitespace and less density.",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "9999px",
+      "tags": "4px",
+      "cards": "8px",
+      "icons": "4.4625px",
+      "inputs": "4px",
+      "buttons": "9999px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "48px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1080px"
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#08090a",
+      "name": "Onyx Canvas",
+      "level": 0,
+      "purpose": "Page background, full-bleed base"
+    },
+    {
+      "hex": "#141516",
+      "name": "Carbon",
+      "level": 1,
+      "purpose": "Input fields, inline code cards"
+    },
+    {
+      "hex": "#1c1c1f",
+      "name": "Graphite",
+      "level": 2,
+      "purpose": "Nested panels, icon tiles, code snippets"
+    },
+    {
+      "hex": "#23252a",
+      "name": "Smoke",
+      "level": 3,
+      "purpose": "Borders, hover surfaces, button borders"
+    },
+    {
+      "hex": "#2d2e31",
+      "name": "Iron",
+      "level": 4,
+      "purpose": "Pressed/active state, highest elevation"
+    }
+  ],
+  "northStar": "observatory console behind dark glass.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.6,
+      "letterSpacing": -0.12
+    },
+    {
+      "role": "body",
+      "size": 15,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.15
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.288
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.416
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.13,
+      "letterSpacing": -1.056
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent site navigation",
+      "description": "Sticky header, full-bleed, background #08090a with 1px bottom border #23252a. Height ~56px. Logo (Linear mark + wordmark in #f7f8f8) left-aligned, nav links (Product, Resources, Customers, Pricing, Now, Contact) in #8a8f98 weight 510, right-aligned controls with vertical separator and ghost Login + outlined Sign Up pill."
+    },
+    {
+      "name": "Outlined Pill Button",
+      "role": "Primary and secondary actions",
+      "description": "9999px radius. Border 1px solid #f7f8f8, background transparent, text #f7f8f8 at 14px weight 510, padding 8px 16px. No fill state, no shadow — confidence comes from the white outline against near-black. Used for 'Sign up' and key conversion actions."
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Tertiary actions and nav links",
+      "description": "No border, no background. Text at 14px weight 510, color #8a8f98. Hover state transitions text color to #f7f8f8. 8px horizontal padding. Used for 'Log in', top-nav links, and inline link buttons."
+    },
+    {
+      "name": "Search Input",
+      "role": "Global search/changelog filter",
+      "description": "Dark surface #141516 with 1px border #23252a, radius 4px. Height ~32px, padding 8px 12px. Placeholder text 'Search...' in #8a8f98. Magnifying glass icon left-aligned in #8a8f98. No focus ring — just border color shift to #34343a."
+    },
+    {
+      "name": "Section Tab Nav",
+      "role": "In-page sub-navigation (Changelog tabs)",
+      "description": "Horizontal row below page title. Active tab ('Changelog') in #f7f8f8 weight 510, inactive tabs in #8a8f98. Tabs separated by 16px gap, no underline indicator. Sits at 14px, left-aligned."
+    },
+    {
+      "name": "Date Marker",
+      "role": "Changelog entry date label",
+      "description": "Small inline label with a 6px dot (chromatic accent, subtle orange/red #e4e5e9 or warm gray) and date text 'April 23, 2026' at 13px weight 400 in #8a8f98. Left-aligned to the entry, marks temporal grouping on the changelog timeline."
+    },
+    {
+      "name": "Changelog Entry Heading",
+      "role": "Release/feature title",
+      "description": "24px–32px Inter Variable weight 510, color #f7f8f8, letter-spacing -0.012em to -0.013em. Anchored to the left content column. Optional hash-anchor link icon (#8a8f98) appears on hover, positioned right of the text."
+    },
+    {
+      "name": "App Connector Icon Grid",
+      "role": "Visual showcase of integrations",
+      "description": "3-row grid of rounded squares (border-radius 8px, ~64px size), dark surface #1c1c1f with 1px border #23252a. Each tile holds a brand glyph in #f7f8f8. Subtle 1px inner stroke. Grids centered or left-aligned within content column, used to illustrate MCP connector ecosystem."
+    },
+    {
+      "name": "Inline Product Reference List",
+      "role": "Bulleted changelog body content",
+      "description": "Unordered list with 6–8px row gap, 4px left padding. Bullet character default #62666d. Body text at 15px weight 400, color #d0d6e0. Inline product names (e.g., 'Granolio', 'Glean', 'Notion', 'PostHog') bolded to weight 590 in #f7f8f8 — no underlines, no links, just typographic weight shift."
+    },
+    {
+      "name": "Command Reference Card",
+      "role": "Inline code/comment example block",
+      "description": "Dark surface #1c1c1f with 1px border #23252a, radius 4px. Padding 12px 16px. Contains a small source label ('Granolio - create issues from my last meeting') in Berkeley Mono 15px, color #f7f8f8. Optional icon cluster on right (status dots, action buttons) in #8a8f98. Mimics a code comment or terminal snippet."
+    },
+    {
+      "name": "Sub-section Divider Heading",
+      "role": "Sub-feature grouping",
+      "description": "20–24px Inter Variable weight 510, color #f7f8f8, with 16px top margin. Followed by a single-sentence preamble at 15px weight 400 in #d0d6e0. Used to break long changelog entries into scannable sub-sections."
+    },
+    {
+      "name": "Body Paragraph",
+      "role": "Default prose content",
+      "description": "15–16px Inter Variable weight 400, line-height 1.5–1.6, color #d0d6e0. Max-width constrained to ~640px within content column. Links inline at weight 510 color #f7f8f8 with no underline (underline appears on hover)."
+    },
+    {
+      "name": "Hash Anchor Link",
+      "role": "Deep-link to section",
+      "description": "Small '#' icon at 16px, color #8a8f98, appears 12px to the right of headings on hover. Subtle, functional, not decorative."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface across all UI. Weight 590 is the signature display weight — the half-step past 500/600 gives Linear a tighter, more controlled visual rhythm than typical 600-bold headlines. Used for body, nav, headings, buttons, icons, links, and footer.",
+      "sizes": "12px, 13px, 14px, 15px, 16px, 17px, 24px, 32px, 48px",
+      "family": "Inter Variable",
+      "weight": "400, 500, 510, 590",
+      "lineHeight": "1.13–2.86",
+      "substitute": "Inter (from Google Fonts) or system-ui",
+      "letterSpacing": "-0.010em to -0.022em, scaling with size",
+      "fontFeatureSettings": "\"cv01\", \"ss03\"; \"cv01\", \"ss01\", \"ss03\""
+    },
+    {
+      "role": "Monospace accent for inline code references, command examples, and technical callouts (e.g., 'Granolio - create issues from my last meeting'). Its presence signals developer-grade precision without screaming for attention.",
+      "sizes": "15px, 21px",
+      "family": "Berkeley Mono",
+      "weight": "400, 590",
+      "lineHeight": "1.30",
+      "substitute": "JetBrains Mono or IBM Plex Mono",
+      "letterSpacing": "-0.014em"
+    }
+  ],
+  "description": "Linear operates in a deep-space monochrome: a near-black canvas (#08090a) layered with whisper-quiet neutral surfaces, hairline borders at 4–5px radius, and almost no chromatic presence. The entire interface reads as machined precision — Inter Variable at custom weights (400, 500, 510, 590) with negative tracking, and Berkeley Mono reserved for inline code references. Elevation is implied by stacked grays and 1px strokes, never by drop shadows. Buttons are pill-shaped (9999px) outlined in white, never filled with brand color — confidence comes from contrast and restraint, not from accents. The result feels like an engineering control surface: dense, calm, and information-first.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "\n\n**Quick Color Reference**\n- Text primary: #f7f8f8\n- Text secondary: #d0d6e0\n- Text muted: #8a8f98\n- Background: #08090a\n- Border: #23252a\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n\n1. *Changelog entry heading*: 32px Inter Variable weight 510, color #f7f8f8, letter-spacing -0.416px, left-aligned with 48px top margin. Hash anchor icon in #8a8f98 appears on hover.\n\n2. *Outlined pill button*: 9999px radius, 1px solid #f7f8f8 border, transparent background, 14px Inter Variable weight 510 in #f7f8f8, padding 8px 16px. No fill, no shadow.\n\n3. *App connector icon tile*: 64×64px, border-radius 8px, background #1c1c1f, 1px border #23252a, centered white brand glyph at 32px. Arranged in 3-row grid with 16px gap.\n\n4. *Date marker*: 6px filled dot in warm accent color followed by 'April 23, 2026' at 13px weight 400 in #8a8f98, left-aligned to content column.\n\n5. *Inline product reference list*: Bulleted list with 8px row gap, 15px Inter Variable weight 400 in #d0d6e0, inline product names bolded to weight 590 in #f7f8f8 (no underline).\n\n"
+    },
+    {
+      "title": "Typographic Voice",
+      "content": "Linear's typography is its loudest signal. The use of Inter Variable with custom half-step weights (510 for headings, 590 for emphasis) avoids the generic 400/600/700 triad that dominates SaaS. The result: headings feel precise rather than bold, emphasis feels intentional rather than heavy. Negative letter-spacing tightens the rhythm at every size — -0.010em for body, -0.022em for display 48px. Font features 'cv01' (curved alternates) and 'ss03' (stylistic set 3) further differentiate the typeface from stock Inter. Berkeley Mono appears only in code-adjacent contexts, acting as a technical whisper rather than a stylistic flourish."
+    }
+  ],
+  "elevationPhilosophy": "Linear deliberately avoids drop shadows. Separation is achieved through three techniques: (1) stacked gray surfaces (5 levels of near-black), (2) 1px hairline borders in #23252a–#34343a, and (3) the rare inner-stroke pattern (rgba(255,255,255,0.03) inset) on elevated buttons. This creates a flat, machined feel where depth is read by value contrast, not blur or offset."
+}

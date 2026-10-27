@@ -1,0 +1,49 @@
+{
+  "id": "QA-UNIT-REG-PR-1360-preview-asset-other-host-happy",
+  "itemIds": ["regression:REG-PR-1360-preview-asset-other-host"],
+  "requirement": "Design system preview assets: stylesheets of a demo on another host read at its public address",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1360-preview-asset-other-host.json",
+    "ref": "PR #1360 (fix); fix evidence: 14/10/2026 on cowork.tracy.site after PR #1356: every preview-asset request of the 24 Joomla demos on fleet01 answered 502 DEMO_UNREADABLE and the Add site preview showed an unstyled page; the same CSS at the demo's public address answered 200",
+    "invariant": "S1: 200 text/css with the file's bytes, only the public address fetched. S2: 200 read on its container only; 400 for a picture, a page or an escape, 404 for an unknown demo, nothing fetched for them.",
+    "productSources": [
+      "apps/tracy-web/src/sites/design-system-preview-assets.js:44",
+      "apps/tracy-web/src/sites/resolver.js:1"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1360-preview-asset-other-host.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1360-preview-asset-other-host"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1360-preview-asset-other-host",
+    "pr": 1360,
+    "kind": "fix",
+    "area": "design-system/preview",
+    "file": "tests/regression/cases/REG-PR-1360-preview-asset-other-host.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/design-system-preview-assets.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-gallery-cream: #f5f6ee;
+  --color-ink: #222222;
+  --color-bone: #ffffff;
+  --color-fog: #a1a19c;
+  --color-lampblack: #000000;
+
+  /* Typography — Font Families */
+  --font-twk-lausanne: 'TWK Lausanne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

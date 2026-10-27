@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7c4e9339-591c-46c3-ac3d-20c1b5b5a568",
+  "status": "complete",
+  "name": "Perplexity AI",
+  "url": "https://styles.refero.design/style/7c4e9339-591c-46c3-ac3d-20c1b5b5a568",
+  "sourceWebsite": "https://www.perplexity.ai/products/computer",
+  "extractedAt": "2026-04-17T02:02:05.925Z",
+  "capturedAt": "2026-10-08T05:13:53.303163+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Garden of computational flora — technical interface blooming through botanical haze",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b3858e2b-e9b7-4ba4-9bb8-e1317b003845.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/bf6a2d3c-2562-4f74-871d-13308732a46c.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/d45bb24d-0c0b-4268-adaf-d30da4071dab.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/cd233019-8477-49af-9390-2106c25e7e59.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/fed2e40d-4900-46b8-ba27-d8632bb5c8ca.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3562f5a898333856ea791637399b2f65e4321bf9968c2738d6520a27a9bfedba",
+      "bytes": 22403
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "977cb9307d1c58ba7672c8e2520209b73dc9accc3f68f09676a6004595a45536",
+      "bytes": 192320
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f8e21c6be4336234c98fa83c214a24e3a29a92fba5575155f2b802c7cb231ff9",
+      "bytes": 31454
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "10a6cc9dbbd3a21f9dcb2ba34216c7e81e33feb8d0b20482de3d20decd8da55c",
+      "bytes": 12224
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "53b559d6902aa05c6fdb55a01b93a24f3c98090748d674ffc01712a455e4487e",
+      "bytes": 13206
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ea383c55371df8ad34e5768feda448a9a3d252a13c85756f7a89f1b3aa5f75fb",
+      "bytes": 4249
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f42fb3eb3ab66b2480f23ac41f5428a5c96b3d5d6c7c2cf6eceed5e5dabefb5b",
+      "bytes": 1013
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f51ae9925e5c009ed52873701fa2772c6e4c61e196b73669310bcb84cea24b6e",
+      "bytes": 1030
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "685f763310213ae342bbd6ce87b022ac04a244cb8f5b298f64725578de83f638",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d82481cf2ac00e23393c40d2d424b565e9af1dbe9e5a945e964555b61f64b081",
+      "bytes": 51576
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c2b10a2443e1279027b809ba8e9d6df8e1eb74bd6c2808c88a91ce10e507737c",
+      "bytes": 25987
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8442dd10a91a1d1a98d57bfbd8a3da9f2e380363213b0a97f553749b8e134834",
+      "bytes": 56559
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "461b200e1b6b426638428df423a649bf7be7380f333655dd54ad28f07bedc56d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "3d6bbfa70e38941f3a2eabe6de5e06bc3cfca0bf8e72cee02e2eb84d38583539",
+      "bytes": 1664
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "382831151635af566567f9bdc7df7bb1746f5664b61e4c7b78764729c2b4f28b",
+      "bytes": 2252
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "14cc44e6-41bf-4178-b834-fc61bfeed4ae",
+    "225059ac-0450-49d3-b2b7-d0e98b7ae938",
+    "312423bf-72ea-42fb-b8f5-ab0104e778f3",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "46781641-8afd-4b01-9f67-06046b6eda71",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "7c4e9339-591c-46c3-ac3d-20c1b5b5a568",
+    "81afaa5c-73ac-4ef4-9a99-296da325ea6c",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "9501cfdc-3eb3-4b64-90f6-9afdded48945",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "d5307f56-76de-4d13-9741-f969c42e9aa5",
+    "e9fff87a-63ce-4c19-840f-98233db62f58",
+    "edf7f95d-da5f-42bf-94c5-b33ade0a2ba2",
+    "ee403055-480e-4bd4-9216-07c9ae2dde2e",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

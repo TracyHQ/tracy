@@ -1,0 +1,54 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#0c0c0d",
+      "$type": "color",
+      "$description": "Ink Black — High-contrast neutral action fill for primary buttons on light surfaces."
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, text on dark fills, input backgrounds"
+    },
+    "ash": {
+      "$value": "#e9e9ec",
+      "$type": "color",
+      "$description": "Ash — Hairline borders, subtle dividers, hover surfaces, secondary button outlines"
+    },
+    "smoke": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Smoke — Muted body text, metadata (mint counts, prices), inactive icons, placeholder content"
+    },
+    "graphite": {
+      "$value": "#242629",
+      "$type": "color",
+      "$description": "Graphite — Icon strokes, secondary button borders, slightly elevated neutral surfaces"
+    },
+    "charcoal": {
+      "$value": "#1d1d1e",
+      "$type": "color",
+      "$description": "Charcoal — Rare dark surface (e.g. featured card panels) — used sparingly to create a single dark anchor in an otherwise all-white page"
+    },
+    "blush-to-violet": {
+      "$value": "#e09bb5",
+      "$type": "color",
+      "$description": "Blush to Violet — Hero wash gradient — soft pink-to-magenta transition used only as a backdrop to large featured artworks, never as a UI fill"
+    }
+  },
+  "font": {
+    "gamma-sans-display": {
+      "$value": "Gamma Sans Display",
+      "$type": "fontFamily",
+      "$description": "Single-family system used for everything from micro-labels to the 72px hero display. Weight 300 for oversized hero titles ('LIGHT') creates a near-tracery effect that lets the artwork underneath read through; weight 600 reserved for short labels and the Connect button; weight 400 carries body and metadata. The custom neo-grotesque has a slightly condensed character width and flat apertures that feel more architectural than friendly."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.gamma.io",
+      "siteName": "Gamma",
+      "extractedAt": "2026-06-03T19:45:15.850Z",
+      "variant": "compact"
+    }
+  }
+}

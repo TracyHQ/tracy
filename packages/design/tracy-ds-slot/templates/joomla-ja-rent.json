@@ -1,0 +1,1378 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-rent",
+  "release": "quickstart/ja-rent/j6@1.0.2",
+  "roles": {
+    "page": "body",
+    "display": "h1.item-title",
+    "body": "p.item-desc",
+    "button-primary": "a.slider-btn.btn",
+    "section": "#Mod87",
+    "input": "input.cell"
+  },
+  "discovered": {
+    "page": "outermost element painted the page colour (body is not)",
+    "display": "largest heading near the top: 60px",
+    "displayFace": "Roboto 600, tracking 0em",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(7, 154, 238)",
+    "section": "first padded full-width section, padding-top 72px",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 18px"
+  },
+  "keepScopes": [".t3-topbar", ".t3-header", ".t3-copyright", ".jamasshead", ".acm-slideshow"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#203c4d",
+    "--fg-2": "#203c4d",
+    "--accent": "#079aee",
+    "--accent-hover": "#067abc",
+    "--surface": "#fafafa",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#f1f1f1",
+    "--muted": "#829eaf",
+    "--font-display": "\"Roboto\", sans-serif",
+    "--font-body": "\"Roboto\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#203c4d",
+      "fg-2": "#203c4d",
+      "accent": "#079aee",
+      "accent-hover": "#067abc",
+      "surface": "#fafafa",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#f1f1f1",
+      "muted": "#829eaf"
+    },
+    {
+      "bg": "#1d4156",
+      "fg": "#829eaf",
+      "fg-2": "#ffffff",
+      "accent": "#079aee",
+      "accent-on": "#ffffff",
+      "surface-warm": "#ffffff"
+    },
+    {
+      "accent": "#829eaf"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#eeeeee",
+      "accent": "#16a6f8",
+      "border-soft": "#e5e5e5",
+      "fg": "#1d4156",
+      "accent-hover": "#0684cb",
+      "warn": "#ffa54d"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border-soft": "#e0e2e3",
+      "accent-hover": "#0077bb"
+    },
+    {
+      "surface": "#f3f8fa",
+      "border-soft": "#e1e1e1",
+      "accent-hover": "#0574b3"
+    },
+    {
+      "surface": "#f7f7f7",
+      "border-soft": "#ebebeb",
+      "accent-hover": "#0085b2"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border-soft": "#e4e4e4"
+    },
+    {
+      "surface": "#f6f6f6",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "surface": "#f9f2f4"
+    },
+    {
+      "surface": "#f4f4f4"
+    },
+    {
+      "surface": "#f1f1f1"
+    },
+    {
+      "surface": "#f3f3f3"
+    },
+    {
+      "surface": "#f0f0f0"
+    },
+    {
+      "surface": "#f8f8f8"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (79 line colours, 98 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.item-title",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.slider-btn.btn"],
+    "buttonPrimary": [".btn-primary", "a.slider-btn.btn"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Mod87"],
+    "bodyFace": ["body"],
+    "onAccent": [".t3-section-bg"]
+  },
+  "contrast": {
+    "accent-text": "div.section-header h3, #t3-mainbody a:not([class*=btn]):not(:has(img))",
+    "muted": "p.stats-description, .t3-footnav .mod-custom p",
+    "body": "p.module-intro, p.block-intro, #t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar-1",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 21 tried (byte 5845); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 315,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 21
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 92,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 23
+    },
+    {
+      "hex": "#f3f8fa",
+      "uses": 70,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 7
+    },
+    {
+      "hex": "#16a6f8",
+      "uses": 58,
+      "kind": "line",
+      "role": "accent",
+      "near": "#079aee",
+      "distance": 22
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 55,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 52,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 5
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 50,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 2
+    },
+    {
+      "hex": "#1d4156",
+      "uses": 48,
+      "kind": "text",
+      "role": "fg",
+      "near": "#203c4d",
+      "distance": 11
+    },
+    {
+      "hex": "#0684cb",
+      "uses": 40,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#067abc",
+      "distance": 18
+    },
+    {
+      "hex": "#f6f6f6",
+      "uses": 24,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 7
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 20,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#0077bb",
+      "uses": 19,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#067abc",
+      "distance": 7
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 18,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#0574b3",
+      "uses": 16,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#067abc",
+      "distance": 11
+    },
+    {
+      "hex": "#ffa54d",
+      "uses": 12,
+      "kind": "line",
+      "role": "warn",
+      "near": "#f0ad4e",
+      "distance": 17
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 11,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 10
+    },
+    {
+      "hex": "#f4f4f4",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 10
+    },
+    {
+      "hex": "#f1f1f1",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 16
+    },
+    {
+      "hex": "#e4e4e4",
+      "uses": 8,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 11
+    },
+    {
+      "hex": "#f3f3f3",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 12
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 17
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#0085b2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#067abc",
+      "distance": 16
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 3
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "sideRules": {
+    "light": {
+      ".acm-slideshow .slider-content h1": {
+        "color": "#ffffff"
+      },
+      ".acm-slideshow .slider-content p": {
+        "color": "#ffffff"
+      },
+      ".btn-decor::before": {
+        "background-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".btn-decor::after": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".btn-default::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".btn-secondary::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".btn-second::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".btn-default::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".btn-secondary::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".btn-second::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".acym_fulldiv .acym_module_form .acysubbuttons::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".acym_fulldiv .acym_module_form .acysubbuttons::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".t3-section.t3-section-bg:not(.t3-section-darker)::before": {
+        "background": "var(--ds-c-accent)"
+      },
+      ".acm-features.style-1 .owl-carousel .owl-item .features-item::after": {
+        "border-bottom-color": "var(--ds-c-border) !important"
+      },
+      ".ja-page .page-item::after": {
+        "border-bottom-color": "var(--ds-c-border-soft) !important"
+      },
+      "code": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      "kbd": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      "pre": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      "samp": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      ".alert.alert-success::before": {
+        "background": "color-mix(in oklab, var(--ds-c-success) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-success::after": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-success": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-success .alert-link": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-warning::before": {
+        "background": "color-mix(in oklab, var(--ds-c-warn) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-warning::after": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-warning": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-warning .alert-link": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-danger::before": {
+        "background": "color-mix(in oklab, var(--ds-c-danger) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-danger::after": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-danger": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-danger .alert-link": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-info::before": {
+        "background": "color-mix(in oklab, var(--ds-c-accent) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-info::after": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-info": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-info .alert-link": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-notice::before": {
+        "background": "color-mix(in oklab, var(--ds-c-accent) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-notice::after": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-notice": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-notice .alert-link": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-message::before": {
+        "background": "color-mix(in oklab, var(--ds-c-success) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-message::after": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-message": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-message .alert-link": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-error::before": {
+        "background": "color-mix(in oklab, var(--ds-c-danger) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-error::after": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-error": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-error .alert-link": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".btn-danger": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".label-danger": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".btn-danger::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-danger) 80%, var(--ds-c-ink)) !important"
+      },
+      ".btn-danger::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-danger) 80%, var(--ds-c-ink)) !important"
+      },
+      ".btn-warning": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".label-warning": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".btn-warning::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-warn) 80%, var(--ds-c-ink)) !important"
+      },
+      ".btn-warning::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-warn) 80%, var(--ds-c-ink)) !important"
+      },
+      ".btn-success": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".label-success": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".btn-success::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-success) 80%, var(--ds-c-ink)) !important"
+      },
+      ".btn-success::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-success) 80%, var(--ds-c-ink)) !important"
+      },
+      "a.list-group-item.active": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".btn.btn-secondary": {
+        "border-radius": "var(--ds-btn-radius) !important",
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-default": {
+        "border-radius": "var(--ds-btn-radius) !important",
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-second": {
+        "border-radius": "var(--ds-btn-radius) !important",
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-default:hover": {
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-default:focus": {
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-default:active": {
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-secondary:hover": {
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-secondary:focus": {
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-secondary:active": {
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-second:hover": {
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-second:focus": {
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-second:active": {
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      "h5": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      "h6": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      ".plain-style .address-top .address-detail span::after": {
+        "border-bottom-color": "color-mix(in oklab, currentColor 40%, transparent) !important"
+      },
+      ".testimonial-text": {
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".author-info": {
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".author-info span": {
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".alert .close": {
+        "opacity": "1",
+        "color": "inherit !important"
+      },
+      ".owl-carousel .owl-nav button .fa": {
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".btn.btn-danger:hover": {
+        "background-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-danger:focus": {
+        "background-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-danger:active": {
+        "background-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-success:hover": {
+        "background-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-success:focus": {
+        "background-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-success:active": {
+        "background-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-warning:hover": {
+        "background-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-warning:focus": {
+        "background-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-warning:active": {
+        "background-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important"
+      },
+      ".categories-module li a::before": {
+        "border-left-color": "var(--ds-c-accent) !important"
+      },
+      ".categories-module li a:hover::before": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".category-module li a::before": {
+        "border-left-color": "var(--ds-c-accent) !important"
+      },
+      ".category-module li a:hover::before": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".archive-module li a::before": {
+        "border-left-color": "var(--ds-c-accent) !important"
+      },
+      ".archive-module li a:hover::before": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".mostread li a::before": {
+        "border-left-color": "var(--ds-c-accent) !important"
+      },
+      ".mostread li a:hover::before": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".latestnews li a::before": {
+        "border-left-color": "var(--ds-c-accent) !important"
+      },
+      ".latestnews li a:hover::before": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".t3-tabs .nav-tabs li.active": {
+        "border-radius": "var(--ds-btn-radius)",
+        "overflow": "hidden"
+      },
+      ".t3-tabs .nav-tabs li.active a": {
+        "border-radius": "var(--ds-btn-radius)"
+      }
+    },
+    "dark": {
+      ".acm-slideshow .slider-content h1": {
+        "color": "#ffffff"
+      },
+      ".acm-slideshow .slider-content p": {
+        "color": "#ffffff"
+      },
+      ".btn-decor::before": {
+        "background-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".btn-decor::after": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".btn-default::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".btn-secondary::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".btn-second::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".btn-default::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".btn-secondary::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".btn-second::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".acym_fulldiv .acym_module_form .acysubbuttons::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".acym_fulldiv .acym_module_form .acysubbuttons::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-ink) 70%, var(--ds-c-on-ink)) !important"
+      },
+      ".t3-section.t3-section-bg:not(.t3-section-darker)::before": {
+        "background": "var(--ds-c-accent)"
+      },
+      ".acm-features.style-1 .owl-carousel .owl-item .features-item::after": {
+        "border-bottom-color": "var(--ds-c-border) !important"
+      },
+      ".ja-page .page-item::after": {
+        "border-bottom-color": "var(--ds-c-border-soft) !important"
+      },
+      "code": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      "kbd": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      "pre": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      "samp": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      ".alert.alert-success::before": {
+        "background": "color-mix(in oklab, var(--ds-c-success) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-success::after": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-success": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-success .alert-link": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-warning::before": {
+        "background": "color-mix(in oklab, var(--ds-c-warn) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-warning::after": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-warning": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-warning .alert-link": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-danger::before": {
+        "background": "color-mix(in oklab, var(--ds-c-danger) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-danger::after": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-danger": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-danger .alert-link": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-info::before": {
+        "background": "color-mix(in oklab, var(--ds-c-accent) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-info::after": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-info": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-info .alert-link": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-notice::before": {
+        "background": "color-mix(in oklab, var(--ds-c-accent) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-notice::after": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-notice": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-notice .alert-link": {
+        "color": "oklch(from var(--ds-c-accent) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-message::before": {
+        "background": "color-mix(in oklab, var(--ds-c-success) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-message::after": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-message": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-message .alert-link": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-error::before": {
+        "background": "color-mix(in oklab, var(--ds-c-danger) 80%, var(--ds-c-ink)) !important"
+      },
+      ".alert.alert-error::after": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-error": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".alert.alert-error .alert-link": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".btn-danger": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".label-danger": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".btn-danger::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-danger) 80%, var(--ds-c-ink)) !important"
+      },
+      ".btn-danger::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-danger) 80%, var(--ds-c-ink)) !important"
+      },
+      ".btn-warning": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".label-warning": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".btn-warning::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-warn) 80%, var(--ds-c-ink)) !important"
+      },
+      ".btn-warning::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-warn) 80%, var(--ds-c-ink)) !important"
+      },
+      ".btn-success": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".label-success": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0) !important"
+      },
+      ".btn-success::before": {
+        "background-color": "color-mix(in oklab, var(--ds-c-success) 80%, var(--ds-c-ink)) !important"
+      },
+      ".btn-success::after": {
+        "border-left-color": "color-mix(in oklab, var(--ds-c-success) 80%, var(--ds-c-ink)) !important"
+      },
+      ".logo-img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      "a.list-group-item.active": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".btn.btn-secondary": {
+        "border-radius": "var(--ds-btn-radius) !important",
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-default": {
+        "border-radius": "var(--ds-btn-radius) !important",
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-second": {
+        "border-radius": "var(--ds-btn-radius) !important",
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-default:hover": {
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-default:focus": {
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-default:active": {
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-secondary:hover": {
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-secondary:focus": {
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-secondary:active": {
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-second:hover": {
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-second:focus": {
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-second:active": {
+        "background-color": "transparent !important",
+        "border": "1px solid var(--ds-c-fg-2) !important"
+      },
+      "h5": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      "h6": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      ".plain-style .address-top .address-detail span::after": {
+        "border-bottom-color": "color-mix(in oklab, currentColor 40%, transparent) !important"
+      },
+      ".testimonial-text": {
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".author-info": {
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".author-info span": {
+        "color": "var(--ds-c-fg-2) !important"
+      },
+      ".alert .close": {
+        "opacity": "1",
+        "color": "inherit !important"
+      },
+      ".owl-carousel .owl-nav button .fa": {
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".wrap.t3-topbar": {
+        "background-color": "transparent !important"
+      },
+      ".wrap.t3-header": {
+        "background-color": "transparent !important"
+      },
+      ".plain-style .detail-contact": {
+        "background-color": "var(--ds-c-surface-warm) !important"
+      },
+      ".btn.btn-danger:hover": {
+        "background-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-danger:focus": {
+        "background-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-danger:active": {
+        "background-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-danger) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-success:hover": {
+        "background-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-success:focus": {
+        "background-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-success:active": {
+        "background-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-success) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-warning:hover": {
+        "background-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-warning:focus": {
+        "background-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important"
+      },
+      ".btn.btn-warning:active": {
+        "background-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important",
+        "border-color": "color-mix(in oklab, var(--ds-c-warn) 85%, var(--ds-c-ink)) !important"
+      },
+      ".categories-module li a::before": {
+        "border-left-color": "var(--ds-c-accent) !important"
+      },
+      ".categories-module li a:hover::before": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".category-module li a::before": {
+        "border-left-color": "var(--ds-c-accent) !important"
+      },
+      ".category-module li a:hover::before": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".archive-module li a::before": {
+        "border-left-color": "var(--ds-c-accent) !important"
+      },
+      ".archive-module li a:hover::before": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".mostread li a::before": {
+        "border-left-color": "var(--ds-c-accent) !important"
+      },
+      ".mostread li a:hover::before": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".latestnews li a::before": {
+        "border-left-color": "var(--ds-c-accent) !important"
+      },
+      ".latestnews li a:hover::before": {
+        "border-left-color": "var(--ds-c-accent-hover) !important"
+      },
+      ".t3-tabs .nav-tabs li.active": {
+        "border-radius": "var(--ds-btn-radius)",
+        "overflow": "hidden"
+      },
+      ".t3-tabs .nav-tabs li.active a": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".btn-inverse": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 80%, var(--ds-c-on-ink)) !important"
+      },
+      ".acymailing_module a.acymailing_togglemodule": {
+        "background-color": "color-mix(in oklab, var(--ds-c-ink) 80%, var(--ds-c-on-ink)) !important"
+      }
+    }
+  },
+  "keepColors": {
+    ".t3-header": "rgb(32, 60, 77)",
+    ".t3-copyright": "rgb(130, 158, 175)"
+  },
+  "remeasureNote": "re-measured 11/10/2026 with the per-element probe: the newsletter band (.t3-section-bg: a photo under an accent veil, its ::before) took the page's text on the system's accent veil (1.03:1 under Moxie) — its text takes the accent's own text colour (selectors.onAccent); the kept header and copyright bands inherited the followed footer's text (#383838 on its navy under MotherDuck) — keepColors gives it its own; the hero slideshow (.acm-slideshow: white title and text on a dark photo) took the system's text, grey on the photo under MotherDuck (seen on the screenshot), so its words keep the template's own colours on its photo, white and #079aee, under every system (sideRules on both sides; keeping the whole band also kept its button, which the role probe reads; the system's accent on the photo read 1.81:1 under Apple)",
+  "measureStill": true,
+  "measureStillNote": "the hero is an owl carousel that runs by itself: measured mid-transition, its title sat over no photo (1.7:1 read under MotherDuck on one run only), so the flow stops it on its first slide",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (and the hero photo now read as a picture: flow.mjs takes an <img> under the text as the ground) on the local build of quickstart/ja-rent/j6 1.0.2 (~/tracy-bench-work/release/ds-batch1/ja-rent/release) (tasks/evidence/ds-remeasure-4-2026-10-11/ja-rent-j6): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, no text under 4.5:1 worse than the template's own (the lowest, 1.2 on the phone hero, is the template's own blue line on its photo), 80% or more of the page follows, every contrast kind sampled in every view. The first pass failed 8 of 8 system views: the newsletter band's text on its accent veil (selectors.onAccent), the kept header and copyright bands' inherited text (keepColors), and the hero title on its photo (sideRules: the template's own white and #079aee under every system; measureStill); checked by eye on the four systems' screenshots, desktop and phone. Earlier: measured 11/10/2026 on the local build of ja-rent/j6 1.0.2 (tasks/evidence/ds-contracts-batch1-2026-10-11/ja-rent-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: accent-text, muted, body, footer), 85% or more of the page follows; without a system 1.0.2 computes exactly what 1.0.1 does; the copyright band (.t3-copyright, #183545) is kept: its white links stayed white on it",
+  "contrastNote": "the home page has no #t3-mainbody text: its own section intros (body), section titles in the accent, the stats band and footer text are what a reader reads (11/10/2026)",
+  "minVersion": {
+    "quickstart/ja-rent/j6": "1.0.2"
+  },
+  "maxVersion": {
+    "quickstart/ja-rent/j6": "1.0.5"
+  },
+  "maxVersionNote": "1.0.5 19/10/2026: role-variable build of ja-products ja_rent (role scan clean: every colour, corner and font that plays a role reads its --ds-* variable with its own value as the fallback, the colour themes and the RTL build included); release-batch verify against 1.0.4: 0 computed differences, same pixels. Before: 1.0.4 16/10/2026 (#1375): re-cut of 1.0.3 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".t3-topbar": {
+      "ground": "#ffffff",
+      "texts": ["#999999", "#203c4d"],
+      "important": true,
+      "kind": "panel",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ":is(a, span, li, .menu-item-title, .dropdown-toggle)": {
+          "color": "text"
+        },
+        "i.fa": {
+          "color": "accent"
+        },
+        ":is(.topbar-1, .topbar-2, .mod-custom, .login-switch, .register-switch)": {
+          "border-color": "ground"
+        }
+      }
+    },
+    ".t3-header": {
+      "ground": "#ffffff",
+      "texts": ["#1d4156"],
+      "paint": {
+        ".nav li a": {
+          "color": "accent"
+        },
+        "&": {
+          "color": "text",
+          "border-bottom-color": "accent"
+        },
+        ":is(a, span, li, .menu-item-title, .dropdown-toggle)": {
+          "color": "text"
+        },
+        ".caret": {
+          "border-top-color": "text",
+          "border-bottom-color": "text"
+        },
+        ":is(a:hover, .open > a, .active > a) .caret": {
+          "border-top-color": "accent",
+          "border-bottom-color": "accent"
+        }
+      },
+      "important": true,
+      "kind": "panel",
+      "repaint": true
+    },
+    ".t3-copyright": {
+      "ground": "#183545",
+      "texts": ["#ffffff", "#829eaf"],
+      "important": true,
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ":is(small, a, span)": {
+          "color": "text-2"
+        }
+      }
+    },
+    ".features-item": {
+      "ground": "#1d4156",
+      "texts": ["#ffffff", "#829eaf"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".inner h3", ".inner p"],
+      "paint": {
+        ".font-icon": {
+          "color": "accent"
+        },
+        "&": {
+          "border-bottom-color": "text-2"
+        }
+      }
+    },
+    ".wrap.t3-section.t3-section-darker": {
+      "ground": "#1d4156",
+      "texts": ["#ffffff", "#829eaf"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".stats-item-counter", ".stats-subject", ".stats-description"],
+      "paint": {
+        ".carousel-control .fa": {
+          "background-color": "accent-fill",
+          "color": "ground"
+        },
+        ".carousel-indicators li.active": {
+          "background-color": "accent-fill",
+          "border-color": "accent-fill"
+        },
+        ".stats-item-icon": {
+          "color": "accent"
+        }
+      }
+    },
+    ".wrap.t3-footer": {
+      "ground": "#1d4156",
+      "texts": ["#829eaf", "#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [
+        ".module-title span",
+        ".item-145 a",
+        ".item-149 a",
+        ".item-146 a",
+        ".item-147 a",
+        ".item-137 a",
+        ".item-134 a",
+        ".item-138 a",
+        ".item-135 a",
+        ".item-136 a",
+        ".item-155 a",
+        ".item-156 a"
+      ],
+      "vars": {
+        "--ds-c-bg": "ground",
+        "--ds-c-fg": "text",
+        "--ds-c-fg-2": "text-2",
+        "--ds-c-muted": "text-2"
+      },
+      "paint": {
+        "&": {
+          "border-top-color": "accent"
+        },
+        ".t3-module": {
+          "background-color": "ground"
+        }
+      }
+    },
+    ".jamasshead": {
+      "ground": "#555555",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    ".contact-suburb": {
+      "ground": "#1d4156",
+      "texts": ["#ffffff", "#829eaf"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text",
+          "border-bottom-color": "text-2"
+        },
+        "> span": {
+          "color": "text-2"
+        },
+        "> i": {
+          "color": "text-2"
+        }
+      }
+    },
+    ".contact-emailto": {
+      "ground": "#1d4156",
+      "texts": ["#829eaf", "#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": ["joomla-hidden-mail a"],
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text",
+          "border-bottom-color": "text-2"
+        },
+        "> span": {
+          "color": "text-2"
+        },
+        "> i": {
+          "color": "text-2"
+        }
+      }
+    },
+    ".contact-telephone": {
+      "ground": "#1d4156",
+      "texts": ["#ffffff", "#829eaf"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text",
+          "border-bottom-color": "text-2"
+        },
+        "> span": {
+          "color": "text-2"
+        },
+        "> i": {
+          "color": "text-2"
+        }
+      }
+    },
+    ".acm-slideshow": {
+      "ground": "#2b2b2b",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true,
+      "paint": {
+        ".slider-content h1 span": {
+          "color": "accent"
+        }
+      },
+      "accentLarge": "(min-width: 768px)"
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; .wrap.t3-footer sets the page tokens inside it to its own ground and words (13/10/2026): the released stylesheet paints the footer modules with var(--ds-c-bg, #1d4156), which turned them white under a light system; the page role is body, not the dark stats section #Mod89; the inner pages masthead (.jamasshead, JA Masshead module: a photo under white title and breadcrumb) is a picture band: its words stay white on the photo; under a light system they took its dark text and read 2.3-2.6:1 on the dark photo (JA Directory /contact-us and /news under Stripe, inner pages measured 14/10/2026); blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent; the contact page’s three navy boxes (.contact-suburb, .contact-emailto, .contact-telephone, drafted 14/10 as fills) set their words straight in the box, in a label span and an icon: drafted with an empty word and a tag-only one, the email label came out the page’s dark text on the box’s worn navy. Each box repaints its own words (&: text), its label and icon (text-2) and the email link (joomla-hidden-mail a) .acm-slideshow accentLarge (14/10/2026): the slide title's coloured words (.slider-content h1 span) measured on the release at 60px 600 from 768px up and 18px under it (390); worn, 55-56px from 768px (the hero's floor keeps any system at 48px or more there) and 22-23px at 390 in a 300 weight: large text from 768px up only, where they take the 3:1 accent and keep the system's hue on the photo (Stripe #c5bcfe instead of near-white #eeebff); the phone keeps the 4.5:1 accent; 19/10/2026: topbar phone icon accent and its dividers the band ground; header rim (border-bottom) accent, caret the band words (accent on hover/open/active); footer rim accent and its theme-coloured module grounds the band ground; feature icons accent and rim text-2; darker band stats icons accent; contact cards' rim text-2",
+  "sideNote": "the slideshow title highlight (h1 span, on the dark photo) is a light shade of the system accent, not the template blue #079aee it kept under every system (library matrix, 14/10/2026); replaced 14/10/2026 (visual review): the fixed mix of the accent with white made a hueless dark accent a mid grey (#858585 under Airbnb and Eddie) on a photo that runs light behind the words; the slideshow (.acm-slideshow) is a picture band whose highlight takes the accent made readable on the photo (the system’s own words for a hueless accent), its title and text keep the template’s white; 19/10/2026 (probe v10): the button stripes (.btn-decor ::before/::after, also the AcyMailing subscribe stripe) are the accent hover on accent buttons, the ink lifted toward its words on the neutral ones and the status colour deepened toward the ink on success/warning/danger; words on a status fill (alerts, danger/warning/success buttons and labels) are black or white by the fill's lightness (oklch); the neutral buttons are ink on the light side and an outline in the second text colour on the dark side (an ink fill on the dark page was either lost or the lightest fill of the page, BTN-1); the active tab, active list-group items and the neutral buttons wear the system's button corner; the colour-theme section-bg veil is the accent; feature and page-item notches the line; contact cards' notches their own words at 40%; alert close glyphs take the alert's words at full opacity; client carousel arrow glyphs accent-on; h5/h6 the heading face and code/kbd/pre/samp the mono face (FONT-2); under a dark system the header logo is inverted with its hues kept (IDENT-2), the topbar and header let the page show through and the contact form band takes the warm surface (GROUND-2: the template lifts them 1.00-1.07 off its page); hover sweep 19/10/2026: success/warning/danger buttons' hover/focus/active fills the status colour deepened toward the ink (the template's #449d44/#c9302c literals), the category/archive/latest-news list markers (a::before) the accent and the accent hover 20/10 (1.0.5): dark side lifts the inverse button (.btn-inverse, the acymailing toggle) off the page: 1.0.5 reads their fill as ink, which a dark system makes the page colour (Tagged Items clear button lost under Moxie, BTN-1).",
+  "followRules": {
+    ".nav-tabs": {
+      "border-color": "border"
+    },
+    ".features-item": {
+      "border-color": "border!"
+    },
+    ".cell, .form-control": {
+      "border-color": "border"
+    },
+    ".btn-default, .btn-secondary, .btn-second": {
+      "color": "on-ink!"
+    },
+    ".btn-default:hover, .btn-default:focus, .btn-default:active, .btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .btn-second:hover, .btn-second:focus, .btn-second:active": {
+      "color": "on-ink!"
+    },
+    ".tagspopular ul > li:hover a": {
+      "color": "accent-on!"
+    },
+    ".label-info": {
+      "background-color": "surface-warm!"
+    },
+    ".panel-info, .panel-info > .panel-heading, .panel-success, .panel-success > .panel-heading, .panel-danger, .panel-danger > .panel-heading, .panel-warning, .panel-warning > .panel-heading": {
+      "border-color": "border!"
+    },
+    ".panel-info > .panel-heading, .panel-success > .panel-heading, .panel-danger > .panel-heading, .panel-warning > .panel-heading": {
+      "background-color": "surface!"
+    },
+    ".panel-info > .panel-heading": {
+      "color": "accent-text!"
+    },
+    ".panel-success > .panel-heading": {
+      "color": "success-text!"
+    },
+    ".panel-danger > .panel-heading": {
+      "color": "danger-text!"
+    },
+    ".panel-warning > .panel-heading": {
+      "color": "warn-text!"
+    },
+    ".alert.alert-success, .alert.alert-message": {
+      "background-color": "success!",
+      "border-color": "success!"
+    },
+    ".alert.alert-danger, .alert.alert-error, .alert.danger": {
+      "background-color": "danger!",
+      "border-color": "danger!"
+    },
+    ".ja-page .page-item": {
+      "border-color": "border-soft!"
+    },
+    ".label-primary, .swatch-item.color-brand-primary dl, .list-group-item.active .list-group-item-text": {
+      "color": "accent-on!"
+    },
+    ".label-info, .label-info:hover, .label-info:focus": {
+      "color": "fg!"
+    },
+    ".t3-tabs-horizontal .nav-tabs > li.active, .t3-tabs-vertical .nav-tabs > li.active, .t3-tabs-horizontal .nav-tabs > li.active a, .t3-tabs-vertical .nav-tabs > li.active a, .t3-tabs-vertical .nav-tabs > li a.active": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".acm-accordion .panel-title a": {
+      "background-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".acm-accordion .panel-title .collapsed": {
+      "background-color": "surface!",
+      "color": "fg!"
+    },
+    ".acm-accordion .panel-title .collapsed .marker": {
+      "background-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".t3-footer": {
+      "border-top-color": "accent!"
+    },
+    ".owl-carousel .owl-nav button.owl-next, .owl-carousel .owl-nav button.owl-prev, .acm-features .owl-theme .owl-controls .owl-buttons div": {
+      "background-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".owl-carousel .owl-nav button.owl-next *, .owl-carousel .owl-nav button.owl-prev *": {
+      "color": "accent-on!"
+    },
+    ".acm-features .font-icon": {
+      "color": "meta!"
+    },
+    ".testimonial-text, .author-info, .fa-big-section": {
+      "color": "fg-2!"
+    },
+    ".t3-tabs-horizontal .nav-tabs > li, .t3-tabs-vertical .nav-tabs > li": {
+      "background-color": "bg!"
+    },
+    ".acm-testimonials .carousel-control .fa": {
+      "background-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".carousel-indicators li.active": {
+      "background-color": "accent!",
+      "border-color": "accent!"
+    },
+    ".uber-cliens .owl-theme .owl-controls .owl-buttons div, .uber-cliens .owl-theme .owl-controls .owl-buttons div .fa": {
+      "color": "accent-on!"
+    }
+  },
+  "contractNotes1317": "13/10/2026 (#1317): the white topbar and header kept their navy words on the system light side under Moxie and the copyright kept #829eaf on its ink; the three bands repaint their words with the system text (the two panels then take the system surface, dark under a dark system, so the first screen follows the mode). Tab and feature lines and form fields follow the border.",
+  "followNote": "19/10/2026 (probe v10, 1.0.4): the template's colour-theme pages (orange, green, yellow) load stylesheets that write the brand colour as literals, so the default theme's own accent pairs are restated: active tabs, accordion heads and markers, owl and client carousel arrows, testimonial carousel arrows and dots take accent/accent-on, the non-active tab cells the page ground, the feature icons meta; .btn-default/.btn-secondary/.btn-second (navy/grey fills, the tokenizer had given btn-default the page colour) words on-ink; .label-info a neutral chip (surface-warm, fg), .label-primary, the brand-primary swatch and the active list-group item text accent-on; panels' rims the line and their heads the surface with status words (accent/success/danger/warn text); filled success/danger alerts the status fills; the popular-tags hover words accent-on; page-item rims the soft line; the features rim the line; the testimonial's inline colours give way (TPL-1, CON-2, BTN-1, HOVER-1, ACCENT-LEAK, MOCK-1)"
+}

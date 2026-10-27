@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-nova/wp7/1.1.10",
+  "platform": "wordpress",
+  "theme": "wp-ja-nova",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-nova/wp7",
+    "version": "1.1.10",
+    "platform": "wordpress",
+    "platformVersion": "7.1",
+    "phpVersion": "8.3.35",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-ja-nova",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "ja-nova-wp7-webroot-1.1.10.tar.gz",
+        "bytes": 63077621,
+        "sha256": "0ba94ea3a1499989351868b8a1467930d288bd051e83deaa4de5372145de3d23",
+        "githubAssetId": 619665092,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-nova%2Fwp7/ja-nova-wp7-webroot-1.1.10.tar.gz"
+      },
+      "database": {
+        "file": "ja-nova-wp7-database-1.1.10.sql.gz",
+        "bytes": 61820,
+        "sha256": "13d9cb35c0ca0471db9d4a3e6dbdbcbc6e986885f9aca67f1c826b8c0dd39c9a",
+        "githubAssetId": 619665093,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-nova%2Fwp7/ja-nova-wp7-database-1.1.10.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.18.0",
+  "mode": "content-recommendation"
+}

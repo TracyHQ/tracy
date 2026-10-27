@@ -1,0 +1,25 @@
+/*
+Theme Name: Tracy Business
+Theme URI: https://tracy.ai
+Update URI: https://github.com/TracyHQ/claude-cowork
+Description: Northgate Industrial: the Tracy Business company site as a WordPress block theme.
+Version: 1.0.0
+Author: Tracy
+Author URI: https://tracy.ai
+Requires at least: 7.0
+Tested up to: 7.1
+Requires PHP: 8.1
+Text Domain: wp-tracy-business
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+/*
+Tracy Business WordPress Theme, (C) 2026 Tracy (https://tracy.ai)
+Tracy Business is distributed under the terms of the GNU GPL v2 or later.
+Built from the Tracy block theme generator; its look is the measured token set of the
+Northgate Industrial design (overlays/wp-tracy-business/tokens.css), not a library system.
+*/
+
+/* The Version line above is rewritten by scripts/build.mjs from package.json.
+ * Styles live in assets/css/ (enqueued by functions.php) and in theme.json. */

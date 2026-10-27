@@ -1,0 +1,18 @@
+meta {
+  name: contents
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}/contents?type=page&limit=5&fields=title,url
+  body: none
+  auth: inherit
+}
+
+docs {
+  # A page of contents
+
+  The Content API envelope for a listing: `contents[]` trimmed by `fields`, `pagination.nextCursor`
+  for the next page (send it as `cursor` with the same filters). ETag = `snapshot.revision`.
+}

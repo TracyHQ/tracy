@@ -1,0 +1,287 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-civica",
+  "release": "quickstart/ja-civica/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.cv-hero__title",
+    "heading": "h2",
+    "body": "p.cv-hero__intro",
+    "button-primary": "a.btn.cv-btn",
+    "container": "div.cv-container",
+    "section": "#acm-mission-letter-186"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 74.88px",
+    "displayFace": "Fraunces 400, tracking -0.015em",
+    "heading": "first section heading: 36px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(242, 183, 5)",
+    "container": "first content container, max-width 1320px",
+    "section": "first padded full-width section, padding-top 112px"
+  },
+  "keepScopes": [".acm-hero", ".acm-statistics", ".acm-cta", ".t4-footnav", ".t4-footer-brand"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#26312c",
+    "--fg-2": "#10241c",
+    "--accent": "#f2b705",
+    "--accent-hover": "#0f5c3c",
+    "--surface": "#f4f6f2",
+    "--surface-warm": "#10241c",
+    "--meta": "#c9d3cd",
+    "--success": "#2f6b4f",
+    "--warn": "#f2b705",
+    "--danger": "#a33a2a",
+    "--border": "#dfe4dc",
+    "--muted": "#56645c",
+    "--font-display": "\"Fraunces\", sans-serif",
+    "--font-body": "\"Hanken Grotesk\", sans-serif",
+    "--accent-on": "#10241c"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#26312c",
+      "fg-2": "#10241c",
+      "accent": "#15784f",
+      "accent-hover": "#0f5c3c",
+      "surface": "#f4f6f2",
+      "surface-warm": "#10241c",
+      "meta": "#c9d3cd",
+      "success": "#2f6b4f",
+      "warn": "#f2b705",
+      "danger": "#a33a2a",
+      "border": "#dfe4dc",
+      "muted": "#60686f"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#26312c",
+      "muted": "#56645c",
+      "fg-2": "#10241c",
+      "accent": "#f2b705",
+      "accent-on": "#10241c",
+      "surface-warm": "#10241c"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "border": "#ced4da",
+      "fg": "#212529",
+      "surface": "#f8f9fa",
+      "surface-warm": "#10241c",
+      "accent": "#f2b705",
+      "border-soft": "#e9ecef"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (16 line colours, 19 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.cv-hero__title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.cv-btn"],
+    "buttonPrimary": [".btn-primary", "a.btn.cv-btn"],
+    "container": [".t4-section .container", "div.cv-container:not(.acm-statistics .cv-container)"],
+    "section": ["#acm-mission-letter-186"],
+    "bodyFace": ["body"],
+    "eyebrow": [".cv-eyebrow"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t4-section p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 14 tried (byte 4659); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ced4da",
+      "uses": 19,
+      "kind": "line",
+      "role": "border",
+      "near": "#dfe4dc",
+      "distance": 23
+    },
+    {
+      "hex": "#212529",
+      "uses": 14,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#26312c",
+      "distance": 13
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#f4f6f2",
+      "distance": 9
+    },
+    {
+      "hex": "#10241c",
+      "uses": 6,
+      "kind": "custom",
+      "role": "surface-warm",
+      "near": "#10241c",
+      "distance": 0
+    },
+    {
+      "hex": "#f2b705",
+      "uses": 4,
+      "kind": "custom",
+      "role": "accent",
+      "near": "#f2b705",
+      "distance": 0
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "templateVars": {
+    "--cv-gold": "var(--ds-c-accent-text)",
+    "--cv-primary": "var(--ds-c-accent-text)",
+    "--cv-cta": "var(--ds-c-accent)",
+    "--cv-on-cta": "var(--ds-c-accent-on)",
+    "--cv-band-text": "#c9d3cd",
+    "--cv-band-heading": "#ffffff",
+    "--cv-accent-on-dark": "#f2b705"
+  },
+  "templateVarsNote": "JA Civica's own --cv-* family: --cv-gold (#b3550f) paints its eyebrow labels and a few accents as text, a name tokenize.mjs cannot place: it takes the accent made readable on the page; --cv-primary paints text 24 of 30 times: the readable accent. --cv-cta / --cv-on-cta (its yellow calls to action and their text) take the accent and its text together. Its dark bands paint var(--cv-band-dark), which no rule may follow (a name tokenize.mjs cannot place), so the text on them keeps the template's own (--cv-band-text #c9d3cd, --cv-band-heading #ffffff), as a band the page keeps; --cv-accent-on-dark (#f2b705, its yellow on those dark bands) stays with them",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the release build 1.0.1 itself (stand.mjs --from-dir, tasks/evidence/ds-contracts-r3a-2026-10-11/ja-civica-j6): controls 0 differences before and after, 0 texts (every heading and text element, desktop and phone) less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple, 64-100% of the page follows; dark and light screenshots looked at (desktop and phone): the numbers band keeps the template's width (under Apple's narrower container its figures ran into each other). Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 4/12 verdicts, controls 0 differences, no text made less readable than the template's own, 64% or more of the page follows, every contrast kind sampled at 1440 and 390 (the failed verdicts are page-role misses only, as before); checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-civica-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-civica 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 4/12 verdicts (the eight failed are the primary-button role only: the template's yellow call to action is kept, as the note above says), controls 0 differences, no text below 4.5:1 worse than the template's own, 64-100% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-civica-j6",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples)",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#26312c",
+    "--body-link-color": "#15784f",
+    "--body-link-hover-color": "#0f5c3c",
+    "--color-primary": "#15784f",
+    "--color-secondary": "#10241c",
+    "--color-success": "#2f6b4f",
+    "--color-info": "#1f5a6b",
+    "--color-warning": "#f2b705",
+    "--color-danger": "#a33a2a",
+    "--color-light": "#f4f6f2",
+    "--color-dark": "#10241c",
+    "--mainnav-text-color": "#10241c",
+    "--mainnav-link-color": "#10241c",
+    "--mainnav-link-hover-color": "#15784f",
+    "--mainnav-link-active-color": "#15784f",
+    "--footer-bg-color": "#10241c",
+    "--footer-text-color": "#c9d3cd",
+    "--footer-link-color": "#ffffff",
+    "--footer-link-hover-color": "#f2b705",
+    "--cv-gold": "#b3550f",
+    "--cv-primary": "#15784f",
+    "--cv-cta": "#f2b705",
+    "--cv-on-cta": "#10241c",
+    "--cv-band-text": "#c9d3cd",
+    "--cv-band-heading": "#fff",
+    "--cv-accent-on-dark": "#f2b705"
+  },
+  "minVersion": {
+    "quickstart/ja-civica/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-civica/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "minVersionNote": "1.0.1 = the rolling zip (ja-civica-j6-quickstart.zip, GitHub digest dd0d62f5de96cac90b81117aba5ac5ccf9cbab0ad8e10cc7c4895e1c77ffb904, read as 1.0.0 as /ops' setting proposal would) with its stylesheets tokenized, and the release's FIRST switch (release-batch.mjs build --rolling-as 1.0.0, zip sha256 db06b1419bf9dc798c6c4231f54bd71e9bfb497214aa7cc779647e04d97668cd, verified 0 computed differences, same pixels, 37/37 pages as the rolling zip); not yet published: ~/tracy-bench-work/RELEASE-DS-R3A.sh. A switch pressed in /ops for the rolling zip itself would be 1.0.0, which this contract refuses (TEMPLATE_NEEDS_UPDATE), as it should",
+  "containerNote": "the numbers band (.acm-statistics, kept) keeps the template's width: its four 62px figures in one row need it, and under Apple's 1024px container \"128,000\" ran into \"14\" (11/10/2026, looked at on the screenshot)",
+  "bands": {
+    ".acm-hero": {
+      "ground": "#10241c",
+      "texts": ["#ffffff", "#f1e6d2", "#dde0df", "#bcc2c0", "#b8bebb"],
+      "picture": true,
+      "important": true
+    },
+    ".acm-statistics": {
+      "ground": "#10241c",
+      "texts": ["#c9d3cd", "#ffffff"],
+      "paint": {
+        ".cv-stat__suffix": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".acm-cta": {
+      "ground": "#10241c",
+      "texts": ["#ffffff", "#f1e6d2", "#dbdedd"],
+      "picture": true,
+      "important": true
+    },
+    ".t4-footnav": {
+      "ground": "#10241c",
+      "texts": ["#ffffff", "#c9d3cd"],
+      "paint": {
+        ".cv-contact-info__list div dt": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-footer-brand": {
+      "ground": "#10241c",
+      "texts": ["#ffffff", "#c9d3cd"],
+      "important": true
+    },
+    ".ja-acm.acm-hero.style-1.cv-hero.cv-hero--full": {
+      "ground": "#10241c",
+      "texts": ["#ffffff", "#f1e6d2", "#dde0df", "#bcc2c0", "#b8bebb"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [
+        ".cv-eyebrow",
+        ".cv-hero__title",
+        ".cv-hero__title em",
+        ".cv-hero__intro",
+        ".cv-hero__caption",
+        ".cv-hero__scroll"
+      ]
+    },
+    ".ja-acm.acm-cta.style-1.cv-cta.cv-cta--image": {
+      "ground": "#10241c",
+      "texts": ["#f1e6d2", "#ffffff", "#dbdedd"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".cv-eyebrow", ".cv-cta__title", ".cv-cta__intro"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours"
+}

@@ -1,0 +1,41 @@
+{
+  "pages": [
+    {
+      "id": "home",
+      "label": "Home",
+      "home": true
+    },
+    {
+      "id": "news",
+      "label": "News"
+    },
+    {
+      "id": "news/all-category",
+      "label": "All Category"
+    },
+    {
+      "id": "news/featured-articles",
+      "label": "Featured Articles"
+    },
+    {
+      "id": "pages/layouts",
+      "label": "Layouts"
+    },
+    {
+      "id": "pages/layouts/content-right-sidebar",
+      "label": "Content + Right Sidebar"
+    },
+    {
+      "id": "pages/layouts/left-sidebar-content",
+      "label": "Left Sidebar + Content"
+    },
+    {
+      "id": "pages/layouts/no-sidebar",
+      "label": "No Sidebar"
+    },
+    {
+      "id": "contact-us",
+      "label": "Contact Us"
+    }
+  ]
+}

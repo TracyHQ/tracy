@@ -1,0 +1,94 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary headings, body text, and icon fills on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "charcoal": {
+      "$value": "#18191b",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text, heading color, deep UI surfaces — slightly warmer than pure black"
+    },
+    "slate-mid": {
+      "$value": "#6a6a6c",
+      "$type": "color",
+      "$description": "Slate Mid — Body text, helper copy, muted descriptions"
+    },
+    "steel": {
+      "$value": "#7d7f80",
+      "$type": "color",
+      "$description": "Steel — De-emphasized headings, inactive labels"
+    },
+    "ash": {
+      "$value": "#acadae",
+      "$type": "color",
+      "$description": "Ash — Icon strokes, subtle heading tint, gradient base color for the shimmer effect; Decorative text/divider gradient — silver base with brief green and periwinkle flash at 35-40%"
+    },
+    "fog": {
+      "$value": "#bbbbbb",
+      "$type": "color",
+      "$description": "Fog — Hairline borders across cards, inputs, images, and dividers"
+    },
+    "mist": {
+      "$value": "#c4c4c4",
+      "$type": "color",
+      "$description": "Mist — Card borders, softer structural lines"
+    },
+    "pebble": {
+      "$value": "#dbdbdb",
+      "$type": "color",
+      "$description": "Pebble — Disabled button background, body borders — the lightest non-surface gray"
+    },
+    "cloud": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Cloud — Elevated surface tier, button borders, subtle fills"
+    },
+    "snow": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Snow — Card surface background — one step off white for gentle separation"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, input fields, icon fills, reversed text on dark elements"
+    },
+    "fern": {
+      "$value": "#448f52",
+      "$type": "color",
+      "$description": "Fern — Accent text, decorative punctuation in body copy, gradient flash color — the only chromatic voice, rationed carefully"
+    },
+    "mint-wash": {
+      "$value": "#dbeddf",
+      "$type": "color",
+      "$description": "Mint Wash — Pale green surface tint, decorative wash blocks"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Primary UI typeface — body, nav links, buttons, inputs, captions, and subheadings across the interface"
+    },
+    "instrument-serif": {
+      "$value": "Instrument Serif",
+      "$type": "fontFamily",
+      "$description": "Wordmark and editorial accents — the italic 'Anything' logo is the system's signature gesture, replacing the standard bold-sans brand mark with something handwritten and human"
+    },
+    "instrument-sans": {
+      "$value": "Instrument Sans",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface — 42px weight 600 carries the hero headline, sharing DNA with Instrument Serif so the serif/sans pairing feels intentional rather than mixed"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.createanything.com",
+      "siteName": "Anything",
+      "extractedAt": "2026-06-03T19:50:21.131Z",
+      "variant": "compact"
+    }
+  }
+}

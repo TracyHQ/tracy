@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "2c7a280c-7cc1-4766-b043-bc8bdd9b868c",
+  "status": "complete",
+  "name": "Recess",
+  "url": "https://styles.refero.design/style/2c7a280c-7cc1-4766-b043-bc8bdd9b868c",
+  "sourceWebsite": "https://takearecess.com",
+  "extractedAt": "2026-06-03T18:47:48.084Z",
+  "capturedAt": "2026-10-08T05:09:43.939298+00:00",
+  "theme": "mixed",
+  "industry": "ecommerce",
+  "description": "pastel sunset over a swimming pool",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b756bd35-75e0-41b2-93dd-8103d88d550e.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/2517d6fa-92da-485b-a698-d10c7fe87125.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/767b64d5-5233-40ce-bc63-f0d3d0794d68.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c8d3c0fd-9e65-49d0-a8b9-3944d7f294b3.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/65baba7b-ee0e-449c-8839-ba9bca0fa01e.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7a157f2fb220352019db8565462d6ccd12964e4114e5988734b6e6c0ca4538b5",
+      "bytes": 17800
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f1c96dfa35f159a12c6aca3cfcb29c4fcda67f924fca36eed9d415f6baa162f9",
+      "bytes": 133161
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d4f63bd873c47a506da921e9d6b90923481303717b142508051b2f0015cae63c",
+      "bytes": 15225
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "dc75e25f8e9ace9b3e69770e50c40d3b2f51b8ea1b6b6ced3237bd45ca0d48e0",
+      "bytes": 13514
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "496f3cfe80027af946ad9cc6417b3fdf2f9fa3c1fdb4bc12c9dc0bd7aa4f07ba",
+      "bytes": 11402
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "49513d94739686e388b338835865d9777a1e5762c2c734e411b3df08a8b8c291",
+      "bytes": 3196
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "48329a98bdb1a86d3436825977358c45097e61c5a5c6f44c465e1d846f395ab1",
+      "bytes": 747
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9c85227b1d2c5ff0d730da3fba2abdaa6b2fdae3ee1dcea86be4aebabb9a2357",
+      "bytes": 764
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "33cceec4340e082d9b078c66c9a84a8b5a4746d906ed910c6c3fdeec9fe96068",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "acbf99fe1d4229af0a7bda27305243158d3bb717ce8a365e77ab9c604b1fe2ed",
+      "bytes": 42420
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a4f5e0b1388fab2e5e8483cf922f7d32424c986ab6059095c59cb47fe8f15fb6",
+      "bytes": 22257
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f94bc09d17151b51676abe4de7db78f10749e113668c7b5cdf004fa205059f1a",
+      "bytes": 40704
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "83deae349dc0615b7a02577fc6435c6ee49c430c3de01cfa60e358f274bbf689",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "258154237c4b873221b5ca9e3d2172e4bbf73a6e616533c3a7af0421086ebae8",
+      "bytes": 1408
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "10176f1920049c1ac1a27746f67a7511c5fb8c15605788d8a41e46b58e049901",
+      "bytes": 1994
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "2c7a280c-7cc1-4766-b043-bc8bdd9b868c",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "3e5c272b-8d68-40d8-9726-b4d6914b4b16",
+    "4d42420f-a7d4-499f-8025-5af294fff0f5",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "71a9583d-1710-4696-9269-50ca8c9a2cfa",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "cfd0fec1-f25a-4b9b-9bd0-d5b66960f2f2",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "db451eca-8de6-43a9-a5d5-35271befdffd",
+    "e327d332-270d-4779-a55c-cd82b8624d2a",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

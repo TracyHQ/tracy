@@ -1,0 +1,2895 @@
+{
+  "about": "shrunk-block: probe data cut from the Add site preview under Moxie, light visitor scheme, 14/10/2026 (preview-check.mjs PREVIEW_DATA=1, no script as the frame runs, fleet01 demos). broken: JA Sensei Joomla 1.0.3, the green banner link a.btn.btn-success.btn-block, 1260 x 186 on the template page, a 1164 x 56 pill worn; clean: JA Voyara, JA Smallbiz, JA Space (its hero heading is smaller in the system's type, words are not blocks). JA Kinetic Joomla samples (14/10/2026): the logo strip grown to a tall empty band, and the same strip once the contract keeps the section rhythm off it.",
+  "broken": [
+    {
+      "source": "quickstart/ja-sensei/j6@1.0.3 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#1a1a1a",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#858273",
+        "#b7b39f",
+        "#868474",
+        "#7a786a",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1",
+            "at": "div.t3-wrapper.masthead-wrapper",
+            "text": "Say Hello to Experts eLearning",
+            "w": 1440,
+            "h": 5357,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1",
+            "at": "div.t3-wrapper-inner",
+            "text": "Say Hello to Experts eLearning",
+            "w": 1440,
+            "h": 5357,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1",
+            "at": "div.t3-topbar",
+            "text": "Say Hello to Experts eLearning",
+            "w": 1440,
+            "h": 49,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a.register-switch",
+            "text": "Create an account",
+            "w": 113,
+            "h": 19,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/div:1/a:1",
+            "at": "a",
+            "text": "",
+            "w": 81,
+            "h": 109,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:2/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Home",
+            "w": 42,
+            "h": 109,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:2/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "About Us",
+            "w": 65,
+            "h": 109,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:2/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "text": "Our Blog",
+            "w": 63,
+            "h": 109,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:2/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Contact Us",
+            "w": 78,
+            "h": 109,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:2/div:1/div:1",
+            "at": "div.acm-features.style-1",
+            "text": "The Prodigious eLearning Cours",
+            "w": 1440,
+            "h": 1075,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Start your free trial",
+            "w": 204,
+            "h": 54,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/a:2",
+            "at": "a.btn.btn-default",
+            "text": "Plans & Pricing",
+            "w": 171,
+            "h": 54,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/div:2/div:1/div:1/div:3",
+            "at": "div.mask-wrap",
+            "text": "",
+            "w": 1442,
+            "h": 220,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "Learn Anywhere",
+            "w": 143,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.action",
+            "text": "View our Courses",
+            "w": 324,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "Expert Instruction",
+            "w": 162,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.action",
+            "text": "Meet the Team",
+            "w": 324,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "Lifetime Access",
+            "w": 138,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1/a:1",
+            "at": "a.action",
+            "text": "See Plans & Pricing",
+            "w": 324,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:3/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Start your free trial",
+            "w": 204,
+            "h": 54,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Meet our Team",
+            "w": 174,
+            "h": 54,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/a:2",
+            "at": "a.btn.btn-default",
+            "text": "Become an Instructor",
+            "w": 220,
+            "h": 54,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1",
+            "at": "div.member-item",
+            "text": "Doris R. Naber\n\nOperations dir",
+            "w": 288,
+            "h": 288,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/div:1",
+            "at": "div.member-item",
+            "text": "Doris R. Naber\n\nOperations dir",
+            "w": 288,
+            "h": 288,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:3/div:1",
+            "at": "div.member-item",
+            "text": "Doris R. Naber\n\nOperations dir",
+            "w": 288,
+            "h": 288,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:4/div:1",
+            "at": "div.member-item",
+            "text": "Doris R. Naber\n\nOperations dir",
+            "w": 288,
+            "h": 288,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/div:3/div:4/div:1/div:1/div:1",
+            "at": "div.acm-testimonial.style-1",
+            "text": "TESTIMONIALS\nSensei is your be",
+            "w": 1440,
+            "h": 178,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-success.btn-block",
+            "text": "Start mastering your courses! ",
+            "w": 1260,
+            "h": 186,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/div:5/button:1",
+            "at": "button.btn.btn-primary",
+            "text": "",
+            "w": 54,
+            "h": 54,
+            "radius": 50
+          },
+          {
+            "path": "div:1/div:1/footer:1",
+            "at": "footer.wrap.t3-footer",
+            "text": "USEFUL LINKS\nHome\nServices\nCou",
+            "w": 1440,
+            "h": 723,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:1/div:1",
+            "at": "div.t3-module.module",
+            "text": "",
+            "w": 324,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1",
+            "at": "div.t3-module.module",
+            "text": "USEFUL LINKS\nHome\nServices\nCou",
+            "w": 144,
+            "h": 287,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Home",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "Services",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "text": "Courses",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Pages",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "News & Events.",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:6/a:1",
+            "at": "a",
+            "text": "Contact Us",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1",
+            "at": "div.t3-module.module",
+            "text": "CLASSES\nDevelopment\nBusiness\nI",
+            "w": 144,
+            "h": 248,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1/div:1/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Development",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "Business",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "text": "IT & Software",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1/div:1/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Design",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1/div:1/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "Photography",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1",
+            "at": "div.t3-module.module",
+            "text": "SUPPORTS\nDocumentation\nF.A.Q\nM",
+            "w": 144,
+            "h": 287,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Documentation",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "F.A.Q",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "text": "Media",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Support Policy",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "Privacy / Terms of use",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:6/a:1",
+            "at": "a",
+            "text": "Advertise",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1",
+            "at": "div.t3-module.module",
+            "text": "RESOURCES\nGet the Theme\nDeals ",
+            "w": 144,
+            "h": 248,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1/div:1/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Get the Theme",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "Deals & Coupons",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "text": "How It Works",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1/div:1/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Tips & Tricks",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1/div:1/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "Terms of Service",
+            "w": 144,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:2/div:1/div:1/div:1/div:1/small:2/a:2",
+            "at": "a",
+            "text": "GNU General Public License.",
+            "w": 178,
+            "h": 20,
+            "radius": 0
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1",
+            "at": "div.t3-wrapper.masthead-wrapper",
+            "text": "Say Hello to Experts eLearning",
+            "w": 1440,
+            "h": 5028,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1",
+            "at": "div.t3-wrapper-inner",
+            "text": "Say Hello to Experts eLearning",
+            "w": 1440,
+            "h": 5028,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1",
+            "at": "div.t3-topbar",
+            "text": "Say Hello to Experts eLearning",
+            "w": 1440,
+            "h": 48,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a.register-switch",
+            "text": "Create an account",
+            "w": 116,
+            "h": 18,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/div:1/a:1",
+            "at": "a",
+            "text": "",
+            "w": 81,
+            "h": 109,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:2/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Home",
+            "w": 43,
+            "h": 109,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:2/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "About Us",
+            "w": 67,
+            "h": 109,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:2/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "text": "Our Blog",
+            "w": 63,
+            "h": 109,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:2/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Contact Us",
+            "w": 80,
+            "h": 109,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:2/div:1/div:1",
+            "at": "div.acm-features.style-1",
+            "text": "The Prodigious eLearning Cours",
+            "w": 1440,
+            "h": 1025,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Start your free trial",
+            "w": 200,
+            "h": 38,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:2/div:1/div:1/div:1/div:1/div:1/a:2",
+            "at": "a.btn.btn-default",
+            "text": "Plans & Pricing",
+            "w": 171,
+            "h": 38,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:2/div:1/div:1/div:3",
+            "at": "div.mask-wrap",
+            "text": "",
+            "w": 1442,
+            "h": 220,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "Learn Anywhere",
+            "w": 152,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.action",
+            "text": "View our Courses",
+            "w": 292,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "Expert Instruction",
+            "w": 168,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.action",
+            "text": "Meet the Team",
+            "w": 292,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "Lifetime Access",
+            "w": 145,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1/a:1",
+            "at": "a.action",
+            "text": "See Plans & Pricing",
+            "w": 292,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:3/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:3/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Start your free trial",
+            "w": 200,
+            "h": 38,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Meet our Team",
+            "w": 170,
+            "h": 38,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:3/a:2",
+            "at": "a.btn.btn-default",
+            "text": "Become an Instructor",
+            "w": 220,
+            "h": 38,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1",
+            "at": "div.member-item",
+            "text": "Doris R. Naber\n\nOperations dir",
+            "w": 264,
+            "h": 264,
+            "radius": 8
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:2/div:1",
+            "at": "div.member-item",
+            "text": "Doris R. Naber\n\nOperations dir",
+            "w": 264,
+            "h": 264,
+            "radius": 8
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:3/div:1",
+            "at": "div.member-item",
+            "text": "Doris R. Naber\n\nOperations dir",
+            "w": 264,
+            "h": 264,
+            "radius": 8
+          },
+          {
+            "path": "div:1/div:1/div:3/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:4/div:1",
+            "at": "div.member-item",
+            "text": "Doris R. Naber\n\nOperations dir",
+            "w": 264,
+            "h": 264,
+            "radius": 8
+          },
+          {
+            "path": "div:1/div:1/div:3/div:4/div:1/div:1/div:1",
+            "at": "div.acm-testimonial.style-1",
+            "text": "TESTIMONIALS\nSensei is your be",
+            "w": 1440,
+            "h": 178,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:4/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-success.btn-block",
+            "text": "Start mastering your courses! ",
+            "w": 1164,
+            "h": 56,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:5/button:1",
+            "at": "button.btn.btn-primary",
+            "text": "",
+            "w": 54,
+            "h": 54,
+            "radius": 50
+          },
+          {
+            "path": "div:1/div:1/footer:1",
+            "at": "footer.wrap.t3-footer",
+            "text": "USEFUL LINKS\nHome\nServices\nCou",
+            "w": 1440,
+            "h": 744,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:1/div:1",
+            "at": "div.t3-module.module",
+            "text": "",
+            "w": 292,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1",
+            "at": "div.t3-module.module",
+            "text": "USEFUL LINKS\nHome\nServices\nCou",
+            "w": 128,
+            "h": 287,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Home",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "Services",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "text": "Courses",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Pages",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "News & Events.",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:2/div:1/div:1/div:1/ul:1/li:6/a:1",
+            "at": "a",
+            "text": "Contact Us",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1",
+            "at": "div.t3-module.module",
+            "text": "CLASSES\nDevelopment\nBusiness\nI",
+            "w": 128,
+            "h": 248,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1/div:1/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Development",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "Business",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "text": "IT & Software",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1/div:1/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Design",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:3/div:1/div:1/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "Photography",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1",
+            "at": "div.t3-module.module",
+            "text": "SUPPORTS\nDocumentation\nF.A.Q\nM",
+            "w": 128,
+            "h": 308,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Documentation",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "F.A.Q",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "text": "Media",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Support Policy",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "Privacy / Terms of use",
+            "w": 128,
+            "h": 42,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:4/div:1/div:1/div:1/ul:1/li:6/a:1",
+            "at": "a",
+            "text": "Advertise",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1",
+            "at": "div.t3-module.module",
+            "text": "RESOURCES\nGet the Theme\nDeals ",
+            "w": 128,
+            "h": 248,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1/div:1/div:1/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Get the Theme",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "Deals & Coupons",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1/div:1/div:1/ul:1/li:3/a:1",
+            "at": "a",
+            "text": "How It Works",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1/div:1/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Tips & Tricks",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:1/div:1/div:5/div:1/div:1/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "Terms of Service",
+            "w": 128,
+            "h": 21,
+            "radius": 4
+          },
+          {
+            "path": "div:1/div:1/footer:1/div:2/div:1/div:1/div:1/div:1/small:2/a:2",
+            "at": "a",
+            "text": "GNU General Public License.",
+            "w": 182,
+            "h": 19,
+            "radius": 0
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 dark (logo strip 90 -> 290 px: the section rhythm on a strip drawn without padding)",
+      "systemColours": [
+        "#858273",
+        "#f4efd4",
+        "#868474",
+        "#93b6fb",
+        "#b7b39f",
+        "#7a786a",
+        "#84acfb",
+        "#1a1a1a",
+        "#060605",
+        "#000000",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/div:1",
+            "at": "div.t4-content",
+            "text": "Kinetic\nHome\nProduct\nPricing\nC",
+            "w": 1440,
+            "h": 4631,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:1/section:1",
+            "at": "section.hx-section.hx-pad",
+            "text": "TRUSTED BY ENGINEERING TEAMS S",
+            "w": 1440,
+            "h": 90,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:1/section:2",
+            "at": "section.acm-clients-ticker",
+            "text": "LIVE\n1.2M EVENTS/MIN\n•\np95 <40",
+            "w": 1440,
+            "h": 47,
+            "radius": 0
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/div:1",
+            "at": "div.t4-content",
+            "text": "Kinetic\nHome\nProduct\nPricing\nC",
+            "w": 1440,
+            "h": 4917,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:1/section:1",
+            "at": "section.hx-section.hx-pad",
+            "text": "TRUSTED BY ENGINEERING TEAMS S",
+            "w": 1440,
+            "h": 290,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:1/section:2",
+            "at": "section.acm-clients-ticker",
+            "text": "LIVE\n1.2M EVENTS/MIN\n•\np95 <40",
+            "w": 1440,
+            "h": 47,
+            "radius": 0
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-voyara/j6@1.0.8 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#84acfb",
+        "#b7b39f",
+        "#000000",
+        "#858273",
+        "#1a1a1a",
+        "#f4efd4",
+        "#93b6fb",
+        "#060605",
+        "#7a786a",
+        "#868474",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:2/div:1",
+            "at": "div.t4-content",
+            "text": "Voyara\nHome\nDestinations\nExper",
+            "w": 1440,
+            "h": 4560,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1",
+            "at": "header.header-block.voy-header.w-100",
+            "text": "Voyara\nHome\nDestinations\nExper",
+            "w": 1440,
+            "h": 77,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.voy-brand-link",
+            "text": "Voyara",
+            "w": 115,
+            "h": 34,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:1/a:1",
+            "at": "a.nav-link.dropdown-toggle",
+            "text": "Home",
+            "w": 88,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:2/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Destinations",
+            "w": 135,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:3/a:1",
+            "at": "a.nav-link",
+            "text": "Experiences",
+            "w": 112,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:4/a:1",
+            "at": "a.nav-link",
+            "text": "Pricing",
+            "w": 74,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:5/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Resources",
+            "w": 121,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:6/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Pages",
+            "w": 90,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/a:2",
+            "at": "a.voy-cta",
+            "text": "Plan a trip",
+            "w": 126,
+            "h": 45,
+            "radius": 9999
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2",
+            "at": "div.acm-hero-media",
+            "text": "Find trips\nNOW BOOKING · SPRIN",
+            "w": 1440,
+            "h": 660,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:1",
+            "at": "div.acm-hero-scrim",
+            "text": "",
+            "w": 1440,
+            "h": 660,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/form:1",
+            "at": "form.acm-hero-search",
+            "text": "Find trips",
+            "w": 560,
+            "h": 56,
+            "radius": 9999
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/form:1/button:1",
+            "at": "button.acm-hero-search-btn",
+            "text": "Find trips",
+            "w": 133,
+            "h": 42,
+            "radius": 9999
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Plan a trip",
+            "w": 126,
+            "h": 47,
+            "radius": 9999
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:2",
+            "at": "a.voy-btn.btn.voy-btn-ghost",
+            "text": "Watch the film",
+            "w": 182,
+            "h": 47,
+            "radius": 9999
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1",
+            "at": "div.ja-acm.acm-clients.style-1",
+            "text": "TRUSTED BY TRAVELLERS & FEATUR",
+            "w": 1440,
+            "h": 141,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1",
+            "at": "div.ja-acm.acm-features.style-1",
+            "text": "WHY VOYARA\nTravel that's plann",
+            "w": 1440,
+            "h": 616,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:1",
+            "at": "div.acm-feature",
+            "text": "Hand-built itineraries\n\nEvery ",
+            "w": 364,
+            "h": 200,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:2",
+            "at": "div.acm-feature",
+            "text": "Vetted partners only\n\nWe perso",
+            "w": 364,
+            "h": 200,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:3",
+            "at": "div.acm-feature",
+            "text": "Real humans, 24/7\n\nA flight ca",
+            "w": 364,
+            "h": 200,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1",
+            "at": "div.ja-acm.acm-destinations.style-1",
+            "text": "FEATURED JOURNEYS\nTrips our tr",
+            "w": 1440,
+            "h": 694,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/a:1",
+            "at": "a.acm-dest-browse",
+            "text": "Browse all destinations",
+            "w": 190,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:1",
+            "at": "article.voy-card.acm-dest-card",
+            "text": "4.8\nNAPLES, CAMPANIA, ITALY\nWh",
+            "w": 267,
+            "h": 351,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:1/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "w": 265,
+            "h": 182,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Where to eat in Naples: the re",
+            "w": 210,
+            "h": 50,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:2",
+            "at": "article.voy-card.acm-dest-card",
+            "text": "4.8\nSIEM REAP, CAMBODIA\nDawn a",
+            "w": 267,
+            "h": 351,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:2/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "w": 265,
+            "h": 182,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:2/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Dawn at Angkor: why you must a",
+            "w": 208,
+            "h": 73,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:3",
+            "at": "article.voy-card.acm-dest-card",
+            "text": "4.8\nKYOTO & NARA, JAPAN\nKyoto ",
+            "w": 267,
+            "h": 351,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:3/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "w": 265,
+            "h": 182,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:3/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Kyoto and Nara: Temples, Garde",
+            "w": 205,
+            "h": 73,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:4",
+            "at": "article.voy-card.acm-dest-card",
+            "text": "4.9\nKHUMBU VALLEY, SOLUKHUMBU,",
+            "w": 267,
+            "h": 351,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:4/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.9",
+            "w": 265,
+            "h": 182,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:4/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Everest Base Camp Trek",
+            "w": 223,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1",
+            "at": "div.ja-acm.acm-fsplit.style-1",
+            "text": "THE VOYARA DIFFERENCE\nOne trip",
+            "w": 1440,
+            "h": 634,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Meet your designer",
+            "w": 195,
+            "h": 45,
+            "radius": 9999
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1",
+            "at": "div.ja-acm.acm-statistics.style-1",
+            "text": "80+\nCountries covered\n12,000+\n",
+            "w": 1440,
+            "h": 211,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1",
+            "at": "div.ja-acm.acm-testimonials.style-1",
+            "text": "TRAVELLER STORIES\nThe trips sp",
+            "w": 1440,
+            "h": 566,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/figure:1",
+            "at": "figure.voy-card.acm-testimonial",
+            "text": "Voyara planned a three-week Pa",
+            "w": 364,
+            "h": 253,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/figure:2",
+            "at": "figure.voy-card.acm-testimonial",
+            "text": "I travel for work constantly a",
+            "w": 364,
+            "h": 253,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/figure:3",
+            "at": "figure.voy-card.acm-testimonial",
+            "text": "When our flight was cancelled,",
+            "w": 364,
+            "h": 253,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1",
+            "at": "div.ja-acm.acm-cta.style-1",
+            "text": "Your next great story starts w",
+            "w": 1440,
+            "h": 468,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1",
+            "at": "div.acm-cta-card.has-image",
+            "text": "Your next great story starts w",
+            "w": 1140,
+            "h": 340,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary.acm-cta-btn",
+            "text": "Start planning free",
+            "w": 189,
+            "h": 45,
+            "radius": 9999
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10",
+            "at": "div.t4-section.t4-footer",
+            "text": "Voyara\n\nCurated journeys, bout",
+            "w": 1440,
+            "h": 493,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1",
+            "at": "div.voy-footer-inner",
+            "text": "Voyara\n\nCurated journeys, bout",
+            "w": 1440,
+            "h": 492,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.voy-brand.voy-brand-link.logo-text",
+            "text": "Voyara",
+            "w": 300,
+            "h": 34,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/nav:1/ul:1/li:1/a:1",
+            "at": "a.nav-link",
+            "text": "Destinations",
+            "w": 82,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/nav:1/ul:1/li:2/a:1",
+            "at": "a.nav-link",
+            "text": "Experiences",
+            "w": 82,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/nav:1/ul:1/li:3/a:1",
+            "at": "a.nav-link",
+            "text": "Boutique Stays",
+            "w": 99,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/nav:1/ul:1/li:4/a:1",
+            "at": "a.nav-link",
+            "text": "Travel Guides",
+            "w": 91,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/nav:1/ul:1/li:1/a:1",
+            "at": "a.nav-link",
+            "text": "About Voyara",
+            "w": 89,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/nav:1/ul:1/li:4/a:1",
+            "at": "a.nav-link",
+            "text": "Sustainability",
+            "w": 88,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:3/div:1/div:1/div:1/nav:1/ul:1/li:1/a:1",
+            "at": "a.nav-link",
+            "text": "Help Center",
+            "w": 79,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:3/div:1/div:1/div:1/nav:1/ul:1/li:2/a:1",
+            "at": "a.nav-link",
+            "text": "Booking Policy",
+            "w": 97,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:3/div:1/div:1/div:1/nav:1/ul:1/li:3/a:1",
+            "at": "a.nav-link",
+            "text": "Travel Insurance",
+            "w": 110,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:3/div:1/div:1/div:1/nav:1/ul:1/li:4/a:1",
+            "at": "a.nav-link",
+            "text": "Community",
+            "w": 76,
+            "h": 27,
+            "radius": 0
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:2/div:1",
+            "at": "div.t4-content",
+            "text": "Voyara\nHome\nDestinations\nExper",
+            "w": 1440,
+            "h": 4614,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1",
+            "at": "header.header-block.voy-header.w-100",
+            "text": "Voyara\nHome\nDestinations\nExper",
+            "w": 1440,
+            "h": 77,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.voy-brand-link",
+            "text": "Voyara",
+            "w": 117,
+            "h": 34,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:1/a:1",
+            "at": "a.nav-link.dropdown-toggle",
+            "text": "Home",
+            "w": 86,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:2/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Destinations",
+            "w": 132,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:3/a:1",
+            "at": "a.nav-link",
+            "text": "Experiences",
+            "w": 108,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:4/a:1",
+            "at": "a.nav-link",
+            "text": "Pricing",
+            "w": 71,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:5/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Resources",
+            "w": 117,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:2/nav:1/div:1/ul:1/li:6/a:1",
+            "at": "a.nav-header.nav-link.dropdown-toggle",
+            "text": "Pages",
+            "w": 87,
+            "h": 76,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:1/header:1/div:1/div:1/div:3/a:2",
+            "at": "a.voy-cta",
+            "text": "Plan a trip",
+            "w": 124,
+            "h": 45,
+            "radius": 9999
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2",
+            "at": "div.acm-hero-media",
+            "text": "Find trips\nNOW BOOKING · SPRIN",
+            "w": 1440,
+            "h": 660,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:1",
+            "at": "div.acm-hero-scrim",
+            "text": "",
+            "w": 1440,
+            "h": 660,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/form:1",
+            "at": "form.acm-hero-search",
+            "text": "Find trips",
+            "w": 560,
+            "h": 52,
+            "radius": 9999
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/form:1/button:1",
+            "at": "button.acm-hero-search-btn",
+            "text": "Find trips",
+            "w": 129,
+            "h": 32,
+            "radius": 1000
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Plan a trip",
+            "w": 124,
+            "h": 47,
+            "radius": 1000
+          },
+          {
+            "path": "div:2/div:1/div:1/div:2/div:1/div:2/div:2/div:1/a:2",
+            "at": "a.voy-btn.btn.voy-btn-ghost",
+            "text": "Watch the film",
+            "w": 168,
+            "h": 47,
+            "radius": 1000
+          },
+          {
+            "path": "div:2/div:1/div:1/div:3/div:1",
+            "at": "div.ja-acm.acm-clients.style-1",
+            "text": "TRUSTED BY TRAVELLERS & FEATUR",
+            "w": 1440,
+            "h": 141,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1",
+            "at": "div.ja-acm.acm-features.style-1",
+            "text": "WHY VOYARA\nTravel that's plann",
+            "w": 1440,
+            "h": 647,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:1",
+            "at": "div.acm-feature",
+            "text": "Hand-built itineraries\n\nEvery ",
+            "w": 371,
+            "h": 200,
+            "radius": 8
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:2",
+            "at": "div.acm-feature",
+            "text": "Vetted partners only\n\nWe perso",
+            "w": 371,
+            "h": 200,
+            "radius": 8
+          },
+          {
+            "path": "div:2/div:1/div:1/div:4/div:1/div:1/div:2/div:3",
+            "at": "div.acm-feature",
+            "text": "Real humans, 24/7\n\nA flight ca",
+            "w": 371,
+            "h": 200,
+            "radius": 8
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1",
+            "at": "div.ja-acm.acm-destinations.style-1",
+            "text": "FEATURED JOURNEYS\nTrips our tr",
+            "w": 1440,
+            "h": 704,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:1/a:1",
+            "at": "a.acm-dest-browse",
+            "text": "Browse all destinations",
+            "w": 183,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:1",
+            "at": "article.voy-card.acm-dest-card",
+            "text": "4.8\nNAPLES, CAMPANIA, ITALY\nWh",
+            "w": 272,
+            "h": 355,
+            "radius": 8
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:1/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "w": 270,
+            "h": 186,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Where to eat in Naples: the re",
+            "w": 213,
+            "h": 48,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:2",
+            "at": "article.voy-card.acm-dest-card",
+            "text": "4.8\nSIEM REAP, CAMBODIA\nDawn a",
+            "w": 272,
+            "h": 355,
+            "radius": 8
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:2/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "w": 270,
+            "h": 186,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:2/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Dawn at Angkor: why you must a",
+            "w": 233,
+            "h": 71,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:3",
+            "at": "article.voy-card.acm-dest-card",
+            "text": "4.8\nKYOTO & NARA, JAPAN\nKyoto ",
+            "w": 272,
+            "h": 355,
+            "radius": 8
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:3/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.8",
+            "w": 270,
+            "h": 186,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:3/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Kyoto and Nara: Temples, Garde",
+            "w": 206,
+            "h": 71,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:4",
+            "at": "article.voy-card.acm-dest-card",
+            "text": "4.9\nKHUMBU VALLEY, SOLUKHUMBU,",
+            "w": 272,
+            "h": 355,
+            "radius": 8
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:4/a:1",
+            "at": "a.voy-card__media",
+            "text": "4.9",
+            "w": 270,
+            "h": 186,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:5/div:1/div:1/div:2/article:4/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Everest Base Camp Trek",
+            "w": 223,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1",
+            "at": "div.ja-acm.acm-fsplit.style-1",
+            "text": "THE VOYARA DIFFERENCE\nOne trip",
+            "w": 1440,
+            "h": 643,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:6/div:1/div:1/div:1/div:2/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Meet your designer",
+            "w": 175,
+            "h": 33,
+            "radius": 1000
+          },
+          {
+            "path": "div:2/div:1/div:1/div:7/div:1",
+            "at": "div.ja-acm.acm-statistics.style-1",
+            "text": "80+\nCountries covered\n12,000+\n",
+            "w": 1440,
+            "h": 211,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1",
+            "at": "div.ja-acm.acm-testimonials.style-1",
+            "text": "TRAVELLER STORIES\nThe trips sp",
+            "w": 1440,
+            "h": 570,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/figure:1",
+            "at": "figure.voy-card.acm-testimonial",
+            "text": "Voyara planned a three-week Pa",
+            "w": 371,
+            "h": 253,
+            "radius": 8
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/figure:2",
+            "at": "figure.voy-card.acm-testimonial",
+            "text": "I travel for work constantly a",
+            "w": 371,
+            "h": 253,
+            "radius": 8
+          },
+          {
+            "path": "div:2/div:1/div:1/div:8/div:1/div:1/div:2/figure:3",
+            "at": "figure.voy-card.acm-testimonial",
+            "text": "When our flight was cancelled,",
+            "w": 371,
+            "h": 253,
+            "radius": 8
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1",
+            "at": "div.ja-acm.acm-cta.style-1",
+            "text": "Your next great story starts w",
+            "w": 1440,
+            "h": 468,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1",
+            "at": "div.acm-cta-card.has-image",
+            "text": "Your next great story starts w",
+            "w": 1160,
+            "h": 340,
+            "radius": 22
+          },
+          {
+            "path": "div:2/div:1/div:1/div:9/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary.acm-cta-btn",
+            "text": "Start planning free",
+            "w": 172,
+            "h": 33,
+            "radius": 1000
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10",
+            "at": "div.t4-section.t4-footer",
+            "text": "Voyara\n\nCurated journeys, bout",
+            "w": 1440,
+            "h": 493,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1",
+            "at": "div.voy-footer-inner",
+            "text": "Voyara\n\nCurated journeys, bout",
+            "w": 1440,
+            "h": 492,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.voy-brand.voy-brand-link.logo-text",
+            "text": "Voyara",
+            "w": 300,
+            "h": 34,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/nav:1/ul:1/li:1/a:1",
+            "at": "a.nav-link",
+            "text": "Destinations",
+            "w": 79,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/nav:1/ul:1/li:2/a:1",
+            "at": "a.nav-link",
+            "text": "Experiences",
+            "w": 77,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/nav:1/ul:1/li:3/a:1",
+            "at": "a.nav-link",
+            "text": "Boutique Stays",
+            "w": 95,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:1/div:1/div:1/div:1/nav:1/ul:1/li:4/a:1",
+            "at": "a.nav-link",
+            "text": "Travel Guides",
+            "w": 85,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/nav:1/ul:1/li:1/a:1",
+            "at": "a.nav-link",
+            "text": "About Voyara",
+            "w": 84,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:2/div:1/div:1/div:1/nav:1/ul:1/li:4/a:1",
+            "at": "a.nav-link",
+            "text": "Sustainability",
+            "w": 85,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:3/div:1/div:1/div:1/nav:1/ul:1/li:1/a:1",
+            "at": "a.nav-link",
+            "text": "Help Center",
+            "w": 75,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:3/div:1/div:1/div:1/nav:1/ul:1/li:2/a:1",
+            "at": "a.nav-link",
+            "text": "Booking Policy",
+            "w": 92,
+            "h": 27,
+            "radius": 0
+          },
+          {
+            "path": "div:2/div:1/div:1/div:10/div:1/div:1/div:1/div:1/div:2/div:3/div:1/div:1/div:1/nav:1/ul:1/li:3/a:1",
+            "at": "a.nav-link",
+            "text": "Travel Insurance",
+            "w": 105,
+            "h": 27,
+            "radius": 0
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-smallbiz/j6@1.0.2 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#1a1a1a",
+        "#000000",
+        "#84acfb",
+        "#93b6fb",
+        "#7a786a",
+        "#858273",
+        "#868474",
+        "#b7b39f",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/div:1",
+            "at": "div.container-lg",
+            "text": "HOME \nABOUT US\nBLOG\nPAGES\nCONT",
+            "w": 1440,
+            "h": 4061,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1",
+            "at": "header.wrap.t3-header",
+            "text": "HOME \nABOUT US\nBLOG\nPAGES\nCONT",
+            "w": 1440,
+            "h": 96,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/a:1",
+            "at": "a",
+            "text": "",
+            "w": 144,
+            "h": 32,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1",
+            "at": "nav.navbar.navbar-default.t3-mainnav",
+            "text": "HOME \nABOUT US\nBLOG\nPAGES\nCONT",
+            "w": 1440,
+            "h": 96,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:1/a:1",
+            "at": "a.dropdown-toggle",
+            "text": "HOME",
+            "w": 80,
+            "h": 96,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "ABOUT US",
+            "w": 91,
+            "h": 96,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "CONTACT US",
+            "w": 106,
+            "h": 96,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:2",
+            "at": "div.acm-features.style-1.clearfix",
+            "text": "Logan is an amazing Barbershop",
+            "w": 1440,
+            "h": 786,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:2/div:1/div:2",
+            "at": "div.features-item.pull-left.bg-dark",
+            "text": "Logan is an amazing Barbershop",
+            "w": 544,
+            "h": 594,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:1/div:1",
+            "at": "div.features-item",
+            "text": "Haircutting\n\nDuis fermentum, j",
+            "w": 288,
+            "h": 382,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:1/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "MORE INFO",
+            "w": 224,
+            "h": 50,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:2/div:1",
+            "at": "div.features-item",
+            "text": "Shaving\n\nLorem ipsum dolor sit",
+            "w": 288,
+            "h": 358,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "MORE INFO",
+            "w": 224,
+            "h": 50,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:3/div:1",
+            "at": "div.features-item",
+            "text": "Trimming\n\nMaecenas pulvinar ve",
+            "w": 288,
+            "h": 358,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:3/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "MORE INFO",
+            "w": 224,
+            "h": 50,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:4/div:1",
+            "at": "div.features-item",
+            "text": "Styling\n\nPraesent eget arcu le",
+            "w": 288,
+            "h": 358,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:4/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "MORE INFO",
+            "w": 224,
+            "h": 50,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:4",
+            "at": "div.acm-features.style-1.clearfix",
+            "text": "Making you look good is in our",
+            "w": 1440,
+            "h": 746,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:4/div:1/div:2",
+            "at": "div.features-item.pull-right.bg-primary",
+            "text": "Making you look good is in our",
+            "w": 544,
+            "h": 554,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:4/div:1/div:2/a:1",
+            "at": "a.btn.btn-border.btn-lg",
+            "text": "PURCHASE NOW",
+            "w": 176,
+            "h": 50,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:1/div:1",
+            "at": "div.item-inner",
+            "text": "Dewey Hall\n\nINTERACTION DESIGN",
+            "w": 395,
+            "h": 558,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:2/div:1",
+            "at": "div.item-inner",
+            "text": "Lorenzo Pope\n\nINTERACTION DESI",
+            "w": 395,
+            "h": 582,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:3/div:1",
+            "at": "div.item-inner",
+            "text": "Perry Larson\n\nCEO\n\nNunc ultric",
+            "w": 395,
+            "h": 582,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:2/div:2/div:1/div:1/div:1",
+            "at": "div.info-list.bg-dark",
+            "text": "Location.\n\n4 5th Avenue at St.",
+            "w": 720,
+            "h": 760,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:3/div:1/a:1",
+            "at": "a",
+            "text": "template.placeholder@gmail.com",
+            "w": 230,
+            "h": 17,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1",
+            "at": "footer.wrap.t3-footer",
+            "text": "COPYRIGHT © 2026 JA SMALLBIZ. ",
+            "w": 1440,
+            "h": 200,
+            "radius": 0
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/div:1",
+            "at": "div.container-lg",
+            "text": "HOME \nABOUT US\nBLOG\nPAGES\nCONT",
+            "w": 1440,
+            "h": 4131,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1",
+            "at": "header.wrap.t3-header",
+            "text": "HOME \nABOUT US\nBLOG\nPAGES\nCONT",
+            "w": 1440,
+            "h": 96,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/div:1/div:1/a:1",
+            "at": "a",
+            "text": "",
+            "w": 144,
+            "h": 32,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1",
+            "at": "nav.navbar.navbar-default.t3-mainnav",
+            "text": "HOME \nABOUT US\nBLOG\nPAGES\nCONT",
+            "w": 1440,
+            "h": 96,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:1/a:1",
+            "at": "a.dropdown-toggle",
+            "text": "HOME",
+            "w": 77,
+            "h": 96,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:2/a:1",
+            "at": "a",
+            "text": "ABOUT US",
+            "w": 88,
+            "h": 96,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/header:1/nav:1/div:3/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "CONTACT US",
+            "w": 101,
+            "h": 96,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:2",
+            "at": "div.acm-features.style-1.clearfix",
+            "text": "Logan is an amazing Barbershop",
+            "w": 1440,
+            "h": 909,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:2/div:1/div:2",
+            "at": "div.features-item.pull-left.bg-dark",
+            "text": "Logan is an amazing Barbershop",
+            "w": 544,
+            "h": 709,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:1/div:1",
+            "at": "div.features-item",
+            "text": "Haircutting\n\nDuis fermentum, j",
+            "w": 288,
+            "h": 342,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:1/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "MORE INFO",
+            "w": 224,
+            "h": 34,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:2/div:1",
+            "at": "div.features-item",
+            "text": "Shaving\n\nLorem ipsum dolor sit",
+            "w": 288,
+            "h": 342,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:2/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "MORE INFO",
+            "w": 224,
+            "h": 34,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:3/div:1",
+            "at": "div.features-item",
+            "text": "Trimming\n\nMaecenas pulvinar ve",
+            "w": 288,
+            "h": 342,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:3/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "MORE INFO",
+            "w": 224,
+            "h": 34,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:4/div:1",
+            "at": "div.features-item",
+            "text": "Styling\n\nPraesent eget arcu le",
+            "w": 288,
+            "h": 342,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:2/div:4/div:1/a:1",
+            "at": "a.btn.btn-block.btn-primary",
+            "text": "MORE INFO",
+            "w": 224,
+            "h": 34,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:1/div:4",
+            "at": "div.acm-features.style-1.clearfix",
+            "text": "Making you look good is in our",
+            "w": 1440,
+            "h": 757,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:4/div:1/div:2",
+            "at": "div.features-item.pull-right.bg-primary",
+            "text": "Making you look good is in our",
+            "w": 544,
+            "h": 565,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:4/div:1/div:2/a:1",
+            "at": "a.btn.btn-border.btn-lg",
+            "text": "PURCHASE NOW",
+            "w": 166,
+            "h": 34,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:1/div:1",
+            "at": "div.item-inner",
+            "text": "Dewey Hall\n\nINTERACTION DESIGN",
+            "w": 395,
+            "h": 558,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:2/div:1",
+            "at": "div.item-inner",
+            "text": "Lorenzo Pope\n\nINTERACTION DESI",
+            "w": 395,
+            "h": 558,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:5/div:2/div:1/div:3/div:1",
+            "at": "div.item-inner",
+            "text": "Perry Larson\n\nCEO\n\nNunc ultric",
+            "w": 395,
+            "h": 558,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:2/div:2/div:1/div:1/div:1",
+            "at": "div.info-list.bg-dark",
+            "text": "Location.\n\n4 5th Avenue at St.",
+            "w": 720,
+            "h": 760,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:2/div:2/div:1/div:1/div:1/div:3/div:1/a:1",
+            "at": "a",
+            "text": "template.placeholder@gmail.com",
+            "w": 213,
+            "h": 19,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/footer:1",
+            "at": "footer.wrap.t3-footer",
+            "text": "COPYRIGHT © 2026 JA SMALLBIZ. ",
+            "w": 1440,
+            "h": 200,
+            "radius": 0
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-space/j6@1.0.4 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 light",
+      "systemColours": [
+        "#f4efd4",
+        "#000000",
+        "#b7b39f",
+        "#93b6fb",
+        "#868474",
+        "#1a1a1a",
+        "#858273",
+        "#84acfb",
+        "#7a786a",
+        "#060605",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1",
+            "at": "div.t3-wrapper.enable-effect",
+            "text": "space.\nHome \n \nProjects \n \nPag",
+            "w": 1440,
+            "h": 4738,
+            "radius": 0
+          },
+          {
+            "path": "div:1/header:1/div:1/a:1",
+            "at": "a",
+            "text": "space.",
+            "w": 67,
+            "h": 38,
+            "radius": 0
+          },
+          {
+            "path": "div:1/header:1/nav:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a.dropdown-toggle",
+            "text": "Projects",
+            "w": 69,
+            "h": 36,
+            "radius": 0
+          },
+          {
+            "path": "div:1/header:1/nav:1/div:1/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Our Blog",
+            "w": 60,
+            "h": 36,
+            "radius": 0
+          },
+          {
+            "path": "div:1/header:1/nav:1/div:1/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "Contact Us",
+            "w": 75,
+            "h": 36,
+            "radius": 0
+          },
+          {
+            "path": "div:1/header:1/div:2/div:2/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Start a Project",
+            "w": 112,
+            "h": 36,
+            "radius": 1
+          },
+          {
+            "path": "div:1/div:1/div:1/div:1",
+            "at": "div.acm-features.style-1",
+            "text": "Think the Design.\nDesign the T",
+            "w": 1440,
+            "h": 900,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Find out more",
+            "w": 167,
+            "h": 54,
+            "radius": 30
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1",
+            "at": "div.features-item.ja-animate",
+            "text": "User Experience\n\nLorem ipsum d",
+            "w": 396,
+            "h": 471,
+            "radius": 3
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "User Experience",
+            "w": 158,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.action",
+            "text": "More details",
+            "w": 288,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1",
+            "at": "div.features-item.ja-animate",
+            "text": "Identity Design\n\nLorem ipsum d",
+            "w": 396,
+            "h": 471,
+            "radius": 3
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "Identity Design",
+            "w": 146,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.action",
+            "text": "More details",
+            "w": 288,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1",
+            "at": "div.features-item.ja-animate",
+            "text": "Content Strategy\n\nLorem ipsum ",
+            "w": 396,
+            "h": 471,
+            "radius": 3
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "Content Strategy",
+            "w": 167,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1/a:1",
+            "at": "a.action",
+            "text": "More details",
+            "w": 288,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:3/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "More about us",
+            "w": 170,
+            "h": 54,
+            "radius": 30
+          },
+          {
+            "path": "div:1/div:2/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a",
+            "text": "",
+            "w": 96,
+            "h": 96,
+            "radius": 50
+          },
+          {
+            "path": "div:1/div:2/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:3/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Join our team",
+            "w": 165,
+            "h": 54,
+            "radius": 30
+          },
+          {
+            "path": "div:1/div:3/div:1/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Start a Project",
+            "w": 169,
+            "h": 54,
+            "radius": 30
+          },
+          {
+            "path": "div:1/div:4/button:1",
+            "at": "button.btn.btn-primary",
+            "text": "",
+            "w": 54,
+            "h": 54,
+            "radius": 50
+          },
+          {
+            "path": "div:1/footer:1",
+            "at": "footer.wrap.t3-footer",
+            "text": "Copyright © 2026 JA Space. All",
+            "w": 1440,
+            "h": 213,
+            "radius": 0
+          },
+          {
+            "path": "div:1/footer:1/div:1/div:1/div:1/div:1/div:1/small:2/a:2",
+            "at": "a",
+            "text": "GNU General Public License.",
+            "w": 163,
+            "h": 17,
+            "radius": 0
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1",
+            "at": "div.t3-wrapper.enable-effect",
+            "text": "space.\nHome \n \nProjects \n \nPag",
+            "w": 1440,
+            "h": 4585,
+            "radius": 0
+          },
+          {
+            "path": "div:1/header:1/div:1/a:1",
+            "at": "a",
+            "text": "space.",
+            "w": 63,
+            "h": 38,
+            "radius": 0
+          },
+          {
+            "path": "div:1/header:1/nav:1/div:1/div:1/ul:1/li:2/a:1",
+            "at": "a.dropdown-toggle",
+            "text": "Projects",
+            "w": 69,
+            "h": 36,
+            "radius": 0
+          },
+          {
+            "path": "div:1/header:1/nav:1/div:1/div:1/ul:1/li:4/a:1",
+            "at": "a",
+            "text": "Our Blog",
+            "w": 60,
+            "h": 36,
+            "radius": 0
+          },
+          {
+            "path": "div:1/header:1/nav:1/div:1/div:1/ul:1/li:5/a:1",
+            "at": "a",
+            "text": "Contact Us",
+            "w": 75,
+            "h": 36,
+            "radius": 0
+          },
+          {
+            "path": "div:1/header:1/div:2/div:2/ul:1/li:1/a:1",
+            "at": "a",
+            "text": "Start a Project",
+            "w": 106,
+            "h": 36,
+            "radius": 1
+          },
+          {
+            "path": "div:1/div:1/div:1/div:1",
+            "at": "div.acm-features.style-1",
+            "text": "Think the Design.\nDesign the T",
+            "w": 1440,
+            "h": 900,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Find out more",
+            "w": 131,
+            "h": 38,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1",
+            "at": "div.features-item.ja-animate",
+            "text": "User Experience\n\nLorem ipsum d",
+            "w": 364,
+            "h": 471,
+            "radius": 3
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "User Experience",
+            "w": 151,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.action",
+            "text": "More details",
+            "w": 256,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1",
+            "at": "div.features-item.ja-animate",
+            "text": "Identity Design\n\nLorem ipsum d",
+            "w": 364,
+            "h": 471,
+            "radius": 3
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "Identity Design",
+            "w": 139,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:2/div:1/a:1",
+            "at": "a.action",
+            "text": "More details",
+            "w": 256,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1",
+            "at": "div.features-item.ja-animate",
+            "text": "Content Strategy\n\nLorem ipsum ",
+            "w": 364,
+            "h": 471,
+            "radius": 3
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1/h4:1/a:1",
+            "at": "a",
+            "text": "Content Strategy",
+            "w": 154,
+            "h": 25,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:1/div:1/div:1/div:1/div:1/div:2/div:3/div:1/a:1",
+            "at": "a.action",
+            "text": "More details",
+            "w": 256,
+            "h": 24,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:2/div:2/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:3/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "More about us",
+            "w": 133,
+            "h": 38,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:2/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:1/div:1/a:1",
+            "at": "a",
+            "text": "",
+            "w": 96,
+            "h": 96,
+            "radius": 50
+          },
+          {
+            "path": "div:1/div:2/div:3/div:1/div:1/div:1/div:1/div:1/div:1/div:2/div:1/div:3/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Join our team",
+            "w": 130,
+            "h": 38,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:3/div:1/div:1/div:2/div:1/div:1/a:1",
+            "at": "a.btn.btn-primary",
+            "text": "Start a Project",
+            "w": 133,
+            "h": 38,
+            "radius": 1000
+          },
+          {
+            "path": "div:1/div:4/button:1",
+            "at": "button.btn.btn-primary",
+            "text": "",
+            "w": 54,
+            "h": 54,
+            "radius": 50
+          },
+          {
+            "path": "div:1/footer:1",
+            "at": "footer.wrap.t3-footer",
+            "text": "Copyright © 2026 JA Space. All",
+            "w": 1440,
+            "h": 213,
+            "radius": 0
+          },
+          {
+            "path": "div:1/footer:1/div:1/div:1/div:1/div:1/div:1/small:2/a:2",
+            "at": "a",
+            "text": "GNU General Public License.",
+            "w": 153,
+            "h": 16,
+            "radius": 0
+          }
+        ]
+      }
+    },
+    {
+      "source": "quickstart/ja-kinetic/j6@1.0.6 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 dark (the strip keeps its own padding)",
+      "systemColours": [
+        "#858273",
+        "#f4efd4",
+        "#868474",
+        "#93b6fb",
+        "#b7b39f",
+        "#7a786a",
+        "#84acfb",
+        "#1a1a1a",
+        "#060605",
+        "#000000",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/div:1",
+            "at": "div.t4-content",
+            "text": "Kinetic\nHome\nProduct\nPricing\nC",
+            "w": 1440,
+            "h": 4631,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:1/section:1",
+            "at": "section.hx-section.hx-pad",
+            "text": "TRUSTED BY ENGINEERING TEAMS S",
+            "w": 1440,
+            "h": 90,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:1/section:2",
+            "at": "section.acm-clients-ticker",
+            "text": "LIVE\n1.2M EVENTS/MIN\n•\np95 <40",
+            "w": 1440,
+            "h": 47,
+            "radius": 0
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/div:1",
+            "at": "div.t4-content",
+            "text": "Kinetic\nHome\nProduct\nPricing\nC",
+            "w": 1440,
+            "h": 4717,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:1/section:1",
+            "at": "section.hx-section.hx-pad",
+            "text": "TRUSTED BY ENGINEERING TEAMS S",
+            "w": 1440,
+            "h": 90,
+            "radius": 0
+          },
+          {
+            "path": "div:1/div:1/div:1/div:3/div:1/section:2",
+            "at": "section.acm-clients-ticker",
+            "text": "LIVE\n1.2M EVENTS/MIN\n•\np95 <40",
+            "w": 1440,
+            "h": 47,
+            "radius": 0
+          }
+        ]
+      }
+    }
+  ]
+}

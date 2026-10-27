@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-deep-iris: #16165c;
+  --color-iris-shadow: #232269;
+  --color-iris-glow: #403cd5;
+  --color-iris-pulse: #5350cc;
+  --color-iris-border: #4846c6;
+  --color-iris-veil: #524fe1;
+  --color-lilac-mist: #b1a6f6;
+  --color-clinical-cyan: #00b1ff;
+  --color-cyan-soft: #59b4ff;
+  --color-mint-vital: #00ffaa;
+  --color-teal-signal: #2ee9ff;
+  --color-cloud-white: #ffffff;
+  --color-pearl: #f4f4f6;
+  --color-ash: #d8d8e3;
+  --color-fog: #9494a9;
+
+  /* Typography — Font Families */
+  --font-gilroy: 'Gilroy', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

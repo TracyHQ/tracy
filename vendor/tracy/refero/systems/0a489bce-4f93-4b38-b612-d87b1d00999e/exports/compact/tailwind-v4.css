@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-hims-violet: #5d48db;
+  --color-carbon-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-vellum-gray: #f0f0f0;
+  --color-graphite: #2e2e2e;
+  --color-linen: #e0e0e0;
+  --color-stone: #8f8f8f;
+  --color-soft-mint: #3fd194;
+  --color-iris: #9685ff;
+
+  /* Typography */
+  --font-sofia: 'sofia', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

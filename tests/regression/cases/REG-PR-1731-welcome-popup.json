@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1731-welcome-popup",
+  "kind": "feat",
+  "title": "A new account sees the Welcome to Tracy popup once; closing or its last button records the welcome hint and it never shows again; the button opens Add site",
+  "pr": 1731,
+  "area": "ui/tracy-onboard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: Run the onboard mount tests (Welcome cases) and the tracy-web welcome scenes door tests."],
+  "expect": [
+    "Every test passes: unseen account sees the popup, x/Escape and the last scene button record `welcome` and it stays closed after reload, the button completes the first run and opens /new/?tab=tracy:add-site, the scenes door is signed-in only and serves only its own files."
+  ],
+  "selectors": {
+    "tool": "packages/ui/tracy-onboard/test/mount.test.mjs",
+    "evidence": "apps/tracy-web/test/welcome-scenes.test.mjs"
+  },
+  "evidence": "167/167 onboard tests and 5/5 scenes door tests on 25/10/2026",
+  "fence": "The first-run popup's show-once rule and the door that serves its scenes",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=60000",
+      "packages/ui/tracy-onboard/test/mount.test.mjs",
+      "apps/tracy-web/test/welcome-scenes.test.mjs"
+    ]
+  }
+}

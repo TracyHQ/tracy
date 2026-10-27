@@ -1,0 +1,442 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-prodex",
+  "release": "quickstart/ja-prodex/j6@1.0.1",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "heading": "h2.cta-title",
+    "body": "p",
+    "button-primary": "a.btn.btn-primary",
+    "container": "div.container",
+    "input": "#email_field_154"
+  },
+  "discovered": {
+    "page": "body",
+    "heading": "first section heading: 48px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(81, 55, 255)",
+    "container": "first content container, max-width 1320px",
+    "input": "first text field"
+  },
+  "keepScopes": [".t4-topbar", ".t4-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ecf2ff",
+    "--fg": "#4b4a51",
+    "--fg-2": "#192227",
+    "--accent": "#5137ff",
+    "--accent-hover": "#084298",
+    "--surface": "#ffffff",
+    "--surface-warm": "#5137ff",
+    "--meta": "#4b4a51",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#dddddd",
+    "--muted": "#87888d",
+    "--font-display": "\"Inter Tight\", sans-serif",
+    "--font-body": "\"Inter Tight\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ecf2ff",
+      "fg": "#4b4a51",
+      "fg-2": "#212529",
+      "accent": "#5137ff",
+      "accent-hover": "#084298",
+      "surface": "#f8f9fa",
+      "surface-warm": "#5137ff",
+      "meta": "#4b4a51",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#dddddd",
+      "muted": "#87888d"
+    },
+    {
+      "bg": "#ecf2ff",
+      "surface": "#ffffff",
+      "fg": "#4b4a51",
+      "fg-2": "#192227",
+      "accent": "#5137ff",
+      "accent-on": "#ffffff",
+      "surface-warm": "#192227"
+    },
+    {
+      "accent": "#fdf533"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#ffffff",
+      "fg": "#495057",
+      "fg-2": "#212529",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef"
+    },
+    {
+      "surface": "#f8f9fa"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (55 line colours, 44 text colours seen)",
+  "selectors": {
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": [".t4-section .container", "div.container"],
+    "bodyFace": ["body"],
+    "onAccent": [".acm-hero .hero-title"],
+    "cardLike": [".module-ct"],
+    "inkImages": [".acm-features.style-2 .img-icon img", ".client-list img"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": "p.testimonial-author, .t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "div.item-inner > p, div.item-inner > div.desc, div.cta-content > div.cta-desc, main p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 16 tried (byte 5763); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 128,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#ffffff",
+      "distance": 0
+    },
+    {
+      "hex": "#495057",
+      "uses": 10,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#4b4a51",
+      "distance": 9
+    },
+    {
+      "hex": "#212529",
+      "uses": 8,
+      "kind": "custom",
+      "role": "fg-2",
+      "near": "#192227",
+      "distance": 9
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 8,
+      "kind": "custom",
+      "role": "border",
+      "near": "#dddddd",
+      "distance": 10
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 7,
+      "kind": "custom",
+      "role": "surface",
+      "near": "#ffffff",
+      "distance": 10
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "followRules": {
+    ".cta-wrap.bg-white": {
+      "background-color": "surface!"
+    },
+    ".acym__user__edit__email": {
+      "border-color": "border"
+    },
+    ".btn-secondary, .btn-dark, .btn.btn-secondary, .btn.btn-dark": {
+      "background-color": "ink!",
+      "color": "on-ink!"
+    },
+    ".btn.btn-secondary:hover, .btn.btn-secondary:focus, .btn.btn-secondary:active, .btn.btn-dark:hover, .btn.btn-dark:focus, .btn.btn-dark:active": {
+      "background-color": "ink!",
+      "color": "on-ink!"
+    },
+    ".bg-dark, .bg-secondary": {
+      "background-color": "ink!"
+    },
+    ".bg-dark :is(h1, h2, h3, h4, h5, h6, p, div, span, li, a):not(.btn), .bg-dark.text-white, .bg-dark .text-white, .bg-secondary.text-white, .bg-secondary .text-white, .bg-secondary :is(h5, p, .card-header), .badge.bg-dark, .badge.bg-secondary, .features-wrap.bg-dark": {
+      "color": "on-ink!"
+    },
+    ".bg-primary": {
+      "background-color": "accent!"
+    },
+    ".bg-primary.text-white, .bg-primary .text-white, .bg-primary :is(h5, p, .card-header), .badge.bg-primary, .bg-info.text-dark, .bg-info .text-dark, .badge.bg-info, .bg-info :is(h5, p, .card-header)": {
+      "color": "accent-on!"
+    },
+    ".badge-info:hover, .badge-info:focus, a.badge-info:hover, a.badge-info:focus": {
+      "color": "accent-on!"
+    },
+    ".badge-info": {
+      "border-color": "border-soft!"
+    },
+    ".btn.btn-light, .btn.btn-light:hover, .btn.btn-light:focus": {
+      "color": "fg!"
+    },
+    ".text-black-50": {
+      "color": "muted!"
+    },
+    ".acm-hero .svg-decor path[fill=\"#01FA93\" i], .acm-hero .svg-decor path[fill=\"#04F9E0\" i]": {
+      "fill": "accent"
+    },
+    ".com_content.view-article p[style*=\"background\"]": {
+      "background-color": "surface!"
+    },
+    ".progress-bar": {
+      "color": "accent-on"
+    }
+  },
+  "followNote": "re-measured 11/10/2026 with the per-element probe: the header's dark call to action (.btn-secondary) had its fill on the system's surface and its literal white text (white on white under MotherDuck and Apple); it now takes the system's strongest text as its fill and the page colour as its text, as the template pairs them. The dark stack band (.features-wrap.bg-dark) takes the strongest text as its fill, so under a dark system it turns light while its literal white text stayed (1.16:1 under Moxie); its text takes the page colour. The same holds for the dark 'Play video' button (.btn-dark). The closing call-to-action card is Bootstrap's .bg-white (white !important), which kept its white under a dark system while its text followed (1.16:1 under Moxie): it takes the system's surface; 19/10/2026 (probe v10, 1.0.3): the dark buttons (.btn-secondary, .btn-dark), the dark stack band and the Bootstrap .bg-dark/.bg-secondary fills take the system's ink with its words (on-ink) instead of the strongest text, which under a dark system (Moxie) had made them the lightest fill of the page (BTN-1, GROUND-1, TPL-1); .bg-primary/.bg-info fills read accent-on, the progress bar's words too; .badge-info hover words accent-on and its rim the soft line (HOVER-1); .btn-light words fg, .text-black-50 muted (CON-2); the hero decor's two green fills accent (ACCENT-LEAK, SHAPE-1); the demo screenshot frames written inline white (p style background #fff) the surface (MOCK-1)",
+  "sideRules": {
+    "light": {
+      ".social-inner a:is(:hover, :focus)": {
+        "opacity": "0.7"
+      },
+      "a.link-heading:is(:hover, :focus), .footer2 a:is(:hover, :focus), .pagination .page-link:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".t4-content": {
+        "background-image": "none"
+      },
+      ".acm-features.style-3 .features-item .img-icon": {
+        "width": "fit-content",
+        "line-height": "0",
+        "border-radius": "50%",
+        "background-color": "oklch(from var(--ds-c-accent) min(l, 0.55) c h)"
+      },
+      ".acm-features.style-3 .features-item .img-icon img": {
+        "filter": "grayscale(1) brightness(0.57) contrast(20)",
+        "mix-blend-mode": "screen"
+      },
+      ".acm-features.style-4 .features-item .img-icon img": {
+        "filter": "brightness(0)"
+      },
+      ".bg-warning.text-dark": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.68 - l) * 1000, 1) 0 0) !important"
+      },
+      ".bg-warning .text-dark": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.68 - l) * 1000, 1) 0 0) !important"
+      },
+      ".badge.bg-warning": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.68 - l) * 1000, 1) 0 0) !important"
+      },
+      ".bg-warning :is(h5, p, .card-header)": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.68 - l) * 1000, 1) 0 0) !important"
+      },
+      ".com_finder .btn": {
+        "border-radius": "var(--ds-btn-radius) !important"
+      },
+      ".acm-hero .svg-decor path[fill=\"white\" i]": {
+        "fill": "var(--ds-c-accent-on)"
+      },
+      ".acm-hero .svg-decor path[fill=\"#0B2330\" i]": {
+        "fill": "var(--ds-c-fg)"
+      },
+      ".acm-hero .svg-decor [stroke=\"#0B2330\" i]": {
+        "stroke": "var(--ds-c-fg)"
+      },
+      ".btn.btn-secondary": {
+        "border-color": "var(--ds-c-ink) !important"
+      },
+      ".btn.btn-dark": {
+        "border-color": "var(--ds-c-ink) !important"
+      },
+      ".acm-hero .svg-decor [stroke=\"white\" i]": {
+        "stroke": "var(--ds-c-accent-on)"
+      }
+    },
+    "dark": {
+      ".social-inner a:is(:hover, :focus)": {
+        "opacity": "0.7"
+      },
+      "a.link-heading:is(:hover, :focus), .footer2 a:is(:hover, :focus), .pagination .page-link:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".t4-content": {
+        "background-image": "none"
+      },
+      ".logo-img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".t4-footer img[src*=logo]": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      ".acm-features.style-3 .features-item .img-icon": {
+        "width": "fit-content",
+        "line-height": "0",
+        "border-radius": "50%",
+        "background-color": "oklch(from var(--ds-c-accent) min(l, 0.55) c h)"
+      },
+      ".acm-features.style-3 .features-item .img-icon img": {
+        "filter": "grayscale(1) brightness(0.57) contrast(20)",
+        "mix-blend-mode": "screen"
+      },
+      ".acm-features.style-4 .features-item .img-icon img": {
+        "filter": "brightness(0) invert(1)"
+      },
+      ".bg-warning.text-dark": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.68 - l) * 1000, 1) 0 0) !important"
+      },
+      ".bg-warning .text-dark": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.68 - l) * 1000, 1) 0 0) !important"
+      },
+      ".badge.bg-warning": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.68 - l) * 1000, 1) 0 0) !important"
+      },
+      ".bg-warning :is(h5, p, .card-header)": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.68 - l) * 1000, 1) 0 0) !important"
+      },
+      ".btn.btn-secondary": {
+        "border-color": "var(--ds-c-fg-2) !important"
+      },
+      ".btn.btn-dark": {
+        "border-color": "var(--ds-c-fg-2) !important"
+      },
+      ".com_finder .btn": {
+        "border-radius": "var(--ds-btn-radius) !important"
+      },
+      ".acm-hero .svg-decor path[fill=\"white\" i]": {
+        "fill": "var(--ds-c-accent-on)"
+      },
+      ".acm-hero .svg-decor path[fill=\"#0B2330\" i]": {
+        "fill": "var(--ds-c-fg)"
+      },
+      ".acm-hero .svg-decor [stroke=\"#0B2330\" i]": {
+        "stroke": "var(--ds-c-fg)"
+      },
+      ".acm-hero .svg-decor [stroke=\"white\" i]": {
+        "stroke": "var(--ds-c-accent-on)"
+      },
+      ".btn-close": {
+        "filter": "invert(1) grayscale(100%) brightness(200%)"
+      }
+    }
+  },
+  "sideNote": "re-measured 11/10/2026: the page's ground is a lavender picture (.t4-content, images/body-bg.jpg) that no system paints; the worn page's text sat on it (1.03:1 under Moxie, 2.33:1 under MotherDuck on its violet patch at the top), so under a system the picture goes and the system's page colour shows; under a dark system the header's dark wordmark is inverted with its hues kept (the footer, kept, keeps its own); 15/10/2026: the footer now wears the system's ground, so the footer's logo (images/joomlart/logo/item-1.png, a dark wordmark beside the violet mark) all but vanished under a dark system (seen on the about-us page under Moxie at 1440, #1a1a1a ground): under a dark system it is inverted with its hues kept, as the header's. Across the library the footer ground is on the page's side of light for 1330 of 1334 systems (the other four have mid-tone pages); 19/10/2026 (probe v10): the dark buttons' rim is ink on the light side and the second text colour on the dark side (an ink fill on a dark card reads as a lost button without it); the How it works circle icons (features style-3, a green/purple/pink disc with a white glyph) are thresholded to a black disc and white glyph and screened over the accent (darkened to oklch L 0.55 at most, so the white glyph reads), the line icons of features style-4 are drawn in black on the light side and white on the dark side (no picture in the template's green: ACCENT-LEAK); the hero decor's white shapes and strokes read accent-on and its navy lines fg; words on a warning fill take black or white by the fill's lightness (oklch from the warn colour); smart-search buttons share the system's button corner (row shape); the alert close icon is inverted on the dark side",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on the local build of quickstart/ja-prodex/j6 1.0.1 (~/tracy-bench-work/release/ds-batch1/ja-prodex/release), T4's generated CSS cleared and rebuilt as on a new site (tasks/evidence/ds-remeasure-4-2026-10-11/ja-prodex-j6): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, no text under 4.5:1 worse than the template's own (lowest 4.90), 84% or more of the page follows, every contrast kind sampled in every view. The first pass with this probe failed 8 of 8 system views: the page's lavender picture stayed under the worn text (1.03:1 under Moxie; sideRules drop it under a system), the dark buttons and the dark stack band kept literal white text on fills that turn light under a dark system, the header's call to action was white on white under light systems, the closing card stayed Bootstrap white (followRules), and the dark wordmark sat on a dark page (sideRules dark invert); checked by eye on the four systems' screenshots, desktop and phone. Earlier: measured 11/10/2026 on the local build of ja-prodex/j6 1.0.1 (tasks/evidence/ds-contracts-batch1-2026-10-11/ja-prodex-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: accent-text, muted, body, footer), 70% or more of the page follows; without a system 1.0.1 computes exactly what 1.0.0 does; kept footer gets --headings-color back (keepDefaults); 0 of ~4,800 painted values differ from 1.0.0 without a system Re-verified 12/10/2026 on the unified probe (fix/ds-remeasure) on quickstart/ja-prodex/j6 1.0.1: the white title of the accent-filled video band read 1.94:1 under MotherDuck, 2.26 under Moxie, 2.56 under Toggl Track (seen by eye; the probe counted it as the template's text on its picture) — onAccent gives it the accent's own text colour; after: 12/12, controls 0, regressed 0, 84–98% follows, every kind sampled, the title 9.28–10.84:1, MotherDuck and Apple read by eye (tasks/evidence/ds-reverify-c-2026-10-12/ja-prodex)",
+  "contrastNote": "the home page has no main p: its item and call-to-action text (body) and the testimonial author (muted) are what a reader reads (11/10/2026)",
+  "keepDefaultsNote": "--headings-color, declared on its tokenized :root, resolved there: the kept footer white kept the worn heading colour (Moxie 2.11:1); given back inside kept bands at the released value",
+  "minVersion": {
+    "quickstart/ja-prodex/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-prodex/j6": "1.0.5"
+  },
+  "maxVersionNote": "1.0.5 21/10/2026 (TEXT-1 batch 2): built from 1.0.4 (release-batch.mjs --overlay); only css/template.css differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).; 1.0.4 19/10/2026: the template reads the design-system role variables (role scan --write + every flagged spot settled, VARS-1); every var() falls back to the 1.0.3 value, so unworn the page is 1.0.3 (release verify)",
+  "selectorsNote": "the video band (.acm-hero) is a card filled with the accent and its title is white from a rule of its own: it takes the accent's own text colour (onAccent) — under MotherDuck's light blue accent the white title read 1.94:1, seen by eye on the unified-probe re-verify 12/10/2026 (the probe let it pass: the same text on a picture in both looks counts as the template's own even when the slot repaints the ground under it)",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-fg)",
+    "--heading-font-family": "var(--ds-font-heading)",
+    "--body-font-family": "var(--ds-font-body)",
+    "--t4-body-font-family": "var(--ds-font-body)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs; 19/10/2026: the T4 face variables (--heading-font-family, --body-font-family, --t4-body-font-family) read the system's faces, so h5, legends, author names and feature titles leave Inter Tight (FONT-2)",
+  "keepDefaults": {
+    "--body-bg-color": "#ecf2ff",
+    "--body-text-color": "#4b4a51",
+    "--body-link-color": "#5137ff",
+    "--body-link-hover-color": "#084298",
+    "--color-primary": "#5137ff",
+    "--color-secondary": "#212529",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#192227",
+    "--mainnav-link-color": "#192227",
+    "--mainnav-link-hover-color": "#5137ff",
+    "--mainnav-link-active-color": "#5137ff",
+    "--footer-bg-color": "#5137ff",
+    "--footer-text-color": "#4b4a51",
+    "--footer-link-color": "#4b4a51",
+    "--footer-link-hover-color": "#5137ff",
+    "--headings-color": "#192227"
+  },
+  "keepColors": {
+    ".t4-topbar": "rgb(255, 255, 255)",
+    ".t4-footer": "rgb(75, 74, 81)"
+  },
+  "bands": {
+    ".t4-topbar": {
+      "ground": "#192227",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".custom p a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-footer": {
+      "ground": "#ffffff",
+      "texts": ["#4b4a51", "#192227"],
+      "paint": {
+        ".h3": {
+          "color": "accent"
+        },
+        "&": {
+          "color": "text"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text"
+        },
+        ".t4-footer-item": {
+          "background-color": "ground"
+        },
+        ".t4-footer-item .module-ct": {
+          "background-color": "ground"
+        },
+        ".acym_module input:is([type=email], [type=text])": {
+          "background-color": "ground",
+          "color": "text",
+          "border-color": "text"
+        }
+      },
+      "important": true,
+      "kind": "panel",
+      "repaint": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the footer (a kept band) holds white cards (.t4-footer-item) whose headings and heading-links read T4’s --headings-color, which the slot points at the system’s heading colour and a kept band did not give back: under a dark system they turned the system’s pale heading colour on the white card (1.16:1 under Moxie, 1:1 under Spotify, visual review 14/10/2026). keepDefaults gives the band the template’s #192227 back. The round How it works photo the review saw is not in the released quickstart (its How it works pictures are interface screenshots on white cards; the sweep stand served another template’s pictures, as for JA Justitia), and the video band’s heading now takes the words that read on the accent. 15/10/2026: the footer's subscription field (.acym_module input, background var(--ds-c-surface, #fff)) kept the template's white inside the kept footer (its --ds-c-* reset to the fallback) while the footer took the system's ground: on a desktop the Subscribe button, drawn inside the field (td + td.acysubbuttons, absolute), sat on that white, and a light accent fill stood 1.23-2.26:1 off it (Moxie, Spotify, Linear at 1440, v9 measure: 3 of 34 home views, 1 of 8 about-us views; on a phone the button is below the field, on the footer ground, and passed). The field takes the footer's ground, its words and its 2px line the footer's words, as the template pairs them (a white field on the white card, its line the dark ink): the button is then judged on the ground it shows on",
+  "contractNotes1317": "13/10/2026 (#1317): .t4-footer is a white panel, not a picture: marked a picture, its ground stayed white while its words took the system text (#b7b39f on white under Moxie, 1.02:1, 20 texts). A panel that repaints its words takes the system surface and its words; the empty paint selector was dropped (never emitted). Second run (21:46): the footer words took the system text while .t4-footer-item kept its own white (white on white under Spotify, 1:1, 20 texts); the item takes the band ground. Round 4 (14/10): the white under the footer words is the modules' own .module-ct inside each item, not the item: the words read 1.0-1.16:1 under Spotify and Moxie on it; the module boxes take the band ground too.",
+  "inkNote": "14/10/2026 (visual review, round 3): the feature cards’ line icons (.acm-features.style-2 .img-icon img: item-5/6/7.png, near-black strokes and grey bars on transparency) and the partner logos beside the hero (.client-list img: dark wordmarks) are ink drawn for a light page; on a dark system’s card or page they all but vanished (Spotify phone: “Find things fast” on its #1f1f1f card). They are inverted under a dark system (inkImages); the coloured feature icons (style-3 disc, style-4 green) are not listed. The header logo keeps the contract’s own sideRules.dark filter",
+  "hoverNote": "Social icons: hover and focus dim the link to 70% opacity, the cue an icon without words can carry. 21/10/2026 (HOVER-2, TEXT-1 batch 2): the contact and social heading links, the footer's licence links and the pagination hover in their rest role under a system: each is underlined on hover and focus."
+}

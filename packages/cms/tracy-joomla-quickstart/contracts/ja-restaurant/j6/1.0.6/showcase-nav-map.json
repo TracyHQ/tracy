@@ -1,0 +1,629 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v2",
+  "profileVersion": "1.0.0",
+  "contract": "ja-restaurant/j6/1.0.6",
+  "baseHash": "83ce00232939053e6f8a102784f2611e4c2ace6b680f6ae9e54a52e1430fa958",
+  "baseFiles": {
+    "manifest.json": "4fc6b4a3d8a62c108efaa8e1d38621660102b6d4e64fe197b7b3386d67fe02b0",
+    "content-map.json": "ad8383412070aa73914cb32deb1bf359d19b4578f884e7d049f31d5ad228d9fd",
+    "presentation-lock.json": "8e60d5cce669a041607fe34b7d03a24b26cc38afcece9c7318d094724b56fa2d"
+  },
+  "inputs": {},
+  "decisionsHash": "8f105ed53cc6c6a8346bccbee808bbc3d87120aae83a604d00cfe34f3ace6fe5",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-111",
+      "identity": {
+        "path": "explore/j-pages/login",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Login",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-112",
+      "identity": {
+        "path": "explore/j-pages/registration",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Registration",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-113",
+      "identity": {
+        "path": "explore/j-pages/user-profile",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "User Profile",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-117",
+      "identity": {
+        "path": "explore/j-pages/category-blog",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-118",
+      "identity": {
+        "path": "explore/bonus-pages/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-119",
+      "identity": {
+        "path": "explore/bonus-pages/erro-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-122",
+      "identity": {
+        "path": "explore/j-pages/smart-search",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Smart Search",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-134",
+      "identity": {
+        "path": "explore/j-pages/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-135",
+      "identity": {
+        "path": "explore/j-pages/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-136",
+      "identity": {
+        "path": "explore/j-pages/all-categories",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "All Categories",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"J! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-150",
+      "identity": {
+        "path": "explore/themes",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Themes",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Themes\" lists the template's colour variants of the home page"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-151",
+      "identity": {
+        "path": "explore/themes/blue-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Blue Color",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Themes\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-152",
+      "identity": {
+        "path": "explore/themes/green-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Green Color",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Themes\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-153",
+      "identity": {
+        "path": "explore/themes/pink-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Pink Color",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Themes\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-154",
+      "identity": {
+        "path": "explore/themes/purple-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Purple Color",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Themes\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-155",
+      "identity": {
+        "path": "explore/themes/default-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Default Color",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Themes\" lists the template's colour variants of the home page"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-9",
+      "identity": {
+        "title": "ja_restaurant - Default",
+        "template": "ja_restaurant",
+        "client_id": "0"
+      },
+      "label": "ja_restaurant - Default · Explore · column 150",
+      "style": {
+        "id": 9,
+        "template": "ja_restaurant"
+      },
+      "menutype": "mainmenu",
+      "item": 110,
+      "column": 150,
+      "path": "mm_config.mainmenu.item-110.sub.rows[item=150]",
+      "before": "e15bd38e1c2fc516b33adb08e7ce6d30f6c1e33109c726d3c270ac92cbe4f51b",
+      "after": "fc0472ae63ab87b8c531c52e91b4f4a5cd48d513d04f099dbbf4414aacf4ddae",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-150 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "ja_restaurant - Blue",
+        "template": "ja_restaurant",
+        "client_id": "0"
+      },
+      "label": "ja_restaurant - Blue · Explore · column 150",
+      "style": {
+        "id": 10,
+        "template": "ja_restaurant"
+      },
+      "menutype": "mainmenu",
+      "item": 110,
+      "column": 150,
+      "path": "mm_config.mainmenu.item-110.sub.rows[item=150]",
+      "before": "4912053e62de08da5ede7b500581ae33ed6021f067cc34215d6ef5392a0c7283",
+      "after": "8078300f275548aed2fa70a2fc2b8b9710699324c38734ab59a57cd105929480",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-150 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-11",
+      "identity": {
+        "title": "ja_restaurant - Green",
+        "template": "ja_restaurant",
+        "client_id": "0"
+      },
+      "label": "ja_restaurant - Green · Explore · column 150",
+      "style": {
+        "id": 11,
+        "template": "ja_restaurant"
+      },
+      "menutype": "mainmenu",
+      "item": 110,
+      "column": 150,
+      "path": "mm_config.mainmenu.item-110.sub.rows[item=150]",
+      "before": "ef8bbdbe029201d156393e91b82b3f5d85f368e7eab789e8b93b2774af077c24",
+      "after": "909f3943cdd3b690c6b2ded90af42b57700938babcea1b753e43aaa7df594625",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-150 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "ja_restaurant - Pink",
+        "template": "ja_restaurant",
+        "client_id": "0"
+      },
+      "label": "ja_restaurant - Pink · Explore · column 150",
+      "style": {
+        "id": 12,
+        "template": "ja_restaurant"
+      },
+      "menutype": "mainmenu",
+      "item": 110,
+      "column": 150,
+      "path": "mm_config.mainmenu.item-110.sub.rows[item=150]",
+      "before": "0e80b03c12aae88c5096c747f3d6567c786ed263805c99bd18618233ce234f55",
+      "after": "3c92cfc2c886c802d86643905b9278b7a531fa42045962e3c49865d94862f39f",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-150 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-13",
+      "identity": {
+        "title": "ja_restaurant - Purple",
+        "template": "ja_restaurant",
+        "client_id": "0"
+      },
+      "label": "ja_restaurant - Purple · Explore · column 150",
+      "style": {
+        "id": 13,
+        "template": "ja_restaurant"
+      },
+      "menutype": "mainmenu",
+      "item": 110,
+      "column": 150,
+      "path": "mm_config.mainmenu.item-110.sub.rows[item=150]",
+      "before": "6a4b2dfa1f08b5e5f49475a69b58ffe67c1452aa537514c0da33c85d850a12ac",
+      "after": "0353fe849f36cfeaccc3a814e3dc9615314f687d6df1c9b3461de66d3d8c1729",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-150 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/homepage",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "Your Profile",
+      "where": "usermenu/your-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Site Administrator",
+      "where": "usermenu/2013-11-16-23-26-41",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Submit an Article",
+      "where": "usermenu/submit-an-article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Template Settings",
+      "where": "usermenu/template-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Site Settings",
+      "where": "usermenu/site-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "Blog",
+      "where": "mainmenu/blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-110",
+      "label": "Explore",
+      "where": "mainmenu/explore",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-114",
+      "label": "Reservation",
+      "where": "mainmenu/contact",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-116",
+      "label": "Bonus Pages",
+      "where": "mainmenu/explore/bonus-pages",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-121",
+      "label": "Reminder",
+      "where": "mainmenu/explore/j-pages/reminder",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=remind): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "About us",
+      "where": "mainmenu/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-132",
+      "label": "Gallery",
+      "where": "mainmenu/gallery",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-133",
+      "label": "Menu",
+      "where": "mainmenu/menu",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-138",
+      "label": "Our History",
+      "where": "mainmenu/about-us/our-history",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-147",
+      "label": "About Us",
+      "where": "mainmenu/explore/bonus-pages/about-us-page",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-148",
+      "label": "Our History",
+      "where": "mainmenu/explore/bonus-pages/our-history",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-160",
+      "label": "Phone Reservation",
+      "where": "mainmenu/contact/phone-reservation",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-162",
+      "label": "Contact Us",
+      "where": "mainmenu/contact/contact-us",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-163",
+      "label": "Simple Menu",
+      "where": "mainmenu/menu/simple-menu",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-164",
+      "label": "Menu with Image",
+      "where": "mainmenu/menu/menu-with-image",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-165",
+      "label": "2 Column Menu",
+      "where": "mainmenu/menu/2-column-menu",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-167",
+      "label": "Offers",
+      "where": "mainmenu/offers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-131",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 19 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-109",
+      "label": "J! Pages",
+      "where": "mainmenu/explore/j-pages",
+      "rule": "unresolved.decision-conflict",
+      "reason": "decided hidden, but it holds menuItem-121, which stays"
+    },
+    {
+      "key": "menuItem-121",
+      "label": "Reminder",
+      "where": "mainmenu/explore/j-pages/reminder",
+      "rule": "unresolved.functional-in-hidden-branch",
+      "reason": "opens com_users (view=remind) inside a branch or menu decided hidden: a working screen leaves only when a decision names it"
+    },
+    {
+      "key": "templateStyle-9",
+      "label": "ja_restaurant - Default",
+      "where": "mm_config.mainmenu.item-109.sub",
+      "rule": "unresolved.mega-column-member-shown",
+      "reason": "children of \"J! Pages\" leave the navigation, but column head(s) menuItem-111, menuItem-136 leave while menuItem-121 stay shown without heading a column (the lock holds no menu order to tell which column they sit in): the panel stays as the template has it"
+    },
+    {
+      "key": "templateStyle-9",
+      "label": "ja_restaurant - Default",
+      "where": "mm_config.mainmenu.item-116.sub",
+      "rule": "unresolved.mega-column-member-shown",
+      "reason": "children of \"Bonus Pages\" leave the navigation, but column head(s) menuItem-118 leave while menuItem-147, menuItem-148 stay shown without heading a column (the lock holds no menu order to tell which column they sit in): the panel stays as the template has it"
+    },
+    {
+      "key": "templateStyle-10",
+      "label": "ja_restaurant - Blue",
+      "where": "mm_config.mainmenu.item-109.sub",
+      "rule": "unresolved.mega-column-member-shown",
+      "reason": "children of \"J! Pages\" leave the navigation, but column head(s) menuItem-111, menuItem-136 leave while menuItem-121 stay shown without heading a column (the lock holds no menu order to tell which column they sit in): the panel stays as the template has it"
+    },
+    {
+      "key": "templateStyle-10",
+      "label": "ja_restaurant - Blue",
+      "where": "mm_config.mainmenu.item-116.sub",
+      "rule": "unresolved.mega-column-member-shown",
+      "reason": "children of \"Bonus Pages\" leave the navigation, but column head(s) menuItem-118 leave while menuItem-147, menuItem-148 stay shown without heading a column (the lock holds no menu order to tell which column they sit in): the panel stays as the template has it"
+    },
+    {
+      "key": "templateStyle-11",
+      "label": "ja_restaurant - Green",
+      "where": "mm_config.mainmenu.item-109.sub",
+      "rule": "unresolved.mega-column-member-shown",
+      "reason": "children of \"J! Pages\" leave the navigation, but column head(s) menuItem-111, menuItem-136 leave while menuItem-121 stay shown without heading a column (the lock holds no menu order to tell which column they sit in): the panel stays as the template has it"
+    },
+    {
+      "key": "templateStyle-11",
+      "label": "ja_restaurant - Green",
+      "where": "mm_config.mainmenu.item-116.sub",
+      "rule": "unresolved.mega-column-member-shown",
+      "reason": "children of \"Bonus Pages\" leave the navigation, but column head(s) menuItem-118 leave while menuItem-147, menuItem-148 stay shown without heading a column (the lock holds no menu order to tell which column they sit in): the panel stays as the template has it"
+    },
+    {
+      "key": "templateStyle-12",
+      "label": "ja_restaurant - Pink",
+      "where": "mm_config.mainmenu.item-109.sub",
+      "rule": "unresolved.mega-column-member-shown",
+      "reason": "children of \"J! Pages\" leave the navigation, but column head(s) menuItem-111, menuItem-136 leave while menuItem-121 stay shown without heading a column (the lock holds no menu order to tell which column they sit in): the panel stays as the template has it"
+    },
+    {
+      "key": "templateStyle-12",
+      "label": "ja_restaurant - Pink",
+      "where": "mm_config.mainmenu.item-116.sub",
+      "rule": "unresolved.mega-column-member-shown",
+      "reason": "children of \"Bonus Pages\" leave the navigation, but column head(s) menuItem-118 leave while menuItem-147, menuItem-148 stay shown without heading a column (the lock holds no menu order to tell which column they sit in): the panel stays as the template has it"
+    },
+    {
+      "key": "templateStyle-13",
+      "label": "ja_restaurant - Purple",
+      "where": "mm_config.mainmenu.item-109.sub",
+      "rule": "unresolved.mega-column-member-shown",
+      "reason": "children of \"J! Pages\" leave the navigation, but column head(s) menuItem-111, menuItem-136 leave while menuItem-121 stay shown without heading a column (the lock holds no menu order to tell which column they sit in): the panel stays as the template has it"
+    },
+    {
+      "key": "templateStyle-13",
+      "label": "ja_restaurant - Purple",
+      "where": "mm_config.mainmenu.item-116.sub",
+      "rule": "unresolved.mega-column-member-shown",
+      "reason": "children of \"Bonus Pages\" leave the navigation, but column head(s) menuItem-118 leave while menuItem-147, menuItem-148 stay shown without heading a column (the lock holds no menu order to tell which column they sit in): the panel stays as the template has it"
+    }
+  ],
+  "counts": {
+    "menuItems": 16,
+    "modules": 0,
+    "megaColumns": 5,
+    "kept": 24,
+    "unresolved": 12
+  }
+}

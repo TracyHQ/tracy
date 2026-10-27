@@ -1,0 +1,28 @@
+# dsh writes the first four lines itself (initProfile in @deepseek-ai/dsh-app-boot) and never
+# touches an existing file. `nodeLinker: hoisted` + `autoInstallPeers: false` are the load-bearing
+# pair: they give out-of-tree plugins a flat node_modules whose missing peers fall through to
+# profiles/node_modules, so every plugin SHARES one cordis instance instead of a duplicate.
+packages:
+  - .
+
+nodeLinker: hoisted
+autoInstallPeers: false
+
+# `node-pty` is a native addon — the `dsh-better-sidebar` terminal tab runs on it, and pnpm 11
+# blocks every dependency's build scripts by default (a sound default: install scripts are where
+# a compromised package gets to run arbitrary code).
+#
+# Declared HERE rather than via `pnpm approve-builds`: that command stores the approval in the
+# machine's local state, so a fleet rebuilding the profile would NOT have it — and the failure is
+# a terminal tab that silently will not open, not an install error anyone sees.
+allowBuilds:
+  node-pty: true
+
+# dsh-passwords is NO longer patched with `pnpm patch` (settled 30/08).
+#
+# The `stripGatewayAuthQuery` fix is now a commit in the fork `vendor/tracy/dsh-passwords` — since
+# 06/09 a WORKSPACE MEMBER of this repo, linked straight into the profile, through no registry.
+#
+# Why the change: the diff-style patch was removed by mistake twice because readers thought it
+# skipped the credential-stripping step. In the fork it is commented code, with a regression test
+# that runs alongside upstream's own 20 tests, and it rebases onto a new tag when upstream releases.

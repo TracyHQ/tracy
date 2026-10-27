@@ -1,0 +1,69 @@
+{
+  "color": {
+    "bone-linen": {
+      "$value": "#f7f5f2",
+      "$type": "color",
+      "$description": "Bone Linen — Page canvas, body backgrounds — the warm off-white that carries almost every section and makes the dark hero and green accents feel like specimens on display"
+    },
+    "oat-milk": {
+      "$value": "#eae6df",
+      "$type": "color",
+      "$description": "Oat Milk — Card surfaces, elevated panels, secondary containers — a half-step darker than the canvas for gentle separation without shadow"
+    },
+    "driftwood": {
+      "$value": "#d7d2cc",
+      "$type": "color",
+      "$description": "Driftwood — Hairline borders, dividers, structural separators — warm gray that reads as line work, not as color"
+    },
+    "ash-mauve": {
+      "$value": "#645757",
+      "$type": "color",
+      "$description": "Ash Mauve — Secondary text, captions, muted labels — used where near-black would be too heavy, sits at 80 instances"
+    },
+    "mahogany-hush": {
+      "$value": "#504344",
+      "$type": "color",
+      "$description": "Mahogany Hush — Dark accent for small headings and emphasis — warmer alternative to the primary text color when a touch of depth is needed"
+    },
+    "obsidian-plum": {
+      "$value": "#2a1a1d",
+      "$type": "color",
+      "$description": "Obsidian Plum — Primary text, body copy, all headings, nav links — a near-black with warm plum undertone that pairs with the cream canvas at 15.3:1 contrast"
+    },
+    "forest-depths": {
+      "$value": "#1d3023",
+      "$type": "color",
+      "$description": "Forest Depths — Hero section background, dark surface, outlined ghost-button borders — the deep green room that introduces the brand and reappears as a dark contrast panel"
+    },
+    "lime-pulse": {
+      "$value": "#26d862",
+      "$type": "color",
+      "$description": "Lime Pulse — Primary action buttons, inline links, accent words inside headlines, active nav states — vivid green used sparingly as functional punctuation, never as decoration"
+    },
+    "peacock-teal": {
+      "$value": "#0e634f",
+      "$type": "color",
+      "$description": "Peacock Teal — Stat numbers, data emphasis — a deeper teal that shares hue with the forest hero but reads quieter so it can carry numerical data in stat cards"
+    }
+  },
+  "font": {
+    "abc-arizona-flare-condensed-variable": {
+      "$value": "ABC Arizona Flare Condensed Variable",
+      "$type": "fontFamily",
+      "$description": "Display and large headings — the condensed serif runs at 180px for the hero statement and steps down through 104, 48, 26, 20px for section headlines. Weight 300 carries the largest sizes, weight 400 takes the mid range. Negative tracking tightens at every size."
+    },
+    "abc-arizona-flare-variable": {
+      "$value": "ABC Arizona Flare Variable",
+      "$type": "fontFamily",
+      "$description": "Body, nav, buttons, cards, captions, and mid-size headings up to 32px. Weight 350 handles 32px headings, weight 400 takes body and UI. The lighter weight at 32px keeps subheadings from competing with the condensed display sizes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://itscraft.com",
+      "siteName": "Craft",
+      "extractedAt": "2026-06-03T20:55:58.644Z",
+      "variant": "compact"
+    }
+  }
+}

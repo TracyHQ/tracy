@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "156462ab-7b11-4029-be45-c2dba853e894",
+  "status": "complete",
+  "name": "Ghia",
+  "url": "https://styles.refero.design/style/156462ab-7b11-4029-be45-c2dba853e894",
+  "sourceWebsite": "https://drinkghia.com",
+  "extractedAt": "2026-06-03T18:46:21.791Z",
+  "capturedAt": "2026-10-08T05:08:36.821488+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Mediterranean sunset on a vintage aperitivo label",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8a03bbb6-aade-4bd0-90f2-53622e3bd8a2.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "90cbc61a47fac59990b51860d792d704b5c0969fe7535782bb1f504c45e7e0a3",
+      "bytes": 18684
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "784c0f7a580f22cef8f7dd2fbd4fc8d9d6fb2454e05e444a75f7a7dfeeb84e08",
+      "bytes": 157322
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e02c41e1e317623a2132aa42c15dac2240241ca65f1f0805b7e236e274f33b42",
+      "bytes": 15336
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "dfba816594361126264de7f58e09a51f84df609522107ec5d716116071bbe7e2",
+      "bytes": 11822
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7292709b52ad1123fe786767c8138e7c6732d5d8dc47f8159b923ac86cb65a83",
+      "bytes": 11545
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "bd824f3b5fa62a02314337a4090a9c9308775104498183faa6db5466b4588da4",
+      "bytes": 3078
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "fcd8386de5e0f6c7f396fb873a56f694002260ceef53f93462febdeca412df60",
+      "bytes": 696
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "bf342c92e985ce5822f15fae8dcff957073ee8a32877d51b7503cb35d3e5398a",
+      "bytes": 713
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "abae0473489f9dd1a71c7d99e85963b4769d4bac98d3217a819e5c8a8d4bab1c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "0a45b9fc26b6d25982aa2c0d59d423f90b224d237a4a792a8bb50d5b74d0aa02",
+      "bytes": 41805
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "b551be474be9dd5546136e4d01f6708304d0eecd40c3a49b6c4401e58389d967",
+      "bytes": 21613
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "37435183c7493d7ca31f827cba0a26f96714392239ff65b1476eef68203c0aa9",
+      "bytes": 39674
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f522a037369a264d610b99f8625f88a9bb3b1c644c186ed932a1324da6c4c6f5",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "177a1d45c5582d1b7a313c47a91249eb1be6cfae7445af39eabc69a34bd395d1",
+      "bytes": 1655
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0d58ab9d62990ebca00bf6dc4c99506bf035fbc05896b7d8f85db586dd5061b5",
+      "bytes": 2215
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "156462ab-7b11-4029-be45-c2dba853e894",
+    "17ce9ad2-f22d-4e48-92de-e28fb8551cc5",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "5528d10f-2e7d-4502-aa49-7bde290e8fe2",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "76483bd1-37d3-4fb9-889b-aecf27b08b83",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e327d332-270d-4779-a55c-cd82b8624d2a",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495"
+  ]
+}

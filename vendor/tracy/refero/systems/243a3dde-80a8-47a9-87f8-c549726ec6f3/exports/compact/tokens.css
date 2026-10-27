@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-canvas-white: #fafafa;
+  --color-warm-ash: #d9d9d9;
+  --color-mid-gray: #cdcdce;
+  --color-ink-black: #07060b;
+  --color-pure-black: #000000;
+  --color-glacial-mist: #ddfcff;
+
+  /* Typography — Font Families */
+  --font-helveticanowdisplay: 'HelveticaNowDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-editorialnew: 'EditorialNew', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-departuremono: 'DepartureMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

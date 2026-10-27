@@ -1,0 +1,2588 @@
+{
+  "$comment": "ACM type:style -> the wp-ja-restaurant pattern that renders it, field by field, for the seeder (renderAcm, `${type}:${style}`). Field names are the Joomla ACM field names verbatim, plus the fields tasks/ja-restaurant-wp7/tools/fix-spec.mjs adds. metadata.name is <type>.<field>[.<n>]; the wrapper of a repeated row is <type>.item.<n>. A block is located by name, never by position.",
+  "schemaVersion": "tracy-base-patterns-map/v1",
+  "namespace": "wp-ja-restaurant",
+  "anchorConvention": "acm-<type>-<module id>",
+  "views": {
+    "$comment": "search is com_finder at /explore/j-pages/smart-search on the source; the theme answers that path with its search view (inc/extra.php wp_ja_restaurant_search_request), so the seeder adds no redirect for it.",
+    "search": {
+      "servedAtPath": true
+    },
+    "page-account": {
+      "$comment": "a guest who opens a profile page gets 303 to the Login page, as the source (inc/groups/account.php)",
+      "expect": {
+        "status": 303,
+        "to": "/explore/j-pages/login/"
+      }
+    },
+    "single": {
+      "$comment": "the theme answers an article at its category path, as the source answers it at its menu path (inc/extra.php wp_ja_restaurant_article_route_request)",
+      "expect": {
+        "status": 200
+      }
+    }
+  },
+  "types": {
+    "98": {
+      "$comment": "alias of slideshow:style-owl for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-slideshow-style-owl",
+      "item": "slideshow.item.<n>",
+      "fields": {
+        "image": {
+          "block": "core/image",
+          "path": "slideshow.image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "slide-title": {
+          "block": "core/paragraph",
+          "path": "slideshow.slide-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "slide-link": {
+          "block": "core/group",
+          "path": "slideshow.item.<n>",
+          "attr": "url",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "module-title": "the slideshow tmpl and its position print no module title (instances 98 and 115 have showtitle on, the rendered HTML has none)"
+      }
+    },
+    "100": {
+      "$comment": "alias of hero:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-hero-style-1",
+      "fields": {
+        "hero-heading": {
+          "block": "core/heading",
+          "path": "hero.hero-heading",
+          "attr": "content"
+        },
+        "hero-img": {
+          "block": "core/image",
+          "path": "hero.hero-img",
+          "attr": "src"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "hero-intro": {
+          "block": "core/paragraph",
+          "path": "hero.hero-intro",
+          "attr": "content"
+        },
+        "hero-heading-accent": {
+          "block": "core/paragraph",
+          "path": "hero.hero-heading-accent",
+          "attr": "content"
+        },
+        "hero-address": {
+          "block": "core/paragraph",
+          "path": "hero.hero-address",
+          "attr": "content"
+        },
+        "hero-address-url": {
+          "block": "core/paragraph",
+          "path": "hero.hero-address",
+          "attr": "url"
+        },
+        "hero-intro-tail": {
+          "block": "core/paragraph",
+          "path": "hero.hero-intro-tail",
+          "attr": "content"
+        }
+      },
+      "dropped": {}
+    },
+    "101": {
+      "$comment": "alias of features-intro:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-features-intro-style-1",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-value": {
+          "block": "core/paragraph",
+          "path": "features-intro.btn.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/paragraph",
+          "path": "features-intro.btn.<n>",
+          "attr": "href",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "102": {
+      "$comment": "alias of menu:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-menu-style-1",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "103": {
+      "$comment": "alias of tabs:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-tabs-style-1",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "tabs.heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "tabs.section-bg",
+          "attr": "src"
+        }
+      },
+      "dropped": {
+        "position": "the Joomla module position the tabs draw; on WordPress the menu sections that follow the box are moved into it by groups/menus.js",
+        "module-title": "the tabs tmpl prints no section title (heading is its own field)"
+      }
+    },
+    "104": {
+      "$comment": "alias of menu:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-menu-style-1",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "108": {
+      "$comment": "alias of features-intro:style-2 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-features-intro-style-2",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "module-intro": {
+          "block": "core/paragraph",
+          "path": "features-intro.module-intro",
+          "attr": "content"
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "price": {
+          "block": "core/paragraph",
+          "path": "features-intro.price.<n>",
+          "attr": "content",
+          "part": 1,
+          "wrap": "span",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "short-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.short-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "block-desc": "not set on instance 108 (the tmpl prints it as .features-description only when present)",
+        "block-bg": "not set on instance 108"
+      }
+    },
+    "111": {
+      "$comment": "alias of menu:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-menu-style-1",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "114": {
+      "$comment": "alias of contact-map:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-contact-map-default",
+      "fields": {
+        "map-title": {
+          "block": "core/paragraph",
+          "path": "contact-map.map-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "module-title": "the source prints no title over the map (the module sits in the masthead position)"
+      }
+    },
+    "115": {
+      "$comment": "alias of slideshow:style-owl for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-slideshow-style-owl",
+      "item": "slideshow.item.<n>",
+      "fields": {
+        "image": {
+          "block": "core/image",
+          "path": "slideshow.image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "slide-title": {
+          "block": "core/paragraph",
+          "path": "slideshow.slide-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "slide-link": {
+          "block": "core/group",
+          "path": "slideshow.item.<n>",
+          "attr": "url",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "module-title": "the slideshow tmpl and its position print no module title (instances 98 and 115 have showtitle on, the rendered HTML has none)"
+      }
+    },
+    "116": {
+      "$comment": "alias of gallery-slide:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-gallery-slide-default",
+      "item": "gallery-slide.item.<n>",
+      "fields": {
+        "image": {
+          "block": "core/image",
+          "path": "gallery-slide.image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/image",
+          "path": "gallery-slide.image.<n>",
+          "attr": "alt",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/group",
+          "path": "gallery-slide.item.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "count": {
+          "block": "core/paragraph",
+          "path": "gallery-slide.count.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "117": {
+      "$comment": "alias of menu:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-menu-style-1",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "118": {
+      "$comment": "alias of tabs:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-tabs-style-1",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "tabs.heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "tabs.section-bg",
+          "attr": "src"
+        }
+      },
+      "dropped": {
+        "position": "the Joomla module position the tabs draw; on WordPress the menu sections that follow the box are moved into it by groups/menus.js",
+        "module-title": "the tabs tmpl prints no section title (heading is its own field)"
+      }
+    },
+    "119": {
+      "$comment": "alias of menu:style-2 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-menu-style-2",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-image": {
+          "block": "core/image",
+          "path": "menu.dish-image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "dish-extra-class": {
+          "block": "core/paragraph",
+          "path": "menu.dish-extra-class.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "dish-extra-class (class part)": "the source also puts the value in the class `badge-<value>` (Sale = green); the pattern draws the text only, a class attr field is not supported for it"
+      }
+    },
+    "120": {
+      "$comment": "alias of menu:style-3 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-menu-style-3",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-image": {
+          "block": "core/image",
+          "path": "menu.dish-image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "dish-extra-class": {
+          "block": "core/paragraph",
+          "path": "menu.dish-extra-class.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "dish-extra-class (class part)": "the source also puts the value in the class `badge-<value>` (Sale = green); the pattern draws the text only, a class attr field is not supported for it"
+      }
+    },
+    "121": {
+      "$comment": "alias of features-intro:style-3 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-features-intro-style-3",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title",
+          "attr": "content"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "tab-body": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        }
+      },
+      "dropped": {}
+    },
+    "126": {
+      "$comment": "alias of statistics:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-statistics-style-1",
+      "item": "statistics.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "statistics.module-title",
+          "attr": "content"
+        },
+        "module-intro": {
+          "block": "core/paragraph",
+          "path": "statistics.module-intro",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "statistics.section-bg",
+          "attr": "src"
+        },
+        "button-title": {
+          "block": "core/button",
+          "path": "statistics.button",
+          "attr": "text"
+        },
+        "button-link": {
+          "block": "core/button",
+          "path": "statistics.button",
+          "attr": "url"
+        },
+        "stats-name": {
+          "block": "core/paragraph",
+          "path": "statistics.stats-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "stats-count": {
+          "block": "core/paragraph",
+          "path": "statistics.stats-count.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "button-icon": "fa-tripadvisor on the one instance; drawn by the stylesheet (.jr-stats-button ::before)",
+        "stats-color": "empty at every item; the bar takes the accent colour from the stylesheet"
+      }
+    },
+    "128": {
+      "$comment": "alias of teams:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-teams-style-1",
+      "item": "teams.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "teams.module-title",
+          "attr": "content"
+        },
+        "module-intro": {
+          "block": "core/paragraph",
+          "path": "teams.module-intro",
+          "attr": "content"
+        },
+        "member-image": {
+          "block": "core/image",
+          "path": "teams.member-image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "member-name": {
+          "block": "core/heading",
+          "path": "teams.member-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "member-position": {
+          "block": "core/paragraph",
+          "path": "teams.member-position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "member-desc": {
+          "block": "core/paragraph",
+          "path": "teams.member-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "number_col": "2 at the one instance; two columns are drawn by the stylesheet (col-md-6)"
+      }
+    },
+    "129": {
+      "$comment": "alias of hero:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-hero-style-1",
+      "fields": {
+        "hero-heading": {
+          "block": "core/heading",
+          "path": "hero.hero-heading",
+          "attr": "content"
+        },
+        "hero-img": {
+          "block": "core/image",
+          "path": "hero.hero-img",
+          "attr": "src"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "hero-intro": {
+          "block": "core/paragraph",
+          "path": "hero.hero-intro",
+          "attr": "content"
+        },
+        "hero-heading-accent": {
+          "block": "core/paragraph",
+          "path": "hero.hero-heading-accent",
+          "attr": "content"
+        },
+        "hero-address": {
+          "block": "core/paragraph",
+          "path": "hero.hero-address",
+          "attr": "content"
+        },
+        "hero-address-url": {
+          "block": "core/paragraph",
+          "path": "hero.hero-address",
+          "attr": "url"
+        },
+        "hero-intro-tail": {
+          "block": "core/paragraph",
+          "path": "hero.hero-intro-tail",
+          "attr": "content"
+        }
+      },
+      "dropped": {}
+    },
+    "130": {
+      "$comment": "alias of text-banner:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-text-banner-default",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "text-banner.heading",
+          "attr": "content"
+        },
+        "text": {
+          "block": "core/paragraph",
+          "path": "text-banner.text",
+          "attr": "content"
+        }
+      }
+    },
+    "132": {
+      "$comment": "alias of timeline:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-timeline-style-1",
+      "item": "timeline.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "timeline.module-title",
+          "attr": "content"
+        },
+        "module-intro": {
+          "block": "core/paragraph",
+          "path": "timeline.module-intro",
+          "attr": "content"
+        },
+        "date": {
+          "block": "core/paragraph",
+          "path": "timeline.date.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "image": {
+          "block": "core/image",
+          "path": "timeline.image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "timeline.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "timeline.description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "icon": "empty at every item; the pattern draws the template's default fa-clock-o"
+      }
+    },
+    "139": {
+      "$comment": "alias of menu:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-menu-style-1",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "140": {
+      "$comment": "alias of menu:style-2 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-menu-style-2",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-image": {
+          "block": "core/image",
+          "path": "menu.dish-image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "dish-extra-class": {
+          "block": "core/paragraph",
+          "path": "menu.dish-extra-class.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "dish-extra-class (class part)": "the source also puts the value in the class `badge-<value>` (Sale = green); the pattern draws the text only, a class attr field is not supported for it"
+      }
+    },
+    "141": {
+      "$comment": "alias of menu:style-3 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-menu-style-3",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-image": {
+          "block": "core/image",
+          "path": "menu.dish-image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "dish-extra-class": {
+          "block": "core/paragraph",
+          "path": "menu.dish-extra-class.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "dish-extra-class (class part)": "the source also puts the value in the class `badge-<value>` (Sale = green); the pattern draws the text only, a class attr field is not supported for it"
+      }
+    },
+    "142": {
+      "$comment": "alias of opentable:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-opentable-style-1",
+      "fields": {
+        "ot-desc": {
+          "block": "core/paragraph",
+          "path": "opentable.ot-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "ot-id": "the OpenTable restaurant id the third-party script needs; empty in the source and the script is not carried (DECISIONS D-02)"
+      }
+    },
+    "143": {
+      "$comment": "alias of happyhours:style-1 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-happyhours-style-1",
+      "fields": {
+        "hp-bg": {
+          "block": "core/image",
+          "path": "happyhours.hp-bg",
+          "attr": "src"
+        },
+        "hp-brand": {
+          "block": "core/image",
+          "path": "happyhours.hp-brand",
+          "attr": "src"
+        },
+        "hp-title": {
+          "block": "core/heading",
+          "path": "happyhours.hp-title",
+          "attr": "content"
+        },
+        "hp-desc": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-desc",
+          "attr": "content"
+        },
+        "hp-info": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-info",
+          "attr": "content"
+        },
+        "hp-link-text": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "content"
+        },
+        "hp-link": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "href"
+        },
+        "hp-badge": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-badge",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "hp-other-info": "style-1 tmpl does not print it"
+      }
+    },
+    "144": {
+      "$comment": "alias of happyhours:style-2 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-happyhours-style-2",
+      "fields": {
+        "hp-bg": {
+          "block": "core/image",
+          "path": "happyhours.hp-bg",
+          "attr": "src"
+        },
+        "hp-brand": {
+          "block": "core/image",
+          "path": "happyhours.hp-brand",
+          "attr": "src"
+        },
+        "hp-title": {
+          "block": "core/heading",
+          "path": "happyhours.hp-title",
+          "attr": "content"
+        },
+        "hp-desc": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-desc",
+          "attr": "content"
+        },
+        "hp-info": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-info",
+          "attr": "content"
+        },
+        "hp-link-text": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "content"
+        },
+        "hp-link": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "href"
+        },
+        "hp-badge": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-badge",
+          "attr": "content"
+        },
+        "hp-other-info": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-other-info",
+          "attr": "content"
+        }
+      },
+      "dropped": {}
+    },
+    "145": {
+      "$comment": "alias of happyhours:style-3 for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-happyhours-style-3",
+      "fields": {
+        "hp-bg": {
+          "block": "core/image",
+          "path": "happyhours.hp-bg",
+          "attr": "src"
+        },
+        "hp-brand": {
+          "block": "core/image",
+          "path": "happyhours.hp-brand",
+          "attr": "src"
+        },
+        "hp-title": {
+          "block": "core/heading",
+          "path": "happyhours.hp-title",
+          "attr": "content"
+        },
+        "hp-desc": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-desc",
+          "attr": "content"
+        },
+        "hp-info": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-info",
+          "attr": "content"
+        },
+        "hp-link-text": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "content"
+        },
+        "hp-link": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "href"
+        },
+        "hp-other-info": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-other-info",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "hp-badge": "style-3 tmpl does not print the badge"
+      }
+    },
+    "147": {
+      "$comment": "alias of subscribe:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-subscribe-default",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "subscribe.module-title",
+          "attr": "content"
+        },
+        "introtext": {
+          "block": "core/paragraph",
+          "path": "subscribe.introtext",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "subscribe.section-bg",
+          "attr": "src"
+        }
+      },
+      "dropped": {
+        "placeholder": "the e-mail field is a fixed core/html form with the English placeholder 'Email'; core blocks cannot take it from a field (content gap)",
+        "button-text": "the button is part of the fixed core/html form, English 'Subscribe' (content gap)",
+        "background": "same picture as section-bg, drawn once as the section background"
+      }
+    },
+    "slideshow:style-owl": {
+      "pattern": "wp-ja-restaurant/acm-slideshow-style-owl",
+      "item": "slideshow.item.<n>",
+      "fields": {
+        "image": {
+          "block": "core/image",
+          "path": "slideshow.image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "slide-title": {
+          "block": "core/paragraph",
+          "path": "slideshow.slide-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "slide-link": {
+          "block": "core/group",
+          "path": "slideshow.item.<n>",
+          "attr": "url",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "module-title": "the slideshow tmpl and its position print no module title (instances 98 and 115 have showtitle on, the rendered HTML has none)"
+      }
+    },
+    "hero:style-1": {
+      "pattern": "wp-ja-restaurant/acm-hero-style-1",
+      "fields": {
+        "hero-heading": {
+          "block": "core/heading",
+          "path": "hero.hero-heading",
+          "attr": "content"
+        },
+        "hero-img": {
+          "block": "core/image",
+          "path": "hero.hero-img",
+          "attr": "src"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "hero-intro": {
+          "block": "core/paragraph",
+          "path": "hero.hero-intro",
+          "attr": "content"
+        },
+        "hero-heading-accent": {
+          "block": "core/paragraph",
+          "path": "hero.hero-heading-accent",
+          "attr": "content"
+        },
+        "hero-address": {
+          "block": "core/paragraph",
+          "path": "hero.hero-address",
+          "attr": "content"
+        },
+        "hero-address-url": {
+          "block": "core/paragraph",
+          "path": "hero.hero-address",
+          "attr": "url"
+        },
+        "hero-intro-tail": {
+          "block": "core/paragraph",
+          "path": "hero.hero-intro-tail",
+          "attr": "content"
+        }
+      },
+      "dropped": {}
+    },
+    "features-intro:style-1": {
+      "pattern": "wp-ja-restaurant/acm-features-intro-style-1",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-value": {
+          "block": "core/paragraph",
+          "path": "features-intro.btn.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/paragraph",
+          "path": "features-intro.btn.<n>",
+          "attr": "href",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "features-intro:style-2": {
+      "pattern": "wp-ja-restaurant/acm-features-intro-style-2",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "module-intro": {
+          "block": "core/paragraph",
+          "path": "features-intro.module-intro",
+          "attr": "content"
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "price": {
+          "block": "core/paragraph",
+          "path": "features-intro.price.<n>",
+          "attr": "content",
+          "part": 1,
+          "wrap": "span",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "short-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.short-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "block-desc": "not set on instance 108 (the tmpl prints it as .features-description only when present)",
+        "block-bg": "not set on instance 108"
+      }
+    },
+    "home-news:default": {
+      "pattern": "wp-ja-restaurant/acm-home-news-default",
+      "item": "home-news.item.<n>",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "home-news.heading",
+          "attr": "content"
+        },
+        "categories-title": {
+          "block": "core/heading",
+          "path": "home-news.categories-title",
+          "attr": "content"
+        },
+        "testimonials-title": {
+          "block": "core/heading",
+          "path": "home-news.testimonials-title",
+          "attr": "content"
+        },
+        "testimonial-text": {
+          "block": "core/paragraph",
+          "path": "home-news.testimonial-text.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "author-name": {
+          "block": "core/paragraph",
+          "path": "home-news.author-name.<n>",
+          "attr": "content",
+          "part": 1,
+          "wrap": "span",
+          "wrapClass": "author-info-text",
+          "repeat": true
+        },
+        "author-img": {
+          "block": "core/image",
+          "path": "home-news.author-img.<n>",
+          "attr": "src",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "gallery-slide:default": {
+      "pattern": "wp-ja-restaurant/acm-gallery-slide-default",
+      "item": "gallery-slide.item.<n>",
+      "fields": {
+        "image": {
+          "block": "core/image",
+          "path": "gallery-slide.image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/image",
+          "path": "gallery-slide.image.<n>",
+          "attr": "alt",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/group",
+          "path": "gallery-slide.item.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "count": {
+          "block": "core/paragraph",
+          "path": "gallery-slide.count.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "subscribe:default": {
+      "pattern": "wp-ja-restaurant/acm-subscribe-default",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "subscribe.module-title",
+          "attr": "content"
+        },
+        "introtext": {
+          "block": "core/paragraph",
+          "path": "subscribe.introtext",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "subscribe.section-bg",
+          "attr": "src"
+        }
+      },
+      "dropped": {
+        "placeholder": "the e-mail field is a fixed core/html form with the English placeholder 'Email'; core blocks cannot take it from a field (content gap)",
+        "button-text": "the button is part of the fixed core/html form, English 'Subscribe' (content gap)",
+        "background": "same picture as section-bg, drawn once as the section background"
+      }
+    },
+    "tabs:style-1": {
+      "pattern": "wp-ja-restaurant/acm-tabs-style-1",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "tabs.heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "tabs.section-bg",
+          "attr": "src"
+        }
+      },
+      "dropped": {
+        "position": "the Joomla module position the tabs draw; on WordPress the menu sections that follow the box are moved into it by groups/menus.js",
+        "module-title": "the tabs tmpl prints no section title (heading is its own field)"
+      }
+    },
+    "menu:style-1": {
+      "pattern": "wp-ja-restaurant/acm-menu-style-1",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "menu:style-2": {
+      "pattern": "wp-ja-restaurant/acm-menu-style-2",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-image": {
+          "block": "core/image",
+          "path": "menu.dish-image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "dish-extra-class": {
+          "block": "core/paragraph",
+          "path": "menu.dish-extra-class.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "dish-extra-class (class part)": "the source also puts the value in the class `badge-<value>` (Sale = green); the pattern draws the text only, a class attr field is not supported for it"
+      }
+    },
+    "menu:style-3": {
+      "pattern": "wp-ja-restaurant/acm-menu-style-3",
+      "item": "menu.item.<n>",
+      "fields": {
+        "tab-title": {
+          "block": "core/heading",
+          "path": "menu.tab-title",
+          "attr": "content"
+        },
+        "module-title": {
+          "block": "core/heading",
+          "path": "menu.module-title",
+          "attr": "content"
+        },
+        "dish-name": {
+          "block": "core/heading",
+          "path": "menu.dish-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-price": {
+          "block": "core/paragraph",
+          "path": "menu.dish-price.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-description": {
+          "block": "core/paragraph",
+          "path": "menu.dish-description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "dish-image": {
+          "block": "core/image",
+          "path": "menu.dish-image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "dish-extra-class": {
+          "block": "core/paragraph",
+          "path": "menu.dish-extra-class.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "dish-extra-class (class part)": "the source also puts the value in the class `badge-<value>` (Sale = green); the pattern draws the text only, a class attr field is not supported for it"
+      }
+    },
+    "happyhours:style-1": {
+      "pattern": "wp-ja-restaurant/acm-happyhours-style-1",
+      "fields": {
+        "hp-bg": {
+          "block": "core/image",
+          "path": "happyhours.hp-bg",
+          "attr": "src"
+        },
+        "hp-brand": {
+          "block": "core/image",
+          "path": "happyhours.hp-brand",
+          "attr": "src"
+        },
+        "hp-title": {
+          "block": "core/heading",
+          "path": "happyhours.hp-title",
+          "attr": "content"
+        },
+        "hp-desc": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-desc",
+          "attr": "content"
+        },
+        "hp-info": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-info",
+          "attr": "content"
+        },
+        "hp-link-text": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "content"
+        },
+        "hp-link": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "href"
+        },
+        "hp-badge": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-badge",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "hp-other-info": "style-1 tmpl does not print it"
+      }
+    },
+    "happyhours:style-2": {
+      "pattern": "wp-ja-restaurant/acm-happyhours-style-2",
+      "fields": {
+        "hp-bg": {
+          "block": "core/image",
+          "path": "happyhours.hp-bg",
+          "attr": "src"
+        },
+        "hp-brand": {
+          "block": "core/image",
+          "path": "happyhours.hp-brand",
+          "attr": "src"
+        },
+        "hp-title": {
+          "block": "core/heading",
+          "path": "happyhours.hp-title",
+          "attr": "content"
+        },
+        "hp-desc": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-desc",
+          "attr": "content"
+        },
+        "hp-info": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-info",
+          "attr": "content"
+        },
+        "hp-link-text": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "content"
+        },
+        "hp-link": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "href"
+        },
+        "hp-badge": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-badge",
+          "attr": "content"
+        },
+        "hp-other-info": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-other-info",
+          "attr": "content"
+        }
+      },
+      "dropped": {}
+    },
+    "happyhours:style-3": {
+      "pattern": "wp-ja-restaurant/acm-happyhours-style-3",
+      "fields": {
+        "hp-bg": {
+          "block": "core/image",
+          "path": "happyhours.hp-bg",
+          "attr": "src"
+        },
+        "hp-brand": {
+          "block": "core/image",
+          "path": "happyhours.hp-brand",
+          "attr": "src"
+        },
+        "hp-title": {
+          "block": "core/heading",
+          "path": "happyhours.hp-title",
+          "attr": "content"
+        },
+        "hp-desc": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-desc",
+          "attr": "content"
+        },
+        "hp-info": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-info",
+          "attr": "content"
+        },
+        "hp-link-text": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "content"
+        },
+        "hp-link": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-link",
+          "attr": "href"
+        },
+        "hp-other-info": {
+          "block": "core/paragraph",
+          "path": "happyhours.hp-other-info",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "hp-badge": "style-3 tmpl does not print the badge"
+      }
+    },
+    "masthead:default": {
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "features-intro:style-3": {
+      "pattern": "wp-ja-restaurant/acm-features-intro-style-3",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title",
+          "attr": "content"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "tab-body": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        }
+      },
+      "dropped": {}
+    },
+    "statistics:style-1": {
+      "pattern": "wp-ja-restaurant/acm-statistics-style-1",
+      "item": "statistics.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "statistics.module-title",
+          "attr": "content"
+        },
+        "module-intro": {
+          "block": "core/paragraph",
+          "path": "statistics.module-intro",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "statistics.section-bg",
+          "attr": "src"
+        },
+        "button-title": {
+          "block": "core/button",
+          "path": "statistics.button",
+          "attr": "text"
+        },
+        "button-link": {
+          "block": "core/button",
+          "path": "statistics.button",
+          "attr": "url"
+        },
+        "stats-name": {
+          "block": "core/paragraph",
+          "path": "statistics.stats-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "stats-count": {
+          "block": "core/paragraph",
+          "path": "statistics.stats-count.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "button-icon": "fa-tripadvisor on the one instance; drawn by the stylesheet (.jr-stats-button ::before)",
+        "stats-color": "empty at every item; the bar takes the accent colour from the stylesheet"
+      }
+    },
+    "teams:style-1": {
+      "pattern": "wp-ja-restaurant/acm-teams-style-1",
+      "item": "teams.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "teams.module-title",
+          "attr": "content"
+        },
+        "module-intro": {
+          "block": "core/paragraph",
+          "path": "teams.module-intro",
+          "attr": "content"
+        },
+        "member-image": {
+          "block": "core/image",
+          "path": "teams.member-image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "member-name": {
+          "block": "core/heading",
+          "path": "teams.member-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "member-position": {
+          "block": "core/paragraph",
+          "path": "teams.member-position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "member-desc": {
+          "block": "core/paragraph",
+          "path": "teams.member-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "number_col": "2 at the one instance; two columns are drawn by the stylesheet (col-md-6)"
+      }
+    },
+    "timeline:style-1": {
+      "pattern": "wp-ja-restaurant/acm-timeline-style-1",
+      "item": "timeline.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "timeline.module-title",
+          "attr": "content"
+        },
+        "module-intro": {
+          "block": "core/paragraph",
+          "path": "timeline.module-intro",
+          "attr": "content"
+        },
+        "date": {
+          "block": "core/paragraph",
+          "path": "timeline.date.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "image": {
+          "block": "core/image",
+          "path": "timeline.image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "timeline.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "timeline.description.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "icon": "empty at every item; the pattern draws the template's default fa-clock-o"
+      }
+    },
+    "opentable:style-1": {
+      "pattern": "wp-ja-restaurant/acm-opentable-style-1",
+      "fields": {
+        "ot-desc": {
+          "block": "core/paragraph",
+          "path": "opentable.ot-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "ot-id": "the OpenTable restaurant id the third-party script needs; empty in the source and the script is not carried (DECISIONS D-02)"
+      }
+    },
+    "text-banner:default": {
+      "pattern": "wp-ja-restaurant/acm-text-banner-default",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "text-banner.heading",
+          "attr": "content"
+        },
+        "text": {
+          "block": "core/paragraph",
+          "path": "text-banner.text",
+          "attr": "content"
+        }
+      }
+    },
+    "contact-map:default": {
+      "pattern": "wp-ja-restaurant/acm-contact-map-default",
+      "fields": {
+        "map-title": {
+          "block": "core/paragraph",
+          "path": "contact-map.map-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "module-title": "the source prints no title over the map (the module sits in the masthead position)"
+      }
+    },
+    "99-102": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-108": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-111": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-112": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-113": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-117": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-118": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-119": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-121": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-122": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-131": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-133": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-134": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-135": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-136": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-138": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-160": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-163": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-164": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-165": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-167": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "99-350": {
+      "$comment": "alias of masthead:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-masthead-default",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "masthead.title",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "masthead.description",
+          "attr": "content"
+        },
+        "background": {
+          "block": "core/image",
+          "path": "masthead.background",
+          "attr": "src"
+        }
+      },
+      "dropped": {}
+    },
+    "news-101": {
+      "$comment": "alias of home-news:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-home-news-default",
+      "item": "home-news.item.<n>",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "home-news.heading",
+          "attr": "content"
+        },
+        "categories-title": {
+          "block": "core/heading",
+          "path": "home-news.categories-title",
+          "attr": "content"
+        },
+        "testimonials-title": {
+          "block": "core/heading",
+          "path": "home-news.testimonials-title",
+          "attr": "content"
+        },
+        "testimonial-text": {
+          "block": "core/paragraph",
+          "path": "home-news.testimonial-text.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "author-name": {
+          "block": "core/paragraph",
+          "path": "home-news.author-name.<n>",
+          "attr": "content",
+          "part": 1,
+          "wrap": "span",
+          "wrapClass": "author-info-text",
+          "repeat": true
+        },
+        "author-img": {
+          "block": "core/image",
+          "path": "home-news.author-img.<n>",
+          "attr": "src",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "news-151": {
+      "$comment": "alias of home-news:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-home-news-default",
+      "item": "home-news.item.<n>",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "home-news.heading",
+          "attr": "content"
+        },
+        "categories-title": {
+          "block": "core/heading",
+          "path": "home-news.categories-title",
+          "attr": "content"
+        },
+        "testimonials-title": {
+          "block": "core/heading",
+          "path": "home-news.testimonials-title",
+          "attr": "content"
+        },
+        "testimonial-text": {
+          "block": "core/paragraph",
+          "path": "home-news.testimonial-text.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "author-name": {
+          "block": "core/paragraph",
+          "path": "home-news.author-name.<n>",
+          "attr": "content",
+          "part": 1,
+          "wrap": "span",
+          "wrapClass": "author-info-text",
+          "repeat": true
+        },
+        "author-img": {
+          "block": "core/image",
+          "path": "home-news.author-img.<n>",
+          "attr": "src",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "news-152": {
+      "$comment": "alias of home-news:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-home-news-default",
+      "item": "home-news.item.<n>",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "home-news.heading",
+          "attr": "content"
+        },
+        "categories-title": {
+          "block": "core/heading",
+          "path": "home-news.categories-title",
+          "attr": "content"
+        },
+        "testimonials-title": {
+          "block": "core/heading",
+          "path": "home-news.testimonials-title",
+          "attr": "content"
+        },
+        "testimonial-text": {
+          "block": "core/paragraph",
+          "path": "home-news.testimonial-text.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "author-name": {
+          "block": "core/paragraph",
+          "path": "home-news.author-name.<n>",
+          "attr": "content",
+          "part": 1,
+          "wrap": "span",
+          "wrapClass": "author-info-text",
+          "repeat": true
+        },
+        "author-img": {
+          "block": "core/image",
+          "path": "home-news.author-img.<n>",
+          "attr": "src",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "news-153": {
+      "$comment": "alias of home-news:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-home-news-default",
+      "item": "home-news.item.<n>",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "home-news.heading",
+          "attr": "content"
+        },
+        "categories-title": {
+          "block": "core/heading",
+          "path": "home-news.categories-title",
+          "attr": "content"
+        },
+        "testimonials-title": {
+          "block": "core/heading",
+          "path": "home-news.testimonials-title",
+          "attr": "content"
+        },
+        "testimonial-text": {
+          "block": "core/paragraph",
+          "path": "home-news.testimonial-text.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "author-name": {
+          "block": "core/paragraph",
+          "path": "home-news.author-name.<n>",
+          "attr": "content",
+          "part": 1,
+          "wrap": "span",
+          "wrapClass": "author-info-text",
+          "repeat": true
+        },
+        "author-img": {
+          "block": "core/image",
+          "path": "home-news.author-img.<n>",
+          "attr": "src",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "news-154": {
+      "$comment": "alias of home-news:default for the contract (S-14)",
+      "pattern": "wp-ja-restaurant/acm-home-news-default",
+      "item": "home-news.item.<n>",
+      "fields": {
+        "heading": {
+          "block": "core/heading",
+          "path": "home-news.heading",
+          "attr": "content"
+        },
+        "categories-title": {
+          "block": "core/heading",
+          "path": "home-news.categories-title",
+          "attr": "content"
+        },
+        "testimonials-title": {
+          "block": "core/heading",
+          "path": "home-news.testimonials-title",
+          "attr": "content"
+        },
+        "testimonial-text": {
+          "block": "core/paragraph",
+          "path": "home-news.testimonial-text.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "author-name": {
+          "block": "core/paragraph",
+          "path": "home-news.author-name.<n>",
+          "attr": "content",
+          "part": 1,
+          "wrap": "span",
+          "wrapClass": "author-info-text",
+          "repeat": true
+        },
+        "author-img": {
+          "block": "core/image",
+          "path": "home-news.author-img.<n>",
+          "attr": "src",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.edit_access_answered-boundary",
+  "itemIds": [
+    "letter:team.edit_access_answered:en",
+    "letter:team.edit_access_answered:vi",
+    "letter:team.edit_access_answered:de",
+    "letter:team.edit_access_answered:it",
+    "letter:team.edit_access_answered:fr",
+    "letter:team.edit_access_answered:nl",
+    "letter:team.edit_access_answered:zh",
+    "letter:team.edit_access_answered:es"
+  ],
+  "requirement": "team.edit_access_answered stays well-formed for one-character, 10,000-character and Unicode facts",
+  "oracle": {
+    "source": "RFC 5322 section 2.2.3 (no line break in a header value)",
+    "ref": "RFC 5322 section 2.2.3 (no line break in a header value)",
+    "invariant": "subject has no CR/LF; the HTML document is complete"
+  },
+  "edgeTags": ["boundary"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.boundary#team.edit_access_answered:"],
+  "redProof": null,
+  "legacyIds": []
+}

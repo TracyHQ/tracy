@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-linen: #e6dece;
+  --color-deep-ink: #000e13;
+  --color-carbon: #232323;
+  --color-soft-ash: #999999;
+  --color-warm-apricot: #ffdead;
+  --color-obsidian: #000000;
+
+  /* Typography — Font Families */
+  --font-gt-pressura-mono: 'GT Pressura Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-voyage: 'Voyage', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtsectradisplay: 'GTSectraDisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

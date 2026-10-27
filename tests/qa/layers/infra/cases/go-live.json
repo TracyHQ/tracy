@@ -1,0 +1,163 @@
+[
+  {
+    "id": "QA-INFRA-go-live-happy-live-opens-egress",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh"],
+    "requirement": "go-live --op live removes every copy of the site's mail-egress block and no other site's",
+    "oracle": {
+      "source": "packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh",
+      "ref": "go-live-switch",
+      "invariant": "go-live flips a copy between draft and live in both directions; the way back to draft is cheap and repeatable; mail egress is blocked in draft and open when live"
+    },
+    "edgeTags": ["happy", "repeat"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["bash"],
+    "assertionIds": ["live-ok", "blocks-removed", "sibling-block-kept"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-go-live-invalid-args-bad-op",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh"],
+    "requirement": "go-live with bad op exits 2 and changes no rule",
+    "oracle": {
+      "source": "packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh",
+      "ref": "go-live-switch",
+      "invariant": "go-live flips a copy between draft and live in both directions; the way back to draft is cheap and repeatable; mail egress is blocked in draft and open when live"
+    },
+    "edgeTags": ["invalid"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["bash"],
+    "assertionIds": ["exit-code", "rules-unchanged"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-go-live-invalid-args-missing-label",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh"],
+    "requirement": "go-live with missing label exits 2 and changes no rule",
+    "oracle": {
+      "source": "packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh",
+      "ref": "go-live-switch",
+      "invariant": "go-live flips a copy between draft and live in both directions; the way back to draft is cheap and repeatable; mail egress is blocked in draft and open when live"
+    },
+    "edgeTags": ["invalid"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["bash"],
+    "assertionIds": ["exit-code", "rules-unchanged"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-go-live-invalid-args-unknown-site",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh"],
+    "requirement": "go-live with unknown site exits 2 and changes no rule",
+    "oracle": {
+      "source": "packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh",
+      "ref": "go-live-switch",
+      "invariant": "go-live flips a copy between draft and live in both directions; the way back to draft is cheap and repeatable; mail egress is blocked in draft and open when live"
+    },
+    "edgeTags": ["invalid"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["bash"],
+    "assertionIds": ["exit-code", "rules-unchanged"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-go-live-linux-fence-kernel",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh"],
+    "requirement": "go-live.sh: the iptables rules it adds/removes actually block/open the site's mail egress in the Linux kernel (rule bookkeeping is covered by the fake-iptables cases; the kernel behaviour is not)",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "linux-fence",
+      "invariant": "the Docker/iptables fence between sites is enforced by the Linux kernel; it can only be proven on a Linux host with the privileges to inspect it"
+    },
+    "edgeTags": ["cold-warm"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["a Linux host with iptables and the privileges to run it"],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-go-live-partial-failure-no-subnet",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh"],
+    "requirement": "when the site network's subnet cannot be read, go-live exits 1 before changing any rule",
+    "oracle": {
+      "source": "packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh",
+      "ref": "go-live-switch",
+      "invariant": "go-live flips a copy between draft and live in both directions; the way back to draft is cheap and repeatable; mail egress is blocked in draft and open when live"
+    },
+    "edgeTags": ["partial-failure", "dependency-failure"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["bash"],
+    "assertionIds": ["refused-unchanged"],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-go-live-rollback-back-to-draft",
+    "itemIds": ["script:packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh"],
+    "requirement": "go-live --op draft puts the egress block back exactly once, even when run twice (live → draft → draft)",
+    "oracle": {
+      "source": "packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh",
+      "ref": "go-live-switch",
+      "invariant": "go-live flips a copy between draft and live in both directions; the way back to draft is cheap and repeatable; mail egress is blocked in draft and open when live"
+    },
+    "edgeTags": ["rollback", "idempotent", "repeat"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": ["scratch tmp dir"],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": ["bash"],
+    "assertionIds": ["draft-blocks-once"],
+    "redProof": null,
+    "legacyIds": []
+  }
+]

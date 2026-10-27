@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><form><title>Menu feature</title><fields name="menu-feature"><fieldset name="feature" label="TPL_TRACY_MENU_FEATURE_LABEL">
+<field name="image" type="media" label="TPL_TRACY_MENU_FEATURE_IMAGE" />
+<field name="image-alt" type="text" label="TPL_TRACY_MENU_FEATURE_IMAGE_ALT" />
+<field name="eyebrow" type="text" label="TPL_TRACY_MENU_FEATURE_EYEBROW" />
+<field name="title" type="text" label="TPL_TRACY_MENU_FEATURE_TITLE" />
+<field name="description" type="textarea" label="TPL_TRACY_MENU_FEATURE_DESCRIPTION" />
+<field name="action" type="text" label="TPL_TRACY_MENU_FEATURE_ACTION" />
+<field name="link" type="text" label="TPL_TRACY_MENU_FEATURE_LINK" />
+</fieldset></fields></form>

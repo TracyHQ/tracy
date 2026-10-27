@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+  "status": "complete",
+  "name": "Apple",
+  "url": "https://styles.refero.design/style/aecac5da-f397-4ddf-b71f-de1efc434cb8",
+  "sourceWebsite": "https://www.apple.com",
+  "extractedAt": "2026-06-03T19:57:35.045Z",
+  "capturedAt": "2026-10-08T05:16:13.698087+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "white room with a single blue switch.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/eeef0455-98ca-429e-b50d-54eaa757a844.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/1f887521-04e4-41f5-ba4f-ef578bd2940b.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/db890fdc-1c11-4b3e-8775-038a56523506.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/483a5674-2b16-48aa-bd93-9c57ef728ceb.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5098ea75-12c5-4904-9be2-60248356c112.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "0e5085113e8c2db1d403a3a620818259822a72e6c49c8754a9e150e9003e9249",
+      "bytes": 19682
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f11715d78a0eac96ff01b1ef684c0854e0ff6de0e70646f50fc6661f141b2285",
+      "bytes": 59038
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "e712312d12c603ebfcc6ff6ff87d740409ea2ccff441321df6c5564cf7c9c738",
+      "bytes": 16388
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "79d7ab1dfb1d97d85ae84ee4ffd63523723ec2a95f823074a4ad0606e30f1a50",
+      "bytes": 11922
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "9dab7681fc336c8a98e79b720531553232fae15d0b85f7c0af993ca4d6eb8d3e",
+      "bytes": 11454
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "59f6b0bea61655d9b8d3ac6f080d07d8a20aaef969857c4ab863d1ff88a241d0",
+      "bytes": 3681
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "400ca0a6bf50daf4243da36c678ed67add1611d85b2b36e42653c052e8dc037a",
+      "bytes": 637
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2bbd37c081265d80c37289c343dbd261ee4063b9ad8f30def29874f84d8f3f83",
+      "bytes": 654
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "87da0240df312f8b45ee2bbd37bf45267ceedc6d53c76b03715879a9f1d6aa2d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a2c4c68475887352973ddeaa2467357cbbeebf0abedc0fa3c53a3b823feea962",
+      "bytes": 43841
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3d86f931e1ade0e6ff034688ad689daf94e045126b48e9de4e59fb07aa4e9d83",
+      "bytes": 23144
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "546d6312eb5b077d57aaddd4b4ca29e715a6872cfbbcd516e6ff3b2a58e24207",
+      "bytes": 53132
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "05c170f93a73af91b2804cbc7340a8f5a041f9e9c52089487abd4bf244ab2ca6",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "66f69255724a52a218d27970cb505d74c1ab7255ce200322692bd92bccc83eae",
+      "bytes": 1741
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "36fa37c89defab3e815260b55ea4b0971460c20a2ccbb016b409cbdc96169cba",
+      "bytes": 2298
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+    "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "2b49d4b2-8461-4985-b7ee-cf9517e19803",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "8d315332-6267-4dc0-a14c-e8b49c26b0e1",
+    "96845df2-7ddb-420a-814e-c339f95a6554",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a73148b9-449b-42cd-9f38-86ef694f500e",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cfcd001c-e812-4126-9bdf-1f16b68d182e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "ec0f5bca-8367-49e7-b8aa-73b3fa09a4a0"
+  ]
+}

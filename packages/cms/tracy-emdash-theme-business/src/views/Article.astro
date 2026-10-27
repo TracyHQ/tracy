@@ -1,0 +1,205 @@
+---
+import { getEditMeta, getEmDashEntry, getEntryTerms } from 'emdash'
+import { PortableText } from 'emdash/ui'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Photo from '@/components/site/Photo.astro'
+import ArticleH2 from '@/components/site/ArticleH2.astro'
+import BodyImage from '@/components/site/BodyImage.astro'
+import Figures from '@/components/site/Figures.astro'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import ProseQuote from '@/components/site/ProseQuote.astro'
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href, readingLabel, type Locale } from '@/lib/i18n'
+import { uiLocale } from '@/lib/ui'
+import { wordsOf } from '@/lib/locale-words'
+import { mediaUrl } from '@/lib/media'
+import { loadPosts } from '@/lib/posts'
+import { groupFigures, tocLabels, tocOf } from '@/lib/toc'
+import { publicOrigin } from '@/lib/public-origin'
+import { stampBlocks, stampFor, stampsFor } from '@/lib/stamps'
+import { childLive, liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+}
+const { chrome, locale, slug } = Astro.props
+const { site } = chrome
+const slots = Object.fromEntries(((site.slots ?? []) as any[]).map((s) => [s.key, s.text]))
+const [{ entry }, pageRes] = await Promise.all([
+  getEmDashEntry('posts', slug, { locale }),
+  getEmDashEntry('news_page', 'news', { locale })
+])
+// A child goes with its list page: News unticked, /news/<slug> answers 404 like /news, whatever page lists it (TCH #1013).
+const reachable = await childLive(Astro.request, locale, `/news/${slug}`)
+if (!entry || entry.data.status !== 'published' || !reachable) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const a = entry.data as Record<string, any>
+// A reachable post has its News page published, so its labels and aside box are the page's published words. The words
+// of an unpublished News row are never read: never written by Tracy, they stayed the template's English (LANG-2).
+const n = (pageRes.entry?.data ?? {}) as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'posts', entry)
+const $np = stampFor(Astro.request, 'news_page', pageRes.entry)
+const $site = stampFor(Astro.request, 'site', site)
+// A button into an unticked page goes on its own; its section stays (TCH #1013, `src/lib/link-gate.ts`).
+const asideUrl = n.aside_url || href(locale, '/contact')
+const $ = stampsFor(Astro.request)
+const [cats, tags, all] = await Promise.all([
+  getEntryTerms('posts', entry.data.id, 'category', { locale }),
+  getEntryTerms('posts', entry.data.id, 'tag', { locale }),
+  loadPosts(locale)
+])
+const cat = cats[0]
+// With News unticked a post a kept page still lists renders; its links into the news family are drawn only while
+// their target is reachable (TCH #1013, `src/lib/listed-children.ts`). With News on, every one of them is live.
+const live = await liveLinks(Astro.request, locale, [
+  asideUrl,
+  '/news',
+  ...(cat ? [`/news/category/${cat.slug}`] : []),
+  ...tags.map((t) => `/news/tag/${t.slug}`),
+  ...all.map((p) => `/news/${p.slug}`)
+])
+const idx = all.findIndex((p) => p.id === entry.data.id)
+const older = idx >= 0 ? all[idx + 1] : undefined
+const newer = idx > 0 ? all[idx - 1] : undefined
+const prev = older && live(`/news/${older.slug}`) ? older : undefined
+const next = newer && live(`/news/${newer.slug}`) ? newer : undefined
+const related = all
+  .filter((p) => p.id !== entry.data.id && cat && p.category?.slug === cat.slug && live(`/news/${p.slug}`))
+  .slice(0, 3)
+const tagLinks = tags.filter((t) => live(`/news/tag/${t.slug}`))
+const toc = tocLabels(tocOf(a.content), a.toc)
+// Downloads listed without a file stay visible as rows without a link (README, Known limitations);
+// only rows with a URL become links.
+const downloads = (a.downloads ?? []).filter((d: any) => d.title)
+// Adjacent body images become one two-column figure row. Inline editing needs the original value
+// (its edit metadata is a non-enumerable tag), so the editor keeps the untouched array.
+// On a stamped request each text block names itself (`field:content.<_key>`, `stampBlocks`) and is
+// rendered by a renderer that prints it; an ordinary request keeps the renderers it always had.
+const body = getEditMeta(a.content)
+  ? (a.content ?? [])
+  : stampBlocks($page, 'content', groupFigures(a.content ?? []))
+const bodyComponents = $page.owner
+  ? {
+      block: {
+        normal: ProseBlock,
+        h1: ProseBlock,
+        h2: ArticleH2,
+        h3: ProseBlock,
+        h4: ProseBlock,
+        h5: ProseBlock,
+        h6: ProseBlock,
+        blockquote: ProseBlock
+      },
+      listItem: ProseListItem,
+      type: { image: BodyImage, figures: Figures, blockquoteGroup: ProseQuote }
+    }
+  : { block: { h2: ArticleH2 }, type: { image: BodyImage, figures: Figures } }
+const meta = [
+  a.author_role,
+  formatDate(a.date, uiLocale(locale)),
+  readingLabel(a.reading_time, uiLocale(locale))
+]
+  .filter(Boolean)
+  .join(' · ')
+const postUrl = (s: string) => href(locale, `/news/${s}`)
+const pageUrl = `${publicOrigin(Astro.url)}${Astro.url.pathname}`
+---
+
+<Base chrome={chrome} title={a.title} description={a.excerpt || a.lede} image={mediaUrl(a.featured_image)} currentPath="/news" type="article" content={{ collection: "posts", id: entry.data.id, slug, toPath: (s) => `/news/${s}` }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={[{ label: site.home_label, url: href(locale, "/"), stamp: $site("home_label") }, { label: n.breadcrumb ?? "", url: href(locale, "/news"), stamp: $np("breadcrumb") }, ...(cat ? [{ label: cat.label, url: href(locale, `/news/category/${cat.slug}`) }] : []), { label: a.short_title || a.title, stamp: $page(a.short_title ? "short_title" : "title") }].filter((i) => !i.url || live(i.url))} />
+		<div class="container-site flex flex-wrap items-start gap-16 pb-[88px] pt-14">
+			<article class="min-w-0 flex-[1_1_520px]">
+				{cat && <div class="eyebrow mb-4 !tracking-[.14em]">{cat.label}</div>}
+				<h1 class="h-article mb-[22px]" {...$page("title")}>{a.title}</h1>
+				{a.lede && <p class="mb-7 max-w-[44em] font-serif text-[22px] leading-[1.5] text-fg-2" {...$page("lede")}>{a.lede}</p>}
+				<div class="mb-9 flex flex-wrap items-center gap-4 border-y border-line py-[18px]">
+					<div class="h-[42px] w-[42px] shrink-0 rounded-full bg-avatar" aria-hidden="true"></div>
+					<div class="flex-1">{a.author && <div class="text-[14.5px] font-semibold" {...$page("author")}>{a.author}</div>}<div class="text-[13px] text-fg-meta">{meta}</div></div>
+					<div class="flex gap-2" data-share>
+						<a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener" class="flex h-9 w-9 items-center justify-center border border-line text-[13px] text-fg-2" aria-label="LinkedIn">in</a>
+						<a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener" class="flex h-9 w-9 items-center justify-center border border-line text-[13px] text-fg-2" aria-label="Facebook">f</a>
+						<button type="button" data-copy-url={pageUrl} class="flex h-9 w-9 rounded-[var(--ds-btn-radius,0px)] items-center justify-center border border-line text-[13px] text-fg-2" aria-label={wordsOf(uiLocale(locale)).copyLink}><svg class="h-[14px] w-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-copy-icon><rect x="9" y="9" width="12" height="12" /><path d="M5 15V5a2 2 0 0 1 2-2h8" /></svg><span class="hidden" data-copy-done>✓</span></button>
+					</div>
+				</div>
+				{a.featured_image && <Photo image={a.featured_image} stamp={$page("featured_image")} alt={a.title} placeholder={slots.article} class="mb-3 h-[420px]" priority />}
+				{a.caption && <div class="mb-9 text-[13px] text-fg-meta" {...$page("caption")}>{a.caption}</div>}
+				<div class="prose-article max-w-[44em]" {...$page("content")}>
+					<PortableText value={body} components={bodyComponents} />
+				</div>
+				{tagLinks.length > 0 && (
+					<div class="my-10 flex flex-wrap items-center gap-2 border-t border-line pt-6">
+						<span class="mr-2 text-[13px] text-fg-meta" {...$np("tags_label")}>{n.tags_label}</span>
+						{tagLinks.map((t) => <a href={href(locale, `/news/tag/${t.slug}`)} class="chip !px-[13px] !py-[7px] !text-[13px]">{t.label}</a>)}
+					</div>
+				)}
+				{(prev || next) && (
+				<div class="mb-14 grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-px border border-line-card bg-line-card">
+					{prev ? <a href={postUrl(prev.slug)} class="block bg-paper p-[22px] text-fg hover:text-forest-text" {...$("posts", prev)()}><div class="mb-2 text-[12px] uppercase tracking-[.14em] text-fg-meta" {...$np("prev_label")}>{n.prev_label}</div><div class="text-[16.5px] font-semibold leading-[1.4]" {...$('posts', prev)("title")}>{prev.data.title}</div></a> : <div class="bg-paper p-[22px]"></div>}
+					{next ? <a href={postUrl(next.slug)} class="block bg-paper p-[22px] text-right text-fg hover:text-forest-text" {...$("posts", next)()}><div class="mb-2 text-[12px] uppercase tracking-[.14em] text-fg-meta" {...$np("next_label")}>{n.next_label}</div><div class="text-[16.5px] font-semibold leading-[1.4]" {...$('posts', next)("title")}>{next.data.title}</div></a> : <div class="bg-paper p-[22px]"></div>}
+				</div>
+				)}
+				{related.length > 0 && (
+					<div>
+						<h2 class="h-card-lg mb-6 border-b border-line pb-4" {...$np("related_title")}>{n.related_title}</h2>
+						<div class="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-6">
+							{related.map((r) => <article {...$("posts", r)()}><Photo image={r.data.featured_image} stamp={$('posts', r)("featured_image")} alt="" placeholder=" " class="mb-3.5 h-[130px]" /><h3 class="mb-1.5 text-[17px] font-semibold leading-[1.35]"><a href={postUrl(r.slug)} class="text-fg hover:text-forest-text" {...$('posts', r)("title")}>{r.data.title}</a></h3><div class="text-[12.5px] text-fg-meta">{formatDate(r.data.date, uiLocale(locale))}</div></article>)}
+						</div>
+					</div>
+				)}
+			</article>
+
+			<aside class="sticky top-[120px] flex flex-[1_1_280px] flex-col gap-7">
+				{toc.length > 0 && (
+					<div class="border border-line-card bg-card p-[22px]" data-toc>
+						<div class="column-label mb-3.5" {...$np("toc_title")}>{n.toc_title}</div>
+						<div class="flex flex-col gap-2.5">
+							{toc.map((t, i) => <a href={`#${t.id}`} class:list={["border-l-2 pl-3 text-[14.5px] leading-[1.4]", i === 0 ? "border-signal font-semibold text-fg" : "border-line-soft text-fg-muted hover:border-line-strong hover:text-forest-text"]} data-toc-link={t.id}>{t.label}</a>)}
+						</div>
+					</div>
+				)}
+				{downloads.length > 0 && (
+					<div class="border border-line-card p-[22px]" {...$page.block("downloads")}>
+						<div class="column-label mb-3" {...$np("downloads_title")}>{n.downloads_title}</div>
+						{downloads.map((d: any) => { const row = "flex justify-between gap-3 border-b border-line-soft py-2.5 text-[14.5px] text-fg"; const inner = <>{d.title} <span class="whitespace-nowrap text-fg-faint">{d.format}</span></>; return d.url ? <a href={d.url} class={`${row} hover:text-forest-text`} {...$page("downloads.title")}>{inner}</a> : <div class={row} {...$page("downloads.title")}>{inner}</div>; })}
+					</div>
+				)}
+				<div class="band-ink p-6">
+					<div class="mb-2.5 font-serif text-[21px] leading-[1.3]" {...$np("aside_title")}>{n.aside_title}</div>
+					<p class="mb-4 text-[14px] leading-[1.6] text-on-ink-muted" {...$np("aside_text")}>{n.aside_text}</p>
+					{live(asideUrl) && <a href={asideUrl} class="btn-primary block !py-3 text-center !text-[14.5px]" {...$np("aside_button")}>{n.aside_button}</a>}
+				</div>
+			</aside>
+		</div>
+	</main>
+</Base>
+
+<script>
+	// Table of contents: smooth scroll and the active marker follows the heading in view.
+	const links = [...document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]")];
+	const setActive = (id: string) => {
+		for (const l of links) {
+			const on = l.dataset.tocLink === id;
+			l.classList.toggle("border-signal", on); l.classList.toggle("font-semibold", on); l.classList.toggle("text-fg", on);
+			l.classList.toggle("border-line-soft", !on); l.classList.toggle("text-fg-muted", !on);
+		}
+	};
+	for (const l of links) l.addEventListener("click", (e) => { const el = document.getElementById(l.dataset.tocLink!); if (!el) return; e.preventDefault(); history.replaceState(null, "", `#${l.dataset.tocLink}`); window.scrollTo({ top: window.pageYOffset + el.getBoundingClientRect().top - 100, behavior: "smooth" }); setActive(l.dataset.tocLink!); });
+	if (links.length && "IntersectionObserver" in window) {
+		const io = new IntersectionObserver((entries) => { for (const en of entries) if (en.isIntersecting) setActive(en.target.id); }, { rootMargin: "-100px 0px -60% 0px" });
+		for (const l of links) { const el = document.getElementById(l.dataset.tocLink!); if (el) io.observe(el); }
+	}
+	for (const b of document.querySelectorAll<HTMLButtonElement>("[data-copy-url]")) b.addEventListener("click", async () => {
+		const icon = b.querySelector<HTMLElement>("[data-copy-icon]"), done = b.querySelector<HTMLElement>("[data-copy-done]");
+		try { await navigator.clipboard.writeText(b.dataset.copyUrl!); icon?.classList.add("hidden"); done?.classList.remove("hidden"); setTimeout(() => { icon?.classList.remove("hidden"); done?.classList.add("hidden"); }, 1500); } catch {}
+	});
+</script>

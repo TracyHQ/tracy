@@ -1,0 +1,206 @@
+/* Hero showcase, tab 5 "You own it" (hero-showcase-tab5.js).
+
+   The app at 1280 x 696: a picture of the sidebar and chat column (580.5px),
+   then the right pane (699.5px): its tab strip (48px, drawn here) and its body
+   (648px), which is either a picture of the app or, for the Publish tab, drawn
+   here. Sizes and colours of the drawn parts were read from the app
+   (cowork.tracy.site, 23/10/2026, getComputedStyle); the Publish tab's rules
+   are the app's own (tch packages/site/tracy-site-tabs/src/client/
+   site-tabs-rules.css) with tracy-ui's Button, Badge and Input. */
+
+.hs-win .hs5 {
+  --a5-success: oklch(0.696 0.17 162.48);
+  --a5-destructive: oklch(0.577 0.245 27.325);
+  --a5-primary: #bf5b3d;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  font-family: -apple-system, system-ui, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.hs-win .hs5 :where(p, h2, h3, dl, dt, dd, code, section, label) { box-sizing: border-box; margin: 0; padding: 0; }
+/* The page's own heading and code rules must not reach the app's. */
+.hs-win .hs5 :is(h2, h3, code, label) { font-family: inherit; letter-spacing: normal; text-transform: none; color: inherit; }
+.hs-win .hs5 :is(.hs5-mono, code) { font-family: var(--a-mono); background: none; }
+.hs-win .hs5-left { position: absolute; top: 0; left: 0; width: 580.5px; height: 696px; }
+
+/* Right pane ------------------------------------------------------------ */
+
+.hs-win .hs5-pane { position: absolute; top: 0; left: 580.5px; width: 699.5px; height: 696px; }
+.hs-win .hs5-bar { position: relative; height: 48px; background: oklch(0.975 0.003 85); }
+.hs-win .hs5-tabs { position: absolute; inset: 0; }
+.hs-win .hs5-tab {
+  position: absolute;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: var(--a-muted);
+  font-size: 13px;
+  line-height: 13px;
+}
+.hs-win .hs5-tab.is-on { background: rgb(241, 243, 245); color: var(--a-fg); }
+.hs-win .hs5-tt { display: flex; flex: 1; align-items: center; gap: 6px; min-width: 0; overflow: hidden; white-space: nowrap; -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
+.hs-win .hs5-tic { display: inline-flex; flex: none; }
+.hs-win .hs5-tic svg { width: 14px; height: 14px; }
+.hs-win .hs5-tchev { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 18px; height: 18px; margin-right: -2px; }
+.hs-win .hs5-tchev svg { width: 14px; height: 14px; }
+.hs-win .hs5-tx { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 20px; height: 20px; margin-left: 2px; color: var(--a-muted); }
+.hs-win .hs5-tx svg { width: 14px; height: 14px; }
+.hs-win .hs5-sep { position: absolute; top: 17px; width: 1px; height: 14px; background: oklch(0.87 0 0); opacity: 0; }
+.hs-win .hs5-sep.is-on { opacity: 1; }
+.hs-win .hs5-ib { position: absolute; top: 10px; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: var(--a-muted); }
+.hs-win .hs5-plus svg { width: 14px; height: 14px; }
+.hs-win .hs5-ib svg { width: 16px; height: 16px; }
+.hs-win .hs5-plus svg { width: 14px; height: 14px; }
+.hs-win .hs5-full { left: 629.5px; }
+.hs-win .hs5-side { left: 665.5px; }
+
+.hs-win .hs5-body { position: relative; height: 648px; overflow: hidden; background: oklab(0.961525 0 0); }
+.hs-win .hs5-view { position: absolute; top: 0; left: 0; width: 699.5px; height: 648px; opacity: 0; }
+.hs-win .hs5-view.is-on { opacity: 1; }
+.hs-win .hs5-view > img { width: 699.5px; height: 648px; }
+
+/* The "..." menu of a My Sites row: a picture at its place (1031, 186 in the
+   app, 450.5, 138 in the pane body), and the hover of one item drawn over it
+   (oklab(0.145 0 0 / .1), radius 8, read from the app). */
+.hs-win .hs5-menu {
+  position: absolute;
+  top: 138px;
+  left: 450.5px;
+  width: 224px;
+  height: 348px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1);
+  opacity: 0;
+}
+.hs-win .hs5-menu.is-on { opacity: 1; }
+.hs-win .hs5-menu img { width: 224px; height: 348px; }
+.hs-win .hs5-hl { position: absolute; left: 5px; width: 214px; height: 32px; border-radius: 8px; background: oklab(0.145 0 0 / .1); opacity: 0; }
+.hs-win .hs5-hl.is-on { opacity: 1; }
+
+/* The "+" menu of the tab strip: under "+", its right edge on the button's. */
+.hs-win .hs5-tabmenu { position: absolute; top: 42px; width: 156px; height: 80px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1); opacity: 0; z-index: 5; }
+.hs-win .hs5-tabmenu.is-on { opacity: 1; }
+.hs-win .hs5-tabhl { position: absolute; top: 70px; width: 148px; height: 24px; margin-left: 4px; border-radius: 8px; background: oklab(0.145 0 0 / .08); opacity: 0; z-index: 6; }
+.hs-win .hs5-tabhl.is-on { opacity: 1; }
+
+/* The WordPress admin: the app opens it in a window of its own (window.open,
+   tracy-my-sites site-actions.ts). Drawn as a plain window over the app. */
+.hs-win .hs5-wp {
+  position: absolute;
+  top: 8px;
+  left: 40px;
+  z-index: 20;
+  width: 1200px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, .14);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .28), 0 4px 12px rgba(0, 0, 0, .12);
+  opacity: 0;
+  visibility: hidden;
+}
+.hs-win .hs5-wp.is-on { opacity: 1; visibility: visible; }
+.hs-win .hs5-wpbar { position: relative; display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 12px; background: #f6f6f6; border-bottom: 1px solid rgba(0, 0, 0, .1); }
+.hs-win .hs5-wpbar i { width: 12px; height: 12px; border-radius: 50%; background: #ff5f57; box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .12); }
+.hs-win .hs5-wpbar i:nth-child(2) { background: #febc2e; }
+.hs-win .hs5-wpbar i:nth-child(3) { background: #28c840; }
+.hs-win .hs5-wpbar span { position: absolute; left: 0; right: 0; text-align: center; color: var(--a-muted); font-size: 12px; }
+.hs-win .hs5-wp img { width: 1198px; height: auto; }
+
+/* Export dialog: the app's backdrop (oklab(0 0 0 / .1), blur 4px) over the
+   whole app, and the dialog's picture at its place (384, 177.5; 512 x 341). */
+.hs-win .hs5-modal { position: absolute; inset: 0; z-index: 30; background: oklab(0 0 0 / .1); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity: 0; visibility: hidden; }
+.hs-win .hs5-modal.is-on { opacity: 1; visibility: visible; }
+.hs-win .hs5-modal img { position: absolute; top: 177.5px; left: 384px; width: 512px; height: 341px; border-radius: 14px; }
+
+/* Publish tab ----------------------------------------------------------- */
+
+.hs-win .hs5-pub { position: absolute; inset: 0; overflow: hidden; color: var(--a-fg); font-size: 14px; line-height: 20px; }
+.hs-win .hs5-pub-in { position: relative; will-change: transform; }
+.hs-win .hs5-phead { display: flex; align-items: center; height: 53px; padding: 12px 12px 12px 8px; border-bottom: 1px solid var(--a-border); background: #fff; }
+.hs-win .hs5-sitebtn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; font-size: 12.8px; line-height: 18.29px; font-weight: 600; }
+.hs-win .hs5-sitebtn svg { width: 14px; height: 14px; color: var(--a-muted); }
+.hs-win .hs5-set { display: grid; gap: 20px; padding: 16px; border-bottom: 1px solid var(--a-border); background: #fff; }
+.hs-win .hs5-shead { display: flex; align-items: center; gap: 12px; }
+.hs-win .hs5-tile { display: grid; flex: none; place-items: center; width: 40px; height: 40px; border: 1px solid var(--a-border); border-radius: 10px; background: oklab(0.9658 0 0); }
+.hs-win .hs5-tile svg { width: 22px; height: 22px; }
+.hs-win .hs5-stext { flex: 1; min-width: 0; }
+.hs-win .hs5-sline { display: flex; align-items: center; gap: 2px 8px; }
+.hs-win .hs5-sname { font-weight: 600; }
+.hs-win .hs5-ssub { color: var(--a-muted); font-size: 12px; line-height: 17px; }
+.hs-win .hs5-sact { display: flex; flex: none; gap: 6px; }
+
+/* tracy-ui Badge (outline) as the status chip: dot + word. */
+.hs-win .hs5-chip { display: inline-flex; flex: none; align-items: center; gap: 6px; height: 20px; padding: 2px 8px; border: 1px solid var(--a-border); border-radius: 32px; font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
+.hs-win .hs5-dot { width: 6px; height: 6px; border-radius: 9999px; background: var(--a-muted); }
+.hs-win .hs5-chip.is-live, .hs-win .hs5-chip[data-chip="live"], .hs-win .hs5-chip[data-chip="verified"] { border-color: color-mix(in oklab, var(--a5-success) 50%, transparent); background: color-mix(in oklab, var(--a5-success) 10%, transparent); }
+.hs-win .hs5-chip.is-live .hs5-dot, .hs-win .hs5-chip[data-chip="live"] .hs5-dot, .hs-win .hs5-chip[data-chip="verified"] .hs5-dot { background: var(--a5-success); }
+.hs-win .hs5-chip[data-chip="connecting"] { border-color: color-mix(in oklab, var(--a5-primary) 40%, transparent); background: color-mix(in oklab, var(--a5-primary) 10%, transparent); }
+.hs-win .hs5-chip[data-chip="connecting"] .hs5-dot { background: var(--a5-primary); }
+
+/* tracy-ui Button, size sm: outline (o), default (p), ghost (g), destructive text (d). */
+.hs-win .hs5-btn { display: inline-flex; flex: none; align-items: center; gap: 4px; height: 28px; padding: 0 10px; border: 1px solid transparent; border-radius: 8px; font-size: 12.8px; line-height: 18.29px; font-weight: 500; white-space: nowrap; transition: background-color .15s, opacity .15s; }
+.hs-win .hs5-btn.o { border-color: var(--a-border); background: #fff; }
+.hs-win .hs5-btn.o.is-hover { background: var(--a-muted-bg); }
+.hs-win .hs5-btn.p { background: var(--a5-primary); color: oklch(0.985 0 0); }
+.hs-win .hs5-btn.d { color: var(--a5-destructive); }
+.hs-win .hs5-btn.is-off { opacity: .5; }
+
+.hs-win .hs5-domains { display: grid; gap: 8px; }
+.hs-win .hs5-domains h2 { font-size: 14px; line-height: 20px; font-weight: 600; }
+.hs-win .hs5-card { border: 1px solid var(--a-border); border-radius: 10px; background: #fff; }
+.hs-win .hs5-cbody { display: grid; gap: 8px; padding: 12px 14px; }
+.hs-win .hs5-chead { display: grid; gap: 2px; }
+.hs-win .hs5-chead h3 { color: var(--a-muted); font-size: 12px; line-height: 17px; font-weight: 400; }
+.hs-win .hs5-lead { font-size: 13px; line-height: 18px; }
+.hs-win .hs5-row { display: flex; align-items: center; gap: 6px 8px; min-height: 28px; }
+.hs-win .hs5-addr { display: flex; flex: none; align-items: center; gap: 4px; }
+.hs-win .hs5-mono { font-family: var(--a-mono); font-size: 13px; line-height: 18px; }
+.hs-win .hs5-copy { display: flex; flex: none; align-items: center; }
+.hs-win .hs5-copyb { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 8px; color: var(--a-muted); }
+.hs-win .hs5-copyb svg { width: 12px; height: 12px; }
+.hs-win .hs5-said { min-width: 44px; }
+.hs-win .hs5-acts { display: flex; flex: 1; align-items: center; justify-content: space-between; gap: 6px 8px; }
+
+.hs-win .hs5-entry { display: flex; }
+.hs-win .hs5-entry.is-gone, .hs-win .hs5-form, .hs-win .hs5-own, .hs-win .hs5-avail { display: none; }
+.hs-win .hs5-form.is-on { display: grid; gap: 8px; }
+.hs-win .hs5-own.is-on { display: block; }
+.hs-win .hs5-avail.is-on { display: block; }
+/* tracy-ui Input, focused (border-ring): 32px, radius 10, px 10. */
+.hs-win .hs5-input { display: flex; align-items: center; height: 32px; padding: 4px 10px; border: 1px solid var(--a5-primary); border-radius: 10px; font-size: 14px; }
+.hs-win .hs5-caret { width: 1px; height: 17px; margin-left: 1px; background: var(--a-fg); animation: hs5-blink 1s steps(1) infinite; }
+@keyframes hs5-blink { 50% { opacity: 0; } }
+.hs-win .hs5-help { color: var(--a-muted); font-size: 12px; }
+.hs-win .hs5-facts { display: flex; gap: 8px; }
+
+/* The domain's card (OwnDomainCard): name + state, what to do next, the
+   records with what the last lookup found, notes, actions. */
+.hs-win .hs5-own .hs5-cbody { display: grid; gap: 8px; }
+.hs-win .hs5-ohead { display: flex; align-items: center; justify-content: space-between; gap: 4px 8px; }
+.hs-win .hs5-ohead h3 { font-weight: 500; }
+.hs-win .hs5-working { display: none; align-items: center; gap: 6px; color: var(--a-muted); font-size: 12px; line-height: 17px; }
+.hs-win .hs5-working svg { width: 14px; height: 14px; animation: hs5-spin 1s linear infinite; }
+@keyframes hs5-spin { to { transform: rotate(360deg); } }
+.hs-win .hs5-own[data-state="connecting"] .hs5-working { display: flex; }
+.hs-win .hs5-own[data-state="connecting"] .hs5-olead,
+.hs-win .hs5-own[data-state="connecting"] .hs5-oacts { display: none; }
+.hs-win .hs5-own:not([data-state="waiting"]) .hs5-hold { display: none; }
+.hs-win .hs5-own:not([data-state="verified"]) .hs5-pubon { display: none; }
+.hs-win .hs5-recs { display: grid; gap: 8px; }
+.hs-win .hs5-rec { display: grid; gap: 4px; padding: 8px 10px; border: 1px solid var(--a-border); border-radius: 8px; font-size: 12px; line-height: 17px; }
+.hs-win .hs5-rec-t { font-weight: 500; }
+.hs-win .hs5-rec dl { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 0 12px; }
+.hs-win .hs5-rec dt { color: var(--a-muted); line-height: 18px; }
+.hs-win .hs5-rec dd { padding: 3px 0; line-height: 18px; }
+.hs-win .hs5-rec dd.hs5-val { display: flex; align-items: flex-start; gap: 4px; padding: 0; }
+.hs-win .hs5-rec code { padding: 3px 0; font-family: var(--a-mono); font-size: 12px; line-height: 18px; }
+.hs-win .hs5-found { color: var(--a-muted); }
+.hs-win .hs5-found.is-ok { color: var(--a5-success); }
+.hs-win .hs5-note { color: var(--a-muted); font-size: 12px; line-height: 17px; }
+.hs-win .hs5-oacts { display: flex; align-items: center; gap: 6px 8px; }
+.hs-win .hs5-oacts .hs5-remove { margin-left: auto; }

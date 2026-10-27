@@ -1,0 +1,102 @@
+{
+  "id": "QA-UNIT-REG-PR-1740-gateway-ownership-check-per-frame-happy",
+  "itemIds": ["regression:REG-PR-1740-gateway-ownership-check-per-frame"],
+  "requirement": "Gateway H20: the per-frame workspace ownership check gives upstream's exact answer at a fraction of the cost, and still refuses another subuser's workspace",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1740-gateway-ownership-check-per-frame.json",
+    "ref": "PR #1740 (fix); fix evidence: Dev profile 25/10/2026: workspaceOwnedByAnotherSubuser was 49% of gateway samples; on dev's real rows H20 gave 702/702 identical answers, 5.79 ms -> 1.34 ms per check",
+    "invariant": "S1: every answer equals upstream's; one rows read per check, realpath only per existing folder; faster than upstream's predicate. S2: the folder is not listed and session creation is refused with 403, nothing sent to dsh.",
+    "productSources": [
+      "vendor/tracy/dsh-passwords/src/auth.ts:105",
+      "vendor/tracy/dsh-passwords/src/config.ts:80",
+      "vendor/tracy/dsh-passwords/src/db.ts:521",
+      "vendor/tracy/dsh-passwords/src/encrypt.ts:27",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:1352",
+      "vendor/tracy/dsh-passwords/src/permissions.ts:29",
+      "vendor/tracy/dsh-passwords/src/tracy/ownership.ts:109",
+      "vendor/tracy/dsh-passwords/src/tracy/persistence.ts:271",
+      "vendor/tracy/dsh-passwords/src/tracy/seat-book.ts:24"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "vendor/tracy/dsh-passwords/src/admin.ts:1086 openSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/admin.ts:296 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/admin.ts:494 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/admin.ts:696 openSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/admin.ts:720 createReadStream() with a computed path",
+      "vendor/tracy/dsh-passwords/src/config.ts:345 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:4238 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:4239 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:4247 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:4248 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/gateway.ts:930 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:114 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:177 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:53 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:536 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:553 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:563 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:580 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:62 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:639 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:657 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/patch.ts:96 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/tracy/i18n/gateway-langs.ts:102 readFileSync() with a computed path",
+      "vendor/tracy/dsh-passwords/src/tracy/session-archive.ts:146 open() with a computed path",
+      "vendor/tracy/dsh-passwords/src/tracy/session-archive.ts:219 readFile() with a computed path",
+      "vendor/tracy/dsh-passwords/test/tracy/gateway-ownership-h20.test.ts:17 spawn() runs a computed command",
+      "vendor/tracy/dsh-passwords/test/tracy/gateway-ownership-h20.test.ts:17 spawn() runs computed arguments",
+      "vendor/tracy/dsh-passwords/test/tracy/gateway-ownership-h20.test.ts:17 spawnSync() runs a computed command",
+      "vendor/tracy/dsh-passwords/test/tracy/gateway-ownership-h20.test.ts:17 spawnSync() runs computed arguments"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "H20: the same answer as upstream",
+    "🔒 H20: a workspace another subuser owns is still refused",
+    "H20: per check, one read of the rows",
+    "🔒 H20: another seat granted that folder",
+    "🔒 H20: and the other seat is refused"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1740-gateway-ownership-check-per-frame"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "vendor/tracy/dsh-passwords", "dsh-passwords"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1740-gateway-ownership-check-per-frame",
+    "pr": 1740,
+    "kind": "fix",
+    "area": "dsh-passwords/gateway",
+    "file": "tests/regression/cases/REG-PR-1740-gateway-ownership-check-per-frame.json"
+  },
+  "command": [
+    "node",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "test/tracy/ownership.test.ts",
+    "test/tracy/gateway-ownership-h20.test.ts"
+  ],
+  "cwd": "vendor/tracy/dsh-passwords",
+  "needs": [],
+  "tests": [
+    "H20: the same answer as upstream",
+    "🔒 H20: a workspace another subuser owns is still refused",
+    "H20: per check, one read of the rows",
+    "🔒 H20: another seat granted that folder",
+    "🔒 H20: and the other seat is refused"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,783 @@
+import { Kysely, SqliteDialect, sql } from "kysely";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { NodeSqliteCompatDatabase as BetterSqlite3 } from "#node-sqlite";
+
+import { generateEncryptionKey, parseEncryptionKeys } from "../../../src/config/secrets.js";
+import { runMigrations } from "../../../src/database/migrations/runner.js";
+import { OptionsRepository } from "../../../src/database/repositories/options.js";
+import type { Database } from "../../../src/database/types.js";
+import { encryptPluginSetting } from "../../../src/plugins/settings.js";
+import { runWithContext } from "../../../src/request-context.js";
+import {
+	getPluginSettingWithDb,
+	getPluginSettingsWithDb,
+	getSiteSetting,
+	getSiteSettings,
+	getSiteSettingWithDb,
+	getSiteSettingsWithDb,
+	invalidateSiteSettingsCache,
+	setSiteSettings,
+} from "../../../src/settings/index.js";
+import { setupTestDatabase } from "../../utils/test-db.js";
+
+describe("Site Settings", () => {
+	let db: Kysely<Database>;
+
+	beforeEach(async () => {
+		db = await setupTestDatabase();
+	});
+
+	afterEach(() => {
+		vi.unstubAllEnvs();
+	});
+
+	describe("setSiteSettings", () => {
+		it("should store settings with site: prefix", async () => {
+			await setSiteSettings({ title: "Test Site" }, db);
+
+			const row = await db
+				.selectFrom("options")
+				.where("name", "=", "site:title")
+				.select("value")
+				.executeTakeFirst();
+
+			expect(row?.value).toBe('"Test Site"');
+		});
+
+		it("should merge with existing settings", async () => {
+			await setSiteSettings({ title: "Test" }, db);
+			await setSiteSettings({ tagline: "Welcome" }, db);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.title).toBe("Test");
+			expect(settings.tagline).toBe("Welcome");
+		});
+
+		it("should store complex objects", async () => {
+			await setSiteSettings(
+				{
+					social: {
+						twitter: "@handle",
+						github: "user",
+					},
+				},
+				db,
+			);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.social?.twitter).toBe("@handle");
+			expect(settings.social?.github).toBe("user");
+		});
+
+		it("should store logo with mediaId", async () => {
+			await setSiteSettings(
+				{
+					logo: { mediaId: "med_123", alt: "Logo" },
+				},
+				db,
+			);
+
+			const row = await db
+				.selectFrom("options")
+				.where("name", "=", "site:logo")
+				.select("value")
+				.executeTakeFirst();
+
+			const parsed = JSON.parse(row?.value || "{}");
+			expect(parsed.mediaId).toBe("med_123");
+			expect(parsed.alt).toBe("Logo");
+		});
+
+		it("deletes media settings while preserving sibling SEO settings", async () => {
+			await setSiteSettings(
+				{
+					logo: { mediaId: "med_logo" },
+					favicon: { mediaId: "med_favicon" },
+					seo: {
+						defaultOgImage: { mediaId: "med_og" },
+						titleSeparator: " — ",
+						googleVerification: "google-code",
+					},
+				},
+				db,
+			);
+
+			await setSiteSettings({ logo: null, favicon: null, seo: { defaultOgImage: null } }, db);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.logo).toBeUndefined();
+			expect(settings.favicon).toBeUndefined();
+			expect(settings.seo).toEqual({
+				titleSeparator: " — ",
+				googleVerification: "google-code",
+			});
+			expect(await new OptionsRepository(db).exists("site:logo")).toBe(false);
+			expect(await new OptionsRepository(db).exists("site:favicon")).toBe(false);
+			const storedSeo = await new OptionsRepository(db).get<Record<string, unknown>>("site:seo");
+			expect(storedSeo).not.toHaveProperty("defaultOgImage");
+		});
+
+		it("deletes the SEO option when its only media reference is removed", async () => {
+			await setSiteSettings({ seo: { defaultOgImage: { mediaId: "med_og" } } }, db);
+
+			await setSiteSettings({ seo: { defaultOgImage: null } }, db);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.seo).toBeUndefined();
+			expect(await new OptionsRepository(db).exists("site:seo")).toBe(false);
+		});
+
+		it("keeps the other SEO fields when updating one of them", async () => {
+			await setSiteSettings(
+				{
+					seo: {
+						titleSeparator: " | ",
+						robotsTxt: "User-agent: *\nDisallow: /private/",
+						googleVerification: "google-code",
+					},
+				},
+				db,
+			);
+
+			await setSiteSettings({ seo: { googleVerification: "new-code" } }, db);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.seo).toEqual({
+				titleSeparator: " | ",
+				robotsTxt: "User-agent: *\nDisallow: /private/",
+				googleVerification: "new-code",
+			});
+		});
+
+		it("keeps the other social links when updating one of them", async () => {
+			await setSiteSettings({ social: { twitter: "@handle", github: "user" } }, db);
+
+			await setSiteSettings({ social: { github: "new-user" } }, db);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.social).toEqual({ twitter: "@handle", github: "new-user" });
+		});
+
+		it("rolls back updates when a media-setting deletion fails", async () => {
+			await setSiteSettings({ title: "Original", logo: { mediaId: "med_logo" } }, db);
+			await sql`
+				CREATE TRIGGER block_site_logo_delete
+				BEFORE DELETE ON options
+				WHEN OLD.name = 'site:logo'
+				BEGIN
+					SELECT RAISE(ABORT, 'blocked delete');
+				END
+			`.execute(db);
+
+			await expect(setSiteSettings({ title: "Changed", logo: null }, db)).rejects.toThrow();
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.title).toBe("Original");
+			expect(settings.logo?.mediaId).toBe("med_logo");
+		});
+	});
+
+	describe("getSiteSetting", () => {
+		it("should return undefined for unset values", async () => {
+			const title = await getSiteSettingWithDb("title", db);
+			expect(title).toBeUndefined();
+		});
+
+		it("should return the stored value", async () => {
+			await setSiteSettings({ title: "My Site" }, db);
+			const title = await getSiteSettingWithDb("title", db);
+			expect(title).toBe("My Site");
+		});
+
+		it("should return numbers correctly", async () => {
+			await setSiteSettings({ postsPerPage: 10 }, db);
+			const postsPerPage = await getSiteSettingWithDb("postsPerPage", db);
+			expect(postsPerPage).toBe(10);
+		});
+
+		it("should return nested objects", async () => {
+			const social = { twitter: "@handle", github: "user" };
+			await setSiteSettings({ social }, db);
+			const retrieved = await getSiteSettingWithDb("social", db);
+			expect(retrieved).toEqual(social);
+		});
+	});
+
+	describe("getSiteSettings", () => {
+		it("should return empty object for no settings", async () => {
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings).toEqual({});
+		});
+
+		it("should return all settings", async () => {
+			await setSiteSettings(
+				{
+					title: "Test",
+					tagline: "Welcome",
+					postsPerPage: 10,
+				},
+				db,
+			);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.title).toBe("Test");
+			expect(settings.tagline).toBe("Welcome");
+			expect(settings.postsPerPage).toBe(10);
+		});
+
+		it("should return partial object for partial settings", async () => {
+			await setSiteSettings({ title: "Test" }, db);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.title).toBe("Test");
+			expect(settings.tagline).toBeUndefined();
+		});
+
+		it("should handle multiple setting types", async () => {
+			await setSiteSettings(
+				{
+					title: "Test Site",
+					postsPerPage: 15,
+					dateFormat: "MMMM d, yyyy",
+					timezone: "America/New_York",
+					social: {
+						twitter: "@test",
+					},
+				},
+				db,
+			);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.title).toBe("Test Site");
+			expect(settings.postsPerPage).toBe(15);
+			expect(settings.dateFormat).toBe("MMMM d, yyyy");
+			expect(settings.timezone).toBe("America/New_York");
+			expect(settings.social?.twitter).toBe("@test");
+		});
+	});
+
+	describe("Plugin settings", () => {
+		it("should return undefined for unset plugin settings", async () => {
+			await expect(getPluginSettingWithDb("demo-plugin", "title", db)).resolves.toBeUndefined();
+		});
+
+		it("should return stored plugin settings", async () => {
+			const options = new OptionsRepository(db);
+			await options.set("plugin:demo-plugin:settings:title", "Hello world");
+			await options.set("plugin:demo-plugin:settings:enabled", true);
+
+			await expect(getPluginSettingWithDb("demo-plugin", "title", db)).resolves.toBe("Hello world");
+			await expect(getPluginSettingsWithDb("demo-plugin", db)).resolves.toEqual({
+				title: "Hello world",
+				enabled: true,
+			});
+		});
+
+		it("returns versioned plugin JSON that is not an encryption envelope", async () => {
+			const versioned = { v: 1, kid: "oauth-key", payload: { enabled: true } };
+			const encryptedByPlugin = {
+				kid: "plugin-managed-key",
+				iv: "plugin-managed-iv",
+				ciphertext: "plugin-managed-ciphertext",
+			};
+			const namespaced = { $emdash: "layout-metadata", columns: 3 };
+			const options = new OptionsRepository(db);
+			await options.set("plugin:demo-plugin:settings:metadata", versioned);
+			await options.set("plugin:demo-plugin:settings:token", encryptedByPlugin);
+			await options.set("plugin:demo-plugin:settings:layout", namespaced);
+
+			await expect(getPluginSettingWithDb("demo-plugin", "metadata", db)).resolves.toEqual(
+				versioned,
+			);
+			await expect(getPluginSettingWithDb("demo-plugin", "token", db)).resolves.toEqual(
+				encryptedByPlugin,
+			);
+			await expect(getPluginSettingWithDb("demo-plugin", "layout", db)).resolves.toEqual(
+				namespaced,
+			);
+			await expect(getPluginSettingsWithDb("demo-plugin", db)).resolves.toEqual({
+				layout: namespaced,
+				metadata: versioned,
+				token: encryptedByPlugin,
+			});
+		});
+
+		it("decrypts encrypted plugin settings from the public read helpers", async () => {
+			const encryptionKey = generateEncryptionKey();
+			vi.stubEnv("EMDASH_ENCRYPTION_KEY", encryptionKey);
+			const keys = await parseEncryptionKeys(encryptionKey);
+			const options = new OptionsRepository(db);
+			await options.set(
+				"plugin:demo-plugin:settings:apiKey",
+				await encryptPluginSetting("demo-plugin", "apiKey", "secret-value", keys),
+			);
+			await options.set("plugin:demo-plugin:settings:enabled", true);
+
+			await expect(getPluginSettingWithDb<string>("demo-plugin", "apiKey", db)).resolves.toBe(
+				"secret-value",
+			);
+			await expect(getPluginSettingsWithDb("demo-plugin", db)).resolves.toEqual({
+				apiKey: "secret-value",
+				enabled: true,
+			});
+		});
+
+		it("rejects structurally malformed encrypted settings instead of returning envelopes", async () => {
+			const encryptionKey = generateEncryptionKey();
+			vi.stubEnv("EMDASH_ENCRYPTION_KEY", encryptionKey);
+			const keys = await parseEncryptionKeys(encryptionKey);
+			const envelope = await encryptPluginSetting("demo-plugin", "apiKey", "secret-value", keys);
+			const options = new OptionsRepository(db);
+			await options.set("plugin:demo-plugin:settings:apiKey", {
+				...envelope,
+				unexpected: true,
+			});
+
+			await expect(getPluginSettingWithDb("demo-plugin", "apiKey", db)).rejects.toMatchObject({
+				code: "PLUGIN_SETTING_DECRYPTION_FAILED",
+			});
+
+			const { ciphertext: _ciphertext, ...missingCiphertext } = envelope;
+			await options.set("plugin:demo-plugin:settings:apiKey", missingCiphertext);
+			await expect(getPluginSettingWithDb("demo-plugin", "apiKey", db)).rejects.toMatchObject({
+				code: "PLUGIN_SETTING_DECRYPTION_FAILED",
+			});
+
+			await options.set("plugin:demo-plugin:settings:apiKey", {
+				...envelope,
+				iv: "not+base64url",
+			});
+			await expect(getPluginSettingsWithDb("demo-plugin", db)).rejects.toMatchObject({
+				code: "PLUGIN_SETTING_DECRYPTION_FAILED",
+			});
+
+			const { kid: _kid, ...missingKid } = envelope;
+			await options.set("plugin:demo-plugin:settings:apiKey", missingKid);
+			await expect(getPluginSettingsWithDb("demo-plugin", db)).rejects.toMatchObject({
+				code: "PLUGIN_SETTING_DECRYPTION_FAILED",
+			});
+		});
+
+		it("treats wildcard characters in plugin IDs as literal prefix text", async () => {
+			const options = new OptionsRepository(db);
+			await options.set("plugin:alpha%beta:settings:title", "literal-percent");
+			await options.set("plugin:alphaxbeta:settings:title", "wrong-percent-match");
+			await options.set("plugin:alpha_beta:settings:title", "literal-underscore");
+			await options.set("plugin:alphazbeta:settings:title", "wrong-underscore-match");
+
+			await expect(getPluginSettingsWithDb("alpha%beta", db)).resolves.toEqual({
+				title: "literal-percent",
+			});
+			await expect(getPluginSettingsWithDb("alpha_beta", db)).resolves.toEqual({
+				title: "literal-underscore",
+			});
+		});
+	});
+
+	describe("Media references", () => {
+		it("should store logo without URL", async () => {
+			await setSiteSettings(
+				{
+					logo: { mediaId: "med_123", alt: "Logo" },
+				},
+				db,
+			);
+
+			// When retrieved without storage, should return mediaId but no URL
+			const logo = await getSiteSettingWithDb("logo", db, null);
+			expect(logo?.mediaId).toBe("med_123");
+			expect(logo?.alt).toBe("Logo");
+		});
+
+		it("should store favicon without URL", async () => {
+			await setSiteSettings(
+				{
+					favicon: { mediaId: "med_456" },
+				},
+				db,
+			);
+
+			const favicon = await getSiteSettingWithDb("favicon", db, null);
+			expect(favicon?.mediaId).toBe("med_456");
+		});
+
+		// Regression: seo.defaultOgImage was defined in the data model and schemas
+		// but getSiteSettings*() never resolved the media reference, so the URL
+		// field was always absent and the documented MCP behavior was a lie.
+		it("resolves seo.defaultOgImage to a media file URL via getSiteSettings", async () => {
+			const mediaId = "med_og_default";
+			const now = new Date().toISOString();
+			await db
+				.insertInto("media" as never)
+				.values({
+					id: mediaId,
+					filename: "og.png",
+					mime_type: "image/png",
+					size: 2048,
+					width: 1200,
+					height: 630,
+					storage_key: `media/${mediaId}.png`,
+					created_at: now,
+				} as never)
+				.execute();
+
+			await setSiteSettings(
+				{
+					seo: {
+						defaultOgImage: { mediaId, alt: "Default OG" },
+					},
+				},
+				db,
+			);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.seo?.defaultOgImage?.mediaId).toBe(mediaId);
+			expect(settings.seo?.defaultOgImage?.alt).toBe("Default OG");
+			expect(settings.seo?.defaultOgImage?.url).toBe(
+				`/_emdash/api/media/file/media/${mediaId}.png`,
+			);
+			expect(settings.seo?.defaultOgImage?.contentType).toBe("image/png");
+			expect(settings.seo?.defaultOgImage?.width).toBe(1200);
+			expect(settings.seo?.defaultOgImage?.height).toBe(630);
+		});
+
+		it("resolves seo.defaultOgImage via getSiteSetting('seo')", async () => {
+			const mediaId = "med_og_per_key";
+			const now = new Date().toISOString();
+			await db
+				.insertInto("media" as never)
+				.values({
+					id: mediaId,
+					filename: "og.png",
+					mime_type: "image/png",
+					size: 1024,
+					storage_key: `media/${mediaId}.png`,
+					created_at: now,
+				} as never)
+				.execute();
+
+			await setSiteSettings(
+				{
+					seo: {
+						defaultOgImage: { mediaId },
+						titleSeparator: " | ",
+					},
+				},
+				db,
+			);
+
+			const seo = await getSiteSettingWithDb("seo", db);
+			expect(seo?.defaultOgImage?.url).toBe(`/_emdash/api/media/file/media/${mediaId}.png`);
+			// Sibling fields preserved through the resolve+spread.
+			expect(seo?.titleSeparator).toBe(" | ");
+		});
+
+		it("returns seo settings unchanged when no defaultOgImage is set", async () => {
+			await setSiteSettings(
+				{
+					seo: { titleSeparator: " — ", googleVerification: "g123" },
+				},
+				db,
+			);
+
+			const settings = await getSiteSettingsWithDb(db);
+			expect(settings.seo?.titleSeparator).toBe(" — ");
+			expect(settings.seo?.googleVerification).toBe("g123");
+			expect(settings.seo?.defaultOgImage).toBeUndefined();
+		});
+	});
+});
+
+/**
+ * Build an in-memory db with a query counter wired into Kysely's `log`
+ * hook. Lets the cache tests assert "no DB query was issued" without
+ * mocking out the repository layer (real DB, real SQL, real round-trip).
+ */
+async function setupCountingDb(): Promise<{
+	db: Kysely<Database>;
+	queries: string[];
+	reset: () => void;
+}> {
+	const sqlite = new BetterSqlite3(":memory:");
+	const queries: string[] = [];
+	const db = new Kysely<Database>({
+		dialect: new SqliteDialect({ database: sqlite }),
+		log: (event) => {
+			if (event.level === "query") queries.push(event.query.sql);
+		},
+	});
+	await runMigrations(db);
+	return { db, queries, reset: () => queries.splice(0, queries.length) };
+}
+
+describe("Site Settings caching", () => {
+	beforeEach(() => {
+		invalidateSiteSettingsCache();
+	});
+
+	it("getSiteSetting() does not hit the DB after getSiteSettings() in the same request", async () => {
+		const { db, queries, reset } = await setupCountingDb();
+		await setSiteSettings({ title: "Site", seo: { titleSeparator: " — " } }, db);
+
+		await runWithContext({ editMode: false, db }, async () => {
+			reset();
+			const all = await getSiteSettings();
+			expect(all.title).toBe("Site");
+			const optionsQueriesAfterAll = queries.filter((q) => q.includes("options")).length;
+
+			const seo = await getSiteSetting("seo");
+			expect(seo?.titleSeparator).toBe(" — ");
+			const optionsQueriesAfterSeo = queries.filter((q) => q.includes("options")).length;
+
+			expect(optionsQueriesAfterSeo).toBe(optionsQueriesAfterAll);
+		});
+	});
+
+	it("globalThis cache survives across requests within an isolate", async () => {
+		const { db, queries, reset } = await setupCountingDb();
+		await setSiteSettings({ title: "Cached Site" }, db);
+
+		await runWithContext({ editMode: false, db }, async () => {
+			const first = await getSiteSettings();
+			expect(first.title).toBe("Cached Site");
+		});
+
+		reset();
+
+		await runWithContext({ editMode: false, db }, async () => {
+			const second = await getSiteSettings();
+			expect(second.title).toBe("Cached Site");
+		});
+
+		const optionsQueries = queries.filter((q) => q.includes("options"));
+		expect(optionsQueries).toEqual([]);
+	});
+
+	it("setSiteSettings() invalidates the globalThis cache", async () => {
+		const { db, queries, reset } = await setupCountingDb();
+		await setSiteSettings({ title: "Original" }, db);
+
+		await runWithContext({ editMode: false, db }, async () => {
+			const before = await getSiteSettings();
+			expect(before.title).toBe("Original");
+		});
+
+		await setSiteSettings({ title: "Updated" }, db);
+
+		reset();
+
+		await runWithContext({ editMode: false, db }, async () => {
+			const after = await getSiteSettings();
+			expect(after.title).toBe("Updated");
+		});
+
+		const prefixScans = queries.filter((q) => q.includes("LIKE") && q.includes("options"));
+		expect(prefixScans.length).toBe(1);
+	});
+
+	it("setSiteSettings() invalidates the cache even when the write throws", async () => {
+		const { db, queries, reset } = await setupCountingDb();
+		await setSiteSettings({ title: "Original" }, db);
+
+		await runWithContext({ editMode: false, db }, async () => {
+			await getSiteSettings();
+		});
+
+		const original = OptionsRepository.prototype.setMany;
+		OptionsRepository.prototype.setMany = async () => {
+			throw new Error("simulated partial-write failure");
+		};
+
+		try {
+			await expect(setSiteSettings({ title: "Updated" }, db)).rejects.toThrow(
+				"simulated partial-write failure",
+			);
+		} finally {
+			OptionsRepository.prototype.setMany = original;
+		}
+
+		reset();
+
+		await runWithContext({ editMode: false, db }, async () => {
+			await getSiteSettings();
+		});
+
+		const prefixScans = queries.filter((q) => q.includes("LIKE") && q.includes("options"));
+		expect(prefixScans.length).toBe(1);
+	});
+
+	it("invalidateSiteSettingsCache() drops the cached value", async () => {
+		const { db, queries, reset } = await setupCountingDb();
+		await setSiteSettings({ title: "First" }, db);
+
+		await runWithContext({ editMode: false, db }, async () => {
+			await getSiteSettings();
+		});
+
+		await db
+			.updateTable("options")
+			.set({ value: JSON.stringify("Second") })
+			.where("name", "=", "site:title")
+			.execute();
+
+		reset();
+		invalidateSiteSettingsCache();
+
+		await runWithContext({ editMode: false, db }, async () => {
+			const after = await getSiteSettings();
+			expect(after.title).toBe("Second");
+		});
+
+		const prefixScans = queries.filter((q) => q.includes("LIKE") && q.includes("options"));
+		expect(prefixScans.length).toBe(1);
+	});
+});
+
+// ---------------------------------------------------------------------------
+// Cross-mutation cache invalidation
+//
+// `seo.defaultOgImage` (and `logo`/`favicon`) bake the media row's resolved
+// URL, contentType, width, and height into a worker-scoped cache. Every code
+// path that mutates the media table must therefore invalidate the cache, or
+// readers will keep serving stale snapshots until the isolate dies.
+//
+// Invalidation lives in three places (any caller of any of these clears
+// the cache):
+//   - `EmDashRuntime.handleMediaUpdate` / `handleMediaReplaceMetadata` /
+//     `handleMediaDelete` — REST + MCP.
+//   - Plugin context `media.delete()` — the plugin-facing public API.
+//   - `local-runtime.delete()` — the provider DELETE route's local path.
+//
+// The tests below pin the runtime-level contract. The plugin-context and
+// local-runtime paths share `invalidateSiteSettingsCache()` directly, so
+// their wiring is verified by inspection plus the cache tests above that
+// prove `invalidateSiteSettingsCache()` itself drops the cache.
+// ---------------------------------------------------------------------------
+
+describe("Media mutations invalidate site settings cache", () => {
+	beforeEach(() => {
+		invalidateSiteSettingsCache();
+	});
+
+	it("EmDashRuntime.handleMediaDelete invalidates the cache on success", async () => {
+		const { createTestRuntime } = await import("../../utils/mcp-runtime.js");
+		const { setupTestDatabaseWithCollections } = await import("../../utils/test-db.js");
+
+		const db = await setupTestDatabaseWithCollections();
+		const runtime = createTestRuntime(db);
+
+		// Seed a media row and reference it from settings so we can prove
+		// invalidation flushes the resolved snapshot.
+		const mediaId = "med_invalidation_delete";
+		const now = new Date().toISOString();
+		await db
+			.insertInto("media" as never)
+			.values({
+				id: mediaId,
+				filename: "og.png",
+				mime_type: "image/png",
+				size: 1024,
+				storage_key: `media/${mediaId}.png`,
+				created_at: now,
+			} as never)
+			.execute();
+		await setSiteSettings({ seo: { defaultOgImage: { mediaId } } }, db);
+
+		await runWithContext({ editMode: false, db }, async () => {
+			const before = await getSiteSettings();
+			expect(before.seo?.defaultOgImage?.url).toContain(mediaId);
+		});
+
+		const result = await runtime.handleMediaDelete(mediaId);
+		expect(result.success).toBe(true);
+
+		// After delete, the resolved snapshot must be re-fetched; with the
+		// media row gone, the URL field disappears.
+		await runWithContext({ editMode: false, db }, async () => {
+			const after = await getSiteSettings();
+			expect(after.seo?.defaultOgImage?.url).toBeUndefined();
+		});
+	});
+
+	it("EmDashRuntime.handleMediaUpdate invalidates the cache on success", async () => {
+		const { createTestRuntime } = await import("../../utils/mcp-runtime.js");
+		const { setupTestDatabaseWithCollections } = await import("../../utils/test-db.js");
+
+		const db = await setupTestDatabaseWithCollections();
+		const runtime = createTestRuntime(db);
+
+		const mediaId = "med_invalidation_update";
+		const now = new Date().toISOString();
+		await db
+			.insertInto("media" as never)
+			.values({
+				id: mediaId,
+				filename: "og.png",
+				mime_type: "image/png",
+				size: 1024,
+				width: 800,
+				height: 600,
+				storage_key: `media/${mediaId}.png`,
+				created_at: now,
+			} as never)
+			.execute();
+		await setSiteSettings({ seo: { defaultOgImage: { mediaId } } }, db);
+
+		await runWithContext({ editMode: false, db }, async () => {
+			const before = await getSiteSettings();
+			expect(before.seo?.defaultOgImage?.width).toBe(800);
+		});
+
+		const result = await runtime.handleMediaUpdate(mediaId, { width: 1200, height: 630 });
+		expect(result.success).toBe(true);
+
+		await runWithContext({ editMode: false, db }, async () => {
+			const after = await getSiteSettings();
+			expect(after.seo?.defaultOgImage?.width).toBe(1200);
+			expect(after.seo?.defaultOgImage?.height).toBe(630);
+		});
+	});
+
+	it("EmDashRuntime.handleMediaReplaceMetadata invalidates the cache on success", async () => {
+		const { createTestRuntime } = await import("../../utils/mcp-runtime.js");
+		const { setupTestDatabaseWithCollections } = await import("../../utils/test-db.js");
+
+		const db = await setupTestDatabaseWithCollections();
+		const runtime = createTestRuntime(db);
+		const mediaId = "med_invalidation_replace";
+		const storageKey = `media/${mediaId}.png`;
+		await db
+			.insertInto("media" as never)
+			.values({
+				id: mediaId,
+				filename: "og.png",
+				mime_type: "image/png",
+				size: 1024,
+				width: 800,
+				height: 600,
+				storage_key: storageKey,
+				created_at: new Date().toISOString(),
+			} as never)
+			.execute();
+		await setSiteSettings({ seo: { defaultOgImage: { mediaId } } }, db);
+
+		await runWithContext({ editMode: false, db }, async () => {
+			expect((await getSiteSettings()).seo?.defaultOgImage?.width).toBe(800);
+		});
+
+		const result = await runtime.handleMediaReplaceMetadata(mediaId, storageKey, {
+			size: 512,
+			width: 400,
+			height: 300,
+			contentHash: "sha256:replacement",
+		});
+		expect(result.success).toBe(true);
+
+		await runWithContext({ editMode: false, db }, async () => {
+			const after = await getSiteSettings();
+			expect(after.seo?.defaultOgImage?.width).toBe(400);
+			expect(after.seo?.defaultOgImage?.height).toBe(300);
+		});
+	});
+});

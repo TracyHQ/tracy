@@ -1,0 +1,295 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-trip/j6/1.0.7",
+  "baseHash": "0b065f0d330fb9c1cd02da9e3f66999dda9f221184cbeb0841f76d5e9d696368",
+  "baseFiles": {
+    "manifest.json": "768b217b42068bdcb4fe6e6b7e9d92a9f66008ca4a27eed2f575826e2b4c1c64",
+    "content-map.json": "3336d43718349979740e84e0fc4714ba35f71a660f8b7c243549bc169859bb62",
+    "presentation-lock.json": "d29853b89318cb639d7986213aac4a8c05cd5b33ec2417d59c97dcf9cd9d4827"
+  },
+  "inputs": {},
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-109",
+      "identity": {
+        "path": "typography",
+        "menutype": "quick-links",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-110",
+      "identity": {
+        "path": "error-page",
+        "menutype": "quick-links",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-111",
+      "identity": {
+        "path": "offline-pages",
+        "menutype": "quick-links",
+        "language": "*"
+      },
+      "label": "Offline Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Pages\" screen"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Login Form",
+      "where": "our-company/login-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Registration Form",
+      "where": "our-company/registration-form",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=registration): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-108",
+      "label": "Profile",
+      "where": "our-company/profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-112",
+      "label": "Smart Search",
+      "where": "quick-links/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "Featured Articles",
+      "where": "our-services/featured-articles",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-114",
+      "label": "Category Blog",
+      "where": "our-services/category-blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-115",
+      "label": "Blog Detail",
+      "where": "our-services/blog-detail",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-116",
+      "label": "Author listing",
+      "where": "our-services/author-listing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Contact",
+      "where": "mainmenu/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-128",
+      "label": "Listings",
+      "where": "mainmenu/listings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-129",
+      "label": "Bangkok",
+      "where": "mainmenu/listings/categories/bangkok",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-130",
+      "label": "New York",
+      "where": "mainmenu/listings/categories/new-york",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Indonesia",
+      "where": "mainmenu/listings/categories/indonesia",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-132",
+      "label": "France",
+      "where": "mainmenu/listings/categories/france",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-133",
+      "label": "Beijing",
+      "where": "mainmenu/listings/categories/beijing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-134",
+      "label": "Tour Detail",
+      "where": "mainmenu/tour-detail",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-141",
+      "label": "About Us",
+      "where": "mainmenu/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-143",
+      "label": "Categories",
+      "where": "mainmenu/listings/categories",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-144",
+      "label": "Locations",
+      "where": "mainmenu/locations",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-145",
+      "label": "Tokyo",
+      "where": "mainmenu/listings/categories/tokyo",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@sidebar-right",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 19 entries stay"
+    },
+    {
+      "key": "module-131",
+      "label": "Our Company",
+      "where": "mod_menu@footnav-2",
+      "rule": "keep.default",
+      "reason": "renders our-company: 3 entries stay"
+    },
+    {
+      "key": "module-132",
+      "label": "Quick Link",
+      "where": "mod_menu@footnav-3",
+      "rule": "keep.default",
+      "reason": "renders quick-links: 1 entry stays"
+    },
+    {
+      "key": "module-135",
+      "label": "Our Services",
+      "where": "mod_menu@footnav-4",
+      "rule": "keep.default",
+      "reason": "renders our-services: 4 entries stay"
+    },
+    {
+      "key": "module-146",
+      "label": "Offcanvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 19 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-135",
+      "label": "Detail Layout 1",
+      "where": "mainmenu/tour-detail/detail-layout-1",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Detail Layout 1\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-136",
+      "label": "Listings Style 2",
+      "where": "mainmenu/listings/listings-style/listings-2",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Listings Style 2\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-137",
+      "label": "Listings Style 1",
+      "where": "mainmenu/listings/listings-style/listings-style-1",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Listings Style 1\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-139",
+      "label": "Listings Style 3",
+      "where": "mainmenu/listings/listings-style/listings-3",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Listings Style 3\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-140",
+      "label": "Detail Layout 2",
+      "where": "mainmenu/tour-detail/detail-layout-2",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Detail Layout 2\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-142",
+      "label": "Listings Style",
+      "where": "mainmenu/listings/listings-style",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Listings Style\" names a showcase branch"
+    }
+  ],
+  "counts": {
+    "menuItems": 3,
+    "modules": 0,
+    "kept": 26,
+    "unresolved": 6
+  }
+}

@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-powder-blue: #d5e0ea;
+  --color-slate-bloom: #a3bfdb;
+  --color-warm-ink: #231f20;
+  --color-true-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-mist-gray: #5f6368;
+
+  /* Typography */
+  --font-primary-font: 'Primary Font', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-primary-sans-custom-serif-influenced-grotesque: 'Primary Sans (custom, serif-influenced grotesque)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-tertiary-sans: 'Tertiary Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display-sans: 'Display Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-tertiary-font: 'Tertiary Font', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-button-font: 'Button Font', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading-font: 'Heading Font', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

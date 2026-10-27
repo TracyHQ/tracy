@@ -1,0 +1,93 @@
+{
+  "admin": "tracyagent",
+  "siteUrl": "http://127.0.0.1:8227",
+  "options": {
+    "siteurl": "http://127.0.0.1:8227",
+    "home": "http://127.0.0.1:8227"
+  },
+  "transients": [
+    "_transient_doing_cron",
+    "_transient_timeout_doing_cron"
+  ],
+  "siteTransients": [
+    "_site_transient_update_core"
+  ],
+  "standOptions": [
+    "tracy_style",
+    "claude_cowork_token"
+  ],
+  "revisions": [
+    {
+      "ID": 41,
+      "post_title": "About",
+      "post_type": "revision",
+      "post_status": "inherit"
+    }
+  ],
+  "autoDrafts": [
+    {
+      "ID": 52,
+      "post_type": "post",
+      "post_status": "auto-draft"
+    }
+  ],
+  "trash": [
+    {
+      "ID": 60,
+      "post_title": "Old hero",
+      "post_type": "page",
+      "post_status": "trash"
+    },
+    {
+      "ID": 61,
+      "post_title": "Northgate wins the tender",
+      "post_type": "post",
+      "post_status": "publish"
+    }
+  ],
+  "users": [
+    {
+      "ID": 1,
+      "user_login": "tracyagent",
+      "roles": [
+        "administrator"
+      ]
+    },
+    {
+      "ID": 2,
+      "user_login": "lee",
+      "roles": [
+        "editor"
+      ]
+    }
+  ],
+  "authorMeta": [
+    { "ID": 1, "user_login": "tracyagent", "seeded": false },
+    { "ID": 2, "user_login": "lee", "seeded": false }
+  ],
+  "sessions": [
+    {
+      "user_login": "tracyagent",
+      "count": 2
+    },
+    {
+      "user_login": "lee",
+      "count": 0
+    }
+  ],
+  "files": [
+    {
+      "rel": "wp-content/debug.log",
+      "why": "debug log"
+    },
+    {
+      "rel": ".DS_Store",
+      "why": "Finder metadata"
+    }
+  ],
+  "media": { "attachments": [], "content": [], "meta": [], "termmeta": [], "options": [], "files": [] },
+  "config": {
+    "salts": true,
+    "dbDefined": true
+  }
+}

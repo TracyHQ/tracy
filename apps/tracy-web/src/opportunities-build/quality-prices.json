@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "tracy-wo-model-prices/v1",
+  "verifiedAt": "2026-10-20T12:00:00Z",
+  "validUntil": "2026-10-27T00:00:00Z",
+  "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+  "visionSource": "https://api-docs.deepseek.com/guides/vision/",
+  "endpointHost": "api.deepseek.com",
+  "maxImageTokens": 1024,
+  "models": {
+    "deepseek-flash": { "inputCentsPerM": 30, "cacheCentsPerM": 0.6, "outputCentsPerM": 120 },
+    "deepseek-v4-pro": { "inputCentsPerM": 132, "cacheCentsPerM": 4.4, "outputCentsPerM": 396 }
+  }
+}

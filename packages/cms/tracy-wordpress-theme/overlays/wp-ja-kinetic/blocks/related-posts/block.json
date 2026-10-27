@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/related-posts",
+  "version": "0.1.0",
+  "title": "Related posts",
+  "category": "design",
+  "icon": "admin-links",
+  "description": "The source's related-posts band below the article body (single-article.css .hx-related, article/default_related.php): 3 newest published siblings in the same category, real data, current post excluded.",
+  "textdomain": "wp-ja-kinetic",
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

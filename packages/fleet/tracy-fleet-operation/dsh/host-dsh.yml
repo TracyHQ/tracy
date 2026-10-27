@@ -1,0 +1,220 @@
+# host-dsh — ONE dsh container for every site on this fleet host.
+#
+#   docker compose --env-file /etc/tracy/host-dsh.env \
+#     -f /opt/tracy-fleet/dsh/host-dsh.yml up -d
+#
+# 🔒 THE `--env-file` IS NOT OPTIONAL. This file is interpolated from it (image tag, hostname,
+# paths) AND hands it to the container as `env_file`. Compose interpolation does NOT read the
+# `env_file:` key — that key only fills the container's environment — so `up -d` without
+# `--env-file` fails on `DSH_IMAGE_TAG` with a message about a variable, not about a flag. The
+# `:?` defaults below exist so it fails there rather than starting a container named after an
+# image tag that is the empty string.
+#
+# ## What this replaces
+#
+# One lane container per site. The tooling that made them (`scripts/tools/create-lane.sh`,
+# `lanes/*.yml`) was deleted on 2026-09-06; the containers themselves are still running and still
+# correct — the switch is per site, behind the KV flag `host-dsh:<label>`, and a host with this
+# file up serves nobody until that flag is on. See HOST-DSH.md.
+#
+# ## Where the agent's bash runs
+#
+# Not here. `@tracy/dsh-subprocess-docker` hands every command to `docker exec` on the SITE's own
+# web container, and it reaches the daemon over `TRACY_DOCKER_HOST` — the socket proxy below,
+# never a socket bind-mounted into this container.
+#
+# ## Two ports, and they are not the same port
+#
+# dsh listens on 51700 inside the container and is NEVER published. What is published is 8080:
+# the `dsh-passwords` gateway, which is the seat door. Every request from the Worker arrives at
+# the gateway, is checked for a seat session, and only then reaches dsh. Publishing 51700 would
+# put a door with no lock on the host's loopback, one `cloudflared` ingress rule away from the
+# open internet.
+name: tracy-host-dsh
+
+services:
+  # ── The docker socket, narrowed ───────────────────────────────────────────────────────────
+  #
+  # haproxy in front of /var/run/docker.sock, with OUR config — see docker-proxy.haproxy.cfg,
+  # which is the whole boundary and explains every line of itself. It allows the seven requests
+  # `docker exec` into a `<label>-web-1` container makes, and denies everything else, including
+  # `POST /containers/create` and an exec into any other container. The evidence table (positives
+  # and negatives, measured through this exact file) is in HOST-DSH.md §5.
+  #
+  # WHY NOT tecnativa/docker-socket-proxy. Its rules are per API PREFIX, so the CONTAINERS switch
+  # that `docker exec` requires also opens `POST /containers/create` — measured 06/09: through it,
+  # `docker run --rm -v /:/host:ro alpine ls /host` worked, i.e. root on the host. A switch cannot
+  # say "exec, only exec, and only into that container". Its image also regenerates
+  # /usr/local/etc/haproxy/haproxy.cfg from a template at every start, so mounting our config at
+  # that path would have it OVERWRITTEN — through the bind, on the host's copy.
+  docker-proxy:
+    # Pinned by tag AND digest: the whole point of this container is which requests it refuses,
+    # and a tag is a name its owner can move.
+    image: haproxy:3.0-alpine@sha256:34cc7d1f6142464d7d2b73e2a1eef7392556dbf304160aef543e513cfd9e5162
+    container_name: tracy-docker-proxy
+    restart: unless-stopped
+    # The image runs as uid 99 (haproxy), which cannot open a socket owned root:docker. haproxy
+    # connects to the backend AFTER any privilege drop, so a group would have to be granted at
+    # run time from a gid this file cannot know. Root it is — and everything below narrows what
+    # root inside this container is worth: no capabilities, a read-only filesystem, no way out to
+    # the network, and one mount.
+    user: "0:0"
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: [/run]
+    volumes:
+      # Read-only on the bind. It stops nothing an API caller can do — the daemon on the other
+      # side is not read-only — but it does stop this container from replacing the socket file.
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Relative to THIS FILE's directory, which is why the two must travel together:
+      # /opt/tracy-fleet/dsh/ on a fleet host, this directory in the repo. A missing config is
+      # not a silent widening — haproxy refuses to start, and dsh's docker calls get nothing to
+      # connect to.
+      - ./docker-proxy.haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    healthcheck:
+      # GET /_ping is one of the seven allowed requests, so a healthy answer here also proves the
+      # config loaded and the socket is reachable — not merely that a process is running.
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2375/_ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    # No `ports:`. The proxy is reachable from the `docker-api` network and nowhere else; a
+    # published 2375 on the host would be the docker daemon, unauthenticated, on a port.
+    networks: [docker-api]
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ── dsh ───────────────────────────────────────────────────────────────────────────────────
+  dsh:
+    # ⚠ THE REPOSITORY MOVED, AND THE DEFAULT IS THE REGISTRY NOW. ADR 0014 had every host build
+    # its own image, which works on a 6-core box and cannot work on DO (2 cores, 3 GB, 17 GB free
+    # against a build that runs `pnpm build:official` over ~300 packages plus Chromium). One
+    # x86_64 runner builds it and pushes to GHCR; each host pulls. `DSH_IMAGE` stays a variable so
+    # a locally built `tracy/dsh:dev` can still be run here without editing this file.
+    image: ${DSH_IMAGE:-ghcr.io/tracyhq/tracy-dsh}:${DSH_IMAGE_TAG:?set DSH_IMAGE_TAG in /etc/tracy/host-dsh.env, e.g. 2026-09-07-a1b2c3d}
+    container_name: tracy-dsh
+    restart: unless-stopped
+    # ── What the host's one dsh may take from the machine (28/09/2026) ──
+    #
+    # One dsh serves every site on the host, and it is not only a web server: `grep`/`glob` run
+    # ripgrep inside it, the brand engine drives a Chromium in it, the seeder runs in it. Nothing
+    # bounded any of that before this: `docker inspect tracy-dsh` read Memory=0 NanoCpus=0 and no
+    # PidsLimit. Measured on the stand under six concurrent bench conversations (docker stats every
+    # 3 s for 42 minutes): 627 MiB at most, 0.92 cores on average and 3.51 at the peak — above 2 in
+    # 3 % of the samples — and 84 processes and threads.
+    #   memory  4g, swap held to the same number (no escape into the host's swap)
+    #   cores   2 by default because it must never exceed the machine: docker refuses to CREATE a
+    #           container asking for more cores than there are ("range of CPUs is from 0.01 to
+    #           2.00"), and then dsh does not start at all — DO droplets have 2. Raise it on a bigger
+    #           host (TRACY_DSH_CPUS=4 on prod1's 6); a cap only slows dsh at its peaks.
+    #   pids    4096
+    # The site containers carry their own caps (provision/render-compose.sh `tracy_site_limits`).
+    # Set in /etc/tracy/host-dsh.env; a changed value reaches the container on the next `up -d`.
+    mem_limit: ${TRACY_DSH_MEMORY:-4g}
+    memswap_limit: ${TRACY_DSH_MEMORY:-4g}
+    cpus: ${TRACY_DSH_CPUS:-2}
+    pids_limit: ${TRACY_DSH_PIDS:-4096}
+    depends_on:
+      # `service_healthy`, not the default `service_started`: the proxy answering
+      # /_ping is what says the config parsed and the socket is reachable. Starting dsh
+      # before that gives an agent a first command that fails for a reason nothing logs.
+      docker-proxy:
+        condition: service_healthy
+    # The file is read twice: once by compose (interpolation above), once here for the
+    # container's environment. Secrets the seat door checks are NOT in it — they live in
+    # /desk-home/dsh-passwords.env, mode 0600, which `docker inspect` never prints.
+    # The path is interpolated so `docker compose config` can be checked on a laptop against a
+    # throwaway file (HOST_DSH_ENV_FILE=…) — the gate this repo runs. It is NOT made optional:
+    # compose's `required: false` would let a host come up with no env file at all, and the
+    # first thing that goes missing is the seat door's hostname.
+    env_file: ["${HOST_DSH_ENV_FILE:-/etc/tracy/host-dsh.env}"]
+    environment:
+      # The image's entrypoint contract. These three do not vary per host, so they are written
+      # here rather than in the env file — a value that is the same everywhere is one that
+      # should not be possible to get wrong on one machine.
+      DSH_PORT: "51700"
+      DSH_PASSWORDS_ENV_FILE: /desk-home/dsh-passwords.env
+      TRACY_DOCKER_HOST: tcp://docker-proxy:2375
+      # dsh refuses any Host header not on this list, so the public hostname is named here and
+      # not at the proxy. 127.0.0.1:51700 is the host's own loopback address — the one the
+      # cloudflared ingress rule dials, and the one a smoke test dials.
+      DSH_TRUSTED_HOSTS: ${HOST_AGENT_HOSTNAME:?set HOST_AGENT_HOSTNAME, e.g. contabo-agent.tracy.ai},127.0.0.1:51700,127.0.0.1:8080
+      # The model key, under the name the harness reads. ONE name to set (`MODEL_API_KEY`), the
+      # same one `deploy/compose.yml` takes on a laptop — a person configuring a machine should
+      # not have to know that the route inside dsh is called `deepseek-official`.
+      #
+      # 🔒 WITHOUT IT THE AGENT IS MUTE, AND SAYS SO THREE LAYERS DOWN. `settings.yaml` in the
+      # image names `deepseek-official` as the default route; with no key, every turn dies with
+      # `MISSING_CREDENTIAL: llm-deepseek: no API key for provider route "deepseek-official"` —
+      # after the session was created and the message was accepted, so the chat looks alive.
+      # Measured 11/09 on the dev host: `env | grep DEEPSEEK_API_KEY` inside `tracy-dsh` → nothing.
+      #
+      # ⚠ It is a vendor key, and this file's env_file DOES reach `docker inspect`. That is a
+      # weaker posture than the seat secrets get (0600, `dsh-passwords.env`, never printed) and it
+      # is a deliberate trade: the harness reads its key from the process environment, so there is
+      # no other door. Anyone in the docker group on this host can already `docker exec` into dsh.
+      DEEPSEEK_API_KEY: ${MODEL_API_KEY:-}
+      # 🔒 TRACY_SITES_ROOT IS DELIBERATELY ABSENT. The subprocess provider defaults to /site,
+      # which is where the bind below lands. Setting it here — or, the trap this comment exists
+      # for, naming a variable TRACY_SITES_ROOT in the env file, where `env_file` would inject
+      # it — points the agent at a path that does not exist inside the container, and the
+      # symptom is an agent that reports every site as empty rather than an error.
+    volumes:
+      # rshared, and the reason is a restart nobody should have to take: a site attached after
+      # this container started (provision/attach-site.sh binds it under /srv/tracy-sites) is
+      # invisible inside a container that took the mount privately. `docker compose restart` to
+      # pick it up would drop every session on the host.
+      #
+      # The source must ALREADY be a shared mount or the container refuses to start with
+      # "path /srv/tracy-sites is mounted on / but it is not a shared mount". host-dsh-init.sh
+      # makes it one (mount --bind onto itself, then --make-rshared) and writes the fstab line.
+      - type: bind
+        source: ${HOST_SITES_ROOT:-/srv/tracy-sites}
+        target: /site
+        bind:
+          propagation: rshared
+      # Sessions, storages, the seat door's database, the onboarding workspace, the model key
+      # store, and dsh-passwords.env. Everything that makes this host's dsh itself.
+      - type: bind
+        source: ${HOST_DSH_HOME:-/srv/tracy/host-dsh/home}
+        target: /desk-home
+    ports:
+      # Loopback only: reaching the world is cloudflared's job. Host 51700 → container 8080,
+      # the gateway. See the "two ports" note at the top.
+      - "127.0.0.1:51700:8080"
+    healthcheck:
+      # The gateway, from inside, with the runtime that is already in the image — no curl in a
+      # slim node image, and adding one for a health check is a package to keep patched.
+      #
+      # Any status below 500 is healthy ON PURPOSE. The gateway answers an unauthenticated GET /
+      # with a redirect or a 401/404 depending on which doors are open, and all of those mean
+      # the same thing here: the process is up and answering. Demanding 200 would make the
+      # health check a second, undocumented opinion about which door should be open.
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch("http://127.0.0.1:8080/").then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      # dsh composes its plugin graph at boot; on a cold host that is minutes, not seconds, and
+      # a container marked unhealthy in that window is a container an operator restarts halfway
+      # through the only slow part.
+      start_period: 180s
+    networks: [docker-api, egress]
+    logging: *logging
+
+networks:
+  # dsh and the proxy, and nothing else. `internal: true` gives this network no gateway, so the
+  # proxy — the one container here holding a docker socket — cannot reach the internet at all.
+  docker-api:
+    internal: true
+  # dsh's way out: model providers, and the git remotes an agent clones from. dsh is on both
+  # networks; its default route comes from this one.
+  egress: {}

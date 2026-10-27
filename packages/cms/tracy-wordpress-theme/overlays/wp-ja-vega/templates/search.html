@@ -1,0 +1,44 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"tracy-header jv-header jv-header--overlap","area":"header"} /-->
+<!-- wp:group {"tagName":"main","className":"tracy-main jv-main","layout":{"type":"default"}} -->
+<main class="wp-block-group tracy-main jv-main">
+<!-- wp:group {"className":"jv-masthead","layout":{"type":"default"}} -->
+<div class="wp-block-group jv-masthead">
+<!-- wp:group {"className":"jv-container","layout":{"type":"default"}} -->
+<div class="wp-block-group jv-container">
+<!-- wp:pattern {"slug":"wp-ja-vega/search-title"} /-->
+<!-- wp:paragraph {"className":"jv-masthead__desc","metadata":{"name":"search.desc"}} -->
+<p class="jv-masthead__desc"></p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+<!-- wp:group {"tagName":"section","className":"jv-section jv-page","layout":{"type":"default"}} -->
+<section class="wp-block-group jv-section jv-page">
+<!-- wp:group {"className":"jv-container","layout":{"type":"default"}} -->
+<div class="wp-block-group jv-container">
+<!-- wp:search {"label":"Search Terms:","placeholder":"","buttonText":"Search","className":"jv-search"} /-->
+<!-- wp:query {"queryId":52,"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"className":"jv-list jv-search-results"} -->
+<div class="wp-block-query jv-list jv-search-results">
+<!-- wp:post-template {"className":"jv-list__items"} -->
+<!-- wp:group {"className":"jv-list-item jv-list-item--compact","layout":{"type":"default"}} -->
+<div class="wp-block-group jv-list-item jv-list-item--compact">
+<!-- wp:post-title {"level":2,"isLink":true,"className":"jv-list-item__title"} /-->
+<!-- wp:post-excerpt {"excerptLength":30,"className":"jv-list-item__text","moreText":""} /-->
+</div>
+<!-- /wp:group -->
+<!-- /wp:post-template -->
+<!-- wp:query-pagination {"className":"jv-pagination","layout":{"type":"flex","justifyContent":"center"}} -->
+<!-- wp:query-pagination-previous /-->
+<!-- wp:query-pagination-numbers /-->
+<!-- wp:query-pagination-next /-->
+<!-- /wp:query-pagination -->
+</div>
+<!-- /wp:query -->
+</div>
+<!-- /wp:group -->
+</section>
+<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"tracy-footer jv-footer","area":"footer"} /-->

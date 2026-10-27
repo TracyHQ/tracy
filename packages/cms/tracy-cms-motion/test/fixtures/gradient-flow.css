@@ -1,0 +1,26 @@
+/*
+ * REJECT-PATH FIXTURE — not a catalogue effect, and never emitted.
+ *
+ * gradient-flow drifts a colour wash across the page background, and a wash the visitor does not
+ * find garish has to be built from the site's own colours — so it names `var(--accent)`. That is
+ * the token ban: the library would then change colour whenever the site is restyled, with nothing
+ * connecting the two. It lives here so the gate has something it must refuse on that ground.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html.tracy-motion .tracy-motion-gradient-flow {
+    --tracy-motion-dur: 12s;
+    background-image: linear-gradient(120deg, var(--accent), transparent);
+    animation: tracy-motion-gradient-flow var(--tracy-motion-dur) linear infinite;
+  }
+}
+
+@keyframes tracy-motion-gradient-flow {
+  from {
+    opacity: 0.6;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#151523",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, heading strokes, dark borders — the structural color of the system, near-black with a cool blue undertone that matches the brand accent"
+    },
+    "signature-violet": {
+      "$value": "#4e64df",
+      "$type": "color",
+      "$description": "Signature Violet — Brand accent and primary action — CTA fills, link borders, active states, star ratings, icon highlights; the single chromatic voice in an otherwise achromatic system"
+    },
+    "signal-red": {
+      "$value": "#ff0000",
+      "$type": "color",
+      "$description": "Signal Red — Red action color for filled buttons, selected navigation states, and focused conversion moments. Use as a supporting accent, not as a status color"
+    },
+    "periwinkle-tint": {
+      "$value": "#99a7f5",
+      "$type": "color",
+      "$description": "Periwinkle Tint — Lighter violet for nav borders, hover states, and decorative accents — a diluted echo of the brand color for secondary emphasis"
+    },
+    "lavender-mist": {
+      "$value": "#d0d6fb",
+      "$type": "color",
+      "$description": "Lavender Mist — Card border tint and soft highlight surfaces — a very pale violet that adds warmth to otherwise cool gray cards"
+    },
+    "deep-iris": {
+      "$value": "#6c7ee4",
+      "$type": "color",
+      "$description": "Deep Iris — Icon fills and secondary link borders — a mid-violet that bridges the brand accent and its lighter tints"
+    },
+    "graphite": {
+      "$value": "#49495a",
+      "$type": "color",
+      "$description": "Graphite — Secondary text and muted body copy — sits between Midnight Ink and the light grays"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, input fields, button text on dark fills — the dominant background across the entire system"
+    },
+    "fog": {
+      "$value": "#e9e9ec",
+      "$type": "color",
+      "$description": "Fog — Subtle surface elevation, soft dividers, secondary card backgrounds — the lightest gray for layering without shadows"
+    },
+    "ash": {
+      "$value": "#d7d7db",
+      "$type": "color",
+      "$description": "Ash — Input borders, form field outlines, and standard dividers — the default border color for structural elements"
+    },
+    "stone": {
+      "$value": "#c7c7cb",
+      "$type": "color",
+      "$description": "Stone — Shadow base — shadows in the system are cast in dark midnight at 0.2 opacity, not in gray, so this color appears only in button and card shadow tints"
+    },
+    "steel": {
+      "$value": "#b9b9c1",
+      "$type": "color",
+      "$description": "Steel — Medium-contrast borders, control outlines, and structural separators. Do not promote it to the primary CTA color"
+    },
+    "lavender-wash": {
+      "$value": "#f1f3fe",
+      "$type": "color",
+      "$description": "Lavender Wash — Tinted card backgrounds and soft surface lifts — a near-white violet that adds color temperature to elevated areas"
+    }
+  },
+  "font": {
+    "roobert": {
+      "$value": "Roobert",
+      "$type": "fontFamily",
+      "$description": "Button text, bold labels, badge copy, and emphasized body — the SemiBold weight adds authority to interactive elements without becoming shouty, keeping buttons compact at 14-16px"
+    },
+    "sharpgrotesk": {
+      "$value": "SharpGrotesk",
+      "$type": "fontFamily",
+      "$description": "Display headings and hero text — the sharper, more condensed grotesque creates clear hierarchy separation from the Roobert body voice, used sparingly so it retains impact at section headers"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback for email-like content or legacy form areas — appears minimally, only where third-party content forces it"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://unfurproject.com",
+      "siteName": "TeePublic",
+      "extractedAt": "2026-06-03T20:24:41.234Z",
+      "variant": "compact"
+    }
+  }
+}

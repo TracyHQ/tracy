@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0ed40a3a-2541-4ffa-acdd-f1170858bc5d",
+  "status": "complete",
+  "name": "Assurestor",
+  "url": "https://styles.refero.design/style/0ed40a3a-2541-4ffa-acdd-f1170858bc5d",
+  "sourceWebsite": "https://www.assurestor.com",
+  "extractedAt": "2026-06-03T20:27:34.472Z",
+  "capturedAt": "2026-10-08T05:08:15.171015+00:00",
+  "theme": "dark",
+  "industry": "saas",
+  "description": "Electric terminal in a deep forest vault — lime phosphor on midnight olive.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b97b75e0-3370-456a-a8ec-e8d1a08788d3.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c31353c4-4e49-4867-aae3-859f3e7955b8.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/4365eed8-3dda-4e30-8fd2-c329e0601712.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/9b354150-04ca-4d59-82e3-a62e127a20dd.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/190e55e9-3db4-4f5a-a83a-dd55ecf214a9.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d307bb7dfaa796ce1759f1ff0744ece59ddfbf8db661b19bd88837b74bb47db5",
+      "bytes": 18303
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c3016639846e7f35d2bf69c029268856cbad7c11c2ca4c2306697bae9cb306da",
+      "bytes": 106135
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ff40a9514f9ae8593247ccca9d09bc3ee8593b859e9e129c6df8245594108104",
+      "bytes": 15274
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c3c12af12ea227be804a9693692475a41e01b3ccf8dd18cccd57a78bc85a8a8c",
+      "bytes": 10266
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ea9a524106e997eaf1b368f903504f35e970f174a0f25ba86b0a6f7128f534a3",
+      "bytes": 11630
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "51c962d5692865f1f79a63cf3790959a9d5ac2fe886759f74ca00e3370e3dbfa",
+      "bytes": 2625
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "38c49d9b2c8daf2865a66b9baa14041031660ae0e73e7076130a5858ea53d01a",
+      "bytes": 515
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "54a8ac2aefc9042756fbc52b5dfaf5154b37200525de9808e802d5174bbcc524",
+      "bytes": 532
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4e3c48ad572d9a6924ae9a3f36b40cc4c33ffb9993a0f2613578024873c2d6e0",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "6b51429ea40141c82a2bb358ddaac642c064cbd57997d4feaecec73baa62519d",
+      "bytes": 42934
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "cf0088ffbcd6ae35d091d8d49d6b9743efc83b4dd22388339c683cbe8400fbb6",
+      "bytes": 22637
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3023cba46f173f89ea41794c6cab43b3dbbac543470e0d3650cf722151507e62",
+      "bytes": 40891
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8ed2e2387c4bb1f7d647823f813f66b2cbd2d2c41c9636b1637b23b7282d393b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "cbc8773ea5130a59f4dcdd9e075bc26c9ae7cbc23e6a48624b31bd26f67a6064",
+      "bytes": 1412
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0d9967fa9be06ed232b66bfea027622e2a0067f28341716a3d0b23cda6e3e835",
+      "bytes": 2028
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "0ed40a3a-2541-4ffa-acdd-f1170858bc5d",
+    "13d6fc89-eba2-4724-ac37-20f4f2e5efec",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "3a398f82-579e-4ec4-a442-9962bf007edf",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "5a7ec81f-03b6-4d21-a706-0d1d323d8899",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "632249f1-fd78-4c77-9b34-7bae37ff3e9b",
+    "68c15685-5db9-4869-b71d-27240568c9d8",
+    "6f3652cf-583f-411d-a117-3a03f6342917",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "bd96c1a6-32ba-42e0-bd5c-23c70a23142c",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "d271a6c4-942f-4abf-a3de-66795f15f031",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e050061c-346d-44cc-92ba-6b22beb4a91f",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

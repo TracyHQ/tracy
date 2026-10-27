@@ -1,0 +1,54 @@
+{
+  "color": {
+    "sunglow": {
+      "$value": "#ffe845",
+      "$type": "color",
+      "$description": "Sunglow — Brand canvas — the dominant page background across all sections, hero, footer, and announcement bar; also fills product category tags and sticker burst shapes"
+    },
+    "sauce-bottle-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Sauce Bottle Black — Primary text, all borders and hairlines, product card strokes, mascot linework, and the filled primary action button background — does the heavy structural and typographic lifting"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "buttermilk": {
+      "$value": "#fbfaf2",
+      "$type": "color",
+      "$description": "Buttermilk — Alternate card surface for quieter product tiles — an off-white that reads as warm cream against the saturated yellow canvas"
+    },
+    "cool-link-blue": {
+      "$value": "#007aff",
+      "$type": "color",
+      "$description": "Cool Link Blue — Ghost/outlined secondary action border — a borrowed utility color for low-emphasis links, never used for filled buttons or primary navigation"
+    }
+  },
+  "font": {
+    "gooper": {
+      "$value": "Gooper",
+      "$type": "fontFamily",
+      "$description": "Signature wordmark display — the massive 'Yellowbird' logotype and any oversized display headings; a custom bubbly, ultra-chunky display face that functions as the brand's icon. Tight tracking (-0.028em) keeps the rounded forms from feeling wobbly at 91px"
+    },
+    "abc-monument-grotesk": {
+      "$value": "ABC Monument Grotesk",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse — nav links, body copy, product names, section headings, button text, footer, and hero subhead. The single weight (400) carries all roles from 14px caption to 61px hero subhead, unified by negative tracking that tightens as size grows (-0.04em at 14px to -0.011em at 61px)"
+    },
+    "pitch-sans": {
+      "$value": "Pitch Sans",
+      "$type": "fontFamily",
+      "$description": "Secondary utility — used for badges, tags, micro-labels, and supporting metadata where a slightly more compact feel is needed. Weight 600 for badge text adds the only weight contrast in the system"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.yellowbirdfoods.com",
+      "siteName": "Yellowbird®",
+      "extractedAt": "2026-06-03T19:53:50.055Z",
+      "variant": "compact"
+    }
+  }
+}

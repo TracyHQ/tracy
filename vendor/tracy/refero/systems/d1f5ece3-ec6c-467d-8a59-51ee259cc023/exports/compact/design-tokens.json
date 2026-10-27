@@ -1,0 +1,94 @@
+{
+  "color": {
+    "hot-pink": {
+      "$value": "#ff82c2",
+      "$type": "color",
+      "$description": "Hot Pink — Signature accent section backgrounds (announcement bar, Studio feature block), inline link emphasis — the brand's editorial punctuation. Used full-bleed, not as a tint"
+    },
+    "sun-yellow": {
+      "$value": "#ffda40",
+      "$type": "color",
+      "$description": "Sun Yellow — Accent highlight wash and decorative badge fills. Secondary chromatic accent that pairs with the pink in the brand's signature palette"
+    },
+    "signal-blue": {
+      "$value": "#20afff",
+      "$type": "color",
+      "$description": "Signal Blue — Secondary section background, decorative callout. A cool counterpoint to the warm pink and yellow, used when a third chromatic moment is needed in long pages"
+    },
+    "ember-orange": {
+      "$value": "#ff6138",
+      "$type": "color",
+      "$description": "Ember Orange — Sporadic chromatic accent for icon strokes and small decorative highlights. Does not define sections"
+    },
+    "leaf-green": {
+      "$value": "#5ad363",
+      "$type": "color",
+      "$description": "Leaf Green — Green supporting accent for decorative details and low-frequency emphasis"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "charcoal": {
+      "$value": "#292c33",
+      "$type": "color",
+      "$description": "Charcoal — Secondary text and dark surface variant. Slightly cooler than pure black; used where a softer dark surface is needed without losing authority"
+    },
+    "slate": {
+      "$value": "#60605e",
+      "$type": "color",
+      "$description": "Slate — Muted body copy, helper text, secondary icon fills. The workhorse secondary text color at high frequency"
+    },
+    "bone": {
+      "$value": "#f1f0eb",
+      "$type": "color",
+      "$description": "Bone — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas and inverse text on dark fills. The cleanest, coolest surface — Bone sits one step above it for warmth"
+    },
+    "mist": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Mist — Slightly cooler light surface for card variants and disabled/secondary button states where Bone would feel too warm"
+    },
+    "stone": {
+      "$value": "#c1c0bc",
+      "$type": "color",
+      "$description": "Stone — Mid-tone divider, disabled border, subtle icon stroke. A neutral that sits between Slate and Bone for hairline UI"
+    },
+    "sand": {
+      "$value": "#e4d9cf",
+      "$type": "color",
+      "$description": "Sand — Decorative warm wash and image placeholder. The warmest neutral — used as a soft tonal block, rarely as functional UI"
+    },
+    "frost": {
+      "$value": "#cfd6e5",
+      "$type": "color",
+      "$description": "Frost — Cool-toned gray for card backgrounds and image placeholders where a cooler counterpart to Bone is needed"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Workhorse sans for body copy, navigation, buttons, icons, badges, and all functional UI. Tight tracking at 0.1em on small/uppercase text gives a controlled, label-like feel rather than the looser default sans treatment."
+    },
+    "sebentafont-custom-editorial-serif": {
+      "$value": "sebentaFont (custom editorial serif)",
+      "$type": "fontFamily",
+      "$description": "Display and large headings only. A high-contrast contemporary serif used at hero scale (64–128px) with heavy negative tracking. The italic cut is the brand's voice — emphasis words like 'the sound' are set italic in the same family rather than recolored or underlined, giving headlines a literary, editorial cadence."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://epidemicsound.com",
+      "siteName": "Epidemicsound",
+      "extractedAt": "2026-06-03T20:10:31.805Z",
+      "variant": "compact"
+    }
+  }
+}

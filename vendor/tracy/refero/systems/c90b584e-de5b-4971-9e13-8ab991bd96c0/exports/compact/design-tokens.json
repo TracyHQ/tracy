@@ -1,0 +1,44 @@
+{
+  "color": {
+    "charcoal-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Charcoal Ink — All text, borders, icon strokes, nav links, button outlines, and structural lines. The dominant ink of the system — every shape and character carries this weight"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary page canvas, card surfaces, button fills, and inverted text on dark blocks. The ground against which everything else is set"
+    },
+    "newsprint-gray": {
+      "$value": "#e8e8e8",
+      "$type": "color",
+      "$description": "Newsprint Gray — Section background for content bands (article grids, footer areas) — creates quiet tonal shifts between white sections without introducing a second hue"
+    },
+    "pewter": {
+      "$value": "#bfbfbf",
+      "$type": "color",
+      "$description": "Pewter — Muted helper text, list dividers, secondary link borders — used sparingly where information is deprioritized but still present"
+    },
+    "signal-red": {
+      "$value": "#ff0000",
+      "$type": "color",
+      "$description": "Signal Red — Red outline accent for tags, dividers, and focused UI edges."
+    }
+  },
+  "font": {
+    "helveticanow": {
+      "$value": "HelveticaNow",
+      "$type": "fontFamily",
+      "$description": "The sole typeface across the entire system. Weight 600 carries headlines, button labels, and card titles; weight 400 handles body, navigation, and supporting text. The display sizes (50px and beyond) compress to tight line-heights of ~0.93–1.00, letting oversized words like 'Eindhoven' and 'Design District' stack with sculptural density. Letter-spacing tightens aggressively at large sizes (-0.05em) and loosens slightly at small sizes (+0.015em), giving the type an editorial confidence that shifts with scale."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.eindhovendesigndistrict.com",
+      "siteName": "Eindhoven Design District",
+      "extractedAt": "2026-06-03T18:35:09.594Z",
+      "variant": "compact"
+    }
+  }
+}

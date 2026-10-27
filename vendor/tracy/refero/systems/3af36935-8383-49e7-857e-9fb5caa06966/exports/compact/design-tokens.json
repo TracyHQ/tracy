@@ -1,0 +1,39 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Bone — Page canvas, the only background tone — a warm off-white that keeps the page from feeling clinical"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Primary text, project titles, navigation links, all body copy — the only ink the system ever uses"
+    },
+    "ash": {
+      "$value": "#080808",
+      "$type": "color",
+      "$description": "Ash — Secondary text, near-identical to Carbon for AAA contrast on Bone — exists for accessibility, not visual contrast"
+    },
+    "stone": {
+      "$value": "#d8d8d8",
+      "$type": "color",
+      "$description": "Stone — Muted UI surface for disabled controls, low-emphasis panels, and placeholder blocks. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "degular": {
+      "$value": "Degular",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for all text — display, body, navigation, and labels. Weight 300 carries display and project titles (the 'whisper' that makes a 50px headline feel editorial, not aggressive). Weight 400 is reserved for body copy, category labels, and nav. Only two weights in the entire system, which is itself a signature choice — there is no 'bold' to reach for."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://jakubreis.com",
+      "siteName": "Jakub Reis",
+      "extractedAt": "2026-06-03T18:21:48.958Z",
+      "variant": "compact"
+    }
+  }
+}

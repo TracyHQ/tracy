@@ -1,0 +1,72 @@
+---
+/**
+ * The ACM `story-chapter` block: statement + support + one action beside a 16:11 photo.
+ * `flip` is `style-2` (photo first on desktop; copy always first on a phone). `as="h1"` is the
+ * source's heading-level option (About opens with a chapter). `scene` tints the support for a
+ * black scene band, whose ink the wrapping view sets.
+ */
+import Photo from '@/components/site/Photo.astro'
+import type { Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+interface Props {
+  statement?: string
+  support?: string
+  image?: any
+  imageAlt?: string
+  linkLabel?: string
+  linkUrl?: string
+  linkStyle?: 'secondary' | 'primary' | 'text'
+  as?: 'h1' | 'h2'
+  flip?: boolean
+  scene?: boolean
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: Partial<Record<'statement' | 'support' | 'image' | 'linkLabel', string>>
+}
+const {
+  statement,
+  support,
+  image,
+  imageAlt = '',
+  linkLabel,
+  linkUrl,
+  linkStyle = 'secondary',
+  as: Tag = 'h2',
+  flip = false,
+  scene = false,
+  stamp,
+  fields
+} = Astro.props
+const none = {}
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [linkUrl])
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+const linkClass =
+  linkStyle === 'primary'
+    ? 'btn btn-primary'
+    : linkStyle === 'text'
+      ? 'inline-flex items-center gap-2 text-[17px] font-medium text-accent hover:text-accent-hover'
+      : 'btn btn-ghost'
+---
+
+<div class="wrap" data-block="chapter">
+	<div class:list={["grid items-center gap-8 lg:gap-12", image && "lg:grid-cols-2"]}>
+		<div class="min-w-0">
+			{statement && <Tag class="h-section max-w-[20ch]" {...at("statement")}>{statement}</Tag>}
+			{support && <p class:list={["mt-6 max-w-[52ch] text-[21px] leading-[1.47] text-pretty", scene ? "text-scene-fg/70" : "text-fg-muted"]} {...at("support")}>{support}</p>}
+			{linkLabel && live(linkUrl) && (
+				<p class="mt-8">
+					<a href={linkUrl || "#"} class={linkClass} {...at("linkLabel")}>
+						{linkLabel}
+						<svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+					</a>
+				</p>
+			)}
+		</div>
+		{image && <Photo image={image} stamp={at("image")} alt={imageAlt} class={`aspect-[16/11] rounded-[12px]${flip ? " lg:order-first" : ""}`} />}
+	</div>
+</div>

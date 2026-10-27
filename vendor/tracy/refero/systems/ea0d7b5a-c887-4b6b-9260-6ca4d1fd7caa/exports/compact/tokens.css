@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-parchment: #eee9cc;
+  --color-aged-linen: #cecab1;
+  --color-tobacco-brown: #674825;
+  --color-midnight-espresso: #1e1915;
+  --color-ink-black: #111111;
+
+  /* Typography — Font Families */
+  --font-pp-neue-montreal: 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,6 @@
+# Insert Tracy's mode+platform picker row; the bundle that loads it must also disable
+# `ui-agent-preset` (`@deepseek-ai/dsh-client-ui-agent-preset`), because both register the
+# single `conversation.hero.agentPreset` slot — a second declaration throws at registration.
+- insert:
+    - id: tracy-mode-picker
+      name: '@tracy/dsh-mode-picker'

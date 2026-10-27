@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-014-pending",
+  "itemIds": ["regression:REG-014"],
+  "requirement": "Site changes tab re-reads /activity and shows the new turn row within 3 s after a turn ends, without a reload",
+  "oracle": {
+    "source": "tests/regression/cases/REG-014-changes-tab-refresh-after-turn.json",
+    "ref": "PR #787 (fix); fix evidence: tasks/evidence/bug-0310-leemood/issue3/after-fix",
+    "invariant": "The build check prints a count >= 1. The unit seam exits 0 with TAP '# pass 5' and '# fail 0'. window.__row === TURN, and li.tv-activity-event[data-event='<TURN>'] has data-source='chat'. window.__rowAt - ENDED <= 3000 (fixed build on scv2: 763, 766, 1117 ms; before #787 no row within 90 s and only F5 showed it). Main-frame navigations since SENT_AT === 0. Exactly one logged /activity request between SENT_AT and window.__rowAt; its URL contains 'version=2' and does not contain 'cursor='. The [data-total] integer is >= T0 + 1. window.__sawReading === false and window.__minRows >= N0 (the rows stayed on screen during the re-read); window.__vis === 0.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer harness, needs stand, site:wp, model, seat:owner"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:site:wp", "need:model", "need:seat:owner"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-014"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "flaky-model", "owner:harness"],
+  "regression": {
+    "id": "REG-014",
+    "pr": 787,
+    "kind": "fix",
+    "area": "site-changes/refresh",
+    "file": "tests/regression/cases/REG-014-changes-tab-refresh-after-turn.json"
+  },
+  "ownerLayer": "harness",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": true,
+  "command": [],
+  "needs": ["stand", "site:wp", "model", "seat:owner"]
+}

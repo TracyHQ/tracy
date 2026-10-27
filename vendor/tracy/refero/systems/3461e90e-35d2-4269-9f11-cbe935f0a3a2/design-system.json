@@ -1,0 +1,265 @@
+{
+  "dos": [
+    "Use Deep Lagoon #004449 for all body text and primary icons — never fall back to #000000 for running copy",
+    "Reserve Electric Iris #483cff for one filled CTA per viewport — duplicate CTAs dilute the signal",
+    "Use 900px border-radius on every button, badge, and pill-shaped link — sharp corners break the pill-button language",
+    "Pair mint wash #d7ffc2 section bands with parchment #fffef0 cards inside them — the two-tone stack is the signature content rhythm",
+    "Apply the 475 weight of PP Mori for UI labels (14-16px) — it carries the warm humanist feel that 400 alone cannot reach",
+    "Use 0.10em letter-spacing at display sizes 48px+ — the expanded tracking is what makes headlines feel editorial rather than SaaS",
+    "Set section padding to 80px top/bottom for vertical breathing room — denser spacing collapses the spacious rhythm"
+  ],
+  "donts": [
+    "Don't use pure #ffffff backgrounds — the warmth of #fffef0 is core to the brand and a clinical white breaks the system",
+    "Don't apply shadows heavier than rgba(0,0,0,0.04) 0px 2px 8px 0px — heavy elevation destroys the flat, paper-like quality",
+    "Don't use black #000000 for body text — it reads as harsh digital where Deep Lagoon teal reads as warm print",
+    "Don't introduce card radii other than 24px — the 24px card + 900px button pairing is the rounded-but-not-floaty signature",
+    "Don't use the neon Lime Pulse #0bff80 for body text or buttons — it only works as 2-5 word display emphasis in headlines",
+    "Don't stack multiple saturated backgrounds — the palette relies on parchment→mint→parchment alternation, not rainbow layering",
+    "Don't reduce the 80px section gap — compressing it removes the editorial pacing that distinguishes the page from standard SaaS layouts"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#004449",
+      "name": "Deep Lagoon",
+      "role": "Primary text, body copy, icon strokes, navigation — deep teal replaces black for all running text and primary iconography, lending a warm printed feel rather than digital harshness",
+      "group": "brand"
+    },
+    {
+      "hex": "#483cff",
+      "name": "Electric Iris",
+      "role": "Violet action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "brand"
+    },
+    {
+      "hex": "#fffef0",
+      "name": "Parchment",
+      "role": "Page canvas, card surfaces on mint sections, inverted text on dark elements — warm off-white background replaces clinical #ffffff, reducing glare and adding editorial softness",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Hairline borders, card outlines, structural dividers, footer strokes — used as 1px boundary lines rather than as primary type, creating crispness against the cream base",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d7ffc2",
+      "name": "Mint Wash",
+      "role": "Section backgrounds, testimonial card surfaces, soft highlight bands — pale green wash separates content zones without the heaviness of gray or color blocks",
+      "group": "accent"
+    },
+    {
+      "hex": "#0bff80",
+      "name": "Lime Pulse",
+      "role": "Display headline emphasis, accent strokes on key words, decorative highlight — neon green appears in sparing two-to-five-word bursts to amplify specific display phrases",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1200px centered content with full-bleed colored bands. Hero is split: headline + CTA left (60% width), phone mockup overlapping a circular masked travel photo right (40%). Feature sections are 3-column equal grids with phone mockup + caption + body text in each cell, set on a mint wash band. Testimonials scroll horizontally as wide portrait cards on a mint band. Navigation is a full-bleed dark teal bar with centered nav links. Section rhythm alternates: parchment hero → mint features → parchment testimonials on mint → dark teal footer. Vertical spacing is generous (80px section gaps, 32px card padding). The overall page reads as a single continuous scroll with color bands doing the section division rather than hard borders or dividers.",
+  "imagery": "Photography is warm-toned travel content: mountain landscapes, coastal towns, city skylines — cropped into circles or organic blob masks behind phone mockups. User testimonial photos are small circular headshots (56px) stacked with overlap. Phone mockups dominate the visual space, always showing iOS app screens with real UI (price alerts, trip lists, booking confirmations). No illustrations, no abstract graphics — the visual hierarchy is phone-mockup-as-hero, photograph-as-context, avatar-as-social-proof. Color treatment on photos is natural, slightly warm, no duotone.",
+  "similar": [
+    {
+      "why": "Same travel-deal app category, same warm-off-white editorial landing page feel with single vivid accent for CTAs",
+      "business": "Hopper"
+    },
+    {
+      "why": "Similar warm humanist typography and generous spacing, though Going pushes the cream canvas and pill-button language further",
+      "business": "Notion"
+    },
+    {
+      "why": "Warm parchment-like background tone, friendly humanist type, and photography of real places used as soft circular accents behind product imagery",
+      "business": "Airbnb"
+    },
+    {
+      "why": "Same approach of using a single vivid color (violet/iris in both cases) for the primary CTA against a neutral canvas, with pill buttons and generous vertical rhythm",
+      "business": "Wise (TransferWise)"
+    },
+    {
+      "why": "Pastel mint accent sections and a warm cream paper-feel canvas — same colored-band approach to section division",
+      "business": "Koodo Mobile"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "24px",
+      "badges": "900px",
+      "inputs": "16px",
+      "buttons": "900px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#fffef0",
+      "name": "Parchment Canvas",
+      "level": 0,
+      "purpose": "Base page background — warm off-white replacing clinical white"
+    },
+    {
+      "hex": "#d7ffc2",
+      "name": "Mint Wash Band",
+      "level": 1,
+      "purpose": "Full-bleed content section background, testimonial zone, feature highlight band"
+    },
+    {
+      "hex": "#fffef0",
+      "name": "Parchment Card",
+      "level": 2,
+      "purpose": "Card surface on mint sections — parchment returns as a lifted layer"
+    },
+    {
+      "hex": "#004449",
+      "name": "Ink Card",
+      "level": 3,
+      "purpose": "Dark teal inverted surface for navigation, footer, or accent blocks — teal carries surface weight, not just text"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.04) 0px 2px 8px 0px",
+      "element": "Feature cards on mint bands"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.04) 0px 2px 8px 0px",
+      "element": "Testimonial cards"
+    }
+  ],
+  "northStar": "Sun-bleached travel journal with electric ink",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.28
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.32
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.33,
+      "letterSpacing": 0.36
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.33,
+      "letterSpacing": 0.48
+    },
+    {
+      "role": "heading-sm",
+      "size": 28,
+      "lineHeight": 1.17,
+      "letterSpacing": 1.68
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.15,
+      "letterSpacing": 2.4
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.14,
+      "letterSpacing": 4.8
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 1.1,
+      "letterSpacing": 8
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button (Electric Iris Pill)",
+      "role": "High-emphasis action — the only filled chromatic button in the system",
+      "description": "Background #483cff, white text, 900px border-radius (full pill), 32px row-gap, padding 16px 28px. PP Mori 475 at 16px, white #fffef0 text. No shadow. Used for the singular 'Join for free' or 'Get App' action that appears once per viewport."
+    },
+    {
+      "name": "Outlined Navigation Button",
+      "role": "Secondary action in the nav bar",
+      "description": "Transparent background, 1.5px border #fffef0 (on dark teal nav) or #004449 (on parchment), 900px radius, 16px 24px padding. PP Mori 475 at 14-16px, text matches border color. Used for 'Sign Up' and 'Login' in the top bar."
+    },
+    {
+      "name": "Mint Section Card",
+      "role": "Content card sitting on a mint wash band",
+      "description": "Background #fffef0, 24px border-radius, 1px border #000 at ~40% opacity or #004449 at low opacity, padding 32px, shadow rgba(0,0,0,0.04) 0px 2px 8px 0px. Holds phone mockup + heading + body text in the 3-column feature grid."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Social proof card in horizontal scroll",
+      "description": "Mint wash background #d7ffc2, 24px border-radius, no border, padding 32px. Contains user photo (circular, ~56px) at top, name and trip metadata, quote body in PP Mori 400/475 at 16px. Cards extend taller than wide for portrait orientation."
+    },
+    {
+      "name": "Phone Mockup Frame",
+      "role": "Device chrome for app screenshots",
+      "description": "Rounded rectangle, ~24px radius, containing a 9:19.5 aspect iOS screenshot. No device shadow — the screenshot bleeds edge-to-edge. Overlapping or isolated placement, sometimes paired with a circular masked travel photo behind it."
+    },
+    {
+      "name": "Social Proof Pill Badge",
+      "role": "Trust signal in the hero",
+      "description": "Mint wash #d7ffc2 background, 900px radius, padding 8px 16px. Contains small avatar stack (24px circles, 2-3 overlapping) + PP Mori 475 at 14px in #004449. Example: avatar group + 'Loved by 2M+ ★★★★★ rating'."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent site navigation",
+      "description": "In dark teal section: background #004449, full-width, padding 20px 0. Logo 'Going™' left in white PP Mori 600 at 24px. Center: text links in PP Mori 475 at 14px, uppercase, 0.06em letter-spacing, white. Right: outlined 'Sign Up' pill + filled 'Get App' violet pill."
+    },
+    {
+      "name": "Press Logo Strip",
+      "role": "Editorial credibility bar",
+      "description": "Row of 4-5 muted publication logos (Travel+Leisure, Good Morning America, etc.) at ~40% opacity in #004449. No background, no borders, sits below the hero CTA with 40px vertical breathing room."
+    },
+    {
+      "name": "Hero Headline Pair",
+      "role": "Primary marketing headline",
+      "description": "Two-line display headline. First line in Deep Lagoon #004449, second line with a 2-3 word phrase swapped to Electric Iris #483cff. PP Mori 700 at 80px desktop (48px tablet, 40px mobile), 0.10em letter-spacing, 1.1 line-height. Lines broken at the value proposition."
+    },
+    {
+      "name": "Feature Section Heading",
+      "role": "Section opener above a 3-column grid",
+      "description": "Centered PP Mori 600 at 40-48px, Deep Lagoon #004449. Single line when possible. Optional inline violet word for emphasis. 80px padding-top above the heading, 48px below before the grid begins."
+    },
+    {
+      "name": "Press/Media Pill Link",
+      "role": "Standalone editorial link in dark sections",
+      "description": "Deep Lagoon #004449 background, PP Mori 475 at 16px in #fffef0, 900px radius, 16px 32px padding. Centered, often appears in footer or as a 'Read the article' callout."
+    },
+    {
+      "name": "Footer Block",
+      "role": "Site footer with link columns",
+      "description": "Deep Lagoon #004449 background, full-bleed. Multi-column link grid in PP Mori 400 at 14px, white text with 0.02em tracking. Logo top-left in white. Padding 80px top/bottom, 1200px max-width."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All text across the system. The signature 475 weight (a semi-normal sitting between Regular and SemiBold) is used for body and UI labels, giving paragraphs a subtly heavier gravity than 400 without the formality of 600. Display sizes (40-80px) use 600/700 with expanded tracking for editorial poster-style headlines. Smaller UI (14-18px) stays at 475 for friendly readable labels.",
+      "sizes": "14px, 16px, 18px, 24px, 28px, 40px, 48px, 80px",
+      "family": "PP Mori",
+      "weight": "400, 475, 600, 700",
+      "lineHeight": "1.10, 1.14, 1.15, 1.17, 1.33, 1.40, 1.50",
+      "substitute": "Inter, General Sans, or Söhne — pick a geometric humanist with a similar warm 475-500 weight option",
+      "letterSpacing": "0.28px at 14px, 0.32px at 16px, 0.36px at 18px, 0.48px at 24px, 1.68px at 28px, 2.4px at 40px, 4.8px at 48px, 8.0px at 80px",
+      "fontFeatureSettings": "\"ss01\" on"
+    }
+  ],
+  "description": "Going is a warm-paper travel companion: a parchment canvas (#fffef0, never pure white) carries deep lagoon teal body text and pill-shaped electric iris CTAs, with soft mint wash bands organizing content sections. PP Mori's slightly off-axis 475 weight gives paragraphs a friendlier gravity than standard 400, while display sizes push tracking outward (up to 0.10em at 80px) for an editorial-poster feel. Surfaces stack: parchment base → mint wash content bands → ink-bordered cards with a whisper shadow. The design refuses cold SaaS conventions — black is used sparingly as a hairline border accent, not as primary type, and the single violet CTA carries all interactive weight across the page.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text: #004449 (Deep Lagoon)\n- background: #fffef0 (Parchment)\n- border: #000000 (Ink Black) or #004449\n- accent: #0bff80 (Lime Pulse) — display only\n- primary action: #483cff (filled action)\n\nExample Component Prompts:\n\n1. Create a Primary Action Button: #483cff background, #fffef0 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. Build a 3-column feature grid on a mint band: full-width #d7ffc2 background, 80px vertical padding. Three equal columns, each with a phone mockup image, a 28px PP Mori 600 subheading in #004449, and 16px body text in #004449 at 475 weight. 32px gap between columns, cards sit on the mint band directly (no card containers), or use #fffef0 card containers with 24px radius and 32px padding.\n\n3. Build a testimonial card: 320px wide, auto height, background #d7ffc2, 24px radius, 32px padding. 56px circular avatar top-left. Name + trip metadata at 14px PP Mori 475 in #004449. Quote body at 16px PP Mori 400 in #004449. No border, no shadow. Cards arranged in a horizontal scroll row.\n\n4. Build the top navigation: full-width #004449 background, 20px vertical padding. Logo 'Going™' left at 24px PP Mori 600 white. Center nav links uppercase at 14px PP Mori 475, white, 0.06em tracking. Right: outlined 'Sign Up' button (1.5px white border, 900px radius, 16px 24px padding) + filled 'Get App' button (background #483cff, white text, 900px radius, 16px 24px padding).\n\n5. Build a social proof pill badge: #d7ffc2 background, 900px radius, 8px 16px padding. Contains 2-3 overlapping 24px circular avatars on the left, then 'Loved by 2M+ ★★★★★' at 14px PP Mori 475 in #004449. Sits above the hero headline with 16px gap below."
+    }
+  ],
+  "elevationPhilosophy": "Shadows are whisper-thin — rgba 0.04 black at 2px/8px. Elevation is carried by the mint-to-parchment surface contrast and ink borders, not by shadow volume. The 4% opacity is just enough to separate cards from the mint band without darkening the cream surface."
+}

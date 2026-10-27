@@ -1,0 +1,14 @@
+{
+  "community.label": "社区",
+  "help.body": "发现问题或有反馈？欢迎在我们的 Discord 社区与 Tracy 团队和其他用户交流。",
+  "help.button": "需要帮助？",
+  "help.close": "关闭",
+  "help.hidden": "已隐藏。“社区”仍在侧边栏底部您头像下的菜单中。",
+  "help.hide": "隐藏此按钮",
+  "help.open": "打开 Discord",
+  "session.new": "新 session",
+  "toggle.collapse": "收起侧边栏",
+  "toggle.open": "展开侧边栏",
+  "workspaces.open": "打开 workspace",
+  "workspaces.title": "Sitespaces"
+}

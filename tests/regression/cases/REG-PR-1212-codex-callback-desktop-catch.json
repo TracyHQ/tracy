@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1212-codex-callback-desktop-catch",
+  "kind": "feat",
+  "title": "Desktop: a ChatGPT Codex sign-in finishes without pasting, whichever way the page opens it",
+  "pr": 1212,
+  "area": "desktop/ai-accounts",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-desktop subscription-handoff tests (node:test; a real loopback server on a free port, fake browser and fake window).",
+    "S2: the end-to-end form: in the desktop app, Getting started or Settings > AI accounts > ChatGPT Codex > Connect; finish OpenAI sign-in in the browser; the tab says 'Signed in. You can close this tab and return to Tracy Cowork.' and the app shows the account connected without a paste."
+  ],
+  "expect": [
+    "The page asking the app to open the Codex authorize address (tracyDesktop.links.openExternal) starts the catcher, then opens the browser.",
+    "A callback with the attempt's path and state gets a 200 HTML page, is delivered once as tracy-subscription-callback, and the catcher stops.",
+    "A wrong state or another path gets a 404 and the catcher keeps listening; a busy port logs one line and leaves the paste path; the catcher stops after its time runs out; a second attempt replaces the first.",
+    "The delivery script carries the URL as JSON data, whatever characters it holds."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=20000",
+      "packages/desktop/tracy-desktop/test/subscription-handoff.test.mjs"
+    ],
+    "tests": [
+      "a Codex callback with the expected state is answered, delivered once, and the catcher stops",
+      "a wrong state or another path gets a plain 404 and the catcher keeps listening",
+      "the catcher stops by itself when the attempt runs out of time",
+      "a busy port logs one line, still opens the browser, and never delivers",
+      "a second attempt replaces the first",
+      "the Codex authorize address names the callback path and state to catch",
+      "the page asking the app to open a Codex sign-in starts the catcher, then the browser",
+      "any other address the page opens goes to the browser with no catcher",
+      "the delivery script dispatches the callback event with the URL as data, whatever it holds"
+    ],
+    "timeout_s": 120
+  },
+  "fence": "the catcher listens only for a known vendor's authorize address opened from a page on the window's own origin, and delivers only to that origin",
+  "selectors": {}
+}

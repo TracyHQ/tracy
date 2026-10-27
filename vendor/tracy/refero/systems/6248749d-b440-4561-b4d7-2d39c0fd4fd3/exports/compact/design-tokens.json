@@ -1,0 +1,109 @@
+{
+  "color": {
+    "peach-cream": {
+      "$value": "#fff1eb",
+      "$type": "color",
+      "$description": "Peach Cream — Page canvas, hero backgrounds, dominant surface — the warm skin of the entire site"
+    },
+    "ink-black": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, pill CTA fill, nav icons, borders — near-black rather than pure #000 for slightly softer edges"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces on cream sections, button labels, inverted text on black CTAs"
+    },
+    "cool-mist": {
+      "$value": "#e9edf6",
+      "$type": "color",
+      "$description": "Cool Mist — Secondary surface, link/button hover washes, soft card backgrounds when a section needs visual cooling"
+    },
+    "slate": {
+      "$value": "#393d46",
+      "$type": "color",
+      "$description": "Slate — Muted body text, secondary headings, icon strokes — lifts information below the black primary"
+    },
+    "hairline": {
+      "$value": "#c8ceda",
+      "$type": "color",
+      "$description": "Hairline — Borders, dividers, list-item separators on neutral surfaces"
+    },
+    "deep-violet": {
+      "$value": "#3d065f",
+      "$type": "color",
+      "$description": "Deep Violet — Brand primary — display headlines, decorative strokes, key UI accents; saturated enough to dominate 158px type against the cream canvas"
+    },
+    "midnight-plum": {
+      "$value": "#190066",
+      "$type": "color",
+      "$description": "Midnight Plum — Headline emphasis, link text, dark card backgrounds — the second register of the violet system, used when Deep Violet needs a partner with more weight"
+    },
+    "lime-wash": {
+      "$value": "#e5ffc3",
+      "$type": "color",
+      "$description": "Lime Wash — Accent card surface, decorative wash — fresh, spring-green that lights up product/feature blocks"
+    },
+    "acid-lime": {
+      "$value": "#baf24a",
+      "$type": "color",
+      "$description": "Acid Lime — Saturated green highlight inside illustrations and graphic accents — punctuation color, never structural"
+    },
+    "lilac-haze": {
+      "$value": "#eac2ff",
+      "$type": "color",
+      "$description": "Lilac Haze — Soft pink-purple card wash, pastel type accent — gentle partner to Deep Violet"
+    },
+    "orchid-pop": {
+      "$value": "#d075ff",
+      "$type": "color",
+      "$description": "Orchid Pop — Saturated pink-purple for decorative shapes and graphic punctuation sitting over lilac or cream"
+    },
+    "sky-wash": {
+      "$value": "#cce7ff",
+      "$type": "color",
+      "$description": "Sky Wash — Cool blue card surface — the cool counterweight to the warm canvas in feature blocks"
+    },
+    "periwinkle": {
+      "$value": "#89b0ff",
+      "$type": "color",
+      "$description": "Periwinkle — Saturated blue highlight for icons and illustration fills"
+    },
+    "apricot": {
+      "$value": "#ffa680",
+      "$type": "color",
+      "$description": "Apricot — Warm accent card surface — echoes the cream canvas but steps up in saturation for energy"
+    },
+    "burnt-sienna": {
+      "$value": "#661800",
+      "$type": "color",
+      "$description": "Burnt Sienna — Dark warm accent for display text and decorative borders — the orange system's deep register"
+    }
+  },
+  "font": {
+    "mmpolyvariable": {
+      "$value": "MMPolyVariable",
+      "$type": "fontFamily",
+      "$description": "Display headlines only — ultra-condensed geometric face that carries page-level authority at 75–158px. The narrow proportions let "
+    },
+    "mmsansvariable": {
+      "$value": "MMSansVariable",
+      "$type": "fontFamily",
+      "$description": "Secondary sans for sub-headlines and short labels that sit beneath the poly display — keeps the brand on one type system without competing with the hero. Substitute: Inter, Söhne, or General Sans."
+    },
+    "mmeuclidcircularb": {
+      "$value": "MMEuclidCircularB",
+      "$type": "fontFamily",
+      "$description": "Body, UI, nav, buttons, badges, inputs — the workhorse. Circular geometric forms keep a friendly counterpoint to the aggressive poly display. Weight 500 for nav, 700 for button labels, 400 for body. Tight line-height 0.80 used for badge micro-text. Substitute: DM Sans, Nunito, or Nunito Sans."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://metamask.io",
+      "siteName": "Metamask",
+      "extractedAt": "2026-06-03T20:14:06.637Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "color": {
+    "graphite-ink": {
+      "$value": "#32302f",
+      "$type": "color",
+      "$description": "Graphite Ink — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#fcfcfc",
+      "$type": "color",
+      "$description": "Paper White — Default page canvas, card surfaces, button text on dark fills — the brightest neutral, used for main reading surfaces"
+    },
+    "linen-cream": {
+      "$value": "#faf8f5",
+      "$type": "color",
+      "$description": "Linen Cream — Warm alternate section background, hero warm-tones, subtle washes — gives the page its boutique warmth and distinguishes sections from flat white"
+    },
+    "fog-veil": {
+      "$value": "#f1f0f0",
+      "$type": "color",
+      "$description": "Fog Veil — Quiet elevated surfaces, subtle hover washes, soft surface tints for inset regions"
+    },
+    "stone": {
+      "$value": "#e4e2e1",
+      "$type": "color",
+      "$description": "Stone — Hairline borders, input outlines, section dividers, nav-rule lines — the workhorse neutral for structural separation"
+    },
+    "pebble": {
+      "$value": "#686664",
+      "$type": "color",
+      "$description": "Pebble — Secondary/captive text, link body, helper copy — keeps muted text inside the warm-grey family instead of dipping into cool slate"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Reserved for SVG icon fills and a few crisp borders where true black is needed for contrast on warm-cream surfaces"
+    },
+    "charcoal": {
+      "$value": "#09090a",
+      "$type": "color",
+      "$description": "Charcoal — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "bronze-field": {
+      "$value": "#3a3525",
+      "$type": "color",
+      "$description": "Bronze Field — Hero/feature-block full-bleed background — a warm dark khaki that stages sculptural 3D illustrations without going full-black, maintaining the boutique-warm axis even in dark sections"
+    }
+  },
+  "font": {
+    "tiempos": {
+      "$value": "Tiempos",
+      "$type": "fontFamily",
+      "$description": "Display and editorial heading serif — used at 56–84px for hero and section titles, 36px for sub-section heads, and 14–18px for emphasis lead-ins. Tiempos is the soul of the brand: a contemporary text serif with strong terminals that brings a Kinfolk-magazine / art-book quality to a fintech. The 500 weight is reserved for the largest display sizes where extra weight balances the tight tracking."
+    },
+    "the-future": {
+      "$value": "The Future",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body sans — a clean geometric workhorse used for paragraph copy, nav links, card titles, input fields, and small UI labels at 14–20px. The 500 weight appears in nav and a few mid-size emphasis lines. The near-zero letter-spacing (0.005em) keeps running text tight and un-fussy. It is the calm counterpart to Tiempos's editorial display."
+    },
+    "wealthsimple-sans": {
+      "$value": "Wealthsimple Sans",
+      "$type": "fontFamily",
+      "$description": "Tracked-out utility face for buttons, nav controls, and selected UI labels — used at 16px with 0.025em letter-spacing so that interactive elements read as distinct, almost stamp-like marks. The wide tracking pushes these elements forward visually without needing weight, reinforcing the pill-button rhythm across the system."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://wealthsimple.com",
+      "siteName": "Wealthsimple",
+      "extractedAt": "2026-06-03T17:30:02.885Z",
+      "variant": "compact"
+    }
+  }
+}

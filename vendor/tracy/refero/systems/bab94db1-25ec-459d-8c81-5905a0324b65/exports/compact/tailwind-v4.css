@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+
+  /* Typography */
+  --font-graphik-light: 'Graphik Light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cardinal-fruit-and-italic-classic-italic-variants: 'Cardinal Fruit (and Italic / Classic Italic variants)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cardinal-fruit-italic: 'Cardinal Fruit Italic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cardinal-classic-italic: 'Cardinal Classic Italic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

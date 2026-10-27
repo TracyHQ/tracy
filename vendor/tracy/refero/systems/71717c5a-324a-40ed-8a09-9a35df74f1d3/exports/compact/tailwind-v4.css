@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-blush-paper: #fce1e3;
+  --color-coral-crimson: #db404f;
+  --color-midnight-ink: #0e1736;
+  --color-pure-white: #ffffff;
+  --color-soft-black: #000000;
+
+  /* Typography */
+  --font-sansita: 'Sansita', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-nunito-sans: 'Nunito Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-clarkson: 'Clarkson', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

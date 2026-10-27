@@ -1,0 +1,70 @@
+{
+  "id": "QA-UNIT-REG-PR-1426-widget-auth-language-happy",
+  "itemIds": ["regression:REG-PR-1426-widget-auth-language"],
+  "requirement": "Voice authentication localizes public guides and parses private confirmation and OTP locally",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1426-widget-auth-language.json",
+    "ref": "PR #1426 (fix); fix evidence: none recorded",
+    "invariant": "Only language and fixed public templates reach translation; credentials and private history are rejected before inference. Invalid placeholders, confirmation collisions and unchanged English guides for another language fail closed. Cached concurrent language requests translate once; unavailable localization never silently switches to English. French spoken email, oui and six French digits verify on the same microphone after explicit confirmation, without credentials in model turns. Unicode decimal digits and localized non-Latin digit words parse exactly; surrounding unknown words and excess digits are refused.",
+    "productSources": [
+      "apps/tracy-web/src/widget/assets/auth-panel.js:3",
+      "apps/tracy-web/src/widget/assets/email-voice.js:43",
+      "apps/tracy-web/src/widget/assets/embed.js:1",
+      "apps/tracy-web/src/widget/assets/live.js:1",
+      "apps/tracy-web/src/widget/auth-language.js:76",
+      "apps/tracy-web/src/widget/route.js:50"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/widget/route.js:542 readFile() with a computed path",
+      "apps/tracy-web/test/e2e/widget-voice-auth.test.mjs:45 readFile() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "language pack uses existing assistant for fixed public templates only; cache/coalescing and validation fail closed",
+    "auth-language route accepts language only and rejects credentials before any translation",
+    "locale lexicon handles spoken email, localized readback, Unicode digits and non-Latin six-digit words",
+    "dynamic guide requests contain language only; no silent English fallback or mismatched stale language",
+    "French voice sign-in loads public instructions and verifies localized confirmation and digits privately"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1426-widget-auth-language"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1426-widget-auth-language",
+    "pr": 1426,
+    "kind": "fix",
+    "area": "widget/voice-sign-in",
+    "file": "tests/regression/cases/REG-PR-1426-widget-auth-language.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/widget-auth-language.test.mjs",
+    "apps/tracy-web/test/e2e/widget-voice-auth.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "language pack uses existing assistant for fixed public templates only; cache/coalescing and validation fail closed",
+    "auth-language route accepts language only and rejects credentials before any translation",
+    "locale lexicon handles spoken email, localized readback, Unicode digits and non-Latin six-digit words",
+    "dynamic guide requests contain language only; no silent English fallback or mismatched stale language",
+    "French voice sign-in loads public instructions and verifies localized confirmation and digits privately"
+  ],
+  "timeoutS": 600
+}

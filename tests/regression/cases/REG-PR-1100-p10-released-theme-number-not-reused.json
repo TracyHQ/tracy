@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1100-p10-released-theme-number-not-reused",
+  "kind": "fix",
+  "title": "No WordPress theme tree carries content under a number already released from TracyHQ/claude-cowork: tracy 1.1.5, WP Kinetic 1.1.12 and WP Morgan 1.1.14 take the changes made after their 1.1.4, 1.1.11 and 1.1.13 releases",
+  "pr": 1100,
+  "area": "wordpress-theme/release",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: For each theme with a release on 10/10/2026 (tracy, tracy-base, wp-ja-essence, wp-ja-impact, wp-ja-kinetic, wp-ja-morgan, wp-ja-nova, wp-ja-vega, wp-tracy-business) read the version its tree declares (packages/cms/tracy-wordpress-theme/package.json for tracy, overlays/<slug>/theme.config.json otherwise) and the Version line of src/<slug>/style.css.",
+    "S2: Compare the declared version with that theme's newest release (recorded in the script: version, tag, and the sha256 digest of the released zip's theme folder, every file's path and sha256, update.json, tracy-release.json and .DS_Store left out). Same number: digest src/<slug> the same way and compare. Otherwise: is the declared number later?",
+    "S3: For wp-ja-essence, wp-ja-kinetic and wp-ja-morgan (the three whose readme.txt keeps a changelog), read the first '= x.y.z =' heading after '== Changelog ==' in src/<slug>/readme.txt."
+  ],
+  "expect": [
+    "S1: every style.css Version equals the declared version.",
+    "S2: tracy, wp-ja-kinetic and wp-ja-morgan declare a number after their releases 1.1.4, 1.1.11 and 1.1.13 (1.1.5, 1.1.12 and 1.1.14 on this branch); wp-ja-essence (1.0.11) and wp-ja-vega (1.1.14) declare a number after 1.0.10 and 1.1.13; tracy-base 1.1.5, wp-ja-impact 1.0.8, wp-ja-nova 1.1.11 and wp-tracy-business 1.1.7 still declare their release's number and their src tree's digest equals the released zip's.",
+    "S3: each changelog opens with the declared version."
+  ],
+  "selectors": {
+    "versions": "packages/cms/tracy-wordpress-theme/{package.json,overlays/<slug>/theme.config.json,src/<slug>/style.css}",
+    "changelog": "packages/cms/tracy-wordpress-theme/src/{wp-ja-essence,wp-ja-kinetic,wp-ja-morgan}/readme.txt",
+    "tool": "tests/regression/scripts/REG-PR-1100-p10-released-theme-number-not-reused.mjs"
+  },
+  "evidence": "10/10/2026: scripts/sync-cms-themes.mjs --check against claude-cowork main faf6ec2 reported tracy (823 files here, 822 there), wp-ja-kinetic and wp-ja-morgan out of date while each still declared its released number. Against the released zips: tracy 1.1.4 lacked inc/brand-logo.php and the functions.php of #879 (contact form mails only a configured recipient) and a2f40f706 (dark-background logo, site name as text); wp-ja-kinetic 1.1.11 and wp-ja-morgan 1.1.13 lacked the readme changelog entry a735e0294 (#1092) added at 14:46 UTC, an hour after both were released at 13:44 UTC. On 8323b61f7 the script's S2 fails for those three.",
+  "fence": "Static read of the committed versions and built trees against a snapshot of the releases taken on 10/10/2026; a release cut after that date is not known to the script, so it guards the numbers released by then",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1100-p10-released-theme-number-not-reused.mjs"]
+  }
+}

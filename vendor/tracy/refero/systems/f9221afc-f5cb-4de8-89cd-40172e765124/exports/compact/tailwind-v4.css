@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-parchment-cream: #f7f6e3;
+  --color-ink-black: #262d29;
+  --color-electric-lemon: #ffff48;
+
+  /* Typography */
+  --font-prody: 'Prody', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisseintl: 'SuisseIntl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisseintl-book: 'SuisseIntl Book', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

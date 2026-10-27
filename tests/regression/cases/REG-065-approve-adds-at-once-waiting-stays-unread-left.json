@@ -1,0 +1,36 @@
+{
+  "id": "REG-065",
+  "kind": "fix",
+  "title": "Team: Approve adds the requester at once in a picked role (no invitation); a waiting request stays under Unread after Review; a member who left reads Left; a team link stays on Team",
+  "pr": 878,
+  "area": "inbox/team",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), A (an Owner) and COOKIE_A, api. KEY = a site where A is Owner. R = req-<unix seconds>@example.test, L = left-<unix seconds>@example.test; mint their cookies like A's (never print them).",
+    "Unit seams: node --test --test-reporter=tap packages/site/tracy-inbox/test/*.test.mjs packages/site/tracy-my-sites/test/link-open.test.mjs packages/core/tracy-core/test/team-approve.test.mjs",
+    "R: POST /me/sites/<KEY>/join-request, then wait 70 s so the request is older than 'just now'. L: A invites L as editor on KEY (POST /api/team/invite), L POST /api/sites/<KEY>/accept, then L POST /api/sites/<KEY>/leave.",
+    "Browser (new Playwright context, cookie COOKIE_A): open O + '/<KEY>/?tab=tracy:inbox'; in the card of .tracy-inbox-row.is-card naming R press Review; wait 6 s; open the same address again and record STILL = count of those cards. Record DB = read_at is not null, settled_at is not null of A's newest team.join_request row on KEY (pq).",
+    "Open O + '/<KEY>?open=my-sites&team=<KEY>'; record LEFT = text of the roster row naming L; in R's row press Approve; record DIALOG = the dialog's text; press the dialog's Approve; wait 5 s; record ROW = text of R's row. Record SEAT = role, accepted_at is not null of R's seat on KEY, and T1 = count of R's team.invited rows (pq).",
+    "Team link guard: open O + '/<KEY>/?tab=tracy:inbox', then O + '/<KEY>?open=browser&page=/&mode=interactive'; then in a NEW page open O + '/<KEY>?open=my-sites&team=<KEY>'; record the active tab's text every 2 s for 20 s (ACTIVE) and the final query (QUERY).",
+    "Clean up: api a GET /api/team, and DELETE /api/sites/<KEY>/seats/<id> for R's live seat."
+  ],
+  "expect": [
+    "The unit seams exit 0 with '# fail 0'.",
+    "STILL === 1 and DB === 't|f' (read by Review, not settled, still listed under Unread).",
+    "LEFT contains 'Left' and not 'Revoked'.",
+    "DIALOG contains 'Approve request' and does not contain 'Seats are granted when they accept' or 'Send the invitation'.",
+    "ROW contains 'Active' and 'Granted just now' (the approval time, not the request's); SEAT === 'editor|t'; T1 === '0'.",
+    "Every ACTIVE sample starts with 'Team'; QUERY contains 'tab=tracy:team' and not 'open=my-sites'."
+  ],
+  "selectors": {
+    "card": ".tracy-inbox .tracy-inbox-row.is-card",
+    "row": "tr containing the address",
+    "dialog": "[role=dialog]",
+    "active": "[role=tab][aria-selected=true]",
+    "doors": "POST /me/sites/:key/join-request · POST /api/team/invite (Approve) · POST /api/sites/:key/accept · POST /api/sites/:key/leave"
+  },
+  "evidence": "On cowork.tracy.site 04/10: Approve opened the invite wizard ('Seats are granted when they accept'); Review hid a still-unanswered request from Unread; a member who left showed 'Revoked'; a View team / Review link landed on the Browser tab one click in two. After #878: the approved row read 'Granted 53 minutes ago', the time of the request.",
+  "fence": "TeamView's Approve calls approveRequestInit through the invite door (admitToSite approves the request: accepted seat, T3/T2b, no T1); notifications/store.js WAITING keeps unsettled invites and requests in Unread and the count; the leave door writes removal_kind 'left' and closedAs reads it; openFromLink waits for a session, strips the query only after the tab opened, and guards it for LINK_GUARD_MS."
+}

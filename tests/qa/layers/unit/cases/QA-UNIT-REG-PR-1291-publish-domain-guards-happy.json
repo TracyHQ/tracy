@@ -1,0 +1,60 @@
+{
+  "id": "QA-UNIT-REG-PR-1291-publish-domain-guards-happy",
+  "itemIds": ["regression:REG-PR-1291-publish-domain-guards"],
+  "requirement": "Publish tab: Connect domain on a draft site asks to publish first instead of opening the domain form; Back to draft warns, per connected domain, that its visitors no longer reach the site",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1291-publish-domain-guards.json",
+    "ref": "PR #1291 (feat); fix evidence: Vincent, 13/10/2026: Connect domain on a draft site should say the site must be published first; Back to draft after a domain is connected should warn that the domain stops working.",
+    "invariant": "S1 exits 0 with 0 failures. On a draft site, pressing [data-action=\"connect-domain\"] opens no form[data-form] and opens a [role=\"alertdialog\"] holding domains.publishFirstTitle and domains.publishFirstBody; no POST go-live is sent by that press. Pressing [data-confirm=\"live\"] in that dialog sends exactly one POST go-live with body {\"op\":\"live\"} and the dialog closes; Cancel closes it and sends nothing. On a live site, Connect domain still opens form[data-form=\"domain\"]. Back to draft on a live site with a connected domain shows domains.draftStops naming that domain on a [data-line=\"draft-domain\"] line that carries the class tv-domain-note-alert.",
+    "productSources": ["packages/site/tracy-site-tabs/src/client/site-tabs-rules.css:11"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/core/tracy-core/test/site-publish-dom.test.mjs:135 require() with a computed specifier",
+      "packages/core/tracy-core/test/site-publish-dom.test.mjs:1618 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "Connect domain on a draft site asks to publish first",
+    "Connect domain on a draft site, Cancel",
+    "Connect domain: the Owner of a site with no domain of its own opens a form for one",
+    "connecting on a site that is already live is one more publish"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1291-publish-domain-guards"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/core/tracy-core", "tracy-core"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1291-publish-domain-guards",
+    "pr": 1291,
+    "kind": "feat",
+    "area": "site-tabs/publish",
+    "file": "tests/regression/cases/REG-PR-1291-publish-domain-guards.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/core/tracy-core/test/site-publish-dom.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "Connect domain on a draft site asks to publish first",
+    "Connect domain on a draft site, Cancel",
+    "Connect domain: the Owner of a site with no domain of its own opens a form for one",
+    "connecting on a site that is already live is one more publish"
+  ],
+  "timeoutS": 600
+}

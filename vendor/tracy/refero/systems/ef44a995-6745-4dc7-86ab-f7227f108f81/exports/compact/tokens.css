@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-midnight-ink: #141414;
+  --color-pure-canvas: #ffffff;
+  --color-graphite: #707070;
+  --color-ash: #adadad;
+  --color-fog: #ededed;
+  --color-mist: #f2f2f2;
+  --color-silver: #c2c2c2;
+  --color-slate-shadow: #e0e0e0;
+
+  /* Typography — Font Families */
+  --font-saans: 'saans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

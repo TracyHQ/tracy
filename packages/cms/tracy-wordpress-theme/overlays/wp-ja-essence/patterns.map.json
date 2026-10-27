@@ -1,0 +1,366 @@
+{
+  "$comment": "ACM type:style -> the wp-ja-essence pattern that renders it, field by field, for the seeder (seed.mjs renderAcm, `${type}:${style}`). Field names are the Joomla ACM field names VERBATIM. metadata.name is <type>.<field>[.<n>]; the wrapper of a repeated row is <type>.item.<n>. Social items: the button text is the service title and `font-icon` rides as the button class `je-icon-<service>` after tools/fix-spec.mjs rewrites it (S-02); core/social-link cannot take a link from the seeder.",
+  "schemaVersion": "wp-ja-essence-patterns-map/v1",
+  "namespace": "wp-ja-essence",
+  "anchorConvention": "acm-<type>-<module id>",
+  "views": {
+    "$comment": "search is com_finder at /pages/j-pages/smart-search on the source; the theme answers that path with its search view (inc/extra.php wp_ja_essence_search_request), so the seeder adds no redirect for it. author and tag are the source's own components (the people of the site, the filterable list of titles): the theme registers a dynamic block for each (inc/extra.php) and the seeder draws it as the body of the view.",
+    "search": {
+      "servedAtPath": true
+    },
+    "author": {
+      "block": "wp-ja-essence/authors"
+    },
+    "tag": {
+      "block": "wp-ja-essence/tagged-list"
+    }
+  },
+  "types": {
+    "gallery:style-1": {
+      "pattern": "wp-ja-essence/section-gallery",
+      "item": "gallery.item.<n>",
+      "fields": {
+        "gallery-image": {
+          "block": "core/image",
+          "path": "gallery.image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "gallery-alt": {
+          "block": "core/image",
+          "path": "gallery.image.<n>",
+          "attr": "alt",
+          "repeat": true
+        },
+        "gallery_title": {
+          "block": "core/button",
+          "path": "gallery.title",
+          "attr": "text"
+        },
+        "gallery_link": {
+          "block": "core/button",
+          "path": "gallery.title",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "number_col": "5 to 6 pictures per row (stylesheet)",
+        "auto_play": "off",
+        "auto_time": "unused"
+      }
+    },
+    "social:style-1": {
+      "pattern": "wp-ja-essence/section-social",
+      "item": "social.item.<n>",
+      "fields": {
+        "font-icon": {
+          "block": "core/button",
+          "path": "social.link.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/button",
+          "path": "social.link.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/button",
+          "path": "social.link.<n>",
+          "attr": "url",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "social-style": "1 vs 2: stylesheet by position"
+      }
+    },
+    "articles-category:slide-feat": {
+      "pattern": "wp-ja-essence/section-articles-category-slide-feat",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "articles-category.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "articles-category:slide-normal": {
+      "pattern": "wp-ja-essence/section-articles-category-slide-normal",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "articles-category.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "articles-category:list-2-feat": {
+      "pattern": "wp-ja-essence/section-articles-category-list-2-feat",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "articles-category.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "articles-category:list-2-normal": {
+      "pattern": "wp-ja-essence/section-articles-category-list-2-normal",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "articles-category.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "articles-category:horizontal-feat": {
+      "pattern": "wp-ja-essence/section-articles-category-horizontal-feat",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "articles-category.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "articles-category:list-blog": {
+      "pattern": "wp-ja-essence/section-articles-category-list-blog",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "articles-category.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "articles-category:default-feat": {
+      "pattern": "wp-ja-essence/section-articles-category-default-feat",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "articles-category.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "articles-latest:latest-feat": {
+      "pattern": "wp-ja-essence/section-articles-latest-latest-feat",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-latest.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "articles-latest.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "articles-latest:latest-nsub": {
+      "pattern": "wp-ja-essence/section-articles-latest-latest-nsub",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-latest.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "articles-latest.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "related-items:related-default": {
+      "pattern": "wp-ja-essence/section-related-items-related-default",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "related-items.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "related-items.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "related-items:related-type-1": {
+      "pattern": "wp-ja-essence/section-related-items-related-type-1",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "related-items.main-section",
+          "attr": "content"
+        },
+        "bottom-desc": {
+          "block": "core/paragraph",
+          "path": "related-items.bottom-desc",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names its categories by slug in the pattern (wpJaEssenceCategory), resolved at render time (inc/extra.php)",
+        "count": "the query perPage of the pattern",
+        "ordering": "the query order of the pattern (title, or newest first where the source orders by hits \u2014 WordPress keeps no hit counter, D-09)"
+      }
+    },
+    "newsletter:default": {
+      "pattern": "wp-ja-essence/section-newsletter",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "newsletter.title",
+          "attr": "content"
+        },
+        "introtext": {
+          "block": "core/paragraph",
+          "path": "newsletter.introtext",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "mode": "vertical form",
+        "termscontent": "the Terms box is the acceptance of the Newsletter form (tools/reconcile.php, Contact Form 7; D-81)",
+        "subtext": "the button label is the Newsletter form's own Sign up (tools/reconcile.php; D-81), not a block of the card"
+      }
+    },
+    "tags-popular:default": {
+      "pattern": "wp-ja-essence/section-tags-popular",
+      "fields": {
+        "title": {
+          "block": "core/heading",
+          "path": "tags-popular.title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "count": "six tags, the block's numberOfTags"
+      }
+    },
+    "articles-categories:slide": {
+      "pattern": "wp-ja-essence/section-articles-categories-slide",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-categories.main-section",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the Categories block lists every category (D-11)"
+      }
+    }
+  },
+  "tags-popular:default": {
+    "pattern": "wp-ja-essence/section-tags-popular",
+    "fields": {
+      "title": {
+        "block": "core/heading",
+        "path": "tags-popular.title",
+        "attr": "content"
+      }
+    },
+    "dropped": {
+      "count": "six tags, the block's numberOfTags"
+    }
+  },
+  "articles-categories:slide": {
+    "pattern": "wp-ja-essence/section-articles-categories-slide",
+    "fields": {},
+    "dropped": {
+      "category": "the Categories block lists every category (D-11)"
+    }
+  }
+}

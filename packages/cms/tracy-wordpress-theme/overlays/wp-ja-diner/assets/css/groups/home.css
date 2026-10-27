@@ -1,0 +1,453 @@
+/* Group "home": the sections of the home page (slideshow, features-intro 1-3, container-tabs with menu panels, latest
+   news, subscribe) on WordPress markup. The carried source rules (css/source/template.css) draw the look; this sheet only
+   re-creates the layout that Bootstrap floats, Owl and the T3 equal-height script gave the Joomla markup, and takes the
+   block wrappers' own margins away. */
+
+/* ---------- Shared ---------- */
+.jd-main {
+  overflow-x: clip; /* the source's Gallery carousel is 4000 px wide and clipped by the page */
+}
+:where(.t3-slideshow, .acm-slideshow, .acm-features, .acm-container-tabs, .acm-menu, .latestnews, .acy-mailing) :where(.is-layout-flow, .is-layout-constrained) > * {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+.t3-section :where(figure),
+.t3-slideshow :where(figure) {
+  margin: 0;
+  border: 0;
+  background: none;
+}
+.acm-features img,
+.acm-container-tabs img,
+.acm-slideshow img,
+.latestnews img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+/* Paragraph blocks stand where the source prints divs (no Bootstrap paragraph margin); the source's own rules, which name the
+   section, are heavier than this and still apply. */
+.acm-features :is(.features-description, .feature-action, .desc, .jd-f-desc, .jd-f-role, .jd-f-btn, .features-btn),
+.acm-container-tabs .menu-action > p,
+.acm-menu :is(.dish-description, .menu-action > p) {
+  margin: 0;
+}
+/* Bootstrap's clearfix pseudo-elements on a flex or grid row would become empty cells */
+.row.equal-height::before,
+.row.equal-height::after,
+.acm-features .row::before,
+.acm-features .row::after {
+  display: none;
+}
+.row.equal-height {
+  display: flex;
+  flex-wrap: wrap;
+}
+/* ---------- Slideshow (Owl in the source, the motion carousel here) ---------- */
+.acm-slideshow .tracy-motion-carousel {
+  position: relative;
+  overflow: hidden;
+}
+.acm-slideshow .tracy-motion-track {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.acm-slideshow .item {
+  flex: 0 0 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.acm-slideshow .item > .img-bg {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
+.acm-slideshow .item > .img-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.acm-slideshow .item .slider-content-inner > * {
+  margin-top: 0;
+}
+.acm-slideshow .item .slider-content-inner p.lead {
+  margin-top: 24px;
+}
+.acm-slideshow .item .slider-content-inner .slide-action {
+  display: block;
+  margin-top: 36px;
+}
+.acm-slideshow .item .slider-content-inner .slide-action > p {
+  display: inline-block;
+  margin: 0;
+}
+.acm-slideshow .item .slider-content-inner .slide-action .btn {
+  margin-right: 12px;
+  margin-top: 12px;
+}
+.acm-slideshow .tracy-motion-dots {
+  position: absolute;
+  bottom: 36px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 11;
+}
+.acm-slideshow .tracy-motion-dot {
+  display: inline-block;
+  width: 24px;
+  height: 6px;
+  margin: 0 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 0; /* ds-keep: square corner by design */
+  position: relative;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0;
+}
+/* the bar is the pseudo-element: the dot is a control, not a white surface of the page */
+.acm-slideshow .tracy-motion-dot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--ds-c-on-ink, #ffffff);
+  opacity: 0.2;
+}
+.acm-slideshow .tracy-motion-dot[aria-current]::before {
+  opacity: 1;
+}
+.acm-slideshow .tracy-motion-dot:focus-visible {
+  outline: 1px solid var(--ds-c-accent, #c36349);
+  outline-offset: 2px;
+}
+
+/* ---------- features-intro style-1: the stepped story ---------- */
+@media (min-width: 768px) {
+  .acm-features.style-1 > .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .acm-features.style-1 .features-info {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 0 18px;
+  }
+  .acm-features.style-1 .features-item {
+    width: auto;
+    float: none;
+  }
+  .acm-features.style-1 .features-info + .features-item {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .acm-features.style-1 .features-item + .features-item {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+.acm-features.style-1 .features-info {
+  box-sizing: border-box;
+}
+/* The source prints the phone copy of this block as `.col-xs-12`, which carries the 18px grid gutter. */
+@media (max-width: 767px) {
+  .acm-features.style-1 .features-info {
+    padding: 0 18px;
+  }
+}
+.acm-features.style-1 .features-item {
+  box-sizing: border-box;
+  padding-left: 18px;
+  padding-right: 18px;
+}
+@media (min-width: 992px) {
+  .acm-features.style-1 .features-info + .features-item {
+    padding-right: 126px;
+  }
+}
+.acm-features.style-1 .features-item .features-img {
+  margin-bottom: 24px;
+}
+.acm-features.style-1 .feature-action a::after {
+  content: '\f30f';
+  font-family: 'Ionicons';
+  font-size: 12px;
+  margin-left: 4px;
+}
+.acm-features.style-1 .feature-action {
+  margin-bottom: 0;
+}
+
+/* ---------- features-intro style-2: the dishes carousel ---------- */
+.acm-features.style-2 .owl-action .owl-nav > button {
+  border: 2px solid var(--ds-c-accent, #c36349);
+  background: transparent;
+  color: var(--ds-c-accent-text, light-dark(#c36349, #d9785d));
+  cursor: pointer;
+  float: left;
+  font-size: 18px;
+  line-height: 52px;
+  text-align: center;
+  padding: 0 24px;
+  height: 54px;
+  border-radius: var(--ds-btn-radius, 0);
+}
+.acm-features.style-2 .owl-action .owl-nav > button + button {
+  margin-left: -2px;
+}
+.acm-features.style-2 .owl-action .owl-nav > button:is(:hover, :focus-visible) {
+  background: var(--ds-c-accent, #c36349);
+  color: var(--ds-c-accent-on, #ffffff);
+}
+.acm-features.style-2 .owl-action .owl-nav > button:focus-visible {
+  outline: 1px solid var(--ds-c-accent-hover, #c36349);
+  outline-offset: 0;
+}
+.acm-features.style-2 .owl-slide .tracy-motion-carousel {
+  position: relative;
+}
+.acm-features.style-2 .owl-slide .tracy-motion-track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 36px;
+}
+.acm-features.style-2 .owl-slide .features-item {
+  flex: 0 0 702px;
+  width: 702px;
+  float: none;
+  padding: 0;
+}
+@media (max-width: 767px) {
+  .acm-features.style-2 .owl-slide .owl-slide-inner {
+    width: 100%;
+  }
+  .acm-features.style-2 .owl-slide .features-item {
+    flex-basis: 100%;
+    width: 100%;
+  }
+}
+.acm-features.style-2 .features-text > * {
+  margin-top: 0;
+}
+.acm-features.style-2 .features-item-inner {
+  box-sizing: border-box;
+}
+
+/* ---------- features-intro style-3: the chef ---------- */
+.acm-features.style-3 .row.equal-height {
+  flex-wrap: wrap;
+}
+@media (min-width: 992px) {
+  .acm-features.style-3 .row.equal-height {
+    flex-direction: row-reverse;
+  }
+}
+.acm-features.style-3 .features-item,
+.acm-features.style-3 .features-image {
+  float: none;
+  box-sizing: border-box;
+}
+.acm-features.style-3 .features-item > .features-item-inner {
+  width: 100%;
+}
+.acm-features.style-3 .features-image figure {
+  display: block;
+}
+
+/* ---------- container-tabs and the menu panels the script moves into it ---------- */
+.acm-container-tabs .jd-tabs-nav {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+.acm-container-tabs .jd-tabs-nav li > a {
+  cursor: pointer;
+}
+.acm-container-tabs .jd-tabs-nav li > a:focus-visible {
+  outline: 1px solid var(--ds-c-accent, #c36349);
+  outline-offset: 2px;
+}
+.acm-container-tabs .tab-content > .tab-pane {
+  display: none;
+}
+.acm-container-tabs .tab-content > .tab-pane.active {
+  display: block;
+}
+.acm-container-tabs .jd-tabs-panels > .t3-section {
+  padding: 0;
+  margin: 0;
+}
+.acm-container-tabs .tab-pane[hidden] {
+  display: none !important;
+}
+.jd-tab-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.acm-menu .menu-items .dish-item {
+  box-sizing: border-box;
+}
+/* The source's phone rows are plain blocks (a `.col` fills its row); in the flex row of this port an item would shrink to
+   its text and the price would not reach the right edge. */
+@media (max-width: 767px) {
+  .acm-menu .menu-items .dish-item {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+.acm-menu .dish-info > h4,
+.acm-menu .dish-description {
+  margin-top: 0;
+}
+.acm-menu .menu-action > p {
+  margin: 0;
+}
+
+/* ---------- latest-news: the newest posts as cards, Owl's 1 / 2 / 3 / 4 to a view ---------- */
+.latestnews.tracy-motion-carousel {
+  position: relative;
+  overflow: hidden;
+}
+.latestnews .wp-block-post-template {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 36px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: flex-start;
+}
+.latestnews .wp-block-post-template > li {
+  flex: 0 0 100%;
+  min-width: 0;
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .latestnews .wp-block-post-template > li {
+    flex-basis: calc((100% - 36px) / 2);
+  }
+}
+@media (min-width: 992px) {
+  .latestnews .wp-block-post-template > li {
+    flex-basis: calc((100% - 72px) / 3);
+  }
+}
+@media (min-width: 1200px) {
+  .latestnews .wp-block-post-template > li {
+    flex-basis: calc((100% - 108px) / 4);
+  }
+}
+.latestnews .item-wrap > * {
+  margin-block: 0;
+}
+.latestnews .item-wrap .image-wrap {
+  margin-bottom: 24px;
+}
+.latestnews .item-wrap .image-wrap a {
+  display: block;
+}
+.latestnews .item-wrap .image-wrap img {
+  width: 100%;
+  height: auto;
+}
+.latestnews .item-wrap .create {
+  display: block;
+}
+.latestnews .item-wrap h3 {
+  margin-top: 12px;
+  margin-bottom: 24px;
+}
+.latestnews .item-wrap .intro p {
+  margin: 0 0 24px;
+}
+.latestnews .item-wrap .wp-block-read-more.action {
+  text-decoration: none;
+}
+.latestnews .item-wrap .wp-block-read-more.action::after {
+  content: '\f30f';
+  font-family: 'Ionicons';
+  margin-left: 4px;
+  font-size: 12px;
+}
+.latestnews .tracy-motion-dots {
+  display: none;
+}
+.latestnews .tracy-motion-dots:has(> :nth-child(2)) {
+  display: block;
+  margin-top: 36px;
+  text-align: center;
+}
+.latestnews .tracy-motion-dot {
+  position: relative;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0;
+}
+.latestnews .tracy-motion-dot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--ds-c-fg-2, light-dark(#222222, #f2eee8));
+  opacity: 0.2;
+}
+.latestnews .tracy-motion-dot[aria-current]::before {
+  opacity: 0.8;
+}
+
+/* ---------- subscribe ---------- */
+.acy-mailing {
+  position: relative;
+  /* The band's photograph is an <img> (below), so a reader of computed styles sees no picture here and takes the page colour for its
+     ground (a dark field, a button, "on the page"). The photograph's own dark and an empty gradient layer say it is a picture band;
+     the opaque photograph covers both, so nothing is painted differently. */
+  background-color: #222222; /* ds-keep: the dark of the picture that covers the band, it keeps the template colour under every system */
+  background-image: linear-gradient(transparent, transparent);
+}
+.acy-mailing > .jd-section-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.acy-mailing > .jd-section-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.acy-mailing > .container {
+  position: relative;
+  z-index: 1;
+}
+.acy-mailing form {
+  margin: 0;
+}
+.acy-mailing .acym_form {
+  margin: 0 auto;
+}
+.acy-mailing .acym_form input[type='email'] {
+  box-sizing: border-box;
+  height: 54px;
+}
+.acy-mailing .acym_posttext,
+.acy-mailing .acym_posttext p {
+  margin: 0;
+}
+
+/* The source prints the News and Subscribe titles in a div (line-height 1.6), not an h5 */
+:is(.acy-mailing, .t3-section:has(.latestnews)) .section-title {
+  line-height: 1.6;
+}

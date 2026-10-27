@@ -1,0 +1,29 @@
+/* ja_kinetic — ACM footerlegal (style-1). Self-contained, block-scoped.
+   Base layout (.kinetic-legal-band / .hx-copy) lives in scss/_kinetic-chrome.scss
+   under .kinetic-footer .hx-foot-bottom — not duplicated here. That scss also
+   ships a hover rule on .hx-legal a that only nudges muted -> chrome-text,
+   which reads as barely-there per micro-interactions.md §3c (LINK: muted ->
+   --heading/--primary on hover). This file reconciles it to the convention
+   without touching the scss: overrides carry one extra class
+   (.kinetic-legal-band) so they win on specificity regardless of stylesheet
+   load order, and add the focus-visible state keyboard users were missing. */
+
+.kinetic-footer .hx-foot-bottom .kinetic-legal-band .hx-legal a {
+  transition: color .15s ease;
+}
+
+.kinetic-footer .hx-foot-bottom .kinetic-legal-band .hx-legal a:hover,
+.kinetic-footer .hx-foot-bottom .kinetic-legal-band .hx-legal a:focus-visible {
+  color: var(--chrome-heading);
+}
+
+.kinetic-footer .hx-foot-bottom .kinetic-legal-band .hx-legal a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Reduced motion (micro-interactions.md §4) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; }
+}

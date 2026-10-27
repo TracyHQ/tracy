@@ -1,0 +1,50 @@
+---
+// mika-template-version: 0.1.1
+import { actions, isInputError } from "astro:actions";
+import { Button, Text } from "@cloudflare/kumo";
+import MagicLinkForm from "../../components/MagicLinkForm.astro";
+import MikaKumoPage from "../../components/MikaKumoPage.astro";
+import { mikaTemplateCurrentCartItemCount } from "../../lib/cart";
+import { mikaHiddenInput, mikaReturnToInput } from "@bnomei/emdash-mika/astro";
+import { mikaTemplateRoutes } from "../../lib/routes";
+
+export const prerender = false;
+
+const requestResult = Astro.getActionResult(actions.mika.magicLink.request);
+const verifyResult = Astro.getActionResult(actions.mika.magicLink.verify);
+const requestInputErrors = isInputError(requestResult?.error)
+  ? requestResult.error.fields
+  : {};
+const requestError = isInputError(requestResult?.error)
+  ? null
+  : requestResult?.error?.message;
+const token = Astro.url.searchParams.get("token");
+
+if (verifyResult?.data) {
+  return Astro.redirect(mikaTemplateRoutes.account);
+}
+
+const cartItemCount = await mikaTemplateCurrentCartItemCount(Astro);
+---
+
+<MikaKumoPage title="Account" pageSize="narrow" cartItemCount={cartItemCount} data-mika-magic-link-page>
+  <section class="mika-kumo-panel mika-kumo-stack">
+  {requestResult?.data?.sent && <Text as="p" variant="success" role="status">Email sent.</Text>}
+  {requestError && <Text as="p" variant="error" role="alert">{requestError}</Text>}
+  {verifyResult?.error && <Text as="p" variant="error" role="alert">{verifyResult.error.message}</Text>}
+
+  {token ? (
+    <form class="mika-kumo-form" action={actions.mika.magicLink.verify.queryString} method="post">
+      <input type="hidden" {...mikaHiddenInput("token", token)} />
+      <input type="hidden" {...mikaReturnToInput(mikaTemplateRoutes.account)} />
+      <Button type="submit" variant="primary">Continue</Button>
+    </form>
+  ) : (
+    <MagicLinkForm
+      id="mika-account-magic-link"
+      returnTo={mikaTemplateRoutes.account}
+      emailError={requestInputErrors.email?.join(", ")}
+    />
+  )}
+  </section>
+</MikaKumoPage>

@@ -1,0 +1,74 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#181717",
+      "$type": "color",
+      "$description": "Ink — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "bone": {
+      "$value": "#eeebea",
+      "$type": "color",
+      "$description": "Bone — Page canvas and section backgrounds — the warm off-white ground that sets the whole system apart from stark-white SaaS"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, product UI panels, testimonial tiles, integration logos — lifted off the Bone canvas to create depth"
+    },
+    "graphite": {
+      "$value": "#2e2d2d",
+      "$type": "color",
+      "$description": "Graphite — Secondary borders, body text dividers, nav rules — one step lighter than Ink for layered information"
+    },
+    "charcoal": {
+      "$value": "#575555",
+      "$type": "color",
+      "$description": "Charcoal — Muted body text, helper labels, subtle borders — the middle gray for de-emphasized content"
+    },
+    "ash": {
+      "$value": "#706e6d",
+      "$type": "color",
+      "$description": "Ash — Tertiary borders, caption text — the quietest gray, used where structure must recede"
+    },
+    "linen": {
+      "$value": "#f7f5f4",
+      "$type": "color",
+      "$description": "Linen — Elevated surface tint, nav background variant — sits between Bone and Paper for subtle layering"
+    },
+    "mist": {
+      "$value": "#d5d3d2",
+      "$type": "color",
+      "$description": "Mist — Shadow color base, very light dividers — the tonal anchor for the 2% opacity shadow system"
+    },
+    "signal-red": {
+      "$value": "#d04841",
+      "$type": "color",
+      "$description": "Signal Red — Brand accent for highlighted feature cards, active nav indicators, and emphasis strokes — used in 5% of the interface to make the other 95% feel intentional"
+    },
+    "network-blue": {
+      "$value": "#5a82de",
+      "$type": "color",
+      "$description": "Network Blue — Decorative product-screenshot gradient — warm red against matte black creates urgency without aggression; blue is reserved for inside-the-product imagery, never for UI controls"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse — body text at 400/16px, UI at 500/14px, and headlines at 300/48-64px. The light-weight headlines are a signature anti-convention choice: most infra brands shout with 700+, Tailscale whispers with 300, creating authority through restraint rather than volume."
+    },
+    "mdio": {
+      "$value": "MDIO",
+      "$type": "fontFamily",
+      "$description": "Branded labels and eyebrows — appears on small caps tags, nav items, and category markers with 0.043-0.050em positive tracking. The wide letter-spacing transforms tiny text into technical insignia rather than body copy. This is the system's 'voice' font."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://tailscale.com",
+      "siteName": "Tailscale",
+      "extractedAt": "2026-06-03T15:31:33.744Z",
+      "variant": "compact"
+    }
+  }
+}

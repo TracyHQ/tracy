@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1015-desktop-app-settings",
+  "kind": "feat",
+  "title": "/ops/ui opens on a Desktop App area first in its rail; its switches change GET /api/desktop/config and leave GET /api/ui alone",
+  "pr": 1015,
+  "area": "ops/ui/desktop-app",
+  "cms": ["any"],
+  "needs": ["stand", "seat:tracy_admin"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup (README.md for a local stand). The ops seat is REG_OPS_SEAT (letter or address, default `a`), an owner or admin of the tracy_admin workspace. Read GET /api/desktop/config with no cookie: record status, cache-control and body. Read GET /api/ui and GET /api/ui?surface=desktop with no cookie.",
+    "S2: As the ops seat, PUT /api/ops/desktop {\"llm\":{\"connect\":false,\"providers\":[\"claude\"]}} so both presses below change something.",
+    "S3: Browser: a NEW context signed in as the ops seat; open $O/ops/ui. Read the rail links `nav a[href^=\"?area=\"]`.",
+    "S4: Press the switch named `Let customers connect their own model plan`; then read GET /api/desktop/config.",
+    "S5: Press the switch named `ChatGPT Codex`; then read GET /api/desktop/config.",
+    "S6: Read GET /api/ui again. Finally PUT /api/ops/desktop back to the llm block recorded in S1."
+  ],
+  "expect": [
+    "S1: /api/desktop/config answers 200 with cache-control no-store and exactly the keys llm and tracyModel; /api/ui answers exactly the key hidden, and ?surface=desktop answers the same hidden list.",
+    "S3: the first rail link reads `Desktop App` and carries aria-current=page; the connect switch is off and the ChatGPT Codex switch is disabled.",
+    "S4: llm is {connect:true, providers:[claude]} and the ChatGPT Codex switch is enabled.",
+    "S5: llm is {connect:true, providers:[claude, codex]} (the screen's order).",
+    "S6: /api/ui still answers only hidden, with the same list as S1."
+  ],
+  "selectors": {
+    "rail": "nav a[href^=\"?area=\"] (first is ?area=desktop-app)",
+    "doors": "GET /api/desktop/config, PUT /api/ops/desktop, GET /api/ui"
+  },
+  "evidence": "PR #1015 replaced a per-switch Desktop column (ui_setting.desktop_overrides, /api/ui?surface=desktop) with one Desktop App area holding the app's own settings (07/10/2026).",
+  "fence": "Mechanism only: the screen writes the desktop_setting row and the public door reads it back. Not covered: the desktop app reading the door (not built yet).",
+  "run": {
+    "cmd": [
+      "../../node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "playwright.config.mjs",
+      "specs/REG-PR-1015-desktop-app-settings.spec.mjs"
+    ],
+    "cwd": "tests/regression",
+    "needs": ["stand", "chrome"]
+  }
+}

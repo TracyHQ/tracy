@@ -1,0 +1,61 @@
+{
+  "id": "QA-UNIT-REG-PR-1450-wo-ops-address-happy",
+  "itemIds": ["regression:REG-PR-1450-wo-ops-address"],
+  "requirement": "/ops/wo keeps every view in the page address: Live Queue filters and the opened WO, Places tab, search, opened place and the Research caps dialog, and Settings as view=settings; a pasted link or F5 reopens the same screen and Back/Forward walks between views",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1450-wo-ops-address.json",
+    "ref": "PR #1450 (feat); fix evidence: none recorded",
+    "invariant": "0 failures, 0 skipped. A bare /ops/wo is the Live Queue with every default and writes nothing back. A full queue address and a full Places address round-trip; stage is written as its digit. Each view reads and writes only its own section; Settings writes only view=settings. An invalid value drops only its own field; blank or over-long text is dropped; parameters /ops/wo does not own are kept.",
+    "productSources": ["packages/web/tracy-harness/src/wo-address.ts:136"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a bare /ops/wo is the Live Queue",
+    "a full queue address round-trips",
+    "stage reads a digit",
+    "a Places address round-trips",
+    "each view reads and writes only its own section",
+    "defaults are not written",
+    "an invalid value drops only its own field",
+    "blank or over-long text is dropped",
+    "parameters this module does not own are kept"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1450-wo-ops-address"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/web/tracy-harness", "tracy-harness"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1450-wo-ops-address",
+    "pr": 1450,
+    "kind": "feat",
+    "area": "website-opportunities/ops",
+    "file": "tests/regression/cases/REG-PR-1450-wo-ops-address.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "test/wo-address.test.mjs"],
+  "cwd": "packages/web/tracy-harness",
+  "needs": [],
+  "tests": [
+    "a bare /ops/wo is the Live Queue",
+    "a full queue address round-trips",
+    "stage reads a digit",
+    "a Places address round-trips",
+    "each view reads and writes only its own section",
+    "defaults are not written",
+    "an invalid value drops only its own field",
+    "blank or over-long text is dropped",
+    "parameters this module does not own are kept"
+  ],
+  "timeoutS": 600
+}

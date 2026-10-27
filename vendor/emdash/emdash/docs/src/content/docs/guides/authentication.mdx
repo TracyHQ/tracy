@@ -1,0 +1,498 @@
+---
+title: Authentication
+description: Passkey-first authentication with pluggable providers for GitHub, Google, Microsoft, and the Atmosphere.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+EmDash uses passkey authentication as its primary login method. Passkeys are phishing-resistant, don't require passwords, and work across devices through your browser or password manager.
+
+Beyond passkeys, you can add **pluggable login providers**. GitHub, Google, and Microsoft are included with EmDash. The separately installed [Atmosphere provider](/guides/atmosphere-auth/) adds AT Protocol accounts, and the same provider interface is open to other packages. The documented GitHub, Google, Microsoft, and Atmosphere providers can create the first admin account or sign in a linked EmDash user.
+
+For Cloudflare deployments, [Cloudflare Access](#cloudflare-access) is a separate, exclusive authentication mode in production. It validates Access credentials on protected EmDash routes rather than showing the EmDash login methods.
+
+## Choose an authentication mode
+
+Passkeys use WebAuthn, a web standard that creates public-key credentials stored on your device or synced through your password manager. When you log in, your device proves possession of the credential without ever sending a password over the network.
+
+Passkeys are the default. GitHub, Google, Microsoft, and Atmosphere providers are additional login methods: each one authenticates the user, links or creates an EmDash account, and establishes the same EmDash session used by a passkey login.
+
+Passkey authentication provides:
+
+- **No passwords to remember or leak**
+- **Phishing-resistant** — credentials are bound to your site's domain
+- **Cross-device sync** — works with iCloud Keychain, Google Password Manager, 1Password, etc.
+- **Fast login** — one tap with biometrics or PIN
+
+Cloudflare Access uses the `auth` option instead of `authProviders`. In production it becomes the authority for protected `/_emdash` routes. EmDash still stores a local user so roles, ownership, and disabled-user checks continue to work.
+
+## Set up the first user
+
+The first time you access the admin panel, the Setup Wizard guides you through creating your admin account.
+
+<Steps>
+
+1. Navigate to `http://localhost:4321/_emdash/admin`
+
+2. On **Set up your site**, enter the site title and optional tagline. A template can also offer sample content. Select **Continue**.
+
+3. On **Create your account**, enter your email address and optional name. Select **Continue**.
+
+4. On **Secure your account**, create a passkey or choose one of the configured login providers. If you choose a passkey, your browser asks where to save it:
+   - On macOS: Touch ID, device password, or security key
+   - On Windows: Windows Hello or security key
+   - On mobile: Face ID, fingerprint, or PIN
+
+5. Complete the browser or provider flow. EmDash creates the first user as Admin and opens the dashboard.
+
+</Steps>
+
+<Aside>
+	When a passkey creates the first account, EmDash stores the email entered in the wizard without
+	verifying it. Configure an email provider before using invites or magic-link login.
+</Aside>
+
+## Log in with a passkey
+
+After setup, returning to the admin panel triggers passkey authentication:
+
+<Steps>
+
+1. Visit `/_emdash/admin`
+
+2. If not logged in, you'll see the login page
+
+3. Click **Sign in** to authenticate
+
+4. Your browser prompts for your passkey (biometrics, PIN, or security key)
+
+5. After verification, you're redirected to the admin dashboard
+
+</Steps>
+
+## Log in with a magic link
+
+If you cannot use your passkey, a magic link provides an alternative. The site must have an email provider configured before EmDash can send the link — see [Email Setup](/guides/email/).
+
+<Steps>
+
+1. On the login page, click **Sign in with email**
+
+2. Enter your email address
+
+3. Check your inbox for a login link
+
+4. Click the link (valid for 15 minutes), then select **Continue** on the confirmation page
+
+	The link is only used when you select **Continue**, so email security scanners that open links in advance don't use it up.
+
+</Steps>
+
+<Aside type="caution">
+	Magic links are single-use and expire after 15 minutes. Request a new link if yours has expired.
+</Aside>
+
+## Configure login providers
+
+In addition to passkeys, EmDash supports pluggable login providers that appear on the login page and in the setup wizard. GitHub, Google, and Microsoft are included with EmDash. Atmosphere and third-party providers are separate packages that register through the same interface.
+
+Providers are additive — passkeys keep working when providers are enabled. GitHub, Google, and Microsoft automatically link an existing EmDash user only when the provider supplies the same verified email address. Atmosphere accounts are linked by their decentralized identifier (DID), because EmDash's Atmosphere flow does not receive an email address. Each included provider can create the first user, so a fresh install can skip passkeys entirely.
+
+### Add providers to Astro
+
+Pass providers to the `authProviders` array on the EmDash integration. The following example enables GitHub, Google, and Atmosphere:
+
+```js title="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import emdash from "emdash/astro";
+import { github } from "emdash/auth/providers/github";
+import { google } from "emdash/auth/providers/google";
+import { atproto } from "@emdash-cms/auth-atproto";
+
+export default defineConfig({
+	integrations: [
+		emdash({
+			authProviders: [github(), google(), atproto()],
+		}),
+	],
+});
+```
+
+Order matters for the login page: providers render in the order you list them, with compact button-only providers first and providers that need a custom form (like Atmosphere, which asks for a handle) shown after.
+
+### GitHub
+
+The following example enables the GitHub provider:
+
+```js
+import { github } from "emdash/auth/providers/github";
+
+emdash({ authProviders: [github()] });
+```
+
+Set credentials via environment variables. EmDash checks the prefixed names first and falls back to the unprefixed ones:
+
+| Variable                                                      | Purpose                |
+| ------------------------------------------------------------- | ---------------------- |
+| `EMDASH_OAUTH_GITHUB_CLIENT_ID` / `GITHUB_CLIENT_ID`          | OAuth app client ID    |
+| `EMDASH_OAUTH_GITHUB_CLIENT_SECRET` / `GITHUB_CLIENT_SECRET`  | OAuth app secret       |
+
+Configure your GitHub OAuth app's callback URL as `https://your-site.example.com/_emdash/api/auth/oauth/github/callback`.
+
+### Google
+
+The following example enables the Google provider:
+
+```js
+import { google } from "emdash/auth/providers/google";
+
+emdash({ authProviders: [google()] });
+```
+
+Set credentials via environment variables. EmDash checks the prefixed names first and falls back to the unprefixed ones:
+
+| Variable                                                      | Purpose                |
+| ------------------------------------------------------------- | ---------------------- |
+| `EMDASH_OAUTH_GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_ID`          | OAuth app client ID    |
+| `EMDASH_OAUTH_GOOGLE_CLIENT_SECRET` / `GOOGLE_CLIENT_SECRET`  | OAuth app secret       |
+
+Configure your Google OAuth client's redirect URI as `https://your-site.example.com/_emdash/api/auth/oauth/google/callback`.
+
+### Microsoft
+
+The following example enables the Microsoft provider:
+
+```js
+import { microsoft } from "emdash/auth/providers/microsoft";
+
+emdash({ authProviders: [microsoft()] });
+```
+
+Register an app in the Microsoft Entra admin center, add a Web redirect URI of `https://your-site.example.com/_emdash/api/auth/oauth/microsoft/callback`, and create a client secret. Then set all three environment variables. EmDash checks the prefixed names first and falls back to the unprefixed ones:
+
+| Variable                                                              | Purpose                                                                  |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `EMDASH_OAUTH_MICROSOFT_CLIENT_ID` / `MICROSOFT_CLIENT_ID`            | Application (client) ID                                                  |
+| `EMDASH_OAUTH_MICROSOFT_CLIENT_SECRET` / `MICROSOFT_CLIENT_SECRET`    | Client secret value                                                      |
+| `EMDASH_OAUTH_MICROSOFT_TENANT_ID` / `MICROSOFT_TENANT_ID`            | Directory (tenant) ID, or `common`, `organizations`, or `consumers`      |
+
+Client secrets created in the Microsoft Entra admin center expire after at most 24 months, and Microsoft sign-in stops working when the secret expires. Create a new secret and update `EMDASH_OAUTH_MICROSOFT_CLIENT_SECRET` before then.
+
+Use the directory ID from the app's overview page. A domain name such as `contoso.onmicrosoft.com` is not accepted as the tenant. To use `common`, `organizations`, or `consumers`, register the app for the matching supported account types, because Microsoft refuses a sign-in that the registration does not allow.
+
+EmDash takes the address from the account's email, or from its sign-in name when the account has no email address. It links an existing user, accepts an invite, and allows self-signup, including the first admin account, only for an address it treats as verified.
+
+With a directory ID, the address of an account that signs in through that directory counts as verified when it is in the same domain as the account's sign-in name (user principal name), because Microsoft allows a sign-in name only in a domain the directory has verified. Addresses of accounts that sign in through another directory or identity provider, such as guests or the personal Microsoft account that created the directory, do not count as verified, and no address counts as verified when the tenant is `common`, `organizations`, or `consumers`.
+
+If your users' email addresses are in a different domain than their sign-in names, add `xms_edov` as an optional ID token claim in the app registration. EmDash then treats such an address as verified when the claim confirms that the directory has verified its domain.
+
+The following example treats every Microsoft address as verified:
+
+```js
+emdash({ authProviders: [microsoft({ emailVerified: true })] });
+```
+
+Set `emailVerified: true` only when you trust every directory whose accounts can sign in. Microsoft does not verify the email address it reports, and an administrator of an account's directory can change it. Set `emailVerified: false` to treat every address as unverified, so that only accounts already linked to an EmDash user can sign in.
+
+#### Manage Microsoft access
+
+To let only some accounts in the directory sign in, set **Assignment required** to **Yes** in the properties of the app's enterprise application in Microsoft Entra, then assign the users or groups that need access. Microsoft refuses everyone else before they reach EmDash. Assigning groups requires Microsoft Entra ID P1 or P2 and covers direct members only.
+
+Microsoft Entra decides who can sign in with Microsoft. EmDash keeps its own users, roles, and disabled-user flag, and changes in the directory do not reach it:
+
+- If an EmDash user already has the address, the first Microsoft sign-in with a verified address links to that user and keeps its role. A sign-in with an unverified address is refused.
+- If the user was invited, signing in with Microsoft from the invite link gives them the invited role. A sign-in without the link falls under the allowed domains.
+- When someone leaves, disable their EmDash user as well as their Microsoft account. A disabled or deleted Microsoft account stops new Microsoft sign-ins, but not an open EmDash session or the passkeys registered in EmDash.
+- If a new Microsoft account later receives the same address, it links to the existing EmDash user and gets that user's role. A disabled EmDash user stays disabled until an administrator enables it.
+- If a deleted Microsoft account is restored in Microsoft Entra, it signs in to the same EmDash user as before.
+
+### Atmosphere (AT Protocol)
+
+For sites where contributors already have an [Atmosphere account](/guides/atmosphere-auth/) — the user-owned identity behind Bluesky and the wider AT Protocol network — install the Atmosphere provider:
+
+```bash
+pnpm add @emdash-cms/auth-atproto
+```
+
+The following example enables the Atmosphere provider with a handle allowlist:
+
+```js
+import { atproto } from "@emdash-cms/auth-atproto";
+
+emdash({
+	authProviders: [
+		atproto({
+			allowedHandles: ["*.example.com"],
+		}),
+	],
+});
+```
+
+No client secret or environment variable is needed. See the [Atmosphere login guide](/guides/atmosphere-auth/) for handle/DID allowlists, role mapping, and the local-development setup that the AT Protocol OAuth profile requires.
+
+### Build a provider
+
+A provider is an `AuthProviderDescriptor`: an `id`, a human label, and the admin components, route handlers, public route prefixes, and storage collections that its login flow needs. Export a `SetupStep` from `adminEntry` if the provider should appear during first-user setup. The shape is exported from `emdash`:
+
+```ts
+import type { AuthProviderDescriptor } from "emdash";
+
+export function myProvider(): AuthProviderDescriptor {
+	return {
+		id: "my-provider",
+		label: "My Provider",
+		adminEntry: "my-provider/admin", // exports LoginButton / LoginForm / SetupStep
+		routes: [
+			{ pattern: "/_emdash/api/auth/my-provider/login", entrypoint: "my-provider/routes/login.ts" },
+			{ pattern: "/_emdash/api/auth/my-provider/callback", entrypoint: "my-provider/routes/callback.ts" },
+		],
+		publicRoutes: ["/_emdash/api/auth/my-provider/"],
+		storage: {
+			sessions: {},
+		},
+	};
+}
+```
+
+The Atmosphere package (`@emdash-cms/auth-atproto`) is the most complete real-world reference for a provider that needs a custom login form, OAuth route handlers, and persistent storage.
+
+## User roles
+
+EmDash uses role-based access control with five levels:
+
+| Role        | Level | Description                                |
+| ----------- | ----- | ------------------------------------------ |
+| Subscriber  | 10    | Read published content (no draft access)   |
+| Contributor | 20    | Create content (needs approval to publish) |
+| Author      | 30    | Create/edit/publish own content            |
+| Editor      | 40    | Manage all content                         |
+| Admin       | 50    | Full access including settings             |
+
+Each role inherits permissions from all lower levels. The first user is always created as Admin.
+
+### Subscribers and draft content
+
+Subscribers hold the `content:read` permission so member-only published content can be served to authenticated readers. They cannot see drafts, scheduled items, trashed items, revisions, or preview URLs — those are gated on `content:read_drafts`, granted to Contributor and above. The list and get endpoints transparently filter to `status=published` for Subscribers; editor-only views (`/compare`, `/revisions`, `/trash`, `/preview-url`) reject Subscriber requests outright.
+
+## Invite users
+
+Admins can invite new users via the admin panel:
+
+<Steps>
+
+1. Go to **Settings** > **Users**
+
+2. Click **Invite User**
+
+3. Enter the user's email and select a role
+
+4. Click **Send Invite**
+
+5. If email is configured, EmDash sends the invite. Otherwise, copy the generated link and send it to the user yourself.
+
+6. They open the link and create the account with a passkey or a login provider offered on the invite page.
+
+</Steps>
+
+Invite links are single-use and expire after 7 days.
+
+## Manage passkeys
+
+Users can manage their passkeys from the account settings:
+
+- **Add passkey** — Register additional passkeys for backup or other devices
+- **Remove passkey** — Delete passkeys you no longer use
+- **Rename passkey** — Give passkeys descriptive names
+
+Each user can have up to 10 passkeys registered.
+
+EmDash does not let a user remove their last passkey. Add a replacement before deleting the old one.
+
+<Aside type="tip">
+	Register passkeys on multiple devices (e.g., laptop and phone) to ensure you always have a way to
+	log in.
+</Aside>
+
+## Letting a group sign in without invites
+
+To let a group sign in without inviting each user, configure a [login provider](#configure-login-providers) with an allowlist. The Atmosphere provider accepts `allowedHandles` and `allowedDIDs` (see [Atmosphere login](/guides/atmosphere-auth/)); the [Cloudflare Access](#cloudflare-access) adapter provisions users from your identity provider via `autoProvision` and `roleMapping`. The documented GitHub, Google, Microsoft, and Atmosphere providers can also create the initial admin account.
+
+## Sessions
+
+Passkey, magic-link, invite, and login-provider callbacks store the EmDash user ID in Astro's session store. The browser receives Astro's opaque `astro-session` identifier; user and credential records remain in the EmDash database.
+
+Cloudflare Access also writes the resolved EmDash user to the Astro session. That lets public pages identify a signed-in user when they read `Astro.locals.user`. The session does not replace Access authentication on protected `/_emdash` routes: EmDash validates the Access JSON Web Token (JWT) again on those requests.
+
+## Authentication rate limits
+
+EmDash limits the unauthenticated endpoints that begin login, signup, or OAuth client registration. The limits are separate for each endpoint and trusted client IP:
+
+| Endpoint | Limit |
+| --- | --- |
+| `POST /_emdash/api/auth/passkey/options` | 10 requests per minute |
+| `POST /_emdash/api/auth/magic-link/send` | 3 requests per 5 minutes |
+| `POST /_emdash/api/auth/signup/request` | 3 requests per 5 minutes |
+| `POST /_emdash/api/oauth/device/code` | 10 requests per minute |
+| `POST /_emdash/api/oauth/device/token` | 12 requests per minute |
+| `POST /_emdash/api/oauth/register` | 10 registrations per minute |
+
+On Cloudflare, EmDash reads the client IP from Cloudflare's request metadata. A self-hosted site behind a reverse proxy must configure [`trustedProxyHeaders`](/reference/configuration/#trustedproxyheaders) before EmDash can use the proxy's client-IP header. When no trusted IP is available, these per-IP checks are skipped because there is no safe key to count.
+
+Passkeys store public-key credentials; the private key stays with the user's authenticator. Magic-link tokens are stored as SHA-256 hashes and deleted after use.
+
+## Troubleshooting
+
+### "No passkeys registered"
+
+If you see this error on login, your passkey may have been deleted from your password manager. Ask an admin to send a recovery magic link; the site must have email configured.
+
+### "Passkey authentication failed"
+
+This usually means the passkey was created for a different domain. Passkeys are domain-bound — a passkey for `localhost:4321` won't work on `example.com`. Register a new passkey for each domain.
+
+### Lost all passkeys
+
+If you've lost access to all your registered passkeys:
+
+1. Ask another admin to send a recovery magic link. The site must have email configured.
+2. Open the link within 15 minutes and select **Continue** to log in.
+3. Register a new passkey in account settings.
+
+If you're the only admin and email isn't configured, you'll need to reset your site's authentication through the database.
+
+## Cloudflare Access
+
+When deploying to Cloudflare, you can use [Cloudflare Access](https://developers.cloudflare.com/workers/configuration/cloudflare-access/) instead of the built-in login methods. Access authenticates the user at the edge with your identity provider. EmDash validates the signed Access JWT, loads the person's identity and groups, and maps that identity to a local EmDash user.
+
+<Aside>
+	In production, Cloudflare Access is the exclusive authentication method. Passkeys, login providers,
+	magic links, invites, and self-signup are unavailable. During local development, EmDash falls back
+	to passkey authentication because a development request does not carry an Access JWT.
+</Aside>
+
+### When to use Cloudflare Access
+
+- **Single Sign-On** — Users authenticate with your company's IdP
+- **Centralized access control** — Manage who can access the admin in the Cloudflare dashboard
+- **No passkey management** — No need to register or manage passkeys
+- **Group-based roles** — Map IdP groups to EmDash roles automatically
+
+### Set up Access
+
+1. Create a Cloudflare Access application and policy for your site's `/_emdash/*` path. Protecting only `/_emdash/admin/*` leaves the REST API without the JWT that EmDash expects.
+2. Copy the application's **Application Audience (AUD) Tag**.
+3. Store the tag in the `CF_ACCESS_AUDIENCE` runtime environment variable. Follow the [EmDash secrets guide](/deployment/secrets/) for local and deployed values.
+4. Configure EmDash to read that value at runtime:
+
+```js title="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import cloudflare from "@astrojs/cloudflare";
+import emdash from "emdash/astro";
+import { d1, access } from "@emdash-cms/cloudflare";
+
+export default defineConfig({
+	output: "server",
+	adapter: cloudflare(),
+	integrations: [
+		emdash({
+			database: d1({ binding: "DB" }),
+			auth: access({
+				teamDomain: "myteam.cloudflareaccess.com",
+				audienceEnvVar: "CF_ACCESS_AUDIENCE",
+			}),
+		}),
+	],
+});
+```
+
+The application audience identifies which Access application issued the JWT. EmDash verifies it together with the issuer and signature; a token for another Access application is rejected.
+
+### Configuration options
+
+| Option          | Type      | Default  | Description                                                   |
+| --------------- | --------- | -------- | ------------------------------------------------------------- |
+| `teamDomain`    | `string`  | required | Your Access team domain (e.g., `myteam.cloudflareaccess.com`) |
+| `audience`      | `string`  | —        | Application Audience (AUD) tag supplied directly. Prefer `audienceEnvVar` on Workers. |
+| `autoProvision` | `boolean` | `true`   | Create EmDash users on first Access login                   |
+| `defaultRole`   | `number`  | `30`     | Role for users not matching any group (30 = Author)           |
+| `syncRoles`     | `boolean` | `false`  | Update role on each login based on IdP groups                 |
+| `roleMapping`   | `object`  | —        | Map IdP group names to role levels                            |
+| `audienceEnvVar`| `string`  | `"CF_ACCESS_AUDIENCE"` | Environment variable containing the audience tag. Used when `audience` is omitted. |
+
+Provide either `audience` or an environment value under `audienceEnvVar`.
+
+### Role mapping
+
+Map your IdP groups to EmDash roles:
+
+```js title="astro.config.mjs"
+emdash({
+	auth: access({
+		teamDomain: "myteam.cloudflareaccess.com",
+		audienceEnvVar: "CF_ACCESS_AUDIENCE",
+		roleMapping: {
+			Admins: 50, // Admin
+			"Content Editors": 40, // Editor
+			Writers: 30, // Author
+		},
+		defaultRole: 20, // Contributor for users not in any group
+	}),
+});
+```
+
+The first matching group wins if a user belongs to multiple groups. The **first user** to access the site always becomes Admin, regardless of groups.
+
+### Role sync behavior
+
+By default (`syncRoles: false`), a user's role is set when they first log in and doesn't change afterward. This allows admins to manually adjust roles in EmDash.
+
+Set `syncRoles: true` if you want IdP groups to be authoritative — the user's role will update on every login based on their current groups.
+
+### Request and session flow
+
+1. The user visits a path protected by the Access application.
+2. Cloudflare Access redirects the user to your identity provider when no Access session exists.
+3. After authentication, Access sends a signed JWT to the origin in `Cf-Access-Jwt-Assertion`.
+4. EmDash validates the token's signature, issuer, and audience, then reads the Access identity and groups.
+5. EmDash finds or provisions the local user, applies the configured role behavior, and records the user in the Astro session.
+6. Later requests to protected EmDash routes repeat Access validation. Public pages can use the EmDash session to identify the user without treating it as proof of a new Access request.
+
+<Aside type="tip">
+	You can still disable users locally in EmDash. A disabled user will be rejected even if Access
+	allows them through.
+</Aside>
+
+### Features replaced by Access
+
+When Access is enabled, these features are unavailable:
+
+- Login page (`/_emdash/admin/login`)
+- Passkey registration and management
+- GitHub, Google, Microsoft, and Atmosphere login
+- Magic link login
+- Self-signup
+- User invites
+
+Access policies decide who reaches EmDash. EmDash still owns local roles, content ownership, and the disabled-user flag. With `syncRoles: false`, administrators can change a provisioned user's role in EmDash. With `syncRoles: true`, the mapped Access groups replace that role on each login.
+
+### Troubleshooting
+
+#### "No Access JWT present"
+
+The request reached EmDash without an Access JWT. This means:
+
+- Access isn't configured to protect your application
+- The Access policy isn't matching the admin routes
+
+Verify that the Access application covers the full `/_emdash/*` path and that its policy includes the user.
+
+#### "JWT audience mismatch"
+
+The `audience` in your config doesn't match the JWT. Double-check the Application Audience Tag in your Access application settings.
+
+#### "User not authorized"
+
+The user authenticated via Access but `autoProvision` is `false` and they don't exist in EmDash. Either:
+
+- Set `autoProvision: true`, or
+- Create the user manually before they log in

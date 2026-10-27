@@ -1,0 +1,55 @@
+{
+  "id": "REG-PR-1460-wo-brief-keeps-template-pages",
+  "kind": "feat",
+  "title": "A WO demo keeps the template's pages and fills them from the restaurant's own posts, deterministically",
+  "pr": 1460,
+  "area": "website-opportunities/brief",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: plan the pages of five released templates (ja-restaurant, ja-impact, ja-spa, ja-vega, Tracy Base) against the content of one restaurant's real posts.",
+    "S2: make content items from 284 real captions of five restaurants.",
+    "S3: answer the create door's pages question from a brief, and build a brief from collected posts."
+  ],
+  "expect": [
+    "S1: ja-restaurant keeps 8 of 13 pages (one menu layout, one contact page, no sample pages), Tracy Base keeps 6 of 6 on EmDash (pricing kept with its layout since 26/10/2026) and 10 of 23 on Joomla, its Contact under Resources kept; every page taken off has a reason; the menu holds dishes, never a job advert, a match night or a joke; a past event or offer goes only to events/offers.",
+    "S2: footers, feed bait and keyword lists are cut; a post said twice is one item unless its numbers differ; job adverts, giveaways, closures, greetings and other-language posts are left out; when an event runs comes from its words, a weekly night is unknown, never active.",
+    "S3: pages answered = the plan's kept pages (no answer when all are kept); the brief has content items and is valid; the menu page shows the restaurant's posted dishes on the site (fill 'dishes') with or without a menu link, never a button to the live menu, and with no posts it is fill 'dishes' with no items."
+  ],
+  "selectors": {
+    "files": "packages/wo/website-opportunities/domain/content-pool.mjs, packages/wo/website-opportunities/domain/page-plan.mjs, packages/wo/website-opportunities/domain/site-answers.mjs",
+    "dom": ""
+  },
+  "evidence": "PR 1460; on stand wo3 (19/10/2026) builds kept ja-restaurant 13→4, ja-vega 17→2, ja-spa 7→2, tracy-base 6→2 pages because pagesOf used the brief's 3–5 page sitemap as the keep list; E2E on stand wobrief 19/10/2026 (ja-restaurant j6 kept exactly 8, 5 unpublished; Tracy Base j6 lost resources/contact before e539649ea1); EmDash Tracy Base hand-off on wobrief: Home/Menu/Services/Blog/About all restaurant content, /pricing 404",
+  "fence": "pagePlan keeps by default and writes why a page goes; contentPool never adds a word to a post",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-page-plan.test.mjs",
+      "packages/wo/website-opportunities/test/domain-content-pool.test.mjs",
+      "packages/wo/website-opportunities/test/domain-site-answers.test.mjs"
+    ],
+    "tests": [
+      "a template keeps its pages: one of each kind, without the samples and variants a demo ships",
+      "every page taken off says why",
+      "on real feeds the menu shows dishes, never a job advert, a match night or a joke",
+      "a past event or offer is never a dish, a story or a blog post; the menu takes posts about food, not about a match night",
+      "the footer a page repeats under its posts is cut from every body, and its links are kept as evidence",
+      "two posts alike in words but not in their date, price or place stay two items",
+      "a job advert, a giveaway or a contest is never content",
+      "when an event or an offer runs is read from its words, never from the day it was posted",
+      "a pricing page keeps its layout: neutral without a collected price, the collected prices when the brief has them",
+      "a page is known by its own name before its section: Contact under Resources is the contact page",
+      "a menu page shows the restaurant’s dishes on the site, with or without a menu link; never a button to the live menu",
+      "a history page without an about page starts from the best story; a gallery without photographs comes off",
+      "an EmDash page carries no path: its id is not always its route (services_page is served at /services)"
+    ]
+  },
+  "history": [
+    "24/10/2026: 07879554a8 (22/10/2026, product owner): the menu page shows the dishes on the site and never links to the restaurant's live menu, which took the visitor off the demo; 'a menu page shows the menu link when there is one, the page’s own dishes when not' was rewritten to the test now named.",
+    "26/10/2026 (#1742, product owner): pricing, team, FAQ, careers and donations pages keep the template's layout instead of coming off; 'a page the plan takes off is named with its reason in the notes' was rewritten to the pricing test now named."
+  ]
+}

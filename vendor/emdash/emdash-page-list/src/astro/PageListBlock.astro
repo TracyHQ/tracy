@@ -1,0 +1,22 @@
+---
+import type { PageListBlockNode } from "../lib/types.js";
+import PageList from "./PageList.astro";
+
+const { node } = Astro.props as { node: PageListBlockNode };
+---
+
+<PageList
+	sourceType={node.sourceType}
+	collection={node.collection}
+	menuName={node.menuName}
+	limit={node.limit}
+	sortField={node.sortField}
+	sortDirection={node.sortDirection}
+	includeDraftsInPreview={node.includeDraftsInPreview}
+	showExcerpt={node.showExcerpt}
+	showDate={node.showDate}
+	heading={node.heading}
+	emptyState={node.emptyState}
+	style={node.style}
+	childDepthLimit={node.childDepthLimit}
+/>

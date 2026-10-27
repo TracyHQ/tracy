@@ -1,0 +1,280 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-justitia",
+  "release": "quickstart/ja-justitia/j6@1.0.0",
+  "minVersion": {
+    "quickstart/ja-justitia/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-justitia/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.slide-title",
+    "heading": "h2",
+    "body": "p.lead",
+    "button-primary": "a.btn.btn-lg",
+    "container": "div.t4-section-inner.container",
+    "section": "#t4-section-2"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 72px",
+    "displayFace": "Prata 300, tracking 0em",
+    "heading": "first section heading: 36px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(182, 157, 116)",
+    "container": "first content container, max-width 1230px",
+    "section": "first padded full-width section, padding-top 150px",
+    "displayPhone": "the same heading at 390 on the published release: 27px"
+  },
+  "keepScopes": [".t4-section-5", ".t4-section-12", ".t4-footnav", ".t4-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#444444",
+    "--fg-2": "#111111",
+    "--accent": "#b69d74",
+    "--accent-hover": "#a58e69",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#1d1f22",
+    "--meta": "#6c757d",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#e9e9e9",
+    "--muted": "#9e9e9e",
+    "--font-display": "\"Prata\", sans-serif",
+    "--font-body": "\"DM Sans\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#444444",
+      "fg-2": "#1d1f22",
+      "accent": "#b69d74",
+      "accent-hover": "#a58e69",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212529",
+      "meta": "#6c757d",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#e9e9e9",
+      "muted": "#9e9e9e"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#444444",
+      "fg-2": "#111111",
+      "accent": "#b69d74",
+      "accent-on": "#ffffff",
+      "surface-warm": "#1d1f22"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#fafafa",
+      "surface-warm": "#1d1f22",
+      "warn": "#fdce03"
+    },
+    {
+      "surface": "#eaedf1"
+    },
+    {
+      "surface": "#f2f2f2"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (83 line colours, 106 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.slide-title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-lg"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-lg"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["#t4-section-2"],
+    "bodyFace": ["body"],
+    "inkImages": [".acm-features.style-2 .img-icon img"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section-3 a:not([class*=btn]):not(:has(img)), .t4-section-6 a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section-3 p, .t4-section-6 p",
+    "body": ".t4-section-4 p",
+    "footer": ".t4-footnav a, .t4-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "offcanvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 27 tried (byte 6092); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#fafafa",
+      "uses": 26,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 2
+    },
+    {
+      "hex": "#1d1f22",
+      "uses": 17,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#1d1f22",
+      "distance": 0
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 21
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 12
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 4,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "t4Placeholders": {
+    "__color_white": "bg",
+    "__body_bg_color": "bg",
+    "__body_text_color": "fg",
+    "__link_color": "accent",
+    "__link_hover_color": "accent-hover",
+    "__color_primary": "accent",
+    "__color_secondary": "fg-2",
+    "__color_success": "success",
+    "__color_warning": "warn",
+    "__color_danger": "danger",
+    "__color_light": "surface",
+    "__color_dark": "fg-2",
+    "__color_black": "fg"
+  },
+  "t4PlaceholdersNote": "the template style sheet (media/t4/css/<style id>.css) is generated on the site from css/tpl/theme.tpl.css and pattern.tpl.css and rewritten whenever its content changes, on a fresh install too: until 11/10/2026 this contract tokenized the generated sheet itself (t4SiteCss), and a 1.0.1 stand forced to regenerate it measured 4/12 (page ground white and call to action gold under every system, link text 2.11:1 under Moxie). Each placeholder named here reads the slot in the template file instead (tokenize.mjs t4Placeholders), in the role the generated sheet gave its value",
+  "t4SiteNote": "T4 writes this template style's typography into media/t4/css/<style id>.css as literals (body{background-color:#ffffff;color:#444444}) and rewrites that file whenever its content changes: the colours reach the slot through the placeholders of css/tpl/theme.tpl.css and pattern.tpl.css (t4Placeholders), never through the generated file",
+  "contrastNote": "the family probes found a hero link over a photo (white on the photo's white) and the dark mission card the page keeps: these read the page's own light sections (practice areas, timeline, attorneys), measured on the release 11/10/2026",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on a stand built from the 1.0.1 build its minVersion names, T4 sheets regenerated (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-justitia-j6): 8/12 as before (the four misses are role sizes and weights: the system's display size does not reach the phone slide title, body weight 500 under Toggl Track), controls 0, no text worse than the template's own, 79% or more of the page follows; the eye saw the practice-area line icons (dark ink) vanish on a dark system page: under a dark system they are inverted with their hues kept (selectors.inkImages), no new release; checked by eye on all four systems, desktop and phone; earlier: measured 11/10/2026 (tasks/evidence/ds-contracts-batch3-2026-10-11/templates/ja-justitia-j6): default unchanged, no text made less readable than the template's own under the systems tried, 78% or more of the page follows; the system's display and heading sizes do not reach its slide title and section titles (role checks missed), colours do. regeneration-checked 11/10/2026 (…/ja-justitia-j6/regen-1.0.1): the 1.0.1 build rebuilt with t4Placeholders instead of t4SiteCss (a t4SiteCss build lost its tokenized sheet on the first request: 4/12, page ground white and call to action gold under every system), stood up, media/t4/css and media/t4/optimize emptied and the page asked for twice so T4 wrote its sheet again: 8/12 as before, controls 0, 79–100% follows, no text worse than the template's own",
+  "inkNote": "the practice-area line icons (images/joomlart/icon/icon-1..4.png, black ink on transparent) vanished on a dark system page (seen by eye on Moxie and Toggl Track, round-3 re-measure 11/10/2026): under a dark system they are inverted with their hues kept (selectors.inkImages), as JA Helple",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-fg-2)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "#444444",
+    "--body-link-color": "#b69d74",
+    "--body-link-hover-color": "#a58e69",
+    "--color-primary": "#b69d74",
+    "--color-secondary": "#1d1f22",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#1d1f22",
+    "--mainnav-text-color": "#212529",
+    "--mainnav-link-color": "#212529",
+    "--mainnav-link-hover-color": "#007bff",
+    "--mainnav-link-active-color": "#007bff",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "#6c757d",
+    "--footer-link-color": "#6c757d",
+    "--footer-link-hover-color": "#fff"
+  },
+  "keepColors": {
+    ".t4-section-5": "rgb(255, 255, 255)",
+    ".t4-section-12": "rgb(255, 255, 255)",
+    ".t4-footnav": "rgba(255, 255, 255, 0.74)",
+    ".t4-footer": "rgba(255, 255, 255, 0.74)"
+  },
+  "bands": {
+    ".t4-section-5": {
+      "ground": "#1d1f22",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".t4-section-12": {
+      "ground": "#1d1f22",
+      "texts": ["#ffffff"],
+      "important": true
+    },
+    ".t4-footnav": {
+      "ground": "#1d1f22",
+      "texts": ["#ffffff", "#c5c5c6"],
+      "paint": {
+        ".module-title span": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t4-footer": {
+      "ground": "#1d1f22",
+      "texts": ["#c5c5c6", "#ffffff"],
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours",
+  "sideRules": {
+    "dark": {
+      "#t4-header-wrap .toggle-bars": {
+        "background-color": "#ffffff"
+      },
+      "#t4-header-wrap .toggle-bars::before": {
+        "background-color": "#ffffff"
+      },
+      "#t4-header-wrap .toggle-bars::after": {
+        "background-color": "#ffffff"
+      },
+      "#t4-header-wrap .head-search :is(.search, .form-search) :is(.form-control, .inputbox, .search-query)": {
+        "background-color": "transparent",
+        "border-color": "transparent"
+      }
+    },
+    "light": {
+      "#t4-header-wrap .head-search :is(.search, .form-search) :is(.form-control, .inputbox, .search-query)": {
+        "background-color": "transparent",
+        "border-color": "transparent"
+      }
+    }
+  },
+  "reviewV8Note": "15/10/2026 (look review v8): the header search field is transparent with a white magnifier picture on the photo header; the page’s Bootstrap field rule filled it with the system’s surface (a blank white square under every light system): in the header it stays transparent. Under a dark system the menu bars (tokenized as the page colour) turned black on the photo: they keep the template’s white",
+  "displayImportant": true,
+  "displayImportantNote": "15/10/2026 (v9 and v10 measures, 21/34 both): every phone view missed display.fontSize, the slide title (h1.slide-title) 27px where the slot writes the system's capped phone size, 33-34px (55-86px on a desktop; 1.25 of the template's own 27px, DISPLAY_OVER_TEMPLATE). The slot's rule was there and lost: the release's css/template.css sets `h1, .h1 { font-size: 1.8rem !important }` up to 575.98px (1.8 x its 15px root = 27px), and a plain rule never beats an !important one, whatever its weight. The line height of the slot's own rule reached the title (29.7px = 1.1 x 27 under Moxie), which is how the plain size was seen to lose. displayImportant writes the display size !important, desktop and phone (the line height and letter spacing stay plain, so the Vietnamese line height still wins); from 576 to 639px and on a desktop the template's sizes were plain and the slot's already won, so nothing changes there"
+}

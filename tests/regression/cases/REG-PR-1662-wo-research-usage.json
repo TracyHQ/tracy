@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-1662-wo-research-usage",
+  "kind": "feat",
+  "title": "Research model calls count against whoever started the run, carry the tokens the provider reported, never touch the spending cap key, and show as their own block on beta usage",
+  "pr": 1662,
+  "area": "website-opportunities/research-usage",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: turn provider usage into a token snapshot, with and without reported usage, and for a partial batch.",
+    "S2: settle a model charge with a payer, a purpose and tokens; settle one whose answer had no usage; write zero-filled or inconsistent snapshots and an unknown payer.",
+    "S3: an account creates a place run, another joins it; a stopped run is started again by someone else; a restart with no known starter.",
+    "S4: a public /find run and a campaign run.",
+    "S5: GET /api/ops/usage over a window with research charges from customers and staff."
+  ],
+  "expect": [
+    "S1: reasoning stays inside completion; no usage is NULL, never zero; a partial batch says how many calls were measured.",
+    "S2: payer, purpose and tokens are kept and account_id is untouched; tokens stay NULL; the database refuses the bad rows.",
+    "S3: the creator pays and the joiner does not; whoever started it again pays; the payer already recorded is kept.",
+    "S4: the public bucket for /find; no person for a campaign.",
+    "S5: a research block of its own, staff left out of the customers view, chat figures untouched."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities/cost-ledger.js apps/tracy-web/src/lib/wo-model-tokens.js apps/tracy-web/src/opportunities/place-jobs.js apps/tracy-web/src/lib/ops-usage-research.js apps/tracy-web/src/ops/usage.js apps/tracy-web/src/db/migrations/167-wo-model-usage.sql",
+    "dom": ""
+  },
+  "fence": "modelTokens' NULL-not-zero snapshot, the ledger's payer columns kept apart from account_id, the tokens/payer check constraints, joinPlace's starter stamp, the research block of /api/ops/usage",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-research-usage.test.mjs",
+      "apps/tracy-web/test/ops-usage.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "provider usage becomes one snapshot; reasoning stays inside completion",
+      "no usage reported is NULL, never zero; a partial batch says how many calls were measured",
+      "a model charge keeps its payer, purpose and reported tokens, and never touches account_id",
+      "an answer without usage leaves tokens NULL; a public run has no account",
+      "the database refuses zero-filled or inconsistent token snapshots and unknown payers",
+      "the account that created the run pays; one who joins it later does not",
+      "a stopped run started again is paid by whoever started it again",
+      "a restart with no known starter keeps the payer already recorded",
+      "a public /find run is the public bucket; a campaign run has no person",
+      "GET /api/ops/usage: research model calls are a block of their own, staff left out, chat figures untouched"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "REG-103",
+  "kind": "fix",
+  "title": "Site changes: no Unknown row from building a site, a sourced file change or Tracy's own EmDash publish; titles not ULIDs; files-only restore names the backup",
+  "pr": 900,
+  "area": "site-changes",
+  "cms": ["wp", "jo", "em"],
+  "needs": [
+    "stand",
+    "seat:owner",
+    "site:create:wp",
+    "site:create:jo",
+    "site:em",
+    "model",
+    "browser:cdp-9222",
+    "playwright"
+  ],
+  "flaky_model": true,
+  "steps": [
+    "From this checkout, resolve Playwright's index.mjs under node_modules/.pnpm/playwright@1.63.0/node_modules/playwright (absolute path). Run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; never restart or close the borrowed browser, its contexts or pages.",
+    "Run PLAYWRIGHT_MODULE=<absolute index.mjs> TEST_COMMIT=$(git rev-parse HEAD) EVIDENCE_DIR=tests/regression/.runs/reg-103-$(date +%s) node tasks/evidence/site-changes-e2e-0410/verify.mjs (defaults are the scv2 stand: STAND_ORIGIN http://scv2.tracy.test:34080, its .env at ~/TCH-local/scv2/.env for SESSION_SECRET, containers tracy-scv2-*, seat scv2-a@example.test, EmDash site scv2em.scv2.tracy.test; on another stand set STAND_ORIGIN, STAND_ENV, PG, WEB, HOST_CONTAINER, DSH, SEAT, EM_SITE). It creates two sites (reg97wpNN from tracy-business/wp7, reg97joNN from the default Joomla design's quickstart; up to 25 minutes each, in parallel), uploads one picture as WordPress user 1 on the new WordPress site, sends ONE chat turn on the EmDash site, makes one backup and one files-only restore on the new WordPress site. Allow up to 60 minutes.",
+    "Read checks.json from EVIDENCE_DIR (every check with its part A–D, name, verdict and detail; `verdict` at the top) and read em-site-changes.html and wp-files-restored.html (each the outerHTML of the Site changes row it checked).",
+    "If the script's verdict is BLOCKED, report BLOCKED with the note it printed (a site that would not build, a model that did not publish with content_update, a collector that logged no publish)."
+  ],
+  "expect": [
+    "The script prints verdict PASS and exits 0; every check in checks.json is PASS.",
+    "build: the web, host and dsh images carry this branch (markers notFoldedSeal, 'Called ONCE, at step 6d', 'tracy_emdash write facts').",
+    "A (E1.2): for the new WordPress and Joomla sites, the history git holds exactly one commit at hand-over and tracy-release/v1 is that commit; v1 holds the files provision wrote (WordPress: wp-content/mu-plugins/tracy-access.php, wp-content/plugins/claude-cowork/claude-cowork.php, wp-config.php; Joomla: plugins/system/tracyaccess, administrator/components/com_claudecowork, .htaccess, configuration.php); after reads and CMS log pulls (read again for up to 4 minutes while a WP-Cron upgrade run that started at hand-over completes), counts.unknown = 0 and no item has origin.source 'unknown' (before the fix: 'Files changed; source unknown' 79 files on WordPress, 50 + 109 on Joomla — dev e2e 04/10).",
+    "B (E5.1c): the upload by WordPress user 1 is one cms-change item, origin.source 'cms-admin', effects.files.count = the number of files the upload wrote, evidence.commitSha set; no outside-files item with origin.source 'unknown'; site_outside.paths of that commit = exactly the upload's files.",
+    "C (E5.e5, E3.2): the turn's site_write content_update row is ok with target.state 'published', target.title non-empty and target.id = the home entry; the collector's publish row of that entry is in no V2 item and counts.unknown is the same as before the turn; the chat item's description.params.title = that title; on screen the row's .tv-activity-desc-text contains the title and not the ULID.",
+    "D (E6.5): the files-only restore (POST /restore mode reset to the backup's sha) answers ok; its operation item has description.key 'site-changes.reset' with params.version = the backup's number; on screen the row reads exactly 'Put the site files back to Backup <N>' (before the fix: 'Put the site files back to commit <sha>')."
+  ],
+  "selectors": {
+    "composer": "[data-composer-input='true'] (first)",
+    "siteChanges": "[data-site-changes-v2], no [data-reading] inside",
+    "row": "li.tv-activity-event[data-event='<item id>'] .tv-activity-desc-text",
+    "activityApi": "GET /api/sites/:key/activity?version=2&filter=<all|site-changes>&limit=50 → items[].{kind,id,origin.source,description{key,params},effects.files,evidence}, counts",
+    "cmsPull": "POST /api/sites/:key/cms-log/pull",
+    "restore": "POST /api/sites/:key/restore {mode:'reset', sha, idemKey}",
+    "history": "$TRACY_PRIVATE_ROOT/<label>/webroot-baseline.git, tag tracy-release/v1",
+    "writeRecord": "site_write(target jsonb {kind, id, title?, state?}) via 'emdash-mcp'",
+    "sealRecord": "site_outside(paths text[], parent_at) — migration 062"
+  },
+  "evidence": "tasks/evidence/e2e-dev-0410/bugs.md items 1, 2, 3, 9, 10 (dev e2e 04/10/2026; branch qa/e2e-dev-2026-10-04 worktree e2e-dev-0410)",
+  "fence": "provision.sh builds the webroot baseline once, at step 6d, after every write into the webroot and before the Initial backup (an archive-built site too); V2_SOURCES_SQL leaves out a seal every path of which a sourced CMS row wrote (notFoldedSeal: a plugin/theme/core row its own folder or files, logged up to 5 minutes after the seal; any such row the translation files of its upgrade run, up to 5 minutes before the seal's window; an upload exactly its files) and FOLDED_SEALS_SQL counts each path on the latest row that wrote it; notTracyOwnCmsDelete counts a content_update whose report says state published/draft as Tracy's publish/unpublish of that id, never more rows than Tracy wrote; resourceText never shows an opaque id; a reset's description carries the backup version when its target is a backup point."
+}

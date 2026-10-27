@@ -1,0 +1,18 @@
+<!-- HEADER BLOCK — Tracy minimal chrome, used by the `landing` layout only.
+     A landing page carries no navigation: brand on the left, and whatever single call-to-action the
+     owner publishes to `header-r` on the right. The CTA is a module rather than baked markup so it
+     stays editable (editability-standards.md). -->
+<header class="header-block header-block-1 tracy-nav tracy-nav--minimal">
+  <div class="container">
+    <div class="header-wrap d-flex align-items-center justify-content-between">
+      <jdoc:include type="element" name="logo" />
+
+      <div class="t4-header-r d-flex align-items-center">
+        <jdoc:include type="modules" name="header-r" style="raw" />
+
+        <jdoc:include type="element" name="header-theme-toggle" />
+      </div>
+    </div>
+  </div>
+</header>
+<!-- // HEADER BLOCK -->

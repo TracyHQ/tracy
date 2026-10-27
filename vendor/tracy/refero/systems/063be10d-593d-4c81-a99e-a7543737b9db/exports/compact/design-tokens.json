@@ -1,0 +1,74 @@
+{
+  "color": {
+    "signal-violet": {
+      "$value": "#5f79ff",
+      "$type": "color",
+      "$description": "Signal Violet — Primary action fill, active nav state, icon accent strokes, focused border — the single chromatic anchor that makes buttons feel switched on against the white canvas"
+    },
+    "mint-pulse": {
+      "$value": "#01fe93",
+      "$type": "color",
+      "$description": "Mint Pulse — Green action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page background, card surface, button text on violet fill, inverted surface for nav float"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, heading text, hairline borders, icon strokes, footer ink"
+    },
+    "fog-gray": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Fog Gray — Card surface lift, subtle background blocks, muted link backgrounds"
+    },
+    "mist-gray": {
+      "$value": "#a6a6a6",
+      "$type": "color",
+      "$description": "Mist Gray — Muted nav text, secondary borders, placeholder strokes"
+    },
+    "ash-gray": {
+      "$value": "#4d4d4d",
+      "$type": "color",
+      "$description": "Ash Gray — Body secondary text, subdued copy, supporting label color"
+    },
+    "smoke-gray": {
+      "$value": "#9c9c9c",
+      "$type": "color",
+      "$description": "Smoke Gray — Tertiary borders, disabled or inactive outlines"
+    },
+    "slate-gray": {
+      "$value": "#707070",
+      "$type": "color",
+      "$description": "Slate Gray — Helper text, metadata, fine print"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "os-studio-grotesk": {
+      "$value": "OS Studio Grotesk",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface — geometric grotesque used for nav, buttons, body copy, cards, and most interface text at sizes 12–24px. At 40–72px it serves as secondary display when paired with the serif. Slightly negative tracking (-0.017em to -0.020em) tightens dense UI labels."
+    },
+    "os-chronik": {
+      "$value": "OS Chronik",
+      "$type": "fontFamily",
+      "$description": "Display serif used for editorial headlines like 'Build • Launch • Run' and 'Join the Appcelerator' — the 300 weight is the signature: most product sites push serifs to 400–600, but this light cut lets headlines read as quiet announcements rather than shouts. Tighter tracking at 72px (-0.020em) keeps the long descenders visually anchored."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://openserv.ai",
+      "siteName": "OpenServ",
+      "extractedAt": "2026-06-03T15:42:58.476Z",
+      "variant": "compact"
+    }
+  }
+}

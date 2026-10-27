@@ -1,0 +1,64 @@
+{
+  "id": "QA-UNIT-REG-PR-1489-quickstart-refresh-etag-happy",
+  "itemIds": ["regression:REG-PR-1489-quickstart-refresh-etag"],
+  "requirement": "The releases refresh asks GitHub with If-None-Match, reads each asset once, and waits for the reset when the quota is low",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1489-quickstart-refresh-etag.json",
+    "ref": "PR #1489 (fix); fix evidence: 19/10/2026: stands wo2 (09:52Z) and wodsft (12:30Z, 12:55Z) failed provisioning with 'quickstart download failed' (403) while four stands shared one GitHub token.",
+    "invariant": "All four tests report ok: an unchanged list is one conditional request answered 304 with no release row rewritten; a changed list downloads no asset already read under the same id; a token under 10% of its quota makes no request until X-RateLimit-Reset; a 403 with x-ratelimit-remaining 0 is logged as the rate limit with its reset time (pre-fix: every 10-minute cycle re-downloaded ~95 assets, four stands on one token spent 5,000 requests an hour and provisioning got 403 on the quickstart download).",
+    "productSources": ["apps/tracy-web/src/lib/quickstart-releases.js:744"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/local-releases.js:103 createReadStream() with a computed path",
+      "apps/tracy-web/src/lib/local-releases.js:194 readFile() with a computed path",
+      "apps/tracy-web/src/lib/local-releases.js:220 readFile() with a computed path",
+      "apps/tracy-web/src/lib/local-releases.js:240 readFile() with a computed path",
+      "apps/tracy-web/src/lib/local-releases.js:269 readFile() with a computed path",
+      "apps/tracy-web/src/lib/quickstart-releases.js:589 readFile() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "an unchanged list is asked with If-None-Match",
+    "a list that changed re-reads only the assets",
+    "a token below 10% of its quota waits",
+    "a 403 with x-ratelimit-remaining: 0 is logged"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1489-quickstart-refresh-etag"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1489-quickstart-refresh-etag",
+    "pr": 1489,
+    "kind": "fix",
+    "area": "web/quickstart-releases",
+    "file": "tests/regression/cases/REG-PR-1489-quickstart-refresh-etag.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/quickstart-releases-etag.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "an unchanged list is asked with If-None-Match",
+    "a list that changed re-reads only the assets",
+    "a token below 10% of its quota waits",
+    "a 403 with x-ratelimit-remaining: 0 is logged"
+  ],
+  "timeoutS": 600
+}

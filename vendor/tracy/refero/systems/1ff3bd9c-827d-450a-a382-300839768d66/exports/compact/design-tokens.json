@@ -1,0 +1,39 @@
+{
+  "color": {
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Page canvas, full-bleed photography backgrounds, nav bar surface"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary text, navigation borders, pill button borders and labels, icon strokes"
+    },
+    "iron-gray": {
+      "$value": "#4d4d4d",
+      "$type": "color",
+      "$description": "Iron Gray — Muted secondary text and low-emphasis nav borders — the only intermediate neutral permitted in the scale"
+    },
+    "spark-lime": {
+      "$value": "#d3fd50",
+      "$type": "color",
+      "$description": "Spark Lime — Sole accent — appears exclusively as a hand-drawn stroke or ring marking a single word in a headline; never as fill, never as background"
+    }
+  },
+  "font": {
+    "lausanne": {
+      "$value": "Lausanne",
+      "$type": "fontFamily",
+      "$description": "Exclusive typeface for all UI. Weight 300 for display and large headings to create a whisper-light monumental effect against dark photography; weight 400 for body, buttons, and small UI. The dramatic size range (11px meta text up to 137px display) with matching line-height compression (0.70 at 137px) turns the single family into both signage and paragraph text. Substitute: Inter or Neue Haas Grotesk for closest geometric neutrality."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://k72.ca",
+      "siteName": "Agence K72",
+      "extractedAt": "2026-06-03T20:36:00.675Z",
+      "variant": "compact"
+    }
+  }
+}

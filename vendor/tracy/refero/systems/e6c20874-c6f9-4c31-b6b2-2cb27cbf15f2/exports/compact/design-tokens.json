@@ -1,0 +1,29 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Bone — Page canvas, card surfaces, section backgrounds — the only non-black color in the system"
+    },
+    "pressed-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pressed Ink — All text, all borders, all icons, all link states, nav strokes, heading rules — the entire interface communicates in pure black against Bone"
+    }
+  },
+  "font": {
+    "munken-sans-web": {
+      "$value": "Munken Sans Web",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for everything. Munken Sans is a Swedish editorial grotesque designed for print — the custom web version preserves the paper-origin feel. Weight 900 at 230px creates the signature display headlines (e.g. 'HOPE'). Weight 700 at 30–40px for section headings. Weight 400 at 16–20px for body. The single-family, three-weight system is the typographic identity — do not introduce a secondary face."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://surface.arcticvolume.com",
+      "siteName": "Surface",
+      "extractedAt": "2026-06-03T20:02:30.249Z",
+      "variant": "compact"
+    }
+  }
+}

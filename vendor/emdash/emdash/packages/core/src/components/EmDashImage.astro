@@ -1,0 +1,336 @@
+---
+/**
+ * EmDash Image component
+ *
+ * Renders images with responsive srcset for CDN providers that support it.
+ * Uses the provider's getSrc function for URL-based image transformations.
+ *
+ * Usage:
+ * ```astro
+ * ---
+ * import { Image } from "emdash/ui";
+ * ---
+ * <Image image={post.data.featured_image} />
+ *
+ * <!-- With overrides -->
+ * <Image image={post.data.featured_image} class="hero" />
+ * ```
+ *
+ * When the image value carries a `darkVariant`, both images are rendered and
+ * CSS shows the one matching the page's color scheme. See the dark mode guide
+ * for the `<html>` class convention and how to override the selectors.
+ */
+import type { ImageValue, MediaValue } from "../fields/types.js";
+import type { HTMLAttributes } from "astro/types";
+import { Image as AstroImage, getImage } from "astro:assets";
+import type { ImageEmbed } from "../media/types.js";
+import { getMediaProvider } from "../media/provider-loader.js";
+import { normalizeLegacyExternalMediaValue } from "../media/normalize.js";
+import { buildRenderMediaUrl } from "../media/url.js";
+import {
+	buildResponsiveImage,
+	toAbsoluteMediaUrl,
+	RESPONSIVE_BREAKPOINTS,
+} from "../media/responsive.js";
+import { getPublicOrigin } from "../api/public-url.js";
+import { focalPointToObjectPosition } from "../media/focal-point.js";
+
+interface Props extends Omit<
+	HTMLAttributes<"img">,
+	"src" | "width" | "height"
+> {
+	/** Image value from content field or media library */
+	image: ImageValue | string | undefined | null;
+	/**
+	 * Image shown in a dark color scheme. Defaults to `image.darkVariant`;
+	 * pass it explicitly when the dark image comes from another field.
+	 */
+	darkVariant?: MediaValue | string | undefined | null;
+	/** Override alt text (uses image.alt by default) */
+	alt?: string;
+	/** Override width (uses image.width by default) */
+	width?: number;
+	/** Override height (uses image.height by default) */
+	height?: number;
+	/** Priority loading (disables lazy loading) */
+	priority?: boolean;
+	/** Render the LQIP placeholder as an inline background. Disable for strict CSP. */
+	placeholder?: boolean;
+}
+
+const {
+	image,
+	darkVariant,
+	alt,
+	width,
+	height,
+	priority,
+	placeholder = true,
+	class: className,
+	id,
+	...attrs
+} = Astro.props;
+
+// Normalize string URLs to object form
+function normalizeImage(
+	img: MediaValue | string | undefined | null
+): MediaValue | null {
+	if (!img) return null;
+	if (typeof img === "string") {
+		return { id: "", src: img };
+	}
+	return normalizeLegacyExternalMediaValue(img);
+}
+
+/**
+ * Build the URL for a local image. Prefers `meta.storageKey`; falls back to
+ * the internal proxy with `img.id` when no storage key is available.
+ */
+function buildLocalImageUrl(img: MediaValue): string {
+	return buildRenderMediaUrl(Astro.locals.emdash?.getPublicMediaUrl, {
+		storageKey: img.meta?.storageKey as string | undefined,
+		id: img.id,
+	});
+}
+
+/**
+ * Generate srcset using provider's getSrc function
+ */
+function generateSrcset(
+	getSrc: NonNullable<ImageEmbed["getSrc"]>,
+	maxWidth: number,
+	aspectRatio?: number
+): string {
+	return RESPONSIVE_BREAKPOINTS.filter((w) => w <= maxWidth * 2) // Include up to 2x for retina
+		.map((w) => {
+			const h = aspectRatio ? Math.round(w / aspectRatio) : undefined;
+			return `${getSrc({ width: w, height: h })} ${w}w`;
+		})
+		.join(", ");
+}
+
+interface ResolvedImage {
+	src: string;
+	srcset?: string;
+	sizes?: string;
+	astroImageSrc: string;
+	width?: number;
+	height?: number;
+	generatedStyle: string;
+}
+
+/**
+ * Resolve the source URL, srcset, dimensions, and LQIP style for one media
+ * value. Props override the value's own dimensions.
+ */
+async function resolveImage(img: MediaValue): Promise<ResolvedImage> {
+	const finalWidth = width ?? img.width;
+	const finalHeight = height ?? img.height;
+	const aspectRatio =
+		finalWidth && finalHeight ? finalWidth / finalHeight : undefined;
+
+	let src = "";
+	let srcset: string | undefined;
+	let sizes: string | undefined;
+	let astroImageSrc = "";
+
+	const providerId = img.provider ?? "local";
+
+	if (providerId === "local" || img.src) {
+		src = img.src || buildLocalImageUrl(img);
+		const publicOrigin = getPublicOrigin(Astro.url, Astro.locals.emdash?.config);
+		const absoluteSrc = toAbsoluteMediaUrl(src, publicOrigin);
+		if (finalWidth && finalHeight && absoluteSrc.startsWith(`${publicOrigin}/`)) {
+			astroImageSrc = absoluteSrc;
+		} else {
+			const optimized = await buildResponsiveImage(getImage, {
+				src: absoluteSrc,
+				width: finalWidth,
+				height: finalHeight,
+			});
+			if (optimized) {
+				src = optimized.src;
+				srcset = optimized.srcset;
+				sizes = optimized.sizes;
+			}
+		}
+	} else {
+		// External provider
+		try {
+			const provider = await getMediaProvider(providerId);
+			if (provider) {
+				const result = provider.getEmbed(img, {
+					width: finalWidth,
+					height: finalHeight,
+				});
+				const embed = result instanceof Promise ? await result : result;
+				if (embed.type === "image") {
+					src = embed.src;
+
+					// Generate srcset if provider supports dynamic sizing
+					if (embed.getSrc) {
+						// Use image width, or default to 1200 for responsive images
+						const maxWidth = finalWidth || 1200;
+						srcset = generateSrcset(embed.getSrc, maxWidth, aspectRatio);
+						sizes = finalWidth
+							? `(min-width: ${finalWidth}px) ${finalWidth}px, 100vw`
+							: "100vw";
+					}
+				}
+			} else {
+				console.warn(`[EmDashImage] Provider not found: ${providerId}`);
+			}
+		} catch (error) {
+			console.error(
+				`[EmDashImage] Failed to get embed for image ${img.id}:`,
+				error
+			);
+		}
+
+		// Fallback to local URL if provider failed
+		if (!src) {
+			src = buildLocalImageUrl(img);
+		}
+	}
+
+	// Build placeholder background style. Prefer the first-class MediaValue fields;
+	// fall back to `meta` for snapshots stored before LQIP was promoted off `meta`.
+	const blurhash = img.blurhash ?? (img.meta?.blurhash as string | undefined);
+	const dominantColor =
+		img.dominantColor ?? (img.meta?.dominantColor as string | undefined);
+
+	let placeholderStyle = "";
+	if (placeholder && blurhash) {
+		const { blurhashToImageCssString } = await import("@unpic/placeholder");
+		placeholderStyle = blurhashToImageCssString(blurhash);
+	} else if (placeholder && dominantColor) {
+		placeholderStyle = `background-color: ${dominantColor};`;
+	}
+
+	// The focal point travels with the media value, so the dark variant gets
+	// its own object-position rather than inheriting the light image's.
+	const objectPosition = focalPointToObjectPosition(img.focalX, img.focalY);
+	const generatedStyle = [
+		placeholderStyle,
+		objectPosition ? `object-position: ${objectPosition};` : "",
+	]
+		.filter(Boolean)
+		.join(" ");
+
+	return {
+		src,
+		srcset,
+		sizes,
+		astroImageSrc,
+		width: finalWidth,
+		height: finalHeight,
+		generatedStyle,
+	};
+}
+
+const img = normalizeImage(image);
+const darkSource =
+	darkVariant ?? (typeof image === "object" ? image?.darkVariant : undefined);
+const dark = img ? normalizeImage(darkSource) : null;
+const finalAlt = alt ?? img?.alt ?? "";
+
+const resolved = img ? await resolveImage(img) : null;
+const resolvedDark = dark ? await resolveImage(dark) : null;
+
+function imgProps(
+	r: ResolvedImage,
+	variantClass: string | undefined,
+	elementId: string | null | undefined
+): Record<string, unknown> {
+	return {
+		id: elementId,
+		src: r.src,
+		srcset: r.srcset,
+		sizes: r.sizes,
+		width: r.width,
+		height: r.height,
+		alt: finalAlt,
+		loading: priority ? "eager" : "lazy",
+		fetchpriority: priority ? "high" : undefined,
+		decoding: "async",
+		style: r.generatedStyle || undefined,
+		class: ["emdash-image-media", variantClass, className].filter(Boolean).join(" "),
+		...attrs,
+	};
+}
+
+const lightClass = resolvedDark ? "emdash-image--light" : undefined;
+// Both variants render into the same document, so a caller-supplied `id` would
+// otherwise appear on two elements.
+const darkId = id ? `${id}--dark` : undefined;
+const astroClass = (variantClass: string | undefined) =>
+	[variantClass, className].filter(Boolean).join(" ") || undefined;
+---
+
+{
+	resolved && resolved.astroImageSrc ? (
+		<AstroImage
+			id={id}
+			src={resolved.astroImageSrc}
+			alt={finalAlt}
+			width={resolved.width}
+			height={resolved.height}
+			priority={priority}
+			layout="constrained"
+			loading={priority ? "eager" : "lazy"}
+			decoding="async"
+			class={astroClass(lightClass)}
+			style={resolved.generatedStyle || undefined}
+			{...attrs}
+		/>
+	) : resolved && resolved.src ? (
+		<img {...imgProps(resolved, lightClass, id)} />
+	) : null
+}
+{
+	resolvedDark && resolvedDark.astroImageSrc ? (
+		<AstroImage
+			id={darkId}
+			src={resolvedDark.astroImageSrc}
+			alt={finalAlt}
+			width={resolvedDark.width}
+			height={resolvedDark.height}
+			priority={priority}
+			layout="constrained"
+			loading={priority ? "eager" : "lazy"}
+			decoding="async"
+			class={astroClass("emdash-image--dark")}
+			style={resolvedDark.generatedStyle || undefined}
+			{...attrs}
+		/>
+	) : resolvedDark && resolvedDark.src ? (
+		<img {...imgProps(resolvedDark, "emdash-image--dark", darkId)} />
+	) : null
+}
+
+<style>
+	.emdash-image-media {
+		max-width: 100%;
+		height: auto;
+	}
+</style>
+
+<style is:global>
+	/* A `dark` or `light` class on <html> wins over the system preference. */
+	:where(:root.dark) .emdash-image--light {
+		display: none;
+	}
+	:where(:root.light) .emdash-image--dark {
+		display: none;
+	}
+	@media (prefers-color-scheme: dark) {
+		:where(:root:not(.light)) .emdash-image--light {
+			display: none;
+		}
+	}
+	@media (prefers-color-scheme: light) {
+		:where(:root:not(.dark)) .emdash-image--dark {
+			display: none;
+		}
+	}
+</style>

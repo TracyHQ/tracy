@@ -1,0 +1,242 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "title": "IBM",
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#f4f4f4"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "#edf5ff"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "#161616"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "#525252"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "#6f6f6f"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "#8d8d8d"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "#c6c6c6"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "#e0e0e0"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#0f62fe"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "color-mix(in oklab, var(--wp--preset--color--accent), black 8%)"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "color-mix(in oklab, var(--wp--preset--color--accent), black 14%)"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "#24a148"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "#f1c21b"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "#da1e28"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "\"IBM Plex Sans\", \"Helvetica Neue\", Arial, sans-serif"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "\"IBM Plex Sans\", \"Helvetica Neue\", Arial, sans-serif"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "\"IBM Plex Mono\", \"SF Mono\", Menlo, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "12px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "14px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "16px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "18px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "20px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "32px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "42px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "60px"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "1312px",
+      "wideSize": "1312px"
+    },
+    "custom": {
+      "leading": {
+        "body": "1.5",
+        "tight": "1.17"
+      },
+      "tracking": {
+        "display": "0"
+      },
+      "sectionY": {
+        "desktop": "96px",
+        "tablet": "72px",
+        "phone": "48px"
+      },
+      "radius": {
+        "sm": "0px",
+        "md": "0px",
+        "lg": "0px",
+        "pill": "9999px"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0 2px 6px rgba(0, 0, 0, 0.12)"
+      },
+      "focusRing": "0 0 0 2px #ffffff, 0 0 0 4px #0f62fe",
+      "motion": {
+        "fast": "110ms",
+        "base": "180ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.2, 0, 0.38, 0.9)"
+      },
+      "container": {
+        "max": "1312px",
+        "gutterDesktop": "32px",
+        "gutterTablet": "24px",
+        "gutterPhone": "16px"
+      },
+      "tracy": {
+        "inspiration": "ibm"
+      }
+    }
+  }
+}

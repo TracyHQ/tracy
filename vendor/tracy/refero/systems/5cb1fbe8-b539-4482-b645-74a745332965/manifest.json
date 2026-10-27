@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "5cb1fbe8-b539-4482-b645-74a745332965",
+  "status": "complete",
+  "name": "Swwim",
+  "url": "https://styles.refero.design/style/5cb1fbe8-b539-4482-b645-74a745332965",
+  "sourceWebsite": "https://www.weswwim.com",
+  "extractedAt": "2026-06-03T20:37:27.198Z",
+  "capturedAt": "2026-10-08T05:12:03.720185+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Cobalt wave with floating luxury objects.\n\nA vivid blue ocean where oversized white type is pierced by editorial product still-lifes.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7d54004d-d751-4c1f-8a12-0b866b634691.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ccbc70e9ed2f06bcbfce9d82feb1ceb2155c5e392baf5c82b8a66b0818e6775a",
+      "bytes": 17400
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b725f51e88bb59c9554516a4c4bc7c88bfb53acd6672e8ae9c2f6bc1814846f4",
+      "bytes": 174219
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a1628dd557f38871f7b34e58f2fc23c5a02b1040b2a4b2d4340716a6da0c4615",
+      "bytes": 14118
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7cfc6fbb98094cf7d74ceca56c32a559b5cb70ee8f6aeb98cde4d0193678349f",
+      "bytes": 10425
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b84cb6a078fefe4d9c6ca1ad63d4ac824c76066671bed46892ac6ab3f52d35dd",
+      "bytes": 10123
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "04223ed9b3493281faa7f8f1875b6b4e085d856597d07da9b5da3b15b76020de",
+      "bytes": 2608
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "5bc02d77e7da1d4dfa5a35f19511717ed93410e9840737926114ac47c604a18a",
+      "bytes": 560
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "44cf015392d18291e83fdc3746e14fa3c0a0000b6f9f68360525b5fc21e0c06d",
+      "bytes": 577
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6b423fc78f385af0968d7f295a09234bf9d6f6537490f90a0ad796ef056dab9e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "59795592f0396f09598ad76da4cf772d042658136f7414e0efb17ce1b301d022",
+      "bytes": 39905
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "264740e958245638dae927a27d3efc77deaaec33d0881852f3ff5aa7e69907e6",
+      "bytes": 20867
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "b23b90ab4dae25dd09d5063354e358720ebe4a07b1acf50ba2644c906de48d03",
+      "bytes": 42225
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "23e84e79cb4875f17c3ebd48ea5586c4beefc05aac1112ccaa773bfae1953d61",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6d1f303673147c6978d435673f96e96975262fd48171220adda2b603af9bb1f1",
+      "bytes": 1647
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "764f87a13b87031df20976410ca0f0efa71fa5a77b7e36d29d56f3bc9bc4796d",
+      "bytes": 2165
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0e8db8d0-4d8f-48ac-a8e7-aaea9601e3ce",
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "3e52dd36-6ab1-48c6-bc40-47ef6d33abc2",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5cb1fbe8-b539-4482-b645-74a745332965",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6b667ffc-5158-4000-9252-3a107d5161ee",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+    "8875b14e-c59a-492f-8780-8027a480f21c",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b7fc2173-c9b1-45ed-bd3a-9999320b3248",
+    "d7a73e16-4b3e-4b9d-aef2-2c31a9db7457",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "edc0c03e-8c20-4e22-badd-2735fcb9f4a8",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "color": {
+    "cyan-pulse": {
+      "$value": "#00bcff",
+      "$type": "color",
+      "$description": "Cyan Pulse — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "voltage-cyan": {
+      "$value": "#53eafd",
+      "$type": "color",
+      "$description": "Voltage Cyan — Announcement bar border, decorative code-editor highlights — brighter, more electric than Cyan Pulse, used for outline accents only"
+    },
+    "plasma-violet": {
+      "$value": "#8e51ff",
+      "$type": "color",
+      "$description": "Plasma Violet — Violet supporting accent for decorative details and low-frequency emphasis."
+    },
+    "signal-magenta": {
+      "$value": "#e12afb",
+      "$type": "color",
+      "$description": "Signal Magenta — Hiring nav link, emphasis words inside testimonial bodies — a second accent reserved for editorial moments, not chrome"
+    },
+    "halftone-blue": {
+      "$value": "#74d4ff",
+      "$type": "color",
+      "$description": "Halftone Blue — Soft highlight wash behind cards and decorative code blocks — desaturated cyan used as a tint, never as text or border"
+    },
+    "deep-teal": {
+      "$value": "#104e64",
+      "$type": "color",
+      "$description": "Deep Teal — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ember-pink": {
+      "$value": "#ed6aff",
+      "$type": "color",
+      "$description": "Ember Pink — Inline code-editor decoration, soft illustration tint — decorative, not a state color"
+    },
+    "alarm-red": {
+      "$value": "#ff2056",
+      "$type": "color",
+      "$description": "Alarm Red — Red supporting accent for decorative details and low-frequency emphasis"
+    },
+    "carbon": {
+      "$value": "#314158",
+      "$type": "color",
+      "$description": "Carbon — Primary body text, icon strokes, heading default — the dominant dark neutral across the entire UI"
+    },
+    "graphite": {
+      "$value": "#1d293d",
+      "$type": "color",
+      "$description": "Graphite — Dark surface fill (testimonial cards, inverse blocks), strongest emphasis text"
+    },
+    "slate": {
+      "$value": "#45556c",
+      "$type": "color",
+      "$description": "Slate — Mid-tone text, secondary icon strokes, muted body copy"
+    },
+    "iron": {
+      "$value": "#62748e",
+      "$type": "color",
+      "$description": "Iron — Helper text, tertiary icon strokes, button label color in dark contexts"
+    },
+    "fog": {
+      "$value": "#6a7282",
+      "$type": "color",
+      "$description": "Fog — Button label on light surfaces, icon default, disabled-adjacent text"
+    },
+    "ash": {
+      "$value": "#99a1af",
+      "$type": "color",
+      "$description": "Ash — Captions, timestamps, lowest-priority metadata"
+    },
+    "mist": {
+      "$value": "#cad5e2",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, input outlines, divider lines"
+    },
+    "porcelain": {
+      "$value": "#e2e8f0",
+      "$type": "color",
+      "$description": "Porcelain — Page canvas, default border color, subtle surface separation"
+    },
+    "paper": {
+      "$value": "#f1f5f9",
+      "$type": "color",
+      "$description": "Paper — Card surface, elevated panel, code editor body fill"
+    },
+    "pure": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure — Inset cards on light gray canvas, button text on cyan fill, modal surfaces"
+    }
+  },
+  "font": {
+    "ibm-plex-sans": {
+      "$value": "IBM Plex Sans",
+      "$type": "fontFamily",
+      "$description": "Primary interface and display typeface. Weight 400 carries body, button labels, nav, and helper text; weight 700 is reserved for headings, large numerics, and the single word inside a headline that needs to be brand-colored. The geometric-but-humanist Plex forms give the UI a terminal-instrument feel without the coldness of a pure grotesque. The 128px step is used for the oversized code-output flourish in the hero."
+    },
+    "ia-writer-mono": {
+      "$value": "iA Writer Mono",
+      "$type": "fontFamily",
+      "$description": "All code, file names, inline technical labels, the 'Hello!' output render, and monospaced UI affordances. Its slightly humanized monospace proportions pair cleanly with Plex Sans at the same sizes — they look like they were drawn for each other. Weight 700 is used for keywords inside the code editor mockup."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://val.town",
+      "siteName": "Val Town",
+      "extractedAt": "2026-06-03T15:35:13.618Z",
+      "variant": "compact"
+    }
+  }
+}

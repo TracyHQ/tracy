@@ -1,0 +1,63 @@
+//
+// Tracy — front-end editing chrome.
+// The blank shipped VirtueMart rules in here, which compiled into template.css and loaded on
+// every page of a design that has no shop. Removed brace-counted, not by regex: they nest.
+//
+// Template variables
+@import "vars";
+@import "../../../plugins/system/t4/themes/base/scss/frontend-edit";
+
+// Improve style
+// ------------------------------
+select {
+  font-family: $font-family-sans-serif;
+}
+
+.accordion {
+  padding: 0;
+}
+
+.choices[data-type*="select-one"],
+.choices[data-type*="select-multiple"] {
+  .choices__item {
+    display: flex;
+    align-items: center;
+    gap: calc($spacer / 2);
+  }
+
+  .choices__list--multiple {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .choices__button_joomla {
+    background: $gray-200;
+    color: $gray-600;
+    border: 0;
+    border-radius: 50%;
+    height: 20px;
+    overflow: hidden;
+    text-indent: -9999rem;
+    position: relative;
+    transition: $transition-base;
+    width: 20px;
+
+    &:hover, &:focus, &:active {
+      background: $danger;
+      color: #fff; /* ds-keep: the remove mark on a Joomla frontend-editing chip, editor chrome on the danger fill */
+      cursor: pointer;
+    }
+
+    &::before {
+      content: "×";
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      position: absolute;
+      text-indent: 0;
+      left: 4px;
+      top: 1px;
+      height: 16px;
+    }
+  }
+}

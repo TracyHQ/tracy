@@ -1,0 +1,69 @@
+{
+  "color": {
+    "solder-orange": {
+      "$value": "#ff6c2f",
+      "$type": "color",
+      "$description": "Solder Orange — Primary action background, call-to-action pills, featured product highlight — the single chromatic accent that makes interactive elements feel switched on against the otherwise neutral canvas"
+    },
+    "bone": {
+      "$value": "#d7cdb8",
+      "$type": "color",
+      "$description": "Bone — Warm beige wash — soft highlight surfaces and muted decorative fills that keep the palette from feeling clinical"
+    },
+    "signal-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Signal White — Card surfaces, content backgrounds, reversed text on dark fills — the clean base layer where product photography sits"
+    },
+    "linen-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Linen Gray — Page canvas, hairline borders, nav separators, input borders — the dominant neutral providing the structural baseline across the entire interface"
+    },
+    "fog": {
+      "$value": "#c2c2c2",
+      "$type": "color",
+      "$description": "Fog — Muted surface fills, secondary panel backgrounds, disabled states"
+    },
+    "soft-mist": {
+      "$value": "#dddee2",
+      "$type": "color",
+      "$description": "Soft Mist — Tertiary surface tint — subtle elevation step between canvas and card"
+    },
+    "ash": {
+      "$value": "#a3a3a3",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, secondary nav labels, icon strokes at rest, footer meta — the quiet voice for non-primary content"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Primary text, filled button backgrounds, high-contrast borders, icon fills — the authority tone for headlines and structural elements"
+    },
+    "deep-charcoal": {
+      "$value": "#191919",
+      "$type": "color",
+      "$description": "Deep Charcoal — Near-black surface for the floating nav pill, dark overlay panels, and any near-pure-black surface that needs slightly less harshness than pure black"
+    }
+  },
+  "font": {
+    "suisse-intl": {
+      "$value": "Suisse Intl",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all display, heading, body, and UI text. The 100px display size paired with -0.0300em tracking and 0.85 line-height creates headlines that read as tightly engineered display specimens — a grotesque with neo-grotesque calm. Weight 500 is used sparingly for emphasis in nav and labels; weight 400 carries body and most headings. Substitute with Inter or Neue Haas Grotesk if Suisse Intl is unavailable."
+    },
+    "suisse-intl-mono": {
+      "$value": "Suisse Intl Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced companion for technical labels, button text, nav items, tag captions, and any interface element that needs to read as instrument-grade or technical. Letter-spacing stays normal — the mono face provides the engineering voice while the grotesk provides the editorial voice. Substitute with JetBrains Mono or IBM Plex Mono."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://telepathicinstruments.com",
+      "siteName": "Telepathic Instruments",
+      "extractedAt": "2026-06-03T16:57:35.355Z",
+      "variant": "compact"
+    }
+  }
+}

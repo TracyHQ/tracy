@@ -1,0 +1,354 @@
+{
+  "dos": [
+    "Set display type at 60px minimum when it carries meaning — anything smaller undermines the editorial voice.",
+    "Use 9999px radius on every button, tag, badge, and image card. The pill is the shape language.",
+    "Reach for the Olive→Violet linear-gradient only on display headlines. Never on body type, buttons, or backgrounds.",
+    "Pair the Vellum Lavender highlight with Inkwell Teal text — the contrast is 8:1+, never lose it to a lighter background.",
+    "Use the 550 weight of angellist for labels and button text; reserve 500 for inline emphasis. Never use 700+ — the system speaks in one voice.",
+    "Keep body text at 18px on the canonical reading sections. 16px is the floor for UI chrome only.",
+    "Separate major sections with the horizontal band stack — let the palette breathe as its own composition."
+  ],
+  "donts": [
+    "Don't set display type in pure Paper White on dark — the gradient IS the display color, not a fallback.",
+    "Don't introduce a second accent color. The system is monochrome + lavender; any other hue breaks the annual-report register.",
+    "Don't use 2px or 4px radii on interactive elements — those values are reserved for the lavender text highlight only.",
+    "Don't center-align body copy. The system is asymmetric and editorial, left rail first.",
+    "Don't add drop shadows to cards or buttons. Elevation is handled by surface tone shifts (Sage → Paper White → Bone), never by blur.",
+    "Don't break the 9999px pill on the nav CTA, even at desktop scale. The roundedness scales with the layout.",
+    "Don't use the Olive→Violet gradient at body sizes — it reads muddy below 60px."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#001d21",
+      "name": "Inkwell Teal",
+      "role": "Primary text, heading fill, hero background, card backgrounds for high-contrast panels",
+      "group": "brand"
+    },
+    {
+      "hex": "#bdbbff",
+      "name": "Vellum Lavender",
+      "role": "Signature accent — highlight washes behind text, section badges, decorative strokes, the right-hand terminus of display gradients",
+      "group": "accent"
+    },
+    {
+      "hex": "#ccd5d6",
+      "name": "Sage Mist",
+      "role": "Dominant canvas background, hairline borders, dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Card surfaces, image panels, inverse text on dark",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f9f9f7",
+      "name": "Bone",
+      "role": "Warm off-white alt surface, muted body text on dark backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eaebea",
+      "name": "Driftwood",
+      "role": "Subtle banded sections, tertiary surface layer",
+      "group": "neutral"
+    },
+    {
+      "hex": "#647577",
+      "name": "Slate Veil",
+      "role": "Mid-gray supporting text, muted UI labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#43585a",
+      "name": "Pewter Deep",
+      "role": "Dark banded section fills, layered surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#213a3d",
+      "name": "Gunmetal",
+      "role": "Even darker banded fills, image overlay scrim base",
+      "group": "neutral"
+    },
+    {
+      "hex": "#002b31",
+      "name": "Patina",
+      "role": "Deepest teal — link backgrounds, footer anchors",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a7b0b1",
+      "name": "Frost",
+      "role": "Cool mid-gray surface accent",
+      "group": "neutral"
+    },
+    {
+      "hex": "#859394",
+      "name": "Pebble",
+      "role": "Muted surface layer for stacked color bands",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b2bfc1",
+      "name": "Mist",
+      "role": "Secondary border tone",
+      "group": "neutral"
+    },
+    {
+      "hex": "#898ee5",
+      "name": "Olive Violet Wash",
+      "role": "Display type gradient — mid-stop of the olive→violet hero fill",
+      "group": "accent",
+      "gradient": "linear-gradient(98.78deg, rgb(127, 120, 51) 6.69%, rgb(137, 142, 229) 40.89%, rgb(137, 142, 229) 83.02%, rgb(134, 123, 54) 100.19%)"
+    }
+  ],
+  "layout": "The page model is full-bleed for the dark hero and the band-stack dividers, then constrained to a ~1280px max-width content rail for the editorial sections. Hero: full-viewport-width dark teal field with monumental display type that bleeds past the edges — no centered headline, no subtitle lockup, just type and a single body subline. Sections alternate: dark hero → white editorial block → three-up image cards → full-bleed color band stack → next section. The editorial blocks use a 60/40 two-column split (heading left, body right) and generous 80–96px vertical padding. Navigation is a minimal top bar (logo left, links center, pill CTA right) on the dark hero. The rhythm is: dramatic opening, quiet reading sections, visual card break, more quiet reading — like turning pages in a print annual.",
+  "imagery": "Imagery is sparse and editorial rather than decorative. The few photographs (e.g. the laptop-on-cushion card) are treated as full-bleed card fills, tightly cropped, and overlaid with Paper White body text. There are no lifestyle contexts, no human subjects, no atmosphere shots — the object or surface is the subject. Color is used in lieu of imagery more often than not: solid Vellum Lavender and Inkwell Teal card panels stand in for photographs, making the layout feel more like a design annual than a product page. Icons are absent from the visible chrome; the wordmark and display type do the brand work alone.",
+  "similar": [
+    {
+      "why": "Same annual-report editorial register, monumental display type on dark, single accent color, pill-shaped controls, and a near-achromatic chrome",
+      "business": "Stripe Press"
+    },
+    {
+      "why": "Light, clean SaaS surface treatment with pill-shaped buttons, restrained palette, and oversized display type — though Angellist's hero is more typographic and less product-photography-driven",
+      "business": "Linear"
+    },
+    {
+      "why": "Editorial microsite language: massive custom display type, flat color band section dividers, restrained palette letting type carry the brand",
+      "business": "Figma Config"
+    },
+    {
+      "why": "Annual-report format with large display headlines, soft pastel accents on a near-white canvas, and a deliberately un-corporate editorial feel",
+      "business": "Notion Year in Review"
+    },
+    {
+      "why": "Pill-shaped nav and CTAs, warm off-white canvas, oversized display headings, and the same kind of confident type-led hierarchy",
+      "business": "Arc browser"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "9999px",
+      "links": "2px",
+      "buttons": "9999px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80-96px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#ccd5d6",
+      "name": "Sage Mist",
+      "level": 1,
+      "purpose": "Dominant page canvas and section dividers"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 2,
+      "purpose": "Card and image panel surfaces"
+    },
+    {
+      "hex": "#f9f9f7",
+      "name": "Bone",
+      "level": 3,
+      "purpose": "Warm alt-surface for nested content blocks"
+    },
+    {
+      "hex": "#eaebea",
+      "name": "Driftwood",
+      "level": 4,
+      "purpose": "Tertiary section banding"
+    },
+    {
+      "hex": "#001d21",
+      "name": "Inkwell Teal",
+      "level": 5,
+      "purpose": "Dark hero and feature-card backgrounds"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "none — flat, no shadow",
+      "element": "Feature Image Card"
+    },
+    {
+      "style": "none — the lavender fill against the canvas is sufficient separation",
+      "element": "Section Badge"
+    },
+    {
+      "style": "none — relies on fill, no elevation",
+      "element": "Pill Button"
+    }
+  ],
+  "northStar": "Editorial annual on matte paper",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.002
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.004
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.6,
+      "letterSpacing": -0.004
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.004
+    },
+    {
+      "role": "heading-sm",
+      "size": 28,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "heading-lg",
+      "size": 60,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.02
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 1.05,
+      "letterSpacing": -0.025
+    },
+    {
+      "role": "display-lg",
+      "size": 144,
+      "lineHeight": 1,
+      "letterSpacing": -0.025
+    },
+    {
+      "role": "display-xl",
+      "size": 260,
+      "lineHeight": 0.8,
+      "letterSpacing": -0.025
+    },
+    {
+      "role": "display-2xl",
+      "size": 288,
+      "lineHeight": 0.75,
+      "letterSpacing": -0.025
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Button — Filled",
+      "role": "Primary action control",
+      "description": "9999px radius. 4px vertical / 10–12px horizontal padding. Body weight 500 at 14–16px, letter-spacing -0.004em. Filled with Inkwell Teal (#001d21), text Paper White. No border. The pill shape is the signature — never square it."
+    },
+    {
+      "name": "Pill Button — Ghost / Outlined",
+      "role": "Secondary action on dark backgrounds",
+      "description": "9999px radius. 1px Paper White border, transparent fill, Paper White text. Same internal padding as filled variant. Used for the nav 'JOIN US' CTA on the dark bar."
+    },
+    {
+      "name": "Section Badge",
+      "role": "Eyebrow label above section headings",
+      "description": "9999px radius. Vellum Lavender (#bdbbff) fill, Inkwell Teal text. Body weight 500 at 13–14px. Padding 4px top/bottom, 10px sides. Functions as a soft category tag, e.g. '2024 BUILD'."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Full-width, Inkwell Teal (#001d21) background. Logo wordmark left in Paper White, nav links centered in Paper White at 14px/500, ghost pill CTA right. No drop shadow — flat against the dark."
+    },
+    {
+      "name": "Display Headline — Hero",
+      "role": "Page-level monumental type",
+      "description": "angellistDisplay 400 at 144–288px. Line-height 0.75–0.80 (negative leading — letters almost touch). Letter-spacing -0.025em. Fill is the Olive→Violet linear-gradient. Mixed weight variants of characters sit in the same line, creating a duotone letterform effect within a single word."
+    },
+    {
+      "name": "Display Headline — Section",
+      "role": "Sub-hero section opener",
+      "description": "angellistDisplay 400 at 60–80px on white, Inkwell Teal fill. Line-height 1.05–1.10. Letter-spacing -0.02em. Often paired with a lavender text-highlight on a key phrase."
+    },
+    {
+      "name": "Text Highlight",
+      "role": "Inline emphasis on a phrase within a heading",
+      "description": "Vellum Lavender (#bdbbff) rectangle behind one or two words of a heading. Crisp 2px corners, no padding adjustment — it sits flush behind the text baseline. Inkwell Teal text remains on top, contrast is still AAA."
+    },
+    {
+      "name": "Feature Image Card",
+      "role": "Three-up content card with overlay text",
+      "description": "Three equal cards in a row, 9999px radius. Each is a full-bleed image (or solid color block in Vellum Lavender, Inkwell Teal) with Paper White body text bottom-left, 16px, weight 400. No card shadow — the image IS the card."
+    },
+    {
+      "name": "Horizontal Band Stack",
+      "role": "Full-bleed section divider / color catalogue",
+      "description": "Stacked full-width horizontal bands in the surface palette (Sage Mist → Driftwood → Frost → Pewter Deep → Gunmetal → Inkwell Teal). Each band 40–60px tall. No gaps, no text — pure color rhythm. Functions as a typological signature between major content sections."
+    },
+    {
+      "name": "Two-Column Split Section",
+      "role": "Heading-left, body-right editorial layout",
+      "description": "60/40 split. Large display heading (heading-lg / display) left-aligned on left, body copy at 18px/1.6 right-aligned on right. Vertically centered. Sage Mist background, no card containers — text floats on canvas."
+    },
+    {
+      "name": "Body Paragraph",
+      "role": "Running text",
+      "description": "angellist 400 at 18px, line-height 1.6, letter-spacing -0.004em. Inkwell Teal on Sage Mist. Max width ~50ch. Never center-aligned."
+    },
+    {
+      "name": "Footer Anchor",
+      "role": "Bottom link/CTA",
+      "description": "Pill-shaped link with Patina (#002b31) background, Paper White text. 9999px radius. Same internal padding as nav ghost button."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display headlines — the brand's signature voice. Used from 28px section openers up to 288px hero type. Single weight (400) carries the system; size alone does the shouting. Tabular lining numerals and three stylistic sets (ss01–ss03) make this a purpose-built editorial face, not a system font fallback.",
+      "sizes": "28px, 38px, 60px, 80px, 144px, 260px, 288px",
+      "family": "angellistDisplay",
+      "weight": "400",
+      "lineHeight": "0.75, 0.80, 1.00, 1.05, 1.10, 1.15, 1.25, 1.30",
+      "substitute": "Inter Tight, Söhne Breit, or Suisse Int'l",
+      "letterSpacing": "-0.025em at 80px+ to -0.01em at 28px — tracking tightens as size grows",
+      "fontFeatureSettings": "\"lnum\" on, \"tnum\" on, \"ss01\" on, \"ss02\" on, \"ss03\" on"
+    },
+    {
+      "role": "Body, UI, and supporting type. 400 for body copy, 500/550 for labels, nav, and button text. The 550 weight is a half-step — a quiet way to add emphasis without bolding. Same stylistic sets as the display face keep the two families visually stitched together.",
+      "sizes": "13px, 14px, 16px, 18px, 20px, 144px",
+      "family": "angellist",
+      "weight": "400, 500, 550",
+      "lineHeight": "0.80, 1.00, 1.40, 1.50, 1.60",
+      "substitute": "Inter, Söhne, or Suisse Int'l",
+      "letterSpacing": "-0.004em at 16–20px, -0.002em at 13–14px, tightening to -0.05em only on micro-labels",
+      "fontFeatureSettings": "\"lnum\" on, \"tnum\" on, \"ss01\" on, \"ss02\" on, \"ss03\" on"
+    }
+  ],
+  "description": "Angellist's 2024 Year in Review reads as a printed editorial annual repurposed for the web — enormous display type set in a custom sans, a single chromatic accent, and surfaces that breathe. The system runs light: warm off-white canvases carry deep teal ink, while a soft lavender punctuates highlights, badges, and the signature gradient that floods the hero headlines. Everything rounds to a pill (9999px) — buttons, tags, nav anchors, even section labels — which makes the monumental type feel approachable rather than imposing. The result is confident, restrained, and slightly literary: an annual report, not a product page.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #001d21 (Inkwell Teal)\n- background: #ccd5d6 (Sage Mist) for page, #ffffff (Paper White) for cards\n- border: #ccd5d6 (Sage Mist) hairlines\n- accent: #bdbbff (Vellum Lavender)\n- display gradient: linear-gradient(98.78deg, #7f7833, #898ee5, #898ee5, #867b36)\n- primary action: no distinct CTA color\n\n## Example Component Prompts\n\n1. **Hero Headline**: Full-bleed #001d21 background, no max-width. Display type at 260px using angellistDisplay weight 400, line-height 0.80, letter-spacing -0.025em, fill with the Olive→Violet linear-gradient. Subline in angellist 400 at 18px, color #f9f9f7, 1.6 line-height, max-width 50ch.\n\n2. **Section Opener**: #ccd5d6 canvas. Eyebrow badge: #bdbbff fill, #001d21 text, 9999px radius, 4px 10px padding, 14px weight 500. Heading: angellistDisplay 400 at 80px, #001d21, line-height 1.05, letter-spacing -0.02em. Wrap one key phrase in a #bdbbff 2px-radius highlight.\n\n3. **Feature Image Card Grid**: Three equal cards, 9999px radius, no shadow. First card: #001d21 fill, Paper White body text at 16px bottom-left. Second card: #bdbbff fill, #001d21 text. Third card: full-bleed photograph. 32px gap between cards.\n\n4. **Pill Button**: 9999px radius, 4px 12px padding, #001d21 fill, #ffffff text, angellist weight 500 at 14px, letter-spacing -0.004em. Never add a border or shadow.\n\n5. **Horizontal Band Stack**: Full-bleed stack of 5–6 bands, 50px each, in sequence #ccd5d6 → #eaebea → #a7b0b1 → #859394 → #43585a → #213a3d → #001d21. No text, no dividers between bands."
+    },
+    {
+      "title": "Display Type Philosophy",
+      "content": "angellistDisplay exists at one weight (400) but at seven sizes — from 28px section openers to 288px hero type. The system deliberately withholds bold weights; size and tight tracking do the work instead. Line-height collapses to 0.75 at the largest sizes (260–288px), so letterforms nearly touch — this is the page's defining move. The 260–288px sizes appear ONLY in the hero, and they should be reserved for moments that earn them. Sub-hero display ranges from 60–80px with 1.05–1.10 line-height, giving breathing room without losing the editorial register."
+    },
+    {
+      "title": "Gradient Discipline",
+      "content": "Two gradients are defined. The Olive→Violet (rgb 127,120,51 → 137,142,229 → 137,142,229 → 134,123,54) is the primary display gradient and should fill display headlines only. The wider spectrum gradient (violet → pink → coral → peach → lavender → olive → blue → cream) is a single-use atmospheric effect. Never apply gradients to body text, UI controls, or backgrounds — the system stays muted in chrome and dramatic only in editorial type."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is expressed entirely through surface tone, never through drop shadow. The palette contains five discrete surface levels (Sage Mist → Paper White → Bone → Driftwood → Inkwell Teal), and components layer by stepping between them. This keeps the page feeling printed rather than rendered — every element sits on the same plane."
+}

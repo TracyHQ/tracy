@@ -1,0 +1,43 @@
+{
+  "id": "QA-UNIT-REG-PR-1357-cowork-joomla-0-24-28-happy",
+  "itemIds": ["regression:REG-PR-1357-cowork-joomla-0-24-28"],
+  "requirement": "Every Joomla quickstart pins Claude Cowork for Joomla 0.24.28 (the self-updater never downloads inside a visitor's request), with the published asset's bytes and sha256, in both catalogues",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1357-cowork-joomla-0-24-28.json",
+    "ref": "PR #1357 (fix); fix evidence: Before this PR every Joomla quickstart pinned 0.24.27, whose self-updater read the ~42 MB package into memory in a visitor's request: 61 memory fatals in 24 h on 20 of 24 fleet01 demos, each appending Joomla's 500 Whoops page to the visitor's page",
+    "invariant": "S1: every Joomla pin is version 0.24.28 or later (0.24.28 exactly when this PR merged: bytes 42591963, sha256 db8c3b54…cc92cc0ae; the exact current asset is held by the case of the PR that moved the pin last); the provision copy pins the same.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-1357-cowork-joomla-0-24-28.mjs:12 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1357-cowork-joomla-0-24-28.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1357-cowork-joomla-0-24-28"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1357-cowork-joomla-0-24-28",
+    "pr": 1357,
+    "kind": "fix",
+    "area": "quickstarts/cowork-pins",
+    "file": "tests/regression/cases/REG-PR-1357-cowork-joomla-0-24-28.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1357-cowork-joomla-0-24-28.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

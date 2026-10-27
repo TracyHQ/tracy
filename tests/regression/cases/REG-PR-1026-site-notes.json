@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1026-site-notes",
+  "kind": "feat",
+  "title": "Site notes are kept by the host beside the step, only from what the customer typed, per site, outside the folder the agent's file tools reach",
+  "pr": 1026,
+  "area": "site-tools/notes",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/site-notes.test.mjs packages/tools/tracy-site-tools/test/site-notes-wiring.test.mjs",
+    "S2: Read the line for each of the tests named in run.tests."
+  ],
+  "expect": [
+    "Every named test reports ok and the run exits 0 with nothing failed, cancelled or skipped.",
+    "The agent is given no notes tool: its tools are tracy_site, tracy_design_check and tracy_emdash, as before the feature.",
+    "Only a customer message (never a notice, a tool answer or a model's words) that carries the marks of a lasting wish starts one side call, and the step never waits for it.",
+    "A proposal of the side call is kept only when it quotes the message the customer typed, with the page text of a Browser-tab comment cut out; a removal needs the customer asking for it in their own words; a model that is down, stalls or answers junk keeps nothing and never throws.",
+    "A note line the agent writes by hand into the site folder is NOT a note: what a later conversation is sent comes only from the host's store <sitesRoot>/.site-notes/<label>, outside <sitesRoot>/<label>, the only folder the file tools are fenced to.",
+    "One site's notes are never sent to another site's conversation, and a site without notes is sent no notice at all.",
+    "The notes are capped at 24 notes and 2,000 characters in total."
+  ],
+  "selectors": {},
+  "evidence": "Measured 08/10/2026 on DeepSeek (81 runs): with a tracy_notes tool in the agent's loop, the conversation in which the customer states a wish cost +55% output tokens, +67% reasoning and +4 tool calls; the tool was removed and the host keeps the notes with one side call. Found while writing the wiring test: with the notes inside the site folder, a model with the 'write' tool could forge a note line and be sent it as 'what the customer asked' in every later conversation; the store was moved out of the folder.",
+  "fence": "packages/tools/tracy-site-tools/src/host/site-notes.mjs: mayHoldWish (the gate), captureWishes (the side call), withoutPageBlocks and quoteIsSaid (what counts as said), applyNote (quotes for add, update and remove; the caps), storeDirOf (the store path); host/index.ts: the pre-step that starts the capture without waiting and sends the notice.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/site-notes.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-notes-wiring.test.mjs"
+    ],
+    "tests": [
+      "🔒 the agent is given no notes tool: its tools are the ones it had before",
+      "🔒 a wish the customer typed is kept by the host, then sent once to the next message and the next conversation",
+      "🔒 the step never waits for the side call",
+      "🔒 a proposal that does not quote the customer is dropped: the side call cannot invent a wish",
+      "🔒 words that came in on a page the customer pointed at are not the customer's words",
+      "🔒 another site's conversation is never sent a site's notes",
+      "🔒 a note the agent writes by hand into a file is not a note",
+      "words the customer did not write are refused NOT_SAID and nothing is stored",
+      "the gate opens on the marks of a lasting wish, in the interface languages, and stays shut otherwise",
+      "capture: a removal needs the customer asking for it; one that does is applied",
+      "capture: a model that is down, stalls, stops short or answers junk keeps nothing and never throws",
+      "the notes' text together is capped too",
+      "the store folder is <sitesRoot>/.site-notes/<label>, and a label that is a path is not a store"
+    ]
+  }
+}

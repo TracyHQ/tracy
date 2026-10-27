@@ -1,0 +1,32 @@
+{
+  "id": "REG-202",
+  "kind": "feat",
+  "title": "A mail that lands in Spam still has a way through: the inviter gets the invite link in the send answer only, the sign-in code step and Request sent page carry a dismissible Spam tip, and every switchable notification mail has a one-click unsubscribe that turns off only its group's email",
+  "pr": 919,
+  "area": "web/team-invite",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Start a throwaway PostgreSQL (for example: docker run -d --rm --name reg202-pg -e POSTGRES_PASSWORD=t -p 127.0.0.1:55432:5432 postgres:16-alpine) and wait until pg_isready answers.",
+    "S2: From the TCH checkout run: TEST_DATABASE_URL=postgres://postgres:t@127.0.0.1:55432/postgres node --test --test-reporter=tap apps/tracy-web/test/team-invite-link.test.mjs apps/tracy-web/test/spam-tip.test.mjs apps/tracy-web/test/notification-unsubscribe.test.mjs apps/tracy-web/test/notification-mail.test.mjs",
+    "S3: Run: node --test --test-reporter=tap packages/core/tracy-core/test/team-invite.test.mjs",
+    "S4: Read the exit codes, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below, then stop the PostgreSQL container."
+  ],
+  "expect": [
+    "S2 and S3 exit 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "'the inviter gets the accept link of the invitation mail, and only the inviter' passes: `results[0].inviteUrl` is the link the mail carries, no public table holds its token, and GET /api/team, /api/sites and /api/notifications (inviter and invitee) do not carry it.",
+    "'no link when nothing was granted: already on the team, or refused' and 'the link opens only for the invited address' pass.",
+    "'one click turns off that group’s email only, and stays idempotent', 'opening the link (GET) changes nothing by itself and offers the one-click form', 'a forged, tampered, expired or locked-group token changes nothing' and 'the locked join-request letters carry no one-click header' pass: after the POST, `notification_preference` holds only `mentions-replies` with inbox true and email false, and the next mention writes an Inbox row and sends no mail.",
+    "'C3-B: the invitation keeps three links, the join request two, and no brand link anywhere' passes: the invitation's hrefs are exactly Decline, Accept and Manage.",
+    "'storage that throws still shows the tip' and 'the script shows the tip, and a dismissal is remembered per tip' pass."
+  ],
+  "selectors": {
+    "door": "POST /api/team/invite, field `results[].inviteUrl`",
+    "tip": "[data-spam-tip=\"spam-signin\"] inside #code-step, [data-spam-tip=\"spam-request\"] on the join page; localStorage key `tracy.tip.<id>`",
+    "unsubscribe": "GET/POST /api/notifications/unsubscribe?t=<token>; headers `List-Unsubscribe` and `List-Unsubscribe-Post` on the mail the notifier sends"
+  },
+  "evidence": "05/10/2026 (tracy-notifications-plan/review/spam-d1-d2-mockups.html): first mails from noreply@tracy.ai can land in Spam, leaving a sign-in code, an invitation or a join answer unseen. Chosen: variant C on the code step and Request sent (tip card), variant C on the wizard Done step (Invite link + Email sent rows). C1-B, C3-B and D3-A chosen 05/10/2026 in tracy-notifications-plan/review/spam-c1-c3-d3-review.html: Gmail shows Unsubscribe only with RFC 8058 headers, and the invitation mail measured in Spam had five links.",
+  "fence": "Mechanism only: tracy-web under node --test with a stub mail transport and a real PostgreSQL; the wizard's Done step under node --test. Not covered: a real mail provider's Spam filter or its Unsubscribe button (the headers are checked, Gmail's own press is not), the clipboard of a real browser (checked by hand in Storybook 05/10, both themes).",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-202.mjs"], "needs": ["postgres"] }
+}

@@ -1,0 +1,318 @@
+{
+  "dos": [
+    "Use NB International Pro weight 300 for all headlines — the whisper-light approach is the signature; weight 400 is acceptable for body, never 600+ for display",
+    "Apply 100px border-radius to all buttons, action chips, and interactive pills — this pill shape is non-negotiable",
+    "Reserve #ffffff (Chalk) for filled CTA buttons and the product mockup card only — everywhere else, use #d4d0c9 (Bone) for text",
+    "Use 10px border-radius for skill cards and content surfaces, 6px for icons and image thumbnails",
+    "Keep letter-spacing at -0.02em for body text (16px and below), tightening to -0.037em at display sizes 64px+",
+    "Center section headlines and let generous 80px section gaps create vertical breathing room between content blocks",
+    "Let the warm-gray #d4d0c9 family carry all text and border work — never introduce a cool blue-gray"
+  ],
+  "donts": [
+    "Do not use weight 600+ for any heading — the 300-400 range is the system's voice; bold breaks the editorial register",
+    "Do not add drop shadows beyond the whisper-soft 1px lift — no card hover elevations, no dramatic depth",
+    "Do not use the chromatic accent colors (green, blue, orange, violet) outside the stat card context — they are rationed, not decorative",
+    "Do not introduce additional surface colors beyond the three-layer stack (#000000 → #0c0c0c → #141414)",
+    "Do not use solid colored backgrounds for cards or sections — the entire system is flat over near-black",
+    "Do not break the pill convention by using sharp or 4px-radius buttons — 100px is mandatory for all interactive elements",
+    "Do not use sans-serif system fonts as the primary face — NB International Pro's humanist warmth is the brand"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "role": "Primary canvas, page background, base borders — the absolute ground zero of the visual system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#141414",
+      "name": "Carbon",
+      "role": "Card and elevated surface background, subtle border tint — the first lift off pure black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0c0c0c",
+      "name": "Tar",
+      "role": "Deep surface fill for nested elements, icon containers — sits between canvas and card",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d4d0c9",
+      "name": "Bone",
+      "role": "Light neutral action fill for buttons on dark surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#878581",
+      "name": "Ash",
+      "role": "Muted body text, secondary headings, low-emphasis borders — warm mid-gray companion to Bone",
+      "group": "neutral"
+    },
+    {
+      "hex": "#615f5c",
+      "name": "Smoke",
+      "role": "Tertiary borders, disabled states, link underlines in rest position — the lowest visible neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d9d9",
+      "name": "Pearl",
+      "role": "Cool-toned secondary text, icon fills on hover, light surface highlights",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a1a1a1",
+      "name": "Graphite",
+      "role": "Supporting text and icon borders, mid-weight border emphasis",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Chalk",
+      "role": "Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed hero with centered text overlay on landscape photograph, then a max-width 1200px content frame for all subsequent sections. Navigation is transparent and flush to edges — no contained bar. Sections alternate between centered text blocks and left-aligned card grids, with generous 80px vertical gaps. The integration row is full-width with logos spaced evenly. Skill cards appear in a 3-column grid with equal-width cards. Stats section uses a 3-column grid where each stat has a colored vertical bar on the left. The product mockup card breaks out of the grid, floating slightly with 1px shadow. Overall rhythm: dramatic visual → quiet text → dense functional grid → quiet text → dramatic stats.",
+  "imagery": "Imagery is rationed to one asset: a single dramatic landscape photograph in the hero — golden-hour mountains with rolling green hills and dramatic cloud formations, evoking scale and exploration. This is the only full-bleed photograph on the entire site; it functions as a brand signature rather than decoration. All other visual content is product UI mockups (white cards embedded on dark canvas) and small third-party brand logos. The photography treatment is high-saturation, warm-toned, natural light — no duotone, no overlays, no masks. The contrast between this warm photographic moment and the cold dark chrome around it is intentional: the product enters a human world.",
+  "similar": [
+    {
+      "why": "Same commitment to a near-black canvas with whisper-light typography and tight letter-spacing; both ration color to functional moments only",
+      "business": "Linear"
+    },
+    {
+      "why": "Dark-mode-first enterprise dev tool with dramatic full-bleed imagery in the hero and monochrome surface system with hairline borders",
+      "business": "Vercel"
+    },
+    {
+      "why": "Editorial typography approach with tight tracking at large display sizes, warm-gray neutrals, and the same instinct to let one large image carry the hero",
+      "business": "Stripe"
+    },
+    {
+      "why": "Restrained monochrome palette, generous section spacing, and product-first surface treatment with minimal chrome",
+      "business": "Anthropic"
+    },
+    {
+      "why": "Dark editorial canvas with dramatic photography and a single muted warm-white text color carrying the entire typographic system",
+      "business": "Runway"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "2px",
+      "cards": "10px",
+      "icons": "6px",
+      "inputs": "6px",
+      "buttons": "100px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Obsidian Canvas",
+      "level": 0,
+      "purpose": "Page-level background, hero image container, full-bleed sections"
+    },
+    {
+      "hex": "#0c0c0c",
+      "name": "Tar Recess",
+      "level": 1,
+      "purpose": "Icon containers, nested inset elements, first surface lift"
+    },
+    {
+      "hex": "#141414",
+      "name": "Carbon Card",
+      "level": 2,
+      "purpose": "Skill cards, product mockup surfaces, stat card backgrounds — the workhorse surface"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(20, 21, 26, 0.05) 0px 1px 2px 0px",
+      "element": "Floating product mockup card"
+    }
+  ],
+  "northStar": "darkroom gallery at midnight — measured, restrained, photograph-centric",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.28
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.64
+    },
+    {
+      "role": "heading-lg",
+      "size": 64,
+      "lineHeight": 1,
+      "letterSpacing": -1.28
+    },
+    {
+      "role": "display",
+      "size": 96,
+      "lineHeight": 1,
+      "letterSpacing": -1.92
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill CTA Button (Filled)",
+      "role": "Primary call-to-action in navigation and hero",
+      "description": "White fill (#ffffff), black text, 100px border-radius, 8px 12px padding, NB International Pro weight 500 at 12-14px. The only fully opaque white element on dark surfaces — functions as a beacon. Sits beside a single square icon button (sun/snowflake toggle) at 28-32px with no border, pure white."
+    },
+    {
+      "name": "Ghost CTA Button",
+      "role": "Secondary call-to-action paired with primary CTA",
+      "description": "Transparent background, 1px border in #615f5c (Smoke), text in #d4d0c9 (Bone), 100px radius, 8px 12px padding, NB International Pro weight 500 at 12-14px. Subtly present — the border is the lowest visible neutral, so the button whispers rather than competes."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-of-page navigation, sticky",
+      "description": "Transparent background over hero, flush with page edges. Logo 'aiwork' in NB International Pro weight 400 at ~14-16px, all lowercase, white. Nav links at 12px weight 400, white, separated by ~24px gap. Right side clusters secondary links then a white pill CTA. No visible border or background — relies on the hero image behind it for separation."
+    },
+    {
+      "name": "Integration Logo Chip",
+      "role": "Display partner/tool integrations in a horizontal row",
+      "description": "Transparent background, contains brand logo + product name in 12px NB International Pro weight 400, Bone text color. Arranged in a single row with ~32-48px gaps. Used to communicate breadth of integration without visual noise — no card containers, no borders, just logos on canvas."
+    },
+    {
+      "name": "Skill Card",
+      "role": "Display actionable AI worker skills in a card grid",
+      "description": "Carbon (#141414) background, 10px border-radius, 1px border in #d4d0c9 at ~10-15% opacity, 16-20px padding. Header: small app icon (6px radius) + skill title in NB International Pro weight 400 at 14-16px, Bone text. Description in Ash (#878581) at 14px. Bottom-right shows related app icons. No shadow, no hover lift — flat and functional."
+    },
+    {
+      "name": "Stat Card",
+      "role": "Display quantitative proof points in the results section",
+      "description": "Transparent or Carbon background, no visible border. Large percentage number (70%, 10%, 50%) at 32-48px in NB International Pro weight 400. Accent color appears as a left vertical bar: green (#1fe274), blue (#00a8f0), orange (#ff9634) — these are the only places chromatic color appears at structural scale. Label in 16-20px Bone below."
+    },
+    {
+      "name": "Product UI Card (Chat/Mission Panel)",
+      "role": "Show product functionality via embedded mockup",
+      "description": "White (#ffffff) background — the only light surface in the dark system, making it pop as a product artifact. 6-10px border-radius. Contains nested rows: user avatar circle + name in NB International Pro, status badges with small colored dots, action buttons with 100px radius pills. The inversion from dark to white inside this card is the system's primary visual trick — it signals 'this is a screenshot, not chrome'."
+    },
+    {
+      "name": "Section Tag/Pill",
+      "role": "Small uppercase category label above section headings",
+      "description": "No background, no border. NB International Pro Mono at 10px, uppercase, letter-spacing normal, Ash (#878581) color. Renders as plain text — no chip styling. Appears centered above section headlines (e.g. 'READY', 'SKILL', 'PROOF'). The monospaced treatment makes it feel like a print section marker, not a UI badge."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Primary product announcement at the top of the page",
+      "description": "NB International Pro weight 300 (Light), 64-96px, white (#ffffff), line-height 1.0, letter-spacing -0.02em to -0.037em. Centered over a full-bleed landscape photograph. The 300 weight at this scale is the system's boldest decision — it requires confidence to make 64px text feel light. Often split into two lines: product name on line 1, descriptor on line 2."
+    },
+    {
+      "name": "App Icon Tile",
+      "role": "Small icon representation for third-party integrations",
+      "description": "6-8px border-radius, 24-32px square, contains brand logo. No background fill — transparent over canvas. Sometimes appears in a row at the bottom of a skill card to show related apps."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Primary typeface across all contexts. The 300 weight for headlines is the signature choice — most enterprise brands shout at 700; Henry whispers at 300 and achieves more authority. The 204px display weight 400 with tight tracking is unmistakably editorial, treating the product name like a magazine cover. NB International Pro's geometric humanist forms carry warmth without friendliness — it is NB Studio's workhorse, not a generic grotesque.",
+      "sizes": "10, 14, 15, 16, 20, 24, 32, 64, 96, 204",
+      "family": "NB International Pro",
+      "weight": "300, 400, 500",
+      "lineHeight": "1.00–1.71",
+      "substitute": "Inter (300/400/500) for web, with a geometric humanist fallback",
+      "letterSpacing": "-0.02em (body), up to -0.037em (display)"
+    },
+    {
+      "role": "Used at 10px for metadata, tags, and technical annotations in the product UI mockup — the mono variant signals 'this is a system label, not marketing copy'",
+      "sizes": "10",
+      "family": "NB International Pro Mono",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "JetBrains Mono, IBM Plex Mono"
+    },
+    {
+      "role": "Secondary UI font for dense body contexts, form labels, and table-like content. Inter's wider x-height handles small sizes better than NB International Pro. The -0.037em tracking at 12px compensates for Inter's tendency to look loose at caption sizes.",
+      "sizes": "12, 14, 16",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.14–1.50",
+      "substitute": "System sans-serif stack",
+      "letterSpacing": "-0.037em to -0.006em (tightens aggressively at smaller sizes)"
+    },
+    {
+      "role": "NB International Pro Light — detected in extracted data but not described by AI",
+      "sizes": "14px, 16px, 64px",
+      "family": "NB International Pro Light",
+      "weight": "300",
+      "lineHeight": "1, 1.5, 1.71",
+      "letterSpacing": "-0.02"
+    },
+    {
+      "role": "NB International Pro Regular — detected in extracted data but not described by AI",
+      "sizes": "10px, 14px, 15px, 16px, 20px, 24px, 32px, 64px, 96px, 204px",
+      "family": "NB International Pro Regular",
+      "weight": "400",
+      "lineHeight": "1, 1.14, 1.2, 1.25, 1.33, 1.43, 1.5",
+      "letterSpacing": "-0.02"
+    },
+    {
+      "role": "NB International Pro CG Medium — detected in extracted data but not described by AI",
+      "sizes": "14px, 15px",
+      "family": "NB International Pro CG Medium",
+      "weight": "500",
+      "lineHeight": "1.33, 1.43",
+      "letterSpacing": "-0.02"
+    },
+    {
+      "role": "NB International Pro CG Mono — detected in extracted data but not described by AI",
+      "sizes": "10px",
+      "family": "NB International Pro CG Mono",
+      "weight": "400",
+      "lineHeight": "1.2"
+    }
+  ],
+  "description": "Henry operates in a near-monochrome dark world: a coal-black canvas interrupted by a single dramatic landscape photograph in the hero, and absolutely nothing else competing for attention. Typography does the heavy lifting — NB International Pro at whisper-light 300 weight for headlines (including a staggering 204px display) creates editorial confidence that monochrome palettes usually can't achieve, while tight -0.02em tracking keeps even the giant display sizes from feeling loose. The interface language is deliberately quiet: pill-shaped white CTA against black, hairline warm-gray borders (the #d4d0c9 family is the only chromatic deviation from pure neutral), translucent dark surfaces stacked in barely-perceptible layers. Color is rationed — appearing only as small functional punctuation in stat numbers and product UI cards. Components are flat, border-driven, and dense rather than spacious. The whole system feels like a high-end editorial magazine that happens to sell enterprise software.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #d4d0c9 (Bone) for primary, #878581 (Ash) for secondary, #615f5c (Smoke) for tertiary\n- background: #000000 (Obsidian) for page, #141414 (Carbon) for cards, #0c0c0c (Tar) for nested\n- border: #d4d0c9 at 10-15% opacity for hairlines, #615f5c for lowest-emphasis dividers\n- accent: warm-gray #d4d0c9 — not chromatic; chromatic colors reserved for stat bars only\n- primary action: #d4d0c9 (filled action)\n\n**Example Component Prompts**\n\n1. **Hero Section**: Full-bleed background photograph (dramatic landscape, golden hour). Headline at 64px NB International Pro weight 300, #ffffff, letter-spacing -1.28px, centered. Subtext at 16px weight 400, #d4d0c9, max-width 480px, centered below. Two CTAs side by side: filled white pill (100px radius, 8px 12px padding, black text 12px weight 500) and ghost pill (100px radius, 1px #615f5c border, #d4d0c9 text). 80px top/bottom padding within content frame.\n\n2. **Skill Card Grid**: 3-column grid, 24px gap. Each card: #141414 background, 10px radius, 1px border at #d4d0c9 12% opacity, 20px padding. Header row: 24px app icon (6px radius) + title in NB International Pro 16px weight 400, #d4d0c9. Body in 14px weight 400, #878581. Bottom row: 2-3 app icons at 20px, 6px radius, right-aligned.\n\n3. **Stat Card Row**: 3-column grid, transparent backgrounds. Left vertical bar 3px wide, 40px tall: #1fe274 for first stat, #00a8f0 for second, #ff9634 for third. Large number at 48px NB International Pro weight 400, #ffffff. Label at 16px weight 400, #d4d0c9, 2-3 lines.\n\n4. **Section Header Block**: Centered. Eyebrow tag at 10px NB International Pro Mono weight 400, uppercase, #878581, letter-spacing normal. Headline at 32-48px NB International Pro weight 300, #ffffff, line-height 1.2, letter-spacing -0.02em. Body at 16px weight 400, #d4d0c9, max-width 560px, centered. 24px gap between elements.\n\n5. **Product Mockup Card**: #ffffff background, 10px radius, 20px padding, max-width 480px, centered. Contains chat-like rows: avatar circle (32px) + name at 14px NB International Pro weight 500 #000000 + status text at 12px #615f5c. Action buttons inside: filled #000000 pill 100px radius, 6px 10px padding, white text 12px weight 500. Surrounding 1px border #d4d0c9 at 8% opacity."
+    }
+  ],
+  "elevationPhilosophy": "Shadow usage is almost deliberately absent — the design relies on near-imperceptible 1px hairline borders (#d4d0c9 at low opacity) and surface color shifts (0c0c0c → 141414) to separate layers. The single observed shadow is a whisper-soft 1px lift on the floating product card. This border-driven, shadow-light approach is what gives Henry its editorial flatness — nothing floats dramatically, everything sits in the same plane, like print layout."
+}

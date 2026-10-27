@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-fuel-orange: #ff7840;
+  --color-ink-black: #000000;
+  --color-graphite: #303030;
+  --color-sterling: #707070;
+  --color-silversmith: #c0c0c0;
+  --color-bone: #e7e7e7;
+  --color-lab-white: #fffffb;
+  --color-pure-white: #ffffff;
+
+  /* Typography */
+  --font-gt-pressura-lc-standard: 'GT Pressura LC Standard', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helvetica-neue-lt-std: 'Helvetica Neue LT Std', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtstandard-m: 'GTStandard-M', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

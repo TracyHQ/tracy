@@ -1,0 +1,2219 @@
+/* wp-ja-kinetic — the chrome the source theme has no rule for: the header's brand, menu and
+ * action groups, the mega menu panel, the theme toggle, the footer columns. Loaded after
+ * tracy.css and layout.css on every page kind but the design pages. Every colour, size and
+ * shadow is a WordPress variable of the active variation; there is no literal value here to go
+ * out of step with the dark set in theme.json.
+ *
+ * The measurements are the Joomla source's own: a sticky bar with a hairline bottom rule, the
+ * 1240px content container, the desktop row folding into the overlay menu below 992px, and the
+ * gutter dropping at 620px. */
+
+/* Accent tints a worn design system derives from its accent role, as the slot contract mixes them.
+ * Each reads --ds-c-accent WITHOUT a fallback, so with no design system the property is invalid at
+ * computed-value time and every reader falls back to the template's own tint: the look does not change. */
+:root {
+  --kds-accent-050: color-mix(in srgb, var(--ds-c-accent) 5%, transparent);
+  --kds-accent-059: color-mix(in srgb, var(--ds-c-accent) 5.9%, transparent);
+  --kds-accent-060: color-mix(in srgb, var(--ds-c-accent) 6%, transparent);
+  --kds-accent-078: color-mix(in srgb, var(--ds-c-accent) 7.8%, transparent);
+  --kds-accent-080: color-mix(in srgb, var(--ds-c-accent) 8%, transparent);
+  --kds-accent-082: color-mix(in srgb, var(--ds-c-accent) 8.2%, transparent);
+  --kds-accent-086: color-mix(in srgb, var(--ds-c-accent) 8.6%, transparent);
+  --kds-accent-094: color-mix(in srgb, var(--ds-c-accent) 9.4%, transparent);
+  --kds-accent-100: color-mix(in srgb, var(--ds-c-accent) 10%, transparent);
+  --kds-accent-110: color-mix(in srgb, var(--ds-c-accent) 11%, transparent);
+  --kds-accent-120: color-mix(in srgb, var(--ds-c-accent) 12%, transparent);
+  --kds-accent-125: color-mix(in srgb, var(--ds-c-accent) 12.5%, transparent);
+  --kds-accent-130: color-mix(in srgb, var(--ds-c-accent) 13%, transparent);
+  --kds-accent-145: color-mix(in srgb, var(--ds-c-accent) 14.5%, transparent);
+  --kds-accent-200: color-mix(in srgb, var(--ds-c-accent) 20%, transparent);
+  --kds-accent-250: color-mix(in srgb, var(--ds-c-accent) 25%, transparent);
+  --kds-accent-251: color-mix(in srgb, var(--ds-c-accent) 25.1%, transparent);
+  --kds-accent-280: color-mix(in srgb, var(--ds-c-accent) 28%, transparent);
+}
+
+
+/* ---- web fonts: the source's own @import (css/template.css:20) pulls IBM Plex Sans (400/500/600),
+   JetBrains Mono (400/500/700) and Space Grotesk (400/500/600/700) from Google Fonts. The build
+   engine's generated theme.json can only carry a font-family STACK for the active variation
+   (settings.typography.fontFamilies is locked out of theme.overlay.json — an overlay setting it
+   would silently undo rootVariation, scripts/build.mjs:448-462); it never bundles a fontFace, so
+   without this block every family in that stack falls through to the system fallback that already
+   follows it. Google serves each of these three families as one variable-weight woff2, so bundling
+   is three files, self-hosted at assets/fonts/ (downloaded on the host — the stand's container has
+   no outbound network) and registered here as three @font-face rules under the same family names
+   the generated stack already asks for first, so no other sheet has to change. */
+
+@font-face {
+  font-family: 'IBM Plex Sans'; /* ds-keep: @font-face family name, not a usage; a role read is invalid in a descriptor */
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('../fonts/ibm-plex-sans-variable.woff2') format('woff2');
+}
+
+/* JetBrains Mono is registered as the source registers it: Google's stylesheet declares one face
+   per requested weight (400, 500, 700), each a single fixed weight over the same variable file
+   (the latin subset, byte-identical to jetbrains-mono-variable.woff2). A computed 600 therefore
+   matches the 700 face and paints at wght 700 on the source (.hx-inc-time, .hx-prompt,
+   .hx-btn--ghost); a single `400 700` range face would paint a true 600 instead. */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk'; /* ds-keep: @font-face family name, not a usage; a role read is invalid in a descriptor */
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../fonts/space-grotesk-variable.woff2') format('woff2');
+}
+
+/* The Vietnamese letters (ă, đ, ơ, ư and the stacked tone marks): the files above are Google's latin
+   cut and draw none of them, so a site in Vietnamese would draw those letters from another font. Each
+   family gets Google's own vietnamese cut of the same variable font, declared after the latin face
+   so the browser takes these letters from it; the unicode-range keeps every other letter on the
+   latin file, so a page in English looks exactly as before. */
+
+@font-face {
+  font-family: 'IBM Plex Sans'; /* ds-keep: @font-face family name, not a usage; a role read is invalid in a descriptor */
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('../fonts/ibm-plex-sans-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301,
+    U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301,
+    U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301,
+    U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301,
+    U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+
+@font-face {
+  font-family: 'Space Grotesk'; /* ds-keep: @font-face family name, not a usage; a role read is invalid in a descriptor */
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../fonts/space-grotesk-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301,
+    U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+
+/* The generated theme.json stack for each preset carries a system fallback tail
+   (`"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif`) — the build engine's own
+   default for every design system, and `settings.typography.fontFamilies` cannot be overridden
+   from this overlay (scripts/build.mjs:448-462, see the comment on the @font-face block above).
+   The source's own computed font-family carries no such tail: `body`/buttons resolve to the bare
+   family name, and only form controls add one literal fallback. Overriding the resolved custom
+   property here reaches every consumer of the preset (this sheet and every other) without
+   touching the generated file. The display and body presets read the worn system's face first (with
+   no system they resolve to the bare family, as before); mono stays JetBrains Mono, as the Joomla
+   template keeps its code and label text in it under every system. */
+:root {
+  --wp--preset--font-family--display: var(--ds-font-display, 'Space Grotesk');
+  --wp--preset--font-family--body: var(--ds-font-body, 'IBM Plex Sans');
+  --wp--preset--font-family--mono: 'JetBrains Mono', monospace;
+}
+
+/* Source: body { -webkit-font-smoothing: antialiased } (css/template.css:19397-19405), inherited by
+   every element. WordPress leaves it at `auto`, which draws every glyph heavier on macOS. */
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Source: every page but the error page loads the T4 settings sheet after template.css, whose
+   `body { font-family: var(--body-font-family) }` (media/t4/css/36.css:108-116, `IBM Plex Sans`)
+   leaves the bare family the :root override above reproduces. The error page
+   (body.body-error-page) loads no settings sheet, so template.css's own
+   `body { font-family: "IBM Plex Sans", system-ui, sans-serif }` (css/template.css:19397-19405) is
+   the one in effect there and every element that inherits from body carries that stack. */
+body.error404 {
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+}
+
+/* Source: the last heading rule in the cascade is the T4 settings sheet's
+   `h1, h2, h3, h4, h5, h6 { line-height: var(--heading-line-height) }` with
+   `--heading-line-height: 1.06` (media/t4/css/36.css:91 + :130, loaded after template.css, so it overrides
+   template.css's own h1 1.04 / h2 1.08 / h3-h4 1.3). theme.json's heading element carries the tight
+   leading 1.04 instead; this sheet loads after the global styles at the same element specificity,
+   and every heading a section styles itself keeps its own, more specific rule. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.06;
+}
+
+/* Source: the same T4 settings rule carries `letter-spacing: var(--heading-letter-spacing)` with
+   `--heading-letter-spacing: -1px` (media/t4/css/36.css:92 + :135; 33.css, 36-sub.css and 37.css say the
+   same), overriding template.css's h1 -1.5px / h2 -1px / h3 -0.5px / h4 -0.3px. theme.json's heading
+   element uses the display tracking token (-1.5px) instead; the token itself stays, since the brand
+   word and `.tracy-display` use it too. Headings a section styles itself keep their own rule. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -1px;
+}
+
+/* Source: css/template.css:204-208, verbatim — smooth in-page scrolling on the root, kept inside the
+   source's own reduced-motion guard. */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Source: media/t4/css/36.css:199-201, verbatim — the T4 settings sheet dims every primary button on
+   hover, site-wide. */
+.btn.btn-primary:hover {
+  opacity: 0.85;
+}
+
+/* Source: media/t4/css/36.css:214-216, verbatim — the same settings sheet dims every secondary
+   button on hover, site-wide. */
+.btn.btn-secondary:hover {
+  opacity: 0.85;
+}
+
+/* ---- header: three groups on one row. The bar sticks to the top of the viewport, as
+   .kinetic-header does in the source (position: sticky; top: 0), and the menu group is
+   stretched to the bar's full height so a mega panel hung from the bar's bottom edge starts
+   exactly where its trigger box ends. ---- */
+
+/* The source's header bar is `position: sticky; top: 0` on its T4 wrapper (`#t4-header.t4-sticky`, z-index 1030) and stays pinned
+   while the page scrolls — measured on the local source stand at 1440, 992 and 576 on the home pages, Pricing, Contact, Blog and the
+   sign-in page (header top 0 after a 600px scroll). Two places do not pin it: from 575.98px down T4 resets `.t4-sticky` to
+   `position: relative !important`, and the 404 page (its own error template). An earlier reading (D-11) found it scrolling away;
+   that was not reproduced on the stand and is withdrawn (D-55). Sticky is also a positioned ancestor, which the full-width mega
+   panel (.tracy-mega__panel, position: absolute; top: 100%) needs. The bar's own surface is the CHROME background, which the
+   source never re-skins per home direction: #FBFCFA light, #0A0D0C dark on Terminal, Blueprint and Signal alike
+   (css/template.css:19328, css/darkmode.css:81), not the page colour that the directions change. */
+.tracy-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background: light-dark(var(--ds-c-bg, #fbfcfa), var(--ds-c-bg, #0a0d0c));
+  border-bottom: 1px solid var(--wp--preset--color--border);
+}
+
+@media (max-width: 575.98px) {
+  .tracy-header {
+    position: relative;
+    top: auto;
+  }
+}
+
+body.error404 .tracy-header {
+  position: relative;
+  top: auto;
+}
+
+/* Source: `.not-at-top #t4-header.t4-sticky { box-shadow: 0 3px 5px rgba(0,0,0,.08) }` once the page has scrolled 100px past the
+   header (T4 base.js); the class is set by assets/js/wp-ja-kinetic-back-to-top.js. */
+body.tracy-not-at-top .tracy-header {
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);
+}
+
+/* Source: .kinetic-header-inner { max-width: var(--content-max, 1240px); margin: 0 auto;
+   padding: 0 32px } (css/template.css:19958-19962) — the row's own box stops at the CONTENT
+   width, and the 32px gutter is inner padding on top of it, not folded into the box like a
+   section's container. Measured live: box x100 w1240 at 1440, content (padded) x132 — a section
+   container is wider by 2×gutter and centers gutter outside the content edge instead. */
+.tracy-header__inner,
+.tracy-footer__inner,
+.tracy-mega__inner {
+  max-width: var(--wp--custom--container--max);
+  padding-inline: var(--wp--custom--container--gutter-desktop);
+  margin-inline: auto;
+}
+
+/* 66px content height + the header's own 1px border-bottom = the source's own .kinetic-header-inner
+   (css/template.css:19958: height: 66px) — measured 67px total on the live source at 1440, light
+   mode, `.kinetic-header` (not the T4 landmark `#t4-header`, which carries no border of its own and
+   was the element an earlier pass compared against). */
+/* Same specificity note as `body .tracy-footer__columns` further down: `body .cls` (0,1,1) beats
+   the generated `.is-content-justification-*`/`.is-layout-flex` (0,1,0) regardless of stylesheet
+   order — restated here even though the value already matches the part's own block attrs, so the
+   row stays correct if that attribute is ever edited in the Site Editor. */
+/* `gap: normal` restated explicitly: core's own `:root :where(.is-layout-flex){gap:var(--wp--
+   preset--spacing--4)}` has near-zero specificity but is still non-zero, so leaving gap unset
+   here would let it apply a 16px gap the source's own two-item row (space-between already pushes
+   them to the row's ends) never carries. */
+body .tracy-header__inner {
+  min-height: 66px;
+  gap: normal;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+/* Source: .hx-left { display:flex; align-items:center; gap:38px } — the brand and the desktop
+   nav share ONE flex item (css/template.css:19967-19975), so `.tracy-header__inner`'s own
+   `space-between` above only ever has this and `.tracy-header__actions` to push apart. */
+.tracy-header__left {
+  align-items: center;
+  gap: 38px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* Source: .kinetic-logo { display:inline-flex; align-items:center; gap:10px }
+   (css/template.css:19897-19900). */
+.tracy-header__brand {
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.tracy-header__brand .tracy-logo {
+  display: block;
+  align-self: center;
+  line-height: 0;
+}
+
+.tracy-header__brand .tracy-logo svg {
+  display: block;
+  height: 26px;
+  width: 26px;
+}
+
+/* Source: .kinetic-logo-text { font: 700 19px/1 "Space Grotesk"; letter-spacing:-0.5px;
+   color: chrome-heading } (css/template.css:19903-19910) — not the display/lg preset pair
+   (600/-0.02em) this rule read before. The base theme's own `.tracy-brand, .tracy-brand a`
+   (src/wp-ja-kinetic/assets/css/tracy.css) sets `letter-spacing: var(--wp--custom--tracking--
+   display)` (-1.5px) directly on the nested `<a>` the Site Title block renders — one class
+   higher specificity (0,1,1) than a bare `.tracy-brand` (0,1,0), so it wins on that child even
+   though this rule already wins on the `.tracy-brand` element itself; measured live: the `<p
+   class="tracy-brand">`'s own letter-spacing read -0.5px correctly, but its `<a>` read -1.5px
+   and the logo box measured 7px narrower than the source's 61px. Repeating the selector one
+   level into the anchor closes that gap at the same specificity this rule already carries for
+   the wrapper. */
+.tracy-header__brand .tracy-brand,
+.tracy-header__brand .tracy-brand a {
+  font-family: var(--ds-font-display, var(--wp--preset--font-family--display)); /* the worn system's display face, as the Joomla wordmark reads it */
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  color: var(--chrome-heading);
+}
+
+/* Source: .kinetic-header .site-slogan { display: none !important } (css/template.css:20924-
+   20926) — the tagline exists in the source's own markup (the bloginfo it is seeded from is
+   real, `wp option get blogdescription` → "observability, reimagined") but the header itself
+   never shows it. Measured live before this rule: WordPress rendered it visibly next to the
+   wordmark; the source's own header never does. */
+.tracy-header__slogan {
+  display: none;
+}
+
+/* Source: .hx-desknav { display:flex; align-items:center }. */
+.tracy-header__menu {
+  align-self: center;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+/* The navigation block is the overlay (hamburger) menu only: `overlayMenu: always` in the part,
+   shown below the tablet width. The desktop row is .tracy-header__links — plain links and the
+   mega blocks in the source's order, every one a block of its own in the Site Editor. */
+.tracy-header__menu .tracy-nav {
+  align-self: center;
+  display: none;
+}
+
+.tracy-header__links {
+  align-items: stretch;
+  gap: var(--wp--preset--spacing--1);
+  flex-wrap: nowrap;
+}
+
+.tracy-header__link {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+/* Source: `.hx-desknav … .nav > li > a { font: 400 14px "IBM Plex Sans"; color: chrome-text;
+   padding: 8px 12px; border-radius: 8px; line-height: 1.2 }` (css/template.css:19993-20003);
+   hover and the active (current-page) item both paint `chrome-heading`, not the accent green —
+   `:hover` stays a colour change with no background, and only `.active` adds weight 500
+   (css/template.css:20005-20031). `aria-current="page"` is this theme's own stand-in for the
+   source's server-rendered `.active`/`.current` class (inc/extra.php). */
+.tracy-header__link a {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--ds-btn-radius, 8px);
+  color: var(--chrome-text);
+  text-decoration: none;
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+/* Source: `.hx-signin { font-size:14px; color:chrome-text }` — a bare Bootstrap-less link with
+   no padding, no flex box and no line-height override of its own, so it falls through to the
+   body's own leading (css/template.css capture: `.hx-signin` computed line-height 21.7px =
+   14px × the design's 1.55 body leading, `display:block`) — a plainer shape than the nav
+   links/mega triggers next to it, which is why this is its own rule rather than sharing theirs. */
+.tracy-header__signin a {
+  display: block;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: var(--wp--custom--leading--body);
+  color: var(--chrome-text);
+  text-decoration: none;
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-header__link a:hover,
+.tracy-header__signin a:hover {
+  color: var(--chrome-heading);
+}
+
+.tracy-header__link a[aria-current='page'] {
+  color: var(--chrome-heading);
+  font-weight: 500;
+}
+
+.tracy-header__link a:focus-visible,
+.tracy-header__signin a:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+/* Source: .hx-right { display:flex; align-items:center; gap:14px }, pushed to the row's far end
+   by `.tracy-header__inner`'s own `space-between` (two children only, see above). */
+.tracy-header__actions {
+  align-items: center;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+
+.tracy-header__signin {
+  margin: 0;
+}
+
+/* Source: `.hx-right-links .hx-cta-pill, .hx-btn--primary { display:inline-flex; gap:7px;
+   background: primary; color: primary-ink; font-weight:600; font-size:14px; padding:9px 16px;
+   border-radius:8px; border:none }` (css/template.css:20164-20182) — a rounded rectangle, not
+   the design system's pill shape, and the arrow glyph is part of the button's own gap-7 row
+   (svg 15×15, parts/header.html). */
+.tracy-header__cta .wp-block-button__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  font-size: 14px;
+  /* Source: `.hx-cta-pill` computed `line-height: 14px` (line-height:1) — core's own button
+     style default (1.5) left the box 7px taller than the source's 33px. */
+  line-height: 1;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--ds-btn-radius, 8px);
+}
+
+.tracy-header__cta .wp-block-button__link svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+
+/* Keyboard focus: the same ring as the header's other controls (`.tracy-theme-toggle`); core's
+   button style removed the outline and nothing put a ring back, so a Tab onto it showed nothing. */
+.tracy-header__cta .wp-block-button__link:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+/* ---- mega menu: EVERY panel — Home/Company's short list as well as Product/Pages' columns —
+   is an auto-width card hung under its own trigger (source: `.mega-dropdown-menu { width: auto
+   !important; min-width: 0 !important }`, css/template.css:20064-20067). There is no full-bleed
+   band variant in the source; `.tracy-mega--compact` used to be the only class styled that way,
+   which left the wider panels spanning the header instead of sizing to their columns. ---- */
+
+.tracy-mega {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Source's trigger (`.nav-link.dropdown-toggle`) sets no gap between the label and `.item-
+   caret`: both live flush against each other (measured live: caret's own left margin 0px, its
+   left edge lands exactly on the label span's right edge) — an inline-flex/button-only 4px gap
+   here widened the trigger box 4px past the source's 84px on every mega item. */
+.tracy-mega__trigger {
+  appearance: none;
+  background: none;
+  border: 0;
+  margin: 0;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 0;
+  padding: 8px 12px;
+  border-radius: var(--ds-btn-radius, 8px);
+  color: var(--chrome-text);
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+/* Source: hover paints `chrome-heading`; the open state carries no colour rule of its own
+   (css/template.css:20005-20031 has no `.show`/open selector), so the trigger only changes
+   colour on `:hover`/`:focus`, not merely because its panel is open. */
+/* Pointer devices only: a tap leaves `:hover` stuck on the trigger, which lit "Product" beside the
+   current page's own item on touch; the source paints no hover colour there. */
+@media (hover: hover) {
+  .tracy-mega__trigger:hover {
+    color: var(--chrome-heading);
+  }
+}
+
+.tracy-mega__trigger[aria-current='page'] {
+  color: var(--chrome-heading);
+  font-weight: 500;
+}
+
+.tracy-mega__trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+/* Source: `.item-caret { display:flex; align-items:center; justify-content:center; height:22px;
+   width:22px 22px } ::before { border-top:4px solid; border-left/right:4px solid transparent }`
+   (css/template.css:16027-16038) — a solid downward triangle, not a rotated corner. */
+.tracy-mega__caret {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+.tracy-mega__caret::before {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid currentColor;
+}
+
+/* Source, dark: `html.t4-dark .kinetic-header .item-caret { color:#E6EAE8 !important }` and the same
+   on its ::before border (css/template.css:19935-19942); the ::before here draws in currentColor. */
+:root[data-theme="dark"] .tracy-mega__caret {
+  color: var(--ds-c-fg, #E6EAE8) !important;
+}
+
+/* The panel: an auto-width card hung from the trigger's bottom edge, painted only while open.
+   The class is toggled by wp-ja-kinetic-mega.js; no :hover rule, so what opens it is one
+   contract. Source: `.mega-dropdown-menu { background:surface; border:1px solid border;
+   border-radius:14px; box-shadow: shadow; padding:0; margin-top:8px; position:absolute }`
+   + `.mega-dropdown-inner { padding:28px }` (css/template.css:20037-20050). */
+.tracy-mega__panel {
+  display: none;
+  position: absolute;
+  inset-inline-start: 0;
+  /* The source's nav item box is 80px tall inside the 67px header (it starts 7px above it), and its
+     panel hangs 8px below that box: 14px below the header's bottom edge. This item is 38px tall and
+     centred, so the 21px difference is added to the usual 100%. */
+  top: calc(100% + 21px);
+  z-index: 30;
+  margin-top: 8px;
+  width: auto;
+  min-width: 0;
+  /* chrome tokens, not the page's own surface: the Blueprint and Signal home variants repaint the
+     page surface, and the source's panel stays the header's own colour */
+  background: var(--chrome-surface);
+  border: 1px solid var(--chrome-border);
+  border-radius: var(--ds-card-radius, 14px);
+  box-shadow: var(--wp--custom--elev--raised);
+  padding: 28px;
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy-mega.is-open > .tracy-mega__panel {
+  display: block;
+}
+
+/* A hover bridge. The panel hangs 29px below the item's box (21px of offset + its 8px margin), so a
+   pointer crossing that strip leaves the item and the panel closes under it. The pseudo-element is
+   part of the panel, hence of the item, and fills the strip from the item's bottom edge to the
+   panel's top edge, so the walk from trigger to panel never leaves the region. */
+.tracy-mega__panel::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: -30px;
+  height: 30px;
+}
+
+.tracy-mega__inner {
+  max-width: none;
+  padding-inline: 0;
+}
+
+/* Source: `.mega-dropdown-inner > .row { display:flex; flex-wrap:nowrap; gap:56px }`
+   (css/template.css:20068-20074) — columns sit side by side at their own content width, never
+   wrapping under the card. */
+/* `body .cls` specificity bump, same trap as the footer/header flex rows above: core's own
+   `.is-layout-flex{flex-wrap:wrap}` (unlayered, printed after this stylesheet) otherwise wins the
+   tie against a bare one-class rule. */
+body .tracy-mega__columns {
+  flex-wrap: nowrap;
+  gap: 56px;
+  /* the block-gap bottom margin core puts under a columns block has no counterpart in the source's row */
+  margin-block-end: 0;
+}
+
+/* Three classes plus `body`: core's `.wp-block-columns:not(.is-not-stacked-on-mobile) > .wp-block-column`
+   (flex-basis 0, grow 1) ties or beats a shorter selector and would give every column the same width;
+   the source's columns are as wide as their widest link. */
+body .tracy-mega__columns.wp-block-columns:not(.is-not-stacked-on-mobile) > .wp-block-column {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+/* Source: `.mega-col-title { font:600 11px/1 "JetBrains Mono"; letter-spacing:1.5px;
+   text-transform:uppercase; margin:0 0 16px; padding:0 }` with `> span { color: chrome-text;
+   display:inline-block; padding-bottom:8px }` (measured open, light and dark). The title element here
+   is the heading itself, so the span's 8px sits in the margin and the heading's own padding stays 0,
+   as the source's heading does. */
+.tracy-mega__title {
+  margin: 0 0 24px;
+  padding: 0;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--chrome-text);
+  white-space: nowrap;
+}
+
+/* Source: `.mega-nav { display:flex; flex-direction:column; gap:13px }` (css/template.css:20099-20106). */
+.tracy-mega__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.tracy-mega__links li {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* Source: each link is a flex block as wide as its column and 21.7px (14px x 1.55) tall, so the whole
+   row is the tap target; an inline link was 18px tall and only as wide as its text. */
+.tracy-mega__links a {
+  display: flex;
+  line-height: 1.55;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--chrome-text);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+@media (hover: hover) {
+  .tracy-mega__links a:hover {
+    color: var(--chrome-heading);
+  }
+}
+
+/* The panel's link to the page being read. The source gives the active item the same colour as a
+   hovered one and a heavier weight (css/template.css:20124-20137); inc/extra.php sets the mark. */
+.tracy-mega__links a[aria-current='page'] {
+  color: var(--chrome-heading);
+  font-weight: 500;
+}
+
+/* In the Site Editor the panel is always open and sits in the flow, so its columns can be edited. */
+.tracy-mega--editing > .tracy-mega__panel {
+  display: block;
+  position: static;
+  box-shadow: none;
+}
+
+/* ---- theme toggle: a bordered square button with a sun/moon SVG pair, one shown at a time —
+   the source's own pair, not an abstract filled/empty circle. Source: `.kinetic-theme-toggle {
+   width/height:36px; border:1px solid chrome-border; background:chrome-surface; radius:9px;
+   color:chrome-text } svg{16×16} .hx-sun{display:none} .hx-moon{display:block}`, flipped under
+   `[data-theme=dark]` (css/template.css:20209-20268). The root's own `data-theme` attribute
+   (wp-ja-kinetic-dark.js) stands in for the source's `html.t4-dark`/`[data-theme=dark]` hook. ---- */
+
+.tracy-theme-toggle {
+  appearance: none;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--chrome-border);
+  border-radius: var(--ds-btn-radius, 9px);
+  background: var(--chrome-surface);
+  color: var(--chrome-text);
+  cursor: pointer;
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard),
+    border-color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-theme-toggle:hover {
+  color: var(--chrome-heading);
+  border-color: var(--chrome-muted);
+}
+
+.tracy-theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+.tracy-theme-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tracy-theme-toggle .tracy-theme-toggle__sun {
+  display: none;
+}
+
+.tracy-theme-toggle .tracy-theme-toggle__moon {
+  display: block;
+}
+
+[data-theme='dark'] .tracy-theme-toggle .tracy-theme-toggle__moon {
+  display: none;
+}
+
+[data-theme='dark'] .tracy-theme-toggle .tracy-theme-toggle__sun {
+  display: block;
+}
+
+/* ---- mobile menu trigger + drawer: WordPress core's own Navigation block (overlayMenu:"always")
+   renders its own toggle button and overlay container; nothing here changes that markup, only
+   its paint. Source: `.t4-offcanvas-toggle { width/height:36px; border:1px solid chrome-border;
+   background:chrome-surface; radius:9px; color:chrome-heading }`, shown only under 992px
+   (css/template.css:20232-20289); the drawer itself: `.kinetic-offcanvas { width:min(100vw,400px);
+   background:chrome-surface; border-left:1px solid chrome-border }` (css/template.css:20296-20303),
+   docked to the right by the browser's own dialog/anchor behaviour core already provides. ---- */
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container-open {
+  display: flex;
+  font: inherit;
+  line-height: 16px;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--chrome-border);
+  border-radius: var(--ds-card-radius, 9px);
+  background: var(--chrome-surface);
+  color: var(--chrome-heading);
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container-open svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Touch targets: the source's 36px square is under the 40px a finger needs. The source itself raises the
+   header's two buttons to 40px for as long as the hamburger shows (`max-width: 991.98px`), tablets
+   included; the footer tiles follow on phones only. */
+@media (max-width: 991.98px) {
+  .tracy-theme-toggle,
+  .tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container-open {
+    width: 40px;
+    height: 40px;
+  }
+}
+/* The footer's finger targets. Source (measured on the stand): from 576px up the social tiles are 34px and the link rows 30px on an
+   11px gap; from 575.98px down T4's phone rules make the tiles 40px and the link rows 40px on the same gap. The brand row stays 24px
+   at every width, so its 40px target is an invisible pseudo-element rather than a taller box. */
+@media (max-width: 575.98px) {
+  footer .tracy-footer__social-tile {
+    width: 40px;
+    height: 40px;
+  }
+  .tracy-footer__links a,
+  nav.tracy-footer__links .wp-block-navigation-item__content.wp-block-navigation-item__content {
+    padding: 9px 0;
+  }
+}
+@media (max-width: 767px) {
+  .tracy-footer__lock {
+    position: relative;
+  }
+  .tracy-footer__lock::after {
+    content: '';
+    position: absolute;
+    inset: -8px 0;
+  }
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open {
+  --wp--style--root--padding-top: 0px;
+  --wp--style--root--padding-right: 0px;
+  --wp--style--root--padding-bottom: 0px;
+  --wp--style--root--padding-left: 0px;
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(100vw, 400px);
+  max-width: min(100vw, 400px);
+  height: 100%;
+  background: var(--chrome-surface);
+  border-left: 1px solid var(--chrome-border);
+  /* The dim behind the panel: the source paints `.kinetic-oc-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55) }` over the
+     header and the page, under the panel, and does not push the page. A spread shadow of the fixed panel covers the same area. */
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.55);
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+  padding: 18px 20px;
+}
+
+/* Each item card. Source: `.t4-off-canvas-body li > a { padding:13px 14px; border:1px solid
+   chrome-border; radius:10px; background:chrome-bg; font:500 16px "Space Grotesk";
+   color:chrome-heading }`, current item `color:chrome-primary; background:chrome-elevated`
+   (css/template.css:20366-20404). Core wraps every link in a `wp-block-navigation-item`; the
+   link itself carries the card, so the parity is one class down from the source's `<li>`. */
+.tracy-header__menu .tracy-nav .wp-block-navigation__container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation-item {
+  width: 100%;
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation-item__content,
+.tracy-header__menu .tracy-nav .wp-block-navigation-submenu__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 14px !important;
+  border: 1px solid var(--chrome-border);
+  border-radius: var(--ds-card-radius, 10px);
+  background: var(--chrome-bg);
+  font-family: var(--wp--preset--font-family--display);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--chrome-heading);
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation-item__content[aria-current='page'],
+.tracy-header__menu .tracy-nav .wp-block-navigation-item.has-child:has(.wp-block-navigation__submenu-container [aria-current='page']) > .wp-block-navigation-item__content {
+  color: var(--ds-c-accent-text, var(--chrome-primary));
+  background: var(--chrome-elevated);
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__submenu-container {
+  position: static;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  margin: 8px 0 0;
+  padding-inline-start: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__submenu-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--chrome-muted);
+}
+
+/* C-18 drill: wp-ja-kinetic-drawer.js adds `.tracy-drill-open` to the one top-level item the
+   visitor drilled into (its own click tracking, not core's `aria-expanded` — core does not
+   enforce "one submenu open at a time" for click-opened items, and auto-expands the current
+   page's own parent on load, neither of which matches the source) — the source replaces the
+   whole top-level list with the open submenu's own items instead of expanding it in place
+   (css/template.css:20366-20404), so every sibling item, and the open item's own trigger row,
+   are hidden here; only its `.wp-block-navigation__submenu-container` (plus the back row
+   inc/extra.php injects as that list's first child) is left standing — and the sign-in link and
+   CTA, which the source keeps below the drilled panel (`.kinetic-oc-cta` sits outside its nav). */
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container[data-tracy-drill] .wp-block-navigation__container > li:where(:not(.tracy-nav__signin, .tracy-nav__cta)) {
+  display: none;
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container[data-tracy-drill] .wp-block-navigation__container > li.tracy-drill-open {
+  display: block;
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container[data-tracy-drill] .wp-block-navigation__container > li.tracy-drill-open > .wp-block-navigation-item__content,
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container[data-tracy-drill] .wp-block-navigation__container > li.tracy-drill-open > .wp-block-navigation-submenu__toggle {
+  display: none;
+}
+
+/* Core's own overlay rules outrank the drawer rules above on three points, so they are restated
+   here one step stronger (wp-includes/blocks/navigation/style.css, WordPress 7.1):
+   - `.wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container.is-menu-open:not(.disable-default-overlay) { background-color:var(--ds-c-surface, #fff) }`
+     — five classes against four: the panel painted white, not chrome-surface; its sibling rule
+     `….is-menu-open:not(.disable-default-overlay) { color:#000 }` turned the close button black
+     (source: `.js-offcanvas-close { color: chrome-text }`, css/template.css:20327-20335);
+   - the overlay content and list take `align-items: var(--navigation-layout-justification-setting)`
+     and the list centres itself (`align-self: center`, measured), which shrinks every card to its text
+     (measured 113–200px) — the source's cards span the drawer;
+   - `….is-menu-open … .has-child .wp-block-navigation__submenu-container { visibility:visible; min-width:200px;
+     padding-left/right:2rem; … }` pre-expands every submenu — the source opens on the top level only and
+     shows a submenu once its parent is drilled (the drill rules above);
+   - `….is-menu-open:not(.disable-default-overlay) { padding: clamp(1rem, var(--wp--style--root--padding-*), 20rem) }`
+     pads the panel 16px on every side even with the root padding zeroed above — the source's head row
+     runs edge to edge and its list starts 20px in; and its `gap: inherit` on the list and on every
+     submenu list replaces the source's 8px between cards. */
+.tracy-header__menu .tracy-nav.wp-block-navigation .wp-block-navigation__responsive-container.is-menu-open:not(.disable-default-overlay) {
+  padding: 0;
+  background: var(--chrome-surface);
+  color: var(--chrome-text);
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content,
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation__container,
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation-item {
+  align-items: stretch;
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .wp-block-navigation__container {
+  align-self: stretch;
+  gap: 8px;
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open:not([data-tracy-drill]) .wp-block-navigation__responsive-container-content .wp-block-navigation__submenu-container {
+  display: none;
+}
+
+/* Source: `.dropdown-menu.is-drilled { padding:0; margin:0; gap:8px }` (css/template.css:20861-20868) —
+   a drilled panel is flush with the drawer, not indented under its parent. */
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content .has-child .wp-block-navigation__submenu-container {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+}
+
+/* Hover. Source: every drawer card `li > a:hover { border-color: chrome-muted }` (css/template.css:20386-20388);
+   a drilled row is a `.dropdown-item`, which T4's off-canvas rule also paints `background: transparent;
+   color: var(--body-link-hover-color)` = primary-hover (css/template.css:16618-16624). */
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > li:not(.tracy-nav__signin):not(.tracy-nav__cta) > .wp-block-navigation-item__content:hover {
+  border-color: var(--chrome-muted);
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__submenu-container .wp-block-navigation-item__content:hover {
+  border-color: var(--chrome-muted);
+  background: transparent;
+  color: var(--ds-c-accent-text-hover, var(--primary-hover));
+}
+
+/* Source: `li.parent > a::after { content:"›"; font-size:18px; line-height:1; color:chrome-muted; flex:none }`
+   (css/template.css:20402-20418). Core hides its own submenu icon inside the overlay. */
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > li.has-child > .wp-block-navigation-item__content::after {
+  content: '›';
+  flex: none;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--chrome-muted);
+}
+
+/* Head row, added by inc/extra.php (wp_ja_kinetic_drawer_head). Source: `.t4-off-canvas-header { display:flex;
+   align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid chrome-border }`,
+   logo `gap:9px`, glyph 22px, name `700 17px "Space Grotesk"` chrome-heading with the logo's own `line-height:1;
+   letter-spacing:-0.5px`, close `font-size:22px; line-height:1; color:chrome-text` in a 32px round button
+   (css/template.css:19900-19915, 20304-20335; measured row 69px tall). Core's close button is absolutely
+   placed in the dialog; it is set onto this row, and its icon replaced by the source's own "×". */
+.tracy-header__menu .tracy-nav .tracy-nav__drawer-head {
+  display: flex;
+  align-items: center;
+  box-sizing: content-box;
+  /* 18px + the 32px button + 18px, as the source's row; the 18px are the row's height, not its padding:
+     the source's row also holds the close button's "×", so its padding is not read as the logo's. */
+  min-height: 68px;
+  padding: 0 20px;
+  background: var(--chrome-surface);
+  border-bottom: 1px solid var(--chrome-border);
+}
+
+.tracy-header__menu .tracy-nav .tracy-nav__drawer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+}
+
+.tracy-header__menu .tracy-nav .tracy-nav__drawer-logo svg {
+  display: block;
+  flex: none;
+}
+
+.tracy-header__menu .tracy-nav .tracy-nav__drawer-logo span {
+  font-family: var(--ds-font-display, var(--wp--preset--font-family--display)); /* the worn system's display face, as the Joomla wordmark reads it */
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  color: var(--chrome-heading);
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-dialog .wp-block-navigation__responsive-container-close {
+  top: 18px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--chrome-text);
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-dialog .wp-block-navigation__responsive-container-close svg {
+  display: none;
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__responsive-dialog .wp-block-navigation__responsive-container-close::before {
+  content: '×';
+}
+
+/* Source: `.kinetic-drill-back { display:flex; align-items:center; gap:8px; width:100%; border:0;
+   border-bottom:1px solid chrome-border; border-radius:0; margin:0 0 6px; padding:2px 2px 12px;
+   font:600 15px "Space Grotesk"; color:chrome-heading; text-align:left }`, its arrow 18px chrome-primary
+   (css/template.css:20869-20899); line height measured 23.25px on the source (body 1.55). */
+.tracy-nav__drill-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0 0 6px;
+  padding: 2px 2px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--chrome-border);
+  border-radius: var(--ds-btn-radius, 0);
+  background: none;
+  appearance: none;
+  cursor: pointer;
+  font-family: var(--wp--preset--font-family--display);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--chrome-heading);
+  text-align: left;
+}
+
+.tracy-nav__drill-back svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  color: var(--ds-c-accent-text, var(--chrome-primary));
+}
+
+/* Source: `.kinetic-drill-sublabel { font:600 11px "JetBrains Mono"; letter-spacing:1.5px;
+   text-transform:uppercase; color:chrome-muted; padding:12px 2px 4px; margin:0 }`, first one
+   `padding-top:4px` (css/template.css:20900-20912). Added by assets/js/wp-ja-kinetic-drawer.js. */
+.tracy-header__menu .tracy-nav .tracy-nav__drill-sublabel {
+  margin: 0;
+  padding: 12px 2px 4px;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--chrome-muted);
+}
+
+.tracy-header__menu .tracy-nav .tracy-nav__drill-sublabel:first-of-type {
+  padding-top: 4px;
+}
+
+/* The two links appended after the real menu items (parts/header.html) stand in for the
+   drawer's own sign-in link + full-width "Start free" button below the source's divider:
+   `.kinetic-oc-cta { margin-top:18px; padding-top:18px; border-top:1px solid chrome-border }`, the two
+   links 12px apart (`.custom { gap:12px }`), sign-in `14px` chrome-text centred, CTA `padding:13px;
+   border-radius:9px; font-weight:600` (css/template.css:20446-20493, 20829-20842), its arrow 8px after
+   the label (measured). The list's own 8px gap is part of each distance below. */
+.tracy-header__menu .tracy-nav .wp-block-navigation__container > .tracy-nav__signin {
+  margin-top: 10px;
+  border-top: 1px solid var(--chrome-border);
+}
+
+.tracy-header__menu .tracy-nav .wp-block-navigation__container > .tracy-nav__cta {
+  margin-top: 4px;
+}
+
+.tracy-header__menu .tracy-nav .tracy-nav__signin > .wp-block-navigation-item__content {
+  border: 0;
+  border-radius: var(--ds-card-radius, 0);
+  background: none;
+  padding: 0 14px !important;
+  /* the 18px under the divider sit on the link, not on the item: the source's link has no padding,
+     and an item that holds only these words would have its own read as the link's */
+  margin-top: 18px;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--chrome-text);
+  justify-content: center;
+}
+
+.tracy-header__menu .tracy-nav .tracy-nav__cta > .wp-block-navigation-item__content {
+  padding: 13px !important;
+  border: 0;
+  border-radius: var(--ds-btn-radius, 9px);
+  background: var(--primary);
+  color: var(--primary-ink);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Source repeats the same header CTA markup (arrow svg included) inside the drawer
+   (`#acm-header-cta-228` appears twice, live capture). The arrow is the same inline `<svg class="hx-cta-arrow">`,
+   added after the label by wp_ja_kinetic_drawer_cta_arrow() in inc/extra.php. */
+.tracy-header__menu .tracy-nav .tracy-nav__cta > .wp-block-navigation-item__content > .hx-cta-arrow {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+/* ---- footer: the four-column band, the dispatch band, then the legal strip — the three rows of
+   the source footer. The footer element itself has no padding or rule; each row carries its own. ---- */
+
+/* The source's whole footer — brand/link row, newsletter row, legal strip — is one element
+   (.kinetic-footer) painted in the design's "elevated" tint, not the page background; the row
+   borders inside it are hairlines, not colour changes. Measured light mode, live source:
+   .kinetic-footer background rgb(242,245,238) == --chrome-elevated (css/template.css:19330),
+   already bridged from this theme's own surface-warm preset (wp-ja-kinetic-sections.css:55). */
+/* Two stacked top lines, as the source draws them: its wrapper `div.t4-section.t4-footer`
+   (transparent, `border-top: 1px solid rgba(255,255,255,0.07)`, css/template.css:17499-17504) over
+   the page background, then `footer.kinetic-footer`'s own 1px hairline on the tinted footer. Here the
+   footer element takes the wrapper's line (its tint clipped off the border) and the first row, the
+   band, takes the hairline. */
+.tracy .tracy-footer {
+  padding-block: 0;
+  background: var(--chrome-elevated);
+  background-clip: padding-box;
+  border-top: 1px solid var(--ds-c-border-soft, rgba(255, 255, 255, 0.07));
+}
+
+.tracy .tracy-footer > .tracy-footer__band {
+  border-top: 1px solid var(--wp--preset--color--border);
+}
+
+/* Source: .kinetic-footer-inner { padding: 64px 32px 32px } — ONE box around every row (cols,
+   news band, legal strip): `.tracy-footer__inner` below already carries the horizontal half of
+   that (shared with the header/mega rule above); this is only the vertical half, scoped to the
+   footer's own inner so it never leaks onto the header/mega's use of the same class. The two
+   rows below carry their own top rhythm (margin-top 48px + padding-top) and no bottom padding of
+   their own — the 32px at the very end belongs to this box, not to the last row. */
+.tracy-footer__band .tracy-footer__inner {
+  padding-block: 64px 32px;
+}
+
+/* Source: .hx-foot-cols { display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap:40px }
+   (css/template.css:20519-20523) — overrides wp:columns' own flex layout; isStackedOnMobile:false
+   on the block (parts/footer.html) keeps core's forced mobile stack from fighting it below.
+   `body` in the selector: core's own generated layout CSS carries `body .is-layout-flex{display:
+   flex}` (specificity 0,1,1 — an element plus a class), which otherwise silently outranks a bare
+   `.tracy-footer__columns{display:grid}` (0,1,0) regardless of stylesheet load order — measured
+   live: `display` stayed `flex` and the grid-column span on the brand cell (below) then had
+   nothing to span, since flex-basis on that cell's own inline style (`style="flex-basis:34%"`,
+   from the block's {"width":"34%"} attribute) took over instead. */
+body .tracy-footer__columns {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin: 0;
+}
+
+/* .tracy-footer__lock is the wp:html anchor itself (glyph + "Kinetic" wordmark), not a wrapper
+   block — see parts/footer.html. Source: .hx-brand-lock { gap: 10px }, .hx-brand-word
+   { font: "Space Grotesk" 700 18px/1; color: chrome-heading }. */
+.tracy-footer__lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.tracy-footer__logo {
+  display: block;
+  height: 24px;
+  width: 24px;
+  flex: 0 0 auto;
+  color: var(--ds-c-accent-text, var(--chrome-primary));
+}
+
+.tracy-footer__lock .tracy-brand {
+  font-family: var(--ds-font-display, var(--wp--preset--font-family--display)); /* the worn system's display face, as the Joomla wordmark reads it */
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  /* Explicit, not left to inherit: the footer wordmark sits in the same `.tracy-brand` class as
+     the header's (parts/header.html, parts/footer.html), and only the header's own context rule
+     sets a negative tracking; this one has none in the source (`.hx-brand-word`,
+     css/template.css:20548-20554). */
+  letter-spacing: normal;
+  color: var(--chrome-heading);
+}
+
+/* The Site Title's anchor: the base theme's own .tracy-brand a (tracy.css) names the display preset, the lg
+   size preset and the display tracking preset on it, one class higher than the rule above. The face follows
+   the worn system; the size, tracking and weight are the anchor's template-default values, pinned so a
+   system's type scale does not inflate the logo (Figma's lg drew it larger than the header's wordmark). */
+.tracy-footer__lock .tracy-brand a {
+  font-family: var(--ds-font-display, var(--wp--preset--font-family--display));
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -1.5px;
+}
+
+/* Source: the brand column's copy is `.hx-social-label` (the ACM social module's own intro
+   text), not the generic `.hx-foot-brand p` fallback — `font:400 14px "IBM Plex Sans"; line-
+   height:1.6; letter-spacing:0; margin:14px 0 14px; max-width:280px` (css/template.css:20563-
+   20573). The generic rule a few lines below it carries a taller `18px` bottom margin for markup
+   shapes without the module wrapper; the running source's markup always has it, so `14px` is
+   what actually reaches the page. */
+.tracy-footer__blurb {
+  margin: 14px 0 14px;
+  max-width: 280px;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.6;
+  color: var(--chrome-text);
+}
+
+/* Source: .hx-foot-col h3 { font: 400 11px/normal "JetBrains Mono"; letter-spacing:1.5px;
+   text-transform:uppercase; color:chrome-muted; margin:0 0 11px } (css/template.css:20621-20631)
+   — mono, not body; 400, not 600; 11px, not the xs preset (12.5px); chrome-muted, not the meta
+   preset; measured live 2026-09-22, this rule previously used the display/body stack at 600 with
+   the wrong colour token, which was part of the footer's own height overshoot. */
+.tracy-footer__title {
+  margin: 0 0 11px;
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--chrome-muted);
+}
+
+/* Source: ul.menu { gap:11px } (css/template.css:20632-20638), not the spacing-3 preset (12px). */
+.tracy-footer__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 11px;
+}
+
+/* Source's footer nav link colour is not the plain muted preset: `.kinetic-footer …li > a` paints
+   from `--chrome-text` (`#46514B`) and its `:hover` from `--chrome-heading` (`#10140F`) — the
+   chrome copy of the neutrals the header/footer stay on (wp-ja-kinetic-sections.css's bridge
+   `:root` block already declares both). Measured live 2026-09-22: this rule previously used
+   `--wp--preset--color--muted` (`#7C877F`), one step lighter than the source. */
+/* Source's own link is a Bootstrap `.nav-link` (`ul.nav.navbar-nav li > a`), which carries
+   `display:inline-block; padding:4px 0` from Bootstrap's own nav-link rule, not from anything
+   `.hx-foot-col`-specific — measured live: line-height 21.7px, but the anchor's own box is 30px
+   (21.7 + 2×4 padding). Missing here, the same text sat in an 18px box, ~22% of the 25px/1440 and
+   73px/390 footer-height shortfall this row traced to (verified: title font/colour/gap fixed
+   first, land closer, this closed the rest). */
+/* Source: `.hx-foot-col ul.menu li > a { font-weight:500 }`, current page `font-weight:700`
+   (css/template.css:20647-20670) — `aria-current` is this theme's stand-in for the source's
+   server-rendered `.active`/`.current` (inc/extra.php). */
+.tracy-footer__links a {
+  display: inline-block;
+  position: relative;
+  top: 0;
+  padding: 4px 0;
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 500;
+  color: var(--chrome-text);
+  text-decoration: none;
+}
+
+.tracy-footer__links a:hover {
+  color: var(--chrome-heading);
+}
+
+.tracy-footer__links a[aria-current='page'] {
+  font-weight: 700;
+}
+
+/* The three link columns are `core/navigation` blocks (D-40): the `nav` carries the column's
+   class, core's own list inside it takes the column's grid and gap instead of its flex layout,
+   and core's item box and link padding give way to the column link's own rule above. */
+nav.tracy-footer__links {
+  display: block;
+}
+nav.tracy-footer__links .wp-block-navigation__container {
+  display: grid;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+}
+nav.tracy-footer__links .wp-block-navigation-item {
+  display: block;
+}
+/* Core paints its link `inherit` with a doubled class (0,3,0); the column's colour needs one more. */
+nav.tracy-footer__links .wp-block-navigation-item__content.wp-block-navigation-item__content {
+  display: inline-block;
+  color: var(--chrome-text);
+}
+nav.tracy-footer__links .wp-block-navigation-item__content.wp-block-navigation-item__content:hover {
+  color: var(--chrome-heading);
+}
+
+/* Source: .hx-social { gap: 10px }, tile { 34x34, border 1px chrome-border, radius 8px,
+   color chrome-text }, tile:hover { color chrome-heading, border-color chrome-muted }, svg 16x16. */
+.tracy-footer__social {
+  gap: 10px;
+  margin-top: var(--wp--preset--spacing--1);
+}
+
+.tracy-footer__social-tile {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--chrome-border);
+  border-radius: var(--ds-card-radius, 8px);
+  color: var(--chrome-text);
+  text-decoration: none;
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard),
+    border-color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-footer__social-tile:hover {
+  color: var(--chrome-heading);
+  border-color: var(--chrome-muted);
+}
+
+.tracy-footer__social-tile svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Source: .hx-foot-news-band { margin-top: 48px; border-top: 1px …; padding-top: 36px } — no
+   padding-bottom of its own. */
+.tracy-footer__news {
+  margin-top: var(--wp--preset--spacing--12);
+  border-top: 1px solid var(--wp--preset--color--border);
+  padding-top: 36px;
+}
+
+/* Source: .acym_module_form { display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+   (css/template.css:13083-13088) — title/desc left, form right; both explicit here in case the
+   block's own layout class is ever absent from a cached render. */
+/* Same specificity note as the other flex rows in this file: core's own `body .is-layout-flex`
+   (0,1,1) beats a bare one-class rule (0,1,0). */
+body .tracy-footer__news-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Source: .acym_introtext { flex:1 1 auto; margin-right:auto; display:flex; flex-direction:column;
+   gap:5px } (css/template.css:13089-13095). */
+.tracy-footer__news-intro {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  margin-right: auto;
+  gap: 5px;
+}
+
+/* Source: .hx-news-title { font:700 18px/1.2 "Space Grotesk"; letter-spacing:-1px;
+   color:chrome-heading } (css/template.css:20675-20682, letter-spacing measured live) — an `h3`,
+   so without an explicit value here it falls through to this theme's own global heading tracking
+   (`elements.heading` in theme.json, -1.5px), one step tighter than the source's own literal. */
+.tracy-footer__news-title {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -1px;
+  color: var(--chrome-heading);
+}
+
+/* Source: .hx-news-desc { font-size:14px; line-height:1.5; color:chrome-muted }
+   (css/template.css:20683-20689). */
+.tracy-footer__news-desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--chrome-muted);
+}
+
+/* Source: .acym_form { flex:0 0 auto; margin:0 } wraps the AcyMailing block's own markup
+   (.acym_module > .acym_fulldiv > form > .acym_module_form > [.acym_form, .acysubbuttons]); with
+   the block's own intro-text slot empty (parts/footer.html), .acym_module_form here holds only
+   those two, so it reproduces the source's field+button row with no extra styling needed on it.
+   Rules below target the plugin's own class names 1:1 against css/template.css:13102-13188; the
+   plugin's own stylesheet is dequeued (inc/extra.php) so nothing else competes with them. */
+.tracy-footer__news-row .acym_module {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.tracy-footer__news-row .acym_module form {
+  margin: 0;
+}
+
+.tracy-footer__news-row .acym_module .acym_module_form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tracy-footer__news-row .acym_module .onefield {
+  margin: 0;
+}
+
+.tracy-footer__news-row .acym_module label {
+  display: block;
+  margin: 0;
+}
+
+/* The visible label span the plugin renders beside the input — hidden, same as the source, which
+   relies on the input's own placeholder instead (css/template.css:13113-13115). */
+.tracy-footer__news-row .acym_module .acym__users__creation__fields__title {
+  display: none;
+}
+
+.tracy-footer__news-row .acym_module input[type='email'],
+.tracy-footer__news-row .acym_module input[type='text'] {
+  width: 260px;
+  max-width: 100%;
+  background: var(--chrome-surface);
+  border: 1px solid var(--chrome-border);
+  border-radius: var(--ds-input-radius, 9px);
+  padding: 13px 14px;
+  color: var(--chrome-heading);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 14px;
+  line-height: 1.2;
+  box-shadow: none;
+  transition: border-color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+/* The error layout's newsletter band is a copy block and a "Subscribe" link, not the form the other pages
+   carry: one row, copy at its own text width (483px) and the link at the far end, wrapping below the copy
+   on a phone. Source: `.kinetic-news-band { display:flex; justify-content:space-between; gap:24px;
+   flex-wrap:wrap }` and `.hx-news-btn` as an `a` (css/template.css:20680-20750). */
+.tracy-404-footer .tracy-footer__news-row {
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.tracy-404-footer .tracy-footer__news-intro {
+  flex: 0 1 auto;
+  margin-right: 0;
+}
+
+.tracy-footer__news-btn {
+  display: inline-flex;
+  align-items: center;
+  background: var(--primary);
+  color: var(--primary-ink);
+  border-radius: var(--ds-btn-radius, 9px);
+  padding: 13px 22px;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.15s;
+}
+
+@media (hover: hover) {
+  .tracy-footer__news-btn:hover {
+    background: var(--primary-hover);
+    color: var(--primary-ink);
+  }
+}
+
+.tracy-footer__news-row .acym_module input[type='email']::placeholder,
+.tracy-footer__news-row .acym_module input[type='text']::placeholder {
+  color: var(--chrome-muted);
+  opacity: 1;
+}
+
+.tracy-footer__news-row .acym_module input[type='email']:focus,
+.tracy-footer__news-row .acym_module input[type='email']:active,
+.tracy-footer__news-row .acym_module input[type='text']:focus,
+.tracy-footer__news-row .acym_module input[type='text']:active {
+  /* The source's newsletter field on focus (measured on the source stand in light and dark): the primary-colour border, a 2px outline
+     in the primary colour 3px off the box, and a 3px ring rgba(77,124,15,.25) in both schemes. */
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--ds-c-focus-ring, rgba(77, 124, 15, 0.25));
+}
+
+/* AcyMailing's own client-side check marks a failed field with `.acym_invalid_field` and shows
+   `.acym__field__error__block` (measured live on the stand: fill an invalid address, submit —
+   the plugin adds both). The source's own copy of this same module never toggles the message
+   visible (css/template.css:13200-13206 styles it, but nothing on the running page adds the
+   `__active` modifier that shows it) while its input still paints a red border on that state, so
+   the field itself carries the error and the text block stays hidden, matching source exactly. */
+.tracy-footer__news-row .acym_module input.acym_invalid_field {
+  background: var(--ds-c-danger-bg, color-mix(in srgb, var(--err) 12%, white));
+  border-color: var(--ds-c-danger, rgb(157, 38, 29));
+  /* the same corner the field's own rule draws (input[type='email'|'text'] above) */
+  border-radius: var(--ds-input-radius, 9px);
+}
+
+.tracy-footer__news-row .acym_module .acym__field__error__block {
+  display: none !important;
+}
+
+.tracy-footer__news-row .acym_module .acysubbuttons {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+}
+
+.tracy-footer__news-row .acym_module .acysubbuttons button.subbutton,
+.tracy-footer__news-row .acym_module .acysubbuttons input.subbutton {
+  background: var(--primary);
+  color: var(--primary-ink);
+  border: 1px solid transparent;
+  border-radius: var(--ds-btn-radius, 9px);
+  padding: 13px 34px;
+  /* The source also loads AcyMailing's module sheet (media/com_acym/css/module.min.css
+     `.acym_module_form input{max-width:90%}`), dequeued here: 90% of the 135px wrapper gives way to
+     this 130px floor, so the button paints 130px wide in a 135px slot (measured 2026-09-25, 1440). */
+  min-width: 130px;
+  max-width: 90%;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background-color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-footer__news-row .acym_module .acysubbuttons button.subbutton:hover,
+.tracy-footer__news-row .acym_module .acysubbuttons button.subbutton:focus,
+.tracy-footer__news-row .acym_module .acysubbuttons input.subbutton:hover,
+.tracy-footer__news-row .acym_module .acysubbuttons input.subbutton:focus {
+  background: var(--primary-hover);
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+/* Source's `.hx-foot-bottom` is ONE element carrying both the row's rhythm AND its own flex row
+   in a single rule — `border-top:1px; margin-top:48px; padding-top:24px; display:flex;
+   align-items:center; justify-content:space-between; gap:14px` (css/template.css:20729-20738);
+   the final 32px of the whole footer comes from the shared `.tracy-footer__inner`'s own
+   padding-bottom (`.tracy-footer__band .tracy-footer__inner` above), not from this row. Split
+   here into `.tracy-footer__strip` (the outer box the parity tooling measures against the
+   source's single element) and `.tracy-footer__bottom` (its one child, copy + legal list) —
+   restating the same flex on both keeps the outer box's own computed style byte-identical to the
+   source's single-element shape while still flexing the two inner children. */
+.tracy-footer__strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: var(--wp--preset--spacing--12);
+  padding-top: 24px;
+  border-top: 1px solid var(--wp--preset--color--border);
+}
+
+/* Same specificity note as `body .tracy-footer__columns` and `body .tracy-header__inner` above:
+   the part's own block attrs ask core for flex/space-between, but the generated
+   `.is-layout-flex` class (0,1,0) loses to core's own `body .is-layout-flex{display:flex}`
+   (0,1,1) — measured live, this row painted `display:block` before this rule. */
+body .tracy-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+}
+
+/* Source: .hx-copy { font-size:13px; color:chrome-muted } (css/template.css:20747-20751) —
+   not the xs preset. */
+.tracy-footer__copy {
+  margin: 0;
+  font-size: 13px;
+  color: var(--chrome-muted);
+}
+
+/* Source: .hx-legal { display:flex; gap:22px } a { font-size:13px; color:chrome-muted }
+   (css/template.css:20752-20763). */
+.tracy-footer__legal {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 22px;
+}
+
+.tracy-footer__legal a {
+  font-size: 13px;
+  color: var(--chrome-muted);
+  text-decoration: none;
+}
+
+/* Phones: the source makes each legal link a 40px-tall flex box (Privacy and Terms are 17px tall above 575px). */
+@media (max-width: 575.98px) {
+  .tracy-footer__legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+}
+
+.tracy-footer__legal a:hover {
+  color: var(--chrome-text);
+}
+
+/* ---- back-to-top: a fixed pill, hidden until the page has scrolled, shown by
+   wp-ja-kinetic-back-to-top.js toggling `.tracy-top-away` on <body> — the theme's own name for
+   the source's `.top-away` (css/template.css:11440-11449, 17606-17629: `#back-to-top { display:
+   none; position:fixed; right:2rem; bottom:1rem; width/height:40px; border-radius:5px;
+   background: rgba(0,0,0,.5) } i { color:#fff }`, shown under `.top-away #back-to-top`). ---- */
+
+.tracy-back-to-top {
+  display: none;
+  position: fixed;
+  right: 2rem;
+  bottom: 1rem;
+  z-index: 40;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--ds-btn-radius, 5px);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: var(--ds-c-on-ink, #fff);
+  cursor: pointer;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+.tracy-back-to-top svg {
+  display: none;
+}
+
+/* The mark: the source draws Font Awesome's chevron-up at 16px (a solid, thick chevron about 14.5 x 9.3px, measured at 4x scale);
+   the footer part in the database prints a thin stroked line chevron, so the stroked one is hidden and the solid one is drawn
+   here, by mask, in the button's own colour. */
+.tracy-back-to-top::before {
+  content: '';
+  width: 14.5px;
+  height: 9.3px;
+  transform: translateY(-0.6px);
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='90 480 1612 1035'%3E%3Cpath d='M1683 1331l-166 165q-19 19-45 19t-45-19l-531-531-531 531q-19 19-45 19t-45-19l-166-165q-19-19-19-45.5t19-45.5l742-741q19-19 45-19t45 19l742 741q19 19 19 45.5t-19 45.5z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='90 480 1612 1035'%3E%3Cpath d='M1683 1331l-166 165q-19 19-45 19t-45-19l-531-531-531 531q-19 19-45 19t-45-19l-166-165q-19-19-19-45.5t19-45.5l742-741q19-19 45-19t45 19l742 741q19 19 19 45.5t-19 45.5z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+.tracy-back-to-top:hover,
+.tracy-back-to-top:focus,
+.tracy-back-to-top:active {
+  background-color: var(--primary);
+  color: var(--ds-c-accent-on, #fff);
+}
+
+body.tracy-top-away .tracy-back-to-top {
+  display: flex;
+}
+
+/* ---- small screens: the source drops its desktop row and its right-hand links at 992px and
+   shows the drawer button in their place; the bar is 60px tall from there down. ---- */
+
+@media (max-width: 991px) {
+  /* `body .cls`: the same specificity trap flagged throughout this file — the desktop
+     `body .tracy-header__inner { min-height: 66px }` rule above (0,1,1) otherwise keeps winning
+     under 992px against a bare `.tracy-header__inner{min-height:60px}` (0,1,0) regardless of
+     cascade order, since @media does not add specificity. Measured live before this line carried
+     `body`: the row stayed 66px tall below 992px (source is 60px there), which cascaded into
+     every centred item (logo, toggle, hamburger) sitting 3px lower than the source. */
+  body .tracy-header__inner {
+    min-height: 60px;
+    /* Below 992px the row's only sibling pair left in normal flow is the toggle group and the
+       hamburger (brand's own gap to them is swallowed by `.tracy-header__actions`'s own
+       `margin-inline-start: auto` below) — source's own `.hx-right` measured live at this width:
+       toggle box 36 wide, hamburger box 36 wide, group box 82 wide, so the gap between the two
+       is 10px, not the desktop row's 14px this rule read before. */
+    gap: 10px;
+  }
+
+  /* Source's .hx-left only exists to carry the desktop row's own 38px gap (css/template.css
+     19967-19975); it has no rule of its own below 992px, where the desktop row it groups is
+     hidden anyway. `display: contents` drops the wrapper from the box tree so `.tracy-header__menu`
+     (now carrying only the hamburger) becomes a direct flex item of `.tracy-header__inner` again,
+     where `order` below can put it next to the toggle. `body .cls`: same specificity trap as
+     every other flex/display rule in this file — a bare `.tracy-header__left{display:contents}`
+     lost outright to core's own `body .is-layout-flex{display:flex}`. */
+  body .tracy-header__left {
+    display: contents;
+  }
+
+  /* The bar itself only ever carries the logo, the theme toggle and the hamburger below 992px —
+     "Start free" moves into the drawer only (`.kinetic-oc-cta`, css/template.css:20456-20486);
+     `.hx-right-links` (sign-in + CTA together) is hidden whole (css/template.css:20274-20276).
+     `.tracy-header__cta` and `.tracy-header__links` both carry core's own `.is-layout-flex`
+     (their block attrs ask for a flex layout); `body .is-layout-flex{display:flex}` (0,1,1) then
+     outranks a bare `.cls{display:none}` (0,1,0) — same specificity trap as
+     `body .tracy-footer__columns` below, same fix. */
+  body .tracy-header__menu .tracy-header__links,
+  body .tracy-header__cta,
+  .tracy-header__signin,
+  .tracy-header__slogan {
+    display: none;
+  }
+
+  .tracy-header__menu .tracy-nav {
+    display: block;
+  }
+
+  .tracy-header__menu {
+    flex: 0 0 auto;
+    order: 3;
+  }
+
+  /* Below 992px the row is only ever logo … toggle, hamburger — two items, not three, so
+     `justify-content: space-between` (desktop's own two-item row) would float the toggle at the
+     row's exact midpoint instead of flush against the hamburger. `margin-inline-start: auto` on
+     the toggle group does the same job space-between did on desktop — push everything from here
+     on to the row's end; the container's own 10px `gap` (above) then keeps the toggle and
+     hamburger apart by exactly that much, matching the source's `.hx-right` box at this width.
+     `.tracy-header__inner .cls`: core's own block-supports stylesheet carries `.is-layout-flex >
+     :is(*, div) { margin: 0 }` (specificity 0,1,1, printed inline in <head>), which otherwise
+     keeps `margin-inline-start` at 0 against a bare `.tracy-header__actions` (0,1,0) regardless
+     of load order. Measured live before this line carried the extra ancestor: computed
+     `margin-left` stayed `0px`, so `justify-content: space-between` (still active, unset below
+     992px) spread the row's now-THREE flex items (logo, toggle group, hamburger) evenly instead
+     of packing the last two flush at the end like the source's own two-item
+     `.hx-left`/`.hx-right` row. */
+  .tracy-header__inner .tracy-header__actions {
+    order: 2;
+    margin-inline-start: auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .tracy-header__inner,
+  .tracy-footer__inner,
+  .tracy-mega__inner {
+    padding-inline: var(--wp--custom--container--gutter-phone);
+  }
+
+  .tracy-header__inner {
+    gap: var(--wp--preset--spacing--2);
+  }
+
+  .tracy-header__cta .wp-block-button__link {
+    padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--4);
+  }
+}
+
+/* Source's own breakpoint for the newsletter row, distinct from the 620px above
+   (css/template.css:13227-13244): the row stacks and the field/button both go full width. */
+/* Source: css/template.css:20768-20776. Same `body` specificity note as the base rule above. */
+@media (max-width: 880px) {
+  body .tracy-footer__columns {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px 20px;
+  }
+
+  .tracy-footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  /* Source: .kinetic-footer-inner { padding: 40px 20px 28px } (css/template.css:20777-20780) —
+     one box, same as the desktop 64/32 rule above; only this breakpoint changes it (there is no
+     separate 991px-tablet value in the source to step through first). */
+  .tracy-footer__band .tracy-footer__inner {
+    padding-block: 40px 28px;
+  }
+
+  .tracy-footer__news-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tracy-footer__news-intro {
+    margin-right: 0;
+  }
+
+  .tracy-footer__news-row .acym_module {
+    width: 100%;
+  }
+
+  /* Without this, the input's own width:100% below resolves against .acym_form's content-based
+     size (flex: 0 0 auto, set outside this query) instead of the row's full width, and shrinks to
+     the browser's default text-input size. Source: .acym_form { width: 100% } at the same
+     breakpoint (css/template.css:13235-13236). */
+  .tracy-footer__news-row .acym_module .acym_form {
+    width: 100%;
+  }
+
+  .tracy-footer__news-row .acym_module input[type='email'],
+  .tracy-footer__news-row .acym_module input[type='text'] {
+    width: 100%;
+  }
+
+  /* The button's own `width` (below) resolves against `.acysubbuttons`'s content-based
+     flex-basis (`flex: 0 0 auto`, set outside this query) unless the wrapper itself is stretched
+     too — the same "child's 100% needs a 100% parent" gap `.acym_form` above already carries a
+     rule for. Measured live before this line: the button stayed content-width (135px) at 390
+     instead of the source's own full-width wrapper. */
+  .tracy-footer__news-row .acym_module .acysubbuttons {
+    width: 100%;
+  }
+
+  /* Source's own button does not go edge-to-edge with its wrapper even once the wrapper itself
+     is full width — measured live at 390: `.acysubbuttons` box 350px, `.subbutton` box 315px, a
+     fixed 35px gap on the trailing edge that holds at every width in this query's range
+     (css/template.css:13227-13244 stacks the row but does not literally set the button to
+     `width:100%`). */
+  .tracy-footer__news-row .acym_module .acysubbuttons button.subbutton,
+  .tracy-footer__news-row .acym_module .acysubbuttons input.subbutton {
+    width: calc(100% - 35px);
+  }
+}
+
+/* ---- 404 footer newsletter (D-47): the source's error.php types its own form here
+   (`form.hx-news-form`, error.php:386-389, css/template.css:20690-20729) that never submits; this
+   page keeps the working AcyMailing block and draws it in that form's boxes: a 260px field and a
+   content-width button (`padding:13px 22px`, no border, the band's line height — Bootstrap's reboot
+   gives buttons `line-height:inherit` there) side by side; under
+   560px the band stacks with a 24px gap and the form keeps its own shrink-to-fit width. ---- */
+.error404 .tracy-footer__news-row .acym_module .acysubbuttons button.subbutton,
+.error404 .tracy-footer__news-row .acym_module .acysubbuttons input.subbutton {
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  padding: 13px 22px;
+  border: 0;
+  line-height: inherit;
+}
+
+@media (max-width: 560px) {
+  .error404 .tracy-footer__news-row {
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .error404 .tracy-footer__news-row .acym_module,
+  .error404 .tracy-footer__news-row .acym_module .acysubbuttons {
+    width: auto;
+  }
+}
+
+/* ---- 404: the source's own dedicated error layout (css/error.css), not the page chrome's
+   generic notice — templates/404.html. Every value below is that stylesheet's own literal,
+   ported 1:1 (light mode has no dark override in it to bridge). ---- */
+
+/* Source: body.body-error-page { min-height:100vh; display:flex; flex-direction:column }
+   (error.css:15-22) — belt-and-suspenders alongside whatever sticky-footer rule `tracy` already
+   carries on `body`, scoped to the one template that needs it. */
+body.error404 {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The source's own error-layout header omits the arrow icon inside "Start free" — measured live
+   on the running source's 404 page: `<a class="hx-cta-pill" href="…">Start free</a>`, no `<svg>`,
+   22px narrower than the same button elsewhere (116px there, 94px here), which the header's
+   own `justify-content: space-between` row then carries into the sign-in link sitting 22px
+   further right too. Every other template keeps the icon (parts/header.html). */
+body.error404 .tracy-header__cta .wp-block-button__link svg {
+  display: none;
+}
+
+/* The error layout's own footer column rhythm is looser than every other page's — measured live
+   on the running source's 404 page: `.hx-foot-col h3` line-height 14.3px (11px × 1.3, a literal
+   this one layout uses, not the theme's shared body/tight leading tokens) and `.hx-foot-col li >
+   a` padding 8px 0 (double the 4px every other footer carries) — templates/404.html's own
+   `.tracy-404-footer` class scopes both to this one template. */
+.tracy-404-footer .tracy-footer__title {
+  line-height: 1.3;
+}
+
+/* error.php does not load the per-page rule that tightens the dispatch heading to -1px; its
+   `h3.hx-news-title` falls back to the template's h3 letter-spacing, -0.5px (measured on the running
+   source's 404, 1440 and 390). */
+.tracy-404-footer .tracy-footer__news-title {
+  letter-spacing: -0.5px;
+}
+
+.tracy-404-footer .tracy-footer__links a {
+  padding: 8px 0;
+  /* Unlike every other footer, the error layout's own link carries no `position:relative` of its
+     own (measured live: `static`/`auto`) — the opposite of the generic footer rule above. */
+  position: static;
+  top: auto;
+}
+
+/* The error layout loads none of the phone rules the other pages get (measured on the source's 404 at 390): the legal links stay inline
+   (17px, not a 40px box). The footer link rows are 40px on both sides with the inherited 21.7px line (a 24px
+   line here made the sweep's heights check read a line-height step at 320), so the padding makes up the 40px. */
+@media (max-width: 575.98px) {
+  .tracy-404-footer .tracy-footer__legal a {
+    display: inline;
+    min-height: 0;
+  }
+  .tracy-404-footer .tracy-footer__links a {
+    padding-block: 9.15px;
+  }
+}
+
+/* Source error.css §2: Error body centred section (flex:1 → fills space between nav/footer) */
+.hx-error-body {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 96px 32px;
+  background: var(--bg);
+}
+
+/* Source error.css §3: Inner wrapper */
+.hx-error-inner {
+  max-width: 760px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Source error.css §4: Eyebrow */
+.hx-error-eyebrow {
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 2px;
+  color: var(--ds-c-accent-text, var(--primary));
+  margin: 0 0 28px;
+  text-transform: uppercase;
+}
+
+/* Source error.css §5: Big 404 */
+.hx-error-code {
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 120px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -4px;
+  color: var(--heading);
+  margin: 0 0 20px;
+  overflow: hidden;
+}
+
+/* Source error.css §6: H1 */
+.hx-error-h1 {
+  font-family: var(--ds-font-display, "Space Grotesk", system-ui, sans-serif);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  color: var(--heading);
+  text-align: center;
+  margin: 0 0 16px;
+}
+
+/* Source error.css §7: Subhead */
+.hx-error-sub {
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 440px;
+  margin: 0;
+}
+
+/* Source error.css §8: Button row */
+.hx-error-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 28px;
+}
+
+/* Primary CTA — larger pad + r9 + 14.5px to match .pen, inherits bg/color from .hx-btn--primary */
+.hx-error-btns .hx-btn--error-p {
+  font-size: 14.5px;
+  padding: 13px 22px;
+  border-radius: var(--ds-btn-radius, 9px);
+  gap: 8px;
+}
+
+/* Secondary / "surface" button — solid surface bg (NOT transparent ghost). The source loads
+   error.css after template.css, so its bare `.hx-btn--error-s` beats `.hx-btn`; here the shared
+   `.hx-btn` rule (wp-ja-kinetic-sections.css) loads after this sheet, so the row scope restores
+   that win (measured: padding 11px 18px / transparent border without it). */
+.hx-error-btns .hx-btn--error-s {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 12px 20px;
+  border-radius: var(--ds-btn-radius, 9px);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--heading);
+  text-decoration: none;
+  transition: 0.15s;
+}
+.hx-error-btns .hx-btn--error-s:hover {
+  background: var(--elevated);
+  color: var(--heading);
+  text-decoration: none;
+}
+
+/* The inner group is a flow-layout block, whose `> *` gap rule gives both literal rows a 16px
+   top margin (measured); the source's two divs carry the UA default 0. */
+.hx-error-btns,
+.hx-error-quick {
+  margin: 0;
+}
+
+/* Source error.css §9: Quick links row */
+.hx-error-quick {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  padding-top: 32px;
+}
+.hx-error-quick a {
+  font-family: var(--ds-font-body, "IBM Plex Sans", system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ds-c-accent-text, var(--primary));
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.hx-error-quick a:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+/* Source error.css §10: Mobile (max 767.98px) */
+@media (max-width: 767.98px) {
+  .hx-error-body {
+    padding: 64px 24px 72px;
+  }
+  .hx-error-code {
+    font-size: 96px;
+    letter-spacing: -3px;
+  }
+  .hx-error-h1 {
+    font-size: 25px;
+    line-height: 1.15;
+  }
+  .hx-error-sub {
+    font-size: 15px;
+    max-width: 100%;
+  }
+  .hx-error-btns {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .hx-error-btns .hx-btn--error-p,
+  .hx-btn--error-s {
+    width: 100%;
+    justify-content: center;
+  }
+  .hx-error-quick {
+    gap: 14px;
+  }
+}
+
+/* Phones, after the drawer's own rules: its close button at 40px, and its group labels at the
+   12px floor (the source's 11px). */
+@media (max-width: 991.98px) {
+  .tracy-header__menu .tracy-nav .wp-block-navigation__responsive-dialog .wp-block-navigation__responsive-container-close {
+    width: 40px;
+    height: 40px;
+  }
+  /* The source's close button is at least 40px, and its head row grows to hold it: 18px + 40px + 18px
+     (the row stays 32px high only while the button does). */
+  .tracy-header__menu .tracy-nav .tracy-nav__drawer-head {
+    min-height: 76px;
+  }
+  .tracy-header__menu .tracy-nav .tracy-nav__signin > .wp-block-navigation-item__content {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+  }
+}
+@media (max-width: 767px) {
+  .tracy-header__menu .tracy-nav .tracy-nav__drill-sublabel {
+    font-size: 12px;
+  }
+  /* the brand links: a 40px target around the 26px mark and the 19px wordmark, same look */
+  .tracy-header__brand .tracy-logo {
+    padding: 7px;
+    margin: -7px;
+  }
+  .tracy-header__brand .tracy-brand a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+}
+
+/* Phones: the 12px text floor (RSP-01). The source sets its mono labels at 10-11.5px; on a phone (575.98px and below, where the source's own phone rules apply) every one of
+   them is raised to 12px. Generated from this file's own rules: keep it last, and regenerate it
+   when a label size changes. */
+@media (max-width: 575.98px) {
+  .tracy-mega__title,
+  .tracy-header__menu .tracy-nav .tracy-nav__drill-sublabel,
+  .tracy-footer__title {
+    font-size: 12px;
+  }
+
+  /* The 12px floor makes "DEVELOPERS" 87px wide, wider than the 80px an equal-fraction column
+     gets at 320px, so it wrapped to two lines, and "Integrations" with its padding needs 79px. The
+     source sizes the column to its content; let the title and the links keep one line and the
+     column grow to the widest. */
+  .tracy-footer__title,
+  .tracy-footer__columns .wp-block-navigation-item__content,
+  .tracy-footer__columns .tracy-footer__links a {
+    white-space: nowrap;
+  }
+
+  body .tracy-footer__columns {
+    grid-template-columns: repeat(3, minmax(min-content, 1fr));
+  }
+}
+
+/* 1.1.9 — the brand is the customer's: Site Logo blocks (a light and a dark one, swapped with data-theme) beside the
+   Site Title, in the header and in the footer lock. An empty spot stays empty (tracy-logo-bare): the name beside it is
+   the text logo. The demo ships the Kinetic glyph as both logos. */
+.tracy-header__brand .tracy-logo img { display: block; height: 26px; width: auto; }
+.tracy-footer__lock { margin: 0; }
+.tracy-footer__lock .tracy-footer__logo { width: auto; height: auto; margin: 0; }
+.tracy-footer__lock .tracy-footer__logo img { display: block; height: 24px; width: auto; }
+.tracy-footer__lock .tracy-brand { margin: 0; }
+.tracy-footer__lock .tracy-brand a { color: inherit; text-decoration: none; }
+.tracy-header__brand .tracy-logo--dark, .tracy-footer__lock .tracy-footer__logo--dark { display: none; }
+:root[data-theme='dark'] .tracy-header__brand .tracy-logo--light, :root[data-theme='dark'] .tracy-footer__lock .tracy-footer__logo--light { display: none; }
+:root[data-theme='dark'] .tracy-header__brand .tracy-logo--dark, :root[data-theme='dark'] .tracy-footer__lock .tracy-footer__logo--dark { display: block; }
+/* Design system: the demo's logo is a picture of the Kinetic glyph in its own lime (kinetic-mark.png and
+   kinetic-mark-dark.png in the quickstart's uploads). Under a system it is painted in the accent-text role,
+   cut to the glyph's shape (assets/images/favicon.svg, the same two strokes), as the Joomla template strokes
+   its glyph with the readable accent. Each declaration reads the role with no fallback, so with no system it
+   is invalid at computed-value time and the picture draws exactly as before. A logo the customer uploads has
+   another file name and is never repainted. The second mask layer is fully transparent: it is there only to
+   read the role. The two values are custom properties of the theme's own, so each reader carries the
+   template's value as its fallback (content: normal, mask: none, what the picture computes to with no rule):
+   with no system the properties are guaranteed-invalid and the readers take those values. */
+:root {
+  --kds-logo-paint: linear-gradient(var(--ds-c-accent-text), var(--ds-c-accent-text));
+  --kds-logo-mask: url("../images/favicon.svg") center / contain no-repeat,
+    linear-gradient(color-mix(in srgb, var(--ds-c-accent-text) 0%, transparent), transparent);
+}
+.tracy-header__brand .tracy-logo img[src*="/kinetic-mark"],
+.tracy-footer__lock .tracy-footer__logo img[src*="/kinetic-mark"] {
+  content: var(--kds-logo-paint, normal);
+  mask: var(--kds-logo-mask, none);
+}

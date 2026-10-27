@@ -1,0 +1,46 @@
+# Local stand of the tracy block theme on the images the fleet's fresh-WordPress path uses.
+#   docker compose -f dev/compose.yml up -d web
+#   dev/verify.sh                                  (installs WP, the theme from ../dist, demo content)
+#   docker compose -f dev/compose.yml down -v      (start over)
+# Named, because the directory is `dev` in every package and compose would otherwise share one project.
+name: tracy-wordpress-theme
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: tracy-dev
+      MARIADB_DATABASE: wp
+    volumes:
+      - db:/var/lib/mysql
+
+  web:
+    image: wordpress:apache
+    depends_on: [db]
+    ports:
+      - "127.0.0.1:8089:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: tracy-dev
+      WORDPRESS_DB_NAME: wp
+    volumes:
+      - webroot:/var/www/html
+
+  cli:
+    image: wordpress:cli
+    depends_on: [db, web]
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: tracy-dev
+      WORDPRESS_DB_NAME: wp
+    volumes:
+      - webroot:/var/www/html
+      - ../dist:/dist:ro
+    entrypoint: ["wp"]
+    profiles: [tools]
+
+volumes:
+  db: {}
+  webroot: {}

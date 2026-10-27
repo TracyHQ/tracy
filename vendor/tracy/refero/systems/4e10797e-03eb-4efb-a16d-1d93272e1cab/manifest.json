@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4e10797e-03eb-4efb-a16d-1d93272e1cab",
+  "status": "complete",
+  "name": "Luro",
+  "url": "https://styles.refero.design/style/4e10797e-03eb-4efb-a16d-1d93272e1cab",
+  "sourceWebsite": "https://luroapp.com",
+  "extractedAt": "2026-06-03T21:06:03.390Z",
+  "capturedAt": "2026-10-08T05:11:25.050807+00:00",
+  "theme": "dark",
+  "industry": "design",
+  "description": "Crimson laser chamber. Deep obsidian walls, every surface ringed in hot pink plasma.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ca611445-935c-4cba-9864-dd10d4598646.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/3274fcf2-0169-4b0d-9ed9-076ce4f65cd7.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/80d2b937-747e-4831-9d2c-3602bc884b51.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/8ebc7b75-dd72-4161-88e4-8bc44e524111.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/046580d6-5e5f-44f1-be63-e61b577cc434.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "01b80acd620520c626a6cb4009216b1726c647f737dda6d388486610576da7d6",
+      "bytes": 21034
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "0247a5b6ed2d239481017341480a91c09ded647694073eb39a33cbcdebf36fd3",
+      "bytes": 95529
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "28faaf577f22982a927ceda0a4fc01719327a9d5acd37a044cd5fb2c0df58538",
+      "bytes": 16937
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f20ec6e3a598c0bfd7f929867b08fc7ee5b80e54dd67bf0b2eb993c713eeac12",
+      "bytes": 9869
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b9ca120a7dde97b0407be1e58e4ae150f634d4a28d7cb6168bab14f16846a5ce",
+      "bytes": 11784
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8d20c1c607ce5ef5b9d325bb533de4e13e6654e943c3e5be8d921d9691592410",
+      "bytes": 2585
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "9eaab26ee9437188f94486610490f873e8d7bc100038134cc39ded625d2a031c",
+      "bytes": 576
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "04d0f76114f4fb0fc02311807b64d2b6474216d0cdfeb24a9420c766194cd085",
+      "bytes": 593
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "2e7a99c034e4b6600b5c373611f19c97da1ed175641ecdaa8799503fd902a333",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "41ec862b258dc4714ec2cc8bba161135fdf4d0c8dc5e70de9944d4c70be2f8d1",
+      "bytes": 44621
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9f2cbe21d9e9fcb6bac4b29cddd8382f294b07d879d8c2886f38f4ae323be2c5",
+      "bytes": 23665
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "327d8f38368ed512dad9709a9add1b599b14b46d0463b13b7c39d594de9e4035",
+      "bytes": 46411
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4c3d15b4fe08ad7dd89819092ff0fce1d3909991ef483d9f7da397a0e5e3388c",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "580da56956c84c124f233097cab5673844a1d7f57ea6b0fe8f64dfdd7c9ffda4",
+      "bytes": 2091
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "83935de533744510195b9cff0fa93c8415982a5a1da673c1dcfb10ca71819380",
+      "bytes": 2646
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "029d3ce0-0fe5-4a8c-99c4-4f9d704f1c60",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "18a75348-513a-49d8-94f5-e2df8c118b6b",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "41547c7a-3bbe-49f0-95d6-9701c9df9a5e",
+    "4e10797e-03eb-4efb-a16d-1d93272e1cab",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "ab8450d9-1b42-4395-aa24-9e277f021aa1",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "d5799c71-f9ae-4bad-aef3-4c07bac42c08",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

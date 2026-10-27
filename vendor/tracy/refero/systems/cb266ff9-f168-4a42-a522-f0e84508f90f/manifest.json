@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "cb266ff9-f168-4a42-a522-f0e84508f90f",
+  "status": "complete",
+  "name": "Desktop.fm",
+  "url": "https://styles.refero.design/style/cb266ff9-f168-4a42-a522-f0e84508f90f",
+  "sourceWebsite": "https://desktop.fm",
+  "extractedAt": "2026-06-03T17:16:42.795Z",
+  "capturedAt": "2026-10-08T05:17:32.716149+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "Chrome disc in a laser grid — Apple keynote restraint meets cyberpunk CD-ROM nostalgia.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/27259dd9-dbf8-47c4-b767-d515e865b31d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/515c987b-bfb1-446a-b4d7-c51307513121.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/2d0fe567-3bcd-4110-841f-f8731a6b7bba.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3ac0dc08-a83b-4b8e-96e1-812b4b2074cd.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/39100670-cd23-49fc-a6a1-1ae9c4d8132b.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5496e8abdd5df29a8279b9f06e81807bf7cfb43ac8a3f6ba1dc348f93924e549",
+      "bytes": 15899
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7a7968d1b53b00ade17467098c9a33100d6eb5bbfd3ceab17f4d2dd1eda90277",
+      "bytes": 41087
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "08710726a0a4dcb675505692cb1bf11a058450566a04706d0187dc45d95c8843",
+      "bytes": 13339
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ca4324fcf28ca7288f7cf5f6cff978ac08d10b6f20c4f3c2fc60a11b7aa82cd4",
+      "bytes": 5478
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b6e9ce73c9ebee4247e8d345f81407a25a4ea6692ff13f7f2b99d8b184d9747e",
+      "bytes": 10238
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "93cdf8b23281c0f584970d47685a6f82714d70968eae07e895bb9543df3748ad",
+      "bytes": 2335
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ee5525a04bd51ecf6eeda1c20d028c46e42561e0c18bfc30cf291a23db6447b8",
+      "bytes": 628
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "dfb50f840c95909d6fdad1cced6d8a1c5b2d85420ddec01f77d30bf8442b351a",
+      "bytes": 645
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "547cd6d679e96b6584bdb5c664542c8b705e129430f8a1fd8f302066034a6e10",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "00fec54caefe0f28d18e34b279f3e350d9759a27d979502af5eacc4d49608b83",
+      "bytes": 39746
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "194e1a32cbd791971f984dcdcedc10ba69acaa4c07e1e5a764d1cd3b92dbcc2b",
+      "bytes": 20752
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f9d55e4e529c4f78edb275461caac40e481a69cbcdbc34d146fdb8abb86039cb",
+      "bytes": 24570
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c7a38faf1932151b01840ded62e08283d680e71b7330c1d51157d09911b0138c",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "43b03efededcbaebe669d6c3f70e274f24c692d2a93c0c00ec9746531d043a1f",
+      "bytes": 1209
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "76c84fd9ea5d09e4e7a909cea1f64dfa3749052adb6fc7901e238a99e703a752",
+      "bytes": 1691
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "08c0ead0-1899-47b4-bfdc-865ab459bbe5",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+    "2b49d4b2-8461-4985-b7ee-cf9517e19803",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "b458ca1a-70f0-4f85-b745-f879a4d08457",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cb266ff9-f168-4a42-a522-f0e84508f90f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "dd89ce6c-f0aa-4ca8-bd63-19dcd81920a7",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d"
+  ]
+}

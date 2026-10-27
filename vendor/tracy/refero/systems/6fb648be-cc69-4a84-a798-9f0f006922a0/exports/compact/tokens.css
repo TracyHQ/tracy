@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-cream-paper: #fbf8f6;
+  --color-pure-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-charcoal: #333333;
+  --color-smoke: #6c6a6a;
+  --color-ash: #dadada;
+  --color-butter-highlight: #f1f29f;
+
+  /* Typography — Font Families */
+  --font-graphik: 'Graphik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-nantes: 'Nantes', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-graphik-fix-variant: 'Graphik (fix variant)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-graphikfix: 'Graphik_fix', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

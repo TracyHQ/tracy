@@ -1,0 +1,202 @@
+{
+  "dos": [
+    "Use Good Sans weight 400 at every size — never introduce bold or medium weights to create hierarchy",
+    "Set section breaks to 160px of vertical whitespace; this is the system's most recognizable rhythm",
+    "Let project images fill 100% viewport width with zero border-radius and zero frame",
+    "Use Whisper Taupe #afa697 for secondary headlines and Ink Carbon #2e2a2b for primary statements in the same block",
+    "Use 100px border-radius on the nav indicator dot — it must read as a perfect circle",
+    "Keep left-edge text alignment with 64px padding from viewport edge on every section",
+    "Use Bone Cream #e6dcd4 only for footer-level coda sections, never mid-page"
+  ],
+  "donts": [
+    "Don't add drop-shadows to any element — depth comes from fill, not blur",
+    "Don't use Signal Orange #fe5431 or Amber Pulse #ff8000 as button backgrounds or link colors — they are decoration only",
+    "Don't introduce a max-width container on text blocks — the left-edge 64px padding is the only gutter",
+    "Don't use a second typeface, even for captions — Good Sans 400 covers the entire voice",
+    "Don't add borders, dividers, or rules between sections — let whitespace do the work",
+    "Don't crop project images with rounded corners or contain them in cards",
+    "Don't bold or italicize any text for emphasis — use the taupe-to-carbon color shift instead"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#2e2a2b",
+      "name": "Ink Carbon",
+      "role": "Primary text, logo mark, dark surface inversions, footer text on cream — a near-black with a barely-warm undertone that keeps the page from feeling clinical",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas and nav surface — the warm-white background that everything floats on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#afa697",
+      "name": "Whisper Taupe",
+      "role": "Supporting neutral for secondary UI, dividers, and muted labels.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6dcd4",
+      "name": "Bone Cream",
+      "role": "Alternate panel background and footer band — a warm cream that signals a quieter section without leaving the monochrome family",
+      "group": "neutral"
+    },
+    {
+      "hex": "#212121",
+      "name": "Lampblack",
+      "role": "Deep surface for inversions and image overlays — slightly cooler than Ink Carbon, used where absolute darkness is needed without color cast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fe5431",
+      "name": "Signal Orange",
+      "role": "Decorative illustration accent — appears inside graphic bands and artwork, never as a UI control fill",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff8000",
+      "name": "Amber Pulse",
+      "role": "Decorative illustration accent — companion to Signal Orange inside warm gradient bands and visual punctuation",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page is full-bleed with no max-width container. The hero opens with a left-aligned text block at 64px inset from the viewport edge, followed by a warm gradient band, then a sequence of full-viewport-height project plates stacked vertically. Navigation is reduced to a wordmark top-left and a circular dot top-right — there is no horizontal nav bar, no sidebar. Section rhythm is dictated by 160px gaps between the last text block and the next image, and by the alternation of type-heavy and image-heavy blocks. Content density is low: one idea per screen, one image per idea.",
+  "imagery": "Photography is full-bleed and cinematic: wide-angle product and architectural shots, often at golden hour, with deep horizon lines and minimal foreground clutter. The Joby Aviation frame centers a single subject against a silhouetted skyline, letting the object own the composition. No lifestyle context, no human subjects, no text overlays baked into the image. Imagery is text-dominant-page's counterweight: when the type is generous, the image is enormous, and vice versa. Illustration is reserved for warm gradient bands that act as visual breaths between sections.",
+  "similar": [
+    {
+      "why": "Same single-weight typography, full-bleed editorial imagery, and left-edge text alignment at the viewport gutter — both treat the page as a printed spread",
+      "business": "Pentagram"
+    },
+    {
+      "why": "Shared playful-but-restrained digital studio voice with monochrome type and warm accent colors reserved for decorative moments",
+      "business": "Resn"
+    },
+    {
+      "why": "Same generous negative space, humanist single-weight sans, and portfolio-first page structure with minimal navigation chrome",
+      "business": "Manual"
+    },
+    {
+      "why": "Full-viewport project plates stacked vertically with caption rows beneath, and near-zero use of UI decoration between frames",
+      "business": "Locomotive"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "100px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "160px",
+    "cardPadding": "",
+    "pageMaxWidth": null
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper Canvas",
+      "level": 0,
+      "purpose": "Default page background and nav surface"
+    },
+    {
+      "hex": "#e6dcd4",
+      "name": "Bone Panel",
+      "level": 1,
+      "purpose": "Footer band and quiet alternation sections"
+    },
+    {
+      "hex": "#212121",
+      "name": "Lampblack Overlay",
+      "level": 2,
+      "purpose": "Image overlays and inversion surfaces"
+    }
+  ],
+  "northStar": "Editorial spread on warm paper. A single humanist voice, monochrome with a whisper of taupe, interrupted only by full-bleed photography and a slim band of warm orange.",
+  "typeScale": [
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "body-lg",
+      "size": 22,
+      "lineHeight": 1.31
+    },
+    {
+      "role": "subheading",
+      "size": 27,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "display",
+      "size": 60,
+      "lineHeight": 1.09
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Nav Indicator",
+      "role": "Primary navigation trigger",
+      "description": "A solid dark dot (Ink Carbon #2e2a2b) positioned in the top-right corner, acting as the menu/menu-state indicator. 100px border-radius makes it a perfect circle. No background fill beyond the dot itself."
+    },
+    {
+      "name": "Wordmark Logo",
+      "role": "Brand identity mark",
+      "description": "The text 'INK' set in Good Sans 400 at ~22px, Ink Carbon #2e2a2b, top-left of the viewport with 64px left padding. No icon, no enclosure — the typography alone carries the brand."
+    },
+    {
+      "name": "Hero Statement Block",
+      "role": "Opening page headline",
+      "description": "Two stacked lines: a muted taupe lead-in ('Technology made Beautiful.') at 27px in Whisper Taupe #afa697, followed by the main statement at 60px in Ink Carbon #2e2a2b. Left-aligned with 64px left padding, generous line-height (1.09 on the 60px line). No border, no background — just type on paper."
+    },
+    {
+      "name": "Full-Bleed Project Plate",
+      "role": "Portfolio showcase frame",
+      "description": "Edge-to-edge image occupying 100% viewport width, 100% viewport height of its container. No border-radius, no frame, no caption inside the image area. Photography extends past all gutters."
+    },
+    {
+      "name": "Project Caption Row",
+      "role": "Label and pagination beneath an image",
+      "description": "Single row below each project plate, separated from the image by ~64px of white. Left: project name in Good Sans 400 at 18px, Ink Carbon #2e2a2b. Right: '1/7' counter in the same size. No dividers, no icons."
+    },
+    {
+      "name": "Decorative Warm Band",
+      "role": "Section transition graphic",
+      "description": "A full-bleed gradient strip using Signal Orange #fe5431 to Amber Pulse #ff8000, with soft cloud-like diffusion. Appears as a visual exhale between text sections. Lives outside the type system — never carries copy."
+    },
+    {
+      "name": "Cream Footer Panel",
+      "role": "Closing section surface",
+      "description": "Bone Cream #e6dcd4 background spanning full viewport width, with Ink Carbon #2e2a2b type. Functions as a quiet coda — the only departure from pure white inside the page."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single voice across the entire interface — body, nav, buttons, headings, and display all share weight 400. The absence of bold is the signature: hierarchy comes from size and color, not weight.",
+      "sizes": "18px, 22px, 27px, 60px",
+      "family": "Good Sans",
+      "weight": "400",
+      "lineHeight": "1.0–1.75 (size-dependent)",
+      "substitute": "Inter, Söhne, or GT America — any humanist sans with a relaxed x-height and open apertures will carry the same conversational tone",
+      "letterSpacing": "normal at all sizes"
+    }
+  ],
+  "description": "INK is an editorial gallery for a digital studio: warm-white paper, a single weight of a humanist sans, and photography that fills the viewport edge-to-edge. The palette is almost entirely grayscale with one warm taupe (#afa697) doing duty as a 'whispered' secondary voice, while a pair of vivid oranges surfaces only inside decorative bands and illustrations — never inside UI controls. Components are reduced to their quietest form: pill-shaped nav, hairline-thin labels, and image captions that float beneath full-bleed frames. The visual rhythm alternates between vast editorial type passages and cinematic image plates, separated by 160px of negative space.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Page background: #ffffff (Paper White)\n- Primary text: #2e2a2b (Ink Carbon)\n- Muted/secondary text: #afa697 (Whisper Taupe)\n- Borders/dividers: none (use whitespace)\n- Decorative accent: #fe5431 (Signal Orange) — illustration bands only\n- primary action: no distinct CTA color\n\n## Example Component Prompts\n1. **Hero Statement**: Left-aligned text block, 64px from viewport left edge. Lead-in line in Good Sans 400, 27px, #afa697, line-height 1.25. Primary statement in Good Sans 400, 60px, #2e2a2b, line-height 1.09. No background, no border, 160px space below before next section.\n2. **Full-Bleed Project Plate**: Image container at 100vw × 100vh, no border-radius, no shadow, no caption inside. Below: a single row with project name left-aligned and '1/7' right-aligned, both in Good Sans 400, 18px, #2e2a2b, 64px below the image.\n3. **Pill Nav Dot**: 16px circle in #2e2a2b, 100px border-radius, positioned top-right with 32px margin from edges. No label, no tooltip chrome.\n4. **Cream Footer Panel**: Full-width band in #e6dcd4, with body text in Good Sans 400, 18px, #2e2a2b. 64px vertical padding, no dividers above or below.\n5. **Decorative Warm Band**: Full-bleed strip ~200px tall between text sections, using a soft gradient from #fe5431 through #ff8000 with cloud-like diffusion. Carries no text."
+    },
+    {
+      "title": "Weight Strategy",
+      "content": "The single-weight typography is the system's most distinctive decision. Most design systems use 2–4 weights to build hierarchy; INK uses 1 weight and lets size (18 → 22 → 27 → 60) and color (#afa697 → #2e2a2b) carry the entire hierarchy. This creates a conversational, almost spoken quality — the page reads like someone thinking out loud, not shouting from a billboard. When generating new pages, resist the urge to add bold for emphasis; instead, shift the color or scale the size."
+    },
+    {
+      "title": "Negative Space as Material",
+      "content": "160px between major sections is not a margin — it is a structural element. The page breathes in these gaps, and the user's eye resets before the next idea. Compression (16–32px) only appears inside caption rows and nav positioning. Any new page built on this system must respect the 160px cadence or it will read as a different brand entirely."
+    }
+  ],
+  "elevationPhilosophy": "The system has no shadows. Depth comes from scale and negative space, not drop-shadow. Where a dark element must rise above a light one, it does so by being filled with Lampblack or Ink Carbon — never by being raised with a blur."
+}

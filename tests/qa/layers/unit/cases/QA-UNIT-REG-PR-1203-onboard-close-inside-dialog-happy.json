@@ -1,0 +1,49 @@
+{
+  "id": "QA-UNIT-REG-PR-1203-onboard-close-inside-dialog-happy",
+  "itemIds": ["regression:REG-PR-1203-onboard-close-inside-dialog"],
+  "requirement": "The Getting started dialog keeps its Close (x) and Hide buttons inside the card at 360 and 390 px",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1203-onboard-close-inside-dialog.json",
+    "ref": "PR #1203 (fix); fix evidence: Dev 12/10/2026 (develop e5ea4dd849) at 360 px: .tv-ob-close at x=371..397, dialog 24..336, viewport 360.",
+    "invariant": "S1: all six tests pass: Close ends at least 8 px inside the dialog's right edge and inside the viewport; Hide starts inside the dialog. S2: .tv-ob-close right edge <= .tv-ob-dialog right edge.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-onboard/test/e2e/top-row-fits.test.mjs:72 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:chrome"],
+  "assertionIds": ["at 360px", "at 390px", "at 1440px"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1203-onboard-close-inside-dialog"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-onboard", "tracy-onboard"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1203-onboard-close-inside-dialog",
+    "pr": 1203,
+    "kind": "fix",
+    "area": "ui/onboard",
+    "file": "tests/regression/cases/REG-PR-1203-onboard-close-inside-dialog.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-force-exit",
+    "--test-reporter=tap",
+    "packages/ui/tracy-onboard/test/e2e/top-row-fits.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["chrome"],
+  "tests": ["at 360px", "at 390px", "at 1440px"],
+  "timeoutS": 300
+}

@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-002-pending",
+  "itemIds": ["regression:REG-002"],
+  "requirement": "EmDash backup and restore check read SQLite through node:sqlite, not host python3 (3.40)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-002-emdash-backup-node-sqlite.json",
+    "ref": "PR #747 (fix); fix evidence: tasks/evidence/site-changes-v2/qa/r1/bugs/QA-I01.md (fix 8bff4ef63; side files d131ca337); the QA note is Studio-local (not in git), the fix commit is on develop",
+    "invariant": "S3: both commands print rc=0 (the branch lib/site-backup.sh _tracy_sqlite takes is node:sqlite, not python3). S5: HTTP 200, ok true, database.state 'full', engine 'sqlite', size > 0, sha256 = 64 lowercase hex (pre-fix: database.state 'none'; host python3 SQLite 3.40 failed with 'malformed database schema … near ORDER'). S6: v<N>.sqlite.gz and v<N>.uploads.tar.gz exist, both -rw-------; no entry starting with '.v<N>.' (no .tmp/-wal/-shm left); sha256 of v<N>.sqlite.gz == database.sha256; its byte count == database.size. S6: tag contents contain 'Tracy-Database: sha256:<database.sha256> size:<database.size> kind:sqlite tables:<n>' with n ≥ 1, and a line starting 'Tracy-Uploads: sha256:'. S7: last line is 'rc=0' and the integer printed before it equals the trailer's tables:<n>. S8: HTTP 200, ok true, status 'succeeded', version == N (pre-fix: 409 BACKUP_NOT_FULL, or 409 RESTORE_REFUSED reason RESTORE_FAILED at the load/check step). S9: latest site_operation: action 'restore-everything', status 'succeeded', error empty; site answers 200 within 120 s; /backups has a row kind 'backup', auto 'pre-restore', version N+1, database.state 'full', engine 'sqlite'.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer infra, needs stand, site:em, seat:owner"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:site:em", "need:seat:owner"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-002"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:infra"],
+  "regression": {
+    "id": "REG-002",
+    "pr": 747,
+    "kind": "fix",
+    "area": "fleet/backup-sqlite",
+    "file": "tests/regression/cases/REG-002-emdash-backup-node-sqlite.json"
+  },
+  "ownerLayer": "infra",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "site:em", "seat:owner"]
+}

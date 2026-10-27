@@ -1,0 +1,83 @@
+---
+/**
+ * EmDash Portable Text wrapper
+ *
+ * Pre-configured with EmDash's built-in components for images, code blocks,
+ * embeds, galleries, tables, etc.
+ *
+ * In edit mode, renders a TipTap-based inline editor instead of static HTML.
+ * The edit metadata is detected automatically from the value — no extra props needed.
+ *
+ * Plugin block rendering components are auto-merged from plugins that declare
+ * a `componentsEntry`. Plugin components are merged between EmDash defaults
+ * and user overrides, so users can still override individual block types.
+ */
+import {
+	PortableText as BasePortableText,
+	mergeComponents,
+	type PortableTextProps,
+} from "astro-portabletext";
+import {
+	buildPortableTextListTree,
+	clonePortableTextValue,
+} from "../content/portable-text-lists.js";
+import { getEditMeta } from "../query.js";
+// @ts-ignore - virtual module
+import { pluginBlockComponents } from "virtual:emdash/block-components";
+import { emdashComponents } from "./index.js";
+import InlineEditor from "./InlineEditor.astro";
+import { groupBlockquoteRuns } from "./portable-text-blockquote-group.js";
+
+export interface Props extends Omit<PortableTextProps, "value"> {
+	value: PortableTextProps["value"];
+	/** Initial label for read-only inline tables; defaults to English. */
+	tablePlaceholder?: string;
+}
+
+const {
+	value,
+	components: userComponents,
+	listNestingMode = "html",
+	tablePlaceholder,
+	...rest
+} = Astro.props;
+
+// Check for edit metadata (attached as non-enumerable property by query functions)
+const editMeta = getEditMeta(value);
+
+// Merge: EmDash defaults < Plugin block components < User components
+const withPlugins = mergeComponents(emdashComponents, { type: pluginBlockComponents });
+const mergedComponents = userComponents
+	? mergeComponents(withPlugins, userComponents)
+	: withPlugins;
+
+// A multi-paragraph quote is stored as consecutive blockquote-styled blocks
+// (Portable Text is flat); merge each run into one blockquoteGroup node so
+// it renders as a single <blockquote> instead of several.
+let renderValue = value;
+if (!editMeta) {
+	const cloned = clonePortableTextValue(Array.isArray(value) ? value : value ? [value] : []);
+	const grouped = groupBlockquoteRuns(cloned);
+	renderValue = buildPortableTextListTree(
+		grouped as Array<Record<string, unknown>>,
+		listNestingMode,
+	) as typeof value;
+}
+---
+
+{editMeta ? (
+	<InlineEditor
+		value={value}
+		collection={editMeta.collection}
+		entryId={editMeta.id}
+		field={editMeta.field}
+		tablePlaceholder={tablePlaceholder}
+	/>
+) : (
+	<BasePortableText
+		value={renderValue}
+		components={mergedComponents}
+		listNestingMode={listNestingMode}
+		{...rest}
+	/>
+)}

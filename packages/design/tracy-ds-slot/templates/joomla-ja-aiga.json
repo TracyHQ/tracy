@@ -1,0 +1,330 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-aiga",
+  "release": "quickstart/ja-aiga/j6@1.0.0",
+  "measuredPage": "/index.php/homepage/home-default",
+  "roles": {
+    "page": "body.one-screen.no-sidebar",
+    "display": "h1"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 45px",
+    "displayFace": "Prata 400, tracking 0em",
+    "displayPhone": "the same heading at 390 on the published release: 20px"
+  },
+  "keepScopes": [],
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "baseTokens": {
+    "--bg": "#000000",
+    "--fg": "#9e9e9e",
+    "--fg-2": "#ffffff",
+    "--accent": "#dec180",
+    "--accent-hover": "#dec180",
+    "--surface": "#f7f7f7",
+    "--meta": "#888888",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#1a1a1a",
+    "--muted": "#666666",
+    "--font-display": "\"Prata\", sans-serif",
+    "--font-body": "\"IBM Plex Sans\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#000000",
+      "fg": "#9e9e9e",
+      "fg-2": "#ffffff",
+      "accent": "#dec180",
+      "accent-hover": "#dec180",
+      "surface": "#f7f7f7",
+      "meta": "#888888",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#1a1a1a",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#000000"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface-warm": "#ffffff",
+      "surface": "#eeeeee",
+      "border-soft": "#e8e8e8",
+      "border": "#1f1f1f",
+      "bg": "#080808"
+    },
+    {
+      "surface": "#f5f5f5",
+      "border-soft": "#e5e5e5",
+      "border": "#262626"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border-soft": "#e1e1e1",
+      "border": "#101010"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border-soft": "#e0e2e3",
+      "border": "#202020"
+    },
+    {
+      "surface": "#f7f7f7",
+      "border": "#0d0d0d",
+      "border-soft": "#e3e3e3"
+    },
+    {
+      "surface": "#f8f8f8",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "surface": "#f9f2f4",
+      "border-soft": "#f2f2f2"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (60 line colours, 73 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": "#t3-mainnav .level0 li:not(.active) > a, .t3-footer small",
+    "body": ".t3-wrapper p, .t3-wrapper li, .t3-wrapper small",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "head-search",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on /index.php/homepage/home-default and its home page, of 14 tried (byte 8946); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#ffffff",
+      "uses": 399,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#fbfbfd",
+      "distance": 6
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 104,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#e8e8e8",
+      "uses": 90,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f5f5f5",
+      "uses": 77,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#1f1f1f",
+      "uses": 72,
+      "kind": "line",
+      "role": "border",
+      "near": "#1a1a1a",
+      "distance": 9
+    },
+    {
+      "hex": "#080808",
+      "uses": 64,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#000000",
+      "distance": 14
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 44,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 31,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 25,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#262626",
+      "uses": 23,
+      "kind": "line",
+      "role": "border",
+      "near": "#1a1a1a",
+      "distance": 21
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 16,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 0
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 16,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 14,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 12,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 2
+    },
+    {
+      "hex": "#101010",
+      "uses": 8,
+      "kind": "line",
+      "role": "border",
+      "near": "#1a1a1a",
+      "distance": 17
+    },
+    {
+      "hex": "#202020",
+      "uses": 8,
+      "kind": "line",
+      "role": "border",
+      "near": "#1a1a1a",
+      "distance": 10
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 7,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#0d0d0d",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#1a1a1a",
+      "distance": 23
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 5,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 12
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 5,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 15
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the 1.0.1 release build itself (quickstart/ja-aiga/j6 1.0.0 tokenized by release-batch.mjs, stood up from its own zip: tasks/evidence/ds-contracts-r3b-2026-10-11/templates/ja-aiga-j6) on /index.php/homepage/home-default, the real home layout (its home page is a Dark. / Light. demo chooser): controls 0 differences, no text made less readable than the template's own under the systems tried, 73% or more of the page follows, every contrast kind sampled at 1440 and 390; the page is one full-screen dark photo with every text on it, so the text there stays light on both sides (sideRules: the system's page colour on a light system, its text colour lightened toward white on a dark one) — the role check misses only the page ground under the light systems, which the photo covers; checked by eye on the four systems' screenshots, desktop and phone, and on About Us, Blog and the columns layout. Re-measured 11/10/2026 with the probe as it stands (every visible heading and text judged per element against the paint beneath it, pictures included, carousels held still) on the 1.0.1 zip (identical to the published asset), T4 caches cleared: 8/12 verdicts, controls 0 differences, no text made less readable than the template's own, 73% or more of the page follows, every contrast kind sampled at 1440 and 390 (the failed verdicts are page-role misses only, as before); the contrast kinds now read every heading and text on the page; checked by eye on the four systems' desktop and phone screenshots: tasks/evidence/ds-remeasure-1-2026-10-11/templates/ja-aiga-j6. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-aiga 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 8/12 verdicts (the four failed are the page-background role under the light systems only: the one-screen photo covers the page, as before), controls 0 differences, no text below 4.5:1 worse than the template's own, 73-100% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-aiga-j6",
+  "alphaVars": ["fg-2-80", "fg-80"],
+  "sideRules": {
+    "light": {
+      "body.one-screen, body.one-screen .t3-wrapper": {
+        "background-color": "var(--ds-c-fg)"
+      },
+      "body.one-screen :is(#t3-header, #t3-mainnav, .t3-hero, .t3-footer) :is(a, span, h1, h2, h3, h4, p, small, li, div):not(.btn, .btn *, button, button *)": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".clients-wrap .client-img img": {
+        "filter": "invert(1)"
+      }
+    },
+    "dark": {
+      "body.one-screen :is(#t3-header, #t3-mainnav, .t3-hero, .t3-footer) :is(a, span, h1, h2, h3, h4, p, small, li, div):not(.btn, .btn *, button, button *)": {
+        "color": "color-mix(in srgb, var(--ds-c-fg) 35%, #ffffff)"
+      }
+    }
+  },
+  "sideNote": "the one-screen layouts (the home page and its demo chooser) are one full-screen dark photo with every text on it, laid by an absolutely positioned slide layer. On a light system the text on the photo takes the system's page colour (its light) and the ground behind the photo the system's text colour, so the text stays light on the photo and the probe, which judges it against that ground, sees the pair a reader sees; the round header buttons keep their own icon. On a dark system the text on the photo takes the system's text colour lightened toward white (35% of it): the system's own text colour is not light enough for the photo (Toggl Track's pink #c56abc on the red hood, about 3.7:1 by the photo's mean colour where the template's white reads 13:1, 11/10/2026), and keeping the template's white left a quarter of the page following. Fonts, sizes and the button follow on both sides. Other layouts are not one-screen and follow as drafted. About Us shows its client logos as white images drawn for the dark page: inverted on a light system",
+  "contrastNote": "the measured page (a one-screen photo) has no paragraph: body text is the menu and the copyright line, muted text the menu at the template's 80% and the copyright line, so every kind has samples at 1440 and 390",
+  "minVersion": {
+    "quickstart/ja-aiga/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-aiga/j6": "1.0.1"
+  }
+}

@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-aubergine-canvas: #181824;
+  --color-elevated-plum: #26253b;
+  --color-pure-white: #ffffff;
+  --color-fog-text: #696f81;
+  --color-ash-text: #8e8da0;
+  --color-mist-highlight: #a3a3a7;
+  --color-whisper-border: #f7f7ff;
+  --color-coral-ember: #ff4a36;
+  --color-iris-accent: #535676;
+
+  /* Typography — Font Families */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-haffer-xh-semibold: 'Haffer XH SemiBold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-jersey-10: 'Jersey 10', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-satoshi: 'Satoshi', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-haffer-xh-semibold-italic: 'Haffer XH SemiBold Italic', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-customblender-medium: 'CUSTOM;Blender Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

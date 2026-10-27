@@ -1,0 +1,44 @@
+{
+  "color": {
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary text, icon strokes, hairline borders, outlined button frame — the only foreground color on the dark canvas, used at full opacity for headlines and at 1px hairline weight for UI structure"
+    },
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Deep background fill, SVG icon bases — the absolute floor of the visual hierarchy, used for full-bleed canvas and asset fills"
+    },
+    "carbon": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Carbon — Heading text on light sections, deep surface layer — near-black with a whisper of warmth, used where #000000 would feel too flat"
+    },
+    "fog": {
+      "$value": "#f5f5f7",
+      "$type": "color",
+      "$description": "Fog — Secondary text, subtle panel surfaces, light-section borders — cool-tinted off-white that softens transitions on inverted sections"
+    },
+    "ash": {
+      "$value": "#cfcfcf",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, disabled states, tertiary borders — the mid-gray for elements that should recede"
+    }
+  },
+  "font": {
+    "unbounded": {
+      "$value": "Unbounded",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for everything — headlines, body, buttons, nav. Its geometric, slightly squared character with wide-aperture letterforms reads as digital-native and architectural. Weight 100 for display text creates a near-wireframe quality that feels holographic against the dark background."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ohzi.io",
+      "siteName": "OHZI Interactive Studio / Dive into digital magic.",
+      "extractedAt": "2026-06-03T19:35:15.938Z",
+      "variant": "compact"
+    }
+  }
+}

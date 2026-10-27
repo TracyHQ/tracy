@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1512-confirm-card-language",
+  "kind": "fix",
+  "title": "A confirm card names the record Tracy read, says yes/no and the call's own verb in the conversation's language, and is never shown in the door's English to another language; writes carry the record's title",
+  "pr": 1512,
+  "area": "site-tools/confirm",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the run.cmd below.",
+    "S2: Read the exit code and the pass/fail counts."
+  ],
+  "expect": [
+    "Exit 0, 0 failures.",
+    "untranslatedConfirmCard(confirmQuestion(key, sentence), 'Vietnamese') names the question id as still in English and asks for Vietnamese; the same card with a Vietnamese question and options passes; 'English' and '' pass; a question whose id does not start with confirm- passes.",
+    "site-call: a delete asks 'This deletes \"<title>\" from your site.' with the title read by content.get; an unreadable record answers TARGET_UNREAD and nothing is deleted; a hide card saying delete, or swapped buttons, is refused in Vietnamese.",
+    "emdash: content_unpublish asks with the entry's title read by content_get; an unreadable entry answers TARGET_UNREAD.",
+    "handler: a write's Apply call carries x-tracy-write-title only with the title read for the same kind and id; a read carries none."
+  ],
+  "selectors": {
+    "check": "packages/tools/tracy-site-tools/src/host/call-memory.mjs untranslatedConfirmCard",
+    "wiring": "packages/tools/tracy-site-tools/src/host/index.ts tools/pre-execute (guard=confirm-card-language)"
+  },
+  "evidence": "Local stand 20/10/2026: EmDash dskeepem typed request got 'This takes one of your posts off your site's pages. Go ahead?'; Joomla dsl4mo by Voice got 'This deletes something from your site.' read aloud, the spoken 'Dong y' matched no option (screens in ~/tracy-bench-work/voice-mode/runs-1480).",
+  "fence": "The card check as a pure function over the door's own ask. Not exercised: a model choosing to reword, the live page.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=400000",
+      "packages/tools/tracy-site-tools/test/call-memory.test.mjs",
+      "packages/tools/tracy-site-tools/test/confirm-words.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-call.test.mjs",
+      "packages/tools/tracy-site-tools/test/emdash-call.test.mjs",
+      "packages/tools/tracy-site-tools/test/handler.test.mjs"
+    ],
+    "needs": []
+  }
+}

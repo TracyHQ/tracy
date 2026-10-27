@@ -1,0 +1,59 @@
+{
+  "color": {
+    "lavender-mist": {
+      "$value": "#f0f1fa",
+      "$type": "color",
+      "$description": "Lavender Mist — Page canvas — the dominant background, a cool off-white with a barely-perceptible lavender cast that makes pure black text feel sharper than it would on pure white"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Elevated card and surface backgrounds, button text on dark fills, inverted surfaces"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, all headings, body copy, icons, and link text — pure black with no softening"
+    },
+    "graphite": {
+      "$value": "#2b2e3a",
+      "$type": "color",
+      "$description": "Graphite — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "haze": {
+      "$value": "#e4e6ef",
+      "$type": "color",
+      "$description": "Haze — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "slate-hollow": {
+      "$value": "#34393f",
+      "$type": "color",
+      "$description": "Slate Hollow — Deep surface layer for dark bands or modal overlays, darker than graphite for clear hierarchy separation"
+    },
+    "electric-indigo": {
+      "$value": "#1a2ffb",
+      "$type": "color",
+      "$description": "Electric Indigo — Chromatic brand accent — appears as icon stroke, inline highlight marks, and as the signature color inside the 3D hero render. The single source of energy against the otherwise achromatic UI"
+    },
+    "acid-lime": {
+      "$value": "#c1ff00",
+      "$type": "color",
+      "$description": "Acid Lime — Highlight wash for emphasis zones, secondary accent inside 3D compositions — used sparingly as a surprise contrast"
+    }
+  },
+  "font": {
+    "aeonik": {
+      "$value": "Aeonik",
+      "$type": "fontFamily",
+      "$description": "Used for every text element on the site — navigation, body, headings, buttons, inputs. The deliberate weight ceiling at 500 (no bold) and uniformly tight -0.02em tracking create a uniform geometric confidence. Display sizes compress line-height to 0.90, letting the largest headlines (108–144px) feel sculpted rather than set. The 400 weight is the workhorse; 500 is reserved for navigation, labels, and button text where a slight emphasis is needed."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://lusion.co",
+      "siteName": "Lusion",
+      "extractedAt": "2026-06-03T18:06:30.524Z",
+      "variant": "compact"
+    }
+  }
+}

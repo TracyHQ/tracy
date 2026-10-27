@@ -1,0 +1,19 @@
+# Marker: this template is a standalone pnpm project (its own lockfile). Without this file pnpm
+# would climb to the TCH root workspace and try to resolve emdash into that lockfile.
+packages: []
+# pnpm 11 refuses dependency build scripts unless listed. These four are the ones EmDash's own
+# workspace allows (vendor/emdash/emdash/pnpm-workspace.yaml) and the template needs at runtime.
+allowBuilds:
+  better-sqlite3: true
+  esbuild: true
+  sharp: true
+  "@parcel/watcher": true
+minimumReleaseAgeExclude:
+  - tailwind-merge@3.7.0
+  - '@emdash-cms/admin@1.1.0'
+  - '@emdash-cms/auth@1.1.0'
+  - '@emdash-cms/blocks@1.1.0'
+  - '@emdash-cms/gutenberg-to-portable-text@1.1.0'
+  - '@emdash-cms/plugin-audit-log@0.2.3'
+  - '@emdash-cms/plugin-forms@0.2.9'
+  - emdash@1.1.0

@@ -1,0 +1,47 @@
+@tracy/od-design-system
+========================
+
+The `systems/` folder in this package is third-party work, copied verbatim from
+
+    OpenDesign — https://github.com/nexu-io/open-design
+    Apache License 2.0 (see the accompanying LICENSE)
+    Copied on 2026-08-31 (6 files per system); the WHOLE tree copied AGAIN on 2026-09-06 at commit
+    3d0d15fc55031e8e6cead709491e7b82565c4dee (about 40 files per system, 4,015 files, 38 MB)
+
+Tracy does NOT modify their content. Every `DESIGN.md`, `tokens.css`, `components.html` and
+`manifest.json` stays exactly as the original — it is third-party data, and editing it corrupts
+the data rather than improving it (docs/references/vocabulary.md §7).
+
+Tracy only adds three things, and all three lie outside `systems/`:
+
+  · catalog.json  — an index generated from the 152 manifests, so the agent can choose without reading 152 files
+  · slots.json    — the text-slot map of the 152 components.html (scripts/build-od-slots.mjs), so the customer's text lands in the right slot
+  · SKILL.md      — how Tracy's agent uses this library
+  · NOTICE        — this file
+
+NOTHING IS LEFT OUT (decided 31/08, actually done 06/09). The 31/08 copy took only 6 files per system (DESIGN.md, DESIGN-vi.md,
+USAGE.md, components.html, manifest.json, tokens.css) although this line already promised everything — the consequence measured 05–06/09:
+Tracy's skill taught the agent that `components.manifest.json`, `preview/*`, `design-tokens.json`, `tailwind-v4.css`,
+`source/*` "do not exist", while upstream has them all. Since 06/09 the `systems/` tree is a verbatim copy of
+upstream `design-systems/` at the commit above, including for each system:
+
+  · DESIGN.md + 17 translations DESIGN-<lang>.md · USAGE.md · manifest.json
+  · tokens.css · design-tokens.json · tailwind-v4.css · components.html · components.manifest.json
+  · preview/{colors,spacing,typography}.html · source/{evidence.md, tokens.source.json, token-contract.report.json}
+  · system/{index.html, kit.html, kit.dark.html, tokens.default.json, artifacts/{landing,deck,poster,email,newsletter,form}.html}
+    — the `system/` folder is GENERATED deterministically by upstream's brand engine from a 6-field seed; `kit.dark.html` is
+    OpenDesign's generic kit on a dark background taking the system's accent colour, NOT a dark mode drawn by the system's author.
+  · `_schema/` and `README.md` of the upstream root folder.
+
+Updating from upstream = copy the whole tree again, without picking files. 38 MB next to a 4.4 GB image is negligible.
+
+ABOUT THE BRAND NAMES in the list (`airbnb`, `stripe`, `nike`, `ferrari`…): those packages describe
+**a style inspired by** those products — the original titles them exactly that way ("Design
+System Inspired by Airbnb"). They are design-description language, not redistributed brand
+assets.
+
+An accompanying TECHNICAL note, not a legal one: a few packages reference that brand's own
+proprietary font (`Airbnb Cereal VF` is an example). The font does not ship with this package and is not
+publicly downloadable. When building a real interface, replace it with a licensed font — otherwise the page will
+silently fall back to the system font and lose exactly what makes that style. Record the font choice in the
+site's `<siteID>_brand_guidelines.md`.

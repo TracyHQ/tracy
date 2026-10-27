@@ -1,0 +1,88 @@
+{
+  "id": "QA-UNIT-REG-PR-1066-harness-review-fixes-happy",
+  "itemIds": ["regression:REG-PR-1066-harness-review-fixes"],
+  "requirement": "A finished turn records how it ended and a swept turn closes before the next opens, a partial EmDash replace is reported, a target refusal frees the lease, a picture on a Model Subscription is named, and the outage shortcut belongs to one speaker on one site",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1066-harness-review-fixes.json",
+    "ref": "PR #1066 (fix); fix evidence: none recorded",
+    "invariant": "0 failures. 'a turn that completed normally tells tracy-web it completed' and 'a turn cut at the output-token ceiling tells tracy-web so' pass: the /moment body carries endReason completed / max-tokens on dsh's real agent loop. 'a swept turn's moment is answered before the next turn's model runs' passes. 'a PARTIAL EmDash replace that wrote 4 places is reported as a write' passes. The two outage-shortcut tests and 'a subscription route declares which inputs it reads' pass. Both 'a dsh picture sent to … is either carried or named' tests pass.",
+    "productSources": [
+      "apps/tracy-web/src/lib/desktop-setting.js:6",
+      "apps/tracy-web/src/seat-plan/providers.js:2",
+      "apps/tracy-web/src/seat-plan/wire/messages.js:14",
+      "packages/site/tracy-site-tabs/lib/index.js:3260",
+      "packages/tools/tracy-site-tools/src/host/emdash.mjs:972",
+      "packages/tools/tracy-site-tools/src/host/exec.mjs:1364",
+      "packages/tools/tracy-site-tools/src/host/look.mjs:246",
+      "packages/tools/tracy-site-tools/src/host/replace-emdash.mjs:1558",
+      "packages/tools/tracy-site-tools/src/host/replace.mjs:478",
+      "packages/tools/tracy-site-tools/src/host/view.mjs:690",
+      "packages/ui/tracy-mode-picker/src/host/account-subscriptions.mjs:13"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-site-tabs/lib/index.js:3129 readFileSync() with a computed path",
+      "packages/site/tracy-site-tabs/lib/index.js:488 readFile() with a computed path",
+      "packages/site/tracy-site-tabs/test/review-turn-close.test.mjs:41 import() with a computed specifier",
+      "packages/site/tracy-site-tabs/test/review-turn-close.test.mjs:51 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a turn that completed normally tells tracy-web it completed",
+    "a turn cut at the output-token ceiling tells tracy-web so",
+    "a swept turn's moment is answered before the next turn's model runs",
+    "a PARTIAL EmDash replace that wrote 4 places is reported as a write",
+    "a seat refused by tracy-web is not let through on the default when tracy-web then goes down",
+    "the outage shortcut belongs to the speaker tracy-web answered",
+    "a subscription route declares which inputs it reads",
+    "a dsh picture sent to Claude is either carried or named, never dropped",
+    "a dsh picture sent to Codex is either carried or named, never dropped"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1066-harness-review-fixes"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-site-tabs", "tracy-site-tabs"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1066-harness-review-fixes",
+    "pr": 1066,
+    "kind": "fix",
+    "area": "agent-harness",
+    "file": "tests/regression/cases/REG-PR-1066-harness-review-fixes.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/site/tracy-site-tabs/test/review-turn-close.test.mjs",
+    "packages/tools/tracy-site-tools/test/review-emdash-changed-report.test.mjs",
+    "packages/ui/tracy-mode-picker/test/review-account-subscriptions.test.mjs",
+    "packages/ui/tracy-mode-picker/test/review-subscription-images.test.mjs",
+    "apps/tracy-web/test/review-seat-plan-images.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a turn that completed normally tells tracy-web it completed",
+    "a turn cut at the output-token ceiling tells tracy-web so",
+    "a swept turn's moment is answered before the next turn's model runs",
+    "a PARTIAL EmDash replace that wrote 4 places is reported as a write",
+    "a seat refused by tracy-web is not let through on the default when tracy-web then goes down",
+    "the outage shortcut belongs to the speaker tracy-web answered",
+    "a subscription route declares which inputs it reads",
+    "a dsh picture sent to Claude is either carried or named, never dropped",
+    "a dsh picture sent to Codex is either carried or named, never dropped"
+  ],
+  "timeoutS": 600
+}

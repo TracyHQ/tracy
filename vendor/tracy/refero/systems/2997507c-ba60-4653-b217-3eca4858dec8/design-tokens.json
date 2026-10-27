@@ -1,0 +1,288 @@
+{
+  "color": {
+    "lab-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Lab White — Page canvas, light content surfaces, reversed type, and sparse structural borders"
+    },
+    "figure-black": {
+      "$value": "#0c0c0c",
+      "$type": "color",
+      "$description": "Figure Black — Primary editorial text, dark pill button fill, navigation marks, and hairline action borders"
+    },
+    "absolute-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Absolute Black — Full-bleed dark media chapters, black hero surfaces, and form text"
+    },
+    "machine-gray": {
+      "$value": "#6d6d6d",
+      "$type": "color",
+      "$description": "Machine Gray — Technical measurements, secondary labels, muted navigation text, and subdued metadata"
+    },
+    "calibration-gray": {
+      "$value": "#cecece",
+      "$type": "color",
+      "$description": "Calibration Gray — 1px navigation separators and light technical rules"
+    }
+  },
+  "font": {
+    "pp-neue-machina-plain": {
+      "$value": "pp-neue-machina-plain",
+      "$type": "fontFamily",
+      "$description": "Uppercase navigation, technical figures, image-overlay headlines, and the 122px display title. Its monospaced-machine character turns labels and specifications into product instrumentation rather than conventional marketing type."
+    },
+    "neue-haas-grot-text": {
+      "$value": "neue-haas-grot-text",
+      "$type": "fontFamily",
+      "$description": "Body copy, contact fields, utility links, buttons, and small editorial headings. The slightly tightened grotesk keeps explanatory writing compact beside oversized technical display type."
+    }
+  },
+  "typography": {
+    "sm": {
+      "$value": {
+        "fontFamily": "pp-neue-machina-plain",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "neue-haas-grot-text",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "neue-haas-grot-text",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "neue-haas-grot-text",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "neue-haas-grot-text",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "neue-haas-grot-text",
+        "fontSize": "17px",
+        "fontWeight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 17px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "neue-haas-grot-text",
+        "fontSize": "22px",
+        "fontWeight": 400,
+        "lineHeight": 1.1,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 22px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "pp-neue-machina-plain",
+        "fontSize": "28px",
+        "fontWeight": 400,
+        "lineHeight": 1.11,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 28px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "pp-neue-machina-plain",
+        "fontSize": "52px",
+        "fontWeight": 400,
+        "lineHeight": 1.11,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 52px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "pp-neue-machina-plain",
+        "fontSize": "52px",
+        "fontWeight": 400,
+        "lineHeight": 1.11,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 52px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "pp-neue-machina-plain",
+        "fontSize": "122px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 122px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "28": {
+      "$value": "28px",
+      "$type": "dimension",
+      "$description": "Spacing 28px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "56": {
+      "$value": "56px",
+      "$type": "dimension",
+      "$description": "Spacing 56px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "96": {
+      "$value": "96px",
+      "$type": "dimension",
+      "$description": "Spacing 96px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "xl": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    },
+    "3xl": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "3xl-2": {
+      "$value": "29px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-2"
+    },
+    "full": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    }
+  },
+  "surface": {
+    "lab-white-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page background, product specification field, and light editorial sections."
+    },
+    "figure-black-surface": {
+      "$value": "#0c0c0c",
+      "$type": "color",
+      "$description": "Surface level 1: Filled pill controls, dark marks, and high-contrast editorial text."
+    },
+    "absolute-black-media-field": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Surface level 2: Dark image chapters and immersive hero-level media surfaces."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.figure.ai/figure",
+      "siteName": "FigureAI",
+      "extractedAt": "2026-09-20T22:15:01.223Z",
+      "variant": "extended"
+    }
+  }
+}

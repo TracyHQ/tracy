@@ -1,0 +1,54 @@
+{
+  "color": {
+    "taupe-paper": {
+      "$value": "#ada59b",
+      "$type": "color",
+      "$description": "Taupe Paper — Full-page canvas, the single dominant surface — every section and component sits on this warm gray, never on white or near-black. The warm undertone (vs cool slate) is what makes the whole site feel like printed stock rather than a digital UI"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, all borders, all hairlines, all SVG strokes. Used at full opacity — no softened text grays, no 80% black. The crispness against warm taupe creates the magazine-printed feel"
+    },
+    "charcoal": {
+      "$value": "#252525",
+      "$type": "color",
+      "$description": "Charcoal — Navigation text and the nav underline borders. Slightly softer than pure ink for the persistent top-of-page chrome so the nav recedes behind the work"
+    },
+    "graphite": {
+      "$value": "#101010",
+      "$type": "color",
+      "$description": "Graphite — Secondary text and supporting borders where Charcoal reads too soft but pure Ink is too loud. The single mid-step between nav and body"
+    },
+    "stone": {
+      "$value": "#454545",
+      "$type": "color",
+      "$description": "Stone — Occasional inset surface for body-level containers — the only tonal step above the canvas, used sparingly for any small frame or block that needs to separate from the page without introducing color"
+    },
+    "press-black": {
+      "$value": "#060506",
+      "$type": "color",
+      "$description": "Press Black — Fine SVG illustration stroke — near-identical to Ink Black but kept distinct in the source. Use for line-art icons and decorative vector marks"
+    }
+  },
+  "font": {
+    "worksans": {
+      "$value": "WorkSans",
+      "$type": "fontFamily",
+      "$description": "All UI chrome: navigation, category labels, body copy, metadata, toggle text. Deliberately tiny — 11–13px forces an editorial intimacy and keeps the page from feeling like a product interface. Set in Work Sans Regular at default tracking; the small size is what makes it feel like print captions rather than web UI."
+    },
+    "silkserif": {
+      "$value": "SilkSerif",
+      "$type": "fontFamily",
+      "$description": "The ALET wordmark and any other serif display moment. Light weight at 23px with tight leading (0.94) and extremely wide letter-spacing — the letters almost float apart. The serif is the only non-sans on the site, which is what makes the brand mark readable as a masthead rather than a wordmark."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://aletagency.com",
+      "siteName": "alet",
+      "extractedAt": "2026-06-03T19:44:19.579Z",
+      "variant": "compact"
+    }
+  }
+}

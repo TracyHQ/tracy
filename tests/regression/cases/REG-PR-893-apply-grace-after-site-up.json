@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-893-apply-grace-after-site-up",
+  "kind": "fix",
+  "title": "Once the site is up, Apply waits for its words a grace period, not the deadline counted from the press",
+  "pr": 893,
+  "area": "sites/apply/build",
+  "cms": ["any"],
+  "needs": ["node", "postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: TEST_DATABASE_URL=postgres://tracy:tracy@127.0.0.1:51730/postgres node --test --test-reporter=tap apps/tracy-web/test/brief-build.test.mjs (any Postgres whose user may create databases will do — the tests make and drop their own; this one is the local stand's).",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail', '# skipped' lines and the result of each case whose name starts with: \"once the site is up, prepare is told to hand back what it has after the grace, and apply takes it\"; \"a prepare that will not hand anything back is given up on soon after the site is up, and the site is handed over\"; \"a run that is over is stopped, and an id its engine names late never lands on the row of the run that replaced it\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# skipped 0', and '# pass' equal to '# tests' (at least 21): the database cases ran, none skipped.",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): the site is awaited beside `prepare`; once it is up `prepare` gets prepareGraceMs (90 s) more, then is told to hand back what it has (prepareStopMs, 10 s) and apply takes it; a prepare that hands nothing back is given up on soon after the site is up; a run that is over aborts its own signal and the one prepare was given."
+  ],
+  "selectors": {
+    "runner": "prepareGraceMs, prepareStopMs, work() in apps/tracy-web/src/sites/brief-build.js",
+    "row": "site_brief (timings)"
+  },
+  "evidence": "Ledger L07, 05/10/2026 (code reading brief-build.js): Apply could hold a site that was already up for up to ~6.5 min after the press while prepare ran, though the design promises '+90 s after the site is up'. Reds 24315705d, 2bce2049d; fixes 8a813a7be, b7e441178.",
+  "fence": "The grace counts from the site being up; the deadline from the press stays the backstop.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-build.test.mjs"],
+    "needs": ["postgres"],
+    "tests": [
+      "once the site is up, prepare is told to hand back what it has after the grace, and apply takes it",
+      "a prepare that will not hand anything back is given up on soon after the site is up, and the site is handed over",
+      "a run that is over is stopped, and an id its engine names late never lands on the row of the run that replaced it"
+    ]
+  }
+}

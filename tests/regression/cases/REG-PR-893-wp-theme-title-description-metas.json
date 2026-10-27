@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-893-wp-theme-title-description-metas",
+  "kind": "fix",
+  "title": "WordPress Apply: the title and description a theme keeps per page in its own metas are the customer's, child themes and copies included",
+  "pr": 893,
+  "area": "sites/apply/wordpress",
+  "cms": ["wp"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-wordpress.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"the title and the description a theme keeps for each page in metas of its own are said again from the customer's words\"; \"a theme that keeps no such metas, or a site whose theme cannot be read, is left quietly\"; \"a child theme's pages are read under the parent's name too, the one whose code prints them\"; \"the other languages' copies have their title, description and heading said again in their own language\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 61).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): the metas <stylesheet>_document_title and <stylesheet>_metadesc (and the parent's <template>_ prefix for a child theme) of each page are said again from the customer's words, the description as the visible sub-title; a theme with no such metas or an unreadable theme is left quietly; other languages' copies get theirs in their own language."
+  ],
+  "selectors": {
+    "engine": "metasOf and the `${prefix}_document_title` / `${prefix}_metadesc` keys in apps/tracy-web/src/sites/brief-engines/wordpress.js"
+  },
+  "evidence": "Ledger L16, 05/10/2026: after Apply on ja-kinetic (WordPress) <title> read 'Kinetic — Observability, reimagined' and every page's meta description sold the demo: the theme prints both from wp_ja_kinetic_document_title / wp_ja_kinetic_metadesc, which no contract slot holds. Reds 0f7ca8846, 4f546157d; fixes e7b55a88e, 10a589255.",
+  "fence": "Only the metas the theme itself names are written; nothing is written on a theme that keeps none.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-wordpress.test.mjs"],
+    "tests": [
+      "the title and the description a theme keeps for each page in metas of its own are said again from the customer's words",
+      "a theme that keeps no such metas, or a site whose theme cannot be read, is left quietly",
+      "a child theme's pages are read under the parent's name too, the one whose code prints them",
+      "the other languages' copies have their title, description and heading said again in their own language"
+    ]
+  }
+}

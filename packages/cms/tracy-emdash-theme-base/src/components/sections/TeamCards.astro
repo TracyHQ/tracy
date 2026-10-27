@@ -1,0 +1,28 @@
+---
+/** Four-up team profiles (the source's `.op-team`): 4:5 portrait, name, accent role, one line. */
+import Photo from '@/components/site/Photo.astro'
+import type { Stamp } from '@/lib/stamps'
+interface Props {
+  items: Array<{ image?: any; image_alt?: string; name: string; role?: string; text?: string }>
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the repeater field the rows come from. */
+  stamp?: Stamp
+  field?: string
+}
+const { items, stamp, field } = Astro.props
+const none = {}
+const row = stamp && field ? stamp.block(field) : none
+const sub = (k: string) => (stamp && field ? stamp(`${field}.${k}`) : none)
+---
+
+<div class="grid-4" data-block="team">
+	{items.map((it) => (
+		<article {...row}>
+			{/* Eager on purpose: the storefront's smooth scrolling keeps a lazy image this far down from
+			    ever loading under a programmatic scroll walk, and the acceptance shoot waits on decode(). */}
+			<Photo image={it.image} stamp={sub("image")} alt={it.image_alt ?? ''} class="mb-5 aspect-[4/5] rounded-[var(--ds-card-radius,18px)]" width={400} height={500} priority />
+			<h3 class="h-card" {...sub("name")}>{it.name}</h3>
+			{it.role && <p class="mt-1 text-[14px] text-accent" {...sub("role")}>{it.role}</p>}
+			{it.text && <p class="mt-4 text-[15px] leading-[1.5] text-fg-muted" {...sub("text")}>{it.text}</p>}
+		</article>
+	))}
+</div>

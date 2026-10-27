@@ -1,0 +1,969 @@
+{
+  "$comment": "Where Tracy Business (EmDash template, packages/cms/tracy-emdash-theme-business at 1.5.1) keeps each topic, read off its own source, seed and the EmDash core it runs; every entry carries its proof and test/content-where.test.mjs re-reads them. The site runs EmDash 1.1.0 and this repo vendors core 1.1.0 (1.0.1 from 29/09/2026; 1.4.5 and 1.4.6 ran 0.38.0): the core routes (robots.txt, sitemap.xml, SEO tags) are read off the vendored core. Left out, not provable here: form fields, labels and recipients (the Forms plugin publishes no tool), the canonical origin (an environment variable).",
+  "schemaVersion": "tracy-content-where/v1",
+  "platform": "emdash",
+  "quickstart": "tracy-business",
+  "versions": [
+    "1.4.5",
+    "1.4.6",
+    "1.5.0",
+    "1.5.1",
+    "1.6.0",
+    "1.7.0",
+    "1.7.1",
+    "1.7.2",
+    "1.7.4",
+    "1.7.5",
+    "1.7.6",
+    "1.7.7",
+    "1.7.8",
+    "1.7.9",
+    "1.7.10",
+    "1.7.11",
+    "1.7.12",
+    "1.7.13",
+    "1.7.14",
+    "1.7.15",
+    "1.7.16",
+    "1.7.17",
+    "1.7.18",
+    "1.7.19",
+    "1.7.20",
+    "1.7.21",
+    "1.7.22",
+    "1.7.23"
+  ],
+  "verifiedReleases": [
+    {
+      "version": "1.4.5",
+      "zipSha256": "10f11612383dcec0d0b3da599a17fc610bf3a16b4af22ee91753684ddbd94aed",
+      "checked": "2026-09-28",
+      "note": "Every proof in this map re-read on the released tracy-business-emdash-quickstart-1.4.5.zip while preparing 1.4.6 (39/39 hold), so sites installed from 1.4.5 keep their where block."
+    },
+    {
+      "version": "1.4.6",
+      "zipSha256": "c372f0b1182b88dc3680933f971cdf55f53b8eaa57d4bcf9c594ea0de57f16af",
+      "checked": "2026-09-29",
+      "note": "Every proof re-read while moving the source to 1.5.0 / EmDash 1.0.1 (61/61 hold): template files on the released tracy-business-emdash-quickstart-1.4.6.zip, core files on emdash@0.38.0 (the redirect middleware then registered as emdash/middleware/redirect), so sites installed from 1.4.6 keep their where block."
+    },
+    {
+      "version": "1.5.0",
+      "zipSha256": "498824356d074259bb5605d8183c1f6cca0976c4917707bc26827b6855c629b5",
+      "checked": "2026-09-29",
+      "note": "Every proof re-read on the released tracy-business-emdash-quickstart-1.5.0.zip while preparing 1.5.1 (61/61 hold; core files on the vendored emdash 1.0.1 that 1.5.0 runs). 1.5.1 changes only tools/forms.json."
+    },
+    {
+      "version": "1.5.1",
+      "zipSha256": "06fc7bf4728d5c5e2848c686f9e6664e90eff4c34a9c526d4b102e72a3e6e109",
+      "checked": "2026-10-04",
+      "note": "Release zip tracy-business-emdash-quickstart-1.5.1.zip downloaded and its sha256 matched quickstarts.json; the proofs hold on the 1.6.0 source (the version these places are read off, on the vendored emdash 1.1.0) while moving the source to 1.6.0."
+    },
+    {
+      "version": "1.6.0",
+      "zipSha256": "34b78358a2d8fa9281c6e5c009fa740f4ff5e3202da97d3017a141d138e7632b",
+      "checked": "2026-10-07",
+      "note": "Release zip tracy-business-emdash-quickstart-1.6.0.zip downloaded and its sha256 matched quickstarts.json; the proofs hold on the 1.7.0 source (the version these places are read off, on the vendored emdash 1.1.0) while moving the source to 1.7.0, which adds brand and page personalization tools and changes no place this map names."
+    },
+    {
+      "version": "1.7.0",
+      "zipSha256": "c0f1d26a49c952f865d4b915d035fd395ae6fa836b32a50f771cd812cff5c6b9",
+      "checked": "2026-10-08",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.0.zip downloaded (sha256 matched GitHub's digest); the 22 template files this map's proofs name are byte-identical to the 1.7.1 source, which changes only tools/personalize.mjs, seed/personalize.json, tests and the version stamps (menu and chrome labels in the written language)."
+    },
+    {
+      "version": "1.7.1",
+      "zipSha256": "3f0d3328ac9de7d34ab3f08ae2916435354e7bf481332bab079c61dbcc5eda22",
+      "checked": "2026-10-08",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.1.zip downloaded (sha256 matched GitHub's digest); the 43 template proofs of this map held on its bytes (the Footer proof read as chrome.footerServices.map, the wording 1.7.1 ships) while moving the source to 1.7.2, where the link gate filters the footer services column (TCH #1013) and the proof reads chrome.footerServices.filter."
+    },
+    {
+      "version": "1.7.2",
+      "zipSha256": "501e6810a5455ea89bb9592e2b6bf0e39a343f9168aa8668cba2423eb17b9552",
+      "checked": "2026-10-09",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.2.zip downloaded (sha256 matched GitHub's digest); the 43 template proofs this map named before 1.7.4 held on its bytes (the two page title proofs read as siteTitle = settings.title ?? 'Northgate Industrial' and fullTitle = `${title} — ${siteTitle}`, the wording 1.7.2 ships) while moving the source to 1.7.4, where the home tab of a named site shows the name alone (src/lib/page-title.ts, TCH #1013). 1.7.3 was never released."
+    },
+    {
+      "version": "1.7.4",
+      "zipSha256": "f1b11d28d06672c5f82c80a9551a863a26ad93db9bedc18d419ec598a817371a",
+      "checked": "2026-10-10",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.4.zip downloaded (sha256 matched GitHub's digest); the 45 template proofs this map named before 1.7.5 held on its bytes (the og:image proof read as image={mediaUrl(a.hero_image)}, the wording 1.7.4 ships) while moving the source to 1.7.5, where a hero picture gives way to the customer's share card (shareImageOf, now src/lib/share-image.ts, TCH #1013 D5)."
+    },
+    {
+      "version": "1.7.5",
+      "zipSha256": "0fc612da0e30c6a65aac5af322fbabc434b90f0f33814ead0d210c0b696b1017",
+      "checked": "2026-10-10",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.5.zip downloaded (sha256 matched GitHub's digest, published 10/10/2026 10:09Z); the 46 template proofs of this map held on its bytes, and every collection, field and /app/ file the map names is in its seed and tree, while moving the source to 1.7.6, which changes only the hero call to action of src/views/Home.astro (it reads the worn design system's --ds-btn-pad-x/--ds-btn-pad-y, TCH #1100) and the version stamps."
+    },
+    {
+      "version": "1.7.6",
+      "zipSha256": "400a7f1bf48832be204828c903f990c099460e5460d9bae3fb67a5e4e455d74b",
+      "checked": "2026-10-10",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.6.zip downloaded (sha256 matched GitHub's digest, published 10/10/2026 14:10Z); the 46 template proofs of this map held on its bytes, and every collection, field and /app/ file the map names is in its seed and tree, while moving the source to 1.7.7 (TCH #1013 g58: posts go with an unticked News page, kit subscribe card words in the sample, contact cards hidden when empty, footer credit kept)."
+    },
+    {
+      "version": "1.7.7",
+      "zipSha256": "39f043ce6c9060556436a22f8cdfa4fad6f3990ccb34da8f77019ffa677673dd",
+      "checked": "2026-10-10",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.7.zip downloaded (sha256 matched GitHub's digest, published 10/10/2026 14:49Z); the 46 template proofs of this map held on its bytes while moving the source to 1.7.8 (TCH #1013 g60: the language switcher reads the display locale, social buttons kept with empty links, the footer's closing line leads to the contact page)."
+    },
+    {
+      "version": "1.7.8",
+      "zipSha256": "6d519d8f345c81c1bb38142113db37482972494a1a43737be2c8d3cf7884103e",
+      "checked": "2026-10-11",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.8.zip downloaded (sha256 matched GitHub's digest); the 46 template proofs of this map as it stood at 1.7.8 (develop c3b7e8a86) held on its bytes while moving the source to 1.7.9 (TCH #1013 g61); the two Contact.astro proofs since name the FormWords wrapper around the same form embed, a place 1.7.8 keeps without the wrapper."
+    },
+    {
+      "version": "1.7.9",
+      "zipSha256": "e733e47aa5163a5a669c294d265894d417946a7c662b9db33f3a0a8f61c4abce",
+      "checked": "2026-10-11",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.9.zip downloaded (sha256 matched GitHub's digest, published 10/10/2026 23:24Z); the 46 template proofs of this map held on its bytes while moving the source to 1.7.10 (TCH #1013 g62: Vietnamese font subsets, kit pages' own words in the page's language)."
+    },
+    {
+      "version": "1.7.10",
+      "zipSha256": "5b16da2dbbff7355abf44ad1d3544216691edc6bf9311bb269c1e90711d79c06",
+      "checked": "2026-10-11",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.10.zip downloaded (sha256 matched GitHub's digest, published 11/10/2026 01:37Z); the 46 template proofs of this map held on its bytes while moving the source to 1.7.11 (TCH #1013 g63: a label given back unchanged is asked again; the vi and ta Lipetsk branch lines)."
+    },
+    {
+      "version": "1.7.11",
+      "zipSha256": "d86489645841fbef0712afc9bbaa138cc459f2c6c319663142412d4d3e57a6f2",
+      "checked": "2026-10-11",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.11.zip downloaded (sha256 matched GitHub's digest, published 11/10/2026 03:12Z); every template file the proofs of this map read (src/, seed/seed.json, astro.config.mjs) is byte-identical to the source moving to 1.7.12, which changes tools/personalize.mjs only (TCH #1013 g64: a label given back half translated is asked again)."
+    },
+    {
+      "version": "1.7.12",
+      "zipSha256": "ed6be28913fc28c0651260c89c70a52d6d127ebbb8a15289f448392472d47af9",
+      "checked": "2026-10-11",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.12.zip downloaded (sha256 matched GitHub's digest, published 11/10/2026 05:40Z); every template file the proofs of this map read (src/, seed/seed.json, astro.config.mjs) is byte-identical to 1.7.13 (TCH #1013: tools/personalize.mjs and seed/personalize.json only). The source moving on after 1.7.13 differs in five lines no proof reads — the class lists of four shadcn components no page draws and the hero call to action's line (Home.astro:85; TCH #1134 walkthrough finding 9); the two Home.astro proofs read title={h.title} and description={h.hero_text}, unchanged."
+    },
+    {
+      "version": "1.7.13",
+      "zipSha256": "58a7205ead90fe63acf9049c604050280a25719cfa578b90625898532b821eda",
+      "checked": "2026-10-11",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.13.zip downloaded (sha256 matched GitHub's digest, published 11/10/2026 08:03Z); every template file the proofs of this map read (src/, seed/seed.json, astro.config.mjs) is byte-identical to the 1.7.14 release, which changes tools/personalize.mjs and seed/personalize.json only (TCH #1013 L4: an open role the model does not write for the customer's trade is emptied, never another company's job); the source after it carries the five lines of TCH #1134 noted above, which no proof reads."
+    },
+    {
+      "version": "1.7.14",
+      "zipSha256": "f87ea860f85600d1241d783e0f749cd8a6ca5104b733fcb5b3da4f972e5c0d40",
+      "checked": "2026-10-11",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.14.zip downloaded (sha256 matched GitHub's digest); src/ differs from the 1.7.15 source only in the five class lines of TCH #1180 (checkbox, dropdown-menu, input and textarea radius read the design-system slot; the hero call to action drops `!` before text-[15px], Home.astro:85), which no proof reads; seed/, tools/ and astro.config.mjs are byte-identical."
+    },
+    {
+      "version": "1.7.15",
+      "zipSha256": "296a3c688f1b2d2789993ab9bef4b33f926a0e042beebc5db40a64d5e8dc77cf",
+      "checked": "2026-10-12",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.15.zip downloaded (sha256 matched GitHub's digest); every file under src/, seed/, tools/ and astro.config.mjs is byte-identical to the 1.7.16 source, which only adds sharp as a direct dependency (package.json, pnpm-lock.yaml, TCH #1182) and its version stamps."
+    },
+    {
+      "version": "1.7.16",
+      "zipSha256": "f1fae8a48cc976d83068f1eb24c3fa02adc6e7d90cdc4e2bdf168300ba42a795",
+      "checked": "2026-10-13",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.16.zip downloaded (sha256 matched GitHub's digest); every file under src/ and seed/, astro.config.mjs and pnpm-lock.yaml is byte-identical to the 1.7.17 source, which changes only tools/personalize.mjs (TCH #1297: Name left blank, a contact page unticked) and its version stamps."
+    },
+    {
+      "version": "1.7.17",
+      "zipSha256": "b379367c7f390fc7aa73d9ded6c67e98e00493e8a4259e6ef604573a8a6ac2b4",
+      "checked": "2026-10-13",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.17.zip downloaded (sha256 matched tasks/evidence/site-questions-2026-10-13/release/SHA256SUMS-tracy-business-1.7.17.txt); every file under seed/ and tools/, astro.config.mjs and pnpm-lock.yaml is byte-identical to the 1.7.18 source, and under src/ only lib/ds-slot.ts and layouts/Base.astro differ (the two-mode design-system slot, TCH #1315 / #1321) and the version stamps; the five entries that read a line of Base.astro (seo, analytics, robots) each find their line in the 1.7.17 file."
+    },
+    {
+      "version": "1.7.18",
+      "zipSha256": "7804bad234f236680f7da61206e36aaa79cbe536c6386a85cd718631ad75e291",
+      "checked": "2026-10-14",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.18.zip downloaded (sha256 matched quickstarts.json and SHA256SUMS); every file under seed/ and tools/, astro.config.mjs and pnpm-lock.yaml is byte-identical to the 1.7.19 source, which changes only src/layouts/Base.astro and src/components/site/Topbar.astro (TCH #1318: the theme toggle's storage key, UNDO-1); the five Base.astro proofs of this map hold on the 1.7.18 file, so sites installed from 1.7.18 keep their where block."
+    },
+    {
+      "version": "1.7.19",
+      "zipSha256": "4369ec6c9527e9bab1d8e4f14e55f8e11aaed55647f475ee376f70a059f2c26e",
+      "checked": "2026-10-16",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.19.zip downloaded (sha256 matched quickstarts.json of 1.7.19 and its SHA256SUMS); every file under seed/ and tools/ but tools/release.mjs (the release step), astro.config.mjs and pnpm-lock.yaml is byte-identical to the 1.7.20 source. 44 of the 46 proofs on theme files hold on the 1.7.19 bytes; the two others read tokens.css lines the role conversion of 1.7.20 rewrote, and hold in their 1.7.19 form in the same file and token (--color-forest: #14483a; and --font-sans: var(--font-archivo), system-ui, sans-serif;), so a site installed from 1.7.19 keeps every where block."
+    },
+    {
+      "version": "1.7.20",
+      "zipSha256": "e25683f181e9c317bdb75000fb565f09d533e4dad5b5522eafebea6d40fce0fb",
+      "checked": "2026-10-16",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.20.zip (sha256 matched its SHA256SUMS on the release, downloaded 16/10/2026) differs from the 1.7.21 source only in src/styles/tokens.css (one mix fraction of a worn-only shade, --tb-ds-on-forest-line) and the version stamps; every proof of this map holds on its bytes."
+    },
+    {
+      "version": "1.7.21",
+      "zipSha256": "855135486464e6aeaa43a14eda116d67de418ba3b5dabc42324578aacd78ea5a",
+      "checked": "2026-10-16",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.21.zip (sha256 matched its SHA256SUMS on the release) differs from the 1.7.22 source in src/styles/ (global.css, tokens.css), five views and kit components (button fills and corners under a worn system), the new src/lib/swatch-role.ts and the version stamps; the two tokens.css proofs (--color-forest, --font-sans) and every other proof of this map hold on its bytes."
+    },
+    {
+      "version": "1.7.22",
+      "zipSha256": "7cea5e493449e61783d0285d00a11c5cd2d9eab1571a90bc07696456fcd2461f",
+      "checked": "2026-10-19",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.22.zip (sha256 matched its SHA256SUMS on the release, downloaded 19/10/2026) differs from the 1.7.23 source in five components and views (Header, MobileMenu, KitForm, KitSlides, Search: a class name each, for the worn-only roles), src/styles/global.css (the worn-only block), package.json and pnpm-lock.yaml (astro 7.2.8, @astrojs/node 11.1.3, sharp 0.35.5), the generated inventory and the version stamps; every proof of this map holds on its bytes."
+    }
+  ],
+  "topics": {
+    "pages": [
+      {
+        "what": "A new page: an entry in the 'pages' collection (served at /<slug>). Its content is a Markdown string (EmDash converts it; # headings, paragraphs); status published puts it live. Then its menu link.",
+        "where": {
+          "collection": "pages",
+          "field": "content"
+        },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_create",
+            "arguments": {
+              "collection": "pages",
+              "slug": "<slug>",
+              "status": "published",
+              "data": {
+                "title": "<title>",
+                "content": "## <question>\n\n<answer>\n\n## <question>\n\n<answer>"
+              }
+            }
+          },
+          "then": {
+            "tool": "tracy_emdash",
+            "call": {
+              "tool": "menu_set_items",
+              "arguments": {
+                "name": "primary",
+                "locale": "<language>",
+                "items": "<every item menu_get answered, plus {label:<title>, type:\"custom\", customUrl:\"/<slug>\"} where it should sit>"
+              }
+            }
+          }
+        },
+        "languages": "One entry per language (locale; another language's page is a translationOf entry) and its menu row carries the /<language> prefix.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Page.astro",
+            "has": "getEmDashEntry('pages', slug, { locale })"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/pages/[...path].astro",
+            "has": "view = { component: Page, props: { slug: a } }"
+          },
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/mcp/server.ts",
+            "has": "pass a Markdown string — converted to Portable Text automatically; prefer "
+          },
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/mcp/server.ts",
+            "has": ".enum([\"draft\", \"published\"])"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/emdash.mjs",
+            "has": "items are in the shape menu_set_items takes"
+          }
+        ]
+      }
+    ],
+    "seo": [
+      {
+        "what": "Page title: the part of <title> before ' — ' (the home tab of a site with its own name shows the name alone), and og:title. 'a|b' means field a when it is set, else b.",
+        "where": {
+          "fields": {
+            "home": "title",
+            "about": "breadcrumb|title",
+            "careers": "breadcrumb|title",
+            "services_page": "breadcrumb|title",
+            "projects_page": "breadcrumb|title",
+            "news_page": "breadcrumb|title",
+            "investors": "breadcrumb|title",
+            "contact": "title",
+            "services": "title",
+            "projects": "title",
+            "posts": "title",
+            "pages": "title"
+          }
+        },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "about",
+              "id": "about",
+              "data": { "breadcrumb": "<new title>" },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One entry row per language: add locale for another language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/layouts/Base.astro",
+            "has": "const fullTitle = pageTitleOf({ title, siteTitle, home: currentPath === '/' })"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/lib/page-title.ts",
+            "has": "return `${title} — ${name}`"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/About.astro",
+            "has": "title={a.breadcrumb || a.title}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Home.astro",
+            "has": "title={h.title}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Article.astro",
+            "has": "title={a.title}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Services.astro",
+            "has": "title={s.breadcrumb || s.title}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/lib/hreflang-plugin.ts",
+            "has": "property: 'og:title', content: policy.title"
+          }
+        ]
+      },
+      {
+        "what": "Site name: after ' — ' in every <title>, og:site_name and the JSON-LD WebSite name.",
+        "where": { "setting": "title" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": { "tool": "settings_update", "arguments": { "title": "<new site name>" } }
+        },
+        "languages": "One value for every language: settings have no locale.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/layouts/Base.astro",
+            "has": "const siteTitle = siteTitleOf(settings.title)"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/lib/page-title.ts",
+            "has": "export const TEMPLATE_NAME = 'Northgate Industrial'"
+          },
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/page/seo-contributions.ts",
+            "has": "og:site_name"
+          }
+        ]
+      },
+      {
+        "what": "Meta description and og:description: the page's own intro field, which the page also shows as its lede. 'a|b' means a when set, else b.",
+        "where": {
+          "fields": {
+            "home": "hero_text",
+            "about": "lede",
+            "careers": "lede",
+            "contact": "lede",
+            "investors": "lede",
+            "services_page": "lede",
+            "projects_page": "lede",
+            "news_page": "lede",
+            "pages": "lede",
+            "posts": "excerpt|lede",
+            "projects": "lede|summary",
+            "services": "description"
+          }
+        },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "contact",
+              "id": "contact",
+              "data": { "lede": "<new description>" },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One entry row per language: add locale for another language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Contact.astro",
+            "has": "description={c.lede}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Home.astro",
+            "has": "description={h.hero_text}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Article.astro",
+            "has": "description={a.excerpt || a.lede}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Project.astro",
+            "has": "description={pr.lede || pr.summary}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Service.astro",
+            "has": "description={sv.description}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/lib/hreflang-plugin.ts",
+            "has": "name: 'description', content: policy.description"
+          }
+        ]
+      },
+      {
+        "what": "Entry SEO panel: only noIndex (out of /sitemap.xml) and image show. seo.title and seo.description are refused: the template's head wins; write the title field and the intro instead.",
+        "where": {
+          "argument": "seo",
+          "collections": [
+            "home",
+            "about",
+            "services_page",
+            "services",
+            "projects_page",
+            "projects",
+            "news_page",
+            "posts",
+            "careers",
+            "investors",
+            "contact",
+            "pages"
+          ]
+        },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "posts",
+              "id": "<slug>",
+              "seo": { "noIndex": true },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One entry row per language: add locale for another language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/lib/hreflang.ts",
+            "has": "the TEMPLATE wins"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/lib/hreflang.ts",
+            "has": "Fields the template leaves unset still fall"
+          },
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/api/handlers/seo.ts",
+            "has": "AND (s.seo_no_index IS NULL OR s.seo_no_index = 0)"
+          }
+        ]
+      },
+      {
+        "what": "og:image: the SEO panel's image, else a post's or project's picture, else seo.defaultOgImage; a hero (home, about, careers, projects list) only when that is unset (before 1.7.5: always).",
+        "where": {
+          "fields": {
+            "home": "hero_image",
+            "about": "hero_image",
+            "careers": "hero_image",
+            "projects": "image",
+            "posts": "featured_image",
+            "projects_page": "featured_image"
+          },
+          "setting": "seo.defaultOgImage"
+        },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "home",
+              "id": "home",
+              "data": { "hero_image": "<media id from media.upload or media.draw>" },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One entry row per language; seo.defaultOgImage is one for every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/About.astro",
+            "has": "heroImage={mediaUrl(a.hero_image)}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/lib/share-image.ts",
+            "has": "if (typeof card === 'string' && card !== '') return card"
+          },
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/page/seo-contributions.ts",
+            "has": "const ogImage = page.seo?.ogImage || page.image || defaultOgImage || null;"
+          }
+        ]
+      },
+      {
+        "what": "JSON-LD: EmDash core prints a WebSite object named after the site on every page and a BlogPosting on news posts; the template adds none of its own.",
+        "where": { "setting": "title", "collection": "posts" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": { "tool": "settings_update", "arguments": { "title": "<site name>" } }
+        },
+        "languages": "The site name is one for every language; a post is one row per language.",
+        "proof": [
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/page/seo-contributions.ts",
+            "has": "if (page.pageType === \"article\") {"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Article.astro",
+            "has": "type=\"article\""
+          }
+        ]
+      },
+      {
+        "what": "hreflang and x-default: one link per language whose translation of the page is published; nothing is stored for it.",
+        "where": { "derived": "the published translations of the page's entry" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "about",
+              "id": "about",
+              "locale": "<language>",
+              "status": "published"
+            }
+          }
+        },
+        "languages": "Each language is its own entry row; publishing it adds that language's link, while that language's site entry is published too.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/layouts/Base.astro",
+            "has": "if (t.status === 'published' && t.slug && isLocale(t.locale) && chrome.locales.includes(t.locale))"
+          }
+        ]
+      },
+      {
+        "what": "Search-engine verification tags (google-site-verification, Bing): settings seo, which settings_update replaces whole.",
+        "where": { "setting": "seo.googleVerification" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "settings_update",
+            "arguments": { "seo": "<the seo object settings_get answers, googleVerification set>" }
+          }
+        },
+        "languages": "One value for every language.",
+        "proof": [
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/page/seo-contributions.ts",
+            "has": "name: \"google-site-verification\","
+          },
+          { "file": "vendor/emdash/emdash/packages/core/src/mcp/server.ts", "has": "googleVerification: z" }
+        ]
+      }
+    ],
+    "design": [
+      {
+        "what": "Colours, radius and container width: each token reads a design-system role (--ds-*) with its own value as fallback; dark under html[data-theme=\"dark\"]. Shows after a rebuild.",
+        "where": { "file": "/app/src/styles/tokens.css" },
+        "door": {
+          "tool": "bash",
+          "call": { "command": "<edit /app/src/styles/tokens.css in the site's container>" },
+          "then": {
+            "tool": "tracy_site_build_emdash",
+            "call": { "action": "request", "operation": "site.rebuild", "input": {} }
+          }
+        },
+        "languages": "One file for every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/styles/tokens.css",
+            "has": "--color-forest: var(--ds-c-accent-band, #14483a);"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/styles/tokens.css",
+            "has": "html[data-theme=\"dark\"] {"
+          },
+          {
+            "file": "packages/site/tracy-site-build-emdash/src/host/requests.mjs",
+            "has": "(a colour is a token in ' +"
+          },
+          {
+            "file": "apps/tracy-web/src/sites/content-strings.js",
+            "has": "outside the folder file tools reach"
+          }
+        ]
+      },
+      {
+        "what": "Fonts (Archivo, Newsreader): downloaded from Google Fonts at build time, Vietnamese subset included, and mapped to --font-sans and --font-serif in tokens.css. An edit shows after a rebuild.",
+        "where": { "file": "/app/src/fonts.json" },
+        "door": {
+          "tool": "bash",
+          "call": {
+            "command": "<edit /app/src/fonts.json (and tokens.css if a variable name changes) in the site's container>"
+          },
+          "then": {
+            "tool": "tracy_site_build_emdash",
+            "call": { "action": "request", "operation": "site.rebuild", "input": {} }
+          }
+        },
+        "languages": "One file for every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/astro.config.mjs",
+            "has": ".map((font) => ({ provider: fontProviders.google(), ...font })),"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/styles/tokens.css",
+            "has": "--font-sans: var(--ds-font-body, var(--font-archivo), system-ui, sans-serif);"
+          }
+        ]
+      },
+      {
+        "what": "The brand lockup in the header is text, not a picture: fields brand_mark, brand_name and brand_sub of the site entry.",
+        "where": { "collection": "site", "field": "brand_name" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "site",
+              "id": "site",
+              "data": { "brand_name": "<name>" },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One site row per language: add locale for another language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/components/site/Header.astro",
+            "has": "{site.brand_name}"
+          }
+        ]
+      }
+    ],
+    "menus": [
+      {
+        "what": "Six menus: primary (header, mobile menu, /sitemap groups), topbar, resources_kit (Resources panel), footer_services, footer_company, footer_legal. menu_set_items replaces the whole list.",
+        "where": {
+          "menu": ["primary", "topbar", "resources_kit", "footer_services", "footer_company", "footer_legal"]
+        },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "menu_set_items",
+            "arguments": {
+              "name": "primary",
+              "locale": "<language>",
+              "items": "<every item menu_get answered, with the change>"
+            }
+          }
+        },
+        "languages": "One menu row per language; another language's links carry its /<language> prefix.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/lib/chrome.ts",
+            "has": "getMenu('primary', { locale }),"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/components/site/Footer.astro",
+            "has": "chrome.footerServices.filter"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/seed/seed.json",
+            "has": "\"id\": \"menu:primary:ru\","
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/emdash.mjs",
+            "has": "items are in the shape menu_set_items takes"
+          }
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "what": "Contact page form: the page embeds the form named by form_id. The form's fields, labels and recipients live in the Forms plugin, which no tool here reaches.",
+        "where": { "collection": "contact", "field": "form_id" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "contact",
+              "id": "contact",
+              "data": { "form_id": "<an existing form id>" },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One contact row per language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Contact.astro",
+            "has": "{c.form_id ? <FormWords tag={uiLocale(locale)}><FormEmbed node={{ formId: c.form_id }} /></FormWords>"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/seed/seed.json",
+            "has": "\"label\": \"Form id (set by the importer)\""
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/site-context.mjs",
+            "has": "Category and form labels have no door here."
+          }
+        ]
+      },
+      {
+        "what": "Newsletter sign-up on /news, /investors and /kit/newsletter: its form id and words (newsletter_title, _text, _placeholder, _button) are fields of the news page entry.",
+        "where": { "collection": "news_page", "field": "newsletter_form_id" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "news_page",
+              "id": "news",
+              "data": { "newsletter_title": "<words>" },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One news page row per language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/News.astro",
+            "has": "data-form-id={n.newsletter_form_id}"
+          }
+        ]
+      },
+      {
+        "what": "Turn the contact form off: set form_id to \"\" on the contact entry of each language served (the card shows a dash instead). Back on: write back the form_id its receipt shows as before.",
+        "where": { "collection": "contact", "field": "form_id" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "contact",
+              "id": "contact",
+              "locale": "<language>",
+              "data": { "form_id": "" },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One contact entry per language, each with its own form_id: one write per language served.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Contact.astro",
+            "has": "{c.form_id ? <FormWords tag={uiLocale(locale)}><FormEmbed node={{ formId: c.form_id }} /></FormWords> : <p class=\"text-[15px] text-fg-meta\">—</p>}"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/seed/seed.json",
+            "has": "\"label\": \"Form id (set by the importer)\""
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/emdash.mjs",
+            "has": "for `content_update` each field asked for, before and after"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/emdash.mjs",
+            "has": "content_update with the same collection and id, data = each field"
+          }
+        ]
+      }
+    ],
+    "analytics": [
+      {
+        "what": "A tracking snippet: no setting, field or installed plugin holds one; it goes in the <head> of the layout every page uses. Template source: shows after a rebuild.",
+        "where": { "file": "/app/src/layouts/Base.astro" },
+        "door": {
+          "tool": "bash",
+          "call": {
+            "command": "<add the snippet to the <head> of /app/src/layouts/Base.astro in the site's container>"
+          },
+          "then": {
+            "tool": "tracy_site_build_emdash",
+            "call": { "action": "request", "operation": "site.rebuild", "input": {} }
+          }
+        },
+        "languages": "One layout for every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/layouts/Base.astro",
+            "has": "<title>{fullTitle}</title>"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/seed/seed.json",
+            "has": "\"label\": \"Image placeholder hints\""
+          },
+          { "file": "packages/cms/tracy-emdash-theme-business/astro.config.mjs", "has": "hreflangPlugin(" }
+        ]
+      }
+    ],
+    "redirects": [
+      {
+        "what": "Redirects (301/302 between paths of the site): EmDash's own redirect store, read at each request before any page, so a new one is live at once and needs no rebuild.",
+        "where": { "store": "/_emdash/api/redirects" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "redirect_create",
+            "arguments": { "source": "/old-page", "destination": "/new-page", "type": 301 }
+          }
+        },
+        "languages": "One rule for every language; write the path as visitors type it.",
+        "proof": [
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/astro/routes/api/redirects/index.ts",
+            "has": "export const POST: APIRoute"
+          },
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/astro/integration/index.ts",
+            "has": "{ entrypoint: \"emdash/internal/middleware/redirect\", order: \"pre\" }"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/emdash.mjs",
+            "has": "export const EMDASH_REDIRECT_TOOLS = new Set(['redirect_list', 'redirect_create', 'redirect_delete'])"
+          }
+        ]
+      }
+    ],
+    "robots": [
+      {
+        "what": "robots.txt: EmDash serves settings seo.robotsTxt (a Sitemap line added), else its default. While the site is a draft Tracy answers /robots.txt itself.",
+        "where": { "setting": "seo.robotsTxt" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "settings_update",
+            "arguments": { "seo": "<the seo object settings_get answers, robotsTxt set>" }
+          }
+        },
+        "languages": "One file for every language.",
+        "proof": [
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/astro/routes/robots.txt.ts",
+            "has": "if (settings.seo?.robotsTxt) {"
+          },
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/astro/integration/routes.ts",
+            "has": "hasUserDefinedPublicRoute(options.srcDir, \"robots.txt\")"
+          },
+          {
+            "file": "apps/tracy-web/src/bar/route.js",
+            "has": "url.pathname === '/robots.txt' && site.publish !== 'published'"
+          }
+        ]
+      },
+      {
+        "what": "/sitemap.xml: EmDash lists published entries of routable collections with the SEO panel (services, projects, posts, pages); an entry with seo.noIndex is left out.",
+        "where": { "argument": "seo", "collections": ["services", "projects", "posts", "pages"] },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "pages",
+              "id": "<slug>",
+              "seo": { "noIndex": true },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One entry row per language.",
+        "proof": [
+          {
+            "file": "vendor/emdash/emdash/packages/core/src/api/handlers/seo.ts",
+            "has": ".where(\"routable\", \"=\", 1);"
+          },
+          { "file": "packages/cms/tracy-emdash-theme-business/seed/seed.json", "has": "\"routable\": false," }
+        ]
+      },
+      {
+        "what": "robots meta: every page says 'index, follow' but /search ('noindex, follow') and the 404 page ('noindex, nofollow'), set in the views. Template source: shows after a rebuild.",
+        "where": { "file": "/app/src/layouts/Base.astro" },
+        "door": {
+          "tool": "bash",
+          "call": {
+            "command": "<edit the robots value of the view in /app/src/views/ in the site's container>"
+          },
+          "then": {
+            "tool": "tracy_site_build_emdash",
+            "call": { "action": "request", "operation": "site.rebuild", "input": {} }
+          }
+        },
+        "languages": "One value per page for every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/layouts/Base.astro",
+            "has": "seo: { robots: robots ?? 'index, follow' },"
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/Search.astro",
+            "has": "robots=\"noindex, follow\""
+          },
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/views/NotFound.astro",
+            "has": "robots=\"noindex, nofollow\""
+          }
+        ]
+      }
+    ],
+    "strings": [
+      {
+        "what": "Words every page shares (top bar, header, footer and its column titles, copyright, search, 404, theme switch): fields of the one site entry per language.",
+        "where": { "collection": "site", "field": "search_title" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "site",
+              "id": "site",
+              "data": { "search_title": "<words>" },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One site row per language: add locale for another language, or tracy_site content.replace for the same words everywhere.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/seed/seed.json",
+            "has": "\"description\": \"Topbar, header, footer, search and 404 copy. One entry per locale.\""
+          }
+        ]
+      },
+      {
+        "what": "News labels (tags, previous and next, table of contents, related): fields of the news page entry.",
+        "where": { "collection": "news_page", "field": "tags_label" },
+        "door": {
+          "tool": "tracy_emdash",
+          "call": {
+            "tool": "content_update",
+            "arguments": {
+              "collection": "news_page",
+              "id": "news",
+              "data": { "tags_label": "<words>" },
+              "status": "published"
+            }
+          }
+        },
+        "languages": "One news page row per language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/seed/seed.json",
+            "has": "\"slug\": \"tags_label\","
+          }
+        ]
+      },
+      {
+        "what": "Words the template code says itself: language names in the switcher, the mobile menu button, 'N min read', the date format. Template source: shows after a rebuild.",
+        "where": { "file": "/app/src/lib/locale-words.ts" },
+        "door": {
+          "tool": "bash",
+          "call": { "command": "<edit /app/src/lib/locale-words.ts in the site's container>" },
+          "then": {
+            "tool": "tracy_site_build_emdash",
+            "call": { "action": "request", "operation": "site.rebuild", "input": {} }
+          }
+        },
+        "languages": "One object per language in the file.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-emdash-theme-business/src/lib/locale-words.ts",
+            "has": "The few words the THEME says itself, per locale."
+          }
+        ]
+      }
+    ]
+  }
+}

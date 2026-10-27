@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1220-claude-web-callback-address",
+  "kind": "fix",
+  "title": "Claude's web sign-in draws Claude's own callback address (localhost:53692/callback) and says how to copy it from a window with no address bar",
+  "pr": 1220,
+  "area": "settings/ai-accounts",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the tracy-model-plan accounts-pane tests (node:test, jsdom page, fake /api/seat-plan doors): pick Claude, press Connect now with an authorizeUrl whose redirect_uri is http://localhost:53692/callback, read the panel."
+  ],
+  "expect": [
+    "ol[data-steps='browser-callback'] still holds exactly three li: open, refused, copy.",
+    "Step 2 holds small[data-hint='popup'] reading 'Opened in a small window with no address bar? Use its menu (⋮) and choose Open in Chrome, then copy the address.'",
+    "The address-bar drawing under step 3 reads 'localhost:53692/callback?code=…' and the panel never mentions 1455.",
+    "The drawn address is the host and path of the attempt's redirect_uri plus '?code=…'; with no readable redirect_uri it falls back to 'localhost:1455/auth/callback?code=…'."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-model-plan/test/accounts-pane.test.mjs"
+    ],
+    "tests": [
+      "the address to copy is drawn from the attempt: the redirect the vendor sends the browser back to",
+      "Claude's sign-in draws Claude's callback address and says what to do with an address-less window",
+      "a browser sign-in says what happens before the page opens: three steps in order, the refused page announced, then the paste box"
+    ],
+    "timeout_s": 180
+  },
+  "fence": "the address the person is told to copy is read from the attempt's own redirect_uri, never a constant of another vendor",
+  "selectors": {
+    "panel": ".tv-ob-connect[data-connect='pending']",
+    "steps": "ol[data-steps='browser-callback'] > li[data-step]",
+    "hint": "small[data-hint='popup']",
+    "illustration": "[data-illustration='address-bar']"
+  }
+}

@@ -1,0 +1,324 @@
+{
+  "dos": [
+    "Set display headlines in sebentaFont at 64–80px, weight 500, line-height 1.0–1.06, letter-spacing -0.04em. The serif does the work — do not pair it with a second display font.",
+    "Use the serif's own italic cut for emphasis inside headlines ('the sound', 'a faster way'). Never swap to a different color or weight for emphasis.",
+    "Use #000000 filled buttons as the only filled-button style. Pair with #f1f0eb ghost buttons for secondary actions. No rounded corners — 0px radius everywhere except the NEW badge.",
+    "Reach for Hot Pink (#ff82c2) as a full-bleed section background, never as a small accent. It announces a chapter of the page, it does not decorate a button.",
+    "Use Inter 16px / line-height 1.56 / letter-spacing 0 for body copy. Apply 0.1em tracking only at caption/label sizes (10–14px) and uppercase contexts.",
+    "Maintain a 64px section gap and 24px card padding as the spatial rhythm. The design is generous and editorial — do not compress.",
+    "Keep the page 1% colorful. Most of the canvas should be white and bone. Each chromatic section is a deliberate pause, not a decoration."
+  ],
+  "donts": [
+    "Do not use a second display serif or a script font. The custom sebentaFont and its italic are the only voice at display sizes.",
+    "Do not round the corners of buttons, cards, or accordion rows. 0px radius is structural to the editorial feel — rounding breaks the magazine logic.",
+    "Do not recolor emphasis words. The italic in the display serif IS the emphasis system. Adding a Hot Pink word inside a black headline breaks the rhythm.",
+    "Do not use #ff82c2, #20afff, or #ffda40 as text colors on a white background. These are section-background colors — at body scale they fail contrast and feel like a toy palette.",
+    "Do not add drop shadows or elevation to cards. The system is flat — surface levels are communicated by background color shifts (white → bone → mist), not by shadow.",
+    "Do not introduce a green/red semantic pair for success and error. The chromatic palette (pink, blue, yellow, orange, green) is decorative and editorial — not a status system.",
+    "Do not stack chromatic sections. Alternate one chromatic block with one monochrome block. The pink-then-blue cadence works because it is rare."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ff82c2",
+      "name": "Hot Pink",
+      "role": "Signature accent section backgrounds (announcement bar, Studio feature block), inline link emphasis — the brand's editorial punctuation. Used full-bleed, not as a tint",
+      "group": "brand"
+    },
+    {
+      "hex": "#ffda40",
+      "name": "Sun Yellow",
+      "role": "Accent highlight wash and decorative badge fills. Secondary chromatic accent that pairs with the pink in the brand's signature palette",
+      "group": "accent"
+    },
+    {
+      "hex": "#20afff",
+      "name": "Signal Blue",
+      "role": "Secondary section background, decorative callout. A cool counterpoint to the warm pink and yellow, used when a third chromatic moment is needed in long pages",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff6138",
+      "name": "Ember Orange",
+      "role": "Sporadic chromatic accent for icon strokes and small decorative highlights. Does not define sections",
+      "group": "accent"
+    },
+    {
+      "hex": "#5ad363",
+      "name": "Leaf Green",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#292c33",
+      "name": "Charcoal",
+      "role": "Secondary text and dark surface variant. Slightly cooler than pure black; used where a softer dark surface is needed without losing authority",
+      "group": "neutral"
+    },
+    {
+      "hex": "#60605e",
+      "name": "Slate",
+      "role": "Muted body copy, helper text, secondary icon fills. The workhorse secondary text color at high frequency",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f1f0eb",
+      "name": "Bone",
+      "role": "Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas and inverse text on dark fills. The cleanest, coolest surface — Bone sits one step above it for warmth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Mist",
+      "role": "Slightly cooler light surface for card variants and disabled/secondary button states where Bone would feel too warm",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c1c0bc",
+      "name": "Stone",
+      "role": "Mid-tone divider, disabled border, subtle icon stroke. A neutral that sits between Slate and Bone for hairline UI",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e4d9cf",
+      "name": "Sand",
+      "role": "Decorative warm wash and image placeholder. The warmest neutral — used as a soft tonal block, rarely as functional UI",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cfd6e5",
+      "name": "Frost",
+      "role": "Cool-toned gray for card backgrounds and image placeholders where a cooler counterpart to Bone is needed",
+      "group": "neutral"
+    }
+  ],
+  "layout": "The page is a centered, max-width 1200px editorial column on a white canvas, with the top announcement bar and nav running full-bleed above it. The hero is a single centered text block (no hero image, no split layout) — the type is the hero. Below the hero, content flows in alternating single-color bands: white sections for content-heavy blocks, then a full-bleed Hot Pink Studio block, then a full-bleed Signal Blue block, each occupying the full viewport width regardless of the 1200px content column. Card grids are 3-up or 4-up at equal width with no gutters beyond the 1200px wrapper, giving them a magazine-grid feel. The FAQ section returns to a single full-width column of bone rows. Vertical rhythm is 64px between major sections, 24px within cards, 8–16px between elements. Navigation is a single sticky top bar — no sidebar, no mega-menu, no breadcrumbs.",
+  "imagery": "Imagery is documentary and brand-led rather than decorative. Photographs are tight, editorial crops of real-world subjects (athletes, filmmakers, musicians, travel) at 16:9 or 3:4 aspect, presented without overlay text, gradient masks, or color treatment — they arrive at full fidelity. The brand logo of each featured partner is composited directly onto the photograph in white, top-centered, at 40–48px, which transforms the photo into a case-study tile rather than a stock image. The pink Studio section includes a floating UI card with a slight rotation and a hand-cursor icon, evoking a hand placing a record. The blue section repeats the motif with a white card. There are no illustrations, no 3D renders, no abstract graphics — the visual language is photography plus bold flat color blocks. Iconography is monochrome and inline (chevrons, arrows, cursors) rather than a decorative icon set.",
+  "similar": [
+    {
+      "why": "Same warm off-white editorial surfaces, sharp-cornered black CTAs, and a single bold accent color used as a section event",
+      "business": "Splice"
+    },
+    {
+      "why": "Editorial serif display, warm bone neutrals, flat sharp-cornered components, and typographic emphasis over chromatic decoration",
+      "business": "Aesop"
+    },
+    {
+      "why": "Custom serif at display scale with italic for emphasis, bone-tinted UI surfaces, and a color-restrained layout that lets typography carry the brand",
+      "business": "Substack"
+    },
+    {
+      "why": "Music-industry editorial with a warm off-white canvas, bold serif headlines, and a willingness to use a single loud color as a section break",
+      "business": "Bandcamp"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "0px",
+      "badges": "9999px",
+      "inputs": "0px",
+      "buttons": "0px",
+      "accordion-rows": "0px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "64px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "media",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Default page background, the cleanest base"
+    },
+    {
+      "hex": "#f1f0eb",
+      "name": "Bone Surface",
+      "level": 1,
+      "purpose": "FAQ rows, secondary buttons, nav strip — the warm editorial surface"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Mist Surface",
+      "level": 2,
+      "purpose": "Cooler light card variant, subtle elevation without shadow"
+    },
+    {
+      "hex": "#ff82c2",
+      "name": "Hot Pink Block",
+      "level": 3,
+      "purpose": "Full-bleed signature accent section"
+    },
+    {
+      "hex": "#20afff",
+      "name": "Signal Blue Block",
+      "level": 4,
+      "purpose": "Secondary full-bleed accent section"
+    }
+  ],
+  "northStar": "Boutique liner notes on sunlit paper. A warm off-white spread with a custom editorial serif, a single hot-pink section that breaks the monochrome like a magazine cover, and sharp black CTAs that feel like ink stamps — not a software product, a printed object that happens to stream music.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1,
+      "letterSpacing": 1
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.56,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.6,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.8
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.13,
+      "letterSpacing": -1.44
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1.06,
+      "letterSpacing": -2.56
+    },
+    {
+      "role": "display-xl",
+      "size": 80,
+      "lineHeight": 1,
+      "letterSpacing": -3.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Bar",
+      "role": "Full-width top-of-page promotion for launches and features",
+      "description": "Hot Pink (#ff82c2) background, black (#000000) text, 14–16px Inter medium, centered single-line message with an inline underlined link. Close (×) icon flush right. No padding inset — bar height is determined by text line-height. Functions as a loud tonal event, not a subtle notification."
+    },
+    {
+      "name": "Primary Navigation",
+      "role": "Top sticky header with logo, links, and account actions",
+      "description": "White (#ffffff) background with a warm bone (#f1f0eb) tinted variant on subpages. Logo left at ~20px, Inter medium 14px nav links center with chevron-down dropdowns, two right-side buttons: a bone-filled 'Log in' (12px Inter, #f1f0eb bg, #000 text, 0 radius, ~8px 16px padding) and a black-filled 'Create free account' (#000 bg, #fff text, same dimensions). No shadow, no border — the bar sits on the canvas directly."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Centered editorial display block on the landing page",
+      "description": "Two-line sebentaFont at 64–80px, weight 500, line-height ~1.06, letter-spacing -0.04em. Black (#000000) on white. Emphasis is set in the serif's italic cut, not a color change. Subhead is Inter 16px Slate (#60605e) at three propositions separated by black square bullets (▪). No background, no border, no decoration — type carries the page."
+    },
+    {
+      "name": "Primary Button",
+      "role": "Main call-to-action ('Create free account', 'Learn more')",
+      "description": "Filled #000000 background, #ffffff text, Inter 14px medium at 0.1em tracking, 0px radius, ~10px vertical × 24px horizontal padding. Centered arrow or text only. This is the only filled-color button in the system — it reads as an ink stamp, not a pill."
+    },
+    {
+      "name": "Secondary Button",
+      "role": "Lower-emphasis action ('Contact sales', 'Log in')",
+      "description": "Ghost/bone variant: #f1f0eb background, #000000 text, same 0px radius and Inter 14px medium as primary. Visually quieter than the black fill — paired side-by-side with the primary, it creates a clear hierarchy without a hover or border treatment."
+    },
+    {
+      "name": "Brand Showcase Card",
+      "role": "Horizontal carousel of case-study thumbnails (New Balance, GoPro, Squarespace, Nissan)",
+      "description": "Full-bleed photographic card (no border, 0 radius, no shadow) with the brand logo overlaid in white at 40–48px, positioned ~20% from the top. Below the card: Inter 18px medium brand name in black, followed by 14px regular Slate subtext ('\"Track title\" by Artist'). Carousel arrows (← →) in a 40px square bone-filled button with black chevron."
+    },
+    {
+      "name": "Feature Highlight Block (Pink Studio)",
+      "role": "Full-bleed Hot Pink section promoting a product feature",
+      "description": "#ff82c2 background, black text. Two-column layout: left holds a sebentaFont 48px heading with italic emphasis on a key phrase, 16px Inter Slate subhead, and a text link with a right-arrow ('Learn more →') in 14px Inter underline. Right holds a floating product card with a slight rotation (-3° to -5°) and a hand-cursor icon, suggesting tactile interaction. The block reads as a magazine spread — not a product card."
+    },
+    {
+      "name": "Feature Highlight Block (Blue Studio)",
+      "role": "Secondary chromatic section, counterpoint to the pink block",
+      "description": "Same two-column editorial structure as the pink block but on #20afff background. White (#ffffff) headline and white product card with a black hand-cursor icon. The blue functions as the 'next chapter' color in the page's chromatic rhythm."
+    },
+    {
+      "name": "FAQ Accordion Row",
+      "role": "Expandable question/answer list",
+      "description": "Full-width #f1f0eb row, 0 radius, ~24px vertical padding, ~24px horizontal padding. Inter 16px medium question text in black, flush left. Down-chevron icon (Inter or Lucide, 16px, black) flush right. 8px vertical gap between rows. No border, no shadow — the bone background alone separates rows from the white canvas."
+    },
+    {
+      "name": "New Badge",
+      "role": "Inline tag marking a new feature or product",
+      "description": "Pill shape (9999px radius), #000000 background, #ffffff text, Inter 10px bold uppercase, 2–4px vertical × 8px horizontal padding. Sits inline with announcement text in the Hot Pink bar and elsewhere. Small, high-contrast, reads as a sticker."
+    },
+    {
+      "name": "Inline Text Link",
+      "role": "In-prose link emphasis ('Learn more', 'Read more')",
+      "description": "Inter 14–16px medium, black (#000000) or chromatic (Hot Pink, Signal Blue depending on context), always underlined. No hover state change in the static spec — the underline is the affordance. Used at the end of a paragraph to invite a deeper read."
+    },
+    {
+      "name": "Carousel Arrow Button",
+      "role": "Horizontal paging control",
+      "description": "40px square, #f1f0eb background, black chevron icon, 0 radius. Disabled state (← at start) drops opacity to ~40%. No border."
+    },
+    {
+      "name": "Footer",
+      "role": "Bottom-of-page site links and legal",
+      "description": "White (#ffffff) background, no top border. Logo and ~4–5 link columns in Inter 14px Slate (#60605e) with black column headers at 12px medium uppercase at 0.1em. Generous 48–64px vertical padding. The footer is quiet and monochrome — the chromatic personality belongs to the page above."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Workhorse sans for body copy, navigation, buttons, icons, badges, and all functional UI. Tight tracking at 0.1em on small/uppercase text gives a controlled, label-like feel rather than the looser default sans treatment.",
+      "sizes": "10, 12, 14, 16, 18, 24",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.0–1.71 (tight at 10px for badge caps, generous at 1.5–1.6 for body)",
+      "substitute": "Inter (Google Fonts)",
+      "letterSpacing": "0.1em on caption/label sizes (10–14px); 0 on body 16px and up"
+    },
+    {
+      "role": "Display and large headings only. A high-contrast contemporary serif used at hero scale (64–128px) with heavy negative tracking. The italic cut is the brand's voice — emphasis words like 'the sound' are set italic in the same family rather than recolored or underlined, giving headlines a literary, editorial cadence.",
+      "sizes": "20, 24, 32, 40, 48, 64, 80, 128",
+      "family": "sebentaFont (custom editorial serif)",
+      "weight": "500 (single weight, with italic)",
+      "lineHeight": "1.0–1.25 (extremely tight at display sizes — the serif sits tall and confident, not airy)",
+      "substitute": "GT Sectra Display, Tiempos Headline, or Canela (closest visual cousins — high-contrast serif with elegant italic)",
+      "letterSpacing": "-0.04em at 64–128px display, -0.03em at 48px, -0.02em at 20–40px",
+      "fontFeatureSettings": "\"liga\" on, \"dlig\" on (editorial ligatures for the italic emphasis)"
+    }
+  ],
+  "description": "Epidemic Sound reads as a music-industry editorial: a warm bone-white canvas, confident black sans-serif UI, and a custom high-contrast serif that carries the brand voice at display sizes. A single vivid hot-pink (#ff82c2) is the signature accent — used sparingly as full-bleed section backgrounds and inline emphasis rather than scattered decoration. Colorfulness sits at 1%, so the system should feel mostly monochrome with chromatic color arriving as deliberate editorial punctuation (pink, signal blue, sun yellow). Components are flat and rectangular, almost no border-radius, very little shadow — the design trusts typography weight and generous spacing to create hierarchy. Italic inside the display serif is a signature move: emphasis is set in the same family rather than a separate color or weight shift, giving headlines a literary, liner-notes quality.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference\n- text: #000000 (primary), #60605e (secondary), #292c33 (inverse on light, dark on dark)\n- background: #ffffff (canvas), #f1f0eb (warm surface), #efefef (cool surface)\n- border: #c1c0bc (hairline), #000000 (strong)\n- accent: #ff82c2 (Hot Pink — section background, never small)\n- primary action: no distinct CTA color\n- secondary action: #f1f0eb filled (ghost), #000000 text, 0px radius, 10px 24px padding\n\nExample Component Prompts\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. Hot Pink feature block: Full-bleed #ff82c2 background. Left column at 60% width holds sebentaFont 48px weight 500 headline with one italic word, #000000. Below it, Inter 16px #000000 subhead. At the bottom, an Inter 14px medium underlined black link ('Learn more →'). 48px section padding.\n\n3. FAQ accordion: White background. Stack of full-width #f1f0eb rows, 0 radius, 24px vertical padding, 24px horizontal padding. Inter 16px medium #000000 question text flush left, 16px black chevron-down icon flush right. 8px vertical gap between rows.\n\n4. Brand showcase card: Full-bleed photographic card, 0 radius, no shadow. Brand logo overlaid in white at 48px, top-centered, 20% from top edge. Below card: Inter 18px medium #000000 brand name, then Inter 14px regular #60605e subhead with track title in quotes. Cards in a 4-up horizontal row, 8px gap.\n\n5. Announcement bar: Full-width #ff82c2 background. Inter 14px medium #000000 centered text, with a black 'NEW' pill badge (0px→9999px radius, #000 bg, #fff text, 10px bold uppercase) inline at the start and an underlined inline link at the end. 16px vertical padding. Close (×) icon flush right."
+    },
+    {
+      "title": "Chromatic Cadence",
+      "content": "The page uses chromatic color as a chapter structure, not as decoration. The default rhythm is: white → white → white → Hot Pink full-bleed → Signal Blue full-bleed → white → white. Each chromatic block must be preceded and followed by a monochrome block — never stack two chromatic sections. The pink is always the first chromatic event in the page (after the announcement bar), blue is the second, and yellow/orange/green appear only as small decorative dots or icon strokes within otherwise monochrome sections. This cadence is what makes the 1% colorfulness feel intentional rather than sparse."
+    }
+  ],
+  "elevationPhilosophy": "The design intentionally avoids shadows. Depth is communicated exclusively through background color shifts across the surface stack (white → bone → mist) and through full-bleed chromatic section blocks. Cards sit flat on their parent surface, buttons are ink-stamped onto the canvas, and the accordion rows are bone-on-white with no border. Adding drop shadows would introduce a software-SaaS visual language that conflicts with the editorial / printed-object feel. If elevation is ever required (e.g. a modal or floating menu), use a 1px #000000 border rather than a shadow — the ink-stamp metaphor extends to layering."
+}

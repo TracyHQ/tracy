@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1152-g61-system-fixes-released",
+  "kind": "fix",
+  "title": "The g61 system fixes of the seven questions hold (no English left on FULL, author words, Joomla plugin/date/layout words, glyph fallback, template buttons, distinct post titles, EmDash seed languages and form words, built-site audit, fonts readiness) and ship with their releases: Claude Cowork for Joomla 0.24.13, Tracy Business EmDash 1.7.9, Tracy SaaS EmDash 1.4.6 pinned, contract ja-essence/wp7/1.0.14 for theme 1.0.14",
+  "pr": 1152,
+  "area": "sites/brief",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/{joomla-left-english,brief-wp-labels-left,brief-wp-repeated-names,author-words,joomla-author-words,brief-wordpress,joomla-site-words,glyph-fallback}.test.mjs (models that answer wrong: English kept, lines missing, formats turned into words).",
+    "S2: node --test packages/cms/tracy-seeder/test/plan-template-buttons.test.mjs and apps/tracy-web/test/{brief-wp-buttons,brief-wp-posts,joomla-article-titles}.test.mjs.",
+    "S3: node --test apps/tracy-web/test/emdash-tool.test.mjs, the Business theme's tests/{personalize-demo-files-seed,seed-language-leftovers}.test.mjs and tests/form-embed-words.test.mjs of the Business, SaaS and Base EmDash themes.",
+    "S4: node --test scripts/test/{template-customization-question-readiness-built-site-social-and-lists,template-customization-question-readiness-built-site-dates-fonts,template-customization-question-readiness-built-site-dead-buttons}.test.mjs and apps/tracy-web/test/template-customization-question-readiness-fonts.test.mjs.",
+    "S5: read both quickstarts.json: every Joomla pin's Claude Cowork version, and the tracy-business/emdash and tracy-saas/emdash entries.",
+    "S6: read packages/cms/tracy-wordpress-quickstart/contracts/ja-essence/wp7/1.0.14/{manifest,content-map,presentation-lock}.json against 1.0.13's, and the quickstart/ja-essence/wp7 1.0.14 row of template-profiles.json."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped or cancelled.",
+    "S2: every test passes, none skipped or cancelled.",
+    "S3: every test passes, none skipped or cancelled.",
+    "S4: every test passes, none skipped or cancelled.",
+    "S5: every Joomla pin on Claude Cowork 0.24.13; tracy-business/emdash 1.7.9 and tracy-saas/emdash 1.4.6, source and state files named for that version with a GitHub asset id.",
+    "S6: contract id ja-essence/wp7/1.0.14, quickstart version 1.0.14, content map identical to 1.0.13, the lock differs from 1.0.13 only in inc/extra.php, the eight languages/*.l10n.php, readme.txt and style.css (template parts and entities identical); the profile row says logos pair, brandReady."
+  ],
+  "selectors": {
+    "tests": "tests/regression/scripts/REG-PR-1152-g61-system-fixes-released.mjs",
+    "left-words": "translateLeft in apps/tracy-web/src/sites/brief-engines/left-words.js",
+    "buttons": "packages/cms/tracy-seeder/src/template-buttons.mjs",
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-11-tcqr-g61-fixes.md",
+  "fence": "The language, button and post-title fallbacks every engine takes when the model disobeys, the EmDash seed and form words, the built-site audit and fonts readiness, and the releases this repository pins for them.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1152-g61-system-fixes-released.mjs"],
+    "needs": []
+  }
+}

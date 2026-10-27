@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-business/j6/1.2.0",
+  "platform": "joomla",
+  "template": "tracy_business",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "tracy-business/j6",
+    "version": "1.2.0",
+    "platform": "joomla",
+    "platformVersion": "6.1.1",
+    "template": "tracy_business",
+    "coworkVersion": "0.16.11",
+    "contract": "tracy-business/j6/1.2.0",
+    "writeDoor": "disabled-until-provision",
+    "languages": {
+      "live": [
+        "af-ZA",
+        "be-BY",
+        "bg-BG",
+        "ca-ES",
+        "cs-CZ",
+        "cy-GB",
+        "da-DK",
+        "de-DE",
+        "el-GR",
+        "en-GB",
+        "es-ES",
+        "et-EE",
+        "fi-FI",
+        "fr-FR",
+        "ga-IE",
+        "hr-HR",
+        "hu-HU",
+        "it-IT",
+        "ja-JP",
+        "ka-GE",
+        "lo-LA",
+        "lt-LT",
+        "lv-LV",
+        "ms-MY",
+        "nb-NO",
+        "nl-NL",
+        "pl-PL",
+        "pt-BR",
+        "pt-PT",
+        "ro-RO",
+        "ru-RU",
+        "sk-SK",
+        "sl-SI",
+        "sr-RS",
+        "sr-YU",
+        "sv-SE",
+        "ta-IN",
+        "th-TH",
+        "tr-TR",
+        "uk-UA",
+        "vi-VN",
+        "zh-CN",
+        "zh-TW"
+      ],
+      "installedNotEnabled": []
+    },
+    "parts": {
+      "webroot": {
+        "file": "tracy-business-j6-webroot-1.2.0.tar.gz",
+        "bytes": 88494391,
+        "sha256": "487a8f74da2944a87b45e19bf9fba02721e9c74985cfddb4098a713174ca002d",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-webroot-1.2.0.tar.gz"
+      },
+      "database": {
+        "file": "tracy-business-j6-database-1.2.0.sql.gz",
+        "bytes": 1186842,
+        "sha256": "4132d1ad869244029555716a682aafbc94041c18a32ec2d137f95a971ac51c9c",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-database-1.2.0.sql.gz"
+      }
+    }
+  },
+  "receiverVersion": "0.17.0",
+  "mode": "content-only"
+}

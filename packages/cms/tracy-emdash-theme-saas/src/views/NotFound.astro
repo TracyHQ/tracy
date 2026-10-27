@@ -1,0 +1,93 @@
+---
+/**
+ * 404 view. The source's words here come from Joomla's error template, not from content, so the
+ * copy is template chrome kept to a minimum: a heading, one sentence, a way home and to the blog.
+ */
+import Base from '@/layouts/Base.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+import { ui } from '@/lib/ui'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path: string
+}
+const { chrome, locale, path } = Astro.props
+const { w } = ui(locale)
+Astro.response.status = 404
+// The blog link goes when the customer unticked the blog page (TCH #1013, `src/lib/link-gate.ts`).
+const blogUrl = href(locale, '/product/blog')
+const live = await liveLinks(Astro.request, locale, [blogUrl])
+---
+
+<Base chrome={chrome} title={w.pageNotFound} currentPath={path} robots="noindex, follow">
+	<section class="k-container k-404">
+		<p class="k-404-code" aria-hidden="true">404</p>
+		<h1 class="k-404-title">{w.pageNotFound}</h1>
+		<p class="k-404-text">{w.notFoundText}</p>
+		<div class="k-404-actions">
+			<a href={href(locale, "/")} class="k-btn k-btn-primary k-404-btn">
+				{w.backHome}
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+			</a>
+			{live(blogUrl) && <a href={blogUrl} class="k-btn k-404-btn k-404-secondary">{w.readTheBlog}</a>}
+		</div>
+	</section>
+</Base>
+
+<style>
+	.k-404 {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding-block: 104px 96px;
+		text-align: center;
+	}
+	.k-404-code {
+		margin: 0 0 28px;
+		font-family: var(--font-heading);
+		font-size: clamp(96px, 16vw, 128px);
+		font-weight: 700;
+		line-height: 0.85;
+		letter-spacing: -4px;
+		color: var(--k-heading);
+	}
+	.k-404-title {
+		margin: 0;
+		font-size: 28px;
+		line-height: 1.2;
+		letter-spacing: -0.5px;
+	}
+	.k-404-text {
+		max-width: 440px;
+		margin: 14px 0 32px;
+		font-size: 16px;
+		line-height: 1.6;
+		color: var(--k-text);
+	}
+	.k-404-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 12px;
+	}
+	.k-404-btn {
+		padding-inline: 22px;
+		border-radius: 9px;
+	}
+	.k-404-secondary {
+		background: var(--k-surface);
+		border-color: var(--k-border);
+		color: var(--k-heading);
+	}
+	.k-404-secondary:hover {
+		border-color: var(--k-primary);
+	}
+	@media (max-width: 767px) {
+		.k-404 {
+			padding-block: 72px 64px;
+		}
+	}
+</style>

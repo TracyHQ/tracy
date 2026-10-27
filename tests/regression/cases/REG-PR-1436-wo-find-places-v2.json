@@ -1,0 +1,74 @@
+{
+  "id": "REG-PR-1436-wo-find-places-v2",
+  "kind": "feat",
+  "title": "Find places v2: Google Places is the first search tier with paging and filters, every place carries an opportunity score and grade, the website column is filled by a durable background check that tells down from blocked, chains in the brand list are hidden, and Google listing photos stream per view without a server cache",
+  "pr": 1436,
+  "area": "website-opportunities",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: search with provider auto and a Google key, then with the key missing, then with a Google quota error.",
+    "S2: search 3 km around Hội An at depth quick and standard; send a radius above 50 km and an unknown cuisine.",
+    "S3: score a place with no website, one with only a Facebook page and a recent post, one whose site is down, one whose site scores 32/100 without HTTPS, one with a fine site, one not checked yet, a chain, and a temporarily closed place.",
+    "S4: run markChains over a result with 'KFC - Chi nhánh Trần Phú' and 'KFC (CN Hội An)', three 'Phở 77' branches and independents.",
+    "S5: ask the site-checks door for 60 addresses twice, with the checker running two at a time under an hourly cap; ask for a 61st; call it 600 times in an hour.",
+    "S6: ask for the photo of a place by its photo name and by its place id, with a Google 404 on the name, with no key, and with a name that is not a photo name.",
+    "S7: render the results header, the kind tabs, the table sorted by score, website, google and social, and the reason text for every scoring key.",
+    "S8: render the find flow: a Google Places answer, an OSM fallback, a failed search, and a search answer whose rows carry no score."
+  ],
+  "expect": [
+    "S1: google-places answers first; without a key the chain goes straight to OSM and names the skipped tier only when google was chosen; a quota error falls back to Apify or OSM with fallbackFrom.",
+    "S2: a rectangle restriction, 20 then up to 60 rows across pages, 400 INVALID_SEARCH for the bad radius and cuisine.",
+    "S3: web.none 40, web.socialOnly 40 + marketing 20 → 91 A, web.down 40, web.slow 25 with the three signals, web.fine 0 → 31 C, pending with no web part, the chain and the closed place halved with their penalty reasons.",
+    "S4: the two KFC rows are chain and chainSuspect, the three Phở 77 rows are chainSuspect only and keep their name, independents unmarked, input untouched.",
+    "S5: only the first N unknown addresses are queued per call, the rest answer not_queued; the second call reports done/down/blocked/failed with the measured fields and no score; a 61st address is 400 INVALID_URLS; the 601st call in the hour is 429 RATE_LIMITED.",
+    "S6: bytes with the credit header and Cache-Control private; the name falls back once to the place id; no key is 503 CREDENTIAL_MISSING; a bad name is 400 INVALID_PHOTO_NAME; the key never appears in a URL or an error.",
+    "S7: every reason key has a line with signed points; rows without a value sort last on every key; kind counts follow the tab order.",
+    "S8: rows get a stable key, the chain count, pages and centre; a row sent without a score still gets one so every cell can draw; a failed search keeps its code."
+  ],
+  "selectors": {
+    "files": "vendor/tracy/tracy-website-opportunities/domain/{discovery-gplaces,discovery-gmaps,opportunity-score,place-kinds,chains,site-stack}.mjs, apps/tracy-web/src/opportunities/{route,site-checks,place-photo,pagespeed}.js, packages/ui/tracy-wo-views/src/model.ts, vendor/tracy/tracy-website-opportunities/src/client/{flow,find-input}.ts",
+    "dom": ".tracy-wo-tab, .tracy-wo-table, .tracy-wo-grid"
+  },
+  "evidence": "Spec tasks/spec-wo-find-v2.md, plan tasks/todo-wo-find-v2.md, approved mockup tasks/mockups/wo-find-v2.html; real Google calls from the Mac Studio 18/10/2026 (Places Text Search Hội An 20 places in 0.7 s; 10 photos a place is Google's ceiling; PageSpeed stackPacks named WordPress and Next.js); stand wo2 acceptance in tasks/evidence-wo-find-v2/",
+  "fence": "The field mask stops at the Enterprise tier on search (no Atmosphere fields), the key travels only in headers and is scrubbed from errors, the photo doors set no server cache, the site-check queue is a Postgres row with a lease and an hourly cap, and the brand list is the only thing that hides a place",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-discovery-gplaces.test.mjs",
+      "packages/wo/website-opportunities/test/domain-opportunity-score.test.mjs",
+      "packages/wo/website-opportunities/test/domain-chains.test.mjs",
+      "packages/wo/website-opportunities/test/domain-place-kinds.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-flow.test.mjs",
+      "packages/ui/tracy-wo-views/test/model.test.mjs",
+      "apps/tracy-web/test/website-opportunities-site-checks.test.mjs",
+      "apps/tracy-web/test/website-opportunities-place-photo.test.mjs",
+      "apps/tracy-web/test/website-opportunities-doors.test.mjs"
+    ],
+    "tests": [
+      "no website and no social page: web 40 + demand 21 + marketing unknown + contact 10 = 71 → B",
+      "Facebook page only: web.socialOnly 40; with a recent post marketing 20 → 91 A",
+      "website down: web.down 40",
+      "slow or dated website (32/100, no HTTPS, not mobile-friendly, © 2016): web.slow 25 with the signals",
+      "fine website: web.fine 0 → demand and contact only, 31 C",
+      "website not checked yet: web.checking null, pending, score without the web part",
+      "a chain is halved: 71 → 36 C with chain.penalty",
+      "temporarily closed is halved too; both penalties compound",
+      "a name seen twice or more in one search is only a suspect, never a chain; branch words do not split it",
+      "a known brand is a chain even when it appears once, by exact name or as a prefix",
+      "every Food and Drink type Google lists has a kind, and so do the five nightlife types",
+      "freshness: done lasts 30 days, down/blocked/failed 24 h",
+      "concurrency and the hourly cap bound how many checks run",
+      "place photo name: the photos mask only, the first photo with its authors, null without one",
+      "site-checks door: queues the first N unknown addresses, answers what is known, validates and rate-limits",
+      "sortRows by website: a checked score ranks above down, social-only and no website; unchecked go last",
+      "reasonText: one line per reason key of opportunity-score.mjs, with signed points",
+      "a Google Places answer becomes rows with a key, its chain count, pages and centre",
+      "a row the server sent without a score or kind still gets one, so every cell can draw"
+    ]
+  }
+}

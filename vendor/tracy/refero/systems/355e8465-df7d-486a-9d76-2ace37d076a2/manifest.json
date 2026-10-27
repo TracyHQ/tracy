@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "355e8465-df7d-486a-9d76-2ace37d076a2",
+  "status": "complete",
+  "name": "Peloton",
+  "url": "https://styles.refero.design/style/355e8465-df7d-486a-9d76-2ace37d076a2",
+  "sourceWebsite": "https://onepeloton.com",
+  "extractedAt": "2026-06-03T19:03:37.207Z",
+  "capturedAt": "2026-10-08T05:10:10.043098+00:00",
+  "theme": "mixed",
+  "industry": "ecommerce",
+  "description": "Red beacon on charcoal runway. A fitness showroom where one electric red CTA cuts through vast dark exhibition space into clean white product galleries.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8d242220-63e9-4db7-9c51-0a3013dce535.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d685a6af34c8dee419dd9d4c093862ea7d710b7b527f604ec567470032fba667",
+      "bytes": 21113
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "093e10edc818fee427a7cd0798a49f827802fb932faf02037a47704971798623",
+      "bytes": 43878
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "bd7ff61821be2d78509648445f08e6ad0a93605733e8894efe6d5e8a30be5d5a",
+      "bytes": 17875
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d23fb7c4d5b17b32b996e5af0b7a7ee060e39e59b5d1ff47699d23b37983a95a",
+      "bytes": 14697
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5e75e79d1ac85fa2dfc5ed826faf13772e42b214204f8c1e53d78a73a098fdb3",
+      "bytes": 13138
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f4cc4cad3aee44306afd1d94cec1584f93c430d98a4ca2d8014c121754a12cf9",
+      "bytes": 2991
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "da8ad185ada7d835f9c45ec389c46a13069009c8356af7b4ed076aecddf449d6",
+      "bytes": 452
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "efd177a76d5f10e6a12ae626f2c937edf593e67776373218b7e791ceb008b57f",
+      "bytes": 469
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "16f40315cce71911538c8b6e2ee128c2e8821a5cc89b5bdab241370b7ec7e35d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "601db9c402660ebd35ce84538208a17ad01a5f703adf26d696c92b93f9044caf",
+      "bytes": 43715
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "643c26d5611420fdca11affb26480a4454731e4ff10456c0daae3013366a6d6b",
+      "bytes": 22424
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8f44cade7889494cfcef776a9a000023cd92a8d8fb3d9959befabac918e34556",
+      "bytes": 45556
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f4fe24f44da131807d31893b174a102a6fb008ae814141d30e54082b4ef895f7",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1b2c3c71f311288456db54c96a021eebd50f8affa91593a383d5fe708266641f",
+      "bytes": 1586
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1e352323867fd5741550d7fbe7247bc70e323009120c12788aa3ff9c6255630a",
+      "bytes": 2242
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "05053a60-1964-4154-9d58-ebdf6352ed3a",
+    "06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "261a4ad3-e835-4f7a-beb7-72187f84d462",
+    "355e8465-df7d-486a-9d76-2ace37d076a2",
+    "390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "7266b546-2fb0-465c-acd6-79001c39829a",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "96845df2-7ddb-420a-814e-c339f95a6554",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "ac53627e-5738-4121-8f5d-05e4d8475a5b",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d7ace114-0548-41f5-a2ff-2afbf32be94d",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e"
+  ]
+}

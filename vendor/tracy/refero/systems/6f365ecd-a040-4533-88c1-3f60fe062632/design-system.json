@@ -1,0 +1,276 @@
+{
+  "dos": [
+    "Use Monument weight 400 at display sizes (64-96px) with letter-spacing -0.03em for all editorial headlines — never bold the type to add weight, add size instead",
+    "Apply #1f58f2 Electric Cobalt exclusively to highlight individual words inside neutral #d8eaff headlines, never to full sentences or paragraphs",
+    "Use #ff4105 Signal Orange only for outlined action buttons and active nav state indicators — never as a background fill or body text color",
+    "Set all borders and hairline dividers in #d8eaff at 1px, creating a unified wireframe-in-light treatment across cards, frames, and section dividers",
+    "Set body micro-labels and nav items in Mono at 10-12px with letter-spacing 0.16em and uppercase — the wide tracking is the signature, not optional",
+    "Layer surfaces in concentric charcoal shades (#000000 → #0d0d0f → #232529 → #2b2f33) to create depth without using shadows",
+    "Use 16px radius for portfolio and content cards, 8px radius for buttons and small tags — keep radii subtle and consistent"
+  ],
+  "donts": [
+    "Do not use solid filled buttons — all CTAs are outlined with chromatic borders against transparent backgrounds",
+    "Do not use #1f58f2 or #ff4105 for body text, borders, or background fills — they are reserved for accent and action roles only",
+    "Do not add shadows or drop-shadow elevation — depth comes from surface color stepping, not from box-shadow",
+    "Do not use multiple accent colors simultaneously — the system is cool-monochrome with exactly one warm accent (#ff4105)",
+    "Do not set Monument at weights other than 400 — the single-weight philosophy is the design",
+    "Do not use rounded radii above 24px on standard components — the 40.798px pill radius is reserved for specific tag/badge treatments",
+    "Do not add gradients — the system is flat and monochromatic within surface levels, with the particle canvas as the only visual texture"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#d8eaff",
+      "name": "Ice White",
+      "role": "Primary text and dominant border color — cool blue-tinted white that doubles as hairline borders, card outlines, and link underlines, creating a wireframe-in-light effect across all surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Void Black",
+      "role": "Deepest surface — page canvas and footer base",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0d0d0f",
+      "name": "Carbon",
+      "role": "Card surface — sits one shade above void, used for elevated content blocks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#232529",
+      "name": "Graphite",
+      "role": "Body background and footer border surface — mid-layer charcoal",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2b2f33",
+      "name": "Slate",
+      "role": "Card backgrounds and the most common elevated surface — the default panel",
+      "group": "neutral"
+    },
+    {
+      "hex": "#41464c",
+      "name": "Iron",
+      "role": "Muted body text and subtle dividers — secondary text level",
+      "group": "neutral"
+    },
+    {
+      "hex": "#565e66",
+      "name": "Steel",
+      "role": "Tertiary body text and low-emphasis borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6c757f",
+      "name": "Fog",
+      "role": "Helper text and low-contrast borders — the quietest readable neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#565657",
+      "name": "Iron Edge",
+      "role": "Medium-contrast borders and link outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1f58f2",
+      "name": "Electric Cobalt",
+      "role": "Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#ff4105",
+      "name": "Signal Orange",
+      "role": "Orange outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed dark canvas with a 1400px max-width content container. Navigation is a single horizontal bar at the top: logo left, nav items center-left, CTA right. The hero is a full-viewport-height section with a centered or left-aligned 96px Monument headline layered over the particle cloud. Below the hero, a 4-column word-cloud section (THEY / HAVE / BECOME / INEVITABLE) uses oversized Monument type as editorial scaffolding. A 3-column portfolio card grid follows, then the 'Meet the pioneers' section with a left-aligned headline (blue sparkle accent) and a horizontal row of portrait cards. Section gaps are generous (100px), creating an editorial magazine rhythm — each section breathes independently rather than flowing continuously.",
+  "imagery": "The site uses a particle/point-cloud visual system as its primary imagery — a WebGL canvas rendering thousands of #1f58f2 dots that form organic wave and constellation patterns against the #0d0d0f background. This appears full-bleed in the hero and as a secondary decoration in the 'Unknown' section. Portrait photography appears in the 'Meet the pioneers' section — tight head-and-shoulders crops on dark backgrounds, desaturated. The decorative sparkle/asterisk mark (hand-drawn, #1f58f2, ~40px) serves as a recurring visual motif between sections. No illustration, no 3D renders, no product screenshots — the visual vocabulary is restricted to: particle systems, portrait photography, and geometric wireframe frames.",
+  "similar": [
+    {
+      "why": "Same dark-canvas editorial design with a single vivid blue accent and oversized display headlines — both treat the homepage as a typographic statement rather than a product showcase",
+      "business": "Arc"
+    },
+    {
+      "why": "VC-firm dark aesthetic with cool-white serif/sans typography and restrained accent color, but Atlantic is more electric and particle-driven",
+      "business": "Notion Capital"
+    },
+    {
+      "why": "Dark-mode interface with a single saturated blue as the sole accent color, Monument-like geometric display type, and editorial section rhythm with generous spacing",
+      "business": "Astro"
+    },
+    {
+      "why": "Same dark-canvas + cool-white type + single warm-orange CTA approach, though Hugging Face uses yellow emoji-like accents rather than Atlantic's electric blue editorial highlights",
+      "business": "Hugging Face"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "8px",
+      "cards": "16px",
+      "pills": "40.798px",
+      "buttons": "8px",
+      "largeCards": "24px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "100px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1400px"
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Void",
+      "level": 0,
+      "purpose": "Page canvas — the deepest background layer"
+    },
+    {
+      "hex": "#0d0d0f",
+      "name": "Carbon",
+      "level": 1,
+      "purpose": "Card surface — elevated content blocks and portfolio cells"
+    },
+    {
+      "hex": "#232529",
+      "name": "Graphite",
+      "level": 2,
+      "purpose": "Body background and footer border region — mid-layer"
+    },
+    {
+      "hex": "#2b2f33",
+      "name": "Slate",
+      "level": 3,
+      "purpose": "Most common card and panel surface — default elevation level"
+    }
+  ],
+  "northStar": "Midnight observatory wireframe — electric blue and ice-white type on layered charcoal, traced with cool-white borders.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1,
+      "letterSpacing": 1.6
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.84
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.24,
+      "letterSpacing": -0.24
+    },
+    {
+      "role": "heading",
+      "size": 64,
+      "lineHeight": 1.06,
+      "letterSpacing": -0.64
+    },
+    {
+      "role": "display",
+      "size": 96,
+      "lineHeight": 1,
+      "letterSpacing": -2.88
+    }
+  ],
+  "components": [
+    {
+      "name": "Outlined Action Button",
+      "role": "Primary CTA — the 'FOLLOW ALONG' button and similar conversion points",
+      "description": "Transparent background with a 1px #ff4105 border, 8px radius, 12-16px vertical padding, 16-24px horizontal padding. Label in Monument 12-14px weight 400, color #ff4105, letter-spacing 0.06em. The outlined-not-filled treatment is deliberate — the warm orange border glows against the dark canvas without filling the visual field with a solid color block."
+    },
+    {
+      "name": "Navigation Link",
+      "role": "Top-nav items (HOME, APPROACH, TEAM, PORTFOLIO, STORIES, JOBS)",
+      "description": "Mono 10-12px, uppercase, letter-spacing 0.16em, color #d8eaff for inactive, #ff4105 for active (with a small marker dot or underline). Horizontal flex row, 32px gap between items, aligned left in a 1400px max-width container with the logo on the far left and CTA on the far right."
+    },
+    {
+      "name": "Brand Mark",
+      "role": "The Atlantic.vc wordmark + geometric glyph in the nav",
+      "description": "The 'atlantic' wordmark in Monument weight 400 at ~16px, paired with a custom geometric square glyph. White (#d8eaff) on dark, no background, sits flush-left in the nav bar."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Oversized editorial headline that fills the viewport",
+      "description": "Monument weight 400 at 96px, line-height 1.00, letter-spacing -0.03em. Color #d8eaff for neutral words, #1f58f2 for accent words (e.g. 'unknown', 'inevitable'). Centered or left-aligned, 50px top padding from the nav. No subheadline below — the headline IS the hero statement."
+    },
+    {
+      "name": "Particle Cloud Canvas",
+      "role": "Full-bleed animated particle visualization behind the hero",
+      "description": "A canvas/WebGL element rendering thousands of #1f58f2 dots on the #0d0d0f background. Dots cluster into organic wave-like formations, creating depth and movement. Occupies 100% viewport height behind the hero text. No border, no radius — bleeds edge to edge."
+    },
+    {
+      "name": "Editorial Statement Block",
+      "role": "Centered mission paragraph appearing below the hero word-cloud section",
+      "description": "Monument 16-24px weight 400, color #6c757f (muted), max-width ~600px centered, 32px line-height. Single paragraph, no embellishment. The muted color makes it recede — it's context for the headline, not a competing element."
+    },
+    {
+      "name": "Portfolio Card Grid",
+      "role": "3-column grid of portfolio company logos (softr, Wandelbots, zenjob, etc.)",
+      "description": "Grid of square cells, each cell is #0d0d0f or #2b2f33 background with 1px #d8eaff border at ~20% opacity, 16px radius. Company logos centered inside, white or monochrome. Grid has 32px row-gap and column-gap. Small uppercase Mono labels above the grid (e.g. 'THEY' / 'HAVE' / 'BECOME' / 'INEVITABLE')."
+    },
+    {
+      "name": "Pioneer Profile Card",
+      "role": "Portrait + bio cards in the 'Meet the pioneers' section",
+      "description": "Portrait photograph with rounded bottom corners, overlaid or paired with Monument headline text. The blue asterisk/sparkle mark (#1f58f2) appears as a decorative accent to the left of the section headline. Cards sit in a horizontal scroll or 3-column grid."
+    },
+    {
+      "name": "Decorative Sparkle Mark",
+      "role": "The hand-drawn asterisk/sparkle used as a section indicator",
+      "description": "Six or eight-point star drawn in #1f58f2, approximately 40px diameter, sits to the left of section headlines. This is the signature decorative element — it marks the transition from one editorial section to the next."
+    },
+    {
+      "name": "Bordered Container Frame",
+      "role": "The wireframe-style outlined boxes that appear throughout (e.g. the hero image carousel indicators)",
+      "description": "Rectangular containers with 1px #d8eaff border, transparent background, 8px radius. Small blue dots (#1f58f2) mark the corners. Functions as a viewport/preview frame — implies looking into something rather than displaying it directly."
+    },
+    {
+      "name": "Scroll Indicator",
+      "role": "Down-arrow chevron at the bottom of the hero viewport",
+      "description": "Small square frame with 1px #d8eaff border, 24px size, containing a downward chevron or dot pattern in #d8eaff. Centered horizontally at the bottom of the hero, positioned ~50px above the fold edge."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and heading type — custom geometric sans used exclusively at weight 400. Headlines reach 96px with line-height 1.00, letter-spacing -0.03em. This single-weight approach forces the type to command through size alone, not boldness — a whisper-loud philosophy. Body-level Monument at 16-24px handles secondary text and large UI labels.",
+      "sizes": "10px, 16px, 24px, 64px, 96px",
+      "family": "Monument",
+      "weight": "400",
+      "lineHeight": "1.00-1.50",
+      "substitute": "Inter, Satoshi, or General Sans",
+      "letterSpacing": "-0.03em at 96px, -0.01em at 64px and below",
+      "fontFeatureSettings": "\"ss01\" on, \"ss02\" on"
+    },
+    {
+      "role": "Micro-labels, nav items, and small-caps category tags — monospaced at 10-14px with extreme tracking (0.06-0.16em). The wide letter-spacing on uppercase labels creates a scientific-instrument read, like serial numbers on laboratory equipment.",
+      "sizes": "10px, 12px, 14px",
+      "family": "Mono",
+      "weight": "400",
+      "lineHeight": "0.80-1.50",
+      "substitute": "JetBrains Mono, IBM Plex Mono, or Space Mono",
+      "letterSpacing": "0.06em at 14px, 0.16em at 10-12px"
+    }
+  ],
+  "description": "Atlantic.vc operates as a midnight investment observatory: near-black canvas, cool-tinted ice-white typography, and a single electric blue (#1f58f2) that illuminates selected words inside otherwise neutral headlines like a tracer running through data. The design language is editorial and scientific — particle-cloud hero imagery, monospaced labels with wide tracking, and oversized display type (96px Monument) that occupies the full viewport. A single warm orange-red (#ff4105) breaks the cool palette exclusively for interactive states and the follow CTA, creating deliberate thermal contrast against the otherwise glacial system. Surfaces layer as concentric shades of charcoal (#000000 → #0d0d0f → #232529 → #2b2f33), with the signature cool-white #d8eaff doubling as text AND the dominant border color — a unified treatment that makes every outlined element feel like a wireframe drawn in light.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "primary action: no distinct CTA color\n**Quick Color Reference**\n- Text (primary): #d8eaff\n- Text (secondary): #6c757f\n- Background (page): #000000 or #0d0d0f\n- Border (hairline): #d8eaff (1px)\n- Accent (highlight): #1f58f2\n- Outlined action border: #ff4105\n\n**3-5 Example Component Prompts**\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n\n3. **Portfolio Card**: Square cell, #0d0d0f background, 1px #d8eaff border at 20% opacity, 16px radius. Company logo or wordmark centered inside in #d8eaff. Cell sits in a 3-column grid with 32px gap. Small Mono 10px uppercase label (#d8eaff, 0.16em tracking) above the grid.\n\n4. **Decorative Sparkle Mark**: 40px diameter, 6-point asterisk drawn with 1.5px strokes in #1f58f2. Positioned to the left of a section headline as an editorial accent. Slight rotation jitter gives it a hand-drawn quality.\n\n5. **Editorial Statement Paragraph**: Centered, max-width 600px. Monument 16px weight 400, color #6c757f, line-height 2.0 (32px). Single paragraph, no decoration — the muted color makes it context for the surrounding visual elements.\n\n**Type Scale Reference**\n- Display (96px / 1.00 / -0.03em) — hero headlines\n- Heading (64px / 1.06 / -0.01em) — section titles\n- Heading-sm (24px / 1.24 / -0.01em) — sub-section titles\n- Body (16px / 1.24 / -0.01em) — Monument body text\n- Caption (10px / 1.00 / 0.16em) — Mono uppercase labels"
+    },
+    {
+      "title": "Decorative Motif System",
+      "content": "The sparkle/asterisk mark is a signature decorative element. Use it as a section-transition indicator, always in #1f58f2, approximately 40px diameter, with hand-drawn irregularity. Pair it with the blue accent color to create visual punctuation between editorial sections. The particle/point-cloud canvas is the other signature visual — use it as a full-bleed background in hero-level sections, never as a contained or clipped element."
+    },
+    {
+      "title": "Color Temperature Discipline",
+      "content": "The system is strictly cool-temperature with one warm exception. Ice-white #d8eaff text and Electric Cobalt #1f58f2 accent dominate all visual hierarchy. The single warm color — Signal Orange #ff4105 — appears only on outlined action buttons and active navigation states. Never use #ff4105 for decorative purposes, body text, or filled backgrounds. The thermal contrast between the cool system and this one warm accent is what makes the CTA feel 'switched on' rather than just visible."
+    }
+  ],
+  "elevationPhilosophy": "No shadows are used. Depth is achieved exclusively through stepped charcoal surface colors (#000000 → #0d0d0f → #232529 → #2b2f33) and 1px #d8eaff wireframe borders. This flat, shadow-free approach keeps the visual language diagrammatic and scientific, like CAD or observatory interfaces."
+}

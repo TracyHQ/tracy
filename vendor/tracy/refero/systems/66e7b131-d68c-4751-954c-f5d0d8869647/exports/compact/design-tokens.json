@@ -1,0 +1,64 @@
+{
+  "color": {
+    "honeycomb-yellow": {
+      "$value": "#ffd931",
+      "$type": "color",
+      "$description": "Honeycomb Yellow — Primary brand color, header band, primary action buttons, nav active state, link underline color, accent fills — the one chromatic note everything else orbits around"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Primary text, heavy borders, button outlines, icon strokes, nav text — the structural ink of the entire system"
+    },
+    "ink-black": {
+      "$value": "#231f20",
+      "$type": "color",
+      "$description": "Ink Black — Secondary text, body copy, button borders, input borders — a slightly warmer near-black for softer reading"
+    },
+    "pearl-gray": {
+      "$value": "#c8cbcd",
+      "$type": "color",
+      "$description": "Pearl Gray — Page canvas, product card backgrounds, the cool stage on which yellow and black perform"
+    },
+    "fog-gray": {
+      "$value": "#a6a8aa",
+      "$type": "color",
+      "$description": "Fog Gray — Muted badge surfaces, secondary chip backgrounds, low-emphasis UI fills"
+    },
+    "smoke-line": {
+      "$value": "#d6d6d6",
+      "$type": "color",
+      "$description": "Smoke Line — Hairline dividers, subtle table/card separators"
+    }
+  },
+  "font": {
+    "times-now": {
+      "$value": "Times Now",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif — used for hero headlines, product names, and section titles. The ultralight 100 weight at 47px creates a tall, almost compressed editorial feel; the condensed letterforms (lineHeight 0.87–0.90) let large headlines sit close to their supporting copy, mimicking a printed poster."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Body copy serif — an unexpected choice for e-commerce that gives the whole site a literary, catalog-like voice. The tight 1.15 line-height keeps paragraph blocks compact and readable."
+    },
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "Small UI labels, button text, micro-copy — set in 11px with generous letter-spacing (0.0730em) to create an all-caps editorial feel even at body temperature"
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Navigation, links, utility text, large numbers — the utility sans that handles everything Times can't. Letter-spacing of 0.0630–0.0910em on small sizes gives all-caps nav items a wide, confident gait."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://lepuzz.com",
+      "siteName": "Le Puzz",
+      "extractedAt": "2026-06-03T19:09:34.873Z",
+      "variant": "compact"
+    }
+  }
+}

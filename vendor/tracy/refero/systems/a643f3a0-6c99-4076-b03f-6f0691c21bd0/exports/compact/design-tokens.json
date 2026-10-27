@@ -1,0 +1,59 @@
+{
+  "color": {
+    "whatsapp-green": {
+      "$value": "#25d366",
+      "$type": "color",
+      "$description": "WhatsApp Green — Primary CTA buttons, active state highlights, and the singular chromatic accent across the entire system — used sparingly to make every action feel like a deliberate invitation rather than a recurring brand color"
+    },
+    "link-blue": {
+      "$value": "#0373e9",
+      "$type": "color",
+      "$description": "Link Blue — Blue accent for outlined action borders, linked labels, and lightweight interactive emphasis."
+    },
+    "charcoal": {
+      "$value": "#1c1e21",
+      "$type": "color",
+      "$description": "Charcoal — High-contrast neutral action fill for primary buttons on light surfaces."
+    },
+    "ink-black": {
+      "$value": "#111b21",
+      "$type": "color",
+      "$description": "Ink Black — Deepest text and icon color, input borders, icon strokes — slightly darker than Charcoal for elements that need maximum weight or definition"
+    },
+    "cream-canvas": {
+      "$value": "#fcf5eb",
+      "$type": "color",
+      "$description": "Cream Canvas — Page background across all sections — warm off-white that gives the entire site its sunlit, approachable atmosphere instead of stark pure white"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, button fills for outlined variants, nav background, and chat-bubble fills — the elevated surface layer sitting on the cream canvas"
+    },
+    "warm-gray": {
+      "$value": "#5e5e5e",
+      "$type": "color",
+      "$description": "Warm Gray — Secondary/muted body text and subtle borders — used for helper text, disclaimers, and de-emphasized labels"
+    },
+    "pale-blue-wash": {
+      "$value": "#f0f4f9",
+      "$type": "color",
+      "$description": "Pale Blue Wash — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "whatsapp-sans-var": {
+      "$value": "WhatsApp Sans Var",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system — body text and UI at 400, headlines and display at 700. The display sizes reaching 80px are uncommonly large for a product marketing site and create a magazine-like confidence. Custom font so no exact substitute, but Inter or Söhne are close fallback options"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.whatsapp.com",
+      "siteName": "WhatsApp.com",
+      "extractedAt": "2026-06-03T17:58:17.369Z",
+      "variant": "compact"
+    }
+  }
+}

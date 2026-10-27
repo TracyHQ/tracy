@@ -1,0 +1,48 @@
+{
+  "id": "QA-UNIT-REG-PR-1383-demo-live-requires-public-address-happy",
+  "itemIds": ["regression:REG-PR-1383-demo-live-requires-public-address"],
+  "requirement": "A demo whose public name does not reach tracy-web is not reported live: the install fails ADDRESS_SHADOWED",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1383-demo-live-requires-public-address.json",
+    "ref": "PR #1383 (fix); fix evidence: 15/10/2026: business-joomla.tracy.ai and business-emdash.tracy.ai answered Cloudflare 502 on every path (stale DNS + tunnel 91b557ed rules outranking *.tracy.ai) while the /ops reinstall of tracy-business/j6 reported the demo live",
+    "invariant": "S1: view.error is ADDRESS_SHADOWED, state failed, no update sets publish = 'published', the job is written failed at step address and failureReason reads the 'does not reach Tracy' message. S2: the demo is marked live. S3: 200, body equal to the token, cache-control no-store.",
+    "productSources": [
+      "apps/tracy-web/src/bar/route.js:215",
+      "apps/tracy-web/src/config.js:1141",
+      "apps/tracy-web/src/lib/address-probe.js:47",
+      "apps/tracy-web/src/lib/demo-sites.js:274",
+      "apps/tracy-web/src/lib/demo-update.js:23",
+      "apps/tracy-web/src/lib/site-address.js:31"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1383-demo-live-requires-public-address.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1383-demo-live-requires-public-address"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1383-demo-live-requires-public-address",
+    "pr": 1383,
+    "kind": "fix",
+    "area": "ops/demos",
+    "file": "tests/regression/cases/REG-PR-1383-demo-live-requires-public-address.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/demo-address-shadowed.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

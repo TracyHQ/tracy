@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-893-joomla-contact-no-account-email",
+  "kind": "fix",
+  "title": "Joomla Apply: no contact record carries the account email; without the owner's mailbox the template's address goes and the form is said to be off",
+  "pr": 893,
+  "area": "sites/apply/joomla",
+  "cms": ["jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-joomla.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"a design that is not another company's is not judged; without the owner's mailbox the template's address is taken off and the form is off, said, and the template's numbers go\"; \"without the owner's mailbox the account's address is written nowhere, whatever the page shows: the template's goes and the form is off\"; \"what the owner typed still wins, and the template's other numbers go with its own; a value the site fills in itself is left\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 55).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): with no email typed the template's email_to is emptied whatever the page shows, the Apply report carries the form-off note with no address in it, the account email of the person who pressed Apply is written nowhere, the template's telephone goes when no phone is typed and its mobile and fax always; a typed email and phone still win and a {site.phone} placeholder is left."
+  ],
+  "selectors": {
+    "steps": "contactSteps, FORM_OFF_NOTE in apps/tracy-web/src/sites/brief-engines/joomla-tidy.js",
+    "record": "contact record fields email_to, telephone, mobile, fax"
+  },
+  "evidence": "05/10/2026: with no email or phone typed, a Joomla site made with Apply kept the demo company's mailbox (sales@northgate-ind.ru) as the contact form's recipient and its telephone on the page (ledger L05, L11). A first fix (4e6ebaa4b) wrote the account email where no switch showed it; review found Joomla 5 publishes email_to anyway (vCard view, contacts finder). Reds 5facff718, 3f576e04f; fixes 4e6ebaa4b, 1bb4cab3f.",
+  "fence": "No visitor's message reaches the template's company and no private address is published: the account email is not passed to the contact step at all.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-joomla.test.mjs"],
+    "tests": [
+      "a design that is not another company's is not judged; without the owner's mailbox the template's address is taken off and the form is off, said, and the template's numbers go",
+      "without the owner's mailbox the account's address is written nowhere, whatever the page shows: the template's goes and the form is off",
+      "what the owner typed still wins, and the template's other numbers go with its own; a value the site fills in itself is left"
+    ]
+  }
+}

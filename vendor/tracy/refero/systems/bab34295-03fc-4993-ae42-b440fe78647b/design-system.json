@@ -1,0 +1,349 @@
+{
+  "dos": [
+    "Use 5.6px radius for all cards, inputs, and code blocks — the sharp corner is a signature, not a compromise",
+    "Use 9999px radius for every action button and the Talk-to-Vapi console",
+    "Set headlines at weight 300 in seasonSans with letter-spacing -0.025em — do not bold them up to match dark-UI conventions",
+    "Pair Ember Orange and Mint Pulse only as adjacent CTA siblings — never use one without the other on the same surface",
+    "Apply Iron Border (#27272a) as a 1px hairline at 490+ frequency — this is the structural skeleton, not a decoration",
+    "Use Geist Mono with +0.08em tracking for any label that needs to read as a developer console, not as marketing copy",
+    "Let the spectrogram waveform graphic carry all six vivid colors at once — no other element on the page should reproduce that palette"
+  ],
+  "donts": [
+    "Do not use drop shadows or box-shadows for elevation — depth comes from background contrast between Void, Carbon, and Slab only",
+    "Do not round card corners beyond 5.6px — the sharp geometry is what makes this system feel like a console rather than a marketing site",
+    "Do not place Spectrogram Blue, Pink, Yellow, or Violet on any UI element — they are reserved for the hero waveform graphic",
+    "Do not use pure white (#ffffff) for text — Cream Text (#fffaea) is the deliberate warm alternative",
+    "Do not stack the Ember and Mint buttons in a row of more than two — the pair is binary, adding a third neutral button breaks the signal",
+    "Do not set body text below 15px or use decorative letter-spacing outside the Geist Mono context",
+    "Do not add gradients, glows, or aurora backgrounds — the design is flat, the only color motion is the static spectrogram graphic"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#0e0e13",
+      "name": "Void Canvas",
+      "role": "Page background, primary canvas — near-black with a cool ink tint that lets the cream text feel hand-set rather than digital",
+      "group": "neutral"
+    },
+    {
+      "hex": "#09090b",
+      "name": "Carbon Surface",
+      "role": "Card backgrounds, inset panels, and list items — one shade deeper than the canvas to create surface depth without elevation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#18181b",
+      "name": "Slab Elevated",
+      "role": "Elevated surface layer, rarely visible — used only for small chips and modal-like overlays that need to sit above cards",
+      "group": "neutral"
+    },
+    {
+      "hex": "#27272a",
+      "name": "Iron Border",
+      "role": "Primary hairline border across lists, dividers, and card edges — appears 490+ times, it is the structural skeleton of the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3f3f46",
+      "name": "Steel Border",
+      "role": "Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#71717a",
+      "name": "Zinc Mute",
+      "role": "Muted body text, icon strokes, and disabled labels — the voice of secondary information",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d8d7d4",
+      "name": "Pearl Border",
+      "role": "Light hairline border used inside nav bars and inverted surfaces — a near-white wire for dark containers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9e6ef",
+      "name": "Ice Border",
+      "role": "Cool-tinted light border for icons, links, and glassy outlined elements — adds a faint blue whisper to contrast with the warm Cream text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fffaea",
+      "name": "Cream Text",
+      "role": "Primary heading and body text — warm off-white (not pure #fff) that reads softer on dark and unifies with the orange accent's warmth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f4f4f5",
+      "name": "Bone Text",
+      "role": "Secondary text and button labels — the cool counterpart to Cream, used when a label needs to feel more clinical than editorial",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a1a1aa",
+      "name": "Mercury Text",
+      "role": "Tertiary text and meta-information — the lightest reading level above Zinc Mute",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e96b34",
+      "name": "Ember Orange",
+      "role": "Primary filled CTA (Request a Demo) — warm burnt orange against cool dark creates urgency without the aggression of pure red",
+      "group": "brand"
+    },
+    {
+      "hex": "#62f6b5",
+      "name": "Mint Pulse",
+      "role": "Secondary filled CTA (Sign Up / Login) — bright mint green pairs against Ember Orange as a complementary pair, the two action colors share the same pill geometry but never co-occupy the same surface",
+      "group": "brand"
+    },
+    {
+      "hex": "#4dcafa",
+      "name": "Spectrogram Blue",
+      "role": "Decorative waveform accent — appears only inside the hero audio visualization, never on UI elements",
+      "group": "accent"
+    },
+    {
+      "hex": "#de94e2",
+      "name": "Spectrogram Pink",
+      "role": "Decorative waveform accent — part of the six-color spectrogram palette in the hero",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffdd03",
+      "name": "Spectrogram Yellow",
+      "role": "Decorative waveform accent — bright lemon dot in the hero waveform graphic",
+      "group": "accent"
+    },
+    {
+      "hex": "#9977ff",
+      "name": "Spectrogram Violet",
+      "role": "Decorative waveform accent — soft purple dot in the hero waveform graphic",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed dark canvas with no visible container borders on the hero. The hero is centered: VAPI wordmark left, headline center, CTAs below, spectrogram full-width at the bottom of the fold. Content sections below the fold use a max-width 1200px centered container with generous 80px section gaps and 1px Iron Border dividers between them. Navigation is a minimal transparent top bar with mono-tracked links centered and pill CTAs right-aligned. Lists and feature rows stretch full-width within the container with hairline top borders creating rhythm. The overall rhythm is: hero (no border) → wave graphic (no border) → logo strip (bordered) → sections (bordered, stacked).",
+  "imagery": "Imagery is minimal and brand-defining. The dominant visual is the full-bleed spectrogram waveform — a horizontal array of small 5.6px-radius rounded rectangles in six vivid colors, varying in height to mimic audio amplitude. No photography, no illustrations, no product screenshots. Logos in the social-proof strip are monochrome line-art in Cream Text. The only non-UI visual asset on the page is the waveform itself, which acts as both decoration and product metaphor (voice/audio → visible spectrum).",
+  "similar": [
+    {
+      "why": "Same dark-canvas console aesthetic with tight ~6px card radii, hairline dividers, and near-white text on deep black",
+      "business": "Linear"
+    },
+    {
+      "why": "Identical developer-product restraint — flat surfaces, no shadows, monochromatic text, single accent color for primary action",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same near-sharp corner geometry and pill-shaped action buttons, though Vapi adds a dual orange/green CTA pair",
+      "business": "Raycast"
+    },
+    {
+      "why": "Adjacent AI-voice category with dark UI, custom neo-grotesque type, and waveform-as-hero visual metaphor",
+      "business": "ElevenLabs"
+    },
+    {
+      "why": "Same developer-facing dark mode with custom display weight (300) and monospaced nav labels with wide tracking",
+      "business": "Replicate"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "5.6px",
+      "chips": "5.6px",
+      "inputs": "5.6px",
+      "buttons": "9999px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#0e0e13",
+      "name": "Void Canvas",
+      "level": 0,
+      "purpose": "Page background — the infinite dark stage"
+    },
+    {
+      "hex": "#09090b",
+      "name": "Carbon Surface",
+      "level": 1,
+      "purpose": "Card and list-item background — subtle depth without shadow"
+    },
+    {
+      "hex": "#18181b",
+      "name": "Slab Elevated",
+      "level": 2,
+      "purpose": "Chip and overlay surface — used sparingly for elements that need to float"
+    }
+  ],
+  "elevation": [],
+  "northStar": "Neon spectrogram across midnight concrete",
+  "typeScale": [
+    {
+      "role": "label",
+      "size": 12,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.43
+    },
+    {
+      "role": "body-lg",
+      "size": 24,
+      "lineHeight": 1.32
+    },
+    {
+      "role": "heading-sm",
+      "size": 40,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.64
+    },
+    {
+      "role": "heading",
+      "size": 56,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.12
+    },
+    {
+      "role": "heading-lg",
+      "size": 68,
+      "lineHeight": 1.09,
+      "letterSpacing": -1.5
+    },
+    {
+      "role": "display-sm",
+      "size": 96,
+      "lineHeight": 1,
+      "letterSpacing": -2.4
+    },
+    {
+      "role": "display",
+      "size": 120,
+      "lineHeight": 1,
+      "letterSpacing": -3
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button (Ember)",
+      "role": "Highest-emphasis action — 'Request a Demo', sign-up triggers",
+      "description": "Filled pill, Ember Orange (#e96b34) background, Cream Text (#fffaea) label at 12px seasonSans weight 500 with +0.08em tracking (mono feel), uppercase, 12px vertical × 24px horizontal padding, 9999px radius. Arrow icon (→) trails the label, same Cream color."
+    },
+    {
+      "name": "Secondary CTA Button (Mint)",
+      "role": "Secondary action — 'Sign Up', 'Login', account creation",
+      "description": "Filled pill, Mint Pulse (#62f6b5) background, Void Canvas (#0e0e13) label for contrast inversion, same 12px seasonSans 500 uppercase +0.08em tracking, 12px × 24px padding, 9999px radius. Sits beside Ember CTA as a complementary pair — never alone."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent header across all pages",
+      "description": "Transparent over Void Canvas (#0e0e13). Left: VAPI wordmark at 18px seasonSans weight 650, Cream Text. Center: nav links at 12px Geist Mono weight 400 with +0.08em tracking in Zinc Mute (#71717a), uppercase. Right: small Ember and Mint CTA pills (compact 8px × 16px padding). Pearl Border (#d8d7d4) 1px bottom divider."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Primary above-the-fold statement",
+      "description": "Two-line headline at 68–96px seasonSans weight 300, Cream Text (#fffaea), line-height 1.0–1.09, letter-spacing -2.0 to -1.5px. The weight 300 choice is anti-convention — most dark hero sites use 600–700 for authority; Vapi uses 300 to let the spectrogram graphic and CTAs carry the weight visually."
+    },
+    {
+      "name": "Hero Subtext",
+      "role": "Supporting sentence below headline",
+      "description": "18px seasonSans weight 400, Bone Text (#f4f4f5) or Zinc Mute (#71717a), line-height 1.43. Short, single sentence, no marketing flourish."
+    },
+    {
+      "name": "Talk to Vapi Console",
+      "role": "Interactive product demo embedded in hero",
+      "description": "Light inverted card (Cream Text #fffaea background, Void Canvas text), 9999px radius (full pill), 16px × 40px padding, centered. Contains 'TALK TO VAPI' at 14px Geist Mono weight 500 +0.08em uppercase in Void Canvas, plus a trailing dot-grid icon. The light-on-dark inversion is the visual punchline of the hero."
+    },
+    {
+      "name": "Spectrogram Waveform Graphic",
+      "role": "Brand-defining decorative element below the hero CTAs",
+      "description": "Full-bleed horizontal grid of small rounded rectangles (5.6px radius) arranged in a waveform pattern, varying heights to mimic audio amplitude. Six-color palette: Spectrogram Blue (#4dcafa), Pink (#de94e2), Yellow (#ffdd03), Violet (#9977ff), Mint (#62f6b5), and Ember (#e96b34). The graphic spans the full viewport width and sits directly on Void Canvas — no container or background."
+    },
+    {
+      "name": "Logo Strip",
+      "role": "Social proof — client logos",
+      "description": "Single horizontal row of 6 logos (Unity, ONE, Intuit, Delphi, Housecall Pro, Cherry) in monochrome Cream Text (#fffaea) or Bone Text (#f4f4f5), evenly distributed with ~32–40px gap. No headings or captions — just logos on the dark canvas."
+    },
+    {
+      "name": "List Item Card",
+      "role": "Row in feature lists, pricing tables, or API endpoint listings",
+      "description": "Carbon Surface (#09090b) background, Iron Border (#27272a) 1px top border (the list/divider appearance is structural — no card chrome), 16px vertical padding, full-width within container. Title at 16–18px seasonSans weight 500 in Cream, description at 14px weight 400 in Zinc Mute."
+    },
+    {
+      "name": "Section Heading",
+      "role": "H2/H3 section titles in mid-page content",
+      "description": "40–56px seasonSans weight 300, Cream Text, letter-spacing -0.64 to -1.12px, line-height 1.10–1.20. Centered or left-aligned depending on section. No eyebrow text or kicker label — the heading stands alone with generous space above."
+    },
+    {
+      "name": "Nav Link Label",
+      "role": "Navigation item text",
+      "description": "12px Geist Mono weight 400, +0.08em tracking, uppercase, Zinc Mute (#71717a) default, Cream Text on hover. No underline, no underline-offset animation — the color shift is the only affordance."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Structural separation between sections, lists, or footer",
+      "description": "1px Iron Border (#27272a), full-width, no spacing of its own. The frequency (490+ occurrences) makes this the most-used component — it is how the design creates rhythm without any background or shadow change."
+    },
+    {
+      "name": "Icon Container",
+      "role": "Wrapping container for inline icons and decorative glyphs",
+      "description": "No background. Icons rendered as 20–24px outlined strokes at 1.5–2px weight in Ice Border (#d9e6ef) or Bone Text (#f4f4f5). Filled icon variants use the six spectrogram colors. Icons are never placed inside rounded backgrounds — they sit directly on the canvas."
+    },
+    {
+      "name": "Code Block / API Snippet",
+      "role": "Developer-facing code examples",
+      "description": "Carbon Surface (#09090b) background, Iron Border (#27272a) 1px, 5.6px radius, 24px padding. Monospaced text in Geist Mono 14px weight 400. Syntax highlighting uses cool palette (Ice Border #d9e6ef, Spectrogram Blue #4dcafa) rather than traditional red/green."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All UI text, headings, body, and button labels — a custom neo-grotesque with an unusually wide weight range (300→650) that lets headlines whisper at 300 while labels speak at 650",
+      "sizes": "11, 12, 14, 15, 16, 18, 22, 24, 32, 40, 44, 56, 68, 96, 120, 144",
+      "family": "seasonSans",
+      "weight": "300, 400, 500, 510, 570, 650",
+      "lineHeight": "1.00–1.71 (tight 1.00–1.20 for display, generous 1.43–1.71 for body)",
+      "substitute": "Inter (closest free match for the grotesque geometry and weight range)",
+      "letterSpacing": "Tight on large text: -0.025em at 96–144px, -0.022em at 68px, -0.020em at 56px, -0.016em at 40px, neutral at 14–18px, slight positive +0.003em at 11–12px"
+    },
+    {
+      "role": "Developer-facing micro-copy: nav links, section labels, 'TALK TO VAPI' callouts, and any monospaced interface element — tracked wide (+0.05em to +0.08em) to read as a console label rather than code",
+      "sizes": "12, 14, 16, 20",
+      "family": "Geist Mono",
+      "weight": "400, 500",
+      "lineHeight": "1.30–1.67",
+      "substitute": "Geist Mono or JetBrains Mono",
+      "letterSpacing": "Wide tracking throughout: +0.050em at 12px, +0.056em at 14px, +0.067em at 16px, +0.069em at 20px, +0.080em at 12px nav — the consistent positive tracking transforms mono from 'code' into 'industrial label'"
+    }
+  ],
+  "description": "Vapi operates as a developer-facing voice AI platform rendered in deep midnight with a single warm cream text color and two oppositional accent fills — burnt orange and mint green. The visual language is sparse and dark: headlines whisper at weight 300 in a custom neo-grotesque, corners stay unusually tight at ~5.6px (closer to a hard rectangle than a card), and color discipline is strict except in one signature moment — a horizontal audio-waveform graphic that explodes into six vivid hues (blue, pink, yellow, violet, green, orange) to evoke a voice spectrogram. Interfaces feel like a developer console: monospaced nav labels with wide tracking, thin hairline borders, no shadows, and pill-shaped action buttons that sit on the canvas without elevation.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "primary action: #e96b34 (filled action)\nCreate a Primary Action Button: #e96b34 background, #09090b text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n**Quick Color Reference**\n- Text: #fffaea (Cream)\n- Background: #0e0e13 (Void Canvas)\n- Card surface: #09090b (Carbon)\n- Border: #27272a (Iron)\n- Accent: #e96b34 (Ember Orange)\n- Secondary action: #62f6b5 (Mint Pulse)\n\n**3-5 Example Component Prompts**\n\n1. Create a hero section on Void Canvas (#0e0e13). Two-line headline at 68px seasonSans weight 300, #fffaea, letter-spacing -1.5px, line-height 1.09. Below it, two pill buttons side by side: left is #e96b34 background with #fffaea label 'REQUEST A DEMO →' at 12px seasonSans 500 +0.08em tracking, 12px×24px padding, 9999px radius; right is #62f6b5 background with #0e0e13 label 'SIGN UP' at the same spec. Full-bleed spectrogram waveform graphic at the bottom of the section.\n\n2. Create a feature list card: #09090b background, no visible border (relies on a 1px #27272a top divider above), 5.6px radius, 16px vertical × 0 horizontal padding. Title at 18px seasonSans 500 in #fffaea, description at 14px seasonSans 400 in #71717a.\n\n3. Create a 'Talk to Vapi' console element: #fffaea background, 9999px radius, 16px×40px padding. Label 'TALK TO VAPI' at 14px Geist Mono 500 +0.08em uppercase in #0e0e13, followed by a 4-dot grid icon in #0e0e13.\n\n4. Create a top nav bar transparent over #0e0e13: VAPI wordmark at 18px seasonSans 650 #fffaea on the left. Center: 'PRODUCT', 'DOCS', 'PRICING', 'COMPANY' in 12px Geist Mono 400 +0.08em uppercase #71717a. Right: compact Ember pill and Mint pill (8px×16px padding). 1px #d8d7d4 bottom divider.\n\n5. Create a code block: #09090b background, 1px #27272a border, 5.6px radius, 24px padding. Monospaced text in Geist Mono 14px 400. Keywords in #4dcafa, strings in #d9e6ef, punctuation in #71717a."
+    },
+    {
+      "title": "Color Pairing Logic",
+      "content": "The Ember/Mint CTA pair is binary and complementary — the orange and green sit on opposite ends of the color wheel, which means they cannot be confused for the same action. This is a deliberate replacement for the typical single-blue-CTA pattern: Vapi signals that 'Request a Demo' and 'Sign Up' are different journeys (sales-led vs self-serve) through hue distance alone. The four other spectrogram colors (Blue, Pink, Yellow, Violet) are quarantined to the hero waveform — their appearance on any other element would dilute the brand's most distinctive moment."
+    },
+    {
+      "title": "Signature Geometry",
+      "content": "The 5.6px radius is the system's most opinionated token. It is not a standard Tailwind value (which jumps from rounded to rounded-md at 6px), and it sits just below the threshold where a corner reads as 'rounded' vs 'sharp'. The effect: cards and inputs feel like developer-tool surfaces (think Linear, Vercel, or Raycast) rather than consumer marketing cards. Only action buttons break to 9999px — the full pill — to create a single obvious affordance on the page. This radius duality (near-sharp for containers, full-pill for actions) is what makes the system instantly recognizable as a developer product rather than a SaaS marketing site."
+    }
+  ],
+  "elevationPhilosophy": "The system is intentionally shadowless. Depth is communicated entirely through three near-black background layers (Void #0e0e13 → Carbon #09090b → Slab #18181b) and 1px Iron Border hairlines. This is a console aesthetic — flat surfaces, structural lines, no skeuomorphic lift."
+}

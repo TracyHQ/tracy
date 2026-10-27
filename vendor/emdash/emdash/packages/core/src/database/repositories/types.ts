@@ -1,0 +1,392 @@
+import type { ContentFieldFilters } from "../../content-list-query.js";
+import type { CustomFieldValue } from "../../schema/types.js";
+import { encodeBase64, decodeBase64 } from "../../utils/base64.js";
+
+/**
+ * Hard cap on cursor length. Cursors we issue are short JSON-in-base64
+ * blobs; a real cursor is well under 200 chars. This guards against
+ * malicious callers passing megabyte-sized strings to force the base64
+ * decoder to allocate (decodeBase64 is O(N) in input size). The MCP and
+ * REST schemas also clamp at 2048 — this 4096 cap is a defense-in-depth
+ * floor inside the repository helpers.
+ */
+const MAX_CURSOR_LENGTH = 4096;
+
+export interface CreateContentInput {
+	/** Explicit content ID for stable seed imports. Omit to generate a ULID. */
+	id?: string;
+	type: string;
+	slug?: string | null;
+	data: Record<string, unknown>;
+	status?: string;
+	authorId?: string;
+	primaryBylineId?: string | null;
+	locale?: string;
+	translationOf?: string;
+	/** Field columns selected atomically from `translationOf` during the insert. */
+	inheritFields?: string[];
+	publishedAt?: string | null;
+	/** Override created_at (ISO 8601). Used by importers to preserve original dates. */
+	createdAt?: string | null;
+}
+
+export interface UpdateContentInput {
+	data?: Record<string, unknown>;
+	status?: string;
+	slug?: string | null;
+	publishedAt?: string | null;
+	scheduledAt?: string | null;
+	/** Entry owner (`ec_{collection}.author_id`). */
+	authorId?: string | null;
+	/** Revision author, separate from entry ownership. */
+	revisionAuthorId?: string | null;
+	primaryBylineId?: string | null;
+}
+
+/** SEO fields for content items */
+export interface ContentSeo {
+	title: string | null;
+	description: string | null;
+	image: string | null;
+	canonical: string | null;
+	noIndex: boolean;
+}
+
+/** Input for updating SEO fields on content */
+export interface ContentSeoInput {
+	title?: string | null;
+	description?: string | null;
+	image?: string | null;
+	canonical?: string | null;
+	noIndex?: boolean;
+}
+
+export interface BylineSummary {
+	id: string;
+	slug: string;
+	displayName: string;
+	bio: string | null;
+	avatarMediaId: string | null;
+	/**
+	 * The avatar media's storage key, folded in by a LEFT JOIN on the
+	 * `media` table. Populated by the content-credit hydration path
+	 * (`getContentBylines` / `getContentBylinesMany`, i.e. the
+	 * `entry.data.bylines` populated by `getEmDashCollection` /
+	 * `getEmDashEntry`) and by the single-row finders (`findById`,
+	 * `findBySlug`, `findByUserId`, `findByUserIds`). `findMany` doesn't
+	 * join media, so it leaves this null.
+	 *
+	 * Lets a page build a direct storage URL for an author avatar without a
+	 * per-byline `MediaRepository.findById`, avoiding an N+1 when many distinct
+	 * authors appear on one page.
+	 *
+	 * Optional so adding it is a non-breaking change for existing code that
+	 * constructs a `BylineSummary` literal; the repositories always populate it
+	 * (to `null` when there's no avatar or no media join).
+	 */
+	avatarStorageKey?: string | null;
+	/** Avatar media alt text, from the same media join. Null when not joined. */
+	avatarAlt?: string | null;
+	/**
+	 * Avatar media blurhash (LQIP placeholder, migration 024), folded in by the
+	 * same media join as `avatarStorageKey`. Lets a renderer paint a blurred
+	 * placeholder while the full avatar loads, with no extra media lookup.
+	 * Null when the byline has no avatar, the media row has no blurhash, or the
+	 * byline came from `findMany`, which doesn't join media.
+	 */
+	avatarBlurhash?: string | null;
+	/**
+	 * Avatar media dominant colour (LQIP placeholder, migration 024), from the
+	 * same media join. Null under the same conditions as `avatarBlurhash`.
+	 */
+	avatarDominantColor?: string | null;
+	websiteUrl: string | null;
+	userId: string | null;
+	isGuest: boolean;
+	createdAt: string;
+	updatedAt: string;
+	/**
+	 * Locale this byline row is presented in. Added by migration 040.
+	 * `(slug, locale)` is unique; a single slug can repeat across locales.
+	 */
+	locale: string;
+	/**
+	 * Shared across translations of the same byline. Added by migration 040.
+	 * `_emdash_content_bylines.byline_id` and `ec_*.primary_byline_id` store
+	 * this value, so a credit spans every locale variant of a byline.
+	 * Nullable in storage for backwards compatibility; new rows always
+	 * populate it.
+	 */
+	translationGroup: string | null;
+	/**
+	 * Custom field values registered via the byline-fields schema (migration
+	 * 041, Discussion #1174). Optional in the TypeScript shape so existing
+	 * object-literal consumers (test fixtures, plugin renderers) stay
+	 * source-compatible; the runtime always returns `{}` when no fields are
+	 * registered. Translatable values reflect this row's locale; non-
+	 * translatable values are shared across every locale variant of the
+	 * byline's `translation_group`.
+	 */
+	customFields?: Record<string, CustomFieldValue>;
+}
+
+export interface ContentBylineCredit {
+	byline: BylineSummary;
+	sortOrder: number;
+	roleLabel: string | null;
+	/** Whether this credit was explicitly assigned or inferred from authorId */
+	source?: "explicit" | "inferred";
+}
+
+/** A whitelisted timestamp column a content-list date range can filter on. */
+export type ContentDateField = "createdAt" | "updatedAt" | "publishedAt";
+
+/**
+ * Inclusive date-range filter for a single whitelisted timestamp column.
+ * Bounds are compared lexicographically against the stored ISO 8601 strings,
+ * which is correct because every timestamp is written via `toISOString()`.
+ * Callers wanting an inclusive upper bound should pass an end-of-day value
+ * (e.g. `2024-12-31T23:59:59.999Z`); the repository does not widen `to`.
+ */
+export interface ContentDateFilter {
+	field: ContentDateField;
+	from?: string;
+	to?: string;
+}
+
+/**
+ * Byline filter for a content list.
+ *
+ * `mode: "any"` matches entries credited to at least one of `bylineIds`;
+ * `mode: "none"` matches entries with no credit at all.
+ *
+ * `bylineIds` are `translation_group` values — what
+ * `_emdash_content_bylines.byline_id` stores since migration 040 — so a filter
+ * matches a byline across every locale variant.
+ *
+ * By default only explicit credits count. `includeInferred` widens the filter
+ * to the byline the list actually renders, which for an entry with no credits
+ * is the one linked to its `author_id` (see `hydrateBylinesMany`).
+ */
+export interface ContentBylineFilter {
+	mode: "any" | "none";
+	/** Ignored when `mode` is `"none"`. An empty list matches nothing. */
+	bylineIds?: string[];
+	includeInferred?: boolean;
+	/**
+	 * Locale a credit has to resolve at — the locale the list is scoped to.
+	 * Applies to explicit credits as well as inferred ones, since a byline
+	 * group credited to an entry renders only where it has a row at that
+	 * locale. Defaults to each entry's own locale when the list spans locales.
+	 */
+	locale?: string;
+}
+
+export interface FindManyOptions {
+	where?: {
+		status?: string;
+		authorId?: string;
+		locale?: string;
+		/** Case-insensitive substring to match against `searchColumns`. */
+		q?: string;
+		/**
+		 * Columns the `q` substring filter is applied to (OR'd together).
+		 * Resolved by the handler from the collection's display fields, slug,
+		 * and any field marked searchable. Each name is validated as a SQL
+		 * identifier.
+		 */
+		searchColumns?: string[];
+		/**
+		 * Serve `q` from the collection's FTS5 index (`_emdash_fts_<slug>`)
+		 * instead of an unindexable substring LIKE. Set by the handler only
+		 * when the collection has search enabled and the index exists
+		 * (SQLite only). The repository combines a token-prefix MATCH with
+		 * an index-served slug prefix so slug lookups keep working.
+		 */
+		useFts?: boolean;
+		/** Inclusive date range over a whitelisted timestamp column. */
+		dateFilter?: ContentDateFilter;
+		/** Restrict to entries by their byline credits. */
+		bylineFilter?: ContentBylineFilter;
+		/** AND-combined filters over custom fields explicitly marked as indexed. */
+		fieldFilters?: ContentFieldFilters;
+	};
+	orderBy?: {
+		field: string;
+		direction: "asc" | "desc";
+	};
+	/**
+	 * Extra field slugs allowed as `orderBy` beyond the system columns — the
+	 * collection's configured titleField/dateField. Resolved by the
+	 * handler server-side so `orderBy` stays a closed set per request.
+	 */
+	sortableExtras?: string[];
+	limit?: number;
+	cursor?: string; // Base64-encoded JSON: {orderValue: string, id: string}
+}
+
+export interface FindManyResult<T> {
+	items: T[];
+	nextCursor?: string; // Base64-encoded JSON: {orderValue: string, id: string}
+	/**
+	 * Total number of rows matching the where clause (ignoring pagination).
+	 * Optional because not every caller needs it; repositories that compute
+	 * it should set it so the UI can render a stable pagination denominator.
+	 */
+	total?: number;
+}
+
+/**
+ * Order value stamped into a cursor over a *staged* reference selection, whose
+ * anchor is a translation group rather than a row in the link table.
+ *
+ * A preview and a public render page the same field from different places, so a
+ * cursor can cross that boundary in either direction — the draft publishes, or
+ * the preview session ends, mid-pagination. Both sides recognise this marker so
+ * they can tell a foreign cursor from a malformed one and restart the field's
+ * page rather than failing or silently emptying it.
+ */
+export const STAGED_CURSOR_MARKER = "staged";
+
+/** Encode a cursor from order value + id */
+export function encodeCursor(orderValue: string, id: string): string {
+	return encodeBase64(JSON.stringify({ orderValue, id }));
+}
+
+/**
+ * Thrown when a pagination cursor cannot be decoded.
+ *
+ * Repository callers should let this propagate; handler catch blocks
+ * map it to a structured `INVALID_CURSOR` error so client pagination
+ * bugs surface immediately rather than silently re-fetching the first
+ * page.
+ */
+export class InvalidCursorError extends Error {
+	constructor(cursor: string) {
+		const display = cursor.length > 50 ? `${cursor.slice(0, 47)}...` : cursor;
+		super(`Invalid pagination cursor: ${display}`);
+		this.name = "InvalidCursorError";
+	}
+}
+
+/**
+ * Decode a cursor to order value + id.
+ *
+ * Throws `InvalidCursorError` if the cursor is empty, not valid base64,
+ * not valid JSON, or doesn't contain string `orderValue` and `id` fields.
+ */
+export function decodeCursor(cursor: string): { orderValue: string; id: string } {
+	if (!cursor) throw new InvalidCursorError(cursor);
+	if (cursor.length > MAX_CURSOR_LENGTH) throw new InvalidCursorError(cursor);
+	let parsed: unknown;
+	try {
+		parsed = JSON.parse(decodeBase64(cursor));
+	} catch {
+		throw new InvalidCursorError(cursor);
+	}
+	if (parsed === null || typeof parsed !== "object") {
+		throw new InvalidCursorError(cursor);
+	}
+	const candidate = parsed as { orderValue?: unknown; id?: unknown };
+	if (typeof candidate.orderValue !== "string" || typeof candidate.id !== "string") {
+		throw new InvalidCursorError(cursor);
+	}
+	return { orderValue: candidate.orderValue, id: candidate.id };
+}
+
+export interface ContentItem {
+	id: string;
+	type: string;
+	slug: string | null;
+	status: string;
+	data: Record<string, unknown>;
+	authorId: string | null;
+	primaryBylineId: string | null;
+	byline?: BylineSummary | null;
+	bylines?: ContentBylineCredit[];
+	createdAt: string;
+	updatedAt: string;
+	publishedAt: string | null;
+	scheduledAt: string | null;
+	liveRevisionId: string | null;
+	draftRevisionId: string | null;
+	version: number;
+	locale: string | null;
+	translationGroup: string | null;
+	/** SEO metadata — only populated for collections with `has_seo` enabled */
+	seo?: ContentSeo;
+	/**
+	 * For collections that support `revisions`: when a draft revision exists,
+	 * `data` reflects the unsaved draft and `liveData` carries the currently-
+	 * published values. When no draft exists, `liveData` is undefined.
+	 *
+	 * Hydrated by `EmDashRuntime.hydrateDraftData()` — repositories themselves
+	 * never set this field; it's purely a runtime-overlay concept that gives
+	 * agents a clear picture of "draft vs. live" without re-fetching the
+	 * revision history.
+	 */
+	liveData?: Record<string, unknown>;
+	/**
+	 * First page of each reference field's resolved selection, keyed by field
+	 * slug. Only populated when the caller opts in via `handleContentGet`'s
+	 * `referenceOptions` param (see content.ts) — hydration is never
+	 * unconditional because it can leak draft ids/slugs to callers without
+	 * `content:read_drafts`.
+	 *
+	 * Shape mirrors `EntryRef` from `api/handlers/relations.ts`, duplicated
+	 * here (rather than imported) so the database layer doesn't depend on
+	 * the api/handlers layer.
+	 */
+	references?: Record<
+		string,
+		{
+			children: Array<{
+				id: string;
+				slug: string | null;
+				collection: string;
+				title: string | null;
+				locale: string | null;
+				translationGroup: string | null;
+				sortOrder?: number;
+			}>;
+			nextCursor?: string;
+		}
+	>;
+}
+
+export class EmDashValidationError extends Error {
+	constructor(
+		message: string,
+		public details?: unknown,
+	) {
+		super(message);
+		this.name = "EmDashValidationError";
+	}
+}
+
+export class ContentCollectionNotFoundError extends Error {
+	constructor(collection: string) {
+		super(`Collection '${collection}' not found`);
+		this.name = "ContentCollectionNotFoundError";
+	}
+}
+
+/**
+ * Thrown by `publish()` when called with `requireDue` for a row that is no
+ * longer due (its `scheduled_at` was cleared or pushed into the future between
+ * selection and publish — e.g. an editor unscheduled it). Lets the scheduled
+ * sweep skip the row silently rather than treating it as a publish failure.
+ */
+export class ScheduledNotDueError extends Error {
+	constructor(message = "Content is no longer scheduled to publish") {
+		super(message);
+		this.name = "ScheduledNotDueError";
+	}
+}
+
+export class ContentMutationConflictError extends Error {
+	constructor(message = "Content changed while the operation was in progress") {
+		super(message);
+		this.name = "ContentMutationConflictError";
+	}
+}

@@ -1,0 +1,23 @@
+{
+  "id": "REG-PR-1427-joomla-native-pagination",
+  "kind": "fix",
+  "title": "Joomla quickstart inventory reads all native pages and detects repeated receiver pages",
+  "pr": 1427,
+  "area": "website-opportunities/native-inventory",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run node --test apps/tracy-web/test/brief-quickstart-first.test.mjs."],
+  "expect": [
+    "A published record only on the third page is included in inventory.",
+    "Unpublished records are filtered after pagination, never used as the stop condition.",
+    "A receiver repeating record IDs is refused before any write/detail mutation."
+  ],
+  "selectors": {
+    "file": "apps/tracy-web/src/sites/brief-engines/quickstart-native.js"
+  },
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/brief-quickstart-first.test.mjs"],
+    "needs": []
+  }
+}

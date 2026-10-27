@@ -1,0 +1,84 @@
+{
+  "color": {
+    "electric-cobalt": {
+      "$value": "#004dff",
+      "$type": "color",
+      "$description": "Electric Cobalt — Primary action buttons, active states, the single chromatic accent that punctuates the entire monochrome system"
+    },
+    "periwinkle-wash": {
+      "$value": "#d9e4ff",
+      "$type": "color",
+      "$description": "Periwinkle Wash — Light blue surface for highlighted regions, subtle brand-tinted backgrounds, soft accent fills"
+    },
+    "lavender-veil": {
+      "$value": "#e6c5f7",
+      "$type": "color",
+      "$description": "Lavender Veil — Soft violet surface for the brand mark and tertiary accent zones, a whisper of warmth against the cool palette"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "graphite": {
+      "$value": "#6e6e6e",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, link color, muted descriptions, supportive copy that recedes from primary content"
+    },
+    "stone": {
+      "$value": "#c9c9c9",
+      "$type": "color",
+      "$description": "Stone — Tertiary surface fills, disabled-state backgrounds, very subtle card differentiation"
+    },
+    "ash": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Ash — Drop shadow base at 16% opacity, secondary dividers, barely-there surface separation"
+    },
+    "pewter": {
+      "$value": "#dfdfdf",
+      "$type": "color",
+      "$description": "Pewter — Secondary borders, card edges, input field outlines, the structural grid color at 1px weight"
+    },
+    "slate-mist": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Slate Mist — Primary hairline borders, the most-used divider color, separating cards, sections, and table rows"
+    },
+    "fog": {
+      "$value": "#f9fafb",
+      "$type": "color",
+      "$description": "Fog — Subtle page-surface lift, alternating section backgrounds, the barely-warm off-white that breaks pure white monotony"
+    },
+    "canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas — Page background, card surfaces, text on dark fills, the dominant surface where everything sits"
+    }
+  },
+  "font": {
+    "pp-radio-grotesk": {
+      "$value": "PP Radio Grotesk",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface. The geometric-humanist character with its distinctive open apertures carries every headline, subhead, uppercase label, and brand statement. The signature technique is mixing weight 400 and 600 within a single sentence (e.g. 'Every Identity. Every Agent. Every Secret.') to create rhythmic emphasis without color or size shifts."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "UI and body typeface. Handles all interface text, navigation, button labels, form inputs, and supporting paragraph copy. The slight negative tracking at body sizes keeps dense UI text compact without feeling tight."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Rarely used serif for one-off editorial accents, likely a fallback or legacy element — not a design-system driver"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.clutch.security",
+      "siteName": "Clutch Security",
+      "extractedAt": "2026-06-03T18:50:08.827Z",
+      "variant": "compact"
+    }
+  }
+}

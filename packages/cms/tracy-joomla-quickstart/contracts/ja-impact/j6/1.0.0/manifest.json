@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-impact/j6/1.0.0",
+  "platform": "joomla",
+  "template": "ja_impact",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-impact",
+    "id": "quickstart/ja-impact/j6",
+    "version": "1.0.0",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_impact",
+    "parts": {
+      "installer": {
+        "file": "ja-impact-j6-quickstart.zip",
+        "bytes": 63571878,
+        "sha256": "19e37e54a337a625893f3adc2bf44e6ea0f77520492c7252595fb34d0c0adb4f"
+      }
+    },
+    "release": "quickstart/ja-impact/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

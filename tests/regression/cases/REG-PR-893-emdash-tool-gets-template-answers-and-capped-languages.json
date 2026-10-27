@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-893-emdash-tool-gets-template-answers-and-capped-languages",
+  "kind": "fix",
+  "title": "EmDash Apply: the tool gets the template's own answers as typed, the sector, and the normalizer's name and capped languages",
+  "pr": 893,
+  "area": "sites/apply/emdash",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-emdash.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"the template’s own answers reach the tool as the customer typed them, beside what the text was read for\"; \"prepare reads the template’s questions from its seed and hands the tool the answers to them\"; \"the name and the languages are the ones the normalizer read as typed: its cap holds, and the menus are planned for the same set\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 29).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): an answer to one of the template's own questions (seed/questions.json) reaches the tool as typed (sector as its option id, the contact line as written), the normalizer's sector is sent when no question gave one, and name and languages are always the normalizer's (at most MAX_LANGUAGES, the set the menus are planned for)."
+  ],
+  "selectors": {
+    "engine": "answersOf, templateQuestionIds, NORMALIZED in apps/tracy-web/src/sites/brief-engines/emdash.js",
+    "tool": "--answers-json of the template personalize tool"
+  },
+  "evidence": "Ledger L10, 05/10/2026: the EmDash personalize tool's copy, form and picture prompts were written for no trade (sector never passed) and a street typed into 'Address and hotline' could vanish (contact rebuilt from the normalizer's echo); the first fix then let raw answers override name and languages past the cap. Reds 6b0a39ea2, f07032c7d; fixes 8439a1551, 336a3c1b8.",
+  "fence": "Answers the template does not ask are not sent; name and languages never come from the raw answers.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-emdash.test.mjs"],
+    "tests": [
+      "the template’s own answers reach the tool as the customer typed them, beside what the text was read for",
+      "prepare reads the template’s questions from its seed and hands the tool the answers to them",
+      "the name and the languages are the ones the normalizer read as typed: its cap holds, and the menus are planned for the same set"
+    ]
+  }
+}

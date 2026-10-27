@@ -1,0 +1,29 @@
+meta {
+  name: content.list
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.list",
+    "params": { "kind": "{{nativeKind}}", "limit": 20 }
+  }
+}
+
+docs {
+  # A page of CMS records of one kind
+
+  Lists records of the kind `nativeKind` names (set by "view pages"), in the CMS's own shape.
+  Replace the kind to list others the component knows, e.g. `module` or `templateStyle` on
+  Joomla, `post` on WordPress.
+
+  Look for: `ok: true` and the list of records. A listing may leave out record bodies (the
+  WordPress one does unless asked); read one whole record with `content.get`.
+}

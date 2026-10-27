@@ -1,0 +1,64 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page canvas, section backgrounds, card surfaces — pure black, not near-black, makes the off-white type and the lime accent feel luminous"
+    },
+    "charcoal": {
+      "$value": "#0e0e0e",
+      "$type": "color",
+      "$description": "Charcoal — Elevated surface layer, subtle borders, secondary backgrounds — one step off the void for depth without breaking the dark mode"
+    },
+    "bone": {
+      "$value": "#f0eded",
+      "$type": "color",
+      "$description": "Bone — Primary text, pentagon tag fills, announcement bar background — slightly warm off-white, softer than pure white against deep black"
+    },
+    "ash": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Ash — Secondary body text, muted helper copy, list dividers — the dominant mid-gray for all non-primary prose"
+    },
+    "smoke": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Smoke — Tertiary text, subtle metadata, low-priority borders"
+    },
+    "graphite": {
+      "$value": "#606060",
+      "$type": "color",
+      "$description": "Graphite — Faintest visible borders, disabled text — the lower edge of the readable gray scale"
+    },
+    "lime-signal": {
+      "$value": "#e1f0bd",
+      "$type": "color",
+      "$description": "Lime Signal — Primary CTA fill only — a muted pale lime used exclusively for the early-access button, never for links, icons, or decoration. The one chromatic moment on the entire page"
+    }
+  },
+  "font": {
+    "sf-pro": {
+      "$value": "SF Pro",
+      "$type": "fontFamily",
+      "$description": "Body, UI, subheadings, and button text. Weight 300 is used for mid-size headings (24–29px) — an anti-convention choice that makes subheadings recede rather than compete with the serif display. Weight 400 for body, buttons, and dense text at 1.50–1.75 line-height for breathing room"
+    },
+    "tanaclassic": {
+      "$value": "tanaClassic",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif. High-contrast, editorial, used at 84px for hero headlines and 38–48px for section headings. Negative tracking (-0.045em at display, -0.030em at mid-headings) tightens the serif into a dense magazine block. The weight 350–400 range is lighter than typical headline serifs, giving the type a whisper of authority rather than shouting"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://tana.inc",
+      "siteName": "Tana",
+      "extractedAt": "2026-06-03T21:42:17.328Z",
+      "variant": "compact"
+    }
+  }
+}

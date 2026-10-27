@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-sunbeam-yellow: #ffc500;
+  --color-electric-violet: #7700ff;
+  --gradient-electric-violet: linear-gradient(180deg, rgb(148, 0, 255), rgb(92, 0, 255));
+  --color-carbon: #312f27;
+  --color-paper-white: #ffffff;
+  --color-slate-gray: #788086;
+  --color-fog: #efefef;
+  --color-sand: #e9e4d9;
+  --color-ash: #b1afa7;
+
+  /* Typography — Font Families */
+  --font-roobert: 'Roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

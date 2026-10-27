@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-1407-ds-check-runner-loads-in-image-happy",
+  "itemIds": ["regression:REG-PR-1407-ds-check-runner-loads-in-image"],
+  "requirement": "The Design system check runner loads in the tracy-web image, and a crashed check names its error on /ops",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1407-ds-check-runner-loads-in-image.json",
+    "ref": "PR #1407 (fix); fix evidence: dev /api/ops/quickstarts 16/10/2026 10:24Z: every release ds-error 'Node.js v24.22.0'; reproduced in an image-shaped folder",
+    "invariant": "S1: no import leaves apps/tracy-web. S2: each runner exits 2 with its own refusal; no ERR_MODULE_NOT_FOUND. S3: the reason is the 'Error [ERR_MODULE_NOT_FOUND]: Cannot find module ...' line, not the Node.js version.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/lib/customize-readiness.js:75",
+      "apps/tracy-web/src/lib/design-system-readiness.js:160",
+      "apps/tracy-web/src/lib/template-design-system-readiness/index.js:94",
+      "apps/tracy-web/src/lib/template-design-system-readiness/severity.js:159"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/db/index.js:52 readFile() with a computed path",
+      "apps/tracy-web/src/lib/design-system-readiness.js:125 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/design-system-readiness.js:82 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/ds-slot.js:101 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/readiness-inputs.js:74 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/measurement-inheritance.js:126 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/measurement-inheritance.js:206 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/measurement-inheritance.js:239 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/measurement-inheritance.js:375 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/measurement.js:110 readFileSync() with a computed path",
+      "scripts/test/tracy-web-image-imports.test.mjs:53 readFileSync() with a computed path",
+      "scripts/test/tracy-web-image-imports.test.mjs:81 spawnSync() runs a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1407-ds-check-runner-loads-in-image.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1407-ds-check-runner-loads-in-image"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "scripts", "scripts"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1407-ds-check-runner-loads-in-image",
+    "pr": 1407,
+    "kind": "fix",
+    "area": "design-system/readiness",
+    "file": "tests/regression/cases/REG-PR-1407-ds-check-runner-loads-in-image.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "scripts/test/tracy-web-image-imports.test.mjs",
+    "apps/tracy-web/test/design-system-readiness.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

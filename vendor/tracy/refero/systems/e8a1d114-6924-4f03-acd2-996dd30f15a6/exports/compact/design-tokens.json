@@ -1,0 +1,79 @@
+{
+  "color": {
+    "hot-coral": {
+      "$value": "#ff4f40",
+      "$type": "color",
+      "$description": "Hot Coral — Brand signature — logo, links, headings, icons, card product. One vivid accent against the achromatic interface; every chromatic moment in the system draws from this single hue"
+    },
+    "midnight-ink": {
+      "$value": "#091723",
+      "$type": "color",
+      "$description": "Midnight Ink — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "deep-navy": {
+      "$value": "#112231",
+      "$type": "color",
+      "$description": "Deep Navy — Secondary surface tint and footer accents. Slightly lighter than Midnight Ink for layered dark elements"
+    },
+    "page-mist": {
+      "$value": "#f2f8f3",
+      "$type": "color",
+      "$description": "Page Mist — Page canvas — the dominant background behind all content sections. A barely-green off-white that gives the interface warmth without competing with white surfaces"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, elevated panels, button text on dark fills. Sits one layer above the mint canvas"
+    },
+    "soft-mint": {
+      "$value": "#e3ebe4",
+      "$type": "color",
+      "$description": "Soft Mint — Hover washes, subtle filled buttons, inset surface treatment. Sits between the page canvas and white cards"
+    },
+    "fog": {
+      "$value": "#b5b9bd",
+      "$type": "color",
+      "$description": "Fog — Tertiary text, placeholder, low-emphasis borders"
+    },
+    "steel": {
+      "$value": "#6b747b",
+      "$type": "color",
+      "$description": "Steel — Secondary body text, metadata, descriptive copy. The workhorse neutral for supporting information"
+    },
+    "ash": {
+      "$value": "#75817e",
+      "$type": "color",
+      "$description": "Ash — Icon strokes, decorative line work, subtle dividers"
+    },
+    "slate-button": {
+      "$value": "#3b4c54",
+      "$type": "color",
+      "$description": "Slate Button — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Maximum-contrast text, the darkest token in the system. Used sparingly for the highest-emphasis text on light surfaces"
+    }
+  },
+  "font": {
+    "monzosanstext": {
+      "$value": "MonzoSansText",
+      "$type": "fontFamily",
+      "$description": "Body and UI text — navigation labels, button copy, descriptive paragraphs, card content, footer text. The custom -0.05em letter-spacing tightens running text for a dense, modern feel; the 400/600/700 spread lets the same family handle everything from captions to subheadings. Substitute with Inter or DM Sans if unavailable."
+    },
+    "monzosansdisplay": {
+      "$value": "MonzoSansDisplay",
+      "$type": "fontFamily",
+      "$description": "Headlines and display text — hero statements, section headings, large product titles. Bolder weights (up to 800) at large sizes (39-61px) create confident, blocky headlines that feel architectural. No custom letter-spacing, letting the weight do the work. Substitute with Inter or Manrope at heavy weights."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://monzo.com",
+      "siteName": "Monzo",
+      "extractedAt": "2026-06-03T20:05:20.171Z",
+      "variant": "compact"
+    }
+  }
+}

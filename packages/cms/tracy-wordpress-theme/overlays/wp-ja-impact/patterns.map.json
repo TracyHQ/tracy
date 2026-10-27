@@ -1,0 +1,2290 @@
+{
+  "$comment": "ACM type:style -> the wp-ja-impact pattern that renders it, field by field, for the seeder (renderAcm, `${type}:${style}`). Field names are the Joomla ACM field names verbatim (plus the fields the task's spec steps add, tasks/ja-impact-wp7/tools/spec-steps). metadata.name is <type>.<field>[.<n>]; the wrapper of a repeated row is <type>.item.<n>. A block is located by name, never by position. Fragments live in tasks/ja-impact-wp7/map/*.json, one owner each; tools/build-map.mjs composes this file.",
+  "schemaVersion": "tracy-base-patterns-map/v1",
+  "namespace": "wp-ja-impact",
+  "anchorConvention": "acm-<type>-<module id>",
+  "views": {
+    "page-account": {
+      "expect": {
+        "status": 303,
+        "to": "/pages/user/login-form"
+      }
+    },
+    "search": {
+      "servedAtPath": true
+    },
+    "single": {
+      "servedAtPath": true
+    }
+  },
+  "types": {
+    "110": {
+      "pattern": "wp-ja-impact/acm-hero",
+      "item": "hero.item.<n>",
+      "fields": {
+        "image-hero": {
+          "block": "core/image",
+          "path": "hero.image-hero.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-title": {
+          "block": "core/paragraph",
+          "path": "hero.sub-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "hero.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "hero.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "button": {
+          "block": "core/button",
+          "path": "hero.button.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "button-2": {
+          "block": "core/button",
+          "path": "hero.button-2.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link-2": {
+          "block": "core/button",
+          "path": "hero.button-2.<n>",
+          "attr": "url",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "btn-icon": "the button arrow is drawn by the theme (jim-btn--arrow ::after); every instance uses the arrow",
+        "btn-icon-2": "same: the arrow is drawn by the theme",
+        "btn-type": "every instance is success (green), the pattern's default; no per-slide colour class",
+        "btn-type-2": "every instance is success (green), the pattern's default; no per-slide colour class"
+      },
+      "$comment": "module 110: alias of hero:style-1 for the visual contract (S-ji-04)"
+    },
+    "111": {
+      "pattern": "wp-ja-impact/acm-features-1",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-tag": {
+          "block": "core/heading",
+          "path": "features.feature-tag",
+          "attr": "content"
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "label": {
+          "block": "core/button",
+          "path": "features.label",
+          "attr": "text"
+        },
+        "link": {
+          "block": "core/button",
+          "path": "features.label",
+          "attr": "url"
+        },
+        "feature-main-img": {
+          "block": "core/image",
+          "path": "features.feature-main-img",
+          "attr": "src"
+        },
+        "media-alignment": {
+          "block": "core/group",
+          "path": "features.row",
+          "attr": "className",
+          "classPrefix": "media-"
+        },
+        "sub-feature-img": {
+          "block": "core/image",
+          "path": "features.sub-feature-img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-media-alignment": {
+          "block": "core/group",
+          "path": "features.item.<n>",
+          "attr": "className",
+          "classPrefix": "flex-",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "icon": "the button arrow is drawn by the theme (jim-btn--arrow ::after)"
+      },
+      "$comment": "module 111: alias of features:style-1 for the visual contract (S-ji-04)"
+    },
+    "115": {
+      "pattern": "wp-ja-impact/acm-features-2",
+      "item": "features.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features.module-title",
+          "attr": "content"
+        },
+        "module-sub-title": {
+          "block": "core/paragraph",
+          "path": "features.module-sub-title",
+          "attr": "content"
+        },
+        "feature-item-col-width": {
+          "block": "core/group",
+          "path": "features.item.<n>",
+          "attr": "className",
+          "classPrefix": "col-md-",
+          "repeat": true
+        },
+        "feature-highlight": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classPrefix": "bg-",
+          "repeat": true
+        },
+        "feature-text-align": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classPrefix": "text-",
+          "repeat": true
+        },
+        "sub-media-alignment": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classMap": {
+            "row": "media-left",
+            "row-reverse": "media-right",
+            "column": "media-top",
+            "column-reverse": "media-bottom"
+          },
+          "repeat": true
+        },
+        "sub-feature-img": {
+          "block": "core/image",
+          "path": "features.sub-feature-img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-title": {
+          "block": "core/heading",
+          "path": "features.sub-feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {},
+      "$comment": "module 115: alias of features:style-2 for the visual contract (S-ji-04)"
+    },
+    "116": {
+      "pattern": "wp-ja-impact/acm-features-2",
+      "item": "features.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features.module-title",
+          "attr": "content"
+        },
+        "module-sub-title": {
+          "block": "core/paragraph",
+          "path": "features.module-sub-title",
+          "attr": "content"
+        },
+        "feature-item-col-width": {
+          "block": "core/group",
+          "path": "features.item.<n>",
+          "attr": "className",
+          "classPrefix": "col-md-",
+          "repeat": true
+        },
+        "feature-highlight": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classPrefix": "bg-",
+          "repeat": true
+        },
+        "feature-text-align": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classPrefix": "text-",
+          "repeat": true
+        },
+        "sub-media-alignment": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classMap": {
+            "row": "media-left",
+            "row-reverse": "media-right",
+            "column": "media-top",
+            "column-reverse": "media-bottom"
+          },
+          "repeat": true
+        },
+        "sub-feature-img": {
+          "block": "core/image",
+          "path": "features.sub-feature-img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-title": {
+          "block": "core/heading",
+          "path": "features.sub-feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {},
+      "$comment": "module 116: alias of features:style-2 for the visual contract (S-ji-04)"
+    },
+    "124": {
+      "pattern": "wp-ja-impact/acm-features-3",
+      "item": "features.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features.module-title",
+          "attr": "content"
+        },
+        "module-sub-title": {
+          "block": "core/paragraph",
+          "path": "features.module-sub-title",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features.carousel",
+          "attr": "className"
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "bg": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classPrefix": "bg-",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "label": {
+          "block": "core/button",
+          "path": "features.button.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/button",
+          "path": "features.button.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "button-type": {
+          "block": "core/button",
+          "path": "features.button.<n>",
+          "attr": "className",
+          "classMap": {
+            "success": "btn-success",
+            "primary": "btn-primary",
+            "warning": "btn-warning",
+            "white": "btn-white",
+            "dark": "btn-dark"
+          },
+          "repeat": true
+        },
+        "bg-content": {
+          "block": "core/group",
+          "path": "features.block-inner",
+          "attr": "className",
+          "classMap": {
+            "bg-primary": "bg-primary",
+            "bg-secondary": "bg-secondary",
+            "bg-warning": "bg-warning",
+            "bg-success": "bg-success"
+          }
+        },
+        "block-img": {
+          "block": "core/image",
+          "path": "features.block-img",
+          "attr": "src"
+        },
+        "block-description": {
+          "block": "core/heading",
+          "path": "features.block-description",
+          "attr": "content"
+        },
+        "btn-block-label": {
+          "block": "core/button",
+          "path": "features.btn-block",
+          "attr": "text"
+        },
+        "btn-block-link": {
+          "block": "core/button",
+          "path": "features.btn-block",
+          "attr": "url"
+        },
+        "btn-block-type": {
+          "block": "core/button",
+          "path": "features.btn-block",
+          "attr": "className",
+          "classMap": {
+            "success": "btn-success",
+            "primary": "btn-primary",
+            "warning": "btn-warning",
+            "white": "btn-white",
+            "dark": "btn-dark"
+          }
+        }
+      },
+      "dropped": {
+        "image-bg": "a card photo behind the card text; empty in every instance of the source, so no block draws it",
+        "icon": "the arrow after a button label is drawn by the stylesheet (the source's value is empty or the same arrow)",
+        "btn-block-icon": "the arrow after the call-to-action label is drawn by the stylesheet",
+        "align": "only on an unpublished module (not drawn on any page)",
+        "image-type": "only on an unpublished module (not drawn on any page)"
+      },
+      "$comment": "module 124: alias of features:style-3 for the visual contract (S-ji-04)"
+    },
+    "125": {
+      "pattern": "wp-ja-impact/acm-features-4",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-tag": {
+          "block": "core/heading",
+          "path": "features.feature-tag",
+          "attr": "content"
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "feature-text-align": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classPrefix": "text-"
+        },
+        "feature-sub-col": {
+          "block": "core/group",
+          "path": "features.list",
+          "attr": "className",
+          "classPrefix": "sub-col-"
+        },
+        "sub-feature-img": {
+          "block": "core/image",
+          "path": "features.sub-feature-img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-title": {
+          "block": "core/heading",
+          "path": "features.sub-feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-title-color": {
+          "block": "core/heading",
+          "path": "features.sub-feature-title.<n>",
+          "attr": "className",
+          "classPrefix": "text-",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {},
+      "$comment": "module 125: alias of features:style-4 for the visual contract (S-ji-04)"
+    },
+    "128": {
+      "pattern": "wp-ja-impact/acm-features-1",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-tag": {
+          "block": "core/heading",
+          "path": "features.feature-tag",
+          "attr": "content"
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "label": {
+          "block": "core/button",
+          "path": "features.label",
+          "attr": "text"
+        },
+        "link": {
+          "block": "core/button",
+          "path": "features.label",
+          "attr": "url"
+        },
+        "feature-main-img": {
+          "block": "core/image",
+          "path": "features.feature-main-img",
+          "attr": "src"
+        },
+        "media-alignment": {
+          "block": "core/group",
+          "path": "features.row",
+          "attr": "className",
+          "classPrefix": "media-"
+        },
+        "sub-feature-img": {
+          "block": "core/image",
+          "path": "features.sub-feature-img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-media-alignment": {
+          "block": "core/group",
+          "path": "features.item.<n>",
+          "attr": "className",
+          "classPrefix": "flex-",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "icon": "the button arrow is drawn by the theme (jim-btn--arrow ::after)"
+      },
+      "$comment": "module 128: alias of features:style-1 for the visual contract (S-ji-04)"
+    },
+    "129": {
+      "pattern": "wp-ja-impact/acm-features-1",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-tag": {
+          "block": "core/heading",
+          "path": "features.feature-tag",
+          "attr": "content"
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "label": {
+          "block": "core/button",
+          "path": "features.label",
+          "attr": "text"
+        },
+        "link": {
+          "block": "core/button",
+          "path": "features.label",
+          "attr": "url"
+        },
+        "feature-main-img": {
+          "block": "core/image",
+          "path": "features.feature-main-img",
+          "attr": "src"
+        },
+        "media-alignment": {
+          "block": "core/group",
+          "path": "features.row",
+          "attr": "className",
+          "classPrefix": "media-"
+        },
+        "sub-feature-img": {
+          "block": "core/image",
+          "path": "features.sub-feature-img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-media-alignment": {
+          "block": "core/group",
+          "path": "features.item.<n>",
+          "attr": "className",
+          "classPrefix": "flex-",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "icon": "the button arrow is drawn by the theme (jim-btn--arrow ::after)"
+      },
+      "$comment": "module 129: alias of features:style-1 for the visual contract (S-ji-04)"
+    },
+    "132": {
+      "pattern": "wp-ja-impact/acm-features-5",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-col": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classPrefix": "cols-"
+        },
+        "feature-count-item": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classMap": {
+            "0": "has-count",
+            "1": "no-count"
+          }
+        },
+        "feature-text-align": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classPrefix": "text-"
+        },
+        "bg-content": {
+          "block": "core/group",
+          "path": "features.item.<n>",
+          "attr": "className",
+          "classPrefix": "bg-",
+          "repeat": true
+        },
+        "feature-tag": {
+          "block": "core/heading",
+          "path": "features.feature-tag.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-label": {
+          "block": "core/button",
+          "path": "features.btn-label.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features.btn-label.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "count-number": {
+          "block": "core/heading",
+          "path": "features.count-number.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "btn-icon": "the button arrow is drawn by the theme (jim-btn--arrow ::after)",
+        "btn-bg-content": "every instance is success (green), the pattern's default",
+        "feature-text-color": "only the unpublished module 134 sets it (default); the card colours come from bg-content"
+      },
+      "$comment": "module 132: alias of features:style-5 for the visual contract (S-ji-04)"
+    },
+    "133": {
+      "pattern": "wp-ja-impact/acm-features-3",
+      "item": "features.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features.module-title",
+          "attr": "content"
+        },
+        "module-sub-title": {
+          "block": "core/paragraph",
+          "path": "features.module-sub-title",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features.carousel",
+          "attr": "className"
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "bg": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classPrefix": "bg-",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "label": {
+          "block": "core/button",
+          "path": "features.button.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/button",
+          "path": "features.button.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "button-type": {
+          "block": "core/button",
+          "path": "features.button.<n>",
+          "attr": "className",
+          "classMap": {
+            "success": "btn-success",
+            "primary": "btn-primary",
+            "warning": "btn-warning",
+            "white": "btn-white",
+            "dark": "btn-dark"
+          },
+          "repeat": true
+        },
+        "bg-content": {
+          "block": "core/group",
+          "path": "features.block-inner",
+          "attr": "className",
+          "classMap": {
+            "bg-primary": "bg-primary",
+            "bg-secondary": "bg-secondary",
+            "bg-warning": "bg-warning",
+            "bg-success": "bg-success"
+          }
+        },
+        "block-img": {
+          "block": "core/image",
+          "path": "features.block-img",
+          "attr": "src"
+        },
+        "block-description": {
+          "block": "core/heading",
+          "path": "features.block-description",
+          "attr": "content"
+        },
+        "btn-block-label": {
+          "block": "core/button",
+          "path": "features.btn-block",
+          "attr": "text"
+        },
+        "btn-block-link": {
+          "block": "core/button",
+          "path": "features.btn-block",
+          "attr": "url"
+        },
+        "btn-block-type": {
+          "block": "core/button",
+          "path": "features.btn-block",
+          "attr": "className",
+          "classMap": {
+            "success": "btn-success",
+            "primary": "btn-primary",
+            "warning": "btn-warning",
+            "white": "btn-white",
+            "dark": "btn-dark"
+          }
+        }
+      },
+      "dropped": {
+        "image-bg": "a card photo behind the card text; empty in every instance of the source, so no block draws it",
+        "icon": "the arrow after a button label is drawn by the stylesheet (the source's value is empty or the same arrow)",
+        "btn-block-icon": "the arrow after the call-to-action label is drawn by the stylesheet",
+        "align": "only on an unpublished module (not drawn on any page)",
+        "image-type": "only on an unpublished module (not drawn on any page)"
+      },
+      "$comment": "module 133: alias of features:style-3 for the visual contract (S-ji-04)"
+    },
+    "134": {
+      "pattern": "wp-ja-impact/acm-features-5",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-col": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classPrefix": "cols-"
+        },
+        "feature-count-item": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classMap": {
+            "0": "has-count",
+            "1": "no-count"
+          }
+        },
+        "feature-text-align": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classPrefix": "text-"
+        },
+        "bg-content": {
+          "block": "core/group",
+          "path": "features.item.<n>",
+          "attr": "className",
+          "classPrefix": "bg-",
+          "repeat": true
+        },
+        "feature-tag": {
+          "block": "core/heading",
+          "path": "features.feature-tag.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-label": {
+          "block": "core/button",
+          "path": "features.btn-label.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features.btn-label.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "count-number": {
+          "block": "core/heading",
+          "path": "features.count-number.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "btn-icon": "the button arrow is drawn by the theme (jim-btn--arrow ::after)",
+        "btn-bg-content": "every instance is success (green), the pattern's default",
+        "feature-text-color": "only the unpublished module 134 sets it (default); the card colours come from bg-content"
+      },
+      "$comment": "module 134: alias of features:style-5 for the visual contract (S-ji-04)"
+    },
+    "135": {
+      "pattern": "wp-ja-impact/acm-funds",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names the category by slug in the pattern (wpJaImpactCategory, with its sub-categories), resolved at render time (inc/groups/g3.php)",
+        "count": "the query perPage of the pattern (the module's count)",
+        "ordering": "the query orderBy / order of the pattern (the module's article ordering)"
+      },
+      "$comment": "module 135: alias of articles-category:funds for the visual contract (S-ji-04)"
+    },
+    "136": {
+      "pattern": "wp-ja-impact/acm-features-6",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-subtitle": {
+          "block": "core/heading",
+          "path": "features.feature-subtitle",
+          "attr": "content"
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "feature-charity-pct": {
+          "block": "core/paragraph",
+          "path": "features.feature-charity-pct",
+          "attr": "content"
+        },
+        "feature-donation-pct": {
+          "block": "core/paragraph",
+          "path": "features.feature-donation-pct",
+          "attr": "content"
+        },
+        "sub-feature-media": {
+          "block": "core/image",
+          "path": "features.sub-feature-media.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-title": {
+          "block": "core/heading",
+          "path": "features.sub-feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "feature-charity": "drawn through feature-charity-pct (spec step S-ji-g1-2 adds it as '72%'); the bar width is read from that text by the render filter in inc/groups/g1.php",
+        "feature-donation": "drawn through feature-donation-pct (spec step S-ji-g1-2); same render filter",
+        "feature-media": "module 136 only (unpublished): its fields describe dated event cards the style-6 template does not print",
+        "feature-date": "module 136 only (unpublished); not printed by the template",
+        "feature-month": "module 136 only (unpublished); not printed by the template",
+        "bg-datemonth": "module 136 only (unpublished); not printed by the template",
+        "bg-content": "module 136 only (unpublished); not printed by the template",
+        "feature-text-color": "module 136 only (unpublished); not printed by the template",
+        "feature-location": "module 136 only (unpublished); not printed by the template",
+        "btn-label": "module 136 only (unpublished); not printed by the template",
+        "btn-link": "module 136 only (unpublished); not printed by the template",
+        "btn-icon": "module 136 only (unpublished); not printed by the template",
+        "btn-bg-content": "module 136 only (unpublished); not printed by the template",
+        "feature-text-align": "module 136 only (unpublished); not printed by the template"
+      },
+      "$comment": "module 136: alias of features:style-6 for the visual contract (S-ji-04)"
+    },
+    "137": {
+      "pattern": "wp-ja-impact/acm-related",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "related-items.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "related-items.sub-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "count": "the query perPage of the pattern (3)"
+      },
+      "$comment": "module 137: alias of related-items:default for the visual contract (S-ji-04)"
+    },
+    "140": {
+      "pattern": "wp-ja-impact/acm-news",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "href"
+        }
+      },
+      "dropped": {
+        "category": "the query names the category by slug in the pattern (wpJaImpactCategory, with its sub-categories), resolved at render time (inc/groups/g3.php)",
+        "count": "the query perPage of the pattern (the module's count)",
+        "ordering": "the query orderBy / order of the pattern (the module's article ordering)"
+      },
+      "$comment": "module 140: alias of articles-category:news for the visual contract (S-ji-04)"
+    },
+    "146": {
+      "pattern": "wp-ja-impact/acm-features-7",
+      "fields": {
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "ft-video": {
+          "block": "core/image",
+          "path": "features.ft-video",
+          "attr": "src"
+        },
+        "video-url": {
+          "block": "core/button",
+          "path": "features.video-url",
+          "attr": "url"
+        },
+        "video-align": {
+          "block": "core/group",
+          "path": "features.item",
+          "attr": "className",
+          "classPrefix": "align-"
+        }
+      },
+      "dropped": {
+        "id-video": "the YouTube id is part of video-url (spec step S-ji-g2-3), the address the play button opens",
+        "position": "the module at this position (the subscribe form) is drawn inside the panel by the pattern: a Contact Form 7 shortcode, never baked markup",
+        "position-2": "the module at this position (the follow-us links) is drawn inside the panel by the pattern as a social-links block"
+      },
+      "$comment": "module 146: alias of features:style-7 for the visual contract (S-ji-04)"
+    },
+    "156": {
+      "pattern": "wp-ja-impact/acm-events",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names the category by slug in the pattern (wpJaImpactCategory, with its sub-categories), resolved at render time (inc/groups/g3.php)",
+        "count": "the query perPage of the pattern (the module's count)",
+        "ordering": "the query orderBy / order of the pattern (the module's article ordering)"
+      },
+      "$comment": "module 156: alias of articles-category:events for the visual contract (S-ji-04)"
+    },
+    "157": {
+      "pattern": "wp-ja-impact/acm-cta-1",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "cta.module-title",
+          "attr": "content"
+        },
+        "cta-desc": {
+          "block": "core/paragraph",
+          "path": "cta.cta-desc",
+          "attr": "content"
+        },
+        "cta-highlight": {
+          "block": "core/heading",
+          "path": "cta.cta-highlight",
+          "attr": "content"
+        },
+        "cta-link-title": {
+          "block": "core/button",
+          "path": "cta.cta-link",
+          "attr": "text"
+        },
+        "cta-link": {
+          "block": "core/button",
+          "path": "cta.cta-link",
+          "attr": "url"
+        },
+        "cta-media": {
+          "block": "core/image",
+          "path": "cta.cta-media",
+          "attr": "src"
+        },
+        "cta-align-media": {
+          "block": "core/group",
+          "path": "cta.row",
+          "attr": "className",
+          "classMap": {
+            "right": "align-right",
+            "left": "align-left"
+          }
+        }
+      },
+      "dropped": {
+        "cta-link-type": "every instance is success (green), the pattern's default"
+      },
+      "$comment": "module 157: alias of cta:style-1 for the visual contract (S-ji-04)"
+    },
+    "158": {
+      "pattern": "wp-ja-impact/acm-cta-2",
+      "fields": {
+        "cta-media": {
+          "block": "core/image",
+          "path": "cta.cta-media",
+          "attr": "src"
+        },
+        "cta-title": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content"
+        },
+        "cta-desc": {
+          "block": "core/paragraph",
+          "path": "cta.cta-desc",
+          "attr": "content"
+        },
+        "cta-link-title": {
+          "block": "core/button",
+          "path": "cta.cta-link",
+          "attr": "text"
+        },
+        "cta-link": {
+          "block": "core/button",
+          "path": "cta.cta-link",
+          "attr": "url"
+        },
+        "bg-content": {
+          "block": "core/group",
+          "path": "cta.surface",
+          "attr": "className",
+          "classPrefix": "bg-"
+        }
+      },
+      "dropped": {
+        "cta-link-type": "every instance is success (green), the pattern's default"
+      },
+      "$comment": "module 158: alias of cta:style-2 for the visual contract (S-ji-04)"
+    },
+    "160": {
+      "pattern": "wp-ja-impact/acm-accordion",
+      "item": "accordion.item.<n>",
+      "fields": {
+        "info-title": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content"
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "accordion.info-desc",
+          "attr": "content"
+        },
+        "accordion-name": {
+          "block": "core/heading",
+          "path": "accordion.accordion-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "accordion.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "text-align": "the source value is always start (the heading block is left-aligned); no instance sets another alignment"
+      },
+      "$comment": "module 160: alias of accordion:style-1 for the visual contract (S-ji-04)"
+    },
+    "161": {
+      "pattern": "wp-ja-impact/acm-features-6",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-subtitle": {
+          "block": "core/heading",
+          "path": "features.feature-subtitle",
+          "attr": "content"
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "feature-charity-pct": {
+          "block": "core/paragraph",
+          "path": "features.feature-charity-pct",
+          "attr": "content"
+        },
+        "feature-donation-pct": {
+          "block": "core/paragraph",
+          "path": "features.feature-donation-pct",
+          "attr": "content"
+        },
+        "sub-feature-media": {
+          "block": "core/image",
+          "path": "features.sub-feature-media.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-title": {
+          "block": "core/heading",
+          "path": "features.sub-feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "feature-charity": "drawn through feature-charity-pct (spec step S-ji-g1-2 adds it as '72%'); the bar width is read from that text by the render filter in inc/groups/g1.php",
+        "feature-donation": "drawn through feature-donation-pct (spec step S-ji-g1-2); same render filter",
+        "feature-media": "module 136 only (unpublished): its fields describe dated event cards the style-6 template does not print",
+        "feature-date": "module 136 only (unpublished); not printed by the template",
+        "feature-month": "module 136 only (unpublished); not printed by the template",
+        "bg-datemonth": "module 136 only (unpublished); not printed by the template",
+        "bg-content": "module 136 only (unpublished); not printed by the template",
+        "feature-text-color": "module 136 only (unpublished); not printed by the template",
+        "feature-location": "module 136 only (unpublished); not printed by the template",
+        "btn-label": "module 136 only (unpublished); not printed by the template",
+        "btn-link": "module 136 only (unpublished); not printed by the template",
+        "btn-icon": "module 136 only (unpublished); not printed by the template",
+        "btn-bg-content": "module 136 only (unpublished); not printed by the template",
+        "feature-text-align": "module 136 only (unpublished); not printed by the template"
+      },
+      "$comment": "module 161: alias of features:style-6 for the visual contract (S-ji-04)"
+    },
+    "164": {
+      "pattern": "wp-ja-impact/acm-cta-2",
+      "fields": {
+        "cta-media": {
+          "block": "core/image",
+          "path": "cta.cta-media",
+          "attr": "src"
+        },
+        "cta-title": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content"
+        },
+        "cta-desc": {
+          "block": "core/paragraph",
+          "path": "cta.cta-desc",
+          "attr": "content"
+        },
+        "cta-link-title": {
+          "block": "core/button",
+          "path": "cta.cta-link",
+          "attr": "text"
+        },
+        "cta-link": {
+          "block": "core/button",
+          "path": "cta.cta-link",
+          "attr": "url"
+        },
+        "bg-content": {
+          "block": "core/group",
+          "path": "cta.surface",
+          "attr": "className",
+          "classPrefix": "bg-"
+        }
+      },
+      "dropped": {
+        "cta-link-type": "every instance is success (green), the pattern's default"
+      },
+      "$comment": "module 164: alias of cta:style-2 for the visual contract (S-ji-04)"
+    },
+    "accordion:style-1": {
+      "pattern": "wp-ja-impact/acm-accordion",
+      "item": "accordion.item.<n>",
+      "fields": {
+        "info-title": {
+          "block": "core/heading",
+          "path": "accordion.info-title",
+          "attr": "content"
+        },
+        "info-desc": {
+          "block": "core/paragraph",
+          "path": "accordion.info-desc",
+          "attr": "content"
+        },
+        "accordion-name": {
+          "block": "core/heading",
+          "path": "accordion.accordion-name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "accordion.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "text-align": "the source value is always start (the heading block is left-aligned); no instance sets another alignment"
+      }
+    },
+    "articles-category:events": {
+      "pattern": "wp-ja-impact/acm-events",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names the category by slug in the pattern (wpJaImpactCategory, with its sub-categories), resolved at render time (inc/groups/g3.php)",
+        "count": "the query perPage of the pattern (the module's count)",
+        "ordering": "the query orderBy / order of the pattern (the module's article ordering)"
+      }
+    },
+    "articles-category:funds": {
+      "pattern": "wp-ja-impact/acm-funds",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "category": "the query names the category by slug in the pattern (wpJaImpactCategory, with its sub-categories), resolved at render time (inc/groups/g3.php)",
+        "count": "the query perPage of the pattern (the module's count)",
+        "ordering": "the query orderBy / order of the pattern (the module's article ordering)"
+      }
+    },
+    "articles-category:gb-events": {
+      "pattern": "wp-ja-impact/gb-events",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      }
+    },
+    "articles-category:gb-funds": {
+      "pattern": "wp-ja-impact/gb-funds",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      }
+    },
+    "articles-category:gb-news": {
+      "pattern": "wp-ja-impact/gb-news",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      }
+    },
+    "articles-category:gb-news-children": {
+      "pattern": "wp-ja-impact/gb-news-children",
+      "fields": {
+        "title": {
+          "block": "core/post-title",
+          "path": "articles-category.title",
+          "attr": "content"
+        }
+      }
+    },
+    "articles-category:gb-news-featured": {
+      "pattern": "wp-ja-impact/gb-news-featured",
+      "fields": {
+        "title": {
+          "block": "core/post-title",
+          "path": "articles-category.title",
+          "attr": "content"
+        }
+      }
+    },
+    "articles-category:gb-news-ordered": {
+      "pattern": "wp-ja-impact/gb-news-ordered",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      }
+    },
+    "articles-category:gb-table": {
+      "pattern": "wp-ja-impact/gb-table",
+      "fields": {
+        "title": {
+          "block": "core/post-title",
+          "path": "articles-category.title",
+          "attr": "content"
+        }
+      }
+    },
+    "articles-category:gb-tagged": {
+      "pattern": "wp-ja-impact/gb-tagged",
+      "fields": {
+        "title": {
+          "block": "core/post-title",
+          "path": "articles-category.title",
+          "attr": "content"
+        }
+      }
+    },
+    "articles-category:news": {
+      "pattern": "wp-ja-impact/acm-news",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        },
+        "title-btn": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "text"
+        },
+        "link-btn": {
+          "block": "core/button",
+          "path": "articles-category.title-btn",
+          "attr": "href"
+        }
+      },
+      "dropped": {
+        "category": "the query names the category by slug in the pattern (wpJaImpactCategory, with its sub-categories), resolved at render time (inc/groups/g3.php)",
+        "count": "the query perPage of the pattern (the module's count)",
+        "ordering": "the query orderBy / order of the pattern (the module's article ordering)"
+      }
+    },
+    "author-list:gb-authors": {
+      "pattern": "wp-ja-impact/gb-authors",
+      "fields": {
+        "list": {
+          "block": "wp-ja-impact/gb-authors",
+          "path": "authors.list",
+          "attr": "perPage"
+        }
+      }
+    },
+    "cta:style-1": {
+      "pattern": "wp-ja-impact/acm-cta-1",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "cta.module-title",
+          "attr": "content"
+        },
+        "cta-desc": {
+          "block": "core/paragraph",
+          "path": "cta.cta-desc",
+          "attr": "content"
+        },
+        "cta-highlight": {
+          "block": "core/heading",
+          "path": "cta.cta-highlight",
+          "attr": "content"
+        },
+        "cta-link-title": {
+          "block": "core/button",
+          "path": "cta.cta-link",
+          "attr": "text"
+        },
+        "cta-link": {
+          "block": "core/button",
+          "path": "cta.cta-link",
+          "attr": "url"
+        },
+        "cta-media": {
+          "block": "core/image",
+          "path": "cta.cta-media",
+          "attr": "src"
+        },
+        "cta-align-media": {
+          "block": "core/group",
+          "path": "cta.row",
+          "attr": "className",
+          "classMap": {
+            "right": "align-right",
+            "left": "align-left"
+          }
+        }
+      },
+      "dropped": {
+        "cta-link-type": "every instance is success (green), the pattern's default"
+      }
+    },
+    "cta:style-2": {
+      "pattern": "wp-ja-impact/acm-cta-2",
+      "fields": {
+        "cta-media": {
+          "block": "core/image",
+          "path": "cta.cta-media",
+          "attr": "src"
+        },
+        "cta-title": {
+          "block": "core/heading",
+          "path": "cta.cta-title",
+          "attr": "content"
+        },
+        "cta-desc": {
+          "block": "core/paragraph",
+          "path": "cta.cta-desc",
+          "attr": "content"
+        },
+        "cta-link-title": {
+          "block": "core/button",
+          "path": "cta.cta-link",
+          "attr": "text"
+        },
+        "cta-link": {
+          "block": "core/button",
+          "path": "cta.cta-link",
+          "attr": "url"
+        },
+        "bg-content": {
+          "block": "core/group",
+          "path": "cta.surface",
+          "attr": "className",
+          "classPrefix": "bg-"
+        }
+      },
+      "dropped": {
+        "cta-link-type": "every instance is success (green), the pattern's default"
+      }
+    },
+    "features:style-1": {
+      "pattern": "wp-ja-impact/acm-features-1",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-tag": {
+          "block": "core/heading",
+          "path": "features.feature-tag",
+          "attr": "content"
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "label": {
+          "block": "core/button",
+          "path": "features.label",
+          "attr": "text"
+        },
+        "link": {
+          "block": "core/button",
+          "path": "features.label",
+          "attr": "url"
+        },
+        "feature-main-img": {
+          "block": "core/image",
+          "path": "features.feature-main-img",
+          "attr": "src"
+        },
+        "media-alignment": {
+          "block": "core/group",
+          "path": "features.row",
+          "attr": "className",
+          "classPrefix": "media-"
+        },
+        "sub-feature-img": {
+          "block": "core/image",
+          "path": "features.sub-feature-img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-media-alignment": {
+          "block": "core/group",
+          "path": "features.item.<n>",
+          "attr": "className",
+          "classPrefix": "flex-",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "icon": "the button arrow is drawn by the theme (jim-btn--arrow ::after)"
+      }
+    },
+    "features:style-2": {
+      "pattern": "wp-ja-impact/acm-features-2",
+      "item": "features.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features.module-title",
+          "attr": "content"
+        },
+        "module-sub-title": {
+          "block": "core/paragraph",
+          "path": "features.module-sub-title",
+          "attr": "content"
+        },
+        "feature-item-col-width": {
+          "block": "core/group",
+          "path": "features.item.<n>",
+          "attr": "className",
+          "classPrefix": "col-md-",
+          "repeat": true
+        },
+        "feature-highlight": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classPrefix": "bg-",
+          "repeat": true
+        },
+        "feature-text-align": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classPrefix": "text-",
+          "repeat": true
+        },
+        "sub-media-alignment": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classMap": {
+            "row": "media-left",
+            "row-reverse": "media-right",
+            "column": "media-top",
+            "column-reverse": "media-bottom"
+          },
+          "repeat": true
+        },
+        "sub-feature-img": {
+          "block": "core/image",
+          "path": "features.sub-feature-img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-title": {
+          "block": "core/heading",
+          "path": "features.sub-feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "features:style-3": {
+      "pattern": "wp-ja-impact/acm-features-3",
+      "item": "features.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features.module-title",
+          "attr": "content"
+        },
+        "module-sub-title": {
+          "block": "core/paragraph",
+          "path": "features.module-sub-title",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features.carousel",
+          "attr": "className"
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "bg": {
+          "block": "core/group",
+          "path": "features.card.<n>",
+          "attr": "className",
+          "classPrefix": "bg-",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "label": {
+          "block": "core/button",
+          "path": "features.button.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/button",
+          "path": "features.button.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "button-type": {
+          "block": "core/button",
+          "path": "features.button.<n>",
+          "attr": "className",
+          "classMap": {
+            "success": "btn-success",
+            "primary": "btn-primary",
+            "warning": "btn-warning",
+            "white": "btn-white",
+            "dark": "btn-dark"
+          },
+          "repeat": true
+        },
+        "bg-content": {
+          "block": "core/group",
+          "path": "features.block-inner",
+          "attr": "className",
+          "classMap": {
+            "bg-primary": "bg-primary",
+            "bg-secondary": "bg-secondary",
+            "bg-warning": "bg-warning",
+            "bg-success": "bg-success"
+          }
+        },
+        "block-img": {
+          "block": "core/image",
+          "path": "features.block-img",
+          "attr": "src"
+        },
+        "block-description": {
+          "block": "core/heading",
+          "path": "features.block-description",
+          "attr": "content"
+        },
+        "btn-block-label": {
+          "block": "core/button",
+          "path": "features.btn-block",
+          "attr": "text"
+        },
+        "btn-block-link": {
+          "block": "core/button",
+          "path": "features.btn-block",
+          "attr": "url"
+        },
+        "btn-block-type": {
+          "block": "core/button",
+          "path": "features.btn-block",
+          "attr": "className",
+          "classMap": {
+            "success": "btn-success",
+            "primary": "btn-primary",
+            "warning": "btn-warning",
+            "white": "btn-white",
+            "dark": "btn-dark"
+          }
+        }
+      },
+      "dropped": {
+        "image-bg": "a card photo behind the card text; empty in every instance of the source, so no block draws it",
+        "icon": "the arrow after a button label is drawn by the stylesheet (the source's value is empty or the same arrow)",
+        "btn-block-icon": "the arrow after the call-to-action label is drawn by the stylesheet",
+        "align": "only on an unpublished module (not drawn on any page)",
+        "image-type": "only on an unpublished module (not drawn on any page)"
+      }
+    },
+    "features:style-4": {
+      "pattern": "wp-ja-impact/acm-features-4",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-tag": {
+          "block": "core/heading",
+          "path": "features.feature-tag",
+          "attr": "content"
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "feature-text-align": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classPrefix": "text-"
+        },
+        "feature-sub-col": {
+          "block": "core/group",
+          "path": "features.list",
+          "attr": "className",
+          "classPrefix": "sub-col-"
+        },
+        "sub-feature-img": {
+          "block": "core/image",
+          "path": "features.sub-feature-img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-title": {
+          "block": "core/heading",
+          "path": "features.sub-feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-title-color": {
+          "block": "core/heading",
+          "path": "features.sub-feature-title.<n>",
+          "attr": "className",
+          "classPrefix": "text-",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {}
+    },
+    "features:style-5": {
+      "pattern": "wp-ja-impact/acm-features-5",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-col": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classPrefix": "cols-"
+        },
+        "feature-count-item": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classMap": {
+            "0": "has-count",
+            "1": "no-count"
+          }
+        },
+        "feature-text-align": {
+          "block": "core/group",
+          "path": "features.root",
+          "attr": "className",
+          "classPrefix": "text-"
+        },
+        "bg-content": {
+          "block": "core/group",
+          "path": "features.item.<n>",
+          "attr": "className",
+          "classPrefix": "bg-",
+          "repeat": true
+        },
+        "feature-tag": {
+          "block": "core/heading",
+          "path": "features.feature-tag.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-label": {
+          "block": "core/button",
+          "path": "features.btn-label.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features.btn-label.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "count-number": {
+          "block": "core/heading",
+          "path": "features.count-number.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "btn-icon": "the button arrow is drawn by the theme (jim-btn--arrow ::after)",
+        "btn-bg-content": "every instance is success (green), the pattern's default",
+        "feature-text-color": "only the unpublished module 134 sets it (default); the card colours come from bg-content"
+      }
+    },
+    "features:style-6": {
+      "pattern": "wp-ja-impact/acm-features-6",
+      "item": "features.item.<n>",
+      "fields": {
+        "feature-subtitle": {
+          "block": "core/heading",
+          "path": "features.feature-subtitle",
+          "attr": "content"
+        },
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "feature-charity-pct": {
+          "block": "core/paragraph",
+          "path": "features.feature-charity-pct",
+          "attr": "content"
+        },
+        "feature-donation-pct": {
+          "block": "core/paragraph",
+          "path": "features.feature-donation-pct",
+          "attr": "content"
+        },
+        "sub-feature-media": {
+          "block": "core/image",
+          "path": "features.sub-feature-media.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-feature-title": {
+          "block": "core/heading",
+          "path": "features.sub-feature-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "sub-feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.sub-feature-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "feature-charity": "drawn through feature-charity-pct (spec step S-ji-g1-2 adds it as '72%'); the bar width is read from that text by the render filter in inc/groups/g1.php",
+        "feature-donation": "drawn through feature-donation-pct (spec step S-ji-g1-2); same render filter",
+        "feature-media": "module 136 only (unpublished): its fields describe dated event cards the style-6 template does not print",
+        "feature-date": "module 136 only (unpublished); not printed by the template",
+        "feature-month": "module 136 only (unpublished); not printed by the template",
+        "bg-datemonth": "module 136 only (unpublished); not printed by the template",
+        "bg-content": "module 136 only (unpublished); not printed by the template",
+        "feature-text-color": "module 136 only (unpublished); not printed by the template",
+        "feature-location": "module 136 only (unpublished); not printed by the template",
+        "btn-label": "module 136 only (unpublished); not printed by the template",
+        "btn-link": "module 136 only (unpublished); not printed by the template",
+        "btn-icon": "module 136 only (unpublished); not printed by the template",
+        "btn-bg-content": "module 136 only (unpublished); not printed by the template",
+        "feature-text-align": "module 136 only (unpublished); not printed by the template"
+      }
+    },
+    "features:style-7": {
+      "pattern": "wp-ja-impact/acm-features-7",
+      "fields": {
+        "feature-title": {
+          "block": "core/heading",
+          "path": "features.feature-title",
+          "attr": "content"
+        },
+        "feature-desc": {
+          "block": "core/paragraph",
+          "path": "features.feature-desc",
+          "attr": "content"
+        },
+        "ft-video": {
+          "block": "core/image",
+          "path": "features.ft-video",
+          "attr": "src"
+        },
+        "video-url": {
+          "block": "core/button",
+          "path": "features.video-url",
+          "attr": "url"
+        },
+        "video-align": {
+          "block": "core/group",
+          "path": "features.item",
+          "attr": "className",
+          "classPrefix": "align-"
+        }
+      },
+      "dropped": {
+        "id-video": "the YouTube id is part of video-url (spec step S-ji-g2-3), the address the play button opens",
+        "position": "the module at this position (the subscribe form) is drawn inside the panel by the pattern: a Contact Form 7 shortcode, never baked markup",
+        "position-2": "the module at this position (the follow-us links) is drawn inside the panel by the pattern as a social-links block"
+      }
+    },
+    "gb-1": {
+      "pattern": "wp-ja-impact/gb-funds",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      },
+      "$comment": "module gb-1: alias of articles-category:gb-funds for the visual contract (S-ji-04)"
+    },
+    "gb-2": {
+      "pattern": "wp-ja-impact/gb-events",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      },
+      "$comment": "module gb-2: alias of articles-category:gb-events for the visual contract (S-ji-04)"
+    },
+    "gb-3": {
+      "pattern": "wp-ja-impact/gb-news",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      },
+      "$comment": "module gb-3: alias of articles-category:gb-news for the visual contract (S-ji-04)"
+    },
+    "gb-4": {
+      "pattern": "wp-ja-impact/gb-news-ordered",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "articles-category.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "articles-category.sub-title",
+          "attr": "content"
+        }
+      },
+      "$comment": "module gb-4: alias of articles-category:gb-news-ordered for the visual contract (S-ji-04)"
+    },
+    "gb-5": {
+      "pattern": "wp-ja-impact/gb-news-children",
+      "fields": {
+        "title": {
+          "block": "core/post-title",
+          "path": "articles-category.title",
+          "attr": "content"
+        }
+      },
+      "$comment": "module gb-5: alias of articles-category:gb-news-children for the visual contract (S-ji-04)"
+    },
+    "gb-6": {
+      "pattern": "wp-ja-impact/gb-news-featured",
+      "fields": {
+        "title": {
+          "block": "core/post-title",
+          "path": "articles-category.title",
+          "attr": "content"
+        }
+      },
+      "$comment": "module gb-6: alias of articles-category:gb-news-featured for the visual contract (S-ji-04)"
+    },
+    "gb-7": {
+      "pattern": "wp-ja-impact/gb-table",
+      "fields": {
+        "title": {
+          "block": "core/post-title",
+          "path": "articles-category.title",
+          "attr": "content"
+        }
+      },
+      "$comment": "module gb-7: alias of articles-category:gb-table for the visual contract (S-ji-04)"
+    },
+    "gb-8": {
+      "pattern": "wp-ja-impact/gb-tagged",
+      "fields": {
+        "title": {
+          "block": "core/post-title",
+          "path": "articles-category.title",
+          "attr": "content"
+        }
+      },
+      "$comment": "module gb-8: alias of articles-category:gb-tagged for the visual contract (S-ji-04)"
+    },
+    "gb-9": {
+      "pattern": "wp-ja-impact/gb-authors",
+      "fields": {
+        "list": {
+          "block": "wp-ja-impact/gb-authors",
+          "path": "authors.list",
+          "attr": "perPage"
+        }
+      },
+      "$comment": "module gb-9: alias of author-list:gb-authors for the visual contract (S-ji-04)"
+    },
+    "hero:style-1": {
+      "pattern": "wp-ja-impact/acm-hero",
+      "item": "hero.item.<n>",
+      "fields": {
+        "image-hero": {
+          "block": "core/image",
+          "path": "hero.image-hero.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "sub-title": {
+          "block": "core/paragraph",
+          "path": "hero.sub-title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "hero.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "hero.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "button": {
+          "block": "core/button",
+          "path": "hero.button.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "button-2": {
+          "block": "core/button",
+          "path": "hero.button-2.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link-2": {
+          "block": "core/button",
+          "path": "hero.button-2.<n>",
+          "attr": "url",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "btn-icon": "the button arrow is drawn by the theme (jim-btn--arrow ::after); every instance uses the arrow",
+        "btn-icon-2": "same: the arrow is drawn by the theme",
+        "btn-type": "every instance is success (green), the pattern's default; no per-slide colour class",
+        "btn-type-2": "every instance is success (green), the pattern's default; no per-slide colour class"
+      }
+    },
+    "related-items:default": {
+      "pattern": "wp-ja-impact/acm-related",
+      "fields": {
+        "main-section": {
+          "block": "core/heading",
+          "path": "related-items.main-section",
+          "attr": "content"
+        },
+        "sub-title": {
+          "block": "core/heading",
+          "path": "related-items.sub-title",
+          "attr": "content"
+        }
+      },
+      "dropped": {
+        "count": "the query perPage of the pattern (3)"
+      }
+    }
+  }
+}

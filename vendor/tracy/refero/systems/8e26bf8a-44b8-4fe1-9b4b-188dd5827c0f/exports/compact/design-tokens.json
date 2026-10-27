@@ -1,0 +1,39 @@
+{
+  "color": {
+    "ice-cyan": {
+      "$value": "#d7f3f5",
+      "$type": "color",
+      "$description": "Ice Cyan — All foreground text, underlined link strokes, hairline borders, and the full-bleed inverted surface at the page foot — the only chromatic element in the system, used to make every readable word and every interactive affordance feel like it shares one voice"
+    },
+    "void": {
+      "$value": "#020203",
+      "$type": "color",
+      "$description": "Void — Page background and deepest canvas layer — near-pure black with a barely-perceptible cool tint that makes Ice Cyan read slightly blue"
+    },
+    "carbon": {
+      "$value": "#111314",
+      "$type": "color",
+      "$description": "Carbon — Elevated card surface, section backdrop, and subtle horizontal divider band — one step lighter than Void to lift project cards and content blocks without breaking the dark mood"
+    }
+  },
+  "font": {
+    "suisseintl": {
+      "$value": "SuisseIntl",
+      "$type": "fontFamily",
+      "$description": "SuisseIntl — detected in extracted data but not described by AI"
+    },
+    "suisse-intl": {
+      "$value": "Suisse Int'l",
+      "$type": "fontFamily",
+      "$description": "Single-family Swiss grotesque used everywhere — 300 weight drives the 50px hero and 40px section headlines (anti-convention; most agencies use 600–700), which creates editorial authority through restraint rather than volume; 400 is the body and nav workhorse; 500 appears in inline emphasis and the 'Play heart.' display lockup at 134px"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://lamalama.nl",
+      "siteName": "Lama Lama",
+      "extractedAt": "2026-06-03T21:36:18.823Z",
+      "variant": "compact"
+    }
+  }
+}

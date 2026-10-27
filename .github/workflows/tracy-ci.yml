@@ -1,0 +1,1263 @@
+# Tracy CI — the gate that says whether a change still passes every check in `scripts/check-all.ts`.
+#
+# WHY THIS FILE EXISTS. Until 2026-08-30 this repo had no `.github/` at all: `pnpm build:check`
+# existed and was good, but it had never had a witness outside the machine of whoever typed it. A
+# gate that runs only when someone remembers to run it measures memory, not code. How many gates
+# that is today is `scripts/check-all.ts`'s business, not this header's — a number written here
+# went stale three times.
+#
+# IT DOES NOT DEPLOY, BUT ITS NEIGHBOURS DO — changed 2026-09-08 by the merge of `main` into
+# `develop`. Two workflows arrived beside it: `build-app-images.yml` and `build-dsh-image.yml`
+# (until 16/09/2026 there was a third, `deploy-workers.yml`, deleted with the Workers themselves). This file still only judges; it never ships. And the
+# old sentence "shipping at TCH is `pnpm release`" is gone with the private registry — ADR 0014 §6
+# ended it on 06/09, so there is no `pnpm release` left to name. CLAUDE.md §5 covers the Worker
+# half.
+#
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+# WHY IT RUNS ON A SELF-HOSTED RUNNER AGAIN — changed 2026-09-08
+#
+# This block has now said three different things, and each was true when written. Until 02/09 the
+# runner had to be self-hosted because `.npmrc` pointed at `http://127.0.0.1:4873`, a verdaccio on
+# a team member's machine. On 02/09 the registry moved to `https://npm.tracy.ai` and the job moved to
+# `ubuntu-latest`, which bought three things: CI no longer waited on a desktop, a PR from another
+# machine still got reviewed, and nobody had to ask whether the runner was alive.
+#
+# It bought them for four days. Measured 07/09: EVERY GitHub-hosted job in this repo had been
+# failing in three seconds with zero steps executed and a 404 for its log — `Tracy CI` 0 green out
+# of 300 runs, `Changelog Check` green last at 05/09 13:12 and red 204 times after it. Not one of
+# those reds was about code. The org (`TracyHQ`, free plan) had burned 2042 of its 2000 included
+# Actions Linux minutes for September, mostly in `tracy-infra`, and a job over the limit with no
+# spending limit set does not queue or warn — it fails, instantly, in a shape indistinguishable
+# from a broken workflow file.
+#
+# So the deciding fact is not speed or convenience: A SHARED MONTHLY QUOTA IS A DEPENDENCY THIS
+# GATE CANNOT SEE AND CANNOT FIX. Another repo in the org can turn this one's CI red without ever
+# touching it. `tracy-build-01` — the container on contabo2 that `build-dsh-image.yml` already ran on — has no quota, and those two workflows stayed green
+# through the whole outage. That is the measurement, not a preference.
+#
+# The cost, stated plainly: this gate is now one machine again. If contabo2 is down, CI does not
+# run — it queues. That failure is loud (a job stuck in "Waiting for a runner") in a way the quota
+# failure never was, which is the trade being made.
+#
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+# WHERE THIS GATE DOES NOT REACH — said out loud so nobody reads the green wider than it is
+#
+# 1. The gate runs on ONE machine, so it cannot prove the tree builds on another. That is exactly
+#    the class of error `check-self-contained` exists to catch, and why that gate stays.
+#
+# 2. Three `dsh-passwords` tests are skipped on purpose (`SKIPPED` in `scripts/check-tests.ts`),
+#    each for its own reason. They were equally red at `cde8beb` — debt inherited from the fork.
+#
+# 3. Language inside `vendor/`, and every `.py`/`.sh`/`.php` file — no gate watches those.
+#    `docs/references/naming-conventions.md` §7.1 has the full list.
+
+name: Tracy CI
+
+permissions:
+  contents: read
+
+# A superseded pull-request run must not stand in front of the current one; a push still needs its
+# own verdict, keyed by commit — keyed by branch, the intermediate commits on `main` get cancelled
+# by the next push, and those are precisely the commits nobody sees a verdict for.
+concurrency:
+  group: tracy-ci-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+# WHICH EVENTS ARE GATED — changed 2026-09-15
+#
+# A pull request, and only a pull request. Opening a PR is the moment someone asks "is this ready
+# to go in", and that is the question this workflow answers; a push to `develop` or `main` used to
+# ask it again.
+#
+# Measured before deciding, 14/09 00:00 → 15/09: Tracy CI ran 27 times on pull requests (~383
+# runner-minutes) and 26 times on pushes to `develop` (~375) plus 3 on `main` (~64). The push runs
+# mostly re-judged a tree the PR run had already judged, on three runners that were full all day
+# — so every build and deploy waited behind a verdict that already existed.
+#
+# 🔒 WHAT THIS GIVES UP, SAID PLAINLY. Of the 14 first-parent merges into `develop` over the same
+# window, only 4 came through a pull request; the other 10 were direct pushes, and none of those is
+# judged here any more. The pre-push hook (`scripts/check-push.mjs`) still runs `pnpm test:workers`
+# on this machine for a push touching `apps/`, `scripts/` or `packages/`, but not the full gate
+# list. A change that matters goes through a PR; `workflow_dispatch` runs this on any ref by hand.
+#
+# History, because it explains why this looks the way it does: until 14/09 the branches were
+# `[main]` alone — the frozen seven-Worker line — so a PR into `develop` reported "no checks" (PR
+# #71). It was widened to `main`, `main-v3` and `develop` on both events. The PR half of that fix
+# is kept; the push half is what this change removes.
+#
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+# 🔒 E2E AND DATABASE TESTS ARE OPT-IN ON A PULL REQUEST INTO develop — 16/10/2026, anh David (SRE)
+#
+# A routine pull request into `develop` runs neither the browser rows (`tests e2e` and the three
+# `tests emdash-*` rows) nor the ~150 workers test files that need a PostgreSQL, unless it carries a label:
+#   `ci:e2e`          the `tests e2e` row runs (whatever the changed paths say); the EmDash rows run
+#                     when their paths are touched (18/10/2026: they open Chromium too);
+#   `ci:integration`  the workers files that read TEST_DATABASE_URL stay in the run.
+# Not touched, ever: pull requests into `staging` and `main` (the release), the nightly `schedule`,
+# `workflow_dispatch`. They run every row and every test, labels or no labels. A pull request that
+# EDITS a test reading the database keeps the database tests too (the file it changed must run). A
+# label that cannot be read fails closed: nothing is opted out. Every skip is announced — a notice and
+# the job summary here, the file names in each row's log. The decision is pure and tested:
+# `scripts/ci/test-scope.mjs`, applied by `scripts/ci/plan-ci.mjs`, executed by `check-tests.ts`
+# (`TRACY_TESTS_SKIP_DB`). Why "green" stays honest: the Turbo hash of every task holding database
+# files includes that variable, and a run that left tests out records `tested scope` != `full`, which
+# `green-tree.mjs` never accepts as the proof that lets a later run skip the suite.
+#
+# 🔒 `labeled` IS NOT A TRIGGER OF THIS FILE, ON PURPOSE. The concurrency group below is keyed by the PR's
+# ref with `cancel-in-progress`, so ANY label (triage, area, a reviewer's) would cancel the run that
+# is in flight, and a `labeled` run that the plan skips would report "skipped" over the required
+# check of the head commit. `.github/workflows/ci-label-rerun.yml` listens for `labeled` instead,
+# only for the two labels above, and re-runs THIS workflow's latest run for the head commit.
+on:
+  workflow_dispatch:
+  # 🔒 NIGHTLY, 02:30 Vietnam time (19:30 UTC), added 29/09/2026. Routine pull requests into
+  # `develop` no longer pay for the browser/e2e suite and the three EmDash suites (each runs only
+  # when its own package is touched, see `plan`); this run still exercises all of them against
+  # `develop` every day. A `schedule` event runs the DEFAULT branch's copy of this file (`main`) and
+  # its `github.ref_name` is `main` — which would pick the PRODUCTION runner lane and check out
+  # `main`. So the nightly checks out `develop` explicitly, and the lane expression treats `schedule`
+  # as dev. ⚠ The trigger exists only once this file is on `main`.
+  #
+  # 🔒 ONE COMMIT PER NIGHTLY, since 05/10/2026. Until then `dsh-lib`, `plan` and every `build-check`
+  # row each checked out the MOVING `develop`, minutes apart, on a branch that takes 40-70 merges a
+  # day — so "every row ran" could be a claim about several trees at once. No incident was measured;
+  # the claim simply was not the one the summary printed. Now `plan` resolves `develop` once
+  # (`checkout_sha`), `dsh-lib-nightly` and every row check out THAT commit and compare their HEAD
+  # with it, and `nightly verdict` is green only for a valid pinned commit. Pull requests and manual
+  # runs are untouched: they still check out the event's own ref. Witness:
+  # `scripts/test/ci-nightly-tree.test.mjs`.
+  schedule:
+    - cron: '30 19 * * *'
+  pull_request:
+    branches: [main, staging, develop]
+    types: [opened, synchronize, ready_for_review]
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # dsh IS BUILT ONCE, BEFORE THE build-check ROWS — added 2026-09-26 (PR #413, dsh 0.1.7).
+  #
+  # WHY, AS NUMBERS. Each of the build-check jobs below (eight then) used to build the vendored dsh in its own runner
+  # checkout, skipping only when that runner had already built that submodule commit. dsh 0.1.7's
+  # host typecheck peaks at 4.5 GB RSS; runners capped at 5 GB (the CI machine's `tracy-ci-01..04`)
+  # or 5.6 GB (`j-general-demo-01`, `j-newsletter-01`, `j-static-01`, `j-ja-demo-01`, `j-misc-01`)
+  # were killed with exit 137 (runs 36252485710, 36255741876, 36258295210). Eight builds per run
+  # were eight draws; only `j-download-01/02` (29 GB) always survived.
+  #
+  # NOW: this job builds dsh AT MOST ONCE per key (submodule commit, Node, platform, build script —
+  # `build-dsh.mjs --print-key`) and saves it with `actions/cache`; the eight jobs restore it with
+  # `fail-on-cache-miss` and their `--skip-if-built` skips. A key already cached (the usual case: a
+  # push to `develop`/`main` saved it from `build-app-images.yml`, see `.github/actions/dsh-lib`)
+  # makes this a lookup of a few seconds that downloads nothing.
+  #
+  # ⚠ THE ONE BUILD CAN STILL LAND ON A SMALL RUNNER. A pull request that MOVES the submodule has
+  # no cache yet, and if this job is scheduled on one of the runners named above the build can be
+  # killed. It is its own job so that `gh run rerun <id> --failed` (or "Re-run failed jobs") retries
+  # just the build, and the eight jobs follow it. That rerun is the workaround until
+  # `TracyHQ/tracy-runners` raises those caps; no new label is added to steer it, because a label no
+  # runner carries does not fail — it queues, silently and forever.
+  # 🔒 NO `x64` ON CHECK AND LIGHT JOBS (since 11/10/2026). The check and light pools mix the AWS
+  # amd64 runners with two arm64 Mac runners (Linux containers running natively); build, deploy and
+  # image jobs keep `x64`. Witness: `scripts/test/ci-runner-arch.test.mjs`. Pools and measurements:
+  # `docs/references/gates-ci-runners.md` (Runners).
+  # 🔒 THE LANE LABEL (since 29/09/2026; pull requests always dev since 26/10/2026). Every
+  # tracy-check/tracy-build/tracy-light job also asks for `tracy-lane-prod` only for a manual run on
+  # `main`/`staging`, and `tracy-lane-dev` otherwise — a pull request into `main` included, because
+  # the production lane shares the machine that builds production images (public-repo-ci.md). The two lanes are two AWS machines (`TracyHQ/tracy-runners`
+  # hosts.tsv), so production images are built where no pull-request code ever ran as root. Both
+  # labels were on live runners BEFORE this expression landed — a label nobody carries queues.
+  #
+  # THE `ci:aws-only` PR LABEL (since 18/10/2026, anh David). The ARM64 machines (studio-check-*,
+  # macmini-light-01) carry the same tracy-check / tracy-light / lane labels as the AWS EC2 runners,
+  # so any job may land there. A pull request labelled `ci:aws-only` (set the label BEFORE the push
+  # or "Ready for review": label events do not start this workflow) also asks for `X64`, which only
+  # the EC2 runners carry. Without the label the extra element is `linux` again, already in the list,
+  # so every other run picks its runner exactly as before.
+  dsh-lib:
+    name: build dsh once for this run
+    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-check, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    timeout-minutes: 45
+    # Pull requests and manual runs only. The nightly builds dsh in `dsh-lib-nightly` below, which
+    # waits for `plan`'s pinned commit; this job must NOT wait for `plan`, or every pull request
+    # would build dsh after planning instead of beside it.
+    if: github.event_name != 'schedule' && (github.event_name != 'pull_request' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository))
+    steps:
+      # Same three steps as `build-check` below; the reasons are written there.
+      - name: Check out Git repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+
+      - name: Fetch the vendored dsh submodule
+        env:
+          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          # An HTTPS submodule URL is the public repository's, fetched without a key.
+          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
+          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
+            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing. Set it with: gh secret set TRACY_VENDOR_DEPLOY_KEY --repo $GITHUB_REPOSITORY"
+            exit 1
+          fi
+          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
+          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          git submodule status vendor/tracy/deepseek-harness
+
+      - name: Assert the runner's Node matches .node-version
+        run: |
+          set -euo pipefail
+          WANT="$(tr -d ' \t\r\n' < .node-version)"
+          HAVE="$(node -v | sed 's/^v//')"
+          echo "want $WANT, runner has $HAVE"
+          [ "$WANT" = "$HAVE" ] || {
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
+            exit 1
+          }
+          corepack enable pnpm
+
+      - name: Restore or build the vendored dsh
+        uses: ./.github/actions/dsh-lib
+        with:
+          mode: ensure
+          lookup-only: 'true'
+
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/vendor_deploy"
+
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # THE MATRIX IS PLANNED, NOT DECLARED — added 2026-09-29.
+  #
+  # A pull request used to ask for nine `build-check` jobs; a row the path filter skipped still took
+  # a runner for its checkout and the skip step, on a dev lane of four heavy runners shared with the
+  # image builds (which waited ~6 min). `scripts/ci/plan-ci.mjs` now decides which rows exist and
+  # `build-check` builds its matrix from that output, so a skipped row never occupies a runner. The
+  # fail-closed rules and the `paths` regexes live in the script and are pinned by
+  # `scripts/test/ci-plan.test.mjs`. Routine PRs into develop now use one `tests related` row from
+  # `scripts/ci/related-tests.mjs`; nightly and release PRs retain both full workers shards. A skip
+  # is still ANNOUNCED (notice + job summary) from here.
+  plan:
+    name: plan the build-check rows
+    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    timeout-minutes: 5
+    if: github.event_name != 'pull_request' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository)
+    # `actions: read` + `checks: read` for `green-tree.mjs` only: it reads earlier Tracy CI runs, their
+    # jobs and their plan job's annotations. `pull-requests: read` for the step "Read this pull
+    # request's labels" only (16/10/2026): the opt-in suites below are decided from the labels the
+    # pull request carries NOW. Read-only; this job still cannot write anything.
+    permissions:
+      contents: read
+      actions: read
+      checks: read
+      pull-requests: read
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      # The tree this run checked out (every event), and — on a pull request only — the URL of a
+      # full green run that already tested that exact tree. Non-empty `green_run` = no build-check
+      # row runs (see `green-tree` below and `build-check`'s `if`).
+      tree: ${{ steps.green.outputs.tree }}
+      green_run: ${{ steps.green.outputs.green_run }}
+      # The Turbo task hashes `plan` asked the cache about (commit, hash and HIT/MISS per task), for
+      # the rows to compare with their own (`scripts/ci/turbo-verify.mjs`). Empty whenever `plan`
+      # planned the rows as before Turbo.
+      turbo_manifest: ${{ steps.turbo.outputs.manifest }}
+      # The nightly's one commit. Set on `schedule` only; empty on every other event, where each job
+      # checks out the event's own ref exactly as before.
+      checkout_sha: ${{ steps.tree.outputs.checkout_sha }}
+      # `true` only on a pull request whose kind is `fix` (`planProof` in `plan-ci.mjs`): the one
+      # event that gets the report-only `new-test-proof` job below.
+      new_test_proof: ${{ steps.plan.outputs.new_test_proof }}
+      # `true` only on a pull request into `develop` that carries no `ci:integration` (and edits no
+      # database test): the rows then leave the workers files that read TEST_DATABASE_URL out of their
+      # run, and the Turbo hash of the tasks that hold such files says so (`TRACY_TESTS_SKIP_DB`).
+      # `false` on every other event, where nothing is left out.
+      skip_db: ${{ steps.plan.outputs.skip_db }}
+    steps:
+      # 🔒 THE ONLY PLACE THE NIGHTLY NAMES `develop`. Every later job takes the commit this checkout
+      # resolved (`checkout_sha`), never the branch — the branch moves while the run is in flight.
+      - name: Check out Git repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+          ref: ${{ github.event_name == 'schedule' && 'develop' || '' }}
+          # 2, not 1: a pull request checks out its merge commit, and HEAD^1 (the base tip) is
+          # what the plan diffs against.
+          fetch-depth: 2
+
+      # The summary is written BEFORE the output on purpose: a step that dies half way must not
+      # leave a usable `checkout_sha` behind. 40 lowercase hex is the whole accepted shape — the
+      # consumers refuse anything else before they check out (see `dsh-lib-nightly`).
+      - name: Pin the nightly to one commit
+        id: tree
+        if: github.event_name == 'schedule'
+        run: |
+          set -euo pipefail
+          SHA="$(git rev-parse --verify 'HEAD^{commit}')"
+          if ! [[ "$SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::the nightly could not resolve develop to one commit id — nothing is pinned, so no row may run"
+            exit 1
+          fi
+          echo "nightly tree: plan selected $SHA"
+          printf '### Nightly tree\n\nEvery job of this run checks out `%s` (develop when `plan` ran).\n' "$SHA" >> "$GITHUB_STEP_SUMMARY"
+          printf 'checkout_sha=%s\n' "$SHA" >> "$GITHUB_OUTPUT"
+
+      # 🔒 TWO OPT-IN SUITES ON A PULL REQUEST INTO develop — 16/10/2026, anh David (SRE). Rule, reasons
+      # and the pure decision: `scripts/ci/test-scope.mjs`. The `tests e2e` row exists only with the
+      # label `ci:e2e`; the workers test files that read TEST_DATABASE_URL are left out of the workers
+      # tests unless the pull request carries `ci:integration` (or edits a database test itself).
+      #
+      # 🔒 THE LABELS ARE READ HERE, FROM THE API, AT RUN TIME — never from `github.event`. A re-run
+      # replays the payload it started with, and the re-run that `ci-label-rerun.yml` starts exists
+      # precisely because a label was added after that payload was written. The step is
+      # `continue-on-error` and a failed read writes NO output: `PR_LABELS` is then empty, which the
+      # planner reads as "unknown" and answers by opting nothing out (every row runs as before).
+      - name: Read this pull request's labels
+        id: labels
+        if: github.event_name == 'pull_request' && github.base_ref == 'develop'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_REF: ${{ github.base_ref }}
+        run: node scripts/ci/test-scope.mjs --read-labels
+
+      # The skip must be known BEFORE Turbo is asked for its hashes: a test task that holds database
+      # files has `TRACY_TESTS_SKIP_DB` in its hash, so the dry run below is run under the same value
+      # the rows will get. `Plan the rows` decides again from the same labels and is red if the two
+      # disagree.
+      - name: Decide the opt-in test scope
+        id: scope
+        if: github.event_name == 'pull_request' && github.base_ref == 'develop'
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          PR_LABELS: ${{ steps.labels.outputs.labels }}
+        run: node scripts/ci/plan-ci.mjs --scope
+
+      # 🔒 TURBO PLANS THE TESTS OF A PULL REQUEST INTO DEVELOP (12/10/2026). Every workers test owner
+      # is a Turbo task whose hash covers the files its suite was measured to read
+      # (`scripts/ci/turbo-setup.mjs`); a dry run says each task's hash, the remote cache says which
+      # hashes it already holds green, and `plan-ci.mjs` starts only the rows that still hold a
+      # missing one. Release pull requests and the nightly never read the cache.
+      #
+      # 🔒 `plan` MUST HASH THE TREE THE ROWS HASH (12/10/2026). A row hashes after its bootstrap: the
+      # dsh submodule checked out, dependencies installed, dsh built. Until this date `plan` hashed
+      # its bare checkout, and every one of the 47 hashes differed from the rows': 12 runs in a row
+      # logged "0 of 47 test tasks are in the remote cache" while the rows were served from it, so no
+      # row was ever skipped. Two things made the hashes differ, and both are handled where they arise:
+      #   1. the root package.json depends on `@deepseek-ai/*` workspace packages that live in the
+      #      submodule; without it Turbo's hash of the internal dependencies is empty, which changes
+      #      EVERY task. So `plan` fetches the submodule, exactly as the rows do (deploy key: the
+      #      submodule is another private repo `GITHUB_TOKEN` cannot read). Nothing is installed or
+      #      built here: what an install or a build adds is ignored by git and kept out of every hash.
+      #   2. a build output git ignores inside a tree a task takes whole (`dsh-passwords/dist`) was
+      #      hashed by the rows only. It is excluded in the generated inputs (`OUTPUTS` in
+      #      `turbo-setup.mjs`), and the `turbo-config` gate names any new one.
+      # The comparison that would have caught this is now part of every run: `plan` publishes its
+      # hashes (`turbo_manifest`), the `checks` row recomputes ALL of them after its bootstrap and is
+      # red on any difference, and each Turbo row does the same for the tasks it ran
+      # (`scripts/ci/turbo-verify.mjs`).
+      #
+      # 🔒 FAILS CLOSED. The three steps below are `continue-on-error`; TURBO_DRY and the manifest are
+      # written by the LAST line of the last one, after the dry run was checked (every task of the
+      # tree present with a hash, the submodule at the pinned commit). A missing key, a fetch that
+      # times out, a cache that did not start, a dry run that fails: TURBO_DRY stays unset and the
+      # rows are planned as they were before Turbo.
+      #
+      # WHAT IT COSTS `plan` (5-minute job, light runners). The fetch: the submodule's history is
+      # ~220 MB and 14 000 files — a full clone the first time a runner sees it, a checkout of the
+      # pinned commit after that (the runner keeps `.git/modules`). The dry run and the cache
+      # questions: seconds, as before. The fetch is cut at 100 s and the dry run at 45 s so that the
+      # fallback still fits in the job's 5 minutes; both steps print how long they took, which is
+      # the only measurement of the runners there is.
+      # ⚠ The version below must equal `turbo` in package.json (`ci-turbo-rows.test.mjs` pins it).
+      #
+      # 🔒 EVERY EVENT ASKS TURBO, SINCE 17/10/2026 — a release pull request, the nightly and a manual
+      # run too. Theirs is a FULL run: `plan-ci.mjs` gives each Turbo row `force`, the row runs every
+      # task with `turbo run --force` (nothing is read from the cache; results are still written, so
+      # the nightly warms the cache for the next morning's pull requests), each task audits its own
+      # inputs as it runs, and `checks` no longer runs every suite a second time under the tracer
+      # (~19 of a release's ~23-minute `checks`, run 38930622899). Any failure above still falls back
+      # to the two workers shards, which audit in `checks` as before.
+      - name: Start the Turbo remote cache
+        uses: ./.github/actions/turbo-cache
+        with:
+          endpoint: ${{ secrets.TURBO_CACHE_S3_ENDPOINT }}
+          bucket: ${{ secrets.TURBO_CACHE_S3_BUCKET }}
+          access-key: ${{ secrets.TURBO_CACHE_S3_ACCESS_KEY }}
+          secret-key: ${{ secrets.TURBO_CACHE_S3_SECRET_KEY }}
+
+      # Only when the cache answered: without it every task is a miss and the fetch buys nothing.
+      # Same command as the rows' "Fetch the vendored dsh submodule" (no --depth: the pinned commit
+      # is one a shallow fetch may not carry), under `timeout`.
+      - name: Fetch the dsh submodule the task hashes depend on
+        id: turbo-dsh
+        if: env.TURBO_API != ''
+        continue-on-error: true
+        env:
+          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          # An HTTPS submodule URL is the public repository's, fetched without a key.
+          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
+          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
+            echo "::warning::plan: secret TRACY_VENDOR_DEPLOY_KEY is missing, so the dsh submodule cannot be fetched — planning the rows as before Turbo"
+            exit 1
+          fi
+          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
+          # The umask stays in a subshell: a bare one would apply to everything git writes afterwards.
+          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          STARTED="$(date +%s)"
+          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15" \
+            timeout 100 git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness || {
+              echo "::warning::plan: the dsh submodule was not fetched within 100 s — planning the rows as before Turbo"
+              exit 1
+            }
+          git submodule status vendor/tracy/deepseek-harness
+          echo "plan: dsh submodule ready in $(( $(date +%s) - STARTED )) s"
+
+      # The key is a credential on a machine that persists between jobs: removed whatever the fetch did,
+      # and before anything else runs.
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/vendor_deploy"
+
+      - name: Ask Turbo which test tasks the cache already holds
+        id: turbo
+        if: steps.turbo-dsh.outcome == 'success'
+        continue-on-error: true
+        env:
+          # In the hash of every task that holds database files (turbo.json `env`; `1` or `0`, never
+          # unset, so plan and rows hash the same way): a green result of a run that skipped them is
+          # a different cache entry from one that ran them, and neither is served to the other.
+          TRACY_TESTS_SKIP_DB: ${{ steps.scope.outputs.skip_db == 'true' && '1' || '0' }}
+        run: |
+          set -euo pipefail
+          corepack enable pnpm || true
+          TASKS="test:ci test:ci:1 test:ci:2 test:ci:3 $(node -p "Object.keys(require('./package.json').scripts).filter((k) => /^test:ci:[a-z]/.test(k)).join(' ')")"
+          STARTED="$(date +%s)"
+          # Hashes only, without the remote cache (2 s); the cache is then asked for the real tasks at once.
+          env -u TURBO_API -u TURBO_TOKEN -u TURBO_TEAM timeout 45 npx -y turbo@2.11.5 run $TASKS --dry=json > "$RUNNER_TEMP/turbo-hashes.txt" 2>&1
+          node scripts/ci/turbo-cached.mjs "$RUNNER_TEMP/turbo-hashes.txt" "$RUNNER_TEMP/turbo-dry.json"
+          # Refuses a dry run that cannot be the rows' (a task missing, no internal-dependency hash,
+          # the submodule not at the pinned commit), and prints every task's hash.
+          node scripts/ci/turbo-verify.mjs --plan "$RUNNER_TEMP/turbo-dry.json" --out "$RUNNER_TEMP/turbo-manifest.json"
+          echo "plan: Turbo hashes and cache answers in $(( $(date +%s) - STARTED )) s"
+          echo "manifest=$(cat "$RUNNER_TEMP/turbo-manifest.json")" >> "$GITHUB_OUTPUT"
+          echo "TURBO_DRY=$RUNNER_TEMP/turbo-dry.json" >> "$GITHUB_ENV"
+
+      - name: Plan the rows
+        id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          # Read by `planProof` only, as data from the environment: never spliced into a command.
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          HEAD_REF: ${{ github.head_ref }}
+          # The labels read above and the decision the dry run was asked under: the planner decides
+          # again from the labels and is red when its answer differs from the scope step's.
+          PR_LABELS: ${{ steps.labels.outputs.labels }}
+          SCOPE_SKIP_DB: ${{ steps.scope.outputs.skip_db }}
+        run: node scripts/ci/plan-ci.mjs
+
+      # 🔒 SAME TREE, SAME VERDICT — added 10/10/2026. Two jobs in one step:
+      #   1. EVERY run records the tree it checked out as a `tested tree` notice — the only record of
+      #      what a pull-request run tested (its merge commit, not its head), read by later runs;
+      #   2. a pull request whose tree a FULL green run of this repository already recorded as tested
+      #      gets `green_run`, and no build-check row runs. A staging → main release PR carries the
+      #      tree its develop → staging PR proved (#1136 = #1130, ~25 min saved per release).
+      # Fails closed: any error leaves `green_run` empty and the full suite runs. Rules and witness:
+      # `scripts/ci/green-tree.mjs`, `scripts/test/ci-green-tree.test.mjs`. The pre-merge check
+      # re-verifies the proof (`check-pr-merge.mjs`); the after-merge check sees a green run.
+      - name: Create repository-scoped CI read token
+        id: ci-app
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.TRACY_CI_MERGE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.TRACY_CI_MERGE_APP_PRIVATE_KEY }}
+          owner: TracyHQ
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: read
+          permission-pull-requests: read
+          permission-actions: read
+          permission-checks: read
+
+      - name: Skip the full suite when this tree already passed one
+        id: green
+        env:
+          EVENT: ${{ github.event_name }}
+          GH_TOKEN: ${{ github.token }}
+          TRACY_CI_READ_APP_TOKEN: ${{ steps.ci-app.outputs.token }}
+          # What this run tests (`full`, or what an opt-in rule left out): recorded beside the tree,
+          # because a run that left tests out can never be the proof that lets a later run skip them.
+          TRACY_CI_TESTED_SCOPE: ${{ steps.plan.outputs.tested_scope }}
+        run: node scripts/ci/green-tree.mjs
+
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # THE NIGHTLY'S dsh BUILD — added 2026-10-05. Same work as `dsh-lib`, for the commit `plan` pinned.
+  #
+  # WHY A SECOND JOB AND NOT `needs: plan` ON `dsh-lib`. `dsh-lib` and `plan` start together on a
+  # pull request; making the first wait for the second would put ~1 min of planning in front of every
+  # pull request's dsh build to serve a run that happens once a day. So the nightly has its own copy,
+  # and exactly one of the two runs on any event — no event gets an extra runner.
+  #
+  # 🔒 THE STEPS BETWEEN THE TWO NIGHTLY GUARDS ARE `dsh-lib`'s, UNCHANGED, and
+  # `scripts/test/ci-nightly-tree.test.mjs` compares them step by step: a fix to one that forgets
+  # the other is red there.
+  #
+  # 🔒 REFUSE BEFORE CHECKOUT. `ref: ''` means "the event's own ref", which on `schedule` is `main`.
+  # An empty or malformed `checkout_sha` must therefore stop the job BEFORE `actions/checkout`
+  # reads it, or the nightly would quietly judge production's tree and call it develop.
+  dsh-lib-nightly:
+    name: build dsh once for the nightly's commit
+    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-check, tracy-lane-dev]
+    timeout-minutes: 45
+    needs: [plan]
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Refuse a nightly without its pinned commit
+        env:
+          NIGHTLY_SHA: ${{ needs.plan.outputs.checkout_sha }}
+        run: |
+          set -euo pipefail
+          if ! [[ "$NIGHTLY_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::plan published no usable commit id for this nightly — refusing to check out (an empty ref would fall back to main)"
+            exit 1
+          fi
+          echo "nightly tree: plan selected $NIGHTLY_SHA"
+
+      - name: Check out Git repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+          ref: ${{ needs.plan.outputs.checkout_sha }}
+
+      - name: Assert the nightly checkout is the pinned commit
+        env:
+          NIGHTLY_SHA: ${{ needs.plan.outputs.checkout_sha }}
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git rev-parse --verify 'HEAD^{commit}')"
+          echo "nightly tree: checked out $HEAD_SHA"
+          if [ "$HEAD_SHA" != "$NIGHTLY_SHA" ]; then
+            echo "::error::this job checked out $HEAD_SHA but plan pinned another commit for the nightly — the run would describe two trees"
+            exit 1
+          fi
+
+      - name: Fetch the vendored dsh submodule
+        env:
+          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          # An HTTPS submodule URL is the public repository's, fetched without a key.
+          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
+          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
+            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing. Set it with: gh secret set TRACY_VENDOR_DEPLOY_KEY --repo $GITHUB_REPOSITORY"
+            exit 1
+          fi
+          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
+          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          git submodule status vendor/tracy/deepseek-harness
+
+      - name: Assert the runner's Node matches .node-version
+        run: |
+          set -euo pipefail
+          WANT="$(tr -d ' \t\r\n' < .node-version)"
+          HAVE="$(node -v | sed 's/^v//')"
+          echo "want $WANT, runner has $HAVE"
+          [ "$WANT" = "$HAVE" ] || {
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
+            exit 1
+          }
+          corepack enable pnpm
+
+      - name: Restore or build the vendored dsh
+        uses: ./.github/actions/dsh-lib
+        with:
+          mode: ensure
+          lookup-only: 'true'
+
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/vendor_deploy"
+
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # THREE PARALLEL JOBS, NOT ONE — changed 2026-09-15.
+  #
+  # Measured over the four green runs before the change: the one job's `Build check` step took
+  # ~193 s, and two gates were most of it — `tests` ~79 s and `lint` ~48 s — while the other 33 ran
+  # sequentially behind them for ~65 s (`boot-graph` 16, `bundles` 15, the rest a few seconds each).
+  # The gates are independent processes, so they are split across runners; the wall clock becomes
+  # the slowest group plus setup instead of the sum.
+  #
+  # 🔒 THE THIRD GROUP IS A `--skip`, NOT A LIST. `check-all.ts` refuses a misspelt name either way,
+  # and a gate added to `GATES` lands in `gates` without this file changing — splitting the run
+  # cannot quietly drop one. Every group runs `check-all.ts`, so `boot-graph`'s own profile build and
+  # every other precondition behave exactly as in a full local `pnpm build:check`.
+  #
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # THE `tests` GROUP BECAME SIX — changed 2026-09-20.
+  #
+  # WHY, AS NUMBERS. Over 24 hours (124 jobs) Tracy CI spent 867 runner-minutes RUNNING and 319
+  # QUEUEING, and `build check (tests)` alone was 537 of the 867 — 62% of all execution, 27 runs
+  # averaging 19m54 and peaking at 35m18. Adding machines could only ever attack the queue; a
+  # 36-minute job on one runner stays 36 minutes however many runners exist.
+  #
+  # Measured inside one such job (run 35487509134), the 36m30 split into four INDEPENDENT suites:
+  #   test:workers  18m54   ·  emdash-theme-base   8m08
+  #   interop           16s  ·  emdash-theme-business 8m27
+  #   dsh-passwords     37s  ·  (coverage count)      ~0
+  # Nothing there consumes anything another produces, so the sum was arbitrary. Split, the wall
+  # clock is the slowest row — about 8m30, set by the two browser-driven EmDash suites.
+  #
+  # CHANGED 2026-09-29 — FOUR ROWS, NOT NINE. Each job pays 65-110 s of fixed setup (checkout, dsh
+  # restore, `pnpm install`) and the dev lane has four heavy runners shared with image builds, so
+  # nine small jobs queued the builds. Now: `checks` (lint + every gate except the tests), and
+  # `test:workers` in TWO shards, the second also carrying the small suites (`workers:2/2,rest` —
+  # interop + dsh-passwords). Shards are balanced by MEASURED seconds (`scripts/test-timings.json`,
+  # greedy longest-first), not by file count. Since 08/10/2026 each shard prints one
+  # `tracy-test-timing` line per file and `scripts/update-test-timings.mjs` fills the table from
+  # those lines of green runs (median of three or more); it is never measured on a laptop.
+  # The list comes from the same regex `checkCoverage()` judges by, never a second glob, and
+  # `check-tests.ts` refuses an empty shard or a misspelt part. See
+  # `scripts/test/check-tests-parts.test.ts`.
+  #
+  # A routine PR into develop now runs only the related workers files in one row. The two full
+  # shards above still run for release PRs, manual runs and the nightly. The browser-driven suites
+  # — `e2e` and the three EmDash themes — remain conditional by path on develop PRs.
+  build-check:
+    name: build check (${{ matrix.group }})
+    # ─────────────────────────────────────────────────────────────────────────────────────────
+    # `tracy-check`, NOT `tracy-build` — changed 2026-09-21
+    #
+    # NOT `ubuntu-latest`: the org's shared monthly quota is a dependency this gate cannot see and
+    # cannot fix (the measurement at the top of this file). What changed is WHICH self-hosted
+    # label it asks for, and the reason is a boundary rather than a preference.
+    #
+    # 🔒 A `tracy-build` RUNNER HOLDS THE DOCKER SOCKET, WHICH IS ROOT ON ITS HOST. Only machines
+    # that run nothing a customer depends on carry it. Checks need no daemon at all — the one
+    # thing in `check-tests.ts` that wanted docker reads `TEST_DATABASE_URL` first, and the four
+    # gated test files that mention `docker` only assert on argv strings — so asking for
+    # `tracy-build` here meant the two production JoomlArt machines could never take a check, and
+    # their capacity sat idle while PRs queued.
+    #
+    # ⚠ THE ORDER OF THIS CHANGE MATTERED. A `runs-on:` label nobody carries does not go red, it
+    # QUEUES, silently and forever. `tracy-check` was added to the four existing `tracy-ci-*`
+    # runners through the API BEFORE this line changed, so there was never a moment where this
+    # workflow asked for something that did not exist.
+    #
+    # Every heavy runner carries BOTH labels, deliberately: a build-only runner would idle 90% of
+    # the time (image builds are 17 jobs and 89 runner-minutes a day against Tracy CI's 81 and
+    # 761), while one pull request asks for eight check slots at once.
+    # The label is per row so a row CAN ask for a different pool. Every row asks for `tracy-check`
+    # today: the one test that needed a docker daemon needed it only to reach a PHP interpreter,
+    # and the runner image carries `php-cli` since `tracy-runners@bf07c3a` — so the exception that
+    # briefly lived here was removed rather than kept warm.
+    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", '${{ matrix.label }}', "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    timeout-minutes: 45
+    # dsh is built by `dsh-lib` above and restored here, never built eight times (see there).
+    #
+    # 🔒 THE `if` SPELLS OUT WHAT `needs` USED TO IMPLY — changed 2026-10-05. Exactly one of the two
+    # dsh jobs runs per event and the other is skipped ON PURPOSE, and a job with a skipped `needs`
+    # is skipped too unless its `if` carries a status function. So the condition names each result:
+    # not cancelled, the draft rule as before, `plan` green, and the dsh job that belongs to this
+    # event green while the other one is skipped. Anything else — a failed, cancelled or
+    # unexpectedly skipped prerequisite — leaves the rows skipped, as before, and on the nightly
+    # that is a RED verdict (`nightly-report`).
+    # 🔒 `green_run` empty, or no row at all: this tree already passed a full run (`plan`, step
+    # "Skip the full suite…"); the job `full suite skipped` below says so on the pull request.
+    needs: [dsh-lib, dsh-lib-nightly, plan]
+    if: >-
+      ${{
+        !cancelled()
+        && (github.event_name != 'pull_request' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository))
+        && needs.plan.result == 'success'
+        && needs.plan.outputs.green_run == ''
+        && (
+          (github.event_name != 'schedule' && needs.dsh-lib.result == 'success' && needs.dsh-lib-nightly.result == 'skipped')
+          || (github.event_name == 'schedule' && needs.dsh-lib-nightly.result == 'success' && needs.dsh-lib.result == 'skipped')
+        )
+      }}
+    strategy:
+      # Every verdict, always: a red lint must not hide what the tests would have said.
+      fail-fast: false
+      # 🔒 LONGEST FIRST, and the order is `plan-ci.mjs`'s: EmDash suites (5-10 min), then e2e, then
+      # the two halves of the workers suite, then `checks` (lint + every gate but the tests). Three
+      # rows always exist; the EmDash rows and `e2e` exist only when the pull request touches their
+      # inputs, on a PR into `main`, on manual runs and on the nightly. Rows are built by `plan`.
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      # `submodules: false` here on purpose: the submodule lives in a DIFFERENT private repo
+      # (`TracyHQ/tch-vendor-deepseek-harness`) that `GITHUB_TOKEN` has no access to, so checkout
+      # would die on it. The next step fetches it with a read-only deploy key instead.
+      #
+      # 🔒 THE NIGHTLY CHECKS OUT `plan`'s COMMIT, NOT `develop` (05/10/2026; reasons at
+      # `dsh-lib-nightly`). The guard runs first because the `ref` expression below turns an empty
+      # `checkout_sha` into '' — the event's own ref, which on `schedule` is `main`. Both guards are
+      # skipped on every other event, where `ref` is '' exactly as it always was.
+      - name: Refuse a nightly without its pinned commit
+        if: github.event_name == 'schedule'
+        env:
+          NIGHTLY_SHA: ${{ needs.plan.outputs.checkout_sha }}
+        run: |
+          set -euo pipefail
+          if ! [[ "$NIGHTLY_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::plan published no usable commit id for this nightly — refusing to check out (an empty ref would fall back to main)"
+            exit 1
+          fi
+          echo "nightly tree: plan selected $NIGHTLY_SHA"
+
+      - name: Check out Git repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+          ref: ${{ github.event_name == 'schedule' && needs.plan.outputs.checkout_sha || '' }}
+          # 2, not 1, for the same reason as in `plan`: a pull request checks out its merge commit,
+          # and the clock-shift step below diffs against HEAD^1 (the base tip).
+          fetch-depth: 2
+
+      - name: Assert the nightly checkout is the pinned commit
+        if: github.event_name == 'schedule'
+        env:
+          NIGHTLY_SHA: ${{ needs.plan.outputs.checkout_sha }}
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git rev-parse --verify 'HEAD^{commit}')"
+          echo "nightly tree: checked out $HEAD_SHA"
+          if [ "$HEAD_SHA" != "$NIGHTLY_SHA" ]; then
+            echo "::error::this row checked out $HEAD_SHA but plan pinned another commit for the nightly — the run would describe two trees"
+            exit 1
+          fi
+
+      # WHY THE SUBMODULE IS FETCHED AT ALL. The `presets` gate builds its table of package names
+      # by reading dsh's four `web-app/presets/*.patch.yml` inside `vendor/tracy/deepseek-harness`. Without them it
+      # fails with the presets gate's own message (printed in Vietnamese: no composition declares a
+      # package for persona, …) — a red that never once
+      # mentions presets. That red was known and accepted while there was no key; the key exists
+      # now (added 07/09 for `build-dsh-image.yml`), so the gate gets its inputs.
+      #
+      # Copied from `build-dsh-image.yml` on `develop`, which has been green on this runner.
+      - name: Fetch the vendored dsh submodule
+        env:
+          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          # An HTTPS submodule URL is the public repository's, fetched without a key.
+          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
+          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
+            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing — the presets gate has no inputs. Set it with: gh secret set TRACY_VENDOR_DEPLOY_KEY --repo $GITHUB_REPOSITORY"
+            exit 1
+          fi
+          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
+          # 🔒 THE umask IS IN A SUBSHELL, AND THAT IS THE WHOLE POINT. A bare `umask 077` applies
+          # to the REST of the step, so everything git writes afterwards lands 600/700.
+          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          # No --depth: the submodule is pinned to an exact commit a shallow fetch may not carry.
+          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          git submodule status vendor/tracy/deepseek-harness
+
+      # The runner image pins Node; `.node-version` pins what the repo expects. Nothing keeps the
+      # two in step, so compare them here rather than let a mismatch surface as some gate's odd
+      # failure twenty minutes in. No `actions/setup-node`: this is our box, not a fresh VM, and
+      # the two proven workflows on this runner do the same.
+      - name: Assert the runner's Node matches .node-version
+        run: |
+          set -euo pipefail
+          WANT="$(tr -d ' \t\r\n' < .node-version)"
+          HAVE="$(node -v | sed 's/^v//')"
+          echo "want $WANT, runner has $HAVE"
+          [ "$WANT" = "$HAVE" ] || {
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image on contabo2 (/opt/tracy-runner)"
+            exit 1
+          }
+          corepack enable pnpm
+
+      # dsh IS BUILT FROM SOURCE — there is no registry left to fetch it from (ADR 0014 §6, 06/09).
+      # Without this step `lib/` of the 410 `@deepseek-ai/*` packages does not exist: the submodule's
+      # `.gitignore` drops it and `pnpm install` only LINKS the source directories. The `lint` gate is
+      # the first to go red, with `Cannot find module '@deepseek-ai/dsh-client-locale'` — a sentence
+      # that says nothing about the cause.
+      #
+      # 🔒 THE ORDER IS PINNED (CLAUDE.md §5) AND THE CLEAN START IS NOT OPTIONAL. `dsh:build` runs
+      # pnpm INSIDE the submodule and claims the 410 members for its own store; the root install then
+      # relinks them and compiles `fs-ext`. Run it the other way round and dsh dies at boot.
+      #
+      # Three workflows share ONE checkout on this runner (`_work/<repo>/<repo>`), and each bootstraps
+      # in it. Starting on top of another's finished state leaves the tree in neither shape — measured
+      # 08/09 on `build-dsh-image.yml`: `pnpm dsh:build` died with `Cannot find package
+      # '@jridgewell/gen-mapping'`, which reads like a missing dependency and is not one. The pnpm
+      # store survives the removal, so this is a relink, not a download.
+      #
+      # ⚡ `--skip-if-built` — added 2026-09-15. The runner keeps this checkout, and the submodule
+      # almost never moves, so the 410-package build was pure repetition: 9 min of PR #94's 25 min
+      # run under load. The script (not this YAML) decides, and prints why it built or skipped;
+      # the stamp rules and why they live in the script are in `scripts/build-dsh.mjs`.
+      # The `rm -rf` still runs: skipping the BUILD does not skip the clean start the root install
+      # relinks from.
+      #
+      # ⚡ RESTORED, NOT BUILT — 26/09. `dsh-lib` built this key once and cached it; restoring
+      # writes the build and its stamp, so the `--skip-if-built` below skips.
+      #
+      # 🔒 `ensure`, NOT `restore`, SINCE 11/10/2026 — TWO ARCHITECTURES SHARE THE CHECK POOL. The
+      # key includes `${process.platform}-${process.arch}` (the flock binding is native code), and
+      # check/light jobs no longer ask for `x64`: the arm64 Mac runners (`imac-check-01`,
+      # `macmini-light-01`, TracyHQ/tracy-runners) take them too. `dsh-lib` caches the key of
+      # whichever architecture ran IT, so a row landing on the other one misses — and `restore`
+      # failed that row by name. `ensure` restores when the key is there (every same-arch row, as
+      # before) and otherwise builds once and saves it, so that architecture hits from then on: one
+      # build per submodule commit per architecture. The old reason for failing instead — a 5 GB
+      # runner could not finish the build — is gone: every check runner now has >= 6 GB (the iMac's
+      # arm64 build took 5 min under its 6.4 GB cap, run 38150938339).
+      - name: Restore the vendored dsh built by dsh-lib
+        uses: ./.github/actions/dsh-lib
+        with:
+          mode: ensure
+
+      - name: Build the vendored dsh
+        run: |
+          set -euo pipefail
+          rm -rf node_modules vendor/tracy/deepseek-harness/node_modules
+          node scripts/build-dsh.mjs --skip-if-built
+
+      - name: Install dependencies
+        id: install
+        run: pnpm install --frozen-lockfile
+
+      - name: Start the Turbo remote cache
+        if: matrix.turbo
+        uses: ./.github/actions/turbo-cache
+        with:
+          endpoint: ${{ secrets.TURBO_CACHE_S3_ENDPOINT }}
+          bucket: ${{ secrets.TURBO_CACHE_S3_BUCKET }}
+          access-key: ${{ secrets.TURBO_CACHE_S3_ACCESS_KEY }}
+          secret-key: ${{ secrets.TURBO_CACHE_S3_SECRET_KEY }}
+
+      # NO `npm ci --prefix vendor/tracy/dsh-passwords` HERE — 06/09. It became a pnpm workspace member,
+      # so the install above already built its `node_modules` and its `prepare` built `dist/`. Running
+      # `npm ci` after that hands one directory to TWO package managers: npm wipes what pnpm just
+      # built and rebuilds from `package-lock.json`, and the two drift in silence until the first
+      # `--frozen-lockfile` goes red. The fork's `package-lock.json` stays for upstream's use, and
+      # `scripts/check-tests.ts` still runs `npm ci` itself when invoked OUTSIDE an installed tree.
+
+      # `boot-graph` RUNS HERE since 06/09: it calls `materialize-profile.mjs` itself, so it no longer
+      # depends on a manual step someone ran in a main checkout. No gate is `--skip`ped.
+      # TYPECHECK BUILD-INFO, `checks` row only (the row that runs `lint`). tsc `--incremental` records
+      # a hash of every file it read, so the newest build-info from any run re-checks only what this
+      # commit changed and what depends on it — same verdict as a cold run, measured cold at 107 s
+      # (run 36596428799). Keyed per commit, restored by prefix; a miss is a cold run, never a skip.
+      # A PR may restore its own entries and those of the default branch: the nightly run (a
+      # `schedule` event, so it saves under `main`) is what hands a fresh PR a warm start.
+      # REPORT ONLY, 04/10: the step has an `id` so the `lint` gate can print what was restored
+      # (exact key, an older key by prefix, nothing) next to its typecheck time. The three outputs go
+      # to `Build check` as environment; `check-lint.ts` prints them and decides nothing from them. On
+      # every other row this step is skipped, the outputs are empty, and `lint` does not run anyway.
+      - name: Restore the typecheck build-info
+        id: tsc-cache
+        if: matrix.group == 'checks'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/tsc
+          key: tsc-${{ github.sha }}
+          restore-keys: tsc-
+
+      # 🔒 EVERY TURBO TASK HASH, COMPARED WITH `plan`'s (12/10/2026) — on the `checks` row, which
+      # always runs, after the same bootstrap as a test row and before anything here runs a test.
+      # `plan` skips a row because of a hash IT computed; if this job computes another hash for the
+      # same commit, that row's tests did not run and nothing else would say so. All tasks, the ones
+      # of skipped rows included. A difference is RED, but only at the end of the job (step "Fail the
+      # row when a Turbo task hash differed"): `continue-on-error` here lets every gate below still
+      # give its verdict. Without a manifest (`plan` fell back) it says so and passes.
+      - name: Compare every Turbo task hash with the plan job's
+        id: turbo-hashes
+        if: ${{ matrix.group == 'checks' && github.event_name == 'pull_request' && github.base_ref == 'develop' }}
+        continue-on-error: true
+        env:
+          TRACY_TURBO_MANIFEST: ${{ needs.plan.outputs.turbo_manifest }}
+          # The value `plan` hashed under: the same task hashed under another one is a different hash.
+          TRACY_TESTS_SKIP_DB: ${{ needs.plan.outputs.skip_db == 'true' && '1' || '0' }}
+        run: node scripts/ci/turbo-verify.mjs --compare
+
+      # A Turbo row runs its tasks; each task is `check-tests.ts --part owner=…`, and a task whose
+      # inputs are unchanged is replayed from the cache (its log included) instead of run — except on
+      # a full run (`matrix.force`: release, nightly, manual), where `--force` runs every task.
+      # `--summarize` writes what Turbo did per task (hash, cache hit or miss) to `.turbo/runs/`.
+      - name: Turbo tests
+        if: matrix.turbo
+        env:
+          # In the hash of the tasks that hold database files, and read (then dropped) by the wrapper
+          # that runs them: `1` leaves those files out of the run, announced in the task's log.
+          TRACY_TESTS_SKIP_DB: ${{ needs.plan.outputs.skip_db == 'true' && '1' || '0' }}
+          FORCE: ${{ matrix.force && '--force' || '' }}
+        run: |
+          rm -rf .turbo/runs
+          pnpm exec turbo run ${{ matrix.turbo }} --concurrency=2 --continue --output-logs=new-only --summarize $FORCE
+
+      # The row's own tasks against `plan`'s manifest. Red unless the record is whole: exactly the
+      # tasks this row was scheduled (the manifest's tasks its words select), each once, each with
+      # `plan`'s hash and with HIT or MISS from Turbo's summary. Per task it prints the hash and what
+      # the cache did next to what `plan` predicted (a task stored by another run in between, or not
+      # served, is explained, not counted as a failure).
+      - name: Compare this row's task hashes with the plan job's
+        if: ${{ !cancelled() && matrix.turbo && steps.install.outcome == 'success' }}
+        env:
+          TRACY_TURBO_MANIFEST: ${{ needs.plan.outputs.turbo_manifest }}
+          ROW_GROUP: ${{ matrix.group }}
+          ROW_TASKS: ${{ matrix.turbo }}
+        run: node scripts/ci/turbo-verify.mjs --row --group "$ROW_GROUP" --tasks "$ROW_TASKS"
+
+      - name: Build check
+        if: ${{ !matrix.turbo }}
+        env:
+          # `1` on a pull request into develop with neither `ci:integration` nor an edited database
+          # test: `check-tests.ts` leaves the workers files that read TEST_DATABASE_URL out of this row's
+          # run, provisions no database for it, and says so. `0` everywhere else, the nightly and the
+          # release pull requests included.
+          TRACY_TESTS_SKIP_DB: ${{ needs.plan.outputs.skip_db == 'true' && '1' || '0' }}
+          TRACY_TURBO_TASK_AUDITS: ${{ matrix.taskAudits && '1' || '' }}
+          TRACY_TSC_CACHE_DIR: ${{ matrix.group == 'checks' && '.cache/tsc' || '' }}
+          TRACY_TSC_CACHE_HIT: ${{ steps.tsc-cache.outputs.cache-hit }}
+          TRACY_TSC_CACHE_MATCHED_KEY: ${{ steps.tsc-cache.outputs.cache-matched-key }}
+          TRACY_TSC_CACHE_PRIMARY_KEY: ${{ steps.tsc-cache.outputs.cache-primary-key }}
+          # THE OWN-DOMAIN PILOT RUNS ON THE `tests e2e` ROW (08/10/2026, #1028). Until then
+          # `apps/tracy-web/test/e2e/site-own-domain.test.mjs` skipped itself on every CI run: it
+          # asks for `TRACY_PILOT=1` and a directory for its screenshots, and nothing set them. It
+          # needs nothing this row lacks: the runner's PostgreSQL (`TEST_DATABASE_URL`), the
+          # Chromium the e2e part already installs, and DNS, tunnel-provider, firewall and docker
+          # stand-ins the test starts itself (no docker socket, no call off the machine). Empty on
+          # every other row, where the test is not run at all. `runner.temp` is emptied after the job.
+          TRACY_PILOT: ${{ matrix.group == 'tests e2e' && '1' || '' }}
+          TRACY_PILOT_ARTIFACT_DIR: ${{ matrix.group == 'tests e2e' && format('{0}/own-domain-pilot', runner.temp) || '' }}
+        run: pnpm exec tsx scripts/check-all.ts ${{ matrix.args }}
+
+      - name: Save the typecheck build-info
+        if: always() && matrix.group == 'checks'
+        continue-on-error: true
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/tsc
+          key: tsc-${{ github.sha }}
+
+      # TESTS RUN AGAIN WITH THE CLOCK 400 DAYS AHEAD — `scripts/run-clock-shift.mjs`.
+      #
+      # WHY. A test that mints a credential at a fixed time and has it verified on the wall clock is
+      # green until the TTL passes that date, then red on every run of every pull request: the
+      # 01/10 cookie of `beta-operation-signal.test.mjs`, 72 h TTL, four red runs from 04/10 02:00
+      # UTC (#838). Run past the TTL on the day it is written, it is red in the PR that adds it.
+      #
+      # THE VERDICT OF A FILE IS ITS EXIT CODE under the moved clock, nothing it prints. A red
+      # file's whole output is printed in this step's log; every file's output is also saved under
+      # `TRACY_CLOCK_SHIFT_LOG_DIR` (`runner.temp`, which the runner empties after each job).
+      #
+      # A STEP OF AN EXISTING ROW, NOT A JOB: a job pays 65-110 s of setup (above) for a step that
+      # took about 0.5 s end to end on a one-file change and 21 s on the branch that added its own two
+      # suites (05/10/2026, a 10-core macOS dev machine WITHOUT a database; not measured on these
+      # runners, and the nightly whole-list run was not measured at all with this runner).
+      #   pull request → only the `test:workers` files the PR adds or changes (HEAD^1 is the base tip
+      #                  of the merge commit; a PR that touches no test file runs 0 files and says so)
+      #   nightly      → `--check-excluded` (every file of the runner's `EXCLUDED` list still exits
+      #                  non-zero on the moved clock; one that exits 0 must leave the list), then the
+      #                  whole `test:workers` list minus those excluded files
+      # Not on manual runs, and the pull-request suite is never run twice.
+      #
+      # THE TWO NIGHTLY COMMANDS BOTH RUN, WHATEVER THE FIRST ONE SAYS (`|| status=$?`, not the
+      # bare lines `set -e` would stop at): one entry that is no longer needed must not cost the
+      # night's only look at the other 800 files. The step is red when either is.
+      #
+      # `!cancelled()` + the install outcome, not the default `success()`: a red gate above must not
+      # hide this verdict, and this step cannot stop a gate from running because it comes after
+      # them. Without an install there is nothing to run and the job is red already.
+      # It inherits `TEST_DATABASE_URL` only if the runner exports it; a suite that skips itself
+      # without a database exits 0 and was NOT checked on the moved clock (the runner says so).
+      - name: Tests with the clock moved forward
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.clock && (github.event_name == 'pull_request' || github.event_name == 'schedule') }}
+        env:
+          EVENT: ${{ github.event_name }}
+          TRACY_CLOCK_SHIFT_LOG_DIR: ${{ runner.temp }}/clock-shift
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = schedule ]; then
+            status=0
+            node scripts/run-clock-shift.mjs --check-excluded || status=$?
+            node scripts/run-clock-shift.mjs --all-workers || status=$?
+            exit "$status"
+          else
+            node scripts/run-clock-shift.mjs --changed-since HEAD^1
+          fi
+
+      # The verdict of "Compare every Turbo task hash with the plan job's", kept for last so that the
+      # gates and the clock-shift tests above ran first. `plan` and this row hashed different trees
+      # for one commit: a row `plan` skipped may not have been tested at all.
+      - name: Fail the row when a Turbo task hash differed
+        if: ${{ !cancelled() && steps.turbo-hashes.outcome == 'failure' }}
+        run: |
+          echo "::error::Turbo task hashes of this row differ from the plan job's — see the step \"Compare every Turbo task hash with the plan job's\""
+          exit 1
+
+      # The key is a credential on a machine that persists between jobs — it does not get to stay.
+      # Its own step with `if: always()`, the shape `build-dsh-image.yml` uses: an inline `rm -f` at
+      # the end of the fetch step never runs when `git submodule update` fails under `set -e`.
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/vendor_deploy"
+
+  # A red nightly is ANNOUNCED, not left for someone to notice on the Actions page. Nobody is
+  # looking at a 02:30 run, so the verdict goes to the run's summary (and an error annotation).
+  #
+  # 🔒 GREEN IS A CLAIM ABOUT ONE COMMIT — changed 2026-10-05. It takes all of: `plan` green,
+  # `dsh-lib-nightly` green, every row green, and a well-formed pinned commit. A prerequisite that
+  # failed, was cancelled or was skipped leaves `build-check` at `skipped`, which is not `success`,
+  # so it can never read as "every row ran". `set -e` is on so that a summary that cannot be
+  # written is a red step rather than a green one that announced nothing.
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # THE CHECK LINE FOR A SKIP — added 10/10/2026. Runs only when `plan` found a full green run of
+  # this exact tree, so the pull request's checks list and /ops/ci show WHY no build-check row ran,
+  # in the job name itself. Its summary carries the same sentence.
+  suite-skipped:
+    name: "full suite skipped: tree ${{ needs.plan.outputs.tree }} already green in run ${{ needs.plan.outputs.green_run }}"
+    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    timeout-minutes: 2
+    needs: [plan]
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && needs.plan.result == 'success' && needs.plan.outputs.green_run != ''
+    steps:
+      - name: Say why no build-check row ran
+        env:
+          TREE: ${{ needs.plan.outputs.tree }}
+          GREEN_RUN: ${{ needs.plan.outputs.green_run }}
+        run: |
+          echo "::notice title=full suite skipped::tree $TREE already green in run $GREEN_RUN"
+          printf '### ⏭ full suite skipped: tree `%s` already green in run %s\n' "$TREE" "$GREEN_RUN" >> "$GITHUB_STEP_SUMMARY"
+
+  nightly-report:
+    name: nightly verdict
+    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, tracy-lane-dev]
+    timeout-minutes: 5
+    needs: [plan, dsh-lib-nightly, build-check]
+    if: always() && github.event_name == 'schedule'
+    steps:
+      - name: Announce the nightly result
+        env:
+          RESULT: ${{ needs.build-check.result }}
+          PLAN: ${{ needs.plan.result }}
+          DSH: ${{ needs.dsh-lib-nightly.result }}
+          SELECTED_SHA: ${{ needs.plan.outputs.checkout_sha }}
+        run: |
+          set -euo pipefail
+          PINNED=missing
+          if [[ "$SELECTED_SHA" =~ ^[0-9a-f]{40}$ ]]; then PINNED=valid; fi
+          if [ "$PLAN" = success ] && [ "$DSH" = success ] && [ "$RESULT" = success ] && [ "$PINNED" = valid ]; then
+            printf '### Nightly Tracy CI on develop: green\n\nEvery row ran (e2e and EmDash included) on one commit: `%s`.\n' "$SELECTED_SHA" >> "$GITHUB_STEP_SUMMARY"
+            echo "nightly tree: verdict green for $SELECTED_SHA"
+            exit 0
+          fi
+          echo "::error::nightly Tracy CI on develop is RED (plan=$PLAN dsh-lib-nightly=$DSH build-check=$RESULT pinned-commit=$PINNED) — see the failed rows of this run"
+          printf '### Nightly Tracy CI on develop: RED\n\nplan `%s` · dsh-lib-nightly `%s` · build-check `%s` · pinned commit `%s`. Open the failed rows of this run; the e2e and EmDash suites only run on PRs that touch them, so this is the first place a break in them shows.\n' "$PLAN" "$DSH" "$RESULT" "$PINNED" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # TEST GROWTH — added 2026-10-12. One line in the summary of EVERY non-draft pull request: test
+  # files and case registrations added and removed, counted from the two versions of each changed
+  # test file (`scripts/ci/new-test-proof.mjs --growth-only`). It runs no test, installs nothing,
+  # and needs nothing from `plan`, so it also reports when `green-tree` skipped the whole suite.
+  #
+  # REPORT-ONLY, AND ITS OWN JOB ON PURPOSE. It judges nothing: the only way it goes red is the
+  # tool failing to read git or to write the summary. As a step of `plan` that failure would stop
+  # every `build-check` row; as its own light job it is one red line and the gates still run.
+  # Seconds are NOT reported here (nothing ran); the proof job below reports the seconds it measured.
+  test-growth:
+    name: test growth (report-only)
+    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    timeout-minutes: 5
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+          # The merge commit and its parents: HEAD^1 is the base tip, as in `plan`.
+          fetch-depth: 2
+
+      - name: Report what this pull request adds to and removes from the suite
+        run: |
+          set -euo pipefail
+          node scripts/ci/new-test-proof.mjs --growth-only --base HEAD^1 --head HEAD --out "$RUNNER_TEMP/test-growth"
+
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # NEW-TEST PROOF — added 2026-10-12. On a pull request whose kind is `fix` (decided by `plan`,
+  # with the Regression gate's own `prKind`), the test files the pull request adds or edits are run
+  # twice in a scratch copy outside the checkout: at the head, and with every non-test file put back
+  # to the base. Green at the head and red without the fix = `proved`; green both ways = `unproved`.
+  # Rules, verdicts and limits: the header of `scripts/ci/new-test-proof.mjs` and
+  # `docs/references/gates-ci-runners.md`.
+  #
+  # 🔒 REPORT-ONLY. `unproved`, `broken`, `not-runnable` and `no-tests` are printed in the summary
+  # and leave the job GREEN. It is red only when the tool itself fails (git, evidence, cleanup), and
+  # no `continue-on-error` hides that. The tool's `--enforce` switch is NOT passed here: whether an
+  # unproved fix should block is the repository owners' decision, and the doc says what evidence
+  # would justify it. This job is not a `build-check` row and no gate waits for it.
+  #
+  # NOT FOR ANY OTHER PULL REQUEST: `new_test_proof` is `true` only for a fix, so a feature, a chore
+  # or a release pull request gets no job here and pays only the growth line above.
+  #
+  # TIME. The tool stops at 180 s per pull request (unfinished files become `not-runnable: time`),
+  # then removes its scratch copy; the job's 30 minutes cover the same setup a `build-check` row
+  # pays (dsh restore, install) plus that. A cancelled job cannot run the tool's own cleanup, so the
+  # `always()` step below removes whatever copy is left, by its owner file.
+  new-test-proof:
+    name: new-test proof (report-only)
+    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-check, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    timeout-minutes: 30
+    needs: [dsh-lib, plan]
+    if: >-
+      ${{
+        !cancelled()
+        && github.event_name == 'pull_request'
+        && github.event.pull_request.draft == false
+        && github.event.pull_request.head.repo.full_name == github.repository
+        && needs.plan.result == 'success'
+        && needs.plan.outputs.new_test_proof == 'true'
+        && needs.dsh-lib.result == 'success'
+      }}
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+          # The merge commit and its parents: the proof compares HEAD^1 (the base tip) with HEAD,
+          # the same pair `plan` lists the changed files from.
+          fetch-depth: 2
+
+      - name: Fetch the vendored dsh submodule
+        env:
+          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          # An HTTPS submodule URL is the public repository's, fetched without a key.
+          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
+          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
+            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing. Set it with: gh secret set TRACY_VENDOR_DEPLOY_KEY --repo $GITHUB_REPOSITORY"
+            exit 1
+          fi
+          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
+          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          git submodule status vendor/tracy/deepseek-harness
+
+      - name: Assert the runner's Node matches .node-version
+        run: |
+          set -euo pipefail
+          WANT="$(tr -d ' \t\r\n' < .node-version)"
+          HAVE="$(node -v | sed 's/^v//')"
+          echo "want $WANT, runner has $HAVE"
+          [ "$WANT" = "$HAVE" ] || {
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
+            exit 1
+          }
+          corepack enable pnpm
+
+      # The same bootstrap as a `build-check` row, in the same pinned order (see there): the tests
+      # are run with the checkout's installed dependencies, so the install must be the real one.
+      - name: Restore the vendored dsh built by dsh-lib
+        uses: ./.github/actions/dsh-lib
+        with:
+          mode: ensure
+
+      - name: Build the vendored dsh
+        run: |
+          set -euo pipefail
+          rm -rf node_modules vendor/tracy/deepseek-harness/node_modules
+          node scripts/build-dsh.mjs --skip-if-built
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Scratch copy and evidence both live under `runner.temp`, never in the checkout. The result
+      # file is printed so the log keeps the machine-readable verdicts after the runner empties
+      # its temp directory.
+      - name: Prove the tests this fix adds or edits
+        run: |
+          set -euo pipefail
+          node scripts/ci/new-test-proof.mjs --base HEAD^1 --head HEAD \
+            --scratch-root "$RUNNER_TEMP/new-test-proof-scratch" --out "$RUNNER_TEMP/new-test-proof"
+          echo "::group::result.json"
+          cat "$RUNNER_TEMP/new-test-proof/result.json"
+          echo "::endgroup::"
+
+      - name: Remove a scratch copy a cancelled run left behind
+        if: always()
+        run: node scripts/ci/new-test-proof.mjs --cleanup --scratch-root "$RUNNER_TEMP/new-test-proof-scratch"
+
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/vendor_deploy"
+
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # A FORK'S PULL REQUEST (26/10/2026, docs/references/public-repo-ci.md). Every job above runs only
+  # for branches of this repository: code from a fork never reaches the team's runners. This is its
+  # minimal equivalent on a GitHub-hosted runner, with no secret and a read-only token: the `checks`
+  # row (`check-all.ts --skip tests`). It needs the vendored dsh submodule, fetched anonymously over
+  # HTTPS; while that repository is private the fetch fails and the job says so and ends green — a
+  # maintainer then pushes the branch to this repository to run the full suite.
+  fork-checks:
+    name: fork pull request checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name != github.repository
+    permissions:
+      contents: read
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Fetch the vendored dsh submodule anonymously
+        id: submodule
+        env:
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          set -uo pipefail
+          if git -c url."https://github.com/".insteadOf="git@github.com:" \
+            submodule update --init --depth 1 vendor/tracy/deepseek-harness; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            msg="The vendored dsh submodule is not public yet, so a fork's pull request cannot be built here. A maintainer runs the full suite by pushing this branch to the repository."
+            echo "::notice title=Fork checks skipped::$msg"
+            printf '### Fork checks skipped\n\n%s\n' "$msg" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Set up Node
+        if: steps.submodule.outputs.available == 'true'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+
+      - name: Build the vendored dsh and install dependencies
+        if: steps.submodule.outputs.available == 'true'
+        run: |
+          set -euo pipefail
+          corepack enable pnpm
+          node scripts/build-dsh.mjs
+          pnpm install --frozen-lockfile
+
+      - name: Build check (checks row)
+        if: steps.submodule.outputs.available == 'true'
+        run: pnpm exec tsx scripts/check-all.ts --skip tests

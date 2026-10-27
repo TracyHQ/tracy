@@ -1,0 +1,27 @@
+{
+  "id": "REG-113",
+  "kind": "fix",
+  "pr": 909,
+  "title": "JA Morgan wp7: registration labels in dark, typography badges and labels, and the header of home styles 2, 3 and 4 match the source at every width; the header of home styles 3 and 4 stays transparent in dark",
+  "area": "wordpress-theme/wp-ja-morgan",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-morgan theme under test (local stand from the quickstart pack, or its clean restore) and the Joomla source (local stand installed from the quickstart/ja-morgan/j6 installer zip, web fonts loading).",
+    "S2: From the TCH checkout run: node vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/visual/site-sweep.mjs --site <site> --source <source> --run-root tasks/ja-morgan-wp7 --zip <theme.zip> --baseline <site-sweep.json of the previous version> --baseline-version <version> --out <dir>",
+    "S3: Read the check list of <dir>/fix-measure.json and the defect groups in <dir>/site-sweep.md.",
+    "S4: Run the regression group on the same site with a mail catcher (tasks/ja-morgan-wp7/tools/stand-mail-capture.php): node tasks/ja-morgan-wp7/tools/measure116.mjs --site <site> --out <dir> --wp <wp-cli runner> (6 checks), and node tasks/ja-morgan-wp7/tools/measure115.mjs --site <site> --source <source> --out <dir> --wp <wp-cli runner> (14 checks)."
+  ],
+  "expect": [
+    "site-sweep: overflow and background pass (312 cases each, no defect); the registration labels, the typography badges and labels and the header insets of home styles 2, 3 and 4 produce no defect group.",
+    "site-sweep: the only groups left are the source's own faults recorded in DECISIONS.md: the light badges of the tag list and the category list on a dark page (D-57) and the home-style-4 header at 320 px (D-58); scheme, header and chips therefore still list them and the measure is 2/5, the previous version 2/5 with 23 groups.",
+    "measure116: TOTAL 6/6 (the hardened contact handlers are unchanged); measure115: TOTAL 14/14."
+  ],
+  "selectors": {
+    "tool": "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/visual/site-sweep.mjs",
+    "evidence": "tasks/ja-morgan-wp7/release/fix-measure.json"
+  },
+  "evidence": "Sweeps of 04/10/2026 against the local Joomla source stand: 1.1.6 had 23 defect groups (3 scheme, 13 header, 7 chips); 1.1.7 has 6, all the source's own (fix-measure.json bound to wp-ja-morgan-1.1.7.zip 9e1bae22; tasks/ja-morgan-wp7/release/BROWSER.json is measure116 6/6 on the clean restore)",
+  "fence": "Browser-measured behaviour of the shipped theme against the source; the tool fails closed on a crash, a deadline or a chip it cannot pair"
+}

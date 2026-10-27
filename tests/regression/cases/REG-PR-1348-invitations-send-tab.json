@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1348-invitations-send-tab",
+  "kind": "feat",
+  "title": "The Send tab lists approved emails, sends one only after a confirmation, keeps a refusal on its row and shows outcome and estimated opens; the banner reads the server switch",
+  "pr": 1348,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the send ledger suite against a private PostgreSQL (TEST_DATABASE_URL) and the mounted harness flow suite from this branch, with fake Google and fake aMember."
+  ],
+  "expect": [
+    "GET /campaigns/:id/sends returns every send of the campaign newest first, each with recipientId; an invitation carries opens, a test send opens null.",
+    "The banner shows Pilot sending on when /sending says pilot; a developer view never calls /sending.",
+    "Send queries recipients with content approved; Send needs a second press; the request body is only requestKey and draftRevision.",
+    "An aMember refusal shows 'aMember: no active plan' on that row and nothing is sent; the next send shows Sent, Opened (estimated), no Send button, and the summary 1 of 1 (100%).",
+    "Conversations says it is not available yet."
+  ],
+  "selectors": {
+    "sends": "/api/ops/invitations/real/campaigns/:id/sends",
+    "row": "[data-send-row]",
+    "banner": "[data-sending-banner]",
+    "opens": "[data-estimated-opens]"
+  },
+  "fence": "Fake Google and fake aMember only; no credential, no real mailbox, no customer address.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-send.test.mjs",
+      "packages/web/tracy-harness/test/invitations-real-flow.test.mjs"
+    ],
+    "tests": [
+      "the Send tab list holds every send of the campaign, each naming its recipient",
+      "Send lists approved emails, sends one after a confirmation and shows outcome and estimated opens",
+      "empty and developer views expose no PII editors or send controls"
+    ]
+  }
+}

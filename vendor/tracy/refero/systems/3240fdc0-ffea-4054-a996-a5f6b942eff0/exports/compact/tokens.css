@@ -1,0 +1,18 @@
+:root {
+  /* Colors */
+  --color-coral-rose: #ea587d;
+  --color-pure-white: #ffffff;
+  --color-cloud: #f2f2f2;
+  --color-bone: #d9d8d4;
+  --color-char: #282828;
+  --color-ink: #121212;
+  --color-black: #000000;
+  --color-fog: #b3b3b3;
+  --color-mist: #cccccc;
+
+  /* Typography — Font Families */
+  --font-apple-system: '-apple-system', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wtqc-custom-display: 'wtqc (custom display)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-custom166638: 'custom_166638', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

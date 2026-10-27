@@ -1,0 +1,64 @@
+{
+  "id": "QA-UNIT-REG-PR-1447-add-site-ds-card-web-path-happy",
+  "itemIds": ["regression:REG-PR-1447-add-site-ds-card-web-path"],
+  "requirement": "Add site keeps its Design system card: a quickstart tag with an encoded slash in the query reaches the support and preview doors (tracyWebPath and nativeBackendPath check encoded traversal in the path only)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1447-add-site-ds-card-web-path.json",
+    "ref": "PR #1447 (fix); fix evidence: 19/10/2026 on cowork.tracy.site: readSupport caught Error TRACY_WEB_PATH_INVALID; no /api/design-system/support request; no [data-design-system-card].",
+    "invariant": "0 failures. tracyWebPath returns /api/design-system/support?quickstart=quickstart%2Fja-kinetic%2Fj6&platform=joomla unchanged off the widget and with /widget/native/backend in front under the native widget. tracyWebPath still throws TRACY_WEB_PATH_INVALID for encoded traversal in the path, a fragment, or a backslash. nativeBackendPath lets the same support query through and still refuses encoded traversal in the path and a fragment.",
+    "productSources": [
+      "apps/tracy-web/src/lib/cookies.js:142",
+      "apps/tracy-web/src/lib/session.js:101",
+      "apps/tracy-web/src/widget/assets/embed.js:1",
+      "apps/tracy-web/src/widget/native-backend.js:20",
+      "apps/tracy-web/src/widget/route.js:50",
+      "packages/core/tracy-core/src/web-path/index.mjs:13"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/widget/route.js:542 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "an encoded slash in a query value is a value, not a way out of the door",
+    "only an explicit native widget mount selects the authenticated Tracy bridge",
+    "native backend permits the creation flow and preserves its query without granting administrative methods"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1447-add-site-ds-card-web-path"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/core/tracy-core", "tracy-core"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1447-add-site-ds-card-web-path",
+    "pr": 1447,
+    "kind": "fix",
+    "area": "add-site/design-system",
+    "file": "tests/regression/cases/REG-PR-1447-add-site-ds-card-web-path.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=60000",
+    "packages/core/tracy-core/test/web-path.test.mjs",
+    "apps/tracy-web/test/widget-native-backend.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "an encoded slash in a query value is a value, not a way out of the door",
+    "only an explicit native widget mount selects the authenticated Tracy bridge",
+    "native backend permits the creation flow and preserves its query without granting administrative methods"
+  ],
+  "timeoutS": 600
+}

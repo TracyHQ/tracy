@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1404-chip-switch-reason",
+  "kind": "fix",
+  "title": "The chip's failover line says the stored reason (usage limit, signed out, unavailable); a Claude request with no ceiling asks for 32000 output tokens",
+  "pr": 1404,
+  "area": "model-plan/failover",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Render the mounted model chip for a pin whose switchedFrom reason is limit, reconnect, unavailable, and none.",
+    "S2: Build the Claude request body (anthropicPayload) with no maxTokens, and with maxTokens 4000."
+  ],
+  "expect": [
+    "S1: \"…because it reached its usage limit.\", \"…because it was signed out.\", then \"…because it was unavailable.\" twice.",
+    "S2: max_tokens 32000, then 4000; the request streams."
+  ],
+  "selectors": {
+    "files": "packages/ui/tracy-model-plan/src/client/ModelChip.tsx (switchedKey), apps/tracy-web/src/seat-plan/wire/messages.js (ANTHROPIC_DEFAULT_MAX_TOKENS)"
+  },
+  "evidence": "broker.js stores switched_from.reason; ModelChip rendered chip.switched for every reason. messages.js sent max_tokens 8192 while vendors/claude.js turns adaptive thinking on",
+  "fence": "The chip reads the reason the broker stored; the Claude wire's default ceiling leaves room for thinking",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-model-plan/test/chip-render.test.mjs",
+      "apps/tracy-web/test/seat-plan-claude-payload.test.mjs"
+    ],
+    "tests": [
+      "a tracy pin after a failover says where the chat came from",
+      "a plan pin after a failover names the plan and where the chat came from",
+      "the failover line says the reason the broker stored",
+      "a Claude request dsh gives no ceiling asks for 32000 output tokens"
+    ]
+  }
+}

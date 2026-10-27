@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "972925c4-0caa-4dc2-9c00-798b5be0ad70",
+  "status": "complete",
+  "name": "Drizzle ORM",
+  "url": "https://styles.refero.design/style/972925c4-0caa-4dc2-9c00-798b5be0ad70",
+  "sourceWebsite": "https://orm.drizzle.team",
+  "extractedAt": "2026-06-03T17:32:50.882Z",
+  "capturedAt": "2026-10-08T05:15:08.331204+00:00",
+  "theme": "light",
+  "industry": "devtools",
+  "description": "Rainwater terminal on graph paper — a clean developer workbench where ink-blue notes float over monochrome code, with little raindrop creatures as the only witnesses.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/edb16984-9ea1-4081-9cf6-8fd4739c1b47.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/236131ad-8779-472b-9408-4949cfdc6c46.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ffe6a797-d36c-42e3-b00d-4f4830991976.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/2ca7f304-603d-41e3-9668-4324e2f4c910.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e92db7c0-d4ca-4dc7-b1d2-e5cada3ab1f0.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "27f43c82069160e1ab6eafa79cf98ec66fd047a146e89a78f803e76852eb9bac",
+      "bytes": 25765
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6f25918237c6f2cb4a9732004f59f4d565ef1f272a4f6103b68f95178ffca691",
+      "bytes": 75977
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "bf29c53d05be592194d376379c056e39e164756527e19db35c158b49abd02717",
+      "bytes": 21564
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "de91f5aae3ea02f086e843605b9f91fc2675162c77dd0f3165b4f7fdbedeb4ef",
+      "bytes": 16280
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6ce172161889eb05d00c8c6c2e18e019af375d2bf6eb39157659d3e9f7bb1d6c",
+      "bytes": 16199
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d470e5f9cf0e42605136e16df1c90d35803fee047866d97a6e47799b2daeeb27",
+      "bytes": 5188
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "cde330a2f99579b78e87d5c05d54303d91cdbd503ce71b0c2940956a774b9a69",
+      "bytes": 1175
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "1566a409f409894f5f03159b2548a529f135366a78d7a533a16b2215baabac77",
+      "bytes": 1192
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "245bcdb79d61fa3d1e1dff215961949d3f81933b2973d5bf68a329e45676fdb7",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "7758e9046cf1abc3b22787d2f548d7c2b126156261a1e59d3a64d60f52f40749",
+      "bytes": 51497
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "fa91a0ae0f95adb5fa4224d912d041d35e612617e0549d3a87d3fe9de52c894f",
+      "bytes": 27476
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7f4a0a9522801886b559601bedebad6b9b4319d7a547e92c00b31bcb858f4d8d",
+      "bytes": 70624
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a3358876cd4d7370ec4b569ef8512173a6ab44c46788f356b4dacbeed2812327",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a6b58e934b913abec56d2ca962946e8089d7fee691f91f6375051de231d2f2e8",
+      "bytes": 2261
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f237123e53600e62dae5386b67532bd5cc459ba97b0238f6b2fff4e8b30df8c6",
+      "bytes": 2840
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "108e2695-6970-47d5-b5b0-eea8fc34e048",
+    "1c1d3939-8d82-4907-aa3c-c9b2fcfbab4f",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "5a7ec81f-03b6-4d21-a706-0d1d323d8899",
+    "78558b01-c101-4b8e-8401-db91269b1150",
+    "78fec83e-4b27-44ab-9f64-31e9dee53e46",
+    "8e9e585f-5ad4-4273-8418-e1f82cdb51cf",
+    "972925c4-0caa-4dc2-9c00-798b5be0ad70",
+    "b0d80806-b724-4ed1-a1d1-074edd3c9bc9",
+    "bd96c1a6-32ba-42e0-bd5c-23c70a23142c",
+    "c14bfde7-6f08-4b54-bd9b-39989d10cfef",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "da6ad92d-4f29-4f92-a59a-3a46295d0d1c",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

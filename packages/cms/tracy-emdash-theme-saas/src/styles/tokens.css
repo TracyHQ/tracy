@@ -1,0 +1,182 @@
+/*
+ * Kinetic design tokens. Every value was MEASURED on the rendered JA Kinetic quickstart (computed custom
+ * properties of <html>, 15/09/2026 — evidence/source/tokens-measured.json), not copied from its
+ * stylesheets. Three directions (html[data-style]) × two themes (html[data-theme]); the same role names
+ * in every block, so components never branch on direction or theme.
+ * Provenance table: tasks/emdash-ja-kinetic/visual-contract.md §1.
+ *
+ * Design-system slot (lib/ds-slot.ts): every colour reads `var(--ds-c-<role>, <its own hex>)`. The
+ * `--ds-c-*` variables exist only while the site wears a design system, so without one each block
+ * computes exactly its own hex. Primary is mostly TEXT here, so it reads the readable accent
+ * (`accent-text`); the places that FILL with primary read `--k-primary-fill` (the accent itself), the
+ * pair of `--k-primary-ink`. The terminal panels keep their own dark colours under any system.
+ */
+@theme {
+	--font-heading: var(--font-space-grotesk), system-ui, sans-serif;
+	--font-sans: var(--font-ibm-plex-sans), system-ui, sans-serif;
+	--font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+	--color-bg: var(--k-bg);
+	--color-surface: var(--k-surface);
+	--color-elevated: var(--k-elevated);
+	--color-text: var(--k-text);
+	--color-heading: var(--k-heading);
+	--color-muted: var(--k-muted);
+	--color-border: var(--k-border);
+	--color-primary: var(--k-primary);
+	--color-primary-ink: var(--k-primary-ink);
+	--color-primary-hover: var(--k-primary-hover);
+	--color-accent: var(--k-accent);
+	--color-logo: var(--k-logo);
+
+	/* shadcn semantic names map onto the same roles. */
+	--color-background: var(--k-bg);
+	--color-foreground: var(--k-text);
+	--color-card: var(--k-surface);
+	--color-card-foreground: var(--k-text);
+	--color-popover: var(--k-surface);
+	--color-popover-foreground: var(--k-text);
+	--color-primary-foreground: var(--k-primary-ink);
+	--color-ring: var(--k-primary);
+	--color-input: var(--k-border);
+
+	--radius-btn: 8px;
+	--radius-ghost: 9px;
+	--radius-card: 16px;
+	--container-site: 1240px;
+}
+
+/* Primary as a FILL (buttons, active pills, dots): the worn accent, else the block's own primary. */
+:root {
+	--k-primary-fill: var(--ds-c-accent, var(--k-primary));
+	--k-primary-fill-hover: var(--ds-c-accent-hover, var(--k-primary-hover));
+}
+
+/* Terminal — light (default direction). */
+:root,
+html[data-style="terminal"] {
+	--k-bg: var(--ds-c-bg, #fbfcfa);
+	--k-surface: var(--ds-c-surface, #ffffff);
+	--k-elevated: var(--ds-c-surface-warm, #f2f5ee);
+	--k-text: var(--ds-c-fg, #46514b);
+	--k-heading: var(--ds-c-fg, #10140f);
+	--k-muted: var(--ds-c-muted, #7c877f);
+	--k-border: var(--ds-c-border, #e4e8e0);
+	--k-primary: var(--ds-c-accent-text, #4d7c0f);
+	--k-primary-ink: var(--ds-c-accent-on, #ffffff);
+	--k-primary-hover: var(--ds-c-accent-text-hover, #3f6a0a);
+	--k-accent: var(--ds-c-accent-text, #65a30d);
+	--k-grid: rgba(16, 20, 15, 0.04);
+	--k-shadow: 0 18px 44px -20px rgba(20, 30, 15, 0.2);
+	--k-logo: var(--ds-c-accent-text, #4d7c0f);
+	/* Pale tints in light (icon tiles, initials avatars, hero glow) mix the direction's BRIGHT accent, as the
+	   source does (#F3FCE5 = lime #A3E635 over the page) — not the darker light-theme primary. DECISIONS D33. */
+	--k-tint: var(--ds-c-accent, #a3e635);
+	/* The terminal and code panels stay dark in both themes (source: hero and query panels). */
+	--k-panel: #0f1311;
+	--k-panel-border: #232a27;
+	--k-panel-text: #9aa6a1;
+	--k-panel-accent: #a3e635;
+	color-scheme: light;
+}
+html[data-style="terminal"][data-theme="dark"],
+html:not([data-style])[data-theme="dark"] {
+	--k-bg: var(--ds-c-bg, #0a0d0c);
+	--k-surface: var(--ds-c-surface, #121614);
+	--k-elevated: var(--ds-c-surface-warm, #0f1311);
+	--k-text: var(--ds-c-fg, #9aa6a1);
+	--k-heading: var(--ds-c-fg, #f2f5f3);
+	--k-muted: var(--ds-c-muted, #5f6b66);
+	--k-border: var(--ds-c-border, #232a27);
+	--k-primary: var(--ds-c-accent-text, #a3e635);
+	--k-primary-ink: var(--ds-c-accent-on, #0a0d0c);
+	--k-primary-hover: var(--ds-c-accent-text-hover, #bcf25a);
+	--k-accent: var(--ds-c-accent-text, #65a30d);
+	--k-grid: rgba(255, 255, 255, 0.035);
+	--k-shadow: 0 20px 50px -18px rgba(0, 0, 0, 0.6);
+	--k-logo: var(--ds-c-accent-text, #a3e635);
+	--k-tint: var(--ds-c-accent, #a3e635);
+	color-scheme: dark;
+}
+
+/* Blueprint */
+html[data-style="blueprint"] {
+	--k-bg: var(--ds-c-bg, #fafafb);
+	--k-surface: var(--ds-c-surface, #ffffff);
+	--k-elevated: var(--ds-c-surface-warm, #f3f4f8);
+	--k-text: var(--ds-c-fg, #57606e);
+	--k-heading: var(--ds-c-fg, #0f1117);
+	--k-muted: var(--ds-c-muted, #9aa1ad);
+	--k-border: var(--ds-c-border, #e4e7ec);
+	--k-primary: var(--ds-c-accent-text, #4f46e5);
+	--k-primary-ink: var(--ds-c-accent-on, #ffffff);
+	--k-primary-hover: var(--ds-c-accent-text-hover, #3f37cf);
+	--k-accent: var(--ds-c-accent-text, #7c3aed);
+	--k-grid: rgba(79, 70, 229, 0.05);
+	--k-shadow: 0 20px 50px -18px rgba(15, 17, 23, 0.16);
+	--k-logo: var(--ds-c-accent-text, #4f46e5);
+	--k-tint: var(--ds-c-accent, #6366f1);
+	--k-panel: #12141e;
+	--k-panel-border: #242838;
+	--k-panel-text: #9aa1b3;
+	--k-panel-accent: #7c7ef5;
+}
+html[data-style="blueprint"][data-theme="dark"] {
+	--k-bg: var(--ds-c-bg, #0b0d14);
+	--k-surface: var(--ds-c-surface, #12141e);
+	--k-elevated: var(--ds-c-surface-warm, #161925);
+	--k-text: var(--ds-c-fg, #9aa1b3);
+	--k-heading: var(--ds-c-fg, #eef0f6);
+	--k-muted: var(--ds-c-muted, #646b7d);
+	--k-border: var(--ds-c-border, #242838);
+	--k-primary: var(--ds-c-accent-text, #6366f1);
+	--k-primary-ink: var(--ds-c-accent-on, #ffffff);
+	--k-primary-hover: var(--ds-c-accent-text-hover, #7c7ef5);
+	--k-accent: var(--ds-c-accent-text, #a78bfa);
+	--k-grid: rgba(99, 102, 241, 0.08);
+	--k-shadow: 0 20px 50px -18px rgba(0, 0, 0, 0.55);
+	--k-logo: var(--ds-c-accent-text, #7c7ef5);
+	--k-tint: var(--ds-c-accent, #6366f1);
+	color-scheme: dark;
+}
+
+/* Signal */
+html[data-style="signal"] {
+	--k-bg: var(--ds-c-bg, #f7fafc);
+	--k-surface: var(--ds-c-surface, #ffffff);
+	--k-elevated: var(--ds-c-surface-warm, #edf3f8);
+	--k-text: var(--ds-c-fg, #41506a);
+	--k-heading: var(--ds-c-fg, #06121f);
+	--k-muted: var(--ds-c-muted, #7d8aa0);
+	--k-border: var(--ds-c-border, #dbe5ee);
+	--k-primary: var(--ds-c-accent-text, #0891b2);
+	--k-primary-ink: var(--ds-c-accent-on, #ffffff);
+	--k-primary-hover: var(--ds-c-accent-text-hover, #0b7e9b);
+	--k-accent: var(--ds-c-accent-text, #6366f1);
+	--k-grid: rgba(8, 145, 178, 0.06);
+	--k-shadow: 0 18px 44px -20px rgba(6, 18, 31, 0.18);
+	--k-logo: var(--ds-c-accent-text, #0891b2);
+	--k-tint: var(--ds-c-accent, #22d3ee);
+	--k-panel: #0f1626;
+	--k-panel-border: #1e2a41;
+	--k-panel-text: #93a0b8;
+	--k-panel-accent: #22d3ee;
+}
+html[data-style="signal"][data-theme="dark"] {
+	--k-bg: var(--ds-c-bg, #0a0f1a);
+	--k-surface: var(--ds-c-surface, #0f1626);
+	--k-elevated: var(--ds-c-surface-warm, #121a2c);
+	--k-text: var(--ds-c-fg, #93a0b8);
+	--k-heading: var(--ds-c-fg, #eaf1fb);
+	--k-muted: var(--ds-c-muted, #566179);
+	--k-border: var(--ds-c-border, #1e2a41);
+	--k-primary: var(--ds-c-accent-text, #22d3ee);
+	--k-primary-ink: var(--ds-c-accent-on, #04141a);
+	--k-primary-hover: var(--ds-c-accent-text-hover, #56e0f4);
+	--k-accent: var(--ds-c-accent-text, #818cf8);
+	--k-grid: rgba(34, 211, 238, 0.06);
+	--k-shadow: 0 20px 50px -18px rgba(0, 0, 0, 0.6);
+	--k-logo: var(--ds-c-accent-text, #22d3ee);
+	--k-tint: var(--ds-c-accent, #22d3ee);
+	color-scheme: dark;
+}

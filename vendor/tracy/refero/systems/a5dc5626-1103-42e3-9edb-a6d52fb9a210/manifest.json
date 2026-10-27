@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+  "status": "complete",
+  "name": "Rivian",
+  "url": "https://styles.refero.design/style/a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+  "sourceWebsite": "https://rivian.com",
+  "extractedAt": "2026-06-03T17:16:58.017Z",
+  "capturedAt": "2026-10-08T05:15:42.279240+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Electric monolith on a concrete gallery wall. Rivian stages each vehicle as a sculpture against vast white space, with typography so large it becomes architecture and one warm yellow that breaks the monochrome like sunlight on a matte surface.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/9eadcaea-ddeb-4f84-b951-5aeb2cc83aba.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/554f2479-13f6-420c-a155-1bb15f9f3258.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/762152f1-7f47-4cb4-9f20-c09091449cbd.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/73c7c26c-e9ee-44ee-925f-448a5769a8ed.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/65620f2f-0bbd-46ee-b1dc-b6b6afd5dcc7.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f11e0440f651c0f7043be52f6aecc1cf4b7c8171543c7cfa8bf59d74ba18b323",
+      "bytes": 24000
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2869881dfe175ea837bb1fcde3f1a0da683cfaa894142c66b2e213c3d6ff8305",
+      "bytes": 325085
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ddbc5e26cb652bfa556bca25ec56492b7637432daf4119531b3ff9e061888a57",
+      "bytes": 19623
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "8508c5800f5ba56c25653716683f7dd2873318e9eec8f63d502f75deaf076d4d",
+      "bytes": 16090
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "14276f1d89a8d2e1cadcccbbe62724cb81cf20a0b1f664e3900156067b52d7f7",
+      "bytes": 14449
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "dc44233bf1b988b76f936c51c29cc6420c2c750b32fe026814543d72261f54d1",
+      "bytes": 4457
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "19c953df9875463a8b51781ac5057d911c16100aae894538e2ef5f80cb2bbe8d",
+      "bytes": 927
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4da5ea1eda3e933fd946a4d3a9dff9185060f0113fe1668df464c9c6cfbf2be5",
+      "bytes": 944
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9e78c1c96c4b93274217724a7c3a7de080aea4473ad23880205e4eebf77b2f2d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a88219a1fd20231bf4652d6a103ae83f55e8bf78cb87f204168010a073a33094",
+      "bytes": 45806
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0f17fb7cfbc39dedb0618a1fa9384293f9452be755116dbeaf20a2562184c0d6",
+      "bytes": 23208
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5340610e411e32a00538fabc347443c2593bd08cab762e4b430d38d6b92354e9",
+      "bytes": 50759
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "adc6aee46c1575bf5ac5c9f273a68a5f8334ef89f3225f5f856e9821e5bdee85",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0dfece138ca80d73fee842e05cf7a6c50f8a4d1e08eada2af78466d0288b0592",
+      "bytes": 2263
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "9b898a6c66e49042e61cc163c93eb6f12a61277e2978705ba837fb12b3ae0177",
+      "bytes": 2955
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "30dfffb4-ff6d-4128-b3e5-39046ba258f0",
+    "355e8465-df7d-486a-9d76-2ace37d076a2",
+    "4433dfe7-315a-4459-bfd7-f59ccdc09bad",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "5f128a23-f60e-4d2d-a845-c35c16d0534b",
+    "7266b546-2fb0-465c-acd6-79001c39829a",
+    "934a61aa-50ff-4e90-852b-4ad0b8262d54",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a5dc5626-1103-42e3-9edb-a6d52fb9a210",
+    "acfb6fa1-3aed-4e64-8522-7f332a796de8",
+    "b8899cbd-e2ca-4069-83cf-d8f8b0d71100",
+    "bf523387-03fc-4243-86ca-25af34daa0ce",
+    "c9c5be5a-aaa1-4338-9681-8378d2e24fbd",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "e85a82b1-c70e-42de-8c42-4bd95dd5e047",
+    "fdcd4cbb-4db6-4138-9cfd-964795f1e1d6",
+    "fe7b8533-f56b-46bd-8713-f18886a1e986"
+  ]
+}

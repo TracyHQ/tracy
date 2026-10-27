@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-transport-resend-invalid-reserved-domains",
+  "itemIds": ["transport:resend"],
+  "requirement": "reserved test domains are not sent; real ones are",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "reservedDomains",
+    "invariant": "RFC 2606 / 6761"
+  },
+  "edgeTags": ["invalid", "recipient"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.transport.reserved#reserved:|deliverable:"],
+  "redProof": null,
+  "legacyIds": []
+}

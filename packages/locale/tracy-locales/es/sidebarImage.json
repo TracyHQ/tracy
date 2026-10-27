@@ -1,0 +1,13 @@
+{
+  "failed": "No se pudo mostrar esta imagen.",
+  "loading": "Renderizando documento...",
+  "preview": "Vista previa de la imagen: {name}",
+  "title": "Imagen",
+  "unsupported": "La vista previa de la imagen requiere el contenido completo del archivo.",
+  "zoomControls": "Controles de zoom",
+  "zoomFitWidth": "Ajustar al ancho",
+  "zoomIn": "Acercar",
+  "zoomMenu": "Elegir el zoom",
+  "zoomOut": "Alejar",
+  "zoomValue": "{percent} %"
+}

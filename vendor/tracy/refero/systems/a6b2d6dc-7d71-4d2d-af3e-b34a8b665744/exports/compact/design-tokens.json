@@ -1,0 +1,39 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, all structural borders, hairline page frames, link underlines — the single typographic ink"
+    },
+    "fog": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Fog — Page background, watermark-level surfaces, lightest borders"
+    },
+    "ash": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Ash — Medium-contrast borders, control outlines, and structural separators."
+    }
+  },
+  "font": {
+    "neue-montreal": {
+      "$value": "Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "All structural UI text: top-bar name, contact link, filter nav, project labels, category tags. Weight 300 for uppercase nav and filter items, 400 for body, 500 for active filter ('All') and project names. Letter-spacing opens dramatically at small sizes (0.07em at 12px) to give the nav a typeset, editorial cadence."
+    },
+    "ryhmes": {
+      "$value": "Ryhmes",
+      "$type": "fontFamily",
+      "$description": "Display serif used exclusively for project titles overlaid on hero imagery (e.g. 'recreation', 'BROWN JORDAN'). Weight 300 — the thinnest possible stroke — combined with tight tracking (-0.03em) makes the text feel etched into the photograph rather than placed on top. This serif is the portfolio's only expressive voice; it never appears in chrome, nav, or labels."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://katherinepihl.com",
+      "siteName": "Katherine Pihl",
+      "extractedAt": "2026-06-03T21:59:07.963Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1730-vi-slot-mask-and-address",
+  "kind": "fix",
+  "title": "Joomla site written in another language: no __CONTENT_SLOT__ mask written as a heading, no words written into an address slot (JA Boxing 1.0.4 Vietnamese footer headings, Plans link-btn)",
+  "pr": 1730,
+  "area": "site-creation/brief",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/joomla-written-headings.test.mjs (siteLanguage and sourceLanguage plans naming headings whose source is the mask)",
+    "S2: node --test apps/tracy-web/test/brief-guard.test.mjs with the address-slot tests (link-btn typed text, url, image, alias, email, phone)"
+  ],
+  "expect": [
+    "S1: the set call carries only the real heading (module-200.title), never a key whose source or answer is __CONTENT_SLOT__",
+    "S2: guardWritten and guardChanges hold every word written into an address slot and keep addresses, e-mails and numbers"
+  ],
+  "selectors": {
+    "engine": "brief-engines/joomla-languages.js headingWords (CONTENT_SLOT_MASK), brief-engines/guard.js isAddressSlot / notWords"
+  },
+  "evidence": "accept-boxing-1722-vi.tracy.site and accept-boxing-104-vi.tracy.site, curl 25/10/2026: 196 __CONTENT_SLOT__ on 61 pages, 4 href=\"/Xem chi tiết\" on /index.php/plans",
+  "fence": "the plugin's mask is never words; an address slot takes only an address",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=never writes the mask over a heading|an address slot never takes words|an e-mail or phone field takes",
+      "apps/tracy-web/test/joomla-written-headings.test.mjs",
+      "apps/tracy-web/test/brief-guard.test.mjs"
+    ],
+    "tests": [
+      "a one-edition site written in Vietnamese never writes the mask over a heading",
+      "a two-edition site written in Vietnamese never writes the mask over a heading",
+      "an address slot never takes words, whatever its type says (JA Boxing link-btn, 25/10/2026)",
+      "an e-mail or phone field takes an e-mail or a number as a visitor reads it, never a translated word"
+    ],
+    "timeout_s": 300
+  }
+}

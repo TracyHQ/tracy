@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+  "status": "complete",
+  "name": "Apple (España)",
+  "url": "https://styles.refero.design/style/da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+  "sourceWebsite": "https://www.apple.com/apple-watch-ultra-3",
+  "extractedAt": "2026-06-03T20:30:17.041Z",
+  "capturedAt": "2026-10-08T05:18:15.528130+00:00",
+  "theme": "mixed",
+  "industry": "ecommerce",
+  "description": "obsidian gallery vitrine — a dark showroom where a single titanium object glows against pure black",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/a6961861-785b-40e0-bb7b-6565a1958e60.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e2712f24-c9b4-4606-a7aa-a79110bfc301.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/9963c961-257c-40ed-ab01-be2a0d938a9e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/cd6d1d35-53e1-4d57-9501-fc62a5f4db1e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/cc9f16fc-24f5-4a99-9ac1-c7d37be54699.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "39b76de019c0f1359102579615c1def9976a762e5bc0295f1063cf7cee756ee9",
+      "bytes": 24441
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f293e977c1b9612bd2cc0c474ed16015649bc3b8b220659a7ed828c9403521b7",
+      "bytes": 119358
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "2687746a9c50b3bf6d9ee949f7e523b906953599fe469a70c6dbd78ca015cdcf",
+      "bytes": 20919
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b35f94b292e7e958a413d78f2948334ebb8075d389e72fe389e047e3af72a270",
+      "bytes": 15161
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "d1d0cf71d780c8c01a07e81890d3cfe811df8b5986dc252a802bc7dc42ffc990",
+      "bytes": 14988
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d9a7aeb2ae3574f5b485ba7323d810ca21776959b2110f27986a690dc613c5b6",
+      "bytes": 4751
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ff28973f1867fe0e5c2fc16e0d00cd6ac38b5520f8d3f580df83781c2492ca03",
+      "bytes": 765
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "791c78aa4589f837ed680e61f3f5860af78d1daa51d37a3e648d6ba856bbc6a4",
+      "bytes": 782
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3086885f84cb1e78b85efa67e96a7382d5e9dd412e425cdd667f02f5f1396d9d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "247cdba56797de22c3e123620fb026349c7bb3d49bb89789a483ddeba10a49a5",
+      "bytes": 48391
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "b7d0fda3060609891fb47445f7eedfda2f1a22e081753b6f50d85601b7c050f4",
+      "bytes": 25582
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "880d8a05e76a893af0fc77c5a66f62e621cbbf22ddea8c64b3e7ca84a38fcecd",
+      "bytes": 72717
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "27b47939e9679987b21cf76c03faf12c6ba339e213d5278779b55d9e0f2498bc",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "326f3d27da6264379d8c80101f461ef7314ef908d6ada9405caca8574c4d08de",
+      "bytes": 1876
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "96faaf154a5ddab3f3e8cdbad40e246e030ab897d41648d9fe95fbbbedf178eb",
+      "bytes": 2540
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "06ee0fd5-c4ab-4d5f-b66a-7285aeacd0b0",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "27a4a4fa-4b1a-4e7e-b2c3-3e5bf57f00e5",
+    "375e255f-6e7b-4091-bf73-6df42a094263",
+    "3b742f76-25ad-446c-a942-09b09b93f6a3",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "8d315332-6267-4dc0-a14c-e8b49c26b0e1",
+    "96845df2-7ddb-420a-814e-c339f95a6554",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a73148b9-449b-42cd-9f38-86ef694f500e",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cfcd001c-e812-4126-9bdf-1f16b68d182e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e"
+  ]
+}

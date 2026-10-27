@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-signal-orange: #f25533;
+  --color-concrete: #efefef;
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-carbon: #161618;
+  --color-mist: #dadada;
+  --color-fog: #cccccc;
+  --color-parchment: #e4d9c8;
+  --color-alert-red: #ff492c;
+  --color-ember: #f1641e;
+
+  /* Typography */
+  --font-times-system-serif: 'Times (system serif)', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-arial-system-sans: 'Arial (system sans)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

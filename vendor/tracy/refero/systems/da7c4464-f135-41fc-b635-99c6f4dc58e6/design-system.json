@@ -1,0 +1,291 @@
+{
+  "dos": [
+    "Reserve #98e58 exclusively for primary action buttons and the brand leaf — never use it for decoration, illustration, or secondary controls",
+    "Set all headlines to Proxima Nova 700 or 800 — the 400→800 weight jump is the hierarchy engine, and no body text should ever compete with it",
+    "Use 16px radius on cards and 6px radius on buttons/inputs — this two-radius system is the structural language; do not introduce a third",
+    "Underline every text link with a 1px stroke; never rely on color alone to signal interactivity",
+    "Keep body copy on white at #040404 — the 20.5:1 contrast against #ffffff is the system's accessibility floor, not a ceiling",
+    "Frame product screenshots on a full-bleed gradient (prism wash or orchid mist) at 16px radius — the gradient is the stage, the screenshot is the actor",
+    "Use 4px as the base spacing unit and snap all padding/margin to the 4px grid (8, 12, 16, 24, 32, 40, 64)"
+  ],
+  "donts": [
+    "Do not add a third border-radius — the 6px/16px pair is deliberate; 8px or 12px breaks the system's geometric language",
+    "Do not introduce semibold (600) weights — Proxima Nova only ships at 400/700/800 in this system, and adding 600 collapses the hierarchy",
+    "Do not use #98e58 for body text, icons, or backgrounds other than buttons — diluting the green destroys the rationed-accent pattern",
+    "Do not apply drop shadows to cards, tiles, or content blocks — shadow belongs to the nav only; everything else is border-defined",
+    "Do not use color alone for interactive affordance — every link, button, and tile must include border, weight change, or underline",
+    "Do not mix the prism wash and orchid mist gradients within the same section — pick one wash per product showcase and commit",
+    "Do not set headlines below 32px or above 76px — the scale is hand-tuned; random sizes break the display rhythm"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#040404",
+      "name": "Ink Black",
+      "role": "Primary text, nav borders, heading strokes, footer dividers — the dominant non-white color across the entire system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page background, card surfaces, nav surface, input fills, button text on dark fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d9d9d9",
+      "name": "Ash Gray",
+      "role": "Nav dividers, link borders, subtle separators, muted UI chrome",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cbcece",
+      "name": "Smoke Gray",
+      "role": "Image borders, input borders, secondary button surface, faint dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#162020",
+      "name": "Slate",
+      "role": "Secondary text, nav border accent, card border emphasis",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6e797a",
+      "name": "Pewter",
+      "role": "Body muted text, helper copy, meta information",
+      "group": "neutral"
+    },
+    {
+      "hex": "#98e58e",
+      "name": "Sprout Green",
+      "role": "Green action color for filled buttons, selected navigation states, and focused conversion moments",
+      "group": "brand"
+    }
+  ],
+  "layout": "Max-width 1200px centered on white canvas, opening with a full-bleed dark hero that breaks the container. The hero reverses contrast: #040404 background, #ffffff headline at 57px, centered email-capture compound. Below the fold, sections alternate between text-dominant bands (integrations 7-column tile grid, pricing tier row) and image-dominant bands (product UI screenshots on gradient washes). Vertical rhythm: 64px section gaps, 32px block gaps, 16px element gaps. Navigation is a sticky top bar with a soft 4px shadow lift. The page reads: dark hero → white product showcase on gradient → white integrations grid → white pricing row.",
+  "imagery": "Photography is full-bleed lifestyle — warm, naturally lit, candid mid-action shots of people using phones and laptops in real environments. Product UI screenshots dominate mid-page, framed on soft gradient washes (prism green-to-blue, orchid purple-to-white) that act as stages rather than decoration. Illustrations are absent. Iconography is platform-native brand color (TikTok cyan-pink, Instagram gradient, LinkedIn blue, X black) — logos are never recolored to match the monochrome system. Visual density is image-heavy in hero and product sections, text-dominant in integrations and pricing.",
+  "similar": [
+    {
+      "why": "Same social-media-management category and same minimal monochrome canvas with a single green brand accent; both use a hero email-capture pattern on a reversed dark panel",
+      "business": "Buffer"
+    },
+    {
+      "why": "Same product category and similar high-contrast black-on-white headline system with a single chromatic CTA accent; both lean on product UI screenshots as hero visuals",
+      "business": "Hootsuite"
+    },
+    {
+      "why": "Same ultra-confident geometric display type at near-black weight on white, same border-defined cards with no shadow, same rationed single-accent color philosophy",
+      "business": "Linear"
+    },
+    {
+      "why": "Same max-width centered container with a reversed dark hero opening, same product-screenshot-on-gradient-wash showcase pattern, same weight-700+ headline confidence",
+      "business": "Webflow"
+    },
+    {
+      "why": "Same single-color-accent-on-monochrome-canvas philosophy and same flat-surface-no-shadow card treatment; both make one color do all the emotional work",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "16px",
+      "badges": "24px",
+      "inputs": "6px",
+      "buttons": "6px",
+      "hero-tiles": "64px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 1,
+      "purpose": "Default page background, hero reverse panels"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Surface",
+      "level": 2,
+      "purpose": "Integration tiles, feature cards — same white as canvas, defined by border and radius rather than tonal lift"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Input Surface",
+      "level": 3,
+      "purpose": "Form fields, email capture — sits on canvas with a 1px border for definition"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(39, 51, 51, 0.24) 0px 4px 8px 0px",
+      "element": "Navigation bar"
+    }
+  ],
+  "gradients": [
+    {
+      "hex": "#98e58",
+      "name": "Prism Wash",
+      "role": "Hero product-showcase background wash — green through teal through periwinkle to deep blue, anchoring product screenshots with a full-spectrum gradient",
+      "group": "accent",
+      "gradient": "linear-gradient(1deg, rgb(89, 203, 89) -31.61%, rgb(152, 229, 142) 8.18%, rgb(125, 234, 213) 36.91%, rgb(161, 194, 248) 63.53%, rgb(32, 91, 195) 109.97%)"
+    },
+    {
+      "hex": "#ec9af1",
+      "name": "Orchid Mist",
+      "role": "Secondary product-showcase background — purple through pink to white, softer than the prism wash",
+      "group": "accent",
+      "gradient": "linear-gradient(rgb(172, 68, 168) -33.09%, rgb(236, 154, 241) 25.66%, rgb(216, 215, 249) 68.39%, rgb(255, 255, 255) 110.38%)"
+    }
+  ],
+  "northStar": "Green sprout on black slate. One vivid accent on a stark monochrome canvas, the color rationed to actions only, with confident geometric type that functions like wayfinding signage.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.48
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.64
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.48
+    },
+    {
+      "role": "subheading",
+      "size": 21,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "subheading-lg",
+      "size": 24,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.18
+    },
+    {
+      "role": "heading",
+      "size": 43,
+      "lineHeight": 1.12
+    },
+    {
+      "role": "heading-lg",
+      "size": 57,
+      "lineHeight": 1.05
+    },
+    {
+      "role": "display",
+      "size": 76,
+      "lineHeight": 1.05
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button (Sprout Green)",
+      "role": "The sole chromatic action in the system — reserved for trial signup and core conversion moments",
+      "description": "Filled #98e58 background, #040404 text, 6px radius, 16px vertical × 24px horizontal padding, Proxima Nova 700 at 16px. Appears on dark hero panels and on white above the fold. The green is the only place UI color is allowed — never decorate with it."
+    },
+    {
+      "name": "Solid Dark Button",
+      "role": "Secondary high-emphasis action when green is not appropriate (login, demo, nav-level CTAs)",
+      "description": "Filled #040404 background, #ffffff text, 6px radius, ~12px vertical × 24px horizontal padding, Proxima Nova 700 at 14–16px. Mirrors the green CTA's geometry but inverts the contrast."
+    },
+    {
+      "name": "Outlined Ghost Button",
+      "role": "Tertiary actions, nav links, low-emphasis controls",
+      "description": "Transparent fill, 1px #040404 or #d9d9d9 border, #040404 text, 6px radius, matches solid button padding. Used in nav bar for 'Log in' and in inline content for 'See all integrations'."
+    },
+    {
+      "name": "Email Input",
+      "role": "Hero email capture and any form field",
+      "description": "White fill, 1px #cbcece border, 6px radius, ~16px vertical padding, Proxima Nova 400 at 16px, placeholder text in #6e797a. No focus ring color change documented; the field sits flush against the green CTA as a compound control."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Global site navigation",
+      "description": "White surface with subtle rgba(39,51,51,0.24) 0px 4px 8px 0px shadow, 16px radius at the outer container. Logo (green leaf + black wordmark) on the left, nav links in #040404 at 16px/400, solid dark 'Try for free' button on the far right. Dropdown indicators use small chevrons."
+    },
+    {
+      "name": "Integration Tile",
+      "role": "Social platform logo grid (TikTok, Instagram, LinkedIn, etc.)",
+      "description": "White surface, 1px #d9d9d9 border, 16px radius, center-aligned platform icon at 48–64px. Arranged in a 7-column grid with 8–12px gaps. The tile is a frame, not a card — it does not lift, it holds."
+    },
+    {
+      "name": "Product Showcase Panel",
+      "role": "Hero product screenshot framing — calendar view, AI suggestions, analytics overlays",
+      "description": "Rounded screenshot container, 16px radius, displayed on a full-bleed gradient background (prism wash or orchid mist). The screenshot is the hero; the gradient is the stage."
+    },
+    {
+      "name": "Sentiment / Insights Card",
+      "role": "Floating data card overlaid on product screenshots",
+      "description": "White surface, 16px radius, small internal padding (~8–12px), Proxima Nova 400 for metric labels at 13px and 700 for values. Includes mini-chart glyphs and star ratings in #98e58e."
+    },
+    {
+      "name": "AI Assist Suggestion Card",
+      "role": "Contextual AI prompt floating beside product UI",
+      "description": "White surface, 16px radius, contains a prompt label at 16px/700 and action rows. Sits adjacent to the calendar grid in the product section."
+    },
+    {
+      "name": "Pricing Tier Card",
+      "role": "Plan comparison — Standard, Professional, Advanced",
+      "description": "White card with 1px colored border per tier (blue tint visible in the data), ~24px padding, 16px radius, tier name at 24px/700, price at 43px/800. CTA at the bottom of each card in the matching tier color."
+    },
+    {
+      "name": "Tag / Pill Badge",
+      "role": "Category tags, status labels, filtering chips",
+      "description": "Filled with contextual color (green for positive, neutral for status), 24px radius (pill shape), ~4–8px vertical padding, 13px Proxima Nova 700."
+    },
+    {
+      "name": "Text Link with Underline",
+      "role": "Inline body links, nav links, 'See all' CTAs",
+      "description": "#040404 text with a 1px underline border, Proxima Nova 400 at 16–18px. Underline is always present — the system uses underline as the only link affordance, never color alone."
+    },
+    {
+      "name": "Hero Reversed Panel",
+      "role": "Top-of-fold black canvas hosting the primary headline and email capture",
+      "description": "Full-bleed #040404 background, #ffffff headline at 57px/800, email input + green CTA compound centered. This is the only dark section; everything below reverts to white."
+    },
+    {
+      "name": "Social Media Icon Set",
+      "role": "Brand-recognized platform marks (Instagram, TikTok, LinkedIn, X, WhatsApp, Salesforce, etc.)",
+      "description": "Each icon is rendered in its native brand colors at 40–48px, centered within an integration tile. The system does not recolor platform logos — it presents them in full chromatic identity."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single-family system. Display and headings lock to 700–800 — near-black weight gives headlines a poster-like authority. Body and nav use 400. The weight gap between body (400) and headline (800) is the hierarchy engine; no medium or semibold exists in between. Substitute: Montserrat, Gotham, or Nunito Sans.",
+      "sizes": "13px, 16px, 18px, 21px, 24px, 32px, 43px, 57px, 76px",
+      "family": "Proxima Nova",
+      "weight": "400, 700, 800",
+      "lineHeight": "1.05–1.64 (tight on display, breathing on body)",
+      "substitute": "Montserrat, Nunito Sans, Gotham"
+    }
+  ],
+  "description": "Sprout Social operates on a stark, high-contrast visual system: near-black ink on white canvas, with a single vivid green that punctuates every call to action. The typeface is Proxima Nova at bold weights (700–800), delivering confident, geometric headlines that feel like signage rather than prose. Surfaces are flat and borderless in feel — rounded corners (16px on cards, 6px on controls) do the structural work that shadows do elsewhere. Color is rationed: 99% of the page is achromatic; the green accent is reserved for primary actions and the brand leaf, never decoration. Product showcases break the monochrome with soft purple-to-white and green-to-blue gradient washes that frame UI screenshots without competing with them.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #040404\n- background: #ffffff\n- border: #d9d9d9 (subtle) / #040404 (emphatic)\n- accent: #98e58e (brand leaf, success highlights)\n- primary action: #98e58e (filled action)\n- muted text: #6e797a\n\n**Example Component Prompts**\n1. Create a Primary Action Button: #98e58e background, #000000 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n2. *Integration tile grid*: White card, 1px #d9d9d9 border, 16px radius, center-aligned 48px platform icon. Arrange in a 7-column grid with 12px gaps on white canvas.\n3. *Product showcase section*: White canvas, 43px/800 #040404 headline left-aligned, then a full-bleed prism-wash gradient panel (green→teal→periwinkle→blue) containing a 16px-radius rounded product screenshot floating centered.\n4. *Pricing tier card*: White surface, 1px #d9d9d9 border, 16px radius, 24px padding. Tier name at 24px/700 #040404, price at 43px/800 #040404, feature list at 16px/400, solid dark CTA at the bottom.\n5. *Floating insights card on product screenshot*: White surface, 16px radius, 8–12px internal padding, metric label at 13px/400 #6e797a, value at 16px/700 #040404, optional 4px green star or sparkline glyph."
+    },
+    {
+      "title": "Visual Language",
+      "content": "Photography is full-bleed lifestyle — real people in real environments using phones and laptops, warm natural lighting, candid rather than staged. The subject is always mid-action (typing, smiling, holding a device), never posed. Product screenshots dominate over photography in mid-page sections: the UI is the hero, framed by soft gradient washes. Illustrations are absent; the brand uses its own product UI as the visual content. Iconography is platform-native — TikTok, Instagram, LinkedIn, X, WhatsApp, Salesforce, Pinterest, etc. appear in their full brand colors, never recolored to match the monochrome system. Integration tiles act as a social-proof mosaic of partner logos. The overall density is image-rich in the hero and product sections, text-dominant in the integrations and pricing zones."
+    },
+    {
+      "title": "Layout",
+      "content": "The page model is max-width 1200px centered on white canvas, with a full-bleed dark hero that breaks the container on the first screen. The hero reverses the system: black background, white headline, centered email capture compound. Below the fold, the layout shifts to left-aligned headlines with full-width product showcases on gradient backgrounds. Sections alternate between text-dominant bands (integrations grid, pricing tiers) and image-dominant bands (product UI screenshots). The integrations section uses a 7-column grid of white tiles on white canvas — the tiles are defined entirely by 1px borders and 16px radius, not by tonal lift. Navigation is a sticky top bar with a soft shadow lift and rounded outer container. Vertical rhythm is generous: 64px section gaps, 32px between content blocks, 16px between elements within a block. The page reads top-to-bottom as: dark hero → white product showcase → white integrations → white pricing."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is almost absent. The system relies on borders, radius, and color contrast to define layers rather than shadow. The single documented shadow is a soft 4px lift on the nav — a whisper, not a declaration. Cards and tiles sit on the same plane as the page; their rounded corners and 1px borders are the only signal that they are interactive."
+}

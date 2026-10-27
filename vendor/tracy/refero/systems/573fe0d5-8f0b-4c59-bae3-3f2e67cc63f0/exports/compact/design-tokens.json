@@ -1,0 +1,79 @@
+{
+  "color": {
+    "abyss-teal": {
+      "$value": "#75b6b5",
+      "$type": "color",
+      "$description": "Abyss Teal — Teal text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color"
+    },
+    "mint-beacon": {
+      "$value": "#0be291",
+      "$type": "color",
+      "$description": "Mint Beacon — Green text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color"
+    },
+    "coral-ember": {
+      "$value": "#f4706b",
+      "$type": "color",
+      "$description": "Coral Ember — Decorative icon accent — used sparingly in nav icons and the hero illustration's mountain highlights. Warm counterpoint to the cool teal/mint palette"
+    },
+    "lavender-mist": {
+      "$value": "#e4cbf2",
+      "$type": "color",
+      "$description": "Lavender Mist — Hero atmosphere — the soft lavender backdrop of the hero section and mountain illustration sky. Only used in the hero band; never in component surfaces or UI chrome"
+    },
+    "void": {
+      "$value": "#101e1e",
+      "$type": "color",
+      "$description": "Void — Page canvas and primary action background — the base layer of the dark theme and the fill of filled CTA buttons (Enter Studio, Discord). Slightly green-tinted black rather than pure neutral"
+    },
+    "carbon": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Carbon — Deep surface — code block backgrounds, terminal interiors, darkest elevated layers. One step below void for maximum contrast terminal aesthetic"
+    },
+    "slate": {
+      "$value": "#162929",
+      "$type": "color",
+      "$description": "Slate — Mid surface and hairline borders — card backgrounds, button borders, dividers. Bridges between void and the lighter elevated steps"
+    },
+    "graphite": {
+      "$value": "#3b4949",
+      "$type": "color",
+      "$description": "Graphite — Elevated card surface and hover-state fills — the topmost card tier, used for testimonial cards and hover backgrounds"
+    },
+    "fog": {
+      "$value": "#718b8b",
+      "$type": "color",
+      "$description": "Fog — Muted text and inactive nav icons — body helper text, inactive nav glyphs, secondary metadata. The de-emphasized reading layer"
+    },
+    "ash": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Ash — Hairline borders and dividers — the universal 1px border color used across nav, cards, icons, and structural separators. Primary border token"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary text and icon fill — all high-emphasis body copy, headings, and filled icon shapes. The top of the text contrast scale"
+    }
+  },
+  "font": {
+    "poppins": {
+      "$value": "Poppins",
+      "$type": "fontFamily",
+      "$description": "All UI and display copy. Weight 300 dominates display and hero headings, creating an unusually quiet headline voice — the database speaks softly. Weight 400 for body and nav, 500 for button labels and emphasized metadata, 700 reserved for rare structural emphasis."
+    },
+    "monospace": {
+      "$value": "monospace",
+      "$type": "fontFamily",
+      "$description": "Code snippets, terminal output, SQL examples, and inline technical tokens. System monospace at a single small size — functional, not decorative."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://tableland.xyz",
+      "siteName": "Tableland",
+      "extractedAt": "2026-06-03T22:01:16.268Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,211 @@
+/*
+ *
+ * Tracy — ACM block `testimonials`
+ * ------------------------------------------------------------------------------------------------
+ * Compiled from less/style.less. This file is self-contained and block-scoped to
+ * `.acm-testimonials`; it is NOT @imported into scss/_all.scss, because mod_ja_acm loads an ACM
+ * block's own css/style.css (ModJAACMHelper::addAssets).
+ *
+ * Not one literal colour, size, space or radius appears below: every value reads a design-spec
+ * token from scss/_tokens-base.scss (:root, light) which scss/darkmode.scss remaps under the dark
+ * hook. That is why this file needs no dark rules of its own — dark mirrors light for free.
+ *
+ * Compile: lessc less/style.less css/style.css
+ *
+ */
+
+.acm-testimonials {
+  /*
+   * Two local knobs, both pinned here once rather than invented at each use site.
+   *
+   * eyebrow tracking: the reference fixture's own `.eyebrow` rule (reference/index.html) uses
+   * positive 0.08em so the uppercase rule reads as deliberate. design-spec §3 names only
+   * --tracking-display (negative, for headings), so the eyebrow value lives here.
+   *
+   * quote leading: the fixture sets 1.38 on `.lead`, its other --text-lg tier. --leading-body
+   * (1.47) is tuned for 17px body and reads loose at 21px, so the quote keeps the fixture's value.
+   */
+  --tracy-eyebrow-tracking: 0.08em;
+  --tracy-quote-leading: 1.38;
+
+  /*
+   * Section rhythm. --tracy-band-y is itself re-pointed at the tablet / phone steps by the
+   * template's own :root media queries, so this single declaration is already responsive.
+   */
+  padding-block: var(--tracy-band-y);
+
+  /*
+   * Deliberately no background and no border: the quotes sit on whichever band the layout row
+   * paints. design-spec §4 — section separation is contrast-led, never rule-led.
+   */
+  background: transparent;
+  color: var(--fg);
+}
+
+.acm-testimonials .tracy-quotes__head {
+  max-width: calc(var(--container-max) * 0.7);
+  margin-block-end: var(--space-12);
+}
+
+/*
+ * Muted, NOT var(--accent). The fixture's eyebrow is blue; here it would spend one of the two
+ * accent uses the screen is allowed, on supporting material. design-spec §2, accent budget.
+ */
+.acm-testimonials .tracy-quotes__eyebrow {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--tracy-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--tracy-quiet, var(--meta));
+}
+
+.acm-testimonials .tracy-quotes__heading {
+  margin: var(--space-3) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+.acm-testimonials .tracy-quotes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+.acm-testimonials--cols-2 .tracy-quotes {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/*
+ * The row itself. Containment is the 1px ring and nothing else — no box-shadow at rest and none on
+ * hover either, because a lift here would make the supporting material the loudest thing on the
+ * band. design-spec §4; DESIGN.md §7 "Don't overuse shadows … in core UI chrome".
+ */
+.acm-testimonials .tracy-quote {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-6);
+  margin: 0;
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  box-shadow: var(--elev-ring);
+}
+
+/*
+ * No ::before quotation mark. The sentence is the ornament.
+ */
+.acm-testimonials .tracy-quote__text {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: 400;
+  line-height: var(--tracy-quote-leading);
+  letter-spacing: -0.011em;
+  color: var(--fg);
+}
+
+.acm-testimonials .tracy-quote__author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  /* Transparent, not absent: T4's base paints `figure figcaption` a flat grey, so removing this
+     line would reveal that instead of the card. The avatar below is the one circle that carries a
+     surface — a filled rectangle here squares off a card the design system rounds to 18px, and it
+     shows the caption's own height, which differs per card because the roles are different
+     lengths. Both defects were one declaration. */
+  background: transparent;
+  color: var(--fg-2);
+  text-align: left;
+}
+
+/*
+ * 50% radius — DESIGN.md §5 "50%: circular media and selection controls". The <img> carries no
+ * border and no box-shadow (editability-standards §4): the crop is the containment.
+ * Diameter is --space-12, a spec step, not a hand-picked 48.
+ */
+.acm-testimonials .tracy-quote__avatar {
+  flex: 0 0 auto;
+  width: var(--space-12);
+  height: var(--space-12);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: none;
+  object-fit: cover;
+  background: var(--surface);
+}
+
+/*
+ * The media-less fallback: the same circle, carrying initials.
+ */
+.acm-testimonials .tracy-quote__avatar--initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--fg-2);
+}
+
+.acm-testimonials .tracy-quote__who {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.acm-testimonials .tracy-quote__name {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--leading-body);
+  color: var(--fg);
+}
+
+.acm-testimonials .tracy-quote__role {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: var(--leading-body);
+  color: var(--tracy-quiet, var(--meta));
+}
+
+/*
+ * Three 21px quotes do not survive a tablet column; both counts fold to one, because a two-across
+ * grid at this measure puts the quote below its own comfortable line length.
+ */
+@media (max-width: 1023px) {
+  .acm-testimonials .tracy-quotes,
+  .acm-testimonials--cols-2 .tracy-quotes {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .acm-testimonials .tracy-quotes__head {
+    max-width: none;
+    margin-block-end: var(--space-8);
+  }
+}
+
+@media (max-width: 639px) {
+  .acm-testimonials .tracy-quote {
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .acm-testimonials .tracy-quote__text {
+    font-size: var(--text-base);
+  }
+}

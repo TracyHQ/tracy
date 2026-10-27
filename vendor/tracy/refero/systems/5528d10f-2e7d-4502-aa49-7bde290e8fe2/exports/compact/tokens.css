@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-vermillion: #ed2e38;
+  --color-blush-canvas: #fcf0f3;
+  --color-charcoal-ink: #333333;
+  --color-onyx: #000000;
+
+  /* Typography — Font Families */
+  --font-linotypehelveticaneueltstdlt: 'LinotypeHelveticaNeueLTStdLt', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-linotypehelveticaneueltstdroman: 'LinotypeHelveticaNeueLTStdRoman', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

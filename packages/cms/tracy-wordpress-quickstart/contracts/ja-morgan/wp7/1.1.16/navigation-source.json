@@ -1,0 +1,1054 @@
+{
+  "$comment": "Raw navigation markup of the release, captured by capture-navigation-source.mjs from its own database archive. Input of scripts/build-wordpress-showcase-nav.mjs; never edit by hand.",
+  "schemaVersion": "tracy-quickstart-navigation-source/wordpress/v1",
+  "contract": "ja-morgan/wp7/1.1.16",
+  "database": {
+    "file": "ja-morgan-wp7-database-1.1.16.sql.gz",
+    "sha256": "f095e58e92f0110cb3defc36e38919ecfab998d2dd17f2cd337405c6c754e304"
+  },
+  "stylesheet": "wp-ja-morgan",
+  "frontPage": 131,
+  "navigations": [
+    {
+      "id": 158,
+      "slug": "mainmenu",
+      "title": "mainmenu",
+      "language": "en",
+      "sha256": "e9b37551847b6db30a66decb3bb5a0c182c39c867fc738594432a407e5c603cc",
+      "content": "<!-- wp:navigation-submenu {\"label\":\"Home\",\"type\":\"page\",\"id\":131,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} -->\n<!-- wp:navigation-link {\"label\":\"Home Style 1\",\"type\":\"page\",\"id\":138,\"url\":\"https://quickstart.invalid/home/home-style-1/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home Style 2\",\"type\":\"page\",\"id\":150,\"url\":\"https://quickstart.invalid/home/home-style-2/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home Style 3\",\"type\":\"page\",\"id\":151,\"url\":\"https://quickstart.invalid/home/home-style-3/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Home Style 4\",\"type\":\"page\",\"id\":152,\"url\":\"https://quickstart.invalid/home/home-style-4/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-link {\"label\":\"About Us\",\"type\":\"page\",\"id\":129,\"url\":\"https://quickstart.invalid/about-us/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Services\",\"type\":\"page\",\"id\":130,\"url\":\"https://quickstart.invalid/services-page/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"News & Update\",\"type\":\"page\",\"id\":154,\"url\":\"https://quickstart.invalid/joomlart-content/category-blog/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact Us\",\"type\":\"page\",\"id\":128,\"url\":\"https://quickstart.invalid/contact-us/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 159,
+      "slug": "usermenu",
+      "title": "usermenu",
+      "language": "en",
+      "sha256": "90c81becfa76038435dc4524d2e1e1534f41e1f1a99151479c5cb43ee0a7ad46",
+      "content": "<!-- wp:navigation-link {\"label\":\"Your Profile\",\"type\":\"page\",\"id\":127,\"url\":\"https://quickstart.invalid/your-profile/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Submit an Article\",\"type\":\"page\",\"id\":131,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Site Administrator\",\"url\":\"administrator\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Template Settings\",\"type\":\"page\",\"id\":131,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Site Settings\",\"type\":\"page\",\"id\":131,\"url\":\"https://quickstart.invalid/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 160,
+      "slug": "joomla-pages",
+      "title": "site-pages",
+      "language": "en",
+      "sha256": "1fcf15ca886c7cabefd79a9bf21f4165333415bebf23bd28effdf0427594d4b2",
+      "content": "<!-- wp:navigation-submenu {\"label\":\"Site Pages\"} -->\n<!-- wp:navigation-link {\"label\":\"Login\",\"type\":\"page\",\"id\":139,\"url\":\"https://quickstart.invalid/j-pages/login/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Registration\",\"type\":\"page\",\"id\":140,\"url\":\"https://quickstart.invalid/j-pages/registration/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Profile\",\"type\":\"page\",\"id\":141,\"url\":\"https://quickstart.invalid/j-pages/profile/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Edit Profile\",\"type\":\"page\",\"id\":142,\"url\":\"https://quickstart.invalid/j-pages/edit-profile/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"Other Pages\"} -->\n<!-- wp:navigation-link {\"label\":\"Smart Search\",\"type\":\"page\",\"id\":153,\"url\":\"https://quickstart.invalid/?page_id=153\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Offline Page\",\"type\":\"page\",\"id\":143,\"url\":\"https://quickstart.invalid/other-pages/offline-page/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Error Page\",\"type\":\"page\",\"id\":144,\"url\":\"https://quickstart.invalid/other-pages/error-page/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"Content\"} -->\n<!-- wp:navigation-link {\"label\":\"List All Categories\",\"type\":\"page\",\"id\":149,\"url\":\"https://quickstart.invalid/joomlart-content/list-all-categories/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Featured Articles\",\"type\":\"page\",\"id\":145,\"url\":\"https://quickstart.invalid/joomlart-content/featured-articles/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Category Blog\",\"type\":\"page\",\"id\":154,\"url\":\"https://quickstart.invalid/joomlart-content/category-blog/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Single Article\",\"type\":\"post\",\"id\":204,\"url\":\"/strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Tagged Items\",\"type\":\"page\",\"id\":155,\"url\":\"https://quickstart.invalid/joomlart-content/tagged-items/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Typography\",\"type\":\"page\",\"id\":147,\"url\":\"https://quickstart.invalid/joomlart-content/typography/\",\"kind\":\"post-type\"} /-->\n<!-- /wp:navigation-submenu -->"
+    },
+    {
+      "id": 161,
+      "slug": "navigate",
+      "title": "navigate",
+      "language": "en",
+      "sha256": "fa398825955b02f2314b4bf1c28597a6b839d0f6018678ae7a4b7cb6c2221730",
+      "content": "<!-- wp:navigation-link {\"label\":\"Home\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Services\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"News\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Testimonials\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Advisors\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact Us\",\"url\":\"#\",\"kind\":\"custom\"} /-->"
+    },
+    {
+      "id": 162,
+      "slug": "services",
+      "title": "services",
+      "language": "en",
+      "sha256": "383ec70bfb37fa4e84c477d48195f9b6205c2618545a792ed4005576af3d1583",
+      "content": "<!-- wp:navigation-link {\"label\":\"Research \",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Financial Modeling\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Human Resource \",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Management\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Legal Solutions\",\"url\":\"#\",\"kind\":\"custom\"} /-->"
+    },
+    {
+      "id": 163,
+      "slug": "support",
+      "title": "support",
+      "language": "en",
+      "sha256": "af12c5ca9e211a4862d5ec3805188a1234eb1a6e7c79947f5fab1eeac2df9ea2",
+      "content": "<!-- wp:navigation-link {\"label\":\"Documentation\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"F.A.Q\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Media\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Support Policy\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Privacy / Terms of use\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Advertise\",\"url\":\"#\",\"kind\":\"custom\"} /-->"
+    },
+    {
+      "id": 164,
+      "slug": "careers",
+      "title": "careers",
+      "language": "en",
+      "sha256": "47091207cab68d99aca59c17fe4fcfefc022637aa6902abe8588aca9281a0ed5",
+      "content": "<!-- wp:navigation-link {\"label\":\"Get the Theme\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"How It Works\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Articles & Tips\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Terms of Service\",\"url\":\"#\",\"kind\":\"custom\"} /-->"
+    },
+    {
+      "id": 165,
+      "slug": "terms-privacy",
+      "title": "terms-privacy",
+      "language": "en",
+      "sha256": "9eaea0a8cf1b143cce24855b54c1149256ec6b32770f43005a3ffc25c074c7ac",
+      "content": "<!-- wp:navigation-link {\"label\":\"Terms & Conditions\",\"url\":\"#\",\"kind\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Cookie Policy\",\"url\":\"#\",\"kind\":\"custom\"} /-->"
+    }
+  ],
+  "templateParts": [
+    {
+      "id": 166,
+      "slug": "header",
+      "theme": "wp-ja-morgan",
+      "area": "header",
+      "sha256": "465b8d722cb79337243cd81a0f3f76002187b844651ef9843bd02107cbf5f220",
+      "content": "<!-- wp:group {\"className\":\"t3-topbar\",\"metadata\":{\"name\":\"header.topbar\"},\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-topbar\">\n<!-- wp:group {\"className\":\"container\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group container\">\n<!-- wp:list {\"className\":\"list-info topbar-left\"} -->\n<ul class=\"wp-block-list list-info topbar-left\"><!-- wp:list-item {\"className\":\"jm-icon-pin\"} -->\n<li class=\"jm-icon-pin\">312 North 24th Street Brooklyn, New York</li>\n<!-- /wp:list-item -->\n<!-- wp:list-item {\"className\":\"jm-icon-call\"} -->\n<li class=\"jm-icon-call\">212.218.8500</li>\n<!-- /wp:list-item --></ul>\n<!-- /wp:list -->\n<!-- wp:social-links {\"className\":\"list-info social topbar-right is-style-logos-only\"} -->\n<ul class=\"wp-block-social-links list-info social topbar-right is-style-logos-only\"><!-- wp:social-link {\"url\":\"#\",\"service\":\"facebook\",\"label\":\"Facebook\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"twitter\",\"label\":\"Twitter\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"instagram\",\"label\":\"Instagram\"} /-->\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"feed\",\"label\":\"Rss\"} /--></ul>\n<!-- /wp:social-links -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"tagName\":\"div\",\"className\":\"t3-header\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-header\">\n<!-- wp:group {\"className\":\"container\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group container\">\n<!-- wp:group {\"className\":\"jm-brand\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jm-brand\">\n<!-- wp:site-logo {\"width\":160,\"shouldSyncIcon\":false,\"className\":\"jm-logo jm-logo\\u002d\\u002dlight tracy-logo-bare\"} /-->\n<!-- wp:site-logo {\"width\":160,\"shouldSyncIcon\":false,\"className\":\"jm-logo jm-logo\\u002d\\u002ddark tracy-logo-bare\"} /-->\n<!-- wp:paragraph {\"className\":\"logo logo-text\"} -->\n<p class=\"logo logo-text\"><a href=\"/\">{site.title}<strong>.</strong></a></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"jm-head-info wrap-info\",\"metadata\":{\"name\":\"header.info\"},\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group jm-head-info wrap-info\">\n<!-- wp:html -->\n<ul><li><h5>Call Us:</h5><span>212.218.8500</span></li><li><h5>Email Us:</h5><a title=\"Send Mail\" href=\"mailto:inquiry@stark.com\">inquiry@stark.com</a></li><li><h5>Open Hours:</h5><span>9am-6pm / Mon-Fri</span></li></ul>\n<!-- /wp:html -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"header-inner\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group header-inner\">\n<!-- wp:navigation {\"ref\":158,\"overlayMenu\":\"mobile\",\"className\":\"t3-mainnav\",\"metadata\":{\"name\":\"nav.mainmenu\"},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} /-->\n<!-- wp:group {\"className\":\"headright\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group headright\">\n<!-- wp:search {\"label\":\"Search\",\"showLabel\":false,\"placeholder\":\"Search ...\",\"buttonText\":\"Search\",\"buttonPosition\":\"button-only\",\"buttonUseIcon\":true,\"isSearchFieldHidden\":true,\"className\":\"head-search\"} /-->\n<!-- wp:html -->\n<button type=\"button\" class=\"theme-toggle\" data-tracy-theme-toggle aria-pressed=\"false\" aria-label=\"Theme: light. Switch to dark\"><svg class=\"theme-toggle__moon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z\"/></svg><svg class=\"theme-toggle__sun\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"/></svg></button>\n<!-- /wp:html -->\n<!-- wp:html -->\n<button type=\"button\" class=\"off-canvas-toggle\" aria-controls=\"jm-off-canvas\" aria-expanded=\"false\" aria-label=\"Open the sidebar\"><span aria-hidden=\"true\"></span><span aria-hidden=\"true\"></span><span aria-hidden=\"true\"></span></button>\n<!-- /wp:html -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"anchor\":\"jm-off-canvas\",\"className\":\"t3-off-canvas\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-off-canvas\" id=\"jm-off-canvas\">\n<!-- wp:group {\"className\":\"t3-off-canvas-header\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-off-canvas-header\">\n<!-- wp:heading {\"level\":2,\"className\":\"t3-off-canvas-header-title\"} -->\n<h2 class=\"wp-block-heading t3-off-canvas-header-title\">Sidebar</h2>\n<!-- /wp:heading -->\n<!-- wp:html -->\n<button type=\"button\" class=\"close\" aria-label=\"Close the sidebar\">×</button>\n<!-- /wp:html -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"t3-off-canvas-body\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-off-canvas-body\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">Site Pages</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":160,\"overlayMenu\":\"never\",\"className\":\"jm-off-canvas-nav\",\"metadata\":{\"name\":\"nav.joomla-pages\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n"
+    },
+    {
+      "id": 167,
+      "slug": "footer",
+      "theme": "wp-ja-morgan",
+      "area": "footer",
+      "sha256": "f72d8f5dc8261e0ba9a2f81e8fb6ab1947d07f543670e7f6523287cacbc457ca",
+      "content": "<!-- wp:group {\"className\":\"t3-footer\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-footer\">\n<!-- wp:group {\"className\":\"container\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group container\">\n<!-- wp:group {\"className\":\"t3-spotlight t3-footnav\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-spotlight t3-footnav\">\n<!-- wp:group {\"className\":\"t3-module jm-foot-col hidden-xs\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-module jm-foot-col hidden-xs\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">Navigate.</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":161,\"overlayMenu\":\"never\",\"metadata\":{\"name\":\"nav.navigate\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"t3-module jm-foot-col hidden-xs\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-module jm-foot-col hidden-xs\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">Services.</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":162,\"overlayMenu\":\"never\",\"metadata\":{\"name\":\"nav.services\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"t3-module jm-foot-col hidden-xs\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-module jm-foot-col hidden-xs\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">Support.</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":163,\"overlayMenu\":\"never\",\"metadata\":{\"name\":\"nav.support\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"t3-module jm-foot-col hidden-xs\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-module jm-foot-col hidden-xs\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">Careers.</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":164,\"overlayMenu\":\"never\",\"metadata\":{\"name\":\"nav.careers\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"t3-module jm-foot-col hidden-xs\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-module jm-foot-col hidden-xs\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">Terms &amp; Privacy.</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":165,\"overlayMenu\":\"never\",\"metadata\":{\"name\":\"nav.terms-privacy\"},\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"t3-module jm-foot-col\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-module jm-foot-col\">\n<!-- wp:heading {\"level\":3,\"className\":\"module-title\"} -->\n<h3 class=\"wp-block-heading module-title\">Social.</h3>\n<!-- /wp:heading -->\n<!-- wp:social-links {\"className\":\"social-follow is-style-logos-only\"} -->\n<ul class=\"wp-block-social-links social-follow is-style-logos-only\"><!-- wp:social-link {\"url\":\"https://www.facebook.com/\",\"service\":\"facebook\",\"label\":\"Facebook\"} /-->\n<!-- wp:social-link {\"url\":\"https://x.com/\",\"service\":\"twitter\",\"label\":\"Twitter\"} /-->\n<!-- wp:social-link {\"url\":\"https://www.instagram.com/\",\"service\":\"instagram\",\"label\":\"Instagram\"} /--></ul>\n<!-- /wp:social-links -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"t3-copyright\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group t3-copyright\">\n<!-- wp:group {\"className\":\"container\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group container\">\n<!-- wp:paragraph {\"className\":\"copyright\"} -->\n<p class=\"copyright\"><small>Copyright © {year} {site.title}. All Rights Reserved.</small> <small>Released under the <a href=\"https://www.gnu.org/licenses/gpl-2.0.html\">GNU General Public License.</a></small></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n"
+    }
+  ],
+  "themeParts": [
+    {
+      "slug": "footer-hs3",
+      "file": "parts/footer-hs3.html",
+      "sha256": "debad89cb9aab379de015907ed120ae1211a9af5cfc5941bb0a67c01af3f8d83",
+      "content": "<!-- wp:pattern {\"slug\":\"wp-ja-morgan/part-footer-hs3\"} /-->\n"
+    },
+    {
+      "slug": "footer-hs4",
+      "file": "parts/footer-hs4.html",
+      "sha256": "291cd37cebdb17825c380f0eaf905ab88d00bb5cd4c3774bf7b8d06665cdb3ae",
+      "content": "<!-- wp:pattern {\"slug\":\"wp-ja-morgan/part-footer-hs4\"} /-->\n"
+    },
+    {
+      "slug": "search-description",
+      "file": "parts/search-description.html",
+      "sha256": "1f9d4c588a18509626cbf4c05c64693d1687495e1a253bf1101baccecf445ae4",
+      "content": "<!-- wp:pattern {\"slug\":\"wp-ja-morgan/part-search-description\"} /-->\n"
+    },
+    {
+      "slug": "search-form",
+      "file": "parts/search-form.html",
+      "sha256": "10a65864b8de632552f7f6a7cbb5a5ace5b0c9e6074b9f8fee65ac870fcb9f2a",
+      "content": "<!-- wp:pattern {\"slug\":\"wp-ja-morgan/part-search-form\"} /-->\n"
+    },
+    {
+      "slug": "sidebar",
+      "file": "parts/sidebar.html",
+      "sha256": "5a51a1416d73e1eb10392325bc71c6bac2b38125c79a48121ca372ac571b2fc7",
+      "content": "<!-- wp:pattern {\"slug\":\"wp-ja-morgan/part-sidebar\"} /-->\n"
+    }
+  ],
+  "linkedPosts": [
+    {
+      "id": 127,
+      "type": "page",
+      "status": "publish",
+      "slug": "your-profile",
+      "blocks": [
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 128,
+      "type": "page",
+      "status": "publish",
+      "slug": "contact-us",
+      "blocks": [
+        "core/shortcode"
+      ]
+    },
+    {
+      "id": 129,
+      "type": "page",
+      "status": "publish",
+      "slug": "about-us",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 130,
+      "type": "page",
+      "status": "publish",
+      "slug": "services-page",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 131,
+      "type": "page",
+      "status": "publish",
+      "slug": "front-page",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 138,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-style-1",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/details",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 139,
+      "type": "page",
+      "status": "publish",
+      "slug": "login",
+      "blocks": [
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 140,
+      "type": "page",
+      "status": "publish",
+      "slug": "registration",
+      "blocks": [
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 141,
+      "type": "page",
+      "status": "publish",
+      "slug": "profile",
+      "blocks": [
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 142,
+      "type": "page",
+      "status": "publish",
+      "slug": "edit-profile",
+      "blocks": [
+        "core/loginout"
+      ]
+    },
+    {
+      "id": 143,
+      "type": "page",
+      "status": "publish",
+      "slug": "offline-page",
+      "blocks": [
+        "core/html",
+        "core/image"
+      ]
+    },
+    {
+      "id": 144,
+      "type": "page",
+      "status": "publish",
+      "slug": "error-page",
+      "blocks": [
+        "core/html",
+        "core/image"
+      ]
+    },
+    {
+      "id": 145,
+      "type": "page",
+      "status": "publish",
+      "slug": "featured-articles",
+      "blocks": []
+    },
+    {
+      "id": 147,
+      "type": "page",
+      "status": "publish",
+      "slug": "typography",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 149,
+      "type": "page",
+      "status": "publish",
+      "slug": "list-all-categories",
+      "blocks": [
+        "core/heading",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 150,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-style-2",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/details",
+        "core/group",
+        "core/heading",
+        "core/html",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 151,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-style-3",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/details",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/list",
+        "core/list-item",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 152,
+      "type": "page",
+      "status": "publish",
+      "slug": "home-style-4",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-title",
+        "core/query"
+      ]
+    },
+    {
+      "id": 153,
+      "type": "page",
+      "status": "draft",
+      "slug": "smart-search",
+      "blocks": [
+        "core/group",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/read-more",
+        "core/search"
+      ]
+    },
+    {
+      "id": 154,
+      "type": "page",
+      "status": "publish",
+      "slug": "category-blog",
+      "blocks": [
+        "core/group",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/read-more"
+      ]
+    },
+    {
+      "id": 155,
+      "type": "page",
+      "status": "publish",
+      "slug": "tagged-items",
+      "blocks": [
+        "core/group",
+        "core/paragraph",
+        "core/post-author-name",
+        "core/post-date",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/read-more",
+        "core/tag-cloud"
+      ]
+    },
+    {
+      "id": 204,
+      "type": "post",
+      "status": "publish",
+      "slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/more",
+        "core/paragraph"
+      ]
+    }
+  ],
+  "listings": [
+    {
+      "id": 148,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        }
+      ]
+    },
+    {
+      "id": 152,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 4,
+          "pages": 0,
+          "paginated": false,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [],
+          "unsupported": [
+            "jmCategory",
+            "jmOrder"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 154,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              4
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 6,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 155,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        },
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    }
+  ],
+  "listedPosts": [
+    {
+      "id": 100,
+      "type": "post",
+      "slug": "student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
+      "author": 2,
+      "date": "2021-08-03 02:11:51",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          11,
+          12
+        ]
+      }
+    },
+    {
+      "id": 101,
+      "type": "post",
+      "slug": "how-co-parents-can-stay-on-the-same-financial-page",
+      "author": 2,
+      "date": "2021-08-03 02:11:50",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          18
+        ]
+      }
+    },
+    {
+      "id": 102,
+      "type": "post",
+      "slug": "heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
+      "author": 2,
+      "date": "2021-08-03 02:11:49",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          11,
+          12
+        ]
+      }
+    },
+    {
+      "id": 103,
+      "type": "post",
+      "slug": "basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
+      "author": 2,
+      "date": "2021-08-03 02:11:48",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          11,
+          14
+        ]
+      }
+    },
+    {
+      "id": 104,
+      "type": "post",
+      "slug": "this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
+      "author": 2,
+      "date": "2021-08-03 02:11:47",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          11,
+          12,
+          18
+        ]
+      }
+    },
+    {
+      "id": 105,
+      "type": "post",
+      "slug": "the-world-needs-to-get-serious-about-combating-carbon-emissions",
+      "author": 2,
+      "date": "2021-08-03 02:11:46",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          11,
+          18
+        ]
+      }
+    },
+    {
+      "id": 106,
+      "type": "post",
+      "slug": "china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
+      "author": 2,
+      "date": "2021-08-03 02:11:45",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          11
+        ]
+      }
+    },
+    {
+      "id": 107,
+      "type": "post",
+      "slug": "stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
+      "author": 2,
+      "date": "2021-08-03 02:11:44",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          11,
+          18
+        ]
+      }
+    },
+    {
+      "id": 108,
+      "type": "post",
+      "slug": "extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
+      "author": 2,
+      "date": "2021-08-03 02:11:43",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          11,
+          12,
+          14,
+          18
+        ]
+      }
+    },
+    {
+      "id": 109,
+      "type": "post",
+      "slug": "china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+      "author": 2,
+      "date": "2021-08-03 02:11:42",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          12,
+          18
+        ]
+      }
+    },
+    {
+      "id": 110,
+      "type": "post",
+      "slug": "trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
+      "author": 2,
+      "date": "2021-08-03 02:11:41",
+      "language": "en",
+      "terms": {
+        "category": [
+          5
+        ],
+        "post_tag": [
+          11,
+          14
+        ]
+      }
+    },
+    {
+      "id": 111,
+      "type": "post",
+      "slug": "pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
+      "author": 2,
+      "date": "2021-08-03 02:11:40",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ],
+        "post_tag": [
+          12
+        ]
+      }
+    },
+    {
+      "id": 112,
+      "type": "post",
+      "slug": "congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
+      "author": 2,
+      "date": "2021-08-03 02:11:39",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    },
+    {
+      "id": 113,
+      "type": "post",
+      "slug": "state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+      "author": 2,
+      "date": "2021-08-03 02:11:38",
+      "language": "en",
+      "terms": {
+        "category": [
+          6
+        ]
+      }
+    },
+    {
+      "id": 114,
+      "type": "post",
+      "slug": "marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
+      "author": 2,
+      "date": "2021-08-03 02:11:37",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ]
+      }
+    },
+    {
+      "id": 115,
+      "type": "post",
+      "slug": "fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
+      "author": 2,
+      "date": "2021-08-03 02:11:36",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ]
+      }
+    },
+    {
+      "id": 116,
+      "type": "post",
+      "slug": "ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
+      "author": 2,
+      "date": "2021-08-03 02:11:35",
+      "language": "en",
+      "terms": {
+        "category": [
+          7
+        ]
+      }
+    },
+    {
+      "id": 117,
+      "type": "post",
+      "slug": "real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
+      "author": 2,
+      "date": "2021-08-03 02:11:34",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 118,
+      "type": "post",
+      "slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+      "author": 2,
+      "date": "2021-08-03 02:11:33",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 119,
+      "type": "post",
+      "slug": "for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+      "author": 2,
+      "date": "2021-08-03 02:11:32",
+      "language": "en",
+      "terms": {
+        "category": [
+          8
+        ]
+      }
+    },
+    {
+      "id": 120,
+      "type": "post",
+      "slug": "cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+      "author": 2,
+      "date": "2021-08-03 02:11:31",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ]
+      }
+    },
+    {
+      "id": 121,
+      "type": "post",
+      "slug": "beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+      "author": 2,
+      "date": "2021-08-03 02:11:30",
+      "language": "en",
+      "terms": {
+        "category": [
+          9
+        ]
+      }
+    },
+    {
+      "id": 122,
+      "type": "post",
+      "slug": "house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+      "author": 2,
+      "date": "2021-08-03 02:11:29",
+      "language": "en",
+      "terms": {
+        "category": [
+          10
+        ]
+      }
+    },
+    {
+      "id": 123,
+      "type": "post",
+      "slug": "farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+      "author": 2,
+      "date": "2021-08-03 02:11:28",
+      "language": "en",
+      "terms": {
+        "category": [
+          10
+        ]
+      }
+    },
+    {
+      "id": 124,
+      "type": "post",
+      "slug": "about-us",
+      "author": 2,
+      "date": "2021-08-03 02:11:27",
+      "language": "en",
+      "terms": {
+        "category": [
+          2
+        ]
+      }
+    },
+    {
+      "id": 125,
+      "type": "post",
+      "slug": "services",
+      "author": 2,
+      "date": "2021-08-03 02:11:26",
+      "language": "en",
+      "terms": {
+        "category": [
+          2
+        ]
+      }
+    },
+    {
+      "id": 204,
+      "type": "post",
+      "slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+      "author": 2,
+      "date": "2021-08-03 02:11:52",
+      "language": "en",
+      "terms": {
+        "category": [
+          4
+        ],
+        "post_tag": [
+          11,
+          12,
+          18
+        ]
+      }
+    }
+  ],
+  "terms": [
+    {
+      "id": 1,
+      "taxonomy": "category",
+      "slug": "uncategorized",
+      "parent": 0
+    },
+    {
+      "id": 2,
+      "taxonomy": "category",
+      "slug": "uncategorised",
+      "parent": 0
+    },
+    {
+      "id": 3,
+      "taxonomy": "category",
+      "slug": "blog",
+      "parent": 0
+    },
+    {
+      "id": 4,
+      "taxonomy": "category",
+      "slug": "investment-managment",
+      "parent": 3
+    },
+    {
+      "id": 5,
+      "taxonomy": "category",
+      "slug": "business-growth-advice",
+      "parent": 3
+    },
+    {
+      "id": 6,
+      "taxonomy": "category",
+      "slug": "tax-advice-and-management",
+      "parent": 3
+    },
+    {
+      "id": 7,
+      "taxonomy": "category",
+      "slug": "business-insights",
+      "parent": 3
+    },
+    {
+      "id": 8,
+      "taxonomy": "category",
+      "slug": "investment-and-superannuation",
+      "parent": 3
+    },
+    {
+      "id": 9,
+      "taxonomy": "category",
+      "slug": "retirement-planning",
+      "parent": 3
+    },
+    {
+      "id": 10,
+      "taxonomy": "category",
+      "slug": "tax-planning",
+      "parent": 3
+    },
+    {
+      "id": 11,
+      "taxonomy": "post_tag",
+      "slug": "business",
+      "parent": 0
+    },
+    {
+      "id": 12,
+      "taxonomy": "post_tag",
+      "slug": "morgan",
+      "parent": 0
+    },
+    {
+      "id": 13,
+      "taxonomy": "post_tag",
+      "slug": "joomlart",
+      "parent": 0
+    },
+    {
+      "id": 14,
+      "taxonomy": "post_tag",
+      "slug": "finance",
+      "parent": 0
+    },
+    {
+      "id": 18,
+      "taxonomy": "post_tag",
+      "slug": "studio",
+      "parent": 0
+    }
+  ],
+  "stickyPosts": [
+    103,
+    104,
+    105,
+    108,
+    109,
+    111,
+    112,
+    115,
+    116,
+    117,
+    118,
+    120,
+    121,
+    122
+  ]
+}

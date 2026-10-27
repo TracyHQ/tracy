@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1684-sync-latency",
+  "kind": "fix",
+  "title": "A Sync from live whose scratch load the database server refuses half way stops instead of applying a merge that saw the missing tables as dropped; tables both live reads hold alike are left out of the scratch loads with the same merge result; WordPress address rewrites done in SQL equal the Python rewrite",
+  "pr": 1684,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/dump-sections.test.mjs packages/fleet/tracy-fleet-operation/test/pgzip.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-db.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs"
+  ],
+  "expect": [
+    "S1: section digests ignore how INSERTs were cut; parallel gzip reads back with gunzip; SQL address rewrite and renumbered links equal the Python and whole-table results; the flow's refused-load case stops without applying; the WordPress flow still passes"
+  ],
+  "selectors": {
+    "host": "webroot-sync.sh load_ours same_tables load_more finish_merge; dump_sections.py; pgzip.py; live_sync_wordpress.py rewrite_address; live_sync.py IdMap.renumber policy_tables"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-24-sync-latency.md",
+  "fence": "A sync never applies a merge built on scratch databases the server did not fully load",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/dump-sections.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/pgzip.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-db.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs"
+    ]
+  }
+}

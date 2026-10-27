@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1785-wo-brief-trade-services",
+  "kind": "feat",
+  "title": "A non-food business's brief (Harbour Sport Club) speaks its trade's words, keeps one copy of each photo and offers three hero candidates, never the logo",
+  "pr": 1785,
+  "area": "website-opportunities/brief",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Build the brief of Harbour Sport Club's 23 real photos (13 Instagram, 10 Google Places; fixture test/fixtures/pictures/near-copies.json) through fromPlace and makeSiteBrief, with its Instagram profile picture as the chosen logo.",
+    "S2: Same with a Google Maps menu photo among the reviews' photos.",
+    "S3: Build briefs for a food, a fitness, an unknown-trade and an old food record (no trade, collected menu items)."
+  ],
+  "expect": [
+    "S1: the brief validates; the three Instagram copies of Google #33, #27, #30 are left out (20 photos remain); the hero section's assetIds are Google #24, #28, #31 (1600 x 2133) and never the logo.",
+    "S2: the menu photo leaves the hero candidates and nothing takes its place.",
+    "S3: food keeps menu and Book a table wording; fitness reads services and booking; unknown reads offerings; the old food record stays food."
+  ],
+  "selectors": {
+    "files": "packages/wo/website-opportunities/domain/brief.mjs (hero heroCandidates); domain/pictures/brief-media.mjs (heroCandidates, withoutNearCopies, NEAR_COPY_BITS 13); domain/trades.mjs (briefTradeOf)"
+  },
+  "evidence": "#1780: Harbour Sport Club, a coaching club, got a restaurant brief (menu, Book a table), the same photo twice (Instagram and Google copies 3, 6 and 12 bits apart) and its logo as the hero picture.",
+  "fence": "Static: domain and brief-research functions on fixture rows; no database, no model, no stand. The reading seam with Postgres is apps/tracy-web/test/website-opportunities-business-reading.test.mjs.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/brief-hero-candidates.test.mjs",
+      "test/brief-research-near-copies.test.mjs",
+      "test/domain-brief-trade-words.test.mjs"
+    ],
+    "cwd": "packages/wo/website-opportunities",
+    "tests": [
+      "Harbour Sport Club's hero offers its three largest Google photos, the logo none of them",
+      "a Google Maps menu photo leaves the hero candidates, and nothing takes its place",
+      "a brief of Harbour Sport Club's 23 photos keeps one copy of each, the sharper Google one",
+      "different pictures with close fingerprints all reach the brief",
+      "trade words: food",
+      "trade words: a known trade (fitness)",
+      "trade words: an unknown trade",
+      "trade words: an old food record without a trade"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+/* Mode B, scoped to the tour. Token values come from Tracy's existing page tokens. */
+.tv-tour { position: fixed; inset: 0; z-index: 2000; color: var(--foreground); font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.tv-tour * { box-sizing: border-box; }
+/* A black scrim stays equally strong in both themes, including the welcome popup. */
+.tv-tour-mask { position: fixed; background: rgb(0 0 0 / 58%); }
+.tv-tour[data-tour-interactive], .tv-tour[data-tour-step="createsite"] { pointer-events: none; }
+.tv-tour[data-tour-interactive] .tv-tour-card, .tv-tour[data-tour-interactive] .tv-tour-mask, .tv-tour[data-tour-step="createsite"] .tv-tour-card { pointer-events: auto; }
+.tv-tour-hole { position: fixed; pointer-events: none; border: 1px solid var(--primary); border-radius: 8px; }
+.tv-tour-card { position: fixed; display: grid; gap: 10px; width: min(340px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); overflow: auto; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); color: var(--card-foreground); box-shadow: 0 16px 40px color-mix(in srgb, var(--foreground) 18%, transparent); }
+.tv-tour-card h2, .tv-tour-card p { margin: 0; }
+.tv-tour-card:focus { outline: none; }
+.tv-tour-card h2 { font-size: 16px; line-height: 1.35; font-weight: 650; }
+.tv-tour-card p { color: var(--muted-foreground); font-size: 13.5px; }
+.tv-tour-card button { font: inherit; font-size: 12px; cursor: pointer; background: var(--card); color: var(--card-foreground); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; }
+.tv-tour-card button:hover { border-color: var(--primary); }
+.tv-tour-card button:focus-visible { outline: none; border-color: var(--ring); }
+.tv-tour-card button:disabled { opacity: .5; cursor: default; }
+.tv-tour-card .tv-tour-primary { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+.tv-tour-card .tv-tour-link { color: var(--muted-foreground); background: transparent; border-color: transparent; padding: 6px 0; }
+.tv-tour-card .tv-tour-link:focus-visible { border-color: var(--ring); }
+.tv-tour-step { font-size: 11px; letter-spacing: .04em; color: var(--muted-foreground); font-weight: 600; }
+.tv-tour-progress { height: 3px; border-radius: 2px; background: var(--muted); overflow: hidden; }
+.tv-tour-progress span { display: block; height: 100%; background: var(--primary); }
+.tv-tour-actions, .tv-tour-actions > div { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.tv-tour-actions { flex-wrap: wrap; }
+.tv-tour-chips { display: grid; gap: 6px; }
+.tv-tour-chips button { text-align: left; }
+.tv-tour-welcome { width: min(470px, calc(100vw - 24px)); padding: 24px; gap: 18px; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.tv-tour-welcome h2 { font-size: 22px; }
+.tv-tour-loop { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.tv-tour-loop > div { display: grid; align-content: start; gap: 5px; background: var(--muted); padding: 10px; border-radius: 10px; font-size: 12px; color: var(--muted-foreground); }
+.tv-tour-loop b { color: var(--foreground); font-size: 13px; }
+.tv-tour-loop i { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--primary); color: var(--primary-foreground); font-size: 11px; font-style: normal; }
+.tv-tour-error { color: var(--destructive); font-size: 12px; }
+
+[data-ds-dark-theme] .tv-tour-card { box-shadow: 0 16px 40px color-mix(in srgb, var(--background) 80%, transparent); }

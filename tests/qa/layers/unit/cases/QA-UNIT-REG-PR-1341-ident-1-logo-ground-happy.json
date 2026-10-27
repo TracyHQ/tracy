@@ -1,0 +1,46 @@
+{
+  "id": "QA-UNIT-REG-PR-1341-ident-1-logo-ground-happy",
+  "itemIds": ["regression:REG-PR-1341-ident-1-logo-ground"],
+  "requirement": "IDENT-1 reads the logo on its real ground: a logo on a photo, a badge on its own fill, a template's own 2.9:1 and a site-name text logo no longer fail",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1341-ident-1-logo-ground.json",
+    "ref": "PR #1341 (fix); fix evidence: Before the fix the five files held ident false on every view (round 4 of #1317 filed them as empty logos for #1318) while the screenshots showed every logo: the probe read the page colour behind the hero photo, the header behind the NG badge, an absolute 3:1 against JA Resume's own 2.9:1, and a glyph-only icon span for JA Essence's site name",
+    "invariant": "S1: every test passes: a text mark onPicture is not judged by a colour, a mark no less readable than the template's own ratio passes (2:1 floor), a badge is read on its own fill, the probe parses and looks for .navbar-brand .site-name before header a > span. S2: IDENT-1 pass on all five rows, every native view ident true.",
+    "productSources": ["packages/design/tracy-ds-slot/src/identity.mjs:46"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1341-ident-1-logo-ground.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1341-ident-1-logo-ground"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/design/tracy-ds-slot", "tracy-ds-slot"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1341-ident-1-logo-ground",
+    "pr": 1341,
+    "kind": "fix",
+    "area": "ops/road-to-live/design-system",
+    "file": "tests/regression/cases/REG-PR-1341-ident-1-logo-ground.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/design/tracy-ds-slot/test/identity.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

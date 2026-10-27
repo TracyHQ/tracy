@@ -1,0 +1,58 @@
+{
+  "id": "REG-PR-1094-account-photo-from-sign-in",
+  "kind": "feat",
+  "title": "A Google or GitHub sign-in gives the account its provider photo, served by Tracy at /auth/avatar/:accountId",
+  "pr": 1094,
+  "area": "identity/avatar",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/avatar-door.test.mjs apps/tracy-web/test/person-face.test.mjs apps/tracy-web/test/oauth.test.mjs packages/core/tracy-core/test/actor-face.test.mjs",
+    "S2: Read the pass/fail counts and the tests named in run.tests."
+  ],
+  "expect": [
+    "0 failures.",
+    "exchangeCode returns the provider's name and picture (Google id_token claims with the profile scope, GitHub GET /user avatar_url).",
+    "A later sign-in replaces the stored picture but never a display name already set.",
+    "personFace answers /auth/avatar/<accountId>?v=<8 hex> for a provider picture and null for any other host.",
+    "GET /auth/avatar/:accountId: 401 without a session, 404 without a picture or for a non-provider address (never fetched), 200 image with ETag and private cache, 304 on If-None-Match, served from cache on the second read, 502 for non-image/SVG, over 1 MB, a redirect to another host, or a timeout.",
+    "Face draws <img src> with the same-origin address."
+  ],
+  "selectors": {
+    "door": "GET /auth/avatar/:accountId (apps/tracy-web/src/identity/route.js, apps/tracy-web/src/identity/avatar.js)",
+    "allow-list": "apps/tracy-web/src/lib/avatar-source.js avatarSource",
+    "face": "apps/tracy-web/src/lib/person-face.js avatarPath"
+  },
+  "evidence": "PO 09/10/2026: 'my email already has an avatar everywhere, why is Tracy still showing a letter?' account.avatar_url was never written.",
+  "fence": "The provider allow-list (write and every fetch hop), the session requirement, the size/type caps, and name-only-when-empty.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/avatar-door.test.mjs",
+      "apps/tracy-web/test/person-face.test.mjs",
+      "apps/tracy-web/test/oauth.test.mjs",
+      "packages/core/tracy-core/test/actor-face.test.mjs"
+    ],
+    "tests": [
+      "exchangeCode: google hands over the profile name and picture from the id_token",
+      "exchangeCode: github hands over the profile name and avatar_url from GET /user",
+      "memory-store mode: a later sign-in refreshes the picture and never overwrites a name already set",
+      "memory-store mode keeps the picture and name too, so /auth/me shows the photo without a database",
+      "avatarUrl: a stored provider picture is served through Tracy, never handed out as the provider address",
+      "avatarUrl: a stored address outside the picture hosts Tracy fetches from → null (the letter)",
+      "a signed-in viewer gets the picture: image bytes, a long private cache, an ETag, no sniffing",
+      "nobody signed in → 401, and the provider is never asked",
+      "an account with no picture, or no account at all → 404",
+      "a stored address outside the provider picture hosts is never fetched → 404",
+      "the second read is served from Tracy’s cache, and a matching If-None-Match answers 304",
+      "an answer that is not an image (or is SVG) → 502, nothing passed through",
+      "a picture over 1 MB → 502, whether or not the provider said its length",
+      "a redirect is followed only onto another provider picture host",
+      "a provider that does not answer in time → 502 (the module gives up on its own timeout)",
+      "a face whose photo is Tracy’s own picture address draws it as is, same origin"
+    ]
+  }
+}

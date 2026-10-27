@@ -1,0 +1,20 @@
+{
+  "id": "REG-PR-1427-agent-demo-private-workflow",
+  "kind": "feat",
+  "title": "Agent demo freezes research, scopes private access and guards planned media import and replay",
+  "pr": 1427,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the deterministic agent demo capability tests."],
+  "expect": [
+    "Full source and media catalogue is hashed and paginated beyond asset24.",
+    "Provision-only requires a frozen server revision and active action.",
+    "Foreign account/site/session and arbitrary URL imports are refused.",
+    "Plan persists before writes; revocation, Stop, corrupt bytes and uncertain receipts block later writes.",
+    "Confirmed import replay returns its existing receipt without a second upload."
+  ],
+  "selectors": { "file": "apps/tracy-web/src/opportunities/agent-demo.js" },
+  "run": { "cmd": ["node", "--test", "apps/tracy-web/test/wo-agent-demo.test.mjs"], "needs": [] }
+}

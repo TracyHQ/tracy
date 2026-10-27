@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1478-widget-guest",
+  "kind": "fix",
+  "title": "Widget: the guest token renews, a visitor is made on first write with per-address limits and idle eviction, each anonymous visitor speaks under its own identity",
+  "pr": 1478,
+  "area": "widget/visitors",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the run.cmd below (node --test over the widget, relay, say and cron suites; database cases skip without TEST_DATABASE_URL).",
+    "S2: Read the exit code and the pass/fail counts."
+  ],
+  "expect": [
+    "Exit 0, 0 failures.",
+    "The internal guest session is minted again after SESSION_RENEW_AFTER_S or within 5 minutes of its end, once for concurrent calls; a process 72 h old still answers anonymous calls.",
+    "GET /widget/api/state without a cookie sets no cookie and keeps no visitor; the first write makes one; the 21st new visitor from one address in an hour answers 429 WIDGET_VISITOR_LIMIT; a full map drops the idle anonymous visitor used longest ago, and with every visitor busy answers 503 WIDGET_AT_CAPACITY with Retry-After 30.",
+    "Two anonymous visitors speak under two widget-guest+<hmac16>@widget.invalid identities: one's microphone never ends the other's session, each has its own day, and the widget-anonymous bucket stops them all at its own limit.",
+    "The cron job deletes expired widget_conversation rows in batches."
+  ],
+  "selectors": {
+    "route": "apps/tracy-web/src/widget/route.js internalSession speechGuest admit idle",
+    "context": "apps/tracy-web/src/widget/context.js visitor({create})",
+    "codes": "429 WIDGET_VISITOR_LIMIT, 503 WIDGET_AT_CAPACITY",
+    "speech": "apps/tracy-web/src/lib/speech.js ANONYMOUS_SPEECH"
+  },
+  "evidence": "Review of #1425/#1426 on 18/10/2026: the guest token was minted once per process (sessions live 72 h; prod ran ~39 h between deploys), every page load wrote a visitor row, and all anonymous visitors shared one speech quota and one live session. Council 19/10/2026.",
+  "fence": "The widget door's visitor lifecycle, the internal sessions and the speech identity, through the door tests. Not exercised: a real speech service, a customer's site embedding the widget, Cloudflare's address header.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/widget.test.mjs",
+      "apps/tracy-web/test/widget-store.test.mjs",
+      "apps/tracy-web/test/widget-startup-errors.test.mjs",
+      "apps/tracy-web/test/widget-speech-playback.test.mjs",
+      "apps/tracy-web/test/speech-relay.test.mjs",
+      "apps/tracy-web/test/speech-say.test.mjs",
+      "apps/tracy-web/test/cron.test.mjs"
+    ],
+    "needs": []
+  }
+}

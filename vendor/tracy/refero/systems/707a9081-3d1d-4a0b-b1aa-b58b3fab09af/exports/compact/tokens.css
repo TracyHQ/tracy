@@ -1,0 +1,27 @@
+:root {
+  /* Colors */
+  --color-violet-pulse: #a565ff;
+  --color-indigo-ink: #5e5cff;
+  --color-lavender-wash: #ebebff;
+  --color-iris-glow: #e0c9ff;
+  --color-ledger-green: #2e7317;
+  --color-paper-white: #ffffff;
+  --color-bone: #f7f7f7;
+  --color-fog: #f1f1f1;
+  --color-silver: #efefef;
+  --color-marble: #fff6df;
+  --color-graphite: #1d1d20;
+  --color-slate: #42424a;
+  --color-iron: #505050;
+  --color-steel: #757575;
+  --color-smoke: #92939e;
+  --color-ash: #e5e7eb;
+  --color-mist: #d1d9e4;
+  --color-olive-gray: #808076;
+  --color-noir: #000000;
+
+  /* Typography — Font Families */
+  --font-twk-lausanne: 'TWK Lausanne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-moderat-serif: 'Moderat Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sf-mono: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

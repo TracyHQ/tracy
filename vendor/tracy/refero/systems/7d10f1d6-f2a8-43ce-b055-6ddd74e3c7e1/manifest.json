@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7d10f1d6-f2a8-43ce-b055-6ddd74e3c7e1",
+  "status": "complete",
+  "name": "Blok",
+  "url": "https://styles.refero.design/style/7d10f1d6-f2a8-43ce-b055-6ddd74e3c7e1",
+  "sourceWebsite": "https://blokwatches.com",
+  "extractedAt": "2026-06-03T21:14:21.425Z",
+  "capturedAt": "2026-10-08T05:13:55.698715+00:00",
+  "theme": "mixed",
+  "industry": "ecommerce",
+  "description": "Swiss showroom on teal-tinted paper",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4b5ca725-7452-4e22-935f-d4ea2505578e.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9bc678e9e265fb3d17f722ac14381f7a31f5ee6c368ebf85adcc33e310a2f44a",
+      "bytes": 21543
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "07d96e61ea9f7dad51598887edfc44baa1ecc93f6df7559ec73866610c8d9c38",
+      "bytes": 129967
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "2312beb95f0f29d15a78c97f1a18b469aaf9ad4db7ec2a9b72c3df6c76c8dceb",
+      "bytes": 17731
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "76a92e4947b8c5ebcce5a3eafba88f0ba7f4e3e1b609d187b7427467c3c10408",
+      "bytes": 12082
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8ae8f2a741888cbe3a8df3fb8202117fe245e8fb55125ebe944d2f2491f21ca1",
+      "bytes": 12747
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "b4236819d672b5ced39f231a4161abce39fdaa842224aa930e33c4f4c76d0015",
+      "bytes": 3276
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "335322e36f89dfb395e975d0b9cb364ed43cd2a517fe85a6b252f99daf162e84",
+      "bytes": 804
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e0e217478aa65eb5bae4e193cef3cb05128d6c5a8c967163d8721b8a5f0feb22",
+      "bytes": 821
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "2f455709d120d8fb959c36a53bf8a0296b4cce4cb5a007c06a1ced54ea7a7482",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d775cbe5baad7d4f0fdfba3e2ab44b34a2b821c427552eccd75c92782813c529",
+      "bytes": 44835
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "22dc765b2e8c920c6259aca7b130f45f321a21a0bad0e7208f707a271d51faa2",
+      "bytes": 23354
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1f007da10dc95c2f43ddbe9038a9a8679e395ac57fdd7b45254313c9e6204e47",
+      "bytes": 52557
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "36b844838c30a98acaf5e6516a3b9e2f5689e8e54cf1e903d9c545c26e718448",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e7212e83abb40e3eff288e02619214a766f289096b029cec67b6c50a61cff981",
+      "bytes": 1926
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "825fec026936c8d26807f1b6ba5b9c936a9d8b2480d0ed8954b4af0a0f9d57c4",
+      "bytes": 2456
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "45c4f990-e6b4-472d-89a4-06870ac17b9f",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "7d10f1d6-f2a8-43ce-b055-6ddd74e3c7e1",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "9b9b0ca1-5067-4115-b62f-ee0e43d1f37f",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b8c2e033-3846-47cf-a52d-2bb39e493d3b",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

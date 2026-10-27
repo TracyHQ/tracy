@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1677-wordpress-rendered-words",
+  "kind": "fix",
+  "title": "content.replace reaches a WordPress theme's render-time words through content.renderedWords, only where the page showed them, and only from Tracy's agent",
+  "pr": 1677,
+  "area": "site-tools/content-replace",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set, run node --test on packages/tools/tracy-site-tools/test/replace-wordpress-rendered-words.test.mjs, packages/tools/tracy-site-tools/test/relay-origin.test.mjs, apps/tracy-web/test/component.test.mjs.",
+    "S2: Read the test names it reports for: a theme-printed phone replaced with its tel: link in one apply; a tel: link a record holds left out of the rules; a following tel: link printed away from the words (elsewhere in main, or in another element) left as it is, and one right beside the words followed; href:true refused under where:\"main\" for a header link and written for a link in main; content.renderedWords sent straight to the Apply door by a browser cookie or a seat key refused ACTION_AGENT_ONLY before the site, while the agent host's actor is taken and that apply is then listed and undone by apply.list and apply.revert; the engine's call relayed under the typing person's actor; the door's refusal of a cookie relay answered with the words kept; an inspect match outside the page-read location refused; and an older plugin answered with render-time wording."
+  ],
+  "expect": ["S1: exit 0 with no failed or skipped test.", "S2: each of the behaviours has a passing test."],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/rendered-words.mjs",
+    "tool": "packages/tools/tracy-site-tools/test/replace-wordpress-rendered-words.test.mjs"
+  },
+  "evidence": "Before this change Diner WP's contact block, a PHP pattern printed through the_content, kept the template's sample address and phone because content.replace found no store holding them",
+  "fence": "Host-side planning with recorded plugin answers; the plugin's own behaviour is covered by the claude-cowork WordPress suite and a real Diner WP stand",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/tools/tracy-site-tools/test/replace-wordpress-rendered-words.test.mjs",
+      "packages/tools/tracy-site-tools/test/relay-origin.test.mjs",
+      "apps/tracy-web/test/component.test.mjs"
+    ],
+    "needs": ["postgres"]
+  }
+}

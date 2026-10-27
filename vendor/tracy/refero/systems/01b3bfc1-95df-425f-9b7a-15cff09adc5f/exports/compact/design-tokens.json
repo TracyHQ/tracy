@@ -1,0 +1,84 @@
+{
+  "color": {
+    "cosmic-violet": {
+      "$value": "#1b2978",
+      "$type": "color",
+      "$description": "Cosmic Violet — Primary brand ink — outlined button borders, heading text on light surfaces, the only chromatic voice in the UI"
+    },
+    "twilight-indigo": {
+      "$value": "#19366c",
+      "$type": "color",
+      "$description": "Twilight Indigo — Deeper violet for secondary borders and gradient origins — bridges Cosmic Violet into the atmospheric range"
+    },
+    "aurora-teal": {
+      "$value": "#75cdd6",
+      "$type": "color",
+      "$description": "Aurora Teal — Atmospheric teal pulled from the hero photography — background washes and the emotional color of the brand"
+    },
+    "cyan-glow": {
+      "$value": "#84cdee",
+      "$type": "color",
+      "$description": "Cyan Glow — Terminal stop of the radial atmospheric gradients — recreates the directional key light of the hero at smaller scales; Decorative radial gradient that recreates the hero's directional teal light in section panels"
+    },
+    "cosmic-violet-wash": {
+      "$value": "#3a3cb5",
+      "$type": "color",
+      "$description": "Cosmic Violet Wash — Decorative violet gradient for atmospheric panels"
+    },
+    "polar-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Polar White — Primary text on the dark hero, light section surfaces, card backgrounds, button text on violet"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Text on light surfaces and deepest contrast points"
+    },
+    "silver-slate": {
+      "$value": "#7488a5",
+      "$type": "color",
+      "$description": "Silver Slate — Near-gray stroke color for subtle decorative lines and secondary UI elements"
+    },
+    "cerulean-mist": {
+      "$value": "#579dc0",
+      "$type": "color",
+      "$description": "Cerulean Mist — Decorative SVG stroke for iconography and illustration accents"
+    },
+    "storm-shadow": {
+      "$value": "#466187",
+      "$type": "color",
+      "$description": "Storm Shadow — Muted blue used for link focus-ring shadows and hover glows"
+    }
+  },
+  "font": {
+    "twklausanne-250": {
+      "$value": "TWKLausanne-250",
+      "$type": "fontFamily",
+      "$description": "Body, UI, and mid-tier headings — the workhorse family. 400 for paragraphs and descriptions, 700 for sub-headings and emphasized labels. The tight 1.13 line-height at 40px gives mid-headings a compressed, architectural feel"
+    },
+    "twklausanne-200": {
+      "$value": "TWKLausanne-200",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines — the lightest cut of TWKLausanne acts as an anti-convention choice: most brands shout at 80px with bold weights, this one whispers at 400 and achieves presence through restraint and aggressive negative tracking"
+    },
+    "neosanspro-medium": {
+      "$value": "NeoSansPro-Medium",
+      "$type": "fontFamily",
+      "$description": "Architectural all-caps labels — nav links, scroll cues, section markers, brand wordmark. The 2.0–3.0 line-height at 10px creates dramatic vertical breathing room, and the extreme +0.32em tracking turns tiny text into spatial markers rather than readable labels"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://amaterasu.ai",
+      "siteName": "Amaterasu",
+      "extractedAt": "2026-06-03T17:32:41.071Z",
+      "variant": "compact"
+    }
+  }
+}

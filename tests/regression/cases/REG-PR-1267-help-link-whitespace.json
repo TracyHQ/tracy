@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1267-help-link-whitespace",
+  "kind": "fix",
+  "title": "A /help answer whose link has a space inside the parentheses still renders as a link when the address is listed",
+  "pr": 1267,
+  "area": "assistant/help-links",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the assistant chat unit tests (packages/ui/tracy-assistant/test/chat.test.mjs) with the TAP reporter.",
+    "S2: Read the result of the test about padded parentheses and the test about the link allowlist."
+  ],
+  "expect": [
+    "S1: exit code 0.",
+    "S2: `[Publish]( /site/?tab=tracy:site-publish&site=site)` is a link when listed; an unlisted padded address keeps only its label; wrapped and shortened addresses still resolve only through the allowlist."
+  ],
+  "selectors": {
+    "file": "packages/ui/tracy-assistant/src/client/chat.ts",
+    "tests": "packages/ui/tracy-assistant/test/chat.test.mjs"
+  },
+  "evidence": "Issue #1260: answers to /help showed `[Publish]( /mysite.tracy.site/?tab=tracy:site-publish&site=mysite.tracy.site)` as raw text",
+  "fence": "The link allowlist: only an address the server listed becomes a link, whatever whitespace the model writes around it",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-force-exit",
+      "packages/ui/tracy-assistant/test/chat.test.mjs"
+    ],
+    "tests": [
+      "a model that pads the parentheses still gets its listed link; an unlisted one keeps its label",
+      "a link is clickable only when the server listed its exact address"
+    ]
+  }
+}

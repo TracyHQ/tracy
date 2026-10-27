@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "707a1648-eaef-4629-9c5a-b835cedde250",
+  "status": "complete",
+  "name": "Earlydog",
+  "url": "https://styles.refero.design/style/707a1648-eaef-4629-9c5a-b835cedde250",
+  "sourceWebsite": "https://www.earlydog.com",
+  "extractedAt": "2026-06-03T16:52:39.979Z",
+  "capturedAt": "2026-10-08T05:13:12.246722+00:00",
+  "theme": "light",
+  "industry": "devtools",
+  "description": "Bauhaus poster pinned to a cloud architect's corkboard — cream paper, primary-color shapes, oversized geometric type.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6c6098c4-affe-4648-8df8-ad5ef0d76195.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/80925eb2-dbc6-4025-be7b-f966fc22a0fc.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/6a88a367-c751-480b-ac6f-bf2daab8eb67.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b52bda63-c4e0-4af8-84a7-aa9373c55354.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ecad7ef7-f92b-4c11-9f01-c77cca2b2136.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2c13e346887de13919d7d91beb5024cb520254fafe9869559316460cc7653a3e",
+      "bytes": 19706
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "74460a7a0609f658116e28d687e06085efb08b3d52366ef7482e45814db87174",
+      "bytes": 98947
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "28db46bd51b9870d367fb3aac25e0069ab528f33bc3765ba0dd686de2a7a0932",
+      "bytes": 16612
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3e01c1a83e94a95788890da62353ec1999a685ed1d4464f6b7afaa953faa3859",
+      "bytes": 7144
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "470033058f1bd1c43eb6dbc12eeb60428b0d6bbc682ad2c4c02cf69e0f92ae02",
+      "bytes": 12618
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d70ac145f95fc6ac228a7e5df57beecae813c1607e1f51bbd5548ea5d10c1f26",
+      "bytes": 2739
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3e2e7f5664e0ba59459bdd481e787c41f6539facb05383bec7711f13520d1b74",
+      "bytes": 494
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "afe2080ee5799de7fb9915e73343f287faf35279514b936a8ee5cb345987ce30",
+      "bytes": 511
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "1821fd558dbe3126c2b697c944d6efc767dbd418d0022fc79020edbbb88ba8ab",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4a956a92d454eba06a90088b4f184c0eeeabee0c6e245223c27690ad775b22a0",
+      "bytes": 42007
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9ecbb845eb038ecef4a157b48ce1d06bbef38eca9c1ce830e6e8e64546219dc7",
+      "bytes": 21612
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "93550dc049a3925ff4f0f233ad215a650de5b2835efb23b37b7251928ea73827",
+      "bytes": 30161
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c3f406535878f1a488bf2deb5be25f3322f1e97b3d97ef2c47921d16c0333121",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "61af9293d2226d119aa73bdef934b66da6255988ab7bb81370238b6f3fe0a9db",
+      "bytes": 1322
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "30cc529a723f254f0404394b786367ca286e9e7975f927ad76eac5afadeb7718",
+      "bytes": 1764
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1e675740-7935-4a49-b4c8-e5aa9fda06dd",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2b41e7c4-1e8c-4ea2-a87f-51e24c57886e",
+    "32845f27-6b24-48be-af25-8e664f826b30",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "707a1648-eaef-4629-9c5a-b835cedde250",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "802bdc0e-ec2e-4d2d-bf5d-de98c0899f66",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "87da9872-f6cc-4354-bf6a-1c02f0394d45",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "b0d80806-b724-4ed1-a1d1-074edd3c9bc9",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

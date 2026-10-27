@@ -1,0 +1,318 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-insight",
+  "release": "quickstart/ja-insight/j6@1.0.0",
+  "minVersion": {
+    "quickstart/ja-insight/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-insight/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "roles": {
+    "page": "div.t3-wrapper.affix-top",
+    "display": "h1",
+    "heading": "div.title h2",
+    "body": "p.lead",
+    "button-primary": "a.btn.btn-lg",
+    "section": "#Section90"
+  },
+  "discovered": {
+    "page": "outermost element painted the page colour (body is not)",
+    "display": "largest heading near the top: 56px",
+    "displayFace": "Butler 300, tracking 0em",
+    "heading": "first section heading: 36px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(19, 46, 94)",
+    "section": "first padded full-width section, padding-top 160px",
+    "displayPhone": "the same heading at 390 on the published release: 24px"
+  },
+  "keepScopes": [".style-3", ".t3-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#132e5e",
+    "--fg": "#555555",
+    "--fg-2": "#111111",
+    "--accent": "#132e5e",
+    "--accent-hover": "#132e5e",
+    "--surface": "#f7f7f7",
+    "--meta": "#888888",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#09152b",
+    "--muted": "#356635",
+    "--font-display": "\"Butler\", sans-serif",
+    "--font-body": "\"IBM Plex Sans\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#132e5e"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#132e5e",
+      "fg": "#555555",
+      "fg-2": "#111111",
+      "accent": "#132e5e",
+      "accent-hover": "#132e5e",
+      "surface": "#f7f7f7",
+      "meta": "#888888",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#09152b",
+      "muted": "#356635"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#555555",
+      "fg-2": "#111111",
+      "accent": "#132e5e",
+      "accent-on": "#ffffff",
+      "surface-warm": "#132e5e"
+    },
+    {
+      "accent": "#132e5e"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "border-soft": "#eaeaea",
+      "surface": "#f8f8f8"
+    },
+    {
+      "surface": "#f7f7f7",
+      "border-soft": "#e5e5e5"
+    },
+    {
+      "surface": "#f5f5f5",
+      "border-soft": "#e0e2e3"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border-soft": "#e3e3e3"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "surface": "#eeeeee",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "surface": "#f0f0f0"
+    },
+    {
+      "surface": "#f9f2f4"
+    },
+    {
+      "surface": "#f2f2f2"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (63 line colours, 78 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-lg"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-lg"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["#Section90"],
+    "bodyFace": ["body"],
+    "inkImages": [".logo .logo-img", ".logo .logo-img-sm"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
+    "muted": "#t3-mainbody p, .t3-sl p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "head-right",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 18 tried (byte 11055); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eaeaea",
+      "uses": 1122,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 210,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 2
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 180,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 0
+    },
+    {
+      "hex": "#f5f5f5",
+      "uses": 110,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 60,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 50,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 50,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 40,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 20,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 20,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 12
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 12
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#f2f2f2",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 9
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the round-3 probe (every visible text judged per element, paint stack under each text) on a stand built from the published 1.0.1 its minVersion names (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-insight-j6): 10/12 (the two misses are a role weight: body weight 500 under Toggl Track, colours follow), controls 0, no text worse than the template's own, 79% or more of the page follows; the probe found the navy .style-3 band's texts changed (they inherit the page text: keepColors) and the eye saw the black line logo vanish on a dark system: fixed in the contract (keepColors, selectors.inkImages, no new release); checked by eye on all four systems, desktop and phone; earlier: measured 11/10/2026 (tasks/evidence/ds-contracts-batch3-2026-10-11/templates/ja-insight-j6): default unchanged, no text made less readable than the template's own under the systems tried, 78% or more of the page follows",
+  "keepColors": {
+    ".style-3": "rgb(85, 85, 85)"
+  },
+  "keepColorsNote": "re-measured 11/10/2026 with the current probe: the navy .style-3 band inherits the page text (#555555) into its wrappers, so a worn system changed 16 of its elements; the band gives its texts back the colour they inherited as released",
+  "inkNote": "its logo is a black line mark (logo-img) drawn for its white header: under a dark system it vanished on the worn page (seen by eye, Moxie and Toggl Track, 11/10/2026): inverted with its hue under a dark worn palette",
+  "bands": {
+    ".style-3": {
+      "ground": "#132e5e",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        ".features-action a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".t3-footer": {
+      "ground": "#111111",
+      "texts": ["#888888", "#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    ".slider-content-inner": {
+      "ground": "#132e5e",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".sub-heading span", ".title h2", ".description p"]
+    },
+    ".acm-features.style-3": {
+      "ground": "#132e5e",
+      "texts": ["#ffffff", "#aa8844"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".sub-heading span", ".module-title-wrap h2", ".features-content p", ".features-action a"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "REG-092",
+  "kind": "fix",
+  "title": "Already-granted join page shows one sentence and a native button opening the exact site, including with JavaScript off",
+  "pr": 884,
+  "area": "team/join",
+  "cms": ["any"],
+  "needs": ["stand:isolated-seats-route", "browser:cdp-9222", "playwright"],
+  "flaky_model": false,
+  "steps": [
+    "From this checkout, resolve Playwright's index.mjs under node_modules/.pnpm/playwright@*/node_modules/playwright (or an installed Playwright module). Use the running Chrome CDP endpoint at http://127.0.0.1:9222; do not restart or close the borrowed browser.",
+    "Run PLAYWRIGHT_MODULE=<absolute index.mjs> TEST_COMMIT=$(git rev-parse HEAD) EVIDENCE_DIR=/tmp/granted-access-regression node tasks/evidence/granted-access-open-site/verify.mjs. The script starts its own ephemeral localhost HTTP stand using the real seatsRoutes and a read-only fixture for an accepted Editor seat; the site's destination is a landing probe, not a running dsh.",
+    "Read checks.json from EVIDENCE_DIR and inspect desktop-light.png and mobile-dark.png. The checks exercise each of the eight interface languages twice: desktop/light with JavaScript on, and 360px/dark with JavaScript off."
+  ],
+  "expect": [
+    "The script exits 0 and prints verdict PASS with checks 16.",
+    "Every language has exactly one translated heading naming wptest0929.tracy.site, no description/note, and one GET form whose action is /wptest0929.tracy.site.",
+    "The translated Open site button stays within the viewport and reaches the exact local site path with JavaScript enabled and disabled, ignoring the hostile next URL.",
+    "All stand requests are GET, all book queries are SELECT, and no browser pageerror occurs."
+  ],
+  "selectors": {
+    "card": ".auth-card",
+    "heading": ".auth-card h1",
+    "openSite": "form[data-open-site] button",
+    "landing": "[data-landing]"
+  },
+  "fence": "The already-granted state uses a single localized sentence and an encoded same-origin GET form, with no script navigation or repeated instruction. This fixture checks the real join route and native navigation; the existing site router and dsh boot are outside this case."
+}

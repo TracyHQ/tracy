@@ -1,0 +1,22 @@
+@theme {
+  /* Colors */
+  --color-jade-cta: #00c27a;
+  --color-mint-surface: #b4f5c8;
+  --color-forest: #00843f;
+  --color-badge-leaf: #d5f8e0;
+  --color-badge-text: #007b3b;
+  --color-void: #000000;
+  --color-paper: #ffffff;
+  --color-fog: #f3f3f3;
+  --color-ash: #eeeeee;
+  --color-cool-grey: #dce1e5;
+  --color-slate: #8c8c8c;
+  --color-stone: #808080;
+  --color-graphite: #4f5457;
+  --color-ink: #333333;
+  --color-charcoal: #626262;
+
+  /* Typography */
+  --font-stk-bureau: 'STK Bureau', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-social: 'ABC Social', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

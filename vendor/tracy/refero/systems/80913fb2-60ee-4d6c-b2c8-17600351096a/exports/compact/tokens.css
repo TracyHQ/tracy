@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-manifesto-orange: #ff7a00;
+  --color-magenta-backdrop: #ff29f1;
+  --color-cobalt-backdrop: #287aea;
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+
+  /* Typography — Font Families */
+  --font-roobert: 'Roobert', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roobert-bubble-display-cut: 'Roobert (Bubble Display Cut)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roobert-bold: 'Roobert Bold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

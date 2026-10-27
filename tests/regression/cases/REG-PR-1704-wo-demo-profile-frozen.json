@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1704-wo-demo-profile-frozen",
+  "kind": "fix",
+  "title": "A /v1/demos demo is built from the business it was sent: name, address, phone, hours, description and items are frozen into the revision’s profile_effective",
+  "pr": 1704,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/public-demos",
+  "steps": [
+    "S1: POST /v1/demos for Pho Hanoi with hours, items and a description; make the action’s revision with revisionForAction; read profile_effective and the brief."
+  ],
+  "expect": [
+    "S1: profile_effective names Pho Hanoi with its address, phone, hours, bio and first item; brief.business.name is Pho Hanoi; the wo-public-demos suite passes."
+  ],
+  "selectors": {
+    "door": "POST /v1/demos; revisionForAction in apps/tracy-web/src/opportunities-build/revisions.js",
+    "tool": "tests/regression/scripts/REG-PR-1704-wo-demo-profile-frozen.mjs"
+  },
+  "evidence": "Stranger run 24/10/2026: both /v1/demos revisions had jsonb_typeof(profile_effective) = null; the demo site kept the Tracy Base template words",
+  "fence": "freezeResearch on the /v1/demos action",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1704-wo-demo-profile-frozen.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

@@ -1,0 +1,1051 @@
+import type { Generated } from "kysely";
+
+// Core database tables
+// Note: Content tables (ec_posts, ec_pages, etc.) are created dynamically
+// by the SchemaRegistry. They are not defined in this type file.
+
+export interface RevisionTable {
+	id: string;
+	collection: string; // e.g., 'posts'
+	entry_id: string; // ID in the ec_* table
+	data: string; // JSON snapshot
+	author_id: string | null;
+	created_at: Generated<string>;
+}
+
+export interface RevisionPruneQueueTable {
+	collection: string;
+	entry_id: string;
+	revision_id: string;
+}
+
+export interface TaxonomyTable {
+	id: string;
+	name: string;
+	slug: string;
+	label: string;
+	parent_id: string | null;
+	data: string | null; // JSON
+	locale: Generated<string>; // e.g. 'en', 'es', 'fr'
+	translation_group: string | null; // shared across translations of the same term
+	// Manual order within a sibling group. 0 for terms that were never
+	// explicitly reordered, so listings fall back to alphabetical.
+	sort_order: Generated<number>;
+}
+
+export interface ContentTaxonomyTable {
+	collection: string; // e.g., 'posts'
+	entry_id: string; // stores the ec_* row's translation_group (locale-agnostic)
+	taxonomy_id: string; // stores taxonomies.translation_group (locale-agnostic)
+	// Legacy denormalized columns from migration 051. A group assignment spans
+	// locale rows whose status and dates may differ, so current reads use the
+	// authoritative ec_* rows and new pivot inserts leave these nullable.
+	status: Generated<string | null>;
+	scheduled_at: Generated<string | null>;
+	deleted_at: Generated<string | null>;
+	locale: Generated<string | null>;
+	published_at: Generated<string | null>;
+	created_at: Generated<string | null>;
+}
+
+/**
+ * One locale's definition of a taxonomy. `hierarchical` and `collections` are
+ * copies of the taxonomy's `_emdash_taxonomy_def_groups` row, kept for code that
+ * reads them directly, such as the plugin sandbox bridges; read them from the group.
+ */
+export interface TaxonomyDefTable {
+	id: string;
+	name: string;
+	label: string;
+	label_singular: string | null;
+	hierarchical: number; // 0 or 1 (SQLite boolean)
+	collections: string | null; // JSON array
+	created_at: Generated<string>;
+	locale: Generated<string>;
+	translation_group: string | null;
+}
+
+/** What a taxonomy is in every locale. `id` is its definitions' `translation_group`. */
+export interface TaxonomyDefGroupTable {
+	id: string;
+	name: string;
+	hierarchical: Generated<number>; // 0 or 1 (SQLite boolean)
+	collections: Generated<string>; // JSON array
+	created_at: Generated<string>;
+}
+
+export interface MediaTable {
+	id: string;
+	filename: string;
+	mime_type: string;
+	size: number | null;
+	width: number | null;
+	height: number | null;
+	focal_x: number | null;
+	focal_y: number | null;
+	alt: string | null;
+	caption: string | null;
+	storage_key: string;
+	status: string; // 'pending' | 'ready' | 'failed'
+	content_hash: string | null; // xxHash64 for deduplication
+	blurhash: string | null;
+	dominant_color: string | null;
+	created_at: Generated<string>;
+	author_id: string | null;
+	folder_id: Generated<string | null>;
+}
+
+export interface MediaFolderTable {
+	id: string;
+	name: string;
+	name_key: string;
+}
+
+export interface MediaUploadAttemptTable {
+	storage_key: string;
+	// No foreign key: this row must survive media deletion until storage cleanup succeeds.
+	media_id: string;
+	status: string; // 'active' | 'cleanup'
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface MediaUsageSourceTable {
+	source_key: string;
+	source_type: string;
+	collection_id: Generated<string | null>;
+	collection_slug: string | null;
+	content_id: string | null;
+	source_variant: string;
+	locale: string | null;
+	translation_group: string | null;
+	content_slug: string | null;
+	content_title: string | null;
+	content_status: string | null;
+	content_scheduled_at: string | null;
+	content_deleted_at: string | null;
+	revision_id: string | null;
+	current_generation: string;
+	schema_version: Generated<number>;
+	source_updated_at: Generated<string | null>;
+	source_version: Generated<number | null>;
+	source_fingerprint: Generated<string | null>;
+	identity_version: Generated<number | null>;
+	source_completeness: Generated<string>;
+	last_attempted_at: Generated<string | null>;
+	last_error_code: Generated<string | null>;
+	indexed_at: Generated<string>;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface MediaUsageTable {
+	id: string;
+	source_key: string;
+	generation: string;
+	field_slug: string;
+	field_path: string;
+	occurrence_index: Generated<number>;
+	reference_type: string;
+	media_id: string | null;
+	provider: Generated<string>;
+	provider_asset_id: string;
+	media_kind: string | null;
+	mime_type: string | null;
+	created_at: Generated<string>;
+	cleanup_lease_token: Generated<string | null>;
+}
+
+export interface MediaUsageCleanupTable {
+	task_key: string;
+	lease_token: string | null;
+	lease_expires_at: string | null;
+	next_eligible_at: string;
+	cursor_created_at: string | null;
+	cursor_id: string | null;
+	scan_before_at: string | null;
+	consecutive_failures: Generated<number>;
+	last_started_at: string | null;
+	last_completed_at: string | null;
+	last_candidate_count: Generated<number>;
+	last_deleted_orphans: Generated<number>;
+	last_deleted_stale: Generated<number>;
+	last_deleted_abandoned: Generated<number>;
+	last_deleted_write_leases: Generated<number>;
+	last_backlog_lower_bound: Generated<number>;
+	last_scan_has_more: Generated<number>;
+	last_duration_ms: Generated<number>;
+	last_error_code: string | null;
+	updated_at: Generated<string>;
+}
+
+export interface MediaUsageGenerationWriteTable {
+	source_key: string;
+	generation: string;
+	lease_token: string;
+	expires_at: string;
+	created_at: Generated<string>;
+}
+
+export interface MediaUsageGenerationFenceTable {
+	task_key: string;
+	generation_floor: string;
+	updated_at: Generated<string>;
+}
+
+export interface MediaUsageIndexStatusTable {
+	adapter_id: string;
+	scope_type: string;
+	scope_key: string;
+	status: string;
+	schema_version: Generated<number>;
+	started_at: Generated<string | null>;
+	completed_at: Generated<string | null>;
+	cursor: Generated<string | null>;
+	indexed_source_count: Generated<number>;
+	failed_source_count: Generated<number>;
+	last_error_code: Generated<string | null>;
+	updated_at: Generated<string>;
+	collection_id: Generated<string | null>;
+	change_epoch: Generated<number | string>;
+	reconciliation_required: Generated<number>;
+	last_incremental_success_at: Generated<string | null>;
+	capture_state: Generated<string | null>;
+}
+
+export interface MediaUsageActivationTable {
+	task_key: string;
+	state: Generated<string>;
+	runtime_generation: Generated<number>;
+	collection_cursor: Generated<string | null>;
+	drain_confirmed_at: Generated<string | null>;
+	lease_token: Generated<string | null>;
+	lease_expires_at: Generated<string | null>;
+	attempt_count: Generated<number>;
+	last_attempted_at: Generated<string | null>;
+	last_error_code: Generated<string | null>;
+	activated_at: Generated<string | null>;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+	media_usage_maintenance_turn: Generated<number>;
+}
+
+export interface MediaUsageWorkTable {
+	collection_id: string;
+	collection_slug: string;
+	content_id: string;
+	change_epoch: number | string;
+	work_version: Generated<number | string>;
+	state: Generated<string>;
+	attempt_count: Generated<number>;
+	next_attempt_at: string;
+	lease_token: Generated<string | null>;
+	lease_expires_at: Generated<string | null>;
+	last_attempted_at: Generated<string | null>;
+	last_error_code: Generated<string | null>;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface MediaUsageCollectionDeletionTable {
+	collection_id: string;
+	collection_slug: string;
+	force_delete: number;
+	state: Generated<string>;
+	phase: Generated<string>;
+	work_cursor: Generated<string | null>;
+	source_key: Generated<string | null>;
+	occurrence_cursor: Generated<string | null>;
+	attempt_count: Generated<number>;
+	next_attempt_at: string;
+	lease_token: Generated<string | null>;
+	lease_expires_at: Generated<string | null>;
+	last_error_code: Generated<string | null>;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface MediaUsageReconciliationTable {
+	collection_id: string;
+	collection_slug: string;
+	run_token: string;
+	target_epoch: Generated<number | string | null>;
+	field_fingerprint: Generated<string | null>;
+	state: Generated<string>;
+	phase: Generated<string>;
+	scan_cursor: Generated<string | null>;
+	scan_upper_id: Generated<string | null>;
+	source_cursor: Generated<string | null>;
+	source_upper_key: Generated<string | null>;
+	attempt_count: Generated<number>;
+	next_attempt_at: string;
+	lease_token: Generated<string | null>;
+	lease_expires_at: Generated<string | null>;
+	last_error_code: Generated<string | null>;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface UserTable {
+	id: string;
+	email: string;
+	name: string | null;
+	avatar_url: string | null;
+	role: number; // RoleLevel: 10=SUBSCRIBER, 20=CONTRIBUTOR, 30=AUTHOR, 40=EDITOR, 50=ADMIN
+	email_verified: number; // 0 or 1
+	data: string | null; // JSON
+	disabled: Generated<number>; // 0 or 1
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface CredentialTable {
+	id: string; // Base64url credential ID
+	user_id: string;
+	public_key: Uint8Array; // SEC1 or PKIX encoded public key
+	algorithm: number;
+	counter: number;
+	device_type: string; // 'singleDevice' | 'multiDevice'
+	backed_up: number; // 0 or 1
+	transports: string | null; // JSON array
+	name: string | null;
+	created_at: Generated<string>;
+	last_used_at: Generated<string>;
+}
+
+export interface AuthTokenTable {
+	hash: string; // SHA-256 hash of token
+	user_id: string | null;
+	email: string | null;
+	type: string; // 'magic_link' | 'email_verify' | 'invite' | 'recovery'
+	role: number | null; // For invites
+	invited_by: string | null;
+	expires_at: string;
+	created_at: Generated<string>;
+}
+
+export interface OAuthAccountTable {
+	provider: string;
+	provider_account_id: string;
+	user_id: string;
+	created_at: Generated<string>;
+}
+
+export interface AllowedDomainTable {
+	domain: string;
+	default_role: number;
+	enabled: number; // 0 or 1
+	created_at: Generated<string>;
+}
+
+export interface AuthChallengeTable {
+	challenge: string; // Base64url challenge (PK)
+	type: string; // 'registration' | 'authentication'
+	user_id: string | null; // For registration, the user being registered
+	data: string | null; // JSON for additional context
+	expires_at: string;
+	created_at: Generated<string>;
+}
+
+// API Tokens (programmatic access)
+
+export interface ApiTokenTable {
+	id: string;
+	name: string;
+	token_hash: string;
+	prefix: string; // First 8 chars for identification (e.g. "ec_pat_Ab")
+	user_id: string;
+	scopes: string; // JSON array of scope strings
+	expires_at: string | null; // null = no expiry
+	last_used_at: string | null;
+	created_at: Generated<string>;
+}
+
+export interface OAuthTokenTable {
+	token_hash: string; // SHA-256 hash (PK)
+	token_type: string; // 'access' | 'refresh'
+	user_id: string;
+	scopes: string; // JSON array
+	client_type: string; // 'cli' | 'mcp'
+	expires_at: string;
+	refresh_token_hash: string | null; // links access → refresh
+	client_id: string | null; // Which OAuth client obtained this token
+	created_at: Generated<string>;
+}
+
+export interface AuthorizationCodeTable {
+	code_hash: string; // SHA-256 hash (PK)
+	client_id: string; // CIMD URL or opaque string
+	redirect_uri: string; // Must match exactly on exchange
+	user_id: string;
+	scopes: string; // JSON array
+	code_challenge: string; // S256 challenge
+	code_challenge_method: string; // 'S256'
+	resource: string | null; // RFC 8707 resource indicator
+	expires_at: string;
+	created_at: Generated<string>;
+}
+
+export interface OAuthClientTable {
+	id: string; // Client ID (e.g. URL or opaque string)
+	name: string; // Human-readable name
+	redirect_uris: string; // JSON array of allowed redirect URIs
+	scopes: string | null; // JSON array of allowed scopes (null = all)
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface DeviceCodeTable {
+	device_code: string; // opaque, high-entropy (PK)
+	user_code: string; // short, human-readable (ABCD-1234)
+	scopes: string; // JSON array
+	user_id: string | null; // set when user authorizes
+	status: string; // 'pending' | 'authorized' | 'denied' | 'expired'
+	expires_at: string;
+	interval: number; // polling interval in seconds
+	last_polled_at: string | null; // RFC 8628 slow_down tracking
+	created_at: Generated<string>;
+}
+
+export interface OptionTable {
+	name: string;
+	value: string; // JSON
+	revision: Generated<string>;
+}
+
+export interface AuditLogTable {
+	id: string;
+	timestamp: Generated<string>;
+	actor_id: string | null;
+	actor_ip: string | null;
+	action: string;
+	resource_type: string | null;
+	resource_id: string | null;
+	details: string | null; // JSON
+	status: string | null;
+}
+
+export interface MigrationTable {
+	name: string;
+	timestamp: string;
+}
+
+// Schema Registry Tables
+
+export interface CollectionTable {
+	id: string;
+	slug: string;
+	label: string;
+	label_singular: string | null;
+	description: string | null;
+	icon: string | null;
+	admin_config: Generated<string | null>; // JSON: { listColumns?: string[]; quickCreate?: boolean }
+	supports: string | null; // JSON array
+	source: string | null;
+	search_config: string | null; // JSON: SearchConfig
+	has_seo: number; // 0 or 1 — opt-in SEO fields for this collection
+	title_field: string | null; // field slug for the admin list Title column (NULL = default)
+	date_field: string | null; // field slug (datetime) for the admin list Date column (NULL = default)
+	url_pattern: string | null; // URL pattern with {slug} placeholder (e.g. "/blog/{slug}")
+	routable: Generated<number>; // 0 or 1 — published entries require a slug when enabled
+	hidden: Generated<number>; // 0 or 1 — omit the auto-generated sidebar entry and dashboard quick action
+	sort_order: number | null; // explicit admin sidebar position; NULL = alphabetical fallback
+	nav_group: string | null; // admin sidebar folder label; NULL = inline
+	comments_enabled: Generated<number>; // 0 or 1
+	comments_moderation: Generated<string>; // 'all' | 'first_time' | 'none'
+	comments_closed_after_days: Generated<number>; // 0 = never close
+	comments_auto_approve_users: Generated<number>; // 0 or 1
+	edit_locking: Generated<number>; // 0 or 1; take an edit lock when an entry is opened
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface SeoTable {
+	collection: string;
+	content_id: string;
+	seo_title: string | null;
+	seo_description: string | null;
+	seo_image: string | null;
+	seo_canonical: string | null;
+	seo_no_index: number; // 0 or 1
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface FieldTable {
+	id: string;
+	collection_id: string;
+	slug: string;
+	label: string;
+	type: string;
+	column_type: string;
+	required: number; // boolean as 0/1
+	unique: number; // boolean as 0/1
+	default_value: string | null; // JSON
+	validation: string | null; // JSON
+	widget: string | null;
+	options: string | null; // JSON
+	sort_order: number;
+	searchable: Generated<number>; // boolean as 0/1, defaults to 0
+	indexed: Generated<number>; // boolean as 0/1, defaults to 0
+	translatable: Generated<number>; // boolean as 0/1, defaults to 1
+	created_at: Generated<string>;
+}
+
+export interface BlockTypeTable {
+	id: string;
+	slug: string;
+	label: string;
+	description: string | null;
+	icon: string | null;
+	category: string | null;
+	current_version: number;
+	source: string;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface BlockTypeVersionTable {
+	id: string;
+	block_type_id: string;
+	version: number;
+	fields: string;
+	fingerprint: string;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+// Plugin Storage Tables
+
+export interface PluginStorageTable {
+	plugin_id: string;
+	collection: string;
+	id: string;
+	data: string; // JSON
+	revision: Generated<string>;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface PluginStateTable {
+	plugin_id: string;
+	version: string;
+	status: string; // 'installed' | 'active' | 'inactive'
+	installed_at: Generated<string>;
+	activated_at: string | null;
+	deactivated_at: string | null;
+	data: string | null; // JSON
+	source: Generated<string>; // 'config' | 'marketplace' | 'registry'
+	marketplace_version: string | null;
+	display_name: string | null;
+	description: string | null;
+	// Registry-specific columns (added by migration 038). Always null for
+	// `source = 'config' | 'marketplace'`; populated for `source = 'registry'`.
+	registry_publisher_did: string | null;
+	registry_slug: string | null;
+	mcp_tools_enabled: Generated<number>;
+	mcp_tools_consent: string | null;
+}
+
+export interface PluginIndexTable {
+	plugin_id: string;
+	collection: string;
+	index_name: string;
+	fields: string; // JSON array of field paths
+	created_at: Generated<string>;
+}
+
+// Navigation Menus
+
+export interface MenuTable {
+	id: string;
+	name: string;
+	label: string;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+	locale: Generated<string>;
+	translation_group: string | null;
+}
+
+export interface MenuItemTable {
+	id: string;
+	menu_id: string;
+	parent_id: string | null;
+	sort_order: number;
+	type: string;
+	reference_collection: string | null;
+	reference_id: string | null; // stores translation_group of referenced content/term
+	custom_url: string | null;
+	label: string;
+	title_attr: string | null;
+	target: string | null;
+	css_classes: string | null;
+	created_at: Generated<string>;
+	locale: Generated<string>;
+	translation_group: string | null;
+}
+
+// Widget Areas
+
+export interface WidgetAreaTable {
+	id: string;
+	name: string;
+	label: string;
+	description: string | null;
+	created_at: Generated<string>;
+}
+
+export interface WidgetTable {
+	id: string;
+	area_id: string;
+	sort_order: number;
+	type: string; // 'content', 'menu', 'component'
+	title: string | null;
+	content: string | null; // JSON: Portable Text
+	menu_name: string | null;
+	component_id: string | null;
+	component_props: string | null; // JSON
+	created_at: Generated<string>;
+}
+
+// Cron Tasks
+
+export interface CronTaskTable {
+	id: string;
+	plugin_id: string;
+	task_name: string;
+	schedule: string;
+	is_oneshot: number; // 0 or 1
+	data: string | null; // JSON
+	next_run_at: string;
+	last_run_at: string | null;
+	status: string; // 'idle' | 'running'
+	locked_at: string | null;
+	enabled: number; // 0 or 1
+	created_at: Generated<string>;
+}
+
+// Comments
+
+export interface CommentTable {
+	id: string;
+	collection: string;
+	content_id: string;
+	parent_id: string | null;
+	author_name: string;
+	author_email: string;
+	author_user_id: string | null;
+	body: string;
+	status: string; // 'pending' | 'approved' | 'spam' | 'trash'
+	ip_hash: string | null;
+	user_agent: string | null;
+	moderation_metadata: string | null; // JSON
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface CommentReactionTable {
+	id: string;
+	comment_id: string;
+	reaction: string;
+	voter_hash: string;
+	created_at: Generated<string>;
+}
+
+// Sections
+
+export interface SectionTable {
+	id: string;
+	slug: string;
+	title: string;
+	description: string | null;
+	keywords: string | null; // JSON array
+	content: string; // JSON: Portable Text array
+	preview_media_id: string | null;
+	source: string; // 'theme', 'user', 'import'
+	theme_id: string | null;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+// Site transfer (migration 084)
+
+export interface TransferOperationTable {
+	id: string;
+	kind: string; // 'export' | 'import'
+	state: string;
+	stage: string | null;
+	cursor: string | null; // JSON
+	progress: string | null; // JSON
+	options: string | null; // JSON
+	idempotency_key: string | null;
+	package_digest: string | null;
+	plan_digest: string | null;
+	origin_site_id: string | null;
+	staging_secret: string;
+	receipt: string | null; // JSON
+	error_code: string | null;
+	error_detail: string | null; // JSON
+	write_epoch: Generated<number>;
+	attempt_count: Generated<number>;
+	lease_token: string | null;
+	lease_expires_at: string | null;
+	runtime_generation: Generated<number>;
+	cancel_requested_at: string | null;
+	mutation_started_at: string | null;
+	created_by: string;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+	completed_at: string | null;
+	expires_at: string | null;
+	staging_collected_at: string | null;
+}
+
+export interface TransferIdentityMapTable {
+	origin_site_id: string;
+	entity_kind: string;
+	portable_id: string;
+	target_id: string;
+	operation_id: string;
+	created_at: Generated<string>;
+}
+
+export interface TransferStagedFileTable {
+	operation_id: string;
+	path: string;
+	bytes: number | string; // bigint: Postgres returns a string
+	sha256: string;
+	state: Generated<string>; // 'declared' | 'verified'
+	verified_at: string | null;
+	logical_sha256: string | null; // verification: logical hash of a record chunk's target records
+}
+
+export interface TransferPackageIndexTable {
+	operation_id: string;
+	kind: string;
+	id: string;
+	group_id: string | null;
+	parent_id: string | null;
+	name_key: string | null;
+	depth: Generated<number>;
+}
+
+export interface TransferMediaBlobTable {
+	operation_id: string;
+	media_id: string;
+	sha256: string;
+	bytes: number | string; // bigint: Postgres returns a string
+}
+
+export interface TransferApprovalTable {
+	id: string;
+	status: Generated<string>; // 'pending' | 'approved' | 'denied' | 'consumed' | 'expired'
+	action: string; // 'export' | 'import'
+	user_id: string;
+	requested_by_token_id: string | null;
+	approved_by: string | null;
+	operation_id: string | null;
+	params_digest: string | null;
+	package_digest: string | null;
+	plan_digest: string | null;
+	expires_at: string;
+	created_at: Generated<string>;
+	decided_at: string | null;
+	consumed_at: string | null;
+}
+
+// Database schema
+// Note: ec_* content tables are dynamic and not part of this type
+export interface Database {
+	revisions: RevisionTable;
+	_emdash_revision_prune_queue: RevisionPruneQueueTable;
+	taxonomies: TaxonomyTable;
+	content_taxonomies: ContentTaxonomyTable;
+	_emdash_taxonomy_defs: TaxonomyDefTable;
+	_emdash_taxonomy_def_groups: TaxonomyDefGroupTable;
+	media: MediaTable;
+	media_folders: MediaFolderTable;
+	_emdash_media_upload_attempts: MediaUploadAttemptTable;
+	_emdash_media_usage_sources: MediaUsageSourceTable;
+	_emdash_media_usage: MediaUsageTable;
+	_emdash_media_usage_cleanup: MediaUsageCleanupTable;
+	_emdash_media_usage_generation_writes: MediaUsageGenerationWriteTable;
+	_emdash_media_usage_cleanup_fence: MediaUsageGenerationFenceTable;
+	_emdash_media_usage_index_status: MediaUsageIndexStatusTable;
+	_emdash_media_usage_activation: MediaUsageActivationTable;
+	_emdash_media_usage_work: MediaUsageWorkTable;
+	_emdash_media_usage_collection_deletions: MediaUsageCollectionDeletionTable;
+	_emdash_media_usage_reconciliations: MediaUsageReconciliationTable;
+	users: UserTable;
+	credentials: CredentialTable;
+	auth_tokens: AuthTokenTable;
+	oauth_accounts: OAuthAccountTable;
+	allowed_domains: AllowedDomainTable;
+	auth_challenges: AuthChallengeTable;
+	options: OptionTable;
+	audit_logs: AuditLogTable;
+	_emdash_migrations: MigrationTable;
+	_emdash_collections: CollectionTable;
+	_emdash_fields: FieldTable;
+	_emdash_block_types: BlockTypeTable;
+	_emdash_block_type_versions: BlockTypeVersionTable;
+	_plugin_storage: PluginStorageTable;
+	_plugin_state: PluginStateTable;
+	_plugin_indexes: PluginIndexTable;
+	_emdash_menus: MenuTable;
+	_emdash_menu_items: MenuItemTable;
+	_emdash_widget_areas: WidgetAreaTable;
+	_emdash_widgets: WidgetTable;
+	_emdash_sections: SectionTable;
+	_emdash_api_tokens: ApiTokenTable;
+	_emdash_oauth_tokens: OAuthTokenTable;
+	_emdash_device_codes: DeviceCodeTable;
+	_emdash_authorization_codes: AuthorizationCodeTable;
+	_emdash_oauth_clients: OAuthClientTable;
+	_emdash_seo: SeoTable;
+	_emdash_cron_tasks: CronTaskTable;
+	_emdash_comments: CommentTable;
+	_emdash_comment_reactions: CommentReactionTable;
+	_emdash_redirects: RedirectTable;
+	_emdash_redirect_write_lock: RedirectWriteLockTable;
+	_emdash_redirect_state: RedirectStateTable;
+	_emdash_redirect_artifacts: RedirectArtifactTable;
+	_emdash_redirect_generation_artifacts: RedirectGenerationArtifactTable;
+	_emdash_404_log: NotFoundLogTable;
+	_emdash_bylines: BylineTable;
+	_emdash_content_bylines: ContentBylineTable;
+	_emdash_byline_fields: BylineFieldTable;
+	_emdash_byline_field_values: BylineFieldValueTable;
+	_emdash_byline_field_group_values: BylineFieldGroupValueTable;
+	_emdash_relations: RelationTable;
+	_emdash_content_references: ContentReferenceTable;
+	_emdash_rate_limits: RateLimitTable;
+	_emdash_entry_locks: EntryLockTable;
+	_emdash_transfer_operations: TransferOperationTable;
+	_emdash_transfer_identity_map: TransferIdentityMapTable;
+	_emdash_transfer_staged_files: TransferStagedFileTable;
+	_emdash_transfer_package_index: TransferPackageIndexTable;
+	_emdash_transfer_media_blobs: TransferMediaBlobTable;
+	_emdash_transfer_approvals: TransferApprovalTable;
+}
+
+export type MediaRow = {
+	id: string;
+	filename: string;
+	mime_type: string;
+	size: number | null;
+	width: number | null;
+	height: number | null;
+	focal_x: number | null;
+	focal_y: number | null;
+	alt: string | null;
+	caption: string | null;
+	storage_key: string;
+	status: string; // 'pending' | 'ready' | 'failed'
+	content_hash: string | null; // xxHash64 for deduplication
+	blurhash: string | null;
+	dominant_color: string | null;
+	created_at: string;
+	author_id: string | null;
+	folder_id: string | null;
+};
+
+export interface RedirectTable {
+	id: string;
+	source: string;
+	destination: string;
+	type: number; // 301, 302, 307, 308
+	is_pattern: number; // boolean: source contains [param] or [...splat]
+	enabled: number; // boolean
+	hits: number;
+	last_hit_at: string | null;
+	group_name: string | null;
+	auto: number; // boolean: system-generated from slug change
+	config_revision: string;
+	source_guard: number;
+	write_generation: number;
+	created_at: string;
+	updated_at: string;
+}
+
+export interface RedirectWriteLockTable {
+	id: number;
+	token: string;
+	expires_at: number;
+	generation: number;
+}
+
+export interface RedirectStateTable {
+	id: number;
+	revision: Generated<number>;
+	generation: string | null;
+	generation_revision: Generated<number>;
+	repair_expires_at: Generated<number>;
+}
+
+export interface RedirectArtifactTable {
+	digest: string;
+	kind: string;
+	payload: string;
+}
+
+export interface RedirectGenerationArtifactTable {
+	generation: string;
+	position: number;
+	digest: string;
+}
+
+export interface NotFoundLogTable {
+	id: string;
+	path: string;
+	referrer: string | null;
+	user_agent: string | null;
+	ip: string | null;
+	hits: number;
+	/**
+	 * Migration 035 adds this as a nullable column (SQLite can't add a
+	 * NOT NULL column with a non-constant default to an existing table).
+	 * The `log404` upsert always writes a value, so new and updated rows
+	 * always have one, but existing rows pre-migration were backfilled
+	 * without a NOT NULL constraint. Typed as nullable to match the schema.
+	 */
+	last_seen_at: string | null;
+	created_at: string;
+}
+
+export interface BylineTable {
+	id: string;
+	slug: string;
+	display_name: string;
+	bio: string | null;
+	avatar_media_id: string | null;
+	website_url: string | null;
+	user_id: string | null;
+	is_guest: number;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+	/**
+	 * Locale this byline row is presented in. Added by migration 040. Backfilled
+	 * to the configured `defaultLocale` for pre-040 rows. `(slug, locale)` is
+	 * unique; the partial unique on `user_id` widens to `(user_id, locale)`.
+	 */
+	locale: Generated<string>;
+	/**
+	 * Shared across translations of the same byline. Added by migration 040.
+	 * Equals `id` for the anchor row; siblings inherit it from their source.
+	 * `_emdash_content_bylines.byline_id` and `ec_*.primary_byline_id` store
+	 * this value rather than a row id, so credits span every locale variant of
+	 * a byline. Nullable in the schema for backwards compatibility; new rows
+	 * always populate it.
+	 */
+	translation_group: string | null;
+}
+
+export interface ContentBylineTable {
+	id: string;
+	collection_slug: string;
+	content_id: string;
+	byline_id: string;
+	sort_order: number;
+	role_label: string | null;
+	created_at: Generated<string>;
+}
+
+// Byline custom fields (migration 041, Discussion #1174)
+//
+// `_emdash_byline_fields` stores definitions; values land in either
+// `_emdash_byline_field_values` (translatable, keyed by byline row id) or
+// `_emdash_byline_field_group_values` (non-translatable, keyed by
+// translation_group). Per-field `translatable` flag picks the home table.
+
+export interface BylineFieldTable {
+	id: string;
+	slug: string;
+	label: string;
+	/** One of: 'string', 'text', 'url', 'boolean', 'select'. v1 subset. */
+	type: string;
+	required: Generated<number>; // 0 or 1
+	/** 0 = group-shared, 1 = per-locale. Defaults to 1 at the DB level. */
+	translatable: Generated<number>;
+	/** JSON: `{ options?: string[] }` for `select`-type fields. */
+	validation: string | null;
+	sort_order: Generated<number>;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface BylineFieldValueTable {
+	byline_id: string;
+	field_id: string;
+	/** JSON-encoded value (`CustomFieldValue` after parse). */
+	value: string | null;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface BylineFieldGroupValueTable {
+	translation_group: string;
+	field_id: string;
+	/** JSON-encoded value (`CustomFieldValue` after parse). */
+	value: string | null;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+// Content references
+//
+// `_emdash_relations` defines relationship types (row-per-locale, like
+// `_emdash_taxonomy_defs`). `_emdash_content_references` holds directed edges
+// between content entries, linked by `translation_group` so they are
+// locale-agnostic — no foreign keys, mirroring `content_taxonomies`.
+
+/**
+ * A relation definition. Not localized — a relation joins the same two
+ * collections whatever language you read it in, and its role labels are
+ * single-valued like a collection's. See migration 086.
+ */
+export interface RelationTable {
+	id: string;
+	slug: string;
+	parent_collection: string;
+	child_collection: string;
+	parent_label: string;
+	child_label: string;
+	parent_label_singular: string | null;
+	child_label_singular: string | null;
+	/** How many children one parent may hold. NULL means unlimited. */
+	max_children_per_parent: number | null;
+	/** How many parents one child may hold. NULL means unlimited. */
+	max_parents_per_child: number | null;
+	created_at: Generated<string>;
+	updated_at: Generated<string>;
+}
+
+export interface ContentReferenceTable {
+	id: string;
+	/** Stores `_emdash_relations.id`. No FK. */
+	relation_id: string;
+	/** Parent entry's `translation_group`. */
+	parent_group: string;
+	/** Child entry's `translation_group`. */
+	child_group: string;
+	sort_order: Generated<number>;
+	created_at: Generated<string>;
+}
+
+// Rate Limits
+
+export interface RateLimitTable {
+	key: string; // {ip or IP hash}:{endpoint}
+	window: string; // ISO timestamp truncated to window size
+	count: number;
+}
+
+export interface EntryLockTable {
+	collection: string;
+	entry_id: string; // ID in the ec_* table
+	user_id: string;
+	token: string; // identifies the holder's editing session, one per tab
+	acquired_at: string; // ISO 8601 with milliseconds
+	expires_at: string; // ISO 8601 with milliseconds
+}

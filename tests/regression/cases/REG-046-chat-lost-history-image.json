@@ -1,0 +1,29 @@
+{
+  "id": "REG-046",
+  "kind": "fix",
+  "title": "A chat session whose history holds an image with a lost stored copy still answers its next turn, instead of failing every turn as TRANSPORT",
+  "pr": 852,
+  "area": "chat/attachments",
+  "cms": ["any"],
+  "needs": ["stand", "model", "site:wp"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Common setup. The stand's dsh-home must be bind-mounted on the host (scv2: ~/TCH-local/scv2/dsh-home, with attachments/ and sessions/); chrome-watch must answer on http://127.0.0.1:9222; the stand's model route must accept images.",
+    "S2: From the TCH checkout run: node tasks/evidence/chat-missing-attachment/reg046.mjs ~/TCH-local/scv2 scv2wp $Q/reg046 (stand dir, site label, output dir). It signs in as scv2-a, opens the site's chat, attaches a freshly drawn PNG and sends 'REG-046 step 1: reply with exactly one word: received', waits for that turn's turn/end in the session log, deletes the attachment object(s) the turn wrote under dsh-home/attachments, then sends 'REG-046 step 2: reply with exactly one word: second' in the same session and waits for its turn/end.",
+    "S3: Read the script's output lines 'turn 1 end', 'attachment objects written', 'turn 2 end', 'turn 2 llm/retry events', 'VERDICT', and the exit code. If 'turn 1 end' is an error, or 'attachment objects written 0', the case is BLOCKED (the setup did not happen), not FAIL."
+  ],
+  "expect": [
+    "'turn 1 end' is {\"kind\":\"completed\"} and 'attachment objects written' is at least 1 (the image was stored and then removed).",
+    "'turn 2 end' is {\"kind\":\"completed\"}: the turn after the stored copy was removed finishes. Before the fix it was {\"kind\":\"error\",\"error\":{\"message\":\"DeepSeek Messages transport failed\",\"code\":\"TRANSPORT\"}}.",
+    "'turn 2 llm/retry events 0': no retry of the second turn (before the fix: 3 retries, all TRANSPORT).",
+    "The script prints 'VERDICT: PASS' and exits 0."
+  ],
+  "selectors": {
+    "composer": "[data-composer-input='true']",
+    "attach": "input[type='file']",
+    "sessionLog": "dsh-home/sessions/--site-<label>--/<session>/session.v4.jsonl.zstd (turn/end, llm/retry)",
+    "attachmentObjects": "dsh-home/attachments/v1/objects/"
+  },
+  "evidence": "tasks/evidence/chat-missing-attachment/ (red and green runs on scv2, 04/10/2026)",
+  "fence": "dsh-llm readRequestImages: a lost image before the latest user message becomes a text note; an unreadable image in the latest message fails as ATTACHMENT_MISSING, never TRANSPORT"
+}

@@ -1,0 +1,84 @@
+{
+  "color": {
+    "paper-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Paper Gray — Page background, card borders, hairline dividers — the cool, slightly blue-gray substrate that every surface sits on or against"
+    },
+    "bone-white": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Bone White — Card and content-tile surface — reads as warm white against the cool Paper Gray substrate, giving each block a subtle lift without any shadow"
+    },
+    "full-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Full Black — Primary body text, nav logo, image letterbox bars — maximum contrast, used for sentences that need to carry the page"
+    },
+    "ink-charcoal": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Ink Charcoal — Headline and link text — almost black but not quite, so Fraunces serifs feel printed rather than digital"
+    },
+    "soft-graphite": {
+      "$value": "#404040",
+      "$type": "color",
+      "$description": "Soft Graphite — Secondary body text, supporting metadata lines under headings"
+    },
+    "pencil-gray": {
+      "$value": "#a3a3a3",
+      "$type": "color",
+      "$description": "Pencil Gray — Tertiary text, icon strokes, placeholder labels — fades to the background and only earns attention when scanned for"
+    },
+    "highlight-mint": {
+      "$value": "#daf5ae",
+      "$type": "color",
+      "$description": "Highlight Mint — Pill-tag background (FILTER, READ) — the first chromatic accent tier, like a fluorescent marker on the page"
+    },
+    "highlight-butter": {
+      "$value": "#fde5a7",
+      "$type": "color",
+      "$description": "Highlight Butter — Pill-tag background (NOW BREWING) — second accent tier, warmer counterpart to the mint"
+    },
+    "highlight-sage": {
+      "$value": "#b7f2cc",
+      "$type": "color",
+      "$description": "Highlight Sage — Pill-tag background (READ variants) — third accent tier, softer green for less emphatic tags"
+    },
+    "rust-underline": {
+      "$value": "#7c2d12",
+      "$type": "color",
+      "$description": "Rust Underline — Occasional inline emphasis — the only warm chromatic voice in the palette, used sparingly to single out one word or phrase inside a body sentence"
+    },
+    "navy-quotation": {
+      "$value": "#0c4a6e",
+      "$type": "color",
+      "$description": "Navy Quotation — Occasional inline emphasis — the cool counterpart to Rust Underline, used for the same hand-underline-in-a-book purpose"
+    }
+  },
+  "font": {
+    "fraunces": {
+      "$value": "Fraunces",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headings — light-weight serif at 30/36/60px. The whisper weight and optical-size personality of Fraunces make every headline feel hand-set rather than UI-generated; this is the single most distinctive typographic choice on the site"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, navigation, metadata, card titles, footer. Used everywhere the voice is functional and not editorial. Compact 14px for card-level metadata, comfortable 16px for running prose"
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "Code-fence and small technical labels — inherits the same tight tracking as Inter so mono blocks align with the proportional text around them"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://chester.how",
+      "siteName": "Chester's Garden",
+      "extractedAt": "2026-06-03T18:19:45.224Z",
+      "variant": "compact"
+    }
+  }
+}

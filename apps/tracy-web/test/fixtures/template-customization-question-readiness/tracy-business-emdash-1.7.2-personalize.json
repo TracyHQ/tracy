@@ -1,0 +1,978 @@
+{
+  "schemaVersion": "tracy-personalize/v1",
+  "note": "What tools/personalize.mjs changes on a customer's copy of this template from the questionnaire answers (seed/questions.json). Five kinds, and the difference between them is what may be INVENTED: `identity` is the customer's own words, written exactly; `replace` rewrites the demo brand everywhere; `copy` is prose a model writes for their sector; `rewrite` does the same for whole demo entries; `facts` are CLAIMS about a real business — counts, founding years, certifications, named clients — and those are REMOVED, never written: a made-up \"380 projects since 2004\" is a lie in the customer's name (CLAUDE.md §0 rule 3). `hide` unpublishes pages that are nothing but claims and drops their menu items. Values use {name} {NAME} {initials} {phone} {address} {year} {sector}; a rule whose value needs an answer the customer did not give is skipped and reported, never guessed.",
+  "settings": {
+    "title": "{name}"
+  },
+  "identity": [
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "brand_name",
+      "value": "{NAME}"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "brand_mark",
+      "value": "{initials}"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "copyright",
+      "value": "© {year} {name}"
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "hotline",
+      "value": "{phone}",
+      "empty": ""
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "topbar_phone",
+      "value": {
+        "en": "Hotline: {phone}",
+        "ru": "Горячая линия: {phone}"
+      },
+      "empty": ""
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "topbar_address",
+      "value": "{address}",
+      "empty": ""
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "footer_legal_2",
+      "value": "{address}",
+      "empty": ""
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "footer_legal_1",
+      "value": ""
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "topbar_email",
+      "value": "{email}",
+      "empty": ""
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "sales_email",
+      "value": "{email}",
+      "empty": ""
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "hours",
+      "value": "{hours}",
+      "empty": ""
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "social",
+      "value": [],
+      "from": "social",
+      "item": { "name": "{name}", "handle": "{handle}", "url": "{url}", "text": "" }
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "why_eyebrow",
+      "value": {
+        "en": "Why {name}",
+        "ru": "Почему «{name}»"
+      }
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "hq_address_1",
+      "value": "{address}",
+      "empty": ""
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "hq_address_2",
+      "value": ""
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "branches",
+      "value": []
+    }
+  ],
+  "replace": [
+    {
+      "find": "Northgate Industrial JSC",
+      "with": "{name}"
+    },
+    {
+      "find": "Northgate Industrial",
+      "with": "{name}"
+    },
+    {
+      "find": "NORTHGATE",
+      "with": "{NAME}"
+    },
+    {
+      "find": "Northgate",
+      "with": "{name}"
+    },
+    {
+      "find": "«Норткейт»",
+      "with": "«{name}»"
+    },
+    {
+      "find": "Норткейт",
+      "with": "{name}"
+    }
+  ],
+  "copyNote": "Read by Tracy's template readiness check, not by tools/personalize.mjs (TCH #1013, D6 + D7): demoCompanyNames is every spelling of the demo company's name, each renamed by a replace rule above; keptText is demo text kept on purpose (collection/slug for an entry, collection/slug.field for one field), here the two legal pages, whose company name replace renames.",
+  "demoCompanyNames": [
+    "Northgate Industrial JSC",
+    "Northgate Industrial",
+    "Northgate",
+    "NORTHGATE",
+    "Норткейт"
+  ],
+  "keptText": ["pages/terms", "pages/privacy"],
+  "labelsNote": "The entries whose labels tools/personalize.mjs translates when the root is written in another language than its own (chromeLabelsOf, TCH #1013): the chrome (header, footer, search, 404) and every page's own headings, buttons, breadcrumb and title (the source of its <title>); the menus are translated beside them. A rule with `fields` names only those fields. Addresses, names, references and fields another rule writes (copy, blocks, rewrite, facts, identity) are left alone; an identity sentence the template has only in another language is translated with them.",
+  "labels": [
+    { "collection": "site", "slug": "site" },
+    { "collection": "home", "slug": "home" },
+    { "collection": "about", "slug": "about" },
+    { "collection": "services_page", "slug": "services" },
+    { "collection": "projects_page", "slug": "projects" },
+    { "collection": "news_page", "slug": "news" },
+    { "collection": "contact", "slug": "contact" },
+    { "collection": "careers", "slug": "careers" },
+    { "collection": "pages", "slug": "terms", "fields": ["title", "lede"] },
+    { "collection": "pages", "slug": "privacy", "fields": ["title", "lede"] }
+  ],
+  "samplesNote": "The template's sample pages (the Resources kit menu): their content stays as the template has it, in the language the site is written in (TCH #1013, K3). When the root is written in another language than its own, tools/personalize.mjs gives each the template's own edition in that language (planFrom, the demo brand swapped), or has its words translated when the template ships no such edition.",
+  "samples": [
+    { "collection": "pages", "slug": "kit-newsletter" },
+    { "collection": "pages", "slug": "kit-email" },
+    { "collection": "pages", "slug": "kit-form" },
+    { "collection": "pages", "slug": "kit-slides" },
+    { "collection": "pages", "slug": "kit-style-guide" }
+  ],
+  "copy": [
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "brand_sub",
+      "brief": "what the business does, under the logo",
+      "maxWords": 4
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "footer_text",
+      "brief": "one sentence about the business for the footer, starting with its name",
+      "maxWords": 24
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "hero_badge",
+      "brief": "a short badge above the headline (a founding year, a place, a credential)",
+      "maxWords": 3
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "hero_title_a",
+      "brief": "first half of the home headline; the second half is the accented ending",
+      "maxWords": 5
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "hero_title_b",
+      "brief": "second, accented half of the home headline (a noun phrase)",
+      "maxWords": 4
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "hero_text",
+      "brief": "one or two sentences under the headline saying what the business offers and to whom",
+      "maxWords": 32
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "services_title",
+      "brief": "heading of the services block",
+      "maxWords": 6
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "why_title",
+      "brief": "one line on why to choose this business",
+      "maxWords": 10
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "band_title",
+      "brief": "a call-to-action question inviting a quote or an order",
+      "maxWords": 12
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "band_text",
+      "brief": "one sentence on what happens after the customer gets in touch",
+      "maxWords": 28
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "band_button",
+      "brief": "the call-to-action button",
+      "maxWords": 4
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "title",
+      "brief": "the about page headline",
+      "maxWords": 10
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "lede",
+      "brief": "the about page opening paragraph: who the business is and what it does",
+      "maxWords": 45
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "mission_text",
+      "brief": "a paragraph on how the business works with its customers",
+      "maxWords": 55
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "cta_title",
+      "brief": "a closing call-to-action question on the about page",
+      "maxWords": 12
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "cta_text",
+      "brief": "one sentence inviting the reader to get in touch",
+      "maxWords": 28
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "lede",
+      "brief": "the contact page opening line: what to write and how fast the business answers",
+      "maxWords": 25
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "quote_label",
+      "brief": "the call-to-action button in the header (what a visitor asks this business for)",
+      "maxWords": 3
+    },
+    {
+      "collection": "site",
+      "slug": "site",
+      "field": "footer_book_label",
+      "brief": "a closing invitation in the footer, ending with an arrow",
+      "maxWords": 5
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "title",
+      "brief": "the services page headline",
+      "maxWords": 9
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "lede",
+      "brief": "one sentence on what the business offers and how it works",
+      "maxWords": 30
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "services_title",
+      "brief": "heading above the list of services",
+      "maxWords": 5
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "process_title",
+      "brief": "heading above the steps of working together",
+      "maxWords": 6
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "pricing_title",
+      "brief": "heading above the price guide",
+      "maxWords": 4
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "pricing_text",
+      "brief": "one sentence saying prices are indicative and how a firm price is given",
+      "maxWords": 28
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "cta_title",
+      "brief": "a closing call to action on the services page",
+      "maxWords": 8
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "cta_text",
+      "brief": "one sentence on what to send and what comes back",
+      "maxWords": 28
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "cta_button",
+      "brief": "the button of that call to action",
+      "maxWords": 4
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "title",
+      "brief": "headline of the page showing the work this business has done",
+      "maxWords": 8
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "lede",
+      "brief": "one sentence introducing the work, with no counts or dates",
+      "maxWords": 28
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "grid_title",
+      "brief": "heading above the gallery of work",
+      "maxWords": 4
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "grid_text",
+      "brief": "a short line under that heading, no dates",
+      "maxWords": 6
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "sectors_title",
+      "brief": "heading above who this business works for",
+      "maxWords": 4
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "how_title",
+      "brief": "heading above how a job runs",
+      "maxWords": 6
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "cta_title",
+      "brief": "a closing call to action on the work page",
+      "maxWords": 8
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "cta_text",
+      "brief": "one sentence inviting an enquiry",
+      "maxWords": 26
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "cta_button",
+      "brief": "the button of that call to action",
+      "maxWords": 4
+    },
+    {
+      "collection": "news_page",
+      "slug": "news",
+      "field": "title",
+      "brief": "headline of the news page",
+      "maxWords": 6
+    },
+    {
+      "collection": "news_page",
+      "slug": "news",
+      "field": "lede",
+      "brief": "one sentence on what this business will share on this page; it has published nothing yet, so name no news",
+      "maxWords": 24
+    },
+    {
+      "collection": "news_page",
+      "slug": "news",
+      "field": "newsletter_title",
+      "brief": "an invitation to subscribe to news from this business",
+      "maxWords": 9
+    },
+    {
+      "collection": "news_page",
+      "slug": "news",
+      "field": "newsletter_text",
+      "brief": "one line on what a subscriber receives",
+      "maxWords": 16
+    },
+    {
+      "collection": "news_page",
+      "slug": "news",
+      "field": "aside_title",
+      "brief": "a question inviting the reader to get in touch, beside an article",
+      "maxWords": 10
+    },
+    {
+      "collection": "news_page",
+      "slug": "news",
+      "field": "aside_text",
+      "brief": "one sentence offering help",
+      "maxWords": 22
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "title",
+      "brief": "headline of the careers page, naming the business",
+      "maxWords": 6
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "lede",
+      "brief": "one or two sentences on who this business hires, with no counts",
+      "maxWords": 34
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "benefits_title",
+      "brief": "heading above what the business offers its people",
+      "maxWords": 5
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "life_title",
+      "brief": "heading above pictures of working here",
+      "maxWords": 5
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "cta_title",
+      "brief": "a closing line for someone who found no suitable role",
+      "maxWords": 9
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "cta_text",
+      "brief": "one sentence inviting a speculative application",
+      "maxWords": 24
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "geo_title",
+      "brief": "heading above where the business is",
+      "maxWords": 4
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "mission_title",
+      "brief": "heading above what the business does",
+      "maxWords": 4
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "notice",
+      "brief": "one line telling the visitor what to include so the answer is useful",
+      "maxWords": 22
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "hero_cta1_label",
+      "brief": "the main button under the headline",
+      "maxWords": 4
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "hero_cta2_label",
+      "brief": "the second, quieter button under the headline",
+      "maxWords": 5
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "services_eyebrow",
+      "brief": "two or three words above the offer block",
+      "maxWords": 3
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "clients_label",
+      "brief": "a line above who this business serves",
+      "maxWords": 6
+    }
+  ],
+  "copySettings": {
+    "tagline": {
+      "from": "site.site.brand_sub"
+    }
+  },
+  "facts": [
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "stats",
+      "why": "counts of projects, employees and years"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "client_logos",
+      "why": "named clients of another company"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "stats",
+      "why": "counts"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "history",
+      "why": "a timeline of another company"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "certs",
+      "why": "certifications and memberships"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "team",
+      "why": "named people"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "geo_list",
+      "why": "offices and regions"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "safety_text",
+      "why": "an incident record"
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "stats",
+      "why": "counts"
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "pricing",
+      "why": "prices"
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "featured_facts",
+      "why": "the measurements of a real building"
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "featured_title",
+      "why": "a named project"
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "featured_text",
+      "why": "a named project"
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "stats",
+      "why": "counts"
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "quote",
+      "why": "a testimonial from a named person"
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "quote_by",
+      "why": "a named person"
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "cta_url",
+      "why": "another company's mailbox"
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "cta_mail",
+      "why": "another company's mailbox"
+    },
+    {
+      "collection": "projects",
+      "field": "year",
+      "why": "a date"
+    },
+    {
+      "collection": "projects",
+      "field": "area",
+      "why": "a measurement"
+    },
+    {
+      "collection": "projects",
+      "field": "city",
+      "why": "a place"
+    },
+    {
+      "collection": "projects",
+      "field": "card_tag",
+      "why": "a type and a year"
+    },
+    {
+      "collection": "projects",
+      "field": "facts",
+      "why": "client, region, duration"
+    },
+    {
+      "collection": "projects",
+      "field": "quote",
+      "why": "a testimonial from a named person"
+    },
+    {
+      "collection": "projects",
+      "field": "quote_by",
+      "why": "a named person"
+    },
+    {
+      "collection": "posts",
+      "field": "author",
+      "why": "a named person or department of another company"
+    },
+    {
+      "collection": "vacancies",
+      "field": "city",
+      "why": "a place"
+    },
+    {
+      "collection": "vacancies",
+      "field": "pay",
+      "why": "a salary"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "geo_text",
+      "why": "where the demo company has its head office, plant and regional divisions"
+    }
+  ],
+  "hide": [],
+  "trim": [
+    {
+      "collection": "posts",
+      "keep": 0,
+      "why": "a demo news note: another company's news under the customer's name, its body naming that company's plants and cities even once rewritten. The news page stays, empty until the customer writes their own",
+      "leadsTo": "/contact"
+    },
+    {
+      "collection": "projects",
+      "keep": 4,
+      "why": "a demo project beyond the four kept: work another company did, under the customer's name",
+      "leadsTo": "/contact"
+    },
+    {
+      "collection": "vacancies",
+      "keep": 2,
+      "why": "a demo open role beyond the two kept: a job nobody is hiring for",
+      "leadsTo": "/contact"
+    },
+    {
+      "collection": "services",
+      "keep": 6,
+      "why": "a demo service beyond the six kept",
+      "leadsTo": "/contact"
+    }
+  ],
+  "rewrite": [
+    {
+      "collection": "services",
+      "brief": "one service or product line this business offers",
+      "fields": ["title", "description", "term"],
+      "lists": {
+        "includes": "item"
+      },
+      "decides": ["title"]
+    },
+    {
+      "collection": "projects",
+      "brief": "one piece of work this business has done or one thing it makes — no client name, no date, no measurements",
+      "fields": ["title", "type_label", "summary", "lede", "scope_title", "cta_label"],
+      "lists": {
+        "scope": "item",
+        "gallery": "caption"
+      },
+      "batch": 3,
+      "decides": ["title"]
+    },
+    {
+      "collection": "posts",
+      "brief": "one note or piece of news this business would publish",
+      "fields": ["title", "short_title", "excerpt"],
+      "body": "content",
+      "bodyWords": 180,
+      "batch": 3,
+      "decides": ["title"]
+    },
+    {
+      "collection": "vacancies",
+      "brief": "one open role at this business",
+      "fields": ["title", "type"],
+      "decides": ["title"]
+    }
+  ],
+  "blocks": [
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "services_items",
+      "itemFields": ["title", "text"],
+      "brief": "one thing this business offers, as a card on the home page"
+    },
+    {
+      "collection": "home",
+      "slug": "home",
+      "field": "why_items",
+      "itemFields": ["title", "text"],
+      "brief": "one reason to choose this business — no counts, no numbers"
+    },
+    {
+      "collection": "about",
+      "slug": "about",
+      "field": "pillars",
+      "itemFields": ["title", "text"],
+      "brief": "one way this business works, on the about page"
+    },
+    {
+      "collection": "services_page",
+      "slug": "services",
+      "field": "process",
+      "itemFields": ["title", "text"],
+      "brief": "one step of working with this business, in order"
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "sectors",
+      "itemFields": ["title", "text"],
+      "brief": "one kind of customer this business serves"
+    },
+    {
+      "collection": "projects_page",
+      "slug": "projects",
+      "field": "how",
+      "itemFields": ["title", "text"],
+      "brief": "one step of how a job runs here"
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "benefits",
+      "itemFields": ["title", "text"],
+      "brief": "one thing this business offers the people who work there"
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "steps",
+      "itemFields": ["title", "text"],
+      "brief": "one step of how hiring works here"
+    },
+    {
+      "collection": "news_page",
+      "slug": "news",
+      "field": "categories",
+      "itemFields": ["label"],
+      "brief": "one category of note this business publishes"
+    },
+    {
+      "collection": "careers",
+      "slug": "careers",
+      "field": "life",
+      "itemFields": ["caption"],
+      "brief": "one picture of a working day at this business"
+    }
+  ],
+  "terms": [
+    {
+      "taxonomy": "category",
+      "collections": ["posts"],
+      "brief": "a category of note this business publishes"
+    },
+    {
+      "taxonomy": "sector",
+      "collections": ["projects"],
+      "brief": "a kind of customer or a kind of work this business does"
+    },
+    {
+      "taxonomy": "department",
+      "collections": ["vacancies"],
+      "brief": "a part of this business someone could work in"
+    }
+  ],
+  "forms": [
+    {
+      "slug": "quote-request",
+      "fields": {
+        "name": "the placeholder of the visitor's name: the words \"Your name\" in the form's language, never a made-up person",
+        "type": "the kinds of request this business takes",
+        "description": "what the visitor should describe",
+        "consent": "one plain sentence agreeing to be contacted about the enquiry, naming no law"
+      },
+      "brief": "the enquiry form of this business"
+    },
+    {
+      "slug": "newsletter",
+      "fields": {},
+      "brief": "the newsletter signup of this business"
+    }
+  ],
+  "images": {
+    "note": "Pictures this build makes for the customer. The fields are the ones the template's media importer fills (seed/media-map.json), read from the SITE rather than the seed. A picture the model cannot make is LEFT EMPTY: a bakery under a photograph of a steel frame is worse than a bakery with a gap.",
+    "model": "google/gemini-3.1-flash-lite-image",
+    "style": "A plain, warm photograph. Natural light, no text, no logos, no people's faces in close-up, no watermark.",
+    "targets": [
+      {
+        "collection": "home",
+        "slug": "home",
+        "field": "hero_image",
+        "what": "the place this business works in, or what it makes — wide and inviting"
+      },
+      {
+        "collection": "home",
+        "slug": "home",
+        "field": "about_image",
+        "what": "the people of this business at work"
+      },
+      {
+        "collection": "about",
+        "slug": "about",
+        "field": "hero_image",
+        "what": "the workplace of this business, seen from inside"
+      },
+      {
+        "collection": "about",
+        "slug": "about",
+        "field": "safety_image",
+        "what": "a detail of the care taken in this work"
+      },
+      {
+        "collection": "careers",
+        "slug": "careers",
+        "field": "hero_image",
+        "what": "someone at work here, focused on the work"
+      },
+      {
+        "collection": "projects_page",
+        "slug": "projects",
+        "field": "featured_image",
+        "what": "the best of what this business makes or does, close up"
+      }
+    ],
+    "entries": [
+      {
+        "collection": "projects",
+        "field": "image",
+        "what": "one thing this business makes, or one job it did, photographed plainly",
+        "limit": 4
+      },
+      {
+        "collection": "posts",
+        "field": "featured_image",
+        "what": "a picture to sit above this note",
+        "limit": 3
+      }
+    ]
+  },
+  "brand": {
+    "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, TCH #1013 D9): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none.",
+    "logoDark": {
+      "collection": "site",
+      "slug": "site",
+      "field": "logo_dark",
+      "label": "Logo for dark backgrounds"
+    }
+  }
+}

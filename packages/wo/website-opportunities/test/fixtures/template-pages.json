@@ -1,0 +1,355 @@
+{
+  "quickstart/ja-impact/j6": [
+    {
+      "id": "home",
+      "home": true,
+      "label": "Home"
+    },
+    {
+      "id": "about",
+      "label": "About"
+    },
+    {
+      "id": "donations",
+      "label": "Donations"
+    },
+    {
+      "id": "events",
+      "label": "Events"
+    },
+    {
+      "id": "pages/j-content/category-blog",
+      "label": "Category Blog"
+    },
+    {
+      "id": "pages/j-content/featured-articles",
+      "label": "Featured Articles"
+    },
+    {
+      "id": "pages/j-content/blog-detail",
+      "label": "Blog Detail"
+    },
+    {
+      "id": "category-blog",
+      "label": "Blog"
+    },
+    {
+      "id": "contact",
+      "label": "Contact"
+    }
+  ],
+  "quickstart/ja-impact/wp7": [
+    {
+      "id": "home",
+      "home": true,
+      "label": "Home"
+    },
+    {
+      "id": "about",
+      "label": "About"
+    },
+    {
+      "id": "donations",
+      "label": "Donations"
+    },
+    {
+      "id": "events",
+      "label": "Events"
+    },
+    {
+      "id": "pages/j-content/featured-articles",
+      "label": "Featured Articles"
+    },
+    {
+      "id": "pages/j-content/category-blog",
+      "label": "Category Blog"
+    },
+    {
+      "id": "category-blog",
+      "label": "Blog"
+    },
+    {
+      "id": "contact",
+      "label": "Contact"
+    }
+  ],
+  "quickstart/ja-restaurant/j6": [
+    {
+      "id": "homepage",
+      "home": true,
+      "label": "Home"
+    },
+    {
+      "id": "about-us",
+      "label": "About us"
+    },
+    {
+      "id": "about-us/our-history",
+      "label": "Our History"
+    },
+    {
+      "id": "menu/simple-menu",
+      "label": "Simple Menu"
+    },
+    {
+      "id": "menu/menu-with-image",
+      "label": "Menu with Image"
+    },
+    {
+      "id": "menu/2-column-menu",
+      "label": "2 Column Menu"
+    },
+    {
+      "id": "offers",
+      "label": "Offers"
+    },
+    {
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "id": "gallery",
+      "label": "Gallery"
+    },
+    {
+      "id": "explore/j-pages/all-categories",
+      "label": "All Categories"
+    },
+    {
+      "id": "explore/j-pages/featured-articles",
+      "label": "Featured Articles"
+    },
+    {
+      "id": "contact/phone-reservation",
+      "label": "Phone Reservation"
+    },
+    {
+      "id": "contact/contact-us",
+      "label": "Contact Us"
+    }
+  ],
+  "quickstart/ja-spa/j6": [
+    {
+      "id": "homepage",
+      "home": true,
+      "label": "Home"
+    },
+    {
+      "id": "our-spa",
+      "label": "Our Spa"
+    },
+    {
+      "id": "services",
+      "label": "Services"
+    },
+    {
+      "id": "page/joomla-content/category-blog",
+      "label": "Category Blog"
+    },
+    {
+      "id": "page/joomla-content/featured-articles",
+      "label": "Featured Articles"
+    },
+    {
+      "id": "our-blog",
+      "label": "Our Blog"
+    },
+    {
+      "id": "contact",
+      "label": "Contact"
+    }
+  ],
+  "quickstart/ja-vega/j6": [
+    {
+      "id": "home",
+      "home": true,
+      "label": "Home"
+    },
+    {
+      "id": "about-us",
+      "label": "About Us"
+    },
+    {
+      "id": "services",
+      "label": "Services"
+    },
+    {
+      "id": "services/managed-services",
+      "label": "Services \u203a Managed Services"
+    },
+    {
+      "id": "services/software-development",
+      "label": "Services \u203a Software Development"
+    },
+    {
+      "id": "services/cloud-services-2",
+      "label": "Services \u203a Cloud Services"
+    },
+    {
+      "id": "services/app-development",
+      "label": "Services \u203a App Development"
+    },
+    {
+      "id": "services/it-consultancy",
+      "label": "Services \u203a IT Consultancy"
+    },
+    {
+      "id": "services/database-security",
+      "label": "Services \u203a Database Security"
+    },
+    {
+      "id": "portfolio",
+      "label": "Portfolio"
+    },
+    {
+      "id": "portfolio/database-security",
+      "label": "Portfolio \u203a Database Security"
+    },
+    {
+      "id": "portfolio/it-consultancy",
+      "label": "Portfolio \u203a IT Consultancy"
+    },
+    {
+      "id": "portfolio/app-development",
+      "label": "Portfolio \u203a App Development"
+    },
+    {
+      "id": "portfolio/cloud-services",
+      "label": "Portfolio \u203a Cloud Services"
+    },
+    {
+      "id": "portfolio/software-development",
+      "label": "Portfolio \u203a Software Development"
+    },
+    {
+      "id": "portfolio/managed-services",
+      "label": "Portfolio \u203a Managed Services"
+    },
+    {
+      "id": "news",
+      "label": "News"
+    }
+  ],
+  "tracy-base/emdash-0.x": [
+    {
+      "id": "home",
+      "home": true,
+      "label": "Home"
+    },
+    {
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "id": "services_page",
+      "label": "Service"
+    },
+    {
+      "id": "pricing",
+      "label": "Pricing"
+    },
+    {
+      "id": "blog",
+      "label": "Resources"
+    },
+    {
+      "id": "about",
+      "label": "Company"
+    }
+  ],
+  "tracy-base/j6": [
+    {
+      "id": "home",
+      "home": true,
+      "label": "Home"
+    },
+    {
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "id": "services",
+      "label": "Service"
+    },
+    {
+      "id": "services/service-detail",
+      "label": "Website design & build"
+    },
+    {
+      "id": "services/website-strategy",
+      "label": "Website strategy"
+    },
+    {
+      "id": "services/brand-and-interface-design",
+      "label": "Brand and interface design"
+    },
+    {
+      "id": "services/website-development",
+      "label": "Website development"
+    },
+    {
+      "id": "services/content-and-photography",
+      "label": "Content and photography"
+    },
+    {
+      "id": "pricing",
+      "label": "Pricing"
+    },
+    {
+      "id": "resources/blog",
+      "label": "Blog"
+    },
+    {
+      "id": "resources/category-list",
+      "label": "All articles"
+    },
+    {
+      "id": "resources/all-categories",
+      "label": "Topics"
+    },
+    {
+      "id": "resources/mag-procurement",
+      "label": "Website planning"
+    },
+    {
+      "id": "resources/mag-datacenter",
+      "label": "Website operations"
+    },
+    {
+      "id": "resources/mag-world",
+      "label": "Studio notes"
+    },
+    {
+      "id": "resources/style-guide",
+      "label": "Design system"
+    },
+    {
+      "id": "resources/spacing",
+      "label": "Spacing & grid"
+    },
+    {
+      "id": "resources/faq",
+      "label": "Help centre"
+    },
+    {
+      "id": "resources/contact",
+      "label": "Contact us"
+    },
+    {
+      "id": "resources/marketing-samples",
+      "label": "Marketing samples"
+    },
+    {
+      "id": "company/about",
+      "label": "About"
+    },
+    {
+      "id": "company/team",
+      "label": "Team"
+    },
+    {
+      "id": "company/careers",
+      "label": "Careers"
+    }
+  ]
+}

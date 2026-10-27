@@ -1,0 +1,46 @@
+{
+  "id": "QA-UNIT-REG-PR-893-wp-apply-sweeps-chosen-language-copies-happy",
+  "itemIds": ["regression:REG-PR-893-wp-apply-sweeps-chosen-language-copies"],
+  "requirement": "WordPress Apply hides and sweeps the copies of the languages the customer chose, not only the source pages",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-wp-apply-sweeps-chosen-language-copies.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026, local stand, develop b21c158bc: a Tracy Business wp7 site made with Apply (en-us + vi-vn) kept project-detail-vi ('Elektra … Lipetsk'), careers-vi, investor-relations-vi, style-guide-vi and five more demo copies published, 30 demo-company words on /vi/ pages, 0 on English ones. content.list of pages answered 17 rows, all of the source language (Polylang narrows it).",
+    "invariant": "S1 exits 0 with '# fail 0'; '# pass' equals '# tests' and is at least 28. Both named cases are 'ok'. S3 prints 'vi 17 0' and 'ru 17 0': every Vietnamese and Russian page of the release is found with the source page it translates, Russian ones included although their slugs carry no -ru.",
+    "productSources": [
+      "apps/tracy-web/src/lib/showcase-nav-map.js:62",
+      "apps/tracy-web/src/sites/brief-engines/wp-blocks.js:243",
+      "apps/tracy-web/src/sites/brief-engines/wp-residue.js:818"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-893-wp-apply-sweeps-chosen-language-copies.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-wp-apply-sweeps-chosen-language-copies"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-893-wp-apply-sweeps-chosen-language-copies",
+    "pr": 893,
+    "kind": "fix",
+    "area": "sites/apply/wordpress",
+    "file": "tests/regression/cases/REG-PR-893-wp-apply-sweeps-chosen-language-copies.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-893-wp-apply-sweeps-chosen-language-copies.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

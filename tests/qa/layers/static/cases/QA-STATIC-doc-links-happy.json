@@ -1,0 +1,30 @@
+{
+  "id": "QA-STATIC-doc-links-happy",
+  "itemIds": ["gate:doc-links"],
+  "requirement": "Gate doc-links (scripts/check-doc-links.ts) exits 0 on the current tree and goes red on a tree that breaks the rule it enforces.",
+  "oracle": {
+    "source": "scripts/check-doc-links.ts",
+    "ref": "header comment",
+    "invariant": "The tree satisfies the rule stated in the header comment of scripts/check-doc-links.ts; the gate exits 0 only then.",
+    "productSources": ["scripts/check-all.ts:48", "scripts/check-doc-links.ts:16"]
+  },
+  "edgeTags": ["happy", "invalid"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["node", "tsx (node_modules)"],
+  "assertionIds": ["static.doc-links.exit-0", "static.doc-links.broken-link-detected"],
+  "redProof": null,
+  "legacyIds": [],
+  "gate": "doc-links",
+  "command": ["pnpm", "exec", "tsx", "scripts/check-all.ts", "--only", "doc-links"],
+  "successMarker": "check-all: 1 gate(s) passed",
+  "gateScript": "scripts/check-doc-links.ts",
+  "mode": "run",
+  "mutations": ["doc-links-broken-link"]
+}

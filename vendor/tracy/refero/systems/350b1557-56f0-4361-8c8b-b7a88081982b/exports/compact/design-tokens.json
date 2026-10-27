@@ -1,0 +1,94 @@
+{
+  "color": {
+    "abyss-ink": {
+      "$value": "#060419",
+      "$type": "color",
+      "$description": "Abyss Ink — Page background, deepest surface — the void that everything floats on"
+    },
+    "deep-violet": {
+      "$value": "#0d0b28",
+      "$type": "color",
+      "$description": "Deep Violet — Card and panel surfaces — one step lifted from the canvas; Atmospheric gradient overlay — blends canvas into indigo accent"
+    },
+    "twilight-plum": {
+      "$value": "#141230",
+      "$type": "color",
+      "$description": "Twilight Plum — Elevated surfaces, active nav backgrounds, deeper card variants"
+    },
+    "dark-plum": {
+      "$value": "#1b0e27",
+      "$type": "color",
+      "$description": "Dark Plum — Hover states, inset surface, tooltip backgrounds"
+    },
+    "periwinkle": {
+      "$value": "#acb0e3",
+      "$type": "color",
+      "$description": "Periwinkle — Hairline borders with violet glow, decorative dividers"
+    },
+    "slate-violet": {
+      "$value": "#4e4e6c",
+      "$type": "color",
+      "$description": "Slate Violet — Muted borders, subdued dividers between sections"
+    },
+    "silver-lilac": {
+      "$value": "#b8b8c8",
+      "$type": "color",
+      "$description": "Silver Lilac — Secondary text, icon strokes, subdued labels"
+    },
+    "lavender-mist": {
+      "$value": "#c4c2d6",
+      "$type": "color",
+      "$description": "Lavender Mist — Body text on dark surfaces, link text, standard icons"
+    },
+    "ghost-white": {
+      "$value": "#f7f5ff",
+      "$type": "color",
+      "$description": "Ghost White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "electric-indigo": {
+      "$value": "#2f39ba",
+      "$type": "color",
+      "$description": "Electric Indigo — Brand accent — highlight testimonial card, gradient origin, decorative icon strokes; Signature gradient on hero text, highlight overlays, and brand energy"
+    },
+    "hot-magenta": {
+      "$value": "#ff5ec4",
+      "$type": "color",
+      "$description": "Hot Magenta — Brand accent — gradient terminus, star icons, playful tag fills"
+    },
+    "orchid-pink": {
+      "$value": "#f092dd",
+      "$type": "color",
+      "$description": "Orchid Pink — Medium pink — decorative chip backgrounds, gradient midtones"
+    },
+    "cotton-candy": {
+      "$value": "#ffc8eb",
+      "$type": "color",
+      "$description": "Cotton Candy — Soft pink wash — subtle accent surfaces, decorative tags"
+    }
+  },
+  "font": {
+    "clash-grotesk": {
+      "$value": "Clash Grotesk",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines — geometric and tight; 72px hero with line-height 1.00 creates near-architectural blocks. Free alternative: Space Grotesk or Migra."
+    },
+    "satoshi": {
+      "$value": "Satoshi",
+      "$type": "fontFamily",
+      "$description": "Body, UI, buttons, navigation, subheadings, and section headings up to 48px. The 0.045em tracking gives it a slightly airy, contemporary feel at smaller sizes. Free alternative: Inter or General Sans."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://beehiiv.com",
+      "siteName": "beehiiv",
+      "extractedAt": "2026-06-03T17:32:00.026Z",
+      "variant": "compact"
+    }
+  }
+}

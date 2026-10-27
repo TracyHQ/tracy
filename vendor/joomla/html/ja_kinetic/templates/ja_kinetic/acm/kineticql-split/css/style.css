@@ -1,0 +1,182 @@
+/* =========================================================================
+ * Kinetic - KineticQL Split (ACM block) - self-contained, block-scoped.
+ * Colour/type/spacing routed through inherited design-spec CSS vars
+ * (--surface --border --heading --text --muted --primary --shadow). Local
+ * *-split fallback vars ship light + dark via the html.t4-dark hook. The
+ * code panel is intentionally dark in BOTH modes (terminal aesthetic).
+ * Compiled from less/style.less.
+ * ========================================================================= */
+.acm-kineticql-split {
+  --split-surface: var(--surface, #FFFFFF);
+  --split-border: var(--border, #E4E8E0);
+  --split-heading: var(--heading, #10140F);
+  --split-text: var(--text, #46514B);
+  --split-muted: var(--muted, #7C877F);
+  --split-primary: var(--primary, #4D7C0F);
+  --split-primary-ink: var(--primary-ink, #FFFFFF);
+  --split-shadow: var(--shadow, 0 18px 44px -20px rgba(20, 30, 15, .2));
+  --err: #E5484D;
+  --warn: #F5A623;
+  --ok: #30A46C;
+  --split-code-bg: #0D1110;
+  --split-code-bar: #111614;
+  --split-code-line: #1b211e;
+  --split-code-title: #7E8A85;
+  --split-code-default: #C9D1CE;
+  --split-syn-key: #A3E635;
+  --split-syn-str: #F5A623;
+  --split-syn-num: #56E0F4;
+  --split-syn-com: #5F6B66;
+}
+.acm-kineticql-split .hx-section {
+  padding: 80px 0;
+}
+.acm-kineticql-split .hx-split-section {
+  border-top: 1px solid var(--split-border);
+  border-bottom: 1px solid var(--split-border);
+}
+.acm-kineticql-split .hx-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-inline: 32px;
+}
+.acm-kineticql-split .hx-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+.acm-kineticql-split .acm-split-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--split-primary);
+  margin-bottom: 14px;
+}
+.acm-kineticql-split .acm-split-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 34px;
+  line-height: 1.12;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  color: var(--split-heading);
+  margin: 0 0 16px;
+}
+.acm-kineticql-split .acm-split-sub {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--split-text);
+  margin: 0 0 22px;
+}
+.acm-kineticql-split .acm-split-checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.acm-kineticql-split .acm-split-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.acm-kineticql-split .acm-split-check .hx-check {
+  width: 18px;
+  height: 18px;
+  color: var(--split-primary);
+  margin-top: 2px;
+  flex: none;
+}
+.acm-kineticql-split .acm-split-check span {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--split-text);
+}
+/* BUTTON gesture (micro-interactions.md §3b): primary bg at rest, darker bg +
+   focus/hover ring on hover AND keyboard focus (:focus-visible). */
+.acm-kineticql-split .acm-split-cta {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 26px;
+  padding: 11px 20px;
+  border-radius: 8px;
+  background: var(--split-primary);
+  color: var(--split-primary-ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color .15s ease, box-shadow .2s ease, transform .2s ease;
+}
+.acm-kineticql-split .acm-split-cta:hover,
+.acm-kineticql-split .acm-split-cta:focus-visible {
+  background: var(--primary-hover, var(--split-primary));
+  color: var(--split-primary-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 77, 124, 15), .25);
+  outline: none;
+}
+/* Per-direction KineticQL code-panel image (owner-swappable media field,
+   image_terminal / image_blueprint / image_signal). The exported PNG carries
+   its OWN window frame + rounded corners inside transparent alpha — so NO
+   template border / radius / box-shadow (would double the frame). Only a soft
+   drop-shadow that respects the image's alpha gives the design's elevation. */
+.acm-kineticql-split .hx-panelimg {
+  display: none;
+  width: 100%;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 20px 42px rgba(8, 12, 10, .35));
+}
+.acm-kineticql-split .hx-panelimg.is-terminal { display: block; }
+html[data-style="blueprint"] .acm-kineticql-split .hx-panelimg.is-terminal,
+html[data-style="signal"]    .acm-kineticql-split .hx-panelimg.is-terminal { display: none; }
+html[data-style="blueprint"] .acm-kineticql-split .hx-panelimg.is-blueprint { display: block; }
+html[data-style="signal"]    .acm-kineticql-split .hx-panelimg.is-signal    { display: block; }
+@media (max-width: 860px) {
+  .acm-kineticql-split .hx-split {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .acm-kineticql-split .acm-split-title {
+    font-size: 30px;
+  }
+}
+@media (max-width: 620px) {
+  .acm-kineticql-split .hx-section {
+    padding: 56px 0;
+  }
+  .acm-kineticql-split .hx-container {
+    padding-inline: 20px;
+  }
+  .acm-kineticql-split .acm-split-title {
+    font-size: 27px;
+  }
+}
+html.t4-dark .acm-kineticql-split,
+[data-bs-theme="dark"] .acm-kineticql-split,
+[data-theme="dark"] .acm-kineticql-split {
+  --split-surface: var(--surface, #121614);
+  --split-border: var(--border, #232A27);
+  --split-heading: var(--heading, #F2F5F3);
+  --split-text: var(--text, #9AA6A1);
+  --split-muted: var(--muted, #5F6B66);
+  --split-primary: var(--primary, #A3E635);
+  --split-primary-ink: var(--primary-ink, #0A0D0C);
+  --split-shadow: var(--shadow, 0 20px 50px -18px rgba(0, 0, 0, .6));
+}
+
+/* ---- reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .acm-kineticql-split * {
+    transition-duration: .01ms !important;
+  }
+  .acm-kineticql-split .acm-split-cta:hover,
+  .acm-kineticql-split .acm-split-cta:focus-visible {
+    transform: none;
+  }
+}

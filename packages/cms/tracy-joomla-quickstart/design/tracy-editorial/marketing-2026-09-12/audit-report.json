@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "scope": "partial",
+  "expectedCases": 28,
+  "observedCases": 28,
+  "contractCases": 632,
+  "scopePages": [
+    "/resources/marketing-samples",
+    "marketing/newsletter",
+    "marketing/email",
+    "marketing/poster",
+    "marketing/deck",
+    "marketing/form",
+    "marketing/typography"
+  ],
+  "elements": 316,
+  "properties": 1584,
+  "missing": [],
+  "findings": [],
+  "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee"
+}

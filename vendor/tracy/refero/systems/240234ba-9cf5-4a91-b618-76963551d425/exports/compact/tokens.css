@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-electric-lime: #d1f470;
+  --color-forest-canopy: #203524;
+  --color-deep-grove: #2d4c33;
+  --color-lime-fade: #d1f470;
+  --gradient-lime-fade: linear-gradient(to right, rgba(0, 0, 0, 0), rgb(209, 244, 112));
+  --color-near-black-ink: #11110d;
+  --color-warm-white: #f5f5f2;
+  --color-pure-white: #ffffff;
+  --color-midnight: #000000;
+  --color-stone-divider: #90918c;
+
+  /* Typography — Font Families */
+  --font-vanilla-sans: 'Vanilla Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

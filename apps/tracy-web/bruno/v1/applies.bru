@@ -1,0 +1,18 @@
+meta {
+  name: applies
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}/applies
+  body: none
+  auth: inherit
+}
+
+docs {
+  # What this key changed
+
+  Tracy's audit for this key's session: `applies[]` and `applyIds` (the successful changes, in the
+  order first applied — revert them newest first). Reads Tracy, not the site.
+}

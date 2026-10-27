@@ -1,0 +1,58 @@
+{
+  "id": "QA-UNIT-REG-PR-1479-wo-qa-needs-baseline-happy",
+  "itemIds": ["regression:REG-PR-1479-wo-qa-needs-baseline"],
+  "requirement": "The demo QA gate never passes a demo without a trustworthy baseline, and holds the hand-off prompt until it has one",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1479-wo-qa-needs-baseline.json",
+    "ref": "PR #1479 (fix); fix evidence: Review 19/10/2026: baseline null/empty made no-demo-pictures skip and no-demo-words compare against nothing, so demos kept template content and passed",
+    "invariant": "S1: needs-review, never passed. S2: left to a person, no repair sent. S3: no prompt sent; sweep reads again and sends it, or gives up.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/opportunities-build/demo-qa.js:59"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/db/index.js:52 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "B1: a run whose baseline is lost ends needs-review without asking the host — never passed",
+    "B1: a round where a check could not be judged leaves the demo to a person, with no repair sent",
+    "B1: a baseline that could not be read holds the prompt; the sweep reads again and sends it, or gives up"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1479-wo-qa-needs-baseline"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1479-wo-qa-needs-baseline",
+    "pr": 1479,
+    "kind": "fix",
+    "area": "website-opportunities/qa",
+    "file": "tests/regression/cases/REG-PR-1479-wo-qa-needs-baseline.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/website-opportunities-demo-qa.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "B1: a run whose baseline is lost ends needs-review without asking the host — never passed",
+    "B1: a round where a check could not be judged leaves the demo to a person, with no repair sent",
+    "B1: a baseline that could not be read holds the prompt; the sweep reads again and sends it, or gives up"
+  ],
+  "timeoutS": 600
+}

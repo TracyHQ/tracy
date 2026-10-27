@@ -1,0 +1,4760 @@
+{
+  "schemaVersion": "tracy-quickstart-content-map/wordpress/v1",
+  "$comment": "Derived from quickstart/ja-essence/wp7 1.0.3's own database by capture-contract.mjs: the site name and tagline, and every named heading, paragraph, list item and button of a published page whose text is plain. A block is found by its metadata.name, never by position.",
+  "entities": [
+    {
+      "key": "option-blogname",
+      "kind": "option",
+      "identity": {
+        "name": "blogname"
+      },
+      "initial": "JA Essence"
+    },
+    {
+      "key": "option-blogdescription",
+      "kind": "option",
+      "identity": {
+        "name": "blogdescription"
+      },
+      "initial": ""
+    },
+    {
+      "key": "page-contact",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "contact"
+      }
+    },
+    {
+      "key": "page-home-3",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-3"
+      }
+    },
+    {
+      "key": "page-resources",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "resources"
+      }
+    },
+    {
+      "key": "page-lifestyle",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "lifestyle"
+      }
+    },
+    {
+      "key": "page-home-2",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-2"
+      }
+    },
+    {
+      "key": "page-layout-1",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "layout-1"
+      }
+    },
+    {
+      "key": "page-layout-2",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "layout-2"
+      }
+    },
+    {
+      "key": "page-layout-3",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "layout-3"
+      }
+    },
+    {
+      "key": "page-video",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "video"
+      }
+    },
+    {
+      "key": "page-gallery",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "gallery"
+      }
+    },
+    {
+      "key": "page-home-4",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-4"
+      }
+    },
+    {
+      "key": "page-home-5",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-5"
+      }
+    },
+    {
+      "key": "page-home-1",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "home-1"
+      }
+    },
+    {
+      "key": "page-category-style-1",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "category-style-1"
+      }
+    },
+    {
+      "key": "page-category-style-2",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "category-style-2"
+      }
+    },
+    {
+      "key": "page-category-style-3",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "category-style-3"
+      }
+    },
+    {
+      "key": "page-category-style-4",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "category-style-4"
+      }
+    },
+    {
+      "key": "page-login-form",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "login-form"
+      }
+    },
+    {
+      "key": "page-registration-form",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "registration-form"
+      }
+    },
+    {
+      "key": "page-user-profile",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "user-profile"
+      }
+    },
+    {
+      "key": "page-error-page",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "error-page"
+      }
+    },
+    {
+      "key": "page-offline-pages",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "offline-pages"
+      }
+    },
+    {
+      "key": "page-typography",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "typography"
+      }
+    },
+    {
+      "key": "page-featured-articles",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "featured-articles"
+      }
+    },
+    {
+      "key": "page-edit-user-profile",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "edit-user-profile"
+      }
+    },
+    {
+      "key": "page-category-blog",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "category-blog"
+      }
+    },
+    {
+      "key": "page-author-listting",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "author-listting"
+      }
+    },
+    {
+      "key": "page-tagged-items",
+      "kind": "page",
+      "identity": {
+        "postType": "page",
+        "slug": "tagged-items"
+      }
+    }
+  ],
+  "slots": [
+    {
+      "key": "site.name",
+      "entity": "option-blogname",
+      "target": {
+        "option": "blogname"
+      },
+      "type": "text",
+      "sample": "JA Essence",
+      "maxCharacters": 80,
+      "input": "name",
+      "label": "Site name"
+    },
+    {
+      "key": "site.tagline",
+      "entity": "option-blogdescription",
+      "target": {
+        "option": "blogdescription"
+      },
+      "type": "text",
+      "sample": "",
+      "maxCharacters": 160,
+      "input": "tagline",
+      "label": "Tagline"
+    },
+    {
+      "key": "contact.gallery.title",
+      "entity": "page-contact",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "contact — gallery.title"
+    },
+    {
+      "key": "contact.gallery.title.url",
+      "entity": "page-contact",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "contact — gallery.title (link)"
+    },
+    {
+      "key": "home-3.articles-category.main-section",
+      "entity": "page-home-3",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Features Lead",
+      "maxCharacters": 80,
+      "label": "home-3 — articles-category.main-section"
+    },
+    {
+      "key": "home-3.gallery.title",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "home-3 — gallery.title"
+    },
+    {
+      "key": "home-3.gallery.title.url",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-3 — gallery.title (link)"
+    },
+    {
+      "key": "resources.gallery.title",
+      "entity": "page-resources",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "resources — gallery.title"
+    },
+    {
+      "key": "resources.gallery.title.url",
+      "entity": "page-resources",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "resources — gallery.title (link)"
+    },
+    {
+      "key": "lifestyle.gallery.title",
+      "entity": "page-lifestyle",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "lifestyle — gallery.title"
+    },
+    {
+      "key": "lifestyle.gallery.title.url",
+      "entity": "page-lifestyle",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "lifestyle — gallery.title (link)"
+    },
+    {
+      "key": "home-2.articles-categories.main-section",
+      "entity": "page-home-2",
+      "target": {
+        "block": "articles-categories.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Categories",
+      "maxCharacters": 80,
+      "label": "home-2 — articles-categories.main-section"
+    },
+    {
+      "key": "home-2.articles-category.main-section",
+      "entity": "page-home-2",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Editor's choice",
+      "maxCharacters": 80,
+      "label": "home-2 — articles-category.main-section"
+    },
+    {
+      "key": "home-2.articles-category.bottom-desc",
+      "entity": "page-home-2",
+      "target": {
+        "block": "articles-category.bottom-desc",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Articles of the day",
+      "maxCharacters": 80,
+      "label": "home-2 — articles-category.bottom-desc"
+    },
+    {
+      "key": "home-2.newsletter.title",
+      "entity": "page-home-2",
+      "target": {
+        "block": "newsletter.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newsletter",
+      "maxCharacters": 80,
+      "label": "home-2 — newsletter.title"
+    },
+    {
+      "key": "home-2.newsletter.introtext",
+      "entity": "page-home-2",
+      "target": {
+        "block": "newsletter.introtext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join 70,000 subscribers!",
+      "maxCharacters": 80,
+      "label": "home-2 — newsletter.introtext"
+    },
+    {
+      "key": "home-2.tags-popular.title",
+      "entity": "page-home-2",
+      "target": {
+        "block": "tags-popular.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tags cloud",
+      "maxCharacters": 80,
+      "label": "home-2 — tags-popular.title"
+    },
+    {
+      "key": "home-2.social.title",
+      "entity": "page-home-2",
+      "target": {
+        "block": "social.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow me",
+      "maxCharacters": 80,
+      "label": "home-2 — social.title"
+    },
+    {
+      "key": "home-2.social.link.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "social.link.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Facebook",
+      "maxCharacters": 80,
+      "label": "home-2 — social.link.1"
+    },
+    {
+      "key": "home-2.social.link.1.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "social.link.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-2 — social.link.1 (link)"
+    },
+    {
+      "key": "home-2.social.link.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "social.link.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Twitter",
+      "maxCharacters": 80,
+      "label": "home-2 — social.link.2"
+    },
+    {
+      "key": "home-2.social.link.2.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "social.link.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-2 — social.link.2 (link)"
+    },
+    {
+      "key": "home-2.social.link.3",
+      "entity": "page-home-2",
+      "target": {
+        "block": "social.link.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Instagram",
+      "maxCharacters": 80,
+      "label": "home-2 — social.link.3"
+    },
+    {
+      "key": "home-2.social.link.3.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "social.link.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-2 — social.link.3 (link)"
+    },
+    {
+      "key": "home-2.social.link.4",
+      "entity": "page-home-2",
+      "target": {
+        "block": "social.link.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Rss",
+      "maxCharacters": 80,
+      "label": "home-2 — social.link.4"
+    },
+    {
+      "key": "home-2.social.link.4.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "social.link.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-2 — social.link.4 (link)"
+    },
+    {
+      "key": "home-2.gallery.title",
+      "entity": "page-home-2",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "home-2 — gallery.title"
+    },
+    {
+      "key": "home-2.gallery.title.url",
+      "entity": "page-home-2",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-2 — gallery.title (link)"
+    },
+    {
+      "key": "layout-1.articles-latest.main-section",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "articles-latest.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Articles - Latest",
+      "maxCharacters": 80,
+      "label": "layout-1 — articles-latest.main-section"
+    },
+    {
+      "key": "layout-1.newsletter.title",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "newsletter.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newsletter",
+      "maxCharacters": 80,
+      "label": "layout-1 — newsletter.title"
+    },
+    {
+      "key": "layout-1.newsletter.introtext",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "newsletter.introtext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join 70,000 subscribers!",
+      "maxCharacters": 80,
+      "label": "layout-1 — newsletter.introtext"
+    },
+    {
+      "key": "layout-1.articles-category.main-section",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Features post",
+      "maxCharacters": 80,
+      "label": "layout-1 — articles-category.main-section"
+    },
+    {
+      "key": "layout-1.tags-popular.title",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "tags-popular.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tags cloud",
+      "maxCharacters": 80,
+      "label": "layout-1 — tags-popular.title"
+    },
+    {
+      "key": "layout-1.social.title",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "social.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow me",
+      "maxCharacters": 80,
+      "label": "layout-1 — social.title"
+    },
+    {
+      "key": "layout-1.social.link.1",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "social.link.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Facebook",
+      "maxCharacters": 80,
+      "label": "layout-1 — social.link.1"
+    },
+    {
+      "key": "layout-1.social.link.1.url",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "social.link.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "layout-1 — social.link.1 (link)"
+    },
+    {
+      "key": "layout-1.social.link.2",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "social.link.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Twitter",
+      "maxCharacters": 80,
+      "label": "layout-1 — social.link.2"
+    },
+    {
+      "key": "layout-1.social.link.2.url",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "social.link.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "layout-1 — social.link.2 (link)"
+    },
+    {
+      "key": "layout-1.social.link.3",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "social.link.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Instagram",
+      "maxCharacters": 80,
+      "label": "layout-1 — social.link.3"
+    },
+    {
+      "key": "layout-1.social.link.3.url",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "social.link.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "layout-1 — social.link.3 (link)"
+    },
+    {
+      "key": "layout-1.social.link.4",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "social.link.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Rss",
+      "maxCharacters": 80,
+      "label": "layout-1 — social.link.4"
+    },
+    {
+      "key": "layout-1.social.link.4.url",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "social.link.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "layout-1 — social.link.4 (link)"
+    },
+    {
+      "key": "layout-1.related-items.main-section",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "related-items.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "More reading",
+      "maxCharacters": 80,
+      "label": "layout-1 — related-items.main-section"
+    },
+    {
+      "key": "layout-1.gallery.title",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "layout-1 — gallery.title"
+    },
+    {
+      "key": "layout-1.gallery.title.url",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "layout-1 — gallery.title (link)"
+    },
+    {
+      "key": "layout-2.related-items.main-section",
+      "entity": "page-layout-2",
+      "target": {
+        "block": "related-items.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "More Read",
+      "maxCharacters": 80,
+      "label": "layout-2 — related-items.main-section"
+    },
+    {
+      "key": "layout-2.gallery.title",
+      "entity": "page-layout-2",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "layout-2 — gallery.title"
+    },
+    {
+      "key": "layout-2.gallery.title.url",
+      "entity": "page-layout-2",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "layout-2 — gallery.title (link)"
+    },
+    {
+      "key": "layout-3.newsletter.title",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "newsletter.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newsletter",
+      "maxCharacters": 80,
+      "label": "layout-3 — newsletter.title"
+    },
+    {
+      "key": "layout-3.newsletter.introtext",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "newsletter.introtext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join 70,000 subscribers!",
+      "maxCharacters": 80,
+      "label": "layout-3 — newsletter.introtext"
+    },
+    {
+      "key": "layout-3.related-items.main-section",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "related-items.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "More Read",
+      "maxCharacters": 80,
+      "label": "layout-3 — related-items.main-section"
+    },
+    {
+      "key": "layout-3.gallery.title",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "layout-3 — gallery.title"
+    },
+    {
+      "key": "layout-3.gallery.title.url",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "layout-3 — gallery.title (link)"
+    },
+    {
+      "key": "video.articles-latest.main-section",
+      "entity": "page-video",
+      "target": {
+        "block": "articles-latest.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Articles - Latest",
+      "maxCharacters": 80,
+      "label": "video — articles-latest.main-section"
+    },
+    {
+      "key": "video.newsletter.title",
+      "entity": "page-video",
+      "target": {
+        "block": "newsletter.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newsletter",
+      "maxCharacters": 80,
+      "label": "video — newsletter.title"
+    },
+    {
+      "key": "video.newsletter.introtext",
+      "entity": "page-video",
+      "target": {
+        "block": "newsletter.introtext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join 70,000 subscribers!",
+      "maxCharacters": 80,
+      "label": "video — newsletter.introtext"
+    },
+    {
+      "key": "video.articles-category.main-section",
+      "entity": "page-video",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Features post",
+      "maxCharacters": 80,
+      "label": "video — articles-category.main-section"
+    },
+    {
+      "key": "video.tags-popular.title",
+      "entity": "page-video",
+      "target": {
+        "block": "tags-popular.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tags cloud",
+      "maxCharacters": 80,
+      "label": "video — tags-popular.title"
+    },
+    {
+      "key": "video.social.title",
+      "entity": "page-video",
+      "target": {
+        "block": "social.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow me",
+      "maxCharacters": 80,
+      "label": "video — social.title"
+    },
+    {
+      "key": "video.social.link.1",
+      "entity": "page-video",
+      "target": {
+        "block": "social.link.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Facebook",
+      "maxCharacters": 80,
+      "label": "video — social.link.1"
+    },
+    {
+      "key": "video.social.link.1.url",
+      "entity": "page-video",
+      "target": {
+        "block": "social.link.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "video — social.link.1 (link)"
+    },
+    {
+      "key": "video.social.link.2",
+      "entity": "page-video",
+      "target": {
+        "block": "social.link.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Twitter",
+      "maxCharacters": 80,
+      "label": "video — social.link.2"
+    },
+    {
+      "key": "video.social.link.2.url",
+      "entity": "page-video",
+      "target": {
+        "block": "social.link.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "video — social.link.2 (link)"
+    },
+    {
+      "key": "video.social.link.3",
+      "entity": "page-video",
+      "target": {
+        "block": "social.link.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Instagram",
+      "maxCharacters": 80,
+      "label": "video — social.link.3"
+    },
+    {
+      "key": "video.social.link.3.url",
+      "entity": "page-video",
+      "target": {
+        "block": "social.link.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "video — social.link.3 (link)"
+    },
+    {
+      "key": "video.social.link.4",
+      "entity": "page-video",
+      "target": {
+        "block": "social.link.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Rss",
+      "maxCharacters": 80,
+      "label": "video — social.link.4"
+    },
+    {
+      "key": "video.social.link.4.url",
+      "entity": "page-video",
+      "target": {
+        "block": "social.link.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "video — social.link.4 (link)"
+    },
+    {
+      "key": "video.related-items.main-section",
+      "entity": "page-video",
+      "target": {
+        "block": "related-items.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "More Read",
+      "maxCharacters": 80,
+      "label": "video — related-items.main-section"
+    },
+    {
+      "key": "video.gallery.title",
+      "entity": "page-video",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "video — gallery.title"
+    },
+    {
+      "key": "video.gallery.title.url",
+      "entity": "page-video",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "video — gallery.title (link)"
+    },
+    {
+      "key": "gallery.articles-latest.main-section",
+      "entity": "page-gallery",
+      "target": {
+        "block": "articles-latest.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Articles - Latest",
+      "maxCharacters": 80,
+      "label": "gallery — articles-latest.main-section"
+    },
+    {
+      "key": "gallery.newsletter.title",
+      "entity": "page-gallery",
+      "target": {
+        "block": "newsletter.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newsletter",
+      "maxCharacters": 80,
+      "label": "gallery — newsletter.title"
+    },
+    {
+      "key": "gallery.newsletter.introtext",
+      "entity": "page-gallery",
+      "target": {
+        "block": "newsletter.introtext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join 70,000 subscribers!",
+      "maxCharacters": 80,
+      "label": "gallery — newsletter.introtext"
+    },
+    {
+      "key": "gallery.articles-category.main-section",
+      "entity": "page-gallery",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Features post",
+      "maxCharacters": 80,
+      "label": "gallery — articles-category.main-section"
+    },
+    {
+      "key": "gallery.tags-popular.title",
+      "entity": "page-gallery",
+      "target": {
+        "block": "tags-popular.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tags cloud",
+      "maxCharacters": 80,
+      "label": "gallery — tags-popular.title"
+    },
+    {
+      "key": "gallery.social.title",
+      "entity": "page-gallery",
+      "target": {
+        "block": "social.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow me",
+      "maxCharacters": 80,
+      "label": "gallery — social.title"
+    },
+    {
+      "key": "gallery.social.link.1",
+      "entity": "page-gallery",
+      "target": {
+        "block": "social.link.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Facebook",
+      "maxCharacters": 80,
+      "label": "gallery — social.link.1"
+    },
+    {
+      "key": "gallery.social.link.1.url",
+      "entity": "page-gallery",
+      "target": {
+        "block": "social.link.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "gallery — social.link.1 (link)"
+    },
+    {
+      "key": "gallery.social.link.2",
+      "entity": "page-gallery",
+      "target": {
+        "block": "social.link.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Twitter",
+      "maxCharacters": 80,
+      "label": "gallery — social.link.2"
+    },
+    {
+      "key": "gallery.social.link.2.url",
+      "entity": "page-gallery",
+      "target": {
+        "block": "social.link.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "gallery — social.link.2 (link)"
+    },
+    {
+      "key": "gallery.social.link.3",
+      "entity": "page-gallery",
+      "target": {
+        "block": "social.link.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Instagram",
+      "maxCharacters": 80,
+      "label": "gallery — social.link.3"
+    },
+    {
+      "key": "gallery.social.link.3.url",
+      "entity": "page-gallery",
+      "target": {
+        "block": "social.link.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "gallery — social.link.3 (link)"
+    },
+    {
+      "key": "gallery.social.link.4",
+      "entity": "page-gallery",
+      "target": {
+        "block": "social.link.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Rss",
+      "maxCharacters": 80,
+      "label": "gallery — social.link.4"
+    },
+    {
+      "key": "gallery.social.link.4.url",
+      "entity": "page-gallery",
+      "target": {
+        "block": "social.link.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "gallery — social.link.4 (link)"
+    },
+    {
+      "key": "gallery.related-items.main-section",
+      "entity": "page-gallery",
+      "target": {
+        "block": "related-items.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "More Read",
+      "maxCharacters": 80,
+      "label": "gallery — related-items.main-section"
+    },
+    {
+      "key": "gallery.gallery.title",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "gallery — gallery.title"
+    },
+    {
+      "key": "gallery.gallery.title.url",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "gallery — gallery.title (link)"
+    },
+    {
+      "key": "home-4.gallery.title",
+      "entity": "page-home-4",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "home-4 — gallery.title"
+    },
+    {
+      "key": "home-4.gallery.title.url",
+      "entity": "page-home-4",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-4 — gallery.title (link)"
+    },
+    {
+      "key": "home-5.articles-category.main-section",
+      "entity": "page-home-5",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Features Lead",
+      "maxCharacters": 80,
+      "label": "home-5 — articles-category.main-section"
+    },
+    {
+      "key": "home-5.articles-latest.main-section",
+      "entity": "page-home-5",
+      "target": {
+        "block": "articles-latest.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Articles - Latest",
+      "maxCharacters": 80,
+      "label": "home-5 — articles-latest.main-section"
+    },
+    {
+      "key": "home-5.newsletter.title",
+      "entity": "page-home-5",
+      "target": {
+        "block": "newsletter.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newsletter",
+      "maxCharacters": 80,
+      "label": "home-5 — newsletter.title"
+    },
+    {
+      "key": "home-5.newsletter.introtext",
+      "entity": "page-home-5",
+      "target": {
+        "block": "newsletter.introtext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join 70,000 subscribers!",
+      "maxCharacters": 80,
+      "label": "home-5 — newsletter.introtext"
+    },
+    {
+      "key": "home-5.tags-popular.title",
+      "entity": "page-home-5",
+      "target": {
+        "block": "tags-popular.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tags cloud",
+      "maxCharacters": 80,
+      "label": "home-5 — tags-popular.title"
+    },
+    {
+      "key": "home-5.social.title",
+      "entity": "page-home-5",
+      "target": {
+        "block": "social.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow me",
+      "maxCharacters": 80,
+      "label": "home-5 — social.title"
+    },
+    {
+      "key": "home-5.social.link.1",
+      "entity": "page-home-5",
+      "target": {
+        "block": "social.link.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Facebook",
+      "maxCharacters": 80,
+      "label": "home-5 — social.link.1"
+    },
+    {
+      "key": "home-5.social.link.1.url",
+      "entity": "page-home-5",
+      "target": {
+        "block": "social.link.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-5 — social.link.1 (link)"
+    },
+    {
+      "key": "home-5.social.link.2",
+      "entity": "page-home-5",
+      "target": {
+        "block": "social.link.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Twitter",
+      "maxCharacters": 80,
+      "label": "home-5 — social.link.2"
+    },
+    {
+      "key": "home-5.social.link.2.url",
+      "entity": "page-home-5",
+      "target": {
+        "block": "social.link.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-5 — social.link.2 (link)"
+    },
+    {
+      "key": "home-5.social.link.3",
+      "entity": "page-home-5",
+      "target": {
+        "block": "social.link.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Instagram",
+      "maxCharacters": 80,
+      "label": "home-5 — social.link.3"
+    },
+    {
+      "key": "home-5.social.link.3.url",
+      "entity": "page-home-5",
+      "target": {
+        "block": "social.link.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-5 — social.link.3 (link)"
+    },
+    {
+      "key": "home-5.social.link.4",
+      "entity": "page-home-5",
+      "target": {
+        "block": "social.link.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Rss",
+      "maxCharacters": 80,
+      "label": "home-5 — social.link.4"
+    },
+    {
+      "key": "home-5.social.link.4.url",
+      "entity": "page-home-5",
+      "target": {
+        "block": "social.link.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-5 — social.link.4 (link)"
+    },
+    {
+      "key": "home-5.gallery.title",
+      "entity": "page-home-5",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "home-5 — gallery.title"
+    },
+    {
+      "key": "home-5.gallery.title.url",
+      "entity": "page-home-5",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-5 — gallery.title (link)"
+    },
+    {
+      "key": "home-1.articles-latest.main-section",
+      "entity": "page-home-1",
+      "target": {
+        "block": "articles-latest.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Articles - Latest",
+      "maxCharacters": 80,
+      "label": "home-1 — articles-latest.main-section"
+    },
+    {
+      "key": "home-1.newsletter.title",
+      "entity": "page-home-1",
+      "target": {
+        "block": "newsletter.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newsletter",
+      "maxCharacters": 80,
+      "label": "home-1 — newsletter.title"
+    },
+    {
+      "key": "home-1.newsletter.introtext",
+      "entity": "page-home-1",
+      "target": {
+        "block": "newsletter.introtext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join 70,000 subscribers!",
+      "maxCharacters": 80,
+      "label": "home-1 — newsletter.introtext"
+    },
+    {
+      "key": "home-1.articles-category.main-section",
+      "entity": "page-home-1",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Features post",
+      "maxCharacters": 80,
+      "label": "home-1 — articles-category.main-section"
+    },
+    {
+      "key": "home-1.tags-popular.title",
+      "entity": "page-home-1",
+      "target": {
+        "block": "tags-popular.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tags cloud",
+      "maxCharacters": 80,
+      "label": "home-1 — tags-popular.title"
+    },
+    {
+      "key": "home-1.social.title",
+      "entity": "page-home-1",
+      "target": {
+        "block": "social.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow me",
+      "maxCharacters": 80,
+      "label": "home-1 — social.title"
+    },
+    {
+      "key": "home-1.social.link.1",
+      "entity": "page-home-1",
+      "target": {
+        "block": "social.link.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Facebook",
+      "maxCharacters": 80,
+      "label": "home-1 — social.link.1"
+    },
+    {
+      "key": "home-1.social.link.1.url",
+      "entity": "page-home-1",
+      "target": {
+        "block": "social.link.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-1 — social.link.1 (link)"
+    },
+    {
+      "key": "home-1.social.link.2",
+      "entity": "page-home-1",
+      "target": {
+        "block": "social.link.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Twitter",
+      "maxCharacters": 80,
+      "label": "home-1 — social.link.2"
+    },
+    {
+      "key": "home-1.social.link.2.url",
+      "entity": "page-home-1",
+      "target": {
+        "block": "social.link.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-1 — social.link.2 (link)"
+    },
+    {
+      "key": "home-1.social.link.3",
+      "entity": "page-home-1",
+      "target": {
+        "block": "social.link.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Instagram",
+      "maxCharacters": 80,
+      "label": "home-1 — social.link.3"
+    },
+    {
+      "key": "home-1.social.link.3.url",
+      "entity": "page-home-1",
+      "target": {
+        "block": "social.link.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-1 — social.link.3 (link)"
+    },
+    {
+      "key": "home-1.social.link.4",
+      "entity": "page-home-1",
+      "target": {
+        "block": "social.link.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Rss",
+      "maxCharacters": 80,
+      "label": "home-1 — social.link.4"
+    },
+    {
+      "key": "home-1.social.link.4.url",
+      "entity": "page-home-1",
+      "target": {
+        "block": "social.link.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-1 — social.link.4 (link)"
+    },
+    {
+      "key": "home-1.gallery.title",
+      "entity": "page-home-1",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "home-1 — gallery.title"
+    },
+    {
+      "key": "home-1.gallery.title.url",
+      "entity": "page-home-1",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "home-1 — gallery.title (link)"
+    },
+    {
+      "key": "category-style-1.related-items.main-section",
+      "entity": "page-category-style-1",
+      "target": {
+        "block": "related-items.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "More Read",
+      "maxCharacters": 80,
+      "label": "category-style-1 — related-items.main-section"
+    },
+    {
+      "key": "category-style-1.gallery.title",
+      "entity": "page-category-style-1",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "category-style-1 — gallery.title"
+    },
+    {
+      "key": "category-style-1.gallery.title.url",
+      "entity": "page-category-style-1",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-style-1 — gallery.title (link)"
+    },
+    {
+      "key": "category-style-2.gallery.title",
+      "entity": "page-category-style-2",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "category-style-2 — gallery.title"
+    },
+    {
+      "key": "category-style-2.gallery.title.url",
+      "entity": "page-category-style-2",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-style-2 — gallery.title (link)"
+    },
+    {
+      "key": "category-style-3.gallery.title",
+      "entity": "page-category-style-3",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "category-style-3 — gallery.title"
+    },
+    {
+      "key": "category-style-3.gallery.title.url",
+      "entity": "page-category-style-3",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-style-3 — gallery.title (link)"
+    },
+    {
+      "key": "category-style-4.articles-latest.main-section",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "articles-latest.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Articles - Latest",
+      "maxCharacters": 80,
+      "label": "category-style-4 — articles-latest.main-section"
+    },
+    {
+      "key": "category-style-4.newsletter.title",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "newsletter.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newsletter",
+      "maxCharacters": 80,
+      "label": "category-style-4 — newsletter.title"
+    },
+    {
+      "key": "category-style-4.newsletter.introtext",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "newsletter.introtext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join 70,000 subscribers!",
+      "maxCharacters": 80,
+      "label": "category-style-4 — newsletter.introtext"
+    },
+    {
+      "key": "category-style-4.tags-popular.title",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "tags-popular.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tags cloud",
+      "maxCharacters": 80,
+      "label": "category-style-4 — tags-popular.title"
+    },
+    {
+      "key": "category-style-4.social.title",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "social.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow me",
+      "maxCharacters": 80,
+      "label": "category-style-4 — social.title"
+    },
+    {
+      "key": "category-style-4.social.link.1",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "social.link.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Facebook",
+      "maxCharacters": 80,
+      "label": "category-style-4 — social.link.1"
+    },
+    {
+      "key": "category-style-4.social.link.1.url",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "social.link.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-style-4 — social.link.1 (link)"
+    },
+    {
+      "key": "category-style-4.social.link.2",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "social.link.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Twitter",
+      "maxCharacters": 80,
+      "label": "category-style-4 — social.link.2"
+    },
+    {
+      "key": "category-style-4.social.link.2.url",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "social.link.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-style-4 — social.link.2 (link)"
+    },
+    {
+      "key": "category-style-4.social.link.3",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "social.link.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Instagram",
+      "maxCharacters": 80,
+      "label": "category-style-4 — social.link.3"
+    },
+    {
+      "key": "category-style-4.social.link.3.url",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "social.link.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-style-4 — social.link.3 (link)"
+    },
+    {
+      "key": "category-style-4.social.link.4",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "social.link.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Rss",
+      "maxCharacters": 80,
+      "label": "category-style-4 — social.link.4"
+    },
+    {
+      "key": "category-style-4.social.link.4.url",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "social.link.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-style-4 — social.link.4 (link)"
+    },
+    {
+      "key": "category-style-4.gallery.title",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "category-style-4 — gallery.title"
+    },
+    {
+      "key": "category-style-4.gallery.title.url",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-style-4 — gallery.title (link)"
+    },
+    {
+      "key": "login-form.gallery.title",
+      "entity": "page-login-form",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "login-form — gallery.title"
+    },
+    {
+      "key": "login-form.gallery.title.url",
+      "entity": "page-login-form",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "login-form — gallery.title (link)"
+    },
+    {
+      "key": "registration-form.gallery.title",
+      "entity": "page-registration-form",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "registration-form — gallery.title"
+    },
+    {
+      "key": "registration-form.gallery.title.url",
+      "entity": "page-registration-form",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "registration-form — gallery.title (link)"
+    },
+    {
+      "key": "user-profile.gallery.title",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "user-profile — gallery.title"
+    },
+    {
+      "key": "user-profile.gallery.title.url",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "user-profile — gallery.title (link)"
+    },
+    {
+      "key": "error-page.gallery.title",
+      "entity": "page-error-page",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "error-page — gallery.title"
+    },
+    {
+      "key": "error-page.gallery.title.url",
+      "entity": "page-error-page",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "error-page — gallery.title (link)"
+    },
+    {
+      "key": "offline-pages.gallery.title",
+      "entity": "page-offline-pages",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "offline-pages — gallery.title"
+    },
+    {
+      "key": "offline-pages.gallery.title.url",
+      "entity": "page-offline-pages",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "offline-pages — gallery.title (link)"
+    },
+    {
+      "key": "typography.gallery.title",
+      "entity": "page-typography",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "typography — gallery.title"
+    },
+    {
+      "key": "typography.gallery.title.url",
+      "entity": "page-typography",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "typography — gallery.title (link)"
+    },
+    {
+      "key": "featured-articles.articles-category.main-section",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Trending",
+      "maxCharacters": 80,
+      "label": "featured-articles — articles-category.main-section"
+    },
+    {
+      "key": "featured-articles.newsletter.title",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "newsletter.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newsletter",
+      "maxCharacters": 80,
+      "label": "featured-articles — newsletter.title"
+    },
+    {
+      "key": "featured-articles.newsletter.introtext",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "newsletter.introtext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join 70,000 subscribers!",
+      "maxCharacters": 80,
+      "label": "featured-articles — newsletter.introtext"
+    },
+    {
+      "key": "featured-articles.tags-popular.title",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "tags-popular.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tags cloud",
+      "maxCharacters": 80,
+      "label": "featured-articles — tags-popular.title"
+    },
+    {
+      "key": "featured-articles.social.title",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "social.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow me",
+      "maxCharacters": 80,
+      "label": "featured-articles — social.title"
+    },
+    {
+      "key": "featured-articles.social.link.1",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "social.link.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Facebook",
+      "maxCharacters": 80,
+      "label": "featured-articles — social.link.1"
+    },
+    {
+      "key": "featured-articles.social.link.1.url",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "social.link.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "featured-articles — social.link.1 (link)"
+    },
+    {
+      "key": "featured-articles.social.link.2",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "social.link.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Twitter",
+      "maxCharacters": 80,
+      "label": "featured-articles — social.link.2"
+    },
+    {
+      "key": "featured-articles.social.link.2.url",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "social.link.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "featured-articles — social.link.2 (link)"
+    },
+    {
+      "key": "featured-articles.social.link.3",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "social.link.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Instagram",
+      "maxCharacters": 80,
+      "label": "featured-articles — social.link.3"
+    },
+    {
+      "key": "featured-articles.social.link.3.url",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "social.link.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "featured-articles — social.link.3 (link)"
+    },
+    {
+      "key": "featured-articles.social.link.4",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "social.link.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Rss",
+      "maxCharacters": 80,
+      "label": "featured-articles — social.link.4"
+    },
+    {
+      "key": "featured-articles.social.link.4.url",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "social.link.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "featured-articles — social.link.4 (link)"
+    },
+    {
+      "key": "featured-articles.related-items.main-section",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "related-items.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "More Read",
+      "maxCharacters": 80,
+      "label": "featured-articles — related-items.main-section"
+    },
+    {
+      "key": "featured-articles.gallery.title",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "featured-articles — gallery.title"
+    },
+    {
+      "key": "featured-articles.gallery.title.url",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "featured-articles — gallery.title (link)"
+    },
+    {
+      "key": "edit-user-profile.gallery.title",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "edit-user-profile — gallery.title"
+    },
+    {
+      "key": "edit-user-profile.gallery.title.url",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "edit-user-profile — gallery.title (link)"
+    },
+    {
+      "key": "category-blog.articles-latest.main-section",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "articles-latest.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Articles - Latest",
+      "maxCharacters": 80,
+      "label": "category-blog — articles-latest.main-section"
+    },
+    {
+      "key": "category-blog.newsletter.title",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "newsletter.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Newsletter",
+      "maxCharacters": 80,
+      "label": "category-blog — newsletter.title"
+    },
+    {
+      "key": "category-blog.newsletter.introtext",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "newsletter.introtext",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Join 70,000 subscribers!",
+      "maxCharacters": 80,
+      "label": "category-blog — newsletter.introtext"
+    },
+    {
+      "key": "category-blog.articles-category.main-section",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "articles-category.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Features post",
+      "maxCharacters": 80,
+      "label": "category-blog — articles-category.main-section"
+    },
+    {
+      "key": "category-blog.tags-popular.title",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "tags-popular.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Tags cloud",
+      "maxCharacters": 80,
+      "label": "category-blog — tags-popular.title"
+    },
+    {
+      "key": "category-blog.social.title",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "social.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Follow me",
+      "maxCharacters": 80,
+      "label": "category-blog — social.title"
+    },
+    {
+      "key": "category-blog.social.link.1",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "social.link.1",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Facebook",
+      "maxCharacters": 80,
+      "label": "category-blog — social.link.1"
+    },
+    {
+      "key": "category-blog.social.link.1.url",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "social.link.1",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-blog — social.link.1 (link)"
+    },
+    {
+      "key": "category-blog.social.link.2",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "social.link.2",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Twitter",
+      "maxCharacters": 80,
+      "label": "category-blog — social.link.2"
+    },
+    {
+      "key": "category-blog.social.link.2.url",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "social.link.2",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-blog — social.link.2 (link)"
+    },
+    {
+      "key": "category-blog.social.link.3",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "social.link.3",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Instagram",
+      "maxCharacters": 80,
+      "label": "category-blog — social.link.3"
+    },
+    {
+      "key": "category-blog.social.link.3.url",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "social.link.3",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-blog — social.link.3 (link)"
+    },
+    {
+      "key": "category-blog.social.link.4",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "social.link.4",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "Rss",
+      "maxCharacters": 80,
+      "label": "category-blog — social.link.4"
+    },
+    {
+      "key": "category-blog.social.link.4.url",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "social.link.4",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-blog — social.link.4 (link)"
+    },
+    {
+      "key": "category-blog.related-items.main-section",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "related-items.main-section",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "More Read",
+      "maxCharacters": 80,
+      "label": "category-blog — related-items.main-section"
+    },
+    {
+      "key": "category-blog.gallery.title",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "category-blog — gallery.title"
+    },
+    {
+      "key": "category-blog.gallery.title.url",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "category-blog — gallery.title (link)"
+    },
+    {
+      "key": "author-listting.gallery.title",
+      "entity": "page-author-listting",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "author-listting — gallery.title"
+    },
+    {
+      "key": "author-listting.gallery.title.url",
+      "entity": "page-author-listting",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "author-listting — gallery.title (link)"
+    },
+    {
+      "key": "tagged-items.gallery.title",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "gallery.title",
+        "attr": "content"
+      },
+      "type": "text",
+      "sample": "@Grazia on instagram",
+      "maxCharacters": 80,
+      "label": "tagged-items — gallery.title"
+    },
+    {
+      "key": "tagged-items.gallery.title.url",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "gallery.title",
+        "attr": "url"
+      },
+      "type": "url",
+      "sample": "#",
+      "maxCharacters": 2048,
+      "label": "tagged-items — gallery.title (link)"
+    },
+    {
+      "key": "contact.gallery.image.1",
+      "entity": "page-contact",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "contact — gallery.image.1"
+    },
+    {
+      "key": "contact.gallery.image.2",
+      "entity": "page-contact",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "contact — gallery.image.2"
+    },
+    {
+      "key": "contact.gallery.image.3",
+      "entity": "page-contact",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "contact — gallery.image.3"
+    },
+    {
+      "key": "contact.gallery.image.4",
+      "entity": "page-contact",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "contact — gallery.image.4"
+    },
+    {
+      "key": "contact.gallery.image.5",
+      "entity": "page-contact",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "contact — gallery.image.5"
+    },
+    {
+      "key": "contact.gallery.image.6",
+      "entity": "page-contact",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "contact — gallery.image.6"
+    },
+    {
+      "key": "home-3.gallery.image.1",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.image.1"
+    },
+    {
+      "key": "home-3.gallery.image.2",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.image.2"
+    },
+    {
+      "key": "home-3.gallery.image.3",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.image.3"
+    },
+    {
+      "key": "home-3.gallery.image.4",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.image.4"
+    },
+    {
+      "key": "home-3.gallery.image.5",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.image.5"
+    },
+    {
+      "key": "home-3.gallery.image.6",
+      "entity": "page-home-3",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "home-3 — gallery.image.6"
+    },
+    {
+      "key": "resources.gallery.image.1",
+      "entity": "page-resources",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "resources — gallery.image.1"
+    },
+    {
+      "key": "resources.gallery.image.2",
+      "entity": "page-resources",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "resources — gallery.image.2"
+    },
+    {
+      "key": "resources.gallery.image.3",
+      "entity": "page-resources",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "resources — gallery.image.3"
+    },
+    {
+      "key": "resources.gallery.image.4",
+      "entity": "page-resources",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "resources — gallery.image.4"
+    },
+    {
+      "key": "resources.gallery.image.5",
+      "entity": "page-resources",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "resources — gallery.image.5"
+    },
+    {
+      "key": "resources.gallery.image.6",
+      "entity": "page-resources",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "resources — gallery.image.6"
+    },
+    {
+      "key": "lifestyle.gallery.image.1",
+      "entity": "page-lifestyle",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "lifestyle — gallery.image.1"
+    },
+    {
+      "key": "lifestyle.gallery.image.2",
+      "entity": "page-lifestyle",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "lifestyle — gallery.image.2"
+    },
+    {
+      "key": "lifestyle.gallery.image.3",
+      "entity": "page-lifestyle",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "lifestyle — gallery.image.3"
+    },
+    {
+      "key": "lifestyle.gallery.image.4",
+      "entity": "page-lifestyle",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "lifestyle — gallery.image.4"
+    },
+    {
+      "key": "lifestyle.gallery.image.5",
+      "entity": "page-lifestyle",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "lifestyle — gallery.image.5"
+    },
+    {
+      "key": "lifestyle.gallery.image.6",
+      "entity": "page-lifestyle",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "lifestyle — gallery.image.6"
+    },
+    {
+      "key": "home-2.gallery.image.1",
+      "entity": "page-home-2",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "home-2 — gallery.image.1"
+    },
+    {
+      "key": "home-2.gallery.image.2",
+      "entity": "page-home-2",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "home-2 — gallery.image.2"
+    },
+    {
+      "key": "home-2.gallery.image.3",
+      "entity": "page-home-2",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "home-2 — gallery.image.3"
+    },
+    {
+      "key": "home-2.gallery.image.4",
+      "entity": "page-home-2",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "home-2 — gallery.image.4"
+    },
+    {
+      "key": "home-2.gallery.image.5",
+      "entity": "page-home-2",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "home-2 — gallery.image.5"
+    },
+    {
+      "key": "home-2.gallery.image.6",
+      "entity": "page-home-2",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "home-2 — gallery.image.6"
+    },
+    {
+      "key": "layout-1.gallery.image.1",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "layout-1 — gallery.image.1"
+    },
+    {
+      "key": "layout-1.gallery.image.2",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "layout-1 — gallery.image.2"
+    },
+    {
+      "key": "layout-1.gallery.image.3",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "layout-1 — gallery.image.3"
+    },
+    {
+      "key": "layout-1.gallery.image.4",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "layout-1 — gallery.image.4"
+    },
+    {
+      "key": "layout-1.gallery.image.5",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "layout-1 — gallery.image.5"
+    },
+    {
+      "key": "layout-1.gallery.image.6",
+      "entity": "page-layout-1",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "layout-1 — gallery.image.6"
+    },
+    {
+      "key": "layout-2.gallery.image.1",
+      "entity": "page-layout-2",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "layout-2 — gallery.image.1"
+    },
+    {
+      "key": "layout-2.gallery.image.2",
+      "entity": "page-layout-2",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "layout-2 — gallery.image.2"
+    },
+    {
+      "key": "layout-2.gallery.image.3",
+      "entity": "page-layout-2",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "layout-2 — gallery.image.3"
+    },
+    {
+      "key": "layout-2.gallery.image.4",
+      "entity": "page-layout-2",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "layout-2 — gallery.image.4"
+    },
+    {
+      "key": "layout-2.gallery.image.5",
+      "entity": "page-layout-2",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "layout-2 — gallery.image.5"
+    },
+    {
+      "key": "layout-2.gallery.image.6",
+      "entity": "page-layout-2",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "layout-2 — gallery.image.6"
+    },
+    {
+      "key": "layout-3.gallery.image.1",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "layout-3 — gallery.image.1"
+    },
+    {
+      "key": "layout-3.gallery.image.2",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "layout-3 — gallery.image.2"
+    },
+    {
+      "key": "layout-3.gallery.image.3",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "layout-3 — gallery.image.3"
+    },
+    {
+      "key": "layout-3.gallery.image.4",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "layout-3 — gallery.image.4"
+    },
+    {
+      "key": "layout-3.gallery.image.5",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "layout-3 — gallery.image.5"
+    },
+    {
+      "key": "layout-3.gallery.image.6",
+      "entity": "page-layout-3",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "layout-3 — gallery.image.6"
+    },
+    {
+      "key": "video.gallery.image.1",
+      "entity": "page-video",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "video — gallery.image.1"
+    },
+    {
+      "key": "video.gallery.image.2",
+      "entity": "page-video",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "video — gallery.image.2"
+    },
+    {
+      "key": "video.gallery.image.3",
+      "entity": "page-video",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "video — gallery.image.3"
+    },
+    {
+      "key": "video.gallery.image.4",
+      "entity": "page-video",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "video — gallery.image.4"
+    },
+    {
+      "key": "video.gallery.image.5",
+      "entity": "page-video",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "video — gallery.image.5"
+    },
+    {
+      "key": "video.gallery.image.6",
+      "entity": "page-video",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "video — gallery.image.6"
+    },
+    {
+      "key": "gallery.gallery.image.1",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.image.1"
+    },
+    {
+      "key": "gallery.gallery.image.2",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.image.2"
+    },
+    {
+      "key": "gallery.gallery.image.3",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.image.3"
+    },
+    {
+      "key": "gallery.gallery.image.4",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.image.4"
+    },
+    {
+      "key": "gallery.gallery.image.5",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.image.5"
+    },
+    {
+      "key": "gallery.gallery.image.6",
+      "entity": "page-gallery",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "gallery — gallery.image.6"
+    },
+    {
+      "key": "home-4.gallery.image.1",
+      "entity": "page-home-4",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "home-4 — gallery.image.1"
+    },
+    {
+      "key": "home-4.gallery.image.2",
+      "entity": "page-home-4",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "home-4 — gallery.image.2"
+    },
+    {
+      "key": "home-4.gallery.image.3",
+      "entity": "page-home-4",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "home-4 — gallery.image.3"
+    },
+    {
+      "key": "home-4.gallery.image.4",
+      "entity": "page-home-4",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "home-4 — gallery.image.4"
+    },
+    {
+      "key": "home-4.gallery.image.5",
+      "entity": "page-home-4",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "home-4 — gallery.image.5"
+    },
+    {
+      "key": "home-4.gallery.image.6",
+      "entity": "page-home-4",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "home-4 — gallery.image.6"
+    },
+    {
+      "key": "home-5.gallery.image.1",
+      "entity": "page-home-5",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/gallery-1-1.jpg",
+      "sampleId": 218,
+      "maxCharacters": 255,
+      "label": "home-5 — gallery.image.1"
+    },
+    {
+      "key": "home-5.gallery.image.2",
+      "entity": "page-home-5",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/gallery-2-1.jpg",
+      "sampleId": 219,
+      "maxCharacters": 255,
+      "label": "home-5 — gallery.image.2"
+    },
+    {
+      "key": "home-5.gallery.image.3",
+      "entity": "page-home-5",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/gallery-3-1.jpg",
+      "sampleId": 220,
+      "maxCharacters": 255,
+      "label": "home-5 — gallery.image.3"
+    },
+    {
+      "key": "home-5.gallery.image.4",
+      "entity": "page-home-5",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/gallery-4-1.jpg",
+      "sampleId": 221,
+      "maxCharacters": 255,
+      "label": "home-5 — gallery.image.4"
+    },
+    {
+      "key": "home-5.gallery.image.5",
+      "entity": "page-home-5",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/gallery-5-1.jpg",
+      "sampleId": 222,
+      "maxCharacters": 255,
+      "label": "home-5 — gallery.image.5"
+    },
+    {
+      "key": "home-5.gallery.image.6",
+      "entity": "page-home-5",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/gallery-6-1.jpg",
+      "sampleId": 223,
+      "maxCharacters": 255,
+      "label": "home-5 — gallery.image.6"
+    },
+    {
+      "key": "home-1.gallery.image.1",
+      "entity": "page-home-1",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "home-1 — gallery.image.1"
+    },
+    {
+      "key": "home-1.gallery.image.2",
+      "entity": "page-home-1",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "home-1 — gallery.image.2"
+    },
+    {
+      "key": "home-1.gallery.image.3",
+      "entity": "page-home-1",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "home-1 — gallery.image.3"
+    },
+    {
+      "key": "home-1.gallery.image.4",
+      "entity": "page-home-1",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "home-1 — gallery.image.4"
+    },
+    {
+      "key": "home-1.gallery.image.5",
+      "entity": "page-home-1",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "home-1 — gallery.image.5"
+    },
+    {
+      "key": "home-1.gallery.image.6",
+      "entity": "page-home-1",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "home-1 — gallery.image.6"
+    },
+    {
+      "key": "category-style-1.gallery.image.1",
+      "entity": "page-category-style-1",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "category-style-1 — gallery.image.1"
+    },
+    {
+      "key": "category-style-1.gallery.image.2",
+      "entity": "page-category-style-1",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "category-style-1 — gallery.image.2"
+    },
+    {
+      "key": "category-style-1.gallery.image.3",
+      "entity": "page-category-style-1",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "category-style-1 — gallery.image.3"
+    },
+    {
+      "key": "category-style-1.gallery.image.4",
+      "entity": "page-category-style-1",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "category-style-1 — gallery.image.4"
+    },
+    {
+      "key": "category-style-1.gallery.image.5",
+      "entity": "page-category-style-1",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "category-style-1 — gallery.image.5"
+    },
+    {
+      "key": "category-style-1.gallery.image.6",
+      "entity": "page-category-style-1",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "category-style-1 — gallery.image.6"
+    },
+    {
+      "key": "category-style-2.gallery.image.1",
+      "entity": "page-category-style-2",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "category-style-2 — gallery.image.1"
+    },
+    {
+      "key": "category-style-2.gallery.image.2",
+      "entity": "page-category-style-2",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "category-style-2 — gallery.image.2"
+    },
+    {
+      "key": "category-style-2.gallery.image.3",
+      "entity": "page-category-style-2",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "category-style-2 — gallery.image.3"
+    },
+    {
+      "key": "category-style-2.gallery.image.4",
+      "entity": "page-category-style-2",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "category-style-2 — gallery.image.4"
+    },
+    {
+      "key": "category-style-2.gallery.image.5",
+      "entity": "page-category-style-2",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "category-style-2 — gallery.image.5"
+    },
+    {
+      "key": "category-style-2.gallery.image.6",
+      "entity": "page-category-style-2",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "category-style-2 — gallery.image.6"
+    },
+    {
+      "key": "category-style-3.gallery.image.1",
+      "entity": "page-category-style-3",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "category-style-3 — gallery.image.1"
+    },
+    {
+      "key": "category-style-3.gallery.image.2",
+      "entity": "page-category-style-3",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "category-style-3 — gallery.image.2"
+    },
+    {
+      "key": "category-style-3.gallery.image.3",
+      "entity": "page-category-style-3",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "category-style-3 — gallery.image.3"
+    },
+    {
+      "key": "category-style-3.gallery.image.4",
+      "entity": "page-category-style-3",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "category-style-3 — gallery.image.4"
+    },
+    {
+      "key": "category-style-3.gallery.image.5",
+      "entity": "page-category-style-3",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "category-style-3 — gallery.image.5"
+    },
+    {
+      "key": "category-style-3.gallery.image.6",
+      "entity": "page-category-style-3",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "category-style-3 — gallery.image.6"
+    },
+    {
+      "key": "category-style-4.gallery.image.1",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "category-style-4 — gallery.image.1"
+    },
+    {
+      "key": "category-style-4.gallery.image.2",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "category-style-4 — gallery.image.2"
+    },
+    {
+      "key": "category-style-4.gallery.image.3",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "category-style-4 — gallery.image.3"
+    },
+    {
+      "key": "category-style-4.gallery.image.4",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "category-style-4 — gallery.image.4"
+    },
+    {
+      "key": "category-style-4.gallery.image.5",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "category-style-4 — gallery.image.5"
+    },
+    {
+      "key": "category-style-4.gallery.image.6",
+      "entity": "page-category-style-4",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "category-style-4 — gallery.image.6"
+    },
+    {
+      "key": "login-form.gallery.image.1",
+      "entity": "page-login-form",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "login-form — gallery.image.1"
+    },
+    {
+      "key": "login-form.gallery.image.2",
+      "entity": "page-login-form",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "login-form — gallery.image.2"
+    },
+    {
+      "key": "login-form.gallery.image.3",
+      "entity": "page-login-form",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "login-form — gallery.image.3"
+    },
+    {
+      "key": "login-form.gallery.image.4",
+      "entity": "page-login-form",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "login-form — gallery.image.4"
+    },
+    {
+      "key": "login-form.gallery.image.5",
+      "entity": "page-login-form",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "login-form — gallery.image.5"
+    },
+    {
+      "key": "login-form.gallery.image.6",
+      "entity": "page-login-form",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "login-form — gallery.image.6"
+    },
+    {
+      "key": "registration-form.gallery.image.1",
+      "entity": "page-registration-form",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "registration-form — gallery.image.1"
+    },
+    {
+      "key": "registration-form.gallery.image.2",
+      "entity": "page-registration-form",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "registration-form — gallery.image.2"
+    },
+    {
+      "key": "registration-form.gallery.image.3",
+      "entity": "page-registration-form",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "registration-form — gallery.image.3"
+    },
+    {
+      "key": "registration-form.gallery.image.4",
+      "entity": "page-registration-form",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "registration-form — gallery.image.4"
+    },
+    {
+      "key": "registration-form.gallery.image.5",
+      "entity": "page-registration-form",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "registration-form — gallery.image.5"
+    },
+    {
+      "key": "registration-form.gallery.image.6",
+      "entity": "page-registration-form",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "registration-form — gallery.image.6"
+    },
+    {
+      "key": "user-profile.gallery.image.1",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "user-profile — gallery.image.1"
+    },
+    {
+      "key": "user-profile.gallery.image.2",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "user-profile — gallery.image.2"
+    },
+    {
+      "key": "user-profile.gallery.image.3",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "user-profile — gallery.image.3"
+    },
+    {
+      "key": "user-profile.gallery.image.4",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "user-profile — gallery.image.4"
+    },
+    {
+      "key": "user-profile.gallery.image.5",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "user-profile — gallery.image.5"
+    },
+    {
+      "key": "user-profile.gallery.image.6",
+      "entity": "page-user-profile",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "user-profile — gallery.image.6"
+    },
+    {
+      "key": "error-page.gallery.image.1",
+      "entity": "page-error-page",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "error-page — gallery.image.1"
+    },
+    {
+      "key": "error-page.gallery.image.2",
+      "entity": "page-error-page",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "error-page — gallery.image.2"
+    },
+    {
+      "key": "error-page.gallery.image.3",
+      "entity": "page-error-page",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "error-page — gallery.image.3"
+    },
+    {
+      "key": "error-page.gallery.image.4",
+      "entity": "page-error-page",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "error-page — gallery.image.4"
+    },
+    {
+      "key": "error-page.gallery.image.5",
+      "entity": "page-error-page",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "error-page — gallery.image.5"
+    },
+    {
+      "key": "error-page.gallery.image.6",
+      "entity": "page-error-page",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "error-page — gallery.image.6"
+    },
+    {
+      "key": "offline-pages.gallery.image.1",
+      "entity": "page-offline-pages",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "offline-pages — gallery.image.1"
+    },
+    {
+      "key": "offline-pages.gallery.image.2",
+      "entity": "page-offline-pages",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "offline-pages — gallery.image.2"
+    },
+    {
+      "key": "offline-pages.gallery.image.3",
+      "entity": "page-offline-pages",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "offline-pages — gallery.image.3"
+    },
+    {
+      "key": "offline-pages.gallery.image.4",
+      "entity": "page-offline-pages",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "offline-pages — gallery.image.4"
+    },
+    {
+      "key": "offline-pages.gallery.image.5",
+      "entity": "page-offline-pages",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "offline-pages — gallery.image.5"
+    },
+    {
+      "key": "offline-pages.gallery.image.6",
+      "entity": "page-offline-pages",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "offline-pages — gallery.image.6"
+    },
+    {
+      "key": "typography.gallery.image.1",
+      "entity": "page-typography",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "typography — gallery.image.1"
+    },
+    {
+      "key": "typography.gallery.image.2",
+      "entity": "page-typography",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "typography — gallery.image.2"
+    },
+    {
+      "key": "typography.gallery.image.3",
+      "entity": "page-typography",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "typography — gallery.image.3"
+    },
+    {
+      "key": "typography.gallery.image.4",
+      "entity": "page-typography",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "typography — gallery.image.4"
+    },
+    {
+      "key": "typography.gallery.image.5",
+      "entity": "page-typography",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "typography — gallery.image.5"
+    },
+    {
+      "key": "typography.gallery.image.6",
+      "entity": "page-typography",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "typography — gallery.image.6"
+    },
+    {
+      "key": "featured-articles.gallery.image.1",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "featured-articles — gallery.image.1"
+    },
+    {
+      "key": "featured-articles.gallery.image.2",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "featured-articles — gallery.image.2"
+    },
+    {
+      "key": "featured-articles.gallery.image.3",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "featured-articles — gallery.image.3"
+    },
+    {
+      "key": "featured-articles.gallery.image.4",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "featured-articles — gallery.image.4"
+    },
+    {
+      "key": "featured-articles.gallery.image.5",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "featured-articles — gallery.image.5"
+    },
+    {
+      "key": "featured-articles.gallery.image.6",
+      "entity": "page-featured-articles",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "featured-articles — gallery.image.6"
+    },
+    {
+      "key": "edit-user-profile.gallery.image.1",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "edit-user-profile — gallery.image.1"
+    },
+    {
+      "key": "edit-user-profile.gallery.image.2",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "edit-user-profile — gallery.image.2"
+    },
+    {
+      "key": "edit-user-profile.gallery.image.3",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "edit-user-profile — gallery.image.3"
+    },
+    {
+      "key": "edit-user-profile.gallery.image.4",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "edit-user-profile — gallery.image.4"
+    },
+    {
+      "key": "edit-user-profile.gallery.image.5",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "edit-user-profile — gallery.image.5"
+    },
+    {
+      "key": "edit-user-profile.gallery.image.6",
+      "entity": "page-edit-user-profile",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "edit-user-profile — gallery.image.6"
+    },
+    {
+      "key": "category-blog.gallery.image.1",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "category-blog — gallery.image.1"
+    },
+    {
+      "key": "category-blog.gallery.image.2",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "category-blog — gallery.image.2"
+    },
+    {
+      "key": "category-blog.gallery.image.3",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "category-blog — gallery.image.3"
+    },
+    {
+      "key": "category-blog.gallery.image.4",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "category-blog — gallery.image.4"
+    },
+    {
+      "key": "category-blog.gallery.image.5",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "category-blog — gallery.image.5"
+    },
+    {
+      "key": "category-blog.gallery.image.6",
+      "entity": "page-category-blog",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "category-blog — gallery.image.6"
+    },
+    {
+      "key": "author-listting.gallery.image.1",
+      "entity": "page-author-listting",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "author-listting — gallery.image.1"
+    },
+    {
+      "key": "author-listting.gallery.image.2",
+      "entity": "page-author-listting",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "author-listting — gallery.image.2"
+    },
+    {
+      "key": "author-listting.gallery.image.3",
+      "entity": "page-author-listting",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "author-listting — gallery.image.3"
+    },
+    {
+      "key": "author-listting.gallery.image.4",
+      "entity": "page-author-listting",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "author-listting — gallery.image.4"
+    },
+    {
+      "key": "author-listting.gallery.image.5",
+      "entity": "page-author-listting",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "author-listting — gallery.image.5"
+    },
+    {
+      "key": "author-listting.gallery.image.6",
+      "entity": "page-author-listting",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "author-listting — gallery.image.6"
+    },
+    {
+      "key": "tagged-items.gallery.image.1",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "gallery.image.1",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-1-3.png",
+      "sampleId": 212,
+      "maxCharacters": 255,
+      "label": "tagged-items — gallery.image.1"
+    },
+    {
+      "key": "tagged-items.gallery.image.2",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "gallery.image.2",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-2-1.png",
+      "sampleId": 213,
+      "maxCharacters": 255,
+      "label": "tagged-items — gallery.image.2"
+    },
+    {
+      "key": "tagged-items.gallery.image.3",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "gallery.image.3",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-3-1.png",
+      "sampleId": 214,
+      "maxCharacters": 255,
+      "label": "tagged-items — gallery.image.3"
+    },
+    {
+      "key": "tagged-items.gallery.image.4",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "gallery.image.4",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-4-1.png",
+      "sampleId": 215,
+      "maxCharacters": 255,
+      "label": "tagged-items — gallery.image.4"
+    },
+    {
+      "key": "tagged-items.gallery.image.5",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "gallery.image.5",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-5-1.png",
+      "sampleId": 216,
+      "maxCharacters": 255,
+      "label": "tagged-items — gallery.image.5"
+    },
+    {
+      "key": "tagged-items.gallery.image.6",
+      "entity": "page-tagged-items",
+      "target": {
+        "block": "gallery.image.6",
+        "attr": "src"
+      },
+      "type": "image",
+      "sample": "wp-content/uploads/2026/10/item-6-1.png",
+      "sampleId": 217,
+      "maxCharacters": 255,
+      "label": "tagged-items — gallery.image.6"
+    }
+  ]
+}

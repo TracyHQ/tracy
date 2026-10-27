@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-893-emdash-kit-pages-hidden",
+  "kind": "fix",
+  "title": "Tracy Business EmDash: no kit showcase page is hidden by a template rule (TCH #1013, 08/10/2026: a page goes only when the customer unticks it)",
+  "pr": 893,
+  "area": "emdash-theme-business/personalize",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-emdash-theme-business/tests/personalize-hide.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 1): the personalize map's hide list is empty, and templateHideRules returns no rule for the seed pages carrying data.sample."
+  ],
+  "selectors": {
+    "map": "packages/cms/tracy-emdash-theme-business/seed/personalize.json (hide)",
+    "seed": "packages/cms/tracy-emdash-theme-business/seed/seed.json (pages with data.sample)"
+  },
+  "evidence": "05/10/2026 local stand: a two-language Tracy Business EmDash site made with Apply kept /kit/style-guide, /kit/newsletter, /kit/form, /kit/slides and their /vi/ copies published and linked from the sitemap page; 24 of the site's 28 demo-company words were on them. After the fix: 0 kit pages reachable, 6 demo words left (in kept demo news posts).",
+  "fence": "Superseded by the product owner's decision of 08/10/2026 (TCH #1013): the template's own showcase pages stay published as released; only a page the customer unticked is unpublished.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-emdash-theme-business/tests/personalize-hide.test.mjs"
+    ]
+  }
+}

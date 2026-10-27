@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-plaster: #f2f3f5;
+  --color-mist: #e5e7eb;
+  --color-chalk: #ffffff;
+  --color-hairline: #d1d5db;
+  --color-inkstone: #0f172a;
+  --color-slate: #334155;
+  --color-graphite: #475569;
+  --color-pewter: #64748b;
+  --color-fog: #939eae;
+  --color-obsidian: #000000;
+  --color-spark-violet: #6d4aff;
+
+  /* Typography */
+  --font-greycliff: 'Greycliff', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

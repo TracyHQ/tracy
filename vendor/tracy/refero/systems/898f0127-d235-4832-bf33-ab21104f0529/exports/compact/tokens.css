@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-smoke: #050409;
+  --color-ash-mist: #b8b6bb;
+  --color-iron-veil: #89868e;
+  --color-faded-print: #999999;
+  --color-snow: #ffffff;
+  --color-eclipse-indigo: #0e0a17;
+  --color-signal-blue: #3d6a99;
+  --color-glacier-beam: #71b8f2;
+
+  /* Typography — Font Families */
+  --font-max-sans: 'Max Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

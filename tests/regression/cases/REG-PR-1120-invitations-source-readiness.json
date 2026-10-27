@@ -1,0 +1,57 @@
+{
+  "id": "REG-PR-1120-invitations-source-readiness",
+  "kind": "feat",
+  "title": "Synthetic source versions invalidate invitation approvals atomically without rewriting drafts",
+  "pr": 1120,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run source store, fenced sync, approval and HTTP tests with a private PostgreSQL database and bounded timeouts."
+  ],
+  "expect": [
+    "source page rollback retains current facts and cursor: all page effects roll back together.",
+    "partial negative survives a later failed page: negative remains effective without false source completion.",
+    "same-dependency refresh after an expired validation gap invalidates permanently: fresh facts never revive stale approval.",
+    "source sync before approve rejects stale campaign revision: the waiting approval gets HTTP 409.",
+    "source sync after approve invalidates before commit: effective approval is false and original text remains.",
+    "source read cannot combine different fact and approval snapshots: concurrent GET never exposes a mixed effective tuple.",
+    "legacy STOP invalidates linked source approvals without touching customized text: suppression crosses the shared alias graph.",
+    "source save invalidates approval and explicit reapproval permits only synthetic simulation: attempts remain immutable and no real mail is sent.",
+    "source content preview matches the generated draft personalization: preview and generated subject/body use the same source facts.",
+    "source admission refuses campaign 101 without blocking existing sync or legacy STOP: bounded enrollment preserves existing operations."
+  ],
+  "selectors": {
+    "source": "/api/ops/invitations/:id/sources/sync",
+    "approve": "/api/ops/invitations/:id/recipients/:rid/approve",
+    "simulate": "/api/ops/invitations/:id/simulate"
+  },
+  "fence": "Synthetic identities only; real private PostgreSQL transactions and observed advisory lock waiters, no live source or mailbox transport.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=90000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/invitations-source-store.test.mjs",
+      "apps/tracy-web/test/invitations-source-sync.test.mjs",
+      "apps/tracy-web/test/invitations-source-approval.test.mjs",
+      "apps/tracy-web/test/invitations-source-routes.test.mjs"
+    ],
+    "tests": [
+      "source page rollback retains current facts and cursor",
+      "partial negative survives a later failed page",
+      "same-dependency refresh after an expired validation gap invalidates permanently",
+      "source sync before approve rejects stale campaign revision",
+      "source sync after approve invalidates before commit",
+      "source read cannot combine different fact and approval snapshots",
+      "legacy STOP invalidates linked source approvals without touching customized text",
+      "source save invalidates approval and explicit reapproval permits only synthetic simulation",
+      "source content preview matches the generated draft personalization",
+      "source admission refuses campaign 101 without blocking existing sync or legacy STOP"
+    ]
+  }
+}

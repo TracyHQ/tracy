@@ -1,0 +1,49 @@
+{
+  "id": "QA-UNIT-REG-PR-1097-help-about-notes-height-happy",
+  "itemIds": ["regression:REG-PR-1097-help-about-notes-height"],
+  "requirement": "Settings › Help & about: the What's new box is as tall as short release notes and caps long ones at 150 px so they scroll",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1097-help-about-notes-height.json",
+    "ref": "PR #1097 (fix); fix evidence: none recorded",
+    "invariant": "S1: notesBoxHeight answers null (no fixed height) for notes up to 150 px tall, 150 for longer ones, and 150 when nothing was measured yet; the rest of the Help & about suite stays green.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-settings/test/help-about.test.mjs:86 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the notes box fits short notes and caps long ones so they scroll",
+    "What’s new shows only with a waiting version and notes"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1097-help-about-notes-height"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-settings", "tracy-settings"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1097-help-about-notes-height",
+    "pr": 1097,
+    "kind": "fix",
+    "area": "settings/help-about",
+    "file": "tests/regression/cases/REG-PR-1097-help-about-notes-height.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "packages/ui/tracy-settings/test/help-about.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the notes box fits short notes and caps long ones so they scroll",
+    "What’s new shows only with a waiting version and notes"
+  ],
+  "timeoutS": 120
+}

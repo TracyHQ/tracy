@@ -1,0 +1,132 @@
+// @ts-check
+import cloudflare from "@astrojs/cloudflare";
+import { cacheCloudflare } from "@astrojs/cloudflare/cache";
+import react from "@astrojs/react";
+import {
+	d1,
+	r2,
+	access,
+	sandbox,
+	cloudflareImages,
+	cloudflareStream,
+} from "@emdash-cms/cloudflare";
+import { aiSearch } from "@emdash-cms/cloudflare/plugins";
+import { formsPlugin } from "@emdash-cms/plugin-forms";
+import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
+import { defineConfig, fontProviders } from "astro/config";
+import emdash from "emdash/astro";
+
+export default defineConfig({
+	output: "server",
+	adapter: cloudflare({
+		imageService: "cloudflare",
+	}),
+	i18n: {
+		defaultLocale: "en",
+		locales: ["en", "fr", "es"],
+		fallback: {
+			fr: "en",
+			es: "en",
+		},
+	},
+	image: {
+		// Enable responsive images globally
+		layout: "constrained",
+		responsiveStyles: true,
+	},
+	integrations: [
+		react(),
+		emdash({
+			// D1 database - binding name must match wrangler.jsonc
+			// session: "auto" enables read replicas (nearest replica for anon,
+			// bookmark-based consistency for authenticated users)
+			database: d1({ binding: "DB", session: "auto" }),
+			// R2 storage for media
+			storage: r2({ binding: "MEDIA" }),
+			// Cloudflare Access authentication
+			// Reads CF_ACCESS_AUDIENCE from env (wrangler secret or .env)
+			auth: access({
+				teamDomain: "cloudflare-cto.cloudflareaccess.com",
+				autoProvision: true,
+				defaultRole: 30, // Author
+				// Map your IdP groups to roles (optional)
+				// roleMapping: {
+				// 	"Admins": 50,
+				// 	"Editors": 40,
+				// },
+			}),
+			// Media providers - Cloudflare Images and Stream
+			// Reads from env vars at runtime: CF_ACCOUNT_ID, CF_IMAGES_TOKEN, CF_STREAM_TOKEN
+			// Or customize with accountIdEnvVar/apiTokenEnvVar options
+			mediaProviders: [
+				cloudflareImages({
+					accountIdEnvVar: "CF_MEDIA_ACCOUNT_ID",
+					apiTokenEnvVar: "CF_MEDIA_API_TOKEN",
+					accountHash: "5LGXGUnHU18h6ehN_xjpXQ",
+				}),
+				cloudflareStream({
+					accountIdEnvVar: "CF_MEDIA_ACCOUNT_ID",
+					apiTokenEnvVar: "CF_MEDIA_API_TOKEN",
+				}),
+			],
+			// Trusted plugins (run in host worker)
+			plugins: [
+				// Test plugin that exercises all v2 APIs
+				formsPlugin(),
+				aiSearch({
+					// AI Search instance name (created on first index). Default: "emdash-content".
+					instanceName: "emdash-content",
+					// wrangler.jsonc `ai_search_namespaces` binding name. Default: "AI_SEARCH".
+					binding: "AI_SEARCH",
+					// Hybrid search (vector + keyword). Default: true.
+					hybridSearch: true,
+					// Public result URLs returned to the AI Search snippet.
+					urlTemplates: {
+						posts: "/posts/{slug}?lang={locale}",
+						pages: "/pages/{slug}?lang={locale}",
+					},
+				}),
+			],
+			// Sandboxed plugins (run in isolated workers)
+			sandboxed: [webhookNotifier],
+			// Sandbox runner for Cloudflare
+			sandboxRunner: sandbox(),
+			// Plugin marketplace
+			marketplace: "https://marketplace.emdashcms.com",
+		}),
+	],
+	// Preferred edge HTML cache: native Workers Caching via the Astro Cloudflare
+	// adapter. Pair with `"cache": { "enabled": true }` in wrangler.jsonc (the
+	// adapter also injects that when this provider is detected). Invalidation is
+	// `cache.purge()` from cloudflare:workers — no CF_ZONE_ID / API token.
+	cache: {
+		provider: cacheCloudflare(),
+	},
+	routeRules: {
+		"/": {
+			maxAge: 3_600,
+			swr: 864_000,
+		},
+		"/[...slug]": {
+			maxAge: 3_600,
+			swr: 864_000,
+		},
+	},
+	fonts: [
+		{
+			provider: fontProviders.google(),
+			name: "Inter",
+			cssVariable: "--font-sans",
+			weights: [400, 500, 600, 700],
+			fallbacks: ["sans-serif"],
+		},
+		{
+			provider: fontProviders.google(),
+			name: "JetBrains Mono",
+			cssVariable: "--font-mono",
+			weights: [400, 500],
+			fallbacks: ["monospace"],
+		},
+	],
+	devToolbar: { enabled: false },
+});

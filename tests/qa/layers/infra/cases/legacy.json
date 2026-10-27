@@ -1,0 +1,232 @@
+[
+  {
+    "id": "QA-INFRA-legacy-fleet-1of4",
+    "itemIds": ["legacy-suite:fleet-1of4"],
+    "requirement": "Existing suite packages/fleet/tracy-fleet-operation/test/*.test.mjs (shard 1 of 4) runs to the end with no failure; each skip and each failure is listed. Its expected values are not bound to an independent oracle, so it is evidence, not a PASS",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "legacy-unbound",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-legacy-fleet-2of4",
+    "itemIds": ["legacy-suite:fleet-2of4"],
+    "requirement": "Existing suite packages/fleet/tracy-fleet-operation/test/*.test.mjs (shard 2 of 4) runs to the end with no failure; each skip and each failure is listed. Its expected values are not bound to an independent oracle, so it is evidence, not a PASS",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "legacy-unbound",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-legacy-fleet-3of4",
+    "itemIds": ["legacy-suite:fleet-3of4"],
+    "requirement": "Existing suite packages/fleet/tracy-fleet-operation/test/*.test.mjs (shard 3 of 4) runs to the end with no failure; each skip and each failure is listed. Its expected values are not bound to an independent oracle, so it is evidence, not a PASS",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "legacy-unbound",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-legacy-fleet-4of4",
+    "itemIds": ["legacy-suite:fleet-4of4"],
+    "requirement": "Existing suite packages/fleet/tracy-fleet-operation/test/*.test.mjs (shard 4 of 4) runs to the end with no failure; each skip and each failure is listed. Its expected values are not bound to an independent oracle, so it is evidence, not a PASS",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "legacy-unbound",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-legacy-host",
+    "itemIds": ["legacy-suite:host"],
+    "requirement": "Existing suite apps/tracy-host/test/*.test.mjs runs to the end with no failure; each skip and each failure is listed. Its expected values are not bound to an independent oracle, so it is evidence, not a PASS",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "legacy-unbound",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-legacy-python",
+    "itemIds": ["legacy-suite:python"],
+    "requirement": "The two Python suites (quickstart-jpa.test.py, render-canonical.test.py) run when python3 is present",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "legacy-unbound",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-legacy-web-backup-restore",
+    "itemIds": ["legacy-suite:web-backup-restore"],
+    "requirement": "Existing suite apps/tracy-web/test/backup-restore.test.mjs runs to the end with no failure; each skip and each failure is listed. Its expected values are not bound to an independent oracle, so it is evidence, not a PASS",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "legacy-unbound",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-legacy-web-cron",
+    "itemIds": ["legacy-suite:web-cron"],
+    "requirement": "Existing suite apps/tracy-web/test/cron.test.mjs runs to the end with no failure; each skip and each failure is listed. Its expected values are not bound to an independent oracle, so it is evidence, not a PASS",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "legacy-unbound",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-legacy-web-inventory-reconcile",
+    "itemIds": ["legacy-suite:web-inventory-reconcile"],
+    "requirement": "Existing suite apps/tracy-web/test/inventory-reconcile.test.mjs runs to the end with no failure; each skip and each failure is listed. Its expected values are not bound to an independent oracle, so it is evidence, not a PASS",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "legacy-unbound",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  },
+  {
+    "id": "QA-INFRA-legacy-web-provision-settles",
+    "itemIds": ["legacy-suite:web-provision-settles"],
+    "requirement": "Existing suite apps/tracy-web/test/provision-settles.test.mjs runs to the end with no failure; each skip and each failure is listed. Its expected values are not bound to an independent oracle, so it is evidence, not a PASS",
+    "oracle": {
+      "source": "CLAUDE.md",
+      "ref": "legacy-unbound",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification"
+    },
+    "edgeTags": ["happy"],
+    "targets": ["local"],
+    "effects": {
+      "reads": [],
+      "writes": [],
+      "mail": false,
+      "model": false,
+      "containers": false
+    },
+    "prerequisites": [],
+    "assertionIds": [],
+    "redProof": null,
+    "legacyIds": []
+  }
+]

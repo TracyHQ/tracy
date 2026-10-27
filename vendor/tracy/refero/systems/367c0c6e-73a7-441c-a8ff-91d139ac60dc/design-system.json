@@ -1,0 +1,356 @@
+{
+  "dos": [
+    "Set display headlines in Wise Sans weight 900 with letter-spacing -3.15px at 105px; the extreme heaviness is the brand's signature — don't soften it to 700.",
+    "Use Lime Voltage (#9fe870) exclusively for primary action fills and active states; one lime element per visible viewport section is usually enough.",
+    "Default to 9999px radius for all buttons, tags, and nav segments — pill shapes are foundational, not decorative.",
+    "Use Forest Ink (#163300) for text and dark surfaces, not pure black; the green-tinted near-black is warmer and more on-brand.",
+    "Apply tight negative letter-spacing at large sizes (-0.030em at 100px+ down to -0.003em at 12px); headings should feel compact, not airy.",
+    "Pair a filled primary CTA with an underlined text link as the secondary action — never two filled buttons side by side.",
+    "Invert section backgrounds from white to Forest Ink to create rhythm; the lime text on dark green is the system's built-in emphasis."
+  ],
+  "donts": [
+    "Don't use Charcoal (#454745) for display headlines — reserve Obsidian (#0e0f0c) or Forest Ink for maximum contrast at large sizes.",
+    "Don't introduce gradients, drop shadows beyond hairline borders, or decorative blurs — the system is flat by design.",
+    "Don't use Lime Voltage as text color on light backgrounds; its contrast is too low. It only works as fill or on dark green.",
+    "Don't use sharp corners (0–4px radius) on buttons, tags, or nav elements; pills are the default shape language.",
+    "Don't set display headlines in Inter — Wise Sans 900 is the only acceptable voice for 60px+ type.",
+    "Don't stack multiple lime elements close together; space them so the accent reads as a single punctuation mark.",
+    "Don't use #000000 for body text; Charcoal (#454745) at 18px on white is the baseline that keeps the page from feeling harsh."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#163300",
+      "name": "Forest Ink",
+      "role": "Dominant brand dark — nav text, dark section backgrounds, primary copy on light surfaces, icon strokes, filled navigation pills. This is the brand's gravity: wherever you need weight or authority, you reach for Forest Ink",
+      "group": "brand"
+    },
+    {
+      "hex": "#9fe870",
+      "name": "Lime Voltage",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#054d28",
+      "name": "Spruce",
+      "role": "Secondary dark green for card surfaces, supporting iconography, and tonal depth on dark sections where Forest Ink is too heavy",
+      "group": "brand"
+    },
+    {
+      "hex": "#e2f6d5",
+      "name": "Linen Mist",
+      "role": "Pale green wash for soft highlight surfaces, tinted card backgrounds, nav hover states. A whisper of the brand green for low-emphasis containers",
+      "group": "accent"
+    },
+    {
+      "hex": "#0b4c72",
+      "name": "Signal Blue",
+      "role": "Blue supporting accent for decorative details and low-frequency emphasis",
+      "group": "accent"
+    },
+    {
+      "hex": "#cb272f",
+      "name": "Alarm Red",
+      "role": "Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#454745",
+      "name": "Charcoal",
+      "role": "Primary text, body copy, dense UI — slightly warm black that feels softer than pure #000 against white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0e0f0c",
+      "name": "Obsidian",
+      "role": "Display headlines, high-contrast headings, pure-black moments in nav and hero. Slightly green-tinted black, not neutral gray",
+      "group": "neutral"
+    },
+    {
+      "hex": "#868685",
+      "name": "Pebble",
+      "role": "Muted secondary text, placeholder copy, icon strokes, input borders. The mid-gray that recedes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6a6c6a",
+      "name": "Slate",
+      "role": "Supporting body text, helper labels, subdued iconography. One step darker than Pebble for slightly more emphasis",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e8ebe6",
+      "name": "Fog",
+      "role": "Card surfaces, section dividers, subtle panel backgrounds on the white canvas. Green-tinted off-white, not pure neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page canvas, inverted card surfaces, button text on lime fill",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered container, with hero and dark sections going full-bleed. Hero pattern: centered massive display headline over white space, with a large illustration (globe) breaking the lower edge of the viewport. Section rhythm alternates white → light green band → dark Forest Ink section, creating a natural color cadence. Content arrangement is predominantly centered stacks in the hero, then 2-column text+visual or 3-column feature rows in supporting sections. A 5-column flag grid handles the country directory. Navigation is a single sticky top bar with a segmented pill switcher. The QR badge floats fixed in the bottom-right corner across all scroll positions.",
+  "imagery": "Painted 3D-style illustrations of a globe with gold coins establish the brand's visual world — tactile, slightly surreal, rendered with soft gradients and warm light. Photography is minimal; when used, it's high-key and lifestyle-casual. Country flags appear as circular thumbnails in a 5-column grid — the only \"icon\" system is national identity. No abstract graphics, no stock patterns. The globe and coins are the recurring mascot motif, signaling global reach through a single warm, optimistic object rather than a montage.",
+  "similar": [
+    {
+      "why": "Same dual-brand color strategy — deep brand color as dominant surface and text, one bright accent for CTAs and highlights, with pill-shaped buttons and large confident headlines.",
+      "business": "Revolut"
+    },
+    {
+      "why": "Bright single-accent color system on a neutral canvas, pill-shaped interactive elements, friendly rounded geometry, and display type that speaks directly to the user.",
+      "business": "Monzo"
+    },
+    {
+      "why": "High-contrast near-black text on white with a single vivid brand accent, oversized bold headlines as the primary brand expression, minimal decoration.",
+      "business": "Cash App"
+    },
+    {
+      "why": "Flat surfaces, hairline borders instead of shadows, generous white space, and a single saturated accent color driving all interactive emphasis.",
+      "business": "N26"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "10px",
+      "inputs": "10px",
+      "buttons": "9999px",
+      "imageMasks": "1000px",
+      "largeCards": "28px",
+      "navSegments": "9999px"
+    },
+    "elementGap": "8-12px",
+    "sectionGap": "64-80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 0,
+      "purpose": "Page canvas — the default background for all content sections"
+    },
+    {
+      "hex": "#e8ebe6",
+      "name": "Fog",
+      "level": 1,
+      "purpose": "Card surfaces, soft panels, and section backgrounds on the white canvas"
+    },
+    {
+      "hex": "#e2f6d5",
+      "name": "Linen Mist",
+      "level": 2,
+      "purpose": "Tinted highlight surfaces — pale green wash for accent containers and hover states"
+    },
+    {
+      "hex": "#9fe870",
+      "name": "Lime Voltage",
+      "level": 3,
+      "purpose": "Active surface — selected tabs, primary CTA fill, emphasis zones"
+    },
+    {
+      "hex": "#163300",
+      "name": "Forest Ink",
+      "level": 4,
+      "purpose": "Inverted surface — dark section backgrounds, nav, high-contrast blocks"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.15) 0px 10px 32px 0px, rgba(0, 0, 0, 0.04) 0px 40px 40px 0px",
+      "element": "Cards"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.08) 0px 6px 20px 0px",
+      "element": "Elevated panels"
+    },
+    {
+      "style": "rgb(134, 134, 133) 0px 0px 0px 1px inset",
+      "element": "Input/button focus"
+    },
+    {
+      "style": "rgba(14, 15, 12, 0.12) 0px 0px 0px 1px",
+      "element": "Icon containers"
+    }
+  ],
+  "northStar": "deep moss with lime voltage. Lime sparks on a near-black forest floor, with massive blocky display type announcing every move.",
+  "typeScale": [
+    {
+      "role": "micro",
+      "size": 12,
+      "lineHeight": 1.63,
+      "letterSpacing": -0.036
+    },
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.55,
+      "letterSpacing": -0.07
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.096
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.126
+    },
+    {
+      "role": "body-lg",
+      "size": 25,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.225
+    },
+    {
+      "role": "subheading",
+      "size": 36,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.396
+    },
+    {
+      "role": "heading-sm",
+      "size": 45,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.495
+    },
+    {
+      "role": "heading",
+      "size": 61,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.915
+    },
+    {
+      "role": "heading-lg",
+      "size": 89,
+      "lineHeight": 0.85,
+      "letterSpacing": -2.67
+    },
+    {
+      "role": "display",
+      "size": 105,
+      "lineHeight": 0.85,
+      "letterSpacing": -3.15
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Pill Button",
+      "role": "The signature action element — filled lime pill that signals \"do this next.\"",
+      "description": "Fully rounded (9999px radius) button with Lime Voltage (#9fe870) fill and Charcoal (#454745) or Forest Ink (#163300) text. Padding 11px vertical, 24px horizontal. Inter weight 500 at 16px. No border, no shadow — the fill does all the work."
+    },
+    {
+      "name": "Outlined Pill Button",
+      "role": "Secondary action in the nav and inline CTAs.",
+      "description": "White fill, 1px Forest Ink border, 9999px radius. Same padding as primary. Used for \"Sign up\" in the header and non-primary calls to action where the lime would compete with a primary action nearby."
+    },
+    {
+      "name": "Text Link Button",
+      "role": "Inline secondary action with low visual weight.",
+      "description": "Underlined Forest Ink text at 16px Inter weight 500, no background, no border. Pairs with the primary CTA when two adjacent actions are needed (e.g. \"Open an account\" + \"Send money now\")."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent header with brand, section switcher, and account access.",
+      "description": "White background, 64px height. Logo left, three-segment pill nav (Personal / Business / Platform) with 9999px radius and Forest Ink text, right cluster has language flag, Help, Log in, and outlined Sign up pill."
+    },
+    {
+      "name": "Segmented Tab Control",
+      "role": "In-page section switcher — single active state in lime.",
+      "description": "Pill container (9999px radius) holding multiple text labels. Active tab: Lime Voltage fill with Charcoal text. Inactive tabs: transparent with Charcoal text. ~40px height, 12px horizontal padding per segment."
+    },
+    {
+      "name": "Display Headline",
+      "role": "The brand's voice — used in hero and major section openers.",
+      "description": "Wise Sans weight 900 at 89–105px, line-height 0.85, letter-spacing -3.15px. Charcoal (#454745) or Obsidian (#0e0f0c) on light, Lime Voltage on dark sections. Set as block text, often in ALL CAPS for hero moments."
+    },
+    {
+      "name": "Feature Row",
+      "role": "Three-column trust signal block — icon + heading + supporting line.",
+      "description": "Single-column-on-mobile, three-column-on-desktop. Icon (24px, Charcoal stroke) at top, heading in Inter 700 at 18px, body in Inter 400 at 16px Pebble. Generous 24px vertical gap between icon and heading."
+    },
+    {
+      "name": "Country Grid Item",
+      "role": "Flag thumbnail + country name link in a 5-column grid.",
+      "description": "Circular flag thumbnail (1000px radius, ~56px diameter), 12px gap to country name in Inter 500 at 16px Forest Ink. Name is a text link with no underline at rest, underline on hover. Items sit in a generous grid with ~32px row gap."
+    },
+    {
+      "name": "Dark Section Card",
+      "role": "Inverted surface for emphasis — used for the send-money CTA block.",
+      "description": "Forest Ink (#163300) background, 28px radius, 40px padding. Lime Voltage text for headline, Paper for body. Contains an inset white card (10px radius, 16px padding) for the currency selector."
+    },
+    {
+      "name": "Currency Selector Pill",
+      "role": "Interactive country/currency picker with a \"Change\" action.",
+      "description": "White pill inside a dark section card. Left: circular flag (24px) + country name in Charcoal Inter 500. Right: outlined \"Change\" button in Forest Ink. 9999px radius, 8px vertical padding."
+    },
+    {
+      "name": "Input Field",
+      "role": "Form input — used for amounts, emails, references.",
+      "description": "10px radius, 1px Pebble (#868685) border, 12px vertical and 16px horizontal padding. Inter 400 at 16px. Focus state: Forest Ink border, no glow ring."
+    },
+    {
+      "name": "Floating QR Badge",
+      "role": "Persistent \"Get the Wise app\" download prompt.",
+      "description": "Forest Ink (#163300) rounded square (16px radius), fixed bottom-right, 120px wide. QR code in Paper at top, \"Get the Wise app\" label in Lime Voltage Inter 500 at 12px below."
+    },
+    {
+      "name": "Badge / Tag",
+      "role": "Small status labels and category tags.",
+      "description": "9999px radius, 8px vertical and 12px horizontal padding. Linen Mist (#e2f6d5) background with Forest Ink text, or Forest Ink background with Lime Voltage text. Inter 500 at 12px."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Body, UI, labels, and sub-headings across the entire product. The 700 weight handles mid-tier headings (36–45px), 500–600 for subheadings and labels, 400 for body and captions. Inter does the quiet work while Wise Sans shouts.",
+      "sizes": "12px, 14px, 16px, 18px, 20px, 22px, 25px, 36px, 45px, 61px, 300px",
+      "family": "Inter",
+      "weight": "400,500,600,700",
+      "lineHeight": "0.72, 1.00, 1.10, 1.25, 1.30, 1.40, 1.43, 1.44, 1.50, 1.55, 1.63, 1.71, 1.86, 2.17",
+      "substitute": "Inter (native Google Fonts)",
+      "letterSpacing": "-0.030em at 105px, -0.015em at 61px, -0.011em at 36px, -0.009em at 25px, -0.007em at 18px, -0.006em at 16px, -0.005em at 14px, -0.003em at 12px",
+      "fontFeatureSettings": "\"calt\""
+    },
+    {
+      "role": "Display headlines — the brand's signature shout. Ultra-heavy weight 900 at 89–105px with tight -0.03em tracking makes every headline a block-letter announcement. Used sparingly: hero, section openers, campaign moments.",
+      "sizes": "40px, 52px, 59px, 89px, 105px, 300px",
+      "family": "Wise Sans",
+      "weight": "900",
+      "lineHeight": "0.85, 1.50",
+      "substitute": "Inter Black (900) with -0.04em tracking",
+      "letterSpacing": "-0.0020em",
+      "fontFeatureSettings": "\"calt\""
+    },
+    {
+      "role": "monospace — detected in extracted data but not described by AI",
+      "sizes": "300px",
+      "family": "monospace",
+      "weight": "400",
+      "lineHeight": "",
+      "fontFeatureSettings": "\"calt\""
+    },
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "300px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "",
+      "fontFeatureSettings": "\"calt\""
+    }
+  ],
+  "description": "Wise speaks in a confident, slightly loud voice: a deep forest green (#163300) carries most of the surface area — text, nav, dark sections, icons — while a single electric lime (#9fe870) acts as functional punctuation on CTAs, active tabs, and key highlights. The display type is almost aggressive: Wise Sans at weight 900, tightly tracked, shouted across the hero in 100px+ block letters. The rest of the system stays restrained on a near-white canvas with soft gray surfaces (#e8ebe6). Components are pill-shaped by default — buttons, nav segments, flag thumbnails, image masks — with gentle 10px radii reserved for cards and inputs. Color rarely gradients; instead, the lime–forest pairing inverts cleanly when sections go dark, creating rhythm without decoration.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference\n- text: #454745 (Charcoal) for body, #0e0f0c (Obsidian) for display\n- background: #ffffff (Paper) canvas, #e8ebe6 (Fog) cards\n- border: #868685 (Pebble) for hairlines, #163300 (Forest Ink) for emphasis\n- accent: #9fe870 (Lime Voltage) for active states and highlights\n- primary action: no distinct CTA color\n- dark surface: #163300 (Forest Ink) for inverted sections\n\nExample Component Prompts\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. Feature row (3-column): icon at 24px stroke #454745, 24px gap to heading at 18px Inter 700 in #0e0f0c, 8px gap to body at 16px Inter 400 in #868685. Column gap 32px, centered max-width 1200px.\n\n3. Country grid item: circular flag thumbnail at 56px diameter (1000px radius), 12px vertical gap to country name in Inter 500 at 16px #163300. Arranged in a 5-column grid with 32px row gap and 24px column gap. Hover state: underline appears on the country name.\n\n4. Dark section card: Forest Ink (#163300) background, 28px radius, 40px padding. Headline in Lime Voltage (#9fe870) at 36px Inter 700. Body text in #ffffff at 16px Inter 400. Contains an inset white card (10px radius) for a currency selector: circular flag + country name in Charcoal + outlined \"Change\" button.\n\n5. Outlined nav button: white fill, 1px solid #163300 border, 9999px radius, 8px 16px padding, Inter 500 at 16px in #163300. Used in the top-right nav cluster for secondary account actions."
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#1e1e1e",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, dark pill button fills, borders, heading strokes — the only ink in the system"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary canvas, image backgrounds, button text on dark fills"
+    },
+    "warm-cream": {
+      "$value": "#fbf9f3",
+      "$type": "color",
+      "$description": "Warm Cream — Alternate surface — the signature cream stock that gives the system its editorial warmth, used for secondary sections and cards"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Maximum contrast moments, occasional true-black text where #1e1e1 isn't dark enough"
+    }
+  },
+  "font": {
+    "cardinal-fruit": {
+      "$value": "Cardinal Fruit",
+      "$type": "fontFamily",
+      "$description": "The signature display serif — exclusively used for hero headlines, section openers, and any moment that needs to feel like a magazine cover. The medium weight (500) is reserved for the most massive treatments (132–180px) where hairline strokes would disappear. Negative letter-spacing tightens the massive forms into a cohesive block of ink."
+    },
+    "soehne-breit-buch": {
+      "$value": "Soehne Breit Buch",
+      "$type": "fontFamily",
+      "$description": "The workhorse grotesque with widened proportions. At small sizes (10–14px) the 0.1em tracking creates the editorial 'kicker' label aesthetic. At 72–80px it serves as a secondary display face for contexts where serif would feel too precious. The 600 weight is used sparingly for emphasis."
+    },
+    "soehne-mono-buch": {
+      "$value": "Soehne Mono Buch",
+      "$type": "fontFamily",
+      "$description": "Monospaced UI face for technical labels, metadata, button text, and small data displays. Its presence signals 'system metadata' versus 'editorial content' — the mono is the interface voice, the serif is the gallery voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://wallpaperprojects.com",
+      "siteName": "Wallpaper Projects",
+      "extractedAt": "2026-06-03T21:29:17.654Z",
+      "variant": "compact"
+    }
+  }
+}

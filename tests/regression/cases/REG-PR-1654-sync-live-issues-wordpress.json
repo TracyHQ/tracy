@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1654-sync-live-issues-wordpress",
+  "kind": "fix",
+  "title": "Sync from live keeps live tag changes, a live-only menu reorder and a kept article's dependent rows; names what it did not take; never carries edit locks or snapshot tables; reports its step while running; Sync anyway reuses the held run; WordPress sites sync too",
+  "pr": 1654,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/fleet/tracy-fleet-operation/test/live-sync-json.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-files.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs"
+  ],
+  "expect": [
+    "S1: tag map rows merge by their natural key; a live-only reorder reaches the copy and a both-sides reorder is kept and named; a kept article keeps its workflow, tag and field rows; checked_out stays the copy's; _tracy_snap_* tables are never compared; Sync anyway after a hold reuses the read when live did not move; a WordPress live site syncs with its address rewritten, wp-config merged per constant and both sides' new posts renumbered"
+  ],
+  "selectors": {
+    "host": "live_sync.py row_key naturalKeys orderedTrees dependents sessionColumns counterColumns TRACY_COPY_TABLE; live_sync_wordpress.py prepare merge_wp_config; webroot-sync.sh keep_held resume_held"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-24-sync-live-issues-wordpress.md",
+  "fence": "A change the live site made never disappears without a name, a Tracy change is never overwritten, and a WordPress site syncs like a Joomla one",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-json.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-files.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs"
+    ]
+  }
+}

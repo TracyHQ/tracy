@@ -1,0 +1,113 @@
+---
+/**
+ * "Still have questions?" card on a tinted band. The life-buoy glyph is decoration (aria-hidden),
+ * not content: the collection has no icon field.
+ */
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import Col from './c/Col.astro'
+import { stampFor, type Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  narrow?: boolean
+}
+const { data, narrow = false } = Astro.props
+const show = Boolean(data.title || data.sub || data.btn_label)
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'faq_support', null)
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [data.btn_link])
+---
+
+{
+	show && (
+		<section class="sup" {...s()}>
+			<div class="band">
+				<Col narrow={narrow}>
+					<div class="card">
+						<span class="mark" aria-hidden="true">
+							<Icon name="life-buoy" size={36} strokeWidth={1.8} />
+						</span>
+						{data.title && <h2 class="title" {...s('title')}>{data.title}</h2>}
+						{data.sub && <p class="sub" {...s('sub')}>{data.sub}</p>}
+						{data.btn_label && live(data.btn_link) && (
+							<a class="k-btn k-btn-primary btn" href={data.btn_link || '#'} {...s('btn_label')}>
+								{data.btn_label}
+								<Icon name="arrow-right" size={18} strokeWidth={2} />
+							</a>
+						)}
+					</div>
+				</Col>
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.sup {
+		padding-block: 0;
+	}
+	/* The band is as wide as the reading column, like the source, not full-bleed. */
+	.band {
+		max-width: 760px;
+		margin-inline: auto;
+		padding-block: 80px;
+		background: var(--k-elevated);
+		border-block: 1px solid var(--k-border);
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16px;
+		padding: 32px;
+		text-align: center;
+		background: var(--k-elevated);
+		border: 1px solid var(--k-border);
+		border-radius: var(--radius-card);
+	}
+	.mark {
+		display: inline-flex;
+		color: var(--k-primary);
+	}
+	.title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 24px;
+		line-height: 1.25;
+		font-weight: 700;
+		letter-spacing: -0.5px;
+		color: var(--k-heading);
+	}
+	.sub {
+		max-width: 520px;
+		margin: 0;
+		font-size: 15.5px;
+		line-height: 1.75;
+		color: var(--k-text);
+	}
+	.btn {
+		min-height: 46px;
+		padding: 0 26px;
+		border-radius: 10px;
+		font-size: 15px;
+	}
+	.btn :global(svg) {
+		width: 18px;
+		height: 18px;
+	}
+	@media (max-width: 767px) {
+		.band {
+			padding-block: 48px;
+		}
+		.card {
+			padding: 28px 20px;
+		}
+	}
+</style>

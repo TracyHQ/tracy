@@ -1,0 +1,310 @@
+---
+title: Port a WordPress Theme
+description: Convert a WordPress theme into a server-rendered EmDash Astro template.
+---
+
+import { Aside, Steps, TabItem, Tabs } from "@astrojs/starlight/components";
+
+Port a WordPress theme by separating its design, route templates, and database-managed features. The result is a complete Astro project with EmDash queries and a seed file, not a PHP theme loaded by a theme runtime.
+
+## Start with content and URLs
+
+Import representative content before converting templates. Record the WordPress post types, taxonomies, permalink rules, menus, widget areas, Customizer values, shortcodes, and plugin-generated markup used by the site.
+
+Choose the new URL for each content type. Astro routes are explicit files, so there is no automatic equivalent of the WordPress template hierarchy.
+
+The current blog template uses this mapping:
+
+| WordPress | EmDash template path |
+| --- | --- |
+| `front-page.php` or `home.php` | `src/pages/index.astro` |
+| `single.php` | `src/pages/posts/[slug].astro` |
+| `archive.php` | `src/pages/posts/index.astro` |
+| `page.php` | `src/pages/pages/[slug].astro` |
+| `category.php` | `src/pages/category/[slug].astro` |
+| `tag.php` | `src/pages/tag/[slug].astro` |
+| `search.php` | `src/pages/search.astro` |
+| `404.php` | `src/pages/404.astro` |
+| `header.php` and `footer.php` | `src/layouts/Base.astro` |
+| `template-parts/content.php` | `src/components/PostCard.astro` or another component |
+
+The starter template instead uses `src/pages/[slug].astro` for pages. Pick one route model and make the seed's `urlPattern` and redirects agree with it.
+
+## Extract the design
+
+Collect the source files that determine the rendered design:
+
+- `style.css` and enqueued stylesheets.
+- `theme.json` for a block theme.
+- Template markup and template parts.
+- Fonts, icons, and images with their licenses.
+- Responsive breakpoints and interactive behavior.
+
+Copy design tokens into the Astro project's CSS and build the shared document shell in `src/layouts/Base.astro`. Convert repeated template parts to components before expanding individual routes.
+
+Do not copy WordPress-generated class names or JavaScript when the new component does not need their behavior. Preserve observable layout and interaction, not implementation residue.
+
+## Convert archive queries
+
+`WP_Query` becomes `getEmDashCollection()`. Filter and order in the query so the database does the work.
+
+The following examples render a latest-posts archive:
+
+<Tabs>
+  <TabItem label="WordPress">
+
+```php title="archive.php"
+<?php
+$posts = new WP_Query([
+  'post_type' => 'post',
+  'post_status' => 'publish',
+  'posts_per_page' => 12,
+  'orderby' => 'date',
+  'order' => 'DESC',
+]);
+
+while ($posts->have_posts()) :
+  $posts->the_post();
+?>
+  <article>
+    <h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+  </article>
+<?php endwhile; wp_reset_postdata(); ?>
+```
+
+  </TabItem>
+  <TabItem label="EmDash">
+
+```astro title="src/pages/posts/index.astro"
+---
+import { getEmDashCollection } from "emdash";
+
+const { entries: posts, error, cacheHint } = await getEmDashCollection("posts", {
+  orderBy: { published_at: "desc" },
+  limit: 12,
+});
+
+if (error) return new Response("Could not load posts", { status: 500 });
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+---
+
+{posts.map((post) => (
+  <article>
+    <h2><a href={`/posts/${post.id}`}>{post.data.title}</a></h2>
+  </article>
+))}
+```
+
+  </TabItem>
+</Tabs>
+
+Use `orderBy`, not `sort` or `sortBy`. The keys are stored field names such as `published_at`, `created_at`, or an indexed collection field.
+
+## Convert single-entry templates
+
+Use the slug from `Astro.params` to call `getEmDashEntry()`. Render rich text with `PortableText`.
+
+```astro title="src/pages/posts/[slug].astro"
+---
+import { decodeSlug, getEmDashEntry } from "emdash";
+import { PortableText } from "emdash/ui";
+import Base from "../../layouts/Base.astro";
+
+const slug = decodeSlug(Astro.params.slug);
+if (!slug) return Astro.rewrite("/404");
+
+const { entry: post, error, cacheHint } = await getEmDashEntry("posts", slug);
+if (error) return new Response("Could not load the post", { status: 500 });
+if (!post) return Astro.rewrite("/404");
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+---
+
+<Base title={post.data.title} content={{ collection: "posts", id: post.data.id, slug }}>
+  <article>
+    <h1 {...post.edit.title}>{post.data.title}</h1>
+    <PortableText value={post.data.content} />
+  </article>
+</Base>
+```
+
+`post.id` is Astro's route identifier and is normally the slug. `post.data.id` is the stored EmDash content ID. Use `data.id` for comments, taxonomy helpers, and visual-editing context.
+
+## Convert taxonomy archives
+
+Resolve a term with its taxonomy name, then use that name in the collection `where` filter. The current blog template uses singular taxonomy names and route directories:
+
+```astro title="src/pages/category/[slug].astro"
+---
+import { decodeSlug, getEmDashCollection, getTerm } from "emdash";
+
+const slug = decodeSlug(Astro.params.slug);
+const term = slug ? await getTerm("category", slug, { includeCounts: false }) : null;
+if (!term) return Astro.rewrite("/404");
+
+const { entries: posts } = await getEmDashCollection("posts", {
+  where: { category: term.slug },
+  orderBy: { published_at: "desc" },
+});
+---
+
+<h1>{term.label}</h1>
+{posts.map((post) => <a href={`/posts/${post.id}`}>{post.data.title}</a>)}
+```
+
+Use `getTermsForEntries()` with `entry.data.id` when an archive needs terms for many entries. That batches the relationship query instead of calling a per-entry helper in a loop.
+
+## Convert dynamic theme features
+
+### Menus
+
+Create menu definitions in `seed/seed.json` and query them with `getMenu("primary")`. Menu items can be reordered and edited after setup, so do not duplicate the same navigation as hard-coded links.
+
+The following component preserves nested menu items and marks the current page:
+
+```astro title="src/components/PrimaryNav.astro"
+---
+import { getMenu } from "emdash";
+
+const menu = await getMenu("primary");
+---
+
+{menu && (
+  <nav aria-label="Primary navigation">
+    <ul>
+      {menu.items.map((item) => (
+        <li>
+          <a href={item.url} aria-current={Astro.url.pathname === item.url ? "page" : undefined}>
+            {item.label}
+          </a>
+          {item.children.length > 0 && (
+            <ul>
+              {item.children.map((child) => (
+                <li><a href={child.url}>{child.label}</a></li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+```
+
+### Widget areas
+
+Define widget areas in the seed and render them with `<WidgetArea name="sidebar" />` from `emdash/ui`. Use component widgets only when the template registers the matching component ID.
+
+```astro title="src/layouts/Post.astro"
+---
+import { WidgetArea } from "emdash/ui";
+---
+
+<main><slot /></main>
+<aside aria-label="Related content">
+  <WidgetArea name="sidebar" />
+</aside>
+```
+
+### Site identity
+
+Read site title, tagline, logo, and favicon with `getSiteSettings()`. Static legal or design copy can remain in the template, but administrator-managed identity must come from settings.
+
+| WordPress value | EmDash setting |
+| --- | --- |
+| Site title | `title` |
+| Tagline | `tagline` |
+| Custom logo | `logo` |
+| Site icon | `favicon` |
+| Posts per page | `postsPerPage` |
+
+### Page templates
+
+If editors must choose among multiple page layouts, add a select field to the pages collection and map each stored value to a known component. Do not turn a stored string into an arbitrary import path.
+
+### Shortcodes and blocks
+
+Map content-bearing shortcodes and WordPress blocks to Portable Text shapes. Use the ordinary `PortableText` renderer for built-in blocks and a component map for custom `_type` values.
+
+A seed can provide custom block data, but it does not register a custom editor. Use a native plugin when the port requires packaged Astro renderers or custom React editing UI.
+
+For example, map a WordPress gallery shortcode to a namespaced `_type` such as `publication.gallery`, create a `Gallery.astro` renderer, and pass it through the `PortableText` component map:
+
+```astro title="src/components/ArticleBody.astro"
+---
+import type { PortableTextBlock } from "emdash";
+import { PortableText } from "emdash/ui";
+import Gallery from "./blocks/Gallery.astro";
+
+interface Props {
+  value: PortableTextBlock[];
+}
+
+const { value } = Astro.props;
+const customTypes = { "publication.gallery": Gallery };
+---
+
+<PortableText value={value} components={{ type: customTypes }} />
+```
+
+## Build the seed
+
+The seed belongs at `seed/seed.json` in current templates, with `package.json#emdash.seed` pointing to it. Declare every collection field, taxonomy, menu, widget area, section, and sample entry that the template assumes.
+
+The following fragment defines the route-facing fields for posts:
+
+```json title="seed/seed.json"
+{
+  "$schema": "https://emdashcms.com/seed.schema.json",
+  "version": "1",
+  "collections": [
+    {
+      "slug": "posts",
+      "label": "Posts",
+      "labelSingular": "Post",
+      "supports": ["drafts", "revisions", "search", "seo"],
+      "urlPattern": "/posts/{slug}",
+      "fields": [
+        { "slug": "title", "label": "Title", "type": "string", "required": true },
+        { "slug": "content", "label": "Content", "type": "portableText" },
+        { "slug": "excerpt", "label": "Excerpt", "type": "text" },
+        { "slug": "featured_image", "label": "Featured image", "type": "image" }
+      ]
+    }
+  ]
+}
+```
+
+Read [Seed files](/themes/seed-files/) for content IDs, references, localization, media, validation, and apply options.
+
+## Port in verifiable stages
+
+<Steps>
+
+1. Import a representative WordPress export and record any unsupported blocks or fields.
+
+2. Start from the current EmDash template for the deployment target.
+
+3. Implement the shared layout, tokens, typography, and responsive shell.
+
+4. Implement archive and single-entry routes using the imported collection slugs and fields.
+
+5. Add taxonomy routes, search, menus, widget areas, and site settings that the source theme actually uses.
+
+6. Add seed definitions for every route dependency and test setup against an empty database.
+
+7. Compare representative public URLs at mobile and desktop widths. Test empty fields, long titles, missing images, drafts, and 404 routes.
+
+8. Prepare redirects for every changed permalink before cutover.
+
+</Steps>
+
+## Handle difficult WordPress themes
+
+- **Child themes:** combine the resolved parent and child output. Port the effective templates and styles, not only the child directory.
+- **Block themes:** use `theme.json` as a source for design tokens and `templates/*.html` as content structure, then express the result as Astro components.
+- **Page builders:** import representative pages first. Builder shortcodes and proprietary JSON usually require a deliberate Portable Text conversion or a redesigned page template.
+- **WooCommerce themes:** treat commerce behavior as a separate application integration. Porting presentation files does not replace product, cart, checkout, payment, or order semantics.
+
+<Aside type="caution">
+  Keep the original WordPress site available until imported media, old URLs, redirects, SEO metadata, forms, and plugin-dependent pages have been verified in the new deployment.
+</Aside>

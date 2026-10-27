@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-sky-signal: #006aff;
+  --color-slate-type: #405168;
+  --color-hazy-steel: #8798b0;
+  --color-whisper-border: #dce2ea;
+  --color-fog-surface: #eff2f6;
+  --color-mist-canvas: #f9fafb;
+  --color-paper: #ffffff;
+  --color-ink: #000000;
+
+  /* Typography — Font Families */
+  --font-intervariable: 'InterVariable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

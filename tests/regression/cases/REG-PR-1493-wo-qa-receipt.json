@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1493-wo-qa-receipt",
+  "kind": "feat",
+  "title": "QA only judges the held session and the accepted prompt; watchdog and lease stop stale rounds",
+  "pr": 1493,
+  "area": "website-opportunities/outreach-v3",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Close a turn of another session or another RPC, drop the prompt receipt; run the first watchdog and two workers racing for a lease."
+  ],
+  "expect": [
+    "A non-matching turn or a missing receipt does not start QA.",
+    "The first prompt also times out; a worker whose lease expired does not overwrite or send a repair.",
+    "Two failed repairs leave Needs review, never Outreach."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/test/website-opportunities-demo-qa.test.mjs"
+  },
+  "fence": "Durable receipts, fixed identities, site permissions, leases and the daily-cap transaction; URLs are compose/copy only.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-demo-qa.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "qaOutcome: all pass completes; a failure repairs twice, then needs a person — never completed",
+      "repairPrompt: scope-locked, coordinates per failed check, and css-intact restores instead of repairing",
+      "placedPaths and briefOf: what Tracy placed is never demo; booking may leave only for verified links",
+      "briefOf: Google reviews are not facts — their words never reach the judge, the rest of the brief does",
+      "pagePlanMissing: a page the build kept that the site does not reach fails PAGE_PLAN_MISSING; soft shapes; none without a plan",
+      "no round while the hand-off chat has no closed turn since the hand-off, or one is still open",
+      "passing round: qa passed, hand-off completed, the host read the baseline pages against the baseline",
+      "failing round: the repair list goes into the hand-off chat, qa retry, and the next closed turn is judged",
+      "the nav changed after a repair: the next round reads the new pages, and each round keeps what it read",
+      "a build with a page plan: a kept page the site does not reach fails the round with PAGE_PLAN_MISSING; each round keeps what the host visited",
+      "a build with a page plan: the host is asked to read every kept page with a path, beside what nav finds",
+      "out of repairs: qa failed, hand-off needs-review — never completed, no third repair sent",
+      "a repair list the chat refuses, and a host that never answers, leave the demo to a person",
+      "a leased build is not taken twice: two runners at once judge it once",
+      "repairPrompt: a phone overflow is never answered with overflow on html/body, and a clipped page says to undo it",
+      "a repair list the agent never started on is sent once more, then needs a person — never a silent wait",
+      "a look-kept failure sends the agent the token and the file, and the rule it broke",
+      "the first hand-off prompt has the same watchdog as repairs; an unrelated turn cannot keep it waiting",
+      "an expired QA worker cannot overwrite the next replica or send a repair after its host returns",
+      "only the held session and accepted prompt id can trigger QA; neither a nearby turn nor a missing receipt qualifies"
+    ]
+  }
+}

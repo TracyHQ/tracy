@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+  "status": "complete",
+  "name": "Portrait",
+  "url": "https://styles.refero.design/style/6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+  "sourceWebsite": "https://portrait.so",
+  "extractedAt": "2026-06-03T17:50:33.919Z",
+  "capturedAt": "2026-10-08T05:12:52.803203+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "polaroid memory wall on cream paper. A bright, off-white scrapbook where deep-navy ink provides the only text, the only structural lines, and the only border color — with a single hand-drawn rainbow that appears once, on the Sign up button and on the italicized word forever, and never again.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/714b4686-5f6d-4ae9-b4ab-50a09672f695.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/67c9a33c-09c1-444e-8e89-1dfcda7b15ac.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/fd405690-25ec-4757-b310-1b8140302ad5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c6524ef9-e616-41e8-b694-43276180f6a7.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c739a2d7-a453-4cda-8aae-cfdb7b00512a.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b57fce51ce2543a0e3bbaeec4090ebf89ac8a726f63343e74c42781436ee2dd9",
+      "bytes": 30060
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "164874ea0770b60025fdf076387ba803f23d7d3fb2eff74e84b880960a161204",
+      "bytes": 128257
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ad0c09e79f998352fd701c1c9476bddf824d50efad81696385d71a1225b6f5d7",
+      "bytes": 23167
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "fad2b0df00bcdc705f5308e6e9cbc89af4201794649858c1d702da24ad3b6757",
+      "bytes": 19826
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "3d25c4a86d24d11c3c3e6f73c18ea91233a82f99897a27944b35cb46b1810200",
+      "bytes": 16254
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "289aff1cfabc48ee29e73a1d286853fab65a523e7a5cb99992712082b16c1385",
+      "bytes": 5320
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a65e00f6f3a5d5c1cede0eb81bdd2f3594545b966626932ced5952e83c58d031",
+      "bytes": 993
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "ac71cce88324175f83fc9d2ba1be090f0fe705daf2e1fd63f79d7a4d662e93de",
+      "bytes": 1191
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3b8956454ee3716e8b0c1874262821415d85242d3d9d81759258a4fcf3edb67c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ca069dd1905fd4b310e40a12722e9c168b9a839d52e12ee1ccbb19d47073c31d",
+      "bytes": 55074
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0ae53a4ec2feec0f12924dcbf35fd29534a19288b5a622c5bb5f35e5eed641f1",
+      "bytes": 30333
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "85549cf87e7cbc520862387b08faea9d29458c76cc2fadbfc9b6ccac96b10b2d",
+      "bytes": 104633
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "27d48263375f21c5594ecf912b6cc2977f04f5fc4195b30d1e58d4d1380f9cb7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "af25f87b5eba101325642eeb7c8ce4f6adf610ffe113cae518226003bbc86f32",
+      "bytes": 3562
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e97752c0783656b1a085eb2ee382a42ea27eae217e841f2f7779cf06eff38c17",
+      "bytes": 4382
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1b2aaf14-43b0-4c23-bd25-1d49924fe85e",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3e5c272b-8d68-40d8-9726-b4d6914b4b16",
+    "59ac8248-1d64-4df3-92f1-919b50e05602",
+    "5bfe6c1d-1b15-4f8d-b0c9-677a33291c5d",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "edf7f95d-da5f-42bf-94c5-b33ade0a2ba2",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59"
+  ]
+}

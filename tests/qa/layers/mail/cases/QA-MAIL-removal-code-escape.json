@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-removal-code-escape",
+  "itemIds": [
+    "direct:removal-code:en",
+    "direct:removal-code:vi",
+    "direct:removal-code:de",
+    "direct:removal-code:it",
+    "direct:removal-code:fr",
+    "direct:removal-code:nl",
+    "direct:removal-code:zh",
+    "direct:removal-code:es"
+  ],
+  "requirement": "the Tracy-staff removal code letter: markup in a person-supplied name is escaped",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "hostile",
+    "invariant": "no live markup from user text"
+  },
+  "edgeTags": ["escape"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.escape:removal-code"],
+  "redProof": null,
+  "legacyIds": []
+}

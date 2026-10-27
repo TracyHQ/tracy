@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1663-dev-acceptance-checks",
+  "kind": "fix",
+  "title": "The demo check holds a build to its own work and the build path holds on a busy host: real links, void tags, pasted comments, minified values and the template's own contrast are not the build's faults; a date is no phone; the look is charged as the ledger allows; an EmDash list keeps its rows; a claim asked again reserves its folder",
+  "pr": 1663,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: compareAgentInventory over a JA module whose # link becomes the business's page, whose <img /> is saved as <img>, whose pasted comment is gone; then one with an added paragraph.",
+    "S2: checkContrastReadable on the template's unreadable header text with its colours unchanged, and with a new colour pair, against the baseline that read it.",
+    "S3: factsIn on 'since 2013. 2013-01-01'.",
+    "S4: checkLookKept after a minifier rewrote rgba(33, 37, 41, 0.5) as rgba(33,37,41,.5) and #fff as #FFFFFF.",
+    "S5: createDemoLook charged through the real cost ledger.",
+    "S6: mergeListPatches with a team list sent whole without _rowId, one row more than stored.",
+    "S7: POST /api/sites/claim asked twice for one build."
+  ],
+  "expect": [
+    "S1: structure kept; the added paragraph changes it.",
+    "S2: pass; fail.",
+    "S3: no phone.",
+    "S4: pass.",
+    "S5: the ledger accepts the charge (no account-cap refusal).",
+    "S6: the two stored rows keep their _rowId by position, the third stays new.",
+    "S7: the second claim reserves the site's folder on the host again."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/agent-demo-inventory.js apps/tracy-host/src/demo-qa.js packages/tools/tracy-site-tools/src/host/emdash-call.mjs apps/tracy-web/src/opportunities/demo-look.js apps/tracy-web/src/sites/route.js",
+    "dom": ""
+  },
+  "fence": "pictureValues' links, comments and void tags; checkContrastReadable's baseline; factsIn's dates",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-web/test/wo-demo-look.test.mjs",
+      "packages/tools/tracy-site-tools/test/emdash-call.test.mjs",
+      "apps/tracy-web/test/sites-route.test.mjs"
+    ],
+    "tests": [
+      "a link made real, a pasted comment gone and a void tag closed another way keep the structure",
+      "contrast-readable and no-text-overlap: white on white fails, text over a picture is not judged",
+      "facts-from-brief: hours, prices, phones and a founding year the brief holds are shown as held",
+      "look-kept: the look Tracy handed over is held",
+      "the real cost ledger accepts the look's charge",
+      "a list field sent as the items that change is merged onto the list as the read answered it",
+      "POST /api/sites/claim: the name makes the site, its seat and its folder"
+    ],
+    "needs": ["postgres"]
+  }
+}

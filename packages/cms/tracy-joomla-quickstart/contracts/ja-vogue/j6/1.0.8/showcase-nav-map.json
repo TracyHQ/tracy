@@ -1,0 +1,363 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-vogue/j6/1.0.8",
+  "baseHash": "e6aeb33bf9e36049590af3d8a4b45c09465bfe5e1a610dbce546b1d61eed142e",
+  "baseFiles": {
+    "manifest.json": "c21d35d9068ffcef09a31980bf21cd4d0110636e7ed9961e6f0ccf422d92b6d4",
+    "content-map.json": "11bfd2a7d46152b3728a10e2508410744810966492f5168eb3fa8ffc4eaf86dd",
+    "presentation-lock.json": "0628811e0ff094fecddad483b40a9c3397addf1a3913ad4dca8bdea6089be0d3"
+  },
+  "inputs": {},
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-142",
+      "identity": {
+        "path": "typography",
+        "menutype": "explore",
+        "language": "*"
+      },
+      "label": "Typography",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Typography\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-144",
+      "identity": {
+        "path": "error-page",
+        "menutype": "explore",
+        "language": "*"
+      },
+      "label": "Error Page",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Error Page\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-145",
+      "identity": {
+        "path": "offline-pages",
+        "menutype": "explore",
+        "language": "*"
+      },
+      "label": "Offline Pages",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Offline Pages\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-147",
+      "identity": {
+        "path": "home/home-1",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home 1",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-148",
+      "identity": {
+        "path": "home/home-2",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home 2",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-158",
+      "identity": {
+        "path": "home/home-3",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home 3",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-162",
+      "identity": {
+        "path": "home/home-5",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home 5",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-169",
+      "identity": {
+        "path": "home/home-6",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Home 6",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/home"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-109",
+      "label": "Contact",
+      "where": "mainmenu/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-110",
+      "label": "Article",
+      "where": "mainmenu/article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-114",
+      "label": "Blogs",
+      "where": "mainmenu/blogs",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-115",
+      "label": "Blog - NoSidebar",
+      "where": "mainmenu/blogs/blog-nosidebar",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-116",
+      "label": "Blog - RightSidebar",
+      "where": "mainmenu/blogs/blog-rightsidebar",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-117",
+      "label": "Blog - LeftSidebar",
+      "where": "mainmenu/blogs/blog-leftsidebar",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-118",
+      "label": "Blog - Masonry 1",
+      "where": "mainmenu/blogs/blog-masonry-1",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-119",
+      "label": "Blog - Masonry 2",
+      "where": "mainmenu/blogs/blog-masonry-2",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-120",
+      "label": "Blog - Slider",
+      "where": "mainmenu/blogs/blog-slider",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-141",
+      "label": "Login",
+      "where": "explore/login",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=login): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-143",
+      "label": "Author listing",
+      "where": "explore/author-listing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-146",
+      "label": "Featured Articles",
+      "where": "explore/heritage",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-160",
+      "label": "Home 4",
+      "where": "mainmenu/home/home-4",
+      "rule": "keep.only-route-to-content",
+      "reason": "the only menu route to category:11, category:12, category:13 (+1): a showcase rule may not take real content along"
+    },
+    {
+      "key": "menuItem-161",
+      "label": "About Us",
+      "where": "mainmenu/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-171",
+      "label": "Category",
+      "where": "mainmenu/category-2",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@sidebar-right",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 25 entries stay"
+    },
+    {
+      "key": "module-128",
+      "label": "Explore",
+      "where": "mod_menu@footnav-3",
+      "rule": "keep.default",
+      "reason": "renders explore: 3 entries stay"
+    },
+    {
+      "key": "module-137",
+      "label": "Offcanvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 25 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-111",
+      "label": "Layout 1",
+      "where": "mainmenu/article/layout-1",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 1\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-112",
+      "label": "Layout 2",
+      "where": "mainmenu/article/layout-2",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 2\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-113",
+      "label": "Layout 3",
+      "where": "mainmenu/article/layout-3",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 3\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-149",
+      "label": "Default Article",
+      "where": "mainmenu/article/layout-1/default",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 1\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-150",
+      "label": "Video Article",
+      "where": "mainmenu/article/layout-1/video",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 1\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-151",
+      "label": "Gallery Article",
+      "where": "mainmenu/article/layout-1/gallery",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 1\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-152",
+      "label": "Default Article",
+      "where": "mainmenu/article/layout-2/default-article",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 2\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-153",
+      "label": "Video Article",
+      "where": "mainmenu/article/layout-2/video",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 2\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-154",
+      "label": "Gallery Article",
+      "where": "mainmenu/article/layout-2/gallery",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 2\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-155",
+      "label": "Default Article",
+      "where": "mainmenu/article/layout-3/default",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 3\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-156",
+      "label": "Video Article",
+      "where": "mainmenu/article/layout-3/video",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 3\" names a showcase branch"
+    },
+    {
+      "key": "menuItem-157",
+      "label": "Gallery Article",
+      "where": "mainmenu/article/layout-3/gallery",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 3\" names a showcase branch"
+    }
+  ],
+  "counts": {
+    "menuItems": 8,
+    "modules": 0,
+    "kept": 19,
+    "unresolved": 12
+  }
+}

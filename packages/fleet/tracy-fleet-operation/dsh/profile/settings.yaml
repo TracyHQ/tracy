@@ -1,0 +1,19 @@
+# The image's `/desk-home/settings.yaml` — kept, but NO LONGER A SETTINGS DOCUMENT dsh reads.
+#
+# Until dsh 0.1.6 this file was the user settings layer (`dsh-settings-file`), and it carried two
+# sections: `llm-pi-ai` (an optional OpenRouter route) and `dsh-better-sidebar` (side card
+# preferences). dsh 0.1.7 removed that reader. Its `settings` row imports a `settings.yaml` ONCE
+# into the profile and renames it `settings.yaml.imported` (`packages/settings/settings/src/
+# index.ts`, `importLegacyDocument`) — and this image turns `settings` off (`cordis.patch.yml`,
+# "rows that write host state from a browser"), so nothing reads the sections at all. Left here,
+# they would be decisions that look in force and do nothing:
+#   - `llm-pi-ai.providers.openrouter` moved to the `llm-pi-ai` row of `cordis.patch.yml`;
+#   - the `dsh-better-sidebar` preferences are gone with dsh-better-sidebar 0.21 (see the
+#     `better-sidebar` row there).
+#
+# WHY THE FILE STAYS. `seed-profile.sh` seeds it onto a host when absent, and `dsh-passwords`
+# still reads two keys from `<DSH_HOME>/settings.yaml` by pattern — `locale.preference` (the
+# gateway page language, `src/i18n.ts`) and `ui-theme.preference` (`src/gateway.ts`) — neither of
+# which the image sets, so both fall back to their defaults. An empty mapping keeps the file valid
+# YAML for any reader.
+{}

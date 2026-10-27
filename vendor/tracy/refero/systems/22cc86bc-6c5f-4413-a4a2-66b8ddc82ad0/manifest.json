@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "22cc86bc-6c5f-4413-a4a2-66b8ddc82ad0",
+  "status": "complete",
+  "name": "Yellowbird®",
+  "url": "https://styles.refero.design/style/22cc86bc-6c5f-4413-a4a2-66b8ddc82ad0",
+  "sourceWebsite": "https://www.yellowbirdfoods.com",
+  "extractedAt": "2026-06-03T19:53:50.055Z",
+  "capturedAt": "2026-10-08T05:09:19.339215+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Retro condiment billboard in midday sun — a single yellow plane under a black sun, every letter drawn with a fat marker.\n\nThe system breathes through color contrast, not elevation: yellow on yellow separated by thick black strokes, with cream cards as the only neutral relief.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/a6de281f-12f0-49d5-957d-dbe04cbb1b31.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/a92fa8b2-502c-4f69-b2c4-3f5def4ab86d.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/5c35bf69-80a9-40fb-9c04-15d95a707075.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b554b4c2-2be7-4beb-8559-96019cf2dc41.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a5f74dd0-0766-46ca-b7c6-d92e6fe072f2.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "755e561c9139a0dbc9f71a9cc9dad3dd9ac2a9ed775b3a5390d7cdc3aba89383",
+      "bytes": 20819
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f58d635d47a10c7d9a1787468a89f9ae19358f52b53ee467eb443e1ba85ece7e",
+      "bytes": 123380
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "2c38862dd0a75104aaa8b2d95b06e1623bc5f0ef941e3ef1fcacf81ab53eac8d",
+      "bytes": 17342
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ed60c9f3eaafcb4465f56992367a69939da2b61f992f701f3afc53268a431eae",
+      "bytes": 11261
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "d9ca81c61de34a065ff8de6ca2baf138e9b6c598102df6509fe4c5f8ab12018c",
+      "bytes": 13806
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "68cfe040f52443d0e15be4f48b4490c4322f3f20139620b335b1c624b745bd27",
+      "bytes": 2684
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d6380ef4a27693c288e0e8b305ec74f2b833e9178b7e6e432f0c347148d8f21e",
+      "bytes": 605
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "b815f36fb846f6bab8c5257752d6edaf3ace39c4c31058e74f75313ebdc034af",
+      "bytes": 622
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "cc53745e8f981fa794ae5bb4ee3c8ca4ba9833a8036c103c7217eedbfbc1cfea",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "49801149bcd7822ca76f2b264d2b8b4082b4d426a2a0e4776bb5a84cb54227f2",
+      "bytes": 44981
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0eab350ef23663cd4e7768552639488da02c0ad7e6c928a5e9530c1b3a3ecc10",
+      "bytes": 23668
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5e724a3f5fe0a4c9cd02c7313de75f40311b7b5dec5e7d2d39c8266ed1f0182d",
+      "bytes": 45508
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d34ff32c8491389fdd53c18500a8cc7f6707015c5b9ef716e08585809a654f83",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "891212a14bb403289ddaece904a803caa95e6c522e377098a51541c67d50839c",
+      "bytes": 1554
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1726a37e7a42260f379823f6197c2f876642d511e67cd8c3db0d1aef19662910",
+      "bytes": 2129
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "2175034b-96d7-417e-886f-ff5a4d8551ae",
+    "22cc86bc-6c5f-4413-a4a2-66b8ddc82ad0",
+    "24929007-7e62-4c96-a940-7de65438a578",
+    "26dac924-d1c8-4097-af0f-0417ccb12128",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "3e100552-a8ad-4179-b89a-6aa5113b92e1",
+    "47f15da7-8905-45b3-bcab-06a4277c6168",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "734ab03c-a326-43e3-a463-c5f90247404f",
+    "7d254296-6817-487a-a58c-4d5eca89cbf3",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "9836e7c2-ac8e-453d-bdef-2677eb078d59",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "ca4708f7-7175-4da2-a47f-ce8f5e601f99",
+    "e9001d5a-504d-47ed-aef0-d0d35fa86418",
+    "ea11696a-17c0-41f8-9b08-c820851e0ea9",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f32595cf-478e-4ccd-8722-0daffa693d76",
+    "f63bf016-5b53-4ddf-9f8c-da43f75a9e2b",
+    "fb812ddb-d7c0-4540-82d7-1562dff16f09"
+  ]
+}

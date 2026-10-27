@@ -1,0 +1,3869 @@
+{
+  "$comment": "ACM type:style -> the wp-ja-morgan pattern that renders it, field by field, for the seeder (renderAcm, `${type}:${style}`). Field names are the Joomla ACM field names verbatim, plus the fields tasks/ja-morgan-wp7 repairs add (fix-spec, RUN.md skill issues S-13/S-14): `module-title` (the module title the tmpl prints), `sub-heading` (the T3 module parameter), `section-bg` (the T3Section background picture), `title-level`, `action` (the arrow link a row draws only when it has a link), `check-list`, `first-open` and `layout`. Choices a tmpl prints as classes ride in the section's moduleClass. metadata.name is <type>.<field>[.<n>]; the wrapper of a repeated row is <type>.item.<n>. A block is located by name, never by position. Carousels are the motion library's tracy-motion-carousel with its track.",
+  "schemaVersion": "tracy-base-patterns-map/v1",
+  "namespace": "wp-ja-morgan",
+  "anchorConvention": "acm-<type>-<module id>",
+  "views": {
+    "$comment": "search is com_finder at /other-pages/smart-search on the source; the theme answers that path with its search view (inc/extra.php wp_ja_morgan_search_request), so the seeder adds no redirect for it.",
+    "search": {
+      "servedAtPath": true
+    }
+  },
+  "types": {
+    "98": {
+      "pattern": "wp-ja-morgan/acm-slideshow",
+      "item": "slideshow.item.<n>",
+      "fields": {
+        "image": {
+          "block": "core/image",
+          "path": "slideshow.image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "slideshow.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "slideshow.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "slideshow.button.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "slideshow.button.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "title-dot": {
+          "block": "core/paragraph",
+          "path": "slideshow.title-dot.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "auto-play": "false on the one instance; the motion library steps only when asked",
+        "module-title": "the slideshow tmpl prints no title",
+        "sub-heading": "not printed"
+      }
+    },
+    "101": {
+      "pattern": "wp-ja-morgan/acm-features-1",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "block-intro": {
+          "block": "core/paragraph",
+          "path": "features-intro.block-intro",
+          "attr": "content"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "features-intro.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "url",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "columns": "two cards side by side at every source instance; drawn by the stylesheet",
+        "slide": "a class on the section root (moduleClass jm-slide-<value>)"
+      }
+    },
+    "102": {
+      "pattern": "wp-ja-morgan/acm-features-2",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "className"
+        },
+        "icon": {
+          "block": "core/paragraph",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "text"
+        },
+        "link-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "features-align": "a class on the section root (moduleClass align-<value>)",
+        "features-style": "a class on the section root (moduleClass style-<value>)"
+      }
+    },
+    "104": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "106": {
+      "pattern": "wp-ja-morgan/acm-testimonials-1",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "testimonials.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "testimonials.section-bg",
+          "attr": "src"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "testimonials.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "label": {
+          "block": "core/paragraph",
+          "path": "testimonials.label.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "testimonials.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "testimonials.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "columns": "three per view at every source instance (owl responsive 1/2/3); drawn by the stylesheet",
+        "block-title": "empty, or the same words as btn-title"
+      }
+    },
+    "108": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "109": {
+      "pattern": "wp-ja-morgan/acm-teams",
+      "item": "teams.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "teams.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "teams.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "teams.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.list",
+          "attr": "className"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "teams.avatar.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "position": {
+          "block": "core/paragraph",
+          "path": "teams.position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "more-title": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 1
+        },
+        "more-link": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "url"
+        },
+        "more-title-strong": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 2,
+          "wrap": "b"
+        }
+      },
+      "dropped": {
+        "color-link": "a class on the section root (moduleClass jm-link-<value>)"
+      }
+    },
+    "113": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "115": {
+      "pattern": "wp-ja-morgan/acm-features-2",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "className"
+        },
+        "icon": {
+          "block": "core/paragraph",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "text"
+        },
+        "link-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "features-align": "a class on the section root (moduleClass align-<value>)",
+        "features-style": "a class on the section root (moduleClass style-<value>)"
+      }
+    },
+    "118": {
+      "pattern": "wp-ja-morgan/acm-clients",
+      "item": "clients.item.<n>",
+      "fields": {
+        "section-bg": {
+          "block": "core/image",
+          "path": "clients.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "clients.list",
+          "attr": "className"
+        },
+        "client-logo": {
+          "block": "core/image",
+          "path": "clients.client-logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "client-name": {
+          "block": "core/image",
+          "path": "clients.client-logo.<n>",
+          "attr": "alt",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "module-title": "the clients tmpl prints no title",
+        "sub-heading": "not printed",
+        "client-link": "empty on every row",
+        "img-opacity": "a class on the section root (moduleClass jm-opacity-<value>)"
+      }
+    },
+    "119": {
+      "pattern": "wp-ja-morgan/acm-hero",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "hero.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "title-level": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "level"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "hero.ft-bg",
+          "attr": "src"
+        },
+        "ft-bg-xs": {
+          "block": "core/image",
+          "path": "hero.ft-bg-xs",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "hero.description",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "hero-align": "a class on the section root (moduleClass align-<value>, fix-spec)",
+        "hero-space": "a class on the section root (moduleClass hero-<value>)",
+        "btn-type": "a class on the section root (moduleClass jm-btn-<value>)",
+        "hero-arrow": "the scroll-down arrow: not drawn, open decision D-48 (the one source instance, acm 14 = hero-arrow yes)",
+        "id-video": "the video button: not drawn, open decision D-49 (acm 30, 32, 37, 43 carry a video id)"
+      }
+    },
+    "120": {
+      "pattern": "wp-ja-morgan/acm-testimonials-2",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "content": {
+          "block": "core/paragraph",
+          "path": "testimonials.content.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "testimonials.avatar.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "name": {
+          "block": "core/paragraph",
+          "path": "testimonials.name.<n>",
+          "attr": "content",
+          "repeat": true,
+          "part": 1
+        },
+        "name-position": {
+          "block": "core/paragraph",
+          "path": "testimonials.name.<n>",
+          "attr": "content",
+          "repeat": true,
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "testimonial-role"
+        }
+      },
+      "dropped": {
+        "module-title": "the source prints no title for this module (acm/testimonials/tmpl/style-2.php)",
+        "sub-heading": "not printed",
+        "section-bg": "not a T3Section module (position section-footer, chrome none)"
+      }
+    },
+    "128": {
+      "pattern": "wp-ja-morgan/acm-testimonials-1",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "testimonials.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "testimonials.section-bg",
+          "attr": "src"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "testimonials.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "label": {
+          "block": "core/paragraph",
+          "path": "testimonials.label.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "testimonials.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "testimonials.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "columns": "three per view at every source instance (owl responsive 1/2/3); drawn by the stylesheet",
+        "block-title": "empty, or the same words as btn-title"
+      }
+    },
+    "129": {
+      "pattern": "wp-ja-morgan/acm-hero",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "hero.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "title-level": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "level"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "hero.ft-bg",
+          "attr": "src"
+        },
+        "ft-bg-xs": {
+          "block": "core/image",
+          "path": "hero.ft-bg-xs",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "hero.description",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "hero-align": "a class on the section root (moduleClass align-<value>, fix-spec)",
+        "hero-space": "a class on the section root (moduleClass hero-<value>)",
+        "btn-type": "a class on the section root (moduleClass jm-btn-<value>)",
+        "hero-arrow": "the scroll-down arrow: not drawn, open decision D-48 (the one source instance, acm 14 = hero-arrow yes)",
+        "id-video": "the video button: not drawn, open decision D-49 (acm 30, 32, 37, 43 carry a video id)"
+      }
+    },
+    "130": {
+      "pattern": "wp-ja-morgan/a-features-4",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "ft-desc": {
+          "block": "core/heading",
+          "path": "features-intro.ft-desc",
+          "attr": "content"
+        },
+        "ft-sign": {
+          "block": "core/image",
+          "path": "features-intro.ft-sign",
+          "attr": "src"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-intro": {
+          "block": "core/image",
+          "path": "features-intro.img-intro.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "icon": {
+          "block": "core/paragraph",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "ft-link-title": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "ft-link": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "title-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "text"
+        },
+        "link-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "content-align": "which side the text sits: drawn by the stylesheet from the tile's position (seeder has no class rule for this field)",
+        "content-bg": "tile colour level bg-lv-1..4: drawn by the stylesheet from the tile's position per page (seeder has no class rule for this field)"
+      }
+    },
+    "131": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "132": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "133": {
+      "pattern": "wp-ja-morgan/acm-testimonials-1",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "testimonials.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "testimonials.section-bg",
+          "attr": "src"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "testimonials.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "label": {
+          "block": "core/paragraph",
+          "path": "testimonials.label.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "testimonials.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "testimonials.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "columns": "three per view at every source instance (owl responsive 1/2/3); drawn by the stylesheet",
+        "block-title": "empty, or the same words as btn-title"
+      }
+    },
+    "134": {
+      "pattern": "wp-ja-morgan/a-statics",
+      "item": "statics.item.<n>",
+      "fields": {
+        "number": {
+          "block": "core/paragraph",
+          "path": "statics.number.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "statics.title.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "columns": "four per row at every instance",
+        "link": "the tmpl wraps the number in a link to #",
+        "action": "not printed",
+        "module-title": "not printed",
+        "sub-heading": "not printed",
+        "section-bg": "empty"
+      }
+    },
+    "135": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "136": {
+      "pattern": "wp-ja-morgan/acm-clients",
+      "item": "clients.item.<n>",
+      "fields": {
+        "section-bg": {
+          "block": "core/image",
+          "path": "clients.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "clients.list",
+          "attr": "className"
+        },
+        "client-logo": {
+          "block": "core/image",
+          "path": "clients.client-logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "client-name": {
+          "block": "core/image",
+          "path": "clients.client-logo.<n>",
+          "attr": "alt",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "module-title": "the clients tmpl prints no title",
+        "sub-heading": "not printed",
+        "client-link": "empty on every row",
+        "img-opacity": "a class on the section root (moduleClass jm-opacity-<value>)"
+      }
+    },
+    "137": {
+      "pattern": "wp-ja-morgan/a-testimonials-3",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "testimonials.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "testimonials.section-bg",
+          "attr": "src"
+        },
+        "member-description": {
+          "block": "core/paragraph",
+          "path": "testimonials.member-description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "img": {
+          "block": "core/image",
+          "path": "testimonials.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "name": {
+          "block": "core/heading",
+          "path": "testimonials.name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "member-position": {
+          "block": "core/paragraph",
+          "path": "testimonials.member-position.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      }
+    },
+    "138": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "139": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "140": {
+      "pattern": "wp-ja-morgan/acm-teams",
+      "item": "teams.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "teams.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "teams.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "teams.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.list",
+          "attr": "className"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "teams.avatar.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "position": {
+          "block": "core/paragraph",
+          "path": "teams.position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "more-title": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 1
+        },
+        "more-link": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "url"
+        },
+        "more-title-strong": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 2,
+          "wrap": "b"
+        }
+      },
+      "dropped": {
+        "color-link": "a class on the section root (moduleClass jm-link-<value>)"
+      }
+    },
+    "141": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "142": {
+      "pattern": "wp-ja-morgan/acm-teams",
+      "item": "teams.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "teams.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "teams.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "teams.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.list",
+          "attr": "className"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "teams.avatar.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "position": {
+          "block": "core/paragraph",
+          "path": "teams.position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "more-title": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 1
+        },
+        "more-link": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "url"
+        },
+        "more-title-strong": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 2,
+          "wrap": "b"
+        }
+      },
+      "dropped": {
+        "color-link": "a class on the section root (moduleClass jm-link-<value>)"
+      }
+    },
+    "143": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "144": {
+      "pattern": "wp-ja-morgan/acm-features-1",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "block-intro": {
+          "block": "core/paragraph",
+          "path": "features-intro.block-intro",
+          "attr": "content"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "features-intro.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "url",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "columns": "two cards side by side at every source instance; drawn by the stylesheet",
+        "slide": "a class on the section root (moduleClass jm-slide-<value>)"
+      }
+    },
+    "145": {
+      "pattern": "wp-ja-morgan/acm-hero",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "hero.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "title-level": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "level"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "hero.ft-bg",
+          "attr": "src"
+        },
+        "ft-bg-xs": {
+          "block": "core/image",
+          "path": "hero.ft-bg-xs",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "hero.description",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "hero-align": "a class on the section root (moduleClass align-<value>, fix-spec)",
+        "hero-space": "a class on the section root (moduleClass hero-<value>)",
+        "btn-type": "a class on the section root (moduleClass jm-btn-<value>)",
+        "hero-arrow": "the scroll-down arrow: not drawn, open decision D-48 (the one source instance, acm 14 = hero-arrow yes)",
+        "id-video": "the video button: not drawn, open decision D-49 (acm 30, 32, 37, 43 carry a video id)"
+      }
+    },
+    "146": {
+      "pattern": "wp-ja-morgan/acm-teams",
+      "item": "teams.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "teams.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "teams.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "teams.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.list",
+          "attr": "className"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "teams.avatar.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "position": {
+          "block": "core/paragraph",
+          "path": "teams.position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "more-title": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 1
+        },
+        "more-link": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "url"
+        },
+        "more-title-strong": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 2,
+          "wrap": "b"
+        }
+      },
+      "dropped": {
+        "color-link": "a class on the section root (moduleClass jm-link-<value>)"
+      }
+    },
+    "147": {
+      "pattern": "wp-ja-morgan/acm-hero",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "hero.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "title-level": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "level"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "hero.ft-bg",
+          "attr": "src"
+        },
+        "ft-bg-xs": {
+          "block": "core/image",
+          "path": "hero.ft-bg-xs",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "hero.description",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "hero-align": "a class on the section root (moduleClass align-<value>, fix-spec)",
+        "hero-space": "a class on the section root (moduleClass hero-<value>)",
+        "btn-type": "a class on the section root (moduleClass jm-btn-<value>)",
+        "hero-arrow": "the scroll-down arrow: not drawn, open decision D-48 (the one source instance, acm 14 = hero-arrow yes)",
+        "id-video": "the video button: not drawn, open decision D-49 (acm 30, 32, 37, 43 carry a video id)"
+      }
+    },
+    "148": {
+      "pattern": "wp-ja-morgan/a-features-5",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "features-intro.ft-bg",
+          "attr": "src"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "btn-type": "primary at every instance",
+        "section-bg": "empty at every instance"
+      }
+    },
+    "149": {
+      "pattern": "wp-ja-morgan/acm-testimonials-1",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "testimonials.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "testimonials.section-bg",
+          "attr": "src"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "testimonials.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "label": {
+          "block": "core/paragraph",
+          "path": "testimonials.label.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "testimonials.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "testimonials.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "columns": "three per view at every source instance (owl responsive 1/2/3); drawn by the stylesheet",
+        "block-title": "empty, or the same words as btn-title"
+      }
+    },
+    "150": {
+      "pattern": "wp-ja-morgan/acm-features-1",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "block-intro": {
+          "block": "core/paragraph",
+          "path": "features-intro.block-intro",
+          "attr": "content"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "features-intro.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "url",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "columns": "two cards side by side at every source instance; drawn by the stylesheet",
+        "slide": "a class on the section root (moduleClass jm-slide-<value>)"
+      }
+    },
+    "151": {
+      "pattern": "wp-ja-morgan/a-features-4",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "ft-desc": {
+          "block": "core/heading",
+          "path": "features-intro.ft-desc",
+          "attr": "content"
+        },
+        "ft-sign": {
+          "block": "core/image",
+          "path": "features-intro.ft-sign",
+          "attr": "src"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-intro": {
+          "block": "core/image",
+          "path": "features-intro.img-intro.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "icon": {
+          "block": "core/paragraph",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "ft-link-title": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "ft-link": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "title-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "text"
+        },
+        "link-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "content-align": "which side the text sits: drawn by the stylesheet from the tile's position (seeder has no class rule for this field)",
+        "content-bg": "tile colour level bg-lv-1..4: drawn by the stylesheet from the tile's position per page (seeder has no class rule for this field)"
+      }
+    },
+    "152": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "153": {
+      "pattern": "wp-ja-morgan/acm-testimonials-1",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "testimonials.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "testimonials.section-bg",
+          "attr": "src"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "testimonials.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "label": {
+          "block": "core/paragraph",
+          "path": "testimonials.label.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "testimonials.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "testimonials.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "columns": "three per view at every source instance (owl responsive 1/2/3); drawn by the stylesheet",
+        "block-title": "empty, or the same words as btn-title"
+      }
+    },
+    "154": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "155": {
+      "pattern": "wp-ja-morgan/a-testimonials-3",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "testimonials.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "testimonials.section-bg",
+          "attr": "src"
+        },
+        "member-description": {
+          "block": "core/paragraph",
+          "path": "testimonials.member-description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "img": {
+          "block": "core/image",
+          "path": "testimonials.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "name": {
+          "block": "core/heading",
+          "path": "testimonials.name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "member-position": {
+          "block": "core/paragraph",
+          "path": "testimonials.member-position.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      }
+    },
+    "156": {
+      "pattern": "wp-ja-morgan/a-features-5",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "features-intro.ft-bg",
+          "attr": "src"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "btn-type": "primary at every instance",
+        "section-bg": "empty at every instance"
+      }
+    },
+    "157": {
+      "pattern": "wp-ja-morgan/acm-latest",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "latest.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "latest.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "latest.section-bg",
+          "attr": "src"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "latest.view-all",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "latest.view-all",
+          "attr": "url"
+        }
+      }
+    },
+    "158": {
+      "pattern": "wp-ja-morgan/acm-clients",
+      "item": "clients.item.<n>",
+      "fields": {
+        "section-bg": {
+          "block": "core/image",
+          "path": "clients.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "clients.list",
+          "attr": "className"
+        },
+        "client-logo": {
+          "block": "core/image",
+          "path": "clients.client-logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "client-name": {
+          "block": "core/image",
+          "path": "clients.client-logo.<n>",
+          "attr": "alt",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "module-title": "the clients tmpl prints no title",
+        "sub-heading": "not printed",
+        "client-link": "empty on every row",
+        "img-opacity": "a class on the section root (moduleClass jm-opacity-<value>)"
+      }
+    },
+    "159": {
+      "pattern": "wp-ja-morgan/acm-hero",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "hero.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "title-level": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "level"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "hero.ft-bg",
+          "attr": "src"
+        },
+        "ft-bg-xs": {
+          "block": "core/image",
+          "path": "hero.ft-bg-xs",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "hero.description",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "hero-align": "a class on the section root (moduleClass align-<value>, fix-spec)",
+        "hero-space": "a class on the section root (moduleClass hero-<value>)",
+        "btn-type": "a class on the section root (moduleClass jm-btn-<value>)",
+        "hero-arrow": "the scroll-down arrow: not drawn, open decision D-48 (the one source instance, acm 14 = hero-arrow yes)",
+        "id-video": "the video button: not drawn, open decision D-49 (acm 30, 32, 37, 43 carry a video id)"
+      }
+    },
+    "165": {
+      "pattern": "wp-ja-morgan/a-features-6",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "btn-type": "primary at every instance",
+        "section-bg": "empty at every instance"
+      }
+    },
+    "167": {
+      "pattern": "wp-ja-morgan/acm-features-2",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "className"
+        },
+        "icon": {
+          "block": "core/paragraph",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "text"
+        },
+        "link-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "features-align": "a class on the section root (moduleClass align-<value>)",
+        "features-style": "a class on the section root (moduleClass style-<value>)"
+      }
+    },
+    "169": {
+      "pattern": "wp-ja-morgan/acm-hero",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "hero.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "title-level": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "level"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "hero.ft-bg",
+          "attr": "src"
+        },
+        "ft-bg-xs": {
+          "block": "core/image",
+          "path": "hero.ft-bg-xs",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "hero.description",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "hero-align": "a class on the section root (moduleClass align-<value>, fix-spec)",
+        "hero-space": "a class on the section root (moduleClass hero-<value>)",
+        "btn-type": "a class on the section root (moduleClass jm-btn-<value>)",
+        "hero-arrow": "the scroll-down arrow: not drawn, open decision D-48 (the one source instance, acm 14 = hero-arrow yes)",
+        "id-video": "the video button: not drawn, open decision D-49 (acm 30, 32, 37, 43 carry a video id)"
+      }
+    },
+    "170": {
+      "pattern": "wp-ja-morgan/acm-teams",
+      "item": "teams.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "teams.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "teams.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "teams.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.list",
+          "attr": "className"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "teams.avatar.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "position": {
+          "block": "core/paragraph",
+          "path": "teams.position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "more-title": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 1
+        },
+        "more-link": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "url"
+        },
+        "more-title-strong": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 2,
+          "wrap": "b"
+        }
+      },
+      "dropped": {
+        "color-link": "a class on the section root (moduleClass jm-link-<value>)"
+      }
+    },
+    "174": {
+      "pattern": "wp-ja-morgan/acm-hero",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "hero.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "title-level": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "level"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "hero.ft-bg",
+          "attr": "src"
+        },
+        "ft-bg-xs": {
+          "block": "core/image",
+          "path": "hero.ft-bg-xs",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "hero.description",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "hero-align": "a class on the section root (moduleClass align-<value>, fix-spec)",
+        "hero-space": "a class on the section root (moduleClass hero-<value>)",
+        "btn-type": "a class on the section root (moduleClass jm-btn-<value>)",
+        "hero-arrow": "the scroll-down arrow: not drawn, open decision D-48 (the one source instance, acm 14 = hero-arrow yes)",
+        "id-video": "the video button: not drawn, open decision D-49 (acm 30, 32, 37, 43 carry a video id)"
+      }
+    },
+    "hero:style-1": {
+      "pattern": "wp-ja-morgan/acm-hero",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "hero.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "hero.section-bg",
+          "attr": "src"
+        },
+        "title-level": {
+          "block": "core/heading",
+          "path": "hero.module-title",
+          "attr": "level"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "hero.ft-bg",
+          "attr": "src"
+        },
+        "ft-bg-xs": {
+          "block": "core/image",
+          "path": "hero.ft-bg-xs",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "hero.description",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "hero.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "hero-align": "a class on the section root (moduleClass align-<value>, fix-spec)",
+        "hero-space": "a class on the section root (moduleClass hero-<value>)",
+        "btn-type": "a class on the section root (moduleClass jm-btn-<value>)",
+        "hero-arrow": "the scroll-down arrow: not drawn, open decision D-48 (the one source instance, acm 14 = hero-arrow yes)",
+        "id-video": "the video button: not drawn, open decision D-49 (acm 30, 32, 37, 43 carry a video id)"
+      }
+    },
+    "teams:style-1": {
+      "pattern": "wp-ja-morgan/acm-teams",
+      "item": "teams.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "teams.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "teams.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "teams.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "teams.list",
+          "attr": "className"
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "teams.avatar.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "teams.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "position": {
+          "block": "core/paragraph",
+          "path": "teams.position.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "teams.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "more-title": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 1
+        },
+        "more-link": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "url"
+        },
+        "more-title-strong": {
+          "block": "core/button",
+          "path": "teams.more",
+          "attr": "text",
+          "part": 2,
+          "wrap": "b"
+        }
+      },
+      "dropped": {
+        "color-link": "a class on the section root (moduleClass jm-link-<value>)"
+      }
+    },
+    "features-intro:style-2": {
+      "pattern": "wp-ja-morgan/acm-features-2",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "className"
+        },
+        "icon": {
+          "block": "core/paragraph",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "text"
+        },
+        "link-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "features-align": "a class on the section root (moduleClass align-<value>)",
+        "features-style": "a class on the section root (moduleClass style-<value>)"
+      }
+    },
+    "features-intro:style-1": {
+      "pattern": "wp-ja-morgan/acm-features-1",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "block-intro": {
+          "block": "core/paragraph",
+          "path": "features-intro.block-intro",
+          "attr": "content"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "features-intro.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "url",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "columns": "two cards side by side at every source instance; drawn by the stylesheet",
+        "slide": "a class on the section root (moduleClass jm-slide-<value>)"
+      }
+    },
+    "features-intro:style-3": {
+      "pattern": "wp-ja-morgan/acm-features-3",
+      "layouts": {
+        "contact": "wp-ja-morgan/acm-features-3-contact",
+        "*": "wp-ja-morgan/acm-features-3"
+      },
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-features": {
+          "block": "core/image",
+          "path": "features-intro.img-features",
+          "attr": "src"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "description-more": {
+          "block": "core/paragraph",
+          "path": "features-intro.description-more",
+          "attr": "content"
+        },
+        "check-list": {
+          "block": "core/list",
+          "path": "features-intro.check-list",
+          "attr": "innerBlocks"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        },
+        "accordion-name": {
+          "block": "core/details",
+          "path": "features-intro.item.<n>",
+          "attr": "summary",
+          "repeat": true
+        },
+        "accordion-desc": {
+          "block": "core/paragraph",
+          "path": "features-intro.accordion-desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "first-open": {
+          "block": "core/group",
+          "path": "features-intro.list",
+          "attr": "showContent"
+        }
+      },
+      "dropped": {
+        "align": "a class on the section root (moduleClass content-right|content-left)",
+        "position": "picks the layout (fix-spec field `layout`): the quick contact form, or the plain pattern whose question list the accordion rows fill",
+        "id-video": "not drawn, open decision D-49",
+        "video-id": "not drawn, open decision D-49"
+      }
+    },
+    "testimonials:style-1": {
+      "pattern": "wp-ja-morgan/acm-testimonials-1",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "testimonials.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "testimonials.section-bg",
+          "attr": "src"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "testimonials.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "label": {
+          "block": "core/paragraph",
+          "path": "testimonials.label.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "testimonials.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "testimonials.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "action": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "link": {
+          "block": "core/paragraph",
+          "path": "testimonials.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "testimonials.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "columns": "three per view at every source instance (owl responsive 1/2/3); drawn by the stylesheet",
+        "block-title": "empty, or the same words as btn-title"
+      }
+    },
+    "testimonials:style-2": {
+      "pattern": "wp-ja-morgan/acm-testimonials-2",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "content": {
+          "block": "core/paragraph",
+          "path": "testimonials.content.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "avatar": {
+          "block": "core/image",
+          "path": "testimonials.avatar.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "name": {
+          "block": "core/paragraph",
+          "path": "testimonials.name.<n>",
+          "attr": "content",
+          "repeat": true,
+          "part": 1
+        },
+        "name-position": {
+          "block": "core/paragraph",
+          "path": "testimonials.name.<n>",
+          "attr": "content",
+          "repeat": true,
+          "part": 2,
+          "wrap": "span",
+          "wrapClass": "testimonial-role"
+        }
+      },
+      "dropped": {
+        "module-title": "the source prints no title for this module (acm/testimonials/tmpl/style-2.php)",
+        "sub-heading": "not printed",
+        "section-bg": "not a T3Section module (position section-footer, chrome none)"
+      }
+    },
+    "latest:style-1": {
+      "pattern": "wp-ja-morgan/acm-latest",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "latest.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "latest.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "latest.section-bg",
+          "attr": "src"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "latest.view-all",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "latest.view-all",
+          "attr": "url"
+        }
+      }
+    },
+    "clients:style-1": {
+      "pattern": "wp-ja-morgan/acm-clients",
+      "item": "clients.item.<n>",
+      "fields": {
+        "section-bg": {
+          "block": "core/image",
+          "path": "clients.section-bg",
+          "attr": "src"
+        },
+        "columns": {
+          "block": "core/group",
+          "path": "clients.list",
+          "attr": "className"
+        },
+        "client-logo": {
+          "block": "core/image",
+          "path": "clients.client-logo.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "client-name": {
+          "block": "core/image",
+          "path": "clients.client-logo.<n>",
+          "attr": "alt",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "module-title": "the clients tmpl prints no title",
+        "sub-heading": "not printed",
+        "client-link": "empty on every row",
+        "img-opacity": "a class on the section root (moduleClass jm-opacity-<value>)"
+      }
+    },
+    "slideshow:style-owl": {
+      "pattern": "wp-ja-morgan/acm-slideshow",
+      "item": "slideshow.item.<n>",
+      "fields": {
+        "image": {
+          "block": "core/image",
+          "path": "slideshow.image.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "slideshow.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "desc": {
+          "block": "core/paragraph",
+          "path": "slideshow.desc.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "slideshow.button.<n>",
+          "attr": "text",
+          "repeat": true
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "slideshow.button.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "title-dot": {
+          "block": "core/paragraph",
+          "path": "slideshow.title-dot.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "auto-play": "false on the one instance; the motion library steps only when asked",
+        "module-title": "the slideshow tmpl prints no title",
+        "sub-heading": "not printed"
+      }
+    },
+    "features-intro:style-4": {
+      "pattern": "wp-ja-morgan/a-features-4",
+      "item": "features-intro.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "ft-desc": {
+          "block": "core/heading",
+          "path": "features-intro.ft-desc",
+          "attr": "content"
+        },
+        "ft-sign": {
+          "block": "core/image",
+          "path": "features-intro.ft-sign",
+          "attr": "src"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "features-intro.section-bg",
+          "attr": "src"
+        },
+        "img-intro": {
+          "block": "core/image",
+          "path": "features-intro.img-intro.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "img-icon": {
+          "block": "core/image",
+          "path": "features-intro.img-icon.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "icon": {
+          "block": "core/paragraph",
+          "path": "features-intro.icon.<n>",
+          "attr": "className",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "features-intro.title.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "ft-link-title": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "ft-link": {
+          "block": "core/paragraph",
+          "path": "features-intro.action.<n>",
+          "attr": "url",
+          "repeat": true
+        },
+        "title-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "text"
+        },
+        "link-more": {
+          "block": "core/button",
+          "path": "features-intro.more",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "content-align": "which side the text sits: drawn by the stylesheet from the tile's position (seeder has no class rule for this field)",
+        "content-bg": "tile colour level bg-lv-1..4: drawn by the stylesheet from the tile's position per page (seeder has no class rule for this field)"
+      }
+    },
+    "features-intro:style-5": {
+      "pattern": "wp-ja-morgan/a-features-5",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "ft-bg": {
+          "block": "core/image",
+          "path": "features-intro.ft-bg",
+          "attr": "src"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "btn-type": "primary at every instance",
+        "section-bg": "empty at every instance"
+      }
+    },
+    "features-intro:style-6": {
+      "pattern": "wp-ja-morgan/a-features-6",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "features-intro.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "features-intro.sub-heading",
+          "attr": "content"
+        },
+        "description": {
+          "block": "core/paragraph",
+          "path": "features-intro.description",
+          "attr": "content"
+        },
+        "btn-title": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "text"
+        },
+        "btn-link": {
+          "block": "core/button",
+          "path": "features-intro.button",
+          "attr": "url"
+        }
+      },
+      "dropped": {
+        "btn-type": "primary at every instance",
+        "section-bg": "empty at every instance"
+      }
+    },
+    "statics:style-1": {
+      "pattern": "wp-ja-morgan/a-statics",
+      "item": "statics.item.<n>",
+      "fields": {
+        "number": {
+          "block": "core/paragraph",
+          "path": "statics.number.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "title": {
+          "block": "core/heading",
+          "path": "statics.title.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      },
+      "dropped": {
+        "columns": "four per row at every instance",
+        "link": "the tmpl wraps the number in a link to #",
+        "action": "not printed",
+        "module-title": "not printed",
+        "sub-heading": "not printed",
+        "section-bg": "empty"
+      }
+    },
+    "testimonials:style-3": {
+      "pattern": "wp-ja-morgan/a-testimonials-3",
+      "item": "testimonials.item.<n>",
+      "fields": {
+        "module-title": {
+          "block": "core/heading",
+          "path": "testimonials.module-title",
+          "attr": "content"
+        },
+        "sub-heading": {
+          "block": "core/paragraph",
+          "path": "testimonials.sub-heading",
+          "attr": "content"
+        },
+        "section-bg": {
+          "block": "core/image",
+          "path": "testimonials.section-bg",
+          "attr": "src"
+        },
+        "member-description": {
+          "block": "core/paragraph",
+          "path": "testimonials.member-description.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "img": {
+          "block": "core/image",
+          "path": "testimonials.img.<n>",
+          "attr": "src",
+          "repeat": true
+        },
+        "name": {
+          "block": "core/heading",
+          "path": "testimonials.name.<n>",
+          "attr": "content",
+          "repeat": true
+        },
+        "member-position": {
+          "block": "core/paragraph",
+          "path": "testimonials.member-position.<n>",
+          "attr": "content",
+          "repeat": true
+        }
+      }
+    }
+  }
+}

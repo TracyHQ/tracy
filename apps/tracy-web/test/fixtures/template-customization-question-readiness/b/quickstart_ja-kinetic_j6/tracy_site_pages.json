@@ -1,0 +1,61 @@
+{
+  "pages": [
+    {
+      "id": "home",
+      "label": "Home",
+      "home": true
+    },
+    {
+      "id": "product/features",
+      "label": "Features"
+    },
+    {
+      "id": "product/integrations",
+      "label": "Integrations"
+    },
+    {
+      "id": "product/changelog",
+      "label": "Changelog"
+    },
+    {
+      "id": "product/blog",
+      "label": "Blog"
+    },
+    {
+      "id": "product/faq",
+      "label": "FAQ"
+    },
+    {
+      "id": "product/all-categories",
+      "label": "All Categories"
+    },
+    {
+      "id": "pricing",
+      "label": "Pricing"
+    },
+    {
+      "id": "company/about",
+      "label": "About"
+    },
+    {
+      "id": "company/team",
+      "label": "Team"
+    },
+    {
+      "id": "company/contact",
+      "label": "Contact"
+    },
+    {
+      "id": "pages/landing",
+      "label": "Landing"
+    },
+    {
+      "id": "pages/kineticql",
+      "label": "Single Article"
+    },
+    {
+      "id": "pages/engineering",
+      "label": "Engineering"
+    }
+  ]
+}

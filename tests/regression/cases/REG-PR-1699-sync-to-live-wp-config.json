@@ -1,0 +1,22 @@
+{
+  "id": "REG-PR-1699-sync-to-live-wp-config",
+  "kind": "fix",
+  "title": "Sync to live's preview on a WordPress site whose wp-config.php differs between the last sync and the copy names the changed settings instead of stopping with CHANGESET_FAILED (AttributeError in config_changes)",
+  "pr": 1699,
+  "area": "sync/live",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: node --test packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"],
+  "expect": [
+    "S1: the wp-config.php case names DISALLOW_FILE_EDIT and WP_DEBUG as no-safe-action settings, the database host is left out as environment, and every other changeset case still passes"
+  ],
+  "selectors": {
+    "host": "live_push.py Changeset.config_changes (WordPress branch)"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-25-sync-woocommerce-scheduler-noise.md",
+  "fence": "A Sync to live preview never stops on a difference it only has to name",
+  "run": {
+    "cmd": ["node", "--test", "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"]
+  }
+}

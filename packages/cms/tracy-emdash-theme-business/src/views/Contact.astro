@@ -1,0 +1,116 @@
+---
+import { getEmDashEntry } from 'emdash'
+import { blockComponents } from '@emdash-cms/plugin-forms/astro'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import FormWords from '@/components/site/FormWords.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Photo from '@/components/site/Photo.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import '@emdash-cms/plugin-forms/styles'
+import '@/styles/forms.css'
+import { stampFor } from '@/lib/stamps'
+import { uiLocale } from '@/lib/ui'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const slots = Object.fromEntries(((site.slots ?? []) as any[]).map((s) => [s.key, s.text]))
+const { entry } = await getEmDashEntry('contact', 'contact', { locale })
+if (!entry) return Astro.rewrite(href(locale, '/404'))
+const c = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'contact', entry)
+const $site = stampFor(Astro.request, 'site', site)
+const FormEmbed = (blockComponents as any)['emdash-form']
+const role = Astro.url.searchParams.get('role')
+---
+
+<Base chrome={chrome} title={c.title} description={c.lede} currentPath="/contact" content={{ collection: "contact", id: entry.data.id, slug: "contact", toPath: () => "/contact" }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={[{ label: site.home_label, url: href(locale, "/"), stamp: $site("home_label") }, { label: c.title, stamp: $page("title") }]} />
+		<div class="container-site pb-10 pt-14">
+			<h1 class="h-list mb-3" {...$page("title")}>{c.title}</h1>
+			<p class="max-w-[44em] text-[16.5px] text-fg-muted" {...$page("lede")}>{c.lede}</p>
+		</div>
+		<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] items-start gap-14 pb-[88px]">
+			<div class="border border-line-card bg-card p-9" data-contact-form data-role-prefill={role ?? undefined} data-reset-label={c.reset_label || undefined}>
+				<div class="mb-7 flex items-start gap-3 border-l-[3px] border-info bg-info-bg px-4 py-3.5">
+					<span class="text-[14px] font-bold text-forest-text">i</span>
+					<p class="text-[14.5px] leading-[1.55] text-info-fg" {...$page("notice")}>{c.notice}</p>
+				</div>
+				{c.form_id ? <FormWords tag={uiLocale(locale)}><FormEmbed node={{ formId: c.form_id }} /></FormWords> : <p class="text-[15px] text-fg-meta">—</p>}
+			</div>
+			<div class="flex flex-col gap-6">
+				<div class="band-ink p-[30px]">
+					<div class="column-label mb-[18px] text-on-ink-meta" {...$page("hq_title")}>{c.hq_title}</div>
+					<div class="mb-5 text-[16.5px] leading-[1.65]" {...$page()}>{c.hq_address_1}<br />{c.hq_address_2}</div>
+					<div class="flex flex-col gap-2.5 text-[15.5px]">
+						<div class="flex justify-between gap-4 border-t border-on-ink-line pt-2.5"><span class="text-on-ink-meta" {...$page("hotline_label")}>{c.hotline_label}</span><span {...$site("hotline")}>{site.hotline}</span></div>
+						<div class="flex justify-between gap-4 border-t border-on-ink-line pt-2.5"><span class="text-on-ink-meta" {...$page("sales_label")}>{c.sales_label}</span><span {...$site("sales_email")}>{site.sales_email}</span></div>
+						<div class="flex justify-between gap-4 border-t border-on-ink-line pt-2.5"><span class="text-on-ink-meta" {...$page("hours_label")}>{c.hours_label}</span><span {...$site("hours")}>{site.hours}</span></div>
+					</div>
+				</div>
+				<Photo image={c.map_image} stamp={$page("map_image")} alt="" placeholder={slots.map} class="h-[260px]" />
+				{(c.branches ?? []).length > 0 && (
+				<div class="border border-line-card p-6">
+					<div class="column-label mb-4" {...$page("branches_title")}>{c.branches_title}</div>
+					<div class="flex flex-col gap-3.5">{(c.branches ?? []).map((b: any) => <div class="border-b border-line-soft pb-3.5" {...$page.block("branches")}><div class="text-[15.5px] font-semibold" {...$page("branches.city")}>{b.city}</div><div class="text-[14px] leading-[1.5] text-fg-muted" {...$page("branches.address")}>{b.address}</div></div>)}</div>
+				</div>
+				)}
+				{(site.social ?? []).length > 0 && (
+				<div class="border border-line-card p-6">
+					<div class="column-label mb-2" {...$page("social_title")}>{c.social_title}</div>
+					<p class="mb-4 text-[14px] leading-[1.6] text-fg-muted" {...$page("social_text")}>{c.social_text}</p>
+					<div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-px border border-line-soft bg-line-soft">
+						{/* A profile with no link yet (K6: the demo's items stay, their links emptied) is drawn as a plain card. */}
+						{(site.social ?? []).map((s: any) => {
+							const url = typeof s.url === "string" ? s.url.trim() : ""
+							const Tag = url !== "" && url !== "#" ? "a" : "div"
+							return (
+								<Tag {...(Tag === "a" ? { href: url, target: "_blank", rel: "noopener" } : {})} class:list={["block bg-paper px-4 py-[15px]", { "hover:bg-signal-tint": Tag === "a" }]} {...$site.block("social")}>
+									<span class="flex items-baseline justify-between gap-2.5"><span class="text-[15.5px] font-semibold text-fg" {...$site("social.name")}>{s.name}</span>{Tag === "a" && <span class="text-[12px] font-semibold text-signal-text">↗</span>}</span>
+									{s.handle && <span class="mt-[3px] block text-[13.5px] text-forest-text" {...$site("social.handle")}>{s.handle}</span>}
+									<span class="mt-[5px] block text-[13px] leading-[1.5] text-fg-meta" {...$site("social.text")}>{s.text}</span>
+									{url !== "" && <span class="mt-1.5 block text-[12px] text-fg-faint" {...$site("social.url")}>{url.replace(/^https?:\/\//, "")}</span>}
+								</Tag>
+							)
+						})}
+					</div>
+				</div>
+				)}
+			</div>
+		</div>
+	</main>
+</Base>
+<script>
+	import "@emdash-cms/plugin-forms/client";
+	const box = document.querySelector<HTMLElement>("[data-contact-form]");
+	const form = box?.querySelector<HTMLFormElement>("form.ec-form");
+	if (form) {
+		// The plugin's template leaves indentation inside <textarea>, which counts as a value: the
+		// placeholder never shows and a reset restores the whitespace. Clear the default value itself.
+		for (const ta of form.querySelectorAll("textarea")) if (!ta.value.trim()) { ta.defaultValue = ""; ta.value = ""; }
+		// Careers "Apply" links arrive with ?role=<title>: pre-fill the project description so the
+		// applicant does not have to retype the vacancy name (source: Apply -> contact page).
+		const role = box!.dataset.rolePrefill;
+		if (role) { const ta = form.querySelector<HTMLTextAreaElement>("textarea[name='description']"); if (ta && !ta.value) ta.value = `${role}\n`; }
+		// Request type is a row of toggle buttons with the first one selected (source: Contact, `mark(types, 0)`).
+		for (const group of form.querySelectorAll<HTMLElement>(".ec-form-radio-group")) {
+			const radios = group.querySelectorAll<HTMLInputElement>("input[type='radio']");
+			if (radios.length && ![...radios].some((r) => r.checked)) radios[0].defaultChecked = true;
+		}
+		// Secondary "Clear form" beside the submit (source: reset button in the action row).
+		const label = box!.dataset.resetLabel, nav = form.querySelector(".ec-form-nav");
+		if (label && nav && !nav.querySelector(".ec-form-reset")) {
+			const reset = document.createElement("button");
+			reset.type = "reset"; reset.className = "ec-form-reset"; reset.textContent = label;
+			nav.append(reset);
+		}
+	}
+</script>

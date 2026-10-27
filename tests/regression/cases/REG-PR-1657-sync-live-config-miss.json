@@ -1,0 +1,20 @@
+{
+  "id": "REG-PR-1657-sync-live-config-miss",
+  "kind": "fix",
+  "title": "A live Global Configuration edit reaches the copy even when the sync's manifest names configuration.php without a hash; a listed file missing from a whole-tree read is named, never kept silently",
+  "pr": 1657,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: node --test packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs"],
+  "expect": [
+    "S1: a manifest entry without sha1 for configuration.php plus a live Site Name edit gives an incremental read packing configuration.php, the new name in changes/, a sha1 in the manifest after, no read on the next sync; a whole pack leaving a listed file out answers ok:false naming it"
+  ],
+  "selectors": {
+    "host": "live-pull.mjs listCheap changed filter (f.unknown), whole-tree got/missing check; live_sync.py stat_manifest"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-24-sync-live-config-miss.md",
+  "fence": "A change on the live site is never taken as unchanged because the site would not hash the file",
+  "run": { "cmd": ["node", "--test", "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs"] }
+}

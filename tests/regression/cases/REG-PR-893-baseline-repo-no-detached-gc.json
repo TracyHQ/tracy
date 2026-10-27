@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-893-baseline-repo-no-detached-gc",
+  "kind": "fix",
+  "title": "Commits in a site's baseline repo start no detached git gc, and teardown waits out one still running",
+  "pr": 893,
+  "area": "fleet/teardown",
+  "cms": ["wp", "jo"],
+  "needs": ["node", "bash", "git"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/webroot-repo-gc.test.mjs packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"the baseline commit of a webroot past the gc threshold starts no automatic gc\"; \"a moment past the gc threshold starts no automatic gc either\"; \"every git call the webroot scripts make on a site repo carries the no-maintenance config\"; \"a git gc still running in the baseline repo is waited for, a bounded while, before the directory goes\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 26).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): with git told to gc at once (gc.auto=1, foreground), a baseline commit and a moment leave no pack behind, every git call the webroot scripts make on a site repo carries the no-maintenance config, and teardown waits a bounded while for a gc.pid naming a live process on this host before removing the directory."
+  ],
+  "selectors": {
+    "config": "TRACY_REPO_GIT_CONFIG in packages/fleet/tracy-fleet-operation/scripts/lib/webroot-repo-git.sh (-c gc.auto=0 -c maintenance.auto=false -c gc.autoDetach=false)",
+    "callers": "webroot-git.sh, webroot-edit.sh, webroot-push.sh, webroot-backup.sh in packages/fleet/tracy-fleet-operation/scripts/webroot/",
+    "teardown": "wait_for_repo_gc in packages/fleet/tracy-fleet-operation/scripts/provision/teardown.sh (step 3)"
+  },
+  "evidence": "05/10/2026 dev Mac, twice: deleting a site whose install had failed (initb-0510-wpz-a3) stopped at teardown step 3 with \"rm: cannot remove '.../webroot-baseline.git': Directory not empty\"; the one file left was gc.log ('unable to read 95727ea4...', 'failed to run repack') written by a detached automatic gc the baseline commit had started (ledger L14b). Red 9610fb9e2 (4 cases not ok on 04a0c6da2), fix cd45fa2b6.",
+  "fence": "No shell git call on a site baseline repo can start automatic maintenance; teardown waits at most 10 s for a gc already running, and remove_path stays the net.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/webroot-repo-gc.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs"
+    ],
+    "tests": [
+      "the baseline commit of a webroot past the gc threshold starts no automatic gc",
+      "a moment past the gc threshold starts no automatic gc either",
+      "every git call the webroot scripts make on a site repo carries the no-maintenance config",
+      "a git gc still running in the baseline repo is waited for, a bounded while, before the directory goes"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Timeline Style 1</title>
+  <fields name="timeline">
+    <fieldset name="band" label="TPL_TRACY_ACM_TIMELINE_BAND_LABEL">
+      <field name="eyebrow" type="text" default="" label="TPL_TRACY_ACM_TIMELINE_EYEBROW_LABEL" />
+      <field name="heading" type="text" default="" label="TPL_TRACY_ACM_TIMELINE_HEADING_LABEL" />
+      <field name="intro" type="textarea" rows="2" default="" label="TPL_TRACY_ACM_TIMELINE_INTRO_LABEL" />
+      <field name="ground" type="list" default="canvas" label="TPL_TRACY_ACM_TIMELINE_GROUND_LABEL">
+        <option value="canvas">TPL_TRACY_ACM_GROUND_CANVAS</option>
+        <option value="warm">TPL_TRACY_ACM_GROUND_WARM</option>
+        <option value="gray">TPL_TRACY_ACM_GROUND_GRAY</option>
+      </field>
+    </fieldset>
+    <fieldset name="entries" label="TPL_TRACY_ACM_TIMELINE_ENTRIES_LABEL">
+      <fields name="entry" multiple="1" label="TPL_TRACY_ACM_TIMELINE_ENTRY_LABEL">
+        <field name="entry-marker" type="text" default="" label="TPL_TRACY_ACM_TIMELINE_MARKER_LABEL" />
+        <field name="entry-title" type="text" default="" label="TPL_TRACY_ACM_TIMELINE_TITLE_LABEL" />
+        <field name="entry-text" type="textarea" rows="3" default="" label="TPL_TRACY_ACM_TIMELINE_TEXT_LABEL" />
+      </fields>
+    </fieldset>
+  </fields>
+</form>

@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-white-screen: #ffffff;
+  --color-charcoal-ink: #262626;
+  --color-mist-tile: #f1f1f1;
+  --color-lilac-wash: #e4eaff;
+  --color-divider-ash: #eaeaea;
+  --color-metadata-gray: #999999;
+  --color-lavender-projector: #a77eff;
+  --color-ultraviolet-type: #6c00f4;
+
+  /* Typography — Font Families */
+  --font-cooperhewitt: 'CooperHewitt', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-jetbrainsmono: 'JetBrainsMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

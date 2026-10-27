@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "519ca09b-9a85-4eec-8630-0d7aae5ac2da",
+  "status": "complete",
+  "name": "Andrei Rybin",
+  "url": "https://styles.refero.design/style/519ca09b-9a85-4eec-8630-0d7aae5ac2da",
+  "sourceWebsite": "https://andreirybin.com",
+  "extractedAt": "2026-06-03T21:51:21.069Z",
+  "capturedAt": "2026-10-08T05:11:37.588359+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "monochrome atelier notebook — a designer's sketchbook where phone screens are pinned like contact sheets on a white wall",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ebe0d93d-a4d9-4667-a60e-cc8ce3a033b1.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/60c42d23-fcce-4561-a485-d9c5c89648f5.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/ef00de4f-2928-4576-ae36-1824c736f976.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/9a00854b-ea8c-48a3-9006-08311f30bdce.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/3cfbff8d-79c4-48ac-9421-30efc0821f23.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8bdb785be09f2ea1f662045e8070ceb0c6c76f4248874597759f912897b48ffe",
+      "bytes": 13887
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "17ff22ab0a9a72c39e77235512c34420cf938df12a660761e4dbbdbf885e4c91",
+      "bytes": 117552
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "091f6a0a3c607ab135acb8ae2a92b2845085c56341a7c82e9237496d4b6d4921",
+      "bytes": 11138
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "62021b17819509061aefcd08d69c7600d2cf29cb547a7dc484792acedb336672",
+      "bytes": 5292
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7de2dacfdff4307da44dedf6855bdbee134c32fbdcc1092709d39b6a64031dac",
+      "bytes": 8669
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "39a6d883553eeb54935962ab8b357557dfbf70be5f5a76fbd0e5e291bf15817f",
+      "bytes": 1935
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ed1bb424f0f217b3e1d55c4439348d2d3c4a1af0c5195c7efb1da59de43e6a45",
+      "bytes": 671
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4fca8df211b77bafce0b8e1bc2f7a4ab7fec52f4f2e46912d4f447ff8445de1e",
+      "bytes": 688
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ca1dbeaea9c72e75c44b67d5110f24f0f180ae7b013d52d1de5892a1fd0b9b62",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "fc8fb8b67d4d4cb1dc9728cf0ed5192d7383a40a59c6078cc411e37e53c9fc8d",
+      "bytes": 37209
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a1ca87a16b4d83fde5ca81ab628c7e8fa2f225c713bb3b9281cab53e3f99e72b",
+      "bytes": 19400
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "40a7341132fd7d16a44aa97b41d63254a40c233b855f1285a558c7871ad52c4f",
+      "bytes": 26613
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "afd69ed4d2e42332dbc1935e0e65a706ae7ea91c82d9b0c3cd8a3693b0b66d0a",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "63189b57bcc69dba763f7fccd657d8195c03e25c4b976307e5467c12c631227c",
+      "bytes": 1144
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "67f4b747d67945bb1c0b692d90159f2c3f4f012f2ce629e6b49bf9aa366387ff",
+      "bytes": 1534
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "23d83a89-8f22-405a-aa33-74fd0ebde9d8",
+    "36de4683-cce3-4a01-820b-65ef8815747b",
+    "4080f6e4-e61c-4d3c-ab93-de74a1b5dfc2",
+    "47b15ce2-34c8-46e3-b2de-f7eed0b6a3b9",
+    "486c3132-9ff7-4e27-9eef-ca2e130bd827",
+    "519ca09b-9a85-4eec-8630-0d7aae5ac2da",
+    "5b7ecaf1-de2d-4fb9-9995-9f0665e77862",
+    "81a66e75-23af-4525-8a4e-f4a54c2700e7",
+    "94c4fc51-4323-4f06-a4a4-27517e190445",
+    "9fe18d8b-58b7-404d-bcc6-9e8a73b8862c",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "c8ca6c83-3197-4b19-af1c-b29d6f829c5f",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "ef44a995-6745-4dc7-86ab-f7227f108f81",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "@tracy/web",
+  "license": "MIT",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Tracy's own door: sign-in, the seat book, and the proxy into each host's dsh.",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.mjs",
+    "test:ci:1": "node --import tsx ../../scripts/ci/turbo-setup.mjs --check --task-part owner=apps/tracy-web:1/3",
+    "test:ci:2": "node --import tsx ../../scripts/ci/turbo-setup.mjs --check --task-part owner=apps/tracy-web:2/3",
+    "test:ci:3": "node --import tsx ../../scripts/ci/turbo-setup.mjs --check --task-part owner=apps/tracy-web:3/3"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "dependencies": {
+    "@hono/node-server": "2.1.1",
+    "acorn": "8.18.0",
+    "css-tree": "3.2.1",
+    "fflate": "0.8.3",
+    "hono": "4.13.11",
+    "impit": "0.14.7",
+    "papaparse": "5.5.3",
+    "parse5": "7.3.0",
+    "pdfjs-dist": "6.3.289",
+    "pg": "8.23.0",
+    "saxes": "6.0.0",
+    "sharp": "0.35.5",
+    "ssh2": "1.17.0",
+    "tinyld": "1.3.4",
+    "tldts": "7.4.11",
+    "ws": "8.21.3",
+    "yauzl": "3.4.0"
+  },
+  "devDependencies": {
+    "@scalar/api-reference": "1.73.1"
+  }
+}

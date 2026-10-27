@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-social-ii/j6/1.0.5",
+  "platform": "joomla",
+  "template": "ja_social_ii",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-social-ii",
+    "id": "quickstart/ja-social-ii/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_social_ii",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-social-ii-j6-webroot-1.0.5.tar.gz",
+        "bytes": 95966899,
+        "sha256": "00d7ee3a40d270e4f3e809eb468ddb003c66d0141ca1f6a6f76bbe039583e9af"
+      },
+      "database": {
+        "file": "ja-social-ii-j6-database-1.0.5.sql.gz",
+        "bytes": 85125,
+        "sha256": "dc687a953eeeb91e44bd2e089f474be0577e030278ffa993c5810b29ded50d4f"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-19T21:00:41.512Z",
+    "builtFrom": {
+      "from": "quickstart/ja-social-ii/j6@1.0.4",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 522 files replaced (templates/ja_social_ii/component.php, templates/ja_social_ii/error.php, templates/ja_social_ii/favicon.ico, templates/ja_social_ii/index.html, templates/ja_social_ii/index.php, templates/ja_social_ii/offline.php, templates/ja_social_ii/templateDetails.xml, templates/ja_social_ii/templateHook.php, templates/ja_social_ii/templateInfo.php, templates/ja_social_ii/template_preview.png, templates/ja_social_ii/template_thumbnail.png, templates/ja_social_ii/thememagic.xml, templates/ja_social_ii/acm, templates/ja_social_ii/css, templates/ja_social_ii/etc, templates/ja_social_ii/fonts, templates/ja_social_ii/html, templates/ja_social_ii/images, templates/ja_social_ii/js, templates/ja_social_ii/language, templates/ja_social_ii/less, templates/ja_social_ii/tpls); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-social-ii/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

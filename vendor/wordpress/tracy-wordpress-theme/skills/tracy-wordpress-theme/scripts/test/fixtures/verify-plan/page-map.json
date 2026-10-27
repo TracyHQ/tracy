@@ -1,0 +1,1051 @@
+{
+  "template": {
+    "name": "northgate-industrial",
+    "title": "Northgate Industrial",
+    "version": null
+  },
+  "theme": {
+    "mode": "light-primary",
+    "palette": {
+      "light": {
+        "primary": "#14483A",
+        "secondary": "#DA5A2A",
+        "body_bg": "rgb(245, 243, 238)",
+        "text": "rgb(20, 23, 26)"
+      },
+      "dark": {
+        "primary": "#7FBFA6",
+        "secondary": "#DA5A2A",
+        "body_bg": "rgb(16, 18, 20)",
+        "text": "rgb(236, 234, 228)"
+      }
+    },
+    "darkDerived": false,
+    "fonts": {
+      "body": "Archivo",
+      "heading": "Newsreader"
+    },
+    "hook": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "lightValue": "light",
+      "darkValue": "dark"
+    }
+  },
+  "templateParts": [
+    "header",
+    "footer"
+  ],
+  "locales": [
+    "en",
+    "ru"
+  ],
+  "defaultLocale": "en",
+  "pages": [
+    {
+      "file": "404.html",
+      "view": "404",
+      "layout": null,
+      "title": "We could not find that page",
+      "path": "/404",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/404_ru.html"
+      },
+      "source": {
+        "file": "404.html",
+        "page": "404",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "404-en-1",
+            "404-en-2"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "About.html",
+      "view": "page",
+      "layout": null,
+      "title": "Building Russian industrial infrastructure since 2004",
+      "path": "/about",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/About_ru.html"
+      },
+      "source": {
+        "file": "About.html",
+        "page": "about",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "about-en-2",
+            "about-en-3",
+            "about-en-4",
+            "about-en-5",
+            "about-en-6",
+            "about-en-7",
+            "about-en-8",
+            "about-en-9",
+            "about-en-10"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Article.html",
+      "view": "single",
+      "layout": null,
+      "title": "Four common mistakes in heavy machine foundation design",
+      "path": "/article",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Article_ru.html"
+      },
+      "source": {
+        "file": "Article.html",
+        "page": "article",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "article-en-2",
+            "article-en-3"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Careers.html",
+      "view": "page",
+      "layout": null,
+      "title": "Working at Northgate",
+      "path": "/careers",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Careers_ru.html"
+      },
+      "source": {
+        "file": "Careers.html",
+        "page": "careers",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "careers-en-2",
+            "careers-en-3",
+            "careers-en-4",
+            "careers-en-5",
+            "careers-en-6",
+            "careers-en-7",
+            "careers-en-8"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Contact.html",
+      "view": "page-contact",
+      "layout": null,
+      "title": "Contact",
+      "path": "/contact",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Contact_ru.html"
+      },
+      "source": {
+        "file": "Contact.html",
+        "page": "contact",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "contact-en-2",
+            "contact-en-3"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Email.html",
+      "view": "page-email",
+      "layout": null,
+      "title": "Transactional emails",
+      "path": "/email",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Email_ru.html"
+      },
+      "source": {
+        "file": "Email.html",
+        "page": "email",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": []
+    },
+    {
+      "file": "Form.html",
+      "view": "page-form",
+      "layout": null,
+      "title": "Form library",
+      "path": "/form",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Form_ru.html"
+      },
+      "source": {
+        "file": "Form.html",
+        "page": "form",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": []
+    },
+    {
+      "file": "Home.html",
+      "view": "front-page",
+      "layout": null,
+      "title": "Building the groundwork for next-generation plants",
+      "path": "/",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Home_ru.html"
+      },
+      "source": {
+        "file": "Home.html",
+        "page": "home",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "home-en-1",
+            "home-en-2",
+            "home-en-3",
+            "home-en-4",
+            "home-en-5",
+            "home-en-6",
+            "home-en-7"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Investor relations.html",
+      "view": "page",
+      "layout": null,
+      "title": "Investor and shareholder information",
+      "path": "/investor-relations",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Investor relations_ru.html"
+      },
+      "source": {
+        "file": "Investor relations.html",
+        "page": "investors",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "investor-relations-en-2",
+            "investor-relations-en-3",
+            "investor-relations-en-4",
+            "investor-relations-en-5",
+            "investor-relations-en-6",
+            "investor-relations-en-7",
+            "investor-relations-en-8",
+            "investor-relations-en-9",
+            "investor-relations-en-10"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "News.html",
+      "view": "home",
+      "layout": null,
+      "title": "News & engineering notes",
+      "path": "/news",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/News_ru.html"
+      },
+      "source": {
+        "file": "News.html",
+        "page": "blog",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "news-en-2",
+            "news-en-3"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Newsletter.html",
+      "view": "page-newsletter",
+      "layout": null,
+      "title": "Newsletter template",
+      "path": "/newsletter",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Newsletter_ru.html"
+      },
+      "source": {
+        "file": "Newsletter.html",
+        "page": "newsletter",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "newsletter-en-2",
+            "newsletter-en-3",
+            "newsletter-en-4"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Project detail.html",
+      "view": "page",
+      "layout": null,
+      "title": "Elektra appliance plant, Lipetsk SEZ",
+      "path": "/project-detail",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Project detail_ru.html"
+      },
+      "source": {
+        "file": "Project detail.html",
+        "page": "project",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "project-detail-en-2",
+            "project-detail-en-3",
+            "project-detail-en-4",
+            "project-detail-en-5"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Projects.html",
+      "view": "page",
+      "layout": null,
+      "title": "Facilities delivered turnkey",
+      "path": "/projects",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Projects_ru.html"
+      },
+      "source": {
+        "file": "Projects.html",
+        "page": "projects",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "projects-en-2",
+            "projects-en-3",
+            "projects-en-4",
+            "projects-en-5",
+            "projects-en-6",
+            "projects-en-7"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/404_ru.html",
+      "view": "404",
+      "layout": null,
+      "title": "Такая страница не найдена",
+      "path": "/ru/404",
+      "locale": "ru",
+      "translationOf": "404.html",
+      "translations": {
+        "en": "404.html"
+      },
+      "source": {
+        "file": "RU/404_ru.html",
+        "page": "404",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "404-ru-1",
+            "404-ru-2"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/About_ru.html",
+      "view": "page",
+      "layout": null,
+      "title": "Строим промышленную инфраструктуру России с 2004 года",
+      "path": "/ru/about",
+      "locale": "ru",
+      "translationOf": "About.html",
+      "translations": {
+        "en": "About.html"
+      },
+      "source": {
+        "file": "RU/About_ru.html",
+        "page": "about",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "about-ru-2",
+            "about-ru-3",
+            "about-ru-4",
+            "about-ru-5",
+            "about-ru-6",
+            "about-ru-7",
+            "about-ru-8",
+            "about-ru-9",
+            "about-ru-10"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Article_ru.html",
+      "view": "single",
+      "layout": null,
+      "title": "Четыре типичные ошибки в расчёте фундаментов под тяжёлые станки",
+      "path": "/ru/article",
+      "locale": "ru",
+      "translationOf": "Article.html",
+      "translations": {
+        "en": "Article.html"
+      },
+      "source": {
+        "file": "RU/Article_ru.html",
+        "page": "article",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "article-ru-2",
+            "article-ru-3"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Careers_ru.html",
+      "view": "page",
+      "layout": null,
+      "title": "Работа в «Норткейт»",
+      "path": "/ru/careers",
+      "locale": "ru",
+      "translationOf": "Careers.html",
+      "translations": {
+        "en": "Careers.html"
+      },
+      "source": {
+        "file": "RU/Careers_ru.html",
+        "page": "careers",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "careers-ru-2",
+            "careers-ru-3",
+            "careers-ru-4",
+            "careers-ru-5",
+            "careers-ru-6",
+            "careers-ru-7",
+            "careers-ru-8"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Contact_ru.html",
+      "view": "page-contact",
+      "layout": null,
+      "title": "Контакты",
+      "path": "/ru/contact",
+      "locale": "ru",
+      "translationOf": "Contact.html",
+      "translations": {
+        "en": "Contact.html"
+      },
+      "source": {
+        "file": "RU/Contact_ru.html",
+        "page": "contact",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "contact-ru-2",
+            "contact-ru-3"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Email_ru.html",
+      "view": "page-email",
+      "layout": null,
+      "title": "Транзакционные письма",
+      "path": "/ru/email",
+      "locale": "ru",
+      "translationOf": "Email.html",
+      "translations": {
+        "en": "Email.html"
+      },
+      "source": {
+        "file": "RU/Email_ru.html",
+        "page": "email",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": []
+    },
+    {
+      "file": "RU/Form_ru.html",
+      "view": "page-form",
+      "layout": null,
+      "title": "Библиотека форм",
+      "path": "/ru/form",
+      "locale": "ru",
+      "translationOf": "Form.html",
+      "translations": {
+        "en": "Form.html"
+      },
+      "source": {
+        "file": "RU/Form_ru.html",
+        "page": "form",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": []
+    },
+    {
+      "file": "RU/Home_ru.html",
+      "view": "front-page",
+      "layout": null,
+      "title": "Строим основание для заводов нового поколения",
+      "path": "/ru",
+      "locale": "ru",
+      "translationOf": "Home.html",
+      "translations": {
+        "en": "Home.html"
+      },
+      "source": {
+        "file": "RU/Home_ru.html",
+        "page": "home",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "home-ru-1",
+            "home-ru-2",
+            "home-ru-3",
+            "home-ru-4",
+            "home-ru-5",
+            "home-ru-6",
+            "home-ru-7"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Investor relations_ru.html",
+      "view": "page",
+      "layout": null,
+      "title": "Информация для акционеров и инвесторов",
+      "path": "/ru/investor-relations",
+      "locale": "ru",
+      "translationOf": "Investor relations.html",
+      "translations": {
+        "en": "Investor relations.html"
+      },
+      "source": {
+        "file": "RU/Investor relations_ru.html",
+        "page": "investors",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "investor-relations-ru-2",
+            "investor-relations-ru-3",
+            "investor-relations-ru-4",
+            "investor-relations-ru-5",
+            "investor-relations-ru-6",
+            "investor-relations-ru-7",
+            "investor-relations-ru-8",
+            "investor-relations-ru-9",
+            "investor-relations-ru-10"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/News_ru.html",
+      "view": "home",
+      "layout": null,
+      "title": "Новости и инженерные заметки",
+      "path": "/ru/news",
+      "locale": "ru",
+      "translationOf": "News.html",
+      "translations": {
+        "en": "News.html"
+      },
+      "source": {
+        "file": "RU/News_ru.html",
+        "page": "blog",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "news-ru-2",
+            "news-ru-3"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Newsletter_ru.html",
+      "view": "page-newsletter",
+      "layout": null,
+      "title": "Шаблон рассылки",
+      "path": "/ru/newsletter",
+      "locale": "ru",
+      "translationOf": "Newsletter.html",
+      "translations": {
+        "en": "Newsletter.html"
+      },
+      "source": {
+        "file": "RU/Newsletter_ru.html",
+        "page": "newsletter",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "newsletter-ru-2",
+            "newsletter-ru-3",
+            "newsletter-ru-4"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Project detail_ru.html",
+      "view": "page",
+      "layout": null,
+      "title": "Завод бытовой техники «Электра», ОЭЗ «Липецк»",
+      "path": "/ru/project-detail",
+      "locale": "ru",
+      "translationOf": "Project detail.html",
+      "translations": {
+        "en": "Project detail.html"
+      },
+      "source": {
+        "file": "RU/Project detail_ru.html",
+        "page": "project",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "project-detail-ru-2",
+            "project-detail-ru-3",
+            "project-detail-ru-4",
+            "project-detail-ru-5"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Projects_ru.html",
+      "view": "page",
+      "layout": null,
+      "title": "Объекты, сданные под ключ",
+      "path": "/ru/projects",
+      "locale": "ru",
+      "translationOf": "Projects.html",
+      "translations": {
+        "en": "Projects.html"
+      },
+      "source": {
+        "file": "RU/Projects_ru.html",
+        "page": "projects",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "projects-ru-2",
+            "projects-ru-3",
+            "projects-ru-4",
+            "projects-ru-5",
+            "projects-ru-6",
+            "projects-ru-7"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Search_ru.html",
+      "view": "search",
+      "layout": null,
+      "title": "Результаты поиска",
+      "path": "/ru/search",
+      "locale": "ru",
+      "translationOf": "Search.html",
+      "translations": {
+        "en": "Search.html"
+      },
+      "source": {
+        "file": "RU/Search_ru.html",
+        "page": "search",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": []
+    },
+    {
+      "file": "RU/Services_ru.html",
+      "view": "page",
+      "layout": null,
+      "title": "Генподряд полного цикла и отдельные этапы работ",
+      "path": "/ru/services",
+      "locale": "ru",
+      "translationOf": "Services.html",
+      "translations": {
+        "en": "Services.html"
+      },
+      "source": {
+        "file": "RU/Services_ru.html",
+        "page": "services",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "services-ru-2",
+            "services-ru-3",
+            "services-ru-4",
+            "services-ru-5",
+            "services-ru-6",
+            "services-ru-7"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Slide_ru.html",
+      "view": "page-slide",
+      "layout": null,
+      "title": "Презентации и слайды",
+      "path": "/ru/slide",
+      "locale": "ru",
+      "translationOf": "Slide.html",
+      "translations": {
+        "en": "Slide.html"
+      },
+      "source": {
+        "file": "RU/Slide_ru.html",
+        "page": "desk",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "slide-ru-2",
+            "slide-ru-3",
+            "slide-ru-4",
+            "slide-ru-5",
+            "slide-ru-6",
+            "slide-ru-7",
+            "slide-ru-8",
+            "slide-ru-9"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "RU/Style guide_ru.html",
+      "view": "page-style-guide",
+      "layout": null,
+      "title": "Стайлгайд и позиции модулей",
+      "path": "/ru/style-guide",
+      "locale": "ru",
+      "translationOf": "Style guide.html",
+      "translations": {
+        "en": "Style guide.html"
+      },
+      "source": {
+        "file": "RU/Style guide_ru.html",
+        "page": "guide",
+        "locale": "ru",
+        "rendered": true
+      },
+      "sections": []
+    },
+    {
+      "file": "Search.html",
+      "view": "search",
+      "layout": null,
+      "title": "Search results",
+      "path": "/search",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Search_ru.html"
+      },
+      "source": {
+        "file": "Search.html",
+        "page": "search",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": []
+    },
+    {
+      "file": "Services.html",
+      "view": "page",
+      "layout": null,
+      "title": "Full-cycle general contracting, or single stages",
+      "path": "/services",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Services_ru.html"
+      },
+      "source": {
+        "file": "Services.html",
+        "page": "services",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "services-en-2",
+            "services-en-3",
+            "services-en-4",
+            "services-en-5",
+            "services-en-6",
+            "services-en-7"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Slide.html",
+      "view": "page-slide",
+      "layout": null,
+      "title": "Presentations and slides",
+      "path": "/slide",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Slide_ru.html"
+      },
+      "source": {
+        "file": "Slide.html",
+        "page": "desk",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "slide-en-2",
+            "slide-en-3",
+            "slide-en-4",
+            "slide-en-5",
+            "slide-en-6",
+            "slide-en-7",
+            "slide-en-8",
+            "slide-en-9"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Style guide.html",
+      "view": "page-style-guide",
+      "layout": null,
+      "title": "Style guide & module positions",
+      "path": "/style-guide",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {
+        "ru": "RU/Style guide_ru.html"
+      },
+      "source": {
+        "file": "Style guide.html",
+        "page": "guide",
+        "locale": "en",
+        "rendered": true
+      },
+      "sections": []
+    },
+    {
+      "file": "category.html",
+      "view": "category",
+      "layout": null,
+      "title": "News & engineering notes",
+      "path": "/news",
+      "locale": "en",
+      "translationOf": null,
+      "translations": {},
+      "synthetic": true,
+      "source": {
+        "standsInFor": "News.html",
+        "reason": "the export has one listing page; the category archive shares its layout"
+      },
+      "sections": [
+        {
+          "position": "main",
+          "via": "dom",
+          "modules": [
+            "news-en-2",
+            "news-en-3"
+          ]
+        }
+      ]
+    }
+  ],
+  "menus": [
+    "tracy",
+    "topbar",
+    "footer-company",
+    "footer-contact",
+    "tracy-ru",
+    "topbar-ru",
+    "footer-company-ru",
+    "footer-contact-ru"
+  ],
+  "source": {
+    "kind": "canvas-export",
+    "path": "/Users/you/TracyHQ/TCH/vendor/joomla/company_website",
+    "shape": "C (Claude Design canvas export)",
+    "rendered": true
+  },
+  "reference": "reference.json",
+  "provenance": "provenance.json"
+}

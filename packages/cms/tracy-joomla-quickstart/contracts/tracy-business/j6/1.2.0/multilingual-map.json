@@ -1,0 +1,2030 @@
+{
+  "schemaVersion": "tracy-quickstart-multilingual/v1",
+  "extensionVersion": "1.1.0",
+  "contract": "tracy-business/j6/1.2.0",
+  "baseHash": "d2f043d20deb6510aeb1f3867641d579801d499f60c67c72eb3efd3c747171b5",
+  "baseFiles": {
+    "manifest.json": "8a027d2d0b67cfea1d3213e20d828380511d8d8ce396756ecf2f63619e4626d7",
+    "content-map.json": "7f1a7f0b641907a999c847a8a387cb5e936c437d184572a4d59a479e79a9a4ce",
+    "presentation-lock.json": "9bf6afbe55baca6c9499730397a9d6c42baa0cb595776b652a2e997bb382a355"
+  },
+  "sourceLanguage": "en-GB",
+  "derive": {
+    "article": {
+      "create": "row",
+      "carry": [
+        "catid",
+        "state",
+        "featured",
+        "access",
+        "ordering",
+        "publish_up",
+        "publish_down",
+        "images",
+        "urls",
+        "attribs",
+        "metadata",
+        "metadesc",
+        "metakey"
+      ],
+      "translate": [
+        "title",
+        "introtext",
+        "fulltext"
+      ],
+      "alias": "source-sef",
+      "association": "articleAssociation"
+    },
+    "module": {
+      "create": "row",
+      "carry": [
+        "module",
+        "position",
+        "ordering",
+        "published",
+        "showtitle",
+        "access",
+        "client_id",
+        "publish_up",
+        "publish_down"
+      ],
+      "translate": [
+        "content",
+        "params",
+        "title"
+      ],
+      "hiddenTitle": "{source} [{locale}]",
+      "note": "tracy-ml:{sourceKey}:{locale}",
+      "assignments": "map"
+    },
+    "menuItem": {
+      "create": "nested",
+      "carry": [
+        "menutype",
+        "type",
+        "browserNav",
+        "access",
+        "published",
+        "params",
+        "template_style_id",
+        "component_id"
+      ],
+      "translate": [
+        "title"
+      ],
+      "alias": "source",
+      "parent": "map",
+      "link": "remap-ids",
+      "home": "mirror",
+      "note": "tracy-ml:{sourceKey}:{locale}",
+      "association": "menuAssociation"
+    }
+  },
+  "aliasPolicy": "shared-with-source",
+  "sourceDelta": {
+    "language": {
+      "from": "*",
+      "to": "en-GB",
+      "entities": [
+        "module-428",
+        "module-430",
+        "module-432",
+        "module-434",
+        "module-435",
+        "module-436",
+        "module-437",
+        "module-438",
+        "module-439",
+        "module-441",
+        "module-442",
+        "module-443",
+        "module-444",
+        "module-445",
+        "module-446",
+        "module-447",
+        "module-611",
+        "module-612",
+        "module-613",
+        "module-665",
+        "module-666",
+        "module-667",
+        "module-668",
+        "module-674",
+        "module-675",
+        "module-676",
+        "module-677",
+        "module-678",
+        "module-679",
+        "module-680",
+        "module-681",
+        "module-682",
+        "module-683",
+        "module-684",
+        "module-685",
+        "module-686",
+        "module-687",
+        "module-688",
+        "module-809",
+        "module-810",
+        "module-811",
+        "module-812",
+        "module-813",
+        "module-814",
+        "module-815",
+        "module-816",
+        "module-817",
+        "module-818",
+        "module-819",
+        "module-820",
+        "module-821",
+        "module-822",
+        "module-837",
+        "module-838",
+        "module-839",
+        "module-840",
+        "module-841",
+        "module-842",
+        "module-843",
+        "module-844",
+        "module-845",
+        "module-846",
+        "module-847",
+        "module-848",
+        "module-849",
+        "module-850",
+        "module-851",
+        "module-852",
+        "module-853",
+        "module-854",
+        "module-855",
+        "module-856",
+        "module-857",
+        "module-858",
+        "module-859",
+        "module-860",
+        "article-546",
+        "article-547",
+        "article-548",
+        "article-549",
+        "article-550",
+        "article-551",
+        "article-552",
+        "article-553",
+        "article-554",
+        "article-555",
+        "article-556",
+        "article-557",
+        "article-558",
+        "article-559",
+        "article-560",
+        "article-561",
+        "article-562",
+        "article-563",
+        "article-564",
+        "article-565",
+        "article-566",
+        "article-658",
+        "article-659",
+        "article-660",
+        "article-661",
+        "article-662",
+        "article-663",
+        "article-694",
+        "article-695",
+        "article-696",
+        "article-697",
+        "article-726",
+        "article-727",
+        "article-728",
+        "article-729",
+        "article-730",
+        "article-731",
+        "article-732",
+        "article-733",
+        "article-734",
+        "article-735",
+        "article-736",
+        "article-737",
+        "menuItem-599",
+        "menuItem-600",
+        "menuItem-601",
+        "menuItem-602",
+        "menuItem-603",
+        "menuItem-604",
+        "menuItem-605",
+        "menuItem-606",
+        "menuItem-607",
+        "menuItem-608",
+        "menuItem-609",
+        "menuItem-610",
+        "menuItem-611",
+        "menuItem-612",
+        "menuItem-613",
+        "menuItem-614",
+        "menuItem-615",
+        "menuItem-616",
+        "menuItem-617",
+        "menuItem-618",
+        "menuItem-619",
+        "menuItem-620",
+        "menuItem-621",
+        "menuItem-622",
+        "menuItem-623",
+        "menuItem-624",
+        "menuItem-625",
+        "menuItem-626",
+        "menuItem-627",
+        "menuItem-628",
+        "menuItem-629",
+        "menuItem-630",
+        "menuItem-631",
+        "menuItem-695",
+        "menuItem-696",
+        "menuItem-697",
+        "menuItem-698",
+        "menuItem-699"
+      ]
+    }
+  },
+  "policies": {
+    "category-253": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-254": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-255": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-256": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-257": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-258": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-259": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-260": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-261": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-262": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-263": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-265": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-266": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-267": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-268": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-269": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-270": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-271": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-272": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-273": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-274": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-275": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-305": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-306": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-319": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-320": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-321": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-322": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-323": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-324": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-325": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-326": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-327": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-328": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-329": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "category-330": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-425": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row stays at language '*' on an archive that already publishes en-GB and ru-RU. Joomla filters `language IN (tag, '*')`, so one row already renders on every edition; pulling it to en-GB so it could be copied would take it off the ru-RU pages it serves today"
+    },
+    "module-426": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row stays at language '*' on an archive that already publishes en-GB and ru-RU. Joomla filters `language IN (tag, '*')`, so one row already renders on every edition; pulling it to en-GB so it could be copied would take it off the ru-RU pages it serves today"
+    },
+    "module-427": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row stays at language '*' on an archive that already publishes en-GB and ru-RU. Joomla filters `language IN (tag, '*')`, so one row already renders on every edition; pulling it to en-GB so it could be copied would take it off the ru-RU pages it serves today"
+    },
+    "module-428": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-429": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "mod_menu renders rows Joomla itself filters by the active language and shows no fixed copy (showtitle is off), so one module serves every language"
+    },
+    "module-430": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-431": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "mod_menu renders rows Joomla itself filters by the active language and shows no fixed copy (showtitle is off), so one module serves every language"
+    },
+    "module-432": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-433": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "mod_ja_acm renders rows Joomla itself filters by the active language and shows no fixed copy (showtitle is off), so one module serves every language"
+    },
+    "module-434": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-435": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-436": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-437": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-438": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-439": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-440": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "mod_menu renders rows Joomla itself filters by the active language and shows no fixed copy (showtitle is off), so one module serves every language"
+    },
+    "module-441": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-442": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-443": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-444": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-445": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-446": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-447": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-448": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-449": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-450": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-451": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-452": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-453": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-454": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-455": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-456": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-457": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-458": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-459": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-460": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-461": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-462": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-463": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-464": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-465": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-466": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-467": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-611": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-612": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-613": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-614": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-615": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-616": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-665": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-666": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-667": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-668": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-669": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-670": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-671": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-672": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-673": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "mod_custom renders rows Joomla itself filters by the active language and shows no fixed copy (showtitle is off), so one module serves every language"
+    },
+    "module-674": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-675": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-676": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-677": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-678": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-679": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-680": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-681": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-682": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-683": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-684": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-685": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-686": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-687": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-688": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-689": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-690": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-691": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-692": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-693": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-694": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-695": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-696": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-697": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-698": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-699": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-700": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-701": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-702": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-703": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-704": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-809": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-810": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-811": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-812": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-813": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-814": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-815": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-816": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-817": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-818": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-819": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-820": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-821": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-822": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-823": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-824": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-825": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-826": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-827": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-828": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-829": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-830": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-831": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-832": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-833": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-834": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-835": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-836": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-837": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-838": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-839": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-840": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-841": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-842": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-843": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-844": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-845": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-846": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-847": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-848": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-849": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-850": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-851": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-852": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-853": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-854": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-855": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-856": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-857": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-858": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-859": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-860": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-861": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-862": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-863": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-864": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-865": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-866": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-867": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-868": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-869": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-870": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-871": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-872": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-873": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-874": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-875": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-876": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-877": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-878": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-879": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-880": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-881": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-882": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-883": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-884": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "module-4369": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "This row stays at language '*' on an archive that already publishes en-GB and ru-RU. Joomla filters `language IN (tag, '*')`, so one row already renders on every edition; pulling it to en-GB so it could be copied would take it off the ru-RU pages it serves today"
+    },
+    "article-546": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-547": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-548": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-549": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-550": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-551": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-552": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-553": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-554": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-555": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-556": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-557": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-558": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-559": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-560": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-561": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-562": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-563": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-564": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-565": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-566": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-567": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-568": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-569": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-570": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-571": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-572": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-573": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-574": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-575": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-576": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-577": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-578": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-579": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-580": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-581": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-582": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-583": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-584": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-585": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-586": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-587": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-658": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-659": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-660": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-661": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-662": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-663": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-664": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-665": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-666": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-667": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-668": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-669": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-694": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-695": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-696": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-697": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-698": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-699": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-700": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-701": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-726": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-727": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-728": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-729": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-730": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-731": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-732": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-733": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-734": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-735": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-736": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-737": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-738": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-739": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-740": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-741": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-742": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-743": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-744": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-745": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-746": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-747": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-748": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "article-749": {
+      "kind": "article",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-596": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row stays at language '*' on an archive that already publishes en-GB and ru-RU. Joomla filters `language IN (tag, '*')`, so one row already renders on every edition; pulling it to en-GB so it could be copied would take it off the ru-RU pages it serves today"
+    },
+    "menuItem-597": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row stays at language '*' on an archive that already publishes en-GB and ru-RU. Joomla filters `language IN (tag, '*')`, so one row already renders on every edition; pulling it to en-GB so it could be copied would take it off the ru-RU pages it serves today"
+    },
+    "menuItem-599": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-600": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-601": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-602": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-603": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-604": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-605": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-606": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-607": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-608": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-609": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-610": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-611": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-612": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-613": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-614": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-615": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-616": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-617": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-618": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-619": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-620": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-621": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-622": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-623": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-624": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-625": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-626": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-627": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-628": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-629": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-630": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-631": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-632": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-633": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-634": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-635": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-636": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-637": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-638": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-639": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-640": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-641": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-642": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-643": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-644": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-645": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-646": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-647": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-648": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-649": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-650": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-651": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-652": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-653": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-654": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-655": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-656": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-657": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-658": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-659": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-660": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-661": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-662": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-663": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-664": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-695": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-696": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-697": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-698": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-699": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-700": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-701": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-702": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-703": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "menuItem-704": {
+      "kind": "menuItem",
+      "policy": "shared",
+      "reason": "This row belongs to the ru-RU edition the archive AUTHORED, not to a translation of en-GB. Its words carry facts the source does not hold — the archive's ru-RU rows name their own legal identifiers, clients and address — so a receiver must never derive, overwrite or re-key them, and a second copy of them in a new language would put two editions of the same block on one page"
+    },
+    "templateStyle-119": {
+      "kind": "templateStyle",
+      "policy": "shared",
+      "reason": "A template style is presentation, shared by every language and locked by the base contract"
+    },
+    "templateStyle-120": {
+      "kind": "templateStyle",
+      "policy": "shared",
+      "reason": "A template style is presentation, shared by every language and locked by the base contract"
+    }
+  },
+  "switcher": {
+    "module": "mod_languages",
+    "position": "language-switcher",
+    "anchorEntity": "module-425",
+    "language": "*",
+    "showtitle": "0",
+    "access": "1",
+    "published": "1",
+    "ordering": "1",
+    "assignment": "all",
+    "note": "tb:pilot",
+    "params": {
+      "header_text": "",
+      "footer_text": "",
+      "dropdown": 0,
+      "dropdownimage": 1,
+      "image": 1,
+      "inline": 1,
+      "show_active": 1,
+      "full_name": 1,
+      "layout": "tracy_business:tb",
+      "cache": 0
+    }
+  },
+  "languageFilter": {
+    "element": "languagefilter",
+    "folder": "system",
+    "enabled": 1,
+    "params": {
+      "item_associations": 1,
+      "detect_browser": 0,
+      "automatic_change": 0,
+      "remove_default_prefix": 0,
+      "lang_cookie": 0,
+      "alternate_meta": 1,
+      "xdefault": 1,
+      "xdefault_language": "en-GB"
+    }
+  },
+  "contentLanguage": {
+    "published": "1",
+    "access": "1",
+    "image": "{sef}"
+  },
+  "unsupported": [
+    {
+      "scope": "category",
+      "effect": "Category titles and descriptions stay in the source language wherever Joomla renders them directly: breadcrumbs on a category route, and the section list of the Magazine sidebar module.",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    {
+      "scope": "menu:tracy-utility",
+      "effect": "The utility menu Joomla ships for account, contact and newsfeed routes is outside the contract inventory. Those routes keep one menu item for every language; their component views translate themselves from the installed language pack, but the menu item titles stay in the source language. No module renders this menu, so the titles are not on a page.",
+      "reason": "Not identified by the published 1.1.0 contract, which covers the `tracy` menu only"
+    },
+    {
+      "scope": "article:archived",
+      "effect": "Archived articles keep their state and get no translation.",
+      "reason": "Not identified by the published 1.1.0 contract, which covers published articles only"
+    },
+    {
+      "scope": "acm-layout-defaults",
+      "effect": "Copy written into a template ACM layout as the fallback for an empty module parameter renders in the source language on every page, translated or not. Measured 12/09/2026 on the Apple quickstart home page: 33 of 180 visible lines, among them the three feature cards and the four statistic labels.",
+      "reason": "These strings are not content slots in the published 1.1.0 contract — grep the content map and they are absent — so they cannot be edited in the SOURCE language either. They live in `templates/tracy/acm/*/tmpl/style-1.php`, which the presentation lock hash-locks as design. Reaching them is a change to the contract or to the template, not to this extension."
+    },
+    {
+      "scope": "text-in-images",
+      "effect": "Words baked into an image stay in the source language.",
+      "reason": "The contract carries image paths, not image content, and Tracy does not redraw customer artwork"
+    },
+    {
+      "scope": "menuItem:type=url",
+      "effect": "A menu item linking to a raw site path keeps that path. When the path names a source-language route the switcher still reaches the source page.",
+      "reason": "A raw path is not an entity reference the receiver can remap with proof"
+    },
+    {
+      "scope": "edition:ru-RU",
+      "effect": "The archive's own ru-RU edition is left exactly as published and gets no copy in the new language. Its pages keep serving ru-RU visitors unchanged.",
+      "reason": "Those rows are authored content, not a translation of the source: they carry legal identifiers, client names and an address the source language does not hold, so nothing here can derive or check them"
+    },
+    {
+      "scope": "article:metadesc (article-551)",
+      "effect": "1 article ships a hand-written meta description, and the copy carries it in the SOURCE language. The translated page's own words are translated; the sentence a search engine quotes is not.",
+      "reason": "`metadesc` is not a content slot of the published contract, so it is carried rather than translated; dropping it from the copy would make the copy differ from the expectation `inspect()` computes from the source row"
+    },
+    {
+      "scope": "entity:language=*",
+      "effect": "Rows the archive left at '*' — menuItem-596, menuItem-597, module-425, module-426, module-427, module-4369 — render on the new language's pages in the source language.",
+      "reason": "Joomla filters `language IN (tag, '*')`, so one row already serves every edition; pulling it to the source language so it could be copied would remove it from the editions the archive publishes today"
+    }
+  ],
+  "counts": {
+    "translate": 157,
+    "shared": 211,
+    "total": 368
+  }
+}

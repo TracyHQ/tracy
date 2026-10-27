@@ -1,0 +1,35 @@
+---
+/**
+ * Renders trusted plugin fragments at the end of <body>.
+ *
+ * Usage:
+ * ```astro
+ * <body>
+ *   <slot />
+ *   <EmDashBodyEnd page={page} />
+ * </body>
+ * ```
+ */
+import type { PublicPageContext } from "../plugins/types.js";
+import { renderFragments } from "../page/fragments.js";
+import { getPageRuntime } from "../page/index.js";
+import { resolveSeoPanelPage } from "../page/seo-contributions.js";
+
+interface Props {
+	page: PublicPageContext;
+}
+
+const { page } = Astro.props;
+const runtime = getPageRuntime(Astro.locals as Record<string, unknown>);
+
+let html = "";
+
+if (runtime) {
+	// Same SEO panel overlay as <EmDashHead>, so body fragment hooks see
+	// the identical page context as head hooks (a request-cache read).
+	const contributions = await runtime.collectPageFragments(await resolveSeoPanelPage(page));
+	html = renderFragments(contributions, "body:end");
+}
+---
+
+<Fragment set:html={html} />

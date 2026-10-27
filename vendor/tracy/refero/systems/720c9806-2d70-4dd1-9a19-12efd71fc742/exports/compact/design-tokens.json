@@ -1,0 +1,114 @@
+{
+  "color": {
+    "void-canvas": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Void Canvas — Primary page background, dominant surface beneath all content"
+    },
+    "obsidian-deep": {
+      "$value": "#090909",
+      "$type": "color",
+      "$description": "Obsidian Deep — Deepest layer — nav overlays, announcement bar background"
+    },
+    "charcoal-surface": {
+      "$value": "#1e1e1d",
+      "$type": "color",
+      "$description": "Charcoal Surface — Footer background, slightly elevated surface above canvas"
+    },
+    "iron-surface": {
+      "$value": "#353534",
+      "$type": "color",
+      "$description": "Iron Surface — Raised card surfaces, pill button backgrounds, interactive containers"
+    },
+    "graphite-lift": {
+      "$value": "#2f2f2f",
+      "$type": "color",
+      "$description": "Graphite Lift — Nav borders, filled dark button backgrounds — the primary interactive fill"
+    },
+    "slate-hover": {
+      "$value": "#40403f",
+      "$type": "color",
+      "$description": "Slate Hover — Hover-state surfaces, slightly elevated overlays"
+    },
+    "ash-text": {
+      "$value": "#868684",
+      "$type": "color",
+      "$description": "Ash Text — Secondary body text, muted link text, hairline borders"
+    },
+    "fog-text": {
+      "$value": "#afaeac",
+      "$type": "color",
+      "$description": "Fog Text — Tertiary body text, disabled or de-emphasized labels"
+    },
+    "smoke-text": {
+      "$value": "#e3e2e0",
+      "$type": "color",
+      "$description": "Smoke Text — Announcement bar text, code snippet text, subheadings at reduced emphasis"
+    },
+    "warm-white": {
+      "$value": "#faf9f6",
+      "$type": "color",
+      "$description": "Warm White — Highest-contrast text on dark backgrounds, filled light button backgrounds"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Nav background on scroll, download button fill, icon fills"
+    },
+    "terminal-sage": {
+      "$value": "#799c92",
+      "$type": "color",
+      "$description": "Terminal Sage — Gray outline accent for tags, dividers, and focused UI edges."
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "matter": {
+      "$value": "Matter",
+      "$type": "fontFamily",
+      "$description": "The system's primary voice — all headings, body copy, buttons, and nav labels. Custom OpenType features give characters precision-cut angles not present in generic alternatives. Negative tracking scales from -0.04em at 64px down to -0.01em at 20px, tightening the display headline into a monolithic slab. Weight 400 handles everything from captions to large headlines — 600 is used sparingly for emphasis."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary UI text — appears in body descriptions and headings within the product UI screenshot. Carries the same OpenType features as Matter to maintain visual harmony. Used when Matter is unavailable in an embedded context."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Terminal commands and code snippets — 'brew install --cask warp' displayed in the hero. Monospaced rendering reinforces the product's terminal identity."
+    },
+    "matter-mono-regular": {
+      "$value": "Matter Mono Regular",
+      "$type": "fontFamily",
+      "$description": "Inline code and terminal output text within prose contexts — distinct from Geist Mono by its custom optical tuning matching the Matter family."
+    },
+    "matter-regular": {
+      "$value": "Matter Regular",
+      "$type": "fontFamily",
+      "$description": "Matter Regular — detected in extracted data but not described by AI"
+    },
+    "matter-medium": {
+      "$value": "Matter Medium",
+      "$type": "fontFamily",
+      "$description": "Matter Medium — detected in extracted data but not described by AI"
+    },
+    "dm-mono": {
+      "$value": "DM Mono",
+      "$type": "fontFamily",
+      "$description": "DM Mono — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://warp.dev/terminal",
+      "siteName": "Warp",
+      "extractedAt": "2026-04-29T22:17:57.634Z",
+      "variant": "compact"
+    }
+  }
+}

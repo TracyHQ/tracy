@@ -1,0 +1,56 @@
+#!/bin/sh
+# Give one freshly installed demo an nginx server block of its own, then reload.
+#
+# WHY THIS EXISTS AND WHY IT IS SEPARATE. `tracy-demo-provision` runs as the site user, which owns
+# the docroot and nothing else — it cannot write nginx's config and must not be able to. This is
+# the one root thing an install needs, so it is the one root thing reachable, through a sudoers
+# line naming this path and no other.
+#
+# 🔒 WHY A BLOCK AT ALL. The catch-all regex vhost serves every demo through `jademo_fpm81`, and
+# Joomla 6 refuses PHP 8.1 outright: measured 16/09 — a demo installed without this answers HTTP
+# 200 with the page "Joomla: unsupported PHP version", which looks like a working site to anything
+# that only checks a status code. JoomlArt's own convention is already this: seven of their demos
+# carry a per-site file pinning `jademo_fpm83`. This copies that convention rather than inventing one.
+#
+# It writes ONE file, from a template, for a name it has checked — and refuses to touch a file that
+# already exists, because a hand-tuned block for a live demo is not this script's to rewrite.
+set -eu
+
+CONF_DIR=/data/webserver/nginx/conf/site-enabled
+TEMPLATE=/etc/tracy/demo-vhost.conf.template
+NGINX=/data/webserver/nginx/sbin/nginx
+ZONE=demo.joomlart.com
+
+slug=${1:-}
+case "$slug" in
+  '') echo "refused: needs a demo name" >&2; exit 2 ;;
+  *[!a-z0-9-]*) echo "refused: a demo name is lower case, digits and dashes — got '$slug'" >&2; exit 2 ;;
+  -*) echo "refused: a demo name does not start with a dash" >&2; exit 2 ;;
+esac
+[ -f "$TEMPLATE" ] || { echo "refused: no vhost template at $TEMPLATE" >&2; exit 2; }
+
+target=$CONF_DIR/$slug.$ZONE.conf
+# ⚠ ALREADY THERE IS DONE, NOT REFUSED. Not rewriting an existing block stays right — it may have
+# been hand-tuned and is not this script's to overwrite — but saying so with a failure broke a
+# `replace` that had otherwise succeeded end to end (measured 17/09: the site was installed, the
+# banner written, and the whole run reported as failed on the one step with nothing to do). The
+# block is derived from the name and a fixed template, so an existing one is the desired state.
+if [ -e "$target" ]; then
+  echo "vhost $slug.$ZONE already present — left as it is"
+  exit 0
+fi
+[ -d "/data/www/site.demo.joomlart.com/public_html/$slug" ] ||
+  { echo "refused: there is no demo called $slug to serve" >&2; exit 2; }
+
+sed "s/@SLUG@/$slug/g" "$TEMPLATE" > "$target.new"
+mv "$target.new" "$target"
+
+# Test BEFORE reload, and take the new file back out if it does not hold: a broken config here
+# stops 459 demos, not one.
+if ! "$NGINX" -t >/dev/null 2>&1; then
+  rm -f "$target"
+  echo "refused: that block did not pass nginx -t — removed it again" >&2
+  exit 2
+fi
+"$NGINX" -s reload
+echo "vhost $slug.$ZONE on php83"

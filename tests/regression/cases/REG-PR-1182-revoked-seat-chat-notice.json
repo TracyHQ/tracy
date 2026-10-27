@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-1182-revoked-seat-chat-notice",
+  "kind": "fix",
+  "title": "A seat revoked while its page is open gets a localized notice, a way to My Sites and an inert composer that keeps its layout",
+  "pr": 1182,
+  "area": "chat-input/seat",
+  "cms": ["any"],
+  "needs": ["stand", "seat:editor", "viewport:360"],
+  "flaky_model": false,
+  "steps": [
+    "S1: As B (editor of the test site) open $O/<site>/ in a 360x800 mobile context and wait for [data-composer-input=\"true\"]; click it and type a two-line sentence (about 100 characters). Read the composer card [data-slot=\"conversation.composer.bar\"] [data-composer-card]: its data-tc-draft attribute and the width of [data-composer-input].",
+    "S2: As A (owner) revoke B: GET /api/team, take B's seat id, then DELETE /api/sites/<site>/seats/<id> with body {\"kind\":\"revoke\"} (Origin = $O).",
+    "S3: In B's page press Enter in the composer, wait 8 s, then read [data-viewer-bar=\"removed\"]: visible, its <a> href, the composer card's inert property, and the draft text.",
+    "S4: Repeat S1-S3 at 1440x900 after inviting B again (POST /api/team/invite role editor, then POST /api/sites/<site>/accept as B)."
+  ],
+  "expect": [
+    "S1: data-tc-draft = own-row; the draft is at least 200 px wide (never a sliver beside the + and role chip).",
+    "S2: 200 {\"revoked\":true,...}.",
+    "S3: the bar is visible with the seat.removed text in the page language, its link href = /new/?tab=tracy:my-sites, the card is inert (true), the draft text is unchanged.",
+    "S4: same as S3; the draft row spans the card above + / role chip / send."
+  ],
+  "selectors": {
+    "bar": "[data-viewer-bar=\"removed\"]",
+    "card": "[data-slot=\"conversation.composer.bar\"] [data-composer-card]",
+    "draftMode": "[data-composer-card][data-tc-draft]",
+    "doors": "DELETE /api/sites/:key/seats/:id, GET /api/team"
+  },
+  "evidence": "e2e 04/10 J7.8 (tasks/evidence/e2e-full-dev/2026-10-04/R-wp/bugs/J7.8-D-ui.md): a revoked seat's message went nowhere with no word on screen, the draft squeezed into a narrow column; after the fix tasks/evidence/tracy-site-sweep/L3/J7.8/",
+  "fence": "createSeatRole marks the seat removed when a read that had the site's row finds it gone (every send re-reads); SeatBar draws RemovedBar and makes the composer inert; draftLayout gives the draft its own row below the 160 px floor",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/seat-role-live.test.mjs",
+      "test/composer-chips.test.mjs",
+      "test/viewer-bar.test.mjs"
+    ],
+    "cwd": "packages/ui/tracy-chat-input",
+    "tests": [
+      "a row that vanishes after the page had it marks the seat removed",
+      "a first read without the row is not a removal",
+      "a seat invited again after removal is no longer removed",
+      "the draft takes its own row when the controls beside it leave less than the draft floor"
+    ]
+  }
+}

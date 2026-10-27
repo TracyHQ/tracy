@@ -1,0 +1,7 @@
+{
+	"verdict": "pass",
+	"maxRiskScore": 0,
+	"categories": [],
+	"images": "fail",
+	"imageCategories": ["nsfw"]
+}

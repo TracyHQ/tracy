@@ -1,0 +1,243 @@
+{
+  "note": "JA Fresco Joomla 1.0.3 (quickstart/ja-fresco/j6), built from 1.0.2 by release-batch.mjs build --replace: nine blog articles of category 9 get distinct publish_up (they tied, PAGE-2); the demo links that led to # lead to Menu (Itemid 128), Contact (117) or Chiefs (126) by their words (PAGE-5): the ACM buttons and Happy Hours links (nested pairs in jatools-config), the footer Book button (module 134 HTML) and the Reservation Policy menu item (118).",
+  "edits": [
+    {
+      "entity": "article-2",
+      "field": "publish_up",
+      "whole": true,
+      "from": "2024-01-18 02:49:47",
+      "to": "2024-01-18 02:48:47",
+      "count": 1
+    },
+    {
+      "entity": "article-3",
+      "field": "publish_up",
+      "whole": true,
+      "from": "2024-01-18 02:49:47",
+      "to": "2024-01-18 02:47:47",
+      "count": 1
+    },
+    {
+      "entity": "article-4",
+      "field": "publish_up",
+      "whole": true,
+      "from": "2024-01-18 02:49:47",
+      "to": "2024-01-18 02:46:47",
+      "count": 1
+    },
+    {
+      "entity": "article-5",
+      "field": "publish_up",
+      "whole": true,
+      "from": "2024-01-18 02:49:47",
+      "to": "2024-01-18 02:45:47",
+      "count": 1
+    },
+    {
+      "entity": "article-6",
+      "field": "publish_up",
+      "whole": true,
+      "from": "2024-01-18 02:49:47",
+      "to": "2024-01-18 02:44:47",
+      "count": 1
+    },
+    {
+      "entity": "article-7",
+      "field": "publish_up",
+      "whole": true,
+      "from": "2024-01-18 02:49:47",
+      "to": "2024-01-18 02:43:47",
+      "count": 1
+    },
+    {
+      "entity": "article-8",
+      "field": "publish_up",
+      "whole": true,
+      "from": "2024-01-18 02:49:47",
+      "to": "2024-01-18 02:42:47",
+      "count": 1
+    },
+    {
+      "entity": "article-9",
+      "field": "publish_up",
+      "whole": true,
+      "from": "2024-01-18 02:49:47",
+      "to": "2024-01-18 02:41:47",
+      "count": 1
+    },
+    {
+      "entity": "article-10",
+      "field": "publish_up",
+      "whole": true,
+      "from": "2024-01-18 02:49:47",
+      "to": "2024-01-18 02:40:47",
+      "count": 1
+    },
+    {
+      "entity": "module-112",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"hero[btn-link]\":[\"#\"]",
+      "to": "\"hero[btn-link]\":[\"index.php?Itemid=128\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-112",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"hero[btn-link-2]\":[\"#\"]",
+      "to": "\"hero[btn-link-2]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-137",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"features-intro[btn-link]\":[\"#\"]",
+      "to": "\"features-intro[btn-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-138",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"features-intro[btn-link]\":[\"#\"]",
+      "to": "\"features-intro[btn-link]\":[\"index.php?Itemid=126\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-140",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"features-intro[btn-link]\":[\"#\"]",
+      "to": "\"features-intro[btn-link]\":[\"index.php?Itemid=128\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-141",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"features-intro[btn-link]\":[\"#\"]",
+      "to": "\"features-intro[btn-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-142",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"features-intro[btn-link]\":[\"#\"]",
+      "to": "\"features-intro[btn-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-143",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"featured-4[button-link]\":[\"#\"]",
+      "to": "\"featured-4[button-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-144",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"features-intro[btn-link]\":[\"#\"]",
+      "to": "\"features-intro[btn-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-147",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"featured-4[button-link]\":[\"#\"]",
+      "to": "\"featured-4[button-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-156",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"features-intro[btn-link]\":[\"#\"]",
+      "to": "\"features-intro[btn-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-172",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"slideshow[order-btn-link]\":[\"#\"]",
+      "to": "\"slideshow[order-btn-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-169",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"happyhours[hp-link]\":[\"#\"]",
+      "to": "\"happyhours[hp-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-170",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"happyhours[hp-link]\":[\"#\"]",
+      "to": "\"happyhours[hp-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-171",
+      "field": "params",
+      "row": true,
+      "json": true,
+      "nested": true,
+      "from": "\"happyhours[hp-link]\":[\"#\"]",
+      "to": "\"happyhours[hp-link]\":[\"index.php?Itemid=117\"]",
+      "count": 1
+    },
+    {
+      "entity": "module-134",
+      "field": "content",
+      "row": true,
+      "from": "#",
+      "to": "index.php?Itemid=117",
+      "count": 1
+    },
+    {
+      "entity": "menuItem-118",
+      "field": "link",
+      "whole": true,
+      "from": "#",
+      "to": "index.php?Itemid=117",
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "REG-043",
+  "kind": "feat",
+  "title": "A comment sent to Tracy is resolved as Tracy when a write cites its latest send; a reply reopens it; Ask Tracy to edit all leaves a sent, unchanged comment unticked with Sent hh:mm; the chat report lists it",
+  "pr": 822,
+  "area": "comments/auto-resolve",
+  "cms": ["wp", "jo"],
+  "needs": ["stand", "model"],
+  "flaky_model": true,
+  "steps": [
+    "S0: Common setup (tests/regression/README.md). Site S = the WordPress test site (scv2wp.<stand domain>), P = its page origin as its comments carry it (e.g. http://scv2wp.scv2.tracy.test:34080). Pick a published post id PID and its exact title T from the site's database (read only).",
+    "S1: api a POST /api/sites/$S/comments '{\"text\":\"[REG-043] probe\",\"url\":\"$P/\",\"element\":null}' → keep comment.id as C.",
+    "S2: api a POST /api/sites/$S/requests '{\"sessionId\":\"reg023-<ms>\",\"requestId\":\"r-<ms>\",\"items\":[{\"url\":\"$P/\",\"element\":null,\"text\":\"\",\"commentId\":\"C\"}]}' → keep requests[0].n as N. Then api a GET /api/sites/$S/comments/sent.",
+    "S3: api a POST /api/sites/$S/apply '{\"action\":\"content.update\",\"params\":{\"kind\":\"post\",\"id\":PID,\"fields\":{\"post_title\":\"T\"},\"apply_id\":\"reg023-<ms>\"},\"comment\":N}' (the title written back unchanged). Then api a GET /api/sites/$S/comments and read the row with id C.",
+    "S4: api b POST /api/sites/$S/comments '{\"text\":\"[REG-043] reply\",\"url\":\"$P/\",\"element\":null,\"replyTo\":\"C\"}'. Read `parent`. Then api a GET /api/sites/$S/comments/sent.",
+    "S5: api a POST /api/sites/$S/comments '{\"text\":\"[REG-043] Append the text \\\" [REG-043]\\\" to the title of the post \\\"T\\\".\",\"url\":\"$P/\",\"element\":null}' → keep its id as U. Browser as seat a: open $O/$S, wait for /s/session-; click [data-conversation-tabs] [data-view='tracy-comments']; click 'All pages'; click .tv-cv-send-all; in [data-tracy-checklist] read each .tv-cv-checklist-row: its input's checked and its [data-sent-at] text.",
+    "S6: Untick every row except U's ([REG-043] Append…) if any is ticked, click [data-tracy-checklist] .tv-cv-primary. Poll site_turn of that session until its newest row is not open (≤ 10 min). Read that row's turn_id and comment_ns; api a GET /api/sites/$S/comments/report?turn=<turn_id>; read [data-tracy-comment-report] under the turn in the chat; api a GET /api/sites/$S/comments and read row U.",
+    "S7: Clean up: api a POST /api/sites/$S/comments/clear '{\"ids\":[\"C\",\"U\"]}'; write post PID's title back to T through the Apply door (or undo the turn's write from Site changes)."
+  ],
+  "expect": [
+    "S2: the sent list holds C with `at` = the send's time.",
+    "S3: Apply answers ok:true; row C has status 'resolved', resolvedByTracy true, resolvedBy {accountId:'', email:'', name:'Tracy', initial:'T', tracy:true}, and its last send's answeredAt set.",
+    "S4: parent.status 'pending' and parent.resolvedByTracy false; the sent list no longer holds C (new words after the send).",
+    "S5: a row of a comment already sent with nothing new since is unticked and shows 'Sent HH:MM' (24-hour); U's row (never sent) is ticked and has no [data-sent-at].",
+    "S6 (when Tracy's write cites U's request number): the report door lists U with done true; the chat shows [data-tracy-comment-report] reading 'Done: 1 comment (reply to a comment if you want more changes)' with a line data-report-comment=U; row U is resolved with resolvedByTracy true. When no write cited it: the report lists U with done false and the chat reads \"Couldn't confirm: 1 comment\" — never 'not done' — and U stays open."
+  ],
+  "selectors": {
+    "doors": "GET /api/sites/:key/comments/sent · GET /api/sites/:key/comments/report?turn= · POST /api/sites/:key/apply (comment)",
+    "checklist": "[data-tracy-checklist] .tv-cv-checklist-row input · [data-sent-at]",
+    "report": "[data-tracy-comment-report] [data-report-comment]",
+    "test": "apps/tracy-web/test/comment-auto-resolve.test.mjs · packages/ui/tracy-chat-input/test/comment-auto-resolve*.test.mjs"
+  },
+  "evidence": "03/10: comments sent with Send all stayed open after Tracy did them; the next Send all ticked and re-sent them and Tracy redid the work (ADR 0025).",
+  "fence": "Only the Apply door's answered_at stamp of a comment's latest send resolves it, and only with no reply or edit after that send; the Send all defaults come from the server's sent list"
+}

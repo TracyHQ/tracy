@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+  "status": "complete",
+  "name": "Isla Beauty",
+  "url": "https://styles.refero.design/style/0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+  "sourceWebsite": "https://isla-beauty.com",
+  "extractedAt": "2026-06-03T19:33:49.432Z",
+  "capturedAt": "2026-10-08T05:08:07.898058+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Cream apothecary with surgical red accents — think warm parchment walls, amber bottles, and a single red seal on every label.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3bea5c8e-9a7a-49a9-9bce-d350e7877059.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8fee625198fcb03c4a784d429dd2a0ec58620f736dbbf1186467d657da16201e",
+      "bytes": 23400
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "bf47d58647866beb5581aa62b648bf5aad07f06aeaddfcd64f922c9218b16f2f",
+      "bytes": 151291
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "912c03363ae39e6cfa2e6b59d4f1eb31bd8e030806a97635f998fb06465b67ce",
+      "bytes": 18890
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "db56235da16a673a9345eceb47b487e13f70db8bd956ae413a70caeef00e720b",
+      "bytes": 18463
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7c4b9c943460f9ea34cecb5dadb7335440a510112756e1138dff4b7cea6f8130",
+      "bytes": 13877
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c2f3cbf63242b2f47e211ccf60595a48182a438cff3e341ee6fa498a09e30037",
+      "bytes": 4821
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "15e85122ebd894e507ed7f9a5f9984f135008dc6d7ed90deb233bdf8cc699843",
+      "bytes": 1210
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "1875593073be85ceb4466e6abcf14d3e2a53177c3d6cf7e9499217346059f682",
+      "bytes": 1227
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "169e373485a6d94f55476398295364c4a659bd4f84ff4f25879dd32e1a1acf17",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4a3503e24535bf741a659cf06bbd17b87cd9404cac45efe08066ac0e667c8d4b",
+      "bytes": 47779
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ed8236ff24a4b03d61fc019a2b6ce4e061ad884f1ea5969702eaa0ad027f3f93",
+      "bytes": 25332
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6a08ba10a2ee3f53e9117d68cd1f1965251b51bcd283d20dbc0d5f03a8e5fb17",
+      "bytes": 68399
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e3faaa81dc1cdc254a2dfb8da3dc2f75e617daff4a1b206cd718962aeed06294",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ff30afb18a52a28457f79a653e2c7d56e1b08a3a8c404cf3663367ea4710fcd7",
+      "bytes": 2161
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "2114f30965ff0db916e23bb79f209cb0a0b858146c4daa146864fb8c03a6266b",
+      "bytes": 2776
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "21b71be3-78a0-4681-a5b9-64cc4b40eb67",
+    "3b080dc3-1992-43fe-91d6-2a721f934435",
+    "3f56ea4d-ed9d-4a36-8fb5-a801519ef80b",
+    "542453bb-1895-45fe-95c9-66dbacbf1b08",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "6fb648be-cc69-4a84-a798-9f0f006922a0",
+    "76483bd1-37d3-4fb9-889b-aecf27b08b83",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "8e1c35bf-f0e8-4889-b869-d9883bb76767",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f3f7122e-d8d3-48f7-9d9d-df6e71545010"
+  ]
+}

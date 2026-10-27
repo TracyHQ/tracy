@@ -1,0 +1,51 @@
+{
+  "id": "QA-UNIT-REG-PR-1299-chat-picker-aliased-models-happy",
+  "itemIds": ["regression:REG-PR-1299-chat-picker-aliased-models"],
+  "requirement": "Chat model picker exposes only operator-aliased models; a non-aliased deployment model cannot be selected",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1299-chat-picker-aliased-models.json",
+    "ref": "PR #1299 (fix); fix evidence: none recorded",
+    "invariant": "Enabling a deployment route for the backend does not expose it in the picker while its model_aliases is empty: routableProviders stays without that route. Once one model under the route is aliased, only that model appears under the route, renamed to its alias. selectModel of a non-aliased deployment model is refused with session/model-unavailable, including a wire-encoded tp_/tm_ id resolved against the host catalogue. modelLabels still resolves a now-hidden historical pick to its label.",
+    "productSources": [
+      "apps/tracy-web/src/lib/model-wire.js:8",
+      "apps/tracy-web/src/lib/secret-box.js:61",
+      "apps/tracy-web/src/workspace/model-policy.js:18"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["proxy reads current ops state and rejects stale picks before reaching dsh"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1299-chat-picker-aliased-models"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1299-chat-picker-aliased-models",
+    "pr": 1299,
+    "kind": "fix",
+    "area": "settings/model-picker",
+    "file": "tests/regression/cases/REG-PR-1299-chat-picker-aliased-models.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-force-exit",
+    "apps/tracy-web/test/workspace-model-policy.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": ["proxy reads current ops state and rejects stale picks before reaching dsh"],
+  "timeoutS": 600
+}

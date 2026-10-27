@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-nubank-violet: #820ad1;
+  --color-deep-iris: #290b4d;
+  --color-dusty-violet: #714f8f;
+  --color-ink: #000000;
+  --color-snow: #ffffff;
+  --color-mist: #f4f4f4;
+  --color-stone: #a2a2a2;
+  --color-concrete: #b3b3b3;
+  --color-smoke: #777777;
+  --color-graphite: #666666;
+
+  /* Typography */
+  --font-graphik: 'Graphik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

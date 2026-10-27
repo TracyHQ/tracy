@@ -1,0 +1,45 @@
+
+FROM node:22.19.0-slim
+
+ARG DSH_VERSION=0.2.1-alpha.1
+WORKDIR /opt/dsh-passwords
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends git python3 make g++ \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g pnpm@11.7.0
+
+RUN mkdir -p /opt/dsh \
+  && printf '%s\n' '{"name":"bundled-dsh","private":true}' > /opt/dsh/package.json \
+  && printf '%s\n' 'packages:' '  - .' 'nodeLinker: hoisted' 'allowBuilds:' '  "@deepseek-ai/dsh-subprocess-local": true' '  "@google/genai": true' '  koffi: true' '  node-pty: true' '  protobufjs: true' > /opt/dsh/pnpm-workspace.yaml \
+  && pnpm --dir /opt/dsh add @deepseek-ai/dsh@${DSH_VERSION} \
+  && node -e "const v=require('/opt/dsh/node_modules/@deepseek-ai/dsh/package.json').version; if (v !== process.env.DSH_VERSION) { console.error('bundled DSH mismatch: '+v+' != '+process.env.DSH_VERSION); process.exit(1); } console.log('bundled DSH '+v);"
+
+COPY package.json npm-shrinkwrap.json tsconfig.json cordis.yml ./
+RUN npm ci --no-audit --no-fund
+COPY src ./src
+COPY scripts ./scripts
+COPY .env.example README.md README_en.md LICENSE ./
+RUN npm run build
+
+COPY docker/docker-entrypoint.bundled.sh /usr/local/bin/dsh-passwords-entrypoint
+RUN sed -i 's/\r$//' /usr/local/bin/dsh-passwords-entrypoint \
+  && chmod 755 /usr/local/bin/dsh-passwords-entrypoint \
+  && mkdir -p /data/dsh /data/dsh-passwords \
+  && chown -R node:node /opt/dsh /opt/dsh-passwords /data
+
+ENV PATH=/opt/dsh/node_modules/.bin:/opt/dsh-passwords/node_modules/.bin:${PATH}
+ENV DSH_HOME=/data/dsh
+ENV DSH_PASSWORDS_ENV_FILE=/data/dsh-passwords/.env
+ENV DSH_PASSWORDS_RUNTIME=docker
+ENV MCP_DSH_ROOT=/opt/dsh/node_modules/@deepseek-ai/dsh
+ENV MCP_DB_PATH=/data/dsh-passwords/platform.db
+ENV MCP_GATEWAY_AUTO_TLS=0
+ENV MCP_GATEWAY_HOST=0.0.0.0
+ENV MCP_GATEWAY_PORT=3088
+ENV MCP_GATEWAY_UPSTREAM=http://127.0.0.1:3080
+ENV MCP_DSH_RESTART_SERVICE=
+
+EXPOSE 3088
+ENTRYPOINT ["dsh-passwords-entrypoint"]

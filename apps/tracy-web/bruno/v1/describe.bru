@@ -1,0 +1,19 @@
+meta {
+  name: describe
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  # What the site holds
+
+  `content.read {describe: true}`: locales, content types, block kinds, capabilities and
+  `permissions` — the seat's toolsets intersected with the key's scopes. A key with
+  `scopes: [content]` shows `code: false` here even when its owner holds every toolset.
+}

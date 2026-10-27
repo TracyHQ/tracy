@@ -1,0 +1,39 @@
+{
+  "name": "@emdash-cms/demo-cloudflare",
+  "version": "0.0.3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build:all": "pnpm run --filter @emdash-cms/demo-cloudflare... build",
+    "preview": "astro preview",
+    "deploy": "pnpm build:all && wrangler deploy",
+    "db:reset:remote": "./scripts/reset-db.sh",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "catalog:",
+    "@astrojs/react": "catalog:",
+    "@cloudflare/ai-search-snippet": "^0.0.40",
+    "@emdash-cms/cloudflare": "workspace:*",
+    "@emdash-cms/plugin-forms": "workspace:*",
+    "@emdash-cms/plugin-webhook-notifier": "workspace:*",
+    "@emdash-cms/plugin-cli": "workspace:*",
+    "@tanstack/react-query": "catalog:",
+    "@tanstack/react-router": "catalog:",
+    "astro": "catalog:",
+    "emdash": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@astrojs/check": "catalog:",
+    "@cloudflare/workers-types": "catalog:",
+    "@types/node": "catalog:",
+    "wrangler": "catalog:"
+  },
+  "emdash": {
+    "seed": "seed/seed.json"
+  }
+}

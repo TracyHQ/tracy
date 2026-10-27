@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c70a9990-bc4b-4a64-a69b-aeb7b344fb74",
+  "status": "complete",
+  "name": "Microsoft",
+  "url": "https://styles.refero.design/style/c70a9990-bc4b-4a64-a69b-aeb7b344fb74",
+  "sourceWebsite": "https://www.microsoft.com",
+  "extractedAt": "2026-06-03T22:09:57.481Z",
+  "capturedAt": "2026-10-08T05:17:21.909460+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Corporate blue retail catalog — think 4-square logo against a white showroom floor with one accent blue guiding every interaction.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0fb80266-ed13-4a3c-a8f1-015867870c72.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/3ddb0b1e-64a8-403c-9a17-1c6e6a59ea2a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/645652ca-e359-466f-99cc-c49cbe389fe9.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/cda54060-e54c-417d-b91b-be6f6ca08cb7.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/47a4e304-46d1-48cd-a851-784d2f847fff.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1bdde7e8d40e7a702fbe1a2f96f69e07db2cb46ec83b47edec77d15dee7e9d92",
+      "bytes": 15970
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c59dc4a2a194605a42cca5e62f19eb3d1447352bbdb5b7c4362f8cc841e32e73",
+      "bytes": 121838
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "80064994bb9b70e7fdd8f8d743c6cadf5a0af42ad2df8086d09b4a57241548b8",
+      "bytes": 14554
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "14addfffc43a73f38d0c23a5fc05c31ba8a418869b4a139f9f35186309954659",
+      "bytes": 7133
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5ed67538201315e0a2d1026e287021f7f788b080f44a42650924af33fbfef53f",
+      "bytes": 11044
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4980cfe4f1f6ad7cd93586beec430c30b8a7b30348673f3e8c9d7d3f21641745",
+      "bytes": 2201
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c395aad46c7b67cc74a431d13d57e34f2ad89eae47eb879889e3510eb31f63a7",
+      "bytes": 392
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0998482457dcc3b21a95847865c34a8f04a588deb9bbfb0f930edcf3d4d861f9",
+      "bytes": 409
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d57a87e33939c5745a61b46dac4dc327e358b6e072fe7c2627bb5ce1c7113e75",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b464c10326b99c382a3bb7f631c15fd52b33ecca7176324cb23bbe9d96618085",
+      "bytes": 40368
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "930919f65234e728d7615d369afd9d7988222cd66f6fb618672399f78d9496ef",
+      "bytes": 21327
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "882cd49a520baa06385b45678cb92009c2096af7e982b304863f8b7bed8306ae",
+      "bytes": 37831
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6ee5c585b8ad9ff86512ba42e53308e23e57734f5d75446308c5639ff8202642",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "df21bf431575224f9e15d50defabfd33d5e42aa36ea3f727f82f12602c4c3a7f",
+      "bytes": 850
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b4ca60a196638a027b607074fec49d8eb8a8b01426af2327555ed5eec45c93ba",
+      "bytes": 1334
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "206c6c51-df38-425f-8d07-b0cc9dd065cf",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "46781641-8afd-4b01-9f67-06046b6eda71",
+    "4bcd0728-0d28-4835-ba9f-d61554f797b1",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "5f39e778-d204-42a9-8b8b-a1519dbd3971",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a73148b9-449b-42cd-9f38-86ef694f500e",
+    "aecac5da-f397-4ddf-b71f-de1efc434cb8",
+    "c57ba3f8-1d76-4660-8ba4-48ddce26e759",
+    "c70a9990-bc4b-4a64-a69b-aeb7b344fb74",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "cfcd001c-e812-4126-9bdf-1f16b68d182e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "f11750fc-d7c0-4d26-b32a-3b1d2098ae34"
+  ]
+}

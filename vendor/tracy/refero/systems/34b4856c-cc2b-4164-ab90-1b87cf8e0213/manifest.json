@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+  "status": "complete",
+  "name": "Everlane",
+  "url": "https://styles.refero.design/style/34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+  "sourceWebsite": "https://everlane.com",
+  "extractedAt": "2026-06-03T20:07:10.848Z",
+  "capturedAt": "2026-10-08T05:10:06.935207+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Minimalist atelier on raw linen. White walls, bare architecture, a single sage-green ribbon of light.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1da79de9-d08a-434f-9968-e021a7bc9c7d.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "12ed3946d53309db1474271309f6f6598aa9602288f7cff28cbb3d8b076d43de",
+      "bytes": 19639
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c61c15e84ec18dcd45899c0bbc16e91956454de9c22b350bb69b152bcbfff0c3",
+      "bytes": 119177
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6af86184317c47a291fbe91f3fb84338c051a2e63d5373b49f099b09a15bce51",
+      "bytes": 16883
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7861ef1aab0929d9db3dfe4bdea1f2c776ec310065cd84c1f4d844e65c6a13b1",
+      "bytes": 14179
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8f16ef0c78759be5d27f8d94fd8d123d79c8f780ebfa2d9d036f34003582775b",
+      "bytes": 12495
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e863de2a400948ffe4e4c370b8dff374747dc458f8a5140ff98897d5ef72646e",
+      "bytes": 3053
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f9f544bc579b7035fc8dfbac712c948a25b83b8d9dac4b5967bdb6307268c356",
+      "bytes": 951
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "b26b4e00b784cc0b4e6d1a07eee43e0a167b9294f0aaabc0b68a78709bf865d9",
+      "bytes": 968
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ee9043c96aa4b19653e481e5dae7d9706753242a4a7418956273f0afb665c6ff",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e9db85f82b2f80f8be0f4a17a99ea3dc9ba102c63d68747d2003785752ea164a",
+      "bytes": 41351
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "261880d329f118f1dd622268189b793545ee42cf0c01d2689c5557f18d87c7cf",
+      "bytes": 21102
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "aeb6781f96f30fe79f688c71f975612a5cb3c4fee71c475591912950029dddfe",
+      "bytes": 42426
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "9d0fec88762f00df63ed121532f31c942876569a22ef9f0e3928cacb58e0a8c5",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f15b4c6cd3c6d25a91c941df2b542179b261a38e71595e090598f199983d7e95",
+      "bytes": 1496
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b7d1c2656136393757f7ad458ada1defdfb7345b79ba5a70be36dc61b6095a3e",
+      "bytes": 2048
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "234e9a17-236d-4446-9d58-f83f6806d012",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2b9e90ad-51d9-4f29-8f7e-a343dc741eab",
+    "2e4ce685-9f49-47a3-9577-bc4f196bd8f7",
+    "2fd71e12-12fc-4346-8281-52afe12bb951",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "44a6d2a5-16ef-42cd-a69c-33a7af16638d",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "79d83fce-84bf-4e12-8039-5d283c98917c",
+    "a4dcee26-dd31-415a-ac99-64299959e7f1",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268",
+    "f401f04f-c45b-4261-9441-f502c6569a29",
+    "fa157687-ee42-443e-a992-5f8a3fcdd48f"
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "5af6b791-6cad-4497-9e94-ace28e4fbd51",
+  "status": "complete",
+  "name": "Helloivy",
+  "url": "https://styles.refero.design/style/5af6b791-6cad-4497-9e94-ace28e4fbd51",
+  "sourceWebsite": "https://helloivy.co",
+  "extractedAt": "2026-06-03T20:25:20.801Z",
+  "capturedAt": "2026-10-08T05:11:56.670353+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Risograph-printed design journal on cream paper. A two-color editorial system where personality lives in typography, not color — the cream background, black ink, and one whisper-gray are the entire palette, and the quirky geometric display face carries all the brand energy the restrained palette deliberately withholds.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f6a87a30-ccce-4dfc-8fe0-ddde49efe3bc.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "caa6f9154b4f01d4323d36a4f7f284c26ac8a347c04d12e410cfcd73bac044bd",
+      "bytes": 22304
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c212dec3dbfc65ad0423352e1c90d2746c016f26e43e03dc14328a9daf4af0c0",
+      "bytes": 131799
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f542403d1ad0c97547b37d3b6f9dab782514848765ef9cce9f2847906478085a",
+      "bytes": 17981
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c9cfe5e6d41b225b4efad82ae64928397ace8274107eb23a10afe992d8c2e8db",
+      "bytes": 10422
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8d1d19074a91a7ed230f9df20b5e07c6c54a26a90e05f53a03268af537d57ba6",
+      "bytes": 13871
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "edbe3d465321ac85720220a97282f58edd69b178186c55b2cc1d227c5d34b00e",
+      "bytes": 3021
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1bda177b97b40c9f4d0a91b1c52f62e1b3fe6e7dbcc0f580b0e5439df8261c39",
+      "bytes": 833
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2940f3a8d818f1cacb8d63b59ff74f3eca80498bc01eca86dc769e5df840c3af",
+      "bytes": 850
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "32dece182857f80ccd012113150c9d17fc2c9d006cb5916eb64104911f36a785",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "feb27c89931ff706aa020686628cc4ff410eb04d3b22eeda75124e46e4effd6a",
+      "bytes": 43033
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "bda1efebdb82d7eb25eb88fb2c239d7cefddf456fed3a2ba0cfd471276d81394",
+      "bytes": 21701
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "0e6233895dc73aa886196429cd6d29e587cf5114290725f1853dde47c535cd27",
+      "bytes": 32892
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d58125fb4dc8339ab089430c0dba6a27b382a6dc498592a2f57956ce6d10a3b6",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "d0fe1497fde24602da08c2c0357a3a86b11b3df692a7058f92b3911c183edab3",
+      "bytes": 2007
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "cd95a1e92902035c0a9b2d9372d99a293bcc587490259b1c5fc08374cdbad67f",
+      "bytes": 2531
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "24d3b281-04a6-4cc7-8a74-634b08472291",
+    "28a7115a-bcf8-4b05-89a5-5290f5842a3c",
+    "34c8dbee-f5d9-4495-a0e0-a25c6ca4b95b",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "5af6b791-6cad-4497-9e94-ace28e4fbd51",
+    "6024d069-8a74-4534-917f-5f5b11224cc5",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "b78edcaa-6754-41d7-ac00-0119b41ad88a",
+    "cafcbe97-58eb-4331-9a0a-c5e6969e8a04",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e1497817-b9f1-4d7a-842f-58a08dd9e455",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f1bff240-fa05-41db-9ae1-b165ea6ea2cb",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d"
+  ]
+}

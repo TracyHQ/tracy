@@ -1,0 +1,64 @@
+{
+  "id": "QA-UNIT-REG-PR-1458-shard-dsh-tag-from-container-happy",
+  "itemIds": ["regression:REG-PR-1458-shard-dsh-tag-from-container"],
+  "requirement": "The master names its own dsh tag from the running container when tracy-host cannot read host-dsh.env, so shard heartbeats are no longer held at TAG_UNKNOWN",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1458-shard-dsh-tag-from-container.json",
+    "ref": "PR #1458 (fix); fix evidence: none recorded",
+    "invariant": "0 failures. Every test named in run.tests reports ok. dshTagOf returns the container's tag for the tracy-dsh repository, keeps image.tag when present, and returns null for another repository or a digest.",
+    "productSources": [
+      "apps/tracy-web/src/config.js:1141",
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/lib/shard-channel.js:54",
+      "apps/tracy-web/src/shards/check.js:52",
+      "apps/tracy-web/src/shards/custom-hostnames.js:38",
+      "apps/tracy-web/src/shards/dns.js:92",
+      "apps/tracy-web/src/shards/doors.js:16",
+      "apps/tracy-web/src/shards/events-inbox.js:35",
+      "apps/tracy-web/src/shards/store.js:114"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/db/index.js:52 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the master s dsh tag falls back to the running container when the host cannot read host-dsh.env",
+    "the master s tags: app from its env, dsh from its own host, asked once per ten minutes, the last good kept"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1458-shard-dsh-tag-from-container"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1458-shard-dsh-tag-from-container",
+    "pr": 1458,
+    "kind": "fix",
+    "area": "shards/check",
+    "file": "tests/regression/cases/REG-PR-1458-shard-dsh-tag-from-container.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-force-exit",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/shards-check.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the master s dsh tag falls back to the running container when the host cannot read host-dsh.env",
+    "the master s tags: app from its env, dsh from its own host, asked once per ten minutes, the last good kept"
+  ],
+  "timeoutS": 600
+}

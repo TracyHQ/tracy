@@ -1,0 +1,368 @@
+{
+  "color": {
+    "void": {
+      "$value": "#010101",
+      "$type": "color",
+      "$description": "Void — Page canvas, full-screen dark sections, and dark-image overlays"
+    },
+    "charcoal-control": {
+      "$value": "#1f1f23",
+      "$type": "color",
+      "$description": "Charcoal Control — Navigation pills, compact filled controls, secondary surface fills, and high-frequency 1px outlines"
+    },
+    "porcelain": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Porcelain — Primary headlines, UI labels, links, icons, strokes, and input text"
+    },
+    "machine-well": {
+      "$value": "#16191b",
+      "$type": "color",
+      "$description": "Machine Well — Contained card interiors and dark media panels"
+    },
+    "hairline-ash": {
+      "$value": "#252525",
+      "$type": "color",
+      "$description": "Hairline Ash — Section rules, list separators, and restrained structural borders"
+    },
+    "muted-steel": {
+      "$value": "#828b8d",
+      "$type": "color",
+      "$description": "Muted Steel — Body copy, descriptions, and secondary explanatory text"
+    },
+    "dormant-graphite": {
+      "$value": "#444444",
+      "$type": "color",
+      "$description": "Dormant Graphite — Inactive step numerals and low-emphasis heading-adjacent metadata"
+    },
+    "faint-steel": {
+      "$value": "#646e71",
+      "$type": "color",
+      "$description": "Faint Steel — Navigation counters and tertiary mono metadata"
+    }
+  },
+  "font": {
+    "office-times-round": {
+      "$value": "Office Times Round",
+      "$type": "fontFamily",
+      "$description": "Display headlines. The rounded, high-contrast serif turns large statements into editorial placards; the -3% tracking keeps its broad letterforms from becoming stately or classical."
+    },
+    "messina-sans": {
+      "$value": "Messina Sans",
+      "$type": "fontFamily",
+      "$description": "Primary interface and reading face. Use 400 for body, labels, and controls; use 600 only for 26px and 32px feature headings, where the slight negative tracking gives modules a compressed technical voice."
+    },
+    "abc-laica-mono": {
+      "$value": "ABC Laica Mono",
+      "$type": "fontFamily",
+      "$description": "Navigation, counters, steps, and uppercase metadata. Its light mono weight plus expanded tracking makes microcopy read as coordinates rather than ordinary navigation."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Messina Sans",
+        "fontSize": "10px",
+        "fontWeight": 600,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.24em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 10px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "ABC Laica Mono",
+        "fontSize": "13px",
+        "fontWeight": 300,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Messina Sans",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 13px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "ABC Laica Mono",
+        "fontSize": "13px",
+        "fontWeight": 300,
+        "lineHeight": 1.2,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 13px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "ABC Laica Mono",
+        "fontSize": "13px",
+        "fontWeight": 300,
+        "lineHeight": 1.3,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 13px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "Messina Sans",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 13px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "ABC Laica Mono",
+        "fontSize": "13px",
+        "fontWeight": 300,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 13px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Messina Sans",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Messina Sans",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Messina Sans",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Messina Sans",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "Messina Sans",
+        "fontSize": "26px",
+        "fontWeight": 600,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 26px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "Messina Sans",
+        "fontSize": "32px",
+        "fontWeight": 600,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 32px"
+    },
+    "3xl-2": {
+      "$value": {
+        "fontFamily": "Messina Sans",
+        "fontSize": "32px",
+        "fontWeight": 600,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl-2 at 32px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Office Times Round",
+        "fontSize": "100px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 100px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Office Times Round",
+        "fontSize": "200px",
+        "fontWeight": 400,
+        "lineHeight": 0.8,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 200px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "28": {
+      "$value": "28px",
+      "$type": "dimension",
+      "$description": "Spacing 28px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    },
+    "96": {
+      "$value": "96px",
+      "$type": "dimension",
+      "$description": "Spacing 96px"
+    },
+    "120": {
+      "$value": "120px",
+      "$type": "dimension",
+      "$description": "Spacing 120px"
+    },
+    "192": {
+      "$value": "192px",
+      "$type": "dimension",
+      "$description": "Spacing 192px"
+    },
+    "224": {
+      "$value": "224px",
+      "$type": "dimension",
+      "$description": "Spacing 224px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "full": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "100px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "surface": {
+    "void-canvas": {
+      "$value": "#010101",
+      "$type": "color",
+      "$description": "Surface level 0: Page background and full-bleed narrative sections."
+    },
+    "machine-well": {
+      "$value": "#16191b",
+      "$type": "color",
+      "$description": "Surface level 1: Contained visual wells and dark card interiors."
+    },
+    "charcoal-control": {
+      "$value": "#1f1f23",
+      "$type": "color",
+      "$description": "Surface level 2: Navigation pills, compact controls, and outlined surface details."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.awenetwork.ai",
+      "siteName": "AWE",
+      "extractedAt": "2026-09-20T19:23:25.686Z",
+      "variant": "extended"
+    }
+  }
+}

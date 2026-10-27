@@ -1,0 +1,32 @@
+:root {
+  /* Colors */
+  --color-signal-blue: #1871da;
+  --color-pulse-green: #1ec072;
+  --color-hot-pink: #f6609f;
+  --color-cotton-candy: #ffb4ed;
+  --color-solar-yellow: #ffbb38;
+  --color-ember-orange: #ff5500;
+  --color-forest-moss: #31805a;
+  --color-tangerine: #ffa724;
+  --color-ultraviolet: #9664d7;
+  --color-deep-iris: #0c4cbe;
+  --color-azure: #1f86ff;
+  --color-alert-red: #c60808;
+  --color-deep-moss: #1c372a;
+  --color-concrete: #e5e7eb;
+  --color-obsidian: #000000;
+  --color-paper: #ffffff;
+  --color-carbon: #101516;
+  --color-mist: #f7f7f7;
+  --color-pebble: #bec6cc;
+  --color-ash: #cccccc;
+  --color-smoke: #d7d7d7;
+  --color-stone: #999999;
+  --color-graphite: #262d2f;
+  --color-iron: #666666;
+  --color-slate: #808080;
+
+  /* Typography — Font Families */
+  --font-neue-haas-grotesk-display: 'Neue Haas Grotesk Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

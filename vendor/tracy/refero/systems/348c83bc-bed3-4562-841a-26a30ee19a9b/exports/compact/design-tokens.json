@@ -1,0 +1,49 @@
+{
+  "color": {
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Primary text, all borders, logo wordmark, nav links, search input border — the sole ink color in the entire system"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "bone": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Bone — Alternate row striping, search input fill, subtle list separators — a barely-there warm gray for differentiation"
+    },
+    "mist": {
+      "$value": "#dddddd",
+      "$type": "color",
+      "$description": "Mist — Input borders, subtle dividers — the lightest functional border tone"
+    },
+    "ash": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, secondary metadata, disabled nav — 7.4:1 contrast against white still passes AAA"
+    }
+  },
+  "font": {
+    "bentonsansre": {
+      "$value": "BentonSansRE",
+      "$type": "fontFamily",
+      "$description": "The sole UI typeface — navigation, body, buttons, input fields, table data, footer. At 9–10px it functions as fine print (image counts, sort labels); at 14–16px as body and nav. The condensed proportions and newspaper-grade x-height give the interface its specimen-sheet feel. Substitute: Franklin Gothic URW or a neutral grotesque like Source Sans 3."
+    },
+    "relaycond": {
+      "$value": "RelayCond",
+      "$type": "fontFamily",
+      "$description": "Reserved for editorial accents — the 'FONTS IN USE' wordmark at 36px (line-height 1.0, nearly square) and 'Staff Pick' ribbon badges at 18px. The condensed width makes the logo read as a masthead rather than UI. Substitute: Roboto Condensed or Oswald."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://fontsinuse.com",
+      "siteName": "Fonts In Use",
+      "extractedAt": "2026-06-03T17:37:55.644Z",
+      "variant": "compact"
+    }
+  }
+}

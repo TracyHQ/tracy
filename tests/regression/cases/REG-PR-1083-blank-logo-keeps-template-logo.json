@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1083-blank-logo-keeps-template-logo",
+  "kind": "fix",
+  "title": "A blank Logo answer keeps the template's logo on every CMS (Joomla T3 and T4, JA Essence WP, Tracy Business WP)",
+  "pr": 1083,
+  "area": "site-build/brand",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test --test-reporter=tap apps/tracy-web/test/brief-brand.test.mjs apps/tracy-web/test/brief-brand-joomla.test.mjs from the repository root.",
+    "S2: The tests run the brand engine with a blank Logo answer (and with a logo id that cannot be read) against site doubles of each template and read what was written."
+  ],
+  "expect": [
+    "S1: every named test reports ok.",
+    "S2: no logo, dark logo, style logo or footer logo slot is written; the name and monogram still change where the template has them."
+  ],
+  "selectors": {
+    "engine": "apps/tracy-web/src/sites/brief-engines/ (brand engines)",
+    "tests": "apps/tracy-web/test/brief-brand{,-joomla}.test.mjs"
+  },
+  "evidence": "Before the fix a blank Logo answer took the name-as-text branch of the WordPress, Joomla T3 and T4 writers, replacing the template's logo (LOGO-4 dropped 09/10/2026, commit 9d669828a, #1013).",
+  "fence": "The brand engines writing a logo only when the customer gave one that could be read.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-brand.test.mjs",
+      "apps/tracy-web/test/brief-brand-joomla.test.mjs"
+    ],
+    "tests": [
+      "a blank Logo answer on JA Essence WP keeps the demo logo and dark logo (no name as text)",
+      "a blank Logo answer on Tracy Business WP keeps the identity logo; the name and monogram still change",
+      "a logo id that could not be read keeps the template logo too",
+      "a blank Logo answer on T3 keeps every style logo as released",
+      "a blank Logo answer on T4 keeps every logo key and the footer slot as released"
+    ]
+  }
+}

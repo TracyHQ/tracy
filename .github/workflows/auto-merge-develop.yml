@@ -1,0 +1,86 @@
+# This privileged workflow runs only trusted default-branch code, never a PR checkout.
+# GitHub activates workflow_run/schedule only after this file reaches the default branch.
+name: Auto Merge Develop
+
+on:
+  workflow_run:
+    workflows: [Tracy CI, Changelog Check, PR Description Check, Regression Check, Branch Fresh Check]
+    types: [completed]
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: 'One PR number, or empty to inspect open develop PRs'
+        type: string
+        default: ''
+      dry_run:
+        description: 'Inspect only; do not merge'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  actions: read
+  checks: read
+  pull-requests: read
+
+concurrency:
+  group: auto-merge-develop
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    if: vars.TRACY_AUTO_MERGE_DEVELOP == 'true' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == true)
+    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    timeout-minutes: 10
+    steps:
+      - name: Check out trusted default-branch code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+
+      - name: Prepare GitHub CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          if command -v gh >/dev/null 2>&1; then
+            gh --version
+            exit 0
+          fi
+          echo 'GitHub CLI is absent from this runner; installing the pinned official release.'
+          cli_dir="$RUNNER_TEMP/tracy-merge-gh"
+          mkdir -p "$cli_dir"
+          curl --fail --silent --show-error --location --retry 3 \
+            https://github.com/cli/cli/releases/download/v2.102.0/gh_2.102.0_linux_amd64.tar.gz \
+            --output "$cli_dir/gh.tar.gz"
+          echo 'bb766f710eef8ede859c18578c72c327597cd4c8a85b06001b1f3843c6019386  gh.tar.gz' \
+            | (cd "$cli_dir" && sha256sum --check)
+          tar -xzf "$cli_dir/gh.tar.gz" -C "$cli_dir"
+          echo "$cli_dir/gh_2.102.0_linux_amd64/bin" >> "$GITHUB_PATH"
+          "$cli_dir/gh_2.102.0_linux_amd64/bin/gh" --version
+
+      - name: Create repository-scoped merge token
+        id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.TRACY_CI_MERGE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.TRACY_CI_MERGE_APP_PRIVATE_KEY }}
+          owner: TracyHQ
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-actions: read
+          permission-checks: read
+
+      - name: Merge only after a fresh exact-head gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AUTO_MERGE_APP_TOKEN: ${{ steps.app.outputs.token }}
+          TRACY_CI_READ_APP_TOKEN: ${{ steps.app.outputs.token }}
+          AUTO_MERGE_PR: ${{ inputs.pr }}
+          # `true` = merge only with a write-level approval of the current head; unset = today's rule.
+          REQUIRE_APPROVAL_FOR_AUTO_MERGE: ${{ vars.REQUIRE_APPROVAL_FOR_AUTO_MERGE }}
+          AUTO_MERGE_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
+        run: node scripts/auto-merge-develop.mjs

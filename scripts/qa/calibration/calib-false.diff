@@ -1,0 +1,19 @@
+diff --git a/apps/tracy-web/src/ops/route.js b/apps/tracy-web/src/ops/route.js
+--- a/apps/tracy-web/src/ops/route.js
++++ b/apps/tracy-web/src/ops/route.js
+@@ -117,9 +117,7 @@ export function opsRoutes(deps) {
+   // Unauthenticated on purpose, same as the Worker's own `/healthz`: an uptime probe is not a
+   // reason to publish who is allowed in. Registered ahead of the door below on purpose too.
+-  app.get('/ops/healthz', (c) =>
+-    c.body('ok\n', 200, { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' })
+-  )
++  app.get('/ops/healthz', (c) => c.json({ status: 'ok' }, 200, { 'cache-control': 'no-store' }))
+diff --git a/apps/tracy-web/src/app.js b/apps/tracy-web/src/app.js
+--- a/apps/tracy-web/src/app.js
++++ b/apps/tracy-web/src/app.js
+@@ -147,7 +147,7 @@ export function createApp(deps) {
+     owners.set(handler, MIDDLEWARE)
+     app.use(path, handler)
+   }
+-  app.get('/health', (c) => c.json({ ok: true }))
++  app.get('/health', (c) => c.body(null, 204))

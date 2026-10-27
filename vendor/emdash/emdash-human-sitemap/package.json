@@ -1,0 +1,57 @@
+{
+  "name": "@masonjames/emdash-human-sitemap",
+  "version": "0.1.1",
+  "description": "Human-readable sitemap block and Astro component for EmDash CMS",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./descriptor": "./src/descriptor.ts",
+    "./plugin": "./src/plugin.ts",
+    "./astro": "./src/astro/index.ts"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "pack:check": "npm pack --dry-run",
+    "check": "npm run typecheck && npm run test",
+    "release:check": "npm run check && npm run pack:check"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "emdash",
+    "astro",
+    "cms",
+    "plugin",
+    "sitemap",
+    "human-sitemap",
+    "accessibility"
+  ],
+  "peerDependencies": {
+    "astro": ">=6.0.0-beta.0",
+    "emdash": ">=0.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "get-tsconfig": "^4.13.7",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masonjames/emdash-human-sitemap.git"
+  },
+  "bugs": {
+    "url": "https://github.com/masonjames/emdash-human-sitemap/issues"
+  },
+  "homepage": "https://github.com/masonjames/emdash-human-sitemap#readme",
+  "author": "Mason James",
+  "license": "MIT"
+}

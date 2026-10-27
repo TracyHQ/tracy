@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-resort/j6/1.0.8",
+  "platform": "joomla",
+  "template": "ja_resort",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-resort",
+    "id": "quickstart/ja-resort/j6",
+    "version": "1.0.8",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_resort",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-resort-j6-webroot-1.0.8.tar.gz",
+        "bytes": 114391707,
+        "sha256": "ecbc8384361d943ed6830b554a0c10bbc4b3a2820752adb52a9d73957202e57d"
+      },
+      "database": {
+        "file": "ja-resort-j6-database-1.0.8.sql.gz",
+        "bytes": 174481,
+        "sha256": "b197e49c2aa0f268df18588a4b4fabd84a8e77a2394baff7957ff498905ab6eb"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T18:02:39.336Z",
+    "builtFrom": {
+      "from": "quickstart/ja-resort/j6@1.0.7",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 2 files replaced (templates/ja_resort/css, templates/ja_resort/scss); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-resort/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.24",
+  "mode": "content-recommendation"
+}

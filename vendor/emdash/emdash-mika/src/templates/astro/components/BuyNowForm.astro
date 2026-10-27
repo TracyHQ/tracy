@@ -1,0 +1,75 @@
+---
+// mika-template-version: 0.1.1
+import { actions } from "astro:actions";
+import { Button } from "@cloudflare/kumo";
+import { mikaHiddenInput, mikaRedirectInputs, mikaReturnTo } from "@bnomei/emdash-mika/astro";
+import { mikaTemplateRoutes } from "../lib/routes";
+
+interface Props {
+  sellableId: string;
+  priceId?: string;
+  quantity?: number;
+  successPath?: string;
+  cancelPath?: string;
+  returnTo?: string;
+  label?: string;
+  disabled?: boolean;
+  buttonClass?: string;
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const {
+  sellableId,
+  priceId,
+  quantity = 1,
+  successPath = mikaTemplateRoutes.checkoutSuccess,
+  cancelPath = mikaTemplateRoutes.checkoutCancel,
+  returnTo = mikaReturnTo(Astro.url),
+  label = "Buy now",
+  disabled = false,
+  buttonClass,
+  class: className,
+  ...attrs
+} = Astro.props;
+const redirectInputs = mikaRedirectInputs(
+  { successPath, cancelPath, returnTo },
+  {
+    successFallback: mikaTemplateRoutes.checkoutSuccess,
+    cancelFallback: mikaTemplateRoutes.checkoutCancel,
+  },
+);
+---
+
+<form
+  {...attrs}
+  data-mika-buy-now
+  class:list={["mika-kumo-form", className]}
+  action={actions.mika.checkout.start.queryString}
+  method="post"
+>
+  <input
+    type="hidden"
+    {...mikaHiddenInput("sellableId", sellableId)}
+    data-mika-selected-sellable-id
+  />
+  <input
+    type="hidden"
+    {...mikaHiddenInput("priceId", priceId)}
+    data-mika-selected-price-id
+  />
+  <input type="hidden" {...mikaHiddenInput("quantity", quantity)} />
+  <input type="hidden" {...redirectInputs.successPath} />
+  <input type="hidden" {...redirectInputs.cancelPath} />
+  <input type="hidden" {...redirectInputs.returnTo} />
+  <Button
+    type="submit"
+    className={buttonClass}
+    variant="primary"
+    disabled={disabled}
+    data-mika-purchase-submit
+    data-mika-initial-disabled={disabled ? "true" : "false"}
+  >
+    <slot>{label}</slot>
+  </Button>
+</form>

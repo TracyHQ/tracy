@@ -1,0 +1,423 @@
+// Repairs measured on the Base site. Loaded after T4's generated style sheet.
+.t4-offcanvas .t4-off-canvas-header {
+  background: var(--surface);
+  color: var(--fg);
+}
+.t4-offcanvas .t4-off-canvas-header a { color: var(--fg); }
+.tracy-theme-toggle { min-width: 44px; min-height: 44px; }
+.tracy-field input.form-check-input[type="checkbox"],
+.tracy-field input.form-check-input[type="radio"] {
+  inline-size: 20px;
+  block-size: 20px;
+  min-inline-size: 20px;
+  flex: 0 0 20px;
+  margin-inline: 0 var(--space-2);
+}
+.tracy-field .form-check-label { cursor: pointer; }
+.tracy-field .form-check-input:focus-visible { box-shadow: var(--focus-ring); }
+// Only one layer owns spacing when a module sits inside a padded T4 band.
+.tracy-band .ja-acm { padding-block: 0; }
+@media (max-width: 1023px) {
+  html:root { --tracy-band-y: var(--tracy-band-y-tablet); }
+}
+@media (max-width: 639px) {
+  html:root { --tracy-band-y: var(--tracy-band-y-phone); }
+  .ja-acm.acm-hero.style-2 { padding-block: var(--tracy-band-y); }
+  .tracy-band .ja-acm.acm-hero.style-2 { padding-block: 0; }
+  .acm-cta-capsule .tracy-cta {
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+  }
+  .acm-story-chapter .tracy-chapter__statement { font-size: var(--text-xl); }
+  .tracy-nav .header-wrap { gap: var(--space-2); }
+  .tracy-nav .t4-header-r { gap: 0; }
+}
+
+.t4-offcanvas .logo-img-sm svg { width: 150px; height: 32px; }
+.t4-offcanvas .t4-off-canvas-header .close {
+  color: var(--fg); background: var(--surface); opacity: 1;
+  min-width: 44px; min-height: 44px;
+}
+
+.tracy-hero__visual { margin: 0; align-self: center; min-width: 0; }
+.tracy-hero__visual img { display: block; width: 100%; height: auto; border-radius: var(--radius-lg); }
+
+// Visual QA: remove the second layer of T4 section padding in the footer.
+.tracy-footnav > .t4-section-inner,
+.tracy-footer > .t4-section-inner { padding-block: 0; }
+.tracy-footnav .t4-row { row-gap: var(--space-8); }
+.tracy-footnav .tracy-footlinks a { display: inline-flex; align-items: center; min-height: 32px; }
+.tracy-footnav .custom > p { color: var(--fg-2); }
+
+// A composed page and a listing use the available layout width at every breakpoint.
+.tracy-main--narrow:has(.ja-acm, .com-content-category-blog, .com-content-category, .com-content-featured) > .container {
+  max-width: calc(var(--container-max) + var(--container-gutter-desktop) * 2);
+}
+.tracy-main--narrow .moduletable,
+.tracy-main--narrow > .container > :is(.com-content-category-blog, .com-content-category, .com-content-featured) {
+  width: auto; max-width: 100%; margin-inline: 0;
+}
+// Empty article chrome must not reserve space before the first section.
+.tracy-article__aside:not(:has(*)),
+.tracy-article__media:not(:has(*)) { display: none; }
+.tracy-prose > .moduletable:first-child > .ja-acm { padding-block-start: 0; }
+.tracy-prose > .moduletable:last-child > .ja-acm { padding-block-end: 0; }
+.tracy-article__title, .tracy-view-head__title { overflow-wrap: anywhere; }
+.article-info .createdby [itemprop="name"] { color: var(--fg-2); }
+.t4-col:is(.sidebar-l, .sidebar-r) .mod-articlescategories a { color: var(--fg-2); }
+.t4-col:is(.sidebar-l, .sidebar-r) .mod-articlescategories a:hover { color: var(--ds-c-accent-text, var(--accent)); }
+
+// Four services need a balanced two-by-two grid, retaining the three-card layout otherwise.
+@media (min-width: 640px) {
+  .acm-features-intro .tracy-features-grid:has(> :nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .acm-features-intro .tracy-features-grid:has(> :nth-child(4):last-child) > :first-child { grid-column: auto; }
+}
+.acm-features-intro .tracy-features-intro__card { padding: var(--space-6); }
+.acm-features-intro .tracy-features-intro__card-text { font-size: var(--text-base); color: var(--fg-2); }
+.acm-clients .tracy-clients__dark-name { display: none; }
+html[data-theme="dark"] .acm-clients .tracy-clients__light-image { display: none; }
+html[data-theme="dark"] .acm-clients .tracy-clients__dark-name { display: inline; color: var(--fg-2); }
+
+// A CTA responds to its column, including the sidebar layout on a large screen.
+.acm-cta-capsule { container-type: inline-size; }
+@container (max-width: 760px) {
+  .acm-cta-capsule .tracy-cta { flex-direction: column; align-items: flex-start; gap: var(--space-6); padding: var(--space-6); }
+  .acm-cta-capsule .tracy-cta__statement { max-width: none; }
+  .acm-cta-capsule .tracy-cta__actions { flex-wrap: wrap; }
+}
+.tracy-filterbar { gap: var(--space-3); }
+.tracy-main .form-check-input { border-color: var(--muted); }
+.tracy-main .tracy-wrapper { background: var(--surface); }
+@media (max-width: 767.98px) {
+  .t4-col:is(.sidebar-l, .sidebar-r) { margin-block-start: var(--space-8); }
+}
+@media (max-width: 639px) {
+  .tracy-footnav .t4-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tracy-footnav .t4-col { width: auto; min-width: 0; }
+  .tracy-footnav .tracy-footlinks a { min-height: 44px; }
+  .tracy-view-head__title { font-size: var(--text-xl); line-height: var(--leading-tight); }
+  .acm-carousel .tracy-carousel__slide { inline-size: 100%; }
+  .tracy-main .tracy-prose .tracy-display { font-size: var(--text-2xl); }
+}
+
+.tracy-postcard__meta:not(:has(*)) { display: none; }
+.tracy-postcard__intro > :last-child { margin-block-end: 0; }
+
+// Category controls: the inner control owns its hit area, without double padding.
+.tracy-catlist__form {
+  .tracy-chips--filters { margin-bottom: var(--space-4); }
+  .tracy-chips--sort { gap: var(--space-2); margin-bottom: var(--space-6); }
+  .tracy-chips--sort .tracy-chip { min-height: 44px; }
+  .tracy-chips--sort .tracy-chip > a {
+    // T4 forces .hasTooltip to inline-block !important.
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+    line-height: 1.4;
+  }
+  .tracy-chip--field { padding: 0 var(--space-4); min-height: 44px; }
+  .tracy-chip--field select {
+    appearance: auto;
+    min-height: 44px;
+    height: 44px;
+    padding-inline-end: var(--space-2);
+    color-scheme: light dark;
+  }
+}
+
+@media (max-width: 639px) {
+  .tracy-fixture .type-stack h2 { font-size: var(--text-2xl); line-height: 1.15; }
+}
+
+.tracy-auth .radio label, .tracy-auth .checkboxes label { min-height: 44px; }
+.tracy-auth .radio input[type="radio"] { width: 20px; height: 20px; flex: 0 0 20px; accent-color: var(--accent); }
+.tracy-auth .tracy-field { margin-bottom: 0; }
+
+// The T4 masthead already renders the wrapper page heading.
+body:has(.t4-masthead) .com-wrapper > .tracy-view-head { display: none; }
+
+.com-tags__items .all-tags a.tracy-chip { color: var(--fg); }
+.com-tags__items .all-tags a.tracy-chip:hover { color: var(--ds-c-accent-text, var(--accent)); }
+
+// T4 uses a rem gutter (34px at this font size) beside 16px container padding.
+.tracy-footnav .t4-row, .tracy-footer .t4-row { --t4-gutter-x: calc(var(--space-4) * 2); }
+
+// Account cards already provide the page title; avoid a second full masthead.
+body:has(.tracy-auth) .t4-masthead { display: none; }
+
+@media (min-width: 992px) {
+  body.tracy-menu-ready #t4-header .navbar-nav > li.mega > .mega-dropdown-menu {
+    display: block !important;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity 180ms ease, transform 180ms ease, visibility 0s linear 180ms;
+    max-height: calc(100dvh - 80px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  body.tracy-menu-ready #t4-header .navbar-nav > li.mega.show > .mega-dropdown-menu {
+    visibility: visible;
+    transition-delay: 0s;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  body.tracy-menu-ready:not(.tracy-menu-open) .t4-wrapper::after { opacity: 0; backdrop-filter: none; }
+  body.tracy-menu-ready.tracy-menu-open .t4-wrapper::after { opacity: 1; background: color-mix(in srgb, var(--bg) 30%, transparent); backdrop-filter: blur(4px); }
+}
+.t4-offcanvas .sub-menu-back, .t4-offcanvas .sub-menu-toggle { cursor: pointer; min-height: 44px; }
+.t4-offcanvas .sub-menu-back:focus-visible, .t4-offcanvas .sub-menu-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.t4-offcanvas .t4-off-canvas-header button { min-width: 44px; min-height: 44px; color: var(--fg); }
+.t4-offcanvas .t4-off-canvas-header { position: sticky; top: 0; z-index: 3; background: var(--surface); }
+.t4-offcanvas { scroll-padding-top: 80px; }
+@media (prefers-reduced-motion: reduce) {
+  .t4-offcanvas, .t4-offcanvas .drilldown-effect, .c-offcanvas-bg,
+  body.tracy-menu-ready #t4-header .mega-dropdown-menu, .t4-wrapper::after {
+    // A non-zero duration preserves T4's transitionend-based focus cleanup.
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+.t4-offcanvas .sub-menu-toggle { min-width: 44px; }
+.t4-offcanvas .t4-off-canvas-header .close { opacity: 1; font-size: 24px; }
+@media (max-width: 575px) {
+  .t4-offcanvas .t4-off-canvas-body .t4-module .module-inner { padding-inline: 0; }
+  .t4-offcanvas .navbar { width: calc(100% - 48px); margin-inline: 24px; }
+  // A drill-down occupies the whole drawer; nested list indentation wastes phone width.
+  .t4-offcanvas .t4-off-canvas-body .navbar.drilldown-effect .navbar-nav .nav-item,
+  .t4-offcanvas .t4-off-canvas-body .navbar.drilldown-effect .navbar-nav .nav-item .dropdown-menu .nav-item {
+    padding-inline: 0;
+  }
+  .t4-offcanvas .t4-off-canvas-body .navbar :is(.nav-link, .dropdown-item) {
+    max-width: 100%;
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 991.98px) {
+  // T4's desktop hover arrow is redundant in drill-down links and can render as a missing glyph.
+  .t4-offcanvas .t4-off-canvas-body .navbar .dropdown-item::before { content: none; }
+  // The translated parent level can protrude into the drawer's side gutter.
+  .t4-offcanvas .navbar:has(> .navbar-nav > li > [aria-expanded="true"]) > .navbar-nav > li > a,
+  .t4-offcanvas .navbar:has(> .navbar-nav > li > [aria-expanded="true"]) > .navbar-nav > li > .sub-menu-toggle {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .t4-offcanvas .t4-off-canvas-body .navbar.drilldown-effect .navbar-nav .sub-menu-toggle {
+    align-self: center;
+    margin-block: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 992px) {
+  body.tracy-menu-ready #t4-header .t4-megamenu .navbar-nav > li.nav-item.tracy-menu-compact { position: relative; }
+  body.tracy-menu-ready #t4-header .t4-megamenu .navbar-nav > li.nav-item.tracy-menu-compact > .dropdown-menu {
+    inline-size: 280px !important;
+    max-inline-size: calc(100vw - 32px) !important;
+    inset-inline: auto 0;
+    padding: var(--space-4);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    box-shadow: var(--tracy-ring);
+  }
+  body.tracy-menu-ready #t4-header .t4-megamenu .tracy-menu-compact .mega-dropdown-menu > .mega-dropdown-inner,
+  #t4-header .tracy-menu-compact .dropdown-menu-inner,
+  #t4-header .tracy-menu-compact .mega-col-nav { padding: 0; }
+  #t4-header .tracy-menu-compact .row { margin: 0; }
+  #t4-header .tracy-menu-compact .dropdown-menu a { min-height: 44px; display: flex; align-items: center; padding: var(--space-2) var(--space-3); }
+  #t4-header .navbar-nav > li > .nav-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -6px; box-shadow: none; border-radius: var(--radius-sm); }
+  body.tracy-menu-ready:not(.tracy-menu-open) .t4-wrapper::after { opacity: 0; backdrop-filter: none; }
+}
+
+@media (min-width: 992px) {
+  body.tracy-menu-ready:not(.tracy-menu-open):has(#t4-header .mega-dropdown-menu.show) .t4-wrapper::after { opacity: 0; backdrop-filter: none; }
+  body.tracy-menu-ready #t4-header .t4-megamenu .navbar-nav > li.nav-item.tracy-menu-compact > .dropdown-menu { box-shadow: none; }
+}
+
+// A subcategory is one card: title and summary share a boundary and a responsive grid.
+:is(.content-category, .com-content-category-blog) .cat-children {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+  margin-inline: 0;
+}
+:is(.content-category, .com-content-category-blog) .cat-children > h3 { grid-column: 1 / -1; padding: 0; margin-bottom: 0; }
+:is(.content-category, .com-content-category-blog) .cat-children .cat-child {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: var(--space-6);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+:is(.content-category, .com-content-category-blog) .cat-children .cat-child > h3 { margin: 0 0 var(--space-3); }
+:is(.content-category, .com-content-category-blog) .cat-children .category-desc { padding: 0; border: 0; border-radius: 0; /* ds-keep: a category description inside its card draws no box (no border, no fill) */ }
+:is(.content-category, .com-content-category-blog) .cat-children .category-desc > :last-child { margin-bottom: 0; }
+@media (max-width: 575px) {
+  :is(.content-category, .com-content-category-blog) .cat-children { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 575px) {
+  #t4-main-body > .t4-section-inner.container > .t4-row { --t4-gutter-x: calc(var(--space-4) * 2); }
+}
+
+@media (min-width: 992px) {
+  .com-content-category-blog .cat-children { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.com-content-category-blog .cat-children .item-title a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0;
+  border: 0; border-radius: 0; /* ds-keep: a title link drawn as text (no border, no fill) */ background: transparent; color: var(--fg);
+  font-size: var(--text-xl); line-height: 1.3;
+}
+.com-content-category-blog .cat-children .item-title a { margin: 0; box-shadow: none; font-size: inherit; }
+:is(.content-category, .com-content-category-blog) .cat-children .category-desc { margin: 0; }
+.com-content-category-blog > .tracy-blog__desc { padding: 0; border: 0; border-radius: 0; /* ds-keep: the blog intro drawn as text (no border, no fill) */ }
+
+// Editorial headings must preserve hierarchy on small screens.
+.tracy-article .tracy-article__title { font-size: var(--text-3xl); line-height: var(--leading-tight); }
+.tracy-article .tracy-prose > h2 { font-size: var(--text-xl); }
+.tracy-article .tracy-prose > h3 { font-size: var(--text-lg); }
+@media (max-width: 639px) { .tracy-article .tracy-article__title { font-size: var(--text-2xl); } }
+.tracy-article .tracy-article__title { text-transform: none; }
+
+
+// Native T4 panels with one editable image feature; override the original logical sizing too.
+.tracy-menu-feature { display:flex; flex-direction:column; overflow:hidden; border-radius:var(--radius-md); background:var(--surface); color:var(--fg); text-decoration:none; }
+.tracy-menu-feature__image { display:block; width:100%; aspect-ratio:16 / 9; height:auto; object-fit:cover; }
+.tracy-menu-feature__body { display:flex; flex-direction:column; gap:8px; padding:18px; }
+.tracy-menu-feature__eyebrow { color:var(--fg-2); font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
+.tracy-menu-feature__title { color:var(--fg); font-size:19px; font-weight:600; line-height:1.25; letter-spacing:-.025em; }
+.tracy-menu-feature__description { color:var(--fg-2); font-size:13px; line-height:1.5; }
+.tracy-menu-feature__action { color:var(--accent); font-size:13px; font-weight:500; padding-top:4px; }
+.tracy-menu-feature:hover .tracy-menu-feature__title { color:var(--accent); }
+.tracy-menu-feature:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+@media (min-width:992px) {
+ body.tracy-menu-ready #t4-header .t4-megamenu .navbar-nav > li.nav-item.mega:has(> .tracy-mega-editorial) { position:static; }
+ body.tracy-menu-ready #t4-header .t4-megamenu .navbar-nav > li.nav-item.mega > .mega-dropdown-menu.tracy-mega-editorial {
+  inline-size:min(760px, calc(100vw - 48px)) !important; max-inline-size:calc(100vw - 48px) !important;
+  inset-inline:50% auto !important; inset-block-start:100%; margin:0 !important;
+  padding:28px; border:1px solid var(--border-soft); border-radius:0 0 var(--ds-card-radius, 20px) var(--ds-card-radius, 20px);
+  background:var(--bg); transform:translate(-50%, -6px) !important;
+  &.tracy-mega-company { inline-size:min(920px, calc(100vw - 48px)) !important; }
+  &.tracy-mega-resources { inline-size:min(880px, calc(100vw - 48px)) !important; }
+  > .mega-dropdown-inner { padding:0; width:100%; max-width:none; }
+  > .mega-dropdown-inner > .row { display:grid; grid-template-columns:1fr 300px; gap:32px; margin:0; }
+  &.tracy-mega-resources > .mega-dropdown-inner > .row { grid-template-columns:repeat(3,minmax(0,1fr)); gap:40px; }
+  .row > div { width:auto; padding:0; min-width:0; }
+  .mega-col-nav, .mega-col-module, .mega-inner { padding:0; }
+  .mega-col-title { color:var(--fg-2); font-size:11px; line-height:1.4; font-weight:600; letter-spacing:.045em; margin:0 0 16px; }
+  .mega-col-nav ul { padding:0; margin:0; }
+  .mega-col-nav li { margin:0; padding:0; }
+  .mega-col-nav a { display:flex; align-items:center; min-height:42px; padding:9px 0; white-space:normal; font-size:15px; line-height:1.35; font-weight:400; letter-spacing:-.01em; }
+  .mega-col-nav a:hover { color:var(--accent); }
+  .moduletable { padding:0; border:0; margin:0; }
+  a.tracy-menu-feature { padding:0; white-space:normal; }
+ }
+ body.tracy-menu-ready #t4-header .t4-megamenu .navbar-nav > li.nav-item.mega.show > .mega-dropdown-menu.tracy-mega-editorial { transform:translate(-50%,0) !important; }
+ body.tracy-menu-ready #t4-header .navbar-nav > li > .nav-link:focus-visible { outline:2px solid var(--accent); outline-offset:-12px; border-radius:var(--ds-card-radius, 16px); }
+}
+
+// Portraits follow the same quiet, aligned hierarchy as the company navigation.
+@media (min-width:992px) {
+ body.tracy-menu-ready #t4-header .t4-megamenu .navbar-nav > li.nav-item.mega > .mega-dropdown-menu.tracy-mega-company {
+  > .mega-dropdown-inner > .row { grid-template-columns:190px minmax(0,1fr); gap:40px; }
+  .mega-col-nav a { font-size:24px; font-weight:600; letter-spacing:-.025em; }
+ }
+}
+#t4-header .tracy-menu-team__heading { margin:0 0 16px; font-size:11px; line-height:1.4; color:var(--fg-2); font-weight:600; }
+#t4-header .tracy-menu-team__people { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; list-style:none; padding:0; margin:0; }
+#t4-header .tracy-menu-team__people > li { padding:0; margin:0; min-width:0; }
+#t4-header .tracy-menu-team__people img { width:100%; height:auto; aspect-ratio:1; object-fit:cover; border-radius:var(--ds-card-radius, 4px); display:block; margin:0 0 12px; }
+#t4-header .tracy-menu-team__name { display:block; font-size:14px; line-height:1.3; font-weight:600; color:var(--fg); letter-spacing:-.02em; }
+#t4-header .tracy-menu-team__role { display:block; margin-top:5px; font-size:11px; line-height:1.4; color:var(--fg-2); }
+
+// Keep teaser actions next to their text; legacy Joomla margins otherwise stack with flex gaps.
+.tracy-postcard .tracy-postcard__body { gap:var(--space-3); }
+.tracy-postcard .tracy-postcard__body > .page-header,
+.tracy-postcard .tracy-postcard__body > .tracy-postcard__meta,
+.tracy-postcard .tracy-postcard__body > .tracy-postcard__intro { margin:0 !important; }
+.tracy-postcard .tracy-postcard__intro > :last-child { margin-bottom:0; }
+.tracy-postcard .tracy-postcard__action { margin-top:0; margin-block-start:0; padding-top:0; padding-block-start:0; }
+.tracy-postcard .tracy-postcard__action p.readmore { margin:0 !important; padding:0; }
+.tracy-postcard .tracy-postcard__action .btn-readmore { display:inline-flex; align-items:center; min-height:44px; padding:0; text-align:start; }
+
+// The controller owns the desktop veil. Legacy :has(:hover) rules otherwise switch
+// blur from 20px to 4px on pointer exit, then remove it mid-fade. Keep the filter
+// constant and animate only opacity so reversals continue from the current frame.
+@media (min-width: 992px) {
+  body.tracy-menu-ready .t4-wrapper::after {
+    opacity: 0 !important;
+    backdrop-filter: blur(4px) !important;
+    background: color-mix(in srgb, var(--bg) 30%, transparent) !important;
+    transition: opacity 180ms ease;
+  }
+  body.tracy-menu-ready.tracy-menu-open .t4-wrapper::after {
+    opacity: 1 !important;
+  }
+}
+
+@media (min-width: 992px) {
+ body.tracy-menu-ready #t4-header .t4-megamenu .navbar-nav > li.nav-item.mega > .mega-dropdown-menu.tracy-mega-editorial:not(.tracy-mega-resources) .mega-col-nav a {
+  font-size:24px; font-weight:600; letter-spacing:-.025em;
+ }
+ #t4-header .tracy-menu-team__people a.tracy-menu-team__person { display:block; padding:0; white-space:normal; }
+ #t4-header .tracy-menu-team__person:hover .tracy-menu-team__name { color:var(--accent); }
+ #t4-header .tracy-menu-team__person:focus-visible, #t4-header .tracy-menu-team__all:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+ #t4-header a.tracy-menu-team__all { display:inline-flex; gap:8px; padding:0; margin-top:20px; font-size:14px; color:var(--accent); }
+}
+
+// Single contact: one heading, a usable form and a contextual information card.
+.tracy-contact-page { max-width:1080px; margin-inline:auto; }
+.tracy-contact-page .tracy-view-head { max-width:760px; margin-bottom:40px; }
+.tracy-contact-page .tracy-view-head__title { font-size:clamp(32px,4vw,48px); line-height:1.12; letter-spacing:-.035em; }
+.tracy-contact-page .tracy-contact { grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:64px; }
+.tracy-contact-page .tracy-form--wide { max-width:none; width:100%; }
+.tracy-contact-page .tracy-field { margin-bottom:24px; }
+.tracy-contact-page .tracy-field input:not([type=checkbox]), .tracy-contact-page .tracy-field textarea { width:100%; max-width:none; box-sizing:border-box; }
+.tracy-contact-page .tracy-field textarea { min-height:160px; height:180px; resize:vertical; }
+.tracy-contact-page .tracy-contact__aside { padding:28px; border:1px solid var(--border-soft); border-radius:var(--ds-card-radius, 20px); background:var(--surface); }
+.tracy-contact-page .acm-contact-information { padding:0; margin:0; }
+.tracy-contact-page .tracy-contact-info__heading { font-size:22px; margin:0 0 24px; }
+.tracy-contact-page .tracy-contact-info__email { font-size:17px; overflow-wrap:anywhere; }
+.tracy-contact-page .tracy-contact-info__notice { font-size:14px; line-height:1.6; margin:24px 0 0; color:var(--fg-2); }
+@media(max-width:767px) {
+ .tracy-contact-page .tracy-contact { grid-template-columns:minmax(0,1fr); gap:32px; }
+ .tracy-contact-page .tracy-view-head { margin-bottom:28px; }
+ .tracy-contact-page .tracy-contact__aside { padding:24px; }
+}
+// T4's masthead repeats the component title; keep the single editable heading by the form.
+body:has(.tracy-contact-page) .t4-masthead { display:none; }
+.tracy-contact-page .tracy-contact-info__details { border:0; box-shadow:none; padding:0; background:transparent; }
+
+.tracy-contact-page .tracy-contact:not(:has(> .tracy-contact__aside)) { grid-template-columns:minmax(0,1fr); max-width:720px; }
+// The aside supplies the one card surface; its ACM section is only content.
+.tracy-contact-page .tracy-contact__aside .acm-contact-information {
+ border:0; border-radius:0; /* ds-keep: content inside the aside card, which draws the frame */ box-shadow:none; background:transparent; padding:0; margin:0;
+}
+.tracy-contact-page #contact-form fieldset { min-width:0; margin-inline:0; padding-inline:0; border:0; }
+.tracy-contact-page #contact-form .form-check { padding:0; margin:0; }
+.tracy-contact-page #contact-form .form-check-label { display:flex; align-items:flex-start; gap:12px; text-align:left; font-weight:400; line-height:1.5; margin:0; }
+.tracy-contact-page #contact-form .form-check-input { float:none; flex:0 0 auto; margin:3px 0 0; }
+
+/* Dark-mode logo pair (html/layouts/t4/element/logo.php, html/layouts/t4/layout/offcanvas.php): a
+   bitmap logo shows in light mode, its .d-dark counterpart (site_logo_dark, or the site name when
+   there is none) in dark mode. The inline SVG mark follows the theme by itself and is not paired.
+   An uploaded logo keeps its proportions and is held to the 32 px the demo logo (images/logo.svg)
+   shows at, so a customer logo takes the demo logo's place without growing the header. */
+.navbar-brand .d-dark,
+.t4-off-canvas-header .d-dark { display: none; }
+html[data-theme="dark"] .navbar-brand .d-light,
+html[data-theme="dark"] .t4-off-canvas-header .d-light { display: none; }
+html[data-theme="dark"] .navbar-brand .d-dark,
+html[data-theme="dark"] .t4-off-canvas-header .d-dark { display: inline; }
+.navbar-brand img.logo-img { width: auto; height: auto; max-width: 100%; max-height: 32px; }

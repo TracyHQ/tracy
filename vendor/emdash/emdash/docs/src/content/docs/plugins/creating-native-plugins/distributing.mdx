@@ -1,0 +1,257 @@
+---
+title: Distributing native plugins
+description: Build, inspect, publish, and install a native plugin package from npm.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+Native plugins are npm packages installed in the host project and registered in `astro.config.mjs`. The package needs a built server entry for its descriptor and `createPlugin()`. If it also ships React or Astro components, export those as separate source entrypoints so the host can compile them for the correct environment.
+
+## Package layout
+
+The following layout separates the server runtime from browser and Astro source:
+
+```text
+plugin-activity/
+├── src/
+│   ├── index.ts
+│   ├── admin/
+│   │   ├── index.tsx
+│   │   └── ActivityPage.tsx
+│   └── astro/
+│       ├── index.ts
+│       └── ActivityBlock.astro
+├── dist/
+│   ├── index.mjs
+│   └── index.d.mts
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+`dist/` is generated. Keep `src/admin/` and `src/astro/` in the published tarball because the host's Vite and Astro build must process those entrypoints.
+
+## Package exports
+
+The following `package.json` builds the server entry and publishes all three entrypoints:
+
+```json title="package.json"
+{
+	"name": "@example/plugin-activity",
+	"version": "0.1.0",
+	"type": "module",
+	"main": "./dist/index.mjs",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs"
+		},
+		"./admin": "./src/admin/index.tsx",
+		"./astro": "./src/astro/index.ts"
+	},
+	"files": ["dist", "src/admin", "src/astro"],
+	"scripts": {
+		"build": "tsdown src/index.ts --format esm --dts --clean",
+		"dev": "tsdown src/index.ts --format esm --dts --watch",
+		"typecheck": "tsc --noEmit",
+		"prepublishOnly": "pnpm typecheck && pnpm build"
+	},
+	"peerDependencies": {
+		"@cloudflare/kumo": "*",
+		"@emdash-cms/admin": "*",
+		"@lingui/core": "*",
+		"@lingui/react": "*",
+		"@tanstack/react-query": "*",
+		"astro": ">=6.0.0-beta.0",
+		"emdash": "*",
+		"react": "^18.0.0 || ^19.0.0"
+	},
+	"devDependencies": {
+		"@types/react": "^19.0.0",
+		"tsdown": "^0.20.0",
+		"typescript": "^5.9.0"
+	},
+	"keywords": ["emdash", "emdash-plugin"],
+	"license": "MIT"
+}
+```
+
+Remove `./admin`, `src/admin`, and the admin-only peer dependencies when the plugin has no trusted React UI. Remove `./astro`, `src/astro`, and the `astro` peer when it has no Portable Text renderer. Add a peer dependency for every host-owned library imported by an exported source entrypoint; this prevents a second React, Kumo, Lingui, or React Query instance from entering the admin bundle.
+
+The entrypoints have different consumers:
+
+| Export | Required when | Consumer |
+| --- | --- | --- |
+| `.` | Always | Astro configuration imports the descriptor factory; EmDash imports the named `createPlugin()` at runtime. |
+| `./admin` | `adminEntry` is set | The host's browser build imports the React component maps. |
+| `./astro` | `componentsEntry` is set | The host's Astro build imports `blockComponents`. |
+
+The module specifiers in the descriptor and runtime must match these exports:
+
+```typescript title="src/index.ts"
+export function activityPlugin(): PluginDescriptor {
+	return {
+		id: "plugin-activity",
+		version: "0.1.0",
+		format: "native",
+		entrypoint: "@example/plugin-activity",
+		adminEntry: "@example/plugin-activity/admin",
+		componentsEntry: "@example/plugin-activity/astro",
+	};
+}
+
+export function createPlugin() {
+	return definePlugin({
+		id: "plugin-activity",
+		version: "0.1.0",
+		admin: {
+			entry: "@example/plugin-activity/admin",
+		},
+	});
+}
+```
+
+Keep the npm package version, descriptor version, and `definePlugin()` version synchronized. The version shown to a site administrator comes from the plugin definition, not automatically from `package.json`.
+
+## Plugin identity and version
+
+`definePlugin()` accepts either an unscoped ID containing lowercase letters, digits, and hyphens, or a scoped ID in the form `@scope/name`. Use an unscoped, kebab-case ID for a site plugin because the ID also occupies one path segment in `/_emdash/api/plugins/<plugin-id>/<route>`.
+
+The following values show the accepted forms and the recommended separation between plugin ID and npm package name:
+
+```typescript
+id: "plugin-activity"; // Recommended: valid in plugin route URLs
+id: "@example/plugin-activity"; // Accepted by definePlugin(), but not one URL segment
+
+entrypoint: "@example/plugin-activity"; // The npm package may stay scoped
+```
+
+Versions must begin with a semantic `major.minor.patch` sequence. Use a complete semantic version for both the descriptor and runtime:
+
+```typescript
+version: "1.0.0"; // Valid
+version: "1.2.3-beta.1"; // Valid prerelease
+version: "1.0"; // Invalid: missing patch version
+```
+
+## TypeScript configuration
+
+The following `tsconfig.json` covers a native plugin with React and Astro source:
+
+```json title="tsconfig.json"
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "preserve",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"declaration": true,
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"jsx": "react-jsx",
+		"types": ["astro/client"]
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "dist"]
+}
+```
+
+Run `pnpm typecheck` against the source entrypoints before packaging. The `build` script compiles only `src/index.ts`; the host compiles the exported admin and Astro source when it consumes the package.
+
+## Inspect the package
+
+Test the exact tarball contents before publishing. The commands below assume a disposable site named `my-emdash-site` sits beside the plugin directory.
+
+<Steps>
+
+1. Build and type-check the package.
+
+   ```bash
+   pnpm typecheck
+   pnpm build
+   ```
+
+2. Create the npm tarball and review the file list printed by npm.
+
+   ```bash
+   npm pack
+   ```
+
+   For the example package, npm creates `example-plugin-activity-0.1.0.tgz`.
+
+3. Confirm that the output contains `dist/index.mjs`, `dist/index.d.mts`, and every source file reachable from the exported `./admin` and `./astro` modules.
+
+4. Install the produced tarball in the disposable EmDash site.
+
+   ```bash
+   cd ../my-emdash-site
+   pnpm add ../plugin-activity/example-plugin-activity-0.1.0.tgz
+   ```
+
+5. Import and register the descriptor factory in the disposable site's `astro.config.mjs`, following [Create and register the package](/plugins/creating-native-plugins/your-first-native-plugin/#create-and-register-the-package). Then build the host site.
+
+   ```bash
+   pnpm build
+   ```
+
+   Open every plugin admin surface and render every contributed Portable Text block. Registering before the build makes Astro resolve the tarball's `./admin` and `./astro` exports; a server-only package test cannot catch a missing browser or `.astro` source file.
+
+</Steps>
+
+## README contents
+
+Give an operator enough information to install and evaluate the package without reading its source. Include:
+
+- a one-sentence description and the supported EmDash version
+- the install command and complete `astro.config.mjs` registration
+- the native trust boundary and why the plugin needs native execution
+- every declared capability and allowed host, with the feature that uses it
+- settings and their defaults
+- required layout components, such as `EmDashBodyEnd` for a body-end fragment
+- upgrade steps for changes that require operator action
+
+Do not describe capability declarations as an isolation boundary. They gate `ctx` APIs, but native code can still use imports, environment variables, and direct network calls available to the host process.
+
+## Publish to npm
+
+Publish after the tarball test passes:
+
+```bash
+npm publish --access public
+```
+
+The first public release of a scoped package needs `--access public`. Use semantic versioning for later releases. Treat changes to constructor options, stored data, required host changes, package exports, or the plugin's trust requirements as compatibility decisions. If an upgrade requires a new capability or allowed host, call it out in the release notes even though native installs do not have a capability-consent prompt.
+
+## Install from npm
+
+An operator installs the published package in the EmDash site:
+
+```bash
+pnpm add @example/plugin-activity
+```
+
+Then import and register its descriptor factory in `astro.config.mjs` as shown in [Create and register the package](/plugins/creating-native-plugins/your-first-native-plugin/#create-and-register-the-package). Installing the dependency alone does not activate the plugin; changing the Astro configuration and deploying the site completes the installation.
+
+## Develop against a host site
+
+Build the plugin in watch mode:
+
+```bash
+pnpm dev
+```
+
+Install the local directory from the host site:
+
+```bash
+pnpm add ../plugin-activity
+```
+
+Register the plugin's descriptor factory in `astro.config.mjs`, then start the host development server. Restart the server after changing descriptor metadata or package exports. If a package-manager file dependency copies files instead of linking them in your setup, reinstall it after rebuilding; a workspace dependency or `pnpm link` keeps the local package connected during development.
+
+## Registry boundary
+
+Native packages cannot be published to the EmDash registry. Registry plugins use the sandboxed package format, signed release workflow, and installation consent flow. If the plugin no longer needs React admin code, Astro renderers, trusted fragments, or another in-process dependency, [convert it to the sandboxed format](/plugins/creating-plugins/choosing-a-format/) before publishing through the registry.
+
+<Aside type="note">
+	A package may publish a sandboxed plugin and a separate native rendering companion. Keep the split explicit in both READMEs: installing the registry plugin does not install or trust the npm companion automatically.
+</Aside>

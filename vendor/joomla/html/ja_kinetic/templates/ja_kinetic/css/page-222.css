@@ -1,0 +1,244 @@
+/* ===================================================================
+   ja_kinetic — FAQ page (Itemid 222) per-page overlay
+   Loaded by index.php after template.css + darkmode.css (cache-busted
+   by filemtime). ALL rules scoped to body.item-222 so they cannot
+   bleed to other pages. Shared ACM block files are never edited.
+   =================================================================== */
+
+/* ------------------------------------------------------------------
+   0. t4-main-body: strip the 48px padding T4 injects between the
+      sticky header and first module — design has flush sections.
+   ------------------------------------------------------------------ */
+body.item-222 .t4-main-body {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* ------------------------------------------------------------------
+   1. MASTHEAD — eyebrow pill (shared CSS renders it as plain block)
+      + radial lime gradient overlay on the section background.
+   ------------------------------------------------------------------ */
+
+body.item-222 .acm-page-masthead .hx-eyebrow {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  background: rgba(163, 230, 53, 0.078) !important;
+  border: 1px solid rgba(163, 230, 53, 0.251) !important;
+  border-radius: 100px !important;
+  padding: 5px 12px !important;
+  margin-bottom: 16px;
+  font-size: 11.5px !important;
+  letter-spacing: 1.5px !important;
+}
+
+/* Light-mode pill override */
+html:not(.t4-dark) body.item-222 .acm-page-masthead .hx-eyebrow {
+  background: rgba(77, 124, 15, 0.08) !important;
+  border: 1px solid rgba(77, 124, 15, 0.2) !important;
+}
+
+body.item-222 .acm-page-masthead .hx-eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+body.item-222 .acm-page-masthead .hx-section {
+  background-color: #161B18 !important;
+  background-image:
+    radial-gradient(ellipse 150% 120% at 50% 0%, rgba(163, 230, 53, 0.059) 0%, transparent 55%),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px) !important;
+  background-size: auto, 30px 30px, 30px 30px !important;
+}
+
+/* Light mode masthead section */
+html:not(.t4-dark) body.item-222 .acm-page-masthead .hx-section {
+  background-color: #F2F5EE !important;
+  background-image:
+    radial-gradient(ellipse 150% 120% at 50% 0%, rgba(77, 124, 15, 0.05) 0%, transparent 55%),
+    linear-gradient(rgba(16, 20, 15, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 20, 15, 0.04) 1px, transparent 1px) !important;
+}
+
+/* ------------------------------------------------------------------
+   2. ACCORDION SECTION
+   ------------------------------------------------------------------ */
+
+/* Section: override shared 80px → 72px */
+body.item-222 .acm-accordion .hx-section {
+  padding: 72px 0 !important;
+}
+
+/* Hide the accordion head (eyebrow + title) — design has none */
+body.item-222 .acm-accordion .hx-faq-head {
+  display: none !important;
+}
+
+body.item-222 .acm-accordion .hx-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+/* Group label: 40px total gap above (10px list gap + 30px margin-top) */
+body.item-222 .acm-accordion .hx-faq-group {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  letter-spacing: 1.8px !important;
+  margin: 30px 0 0 !important;
+}
+body.item-222 .acm-accordion .hx-faq-group:first-child {
+  margin-top: 0 !important;
+}
+
+body.item-222 .acm-accordion .hx-faq-item {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 18px 20px !important;
+}
+/* Remove the shared divider lines */
+body.item-222 .acm-accordion .hx-faq-item:first-of-type {
+  border-top: 1px solid var(--border) !important;
+}
+
+body.item-222 .acm-accordion .hx-faq-q {
+  font-size: 15.5px !important;
+  padding: 0 !important;
+  gap: 16px !important;
+}
+
+/* Open state: question stays --heading (not --primary) */
+body.item-222 .acm-accordion .hx-faq-item[open] > .hx-faq-q {
+  color: var(--heading) !important;
+}
+
+body.item-222 .acm-accordion .hx-faq-ico {
+  flex: 0 0 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+/* closed: muted (already var(--muted) in shared CSS) */
+/* open: primary (already var(--primary) in shared CSS — keep it) */
+
+body.item-222 .acm-accordion .hx-faq-a {
+  font-size: 14.5px !important;
+  line-height: 1.65 !important;
+  padding: 14px 0 0 !important;
+}
+
+/* ------------------------------------------------------------------
+   3. SUPPORT SECTION — exact bg (#161B18 dark / #F2F5EE light)
+      The shared faq-support CSS uses var(--elevated) as a token
+      fallback; here we pin the exact hex per design.
+   ------------------------------------------------------------------ */
+body.item-222 .acm-faq-support .hx-sup-section {
+  background: #161B18 !important;
+}
+
+html:not(.t4-dark) body.item-222 .acm-faq-support .hx-sup-section {
+  background: #F2F5EE !important;
+}
+
+/* The card inside matches the section bg (.pen Support Card == section #161B18),
+   reading as a bordered card on the same-tone band. */
+body.item-222 .acm-faq-support .hx-sup-card {
+  background: #161B18 !important;
+  border-color: var(--border) !important;
+}
+
+html:not(.t4-dark) body.item-222 .acm-faq-support .hx-sup-card {
+  background: #F2F5EE !important; /* .pen light Support Card == section #F2F5EE, not white */
+}
+
+/* ------------------------------------------------------------------
+   4. CTA SECTION — override section padding 72px → 80px per design
+   ------------------------------------------------------------------ */
+body.item-222 .acm-cta .hx-section {
+  padding-block: 80px !important;
+}
+
+/* ------------------------------------------------------------------
+   5. RESPONSIVE — Mobile (<= 767.98px)
+   ------------------------------------------------------------------ */
+@media (max-width: 767.98px) {
+
+  /* --- Masthead mobile --- */
+  body.item-222 .acm-page-masthead .hx-section {
+    padding: 40px 0 36px !important;
+  }
+  body.item-222 .acm-page-masthead .hx-pad {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  body.item-222 .acm-page-masthead .hx-h1 {
+    font-size: 32px !important;
+    letter-spacing: -0.8px !important;
+  }
+  body.item-222 .acm-page-masthead .hx-mast-sub {
+    font-size: 15px !important;
+  }
+
+  /* --- Accordion mobile --- */
+  body.item-222 .acm-accordion .hx-section {
+    padding: 36px 0 0 !important; /* bottom handled by support top gap */
+  }
+  body.item-222 .acm-accordion .hx-pad {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  body.item-222 .acm-accordion .hx-faq-item {
+    padding: 16px 18px !important;
+    border-radius: 10px !important;
+  }
+  body.item-222 .acm-accordion .hx-faq-q {
+    font-size: 15px !important;
+    gap: 12px !important;
+  }
+  body.item-222 .acm-accordion .hx-faq-ico {
+    flex: 0 0 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+  body.item-222 .acm-accordion .hx-faq-a {
+    font-size: 14px !important;
+    padding-top: 12px !important;
+  }
+
+  body.item-222 .acm-accordion .hx-faq-group {
+    font-size: 11px !important;
+    letter-spacing: 1.5px !important;
+    margin-top: 14px !important; /* 14+10=24px total gap between groups */
+  }
+  body.item-222 .acm-accordion .hx-faq-group:first-child {
+    margin-top: 0 !important;
+  }
+
+  body.item-222 .acm-accordion .hx-faq-item[open] {
+    border-left: 3px solid var(--primary) !important;
+  }
+
+  /* --- Support mobile: section padding adds 48px bottom clearance ---
+     Use both dark + light selectors to beat the desktop light override
+     (which has higher specificity than the plain body.item-222 rule). */
+  body.item-222 .acm-faq-support .hx-sup-section,
+  html.t4-dark body.item-222 .acm-faq-support .hx-sup-section,
+  html:not(.t4-dark) body.item-222 .acm-faq-support .hx-sup-section {
+    background: transparent !important;
+    border: none !important;
+    padding: 24px 20px 48px !important;
+  }
+
+  /* --- CTA mobile --- */
+  body.item-222 .acm-cta .hx-section {
+    padding-block: 56px !important;
+  }
+}

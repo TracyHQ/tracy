@@ -1,0 +1,50 @@
+{
+  "id": "QA-UNIT-REG-PR-1228-wp-pack-modes-happy",
+  "itemIds": ["regression:REG-PR-1228-wp-pack-modes"],
+  "requirement": "The eight WordPress quickstarts re-cut with readable webroot modes keep their contracts and rows, pack modes are refused at the source, and the template-data CI lane stays narrow and fail-closed",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1228-wp-pack-modes.json",
+    "ref": "PR #1228 (fix); fix evidence: 12/10/2026: every demo install from the batch-1 WordPress packs failed at provision (wp-cli could not read wp-load.php); unpacking as provision does in wordpress:cli-php8.3 and running wp-cli as www-data fails on all 8 old archives and prints 7.1.3 on all 8 new ones",
+    "invariant": "S1: every manifest names its own id, version and webroot archive; every tag has a profile row for its new version. S2: the 0600/0700 archive has 2 wrong members; the 0644/0755 archive has none. S3: no restore or quickstart command runs inside (umask 077; ...), and no block sets umask 077 for its following commands. S4: contract-only plans the template-data lane (checks row starting --only lint, no tests 1/2); the mixed diff plans the same matrix with and without the lane; the throwing reader plans every row.",
+    "productSources": [
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/webroot-modes.js:24",
+      "scripts/ci/plan-ci.mjs:229",
+      "scripts/ci/related-tests.mjs:393"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "scripts/ci/related-tests.mjs:394 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1228-wp-pack-modes.mjs:104 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1228-wp-pack-modes.mjs:47 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1228-wp-pack-modes.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1228-wp-pack-modes"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1228-wp-pack-modes",
+    "pr": 1228,
+    "kind": "fix",
+    "area": "wordpress-quickstart/pack-modes",
+    "file": "tests/regression/cases/REG-PR-1228-wp-pack-modes.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1228-wp-pack-modes.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

@@ -1,0 +1,59 @@
+{
+  "color": {
+    "press-ink": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Press Ink — Primary text, hairlines, section borders, icon strokes, footer text — the singular dark tone that carries 95% of all foreground information"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, nav pill background, heading-bordered surfaces"
+    },
+    "newsprint": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Newsprint — Subtle surface fills, soft borders, hairline dividers, the tone behind the crumpled-paper texture"
+    },
+    "foil-gray": {
+      "$value": "#e1e1e1",
+      "$type": "color",
+      "$description": "Foil Gray — Light borders, icon stroke accents, secondary dividers"
+    },
+    "mute-gray": {
+      "$value": "#c5c5c5",
+      "$type": "color",
+      "$description": "Mute Gray — Tertiary text, disabled state, low-contrast surface lines"
+    }
+  },
+  "font": {
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "Universal workhorse — body copy at 17px/1.29, display headlines at 75–274px with -0.04em tracking at the largest sizes, nav labels at 15px"
+    },
+    "ppsupplymono": {
+      "$value": "PPSupplyMono",
+      "$type": "fontFamily",
+      "$description": "Meta labels and bracketed captions like [01-N INTRODUCTION] and section tags (ADVERTISEMENTS, CREATIVE/AGENCY, OFFLINE MARKETING) — these are the only typographic accents that break the Helvetica monotony"
+    },
+    "ppsupplysans": {
+      "$value": "PPSupplySans",
+      "$type": "fontFamily",
+      "$description": "Secondary nav and footer micro-text where a different sans voice is needed"
+    },
+    "rock-salt": {
+      "$value": "Rock Salt",
+      "$type": "fontFamily",
+      "$description": "Rare handwritten signature accent for one or two words per page (e.g. the circled 'pleasure' annotation) — used like a stamp, never for content"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.bpco.kr",
+      "siteName": "큰그림컴퍼니",
+      "extractedAt": "2026-06-03T20:39:14.244Z",
+      "variant": "compact"
+    }
+  }
+}

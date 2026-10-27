@@ -1,0 +1,383 @@
+{
+  "color": {
+    "paper-gray": {
+      "$value": "#f3f3f4",
+      "$type": "color",
+      "$description": "Paper Gray — Page backgrounds, footer ground, quiet section bands, pale action outlines"
+    },
+    "carbon-ink": {
+      "$value": "#131314",
+      "$type": "color",
+      "$description": "Carbon Ink — Primary text, black hero and statement-card surfaces, dark icons"
+    },
+    "cloud-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Cloud White — Text over dark imagery, card and popover surfaces"
+    },
+    "divider-ash": {
+      "$value": "#e0dfdf",
+      "$type": "color",
+      "$description": "Divider Ash — Project-card surfaces, 1px dividers, quiet link and outline borders"
+    },
+    "muted-graphite": {
+      "$value": "#66646d",
+      "$type": "color",
+      "$description": "Muted Graphite — Section labels, supporting copy, subdued navigation and metadata"
+    },
+    "disabled-steel": {
+      "$value": "#838384",
+      "$type": "color",
+      "$description": "Disabled Steel — Disabled or inactive control fills"
+    },
+    "voltage-lime": {
+      "$value": "#befc65",
+      "$type": "color",
+      "$description": "Voltage Lime — Filled conversion buttons and selected controls — the sudden vivid green punctuates an otherwise near-monochrome interface"
+    }
+  },
+  "font": {
+    "neuemontreal": {
+      "$value": "NeueMontreal",
+      "$type": "fontFamily",
+      "$description": "Single-family system for display, editorial body, navigation, buttons, and footer. The 72px weight-400 display treatment is intentionally lighter than the medium-weight supporting hierarchy; it makes major statements feel open rather than dense."
+    }
+  },
+  "typography": {
+    "sm": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "18px",
+        "fontWeight": 500,
+        "lineHeight": 1.56,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.56,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "20px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "20px",
+        "fontWeight": 500,
+        "lineHeight": 1.6,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 20px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.015em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 24px"
+    },
+    "2xl-3": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-3 at 24px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "30px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 30px"
+    },
+    "3xl-2": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "30px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl-2 at 30px"
+    },
+    "3xl-3": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "32px",
+        "fontWeight": 500,
+        "lineHeight": 1.18,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl-3 at 32px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "56px",
+        "fontWeight": 500,
+        "lineHeight": 1.18,
+        "letterSpacing": "-0.025em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 56px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "72px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.035em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 72px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "72px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 72px"
+    },
+    "5xl-4": {
+      "$value": {
+        "fontFamily": "NeueMontreal",
+        "fontSize": "72px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-4 at 72px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "96": {
+      "$value": "96px",
+      "$type": "dimension",
+      "$description": "Spacing 96px"
+    },
+    "128": {
+      "$value": "128px",
+      "$type": "dimension",
+      "$description": "Spacing 128px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "md": {
+      "$value": "6.4px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    },
+    "2xl": {
+      "$value": "17.6px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "3xl": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "3xl-2": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-2"
+    }
+  },
+  "shadow": {
+    "md": {
+      "$value": "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+      "$type": "shadow",
+      "$description": "Shadow elevation md"
+    }
+  },
+  "surface": {
+    "paper-gray-canvas": {
+      "$value": "#f3f3f4",
+      "$type": "color",
+      "$description": "Surface level 0: Main page ground, footer, and pale editorial sections."
+    },
+    "cloud-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 1: Popover, chip, and light content surface."
+    },
+    "ash-project-surface": {
+      "$value": "#e0dfdf",
+      "$type": "color",
+      "$description": "Surface level 2: Project visual backdrops and structural borders."
+    },
+    "carbon-ink-surface": {
+      "$value": "#131314",
+      "$type": "color",
+      "$description": "Surface level 3: Hero, testimonial, and high-contrast statement panels."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bejamas.com",
+      "siteName": "Bejamas",
+      "extractedAt": "2026-09-20T19:30:38.652Z",
+      "variant": "extended"
+    }
+  }
+}

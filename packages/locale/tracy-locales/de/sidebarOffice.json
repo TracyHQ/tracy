@@ -1,0 +1,17 @@
+{
+  "busy": "Die Office-Vorschau ist ausgelastet. Versuchen Sie es gleich erneut.",
+  "changed": "Die Datei wurde während des Lesens geändert. Öffnen Sie die Vorschau erneut.",
+  "closeDetails": "Schriftdetails schließen",
+  "failed": "Die Office-Konvertierung hat kein verwendbares PDF erzeugt. Prüfen Sie die Datei und versuchen Sie es erneut.",
+  "invalid": "Für diese Office-Datei ist keine Vorschau möglich. Sie ist möglicherweise beschädigt, passwortgeschützt oder hat die falsche Endung.",
+  "loading": "Dokument wird gerendert...",
+  "missingFontsCount": "Schriften: {count}",
+  "missingFontsDescription": "Diese Schriften sind für diese Vorschau nicht verfügbar. Text und Layout können vom Originaldokument abweichen.",
+  "missingFontsTitle": "Fehlende Schriften",
+  "retry": "Erneut versuchen",
+  "timeout": "Bei der Office-Konvertierung ist eine Zeitüberschreitung aufgetreten. Versuchen Sie es erneut.",
+  "title": "Office-Dokument",
+  "tooLarge": "Die Office-Datei oder das konvertierte PDF überschreitet die Größenbeschränkung für die Vorschau. Verringern Sie die Dateigröße oder passen Sie die Vorschaukonfiguration an.",
+  "unavailable": "Office-Vorschauen sind nicht verfügbar. Aktivieren Sie den Dokumentvorschau-Dienst auf dem Computer, auf dem Tracy Cowork läuft.",
+  "viewMissingFonts": "Fehlende Schriften: {count}. Klicken zum Anzeigen."
+}

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "midnight-carbon": {
+      "$value": "#12130f",
+      "$type": "color",
+      "$description": "Midnight Carbon — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "bone-glow": {
+      "$value": "#e4dfda",
+      "$type": "color",
+      "$description": "Bone Glow — Primary text, headings, button text, all body copy. Warm off-white used at every size from 12px telemetry to 80px displays. The only color that does real work"
+    },
+    "charcoal-vein": {
+      "$value": "#3c3c38",
+      "$type": "color",
+      "$description": "Charcoal Vein — Secondary borders, dividers, subdued UI chrome. Warm mid-gray that registers on the dark canvas without competing with bone-white text"
+    },
+    "rose-quartz-bloom": {
+      "$value": "#f5c2c8",
+      "$type": "color",
+      "$description": "Rose Quartz Bloom — Accent glow on 3D rendered objects, ambient lighting bleed from the hero artifact. Never used on UI chrome — appears only as the soft pink edge-light on cubes"
+    }
+  },
+  "font": {
+    "arbeit-technik": {
+      "$value": "Arbeit Technik",
+      "$type": "fontFamily",
+      "$description": "Telemetry and label text — timestamps, location, status indicators, small caps annotations. 12px only, monospaced, with aggressive -0.6px letter-spacing that makes each character feel stamped. The 'HUD font' for all meta-information."
+    },
+    "inline-vf": {
+      "$value": "Inline VF",
+      "$type": "fontFamily",
+      "$description": "Hero display — the time readout and masthead block-letter wordmark. Ultra-condensed vertical metrics (0.70) compress the type into dense rectangular shapes. The signature voice: blocky, digital, unapologetic."
+    },
+    "arbeit-contrast": {
+      "$value": "Arbeit Contrast",
+      "$type": "fontFamily",
+      "$description": "Readable prose at 16px (body, links), section headings at 30px, and secondary display at 80px. Contrast cuts in the strokes give it authority at every size without increasing weight. The workhorse typeface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://yinger.dev",
+      "siteName": "Max Yinger",
+      "extractedAt": "2026-06-03T18:42:44.802Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,348 @@
+{
+  "dos": [
+    "Use Roobert at 700 weight for all display headlines 44px and above — the heavy weight at large sizes is the signature",
+    "Apply letter-spacing of -0.02em or tighter on any text 32px and above; use +0.09em on uppercase labels at 13px and below",
+    "Set primary CTAs to a black pill at 1584px radius with 8px/16px padding and white text",
+    "Reserve the vivid chromatic colors (Lime, Ember, Signal, Aqua, Cobalt, Forest, Magenta) exclusively for testimonial and social-proof card backgrounds — never use them for buttons, links, or functional UI",
+    "Separate surfaces with 1px Sand (#dad4c8) borders rather than shadows — the system is flat by design",
+    "Use the Violet Pulse (#3859f9) for all inline links and emphasized keywords within body copy",
+    "Keep card radii in the 12–40px range; use 12px for compact info cards, 24px for feature panels, 40px for full-bleed testimonial cards"
+  ],
+  "donts": [
+    "Don't apply drop shadows to cards or panels — separation comes from borders, not elevation",
+    "Don't use saturated colors (lime, orange, cyan, etc.) for buttons, form inputs, or status indicators",
+    "Don't set body text above 16px without tightening letter-spacing — large sizes need negative tracking to feel composed",
+    "Don't use the cool gray border (#e6e8ec) for decorative or large-surface dividers — reserve it for inputs and small UI elements; use warm Sand (#dad4c8) elsewhere",
+    "Don't break the pill shape on primary CTAs — 1584px radius is non-negotiable for the main action button",
+    "Don't use Roobert below 400 weight — the typeface is designed to carry weight, and light weights are not part of the system",
+    "Don't place more than one vivid chromatic card adjacent to another — space them with white or cream panels to let the color breathe"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas, card surfaces, button text on dark fills, inverted text on color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f9f8f6",
+      "name": "Warm Cream",
+      "role": "Soft surface variant for feature cards, footer background, and off-white panels — gives the white space a paper-like warmth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dad4c8",
+      "name": "Sand Border",
+      "role": "Primary hairline border and divider — warm beige rather than cool gray, keeps the system from feeling sterile",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e6e8ec",
+      "name": "Cool Mist",
+      "role": "Secondary cool-tone border for inputs, structural dividers, and subtle UI frames",
+      "group": "neutral"
+    },
+    {
+      "hex": "#55534e",
+      "name": "Stone Gray",
+      "role": "Body text, muted paragraphs, and secondary link color — warm dark gray for readable supporting copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9f9b93",
+      "name": "Ash Gray",
+      "role": "Tertiary text, icon strokes, and low-emphasis labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#222222",
+      "name": "Slate Gray",
+      "role": "Near-black for nav text, button labels, and high-contrast UI text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3859f9",
+      "name": "Violet Pulse",
+      "role": "Brand accent for inline links, highlighted keywords, and key emphasis text — the only saturated color that runs through body and heading copy",
+      "group": "brand"
+    },
+    {
+      "hex": "#b8a5e8",
+      "name": "Lavender Banner",
+      "role": "Top announcement bar background — soft violet band reserved for event/promo strips",
+      "group": "brand"
+    },
+    {
+      "hex": "#0ec5b0",
+      "name": "Teal Mark",
+      "role": "Logo 'c' glyph and small brand insignia accents",
+      "group": "brand"
+    },
+    {
+      "hex": "#cbd810",
+      "name": "Lime Slide",
+      "role": "Vivid card background for testimonial panels and social proof blocks",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff7614",
+      "name": "Ember Orange",
+      "role": "Vivid card background for testimonial and social proof blocks",
+      "group": "accent"
+    },
+    {
+      "hex": "#429dff",
+      "name": "Signal Blue",
+      "role": "Vivid card background for testimonial blocks and feature callouts",
+      "group": "accent"
+    },
+    {
+      "hex": "#3bd3fd",
+      "name": "Aqua Splash",
+      "role": "Vivid card background for testimonial blocks and product feature surfaces",
+      "group": "accent"
+    },
+    {
+      "hex": "#0667d9",
+      "name": "Cobalt",
+      "role": "Deep vivid blue card background — used in social proof carousel for darker contrast moments",
+      "group": "accent"
+    },
+    {
+      "hex": "#02693e",
+      "name": "Forest",
+      "role": "Saturated card background for testimonial blocks — rare but present in the color carousel",
+      "group": "accent"
+    },
+    {
+      "hex": "#8b045c",
+      "name": "Magenta",
+      "role": "Saturated card background for testimonial blocks and feature highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#f8b9e3",
+      "name": "Blush",
+      "role": "Soft pink card background — the only pastel in the accent set, used sparingly for tonal variety",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page uses a max-width 1200px centered container on a pure white canvas, with full-bleed colored bands for testimonial carousels and the announcement bar. The hero is a centered text stack (max-width ~900px headline) over a white field with product imagery bleeding from the bottom. Below the hero, sections alternate between two-column text+image layouts (40/60 or 50/50 splits) and full-width color carousels. A horizontally scrolling logo strip and a horizontally scrolling testimonial card row break the vertical rhythm. Vertical section gaps are generous (64–96px). Navigation is a clean top bar with left-aligned logo, centered links, and right-aligned action buttons; it sits below a 36px lavender announcement strip. The overall density is comfortable — large headline, ample whitespace, and only one or two CTAs per screen.",
+  "imagery": "Photography is product-focused and tactile: close-up shots of clay/play-doh sculptures in vivid colors (pink, orange, cyan, yellow) staged on white or neutral surfaces with hand tools (pencils, small wooden boards) visible. Images are full-bleed, with subjects bleeding off the bottom edge of the hero. The visual treatment evokes a craft or maker studio — no people, no lifestyle context, no abstract gradients. Decorative illustrations are absent; the only graphic elements are the clay-sculpture product photos and the flat monochromatic logo marks in the trust strip.",
+  "similar": [
+    {
+      "why": "Same max-width centered container, heavy display type, pill-shaped CTAs, and monochrome surfaces with a single saturated accent for links and key UI",
+      "business": "Linear"
+    },
+    {
+      "why": "Same warm, paper-like background tones and minimal elevation, with bold display headlines and flat content blocks",
+      "business": "Notion"
+    },
+    {
+      "why": "Same playful approach to bold type on white, with vivid chromatic moments breaking up otherwise monochrome sections",
+      "business": "Framer"
+    },
+    {
+      "why": "Same heavy-weight display typography, tight letter-spacing on large sizes, and pill-shaped primary actions on a clean white canvas",
+      "business": "Pitch"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "8px",
+      "cards": "24px",
+      "inputs": "8px",
+      "buttons": "1584px",
+      "smallChips": "2.75px",
+      "testimonialCards": "40px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 0,
+      "purpose": "Page canvas and default card background"
+    },
+    {
+      "hex": "#f9f8f6",
+      "name": "Cream",
+      "level": 1,
+      "purpose": "Off-white surface for feature panels and footer"
+    },
+    {
+      "hex": "#cbd810",
+      "name": "Vivid Card",
+      "level": 2,
+      "purpose": "Full-color testimonial card surfaces"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px -1px 1px 0px inset, rgba(0, 0, 0, 0.05) 0px -0.5px 1px 0px",
+      "element": "Primary CTA button"
+    }
+  ],
+  "northStar": "Bright playroom of clay shapes on white paper. A monochrome workspace punctuated by vivid, hand-rolled chromatic objects that feel weighty and tactile.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.09
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.6,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.16
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.32
+    },
+    {
+      "role": "heading",
+      "size": 44,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.88
+    },
+    {
+      "role": "heading-lg",
+      "size": 60,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.8
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 1,
+      "letterSpacing": -3.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Main conversion action (e.g. 'Start building for free')",
+      "description": "Pill shape at 1584px radius, 8px vertical / 16px horizontal padding, black (#000) fill, white text at 15–16px Roobert 500. Includes a thin 1px top shadow + inset bottom highlight for a barely-there pressed feel. Trailing arrow icon in white."
+    },
+    {
+      "name": "Secondary Ghost Button",
+      "role": "Lower-emphasis action (e.g. 'Log in', 'More choices')",
+      "description": "Outlined pill at 1584px radius, 1px border in Cool Mist (#e6e8ec) or Sand (#dad4c8), transparent fill, black or dark text at 14–15px Roobert 500. Used for cookie controls and secondary nav actions."
+    },
+    {
+      "name": "Navigation Link",
+      "role": "Primary nav items (Product, Use cases, Solutions, etc.)",
+      "description": "Plain text at 14–15px Roobert 500, color #000, no underline by default. On hover, subtle underline appears. Wrapped in the top nav bar with a max-width container."
+    },
+    {
+      "name": "Sign Up Button (Nav)",
+      "role": "Account creation from the top nav",
+      "description": "Compact black pill at 12px radius, 6px vertical / 13px horizontal padding, black fill, white text at 14px Roobert 500, small caret for dropdown."
+    },
+    {
+      "name": "Announcement Banner",
+      "role": "Top-of-page event/promo strip",
+      "description": "Full-width lavender (#b8a5e8) band, ~36px tall. Left side: bold black Roobert event name (e.g. 'SCULPT') in uppercase, followed by event details in black. Right side: date/location in black + small arrow link. Sits above the main nav."
+    },
+    {
+      "name": "Testimonial Color Card",
+      "role": "Customer quote card in the social-proof carousel",
+      "description": "Vivid solid-fill card (lime, orange, blue, cyan, magenta, forest, or cobalt — one color per card) at 40px radius, 32–48px padding. Company logo + name in black at top, quote text in black at 15–16px Roobert 400, avatar + name + title in a white pill at the bottom-left corner of the card. Cards sit edge-to-edge in a horizontal scroll with no visible border or shadow."
+    },
+    {
+      "name": "Feature Callout Card",
+      "role": "Inline product stat or AI provider card",
+      "description": "White card with 12px radius and 1px Sand (#dad4c8) border, 16–24px padding. Large metric on the left ('>2x' in black at 32–44px), provider name and description on the right in 14–15px Roobert. Subtle, information-dense."
+    },
+    {
+      "name": "Hero Section",
+      "role": "Top-of-page headline block",
+      "description": "Centered stack on Paper White. Headline at 60–80px Roobert 700 in #000 with -1.8 to -3.2px tracking, max-width ~900px. Subheadline at 18–20px Roobert 400 in Stone Gray (#55534e), max-width ~560px. Single black pill CTA centered below. Decorative product photography (clay-sculpture imagery) bleeds off the bottom edge."
+    },
+    {
+      "name": "Logo Strip",
+      "role": "Trust/social proof row of customer logos",
+      "description": "Horizontal row of monochrome or original-color company logos on Paper White, evenly spaced with 32–48px gaps. No card background or border — logos sit directly on the canvas with a centered eyebrow label above ('TRUSTED BY MORE THAN 300,000 LEADING GTM TEAMS...') in 11–12px Roobert uppercase with +0.09em tracking."
+    },
+    {
+      "name": "Cookie Consent Banner",
+      "role": "Bottom-of-page GDPR notice",
+      "description": "Fixed-position white card with 12–16px radius, 1px Cool Mist border, subtle bottom shadow. Left column: bold 'We use cookies' title + 12–14px body copy. Right column: two pill buttons — primary (black 'Accept all') and ghost ('More choices'). Includes a small cookie icon and privacy policy link below."
+    },
+    {
+      "name": "Footer",
+      "role": "Site-wide footer",
+      "description": "Warm Cream (#f9f8f6) background, 40px top-radius on the inner container. Black text for links, muted gray for secondary labels. Multi-column link grid with bold section headers at 14–15px Roobert 600."
+    },
+    {
+      "name": "Tab Pill",
+      "role": "Secondary navigation or section switcher",
+      "description": "Small 1584px-radius pill, 2px border in Cool Mist (#e6e8ec), 4–6px padding, 13–14px Roobert 500 text. Active state fills with black background and white text."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface for all UI text, headlines, buttons, and body copy. The heavy 700 weight at 60–80px is the signature — display headlines are massive, dense, and confident. Stylistic sets (ss01, ss03, ss10, ss11, ss12) are enabled to activate the custom alternate glyphs that give Roobert its distinctive geometric character.",
+      "sizes": "10px, 11px, 12px, 13px, 14px, 15px, 16px, 18px, 20px, 32px, 44px, 60px, 80px",
+      "family": "Roobert",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.00–1.60",
+      "substitute": "Inter, General Sans, or Söhne",
+      "letterSpacing": "-3.2px at 80px, -1.8px at 60px, -0.88px at 44px, -0.32px at 32px, -0.16px at 20px, 0 at 16px, +0.09em on uppercase labels at 13–14px",
+      "fontFeatureSettings": "\"ss01\" on, \"ss03\" on, \"ss10\" on, \"ss11\" on, \"ss12\" on"
+    },
+    {
+      "role": "Icon system — line-based icons used in nav, feature bullets, and UI affordances. Kept thin and consistent at body and small sizes.",
+      "sizes": "13px, 16px, 20px",
+      "family": "Phosphor",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "Phosphor Icons (open-source), Feather, or Lucide",
+      "fontFeatureSettings": "\"liga\" on"
+    },
+    {
+      "role": "Phosphor-Bold — detected in extracted data but not described by AI",
+      "sizes": "16px",
+      "family": "Phosphor-Bold",
+      "weight": "400",
+      "lineHeight": "1",
+      "fontFeatureSettings": "\"liga\""
+    }
+  ],
+  "description": "Clay uses a bright, tactile workspace language: white canvas with weighty black type, pill-shaped controls, and a vivid violet accent (#3859f9) that powers links, key callouts, and inline emphasis. Most surfaces stay monochrome — warm cream (#f9f8f6) cards on pure white with soft beige borders (#dad4c8) — while chromatic moments arrive as full-bleed colored testimonial cards in lime, orange, cyan, and magenta, like individual clay sculptures placed on a clean table. Components feel hand-shaped rather than pixel-perfect: generous border radii (12–40px), near-zero elevation, and tight negative tracking on large display sizes. The overall feel is energetic and confident without being decorative — color is reserved for social proof and brand moments, not for functional UI.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Text: #000000 (primary), #55534e (body), #9f9b93 (tertiary)\n- Background: #ffffff (canvas), #f9f8f6 (cream surface)\n- Border: #dad4c8 (warm), #e6e8ec (cool)\n- Accent: #3859f9 (violet pulse — links and emphasis only)\n- primary action: no distinct CTA color\n\n## Example Component Prompts\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. **Testimonial Card** — Solid fill in Lime (#cbd810) or Ember Orange (#ff7614) or Signal Blue (#429dff). 40px border-radius, 40px padding. Company logo + name in 16px Roobert 600 black at top. Quote text in 16px Roobert 400 black, line-height 1.5. White avatar pill (12px radius) at bottom-left with name (14px Roobert 600 black) and title (13px Roobert 400 #55534e). No border, no shadow.\n\n3. **Secondary Ghost Button** — Transparent fill, 1px border in #e6e8ec, 1584px radius, 8px/16px padding. Text in 14px Roobert 500, #000000. No shadow. Use for 'Log in' and cookie controls.\n\n4. **Feature Callout Card** — White (#ffffff) background, 1px border in #dad4c8, 12px radius, 24px padding. Large metric ('>2x') in 44px Roobert 700 black on the left. Provider name in 16px Roobert 600 black, description in 14px Roobert 400 #55534e on the right. Small external-link icon in top-right corner.\n\n5. **Announcement Banner** — Full-width lavender (#b8a5e8) band, 36px height, flex row with space-between. Left: event name in 13px Roobert 700 uppercase #000000 with +0.09em tracking, followed by event tagline in 13px Roobert 500 #000000. Right: date/location in 13px Roobert 500 #000000 + small arrow icon in black. Sits flush above the main nav."
+    }
+  ],
+  "elevationPhilosophy": "The system deliberately avoids drop shadows on cards and surfaces — separation is achieved through warm beige borders (#dad4c8) and color contrast rather than elevation. The only shadow in the system is a near-invisible 1px top + inset combo on the primary CTA, giving filled buttons a subtle pressed-in feel without breaking the flat aesthetic."
+}

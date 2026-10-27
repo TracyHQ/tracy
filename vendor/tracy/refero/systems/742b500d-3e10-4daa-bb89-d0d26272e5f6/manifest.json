@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+  "status": "complete",
+  "name": "Paste",
+  "url": "https://styles.refero.design/style/742b500d-3e10-4daa-bb89-d0d26272e5f6",
+  "sourceWebsite": "https://pasteapp.io",
+  "extractedAt": "2026-04-11T23:07:11.731Z",
+  "capturedAt": "2026-10-08T05:13:27.028811+00:00",
+  "theme": "light",
+  "industry": null,
+  "description": "Amber lantern on white marble — the brand's warm gradient logo floats in vast white space, like a single lit window in a snow-covered building.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b1c40caa-7792-4c3c-900a-c6588b272656.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/8afc628f-1790-4fd3-89d0-fdfab4cecd8c.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/8d831a3b-e970-4b77-853d-5b8342893108.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/bd60ca44-2310-48d2-bdf3-aafbdf0d625d.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/40b066b6-9b7c-404c-898b-53db9578cdee.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "fb3847f8c3047ae8fd4bcd42c4053823815214e7832054ae8cb176d60468b782",
+      "bytes": 21699
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c1a9036a9dc016b69a53d7b95a0a65f94bb608ed5d07d6466b727c94afddfd64",
+      "bytes": 139274
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "361e02a40756b350253050f420a9d648b1e297d78855e28ce6436052c02bcc6c",
+      "bytes": 31320
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c26ce7d1393d43f757d4659364115dad201e9c67964cc78c1965e45ac869afac",
+      "bytes": 11964
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "25379204ca317e07bd402a8948993cf73955ac6b4c15799699ce0403fd28a834",
+      "bytes": 12465
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f60ac8e415fe1d5ccd29115bff6b78c12a350ee9ac4d2705024d6ad223c0e715",
+      "bytes": 3688
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "380064beb13eb6777ad1bb25298baf00af3f301dacb5f14d068d7ba77c473624",
+      "bytes": 765
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2b8ef7cf9e58d8a5e62938606df9a10a4a5e54b47eab6b05a9758404d30f7277",
+      "bytes": 883
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7855e6a952616c9dbd2fa0c78f1d122678b58f5bf28831ef031e51729271e76c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e45d3955ffcc032bdc0f603be301e57f828a278e37920d56f1799f8973623ae9",
+      "bytes": 51739
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a388e06903becf2f13a26d0ca396267ea20e17a2dc0094aa6882487dd89a7f71",
+      "bytes": 25705
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d4185492fab1d542cfd20f445cbecf99eab430220def8c622c5d9711bfefdcdf",
+      "bytes": 52159
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7074ec1d4e4ff76c9b473cda9f7767652b6136960b4b9092f8f8866704562199",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b38e979555ccf9ce8143ec7c3bef9a704663aed742282c62d605d1c6fc32e98d",
+      "bytes": 1878
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ebb872ca9a175122f3895dc3a86a75d5e546c5818d265f129eabcb16fcc2b1a8",
+      "bytes": 2558
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "08c0ead0-1899-47b4-bfdc-865ab459bbe5",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "29567671-da1e-4f85-ae52-8b611fecc384",
+    "2b49d4b2-8461-4985-b7ee-cf9517e19803",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "4d832c12-dd14-45b0-bba7-2d3bc25d8264",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "5d8ad116-b3d8-4890-a969-5b856b35c678",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "aa87c258-0eb8-4c14-9f2f-96f16fb926b8",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d6c2a911-45ed-4860-a992-43df22793c2a",
+    "dbc5ecba-7309-456f-93b4-4356c6b0d293",
+    "ec0f5bca-8367-49e7-b8aa-73b3fa09a4a0",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

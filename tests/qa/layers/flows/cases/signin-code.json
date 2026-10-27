@@ -1,0 +1,423 @@
+[
+  {
+    "assertionIds": [
+      "signin-happy#otp-in-sink",
+      "signin-happy#verify-sets-session",
+      "signin-happy#me-names-the-account"
+    ],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-happy-code-from-sink",
+    "itemIds": ["flow:signin-code"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "prerequisites": ["stand"],
+    "redProof": null,
+    "ref": "signin-happy",
+    "requirement": "Sign in by emailed code — code from sink (happy)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [
+      "signin-wrong-code#wrong-code-sets-no-session",
+      "signin-wrong-code#wrong-code-not-2xx",
+      "signin-wrong-code#me-still-anonymous"
+    ],
+    "edgeTags": ["invalid"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-invalid-wrong-code",
+    "itemIds": ["flow:signin-code"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "prerequisites": ["stand"],
+    "redProof": null,
+    "ref": "signin-wrong-code",
+    "requirement": "Sign in by emailed code — wrong code (invalid)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["signin-replay#used-code-refused", "signin-replay#replay-sets-no-session"],
+    "edgeTags": ["repeat"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-repeat-replay",
+    "itemIds": ["flow:signin-code"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "prerequisites": ["stand"],
+    "redProof": null,
+    "ref": "signin-replay",
+    "requirement": "Sign in by emailed code — replay (repeat)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [
+      "signin-new-returning#new-address-gets-one-account",
+      "signin-new-returning#returning-sign-in-same-account"
+    ],
+    "edgeTags": ["new-returning"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-new-returning-both",
+    "itemIds": ["flow:signin-code"],
+    "kind": "scripted",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "prerequisites": ["stand"],
+    "redProof": null,
+    "ref": "signin-new-returning",
+    "requirement": "Sign in by emailed code — both (new-returning)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["dependency-failure"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-dependency-failure-no-mailbox",
+    "itemIds": ["flow:signin-code"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "pendingReason": "a missing or unreadable mail sink is reported ENV with its probe (layer selftest), not a product case",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Sign in by emailed code — no mailbox (dependency-failure)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["legacy:J0#verdict"],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-happy-legacy-cookie",
+    "itemIds": ["flow:signin-code", "journey:J0"],
+    "kind": "legacy",
+    "legacyIds": ["J0"],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "prerequisites": ["stand", "legacy-runner"],
+    "redProof": null,
+    "ref": "J0",
+    "requirement": "Sign in by emailed code — legacy cookie (happy) [journey J0: identity smoke]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": ["legacy:J1#verdict"],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-happy-legacy-code-half",
+    "itemIds": ["flow:signin-code", "journey:J1"],
+    "kind": "legacy",
+    "legacyIds": ["J1"],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "prerequisites": ["stand", "legacy-runner"],
+    "redProof": null,
+    "ref": "J1",
+    "requirement": "Sign in by emailed code — legacy code half (happy) [journey J1: sign-in by emailed code]",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["boundary"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-boundary-code-length",
+    "itemIds": ["flow:signin-code"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "pendingReason": "not scripted: 5- and 7-digit codes need the spec of the verify door",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Sign in by emailed code — code length (boundary)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["reload-resume"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-reload-resume-cookie-persists",
+    "itemIds": ["flow:signin-code"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "pendingReason": "not scripted: J12 covers a reload in a browser, which needs the local browser transport",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Sign in by emailed code — cookie persists (reload-resume)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["double-submit"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-double-submit-two-verify",
+    "itemIds": ["flow:signin-code"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Sign in by emailed code — two verify (double-submit)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["interrupted"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-interrupted-abandoned-login",
+    "itemIds": ["flow:signin-code"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Sign in by emailed code — abandoned login (interrupted)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["boundary"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-boundary-expired-code",
+    "itemIds": ["flow:signin-code"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "pendingReason": "not scripted on a stand (a stand has no clock to move): the door outcome is played in the api layer (QA-API-scenario-signin-code-expired)",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Sign in by emailed code — expired code (boundary)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["concurrent-seat"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-concurrent-seat-link-opened-on-another-device",
+    "itemIds": ["flow:signin-code"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "pendingReason": "no approved expectation: the sign-in letter carries a code and no link, and the verify door binds a code to no device (QA-API-scenario-signin-link-other-device); the device sign-in pages need two browser contexts",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Sign in by emailed code — link opened on another device (concurrent-seat)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["cleanup"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-cleanup-sign-out",
+    "itemIds": ["flow:signin-code"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "pendingReason": "not scripted on a stand: the door outcome is played in the api layer (QA-API-scenario-signin-signout)",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Sign in by emailed code — sign out (cleanup)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["new-returning"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-new-returning-waitlisted-address",
+    "itemIds": ["flow:signin-code"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "pendingReason": "not scripted: needs the beta gate on and its membership service; covered by the product tests of apps/tracy-web/test/error-next-step.test.mjs (F-S1-013)",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Sign in by emailed code — waitlisted address (new-returning)",
+    "targets": ["local"]
+  },
+  {
+    "assertionIds": [],
+    "edgeTags": ["empty"],
+    "effects": {
+      "containers": false,
+      "mail": true,
+      "model": false,
+      "reads": ["mail-sink", "db"],
+      "writes": ["account", "session"]
+    },
+    "id": "QA-FLOWS-signin-code-empty-no-email",
+    "itemIds": ["flow:signin-code"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "a code read from the mail sink, posted to /verify, sets one session cookie that /auth/me names; a wrong or replayed code sets none",
+      "ref": "POST /login, POST /verify, GET /auth/me (pinned API reference)",
+      "source": "apps/tracy-web/src/api-reference/routes/people.js"
+    },
+    "pendingReason": "not scripted",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "Sign in by emailed code — no email (empty)",
+    "targets": ["local"]
+  }
+]

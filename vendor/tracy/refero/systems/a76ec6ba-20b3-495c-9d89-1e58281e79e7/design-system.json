@@ -1,0 +1,433 @@
+{
+  "dos": [
+    "Use 8px radius for all cards, buttons, inputs, and interactive surfaces — the 9999px pill is reserved exclusively for badges and tags.",
+    "Pair the Indigo Navy (#111a4a) primary button with the Secondary Outlined Button (#111a4a border, transparent fill) — never place two filled CTAs side by side.",
+    "Render code snippets in SFMono at 12px with line-height 1.5, tinting keys in #167e6c (Seafoam 700) and string values in #94efb7 (Seafoam 400).",
+    "Apply the five-layer progressive shadow stack to product cards only — do not use it on bordered content cards, which get the simpler 1px hairline + whisper shadow.",
+    "Set heading letter-spacing to -0.03em at 52px and -0.02em at 40–48px — the tight tracking on large sizes is essential to the SuisseIntl editorial feel.",
+    "Use Signal Orange (#ec652b) for at most one surface per page — the accent is designed to be rare and high-signal.",
+    "Set section gaps to 72px and card padding to 24px — the comfortable density is part of the institutional trust register."
+  ],
+  "donts": [
+    "Don't use the 9999px pill radius on buttons — buttons stay at 8px to maintain the sharp, confident banking feel.",
+    "Don't place seafoam green (#44b48b) on body copy outside code or data contexts — the color signals technical content, not prose.",
+    "Don't stack more than two card shadow styles on the same page — the product card shadow and the transaction widget shadow are both dramatic; using both simultaneously creates visual noise.",
+    "Don't use the linear rainbow gradient on UI elements — it's a one-time decorative asset for the halftone map illustration only.",
+    "Don't set body text below 14px in SuisseIntl — drop to SuisseIntlMono or SFMono at 10–12px for micro-copy and technical labels.",
+    "Don't apply the Cobalt Edge (#1e4199) or Ocean Depth (#0c6997) colors to text or buttons — they are decorative SVG colors only.",
+    "Don't use pure black (#000000) for body text — use Slate Ink (#3b3e47) or Obsidian (#12161e) for a softer, more refined dark."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#111a4a",
+      "name": "Indigo Navy",
+      "role": "Primary brand color — filled CTAs, navigation active states, heading text, logo wordmark. The deep violet-tinted navy carries institutional weight without going pure black; pairs with white text for the site's most confident button",
+      "group": "brand"
+    },
+    {
+      "hex": "#011821",
+      "name": "Midnight Ink",
+      "role": "Dark surface and emphasis text — product card backgrounds, high-contrast body copy. Near-gray with a cool blue-green undertone; works as the dark-mode substrate when a section needs to invert",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3b3e47",
+      "name": "Slate Ink",
+      "role": "Secondary heading and body text — slightly warmer than Midnight Ink, used where pure black feels too harsh against the light canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7c7f88",
+      "name": "Steel",
+      "role": "Body and link text — the dominant muted text color (245 occurrences in body). Neutral gray-blue that reads as quiet, never washed out",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a9acb6",
+      "name": "Fog",
+      "role": "Icon strokes, tertiary borders, placeholder text. Mid-gray that separates without competing with text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cbcccf",
+      "name": "Mist",
+      "role": "Lightest body text — captions, disclaimers, fine print. Stays legible on white but recedes visually",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e3e4e8",
+      "name": "Silver Lining",
+      "role": "Card borders, input borders, divider lines. The structural hairline color — appears wherever two surfaces need to separate without shadow",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f6f6f8",
+      "name": "Cloud Canvas",
+      "role": "Page background — the dominant canvas color. Near-white with a barely-perceptible cool tint that keeps the page from feeling sterile",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Card surfaces, nav background, button fills, secondary text. The top layer of the surface stack",
+      "group": "neutral"
+    },
+    {
+      "hex": "#232730",
+      "name": "Charcoal",
+      "role": "Nav icons, dark icon strokes — slightly bluer than pure black, used in icon contexts where Slate Ink would be too warm",
+      "group": "neutral"
+    },
+    {
+      "hex": "#12161e",
+      "name": "Obsidian",
+      "role": "Deep icon strokes and nav elements. Near-black with a blue undertone that matches the indigo navy family",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Maximum contrast text, dark fills in illustrations. Used sparingly — Indigo Navy or Slate Ink carry most text work",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ec652b",
+      "name": "Signal Orange",
+      "role": "Accent CTA fill and featured card background — one of the few saturated warm colors in the system. Appears on the Brex highlight card and select buttons to draw the eye without feeling decorative",
+      "group": "accent"
+    },
+    {
+      "hex": "#f2936b",
+      "name": "Peach Glow",
+      "role": "Soft accent surface — lighter companion to Signal Orange, used as card backgrounds where warmth is needed at lower intensity",
+      "group": "accent"
+    },
+    {
+      "hex": "#44b48b",
+      "name": "Seafoam 600",
+      "role": "Code and data text — the signature color for JSON keys, identifiers, and financial values in code snippets. Also used for chart data points and growth visualizations",
+      "group": "brand"
+    },
+    {
+      "hex": "#167e6c",
+      "name": "Seafoam 700",
+      "role": "Darker seafoam for strokes, chart lines, and icon accents in data contexts. Anchors the seafoam scale on darker backgrounds",
+      "group": "brand"
+    },
+    {
+      "hex": "#94efb7",
+      "name": "Seafoam 400",
+      "role": "Highlighted code text — string values, URLs, API endpoints in code blocks. The lightest seafoam, reads as green-tinted monospace",
+      "group": "brand"
+    },
+    {
+      "hex": "#023247",
+      "name": "Deep Sea",
+      "role": "Decorative stroke and chart accent — deep teal used in SVG illustrations and data visualizations alongside the seafoam scale",
+      "group": "brand"
+    },
+    {
+      "hex": "#88deeb",
+      "name": "Sky Cyan",
+      "role": "Soft accent surface and stroke — appears as background washes behind data widgets and as decorative chart strokes",
+      "group": "accent"
+    },
+    {
+      "hex": "#1e4199",
+      "name": "Cobalt Edge",
+      "role": "Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color",
+      "group": "accent"
+    },
+    {
+      "hex": "#0c6997",
+      "name": "Ocean Depth",
+      "role": "Decorative fill — medium blue used in illustration and SVG contexts",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-page structure is max-width 1200px centered with generous side margins (64–80px on desktop). Hero is a split layout — headline and CTAs left-aligned at 40% width, with a floating transaction widget positioned right at 55–70% width over the halftone map background. Below the hero, sections alternate between white (#ffffff) and the light canvas (#f6f6f8) with 72px vertical gaps. Content arrangement follows a consistent 6-column grid: text blocks span 4 columns (66%), image/product cards span 5–6 columns with deliberate off-grid positioning. Feature sections use a 2-column text-left/product-right pattern. The trust stats section breaks to a full-width 4-column equal grid. Customer logos sit in a single centered row with 48px gaps. The footer is compact, 2-column layout. Navigation is a fixed top bar, 62px tall, transparent over the hero with backdrop blur, transitioning to white on scroll. No sidebar, no mega-menu — dropdowns are simple chevron menus.",
+  "imagery": "Imagery is minimal and functional — Column avoids stock photography entirely. The visual language is built from three sources: (1) SVG data illustrations, specifically a dotted halftone world map rendered in indigo-to-orange-to-seafoam gradient dots that creates a global-scale atmosphere behind the hero; (2) product mockup cards — floating widgets showing account balances, transfer details, and JSON code snippets in white cards with dramatic shadows; (3) chart visualizations — candlestick or bar charts in seafoam green with thin connecting lines, used in the trust/stats section. The halftone map is the signature visual element — its gradient transitions from #d65620 (orange) through violet, blue, sky cyan, seafoam, to yellow, creating a spectrum that ties together the entire brand palette in a single decorative surface. Icons are uniformly outlined at 1.5–2px stroke weight in #232730 or #a9acb6, with filled variants for active states. No lifestyle photography, no abstract 3D renders — the restraint is deliberate, keeping focus on product and data.",
+  "similar": [
+    {
+      "why": "Same navy-and-orange dual-accent palette on light backgrounds, same institutional-but-modern fintech register, similar card-driven layout with floating product widgets.",
+      "business": "Brex"
+    },
+    {
+      "why": "Deep navy typography on near-white canvas, restrained use of a single warm accent, developer-focused financial product language with code-adjacent typography.",
+      "business": "Mercury"
+    },
+    {
+      "why": "Light canvas with deep navy primary text, white card surfaces with subtle shadows, and a visual language built around data and product mockups rather than photography.",
+      "business": "Plaid"
+    },
+    {
+      "why": "Max-width centered layout, dramatic card shadows on floating product widgets, geometric grotesque typography, and the same restraint in using color as functional punctuation.",
+      "business": "Stripe"
+    },
+    {
+      "why": "Trust-forward fintech aesthetic with a near-white canvas, deep brand text color, and a visual system that prioritizes data clarity and institutional credibility over decorative flourish.",
+      "business": "Wise"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "8px",
+      "inputs": "8px",
+      "buttons": "8px",
+      "nav-pills": "8px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "72px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "fintech",
+  "surfaces": [
+    {
+      "hex": "#f6f6f8",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Base page background — the near-white cool-tinted surface that fills the viewport."
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Surface",
+      "level": 1,
+      "purpose": "Top of the surface stack — content cards, transaction widgets, code blocks all sit here."
+    },
+    {
+      "hex": "#ffffff80",
+      "name": "Frosted Overlay",
+      "level": 2,
+      "purpose": "Translucent layer for nav pills, badges, and overlays that need to hint at background content beneath."
+    },
+    {
+      "hex": "#88deeb",
+      "name": "Sky Wash",
+      "level": 3,
+      "purpose": "Decorative background wash — used as soft accent behind data sections and chart areas."
+    },
+    {
+      "hex": "#f2936b",
+      "name": "Signal Orange Surface",
+      "level": 4,
+      "purpose": "Featured accent card background — the highest-signal warm surface, used at most once per page for the Brex highlight."
+    },
+    {
+      "hex": "#011821",
+      "name": "Deep Surface",
+      "level": 5,
+      "purpose": "Dark mode inversion — appears when a section needs to flip to dark navy for contrast."
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0,0,0,0.02) 0px 40px 32px 0px, rgba(0,0,0,0.03) 0px 22px 18px 0px, rgba(0,0,0,0.03) 0px 12px 10px 0px, rgba(0,0,0,0.04) 0px 7px 5px 0px, rgba(0,0,0,0.07) 0px 3px 2px 0px",
+      "element": "Product Card"
+    },
+    {
+      "style": "rgba(30,30,44,0.15) 24px 48px 64px 0px, rgb(255,255,255) 0px 0px 0px 1px inset",
+      "element": "Transaction Widget"
+    },
+    {
+      "style": "rgba(18,22,30,0.024) 0px 1px 4px 0px, rgba(18,22,30,0.05) 0px 1px 0px 0px, rgba(18,22,30,0.024) 0px 0px 0px 1px",
+      "element": "Bordered Card"
+    },
+    {
+      "style": "rgba(17,26,74,0.1) 0px 1px 3px 0px, rgba(17,26,74,0.05) 0px 1px 0px 0px, rgba(255,255,255,0.5) 0px 1px 0px 0px inset, rgba(255,255,255,0.5) 0px 1px 4px 0px inset",
+      "element": "Primary Button"
+    }
+  ],
+  "northStar": "deep navy ledger under cool dawn",
+  "typeScale": [
+    {
+      "role": "micro",
+      "size": 10,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.33,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading-sm",
+      "size": 20,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "subheading-lg",
+      "size": 28,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.28
+    },
+    {
+      "role": "heading-sm",
+      "size": 40,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.8
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "heading-lg",
+      "size": 52,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.56
+    },
+    {
+      "role": "display",
+      "size": 60,
+      "lineHeight": 1,
+      "letterSpacing": -0.6
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Filled Button",
+      "role": "Main call-to-action — highest-emphasis interactive element.",
+      "description": "Background: #111a4a (Indigo Navy). Text: #ffffff, 14px SuisseIntl weight 500, letter-spacing normal. Border: none. Radius: 8px. Padding: 12px top/bottom, 20px left/right. Arrow icon after label. Box-shadow: rgba(17,26,74,0.1) 0px 1px 3px, rgba(17,26,74,0.05) 0px 1px 0px, with inset white highlight for slight inner luminosity. Used for 'Sign up' and top-of-page conversion actions."
+    },
+    {
+      "name": "Secondary Outlined Button",
+      "role": "Secondary action — less weight than primary but still a distinct CTA.",
+      "description": "Background: transparent. Text: #111a4a, 14px SuisseIntl weight 500. Border: 1px solid #111a4a. Radius: 8px. Padding: 12px top/bottom, 32px left/right. No arrow by default. Used for 'Documentation' and 'Learn about our bank' — sits beside the primary without competing."
+    },
+    {
+      "name": "Ghost Navigation Pill",
+      "role": "Top-bar navigation trigger — 'Products', 'Developers', 'Blog'.",
+      "description": "Background: rgba(255,255,255,0.25) with backdrop blur. Text: #000000, 14px SuisseIntl weight 400. Border: 1px solid #ffffff. Radius: 8px. Padding: 6px top/bottom, 12px left/right. Chevron icon for dropdowns. Frosted-glass effect sits over the hero background."
+    },
+    {
+      "name": "Pill Button",
+      "role": "Compact action — tag-like buttons used for filtering and quick navigation.",
+      "description": "Background: rgba(255,255,255,0.5). Text: #232730, 12–14px SuisseIntl weight 400. Border: 1px solid #e3e4e8. Radius: 8px (not fully rounded). Padding: 0px vertical, 16px horizontal for compact alignment."
+    },
+    {
+      "name": "Accent Orange Button",
+      "role": "High-attention CTA — used when a section needs a warm, urgent accent.",
+      "description": "Background: #ec652b (Signal Orange). Text: #ffffff, 14px SuisseIntl weight 500. Border: none. Radius: 8px. Padding: 12px top/bottom, 20px left/right. Appears on the Brex highlight card and select promotional surfaces — never on the primary nav."
+    },
+    {
+      "name": "Product Card (Elevated)",
+      "role": "Feature showcase card — used for product mockups and feature highlights.",
+      "description": "Background: rgba(2,50,71,0.01) (near-transparent with the faintest blue-green tint). Radius: 8px. Box-shadow: five-layer progressive shadow stack — rgba(0,0,0,0.02) at 40px/32px, 0.03 at 22px/18px, 0.03 at 12px/10px, 0.04 at 7px/5px, 0.07 at 3px/2px. Padding: 0 (content is positioned absolutely inside). No border. The shadow stack creates a diffused, hovering presence rather than a hard card edge."
+    },
+    {
+      "name": "Transaction Widget Card",
+      "role": "Compact data card — shows account balances, transfer details, payment status.",
+      "description": "Background: #ffffff. Radius: 8px. Box-shadow: rgba(30,30,44,0.15) 24px 48px 64px — a dramatic, off-axis shadow that makes the widget feel like it's floating above the hero. Inset border: 1px solid #ffffff. Padding: 12px top/bottom, 0 left/right. Contains flag icons, amount text (SuisseIntl weight 500, 16–18px), and status badges."
+    },
+    {
+      "name": "Bordered Content Card",
+      "role": "Standard card for grouped content — quotes, code examples, feature blocks.",
+      "description": "Background: #ffffff. Radius: 8px. Box-shadow: rgba(18,22,30,0.024) 0px 1px 4px, rgba(18,22,30,0.05) 0px 1px 0px, rgba(18,22,30,0.024) 0px 0px 0px 1px — combines a hairline border with a whisper of shadow. Padding: 12px all sides."
+    },
+    {
+      "name": "Code Block",
+      "role": "JSON/API example — shows developer-facing content with syntax-tinted text.",
+      "description": "Background: #ffffff. Radius: 8px. Monospace: SFMono 12px, line-height 1.5. Keys tinted #167e6c (Seafoam 700), string values #94efb7 (Seafoam 400), structural brackets in #232730. The entire block reads as a data object rather than formatted prose."
+    },
+    {
+      "name": "FDIC Badge",
+      "role": "Trust indicator — regulatory badge for bank membership.",
+      "description": "Background: rgba(255,255,255,0.8) with backdrop blur(8px). Text: #000000, 10–12px SuisseIntl weight 400. Radius: 9999px (full pill). Padding: 4px 12px. Semi-transparent so it floats over the hero gradient without blocking it."
+    },
+    {
+      "name": "Tag with Dot",
+      "role": "Status or category label — 'TRUSTED AT SCALE II', 'DEVELOPER FIRST'.",
+      "description": "Background: rgba(0,0,0,0) (transparent, sits over light backgrounds). Text: #000000 or #111a4a, 12px SuisseIntl weight 500, uppercase, letter-spacing slightly expanded. Small green or blue dot prefix for category color. Radius: 0 (no rounding — reads as a label, not a chip)."
+    },
+    {
+      "name": "Logo Bar Card",
+      "role": "Partner/customer logo showcase — used in trust strip and case studies.",
+      "description": "Background: #ffffff or transparent. Individual logos rendered as flat monochrome SVG at 16–20px height, #000000 or #7c7f88. Spacing: 48px between logos. No card chrome — logos sit directly on the canvas with whitespace as separator."
+    },
+    {
+      "name": "Account Balance Card",
+      "role": "Featured account display — the Brex operating account mockup.",
+      "description": "Background: #ec652b (Signal Orange) for the primary featured card, or #ffffff for secondary. Radius: 8px. Contains SwissIntl amount text at 24px weight 500, small chart line in white at 60% opacity, and account metadata in 12px weight 400. The orange variant is the system's most saturated surface — used at most once per page."
+    },
+    {
+      "name": "Stats Row",
+      "role": "Trust metrics — '$4.5T+', '99.999%', 'No. 1', '$100B+'.",
+      "description": "Four-column grid with no dividers. Each stat: number in #167e6c (Seafoam 700) at 28px SuisseIntl weight 500, label in #7c7f88 at 14px weight 400 below. 48px row gap. The seafoam number color ties the stats to the data/code visual language."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface — used for all headings, body, buttons, nav, links, and card text. The custom geometric grotesque gives Column a distinctive editorial register that distinguishes it from Inter-only fintechs. Weight 600 at 52–60px for display, weight 500 for sub-headings, weight 400 for body, weight 300 for low-emphasis links.",
+      "sizes": "11, 12, 14, 16, 18, 20, 24, 28, 40, 48, 52, 60",
+      "family": "SuisseIntl",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.0, 1.1, 1.3, 1.33, 1.38, 1.4, 1.43, 1.5",
+      "substitute": "Inter",
+      "letterSpacing": "-0.03em at 52px, -0.02em at 40–48px, -0.01em at 20–28px, normal at 14–16px",
+      "fontFeatureSettings": "\"salt\" 2"
+    },
+    {
+      "role": "Monospace companion to SuisseIntl — used for technical labels, API identifiers, and inline data in UI chrome. Maintains the same proportions as SuisseIntl so mono and proportional text align cleanly in mixed contexts.",
+      "sizes": "10, 12, 14",
+      "family": "SuisseIntlMono",
+      "weight": "400",
+      "lineHeight": "1.5",
+      "substitute": "JetBrains Mono",
+      "fontFeatureSettings": "\"cv11\", \"salt\" 2"
+    },
+    {
+      "role": "Code snippet rendering — appears in JSON examples and API documentation blocks. Tinted in seafoam green scale to visually distinguish code from UI prose.",
+      "sizes": "10, 12",
+      "family": "SFMono",
+      "weight": "400",
+      "lineHeight": "1.5",
+      "substitute": "Fira Code",
+      "fontFeatureSettings": "\"cv11\", \"salt\" 2"
+    },
+    {
+      "role": "UI fallback font — used in dashboard and product surface contexts where Inter's wider character set and system familiarity take priority over brand identity.",
+      "sizes": "10, 12, 14, 16, 20, 24",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.0, 1.1, 1.14, 1.33, 1.5",
+      "substitute": "Inter",
+      "letterSpacing": "-0.03em at 24px, -0.02em at 16–20px",
+      "fontFeatureSettings": "\"cv11\""
+    }
+  ],
+  "description": "Column uses a deep-navy institutional language on a near-white canvas: the page reads as a trustworthy banking product surface first, a developer playground second. Brand color is not a single hue but a coordinated pair — indigo navy #111a4a for serious structure, seafoam green #44b48b for data and code — with one warm orange (#ec652b) reserved for high-signal accent surfaces like the Brex card. Typography is dominated by SuisseIntl, a geometric grotesque used across the full weight range from 300 (links) through 600 (display), which gives the system a refined, editorial register most fintechs lack. Cards float on generous white surfaces with subtle multi-layer shadows; most UI chrome is flat, with depth appearing only where a card needs to feel like a physical object (transaction widgets, product mockups). Code and financial data live in monospace, tinted seafoam — a visual signal that this is a bank built by engineers, for engineers.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Background: #f6f6f8\n- Card surface: #ffffff\n- Primary text: #111a4a (Indigo Navy)\n- Muted text: #7c7f88 (Steel)\n- Accent: #ec652b (Signal Orange) — reserve for one featured surface per page\n- primary action: #ec652b (filled action)\n\n## Example Component Prompts\n\n1. Create a Primary Action Button: #ec652b background, #000000 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Create a trust stats row**: Four equal columns on #f6f6f8 canvas, 48px gaps. Each stat: number at 28px SuisseIntl weight 500, #167e6c (Seafoam 700). Label below at 14px weight 400, #7c7f88. No dividers between columns.\n\n3. **Create a code block**: #ffffff background, 8px radius, simple hairline border (rgba(18,22,30,0.024) 0 0 0 1px). Content in SFMono 12px line-height 1.5. Keys in #167e6c, string values in #94efb7, brackets and structure in #232730. Padding: 24px all sides.\n\n4. **Create a customer logo bar**: Single horizontal row on #ffffff background. Logos at 16–20px height, monochrome in #000000 or #7c7f88. 48px gap between logos. Centered, no card chrome.\n"
+    },
+    {
+      "title": "Signature Visual Element",
+      "content": "The halftone world map is Column's most distinctive decorative asset — a field of small dots arranged in a grid pattern, with each dot sized and colored according to a spectrum gradient: orange (#d65620) → violet (#9f7aee) → blue (#4575cd) → sky cyan (#71d2f0) → seafoam (#44b48b) → yellow (#f4df69). Dots are 2–4px in diameter, spaced 8–10px apart, covering a world map silhouette. The gradient creates a sense of global connectivity and financial flow without literal illustration. This gradient should not be reused on UI elements — it belongs only on the map illustration."
+    },
+    {
+      "title": "Typography Personality",
+      "content": "SuisseIntl's character variants ('salt' 2) subtly modify the typeface's default letterforms — the single-story 'a' and other alternates give the font a warmer, more editorial feel than its Swiss grotesque origins. This is a deliberate choice: most fintechs use Inter or Söhne, which read as generic and tech-forward. SuisseIntl reads as institutional and considered, like the type you'd find in a private bank's annual report. The weight range (300–600) is used fully — weight 300 appears on low-emphasis links (a deliberate softening), weight 600 only on the largest display sizes. This range gives the system tonal flexibility most single-weight systems lack."
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "id": "QA-UNIT-REG-PR-1426-widget-spoken-auth-happy",
+  "itemIds": ["regression:REG-PR-1426-widget-spoken-auth"],
+  "requirement": "Voice sign-in asks for spoken email and keeps confirmation, private OTP and shared microphone",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1426-widget-spoken-auth.json",
+    "ref": "PR #1426 (fix); fix evidence: none recorded",
+    "invariant": "EN and VI guides ask the person to say their email, then confirm before requesting a code, including regional language tags. Spoken email fills the panel and is read back; no OTP request occurs before yes or đúng. Spoken six digits verify once on the same microphone, with no credentials in model turns or sessionStorage; the next normal utterance resumes website context. Rejected email, partial code, paused listening and stale code callbacks after Google/phase changes never submit a code.",
+    "productSources": [
+      "apps/tracy-web/src/widget/assets/auth-panel.js:64",
+      "apps/tracy-web/src/widget/assets/email-voice.js:37",
+      "apps/tracy-web/src/widget/assets/live.js:1",
+      "apps/tracy-web/src/widget/assets/speech-cursor.js:2"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/test/e2e/widget-voice-auth.test.mjs:45 readFile() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "spoken auth happy path fills email, confirms before OTP, verifies six digits and resumes without a model turn",
+    "email rejection does not send OTP; paused or changed-phase queued code cannot verify",
+    "voice sign-in confirms the spoken email and verifies OTP without replacing the microphone",
+    "Vietnamese regional voice guide accepts spoken confirmation and six digits on the same microphone"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1426-widget-spoken-auth"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1426-widget-spoken-auth",
+    "pr": 1426,
+    "kind": "fix",
+    "area": "widget/voice-sign-in",
+    "file": "tests/regression/cases/REG-PR-1426-widget-spoken-auth.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/widget-auth-conversation.test.mjs",
+    "apps/tracy-web/test/e2e/widget-voice-auth.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "spoken auth happy path fills email, confirms before OTP, verifies six digits and resumes without a model turn",
+    "email rejection does not send OTP; paused or changed-phase queued code cannot verify",
+    "voice sign-in confirms the spoken email and verifies OTP without replacing the microphone",
+    "Vietnamese regional voice guide accepts spoken confirmation and six digits on the same microphone"
+  ],
+  "timeoutS": 600
+}

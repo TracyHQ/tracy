@@ -1,0 +1,78 @@
+{
+  "id": "QA-UNIT-REG-PR-1072-invitations-template-review-happy",
+  "itemIds": ["regression:REG-PR-1072-invitations-template-review"],
+  "requirement": "Invitation group templates persist and generate reviewable drafts without overwriting approved emails",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1072-invitations-template-review.json",
+    "ref": "PR #1072 (feat); fix evidence: none recorded",
+    "invariant": "Five groups keep independent immutable template versions; a fresh route read returns persisted content and preview is read-only. Missing required templates reject generation atomically; preview and generated drafts use the same renderer. Default generation preserves customized and approved snapshots; explicit replacement clears approval and blocked or attempted recipients cannot be overwritten. Linked-identity suppression prevents generation, customization and approval across campaigns. Saving group two retains selection; generation opens Review emails filtered to that group. Failed saves and cancelled navigation preserve unsaved edits; confirmed reload of the selected campaign discards them consistently. Review lists drafts, Conversations lists messages, and Import describes recipient CSV rather than templates.",
+    "productSources": ["apps/tracy-web/src/db/index.js:25", "apps/tracy-web/src/invitations/route.js:98"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/db/index.js:52 readFile() with a computed path",
+      "packages/web/tracy-harness/test/navigation-guard.test.mjs:6 import() with a computed specifier",
+      "packages/web/tracy-harness/test/support/ops-i18n-esbuild.mjs:22 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "group content versions survive fresh route reads without changing existing snapshots",
+    "content versions persist independently across five groups and preview is read-only",
+    "generation requires assigned content atomically and uses the preview renderer",
+    "template edits and default generation preserve approved custom drafts; explicit replacement resets approval",
+    "regeneration and customization leave blocked recipients and any attempted snapshot untouched",
+    "individual customization and approval reject program suppression without writing the campaign",
+    "saving group two keeps its selection and generation posts that group then opens Review emails",
+    "unsaved edits block approval and sandbox, survive a failed save, and cancel tab navigation",
+    "reopening the current campaign discards template edits only after confirmation",
+    "Review lists drafts, Conversations lists recorded messages, and Import describes recipients",
+    "cancelled Back restores its history position without a second confirmation"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1072-invitations-template-review"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1072-invitations-template-review",
+    "pr": 1072,
+    "kind": "feat",
+    "area": "ops/invitations",
+    "file": "tests/regression/cases/REG-PR-1072-invitations-template-review.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/invitations-sandbox.test.mjs",
+    "apps/tracy-web/test/invitations-content.test.mjs",
+    "packages/web/tracy-harness/test/invitations-flow.test.mjs",
+    "packages/web/tracy-harness/test/navigation-guard.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "group content versions survive fresh route reads without changing existing snapshots",
+    "content versions persist independently across five groups and preview is read-only",
+    "generation requires assigned content atomically and uses the preview renderer",
+    "template edits and default generation preserve approved custom drafts; explicit replacement resets approval",
+    "regeneration and customization leave blocked recipients and any attempted snapshot untouched",
+    "individual customization and approval reject program suppression without writing the campaign",
+    "saving group two keeps its selection and generation posts that group then opens Review emails",
+    "unsaved edits block approval and sandbox, survive a failed save, and cancel tab navigation",
+    "reopening the current campaign discards template edits only after confirmation",
+    "Review lists drafts, Conversations lists recorded messages, and Import describes recipients",
+    "cancelled Back restores its history position without a second confirmation"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,11 @@
+-- EmDash's publish-state snapshot, kept beside the cursor of the same log (04/10/2026).
+--
+-- EmDash logs no publish or unpublish anywhere: its audit-log plugin has no hook for them and core
+-- names nobody on either (`tasks/evidence/emdash-attribution/publish-state-measure.md`). So the
+-- collector compares each entry's state with the previous pull's, and needs that previous state.
+-- It is the host's own answer, sent back on the next pull and replaced as a whole — never read here:
+--   {"w": "<updated_at mark already read>", "e": {"<collection>/<id>": [status, live_revision_id, scheduled_at]}}
+-- `e` holds only the entries that are NOT plainly live (drafts, scheduled, a pending change), so it
+-- stays small; the shape and its rules are `apps/tracy-host/src/cms-log.js` (`emdashPublishState`).
+-- Null = no snapshot yet: the next pull takes one and reports nothing for entries already there.
+alter table site_cms_log_cursor add column if not exists state jsonb;

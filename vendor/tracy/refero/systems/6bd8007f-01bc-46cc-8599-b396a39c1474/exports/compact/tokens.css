@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-void: #08080a;
+  --color-charcoal: #0d0d12;
+  --color-graphite: #17171c;
+  --color-slate: #25252d;
+  --color-iron: #31313a;
+  --color-ash: #62626f;
+  --color-fog: #8b8e9c;
+  --color-pearl: #aeaac0;
+  --color-chalk: #dad7de;
+  --color-lavender-beam: #ab8ff1;
+  --color-iris-glow: #8960f0;
+  --color-webgl-aurora: #8e6ce4;
+  --gradient-webgl-aurora: radial-gradient(circle, rgb(142, 108, 228), rgb(114, 79, 201));
+
+  /* Typography — Font Families */
+  --font-overused-grotesk: 'Overused Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sprat: 'Sprat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apple-system: '-apple-system', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

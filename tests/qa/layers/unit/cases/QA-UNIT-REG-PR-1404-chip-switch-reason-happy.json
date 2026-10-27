@@ -1,0 +1,61 @@
+{
+  "id": "QA-UNIT-REG-PR-1404-chip-switch-reason-happy",
+  "itemIds": ["regression:REG-PR-1404-chip-switch-reason"],
+  "requirement": "The chip's failover line says the stored reason (usage limit, signed out, unavailable); a Claude request with no ceiling asks for 32000 output tokens",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1404-chip-switch-reason.json",
+    "ref": "PR #1404 (fix); fix evidence: broker.js stores switched_from.reason; ModelChip rendered chip.switched for every reason. messages.js sent max_tokens 8192 while vendors/claude.js turns adaptive thinking on",
+    "invariant": "S1: \"…because it reached its usage limit.\", \"…because it was signed out.\", then \"…because it was unavailable.\" twice. S2: max_tokens 32000, then 4000; the request streams.",
+    "productSources": ["apps/tracy-web/src/seat-plan/wire/messages.js:528"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-model-plan/test/chip-render.test.mjs:170 require() with a computed specifier",
+      "packages/ui/tracy-model-plan/test/chip-render.test.mjs:44 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a tracy pin after a failover says where the chat came from",
+    "a plan pin after a failover names the plan and where the chat came from",
+    "the failover line says the reason the broker stored",
+    "a Claude request dsh gives no ceiling asks for 32000 output tokens"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1404-chip-switch-reason"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-model-plan", "tracy-model-plan"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1404-chip-switch-reason",
+    "pr": 1404,
+    "kind": "fix",
+    "area": "model-plan/failover",
+    "file": "tests/regression/cases/REG-PR-1404-chip-switch-reason.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-model-plan/test/chip-render.test.mjs",
+    "apps/tracy-web/test/seat-plan-claude-payload.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a tracy pin after a failover says where the chat came from",
+    "a plan pin after a failover names the plan and where the chat came from",
+    "the failover line says the reason the broker stored",
+    "a Claude request dsh gives no ceiling asks for 32000 output tokens"
+  ],
+  "timeoutS": 600
+}

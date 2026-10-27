@@ -1,0 +1,60 @@
+{
+  "id": "REG-PR-1667-wo-e2e-small-fixes",
+  "kind": "fix",
+  "title": "Seven small Website Opportunities faults from the dev e2e run stay fixed: demo link, look-check and social stats in the ledger, unchanged Retry publishes nothing, demo chat session ids, unsourced contact details",
+  "pr": 1667,
+  "area": "website-opportunities/e2e-small-fixes",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: list /ops/wo with a demo build whose site key is <label>.<siteDomain>.",
+    "S2: run the demo look check with a fake vision door and an account; summarise a demo-look ledger row on /ops Usage.",
+    "S3: fetch social stats through ScrapeCreators; then with the research daily cap at 0.",
+    "S4: research a place, then Retry one source that answers the same; then one that answers something new.",
+    "S5: hold a prompt for a wo-demo-<uuid> session; test the session id rule against good and bad ids.",
+    "S6: run collected-used on pages showing an uncollected email, mailto, phone, street line; on a page with a sample:true row about it; with a collected email beside a sample one; read agentDemoCollected's sample rows."
+  ],
+  "expect": [
+    "S1: demoSite is the site key and demoUrl is http://<site key>:<port>/ with no second domain.",
+    "S2: the charge carries purpose demo-look, the builder as payer and the reported tokens; Usage counts it under demo-look, not other.",
+    "S3: one settled scrapecreators ledger row per request at 1 cent; with the cap at 0 no call goes out and the page waits as 'budget'.",
+    "S4: same answer: current snapshot unchanged, research key unchanged, logo research kept, request completed on the current snapshot; new answer: new snapshot that keeps the logo research's vision record.",
+    "S5: the wo-demo session is held and written to the file; ../, spaces, a leading dash and over-long ids are refused.",
+    "S6: each uncollected value is a COLLECTED_UNSOURCED finding; the marked sample is listed, not failed, only on its page; the sample beside a collected email fails; samples carry page and what the row is about."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/lib/wo-ops.js apps/tracy-web/src/opportunities/demo-look.js apps/tracy-web/src/opportunities/social-stats.js apps/tracy-web/src/opportunities/place-jobs.js apps/tracy-web/src/opportunities/place-executor.js packages/tools/tracy-site-tools/src/host/deploy-hold.mjs apps/tracy-host/src/demo-qa.js apps/tracy-web/src/opportunities/agent-demo.js",
+    "dom": ""
+  },
+  "fence": "wo-ops demoUrl from the site key, demo-look's ledger purpose/payer/tokens, social-stats' per-request ledger reservation, publish()'s same-content check for one-source runs, sameLogoFindings, SESSION_ID's prefixes, checkCollectedUsed's COLLECTED_UNSOURCED with sample rows",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/website-opportunities-my-list.test.mjs",
+      "apps/tracy-web/test/wo-demo-look.test.mjs",
+      "apps/tracy-web/test/wo-research-usage.test.mjs",
+      "apps/tracy-web/test/website-opportunities-social-stats.test.mjs",
+      "apps/tracy-web/test/website-opportunities-place-retry-source.test.mjs",
+      "packages/tools/tracy-site-tools/test/deploy-hold.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-web/test/wo-agent-demo.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "/ops/wo links a demo at its site key, which already carries the site domain",
+      "the call is charged as vision against the research caps, with what the answer says it used",
+      "the finished demo's look check is its own purpose, not 'other'",
+      "ScrapeCreators reserves calls against the matching network cap",
+      "a spent research daily budget defers the page like a spent provider cap",
+      "a Retry whose source answers the same keeps the snapshot, the brief and the logo research",
+      "a Retry that finds something new still publishes it, keeping the logo research it did not redo",
+      "Tracy's own session ids are sessions too; anything that is not an id is still refused",
+      "collected-used: an email, phone or street address the research never collected fails unless marked sample",
+      "collected for the final check: brief facts, every collected review, own photo count and imported paths"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "id": "QA-UNIT-REG-PR-926-wp-apply-writes-site-mailboxes-happy",
+  "itemIds": ["regression:REG-PR-926-wp-apply-writes-site-mailboxes"],
+  "requirement": "Apply writes a WordPress site's own mailboxes: option tracy_contact_to (where the theme's contact form sends) and contact.email of tracy_site_identity (the address its theme shows)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-926-wp-apply-writes-site-mailboxes.json",
+    "ref": "PR #926 (fix); fix evidence: Ledger L17b of the Apply audit, 05/10/2026: the Tracy WordPress themes send their own contact form to option tracy_contact_to and nowhere else (never admin_email); the Build path wrote it (apply-wordpress.mjs), Apply did not, so a visitor's message through the theme's own form failed, and the kinetic theme 1.1.6 shows contact.email of tracy_site_identity, which Apply never set.",
+    "invariant": "S2: pass 4, fail 0: with a mailbox typed the sweep sets option tracy_contact_to to it and contact.email of tracy_site_identity to it; with none typed, the recipient is the account that pressed Apply (never written into the identity option) and a demo address the site showed is emptied; an option already right is not written again; an identity stored nested or as flat dotted keys keeps its shape; an option that cannot be read is said in the notes and not overwritten; a sweep given no recipient and no contact writes no option. Before the fix: 3 of the 4 fail. S3: fail 0: the engine's other behaviour (form recipients, links, pages) is unchanged. S4: at least 1: the sweep writes options through content.update. Every command exits 0.",
+    "productSources": [
+      "apps/tracy-web/src/lib/contracts.js:244",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:62",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "apps/tracy-web/src/sites/brief-engines/pictures.js:63",
+      "apps/tracy-web/src/sites/brief-engines/wordpress.js:340",
+      "apps/tracy-web/src/sites/brief-engines/wp-blocks.js:243",
+      "apps/tracy-web/src/sites/brief-engines/wp-residue.js:818",
+      "apps/tracy-web/src/sites/route.js:730"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contract-copy.js:42 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:25 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:43 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/wordpress.js:161 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:1278 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:21 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:2869 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-wordpress.test.mjs:3072 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-926-wp-apply-writes-site-mailboxes.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-926-wp-apply-writes-site-mailboxes"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-926-wp-apply-writes-site-mailboxes",
+    "pr": 926,
+    "kind": "fix",
+    "area": "site-brief/wordpress",
+    "file": "tests/regression/cases/REG-PR-926-wp-apply-writes-site-mailboxes.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-926-wp-apply-writes-site-mailboxes.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

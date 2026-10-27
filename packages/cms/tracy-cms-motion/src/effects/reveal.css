@@ -1,0 +1,139 @@
+/*
+ * reveal — each element that carries `tracy-motion-reveal` fades in from its own direction the
+ * first time it scrolls into view, after its own delay.
+ *
+ * Opt-in by markup. The effect touches nothing but elements carrying the class, which a block's
+ * author sets (a block's "Additional CSS class" field); a page without one is left exactly as
+ * before. Direction and delay are classes on the same element, named in AOS's vocabulary because
+ * that is how the templates it ports write them — `fade-left` moves TOWARDS the left, so it starts
+ * off to the right:
+ *
+ *   tracy-motion-reveal                    fade-up (the default)
+ *   tracy-motion-reveal--fade-left         enters from the right
+ *   tracy-motion-reveal--fade-right        enters from the left
+ *   tracy-motion-reveal--flip-up           turns up from lying flat
+ *   tracy-motion-delay-1 … -8              waits 100 ms … 800 ms
+ *
+ * The runtime watches each element, adds `tracy-motion-in` when it meets the viewport and swaps it
+ * for `tracy-motion-done` when its animation ends, so what stays on the page is one marker. The
+ * hide below sits on the root marker alone for the same reason the base sheet's does: the head
+ * partial sets it before this file arrives, so nothing is seen standing still before it moves.
+ * `subtle` is a short rise; `bold` is AOS's own reading (1.5 s, 100 px, `ease`), which is what a
+ * port asks for when the source ran AOS with `duration: 1500`.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html.tracy-motion main .tracy-motion-reveal {
+    opacity: 0;
+  }
+
+  html.tracy-motion main .tracy-motion-reveal.tracy-motion-done {
+    opacity: 1;
+  }
+
+  html.tracy-motion .tracy-motion-reveal.tracy-motion-in {
+    --tracy-motion-dur: 700ms;
+    --tracy-motion-ease: cubic-bezier(0.2, 0, 0, 1);
+    --tracy-motion-shift: 32px;
+    animation: tracy-motion-reveal-up var(--tracy-motion-dur) var(--tracy-motion-ease)
+      var(--tracy-motion-delay, 0ms) both;
+  }
+
+  html.tracy-motion .tracy-motion-reveal.tracy-motion-in.tracy-motion-bold {
+    --tracy-motion-dur: 1500ms;
+    --tracy-motion-ease: ease;
+    --tracy-motion-shift: 100px;
+  }
+
+  html.tracy-motion .tracy-motion-reveal--fade-left.tracy-motion-in {
+    animation-name: tracy-motion-reveal-left;
+  }
+
+  html.tracy-motion .tracy-motion-reveal--fade-right.tracy-motion-in {
+    animation-name: tracy-motion-reveal-right;
+  }
+
+  html.tracy-motion .tracy-motion-reveal--flip-up.tracy-motion-in {
+    animation-name: tracy-motion-reveal-flip-up;
+  }
+
+  html.tracy-motion .tracy-motion-delay-1 {
+    --tracy-motion-delay: 100ms;
+  }
+
+  html.tracy-motion .tracy-motion-delay-2 {
+    --tracy-motion-delay: 200ms;
+  }
+
+  html.tracy-motion .tracy-motion-delay-3 {
+    --tracy-motion-delay: 300ms;
+  }
+
+  html.tracy-motion .tracy-motion-delay-4 {
+    --tracy-motion-delay: 400ms;
+  }
+
+  html.tracy-motion .tracy-motion-delay-5 {
+    --tracy-motion-delay: 500ms;
+  }
+
+  html.tracy-motion .tracy-motion-delay-6 {
+    --tracy-motion-delay: 600ms;
+  }
+
+  html.tracy-motion .tracy-motion-delay-7 {
+    --tracy-motion-delay: 700ms;
+  }
+
+  html.tracy-motion .tracy-motion-delay-8 {
+    --tracy-motion-delay: 800ms;
+  }
+}
+
+@keyframes tracy-motion-reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--tracy-motion-shift));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tracy-motion-reveal-left {
+  from {
+    opacity: 0;
+    transform: translateX(var(--tracy-motion-shift));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tracy-motion-reveal-right {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--tracy-motion-shift)));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tracy-motion-reveal-flip-up {
+  from {
+    opacity: 0;
+    transform: perspective(2500px) rotateX(-100deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: perspective(2500px) rotateX(0);
+  }
+}

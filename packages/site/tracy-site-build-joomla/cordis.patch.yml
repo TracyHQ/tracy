@@ -1,0 +1,8 @@
+# Insert this plugin's row. Whichever bundle loads this package puts the row in the loader tree.
+#
+# 🔒 This row does NOT run when a profile loads `@tracy/dsh-native-bundle`: a package's own patch
+# only applies when that package is named in `dsh.profile.bundles`. Listing BOTH the bundle AND
+# this package in one profile inserts the row twice → duplicate id → dsh REFUSES TO BOOT.
+- insert:
+    - id: tracy-site-build-joomla
+      name: '@tracy/dsh-site-build-joomla'

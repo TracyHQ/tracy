@@ -1,0 +1,468 @@
+/* Hero showcase, tab 3 "Click to edit": the site workspace of the Tracy app
+   (left rail, chat, the site in the app's browser) at 1280 x 696.
+
+   Every size, colour and font below was read from the live app
+   (cowork.tracy.site, site workspace of a test site, 23/10/2026) with
+   getComputedStyle / getBoundingClientRect at a 1280 x 696 window, except
+   where a comment says it was measured on a screenshot. The site inside the
+   browser is two screenshots of the test site (before / after the edit). */
+
+.hs-win .hs3 { position: absolute; inset: 0; overflow: hidden; background: #fff; }
+.hs-win .hs3 svg { display: block; flex: none; }
+.hs-win .hs3 p { margin: 0; }
+
+/* ---- Left rail --------------------------------------------------------- */
+
+.hs3-side {
+  position: absolute; top: 0; left: 0; width: 280px; height: 696px;
+  background: oklch(0.975 0.003 85); border-right: 1px solid var(--a-border);
+}
+.hs3-brand { position: absolute; top: 18px; left: 12px; display: flex; align-items: center; height: 24px; }
+.hs3-mark { width: 22px; height: 22px; margin: 0 9px 0 1px; }
+.hs3-brand .hs-logo { height: 24px; width: 57.5px; }
+.hs3-cowork {
+  margin-left: 7px; padding-left: 7.2px; border-left: 1px solid currentColor;
+  font-size: 14.4px; font-weight: 300; line-height: 16.56px; opacity: .52;
+}
+.hs3-collapse { position: absolute; top: 22px; left: 246px; width: 16px; height: 16px; }
+.hs3-new {
+  position: absolute; top: 60px; left: 12px; width: 256px; height: 38px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: 8px; background: oklab(0.9086 0.00024 0.00275); font-size: 14px;
+}
+.hs3-new .hs3-ico { width: 16px; height: 16px; }
+.hs3-nav {
+  position: absolute; left: 12px; width: 256px; height: 36px;
+  display: flex; align-items: center; gap: 8px; padding: 0 12px;
+  color: oklab(0.38338 0 0); font-size: 14px;
+}
+.hs3-nav .hs3-ico { width: 16px; height: 16px; }
+.hs3-nav > span:nth-child(2) { flex: 1; }
+.hs3-badge {
+  display: inline-flex; align-items: center; height: 18px; padding: 0 5px; border-radius: 9999px;
+  background: rgb(191, 91, 61); color: oklch(0.985 0 0); font-size: 11px; font-weight: 600; line-height: 11px;
+}
+.hs3-site-h {
+  position: absolute; top: 194px; left: 8px; width: 264px; height: 32px;
+  display: flex; align-items: center; padding: 0 4px 0 11px; color: var(--a-muted); font-size: 14px;
+}
+.hs3-site-h > span:first-child { flex: 1; }
+.hs3-site-h .hs3-ib { width: 28px; height: 28px; display: grid; place-items: center; margin-left: 4px; }
+.hs3-site-h .hs3-ib:nth-child(2) .hs3-ico { width: 14px; height: 14px; }
+.hs3-site-h .hs3-ib:nth-child(3) .hs3-ico { width: 16px; height: 16px; }
+.hs3-ws {
+  position: absolute; top: 226px; left: 8px; width: 257px; height: 34px;
+  display: flex; align-items: center; gap: 6px; padding: 0 12px; font-size: 14px; font-weight: 500;
+}
+.hs3-ws .hs3-ico { width: 16px; height: 16px; color: rgb(191, 91, 61); }
+.hs3-sess {
+  position: absolute; top: 262px; left: 8px; width: 257px; height: 36px;
+  display: flex; align-items: center; gap: 12px; padding: 0 12px; color: oklab(0.38338 0 0); font-size: 14px;
+}
+.hs3-sess-ic { position: relative; width: 16px; height: 16px; margin: 0 -5px; flex: none; }
+.hs3-dot { position: absolute; top: 5px; left: 5px; width: 6px; height: 6px; border-radius: 50%; background: rgb(191, 91, 61); }
+.hs3 .hs3-sess .hs3-spin { position: absolute; inset: 1px; display: none; color: var(--a-muted); animation: hs3-spin 1s linear infinite; }
+.hs3 .hs3-sess.is-busy .hs3-spin { display: block; }
+.hs3-sess.is-busy .hs3-dot, .hs3-sess.is-idle .hs3-dot { display: none; }
+.hs3-sess-name { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.hs3-sess-age { color: var(--a-muted); font-size: 10px; line-height: 16px; }
+.hs3-acct-line { position: absolute; top: 637px; left: 0; right: 0; height: 1px; background: rgb(219, 219, 217); } /* measured on a screenshot */
+.hs3-acct {
+  position: absolute; top: 644px; left: 8px; width: 264px; height: 44px;
+  display: flex; align-items: center; gap: 10px; padding: 0 12px;
+  color: oklab(0.38338 0 0); font-size: 14px; font-weight: 500;
+}
+.hs3-av {
+  display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; flex: none;
+  background: rgb(77, 124, 15); color: #fff; font-size: 13px; font-weight: 600; line-height: 13px;
+}
+
+/* ---- Chat column ------------------------------------------------------- */
+
+.hs3-chat { position: absolute; top: 0; left: 280px; width: 300px; height: 696px; overflow: hidden; background: #fff; }
+.hs3-sitebtn {
+  position: absolute; top: 10px; left: 12px; height: 32px; display: flex; align-items: center; gap: 7px;
+  padding: 0 8px; font-size: 14px; font-weight: 600; line-height: 14px;
+}
+.hs3-sitebtn .hs3-wp { width: 16px; height: 16px; }
+.hs3-sitebtn .hs3-chev { width: 12px; height: 12px; color: var(--a-muted); }
+.hs3-hdr-tools { position: absolute; top: 12px; left: 159.7px; display: none; align-items: center; }
+.hs3-chip {
+  width: 18.3px; height: 22px; margin-top: 3px; padding: 0 8px; overflow: hidden; white-space: nowrap;
+  border: 1px solid var(--a-border); border-radius: 9999px; color: var(--a-muted); font-size: 12px; line-height: 20px;
+}
+.hs3-voice { display: flex; align-items: center; gap: 6px; height: 28px; margin-left: 8px; padding: 0 8px; color: var(--a-muted); }
+.hs3-voice .hs3-ico:first-child { width: 16px; height: 16px; }
+.hs3-voice .hs3-ico:last-child { width: 12px; height: 12px; opacity: .7; }
+.hs3-hdr-more { width: 36px; height: 28px; margin-left: 8px; display: grid; place-items: center; }
+.hs3-hdr-more .hs3-ico { width: 16px; height: 16px; }
+.hs3-tabs {
+  position: absolute; top: 52px; left: 0; width: 300px; height: 26px; display: none; gap: 20px; padding: 0 0 0 28px;
+  border-bottom: .5px solid var(--a-border); color: var(--a-muted); font-size: 13px; font-weight: 500; line-height: 16px;
+}
+.hs3-tabs > span { position: relative; display: flex; gap: 6px; height: 25px; }
+.hs3-tabs > span.is-on { color: rgb(191, 91, 61); }
+.hs3-tabs > span.is-on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: rgb(191, 91, 61); }
+.hs3-tabs i {
+  font-style: normal; height: 16px; padding: 0 5px; border-radius: 9999px;
+  background: var(--a-muted-bg); color: var(--a-muted); font-size: 11px; font-weight: 500;
+}
+.hs3.is-chat .hs3-hdr-tools, .hs3.is-chat .hs3-tabs { display: flex; }
+
+/* Before the first message: the site's start card. */
+.hs3-start { position: absolute; top: 155.8px; left: 0; width: 300px; text-align: center; }
+.hs3.is-chat .hs3-start { display: none; }
+.hs3-start-t { display: block; font-size: 21px; font-weight: 600; line-height: 26.25px; }
+.hs3-start-s {
+  display: inline-flex; align-items: center; gap: 3px; margin-top: 6px;
+  color: var(--a-muted); font-size: 13px; line-height: 18.2px;
+}
+.hs3-start-s .hs3-ico { width: 12px; height: 12px; opacity: .6; }
+.hs3-cards { display: flex; flex-direction: column; gap: 9px; width: 200px; margin: 22px auto 0; text-align: left; }
+.hs3-card {
+  display: flex; align-items: center; gap: 10px; height: 41px; padding: 0 11px 0 8px;
+  border: 1px solid var(--a-border); border-radius: 999px; background: #fff; font-size: 13px; font-weight: 500; line-height: 16.9px;
+}
+.hs3-card b { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; color: #fff; }
+.hs3-card b .hs3-ico { width: 13px; height: 13px; }
+
+/* The conversation. Positions are the app's, in a column 229px wide from x 32. */
+/* Like the app, the thread is pinned to the bottom of the log: the latest line sits 16px above the
+   composer (top 559px in chat mode) and older lines are pushed up and clipped at the log's top. */
+.hs3-log { position: absolute; top: 77.5px; left: 0; width: 300px; height: 465.5px; overflow: hidden; display: none; }
+.hs3.is-chat .hs3-log { display: block; }
+.hs3-flow { position: absolute; bottom: 0; left: 32px; width: 229px; }
+.hs3-bubble {
+  margin-left: 17.2px; padding: 8px 12px; border-radius: 12px 12px 4px 12px;
+  background: oklch(0.97 0 0); font-size: 14px; line-height: 22px;
+}
+.hs3-bubble > span:first-child { display: block; line-height: 16.5px; margin-top: 2.5px; }
+.hs3-ref {
+  display: flex; align-items: center; gap: 4px; max-width: 187.8px; height: 22px; margin-top: 3px; padding: 2px 6px;
+  border: 1px solid var(--a-border); border-radius: 6px; background: rgb(237, 243, 254);
+  font-size: 11px; font-weight: 500; line-height: 16px; white-space: nowrap; overflow: hidden;
+}
+.hs3-ref > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.hs3-pinmini {
+  display: grid; place-items: center; width: 16px; height: 16px; flex: none; border-radius: 8px 8px 8px 0;
+  background: rgb(77, 124, 15); color: #fff; font-size: 9px; font-weight: 600; line-height: 16px;
+}
+.hs3-ref .hs3-ico { width: 11px; height: 11px; color: var(--a-muted); }
+.hs3-meta { display: flex; justify-content: flex-end; align-items: center; gap: 8px; height: 28px; margin-top: 6px; color: var(--a-muted); }
+.hs3-meta > span { padding-right: 12px; font-size: 13px; line-height: 24px; }
+.hs3-meta > i { display: grid; place-items: center; width: 28px; height: 28px; }
+.hs3-meta .hs3-ico { width: 15px; height: 15px; }
+
+.hs3-step {
+  display: flex; align-items: center; gap: 6px; height: 33px; margin-top: 16px; padding-bottom: 8px;
+  border-bottom: .5px solid var(--a-border); color: var(--a-muted); font-size: 14px; line-height: 24px;
+}
+.hs3-step .hs3-ico { width: 14px; height: 14px; }
+.hs3-step .hs3-ico.is-chev { margin-left: -2px; }
+/* The app sweeps a lighter band across the label while it works. */
+.hs3-step.is-live b {
+  font-weight: 400; color: transparent; -webkit-background-clip: text; background-clip: text;
+  background-image: linear-gradient(90deg, oklch(0.4 0 0) 0 35%, oklch(0.7 0 0) 50%, oklch(0.4 0 0) 65% 100%);
+  background-size: 300% 100%; animation: hs3-sweep 2s linear infinite;
+}
+.hs3-step b { font-weight: 400; }
+.hs3-run { display: flex; align-items: center; gap: 6px; margin-top: 13.5px; color: rgb(52, 94, 186); font-size: 12px; line-height: 22px; font-variant-numeric: tabular-nums; } /* colour measured on a screenshot */
+.hs3-run .hs3-ico { width: 14px; height: 14px; }
+.hs3-run.is-first { margin-top: 16px; }
+.hs3-reply { margin-top: 16px; font-size: 14px; line-height: 24px; }
+.hs3 .hs3-reply p + p { margin-top: 16px; }
+.hs3-change {
+  margin-top: 22px; padding: 10px 12px; border: 1px solid var(--a-border); border-radius: 10px; background: #fff;
+  font-size: 13px; line-height: 18.85px;
+}
+.hs3-change-t { font-size: 13.5px; font-weight: 600; line-height: 19.575px; }
+.hs3 .hs3-change-s { margin-top: 2px; color: var(--a-muted); font-size: 12.5px; line-height: 18.125px; }
+.hs3-change-b { display: flex; gap: 6px; margin-top: 6px; }
+.hs3-change-b > span {
+  display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border-radius: 7px;
+  border: 1px solid transparent; color: var(--a-muted); font-size: 12.5px; line-height: 18.125px;
+}
+.hs3-change-b > span + span { border-color: var(--a-border); background: #fff; color: var(--a-fg); }
+.hs3-change-b .hs3-ico { width: 13px; height: 13px; }
+/* The card through an undo (TurnUndoCard's tv-undo-* rules in the app): hover tints, the
+   confirmation (its lines 4px apart, buttons on the right, Undo in the brand colour), the
+   spinner while undoing, and the dashed "Undone" card. */
+.hs3-change-b > span.is-hover { background: oklab(0.9487 0 0); }
+.hs3 .hs3-change[class*="is-"] > * + * { margin-top: 4px; }
+.hs3 .hs3-change .hs3-change-b.is-foot { justify-content: flex-end; margin-top: 10px; }
+.hs3-change-b.is-foot > span:first-child { border-color: var(--a-border); background: #fff; color: var(--a-fg); }
+.hs3-change-b > span.is-primary { border-color: rgb(191, 91, 61); background: rgb(191, 91, 61); color: oklch(0.985 0 0); }
+.hs3-change-b > span.is-primary.is-hover { background: oklab(0.535 0.0953 0.0729); }
+.hs3-change-t.is-ic { display: flex; align-items: center; gap: 6px; }
+.hs3-change-t .hs3-ico { width: 13px; height: 13px; }
+.hs3-uspin {
+  flex: none; width: 12px; height: 12px; box-sizing: border-box; border-radius: 50%;
+  border: 2px solid color-mix(in oklab, currentColor 25%, transparent); border-top-color: currentColor;
+  animation: hs3-spin .8s linear infinite;
+}
+.hs3-change.is-undone { border-style: dashed; background: transparent; }
+.hs3-change-s u { text-underline-offset: 2px; }
+.hs3-change-s u.is-hover { color: var(--a-fg); }
+.hs3-change-b.is-foot > span.is-hover:first-child { background: oklab(0.9487 0 0); }
+.hs3-done {
+  margin-top: 34px; padding: 10px 14px 14px; border: 1px solid var(--a-border); border-radius: 12px;
+  font-size: 13px; line-height: 18.85px;
+}
+.hs3-done p { font-weight: 600; }
+.hs3-done p span { font-weight: 400; color: var(--a-muted); }
+.hs3-done u { display: block; margin-top: 6px; color: var(--a-muted); }
+.hs3-acts { display: flex; align-items: center; gap: 8px; height: 28px; margin: 28px 0 0 -6px; color: var(--a-muted); }
+.hs3-acts > i { display: grid; place-items: center; width: 28px; height: 28px; }
+.hs3-acts .hs3-ico { width: 15px; height: 15px; }
+.hs3-acts > span { margin-left: 8px; font-size: 12px; line-height: 24px; }
+
+/* Composer: at the bottom before the chat starts, 24px higher once it has a stats line. */
+.hs3-comp {
+  position: absolute; top: 583px; left: 15px; width: 270px; height: 105px; padding: 10px 12px 12px 8px;
+  border: 1px solid var(--a-border); border-radius: 12px; background: #fff;
+}
+.hs3.is-chat .hs3-comp { top: 559px; left: 8px; width: 277px; }
+.hs3-ph { height: 40px; padding: 0 4px; color: var(--a-muted); font-size: 14px; line-height: 20px; }
+.hs3-crow { display: flex; align-items: center; gap: 6px; height: 30px; margin-top: 11px; }
+.hs3.is-chat .hs3-crow { margin-top: 11px; }
+.hs3-plus { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--a-border); border-radius: 6px; color: var(--a-muted); }
+.hs3-plus .hs3-ico, .hs3-cbtn .hs3-ico { width: 16px; height: 16px; }
+.hs3-model { display: flex; align-items: center; gap: 2px; height: 28px; margin-left: auto; padding: 0 4px; color: var(--a-muted); }
+.hs3-model .hs3-ico:first-child { width: 16px; height: 16px; }
+.hs3-model .hs3-ico:last-child { width: 12px; height: 12px; }
+.hs3-cbtn { display: grid; place-items: center; width: 28px; height: 28px; color: var(--a-muted); }
+.hs3-cbtn + .hs3-cbtn { margin-left: 2px; }
+.hs3-send {
+  position: relative; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 999px;
+  background: rgb(191, 91, 61); color: oklch(0.985 0 0); opacity: .4;
+}
+.hs3-send .hs3-ico { width: 16px; height: 16px; }
+.hs3-send i { display: none; width: 10px; height: 10px; border-radius: 2px; background: #fff; } /* stop: drawn from a screenshot */
+.hs3-send.is-stop { opacity: 1; }
+.hs3-send.is-stop i { display: block; }
+.hs3-send.is-stop .hs3-ico { display: none; }
+.hs3-stats {
+  position: absolute; top: 670px; left: 23px; display: flex; align-items: center; gap: 12px;
+  color: var(--a-muted); font-size: 11px; line-height: 18px; opacity: 0;
+}
+.hs3-stats > span { display: flex; align-items: center; gap: 4px; }
+.hs3-stats .hs3-ico { width: 12px; height: 12px; }
+.hs3-stats .hs3-ctx circle { fill: none; stroke: currentColor; stroke-width: 1.5; }
+.hs3-stats .hs3-ctx circle:first-child { opacity: .3; }
+.hs3-stats.is-on { opacity: 1; }
+.hs3-stats .hs3-tps { display: none; }
+.hs3-stats.has-tps .hs3-tps { display: flex; }
+
+/* ---- The app's browser ------------------------------------------------- */
+
+.hs3-pane {
+  position: absolute; top: 0; left: 580px; width: 700px; height: 696px;
+  border-left: .5px solid var(--a-border); background: oklch(0.975 0.003 85);
+}
+.hs3-ib, .hs3-tb { display: grid; place-items: center; flex: none; }
+.hs3-tabrow { position: absolute; top: 0; left: 0; right: 0; height: 48px; }
+.hs3-tab { position: absolute; top: 10px; left: 10px; width: 190px; height: 28px; display: flex; align-items: center; gap: 5px; padding: 0 10px; font-size: 13px; line-height: 18.2px; }
+.hs3-tab .hs3-ib { width: 18px; height: 18px; }
+.hs3-tab .hs3-ib .hs3-ico { width: 14px; height: 14px; }
+.hs3-tab img { width: 14px; height: 14px; }
+.hs3-tab span:last-child { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
+.hs3-tabplus { position: absolute; top: 10px; left: 204px; width: 28px; height: 28px; color: var(--a-muted); }
+.hs3-tabplus .hs3-ico, .hs3-tabr .hs3-ico { width: 15px; height: 15px; }
+.hs3-tabr { position: absolute; top: 10px; right: 6px; display: flex; gap: 8px; color: var(--a-muted); }
+.hs3-tabr > i { display: grid; place-items: center; width: 28px; height: 28px; }
+
+.hs3-bar {
+  position: absolute; top: 48px; left: 0; right: 0; height: 45px; display: flex; align-items: center; gap: 4px;
+  padding: 6px 8px; border-bottom: 1px solid oklab(0.145 0 0 / .1); /* line colour measured on a screenshot */
+  font-size: 12px; font-weight: 500; line-height: 18px;
+}
+.hs3-tb { width: 32px; height: 32px; border-radius: 8px; color: oklab(0.145 0 0 / .58); }
+.hs3-tb .hs3-ico { width: 14px; height: 14px; }
+.hs3-tb.is-off { opacity: .4; }
+.hs3-refresh.is-busy .hs3-ico { animation: hs3-spin 1s linear infinite; }
+.hs3-tbt .hs3-uturn { animation: hs3-spin .9s linear infinite; } /* "Undoing…" in the browser bar */
+/* The app's loading line under the address bar while the preview reloads: a faint brand track
+   and a 40% sweep running along it (sidebar.module.css .browserProgress). */
+.hs3-prog {
+  position: absolute; top: 91px; left: 0; right: 0; height: 2px; opacity: 0;
+  background-color: rgba(191, 91, 61, .22);
+  background-image: linear-gradient(90deg, transparent 0%, rgb(191, 91, 61) 50%, transparent 100%);
+  background-size: 40% 100%; background-repeat: no-repeat;
+}
+.hs3-prog.is-on { opacity: 1; animation: hs3-prog 1.1s ease-in-out infinite; }
+@keyframes hs3-prog { from { background-position: -40% 0; } to { background-position: 140% 0; } }
+.hs3-url {
+  display: flex; align-items: center; flex: 1; min-width: 0; height: 32px; gap: 2px; padding: 0 3px 0 0;
+  border-radius: 8px; background: oklab(0.145 0 0 / .06);
+}
+.hs3-url > span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; padding: 0 6px 0 10px; font-size: 13px; font-weight: 400; color: var(--a-fg); }
+.hs3-url > i { display: grid; place-items: center; width: 26px; height: 26px; color: oklab(0.145 0 0 / .58); flex: none; }
+.hs3-url .hs3-ico { width: 14px; height: 14px; }
+.hs3-url > i:first-of-type .hs3-ico { width: 15px; height: 15px; }
+.hs3-tbt { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 8px; border-radius: 8px; flex: none; white-space: nowrap; }
+.hs3-tbt .hs3-ico { width: 14px; height: 14px; }
+.hs3-tbt.is-off { color: oklab(0.145 0 0 / .4); }
+.hs3-tbt i { font-style: normal; color: var(--a-muted); font-size: 11px; display: none; margin-left: 4px; }
+.hs3-tbt.has-n i { display: inline; }
+.hs3-mode {
+  display: flex; gap: 2px; height: 32px; padding: 2px; margin-left: 2px; border-radius: 8px; background: oklab(0.145 0 0 / .06); flex: none;
+}
+.hs3-mode > span {
+  display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 6px; color: oklab(0.145 0 0 / .58);
+}
+.hs3-mode > span:first-child .hs3-ico { width: 14px; height: 14px; }
+.hs3-mode > span:last-child .hs3-ico { width: 13px; height: 13px; }
+.hs3-mode > span.is-on { background: oklch(0.97 0 0); color: var(--a-fg); box-shadow: 0 0 0 1px oklab(0.145 0 0 / .14); }
+.hs3-mode > span.is-hover:not(.is-on) { background: oklab(0.145 0 0 / .06); color: var(--a-fg); }
+
+.hs3-frame { position: absolute; top: 93px; left: 0; width: 699.5px; height: 603px; overflow: hidden; background: #141414; }
+
+/* Edit mode, drawn by the app inside the page: a thin orange line round the
+   block under the pointer, a 2px one round the picked block, a faint white one
+   round a block that has a comment (colours measured on screenshots). */
+.hs3-box { position: absolute; display: none; border: 1px solid rgba(191, 91, 61, .73); background: rgba(191, 91, 61, .06); }
+.hs3-box.is-on { display: block; }
+.hs3-box.is-picked { border: 2px solid rgb(191, 91, 61); background: rgba(191, 91, 61, .1); }
+.hs3-box.is-noted { border: 1px solid rgba(255, 255, 255, .2); background: none; }
+.hs3-pin {
+  position: absolute; display: none; place-items: center; width: 26px; height: 26px; border-radius: 0 50% 50%;
+  background: rgb(77, 124, 15); color: #fff; font-size: 12px; font-weight: 600; line-height: 12px;
+  box-shadow: #fff 0 0 0 2px, rgba(0, 0, 0, .18) 0 0 0 3px;
+}
+.hs3-pin.is-on { display: grid; }
+.hs3-hint {
+  position: absolute; left: 50%; bottom: 12px; display: none; align-items: center; gap: 8px; height: 30px; padding: 6px 12px;
+  transform: translateX(-50%); white-space: nowrap; border-radius: 999px; background: oklch(0.145 0 0); color: oklch(0.975 0.003 85);
+  font-size: 12px; line-height: 18px;
+  box-shadow: rgba(0, 0, 0, .2) 0 0 1px, rgba(0, 0, 0, .02) 0 0 4px, rgba(0, 0, 0, .08) 0 12px 32px;
+}
+.hs3-hint .hs3-ico { width: 13px; height: 13px; }
+.hs3-hint > span:last-child { opacity: .6; }
+.hs3-hint.is-on { display: flex; }
+
+/* The comment box the app opens under a picked block. */
+.hs3-cbox {
+  position: absolute; z-index: 20; display: none; width: 340px; height: 210px; padding: 10px;
+  border: 1px solid var(--a-border); border-radius: 8px; background: oklch(0.97 0 0);
+  font-size: 12px; line-height: 18px;
+  box-shadow: rgba(0, 0, 0, .2) 0 0 1px, rgba(0, 0, 0, .02) 0 0 4px, rgba(0, 0, 0, .08) 0 12px 32px;
+}
+.hs3-cbox.is-on { display: block; }
+.hs3-cbox-h { display: flex; align-items: center; justify-content: space-between; height: 32px; margin: -4px -4px 0 0; }
+.hs3-cbox-h > span { color: var(--a-muted); font-size: 14px; font-weight: 500; line-height: 22px; }
+.hs3-cbox-h > i { display: grid; place-items: center; width: 28px; height: 28px; color: var(--a-muted); }
+.hs3-cbox-h .hs3-ico { width: 14px; height: 14px; }
+.hs3-crumbs { display: flex; align-items: center; height: 22px; margin: 2px 0 0 -6px; }
+.hs3-crumbs > span { padding: 0 6px; border-radius: 5px; color: oklab(0.475 0 0); line-height: 22px; }
+.hs3-crumbs > em { padding: 0 3px; font-style: normal; color: oklab(0.6565 0 0); }
+.hs3-crumbs > span.is-on { background: oklab(0.908909 0.0173198 0.0132464); color: var(--a-fg); font-weight: 600; }
+.hs3-ta {
+  position: relative; height: 84px; margin: 8px 0 0; padding: 8px 36px 8px 10px;
+  border: 1px solid oklab(0.5725 0 0); border-radius: 8px; background: #fff;
+  color: var(--a-fg); font-size: 14px; line-height: 22px;
+}
+.hs3-ta .hs3-tph { color: var(--a-muted); }
+.hs3-ta.has-text .hs3-tph { display: none; }
+.hs3-caret { display: none; width: 1px; height: 17px; margin: 0 0 -3px 1px; background: var(--a-fg); }
+.hs3-ta.is-focus .hs3-caret { display: inline-block; animation: hs3-blink 1s steps(1) infinite; }
+.hs3-ta > i { position: absolute; right: 3px; bottom: 3px; display: grid; place-items: center; width: 28px; height: 28px; color: var(--a-muted); }
+.hs3-ta > i .hs3-ico { width: 16px; height: 16px; }
+.hs3-cfoot { display: flex; align-items: center; height: 32px; margin: 12px 0 0; }
+.hs3-attach {
+  display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--a-border); border-radius: 8px;
+  background: oklch(0.975 0.003 85); color: var(--a-muted);
+}
+.hs3-attach .hs3-ico { width: 14px; height: 14px; }
+.hs3-cfoot > span { display: flex; align-items: center; height: 32px; padding: 0 8px; border-radius: 8px; font-size: 13px; font-weight: 500; line-height: 18px; opacity: .5; }
+.hs3-note { margin-left: auto; border: 1px solid var(--a-border); background: oklch(0.975 0.003 85); }
+.hs3-ask { gap: 6px; margin-left: 6px; background: rgb(191, 91, 61); color: #fff; }
+.hs3-ask i { font-style: normal; font-size: 11px; line-height: 14px; opacity: .6; }
+.hs3-cbox.has-text .hs3-cfoot > span { opacity: 1; }
+.hs3-ask.is-hover { background: rgb(170, 78, 50); }
+
+/* Tooltip under the reload button while Tracy works (measured on screenshots). */
+.hs3-tip {
+  position: absolute; top: 94px; left: 74.5px; display: none; height: 24px; padding: 0 10px; border-radius: 5px;
+  background: #2c2c2e; color: #f2f2f2; font-size: 12px; line-height: 24px; white-space: nowrap; z-index: 5;
+}
+.hs3-tip::before { content: ""; position: absolute; top: -5px; left: 16px; border: 5px solid transparent; border-top: 0; border-bottom-color: #2c2c2e; }
+.hs3-tip.is-on { display: block; }
+
+/* Slow pointer for gliding over the blocks of the page. */
+.hs-cursor.hs3-slow:not(.no-move) { transition: opacity 700ms cubic-bezier(.45, .05, .2, 1), transform 900ms cubic-bezier(.42, 0, .58, 1); }
+
+@keyframes hs3-spin { to { transform: rotate(360deg); } }
+@keyframes hs3-sweep { from { background-position: 100% 0; } to { background-position: 0 0; } }
+@keyframes hs3-blink { 50% { opacity: 0; } }
+
+/* Rows the script hides until their moment (their own display rules would win over [hidden]). */
+.hs3 [hidden] { display: none !important; }
+
+/* Original JA Kinetic desktop hero shared by editor, team and ownership scenes.
+   Keep source pixels for logo, brand colors, grid, buttons and terminal. */
+.hs-win .welcome-kinetic {
+  position: absolute; top: 0; left: 0; width: 699.5px; height: 603px;
+  isolation: isolate; overflow: hidden; background: #fbfcf8; color: #101410;
+}
+.hs-win .welcome-kinetic img { display: block; position: absolute; left: 0; width: 699.5px; height: auto; }
+.hs-win .welcome-kinetic-image { top: 0; clip-path: path(evenodd, 'M0 0H699.5V300H0Z M17 109H295V181H17Z M17 185H310V217H17Z'); }
+.hs-win .welcome-kinetic-image.is-dark { display: none; }
+.hs-win .welcome-kinetic-continuation { position: absolute; inset: 300px 0 0; overflow: hidden; }
+.hs-win .welcome-kinetic-continuation > img { top: -266px; }
+.hs-win .welcome-kinetic-heading,
+.hs-win .welcome-kinetic-copy {
+  position: absolute; z-index: 1; margin: 0; padding: 0;
+  background-color: #f9fbf5;
+  background-image: linear-gradient(#e9eee5 1px, transparent 1px), linear-gradient(90deg, #e9eee5 1px, transparent 1px);
+  background-size: 19.7px 19.7px; background-position: -18.6px -12.8px;
+  font-family: Arial, Helvetica, sans-serif; letter-spacing: -.5px;
+}
+.hs-win .welcome-kinetic-heading { left: 17px; top: 109px; width: 278px; height: 72px; font-size: 28px; font-weight: 700; line-height: 31px; }
+.hs-win .welcome-kinetic-copy { left: 17px; top: 185px; width: 293px; height: 32px; font-size: 9.3px; font-weight: 400; line-height: 15.5px; letter-spacing: 0; color: #525951; }
+.hs-win .welcome-kinetic-new { display: none; }
+.hs-win .hs3-frame.is-new .welcome-kinetic-old,
+.hs-win .welcome-kinetic.is-finished .welcome-kinetic-old { display: none; }
+.hs-win .hs3-frame.is-new .welcome-kinetic-new,
+.hs-win .welcome-kinetic.is-finished .welcome-kinetic-new { display: block; }
+.hs-win .hs5-view[data-v="browser"] { overflow: hidden; }
+.hs-win .hs5-view[data-v="browser"] > .hs5-browser-toolbar { position: absolute; top: 0; left: 0; width: 699.5px; height: 45px; }
+.hs-win .hs5-view[data-v="browser"] > .welcome-kinetic { top: 45px; }
+:root[data-theme="dark"] .hs-win .welcome-kinetic { background: #010100; color: #f0f3ee; }
+:root[data-theme="dark"] .hs-win .welcome-kinetic-image.is-light { display: none; }
+:root[data-theme="dark"] .hs-win .welcome-kinetic-image.is-dark { display: block; }
+:root[data-theme="dark"] .hs-win .welcome-kinetic-heading,
+:root[data-theme="dark"] .hs-win .welcome-kinetic-copy { background-color: #0c120c; background-image: linear-gradient(#172017 1px, transparent 1px), linear-gradient(90deg, #172017 1px, transparent 1px); }
+:root[data-theme="dark"] .hs-win .welcome-kinetic-copy { color: #a0a99e; }
+
+/* Content and comments are separate stacking contexts. Hit tests use real nodes. */
+.hs-win { pointer-events: auto; }
+.hs-win .hs-cursor, .hs-win .hs-aura { pointer-events: none; }
+.hs-win [data-hs4-l="popB"], .hs-win [data-hs4-l="popC"] { z-index: 20; }
+.hs-win .welcome-kinetic-continuation > .is-dark { display: none; }
+.hs-win .welcome-kinetic-dark-below { display: none; }
+:root[data-theme="dark"] .hs-win .welcome-kinetic-continuation { display: none; }
+:root[data-theme="dark"] .hs-win .welcome-kinetic { background: #0b100e; }
+:root[data-theme="dark"] .hs-win .welcome-kinetic-dark-below { display: block; position:absolute; top:300px; width:699.5px; bottom:0; background:#0b100e; color:#e9ece9; }
+.welcome-kinetic-trusted { height:62px; display:flex; align-items:center; justify-content:space-around; gap:12px; padding:0 19px !important; background:#0e1311; border-bottom:1px solid #202721 !important; color:#747d76; }
+.welcome-kinetic-trusted small { width:240px; font:6px monospace; letter-spacing:1px; }
+.welcome-kinetic-trusted span { font:700 9px Arial,sans-serif; }
+.welcome-kinetic-stats { height:28px; padding:8px 18px !important; color:#a3e635; background:#0a0f0d; border-bottom:1px solid #202721 !important; font:6px monospace; letter-spacing:.6px; white-space:nowrap; overflow:hidden; }
+.welcome-kinetic-section { position:relative; margin:50px 18px 0 !important; padding-top:22px !important; border-top:1px solid #202721 !important; }
+.welcome-kinetic-section small { display:block; color:#a3e635; font:7px monospace; letter-spacing:1px; }
+.welcome-kinetic-section h2 { margin:10px 0 0 !important; font:700 21px/25px Arial,sans-serif; letter-spacing:-.6px; }
+.welcome-kinetic-section p { position:absolute; top:21px; right:0; width:210px; color:#a0a99e; font:9px/14px Arial,sans-serif; }
+
+/* Scene 1 (editable hero): the DOM headline and paragraph are only patches for the edited state. While the page shows its
+   original text (before the edit and after the Undo), the original capture is shown whole, so the hero is the template's own
+   pixels: its font, its grid and its glow, with no patch boxes. The headline element stays in place, empty and transparent,
+   as the box the edit outline and the undo highlight are measured from. */
+.hs-win .hs3-frame:not(.is-new) .welcome-kinetic.is-editable .welcome-kinetic-image { clip-path: none; }
+.hs-win .hs3-frame:not(.is-new) .welcome-kinetic.is-editable .welcome-kinetic-heading { background: none; color: transparent; }
+/* The paragraph is never edited in scene 1, so it is the capture's own text in every state (only the headline is patched). */
+.hs-win .welcome-kinetic.is-editable .welcome-kinetic-copy { visibility: hidden; }
+.hs-win .hs3-frame.is-new .welcome-kinetic.is-editable .welcome-kinetic-image { clip-path: path(evenodd, 'M0 0H699.5V300H0Z M17 109H295V181H17Z'); }
+/* The undo highlight wraps the headline's own text in the capture (measured: x 19 to 269, y 115 to 173 in hero pixels). */
+.hs-win .welcome-kinetic-heading > .hs-change-hl { inset: 0 20px 2px -4px; }
+/* The edited headline is set in the template's own display face (Space Grotesk, matched against the capture), not Arial. */
+@font-face { font-family: "Kinetic Display"; src: url(../sites/fernway/fonts/space-grotesk-variable.woff2) format("woff2"); font-weight: 300 700; font-display: block; }
+.hs-win .welcome-kinetic.is-editable .welcome-kinetic-heading { font-family: "Kinetic Display", "Space Grotesk", Arial, sans-serif; font-size: 29.3px; letter-spacing: -.6px; }

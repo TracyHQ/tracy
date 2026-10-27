@@ -1,0 +1,1168 @@
+{
+  "schemaVersion": 1,
+  "id": "tracy-apple-studio",
+  "revision": 3,
+  "mode": "demo",
+  "language": "en",
+  "identity": {
+    "name": "company.name",
+    "summary": "company.summary",
+    "disclosure": "demo.disclosure"
+  },
+  "voice": [
+    "Use plain, specific English focused on the audience, website work and next action.",
+    "Describe strategy, design, development, content and ongoing care as one studio offer.",
+    "Present plans, team profiles and imagery as illustrative. Do not describe them as real customers, endorsements or sales offers.",
+    "Keep factual names, roles, amounts and destinations in references; vary editorial headlines by purpose."
+  ],
+  "sources": {
+    "studio": {
+      "kind": "demo",
+      "reference": "packages/cms/tracy-joomla-quickstart/build-company-onepage.mjs and studio-home-copy.json",
+      "note": "Existing studio demo copy reconciled in this session; profile summary and disclosure consolidate its meaning."
+    },
+    "services": {
+      "kind": "site",
+      "reference": "http://127.0.0.1:8212/services",
+      "note": "Public rendered text read 2026-09-12; six demo services match the Onepage source, and each service page route was confirmed to answer 200."
+    },
+    "team": {
+      "kind": "site",
+      "reference": "http://127.0.0.1:8212/company/team",
+      "note": "Public rendered text read 2026-09-12; names and roles explicitly describe fictional team members. Names revised 2026-09-12 so each reads against the stock portrait the demo shows."
+    },
+    "pricing": {
+      "kind": "site",
+      "reference": "http://127.0.0.1:8212/pricing",
+      "note": "Public rendered text read 2026-09-12; sample amounts and periods only, not real offers."
+    },
+    "contact": {
+      "kind": "site",
+      "reference": "http://127.0.0.1:8212/resources/contact",
+      "note": "Public rendered text read 2026-09-12; demo label and warning only. No recipient email is approved."
+    },
+    "contact-module": {
+      "kind": "demo",
+      "reference": "User request 2026-09-12: shared footer and Contact information ACM",
+      "note": "Reserved .example email is illustrative and not a recipient. Social URLs are not provided and remain unconfigured."
+    }
+  },
+  "facts": {
+    "company.name": {
+      "value": "Tracy Apple",
+      "status": "demo",
+      "source": "studio"
+    },
+    "company.summary": {
+      "value": "An illustrative independent website studio bringing strategy, brand design and development together.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "company.audience": {
+      "value": "Businesses that need a clearer website and a practical way for their teams to keep it current.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "demo.disclosure": {
+      "value": "Tracy Apple is a studio demo. Company details, team profiles and prices are illustrative, not an offer from Tracy.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "contact.title": {
+      "value": "Tracy Studio — Demo enquiries",
+      "status": "demo",
+      "source": "contact"
+    },
+    "contact.notice": {
+      "value": "This is a demonstration contact page. Replace the recipient email and business details before enabling enquiries for your own website.",
+      "status": "demo",
+      "source": "contact"
+    },
+    "cta.primary.label": {
+      "value": "Start a conversation",
+      "status": "demo",
+      "source": "studio"
+    },
+    "cta.primary.href": {
+      "value": "/resources/contact",
+      "status": "demo",
+      "source": "studio"
+    },
+    "cta.services.label": {
+      "value": "Explore our services",
+      "status": "demo",
+      "source": "studio"
+    },
+    "cta.services.href": {
+      "value": "/services",
+      "status": "demo",
+      "source": "studio"
+    },
+    "product.name": {
+      "value": "Website toolkit",
+      "status": "demo",
+      "source": "studio"
+    },
+    "product.summary": {
+      "value": "Flexible pages, editable content and a consistent design language help your team keep the website moving.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "services.strategy.name": {
+      "value": "Website strategy",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.strategy.description": {
+      "value": "Start with the people your website needs to help. We turn audience questions, business priorities and existing content into a clear page plan.",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.design.name": {
+      "value": "Brand and interface design",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.design.description": {
+      "value": "A recognisable website needs more than a logo. Colour, typography, photography and interaction should feel like parts of the same business.",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.development.name": {
+      "value": "Website development",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.development.description": {
+      "value": "A good design should remain useful after launch. We build pages around editable sections so your team can keep services, people and news up to date.",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.content.name": {
+      "value": "Content and photography",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.content.description": {
+      "value": "Specific words and relevant images help people understand what you do. We plan content around customer questions and choose visuals that explain the work.",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.care.name": {
+      "value": "Website care",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.care.description": {
+      "value": "Websites need attention as a business changes. A regular review helps keep contact information, services, software and the visitor journey current.",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.campaign.name": {
+      "value": "Planning a focused campaign page",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.campaign.description": {
+      "value": "A campaign page works best when its offer and audience are specific. The headline, supporting detail and action should all serve that one purpose.",
+      "status": "demo",
+      "source": "services"
+    },
+    "team.hale.name": {
+      "value": "Adam Hale",
+      "status": "demo",
+      "source": "team"
+    },
+    "team.hale.role": {
+      "value": "Design Director",
+      "status": "demo",
+      "source": "team"
+    },
+    "team.hale.bio": {
+      "value": "Shapes the visual direction and keeps each page focused on its audience.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.hale.image": {
+      "value": "/images/demo/members/mem-1.jpg",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.hale.image-alt": {
+      "value": "Illustrative portrait for Adam Hale",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.lang.name": {
+      "value": "Peter Lang",
+      "status": "demo",
+      "source": "team"
+    },
+    "team.lang.role": {
+      "value": "Development Lead",
+      "status": "demo",
+      "source": "team"
+    },
+    "team.lang.bio": {
+      "value": "Turns the design into sections the team can maintain.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.lang.image": {
+      "value": "/images/demo/members/mem-2.jpg",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.lang.image-alt": {
+      "value": "Illustrative portrait for Peter Lang",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.lindqvist.name": {
+      "value": "Sofia Lindqvist",
+      "status": "demo",
+      "source": "team"
+    },
+    "team.lindqvist.role": {
+      "value": "Brand Designer",
+      "status": "demo",
+      "source": "team"
+    },
+    "team.lindqvist.bio": {
+      "value": "Connects the identity, words and images across the experience.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.lindqvist.image": {
+      "value": "/images/demo/members/mem-3.jpg",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.lindqvist.image-alt": {
+      "value": "Illustrative portrait for Sofia Lindqvist",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.meyer.name": {
+      "value": "Lucas Meyer",
+      "status": "demo",
+      "source": "team"
+    },
+    "team.meyer.role": {
+      "value": "Research Lead",
+      "status": "demo",
+      "source": "team"
+    },
+    "team.meyer.bio": {
+      "value": "Brings customer questions into the project from the start.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.meyer.image": {
+      "value": "/images/demo/members/mem-4.jpg",
+      "status": "demo",
+      "source": "studio"
+    },
+    "team.meyer.image-alt": {
+      "value": "Illustrative portrait for Lucas Meyer",
+      "status": "demo",
+      "source": "studio"
+    },
+    "process.step-1.name": {
+      "value": "Discover the business",
+      "status": "demo",
+      "source": "studio"
+    },
+    "process.step-1.description": {
+      "value": "Map the audience, offer and customer questions before deciding what each page needs.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "process.step-2.name": {
+      "value": "Shape the experience",
+      "status": "demo",
+      "source": "studio"
+    },
+    "process.step-2.description": {
+      "value": "Bring the message, visual identity and page structure together in concrete page concepts.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "process.step-3.name": {
+      "value": "Build and review",
+      "status": "demo",
+      "source": "studio"
+    },
+    "process.step-3.description": {
+      "value": "Turn the agreed direction into editable pages and review the important visitor journeys.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "process.step-4.name": {
+      "value": "Launch and learn",
+      "status": "demo",
+      "source": "studio"
+    },
+    "process.step-4.description": {
+      "value": "Hand over the content workflow and use regular reviews to keep the website useful.",
+      "status": "demo",
+      "source": "studio"
+    },
+    "pricing.starter.name": {
+      "value": "Starter",
+      "status": "demo",
+      "source": "pricing"
+    },
+    "pricing.starter.amount": {
+      "value": "$0",
+      "status": "demo",
+      "source": "pricing"
+    },
+    "pricing.starter.period": {
+      "value": "demo plan",
+      "status": "demo",
+      "source": "pricing"
+    },
+    "pricing.studio.name": {
+      "value": "Studio",
+      "status": "demo",
+      "source": "pricing"
+    },
+    "pricing.studio.amount": {
+      "value": "$24",
+      "status": "demo",
+      "source": "pricing"
+    },
+    "pricing.studio.period": {
+      "value": "per month · demo",
+      "status": "demo",
+      "source": "pricing"
+    },
+    "pricing.foundry.name": {
+      "value": "Foundry",
+      "status": "demo",
+      "source": "pricing"
+    },
+    "pricing.foundry.amount": {
+      "value": "$96",
+      "status": "demo",
+      "source": "pricing"
+    },
+    "pricing.foundry.period": {
+      "value": "per month · demo",
+      "status": "demo",
+      "source": "pricing"
+    },
+    "pricing.notice": {
+      "value": "Illustrative plans for this demo studio. Scope and prices are examples, not an offer from Tracy.",
+      "status": "demo",
+      "source": "pricing"
+    },
+    "services.strategy.href": {
+      "value": "/services/website-strategy",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.design.href": {
+      "value": "/services/brand-and-interface-design",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.development.href": {
+      "value": "/services/website-development",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.content.href": {
+      "value": "/services/content-and-photography",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.care.href": {
+      "value": "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+      "status": "demo",
+      "source": "services"
+    },
+    "services.campaign.href": {
+      "value": "/services/43-22-sure-fire-headline-formulas-that-work",
+      "status": "demo",
+      "source": "services"
+    },
+    "contact.info.heading": {
+      "value": "Contact information",
+      "status": "demo",
+      "source": "contact-module"
+    },
+    "contact.info.email": {
+      "value": "hello@tracy-apple.example",
+      "status": "demo",
+      "source": "contact-module"
+    },
+    "contact.info.email-label": {
+      "value": "Email · demo address",
+      "status": "demo",
+      "source": "contact-module"
+    },
+    "contact.info.social-heading": {
+      "value": "Find us online",
+      "status": "demo",
+      "source": "contact-module"
+    },
+    "contact.info.unavailable-label": {
+      "value": "Not configured",
+      "status": "demo",
+      "source": "contact-module"
+    },
+    "contact.info.social-linkedin": {
+      "value": "LinkedIn",
+      "status": "demo",
+      "source": "contact-module"
+    },
+    "contact.info.social-instagram": {
+      "value": "Instagram",
+      "status": "demo",
+      "source": "contact-module"
+    },
+    "contact.info.social-facebook": {
+      "value": "Facebook",
+      "status": "demo",
+      "source": "contact-module"
+    }
+  },
+  "surfaces": [
+    {
+      "id": "/",
+      "purpose": "Home",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "/product",
+      "purpose": "Product",
+      "requiredFacts": []
+    },
+    {
+      "id": "/services",
+      "purpose": "Service",
+      "requiredFacts": [
+        "services.strategy.name",
+        "services.design.name",
+        "services.development.name",
+        "services.content.name",
+        "services.care.name",
+        "services.campaign.name"
+      ]
+    },
+    {
+      "id": "/services/service-detail",
+      "purpose": "Website design and build",
+      "requiredFacts": []
+    },
+    {
+      "id": "/services/website-strategy",
+      "purpose": "Website strategy",
+      "requiredFacts": []
+    },
+    {
+      "id": "/services/brand-and-interface-design",
+      "purpose": "Brand and interface design",
+      "requiredFacts": []
+    },
+    {
+      "id": "/services/website-development",
+      "purpose": "Website development",
+      "requiredFacts": []
+    },
+    {
+      "id": "/services/content-and-photography",
+      "purpose": "Content and photography",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pricing",
+      "purpose": "Pricing",
+      "requiredFacts": [
+        "pricing.starter.name",
+        "pricing.starter.amount",
+        "pricing.starter.period",
+        "pricing.studio.name",
+        "pricing.studio.amount",
+        "pricing.studio.period",
+        "pricing.foundry.name",
+        "pricing.foundry.amount",
+        "pricing.foundry.period",
+        "pricing.notice"
+      ]
+    },
+    {
+      "id": "/resources/blog",
+      "purpose": "Blog",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/category-list",
+      "purpose": "All articles",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/archive",
+      "purpose": "Archive",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories",
+      "purpose": "Topics",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-procurement",
+      "purpose": "Website planning",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-datacenter",
+      "purpose": "Website operations",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-world",
+      "purpose": "Studio notes",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/style-guide",
+      "purpose": "Style guide",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/typography",
+      "purpose": "Typography",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/colors",
+      "purpose": "Color roles",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/spacing",
+      "purpose": "Spacing and radius",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/faq",
+      "purpose": "Questions",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/contact",
+      "purpose": "Contact us",
+      "requiredFacts": ["contact.title", "contact.notice"]
+    },
+    {
+      "id": "/resources/search",
+      "purpose": "Search",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/tags",
+      "purpose": "Tags",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/sign-in",
+      "purpose": "Sign in",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/home-2",
+      "purpose": "Home — variant",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/single-contact",
+      "purpose": "Talk to sales",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/single-tag",
+      "purpose": "Joomla",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/marketing-samples",
+      "purpose": "Marketing samples",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/home-variation",
+      "purpose": "Home variation",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/home-onepage",
+      "purpose": "Home - Onepage",
+      "requiredFacts": [
+        "company.name",
+        "team.hale.name",
+        "team.lang.name",
+        "team.lindqvist.name",
+        "team.meyer.name"
+      ]
+    },
+    {
+      "id": "/company/about",
+      "purpose": "About",
+      "requiredFacts": []
+    },
+    {
+      "id": "/company/team",
+      "purpose": "Team",
+      "requiredFacts": [
+        "team.hale.name",
+        "team.hale.role",
+        "team.lang.name",
+        "team.lang.role",
+        "team.lindqvist.name",
+        "team.lindqvist.role",
+        "team.meyer.name",
+        "team.meyer.role"
+      ]
+    },
+    {
+      "id": "/company/careers",
+      "purpose": "Careers",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/contact-category",
+      "purpose": "Contact category",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/featured-contacts",
+      "purpose": "Featured contacts",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/news-feeds",
+      "purpose": "News feeds",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/wrapper",
+      "purpose": "Wrapper",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/authors",
+      "purpose": "Authors",
+      "requiredFacts": []
+    },
+    {
+      "id": "/account/create-account",
+      "purpose": "Create account",
+      "requiredFacts": []
+    },
+    {
+      "id": "/account/profile",
+      "purpose": "Sign in",
+      "requiredFacts": []
+    },
+    {
+      "id": "/account/reset-password",
+      "purpose": "Reset password",
+      "requiredFacts": []
+    },
+    {
+      "id": "/account/forgot-username",
+      "purpose": "Forgot username",
+      "requiredFacts": []
+    },
+    {
+      "id": "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+      "purpose": "Website care",
+      "requiredFacts": []
+    },
+    {
+      "id": "/services/43-22-sure-fire-headline-formulas-that-work",
+      "purpose": "Planning a focused campaign page",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/blog/11-how-to-nulla-sit-amet-massa-non-nisi-pretium-faucibus",
+      "purpose": "Writing a useful website brief",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/blog/12-how-to-create-a-customer-service-chatbot-for-facebook-messenger-with-chatfuel",
+      "purpose": "Designing a contact page people can use",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/blog/36-how-to-write-like-hemingway",
+      "purpose": "Editing website copy for clarity",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/blog/37-how-much-money-do-youtubers-make",
+      "purpose": "Choosing what belongs on the homepage",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/blog/38-21-useful-keyboard-shortcuts-for-writers",
+      "purpose": "Building an editorial calendar",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/authors/author/tracyagent",
+      "purpose": "Authors",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/tags/t4-framework",
+      "purpose": "T4 Framework",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/blog/39-want-new-customers-faster-avoid-this-rookie-marketing-habit",
+      "purpose": "Making service pages more specific",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/blog/40-how-to-write-bullet-points-people-actually-want-to-read",
+      "purpose": "Writing headings that guide a reader",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/blog/41-why-being-naive-can-make-your-fortune",
+      "purpose": "Using customer stories responsibly",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/blog/42-how-to-write-bullet-points-people-actually-want-to-read-22",
+      "purpose": "A simple content review workflow",
+      "requiredFacts": []
+    },
+    {
+      "id": "/services/4-how-to-build-a-facial-recognition-mobile-app-with-react-native",
+      "purpose": "Lessons from a website discovery workshop",
+      "requiredFacts": []
+    },
+    {
+      "id": "/services/5-slack-api-tutorial-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "purpose": "Keeping project communication clear",
+      "requiredFacts": []
+    },
+    {
+      "id": "/services/6-guide-to-customer-appreciation-emails-examples-and-best-practices",
+      "purpose": "A thoughtful follow-up after launch",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised",
+      "purpose": "Studio resources",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories",
+      "purpose": "Explore the studio",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical",
+      "purpose": "Practical guides",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace",
+      "purpose": "Inside the studio",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink",
+      "purpose": "Studio life",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/14-pages",
+      "purpose": "Website pages",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/17-magazine",
+      "purpose": "Insights",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-procurement/49-abb-group-develops-rpa-solutions-for-construction",
+      "purpose": "Choosing a CMS your team can use",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/authors/author/demo",
+      "purpose": "Authors",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-procurement/50-draas-vs-disaster-recovery-which-one-is-right-for-you",
+      "purpose": "Asking better questions about hosting",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-procurement/51-how-next-gen-embedded-analytics-power-data-driven-action",
+      "purpose": "Preparing an asset inventory",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-procurement/52-servicenow-integrates-with-microsoft-to-boost-cybersecurity",
+      "purpose": "Reviewing third-party integrations",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-procurement/53-verizon-to-sell-yahoo-and-aol-for-5-billion-to-apollo",
+      "purpose": "Comparing proposals on the same basis",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-world/63-opinion-the-future-of-the-city-is-smart-and-sustainable",
+      "purpose": "Studio notes: making time for improvements",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-world/62-people-moves-apac-ubs-flipkart-aon-heineken-fullerton",
+      "purpose": "Studio notes: welcoming a new perspective",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-world/61-why-china-is-cracking-down-on-crypto-mining-and-trading",
+      "purpose": "Studio notes: reviewing work together",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-world/60-opinion-how-the-m-a-landscape-is-reshaping-post-pandemic",
+      "purpose": "Studio notes: a better project kickoff",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-world/59-deloitte-s-abdi-goodarzi-on-the-future-of-the-enterprise",
+      "purpose": "Studio notes: starting with the customer",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-datacenter/58-uk-government-approves-44bn-o2-virgin-media-merger",
+      "purpose": "Reducing unnecessary page weight",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-datacenter/54-five-steps-to-creating-a-post-pandemic-workplace",
+      "purpose": "Making recovery part of launch planning",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/authors/author/Lawrence",
+      "purpose": "Authors",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-datacenter/55-how-to-expand-the-cloud-native-technology-workforce",
+      "purpose": "A routine for website updates",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-datacenter/56-liverpool-trials-free-5g-to-help-monitor-health-conditions",
+      "purpose": "Keeping forms connected to your team",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/mag-datacenter/57-becoming-more-human-in-a-hyper-connected-world",
+      "purpose": "Reading website analytics with a purpose",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/authors/author/DamonZ",
+      "purpose": "Authors",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/tags/jooma-4-x",
+      "purpose": "Jooma 4.x",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/tags/joomla-3-9",
+      "purpose": "Joomla 3.9",
+      "requiredFacts": []
+    },
+    {
+      "id": "/company/team/18-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "purpose": "Adam Hale — Design Director",
+      "requiredFacts": []
+    },
+    {
+      "id": "/company/team/19-create-donec-lacinia-urna-a-metus-iaculis-ultrices",
+      "purpose": "Peter Lang — Development Lead",
+      "requiredFacts": []
+    },
+    {
+      "id": "/company/team/20-unlimited-nam-id-sem-eu-enim-sagittis-mollis",
+      "purpose": "Sofia Lindqvist — Brand Designer",
+      "requiredFacts": []
+    },
+    {
+      "id": "/company/team/21-save-pellentesque-habitant-morbi-tristique-senectus-et-netus",
+      "purpose": "Lucas Meyer — Research Lead",
+      "requiredFacts": []
+    },
+    {
+      "id": "/company/team/70-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique",
+      "purpose": "How the demo team works together",
+      "requiredFacts": []
+    },
+    {
+      "id": "/company/team/71-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "purpose": "Meet the people behind a project",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/news-feeds/5-uncategorised",
+      "purpose": "News feeds",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/authors/author/margarete69",
+      "purpose": "Authors",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/authors/author/deonte.daniel",
+      "purpose": "Authors",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/authors/author/dion.parker",
+      "purpose": "Authors",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/1-about-us",
+      "purpose": "About us",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/13-full-width",
+      "purpose": "Full width",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/14-sidebar-left-content",
+      "purpose": "Sidebar Left + Content",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/15-content-sidebar-right",
+      "purpose": "Content + Sidebar Right",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/22-include-nunc-eget-mauris-a-urna-viverra-rutrum",
+      "purpose": "Testing a website before launch",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/23-how-to-curabitur-tempus-lacus-id-orci-feugiat",
+      "purpose": "Planning a website migration",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/24-double-suspendisse-luctus-justo-convallis-blandit-facilisis",
+      "purpose": "Keeping images sharp on smaller screens",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/25-delete-nullam-mollis-diam-ligula-at-convallis-ante-condimentum",
+      "purpose": "Making a website easy to maintain",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/26-phasellus-rutrum-turpis-mattis-aliquet-pharetra",
+      "purpose": "A practical handover checklist",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/11-technical/72-pellentesque-iaculis-nibh-nec-purus-malesuada-non-scelerisque-diam-ultricies",
+      "purpose": "Testing keyboard navigation",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/27-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "purpose": "Inside a collaborative design review",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/28-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "purpose": "Preparing for a team photo session",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/29-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "purpose": "A workspace that supports creative work",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/30-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "purpose": "From workshop notes to a page plan",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/73-donec-vitae-efficitur-erat-at-sodales-sem",
+      "purpose": "Organising a useful inspiration library",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/12-cool-workspace/74-quisque-pulvinar-diam-ac-urna-maximus-ut-feugiat-nisi-tristique",
+      "purpose": "Keeping project decisions findable",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/66-maecenas-tristique-nunc-arcu-in-molestie-elit-tristique-eu",
+      "purpose": "Making room for informal conversations",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/67-create-more-elit-nisi-egestas-vel-vestibulum-ut",
+      "purpose": "A team lunch with a purpose",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/68-vivamus-maximus-ante-in-ligula-egestas-fringilla",
+      "purpose": "Collecting inspiration outside the studio",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/9-demo-categories/13-food-and-drink/69-create-curabitur-tempus-lacus-id-orci-feugiat",
+      "purpose": "Sharing knowledge in small sessions",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/14-pages/32-header-1",
+      "purpose": "Header 1",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/14-pages/33-header-2",
+      "purpose": "Header 2",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/14-pages/34-header-3",
+      "purpose": "Header 3",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/14-pages/35-header-4",
+      "purpose": "Header 4 (Main menu - Logo - Topbar right)",
+      "requiredFacts": []
+    },
+    {
+      "id": "/pages/news-feeds/5-uncategorised/1-joomla-announcements",
+      "purpose": "Joomla! announcements",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/16-3-columns",
+      "purpose": "3 Columns",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/17-layouts",
+      "purpose": "Layouts",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/2-uncategorised/31-home-dark",
+      "purpose": "Home Dark",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/14-pages/65-offline-page",
+      "purpose": "Offline page",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/14-pages/46-features-page",
+      "purpose": "Features page",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/14-pages/48-faqs",
+      "purpose": "FAQs",
+      "requiredFacts": []
+    },
+    {
+      "id": "/resources/all-categories/14-pages/64-error-page",
+      "purpose": "Error page",
+      "requiredFacts": []
+    },
+    {
+      "id": "marketing/newsletter-light.html",
+      "purpose": "newsletter artifact for the same studio (light)",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "marketing/newsletter-dark.html",
+      "purpose": "newsletter artifact for the same studio (dark)",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "marketing/email-light.html",
+      "purpose": "email artifact for the same studio (light)",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "marketing/email-dark.html",
+      "purpose": "email artifact for the same studio (dark)",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "marketing/poster-light.html",
+      "purpose": "poster artifact for the same studio (light)",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "marketing/poster-dark.html",
+      "purpose": "poster artifact for the same studio (dark)",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "marketing/deck-light.html",
+      "purpose": "deck artifact for the same studio (light)",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "marketing/deck-dark.html",
+      "purpose": "deck artifact for the same studio (dark)",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "marketing/form-light.html",
+      "purpose": "form artifact for the same studio (light)",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "marketing/form-dark.html",
+      "purpose": "form artifact for the same studio (dark)",
+      "requiredFacts": ["company.name", "cta.primary.href"]
+    },
+    {
+      "id": "marketing/typography-light.html",
+      "purpose": "typography artifact for the same studio (light)",
+      "requiredFacts": ["company.name"]
+    },
+    {
+      "id": "marketing/typography-dark.html",
+      "purpose": "typography artifact for the same studio (dark)",
+      "requiredFacts": ["company.name"]
+    }
+  ],
+  "pending": []
+}

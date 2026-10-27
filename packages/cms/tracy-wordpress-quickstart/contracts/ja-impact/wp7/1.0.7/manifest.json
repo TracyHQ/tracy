@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-impact/wp7/1.0.7",
+  "platform": "wordpress",
+  "theme": "wp-ja-impact",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-impact/wp7",
+    "version": "1.0.7",
+    "platform": "wordpress",
+    "platformVersion": "7.1.2",
+    "phpVersion": "8.3.35",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-ja-impact",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "ja-impact-wp7-webroot-1.0.7.tar.gz",
+        "bytes": 55703941,
+        "sha256": "e7bbf9df30653ea44daa58a143b911a3aeff39c44f69e3fe869ffacd6b0eeca1",
+        "githubAssetId": 619668182,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-impact%2Fwp7/ja-impact-wp7-webroot-1.0.7.tar.gz"
+      },
+      "database": {
+        "file": "ja-impact-wp7-database-1.0.7.sql.gz",
+        "bytes": 54611,
+        "sha256": "a54f67e275f1d05fc2e05eb8f06f43f51cc8796d63d0717e9354bb9395b221bd",
+        "githubAssetId": 619668183,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-impact%2Fwp7/ja-impact-wp7-database-1.0.7.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.18.0",
+  "mode": "content-recommendation"
+}

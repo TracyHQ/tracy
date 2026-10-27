@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-brand-blue: #0066cc;
+  --color-deep-indigo: #0e2575;
+  --color-midnight-card: #213680;
+  --color-charcoal-ink: #101820;
+  --color-paper-cream: #f4f1ea;
+  --color-white: #ffffff;
+  --color-lavender-mist: #e6e0f8;
+  --color-ice-blue: #e9f4ff;
+  --color-peach-blush: #f7e1d5;
+  --color-ash-border: #d6d6d6;
+
+  /* Typography — Font Families */
+  --font-maison-neue: 'Maison Neue', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-spoof: 'Spoof', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

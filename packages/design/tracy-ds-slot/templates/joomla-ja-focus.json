@@ -1,0 +1,262 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-focus",
+  "release": "quickstart/ja-focus/j6@1.0.0",
+  "minVersion": {
+    "quickstart/ja-focus/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-focus/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "roles": {
+    "page": "body",
+    "body": "p.mod-articles-category-introtext"
+  },
+  "discovered": {
+    "page": "body",
+    "body": "first body paragraph"
+  },
+  "keepScopes": [],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#666666",
+    "--fg-2": "#222222",
+    "--accent": "#d91e00",
+    "--accent-hover": "#8d1300",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#ffdb00",
+    "--danger": "#d9534f",
+    "--border": "#eeeeee",
+    "--muted": "#555555",
+    "--font-display": "\"Heebo\", sans-serif",
+    "--font-body": "\"Heebo\", sans-serif"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#666666",
+      "fg-2": "#222222",
+      "accent": "#d91e00",
+      "accent-hover": "#8d1300",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#ffdb00",
+      "danger": "#d9534f",
+      "border": "#eeeeee",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#666666",
+      "fg-2": "#666666"
+    },
+    {
+      "accent": "#d91e00"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#eeeeee",
+      "border-soft": "#e8e8e8",
+      "danger": "#dd4b39",
+      "accent-hover": "#821200",
+      "accent": "#dd0b0b"
+    },
+    {
+      "surface": "#fcf8e3",
+      "border-soft": "#e5e5e5"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "border-soft": "#e1e1e1",
+      "surface": "#f6f6f6"
+    },
+    {
+      "border-soft": "#e0e2e3",
+      "surface": "#f1f1f1"
+    },
+    {
+      "surface": "#f9f2f4",
+      "border-soft": "#e4e4e4"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (75 line colours, 89 text colours seen)",
+  "selectors": {
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
+    "muted": "#t3-mainbody p, .t3-sl p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "banner-top",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 34 tried (byte 9661); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 109,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 42,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 30,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#e8e8e8",
+      "uses": 30,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 28,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 16,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 12,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 12,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#f6f6f6",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 2
+    },
+    {
+      "hex": "#dd4b39",
+      "uses": 8,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#d9534f",
+      "distance": 24
+    },
+    {
+      "hex": "#f1f1f1",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 10
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#821200",
+      "uses": 4,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#8d1300",
+      "distance": 11
+    },
+    {
+      "hex": "#e4e4e4",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 11
+    },
+    {
+      "hex": "#dd0b0b",
+      "uses": 4,
+      "kind": "line",
+      "role": "accent",
+      "near": "#d91e00",
+      "distance": 22
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the published release 1.0.1 (quickstart/ja-focus/j6, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-focus-j6 — 12/12, controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 82% or more of the page follows, checked by eye on the four systems' screenshots; with the earlier contract the Most Read module's active tab title read 2.3–2.6:1 under Moxie and Toggl Track: the jatabs plugin's own stylesheet paints the active tab white, under the readable accent of a dark page — fixed by followRules (.ja-tabs-title li.active takes the worn page ground). Earlier: measured 11/10/2026 (tasks/evidence/ds-contracts-batch3-2026-10-11/templates/ja-focus-j6): default unchanged, no text made less readable than the template's own under the systems tried, 81% or more of the page follows",
+  "contrastNote": "block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026; heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples) — added at the re-measure of 11/10/2026, the contract was ready on the four first-match probes only",
+  "followRules": {
+    ".ja-tabs-title li.active": {
+      "background-color": "bg"
+    }
+  },
+  "followNote": "the jatabs plugin's own stylesheet (plugins/system/jatabs/jatabs/themes/default/style.css, not the template's) paints the active tab white (#FFFFFF) to match a white page; the tab title takes the readable accent of the worn page, so under a dark system it read 2.3–2.6:1 on that white box (Most Read: \"Week\") — the active tab takes the worn page ground"
+}

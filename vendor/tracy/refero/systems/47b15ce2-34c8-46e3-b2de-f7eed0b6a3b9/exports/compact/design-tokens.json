@@ -1,0 +1,64 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, display headlines, icon strokes — the only true black in the system, used at full strength for headlines and body to maximize contrast against the light canvas"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, elevated panels, and inset backgrounds — the bright surface that floats above the canvas gray"
+    },
+    "canvas-gray": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Canvas Gray — Page background and recessed surface — the dominant canvas that makes white cards feel lifted without using shadows"
+    },
+    "hairline-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Hairline Gray — Borders, dividers, card outlines, and structural rules — by far the most-used color (4960 occurrences), it defines every interface edge with 1px restraint"
+    },
+    "body-gray": {
+      "$value": "#5a5e62",
+      "$type": "color",
+      "$description": "Body Gray — Secondary body text — softened black for long-form copy in the right column, reduces visual weight without sacrificing legibility"
+    },
+    "muted-gray": {
+      "$value": "#b2b2b2",
+      "$type": "color",
+      "$description": "Muted Gray — Tertiary text and metadata — captions, labels, and supporting copy that should recede behind primary content"
+    },
+    "deep-navy": {
+      "$value": "#0f1ea1",
+      "$type": "color",
+      "$description": "Deep Navy — Active/selected tab background and the system's sole chromatic accent — appears once per section to signal the current state against the monochrome field"
+    },
+    "sky-blue": {
+      "$value": "#8fbaff",
+      "$type": "color",
+      "$description": "Sky Blue — Subtle surface wash and decorative highlight — soft chromatic field used sparingly behind small elements, never as a CTA"
+    },
+    "pale-lavender": {
+      "$value": "#cfd2ec",
+      "$type": "color",
+      "$description": "Pale Lavender — Soft surface tint — the gentlest chromatic wash for background sections that need to break the achromatic field without competing with content"
+    }
+  },
+  "font": {
+    "soehne": {
+      "$value": "Soehne",
+      "$type": "fontFamily",
+      "$description": "Sole typeface — used for display, headings, body, links, icons, and everything between. Weight 700 carries all display and heading roles; weight 400 handles body, captions, and links. Soehne's humanist grotesque proportions and tight terminals give the editorial broadsheet its distinctive voice — a system font would feel too neutral, too SaaS-generic."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.pencilbooth.com",
+      "siteName": "PencilBooth",
+      "extractedAt": "2026-06-03T21:33:43.238Z",
+      "variant": "compact"
+    }
+  }
+}

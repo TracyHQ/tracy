@@ -1,0 +1,86 @@
+{
+  "extends": "joomla-ja-podcast-modes",
+  "template": "joomla/ja-podcast",
+  "minVersion": {
+    "quickstart/ja-podcast/j6": "1.0.6"
+  },
+  "maxVersion": {
+    "quickstart/ja-podcast/j6": "1.0.7"
+  },
+  "maxVersionNote": "1.0.7 21/10/2026 (TEXT-1 batch 3): built from 1.0.6 (release-batch.mjs --overlay); only css/template.css differs (and its SCSS sources): text that read a ground role (TEXT-1) now reads its text role with its own colour as the fallback, and words on a status fill pair with it (page-colour words on the status text shade, or the status text on its pale fill); the clients card title (.clients-wrap.bg-primary .clients-title) keeps the page colour as words on the card's own fill (fg), and the registration cancel button reads the button's own words (--t4-btn-color); unworn the page is the release's own (VERIFICATION.json).",
+  "rolesNote": "16/10/2026 (role-variable batch 2): from 1.0.6 the release's stylesheets read the role variables at the source, and the shared Bootstrap block fills the dark button (.btn-dark) with the system's ink. The two-mode contract it extends gave that button the page colour as its words (followRules .btn-dark -> bg!, side dark .cta-wrap .btn-dark), made for 1.0.5 whose dark button takes the page text (fg) as its fill: on 1.0.6 that put page-coloured words on ink (1.0-1.2:1 on a dark page), and filling it with fg instead made a dark button the lightest fill of the page (BTN-1 button-dark, preview probe v9). Here the dark button's words take the ink's own text colour (on-ink). The About page intro heading (.acm-features.style-4 .title-lead h1) takes the page text (fg) instead of fg-2: fg-2 read 8.97:1 where the body text beside it reads 16.33:1 under Moxie (HIER-2 heading-quiet). Every other rule as the contracts it extends; 1.0.5 keeps joomla-ja-podcast-modes unchanged.",
+  "followRules": {
+    ".btn-dark": {
+      "color": "on-ink!"
+    },
+    ".btn-light": {
+      "color": "fg!"
+    },
+    ".acm-features.style-4 .title-lead h1": {
+      "color": "fg"
+    },
+    ".acm-features.style-4 .desc-section": {
+      "color": "fg"
+    },
+    ".t4-offcanvas .t4-off-canvas-header .close": {
+      "background-color": "bg"
+    },
+    ".t4-off-canvas-header": {
+      "background-color": "bg"
+    }
+  },
+  "followNote": "re-measured 11/10/2026: the dark button ('Start listening') takes the system's strongest text as its fill, so under a dark system it turns light while its literal white text stayed (1.16:1 under Moxie); its text takes the page colour. The light button ('Subscribe' on the call-to-action band) has its fill on the system's surface while its released stylesheet reads its black text as surface-warm (#f9f9f9 on #f5f5f7 under Apple, seen on the screenshot: buttons are not in the text probe); its text takes the system's page text (fg); the About page intro card (.acm-features.style-4, the template’s cream panel) follows the page while its heading (.title-lead h1, a literal #181d24) and text (.desc-section, black at 75%) kept the template’s dark: dark on black under Moxie (1.24 and 1.30:1, visual review 14/10/2026). The heading takes the system’s heading ink, the text its body text; 14/10/2026 (visual review, round 3): with the off-canvas menu panel now on the system’s page (general rule), its close button (.t4-off-canvas-header .close, a 32px circle the template fills with its page white, so it does not show on its white panel) stayed a white disc on the dark panel under a dark system, its × in the system’s grey at 3.6–3.9:1 (Moxie, Spotify). It takes the page colour, as the template’s does; the panel’s header strip (.t4-off-canvas-header, the template’s white) takes the page as well — it stayed a white strip atop the dark panel",
+  "sideRules": {
+    "light": {
+      "a span.d-dark:not(.logo-mobile)": {
+        "display": "none"
+      },
+      "a span.d-light:not(.logo-mobile)": {
+        "display": "inline"
+      },
+      ".custom img[src*=Logo-light]": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      },
+      "div.title-lead h1 span": {
+        "color": "var(--ds-c-accent-text)"
+      },
+      ".clients-wrap.bg-primary": {
+        "background-color": "var(--ds-c-fg) !important"
+      },
+      ".clients-wrap.bg-primary .clients-title": {
+        "color": "var(--ds-c-bg)"
+      },
+      ".t4-offcanvas .btn-toggle::after": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".dark-active .t4-header-r .form-search input.js-finder-search-query": {
+        "filter": "invert(1) hue-rotate(180deg)",
+        "background-color": "transparent",
+        "border-color": "transparent",
+        "color": "var(--ds-c-bg)"
+      },
+      ".cat-item > a:is(:hover, :focus), .page-link:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".cat-item > a:is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p), .page-link:is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      }
+    },
+    "dark": {
+      ".t4-offcanvas .btn-toggle::after": {
+        "color": "var(--ds-c-fg)"
+      },
+      ".cta-wrap .btn-dark": {
+        "color": "var(--ds-c-on-ink)!important"
+      },
+      ".cat-item > a:is(:hover, :focus), .page-link:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".cat-item > a:is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p), .page-link:is(:hover, :focus) :is(span, strong, em, b, small, h1, h2, h3, h4, h5, h6, p)": {
+        "text-decoration-line": "underline !important"
+      }
+    }
+  },
+  "sideNote": "re-measured 11/10/2026: on a light system the template's own light-mode logo shows (span.d-light; its white dark-mode wordmark had vanished on the light page), and the footer's white wordmark is inverted with its hues kept. the hero title's yellow word (#fed90f, drawn for the template's dark page) read 1.39:1 on a light system's page; on a light page it takes the system's readable accent. The 'Listen our podcast on' card is a 20% black veil drawn for the dark page, with white platform logos (pictures): on a light page it was a pale grey card with the logos fading into it, so there it takes the system's strongest text as its fill and its title the page colour; 14/10/2026 (visual review, round 3): the off-canvas submenu chevrons (.t4-offcanvas .btn-toggle::after, a Font Awesome glyph) computed black on the panel that now takes the system’s page, so under a dark system they vanished on it (Moxie, Spotify, Linear); on both sides they take the system’s text (fg)",
+  "hoverNote": "21/10/2026 (HOVER-2, TEXT-1 batch 3): the category filter's 'All' link and the pagination links keep the same words on hover under some systems (their rest and hover read one role), so hover and focus also underline. The same underline is written on the link's inner words (span, strong, em, b, small, headings, p): the probe reads the cue on the element that holds the words, and an underline set on the link alone does not change that element's computed style."
+}

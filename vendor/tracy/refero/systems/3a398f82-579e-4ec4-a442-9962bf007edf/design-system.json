@@ -1,0 +1,340 @@
+{
+  "dos": [
+    "Use #c5ff4a for filled CTA buttons, glowing borders, status pills, and exactly one italic accent word per headline — never for body text, never for icons at full size",
+    "Set display headlines in PT Serif weight 300 with negative tracking (-0.025em at 56px scaling to -0.035em at 130px) and tight line-height (0.88–0.95)",
+    "Set all UI labels in Inter Tight uppercase with 0.18–0.26em letter-spacing and bracket or period punctuation to read as classified-document metadata",
+    "Separate surface levels using border color steps (#252525 → #1f1f1f → #313131) rather than drop-shadows; the system has exactly one glow and it belongs to the lime CTA",
+    "Use #060606 as the dominant page background and reserve #000000 for absolute void areas (top bar, hero deep sections, code block inline spans)",
+    "Compose hero sections with the dotted-globe SVG (white dots, no fills) on the near-black canvas; never use a photographic or gradient hero",
+    "Scale the neon section divider (full-width 6–8px #c5ff4a bar) to exactly one per page between major page regions"
+  ],
+  "donts": [
+    "Do not introduce any chromatic color beyond #c5ff4a, #597321, and #314013 — the entire chromatic palette is three greens against ten grays",
+    "Do not apply drop-shadows to cards, panels, or modals; elevation is communicated through surface-tone layering only",
+    "Do not use PT Serif at weight 400 or heavier for display; weight 300 is the signature and heavier weights break the whisper-authority effect",
+    "Do not round corners beyond 4px on cards, panels, and tiles; the system is near-sharp by design — only the status pill and nothing else uses 9999px radius",
+    "Do not use lime green for body copy, paragraph text, or long-form descriptions — it is reserved for actions, borders, and at most one italic accent word per headline",
+    "Do not mix the display serif into UI chrome (buttons, nav, labels); Inter Tight owns everything below 24px",
+    "Do not center long body paragraphs; content cards use left-aligned text with the metadata label and section index left/right mirrored above the title"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Void Black",
+      "role": "Page canvas, deep background layer — the absolute floor of the surface stack",
+      "group": "neutral"
+    },
+    {
+      "hex": "#060606",
+      "name": "Carbon",
+      "role": "Primary page background where pure black would be too harsh — the actual canvas color in the dominant layout",
+      "group": "neutral"
+    },
+    {
+      "hex": "#252525",
+      "name": "Graphite",
+      "role": "Card surfaces, nav bar, raised panels — the dominant mid-neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1f1f1f",
+      "name": "Onyx",
+      "role": "Subtle elevation layer between canvas and card",
+      "group": "neutral"
+    },
+    {
+      "hex": "#313131",
+      "name": "Iron",
+      "role": "Box-shadow depth, elevated surface tint — provides warmth on hover and focus",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3d3d3d",
+      "name": "Slate",
+      "role": "Hairline borders on dense tables, row dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#525252",
+      "name": "Fog",
+      "role": "Low-emphasis borders, disabled control outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7a7a7a",
+      "name": "Ash",
+      "role": "Muted body text, helper copy, link underlines — the workhorse mid-gray",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8a8a8a",
+      "name": "Smoke",
+      "role": "Secondary captions, metadata text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c5c5c5",
+      "name": "Pearl",
+      "role": "Tertiary text, subtle heading tints",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e5e5",
+      "name": "Bone",
+      "role": "High-emphasis body text where pure white would vibrate against black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Chalk",
+      "role": "Display text, primary headings, icon strokes — the only text color permitted above #e5e5e5",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c5ff4a",
+      "name": "Signal Lime",
+      "role": "Primary CTA fill, glowing borders, italic accent words in headlines — the single chromatic punctuation in an otherwise monochrome system; at 17.8:1 contrast against black it reads as emergency lighting",
+      "group": "brand"
+    },
+    {
+      "hex": "#597321",
+      "name": "Olive Depth",
+      "role": "Dark green stroke for SVG world-map art and shadow glows under signal-lime elements",
+      "group": "accent"
+    },
+    {
+      "hex": "#314013",
+      "name": "Moss Shadow",
+      "role": "Deepest green used only as decorative stroke in dotted-globe illustrations",
+      "group": "accent"
+    }
+  ],
+  "layout": "Layout is max-width 1280px centered with generous outer gutters. The hero is a full-bleed dark canvas with a centered headline stack (eyebrow bracket → 89px PT Serif headline → 14px Inter Tight body → lime CTA), the dotted-globe SVG sitting behind the headline at roughly 60% page width. Below the hero, a 6–8px neon lime divider bar spans full width. Content sections alternate between single-column centered stacks (display headline + paragraph) and two-column card grids (TransGate / TransGate SDK pattern: card with metadata eyebrow, 32–40px serif title, body, and a code-block proof panel at the bottom). Vertical rhythm is spacious: 80–120px between major sections, 32–48px inside cards, 16–20px between elements within a card. Navigation is a sticky top bar with a black background, a 1px graphite bottom border, wordmark left, five centered ghost nav items, and a lime CTA pinned right. The page reads top-to-bottom as a single editorial column punctuated by section dividers, never as a dense dashboard grid.",
+  "imagery": "Imagery is pointillist, not photographic. The hero uses a dotted SVG world-map (1.5px white dots, opacity 0.4–0.7 to suggest continent density) floating on the near-black canvas. No photographs, no lifestyle shots, no product renders. The only 'image' asset is the lime-green logo tile (square, 4px radius, black 'P' mark, with the signature glow). Section illustrations and diagrams live as code-block panels (JetBrains Mono on #252525) rather than rendered graphics. Iconography is line-only or filled monochrome in #ffffff or #c5ff4a — no multicolor icons, no duotone, no gradient icons. The overall density is text-dominant with whitespace and typography doing the visual heavy lifting; the dotted globe is the single largest graphic element on any page.",
+  "similar": [
+    {
+      "why": "Same dark-canvas-plus-single-acid-green-accent language, and the same editorial-grade serif mixed with terminal-style monospace for cryptographic proof",
+      "business": "Nervos Network"
+    },
+    {
+      "why": "Near-black backgrounds with a single vivid chartreuse/lime as the only chromatic brand color, plus hairline-border card surfaces and a glow-on-CTA signature",
+      "business": "Helium"
+    },
+    {
+      "why": "Privacy-protocol crypto sites that pair whisper-weight display serif with uppercase tracked-out sans labels and lime-green CTA glow against near-black",
+      "business": "Aleo"
+    },
+    {
+      "why": "Dark interface with neon-lime accent used sparingly as border, pill, and CTA glow; near-sharp corners; editorial section rhythm",
+      "business": "Layer3"
+    },
+    {
+      "why": "Mono-on-black product chrome with a single vivid green accent reserved exclusively for action states, status pills, and border highlights",
+      "business": "Convex (defi)"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "2px",
+      "cards": "0px",
+      "buttons": "4px",
+      "logoTiles": "4px"
+    },
+    "elementGap": "16-20px",
+    "sectionGap": "80-120px",
+    "cardPadding": "32-48px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "crypto",
+  "surfaces": [
+    {
+      "hex": "#060606",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — the void"
+    },
+    {
+      "hex": "#1f1f1f",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Content blocks, feature panels"
+    },
+    {
+      "hex": "#252525",
+      "name": "Raised",
+      "level": 2,
+      "purpose": "Nav bar, active panels, code blocks"
+    },
+    {
+      "hex": "#313131",
+      "name": "Hover",
+      "level": 3,
+      "purpose": "Interactive hover state, elevated popovers"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 0 8px 0 rgba(197, 255, 74, 0.45)",
+      "element": "Signal Lime CTA Button"
+    }
+  ],
+  "northStar": "Encrypted terminal meets classified broadsheet — a single lime-green signal cutting through near-black typography that mixes a whisper-weight serif with terminal-grade sans.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.24
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.55,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.15,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "heading",
+      "size": 49,
+      "lineHeight": 1.05,
+      "letterSpacing": -1
+    },
+    {
+      "role": "heading-lg",
+      "size": 72,
+      "lineHeight": 0.98,
+      "letterSpacing": -1.8
+    },
+    {
+      "role": "display",
+      "size": 89,
+      "lineHeight": 0.94,
+      "letterSpacing": -3.1
+    }
+  ],
+  "components": [
+    {
+      "name": "Signal Lime CTA Button",
+      "role": "Primary action trigger — the only filled chromatic button in the system",
+      "description": "Background #c5ff4a, text #000000, padding 14px 24px, radius 4px. Inter Tight weight 500 at 14px with 0.04em tracking. Carries a chromatic glow shadow 0 0 8px 0 rgba(197, 255, 74, 0.45) — this glow is the button's only elevation, signaling 'this is the thing that does something'."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Top-bar navigation items (PRODUCTS, TECHNOLOGY, ECOSYSTEM, $ZKP, RESOURCES)",
+      "description": "Transparent background, text #ffffff, Inter Tight weight 500 at 13px, 0.18em uppercase tracking. No border, no background. Active state: text shifts to #c5ff4a."
+    },
+    {
+      "name": "Outlined Green Button (Launch CTA)",
+      "role": "Secondary action with chromatic border",
+      "description": "Transparent background, 1px border #c5ff4a, text #c5ff4a, padding 14px 24px, radius 4px. Inter Tight weight 500 at 14px uppercase with 0.08em tracking. Carries the same lime glow as the filled CTA."
+    },
+    {
+      "name": "Sharp Content Card",
+      "role": "Feature panels for TransGate / TransGate SDK sections",
+      "description": "Background #1f1f1f, 1px border #252525, padding 40px, radius 0px. No drop shadow — depth comes from the border-color step against the canvas. Contains a tracked-out label (#7a7a8a, 0.18em) at the top, a PT Serif weight 300 headline (32–40px), and a body paragraph in Inter Tight 14px."
+    },
+    {
+      "name": "Code Block Panel",
+      "role": "Inline proof / SDK code display",
+      "description": "Background #252525, padding 24px, radius 4px, 1px border #313131. JetBrains Mono 13px, line-height 1.55. Lime-green syntax highlighting tokens (#c5ff4a) on #000000 inline code spans. Tag pills (e.g. 'SCHEMA', 'BUNDLE', 'INTENT') sit right-aligned in lime."
+    },
+    {
+      "name": "Metadata Label Stamp",
+      "role": "[ BUILT FOR HUMANS & AGENTS ] style section labels",
+      "description": "Inter Tight 11px weight 500, uppercase, 0.22em tracking, color #7a7a8a, bracketed in literal square brackets. The bracket punctuation is part of the identity — never strip the brackets."
+    },
+    {
+      "name": "Accent Word",
+      "role": "Single italic PT Serif word in lime green inside an otherwise white headline",
+      "description": "PT Serif weight 300 italic, color #c5ff4a, sized to match the parent headline (e.g. 'Verifiable Internet.' inside a 89px display). This is the only place italic PT Serif appears and the only place lime hits a headline — use sparingly, one per headline maximum."
+    },
+    {
+      "name": "Logo Tile",
+      "role": "Brand mark in lime green square",
+      "description": "60×60 to 80×80px square, background #c5ff4a, radius 4px, contains a black 'P' mark centered. The glow shadow 0 0 8px rgba(197, 255, 74, 0.45) is applied to the tile, not the inner mark."
+    },
+    {
+      "name": "Dotted Globe Visual",
+      "role": "Hero section world-map illustration",
+      "description": "Pure SVG composed of 1.5px #ffffff dots on the #060606 canvas forming a world-map silhouette. The dots use opacity 0.4–0.7 to create continent density. No gradient fills, no fills at all — this is pointillism typography, not vector art."
+    },
+    {
+      "name": "Neon Section Divider",
+      "role": "Horizontal lime strip separating major page sections",
+      "description": "Full-width 6–8px bar, solid #c5ff4a, used once between hero and content. Functions as a 'classified document' red-bar moment. Do not repeat within a page; one per scroll is the rule."
+    },
+    {
+      "name": "Status Tag Pill",
+      "role": "Signed/Verified status indicators (e.g. '✓ SIGNED', '● 3 MODES')",
+      "description": "Background transparent, 1px border #c5ff4a, text #c5ff4a, padding 4px 10px, radius 9999px, Inter Tight 11px weight 500 uppercase 0.06em. Check mark or dot prefix in same lime."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent page chrome",
+      "description": "Background #000000, 1px bottom border #252525, height 64px, max-width 1280px centered. Left: wordmark. Center: 5 nav items in ghost button style. Right: lime CTA. Sticky on scroll."
+    },
+    {
+      "name": "Section Eyebrow Bracket",
+      "role": "Above-title metadata tag for new content sections",
+      "description": "Text 'FOR HUMANS · BROWSER EXTENSION' or 'FOR AGENTS · TRANSGATE SDK' in Inter Tight 11px weight 500, 0.22em tracking, color #7a7a8a. Period-separator between phrases. Right-aligned: 'B 01' / 'B 02' style section index in same treatment."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All display headlines, hero copy, section titles, and the italic accent words — the editorial voice. Weight 300 is anti-convention for a crypto site; most use 600-700, this whisper-weight signals authority through restraint, not volume.",
+      "sizes": "20, 22, 24, 26, 32, 40, 49, 56, 60, 72, 75, 78, 86, 89, 130",
+      "family": "PT Serif",
+      "weight": "300",
+      "lineHeight": "0.88–1.20 (tight for display, opening up for medium text)",
+      "substitute": "Source Serif 4 (Google), Cormorant Garamond Light",
+      "letterSpacing": "-0.0350em at 130px, -0.0250em at 56–60px, -0.0100em at 20–24px",
+      "fontFeatureSettings": "\"liga\" on, \"dlig\" on"
+    },
+    {
+      "role": "All UI chrome, body paragraphs, buttons, nav, tags, labels, links. Carries 500 for nav emphasis, 600 for button text. The uppercase tracked-out labels (0.18–0.26em) read as classified-document metadata stamps.",
+      "sizes": "9, 10, 11, 12, 13, 14, 16, 20, 28",
+      "family": "Inter Tight",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.20–1.90 (wide for body, tight for nav)",
+      "substitute": "Inter (Google)",
+      "letterSpacing": "0.0050em, 0.0100em, 0.0200em, 0.0300em, 0.0400em, 0.0800em, 0.1100em, 0.1200em, 0.1600em, 0.1800em, 0.1830em, 0.2000em, 0.2200em, 0.2400em, 0.2600em"
+    },
+    {
+      "role": "Code snippets, protocol names, terminal output, hex strings — the proof-of-cryptography evidence layer",
+      "sizes": "10, 11, 13",
+      "family": "JetBrains Mono",
+      "weight": "400, 500, 600",
+      "lineHeight": "0.92, 1.20, 1.55",
+      "substitute": "Fira Code (Google)",
+      "letterSpacing": "0.0100em, 0.0600em, 0.1800em, 0.2200em, 0.2400em"
+    },
+    {
+      "role": "Inline monospace fallback, tiny hash strings, timestamps",
+      "sizes": "9, 11, 12",
+      "family": "ui-monospace",
+      "weight": "400",
+      "lineHeight": "1.20, 1.55",
+      "letterSpacing": "0.0400em, 0.2200em"
+    }
+  ],
+  "description": "zkPass is an encrypted-terminal meets editorial-broadsheet: a near-black canvas serves as the substrate for a single vivid chartreuse accent (#c5ff4a) that behaves like a signal light in a dark room. The display voice is PT Serif at weight 300 — a deliberate contrarian choice that lends editorial gravity to a cryptographic protocol, contrasting the cold tech feel with a typeset-newspaper authority. Body and UI chrome switch to Inter Tight, with uppercase tracked-out labels (0.18–0.26em) that read as classified-document metadata. Surfaces stack tightly: pure black canvas → near-black cards → slightly raised panels, all separated by hairline borders rather than shadows. The lime green only ever appears in three roles: filled CTA, glowing border, and italic accent word inside headlines. Everything else stays monochrome.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- text (primary): #ffffff\n- text (body): #e5e5e5\n- text (muted/helper): #7a7a8a\n- background (canvas): #060606\n- background (card/panel): #1f1f1f\n- border (hairline): #252525\n- accent / primary action: #c5ff4a (filled action)\n\nExample Component Prompts:\n\n1. Create a hero section: background #060606. Eyebrow label '[ BUILT FOR HUMANS & AGENTS ]' in Inter Tight 11px weight 500 uppercase 0.22em tracking color #7a7a8a. Headline 'Privacy & Trust Layer for the Verifiable Internet.' in PT Serif weight 300 at 89px, line-height 0.94, letter-spacing -3.1px, color #ffffff — but the words 'Verifiable Internet.' are set in italic #c5ff4a. Body subtext in Inter Tight 14px weight 400 line-height 1.55 color #e5e5e5, max-width 480px centered. A dotted-globe SVG (white dots, opacity 0.4–0.7) sits behind the headline. Below the hero, a full-width 6px solid #c5ff4a divider bar.\n\n2. Create a content card: background #1f1f1f, 1px border #252525, padding 40px, radius 0px. Eyebrow label 'FOR HUMANS · BROWSER EXTENSION' in Inter Tight 11px weight 500 uppercase 0.22em color #7a7a8a, with a right-aligned 'B 01' section index in the same treatment. Title 'TransGate' in PT Serif weight 300 at 40px line-height 1.05 color #ffffff. Body paragraph in Inter Tight 14px weight 400 line-height 1.55 color #e5e5e5. At the bottom, a code-block panel: background #252525, padding 24px, radius 4px, JetBrains Mono 13px line-height 1.55, with lime-green keyword tokens (#c5ff4a) and a right-aligned status pill ('✓ SIGNED' in a 1px #c5ff4a border pill, Inter Tight 11px weight 500 uppercase).\n\n3. Create a top navigation bar: background #000000, 1px bottom border #252525, height 64px, max-width 1280px centered. Left: zkPass wordmark in PT Serif weight 300 at 20px color #ffffff. Center: five nav items (PRODUCTS, TECHNOLOGY, ECOSYSTEM, $ZKP, RESOURCES) in Inter Tight 13px weight 500 uppercase 0.18em tracking color #ffffff, no background, separated by 32px gaps. Right: a 'LAUNCH' ghost button — transparent background, 1px border #c5ff4a, text #c5ff4a, Inter Tight 13px weight 500 uppercase 0.08em tracking, padding 10px 20px, radius 4px, with the signature glow 0 0 8px rgba(197, 255, 74, 0.45). Sticky on scroll.\n\n4. Create a logo tile: 64×64px square, background #c5ff4a, radius 4px, centered black 'P' mark in PT Serif weight 300 at 36px, with the glow shadow 0 0 8px rgba(197, 255, 74, 0.45) applied to the tile itself. Place it centered below the hero headline.\n\n5. Create a section eyebrow: text 'Two audiences,' in PT Serif weight 300 at 49px line-height 1.05 color #ffffff, followed by 'one primitive.' in the same size and weight but italic and color #c5ff4a. Above it, a small bracket label '[ BUILT FOR HUMANS & AGENTS ]' in Inter Tight 11px weight 500 uppercase 0.22em color #7a7a8a. To the right of the headline, a 2-paragraph body block in Inter Tight 14px weight 400 line-height 1.55 color #e5e5e5, max-width 380px."
+    }
+  ],
+  "elevationPhilosophy": "This system rejects conventional drop-shadows. Depth is communicated through surface-tone layering (canvas → card → raised → hover) and a single chromatic glow reserved exclusively for the lime CTA. Flatten everything else; let the green do the lifting."
+}

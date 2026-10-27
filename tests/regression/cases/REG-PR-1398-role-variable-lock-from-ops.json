@@ -1,0 +1,54 @@
+{
+  "id": "REG-PR-1398-role-variable-lock-from-ops",
+  "kind": "feat",
+  "title": "Role-variable releases: /ops opens the design-system lock for a release whose v8 preview reading is clean, and keeps it shut while VARS-1 or MODE-3 fails",
+  "pr": 1398,
+  "area": "design-system/readiness",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Derive the customer lock from the stored /ops Design system checks (readyTemplates) for a release whose rules all pass, and for one where a must-fix rule fails, a rule is unmeasured, the check is running or never ran.",
+    "S2: Grade a release with checkRelease when its role scan is missing, clean, or names missing roles and hardcoded literals (VARS-1).",
+    "S3: Grade a release whose measurement, contract or stylesheets show a light/dark switch while its contract offers one look, and a two-mode contract (MODE-3).",
+    "S4: Grade a release whose preview was re-measured in the tree (probe v8) after its VERIFICATION.json was written."
+  ],
+  "expect": [
+    "S1: only an all-pass check opens the template (code ds-ready); every other state keeps it shut with its own code.",
+    "S2: VARS-1 is must-fix for every CMS; no scan for this version is Not scanned yet and holds Publish; missing roles and literals fail naming file, line and component; a clean scan passes.",
+    "S3: MODE-3 is must-fix for every CMS and fails on each one-look mismatch; modes: true passes; a one-look template is not applicable.",
+    "S4: the newest in-tree preview reading wins over the release VERIFICATION.json of the same run."
+  ],
+  "selectors": {
+    "tool": "apps/tracy-web/test/design-system-customer-lock.test.mjs",
+    "evidence": "apps/tracy-web/src/lib/template-design-system-readiness/"
+  },
+  "evidence": "Unit tests over the /ops lock derivation and the VARS-1, MODE-3 and measurement readers that the role-variable batch added or changed",
+  "fence": "Lock derivation and rule grading in tracy-web; does not drive a stand or a browser",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/design-system-customer-lock.test.mjs",
+      "apps/tracy-web/test/template-design-system-readiness-vars-1.test.mjs",
+      "apps/tracy-web/test/template-design-system-readiness-mode-3.test.mjs",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs"
+    ],
+    "tests": [
+      "derived from /ops: open only when the Design system step of the release says ds-ready",
+      "derived from /ops: one release not ready locks the template",
+      "VARS-1 is registered for every CMS",
+      "no role scan, or one of another version, is \"Not scanned yet\" and holds Publish",
+      "a scan declaring every required role with no hardcoded role passes",
+      "missing required roles and unhandled literals fail",
+      "MODE-3 is registered for every CMS",
+      "a template whose measurement found a light/dark switch fails",
+      "a template whose contract carries a dark palette fails",
+      "a template whose own stylesheets paint a dark scheme fails",
+      "a two-mode template whose contract says modes: true passes",
+      "a one-look template is not applicable",
+      "a preview re-measured in the tree wins over the release VERIFICATION.json"
+    ]
+  }
+}

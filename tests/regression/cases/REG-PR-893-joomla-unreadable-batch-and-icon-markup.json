@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-893-joomla-unreadable-batch-and-icon-markup",
+  "kind": "fix",
+  "title": "Joomla planner: one unreadable batch keeps its words and the rest are written; icon markup never reaches the model",
+  "pr": 893,
+  "area": "seeder/joomla-plan",
+  "cms": ["jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-seeder/test/plan-joomla-contract.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the results of the cases whose names start with \"🔒 a batch the model never answers readably\" and \"markup with no words in it never reaches the model\".",
+    "S3: Run: node --input-type=module -e \"import { isMarkupOnly } from './packages/cms/tracy-seeder/src/plan-joomla-contract.mjs'; import { readFileSync } from 'node:fs'; const m = JSON.parse(readFileSync('packages/cms/tracy-joomla-quickstart/contracts/ja-vega/j6/1.0.3/content-map.json','utf8')); const svg = m.slots.filter(s => /\\(\\(\\s*svg/i.test(String(s.sample||''))); console.log(svg.length, svg.filter(s => isMarkupOnly(s.sample)).length)\" and record the output."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 18).",
+    "Both named cases are 'ok': a batch whose answer is cut off keeps its slots pending as 'model-unreadable' while the other batch is written; nothing readable at all still rejects with 'Content mapping refused 3 times'; a thrown model call still reaches the caller; an icon sample is neither asked about nor pending.",
+    "S3 prints '11 11': every SVG icon text slot of ja-vega/j6/1.0.3 is recognised as markup with no words."
+  ],
+  "selectors": {
+    "planner": "planJoomlaContract, isMarkupOnly in packages/cms/tracy-seeder/src/plan-joomla-contract.mjs",
+    "contract": "packages/cms/tracy-joomla-quickstart/contracts/ja-vega/j6/1.0.3/content-map.json"
+  },
+  "evidence": "05/10/2026 local stand: Apply on Design inspiration ja-vega (Joomla) failed in 1 of 2 runs, 'Content mapping refused 3 times: ... not valid JSON', nothing written. Replaying that contract's plan with the real model: the same 33-slot batch was cut off 3/3 times in the middle of SVG path data (11 text slots hold ((svg ...)) icons up to 3.2 kB). After the fix: 3/3 Apply runs applied (397, 349 slots).",
+  "fence": "Markup-only samples are left as the template made them; a batch with no readable answer after the retries is pending and the plan goes on; a plan with no readable batch, or a model that throws, still fails loudly.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-893-joomla-unreadable-batch-and-icon-markup.mjs"]
+  }
+}

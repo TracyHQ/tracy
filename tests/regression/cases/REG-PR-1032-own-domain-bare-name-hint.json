@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1032-own-domain-bare-name-hint",
+  "kind": "fix",
+  "title": "The card of an own domain that starts with www. says to forward the bare name to it at the DNS provider",
+  "pr": 1032,
+  "area": "sites/own-domain",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/core/tracy-core/test/site-publish-dom.test.mjs",
+    "S2: Record the exit code and the result of the case named in `run.tests`."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "S2: the case is 'ok': the card of `www.example.com` draws the line `bare-name` with `example.com` and `www.example.com`; the card of `shop.example.com` has no such line."
+  ],
+  "selectors": {
+    "card": "packages/core/tracy-core/src/site-tabs/SiteDomains.tsx ([data-line=\"bare-name\"])",
+    "string": "domains.bareName (packages/site/tracy-site-tabs/src/client/strings.ts)"
+  },
+  "evidence": "A site connects a subdomain only and nothing forwards the bare domain, so `example.com` opened nothing while `www.example.com` was live, and the screen did not say so.",
+  "fence": "Tracy does not connect or forward a bare domain; whether the customer's DNS provider forwards it is not covered by this case.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/site-publish-dom.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a domain that starts with www. says how its bare name reaches the site; any other subdomain says nothing"
+    ]
+  }
+}

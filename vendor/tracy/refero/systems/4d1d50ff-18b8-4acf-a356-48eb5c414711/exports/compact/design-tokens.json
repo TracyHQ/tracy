@@ -1,0 +1,84 @@
+{
+  "color": {
+    "midnight-navy": {
+      "$value": "#20294c",
+      "$type": "color",
+      "$description": "Midnight Navy — Violet text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color"
+    },
+    "cornflower-steel": {
+      "$value": "#375390",
+      "$type": "color",
+      "$description": "Cornflower Steel — Borders, icon strokes, secondary text, tag outlines — a desaturated cousin of midnight used for structural elements that recede from primary copy"
+    },
+    "electric-blue": {
+      "$value": "#459af8",
+      "$type": "color",
+      "$description": "Electric Blue — Inline links, active nav text, small accent dots — the only high-chroma blue, used sparingly to signal clickable moments"
+    },
+    "fog-white": {
+      "$value": "#f0f1f5",
+      "$type": "color",
+      "$description": "Fog White — Page canvas, subtle card fills, list backgrounds, nav backdrop — the off-white base layer that gives the navy its depth"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, button text on dark fills, elevated panels — the topmost surface that sits above fog"
+    },
+    "silver-lining": {
+      "$value": "#c7cbdb",
+      "$type": "color",
+      "$description": "Silver Lining — Hairline borders, inactive dividers, muted list separators — cool-tinted gray that vanishes against fog but defines against white"
+    },
+    "mist-gray": {
+      "$value": "#dddfe9",
+      "$type": "color",
+      "$description": "Mist Gray — Soft borders on light cards, subtle background washes — a step between fog and silver for layered surfaces"
+    },
+    "smoke": {
+      "$value": "#979db5",
+      "$type": "color",
+      "$description": "Smoke — Light text on dark surfaces, inverse labels, and high-contrast captions."
+    },
+    "dusk": {
+      "$value": "#676b89",
+      "$type": "color",
+      "$description": "Dusk — Secondary headings, icon fills in illustrations, mid-weight body — between smoke and midnight for visual rhythm"
+    },
+    "abyss": {
+      "$value": "#042939",
+      "$type": "color",
+      "$description": "Abyss — Deepest accent, used in illustration borders and dark-image frames — almost black but with a navy cast"
+    },
+    "voltage-yellow": {
+      "$value": "#ffff00",
+      "$type": "color",
+      "$description": "Voltage Yellow — Rare highlight on a single featured card or callout — used once or twice per page maximum as a visual shock"
+    },
+    "hyacinth": {
+      "$value": "#788dba",
+      "$type": "color",
+      "$description": "Hyacinth — Outlined action border, rarely used — a lighter cornflower for ghost buttons that need a subtle border presence"
+    }
+  },
+  "font": {
+    "gt-walsheim-pro": {
+      "$value": "GT Walsheim Pro",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all UI. Geometric humanist sans with generous x-height and subtly rounded terminals. Weight 700 at 100px powers the poster-scale hero headline; weight 600 handles subheadings; weight 400 carries body, captions, and UI labels. The 100px hero with -0.125em tracking is the signature — it compresses the headline into a dense, intentional block rather than a airy web headline."
+    },
+    "gt-america": {
+      "$value": "GT America",
+      "$type": "fontFamily",
+      "$description": "Secondary typeface for specific heading or display moments where a more compressed, neo-grotesque tone is needed. Used sparingly."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://fold.money",
+      "siteName": "Fold",
+      "extractedAt": "2026-06-03T18:29:54.656Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1666-demo-check-background",
+  "kind": "fix",
+  "title": "tracy_demo check runs in the background on tracy-web and dsh polls its result, so a check longer than the edge's ~100 s still reaches the agent and is counted once",
+  "pr": 1666,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: a client-send demo build, planned and ready: check.start while the vision look is held open, a second check.start, check.status, then let the look finish and poll check.status; close the action and read check.status and call check.start; write a running clientCheck from another process started long ago and read check.status.",
+    "S2: runDemoLifecycle {operation:'check'} against a send that answers check.start running then a result; against an older tracy-web (AGENT_DEMO_BAD_OPERATION); with a refusal or a result from start; still running past the 10-minute bound; with Stop; with failed status polls on the way."
+  ],
+  "expect": [
+    "S1: start answers running at once with one checkId; the second start joins it; status is running and nothing is counted yet; after the look finishes status carries pass:false and the looks-finished check under the same checkId, counted exactly once; after the action closes status still answers that checkId and check.start is AGENT_DEMO_ACTION_CLOSED; the silent check is DEMO_CHECK_LOST and not counted.",
+    "S2: sends check.start then check.status until the result; falls back to one synchronous check; answers start's refusal or result without polling; DEMO_CHECK_RUNNING with running:true; TURN_STOPPED after one send; two failed polls are ridden through, six in a row are the answer, DEMO_CHECK_LOST is the answer at once."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities/client-demo.js apps/tracy-web/src/opportunities/agent-demo.js packages/tools/tracy-site-tools/src/host/demo-lifecycle.mjs",
+    "dom": ""
+  },
+  "fence": "check.start/check.status: background check with heartbeat in wo_build.qa.clientCheck, counted when saved, readable after the action closes; dsh polling with fallback only on AGENT_DEMO_BAD_OPERATION",
+  "evidence": "dev 24/10/2026: every tracy_demo check answered Cloudflare 524; the action stayed queued/fill",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-demo-runner.test.mjs",
+      "packages/tools/tracy-site-tools/test/demo-lifecycle.test.mjs"
+    ],
+    "tests": [
+      "client-send reserves real chat and one native user request before provision",
+      "check starts the server check and polls its status in short calls until it has a result",
+      "check against a tracy-web without check.start falls back to the one long check call",
+      "check answers a refusal or a finished result from start at once, never polling",
+      "check still running at the wait bound says so; Stop ends polling without another send",
+      "check polls through a few failed status calls on the way, then answers the last failure"
+    ],
+    "needs": ["postgres"]
+  }
+}

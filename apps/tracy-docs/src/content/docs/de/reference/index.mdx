@@ -1,0 +1,30 @@
+---
+title: API-Referenz
+description: Die interaktive OpenAPI-Referenz der Tracy API und die Rohdokumente, aus denen sie stammt — openapi.json, llms.txt und das Dokument des Claude-Cowork-Plugins.
+tableOfContents: false
+---
+
+Die Referenz unten wird live aus dem OpenAPI-3.1-Dokument gezogen, das `tracy-web` für sich selbst baut,
+sodass sie den Routen niemals hinterherhinken kann. **Test request** schickt den Aufruf mit dem Schlüssel, den du einfügst, an den API-Host — der
+Schlüssel bleibt in deinem Tab und wird nirgends gespeichert. Öffne sie
+eigenständig unter [`/api/reference/`](/api/reference/).
+
+<iframe
+  class="tracy-reference-frame"
+  src="/api/reference/"
+  title="Tracy API reference"
+  loading="lazy"
+></iframe>
+
+## Die Dokumente
+
+| | |
+|---|---|
+| [`/api/openapi.json`](/api/openapi.json) | Das OpenAPI-3.1-Dokument der öffentlichen API — jede Route, jeder Parameter, Body, jede Antwort und Ablehnung; `servers[0]` ist der API-Host. |
+| [`/api/llms.txt`](/api/llms.txt) | Dieselbe Referenz als reiner Text im [llms.txt](https://llmstxt.org)-Format, eine Zeile pro Operation, zum Lesen für ein Sprachmodell. |
+| [`/api/claude-cowork.json`](/api/claude-cowork.json) | Die HTTP-Oberfläche des Claude-Cowork-Plugins auf einer Kunden-Site mit Joomla oder WordPress — seine Aktionstür und `/content.json` — als OpenAPI-Dokument. |
+
+Die Referenz kennzeichnet jede Apply-Aktion mit dem **Werkzeugsatz**, den sie braucht (`content`, `code`,
+`site`, `lifecycle`), und dem Plugin-Release, das sie beantwortet; diese Spalten stammen aus den eigenen
+Tabellen der Tür, weshalb sie in der Referenz leben und nicht auf der Seite
+[Kompatibilität](/de/reference/compatibility/).

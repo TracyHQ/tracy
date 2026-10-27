@@ -1,0 +1,119 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, dark card surfaces, code editor backgrounds, filled neutral buttons — the dominant dark across the site"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "cream-surface": {
+      "$value": "#f6f6f6",
+      "$type": "color",
+      "$description": "Cream Surface — Page canvas and section backgrounds — warm off-white that distinguishes Convex from cold-white SaaS"
+    },
+    "lilac-wash": {
+      "$value": "#f7f1ff",
+      "$type": "color",
+      "$description": "Lilac Wash — Subtle tinted background panels, icon wash areas, soft section dividers"
+    },
+    "charcoal-surface": {
+      "$value": "#292929",
+      "$type": "color",
+      "$description": "Charcoal Surface — Secondary dark surfaces, navigation pills, dark-mode code block frames"
+    },
+    "graphite-border": {
+      "$value": "#38383a",
+      "$type": "color",
+      "$description": "Graphite Border — Borders on dark surfaces, dividers within code blocks, outlined button strokes on dark fills"
+    },
+    "slate-text": {
+      "$value": "#4f4f52",
+      "$type": "color",
+      "$description": "Slate Text — Secondary body text, nav metadata, subdued labels"
+    },
+    "fog-text": {
+      "$value": "#6d6d70",
+      "$type": "color",
+      "$description": "Fog Text — Muted helper text, tertiary nav items, breadcrumb-style labels"
+    },
+    "ash-text": {
+      "$value": "#a9a9ac",
+      "$type": "color",
+      "$description": "Ash Text — Placeholder text, disabled labels, very low-emphasis metadata"
+    },
+    "mist-divider": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Mist Divider — Hairline dividers, input borders on light surfaces, table row separators"
+    },
+    "signal-blue": {
+      "$value": "#69bee2",
+      "$type": "color",
+      "$description": "Signal Blue — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "plum-button": {
+      "$value": "#8d2676",
+      "$type": "color",
+      "$description": "Plum Button — Alternative filled button accent on specific marketing sections — rich magenta against cream"
+    },
+    "ember-orange": {
+      "$value": "#de5d33",
+      "$type": "color",
+      "$description": "Ember Orange — Highlight accent on specific CTAs or callout chips — warm complement to the cool blues"
+    },
+    "hot-pink": {
+      "$value": "#fc618d",
+      "$type": "color",
+      "$description": "Hot Pink — Red supporting accent for decorative details and low-frequency emphasis"
+    },
+    "iris-violet": {
+      "$value": "#948ae3",
+      "$type": "color",
+      "$description": "Iris Violet — Violet supporting accent for decorative details and low-frequency emphasis"
+    },
+    "mint-green": {
+      "$value": "#7bd88f",
+      "$type": "color",
+      "$description": "Mint Green — Green supporting accent for decorative details and low-frequency emphasis"
+    },
+    "canary-yellow": {
+      "$value": "#f8e67a",
+      "$type": "color",
+      "$description": "Canary Yellow — Yellow supporting accent for decorative details and low-frequency emphasis"
+    },
+    "dusk-gradient": {
+      "$value": "#221f1d",
+      "$type": "color",
+      "$description": "Dusk Gradient — Dark section background gradient — diagonal fade from warm near-black through charcoal to a cool blue haze"
+    }
+  },
+  "font": {
+    "gt-america": {
+      "$value": "GT America",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for all UI, headings, body, nav, and buttons — grotesque sans with tight optical spacing; weight 400/500 for body, weight 700 reserved for emphasis and button labels"
+    },
+    "ui-monospace-monospace": {
+      "$value": "ui-monospace / monospace",
+      "$type": "fontFamily",
+      "$description": "Code snippets, terminal output, file paths, inline code — exclusively inside code blocks and developer-facing surfaces"
+    },
+    "monospace": {
+      "$value": "monospace",
+      "$type": "fontFamily",
+      "$description": "monospace — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://convex.dev",
+      "siteName": "Convex",
+      "extractedAt": "2026-06-03T17:34:57.360Z",
+      "variant": "compact"
+    }
+  }
+}

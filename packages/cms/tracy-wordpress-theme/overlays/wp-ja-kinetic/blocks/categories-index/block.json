@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/categories-index",
+  "version": "0.1.0",
+  "title": "Categories index",
+  "category": "design",
+  "icon": "category",
+  "description": "The source's \"All Categories\" index (com_content view=categories, css/page-250.css .hx-cats): every category with a published post, icon, name, post count and description.",
+  "textdomain": "wp-ja-kinetic",
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

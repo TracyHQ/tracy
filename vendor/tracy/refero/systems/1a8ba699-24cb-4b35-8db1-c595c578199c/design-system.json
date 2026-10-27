@@ -1,0 +1,353 @@
+{
+  "dos": [
+    "Use weight 330 for display headlines (70-96px) with 0.015-0.04em letter-spacing — this whisper-weight is the brand's signature voice",
+    "Set primary action buttons to white fill (#ffffff) with #02090a text, never mint green — the green accent is for text emphasis, not CTAs",
+    "Apply #36f4a4 only to inline keyword highlights and the wordmark — it should appear as semantic punctuation, not decoration",
+    "Use border-radius 12px for all content cards and 9999px for action buttons — mixing these creates the card/button hierarchy",
+    "Layer dark surfaces in the order #02090a → #041e18 → #072720 — each step must carry a green tint to maintain atmospheric cohesion",
+    "Use the ",
+    "ss03\" font feature setting on all NeueHaasGrotesk and Inter text — it enables alternate glyphs that define the brand's letter personality\"",
+    "Pair multi-layer soft shadows (black 0.1 + white 0.03 inset) on dark cards for a glass-edge effect rather than heavy drop shadows"
+  ],
+  "donts": [
+    "Never use weight 700+ for display headlines — the brand's authority comes from restraint at 330, not volume at 700",
+    "Never fill a button with #36f4a4 — the mint green is a text and accent color, not an action color",
+    "Never use light/neutral backgrounds — the system is dark-first; cards, sections, and the canvas all carry green-tinted darks",
+    "Never use border-radius larger than 12px on cards — the pill shape (9999px) is reserved exclusively for buttons and tags",
+    "Never use a pure neutral gray (#808080 or similar) — all grays must carry a green or teal tint to harmonize with the dark surfaces",
+    "Never apply heavy drop shadows for elevation — rely on surface tint steps and hairline borders instead, with only soft layered shadows for interactive elements",
+    "Never use more than one accent color per view — mint green for emphasis, cyan teal only in gradients, never both competing for attention"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#02090a",
+      "name": "Abyssal Ink",
+      "role": "Page canvas and hero backgrounds — near-black with a green undertone makes the mint accent glow rather than fight",
+      "group": "neutral"
+    },
+    {
+      "hex": "#041e18",
+      "name": "Forest Floor",
+      "role": "Card and elevated surface — one step up from canvas, reads as a panel cut from the same dark material",
+      "group": "neutral"
+    },
+    {
+      "hex": "#072720",
+      "name": "Deep Canopy",
+      "role": "Secondary card surface and nav backgrounds — provides a second elevation step above Forest Floor",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000a1e",
+      "name": "Midnight Tinge",
+      "role": "Sectional backgrounds where a cooler, blue-tinted dark is needed for variation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#093329",
+      "name": "Moss Border",
+      "role": "List dividers and inset borders on dark surfaces — green-tinted so dividers feel atmospheric, not structural",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1e2c31",
+      "name": "Iron Veil",
+      "role": "Hairline borders and card outlines — the most-used divider color, bridges green and neutral tones",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Ghost White",
+      "role": "Secondary surface highlights, subtle borders, and inactive iconography on light or dark contexts",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a1a1aa",
+      "name": "Ash Label",
+      "role": "Muted helper text, footer metadata, and secondary nav labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#71717a",
+      "name": "Slate Caption",
+      "role": "Tertiary text and inactive state captions",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9dabad",
+      "name": "Sea Mist",
+      "role": "Body text in teal-tinted sections and secondary paragraph copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#99b3ad",
+      "name": "Tide Pool",
+      "role": "Muted body copy and link text where a subtle green-gray harmonizes with the brand hue",
+      "group": "neutral"
+    },
+    {
+      "hex": "#36f4a4",
+      "name": "Mint Signal",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#30deee",
+      "name": "Cyan Pulse",
+      "role": "Secondary accent for gradient washes, decorative icons, and teal-tinted emphasis text",
+      "group": "accent"
+    },
+    {
+      "hex": "#5fd5b6",
+      "name": "Aurora Gradient",
+      "role": "Decorative gradient that sweeps from mint to violet, used in feature highlights and brand flourishes",
+      "group": "accent",
+      "gradient": "linear-gradient(126.17deg, rgb(95, 213, 182) 32.74%, rgb(134, 92, 255) 100%)"
+    },
+    {
+      "hex": "#244749",
+      "name": "Twilight Wash",
+      "role": "Decorative surface gradient — dark teal to deeper teal for atmospheric panels and section backgrounds",
+      "group": "accent",
+      "gradient": "linear-gradient(rgb(36, 71, 73) 0%, rgb(24, 46, 47) 100%)"
+    }
+  ],
+  "layout": "Full-bleed page model with no visible max-width constraint at the canvas level. The hero is a full-viewport photographic image with overlaid display text left-aligned in the lower-left quadrant, creating an asymmetric composition where the visual dominates and the text anchors. Below the hero, sections shift to a dark content area with max-width ~1280px centered. Content sections alternate between left-aligned text + right-aligned media blocks and centered headline + grid layouts (3-column image card grids for brand showcases, 2-column layouts for feature explanations). The international section uses a full-bleed dark teal-tinted background with centered content. Navigation is a minimal top bar: logo left, nav links center-left, login + CTA right, transparent over the hero and solid dark on scroll. Spacing between sections is generous (64-96px) to let the dark background breathe.",
+  "imagery": "Full-bleed cinematic photography dominates the hero: tightly cropped, high-energy crowd and event imagery (the Nasdaq/Allbells celebration shot) with no lifestyle staging — the moment IS the content. Product and brand imagery in secondary sections appears in rounded media cards (12px radius) with full-bleed crops, no padding around images. The visual strategy alternates between spectacle (hero photography) and catalog (brand logo grids, product screenshots in cards). Gradients with teal and green washes appear behind map graphics and feature sections to create atmospheric depth without literal imagery. Icons are minimal and outlined, used only for functional UI affordances.",
+  "similar": [
+    {
+      "why": "Same dark-mode-first approach with near-black canvas, whisper-light weight display headlines, and pill-shaped action buttons",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar generous letter-spacing on large display text and minimal color palette where a single accent color functions as semantic emphasis rather than decoration",
+      "business": "Vercel"
+    },
+    {
+      "why": "Shared use of light-weight typography at large sizes, pill-shaped CTAs, and a dark surface stack with subtle tint variations",
+      "business": "Stripe"
+    },
+    {
+      "why": "Same restrained accent color usage — a single brand hue appears only for emphasis and brand identity, never as a filled action",
+      "business": "Notion"
+    },
+    {
+      "why": "Dark canvas with green-tinted neutrals and full-bleed photographic hero sections with overlaid display text",
+      "business": "Arc Browser"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "8px",
+      "cards": "12px",
+      "pills": "9999px",
+      "buttons": "9999px",
+      "asymmetric": "20px",
+      "smallButtons": "4px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64-96px",
+    "cardPadding": "20-24px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#02090a",
+      "name": "Abyssal Ink",
+      "level": 0,
+      "purpose": "Page canvas and full-bleed hero backgrounds"
+    },
+    {
+      "hex": "#000a1",
+      "name": "Midnight Tinge",
+      "level": 1,
+      "purpose": "Sectional bands where a cooler dark is needed"
+    },
+    {
+      "hex": "#041e18",
+      "name": "Forest Floor",
+      "level": 2,
+      "purpose": "Card panels and content containers"
+    },
+    {
+      "hex": "#072720",
+      "name": "Deep Canopy",
+      "level": 3,
+      "purpose": "Elevated cards, nav backgrounds, and hover-state surfaces"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 8px 8px 0px, rgba(0, 0, 0, 0.1) 0px 4px 4px 0px, rgba(0, 0, 0, 0.1) 0px 2px 2px 0px, rgba(0, 0, 0, 0.1) 0px 0px 0px 1px, rgba(255, 255, 255, 0.03) 0px 1px 0px 0px inset",
+      "element": "Content Card"
+    },
+    {
+      "style": "rgba(5, 24, 19, 0.05) 0px 20px 60px 0px, rgb(19, 59, 50) 0px 1px 0px 0px inset",
+      "element": "Interactive Demo Card"
+    }
+  ],
+  "northStar": "midnight bazaar under mint lanterns",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.72
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.56
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.64
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.48
+    },
+    {
+      "role": "heading",
+      "size": 28,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.56
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.25,
+      "letterSpacing": 0.96
+    },
+    {
+      "role": "display",
+      "size": 70,
+      "lineHeight": 1.14,
+      "letterSpacing": 1.05
+    },
+    {
+      "role": "display-lg",
+      "size": 96,
+      "lineHeight": 1,
+      "letterSpacing": 1.44
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Action Button",
+      "role": "Filled white pill button for the main CTA on each section",
+      "description": "Background #ffffff, text #02090a, border-radius 9999px, padding 12px 24px, font Inter-Variable 16px weight 550, letter-spacing 0.06em uppercase. Renders as a high-contrast white capsule against the dark canvas — the green accent never fills an action."
+    },
+    {
+      "name": "Ghost Outline Button",
+      "role": "Secondary action paired with the primary CTA",
+      "description": "Background transparent, border 1px #ffffff with opacity ~0.4, text #ffffff, border-radius 9999px, padding 12px 24px, font Inter-Variable 16px weight 550. Sits beside the primary action as a quieter alternative."
+    },
+    {
+      "name": "Small Rectangular Button",
+      "role": "Compact buttons inside cards, calculators, and inline forms",
+      "description": "Background #333333, text #ffffff, border-radius 4px, padding 8px 16px, font Inter-Variable 14px weight 550. Used for form submissions and card-level actions where the pill shape would feel too soft."
+    },
+    {
+      "name": "Content Card",
+      "role": "Image-forward card in feature grids and brand showcase sections",
+      "description": "Background #041e18, border-radius 12px, overflow hidden. Contains a full-bleed image with 12px radius inheriting to the image. No visible border — the image and rounded corner are the card's identity. Shadow: rgba(5,24,19,0.05) 0px 20px 60px 0px for subtle lift."
+    },
+    {
+      "name": "Elevated Feature Card",
+      "role": "Cards with product previews, shipping calculators, and interactive demos",
+      "description": "Background #041e18 or #072720, border 1px solid #1e2c31, border-radius 12px, padding 20-24px, shadow: multi-layer black 0.1 opacity with inset white 0.03 highlight. The layered shadow with inset white creates a subtle glass-edge effect against the dark surface."
+    },
+    {
+      "name": "Asymmetric Media Card",
+      "role": "Cards with 20px top-left and bottom-right radii, creating a dynamic shape",
+      "description": "Border-radius 20px on opposite corners only (asymmetric), background #041e18. Used for hero-adjacent media blocks where a standard rounded card would feel static."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation with logo, links, and action buttons",
+      "description": "Background transparent or #072720 on scroll, logo with green Shopify bag icon, nav links in Inter-Variable 14px weight 400 with #ffffff or #a1a1aa color, right-aligned action buttons. Border-radius 8px on the nav container itself."
+    },
+    {
+      "name": "Hero Overlay Text",
+      "role": "Large display headline overlaid on full-bleed photography",
+      "description": "NeueHaasGrotesk weight 330 at 70-96px, color #ffffff, line-height 1.0-1.14, letter-spacing 0.015-0.04em. The whisper-weight headlines over dramatic photography create a contrast between restraint and spectacle."
+    },
+    {
+      "name": "Inline Keyword Highlight",
+      "role": "Brand-colored emphasis within body text and headings",
+      "description": "Text color #36f4a4 applied to key phrases (product names, value propositions) within otherwise white paragraphs. The mint green appears only as semantic emphasis — never decorative."
+    },
+    {
+      "name": "Shipping Calculator Widget",
+      "role": "Interactive form embedded in feature sections",
+      "description": "Background #ffffff, border-radius 12px, padding 16px. Contains labeled form fields with #02090a text, a green highlighted total row (background #36f4a4 or similar mint), and a dark submit button at the bottom."
+    },
+    {
+      "name": "Country Selector Flag",
+      "role": "Vertical list of country flags in the international section",
+      "description": "Each flag in a square container ~40px with #072720 background, border-radius 4px, separated by 8px gap. Active flag has a brighter border or background lift."
+    },
+    {
+      "name": "Section Gradient Background",
+      "role": "Atmospheric background for feature and international sections",
+      "description": "Linear gradient from rgb(36,71,73) to rgb(24,46,47) or radial gradient with teal center fading to canvas. Creates a subtle teal glow that differentiates sections without breaking the dark-mode cohesion."
+    },
+    {
+      "name": "Footer Link Group",
+      "role": "Column-based footer navigation with category headings and links",
+      "description": "Category headings in Inter-Variable 12px weight 550 uppercase with 0.06em letter-spacing and #a1a1aa color. Links in 14px weight 400 with #ffffff or #9dabad color, 8-12px vertical spacing between items."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface for all display, heading, and body text. Weight 330 at 70-96px is the signature choice: most brands shout at 700+, Shopify whispers at 330 with generous letter-spacing (0.015-0.04em), creating authority through restraint. The ",
+      "sizes": "14, 16, 18, 20, 24, 28, 48, 55, 70, 96",
+      "family": "NeueHaasGrotesk",
+      "weight": "330, 400, 500, 550, 600",
+      "lineHeight": "1.25, 1.28, 1.40, 1.49, 1.50",
+      "letterSpacing": "0.0150em, 0.0200em, 0.0400em",
+      "fontFeatureSettings": "\"ss03\"",
+      "Inter, Helvetica Neue, or Manrope": "letterSpacing",
+      "0.015em at 55-96px, 0.02em at 28-48px, 0.04em at 14-24px": "fontFeatureSettings",
+      "ss03\" feature setting enables a specific alternate glyph set that defines the brand's letter personality.\"": "substitute"
+    },
+    {
+      "role": "Secondary typeface for nav, buttons, footer, and micro-copy where Inter's narrower proportions and tighter letter-spacing (0.06em uppercase) suit compact UI contexts",
+      "sizes": "12, 14, 16, 18, 20",
+      "family": "Inter-Variable",
+      "weight": "400, 420, 450, 550",
+      "lineHeight": "1.20, 1.29, 1.43, 1.50, 1.56",
+      "substitute": "Inter, system-ui, or Roboto",
+      "letterSpacing": "0.06em for uppercase labels and button text",
+      "fontFeatureSettings": "\\\"ss03\\\""
+    }
+  ],
+  "description": "Shopify's design language reads as a midnight marketplace lit by mint-green signals: a near-black canvas with a faint forest tint, white typography at whisper-light weights (330) that lets generous letter-spacing carry the voice, and a single vivid mint accent that functions as functional punctuation rather than decoration. Surfaces stack in subtle dark-green tints (#02090a → #041e18 → #072720) so that cards feel like panels lifted from the same material, separated by hairline borders rather than heavy shadows. The primary action is a high-contrast white pill button — the green never fills an action — which keeps the brand hue available for inline highlights, key phrases, and iconography where it reads as confidence rather than urgency. Layout alternates between cinematic full-bleed photography and dark content bands with rounded media cards (12px radius), creating a rhythm of spectacle and catalog.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\\n- text: #ffffff (primary), #99b3ad (body muted), #a1a1aa (helper)\\n- background: #02090a (canvas), #041e18 (card), #072720 (elevated)\\n- border: #1e2c31 (hairline), #093329 (inset)\\n- accent: #36f4a4 (mint — text emphasis only)\\n- secondary accent: #30deee (teal — gradients only)\\n- primary action: no distinct CTA color"
+    }
+  ],
+  "elevationPhilosophy": "Elevation is used sparingly and atmospherically. The primary technique is a multi-layer soft black shadow combined with a near-invisible white inset highlight (rgba(255,255,255,0.03)) to create a glass-edge effect on dark cards. Heavy drop shadows are avoided — the green-tinted dark surfaces and hairline borders do most of the work of separating layers."
+}

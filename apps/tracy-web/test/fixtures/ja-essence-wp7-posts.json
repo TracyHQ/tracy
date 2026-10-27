@@ -1,0 +1,373 @@
+{
+  "note": "The 46 published posts of JA Essence WordPress (dev ja-essence-wordpress.tracy.site, WP REST, 11/10/2026): id, slug, title, date and term slugs. Their bodies are ja-essence-wp7-1.0.10-post.html, their excerpt its first paragraph.",
+  "posts": [
+    {
+      "id": 77,
+      "slug": "capturing-essence-expressive-line-art-techniques",
+      "title": "Capturing Essence: Expressive Line Art Techniques",
+      "created": "2023-06-14 03:41:37",
+      "categories": ["blog-health"],
+      "tags": ["lifestyle", "health", "technology", "video"]
+    },
+    {
+      "id": 84,
+      "slug": "beyond-black-and-white-adding-colors-to-line-art",
+      "title": "Beyond Black and White: Adding Colors to Line Art",
+      "created": "2023-06-14 03:41:36",
+      "categories": ["blog-design"],
+      "tags": ["lifestyle", "health", "technology", "video"]
+    },
+    {
+      "id": 96,
+      "slug": "capturing-essence-expressive-line-art-techniques-2",
+      "title": "Capturing Essence: Expressive Line Art Techniques",
+      "created": "2023-06-14 03:41:35",
+      "categories": ["blog-normal"],
+      "tags": ["lifestyle", "health", "technology", "video"]
+    },
+    {
+      "id": 101,
+      "slug": "beyond-black-and-white-adding-colors-to-line-art-2",
+      "title": "Beyond Black and White: Adding Colors to Line Art",
+      "created": "2023-06-14 03:41:34",
+      "categories": ["blog-normal"],
+      "tags": ["lifestyle", "health", "technology", "video"]
+    },
+    {
+      "id": 110,
+      "slug": "capturing-essence-expressive-line-art-techniques-3",
+      "title": "Capturing Essence: Expressive Line Art Techniques",
+      "created": "2023-06-14 03:41:33",
+      "categories": ["resources"],
+      "tags": ["lifestyle", "health", "technology", "video"]
+    },
+    {
+      "id": 114,
+      "slug": "natural-remedies-for-common-ailments",
+      "title": "Natural Remedies for Common Ailments",
+      "created": "2023-06-14 03:41:32",
+      "categories": ["lifestyle"],
+      "tags": ["lifestyle", "health", "technology", "video"]
+    },
+    {
+      "id": 76,
+      "slug": "embracing-minimalism-line-art-creations",
+      "title": "Embracing Minimalism: Line Art Creations",
+      "created": "2023-06-14 03:11:05",
+      "categories": ["blog-health"],
+      "tags": ["lifestyle", "health", "technology", "travel"]
+    },
+    {
+      "id": 85,
+      "slug": "sketching-stories-narrative-elements-in-line-art",
+      "title": "Sketching Stories: Narrative Elements in Line Art",
+      "created": "2023-06-14 03:11:04",
+      "categories": ["blog-design"],
+      "tags": ["lifestyle", "health", "technology", "travel"]
+    },
+    {
+      "id": 97,
+      "slug": "embracing-minimalism-line-art-creations-2",
+      "title": "Embracing Minimalism: Line Art Creations",
+      "created": "2023-06-14 03:11:03",
+      "categories": ["blog-normal"],
+      "tags": ["lifestyle", "health", "technology", "travel"]
+    },
+    {
+      "id": 108,
+      "slug": "sketching-stories-narrative-elements-in-line-art-2",
+      "title": "Sketching Stories: Narrative Elements in Line Art",
+      "created": "2023-06-14 03:11:02",
+      "categories": ["resources"],
+      "tags": ["lifestyle", "health", "technology", "travel"]
+    },
+    {
+      "id": 115,
+      "slug": "fitness-tips-for-a-healthy-lifestyle",
+      "title": "Fitness Tips for a Healthy Lifestyle",
+      "created": "2023-06-14 03:11:01",
+      "categories": ["lifestyle"],
+      "tags": ["lifestyle", "health", "technology", "travel"]
+    },
+    {
+      "id": 71,
+      "slug": "healthy-eating-tips-for-busy-professionals",
+      "title": "Healthy Eating Tips for Busy Professionals",
+      "created": "2023-06-09 07:23:22",
+      "categories": ["blog-fashion"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 72,
+      "slug": "mindful-eating-for-weight-management",
+      "title": "Mindful Eating for Weight Management",
+      "created": "2023-06-09 07:23:21",
+      "categories": ["blog-health"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 73,
+      "slug": "exercise-routines-for-overall-fitness",
+      "title": "Exercise Routines for Overall Fitness",
+      "created": "2023-06-09 07:23:20",
+      "categories": ["blog-fashion"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 74,
+      "slug": "beauty-in-simplicity-exploring-line-art",
+      "title": "Beauty in Simplicity: Exploring Line Art",
+      "created": "2023-06-09 07:23:19",
+      "categories": ["blog-fashion"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 75,
+      "slug": "drawing-with-elegance-the-art-of-line-work",
+      "title": "Drawing with Elegance: The Art of Line Work",
+      "created": "2023-06-09 07:23:18",
+      "categories": ["blog-health"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 78,
+      "slug": "from-lines-to-life-mastering-the-art-of-line-drawing",
+      "title": "From Lines to Life: Mastering the Art of Line Drawing",
+      "created": "2023-06-09 07:23:17",
+      "categories": ["blog-health"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 79,
+      "slug": "the-power-of-lines-creating-impactful-line-art",
+      "title": "The Power of Lines: Creating Impactful Line Art",
+      "created": "2023-06-09 07:23:16",
+      "categories": ["blog-health"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 80,
+      "slug": "fluid-lines-infinite-possibilities-line-art-inspirations",
+      "title": "Fluid Lines, Infinite Possibilities: Line Art Inspirations",
+      "created": "2023-06-09 07:23:15",
+      "categories": ["blog-health"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 81,
+      "slug": "dancing-with-lines-dynamic-line-art-expressions",
+      "title": "Dancing with Lines: Dynamic Line Art Expressions",
+      "created": "2023-06-09 07:23:14",
+      "categories": ["blog-health"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 82,
+      "slug": "harmony-in-lines-balancing-elements-in-line-art",
+      "title": "Harmony in Lines: Balancing Elements in Line Art",
+      "created": "2023-06-09 07:23:13",
+      "categories": ["blog-health"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 83,
+      "slug": "the-beauty-of-symmetry-symmetrical-line-art-designs",
+      "title": "The Beauty of Symmetry: Symmetrical Line Art Designs",
+      "created": "2023-06-09 07:23:12",
+      "categories": ["blog-design"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 86,
+      "slug": "organic-geometry-exploring-geometric-line-art",
+      "title": "Organic Geometry: Exploring Geometric Line Art",
+      "created": "2023-06-09 07:23:11",
+      "categories": ["blog-design"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 87,
+      "slug": "line-art-portraits-capturing-emotions-with-lines",
+      "title": "Line Art Portraits: Capturing Emotions with Lines",
+      "created": "2023-06-09 07:23:10",
+      "categories": ["blog-design"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 88,
+      "slug": "nature-s-intricacy-botanical-line-art-explorations",
+      "title": "Nature’s Intricacy: Botanical Line Art Explorations",
+      "created": "2023-06-09 07:23:09",
+      "categories": ["blog-design"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 89,
+      "slug": "architectural-wonders-line-art-in-buildings-and-landscapes",
+      "title": "Architectural Wonders: Line Art in Buildings and Landscapes",
+      "created": "2023-06-09 07:23:08",
+      "categories": ["blog-design"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 90,
+      "slug": "outlining-creativity-line-art-for-illustrations-and-designs",
+      "title": "Outlining Creativity: Line Art for Illustrations and Designs",
+      "created": "2023-06-09 07:23:07",
+      "categories": ["blog-design"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 91,
+      "slug": "whimsical-wonders-imaginative-line-art-creations",
+      "title": "Whimsical Wonders: Imaginative Line Art Creations",
+      "created": "2023-06-09 07:23:06",
+      "categories": ["blog-design"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 92,
+      "slug": "harmony-in-lines-balancing-elements-in-line-art-2",
+      "title": "Harmony in Lines: Balancing Elements in Line Art",
+      "created": "2023-06-09 07:23:05",
+      "categories": ["blog-fashion"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 93,
+      "slug": "dancing-with-lines-dynamic-line-art-expressions-2",
+      "title": "Dancing with Lines: Dynamic Line Art Expressions",
+      "created": "2023-06-09 07:23:04",
+      "categories": ["blog-fashion"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 94,
+      "slug": "fluid-lines-infinite-possibilities-line-art-inspirations-2",
+      "title": "Fluid Lines, Infinite Possibilities: Line Art Inspirations",
+      "created": "2023-06-09 07:23:03",
+      "categories": ["blog-fashion"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 95,
+      "slug": "harmony-in-lines-balancing-elements-in-line-art-3",
+      "title": "Harmony in Lines: Balancing Elements in Line Art",
+      "created": "2023-06-09 07:23:02",
+      "categories": ["blog-normal"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 98,
+      "slug": "drawing-with-elegance-the-art-of-line-work-2",
+      "title": "Drawing with Elegance: The Art of Line Work",
+      "created": "2023-06-09 07:23:01",
+      "categories": ["blog-normal"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 99,
+      "slug": "architectural-wonders-line-art-in-buildings-and-landscapes-2",
+      "title": "Architectural Wonders: Line Art in Buildings and Landscapes",
+      "created": "2023-06-09 07:23:00",
+      "categories": ["blog-normal"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 100,
+      "slug": "organic-geometry-exploring-geometric-line-art-2",
+      "title": "Organic Geometry: Exploring Geometric Line Art",
+      "created": "2023-06-09 07:22:59",
+      "categories": ["blog-normal"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 102,
+      "slug": "fluid-lines-infinite-possibilities-line-art-inspirations-3",
+      "title": "Fluid Lines, Infinite Possibilities: Line Art Inspirations",
+      "created": "2023-06-09 07:22:58",
+      "categories": ["blog-normal"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 103,
+      "slug": "dancing-with-lines-dynamic-line-art-expressions-3",
+      "title": "Dancing with Lines: Dynamic Line Art Expressions",
+      "created": "2023-06-09 07:22:57",
+      "categories": ["blog-normal"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 104,
+      "slug": "harmony-in-lines-balancing-elements-in-line-art-4",
+      "title": "Harmony in Lines: Balancing Elements in Line Art",
+      "created": "2023-06-09 07:22:56",
+      "categories": ["blog-normal"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 105,
+      "slug": "whimsical-wonders-imaginative-line-art-creations-2",
+      "title": "Whimsical Wonders: Imaginative Line Art Creations",
+      "created": "2023-06-09 07:22:55",
+      "categories": ["resources"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 106,
+      "slug": "architectural-wonders-line-art-in-buildings-and-landscapes-3",
+      "title": "Architectural Wonders: Line Art in Buildings and Landscapes",
+      "created": "2023-06-09 07:22:54",
+      "categories": ["resources"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 107,
+      "slug": "nature-s-intricacy-botanical-line-art-explorations-2",
+      "title": "Nature’s Intricacy: Botanical Line Art Explorations",
+      "created": "2023-06-09 07:22:53",
+      "categories": ["resources"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 109,
+      "slug": "abstract-wonders-exploring-line-art-composition",
+      "title": "Abstract Wonders: Exploring Line Art Composition",
+      "created": "2023-06-09 07:22:52",
+      "categories": ["resources"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 111,
+      "slug": "mindful-eating-for-weight-management-2",
+      "title": "Mindful Eating for Weight Management",
+      "created": "2023-06-09 07:22:51",
+      "categories": ["lifestyle"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 112,
+      "slug": "essential-nutrients-for-optimal-health",
+      "title": "Essential Nutrients for Optimal Health",
+      "created": "2023-06-09 07:22:50",
+      "categories": ["lifestyle"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 113,
+      "slug": "mental-health-and-well-being-strategies",
+      "title": "Mental Health and Well-being Strategies",
+      "created": "2023-06-09 07:22:49",
+      "categories": ["lifestyle"],
+      "tags": ["lifestyle", "health", "technology", "design"]
+    },
+    {
+      "id": 70,
+      "slug": "vintage-inspired-martini-and-cocktail-glasses",
+      "title": "Vintage-inspired martini & cocktail glasses",
+      "created": "2023-06-07 03:31:54",
+      "categories": ["blog-fashion"],
+      "tags": ["lifestyle", "health", "video", "travel"]
+    }
+  ]
+}

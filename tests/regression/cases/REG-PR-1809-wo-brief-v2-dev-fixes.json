@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1809-wo-brief-v2-dev-fixes",
+  "kind": "fix",
+  "title": "WO brief v2 dev fixes: withheld rating copied from listing, joined services in the reading, business reading model answer, client profile facts",
+  "pr": 1809,
+  "area": "website-opportunities/brief",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the domain tests of packages/wo/website-opportunities for the withheld rating copied from the listing, the joined services of a reading, the business reading and the model answer of the business reading.",
+    "S2: Run the client profile facts test of packages/site/tracy-website-opportunities."
+  ],
+  "expect": [
+    "S1: every test passes: a disagreeing copy of the rating stays one withheld fact, joined services are read as separate services, a held reading gets its lost part back without a second model call.",
+    "S2: the client profile facts are built from the profile as written."
+  ],
+  "selectors": {
+    "test": "packages/wo/website-opportunities/test/domain-withheld-rating-copied.test.mjs"
+  },
+  "evidence": "PR 1809 fixes the problems found on dev in the brief v2; these test files fence each fix",
+  "fence": "pure domain functions and the profile fact builder; no database needed",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/wo/website-opportunities/test/domain-withheld-rating-copied.test.mjs",
+      "packages/wo/website-opportunities/test/domain-reading-joined-services.test.mjs",
+      "packages/wo/website-opportunities/test/domain-business-reading.test.mjs",
+      "packages/wo/website-opportunities/test/business-reading-model-answer.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-profile-facts.test.mjs"
+    ]
+  }
+}

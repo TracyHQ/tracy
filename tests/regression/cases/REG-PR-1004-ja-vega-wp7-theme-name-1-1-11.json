@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1004-ja-vega-wp7-theme-name-1-1-11",
+  "kind": "fix",
+  "title": "JA Vega wp7 1.1.11: the theme is listed in WordPress as WP Vega (was JA Vega); the site content keeps the name JA Vega",
+  "pr": 1004,
+  "area": "wordpress-theme/wp-ja-vega",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read the Theme Name and Version lines of the style.css of the shipped theme and of its overlay, and the version in the overlay theme.config.json.",
+    "S2: Read tasks/ja-vega-wp7/release/fix-measure.json and the wp-ja-vega-1.1.11.zip line of tasks/ja-vega-wp7/release/SHA256SUMS."
+  ],
+  "expect": [
+    "Both style.css files read `Theme Name: WP Vega`; the shipped one reads `Version: 1.1.11` and the overlay theme.config.json has version 1.1.11.",
+    "The measure was taken by site-sweep.mjs on the zip whose sha256 is the SHA256SUMS line, and 11/11 checks pass."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1004-ja-vega-wp7-theme-name-1-1-11.mjs",
+    "evidence": "tasks/ja-vega-wp7/release/fix-measure.json"
+  },
+  "evidence": "Release chain of 07/10/2026 on the clean restore of the packed 1.1.11 site: wp theme list shows wp-ja-vega titled WP Vega at 1.1.11, active, site title JA Vega; full sweep 11/11, 0 open, 0 not measured",
+  "fence": "The shipped theme's declared name and the recorded sweep on the released zip",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1004-ja-vega-wp7-theme-name-1-1-11.mjs"]
+  }
+}

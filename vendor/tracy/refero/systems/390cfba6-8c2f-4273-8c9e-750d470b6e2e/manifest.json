@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+  "status": "complete",
+  "name": "VITURE",
+  "url": "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+  "sourceWebsite": "https://www.viture.com",
+  "extractedAt": "2026-06-03T20:33:14.195Z",
+  "capturedAt": "2026-10-08T05:10:24.366327+00:00",
+  "theme": "mixed",
+  "industry": "ecommerce",
+  "description": "neon product stage behind midnight glass — a blacked-out showroom where one orange beam cuts through the dark to illuminate a pair of glasses on a pedestal.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/221e1d4e-ef0c-471e-9745-07a6d2660df0.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "acc9780f29a241800368f9d110c5bfda86c6214419827af47c5d5b25074bf3be",
+      "bytes": 24066
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "88dd7be69535d2e2212385b157c8c8b5100b562980647a485a0cef9fd65ac68d",
+      "bytes": 93903
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f43fb0cc31b98ac19272f82f1efc778e2821c37c96972388c542a0b9b30948c5",
+      "bytes": 20388
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "1e7ff791d53f9711ec867fb70308e37aa879cfcc2fe239d8098c55bb6b87a179",
+      "bytes": 18331
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ffa91535ff4b3d6fc6084ed339c6e9f70d9e951bd8383665cbc147b9f317bcca",
+      "bytes": 15227
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f4bf12b7d2e7327e2f99e49c109596959ea1006e2e7879da7491578d2a59bdaf",
+      "bytes": 3706
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "31d61e2ccf83675ca1d00d984884c66deeec3e682a0020db25ee5ffb5cf3cef7",
+      "bytes": 580
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "85f159a464eff2728d037d31c40944bbb414c31698bb9822d82c6c88cec1ca9d",
+      "bytes": 878
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "acb0d91c32960d5a485e98b697a1f689af5c990f012aa03672a7effc7e79f73c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1c57d4eb0a6f7d0e31d71279a9ea44a2884165f6e1b4836ee7b88b3fe6f2348c",
+      "bytes": 47432
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c33c1e2ef00a892ae061d868960494bf8580cd6f2d6fa316a1d4595a8125ee2a",
+      "bytes": 24563
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "271be85995994244281379a1b1cd73b97b52a3042aaa90356761dbbd691e1b64",
+      "bytes": 60548
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "92c424baf3fba19757f2e6d8f2f28ef8ef8a1616e2b3288b351d7003f1ad7d04",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "73060ae266044f493139e6276578d1e04343e5c0e154e8f566c9ceef1e8bb5d1",
+      "bytes": 2060
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "14c96ff26c75d252dbfbf6c427b9f98432143a4679de51f75e5600276bc74b0b",
+      "bytes": 3045
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+    "3b742f76-25ad-446c-a942-09b09b93f6a3",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "5183054c-4c6e-4ecf-bd90-f7d794d5eb17",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "9e5bd4b1-0ba8-4592-a5ec-a935bd4ea9c6",
+    "bab34295-03fc-4993-ae42-b440fe78647b",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e"
+  ]
+}

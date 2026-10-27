@@ -1,0 +1,39 @@
+{
+  "header": "在 {site} 上构建",
+  "question": "第 {n}/{total} 步“{task}”失败。要重试这一步吗？",
+  "retry": "重试这一步",
+  "retryWhy": "从停下的地方再跑一次。",
+  "leave": "先放着",
+  "leaveWhy": "保持站点原样。重试按钮仍在 Build 标签页。",
+  "signIn": "重新登录后再试",
+  "signInWhy": "这一步被拒绝，是因为它背后没有已登录的人。请重新加载页面，然后选择此项。",
+  "stages": {
+    "check": "检查站点",
+    "theme": "安装主题",
+    "style": "应用外观",
+    "copy": "撰写文案",
+    "seed": "排布页面",
+    "shot": "拍一张图",
+    "skipped": "{task}（已跳过）",
+    "plugin": "安装翻译插件",
+    "copyLang": "撰写{lang}文案",
+    "seedPages": "排布 {n} 个页面",
+    "styleWaiting": "应用外观（这一步由 Tracy 来做）"
+  },
+  "progress": {
+    "covers": "{done}/{total} 张图",
+    "posts": "正在写博客",
+    "sections": "正在写页面"
+  },
+  "langNameLower": false,
+  "provision": {
+    "creating": "创建网站",
+    "fetching": "获取网站文件",
+    "baseline": "记录文件的初始状态",
+    "database": "启动数据库",
+    "importing": "导入数据库",
+    "configuring": "配置网站",
+    "failed": "网站设置已停止：{detail}。请在“构建”标签页中点击“重试”。",
+    "failedBare": "网站设置已停止。请在“构建”标签页中点击“重试”。"
+  }
+}

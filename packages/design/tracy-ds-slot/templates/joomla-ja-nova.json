@@ -1,0 +1,367 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-nova",
+  "minVersion": {
+    "quickstart/ja-nova/j6": "1.0.5"
+  },
+  "maxVersion": {
+    "quickstart/ja-nova/j6": "1.0.9"
+  },
+  "maxVersionNote": "1.0.9 21/10/2026 (TEXT-1 batch 2): built from 1.0.8 (release-batch.mjs --overlay); only css/darkmode.css, css/template.css differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.8 16/10/2026 (batch 2): the template reads the design-system role variables (--ds-c-*, corners, faces) with its own values as fallback; Bootstrap components read the roles; unworn the page is the release's own (VERIFICATION.json). 1.0.7 16/10/2026 (#1375): re-cut of 1.0.6 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "release": "quickstart/ja-nova/j6@1.0.4",
+  "modes": true,
+  "modesNote": "from 1.0.8 (role variables, batch 2): the template has a light/dark switch (css/darkmode.css under html[data-theme=dark], the header theme toggle, the vega-standard pre-paint in index.php) whose dark side reads the roles too (--dm-* read --ds-c-*), so the Add site popup offers Light | Dark (TDSR MODE-3), as JA Vega 1.0.7 and JA Vital 1.0.6. Both sides keep the contract's bands.",
+  "modesAuto": false,
+  "modesAutoNote": "the pre-paint script in index.php always sets data-theme (light or dark, from ?theme=, the cookie, the default, or the OS when the default is auto) before the page paints, so no unmarked 'auto' state is left to the OS: the OS-dark copy is not written (as JA Vega and JA Vital).",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.hero-title",
+    "heading": "h2",
+    "body": "p",
+    "button-primary": "a.btn.btn-primary",
+    "container": "div.t4-section-inner.container",
+    "section": "#Mod112"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 40px",
+    "displayFace": "Golos Text 700, tracking 0em",
+    "heading": "first section heading: 32px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(94, 72, 219)",
+    "container": "first content container, max-width 1376px",
+    "section": "first padded full-width section, padding-top 128px",
+    "displayPhone": "the same heading at 390 on the published release: 28px"
+  },
+  "keepScopes": [".bg-purple", ".bg-green", ".t4-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg-2": "#212529",
+    "--accent": "#5e48db",
+    "--accent-hover": "#3014cc",
+    "--surface": "#fafafa",
+    "--surface-warm": "#212529",
+    "--success": "#198754",
+    "--warn": "#fd7e14",
+    "--danger": "#dc3545",
+    "--border": "#f7f7f7",
+    "--muted": "#666666",
+    "--font-display": "\"Golos Text\", sans-serif",
+    "--font-body": "\"Golos Text\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg-2": "#212529",
+      "accent": "#5e48db",
+      "accent-hover": "#3014cc",
+      "surface": "#fafafa",
+      "surface-warm": "#212529",
+      "success": "#198754",
+      "warn": "#fd7e14",
+      "danger": "#dc3545",
+      "border": "#f7f7f7",
+      "muted": "#666666"
+    },
+    {
+      "bg": "#ffffff",
+      "fg-2": "#333333",
+      "accent": "#5e48db",
+      "accent-on": "#ffffff",
+      "surface-warm": "#5e48db"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#f7f7f7",
+      "surface-warm": "#212529",
+      "border-soft": "#dee2e6"
+    },
+    {
+      "surface": "#efedfc",
+      "border-soft": "#e9ecef"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (56 line colours, 51 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.hero-title",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["#Mod112"],
+    "bodyFace": ["body"],
+    "cardLike": [".teams-item-inner", ".card", ".features-inner", ".features-item", ".pricing-wrap"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t4-section p, main p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 15 tried (byte 4740); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#f7f7f7",
+      "uses": 53,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 5
+    },
+    {
+      "hex": "#212529",
+      "uses": 24,
+      "kind": "custom",
+      "role": "surface-warm",
+      "near": "#212529",
+      "distance": 0
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 8,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#efedfc",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#fafafa",
+      "distance": 17
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 4,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaultsYield": true,
+  "followRules": {
+    ".bg-green-light": {
+      "background-color": "surface-warm"
+    },
+    ".text-orange": {
+      "color": "warn-text"
+    }
+  },
+  "followNote": "re-measured 11/10/2026 with the per-element probe: the light green band (.bg-green-light, #E6F6F0, a colour outside the template's palette so its stylesheet never read the slot) kept its ground while its title took the system's text, #b7b39f on #e6f6f0 (1.89:1) under Moxie; it now takes the system's surface like the other light bands; 15/10/2026 (v9 measure): the stat numbers of the features-intro module (style-3, span.h2.text-<stt-color>) colour one of four by .text-orange, which the released stylesheet reads as the status colour (var(--ds-c-warn, #fd7e14)) while its sibling hues (.text-cyan, .text-red, .text-yellow, .text-green) read the meta text. The worn warn is the template's own #fd7e14 under all 1334 systems, under 3:1 on the surface under 1036 of them (2.33:1 on Toggl Track's #fcf1f8 card, below the template's own 2.40:1 on #f7f7f7, desktop and phone). .text-orange now takes the meta text like its siblings: 4.50:1 or more on the surface and the page under every system; 15/10/2026: .text-orange (the template's warn #fd7e14 set as words, 2.33:1 on Toggl Track's card) takes the warn colour's readable shade (warn-text), which keeps its orange",
+  "sideRules": {
+    "light": {
+      ".ja-social-share-inner .ja-button-list a[class^=\"button-\"]": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".footer2 a:is(:hover, :focus), .pagination .page-link:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".tabs-category #nav-tab, .tabs-category #nav-tab .nav-link": {
+        "border-radius": "var(--ds-btn-radius)"
+      }
+    },
+    "dark": {
+      ".ja-social-share-inner .ja-button-list a[class^=\"button-\"]": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".footer2 a:is(:hover, :focus), .pagination .page-link:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      },
+      ".tabs-category #nav-tab, .tabs-category #nav-tab .nav-link": {
+        "border-radius": "var(--ds-btn-radius)"
+      },
+      ".navbar-brand .d-light": {
+        "display": "none"
+      },
+      ".navbar-brand .d-dark": {
+        "display": "inline"
+      },
+      ".mod-finder .mod-finder__search button[type=submit] .icon-search::after": {
+        "filter": "invert(1)"
+      },
+      ".acm-clients img": {
+        "filter": "invert(1)"
+      },
+      ".bg-color .btn-light": {
+        "background-color": "transparent !important",
+        "border-color": "var(--dm-heading) !important",
+        "color": "var(--dm-heading) !important"
+      },
+      ".t4-mod-wrap.top-large.bottom-large.bg-color.bg-yellow.bg-yellow": {
+        "background-color": "var(--ds-c-bg) !important"
+      }
+    }
+  },
+  "sideRulesNote": "17/10/2026 (batch 2): on a dark worn page the header shows the template's own dark-mode logo (span.d-dark, white wordmark, its purple mark kept) instead of the light one (dark grey wordmark on black); the search module's magnifier (a dark PNG, images/icons/ic-search.png) and the client logos (grey pictures made for a white page) invert to light, as on the template's own dark side. Two modes (17/10/2026): on the dark side the light buttons of the coloured bands (Contact us, View all our news) are drawn as an outline in the dark side's heading colour (--dm-heading, read off the roles by the template's darkmode.css) instead of the band's accent fill, the lightest fill of the dark page (BTN-1 button-dark); a filled dark button stood 1.09:1 off the band. On the dark side the team band shows the page itself: worn as the system's ink (its surface on a dark page) its team cards and arrow buttons, which the template's dark side paints with that same surface, vanished into it.",
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on quickstart/ja-nova/j6 1.0.5 as published, T4's generated CSS cleared and rebuilt as on a new site (tasks/evidence/ds-remeasure-4-2026-10-11/ja-nova-j6): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, no text under 4.5:1 worse than the template's own (lowest 4.72), 93% or more of the page follows, every contrast kind sampled in every view; fixed on the way: the purple band's paragraphs had turned the root's grey (rgba(19,21,21,.7) on #5e48db) because the given-back page text beat the band's own white (keepDefaultsYield), and the light green band took the system's text on its own #E6F6F0 ground (followRules: surface); checked by eye on the four systems' screenshots, desktop and phone. Earlier: measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-nova-j6): default unchanged, no text made less readable than the template's own under the systems tried, 93% or more of the page follows",
+  "templateVars": {
+    "--color-secondary": "var(--ds-c-muted)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepDefaults": {
+    "--body-bg-color": "#ffffff",
+    "--body-text-color": "rgba(19, 21, 21, 0.7)",
+    "--body-link-color": "#5e48db",
+    "--body-link-hover-color": "#3014cc",
+    "--color-primary": "#5e48db",
+    "--color-secondary": "#6c757d",
+    "--color-success": "#198754",
+    "--color-info": "#0dcaf0",
+    "--color-warning": "#fd7e14",
+    "--color-danger": "#dc3545",
+    "--color-light": "#fafafa",
+    "--color-dark": "#212529",
+    "--mainnav-text-color": "#333333",
+    "--mainnav-link-color": "#333333",
+    "--mainnav-link-hover-color": "#5e48db",
+    "--mainnav-link-active-color": "#371bd3",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "rgba(255, 255, 255, 0.7)",
+    "--footer-link-color": "rgba(255, 255, 255, 0.755)",
+    "--footer-link-hover-color": "#ffffff"
+  },
+  "keepColors": {
+    ".bottom-medium": "rgba(255, 255, 255, 0.75)",
+    ".bg-green": "rgba(255, 255, 255, 0.75)",
+    ".top-medium": "rgba(255, 255, 255, 0.75)",
+    ".t4-footer": "rgba(255, 255, 255, 0.7)"
+  },
+  "bands": {
+    ".bg-purple": {
+      "ground": "#5e48db",
+      "texts": ["#d7d1f6", "#ffffff"],
+      "paint": {
+        ".info-title h2 span": {
+          "color": "accent"
+        },
+        ".cta-desc span": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    },
+    ".bg-green": {
+      "ground": "#04ad68",
+      "texts": ["#ffffff"],
+      "important": true,
+      "paint": {
+        ":is(.main-title, .main-title *, .section-title, .section-title *)": {
+          "color": "text"
+        }
+      },
+      "repaint": true,
+      "kind": "ink"
+    },
+    ".t4-footer": {
+      "ground": "#212529",
+      "texts": ["#c9cacb", "#bdbebf"],
+      "important": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text"
+        }
+      },
+      "repaint": true
+    },
+    ".t4-mod-wrap.top-large.bottom-large.bg-color.bg-yellow": {
+      "ground": "#f8ab11",
+      "texts": ["#ffffff", "#000000"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".teams-desc", ".teams-desc span"]
+    },
+    ".bottom-medium": {
+      "ground": "#5e48db",
+      "texts": ["#d7d1f6", "#ffffff"],
+      "paint": {
+        ".info-title h2 span": {
+          "color": "accent"
+        },
+        "&": {
+          "color": "text"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text"
+        },
+        ".text-cyan": {
+          "color": "accent"
+        }
+      },
+      "important": true,
+      "kind": "brand",
+      "repaint": true
+    },
+    ".top-medium": {
+      "ground": "#5e48db",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".cta-desc span": {
+          "color": "accent"
+        },
+        "&": {
+          "color": "text"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text"
+        },
+        ".text-cyan": {
+          "color": "accent"
+        }
+      },
+      "important": true,
+      "kind": "brand",
+      "repaint": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the two purple bands were keyed by .bottom-medium and .top-medium, T4’s padding classes, which any module carries: on About Us 2 the light \"The just investigation\" module (.top-blank.bottom-medium.bg-normal) was kept and painted the band’s accent ground under its dark words (1.26:1 under Stripe), and the light section kept its white-at-75% words on a page that stayed light (visual review 14/10/2026). Both bands are keyed by what paints them, .bg-purple, with both their accent paints. The team band (the .bg-yellow fill) named only the span inside its heading: the heading itself (.teams-desc, white on the template’s yellow) stayed white on a light accent (Mailchimp, Linear); it is a word of the fill too Batch 2 (17/10/2026, two modes): the green news band (.bg-green) is read as an ink band: worn as the accent, its photo cards' words (white on the card pictures) were judged on the light accent (ACC-1); on the system's ink (its surface on a dark page) they and the repainted title read. The team band (.bg-yellow fill) is read as an ink band too: on the system's accent its white heading had to take the accent's own pair and split from the other band headings (HIER-2), while the headings' on-ink read 3.14:1 on the accent (ACC-1); on the ink all three headings read alike.",
+  "contractNotes1317": "13/10/2026 (#1317): the two purple call bands kept their white words (80 left paints) while their ground followed; they repaint them with the system text and their cyan marks with the accent. The green news band keeps its words (white on its own dark cards) and its pink dates take the accent. The footer social icons keep their brand colours on purpose.",
+  "pictureRules": {
+    ".acm-pricing.style-1 .pricing-plan-list ul li:before": {
+      "background-image": "none",
+      "background-color": "var(--ds-c-accent-text)",
+      "mask-image": "url(\"data:image/svg+xml,%3Csvg%20width%3D'21'%20height%3D'20'%20viewBox%3D'0%200%2021%2020'%20fill%3D'none'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cpath%20d%3D'M4.92141%2015.7452C4.20235%2015.0262%204.67928%2013.5165%204.31328%2012.632C3.93387%2011.715%202.54166%2010.9769%202.54166%209.99997C2.54166%209.02301%203.93388%208.285%204.31328%207.36803C4.67928%206.48346%204.20235%204.97382%204.92141%204.25476C5.64048%203.53569%207.15012%204.01262%208.03469%203.64662C8.95168%203.26722%209.68971%201.875%2010.6667%201.875C11.6436%201.875%2012.3817%203.26722%2013.2986%203.64663C14.1832%204.01263%2015.6928%203.5357%2016.4119%204.25476C17.131%204.97382%2016.654%206.48346%2017.02%207.36804C17.3994%208.28502%2018.7917%209.02305%2018.7917%2010C18.7917%2010.977%2017.3994%2011.715%2017.02%2012.632C16.654%2013.5165%2017.131%2015.0262%2016.4119%2015.7452C15.6928%2016.4643%2014.1832%2015.9874%2013.2986%2016.3534C12.3816%2016.7328%2011.6436%2018.125%2010.6666%2018.125C9.68966%2018.125%208.95166%2016.7328%208.03469%2016.3534C7.15011%2015.9874%205.64048%2016.4643%204.92141%2015.7452Z'%20stroke%3D'%235E48DB'%20stroke-width%3D'1.5'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%2F%3E%3Cpath%20d%3D'M14.1042%208.125L9.5208%2012.5L7.22916%2010.3125'%20stroke%3D'%235E48DB'%20stroke-width%3D'1.5'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%2F%3E%3C%2Fsvg%3E\")",
+      "mask-repeat": "no-repeat",
+      "mask-position": "0 0"
+    }
+  },
+  "pictureRulesNote": "20/10/2026 (PIC-1): the home pricing plans tick each feature with templates/ja_nova/images/icons/ic-list.svg (a badge check stroked in the brand purple #5E48DB) as the background of .pricing-plan-list li:before, a picture a worn system cannot recolour. Under a system an inline percent-encoded copy of the same file is the mask of that box, painted with the accent text role. No system worn: nothing of this is written (DEF-1).",
+  "hoverNote": "21/10/2026 (FOREIGN-1, TEXT-1 batch 2): the share buttons of an article (plugin jasocialshare, a.button-twitter/-reddit/...) paint fixed brand fills (#00acee, #ff4400): under a system they take the accent and its words. (HOVER-2, TEXT-1 batch 2): the footer licence links and the pagination hover in their rest role under a system: each is underlined on hover and focus. BTN-1: the project filter tabs (button.nav-link in .tabs-category) took the template's 1rem corner; they wear the system's button radius, and so does their row (#nav-tab, invisible: no fill, no border): the probe reads the tab buttons as one segmented control (a frame that hugs the cells, role tablist) and judges the frame's corner."
+}

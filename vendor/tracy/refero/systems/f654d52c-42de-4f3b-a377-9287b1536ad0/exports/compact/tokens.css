@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-onyx: #191919;
+  --color-pure-black: #000000;
+  --color-paper: #ffffff;
+  --color-concrete: #808080;
+
+  /* Typography — Font Families */
+  --font-twk-everett: 'TWK Everett', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-twk-everett-mono: 'TWK Everett Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

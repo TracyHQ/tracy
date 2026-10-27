@@ -1,0 +1,708 @@
+/**
+ * Runtime utilities for EmDash
+ *
+ * This file contains functions that are used at runtime (in middleware, routes, etc.)
+ * and must work in all environments including Cloudflare Workers.
+ *
+ * DO NOT import Node.js-only modules here (fs, path, module, etc.)
+ */
+
+import type { ManifestHookEntry, ManifestRouteEntry } from "@emdash-cms/plugin-types";
+
+import type { AuthDescriptor, AuthProviderDescriptor } from "../../auth/types.js";
+import type { RuntimeMigrationConfig } from "../../database/migrations/policy.js";
+import type { DatabaseDescriptor } from "../../db/adapters.js";
+import type { MediaProviderDescriptor } from "../../media/types.js";
+import type { ObjectCacheDescriptor } from "../../object-cache/types.js";
+import type {
+	FieldWidgetConfig,
+	PluginEditorAction,
+	PluginEditorPanel,
+	PluginMcpManifestConfig,
+	PortableTextBlockConfig,
+	ResolvedPlugin,
+	SettingField,
+} from "../../plugins/types.js";
+import type { RegistryConfigOption } from "../../registry/types.js";
+import type { StorageDescriptor } from "../storage/types.js";
+
+export type { RegistryConfig, RegistryConfigOption } from "../../registry/types.js";
+
+export type { ResolvedPlugin };
+export type { MediaProviderDescriptor };
+
+/**
+ * Admin page definition (copied from plugins/types to avoid circular deps)
+ */
+export interface PluginAdminPage {
+	path: string;
+	label: string;
+	icon?: string;
+}
+
+/**
+ * Dashboard widget definition (copied from plugins/types to avoid circular deps)
+ */
+export interface PluginDashboardWidget {
+	id: string;
+	size?: "full" | "half" | "third";
+	title?: string;
+}
+
+/**
+ * Plugin descriptor - returned by plugin factory functions
+ *
+ * Contains all static metadata needed for manifest and admin UI,
+ * plus the entrypoint for runtime instantiation.
+ *
+ * @example
+ * ```ts
+ * export function myPlugin(options?: MyPluginOptions): PluginDescriptor {
+ *   return {
+ *     id: "my-plugin",
+ *     version: "1.0.0",
+ *     entrypoint: "@my-org/emdash-plugin-foo",
+ *     options: options ?? {},
+ *     adminEntry: "@my-org/emdash-plugin-foo/admin",
+ *     adminPages: [{ path: "/settings", label: "Settings" }],
+ *   };
+ * }
+ * ```
+ */
+/**
+ * Storage collection declaration for sandboxed plugins
+ */
+export interface StorageCollectionDeclaration {
+	indexes?: string[];
+	uniqueIndexes?: string[];
+}
+
+export interface PluginDescriptor<TOptions extends object = object> {
+	/** Unique plugin identifier */
+	id: string;
+	/** Plugin version (semver) */
+	version: string;
+	/** Module specifier to import (e.g., "@emdash-cms/plugin-api-test") */
+	entrypoint: string;
+	/**
+	 * Options to pass to createPlugin(). Native format only.
+	 * Standard-format plugins configure themselves via KV settings
+	 * and Block Kit admin pages -- not constructor options.
+	 */
+	options?: TOptions;
+	/**
+	 * Plugin format. Determines how the entrypoint is loaded:
+	 * - `"standard"` -- exports `definePlugin({ hooks, routes })` as default.
+	 *   Wrapped with `adaptSandboxEntry` for in-process execution. Can run in both
+	 *   `plugins: []` (in-process) and `sandboxed: []` (isolate).
+	 * - `"native"` -- exports `createPlugin(options)` returning a `ResolvedPlugin`.
+	 *   Can only run in `plugins: []`. Cannot be sandboxed or published to marketplace.
+	 *
+	 * Defaults to `"native"` when unset.
+	 *
+	 */
+	format?: "standard" | "native";
+	/** Admin UI module specifier (e.g., "@emdash-cms/plugin-audit-log/admin") */
+	adminEntry?: string;
+	/** Module specifier for site-side Astro rendering components (must export `blockComponents`) */
+	componentsEntry?: string;
+	/** Admin pages for navigation */
+	adminPages?: PluginAdminPage[];
+	/** Dashboard widgets */
+	adminWidgets?: PluginDashboardWidget[];
+	/** Saved-entry Block Kit panels. */
+	editorPanels?: PluginEditorPanel[];
+	/** Saved-entry host-rendered actions. */
+	editorActions?: PluginEditorAction[];
+	/** Settings schema for the auto-generated admin settings form */
+	settingsSchema?: Record<string, SettingField>;
+	/**
+	 * Portable Text block types this plugin contributes to the editor.
+	 * Declarative (Block Kit) — surfaced in the admin slash menu and consumed
+	 * from the manifest, so standard/sandboxed plugins can contribute blocks
+	 * without a native render component.
+	 */
+	portableTextBlocks?: PortableTextBlockConfig[];
+	/** Field widget types this plugin contributes for schema-field editing UIs. */
+	fieldWidgets?: FieldWidgetConfig[];
+
+	// === Sandbox-specific fields (for sandboxed plugins) ===
+
+	/**
+	 * Capabilities the plugin requests.
+	 * For standard-format plugins, capabilities are enforced in both trusted and
+	 * sandboxed modes via the PluginContextFactory.
+	 */
+	capabilities?: string[];
+	/**
+	 * Allowed hosts for network:fetch capability
+	 * Supports wildcards like "*.example.com"
+	 */
+	allowedHosts?: string[];
+	/**
+	 * Storage collections the plugin declares
+	 * Sandboxed plugins can only access declared collections.
+	 */
+	storage?: Record<string, StorageCollectionDeclaration>;
+	/** Serialized MCP declarations emitted by the plugin build. */
+	mcp?: PluginMcpManifestConfig;
+	/**
+	 * Route declarations for sandboxed config-declared plugins. Mirrors
+	 * definePlugin({ routes }) and drives route auth decisions; omitted routes
+	 * default to non-public.
+	 */
+	routes?: Array<ManifestRouteEntry | string>;
+	/**
+	 * Hook declarations for sandboxed config-declared plugins. Mirrors
+	 * definePlugin({ hooks }).
+	 */
+	hooks?: Array<ManifestHookEntry | string>;
+}
+
+/**
+ * Sandboxed plugin descriptor - same format as PluginDescriptor
+ *
+ * These run in isolated V8 isolates via Worker Loader on Cloudflare.
+ * The `entrypoint` is resolved to a file and bundled at build time.
+ */
+export type SandboxedPluginDescriptor<TOptions extends object = object> =
+	PluginDescriptor<TOptions>;
+
+export interface EmDashConfig {
+	/**
+	 * Database configuration
+	 *
+	 * Use one of the adapter functions:
+	 * - `sqlite({ url: "file:./data.db" })` - Local SQLite
+	 * - `libsql({ url: "...", authToken: "..." })` - Turso/libSQL
+	 * - `d1({ binding: "DB" })` - Cloudflare D1
+	 *
+	 * @example
+	 * ```ts
+	 * import { sqlite } from "emdash/db";
+	 *
+	 * emdash({
+	 *   database: sqlite({ url: "file:./data.db" }),
+	 * })
+	 * ```
+	 */
+	database?: DatabaseDescriptor;
+	/** Core database migration behavior at runtime. Defaults to `auto`. */
+	migrations?: RuntimeMigrationConfig;
+	/**
+	 * Storage configuration (for media)
+	 */
+	storage?: StorageDescriptor;
+
+	/**
+	 * Optional distributed object cache for query results.
+	 *
+	 * Off by default. When configured, content and chrome (settings, menus,
+	 * taxonomies) reads are cached in a fast key/value store and served without
+	 * touching the database on repeat requests across isolates. This offloads
+	 * read pressure from D1/SQLite, which is especially valuable on Cloudflare
+	 * where D1 has far lower request capacity than KV.
+	 *
+	 * Use a backend adapter:
+	 * - `memoryCache()` from `emdash/astro` — in-isolate (Node / local dev)
+	 * - `kvCache({ binding: "CACHE" })` from `@emdash-cms/cloudflare` — KV
+	 *
+	 * Preview and visual-edit requests bypass the cache, so editors previewing
+	 * see live content. All other reads — including authenticated browsing outside
+	 * edit mode — are served from the cache, which only ever stores published
+	 * content. When Astro route caching is enabled, a rendered cache fill bypasses
+	 * the object cache so a purged page cannot be rebuilt from an older snapshot.
+	 * Other requests may see stale content until isolates pick up the bumped epoch:
+	 * immediate with the memory backend, and on KV bounded by KV's edge-cache
+	 * propagation (eventual consistency, up to ~60s) plus the isolate-local
+	 * `revalidate` window (default 1s).
+	 *
+	 * Scheduled content becomes visible at query time (no write event fires when
+	 * its publish time passes), so a cached list/entry won't surface a newly-due
+	 * scheduled item until the next write to that collection or until the
+	 * entry's TTL lapses (`defaultTtl`, default 1h). Sites that rely on precise
+	 * scheduled publishing should lower `defaultTtl` accordingly.
+	 *
+	 * @example
+	 * ```ts
+	 * import { kvCache } from "@emdash-cms/cloudflare";
+	 *
+	 * emdash({
+	 *   database: d1({ binding: "DB" }),
+	 *   objectCache: kvCache({ binding: "CACHE" }),
+	 * })
+	 * ```
+	 */
+	objectCache?: ObjectCacheDescriptor;
+	/**
+	 * Image optimization.
+	 *
+	 * By default EmDash wraps Astro's image endpoint so media served from
+	 * storage is optimized through the normal `<Image>` / `getImage` pipeline,
+	 * loading source bytes directly from the storage adapter (works behind
+	 * Cloudflare Access). Set to `false` to leave Astro's image endpoint
+	 * untouched -- media then renders as a plain `<img>` unless your image
+	 * service can fetch it over HTTP.
+	 */
+	images?: boolean;
+	/**
+	 * Trusted plugins to load (run in main isolate)
+	 *
+	 * @example
+	 * ```ts
+	 * import auditLog from "@emdash-cms/plugin-audit-log";
+	 * import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
+	 *
+	 * emdash({
+	 *   plugins: [auditLog, webhookNotifier],
+	 * })
+	 * ```
+	 */
+	plugins?: PluginDescriptor[];
+	/**
+	 * Sandboxed plugins to load (run in isolated V8 isolates)
+	 *
+	 * Only works on Cloudflare with Worker Loader enabled.
+	 * Uses the same format as `plugins` - the difference is where they run.
+	 *
+	 * @example
+	 * ```ts
+	 * import { sandbox } from "@emdash-cms/cloudflare";
+	 * import { untrustedPlugin } from "some-third-party-plugin";
+	 *
+	 * emdash({
+	 *   plugins: [trustedPlugin()],     // runs in host
+	 *   sandboxed: [untrustedPlugin()], // runs in isolate
+	 *   sandboxRunner: sandbox(),
+	 * })
+	 * ```
+	 */
+	sandboxed?: SandboxedPluginDescriptor[];
+	/**
+	 * Module that exports the sandbox runner factory.
+	 * Required if using sandboxed plugins.
+	 *
+	 * @example
+	 * ```ts
+	 * import { sandbox } from "@emdash-cms/cloudflare";
+	 *
+	 * emdash({
+	 *   sandboxRunner: sandbox(),
+	 * })
+	 * ```
+	 */
+	sandboxRunner?: string;
+
+	/**
+	 * Explicitly disable plugin sandboxing, even if a sandbox runner is configured.
+	 * Use this as a debugging escape hatch to determine whether a bug is in your
+	 * plugin code or in the sandbox runtime.
+	 *
+	 * When set to `false`, all plugins run in-process without isolation.
+	 *
+	 * @default true (sandboxing enabled if sandboxRunner is configured)
+	 */
+	sandbox?: boolean;
+
+	/**
+	 * Authentication configuration
+	 *
+	 * Use an auth adapter function from a platform package:
+	 * - `access({ teamDomain: "..." })` from `@emdash-cms/cloudflare`
+	 *
+	 * When an external auth provider is configured, passkey auth is disabled.
+	 *
+	 * @example
+	 * ```ts
+	 * import { access } from "@emdash-cms/cloudflare";
+	 *
+	 * emdash({
+	 *   auth: access({
+	 *     teamDomain: "myteam.cloudflareaccess.com",
+	 *     audience: "abc123...",
+	 *     roleMapping: {
+	 *       "Admins": 50,
+	 *       "Editors": 30,
+	 *     },
+	 *   }),
+	 * })
+	 * ```
+	 */
+	auth?: AuthDescriptor;
+
+	/**
+	 * Pluggable auth providers (login methods on the login page).
+	 *
+	 * Auth providers appear as options alongside passkey on the login page
+	 * and setup wizard. Any provider can be used to create the initial
+	 * admin account. Passkey is built-in; providers listed here are additive.
+	 *
+	 * @example
+	 * ```ts
+	 * import { atproto } from "@emdash-cms/auth-atproto";
+	 *
+	 * emdash({
+	 *   authProviders: [atproto()],
+	 * })
+	 * ```
+	 */
+	authProviders?: AuthProviderDescriptor[];
+
+	/**
+	 * MCP (Model Context Protocol) server endpoint.
+	 *
+	 * Exposes an MCP Streamable HTTP server at `/_emdash/api/mcp`
+	 * that allows AI agents and tools to interact with the CMS using
+	 * the standardized MCP protocol.
+	 *
+	 * Enabled by default. The endpoint requires bearer token auth, so
+	 * it has no effect unless the user creates an API token and
+	 * configures a client. Set to `false` to disable.
+	 *
+	 * @default true
+	 */
+	mcp?: boolean;
+
+	/**
+	 * Plugin marketplace URL
+	 *
+	 * Existing marketplace-installed plugins use this URL for updates.
+	 * Marketplace browsing and new installs are no longer shown in the admin.
+	 *
+	 * Must be an HTTPS URL in production, or localhost/127.0.0.1 in dev.
+	 * Installing or updating plugins requires an available `sandboxRunner`.
+	 * Existing marketplace-installed plugins remain updateable and uninstallable.
+	 * New plugin discovery and installs use the registry.
+	 *
+	 * @example
+	 * ```ts
+	 * import { sandbox } from "@emdash-cms/cloudflare";
+	 *
+	 * emdash({
+	 *   marketplace: "https://marketplace.emdashcms.com",
+	 *   sandboxRunner: sandbox(),
+	 * })
+	 * ```
+	 *
+	 * @deprecated Keep this option only while the site has plugins installed from
+	 * the legacy marketplace. Remove it after those plugins are replaced or
+	 * uninstalled.
+	 */
+	marketplace?: string;
+
+	/**
+	 * Plugin registry discovery and installation.
+	 *
+	 * An enabled sandbox runner uses the hosted registry by default. Pass a
+	 * registry URL or configuration object to customize it, or `false` to
+	 * disable registry discovery while retaining the sandbox runner.
+	 *
+	 * @default "https://registry.emdashcms.com" when sandboxing is enabled
+	 */
+	registry?: RegistryConfigOption;
+
+	/**
+	 * Core update notice in the admin dashboard.
+	 *
+	 * When enabled (the default), EmDash checks the public npm registry
+	 * (`registry.npmjs.org`) at most once per day for published `emdash`
+	 * releases and shows a dismissible banner in the admin dashboard when
+	 * a newer version is available. The check is deferred after the
+	 * response and carries no site data — it's a plain GET to the public
+	 * registry. Sites without outbound internet simply never see the banner.
+	 *
+	 * The banner names the newest stable release that has been public for
+	 * `minimumReleaseAge`: a duration string (`"48h"`, `"7d"`) or a number
+	 * of seconds, `"24h"` by default. Set it to match a package manager's
+	 * release-age policy, such as pnpm's `minimumReleaseAge`.
+	 *
+	 * Set to `false` to disable the check entirely.
+	 *
+	 * @default true
+	 */
+	updateCheck?: boolean | { minimumReleaseAge?: string | number };
+
+	/**
+	 * Maximum allowed media file upload size in bytes.
+	 *
+	 * Applies to both direct multipart uploads and signed-URL uploads.
+	 * When unset, defaults to 52_428_800 (50 MB).
+	 *
+	 * @example
+	 * ```ts
+	 * emdash({ maxUploadSize: 100 * 1024 * 1024 }) // 100 MB
+	 * ```
+	 */
+	maxUploadSize?: number;
+
+	/**
+	 * Public browser-facing origin for the site.
+	 *
+	 * Use when `Astro.url` / `request.url` do not match what users open — common with a
+	 * **TLS-terminating reverse proxy**: the app often sees `http://` on the internal hop
+	 * while the browser uses `https://`, which breaks WebAuthn, CSRF, OAuth, and redirect URLs.
+	 *
+	 * Set to the full origin users type in the address bar (no path), e.g.
+	 * `https://mysite.example.com`. When not set, falls back to environment variables
+	 * `EMDASH_SITE_URL` > `SITE_URL`, then to the request URL's origin.
+	 *
+	 * Replaces `passkeyPublicOrigin` (which only fixed passkeys).
+	 */
+	siteUrl?: string;
+
+	/**
+	 * Additional origins accepted by passkey verification.
+	 *
+	 * When the same EmDash deployment is reachable under several hostnames sharing
+	 * a registrable parent (e.g. `https://example.com` plus
+	 * `https://preview.example.com`), the canonical `siteUrl` defines the `rpId`
+	 * and the entries here are the *additional* origins from which assertions
+	 * are accepted. Each entry must be the same hostname as `siteUrl` or a
+	 * subdomain of it — WebAuthn requires `rpId` to be a registrable suffix of
+	 * every origin.
+	 *
+	 * Merged at runtime with the `EMDASH_ALLOWED_ORIGINS` env var (comma-separated).
+	 * Validation:
+	 *   - Config-declared entries are shape-checked at Astro startup.
+	 *   - Subdomain relationship to `siteUrl` is checked at startup when
+	 *     `siteUrl` is also config-declared, otherwise at first passkey
+	 *     verification (since `siteUrl` may come from `EMDASH_SITE_URL`).
+	 *
+	 * Mismatches throw with a source-attributed message naming
+	 * `config.allowedOrigins` or `EMDASH_ALLOWED_ORIGINS`.
+	 *
+	 * @example
+	 * ```ts
+	 * emdash({
+	 *   siteUrl: "https://example.com",
+	 *   allowedOrigins: ["https://preview.example.com"],
+	 * })
+	 * ```
+	 */
+	allowedOrigins?: string[];
+	/*
+	 * Headers to trust for client IP resolution when running behind a reverse
+	 * proxy. The first header in this list that is present on the request
+	 * wins. Applies to rate limiting for auth endpoints and comment
+	 * submission.
+	 *
+	 * Common values:
+	 * - `x-real-ip` — nginx, Caddy, Traefik
+	 * - `fly-client-ip` — Fly.io
+	 * - `x-forwarded-for` — generic (first entry is used)
+	 *
+	 * Only set this when you **control the reverse proxy**. Untrusted
+	 * clients can set any header they like; trusting headers from an open
+	 * network is an IP-spoofing vulnerability that defeats rate limiting.
+	 *
+	 * On Cloudflare the `cf` object on the request is used automatically —
+	 * you normally don't need to set this. Leave unset (or empty) to
+	 * preserve the default: IP is resolved only when the request came
+	 * through Cloudflare's edge.
+	 *
+	 * Falls back to `EMDASH_TRUSTED_PROXY_HEADERS` env var (comma-separated)
+	 * when this option is not set, so operators can configure at deploy
+	 * time without touching the Astro config.
+	 */
+	trustedProxyHeaders?: string[];
+
+	/**
+	 * User middleware that wraps the complete EmDash request pipeline.
+	 *
+	 * Before `next()` it runs before EmDash initializes its runtime or database,
+	 * so `locals.emdash`, the authenticated user, and request-scoped EmDash state
+	 * are unavailable. This allows cached responses and request gates to return
+	 * without paying initialization cost. When it calls `next()`, the resolved
+	 * response includes EmDash HTML injection and all other response mutations,
+	 * allowing the middleware to finalize caching and response headers safely.
+	 */
+	middleware?: {
+		/** Astro middleware module entrypoint. */
+		outer: string | URL;
+	};
+
+	/**
+	 * Enable playground mode for ephemeral "try EmDash" sites.
+	 *
+	 * When set, the integration injects a playground middleware (order: "pre")
+	 * that runs BEFORE the normal EmDash middleware chain. It creates an
+	 * isolated Durable Object database per session, runs migrations, applies
+	 * the seed, creates an anonymous admin user, and sets the DB in ALS.
+	 * By the time the runtime middleware runs, the database is fully ready.
+	 *
+	 * Setup and auth middleware are skipped (the playground handles both).
+	 *
+	 * Requires `@emdash-cms/cloudflare` as a dependency and a DO binding
+	 * in wrangler.jsonc.
+	 *
+	 * @example
+	 * ```ts
+	 * emdash({
+	 *   database: playgroundDatabase({ binding: "PLAYGROUND_DB" }),
+	 *   playground: {
+	 *     middlewareEntrypoint: "@emdash-cms/cloudflare/db/playground-middleware",
+	 *   },
+	 * })
+	 * ```
+	 */
+	playground?: {
+		/** Module path for the playground middleware. */
+		middlewareEntrypoint: string;
+	};
+
+	/**
+	 * Media providers for browsing and uploading media
+	 *
+	 * The local media provider (using storage adapter) is available by default.
+	 * Additional providers can be added for external services like Unsplash,
+	 * Cloudinary, Mux, Cloudflare Images, etc.
+	 *
+	 * @example
+	 * ```ts
+	 * import { cloudflareImages, cloudflareStream } from "@emdash-cms/cloudflare";
+	 * import { unsplash } from "@emdash-cms/provider-unsplash";
+	 *
+	 * emdash({
+	 *   mediaProviders: [
+	 *     cloudflareImages({ accountId: "..." }),
+	 *     cloudflareStream({ accountId: "..." }),
+	 *     unsplash({ accessKey: "..." }),
+	 *   ],
+	 * })
+	 * ```
+	 */
+	mediaProviders?: MediaProviderDescriptor[];
+
+	/**
+	 * Admin UI font configuration.
+	 *
+	 * By default, EmDash loads Noto Sans via the Astro Font API, covering
+	 * Latin, Latin Extended, Cyrillic, Cyrillic Extended, Greek, Greek
+	 * Extended, Devanagari, and Vietnamese. Fonts are downloaded from
+	 * Google at build time and self-hosted, so there are no runtime CDN
+	 * requests.
+	 *
+	 * To add support for additional writing systems (Arabic, CJK, etc.),
+	 * pass script names. EmDash resolves the matching Noto Sans variant
+	 * from Google Fonts and merges all script faces under a single
+	 * font-family, so the browser downloads only the glyphs it needs
+	 * via unicode-range.
+	 *
+	 * Set to `false` to disable font injection entirely and use system fonts.
+	 *
+	 * @example
+	 * ```ts
+	 * // Add Arabic and Japanese support
+	 * emdash({
+	 *   fonts: {
+	 *     scripts: ["arabic", "japanese"],
+	 *   },
+	 * })
+	 * ```
+	 *
+	 * @example
+	 * ```ts
+	 * // Disable web fonts entirely (use system fonts)
+	 * emdash({
+	 *   fonts: false,
+	 * })
+	 * ```
+	 */
+	fonts?:
+		| false
+		| {
+				/**
+				 * Additional Noto Sans script families to include.
+				 *
+				 * Available scripts: arabic, armenian, bengali, chinese-simplified,
+				 * chinese-traditional, chinese-hongkong, devanagari, ethiopic, farsi,
+				 * georgian, gujarati, gurmukhi, hebrew, japanese, kannada, khmer,
+				 * korean, lao, malayalam, myanmar, oriya, sinhala, tamil, telugu,
+				 * thai, tibetan.
+				 */
+				scripts?: string[];
+		  };
+
+	/**
+	 * Admin UI branding (white-labeling).
+	 *
+	 * Overrides the default EmDash logo and name in the admin panel.
+	 * Use this to white-label the CMS for agency or enterprise deployments.
+	 * These settings are separate from the public site settings (title, logo,
+	 * favicon) which remain available for SEO and front-end use.
+	 *
+	 * @example
+	 * ```ts
+	 * emdash({
+	 *   admin: {
+	 *     logo: "/images/agency-logo.webp",
+	 *     siteName: "AgencyX CMS",
+	 *     footerLabel: "AgencyX",
+	 *     favicon: "/favicon.ico",
+	 *   },
+	 * })
+	 * ```
+	 */
+	admin?: {
+		/** URL or path to a custom logo image for the admin UI (login page, sidebar). */
+		logo?: string;
+		/** Custom name displayed in the admin sidebar header and browser tab. */
+		siteName?: string;
+		/** Label displayed beside the version in the sidebar footer. Set to false to hide it. */
+		footerLabel?: string | false;
+		/** URL or path to a custom favicon for the admin panel. */
+		favicon?: string;
+	};
+
+	/**
+	 * Editor toolbar delivery on public pages.
+	 *
+	 * - `"server"` (default): the toolbar is injected server-side into every
+	 *   HTML response rendered for an authenticated editor. Simple and
+	 *   zero-config, but behind a shared cache (Cloudflare Cache Everything /
+	 *   Workers Cache, Fastly, Varnish, …) editors often receive the cached
+	 *   anonymous variant — without the toolbar — whenever an anonymous visitor
+	 *   primed the cache first, so the toolbar appears and disappears with
+	 *   cache state.
+	 * - `"client"`: public HTML is identical for everyone (nothing
+	 *   session-specific is injected server-side, so shared caches stay fully
+	 *   effective). A tiny bootstrap script shows an "Edit" pill for browsers
+	 *   that have logged into the admin (non-secret localStorage flag). Clicking
+	 *   it verifies the session and reloads the page with an `_edit` query
+	 *   param, which is always rendered fresh (never cached) with the full
+	 *   toolbar. Logged-out visitors opening an `_edit` URL are redirected to
+	 *   the canonical URL.
+	 * - `false`: never render the toolbar or bootstrap script.
+	 *
+	 * See the visual-editing docs for the cache-behavior details.
+	 */
+	toolbar?: "server" | "client" | false;
+
+	/**
+	 * Version of Astro the host project is building with. Populated by the
+	 * integration's `astro:config:setup` hook (not authored by the user) and
+	 * surfaced to the admin and the registry install gate so a plugin's
+	 * `env:astro` requirement can be evaluated against the real host version.
+	 */
+	astroVersion?: string;
+}
+
+const STORED_CONFIG_KEY = Symbol.for("emdash:stored-config");
+const configHolder = globalThis as Record<symbol, unknown>;
+
+/**
+ * Get stored config from global
+ * This is set by the virtual module at build time
+ */
+export function getStoredConfig(): EmDashConfig | null {
+	// eslint-disable-next-line typescript/no-unsafe-type-assertion -- globalThis singleton pattern (see request-context.ts)
+	return (configHolder[STORED_CONFIG_KEY] as EmDashConfig | undefined) ?? null;
+}
+
+/**
+ * Set stored config in global
+ * Called by the integration at config time
+ */
+export function setStoredConfig(config: EmDashConfig): void {
+	configHolder[STORED_CONFIG_KEY] = config;
+}

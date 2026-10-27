@@ -1,0 +1,74 @@
+{
+  "color": {
+    "forest-canopy": {
+      "$value": "#214538",
+      "$type": "color",
+      "$description": "Forest Canopy — Primary brand action — CTA button fills, nav text, active tab indicators, brand icons, link hovers, section headings. Deep botanical green against white gives every action weight without aggression"
+    },
+    "studio-ink": {
+      "$value": "#151e1b",
+      "$type": "color",
+      "$description": "Studio Ink — Primary body and heading text. Slightly green-tinted near-black reads as quieter than pure #000, harmonizing with the brand green instead of fighting it"
+    },
+    "graphite-body": {
+      "$value": "#4d4d4f",
+      "$type": "color",
+      "$description": "Graphite Body — Secondary and helper text — descriptions, captions, supporting copy under headings and feature labels"
+    },
+    "ash-border": {
+      "$value": "#e4e5e6",
+      "$type": "color",
+      "$description": "Ash Border — Default hairline border for cards, inputs, nav containers, list dividers, and button outlines. The structural skeleton of the interface"
+    },
+    "fog-surface": {
+      "$value": "#f4f4f4",
+      "$type": "color",
+      "$description": "Fog Surface — Subtle background for tab buttons, list rows, and secondary button borders. One step darker than white to delineate zones without elevation"
+    },
+    "moss-wash": {
+      "$value": "#e5ede9",
+      "$type": "color",
+      "$description": "Moss Wash — Soft green-tinted card surface — used for stat cards and feature tiles where a faint brand color cue is needed without commitment to a filled green block"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on dark green fills, icon knockouts. The dominant background across the entire site"
+    },
+    "cast-iron": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Cast Iron — Icon fills and select heading text where maximum contrast is needed. Used sparingly — mostly for decorative SVG icon weight"
+    },
+    "citrus-note": {
+      "$value": "#faefc3",
+      "$type": "color",
+      "$description": "Citrus Note — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content."
+    },
+    "link-green": {
+      "$value": "#208619",
+      "$type": "color",
+      "$description": "Link Green — Green text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "girott": {
+      "$value": "Girott",
+      "$type": "fontFamily",
+      "$description": "Display headline — used for the hero statement at 168px, uppercase, +0.083em tracking. A condensed editorial serif that converts a SaaS homepage into a magazine cover. Free substitute: Oswald Bold or Bebas Neue if Girott is unavailable, but the condensed stencil-serif character is the signature."
+    },
+    "graphik": {
+      "$value": "Graphik",
+      "$type": "fontFamily",
+      "$description": "Primary interface typeface — body, headings, nav, buttons, cards. Weights 400/500 carry body and UI; 600/700 are reserved for section headings and emphasis. Negative letter-spacing tightens geometric forms at larger sizes, giving a precise editorial feel rather than a friendly rounded look. Free substitute: Inter (closest open-source match) or Manrope."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.buzzsprout.com",
+      "siteName": "Free Podcast Hosting",
+      "extractedAt": "2026-06-03T21:48:59.252Z",
+      "variant": "compact"
+    }
+  }
+}

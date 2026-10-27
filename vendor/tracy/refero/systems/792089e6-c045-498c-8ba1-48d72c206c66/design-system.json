@@ -1,0 +1,306 @@
+{
+  "dos": [
+    "Use #edfc47 chartreuse only as an emphasis stroke — a highlight rectangle behind a word in a headline, an icon fill, a tag — never as a button background or large surface fill",
+    "Set headlines in Roobert 500 at 48-88px with -0.02em tracking; the geometric lowercase and tight tracking are what make the editorial scale work",
+    "Use #000000 filled buttons as the only primary action; the system has exactly one button fill color",
+    "Reach for the single soft shadow (rgba(0,0,0,0.1) 0px 11px 17px -10px) only on product screenshot frames; everything else stays flat with a Silver hairline or no border",
+    "Separate type systems by role: Roobert 500 for all headings 20px and above, Inter for everything at 18px and below — never mix them at the same size",
+    "Keep the canvas at #f7f6f5 Newsprint for full-page backgrounds and use #ffffff Paper for cards, nav, and product frames to build the two-tier surface stack",
+    "Use 10px radius for cards and buttons, 6px for nav, 100px for pills — the three radii carry the entire shape language"
+  ],
+  "donts": [
+    "Don't fill buttons with chartreuse — the accent is for emphasis, not action",
+    "Don't use multiple colors of buttons; the system is monochrome with one accent, so a colored button would break the visual contract",
+    "Don't add colored gradients, drop shadows, or glow effects to UI surfaces — the design is intentionally flat",
+    "Don't set body copy in Roobert; it's a display face and loses legibility under 24px",
+    "Don't use letter-spacing looser than -0.01em on headings — the tight tracking is part of the editorial feel",
+    "Don't introduce a second accent color; even subtle blue/green additions compete with the chartreuse and dilute the system",
+    "Don't stack elevation: no card-on-card, no modals with heavy shadows, no hover-lift transforms — use color contrast and hairline borders instead",
+    "Don't set display headlines below 40px; the Roobert 500 weight needs the scale to register as editorial"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f7f6f5",
+      "name": "Newsprint",
+      "role": "Page canvas and ambient background — warm off-white that softens the stark black type",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Card surfaces, product screenshot frames, nav background — the raised, clean tier above the canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Press Black",
+      "role": "High-contrast neutral action fill for primary buttons on light surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0a0a0c",
+      "name": "Midnight",
+      "role": "Announcement bar and dark band backgrounds — near-black for the slim top promo strip",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4d4d4d",
+      "name": "Graphite",
+      "role": "Body text and secondary headings — readable but recedes against Press Black for hierarchy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#808080",
+      "name": "Ash",
+      "role": "Muted helper text, icon strokes, tertiary metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cccccc",
+      "name": "Silver",
+      "role": "Hairline borders, dividers, inactive UI edges — the only border color in the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#edfc47",
+      "name": "Highlighter",
+      "role": "Emphasis accent on words inside headlines, icon fills, tag highlights — chartreuse that never fills a button, only marks what matters",
+      "group": "accent"
+    }
+  ],
+  "layout": "Centered, max-width 1200px page model on a Newsprint (#f7f6f5) canvas. The hero is a centered stack: trust line, 88px headline, subtext, dual-button row, platform line, then a full-width product screenshot frame below. Below the hero, the page settles into a 3-column feature card grid with 16px gaps and generous vertical breathing room (64-80px between sections). Feature card headlines sit top-left in each tile, with a product crop or UI illustration filling the lower half. A logo bar in a single row breaks up the section rhythm. Navigation is a clean top bar with no sticky shadow — it floats on the canvas. The overall rhythm alternates between centered editorial blocks and structured 3-column grids, never side-by-side text+image split layouts.",
+  "imagery": "Visuals are dominated by product screenshots — the actual Quo app UI rendered inside Paper frames with one soft shadow. No lifestyle photography, no stock imagery, no abstract graphics. The only illustrative element is the chartreuse highlighter rectangle placed over words in headlines, which functions as both decoration and emphasis. Icons throughout the UI are simple line-style glyphs in Press Black or Ash, never multicolored. The product screenshots do the heavy lifting of showing what the product does, while the editorial type and highlighter accents do the brand work.",
+  "similar": [
+    {
+      "why": "Same near-monochromatic palette with a single vivid accent color, flat surfaces, and editorial-scale headlines that prioritize type over chrome",
+      "business": "Linear"
+    },
+    {
+      "why": "Same restrained black-on-warm-white fintech aesthetic with Inter UI type and a quiet, confident tone",
+      "business": "Mercury"
+    },
+    {
+      "why": "Same black/white minimalism with precise typographic hierarchy and product-screenshot-as-hero visual strategy",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same product-UI-screenshot-driven marketing where the app itself is the primary visual asset rather than staged photography",
+      "business": "Notion"
+    },
+    {
+      "why": "Same editorial display type treatment and confidence in letting a single sentence headline carry an entire hero section",
+      "business": "Stripe"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "6px",
+      "cards": "10px",
+      "pills": "100px",
+      "inputs": "10px",
+      "buttons": "10px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64-80px",
+    "cardPadding": "24-32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#f7f6f5",
+      "name": "Newsprint",
+      "level": 1,
+      "purpose": "Page canvas"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 2,
+      "purpose": "Cards, nav, product frames"
+    },
+    {
+      "hex": "#000000",
+      "name": "Press Black",
+      "level": 3,
+      "purpose": "Filled buttons, dark CTAs"
+    },
+    {
+      "hex": "#0a0a0c",
+      "name": "Midnight",
+      "level": 4,
+      "purpose": "Announcement bar, dark promo strips"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 11px 17px -10px",
+      "element": "Product screenshot card"
+    }
+  ],
+  "northStar": "highlighter on newsprint — a single chartreuse stroke against stark black-and-white editorial layout.",
+  "typeScale": [
+    {
+      "role": "small",
+      "size": 12,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-lg",
+      "size": 20,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.2
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.24
+    },
+    {
+      "role": "heading-sm",
+      "size": 48,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "heading",
+      "size": 56,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.12
+    },
+    {
+      "role": "heading-lg",
+      "size": 64,
+      "lineHeight": 1.05,
+      "letterSpacing": -1.28
+    },
+    {
+      "role": "display",
+      "size": 88,
+      "lineHeight": 1,
+      "letterSpacing": -1.76
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Filled Button",
+      "role": "Main conversion action (Try for free, Get started)",
+      "description": "Black fill (#000000), white text in Inter 600 at 16px, 10px radius, 12px vertical / 20px horizontal padding, no border. The only chromatic-free filled button in the system — when something must be clicked, it's black."
+    },
+    {
+      "name": "Ghost Button",
+      "role": "Secondary action (See how it works, Talk to Sales)",
+      "description": "Transparent fill, Press Black text in Inter 500 at 16px, 10px radius, 12px/20px padding, no visible border. Sits beside the primary button with a small play or arrow glyph to signal it opens a demo."
+    },
+    {
+      "name": "Nav Login Link",
+      "role": "Tertiary nav action",
+      "description": "Plain Inter 500 text in Press Black at 14px, no fill, no border, 6px radius if it ever wraps a pill. Sits flush in the nav row."
+    },
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page promo strip",
+      "description": "Midnight (#0a0a0c) full-bleed bar, white Inter 500 text at 14px, a small chartreuse emoji/icon, and a right-side close (×) in white. Sits above the main nav as a separate band."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Paper (#ffffff) background, 6px radius on any bordered element, Inter 500 nav links in Press Black at 14px with dropdown chevrons, Quo wordmark left, login + Talk to Sales + Try for free right. No visible bottom border, floats on the canvas."
+    },
+    {
+      "name": "Hero Section",
+      "role": "Above-the-fold value proposition",
+      "description": "Centered on Newsprint canvas. Trust line (★ 4.7 stars, review count) in Inter 500 at 14px. Headline in Roobert 500 at 88px with -1.76px tracking, Press Black, with one or two words wrapped in a chartreuse highlighter rectangle (#edfc47) for emphasis. Subtext in Graphite Inter 400 at 18px. Primary + ghost button pair centered below. Platform availability line in Ash Inter 400 at 14px."
+    },
+    {
+      "name": "Product Screenshot Frame",
+      "role": "App preview shown below the hero",
+      "description": "Paper (#ffffff) surface with 10px radius, the single soft shadow (rgba(0,0,0,0.1) 0px 11px 17px -10px), and the full app UI rendered inside. Acts as the visual proof point — the only 'image' most sections need."
+    },
+    {
+      "name": "Feature Card (3-Column Grid)",
+      "role": "Product capability tiles",
+      "description": "Paper (#ffffff) card on Newsprint canvas, 10px radius, no shadow, no border, 24-32px internal padding. Headline in Roobert 500 at 24px (-0.24px tracking), Press Black. A small UI illustration or product crop fills the lower half. Cards align in a 3-column grid with 16px gaps."
+    },
+    {
+      "name": "Tab/Pill Nav",
+      "role": "In-section feature switcher",
+      "description": "Three pill-shaped tabs (100px radius) in a row: first tab is filled Paper with subtle Silver border and Press Black text, others are ghost with Ash text. 8px vertical / 16px horizontal padding, Inter 500 at 14px."
+    },
+    {
+      "name": "Chat Bubble — Sent",
+      "role": "In-app message UI element",
+      "description": "Solid blue fill (#007bff range) with white Inter 400 text at 14px, 10px radius on all corners, 12px padding. Appears inside product screenshots to demo the inbox."
+    },
+    {
+      "name": "Chat Bubble — Received",
+      "role": "In-app message UI element",
+      "description": "Light gray fill (#f0f0f0 range) with Press Black text, 10px radius, 12px padding. Pairs with sent bubble to show conversation."
+    },
+    {
+      "name": "Logo Bar",
+      "role": "Social proof / customer logos",
+      "description": "Single row of customer logos in Ash (#808080) or Graphite, evenly spaced, centered on a Paper or Newsprint band. Logos are monochrome — no brand color leaks into the system."
+    },
+    {
+      "name": "Phone Number Row",
+      "role": "Trust/feature list item inside a card",
+      "description": "Each row pairs a small flag icon, a Press Black phone number in Inter 500 at 16px, and a region label in Ash Inter 400 at 14px. Rows separated by hairline Silver borders, 12-16px vertical padding."
+    },
+    {
+      "name": "Stat Card",
+      "role": "Highlighted metric tile",
+      "description": "Paper background, 10px radius, large number in Roobert 500 at 48px in Press Black, label in Ash Inter 400 at 14px below. No border, no shadow."
+    },
+    {
+      "name": "Footer Link Column",
+      "role": "Site footer navigation",
+      "description": "Column heading in Inter 600 Press Black at 14px, link list in Inter 400 Graphite at 14px with 8px row gap. No bullets, no underlines until hover."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All display and heading copy — geometric sans with tight tracking that lets headlines read as editorial blocks. Weight 500 (not 700) keeps the large sizes from feeling like a poster; the restraint is the point.",
+      "sizes": "20px, 24px, 40px, 48px, 56px, 64px, 88px",
+      "family": "Roobert",
+      "weight": "500",
+      "lineHeight": "0.90–1.20",
+      "substitute": "DM Sans, General Sans, or Manrope at matching weights",
+      "letterSpacing": "-0.02em at 48–88px, -0.01em at 20–24px",
+      "fontFeatureSettings": "\"ss01\" on, \"ss02\" on"
+    },
+    {
+      "role": "Body, nav, buttons, badges, labels, icons — the workhorse UI face. 400 for body, 500 for nav and labels, 600 for button text and emphasized UI.",
+      "sizes": "12px, 14px, 16px, 18px, 20px",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.20–1.50",
+      "substitute": "Inter (already free via Google Fonts)"
+    }
+  ],
+  "description": "Quo runs on an almost ruthlessly monochromatic system — white and off-white canvases, black ink, hairline borders, near-zero elevation — with a single chartreuse accent that behaves like a highlighter, not a decoration. Headlines are editorial in scale (Roobert at up to 88px, tight -0.02em tracking) while UI stays compact in Inter, producing a newspaper-meets-app rhythm: massive confident display type above dense functional surfaces. Components are flat and rectangular with 10px corners; depth is communicated by product screenshots and one soft shadow rather than stacking. The chartreuse (#edfc47) never fills a button — it highlights words inside headlines, tags icons, and draws the eye to emphasis, making the primary action (a black filled button) feel like the default rather than a colorful exception.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Text: #000000 (Press Black)\n- Background: #f7f6f5 (Newsprint canvas), #ffffff (Paper cards)\n- Border: #cccccc (Silver hairlines)\n- Accent: #edfc47 (Highlighter — emphasis only)\n- Body text: #4d4d4d (Graphite)\n- Muted text: #808080 (Ash)\n- primary action: #000000 (filled action)\n\n**3-5 Example Component Prompts**\n\n1. Create a Primary Action Button: #000000 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. *Create a 3-column feature card row:* Three Paper (#ffffff) cards on a Newsprint canvas, 10px radius, no shadow, 24px internal padding, 16px gap between cards. Each card has a Roobert 500 headline at 24px (-0.24px tracking) in #000000, an Inter 400 description at 16px in #4d4d4d below, and a product UI crop filling the lower 60% of the card. The card headlines are left-aligned, not centered.\n\n3. *Create a top navigation bar:* Paper (#ffffff) background, full-width, 64px tall. Left: Quo wordmark in Roobert 500 at 20px #000000. Center: nav links in Inter 500 at 14px #000000 with small dropdown chevrons. Right: 'Log in' as plain Inter 500 #000000 text, 'Talk to Sales' as ghost button (transparent, #000000 text, 6px radius), 'Try for free' as filled #000000 button with white Inter 600 text, 10px radius. No bottom border.\n\n4. *Create an announcement bar:* Midnight (#0a0a0c) full-bleed strip, 40px tall, centered white text in Inter 500 at 14px reading 'New: Quo's Claude connector →' with a small chartreuse #edfc47 icon to the left and a white × close button to the right.\n\n5. *Create a logo bar:* Single horizontal row of 8-10 customer logos in #808080 Ash, evenly spaced and centered, on a Paper (#ffffff) band with 48px vertical padding. Logos are monochrome — no original brand colors survive. Section heading above in Inter 500 at 14px Ash: 'Powering conversations for 90,000+ businesses'."
+    }
+  ],
+  "elevationPhilosophy": "Quo deliberately avoids stacking depth. The single soft shadow is reserved for product screenshot frames to lift them off the canvas; all other surfaces communicate hierarchy through flat color contrast (Paper on Newsprint) and hairline Silver borders, never through elevation."
+}

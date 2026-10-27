@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c03afcbd-96ed-4b7f-8d0a-277fc0042ba7",
+  "status": "complete",
+  "name": "Udemy",
+  "url": "https://styles.refero.design/style/c03afcbd-96ed-4b7f-8d0a-277fc0042ba7",
+  "sourceWebsite": "https://www.udemy.com",
+  "extractedAt": "2026-06-03T17:48:42.658Z",
+  "capturedAt": "2026-10-08T05:17:00.457414+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Modern classroom whiteboard with violet ink.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/85a50c2f-ee8d-4ce2-8bc5-cf462efecb2e.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d00e121791893a3a2422717dcf28f09a346a8fff72060b6fe57eba0e6a83159c",
+      "bytes": 16737
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "dcf2da8fc8a1c43c5fdd92b0bf0cbf1a473bcd0674f8922b73fd00b5d0c9a20d",
+      "bytes": 91916
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "48ab9279493f597f0d1cbeacc9dbfbf0f3b4e609c2c73a1d0c2d6eae739f94d1",
+      "bytes": 14327
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "042a52871e03179619f2f34e8ac9809317ecfc20bc5301e2e689bfb5d4466efb",
+      "bytes": 10609
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "56dda443f256bc828938adefa59f1914bf72f557c06961f9940e018a270cf3ea",
+      "bytes": 10144
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "5b84eb85a63921cc59bc8b80e3b48786c099f573b061ecf744b41226d0fa6b7f",
+      "bytes": 2983
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a63d5854441631ff06d10ae751a5f03195e38293e166730ffcf5efb3d01a3e64",
+      "bytes": 555
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d6a70b704605a2b2ec50a3352130f7872f529af90c5a43a468e8555daa415f56",
+      "bytes": 572
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "26244fa69823d3c61a11e8ee155216d3056b66f61939e74f80fc2659215fd976",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d65c202381829754dcf329c50d2dd64cdde18541d9930d4856d8403cd263faaf",
+      "bytes": 41308
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "78d3f5b35cfb1963c0af3650028e22efb270501d685911b00780c13cc870b34c",
+      "bytes": 21757
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e81059800f61a3a114a5d9e44c7c1121fff49fd7f7e3d5715d241bd78f11ccd7",
+      "bytes": 46455
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a0b0d0e7b6ac6261ba74a26c2640f3294313b963f3a3e5b56357ebe231f94d69",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c63ae1f300fdc90ccf1de744ef8ef9b11b878af784e57f8126f90e77fc71ed55",
+      "bytes": 1435
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e92393b3dceef8f585c144a584a034de7a0e444f86335dce401ec6c4cbf19486",
+      "bytes": 2053
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "162e9ba9-7487-4b57-aee8-0bbeadcc586d",
+    "342f1c3b-a123-49b6-a980-3491bc7793db",
+    "4367b4cd-b002-4719-a418-cbce020f0d33",
+    "476fea7c-d578-4625-b9e6-36e95faa6ca4",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "528eb1d4-8508-4dc6-87b4-c7b92d648dac",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "7088d695-362b-4e09-b325-fa8136d4f350",
+    "72b85d0a-1ff8-4dd3-b33a-f55aad6df5c9",
+    "80b2cc74-62c5-4898-bc2b-12aa94ed2943",
+    "90b8631c-4e2c-407e-86a3-d2bff456dc93",
+    "95b472c5-fc07-46a8-a11f-c5432e290fcd",
+    "9946887b-ffa9-4276-af81-ae6352795afb",
+    "a521abb9-d84b-4870-b5a8-363be7c3f94a",
+    "b04c379c-7c33-4d69-8882-8d85d7768654",
+    "b78edcaa-6754-41d7-ac00-0119b41ad88a",
+    "bc4fb98b-37ec-480a-b7a9-acd197cbebb9",
+    "c03afcbd-96ed-4b7f-8d0a-277fc0042ba7",
+    "c57ba3f8-1d76-4660-8ba4-48ddce26e759",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8"
+  ]
+}

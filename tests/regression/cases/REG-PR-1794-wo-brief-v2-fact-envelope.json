@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1794-wo-brief-v2-fact-envelope",
+  "kind": "feat",
+  "title": "WO brief v2: sub-trade words, one fact envelope with confidence and on-site decision, research by reference, key messages",
+  "pr": 1794,
+  "area": "website-opportunities/brief",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the sub-trade, fact confidence, fact decisions, key messages and brief v2 tests of packages/wo/website-opportunities.",
+    "S2: Run the tracy-web test that reads the research of a revision by reference."
+  ],
+  "expect": [
+    "S1: every test passes: sub-trade words come from the fixture, each fact carries confidence and an on-site decision, key messages are built from them.",
+    "S2: the revision holds a reference to its research and the research resolves from it."
+  ],
+  "selectors": {
+    "test": "packages/wo/website-opportunities/test/domain-sub-trade.test.mjs"
+  },
+  "evidence": "PR 1794 builds the brief v2 envelope; these existing test files fence each part of it",
+  "fence": "pure domain functions and the research reference reader; no database needed",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/wo/website-opportunities/test/domain-sub-trade.test.mjs",
+      "packages/wo/website-opportunities/test/domain-fact-confidence.test.mjs",
+      "packages/wo/website-opportunities/test/domain-fact-decisions.test.mjs",
+      "packages/wo/website-opportunities/test/domain-key-messages.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief-v2.test.mjs",
+      "apps/tracy-web/test/wo-revision-research-reference.test.mjs"
+    ]
+  }
+}

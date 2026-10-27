@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-void: #000000;
+  --color-charcoal: #131313;
+  --color-pure: #ffffff;
+  --color-acid-lime: #d3de5d;
+
+  /* Typography */
+  --font-ak-monument-grotesk: 'AK Monument Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

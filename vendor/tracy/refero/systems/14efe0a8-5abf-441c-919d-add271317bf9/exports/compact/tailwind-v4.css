@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-forest-heritage: #035542;
+  --color-billboard-blue: #2b7bb9;
+  --color-cream-teal: #56dddb;
+  --color-butter-yellow: #f9e9a9;
+  --color-charcoal-press: #333333;
+  --color-cream-white: #ffffff;
+
+  /* Typography */
+  --font-work-sans: 'Work Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-font-awesome-5-brands: 'Font Awesome 5 Brands', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

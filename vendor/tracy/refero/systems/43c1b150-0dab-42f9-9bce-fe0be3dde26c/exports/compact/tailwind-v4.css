@@ -1,0 +1,23 @@
+@theme {
+  /* Colors */
+  --color-parchment: #fdf6ee;
+  --color-soft-cream: #f0e6dc;
+  --color-pure-card: #ffffff;
+  --color-ink-black: #000000;
+  --color-charcoal-bark: #21201c;
+  --color-sepia: #2b180a;
+  --color-bronze: #7f6e60;
+  --color-driftwood: #94877c;
+  --color-stone: #a99d93;
+  --color-pebble: #d9cfc3;
+  --color-chestnut: #3e2407;
+  --color-ember-orange: #f65726;
+  --color-saffron-pulse: #ff5c00;
+  --color-peach-glow: #fed0b3;
+
+  /* Typography */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-martina-plantijn-light: 'Martina Plantijn Light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-roboto-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

@@ -1,0 +1,69 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page background, card surfaces, primary canvas — the default stage for all content"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary text, pill button fills, display headlines on dark, thin borders for reverse-contrast components"
+    },
+    "carbon": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Carbon — Input fields, secondary surface elevation, subtle dark borders — one shade above Obsidian for depth without contrast"
+    },
+    "graphite": {
+      "$value": "#1c1c1c",
+      "$type": "color",
+      "$description": "Graphite — Elevated surface layer above the canvas — for overlay cards, tooltips, and floating panels"
+    },
+    "smoke": {
+      "$value": "#454545",
+      "$type": "color",
+      "$description": "Smoke — Headline accent borders, secondary text, low-emphasis dividers"
+    },
+    "ash": {
+      "$value": "#575757",
+      "$type": "color",
+      "$description": "Ash — Body-level borders, inactive dividers, low-contrast separators between sections"
+    },
+    "near-black": {
+      "$value": "#050505",
+      "$type": "color",
+      "$description": "Near Black — Subtle hairlines and body borders that are nearly invisible against Obsidian"
+    }
+  },
+  "font": {
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "raveo-variable-variable": {
+      "$value": "Raveo Variable Variable",
+      "$type": "fontFamily",
+      "$description": "Display and heading font at its heaviest weight (1000). The variable axis is not used — the system commits to maximum weight to create typographic mass without chromatic weight. Sizes scale from 64px display down to 12px micro-labels (e.g., nav items 'NEW', 'Feed'). Letter-spacing tightens aggressively at large sizes (-0.04em at 64px, -0.02em at 22px) to lock the glyphs into a single visual block. Font features 'blwf', 'cv03', 'cv04', 'cv09', 'cv11' activate specific stylistic alternates — a signature typographic fingerprint. No web-safe substitute captures this; 'Inter' at weight 900 is the closest match, but weight and openness will differ."
+    },
+    "system-sans-serif": {
+      "$value": "System Sans-Serif",
+      "$type": "fontFamily",
+      "$description": "Secondary utility text — nav links, metadata, timestamps, captions. Weight 400 only; no bold variants. The system font acts as a quiet complement to Raveo's display voice."
+    },
+    "inter-display": {
+      "$value": "Inter Display",
+      "$type": "fontFamily",
+      "$description": "One-off paragraph text at 22px — lighter weight than Raveo at the same size creates a body/heading tension within the same line height"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://guglieri.com",
+      "siteName": "Guglieri",
+      "extractedAt": "2026-06-03T21:08:07.941Z",
+      "variant": "compact"
+    }
+  }
+}

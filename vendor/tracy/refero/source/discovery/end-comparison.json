@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-08T05:20:51.464714+00:00",
+  "beforeCount": 1342,
+  "afterCount": 1342,
+  "added": [],
+  "removed": [],
+  "http": {
+    "url": "https://styles.refero.design/sitemaps/styles.xml",
+    "finalUrl": "https://styles.refero.design/sitemaps/styles.xml",
+    "status": 200,
+    "fetchedAt": "2026-10-08T05:20:51.463085+00:00",
+    "sha256": "0e400e5160fd4620641cbbaca8ce090d8602699f90326a6ef912a4c01362a920",
+    "bytes": 461819,
+    "contentType": "application/xml; charset=utf-8",
+    "etag": null
+  }
+}

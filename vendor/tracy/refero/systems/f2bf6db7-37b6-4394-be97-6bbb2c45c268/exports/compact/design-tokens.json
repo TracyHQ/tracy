@@ -1,0 +1,44 @@
+{
+  "color": {
+    "obsidian-ink": {
+      "$value": "#1c1717",
+      "$type": "color",
+      "$description": "Obsidian Ink — Primary text, all text links, body copy, headings, icon strokes, hairline borders across the entire UI. This is the load-bearing color — 17.7:1 on white, used for 5,000+ instances. Its very slight warm cast (not pure black) gives the entire interface a printed-catalog feel rather than a screen feel"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "bone": {
+      "$value": "#f0f0f0",
+      "$type": "color",
+      "$description": "Bone — Secondary surface for alternating sections, subtle panel backgrounds, and inline borders/separators. Creates the faintest warm-gray tier between paper-white and the sage announcement band"
+    },
+    "eucalyptus-mist": {
+      "$value": "#a9aea9",
+      "$type": "color",
+      "$description": "Eucalyptus Mist — Top announcement banner background, muted section washes, tertiary border. Reads as near-gray in isolation but carries a barely-perceptible sage cast when used full-width — a single chromatic breath in an otherwise monochrome system"
+    }
+  },
+  "font": {
+    "sohne-web": {
+      "$value": "Sohne Web",
+      "$type": "fontFamily",
+      "$description": "The entire interface voice — body, nav, links, headings, buttons, inputs, badges, image captions. Sohne at 400 only (no bold weights detected) gives MAKR its whisper-quiet authority: information is communicated through size and tracking, never through weight contrast. Substitute: Inter, Söhne, or Untitled Sans."
+    },
+    "circularxxmonoweb": {
+      "$value": "CircularXXMonoWeb",
+      "$type": "fontFamily",
+      "$description": "Reserved for rare technical or product-spec callouts — a monospaced whisper that breaks the neo-grotesque rhythm. Use sparingly: a product code, a material specification, nothing more. Substitute: JetBrains Mono or IBM Plex Mono."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://makr.com",
+      "siteName": "MAKR",
+      "extractedAt": "2026-06-03T18:08:20.965Z",
+      "variant": "compact"
+    }
+  }
+}

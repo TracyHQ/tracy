@@ -1,0 +1,59 @@
+{
+  "color": {
+    "oxblood": {
+      "$value": "#472425",
+      "$type": "color",
+      "$description": "Oxblood — The singular chromatic identity — display headlines, nav links, body text, borders, and the active theme toggle. This muted dark-wine red carries all brand presence; the system is monochrome with this one warm, desaturated red as the only color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas and card surfaces. The background that the typography sits on; it reads as gallery white, not pure technical white"
+    },
+    "carbon-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Black — Secondary text, decorative borders, and structural hairlines. Used as the neutral companion to Oxblood when chromatic emphasis isn't needed"
+    },
+    "graphite": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text and body borders. A softer near-black for inline content where pure black feels too harsh"
+    },
+    "ash": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, the inactive theme toggle label, and low-emphasis annotations"
+    },
+    "crimson": {
+      "$value": "#e73737",
+      "$type": "color",
+      "$description": "Crimson — Red outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "neue-haas-display": {
+      "$value": "Neue Haas Display",
+      "$type": "fontFamily",
+      "$description": "The display face used for the nameplate and role titles. Sits at 135–188px with tight negative tracking (-0.025em to -0.020em) — the oversized scale is the signature; there is no intermediate heading tier, just utility text and then this monumental display."
+    },
+    "sfuidisplay": {
+      "$value": "SFUIDisplay",
+      "$type": "fontFamily",
+      "$description": "Body and utility type. Weight 300 whispers at body sizes for a quiet, label-like reading voice; weight 400 carries the uppercase tracked annotations (8–12px) that label sections and form microcopy. The narrow range (8–21px) confirms this is a system with two voices: monumental display or quiet label."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Rare fallback for button labels where the custom faces aren't available — not a designed choice, a system safety net."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://leonidkostetskyi.com",
+      "siteName": "Leonid Kostetskyi",
+      "extractedAt": "2026-06-03T15:17:41.185Z",
+      "variant": "compact"
+    }
+  }
+}

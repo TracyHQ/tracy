@@ -1,0 +1,74 @@
+{
+  "color": {
+    "off-white-ink": {
+      "$value": "#fffffe",
+      "$type": "color",
+      "$description": "Off-White Ink — Primary text, icon strokes, heading color — slightly cream warm-white reads softer than pure #fff against olive-charcoal surfaces"
+    },
+    "page-void": {
+      "$value": "#1c1c1a",
+      "$type": "color",
+      "$description": "Page Void — Deepest page background, behind everything; the recessed layer"
+    },
+    "graphite-card": {
+      "$value": "#232320",
+      "$type": "color",
+      "$description": "Graphite Card — Primary card and surface — most panels, modals, and elevated containers"
+    },
+    "slate-matte": {
+      "$value": "#2e2e2b",
+      "$type": "color",
+      "$description": "Slate Matte — Canvas-level surface, outer page background, content area baseline"
+    },
+    "ash-step": {
+      "$value": "#35352f",
+      "$type": "color",
+      "$description": "Ash Step — Subtle surface lift, nested card backgrounds, hover wash"
+    },
+    "stone-lift": {
+      "$value": "#3e3e38",
+      "$type": "color",
+      "$description": "Stone Lift — Higher elevation tier, active rows, secondary surface"
+    },
+    "pewter-button": {
+      "$value": "#45453e",
+      "$type": "color",
+      "$description": "Pewter Button — Button and chip backgrounds, pressed states"
+    },
+    "bistre-border": {
+      "$value": "#161615",
+      "$type": "color",
+      "$description": "Bistre Border — Dark border stroke, hairline separators, outline button border on hover"
+    },
+    "fog-text": {
+      "$value": "#7f7e77",
+      "$type": "color",
+      "$description": "Fog Text — Secondary muted text, captions, inactive controls; Reserved for button/dark accents"
+    },
+    "sand-label": {
+      "$value": "#a3a29c",
+      "$type": "color",
+      "$description": "Sand Label — Mid-level text, metadata, helper copy, list labels — warm gray that holds presence without competing with primary text"
+    },
+    "spray-wash": {
+      "$value": "#3fe0a6",
+      "$type": "color",
+      "$description": "Spray Wash — Decorative highlight — the only chromatic accent in the system, used exclusively inside the teal-to-lime gradient banner"
+    }
+  },
+  "font": {
+    "styrene": {
+      "$value": "Styrene",
+      "$type": "fontFamily",
+      "$description": "Single typeface serves everything from 11px captions to 45px display. Geometric humanist sans with tight apertures; weight 400 only — no bold. Tight -0.05em tracking is applied at every size, making headings feel condensed and utilitarian rather than elegant"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://herdi.ng",
+      "siteName": "herding.app",
+      "extractedAt": "2026-06-03T19:57:05.442Z",
+      "variant": "compact"
+    }
+  }
+}

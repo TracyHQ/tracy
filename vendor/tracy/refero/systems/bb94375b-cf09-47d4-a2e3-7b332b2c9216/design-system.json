@@ -1,0 +1,258 @@
+{
+  "dos": [
+    "Use Oracle at weight 250–300 for all display headlines (54px+); the whisper-light weight is the brand's typographic signature.",
+    "Keep the primary CTA (#000000 fill, 30px radius) as the only filled dark surface — never introduce a second filled button style.",
+    "Use 30px border-radius on all buttons, links, and cards; 45px on inputs; 9999px on tag/pill elements.",
+    "Set letter-spacing at -0.04em to -0.06em on any display-size type (54px+); tighter tracking at larger sizes prevents the light weight from looking airy.",
+    "Let photography fill the visual space — use 4:5 or 1:1 aspect ratio creator portraits with 30px radius and no card chrome.",
+    "Use #1a1a1a for all text and borders, not #000000 — the near-black reads as softer while preserving contrast.",
+    "Maintain a 4px spacing base with comfortable density: 8–14px between elements, 16–24px card padding, 64–96px section gaps."
+  ],
+  "donts": [
+    "Do not introduce a chromatic brand color for buttons, links, or CTAs — the system is deliberately monochrome.",
+    "Do not use display weights above 500 on Oracle; the 600+ range breaks the editorial whisper-tone.",
+    "Do not add shadows or elevation to cards — the system relies on hairline borders and white space for separation.",
+    "Do not use gradients on buttons, backgrounds, or overlays — the data shows zero gradient usage.",
+    "Do not set body text in anything wider than Oracle; the custom typeface's geometry is part of the identity.",
+    "Do not round corners at less than 30px on containers — the pill-everywhere approach is structural, not decorative.",
+    "Do not place UI text directly on busy photography without sufficient natural contrast or a solid overlay — legibility over atmosphere."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#1a1a1a",
+      "name": "Obsidian",
+      "role": "Primary text, hairline borders, subtle dividers — used at very-high frequency (1452 instances) across body, list, card, and input borders. The near-black rather than pure #000 keeps the UI from feeling harsh while preserving the monochromatic authority",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page canvas, card surfaces, button text on dark fills, input fields. The base layer everything else floats on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Stage Black",
+      "role": "High-contrast neutral action fill for primary buttons on light surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#959595",
+      "name": "Concrete",
+      "role": "Mid-tone neutral for secondary text, muted metadata, disabled states. Bridges the gap between #1a1a1a and white for hierarchical de-emphasis",
+      "group": "neutral"
+    },
+    {
+      "hex": "#90867a",
+      "name": "Stone",
+      "role": "Warm-tinted neutral appearing in hero overlays and photographic edges. Subtly breaks the otherwise cool monochrome with an organic warmth pulled from creator imagery",
+      "group": "neutral"
+    },
+    {
+      "hex": "#94bbff",
+      "name": "Sky Tint",
+      "role": "Soft blue-washed section background visible behind the creator-photo carousel. Functions as a breathing tonal band between the pure-white canvas and photographic blocks — never used on UI controls",
+      "group": "accent"
+    },
+    {
+      "hex": "#71a0ff",
+      "name": "Deep Sky",
+      "role": "Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color",
+      "group": "accent"
+    },
+    {
+      "hex": "#002a57",
+      "name": "Brand Blue",
+      "role": "Deep navy from the logo wordmark and highest-contrast brand moments. The darkest chromatic in the system, reserved for brand identity and the cookie banner link text",
+      "group": "brand"
+    }
+  ],
+  "layout": "Full-bleed hero with edge-to-edge photography and a single sticky top nav. Navigation is minimal: 4 text links left, centered logo, search + login + CTA right. The page is divided into full-viewport-height sections, each anchored by a large creator photograph with a single editorial headline overlaid in the lower third. A distinctive mid-page section uses a soft blue (#94bbff) background band displaying a horizontal carousel/grid of square creator portrait cards with no card chrome. Content alternates between white-canvas text blocks (centered or left-aligned, max-width ~1200px) and full-bleed photographic sections. Section gaps are generous (64–96px) to let each creator story breathe. No sidebar, no mega-menu, no multi-column dashboard patterns — this is a marketing surface, not a product UI.",
+  "imagery": "Photography is the entire visual system. Creator portraits are shot in warm, natural-light environments — a podcaster with headphones, an artist at an easel, a musician with a golden mirror frame. Treatment is full-bleed with no decorative framing, no duotone, no color grading overlay. Photos are presented at large scale (full viewport width or edge-to-edge section bands) with generous aspect ratios. No illustration, no 3D renders, no abstract graphics appear. The only non-photographic visual is the small 'P' Patreon logo mark in the nav, set in solid black. Photography density is very high: every section break features at least one creator portrait, making the page read as a visual editorial rather than a product UI.",
+  "similar": [
+    {
+      "why": "Same monochrome-editorial approach: white canvas, single-color logo, serif-or-light-sans typography, photography-driven hero, pill-shaped buttons, near-zero chromatic palette.",
+      "business": "Substack"
+    },
+    {
+      "why": "Editorial publishing aesthetic with extreme typographic restraint, custom or near-custom light-weight type, photography as primary content, and an almost total absence of color in the interface.",
+      "business": "Medium"
+    },
+    {
+      "why": "Same whisper-weight headline philosophy (SF Pro at 200–300 for hero copy), full-bleed product photography, and monochrome UI chrome that defers to imagery.",
+      "business": "Apple (macOS / iCloud pages)"
+    },
+    {
+      "why": "Similar ultra-rounded geometry (pill buttons, generous radii), custom-feeling typeface at light weights, and a marketing site that uses bold photography over UI ornament.",
+      "business": "Arc Browser"
+    },
+    {
+      "why": "Creator-tool platform with a deliberately understated, near-monochrome marketing surface that lets the user-generated photography and portfolios take visual precedence.",
+      "business": "VSCO"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "30px",
+      "links": "30px",
+      "inputs": "45px",
+      "buttons": "30px"
+    },
+    "elementGap": "8-14px",
+    "sectionGap": "64-96px",
+    "cardPadding": "16-24px",
+    "pageMaxWidth": "1440px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "level": 1,
+      "purpose": "Page canvas — the dominant background across all sections"
+    },
+    {
+      "hex": "#94bbff",
+      "name": "Stage",
+      "level": 2,
+      "purpose": "Tinted section band appearing behind the creator-photo carousel — a soft blue atmospheric break"
+    },
+    {
+      "hex": "#1a1a1a",
+      "name": "Overlay",
+      "level": 3,
+      "purpose": "Dark text overlay on hero photography — semi-transparent or full-opacity for caption legibility"
+    }
+  ],
+  "northStar": "White gallery for creator portraits — a near-blank editorial stage where the only color lives inside the frame.",
+  "typeScale": [
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 22,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.44
+    },
+    {
+      "role": "heading-sm",
+      "size": 26,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.6
+    },
+    {
+      "role": "heading",
+      "size": 39,
+      "lineHeight": 1,
+      "letterSpacing": -0.88
+    },
+    {
+      "role": "heading-lg",
+      "size": 54,
+      "lineHeight": 0.98,
+      "letterSpacing": -2.16
+    },
+    {
+      "role": "display",
+      "size": 128,
+      "lineHeight": 0.87,
+      "letterSpacing": -7.04
+    },
+    {
+      "role": "display-xl",
+      "size": 188,
+      "lineHeight": 0.87,
+      "letterSpacing": -11.28
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button (Get Started)",
+      "role": "The single filled button in the system — the only black surface element besides text.",
+      "description": "Pure #000000 fill, #ffffff text, 30px border-radius, 14px vertical × 21px horizontal padding, Oracle weight 400 at 15px. No border. Appears once per screen in the top-right nav. The contrast against the white page creates the only visual 'pulse' in the otherwise monochrome UI."
+    },
+    {
+      "name": "Ghost Outline Button (Log in)",
+      "role": "Secondary action in the nav — de-emphasized relative to the primary CTA.",
+      "description": "Transparent fill, #1a1a1a 1px border, #1a1a1a text, 30px radius, 14px × 21px padding, Oracle 400 at 15px. Sits left of the primary CTA as a quieter option."
+    },
+    {
+      "name": "Pill Nav Link (Updates)",
+      "role": "Navigation item styled as a pill with full border — distinct from flat text links.",
+      "description": "Transparent fill, #1a1a1a 1px border, full 9999px radius, 11px vertical × 15px horizontal padding, Oracle 400 at 15px. Creates a visual 'chip' pattern that signals it as a content category rather than a destination."
+    },
+    {
+      "name": "Text Nav Link",
+      "role": "Standard navigation items (Creators, Features, Pricing, Resources).",
+      "description": "No background, no border, #1a1a1a text, Oracle 400 at 15px, 8px horizontal padding. Flush to baseline, no underline by default. Underline or opacity change on hover."
+    },
+    {
+      "name": "Creator Portrait Card",
+      "role": "Photographic content card in the grid layout — the system's primary content unit.",
+      "description": "Square or 4:5 aspect ratio photography with no visible border or shadow. 30px radius on the photo container. Creator name in Oracle 400 at 15px below the image in #1a1a1a. No card background — the image sits directly on the page canvas."
+    },
+    {
+      "name": "Hero Photography Block",
+      "role": "Full-bleed creator portrait that fills the viewport's height, carrying the page's emotional weight.",
+      "description": "Edge-to-edge image with no padding or margin. White or light text overlay positioned in the lower third. No gradient overlay — the text relies on natural contrast in the photograph. Headline set in Oracle 250 at 54–128px in #ffffff."
+    },
+    {
+      "name": "Search Input (Find a Creator)",
+      "role": "Top-nav search field with icon prefix.",
+      "description": "White fill, #1a1a1a 1px border, 45px radius (more rounded than buttons), 11px vertical × 15px horizontal padding, Oracle 400 at 15px. Search icon left-aligned in #1a1a1a. Placeholder text in #959595."
+    },
+    {
+      "name": "Cookie Consent Banner",
+      "role": "Fixed-bottom modal for privacy compliance — the only floating UI element.",
+      "description": "White fill, 1px #1a1a1a border, 12px radius, horizontal padding 24px. Heading in Oracle 500 at 15px #1a1a1a. Body in Oracle 400 at 15px #1a1a1a. Three action buttons stacked: filled #1a1a1a (Accept all), outlined #1a1a1a (Reject non-essential), text link (More choices). A blue link (#002a57) for 'See Our Privacy Policy'."
+    },
+    {
+      "name": "Section Headline (Editorial)",
+      "role": "Large display text used in section openers like 'Creativity powered by fandom'.",
+      "description": "Oracle 250 at 54–128px, #1a1a1a on white or #ffffff on dark/photo, line-height 0.98–1.1, letter-spacing scaled to -0.04em. The weight-250 choice is the signature: the type looks almost handwritten or sketched rather than typed."
+    },
+    {
+      "name": "Body Text Block",
+      "role": "Standard paragraph copy for descriptions and marketing prose.",
+      "description": "Oracle 400 at 15px, #1a1a1a, line-height 1.5, letter-spacing -0.018em. 20px bottom margin for paragraph spacing. No drop cap, no pull quote — entirely utilitarian."
+    },
+    {
+      "name": "Footer",
+      "role": "Standard site footer with link columns.",
+      "description": "White or near-white fill, 1px top border in #1a1a1a, 64px+ vertical padding. Link columns in Oracle 400 at 15px #1a1a1a. No social icons styled with color — likely monochrome glyphs."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Sole typeface across all contexts — body, heading, button, link, input, card. The 250–300 weights for display and headings are anti-convention: most platforms shout with 700–800 weights; Oracle whispers, creating editorial authority through restraint. The 500 weight appears only in UI controls and nav. Negative letter-spacing scales with size: -0.06em at 188px down to -0.018em at 22px, pulling the wide display headlines into a tight, monolithic block.",
+      "sizes": "8, 14, 15, 22, 26, 27, 39, 54, 128, 188",
+      "family": "Oracle",
+      "weight": "250, 300, 350, 400, 500",
+      "lineHeight": "0.87, 0.98, 1.00, 1.10, 1.20, 1.50",
+      "substitute": "Söhne (Klim Type Foundry) — same ultra-light weight range and tight tracking. Free alternative: 'Inter' at weight 200–300 captures the feel.",
+      "letterSpacing": "-0.06em at 188px, -0.055em at 128px, -0.04em at 54px, -0.023em at 27px, -0.02em at 22px, -0.018em at 15px, +0.02em at 8px (uppercase micro-labels)",
+      "fontFeatureSettings": "'ss01' on, 'tnum' on, 'kern' on"
+    }
+  ],
+  "description": "Patreon is an editorial-monochrome platform: a near-pure white canvas where the only color is photographic. The UI recedes so creator portraits can dominate. The custom 'Oracle' typeface is set in whisper-light weights (250–350) with aggressively tight negative tracking, producing a high-fashion magazine tone rather than a typical SaaS register. Buttons and inputs are pill-shaped (30–45px radii), borders are hairline #1a1a1a, and the single filled action is pure black — no chromatic brand color, no gradients, no decorative tint. The system is deliberately austere: the visual richness comes from real human photography, not from interface ornament.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "QUICK COLOR REFERENCE\n- text/border: #1a1a1a\n- background/canvas: #ffffff\n- primary action: #000000 (filled action)\n- muted text: #959595\n- brand logo/accent: #002a57\n- section tint: #94bbff\n\nEXAMPLE COMPONENT PROMPTS:\n\n1. Create a hero section: Full-bleed creator photograph as background, no overlay. Headline 'Creativity is everywhere' positioned lower-left in Oracle weight 250 at 128px, #ffffff, line-height 0.87, letter-spacing -0.06em. No subtext, no button — let the photo carry it.\n\n2. Create a creator portrait card: Square (1:1) photograph with 30px border-radius, no border, no shadow. Creator name below in Oracle 400 at 15px, #1a1a1a, 14px top margin. No card background — image sits directly on #ffffff canvas.\n\n3. Create a top navigation bar: White fill, sticky, 16px vertical padding. Left: four text links (Creators, Features, Pricing, Resources) in Oracle 400 at 15px, #1a1a1a, 8px horizontal gap. Center: Patreon 'P' logo in #000000. Right: search input (45px radius, 1px #1a1a1a border, placeholder 'Find a Creator' in #959595), ghost outline button 'Log in' (30px radius, 1px #1a1a1a border, #1a1a1a text), filled black button 'Get Started' (30px radius, #000000 fill, #ffffff text).\n\n4. Create a section opener: White canvas, max-width 1200px centered. Headline 'Creativity powered by fandom' in Oracle 250 at 54px, #1a1a1a, line-height 0.98, letter-spacing -0.04em. Below, a horizontal row of 5 creator portrait cards (square, 30px radius, overlapping slightly with -4px margin). Section background transitions to #94bbff at 50% height.\n\n5. Create a body text block: White background, max-width 640px. Paragraph in Oracle 400 at 15px, #1a1a1a, line-height 1.5, letter-spacing -0.018em, 20px bottom margin. No first-line indent, no drop cap."
+    },
+    {
+      "title": "Typography Philosophy",
+      "content": "Oracle is set exclusively in weights 250–500. The absence of bold (600+) is a deliberate constraint: the system communicates hierarchy through size and tracking, not weight escalation. A 128px headline at weight 250 has the same visual mass as a 22px subhead at weight 500 — the system balances lightness with scale. Body text sits at 15px (not the more common 16px), creating a tighter visual density that pairs with the light display weights. All letter-spacing is negative except the 8px uppercase micro-labels (+0.02em), which need slight expansion to remain legible."
+    },
+    {
+      "title": "Radius System",
+      "content": "Three discrete radius values define the system's softness: 30px (buttons, links, cards), 45px (inputs), and 9999px (pill tags and the 'Updates' nav chip). There are no sharp 0px corners and no intermediate values like 8px or 12px. The choice to push past typical 'rounded' territory (4–16px) into 'pill' territory (30–45px) makes every interactive element feel inviting and finger-friendly, reinforcing the creator-community warmth."
+    }
+  ],
+  "elevationPhilosophy": "The system uses no shadows. Depth and separation are achieved through: (1) hairline #1a1a1a 1px borders on inputs, buttons, and cards; (2) generous white space between sections; (3) the contrast between pure-black CTA fills and the white canvas; and (4) edge-to-edge photography that creates natural visual layering. Adding box-shadow would break the flat editorial register."
+}

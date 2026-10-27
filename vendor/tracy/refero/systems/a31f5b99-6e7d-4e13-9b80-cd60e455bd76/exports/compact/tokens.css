@@ -1,0 +1,25 @@
+:root {
+  /* Colors */
+  --color-pure-canvas: #ffffff;
+  --color-slate-mist: #f1f5f9;
+  --color-carbon-ink: #000000;
+  --color-graphite: #1c1d21;
+  --color-ash-border: #d0d0d0;
+  --color-fog-border: #e8e6e6;
+  --color-electric-blue: #166aea;
+  --color-deep-violet: #101585;
+  --color-indigo-pulse: #2c34af;
+  --color-lime-highlight: #dff994;
+  --color-lemon-note: #fdf4a1;
+  --color-lavender-mist: #bfc8e8;
+  --color-input-blue: #538ab6;
+
+  /* Typography — Font Families */
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-madefor-display: 'madefor-display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-madefor-text: 'madefor-text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-madefor-text-mediumbold: 'madefor-text-mediumbold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wix-madefor-display-v2: 'wix-madefor-display-v2', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wix-madefor-text-v2: 'wix-madefor-text-v2', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-madefor-text-bold: 'madefor-text-bold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

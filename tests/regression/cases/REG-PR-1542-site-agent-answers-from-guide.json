@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-1542-site-agent-answers-from-guide",
+  "kind": "feat",
+  "title": "A customer's question about Tracy itself reaches the site agent's guide: the guide door tells an Owner the step the Domains card shows, tells an Editor to ask an Owner without the TXT value, hides an article whose switch is off, and every customer-visible switch has an article",
+  "pr": 1542,
+  "area": "site-agent/guide",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: run apps/tracy-web/test/guide.test.mjs (the articles parse, find the domain article from English and Vietnamese questions, respect the switch and the platform).",
+    "S2: run apps/tracy-web/test/site-guide.test.mjs: GET /api/sites/_conversation/guide as an Owner, an Editor and a Viewer, with no domain, a reserved domain, a wrong CNAME, a draft site, the Connect domain switch off, and recheck as an Owner and as an Editor; every ready/missing/wrong word is compared with the card's own checks.",
+    "S3: run packages/tools/tracy-site-tools/test/guide-tool.test.mjs and the site-context rule test (the tool is sent from the first step on every platform, its description names no site, a failure always carries a next that stops the agent guessing; the rule sends Tracy questions to tracy_guide first).",
+    "S4: run scripts/test/check-guide-coverage.test.mjs (a switch with neither an article nor a reasoned exemption turns the gate red)."
+  ],
+  "expect": [
+    "S1: all tests pass, including the Vietnamese question 'trỏ DNS sao' finding the own-domain article.",
+    "S2: the Owner's lines name the missing TXT/CNAME and the value DNS found; the Editor and the Viewer never receive the TXT value and are told an Owner is needed; recheck by an Editor changes nothing and says NOT_SITE_OWNER; with the switch off no article is offered.",
+    "S3: tracy_guide is not in DEFERRED_NAMES or PLATFORM_ONLY_TOOLS; the description is 520 characters or fewer; the rule is in the context of WordPress, Joomla and EmDash.",
+    "S4: each gap is named in the gate's message."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/guide/, apps/tracy-web/src/sites/guide.js, apps/tracy-web/src/sites/guide-state.js, packages/tools/tracy-site-tools/src/host/guide-tool.mjs, packages/tools/tracy-site-tools/src/host/site-context.mjs",
+    "door": "GET /api/sites/_conversation/guide"
+  },
+  "evidence": "21/10/2026 (Vincent): a customer who could not connect their own domain asked the agent in the chat, which knew nothing of Tracy; /help told every own domain 'routing and TLS not available yet'. The agent half (a real model, 24 plain-chat questions on WordPress, Joomla and EmDash) is measured on the tracy-guide stand and written in tasks/evidence-agent-tracy-guide/.",
+  "fence": "the guide door returns the same domain facts the Domains card is drawn from (settingsSnapshot) and the TXT value only to an Owner; recheck runs only for an Owner while the site-connect-domain switch is on; an article whose switch is off is not offered",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/guide.test.mjs",
+      "apps/tracy-web/test/site-guide.test.mjs",
+      "packages/tools/tracy-site-tools/test/guide-tool.test.mjs",
+      "scripts/test/check-guide-coverage.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a customer asking about their own domain finds the domain article, in English or Vietnamese",
+      "no domain yet: the agent is told the site answers at its Tracy address only, and links to Publish",
+      "a viewer or an editor is not given the TXT value, and is told to ask an Owner",
+      "recheck is the Check again button: it reads DNS, records it, and the answer shows the new reading",
+      "only an Owner can recheck; anyone else gets the stored state and the reason",
+      "the operator turned Connect domain off: the agent is not offered the article",
+      "it is sent from the first step: not deferred and not hidden for a platform",
+      "a miss is an answer that says do not know, never an invention",
+      "a new switch with neither an article nor an exemption is red, and says what to do"
+    ]
+  }
+}

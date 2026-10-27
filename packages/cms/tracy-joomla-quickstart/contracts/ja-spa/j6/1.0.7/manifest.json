@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-spa/j6/1.0.7",
+  "platform": "joomla",
+  "template": "ja_spa",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-spa",
+    "id": "quickstart/ja-spa/j6",
+    "version": "1.0.7",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_spa",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-spa-j6-webroot-1.0.7.tar.gz",
+        "bytes": 43334520,
+        "sha256": "3ca58abe2bb3f7aa0b6f814ce99408c627b8a4189f4be31c21d07a27a9c567e0"
+      },
+      "database": {
+        "file": "ja-spa-j6-database-1.0.7.sql.gz",
+        "bytes": 80335,
+        "sha256": "0c0ebd4dff0d3ba872887892d262a029ff4ed5eeeb30596beb6d9c4e4db430eb"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-18T04:56:29.880Z",
+    "builtFrom": {
+      "from": "quickstart/ja-spa/j6@1.0.6",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 193 files replaced (templates/ja_spa/AGENTS.md, templates/ja_spa/CHANGELOG.md, templates/ja_spa/CLAUDE.md, templates/ja_spa/README.md, templates/ja_spa/component.php, templates/ja_spa/error-t4.php, templates/ja_spa/error.php, templates/ja_spa/favicon.ico, templates/ja_spa/index.php, templates/ja_spa/layout.json, templates/ja_spa/offline.php, templates/ja_spa/templateDetails.xml, templates/ja_spa/templateInfo.php, templates/ja_spa/template_preview.png, templates/ja_spa/template_thumbnail.png, templates/ja_spa/css, templates/ja_spa/docs, templates/ja_spa/etc, templates/ja_spa/fonts, templates/ja_spa/html, templates/ja_spa/images, templates/ja_spa/js, templates/ja_spa/params, templates/ja_spa/scss, templates/ja_spa/acm, templates/ja_spa/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-spa/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

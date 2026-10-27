@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+  "status": "complete",
+  "name": "Adcker",
+  "url": "https://styles.refero.design/style/e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+  "sourceWebsite": "https://adcker.com",
+  "extractedAt": "2026-06-03T19:41:03.010Z",
+  "capturedAt": "2026-10-08T05:18:38.144370+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Giant brutalist poster on warm museum paper",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0b933da1-b9b2-4f69-9893-2eedc42d9afe.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "75831734c066c61ef02c26298bb1c6fe6dc8cb7f7ee7afc4728cadfb0902cb5c",
+      "bytes": 17266
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8256bb40f640f57657f718b797e10bde313c7c2047debe3fa02ab1874318e284",
+      "bytes": 64025
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d3d243550b3ba82236ee5f88425d83732440e69abf3391b0d27df7ed2905d8db",
+      "bytes": 14105
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0afe9414b4b58ea720183e84917bfc6d16567b2c76f4f5708ebd87118b2b6159",
+      "bytes": 6597
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f4ce9a4ce7b74b1187aa99284e966921c0a0ea40c6aec774205446158b8db2f1",
+      "bytes": 10503
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9c69f66ded5f7ef1593e780692f9c73bfb01fe07f68a90c6758748e21429fc69",
+      "bytes": 2403
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4e89f3f3f6fb3ad2a8f24a18ab1a47d7f48700cbcccd27552630a96c861c6e54",
+      "bytes": 608
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "ed91431eb93436b03ed32470838fa5cc9752e070add1f87c705b5999a745d9c6",
+      "bytes": 625
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "97bc65e78f84beca8f664bf170a1a9f83dac373f05bfd57afacd90dca3186d13",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3b2adb09cd0033500a9c66bee023db328139f0054200aeadf34bbe7c5d602c8b",
+      "bytes": 38817
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0673926a8bf6940cf0a2e6e1f046a7e9973d5d5319413a8e04ff94d1606598e7",
+      "bytes": 19986
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5e821cb952ca0d944a2194a601f48371bebedb7376b92c72591efa2c8934d858",
+      "bytes": 26600
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a83862fe27d224051ca73d4c9a9c77a2b551d9f2a5444658bfaaffd2a6d07264",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "f2ae732d5ec6c2e774f31fe728cfd3b508db906eb2da21b8ac95f870290f02f6",
+      "bytes": 1301
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e8dff39ebf59d06a0c4ce42380ac4c4810ec5048a6d7d2c537ce1bb36f85a4d8",
+      "bytes": 1776
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0e8db8d0-4d8f-48ac-a8e7-aaea9601e3ce",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "565bfc50-3a19-4224-9a4c-125edaeb7bef",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb63a015-b018-4bd9-be66-0973ac6be753",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e4593570-e43f-4eda-8618-0bb704d5ebb7",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "ec17bdec-c8fa-4221-abd6-da717bf38d96",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f68dd3d8-e8fa-4d2c-8c59-28aba06c9d8a",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060",
+    "ffb945f9-2d70-45e8-9024-492900318fa8"
+  ]
+}

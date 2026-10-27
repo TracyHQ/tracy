@@ -1,0 +1,347 @@
+{
+  "dos": [
+    "Use Parchment Cream (#faf5e8) as the base canvas — never pure #ffffff for full-page backgrounds",
+    "Pair every primary filled CTA with a ghost outlined button as the secondary action",
+    "Use 12px border-radius for all buttons and 24px for large feature cards to create the rounded-but-architectural feel",
+    "Give each major use case section its own saturated color identity (terracotta, sapphire, forest, peach, pink)",
+    "Use Haas Groot Disp 900 for hero and section headlines, reserving it for sizes 40px+",
+    "Apply the 8px base unit consistently: 8, 16, 24, 32, 40, 64 for padding, gaps, and section rhythm",
+    "Anchor interactive elements with Onyx (#181d26) rather than a brand-colored fill"
+  ],
+  "donts": [
+    "Don't use pure #ffffff as a page background — always use Parchment Cream (#faf5e8) for the canvas",
+    "Don't use a brand-blue or chromatic color for CTA buttons — Onyx black is the convention",
+    "Don't apply letter-spacing to display headlines in Haas Groot Disp — the custom face is designed for tight tracking",
+    "Don't use sharp corners (0px radius) on any interactive or card element — minimum 12px",
+    "Don't mix more than 2 text weights in a single body paragraph — stay at 400 or 500",
+    "Don't place white cards directly on the cream canvas with zero padding — always 16-24px internal padding",
+    "Don't use the saturated feature card colors for text body or small UI elements — they're meant for section-scale surfaces only"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#faf5e8",
+      "name": "Parchment Cream",
+      "role": "Page canvas — the warm off-white that defines the entire site's atmosphere, replacing standard pure-white backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f8fafc",
+      "name": "Frost White",
+      "role": "Alternate light surface for nested elements, subtle nav backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#181d26",
+      "name": "Onyx",
+      "role": "Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333840",
+      "name": "Charcoal",
+      "role": "Body text, secondary text levels, border accents — the workhorse dark neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#525965",
+      "name": "Graphite",
+      "role": "Muted text, sub-labels, less prominent body copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9297a0",
+      "name": "Steel",
+      "role": "Placeholder text, disabled states, low-emphasis labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e0e2e6",
+      "name": "Silver Border",
+      "role": "Hairline dividers, card borders, subtle structural separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#040e20",
+      "name": "Midnight Indigo",
+      "role": "Deepest heading text, near-black with cool bias for maximum editorial weight",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1b61c9",
+      "name": "Cobalt Blue",
+      "role": "Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "accent"
+    },
+    {
+      "hex": "#254fad",
+      "name": "Sapphire",
+      "role": "Violet supporting accent for decorative details and low-frequency emphasis.",
+      "group": "accent"
+    },
+    {
+      "hex": "#aa2d00",
+      "name": "Terracotta",
+      "role": "Orange supporting accent for decorative details and low-frequency emphasis.",
+      "group": "accent"
+    },
+    {
+      "hex": "#912e1f",
+      "name": "Burnt Sienna",
+      "role": "Dark terracotta variant for card backgrounds and text on warm sections",
+      "group": "accent"
+    },
+    {
+      "hex": "#fcab79",
+      "name": "Peach Glow",
+      "role": "Soft warm wash for highlight panels, accent backgrounds",
+      "group": "accent"
+    },
+    {
+      "hex": "#0a2e0e",
+      "name": "Forest Ink",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis.",
+      "group": "accent"
+    },
+    {
+      "hex": "#214224",
+      "name": "Moss",
+      "role": "Secondary green text and border accents on green-themed sections",
+      "group": "accent"
+    },
+    {
+      "hex": "#fa91e0",
+      "name": "Petal Pink",
+      "role": "Playful accent for tags, category chips, illustration color",
+      "group": "accent"
+    },
+    {
+      "hex": "#fcb42a",
+      "name": "Marigold",
+      "role": "Warm accent for badges, tag chips, category highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#c7e5f2",
+      "name": "Pale Sky",
+      "role": "Light supporting surface for subtle backgrounds and section separation",
+      "group": "accent"
+    }
+  ],
+  "layout": "Centered, max-width 1200px content column on a warm cream canvas. Hero is centered text stack over a dark product screenshot that breaks below the content edge. Sections flow vertically with consistent 64px gaps, alternating between text-forward editorial sections and visual-heavy product demo sections. Feature areas use a 2-column pattern: left side has a vertical numbered tab list (01–04), right side has a large saturated color block. The bottom section uses a 2-column grid of color-coded use-case cards, each filling roughly half the width. Navigation is a clean top bar with logo left, centered links, and CTAs right. Dense information architecture is avoided — sections breathe with generous whitespace, and each block serves a single purpose.",
+  "imagery": "Product screenshots dominate as the primary visual content — full dark-mode app UI frames embedded in the light cream page create strong contrast. The screenshots show data tables, kanban boards, calendar views, and AI prompt inputs at full fidelity. Supporting imagery includes small inline product crops (sneaker photos, portrait images) within feature cards. No lifestyle photography, no abstract illustrations. Logo bar uses muted monochrome customer logos. The visual language is product-showcase: the app interface IS the hero, framed by warm editorial typography.",
+  "similar": [
+    {
+      "why": "Same warm neutral canvas approach, same generous whitespace, same centered hero-with-screenshot pattern, though Notion leans more monochromatic",
+      "business": "Notion"
+    },
+    {
+      "why": "Similar clean editorial typography and confident use of near-black for primary actions, but Linear is dark-mode-first and more geometric",
+      "business": "Linear"
+    },
+    {
+      "why": "Shared pattern of color-coded feature/use-case sections with saturated accent blocks, though Webflow uses purple as a stronger single brand anchor",
+      "business": "Webflow"
+    },
+    {
+      "why": "Similar product-screenshot-as-hero visual strategy and a multi-hue accent system rather than a single brand color",
+      "business": "Figma"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "32px",
+      "cards": "16px",
+      "buttons": "12px",
+      "featureCards": "24px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#faf5e8",
+      "name": "Parchment Canvas",
+      "level": 0,
+      "purpose": "Page-wide warm background that sets the editorial tone"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White Card",
+      "level": 1,
+      "purpose": "Primary card surface sitting on parchment"
+    },
+    {
+      "hex": "#f8fafc",
+      "name": "Frost White",
+      "level": 2,
+      "purpose": "Subtle alternate surface for nested elements"
+    },
+    {
+      "hex": "#c7e5f2",
+      "name": "Pale Sky",
+      "level": 3,
+      "purpose": "Tinted surface for soft section differentiation"
+    },
+    {
+      "hex": "#181d26",
+      "name": "Onyx Frame",
+      "level": 4,
+      "purpose": "Dark product screenshot containers and dark CTA fills"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.32) 0px 0px 1px 0px, rgba(0, 0, 0, 0.08) 0px 0px 2px 0px, rgba(45, 127, 249, 0.28) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 0.5px inset",
+      "element": "Primary CTA Button"
+    },
+    {
+      "style": "rgba(15, 48, 106, 0.05) 0px 0px 20px 0px",
+      "element": "Top Navigation"
+    }
+  ],
+  "northStar": "warm workshop with color-coded chapters",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.35,
+      "letterSpacing": 0.07
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.096
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.35,
+      "letterSpacing": 0.126
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.2
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.25,
+      "letterSpacing": 0.264
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.64
+    },
+    {
+      "role": "heading-lg",
+      "size": 40,
+      "lineHeight": 1.15,
+      "letterSpacing": 0.8
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Main conversion action",
+      "description": "Filled #181d26 (Onyx) background, white text, Haas 600 at 16px, 12px border-radius, 16px vertical and 24px horizontal padding. Sits on cream canvas with a subtle multi-layer blue-tinted shadow giving it dimensional weight."
+    },
+    {
+      "name": "Secondary Ghost Button",
+      "role": "Secondary action or alternative CTA",
+      "description": "White #ffffff background, 1px #181d26 border, black text, Haas 600 at 16px, 12px border-radius, identical padding to primary. Used for 'Book demo' actions paired with primary CTAs."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "White #ffffff background with subtle blue-tinted drop shadow (rgba(15,48,106,0.05) 0px 0px 20px). Logo left (Airtable mark), centered nav links in Haas 400 at 16px with chevron dropdowns, right-aligned 'Book Demo' ghost button and 'Sign up for free' primary button plus 'Log in' text link."
+    },
+    {
+      "name": "Hero Section",
+      "role": "First-screen value proposition",
+      "description": "Centered on parchment cream canvas, 48px Haas Groot Disp 900 headline in #040e20, 18px Haas 400 subtext in #333840, dual CTAs (primary + ghost) centered below, followed by a dark #181d26 product screenshot container with 16px radius showing the app interface."
+    },
+    {
+      "name": "Logo Trust Bar",
+      "role": "Social proof and credibility",
+      "description": "Single row of customer logos in muted monochrome on parchment background, preceded by a small caption 'Trusted by 500,000 leading teams' in Haas 400."
+    },
+    {
+      "name": "Tabbed Feature Section",
+      "role": "Product capability deep-dive",
+      "description": "Two-column layout: left side has numbered tab list (01–04) in Haas 500, active tab in #181d26 weight 600, inactive tabs in muted #9297a0. Right side has a large saturated color block (e.g. #aa2d00 Terracotta) with white inner card containing heading, body text, and ghost 'Learn more' button."
+    },
+    {
+      "name": "Color-Coded Feature Card",
+      "role": "Use case showcase",
+      "description": "Large card with 24px radius, saturated background color (Terracotta, Sapphire, Forest, Pale Sky), inner white panel showing app screenshot or data. Each use case gets its own color identity — terracotta for campaigns, sapphire for opportunities, forest for localization, pale sky for attendee lists."
+    },
+    {
+      "name": "Product Screenshot Frame",
+      "role": "Dark app preview container",
+      "description": "#181d26 background container with 16px radius, holds full app UI screenshots with their native dark theme, creating contrast against the warm cream page."
+    },
+    {
+      "name": "Prompt Input Bar",
+      "role": "AI prompt interaction",
+      "description": "White rounded pill input on dark product surface, contains prompt text in Haas 400, trailing circular dark submit button with arrow icon."
+    },
+    {
+      "name": "Category Chip / Tag",
+      "role": "Label or filter indicator",
+      "description": "Pill-shaped, 32px border-radius, small text in Haas 500, vivid color background (Marigold, Petal Pink) with contrasting text — used for status, category, and filter labels."
+    },
+    {
+      "name": "Announcement Banner",
+      "role": "Top-of-page promotional strip",
+      "description": "Full-width thin bar at page top, light background, centered text in Haas 400 with inline link in Cobalt Blue (#1b61c9) and a dismiss close button on the right."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display headlines — the custom serif/slab face used for hero statements and large section titles, driven by 900 weight for editorial weight",
+      "sizes": "20px, 48px",
+      "family": "Haas Groot Disp",
+      "weight": "400, 900",
+      "lineHeight": "1.50",
+      "substitute": "GT Sectra Display, Tiempos Headline, or Roboto Slab 900",
+      "letterSpacing": "normal"
+    },
+    {
+      "role": "Body, nav, buttons, subheadings, UI labels — the workhorse sans-serif at 400 for body, 500 for emphasis, 600 for buttons and labels; slight positive tracking opens up at larger sizes",
+      "sizes": "14px, 16px, 18px, 20px, 24px, 32px, 40px",
+      "family": "Haas",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.15, 1.20, 1.25, 1.30, 1.35, 1.50",
+      "substitute": "Inter, Söhne, or Neue Haas Grotesk",
+      "letterSpacing": "0.0050em at 14px, 0.0060em at 16px, 0.0070em at 18px, 0.0100em at 20px, 0.0110em at 24px, 0.0200em at 32px+"
+    }
+  ],
+  "description": "Airtable presents as a warm, editorial workspace rather than a cold SaaS dashboard. The canvas is a soft cream parchment (#faf5e8) — never stark white — which gives the whole site a paper-like, almost printed feel. Typography is bold and unapologetic: a custom display face at near-900 weight for hero headlines pairs with a workhorse sans for body and UI. Buttons are pure black, not the expected brand-blue, giving the page an architectural, almost print-publication confidence. The signature move is color-coded feature cards — each use case gets its own saturated hue (terracotta, deep blue, forest green, peach, pink) functioning as chapter dividers in a visual catalog. The overall effect is a creative studio notebook: warm, organized, opinionated, and human.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #181d26 (Onyx)\n- background: #faf5e8 (Parchment Cream)\n- border: #e0e2e6 (Silver Border)\n- accent: #1b61c9 (Cobalt Blue) for links\n- primary action: no distinct CTA color\n- section accents: #aa2d00 (Terracotta), #254fad (Sapphire), #0a2e0e (Forest), #fcab79 (Peach)\n\n**Example Component Prompts**\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. Create a color-coded feature card: 24px border-radius, background #aa2d00 (Terracotta), inner white #ffffff panel with 16px padding containing a heading at 24px Haas weight 600 #181d26, body text at 16px Haas weight 400 #333840, and a ghost button (white fill, 1px #181d26 border, 12px radius) labeled 'Learn more'.\n\n\n4. Create a tabbed feature section: 2-column layout. Left column has numbered tabs (01–04) in Haas 500, active tab in #181d26 weight 600 with a left indicator bar, inactive tabs in #9297a0 weight 400. Right column is a large #aa2d00 (Terracotta) block with a white inner card containing the feature content and a ghost 'Learn more' button.\n\n5. Create an announcement banner: full-width strip, #f8fafc background, 12px vertical padding, centered text in Haas 400 at 14px #333840 with an inline link in #1b61c9 (Cobalt Blue) and a small dismiss '×' button on the far right."
+    }
+  ]
+}

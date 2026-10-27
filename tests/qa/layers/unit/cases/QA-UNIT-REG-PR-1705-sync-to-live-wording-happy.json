@@ -1,0 +1,49 @@
+{
+  "id": "QA-UNIT-REG-PR-1705-sync-to-live-wording-happy",
+  "itemIds": ["regression:REG-PR-1705-sync-to-live-wording"],
+  "requirement": "Sync to live's Publish flow reads a size under 1 kB as bytes, plural (\"300 bytes\", not \"300 byte\"), and its tick boxes name no count (\"Also send these PHP files to my live site\")",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1705-sync-to-live-wording.json",
+    "ref": "PR #1705 (fix); fix evidence: tasks/nhat-ky/2026-10-25-sync-to-live-wording.md",
+    "invariant": "S1: the files/settings/PHP case shows \"helper.php300 bytes\" and \"Also send these PHP files to my live site\"; the review case shows \"Will remove (2)\" and \"Also remove these from my live site\"",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/core/tracy-core/test/publish-push-dom.test.mjs:130 require() with a computed specifier",
+      "packages/core/tracy-core/test/publish-push-dom.test.mjs:41 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1705-sync-to-live-wording.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1705-sync-to-live-wording"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/core/tracy-core", "tracy-core"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1705-sync-to-live-wording",
+    "pr": 1705,
+    "kind": "fix",
+    "area": "sync/live",
+    "file": "tests/regression/cases/REG-PR-1705-sync-to-live-wording.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/core/tracy-core/test/publish-push-dom.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

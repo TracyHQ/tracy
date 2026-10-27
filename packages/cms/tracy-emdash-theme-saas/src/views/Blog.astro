@@ -1,0 +1,678 @@
+---
+/**
+ * Post lists. Three layouts, one data path:
+ * - stream: the blog home (featured read, topics rail, numbered rows) — the only list the source
+ *   lays out this way;
+ * - catalog: every other category or tag list (card rows beside categories and popular tags);
+ * - author: one writer's profile and posts.
+ * A filter that matches nothing, or a `?page` that does not exist, answers 404.
+ */
+import Base from '@/layouts/Base.astro'
+import NotFound from '@/views/NotFound.astro'
+import { SECTION_COMPONENTS } from '@/components/sections/registry'
+import Masthead from '@/components/blog/Masthead.astro'
+import Pagination from '@/components/blog/Pagination.astro'
+import PostCard from '@/components/blog/PostCard.astro'
+import Chips from '@/components/blog/Chips.astro'
+import AuthorProfile from '@/components/blog/AuthorProfile.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import { stampFor, stampsFor, type Attrs } from '@/lib/stamps'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import type { ComposedPage } from '@/lib/sections'
+import {
+  AUTHORS_PATH,
+  BLOG_PATH,
+  categoryPath,
+  countBy,
+  dateMedium,
+  dateShort,
+  loadTerms,
+  pageHref,
+  postPath,
+  resolveListing,
+  TAGS_PATH,
+  tagPath,
+  type Post
+} from '@/lib/posts'
+import { ui } from '@/lib/ui'
+import { fillWords, uiCount } from '@/lib/ui-words'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path: string
+  page?: ComposedPage & { filter?: string }
+  category?: string
+  tag?: string
+  author?: string
+}
+const { chrome, locale, path, page, category, tag, author } = Astro.props
+
+// The router gets the 404 status from viewFound() (same resolver); a miss renders the 404 view here.
+const { posts, list, pg, term, writer, mode, categorySlug, tagSlug } = await resolveListing(
+  locale,
+  { page, category, tag, author },
+  Astro.url
+)
+const url = (n: number) => pageHref(Astro.url, n)
+// The template's own words, in the site's language (`src/lib/ui.ts`).
+const { tag: lang, w } = ui(locale)
+const counter = (p: { page: number; pages: number }) => fillWords(w.pageOf, { page: p.page, pages: p.pages })
+
+const catCounts = countBy(posts, (p) => (p.category ? [p.category.slug] : []))
+const tagCounts = countBy(posts, (p) => p.tags.map((t) => t.slug))
+const [allCategories, allTags] = pg
+  ? await Promise.all([loadTerms(locale, 'category'), loadTerms(locale, 'tag')])
+  : [[], []]
+const homeHref = href(locale, '/')
+const blogHref = href(locale, BLOG_PATH)
+const authorsHref = href(locale, AUTHORS_PATH)
+const tagsHref = href(locale, TAGS_PATH)
+// With the blog unticked, a list a kept page keeps alive (Engineering, a category view All categories links to) still
+// renders; its links into the blog family are drawn only while their target is reachable (TCH #1013,
+// `src/lib/listed-children.ts`). With the blog on, every one of them is live.
+const live = await liveLinks(Astro.request, locale, [
+  blogHref,
+  authorsHref,
+  tagsHref,
+  ...allCategories.map((c) => categoryPath(c.slug)),
+  ...allTags.map((t) => tagPath(t.slug))
+])
+const categories = allCategories.filter((c) => catCounts.get(c.slug) && live(categoryPath(c.slug)))
+const popularTags = allTags
+  .filter((t) => tagCounts.get(t.slug) && live(tagPath(t.slug)))
+  .sort((a, b) => (tagCounts.get(b.slug) ?? 0) - (tagCounts.get(a.slug) ?? 0))
+
+// Tag archives carry the source's template prefix ("Tagged: incident"); categories show the bare label.
+const title =
+  writer?.name ??
+  (term
+    ? tagSlug
+      ? fillWords(w.taggedTitle, { label: term.label })
+      : term.label
+    : page?.heading || page?.title || '')
+const description = writer ? writer.tagline || null : page?.sub || term?.description || null
+const eyebrow = mode === 'author' ? w.author : mode === 'stream' ? w.blog : tagSlug ? w.tagged : w.category
+const home = { label: w.home, href: homeHref }
+const allCrumbs: Array<{ label: string; href?: string }> =
+  mode === 'author'
+    ? [home, { label: w.authors, href: authorsHref }, { label: title }]
+    : mode === 'catalog' && tagSlug
+      ? [home, { label: w.tags, href: tagsHref }, { label: term?.label ?? title }]
+      : mode === 'catalog'
+        ? [home, { label: w.blog, href: blogHref }, { label: title }]
+        : []
+const crumbs = allCrumbs.filter((c) => !c.href || live(c.href))
+
+// Stream: the page's own category is "All posts"; the rest are topics.
+const topics = categories.filter((c) => c.slug !== categorySlug)
+const browse = [
+  { label: w.allPosts, href: blogHref, active: true },
+  ...topics.map((c) => ({ label: c.label, href: href(locale, categoryPath(c.slug)), active: false })),
+  ...popularTags
+    .slice(0, 6)
+    .map((t) => ({ label: t.label, href: href(locale, tagPath(t.slug)), active: false }))
+]
+const featured = mode === 'stream' && pg?.page === 1 ? pg.slice[0] : undefined
+const rows = pg ? (featured ? pg.slice.slice(1) : pg.slice) : []
+const postUrl = (p: Post) => href(locale, postPath(p.slug))
+const sections = page && mode !== 'author' ? page.sections : []
+
+// Provenance stamps (`src/lib/stamps.ts`); empty on an ordinary request. The list page's entry owns
+// the page and stamps its head; a writer's page is owned by the writers entry. A category or tag name
+// is a taxonomy term, not a Content API record, and the list chrome ("Browse", "All articles") is the
+// template's own words: neither carries a stamp.
+const $ = stampsFor(Astro.request)
+const $page = stampFor(Astro.request, 'pages', page ? { slug: page.slug, data: { id: page.id } } : null)
+const $writer = stampFor(Astro.request, 'writers', writer?.entry ?? null)
+const $owner = writer ? $writer : $page
+const none: Attrs = {}
+const headMarks = writer
+  ? { title: $writer('name'), sub: writer.tagline ? $writer('tagline') : none }
+  : term
+    ? { sub: page?.sub ? $page('sub') : none }
+    : { title: $page(page?.heading ? 'heading' : 'title'), sub: $page('sub') }
+---
+
+{
+	!pg ? (
+		<NotFound chrome={chrome} locale={locale} path={path} />
+	) : (
+		<Base chrome={chrome} title={title} description={description} currentPath={path} style={page?.style ?? 'terminal'}>
+			<PageOwner stamp={$owner} />
+			<Masthead title={title} sub={description} eyebrow={eyebrow} crumbs={crumbs} crumbsLabel={w.breadcrumb} band={mode !== 'author'} size={mode === 'author' ? 'author' : tagSlug ? 'tags' : 'list'} marks={headMarks} />
+
+			{mode === 'stream' && (
+				<>
+					<nav class="browse" aria-label={w.browse}>
+						<div class="k-container browse-inner">
+							<span class="browse-label">{w.browse}</span>
+							<ul>
+								{browse.map((b) => (
+									<li>
+										<a href={b.href} class:list={{ active: b.active }} aria-current={b.active ? 'page' : undefined}>
+											{b.label}
+										</a>
+									</li>
+								))}
+							</ul>
+						</div>
+					</nav>
+
+					{featured && (
+						<section class="k-container feat">
+							<div class="feat-head">
+								<span class="feat-title">
+									<span class="feat-num">(01)</span> {w.featuredRead}
+								</span>
+								<span class="feat-note">{w.editorsPick}</span>
+							</div>
+							<a class="feat-card" href={postUrl(featured)} {...$('posts', featured)()}>
+								{featured.cover && (
+									<div class="feat-media">
+										<img src={featured.cover} alt={featured.coverAlt} width="960" height="640" decoding="async" {...$('posts', featured)('cover')} />
+									</div>
+								)}
+								<div class="feat-body">
+									{featured.category && <span class="feat-cat">{featured.category.label}</span>}
+									<h2 class="feat-h" {...$('posts', featured)('title')}>{featured.title}</h2>
+									{featured.excerpt && <p class="feat-excerpt" {...$('posts', featured)('excerpt')}>{featured.excerpt}</p>}
+									<span class="feat-meta">{[featured.author, dateMedium(featured.date, lang), fillWords(w.minShort, { n: featured.minutes })].filter(Boolean).join(' · ')}</span>
+								</div>
+							</a>
+						</section>
+					)}
+
+					<section class:list={['k-container stream', { first: !featured }]}>
+						<div class="stream-grid">
+							<aside class="rail" aria-label={w.topics}>
+								<span class="rail-title">{w.topics}</span>
+								<a href={href(locale, BLOG_PATH)} class="active" aria-current="page">
+									{w.allPosts}
+								</a>
+								{topics.map((c) => (
+									<a href={href(locale, categoryPath(c.slug))}>{c.label}</a>
+								))}
+							</aside>
+							<div class="stream-main">
+								<div class="list-head">
+									<h2 class="list-title">{w.allArticles}</h2>
+									<span class="list-count">// {uiCount(lang, w.posts, list.length)} · {w.newestFirst}</span>
+								</div>
+								{rows.map((p, i) => (
+									<a class="row" href={postUrl(p)} {...$('posts', p)()}>
+										<span class="row-num">{String(i + 1).padStart(2, '0')}</span>
+										<div class="row-main">
+											{p.category && <span class="row-cat">{p.category.label}</span>}
+											<h3 class="row-h" {...$('posts', p)('title')}>{p.title}</h3>
+											{p.excerpt && <p class="row-excerpt" {...$('posts', p)('excerpt')}>{p.excerpt}</p>}
+										</div>
+										<div class="row-meta">
+											<span>{p.author}</span>
+											<span>{dateShort(p.date, lang)}</span>
+											<span class="read">{fillWords(w.minShort, { n: p.minutes })}</span>
+										</div>
+									</a>
+								))}
+								<Pagination page={pg.page} pages={pg.pages} url={url} counter={counter(pg)} locale={locale} />
+							</div>
+						</div>
+					</section>
+				</>
+			)}
+
+			{mode === 'catalog' && (
+				<section class="catalog">
+					<div class="k-container cat-grid">
+						<div class="cat-main">
+							{pg.slice.length === 0 && <p class="empty">{w.noPostsYet}</p>}
+							{pg.slice.map((p) => (
+								<PostCard post={p} locale={locale} variant="catalog" media />
+							))}
+							<Pagination page={pg.page} pages={pg.pages} url={url} counter={counter(pg)} locale={locale} />
+						</div>
+						<aside class="cat-aside">
+							{categories.length > 0 && (
+								<div class="box">
+									<span class="box-h">{w.categories}</span>
+									{categories.map((c) => (
+										<a href={href(locale, categoryPath(c.slug))} class:list={['box-row', { active: c.slug === categorySlug }]} aria-current={c.slug === categorySlug ? 'page' : undefined}>
+											<span>{c.label}</span>
+											<span class="box-count">{catCounts.get(c.slug)}</span>
+										</a>
+									))}
+								</div>
+							)}
+							{popularTags.length > 0 && (
+								<div class="box">
+									<span class="box-h">{w.popularTags}</span>
+									<Chips items={popularTags.slice(0, 10).map((t) => ({ label: t.label, href: href(locale, tagPath(t.slug)), active: t.slug === tagSlug }))} />
+								</div>
+							)}
+						</aside>
+					</div>
+				</section>
+			)}
+
+			{mode === 'author' && writer && <AuthorProfile writer={writer} posts={pg.slice} locale={locale} page={pg.page} pages={pg.pages} url={url} />}
+
+			{sections.map((section, index) => {
+				const Component = SECTION_COMPONENTS[section.collection]
+				return Component ? <Component data={section.data} index={index} style={page?.style ?? 'terminal'} stamp={$(section.collection, { slug: section.entry, data: section.data })} /> : null
+			})}
+		</Base>
+	)
+}
+
+<style>
+	/* Browse strip: one scrolling line of topics and tags. */
+	.browse {
+		background: var(--k-elevated);
+		border-bottom: 1px solid var(--k-border);
+	}
+	.browse-inner {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+		padding-block: 14px;
+		overflow-x: auto;
+		scrollbar-width: none;
+		white-space: nowrap;
+	}
+	.browse-inner::-webkit-scrollbar {
+		display: none;
+	}
+	.browse-label {
+		flex: none;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-primary);
+	}
+	.browse ul {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.browse li {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+	.browse li + li::before {
+		content: '';
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: var(--k-primary-fill);
+	}
+	.browse a {
+		font-family: var(--font-mono);
+		font-size: 13px;
+		line-height: 1.55;
+		color: var(--k-text);
+	}
+	.browse a:hover,
+	.browse a.active {
+		color: var(--k-primary);
+	}
+
+	/* Featured read. */
+	.feat {
+		padding-top: 72px;
+	}
+	.feat-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 16px;
+		margin-bottom: 24px;
+		padding-top: 28px;
+		border-top: 1px solid var(--k-border);
+	}
+	.feat-title {
+		font-family: var(--font-heading);
+		font-size: 26px;
+		line-height: 1.5;
+		letter-spacing: -0.5px;
+		font-weight: 700;
+		color: var(--k-heading);
+	}
+	.feat-num {
+		font-family: var(--font-mono);
+		font-size: 14px;
+		font-weight: 400;
+		letter-spacing: 0;
+		color: var(--k-primary);
+	}
+	.feat-note {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.feat-card {
+		display: flex;
+		min-height: 300px;
+		overflow: hidden;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: var(--radius-card);
+		transition: border-color 0.15s;
+	}
+	.feat-card:hover {
+		border-color: color-mix(in srgb, var(--k-primary) 45%, var(--k-border));
+	}
+	.feat-media {
+		position: relative;
+		flex: 0 0 480px;
+		background: var(--k-elevated);
+	}
+	.feat-media img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.feat-body {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		padding: 36px;
+	}
+	.feat-cat {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-primary);
+	}
+	.feat-h {
+		margin: 0;
+		max-width: 620px;
+		font-family: var(--font-heading);
+		font-size: 28px;
+		line-height: 1.21;
+		letter-spacing: -0.5px;
+		font-weight: 700;
+		color: var(--k-heading);
+		transition: color 0.15s;
+	}
+	.feat-card:hover .feat-h {
+		color: var(--k-primary);
+	}
+	.feat-excerpt {
+		margin: 0;
+		max-width: 560px;
+		font-size: 15.5px;
+		line-height: 1.6;
+		color: var(--k-text);
+	}
+	.feat-meta {
+		margin-top: 4px;
+		font-family: var(--font-mono);
+		font-size: 12.5px;
+		color: var(--k-muted);
+	}
+
+	/* Topics rail + numbered rows. */
+	.stream {
+		padding-block: 96px 88px;
+	}
+	.stream.first {
+		padding-top: 72px;
+	}
+	.stream-grid {
+		display: grid;
+		grid-template-columns: 210px minmax(0, 1fr);
+		gap: 40px;
+		align-items: start;
+	}
+	.rail {
+		position: sticky;
+		top: 96px;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+	.rail-title {
+		margin-bottom: 8px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.rail a {
+		padding: 9px 12px;
+		border-radius: 8px;
+		font-size: 14.5px;
+		line-height: 1.55;
+		color: var(--k-muted);
+		transition: color 0.15s, background-color 0.15s;
+	}
+	.rail a:hover {
+		color: var(--k-heading);
+	}
+	.rail a.active {
+		color: var(--k-primary);
+		background: color-mix(in srgb, var(--k-primary) 8%, transparent);
+	}
+	.list-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 16px;
+		margin-bottom: 4px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid var(--k-border);
+	}
+	.list-title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 18px;
+		line-height: 1.55;
+		letter-spacing: -0.2px;
+		font-weight: 600;
+		color: var(--k-heading);
+	}
+	.list-count {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		color: var(--k-muted);
+		white-space: nowrap;
+	}
+	.row {
+		display: grid;
+		grid-template-columns: 54px minmax(0, 1fr) 152px;
+		gap: 24px;
+		padding: 26px 0;
+	}
+	.row + .row {
+		border-top: 1px solid var(--k-border);
+	}
+	.row-num {
+		font-family: var(--font-mono);
+		font-size: 18px;
+		line-height: 1.2;
+		color: var(--k-muted);
+	}
+	.row-cat {
+		display: block;
+		margin-bottom: 8px;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		line-height: 1.55;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: var(--k-primary);
+	}
+	.row-h {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 21px;
+		line-height: 1.25;
+		font-weight: 600;
+		color: var(--k-heading);
+		transition: color 0.15s;
+	}
+	.row:hover .row-h {
+		color: var(--k-primary);
+	}
+	.row-excerpt {
+		margin: 7px 0 0;
+		font-size: 14.5px;
+		line-height: 1.5;
+		color: var(--k-text);
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.row-meta {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 3px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		line-height: 1.55;
+		color: var(--k-muted);
+		text-align: right;
+	}
+	.row-meta .read {
+		color: var(--k-primary);
+	}
+
+	/* Catalog: card rows beside categories and tags. */
+	.catalog {
+		padding: 56px 0 72px;
+	}
+	.cat-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 300px;
+		gap: 40px;
+		align-items: start;
+	}
+	.cat-main {
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+	}
+	.empty {
+		margin: 0;
+		color: var(--k-muted);
+	}
+	.cat-aside {
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+	}
+	.box {
+		display: flex;
+		flex-direction: column;
+		padding: 20px;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 14px;
+	}
+	.box-h {
+		margin-bottom: 12px;
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.box-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		margin: 0 -8px;
+		padding: 6px 8px;
+		border-radius: 8px;
+		font-size: 14px;
+		line-height: 1.55;
+		color: var(--k-text);
+	}
+	.box-row:hover {
+		color: var(--k-heading);
+	}
+	.box-row.active {
+		color: var(--k-primary);
+		background: color-mix(in srgb, var(--k-primary) 8%, transparent);
+	}
+	.box-count {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--k-muted);
+	}
+
+	@media (max-width: 991px) {
+		.stream-grid,
+		.cat-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.rail {
+			display: none;
+		}
+	}
+	@media (max-width: 767px) {
+		.feat {
+			padding-top: 36px;
+		}
+		.feat-head {
+			display: none;
+		}
+		.feat-card {
+			flex-direction: column;
+		}
+		.feat-media {
+			flex: none;
+			height: 150px;
+		}
+		.feat-body {
+			gap: 10px;
+			padding: 24px 20px;
+		}
+		.feat-h {
+			font-size: 22px;
+		}
+		.stream,
+		.stream.first {
+			padding-block: 48px 64px;
+		}
+		.row {
+			grid-template-columns: 32px minmax(0, 1fr);
+			gap: 8px 16px;
+		}
+		.row-meta {
+			grid-column: 2;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 0;
+			font-size: 11.5px;
+			text-align: left;
+		}
+		.row-meta span + span::before {
+			content: '·';
+			margin: 0 6px;
+			color: var(--k-muted);
+		}
+		.catalog {
+			padding: 40px 0 56px;
+		}
+	}
+</style>

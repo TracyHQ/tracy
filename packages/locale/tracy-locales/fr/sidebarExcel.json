@@ -1,0 +1,17 @@
+{
+  "charts": "graphiques",
+  "conditionalFormatting": "mise en forme conditionnelle",
+  "encoding": "Cet encodage de texte n’a pas pu être lu. Enregistrez le fichier en UTF-8 ou UTF-16 avec BOM puis réessayez.",
+  "featureSeparator": ", ",
+  "formulaWarning": "Ce classeur contient des formules. Les résultats affichés peuvent être manquants ou inexacts.",
+  "images": "images",
+  "invalid": "Impossible d’ouvrir cette feuille de calcul. Vérifiez son format, son contenu ou sa protection par mot de passe.",
+  "language": "en",
+  "loading": "Rendu du document…",
+  "retry": "Réessayer",
+  "shapes": "formes",
+  "timeout": "L’ouverture de ce classeur a expiré. Essayez un fichier plus petit.",
+  "title": "Feuille de calcul",
+  "tooLarge": "Ce classeur dépasse la taille limite de l’aperçu.",
+  "unsupportedNotice": "Cet aperçu ne prend pas en charge les {features} de ce classeur. Ouvrez-le dans une application du système pour une expérience complète."
+}

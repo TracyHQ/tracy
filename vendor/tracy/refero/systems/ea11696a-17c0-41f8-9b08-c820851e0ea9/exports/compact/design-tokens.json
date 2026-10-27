@@ -1,0 +1,59 @@
+{
+  "color": {
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, card surfaces, ghost button fill — the primary stage everything else sits on"
+    },
+    "graphite-ink": {
+      "$value": "#3a3a3e",
+      "$type": "color",
+      "$description": "Graphite Ink — Primary text, link color, icon strokes, hairline borders, ghost button borders — a warm near-black that carries 97% of all typographic weight"
+    },
+    "deep-carbon": {
+      "$value": "#090b11",
+      "$type": "color",
+      "$description": "Deep Carbon — Accent text, nav strokes, strong card borders — slightly cooler and harder than Graphite Ink, reserved for moments of maximum contrast"
+    },
+    "ash-veil": {
+      "$value": "#b5b0b0",
+      "$type": "color",
+      "$description": "Ash Veil — Muted body backgrounds, soft borders — a warm gray used for secondary surface bands beneath the main canvas"
+    },
+    "apricot-wash": {
+      "$value": "#ffcf9e",
+      "$type": "color",
+      "$description": "Apricot Wash — Card backgrounds and borders — the dominant chromatic accent, used as a warm fill or hairline outline on featured cards"
+    },
+    "iris-mist": {
+      "$value": "#babfff",
+      "$type": "color",
+      "$description": "Iris Mist — Card backgrounds and borders — cool lavender counterpoint to Apricot Wash, pairs with peach on portfolio or feature cards"
+    },
+    "fuchsia-bloom": {
+      "$value": "#e3a2ef",
+      "$type": "color",
+      "$description": "Fuchsia Bloom — Card backgrounds — a vivid pink fill, the most saturated color in the system, appears as a solid block rather than a border"
+    },
+    "polar-blue": {
+      "$value": "#bfe0f7",
+      "$type": "color",
+      "$description": "Polar Blue — Soft surface tint — pale sky blue used as a rare secondary card or section background, cooling the warm peach/lavender/pink palette"
+    }
+  },
+  "font": {
+    "instrument-sans": {
+      "$value": "Instrument Sans",
+      "$type": "fontFamily",
+      "$description": "The only typeface. Used for every UI element, every headline, every caption. Weight 400 is default body and display; weight 500 sparingly for nav labels and emphasis. The signature move: Instrument Sans is a humanist geometric grotesque with optical corrections — paired with aggressive negative tracking at display sizes, it produces tight, modern, almost couture typography that reads as editorial, not SaaS."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.blueyard.com",
+      "siteName": "BlueYard Capital",
+      "extractedAt": "2026-06-03T20:07:35.302Z",
+      "variant": "compact"
+    }
+  }
+}

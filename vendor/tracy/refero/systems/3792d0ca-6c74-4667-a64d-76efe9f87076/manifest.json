@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3792d0ca-6c74-4667-a64d-76efe9f87076",
+  "status": "complete",
+  "name": "Xbox.com",
+  "url": "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+  "sourceWebsite": "https://xbox.com",
+  "extractedAt": "2026-06-03T19:09:29.419Z",
+  "capturedAt": "2026-10-08T05:10:19.982024+00:00",
+  "theme": "light",
+  "industry": "media",
+  "description": "stadium-lit arcade storefront. Stark white shelves displaying game artwork under dramatic lighting, with one signature green neon strip cutting through the rows.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/12ef26da-ad9c-48cf-9f2f-6e7592dde2bd.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/a1ebd54a-5f54-48f3-8473-f4f886dce4bc.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/168d9f02-a32a-4ac0-8621-5e3f96b87c4e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b90965c0-960b-43cb-ae9d-b81e19781aae.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/190969d6-51e5-45db-b688-a223873e3fbb.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "706753919eec93a0d63d96a4513fb856d4fad9714172db8c4a6d85d491335525",
+      "bytes": 21441
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "96e33537e463a6a415bc446871928747d51158073544e65854103bcb4b306658",
+      "bytes": 232629
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c6f47af222ae8cfe5c07a137f9eb4ec2ba23fb6f1cc743b165631faf0bfb5d51",
+      "bytes": 18851
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "67c09696db7ca1bd243e5e1ea837dc643b8d941f525a5f5e1aa5fd838cbe1623",
+      "bytes": 10152
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ad1e235172975e607b5b6979b88238c9efe488803b0da28dd6b4ae4e2fb0567d",
+      "bytes": 13926
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "456219367e434b6742bc768979dfeb124a5bfca19f3ad27286a2b9fb1e69fb50",
+      "bytes": 3540
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "5909d1a32dd1d5af32e78aeb63f3749d1e2a1fea0dee3af2e01b445e415c733f",
+      "bytes": 630
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "519cf3cf1e94ec65a7e9278d1beebe88337d51010fee511984c7f3a00550dc6f",
+      "bytes": 647
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9a34b4d7ab6d4565b1677fd64a4373c14ff202ab19267a1761a5234f67c5070e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "9c1f2394323741e23759d8f7af1da28b5703a920b51565f8d87bb4da4bd1bb73",
+      "bytes": 43942
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a58dfd08f3438a820b8c1ab3132dd2c2a7c16fd41603761c8896bf7016f48b98",
+      "bytes": 22500
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e6b512eb64cba38408bfff9e0ea9c08e37a14d88b2e9cf1a4141b4d1184a7c60",
+      "bytes": 42055
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6a97b72d5ac911c86caa4f1a25e80abd909d088facb4a0b092b3faaa4e4b1a0c",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "768af8a91e0bad2b2ade5db710f99700221e305eac28b4d01cdc71ca41f49f5c",
+      "bytes": 1339
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d6fa91e00cb8d398eb7baa1014e25ab81decbb36f7dfefa0f9fb6f661203dbe5",
+      "bytes": 1925
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0e4d933c-aa07-4787-9884-40a0e6c338e4",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "35f89ccd-614d-4f8f-9cce-bb94309df237",
+    "3792d0ca-6c74-4667-a64d-76efe9f87076",
+    "40030487-56e3-447d-904f-b955ebadd0b5",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "4782832c-1c23-4fe3-997c-2a08d7b6c5d1",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "5f39e778-d204-42a9-8b8b-a1519dbd3971",
+    "604af0f7-b4c3-4921-93af-9da03df81493",
+    "7e21f6e1-deec-4bc4-a30e-f2c9d3320314",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "c70a9990-bc4b-4a64-a69b-aeb7b344fb74",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "e586b296-bfac-4e93-add2-daa384712b39",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "faec4b0c-cf93-4150-97de-0a8e7eed1840"
+  ]
+}

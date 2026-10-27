@@ -1,0 +1,343 @@
+{
+  "dos": [
+    "Use weight 200 for all display and headline text in PP Neue Montreal — the ultra-light cut is the brand's visual signature.",
+    "Use Sky Signal (#67beff) only for the filled primary CTA and the live-status dot; never extend it to backgrounds, illustrations, or decorative fills.",
+    "Set headline line-height to 1.00-1.10 — the tight leading is essential to the whisper aesthetic and prevents the light weight from looking fragile.",
+    "Keep card padding in the 20-24px range and radii at 12-20px; tighter and it feels cramped, wider and it competes with the generous page-level spacing.",
+    "Use Ghost buttons (transparent + Slate text) for all secondary actions; reserve the filled Sky Signal button exclusively for the single primary action on each screen.",
+    "Apply the hairline Linen (#e5e8ec) border pattern with rgba(0,0,0,0.02) shadow for elevated surfaces — the system uses depth in millimeters, not millimeters turned into centimeters.",
+    "Center text blocks at max-width 680px for readability; let the surrounding negative space carry the page rhythm."
+  ],
+  "donts": [
+    "Do not use weights above 500 for PP Neue Montreal — the Medium 500 is already the upper bound; 600+ destroys the whisper character of the system.",
+    "Do not add color to body copy, headings, or backgrounds beyond the Inkstone/Slate/Pewter neutral scale — chromatic text breaks the monochrome contract.",
+    "Do not apply large or saturated shadows; the system intentionally operates at rgba(0,0,0,0.02) to rgba(0,0,0,0.1) depth only.",
+    "Do not use pill shapes (9999px radius) for primary buttons — 8px is the button radius; pill shapes are reserved for tags and status chips.",
+    "Do not introduce gradients, glassmorphism, or heavy blur effects — the design language is flat, matte, and paper-like.",
+    "Do not set headline letter-spacing to negative values — PP Neue Montreal is already optically balanced; additional tracking adjustment creates inconsistency with the font's native rhythm.",
+    "Do not use Electric Iris (#4288ff) as a fill — it is an outline/link/ghost action color only; Sky Signal owns the filled action role."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#67beff",
+      "name": "Sky Signal",
+      "role": "Blue action color for filled buttons, selected navigation states, and focused conversion moments",
+      "group": "brand"
+    },
+    {
+      "hex": "#4288ff",
+      "name": "Electric Iris",
+      "role": "Outlined/ghost action border, inline link accent, focus rings — cooler and slightly deeper than Sky Signal",
+      "group": "brand"
+    },
+    {
+      "hex": "#fafbfc",
+      "name": "Paper White",
+      "role": "Page canvas, primary surface, inverted text on dark bars",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f3f7fa",
+      "name": "Mist",
+      "role": "Subtle band backgrounds, section alternation, elevated surface tint",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2f6fa",
+      "name": "Fog",
+      "role": "Card surface, soft fill behind product screenshots",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e8ec",
+      "name": "Linen",
+      "role": "Hairline dividers, faint borders, disabled surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Ash",
+      "role": "Ghost button background, subtle hover fill",
+      "group": "neutral"
+    },
+    {
+      "hex": "#292c3d",
+      "name": "Inkstone",
+      "role": "Primary text, strongest contrast — carries the 200-weight headlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3e4150",
+      "name": "Slate",
+      "role": "Body text, secondary headings, dense body copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#686a76",
+      "name": "Pewter",
+      "role": "Muted body text, helper text, inactive nav",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7d7e7e",
+      "name": "Graphite",
+      "role": "Tertiary text, footer links, faint labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c2c3c8",
+      "name": "Silver",
+      "role": "Placeholder text, very faint borders, decorative strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#171719",
+      "name": "Obsidian",
+      "role": "Top announcement bar background, dark surface, inverted text fill",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1e1e20",
+      "name": "Midnight",
+      "role": "Dark card surface, secondary dark fill",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed sections on a 1200px max-width centered grid. Hero is left-aligned text block at ~680px width with generous left margin, followed by centered product screenshot cards. Sections alternate between Paper White and Mist (#f3f7fa) for subtle rhythm. Vertical spacing between sections is 80-120px. Navigation is a minimal top bar with no sticky behavior, no shadow, no border — the top announcement bar provides the only dark surface contrast.",
+  "imagery": "Visuals are dominated by product UI screenshots displayed in rounded cards against muted backgrounds. No lifestyle photography, no stock imagery, no illustration. The only decorative visuals are very faint geometric patterns on hero sections, rendered in near-white opacity so they read as paper texture rather than graphic design. Icons are minimal and line-based, inline with text rather than standing alone.",
+  "similar": [
+    {
+      "why": "Same near-monochrome palette with a single vivid accent (Linear's purple), ultra-clean surfaces, hairline borders, and whisper-light typography hierarchy",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar typographic confidence with custom display faces, centered hero text blocks on white, and minimal decorative chrome — though Stripe leans more colorful",
+      "business": "Stripe"
+    },
+    {
+      "why": "Same paper-white canvas aesthetic, restrained color usage, and emphasis on generous whitespace around compact UI elements",
+      "business": "Notion"
+    },
+    {
+      "why": "Geist-family typography sensibility (though Aqua uses PP Neue Montreal), dark/light surface contrast via announcement bars, and minimal product UI surfaces",
+      "business": "Vercel"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "12-20px",
+      "icons": "4px",
+      "pills": "9999px",
+      "inputs": "8px",
+      "buttons": "8px",
+      "decorative": "30-70px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "80-120px",
+    "cardPadding": "20-24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#fafbfc",
+      "name": "Page Canvas",
+      "level": 1,
+      "purpose": "Primary background for all pages"
+    },
+    {
+      "hex": "#f3f7fa",
+      "name": "Section Band",
+      "level": 2,
+      "purpose": "Alternating section tint, subtle visual rhythm"
+    },
+    {
+      "hex": "#f2f6fa",
+      "name": "Card Surface",
+      "level": 3,
+      "purpose": "Product screenshot cards, elevated content blocks"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Hover/Active Fill",
+      "level": 4,
+      "purpose": "Ghost button hover, interactive feedback"
+    },
+    {
+      "hex": "#171719",
+      "name": "Inverted Bar",
+      "level": 5,
+      "purpose": "Top announcement bar, dark accent surfaces"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0px 0px 0px 1px rgba(0,0,0,0.02), 0px 1px 1px 0.5px rgba(0,0,0,0.02), 0px 3px 3px 1.5px rgba(0,0,0,0.02), 0px 6px 6px -3px rgba(0,0,0,0.02), 0px 12px 12px -6px rgba(0,0,0,0.02), 0px 24px 24px -12px rgba(0,0,0,0.02)",
+      "element": "Product Screenshot Card"
+    },
+    {
+      "style": "inset 0 1px 0 rgb(255,255,255), 0px 0px 0px 1px rgba(0,0,0,0.06), 0px 1px 1px 0.5px rgba(0,0,0,0.06), 0px 3px 3px 1.5px rgba(0,0,0,0.06), 0px 6px 6px -3px rgba(0,0,0,0.06), 0px 12px 12px -6px rgba(0,0,0,0.06), 0px 24px 24px -12px rgba(0,0,0,0.06)",
+      "element": "Elevated Panel"
+    },
+    {
+      "style": "0px 0px 0px 1px rgba(0,0,0,0.1), 0px 1px 1px 0.5px rgba(0,0,0,0.1), 0px 3px 3px 1.5px rgba(0,0,0,0.1), 0px 6px 6px -3px rgba(0,0,0,0.1), 0px 12px 12px -6px rgba(0,0,0,0.1), 0px 24px 24px -12px rgba(0,0,0,0.1)",
+      "element": "Floating Card"
+    }
+  ],
+  "northStar": "Whisper on paper — ultra-light type resting on near-white with a single blue drop of color",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 1
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Bar",
+      "role": "Top utility strip",
+      "description": "Full-bleed Obsidian (#171719) bar, ~40px tall, centered white text at 12px PP Neue Montreal Book, contains an inline 'Download' link underlined. Used for release announcements and live-status notices."
+    },
+    {
+      "name": "Primary Navigation",
+      "role": "Top site nav",
+      "description": "White background, no border or shadow. Left: wordmark 'AQUA' at 16px PP Neue Montreal Medium 500, uppercase tracking. Right: nav links (Pricing, User Guide, Blog, Changelog, API, Download iOS) at 14px weight 400 in Slate, followed by a filled CTA. Generous horizontal padding ~24px."
+    },
+    {
+      "name": "Filled CTA Button",
+      "role": "Primary action",
+      "description": "Sky Signal (#67beff) background, white text, 8px radius, padding 10px 16px, PP Neue Montreal Medium 500 at 14px. The only saturated fill in the system — its rarity makes it the unmistakable action signal. No border, no shadow."
+    },
+    {
+      "name": "Ghost Button",
+      "role": "Secondary action",
+      "description": "Transparent background, Slate (#3e4150) text at 14px weight 500, 8px radius, padding 10px 16px. No border — relies on text weight contrast to indicate interactivity. Hover: Ash (#efefef) background fill."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Primary page headline",
+      "description": "PP Neue Montreal Book 200, 56-72px, Inkstone (#292c3d), line-height 1.00-1.10. The ultra-light weight is the signature — headline reads as whisper rather than announcement. Left-aligned in wide single-column blocks with generous left/right breathing room."
+    },
+    {
+      "name": "Key Hint Chip",
+      "role": "Keyboard indicator",
+      "description": "White background, Linen (#e5e8ec) 1px border, 4px radius, padding 4px 10px, text in Geist Mono 13px weight 500 Slate. Used inline to denote keyboard keys (e.g. 'Hold', 'Space') within instructional copy."
+    },
+    {
+      "name": "Product Screenshot Card",
+      "role": "Feature demonstration",
+      "description": "Product UI screenshot placed inside a 20px-radius card with Fog (#f2f6fa) or Mist (#f3f7fa) background. Card has a hairline Linen (#e5e8ec) border and a barely-there shadow at rgba(0,0,0,0.02). The card sits centered below text blocks, acting as the visual anchor for each section."
+    },
+    {
+      "name": "Inline Link",
+      "role": "Text link accent",
+      "description": "Electric Iris (#4288ff) color, PP Neue Montreal Medium 500, underlined. No background fill — color is the only signal. Hover: same color, opacity 0.8."
+    },
+    {
+      "name": "Status Dot",
+      "role": "Live indicator",
+      "description": "8px diameter filled circle in Sky Signal (#67beff). Used sparingly to indicate live/active state (e.g. 'Now live on iOS'). The only place this color appears outside the filled CTA."
+    },
+    {
+      "name": "Feature Section",
+      "role": "Content section",
+      "description": "Centered text block on Paper White or Mist background. Subheading at 40px weight 200, supporting body at 16px weight 400 Slate, max-width ~680px, followed by a Ghost CTA. Vertical rhythm: 80-120px between sections."
+    },
+    {
+      "name": "Subtle Background Pattern",
+      "role": "Decorative atmosphere",
+      "description": "Very faint geometric or organic pattern overlaid on hero sections at near-white opacity. Adds texture without competing with the whisper typography. Tones in Linen or Silver."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Primary typeface — weight 200 for display and headlines (anti-convention; most sites use 600-700, this whisper-weight gains authority through restraint), weight 400 for body and subheadings. Custom Pangram Pangram face with Polish alternates and character variants.",
+      "sizes": "13px, 14px, 15px, 16px, 17px, 20px, 24px, 40px, 56px, 60px, 72px",
+      "family": "PP Neue Montreal",
+      "weight": "200, 400",
+      "lineHeight": "1.00, 1.10, 1.20, 1.40, 1.50, 1.60",
+      "substitute": "Inter (200, 400) or Söhne Buch",
+      "letterSpacing": "normal across all sizes — no tracking adjustment",
+      "fontFeatureSettings": "\"blwf\" on, \"cv03\" on, \"cv04\" on, \"cv09\" on, \"cv11\" on"
+    },
+    {
+      "role": "Medium cut for UI controls, buttons, nav links, and small labels where the Book weight feels too quiet to anchor interaction",
+      "sizes": "",
+      "family": "PP Neue Montreal",
+      "weight": "400, 500",
+      "lineHeight": "1.00, 1.10, 1.20, 1.40, 1.50, 1.60",
+      "substitute": "Inter Medium (500)",
+      "fontFeatureSettings": "\"blwf\" on, \"cv03\" on, \"cv04\" on, \"cv09\" on, \"cv11\" on"
+    },
+    {
+      "role": "System-level fallback and small UI text — nav micro-labels, metadata, the smallest body sizes",
+      "sizes": "10px, 11px, 12px, 20px",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.00, 1.10, 1.20, 1.40, 1.50, 1.60",
+      "substitute": "system-ui",
+      "letterSpacing": "normal"
+    },
+    {
+      "role": "Monospaced face for keyboard hints (the Hold/Space key chips), code, and technical micro-labels",
+      "sizes": "11px, 13px, 14px, 18px",
+      "family": "Geist Mono",
+      "weight": "400, 500",
+      "lineHeight": "1.00, 1.40, 1.60",
+      "substitute": "IBM Plex Mono, JetBrains Mono"
+    },
+    {
+      "role": "IBM Plex Mono — detected in extracted data but not described by AI",
+      "sizes": "10px, 13px",
+      "family": "IBM Plex Mono",
+      "weight": "400",
+      "lineHeight": "1.2"
+    }
+  ],
+  "description": "Aqua speaks in a typographic whisper on near-white surfaces. PP Neue Montreal at weight 200 for headlines is the signature — text that feels etched rather than printed, gaining authority through restraint instead of volume. The palette is 99% achromatic: a paper-white canvas, a tight ladder of cool grays for text, and a single vivid sky blue that appears only as functional punctuation for the download CTA, link accents, and the tiny 'now live' dot. Surfaces are flat with hairline borders and almost imperceptible shadows; the only elevation is a millimeter of rgba(0,0,0,0.02) depth. Components are compact and utilitarian — small radii, tight padding, ghost controls — but the page breathes with generous vertical rhythm between sections. Layout centers text in wide single-column blocks rather than fighting for grid space, and a large product screenshot in a soft 20px card anchors the second screen.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #292c3d (Inkstone) for headlines, #3e4150 (Slate) for body\n- background: #fafbfc (Paper White) canvas, #f3f7fa (Mist) section bands\n- border: #e5e8ec (Linen) hairline\n- accent: #67beff (Sky Signal) — filled CTA only\n- link/outline action: #4288ff (Electric Iris) — borders, ghost actions, inline links\n- primary action: #67beff (filled action)\n\n**Example Component Prompts**\n\n1. *Hero Headline Block*: 1200px max-width container, left-aligned text at 680px width. Headline: 56px PP Neue Montreal weight 200, color #292c3d, line-height 1.10. Subtext: 16px PP Neue Montreal weight 400, color #3e4150, line-height 1.50. 80px vertical padding above and below.\n\n2. *Filled Download CTA*: Sky Signal (#67beff) background, 8px border-radius, padding 10px 16px. Text: 14px PP Neue Montreal Medium 500, color white. No border, no shadow. Centered or right-aligned in nav bar.\n\n3. *Ghost Secondary Button*: Transparent background, 8px border-radius, padding 10px 16px. Text: 14px PP Neue Montreal Medium 500, color #3e4150. Hover state: #efefef background fill. No border in default state.\n\n4. *Product Screenshot Card*: Mist (#f2f6fa) or Fog (#f2f6fa) background, 20px border-radius, 1px Linen (#e5e8ec) border, padding 24px. Contains a product UI screenshot with 12px inner radius. Apply rgba(0,0,0,0.02) layered shadow stack.\n\n5. *Key Hint Chip*: White background, 1px #e5e8ec border, 4px border-radius, padding 4px 10px. Text: 13px Geist Mono weight 500, color #3e4150. Used inline within instructional sentences to denote keyboard keys."
+    }
+  ],
+  "elevationPhilosophy": "Depth operates at sub-perceptual thresholds. Shadows never exceed rgba(0,0,0,0.1) and are always paired with a 1px hairline border in Linen. The system treats elevation as a millimeter of paper, not a float of pixels — surface separation is communicated through subtle background tint shifts (#fafbfc → #f3f7fa → #f2f6fa) rather than cast shadow."
+}

@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10",
+  "kind": "fix",
+  "title": "JA Morgan wp7 1.1.10: the theme is listed in WordPress as \"WP Morgan\" and the release records a passing site sweep on the released zip",
+  "pr": 1007,
+  "area": "wordpress-theme/wp-ja-morgan",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read packages/cms/tracy-wordpress-theme/src/wp-ja-morgan/style.css and overlays/wp-ja-morgan/style.css and theme.config.json.",
+    "S2: Read tasks/ja-morgan-wp7/release/fix-measure.json (taken by site-sweep.mjs on the released zip) and the zip's line in tasks/ja-morgan-wp7/release/SHA256SUMS."
+  ],
+  "expect": [
+    "S1: both style.css files have exactly one 'Theme Name: WP Morgan' line; the shipped style.css has one 'Version: 1.1.10' line and the overlay's theme.config.json version is 1.1.10.",
+    "S2: fix-measure.json names site-sweep.mjs, its themeZipSha256 equals the zip line of SHA256SUMS, and 11 of 11 checks pass with none failing."
+  ],
+  "selectors": {
+    "overlay": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-morgan",
+    "evidence": "tasks/ja-morgan-wp7/release/fix-measure.json",
+    "tool": "tests/regression/scripts/REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10.mjs"
+  },
+  "evidence": "Name-only release of 06/10/2026: the clean restore of 1.1.10 passes 11/11 sweep checks on the released zip; `wp theme list` on the restore shows wp-ja-morgan titled WP Morgan at 1.1.10.",
+  "fence": "Reads committed files only; it does not re-measure a browser. The recorded sweep is bound to the released zip by its sha256.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10.mjs"]
+  }
+}

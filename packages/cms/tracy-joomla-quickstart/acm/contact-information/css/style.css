@@ -1,0 +1,16 @@
+/* The same token-driven block fits a full footer or the narrow Contact aside. */
+.acm-contact-information {color:var(--fg);font-family:var(--font-body);font-size:var(--text-base);line-height:var(--leading-body);}
+.acm-contact-information .tracy-contact-info__heading {font-family:var(--font-display);font-size:var(--text-xl);font-weight:700;line-height:var(--leading-tight);letter-spacing:var(--tracking-display);margin:0 0 var(--space-6);}
+.acm-contact-information .tracy-contact-info__social-heading {font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;line-height:var(--leading-tight);letter-spacing:var(--tracking-display);margin:0 0 var(--space-6);}
+.acm-contact-information .tracy-contact-info__label {margin:0 0 var(--space-2);color:var(--muted);}
+.acm-contact-information .tracy-contact-info__email {display:inline-block;font-size:var(--text-lg);line-height:1.47;overflow-wrap:anywhere;color:var(--fg);text-decoration:none;}
+.acm-contact-information .tracy-contact-info__notice {margin:var(--space-4) 0 0;color:var(--muted);max-width:52ch;}
+.acm-contact-information .tracy-contact-info__links {display:flex;flex-wrap:wrap;gap:var(--space-4) var(--space-6);list-style:none;margin:0;padding:0;}
+.acm-contact-information .tracy-contact-info__links li {margin:0;padding:0;}
+.acm-contact-information a {color:var(--fg);text-decoration:none;}
+.acm-contact-information a:hover {color:var(--accent);text-decoration:underline;text-underline-offset:.2em;}
+.acm-contact-information a:focus-visible {outline:2px solid var(--accent);outline-offset:4px;border-radius:var(--radius-sm);}
+.acm-contact-information [aria-disabled] {color:var(--muted);}
+.acm-contact-information small {display:block;font-size:var(--text-sm);}
+.tracy-contact__aside .acm-contact-information {padding:var(--space-6);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);}
+@media(max-width:767px) {.acm-contact-information .tracy-contact-info__heading {font-size:var(--text-2xl-phone);}}

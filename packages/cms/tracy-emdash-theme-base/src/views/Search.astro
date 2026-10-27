@@ -1,0 +1,63 @@
+---
+/**
+ * `/search`: the site search over posts, services and people through emdash's FTS. Never
+ * indexed and never cached — the page depends on `?q=`. Shape follows the source's search page
+ * (`resources-search`): a label, a wide field and the primary button; the source's
+ * "Advanced Search" has no counterpart here and is dropped.
+ */
+import { search } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import type { Chrome } from '@/lib/chrome'
+import { fill, href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+// Provenance stamps of the site chrome's fields (`src/lib/stamps.ts`); empty on an ordinary request.
+const $site = stampFor(Astro.request, 'site', site)
+Astro.response.headers.set('cache-control', 'no-store')
+
+// Which searchable collection lives under which route.
+const ROUTES: Record<string, string> = { posts: '/blog', services: '/services', people: '/team' }
+const q = (Astro.url.searchParams.get('q') ?? '').trim()
+const results = q
+  ? (
+      await search(q, { collections: Object.keys(ROUTES), locale, status: 'published', limit: 50 })
+    ).items.filter((r) => r.slug && ROUTES[r.collection])
+  : []
+const line = q
+  ? results.length > 0
+    ? fill(site.search_results_line, { count: results.length, query: q })
+    : fill(site.search_empty, { query: q })
+  : ''
+// The line is a filled template: stamped with the site field it was filled from.
+const lineStamp = q ? $site(results.length > 0 ? 'search_results_line' : 'search_empty') : {}
+---
+
+<Base chrome={chrome} title={site.search_title} currentPath="/search" robots="noindex, nofollow">
+	<main id="main" class="wrap pb-[var(--band-y)] pt-12">
+		<form action={href(locale, "/search")} method="get" role="search" class="max-w-[1024px]">
+			<h1 class="mb-3 text-[14px] font-medium leading-[1.47] text-fg"><label for="search-q" {...$site("search_title")}>{site.search_title}</label></h1>
+			<div class="flex flex-wrap gap-3">
+				<input id="search-q" type="search" name="q" value={q} placeholder={site.search_placeholder} {...$site("search_placeholder")} class="h-[52px] min-w-0 flex-1 rounded-[var(--ds-input-radius,10px)] border border-line bg-bg px-4 text-[17px] text-fg" />
+				<button type="submit" class="btn btn-primary" {...$site("search_button")}>{site.search_button}</button>
+			</div>
+		</form>
+		{line && <p class="mt-10 text-[17px] text-fg-2" aria-live="polite" {...lineStamp}>{line}</p>}
+		{results.length > 0 && (
+			<ol class="mt-2 max-w-[760px] divide-y divide-line-soft">
+				{results.map((r) => (
+					<li class="py-5">
+						<a href={href(locale, `${ROUTES[r.collection]}/${r.slug}`)} class="text-[19px] font-semibold leading-[1.25] text-fg hover:text-accent">{r.title ?? r.slug}</a>
+						{/* ds-keep: highlight of a matched word inside a sentence, not a component */}
+						{r.snippet && <p class="mt-1.5 text-[15px] leading-[1.5] text-fg-muted [&_mark]:rounded-[3px] [&_mark]:bg-accent-tint [&_mark]:text-fg" set:html={r.snippet} />}
+					</li>
+				))}
+			</ol>
+		)}
+	</main>
+</Base>

@@ -1,0 +1,1161 @@
+{
+  "schemaVersion": "tracy-quickstart-multilingual/v1",
+  "extensionVersion": "1.1.0",
+  "contract": "tracy-airbnb/j6/1.1.0",
+  "baseHash": "45588d4085084b2240e21c5617f67cb7af99d546e17705331ad6c2ce90c99d6a",
+  "baseFiles": {
+    "manifest.json": "b4a9be4bfa10b7101aa2d3cc3e46e4de9fa4342df871ff0303ffd1fafdf205e3",
+    "content-map.json": "80d86313971dcbbcc7b6a26851410e61f62f8f4e6c01a11dc194b28a8084bd9e",
+    "presentation-lock.json": "65083cc0c6a2e2f4519d3eef13bd49d604e62cd03a29f4d114b826695b3d82d0"
+  },
+  "sourceLanguage": "en-GB",
+  "derive": {
+    "article": {
+      "create": "row",
+      "carry": [
+        "catid",
+        "state",
+        "featured",
+        "access",
+        "ordering",
+        "publish_up",
+        "publish_down",
+        "images",
+        "urls",
+        "attribs",
+        "metadata",
+        "metadesc",
+        "metakey"
+      ],
+      "translate": [
+        "title",
+        "introtext",
+        "fulltext"
+      ],
+      "alias": "source-sef",
+      "association": "articleAssociation"
+    },
+    "module": {
+      "create": "row",
+      "carry": [
+        "module",
+        "position",
+        "ordering",
+        "published",
+        "showtitle",
+        "access",
+        "client_id",
+        "publish_up",
+        "publish_down"
+      ],
+      "translate": [
+        "content",
+        "params",
+        "title"
+      ],
+      "hiddenTitle": "{source} [{locale}]",
+      "note": "tracy-ml:{sourceKey}:{locale}",
+      "assignments": "map"
+    },
+    "menuItem": {
+      "create": "nested",
+      "carry": [
+        "menutype",
+        "type",
+        "browserNav",
+        "access",
+        "published",
+        "params",
+        "template_style_id",
+        "component_id"
+      ],
+      "translate": [
+        "title"
+      ],
+      "alias": "source",
+      "parent": "map",
+      "link": "remap-ids",
+      "home": "mirror",
+      "note": "tracy-ml:{sourceKey}:{locale}",
+      "association": "menuAssociation"
+    }
+  },
+  "aliasPolicy": "shared-with-source",
+  "sourceDelta": {
+    "language": {
+      "from": "*",
+      "to": "en-GB",
+      "entities": [
+        "module-170",
+        "module-171",
+        "module-172",
+        "module-173",
+        "module-174",
+        "module-175",
+        "module-177",
+        "module-178",
+        "module-179",
+        "module-180",
+        "module-181",
+        "module-182",
+        "module-183",
+        "module-184",
+        "module-185",
+        "module-186",
+        "module-187",
+        "module-188",
+        "module-189",
+        "module-190",
+        "module-191",
+        "module-192",
+        "module-193",
+        "module-194",
+        "module-195",
+        "module-196",
+        "module-197",
+        "module-198",
+        "module-199",
+        "module-200",
+        "module-201",
+        "module-202",
+        "module-203",
+        "module-204",
+        "module-205",
+        "module-206",
+        "module-207",
+        "module-208",
+        "module-213",
+        "module-214",
+        "module-215",
+        "module-216",
+        "module-217",
+        "module-218",
+        "module-219",
+        "module-220",
+        "module-221",
+        "module-222",
+        "module-223",
+        "article-1",
+        "article-2",
+        "article-3",
+        "article-7",
+        "article-8",
+        "article-9",
+        "article-10",
+        "article-11",
+        "article-12",
+        "article-13",
+        "article-14",
+        "article-15",
+        "article-16",
+        "article-17",
+        "article-18",
+        "article-19",
+        "article-20",
+        "article-21",
+        "article-22",
+        "article-23",
+        "article-24",
+        "article-25",
+        "article-26",
+        "article-27",
+        "article-28",
+        "article-29",
+        "article-30",
+        "article-31",
+        "article-32",
+        "article-33",
+        "article-34",
+        "article-35",
+        "article-36",
+        "article-37",
+        "article-38",
+        "article-39",
+        "article-40",
+        "article-41",
+        "article-42",
+        "article-43",
+        "article-45",
+        "article-46",
+        "article-47",
+        "article-48",
+        "article-49",
+        "article-50",
+        "article-51",
+        "article-52",
+        "article-53",
+        "article-54",
+        "article-55",
+        "article-56",
+        "article-57",
+        "article-58",
+        "article-59",
+        "article-60",
+        "article-61",
+        "article-62",
+        "article-63",
+        "article-64",
+        "article-65",
+        "article-66",
+        "article-67",
+        "article-68",
+        "article-69",
+        "article-70",
+        "article-71",
+        "article-72",
+        "article-73",
+        "article-74",
+        "article-75",
+        "article-76",
+        "article-77",
+        "article-78",
+        "article-79",
+        "article-80",
+        "article-81",
+        "article-82",
+        "menuItem-239",
+        "menuItem-241",
+        "menuItem-242",
+        "menuItem-243",
+        "menuItem-244",
+        "menuItem-246",
+        "menuItem-247",
+        "menuItem-248",
+        "menuItem-249",
+        "menuItem-250",
+        "menuItem-251",
+        "menuItem-252",
+        "menuItem-253",
+        "menuItem-254",
+        "menuItem-256",
+        "menuItem-261",
+        "menuItem-262",
+        "menuItem-263",
+        "menuItem-264",
+        "menuItem-265",
+        "menuItem-268",
+        "menuItem-271",
+        "menuItem-273",
+        "menuItem-302",
+        "menuItem-303",
+        "menuItem-304",
+        "menuItem-305",
+        "menuItem-306",
+        "menuItem-307",
+        "menuItem-308",
+        "menuItem-309",
+        "menuItem-310",
+        "menuItem-311",
+        "menuItem-312",
+        "menuItem-313",
+        "menuItem-314",
+        "menuItem-315",
+        "menuItem-316",
+        "menuItem-317",
+        "menuItem-318",
+        "menuItem-319",
+        "menuItem-320",
+        "menuItem-321",
+        "menuItem-322",
+        "menuItem-323",
+        "menuItem-324"
+      ]
+    }
+  },
+  "policies": {
+    "category-2": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-8": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-9": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-10": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-11": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-12": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-13": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-14": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-15": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-16": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-17": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-18": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-19": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "category-20": {
+      "kind": "category",
+      "policy": "shared",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    "module-169": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "mod_menu renders rows Joomla itself filters by the active language and shows no fixed copy (showtitle is off), so one module serves every language"
+    },
+    "module-170": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-171": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-172": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-173": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-174": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-175": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-176": {
+      "kind": "module",
+      "policy": "shared",
+      "reason": "mod_breadcrumbs renders rows Joomla itself filters by the active language and shows no fixed copy (showtitle is off), so one module serves every language"
+    },
+    "module-177": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-178": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-179": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-180": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-181": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-182": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-183": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-184": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-185": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-186": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-187": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-188": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-189": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-190": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-191": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-192": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-193": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-194": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-195": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-196": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-197": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-198": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-199": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-200": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-201": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-202": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-203": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-204": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-205": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-206": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-207": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-208": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-213": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-214": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-215": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-216": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-217": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-218": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-219": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-220": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-221": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-222": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "module-223": {
+      "kind": "module",
+      "policy": "translate"
+    },
+    "article-1": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-2": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-3": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-7": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-8": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-9": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-10": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-11": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-12": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-13": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-14": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-15": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-16": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-17": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-18": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-19": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-20": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-21": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-22": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-23": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-24": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-25": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-26": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-27": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-28": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-29": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-30": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-31": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-32": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-33": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-34": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-35": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-36": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-37": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-38": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-39": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-40": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-41": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-42": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-43": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-45": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-46": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-47": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-48": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-49": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-50": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-51": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-52": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-53": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-54": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-55": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-56": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-57": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-58": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-59": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-60": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-61": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-62": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-63": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-64": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-65": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-66": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-67": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-68": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-69": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-70": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-71": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-72": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-73": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-74": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-75": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-76": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-77": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-78": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-79": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-80": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-81": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "article-82": {
+      "kind": "article",
+      "policy": "translate"
+    },
+    "menuItem-239": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-241": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-242": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-243": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-244": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-246": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-247": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-248": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-249": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-250": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-251": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-252": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-253": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-254": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-256": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-261": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-262": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-263": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-264": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-265": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-268": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-271": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-273": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-302": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-303": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-304": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-305": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-306": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-307": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-308": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-309": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-310": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-311": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-312": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-313": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-314": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-315": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-316": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-317": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-318": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-319": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-320": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-321": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-322": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-323": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "menuItem-324": {
+      "kind": "menuItem",
+      "policy": "translate"
+    },
+    "templateStyle-100": {
+      "kind": "templateStyle",
+      "policy": "shared",
+      "reason": "A template style is presentation, shared by every language and locked by the base contract"
+    },
+    "templateStyle-101": {
+      "kind": "templateStyle",
+      "policy": "shared",
+      "reason": "A template style is presentation, shared by every language and locked by the base contract"
+    },
+    "templateStyle-110": {
+      "kind": "templateStyle",
+      "policy": "shared",
+      "reason": "A template style is presentation, shared by every language and locked by the base contract"
+    },
+    "templateStyle-111": {
+      "kind": "templateStyle",
+      "policy": "shared",
+      "reason": "A template style is presentation, shared by every language and locked by the base contract"
+    },
+    "templateStyle-112": {
+      "kind": "templateStyle",
+      "policy": "shared",
+      "reason": "A template style is presentation, shared by every language and locked by the base contract"
+    },
+    "templateStyle-113": {
+      "kind": "templateStyle",
+      "policy": "shared",
+      "reason": "A template style is presentation, shared by every language and locked by the base contract"
+    },
+    "templateStyle-114": {
+      "kind": "templateStyle",
+      "policy": "shared",
+      "reason": "A template style is presentation, shared by every language and locked by the base contract"
+    },
+    "templateStyle-115": {
+      "kind": "templateStyle",
+      "policy": "shared",
+      "reason": "A template style is presentation, shared by every language and locked by the base contract"
+    }
+  },
+  "switcher": {
+    "module": "mod_languages",
+    "position": "header-r",
+    "anchorEntity": "module-170",
+    "language": "*",
+    "showtitle": "0",
+    "access": "1",
+    "published": "1",
+    "assignment": "all",
+    "note": "tracy-ml:switcher",
+    "params": {
+      "header_text": "",
+      "footer_text": "",
+      "dropdown": 0,
+      "image": 0,
+      "inline": 1,
+      "show_active": 1,
+      "full_name": 0,
+      "horizontal": 1,
+      "active_lang_icon": 0,
+      "layout": "_:default",
+      "moduleclass_sfx": "",
+      "cache": 0
+    }
+  },
+  "languageFilter": {
+    "element": "languagefilter",
+    "folder": "system",
+    "enabled": 1,
+    "params": {
+      "item_associations": 1,
+      "detect_browser": 0,
+      "automatic_change": 0,
+      "remove_default_prefix": 0,
+      "lang_cookie": 0,
+      "alternate_meta": 1,
+      "xdefault": 1,
+      "xdefault_language": "en-GB"
+    }
+  },
+  "contentLanguage": {
+    "published": "1",
+    "access": "1",
+    "image": "{sef}"
+  },
+  "unsupported": [
+    {
+      "scope": "category",
+      "effect": "Category titles and descriptions stay in the source language wherever Joomla renders them directly: breadcrumbs on a category route, and the section list of the Magazine sidebar module.",
+      "reason": "The published 1.1.0 contract exposes no category content slot, and the receiver cannot set a category alias on create — a translated category would take a generated alias and move every derived article into a tree whose ordering and ACL the base contract does not describe"
+    },
+    {
+      "scope": "menu:tracy-utility",
+      "effect": "The utility menu Joomla ships for account, contact and newsfeed routes is outside the contract inventory. Those routes keep one menu item for every language; their component views translate themselves from the installed language pack, but the menu item titles stay in the source language. No module renders this menu, so the titles are not on a page.",
+      "reason": "Not identified by the published 1.1.0 contract, which covers the `tracy` menu only"
+    },
+    {
+      "scope": "article:archived",
+      "effect": "Archived articles keep their state and get no translation.",
+      "reason": "Not identified by the published 1.1.0 contract, which covers published articles only"
+    },
+    {
+      "scope": "acm-layout-defaults",
+      "effect": "Copy written into a template ACM layout as the fallback for an empty module parameter renders in the source language on every page, translated or not. Measured 12/09/2026 on the Apple quickstart home page: 33 of 180 visible lines, among them the three feature cards and the four statistic labels.",
+      "reason": "These strings are not content slots in the published 1.1.0 contract — grep the content map and they are absent — so they cannot be edited in the SOURCE language either. They live in `templates/tracy/acm/*/tmpl/style-1.php`, which the presentation lock hash-locks as design. Reaching them is a change to the contract or to the template, not to this extension."
+    },
+    {
+      "scope": "text-in-images",
+      "effect": "Words baked into an image stay in the source language.",
+      "reason": "The contract carries image paths, not image content, and Tracy does not redraw customer artwork"
+    },
+    {
+      "scope": "menuItem:type=url",
+      "effect": "A menu item linking to a raw site path keeps that path. When the path names a source-language route the switcher still reaches the source page.",
+      "reason": "A raw path is not an entity reference the receiver can remap with proof"
+    }
+  ],
+  "counts": {
+    "translate": 173,
+    "shared": 24,
+    "total": 197
+  }
+}

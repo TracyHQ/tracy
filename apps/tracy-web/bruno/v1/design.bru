@@ -1,0 +1,20 @@
+meta {
+  name: design
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}/design
+  body: none
+  auth: inherit
+}
+
+docs {
+  # The design system the site wears
+
+  Answers `{design: {id, name, source, platform, tokens, tokensFrom, updatedAt}}`, or
+  `{design: null}` when the site wears no system Tracy knows of. `tokens` are CSS custom property
+  names and values: keep new content inside them. Needs the `content` scope; the ETag follows
+  `updatedAt`.
+}

@@ -1,0 +1,15 @@
+# Insert dsh-plugin-better-locale: a pure language pack for DSH's native
+# third-language API (v0.1.2-alpha.1). The client half registers 19 bundled
+# languages (ja/ko/fr/...) through ctx.locale.addLanguage and their
+# dictionaries through ctx.locale.register(ns, locale, dict), one ctx.effect
+# per language, so HMR / fiber disposal removes exactly what was added.
+# Each language becomes selectable in DSH's own Language settings row with
+# per-key fallback to English; the selection persists in DSH's durable
+# locale.preference setting.
+#
+# The plugin is client-only and ships no UI of its own: selection UI,
+# persistence, <html lang> sync, and the locale/change event are all owned
+# by DSH's locale service since the native language-pack API.
+- insert:
+    - id: dsh-plugin-better-locale
+      name: '@huanlin/dsh-plugin-better-locale'

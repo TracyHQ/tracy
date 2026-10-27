@@ -1,0 +1,15 @@
+# Tracy's settings surface REPLACES dsh's, it does not sit beside it.
+#
+# `sidebar.settings` is declared `kind: 'single'` by @deepseek-ai/dsh-client-ui-sidebar, so
+# exactly one plugin may fill it. Leave `ui-settings-general` enabled and one of the two wins
+# arbitrarily — the failure mode is a settings screen that changes between boots.
+#
+# Disabling it costs nothing that is not re-declared below: `SettingsRoot` owned only the
+# chrome. Every section (models, plugin inventory, agent presets, appearance) registers into
+# `settings.section`, a `kind: 'list'` child that Tracy's root re-declares by the same name.
+- id: ui-settings-general
+  disabled: true
+
+- insert:
+    - id: tracy-settings
+      name: '@tracy/dsh-settings'

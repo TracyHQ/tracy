@@ -1,0 +1,49 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#1a1c2c",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text, filled pill buttons, hairline borders, dark surfaces — the only chromatic color in the system; near-black with a barely-perceptible cool navy cast that softens the contrast against warm cream without losing the gravitas of pure black"
+    },
+    "warm-parchment": {
+      "$value": "#fcfaf3",
+      "$type": "color",
+      "$description": "Warm Parchment — Page canvas and light surface base — a creamy off-white that replaces the default SaaS pure-white with paper warmth, making the page feel printed rather than rendered"
+    },
+    "soft-linen": {
+      "$value": "#ebe9e4",
+      "$type": "color",
+      "$description": "Soft Linen — Elevated card and panel surface — one step darker than the canvas, used sparingly to lift a card or a section band without introducing a new color"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — SVG icon fills and decorative monochrome marks — reserved for vector assets where true black reads cleaner than the navy-tinted Midnight Ink"
+    },
+    "blush-coral": {
+      "$value": "#fd9494",
+      "$type": "color",
+      "$description": "Blush Coral — Sporadic warm accent — emerges from the hero aurora and may surface in tag dots or decorative washes; the only warm hue that earns a place in an otherwise cool-neutral system"
+    }
+  },
+  "font": {
+    "zjsansdisplay": {
+      "$value": "ZJSansDisplay",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for body, navigation, subheadings, and the 40–48px heading range. The 12px eyebrow and tag text carries +0.05em tracking (letter-spacing: 0.6px at 12px) to read as a small caps eyebrow; everything at 16px and above sits at -0.02em (-0.32px at 16px) for tight, editorial density. This is the working sans that does 95% of the page's communicative labor."
+    },
+    "featuredecklight": {
+      "$value": "FeatureDeckLight",
+      "$type": "fontFamily",
+      "$description": "Hero display face used at 60–90px with line-height compressed to 1.07–1.11. Weight 100 is the anti-convention signature: while every agency site uses 600–800 for display, this hairline weight makes the largest text the lightest on the page — authority through restraint, not volume. The italic cut is used for poetic emphasis words inside the headline (e.g. 'the world')."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://zeusjones.com",
+      "siteName": "Zeus Jones",
+      "extractedAt": "2026-06-03T21:31:30.554Z",
+      "variant": "compact"
+    }
+  }
+}

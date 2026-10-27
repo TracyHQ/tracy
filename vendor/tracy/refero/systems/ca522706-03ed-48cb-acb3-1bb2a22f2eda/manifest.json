@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ca522706-03ed-48cb-acb3-1bb2a22f2eda",
+  "status": "complete",
+  "name": "Little Amps",
+  "url": "https://styles.refero.design/style/ca522706-03ed-48cb-acb3-1bb2a22f2eda",
+  "sourceWebsite": "https://littleampscoffee.com",
+  "extractedAt": "2026-06-03T19:45:20.544Z",
+  "capturedAt": "2026-10-08T05:17:29.470485+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "vinyl record sleeve in afternoon sun. Cream paper, burnt-orange ink, a single dusty blue stamp, every label set in monospace — the interface behaves like a printed coffee zine: tactile, editorial, never sterile.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d12abb20-f05a-41be-bbe3-2c0be8195cfe.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bd5dc2b14bbb6e04504af48ff523f4bd0ffbf23793247fa5d0142e474e01b9aa",
+      "bytes": 24209
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8f3ec9a29f8cc378d03e2c6ce6241fa4a88c2af70999ce53fb948ecf83771250",
+      "bytes": 134348
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "005e0d2c5a022b14c65a029abc2582a0832c4c0148802d6a780153e7a00007ed",
+      "bytes": 20327
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "143ee2281ac7a7c12c0b0cc7bc981c517eb6cf98f8af74bbd38331953f80f133",
+      "bytes": 16064
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c941ef9001c777bb77d7a345c96414c7889282012de46d97d738388dda0a9656",
+      "bytes": 14564
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "0625dc93092dbcbcb5e0df54447652a222fc9a58184566b72902d6f31d22c573",
+      "bytes": 4307
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "be4e417592df03a7f12952a16ae7a66085fa24e4c4ded3d2939d7656f6670066",
+      "bytes": 965
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "899eb9245c296da451c5cc3ff907509090f64a7dc8f021e1ca0f366953b35c7f",
+      "bytes": 982
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "2e2025dff270acf47b4592098b186c691d67711ef155276464318b89dc640f20",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3c699fd17f0cd221420aec16eca67a2263ef6a19e66ad7b9cb9544f9b90baa44",
+      "bytes": 47655
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "947c2fe5a45e15070735ac03b6cd1d2698f05be61366e78b72580584999bf059",
+      "bytes": 24715
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "892397e44582bccb6da08f3244f4c9aa89d21650b836501d5cfe138b4bab1038",
+      "bytes": 59274
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "da4f1ee1f4e6be54583ad39b16c475132f6cb134fb58f8439ab782ee17186926",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7bca67149a4f9082310280705d9bb55791362c14cc36ee3639f71a4a656602d0",
+      "bytes": 1851
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "81282e5ebb1c605febc8886a394e9922f44d033d862a39162ca39cf92489ab93",
+      "bytes": 2340
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1b2aaf14-43b0-4c23-bd25-1d49924fe85e",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "35ae81e1-273c-43d7-9bcd-ea186d062c13",
+    "5fbdad0a-d102-41c2-8253-f201ad6a6673",
+    "6a5f9438-7ae6-4743-a0bd-f9087d467eff",
+    "6da76890-6e04-452a-834d-ff019e232c2b",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "76c761d8-4af1-4ed5-ba93-eeb60f7006b5",
+    "8288950a-2731-44fd-85ef-211aecd8091d",
+    "9307193e-7ce3-48c1-b650-8ab77aa83c3f",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "b5532c58-620a-4d69-8861-35b2b6443956",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "ca522706-03ed-48cb-acb3-1bb2a22f2eda",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "db451eca-8de6-43a9-a5d5-35271befdffd",
+    "e327d332-270d-4779-a55c-cd82b8624d2a",
+    "fb6ac216-c11a-47c3-88e8-0423541da69c"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-essence/wp7/1.0.3",
+  "platform": "wordpress",
+  "theme": "wp-ja-essence",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-essence/wp7",
+    "version": "1.0.3",
+    "platform": "wordpress",
+    "platformVersion": "7.1.2",
+    "phpVersion": "8.3.35",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-ja-essence",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "ja-essence-wp7-webroot-1.0.3.tar.gz",
+        "bytes": 60844314,
+        "sha256": "65814522f55bf41237ea5d92317e2a79fed66ae855eb98adc1df81b358c02327",
+        "githubAssetId": 607392206,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-essence%2Fwp7/ja-essence-wp7-webroot-1.0.3.tar.gz"
+      },
+      "database": {
+        "file": "ja-essence-wp7-database-1.0.3.sql.gz",
+        "bytes": 59306,
+        "sha256": "4c0ae042c211132a74f686bc98ae7a21fb73e116abdc8e6208966c1a96999154",
+        "githubAssetId": 607392202,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-essence%2Fwp7/ja-essence-wp7-database-1.0.3.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.17.3",
+  "mode": "content-recommendation"
+}

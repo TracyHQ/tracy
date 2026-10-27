@@ -1,0 +1,50 @@
+---
+title: Connect Codex
+description: Configure Tracy for Codex CLI, complete OAuth, and verify a read from your website.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import McpSetup from '../../../../components/McpSetup.astro';
+
+Use Tracy tools from Codex CLI to work with one connected website. You need Codex CLI installed, a Tracy account, and an accepted website invitation with content-editing access.
+
+## Configure Tracy
+
+Merge these sections into `~/.codex/config.toml`. If a `tracy` server entry already exists, update it instead of creating a duplicate table. Preserve your other settings.
+
+<McpSetup client="codex" />
+
+The public client ID is not a secret. You do not need an OpenAI API key or a Tracy API key for this MCP authorization flow.
+
+## Sign in to Tracy
+
+```sh title="Start OAuth"
+codex mcp login tracy
+```
+
+<Steps>
+
+1. Run the login command on the same computer as your browser.
+2. Sign in to Tracy in the browser window that opens.
+3. Review the app identity, select the correct website, and approve access.
+4. Return to the terminal. After login succeeds, start or resume your Codex conversation with Tracy available.
+
+</Steps>
+
+<Aside type="note" title="Use the exact loopback callback">
+Keep port `17833` available during sign-in. The registered address is `http://127.0.0.1:17833/callback`; changing it to `localhost` or another port is not equivalent for OAuth validation. A remote terminal's loopback address points to that remote machine, so this guide assumes a local CLI and browser.
+</Aside>
+
+## Verify a real read
+
+```text wrap title="First prompt"
+Use Tracy to show the connected website and list its pages. Do not edit anything.
+```
+
+Confirm the website in the result before [making a change](/mcp/working-with-your-site/). OAuth and code exchange were verified with Codex CLI 0.162.1 on an isolated test environment; still verify the first tool read on your own connection.
+
+## Disconnect
+
+Run `codex mcp logout tracy` to remove saved OAuth credentials. Remove the `mcp_servers.tracy` configuration if you no longer want the server available. To invalidate access at Tracy, also follow [Revoke access](/mcp/permissions/).
+
+See the [official Codex MCP documentation](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) for configuration details. If sign-in does not return to your terminal, see [Troubleshooting](/mcp/troubleshooting/).

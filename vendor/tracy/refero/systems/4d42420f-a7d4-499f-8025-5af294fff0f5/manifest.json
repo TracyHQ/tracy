@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "4d42420f-a7d4-499f-8025-5af294fff0f5",
+  "status": "complete",
+  "name": "High Protein",
+  "url": "https://styles.refero.design/style/4d42420f-a7d4-499f-8025-5af294fff0f5",
+  "sourceWebsite": "https://magicspoon.com",
+  "extractedAt": "2026-09-24T17:41:21.018Z",
+  "capturedAt": "2026-10-08T05:11:22.708749+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Magic Spoon — neon cereal arcade. Build expansive pastel aisles where vivid violet typography and playful packaged-product collisions feel like a snack shelf lit by an arcade glow.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f8e7e466-b89f-45ab-aa65-5618e60ebd75.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/8b294fc4-388c-4077-9381-450bd7a77191.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/2b8f540a-d498-4708-bd19-56a8b7fb55af.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c71ea138-670e-45e5-ae88-8fb5cb29bb1d.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ee91fc80-2847-419b-abb4-0eb03f9c78dd.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9bfe8fb519c8eb9ecbd65543ef035be7d6d52614300a58860f88038ca2260fc0",
+      "bytes": 23367
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "e7cf6264f1e0f5877902405211b94613259fb47757963472b63a0953f4c95c9b",
+      "bytes": 243193
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "739cb46b1c8c3ca9b76f45919da54fbe2cce076077e6598198ab2412fdda4931",
+      "bytes": 18288
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "81c110aed20e03a09448591f7a7722ad525ea846f7564af0b0e0014bfcfbf20f",
+      "bytes": 19644
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6a52fa2ff4be76694a5ed02f70bf808911b654f7693cd0efbcc737fae948233d",
+      "bytes": 12700
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "34c2b0d00a47cf28eeffee9532d66fb48766b948948dc6b3667bab1ab407c5ce",
+      "bytes": 3409
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "aad234635a80e21c3ba63952895c23e206c90685f915f180b8aa05f07a2ded1c",
+      "bytes": 820
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a795b6535d641bf4eb4a0a0e5ea08df46827e19dc3591b907876f8c271d6b2b7",
+      "bytes": 977
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6b330e0230775e47893e320ba0a8f680177910cb7c07440d1e465bf438318abe",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "58e05ef9f50e0c17ad1c6b14e4b66db8773fcf61e3506a9c47407e57ab1e9542",
+      "bytes": 44629
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "7d35e9363359b911c21cff14e5d977f33bb0899251c2075349e525a9f32b44bb",
+      "bytes": 23870
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "affe7c48b1d7eca3d09e2c22f0e702c46e05f7c269631e80b0c557c3e6b7e09d",
+      "bytes": 65281
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c186656cbee91bdee0d2bf0b63e20060ffacb99d1dad71483dcaa70d8db6106e",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a24c17f58af8862d61ea8ef93dfe2e82fe8d006805f886ae2d0a1a13432cf534",
+      "bytes": 2419
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e49b9af1f1569de4d99a8cfd2622407b038cc23871cec17571f730ab7ed06d6b",
+      "bytes": 3230
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "029d3ce0-0fe5-4a8c-99c4-4f9d704f1c60",
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "22e11001-8786-4af7-bdb9-f9419ce8ad1a",
+    "2c7a280c-7cc1-4766-b043-bc8bdd9b868c",
+    "4d42420f-a7d4-499f-8025-5af294fff0f5",
+    "59ac8248-1d64-4df3-92f1-919b50e05602",
+    "5cc6e3be-1cbd-4d09-9958-9cb82b2487db",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "71a9583d-1710-4696-9269-50ca8c9a2cfa",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "a6d39bad-6e32-462e-afce-67c9cb76cf40",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "ab7996ed-e0ed-40a0-81a5-d37f19ef35b0",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d91841cf-c717-43ef-97a2-400778fa6e1a",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

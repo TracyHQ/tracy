@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-ember-ink: #d9462b;
+  --color-dusty-rose: #e296bb;
+  --color-ink-black: #000000;
+  --color-charcoal: #212121;
+  --color-bone-white: #f5f6f5;
+  --color-paper-white: #ffffff;
+
+  /* Typography */
+  --font-trjn-davinci: 'TRJN DaVinci', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helveticaneue-light: 'HelveticaNeue-Light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neue-montreal: 'Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

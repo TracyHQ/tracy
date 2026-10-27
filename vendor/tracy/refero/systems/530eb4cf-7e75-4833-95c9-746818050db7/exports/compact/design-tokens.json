@@ -1,0 +1,84 @@
+{
+  "color": {
+    "electric-blue": {
+      "$value": "#0000ff",
+      "$type": "color",
+      "$description": "Electric Blue — Violet outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "wireframe-green": {
+      "$value": "#098551",
+      "$type": "color",
+      "$description": "Wireframe Green — Data point accent on the world map visualization — marks growth/gas nodes against the neutral wireframe"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Primary text, headlines, structural lines, iconography"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page canvas, card surfaces, button text on dark or chromatic fills"
+    },
+    "ash": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Ash — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "graphite": {
+      "$value": "#323232",
+      "$type": "color",
+      "$description": "Graphite — Sidebar borders, strong secondary structural lines"
+    },
+    "slate": {
+      "$value": "#717886",
+      "$type": "color",
+      "$description": "Slate — Body text, subhead descriptions, secondary labels — the working gray for prose"
+    },
+    "fog": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Fog — Tertiary text, disabled states, low-priority metadata"
+    },
+    "mist": {
+      "$value": "#b1b7c3",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, sidebar dividers, subtle icon outlines, nav separators"
+    }
+  },
+  "font": {
+    "doto": {
+      "$value": "Doto",
+      "$type": "fontFamily",
+      "$description": "Display headline face — used at 115px with -0.025em tracking for the hero and section openers. Its geometric, rounded character is distinct from typical sans-serifs; the extremely tight line-height (0.70) lets massive type lock to a single line. Substitute: Space Grotesk or Outfit."
+    },
+    "coinbase-sans": {
+      "$value": "Coinbase Sans",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse for headings, subheadings, and UI text. Weight 400 at 32-110px with aggressive negative tracking (-0.03em to -0.05em) creates tight, architectural headlines. Weight 500 for emphasis. Substitute: Inter at matching weights and tracking."
+    },
+    "coinbase-display": {
+      "$value": "Coinbase Display",
+      "$type": "fontFamily",
+      "$description": "Body and navigation text. The default reading face at 14-16px with normal tracking. Calm, neutral, and built for long-form scanning. Substitute: Inter or system-ui."
+    },
+    "coinbase-mono": {
+      "$value": "Coinbase Mono",
+      "$type": "fontFamily",
+      "$description": "Category labels and metadata — always uppercase with 0.073em tracking. Pins section labels like 'BASE APP', 'BASE CHAIN' above content blocks. The monospaced geometry with wide tracking creates a technical, indexical feel. Substitute: JetBrains Mono or IBM Plex Mono."
+    },
+    "base-sans": {
+      "$value": "Base Sans",
+      "$type": "fontFamily",
+      "$description": "Subhead and lead body text at 18px with -0.014em tracking. Slightly tighter than body for emphasis without weight change. Substitute: Inter at 18px with -0.25px tracking."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.base.org",
+      "siteName": "Base",
+      "extractedAt": "2026-06-03T18:26:44.810Z",
+      "variant": "compact"
+    }
+  }
+}

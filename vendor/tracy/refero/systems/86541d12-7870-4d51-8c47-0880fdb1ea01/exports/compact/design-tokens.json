@@ -1,0 +1,109 @@
+{
+  "color": {
+    "slate-canvas": {
+      "$value": "#1c1e21",
+      "$type": "color",
+      "$description": "Slate Canvas — Primary page background, hero canvas, card surface base — the workspace floor everything sits on"
+    },
+    "ink-well": {
+      "$value": "#121317",
+      "$type": "color",
+      "$description": "Ink Well — Deepest surface — code block backgrounds, terminal panes, inset containers that need to feel recessed below the canvas"
+    },
+    "graphite-hairline": {
+      "$value": "#3b3e45",
+      "$type": "color",
+      "$description": "Graphite Hairline — Subtle borders, divider lines, card edges — barely visible separators that let density carry the visual structure"
+    },
+    "steel-border": {
+      "$value": "#272a2e",
+      "$type": "color",
+      "$description": "Steel Border — Slightly darker hairline for nested containers and secondary borders where Graphite feels too bright"
+    },
+    "ash-text": {
+      "$value": "#b5b8c0",
+      "$type": "color",
+      "$description": "Ash Text — Tertiary text, captions, muted helper copy — text that should be readable but not competing with headlines"
+    },
+    "fog-text": {
+      "$value": "#878c99",
+      "$type": "color",
+      "$description": "Fog Text — Secondary body text, metadata, icon strokes — the most-used neutral text color, reading as a soft graphite on slate"
+    },
+    "cloud-text": {
+      "$value": "#d7d9dd",
+      "$type": "color",
+      "$description": "Cloud Text — Secondary headings, button text, emphasized body — one step below full white, used where pure white would feel harsh"
+    },
+    "bone-text": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Bone Text — Primary text, headlines, high-contrast labels — the dominant foreground color against the slate canvas"
+    },
+    "signal-lime": {
+      "$value": "#a8ff53",
+      "$type": "color",
+      "$description": "Signal Lime — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "syntax-violet": {
+      "$value": "#9c9af2",
+      "$type": "color",
+      "$description": "Syntax Violet — Code syntax highlighting (functions, keywords), media generation feature icon — the most-used chromatic color after lime, giving the code blocks their editor feel"
+    },
+    "syntax-pink": {
+      "$value": "#fa3abf",
+      "$type": "color",
+      "$description": "Syntax Pink — Code syntax (strings, special tokens), media processing feature icon — hot accent used sparingly for code punctuation"
+    },
+    "event-violet": {
+      "$value": "#7655fd",
+      "$type": "color",
+      "$description": "Event Violet — Headline highlight words, streaming feature icon, decorative gradient accent — slightly deeper violet for larger surfaces"
+    },
+    "loop-green": {
+      "$value": "#afec73",
+      "$type": "color",
+      "$description": "Loop Green — Code syntax (types, booleans), inline emphasis text — softer green that sits between Signal Lime and Ash, used inside code contexts"
+    },
+    "key-lime": {
+      "$value": "#d9f07c",
+      "$type": "color",
+      "$description": "Key Lime — Code syntax (variables, parameters) — the lightest green, reads almost yellow against dark, used for code identifiers"
+    },
+    "tag-magenta": {
+      "$value": "#e888f8",
+      "$type": "color",
+      "$description": "Tag Magenta — Code syntax (property names, tags) — gentle pink for object keys and JSX attributes"
+    },
+    "mute-red": {
+      "$value": "#f43f5e",
+      "$type": "color",
+      "$description": "Mute Red — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "satoshi": {
+      "$value": "Satoshi",
+      "$type": "fontFamily",
+      "$description": "Display and heading — Satoshi carries every headline from 16px sub-labels up to the 60px hero. Weight 500 is the default for most headings; 600 appears on the hero. Letter-spacing pushes open at 0.05em on the largest sizes, giving headlines a spaced-out editorial feel that contrasts Geist's tightness. This is the brand's voice at scale."
+    },
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Body, navigation, buttons, links, UI labels — Geist is the workhorse that keeps the interface legible. Weight 400 for body, 500 for buttons and active nav, 300 for the lightest body or large paragraph copy. Normal letter-spacing. Its grotesque neutrality is intentional — it lets Satoshi speak at display scale and code syntax speak in the editor."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Code blocks, inline code, terminal output, log lines — Geist Mono is locked at 14px, the code face that appears in the embedded TypeScript examples and any monospaced UI text. Its presence signals 'this is real, runnable code' and bridges the marketing site to the developer product."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://trigger.dev",
+      "siteName": "Trigger.dev",
+      "extractedAt": "2026-06-03T18:23:10.089Z",
+      "variant": "compact"
+    }
+  }
+}

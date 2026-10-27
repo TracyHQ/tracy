@@ -1,0 +1,496 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-impact/wp7/1.0.11",
+  "baseHash": "17afa18b0131955177fcaafa4f1fd5c0db75e607f615d70fd5dfbdbb777d8392",
+  "baseFiles": {
+    "manifest.json": "d833e50e35ca41cd925103d1db50d536d144fa57297b189ec951d707d275006e",
+    "content-map.json": "a0b793e4c45ccdcc46a664d0d1568bbb44231c1c80f14e3207304a0c4d1e5ee6",
+    "presentation-lock.json": "872cdb7617e29ecbef7d4d8dff6c71d83c58b043a02ccaae89fa9bb8ade0eefe"
+  },
+  "inputs": {
+    "navigation-source.json": "9db0a2c8244599fe6f132c82ea2692c785b2e22f589ec582217cf3c48f85f9d1"
+  },
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 182,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Offline Page",
+        "pageId": 173
+      },
+      "label": "Offline Page",
+      "path": [
+        "Pages",
+        "Pages",
+        "Offline Page"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Offline Page\" is one of the template's own screens",
+      "key": "navigation-182",
+      "before": "b4f7860a464feeb6feb61e2cf86534c400c9cb55a2650a086b603d9b29775120",
+      "after": "8b910800394c17231ab594a93c0730d049079e4d12d32055ac7cf98ec099474b"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 182,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Error Page",
+        "pageId": 174
+      },
+      "label": "Error Page",
+      "path": [
+        "Pages",
+        "Pages",
+        "Error Page"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Error Page\" is one of the template's own screens",
+      "key": "navigation-182",
+      "before": "8b910800394c17231ab594a93c0730d049079e4d12d32055ac7cf98ec099474b",
+      "after": "1d31d0263fc99acd5daf3394279b806cdd402640c1b01feadf9911c20cca8d61"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 182,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Typography",
+        "pageId": 175
+      },
+      "label": "Typography",
+      "path": [
+        "Pages",
+        "Pages",
+        "Typography"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Typography\" is one of the template's own screens",
+      "key": "navigation-182",
+      "before": "1d31d0263fc99acd5daf3394279b806cdd402640c1b01feadf9911c20cca8d61",
+      "after": "6941292fc184dbd33a8bd85b35d2180905115480c9d35781ef788ad148a2cfb6"
+    }
+  ],
+  "finals": [
+    {
+      "key": "navigation-182",
+      "before": "b4f7860a464feeb6feb61e2cf86534c400c9cb55a2650a086b603d9b29775120",
+      "after": "6941292fc184dbd33a8bd85b35d2180905115480c9d35781ef788ad148a2cfb6"
+    }
+  ],
+  "kept": [
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 154,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "About",
+      "path": [
+        "About"
+      ],
+      "pageId": 155,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Donations",
+      "path": [
+        "Donations"
+      ],
+      "pageId": 161,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Events",
+      "path": [
+        "Events"
+      ],
+      "pageId": 162,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Pages",
+      "path": [
+        "Pages"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Articles",
+      "path": [
+        "Pages",
+        "Articles"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Featured Articles",
+      "path": [
+        "Pages",
+        "Articles",
+        "Featured Articles"
+      ],
+      "pageId": 176,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Author listting",
+      "path": [
+        "Pages",
+        "Articles",
+        "Author listting"
+      ],
+      "pageId": 178,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Blog Detail",
+      "path": [
+        "Pages",
+        "Articles",
+        "Blog Detail"
+      ],
+      "pageId": 114,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Category Blog",
+      "path": [
+        "Pages",
+        "Articles",
+        "Category Blog"
+      ],
+      "pageId": 177,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Pages",
+      "path": [
+        "Pages",
+        "Pages"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Smart Search",
+      "path": [
+        "Pages",
+        "Pages",
+        "Smart Search"
+      ],
+      "pageId": 179,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "User pages",
+      "path": [
+        "Pages",
+        "User pages"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Login Form",
+      "path": [
+        "Pages",
+        "User pages",
+        "Login Form"
+      ],
+      "pageId": 170,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Registration Form",
+      "path": [
+        "Pages",
+        "User pages",
+        "Registration Form"
+      ],
+      "pageId": 171,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "User Profile",
+      "path": [
+        "Pages",
+        "User pages",
+        "User Profile"
+      ],
+      "pageId": 172,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Blog",
+      "path": [
+        "Blog"
+      ],
+      "pageId": 164,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-182",
+      "where": "wp_navigation 182 (mainmenu)",
+      "label": "Contact",
+      "path": [
+        "Contact"
+      ],
+      "pageId": 156,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (need-help)",
+      "label": "Help & FAQs",
+      "path": [
+        "Help & FAQs"
+      ],
+      "pageId": 157,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (need-help)",
+      "label": "Your account",
+      "path": [
+        "Your account"
+      ],
+      "pageId": 170,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (need-help)",
+      "label": "Track your order",
+      "path": [
+        "Track your order"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-183",
+      "where": "wp_navigation 183 (need-help)",
+      "label": "Contact info",
+      "path": [
+        "Contact info"
+      ],
+      "pageId": 156,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-184",
+      "where": "wp_navigation 184 (guide)",
+      "label": "Store Locations",
+      "path": [
+        "Store Locations"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-184",
+      "where": "wp_navigation 184 (guide)",
+      "label": "Registry",
+      "path": [
+        "Registry"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-184",
+      "where": "wp_navigation 184 (guide)",
+      "label": "Blog",
+      "path": [
+        "Blog"
+      ],
+      "pageId": 163,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-184",
+      "where": "wp_navigation 184 (guide)",
+      "label": "Shipping info",
+      "path": [
+        "Shipping info"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-185",
+      "where": "wp_navigation 185 (get-to-know-us)",
+      "label": "About us",
+      "path": [
+        "About us"
+      ],
+      "pageId": 155,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-185",
+      "where": "wp_navigation 185 (get-to-know-us)",
+      "label": "Term of service",
+      "path": [
+        "Term of service"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-185",
+      "where": "wp_navigation 185 (get-to-know-us)",
+      "label": "Careers",
+      "path": [
+        "Careers"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-185",
+      "where": "wp_navigation 185 (get-to-know-us)",
+      "label": "Affiliates",
+      "path": [
+        "Affiliates"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-186",
+      "where": "wp_navigation 186 (follow-us)",
+      "label": "Twitter",
+      "path": [
+        "Twitter"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-186",
+      "where": "wp_navigation 186 (follow-us)",
+      "label": "Facebook",
+      "path": [
+        "Facebook"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-186",
+      "where": "wp_navigation 186 (follow-us)",
+      "label": "Instagram",
+      "path": [
+        "Instagram"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-186",
+      "where": "wp_navigation 186 (follow-us)",
+      "label": "Threads",
+      "path": [
+        "Threads"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "links": 3,
+    "templateParts": 0,
+    "kept": 34,
+    "unresolved": 0
+  }
+}

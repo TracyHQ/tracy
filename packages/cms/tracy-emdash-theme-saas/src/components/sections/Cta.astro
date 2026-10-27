@@ -1,0 +1,307 @@
+---
+/**
+ * cta — three looks measured on the source:
+ *  - `variant: bar`: a tinted bar, copy left and button right (/product/integrations).
+ *  - a card WITHOUT an eyebrow: the compact flat card (/company/team "We're hiring").
+ *  - every other card: the centred card with the primary glow, optional second button and
+ *    terminal chip (home, pricing, features, about, landing …).
+ * The source picks the compact card by the same rule — it has no separate variant value for it.
+ */
+import type { Style } from '@/lib/sections'
+import Icon from '@/components/Icon.astro'
+import { stampFor, type Stamp } from '@/lib/stamps'
+import { splitPath } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  /** Provenance stamps of this section's entry (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  data: Record<string, any>
+  index: number
+  style: Style
+  /** True inside the 760px article column of inner pages (DECISIONS D18). */
+  narrow?: boolean
+}
+const { data, narrow = false } = Astro.props
+const look = data.variant === 'bar' ? 'bar' : data.eyebrow ? 'card' : 'compact'
+const s: Stamp = Astro.props.stamp ?? stampFor(Astro.request, 'cta', null)
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, splitPath(Astro.url.pathname).locale, [
+  data.btn1_link,
+  data.btn2_link,
+  data.chip_link
+])
+const show1 = Boolean(data.btn1_label) && live(data.btn1_link)
+const show2 = Boolean(data.btn2_label) && live(data.btn2_link)
+const hasActions = show1 || show2 || Boolean(data.chip)
+---
+
+<section class:list={['cta', `cta--${look}`, narrow && 'is-narrow']} {...s()}>
+	<div class="k-container">
+		<div class="cta-inner">
+			<div class="cta-copy">
+				{data.eyebrow && <p class="k-eyebrow cta-eyebrow" {...s('eyebrow')}>{data.eyebrow}</p>}
+				{data.title && <h2 class="cta-title" {...s('title')}>{data.title}</h2>}
+				{data.sub && <p class="cta-sub" {...s('sub')}>{data.sub}</p>}
+			</div>
+			{
+				hasActions && (
+					<div class="cta-actions">
+						{show1 && (
+							<a class="k-btn k-btn-primary cta-btn" href={data.btn1_link || undefined} {...s('btn1_label')}>
+								{data.btn1_label}
+								<Icon name="arrow-right" size={16} />
+							</a>
+						)}
+						{show2 && (
+							<a class="k-btn cta-btn cta-btn2" href={data.btn2_link || undefined} {...s('btn2_label')}>
+								{data.btn2_label}
+							</a>
+						)}
+						{data.chip &&
+							(data.chip_link && live(data.chip_link) ? (
+								<a class="cta-chip" href={data.chip_link}>
+									<span class="cta-sigil" aria-hidden="true">$</span>
+									<span {...s('chip')}>{data.chip}</span>
+								</a>
+							) : (
+								<span class="cta-chip">
+									<span class="cta-sigil" aria-hidden="true">$</span>
+									<span {...s('chip')}>{data.chip}</span>
+								</span>
+							))}
+					</div>
+				)
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.cta {
+		padding-block: 80px;
+	}
+	.cta-inner {
+		border: 1px solid var(--k-border);
+		text-align: center;
+	}
+	.cta-eyebrow {
+		font-size: 12px;
+		margin-bottom: 14px;
+	}
+	.cta-title {
+		margin-inline: auto;
+		max-width: 680px;
+		font-size: var(--ds-size-heading, 40px);
+		line-height: 1.08;
+		letter-spacing: -1.2px;
+		font-weight: 700;
+		/* N-a40a83: greedy breaking leaves a lone "Be" at the end of line 1 on the shared card. */
+		text-wrap: balance;
+	}
+	.cta-sub {
+		margin: 14px auto 0;
+		max-width: 480px;
+		font-size: 16px;
+		line-height: 1.6;
+		/* N-a40a83: keeps the lede from ending on a one-word line ("minutes."). */
+		text-wrap: pretty;
+	}
+	.cta-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 14px;
+		margin-top: 30px;
+	}
+	.cta-btn {
+		min-height: 46px;
+		padding: 0 26px;
+		font-size: 15px;
+		border-radius: var(--radius-ghost);
+	}
+	.cta-btn :global(svg) {
+		transition: transform 0.15s;
+	}
+	.cta-btn:hover :global(svg) {
+		transform: translateX(2px);
+	}
+	.cta-btn2 {
+		color: var(--k-heading);
+		border-color: var(--k-border);
+		background: color-mix(in srgb, var(--k-heading) 4%, transparent);
+	}
+	.cta-btn2:hover {
+		border-color: var(--k-primary);
+	}
+	/* The command chip is a terminal fragment: dark in both themes, like every panel. */
+	.cta-chip {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 9px;
+		min-height: 46px;
+		padding: 0 20px;
+		border-radius: var(--radius-ghost);
+		border: 1px solid var(--k-panel-border);
+		background: var(--k-panel);
+		color: var(--k-panel-text);
+		font-family: var(--font-mono);
+		font-size: 14px;
+		white-space: nowrap;
+	}
+	:global(html[data-theme='dark']) .cta-chip {
+		background: var(--k-surface);
+		border-color: var(--k-border);
+		color: var(--k-text);
+	}
+	a.cta-chip:hover {
+		border-color: var(--k-primary);
+	}
+	.cta-sigil {
+		color: var(--k-panel-accent, var(--k-primary));
+	}
+	:global(html[data-theme='dark']) .cta-sigil {
+		color: var(--k-primary);
+	}
+
+	/* --- card --- */
+	.cta--card .cta-inner {
+		padding: 60px 40px;
+		border-radius: 20px;
+		background:
+			radial-gradient(110% 90% at 72% 0%, color-mix(in srgb, var(--k-primary) 12%, transparent), transparent 75%),
+			linear-gradient(var(--k-elevated), var(--k-surface));
+	}
+
+	/* --- compact --- */
+	.cta--compact {
+		padding-block: 40px 64px;
+	}
+	.cta--compact .cta-inner {
+		padding: 36px;
+		border-radius: var(--radius-card);
+		background: var(--k-elevated);
+	}
+	.cta--compact .cta-title,
+	.cta--bar .cta-title {
+		font-size: 24px;
+		line-height: 1.3;
+		letter-spacing: -0.5px;
+	}
+	.cta--compact .cta-sub {
+		max-width: 440px;
+		font-size: 15px;
+		line-height: 1.55;
+	}
+	.cta--compact .cta-btn,
+	.cta--bar .cta-btn {
+		min-height: 41px;
+		padding: 0 22px;
+		font-size: 14.5px;
+	}
+
+	/* --- bar --- */
+	.cta--bar {
+		padding-block: 40px 72px;
+	}
+	.cta--bar .cta-inner {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 20px;
+		padding: 32px;
+		border-radius: var(--radius-card);
+		background: var(--k-elevated);
+		text-align: left;
+	}
+	.cta--bar .cta-title {
+		margin: 0 0 4px;
+		max-width: none;
+	}
+	.cta--bar .cta-sub {
+		margin: 0;
+		max-width: 560px;
+		font-size: 14px;
+		line-height: 1.55;
+	}
+	.cta--bar .cta-actions {
+		margin-top: 0;
+		justify-content: flex-end;
+	}
+
+	@media (max-width: 767px) {
+		.cta {
+			padding-block: 48px;
+		}
+		.cta--card .cta-inner {
+			padding: 40px 22px;
+		}
+		.cta-eyebrow {
+			font-size: 11px;
+			letter-spacing: 1.5px;
+			margin-bottom: 12px;
+		}
+		.cta-title {
+			font-size: 24px;
+			line-height: 1.1;
+			letter-spacing: -0.5px;
+		}
+		.cta-sub {
+			margin-top: 12px;
+			font-size: 14px;
+		}
+		.cta-actions {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 12px;
+			margin-top: 26px;
+		}
+		.cta--compact .cta-inner {
+			padding: 28px 22px;
+		}
+		.cta--bar .cta-inner {
+			grid-template-columns: minmax(0, 1fr);
+			padding: 24px;
+		}
+		.cta--bar .cta-actions {
+			align-items: flex-start;
+		}
+	}
+
+	/* Inside the 760px article column: the glow card keeps its frame but takes a card-sized title. */
+	.cta--card.is-narrow .cta-title {
+		font-size: 24px;
+		letter-spacing: -0.5px;
+	}
+	.cta--card.is-narrow .cta-sub {
+		line-height: 1.75;
+	}
+	.cta--bar.is-narrow {
+		padding-block: 0 72px;
+	}
+	@media (max-width: 767px) {
+		/* The source's article column keeps a 20px inset from the viewport on phones. */
+		.cta.is-narrow {
+			margin-inline: 20px;
+		}
+		.cta.is-narrow .cta-title {
+			font-size: 22px;
+		}
+		.cta--compact.is-narrow {
+			padding-block: 28px 48px;
+		}
+		.cta--compact.is-narrow .cta-inner {
+			padding: 32px 20px;
+		}
+		.cta--compact.is-narrow .cta-sub {
+			font-size: 14.5px;
+		}
+		.cta--bar.is-narrow {
+			padding-block: 8px 56px;
+		}
+		.cta--bar.is-narrow .cta-inner {
+			padding: 28px;
+		}
+	}
+</style>

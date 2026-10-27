@@ -1,0 +1,2519 @@
+/* wp-tracy-business — section patterns (overlays/wp-tracy-business/patterns/section-*.php).
+ *
+ * This file REPLACES the source theme's assets/css/sections.css (same path wins in the overlay
+ * build), which functions.php already enqueues as `tracy-sections` — so it needs no enqueue of
+ * its own. What goes with the replaced sheet: the utility classes the shared `tracy/section-*`
+ * library patterns are written in. This theme does not seed those patterns (every typed spec
+ * section has a `wp-tracy-business/section-*` pattern, the rest stay core/html), so nothing on
+ * a seeded page loses its styling.
+ *
+ * Every value is a token of the measured tokens.css, through the WordPress variables theme.json
+ * emits (--wp--preset--*, --wp--custom--*); no literal colours, sizes or fonts. The brand orange
+ * is the one colour the 56-token schema has no slot for: it reads
+ * --wp--custom--tracy--brand--orange (settings.custom.tracy.brand.orange in theme.overlay.json)
+ * and falls back to the warn preset, which tokens.css measured to the same orange; ink, paper
+ * and green come from the same brand set.
+ *
+ * Classes are BEM under `wtb-`: `.wtb-section.wtb-<type>` on every pattern root (the seeder's
+ * `root` in patterns.map.json), `.wtb-inner` for the container, `.wtb-head` for the uniform
+ * eyebrow · heading · intro · actions head. Square corners and 1px rules throughout: the
+ * design's radius tokens are 0 and its cards are outlined, not lifted. */
+
+/* The brand set theme.overlay.json declares under settings.custom.tracy.brand (orange · ink ·
+   green · paper) is what the chrome (wp-tracy-business.css) paints with, and it stays fixed in
+   dark mode where the presets flip; the bands here follow it, each with the preset it would be
+   without the overlay as fallback. */
+.tracy {
+  --wtb-orange: var(--wp--custom--tracy--brand--orange, var(--wp--preset--color--warn));
+  --wtb-ink: var(--wp--custom--tracy--brand--ink, var(--wp--preset--color--fg));
+  --wtb-on-ink: var(--wp--custom--tracy--brand--paper, var(--wp--preset--color--bg));
+  --wtb-on-ink-muted: color-mix(in srgb, var(--wtb-on-ink) 72%, transparent);
+  /* The FILL. The brand green is the same #14483a in both schemes (chrome buttons, the CTA band),
+     so a surface painted from it keeps its colour under dark. */
+  --wtb-green: var(--wp--custom--tracy--brand--green, var(--wp--preset--color--accent));
+  /* The same green as TEXT — and text has to flip. The accent preset is #14483a in light and mint
+     in dark; painting a card title from the fill gave #14483a on #191c1f, 1.64:1 (15/09). */
+  --wtb-green-text: var(--wp--preset--color--accent);
+  --wtb-on-green: var(--wp--custom--tracy--brand--paper, var(--wp--preset--color--accent-on));
+  /* The text greys the source sets on its fixed bands, as brand constants (theme.overlay.json):
+     #B9B5AC for copy and eyebrows on ink, #8A8780 for captions on ink, #BFD4CB for copy on
+     green. Mixed from paper and ink they landed a few units off on every channel (fast-5,
+     15/09: 26 parity rows on the hero eyebrow, the stat captions and the closing call's lede). */
+  --wtb-on-ink-text: var(--wp--custom--tracy--brand--ink-text, var(--wtb-on-ink-muted));
+  --wtb-on-ink-caption: var(--wp--custom--tracy--brand--ink-caption, var(--wp--preset--color--meta));
+  --wtb-on-green-text: var(--wp--custom--tracy--brand--green-text, var(--wtb-on-green));
+  --wtb-rule: var(--wp--preset--color--border);
+  --wtb-rule-soft: var(--wp--preset--color--border-soft);
+  --wtb-gap: var(--wp--preset--spacing--6);
+}
+
+/* ----- Section frame ------------------------------------------------------------------ */
+
+.wtb-section {
+  padding-block: var(--wp--custom--section-y--phone);
+  padding-inline: var(--wp--custom--container--gutter-phone);
+}
+
+@media (min-width: 640px) {
+  .wtb-section {
+    padding-block: var(--wp--custom--section-y--tablet);
+    padding-inline: var(--wp--custom--container--gutter-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  .wtb-section {
+    padding-block: var(--wp--custom--section-y--desktop);
+    padding-inline: var(--wp--custom--container--gutter-desktop);
+  }
+}
+
+.wtb-inner {
+  max-width: var(--wp--custom--container--max);
+  margin-inline: auto;
+}
+
+/* Blocks inside a pattern carry their own rhythm; the theme's flow gap stays out. */
+.wtb-section .wp-block-group > * + * {
+  margin-block-start: 0;
+}
+
+/* ----- The uniform head ---------------------------------------------------------------- */
+
+.wtb-head {
+  max-width: 62ch;
+  margin-bottom: var(--wp--preset--spacing--8);
+}
+
+.wtb-eyebrow {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wtb-orange);
+  margin: 0 0 var(--wp--preset--spacing--3);
+}
+
+.wtb-heading {
+  font-family: var(--wp--preset--font-family--display);
+  font-weight: 400;
+  font-size: var(--wp--preset--font-size--xxxl);
+  line-height: 1.15;
+  letter-spacing: var(--wp--custom--tracking--display);
+  margin: 0 0 var(--wp--preset--spacing--4);
+  text-wrap: balance;
+}
+
+/* The section title, with the source's own clamps so 390 lands where the source does (fast-5
+   N-f866b3: a fixed 40px ran "One accountable partner…" to three lines at 390, the source's 28px
+   to two): the front page's h2 is `clamp(28px, 3.4vw, 40px)`; its closing call and news head are
+   the smaller `clamp(26px, 3vw, 36px)`; every inner page's is `clamp(24px, 2.8vw, 32px)` (about,
+   services, projects, careers, investor relations — parity 14/09, 14 rows). The size follows the
+   `home` body class, not the pattern. */
+h2.wtb-heading {
+  font-size: clamp(24px, 2.8vw, calc(var(--wp--preset--font-size--xxxl) - 8px));
+}
+
+/* Two inner-page sections read one step up, `clamp(26px, 3vw, 36px)` in the source: the services
+   grid ("What we do" on the about page) and the team band ("Leadership") — full-1, 16 rows at
+   36/26. The front page's own sizes follow below and win by order. */
+.wtb-services h2.wtb-heading,
+.wtb-team h2.wtb-heading {
+  font-size: clamp(26px, 3vw, calc(var(--wp--preset--font-size--xxxl) - 4px));
+}
+
+.home h2.wtb-heading {
+  font-size: clamp(var(--wp--preset--font-size--xxl), 3.4vw, var(--wp--preset--font-size--xxxl));
+}
+
+.home .wtb-cta h2.wtb-heading,
+.home .wtb-news h2.wtb-heading {
+  font-size: clamp(26px, 3vw, calc(var(--wp--preset--font-size--xxxl) - 4px));
+}
+
+/* A page's own title in a section (the about hero): the source's `clamp(32px, 4.2vw, 50px)` at
+   1.08 — 50 at 1440, 32 at 390 (full-1: a fixed 50 was 54px of leading on nine phone pages). */
+h1.wtb-heading {
+  font-size: clamp(32px, 4.2vw, calc(var(--wp--preset--font-size--xxxl) + 10px));
+  line-height: 1.08;
+}
+
+h3.wtb-heading {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--lg);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.wtb-intro {
+  font-size: var(--wp--preset--font-size--lg);
+  line-height: var(--wp--custom--leading--body);
+  color: var(--wp--preset--color--fg-2);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.wtb-actions {
+  margin-top: var(--wp--preset--spacing--6);
+  gap: var(--wp--preset--spacing--3);
+}
+
+/* Heading on the left, the link-style action on the right, on one baseline row. */
+@media (min-width: 640px) {
+  .wtb-head--row {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 62ch) auto;
+    grid-template-areas:
+      'eyebrow .'
+      'heading actions'
+      'intro .';
+    column-gap: var(--wtb-gap);
+    align-items: end;
+    padding-bottom: var(--wp--preset--spacing--4);
+    border-bottom: 1px solid var(--wtb-rule);
+  }
+
+  .wtb-head--row > .wtb-eyebrow {
+    grid-area: eyebrow;
+  }
+
+  .wtb-head--row > .wtb-heading {
+    grid-area: heading;
+    margin-bottom: 0;
+  }
+
+  .wtb-head--row > .wtb-intro {
+    grid-area: intro;
+    margin-top: var(--wp--preset--spacing--3);
+  }
+
+  .wtb-head--row > .wtb-actions {
+    grid-area: actions;
+    justify-self: end;
+    margin-top: 0;
+  }
+}
+
+/* ----- Buttons: square, three styles ---------------------------------------------------- */
+
+.tracy .wtb-section .wp-block-button .wp-block-button__link {
+  border-radius: var(--ds-btn-radius, 0);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 600;
+  padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--5);
+}
+
+/* The closing call's button on the green band is one size up: the source's 16px in 17px × 34px
+   (parity 15/09, "Talk to our sales team" 14px → 16px on every stage). */
+.tracy .wtb-cta:not(.wtb-cta--panel):not(.wtb-cta--ink) .wp-block-button .wp-block-button__link {
+  font-size: var(--wp--preset--font-size--base);
+  padding: calc(var(--wp--preset--spacing--4) + 1px) calc(var(--wp--preset--spacing--8) + 2px);
+}
+
+/* The panel's and the ink band's orange button (about, projects, services, investor relations)
+   is the source's 15.5px in 15px × 30px — one half-step under the green band's 16 in 17 × 34
+   (full-3, 24 rows at 14px once G-W38 paired the band's button with the band's, not the header's).
+   The text-link second call keeps its own rule below. */
+.tracy :is(.wtb-cta--panel, .wtb-cta--ink) .wp-block-button:not(.is-style-outline):not(.is-style-link) .wp-block-button__link {
+  font-size: calc(var(--wp--preset--font-size--base) - 0.5px);
+  padding: calc(var(--wp--preset--spacing--4) - 1px) calc(var(--wp--preset--spacing--8) - 2px);
+}
+
+/* `is-style-orange` itself is painted by the chrome sheet (wp-tracy-business.css), the one
+   place that button style lives; the two styles below are the section-local ones. */
+.tracy .wtb-section .wp-block-button.is-style-outline .wp-block-button__link {
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+}
+
+.tracy .wtb-section .wp-block-button.is-style-link .wp-block-button__link {
+  background: transparent;
+  color: var(--wp--preset--color--accent);
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  padding: 0 0 2px;
+}
+
+/* ----- Bands: what sits on ink or green inherits the band's colour ----------------------- */
+
+/* theme.json paints every heading and link in the page's ink; on a band that is the ground. */
+.wtb-hero .wp-block-heading,
+.wtb-team .wp-block-heading,
+.wtb-cta .wp-block-heading,
+.wtb-contact__card p,
+.wtb-hero .wtb-hero__copy a:not(.wp-block-button__link),
+.wtb-team a:not(.wp-block-button__link),
+.wtb-cta a:not(.wp-block-button__link) {
+  color: inherit;
+}
+
+/* ----- Cards, shared by services · projects · news -------------------------------------- */
+
+.wtb-card {
+  background: var(--wp--preset--color--surface);
+  border: 1px solid var(--wtb-rule);
+  display: flex;
+  flex-direction: column;
+}
+
+.wtb-card__body {
+  padding: var(--wp--preset--spacing--5);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.wtb-card__media {
+  margin: 0;
+}
+
+.wtb-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 16 / 10;
+}
+
+.wtb-card__meta {
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--wtb-orange);
+  margin: 0 0 var(--wp--preset--spacing--2);
+}
+
+/* The source's card title everywhere it draws one (service, project and news cards): 19px, 600,
+   -0.01em, 1.35 (parity 14/09, 18 rows at 16.5px). */
+.wtb-card__title {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: calc(var(--wp--preset--font-size--lg) + 1px);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--wp--preset--spacing--2);
+  /* `pretty`, not `balance`: balance cut "Elektra appliance / plant" mid-phrase where the source
+     breaks after the comma (typography lens, fast-10). */
+  text-wrap: pretty;
+}
+
+.wtb-card__text {
+  font-size: calc(var(--wp--preset--font-size--sm) + 1px);
+  line-height: var(--wp--custom--leading--body);
+  color: var(--wp--preset--color--muted);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* The link line is the link's colour on the paragraph too, not only on the anchor: the source
+   draws it as one anchor, and the paragraph is what a parity pass reads (15/09, 4 rows). */
+.wtb-card__link {
+  margin: auto 0 0;
+  padding-top: var(--wp--preset--spacing--4);
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 600;
+  color: var(--wp--preset--color--accent);
+}
+
+.wtb-card__link a {
+  color: var(--wp--preset--color--accent);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+/* ----- Stats: the figure cell, in the hero band and the stats section ------------------- */
+
+/* The source's figure: 38px in the hero band; in the stats section 34px on about and careers,
+   32px on services — the majority wins (parity 14/09: 16 rows at 34, 8 at 32) — at line-height 1. */
+.wtb-stat__n {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: calc(var(--wp--preset--font-size--xxl) + 6px);
+  line-height: 1;
+  letter-spacing: var(--wp--custom--tracking--display);
+  /* Not `nowrap`: a figure is short and never needs it, and a sentence seeded into the figure
+     slot (the RU investor page's disclosures, full-1) ran the page to 1591px. The cell may
+     shrink under the text instead (`min-width: 0` on the cell, below). */
+  margin: 0 0 var(--wp--preset--spacing--1);
+}
+
+.wtb-stat__label,
+.wtb-stat__meta {
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--meta);
+  margin: 0;
+}
+
+.wtb-stat__meta {
+  font-size: var(--wp--preset--font-size--xs);
+  color: var(--wp--preset--color--meta);
+  margin-top: var(--wp--preset--spacing--1);
+}
+
+/* ----- hero ------------------------------------------------------------------------------ */
+
+.wtb-hero {
+  background: var(--wtb-ink);
+  color: var(--wtb-on-ink);
+  padding-bottom: 0;
+}
+
+/* One column below 1024, and a column that cannot grow past the container: an implicit `auto`
+   track sizes to its min-content, so one unbreakable phrase in the title widened the whole hero
+   (copy AND picture) to 397px at 390 — a 23px horizontal scroll on /ru/ (fast-6 M-96137b). */
+.wtb-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--wp--preset--spacing--8);
+  align-items: center;
+  padding-bottom: var(--wp--custom--section-y--phone);
+}
+
+@media (min-width: 1024px) {
+  .wtb-hero__inner {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: var(--wp--preset--spacing--12);
+    padding-bottom: var(--wp--custom--section-y--tablet);
+  }
+}
+
+.wtb-hero__copy {
+  max-width: none;
+  margin-bottom: 0;
+}
+
+.wtb-hero .wtb-eyebrow {
+  display: inline-block;
+  border: 1px solid var(--wtb-on-ink-muted);
+  padding: var(--wp--preset--spacing--1) var(--wp--preset--spacing--3);
+  font-weight: 400;
+  color: var(--wtb-on-ink-text);
+}
+
+/* The accent phrase of the hero title: the source's italic orange <em> on its own line — and
+   one line when it fits: at 390 the phrase broke at its hyphen, "next-" / "generation" (fast-5
+   N-d6a50d). An atomic inline (inline-block) moves whole to the next line instead of breaking
+   mid-phrase, and only wraps inside itself when it is wider than the column — `nowrap` had no
+   such fallback: «заводов нового поколения» is 397px at 390 and 577px in the 497px column at
+   1024, and it pushed the page 23px wide on /ru/ (fast-6 M-96137b, M-f7d22d). */
+.wtb-hero__heading em {
+  display: inline-block;
+  max-width: 100%;
+  font-style: italic;
+  color: var(--wtb-orange);
+}
+
+.wtb-hero .wtb-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: var(--wp--preset--spacing--2);
+  height: var(--wp--preset--spacing--2);
+  background: var(--ds-c-accent, var(--wtb-orange));
+  margin-right: var(--wp--preset--spacing--2);
+  vertical-align: middle;
+}
+
+/* The source's `clamp(38px, 5.4vw, 64px)`: 64 at 1440, 38 at 390 — a fixed 64 ran the title to
+   six lines there (fast-5 N-f866b3). Balanced, so no line is one word. */
+.wtb-hero__heading {
+  font-family: var(--wp--preset--font-family--display);
+  font-weight: 400;
+  font-size: clamp(38px, 5.4vw, var(--wp--preset--font-size--xxxxl));
+  line-height: var(--wp--custom--leading--tight);
+  letter-spacing: var(--wp--custom--tracking--display);
+  margin: 0 0 calc(var(--wp--preset--spacing--5) + 4px);
+  text-wrap: balance;
+}
+
+/* The lede: the source's 18px at 1.65 in a 520px measure, its text grey on ink. */
+.wtb-hero .wtb-intro {
+  color: var(--wtb-on-ink-text);
+  line-height: 1.65;
+  max-width: 520px;
+}
+
+.wtb-hero__media {
+  margin: 0;
+  border: 1px solid var(--wtb-on-ink-muted);
+}
+
+.wtb-hero__media img {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+}
+
+.wtb-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--wtb-on-ink-muted);
+}
+
+@media (min-width: 1024px) {
+  .wtb-hero__stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.wtb-hero__stats .wtb-stat {
+  padding: var(--wp--preset--spacing--5) var(--wp--preset--spacing--4) var(--wp--preset--spacing--5) 0;
+  border-right: 1px solid var(--wtb-on-ink-muted);
+  padding-left: var(--wp--preset--spacing--4);
+}
+
+.wtb-hero__stats .wtb-stat:first-child {
+  padding-left: 0;
+}
+
+.wtb-hero__stats .wtb-stat:last-child {
+  border-right: 0;
+}
+
+/* The hero figure: the source's `clamp(28px, 3.2vw, 38px)`. */
+.wtb-hero__stats .wtb-stat__n {
+  font-size: clamp(var(--wp--preset--font-size--xxl), 3.2vw, calc(var(--wp--preset--font-size--xxl) + 10px));
+}
+
+/* The hero's captions: the source's 13px in its caption grey on ink (#8A8780). */
+.wtb-hero__stats .wtb-stat__label,
+.wtb-hero__stats .wtb-stat__meta {
+  font-size: calc(var(--wp--preset--font-size--sm) - 1px);
+  color: var(--wtb-on-ink-caption);
+}
+
+/* The 404 page: the eyebrow is the giant "404", no image, no figures. */
+.wtb-hero--404 {
+  background: var(--wp--preset--color--bg);
+  color: var(--wp--preset--color--fg);
+  padding-bottom: var(--wp--custom--section-y--phone);
+}
+
+.wtb-hero--404 .wtb-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+  padding-bottom: 0;
+}
+
+.wtb-hero--404 .wtb-eyebrow {
+  display: block;
+  border: 0;
+  padding: 0;
+  font-family: var(--wp--preset--font-family--display);
+  font-size: clamp(80px, 12vw, calc(2 * var(--wp--preset--font-size--xxxxl) + 2px));
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-transform: none;
+  color: var(--wtb-orange);
+  margin-bottom: var(--wp--preset--spacing--5);
+}
+
+.wtb-hero--404 .wtb-eyebrow::before {
+  display: none;
+}
+
+.wtb-hero--404 .wtb-hero__heading {
+  font-size: clamp(var(--wp--preset--font-size--xxl), 3.4vw, var(--wp--preset--font-size--xxxl));
+}
+
+/* The lede: the source's 17px at 1.65 in a 36em measure, 30px above the search. */
+.wtb-hero--404 .wtb-intro {
+  color: var(--wp--preset--color--muted);
+  font-size: calc(var(--wp--preset--font-size--base) + 1px);
+  line-height: 1.65;
+  max-width: 36em;
+  margin-bottom: calc(var(--wp--preset--spacing--6) + 6px);
+}
+
+.wtb-hero--404 .wtb-hero__media,
+.wtb-hero--404 .wtb-hero__stats {
+  display: none;
+}
+
+/* Its call is a text link ("← Back to home"), not a filled button — whichever style the seeder
+   gave the button (the chrome paints `is-style-orange` one class stronger, hence the pair). */
+.tracy .wtb-hero--404 .wp-block-button .wp-block-button__link,
+.tracy .wtb-hero--404 .wp-block-button.is-style-orange .wp-block-button__link {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--wp--preset--color--accent);
+  border-radius: var(--ds-btn-radius, 0);
+  padding: 0 0 2px;
+  color: var(--wp--preset--color--accent);
+  font-size: calc(var(--wp--preset--font-size--sm) + 1px);
+  font-weight: 600;
+}
+
+.tracy .wtb-hero--404 .wp-block-button .wp-block-button__link:hover {
+  color: var(--wtb-orange);
+  border-color: currentColor;
+}
+
+/* The 404 page is two columns in the source: the hero (with the search the template adds under
+   its text) on the left, the "You may be looking for" panel on the right. The template's group
+   holds both; here it is the container box and a grid. */
+.tracy .tracy-404 {
+  max-width: calc(var(--wp--custom--container--max) + (var(--wp--custom--container--gutter-desktop) * 2));
+  padding-block: 0;
+}
+
+@media (min-width: 1024px) {
+  .tracy .tracy-404 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--wp--preset--spacing--12);
+    align-items: start;
+  }
+
+  .tracy .tracy-404 > .wtb-hero--404 {
+    padding-inline: 0;
+  }
+
+  .tracy .tracy-404 > [data-dc-tpl] {
+    margin-top: var(--wp--custom--section-y--desktop);
+  }
+}
+
+.tracy .wtb-hero--404 .wp-block-search {
+  max-width: 420px;
+  margin-bottom: var(--wp--preset--spacing--6);
+}
+
+/* Its button is ink with white text in the source (15px, 0 × 24px), not the chrome's green
+   (parity 15/09, en-404 on every stage). Dark inverts it to paper on ink — theme.overlay.json. */
+.tracy .wtb-hero--404 .wp-block-search__button {
+  background: var(--wtb-ink);
+  border-color: var(--wtb-ink);
+  color: var(--wp--preset--color--accent-on);
+  font-size: calc(var(--wp--preset--font-size--sm) + 1px);
+  padding-inline: var(--wp--preset--spacing--6);
+}
+
+/* ----- stats ----------------------------------------------------------------------------- */
+
+/* A figure whose caption the extractor read as its meta (no label line): the meta is the label. */
+.wtb-stat__n + .wtb-stat__meta {
+  font-size: var(--wp--preset--font-size--sm);
+  margin-top: 0;
+}
+
+/* The stats band right after a page's opening text section sits close under it, as the about
+   page's does in the source (~50px, not two section paddings). */
+.wtb-text + .wtb-stats {
+  padding-top: 0;
+}
+
+.wtb-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--wtb-rule);
+  border: 1px solid var(--wtb-rule);
+}
+
+@media (min-width: 1024px) {
+  .wtb-stats__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.wtb-stats__grid .wtb-stat {
+  background: var(--wp--preset--color--surface);
+  padding: var(--wp--preset--spacing--5) var(--wp--preset--spacing--5);
+  min-width: 0;
+}
+
+/* ----- services -------------------------------------------------------------------------- */
+
+.wtb-services {
+  background: var(--wp--preset--color--surface-warm);
+  border-top: 1px solid var(--wtb-rule);
+  border-bottom: 1px solid var(--wtb-rule);
+}
+
+.wtb-services__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+  background: var(--wtb-rule);
+  border: 1px solid var(--wtb-rule);
+  counter-reset: wtb-service;
+}
+
+@media (min-width: 640px) {
+  .wtb-services__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .wtb-services__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.wtb-services__item {
+  background: var(--wp--preset--color--bg);
+  padding: var(--wp--preset--spacing--6) var(--wp--preset--spacing--5);
+  display: flex;
+  flex-direction: column;
+  counter-increment: wtb-service;
+}
+
+.wtb-services__num {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--base);
+  color: var(--wtb-orange);
+  margin: 0 0 var(--wp--preset--spacing--5);
+}
+
+/* The services grid on an inner page (the about page's "What we do", D23.2): the source's card
+   title there is 16.5px, its lede 16.5px at 1.7 — the front page keeps the 19px title of the
+   shared card (full-1, 40 rows). */
+:where(body:not(.home)) .wtb-services .wtb-card__title {
+  font-size: calc(var(--wp--preset--font-size--base) + 0.5px);
+}
+
+.wtb-services .wtb-intro {
+  font-size: calc(var(--wp--preset--font-size--base) + 0.5px);
+  line-height: 1.7;
+}
+
+/* A card whose meta the spec left empty still shows its ordinal. */
+.wtb-services__item:not(:has(.wtb-services__num))::before {
+  content: '0' counter(wtb-service);
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--base);
+  color: var(--wtb-orange);
+  margin: 0 0 var(--wp--preset--spacing--5);
+}
+
+/* ----- services as a numbered process list ---------------------------------------------- */
+
+/* Three inner-page sections are typed `services` since full-2 (D24.31, G-W37) yet are the source's
+   numbered PROCESS rows, not its service cards: "How the work runs" (services), "How we run a
+   project" (projects), "How hiring works" (careers). No hook marks them, so the shape does: every
+   item carries an ordinal and none a "Learn more" link — the front page's cards link, and the
+   about page's "What we do" cards carry no ordinal of their own (CSS numbers them). The source
+   draws the rows on the page ground, one column of `50px | 1fr` ruled below, the ordinal 24px
+   Newsreader in orange at 1.1, the title 16.5/600, the copy 15px at 1.6 — inside a ~592px column
+   beside a sibling list; here the list keeps the head's 62ch measure so it does not run the
+   full container. Not the warm band, not the four-column grid, and not the band's rules: the
+   verbatim section above it (Sectors, the service cards) draws its own bottom rule, and two rules
+   met at one seam (full-3: 96 rows at 16px, 24 at 36/26, 12 doubled seams). `body:not(.home)`
+   is belt and braces — the front page's cards link, so the shape never matches there. */
+:where(body:not(.home)) .wtb-services:has(.wtb-services__num):not(:has(.wtb-card__link)) {
+  background: transparent;
+  border-top: 0;
+  border-bottom: 0;
+}
+
+/* The section title is the inner page's `clamp(24px, 2.8vw, 32px)`, not the services grid's one
+   step up (the rule above this block, `.wtb-services h2.wtb-heading`). */
+:where(body:not(.home)) .wtb-services:has(.wtb-services__num):not(:has(.wtb-card__link)) h2.wtb-heading {
+  font-size: clamp(24px, 2.8vw, calc(var(--wp--preset--font-size--xxxl) - 8px));
+  margin-bottom: 0;
+}
+
+/* The source's heading sits 20px over the first row with no rule of its own — the rows rule
+   themselves. */
+:where(body:not(.home)) .wtb-services:has(.wtb-services__num):not(:has(.wtb-card__link)) .wtb-head {
+  margin-bottom: var(--wp--preset--spacing--5);
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+:where(body:not(.home)) .wtb-services:has(.wtb-services__num):not(:has(.wtb-card__link)) .wtb-services__grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  max-width: 62ch;
+  background: transparent;
+  border: 0;
+}
+
+/* One row: the ordinal in a 50px column, the title and copy stacked beside it, a rule under. */
+:where(body:not(.home)) .wtb-services:has(.wtb-services__num):not(:has(.wtb-card__link)) .wtb-services__item {
+  display: grid;
+  grid-template-columns: calc(var(--wp--preset--spacing--12) + 2px) minmax(0, 1fr);
+  column-gap: calc(var(--wp--preset--spacing--4) + 2px);
+  padding: var(--wp--preset--spacing--4) 0;
+  background: transparent;
+  border-bottom: 1px solid var(--wtb-rule);
+}
+
+:where(body:not(.home)) .wtb-services:has(.wtb-services__num):not(:has(.wtb-card__link)) .wtb-services__num {
+  grid-row: 1 / span 2;
+  font-size: calc(var(--wp--preset--font-size--xl) + 2px);
+  line-height: 1.1;
+  margin: 0;
+}
+
+:where(body:not(.home)) .wtb-services:has(.wtb-services__num):not(:has(.wtb-card__link)) .wtb-card__title {
+  margin: 0;
+}
+
+:where(body:not(.home)) .wtb-services:has(.wtb-services__num):not(:has(.wtb-card__link)) .wtb-card__text {
+  margin-top: var(--wp--preset--spacing--1);
+}
+
+/* ----- projects -------------------------------------------------------------------------- */
+
+.wtb-projects {
+  background: var(--wp--preset--color--surface-warm);
+}
+
+.wtb-projects__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--wtb-gap);
+}
+
+@media (min-width: 640px) {
+  .wtb-projects__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .wtb-projects__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* One ratio for the three cards. The source draws the first card's image taller (300px against
+   190px), and the port had it at 4:5: the grid row stretched to that card, so cards 2–3 carried
+   ~300px of empty surface under "Read the case study" and their titles sat 250px above the
+   first card's (visual-qa 15/09, N-177bd4 · N-030945). The shared 16:10 of `.wtb-card__media`
+   applies; nothing to override. */
+
+/* ----- news ------------------------------------------------------------------------------ */
+
+/* The source's news card title: the h3 is ink and the anchor inside it carries the link colour,
+   orange on hover, no underline. The pattern writes the title without an anchor today, so the
+   heading itself takes the link colour until it wraps one — `:has(a)` hands the colour back to
+   the anchor the moment the pattern adds it (fast-6, 8 rows: the source's h3 measures ink, its
+   visible text forest). */
+.wtb-news__item .wtb-card__title:not(:has(a)),
+.wtb-news__item .wtb-card__title a {
+  color: var(--wtb-green-text);
+}
+
+/* The source draws TWO project titles (D24.16, kept): the first, wide card's is 24px, semibold,
+   ink, -0.015em; the two cards beside it are whole-card links, so their titles are the shared 19px
+   in the link colour (fast-6, 8 rows: "Vorsino" and "Obninsk" measured 24px ink against the
+   source's 19px forest — 15/09 had put the first card's size on all three). */
+.wtb-projects .wtb-projects__item:first-child .wtb-card__title,
+.wtb-projects .wtb-projects__item:first-child .wtb-card__title a {
+  color: inherit;
+  font-size: calc(var(--wp--preset--font-size--xl) + 2px);
+  letter-spacing: -0.015em;
+}
+
+.wtb-projects .wtb-projects__item:not(:first-child) .wtb-card__title,
+.wtb-projects .wtb-projects__item:not(:first-child) .wtb-card__title a {
+  color: var(--wtb-green-text);
+}
+
+.wtb-news__item .wtb-card__title a:hover {
+  color: var(--wtb-orange);
+}
+
+/* "Other projects" on a project page — the grid that follows the page's own opening sheet (the
+   text split carrying both `media-end` and `specs`, see the ink band under `text`): the source
+   draws a compact index, four to a row, no card box — the picture, a 16px semibold ink title at
+   1.35, and under it a 13px caption in the meta grey (full-1, 48 rows: the shared card put the
+   24px/19px link titles and the orange uppercase meta ABOVE the title). */
+.wtb-text--specs.wtb-text--media-end ~ .wtb-projects .wtb-projects__grid {
+  gap: var(--wp--preset--spacing--6);
+}
+
+@media (min-width: 1024px) {
+  .wtb-text--specs.wtb-text--media-end ~ .wtb-projects .wtb-projects__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.wtb-text--specs.wtb-text--media-end ~ .wtb-projects .wtb-card {
+  background: transparent;
+  border: 0;
+}
+
+.wtb-text--specs.wtb-text--media-end ~ .wtb-projects .wtb-card__media {
+  border: 1px dashed var(--wtb-rule);
+  margin-bottom: var(--wp--preset--spacing--3);
+}
+
+.wtb-text--specs.wtb-text--media-end ~ .wtb-projects .wtb-card__body {
+  padding: 0;
+}
+
+.wtb-text--specs.wtb-text--media-end ~ .wtb-projects .wtb-projects__item .wtb-card__title,
+.wtb-text--specs.wtb-text--media-end ~ .wtb-projects .wtb-projects__item .wtb-card__title a {
+  color: inherit;
+  font-size: var(--wp--preset--font-size--base);
+  line-height: 1.35;
+  letter-spacing: 0;
+  margin: 0 0 var(--wp--preset--spacing--1);
+}
+
+.wtb-text--specs.wtb-text--media-end ~ .wtb-projects .wtb-card__meta {
+  order: 1;
+  font-size: calc(var(--wp--preset--font-size--xs) + 1px);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--wp--preset--color--meta);
+  margin: 0;
+}
+
+.wtb-news__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--wtb-gap);
+}
+
+@media (min-width: 640px) {
+  .wtb-news__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.wtb-news__item {
+  border: 0;
+  background: transparent;
+}
+
+.wtb-news__item .wtb-card__media {
+  margin-bottom: var(--wp--preset--spacing--4);
+}
+
+.wtb-news__item .wtb-card__media img {
+  aspect-ratio: 16 / 9;
+}
+
+.wtb-news__item .wtb-card__meta {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--wp--preset--color--meta);
+}
+
+/* The band is a Query Loop of the site's latest posts (patterns/section-news.php, 28/09): the grid
+   is the post template's list and each card sits in a list item. The flow layout's gap would push
+   items 2–3 down by a block gap, so it is taken off; the item stretches to the row and the card
+   fills it, so "Read more →" keeps to the card's bottom edge across the row (the rule under
+   `.wtb-card > .wtb-card__link` further down). A band of typed cards seeded before 28/09 has no
+   list items, and none of this applies to it. */
+.wtb-news__grid > li {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.wtb-news__grid > li > .wtb-news__item {
+  flex: 1;
+}
+
+/* Date · category on one line, as the typed card's one paragraph read ("12 Aug 2026 · Disclosure");
+   the post-terms prefix carries the dot. The category links to its archive, in the meta's grey
+   until pointed at. */
+.wtb-news__item .wtb-card__meta:has(> .wp-block-post-date) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.25em;
+}
+
+.wtb-news__item .wtb-card__meta a {
+  color: inherit;
+}
+
+.wtb-news__item .wtb-card__meta a:hover {
+  color: var(--wtb-orange);
+}
+
+/* ----- cta ------------------------------------------------------------------------------- */
+
+.wtb-cta {
+  background: var(--wtb-green);
+  color: var(--wtb-on-green);
+  padding-block: var(--wp--custom--section-y--phone);
+}
+
+.wtb-cta__inner {
+  display: grid;
+  gap: var(--wp--preset--spacing--6);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .wtb-cta__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--wp--preset--spacing--12);
+  }
+}
+
+.wtb-cta__copy {
+  margin-bottom: 0;
+}
+
+.wtb-cta .wtb-eyebrow {
+  color: var(--wtb-on-green);
+  opacity: 0.8;
+}
+
+.wtb-cta .wtb-heading {
+  font-size: calc(var(--wp--preset--font-size--xxl) + 4px);
+  margin-bottom: var(--wp--preset--spacing--2);
+}
+
+.wtb-cta .wtb-intro {
+  color: var(--wtb-on-green-text);
+  font-size: calc(var(--wp--preset--font-size--base) + 0.5px);
+}
+
+.wtb-cta__actions {
+  margin-top: 0;
+  flex-wrap: wrap;
+}
+
+/* The inner pages' closing call (patterns.map.json: style `panel`, every view but the front
+   page): a beige panel inside the container on the page ground — ink heading, grey text, the
+   orange button and a plain green text link — where the front page's is the green band. */
+.wtb-cta--panel {
+  background: transparent;
+  color: var(--wp--preset--color--fg);
+  padding-block: 0 calc(var(--wp--custom--section-y--desktop) - var(--wp--preset--spacing--2));
+}
+
+.wtb-cta--panel .wtb-cta__inner {
+  background: var(--wp--preset--color--surface-warm);
+  border: 1px solid var(--wtb-rule);
+  padding: var(--wp--preset--spacing--8) calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--2));
+}
+
+.wtb-cta--panel .wtb-eyebrow {
+  color: var(--wtb-orange);
+  opacity: 1;
+}
+
+.wtb-cta--panel .wtb-intro {
+  color: var(--wp--preset--color--fg-2);
+  opacity: 1;
+}
+
+/* The panel's title is an inner-page section title, `clamp(24px, 2.8vw, 32px)` — 24 at 390,
+   where the band's fixed 32 stayed (full-1, 4 rows). */
+.wtb-cta--panel .wtb-heading {
+  font-size: clamp(24px, 2.8vw, calc(var(--wp--preset--font-size--xxxl) - 8px));
+}
+
+.tracy .wtb-cta--panel .wp-block-button.is-style-outline .wp-block-button__link {
+  background: transparent;
+  border: 0;
+  padding: 0 0 2px;
+  border-bottom: 1px solid var(--wtb-green-text);
+  color: var(--wtb-green-text);
+  font-size: calc(var(--wp--preset--font-size--sm) + 1px);
+}
+
+.tracy .wtb-cta--panel .wp-block-button.is-style-outline .wp-block-button__link:hover {
+  color: var(--wtb-orange);
+  border-color: currentColor;
+}
+
+/* The Services, Projects and Investor relations closing calls (patterns.map.json: style `ink`):
+   an ink band edge to edge, paper heading at 34px, the copy in the warm grey, the orange button
+   and a paper text link ruled in the muted green. */
+.wtb-cta--ink {
+  background: var(--wtb-ink);
+  color: var(--wtb-on-ink);
+  padding-block: calc(var(--wp--custom--section-y--desktop) - 28px);
+}
+
+.wtb-cta--ink .wtb-eyebrow {
+  color: var(--wtb-orange);
+  opacity: 1;
+}
+
+.wtb-cta--ink .wtb-heading {
+  color: var(--wtb-on-ink);
+  /* The source's `clamp(24px, 2.8vw, 34px)` on the services call (the projects call is 32 at
+     1440, the one row the shared size leaves open) — 24 at 390 (full-1, 8 rows at 34). */
+  font-size: clamp(24px, 2.8vw, calc(var(--wp--preset--font-size--xxl) + 6px));
+  text-wrap: pretty;
+}
+
+.wtb-cta--ink .wtb-intro {
+  /* The band's copy grey, as the hero's lede: #B9B5AC, not the paper mix (full-1, 16 rows). */
+  color: var(--wtb-on-ink-text);
+  opacity: 1;
+  font-size: calc(var(--wp--preset--font-size--base) + 0.5px);
+  line-height: 1.65;
+  max-width: 38em;
+}
+
+.tracy .wtb-cta--ink .wp-block-button.is-style-outline .wp-block-button__link {
+  background: transparent;
+  border: 0;
+  padding: 0 0 2px;
+  border-bottom: 1px solid color-mix(in srgb, var(--wtb-green) 55%, var(--wtb-on-ink));
+  color: var(--wtb-on-ink);
+  font-size: calc(var(--wp--preset--font-size--sm) + 1px);
+}
+
+.tracy .wtb-cta--ink .wp-block-button.is-style-outline .wp-block-button__link:hover {
+  color: var(--wtb-orange);
+  border-color: currentColor;
+}
+
+/* ----- team ------------------------------------------------------------------------------ */
+
+.wtb-team {
+  background: var(--wtb-ink);
+  color: var(--wtb-on-ink);
+}
+
+.wtb-team .wtb-intro {
+  color: var(--wtb-on-ink-muted);
+}
+
+.wtb-team__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--wtb-gap);
+}
+
+@media (min-width: 1024px) {
+  .wtb-team__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.wtb-team__media {
+  margin: 0 0 var(--wp--preset--spacing--3);
+}
+
+.wtb-team__media img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.wtb-team .wtb-team__name {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--base);
+  font-weight: 600;
+  margin: 0;
+  /* Pure white, one step above the band's paper — the source's #FFFFFF on the name alone, in both
+     schemes (full-1, 32 rows). The accent-on preset is that white in both. */
+  color: var(--wp--preset--color--accent-on);
+}
+
+.wtb-team__role {
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wtb-orange);
+  margin: 0 0 var(--wp--preset--spacing--2);
+}
+
+.wtb-team__bio {
+  font-size: var(--wp--preset--font-size--sm);
+  line-height: 1.55;
+  /* The band's caption grey (#8A8780), as the source paints the bio — and a colour the parity
+     diff can read; the 72% paper mix is a color(srgb … / 0.72) it cannot (full-2, 32 rows once
+     the team pattern put the bio in this class). */
+  color: var(--wtb-on-ink-caption);
+  margin: 0;
+}
+
+/* ----- contact --------------------------------------------------------------------------- */
+
+.wtb-contact__inner {
+  display: grid;
+  gap: var(--wp--preset--spacing--8);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .wtb-contact__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--wp--preset--spacing--12);
+  }
+
+  /* The contact page's hero carries only the copy (the form and the address cards follow as the
+     source's own markup): one column, so the lede keeps the source's 44em measure and one line. */
+  .wtb-contact__inner:not(:has(.wtb-contact__card)) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.wtb-contact__copy {
+  margin-bottom: 0;
+}
+
+/* The source's `clamp(32px, 4vw, 48px)` — 48 at 1440, 32 at 390 (full-1, 4 rows). */
+.wtb-contact__copy .wtb-heading {
+  font-size: clamp(32px, 4vw, calc(var(--wp--preset--font-size--xxxxl) - 16px));
+}
+
+/* The source's 16.5px lede in a 44em measure — one line at 1440 (60ch was 545px: two lines). */
+.wtb-contact__copy .wtb-intro {
+  font-size: calc(var(--wp--preset--font-size--base) + 0.5px);
+  color: var(--wp--preset--color--muted);
+  max-width: 44em;
+}
+
+.wtb-contact__card {
+  background: var(--wtb-ink);
+  color: var(--wtb-on-ink);
+  padding: var(--wp--preset--spacing--6);
+}
+
+.wtb-contact__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--wp--preset--spacing--4);
+  padding-block: var(--wp--preset--spacing--3);
+  border-top: 1px solid var(--wtb-on-ink-muted);
+}
+
+.wtb-contact__row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.wtb-contact__label {
+  color: var(--wtb-on-ink-muted);
+  margin: 0;
+  font-size: var(--wp--preset--font-size--sm);
+  white-space: nowrap;
+}
+
+.wtb-contact__value {
+  margin: 0;
+  text-align: right;
+}
+
+/* A run that must not be broken across lines — a telephone number, a time with its zone. CSS can
+   only hold a whole ELEMENT together, so the run needs a wrapper of its own: this is the hook for
+   whoever prints it (full-5 N-668903, N-039c3a — the branch numbers and the email footer's number
+   are single text runs inside the source's own markup, "+7 495 / 382 14 55" and "550-67-/89", and
+   no selector reaches half a text node). */
+.wtb-nowrap {
+  white-space: nowrap;
+}
+
+/* At the phone the desktop two-column row is the wrong shape: a nowrap label eats most of a 326px
+   line, so the address fell down five lines in EN and seven in RU, each ragged-right against the
+   card (full-5 N-d8e139, N-dedb48, N-2e27d9, N-c32fc4). The source stacks there — label over
+   value, the value ranged left across the full width, three lines. That also lands the hotline and
+   "Mon–Fri, 9:00–18:00 (MSK)" back on one line each (N-668903 for the card's number, N-e4e59a). */
+@media (max-width: 639px) {
+  .wtb-contact__row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--wp--preset--spacing--1);
+  }
+
+  .wtb-contact__value {
+    text-align: left;
+  }
+}
+
+/* The card's rows as the source draws them: label and value both 15.5px, the label in the band's
+   caption grey (#8A8780 — the band rule above painted it paper, full-1 24 rows); the first row is
+   the address, its label a 12px bold uppercase caption and its value 16.5px at 1.65. */
+.wtb-contact__card .wtb-contact__label {
+  color: var(--wtb-on-ink-caption);
+  font-size: calc(var(--wp--preset--font-size--base) - 0.5px);
+}
+
+.wtb-contact__card .wtb-contact__value {
+  font-size: calc(var(--wp--preset--font-size--base) - 0.5px);
+}
+
+.wtb-contact__card .wtb-contact__row:first-child .wtb-contact__label {
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.wtb-contact__card .wtb-contact__row:first-child .wtb-contact__value {
+  font-size: calc(var(--wp--preset--font-size--base) + 0.5px);
+  line-height: 1.65;
+}
+
+.wtb-contact__meta {
+  grid-column: 1 / -1;
+  font-size: var(--wp--preset--font-size--xs);
+  color: var(--wtb-on-ink-muted);
+  margin: 0;
+}
+
+/* ----- form ------------------------------------------------------------------------------ */
+
+.wtb-form__inner {
+  display: grid;
+  gap: var(--wp--preset--spacing--8);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .wtb-form__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--wp--preset--spacing--12);
+  }
+}
+
+.wtb-form__card {
+  background: var(--wp--preset--color--surface);
+  border: 1px solid var(--wtb-rule);
+  padding: var(--wp--preset--spacing--6);
+}
+
+.wtb-form__note {
+  background: color-mix(in srgb, var(--wp--preset--color--accent) 10%, transparent);
+  border-left: var(--wp--preset--spacing--1) solid var(--wp--preset--color--accent);
+  padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--4);
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--fg-2);
+  margin: 0 0 var(--wp--preset--spacing--6);
+}
+
+/* The Contact Form 7 form the seeder writes (lib/form-embed.mjs): one CF7 tag per source
+   control, wrapped in `<p>` by wpautop, with `wtb-form__*` hooks. It renders wherever the
+   section landed — the designed card (`.wtb-form__card`) or the source's own markup when the
+   section fell back to core/html (the contact page, visual-5) — so the rules hang off the form
+   itself, not the card. Values are the source's contact form: two columns of 15px fields on
+   the page ground, a chip row for the request type, a dashed drop zone, an orange submit next
+   to a ghost reset. */
+.tracy .wpcf7-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--wp--preset--spacing--5);
+  font-family: var(--wp--preset--font-family--body);
+}
+
+.tracy .wpcf7-form > p {
+  margin: 0;
+}
+
+.tracy .wpcf7-form > .hidden-fields-container {
+  display: none;
+}
+
+/* A control that reads across the card: the long text, the drop zone, the chip row, the consent
+   line, the buttons, the response line. Short text fields keep one column each. */
+.tracy .wpcf7-form > fieldset,
+.tracy .wpcf7-form > p:has(textarea),
+.tracy .wpcf7-form > p:has(.wpcf7-file),
+.tracy .wpcf7-form > p:has(.wpcf7-acceptance),
+.tracy .wpcf7-form > p:has(.wpcf7-submit),
+.tracy .wpcf7-form > .wtb-form__actions,
+.tracy .wpcf7-form > .wpcf7-response-output {
+  grid-column: 1 / -1;
+}
+
+/* The seeder groups the short text fields in `.wtb-form__grid--2` (lib/form-embed.mjs) and no rule
+   ever read the class, so the whole group sat in ONE column of the form grid and the four fields
+   stacked: the contact card ran 1179px tall (full-5 N-ce0793). The group spans the card and pairs
+   its own fields — wpautop puts all four labels in a single `<p>` separated by `<br>`, so the grid
+   goes on that paragraph and those separators are what would otherwise break the pairing. */
+.tracy .wpcf7-form > .wtb-form__grid {
+  grid-column: 1 / -1;
+}
+
+.tracy .wpcf7-form .wtb-form__grid--2 > p {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--wp--preset--spacing--5);
+}
+
+.tracy .wpcf7-form .wtb-form__grid--2 > p > br {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .tracy .wpcf7-form .wtb-form__grid--2 > p {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.tracy .wpcf7-form .wtb-form__field,
+.tracy .wpcf7-form .wtb-form__choices > legend {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy .wpcf7-form .wtb-form__choices {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.tracy .wpcf7-form .wtb-form__choices > legend {
+  padding: 0;
+  margin-bottom: 7px;
+}
+
+.tracy .wpcf7-form .wtb-form__choices > p {
+  margin: 0;
+}
+
+.tracy .wpcf7-form .wtb-form__field > .wpcf7-form-control-wrap {
+  display: block;
+  margin-top: 7px;
+}
+
+.tracy .wpcf7-form input:not([type='submit']):not([type='checkbox']):not([type='radio']):not([type='file']),
+.tracy .wpcf7-form textarea,
+.tracy .wpcf7-form select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+  padding: 12px 13px;
+  border: 1px solid var(--wtb-rule);
+  border-radius: var(--ds-input-radius, 0);
+  background: var(--wp--preset--color--bg);
+  color: var(--wp--preset--color--fg);
+  font-weight: 400;
+}
+
+.tracy .wpcf7-form textarea {
+  height: 130px;
+  resize: vertical;
+}
+
+.tracy .wpcf7-form input::placeholder,
+.tracy .wpcf7-form textarea::placeholder {
+  color: var(--wp--preset--color--meta);
+  font-family: inherit;
+  opacity: 1;
+}
+
+.tracy .wpcf7-form input:focus-visible,
+.tracy .wpcf7-form textarea:focus-visible {
+  outline: 2px solid var(--ds-c-focus-ring, var(--wp--preset--color--accent));
+  outline-offset: 0;
+}
+
+/* Radio options as chips: the checked one is the filled green chip, the rest are outlined. The
+   native radio stays in the tree for the keyboard and the screen reader, off-canvas. */
+.tracy .wpcf7-form .wpcf7-radio {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp--preset--spacing--2);
+}
+
+.tracy .wpcf7-form .wpcf7-radio .wpcf7-list-item {
+  margin: 0;
+}
+
+.tracy .wpcf7-form .wpcf7-radio .wpcf7-list-item label {
+  position: relative;
+  display: inline-block;
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 400;
+  padding: 10px 16px;
+  border: 1px solid var(--wtb-rule);
+  color: var(--wp--preset--color--fg-2);
+  background: transparent;
+  cursor: pointer;
+}
+
+.tracy .wpcf7-form .wpcf7-radio .wpcf7-list-item label:has(input:checked) {
+  /* The FILL, not the accent preset: the accent is mint in dark, and white on mint is 2.1:1
+     (full-1 contrast, 6 rows). The brand green is the same #14483a in both schemes — the fill
+     the chrome's button and the 404's search button keep in dark (D24.20). */
+  background: var(--wtb-green);
+  border-color: var(--wtb-green);
+  color: var(--wp--preset--color--accent-on);
+  font-weight: 600;
+}
+
+.tracy .wpcf7-form .wpcf7-radio .wpcf7-list-item label:has(input:focus-visible) {
+  outline: 2px solid var(--ds-c-focus-ring, var(--wp--preset--color--accent));
+  outline-offset: 2px;
+}
+
+.tracy .wpcf7-form .wpcf7-radio input[type='radio'] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  pointer-events: none;
+}
+
+.tracy .wpcf7-form .wpcf7-radio .wpcf7-list-item-label {
+  margin: 0;
+}
+
+/* Drop zone: the label is the dashed box the source drew; the native file input sits inside it
+   so a click anywhere on the box opens the picker and the chosen name stays visible. */
+.tracy .wpcf7-form .wtb-form__file {
+  display: block;
+  border: 1px dashed color-mix(in srgb, var(--wtb-rule) 70%, var(--wp--preset--color--meta));
+  background: var(--wp--preset--color--bg);
+  padding: 22px;
+  text-align: center;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--wp--preset--color--fg);
+  cursor: pointer;
+}
+
+.tracy .wpcf7-form .wtb-form__file .wtb-form__hint {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--wp--preset--color--meta);
+  margin-top: 4px;
+}
+
+.tracy .wpcf7-form .wtb-form__file > br {
+  display: none;
+}
+
+.tracy .wpcf7-form .wtb-form__file .wpcf7-form-control-wrap {
+  display: block;
+  margin-top: 10px;
+}
+
+.tracy .wpcf7-form input[type='file'] {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--wp--preset--color--meta);
+  max-width: 100%;
+}
+
+/* The picker button is the browser's own until something says otherwise: #EFEFEF in light, #6B6B6B
+   in dark, and nothing like the ghost button the same site draws two pages away (full-5 N-3f67f6).
+   Inside the drop zone there is no longer one to see — `inc/extra.php` clips that input off canvas
+   (2965c92d2) — so this is the fallback for a `[file]` tag that lands anywhere else: the reset's
+   own language, a 1px rule and no radius. */
+.tracy .wpcf7-form input[type='file']::file-selector-button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 8px 14px;
+  margin-right: var(--wp--preset--spacing--3);
+  border: 1px solid var(--wtb-rule);
+  border-radius: var(--ds-btn-radius, 0);
+  background: transparent;
+  color: var(--wp--preset--color--fg-2);
+  cursor: pointer;
+}
+
+.tracy .wpcf7-form input[type='file']::file-selector-button:hover {
+  border-color: var(--wp--preset--color--fg-2);
+}
+
+/* Consent line: an 18px box and 14px text, as the source — on the paragraph too, which is what
+   a parity pass reads (full-1, 8 rows at 16px ink). */
+.tracy .wpcf7-form > p:has(.wpcf7-acceptance) {
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--fg-2);
+}
+
+.tracy .wpcf7-form .wpcf7-acceptance .wpcf7-list-item {
+  margin: 0;
+}
+
+.tracy .wpcf7-form .wpcf7-acceptance label {
+  display: flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--3);
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--fg-2);
+  cursor: pointer;
+}
+
+/* The consent box in the source's OWN language, not the browser's. `accent-color` only tints the
+   native box, so the unchecked one stayed #FFFFFF/#767676 in light and #3B3B3B/#858585 in dark —
+   while the form library page two clicks away draws the same control as a white 17px box ruled
+   #B4AFA4, filled forest when checked (full-5 N-3f67f6: one site, two faces for one control). The
+   drawn box, and the tick the drawn one is missing too (N-df40b3): the fill alone said "checked"
+   in colour only. */
+.tracy .wpcf7-form input[type='checkbox'] {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: none;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid var(--wtb-rule);
+  border-radius: var(--ds-input-radius, 0);
+  background: var(--wp--preset--color--surface);
+  cursor: pointer;
+}
+
+.tracy .wpcf7-form input[type='checkbox']:checked {
+  /* The FILL, not the accent preset — the accent is mint in dark, and the tick is white (D24.20,
+     the same reason the chips take the brand green). */
+  background: var(--wtb-green);
+  border-color: var(--wtb-green);
+}
+
+.tracy .wpcf7-form input[type='checkbox']:checked::after,
+.tracy .wp-block-post-content span[style*='width: 17px'][style*='background: var(--wp--custom--tracy--brand--green)']::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 8px;
+  margin: -6px 0 0 -2px;
+  border: solid var(--wp--preset--color--accent-on);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.tracy .wpcf7-form input[type='checkbox']:focus-visible {
+  outline: 2px solid var(--ds-c-focus-ring, var(--wp--preset--color--accent));
+  outline-offset: 2px;
+}
+
+/* The form library page draws its checked box as a filled 17px span (the source's markup, so no
+   input to style): the tick above needs it positioned. The slide deck's 11px bullet squares carry
+   the same fill and are deliberately not matched. */
+.tracy .wp-block-post-content span[style*='width: 17px'][style*='background: var(--wp--custom--tracy--brand--green)'] {
+  position: relative;
+}
+
+/* A field that failed validation is tinted, not just ringed (the source's #FDF3F1). Its corner is
+   the field's own rule's (.wpcf7-form input above, which reads --ds-input-radius).
+   ds-keep: the tint draws no box of its own, the field rule sets the corner */
+.tracy .wp-block-post-content input[aria-invalid='true'],
+.tracy .wp-block-post-content .wpcf7-not-valid {
+  background: var(--ds-c-danger-bg, color-mix(in srgb, var(--wp--preset--color--danger) 6%, var(--wp--preset--color--bg)));
+}
+
+.tracy .wpcf7-form .wpcf7-not-valid-tip {
+  font-size: var(--wp--preset--font-size--xs);
+  color: var(--ds-c-danger-text, var(--wp--preset--color--danger));
+  margin-top: 4px;
+}
+
+.tracy .wpcf7-form .wtb-form__actions {
+  margin-top: var(--wp--preset--spacing--2);
+}
+
+.tracy .wpcf7-form .wtb-form__actions > p {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--wp--preset--spacing--4);
+  margin: 0;
+}
+
+.tracy .wpcf7-form input[type='submit'],
+.tracy .wpcf7-form .wtb-form__reset {
+  font-family: inherit;
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  border-radius: var(--ds-btn-radius, 0);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.tracy .wpcf7-form input[type='submit'] {
+  background: var(--ds-c-accent, var(--wtb-orange));
+  color: var(--wp--preset--color--accent-on);
+  border: 0;
+  padding: 15px 32px;
+}
+
+/* A submit held disabled (an unticked consent): the same face as at rest unless a design system
+   gives the disabled state its own. :where() keeps it at the rest rule's weight, so the hover rule
+   below and every more specific card rule still win as before. */
+.tracy .wpcf7-form input[type='submit']:where(:disabled) {
+  background: var(--ds-c-disabled-bg, var(--ds-c-accent, var(--wtb-orange)));
+  color: var(--ds-c-disabled-fg, var(--wp--preset--color--accent-on));
+}
+
+.tracy .wpcf7-form input[type='submit']:hover {
+  background: color-mix(in srgb, var(--wtb-orange) 88%, var(--wp--preset--color--fg));
+}
+
+.tracy .wpcf7-form .wtb-form__reset {
+  background: transparent;
+  border: 1px solid var(--wtb-rule);
+  color: var(--wp--preset--color--fg-2);
+  padding: 15px 24px;
+}
+
+.tracy .wpcf7-form .wtb-form__reset:hover {
+  border-color: var(--wp--preset--color--fg-2);
+}
+
+/* CF7 paints its own spinner beside the submit; keep it in the button row. */
+.tracy .wpcf7-form .wpcf7-spinner {
+  margin: 0;
+}
+
+.tracy .wpcf7-form .wpcf7-response-output {
+  margin: 0;
+  padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--4);
+  /* The neutral message: an info note. Contact Form 7's own state rules colour its sent, failed and
+     invalid rules on top; its words keep the form's own colour (currentColor) without a system. */
+  border: 1px solid var(--ds-c-info, var(--wtb-rule));
+  color: var(--ds-c-info-text, currentColor);
+  font-size: var(--wp--preset--font-size--sm);
+}
+
+.tracy .wpcf7-form.init .wpcf7-response-output {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .tracy .wpcf7-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.wtb-form__head {
+  margin-bottom: var(--wp--preset--spacing--4);
+}
+
+.wtb-form__map {
+  margin: 0 0 var(--wp--preset--spacing--6);
+  border: 1px dashed var(--wtb-rule);
+}
+
+.wtb-form__map img {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+}
+
+.wtb-form__list {
+  border: 1px solid var(--wtb-rule);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--wtb-rule);
+}
+
+.wtb-form__row {
+  background: var(--wp--preset--color--surface);
+  padding: var(--wp--preset--spacing--4);
+}
+
+.wtb-form__row-title {
+  font-weight: 600;
+  margin: 0;
+}
+
+.wtb-form__row-text {
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--muted);
+  margin: var(--wp--preset--spacing--1) 0 0;
+}
+
+.wtb-form__row-meta {
+  font-size: var(--wp--preset--font-size--xs);
+  color: var(--wp--preset--color--meta);
+  margin: var(--wp--preset--spacing--2) 0 0;
+}
+
+.wtb-form__row-link {
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 600;
+  margin: var(--wp--preset--spacing--2) 0 0;
+}
+
+.wtb-form__row-link a {
+  color: var(--wp--preset--color--accent);
+  text-decoration: none;
+}
+
+/* ----- gallery (logo strip) -------------------------------------------------------------- */
+
+.wtb-gallery {
+  border-top: 1px solid var(--wtb-rule);
+  padding-block: var(--wp--preset--spacing--8);
+}
+
+.wtb-gallery__inner {
+  display: grid;
+  gap: var(--wp--preset--spacing--6);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .wtb-gallery__inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--wp--preset--spacing--12);
+  }
+}
+
+.wtb-gallery__head {
+  margin-bottom: 0;
+}
+
+.wtb-gallery__head .wtb-eyebrow {
+  color: var(--wp--preset--color--meta);
+  margin-bottom: 0;
+}
+
+.wtb-gallery__head .wtb-heading {
+  margin: var(--wp--preset--spacing--2) 0 0;
+}
+
+.wtb-gallery__head .wtb-intro {
+  font-size: var(--wp--preset--font-size--sm);
+}
+
+.wtb-gallery__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp--preset--spacing--3);
+  justify-content: flex-end;
+}
+
+.wtb-gallery__item {
+  border: 1px solid var(--wtb-rule);
+  background: var(--wp--preset--color--surface);
+  padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--4);
+  display: flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--2);
+}
+
+.wtb-gallery__media {
+  margin: 0;
+}
+
+.wtb-gallery__media img {
+  height: var(--wp--preset--spacing--8);
+  width: auto;
+}
+
+.wtb-gallery__caption {
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ----- slide (rows) ---------------------------------------------------------------------- */
+
+.wtb-slide__list {
+  border-top: 1px solid var(--wtb-rule);
+}
+
+.wtb-slide__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--wp--preset--spacing--5);
+  align-items: center;
+  padding-block: var(--wp--preset--spacing--4);
+  border-bottom: 1px solid var(--wtb-rule);
+}
+
+.wtb-slide__row:not(:has(.wtb-slide__thumb)) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.wtb-slide__thumb {
+  margin: 0;
+  width: calc(var(--wp--preset--spacing--12) * 2.5);
+  border: 1px solid var(--wtb-rule);
+}
+
+.wtb-slide__thumb img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.wtb-slide__title {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--base);
+  font-weight: 600;
+  /* A row title, not a display heading: theme.json's tight heading leading (1.02) clipped the
+     Cyrillic ascenders on the RU investor page's rows (full-1, 16 rows at 16.32px). */
+  line-height: 1.4;
+  margin: 0;
+}
+
+.wtb-slide__text {
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--muted);
+  margin: var(--wp--preset--spacing--1) 0 0;
+}
+
+.wtb-slide__side {
+  text-align: right;
+}
+
+.wtb-slide__meta {
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 700;
+  color: var(--wtb-orange);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.wtb-slide__link {
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 600;
+  margin: var(--wp--preset--spacing--1) 0 0;
+}
+
+.wtb-slide__link a {
+  color: var(--wp--preset--color--accent);
+  text-decoration: none;
+}
+
+/* ----- text (split) ---------------------------------------------------------------------- */
+
+.wtb-text__inner {
+  display: grid;
+  gap: var(--wp--preset--spacing--8);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .wtb-text__inner:has(.wtb-text__media) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--wp--preset--spacing--12);
+  }
+}
+
+.wtb-text__media {
+  margin: 0;
+}
+
+/* The picture follows the copy when it did in the source (patterns.map.json: style `media-end`).
+   The ORDER is not a desktop affair: the pattern prints the figure first and only this declaration
+   puts it back after the copy, so inside the 1024 query the phone got picture-then-heading on every
+   `media-end` section (full-5 N-8f184e, N-325f74 — `.wtb-text--card` declares it outside a query,
+   which is why Safety reads right at 390 and its neighbours do not). Only the column ratio is a
+   desktop affair. */
+.wtb-text--media-end .wtb-text__media {
+  order: 1;
+}
+
+@media (min-width: 1024px) {
+  .wtb-text--media-end .wtb-text__inner:has(.wtb-text__media) {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  }
+}
+
+.wtb-text__media img {
+  width: 100%;
+  /* D24.6: the source's frame is 4:3 (555×419); the PNG is square and gets cropped. */
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.wtb-text__copy .wtb-head {
+  margin-bottom: var(--wp--preset--spacing--6);
+}
+
+/* In a split the column is the measure: the source's copy column is half the container (592px)
+   and its lede wraps there at 17.5px/1.68 with `text-wrap: pretty`; a 62ch cap on top of the
+   column (568px) pushed the about hero's lede to four lines with a two-word widow (visual-5). */
+.wtb-text__inner:has(.wtb-text__media) .wtb-text__copy .wtb-head {
+  max-width: none;
+}
+
+.wtb-text__inner:has(.wtb-text__media) .wtb-text__copy h1.wtb-heading {
+  text-wrap: pretty;
+}
+
+/* An inner page's split lede is the source's 16px at 1.68 ("Where we work", "Safety", the projects
+   flagship at 1.65) — the shared 18px is the front page's (full-1, 24 rows). The page-title
+   lede below keeps its 17.5px. */
+:where(body:not(.home)) .wtb-text .wtb-intro {
+  font-size: var(--wp--preset--font-size--base);
+  line-height: 1.68;
+}
+
+/* The page-title lede — the line under an h1 — is the source's 17.5px at 1.68 in a 44em measure
+   on every inner page (the investor, services and projects pages open with one and no picture:
+   full-2, 20 rows at 16px), not only in the split with the picture below. */
+.wtb-text .wtb-text__copy h1.wtb-heading + .wtb-intro {
+  font-size: calc(var(--wp--preset--font-size--lg) - 0.5px);
+  line-height: 1.68;
+  max-width: 44em;
+  text-wrap: pretty;
+}
+
+.wtb-text__inner:has(.wtb-text__media) .wtb-text__copy h1.wtb-heading + .wtb-intro {
+  max-width: 40em;
+}
+
+.wtb-text__point {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--wp--preset--spacing--4);
+  padding-block: var(--wp--preset--spacing--4);
+  border-top: 1px solid var(--wtb-rule);
+}
+
+.wtb-text__point::before {
+  content: '→';
+  color: var(--wp--preset--color--fg-2);
+  grid-row: 1 / span 3;
+}
+
+.wtb-text__point-title {
+  font-weight: 600;
+  margin: 0;
+}
+
+.wtb-text__point-text,
+.wtb-text__point-meta {
+  font-size: calc(var(--wp--preset--font-size--sm) + 1px);
+  line-height: var(--wp--custom--leading--body);
+  color: var(--wp--preset--color--muted);
+  margin: var(--wp--preset--spacing--1) 0 0;
+}
+
+.wtb-text__point-meta {
+  font-size: var(--wp--preset--font-size--xs);
+  color: var(--wp--preset--color--meta);
+}
+
+/* An inner page's point list is the compact one — the about page's "Where we work": a 15.5px
+   title over a 14.5px line in the caption grey, where the front page's "Why Northgate" keeps
+   17/15 in the body grey (full-1, 32 rows). `:where` keeps the specificity under the spec-sheet
+   and price-list rules below. */
+:where(body:not(.home)) .wtb-text .wtb-text__point-title {
+  font-size: calc(var(--wp--preset--font-size--base) - 0.5px);
+}
+
+:where(body:not(.home)) .wtb-text .wtb-text__point-text {
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+  color: var(--wp--preset--color--meta);
+}
+
+/* A spec sheet (style `specs`: every item's title is a short label — Client, Area, Location):
+   tiles in a 1px-ruled grid, the label a small uppercase grey line and the value under it the
+   bold one — the reverse of a feature list, and without its arrow.
+
+   The sheet without its class: a list whose points are a short label over a value (`title`
+   directly followed by `meta`, no `text`) is a spec sheet by shape — the projects page's
+   flagship (Area / 62,000 m²) and the project detail (Client, Area, Duration). patterns.map.json
+   has no `specs` style yet (its `when` cannot see a section id), so the shape stands in. */
+.wtb-text--specs .wtb-text__list,
+.wtb-text__list:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-meta) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1px;
+  background: var(--wtb-rule);
+  border: 1px solid var(--wtb-rule);
+}
+
+.wtb-text--specs .wtb-text__point,
+.wtb-text__list:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-meta) .wtb-text__point {
+  display: block;
+  background: var(--wp--preset--color--bg);
+  padding: calc(var(--wp--preset--spacing--3) + 2px) var(--wp--preset--spacing--4);
+  border-top: 0;
+}
+
+.wtb-text--specs .wtb-text__point::before,
+.wtb-text__list:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-meta) .wtb-text__point::before {
+  content: none;
+}
+
+.wtb-text--specs .wtb-text__point-title,
+.wtb-text__list:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-meta) .wtb-text__point-title {
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--meta);
+}
+
+.wtb-text--specs .wtb-text__point-text,
+.wtb-text--specs .wtb-text__point-meta,
+.wtb-text__list:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-meta) .wtb-text__point-text,
+.wtb-text__list:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-meta) .wtb-text__point-meta {
+  font-size: var(--wp--preset--font-size--base);
+  font-weight: 600;
+  color: var(--wp--preset--color--fg);
+  margin-top: calc(var(--wp--preset--spacing--1) + 1px);
+}
+
+/* A price list (style `pricing`, for patterns.map.json to add — the services page's Indicative
+   pricing): title 16/600 ink, text 13.5 grey, the price at the end of the row in green 16/600.
+
+   The list without its class: a point that carries all three lines — a bold title, a grey
+   description and a value — is a priced row by shape (the services page's pricing, the investor
+   page's dividends: RUB 14.20 per share / Paid 22 Jul 2026 / FY 2025), as the spec sheet above
+   stands in by shape. `:where` keeps the shape at the class's own specificity, so a band style
+   (`.wtb-text--ink`, below) still recolours it. Its lede is the source's 14.5px caption line. */
+.wtb-text--pricing .wtb-text__point,
+.wtb-text__list:where(:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-text + .wtb-text__point-meta)) .wtb-text__point {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: var(--wp--preset--spacing--4);
+}
+
+.wtb-text--pricing .wtb-text__point::before,
+.wtb-text__list:where(:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-text + .wtb-text__point-meta)) .wtb-text__point::before {
+  content: none;
+}
+
+.wtb-text--pricing .wtb-text__point-title,
+.wtb-text__list:where(:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-text + .wtb-text__point-meta)) .wtb-text__point-title {
+  font-size: var(--wp--preset--font-size--base);
+  grid-column: 1;
+}
+
+.wtb-text--pricing .wtb-text__point-text,
+.wtb-text__list:where(:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-text + .wtb-text__point-meta)) .wtb-text__point-text {
+  grid-column: 1;
+  font-size: calc(var(--wp--preset--font-size--sm) - 0.5px);
+  color: var(--wp--preset--color--meta);
+}
+
+.wtb-text--pricing .wtb-text__point-meta,
+.wtb-text__list:where(:has(> .wtb-text__point > .wtb-text__point-title + .wtb-text__point-text + .wtb-text__point-meta)) .wtb-text__point-meta {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  font-size: var(--wp--preset--font-size--base);
+  font-weight: 600;
+  color: var(--wp--preset--color--accent);
+  white-space: nowrap;
+  margin: 0;
+}
+
+.wtb-text--pricing .wtb-intro,
+.wtb-text:where(:has(> .wtb-inner .wtb-text__point-title + .wtb-text__point-text + .wtb-text__point-meta)) .wtb-intro {
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+  line-height: 1.6;
+  color: var(--wp--preset--color--meta);
+}
+
+/* A text section on the ink band. Two in the source: a project page's own opening sheet (the
+   split with the picture after the copy AND the spec-sheet strip — the one section that carries
+   both styles, patterns.map.json `media-end` + `specs`; the projects page's flagship is `specs`
+   alone and sits on the warm surface) and the investor page's Dividends (a priced list; the
+   `ink` style is the hook, for patterns.map.json to add on investor-relations-*-7). Paper title,
+   the lede in the band's copy grey, captions in its caption grey, values in paper; the priced
+   row's value drops the green for the caption grey and the source's 13.5/400 (full-1, ~100 rows
+   on the project detail and the dividends). The list rules go through `.wtb-inner` so they
+   outrank the shape rules above (a `:has()` carries its argument's specificity). */
+.wtb-text--ink,
+.wtb-text--specs.wtb-text--media-end {
+  background: var(--wtb-ink);
+  color: var(--wtb-on-ink);
+}
+
+:is(.wtb-text--ink, .wtb-text--specs.wtb-text--media-end) .wp-block-heading {
+  color: inherit;
+}
+
+:is(.wtb-text--ink, .wtb-text--specs.wtb-text--media-end) .wtb-inner .wtb-intro {
+  color: var(--wtb-on-ink-text);
+}
+
+:is(.wtb-text--ink, .wtb-text--specs.wtb-text--media-end) .wtb-inner .wtb-text__point {
+  border-top-color: color-mix(in srgb, var(--wtb-on-ink) 18%, transparent);
+}
+
+:is(.wtb-text--ink, .wtb-text--specs.wtb-text--media-end) .wtb-inner .wtb-text__point::before {
+  color: var(--wtb-on-ink-text);
+}
+
+:is(.wtb-text--ink, .wtb-text--specs.wtb-text--media-end) .wtb-inner .wtb-text__list > .wtb-text__point > .wtb-text__point-title {
+  color: var(--wp--preset--color--accent-on);
+}
+
+:is(.wtb-text--ink, .wtb-text--specs.wtb-text--media-end) .wtb-inner .wtb-text__list > .wtb-text__point > .wtb-text__point-text,
+:is(.wtb-text--ink, .wtb-text--specs.wtb-text--media-end) .wtb-inner .wtb-text__list > .wtb-text__point > .wtb-text__point-meta {
+  color: var(--wtb-on-ink);
+}
+
+/* The spec sheet on ink (the project page): tiles on the band itself, ruled in the muted grey,
+   the label in the caption grey, the value 17px paper. The rules are each tile's outline into
+   the 1px gap, not the grid's background: a trailing empty cell of the auto-fit grid would show
+   that background as a lighter block on the band. */
+.wtb-text--specs.wtb-text--media-end .wtb-inner .wtb-text__list {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--wtb-on-ink) 18%, transparent);
+}
+
+.wtb-text--specs.wtb-text--media-end .wtb-inner .wtb-text__list > .wtb-text__point {
+  background: transparent;
+  outline: 1px solid color-mix(in srgb, var(--wtb-on-ink) 18%, transparent);
+  outline-offset: 0;
+}
+
+.wtb-text--specs.wtb-text--media-end .wtb-inner .wtb-text__list > .wtb-text__point > .wtb-text__point-title {
+  color: var(--wtb-on-ink-caption);
+}
+
+.wtb-text--specs.wtb-text--media-end .wtb-inner .wtb-text__list > .wtb-text__point > .wtb-text__point-text,
+.wtb-text--specs.wtb-text--media-end .wtb-inner .wtb-text__list > .wtb-text__point > .wtb-text__point-meta {
+  font-size: calc(var(--wp--preset--font-size--base) + 1px);
+}
+
+/* The priced list on ink (Dividends): description and value both in the caption grey, the value
+   at the source's 13.5px regular; the lede 15.5px. */
+.wtb-text--ink .wtb-inner .wtb-text__list > .wtb-text__point > .wtb-text__point-title + .wtb-text__point-text,
+.wtb-text--ink .wtb-inner .wtb-text__list > .wtb-text__point > .wtb-text__point-text + .wtb-text__point-meta {
+  color: var(--wtb-on-ink-caption);
+}
+
+.wtb-text--ink .wtb-inner .wtb-text__list > .wtb-text__point > .wtb-text__point-text + .wtb-text__point-meta {
+  font-size: calc(var(--wp--preset--font-size--sm) - 0.5px);
+  font-weight: 400;
+}
+
+.wtb-text--ink .wtb-inner .wtb-intro {
+  font-size: calc(var(--wp--preset--font-size--base) - 0.5px);
+  line-height: 1.6;
+}
+
+/* A text section as a small card (style `card`, patterns.map.json on about-*-9 — the about page's
+   Safety, the source's div 1060, D23.3): the container is the box — a 1px rule, the warm surface,
+   28px in — the title the card's `clamp(22px, 2.5vw, 28px)` over 14px, the copy 16/1.68 in the
+   body's second grey over 20px, and the picture a 200px-high ruled frame AFTER the copy, one
+   column at every width (the split's two columns and its order rule stop at the card). Where the
+   card stands — beside Accreditations, one column of the source's own grid — is the page's, not
+   the section's (seeder-spec). Full-2, 8 rows at 28/22. */
+.wtb-text.wtb-text--card .wtb-text__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  align-items: start;
+  border: 1px solid var(--wtb-rule);
+  background: var(--wp--preset--color--surface-warm);
+  padding: calc(var(--wp--preset--spacing--6) + var(--wp--preset--spacing--1));
+}
+
+/* The frame is 200px tall and the card runs the full container, so at 1440 the picture was a
+   1116×198 slot — 5.6:1 — and `cover` cut the shield off at the top and the bottom (full-5
+   N-8ceec1). The illustration is the section's whole content: the frame stops at 2:1 and the
+   picture is fitted INSIDE it, so nothing of it is lost at any width. */
+.wtb-text.wtb-text--card .wtb-text__media {
+  order: 1;
+  max-width: calc(var(--wp--preset--spacing--12) * 8 + var(--wp--preset--spacing--4));
+  height: calc(var(--wp--preset--spacing--12) * 4 + var(--wp--preset--spacing--2));
+  border: 1px solid var(--wtb-rule);
+  overflow: hidden;
+}
+
+.wtb-text.wtb-text--card .wtb-text__media img {
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+.wtb-text.wtb-text--card .wtb-text__copy .wtb-head {
+  max-width: none;
+  margin-bottom: var(--wp--preset--spacing--5);
+}
+
+.wtb-text.wtb-text--card h2.wtb-heading {
+  font-size: clamp(22px, 2.5vw, var(--wp--preset--font-size--xxl));
+  margin-bottom: calc(var(--wp--preset--spacing--3) + var(--wp--preset--spacing--1) / 2);
+}
+
+.wtb-text.wtb-text--card .wtb-intro {
+  color: var(--wp--preset--color--fg-2);
+}
+
+/* ----- links (box) ----------------------------------------------------------------------- */
+
+.wtb-links__box {
+  border: 1px solid var(--wtb-rule);
+  background: var(--wp--preset--color--surface);
+}
+
+.wtb-links__head {
+  max-width: none;
+  margin: 0;
+  padding: var(--wp--preset--spacing--5) var(--wp--preset--spacing--6);
+  border-bottom: 1px solid var(--wtb-rule);
+}
+
+.wtb-links__head .wtb-eyebrow {
+  margin-bottom: var(--wp--preset--spacing--1);
+}
+
+.wtb-links__head .wtb-heading {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.wtb-links__head .wtb-intro {
+  font-size: var(--wp--preset--font-size--sm);
+  margin-top: var(--wp--preset--spacing--2);
+}
+
+.wtb-links__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--wp--preset--spacing--4);
+  align-items: baseline;
+  padding: var(--wp--preset--spacing--4) var(--wp--preset--spacing--6);
+  border-bottom: 1px solid var(--wtb-rule-soft);
+}
+
+.wtb-links__row:last-child {
+  border-bottom: 0;
+}
+
+.wtb-links__title {
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.wtb-links__title a {
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+/* On a page (the investor page's reports and disclosures) the list is not the 404's boxed
+   panel: the source sets a serif section title over plain rows ruled in the soft grey, edge to
+   edge with the section (full-1, 8 rows at Newsreader 32). The 404's box (`.tracy-404 > .wtb-links`)
+   keeps its label head. */
+.wp-block-post-content > .wtb-links .wtb-links__box {
+  border: 0;
+  background: transparent;
+}
+
+.wp-block-post-content > .wtb-links .wtb-links__head {
+  padding: 0;
+  border-bottom: 0;
+  margin-bottom: var(--wp--preset--spacing--5);
+}
+
+.wp-block-post-content > .wtb-links .wtb-links__head .wtb-heading {
+  font-family: var(--wp--preset--font-family--display);
+  font-size: clamp(24px, 2.8vw, calc(var(--wp--preset--font-size--xxxl) - 8px));
+  font-weight: 400;
+  letter-spacing: var(--wp--custom--tracking--display);
+  text-transform: none;
+  line-height: 1.15;
+}
+
+.wp-block-post-content > .wtb-links .wtb-links__row {
+  padding-inline: 0;
+}
+
+.wp-block-post-content > .wtb-links .wtb-links__row:last-child {
+  border-bottom: 1px solid var(--wtb-rule-soft);
+}
+
+/* A list of files (style `files`, for patterns.map.json to add on the investor page's reports):
+   the row title semibold, the meta the caption grey, the arrow the orange download mark. */
+.wtb-links--files .wtb-links__title {
+  font-weight: 600;
+}
+
+.wtb-links--files .wtb-links__title a::after {
+  content: '\00a0↓';
+  color: var(--wtb-orange);
+}
+
+/* The 404 page's "You may be looking for" rows are plain 16px links (400); the investor
+   page's disclosure rows keep 500. */
+.tracy-404 .wtb-links__title {
+  font-weight: 400;
+}
+
+.wtb-links__title a::after {
+  content: ' →';
+  color: var(--wp--preset--color--meta);
+}
+
+.wtb-links__text {
+  grid-column: 1;
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--muted);
+  margin: var(--wp--preset--spacing--1) 0 0;
+}
+
+.wtb-links__meta {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: calc(var(--wp--preset--font-size--xs) + 1px);
+  /* The caption grey itself: the 55% mix read 2.6:1 on paper and near-invisible on ink (full-1,
+     16 rows on the reports' "PDF · 6.4 MB · 28 Mar 2026"). */
+  color: var(--wp--preset--color--meta);
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* A page's plain link list (the investor page's disclosures) dates its rows in the source's
+   lighter caption grey — #A8A49B, the one literal the source keeps for a date beside a row, and
+   #807D77 under its own dark map (theme.overlay.json declares both as brand.captionLight). The
+   files list (style `files`, the reports) and the 404's box keep the readable meta grey, as the
+   source does (full-2, 32 rows on "12 Aug 2026" and its RU twins). */
+.wp-block-post-content > .wtb-links:not(.wtb-links--files) .wtb-links__meta {
+  color: var(--wp--custom--tracy--brand--caption-light, var(--wp--preset--color--meta));
+}
+
+/* =====================================================================================
+   Visual QA fast-5 (15/09), templates-patterns round — rules for the pattern classes that round
+   changed. One block at the end, so the tokens-css round's edits above never share a line.
+   ===================================================================================== */
+
+/* A section is its own band. WordPress's flow gap gave every `.wtb-section` in the page stack a
+   16px top margin (measured 15/09: each section at margin-top 16px), so a strip of page
+   background ran between two surface-warm sections — under dark, a darker line splitting "What
+   we do" from "Selected projects". */
+.tracy .wp-block-post-content > .wtb-section,
+.tracy .tracy-404 > .wtb-section {
+  margin-block-start: 0;
+}
+
+/* The frame's `.wtb-section .wp-block-group > * + * { margin-block-start: 0 }` outranks a block's
+   own top margin, so `.wtb-actions` (24px) and `.wtb-card__link` (auto) lost theirs: the hero's
+   buttons sat 1px under the lede, and "Read more →" floated at three heights across the news
+   cards. Restated one class deeper where the source needs them — the hero's eyebrow → title at
+   24px and lede → buttons at 40px, the card link at the card's bottom. */
+.wtb-hero .wtb-hero__copy > .wtb-eyebrow {
+  margin-bottom: var(--wp--preset--spacing--6);
+}
+
+.wtb-hero .wtb-hero__copy > .wtb-actions {
+  margin-block-start: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--2));
+}
+
+.wtb-card > .wtb-card__link,
+.wtb-card__body > .wtb-card__link {
+  margin-block-start: auto;
+}
+
+/* The link list's arrow travels with the last word (a no-break space binds it): "→" alone on a
+   line under «Презентация компетенций, 2026» at 390. On the 404 page the row is one link and the
+   source pins the arrow to the card's right edge: the link is a flex row, the arrow its last item. */
+.wtb-links__title a::after {
+  content: '\00a0→';
+}
+
+.tracy-404 .wtb-links__row {
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 0;
+}
+
+.tracy-404 .wtb-links__title a {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--4);
+}
+
+.tracy-404 .wtb-links__title a::after {
+  content: '→';
+  flex: none;
+}
+
+@media (max-width: 1023px) {
+  /* Under the two-column width the 404's link box follows the hero; the hero's bottom padding
+     is the gap, the box's top padding goes (48 + 48 + rhythm read as a 120px hole). */
+  .tracy .tracy-404 > .wtb-links {
+    padding-top: 0;
+  }
+
+  /* The client logos sit under their eyebrow, not beside it, so the strip starts at the left. */
+  .wtb-gallery__grid {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* The hero's figures as a 2×2: a rule under the first row, none at the right of the second
+     column, no left padding in the first — the grid had a rule between the columns and none
+     between the rows. */
+  .wtb-hero__stats .wtb-stat:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--wtb-on-ink-muted);
+  }
+
+  .wtb-hero__stats .wtb-stat:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .wtb-hero__stats .wtb-stat:nth-child(2n + 1) {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 639px) {
+  /* The hero's figures in one column at the phone width, as the source stacks them: every label
+     on one line ("Serious incidents in 2025" had its year dropped alone), one rule between cells. */
+  .wtb-hero__stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wtb-hero__stats .wtb-stat {
+    padding: var(--wp--preset--spacing--4) 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--wtb-on-ink-muted);
+  }
+
+  .wtb-hero__stats .wtb-stat:last-child {
+    border-bottom: 0;
+  }
+
+  /* The client logos: two equal columns from gutter to gutter (the flex strip left 112px at the
+     left and parked the fifth logo at the right), each wordmark scaled to its cell so it can be
+     read — at 32px high the image drew a 6px wordmark. */
+  .wtb-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wtb-gallery__item {
+    justify-content: center;
+  }
+
+  .wtb-gallery__media {
+    width: 100%;
+  }
+
+  .wtb-gallery__media img {
+    width: 100%;
+    height: auto;
+    max-height: calc(var(--wp--preset--spacing--12) + var(--wp--preset--spacing--2));
+    object-fit: contain;
+  }
+}
+
+/* The client strip at the desktop width: five tiles on one row as the source draws it (130×52
+   each). Once the logo filled its tile (images lens, fast-10) the tiles outgrew the row and the
+   fifth dropped under the label alone; the tile now takes a fifth of the strip and the wordmark
+   sizes to it. */
+@media (min-width: 1024px) {
+  .wtb-gallery__grid {
+    flex-wrap: nowrap;
+  }
+
+  .wtb-gallery__item {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline: var(--wp--preset--spacing--3);
+  }
+
+  .wtb-gallery__media img {
+    max-height: var(--wp--preset--spacing--10);
+  }
+}

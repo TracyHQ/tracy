@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-morgan/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_morgan",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-morgan",
+    "id": "quickstart/ja-morgan/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_morgan",
+    "framework": "t3",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-morgan-j6-webroot-1.0.3.tar.gz",
+        "bytes": 50981444,
+        "sha256": "1224d7f09f6a09e11ca06febe8799e2d85bdfd912b4228ce9984d51c86ae6140"
+      },
+      "database": {
+        "file": "ja-morgan-j6-database-1.0.3.sql.gz",
+        "bytes": 107233,
+        "sha256": "da793d70b465c8418cf98935c37d611a04082aef324fae18ed5bd542ef2ab040"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-09T13:09:15.461Z",
+    "builtFrom": {
+      "from": "quickstart/ja-morgan/j6@1.0.2",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-morgan/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.0",
+  "mode": "content-recommendation"
+}

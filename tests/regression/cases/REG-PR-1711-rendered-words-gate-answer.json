@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1711-rendered-words-gate-answer",
+  "kind": "fix",
+  "title": "content.replace on WordPress words the theme prints at render time names the gate that kept the rendered-words road shut (all:true → retry with all:\"page\"; outside the main region; a page with no record of its own; an older plugin), on known and untraced themes alike, instead of the generic 'cannot replace them through a door yet'",
+  "pr": 1711,
+  "area": "site-tools/replace/wordpress",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/replace-wordpress-rendered-words.test.mjs packages/tools/tracy-site-tools/test/replace-wordpress.test.mjs",
+    "S2: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "'all:true on words the theme prints on this page names its gate and all:\"page\", nothing written' passes, and 'the same sidebar words with all:\"page\" change through the rendered-words road, one apply' passes.",
+    "'all:true on an older plugin says the plugin is older, never sends the call round with all:\"page\"' passes.",
+    "'words the theme prints outside the main region say so, never the generic sentence', 'on a known theme, words the theme prints in the header name the outside gate too' and 'on a known theme, a page with no record of its own names that gate' pass.",
+    "'a reason with a road of its own keeps its next: the theme file on a page with no record' passes."
+  ],
+  "selectors": {
+    "answer": "content.replace answer fields code, next",
+    "fixture": "packages/tools/tracy-site-tools/test/fixtures/replace/fake-wordpress.mjs"
+  },
+  "evidence": "Issue #1677 (24/10/2026): on a JA Restaurant WordPress demo, content.replace {all:true} on the /blog/ sidebar banner words answered NOT_EDITABLE with the generic 'cannot replace them through a door yet'; the same call with all:\"page\" changed them. The banner is printed by the theme's PHP into the sidebar of /blog/ only.",
+  "fence": "Mechanism only: the WordPress replace engine over the package's fake component. Not covered: a live site with the real plugin, and whether the model follows the new next.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/replace-wordpress-rendered-words.test.mjs",
+      "packages/tools/tracy-site-tools/test/replace-wordpress.test.mjs"
+    ]
+  }
+}

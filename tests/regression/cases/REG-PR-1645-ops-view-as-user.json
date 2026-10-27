@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-1645-ops-view-as-user",
+  "kind": "feat",
+  "title": "/ops View as user: only owners and admins open a view of a customer, it never touches the admin's own sign-in or the customer's activity, dsh's socket opens as the customer, and it ends on exit or sign-out",
+  "pr": 1645,
+  "area": "ops/view-as-user",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: POST /api/ops/view-as as a customer, a developer seat, and an owner from a foreign origin; as an owner with an over-long reason; and as an owner for a staff account, for themselves and for an unknown email.",
+    "S2: As an owner, open a view of a customer with no reason, then read /auth/me, open the customer's Inbox, and read /api/ops/ui with both cookies; open a socket with both cookies.",
+    "S3: Press the bar's exit, and separately sign out, with a view open; read the audit rows and read /auth/me with the old view token."
+  ],
+  "expect": [
+    "S1: every attempt is refused (403, 400 or 404) and no audit row exists.",
+    "S2: the start answers a url, sets only tracy_view and writes a view_as.start audit row with the admin and the target; /auth/me answers the customer with viewAs.by the owner and renews nothing; the Inbox saves no language on the customer; /api/ops/ui still answers 200 for the admin; the socket is opened as the customer's email.",
+    "S3: exit answers 303 to /ops and sign-out clears tracy_view; each leaves a view_as.end audit row; the old view token reads as signed out."
+  ],
+  "selectors": {
+    "tool": "apps/tracy-web/test/ops-view-as.test.mjs",
+    "socket": "apps/tracy-web/test/upgrade-listener.test.mjs"
+  },
+  "fence": "The view token (lib/session.js), the banner and scope (lib/view-as-guard.js), the start/exit doors (ops/view-as.js) and the socket identity (workspace/upgrade.js), driven through the real app on a scratch Postgres",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/ops-view-as.test.mjs",
+      "apps/tracy-web/test/view-as-guard.test.mjs",
+      "apps/tracy-web/test/session-view-as.test.mjs",
+      "apps/tracy-web/test/upgrade-listener.test.mjs"
+    ],
+    "tests": [
+      "only an owner or admin, from this origin, may open a view",
+      "a view is the customer",
+      "exit ends the view on the record",
+      "signing out ends an open view",
+      "opening the customer",
+      "nothing is locked",
+      "/ops keeps the admin as the admin",
+      "a view token wins over the admin",
+      "a socket opened during an admin view",
+      "the reason is optional"
+    ],
+    "needs": ["postgres"]
+  }
+}

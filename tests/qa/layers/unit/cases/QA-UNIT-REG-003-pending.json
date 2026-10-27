@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-003-pending",
+  "itemIds": ["regression:REG-003"],
+  "requirement": "Restore everything on Joomla swaps tables that carry triggers (no MariaDB 1435)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-003-joomla-restore-tables-with-triggers.json",
+    "ref": "PR #747 (fix); fix evidence: tasks/evidence/site-changes-v2/qa/r1/bugs/QA-I10-r2.md (fix 83b2a02bd); the QA note is Studio-local (not in git), the fix commit is on develop",
+    "invariant": "S3: T0 has ≥ 1 row (Claude Cowork Joomla plugin sites: 4 — tr_cc_content_article_delete/insert on <P>content, tr_cc_content_shared_delete/insert on <P>modules); 0 rows → BLOCKED (fixture missing), never PASS. S4: HTTP 200, database.state 'full', engine 'mariadb' or 'mysql'. S5: U0 == 1. S6: HTTP 200, ok true, status 'succeeded', version == N (pre-fix: HTTP 409 {code:'RESTORE_REFUSED', reason:'RESTORE_FAILED'}; host job output 'ERROR 1435 (HY000): Trigger in wrong schema'). S7: latest site_operation: action 'restore-everything', status 'succeeded', error empty (pre-fix: 'restore-everything | failed | RESTORE_FAILED'). S7: T1 == T0 (same trigger names on the same tables, so the point's trigger set is live again). S7: U1 == 0 (the swap ran); R == 0 (scratch schema dropped). S7: /backups has a row kind 'backup', auto 'pre-restore', version N+1, database.state 'full'; F ends in HTTP 200 after following redirects (a 301 from / to a language page such as /en/ is the site's normal answer, before and after the restore; compare with the same curl before S4 if in doubt).",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer infra, needs stand, site:jo, seat:owner"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:site:jo", "need:seat:owner"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-003"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:infra"],
+  "regression": {
+    "id": "REG-003",
+    "pr": 747,
+    "kind": "fix",
+    "area": "fleet/restore-everything",
+    "file": "tests/regression/cases/REG-003-joomla-restore-tables-with-triggers.json"
+  },
+  "ownerLayer": "infra",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand", "site:jo", "seat:owner"]
+}

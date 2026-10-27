@@ -1,0 +1,60 @@
+{
+  "id": "QA-UNIT-REG-PR-1156-g63-system-fixes-released-happy",
+  "itemIds": ["regression:REG-PR-1156-g63-system-fixes-released"],
+  "requirement": "The g63 system fixes of the seven questions hold (one post title stage written last from each WordPress and Joomla post's own body, EmDash labels the model echoes asked again and reported, seed address words translated, theme example words translated, audit skips person names and dedupes one Joomla article on two routes) and ship with their releases: Tracy Business EmDash 1.7.11, Tracy SaaS EmDash 1.4.8 pinned, contract ja-essence/wp7/1.0.15 for theme 1.0.15",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1156-g63-system-fixes-released.json",
+    "ref": "PR #1156 (fix); fix evidence: tasks/nhat-ky/2026-10-12-tcqr-g63-fixes.md",
+    "invariant": "S1: every test passes, none skipped or cancelled. S2: every test passes, none skipped or cancelled. S3: every test passes, none skipped or cancelled. S4: every test passes, none skipped or cancelled. S5: tracy-business/emdash 1.7.11 and tracy-saas/emdash 1.4.8, source and state files named for that version with a GitHub asset id. S6: contract id ja-essence/wp7/1.0.15, quickstart version 1.0.15, content map identical to 1.0.14, the lock differs from 1.0.14 only in the eight languages/*.l10n.php, readme.txt and style.css (template parts and entities identical); the profile row says logos pair, brandReady.",
+    "productSources": [
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "scripts/lib/template-customization-question-readiness-built-site/audit.mjs:65",
+      "scripts/lib/template-customization-question-readiness-built-site/content.mjs:21",
+      "scripts/lib/template-customization-question-readiness-built-site/dates-and-styles.mjs:60",
+      "scripts/lib/template-customization-question-readiness-built-site/labels.mjs:75",
+      "scripts/lib/template-customization-question-readiness-built-site/menus.mjs:52",
+      "scripts/lib/template-customization-question-readiness-built-site/text.mjs:147"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/cms/tracy-wordpress-theme/test/l10n-example-words.test.mjs:16 readFileSync() with a computed path",
+      "scripts/test/template-customization-question-readiness-built-site.test.mjs:42 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs:26 spawnSync() runs apps/tracy-web/test/joomla-posts-g62.test.mjs, which is not a file",
+      "tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs:26 spawnSync() runs apps/tracy-web/test/post-title-stage-g62.test.mjs, which is not a file",
+      "tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs:26 spawnSync() runs apps/tracy-web/test/wp-posts-g62.test.mjs, which is not a file",
+      "tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs:36 spawnSync() passes packages/cms/tracy-emdash-theme-business/tests/seed-language-leftovers.test.mjs to node; not proven to run it",
+      "tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs:36 spawnSync() passes vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/scripts/tests/personalize-labels-echoed.test.mjs to node; not proven to run it",
+      "tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs:36 spawnSync() runs a computed path",
+      "tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs:60 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1156-g63-system-fixes-released.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1156-g63-system-fixes-released"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1156-g63-system-fixes-released",
+    "pr": 1156,
+    "kind": "fix",
+    "area": "sites/brief",
+    "file": "tests/regression/cases/REG-PR-1156-g63-system-fixes-released.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

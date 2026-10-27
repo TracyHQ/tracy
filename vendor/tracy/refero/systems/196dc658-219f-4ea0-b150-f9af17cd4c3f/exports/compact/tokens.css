@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-paper-white: #ffffff;
+  --color-air-wash: #effbff;
+  --color-mist-border: #e8eff2;
+  --color-steel-inset: #d0d6d7;
+  --color-ash-copy: #7e8486;
+  --color-graphite-copy: #434647;
+  --color-editorial-ink: #2a2c2d;
+  --color-charcoal: #1d1f20;
+  --color-prism-cyan: #00d0ff;
+  --color-sky-fade: #a6ecff;
+  --gradient-sky-fade: linear-gradient(180deg, #effbff 40%, #a6ecff 100%);
+  --color-cyan-halo: #ccf6ff;
+
+  /* Typography — Font Families */
+  --font-exposure-09cb373df0d2138c: 'Exposure-09cb373df0d2138c', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-denimink-fc4757ccf169d42a: 'DenimINK-fc4757ccf169d42a', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

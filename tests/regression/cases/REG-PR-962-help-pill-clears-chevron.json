@@ -1,0 +1,67 @@
+{
+  "id": "REG-PR-962-help-pill-clears-chevron",
+  "kind": "fix",
+  "title": "The Need help? pill steps left of dsh's scroll-to-bottom chevron when it appears, starting on the chevron's first frame, eases there, and returns when the chevron goes; My Sites shows the loading bar only for a slow seat book; the Comments tab shows its open count before the read marks are in and its unread dot after",
+  "pr": 962,
+  "area": "ui/sidebar/community",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "From this checkout run: node --test --test-reporter=tap --test-force-exit packages/ui/tracy-sidebar/test/e2e/help-pill-chevron.test.mjs packages/site/tracy-my-sites/test/e2e/tab-loading.test.mjs packages/ui/tracy-chat-input/test/e2e/comments-list-redesign.test.mjs",
+    "The pill test mounts the real HelpButton and the real stylesheet over a page laid out like dsh's conversation column (scroll body, sticky composer seat, chat frame) and puts a scroll-to-bottom chevron in the frame the way ChatView does. The chevron's fade-in and the pill's slide are frozen the moment they are created (before any frame) without losing the real start frame of each, so the time by which the pill's move lags the chevron's mount is kept and must be zero; both are then seeked to chosen times on one clock (the fade's), and positions and opacity are read from the DOM there. The fixture also exposes unmount and mount of the pill.",
+    "The My Sites test opens the real tab on Playwright's clock, paused: the stubbed seat book's delay and the loading bar's timers read that clock, and the test moves it.",
+    "The Comments tab test mounts the real CommentsView and watchCommentsBadge with a stubbed server whose /reads answer is held until the test releases it, so the tab is read before the read marks are in and again after."
+  ],
+  "expect": [
+    "The run exits 0 with 29 tests passing and 0 failing (10 pill, 2 My Sites, 17 in the Comments list file).",
+    "With the chevron on the page the pill ends 8px (+/-1) left of it, having moved aside by more than 30px.",
+    "The pill's move is a transform transition with a finite duration that starts on the same frame as the chevron's fade (lag 0 ms: the new place is written in the observer that sees the chevron mount, not in a later task), starts where the pill was, never goes back, carries under 60% of the move in any twentieth of its time, and is past half the way at a quarter of its time (ease-out); at the first millisecond the chevron's opacity passes 0.05 the pill covers under 20px of it, and at the first millisecond it passes 0.95 the pill is clear of it.",
+    "When the chevron goes the pill slides back (halfway between at half its time) to within 1px of its place; six toggles, each landing mid-slide, end beside the chevron (gap 8 +/-1) and then at rest (+/-1) with no transition left running.",
+    "A pill that mounts beside a chevron already on screen starts no transform transition on any of its placements (appears in place, no slide-in).",
+    "With the chevron beside it, moving the column's right edge 40px re-places the pill with no transform transition on any placement, still 8px (+/-1) left of the chevron.",
+    "With the chat frame off the page when the pill mounts: a frame mounted later, and then a new frame replacing it, are both watched, so a chevron coming into either (in a later task, or in the same task as the new frame) slides the pill aside on the chevron's frame (lag 0) to 8px (+/-1) left of it, and the pill returns to within 1px of its place when the chevron goes.",
+    "A chevron that comes 284px above the pill's band leaves the dock's style untouched; when it then moves down into the band (it neither came nor went) the pill is re-placed 8px (+/-1) left of it with no transform transition on any placement.",
+    "Opening and closing the pill's panel (a React re-render) makes no change to the dock's style.",
+    "After the pill is unmounted, a chevron coming and going writes nothing to the old dock; a pill mounted again sits where the old one did, slides aside on the chevron's frame (lag 0) and ends 8px (+/-1) left of it.",
+    "With prefers-reduced-motion the pill starts no transform transition, the chevron no fade, and the pill still clears the chevron.",
+    "My Sites with the seat book answering at 1500ms of the page clock: at 700ms one bar (role progressbar, label Loading, top 0, height 2) and an empty body; after the answer 8 rows and, 700ms later, no bar.",
+    "My Sites with the seat book answering at 60ms of the page clock: 8 rows and no bar ever added to the page, with the clock run 1000ms past the answer.",
+    "Comments tab with the /reads answer held: once the request is out the tab shows the open count 4 with no dot, title or name; after the answer is released the tab shows 4 with the dot, title \"3 unread\" and name \"Comments 4, 3 unread\"."
+  ],
+  "selectors": {
+    "pill": ".tch-help-pill inside .tch-help-dock",
+    "chevron": "button[class*=\"toBottom\"] inside [data-conversation-scroll]",
+    "loading bar": "[data-tab-loading-bar] inside #panel",
+    "comments tab": "[data-conversation-tabs] [role=\"tab\"] (data-tracy-count, data-tracy-unread)"
+  },
+  "evidence": "Screenshot, 06/10/2026: with the reader scrolled up, dsh's round chevron sat on top of the pill and covered the word \"help\". On the unfixed source this test fails 4 of 5 (the pill never moves). Issue #1010 (07/10/2026): with the pill's place set by a React state update, the slide started one task after the chevron's mount. Read from painted frames with nothing frozen (no pause, playbackRate or currentTime; the helper's unfrozen-proof run of 07/10/2026 22:05 UTC, 20 runs per side and rate under Chromium CPU throttling), the unfixed pill's slide started after the chevron's fade (lag inferred from the easing): up to one frame (about 17 ms) at rates 4 to 16, up to two frames (about 33 ms) at rates 20 and 30, and up to three (50 ms) at rate 50. Read directly at the first frame the chevron's opacity passed 0.05, the unfixed pill covered up to about 14.5px of it at rates 4 to 16, and more than 20px in 1 of 20 runs at rate 20 (22.6px), 3 of 20 at rate 30 (22.6px) and 12 of 20 at rate 50 (33.3px); those counts belong to that run, other runs of the check gave different ones. Writing the place directly in the observer brought the inferred lag to 0 ms and the first-sight overlap to about 8.3 to 8.4px at every one of these rates, with no run over 20px; the check fails if a fixed run goes over 20px or if no unfixed run does at rate 50.",
+  "fence": "Mechanism only: the pill's placement and animation against a hand-copied layout of dsh's conversation column, and My Sites' use of the shared loading bar against a stubbed fetch, and the Comments tab badge against a stubbed comments server. Not covered: dsh's real CSS (if dsh renames `toBottom` or moves the button out of the chat frame the pill stops stepping aside and this fixture cannot see it), and the running dev page. This case runs unthrottled: it checks that the slide starts on the chevron's frame (which holds however slow the machine is), not how a throttled or loaded browser paints; the throttled RED/GREEN runs are evidence kept with issue #1010, not part of this case.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-force-exit",
+      "packages/ui/tracy-sidebar/test/e2e/help-pill-chevron.test.mjs",
+      "packages/site/tracy-my-sites/test/e2e/tab-loading.test.mjs",
+      "packages/ui/tracy-chat-input/test/e2e/comments-list-redesign.test.mjs"
+    ],
+    "tests": [
+      "the pill steps left of the chevron when it appears",
+      "the pill eases aside instead of jumping",
+      "the pill goes back to its place when the chevron goes",
+      "a pill that opens beside a chevron already on screen appears in place",
+      "a column that moves while the chevron stays moves the pill without sliding",
+      "a chat frame that mounts after the pill, or replaces the one it watched, still moves the pill on the chevron's frame",
+      "a chevron that came outside the pill's band and later moves into it moves the pill without sliding",
+      "opening and closing the panel re-renders the pill without touching its place",
+      "a pill taken off the page stops placing itself, and one mounted again places itself and steps aside",
+      "with reduced motion the pill moves aside at once",
+      "a slow seat book shows the loading bar",
+      "a fast seat book never shows the bar",
+      "04/10: the page filter and the Comments tab count OPEN threads in grey without waiting for the read marks"
+    ],
+    "timeout_s": 900
+  }
+}

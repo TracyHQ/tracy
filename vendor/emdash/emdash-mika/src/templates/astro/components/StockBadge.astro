@@ -1,0 +1,40 @@
+---
+// mika-template-version: 0.1.1
+import { Badge } from "@cloudflare/kumo";
+import type { AvailabilityDTO, AvailabilityStatus } from "@bnomei/emdash-mika/types";
+import {
+  mikaTemplateAvailabilityStatusLabel,
+  mikaTemplateAvailabilityStatusVariant,
+  type MikaTemplateAvailabilityLabels
+} from "../lib/display";
+
+interface Props {
+  availability?: AvailabilityDTO;
+  labels?: MikaTemplateAvailabilityLabels;
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { availability, labels = {}, class: className, ...attrs } = Astro.props;
+const status: AvailabilityStatus = availability?.status ?? "untracked";
+const baseLabel = mikaTemplateAvailabilityStatusLabel(status, labels);
+const quantity = availability?.availableQuantity;
+const label =
+  quantity !== undefined && status === "available"
+    ? `${baseLabel} · ${quantity} available`
+    : quantity !== undefined && status === "low_stock"
+      ? `${baseLabel} · ${quantity} left`
+      : baseLabel;
+const variant = mikaTemplateAvailabilityStatusVariant(status);
+---
+
+<Badge
+  {...attrs}
+  data-mika-stock={status}
+  className={className}
+  appearance="dot"
+  variant={variant}
+  aria-live="polite"
+>
+  {label}
+</Badge>

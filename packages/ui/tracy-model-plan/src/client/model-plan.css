@@ -1,0 +1,57 @@
+/* Tailwind source for Settings › Model plan. Same recipe as tracy-ask-form/src/client/ask-form.css:
+   theme + utilities only, NO preflight — this section lives inside dsh's page. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@tracy/ui/tokens.css';
+@source './';
+@source '../../../tracy-ui/src';
+/* The account menu's row is a `PopoverItem` (`AiAccountsRow.tsx`). */
+@source '../../../../core/tracy-core/src/site-tabs/Popover.tsx';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS. */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* Mode B has no preflight: the UA still paints buttons grey and form controls in their own font.
+   Scoped to this section's root and placed in `base`, so every utility on a `@tracy/ui` component wins. */
+@layer base {
+  .tracy-model-plan button, .tracy-model-plan input { background-color: transparent; color: inherit; font: inherit; border-width: 0; padding: 0; }
+  .tracy-model-plan, .tracy-model-plan * { box-sizing: border-box; }
+}
+
+/* The chip at the head of each chat (`ModelChip.tsx`): plain rules scoped to its own class, not
+   utilities, so no other plugin's Tailwind table injected later can reshape it (DESIGN.md §3.1).
+   Not interactive: no focus state to draw. */
+@layer components {
+  /* Block, not flex: text-overflow only cuts text inside a block container, and min-width 0 lets
+     the header row squeeze it, so a long label ends in an ellipsis instead of running past the row. */
+  .tracy-model-chip {
+    display: block; flex: 0 1 auto; min-width: 0; box-sizing: border-box; height: 22px; max-width: 280px;
+    padding: 0 8px; border: 1px solid var(--border); border-radius: 9999px;
+    color: var(--muted-foreground); font-size: 12px; line-height: 20px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; cursor: default;
+  }
+  .tracy-model-chip[data-model-chip="reconnect"] { color: var(--destructive); border-color: var(--destructive); }
+  .tracy-model-chip-row { min-width: 0; }
+  /* Shed the vendor before truncating the model. The final hide threshold and the neighboring
+     job control's compact state live together in styles.ts, outside Tailwind's layers. */
+  @container (max-width: 239px) {
+    .tracy-model-chip-vendor { display: none; }
+  }
+}
+
+/* The session header (dsh ConversationRoot.module.css) lays out the site name column at its full
+   width and keeps the actions slot from shrinking, so a long chip ran under the "..." button and
+   widened the column. Only while the chip is in the header: the site name column takes its full
+   width first and gives way to its own ellipsis only when the name itself is longer than the
+   header; the title row keeps a 44px floor so the "..." button is never covered; the actions slot
+   shrinks. The title row's width never depends on the chip, so hiding the chip at a narrow row
+   cannot feed back into the container query. Unlayered on purpose: dsh's module rules are
+   unlayered, and a layered rule always loses to them. */
+header[class*="_header"]:has([class*="_titleRow"] .tracy-model-chip) {
+  grid-template-columns: minmax(0, auto) minmax(min(44px, 100%), 1fr);
+}
+header[class*="_header"]:has([class*="_titleRow"] .tracy-model-chip) [class*="_headerLeading"] {
+  min-width: 0;
+}
+[class*="_headerActions"]:has(.tracy-model-chip) { flex: 0 1 auto; min-width: 0; }

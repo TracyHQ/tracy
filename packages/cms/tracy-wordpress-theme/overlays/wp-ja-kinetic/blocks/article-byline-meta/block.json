@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/article-byline-meta",
+  "version": "0.1.0",
+  "title": "Article byline meta",
+  "category": "design",
+  "icon": "clock",
+  "description": "`.hx-author__meta` on the single-article byline (`article/default.php:183-193`): role, date and read-time joined into ONE text node with \" · \" (`implode(' · ', $hxMeta)`) — not three separate elements, so it is built server-side here rather than composed from three block instances.",
+  "textdomain": "wp-ja-kinetic",
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

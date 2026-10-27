@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-045-pending",
+  "itemIds": ["regression:REG-045"],
+  "requirement": "JA Essence wp7: front-page header below 1200px, gallery-post slider, home-4 masonry and home-2 chips behave like the source",
+  "oracle": {
+    "source": "tests/regression/cases/REG-045-ja-essence-wp7-reaudit-fixes.json",
+    "ref": "PR #851 (fix); fix evidence: Independent re-audit 03/10/2026 (seven items); measure104 7/7 on 1.0.4 bound to wp-ja-essence-1.0.4.zip 98f86b98 (tasks/ja-essence-wp7/release/BROWSER.json); 2/7 on 1.0.3",
+    "invariant": "measure104: TOTAL 7/7 checks pass. A1: at 768, 900 and 991px the home header shows no menu row, the same controls as the source, a search icon with width and the source's height; A6: at 1024 and 1100px its side margin matches the source's. A2: Natural Remedies, Capturing Essence and Beyond Black and White show a slider above the title with the source's pictures in the source's order at 1440 and 390; the arrows change the picture and a thumbnail selects it. A3: the home-4 columns list the source's cards in the source's order and Beyond Black and White is the overlay card in column 2 under Trending. A4, A5: the article chip and the previous/next links of the Natural Remedies and Fitness Tips articles equal the source's at the same address. A7: the Editor's choice chips of home-2 have the source's colour, padding and radius against the source's page colour, light and dark; the contact strip has one active dot like the source.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer cms, needs stand"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-045"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "owner:cms"],
+  "regression": {
+    "id": "REG-045",
+    "pr": 851,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-essence",
+    "file": "tests/regression/cases/REG-045-ja-essence-wp7-reaudit-fixes.json"
+  },
+  "ownerLayer": "cms",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": false,
+  "command": [],
+  "needs": ["stand"]
+}

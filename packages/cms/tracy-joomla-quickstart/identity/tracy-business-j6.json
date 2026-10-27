@@ -1,0 +1,638 @@
+{
+  "$comment": "Demo brand → identity tokens for tracy-business/j6, applied by scripts/tokenize-brand.mjs to a disposable install before the archive is cut. Longest match wins, so a legal form listed here is replaced whole. Inventory behind every line: tasks/todo-danh-tinh-site.md (P0.2). File paths (images/northgate/…) are deliberately absent: they are file names, not words a visitor reads.",
+  "quickstart": "tracy-business/j6",
+  "replace": [
+    {
+      "from": "Northgate Industrial JSC",
+      "to": "{site.name}"
+    },
+    {
+      "from": "Northgate Industrial",
+      "to": "{site.name}"
+    },
+    {
+      "from": "NORTHGATE",
+      "to": "{site.name}"
+    },
+    {
+      "from": "Northgate",
+      "to": "{site.name}"
+    },
+    {
+      "from": "АО «Норткейт Индастриал»",
+      "to": "{site.name}"
+    },
+    {
+      "from": "Норткейт Индастриал",
+      "to": "{site.name}"
+    },
+    {
+      "from": "Норткейт",
+      "to": "{site.name}"
+    },
+    {
+      "from": "ノースゲート・インダストリアルJSC",
+      "to": "{site.name}"
+    },
+    {
+      "from": "ノースゲート・インダストリアル",
+      "to": "{site.name}"
+    },
+    {
+      "from": "ノースゲート",
+      "to": "{site.name}"
+    },
+    {
+      "from": "aria-hidden=\"true\">NG</span>",
+      "to": "aria-hidden=\"true\">{site.monogram}</span>"
+    },
+    {
+      "from": "sales@northgate-ind.ru",
+      "to": "{contact.email}"
+    },
+    {
+      "from": "info@northgate-ind.ru",
+      "to": "{contact.email}"
+    },
+    {
+      "from": "hr@northgate-ind.ru",
+      "to": "{contact.email}"
+    },
+    {
+      "from": "ir@northgate-ind.ru",
+      "to": "{contact.email}"
+    },
+    {
+      "from": "no-reply@northgate-ind.ru",
+      "to": "{contact.email}"
+    },
+    {
+      "from": "youtube.com/@NorthgateIndustrial",
+      "to": "youtube.com/@NorthgateIndustrial"
+    },
+    {
+      "from": "@NorthgateIndustrial",
+      "to": "@NorthgateIndustrial"
+    },
+    {
+      "from": "linkedin.com/company/northgate-industrial",
+      "to": "linkedin.com/company/northgate-industrial"
+    },
+    {
+      "from": "/company/northgate-industrial",
+      "to": "/company/northgate-industrial"
+    },
+    {
+      "from": "tel:88005506790",
+      "to": "tel:{contact.tel}"
+    },
+    {
+      "from": "8 800 550-67-90",
+      "to": "{contact.phone}"
+    },
+    {
+      "from": "8 800 550-67-89",
+      "to": "{contact.phone}"
+    },
+    {
+      "from": "Industriepark Vorsino, Region Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Industrijski park Vorsino, Kaluška oblast",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Industrijski park Vorsino, Kaluška regija",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Industrijski park Vorsino, region Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Khu công nghiệp Vorsino, tỉnh Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Parc Diwydiannol Vorsino, Rhanbarth Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Parc Industrial Vorsino, Regiunea Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Parc Industrial de Vorsino, Regió de Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Parc industriel de Vorsino, région de Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Parco Industriale di Vorsino, Regione di Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Park Przemysłowy Vorsino, region Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Parque Industrial Vorsino, región de Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Parque Industrial de Vorsino, Região de Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Priemyselný park Vorsino, Kalužská oblasť",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Průmyslový park Vorsino, oblast Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Páirc Thionsclaíoch Vorsino, Réigiún Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Taman Perindustrian Vorsino, Wilayah Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino Industrial Park, Kaluga Region",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino Industriepark, Kaluga-streek",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino Industriepark, regio Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino Industripark, Kaluga-region",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino Ipari Park, Kalugai terület",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino Sanayi Parkı, Kaluga Bölgesi",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino industripark, Kaluga-regionen",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino industriālais parks, Kalugas apgabals",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino pramonės parkas, Kalugos sritis",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino tööstuspark, Kaluga piirkond",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino தொழில்துறை பூங்கா, Kaluga மாவட்டம்",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino 工業園區，Kaluga 州",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsinon teollisuuspuisto, Kalugan alue",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino工业园区，Kaluga州",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino工業団地、Kaluga州",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Βιομηχανικό Πάρκο Vorsino, Περιφέρεια Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Індустрыяльны парк Vorsino, вобласць Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Індустріальний парк Vorsino, область Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Индустриален парк Vorsino, област Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Индустриальный парк «Ворсино», Калужская обл.",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Индустријски парк Ворсино, Калушка област",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "นิคมอุตสาหกรรม Vorsino, แคว้น Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "ນິຄົມອຸດສາຫະກຳ Vorsino, ແຂວງ Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "ინდუსტრიული პარკი ვორსინო, კალუგის ოლქი",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · Admissão SRO Nº 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Parque Industrial de Vorsino, lote 12, Região de Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · Admitere SRO nr. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Parc Industrial Vorsino, parcela 12, Regiunea Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · Agrément SRO n° 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Parc industriel de Vorsino, parcelle 12, région de Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · Giấy phép SRO số 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Khu công nghiệp Vorsino, lô 12, tỉnh Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · N.º de admissão SRO 214<br>",
+      "to": ""
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · No. Kelulusan SRO 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Taman Perindustrian Vorsino, plot 12, Wilayah Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO admission No. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino Industrial Park, plot 12, Kaluga Region",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO dopusnica br. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Industrijski park Vorsino, parcela 12, Kaluška oblast",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO dovoljenje št. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Industrijski park Vorsino, parcela 12, Kaluška regija",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO dozvola br. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Industrijski park Vorsino, parcela 12, region Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO leidimo Nr. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino pramonės parkas, 12 sklypas, Kalugos sritis",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO liikmenumber 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino tööstuspark, krunt 12, Kaluga piirkond",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO n. iscrizione 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Parco Industriale di Vorsino, lotto 12, Regione di Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO pielaides Nr. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino industriālais parks, 12. zemes gabals, Kalugas apgabals",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO povolenie č. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Priemyselný park Vorsino, pozemok 12, Kalužská oblasť",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO rhif derbyn 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Parc Diwydiannol Vorsino, llain 12, Rhanbarth Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO üyelik No. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino Sanayi Parkı, 12 no'lu parsel, Kaluga Bölgesi",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO дозвола бр. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Индустријски парк Ворсино, парцела 12, Калушка област",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO அனுமதி எண். 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino தொழில்துறை பூங்கா, மனை 12, Kaluga மாவட்டம்",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO เลขที่รับรอง 214<br>",
+      "to": ""
+    },
+    {
+      "from": "นิคมอุตสาหกรรม Vorsino แปลง 12 แคว้น Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO ເລກທີ່ຂຶ້ນທະບຽນ 214<br>",
+      "to": ""
+    },
+    {
+      "from": "ນິຄົມອຸດສາຫະກຳ Vorsino, ແປງທີ 12, ແຂວງ Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO დაშვების №214<br>",
+      "to": ""
+    },
+    {
+      "from": "ინდუსტრიული პარკი ვორსინო, ნაკვეთი 12, კალუგის ოლქი",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO – povolení č. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Průmyslový park Vorsino, pozemek 12, oblast Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO 核准編號214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino 工業園區12號地塊，Kaluga 州",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO, admisión n.º 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Parque Industrial Vorsino, parcela 12, región de Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO, admissió núm. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Parc Industrial de Vorsino, parcel·la 12, Regió de Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO-Zulassungsnr. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Industriepark Vorsino, Parzelle 12, Region Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO-engedélyszám: 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino Ipari Park, 12. telephely, Kalugai terület",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO-jäsenyys nro 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsinon teollisuuspuisto, tontti 12, Kalugan alue",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO-medlemskap nr. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino industripark, tomt 12, Kaluga-regionen",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO-medlemsnr. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO-tilladelse nr. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino Industripark, grund 12, Kaluga-region",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO-toelatingsnr. 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino Industriepark, erf 12, Kaluga-streek",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Vorsino Industriepark, kavel 12, regio Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO准入编号 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino工业园区12号地块，Kaluga州",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO加盟登録番号214<br>",
+      "to": ""
+    },
+    {
+      "from": "Vorsino工業団地 12区画、Kaluga州",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · Uimh. Iontrála SRO 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Páirc Thionsclaíoch Vorsino, plota 12, Réigiún Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · Zezwolenie SRO nr 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Park Przemysłowy Vorsino, działka 12, region Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · Αρ. έγκρισης SRO 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Βιομηχανικό Πάρκο Vorsino, οικόπεδο 12, Περιφέρεια Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · Допуск SRO № 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Индустриален парк Vorsino, парцел 12, област Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · допуск SRO № 214<br>",
+      "to": ""
+    },
+    {
+      "from": "Індустрыяльны парк Vorsino, участак 12, вобласць Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "Індустріальний парк Vorsino, ділянка 12, область Kaluga",
+      "to": "{contact.address}"
+    },
+    {
+      "from": "ИНН 4003xxxxxx · ОГРН 10440xxxxxxxx · Допуск СРО № 214<br>",
+      "to": ""
+    },
+    {
+      "from": "ИП «Ворсино», участок 12, Калужская область",
+      "to": "{contact.address}"
+    }
+  ],
+  "$comment_keep": "Kept whole on purpose (from == to): demo handles and URLs that the shorter Northgate rule would otherwise turn into broken links wherever they still appear outside the social block.",
+  "$comment_acm": "Structure, not words: the demo lists six Russian networks with demo handles. Replaced in every language by the five v1 networks (chosen 23/09, tasks/todo-danh-tinh-site.md Q6), URL from the identity module; a card whose token is empty is left out by the patched tb-sys-social layout. Handle and description stay empty rather than invented.",
+  "acm": {
+    "tracy_business:tb-sys-social": {
+      "tb-sys-social[name]": ["Facebook", "Instagram", "LinkedIn", "TikTok", "YouTube"],
+      "tb-sys-social[handle]": ["", "", "", "", ""],
+      "tb-sys-social[desc]": ["", "", "", "", ""],
+      "tb-sys-social[url-text]": [
+        "{social.facebook}",
+        "{social.instagram}",
+        "{social.linkedin}",
+        "{social.tiktok}",
+        "{social.youtube}"
+      ],
+      "tb-sys-social[url]": [
+        "{social.facebook}",
+        "{social.instagram}",
+        "{social.linkedin}",
+        "{social.tiktok}",
+        "{social.youtube}"
+      ]
+    },
+    "tracy_business:tb-kit-email": {
+      "tb-kit-email[brand-mark]": ["{site.monogram}"],
+      "tb-kit-email[foot]": ["{site.name} · {contact.address} · {contact.phone}"]
+    },
+    "tracy_business:tb-footer-contact": {
+      "tb-footer-contact[phone]": ["{contact.phone}"],
+      "tb-footer-contact[hours]": ["{contact.hours}"],
+      "tb-footer-contact[social-label]": ["Facebook", "Instagram", "LinkedIn", "TikTok", "YouTube"],
+      "tb-footer-contact[social-url]": [
+        "{social.facebook}",
+        "{social.instagram}",
+        "{social.linkedin}",
+        "{social.tiktok}",
+        "{social.youtube}"
+      ]
+    },
+    "tracy_business:tb-sys-hq": {
+      "tb-sys-hq[addr1]": ["{contact.address}"],
+      "tb-sys-hq[addr2]": [""]
+    },
+    "tracy_business:tb-sys-map": {
+      "tb-sys-map[image-alt]": ["{contact.address}"]
+    }
+  },
+  "$comment_address": "The topbar's demo address, in every language the archive carries (read from the 1.1.0 topbar modules, 23/09): each becomes {contact.address}.",
+  "$comment_hq": "The demo head office. Field by field where a block holds it (tb-sys-hq, tb-sys-map, tb-kit-email — the acm section below). The footer's legal line carries the demo company's Russian registration numbers (INN · OGRN · SRO), one line per language read from the 1.1.0 footer modules (23/09): a customer has none of them, so each line becomes empty rather than a token."
+}

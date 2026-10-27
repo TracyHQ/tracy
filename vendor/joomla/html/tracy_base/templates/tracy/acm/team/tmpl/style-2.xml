@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><title>Team — Menu portraits</title><fields name="team">
+<fieldset name="source" label="TPL_TRACY_BASE_TEAM_SOURCE_LABEL">
+<field name="heading" type="text" label="TPL_TRACY_BASE_ACM_TEAM_HEADING_LABEL" />
+<field name="source-category" type="category" extension="com_content" required="true" label="TPL_TRACY_BASE_TEAM_CATEGORY_LABEL" description="TPL_TRACY_BASE_TEAM_CATEGORY_DESC" />
+<field name="selected-members" type="sql" multiple="true" key_field="value" value_field="text" query="SELECT a.id AS value, CONCAT(c.title, ' / ', a.title) AS text FROM #__content AS a INNER JOIN #__categories AS c ON c.id = a.catid WHERE a.state IN (0,1) ORDER BY c.title, a.ordering, a.id" label="TPL_TRACY_BASE_TEAM_SELECTED_LABEL" description="TPL_TRACY_BASE_TEAM_SELECTED_DESC" />
+</fieldset></fields></form>

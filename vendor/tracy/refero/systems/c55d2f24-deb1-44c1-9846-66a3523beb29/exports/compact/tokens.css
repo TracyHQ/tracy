@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-citrine-signal: #e5ff5d;
+  --color-carbon-black: #111111;
+  --color-bone-white: #f9f9f9;
+  --color-graphite: #2b2b2b;
+  --color-ash: #6e6e6e;
+  --color-stone: #9c9c9c;
+  --color-smoke: #565656;
+  --color-chalk: #d6d6d6;
+  --color-cream-paper: #eeeeee;
+  --color-pure-black: #000000;
+  --color-sand: #b7b3a2;
+
+  /* Typography — Font Families */
+  --font-neue-haas-grotesk-text: 'Neue Haas Grotesk Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

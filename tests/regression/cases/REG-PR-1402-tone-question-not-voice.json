@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1402-tone-question-not-voice",
+  "kind": "fix",
+  "title": "The Tone question of Customize your site names a writing style, never a speaking voice, in every language",
+  "pr": 1402,
+  "area": "add-site/site-questions",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In packages/site/tracy-site-build-{emdash,joomla,wordpress}/questions.json and apps/tracy-web/src/questions/{emdash,joomla,wordpress}.json, read the question with id `tone`: hint.en, label.vi, label.de, and every label and hint value.",
+    "S2: Compare each apps/tracy-web/src/questions/<cms>.json with packages/site/tracy-site-build-<cms>/questions.json byte for byte.",
+    "S3: Read summary_tone of tracy-add-site, and form.tone, msg.answered, msg.revised of tracy-site-build-<cms>, in packages/locale/tracy-locale-vi/vi and packages/locale/tracy-locales/de.",
+    "S4: In the committed lib/client.js of packages/locale/tracy-locale-vi and packages/locale/tracy-locales, count the summary_tone, form.tone and '<word>: {tone}' strings."
+  ],
+  "expect": [
+    "S1: hint.en = 'Sets the writing style Tracy uses for the text on your site.\\nPlain is direct, Warm is friendly, Bold is confident.'; label.vi = 'Văn phong'; label.de = 'Schreibstil'; no label or hint contains voice, giọng, Tonfall, voz, voce, głos, röst, โทนเสียง, น้ำเสียง, लहजा or is 'Nada'.",
+    "S2: all three mirrors are byte-equal.",
+    "S3: vi summary_tone = 'Văn phong {label}', form.tone = 'Văn phong', messages say 'Văn phong: {tone}' and never 'Giọng'; de summary_tone = 'Schreibstil: {label}', form.tone = 'Schreibstil', messages say 'Schreibstil: {tone}' and never 'Tonfall'.",
+    "S4: vi lib: summary_tone 'Văn phong {label}' 1x, form.tone 'Văn phong' 3x, 'Văn phong: {tone}' 6x, old 'Giọng' strings 0; de lib: same with 'Schreibstil', old 'Tonfall' strings 0."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-site-build-*/questions.json, apps/tracy-web/src/questions/*.json, packages/locale/{tracy-locale-vi/vi,tracy-locales/de}/*.json",
+    "door": "GET /api/sites/questions serves apps/tracy-web/src/questions/<cms>.json",
+    "tool": "tests/regression/scripts/REG-PR-1402-tone-question-not-voice.mjs"
+  },
+  "evidence": "Reported 16/10/2026: after the chat box gained a microphone (#1364), the Tone question read as a voice setting ('Sets the voice Tracy uses…', vi 'Giọng Ấm'). On develop e6cf3a4f4f the script fails 52 checks.",
+  "fence": "Static read of the shipped questionnaires, their tracy-web mirrors and the committed locale bundles; check-questions keeps mirrors byte-equal, check-bundles keeps lib/client.js in step",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1402-tone-question-not-voice.mjs"]
+  }
+}

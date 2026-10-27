@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-index-ink: #000000;
+  --color-paper-white: #ffffff;
+  --color-highlighter-yellow: #ffd600;
+
+  /* Typography */
+  --font-itcgaramondstdltcond: 'ITCGaramondStdLtCond', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abcdiatypelight: 'ABCDiatypeLight', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-indexlogotype: 'IndexLogotype', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

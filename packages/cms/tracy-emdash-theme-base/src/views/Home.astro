@@ -1,0 +1,114 @@
+---
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import HeroOd from '@/components/sections/HeroOd.astro'
+import ProofStrip from '@/components/sections/ProofStrip.astro'
+import SectionHead from '@/components/sections/SectionHead.astro'
+import CardList from '@/components/sections/CardList.astro'
+import Steps from '@/components/sections/Steps.astro'
+import InlineCta from '@/components/sections/InlineCta.astro'
+import FeatureRows from '@/components/sections/FeatureRows.astro'
+import StatsBand from '@/components/sections/StatsBand.astro'
+import Quotes from '@/components/sections/Quotes.astro'
+import FaqList from '@/components/sections/FaqList.astro'
+import PricingTiers from '@/components/sections/PricingTiers.astro'
+import CtaBand from '@/components/sections/CtaBand.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { entry } = await getEmDashEntry('home', 'home', { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const h = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'home', entry)
+---
+
+<Base chrome={chrome} title={h.title} description={h.hero_lead} currentPath="/" content={{ collection: "home", id: entry.data.id, slug: "home", toPath: () => "/" }}>
+	<main id="main" class="home-main">
+		<PageOwner stamp={$page} />
+		<HeroOd eyebrow={h.hero_eyebrow} title={h.hero_title} lead={h.hero_lead} cta1Label={h.hero_cta1_label} cta1Url={h.hero_cta1_url || href(locale, "/contact")} cta2Label={h.hero_cta2_label} cta2Url={h.hero_cta2_url} note={h.hero_note} mockCaption={h.hero_mock_caption} stamp={$page} fields={{ eyebrow: "hero_eyebrow", title: "hero_title", lead: "hero_lead", cta1Label: "hero_cta1_label", cta2Label: "hero_cta2_label", note: "hero_note", mockCaption: "hero_mock_caption" }} />
+		<ProofStrip kicker={h.proof_kicker} title={h.proof_title} line={h.proof_line} items={h.proof_items ?? []} stamp={$page} fields={{ kicker: "proof_kicker", title: "proof_title", line: "proof_line", items: "proof_items" }} />
+		<section class="band border-t border-line-soft" id="problem">
+			<div class="wrap">
+				<SectionHead eyebrow={h.problem_eyebrow} title={h.problem_title} lead={h.problem_lead} stamp={$page} fields={{ eyebrow: "problem_eyebrow", title: "problem_title", lead: "problem_lead" }} />
+				<CardList items={h.problem_items ?? []} variant="dot" block="problem" stamp={$page} field="problem_items" />
+			</div>
+		</section>
+		<section class="band border-t border-line-soft" id="value">
+			<div class="wrap">
+				<SectionHead eyebrow={h.value_eyebrow} title={h.value_title} lead={h.value_lead} stamp={$page} fields={{ eyebrow: "value_eyebrow", title: "value_title", lead: "value_lead" }} />
+				<CardList items={h.value_items ?? []} block="value" stamp={$page} field="value_items" />
+			</div>
+		</section>
+		<section class="band border-t border-line-soft" id="how">
+			<div class="wrap">
+				<SectionHead eyebrow={h.how_eyebrow} title={h.how_title} lead={h.how_lead} stamp={$page} fields={{ eyebrow: "how_eyebrow", title: "how_title", lead: "how_lead" }} />
+				<Steps items={h.how_steps ?? []} stamp={$page} field="how_steps" />
+			</div>
+		</section>
+		<InlineCta title={h.inline_cta_title} text={h.inline_cta_text} label={h.inline_cta_label} url={h.inline_cta_url} stamp={$page} fields={{ title: "inline_cta_title", text: "inline_cta_text", label: "inline_cta_label" }} />
+		<section class="band" id="features">
+			<div class="wrap">
+				<SectionHead eyebrow={h.features_eyebrow} title={h.features_title} lead={h.features_lead} stamp={$page} fields={{ eyebrow: "features_eyebrow", title: "features_title", lead: "features_lead" }} />
+				<FeatureRows items={h.features_items ?? []} stamp={$page} field="features_items" />
+			</div>
+		</section>
+		{(h.stats ?? []).length > 0 && (
+		<StatsBand items={h.stats ?? []} stamp={$page} fields={{ items: "stats" }} />
+		)}
+		{(h.team_quotes ?? []).length > 0 && (
+		<section class="band border-t border-line-soft" id="team">
+			<div class="wrap">
+				<SectionHead eyebrow={h.team_eyebrow} title={h.team_title} lead={h.team_lead} stamp={$page} fields={{ eyebrow: "team_eyebrow", title: "team_title", lead: "team_lead" }} />
+				<Quotes items={h.team_quotes ?? []} stamp={$page} field="team_quotes" />
+				{h.team_note && <p class="mt-8 text-center text-[13px] text-fg-meta" {...$page("team_note")}>{h.team_note}</p>}
+			</div>
+		</section>
+		)}
+		<section class="band border-t border-line-soft" id="faq">
+			<div class="wrap">
+				<SectionHead eyebrow={h.faq_eyebrow} title={h.faq_title} stamp={$page} fields={{ eyebrow: "faq_eyebrow", title: "faq_title" }} />
+				<FaqList items={h.faq_items ?? []} stamp={$page} field="faq_items" />
+			</div>
+		</section>
+		{(h.pricing_tiers ?? []).length > 0 && (
+		<section class="band border-t border-line-soft" id="pricing">
+			<div class="wrap">
+				<SectionHead eyebrow={h.pricing_eyebrow} title={h.pricing_title} lead={h.pricing_lead} stamp={$page} fields={{ eyebrow: "pricing_eyebrow", title: "pricing_title", lead: "pricing_lead" }} />
+				<PricingTiers tiers={h.pricing_tiers ?? []} stamp={$page} field="pricing_tiers" />
+				{h.pricing_note && <p class="mt-8 text-center text-[15px] text-fg-muted" {...$page("pricing_note")}>{h.pricing_note}</p>}
+				{h.pricing_disclaimer && <p class="mt-2 text-center text-[13px] text-fg-meta" {...$page("pricing_disclaimer")}>{h.pricing_disclaimer}</p>}
+			</div>
+		</section>
+		)}
+		<div class="pb-[var(--band-y)]">
+			<CtaBand title={h.final_title} text={h.final_text} btnLabel={h.final_cta_label} btnUrl={h.final_cta_url} linkLabel={h.final_link_label} linkUrl={h.final_link_url} tail={h.final_tail} stamp={$page} fields={{ title: "final_title", text: "final_text", btnLabel: "final_cta_label", linkLabel: "final_link_label", tail: "final_tail" }} />
+		</div>
+	</main>
+</Base>
+
+<style>
+	#problem :global(.card),
+	#value :global(.card) {
+		padding: 32px;
+	}
+	.home-main :global([data-block="inline-cta"]) {
+		padding-inline: 0;
+	}
+	@media (max-width: 880px) {
+		#problem :global([data-block="problem"]),
+		#value :global([data-block="value"]) {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

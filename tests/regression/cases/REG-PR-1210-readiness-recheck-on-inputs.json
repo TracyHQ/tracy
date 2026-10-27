@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1210-readiness-recheck-on-inputs",
+  "kind": "fix",
+  "title": "Customize your site re-checks a release when the inputs it was judged with change (rules, own profile rows, contract), keeps the last result with Rechecking meanwhile, and sends each fix to where its file lives",
+  "pr": 1210,
+  "area": "ops/road-to-live/customize",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set to a Postgres the tests may use, run node --test apps/tracy-web/test/customize-readiness.test.mjs apps/tracy-web/test/road-to-live.test.mjs.",
+    "S2: Run node --test packages/web/tracy-harness/test/template-presses.test.mjs packages/web/tracy-harness/test/problem-guides.test.mjs.",
+    "S3: Run node --test apps/tracy-web/test/template-customization-question-readiness-c.test.mjs apps/tracy-web/test/readiness-fix-places.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes, including: checked while the profile row was missing gives STAB-1 must-fix, and after the row is added the next sweep re-checks it automatically and it is clean, with the last result and recheckingSince shown meanwhile and the other template not re-checked; a rules change re-checks every release; Check again keeps the last result until the new one lands; a re-checking step keeps its state and the publish refusal.",
+    "S2: every test passes, including the last result plus a Rechecking note with no Check again button, and the prompt sending a contract fix to the tch repository, a JA template fix to ja-products and an EmDash template fix to packages/cms/tracy-emdash-theme-<name>.",
+    "S3: every test passes, including ABOUT-3 owner contract on Joomla and WordPress and template on EmDash, owner contract for a missing contract, and for every rule and platform: every file a fix names is classified, exists in tch when it is a tch file, is named only on a platform that has it (or qualified by its CMS), and the owner sends the reader to where it lives."
+  ],
+  "selectors": {
+    "inputs": "apps/tracy-web/src/lib/readiness-inputs.js currentInputs, changedInputs",
+    "sweep": "apps/tracy-web/src/lib/customize-readiness.js pendingReleases, sweepReadiness",
+    "table": "template_readiness.inputs, template_readiness.rechecking_since (migration 096)",
+    "panel": "[data-road-step=customize] [data-road-rechecking]",
+    "owner": "readers/quickstart-contract.js declaredCopyOwner, NO_CONTRACT_OWNER",
+    "fix-places": "apps/tracy-web/test/readiness-fix-places.test.mjs PLACES; packages/web/tracy-harness/src/cms/problem-guides.ts ownerPlace"
+  },
+  "evidence": "12/10/2026 on dev: Tracy Business EmDash 1.7.16 was checked before the image with its template-profiles.json row was deployed; six must-fix rules stayed until Check again gave 27/27. The ABOUT-3 prompt for tracy-business/wp7 1.3.4 sent the fix to ja-products although demoCompanyNames is in the contract's 1.3.4.copy.json in tch.",
+  "fence": "A stored result records the version of every input it was judged with; the sweep compares them with the server's own and re-checks only the affected releases, while Publish keeps reading the last result",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/customize-readiness.test.mjs",
+      "apps/tracy-web/test/road-to-live.test.mjs",
+      "packages/web/tracy-harness/test/template-presses.test.mjs",
+      "packages/web/tracy-harness/test/problem-guides.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-c.test.mjs",
+      "apps/tracy-web/test/readiness-fix-places.test.mjs"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+/* Layout only; all statistics components use the shared Signals visual rules. */
+.app-statistic-kpis { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.app-statistic-views { width: fit-content; flex-wrap: wrap; }
+.app-statistic-record-layout { display: grid; min-width: 0; gap: 20px; align-items: start; }
+.app-statistic-record-layout > * { min-width: 0; }
+.app-statistic-link { color: var(--primary); font-size: 14px; text-align: inherit; overflow-wrap: anywhere; cursor: pointer; }
+.app-statistic-link:hover { text-decoration: underline; }
+.app-statistic-details-button { font-size: 14px; height: 28px; padding: 0; }
+.app-statistic-screen [data-signal-table="app-records"] td { height: 64px; vertical-align: middle; padding-block: 8px; white-space: nowrap; }
+.app-statistic-screen [data-signal-table="app-records"] td > .signals-hover-trigger { margin-top: 0; color: var(--foreground); font-size: 14px; }
+.app-statistic-person { display: block; text-align: left; }
+.app-statistic-person .signals-primary { max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-statistic-screen [data-signal-table="app-records"] .signals-numeric { color: var(--foreground); }
+.app-statistic-screen aside { font-size: 14px; overflow-wrap: anywhere; }
+.app-statistic-screen aside button { font-size: 14px; }
+@media (min-width: 1280px) { .app-statistic-record-layout-open { grid-template-columns: minmax(0, 1fr) 380px; } }
+@media (max-width: 1100px) { .app-statistic-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 550px) { .app-statistic-kpis { grid-template-columns: minmax(0, 1fr); } }
+
+.app-statistic-screen .signals-kpi-number-label { font-size: 16px; line-height: 1.5; font-weight: 500; }
+.app-statistic-screen .app-statistic-no-activity { display: inline-block; max-width: 180px; white-space: normal; font-size: 13px; color: var(--muted-foreground); }
+
+.app-statistic-breakdowns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+@media (max-width: 1100px) {
+  .app-statistic-breakdowns { grid-template-columns: minmax(0, 1fr); }
+}

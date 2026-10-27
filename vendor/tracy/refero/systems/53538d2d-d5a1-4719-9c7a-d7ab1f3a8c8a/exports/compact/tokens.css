@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-ink: #171717;
+  --color-paper: #ffffff;
+  --color-notebook-cream: #ede7e2;
+  --color-olive-ink: #37352f;
+  --color-highlight-lime: #f5ff7d;
+  --color-lavender-wash: #e2d8ff;
+  --color-periwinkle-wash: #c3d5fc;
+
+  /* Typography — Font Families */
+  --font-poppins: 'Poppins', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-montserrat: 'Montserrat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

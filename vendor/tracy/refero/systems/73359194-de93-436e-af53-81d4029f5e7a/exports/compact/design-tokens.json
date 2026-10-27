@@ -1,0 +1,74 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surface base, text on dark cards"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, hairline borders, nav labels — the structural anchor of every element"
+    },
+    "carbon": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Carbon — Secondary text and deep surfaces where pure black reads too harsh"
+    },
+    "concrete": {
+      "$value": "#939393",
+      "$type": "color",
+      "$description": "Concrete — Muted navigation labels, secondary link text, inactive nav state"
+    },
+    "ash": {
+      "$value": "#aaaaaa",
+      "$type": "color",
+      "$description": "Ash — Tertiary link borders and subdued annotation text"
+    },
+    "plaster": {
+      "$value": "#e8e8e8",
+      "$type": "color",
+      "$description": "Plaster — Subtle surface division, alternating card backgrounds"
+    },
+    "sumi": {
+      "$value": "#0a0000",
+      "$type": "color",
+      "$description": "Sumi — Near-black project card background — reads as deepest neutral"
+    },
+    "slate-night": {
+      "$value": "#262a36",
+      "$type": "color",
+      "$description": "Slate Night — Project card background — slightly cool dark, content-driven not UI"
+    },
+    "terracotta-blush": {
+      "$value": "#efccbe",
+      "$type": "color",
+      "$description": "Terracotta Blush — Project card background — warm content fill, not a UI accent"
+    },
+    "verdant": {
+      "$value": "#43d491",
+      "$type": "color",
+      "$description": "Verdant — Project card background — vivid content fill, not a UI accent"
+    }
+  },
+  "font": {
+    "suisseintl-regular": {
+      "$value": "SuisseIntl-Regular",
+      "$type": "fontFamily",
+      "$description": "SuisseIntl-Regular — detected in extracted data but not described by AI"
+    },
+    "suisse-intl": {
+      "$value": "Suisse Int'l",
+      "$type": "fontFamily",
+      "$description": "Single typeface at a single weight carries the entire interface — navigation, body, and display. The refusal to use a bold or italic weight forces hierarchy through size, line-height, and whitespace alone. The variable line-heights (1.11 for tight display stacks, 1.79–2.44 for body) show that this one weight is stretched across very different densities."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://clasebcn.com",
+      "siteName": "Clase bcn",
+      "extractedAt": "2026-06-03T21:54:23.798Z",
+      "variant": "compact"
+    }
+  }
+}

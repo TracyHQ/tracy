@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-solder-orange: #ff6c2f;
+  --color-bone: #d7cdb8;
+  --color-signal-white: #ffffff;
+  --color-linen-gray: #e5e7eb;
+  --color-fog: #c2c2c2;
+  --color-soft-mist: #dddee2;
+  --color-ash: #a3a3a3;
+  --color-carbon-black: #000000;
+  --color-deep-charcoal: #191919;
+
+  /* Typography — Font Families */
+  --font-suisse-intl: 'Suisse Intl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisse-intl-mono: 'Suisse Intl Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

@@ -1,0 +1,64 @@
+{
+  "id": "QA-UNIT-REG-PR-1347-tdsr-measure-remaining-happy",
+  "itemIds": ["regression:REG-PR-1347-tdsr-measure-remaining"],
+  "requirement": "Eight re-measured Joomla rows pass every built-site rule on /ops, and JA Vital passes BAND-1 through keepWhole",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1347-tdsr-measure-remaining.json",
+    "ref": "PR #1347 (feat); fix evidence: Before: /ops graded the eight rows C on 'Not measured yet' (IDENT-1, MODE-1, MODE-2; every built-site rule on JA Voyara 1.0.8), and JA Vital BAND-1 Worth fixing (.btn-white kept but undeclared)",
+    "invariant": "S1: every test passes, among them the eight-row test: ROLE-1, SCREEN-1, CON-1, UNDO-1, FONT-1, IDENT-1 and MODE-1 pass 'Measured on <version>, 2026-10-14, imac', MODE-2 not applicable, BAND-1 pass (JA Vital included). S2: each file measured 2026-10-14 on the iMac with od:bmw, od:stripe, od:spotify and Moxie, ident and modeMatch read on every view, themeToggle false.",
+    "productSources": [
+      "apps/tracy-web/src/lib/preview-demo.js:11",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/release-content.js:44",
+      "apps/tracy-web/src/lib/template-design-system-readiness/assets.js:26",
+      "apps/tracy-web/src/lib/template-design-system-readiness/index.js:157",
+      "apps/tracy-web/src/lib/template-design-system-readiness/newest-theme.js:10",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/slot.js:15",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/tokenized.js:110",
+      "apps/tracy-web/src/lib/template-design-system-readiness/rules/band-1-bands-follow.js:14",
+      "apps/tracy-web/src/lib/template-design-system-readiness/rules/built-site.js:54",
+      "apps/tracy-web/src/lib/template-design-system-readiness/severity.js:87",
+      "packages/design/tracy-ds-slot/src/measurement.mjs:16",
+      "packages/design/tracy-ds-slot/src/preview-probe-version.mjs:143"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/ds-slot.js:101 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/ds-slot.js:79 import() with a computed specifier",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs:32 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1347-tdsr-measure-remaining.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1347-tdsr-measure-remaining"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1347-tdsr-measure-remaining",
+    "pr": 1347,
+    "kind": "feat",
+    "area": "ops/road-to-live/design-system",
+    "file": "tests/regression/cases/REG-PR-1347-tdsr-measure-remaining.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/template-design-system-readiness.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

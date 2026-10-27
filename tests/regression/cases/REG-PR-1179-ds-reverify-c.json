@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1179-ds-reverify-c",
+  "kind": "fix",
+  "title": "Eighteen ready Joomla slot contracts (JA Lawfirm to JA Seven) re-verified with the unified probe on the release their minVersion names: still ready, with the six fixes the re-verify found",
+  "pr": 1179,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-{ja-lawfirm,ja-magz-ii,ja-mason,ja-mono,ja-mood,ja-morgan,ja-nova,ja-phio,ja-podcast,ja-prodex,ja-purity-iv,ja-rent,ja-resort,ja-restaurant,ja-resume,ja-rights,ja-sensei,ja-seven}.json through loadContract; build the module sheet (joomlaSlot) under Moxie (dark), MotherDuck (light) and Apple (light) for JA Prodex, JA Sensei and JA Magz II.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf(...), {key, version}) for each at its minVersion and at the version before it.",
+    "All of it: node tests/regression/scripts/REG-PR-1179-ds-reverify-c.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: each of the eighteen is ready, its minVersion is the release re-verified (ja-lawfirm/magz-ii/mason/mono/mood/prodex/purity-iv/resume/rights/sensei/seven 1.0.1, ja-podcast/rent/resort 1.0.2, ja-morgan 1.0.3, ja-phio/restaurant 1.0.4, ja-nova 1.0.5), its maxVersion is at or above it, tasks/evidence/ds-reverify-c-2026-10-12/<slug>/rule.json (held) or <slug>/after/rule.json (fixed) exists, and it judges a running-text kind; the six fixed name that evidence in readyNote. JA Prodex's .acm-hero .hero-title takes var(--ds-c-accent-on) under Moxie and MotherDuck; JA Sensei's .acm-features.style-1 .btn-action .btn.btn-default keeps background-color #955cf0 under Moxie, MotherDuck and Apple; JA Magz II's .items-row article.image .item-content is #aaaaaa and .article-aside #999999 under MotherDuck and Apple and absent under Moxie; JA Mood's and JA Morgan's heading and text kinds start with 'body '; JA Rights has measureStill true.",
+    "S3: each at its minVersion -> {contract:'joomla-<slug>'}; the version before -> reason TEMPLATE_NEEDS_UPDATE."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-<slug>.json ready, minVersion, maxVersion, contrast, sideRules, selectors.onAccent, measureStill",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor / templateKeyOf"
+  },
+  "evidence": "tasks/evidence/ds-reverify-c-2026-10-12/README.md — per-template table before/after, rule.json and report.md of each flow run and the eye montages (12/10/2026).",
+  "fence": "The measures on Docker stands are in the evidence, not re-run here (each takes 10-30 min on the shared VM). Not covered: the probe itself (flow.mjs unchanged on this branch) and judging by eye.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1179-ds-reverify-c.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

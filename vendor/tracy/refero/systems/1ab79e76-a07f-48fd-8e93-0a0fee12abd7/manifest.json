@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1ab79e76-a07f-48fd-8e93-0a0fee12abd7",
+  "status": "complete",
+  "name": "V7labs",
+  "url": "https://styles.refero.design/style/1ab79e76-a07f-48fd-8e93-0a0fee12abd7",
+  "sourceWebsite": "https://www.v7labs.com",
+  "extractedAt": "2026-06-03T21:10:49.013Z",
+  "capturedAt": "2026-10-08T05:08:56.919413+00:00",
+  "theme": "mixed",
+  "industry": "ai",
+  "description": "Sunlit amber archive — editorial intelligence behind theater curtains. The first screen pours warm orange light through vertical drapery streaks, then strips to monochrome seriousness below.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1854595c-ddf5-4d2a-9454-f870928e95f3.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8bd8f663aa774f51e882eff7ae3b4b88252c9e2ef52f7167578eb6d8c4c586b1",
+      "bytes": 26708
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "789e465df628058a9b22b105fde7051b2dacbef80fc43da6973b691d24086c47",
+      "bytes": 88178
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "48eafa8ffb7fb58c5cd54cbfd9a75595b43038aca2816b047ff0bdb9098139d2",
+      "bytes": 21833
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9d72b4e0e171d21a6a1191e26e7cf544ef3c93e20aec14c1466ba2683640191a",
+      "bytes": 14721
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5cc710a0d1c51f4ad00c265570514387859fb37c20ed089b435e187b2de91984",
+      "bytes": 15793
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2dfee42dec74be56f71fcdee45c1ce69b2f1568432d9c136303e34b57fbe956c",
+      "bytes": 4716
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "94c2e8287e513a67140d171a7dbfc4f1891deb9fa27de2587d764e6650fa3ab9",
+      "bytes": 1023
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e09ce6190547a98f5f3769c57a3141568f76a3a466ab06da23ba9de0af2cbfac",
+      "bytes": 1040
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "50021d4cebce376e67b69659efb14453be0f790d5c807a6a90616d5ab79de834",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "646fecb308628270cd41ad518f546ecfeb875d61a56b3e0a7fe00c91c458f96d",
+      "bytes": 50550
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8b1addd260329bc3fbecaae37ebfd2b82b7c45f4573f7d4db8a93719dd2046fb",
+      "bytes": 26771
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ae172aabed8f4361407e9247ae124eaa52cce8de81fa0736655f53ece791ad9c",
+      "bytes": 71700
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "e438be9c82853405003261ef31642e418fdeb30e14fb7539cb06d89554e9da7f",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "db4c39dee93888e4a5dd19c9805cb567ad8766b8a5799af0076a128483ba8923",
+      "bytes": 2391
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "8c7f2f295115d5c84f45b51c30afba943ed9920338d5ca3eefadace5dccae083",
+      "bytes": 3014
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "1ab79e76-a07f-48fd-8e93-0a0fee12abd7",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "478c8660-f1a0-4339-ac8c-4cf7ca4cf738",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "73cd9a6a-f861-4376-a3e1-e12f83c8960e",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

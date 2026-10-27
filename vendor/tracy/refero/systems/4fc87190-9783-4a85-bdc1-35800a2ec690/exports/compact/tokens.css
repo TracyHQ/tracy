@@ -1,0 +1,10 @@
+:root {
+  /* Colors */
+  --color-carbon-black: #000000;
+  --color-gallery-white: #ffffff;
+  --color-plaster-gray: #efefef;
+
+  /* Typography — Font Families */
+  --font-esallianz: 'ESAllianz', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-open-sans: 'Open Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

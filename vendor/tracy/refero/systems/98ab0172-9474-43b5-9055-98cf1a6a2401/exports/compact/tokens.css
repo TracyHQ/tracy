@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-carbon-canvas: #000000;
+  --color-bone-white: #ffffff;
+  --color-ash-veil: #e5e7eb;
+  --color-smoke: #bfbfbf;
+  --color-iron-gray: #999999;
+
+  /* Typography — Font Families */
+  --font-circularxx: 'circularXx', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

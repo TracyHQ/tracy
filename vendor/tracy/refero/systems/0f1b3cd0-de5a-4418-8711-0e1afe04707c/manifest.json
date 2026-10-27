@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0f1b3cd0-de5a-4418-8711-0e1afe04707c",
+  "status": "complete",
+  "name": "Daniela and Moe Wedding 2019",
+  "url": "https://styles.refero.design/style/0f1b3cd0-de5a-4418-8711-0e1afe04707c",
+  "sourceWebsite": "https://danielaandmoe.com",
+  "extractedAt": "2026-06-03T18:52:29.975Z",
+  "capturedAt": "2026-10-08T05:08:17.047669+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Botanical wedding invitation on blush paper — editorial, hand-drawn, sun-warmed.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7607c547-1485-4d3a-b664-ce886b70e05b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c64e81d4-8efe-4275-91a4-3c362c0c1aaa.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/d14d4cdb-1bca-45cd-b137-38233eea0314.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/546cacf4-0095-404a-9030-3d3718fc96a9.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/61e07060-9895-4188-b531-e54872779c05.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "022468c686abfed96da060ae4ab875736cc0826cb501eaeee007925da5dcdb95",
+      "bytes": 17953
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "5b029c9c49b8b722baa3a31eca972bbfd89606b342a038a66d38838855e86e35",
+      "bytes": 113489
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c5d14aae48ce895619d5baf33f3b28cfa12e235aab36785e300f3129f68f4608",
+      "bytes": 15516
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "dd1e30dde31e77f6fb4c1e3718fa92b68aef47ae80f5c86a92e265e61426fbf4",
+      "bytes": 11842
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "370984d4200e05ec0bdab546f7e2356e3531a2871f971b506d4363b26b73b362",
+      "bytes": 10892
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c2952eafc4ba443271ec8cc468e63da1cc0b693b9b7d85a3827f452c2d17a1db",
+      "bytes": 3411
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "689f5f9b81cdf518422374177a43ae857b0defbb68a108287b45bc5e45c63ee0",
+      "bytes": 649
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "563b65f11af006305921ebb4535682cdaf468c544d549987213913a16f355627",
+      "bytes": 666
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "e65d0dd24081ff24930ad9d616f13e9c81df14fce9c552845c311480f0c02ec7",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "082bf6b6caefeb0fcd8861dd324392af37d87292d110ad212f9fdc0c6424bcd7",
+      "bytes": 41271
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ea1e6f219138bc29faa1a76294377c5852c7cc8f42735d0d51785573e509f437",
+      "bytes": 21607
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "0d8536907925266e3574c6ff9af5d5f76eae36e5e5e437f6b494db15fa9cf4f2",
+      "bytes": 45360
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "474193fd8c862d70ce181c56fd4086c565d319fefae71007103b7a7b4a484c3e",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e14024752a24688c0ee82f11cccca65fa3f5acf8b5fa4ce6f9ae43e5ff8d7b38",
+      "bytes": 1360
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "1fcda5fc8f6facb1f0cef93588177cb250f1619d2547b9db35c37da43c6bb20a",
+      "bytes": 1899
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0f1b3cd0-de5a-4418-8711-0e1afe04707c",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "2ab2f666-6da7-4cd8-bc91-52a28bd560ad",
+    "329075e8-97ed-4722-8952-d9bf001de233",
+    "4e616d96-14ea-43d6-9662-0ad3fa19ef7c",
+    "515da65c-f9e3-4296-a05d-0d921f5cdab1",
+    "6db1057d-3457-4173-9184-df160415f060",
+    "71717c5a-324a-40ed-8a09-9a35df74f1d3",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "79b4ebc4-30f6-45b6-b2d2-922e28e05ca9",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "9f228e72-997a-4410-9190-68359028e3d0",
+    "a639fa6c-1705-47c2-b452-d4479469a734",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "b490cff8-9d2c-4225-9118-6468e4f3213d",
+    "f4e1b510-6085-4fb8-8597-05d479d3c00c",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916"
+  ]
+}

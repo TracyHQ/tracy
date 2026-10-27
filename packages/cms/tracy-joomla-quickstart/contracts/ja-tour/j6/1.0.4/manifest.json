@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-tour/j6/1.0.4",
+  "platform": "joomla",
+  "template": "ja_tour",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-tour",
+    "id": "quickstart/ja-tour/j6",
+    "version": "1.0.4",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_tour",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-tour-j6-webroot-1.0.4.tar.gz",
+        "bytes": 57466021,
+        "sha256": "ba0d0c719303c66b9d561198a0cfdcf5dd79ad639424f2a47dd5910476b0b442"
+      },
+      "database": {
+        "file": "ja-tour-j6-database-1.0.4.sql.gz",
+        "bytes": 130123,
+        "sha256": "29bfedb07ff67bb4defd4f735b99cc13c9ae28535e6d09baaf9626c74a685d99"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-17T08:53:33.603Z",
+    "builtFrom": {
+      "from": "quickstart/ja-tour/j6@1.0.3",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 731 files replaced (templates/ja_tour/AGENTS.md, templates/ja_tour/CLAUDE.md, templates/ja_tour/README.md, templates/ja_tour/component.php, templates/ja_tour/error-t4.php, templates/ja_tour/error.php, templates/ja_tour/favicon.ico, templates/ja_tour/index.php, templates/ja_tour/layout.json, templates/ja_tour/offline.php, templates/ja_tour/prepros-6.config, templates/ja_tour/templateDetails.xml, templates/ja_tour/templateInfo.php, templates/ja_tour/template_preview.png, templates/ja_tour/template_thumbnail.png, templates/ja_tour/css, templates/ja_tour/docs, templates/ja_tour/etc, templates/ja_tour/fonts, templates/ja_tour/html, templates/ja_tour/images, templates/ja_tour/js, templates/ja_tour/scss, templates/ja_tour/acm, templates/ja_tour/language); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-tour/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

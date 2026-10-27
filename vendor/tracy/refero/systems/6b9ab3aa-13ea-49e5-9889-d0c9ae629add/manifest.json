@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6b9ab3aa-13ea-49e5-9889-d0c9ae629add",
+  "status": "complete",
+  "name": "AIUC",
+  "url": "https://styles.refero.design/style/6b9ab3aa-13ea-49e5-9889-d0c9ae629add",
+  "sourceWebsite": "https://aiuc.com",
+  "extractedAt": "2026-06-03T21:37:47.982Z",
+  "capturedAt": "2026-10-08T05:12:54.438414+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Alpine underwriting ledger — a white page ruled with hairline rules, topped by a single pale-blue mountain photograph.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/25093b63-b6f2-4698-a88e-5531748f47de.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/2a21bc2b-86a7-4222-98ad-5f37c49355e5.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/38c01aff-1fcb-4185-9e7c-e06085e1f3bc.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/0e7d2a53-2bdd-437c-b5b1-513f19de424b.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/e39f767f-9b4b-489c-b91d-941f7a6b27da.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7fd23f60e7b1a97646f418f72192e7b014bcbec84fa104f40142f1495bcb9e7c",
+      "bytes": 19497
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "2e6f0a06c0295bc821cc12c6a2c5455656cd5ee5aff89edf18b75e7287664aaa",
+      "bytes": 98568
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3fbf9c6dd5da7defe9cae22dd28d7f64fd2835f807da3d9002e0240a94a937d5",
+      "bytes": 15561
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d99e15e9a22cf4d55338b5f7843812737ed00dca5fca643f515081f9415ea4b0",
+      "bytes": 9099
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "30c2604764026409e7780a3810c5c47adf6cc075507a63cd97f1b116ca397bc7",
+      "bytes": 11818
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d65858efbcac7b2c6fdae466ea6273fa42d7b13f6f10d1544d4a31e4aabe8ae6",
+      "bytes": 3141
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "47c21033868bcf62d1da909e33100074e1605f07de02bddecc12d2e44688306b",
+      "bytes": 803
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "40cb487763d86b2110310e72e7750eb7b31a58b33eea1031b123a5a914639a80",
+      "bytes": 820
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6b041d4cbac9a70d862373094803e692ace22c9a3d0abb97c20719dd60f029e8",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "cee9e1c017f2e5be652c09a4d84816ca7d86702e40c88a686ceb9d207779b286",
+      "bytes": 42211
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3b83b58aec740d5bd3c3fc8d94dcb2e0a816bbf47d5a0262f92fe881fbed492a",
+      "bytes": 21879
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "fb3d6932fd91f9625bbff95fd4242e0b9669e44c72613310f64c47285f872b2e",
+      "bytes": 40687
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "35469c3c434ddaada222f26326c9113b302a32f2a84c822c6f86e969479c96ca",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "24575571c9ea15b331d695a550a6469a5c76d70d7ef54a0120c1cb022fca728a",
+      "bytes": 1830
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "47f8bc7f6efb09e72b8222d0dfec5e79f7529c3fadaa5f47439dac589ba35045",
+      "bytes": 2286
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "08c8700c-f278-42bc-812e-f60dc6ce996e",
+    "0e971626-ca51-45ba-acf6-35a53c561b2c",
+    "1ab79e76-a07f-48fd-8e93-0a0fee12abd7",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "46781641-8afd-4b01-9f67-06046b6eda71",
+    "478c8660-f1a0-4339-ac8c-4cf7ca4cf738",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "6b9ab3aa-13ea-49e5-9889-d0c9ae629add",
+    "750387be-bda4-448b-950f-c9356c3ec25f",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "7b083729-e694-4b66-82a3-befb08451722",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "9623a699-230d-4ee2-a174-8209e1e9ef16",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "b6f25b86-ffcf-42f1-9f37-5e37d08cb4ce",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "dc541737-8bf2-4b31-b729-0352f696e82f",
+    "e81d4724-9615-4159-8678-cef35f986cab",
+    "ee403055-480e-4bd4-9216-07c9ae2dde2e",
+    "f08ee8f2-2ba5-4ae8-aba7-fec7cea40ae4"
+  ]
+}

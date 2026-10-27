@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-base/wp7/1.1.4",
+  "platform": "wordpress",
+  "theme": "tracy-base",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "tracy-base/wp7",
+    "version": "1.1.4",
+    "platform": "wordpress",
+    "platformVersion": "7.1.3",
+    "phpVersion": "8.3.33",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "tracy-base",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "tracy-base-wp7-webroot-1.1.4.tar.gz",
+        "bytes": 45433202,
+        "sha256": "498b202ffc104aa7a607680cc303349c0173b8a1ef900897a1a9fe6fde4e3ce4",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Fwp7/tracy-base-wp7-webroot-1.1.4.tar.gz"
+      },
+      "database": {
+        "file": "tracy-base-wp7-database-1.1.4.sql.gz",
+        "bytes": 58864,
+        "sha256": "b900e5fe64af30db2e02f099efa661e1d3bbb267fdaf01635395dedd1fd9e9f2",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Fwp7/tracy-base-wp7-database-1.1.4.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.18.2",
+  "mode": "content-recommendation"
+}

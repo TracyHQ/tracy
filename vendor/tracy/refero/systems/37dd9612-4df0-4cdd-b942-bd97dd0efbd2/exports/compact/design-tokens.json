@@ -1,0 +1,64 @@
+{
+  "color": {
+    "page-parchment": {
+      "$value": "#dbd5d2",
+      "$type": "color",
+      "$description": "Page Parchment — Primary border color for all containers, cards, nav, body, and links — warm taupe that reads as paper edge, not digital gray"
+    },
+    "ink-black": {
+      "$value": "#271f1b",
+      "$type": "color",
+      "$description": "Ink Black — All text, icons, and heading strokes — warm near-black with brown undertone, never pure #000"
+    },
+    "sheet-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Sheet White — Primary page canvas and white card surfaces. Do not promote it to the primary CTA color"
+    },
+    "felt-gray": {
+      "$value": "#ededed",
+      "$type": "color",
+      "$description": "Felt Gray — Secondary surface for badges, subtle panel backgrounds, and inactive card states"
+    },
+    "margin-gray": {
+      "$value": "#888786",
+      "$type": "color",
+      "$description": "Margin Gray — Muted helper text, secondary metadata, and inactive nav items"
+    },
+    "periwinkle-action": {
+      "$value": "#4a83f5",
+      "$type": "color",
+      "$description": "Periwinkle Action — Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "cornflower-wash": {
+      "$value": "#b1cafb",
+      "$type": "color",
+      "$description": "Cornflower Wash — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "dusk-periwinkle": {
+      "$value": "#cedaf3",
+      "$type": "color",
+      "$description": "Dusk Periwinkle — Inset border and subtle blue-tinted edge on elevated or focused elements"
+    }
+  },
+  "font": {
+    "ivyora": {
+      "$value": "IvyOra",
+      "$type": "fontFamily",
+      "$description": "Display and heading serif — used at 64px for hero headlines, 24px for section titles, and 18px for card titles. Weight stays at 400 across all sizes: the serif's contrast and tight tracking (-0.03em at display) do the visual work, not boldness."
+    },
+    "google-sans-flex": {
+      "$value": "Google Sans Flex",
+      "$type": "fontFamily",
+      "$description": "Body, navigation, buttons, and utility text. Stays compact (14-18px) and invisible — its job is legibility, not personality. Weight 500 for nav active states, 400 for body, 600 reserved for button labels."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://mirror.xyz",
+      "siteName": "Paragraph",
+      "extractedAt": "2026-06-03T20:33:31.523Z",
+      "variant": "compact"
+    }
+  }
+}

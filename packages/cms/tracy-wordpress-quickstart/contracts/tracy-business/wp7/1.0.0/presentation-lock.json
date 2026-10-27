@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "tracy-quickstart-presentation-lock/wordpress/v1",
+  "$comment": "What a content-only build must leave alone on a restored Tracy Business site. Only the active theme identity and essential WP settings are locked; the archive is the design, so no theme file hashes are carried here.",
+  "options": {
+    "stylesheet": "wp-tracy-business",
+    "template": "wp-tracy-business",
+    "show_on_front": "page",
+    "permalink_structure": "/%postname%/",
+    "users_can_register": "0"
+  },
+  "themeMods": {
+    "theme": "wp-tracy-business",
+    "protected": ["custom_css_post_id", "nav_menu_locations"]
+  },
+  "fileRoots": ["wp-content/themes/wp-tracy-business"],
+  "files": {}
+}

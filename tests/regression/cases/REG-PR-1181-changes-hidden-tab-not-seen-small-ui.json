@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1181-changes-hidden-tab-not-seen-small-ui",
+  "kind": "fix",
+  "title": "A Site changes tab mounted behind another tab reads its list but does not mark it seen; shown again, it does",
+  "pr": 1181,
+  "area": "site-changes/badge",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap packages/core/tracy-core/test/site-changes-undo-request.test.mjs packages/site/tracy-site-tabs/test/shown-again.test.mjs",
+    "S2: Read the line for 'a list read while its pane is hidden does not mark it seen; shown again, it does' and the four paneShown lines."
+  ],
+  "expect": [
+    "Every test reports ok and the run ends with '# fail 0'.",
+    "The real ChangesView mounted with isShown() false reads GET …/activity but sends no PUT …/activity/seen (pre-fix: one PUT at mount); after isShown() turns true and reloadKey moves, exactly one PUT …/activity/seen.",
+    "paneShown is false for a pane with no layout boxes (display: none, the side card's unpicked tab), for a page whose visibilityState is 'hidden', and for no root; true for a laid-out pane in a page in front."
+  ],
+  "selectors": {
+    "doors": "GET /api/sites/:key/activity?version=2 · PUT /api/sites/:key/activity/seen"
+  },
+  "evidence": "E2E dev 04/10 E9.2b (tasks/evidence/e2e-dev-0410/bugs.md item 8, E9/b-jo-unseen-2.json): seat B's /activity/unseen was 1; opening the Joomla workspace, whose layout keeps Site changes behind the Browser tab, moved B's watermark 9 s later and no badge was ever drawn. dsh-better-sidebar keeps every tab mounted (split-pane.tsx, paneTabHidden = display: none), and ChangesView marked the list seen on every read.",
+  "fence": "ChangesView takes isShown() and moves the watermark only while it is true; tracy-site-tabs passes paneShown(root) (laid out and page visible); followShownAgain re-reads when the pane comes into view, and that read marks it.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/site-changes-undo-request.test.mjs",
+      "packages/site/tracy-site-tabs/test/shown-again.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a list read while its pane is hidden does not mark it seen; shown again, it does",
+      "an unpicked tab (display: none, no boxes) is not shown"
+    ]
+  }
+}

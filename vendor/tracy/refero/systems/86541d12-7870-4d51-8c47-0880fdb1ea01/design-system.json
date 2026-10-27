@@ -1,0 +1,347 @@
+{
+  "dos": [
+    "Use Signal Lime (#a8ff53) as the only filled accent surface — it is the charging light, not decoration",
+    "Set headlines in Satoshi with 0.05em tracking at 36px and above; this spaced-out quality is the brand's editorial voice",
+    "Use Geist Mono at exactly 14px for all code; do not scale it up for display",
+    "Render code blocks on Ink Well (#121317) so they read as recessed editor panes against the canvas",
+    "Apply the syntax palette (violet, pink, two greens) only inside code contexts and feature icons — never on body text or backgrounds",
+    "Keep surface depth to two levels (canvas + ink well) with 1px graphite hairlines; avoid drop shadows",
+    "Use 4px radius for all rectangular components and 9999px only for pill-shaped elements like feature tags"
+  ],
+  "donts": [
+    "Do not use drop shadows or floating cards — depth comes from surface contrast and hairlines only",
+    "Do not apply Signal Lime to large backgrounds or decorative shapes; it is a small, charged accent, not a wash",
+    "Do not mix the syntax palette into non-code text — these colors are for code and icons, not body copy",
+    "Do not use the chromatic accent colors as button fills; all action buttons use either Signal Lime (primary) or ghost/neutral (secondary)",
+    "Do not set body text below 14px or use line-height tighter than 1.40 — Geist needs room to breathe at small sizes",
+    "Do not introduce new neutrals; the scale runs from #121317 (Ink) through #1c1e21 (Canvas) to #e5e7eb (Bone) with four intermediate grays — that's the full range",
+    "Do not use rounded corners above 4px on rectangular components; the system is deliberately tight, not soft"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#1c1e21",
+      "name": "Slate Canvas",
+      "role": "Primary page background, hero canvas, card surface base — the workspace floor everything sits on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#121317",
+      "name": "Ink Well",
+      "role": "Deepest surface — code block backgrounds, terminal panes, inset containers that need to feel recessed below the canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3b3e45",
+      "name": "Graphite Hairline",
+      "role": "Subtle borders, divider lines, card edges — barely visible separators that let density carry the visual structure",
+      "group": "neutral"
+    },
+    {
+      "hex": "#272a2e",
+      "name": "Steel Border",
+      "role": "Slightly darker hairline for nested containers and secondary borders where Graphite feels too bright",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b5b8c0",
+      "name": "Ash Text",
+      "role": "Tertiary text, captions, muted helper copy — text that should be readable but not competing with headlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#878c99",
+      "name": "Fog Text",
+      "role": "Secondary body text, metadata, icon strokes — the most-used neutral text color, reading as a soft graphite on slate",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d7d9dd",
+      "name": "Cloud Text",
+      "role": "Secondary headings, button text, emphasized body — one step below full white, used where pure white would feel harsh",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Bone Text",
+      "role": "Primary text, headlines, high-contrast labels — the dominant foreground color against the slate canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a8ff53",
+      "name": "Signal Lime",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#9c9af2",
+      "name": "Syntax Violet",
+      "role": "Code syntax highlighting (functions, keywords), media generation feature icon — the most-used chromatic color after lime, giving the code blocks their editor feel",
+      "group": "accent"
+    },
+    {
+      "hex": "#fa3abf",
+      "name": "Syntax Pink",
+      "role": "Code syntax (strings, special tokens), media processing feature icon — hot accent used sparingly for code punctuation",
+      "group": "accent"
+    },
+    {
+      "hex": "#7655fd",
+      "name": "Event Violet",
+      "role": "Headline highlight words, streaming feature icon, decorative gradient accent — slightly deeper violet for larger surfaces",
+      "group": "accent"
+    },
+    {
+      "hex": "#afec73",
+      "name": "Loop Green",
+      "role": "Code syntax (types, booleans), inline emphasis text — softer green that sits between Signal Lime and Ash, used inside code contexts",
+      "group": "accent"
+    },
+    {
+      "hex": "#d9f07c",
+      "name": "Key Lime",
+      "role": "Code syntax (variables, parameters) — the lightest green, reads almost yellow against dark, used for code identifiers",
+      "group": "accent"
+    },
+    {
+      "hex": "#e888f8",
+      "name": "Tag Magenta",
+      "role": "Code syntax (property names, tags) — gentle pink for object keys and JSX attributes",
+      "group": "accent"
+    },
+    {
+      "hex": "#f43f5e",
+      "name": "Mute Red",
+      "role": "Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page is a single centered column at max-width 1200px with full-bleed dark canvas. The hero is a centered text stack: large Satoshi headline (60px, 0.05em tracking), muted Geist subtext, and a lime CTA with an inline link — all vertically centered in a tall viewport. Below the fold, a two-column section pairs a left-aligned code editor (Ink Well surface, ~50% width) with right-aligned descriptive copy and a ghost CTA. A horizontal logo strip with 'Trusted by developers' caption breaks the rhythm. The testimonials section uses a three-column card grid with consistent 24px gutters. Feature pills run as a single horizontal row at the page foot. Section gaps are 80-120px of vertical breathing room — generous but not airy. Navigation is a sticky top bar with left-aligned logo, centered links, and right-aligned actions (GitHub, star count, login, lime CTA).",
+  "imagery": "The site is text- and code-dominant, not photography-led. The primary visual is the embedded TypeScript code editor (Ink Well background, multi-color syntax highlighting) which functions as both product demonstration and decorative asset. Feature pills at the page footer use small chromatic icons (2-3px stroke, filled style) in violet, pink, green, and yellow to create color rhythm without imagery. Customer testimonials include small circular avatars and grayscale company logos rendered in a uniform row. There is no lifestyle photography, no hero illustration, no 3D rendering — the visual weight comes from type hierarchy, code blocks, and the lime accent. The overall density is text-forward: code and copy do the work that images would do on a consumer product site.",
+  "similar": [
+    {
+      "why": "Same dark canvas with single-color accent strategy, Satoshi/Geist-class grotesks for body, and a terminal-adjacent developer aesthetic — though Vercel uses white-on-black minimalism where Trigger.dev uses lime pop",
+      "business": "Vercel"
+    },
+    {
+      "why": "Shared commitment to tight 4px radii, hairline borders over shadows, and dark-mode-first surfaces — both treat the interface as a tool surface, not a marketing canvas",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar syntax-highlighting-as-branding approach with multiple chromatic accents scattered across feature pills and code blocks, creating color rhythm without decoration",
+      "business": "Railway"
+    },
+    {
+      "why": "Direct competitor in the workflow/background-jobs space with the same dark canvas, code-forward hero, and developer-terminal visual language",
+      "business": "Inngest"
+    },
+    {
+      "why": "Matches the dark-mode developer marketing pattern with Geist-family body type, prominent code blocks in the hero, and a single saturated brand color as the only filled accent",
+      "business": "Resend"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "4px",
+      "pills": "9999px",
+      "inputs": "4px",
+      "buttons": "4px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "80-120px",
+    "cardPadding": "24-32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#1c1e21",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — the dominant dark surface"
+    },
+    {
+      "hex": "#121317",
+      "name": "Inset",
+      "level": 1,
+      "purpose": "Code blocks, terminal panes, recessed containers"
+    },
+    {
+      "hex": "#1c1e21",
+      "name": "Card",
+      "level": 2,
+      "purpose": "Testimonial cards, feature cards — sit on the canvas with hairline borders for definition"
+    },
+    {
+      "hex": "#a8ff53",
+      "name": "Accent",
+      "level": 3,
+      "purpose": "Primary CTA surface, active indicators, logo mark"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 0 0 1px rgba(168, 255, 83, 0.15) inset",
+      "element": "Primary CTA button"
+    },
+    {
+      "style": "border-color transitions from #272a2 to #3b3e45, no shadow change",
+      "element": "Card hover"
+    }
+  ],
+  "northStar": "Charging terminal on slate. The interface is a dimly lit workstation where one lime LED signals activity against rows of quiet monospaced text and faint violet syntax glow.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.38
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading-lg",
+      "size": 36,
+      "lineHeight": 1.2,
+      "letterSpacing": 1.8
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.11,
+      "letterSpacing": 2.4
+    },
+    {
+      "role": "hero",
+      "size": 60,
+      "lineHeight": 1,
+      "letterSpacing": 3
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button (Lime Fill)",
+      "role": "Main conversion action — 'Get started', 'Start building now'",
+      "description": "Background #a8ff53 (Signal Lime), text #121317 (Ink Well), 4px radius, 12px 16px padding, Geist 500 at 16px. No border. The lime fill on dark text creates maximum contrast (13.6:1 AAA). This is the only filled button in the system."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Secondary navigation action — 'Login'",
+      "description": "Transparent background, text #d7d9dd (Cloud), 4px radius, 10px 14px padding, Geist 400. No border, no background fill. On hover, text shifts to #e5e7eb (Bone)."
+    },
+    {
+      "name": "Nav Link Item",
+      "role": "Top navigation items — 'How it works', 'Product', 'Pricing'",
+      "description": "Transparent background, text #d7d9dd (Cloud), 14px Geist 400, 4px radius. No background fill, no border. On hover or active state, text becomes #e5e7eb (Bone)."
+    },
+    {
+      "name": "GitHub Star Badge",
+      "role": "Repository link with star count in nav",
+      "description": "Transparent background, text #d7d9dd, 4px radius. Includes a GitHub icon and star count. The '14.3k' count is displayed as inline Geist 400 text."
+    },
+    {
+      "name": "Feature Pill",
+      "role": "Category tag pills at page bottom — 'AI agents', 'Media processing', 'Run Python'",
+      "description": "Transparent or subtly tinted background, text #e5e7eb, 9999px radius (full pill), 4px 10px padding, 14px Geist 400. Each pill has a small chromatic icon (violet, pink, green, etc.) to the left of the label. The pill shape and colorful iconography is the signature of this component."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Primary page headline",
+      "description": "Satoshi 500 at 60px, line-height 1.00, letter-spacing 3px (0.05em), color #e5e7eb. Centered, single-line where possible. The 3px tracking at this size is distinctive — it gives the headline an editorial, almost billboard quality."
+    },
+    {
+      "name": "Hero Subtext",
+      "role": "Supporting paragraph below hero headline",
+      "description": "Geist 400 at 18px, line-height 1.50, color #878c99 (Fog). Max-width ~600px, centered. Sets the muted, readable tone for descriptive copy."
+    },
+    {
+      "name": "Code Editor Pane",
+      "role": "Embedded TypeScript code block in the hero/feature sections",
+      "description": "Background #121317 (Ink Well), 4px radius, optional 1px border #272a2e. Contains Geist Mono at 14px with syntax highlighting: keywords in #9c9af2 (Syntax Violet), strings in #fa3abf (Syntax Pink), types/booleans in #afec73 (Loop Green), variables in #d9f07c (Key Lime), property names in #e888f8 (Tag Magenta), comments and default text in #878c99 (Fog). The code surface is a full UI element, not decoration."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Customer quote in 'Loved by developers' section",
+      "description": "Background #1c1e21 (Canvas), 1px border #272a2, 4px radius, 24-32px padding. Body text in #e5e7eb (Bone) at 16px Geist 400. Customer name in #d7d9dd (Cloud), company and 'Read story' link in #878c99 (Fog). Avatar (small circular image) and optional company logo on the right. No shadow — the hairline border is the only delimiter."
+    },
+    {
+      "name": "Logo Strip Item",
+      "role": "Company logos in social proof band",
+      "description": "Display company logos in #b5b8c0 (Ash) or grayscale, rendered at uniform height. Section background is canvas, logos are centered in a single row with consistent horizontal spacing (32-48px gap). No card or border treatment — the logos float on the canvas."
+    },
+    {
+      "name": "Video Embed Trigger",
+      "role": "'Play' / 'Replay' / 'Full screen' controls in embedded media",
+      "description": "Ghost button style — transparent background, text #d7d9dd, 14px Geist 400. Play icon is a small triangle in #e5e7eb. Controls align right with 12px gap between items."
+    },
+    {
+      "name": "Section Divider",
+      "role": "Visual separator between page sections",
+      "description": "1px horizontal line in #272a2 (Steel Border), full width or max-width contained. Sometimes replaced by 80-120px vertical gap alone (seamless flow). No decorative shapes."
+    },
+    {
+      "name": "Brand Logo Lockup",
+      "role": "Trigger.dev wordmark in header",
+      "description": "Geist 600 at ~20px. 'Trigger' in #e5e7eb (Bone), preceded by a lime-green triangle/play icon in #a8ff53 (Signal Lime). The colored mark is the brand's most recognizable element."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and heading — Satoshi carries every headline from 16px sub-labels up to the 60px hero. Weight 500 is the default for most headings; 600 appears on the hero. Letter-spacing pushes open at 0.05em on the largest sizes, giving headlines a spaced-out editorial feel that contrasts Geist's tightness. This is the brand's voice at scale.",
+      "sizes": "16, 18, 20, 24, 30, 36, 48, 60px",
+      "family": "Satoshi",
+      "weight": "500, 600",
+      "lineHeight": "1.00, 1.11, 1.20, 1.33, 1.38, 1.40, 1.50, 1.56",
+      "substitute": "General Sans, Switzer, or Inter (with tracking adjustments)",
+      "letterSpacing": "0.025em at 20-30px, 0.05em at 36-60px"
+    },
+    {
+      "role": "Body, navigation, buttons, links, UI labels — Geist is the workhorse that keeps the interface legible. Weight 400 for body, 500 for buttons and active nav, 300 for the lightest body or large paragraph copy. Normal letter-spacing. Its grotesque neutrality is intentional — it lets Satoshi speak at display scale and code syntax speak in the editor.",
+      "sizes": "14, 16, 18, 20px",
+      "family": "Geist",
+      "weight": "300, 400, 500",
+      "lineHeight": "1.40, 1.43, 1.50, 1.56, 1.71",
+      "substitute": "Inter, Geist (open source), or Söhne"
+    },
+    {
+      "role": "Code blocks, inline code, terminal output, log lines — Geist Mono is locked at 14px, the code face that appears in the embedded TypeScript examples and any monospaced UI text. Its presence signals 'this is real, runnable code' and bridges the marketing site to the developer product.",
+      "sizes": "14px",
+      "family": "Geist Mono",
+      "weight": "300, 400",
+      "lineHeight": "1.43",
+      "substitute": "JetBrains Mono, Berkeley Mono, or IBM Plex Mono"
+    }
+  ],
+  "description": "Trigger.dev's visual system is a dark-mode developer terminal transplanted into a marketing surface: matte charcoal canvas, Geist's quiet technical voice for body and UI, and Satoshi's geometric precision stretched to display scale with generous tracking. A single electric lime (#a8ff53) carries the brand's signal — it lives in the logo glyph, the primary nav button, and feature pills, giving the whole interface a charging-light quality against the dark. The rest of the chromatic vocabulary is a syntax-highlighting palette (pinks, violets, soft greens) borrowed from code editors, applied to feature icons and inline code so the site visually rhymes with the TypeScript it asks you to write. Surfaces stay flat and low-contrast; depth comes from 1px hairlines and the gradient stack, not from drop shadows.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #e5e7eb (primary), #d7d9dd (secondary), #878c99 (tertiary), #b5b8c0 (muted)\n- background: #1c1e21 (canvas), #121317 (code blocks)\n- border: #272a2e (subtle), #3b3e45 (emphasis)\n- accent: #a8ff53 (Signal Lime — logo mark, feature icons, active states)\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n1. *Hero headline*: 60px Satoshi weight 500, #e5e7eb, letter-spacing 3px, line-height 1.00, centered. Below it, 18px Geist weight 400, #878c99, max-width 600px, centered.\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n3. *Code block*: #121317 background, 4px radius, 1px #272a2e border. Inside, Geist Mono 14px with: keywords in #9c9af2, strings in #fa3abf, types in #afec73, variable names in #d9f07c, property keys in #e888f8, default text in #878c99.\n4. *Testimonial card*: #1c1e21 background, 1px #272a2e border, 4px radius, 28px padding. 16px Geist 400 quote in #e5e7eb. Customer name in #d7d9dd, 'Read story →' link in #878c99 with an arrow in #fa3abf.\n5. *Feature pill*: transparent background, 9999px radius, 4px 10px padding, 14px Geist 400 in #e5e7eb. Small 12px icon to the left in a chromatic accent (violet #9c9af2 for 'AI agents', pink #fa3abf for 'Media processing', green #a8ff53 for 'Run Python')."
+    }
+  ],
+  "elevationPhilosophy": "This system intentionally avoids drop shadows. Depth is communicated exclusively through surface contrast (canvas vs ink well), hairline borders at 1px, and occasional inner-glow treatments on accent elements. The flatness keeps the interface reading as a developer's tool surface, not a consumer product — depth would feel theatrical against the terminal aesthetic."
+}

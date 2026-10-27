@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-mood/j6/1.0.0",
+  "platform": "joomla",
+  "template": "ja_mood",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-mood",
+    "id": "quickstart/ja-mood/j6",
+    "version": "1.0.0",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.0"
+    },
+    "template": "ja_mood",
+    "parts": {
+      "installer": {
+        "file": "ja-mood-j6-quickstart.zip",
+        "bytes": 71427479,
+        "sha256": "966b5e1163545ca63fa3ebc7954e0ba9c4800fdf13ab98b3e0284548da74016a"
+      }
+    },
+    "release": "quickstart/ja-mood/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

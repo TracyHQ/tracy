@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-void-black: #000000;
+  --color-ghost-white: #ffffff;
+  --color-ash-border: #4d4d4d;
+  --color-smoke: #808080;
+  --color-fog: #999999;
+  --color-pale-mist: #c6c6c6;
+  --color-dusk-violet: #343755;
+
+  /* Typography — Font Families */
+  --font-nbarchitekt: 'nbarchitekt', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

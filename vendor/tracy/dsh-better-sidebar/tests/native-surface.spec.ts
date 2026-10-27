@@ -1,0 +1,941 @@
+// @vitest-environment jsdom
+/**
+ * Unit tests for the native-surface adapter: the per-tab record registry
+ * (src/client/native/tab-adapter.tsx) and the service's routing into it
+ * (src/client/service.ts `setSurface`).
+ */
+import { describe, expect, it, vi } from 'vitest'
+import { createElement } from 'react'
+import { createRoot, type Root } from 'react-dom/client'
+import { act } from 'react-dom/test-utils'
+import { createNativeTabRecords, NativeTabBody, NativeTabTitle } from '../src/client/native/tab-adapter.tsx'
+import { registerNativeSurface } from '../src/client/native/index.ts'
+import { createBetterSidebarService, type SidebarSurface } from '../src/client/service.ts'
+import { createSidebarStore, toggleExpanded, type SidebarTab } from '../src/client/state.ts'
+import { tracyBrowserTab } from '../src/client/builtins/tracy-browser.tsx'
+
+const scope = { sessionId: 's1', cwd: '/work' }
+
+describe('createNativeTabRecords', () => {
+  it('mints a synthetic tab from the native record + params', () => {
+    const records = createNativeTabRecords()
+    const view = records.ensure({
+      id: 'tab-1', kind: 'browser', title: 'Browser', params: { url: 'https://a.test', meta: { k: 1 } }, scope,
+    })
+    expect(view.tab).toMatchObject({ id: 'tab-1', type: 'browser', title: 'Browser', meta: { k: 1 } })
+    expect(view.scope).toBe(scope)
+    expect(view.expanded).toEqual([])
+  })
+
+  it('calls the descriptor factory once for a record that arrives without seed fields', () => {
+    const records = createNativeTabRecords()
+    const mint = vi.fn(() => ({ title: 'Side chat', meta: { autoCreate: true } }))
+    const view = records.ensure({ id: 'tab-2', kind: 'sidechat', title: 'Side Chat', params: undefined, scope, mint })
+    expect(mint).toHaveBeenCalledTimes(1)
+    expect(view.tab).toMatchObject({ title: 'Side chat', meta: { autoCreate: true } })
+    // A second render of the same record does not re-mint.
+    records.ensure({ id: 'tab-2', kind: 'sidechat', title: 'Side Chat', params: undefined, scope, mint })
+    expect(mint).toHaveBeenCalledTimes(1)
+  })
+
+  it('refreshes the seed fields on navigation but keeps the record identity', () => {
+    const records = createNativeTabRecords()
+    records.ensure({ id: 'tab-3', kind: 'editor', title: 'a.ts', params: { path: '/work/a.ts' }, scope })
+    records.update('tab-3', { title: 'renamed.ts' })
+    const view = records.ensure({ id: 'tab-3', kind: 'editor', title: 'b.ts', params: { path: '/work/b.ts' }, scope })
+    expect(view.tab).toMatchObject({ id: 'tab-3', path: '/work/b.ts', title: 'renamed.ts' })
+  })
+
+  it('keeps an address a plugin wrote over the url seed when the body re-renders (TRACY FORK, TCH E7.2c)', () => {
+    const records = createNativeTabRecords()
+    const params = { url: 'https://old.site.test/about/' }
+    records.ensure({ id: 'tab-url', kind: 'tracy:browser', title: 'Browser', params, scope })
+    // A rename: tracy-tab-link moves the tab to the address the site answers at now.
+    records.update('tab-url', { meta: { url: 'https://new.site.test/about/' }, title: 'new.site.test' })
+    // The record change re-renders the body with the SAME navigation seed: not a navigation.
+    const view = records.ensure({ id: 'tab-url', kind: 'tracy:browser', title: 'Browser', params: { ...params }, scope })
+    expect(view.tab.meta).toEqual({ url: 'https://new.site.test/about/' })
+    // A real navigation to another address still lands.
+    const moved = records.ensure({ id: 'tab-url', kind: 'tracy:browser', title: 'Browser', params: { url: 'https://other.test/' }, scope })
+    expect(moved.tab.meta).toEqual({ url: 'https://other.test/' })
+  })
+
+  it('tracks expansion in the SESSION state and bumps the record version', () => {
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const records = createNativeTabRecords()
+    records.attachStore(store)
+    records.ensure({ id: 'tab-4', kind: 'editor', title: 'Files', params: undefined, scope })
+    const before = records.versionOf('tab-4')
+    records.toggleExpanded('tab-4', '/work/src')
+    expect(records.get('tab-4')?.expanded).toEqual(['/work/src'])
+    expect(store.getSessionStates().get('s1')?.expanded).toEqual(['/work/src'])
+    expect(records.versionOf('tab-4')).toBeGreaterThan(before)
+    records.toggleExpanded('tab-4', '/work/src')
+    expect(records.get('tab-4')?.expanded).toEqual([])
+  })
+
+  it('keeps the expansion after a tab record is DROPPED and rebuilt (the reported bug)', () => {
+    // The user's flow: open a file preview (the files tab unmounts and its
+    // native record is dropped), close it, return to the files page — a NEW
+    // record for the SAME session must show the set the user had.
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const records = createNativeTabRecords()
+    records.attachStore(store)
+    records.ensure({ id: 'files-1', kind: 'files', title: 'Files', params: undefined, scope })
+    records.toggleExpanded('files-1', '/work/src')
+    records.toggleExpanded('files-1', '/work/src/components')
+    expect(records.get('files-1')?.expanded).toEqual(['/work/src', '/work/src/components'])
+
+    records.drop('files-1')
+    const rebuilt = records.ensure({ id: 'files-2', kind: 'files', title: 'Files', params: undefined, scope })
+    expect(rebuilt.expanded).toEqual(['/work/src', '/work/src/components'])
+  })
+
+  it('shares one expansion set between two native tabs of the same session', () => {
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const records = createNativeTabRecords()
+    records.attachStore(store)
+    records.ensure({ id: 'files-a', kind: 'files', title: 'Files', params: undefined, scope })
+    records.ensure({ id: 'files-b', kind: 'files', title: 'Files', params: undefined, scope })
+
+    records.toggleExpanded('files-a', '/work/src')
+    expect(records.get('files-b')?.expanded).toEqual(['/work/src'])
+
+    // The WORKBENCH's own toggle (the per-session reducer) is the same state.
+    store.reduce(state => toggleExpanded(state, '/work/lib'))
+    expect(records.get('files-a')?.expanded).toEqual(['/work/src', '/work/lib'])
+    expect(records.get('files-b')?.expanded).toEqual(['/work/src', '/work/lib'])
+
+    // …and a toggle from the native side is visible to the workbench reducer's
+    // state (one authority, two surfaces).
+    records.toggleExpanded('files-b', '/work/src')
+    expect(store.getSessionStates().get('s1')?.expanded).toEqual(['/work/lib'])
+  })
+
+  it('keeps two sessions apart (a native tab in each)', () => {
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const records = createNativeTabRecords()
+    records.attachStore(store)
+    records.ensure({ id: 's1-files', kind: 'files', title: 'Files', params: undefined, scope })
+    records.ensure({ id: 's2-files', kind: 'files', title: 'Files', params: undefined, scope: { sessionId: 's2', cwd: '/other' } })
+
+    // The ACTIVE session goes through `reduce`; the background one through
+    // `reduceFor` — both must land in their own session only.
+    records.toggleExpanded('s1-files', '/work/src')
+    records.toggleExpanded('s2-files', '/other/lib')
+    expect(records.get('s1-files')?.expanded).toEqual(['/work/src'])
+    expect(records.get('s2-files')?.expanded).toEqual(['/other/lib'])
+    expect(store.getSessionStates().get('s1')?.expanded).toEqual(['/work/src'])
+    expect(store.getSessionStates().get('s2')?.expanded).toEqual(['/other/lib'])
+  })
+
+  it('reflects a store change made while no view is subscribed yet', () => {
+    const store = createSidebarStore()
+    store.setSession('s1')
+    store.reduce(state => toggleExpanded(state, '/work/src'))
+    const records = createNativeTabRecords()
+    records.attachStore(store)
+    const view = records.ensure({ id: 'late', kind: 'files', title: 'Files', params: undefined, scope })
+    expect(view.expanded).toEqual(['/work/src'])
+  })
+
+  it('notifies subscribers and forgets a dropped record', () => {
+    const records = createNativeTabRecords()
+    records.ensure({ id: 'tab-5', kind: 'terminal', title: 'Terminal', params: undefined, scope })
+    const listener = vi.fn()
+    const off = records.subscribe(listener)
+    records.update('tab-5', { title: 'zsh' })
+    expect(listener).toHaveBeenCalledTimes(1)
+    expect(records.get('tab-5')?.tab.title).toBe('zsh')
+    records.drop('tab-5')
+    expect(records.has('tab-5')).toBe(false)
+    off()
+    records.ensure({ id: 'tab-6', kind: 'terminal', title: 'Terminal', params: undefined, scope })
+    records.update('tab-6', { title: 'x' })
+    expect(listener).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('service routing into the native surface', () => {
+  const mount = (): { surface: SidebarSurface; calls: unknown[]; service: ReturnType<typeof createBetterSidebarService> } => {
+    const calls: unknown[] = []
+    const surface: SidebarSurface = {
+      openTab: input => { calls.push({ op: 'openTab', ...input }) },
+      openResource: input => { calls.push({ op: 'openResource', ...input }) },
+      fileAddress: (sessionId, cwd, path) => `addr://${sessionId}${cwd === undefined ? '' : cwd}${path}`,
+      close: (sessionId, tabId) => ({ type: 'terminal', title: `closed ${tabId} in ${sessionId}` }),
+      update: tabId => tabId === 'native-1',
+      activate: tabId => tabId === 'native-1',
+      has: tabId => tabId === 'native-1',
+    }
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const service = createBetterSidebarService(store)
+    service.setSurface(surface)
+    service.registerTab({
+      id: 'my-plugin:term',
+      title: 'Terminal',
+      component: () => null,
+      createTab: state => ({
+        // A `terminal`-shaped tab id (the plugin no longer ships that type,
+        // but the service treats the descriptor id as an open string) keeps
+        // this fixture's native routing identical.
+        tab: { id: `terminal:${state.nextBrowser}`, type: 'terminal', title: 'Terminal', meta: { n: state.nextBrowser } },
+        patch: { nextBrowser: state.nextBrowser + 1 },
+      }),
+    })
+    service.registerTab({ id: 'git', title: 'Changes', component: () => null })
+    service.registerTab({ id: 'editor', title: 'Files', component: () => null, icon: () => null })
+    return { surface, calls, service }
+  }
+
+  it('opens a page type natively, carrying the descriptor factory seed', () => {
+    const { service, calls } = mount()
+    service.openTab({ type: 'my-plugin:term' }, scope)
+    expect(calls).toEqual([{
+      op: 'openTab',
+      sessionId: 's1',
+      kind: 'my-plugin:term',
+      params: { title: 'Terminal', meta: { n: 1 } },
+      revealIfOpened: false,
+    }])
+  })
+
+  it('opens a file path as a resource address', () => {
+    const { service, calls } = mount()
+    service.openTab({ type: 'editor', path: '/work/a.ts', title: 'a.ts' }, scope)
+    expect(calls).toEqual([{ op: 'openResource', sessionId: 's1', address: 'addr://s1/work/work/a.ts', revealIfOpened: true }])
+  })
+
+  it('maps a path-less editor open to the files page kind', () => {
+    const { service, calls } = mount()
+    service.openTab({ type: 'editor' }, scope)
+    expect(calls).toEqual([{ op: 'openTab', sessionId: 's1', kind: 'files', params: {}, revealIfOpened: true }])
+  })
+
+  it('keeps a component type path seed on the page open (no resource reroute)', () => {
+    // Regression #632: a path seed on a component type was rerouted into
+    // openResource, so the editor (the dsh-resource://file/** claimant)
+    // received the open and the registered component never mounted.
+    const { service, calls } = mount()
+    service.registerTab({ id: 'my-plugin:doc', title: 'Doc', component: () => null })
+    service.openTab({ type: 'my-plugin:doc', path: '/work/spec.md', title: 'Spec' }, scope)
+    expect(calls).toEqual([{
+      op: 'openTab',
+      sessionId: 's1',
+      kind: 'my-plugin:doc',
+      params: { title: 'Spec', path: '/work/spec.md' },
+      revealIfOpened: true,
+    }])
+  })
+
+  it('carries the path seed and meta on a multi-instance component open', () => {
+    const { service, calls } = mount()
+    service.registerTab({
+      id: 'my-plugin:console',
+      title: 'Console',
+      createTab: (state) => ({
+        tab: { id: `console:${state.nextBrowser}`, type: 'my-plugin:console', title: 'Console' },
+        patch: { nextBrowser: state.nextBrowser + 1 },
+      }),
+      component: () => null,
+    })
+    service.openTab({ type: 'my-plugin:console', path: '/work/x.md', meta: { k: 1 } }, scope)
+    expect(calls).toEqual([{
+      op: 'openTab',
+      sessionId: 's1',
+      kind: 'my-plugin:console',
+      params: { title: 'Console', path: '/work/x.md', meta: { k: 1 } },
+      // Multi-instance kinds mint a fresh tab per open: no forced reveal.
+      revealIfOpened: false,
+    }])
+  })
+
+  it('reports a component path seed to onOpen on the synthetic tab', () => {
+    const { service } = mount()
+    const seen: Array<SidebarTab | undefined> = []
+    service.registerTab({ id: 'my-plugin:doc', title: 'Doc', onOpen: (tab) => { seen.push(tab) }, component: () => null })
+    service.openTab({ type: 'my-plugin:doc', path: '/work/spec.md' }, scope)
+    expect(seen).toHaveLength(1)
+    expect(seen[0]).toMatchObject({ type: 'my-plugin:doc', path: '/work/spec.md' })
+  })
+
+  it('keeps a bottom-targeted open in the plugin layout', () => {
+    const { service, calls } = mount()
+    service.openTab({ type: 'terminal', target: 'bottom' }, scope)
+    expect(calls).toEqual([])
+  })
+
+  it('routes record operations to the native surface when the id is native', () => {
+    const { service } = mount()
+    expect(() => service.updateTab('native-1', { title: 'x' })).not.toThrow()
+    expect(() => service.activateTab('native-1')).not.toThrow()
+    expect(() => service.closeTab('native-1', scope)).not.toThrow()
+    // A non-native id keeps the plugin's own layout path (a strict no-op here).
+    expect(() => service.updateTab('other', { title: 'x' })).not.toThrow()
+    expect(() => service.closeTab('other', scope)).not.toThrow()
+  })
+
+  it('refuses a disabled type before touching the surface', () => {
+    const { service, calls } = mount()
+    service.setSurface(undefined)
+    const store = createSidebarStore()
+    void store
+    service.setSurface({
+      openTab: input => { calls.push({ op: 'openTab', ...input }) },
+      openResource: () => { calls.push({ op: 'openResource' }) },
+      fileAddress: () => 'addr',
+      close: () => undefined,
+      update: () => false,
+      activate: () => false,
+      has: () => false,
+    })
+    service.openTab({ type: 'missing' }, scope)
+    expect(calls).toEqual([])
+  })
+})
+
+describe('registerNativeSurface lifecycle (service-driven registration)', () => {
+  it('registers the native tab types when the tab-type registry ARRIVES after the slot declaration', () => {
+    // Regression: the native seat declares `sidebar.right.pane.tab` before it
+    // provides `sidebarRightTabs`, so a registration driven by the slot
+    // declaration reads the service as missing and registers nothing —
+    // observed on a real DSH profile (the guide page stayed empty while the
+    // same build worked in the scratch mount lane, where activation order
+    // happened to differ). The registration must follow the SERVICE.
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const service = createBetterSidebarService(store)
+    service.registerTab({ id: 'terminal', title: 'Terminal', component: () => null, description: () => 'Runs a shell' })
+    service.registerTab({ id: 'editor', title: 'Files', component: () => null, icon: () => null, description: () => 'Browse the tree' })
+    service.registerTab({ id: 'browser', title: 'Browser', component: () => null })
+    const records = createNativeTabRecords()
+
+    const registered: Array<{ id: string; kind: string; title: (address: string) => string; guide: unknown }> = []
+    const slotKeys: string[] = []
+    // The registry is ABSENT while the slot callback fires and appears later
+    // (that ordering is the regression): a holder keeps the timing honest
+    // without a reassigned binding.
+    const registry: { current: { register: (definition: { id: string; kind: string; title: (address: string) => string; guide?: unknown }) => () => void } | undefined } = { current: undefined }
+    let runInjected: (() => void) | undefined
+
+    const ctx = {
+      inject: (deps: readonly string[], callback: (injected: { get: (name: string) => unknown }) => void) => {
+        expect(deps).toEqual(['sidebarRightTabs'])
+        runInjected = () => { callback({ get: () => registry.current }) }
+        return { dispose: () => { runInjected = undefined } }
+      },
+      get: () => registry.current,
+      slots: {
+        // The slot is already declared when this plugin activates: the
+        // callback runs immediately, with no service in sight.
+        inject: (_key: string, callback: () => () => void) => callback(),
+        register: (options: { name: string; key?: string }) => {
+          slotKeys.push(options.key ?? options.name)
+          return () => {}
+        },
+      },
+    }
+    const dispose = registerNativeSurface({ ctx: ctx as never, store, service, records })
+
+    // Nothing may register while the registry is absent…
+    expect(registered).toHaveLength(0)
+    expect(slotKeys).toHaveLength(0)
+
+    // …and everything registers once it appears.
+    registry.current = {
+      register: (definition) => {
+        registered.push({ id: definition.id, kind: definition.kind, title: definition.title, guide: definition.guide })
+        return () => {}
+      },
+    }
+    runInjected?.()
+    expect(registered.map(entry => entry.kind).sort()).toEqual(['browser', 'editor', 'files', 'terminal'])
+    expect(registered.map(entry => entry.id)).toContain('dsh-better-sidebar:files')
+    expect(slotKeys).toContain('dsh-better-sidebar:terminal')
+    expect(slotKeys).toContain('dsh-better-sidebar:files')
+
+    // A resource tab is titled by the FILE it shows (the descriptor's own
+    // title would make every open file look identical in the strip), while a
+    // page tab keeps the descriptor's title.
+    const editorType = registered.find(entry => entry.kind === 'editor')
+    expect(editorType?.title('dsh-resource://file/session/s1/src/main.ts')).toBe('main.ts')
+    expect(editorType?.title('dsh-resource://file/absolute/work/pkg/a/b.txt')).toBe('b.txt')
+    expect(editorType?.title('sidebar://editor')).toBe('Files')
+    // The new-tab/guide list must offer ONE "Files" row: the `files` kind
+    // takeover draws the same explorer the editor page would, so the editor
+    // type contributes no guide entry of its own.
+    expect(editorType?.guide).toBeUndefined()
+    const filesType = registered.find(entry => entry.kind === 'files')
+    expect(filesType?.guide).toBeDefined()
+    // The takeover carries the editor's glyph, so the "Files" guide row is
+    // not the only one with a blank icon slot.
+    const filesGuide = filesType?.guide as Array<{ icon?: unknown; title: () => string; description?: () => string }> | undefined
+    expect(filesGuide?.[0]?.icon).toBeDefined()
+    // DSH 0.1.5-rc.1+ restored the guide `description` as an optional
+    // `() => string` (rendered only while the guide lists at most 4
+    // entries). The takeover IS the editor's page, so its guide line is the
+    // EDITOR descriptor's description (the takeover reuses it, exactly as it
+    // reuses the glyph), evaluated fresh per call so a thunk follows the
+    // active locale.
+    expect(filesGuide?.[0]?.description?.()).toBe('Browse the tree')
+    const terminalGuide = registered.find(entry => entry.kind === 'terminal')?.guide as
+      Array<{ description?: () => string }> | undefined
+    expect(terminalGuide?.[0]?.description?.()).toBe('Runs a shell')
+    // A descriptor that declares NO description must reach the host with no
+    // `description` field at all — the host has no fallback of its own, so
+    // an empty thunk would render a blank second line instead of a clean
+    // title-only capsule.
+    const browserGuide = registered.find(entry => entry.kind === 'browser')?.guide as
+      Array<{ title: () => string; description?: unknown }> | undefined
+    expect(browserGuide?.[0]?.description).toBeUndefined()
+    expect('description' in (browserGuide?.[0] ?? {})).toBe(false)
+    expect(browserGuide?.[0]?.title?.()).toBe('Browser')
+    // DSH 0.1.6-alpha.2 made `SidebarRightGuideEntry.id` REQUIRED and unique
+    // per provider: a registration whose guide entries carry no id collides
+    // on `undefined` and `SidebarRightTabRegistry.register` throws
+    // `duplicate guide entry id`, which cordis swallows — leaving the whole
+    // native surface silently empty (no guide row, no plugin tab types).
+    const guideIds: string[] = []
+    for (const entry of registered) {
+      const guide = entry.guide as Array<{ id?: unknown }> | undefined
+      for (const item of guide ?? []) {
+        expect(typeof item.id, `guide id of ${entry.kind}`).toBe('string')
+        guideIds.push(item.id as string)
+      }
+    }
+    expect(guideIds.length).toBeGreaterThan(0)
+    expect(new Set(guideIds).size).toBe(guideIds.length)
+
+    dispose()
+  })
+
+  it('re-registers NOTHING on a store change (a folder toggle must not replace the explorer body)', () => {
+    // Regression (reported as "expanding a folder makes the whole tree
+    // refresh"): the surface kept its registrations in step by diffing them on
+    // every service AND store notification, and the built-in `files` takeover
+    // is keyed by its KIND — never by a descriptor id — so the "drop what is
+    // no longer wanted" loop read it as a stray registration and disposed it on
+    // EVERY state write. Disposing and re-creating a slot registration replaces
+    // the host's slot entry, which unmounts the tab body it draws: toggling a
+    // folder tore down the explorer (level cache, scroll position and the
+    // directory watcher all live in that component) and remounted it, so the
+    // tree blanked, re-requested [root, ...expanded] and rebuilt every row.
+    // The store notifies on each toggle, so this churned on every click.
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const service = createBetterSidebarService(store)
+    service.registerTab({ id: 'editor', title: () => 'Files', component: () => null })
+    service.registerTab({ id: 'git', title: () => 'Changes', component: () => null })
+    const records = createNativeTabRecords()
+
+    /** Every slot registration, in order (the unregister keys land in `disposed`). */
+    const registered: string[] = []
+    const disposed: string[] = []
+    const registry = {
+      register: (definition: { id: string; kind: string; title: (address: string) => string }) =>
+        () => { disposed.push(definition.id) },
+    }
+    const ctx = {
+      inject: (_deps: readonly string[], callback: (injected: { get: (name: string) => unknown }) => void) => {
+        callback({ get: () => registry })
+        return { dispose: () => { /* the surface owns the rest */ } }
+      },
+      get: () => registry,
+      slots: {
+        inject: (_key: string, callback: () => () => void) => callback(),
+        register: (options: { name: string; key?: string }) => {
+          const key = options.key ?? options.name
+          registered.push(key)
+          return () => { disposed.push(key) }
+        },
+      },
+    }
+    const dispose = registerNativeSurface({ ctx: ctx as never, store, service, records })
+    const mounted = [...registered]
+    /** The takeover's slot registrations: its body + its chip title, one pair. */
+    const filesSlots = (): number => registered.filter(key => key === 'dsh-better-sidebar:files').length
+    expect(filesSlots(), 'the takeover registers its body + chip slots').toBe(2)
+    expect(disposed).toEqual([])
+
+    // A folder toggle: only state, no registry and no settings change. The
+    // native surface must not touch a single registration.
+    store.reduce(state => toggleExpanded(state, '/work/big'))
+    store.reduce(state => toggleExpanded(state, '/work/big/child'))
+    // Any other state write behaves the same (the workbench height, a tab
+    // switch, the selection — all of them notify the same subscribers).
+    store.update(state => { state.bottomOpen = !state.bottomOpen })
+    expect({ registered, disposed }).toEqual({ registered: mounted, disposed: [] })
+
+    // The takeover still follows the editor type's own switch: disabling the
+    // editor releases it, re-enabling brings it back exactly once.
+    store.setPrefs({ ...store.getPrefs(), tabsEnabled: { editor: false } })
+    expect(disposed).toContain('dsh-better-sidebar:files')
+    expect(registered).toEqual(mounted)
+    store.setPrefs({ ...store.getPrefs(), tabsEnabled: { editor: true } })
+    expect(filesSlots(), 'the re-enabled takeover registers again — exactly one pair').toBe(4)
+    dispose()
+  })
+
+  it('claims exactly the extensions DSH has no preview for (the nine restored formats included)', () => {
+    // DSH 0.1.7 handed every read-only preview to `ui-sidebar-documentpreview`,
+    // and `canOpen` returning false is what gives the address away. The host's
+    // renderer tables cover xlsx/xls/csv/tsv, pdf, the eight common image
+    // formats, doc/docx/ppt/pptx and the flat-ODS text fallback — nine
+    // extensions that were refused here as well have NO host renderer at all,
+    // and refusing them swapped the plugin's binary-download pane for the
+    // host's "Preview is not available for this file type yet" dead end. This
+    // pins both directions so the refusal list can never drift wider than the
+    // host again; the host files behind the boundary are named in
+    // src/client/native/index.ts.
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const service = createBetterSidebarService(store)
+    service.registerTab({ id: 'editor', title: 'Files', component: () => null })
+    const records = createNativeTabRecords()
+    let canOpen: ((address: string) => boolean) | undefined
+    const ctx = {
+      inject: (_deps: readonly string[], callback: (injected: { get: () => unknown }) => void) => {
+        callback({
+          get: () => ({
+            register: (definition: { kind: string; canOpen?: (address: string) => boolean }) => {
+              if (definition.kind === 'editor') canOpen = definition.canOpen
+              return () => {}
+            },
+          }),
+        })
+        return { dispose: () => {} }
+      },
+      get: () => undefined,
+      slots: { inject: (_key: string, callback: () => () => void) => callback(), register: () => () => {} },
+    }
+    registerNativeSurface({ ctx: ctx as never, store, service, records })
+    expect(canOpen, 'the editor type registered no canOpen').toBeTypeOf('function')
+    const open = canOpen as (address: string) => boolean
+
+    /** One session-scoped file address, the shape the chat hands the sidebar. */
+    const file = (name: string) => `dsh-resource://file/session/s1/${name}`
+
+    // Formats the host renders: DSH's own preview must own them.
+    for (const name of [
+      'book.xlsx', 'legacy.xls', 'data.csv', 'data.tsv', 'flat.fods',
+      'paper.pdf', 'photo.png', 'photo.jpg', 'anim.gif', 'photo.webp', 'art.svg',
+      'tile.bmp', 'favicon.ico', 'report.docx', 'report.doc', 'deck.pptx', 'deck.ppt',
+    ]) {
+      expect(open(file(name)), name).toBe(false)
+    }
+
+    // Formats the host has NO renderer for: the plugin claims them, so the
+    // `code` catch-all reaches the binary-download pane instead of a dead end.
+    for (const name of [
+      'macro.xlsb', 'sheet.xlt', 'template.xltx', 'macro.xltm',
+      'flat.ods', 'flat.ots', 'notes.dot', 'notes.dotx', 'next.avif',
+    ]) {
+      expect(open(file(name)), name).toBe(true)
+    }
+
+    // The three viewers the plugin keeps on purpose, and a non-file address.
+    for (const name of ['README.md', 'page.html', 'main.ts']) {
+      expect(open(file(name)), name).toBe(true)
+    }
+    expect(open('sidebar://editor')).toBe(false)
+  })
+})
+
+/**
+ * Tracy (TCH e2e v3 X08, 30/09/2026): the site preview keeps its body mounted while another tab is
+ * selected. DSH's dock renders a hidden tab's body only when its type says `keepMounted`; without
+ * it, selecting any other tab unmounted the preview, and coming back loaded the page again from
+ * the top (scroll 1659 → 0, the Refresh state lost).
+ */
+describe('the site preview stays mounted behind another tab (X08)', () => {
+  it('registers tracy:browser with keepMounted, and only that type', () => {
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const service = createBetterSidebarService(store)
+    service.registerTab(tracyBrowserTab())
+    service.registerTab({ id: 'editor', title: 'Files', component: () => null })
+    const records = createNativeTabRecords()
+    const kept: Record<string, boolean | undefined> = {}
+    const ctx = {
+      inject: (_deps: readonly string[], callback: (injected: { get: () => unknown }) => void) => {
+        callback({
+          get: () => ({
+            register: (definition: { kind: string; keepMounted?: boolean }) => {
+              kept[definition.kind] = definition.keepMounted
+              return () => {}
+            },
+          }),
+        })
+        return { dispose: () => {} }
+      },
+      get: () => undefined,
+      slots: { inject: (_key: string, callback: () => () => void) => callback(), register: () => () => {} },
+    }
+    registerNativeSurface({ ctx: ctx as never, store, service, records })
+    expect(kept['tracy:browser']).toBe(true)
+    expect(kept.editor).toBeUndefined()
+    expect(kept.files).toBeUndefined()
+  })
+})
+
+/**
+ * Tracy (Brian 03/10/2026): the site preview is the site workspace's own page, so its last tab in a
+ * column cannot be closed there (dsh `keepLast`, 0.1.7-rc.2-tracy.16). The creation workspace
+ * (`/new/`) has no site to show and keeps nothing; a type that declares nothing passes nothing.
+ */
+describe('the site preview keeps its last tab in a site workspace', () => {
+  function registered(): Record<string, (() => boolean) | undefined> {
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const service = createBetterSidebarService(store)
+    service.registerTab(tracyBrowserTab())
+    service.registerTab({ id: 'editor', title: 'Files', component: () => null })
+    const kept: Record<string, (() => boolean) | undefined> = {}
+    const ctx = {
+      inject: (_deps: readonly string[], callback: (injected: { get: () => unknown }) => void) => {
+        callback({
+          get: () => ({
+            register: (definition: { kind: string; keepLast?: () => boolean }) => {
+              kept[definition.kind] = definition.keepLast
+              return () => {}
+            },
+          }),
+        })
+        return { dispose: () => {} }
+      },
+      get: () => undefined,
+      slots: { inject: (_key: string, callback: () => () => void) => callback(), register: () => () => {} },
+    }
+    registerNativeSurface({ ctx: ctx as never, store, service, records: createNativeTabRecords() })
+    return kept
+  }
+  function withBase(href: string, run: () => void): void {
+    const base = document.createElement('base')
+    base.href = new URL(href, location.origin).href
+    document.head.prepend(base)
+    try { run() } finally { base.remove() }
+  }
+
+  it('keeps it under a site key, and not under /new/', () => {
+    const kept = registered()
+    const keepLast = kept['tracy:browser']
+    expect(typeof keepLast).toBe('function')
+    withBase('/scv2jo.scv2.tracy.test/', () => { expect(keepLast!()).toBe(true) })
+    withBase('/new/', () => { expect(keepLast!()).toBe(false) })
+    expect(kept.editor).toBeUndefined()
+  })
+})
+
+describe('NativeTabBody full-height host wrapper', () => {
+  it('renders the descriptor component inside the [data-dsh-native-tab-host] wrapper', () => {
+    // DSH's native tab body host (`.paneBody`) is a BLOCK scroller with a
+    // definite height, not a flex container — our tab roots (`flex: 1;
+    // min-height: 0`) collapse there without a column-flex wrapper of
+    // height:100%. The stable `data-dsh-native-tab-host` marker (mirroring
+    // `data-dsh-better-sidebar`) lets the e2e lane assert the fill; this
+    // unit check pins the structure: the marker wrapper exists and the
+    // descriptor's output is INSIDE it (before the fix the component was
+    // rendered bare, with no wrapper at all).
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const service = createBetterSidebarService(store)
+    service.registerTab({
+      id: 'stub',
+      title: 'Stub',
+      component: () => createElement('div', { 'data-stub-body': '' }, 'stub body'),
+    })
+    const records = createNativeTabRecords()
+    const sessions = { list: { subscribe: () => () => {}, getSnapshot: () => ({ byId: {} }) } }
+    const ctx = { sessions } as never
+    const info = {
+      tab: {
+        id: 'native-9',
+        kind: 'stub',
+        title: 'Stub',
+        contentId: 'sidebar://stub',
+        visible: true,
+        navigation: { address: 'sidebar://stub', params: undefined, revision: 0 },
+        signal: new AbortController().signal,
+      },
+    }
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    let root: Root | undefined
+    act(() => {
+      root = createRoot(host)
+      root.render(createElement(NativeTabBody, {
+        sessionId: 's1',
+        ctx,
+        store,
+        service,
+        records,
+        descriptorId: 'stub',
+        useTabInfo: () => info,
+      }))
+    })
+    const wrapper = host.querySelector('[data-dsh-native-tab-host=""]')
+    expect(wrapper, 'the full-height host wrapper must exist').not.toBeNull()
+    expect(wrapper!.querySelector('[data-stub-body]'), 'the descriptor component renders inside the wrapper').not.toBeNull()
+    expect(wrapper!.childElementCount).toBe(1)
+    act(() => { root?.unmount() })
+    host.remove()
+  })
+})
+
+/**
+ * The native tab CHIP: the host's tab definition carries no icon field, so
+ * the plugin draws the glyph itself inside the `sidebar.right.pane.tab.title`
+ * slot (which IS the chip's content). These cases pin the placement rule —
+ * an editor tab with a path shows the FILE's glyph, every other tab shows its
+ * descriptor's glyph — and the accessible-name boundary: the glyph is
+ * decorative, so the chip's name stays exactly the title the e2e lane matches
+ * with `getByRole('tab', { name })`.
+ */
+describe('NativeTabTitle (the chip glyph)', () => {
+  const renderTitle = (
+    records: ReturnType<typeof createNativeTabRecords>,
+    service: ReturnType<typeof createBetterSidebarService>,
+    info: unknown,
+    descriptorId: string,
+  ): { host: HTMLDivElement; unmount: () => void } => {
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    let root: Root | undefined
+    act(() => {
+      root = createRoot(host)
+      root.render(createElement(NativeTabTitle, {
+        records,
+        service,
+        descriptorId,
+        useTabInfo: () => info as never,
+      }))
+    })
+    return {
+      host,
+      unmount: () => {
+        act(() => { root?.unmount() })
+        host.remove()
+      },
+    }
+  }
+
+  const nativeInfo = (id: string, kind: string, title: string) => ({
+    tab: {
+      id,
+      kind,
+      title,
+      contentId: `sidebar://${id}`,
+      visible: true,
+      navigation: { address: `sidebar://${id}`, params: undefined, revision: 0 },
+      signal: new AbortController().signal,
+    },
+  })
+
+  it('draws the descriptor glyph before the live title', () => {
+    const records = createNativeTabRecords()
+    const service = createBetterSidebarService(createSidebarStore())
+    service.registerTab({
+      id: 'stub-tab',
+      title: () => 'Stub',
+      icon: (size: number) => createElement('i', { 'data-stub-icon': size }),
+      component: () => createElement('div'),
+    })
+    records.ensure({ id: 'chip-1', kind: 'stub-tab', title: 'Stub', params: undefined, scope })
+
+    const { host, unmount } = renderTitle(records, service, nativeInfo('chip-1', 'stub-tab', 'Stub'), 'stub-tab')
+    const chip = host.querySelector('[aria-hidden="true"]')
+    expect(chip, 'the chip must carry a decorative glyph').not.toBeNull()
+    expect(chip!.querySelector('[data-stub-icon="14"]'), 'the descriptor icon renders at the chip scale').not.toBeNull()
+    expect(host.textContent, 'the title follows the glyph').toBe('Stub')
+    expect(host.querySelector('[role="tab"]'), 'the chip itself is the host’s element, not the plugin’s').toBeNull()
+    unmount()
+  })
+
+  it('a native chip draws the descriptor badge and re-draws it when a plugin invalidates badges (TRACY FORK, TCH #858)', () => {
+    let unseen: number | null = 3
+    const records = createNativeTabRecords()
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const service = createBetterSidebarService(store)
+    service.registerTab({
+      id: 'counted-tab',
+      title: () => 'Site changes',
+      icon: (size: number) => createElement('i', { 'data-stub-icon': size }),
+      component: () => createElement('div'),
+      badge: () => unseen,
+    })
+    records.ensure({ id: 'chip-2', kind: 'counted-tab', title: 'Site changes', params: undefined, scope })
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    let root: Root | undefined
+    act(() => {
+      root = createRoot(host)
+      root.render(createElement(NativeTabTitle, {
+        records, service, descriptorId: 'counted-tab', ctx: {} as never,
+        useTabInfo: () => nativeInfo('chip-2', 'counted-tab', 'Site changes') as never,
+      }))
+    })
+    const badge = () => host.querySelector('span:not([aria-hidden])')?.textContent ?? null
+    expect(badge(), 'the chip draws the descriptor badge after the title').toBe('3')
+    expect(host.textContent).toBe('Site changes3')
+    unseen = 120
+    act(() => { service.invalidateTabBadges() })
+    expect(badge(), 'an invalidation re-reads the badge; the strip’s 99+ cap applies').toBe('99+')
+    unseen = 0
+    act(() => { service.invalidateTabBadges() })
+    expect(badge(), 'a 0 draws nothing — the badge is the registrant’s to shape, 0 is its “nothing”').toBe('0')
+    unseen = null
+    act(() => { service.invalidateTabBadges() })
+    expect(badge(), 'null draws no pill').toBeNull()
+    expect(host.textContent, 'glyph and title stay').toBe('Site changes')
+    act(() => { root?.unmount() })
+    host.remove()
+  })
+
+  it('a native chip without a plugin context draws no badge (TRACY FORK)', () => {
+    const records = createNativeTabRecords()
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const service = createBetterSidebarService(store)
+    service.registerTab({ id: 'counted-tab', title: () => 'Site changes', component: () => createElement('div'), badge: () => 4 })
+    records.ensure({ id: 'chip-3', kind: 'counted-tab', title: 'Site changes', params: undefined, scope })
+    const { host, unmount } = renderTitle(records, service, nativeInfo('chip-3', 'counted-tab', 'Site changes'), 'counted-tab')
+    expect(host.textContent).toBe('Site changes')
+    unmount()
+  })
+
+  it('an open tab follows a language switch until a plugin names it (TRACY FORK, TCH spec #730)', async () => {
+    let word = 'My Sites'
+    const records = createNativeTabRecords()
+    const service = createBetterSidebarService(createSidebarStore())
+    service.registerTab({ id: 'sites-tab', title: () => word, component: () => createElement('div') })
+    // The host stored the title in the language the tab was opened in.
+    records.ensure({ id: 'chip-3', kind: 'sites-tab', title: 'My Sites', params: undefined, scope })
+    records.ensure({ id: 'chip-4', kind: 'sites-tab', title: 'My Sites', params: undefined, scope })
+    records.update('chip-4', { title: 'My Sites · acme.test' })
+
+    const a = renderTitle(records, service, nativeInfo('chip-3', 'sites-tab', 'My Sites'), 'sites-tab')
+    const b = renderTitle(records, service, nativeInfo('chip-4', 'sites-tab', 'My Sites'), 'sites-tab')
+    word = 'Meine Sites'
+    await act(async () => {
+      document.documentElement.lang = 'de'
+      await Promise.resolve()
+    })
+    expect(a.host.textContent, 'an untitled tab draws its type label in the new language').toBe('Meine Sites')
+    expect(b.host.textContent, 'a title a plugin set stays the plugin\'s to change').toBe('My Sites · acme.test')
+    a.unmount()
+    b.unmount()
+    document.documentElement.lang = ''
+  })
+
+  it('a restored tab nobody opened yet follows a language switch too (no record) (TRACY FORK)', async () => {
+    let word = 'Team'
+    const records = createNativeTabRecords()
+    const service = createBetterSidebarService(createSidebarStore())
+    service.registerTab({ id: 'team-tab', title: () => word, component: () => createElement('div') })
+    // No records.ensure: the body never mounted, only the chip shows, with the host's stored title.
+    const chip = renderTitle(records, service, nativeInfo('chip-5', 'team-tab', 'Team'), 'team-tab')
+    word = 'Equipo'
+    await act(async () => {
+      document.documentElement.lang = 'es'
+      await Promise.resolve()
+    })
+    expect(chip.host.textContent).toBe('Equipo')
+    chip.unmount()
+    document.documentElement.lang = ''
+  })
+
+  it('a page tab opened through openTab follows a language switch after its body unmounts (TRACY FORK, TCH spec #730)', async () => {
+    // Measured on cowork.tracy.site: Team opened by a ?tab= link at load, then left for another tab,
+    // kept the host's stored title from an earlier language ("Doi" in a zh interface).
+    let word = 'Team'
+    const opened: unknown[] = []
+    const store = createSidebarStore()
+    store.setSession('s1')
+    const service = createBetterSidebarService(store)
+    service.setSurface({
+      openTab: input => { opened.push(input.params) },
+      openResource: () => {},
+      fileAddress: () => '',
+      close: () => undefined,
+      update: () => false,
+      activate: () => false,
+      has: () => false,
+    })
+    service.registerTab({ id: 'team-tab', title: () => word, component: () => createElement('div') })
+    service.openTab({ type: 'team-tab', meta: { siteKey: 'acme.test' } }, scope)
+    const params = opened[0] as Record<string, unknown>
+    expect(params, 'the type label is not a caller-chosen title').not.toHaveProperty('title')
+    const records = createNativeTabRecords()
+    // The body mounted while the tab was active, then unmounted when another tab was picked.
+    records.ensure({ id: 'chip-7', kind: 'team-tab', title: 'Doi', params: params as never, scope })
+    records.drop('chip-7')
+    const info = nativeInfo('chip-7', 'team-tab', 'Doi')
+    const withParams = { tab: { ...info.tab, navigation: { ...info.tab.navigation, params } } }
+    word = '团队'
+    const chip = renderTitle(records, service, withParams, 'team-tab')
+    expect(chip.host.textContent).toBe('团队')
+    word = 'Squadra'
+    await act(async () => {
+      document.documentElement.lang = 'it'
+      await Promise.resolve()
+    })
+    expect(chip.host.textContent).toBe('Squadra')
+    chip.unmount()
+    document.documentElement.lang = ''
+  })
+
+  it('a tab whose navigation names its own title shows that title before its body mounts (TRACY FORK)', () => {
+    const records = createNativeTabRecords()
+    const service = createBetterSidebarService(createSidebarStore())
+    service.registerTab({ id: 'page-tab', title: () => 'Browser', component: () => createElement('div') })
+    const info = nativeInfo('chip-8', 'page-tab', 'Browser')
+    const named = { tab: { ...info.tab, navigation: { ...info.tab.navigation, params: { title: 'acme.test' } } } }
+    const chip = renderTitle(records, service, named, 'page-tab')
+    expect(chip.host.textContent).toBe('acme.test')
+    chip.unmount()
+  })
+
+  it('an editor tab with a path shows the FILE glyph instead of the type glyph', () => {
+    const records = createNativeTabRecords()
+    const service = createBetterSidebarService(createSidebarStore())
+    service.registerTab({
+      id: 'editor',
+      title: () => 'Files',
+      icon: (size: number) => createElement('i', { 'data-type-icon': size }),
+      component: () => createElement('div'),
+    })
+    records.ensure({
+      id: 'chip-2',
+      kind: 'editor',
+      title: 'notes.md',
+      params: { path: '/work/notes.md' },
+      scope,
+    })
+
+    const { host, unmount } = renderTitle(records, service, nativeInfo('chip-2', 'editor', 'notes.md'), 'editor')
+    expect(host.querySelector('[data-type-icon]'), 'the type glyph must NOT be used for a file tab').toBeNull()
+    // The file glyph is the host's own FileTypeIcon (its component identity is
+    // asserted through the resolver tests); here the point is that a glyph is
+    // drawn and the title is intact.
+    expect(host.querySelector('[aria-hidden="true"]')).not.toBeNull()
+    expect(host.textContent).toBe('notes.md')
+    unmount()
+  })
+
+  it('falls back to the title alone when the type is gone (unregistered descriptor)', () => {
+    const records = createNativeTabRecords()
+    const service = createBetterSidebarService(createSidebarStore())
+    records.ensure({ id: 'chip-3', kind: 'ghost', title: 'Ghost', params: undefined, scope })
+
+    const { host, unmount } = renderTitle(records, service, nativeInfo('chip-3', 'ghost', 'Ghost'), 'ghost')
+    expect(host.querySelector('[aria-hidden="true"]')).toBeNull()
+    expect(host.textContent).toBe('Ghost')
+    unmount()
+  })
+})

@@ -1,0 +1,109 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Page canvas, hero backgrounds, deepest surface — the obsidian backdrop against which the brand violet glows"
+    },
+    "obsidian-surface": {
+      "$value": "#0f0f13",
+      "$type": "color",
+      "$description": "Obsidian Surface — Elevated card surfaces, button fills for neutral/ghost controls, hero overlays"
+    },
+    "carbon-border": {
+      "$value": "#292929",
+      "$type": "color",
+      "$description": "Carbon Border — Hairline borders across cards, nav, body, links, and lists — the structural grid in a single near-black tone"
+    },
+    "graphite-card-edge": {
+      "$value": "#1d1d1d",
+      "$type": "color",
+      "$description": "Graphite Card Edge — Card-specific border tone, one step lighter than Carbon to create layered card edges"
+    },
+    "ash-mist": {
+      "$value": "#2a2a36",
+      "$type": "color",
+      "$description": "Ash Mist — Subtle violet-tinted dark border for sections and footer dividers — the only near-gray with hue"
+    },
+    "platinum-text": {
+      "$value": "#e6e6e6",
+      "$type": "color",
+      "$description": "Platinum Text — Primary body and UI text, nav links, card text, icon strokes — soft white for long-form reading on black"
+    },
+    "foil-highlight": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Foil Highlight — Display headings, brand mark, button labels on dark — pure white reserved for the loudest type moments"
+    },
+    "steel-muted": {
+      "$value": "#9e9e9e",
+      "$type": "color",
+      "$description": "Steel Muted — Muted helper text, secondary list items, dimmed icon strokes — quiet copy in the body"
+    },
+    "portal-violet": {
+      "$value": "#b296f8",
+      "$type": "color",
+      "$description": "Portal Violet — Primary action buttons, icon strokes, accent text, shadow tint — the singular brand signal; lavender that reads as dimensional energy"
+    },
+    "wisteria": {
+      "$value": "#594b7c",
+      "$type": "color",
+      "$description": "Wisteria — Muted violet border for accent rules and decorative dividers"
+    },
+    "indigo-plum": {
+      "$value": "#4b3f71",
+      "$type": "color",
+      "$description": "Indigo Plum — Violet badge border for category tags in the violet family"
+    },
+    "lavender-mist": {
+      "$value": "#ede9fe",
+      "$type": "color",
+      "$description": "Lavender Mist — Violet badge text fill — desaturated lavender for readable on-dark violet tag content"
+    },
+    "fuchsia-ink": {
+      "$value": "#571c60",
+      "$type": "color",
+      "$description": "Fuchsia Ink — Pink/magenta badge border for editorial or community-event categories"
+    },
+    "verdant-edge": {
+      "$value": "#0e4f26",
+      "$type": "color",
+      "$description": "Verdant Edge — Green outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color"
+    },
+    "mint-whisper": {
+      "$value": "#dcfce7",
+      "$type": "color",
+      "$description": "Mint Whisper — Success badge text — soft mint for green category labels on dark"
+    },
+    "cobalt-vein": {
+      "$value": "#264264",
+      "$type": "color",
+      "$description": "Cobalt Vein — Blue outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color"
+    },
+    "deep-tide": {
+      "$value": "#06425d",
+      "$type": "color",
+      "$description": "Deep Tide — Blue outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color"
+    },
+    "ice-blue": {
+      "$value": "#dbeafe",
+      "$type": "color",
+      "$description": "Ice Blue — Info badge text — desaturated sky for blue category labels on dark"
+    }
+  },
+  "font": {
+    "suisse-intl": {
+      "$value": "Suisse Intl",
+      "$type": "fontFamily",
+      "$description": "Sole typeface. Weight 900 at 72px/48px for display and section headings is the signature — the brand does not whisper at scale, it announces. Weight 600 for sub-headings and nav, weight 500 for emphasized body, weight 400 for body and supporting copy. The lineHeight 1.00–1.11 at display sizes is unusually tight and signals confidence; body sits at 1.43–1.56 for compact reading. Letter-spacing tracks the hierarchy: -0.025em pulls display tight, 0.05em relaxes body, 0.20em stretches labels and badges wide."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://portalgaming.com",
+      "siteName": "Portal",
+      "extractedAt": "2026-06-03T20:12:42.390Z",
+      "variant": "compact"
+    }
+  }
+}

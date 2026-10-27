@@ -1,0 +1,74 @@
+{
+  "color": {
+    "soprano-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Soprano White — Page canvas, header and footer surfaces, image-overlay text, bordered purchase controls"
+    },
+    "studio-mist": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Studio Mist — Product-tile surfaces, category controls, search field, and pale action surfaces"
+    },
+    "warm-porcelain": {
+      "$value": "#f1efee",
+      "$type": "color",
+      "$description": "Warm Porcelain — Quiet secondary navigation and transitional surface bands"
+    },
+    "bass-black": {
+      "$value": "#131317",
+      "$type": "color",
+      "$description": "Bass Black — Primary text, navigation, icons, hairline borders, dark purchase fills, and inverse badges"
+    },
+    "countertenor-gray": {
+      "$value": "#b4bec7",
+      "$type": "color",
+      "$description": "Countertenor Gray — Announcement-strip field, subdued controls, and inactive control treatment"
+    },
+    "steel-gray": {
+      "$value": "#949494",
+      "$type": "color",
+      "$description": "Steel Gray — Fine separators and low-emphasis form borders"
+    },
+    "charcoal-helper": {
+      "$value": "#40464b",
+      "$type": "color",
+      "$description": "Charcoal Helper — Footer links, supporting links, and subdued utility text"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Search and utility icon strokes, input text, and high-contrast micro-details"
+    },
+    "quiet-placeholder": {
+      "$value": "#545454",
+      "$type": "color",
+      "$description": "Quiet Placeholder — Search placeholder and inactive input copy"
+    },
+    "chord-blue": {
+      "$value": "#005bff",
+      "$type": "color",
+      "$description": "Chord Blue — Inline learning links — a single electric-blue interruption in an otherwise monochrome retail interface"
+    }
+  },
+  "font": {
+    "bose-headline": {
+      "$value": "Bose Headline",
+      "$type": "fontFamily",
+      "$description": "Condensed display voice for section titles and campaign headlines. The 900 weight at 60px and 96px is compressed vertically rather than made airy, making the headline read like a bold audio-equipment mark; the 400 weight supplies quieter 32px service headings."
+    },
+    "bose-text": {
+      "$value": "Bose Text",
+      "$type": "fontFamily",
+      "$description": "Interface, product metadata, navigation, links, and campaign support copy. Regular 15px uppercase navigation stays restrained; 500-weight 16px labels and 24px campaign support text provide the controlled step-up beneath the headline."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.bose.com/home",
+      "siteName": "Bose",
+      "extractedAt": "2026-09-24T17:31:26.443Z",
+      "variant": "compact"
+    }
+  }
+}

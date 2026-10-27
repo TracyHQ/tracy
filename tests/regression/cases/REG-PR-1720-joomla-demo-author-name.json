@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1720-joomla-demo-author-name",
+  "kind": "fix",
+  "title": "Joomla new site: the quickstart's Super User (\"Tracy Agent\") takes the business name as display name, so bylines and author pages no longer say Tracy Agent",
+  "pr": 1720,
+  "area": "site-creation/brief",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/brief-brand-joomla-author.test.mjs (setSiteBrand on a fake Joomla site with Super User 42 'Tracy Agent', a sample author in group 2 and a Tracy Access account in group 8)"
+  ],
+  "expect": [
+    "S1: user 42 is renamed to the given name, or to the site name when none is given; the sample author and the Tracy Access account keep their names; only the name column is written under the brand apply id and apply.revert restores 'Tracy Agent'"
+  ],
+  "selectors": {
+    "engine": "brief-engines/brand-joomla-author.js writeDemoAuthorName, called from brand-joomla.js writeJoomlaBrand"
+  },
+  "evidence": "iMac DDEV tracy-ja-boxing-j6 (plugin 0.24.61), 25/10/2026: users 42/52 renamed through the plugin door, meta author 'JA Boxing' rendered, reverted",
+  "fence": "The demo Super User's display name follows the business; no other account is touched",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-brand-joomla-author.test.mjs"
+    ],
+    "tests": [
+      "a name the customer gave becomes the demo Super User display name, and only that",
+      "no name given: the demo Super User takes the site name as it stands"
+    ],
+    "timeout_s": 300
+  }
+}

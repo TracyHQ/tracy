@@ -1,0 +1,94 @@
+{
+  "color": {
+    "peach-ground": {
+      "$value": "#e1c19e",
+      "$type": "color",
+      "$description": "Peach Ground — Page canvas, hero and section backgrounds — the warm tan base that ties the whole site together like craft paper"
+    },
+    "lime-pop": {
+      "$value": "#e4ff60",
+      "$type": "color",
+      "$description": "Lime Pop — Green action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "lavender-card": {
+      "$value": "#adabff",
+      "$type": "color",
+      "$description": "Lavender Card — Card and surface panels, soft-tinted blocks that lift content off the peach canvas without going cold"
+    },
+    "magenta-marker": {
+      "$value": "#ea5da3",
+      "$type": "color",
+      "$description": "Magenta Marker — Highlight words inside headlines, decorative strokes and borders — the hand-marker pink that punches single words out of the black display type"
+    },
+    "moss-link": {
+      "$value": "#6fb853",
+      "$type": "color",
+      "$description": "Moss Link — Text link color and inline underline borders — the only green in the system, reserved for navigational emphasis"
+    },
+    "sky-note": {
+      "$value": "#7fb6e6",
+      "$type": "color",
+      "$description": "Sky Note — Secondary tag and occasional button fill — a cool counterpoint that keeps the palette from feeling monochromatically warm"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, display headlines, card and section borders, icon strokes — the structural neutral that carries 90% of the type"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card body backgrounds, icon contrast fills, inverted-button text — bright clean white for surfaces that need to detach from the peach ground"
+    },
+    "fog-gray": {
+      "$value": "#f6f6f6",
+      "$type": "color",
+      "$description": "Fog Gray — Quiet secondary surface for input fields and soft panel fills — used where pure white would feel too clinical"
+    }
+  },
+  "font": {
+    "medium": {
+      "$value": "Medium",
+      "$type": "fontFamily",
+      "$description": "Medium — detected in extracted data but not described by AI"
+    },
+    "squadeasy-black-custom-display": {
+      "$value": "SquadEasy Black (custom display)",
+      "$type": "fontFamily",
+      "$description": "Display headlines and hero statements — the brand's signature voice. 220px hero text at line-height 0.87 with letter-spacing -0.036em creates compressed, poster-grade blocks that dominate the peach canvas. No body text uses this family."
+    },
+    "squadeasy-body-custom-sans": {
+      "$value": "SquadEasy Body (custom sans)",
+      "$type": "fontFamily",
+      "$description": "Body, nav, card, button and link text — the working sans. Weight 500 is the default for nav and labels, 700 for emphasized inline phrases, 400 for paragraphs. Tracking runs -0.011em to -0.018em, keeping even 22px body text visually tight."
+    },
+    "squadeasy-regular-custom-small-text": {
+      "$value": "SquadEasy Regular (custom small text)",
+      "$type": "fontFamily",
+      "$description": "Button labels, micro-labels, small icon-adjacent text — slightly tighter tracking than Body (-0.021em at 12px) so 12px still reads as a deliberate label, not body copy shrunk down"
+    },
+    "squadeasy-sharpie-custom-handwriting": {
+      "$value": "SquadEasy Sharpie (custom handwriting)",
+      "$type": "fontFamily",
+      "$description": "Decorative handwritten accent on small annotation labels — used sparingly as a craft-paper footnote device, never for functional UI"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "epilogue": {
+      "$value": "Epilogue",
+      "$type": "fontFamily",
+      "$description": "Epilogue — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.squadeasy.com",
+      "siteName": "SquadEasy",
+      "extractedAt": "2026-06-03T17:36:27.640Z",
+      "variant": "compact"
+    }
+  }
+}

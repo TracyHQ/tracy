@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "66e7b131-d68c-4751-954c-f5d0d8869647",
+  "status": "complete",
+  "name": "Le Puzz",
+  "url": "https://styles.refero.design/style/66e7b131-d68c-4751-954c-f5d0d8869647",
+  "sourceWebsite": "https://lepuzz.com",
+  "extractedAt": "2026-06-03T19:09:34.873Z",
+  "capturedAt": "2026-10-08T05:12:39.025190+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Sunny Sunday circular — a yellow tabloid stuffed with puzzles.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/af2f0d44-1c22-4197-a256-571e51f8d57e.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d8f64d30-5b20-474c-a9f7-1f7762ddf59f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/41fbee73-534b-4f75-acb4-80d03cde7b05.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/869ee009-0497-4e28-bce9-51e40b3d17ac.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/2f5fe6ec-97de-4289-9cc8-6fc29a7f2ee7.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8e0ccefd78ce20a2451cd1251b5771d926495b743561731e156a1cdcc49d7233",
+      "bytes": 19381
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1f79772f24eb61a6cbe319b94c52f40690fbe1779c3c888e7e90c13a7f5dc664",
+      "bytes": 275196
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "fc7d0d106973d12dc599550d4fdc3895ee79848016bdaeba7e0885a3647149cd",
+      "bytes": 15820
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b1a09dc53c7705db74dc148d84847d0c08944a8e32594a39987716f56ab78ed6",
+      "bytes": 11247
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "2038eb900a349c7dc756368c46796884da63a9346eaf322464b10120c9dc2bba",
+      "bytes": 11722
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2692e67320e5ff101c45e42518e9629eb51860c94681b28de20e510354469e38",
+      "bytes": 2839
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ee2d960286b0509692bebb666f1adb44bc69cfddaa49327d601afbdc7daad11c",
+      "bytes": 742
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7239e677c2fe2051b1bd6a236aec35c47f573155079df67765cc5d0082bcc650",
+      "bytes": 759
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a230c12d47f7cc7ec6e1d6d6095a641ec4eff97379c392e3c8d85fd700f45694",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "11e3b755f81db70952c1e1ff177f6da6ae2f6396e2b6f7faf1f82494d497a7ce",
+      "bytes": 42455
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e83861c56efc0fa8c286190f1024031f03546d3cad1006c1470d07cd3fc01cc2",
+      "bytes": 22039
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "24621656d65c7dc92ab2623924df9f85d4c10be154375cbc29a2d92905dfd82a",
+      "bytes": 43915
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "edf1e865005fc15b94beb4e6b0e513a1ec7ea72c707fc0675d570ba87672e696",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5a1c3ce02fff37cff48d993807a08c0436777cadfad59b222ad341ce2658292c",
+      "bytes": 1747
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5b2c6486e472a57f2e30d0bebda5dd3e4eeee5b5edb8325f8822b4692a8d51b7",
+      "bytes": 2348
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "2175034b-96d7-417e-886f-ff5a4d8551ae",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "59ac8248-1d64-4df3-92f1-919b50e05602",
+    "66e7b131-d68c-4751-954c-f5d0d8869647",
+    "6d4ef8f4-badd-4e3c-a168-0cc89c833b26",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "79b4ebc4-30f6-45b6-b2d2-922e28e05ca9",
+    "7d254296-6817-487a-a58c-4d5eca89cbf3",
+    "7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+    "8512e28d-5385-4c20-a336-214568c4370c",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "a26f1a4d-758c-4df0-a61e-88a7ca0931ce",
+    "c521be99-14af-4d57-8f8f-34c76c9ade61",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65"
+  ]
+}

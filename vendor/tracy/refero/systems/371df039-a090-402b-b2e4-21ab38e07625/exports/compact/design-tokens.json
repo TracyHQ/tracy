@@ -1,0 +1,99 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#00052e",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary canvas, hero backgrounds, deep surface — the foundational dark that absorbs the electric blue glow and makes it feel like signal emerging from noise"
+    },
+    "signal-blue": {
+      "$value": "#0428cb",
+      "$type": "color",
+      "$description": "Signal Blue — Violet outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "arc-cyan": {
+      "$value": "#34fcff",
+      "$type": "color",
+      "$description": "Arc Cyan — Atmospheric accent and glow halos around the particle sphere, rare decorative energy that reads as electricity rather than UI"
+    },
+    "halo-violet": {
+      "$value": "#afb4db",
+      "$type": "color",
+      "$description": "Halo Violet — Soft gradient midtone that bridges Signal Blue into Midnight Ink, used in the radial background wash and ambient surface tinting"
+    },
+    "carbon": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Carbon — Dark mode text on light surfaces, button text fallback — an almost-black that stays warmer than pure #000"
+    },
+    "slate-body": {
+      "$value": "#4f5166",
+      "$type": "color",
+      "$description": "Slate Body — Body text on light product sections, secondary metadata, paragraph copy"
+    },
+    "fog": {
+      "$value": "#6b6b83",
+      "$type": "color",
+      "$description": "Fog — Muted text, helper copy, de-emphasized labels, ghost-bordered links on light backgrounds"
+    },
+    "mist": {
+      "$value": "#8185a0",
+      "$type": "color",
+      "$description": "Mist — Tertiary text and disabled labels — one step quieter than Fog"
+    },
+    "silver-border": {
+      "$value": "#dbdcdf",
+      "$type": "color",
+      "$description": "Silver Border — Hairline dividers on light product surfaces, card outlines, table separators"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Product surface fills, dashboard canvas, light section backgrounds, button text on dark"
+    }
+  },
+  "font": {
+    "open-suace-sans-regular": {
+      "$value": "Open Suace Sans Regular",
+      "$type": "fontFamily",
+      "$description": "Open Suace Sans Regular — detected in extracted data but not described by AI"
+    },
+    "f37-bolton": {
+      "$value": "F37 Bolton",
+      "$type": "fontFamily",
+      "$description": "Small-caps labels and eyebrow text, slightly tracked for a technical/industrial feel that contrasts with the body sans"
+    },
+    "open-sauce-sans": {
+      "$value": "Open Sauce Sans",
+      "$type": "fontFamily",
+      "$description": "Body copy, subheadings, nav links, card content — the workhorse sans, comfortable line-height (1.5+) at 16-18px keeps long product copy readable without losing the editorial pacing set by Bolton"
+    },
+    "ibm-plex-mono": {
+      "$value": "IBM Plex Mono",
+      "$type": "fontFamily",
+      "$description": "Micro-labels, data tags, order IDs, status badges — the monospaced faces with wide tracking are reserved for data/system chrome, creating a visual distinction between human-readable copy and machine-generated metadata"
+    },
+    "open-suace-sans-light": {
+      "$value": "Open Suace Sans Light",
+      "$type": "fontFamily",
+      "$description": "Open Suace Sans Light — detected in extracted data but not described by AI"
+    },
+    "f37-bolton-book": {
+      "$value": "F37 Bolton Book",
+      "$type": "fontFamily",
+      "$description": "F37 Bolton Book — detected in extracted data but not described by AI"
+    },
+    "f37-bolton-medium": {
+      "$value": "F37 Bolton Medium",
+      "$type": "fontFamily",
+      "$description": "F37 Bolton Medium — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.ameba.ai",
+      "siteName": "Ameba",
+      "extractedAt": "2026-06-03T17:28:13.420Z",
+      "variant": "compact"
+    }
+  }
+}

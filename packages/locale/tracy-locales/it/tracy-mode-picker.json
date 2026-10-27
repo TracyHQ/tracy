@@ -1,0 +1,15 @@
+{
+  "group.mode": "Modalità",
+  "group.platform": "Piattaforma",
+  "lockedHint": "Questa session ha già una cronologia. Modalità e piattaforma si applicano solo a una nuova session",
+  "noDescription": "Nessuna descrizione",
+  "platform.adds": "aggiunge {tools} strumenti · {skills} skill",
+  "platform.nothingYet": "ancora nulla: gli agent funzionano solo con la loro modalità",
+  "platform.siteRuns": "questo site usa {platform}",
+  "role.designer": "Designer",
+  "role.developer": "Sviluppatore",
+  "role.seo-geo": "SEO/GEO",
+  "role.writer": "Redattore",
+  "seatHint": "Modalità e piattaforma per la prossima session",
+  "switchRefused": "{name} è stato rifiutato: {reason}"
+}

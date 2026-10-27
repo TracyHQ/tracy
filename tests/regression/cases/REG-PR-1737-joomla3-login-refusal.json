@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1737-joomla3-login-refusal",
+  "kind": "fix",
+  "title": "A Joomla 3 sign-in refusal (a 200 that draws the login form again) is invalid_credential, no_backend_access or mfa_required, not unreachable/no_redirect",
+  "pr": 1737,
+  "area": "sites/import",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run`.",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "A login POST answered with a 200 Joomla 3.10 login form carrying 'Username and password do not match…' is invalid_credential at login_post, and the run's diagnostic carries username_is_email (true for an email-shaped username, false otherwise), never the username.",
+    "The same 200 with 'You do not have access to the Administrator section…' is no_backend_access; with the two factor Secret Key sentence it is mfa_required.",
+    "A German Joomla 3 refusal is read through administrator/language/de-DE/de-DE.ini.",
+    "The Joomla 3 login form with no message is invalid_credential/message_unread.",
+    "A 200 that is not Joomla's admin login form (plain page, a form outside Joomla's template, RSFirewall's Protected Area) stays unreachable/no_redirect."
+  ],
+  "selectors": {
+    "function": "packages/site/tracy-add-site/src/host/joomla.ts loginToAdmin, isAdminLoginForm, refusedSignIn",
+    "test": "packages/site/tracy-add-site/test/import-signin-data.test.mjs; packages/site/tracy-add-site/test/import-gates.test.mjs"
+  },
+  "evidence": "Production operator alert 25/10/2026 on a Joomla 3.10.11 import: Reason: unreachable · Where: login_post/no_redirect · HTTP 200 · /administrator/index.php · Sign-in: password. Joomla 3.10.11 LoginController::login() redirects only on success; a refusal falls through to display(), a 200.",
+  "fence": "loginToAdmin reads a 200 answer to the login POST for Joomla's refusal sentence only when the body is Joomla's own administrator login form; the firewall check runs first, Joomla 4+ redirect handling and WordPress are unchanged",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/import-signin-data.test.mjs",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs"
+    ],
+    "tests": [
+      "Joomla 3 answering a wrong password with a 200 is invalid_credential, with the email shape kept",
+      "Joomla 3 answering an account without administrator access with a 200 is no_backend_access",
+      "Joomla 3 answering a missing Secret Key with a 200 is mfa_required",
+      "a German Joomla 3 refusing on a 200 is read through its language file",
+      "a Joomla 3 login form again with no message to read is message_unread, not unreachable",
+      "a 200 on the login POST that is not Joomla's login form stays unreachable/no_redirect",
+      "a challenge on a non-403 answer of the sign-in is blocked_by_firewall, not a generic failure"
+    ]
+  }
+}

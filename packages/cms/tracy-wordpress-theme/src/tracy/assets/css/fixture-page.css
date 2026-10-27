@@ -1,0 +1,23 @@
+/* tracy — the only theme stylesheet a fixture page loads.
+ * The page is the design system's own components.html, pixel for pixel as the preview showed it,
+ * so tracy.css, layout.css, sections.css, the block library and the global styles stay out
+ * (functions.php dequeues them). What is left: the document margin the fixture's own body rule
+ * expects, the WordPress wrappers made invisible, and a wrapper that reaches the bottom of the
+ * viewport the way a document's canvas does. */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.wp-site-blocks,
+.entry-content {
+  margin: 0;
+  padding: 0;
+}
+
+.tracy-fixture,
+.tracy-artifact {
+  min-height: 100vh;
+}

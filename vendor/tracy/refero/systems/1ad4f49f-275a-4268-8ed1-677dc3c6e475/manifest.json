@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+  "status": "complete",
+  "name": "Increase",
+  "url": "https://styles.refero.design/style/1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+  "sourceWebsite": "https://increase.com",
+  "extractedAt": "2026-06-03T21:11:54.277Z",
+  "capturedAt": "2026-10-08T05:08:57.201773+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "institutional blueprint on vellum — one electric chartreuse stripe cuts the navy calm, mint data signals pulse beneath it.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ff391de7-952f-4f11-b104-07169c5b2a81.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8ff5b0b259c5f6670d10a865a55680aaf56f429119ca29e3dc29438971172a74",
+      "bytes": 23849
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fbf20c15f8f5b89825031bc0e1bfd9cb99ab09b4bbea28e0daa21f73f21daa24",
+      "bytes": 100688
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "74c3711ca6e95d1e6e58dcebb1175bf9af24555c1d0a0f2f68b9d153fbb930d6",
+      "bytes": 19651
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "bd9f56297a4589888010f91456170da10157eb0775816acc805721cbf450d1df",
+      "bytes": 11313
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e0000c1f5c6815138483ba2b99d081b8d42fa3cd508809ba9913114a618928d4",
+      "bytes": 15112
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "e48b7b3252a1057d5c1a476bf3e4fe48b75c306f8d2f3eb2fabb8980a71eaa33",
+      "bytes": 4039
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "98f4f25cf796d8d1597de24d109ea9c888944b6f5adda42c179a57715219a8c7",
+      "bytes": 618
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d437877b6a151006dd8d0fa2d9089e286102d93834d2f6076d2c2200fa674a32",
+      "bytes": 635
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "edc90a6db4610f9783f37e27f3b1ca36c7fb59e88ca8e2bde4f0b9742a43d1d3",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "befa9e95ebe952b400765efc08c7099cf795d04a60707713aa93f470f9f77f50",
+      "bytes": 48263
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5218b2130c927b5275524b9a12d8a7805a9e03e54a8675f3e33a44cb20250933",
+      "bytes": 25181
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "dfe497e53a0c258305e3afab9a455591b12b5923084faa147ad7c97919adf458",
+      "bytes": 53888
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "11781a76427c4a533e9729ddcbaba9d925b842f186f8bfcceb52f50096fbf090",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2e0a6254b229c2be3e6d31cf95e23e630541426df144f9add7432e90ce167922",
+      "bytes": 2037
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3699b5aed2b03ba66913e1f97bf1737ece2238044d85b1bba14624e440301820",
+      "bytes": 2620
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "0c55e725-e933-41b6-9fb7-2505a6659ee5",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "2e9b3dcb-f937-488d-891c-351c7366188f",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "5076959f-f849-4b50-8f8a-2040d4756f98",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "8cf4a580-bfb6-4090-a899-f734ffe62370",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "bcfc6cb0-1b39-4f3f-a95e-bd7b563b0efc",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c"
+  ]
+}

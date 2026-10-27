@@ -1,0 +1,94 @@
+{
+  "color": {
+    "carbon-ink": {
+      "$value": "#1a211e",
+      "$type": "color",
+      "$description": "Carbon Ink — Primary text, dark hero panels, body copy, icons, borders on light surfaces — the near-black that anchors every headline and forms the deep-background panels of split sections"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Maximum contrast elements: headline fills on white, announcement bar, footer treatments, solid icon strokes — appears where the design demands the sharpest edge"
+    },
+    "obsidian": {
+      "$value": "#0c0c0c",
+      "$type": "color",
+      "$description": "Obsidian — Deep panel surfaces and image overlays — slightly softer than true black, used for full-bleed dark sections that need to feel weighty without flat black's harshness"
+    },
+    "fog": {
+      "$value": "#eef1f0",
+      "$type": "color",
+      "$description": "Fog — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "mist": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Mist — Divider lines, disabled states, subtle structural separators — the mid-light gray that defines boundaries between sections on the white canvas"
+    },
+    "graphite": {
+      "$value": "#606562",
+      "$type": "color",
+      "$description": "Graphite — Muted body text, secondary navigation, metadata labels — the de-emphasized text tone for information that supports but should not compete with headlines"
+    },
+    "ash-border": {
+      "$value": "#cccfcd",
+      "$type": "color",
+      "$description": "Ash Border — Hairline input borders, subtle dividers — a warm-leaning gray that reads as a soft pencil line against white surfaces"
+    },
+    "slate": {
+      "$value": "#363537",
+      "$type": "color",
+      "$description": "Slate — Navigation text on light surfaces, mid-weight borders — reads as near-black at small sizes but carries a subtle warmth"
+    },
+    "pewter": {
+      "$value": "#4e4e4e",
+      "$type": "color",
+      "$description": "Pewter — Supporting neutral for secondary UI, dividers, and muted labels"
+    },
+    "ember-red": {
+      "$value": "#cc2e39",
+      "$type": "color",
+      "$description": "Ember Red — Red supporting accent for decorative details and low-frequency emphasis"
+    }
+  },
+  "font": {
+    "geist": {
+      "$value": "Geist",
+      "$type": "fontFamily",
+      "$description": "Body copy, product titles, descriptions, form inputs, link text, footer content. Weight 400 for body, 600 for emphasis, 700 for product names and important inline labels. The neutral grotesque lets the display serif and condensed sans carry the brand voice while Geist handles everything functional and readable."
+    },
+    "exposure-style-serif-exposure-10": {
+      "$value": "Exposure-style serif (Exposure-10)",
+      "$type": "fontFamily",
+      "$description": "Display and hero headlines. Single weight (400) in an italic-leaning serif creates editorial gravitas — these are the words that set the brand's tone, used sparingly on full-bleed dark panels and key section openers. The tight tracking (-0.025em) lets large letterforms feel composed rather than airy."
+    },
+    "bryant-style-condensed-sans-bryant": {
+      "$value": "Bryant-style condensed sans (bryant)",
+      "$type": "fontFamily",
+      "$description": "Navigation labels, category filter buttons, button text, eyebrows, section tags, and secondary headings. The compressed uppercase forms with positive tracking create an industrial, label-like voice — these words identify and instruct, never describe."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Small technical labels, SKUs, or micro-data — appears in the smallest details where monospaced alignment signals precision or product specification."
+    },
+    "exposure-10": {
+      "$value": "Exposure-10",
+      "$type": "fontFamily",
+      "$description": "Exposure-10 — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://peakdesign.com",
+      "siteName": "Peak Design",
+      "extractedAt": "2026-06-03T16:44:14.809Z",
+      "variant": "compact"
+    }
+  }
+}

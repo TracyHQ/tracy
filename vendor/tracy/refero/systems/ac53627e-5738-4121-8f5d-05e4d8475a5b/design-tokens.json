@@ -1,0 +1,583 @@
+{
+  "color": {
+    "soprano-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Soprano White — Page canvas, header and footer surfaces, image-overlay text, bordered purchase controls"
+    },
+    "studio-mist": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Studio Mist — Product-tile surfaces, category controls, search field, and pale action surfaces"
+    },
+    "warm-porcelain": {
+      "$value": "#f1efee",
+      "$type": "color",
+      "$description": "Warm Porcelain — Quiet secondary navigation and transitional surface bands"
+    },
+    "bass-black": {
+      "$value": "#131317",
+      "$type": "color",
+      "$description": "Bass Black — Primary text, navigation, icons, hairline borders, dark purchase fills, and inverse badges"
+    },
+    "countertenor-gray": {
+      "$value": "#b4bec7",
+      "$type": "color",
+      "$description": "Countertenor Gray — Announcement-strip field, subdued controls, and inactive control treatment"
+    },
+    "steel-gray": {
+      "$value": "#949494",
+      "$type": "color",
+      "$description": "Steel Gray — Fine separators and low-emphasis form borders"
+    },
+    "charcoal-helper": {
+      "$value": "#40464b",
+      "$type": "color",
+      "$description": "Charcoal Helper — Footer links, supporting links, and subdued utility text"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Search and utility icon strokes, input text, and high-contrast micro-details"
+    },
+    "quiet-placeholder": {
+      "$value": "#545454",
+      "$type": "color",
+      "$description": "Quiet Placeholder — Search placeholder and inactive input copy"
+    },
+    "chord-blue": {
+      "$value": "#005bff",
+      "$type": "color",
+      "$description": "Chord Blue — Inline learning links — a single electric-blue interruption in an otherwise monochrome retail interface"
+    }
+  },
+  "font": {
+    "bose-headline": {
+      "$value": "Bose Headline",
+      "$type": "fontFamily",
+      "$description": "Condensed display voice for section titles and campaign headlines. The 900 weight at 60px and 96px is compressed vertically rather than made airy, making the headline read like a bold audio-equipment mark; the 400 weight supplies quieter 32px service headings."
+    },
+    "bose-text": {
+      "$value": "Bose Text",
+      "$type": "fontFamily",
+      "$description": "Interface, product metadata, navigation, links, and campaign support copy. Regular 15px uppercase navigation stays restrained; 500-weight 16px labels and 24px campaign support text provide the controlled step-up beneath the headline."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 12px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 12px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "12px",
+        "fontWeight": 500,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 12px"
+    },
+    "xs-4": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-4 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.71,
+        "letterSpacing": "0.057em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.71,
+        "letterSpacing": "0.05em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 14px"
+    },
+    "sm-7": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.14,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-7 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 15px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "base-5": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-5 at 16px"
+    },
+    "base-6": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.63,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-6 at 16px"
+    },
+    "base-7": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.05em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-7 at 16px"
+    },
+    "base-8": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-8 at 16px"
+    },
+    "base-9": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.13,
+        "letterSpacing": "0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-9 at 16px"
+    },
+    "base-10": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.05em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-10 at 16px"
+    },
+    "base-11": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0.05em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-11 at 16px"
+    },
+    "base-12": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.63,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-12 at 16px"
+    },
+    "base-13": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 2.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-13 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "18px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "18px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 18px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "21px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 21px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "22px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 22px"
+    },
+    "xl-3": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "23px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-3 at 23px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 24px"
+    },
+    "2xl-3": {
+      "$value": {
+        "fontFamily": "Bose Text",
+        "fontSize": "26px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-3 at 26px"
+    },
+    "3xl": {
+      "$value": {
+        "fontFamily": "Bose Headline",
+        "fontSize": "32px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 3xl at 32px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Bose Headline",
+        "fontSize": "60px",
+        "fontWeight": 900,
+        "lineHeight": 0.88,
+        "letterSpacing": "0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 60px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Bose Headline",
+        "fontSize": "96px",
+        "fontWeight": 900,
+        "lineHeight": 0.88,
+        "letterSpacing": "0.015em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 96px"
+    }
+  },
+  "spacing": {
+    "4": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Spacing 4px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "56": {
+      "$value": "56px",
+      "$type": "dimension",
+      "$description": "Spacing 56px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "72": {
+      "$value": "72px",
+      "$type": "dimension",
+      "$description": "Spacing 72px"
+    },
+    "120": {
+      "$value": "120px",
+      "$type": "dimension",
+      "$description": "Spacing 120px"
+    },
+    "unit": {
+      "$value": "4px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "sm": {
+      "$value": "2px",
+      "$type": "dimension",
+      "$description": "Border radius sm"
+    },
+    "2xl": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "3xl": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "full": {
+      "$value": "88px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "surface": {
+    "soprano-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Page canvas, header, footer, white overlay controls"
+    },
+    "studio-mist": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Surface level 1: Product tiles, category controls, search field"
+    },
+    "warm-porcelain": {
+      "$value": "#f1efee",
+      "$type": "color",
+      "$description": "Surface level 2: Secondary navigation and subdued transitional bands"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.bose.com/home",
+      "siteName": "Bose",
+      "extractedAt": "2026-09-24T17:31:26.443Z",
+      "variant": "extended"
+    }
+  }
+}

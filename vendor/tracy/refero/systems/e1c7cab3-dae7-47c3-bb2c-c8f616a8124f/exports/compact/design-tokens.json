@@ -1,0 +1,79 @@
+{
+  "color": {
+    "signal-green": {
+      "$value": "#00e05c",
+      "$type": "color",
+      "$description": "Signal Green — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color; Decorative geometric shapes, radial glow accents in dark sections, gradient endpoints"
+    },
+    "midnight-navy": {
+      "$value": "#162136",
+      "$type": "color",
+      "$description": "Midnight Navy — Headlines, primary body text, navigation, dark footer sections — the structural anchor of the entire hierarchy"
+    },
+    "slate-navy": {
+      "$value": "#2b3a57",
+      "$type": "color",
+      "$description": "Slate Navy — Secondary headings, card titles, muted dark text — a softened navy for sub-hierarchy"
+    },
+    "steel-blue-gray": {
+      "$value": "#657694",
+      "$type": "color",
+      "$description": "Steel Blue-Gray — Helper text, secondary copy, muted labels, dropdown menus — the cool-toned equivalent of mid-gray"
+    },
+    "mist-blue": {
+      "$value": "#bfc7d9",
+      "$type": "color",
+      "$description": "Mist Blue — Hairline borders, dividers, input borders, subtle separators"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Icon strokes, high-contrast text, SVG fills, decorative geometric accents"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, inverse text on dark, input fills"
+    },
+    "frost-surface": {
+      "$value": "#f2f5fa",
+      "$type": "color",
+      "$description": "Frost Surface — Feature card backgrounds, subtle wash sections, ghost button hovers — the softest cool tint"
+    },
+    "halo-blue-gray": {
+      "$value": "#c1c9d8",
+      "$type": "color",
+      "$description": "Halo Blue-Gray — Shadow tones, elevated surface edges, decorative background shapes"
+    },
+    "link-blue": {
+      "$value": "#0073d3",
+      "$type": "color",
+      "$description": "Link Blue — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "smoke-gray": {
+      "$value": "#737a86",
+      "$type": "color",
+      "$description": "Smoke Gray — Disabled button states, inactive controls, de-emphasized metadata"
+    }
+  },
+  "font": {
+    "tt-norms-pro": {
+      "$value": "TT Norms Pro",
+      "$type": "fontFamily",
+      "$description": "Single-family system for all UI. Weight 700 for headlines and CTAs (commands attention on white), weight 600 for subheadings and button labels, weight 400 for body and descriptions. Tabular numerals (tnum) enabled for data-heavy product mockups; stylistic alternates ss01–ss04, ss06 active for refined letterforms in display sizes. The 0.125em letter-spacing on 12–13px all-caps creates the uppercase eyebrow pattern ('3+ HOURS', 'TRUSTED BY 20,000+ HAPPY CUSTOMERS WORLDWIDE') that structures every section."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://wrike.com",
+      "siteName": "Wrike",
+      "extractedAt": "2026-06-03T18:17:12.878Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+/* Scenes 3 (last frame) and 4: the Customize step as tch develop draws it (wizard-customize-css.ts), plus the typing caret of the replay. */
+.tas-wizard-body.cz-body{display:flex;flex-direction:column;overflow:hidden}
+.cz-viewport{flex:1;min-height:0;overflow:hidden;margin:0 -32px;padding:0 32px;-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 22px),transparent)}
+.cz-scroll{width:100%;max-width:760px;will-change:transform}
+.tas-customize-groups{display:grid;gap:26px;padding-bottom:28px}
+.tas-customize-heading{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.tas-customize-heading h2{margin:0;font-size:13px;line-height:18px;font-weight:600;letter-spacing:.01em}
+.tas-customize-heading>span,.tas-customize-pages-heading>span{font-size:12px;line-height:16px;color:var(--muted-foreground)}
+.tas-customize-box{border:1px solid var(--border);border-radius:12px;padding:16px;display:grid;gap:16px}
+.tas-customize-box[data-group-layout=LanguageTone],.tas-customize-box[data-group-layout=Brand]{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.tas-customize-box[data-group-layout=Brand]{gap:12px}
+.tas-customize-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.tas-customize-label{display:flex;flex-direction:column;gap:4px;min-width:0}
+.tas-customize-label[data-hint-inline=true]{flex-direction:row;align-items:baseline;gap:6px;height:18px}
+.tas-customize-label label{flex-shrink:0;white-space:nowrap;font-size:13px;font-weight:500;line-height:18px;color:var(--foreground)}
+.tas-customize-label span{font-size:12px;line-height:16px;color:var(--muted-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.cz-input{position:relative;display:flex;align-items:center;height:36px;padding:0 10px;border:1px solid var(--input);border-radius:8px;font-size:13px;white-space:nowrap;overflow:hidden}
+.cz-input.is-focused,.tas-customize-textarea.is-focused{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in oklab,var(--primary) 16%,transparent)}
+.cz-placeholder{color:var(--muted-foreground)}
+.cz-value{color:var(--foreground)}
+.cz-caret{display:inline-block;width:1.5px;height:16px;margin-left:1px;background:var(--foreground);vertical-align:-3px;animation:cz-blink 1s steps(1) infinite}
+@keyframes cz-blink{50%{opacity:0}}
+.cz-select svg{width:14px;height:14px;margin-left:auto;fill:none;stroke:var(--muted-foreground);stroke-width:1.6}
+.tas-customize-textarea{border:1px solid var(--input);border-radius:8px;overflow:hidden}
+.cz-textarea{min-height:64px;padding:8px 10px;font-size:13px;line-height:18px;white-space:normal}
+.tas-customize-textarea-foot{display:flex;align-items:center;gap:6px;padding:6px 8px;border-top:1px solid var(--border);background:color-mix(in oklab,var(--foreground) 3.5%,var(--card));flex-wrap:wrap}
+.tas-customize-starter{display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:6px;border:1px solid var(--border);background:var(--card);font-size:12px;color:var(--muted-foreground)}
+.tas-customize-rewrite{margin-left:auto;display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--primary)}
+.tas-customize-rewrite svg{width:12px;height:12px;fill:currentColor}
+.cz-tone{display:flex;border:1px solid var(--input);border-radius:8px;padding:2px;gap:2px;height:36px}
+.cz-tone-item{flex:1;height:30px;border:1px solid transparent;border-radius:6px;background:transparent;font-size:13px;color:var(--muted-foreground)}
+.cz-tone-item[aria-pressed=true]{background:color-mix(in oklab,var(--primary) 12%,transparent);color:var(--foreground);font-weight:500}
+.tas-customize-upload{display:flex;align-items:center;gap:12px;border:1px dashed var(--input);border-radius:10px;padding:10px 12px;min-width:0}
+.tas-customize-upload[data-filled="1"]{border-style:solid}
+.tas-customize-upload-preview{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:8px;background:color-mix(in oklab,var(--foreground) 3.5%,var(--card));font-weight:600;font-size:12px;flex-shrink:0;overflow:hidden;color:var(--muted-foreground)}
+.tas-customize-upload-preview.is-dark{width:96px;background:#10140f}
+.tas-customize-upload-preview.is-light{width:96px;background:#fbfcfa;box-shadow:inset 0 0 0 1px var(--border)}
+.tas-customize-upload-preview img{display:block;max-width:86%;max-height:80%;object-fit:contain}
+.tas-customize-upload[data-tile=favicon] .tas-customize-upload-preview img{max-width:100%;max-height:100%}
+.tas-customize-upload-preview svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.4}
+.tas-customize-upload-copy{min-width:0;display:flex;flex-direction:column}
+.tas-customize-upload-copy>span{font-size:13px;font-weight:500;line-height:18px}
+.tas-customize-upload-copy small{font-size:12px;line-height:16px;color:var(--muted-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tas-customize-upload .tas-customize-upload-button{margin-left:auto;flex-shrink:0;height:36px;padding:0 12px;background:transparent;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.cz-spin{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8}
+.tas-customize-pages-heading{display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px}
+.tas-customize-pages-heading button{height:auto;padding:0;border:0;background:transparent;color:var(--primary);font-size:12px}
+.tas-customize-pages{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:2px 12px}
+.tas-customize-page{display:flex;align-items:center;gap:8px;height:30px;font-size:13px;line-height:18px}
+.tas-customize-page[data-locked="1"]{color:var(--muted-foreground)}
+.cz-check{width:14px;height:14px;border-radius:4px;background:var(--primary);position:relative;flex:none}
+.cz-check:after{content:"";position:absolute;left:4.5px;top:2px;width:3px;height:7px;border:solid #fff;border-width:0 1.6px 1.6px 0;transform:rotate(45deg)}
+.tas-customize-page[data-locked="1"] .cz-check{opacity:.5}
+.cz-review-brand img{width:14px;height:14px;border-radius:3px;margin-right:6px}
+.cz-build .create-progress li[data-brief-step="1"] span{color:var(--foreground);font-weight:500}
+/* While typing, a long answer keeps its end and the caret in view, like a real input. */
+.cz-line{display:inline-flex;align-items:center;justify-content:flex-end;max-width:100%;overflow:hidden;white-space:nowrap}
+.cz-line>*{flex:none}
+/* The ready screen's actions (tch wizard.tsx 1372-1427): the primary button, then the link-style "Open your site in a new tab". */
+.cz-ready-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+.cz-ready-actions .btn.link{border-color:transparent;background:transparent;color:var(--primary);padding-left:0;padding-right:0;text-underline-offset:4px}
+.cz-ready-actions .btn.link.is-hover{text-decoration:underline}

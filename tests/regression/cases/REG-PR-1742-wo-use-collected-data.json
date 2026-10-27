@@ -1,0 +1,59 @@
+{
+  "id": "REG-PR-1742-wo-use-collected-data",
+  "kind": "fix",
+  "title": "WO uses what research collected on the demo: verbatim reviews with their author, Google's rating and price range, guest photos as dish photos",
+  "pr": 1742,
+  "area": "website-opportunities/demo-data",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "From the checkout, run the command in run.",
+    "It runs the domain tests of the brief, the Google Place facts and the dish photo matcher, the quickstart-first review pins and plain-card fallback, the Google Maps review normalizer, the editorial dossier and its Tracy Base EmDash testimonial cards, the slot plan of reviews and figures, the agent rating part, the host QA review check, and the place profile's read of social counts against a real PostgreSQL (TEST_DATABASE_URL). No network is needed."
+  ],
+  "expect": [
+    "A review shown word for word with its author's name passes the host QA review check; a missing platform credit or link is a note, never a failure; changed words, a missing author or an unsigned review still fail.",
+    "Every Google review collected stays in the brief with its whole text; every Google Maps review the lookup returned is kept.",
+    "The brief holds Google's rating, review count and price range of the same place, credited to Google; another place's listing lends it none.",
+    "A TripAdvisor or Google Maps guest photo is a dish photo candidate only by the words of its own review, and vision still decides acceptance.",
+    "quickstart-first reads TripAdvisor and Google Maps reviews, pins each review whole, and fills plain quote cards with reviews before visit information.",
+    "A template's pricing, team, FAQ, careers or donations page is kept with its layout: pricing shows the collected prices (fill 'prices') or stays neutral, the others are neutral; the agent prompt names no demo person, question, job or price for them.",
+    "The quickstart editor's sources hold the place's own website pages, its own posts (never a guest's), Google's rating typed as a rating, and each collected follower or like count with its platform and link.",
+    "The editorial pilot's testimonial role quotes one collected review whole, with its author and platform; a review never leads the home page or tells the story.",
+    "quality-v1 carries each signed review as a review source: a testimonial may quote it whole with its author and platform, and a fact citing it is refused (FACT_AUTHORSHIP).",
+    "The brief lists the follower and like counts research collected, with platform and link; the hand-off prompt does not repeat them.",
+    "The place profile view shows a review with its kind and author and no 'Not used on the demo' label.",
+    "On Tracy Base EmDash the landing page's quote cards (`testimonials_quotes`) take the collected reviews, one per card, word for word with the reviewer's own name and the platform on the line under it, from the editorial pilot's hand-made map and from the 0.5.6 slot-roles sidecar alike; the cards no review reaches keep their place with quote, name and line emptied, the section heading stays, the team cards (`team_quotes`) never take a guest, and a review without its author or platform is never placed. The card draws the author's initials: the template has no avatar field.",
+    "A post count the social-stats cache measured (Instagram 130) becomes a statistic printed as '130' 'Instagram posts' ('Bài đăng trên Instagram' in Vietnamese, every site language labelled), after ratings, review counts, followers and likes; a profile measured with posts and no follower count still shows its posts.",
+    "A deployment that is a client of the shared social authority reads follower and post counts from that authority's replica only (never another authority's, never its old own cache); a standalone or central deployment reads its own cache; an invalidated binding or a handle found missing gives nothing.",
+    "All tests pass."
+  ],
+  "selectors": {
+    "functions": "checkNoGoogleReviewQuoted, buildBrief, placeFactsFromDetails, matchDishPhotos, quickstartReviews, quickstartFactCopy, quickstartReviewFallback, normalizeMapsReviews, placeDossier, freezeAgentResearch, pagePlan, answersFromBrief, renderAgentPrompt, renderBriefMarkdown, quickstartSources, emdashEditorialTemplate, editorialInput, validateEditorialPlan, editorialPins, qualitySourcesOf, validateFact, validateQualityPlan, placeProfileView, emdashCopyWrites, writeWoCopy, planSlotFill, placeProfileFromResearch, socialStatsOfRead, useSocialStatsSource"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/wo/website-opportunities/test/domain-brief.test.mjs",
+      "packages/wo/website-opportunities/test/domain-gplaces-details.test.mjs",
+      "packages/wo/website-opportunities/test/domain-dish-photos.test.mjs",
+      "apps/tracy-web/test/brief-quickstart-first.test.mjs",
+      "apps/tracy-web/test/website-opportunities-google-maps.test.mjs",
+      "apps/tracy-web/test/wo-editorial.test.mjs",
+      "apps/tracy-web/test/wo-agent-demo.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-host/test/demo-qa-review-attribution.test.mjs",
+      "packages/wo/website-opportunities/test/domain-page-plan.test.mjs",
+      "packages/wo/website-opportunities/test/domain-site-answers.test.mjs",
+      "packages/wo/website-opportunities/test/domain-agent-prompt.test.mjs",
+      "apps/tracy-web/test/wo-quality-sources.test.mjs",
+      "apps/tracy-web/test/wo-quality-plan.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-place-profile.test.mjs",
+      "apps/tracy-web/test/brief-emdash-wo-copy.test.mjs",
+      "packages/wo/website-opportunities/test/domain-slot-fill-reviews.test.mjs",
+      "apps/tracy-web/test/wo-place-social-stats.test.mjs"
+    ],
+    "needs": ["postgres"]
+  }
+}

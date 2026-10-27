@@ -1,0 +1,33 @@
+---
+import type { Locale } from '@/lib/i18n'
+import { wordsOf } from '@/lib/locale-words'
+import { uiLocale } from '@/lib/ui'
+
+interface Props {
+  page: number
+  pages: number
+  url: (n: number) => string
+  meta?: string
+  locale: Locale
+}
+const { page, pages, url, meta, locale } = Astro.props
+// The arrows' accessible names are the theme's words, in the language the page is written in (TCH #1013, LANG-2).
+const words = wordsOf(uiLocale(locale))
+const nums: Array<number | '…'> = []
+for (let n = 1; n <= pages; n++) {
+  if (n === 1 || n === pages || Math.abs(n - page) <= 1) nums.push(n)
+  else if (nums[nums.length - 1] !== '…') nums.push('…')
+}
+const box = 'flex h-[38px] min-w-[38px] items-center justify-center text-[14px]'
+---
+
+{pages > 1 && (
+	<nav class="mt-14 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-6" aria-label="Pagination">
+		<div class="flex gap-1.5">
+			{page > 1 ? <a href={url(page - 1)} class={`${box} border border-line text-fg-meta`} aria-label={words.previous}>‹</a> : <span class={`${box} border border-line text-fg-faint`}>‹</span>}
+			{nums.map((n) => (n === "…" ? <span class={`${box} text-fg-faint`}>…</span> : n === page ? <span class={`${box} bg-ink font-semibold text-[color:var(--ds-c-on-ink,var(--color-white))]`} aria-current="page">{n}</span> : <a href={url(n)} class={`${box} border border-line text-fg hover:border-forest-text`}>{n}</a>))}
+			{page < pages ? <a href={url(page + 1)} class={`${box} border border-line text-fg-meta`} aria-label={words.next}>›</a> : <span class={`${box} border border-line text-fg-faint`}>›</span>}
+		</div>
+		{meta && <div class="text-[13.5px] text-fg-meta">{meta}</div>}
+	</nav>
+)}

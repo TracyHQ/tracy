@@ -1,0 +1,54 @@
+{
+  "color": {
+    "gallery-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Gallery White — Page backgrounds, header surfaces, navigation fields, and editorial whitespace"
+    },
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, logo marks, icon fills, and transparent-control text"
+    },
+    "near-black": {
+      "$value": "#090909",
+      "$type": "color",
+      "$description": "Near-Black — Navigation text, links, input text, and fine dark rules"
+    },
+    "rule-gray": {
+      "$value": "#e9e9e9",
+      "$type": "color",
+      "$description": "Rule Gray — 1px dividers, quiet section boundaries, and image-grid separation"
+    },
+    "studio-gray": {
+      "$value": "#f3f3f3",
+      "$type": "color",
+      "$description": "Studio Gray — Image loading fields and input surfaces"
+    },
+    "inactive-gray": {
+      "$value": "#aaaaaa",
+      "$type": "color",
+      "$description": "Inactive Gray — Inactive navigation and disabled text"
+    },
+    "butter-ticket": {
+      "$value": "#faedbc",
+      "$type": "color",
+      "$description": "Butter Ticket — Footer and service-information surfaces; the muted yellow reads as a printed event ticket against the monochrome interface"
+    }
+  },
+  "font": {
+    "helveticanowvar": {
+      "$value": "HelveticaNowVar",
+      "$type": "fontFamily",
+      "$description": "The complete interface voice: 520 for navigation, utility links, controls, and uppercase discovery labels; 470 for quieter editorial or descriptive copy. The fixed 13px scale makes the photography—not oversized type—the dominant visual material."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://axelarigato.com",
+      "siteName": "AXEL ARIGATO",
+      "extractedAt": "2026-09-20T19:24:28.599Z",
+      "variant": "compact"
+    }
+  }
+}

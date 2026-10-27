@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-ink-black: #121212;
+  --color-paper-white: #ffffff;
+  --color-blush-wash: #f9d9f7;
+
+  /* Typography — Font Families */
+  --font-monumentextended-ultrabold: 'MonumentExtended UltraBold', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-monumentextended-regular: 'MonumentExtended Regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-swiss: 'Swiss', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,72 @@
+{
+  "id": "QA-UNIT-REG-PR-893-emdash-cleanup-outlives-run-happy",
+  "itemIds": ["regression:REG-PR-893-emdash-cleanup-outlives-run"],
+  "requirement": "EmDash Apply: the clean-up of hidden languages after hand-over runs on its own clock, not the run's signal",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-emdash-cleanup-outlives-run.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026 local stand, final check on the image of 2f59bf3e8: every EmDash Apply logged '[brief] <site>: hidden languages after hand-over: 0 unpublished, 39 failed, 0 not reached' — the clean-up was made on ctx.signal, which brief-build aborts as the run ends, before dispose waits for it.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 30); the named test is 'ok': with the run's signal aborted right after apply returns (as brief-build does before dispose), every entry of the hidden language is unpublished and the clean-up line says '0 failed, 0 not reached'.",
+    "productSources": [
+      "apps/tracy-web/src/lib/emdash-tool.js:37",
+      "apps/tracy-web/src/sites/brief-engines/emdash-menus.js:331",
+      "apps/tracy-web/src/sites/brief-engines/emdash.js:105",
+      "apps/tracy-web/src/sites/brief-normalize.js:403"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-menus.js:231 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-menus.js:53 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-menus.js:75 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-real-pictures.js:100 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-real-pictures.js:204 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash-wo-copy.js:37 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash.js:173 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash.js:223 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash.js:482 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/emdash.js:555 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-emdash.test.mjs:1038 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:207 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:253 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:652 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:748 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:808 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:857 import() with a computed specifier",
+      "apps/tracy-web/test/brief-emdash.test.mjs:955 spawn() runs computed arguments",
+      "apps/tracy-web/test/brief-emdash.test.mjs:97 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-emdash.test.mjs:998 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-893-emdash-cleanup-outlives-run.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-emdash-cleanup-outlives-run"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-893-emdash-cleanup-outlives-run",
+    "pr": 893,
+    "kind": "fix",
+    "area": "tracy-web/brief-engines/emdash",
+    "file": "tests/regression/cases/REG-PR-893-emdash-cleanup-outlives-run.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-893-emdash-cleanup-outlives-run.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

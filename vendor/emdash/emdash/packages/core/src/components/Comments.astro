@@ -1,0 +1,367 @@
+---
+/**
+ * Server-rendered comment list for a content item.
+ *
+ * Fetches approved comments directly from the repository (no API call).
+ * Renders semantic HTML with CSS custom properties for styling.
+ *
+ * @example
+ * ```astro
+ * ---
+ * import { Comments } from "emdash/ui/comments";
+ * ---
+ * <Comments collection="posts" contentId={post.id} threaded />
+ * ```
+ */
+import type { PublicComment } from "../database/repositories/comment.js";
+import { getComments } from "../comments/query.js";
+import { getCollectionInfo } from "../schema/query.js";
+
+interface Props {
+	collection: string;
+	contentId: string;
+	threaded?: boolean;
+	/** Show a like/reaction button per comment (opt-in). */
+	reactions?: boolean;
+	/** Order of top-level comments: chronological (default) or Wilson-ranked. */
+	sort?: "oldest" | "best";
+	class?: string;
+}
+
+const {
+	collection,
+	contentId,
+	threaded = false,
+	reactions = false,
+	sort = "oldest",
+	class: className,
+} = Astro.props;
+
+const collectionInfo = await getCollectionInfo(collection);
+const enabled = collectionInfo?.commentsEnabled ?? false;
+const { items, total } = enabled
+	? await getComments({ collection, contentId, threaded, reactions, sort })
+	: { items: [], total: 0 };
+
+const URL_RE = /https?:\/\/[^\s<>"')\]]+/g;
+const AMP_RE = /&/g;
+const LT_RE = /</g;
+const GT_RE = />/g;
+const QUOT_RE = /"/g;
+
+function autoLinkUrls(text: string): string {
+	return text.replace(
+		URL_RE,
+		(url) =>
+			`<a href="${url}" rel="nofollow ugc noopener" target="_blank">${url}</a>`
+	);
+}
+
+function escapeHtml(text: string): string {
+	return text
+		.replace(AMP_RE, "&amp;")
+		.replace(LT_RE, "&lt;")
+		.replace(GT_RE, "&gt;")
+		.replace(QUOT_RE, "&quot;");
+}
+
+function formatBody(text: string): string {
+	return autoLinkUrls(escapeHtml(text));
+}
+
+// Progressive-enhancement script for reactions. Emitted verbatim (is:inline)
+// only when `reactions` is enabled, so non-reaction pages ship zero extra JS.
+// Avoids template literals internally so it survives the outer backticks.
+const REACTION_SCRIPT = `
+(() => {
+  const sections = document.querySelectorAll('[data-ec-comments][data-ec-reactions]');
+  sections.forEach((section) => {
+    const collection = section.getAttribute('data-collection');
+    const contentId = section.getAttribute('data-content-id');
+    if (!collection || !contentId) return;
+    const base = '/_emdash/api/comments/' + encodeURIComponent(collection) + '/' + encodeURIComponent(contentId) + '/reactions';
+    const headers = { 'X-EmDash-Request': '1' };
+
+    fetch(base, { headers: headers })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((payload) => {
+        const viewer = payload && payload.data && payload.data.viewer;
+        if (!viewer) return;
+        Object.keys(viewer).forEach((commentId) => {
+          (viewer[commentId] || []).forEach((reaction) => {
+            const sel = '.ec-reaction[data-comment-id="' + commentId + '"][data-ec-reaction="' + reaction + '"]';
+            const btn = section.querySelector(sel);
+            if (btn) btn.setAttribute('aria-pressed', 'true');
+          });
+        });
+      })
+      .catch(() => {});
+
+    section.addEventListener('click', (event) => {
+      const btn = event.target.closest('.ec-reaction');
+      if (!btn || !section.contains(btn)) return;
+      const commentId = btn.getAttribute('data-comment-id');
+      const reaction = btn.getAttribute('data-ec-reaction');
+      if (!commentId || !reaction) return;
+      btn.disabled = true;
+      fetch(base, {
+        method: 'POST',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, headers),
+        body: JSON.stringify({ commentId: commentId, reaction: reaction }),
+      })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((payload) => {
+          const data = payload && payload.data;
+          if (!data) return;
+          btn.setAttribute('aria-pressed', data.reacted ? 'true' : 'false');
+          const countEl = btn.querySelector('[data-ec-reaction-count]');
+          if (countEl) countEl.textContent = String((data.counts && data.counts[reaction]) || 0);
+        })
+        .catch(() => {})
+        .finally(() => { btn.disabled = false; });
+    });
+  });
+})();
+`;
+---
+
+{
+	enabled && (
+		<Fragment>
+		<section
+			class:list={["ec-comments", className]}
+			data-ec-comments
+			data-collection={collection}
+			data-content-id={contentId}
+			{...(reactions ? { "data-ec-reactions": "" } : {})}
+		>
+			<h3 class="ec-comments-heading">
+				{total === 0
+					? "No comments yet"
+					: total === 1
+						? "1 Comment"
+						: `${total} Comments`}
+			</h3>
+
+			{items.length > 0 && (
+				<ol class="ec-comments-list">
+					{items.map((comment: PublicComment) => (
+						<li>
+							<article
+								class="ec-comment"
+								id={`comment-${comment.id}`}
+								data-comment-id={comment.id}
+							>
+								<header class="ec-comment-header">
+									<span class="ec-comment-author">
+										{comment.authorName}
+										{comment.isRegisteredUser && (
+											<span class="ec-comment-badge" aria-label="Site member">
+												&#x2713;
+											</span>
+										)}
+									</span>
+									<time class="ec-comment-date" datetime={comment.createdAt}>
+										{new Date(comment.createdAt).toLocaleDateString("en-US", {
+											year: "numeric",
+											month: "long",
+											day: "numeric",
+											hour: "numeric",
+											minute: "2-digit",
+										})}
+									</time>
+								</header>
+								<div
+									class="ec-comment-body"
+									set:html={formatBody(comment.body)}
+								/>
+								{reactions && (
+									<div class="ec-comment-actions">
+										<button
+											type="button"
+											class="ec-reaction"
+											data-ec-reaction="like"
+											data-comment-id={comment.id}
+											aria-pressed="false"
+										>
+											<span class="ec-reaction-icon" aria-hidden="true">
+												&#x2661;
+											</span>
+											<span class="ec-reaction-label">Like</span>
+											<span class="ec-reaction-count" data-ec-reaction-count>
+												{comment.reactions?.like ?? 0}
+											</span>
+										</button>
+									</div>
+								)}
+								{threaded && comment.replies && comment.replies.length > 0 && (
+									<ol class="ec-comment-replies">
+										{comment.replies.map((reply: PublicComment) => (
+											<li>
+												<article
+													class="ec-comment ec-comment-reply"
+													id={`comment-${reply.id}`}
+													data-comment-id={reply.id}
+												>
+													<header class="ec-comment-header">
+														<span class="ec-comment-author">
+															{reply.authorName}
+															{reply.isRegisteredUser && (
+																<span
+																	class="ec-comment-badge"
+																	aria-label="Site member"
+																>
+																	&#x2713;
+																</span>
+															)}
+														</span>
+														<time
+															class="ec-comment-date"
+															datetime={reply.createdAt}
+														>
+															{new Date(reply.createdAt).toLocaleDateString(
+																"en-US",
+																{
+																	year: "numeric",
+																	month: "long",
+																	day: "numeric",
+																	hour: "numeric",
+																	minute: "2-digit",
+																}
+															)}
+														</time>
+													</header>
+													<div
+														class="ec-comment-body"
+														set:html={formatBody(reply.body)}
+													/>
+													{reactions && (
+														<div class="ec-comment-actions">
+															<button
+																type="button"
+																class="ec-reaction"
+																data-ec-reaction="like"
+																data-comment-id={reply.id}
+																aria-pressed="false"
+															>
+																<span class="ec-reaction-icon" aria-hidden="true">&#x2661;</span>
+																<span class="ec-reaction-label">Like</span>
+																<span class="ec-reaction-count" data-ec-reaction-count>{reply.reactions?.like ?? 0}</span>
+															</button>
+														</div>
+													)}
+												</article>
+											</li>
+										))}
+									</ol>
+								)}
+							</article>
+						</li>
+					))}
+				</ol>
+			)}
+		</section>
+		{reactions && <script is:inline set:html={REACTION_SCRIPT} />}
+		</Fragment>
+	)
+}
+
+<style>
+	.ec-comments {
+		--ec-comment-gap: 1.5rem;
+		--ec-comment-indent: 2rem;
+		--ec-comment-border: 1px solid #e5e7eb;
+	}
+
+	.ec-comments-list,
+	.ec-comment-replies {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.ec-comments-list > li + li {
+		margin-top: var(--ec-comment-gap);
+	}
+
+	.ec-comment {
+		padding-bottom: var(--ec-comment-gap);
+		border-bottom: var(--ec-comment-border);
+	}
+
+	.ec-comment-replies {
+		margin-top: var(--ec-comment-gap);
+		padding-left: var(--ec-comment-indent);
+	}
+
+	.ec-comment-replies > li + li {
+		margin-top: var(--ec-comment-gap);
+	}
+
+	.ec-comment-header {
+		display: flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+
+	.ec-comment-author {
+		font-weight: 600;
+	}
+
+	.ec-comment-author a {
+		color: inherit;
+	}
+
+	.ec-comment-badge {
+		font-size: 0.75em;
+		vertical-align: super;
+	}
+
+	.ec-comment-date {
+		font-size: 0.875em;
+		opacity: 0.6;
+	}
+
+	.ec-comment-body {
+		margin-top: 0.5rem;
+		white-space: pre-wrap;
+		word-break: break-word;
+	}
+
+	.ec-comment-actions {
+		margin-top: 0.5rem;
+	}
+
+	.ec-reaction {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		font: inherit;
+		font-size: 0.875em;
+		color: inherit;
+		background: none;
+		border: var(--ec-comment-border);
+		border-radius: 999px;
+		padding: 0.15rem 0.6rem;
+		cursor: pointer;
+	}
+
+	.ec-reaction[aria-pressed="true"] {
+		border-color: currentColor;
+		font-weight: 600;
+	}
+
+	.ec-reaction[aria-pressed="true"] .ec-reaction-icon {
+		color: #e0245e;
+	}
+
+	.ec-reaction:disabled {
+		opacity: 0.5;
+		cursor: default;
+	}
+
+	.ec-reaction-count {
+		font-variant-numeric: tabular-nums;
+	}
+</style>

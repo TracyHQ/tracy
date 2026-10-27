@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-void-indigo: #040723;
+  --color-abyss-plum: #140f33;
+  --color-onyx: #000000;
+  --color-glacier: #e4ebf3;
+  --color-paper: #ffffff;
+  --color-smoke: #999999;
+  --color-ash: #808080;
+  --color-graphite: #333333;
+  --color-charcoal: #222222;
+  --color-cinder: #cccccc;
+  --color-pulse-blue: #3898ec;
+  --color-iris: #755eff;
+  --color-lavender-lightning: #aa57ff;
+  --color-neon-sprout: #0be014;
+  --color-dusk-fade: #47246a;
+
+  /* Typography — Font Families */
+  --font-avenir: 'Avenir', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-poppins: 'Poppins', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

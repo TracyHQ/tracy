@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-indigo-statement: #203b90;
+  --color-indigo-mist: #7989bc;
+  --color-paper-white: #ffffff;
+  --color-carbon: #000000;
+  --color-graphite: #1b1b1b;
+  --color-fog: #f2f2f2;
+
+  /* Typography — Font Families */
+  --font-soehne: 'Soehne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-integral: 'Integral', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-nunito-sans-klaviyo-hosted: 'Nunito-Sans-Klaviyo-Hosted', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtstandard-m: 'GTStandard-M', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

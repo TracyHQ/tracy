@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1635-joomla-prefetch-contract",
+  "kind": "fix",
+  "title": "Joomla quickstart provision puts the site's contract profile into its Claude Cowork component, as root, before the bind",
+  "pr": 1635,
+  "area": "fleet/provision/joomla-contract",
+  "cms": ["jo"],
+  "needs": ["node", "php-or-docker"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/joomla-contract-fetch.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines, and whether the named tests are 'ok'."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 11).",
+    "The tests 'both quickstart roads fetch after the component install and before the bind, and stop on failure', 'a fetch that fails stops with a line naming the profile, and no bind follows it', 'a component that predates fetching bundles its profiles: nothing is done, nothing fails' and 'a fetching component gets the profile from its own release, readable by the web user' are 'ok'."
+  ],
+  "selectors": {
+    "shell": "packages/fleet/tracy-fleet-operation/scripts/provision/platform/joomla.sh (joomla_fetch_contract)",
+    "php": "packages/fleet/tracy-fleet-operation/scripts/provision/joomla-contract-fetch.php (tracy_contract_fetch)"
+  },
+  "evidence": "Dev, 22-23/10/2026: every new Joomla quickstart site whose component is Claude Cowork for Joomla >= 0.24.55 stopped at the bind with `contract_unavailable: cannot create .../lib/contracts/ja-fresco/j6` (the component, installed by root, fetches its profile on first use into its own code folder; the site answers the bind as www-data). Local: the fetch script run as root in php:8.1-cli over the real 0.24.55 component (root-owned) put ja-fresco/j6/1.0.4 on disk 0755/0644, readable by www-data; offline it exited 1 with `!! contract profile ja-fresco/j6/1.0.4 could not be put on disk: fetch failed: download failed: Could not resolve host: github.com`.",
+  "fence": "Only the profile fetch between install and bind is added; how the component is installed, how the bind runs and the final webroot ownership (own_webroot) are unchanged. WordPress untouched.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-fetch.test.mjs"
+    ],
+    "tests": [
+      "both quickstart roads fetch after the component install and before the bind, and stop on failure",
+      "a fetch that fails stops with a line naming the profile, and no bind follows it",
+      "a component that predates fetching bundles its profiles: nothing is done, nothing fails",
+      "a fetching component gets the profile from its own release, readable by the web user"
+    ]
+  }
+}

@@ -1,0 +1,352 @@
+---
+/**
+ * Site footer: brand block with socials, three link columns (menus), newsletter band (Forms
+ * plugin) and the legal row. Every word and link comes from `chrome`; empty parts are not rendered.
+ */
+import type { Chrome, ChromeLink } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import Icon from '@/components/Icon.astro'
+import LogoMark from '@/components/site/LogoMark.astro'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { getSiteSettings } from 'emdash'
+import Newsletter from '@/components/islands/Newsletter'
+import { isCurrent } from '@/components/islands/nav'
+import { islandMarks, stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  /** Site-relative path of the current page: its footer link is marked. */
+  currentPath?: string
+}
+const { chrome, currentPath = '' } = Astro.props
+const b = chrome.brand ?? {}
+const brandName = String(b.brand ?? '').trim()
+const tagline = String(b.heading ?? '').trim()
+const logoSrc = mediaUrl(b.logo)
+// The customer's logo wins over the template's own (`brand.logo`); the footer follows the theme like the header.
+const logos = brandLogos(await getSiteSettings(), b.logo_dark, brandName)
+const customerLogo = Boolean(logos.light || logos.dark)
+// Every social item is drawn: one with no link yet (K6: the demo's items stay, their links emptied) as a plain icon.
+const socials = ((b.items ?? []) as any[]).filter((s) => s && (s.url || s.network || s.label))
+const columns = [chrome.footerProduct, chrome.footerDevelopers, chrome.footerCompany].filter(
+  (c) => c?.items?.length
+)
+const n = chrome.newsletter ?? {}
+const showNewsletter = Boolean(n.title || n.text || n.button_label)
+const legal = chrome.footerLegal ?? {}
+// The footer legal entry carries its own links; the `legal` menu is the fallback when it has none.
+const legalLinks: { label: string; url: string }[] = (legal.items as any[])?.length
+  ? (legal.items as any[])
+  : chrome.legal
+const hasLink = (url: unknown) => typeof url === 'string' && url.trim() !== '' && url !== '#'
+const isExternal = (url: string) => /^https?:\/\//.test(url)
+// Provenance stamps of the chrome entries' fields (`src/lib/stamps.ts`); empty on an ordinary request.
+// The three link columns and the fallback legal links are menus, which are not Content API records:
+// they carry no stamp.
+const src = chrome.sources
+const $brand = stampFor(Astro.request, src.brand.collection, src.brand.entry)
+const $news = stampFor(Astro.request, src.newsletter.collection, src.newsletter.entry)
+const $legal = stampFor(Astro.request, src.footerLegal.collection, src.footerLegal.entry)
+const legalOwn = Boolean((legal.items as any[])?.length)
+const newsMarks = islandMarks({ input: $news('placeholder'), button: $news('button_label') })
+---
+
+<footer class="k-footer">
+	<div class="k-container">
+		<div class="k-footer-top">
+			<div class="k-footer-brand">
+				{
+					(brandName || logoSrc || customerLogo) && (
+						<a href={href(chrome.locale, "/")} class="k-footer-logo">
+							<BrandLogo spots={logoSpots(logos, "themed")} alt={logos.alt} imgClass="k-footer-brand-img">
+								{logoSrc ? <img src={logoSrc} alt={brandName} height="24" {...$brand('logo')} /> : <LogoMark size={24} />}
+								{brandName && <span {...$brand('brand')}>{brandName}</span>}
+							</BrandLogo>
+						</a>
+					)
+				}
+				{tagline && <p class="k-footer-tagline" {...$brand('heading')}>{tagline}</p>}
+				{
+					socials.length > 0 && (
+						<ul class="k-footer-social">
+							{socials.map((s) => (
+								<li {...$brand.block('items')}>
+									{hasLink(s.url) ? (
+										<a href={s.url} aria-label={s.label || undefined} title={s.label || undefined} {...(isExternal(s.url) ? { target: "_blank", rel: "noopener" } : {})} {...$brand('items.label')}>
+											<Icon name={s.network} size={16} />
+										</a>
+									) : (
+										<span role="img" aria-label={s.label || undefined} title={s.label || undefined} {...$brand('items.label')}>
+											<Icon name={s.network} size={16} />
+										</span>
+									)}
+								</li>
+							))}
+						</ul>
+					)
+				}
+			</div>
+			{
+				columns.map((col) => (
+					<nav class="k-footer-col" aria-label={col.title || undefined}>
+						{col.title && <h3 class="k-footer-heading">{col.title}</h3>}
+						<ul>
+							{col.items.map((i: ChromeLink) => (
+								<li>{hasLink(i.url) ? <a href={i.url} target={i.target || undefined} class:list={[{ "is-active": isCurrent(i.url, currentPath) }]} aria-current={isCurrent(i.url, currentPath) ? "page" : undefined}>{i.label}</a> : <span>{i.label}</span>}</li>
+							))}
+						</ul>
+					</nav>
+				))
+			}
+		</div>
+
+		{
+			showNewsletter && (
+				<div class="k-news">
+					<div class="k-news-copy">
+						{n.title && <h3 class="k-news-title" {...$news('title')}>{n.title}</h3>}
+						{n.text && <p class="k-news-text" {...$news('text')}>{n.text}</p>}
+					</div>
+					<Newsletter client:idle label={String(n.title ?? '')} placeholder={String(n.placeholder ?? '')} buttonLabel={String(n.button_label ?? '')} formId={String(n.form_id ?? '')} {...newsMarks} />
+				</div>
+			)
+		}
+
+		<div class="k-footer-bottom">
+			{legal.copyright && <p {...$legal('copyright')}>{legal.copyright}</p>}
+			{
+				legalLinks.length > 0 && (
+					<ul>
+						{legalLinks.map((i) => (
+							<li {...(legalOwn ? $legal.block('items') : {})}>{hasLink(i.url) ? <a href={i.url} {...(legalOwn ? $legal('items.label') : {})}>{i.label}</a> : <span {...(legalOwn ? $legal('items.label') : {})}>{i.label}</span>}</li>
+						))}
+					</ul>
+				)
+			}
+		</div>
+	</div>
+</footer>
+
+<style>
+	/* The source's <footer> carries no padding; its inner container does (measured two-sided). */
+	.k-footer {
+		padding: 0;
+		background: var(--k-elevated);
+		border-top: 1px solid var(--k-border);
+		font-size: 14px;
+		color: var(--k-text);
+	}
+	.k-footer > .k-container {
+		padding-block: 64px 32px;
+	}
+	.k-footer-top {
+		display: grid;
+		grid-template-columns: 1.4fr 1fr 1fr 1fr;
+		gap: 40px;
+	}
+	.k-footer-logo {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		font-family: var(--font-heading);
+		font-size: 18px;
+		font-weight: 700;
+		letter-spacing: -0.4px;
+		line-height: 24px;
+		color: var(--k-heading);
+	}
+	.k-footer-logo img {
+		height: 24px;
+		width: auto;
+	}
+	/* The customer's own logo is the whole lockup (no name beside it), so it gets a little more height. */
+	.k-footer-logo :global(img.k-footer-brand-img) {
+		height: 28px;
+		max-width: 200px;
+		object-fit: contain;
+	}
+	.k-footer-tagline {
+		max-width: 280px;
+		margin: 20px 0 0;
+		line-height: 1.6;
+	}
+	.k-footer-social {
+		display: flex;
+		gap: 10px;
+		margin-top: 14px;
+	}
+	.k-footer-social a,
+	.k-footer-social span[role="img"] {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		border: 1px solid var(--k-border);
+		border-radius: 8px;
+		color: var(--k-text);
+		transition: border-color 0.15s, color 0.15s;
+	}
+	.k-footer-social a:hover {
+		border-color: var(--k-primary);
+		color: var(--k-primary);
+	}
+	.k-footer-heading {
+		margin: 0 0 10px;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		font-weight: 400;
+		line-height: 12px;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-muted);
+	}
+	.k-footer-col ul {
+		display: flex;
+		flex-direction: column;
+		gap: 11px;
+	}
+	.k-footer-col a,
+	.k-footer-col span {
+		display: inline-block;
+		padding: 4px 0;
+		font-weight: 500;
+		line-height: 1.55;
+		color: var(--k-text);
+		transition: color 0.15s;
+	}
+	.k-footer-col a:hover {
+		color: var(--k-heading);
+	}
+	/* Current page, as the source marks it: same colour, bold. */
+	.k-footer-col a.is-active {
+		font-weight: 700;
+	}
+
+	.k-news {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px 24px;
+		margin-top: 48px;
+		padding-top: 36px;
+		border-top: 1px solid var(--k-border);
+	}
+	.k-news-title {
+		margin: 0;
+		font-size: 18px;
+		line-height: 1.2;
+		letter-spacing: -1px;
+	}
+	.k-news-text {
+		margin: 5px 0 0;
+		line-height: 1.5;
+		color: var(--k-muted);
+	}
+	.k-footer :global(.k-news-form) {
+		display: flex;
+		gap: 10px;
+	}
+	.k-footer :global(.k-news-input) {
+		width: 260px;
+		height: 45px;
+		padding: 13px 14px;
+		border: 1px solid var(--k-border);
+		border-radius: 9px;
+		background: var(--k-surface);
+		font: inherit;
+		font-size: 14px;
+		color: var(--k-heading);
+	}
+	.k-footer :global(.k-news-input::placeholder) {
+		color: var(--k-muted);
+	}
+	.k-footer :global(.k-news-input:focus-visible) {
+		outline: 2px solid var(--k-primary);
+		outline-offset: 0;
+		border-color: transparent;
+	}
+	.k-footer :global(.k-news-button) {
+		min-height: 45px;
+		padding-inline: 34px;
+		border-radius: 9px;
+		cursor: pointer;
+	}
+	.k-footer :global(.k-news-button:disabled) {
+		opacity: 0.7;
+		cursor: progress;
+	}
+	.k-footer :global(.k-news-status) {
+		margin: 8px 0 0;
+		font-size: 13px;
+		color: var(--k-primary);
+	}
+	.k-footer :global(.k-news-status.is-error) {
+		color: var(--k-heading);
+	}
+	.k-footer :global(.k-news-status:empty) {
+		display: none;
+	}
+
+	.k-footer-bottom {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 14px;
+		margin-top: 48px;
+		padding-top: 24px;
+		border-top: 1px solid var(--k-border);
+		font-size: 13px;
+		color: var(--k-muted);
+	}
+	.k-footer-bottom p {
+		margin: 0;
+	}
+	.k-footer-bottom ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 22px;
+	}
+	.k-footer-bottom a {
+		color: var(--k-muted);
+		transition: color 0.15s;
+	}
+	.k-footer-bottom a:hover {
+		color: var(--k-heading);
+	}
+
+	/* Breakpoints measured on the rendered source: grid ~900, newsletter stack ~820, full width 576. */
+	@media (max-width: 899.98px) {
+		.k-footer-top {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 20px;
+		}
+		.k-footer-brand {
+			grid-column: 1 / -1;
+		}
+	}
+	@media (max-width: 819.98px) {
+		.k-news {
+			flex-direction: column;
+			align-items: stretch;
+		}
+	}
+	@media (max-width: 575.98px) {
+		.k-footer > .k-container {
+			padding-top: 40px;
+		}
+		.k-footer :global(.k-news-form) {
+			flex-direction: column;
+		}
+		.k-footer :global(.k-news-input) {
+			width: 100%;
+		}
+		.k-footer-bottom {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+	}
+</style>

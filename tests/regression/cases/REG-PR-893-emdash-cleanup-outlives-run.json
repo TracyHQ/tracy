@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-893-emdash-cleanup-outlives-run",
+  "kind": "fix",
+  "title": "EmDash Apply: the clean-up of hidden languages after hand-over runs on its own clock, not the run's signal",
+  "pr": 893,
+  "area": "tracy-web/brief-engines/emdash",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-emdash.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines, and whether the test 'the clean-up outlives the run: the run’s signal is aborted as it ends, before its end waits for the clean-up' is 'ok'."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 30); the named test is 'ok': with the run's signal aborted right after apply returns (as brief-build does before dispose), every entry of the hidden language is unpublished and the clean-up line says '0 failed, 0 not reached'."
+  ],
+  "selectors": {
+    "engine": "apps/tracy-web/src/sites/brief-engines/emdash.js (apply → prepared.hiding = hideRest({ api: siteApi(…, AbortSignal.timeout(HIDE_MS), …) }))",
+    "runner": "apps/tracy-web/src/sites/brief-build.js (finally: controller.abort, then engine.dispose)"
+  },
+  "evidence": "05/10/2026 local stand, final check on the image of 2f59bf3e8: every EmDash Apply logged '[brief] <site>: hidden languages after hand-over: 0 unpublished, 39 failed, 0 not reached' — the clean-up was made on ctx.signal, which brief-build aborts as the run ends, before dispose waits for it.",
+  "fence": "Only the signal the clean-up's requests carry changes; what it reads and unpublishes, its concurrency and its HIDE_MS bound do not.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-893-emdash-cleanup-outlives-run.mjs"]
+  }
+}

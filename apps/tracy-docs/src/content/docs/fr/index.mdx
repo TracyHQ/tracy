@@ -1,0 +1,41 @@
+---
+title: "Tracy Cowork — créez et modifiez votre site web avec l’IA"
+description: "Tracy Cowork crée et modifie votre site WordPress, Joomla ou EmDash quand vous le demandez dans un chat, vous montre chaque changement et vous permet de l’annuler."
+template: splash
+hero:
+  title: "Tracy Cowork — créez et modifiez votre site web avec l’IA"
+  tagline: "Demandez dans un chat et Tracy fait la modification sur votre vrai site WordPress, Joomla ou EmDash — puis vous montre chaque changement pour que vous puissiez le relire et l’annuler."
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: "Premiers pas"
+      link: /fr/get-started/
+      icon: right-arrow
+    - text: "Télécharger l’application"
+      link: /fr/desktop/download/
+      icon: download
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+<CardGrid>
+  <Card title="Premiers pas" icon="rocket">
+    Connectez-vous, ajoutez votre premier site et demandez une modification à Tracy. [Premiers pas](/fr/get-started/)
+  </Card>
+  <Card title="Application de bureau" icon="laptop">
+    Tracy pour macOS, Windows et Linux. Elle se met à jour toute seule. [Télécharger l’application](/fr/desktop/download/)
+  </Card>
+  <Card title="MCP Server" icon="puzzle">
+    Connectez ChatGPT, Claude, Claude Code, Cursor ou Codex à votre site Tracy. [Configurer MCP](/fr/mcp/getting-started/)
+  </Card>
+  <Card title="Travailler sur votre site" icon="pencil">
+    Chat, commentaires sur la page, Site changes, annulation et Backup. [Utiliser Tracy](/fr/using-tracy/)
+  </Card>
+  <Card title="Journal des modifications" icon="document">
+    Un relevé daté de ce qui a changé, et quand : dans [Tracy Cowork](/fr/changelog/desktop/), sur le web et dans l’app, et dans l’[API](/fr/changelog/).
+  </Card>
+  <Card title="Pour les développeurs et les agents" icon="seti:json">
+    L’API Tracy : lire et modifier un site hébergé par Tracy en HTTPS, avec une clé liée à votre siège. [Vue d’ensemble de l’API](/fr/api/)
+  </Card>
+</CardGrid>

@@ -1,0 +1,319 @@
+{
+  "dos": [
+    "Set headlines and product names in ID00 Serif italic — the italic serif is the brand's voice. Setting them in roman or in the sans destroys the editorial feel.",
+    "Keep the canvas near-black (#0e1311 or #000000) and let bone (#ffffff) type carry the hierarchy. Reach for colored surfaces only for inverted sections or badge fills.",
+    "Use 4px radii on cards, buttons, inputs, and badges. The 60px radius is reserved exclusively for the cream price pill — do not apply it to other components.",
+    "Place product photography on warm, low-lit studio backdrops (ember red, dark amber, charcoal). Avoid white or bright backgrounds — they break the dark-gallery mood.",
+    "Use badge colors (citron #faf080, lichen #cadcac, antique gold #cfa53b) sparingly and only for editorial tags, not for actions or alerts.",
+    "Make CTAs typographic links in ID00 Serif italic, not filled buttons. A 4px-radius ghost button is acceptable only for secondary utility actions like the cart selector.",
+    "Separate layers with 1px hairlines in #1a1a1a or #dfdbca, not with shadows. The system runs on border contrast, not elevation."
+  ],
+  "donts": [
+    "Do not introduce a filled chromatic CTA button. The system is intentionally CTA-less at the primary level — actions are italic serif links.",
+    "Do not set body copy or navigation in the serif. GT America is for UI; ID00 Serif is for editorial and product naming. Mixing the two roles dilutes both.",
+    "Do not use bright white (#ffffff) as a page background. The system is dark-first; invert only for price chips, modal overlays, and the rare light section.",
+    "Do not apply saturated brand colors to backgrounds, cards, or text. The chromatic palette exists only as small badge fills and hairlines.",
+    "Do not use large drop shadows. The 10px blur at 5% opacity is the ceiling — anything heavier reads as Material/iOS, not editorial gallery.",
+    "Do not set headlines in weight 600 or 700. The serif runs 300–400 italic and the sans runs 400–500. Anything bolder breaks the whisper-quiet tone.",
+    "Do not place product photography on a white or light-gray background. Always shoot against a warm, dark studio tone to maintain the ember-roastery atmosphere."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#0e1311",
+      "name": "Obsidian",
+      "role": "Primary canvas — page backgrounds, hero sections, card surfaces. The near-black with a faint green undertone makes white type glow without feeling sterile",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Deepest surface, borders, and type. Used for maximum-contrast outlines, product box photography backgrounds, and the darkest UI strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1a1a1a",
+      "name": "Ash Charcoal",
+      "role": "Secondary surface and border tone — slightly lifted from black for subtle layering on nav, dividers, and outlined button edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Graphite",
+      "role": "Mid-neutral for secondary text, input borders, and card outlines where pure black is too heavy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#808080",
+      "name": "Stone Gray",
+      "role": "Image placeholder and muted background tone — holds space where product photography is loading or absent",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b3b3b3",
+      "name": "Silver",
+      "role": "De-emphasized borders and helper text on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bone",
+      "role": "Primary text on dark canvases, price-chip fills, inverted button surfaces. The brightest accent in an otherwise low-key palette",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f6f7f2",
+      "name": "Linen",
+      "role": "Warm off-white surface for inverted sections, price pill backgrounds, and soft button fills. Sits between bone and the khaki family",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dfdbca",
+      "name": "Sand Khaki",
+      "role": "Hairline borders, dividers, input outlines, and card edges on light surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cadcac",
+      "name": "Lichen Green",
+      "role": "Green state accent for badges, validation surfaces, and short status labels.",
+      "group": "semantic"
+    },
+    {
+      "hex": "#faf080",
+      "name": "Citron",
+      "role": "Yellow state accent for badges, validation surfaces, and short status labels.",
+      "group": "semantic"
+    },
+    {
+      "hex": "#cfa53b",
+      "name": "Antique Gold",
+      "role": "Accent stroke and border for promotional or limited-availability badges. Reads as aged brass — never neon",
+      "group": "accent"
+    },
+    {
+      "hex": "#4d4a31",
+      "name": "Olive Bark",
+      "role": "Dark olive link/announcement background — the deep green-brown of the top bar, grounded and earthy",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-width dark sections stack vertically with generous vertical breathing room (80px+ between sections). No centered max-width container; content stretches edge-to-edge and uses generous left/right gutters. The hero is a two-column split: a left 'index' column (about 30% width) of typographic editorial entries, and a right 'photograph' column (about 55% width) holding a single product image, with empty black space at the far right acting as breathing room. Below the hero, sections alternate between centered prose (the manifesto block), two-column product+text splits, and wide product card grids. The product grid is 3 columns on desktop, 2 on tablet, with cards that are roughly square and tightly packed. Navigation is a centered horizontal bar in the header. The overall rhythm: quiet black, loud photograph, quiet black, quiet copy, loud photograph — a gallery cadence, not a SaaS cadence.",
+  "imagery": "Photography is the dominant visual medium, and it is shot like editorial still-life: products on warm studio backdrops (deep ember-red, dark amber, charcoal) with soft directional lighting and a single visible floor shadow. No lifestyle imagery, no hands, no people, no café interiors — the object (a coffee bag, a V60 dripper on a timber block, a black roastery box) is always the hero, shot at close-to-product scale. Treated backgrounds are slightly desaturated, low-key, and warm — the product is in color, the world around it is in shadow. Iconography is minimal: a single chat-bubble glyph in a bone circle bottom-right, and thin line icons in the header. No illustration, no abstract graphics, no gradients applied to UI — gradients appear only in the hero backdrop as a soft ember wash behind the photograph.",
+  "similar": [
+    {
+      "why": "Same dark editorial aesthetic with warm studio product photography and serif-driven product names over near-black canvases.",
+      "business": "Square Mile Coffee Roasters"
+    },
+    {
+      "why": "Specialty coffee brand using a near-black canvas with hairline borders and minimal CTAs, letting photography carry the visual weight.",
+      "business": "Onyx Coffee Lab"
+    },
+    {
+      "why": "Dark-mode product-first ecommerce with italic serif product naming and warm-toned product photography on moody backdrops.",
+      "business": "Manhattan Special Roasting Co."
+    },
+    {
+      "why": "UK specialty roaster with a similarly restrained palette, serif italic editorial labels, and product-photography-led hero sections.",
+      "business": "Workshop Coffee"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "4px",
+      "cards": "4px",
+      "badges": "4px",
+      "inputs": "4px",
+      "buttons": "4px",
+      "pricePills": "60px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1400px"
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#0e1311",
+      "name": "Obsidian Canvas",
+      "level": 0,
+      "purpose": "Page and section background — the default dark surface"
+    },
+    {
+      "hex": "#1a1a1a",
+      "name": "Lifted Black",
+      "level": 1,
+      "purpose": "Subtle elevation on nav, outlined controls, and card borders"
+    },
+    {
+      "hex": "#dfdbca",
+      "name": "Warm Card",
+      "level": 2,
+      "purpose": "Product card border and hairline dividers — the khaki undertone that warms the dark UI"
+    },
+    {
+      "hex": "#f6f7f2",
+      "name": "Linen Invert",
+      "level": 3,
+      "purpose": "Inverted light surface for price chips, soft button fills, and occasional light-on-light sections"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bone Overlay",
+      "level": 4,
+      "purpose": "Highest-elevation surface — full-invert buttons, modal backgrounds, and badge fills"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.05) 0px 2.5px 10px -4px",
+      "element": "Product card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "element": "Lifted card"
+    }
+  ],
+  "northStar": "Embers in a dark roastery. A near-black canvas with warm, low-lit product photography and italic serif labels — the feeling of a specialty coffee menu printed in a midnight zine.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-sm",
+      "size": 21,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "heading-lg",
+      "size": 36,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "display",
+      "size": 42,
+      "lineHeight": 1.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page utility strip",
+      "description": "Full-bleed bar at the very top, olive-bark background (#4d4a31) with cream text. GT America 11–13px, centered, single line. Used for shipping thresholds and time-sensitive messaging."
+    },
+    {
+      "name": "Primary Header / Nav",
+      "role": "Site-wide navigation",
+      "description": "Sticky dark header on #0e1311. Left: monogram + '10' (10th anniversary mark) in bone serif. Center: nav items in GT America 14px weight 500 (Coffee, Equipment, Accessories, Learning) with dropdown indicators, separated by a vertical hairline. Right: search icon, 'Log In' text link, cart count in parentheses, currency selector. Border-bottom 1px in #1a1a1a."
+    },
+    {
+      "name": "Editorial Hero — Featured Column",
+      "role": "Left-side hero index",
+      "description": "On dark gradient background (black → ember red), a vertical stack of four editorial entries. Each entry: product name in ID00 Serif italic 18–21px, bone (#ffffff); call-to-action subtext in GT America 13–14px weight 400, slightly dimmed. 'FEATURED' label in GT America 11px uppercase letter-spaced at the top. Entries are typographic links, not cards — generous vertical spacing (40–56px between entries) turns the index into a table of contents."
+    },
+    {
+      "name": "Product Hero — Studio Photograph",
+      "role": "Right-side hero visual",
+      "description": "Large product photograph (a black coffee box, 60% of viewport height) on a warm ember-red studio backdrop with soft floor shadow. No text overlay. The object is the hero; the UI defers to it."
+    },
+    {
+      "name": "Editorial Manifesto Block",
+      "role": "Brand statement section",
+      "description": "Full-width black (#0e1311) section. Centered or left-aligned ID00 Serif italic 30–36px, bone color, weight 300–400. Generous line-height (1.2). No buttons, no links — the prose IS the content."
+    },
+    {
+      "name": "Product Card (Dark)",
+      "role": "Catalog product tile",
+      "description": "Black or near-black background. Product photograph fills the upper 60–70% of the card on a warm-tinted studio backdrop. Product name in ID00 Serif italic 21–24px bone. Tasting notes in GT America 13–14px #b3b3b3. Price pill anchored bottom-left. Hairline border 1px in #1a1a1a, radius 4px."
+    },
+    {
+      "name": "Price Pill",
+      "role": "Inline price chip",
+      "description": "Linseed off-white (#f6f7f2) pill, border-radius 60px (near-full). Text 'From — €XX.XX' in GT America 13px weight 500, #0e1311. Horizontal padding 12–16px, vertical 6–8px. Sits inline with product name or floats bottom-left of a card."
+    },
+    {
+      "name": "Editorial Tag Badge",
+      "role": "Category / status label",
+      "description": "Small pill, radius 4px, padding 4px 8px. Text GT America 11px weight 500 uppercase, #0e1311. Background fills: #faf080 for 'New Release', #cadcac for 'Elevated Brewing' / editorial categories, #cfa53b stroke for limited-edition or special-release items. Always bone or #0e1311 text — never chromatic text on chromatic background."
+    },
+    {
+      "name": "Outlined Text Button",
+      "role": "Primary navigation action",
+      "description": "No filled CTA. 'Shop Now' and similar actions are ID00 Serif italic 16–18px bone, no border, no background — pure typographic links. Underline appears on hover."
+    },
+    {
+      "name": "Search Icon Button",
+      "role": "Header utility",
+      "description": "24px line icon, bone stroke, no background, 8px hit area padding. In the right-side header cluster."
+    },
+    {
+      "name": "Cart Indicator",
+      "role": "Header utility",
+      "description": "Text-only 'Cart (0)' in GT America 14px weight 500 bone, parentheses around the count, no badge or pill — restraint over notification badges."
+    },
+    {
+      "name": "Pairing Banner (Red Box)",
+      "role": "Co-branded event block",
+      "description": "Large deep-red (#7a1212 approx) framed block containing partner logos at top, event title in GT America uppercase, product name in ID00 Serif 30px, event date at bottom. 4px hairline border, radius 4px. Used for SHED/OTHER wine-pairing events."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The UI workhorse: navigation labels, body copy, button text, metadata, footer text, cart count, form fields. Weight 400 for body, 500 for nav items, 600 sparingly for tiny uppercase labels like 'FEATURED'. At 11–14px it carries the entire structural layer.",
+      "sizes": "11, 12, 13, 14, 16, 18, 20, 21, 24, 42px",
+      "family": "GT America Standard",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.20, 1.25, 1.40, 1.50, 2.00",
+      "substitute": "Inter, Söhne, or Neue Haas Grotesk"
+    },
+    {
+      "role": "The editorial voice: product names, section headings, the 'Shop Now' and 'Limited Time Offer' labels in the hero, the 'Independent specialty coffee roaster…' manifesto copy. Almost always set in italic — this is the signature move. The italic serif against a black canvas is what makes the site read as a curated coffee journal rather than a store.",
+      "sizes": "16, 18, 30, 36, 42px",
+      "family": "ID00 Serif",
+      "weight": "300, 400",
+      "lineHeight": "1.00, 1.20, 1.25, 1.50",
+      "substitute": "GT Sectra, Cormorant Garamond Italic, or Playfair Display Italic"
+    },
+    {
+      "role": "Fallback / system substitute for small tertiary text and icons where GT America is not loaded.",
+      "sizes": "11, 14px",
+      "family": "Helvetica",
+      "weight": "400, 500",
+      "lineHeight": "1.50",
+      "substitute": "system-ui, -apple-system, Arial"
+    },
+    {
+      "role": "reviewsio-font — detected in extracted data but not described by AI",
+      "sizes": "15px, 16px, 22px, 24px",
+      "family": "reviewsio-font",
+      "weight": "400",
+      "lineHeight": "1"
+    }
+  ],
+  "description": "Assembly Coffee's visual system reads like an editorial magazine printed on black paper. The interface is overwhelmingly dark — near-black canvases carry everything — interrupted only by product photography lit against warm studio backdrops (ember-red, deep amber) and hairline typography in white. Two type families do all the work: a geometric sans (GT America) for UI scaffolding, navigation, and metadata, and a refined serif (ID00 Serif) for product names, section labels, and editorial copy, almost always in italic, which turns a functional nav list into a curated index. The palette is almost monochromatic: the chromatic vocabulary is rationed to badge fills (pale yellow, sage green, antique gold) and the occasional warm-tinted cream surface. Buttons are not loud — price chips and 'Shop Now' links live as small text or pill-shaped cream labels. Components are thin, sharp-cornered, and rely on borders and weight contrast rather than shadows or fills for separation.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (on dark): #ffffff\n- text (secondary/muted): #b3b3b3\n- Create a Primary Action Button: #000000 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n- surface (warm border / hairline): #dfdbca\n- accent (editorial badge — new release): #faf080\n- primary action: #000000 (filled action)\n\n**3–5 Example Component Prompts**\n\n1. *Editorial Hero Index Entry*: A vertical stack entry on #0e1311 canvas. Product name in ID00 Serif italic 21px, #ffffff. Sublabel 'Shop Now' or 'Limited Time Offer' in ID00 Serif italic 16px, #b3b3b3. Vertical spacing 48px between entries. No border, no background, no button — pure typographic link.\n\n2. *Product Card (Dark)*: Square card on #0e1311 background, 4px radius, 1px border in #1a1a1a. Upper 65%: product photograph on a warm ember-red studio backdrop with soft shadow. Lower 35%: product name in ID00 Serif italic 24px #ffffff, tasting notes in GT America 14px #b3b3b3, price pill at bottom-left.\n\n3. *Price Pill*: Inline pill, 60px radius, #f6f7f2 background, padding 6px 16px. Text 'From — €29.95' in GT America 13px weight 500, #0e1311. No border, no shadow.\n\n4. *Editorial Tag Badge*: Small pill, 4px radius, #faf080 background, padding 4px 8px. Text 'New Release' in GT America 11px weight 500 uppercase, #0e1311. No border.\n\n5. *Manifesto Block*: Full-width #0e1311 section, 80px vertical padding above and below. Centered or left-aligned text in ID00 Serif italic 36px, #ffffff, line-height 1.2, weight 300. No buttons, no links, no images — the prose is the section."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is whisper-quiet — a barely-there 10px blur at 5% black. The design relies on the contrast between near-black canvases and warm cream borders (#dfdbca) to separate layers, not shadow. Anything more visible would break the gallery-print feel."
+}

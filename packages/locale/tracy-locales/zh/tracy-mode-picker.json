@@ -1,0 +1,15 @@
+{
+  "group.mode": "模式",
+  "group.platform": "平台",
+  "lockedHint": "此 session 已有历史记录。模式和平台仅适用于新 session",
+  "noDescription": "无描述",
+  "platform.adds": "添加 {tools} 个工具 · {skills} 个 skill",
+  "platform.nothingYet": "暂无内容：agent 仅按其模式运行",
+  "platform.siteRuns": "此 site 运行 {platform}",
+  "role.designer": "设计师",
+  "role.developer": "开发者",
+  "role.seo-geo": "SEO/GEO",
+  "role.writer": "撰稿人",
+  "seatHint": "下一个 session 的模式和平台",
+  "switchRefused": "{name} 被拒绝：{reason}"
+}

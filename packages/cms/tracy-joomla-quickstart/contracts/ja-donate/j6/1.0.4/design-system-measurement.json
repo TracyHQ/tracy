@@ -1,0 +1,213 @@
+{
+  "schemaVersion": "tdsr-measurement/v1",
+  "template": "ja-donate",
+  "cms": "joomla",
+  "tag": "quickstart/ja-donate/j6",
+  "version": "1.0.4",
+  "measuredAt": "2026-10-13T13:16:25Z",
+  "machine": "imac",
+  "measuredBy": "tdsr pass-joomla.mjs --no-tokenize --bands (sweep ds-sweep-2026-10-13-moxie)",
+  "flowVersion": "ccd9b52d4",
+  "modes": [
+    "native"
+  ],
+  "systems": [
+    "od:bmw",
+    "od:stripe",
+    "od:spotify",
+    "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0"
+  ],
+  "perSystem": [
+    {
+      "system": "od:bmw",
+      "viewport": 1440,
+      "mode": "native",
+      "check": "fail",
+      "match": null,
+      "margin": null,
+      "follows": 0.984,
+      "left": {
+        "first": 0,
+        "page": 0
+      },
+      "lowContrast": 0,
+      "lowestContrast": null,
+      "misses": [],
+      "fontsLoaded": 7,
+      "fontsDeclared": null,
+      "systemFontsLoaded": null,
+      "ident": null,
+      "modeMatch": null,
+      "toggleVisible": null,
+      "shot": null
+    },
+    {
+      "system": "od:bmw",
+      "viewport": 390,
+      "mode": "native",
+      "check": "fail",
+      "match": null,
+      "margin": null,
+      "follows": 0.936,
+      "left": {
+        "first": 0,
+        "page": 0
+      },
+      "lowContrast": 0,
+      "lowestContrast": null,
+      "misses": [],
+      "fontsLoaded": 5,
+      "fontsDeclared": null,
+      "systemFontsLoaded": null,
+      "ident": null,
+      "modeMatch": null,
+      "toggleVisible": null,
+      "shot": null
+    },
+    {
+      "system": "od:stripe",
+      "viewport": 1440,
+      "mode": "native",
+      "check": "fail",
+      "match": null,
+      "margin": null,
+      "follows": 0.896,
+      "left": {
+        "first": 0,
+        "page": 0
+      },
+      "lowContrast": 0,
+      "lowestContrast": null,
+      "misses": [],
+      "fontsLoaded": 7,
+      "fontsDeclared": null,
+      "systemFontsLoaded": null,
+      "ident": null,
+      "modeMatch": null,
+      "toggleVisible": null,
+      "shot": null
+    },
+    {
+      "system": "od:stripe",
+      "viewport": 390,
+      "mode": "native",
+      "check": "fail",
+      "match": null,
+      "margin": null,
+      "follows": 0.848,
+      "left": {
+        "first": 0,
+        "page": 0
+      },
+      "lowContrast": 0,
+      "lowestContrast": null,
+      "misses": [],
+      "fontsLoaded": 6,
+      "fontsDeclared": null,
+      "systemFontsLoaded": null,
+      "ident": null,
+      "modeMatch": null,
+      "toggleVisible": null,
+      "shot": null
+    },
+    {
+      "system": "od:spotify",
+      "viewport": 1440,
+      "mode": "native",
+      "check": "fail",
+      "match": null,
+      "margin": null,
+      "follows": 0.992,
+      "left": {
+        "first": 0,
+        "page": 0
+      },
+      "lowContrast": 3,
+      "lowestContrast": null,
+      "misses": [],
+      "fontsLoaded": 6,
+      "fontsDeclared": null,
+      "systemFontsLoaded": null,
+      "ident": null,
+      "modeMatch": null,
+      "toggleVisible": null,
+      "shot": null
+    },
+    {
+      "system": "od:spotify",
+      "viewport": 390,
+      "mode": "native",
+      "check": "fail",
+      "match": null,
+      "margin": null,
+      "follows": 0.992,
+      "left": {
+        "first": 0,
+        "page": 0
+      },
+      "lowContrast": 3,
+      "lowestContrast": null,
+      "misses": [],
+      "fontsLoaded": 5,
+      "fontsDeclared": null,
+      "systemFontsLoaded": null,
+      "ident": null,
+      "modeMatch": null,
+      "toggleVisible": null,
+      "shot": null
+    },
+    {
+      "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+      "viewport": 1440,
+      "mode": "native",
+      "check": "fail",
+      "match": null,
+      "margin": null,
+      "follows": 0.853,
+      "left": {
+        "first": 0,
+        "page": 0
+      },
+      "lowContrast": 3,
+      "lowestContrast": null,
+      "misses": [],
+      "fontsLoaded": 10,
+      "fontsDeclared": null,
+      "systemFontsLoaded": null,
+      "ident": null,
+      "modeMatch": null,
+      "toggleVisible": null,
+      "shot": null
+    },
+    {
+      "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+      "viewport": 390,
+      "mode": "native",
+      "check": "fail",
+      "match": null,
+      "margin": null,
+      "follows": 0.853,
+      "left": {
+        "first": 0,
+        "page": 0
+      },
+      "lowContrast": 3,
+      "lowestContrast": null,
+      "misses": [],
+      "fontsLoaded": 9,
+      "fontsDeclared": null,
+      "systemFontsLoaded": null,
+      "ident": null,
+      "modeMatch": null,
+      "toggleVisible": null,
+      "shot": null
+    }
+  ],
+  "controls": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "evidence": "tasks/evidence/ds-sweep-2026-10-13-moxie"
+}

@@ -1,0 +1,65 @@
+{
+  "id": "QA-UNIT-REG-PR-1323-design-system-preview-followups-happy",
+  "itemIds": ["regression:REG-PR-1323-design-system-preview-followups"],
+  "requirement": "Design system preview keeps put-back addresses plain through Cloudflare (no-transform), says why a preview is not available as the stage notice, and the try's bar outlives the Design system tab",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1323-design-system-preview-followups.json",
+    "ref": "PR #1323 (fix); fix evidence: Measured 13/10/2026 on cowork.tracy.site after PR #1301 deployed: GET /api/design-system/preview for tracy-business/j6 answered 200 with 2 data-cfemail, 1 email-decode, 0 mailto while the same HTML decoded clean at the machine; tracy.ai preview showed one bare line with no icon or reason; [data-try-bar] count 0 right after Try with the apply through",
+    "invariant": "S1: every test passes: the measured Business Joomla markup decodes to mailto in any attribute order and the decode script goes whatever its host; the demo door's answer carries Cache-Control no-transform and no data-cfemail, email-protection or email-decode. S2: every test passes: a 409 NO_SLOT preview renders the stage notice with one info icon and the template line, no bare data-preview-unavailable paragraph; after Try the Design system tab can unmount and the bar stays on the page with Undo and Keep, Undo presses the undo door and reloads the Browser tab; the way back announces tracy:design-system-changed. S3: the demo's addresses read as addresses in the frame; the no-slot site shows the centred notice with the info icon saying the template cannot wear a design system yet; after Try the Browser panel is in front and the bar with Undo and Keep is still at the bottom of the window.",
+    "productSources": [
+      "apps/tracy-web/src/lib/ds-preview-ticket.js:62",
+      "apps/tracy-web/src/lib/ds-slot.js:405",
+      "apps/tracy-web/src/sites/cloudflare-email.js:25",
+      "apps/tracy-web/src/sites/design-system-preview-links.js:169",
+      "apps/tracy-web/src/sites/design-system-preview-page.js:121",
+      "apps/tracy-web/src/sites/design-system-preview-wordpress.js:174",
+      "apps/tracy-web/src/sites/design-system-preview.js:155",
+      "apps/tracy-web/src/sites/resolver.js:112",
+      "packages/design/tracy-design-inspiration/src/client/design-system-door.mjs:83"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/ds-slot.js:411 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/ds-slot.js:578 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/ds-slot.js:79 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1323-design-system-preview-followups.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1323-design-system-preview-followups"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1323-design-system-preview-followups",
+    "pr": 1323,
+    "kind": "fix",
+    "area": "sites/design-system",
+    "file": "tests/regression/cases/REG-PR-1323-design-system-preview-followups.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/cloudflare-email.test.mjs",
+    "apps/tracy-web/test/design-system-preview-door.test.mjs",
+    "packages/design/tracy-design-inspiration/test/preview-unavailable.test.mjs",
+    "packages/design/tracy-design-inspiration/test/site-preview-reader.test.mjs",
+    "packages/design/tracy-design-inspiration/test/try-on-landing.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

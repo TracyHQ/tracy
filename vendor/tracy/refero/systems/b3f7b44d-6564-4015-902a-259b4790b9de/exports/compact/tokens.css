@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-pale-lemon: #ffffa7;
+  --color-electric-yellow: #fddd05;
+  --color-obsidian: #000000;
+  --color-paper: #ffffff;
+  --color-graphite: #333333;
+  --color-mist: #999999;
+  --color-steel: #808080;
+
+  /* Typography — Font Families */
+  --font-pp-neue-montreal: 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-pp-neue-montreal-medium: 'PP Neue Montreal Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-abc-monument-grotesk: 'ABC Monument Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-system-sans-serif: 'System Sans-Serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

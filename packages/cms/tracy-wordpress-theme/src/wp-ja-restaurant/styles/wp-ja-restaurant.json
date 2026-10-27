@@ -1,0 +1,242 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "title": "WP Restaurant",
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "var(--ds-c-bg, #f4f2e7)"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "var(--ds-c-surface, #ffffff)"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "var(--ds-c-ink, #3a352f)"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "var(--ds-c-fg, #3a352f)"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "var(--ds-c-heading, #333333)"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "var(--ds-c-muted, #555555)"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "var(--ds-c-meta, #999999)"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "var(--ds-c-border, #cccccc)"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "var(--ds-c-border-soft, #e8e8ed)"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "var(--ds-c-accent, #d24a24)"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "var(--ds-c-accent-on, #ffffff)"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "var(--ds-c-accent-hover, #ffd33d)"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "var(--ds-c-accent-active, #ffd33d)"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "var(--ds-c-success, #16a34a)"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "var(--ds-c-warn, #eab308)"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "var(--ds-c-danger, #dc2626)"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "var(--ds-font-display, Teko, sans-serif)"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "var(--ds-font-body, \"Noticia Text\", serif)"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "\"Roboto Mono\", ui-monospace, Menlo, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "12px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "14px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "16px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "21px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "28px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "40px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "36px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "58px"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "1190px",
+      "wideSize": "1190px"
+    },
+    "custom": {
+      "leading": {
+        "body": "1.88",
+        "tight": "1.1"
+      },
+      "tracking": {
+        "display": "0"
+      },
+      "sectionY": {
+        "desktop": "100px",
+        "tablet": "64px",
+        "phone": "40px"
+      },
+      "radius": {
+        "sm": "var(--ds-input-radius, 0px)",
+        "md": "var(--ds-btn-radius, 0px)",
+        "lg": "var(--ds-card-radius, 0px)",
+        "pill": "var(--ds-pill-radius, 980px)"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0 12px 32px rgba(0, 0, 0, 0.08) /* ds-keep: shadow depth, not a colour role */"
+      },
+      "focusRing": "0 0 0 4px var(--ds-c-focus-ring, color-mix(in oklab, var(--wp--preset--color--accent), transparent 65%))",
+      "motion": {
+        "fast": "150ms",
+        "base": "220ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.28, 0, 0.22, 1)"
+      },
+      "container": {
+        "max": "1190px",
+        "gutterDesktop": "25px",
+        "gutterTablet": "18px",
+        "gutterPhone": "25px"
+      },
+      "tracy": {
+        "inspiration": "wp-ja-restaurant"
+      }
+    }
+  }
+}

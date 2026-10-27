@@ -1,0 +1,79 @@
+{
+  "color": {
+    "bone-white": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Bone White — Page canvas and section backgrounds — warmer than pure white, makes the ink-black type feel printed rather than digital"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, raised panels, and inset blocks — the one step brighter than the canvas for subtle layering without shadows"
+    },
+    "ink-black": {
+      "$value": "#09090b",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, headlines, and key borders — near-black with a faint cool cast that feels editorial rather than utilitarian"
+    },
+    "carbon": {
+      "$value": "#18181b",
+      "$type": "color",
+      "$description": "Carbon — Filled action buttons and dark accent surfaces — one step lighter than Ink Black, reads as solid graphite against the white canvas"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — SVG icon fills, fine borders, and structural rules — the absolute dark for highest-contrast iconography"
+    },
+    "slate": {
+      "$value": "#71717a",
+      "$type": "color",
+      "$description": "Slate — Secondary nav text, helper text, and subtle UI marks — mid-gray that stays legible without competing with Ink Black headings"
+    },
+    "ash": {
+      "$value": "#a1a1aa",
+      "$type": "color",
+      "$description": "Ash — Muted body text, placeholder, and de-emphasized links — the quietest readable gray for tertiary information"
+    },
+    "mist": {
+      "$value": "#d4d4d8",
+      "$type": "color",
+      "$description": "Mist — Hairline nav borders and the lightest dividers — barely-there structural lines"
+    },
+    "ember-orange": {
+      "$value": "#e95420",
+      "$type": "color",
+      "$description": "Ember Orange — Logo lightning bolt and the single brand accent — appears almost exclusively as the Winamp mark, making it feel like a power indicator rather than a decoration"
+    }
+  },
+  "font": {
+    "rubik": {
+      "$value": "Rubik",
+      "$type": "fontFamily",
+      "$description": "Rubik — detected in extracted data but not described by AI"
+    },
+    "poppins": {
+      "$value": "Poppins",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all UI — geometric humanist sans with rounded terminals. The 69px hero weight uses 500/600 to avoid feeling shouty; the 24px subhead at 700 is the heaviest moment in the system. Rounded geometry softens the strict monochrome grid."
+    },
+    "system-ui-sans-serif": {
+      "$value": "system-ui sans-serif",
+      "$type": "fontFamily",
+      "$description": "Fallback for tiny utility labels and icon-adjacent microcopy where loading Poppins would be wasted weight"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Inter — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.winamp.com",
+      "siteName": "Winamp",
+      "extractedAt": "2026-06-03T20:08:26.124Z",
+      "variant": "compact"
+    }
+  }
+}

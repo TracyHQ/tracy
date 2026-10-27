@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1426-widget-native-conversation",
+  "kind": "feat",
+  "title": "Verified discovery adopts once into native chat with scoped bridges and no replay",
+  "pr": 1426,
+  "area": "widget/native-conversation",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the deterministic Node suites. They do not use user audio, send OTP, create sites or invoke providers."
+  ],
+  "expect": [
+    "Anonymous and foreign-account adoption are refused; context and stable session mapping are owner/revision-bound.",
+    "A durable preparing mapping precedes native allocation; retries reuse the same ID without replaying prompts.",
+    "HTTP/WS mounts and API allowlists refuse unrelated paths; credentials never enter browser JSON.",
+    "Network/provider/quota tails remain manual; fresh speech is separate and retains native question behavior.",
+    "Parent handoff stops the legacy microphone and transfers only a manual draft.",
+    "The actual onboarding pre-step admits the imported record into the model decision and rejects missing receipts or another cwd."
+  ],
+  "selectors": {
+    "routes": "/widget/api/native/open, /widget/native, /api/widget-native/context"
+  },
+  "fence": "Verified identity, signed server allocation, encrypted CAS context, ordinary native permissions and method/path allowlists. Fixtures are not runtime acceptance.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/widget-native-handoff.test.mjs",
+      "apps/tracy-web/test/widget-native-session.test.mjs",
+      "apps/tracy-web/test/widget-native-bridge.test.mjs",
+      "apps/tracy-web/test/widget-native-backend.test.mjs",
+      "apps/tracy-web/test/widget-native-parent.test.mjs",
+      "packages/tools/tracy-site-tools/test/widget-native-context.test.mjs",
+      "packages/tools/tracy-site-tools/test/widget-native-step.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-mode.test.mjs"
+    ],
+    "tests": [
+      "prepare is durable before native allocation; refresh does not duplicate sessions or prompts",
+      "failed or unsettled endings retain pending words without timer replay or question answers"
+    ],
+    "needs": []
+  }
+}

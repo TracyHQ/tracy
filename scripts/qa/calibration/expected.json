@@ -1,0 +1,39 @@
+{
+  "$comment": "Hand-written expected results of the two calibration PRs (plan §8). Independent of any model: checked by reading apps/tracy-web/src/ops/route.js (GET /ops/healthz -> 200, 'ok\\n', text/plain), src/ops/ui.js (GET /api/ui -> { hidden: [...] }, no-store) and src/app.js (GET /health -> 200 { ok: true }) on develop 2ac42aeea, 03/10/2026. A lane that gets these wrong is not trusted for the night (plan §8 item 1). Calibration cases never become issues.",
+  "calib-true": {
+    "title": "chore(ops): document the two public read doors an uptime probe may use",
+    "cases": [
+      {
+        "quote": "`GET /ops/healthz` answers 200 with the plain-text body `ok`, without a sign-in.",
+        "seam": 1,
+        "atT": "pass",
+        "truth": "GET /ops/healthz -> 200, content-type text/plain; charset=utf-8, body \"ok\\n\""
+      },
+      {
+        "quote": "`GET /api/ui` answers 200 with a JSON object whose `hidden` field is an array, and the response carries `cache-control: no-store`.",
+        "seam": 1,
+        "atT": "pass",
+        "truth": "GET /api/ui -> 200, cache-control no-store, body { \"hidden\": [...] }"
+      }
+    ]
+  },
+  "calib-false": {
+    "title": "feat(ops): health doors answer in JSON",
+    "cases": [
+      {
+        "quote": "`GET /ops/healthz` now answers with JSON: the body is `{\"status\":\"ok\"}` and the content type is `application/json`.",
+        "seam": 1,
+        "atT": "fail",
+        "verdict": "differs",
+        "truth": "GET /ops/healthz -> 200, content-type text/plain; charset=utf-8, body \"ok\\n\""
+      },
+      {
+        "quote": "`GET /health` answers 204 with an empty body.",
+        "seam": 1,
+        "atT": "fail",
+        "verdict": "differs",
+        "truth": "GET /health -> 200, body {\"ok\":true}"
+      }
+    ]
+  }
+}

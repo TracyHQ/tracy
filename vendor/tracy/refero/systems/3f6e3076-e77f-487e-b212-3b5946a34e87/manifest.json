@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3f6e3076-e77f-487e-b212-3b5946a34e87",
+  "status": "complete",
+  "name": "Miranda",
+  "url": "https://styles.refero.design/style/3f6e3076-e77f-487e-b212-3b5946a34e87",
+  "sourceWebsite": "https://www.niccolomiranda.com",
+  "extractedAt": "2026-06-03T19:16:57.231Z",
+  "capturedAt": "2026-10-08T05:10:44.452931+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Old-world broadsheet on warm cream — newspaper editorial for the digital age.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/14e8cfdd-dd70-40f2-9e6b-ee9033739081.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/0582f65a-b483-4b60-b774-9d7d119b1961.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/d48392f0-54c9-4cb2-a3d4-f2eb463fe378.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/92148570-f652-4102-91d4-b8bbf8e755fe.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c14cbc49-f910-47e0-ae17-043801691f46.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6ceb68d573e3e36cff3082d3137caa98c7e99754103bc123a7eca326e01c8a6c",
+      "bytes": 19237
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ab2b117345eec67ee144de171afa737118c1f20221fd0eca0dcbe4d326a54e01",
+      "bytes": 160607
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "eca4acd556db0ce96a630b0be5987bd4c5258dacad85efc7d69c8cd02cca9ad7",
+      "bytes": 15394
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "51e53a3adeb4e86d06fee48fecc289290a52ecb3573aff4ca41b21904ce91b26",
+      "bytes": 18247
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "49b967ebe4db18fc42653789016d292b0e948ddcaaaefcc5212f5c4f0352ce7c",
+      "bytes": 11308
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "99a1086ac619965c97e27b81bc7c01cf39b4939807172968a17e0b587a4eef06",
+      "bytes": 2427
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "1c3581c8e0f589ac7bfbaeae3104396800b122216ddfe08344eeeb3e184111b2",
+      "bytes": 747
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "716ac2bf9c667709e6f272e4a668934d5570cfb23c4833a47c374b3fec83f5c8",
+      "bytes": 764
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6dc65245ecc6396d19cbe18c48593fab43d34ef510d3bf072eee9e9e998f3397",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "33dc229decfe028e3de32e797e53f85175cfdbbb9b8790a5aaa3c7530b380971",
+      "bytes": 42450
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "64e4d6a09b836096dbf78769a45d8c60a79b37acdbf0bbe77d38780b593bdb82",
+      "bytes": 21930
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "66f99f527bd7ddd475308472351f226a78b51e0a65ea306c17c14e0edca40d5c",
+      "bytes": 45242
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8a4ec453d5b93053903d30ce834dae4bfbf925e401868672fb715b58305d8797",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "895b6a371eb377c67c6711604d584c8df53b1e775cd73fbbae51a58f7254012c",
+      "bytes": 1924
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "566e44735df5976152c4cdb04188583b30e7edd00eed8bab59d9df72a19186e2",
+      "bytes": 2470
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0a2bcda6-b5b9-463d-bc8d-2c7ccaa2b776",
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1a519123-071a-449f-b5df-0def73ed7f35",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "2ab2f666-6da7-4cd8-bc91-52a28bd560ad",
+    "3f6e3076-e77f-487e-b212-3b5946a34e87",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6262b0bb-ea6f-481b-b706-65df29507b6c",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "97f7787e-bba0-4d37-8b74-4b0cb8d5a57c",
+    "a21cf7a4-80e0-4f4a-9297-823a5180c2d3",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "dd96b76a-b691-49e7-ba8f-1cdc8f7172e6",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

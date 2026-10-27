@@ -1,0 +1,44 @@
+{
+  "id": "QA-UNIT-REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9-happy",
+  "itemIds": ["regression:REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9"],
+  "requirement": "JA Morgan wp7 1.1.9: the narrow-width layout (footer column split, xs sidebar spacing, tag chip box, feature icon box) matches the source and the release records a passing site sweep",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9.json",
+    "ref": "PR #989 (fix); fix evidence: Sweeps of 06/10/2026 against the local Joomla source stand: the 1.1.8 baseline passed 10/11 (heights failed); the 1.1.9 clean restore passes 11/11 on the released zip.",
+    "invariant": "S1: style.css has exactly one 'Version: 1.1.9' line; both stylesheets split the Home Style 3 footer into four equal columns and use 3fr 4fr 3fr 2fr only from 1200 px, use the 25 px / 12.5 px sidebar module spacing below 768 px, draw the tag chip as a 21 px inline-block box, fix the feature icon box at 93.75 px below 768 px, and set row-gap 0 on the footer. S2: fix-measure.json names site-sweep.mjs, its themeZipSha256 equals the zip line of SHA256SUMS, 11 of 11 checks pass with none failing and 0 heights defects, and its baseline is 1.1.8 with heights failing.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "tests/regression/scripts/REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9.mjs:18 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9.mjs:23 packages/cms/tracy-wordpress-theme/src/wp-ja-morgan/style.css has no code line to point at"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9",
+    "pr": 989,
+    "kind": "fix",
+    "area": "wordpress-theme/wp-ja-morgan",
+    "file": "tests/regression/cases/REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

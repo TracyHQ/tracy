@@ -1,0 +1,585 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
+  "profileVersion": "1.0.0",
+  "contract": "ja-essence/wp7/1.0.20",
+  "baseHash": "2f98b65e27417756c261b7795c8142f5bf3bd6d2428bbfb6f9b99e075865dab2",
+  "baseFiles": {
+    "manifest.json": "eadc5c024f33db572d696b8c419da54093f79763305ecbb8d5a52ecb3b394a4b",
+    "content-map.json": "409433a412ba05ed93dc8dd21273d75bf8211d3c68b3c6269cd71b74ffa9d0d0",
+    "presentation-lock.json": "1bc5fbfabd49f60418e8072b790b2e0e5cdc3a57259c727d3749fb21f5dceec2"
+  },
+  "inputs": {
+    "navigation-source.json": "a385f2fbc1cf403b14bcd908fbec38140f63234df0b0e3397115b974171bef89"
+  },
+  "decisionsHash": "f8b0e94772a24d799f587964806e5e5f24cd4f0962e3b813b953c685159851a7",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 155,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home 1",
+        "pageId": 133
+      },
+      "label": "Home 1",
+      "path": [
+        "Home",
+        "Home 1"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "an alternative demo home layout under \"Home\", beside the front page; its query block lists posts that the front page (a query too) and the kept category entries also list; no submenu or child page under it, and no other entry links it",
+      "key": "navigation-155",
+      "before": "659ba62e4cfe367a324c844b5459b01980dad2ec6c8ff9269d4958c3bee06190",
+      "after": "c00c6bc3adf1d31fb2a263fb89e3d38e05065df0b6458cb34eac8a9b893943ed"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 155,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home 2",
+        "pageId": 125
+      },
+      "label": "Home 2",
+      "path": [
+        "Home",
+        "Home 2"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "an alternative demo home layout under \"Home\", beside the front page; its query block lists posts that the front page (a query too) and the kept category entries also list; no submenu or child page under it, and no other entry links it",
+      "key": "navigation-155",
+      "before": "c00c6bc3adf1d31fb2a263fb89e3d38e05065df0b6458cb34eac8a9b893943ed",
+      "after": "88591ef454e42311207ab1804bbf3bb3b93ecf57d991c5f6eee1f54fb22f0219"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 155,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home 3",
+        "pageId": 118
+      },
+      "label": "Home 3",
+      "path": [
+        "Home",
+        "Home 3"
+      ],
+      "contains": [],
+      "rule": "hide.home-branch-variant",
+      "reason": "the home page again, under \"Home\", which already links it",
+      "key": "navigation-155",
+      "before": "88591ef454e42311207ab1804bbf3bb3b93ecf57d991c5f6eee1f54fb22f0219",
+      "after": "67b54ebe9fa12fdba21a551e790f174399ca4cddf18641ce9e683d817d9dbc8c"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 155,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home 4",
+        "pageId": 131
+      },
+      "label": "Home 4",
+      "path": [
+        "Home",
+        "Home 4"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "an alternative demo home layout under \"Home\", beside the front page; its blocks are images, buttons, groups and a pattern, with no heading, text or post list of its own; no submenu or child page under it, and no other entry links it",
+      "key": "navigation-155",
+      "before": "67b54ebe9fa12fdba21a551e790f174399ca4cddf18641ce9e683d817d9dbc8c",
+      "after": "dc873f3648ff6c995b2e6bc7120d75eca81146232d99708f30d7eb7d3da9595a"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 155,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Home 5",
+        "pageId": 132
+      },
+      "label": "Home 5",
+      "path": [
+        "Home",
+        "Home 5"
+      ],
+      "contains": [],
+      "rule": "hide.decision",
+      "reason": "an alternative demo home layout under \"Home\", beside the front page; its query block lists posts that the front page (a query too) and the kept category entries also list; no submenu or child page under it, and no other entry links it",
+      "key": "navigation-155",
+      "before": "dc873f3648ff6c995b2e6bc7120d75eca81146232d99708f30d7eb7d3da9595a",
+      "after": "4bc552eef980afe7eac013c4a4e9623740bb8a7a0e4418610fcbf50b7848b162"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 155,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Error Page",
+        "pageId": 144
+      },
+      "label": "Error Page",
+      "path": [
+        "Pages",
+        "J!Pages",
+        "Error Page"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Error Page\" is one of the template's own screens",
+      "key": "navigation-155",
+      "before": "4bc552eef980afe7eac013c4a4e9623740bb8a7a0e4418610fcbf50b7848b162",
+      "after": "c5b3d4af004f0a4b281aa1b642724f889b242cd08ab00159538f77b4f1440e18"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 155,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Offline Pages",
+        "pageId": 145
+      },
+      "label": "Offline Pages",
+      "path": [
+        "Pages",
+        "J!Pages",
+        "Offline Pages"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Offline Pages\" is one of the template's own screens",
+      "key": "navigation-155",
+      "before": "c5b3d4af004f0a4b281aa1b642724f889b242cd08ab00159538f77b4f1440e18",
+      "after": "c50873ea8d1836fc63032380a24e5b8f122721ba36ccdf5f7f43525b187d25b6"
+    },
+    {
+      "op": "navigation.removeLink",
+      "navigation": {
+        "id": 155,
+        "slug": "mainmenu"
+      },
+      "link": {
+        "label": "Typography",
+        "pageId": 146
+      },
+      "label": "Typography",
+      "path": [
+        "Pages",
+        "J!Pages",
+        "Typography"
+      ],
+      "contains": [],
+      "rule": "hide.kit-screen",
+      "reason": "\"Typography\" is one of the template's own screens",
+      "key": "navigation-155",
+      "before": "c50873ea8d1836fc63032380a24e5b8f122721ba36ccdf5f7f43525b187d25b6",
+      "after": "50bcccd2f1c31148b2df8481f07430e628c8013be1e2ecc454cbdd43c5cf7fe6"
+    }
+  ],
+  "finals": [
+    {
+      "key": "navigation-155",
+      "before": "659ba62e4cfe367a324c844b5459b01980dad2ec6c8ff9269d4958c3bee06190",
+      "after": "50bcccd2f1c31148b2df8481f07430e628c8013be1e2ecc454cbdd43c5cf7fe6"
+    }
+  ],
+  "kept": [
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Home",
+      "path": [
+        "Home"
+      ],
+      "pageId": 118,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "#Category",
+      "path": [
+        "#Category"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Detail",
+      "path": [
+        "Detail"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Video",
+      "path": [
+        "Detail",
+        "Video"
+      ],
+      "pageId": 129,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Gallery",
+      "path": [
+        "Detail",
+        "Gallery"
+      ],
+      "pageId": 130,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Pages",
+      "path": [
+        "Pages"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "User",
+      "path": [
+        "Pages",
+        "User"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Login Form",
+      "path": [
+        "Pages",
+        "User",
+        "Login Form"
+      ],
+      "pageId": 141,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Registration Form",
+      "path": [
+        "Pages",
+        "User",
+        "Registration Form"
+      ],
+      "pageId": 142,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "User Profile",
+      "path": [
+        "Pages",
+        "User",
+        "User Profile"
+      ],
+      "pageId": 143,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Edit User Profile",
+      "path": [
+        "Pages",
+        "User",
+        "Edit User Profile"
+      ],
+      "pageId": 148,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Smart Search",
+      "path": [
+        "Pages",
+        "J!Pages",
+        "Smart Search"
+      ],
+      "pageId": null,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Category Blog",
+      "path": [
+        "Pages",
+        "J! Content",
+        "Category Blog"
+      ],
+      "pageId": 150,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Featured Articles",
+      "path": [
+        "Pages",
+        "J! Content",
+        "Featured Articles"
+      ],
+      "pageId": 147,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Author listting",
+      "path": [
+        "Pages",
+        "J! Content",
+        "Author listting"
+      ],
+      "pageId": 151,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Tagged Items",
+      "path": [
+        "Pages",
+        "J! Content",
+        "Tagged Items"
+      ],
+      "pageId": 152,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Contact",
+      "path": [
+        "Contact"
+      ],
+      "pageId": 117,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-156",
+      "where": "wp_navigation 156 (category)",
+      "label": "Health",
+      "path": [
+        "Health"
+      ],
+      "pageId": 137,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-156",
+      "where": "wp_navigation 156 (category)",
+      "label": "Design",
+      "path": [
+        "Design"
+      ],
+      "pageId": 138,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-156",
+      "where": "wp_navigation 156 (category)",
+      "label": "Fashion",
+      "path": [
+        "Fashion"
+      ],
+      "pageId": 139,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-156",
+      "where": "wp_navigation 156 (category)",
+      "label": "Resources",
+      "path": [
+        "Resources"
+      ],
+      "pageId": 122,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    },
+    {
+      "key": "navigation-156",
+      "where": "wp_navigation 156 (category)",
+      "label": "Lifestyle",
+      "path": [
+        "Lifestyle"
+      ],
+      "pageId": 123,
+      "rule": "keep.default",
+      "reason": "not a showcase entry by any rule"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Category Style 1",
+      "path": [
+        "#Category",
+        "Category Style 1"
+      ],
+      "pageId": 137,
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Category Style 1\" names a showcase branch"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Category Style 2",
+      "path": [
+        "#Category",
+        "Category Style 2"
+      ],
+      "pageId": 138,
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Category Style 2\" names a showcase branch"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Category Style 3",
+      "path": [
+        "#Category",
+        "Category Style 3"
+      ],
+      "pageId": 139,
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Category Style 3\" names a showcase branch"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Category Style 4",
+      "path": [
+        "#Category",
+        "Category Style 4"
+      ],
+      "pageId": 140,
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Category Style 4\" names a showcase branch"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Layout 1",
+      "path": [
+        "Detail",
+        "Layout 1"
+      ],
+      "pageId": 126,
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 1\" names a showcase branch"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Layout 2",
+      "path": [
+        "Detail",
+        "Layout 2"
+      ],
+      "pageId": 127,
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 2\" names a showcase branch"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "Layout 3",
+      "path": [
+        "Detail",
+        "Layout 3"
+      ],
+      "pageId": 128,
+      "rule": "unresolved.showcase-word",
+      "reason": "\"Layout 3\" names a showcase branch"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "J!Pages",
+      "path": [
+        "Pages",
+        "J!Pages"
+      ],
+      "pageId": null,
+      "rule": "unresolved.showcase-word",
+      "reason": "\"J!Pages\" names a showcase branch"
+    },
+    {
+      "key": "navigation-155",
+      "where": "wp_navigation 155 (mainmenu)",
+      "label": "J! Content",
+      "path": [
+        "Pages",
+        "J! Content"
+      ],
+      "pageId": null,
+      "rule": "unresolved.showcase-word",
+      "reason": "\"J! Content\" names a showcase branch"
+    }
+  ],
+  "counts": {
+    "links": 8,
+    "templateParts": 0,
+    "kept": 22,
+    "unresolved": 9
+  }
+}

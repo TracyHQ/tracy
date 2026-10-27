@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "645d7583-8391-455b-83d2-c95fb7fe91dc",
+  "status": "complete",
+  "name": "Ashleyandco",
+  "url": "https://styles.refero.design/style/645d7583-8391-455b-83d2-c95fb7fe91dc",
+  "sourceWebsite": "https://ashleyandco.co",
+  "extractedAt": "2026-06-03T21:31:08.203Z",
+  "capturedAt": "2026-10-08T05:12:32.705752+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Whispered apothecary editorial — a warm cream page where a single serif headline floats like a perfume ad and every other element recedes into silence.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/cc6eb348-2396-4a2c-bcef-ddcb961670f0.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d611be5cf430288f9f91a2913acdb49efb7eb87a6af4d3ca620f37bfa18ea6f8",
+      "bytes": 21392
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "889111b24ceba76bf854b9761148d941b9a422c76bff355538d318a12ab5e988",
+      "bytes": 80965
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "750c9a956d73cee630ffa6c23e2ac70dc290fbd6ec16741073fc534ca3635e93",
+      "bytes": 18624
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f0d876fe168832eb7d1b4ca2037eb9f3d6a9296cf2f872cfbb40be6c312d3197",
+      "bytes": 9391
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b566e1461ac9c0766b7f42ab29bc0e1ad65e37895d67278024bdeb94bb5ce72a",
+      "bytes": 15070
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "981579999e4da8ce1f706bcf6530a556f41ce53ca43c5cb3046472b90818b3ca",
+      "bytes": 3226
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c105439771d73291f5c4ca8c5aa4517486668eaba98bd4fec1fe05aa956d982f",
+      "bytes": 550
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a39e2d7ec31a5a2d70cfee6fdbc7dba845e22333cf10aa0069733a042c136a92",
+      "bytes": 567
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "09b52b6126d324da2b47bd0813f849f67d9d38a1b04a5c1e7456efdfe5668780",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "2a137f932e69d656a422ae521c422a93b42afd63db61d81136be1e14347e5bd2",
+      "bytes": 43935
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f3b82af8bbfdc597dc40d61f1cd7c7b7f2aec3f38bfe7ef6d4ec979d1a2e16df",
+      "bytes": 22625
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9100a07553ad6c44e247d3ed4b83f0b3ca6490329e82ba012074146abeb3546a",
+      "bytes": 43065
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "9f4c083ea49d815dba4f91086ef444468631ef11d0b395f97f53266e96020c3c",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "87b52b798ad3cb22ca237b7c31900f342062dcfe378f10e147027b63ae7f25c1",
+      "bytes": 1193
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "887638fb3bf024da7fa6360ff77fac5f18604e5bcc84c153d9aa60d0e6482d48",
+      "bytes": 1690
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "3b080dc3-1992-43fe-91d6-2a721f934435",
+    "3f56ea4d-ed9d-4a36-8fb5-a801519ef80b",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "6fb648be-cc69-4a84-a798-9f0f006922a0",
+    "76483bd1-37d3-4fb9-889b-aecf27b08b83",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "a4dcee26-dd31-415a-ac99-64299959e7f1",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f3f7122e-d8d3-48f7-9d9d-df6e71545010"
+  ]
+}

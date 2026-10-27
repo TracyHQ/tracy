@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-workspace-invite-locale",
+  "itemIds": [
+    "direct:workspace-invite:en",
+    "direct:workspace-invite:vi",
+    "direct:workspace-invite:de",
+    "direct:workspace-invite:it",
+    "direct:workspace-invite:fr",
+    "direct:workspace-invite:nl",
+    "direct:workspace-invite:zh",
+    "direct:workspace-invite:es"
+  ],
+  "requirement": "the workspace invitation to a person without an account reads in eight languages; others read as English",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 5",
+    "invariant": "the 8 interface languages, else English"
+  },
+  "edgeTags": ["locale"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.locale:workspace-invite"],
+  "redProof": null,
+  "legacyIds": []
+}

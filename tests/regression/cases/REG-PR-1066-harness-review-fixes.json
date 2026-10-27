@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-1066-harness-review-fixes",
+  "kind": "fix",
+  "title": "A finished turn records how it ended and a swept turn closes before the next opens, a partial EmDash replace is reported, a target refusal frees the lease, a picture on a Model Subscription is named, and the outage shortcut belongs to one speaker on one site",
+  "pr": 1066,
+  "area": "agent-harness",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout (after `pnpm dsh:build`, which review-turn-close needs) run: node --test --test-reporter=tap packages/site/tracy-site-tabs/test/review-turn-close.test.mjs packages/tools/tracy-site-tools/test/review-emdash-changed-report.test.mjs packages/ui/tracy-mode-picker/test/review-account-subscriptions.test.mjs packages/ui/tracy-mode-picker/test/review-subscription-images.test.mjs apps/tracy-web/test/review-seat-plan-images.test.mjs",
+    "S2: Read the result of each test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'a turn that completed normally tells tracy-web it completed' and 'a turn cut at the output-token ceiling tells tracy-web so' pass: the /moment body carries endReason completed / max-tokens on dsh's real agent loop.",
+    "'a swept turn's moment is answered before the next turn's model runs' passes.",
+    "'a PARTIAL EmDash replace that wrote 4 places is reported as a write' passes.",
+    "The two outage-shortcut tests and 'a subscription route declares which inputs it reads' pass.",
+    "Both 'a dsh picture sent to … is either carried or named' tests pass."
+  ],
+  "selectors": {
+    "turnClose": "packages/site/tracy-site-tabs/src/host/turn-record.mjs stoppingReasonOf, createTurnBook sweeps; POST /api/sites/:key/moment {endReason}",
+    "changedReport": "packages/tools/tracy-site-tools/src/host/emdash.mjs emdashReplaceWrote",
+    "subscription": "packages/ui/tracy-mode-picker/src/host/account-subscriptions.mjs AccountAdapter.resolveModel, forSession plain key",
+    "wire": "apps/tracy-web/src/seat-plan/wire/messages.js PICTURE_NOT_SHOWN"
+  },
+  "fence": "Each test drives the mechanism with the input that broke it: dsh's real agent loop with a scripted model and a held /moment; the real EmDash replace job driven to PARTIAL; a pin door that refuses then goes down; a dsh image reference on the wire. No model, no network, no Postgres. The lease release on APPLY_TARGET_NOT_ALLOWED needs Postgres and is held by apps/tracy-web/test/review-apply-write-door.test.mjs.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-site-tabs/test/review-turn-close.test.mjs",
+      "packages/tools/tracy-site-tools/test/review-emdash-changed-report.test.mjs",
+      "packages/ui/tracy-mode-picker/test/review-account-subscriptions.test.mjs",
+      "packages/ui/tracy-mode-picker/test/review-subscription-images.test.mjs",
+      "apps/tracy-web/test/review-seat-plan-images.test.mjs"
+    ],
+    "tests": [
+      "a turn that completed normally tells tracy-web it completed",
+      "a turn cut at the output-token ceiling tells tracy-web so",
+      "a swept turn's moment is answered before the next turn's model runs",
+      "a PARTIAL EmDash replace that wrote 4 places is reported as a write",
+      "a seat refused by tracy-web is not let through on the default when tracy-web then goes down",
+      "the outage shortcut belongs to the speaker tracy-web answered",
+      "a subscription route declares which inputs it reads",
+      "a dsh picture sent to Claude is either carried or named, never dropped",
+      "a dsh picture sent to Codex is either carried or named, never dropped"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-trip/j6/1.0.6",
+  "platform": "joomla",
+  "template": "ja_trip",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-trip",
+    "id": "quickstart/ja-trip/j6",
+    "version": "1.0.6",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_trip",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-trip-j6-webroot-1.0.6.tar.gz",
+        "bytes": 66840466,
+        "sha256": "4f7b8116f39753d8fee9d2242589c85302112bc13914ddfabae1d5d4d1f95d97"
+      },
+      "database": {
+        "file": "ja-trip-j6-database-1.0.6.sql.gz",
+        "bytes": 106629,
+        "sha256": "52a7ef0c7a839f9ebf929d2d238b3d0f3ccf7f36124810382a5c37bf0b2b7841"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-15T17:05:18.688Z",
+    "builtFrom": {
+      "from": "quickstart/ja-trip/j6@1.0.5",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-trip/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

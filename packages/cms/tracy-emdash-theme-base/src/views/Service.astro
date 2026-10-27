@@ -1,0 +1,123 @@
+---
+/**
+ * /services/<slug> — one service (source: com_content article, `tracy-article`). Title, image,
+ * excerpt and Portable Text body; then, only when the editor filled them, the FAQ accordion
+ * (ACM accordion 207) and the capsule CTA (ACM cta-capsule 208). The source pins a "latest
+ * articles" sidebar (module 177) to one menu item only; here it is a section under the body on
+ * every service, so no service depends on a menu assignment the CMS does not have.
+ */
+import { getEditMeta, getEmDashEntry } from 'emdash'
+import { PortableText } from 'emdash/ui'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import Photo from '@/components/site/Photo.astro'
+import ArticleH2 from '@/components/site/ArticleH2.astro'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import ProseQuote from '@/components/site/ProseQuote.astro'
+import BodyImage from '@/components/site/BodyImage.astro'
+import SectionHead from '@/components/sections/SectionHead.astro'
+import FaqList from '@/components/sections/FaqList.astro'
+import CtaBand from '@/components/sections/CtaBand.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampBlocks, stampFor, stampsFor } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+import { loadPosts } from '@/lib/posts'
+import { childLive, liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+}
+const { chrome, locale, slug } = Astro.props
+const { site } = chrome
+const [{ entry }, pageRes] = await Promise.all([
+  getEmDashEntry('services', slug, { locale }),
+  getEmDashEntry('services_page', 'services_page', { locale })
+])
+// A child goes with its list page: Services unticked, its items answer 404 like the list, unless a page the customer kept still lists it (TCH #1013).
+const reachable = await childLive(Astro.request, locale, `/services/${slug}`)
+if (!entry || entry.data.status !== 'published' || !reachable) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const s = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'services', entry)
+const $sp = stampFor(Astro.request, 'services_page', pageRes.entry)
+const $site = stampFor(Astro.request, 'site', site)
+const $ = stampsFor(Astro.request)
+const page = (pageRes.entry?.data ?? {}) as Record<string, any>
+// Blog unticked: its posts answer 404 (TCH #1013), so the latest-posts list goes with them.
+const blogLive = (await liveLinks(Astro.request, locale, ['/blog']))('/blog')
+const latest = blogLive ? (await loadPosts(locale)).slice(0, 5) : []
+// On a stamped request each text block names itself (`field:content.<_key>`, `stampBlocks`) and is
+// rendered by a renderer that prints it; an ordinary request keeps the renderers it always had.
+// Inline editing needs the original value (its edit metadata is a non-enumerable tag).
+const body = getEditMeta(s.content) ? (s.content ?? []) : stampBlocks($page, 'content', s.content ?? [])
+const bodyComponents = $page.owner
+  ? {
+      block: {
+        normal: ProseBlock,
+        h1: ProseBlock,
+        h2: ArticleH2,
+        h3: ProseBlock,
+        h4: ProseBlock,
+        h5: ProseBlock,
+        h6: ProseBlock,
+        blockquote: ProseBlock
+      },
+      listItem: ProseListItem,
+      type: { image: BodyImage, blockquoteGroup: ProseQuote }
+    }
+  : { block: { h2: ArticleH2 }, type: { image: BodyImage } }
+const faq: Array<{ question: string; answer: string }> = (s.faq_items ?? []).filter((it: any) => it?.question)
+const hasCta = Boolean(s.cta_statement)
+---
+
+<Base chrome={chrome} title={s.title} description={s.excerpt} image={mediaUrl(s.image)} currentPath="/services" content={{ collection: "services", id: entry.data.id, slug, toPath: (x) => `/services/${x}` }}>
+	<Breadcrumb items={[{ label: site.breadcrumb_home, url: href(locale, "/"), stamp: $site("breadcrumb_home") }, ...(page.title ? [{ label: page.title, url: href(locale, "/services"), stamp: $sp("title") }] : []), { label: s.title, stamp: $page("title") }]} />
+	<main id="main" class="pb-[var(--band-y)] pt-10">
+		<PageOwner stamp={$page} />
+		<div class="wrap">
+			<article class="mx-auto max-w-[720px]">
+				<header class="mb-6">
+					<h1 class="h-article" {...$page("title")}>{s.title}</h1>
+				</header>
+				{s.image && <Photo image={s.image} stamp={$page("image")} alt={s.image_alt} class="mb-8 aspect-[16/9] rounded-[var(--ds-card-radius,18px)]" priority />}
+				{s.excerpt && <p class="lead mb-6 text-fg" {...$page("excerpt")}>{s.excerpt}</p>}
+				<div class="prose-article" {...$page("content")}>
+					<PortableText value={body} components={bodyComponents} />
+				</div>
+			</article>
+			{faq.length > 0 && (
+				<section class="mx-auto mt-16 max-w-[736px]" data-block="service-faq">
+					<SectionHead eyebrow={s.faq_eyebrow} title={s.faq_heading} lead={s.faq_intro} align="left" class="mb-6" stamp={$page} fields={{ eyebrow: "faq_eyebrow", title: "faq_heading", lead: "faq_intro" }} />
+					<FaqList items={faq} stamp={$page} field="faq_items" />
+				</section>
+			)}
+		</div>
+		{hasCta && (
+			<div class="mt-16">
+				<CtaBand variant="capsule" title={s.cta_statement} text={s.cta_support} btnLabel={s.cta_btn_label} btnUrl={s.cta_btn_url ? href(locale, s.cta_btn_url) : undefined} linkLabel={s.cta_link_label} linkUrl={s.cta_link_url ? href(locale, s.cta_link_url) : undefined} stamp={$page} fields={{ title: "cta_statement", text: "cta_support", btnLabel: "cta_btn_label", linkLabel: "cta_link_label" }} />
+			</div>
+		)}
+		{latest.length > 0 && (
+			<section class="wrap mt-20" data-block="service-latest">
+				<div class="mx-auto max-w-[720px] border-t border-line-soft pt-12">
+					<h2 class="h-card mb-6" {...$site("latest_title")}>{site.latest_title}</h2>
+					<ul class="divide-y divide-line-soft">
+						{latest.map((p) => (
+							<li class="py-3" {...$("posts", p)()}>
+								<a href={href(locale, `/blog/${p.slug}`)} class="text-[17px] font-medium text-fg hover:text-accent" {...$("posts", p)("title")}>{p.data.title}</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			</section>
+		)}
+	</main>
+</Base>

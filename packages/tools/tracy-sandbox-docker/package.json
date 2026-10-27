@@ -1,0 +1,31 @@
+{
+  "name": "@tracy/dsh-sandbox-docker",
+  "version": "0.1.0",
+  "description": "Process sandbox for a dsh whose sites run as Docker containers: the container confines, this provider only stamps the session's file-effect mode for the docker-exec subprocess provider to enforce as the exec user",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./stamp": "./stamp.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "stamp.mjs",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/tools/tracy-sandbox-docker"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-sandbox": "^0.2.0-rc.2-tracy.26"
+  },
+  "license": "MIT"
+}

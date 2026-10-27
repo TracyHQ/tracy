@@ -1,0 +1,24 @@
+{
+  "$comment": "What the verify lane (astra) leaves as verdict.json (plan §4.7, §7.1). Exactly three verdicts. `observation` is the agent's OWN observation (command and the output it read), not the red test's output.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pr", "cases"],
+  "properties": {
+    "pr": { "type": "string", "pattern": "^(pr[0-9]+|calib-(true|false))$" },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["caseId", "verdict", "observeFile", "observation", "reason"],
+        "properties": {
+          "caseId": { "type": "string", "pattern": "^(pr[0-9]+|calib-(true|false))-k[0-9]+$" },
+          "verdict": { "type": "string", "enum": ["differs", "test-wrong", "inconclusive"] },
+          "observeFile": { "type": ["string", "null"] },
+          "observation": { "type": "string" },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

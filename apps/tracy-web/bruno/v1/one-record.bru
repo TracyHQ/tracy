@@ -1,0 +1,22 @@
+meta {
+  name: one record
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}/records/article/{{recordId}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  recordId: 1
+}
+
+docs {
+  # One record as the site holds it
+
+  `content.get`. Set `recordId` in the Vars tab to an id "records list" answered. On WordPress a
+  kind without a numeric id is read as `/records/option/0?key=blogname`.
+}

@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-deep-forest: #000a06;
+  --color-pine-bark: #0a1a14;
+  --color-charcoal: #161818;
+  --color-abyssal-indigo: #01051b;
+  --color-paper-white: #ffffff;
+  --color-ash-gray: #5e6262;
+  --color-smoke: #828282;
+  --color-silver: #d9d9d9;
+  --color-pure-black: #000000;
+  --color-electric-mint: #7affb4;
+  --color-mint-whisper: #e3ffef;
+  --color-bioluminescent-bloom: #0a3a2b;
+  --gradient-bioluminescent-bloom: radial-gradient(circle, rgba(0, 100, 70, 0.4) 0%, rgba(0, 60, 40, 0.2) 30%, rgba(0, 30, 20, 0.08) 55%, rgba(0, 0, 0, 0) 75%);
+  --color-pine-to-abyss: #0f3a2b;
+  --gradient-pine-to-abyss: linear-gradient(rgb(15, 58, 43) 0%, rgb(0, 10, 7) 100%);
+
+  /* Typography — Font Families */
+  --font-euclid-circular-a: 'Euclid Circular A', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-onsite-semimono: 'Onsite SemiMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

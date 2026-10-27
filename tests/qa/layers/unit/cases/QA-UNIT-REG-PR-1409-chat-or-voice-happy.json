@@ -1,0 +1,68 @@
+{
+  "id": "QA-UNIT-REG-PR-1409-chat-or-voice-happy",
+  "itemIds": ["regression:REG-PR-1409-chat-or-voice"],
+  "requirement": "Chat or Voice per conversation, as in ChatGPT's app: the header's mode menu (Chat checked, Voice) and the chat box's audio wave go into a voice view (an orb) that replaces the conversation's body, with a footer (mute, X) in the chat box's place; X, Chat or another tab go back and end the voice",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1409-chat-or-voice.json",
+    "ref": "PR #1409 (feat); fix evidence: 16/10/2026: (translated) 'each session gets 2 options, 1 voice, 2 chat, like the ChatGPT app on a phone' (screenshot of ChatGPT's voice screen: an orb, mute, X). Screenshots and the real dsh page: tasks/evidence/voice-chat-or-voice-2026-10-16/.",
+    "invariant": "0 failures. 'Chat or Voice: Voice takes the body and the chat box, listens, sends, works out loud, reads the reply, stops for the person; X back to Chat' passes: the menu has Chat checked and Voice; in Voice the orb view is shown, there is no chat box (no draft) and the footer has mute and X; mute pauses the ear; X goes back to Chat where the spoken requests are the person's messages. 'into Voice from the chat box, out by another tab; dark; a narrow column' passes: the audio wave in the chat box goes into Voice, another tab ends the voice and brings the chat box back, the menu stays on screen at 390px and nothing scrolls sideways. 'the tab is pressed once the strip renders, never when already shown, and given up on after a while' passes.",
+    "productSources": [
+      "packages/ui/tracy-chat-input/src/client/comments-open.mjs:85",
+      "packages/ui/tracy-chat-input/src/client/voice-mode-view.mjs:79"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-chat-input/test/e2e/voice-mode.test.mjs:195 readFileSync() with a computed path",
+      "packages/ui/tracy-chat-input/test/e2e/voice-mode.test.mjs:38 import() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/voice-mode.test.mjs:40 import() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/voice-mode.test.mjs:42 import() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/voice-mode.test.mjs:45 import() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/voice-mode.test.mjs:46 import() with a computed specifier",
+      "packages/ui/tracy-chat-input/test/e2e/voice-mode.test.mjs:47 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "Chat or Voice: Voice takes the body and the chat box, listens, sends, works out loud, reads the reply, stops for the person; X back to Chat",
+    "into Voice from the chat box, out by another tab; dark; a narrow column",
+    "the tab is pressed once the strip renders, never when already shown, and given up on after a while"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1409-chat-or-voice"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-chat-input", "tracy-chat-input"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1409-chat-or-voice",
+    "pr": 1409,
+    "kind": "feat",
+    "area": "composer/voice-mode",
+    "file": "tests/regression/cases/REG-PR-1409-chat-or-voice.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=120000",
+    "packages/ui/tracy-chat-input/test/e2e/voice-mode.test.mjs",
+    "packages/ui/tracy-chat-input/test/voice-mode-view.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "Chat or Voice: Voice takes the body and the chat box, listens, sends, works out loud, reads the reply, stops for the person; X back to Chat",
+    "into Voice from the chat box, out by another tab; dark; a narrow column",
+    "the tab is pressed once the strip renders, never when already shown, and given up on after a while"
+  ],
+  "timeoutS": 600
+}

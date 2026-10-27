@@ -1,0 +1,21 @@
+@theme {
+  /* Colors */
+  --color-amber-curtain: #ec580a;
+  --color-ember-wash: #ff683d;
+  --color-midnight-ink: #00104e;
+  --color-canvas-cream: #f7f6f5;
+  --color-paper-white: #ffffff;
+  --color-charcoal-depth: #1c1c1c;
+  --color-graphite: #292929;
+  --color-stone: #484848;
+  --color-mist: #989897;
+  --color-foil: #6a6a6a;
+  --color-onyx: #000000;
+
+  /* Typography */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-martina-plantijn: 'Martina Plantijn', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-stk-bureau: 'STK Bureau', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter-variable: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

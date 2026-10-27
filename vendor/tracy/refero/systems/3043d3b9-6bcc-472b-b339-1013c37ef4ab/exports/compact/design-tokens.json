@@ -1,0 +1,69 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Page canvas, footer backgrounds, and black text on white pill controls"
+    },
+    "charcoal": {
+      "$value": "#080808",
+      "$type": "color",
+      "$description": "Charcoal — Dark product-link and secondary surface backgrounds"
+    },
+    "ink": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Ink — Filled add-to-bag controls and raised dark UI surfaces"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Body copy, white outlined actions, and inverted pill action fills"
+    },
+    "ash": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Ash — Muted supporting body copy"
+    },
+    "desert-butter": {
+      "$value": "#f5e78d",
+      "$type": "color",
+      "$description": "Desert Butter — Headings, navigation, hairline borders, badges, and editorial links — the warm yellow makes the black interface read like a night-lit printed zine"
+    }
+  },
+  "font": {
+    "rom": {
+      "$value": "ROM",
+      "$type": "fontFamily",
+      "$description": "Core compact sans for navigation, body copy, buttons, product metadata, links, footer content, and uppercase utility labels. Its small, dense letterforms make the store language feel typographic rather than interface-default."
+    },
+    "gaisyr": {
+      "$value": "Gaisyr",
+      "$type": "fontFamily",
+      "$description": "Editorial serif for yellow section headings, compact quotes, and collection links. The mix of sturdy 700 weight and loose tracking makes short phrases feel like printed pull quotes rather than conventional ecommerce headings."
+    },
+    "abc-rom-extended": {
+      "$value": "ABC ROM Extended",
+      "$type": "fontFamily",
+      "$description": "Ultra-compact extended sans reserved for the uppercase announcement marquee."
+    },
+    "rom-extended": {
+      "$value": "ROM Extended",
+      "$type": "fontFamily",
+      "$description": "Wide display sans for product-feature names and large promotional statements. The 48px, weight-700 display treatment is the largest measured type and stays blunt, uppercase, and untracked."
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "One-off long-form supporting text treatment."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bedouinsdaughter.com",
+      "siteName": "Bedouin's Daughter",
+      "extractedAt": "2026-09-20T19:29:36.676Z",
+      "variant": "compact"
+    }
+  }
+}

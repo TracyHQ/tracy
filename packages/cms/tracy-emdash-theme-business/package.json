@@ -1,0 +1,62 @@
+{
+  "name": "@tracy/emdash-theme-business",
+  "version": "1.7.23",
+  "private": true,
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "description": "Tracy Business — Tracy's EmDash template for business/company sites (Astro SSR, Tailwind CSS 4, shadcn/ui, 40-locale i18n). Demo content: Northgate Industrial.",
+  "emdash": {
+    "label": "Tracy Business",
+    "description": "Company website template: services, projects, news, careers, investor relations, contact form, search, marketing kit. Multilingual (row-per-locale, 40 locales). Demo content: Northgate Industrial.",
+    "seed": "seed/seed.json"
+  },
+  "engines": {
+    "node": ">=22.16"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs",
+    "typecheck": "astro check",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@astrojs/node": "11.1.3",
+    "@astrojs/react": "6.0.0",
+    "@cloudflare/kumo": "2.6.0",
+    "@emdash-cms/auth": "1.1.0",
+    "@emdash-cms/plugin-audit-log": "0.2.3",
+    "@emdash-cms/plugin-forms": "0.2.9",
+    "@phosphor-icons/react": "2.1.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.2.8",
+    "better-sqlite3": "12.11.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "emdash": "1.1.0",
+    "emdash-smtp": "0.3.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0",
+    "lucide-react": "1.45.0",
+    "radix-ui": "1.6.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.7",
+    "@types/node": "24.10.13",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "acorn": "8.18.0",
+    "playwright": "1.63.0",
+    "pngjs": "^7.0.0",
+    "shadcn": "4.21.0",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  },
+  "packageManager": "pnpm@11.9.0"
+}

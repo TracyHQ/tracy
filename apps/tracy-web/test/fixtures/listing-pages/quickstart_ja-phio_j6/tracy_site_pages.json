@@ -1,0 +1,81 @@
+{
+  "pages": [
+    {
+      "id": "home",
+      "label": "Home",
+      "home": true
+    },
+    {
+      "id": "our-work",
+      "label": "Our Work"
+    },
+    {
+      "id": "our-work/presentation",
+      "label": "Presentation"
+    },
+    {
+      "id": "our-work/animation",
+      "label": "Animation"
+    },
+    {
+      "id": "our-work/web-design",
+      "label": "Web design"
+    },
+    {
+      "id": "our-work/branding",
+      "label": "Branding"
+    },
+    {
+      "id": "our-work/live-action",
+      "label": "Live action"
+    },
+    {
+      "id": "services",
+      "label": "Services"
+    },
+    {
+      "id": "services/social-media",
+      "label": "Social Media"
+    },
+    {
+      "id": "services/ux-design",
+      "label": "UX design"
+    },
+    {
+      "id": "services/ux-design-2",
+      "label": "Idea & Concept"
+    },
+    {
+      "id": "team",
+      "label": "Team"
+    },
+    {
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "id": "blog/blog-align-right",
+      "label": "Blog Align Right"
+    },
+    {
+      "id": "blog/blog-align-left",
+      "label": "Blog Align Left"
+    },
+    {
+      "id": "blog/blog-full-width",
+      "label": "Blog Full Width"
+    },
+    {
+      "id": "pages/j-content/featured-articles",
+      "label": "Featured Articles"
+    },
+    {
+      "id": "pages/j-content/category-blog",
+      "label": "Category Blog"
+    },
+    {
+      "id": "contact",
+      "label": "Contact"
+    }
+  ]
+}

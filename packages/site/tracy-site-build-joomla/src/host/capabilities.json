@@ -1,0 +1,219 @@
+{
+  "schemaVersion": "tracy-capabilities/v1",
+  "version": "1.1.0",
+  "platform": "joomla",
+  "artifacts": {
+    "tracy-apple-j6-1.0.0": {
+      "kind": "akeeba-quickstart",
+      "version": "1.0.0",
+      "release": "tracy-apple/j6",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-quickstart-1.0.0.zip",
+      "sha256": "d082349a9c17b2984fb0c5d52b5319fab2bcbe58cbd69a67b2fe01392bfefa68",
+      "bytes": 66104008,
+      "githubAssetId": 557340948
+    },
+    "tracy-airbnb-j6-1.0.0": {
+      "kind": "joomla-extension",
+      "version": "1.0.0",
+      "release": "tracy-airbnb/j6",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-airbnb%2Fj6/tpl_tracy_airbnb-j6-1.0.0.zip",
+      "sha256": "10785c4754b1be4439971d2b7013a5ab9edec9d94e41cd651f10776bf5d50e22",
+      "bytes": 841866,
+      "githubAssetId": 557827939
+    },
+    "tracy-apple-j6-runtime-1.1.0": {
+      "kind": "tracy-runtime-quickstart",
+      "version": "1.1.0",
+      "release": "tracy-apple/j6",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-runtime-quickstart-1.1.0.zip",
+      "sha256": "b09ced26a2e96c4afb5feccca43a8bcec61dd56a6b91d41534d98d989ca5d2ed",
+      "bytes": 58601214,
+      "githubAssetId": 557831008
+    },
+    "tracy-business-j6-runtime-1.1.0": {
+      "kind": "tracy-runtime-quickstart",
+      "version": "1.1.0",
+      "release": "tracy-business/j6",
+      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-runtime-quickstart-1.1.0.zip",
+      "sha256": "aaf6ccff459b5520931e5ae1da5f5ad08a64f0ba633f204f1291b347277ba1ff",
+      "bytes": 86309219,
+      "githubAssetId": 579502177
+    }
+  },
+  "providers": {
+    "tracy-apple-j6": {
+      "version": "1.1.0",
+      "platformMajors": [6],
+      "requires": [],
+      "extensions": [
+        {
+          "type": "template",
+          "element": "tracy"
+        },
+        {
+          "type": "plugin",
+          "folder": "system",
+          "element": "t4"
+        }
+      ],
+      "artifact": "tracy-apple-j6-runtime-1.1.0",
+      "recipe": "quickstart.restore",
+      "verification": "tracy-apple.design",
+      "state": "ready"
+    },
+    "joomla-content": {
+      "version": "1.0.0",
+      "platformMajors": [6],
+      "requires": [],
+      "extensions": [
+        {
+          "type": "component",
+          "element": "com_content"
+        },
+        {
+          "type": "component",
+          "element": "com_claudecowork"
+        }
+      ],
+      "recipe": "content.contract",
+      "verification": "content.rendered",
+      "state": "ready"
+    },
+    "joomla-multilingual": {
+      "version": "1.1.0",
+      "platformMajors": [6],
+      "requires": ["joomla-content"],
+      "extensions": [
+        {
+          "type": "plugin",
+          "folder": "system",
+          "element": "languagefilter"
+        },
+        {
+          "type": "module",
+          "element": "mod_languages"
+        }
+      ],
+      "recipe": "language.add",
+      "verification": "language.routes-and-associations",
+      "state": "ready",
+      "locales": [
+        "af-ZA",
+        "be-BY",
+        "bg-BG",
+        "ca-ES",
+        "cs-CZ",
+        "cy-GB",
+        "da-DK",
+        "de-AT",
+        "de-CH",
+        "de-DE",
+        "de-LI",
+        "de-LU",
+        "el-GR",
+        "en-AU",
+        "en-CA",
+        "en-NZ",
+        "en-US",
+        "es-ES",
+        "et-EE",
+        "fi-FI",
+        "fr-CA",
+        "fr-FR",
+        "ga-IE",
+        "hr-HR",
+        "hu-HU",
+        "it-IT",
+        "ja-JP",
+        "ka-GE",
+        "lo-LA",
+        "lt-LT",
+        "lv-LV",
+        "ms-MY",
+        "nb-NO",
+        "nl-BE",
+        "nl-NL",
+        "pl-PL",
+        "pt-BR",
+        "pt-PT",
+        "ro-RO",
+        "ru-RU",
+        "sk-SK",
+        "sl-SI",
+        "sr-RS",
+        "sr-YU",
+        "sv-SE",
+        "ta-IN",
+        "th-TH",
+        "tr-TR",
+        "uk-UA",
+        "vi-VN",
+        "zh-CN",
+        "zh-TW"
+      ]
+    },
+    "tracy-airbnb-j6": {
+      "version": "1.0.0",
+      "platformMajors": [6],
+      "requires": ["joomla-content"],
+      "extensions": [
+        {
+          "type": "plugin",
+          "folder": "system",
+          "element": "t4"
+        },
+        {
+          "type": "template",
+          "element": "tracy_airbnb"
+        }
+      ],
+      "recipe": "design.apply",
+      "verification": "tracy-airbnb.design",
+      "state": "pending",
+      "artifact": "tracy-airbnb-j6-1.0.0",
+      "reason": "Changing the design of a site that already carries content is a migration workflow of its own; a new site is built with its design instead."
+    },
+    "tracy-business-j6": {
+      "version": "1.1.0",
+      "platformMajors": [6],
+      "requires": [],
+      "extensions": [
+        {
+          "type": "template",
+          "element": "tracy_business"
+        },
+        {
+          "type": "plugin",
+          "folder": "system",
+          "element": "t4"
+        },
+        {
+          "type": "component",
+          "element": "com_claudecowork"
+        }
+      ],
+      "artifact": "tracy-business-j6-runtime-1.1.0",
+      "recipe": "quickstart.restore",
+      "verification": "tracy-business.design",
+      "state": "pending",
+      "reason": "The fleet first boot (provision/platform/joomla.sh, joomla-bootstrap.php) binds the tracy-apple/j6/1.1.0 content contract unconditionally and POST /api/sites accepts only tracy-apple/j6; Tracy Business ships without a contract. Provisioning it needs that first boot to read the contract from quickstarts.json (null = unbound) — a separate change."
+    }
+  },
+  "capabilities": {
+    "site.create.apple": {
+      "provider": "tracy-apple-j6"
+    },
+    "content.revise": {
+      "provider": "joomla-content"
+    },
+    "language.add": {
+      "provider": "joomla-multilingual"
+    },
+    "design.apply.airbnb": {
+      "provider": "tracy-airbnb-j6"
+    },
+    "site.create.business": {
+      "provider": "tracy-business-j6"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-atlassian-blue: #1868db;
+  --color-midnight-navy: #101214;
+  --color-carbon-edge: #292a2e;
+  --color-slate-current: #1c2b42;
+  --color-muted-indigo: #42526e;
+  --color-pure-white: #ffffff;
+  --color-fog-white: #f0f1f2;
+  --color-ash-gray: #b7b9be;
+  --color-taxicab-yellow: #fca700;
+  --color-lavender-wash: #eed7fc;
+  --color-confetti-gradient: #bf63f3;
+  --gradient-confetti-gradient: conic-gradient(rgb(191, 99, 243) 170deg, rgb(252, 167, 0) 171deg, rgb(252, 167, 0) 230deg, rgb(77, 140, 237) 231deg, rgb(77, 140, 237) 360deg);
+
+  /* Typography — Font Families */
+  --font-charlie-display: 'Charlie Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-charlie-text: 'Charlie Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

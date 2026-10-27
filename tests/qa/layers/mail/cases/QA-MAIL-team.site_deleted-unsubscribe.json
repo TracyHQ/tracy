@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.site_deleted-unsubscribe",
+  "itemIds": [
+    "letter:team.site_deleted:en",
+    "letter:team.site_deleted:vi",
+    "letter:team.site_deleted:de",
+    "letter:team.site_deleted:it",
+    "letter:team.site_deleted:fr",
+    "letter:team.site_deleted:nl",
+    "letter:team.site_deleted:zh",
+    "letter:team.site_deleted:es"
+  ],
+  "requirement": "team.site_deleted: carries a working one-click unsubscribe for its own group, none in the locked group",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "groups",
+    "invariant": "RFC 8058 headers for switchable groups only"
+  },
+  "edgeTags": ["unsubscribe"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.unsubscribe-header#team.site_deleted:"],
+  "redProof": null,
+  "legacyIds": []
+}

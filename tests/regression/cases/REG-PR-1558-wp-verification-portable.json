@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1558-wp-verification-portable",
+  "kind": "fix",
+  "title": "WordPress quickstart VERIFICATION.json carries no stand origin or machine path",
+  "pr": 1558,
+  "area": "wordpress-skill/release",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme run: npm ci, then node --test --test-reporter=tap scripts/test/verification-portable.test.mjs scripts/test/quickstart-patch-chain.test.mjs scripts/test/quickstart-cycle.test.mjs",
+    "S2: Read the result of each test."
+  ],
+  "expect": [
+    "0 failures.",
+    "Every test in verification-portable.test.mjs passes: stand origins and machine paths (start of value, inside text, file:// URLs) are absent from the record; a non-loopback IPv6 address and repository-relative paths stay; release, version, gate, visual and hashes are unchanged."
+  ],
+  "selectors": {
+    "function": "scripts/quickstart/release.mjs portableVerification, verificationRecord",
+    "test": "scripts/test/verification-portable.test.mjs"
+  },
+  "evidence": "The JA Restaurant WP release's VERIFICATION.json held http://127.0.0.1:<port> origins and ~/ evidence dirs; published WP releases before it held none.",
+  "fence": "Skill tooling only; no theme, pack or fleet change.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/test/verification-portable.test.mjs",
+      "scripts/test/quickstart-patch-chain.test.mjs",
+      "scripts/test/quickstart-cycle.test.mjs"
+    ],
+    "cwd": "vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme",
+    "tests": [
+      "a release record carries no stand origin and no machine path",
+      "a machine path inside a longer message is cut, a repository-",
+      "IPv6 stand origins are replaced too",
+      "a file:// URL of a machine path is cut to the file name",
+      "only loopback IPv6 is a stand origin; a documentation addres"
+    ],
+    "timeout_s": 600
+  }
+}

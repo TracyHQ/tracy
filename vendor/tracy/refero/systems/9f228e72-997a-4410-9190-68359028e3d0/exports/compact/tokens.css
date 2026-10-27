@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-canvas: #fff3e7;
+  --color-ink: #030302;
+  --color-white: #ffffff;
+  --color-linen: #f7f7f7;
+  --color-cloud: #efefef;
+  --color-ash: #e1e1e1;
+  --color-stone: #bebbba;
+  --color-graphite: #41413f;
+  --color-mint: #9bd8a9;
+  --color-marigold: #fde99b;
+  --color-periwinkle: #b8caf5;
+  --color-sky: #9ed4ef;
+  --gradient-sky: linear-gradient(in oklab, rgb(158, 212, 239) 0px, rgb(209, 238, 249) 100%);
+  --color-papaya: #ff4500;
+  --color-azure: #0087ff;
+
+  /* Typography — Font Families */
+  --font-untitledseriffont: 'UntitledSerifFont', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-untitledsansfont: 'UntitledSansFont', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

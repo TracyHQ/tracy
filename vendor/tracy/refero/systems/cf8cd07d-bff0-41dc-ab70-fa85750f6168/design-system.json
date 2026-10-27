@@ -1,0 +1,318 @@
+{
+  "dos": [
+    "Use Carbon (#191919) for every elevated surface — cards, inputs, modals — so they read as one step above the black canvas",
+    "Set primary text and key headings in Bone (#eeeeee); use Ash (#7b7b7b) for secondary metadata and Fog (#b4b4b4) for body text and borders",
+    "Use Redaction 10/50 Italic for editorial section titles and the hero question; reserve Geist for all functional UI text",
+    "Apply 24px radius to cards, inputs, and large surfaces; 10px to buttons and tags; 9999px only to the primary pill CTA and quick-prompt chips",
+    "Apply -0.0300em letter-spacing at 60–80px display sizes and -0.0170em at 20–22px subheadings to maintain the compressed editorial voice",
+    "Keep the interface fully monochrome — let the generated images be the only source of color in any composition",
+    "Use 1px Fog (#b4b4b4) borders on cards and inputs; never use shadows to denote elevation"
+  ],
+  "donts": [
+    "Do not introduce a chromatic brand accent color — the zero-colorfulness palette is the signature",
+    "Do not use Redaction for body text, buttons, or functional UI; it is display-only",
+    "Do not apply box-shadows to cards or panels — the system relies on #191919 surface contrast against #000000 canvas, not elevation shadows",
+    "Do not use Satoshi at 700 for long headlines; it is a subhead accent, not a display face",
+    "Do not center-align body paragraphs or card descriptions — use left-align to match the editorial left-edge rhythm",
+    "Do not use 4px or 5px radii for cards or inputs; stay on the 10/24/9999px system",
+    "Do not use color-coded status indicators (green/yellow/red) — if feedback is needed, use weight, size, or position changes within the gray scale"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "role": "Page canvas, primary borders, image frame edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#191919",
+      "name": "Carbon",
+      "role": "Card surfaces, elevated panels, input fields — one step above the canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#303030",
+      "name": "Graphite",
+      "role": "Deeper elevated surfaces, input interiors, subtle panel separation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#606060",
+      "name": "Slate",
+      "role": "Muted headings, secondary borders, subdued labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7b7b7b",
+      "name": "Ash",
+      "role": "Body secondary text, link borders, metadata text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b4b4b4",
+      "name": "Fog",
+      "role": "Primary borders, hairlines, dividers, muted body text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#bfbfbf",
+      "name": "Mist",
+      "role": "Light borders, subtle surface edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#eeeeee",
+      "name": "Bone",
+      "role": "Primary text, high-contrast borders, heading strokes — the only near-white",
+      "group": "neutral"
+    },
+    {
+      "hex": "#050505",
+      "name": "Pitch",
+      "role": "Near-black for icon strokes, inverted button text, fine detail borders",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed sections on a 1280px max-width centered track. The hero is a centered prompt input with floating image previews above and beside it, arranged in a loose asymmetric collage on the black canvas. Below the hero, a three-column feature grid (Ideate/Iterate/Scale) with equal-width cards. Further down, a two-column split with a large left-aligned display heading stacked vertically (Visual Effects / Fashion / Advertising) and a workflow diagram card on the right. Section rhythm uses 48px vertical gaps with no dividers — sections flow seamlessly on the black canvas. Navigation is a single transparent sticky bar at the top.",
+  "imagery": "Imagery is the product — generated photographs, editorial compositions, and creative outputs are the dominant visual content. Images appear as floating tiles on the pure black canvas, often with parallax overlap, no captions, and slight rotation. They are full-color, high-contrast, and editorial in quality (fashion-editorial lighting, cinematic compositions). In UI mockups embedded within cards, screenshots show the FAUNA agent interface with mock generation results. No illustrations, no 3D renders, no abstract graphics — the generated photographic output carries all visual weight.",
+  "similar": [
+    {
+      "why": "Same monochrome dark gallery aesthetic where the generated images are the only color; floating image grid on pure black canvas",
+      "business": "Midjourney"
+    },
+    {
+      "why": "Same zero-chrome dark interface with prompt-centric hero and image-preview gallery arranged asymmetrically on black",
+      "business": "Krea AI"
+    },
+    {
+      "why": "Same editorial dark-mode product UI with serif display accents on a pure black canvas and compact card grids",
+      "business": "Ideogram"
+    },
+    {
+      "why": "Same black-canvas generative-AI landing page pattern with floating creative output tiles and minimal UI chrome",
+      "business": "Runway"
+    },
+    {
+      "why": "Same hairline-border-on-dark-surface component language (1px borders, subtle #191919 card elevation, no shadows) and Geist-family typography",
+      "business": "Linear"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "10px",
+      "cards": "24px",
+      "pills": "9999px",
+      "inputs": "24px",
+      "buttons": "10px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "48px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page background — pure black absorbs all attention toward the generated imagery"
+    },
+    {
+      "hex": "#191919",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Elevated panels, prompt input, feature cards — one stop above the canvas"
+    },
+    {
+      "hex": "#303030",
+      "name": "Deep Surface",
+      "level": 2,
+      "purpose": "Input interiors, nested panels, subtle layering"
+    }
+  ],
+  "northStar": "Black velvet gallery — pure dark canvas, vivid images as the only color",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.37,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.16
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.34
+    },
+    {
+      "role": "heading-sm",
+      "size": 22,
+      "lineHeight": 1.15,
+      "letterSpacing": -0.66
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "display",
+      "size": 42,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.01
+    },
+    {
+      "role": "display-lg",
+      "size": 60,
+      "lineHeight": 1,
+      "letterSpacing": -1.5
+    },
+    {
+      "role": "display-xl",
+      "size": 80,
+      "lineHeight": 1,
+      "letterSpacing": -2.4
+    }
+  ],
+  "components": [
+    {
+      "name": "Prompt Input",
+      "role": "Hero CTA — the primary interaction surface",
+      "description": "Full-width Carbon (#191919) surface, 24px radius, hairline Fog (#b4b4b4) border, 24px internal padding. Placeholder text in Ash (#7b7b7b) at 15px Geist 400. Contains a circular submit button (24px, #eeeeee fill, dark icon) at the right edge. This is the largest functional element on the page — it must feel inviting and centered."
+    },
+    {
+      "name": "Feature Card (Ideate/Iterate/Scale)",
+      "role": "Three-column capability showcase",
+      "description": "Carbon (#191919) surface, 24px radius, 1px Fog (#b4b4b4) border. Internal padding 24px. Large numeral (01/02/03) at 30px Geist 600 in Ash, paired with a heading at 30px Geist 600 in Bone. Contains a screenshot/UI preview image filling the card body, followed by a short descriptor in Body text and a bullet subhead in Geist 600."
+    },
+    {
+      "name": "Ghost Navigation Button",
+      "role": "Top-right secondary action",
+      "description": "Transparent fill, 1px Fog (#b4b4b4) border, 10px radius, padding 9px 13px. Text in Bone at 14px Geist 500. On hover, background lifts to #191919."
+    },
+    {
+      "name": "Primary Pill Button",
+      "role": "Top-right primary action ('Get started for free')",
+      "description": "Bone (#eeeeee) fill, Pitch (#050505) text, 9999px radius (fully pill), padding 9px 14px. Text at 14px Geist 500. This is the only light element in the nav — it functions as the bright dot in a dark field."
+    },
+    {
+      "name": "Pill Suggestion Chip",
+      "role": "Quick-prompt buttons under the main input",
+      "description": "Transparent fill, 1px Fog (#b4b4b4) border, 9999px radius, padding 6px 14px. Text at 14px Geist 400 in Bone, with a small leading icon. Three chips sit in a row: 'On-brand variations', 'Editorial shoot', 'Campaign moodboard'."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Site-wide navigation",
+      "description": "Sticky, transparent (canvas #000000 shows through), no border. Logo (FLORA wordmark with monogram) on the left, nav links centered, two action buttons on the right. Links at 14px Geist 400 in Bone, with dropdown chevrons. The wordmark uses a serif treatment distinguishing it from the sans-serif UI."
+    },
+    {
+      "name": "Image Preview Thumbnail",
+      "role": "Floating gallery of generated outputs",
+      "description": "Aspect-ratio-locked image tile with 10px or 24px radius, no border, 2–3px gap between tiles. Images are the only chromatic content — they sit on the black canvas like prints hung on a gallery wall, slightly overlapping in parallax positions."
+    },
+    {
+      "name": "Tag Pill ('New')",
+      "role": "Feature freshness indicator",
+      "description": "Small pill: Carbon (#191919) fill, 10px radius, padding 1px 8px. Text at 11px Geist 500 in Bone, often paired with a parent nav link (e.g., 'Techniques New')."
+    },
+    {
+      "name": "Workflow Diagram Card",
+      "role": "Node-graph visualization in the 'Scale' section",
+      "description": "Carbon (#191919) panel, 24px radius, containing 3–4 image nodes connected by thin Fog (#b4b4b4) curved lines. Nodes have 10px radius, show a small image preview and a label in caption-size Geist."
+    },
+    {
+      "name": "Section Heading (Redaction)",
+      "role": "Editorial section titles",
+      "description": "Redaction 10 at 42px, tracking -0.0360em, color Bone (#eeeeee), with one word in Redaction 50 Italic for emphasis. Line-height 1.10. Appears above or beside a short descriptive paragraph in body Geist."
+    },
+    {
+      "name": "Text-Left Large Display",
+      "role": "Full-bleed section headers ('Visual Effects', 'Fashion', 'Advertising')",
+      "description": "Display at 60–80px Geist, tracking -0.0250em to -0.0300em, in Bone. Large section labels stack vertically with generous 48px+ vertical rhythm. Sits on the black canvas — no card, no border."
+    },
+    {
+      "name": "Footer Link",
+      "role": "Bottom-of-page navigation",
+      "description": "Text-only, no background. Ash (#7b7b7b) at 14px Geist 400, 4–8px gap between items. On hover, color shifts to Bone."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Primary UI and body font — used across all functional text, nav, buttons, inputs, labels, and standard headings. The weight range is tight (400 for body, 500 for emphasis, 600 for strong labels) creating a restrained typographic voice. Letter-spacing tightens at larger sizes (-0.0300em at 80px, -0.0170em at 20px) giving headings a compressed editorial feel. The cv03/cv04/cv09/cv11 alternates and blwf feature shape Geist's letterforms into a distinctly modern, slightly geometric sans.",
+      "sizes": "8, 11, 12, 14, 15, 16, 20, 22, 30, 60, 80px",
+      "family": "Geist",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.0–1.5",
+      "substitute": "Inter, system-ui",
+      "letterSpacing": "-0.0300em at 80px, -0.0250em at 60px, -0.0170em at 20px, -0.0100em at 16px, -0.0010em at 14px, normal at 12px and below",
+      "fontFeatureSettings": "\"blwf\", \"cv03\", \"cv04\", \"cv09\", \"cv11\""
+    },
+    {
+      "role": "Display heading font — used for editorial section titles where the word itself needs presence. Redaction is a high-contrast serif/transitional with extreme thin strokes; at 42px with -0.0360em tracking it reads as a magazine masthead, not UI. The signature choice is using a serif on a pure-black generative-AI product — it humanizes the machine.",
+      "sizes": "42px",
+      "family": "Redaction 10",
+      "weight": "400",
+      "lineHeight": "1.10",
+      "substitute": "Playfair Display, EB Garamond",
+      "letterSpacing": "-0.0360em"
+    },
+    {
+      "role": "Accent display variant — used for one or two words within an otherwise upright Redaction headline (e.g. 'What should we make?' with 'make' in italic). The italic is a loaded gesture: it signals the creative act, the human agency of prompting. Tracking at -0.0240em keeps the italic from sprawling.",
+      "sizes": "42px",
+      "family": "Redaction 50 Italic",
+      "weight": "400",
+      "lineHeight": "1.00",
+      "substitute": "Playfair Display Italic, Cormorant Italic",
+      "letterSpacing": "-0.0240em"
+    },
+    {
+      "role": "Occasional bold subhead — used sparingly for card titles or section labels where Geist at 600 would feel too neutral and Redaction would feel too editorial. Satoshi at 700 fills the middle ground.",
+      "sizes": "22px",
+      "family": "Satoshi",
+      "weight": "700",
+      "lineHeight": "1.15",
+      "substitute": "Inter Bold, Geist Bold",
+      "letterSpacing": "-0.0300em"
+    },
+    {
+      "role": "Geist Variable — detected in extracted data but not described by AI",
+      "sizes": "14px",
+      "family": "Geist Variable",
+      "weight": "400, 700",
+      "lineHeight": "1",
+      "letterSpacing": "0.029"
+    }
+  ],
+  "description": "FLORA is a black-velvet gallery for AI-generated imagery: a pure #000000 canvas where the only color comes from the images themselves. The interface is austere and editorial — no chromatic brand accent, no decorative gradients, no icon color. Geist carries every functional surface with quiet efficiency while Redaction 10 and Redaction 50 Italic lend expressive typographic weight to the few moments that need to feel curated (the hero question, the section openers). Components float on #191919 cards with hairline #b4b4b4 borders and 24px radii, looking more like matted photographs than software panels. The entire system is designed to disappear so that the generated visual output — the actual product — becomes the only vivid thing on screen.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Canvas/background: #000000\n- Card/elevated surface: #191919\n- Deep surface: #303030\n- Primary text: #eeeeee\n- Secondary text/borders: #b4b4b4\n- Muted text: #7b7b7b\n- primary action: #000000 (filled action)\n\n**Example Component Prompts**\n1. *Hero prompt input*: Full-width Carbon (#191919) surface, 24px radius, 1px Fog (#b4b4b4) border, 24px padding. Placeholder 'Shoot an on-figure editorial in a Tokyo alley…' in Ash (#7b7b7b) at 15px Geist 400. Circular 24px submit button with Bone fill at right edge.\n\n2. *Three-column feature card*: Carbon (#191919) fill, 24px radius, 1px Fog border, 24px padding. Numeral '01' in Ash at 30px Geist 600, heading 'Ideate' in Bone at 30px Geist 600. Body text in Fog at 15px Geist 400. Contains a UI mockup image filling the card width.\n\n3. Create a Primary Action Button: #000000 background, #eeeeee text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n4. *Editorial section heading*: Redaction 10 at 42px, tracking -0.0360em, color Bone, line-height 1.10. One word swapped to Redaction 50 Italic for emphasis.\n\n5. *Ghost nav button*: Transparent fill, 1px Fog (#b4b4b4) border, 10px radius, padding 9px 13px. Text 'Contact sales' at 14px Geist 500 in Bone."
+    },
+    {
+      "title": "Monochrome Discipline",
+      "content": "The palette has zero colorfulness. This is not a constraint — it is the core identity. Every chromatic pixel in the system comes from user-generated imagery, never from UI chrome. When adding any new component, audit it for color: fills, borders, icons, and text must all be drawn from the 9-step achromatic scale (#000000 → #050505 → #191919 → #303030 → #606060 → #7b7b7b → #b4b4b4 → #bfbfbf → #eeeeee). The only permitted color in chrome is the gradient highlight on the submit arrow and the green 'New' badge dot — and even these are used minimally."
+    }
+  ],
+  "elevationPhilosophy": "FLORA uses no box-shadows. Elevation is communicated entirely through surface tone: the canvas is #000000, elevated panels are #191919, and deeper nested surfaces are #303030. This eliminates the visual noise of cast shadows and keeps the black-velvet-gallery feel intact. Hairline 1px borders in Fog (#b4b4b4) define card edges instead."
+}

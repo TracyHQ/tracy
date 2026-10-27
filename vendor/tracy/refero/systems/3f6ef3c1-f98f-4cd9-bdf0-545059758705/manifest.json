@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3f6ef3c1-f98f-4cd9-bdf0-545059758705",
+  "status": "complete",
+  "name": "Atlas Card",
+  "url": "https://styles.refero.design/style/3f6ef3c1-f98f-4cd9-bdf0-545059758705",
+  "sourceWebsite": "https://atlascard.com",
+  "extractedAt": "2026-06-03T15:45:55.597Z",
+  "capturedAt": "2026-10-08T05:10:44.503039+00:00",
+  "theme": "dark",
+  "industry": "fintech",
+  "description": "Midnight vault with a single sapphire light — pure black space where one deep electric blue is the only thing that matters.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/40c6449e-a783-4276-a34c-2facafd8aafe.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ba3a30d1-93a5-47c6-8a18-e1f0d0345f58.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/92c80c15-9e67-408c-b99d-4676e67d6858.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/7e26583a-feb5-40b3-a705-6120b790774e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/55b8665f-1277-45d3-a4f7-e4f8b9c6ed4d.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e11f634358006e2a3a72df88609708c4fc76fe3ea5133291d226810dfd0954c5",
+      "bytes": 20353
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "15d3afc08586c9c05b96a02fea49d0f40655ed0f5394e66841ca4b1694645702",
+      "bytes": 108583
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "3a4985bda952623d8c97182ed73166a9c477861d7643d7c3c31eb0c01d870a62",
+      "bytes": 16387
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "72e80e4f3a73d9d82af0aa0176b495667d9c43791a8ffcf55d4288adede55bbf",
+      "bytes": 9095
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4fc54caa5dd81185b2fed1296a16c0ab3aee5df05f7836692e3c9318611f1367",
+      "bytes": 13452
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d412a123f9d1eab5cab6cb5590b90a9fcb0b83d4f7893c7f271a002a0d8e8804",
+      "bytes": 3771
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3bda722d58463716e0edd65ebcbad05983c2d1d6bfc510333891b262e6187dc7",
+      "bytes": 676
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5318037623733eaa68ce9d91f8b97af0f142eef6d36d3421fe18fa2271504431",
+      "bytes": 693
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "921c2d3f7703431074fbcd8298ce444237570c38b68191fe494f802fa3006fc9",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "cb265156259cb6e1c6a1b46a80eb17e48521fec5aadbfa408d0c37baedbc7f2c",
+      "bytes": 44025
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "578ab85f6fea76c47dec3f124d45b92ef5e0ddd340258c4b8ee593aecc055dfd",
+      "bytes": 22360
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "376b9cc8d47946cc736105c4bcac4345b4ffab65e5391e744a1149ea1fb853eb",
+      "bytes": 35026
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "886d175943205d70f78583e483b66a16fe0a57c9ff95696dcbd0a86c2c5764c7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "bed0ceaeced255230a6df650b79b13cfb011cbddb0e778241e30b2e5b8d77714",
+      "bytes": 1402
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7ac820d8ac06f26ae9e7d675639e3f50b4a9523889acea70f9e24769e0616a71",
+      "bytes": 1910
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "3f6ef3c1-f98f-4cd9-bdf0-545059758705",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "7c38e84b-aea0-4c8f-b3e9-60b994ee6c6b",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "98a1ad40-90e2-4665-b49f-e5ffd4d4b90b",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "b136f0a0-8064-4978-a18e-db54b9362c24",
+    "bcfc6cb0-1b39-4f3f-a95e-bd7b563b0efc",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c"
+  ]
+}

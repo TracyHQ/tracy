@@ -1,0 +1,987 @@
+/* Group B (content pages): Featured Articles, Tagged Items, Typography, tag and category lists, offline, error. */
+
+/* ---- Featured Articles: three cards to a row ---- */
+.blog-featured .tracy-grid.items-row {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.blog-featured .article-info {
+	align-items: center;
+	gap: 0 15px;
+}
+.blog-featured .article-info .hits {
+	margin: 0;
+	font-size: inherit;
+	line-height: inherit;
+}
+.t3-content .blog-featured .tags {
+	margin: 0 0 18.75px;
+}
+
+/* ---- Tagged Items: two to a row, picture, title, text ---- */
+.tag-category .tracy-grid.cat-list {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0 30px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.tag-category .item {
+	margin: 0 0 30px;
+}
+.tag-category .item-image {
+	margin: 0;
+}
+/* The blog cards bleed their picture 30 px past the card padding (`.blog .item-image`, !important); the tagged items have no card padding, so
+   the bleed pushed the picture 30 px out of its column and the page 6 px wider than the screen at 768 px (audit 03/10, defect 9). */
+.blog.tag-category .item-image {
+	margin: 0 !important;
+}
+.tag-category .item-image img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--ds-pill-radius, 4px);
+}
+.tag-category .article-title {
+	margin: 25px 0 12.5px;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 30px;
+}
+.tag-category .article-title a {
+	color: var(--jm-heading);
+}
+.tag-category .tag-body,
+.tag-category .tag-body p {
+	margin: 0;
+	font-size: 16px;
+	line-height: 25px;
+	color: var(--jm-text);
+}
+
+/* ---- List of all tags: filter bar, then three bordered cards to a row ---- */
+.tag-category .tag-list-form fieldset.filters {
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+	margin: 12.5px 0 45px;
+	padding: 0;
+	border: 0;
+	min-width: 0;
+	flex-wrap: wrap;
+}
+.tag-category .filters .btn-group {
+	display: flex;
+	margin: 0 12.5px 15px 5px;
+}
+.tag-category .filters .inputbox,
+.tag-category .filters .form-select {
+	box-sizing: border-box;
+	height: 60px;
+	border: 1px solid var(--jm-line);
+	background: var(--jm-card);
+	color: light-dark(var(--ds-c-fg, #555555), var(--ds-c-fg, #cdd4e0));
+	font: inherit;
+}
+.tag-category .filters .inputbox {
+	width: 230px;
+	padding: 20px 30px;
+	border-radius: var(--ds-pill-radius, 4px) 0 0 var(--ds-pill-radius, 4px);
+}
+.tag-category .filters .form-select {
+	width: 101px;
+	padding: 20px 34px 20px 16px;
+	border-radius: var(--ds-input-radius, 4px);
+}
+.tag-category .filters .btn {
+	box-sizing: border-box;
+	height: 60px;
+	margin: 0;
+	padding: 20px 30px 20px 31px;
+	border: 1px solid var(--jm-line);
+	border-left-width: 0;
+	border-radius: var(--ds-btn-radius, 0);
+	background: var(--jm-card);
+	color: light-dark(var(--ds-c-fg-2, #333333), var(--ds-c-fg, #cdd4e0));
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 18.08px;
+	cursor: pointer;
+}
+.tag-category .filters .btn:last-child {
+	border-radius: 0 var(--ds-btn-radius, 4px) var(--ds-btn-radius, 4px) 0;
+}
+.tag-category .filters .fa {
+	display: inline-block;
+	font: normal 16px/16px "FontAwesome";
+}
+.tag-category .filters .fa-search::before {
+	content: "\f002";
+}
+.tag-category .filters .fa-remove::before {
+	content: "\f00d";
+}
+.tag-category .cats-list.row {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 -15px;
+}
+.tag-category .cats-list .col-sm-4 {
+	box-sizing: border-box;
+	flex: 0 0 33.3333%;
+	max-width: 33.3333%;
+	padding: 0 15px;
+}
+.tag-category .cats-list .item {
+	margin: 0 0 30px;
+	border: 1px solid var(--jm-line);
+	border-radius: var(--ds-pill-radius, 4px);
+	text-align: center;
+	background: var(--jm-card);
+}
+.tag-category .cats-list .item-image {
+	margin: 0;
+}
+.tag-category .cats-list .item-image img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--ds-pill-radius, 4px) var(--ds-pill-radius, 4px) 0 0;
+}
+.tag-category .cats-list .item h3 {
+	margin: 25px 0 12.5px;
+	font-size: 20px;
+	line-height: 30px;
+	text-align: center;
+}
+.tag-category .cats-list .item h3 a {
+	color: var(--jm-heading);
+}
+.tag-category .cats-list .caption {
+	padding: 0 15px 25px;
+}
+.tag-category .cats-list .caption .tag-body p {
+	display: inline;
+}
+.tag-category .cats-list .list-hits {
+	display: inline-block;
+	margin: 12.5px 0 0;
+	padding: 3px 7px;
+	vertical-align: middle;
+	border-radius: var(--ds-pill-radius, 4px);
+	background: var(--jm-gray);
+	color: var(--jm-text);
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 12px;
+}
+
+/* ---- List all categories: two bordered cards to a row ---- */
+.categories-list.row {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 -15px;
+}
+.categories-list .category-item {
+	box-sizing: border-box;
+	flex: 0 0 50%;
+	max-width: 50%;
+	padding: 0 15px;
+	margin-bottom: 30px;
+}
+.categories-list .category-item-inner {
+	box-sizing: border-box;
+	height: 100%;
+	padding: 30px;
+	border: 1px solid var(--jm-line);
+	border-radius: var(--ds-card-radius, 4px);
+	background: var(--jm-card);
+}
+.categories-list .item-img {
+	margin: -30px -30px 25px;
+}
+.categories-list .item-img img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--ds-card-radius, 4px) var(--ds-card-radius, 4px) 0 0;
+}
+.categories-list .item-title {
+	margin: 0 0 25px;
+	font-size: 20px;
+	line-height: 30px;
+}
+.categories-list .item-title a {
+	color: var(--jm-navy-fg);
+}
+.categories-list .item-title .badge {
+	/* The source floats the badge right: a float also narrows the description lines beside it. */
+	float: right;
+	margin: 0 0 0 12.5px;
+	padding: 5px 10px;
+	border-radius: 50%;
+	background: var(--jm-gray);
+	color: var(--jm-text);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 16px;
+	text-align: center;
+}
+.categories-list .category-desc,
+.categories-list .category-desc p {
+	margin: 0;
+}
+@media (max-width: 767px) {
+	.blog-featured .tracy-grid.items-row,
+	.tag-category .tracy-grid.cat-list {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.tag-category .cats-list .col-sm-4,
+	.categories-list .category-item {
+		flex-basis: 100%;
+		max-width: 100%;
+	}
+}
+
+/* ---- Content typography (Typography page and every article body): the Bootstrap 3 base the source content is written against ---- */
+body.jm-route-typography .ja-masthead-title.wp-block-post-title,
+body.jm-route-error-page .ja-masthead-title.wp-block-post-title,
+body.jm-route-offline-page .ja-masthead-title.wp-block-post-title {
+	line-height: 75px;
+}
+.t3-content :where(h1) {
+	margin: 25px 0 12.5px;
+	font-size: 60px;
+	line-height: 75px;
+}
+.t3-content :where(h2) {
+	margin: 25px 0 12.5px;
+	font-size: 36px;
+	line-height: 45px;
+}
+.t3-content :where(h3) {
+	margin: 25px 0 12.5px;
+	font-size: 24px;
+	line-height: 35px;
+}
+.t3-content :where(h4) {
+	margin: 12.5px 0;
+	font-size: 20px;
+	line-height: 30px;
+}
+.t3-content :where(h5) {
+	margin: 12.5px 0;
+	font-size: 16px;
+	line-height: 20px;
+}
+.t3-content :where(h6) {
+	margin: 12.5px 0;
+	font-size: 13px;
+	line-height: 20px;
+}
+.t3-content :where(h1, h2, h3, h4, h5, h6) small {
+	font-size: 65%;
+	font-weight: 400;
+	line-height: 1;
+	color: var(--ds-c-meta, #999999);
+}
+.t3-content .lead {
+	font-size: 18px;
+	line-height: 30px;
+}
+.t3-content blockquote {
+	margin: 0 0 25px;
+	padding: 12.5px 25px;
+	border-left: 5px solid var(--jm-line);
+	font-size: 20px;
+	line-height: 31.25px;
+}
+.t3-content blockquote p {
+	font-size: 20px;
+	line-height: 31.25px;
+}
+.t3-content blockquote p {
+	margin-bottom: 25px;
+}
+.t3-content blockquote small {
+	display: block;
+	font-size: 16px;
+	line-height: 25px;
+	color: var(--ds-c-meta, #999999);
+}
+.t3-content .text-muted {
+	color: var(--ds-c-meta, #999999);
+}
+.t3-content .text-primary {
+	color: var(--ds-c-accent-text, #d93030);
+}
+.t3-content .text-warning {
+	color: var(--ds-c-warn-text, #c09853);
+}
+.t3-content .text-danger {
+	color: var(--ds-c-danger-text, #b94a48);
+}
+.t3-content .text-success {
+	color: var(--ds-c-success-text, #468847);
+}
+.t3-content .text-info {
+	color: var(--ds-c-info-text, #3a87ad);
+}
+
+/* Alerts */
+.t3-content .alert {
+	margin: 0 0 25px;
+	padding: 15px;
+	border: 1px solid var(--al-border, transparent);
+	border-radius: var(--ds-card-radius, 4px);
+	background: var(--al-bg, transparent);
+	color: var(--al-fg, inherit);
+	--al-fg: light-dark(var(--ds-c-warn-text, #c09853), var(--ds-c-warn-text, #e6c46a));
+	--al-bg: var(--ds-c-surface-warm, light-dark(#fcf8e3, #2a2410));
+	--al-border: var(--ds-c-border-soft, light-dark(#faebcc, #5a4d20));
+}
+.t3-content .alert p:last-child {
+	margin-bottom: 0;
+}
+.t3-content .alert-danger {
+	--al-fg: var(--ds-c-danger-text, light-dark(#b94a48, #e88a86));
+	--al-bg: var(--ds-c-danger-bg, light-dark(#f2dede, #2a1515));
+	--al-border: var(--ds-c-danger, light-dark(#ebccd1, #5a2d2d));
+}
+.t3-content .alert-success {
+	--al-fg: var(--ds-c-success-text, light-dark(#468847, #86d48c));
+	--al-bg: var(--ds-c-success-bg, light-dark(#dff0d8, #15271b));
+	--al-border: var(--ds-c-success, light-dark(#d6e9c6, #2f5a34));
+}
+.t3-content .alert-info {
+	--al-fg: var(--ds-c-info-text, light-dark(#3a87ad, #74c4e6));
+	--al-bg: var(--ds-c-info-bg, light-dark(#d9edf7, #112630));
+	--al-border: var(--ds-c-info, light-dark(#bce8f1, #2c5870));
+}
+
+/* Buttons */
+.t3-content .btn:where(:not(.wp-block-button)) {
+	display: inline-block;
+	margin: 12.5px 12.5px 0 0;
+	padding: 20px 30px;
+	border: 1px solid var(--bt-border, var(--jm-line));
+	border-radius: var(--ds-btn-radius, 4px);
+	background: var(--bt-bg, light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-surface, #20283c)));
+	color: var(--bt-fg, light-dark(var(--ds-c-fg-2, #333333), var(--ds-c-fg-2, #cdd4e0)));
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 18.08px;
+	text-align: center;
+	--bt-border: light-dark(var(--ds-c-border, #eaeaea), var(--ds-c-border, #2a3247));
+}
+.t3-content .btn-primary,
+.t3-content .btn-danger {
+	--bt-bg: var(--ds-c-accent, #d93030);
+	--bt-border: var(--ds-c-accent, #d93030);
+	--bt-fg: var(--ds-c-accent-on, #ffffff);
+}
+.t3-content .btn-success {
+	--bt-bg: var(--ds-c-success, #5cb85c);
+	--bt-border: var(--ds-c-success, #5cb85c);
+	--bt-fg: var(--ds-c-on-ink, #ffffff);
+}
+.t3-content .btn-warning {
+	--bt-bg: var(--ds-c-warn, #ffbb22);
+	--bt-border: var(--ds-c-warn, #ffbb22);
+	--bt-fg: var(--ds-c-on-ink, #ffffff);
+}
+.t3-content .btn-info {
+	--bt-bg: var(--ds-c-info, #5bc0de);
+	--bt-border: var(--ds-c-info, #5bc0de);
+	--bt-fg: var(--ds-c-on-ink, #ffffff);
+}
+
+/* Navigation: tabs and pills */
+.t3-content ul.nav {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.t3-content ul.nav > li {
+	position: relative;
+	display: block;
+}
+.t3-content ul.nav > li > a {
+	position: relative;
+	display: block;
+	padding: 10px 15px;
+	font-weight: 400;
+}
+.t3-content ul.nav-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid var(--ds-c-border, light-dark(#dddddd, #2a3247));
+}
+.t3-content ul.nav-tabs > li {
+	font-weight: 500;
+}
+.t3-content ul.nav-tabs > li > a {
+	margin-right: 25px;
+	padding: 0;
+	border-radius: var(--ds-card-radius, 4px) var(--ds-card-radius, 4px) 0 0;
+	color: var(--ds-c-fg, #777777);
+	font-weight: 500;
+}
+/* Only the tab's link is painted, as in the source; the list item stays transparent (a painted item 68 px wide behind a 43 px link
+   showed on any band that is not white). */
+.t3-content ul.nav-tabs > li.active > a {
+	background: light-dark(var(--ds-c-bg, #ffffff), transparent);
+}
+.t3-content ul.nav-tabs > li.active > a {
+	color: var(--ds-c-accent-text, #d93030);
+}
+.t3-content ul.nav-tabs > li.disabled > a {
+	color: var(--ds-c-disabled-fg, #999999);
+}
+.t3-content ul.nav-pills > li > a {
+	border-radius: var(--ds-pill-radius, 4px);
+	color: var(--ds-c-accent-text, #d93030);
+}
+.t3-content ul.nav-pills > li.active > a {
+	background: var(--ds-c-accent-active, #c42424);
+	color: var(--ds-c-accent-on, #ffffff);
+}
+.t3-content ul.nav-pills > li.disabled > a {
+	color: var(--ds-c-disabled-fg, #999999);
+}
+.t3-content ul.nav .dropdown-menu {
+	display: none;
+	position: absolute;
+	z-index: 1000;
+	min-width: 160px;
+	margin: -1px 0 0;
+	padding: 5px 0;
+	list-style: none;
+	border: 1px solid var(--ds-c-border-soft, rgba(0, 0, 0, 0.15));
+	border-radius: 0 0 var(--ds-card-radius, 4px) var(--ds-card-radius, 4px);
+	background: var(--jm-card);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+	font-size: 15px;
+	line-height: 23.4375px;
+	text-align: left;
+}
+.t3-content ul.nav .dropdown-menu > li > a {
+	display: block;
+	padding: 5px 20px;
+	color: light-dark(var(--ds-c-fg-2, #333333), var(--ds-c-fg, #cdd4e0));
+}
+
+/* Tags as labels */
+.t3-content .tags .tag {
+	display: inline-block;
+	margin: 0 6.25px 6.25px 0;
+}
+.t3-content .label {
+	display: inline;
+	padding: 2.4px 7.2px 3.6px;
+	border-radius: var(--ds-pill-radius, 3px);
+	background: var(--jm-gray);
+	color: var(--jm-text);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 12px;
+	text-align: center;
+}
+
+/* The Bootstrap 3 indicator labels of the typography page (<span>): bold white on a solid colour. The soft grey
+   above is the tag chip, an <a>. */
+.t3-content span.label {
+	color: var(--ds-c-on-ink, #ffffff);
+	font-weight: 700;
+}
+.t3-content span.label-default {
+	background: var(--ds-c-ink, #999999);
+}
+.t3-content span.label-primary,
+.t3-content span.label-danger {
+	background: var(--ds-c-accent, #d93030);
+}
+.t3-content span.label-success {
+	background: var(--ds-c-success, #5cb85c);
+}
+.t3-content span.label-info {
+	background: var(--ds-c-info-bg, #5bc0de);
+	color: var(--ds-c-info-text, #ffffff);
+}
+.t3-content span.label-warning {
+	background: var(--ds-c-warn, #ffbb22);
+}
+
+/* Badges and list groups: a grey pill with white text; the active pill or list item turns white with red text. */
+.t3-content .badge {
+	display: inline-block;
+	margin-left: 3px;
+	padding: 3px 7px;
+	border-radius: var(--ds-pill-radius, 10px);
+	background: var(--ds-c-ink, #999999);
+	color: var(--ds-c-on-ink, #ffffff);
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 12px;
+	text-align: center;
+}
+.t3-content .list-group {
+	margin: 0 0 20px;
+	padding: 0;
+	list-style: none;
+}
+.t3-content .list-group-item {
+	position: relative;
+	display: block;
+	padding: 10px 15px;
+	border: 1px solid var(--ds-c-border, light-dark(#dddddd, #2a3247));
+	background: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-surface, #1a2032));
+	color: var(--jm-text);
+}
+/* The source overlaps neighbouring borders with a -1px margin; dropping the top border of every item but the first draws the same single line. */
+.t3-content .list-group-item + .list-group-item {
+	border-top-width: 0;
+}
+.t3-content .list-group-item:first-child {
+	border-radius: var(--ds-card-radius, 4px) var(--ds-card-radius, 4px) 0 0;
+}
+.t3-content .list-group-item:last-child {
+	border-radius: 0 0 var(--ds-card-radius, 4px) var(--ds-card-radius, 4px);
+}
+.t3-content .list-group-item .badge {
+	float: right;
+	background: var(--ds-c-ink, #999999);
+	color: var(--ds-c-on-ink, #ffffff);
+}
+.t3-content a.list-group-item {
+	color: light-dark(var(--ds-c-fg, #555555), var(--ds-c-fg, #a7b0c2));
+}
+/* Under a system the active row is a selected row, as the template draws it in dark: the surface with the
+   accent edge, not an accent-filled box (that reads as a button with the wrong corner). */
+.t3-content .list-group-item.active {
+	border-color: var(--ds-c-accent, #d93030);
+	background: var(--ds-c-surface, #d93030);
+	color: var(--ds-c-heading, #ffffff);
+}
+.t3-content .list-group-item.active .badge,
+.t3-content ul.nav-pills > li.active .badge {
+	background: var(--ds-c-bg, #ffffff);
+	color: var(--ds-c-accent-text, #d93030);
+}
+.t3-content .list-group-item-heading {
+	margin: 0 0 5px;
+}
+.t3-content .list-group-item-text {
+	margin: 0;
+	line-height: 20.8px;
+}
+
+/* Panels and wells */
+.t3-content .panel {
+	--pn-border: var(--ds-c-border, light-dark(#dddddd, #2a3247));
+	--pn-head-bg: var(--ds-c-surface-warm, light-dark(#f5f5f5, #20283c));
+	--pn-head-fg: light-dark(var(--ds-c-fg-2, #333333), var(--ds-c-fg, #f2f4f8));
+	margin: 0 0 25px;
+	border: 1px solid var(--pn-border);
+	border-radius: var(--ds-card-radius, 4px);
+	background: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-surface, #1a2032));
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+.t3-content .panel-heading {
+	padding: 10px 15px;
+	border-bottom: 1px solid var(--pn-border);
+	border-radius: var(--ds-card-radius, 3px) var(--ds-card-radius, 3px) 0 0;
+	background: var(--pn-head-bg);
+	color: var(--pn-head-fg);
+}
+.t3-content .panel-title {
+	margin: 0;
+	font-size: 18px;
+	line-height: 26.244px;
+	color: inherit;
+}
+.t3-content .panel-body {
+	margin: 0;
+	padding: 15px;
+}
+.t3-content .panel-primary {
+	--pn-border: var(--ds-c-accent, #d93030);
+	--pn-head-bg: var(--ds-c-accent, #d93030);
+	--pn-head-fg: var(--ds-c-accent-on, #ffffff);
+}
+.t3-content .panel-success {
+	--pn-border: var(--ds-c-success, light-dark(#d6e9c6, #2f5a34));
+	--pn-head-bg: var(--ds-c-success-bg, light-dark(#dff0d8, #1c3a24));
+	--pn-head-fg: var(--ds-c-success-text, light-dark(#468847, #86d48c));
+}
+.t3-content .panel-warning {
+	--pn-border: var(--ds-c-warn, light-dark(#faebcc, #5a4d20));
+	--pn-head-bg: var(--ds-c-warn-bg, light-dark(#fcf8e3, #2a2410));
+	--pn-head-fg: var(--ds-c-warn-text, light-dark(#c09853, #e6c46a));
+}
+.t3-content .panel-danger {
+	--pn-border: var(--ds-c-danger, light-dark(#ebccd1, #5a2d2d));
+	--pn-head-bg: var(--ds-c-danger-bg, light-dark(#f2dede, #2a1515));
+	--pn-head-fg: var(--ds-c-danger-text, light-dark(#b94a48, #e88a86));
+}
+.t3-content .panel-info {
+	--pn-border: light-dark(var(--ds-c-info, #bce8f1), var(--ds-c-info, #2c5870));
+	--pn-head-bg: var(--ds-c-surface-warm, light-dark(#d9edf7, #112630));
+	--pn-head-fg: light-dark(var(--ds-c-info-text, #3a87ad), var(--ds-c-info-text, #74c4e6));
+}
+.t3-content .well {
+	min-height: 20px;
+	margin: 0 0 20px;
+	padding: 19px;
+	border: 1px solid light-dark(var(--ds-c-border, #e3e3e3), var(--ds-c-border, #2a3247));
+	border-radius: var(--ds-card-radius, 4px);
+	background: light-dark(var(--ds-c-surface, #f5f5f5), var(--ds-c-surface, #1a2032));
+}
+.t3-content .well-sm {
+	padding: 9px;
+	border-radius: var(--ds-card-radius, 3px);
+}
+.t3-content .well-lg {
+	padding: 24px;
+	border-radius: var(--ds-card-radius, 6px);
+}
+
+/* Bootstrap 3 grid the demo pages are laid out with (row + col-*), scoped to the demo rows */
+.t3-content .example-row {
+	display: flex;
+	flex-wrap: wrap;
+	max-width: none;
+	margin-right: -15px !important;
+	margin-left: -15px !important;
+}
+.t3-content .example-row > [class*="col-"] {
+	box-sizing: border-box;
+	flex: 0 0 100%;
+	max-width: 100%;
+	padding: 0 15px;
+}
+/* Where the columns stack, the source's are plain blocks: their margins collapse (a flex row keeps every one of them). */
+@media (max-width: 767px) {
+	.t3-content .example-row {
+		display: flow-root;
+	}
+}
+@media (min-width: 768px) and (max-width: 991px) {
+	.t3-content .example-row:not(:has(> .col-sm-4)) {
+		display: flow-root;
+	}
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+	.t3-content .example-row:has(> [class*="col-lg-"]):not(:has(> .col-md-6)) {
+		display: flow-root;
+	}
+}
+@media (min-width: 768px) {
+	.t3-content .example-row > .col-sm-4 {
+		flex-basis: 33.3333%;
+		max-width: 33.3333%;
+	}
+}
+@media (min-width: 992px) {
+	.t3-content .example-row > .col-md-6 {
+		flex-basis: 50%;
+		max-width: 50%;
+	}
+	.t3-content .example-row > .col-md-12 {
+		flex-basis: 100%;
+		max-width: 100%;
+	}
+}
+@media (min-width: 1200px) {
+	.t3-content .example-row > .col-lg-4 {
+		flex-basis: 33.3333%;
+		max-width: 33.3333%;
+	}
+	.t3-content .example-row > .col-lg-5 {
+		flex-basis: 41.6667%;
+		max-width: 41.6667%;
+	}
+	.t3-content .example-row > .col-lg-7 {
+		flex-basis: 58.3333%;
+		max-width: 58.3333%;
+	}
+	.t3-content .example-row > .col-lg-8 {
+		flex-basis: 66.6667%;
+		max-width: 66.6667%;
+	}
+	.t3-content .example-row > .col-lg-12 {
+		flex-basis: 100%;
+		max-width: 100%;
+	}
+}
+
+/* The source content runs the full width of its column; the constrained layout of the block editor would cap it at the theme's content size. */
+.t3-content .is-layout-constrained > * {
+	max-width: none;
+}
+
+.t3-content address {
+	margin: 0 0 25px;
+	font-style: normal;
+}
+.t3-content .tags {
+	margin-bottom: 18.75px;
+}
+
+/* Tab panes: only the active one shows */
+.t3-content .tab-content {
+	display: flex;
+	padding: 30px;
+}
+@media (max-width: 767px) {
+	.t3-content .tab-content {
+		padding: 12.5px;
+	}
+}
+.t3-content ul.nav-stacked > li + li {
+	margin-top: 2px;
+}
+.t3-content .tab-content > .tab-pane:not(.active) {
+	display: none;
+}
+.t3-content .tab-content > .tab-pane {
+	min-width: 0;
+}
+
+/* Horizontal pills (badges demo): the stacked variant keeps them one above the other */
+.t3-content ul.nav-pills:not(.nav-stacked) {
+	display: flex;
+	flex-wrap: wrap;
+}
+.t3-content ul.nav-pills:not(.nav-stacked) > li {
+	display: block;
+	margin-right: 2px;
+}
+
+/* Colour swatches: 100 px tall, 123 px from 1200 px (the source's step) */
+.t3-content .swatch-item {
+	--sw-bg: var(--ds-c-accent, #d93030);
+	--sw-fg: var(--ds-c-accent-on, #ffffff);
+	position: relative;
+	min-height: 100px;
+	margin: 0 0 25px;
+	background: var(--sw-bg);
+	color: var(--sw-fg);
+}
+@media (min-width: 1200px) {
+	.t3-content .swatch-item {
+		min-height: 123px;
+	}
+}
+.t3-content .swatch-item dl {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: 0;
+	padding: 20px;
+}
+.t3-content .swatch-item dt {
+	font-weight: 700;
+}
+.t3-content .swatch-item dt,
+.t3-content .swatch-item dd {
+	margin: 0;
+	color: inherit;
+}
+.t3-content .color-brand-secondary {
+	--sw-bg: var(--ds-c-ink, #1b3060);
+	--sw-fg: var(--ds-c-on-ink, #ffffff);
+}
+.t3-content .color-brand-warning {
+	--sw-bg: var(--ds-c-warn-bg, #ffbb22);
+	--sw-fg: var(--ds-c-warn-text, #ffffff);
+}
+.t3-content .color-brand-danger {
+	--sw-bg: var(--ds-c-accent, #d93030);
+}
+.t3-content .color-brand-info {
+	--sw-bg: var(--ds-c-info-bg, #5bc0de);
+	--sw-fg: var(--ds-c-info-text, #ffffff);
+}
+.t3-content .color-brand-success {
+	--sw-bg: var(--ds-c-success-bg, #5cb85c);
+	--sw-fg: var(--ds-c-success-text, #ffffff);
+}
+.t3-content .color-gray-darker {
+	--sw-bg: var(--ds-c-ink, #222222);
+	--sw-fg: var(--ds-c-on-ink, #ffffff);
+}
+.t3-content .color-gray-dark {
+	--sw-bg: var(--ds-c-ink, #333333);
+	--sw-fg: var(--ds-c-on-ink, #ffffff);
+}
+.t3-content .color-gray {
+	--sw-bg: var(--ds-c-ink, #555555);
+	--sw-fg: var(--ds-c-on-ink, #ffffff);
+}
+.t3-content .color-gray-light {
+	--sw-bg: var(--ds-c-ink, #999999);
+	--sw-fg: var(--ds-c-on-ink, #333333);
+}
+.t3-content .color-gray-lighter {
+	--sw-bg: var(--ds-c-surface-warm, #eeeeee);
+	--sw-fg: var(--ds-c-fg-2, #333333);
+}
+
+/* Form states */
+.t3-content .form-group {
+	--fg-state: var(--ds-c-fg, #777777);
+	margin: 0 0 25px;
+}
+.t3-content .has-success {
+	--fg-state: var(--ds-c-fg, #468847);
+}
+.t3-content .has-error {
+	--fg-state: var(--ds-c-fg, #b94a48);
+}
+.t3-content .has-warning {
+	--fg-state: var(--ds-c-fg, #c09853);
+}
+.t3-content .control-label {
+	display: inline-block;
+	max-width: 100%;
+	margin-bottom: 5px;
+	font-weight: 700;
+	color: var(--fg-state, inherit);
+}
+.t3-content .form-control {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 20px 30px;
+	border: 1px solid var(--fg-state, var(--jm-line));
+	border-radius: var(--ds-input-radius, 4px);
+	background: light-dark(var(--ds-c-bg, #ffffff), var(--ds-c-surface, #20283c));
+	color: light-dark(var(--ds-c-fg, #555555), var(--ds-c-fg, #cdd4e0));
+	font: inherit;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+/* The block editor's constrained layout zeroes the last child's bottom margin and adds a top margin to every child; the source uses the element margins of its own base styles. */
+.t3-content .is-layout-constrained > :is(p, blockquote, address, .alert, .panel, .swatch-item, .form-group, .lead) {
+	margin-block: 0 25px;
+}
+.t3-content .is-layout-constrained > :is(.well, .list-group) {
+	margin-block: 0 20px;
+}
+.t3-content .is-layout-constrained > :is(h1, h2, h3) {
+	margin-block: 25px 12.5px;
+}
+.t3-content .is-layout-constrained > :is(h4, h5, h6) {
+	margin-block: 12.5px;
+}
+.t3-content .is-layout-constrained > :is(.example-row, .tags) {
+	margin-block-start: 0;
+}
+
+/* ---- Tagged items: the source keeps the search group at the left edge and the page-size select flush right ---- */
+.tag-category .tagged-items-form fieldset.filters {
+	justify-content: space-between;
+}
+.tag-category .tagged-items-form .filters .btn-group.pull-right {
+	margin-right: 0;
+}
+
+/* Sidebar modules keep their last child's bottom margin inside, as the source's module boxes do. */
+.t3-sidebar .t3-module {
+	display: flow-root;
+}
+
+/* The excerpt of a tagged item is an inline paragraph, so the source's "..." continues its last line. */
+.tag-category .cat-list .item .tag-body p {
+	display: inline;
+}
+
+/* The source's toolbar wraps at every width (Bootstrap's btn-toolbar), so the page-size select drops under the search group when both do not fit. */
+.tag-category .tagged-items-form fieldset.filters {
+	flex-wrap: wrap;
+}
+@media (max-width: 767px) {
+	.tag-category .tagged-items-form .filters .btn-group:not(.pull-right) .btn {
+		padding-inline: 15px;
+	}
+	/* Like the source's inline-block input, the search box gives way when the group is wider than the toolbar. */
+	.tag-category .tagged-items-form .filters .btn-group:not(.pull-right) {
+		min-width: 0;
+		max-width: 100%;
+	}
+	.tag-category .tagged-items-form .filters .btn-group:not(.pull-right) .inputbox {
+		flex: 0 1 230px;
+		min-width: 0;
+	}
+	.tag-category .tagged-items-form .filters .btn-group:not(.pull-right) .btn {
+		flex: none;
+	}
+}
+/* ---- Card grids step at 992 like the source's col-md-*; core layout.css forces two columns up to 1024 with !important ---- */
+@media (max-width: 991px) {
+	.blog .tracy-grid.items-row {
+		grid-template-columns: minmax(0, 1fr) !important;
+	}
+}
+@media (min-width: 992px) {
+	.blog-featured .tracy-grid.items-row {
+		grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+	}
+}
+
+/* ---- Masthead title: 45/67.5 between 768 and 991 (the source's own step), 60/90 above ---- */
+@media (min-width: 768px) and (max-width: 991px) {
+	body .ja-masthead-title.wp-block-post-title,
+	body .ja-masthead .ja-masthead-title {
+		font-size: 45px;
+		line-height: 67.5px;
+	}
+}
+/* The h1-style mastheads (typography, error, offline, article) keep line-height 1.25 and use the whole container width. */
+@media (min-width: 768px) and (max-width: 991px) {
+	body:is(.jm-route-typography, .jm-route-error-page, .jm-route-offline-page) .ja-masthead-title.wp-block-post-title,
+	body .jm-article-masthead .ja-masthead-title.wp-block-post-title {
+		line-height: 56.25px;
+	}
+	body:is(.jm-route-typography, .jm-route-error-page, .jm-route-offline-page) .ja-masthead-detail {
+		margin-inline: 0;
+		max-width: none;
+	}
+}
+
+/* An article picture sits in its own <p> in the source (25 px margin below it, the 12.5 px above collapses into the previous margin). */
+.article-content > figure,
+.entry-content > figure {
+	margin-bottom: 25px;
+}
+/* Joomla's empty article-aside (a 25 px margin) sits above the text of these article pages. */
+body:is(.jm-route-offline-page, .jm-route-error-page, .jm-route-typography) .t3-content.item-page,
+body.jm-route-typography .t3-content .item-page {
+	padding-top: 25px;
+}
+body.jm-route-typography .core-typo {
+	padding-top: 25px;
+}
+/* Offline / error pages: the source's picture is an inline image with 12.5 px margins inside a paragraph (25 px margin below). */
+body:is(.jm-route-offline-page, .jm-route-error-page) .t3-content.item-page > figure {
+	padding-top: 12.5px;
+	margin-bottom: 37.5px;
+}
+@media (min-width: 992px) {
+	body:is(.jm-route-typography, .jm-route-error-page, .jm-route-offline-page) .ja-masthead-detail {
+		max-width: 800px;
+	}
+}
+
+/* Category cards are col-md-6 in the source: one column below 992. */
+@media (max-width: 991px) {
+	.categories-list .category-item {
+		flex-basis: 100%;
+		max-width: 100%;
+	}
+}

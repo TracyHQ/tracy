@@ -1,0 +1,486 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-symphony",
+  "release": "quickstart/ja-symphony/j6@1.0.1",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1:not(#t4-hero h1)",
+    "heading": "h2",
+    "body": "p",
+    "button-primary": "a.btn.btn-primary",
+    "container": "div.t4-section-inner.container",
+    "section": "div.t4-section-inner.container-fluid"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 200px",
+    "displayFace": "beacon 500, tracking 0em",
+    "heading": "first section heading: 36px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(85, 221, 119)",
+    "container": "first content container, max-width 1260px",
+    "section": "first padded full-width section, padding-top 75px"
+  },
+  "keepScopes": ["#t4-hero", "#t4-header", ".ja-masthead"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#14141c",
+    "--fg": "#94949c",
+    "--fg-2": "#ffffff",
+    "--accent": "#55dd77",
+    "--accent-hover": "#55dd77",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#212529",
+    "--meta": "#6c757d",
+    "--success": "#28a745",
+    "--warn": "#ffc107",
+    "--danger": "#dc3545",
+    "--border": "#242432",
+    "--muted": "#64646c",
+    "--font-display": "\"louis_george_cafe\", sans-serif",
+    "--font-body": "\"louis_george_cafe\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#14141c",
+      "fg": "#94949c",
+      "fg-2": "#22222c",
+      "accent": "#55dd77",
+      "accent-hover": "#55dd77",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212529",
+      "meta": "#6c757d",
+      "success": "#28a745",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "border": "#242432",
+      "muted": "#64646c"
+    },
+    {
+      "bg": "#14141c",
+      "fg": "#94949c",
+      "fg-2": "#ffffff",
+      "accent": "#55dd77",
+      "accent-on": "#ffffff"
+    },
+    {
+      "fg": "#ffffff"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "border": "#22222c",
+      "surface": "#ffffff",
+      "warn": "#fdce03",
+      "bg": "#0c0c0f"
+    },
+    {
+      "surface": "#e9ecef"
+    },
+    {
+      "surface": "#f8f9fa"
+    },
+    {
+      "surface": "#eaedf1"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (79 line colours, 101 text colours seen)",
+  "selectors": {
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn:not(.btn-readmore)", "a.btn-sm.btn"],
+    "buttonPrimary": [".btn-primary", "a.btn-sm.btn"],
+    "container": [".t4-section .container", "div.t4-section-inner.container"],
+    "section": ["div.t4-section-inner.container-fluid"],
+    "bodyFace": ["body"],
+    "display": "h1:not(#t4-hero h1)",
+    "headingsAll": [":is(h1, h2, h3, h4):not(#t4-hero *)"],
+    "displaySize": "h1:not(#t4-hero h1)"
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t4-section p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "offcanvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 18 tried (byte 7056); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#22222c",
+      "uses": 116,
+      "kind": "line",
+      "role": "border",
+      "near": "#242432",
+      "distance": 7
+    },
+    {
+      "hex": "#ffffff",
+      "uses": 35,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 10
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 30,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 23
+    },
+    {
+      "hex": "#f8f9fa",
+      "uses": 21,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 0
+    },
+    {
+      "hex": "#eaedf1",
+      "uses": 4,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 21
+    },
+    {
+      "hex": "#fdce03",
+      "uses": 4,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#ffc107",
+      "distance": 14
+    },
+    {
+      "hex": "#0c0c0f",
+      "uses": 4,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#14141c",
+      "distance": 17
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "ready": true,
+  "readyNote": "measured 11/10/2026 on the release build 1.0.1 itself (stand.mjs --from-dir, tasks/evidence/ds-contracts-r3a-2026-10-11/ja-symphony-j6): controls 0 differences before and after, 0 texts (every heading and text element, desktop and phone) less readable than the template’s own under Moxie, MotherDuck, Toggl Track and Apple, 68-92% of the page follows, no sideways scroll. Batch 1’s two causes: the content area T4 paints as a literal (#14141c) now follows through followRules (body, .t4-content); the hero and the header over its photo keep the template’s own look and face (so the hero title no longer takes Apple’s wider face and overflows the phone). Dark and light screenshots looked at, desktop and phone. Re-measured 11/10/2026 with the per-element probe on the same 1.0.1 build: controls 0, no text worse than the template's own (none regressed under any system, desktop and phone), 68%–92% follows, every contrast kind sampled in every view, checked by eye (tasks/evidence/ds-remeasure-5-2026-10-11/ja-symphony). The flow's role score stays 69%–75% as in round 3: the display and primary-button probes land on the kept hero (its title and button keep the template's face and green on purpose)",
+  "contrastNote": "heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples)",
+  "measureStill": true,
+  "followRules": {
+    "body": {
+      "color": "fg",
+      "background-color": "bg"
+    },
+    ".t4-content": {
+      "background-color": "bg"
+    },
+    "a.btn.btn-primary": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".btn-secondary": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "muted!"
+    },
+    ".jp-audio .jp-seek-bar": {
+      "background-color": "surface"
+    },
+    ".owl-dots .owl-dot": {
+      "border-color": "border",
+      "background-color": "surface!"
+    },
+    ".owl-dots .owl-dot.active": {
+      "border-color": "fg"
+    },
+    ".ja-video-list .btn-play": {
+      "border-color": "accent!"
+    },
+    ":is(p, dd, td, label, .alert, .docs-section) a:not(.btn), a.required": {
+      "color": "accent-text!"
+    },
+    ".btn.btn-primary, button.btn-primary, .search .btn-toolbar .btn, .search .btn-toolbar .btn:hover, .search .btn-toolbar .btn:focus, .btn.btn-lg.btn-block": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".page-item.active .page-link": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".badge-primary": {
+      "background-color": "accent!",
+      "color": "accent-on!"
+    },
+    "#audio-player-wrap .jp-type-single .jp-progress .jp-seek-bar .jp-play-bar": {
+      "background-color": "accent!"
+    },
+    ".ja-video-list.video-playing .video-mask": {
+      "border-color": "accent!"
+    },
+    "#audio-player-wrap .jp-state-playing .jp-type-single .jp-left, #audio-player-wrap .jp-state-playing .jp-play .fa": {
+      "color": "accent-text!"
+    },
+    ".readmore .btn-readmore": {
+      "color": "accent-text!"
+    },
+    ".readmore .btn-readmore:hover, .readmore .btn-readmore:focus, .readmore .btn-readmore:active": {
+      "color": "accent-text-hover!",
+      "border-bottom-color": "accent-text-hover"
+    },
+    ".ja-video-list .btn-play, #ja-btn-play": {
+      "background-color": "ink!",
+      "border-color": "accent!",
+      "color": "on-ink!"
+    },
+    ".alert-info, .alert-info strong, .alert-info center, .alert-info p": {
+      "background-color": "surface!",
+      "border-color": "border!",
+      "color": "accent-text!"
+    },
+    "code.highlighter-rouge": {
+      "color": "fg-2!"
+    },
+    ".t4-typo-example .bg-primary": {
+      "background-color": "accent!",
+      "color": "accent-on!"
+    },
+    ":is(.t4-typo-example .bg-dark, .t4-typo-example .bg-secondary, .t4-typo-example .text-white.bg-dark)": {
+      "background-color": "ink!",
+      "color": "on-ink!"
+    },
+    ".t4-typo-example .bg-light": {
+      "background-color": "surface!",
+      "color": "fg!"
+    },
+    ".t4-typo-example .bg-success": {
+      "background-color": "surface!",
+      "color": "success-text!"
+    },
+    ".t4-typo-example .text-success": {
+      "color": "success-text!"
+    },
+    ".t4-typo-example .bg-warning": {
+      "background-color": "surface!",
+      "color": "warn-text!"
+    },
+    ".t4-typo-example .text-warning": {
+      "color": "warn-text!"
+    },
+    ".t4-typo-example .bg-danger": {
+      "background-color": "surface!",
+      "color": "danger-text!"
+    },
+    ".t4-typo-example .text-danger": {
+      "color": "danger-text!"
+    },
+    ".t4-typo-example .bg-info": {
+      "background-color": "surface!",
+      "color": "accent-text!"
+    },
+    ".t4-typo-example .text-info": {
+      "color": "accent-text!"
+    },
+    ".t4-typo-example .text-primary": {
+      "color": "accent-text!"
+    },
+    "h2.item-title a:hover, h2.item-title a:focus, .item-title h2 a:hover, .category-name a:hover, .category-name a:focus, .page-header h2 a:hover, .categories-list h2 a:hover, .items-more .nav-tabs > li > a:hover, .owl-article .mod-articles-category-title a:hover, .owl-article .mod-articles-category-readmore a:hover, .owl-article .mod-articles-category-category a:hover, div.acm-gallery .gallery-action a:hover, div.acm-gallery .gallery-action a:focus, li.com-content-category-blog__link a:hover, a.mod-articles-category-title-link:hover, .mod-articles-category-category a:hover, :is(p, dd, td, label, .alert, .t4-typo-example) a:not(.btn):hover, #audio-player-wrap .social-music a:hover, #audio-player-wrap .social-music a:focus, #audio-player-wrap .jp-left .jp-play:hover": {
+      "color": "accent-text-hover!"
+    },
+    ".contact .contact-links ul.nav li a": {
+      "background-color": "ink!",
+      "color": "on-ink!"
+    },
+    ".contact .contact-links ul.nav li a:hover, .contact .contact-links ul.nav li a:focus": {
+      "color": "accent-on-ink!"
+    },
+    ".t4-typo-example :is(.text-light, .text-white).bg-dark": {
+      "background-color": "ink!",
+      "color": "on-ink!"
+    }
+  },
+  "followNote": "T4 writes the page's ground and text (body, .t4-content #14141c) into its generated theme CSS (media/t4/css/<style>.css) as literals and rewrites that file whenever the style's colours change, so a tokenized copy cannot ship: the slot module paints them with the worn roles instead. 13/10/2026 (#1317): the event list's primary buttons (T4 paints .btn-primary green with !important), the disabled secondary button, the audio player's seek bar (#22222c) and the carousel dots are the page's own and follow at the slot's own specificity (:root×6 beats T4's plain rules; the contract stays free of !important as the family's control in cms.test.mjs); roles.display and roles.button-primary point past the kept hero (its title and button keep the template's face on purpose, so the probe measured the kept band and missed on every system); the header's menu words keep their white on the hero photo (the accent paint put the system's accent on the photo, 1.07:1 under BMW); 21/10/2026 (HOVER-2, TEXT-1 batch 1): the states read a role apart from rest, as the template's own states change: the header menu's hover and focus take the band's accent (judged on the header's #14141c; active and open items keep the white), the header's social circles fill with the band's accent fill on hover (their words follow that fill), and the read-more link's hover takes the accent words' hover role on its words and underline 21/10/2026 (review): the header menu's hover takes the band's accent, which is the band's white under 432 systems (an accent no step makes readable on the dark header turns white), so its hover and focus also underline; the 'read more' link's accent words and their hover are black on black under some systems, so it underlines too (sideRules).",
+  "templateVars": {
+    "--color-light": "var(--ds-c-fg)"
+  },
+  "templateVarsNote": "the template's own T4 theme colours (params/typelist-theme.xml), each in the role the template's palette gives its value; pass-joomla.mjs",
+  "keepDefaults": {
+    "--body-bg-color": "#14141c",
+    "--body-text-color": "#94949c",
+    "--body-link-color": "#55dd77",
+    "--body-link-hover-color": "#55dd77",
+    "--color-primary": "#55dd77",
+    "--color-secondary": "#22222c",
+    "--color-success": "#28a745",
+    "--color-info": "#17a2b8",
+    "--color-warning": "#ffc107",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#22222c",
+    "--mainnav-text-color": "#212529",
+    "--mainnav-link-color": "#212529",
+    "--mainnav-link-hover-color": "#007bff",
+    "--mainnav-link-active-color": "#007bff",
+    "--footer-bg-color": "#212529",
+    "--footer-text-color": "#6c757d",
+    "--footer-link-color": "#6c757d",
+    "--footer-link-hover-color": "#fff"
+  },
+  "keepColors": {
+    "#t4-hero": "rgb(148, 148, 156)",
+    "#t4-header": "rgb(148, 148, 156)"
+  },
+  "heroNote": "the hero (#t4-hero) is the template's own brand moment: a concert photo with \"We are Symphony.\" in its brush face (beacon, 200px) on a green brush stroke. Worn, the title took the system's display size and face (a one-line strip under Moxie, MotherDuck and Toggl Track; under Apple a dark title on the dark photo, 2.42:1, and 438px wide on a phone): the band is kept, its title keeps its face and size (display and headings skip it)",
+  "headerNote": "the header (#t4-header, sticky) is laid over the hero's photo (the hero's margin-top -150px) with no fill of its own, and once the page scrolls it takes the template's dark ground (.not-at-top … .t4-header): it is kept with the hero, white menu on the photo; following, the menu took Apple's dark text and Toggl Track's pink on the photo (1.18-1.54:1, read off the paint stack, flow.mjs); it keeps its own face too (sideRules on both sides: the system's body face set its menu wider, over a brighter stretch of the photo — MotherDuck 3.79 for the template's 4.24); 15/10/2026: the face is the template’s body variable (T4 site profile: louis_george_cafe), not its name: the release’s Vietnamese block points it at Be Vietnam Pro, which the name at :root×6 had beaten",
+  "sideRules": {
+    "light": {
+      "#t4-header": {
+        "font-family": "var(--body-font-family)"
+      },
+      ":is(h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, legend):not(#t4-hero *)": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      "h1:not(#t4-hero *)": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      ":is(code, kbd, pre, samp)": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      "#t4-hero .bg-decor": {
+        "filter": "grayscale(1)"
+      },
+      ".event-item .event-actions a.btn.btn-sm": {
+        "padding": "8.64px 16px",
+        "font-size": "14px"
+      },
+      "#t4-hero h1": {
+        "font-family": "var(--ds-font-display)",
+        "font-size": "min(12.5rem, calc(min(800px, 100vw - 60px) / 6))"
+      },
+      ":is(.t4-offcanvas .t4-off-canvas-header, #t4-footer) img.logo-img": {
+        "filter": "invert(1)"
+      },
+      "#t4-header .navbar-nav li:hover :is(.nav-link, .menu-item-title), #t4-header .navbar-nav :is(.nav-link, .menu-item-title):focus": {
+        "text-decoration-line": "underline !important"
+      },
+      ".readmore .btn-readmore:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      }
+    },
+    "dark": {
+      "#t4-header": {
+        "font-family": "var(--body-font-family)"
+      },
+      ":is(h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, legend):not(#t4-hero *)": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      "h1:not(#t4-hero *)": {
+        "font-family": "var(--ds-font-heading)"
+      },
+      ":is(code, kbd, pre, samp)": {
+        "font-family": "var(--ds-font-mono)"
+      },
+      "#t4-hero .bg-decor": {
+        "filter": "grayscale(1)"
+      },
+      ".event-item .event-actions a.btn.btn-sm": {
+        "padding": "8.64px 16px",
+        "font-size": "14px"
+      },
+      "#t4-hero h1": {
+        "font-family": "var(--ds-font-display)",
+        "font-size": "min(12.5rem, calc(min(800px, 100vw - 60px) / 6))"
+      },
+      "#t4-header .navbar-nav li:hover :is(.nav-link, .menu-item-title), #t4-header .navbar-nav :is(.nav-link, .menu-item-title):focus": {
+        "text-decoration-line": "underline !important"
+      },
+      ".readmore .btn-readmore:is(:hover, :focus)": {
+        "text-decoration-line": "underline !important"
+      }
+    }
+  },
+  "minVersion": {
+    "quickstart/ja-symphony/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-symphony/j6": "1.0.5"
+  },
+  "maxVersionNote": "1.0.5 21/10/2026 (TEXT-1 batch 1): built from 1.0.4 (release-batch.mjs --overlay); only css/template.css (.text-info, .star, .red read info-text, warn-text, danger-text) differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json). 1.0.4 19/10/2026 (dot 3): 1.0.3 with every stylesheet reading the design system role variables (VARS-1 role scan clean, design-system-roles.json ships), verified 0 computed differences and the same pixels against 1.0.3 (release-batch verify).",
+  "minVersionNote": "1.0.1 = 1.0.0 with its stylesheets tokenized (release-batch.mjs build from this contract, installer zip sha256 2a2c09b1589e2ca5296e70a2c4a3e2b8f4be65838ab113ae8bfa83a5b21c828c; verified 0 computed differences, same pixels, 38/38 pages as released; tch contract ja-symphony/j6/1.0.1 and a template-profiles row); not yet published: ~/tracy-bench-work/RELEASE-DS-R3A.sh, after the Claude Cowork plugin carries the contract",
+  "bands": {
+    "#t4-hero": {
+      "ground": "#14141c",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    "#t4-header": {
+      "ground": "#14141c",
+      "texts": ["#ffffff"],
+      "root": false,
+      "paint": {
+        ".nav-link::after": {
+          "border-color": "accent-fill"
+        },
+        ".item-caret::before": {
+          "border-top-color": "accent-fill"
+        },
+        ".t4-content": {
+          "background-color": "ground"
+        },
+        ":is(.navbar-nav li.active, .navbar-nav li.show) :is(.nav-link, .menu-item-title, .item-caret)": {
+          "color": "text"
+        },
+        ".navbar-nav li:hover :is(.nav-link, .menu-item-title, .item-caret), .navbar-nav :is(.nav-link, .menu-item-title):focus": {
+          "color": "accent"
+        },
+        ".social-list li a:hover, .social-list li a:focus, .social-list li a:active": {
+          "background-color": "accent-fill"
+        },
+        ":is(.dropdown-menu li.active, .dropdown-menu li:hover) :is(a, .menu-item-title)": {
+          "color": "accent"
+        },
+        ":is(.navbar-nav li.active, .navbar-nav li.show, .navbar-nav li:hover) .item-caret::before": {
+          "border-top-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".ja-masthead": {
+      "ground": "#14141c",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; 14/10/2026 (visual review, /index.php/our-blog): the inner page-title band (.ja-masthead.has-bg) is a dark concert photo under the template’s mask (mask-hero.png) with a white title; the title followed a light system’s dark text onto the photo (Stripe slate, about 2.4:1). It is a kept picture band now (ground the template’s #14141c the photo runs into): its title keeps its white, the header links over it were already white (checked Stripe, Notion, Airbnb)",
+  "contractNotes1317": "Round 4 (14/10): the template sets its primary button (.btn.btn-primary, #55dd77) with !important, so the button rules never landed and the button-primary role missed on every view; the rule is !important now. The carousel dots' #22222c discs take the system surface, and the video play rings (white) the accent.",
+  "heroFitNote": "19/10/2026 (dot 3 eye check): the hero title wears the system display face; at the template's 200px the word Symphony. ran 1068px wide in the 800px hero (Inter under Figma, past the window's right edge). Worn, the title is sized so a word of up to six em fits the hero box (800px, or the window less 60px on a phone), never above the template's 12.5rem."
+}

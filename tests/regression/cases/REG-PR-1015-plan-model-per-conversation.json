@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1015-plan-model-per-conversation",
+  "kind": "feat",
+  "title": "A conversation's model is decided once — the customer's connected plan in the desktop app, else Tracy's — never falls back mid-conversation, and plan routes never reach a shared host",
+  "pr": 1015,
+  "area": "desktop/plan-connect",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/ui/tracy-mode-picker/test/session-models.test.mjs (the model policy on dsh's own cordis and agentEvents, with a stand-in for dsh-subscriptions' `subscriptions.available`).",
+    "S2: node --test packages/desktop/tracy-desktop/test/plan-profile.test.mjs (the patch the app writes for its own dsh from GET /api/desktop/config, and the config cache).",
+    "S3: node --import tsx --test scripts/test/image-profile.test.mjs (gate image-profile)."
+  ],
+  "expect": [
+    "S1: clean TAP; passes: no customerRoutes → default and credentials unread; a new conversation takes the connected plan, else the default; decided once (connecting later does not move a running conversation); a plan gone mid-conversation fails with tracy/plan-disconnected and never runs on the default; a logged route survives a restart; the model door accepts only the conversation's own model.",
+    "S2: clean TAP; passes: connecting on → settings + config-editor on, dsh-subscriptions limited to the allowed vendors, routes in that order, authorization and ui-settings-models untouched; connecting off / no vendor / unreadable → no patch; a server that does not answer → the last copy kept, else nothing.",
+    "S3: clean TAP; `customerRoutes` on tracy-mode-picker (as a row or an insert) is red in the fleet patch, the native bundle and the cowork bundle."
+  ],
+  "selectors": {
+    "policy": "packages/ui/tracy-mode-picker/src/host/session-models.mjs",
+    "app": "packages/desktop/tracy-desktop/src/plan-profile.js",
+    "gate": "scripts/check-image-profile.ts checkModelLock"
+  },
+  "fence": "Mechanism only, in process. Not covered: a real sign-in with a vendor and a real request on the customer's plan (cases U2–U5 of tasks/evidence/desktop-llm/test-cases.md, by hand).",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-PR-1015-plan-model-per-conversation.mjs"] }
+}

@@ -1,0 +1,3 @@
+/* The block draws no chrome of its own: samples.css owns the collection, and the ACM wrapper must
+   not add a second frame around a section that already has one. */
+.acm-marketing-samples.style-1 > .tracy-marketing { margin: 0 auto; }

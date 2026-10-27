@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3e5c272b-8d68-40d8-9726-b4d6914b4b16",
+  "status": "complete",
+  "name": "SquadEasy",
+  "url": "https://styles.refero.design/style/3e5c272b-8d68-40d8-9726-b4d6914b4b16",
+  "sourceWebsite": "https://www.squadeasy.com",
+  "extractedAt": "2026-06-03T17:36:27.640Z",
+  "capturedAt": "2026-10-08T05:10:40.629692+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Polaroid scrapbook on sunlit peach paper",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/58f13aa4-e566-423d-971f-c7c00954ff17.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/99bfb6b3-3da2-4412-a91f-59d0a3b1e48b.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/6d7fb118-fb74-4506-bed9-d401d75b1c42.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f9e18d72-1c79-4f1b-847d-5987d422a5a7.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/26e63cfd-029f-4c92-8f2b-9cbdcb38a3b8.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "153991369126487bca4f72105ed7902ba53b677886cedaba176a6e1db2cdd7c9",
+      "bytes": 22580
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c66163ceac08ea0cda6663e58ef03e5dd96abe197a29fbda9edad15cb5ebf2ae",
+      "bytes": 128481
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1b444c8e152b3937fa9b3b7a783cb21c98df825b68d654807bb382d431aaeb17",
+      "bytes": 17331
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0fd7ab6424954e05a68f6a9b13baef94a2f2c1a30ca45e3014f2c5d2ace8be45",
+      "bytes": 15864
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f7b6bcb97b60f1d00f4b4ecfafcc7a899b86e3f93759377a1ef6bee9268c6ce3",
+      "bytes": 12474
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "dedc32b45690d4833316494c3afb2cbfa27ca3dac6c01b4fae22904e23be1ae4",
+      "bytes": 4298
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "5e71514d726f6732a7bb775a465abd181683de0792ef31bdc9f09e52350f4384",
+      "bytes": 1382
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9340859615ea8c8a48e115365a9b245d582f9a6803f1b3d7846b96c4ef9c733d",
+      "bytes": 1399
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "183581b56bf1daf7d3a0cbbb1f31c851bee5fc2eb347ae3a70ae8faddf68c056",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1c1e04e0f752d94f5671f66d944a97c5e207583e20f8c35194f923ea936d8dda",
+      "bytes": 45072
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a44d685da831d454d08a22dc008b108aa030da1e8a7c4e00847f50007842d8ac",
+      "bytes": 23601
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "2b253828df044410d31ede876a6eae995b1f02f78d0fabe773507aa6a7f6b7f8",
+      "bytes": 52120
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f6dd404316723765fc30ca32d20a11d4bf8aa4559db4a40ef247b64b5b77bcaa",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "89efeccb78a2a99d28d13891f1d647629a34c5150d9484d56fd6757e801d4b21",
+      "bytes": 2525
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "88b59c21d42028f8291bb934f1dd17bb1550973ba8cd61224f765d3099b56737",
+      "bytes": 3104
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3e5c272b-8d68-40d8-9726-b4d6914b4b16",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "6b51388b-d00f-4b22-8297-68fb9fc00bc7",
+    "79b4ebc4-30f6-45b6-b2d2-922e28e05ca9",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b5ca4e9a-2322-4796-b4c5-3b3bf194821f",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

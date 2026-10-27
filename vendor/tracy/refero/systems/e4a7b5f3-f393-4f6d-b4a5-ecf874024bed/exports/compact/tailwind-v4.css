@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-canvas-white: #ffffff;
+  --color-ink: #101010;
+  --color-charcoal: #000000;
+  --color-muted-hard: #222222;
+  --color-muted: #555555;
+  --color-muted-soft: #999999;
+  --color-border-soft: #c8c8c8;
+  --color-border-subtle: #e0e0e0;
+
+  /* Typography */
+  --font-soehne-mono: 'Soehne Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

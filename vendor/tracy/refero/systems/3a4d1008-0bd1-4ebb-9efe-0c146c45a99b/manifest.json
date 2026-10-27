@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+  "status": "complete",
+  "name": "Kagi",
+  "url": "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+  "sourceWebsite": "https://kagi.com",
+  "extractedAt": "2026-09-24T17:40:25.239Z",
+  "capturedAt": "2026-10-08T05:10:28.046324+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Private reading room. Build open white space around decisive graphite text, with small violet cues and warm pastel product surfaces interrupting the calm.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b37f3ada-c7a7-4e9d-9474-c6553e787ed5.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3daa80ae68315482540c0dbd48bb04828d3c358268fc03247bc241da59135c90",
+      "bytes": 21692
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "bb2998fdd8e2948233b2377789e356399ca1f512e442e7adf6177cb683c8a287",
+      "bytes": 87370
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d23c2abe8d765b7e998d2e887a1b027a45d1688a2b23fb759bbb893027a6248a",
+      "bytes": 17537
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ebcadb2e9ec3fd0f189011473d49d4a3d7e2cb74bf9c22f886de47d81afa5728",
+      "bytes": 11041
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6faeee6c815831e3640549b824ef7a9b1069229482e0cb29b76bfbae8beff7a4",
+      "bytes": 12115
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a15951c137019bd851d88e04be818ba2747238df1f2c9161fb8f68101d0935de",
+      "bytes": 3642
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2726875985664c0127b80d6d1a95c92f156c9eab34200d8fbf22ccce6e233fc2",
+      "bytes": 858
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d5cee6d5034c6f9dbf2281e0d2221ec8bf3ee96883262059c2088675bcdd8693",
+      "bytes": 875
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d037bc8c958dadd2acd3775d78961c4f2f6eceacad0b4a9a36943517cb6eaf32",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "14bd77c449d5a04a9425bc2ec92540d9634be4f2b02b65531cbc282b313f6a99",
+      "bytes": 42931
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "93ba03928a8ef7bd666a56acc4d084e2a8ff633314b876684179af725950d8cf",
+      "bytes": 22478
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ccb9c66df27fd44fdce4b1186d3ad9d1231f97cbaa6a43b71b39877e7e2c5821",
+      "bytes": 47243
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f24e4ede3daf2b7b3b15b0928d1b4830ee1a335ef280ed0e49c6cfd951710d4f",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "af1ca4f7b7d03503c2ffd57673a7405a7e0762491d2e42930e34dec27eab19c4",
+      "bytes": 2369
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "53158812727edcc8bb81693711b38208fc0963f230c5f026ee7238b9c7b0f319",
+      "bytes": 2989
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "7eed2626-ab11-472c-b04a-603476ff8957",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "a6d39bad-6e32-462e-afce-67c9cb76cf40",
+    "bf5616e4-7bd1-40ce-8b2d-aae84c2e4ebd",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "c65db621-7faa-45f3-8e30-dc3ef9ffe660",
+    "ca93daf1-daf3-41b7-8248-8f63082761e8",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f65b0b91-bdd1-458d-8775-2f6fa8a9d4b1",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fbcf9cbb-7c6b-449d-862a-bce521a8ab1d",
+    "fd36bae9-dbf4-4b0f-a48b-e8c6f92edca3"
+  ]
+}

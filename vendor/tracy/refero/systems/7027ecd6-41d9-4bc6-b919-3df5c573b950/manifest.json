@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7027ecd6-41d9-4bc6-b919-3df5c573b950",
+  "status": "complete",
+  "name": "Heynds",
+  "url": "https://styles.refero.design/style/7027ecd6-41d9-4bc6-b919-3df5c573b950",
+  "sourceWebsite": "https://www.heynds.com/en",
+  "extractedAt": "2026-06-03T21:00:52.630Z",
+  "capturedAt": "2026-10-08T05:13:11.959006+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Ember on fresh snow. A single vivid orange flame burning against pristine white, radiating subtle warmth.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ff759f21-1c2c-4a99-84ea-db7545ac9930.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/e1ee79cd-37b3-42d9-9822-44861e474ac1.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/423c5ac6-1793-479a-865d-3f4e6d2802cb.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/7f7ff45d-177f-404f-be0d-a9c699d1c117.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/daddb86b-239f-42ae-bd42-e188e6f1860f.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "0778f01c7efa72dbdee149f73f19f9c88158d035fe69bcce27a0ebc691c6dc6d",
+      "bytes": 16911
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d38f433fe91f584724b320081a798571df28b937ab601dcc4503d43b3e4735ff",
+      "bytes": 113135
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f4de36bac9d7b9da00f217f0d52297a49b4146e1022c98aafe4f28a4fad1d20f",
+      "bytes": 14647
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0549a1e9e71d7f6443246bb54ef3b56728d9490d31ad3fae276143c148eb5638",
+      "bytes": 10334
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e6a0055d4fc7986fc616a72f84a38568319075a536543efea79461b516964fed",
+      "bytes": 10826
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7b83727a46c25f30c3754fa0053f601b7f52188ecbcc235d528b0a5efc4db39d",
+      "bytes": 2383
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2530da502d2c0aef53099b79b074c1ccf7df76c7ce910b21d76065e35ed0c7ab",
+      "bytes": 412
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "27c51322083e5ab7a549fc0896239875b868643a0bdbe4f074fb4a9a3a4a6ca6",
+      "bytes": 429
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d9dae6deb6ca350706797c006d8c19ff116e38326fb8a51f67415c7bcc32041e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "fd0fe81cec1a962b7b551cde82095fba3135338b42f7cabf8b721562f41a0062",
+      "bytes": 41963
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a5f366c44f6fcb8767c06c826777c6afdc55cef29af74e3bc3c0d6032d56de86",
+      "bytes": 22341
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "716557a6bfb488de76129eb119fea159e68f5630a06688a8410a5ca9a1697584",
+      "bytes": 42323
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c48675aa920227963a746332957ea42fb59cefd4fd9db358b44f1f3d1af7b31d",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a62e1505e7908a1595a093125c7b87818476e4e7de411b03457983b45aba180a",
+      "bytes": 1301
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "e3f9f53e2ca3608bc19e880eb3b71bfbd66f4f4ff33c2733ed0dd9ff0dae3ab5",
+      "bytes": 1870
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "3d6eda0c-16ab-4e7e-aca6-5f9a5432bfd1",
+    "4d832c12-dd14-45b0-bba7-2d3bc25d8264",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "62e8e59e-17a5-4eba-a6c6-1c7f67ded518",
+    "7027ecd6-41d9-4bc6-b919-3df5c573b950",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "78fec83e-4b27-44ab-9f64-31e9dee53e46",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+    "9ff62d34-e48d-4fcb-9fd9-c018e2747542",
+    "ba07accb-b2cc-4ad9-a25f-c50b0f90f34e",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59"
+  ]
+}

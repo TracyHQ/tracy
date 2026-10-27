@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-honey-yellow: #fffa77;
+  --color-marigold: #fffa56;
+  --color-inkwell: #142127;
+  --color-carbon: #131416;
+  --color-slate-gray: #343c40;
+  --color-pebble: #63696c;
+  --color-river-mist: #c7d5d9;
+  --color-fog: #e0e5e7;
+  --color-paper-white: #ffffff;
+
+  /* Typography — Font Families */
+  --font-stk-bureau-serif: 'STK Bureau Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-stk-bureau-sans: 'STK Bureau Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-stk-gerhard: 'STK Gerhard', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1690-demo-inventory-large-site",
+  "kind": "fix",
+  "title": "Agent-demo inventory of a large Joomla site finishes inside its 90 s cap with the same records, and a build's step budget grows with its template",
+  "pr": 1690,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read a fake Joomla site of 60 records per kind with a component that sends bodies and relation dumps, and the same site with one that sends neither; compare the inventories and count the Apply calls.",
+    "S2: Read a 200-record site whose answers arrive with jitter; record the most calls in flight and the record order.",
+    "S3: Refuse one content.get on a 300-record site; count the calls sent after the refusal.",
+    "S4: Ask loopNotices for builds of 40/10, 300/60 and 7800/400 records/rows after 55, 75, 115, 125 looking steps and 250, 485 steps of repairs."
+  ],
+  "expect": [
+    "S1: records, hash and invariantHash identical; the bulk read makes fewer than 30 calls and no relation content.get.",
+    "S2: more than one and at most 8 calls in flight; same record keys, coverage and hash as the calm read.",
+    "S3: at most 8 calls after the refusal.",
+    "S4: a small build keeps five times the bars, a 300/60 build has room past 55 looking and 250 steps, the cap holds at 120 looking and 480 steps."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1690-demo-inventory-large-site.mjs",
+    "evidence": "apps/tracy-web/test/agent-demo-inventory-large-site.test.mjs"
+  },
+  "evidence": "Local stand 24/10/2026: reverb-asian-fusion-res (Tracy Business j6, 7,787 records) hit AGENT_DEMO_INVENTORY_LIMIT at 90 s after 284 calls; after the fix 42 s, 341 calls, complete.",
+  "fence": "createAgentDemoInventory (Apply reads only) and buildScale/loopNotices in tracy-site-tools; no stand, no model",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1690-demo-inventory-large-site.mjs"],
+    "timeout_s": 600
+  }
+}

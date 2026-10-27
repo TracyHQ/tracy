@@ -1,0 +1,175 @@
+---
+title: Page fragments
+description: Add trusted scripts or HTML to public page insertion points.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+The `page:fragments` hook contributes scripts or raw HTML to the head or body of a rendered public page. Use it for browser code that structured metadata cannot express, such as an analytics loader with a `<noscript>` fallback.
+
+Fragment output runs as first-party page code. EmDash invokes this hook only for trusted, in-process plugins; sandboxed plugins never contribute fragments. If the page needs meta tags, canonical or alternate links, or JSON-LD, use the sandbox-compatible [`page:metadata` hook](/plugins/creating-plugins/hooks/#pagemetadata) instead.
+
+## Declare the capability and hook
+
+`page:fragments` requires `hooks.page-fragments:register` in the native runtime definition. The following hook adds an external script and an HTML fallback only when a configured analytics ID exists:
+
+```typescript title="src/index.ts"
+return definePlugin({
+	id: "plugin-analytics",
+	version: "0.1.0",
+	capabilities: ["hooks.page-fragments:register"],
+	hooks: {
+		"page:fragments": async (event, ctx) => {
+			const analyticsId = await ctx.settings.get<string>("analyticsId");
+			if (!analyticsId || event.page.path.startsWith("/_emdash/")) return null;
+
+			const encodedId = encodeURIComponent(analyticsId);
+			return [
+				{
+					kind: "external-script",
+					placement: "head",
+					src: `https://analytics.example.com/client.js?id=${encodedId}`,
+					async: true,
+					key: "analytics-client",
+				},
+				{
+					kind: "html",
+					placement: "body:end",
+					html: "<noscript>Analytics requires JavaScript.</noscript>",
+					key: "analytics-fallback",
+				},
+			];
+		},
+	},
+});
+```
+
+Raw HTML contributions are inserted verbatim. Keep the fragment static when possible; otherwise escape every value that can come from settings, content, request data, or an external service.
+
+For native plugins, declare the capability in `definePlugin()`. The descriptor does not need a second copy because `createPlugin()` supplies the runtime capability list.
+
+If the capability is missing, EmDash logs a warning and does not register the hook. Hook errors are logged and do not prevent the page from rendering.
+
+## Add the layout insertion points
+
+The host theme chooses which placements it supports. It must pass the same `PublicPageContext` to the corresponding EmDash components:
+
+<Steps>
+
+1. Build the page context once in the layout.
+
+   ```astro title="src/layouts/Base.astro"
+   ---
+   import { createPublicPageContext } from "emdash/page";
+   import {
+       EmDashBodyEnd,
+       EmDashBodyStart,
+       EmDashHead,
+   } from "emdash/ui";
+
+   interface Props {
+       title: string;
+       description?: string;
+       content?: { collection: string; id: string; slug?: string | null };
+   }
+
+   const { title, description, content } = Astro.props;
+   const page = createPublicPageContext({
+       Astro,
+       kind: content ? "content" : "custom",
+       pageType: content ? "article" : "website",
+       title,
+       description,
+       content,
+   });
+   ---
+   ```
+
+2. Render each supported placement in the matching part of the document.
+
+   ```astro title="src/layouts/Base.astro"
+   <html lang="en">
+       <head>
+           <title>{title}</title>
+           <EmDashHead page={page} />
+       </head>
+       <body>
+           <EmDashBodyStart page={page} />
+           <slot />
+           <EmDashBodyEnd page={page} />
+       </body>
+   </html>
+   ```
+
+</Steps>
+
+`EmDashHead` renders `head` fragments as well as EmDash and plugin metadata. `EmDashBodyStart` renders `body:start` fragments immediately after the opening `<body>`, and `EmDashBodyEnd` renders `body:end` fragments after the page content. A theme that omits a component does not render fragments for that placement. Document any required insertion point in the plugin README.
+
+## Contribution reference
+
+A hook can return one contribution, an array, or `null`. The supported contribution shapes are:
+
+| `kind` | Required fields | Optional fields | Output behavior |
+| --- | --- | --- | --- |
+| `external-script` | `placement`, `src` | `async`, `defer`, `attributes`, `key` | Renders a `<script src="…">` element. |
+| `inline-script` | `placement`, `code` | `attributes`, `key` | Renders `code` inside a `<script>` element. |
+| `html` | `placement`, `html` | `key` | Inserts `html` without sanitizing it. |
+
+`placement` accepts `head`, `body:start`, or `body:end`.
+
+EmDash HTML-escapes attribute names and values and removes attributes whose names begin with `on`. For inline scripts, it escapes `</` so a value cannot close the script element. These renderer checks do not make untrusted HTML or JavaScript safe; the plugin must still encode interpolated data for the language and context where it is inserted.
+
+The following hook safely places a JSON value in an inline script:
+
+```typescript title="src/index.ts"
+"page:fragments": async (event) => {
+	if (event.page.kind !== "content" || !event.page.content) return null;
+
+	return {
+		kind: "inline-script",
+		placement: "body:start",
+		code: `window.currentContent = ${JSON.stringify({
+			collection: event.page.content.collection,
+			id: event.page.content.id,
+		})};`,
+		key: "current-content",
+	};
+},
+```
+
+Within one placement, contributions with the same `key` keep the first value. External scripts without a key are also deduplicated by `src`. Use a stable key when two hooks could describe the same logical fragment.
+
+## Page context reference
+
+The hook receives `{ page }`. The page object comes from the host layout, with optional SEO-panel values overlaid for a content entry that was loaded during the request.
+
+| Field | Type and meaning |
+| --- | --- |
+| `url` | Absolute page URL. |
+| `path` | URL pathname. |
+| `locale` | Active locale, or `null`. |
+| `kind` | `content` for an EmDash entry or `custom` for another page. |
+| `pageType` | Theme-defined type, commonly `article` or `website`. |
+| `title`, `pageTitle` | Full document title and optional page-only title. |
+| `description`, `canonical`, `image` | Page metadata values, each nullable. |
+| `content` | Optional `{ collection, id, slug }` reference for the rendered entry. |
+| `seo` | Optional Open Graph title, description, image, and robots overrides. |
+| `articleMeta` | Optional published time, modified time, and author. |
+| `siteName`, `siteUrl` | Optional public site identity and origin. |
+| `breadcrumbs` | Optional root-first `{ name, url }` items. An empty array explicitly means no breadcrumbs. |
+
+Use `kind`, `pageType`, `path`, `locale`, or `content` to limit where a fragment appears. Do not fetch an entry again when the page context already carries the identity needed for the decision.
+
+## Prefer structured metadata when possible
+
+Use `page:metadata` for the following output:
+
+- `<meta name="…">` and `<meta property="…">` tags
+- canonical, alternate, author, license, `nlweb`, and `site.standard.document` links
+- JSON-LD graphs
+
+`page:metadata` validates its structured contributions, deduplicates them with the page's base metadata, and works in both native and sandboxed plugins. Use `page:fragments` when the browser must receive executable code or markup that the structured hook cannot represent.
+
+<Aside type="caution">
+	A native fragment can read secrets from the host process and send data to the browser or another origin. Review the package as first-party application code, and never place a server-side secret in a fragment.
+</Aside>

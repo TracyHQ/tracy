@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1231-readiness-rule-false-verdicts",
+  "kind": "fix",
+  "title": "The Customize your site readiness rules and the Joomla contract capture give the verdicts the spec asks for, on real fixture data",
+  "pr": 1231,
+  "area": "template-customization-question-readiness/rules",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the readiness rule tests: apps/tracy-web/test/template-customization-question-readiness-{a,b,c,g60,fonts}.test.mjs.",
+    "S2: Run apps/tracy-web/test/joomla-component-page.test.mjs (the Pages answer on JA Resort's com_solidres Rooms, its menu as released).",
+    "S3: Run packages/cms/tracy-joomla-quickstart/test/capture-contract.test.mjs (jatable rows, --link-fields-by-role, trashed modules without a schema)."
+  ],
+  "expect": [
+    "S1: every test passes: LANG-2 reads a JSX ternary as code and judges the font a page of the language draws with; STAB-7 reads TPL_RT_ . $key as a prefix and skips uncalled helpers; PAGE-4 skips /wp-login.php; PAGE-5 finds the url slot of a flat ACM field; ABOUT-2 reads a class-list field as a setting; STAB-6 on WordPress compares the lock with the theme zip; PAGE-2 notes trimmed entries Apply publishes again and reads hyphenated layouts; PAGE-7 notes a non-article component page; NAME-1 passes a home tab that opens with the name.",
+    "S2: unticked Rooms is taken off, ticked Rooms stays, never the home entry.",
+    "S3: every test passes (tests that need php skip only where php is missing)."
+  ],
+  "selectors": {
+    "tests": "apps/tracy-web/test/template-customization-question-readiness-*.test.mjs, apps/tracy-web/test/joomla-component-page.test.mjs, packages/cms/tracy-joomla-quickstart/test/capture-contract.test.mjs"
+  },
+  "evidence": "12/10/2026: the template agents making the published templates green met each false verdict on real releases (EmDash HeroAcm.astro, ja-smallbiz/resume/mood/directory helper.php, tracy-base wp7, ja-voyara 400, ja-symphony 102, ja-smallbiz 107/111/119, ja-directory 88, ja-resort Rooms, tracy-business j6 trim); whole gallery before/after: 6 STAB-6 live-only to pass, 5 STAB-7 and 1 PAGE-7 fail to pass, none pass to fail",
+  "fence": "The rule functions and the capture tool themselves, on fixtures cut from the releases and the contracts in the tree",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "apps/tracy-web/test/template-customization-question-readiness-a.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-b.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-c.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-g60.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-fonts.test.mjs",
+      "apps/tracy-web/test/joomla-component-page.test.mjs",
+      "packages/cms/tracy-joomla-quickstart/test/capture-contract.test.mjs"
+    ]
+  }
+}

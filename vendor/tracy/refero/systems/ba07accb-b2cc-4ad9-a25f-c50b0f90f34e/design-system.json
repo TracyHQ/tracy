@@ -1,0 +1,341 @@
+{
+  "dos": [
+    "Use Electric Cobalt #244cff exclusively for primary action fills — never as a decorative element or text color",
+    "Set all buttons to pill radius (100px) for both the cobalt primary and obsidian dark variants",
+    "Keep headlines at Inter weight 400 — authority comes from size (38px section, 60px display), not weight",
+    "Use Parchment #f7f7f1 as the page canvas for all marketing pages; reserve Snow #ffffff for elevated cards and containers",
+    "Embed dark-mode product screenshots (#1d1f21 surface) as visual anchors inside the light page — this light-dark contrast is the signature",
+    "Apply Inter font features \"cv03\", \"cv04\", \"cv09\", \"cv11\" to get the alternate glyph sets that distinguish Mage's Inter from default Inter",
+    "Use 6px radius for cards and product thumbnails, 16px for larger image containers, 100px (pill) for all interactive controls"
+  ],
+  "donts": [
+    "Do not use multiple vivid colors as action buttons — the system has one action color (cobalt) and one dark variant; everything else is text or surface",
+    "Do not set headlines to weight 600 or 700 — the whisper-weight 400 at large size is the signature; bolding breaks the editorial tone",
+    "Do not add drop shadows to cards on the Parchment canvas — the warm tonal contrast between #f7f7f1 and #ffffff is enough separation",
+    "Do not use the illustration palette colors (#fcc2cd, #fced9f, #ba9ffc) as UI chrome — they are reserved for the hero artwork and decorative card washes",
+    "Do not mix Light Slate Blue #5487a1 or Amber #9e770b into text or border roles — they are illustration-only accents",
+    "Do not use sharp corners (0px radius) on cards or images — the 6px minimum radius is a system-wide baseline",
+    "Do not put body text below 14px — the Inter 12px usage is limited to micro-labels and metadata, never running prose"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#244cff",
+      "name": "Electric Cobalt",
+      "role": "Primary action fill — CTA buttons, active nav state, the single switched-on color in an otherwise muted system",
+      "group": "brand"
+    },
+    {
+      "hex": "#c3aeff",
+      "name": "Lavender Mist",
+      "role": "Brand illustration accent — decorative fills in the hero artwork and supporting graphics, echoes the cobalt at lower saturation",
+      "group": "accent"
+    },
+    {
+      "hex": "#f7f7f1",
+      "name": "Parchment",
+      "role": "Page canvas — warm off-white background that gives the whole site its editorial, paper-like quality",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Snow",
+      "role": "Card surfaces, text on dark backgrounds, product thumbnail containers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e8f8ff",
+      "name": "Ice Wash",
+      "role": "Tinted card surface — subtle blue-white variant for differentiated cards (logo bar, feature callouts)",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d6f2ff",
+      "name": "Sky Tint",
+      "role": "Decorative card wash — pale blue background for illustration overlays and feature card accents",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffffbd",
+      "name": "Lemon Wash",
+      "role": "Decorative card wash — warm yellow tint for illustration card backgrounds and feature highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#fcc2cd",
+      "name": "Blush",
+      "role": "Decorative card wash — soft pink for illustration card backgrounds",
+      "group": "accent"
+    },
+    {
+      "hex": "#fced9f",
+      "name": "Buttercream",
+      "role": "Decorative card wash — warm cream-yellow for illustration card backgrounds",
+      "group": "accent"
+    },
+    {
+      "hex": "#3388ff",
+      "name": "Azure",
+      "role": "Illustration accent — mid-blue used in hero artwork and data visualization elements",
+      "group": "accent"
+    },
+    {
+      "hex": "#5487a1",
+      "name": "Slate Blue",
+      "role": "Illustration accent — muted blue for decorative borders and secondary graphic elements",
+      "group": "accent"
+    },
+    {
+      "hex": "#9e770b",
+      "name": "Amber",
+      "role": "Illustration accent — warm dark-yellow for decorative graphic elements",
+      "group": "accent"
+    },
+    {
+      "hex": "#ba9ffc",
+      "name": "Lilac Pop",
+      "role": "Illustration accent — vivid lavender for hero artwork highlights",
+      "group": "accent"
+    },
+    {
+      "hex": "#294dba",
+      "name": "Deep Cobalt",
+      "role": "Illustration accent — darker blue for hero artwork depth and contrast",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Primary text, hairline borders, high-contrast edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2b2b2b",
+      "name": "Graphite",
+      "role": "Secondary text, body copy on light surfaces — softer than pure black for reading comfort",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d1f21",
+      "name": "Obsidian",
+      "role": "High-contrast neutral action fill for primary buttons on light surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#878787",
+      "name": "Ash",
+      "role": "Muted text — captions, helper text, secondary metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b0b0b0",
+      "name": "Fog",
+      "role": "Borders, dividers, disabled state outlines, muted link text",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered content. Hero is a two-column split: left ~40% holds headline + subtext + CTAs + a dark product video thumbnail stacked vertically; right ~55% holds the full-color illustration. Below the hero, a full-width trust logo bar spans the content width. Feature sections use a 2x2 grid: each cell has a heading + subtext on top, dark product screenshot below with 6px radius. The page alternates between warm-canvas sections and slightly different surface tints (Ice Wash) for visual separation. Navigation is a simple top bar with left-aligned logo + links, right-aligned CTA pair. No sidebar, no mega-menu. Section gaps are generous (~64px) creating a comfortable editorial rhythm rather than a dense product-grid feel.",
+  "imagery": "Hero features a large custom illustration: 3-4 illustrated characters in colorful casual clothing (coral pants, yellow tops, purple overalls) interacting with a central blue spherical data object with circuit-board patterns. The illustration uses the brand's decorative palette (lavender, azure, blush, buttercream) and occupies the right half of the hero. Product screenshots are dark-mode (graphite sidebar + code editor) with vibrant integration logos in a grid. No photography. No abstract gradients or 3D renders beyond the illustration. Icon style in the UI is a mix: product UI uses small monospace-style code icons; the illustration uses flat filled shapes with no outlines.",
+  "similar": [
+    {
+      "why": "Same single-accent-plus-black approach with whisper-weight headlines and a warm off-white canvas; both use a dark-mode product surface inside a light marketing page",
+      "business": "Vercel"
+    },
+    {
+      "why": "Similar pill-radius buttons, generous whitespace, Inter typography at restrained weights, and a dark product island embedded in light marketing context",
+      "business": "Linear"
+    },
+    {
+      "why": "Same warm off-white canvas, Inter type system, single vivid accent color for primary actions, and dark-mode product screenshots as feature anchors",
+      "business": "Airplane"
+    },
+    {
+      "why": "Light editorial canvas with dark product UI previews, generous section spacing, and a single saturated brand color for action",
+      "business": "PlanetScale"
+    },
+    {
+      "why": "Similar data-platform identity with light parchment-toned pages, custom illustration as hero centerpiece, and dark product UI as feature evidence",
+      "business": "Modal"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "6px",
+      "images": "16px",
+      "buttons": "100px",
+      "largeSurfaces": "12px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "64px",
+    "cardPadding": "24-40px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#f7f7f1",
+      "name": "Parchment",
+      "level": 0,
+      "purpose": "Page canvas — the warm off-white base of all marketing pages"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Snow",
+      "level": 1,
+      "purpose": "Card surfaces, elevated containers, product thumbnails"
+    },
+    {
+      "hex": "#e8f8ff",
+      "name": "Ice Wash",
+      "level": 2,
+      "purpose": "Tinted card surface for differentiated sections (logo trust bar, feature callouts)"
+    },
+    {
+      "hex": "#1d1f21",
+      "name": "Obsidian",
+      "level": 3,
+      "purpose": "Dark-mode product UI — the code editor and pipeline builder embedded as screenshots"
+    }
+  ],
+  "northStar": "data alchemy on parchment. Warm off-white canvas, whisper-weight Inter headlines, one cobalt switch for action, dark-mode product islands floating inside a bright editorial page.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body-lg",
+      "size": 18,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 22,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.4
+    },
+    {
+      "role": "heading-lg",
+      "size": 38,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "display",
+      "size": 60,
+      "lineHeight": 1.3
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "High-emphasis action — 'Start Building', form submissions",
+      "description": "Electric Cobalt #244cff background, white text, Inter 500 at 15-16px, pill radius (100px), padding 12px 24px. The single vivid color in the system — every primary action uses this exact shade. No hover darkening needed at this saturation; it already commands attention."
+    },
+    {
+      "name": "Dark CTA Button",
+      "role": "Secondary high-emphasis — 'Try Mage' in nav, product entry points",
+      "description": "Obsidian #1d1f21 background, white text, Inter 500 at 15-16px, pill radius (100px), padding 8px 16px. Used for the persistent product-access button in the nav bar. The dark-on-warm-white contrast creates a different kind of urgency than the cobalt — more 'enter the tool' than 'start here'."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Low-emphasis action — 'Get a demo', inline navigation",
+      "description": "No background, Graphite #2b2b2b text, Inter 500 at 15-16px. Sits beside filled CTAs as the secondary path. Underline appears on hover only."
+    },
+    {
+      "name": "Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "Transparent over Parchment #f7f7f1 canvas. Left: Mage logo (custom mark) + nav links (Platform, Solutions, Resources, Pricing, Try) in Inter 500 at 15px. Right: 'Demo' ghost link + 'Try Mage' dark pill button. No background fill, no border — the bar relies on whitespace and the warm canvas to separate from content below."
+    },
+    {
+      "name": "Hero Product Thumbnail",
+      "role": "Embedded product preview in the hero section",
+      "description": "Dark-mode product UI screenshot (Obsidian #1d1f21 surface) inside a Snow #ffffff container with 16px radius. Central play button overlay (white circle with cobalt play icon) signals video. The dark product island inside the warm light page is the signature visual contrast — 'here is where the work happens'."
+    },
+    {
+      "name": "Trust Logo Bar",
+      "role": "Social proof — 'Trusted by data teams at leading companies'",
+      "description": "Horizontal strip of company logos (Samsung, Stability.ai, Comcast, IBM, etc.) on Parchment #f7f7f1 canvas. Logos rendered in Pure Black or Graphite. The logos themselves sit on subtle individual card containers with 6px radius and Ice Wash #e8f8ff or Parchment backgrounds."
+    },
+    {
+      "name": "Feature Card (Product Screenshot)",
+      "role": "Feature showcase — 'Build pipelines', 'Connect data', 'Run continuously', 'Fix and recover'",
+      "description": "Two-column layout: heading (Inter 400 at 18-22px) + subtext (Inter 400 at 16px, Graphite) above a dark-mode product screenshot with 6px radius. The screenshot shows the pipeline editor with dark sidebar and monospace code. The dark product image anchors each card and signals 'this is real, working software'."
+    },
+    {
+      "name": "Section Heading Group",
+      "role": "Section titles and descriptions",
+      "description": "Inter Variable 400 at 38px for the section title, Inter 400 at 16-18px Graphite for the subtitle. The 38px headline at weight 400 is the signature: no bold, no uppercase, no decorative flourishes — just scale and Inter's geometric clarity doing the work."
+    },
+    {
+      "name": "Illustration Overlay",
+      "role": "Decorative hero artwork — people interacting with a data orb",
+      "description": "Full-color custom illustration: characters in varied clothing (coral, yellow, purple, teal) around a central blue spherical data object with circuit patterns. Uses the illustration palette: Lavender Mist #c3aeff, Azure #3388ff, Blush #fcc2cd, Buttercream #fced9f. Sits to the right of the hero text, roughly 50% of viewport width."
+    },
+    {
+      "name": "Data Source Icon Grid",
+      "role": "Integration showcase within the product UI",
+      "description": "Grid of colorful integration logos (PostgreSQL, MongoDB, etc.) visible in the 'Connect data' product screenshot. Each icon is a rounded square with the brand's native color. This is product UI content, not design system chrome."
+    }
+  ],
+  "typography": [
+    {
+      "role": "sans-serif — detected in extracted data but not described by AI",
+      "sizes": "12px",
+      "family": "sans-serif",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Workhorse body and UI text — body copy at 400, buttons/labels at 500-600, bold callouts at 700. The font's open apertures and tall x-height make it readable at 12-16px on the warm canvas",
+      "sizes": "12px, 13px, 15px, 16px, 17px, 18px, 21px, 22px, 24px",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.20-1.65",
+      "substitute": "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      "fontFeatureSettings": "\"cv03\", \"cv04\", \"cv09\", \"cv11\", \"blwf\""
+    },
+    {
+      "role": "Display and heading sizes — 60px display headlines, 38px section headers, 30px subheadings. Weight stays at 400 even at display size: the headlines whisper rather than shout, authority through scale not weight",
+      "sizes": "20px, 22px, 30px, 38px, 60px",
+      "family": "Inter Variable",
+      "weight": "400",
+      "lineHeight": "1.30-1.40",
+      "substitute": "Inter (static weights)"
+    },
+    {
+      "role": "Small bold labels — compact uppercase-style tags and category markers at 14px weight 600",
+      "sizes": "14px",
+      "family": "Geist",
+      "weight": "600",
+      "lineHeight": "1.50",
+      "substitute": "Inter 600"
+    }
+  ],
+  "description": "Mage operates on a warm parchment canvas (#f7f7f1) that gives the data-platform brand an editorial, almost lab-notebook warmth rather than the cold gray most SaaS tools default to. The interface is deliberately quiet: soft cards on a warm white field, generous breathing room, and a single vivid electric-cobalt accent (#244cff) that acts as a switch — it appears only on primary actions, nowhere else. Typography is Inter-only, used at restrained weights (400 dominates even at display sizes), which makes the large headlines feel declarative rather than shouting. Product surfaces (the pipeline editor) are dark-mode islands embedded inside the light page, creating a clear visual contract: marketing context is warm-paper light, working context is deep-graphite dark. Decorative violet (#c3aeff) threads through the brand illustration as a secondary color note, never as UI chrome.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Canvas: #f7f7f1 (Parchment)\n- Card surface: #ffffff (Snow)\n- Tinted surface: #e8f8ff (Ice Wash)\n- Primary text: #000000 / #2b2b2b\n- Muted text: #878787 / #b0b0b0\n- Accent: #244cff (Electric Cobalt)\n- Dark surface: #1d1f21 (Obsidian)\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n2. **Create a feature card**: No card background (sits on Parchment). Section heading at 38px Inter Variable weight 400, #000000. Subtitle at 16px Inter 400, #2b2b2b. Dark product screenshot below with 6px border-radius, 24px internal padding, showing a code editor with dark sidebar.\n\n\n4. **Create a navigation bar**: Transparent over Parchment. Left: logo + 5 nav links in Inter 500 at 15px, #000000. Right: 'Demo' ghost text link (#2b2b2b) + dark 'Try Mage' pill button (#1d1f21 background, white text, 8px 16px padding, 100px radius).\n\n5. **Create a trust logo bar**: Full-width Parchment background. Caption 'Trusted by data teams' at 14px Inter 400, #878787. Row of 7 company logos in #000000, evenly spaced, max-height 24px each, with 10px gap between logos."
+    }
+  ]
+}

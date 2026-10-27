@@ -1,0 +1,80 @@
+{
+  "id": "REG-PR-1714-wo-round-12",
+  "kind": "fix",
+  "title": "A Website Opportunities demo build writes every template post from the research (never \"Coming soon\") on WordPress, Joomla and EmDash, reads a thin website through Jina and Firecrawl by default, keeps promotions off the menu but not serving hours, and a removed site takes its site_brief row",
+  "pr": 1714,
+  "area": "opportunities-build/residue-sweep",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL set, run: node --test --test-reporter=tap packages/wo/website-opportunities/test/domain-editorial-guide.test.mjs packages/wo/website-opportunities/test/domain-menu-reader.test.mjs packages/wo/website-opportunities/test/domain-website-readers.test.mjs apps/tracy-web/test/opportunities-menu-parts.test.mjs apps/tracy-web/test/website-opportunities-research-wiring.test.mjs apps/tracy-web/test/site-brief-removal.test.mjs apps/tracy-web/test/wo-agent-demo.test.mjs packages/tools/tracy-site-tools/test/sweep-resolve.test.mjs packages/tools/tracy-site-tools/test/site-call.test.mjs packages/tools/tracy-site-tools/test/emdash-call.test.mjs",
+    "S2: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "'build 16: research of 2 old topics for 22 template posts gives 22 written posts, none \"Coming soon\"' passes: 20 swept posts with distinct titles, no unresolved field, posts-written passes 22 of 22.",
+    "'splitTopics: fewer topics than posts are split into narrower ones from the same facts, never invented' and 'composePost: a title, body and excerpt from the facts, never \"Coming soon\"; a review is not copied' pass.",
+    "'website content lists only readers research can run, and defaults to all of them' and 'website content: by default a thin direct crawl falls to Jina, then Firecrawl, each only with its key' pass.",
+    "'a promotion is not a dish: happy hour, \"x for y\", a deal or offer heading, one price for all, in any language' passes, and 'serving hours are not a promotion: \"until 14:00\", \"served 11-15\", \"from 17:00\" keep their dishes' keeps the all-day breakfast, lunch and dinner dishes while dropping happy hour, \"gratis\", \"-30 %\", \"offert\" and \"get a dessert free\".",
+    "'a plan the sweep completes is not refused' passes: validateAgentPlan raises no coverage.posts for a plan writing one post per research topic, and planSweep then writes the two split topics into the posts left, nothing unresolved; 'the sweep writes the topics the agent did not use' passes: drafts are matched to the posts the agent wrote by their words, so no topic is written twice.",
+    "'a Joomla or EmDash template post's body is written from the research like WordPress's, else reported' and 'a Joomla or EmDash template post's body: written over the template's own, read this call, never over the agent's' pass; the Joomla and EmDash sweep body-guard tests pass inside withSweepRead and stay BODY_SHRINK outside it or without a read.",
+    "'a written post uses only the facts its distinct words say' passes: a post on \"fresh bread every morning\" leaves \"fresh pasta every evening\" to the sweep, and a post in other words still uses its fact; 'a Joomla or EmDash template post's body is written…' also empties a Joomla fulltext still the template's under an intro the agent wrote, or reports it when the plan wrote it; 'a post field the agent changed after the sweep planned is kept' passes: every sweep post write (Joomla/EmDash post, WordPress post, plain content.update/content_update) drops a field no longer holding its planned value (`was`).",
+    "Each of the four site_brief removal tests passes: Remove, a torn-down site, a forgotten demo, a stale claim."
+  ],
+  "selectors": {
+    "posts": "apps/tracy-web/src/opportunities-build/agent-demo.js postDraftsOf",
+    "sweep": "apps/tracy-web/src/opportunities-build/residue-sweep.js planSweep",
+    "topics": "packages/wo/website-opportunities/domain/editorial-guide.mjs splitTopics composePost",
+    "readers": "packages/wo/website-opportunities/domain/capabilities.mjs website-content",
+    "menu": "packages/wo/website-opportunities/domain/menu-reader.mjs promotion",
+    "brief": "apps/tracy-web/src/lib/site-brief-row.js DELETE_BRIEF_OF_GONE",
+    "coverage": "apps/tracy-web/src/opportunities-build/agent-demo.js postCoverage topicsLeft",
+    "resolve": "packages/tools/tracy-site-tools/src/host/sweep-resolve.mjs templateFields",
+    "guard": "packages/tools/tracy-site-tools/src/host/site-call.mjs inSweepRead joomlaBodyGuard; emdash-call.mjs emdashBodyGuard"
+  },
+  "evidence": "The Willow Nook cafe demo, local build 16 (25/10/2026): the research held 2 post topics for 22 template posts, the sweep wrote \"Coming soon\" into 20 and posts-written failed; the menu page needed Jina but the default order named no reader; the specials line \"Happy hour. Two cocktails. 150 kr.\" was read as a dish; a deleted site's site_brief row refused the next build AGENT_DEMO_OTHER_WRITER (#1749). Review of round 12 (26/10/2026): coverage.posts refused a plan the sweep would complete; Joomla and EmDash posts kept the template body; \"All day breakfast until 14:00\" was dropped as a promotion; the sweep could write a topic the agent had already written. Second review pass (26/10/2026): a post on one fact used another sharing most of its words, so the sweep drafted nothing; a Joomla fulltext under an intro the agent wrote stayed the template's, unreported; the sweep's title write overwrote a title the agent changed after planning.",
+  "fence": "Mechanism only, over fixtures and a scratch database. Not covered: a live build on a real site, Joomla and EmDash live runs, the quality of the composed post text, and site_brief rows left behind before this change.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-residue-sweep.test.mjs",
+      "packages/wo/website-opportunities/test/domain-editorial-guide.test.mjs",
+      "packages/wo/website-opportunities/test/domain-menu-reader.test.mjs",
+      "packages/wo/website-opportunities/test/domain-website-readers.test.mjs",
+      "apps/tracy-web/test/opportunities-menu-parts.test.mjs",
+      "apps/tracy-web/test/website-opportunities-research-wiring.test.mjs",
+      "apps/tracy-web/test/site-brief-removal.test.mjs",
+      "apps/tracy-web/test/wo-agent-demo.test.mjs",
+      "packages/tools/tracy-site-tools/test/sweep-resolve.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-call.test.mjs",
+      "packages/tools/tracy-site-tools/test/emdash-call.test.mjs"
+    ],
+    "tests": [
+      "build 16: research of 2 old topics for 22 template posts",
+      "splitTopics: fewer topics than posts are split",
+      "composePost: a title, body and excerpt from the facts",
+      "website content lists only readers research can run, and defaults to all of them",
+      "website content: by default a thin direct crawl falls to Jina, then Firecrawl",
+      "a promotion is not a dish",
+      "a promotion a model read off a menu photo is not a dish either",
+      "Remove (deleteSite): the site row and its brief go together",
+      "a torn-down site (deleteTornDownSite) takes its brief with it",
+      "a forgotten demo (removeDemoSite) takes its brief with it",
+      "a stale claim the sweep gives back (sweepClaims) takes its brief with it",
+      "serving hours are not a promotion",
+      "a plan the sweep completes is not refused",
+      "the sweep writes the topics the agent did not use",
+      "a Joomla or EmDash template post's body is written from the research like WordPress's",
+      "a Joomla or EmDash template post's body: written over the template's own",
+      "🔒 the sweep writes a Joomla template article's research body on a read made for the write",
+      "🔒 the same Joomla write outside the sweep, or inside it with no read, is still refused BODY_SHRINK",
+      "🔒 EmDash body guard: the sweep's research body passes on a read made for it",
+      "a written post uses only the facts its distinct words say",
+      "a post field the agent changed after the sweep planned is kept"
+    ],
+    "needs": ["postgres"]
+  }
+}

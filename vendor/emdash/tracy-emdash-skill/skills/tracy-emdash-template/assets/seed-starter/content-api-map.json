@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "scope": "entry-scalars",
+  "note": "Tracy Content API: one row per collection of seed/site-model.json. type is page, article, service, project, shared or generic; urlPattern is the public path ({slug} for one entry per page), null when the collection has no page of its own. chrome names the shared entry the header and footer print. tools/content-api-gate.mjs refuses a collection of the model that has no row here.",
+  "collections": {
+    "site": {
+      "type": "shared",
+      "urlPattern": null
+    }
+  },
+  "chrome": {
+    "collection": "site",
+    "slug": "site"
+  }
+}

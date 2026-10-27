@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1134-ds-contracts-gk",
+  "kind": "feat",
+  "title": "The five GavickPro (Gavern) quickstarts wear a design system from their tokenized 1.0.1 re-releases: each gk_* template maps to its ready slot contract, a site built from 1.0.0 is asked to update, and a Gavern contract that opts in breaks long heading words",
+  "pr": 1134,
+  "area": "design-system/slot-contracts",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/design/tracy-ds-slot/test/cms.test.mjs apps/tracy-web/test/design-system-door.test.mjs",
+    "S2: Read the result of each test named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'Joomla: a Gavern (GavickPro) contract breaks long heading words only when it opts in (breakWords)' passes.",
+    "'a template maps to its slot contract; one without a contract says why' passes (gk_appetit, gk_archi, gk_compact, gk_restly, gk_spotlight map to joomla-gk-*; a gk_appetit site at quickstart 1.0.0 answers TEMPLATE_NEEDS_UPDATE, need 1.0.1).",
+    "'every ready contract names the releases it wears' passes (each joomla-gk-* contract carries minVersion quickstart/gavick-gk-<name>/j6 = 1.0.1)."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-gk-appetit.json, joomla-gk-archi.json, joomla-gk-compact.json, joomla-gk-restly.json, joomla-gk-spotlight.json",
+    "contractField": "breakWords (src/joomla.mjs)",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template}), site)"
+  },
+  "evidence": "tasks/evidence/ds-contracts-gk-2026-10-11/README.md",
+  "fence": "Which GavickPro template element maps to which slot contract, its readiness and minVersion; the opt-in breakWords rule. No stand, no model, no Docker.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/design/tracy-ds-slot/test/cms.test.mjs",
+      "apps/tracy-web/test/design-system-door.test.mjs"
+    ],
+    "tests": [
+      "Joomla: a Gavern (GavickPro) contract breaks long heading words only when it opts in (breakWords)",
+      "a template maps to its slot contract; one without a contract says why",
+      "every ready contract names the releases it wears"
+    ]
+  }
+}

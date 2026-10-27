@@ -1,0 +1,1 @@
+{ "verdict": "warn", "minRiskScore": 10, "categories": ["data-exfiltration"] }

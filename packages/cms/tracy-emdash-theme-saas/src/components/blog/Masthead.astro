@@ -1,0 +1,297 @@
+---
+/**
+ * The blog family's page head: grid ground, optional breadcrumb, pill eyebrow, title and sub, all
+ * centred. `band` tints it with the elevated surface (list pages); articles sit on the page ground.
+ * The default slot takes extra head content (the search form).
+ *
+ * `size` names the page family. The source steps each family's title and sub at its own widths
+ * (measured 16/09 on the rendered quickstart, 1440 → 360 at 1px around every step):
+ *   list        blog home, category archives   46 → 38 @860 → 32 @760 (sub 15 @760)
+ *   tags        tag index, tag archives        46 → 33 @767 (sub 15 @767)
+ *   search      search                         46 → 33 @767 (sub stays 17)
+ *   archive     article archive                46 → 30 @620 (sub 15 @620)
+ *   writers     writers directory              46 → 34 @760 (sub 16 @760)
+ *   author      a writer's page                46 → 36 @860 (sub 16 @620), line-height 1.05
+ *   categories  all categories                 46 → 32 @620 (sub 16 @620)
+ *   article     post, helixql, legal           44 → 38 @860 → 30 @620 (sub 15 @620)
+ */
+import type { Attrs } from '@/lib/stamps'
+
+interface Crumb {
+  label: string
+  href?: string
+}
+interface Props {
+  title: string
+  sub?: string | null
+  eyebrow?: string | null
+  eyebrowHref?: string | null
+  crumbs?: Crumb[]
+  band?: boolean
+  narrow?: boolean
+  size?: 'list' | 'tags' | 'search' | 'archive' | 'writers' | 'author' | 'categories' | 'article'
+  /** The footer follows directly: drop the bottom rule and the page's stretch, so no strip or double rule sits between. */
+  last?: boolean
+  /** The grid ground; the source search head is a flat tint. */
+  grid?: boolean
+  /** Provenance stamps of the words that come from an entry (`src/lib/stamps.ts`); empty on an ordinary request. */
+  marks?: { title?: Attrs; sub?: Attrs; eyebrow?: Attrs }
+  /** Accessible name of the breadcrumb, in the site's language. */
+  crumbsLabel?: string
+}
+const {
+  title,
+  sub,
+  eyebrow,
+  eyebrowHref,
+  crumbs = [],
+  band = false,
+  narrow = false,
+  size = 'list',
+  last = false,
+  grid = true,
+  marks = {},
+  crumbsLabel
+} = Astro.props
+const Eyebrow = eyebrowHref ? 'a' : 'span'
+// The source cuts a long current crumb inside the word at 31 characters, with no space before "…".
+const short = (label: string) => (label.length > 32 ? `${label.slice(0, 31).trimEnd()}…` : label)
+---
+
+<header class:list={['mast', `size-${size}`, { 'k-grid-bg': grid, band, last, 'has-crumbs': crumbs.length > 0 }]}>
+	<div class:list={['k-container inner', { narrow }]}>
+		{
+			crumbs.length > 0 && (
+				<nav class="crumbs" aria-label={crumbsLabel ?? "Breadcrumb"}>
+					{crumbs.map((c, i) => (
+						<>
+							{i > 0 && <span class="sep" aria-hidden="true">/</span>}
+							{c.href ? (
+								<a href={c.href}>{c.label}</a>
+							) : (
+								<span class="current" aria-current="page" title={short(c.label) !== c.label ? c.label : undefined}>
+									{short(c.label)}
+								</span>
+							)}
+						</>
+					))}
+				</nav>
+			)
+		}
+		{eyebrow && <Eyebrow class="pill" href={eyebrowHref ?? undefined} {...marks.eyebrow}>{eyebrow}</Eyebrow>}
+		<h1 class="title" {...marks.title}>{title}</h1>
+		{sub && <p class="sub" {...marks.sub}>{sub}</p>}
+		<slot />
+	</div>
+</header>
+
+<style>
+	.mast {
+		position: relative;
+		padding: 66px 0 58px;
+		background-color: var(--k-bg);
+		border-bottom: 1px solid var(--k-border);
+		overflow: hidden;
+	}
+	.mast.band {
+		background-color: var(--k-elevated);
+	}
+	/* Source heads with a breadcrumb (article, author, archive, category) sit 6px tighter top and bottom. */
+	.mast.has-crumbs {
+		padding: 60px 0 52px;
+	}
+	.mast.last {
+		border-bottom: 0;
+	}
+	/* Base stretches <main> to fill the viewport; with the footer straight after this head, that
+	   stretch is an empty strip the source does not have. */
+	:global(#main:has(> .mast.last)) {
+		flex: none;
+	}
+	/* Soft light from above, tinted by the direction's primary. */
+	.mast::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(ellipse 55% 80% at 50% 0%, color-mix(in srgb, var(--k-primary) 7%, transparent), transparent 70%);
+		pointer-events: none;
+	}
+	.inner {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16px;
+		text-align: center;
+	}
+	.inner.narrow {
+		max-width: 820px;
+	}
+	.crumbs {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		gap: 6px;
+		max-width: 100%;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		line-height: 1.2;
+		color: var(--k-muted);
+	}
+	.crumbs a:first-child {
+		color: var(--k-text);
+	}
+	.crumbs a:hover {
+		color: var(--k-primary);
+	}
+	.current {
+		white-space: nowrap;
+	}
+	/* Article and author heads: breadcrumb and chip set solid (line-height 1), 12px and 23.5px tall as
+	   in the source; the archive's breadcrumb keeps the looser 1.55. */
+	.size-article .crumbs,
+	.size-author .crumbs {
+		line-height: 1;
+	}
+	.size-article .pill,
+	.size-author .pill {
+		line-height: 1;
+	}
+	.size-archive .crumbs {
+		line-height: 1.55;
+	}
+	.pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+		padding: 5px 12px;
+		border-radius: 100px;
+		border: 1px solid color-mix(in srgb, var(--k-primary) 25%, transparent);
+		background: color-mix(in srgb, var(--k-primary) 8%, transparent);
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		line-height: 1.55;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		color: var(--k-primary);
+		max-width: 100%;
+	}
+	.pill::before {
+		content: '';
+		width: 6px;
+		height: 6px;
+		flex: none;
+		border-radius: 50%;
+		background: var(--k-primary-fill);
+	}
+	a.pill:hover {
+		border-color: var(--k-primary);
+	}
+	.title {
+		margin: 0;
+		max-width: 760px;
+		font-family: var(--font-heading);
+		font-size: 46px;
+		line-height: 1.08;
+		letter-spacing: -1.3px;
+		font-weight: 700;
+		color: var(--k-heading);
+		text-wrap: balance;
+		overflow-wrap: anywhere;
+	}
+	.sub {
+		margin: 0;
+		max-width: 600px;
+		font-size: 17px;
+		line-height: 1.6;
+		color: var(--k-text);
+	}
+	.size-article .title {
+		font-size: 44px;
+		line-height: 1.1;
+	}
+	/* Source author pages: 46px / 48.3px (1.05), against 1.08 on every other list masthead — DECISIONS D27. */
+	.size-author .title {
+		line-height: 1.05;
+	}
+
+	@media (max-width: 860px) {
+		.size-list .title {
+			font-size: 38px;
+			letter-spacing: -1.1px;
+		}
+		.size-author .title {
+			font-size: 36px;
+			letter-spacing: -1px;
+		}
+		.size-article .title {
+			font-size: 38px;
+			line-height: 1.08;
+			letter-spacing: -1px;
+		}
+	}
+	@media (max-width: 767px) {
+		.mast {
+			padding: 40px 0 36px;
+		}
+		.mast.has-crumbs {
+			padding: 40px 0 34px;
+		}
+		.inner {
+			gap: 14px;
+		}
+		.size-tags .title,
+		.size-search .title {
+			font-size: 33px;
+			letter-spacing: -1px;
+		}
+		.size-tags .sub {
+			font-size: 15px;
+		}
+	}
+	@media (max-width: 760px) {
+		.size-list .title {
+			font-size: 32px;
+			letter-spacing: -1px;
+		}
+		.size-list .sub {
+			font-size: 15px;
+			line-height: 1.55;
+		}
+		.size-writers .title {
+			font-size: 34px;
+			line-height: 1.1;
+			letter-spacing: -1px;
+		}
+		.size-writers .sub {
+			font-size: 16px;
+			line-height: 27px;
+		}
+	}
+	@media (max-width: 620px) {
+		.size-archive .title {
+			font-size: 30px;
+			letter-spacing: -0.8px;
+		}
+		.size-archive .sub,
+		.size-article .sub {
+			font-size: 15px;
+		}
+		.size-author .sub {
+			font-size: 16px;
+			line-height: 27px;
+		}
+		.size-categories .title {
+			font-size: 32px;
+			letter-spacing: -1px;
+		}
+		.size-categories .sub {
+			font-size: 16px;
+		}
+		.size-article .title {
+			font-size: 30px;
+			line-height: 1.12;
+		}
+	}
+</style>

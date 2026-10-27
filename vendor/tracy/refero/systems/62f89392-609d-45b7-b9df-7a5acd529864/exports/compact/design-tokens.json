@@ -1,0 +1,109 @@
+{
+  "color": {
+    "canva-violet": {
+      "$value": "#8b3dff",
+      "$type": "color",
+      "$description": "Canva Violet — Primary brand color, gradient anchor, link text, category icon accents"
+    },
+    "soft-iris": {
+      "$value": "#a370fc",
+      "$type": "color",
+      "$description": "Soft Iris — Secondary violet for lighter gradient stops, subdued link states, decorative icon tints"
+    },
+    "deep-amethyst": {
+      "$value": "#9729ff",
+      "$type": "color",
+      "$description": "Deep Amethyst — Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "ember-red": {
+      "$value": "#ff3d4d",
+      "$type": "color",
+      "$description": "Ember Red — Warm accent for gradient panels, social/heart icon variants, category tag punctuation"
+    },
+    "plasma-pink": {
+      "$value": "#e950f7",
+      "$type": "color",
+      "$description": "Plasma Pink — Magenta accent for gradient sweeps, sparkle/sticker icon variants, creative expression"
+    },
+    "solar-orange": {
+      "$value": "#ff6105",
+      "$type": "color",
+      "$description": "Solar Orange — Orange accent for warm gradient panels, fire/print icon variants, callout energy"
+    },
+    "ink-black": {
+      "$value": "#0f1015",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, dark surface fills, button text on light backgrounds, nav text"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Hardest text, logo wordmark rendering, high-contrast icons"
+    },
+    "off-black": {
+      "$value": "#231f20",
+      "$type": "color",
+      "$description": "Off-Black — Print-style black for rich type rendering, secondary deep fill"
+    },
+    "slate-smoke": {
+      "$value": "#575a5f",
+      "$type": "color",
+      "$description": "Slate Smoke — Muted helper text, secondary nav, icon outlines, inactive state text"
+    },
+    "pale-mist": {
+      "$value": "#d7d9de",
+      "$type": "color",
+      "$description": "Pale Mist — Hairline borders, focus ring halos, very-light dividers, subtle shadow tints"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "teal-violet-sky": {
+      "$value": "#7d2ae8",
+      "$type": "color",
+      "$description": "Teal Violet Sky — Hero and feature card gradient — teal to violet sweep at 135deg"
+    },
+    "coral-sunset": {
+      "$value": "#ff6208",
+      "$type": "color",
+      "$description": "Coral Sunset — Warm-to-peach gradient panel for lifestyle/print product cards"
+    },
+    "emerald-meadow": {
+      "$value": "#00b100",
+      "$type": "color",
+      "$description": "Emerald Meadow — Green gradient panel for app-integration and template discovery cards"
+    },
+    "ulraviolet-horizon": {
+      "$value": "#5a32fa",
+      "$type": "color",
+      "$description": "Ulraviolet Horizon — Wide spectrum hero gradient — purple to cyan to white wash, the most expansive expression of the brand"
+    }
+  },
+  "font": {
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    },
+    "canva-sans": {
+      "$value": "Canva Sans",
+      "$type": "fontFamily",
+      "$description": "Sole brand typeface — humanist sans with warm apertures, used for everything from 14px body to 80px display. Weight 400 is the workhorse; 500 carries subheads; 600 punches buttons and tag labels. The ss02/ss03 stylistic sets give alternative letterforms that add personality without going decorative."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://canva.com",
+      "siteName": "Canva",
+      "extractedAt": "2026-06-03T15:38:45.503Z",
+      "variant": "compact"
+    }
+  }
+}

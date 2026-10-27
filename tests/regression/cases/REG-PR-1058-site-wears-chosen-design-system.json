@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1058-site-wears-chosen-design-system",
+  "kind": "feat",
+  "title": "A running EmDash base site wears the design system it is given: switching writes one slot file, the page matches the system's profile by role within seconds with no rebuild and no model turn, every text reads at 4.5:1, and with no slot the page computes exactly what it did before",
+  "pr": 1058,
+  "area": "design/slot",
+  "cms": ["em"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/design/tracy-ds-slot/test/slot.test.mjs, and in packages/cms/tracy-emdash-theme-base tests/ds-slot.test.mjs + tests/ds-slot-template.test.mjs.",
+    "S2: node packages/design/tracy-ds-slot/scripts/audit.mjs (every Refero and OpenDesign system through normalise → gate → emit).",
+    "S3: build packages/cms/tracy-emdash-theme-base from this tree (pnpm install if needed, pnpm build); serve dist/server/entry.mjs on 127.0.0.1:4391 with SITE_DATA_DIR = a new empty folder; seed with tools/bootstrap-site.sh. Snap the page with no system (flow-emdash.mjs --snap), then run packages/design/tracy-ds-slot/scripts/flow-emdash.mjs --baseline <snap> over the 11 pilot ids listed in the script (8 Refero incl. arte*, 3 OpenDesign).",
+    "S4: packages/design/tracy-ds-slot/scripts/edges-emdash.mjs against the same site.",
+    "Cleanup: the script kills the server it started and removes its data folder."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: the audit prints 'invariants: all hold' and exits 0.",
+    "S3: 10 systems × 2 widths judged; each matches its profile on every applicable measurement (match 1); each matches its own system ≥ 0.25 better than any other; every text kind on the page ≥ 4.5:1; no sideways scroll; served within 5 s of the call; the four no-system controls (before and after clearing, 1440 and 390) show 0 differences; arte* alone is refused (contrast-fg-bg).",
+    "S4: 44 page loads all 200 without sideways scroll; ?theme and the OS preference never flip a worn system and its toggle is hidden; with no system ?theme=dark still darkens and the toggle shows; the admin carries no slot and is byte-identical."
+  ],
+  "selectors": {
+    "slot file": "<SITE_DATA_DIR>/ds-slot.css, written by packages/design/tracy-ds-slot/scripts/ds-slot.mjs",
+    "injected": "<style id=\"tracy-ds-slot\" data-ds=\"<profile id>\"> and <html data-ds-worn> in src/layouts/Base.astro",
+    "roles": "ROLES in packages/design/tracy-ds-slot/src/probe.mjs (.h-hero, .h-section, main p, .btn-primary, .card, .wrap, .band …)"
+  },
+  "evidence": "tasks/evidence/ds-slot-2026-10-09/README.md — the run on 09/10/2026 with every screenshot; plan tasks/ke-hoach-site-mac-dung-design-system.md.",
+  "fence": "Mechanism only: the profile, the slot file, the template's fallbacks and what the page computes. Not covered: WordPress and Joomla (no slot yet), a fleet site (no build door writes the slot yet), and whether a person judges the result faithful to the source site — the screenshots are there for that.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1058-site-wears-chosen-design-system.mjs"],
+    "needs": []
+  }
+}

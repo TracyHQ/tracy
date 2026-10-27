@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-926-look-set-one-call",
+  "kind": "feat",
+  "title": "tracy_site look.set writes a style change in one call — a scoped rule after the rule that wins, or the token where it is set — with a look undo, a second read, and the files put back when nothing moved",
+  "pr": 926,
+  "area": "site-tools/look",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/tools/tracy-site-tools in the TCH checkout run: node --test --test-reporter=tap test/look-set.test.mjs",
+    "S2: Run: node --test --test-reporter=tap --test-name-pattern=\"modes: per platform|a description names its own actions|an EmDash site is told only the page tools\" test/site-context.test.mjs test/surface.test.mjs",
+    "S3: Read the exit codes, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below."
+  ],
+  "expect": [
+    "S1 and S2 exit 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "'WordPress, scope element: ONE rule for that button on that page, after the rule that wins, as specific — undo kept, read again' passes: the site's Additional CSS gets `body.page-id-42 div.wp-block-group.wtb-hero … { background-color: #1d4ed8; }` and `wrote[0].file` is 'Additional CSS', every theme file (theme.json too) is unchanged (a WordPress look goes to Additional CSS, never the theme's files, since PR #1089), one entry sits under `.tracy/undo/look/`, and the second read asks for that same selector.",
+    "'WordPress, hide on phones…' passes: the rule sits inside `@media (max-width: 767.98px)` and the answer carries `for: phones (below 768px)` and `hidden: display:none`.",
+    "'WordPress, scope site: the theme.json token set again in Additional CSS…' passes: Additional CSS gets `:root { --wp--custom--tracy--brand--orange: #1d4ed8; }`, theme.json and every other theme file are unchanged (since PR #1089), and `sameValue` names `--wp--preset--color--warn`.",
+    "'Joomla, scope page…' passes: `body.item-599 .tb-btn--signal { background-color: … }` is appended to css/styles/tracy-business.css (the first template sheet after T4's bundle) and site-repairs.css is unchanged.",
+    "'Joomla, scope site…' passes: `--tb-band-signal-bg` changes in place in `:root`, the `html[data-theme=\"dark\"]` value stays and is named in `alsoSet`.",
+    "'EmDash, scope site…' passes: `/app/src/styles/tokens.css` @theme `--color-signal` changes, the answer says `after the rebuild`, and the page is read once.",
+    "'a write that changed nothing is put back, byte for byte, and said' passes with code LOOK_SET_NO_EFFECT.",
+    "'refused, nothing written: a page no class names, EmDash sections' passes: a page whose body names no page ('carries no class that names it') and EmDash `scope:element` (LOOK_SET_NO_ROAD before any read) write no undo, no Additional CSS and no theme file; 'Joomla, refused, nothing written: a winner after every template sheet' passes: LOOK_SET_NO_ROAD, no undo, Additional CSS neither read nor written (since PR #1089 this refusal is Joomla's: on WordPress a later winner is beaten by a more specific rule in Additional CSS).",
+    "'🔒 the built tracy_site: look.set reads with set:true in the site’s browser, writes Additional CSS through wp-cli in the site’s container…' passes: LOOK_SET_NOT_IN_MODE without `bash` and before any read; with `bash` the built lib writes Additional CSS through `wp eval` in `<label>-web-1` (one read, one write) and leaves the theme files unchanged (since PR #1089; it wrote the theme file before).",
+    "S2: the LOOK line of a mode with a shell names `look.set` (EmDash: `scope:\"site\"` and `styles/tokens.css`), a mode without one never does, and no surface description names it."
+  ],
+  "selectors": {
+    "action": "tracy_site {action:\"look.set\", params:{path, target:{text|selector, nth?}, props:{…}, scope:\"element\"|\"page\"|\"site\", viewport?}}",
+    "codes": "BAD_LOOK_SET, LOOK_SET_NO_ROAD, LOOK_SET_NO_EFFECT, LOOK_SET_NOT_IN_MODE",
+    "undo": "<site>/.tracy/undo/look/<id>/manifest.json, tool \"look.set\"; look.revert {undo}"
+  },
+  "evidence": "Flow D, 55 runs of the designer agent on benchwpapply02, benchjoomlaapply01 and benchemdashapply01 (05/10/2026, /tmp/claude-501/opt/allcalls.json): style-one-button 24 calls on WordPress, hide-on-mobile 15–20, colour-sitewide-except 72 calls and 2.2M tokens on Joomla, nearly all finding a file and a selector page.look had already named.",
+  "fence": "Mechanism only, no stand: the call on fake sites built from the bench templates' shapes, with the cascade rows page.look answered there, and the built tool with a scripted exec. Not covered: a real browser's cascade after the write (the second read is a fixture), a real wp-cli write of Additional CSS, a real EmDash rebuild.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-926-look-set-one-call.mjs"]
+  }
+}

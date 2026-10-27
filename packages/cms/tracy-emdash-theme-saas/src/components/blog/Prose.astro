@@ -1,0 +1,165 @@
+---
+/**
+ * Long-form body: Portable Text (posts) or plain text split into paragraphs (a pages `body` text
+ * field). Blocks are rendered by other components, so the typography is written with :global under
+ * the `.prose` scope.
+ */
+import { getEditMeta } from 'emdash'
+import { PortableText } from 'emdash/ui'
+import ProseBlock from './ProseBlock.astro'
+import CodeBlock from './CodeBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import ProseQuote from '@/components/site/ProseQuote.astro'
+import { stampBlocks, type Attrs, type Stamp } from '@/lib/stamps'
+
+interface Props {
+  value: unknown
+  /** Provenance stamps of the entry that holds `value` (`src/lib/stamps.ts`); none when not given. */
+  stamp?: Stamp
+  /** The field `value` is read from, named in each block's stamp. */
+  field?: string
+}
+const { value, stamp, field } = Astro.props
+// On a stamped request each text block names itself (`field:<field>.<_key>`, `stampBlocks`) and list
+// items and quote groups get renderers that print it; an ordinary request keeps the renderers it had.
+// A value the visual editor holds (edit metadata) is left as it is, so the inline editor still receives it.
+const stamped = Boolean(stamp?.owner && field && Array.isArray(value) && !getEditMeta(value))
+const blocks = stamped ? stampBlocks(stamp as Stamp, field as string, value as any[]) : value
+const components = stamped
+  ? { block: ProseBlock, listItem: ProseListItem, type: { code: CodeBlock, blockquoteGroup: ProseQuote } }
+  : { block: ProseBlock, type: { code: CodeBlock } }
+// A plain-text body is one field: every paragraph carries that field's stamp.
+const textMark: Attrs = stamp && field ? stamp(field) : {}
+const paragraphs =
+  typeof value === 'string'
+    ? value
+        .split(/\n\s*\n/)
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : []
+---
+
+<div class="prose">
+	{
+		Array.isArray(value) ? (
+			<PortableText value={blocks as any} components={components as any} />
+		) : (
+			paragraphs.map((p) => <p {...textMark}>{p}</p>)
+		)
+	}
+</div>
+
+<style>
+	.prose {
+		font-size: 17px;
+		line-height: 1.75;
+		color: var(--k-text);
+		overflow-wrap: break-word;
+	}
+	.prose > :global(:first-child) {
+		margin-top: 0;
+	}
+	.prose :global(p) {
+		margin: 0 0 20px;
+	}
+	.prose :global(h2),
+	.prose :global(h3),
+	.prose :global(h4) {
+		font-family: var(--font-heading);
+		font-size: 24px;
+		line-height: 1.15;
+		letter-spacing: -0.5px;
+		font-weight: 700;
+		color: var(--k-heading);
+		margin: 40px 0 14px;
+	}
+	.prose :global(h3) {
+		margin: 32px 0 12px;
+	}
+	.prose :global(h4) {
+		font-size: 19px;
+	}
+	.prose :global(ul),
+	.prose :global(ol) {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin: 0 0 20px;
+		padding: 0;
+	}
+	.prose :global(ul) {
+		list-style: none;
+	}
+	.prose :global(ol) {
+		padding-left: 22px;
+		list-style: decimal;
+	}
+	.prose :global(li) {
+		font-size: 16px;
+		line-height: 1.5;
+	}
+	.prose :global(ul > li) {
+		position: relative;
+		padding-left: 28px;
+	}
+	/* A check mark drawn with two borders, in the direction's primary. */
+	.prose :global(ul > li::before) {
+		content: '';
+		position: absolute;
+		left: 3px;
+		top: 6px;
+		width: 11px;
+		height: 6px;
+		border-left: 2px solid var(--k-primary);
+		border-bottom: 2px solid var(--k-primary);
+		transform: rotate(-45deg);
+	}
+	.prose :global(li p) {
+		margin: 0;
+	}
+	.prose :global(blockquote) {
+		margin: 28px 0;
+		padding: 2px 0 2px 18px;
+		border-left: 3px solid var(--k-primary);
+		font-family: var(--font-heading);
+		font-size: 18px;
+		line-height: 1.5;
+		font-weight: 600;
+		color: var(--k-heading);
+	}
+	/* A quote run is grouped into one blockquote whose blocks render through the same component. */
+	.prose :global(blockquote blockquote) {
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+	.prose :global(blockquote p) {
+		margin: 0;
+	}
+	.prose :global(a) {
+		color: var(--k-primary);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.prose :global(strong) {
+		font-weight: 700;
+	}
+	.prose :global(:not(pre) > code) {
+		font-family: var(--font-mono);
+		font-size: 0.88em;
+		padding: 1px 5px;
+		border-radius: 4px;
+		background: var(--k-elevated);
+		color: var(--k-heading);
+	}
+	@media (max-width: 767px) {
+		.prose {
+			font-size: 16px;
+			line-height: 1.7;
+		}
+		.prose :global(h2),
+		.prose :global(h3) {
+			font-size: 22px;
+		}
+	}
+</style>

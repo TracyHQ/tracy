@@ -1,0 +1,331 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page backgrounds, navigation surfaces, footer backgrounds, and open whitespace"
+    },
+    "charcoal": {
+      "$value": "#1f2025",
+      "$type": "color",
+      "$description": "Charcoal — Filled download controls, dark surface blocks, logos, and monochrome iconography"
+    },
+    "ink": {
+      "$value": "#222326",
+      "$type": "color",
+      "$description": "Ink — Display headings, section headings, feature titles, and primary text"
+    },
+    "cloud-card": {
+      "$value": "#ebf0f8",
+      "$type": "color",
+      "$description": "Cloud Card — Feature-card surfaces, light icon fills, and text inside Charcoal download controls"
+    },
+    "body-gray": {
+      "$value": "#747679",
+      "$type": "color",
+      "$description": "Body Gray — Body copy, muted navigation links, helper text, and secondary labels"
+    },
+    "signal-gold": {
+      "$value": "#ffca00",
+      "$type": "color",
+      "$description": "Signal Gold — Rating stars and small positive health-data indicators"
+    },
+    "coral-signal": {
+      "$value": "#ffab94",
+      "$type": "color",
+      "$description": "Coral Signal — Warm metric accents and lower-edge washes in feature visualizations"
+    },
+    "recovery-green": {
+      "$value": "#31ce01",
+      "$type": "color",
+      "$description": "Recovery Green — Recovery rings and green-tinted metric visualizations"
+    },
+    "metric-blue": {
+      "$value": "#415eee",
+      "$type": "color",
+      "$description": "Metric Blue — Circular metric indicators and blue gradient treatments in product visuals"
+    },
+    "sleep-lilac": {
+      "$value": "#b9a6ff",
+      "$type": "color",
+      "$description": "Sleep Lilac — Sleep-oriented metric rings and soft violet visual accents"
+    },
+    "hero-sky": {
+      "$value": "#d2e5ff",
+      "$type": "color",
+      "$description": "Hero Sky — Top hero atmosphere behind the device composition, fading from cool daylight into warm paper"
+    }
+  },
+  "font": {
+    "apple-system-blinkmacsystemfont-inter-segoe-ui-sans-serif": {
+      "$value": "-apple-system, BlinkMacSystemFont, Inter, \"Segoe UI\", sans-serif",
+      "$type": "fontFamily",
+      "$description": "SF Pro system typography carries every interface layer. Use 600-weight display text at 40px–80px with -0.03em tracking: its compact, almost lockup-like lines make wellness claims feel like product labels rather than editorial copy. Use 400-weight body text at 18px–24px and 500-weight navigation/actions at 16px–18px."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 12px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "12px",
+        "fontWeight": 600,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 12px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.011em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "18px",
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.009em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "18px",
+        "fontWeight": 600,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 18px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "24px",
+        "fontWeight": 600,
+        "lineHeight": 0.9,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 24px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "40px",
+        "fontWeight": 600,
+        "lineHeight": 1,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 40px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "64px",
+        "fontWeight": 600,
+        "lineHeight": 1,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 64px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "-apple-system",
+        "fontSize": "80px",
+        "fontWeight": 600,
+        "lineHeight": 1,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 80px"
+    }
+  },
+  "spacing": {
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "96": {
+      "$value": "96px",
+      "$type": "dimension",
+      "$description": "Spacing 96px"
+    },
+    "160": {
+      "$value": "160px",
+      "$type": "dimension",
+      "$description": "Spacing 160px"
+    },
+    "unit": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "3xl": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "3xl-2": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl-2"
+    },
+    "full": {
+      "$value": "128px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "shadow": {
+    "md": {
+      "$value": "rgba(0, 0, 0, 0.25) 0px 0px 16px -8px",
+      "$type": "shadow",
+      "$description": "Shadow elevation md"
+    },
+    "subtle": {
+      "$value": "rgb(255, 255, 255) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.25) 0px 0px 4px 0px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    },
+    "lg": {
+      "$value": "rgb(255, 255, 255) 0px 0px 24px 0px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation lg"
+    },
+    "md-2": {
+      "$value": "rgba(0, 0, 0, 0.15) 0px 2px 16px 0px",
+      "$type": "shadow",
+      "$description": "Shadow elevation md-2"
+    },
+    "subtle-2": {
+      "$value": "rgba(255, 255, 255, 0.36) 0px 1px 0px 0px inset",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle-2"
+    }
+  },
+  "surface": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page canvas, open sections, navigation, and footer."
+    },
+    "cloud-card": {
+      "$value": "#ebf0f8",
+      "$type": "color",
+      "$description": "Surface level 1: Feature-card backgrounds and pale inset surfaces."
+    },
+    "charcoal": {
+      "$value": "#1f2025",
+      "$type": "color",
+      "$description": "Surface level 2: Download pills, QR prompt surfaces, and dark monochrome blocks."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.bevel.health",
+      "siteName": "Bevel",
+      "extractedAt": "2026-09-24T17:31:24.413Z",
+      "variant": "extended"
+    }
+  }
+}

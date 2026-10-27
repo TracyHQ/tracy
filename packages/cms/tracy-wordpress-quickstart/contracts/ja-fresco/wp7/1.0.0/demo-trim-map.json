@@ -1,0 +1,302 @@
+{
+  "schemaVersion": "tracy-quickstart-demo-trim/wordpress/v1",
+  "extensionVersion": "1.0.0",
+  "contract": "ja-fresco/wp7/1.0.0",
+  "baseHash": "4946098fc1f7007c22484fcb3b2ecdd3c649cc14a4db1b88d89c2ff78f30f927",
+  "baseFiles": {
+    "manifest.json": "85209ec644a3337668969caa60977146d616336fdbc6f2790fb6f8752c2748ee",
+    "content-map.json": "8b7bbb5f3041e034f4af9b1b9ade53a4e449bd218a8a2d02cbafed9a4f2ce51d",
+    "presentation-lock.json": "ff7203a437c1454234258412682fde810aee2d214dc7ad862f7f015d5631e0bd"
+  },
+  "kept": [
+    {
+      "key": "page-3",
+      "kind": "page",
+      "id": 3,
+      "language": null,
+      "reason": "a utility page the theme keeps as a draft"
+    },
+    {
+      "key": "page-53",
+      "kind": "page",
+      "id": 53,
+      "language": null,
+      "reason": "a utility page the theme keeps as a draft"
+    },
+    {
+      "key": "page-54",
+      "kind": "page",
+      "id": 54,
+      "language": null,
+      "reason": "contract maps it as page-front-page"
+    },
+    {
+      "key": "page-55",
+      "kind": "page",
+      "id": 55,
+      "language": null,
+      "reason": "navigation 80 opens it"
+    },
+    {
+      "key": "page-56",
+      "kind": "page",
+      "id": 56,
+      "language": null,
+      "reason": "contract maps it as page-about"
+    },
+    {
+      "key": "page-57",
+      "kind": "page",
+      "id": 57,
+      "language": null,
+      "reason": "contract maps it as page-gallery"
+    },
+    {
+      "key": "page-58",
+      "kind": "page",
+      "id": 58,
+      "language": null,
+      "reason": "contract maps it as page-chiefs"
+    },
+    {
+      "key": "page-59",
+      "kind": "page",
+      "id": 59,
+      "language": null,
+      "reason": "contract maps it as page-menu"
+    },
+    {
+      "key": "page-60",
+      "kind": "page",
+      "id": 60,
+      "language": null,
+      "reason": "contract maps it as page-offer"
+    },
+    {
+      "key": "page-61",
+      "kind": "page",
+      "id": 61,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-62",
+      "kind": "page",
+      "id": 62,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-63",
+      "kind": "page",
+      "id": 63,
+      "language": null,
+      "reason": "contract maps it as page-home-2"
+    },
+    {
+      "key": "page-64",
+      "kind": "page",
+      "id": 64,
+      "language": null,
+      "reason": "contract maps it as page-home-3"
+    },
+    {
+      "key": "page-65",
+      "kind": "page",
+      "id": 65,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-66",
+      "kind": "page",
+      "id": 66,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-67",
+      "kind": "page",
+      "id": 67,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-68",
+      "kind": "page",
+      "id": 68,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-69",
+      "kind": "page",
+      "id": 69,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-70",
+      "kind": "page",
+      "id": 70,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-71",
+      "kind": "page",
+      "id": 71,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-72",
+      "kind": "page",
+      "id": 72,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-73",
+      "kind": "page",
+      "id": 73,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-74",
+      "kind": "page",
+      "id": 74,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-75",
+      "kind": "page",
+      "id": 75,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-76",
+      "kind": "page",
+      "id": 76,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-77",
+      "kind": "page",
+      "id": 77,
+      "language": null,
+      "reason": "a utility page the theme keeps as a draft"
+    }
+  ],
+  "hide": [
+    {
+      "key": "post-43",
+      "kind": "post",
+      "id": 43,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-44",
+      "kind": "post",
+      "id": 44,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-45",
+      "kind": "post",
+      "id": 45,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-46",
+      "kind": "post",
+      "id": 46,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-47",
+      "kind": "post",
+      "id": 47,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-48",
+      "kind": "post",
+      "id": 48,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-49",
+      "kind": "post",
+      "id": 49,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-50",
+      "kind": "post",
+      "id": 50,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-51",
+      "kind": "post",
+      "id": 51,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-52",
+      "kind": "post",
+      "id": 52,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    }
+  ],
+  "counts": {
+    "hide": 10,
+    "kept": 26,
+    "languages": 1
+  }
+}

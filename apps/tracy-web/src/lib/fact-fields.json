@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "tracy-fact-fields/v1",
+  "titles": "Pricing|Statistics|Testimonials|Clients|Team",
+  "roles": {
+    "stat": "^(?:(?:stat|stats|figure|tile|counter|row)[-_])?(?:value|count|number)$|^(?:tile-)?stat$",
+    "stat-label": "^(?:stat|stats|figure|counter)[-_](?:label|name|caption|desc)$",
+    "place": "^(?:city|town|region|country|street|place|location|addr\\d*|address\\d*)$",
+    "testimonial": "^(?:quote|testimonial(?:-text)?|review(?:-text)?|rating)$",
+    "client": "^(?:client|logo|mark|partner|brand)[-_](?:name|alt|title)$|^company$",
+    "team": "^(?:member|team|author|person|speaker)[-_](?:name|position|role|title|bio|desc|description)$|^(?:name|role|position|bio|author)$|^name-(?:member|office)$",
+    "price": "^(?:[a-z]+[-_])*price$"
+  },
+  "companions": {
+    "label": ["value", "number", "count"]
+  }
+}

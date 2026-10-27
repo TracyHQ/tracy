@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "6e22b676-90e0-4e1a-a230-2b52f331d0e4",
+  "status": "complete",
+  "name": "iconwerk",
+  "url": "https://styles.refero.design/style/6e22b676-90e0-4e1a-a230-2b52f331d0e4",
+  "sourceWebsite": "https://www.iconwerk.com",
+  "extractedAt": "2026-06-03T21:16:52.980Z",
+  "capturedAt": "2026-10-08T05:13:04.075255+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "gallery wall of crafted icons — a near-invisible white room where rounded tiles of work hang in rhythmic rows",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0d08f781-614e-42df-92c2-cb237120f448.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9c346a2e90a06d73ce30891093198a29188597ca383170c0f39bb94f5dea8699",
+      "bytes": 16518
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9c9c2668f9f017f328db5af5c34eceb80bdda5d4294a91f86e32d9eba4c53e12",
+      "bytes": 95975
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "cd7ec42365ee64a40139ce5bd0dd47021331e0c02fc1e7251f4f532dc2420619",
+      "bytes": 14371
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "09d0e8a3b5ba8aec24b15d40921fe01479770b14cdacf2b54108d309a7f7d292",
+      "bytes": 5919
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f39aa4b02f7f0580218300b145c227a74868ef6e22424b1588b1218c9ae71b37",
+      "bytes": 11168
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d8d3f8f46d63e6101b4c8ee8ad2555f7f6f5da66eae89d0896dde0df5b7ecc04",
+      "bytes": 1910
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0200d2bcfcbca7d0d93c0b3b00eab493c1821d38d950912d83c7912545826318",
+      "bytes": 425
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "124c9171420c81b334646a124cd1e1d5787ed560a93ca72ae530329a388b97ce",
+      "bytes": 442
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "98707363e99b2a9c2a96a8f39f8a2281d7d42a7f7f1c48433543739e41b8704c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e9798e61127b5428868e36e9dc898badc4033694ac0c787f66fd0333ffd78f87",
+      "bytes": 38435
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3d45cf19313e48ea2daddd7de5fc959464b6b8cb96a09fec4b762aeaa2c379c0",
+      "bytes": 19567
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d179177e1e5675fd625e826881fe0756deb82608df4d31b35c391cded5a48e42",
+      "bytes": 23301
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d09a201c2f01c0fa29d3ed8bcfcbdc1b275cfa88be220532e1f4d9a573863bea",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "71f4753f6310a7684a8d54c21c8653806bd1be24e96ce1b1c9a5d4f6ec0842a5",
+      "bytes": 923
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "6ed440bb963b1d11f606d351140f3f82a20e79f2d379485a6778ed1ce10368eb",
+      "bytes": 1381
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "004f4856-4b01-4c23-a9fb-866303d5013b",
+    "10b9e7bb-9ffb-43eb-9360-5628d8390107",
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "14f10100-a102-427a-88d1-7cc80cbb332d",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "23d83a89-8f22-405a-aa33-74fd0ebde9d8",
+    "36de4683-cce3-4a01-820b-65ef8815747b",
+    "4fc87190-9783-4a85-bdc1-35800a2ec690",
+    "653b7b25-f610-4a46-90e1-e3eed98b1f24",
+    "667c59e3-aaba-46e8-a2b3-255254328b6e",
+    "6e22b676-90e0-4e1a-a230-2b52f331d0e4",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "9fe18d8b-58b7-404d-bcc6-9e8a73b8862c",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b8ce0a90-40c6-4518-940c-8c97ccf9c1a0",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "c8ca6c83-3197-4b19-af1c-b29d6f829c5f",
+    "dd646da4-36f5-42b1-83dd-6a1c90cf8983",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1"
+  ]
+}

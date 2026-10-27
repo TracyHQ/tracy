@@ -1,0 +1,59 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, hairline borders, icon strokes, badge outlines, card outlines — the only structural line color in the system"
+    },
+    "paper-warm": {
+      "$value": "#f9f7f3",
+      "$type": "color",
+      "$description": "Paper Warm — Page canvas, card surfaces, body backgrounds — the warm cream base layer for all content"
+    },
+    "bone": {
+      "$value": "#ecebe7",
+      "$type": "color",
+      "$description": "Bone — Raised surfaces, pill button fills, input fills, link backgrounds — one step warmer/darker than the canvas for tactile depth without shadows"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Headline color on dark hero overlays, card highlight wash, inverted surface accents"
+    },
+    "graphite": {
+      "$value": "#8c8c8c",
+      "$type": "color",
+      "$description": "Graphite — Secondary borders, muted metadata text, badge secondary text and borders — the warm mid-gray step in the neutral scale"
+    },
+    "ash": {
+      "$value": "#a2a1a1",
+      "$type": "color",
+      "$description": "Ash — Tertiary badge borders and subtle dividers — the lightest structural gray for the quietest separators"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Input text and form field copy — softer than pure black for longer reading inside form contexts"
+    }
+  },
+  "font": {
+    "messina-sans": {
+      "$value": "Messina Sans",
+      "$type": "fontFamily",
+      "$description": "The only workhorse typeface — used for everything from micro-labels (8px) to display headlines (72px). Weight 400 is the sole weight; hierarchy is created entirely by size and line-height, never by weight contrast. This produces a quiet, editorial voice where the type whispers at every level rather than shouting with bold."
+    },
+    "letterformvariations-04-dmgx": {
+      "$value": "Letterformvariations 04 Dmgx",
+      "$type": "fontFamily",
+      "$description": "Decorative display face used very sparingly for typographic moments — an experimental or contrast voice to break the Messina Sans monotony, reserved for editorial flourishes only"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.acceptandproceed.com",
+      "siteName": "Acceptandproceed",
+      "extractedAt": "2026-06-03T20:39:21.828Z",
+      "variant": "compact"
+    }
+  }
+}

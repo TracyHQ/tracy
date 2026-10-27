@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-electric-violet: #592eff;
+  --color-midnight-plum: #21164c;
+  --color-obsidian-charcoal: #353241;
+  --color-slate-smoke: #5f5f69;
+  --color-pearl-mist: #e0e0db;
+  --color-soft-concrete: #eeeeee;
+  --color-pure-white: #ffffff;
+  --color-sky-tint: #bcf2ff;
+  --color-lime-spritz: #dfff9d;
+  --color-cotton-candy: #ffaae6;
+  --color-neon-cyan: #2ed6ff;
+  --color-lime-pop: #a2ea13;
+  --color-magenta-pulse: #f843c2;
+
+  /* Typography — Font Families */
+  --font-polysans: 'PolySans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-plus-jakarta-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

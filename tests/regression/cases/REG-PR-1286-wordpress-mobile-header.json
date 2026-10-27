@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1286-wordpress-mobile-header",
+  "kind": "fix",
+  "title": "Long business names keep the WordPress mobile menu inside the viewport",
+  "pr": 1286,
+  "area": "site-editing/mobile-header",
+  "cms": ["wp"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "Load the captured public WordPress header block markup and core styles, then inject all three theme CSS files from this checkout. Abort network requests so the fixture cannot contact a real customer site.",
+    "Set the business name to Desert Lantern Studio, an unbroken long name, and Studio at 320, 390, 768 and 1440 px. Measure document width and the menu button bounds for each combination."
+  ],
+  "expect": [
+    "All twelve combinations have document.scrollWidth <= viewport width.",
+    "At mobile widths the hamburger bounds remain inside the viewport. An assertion failure or unavailable CDP browser fails or blocks the case."
+  ],
+  "selectors": {
+    "brand": ".tracy-brand a",
+    "menu": ".wp-block-navigation__responsive-container-open"
+  },
+  "evidence": "tasks/evidence/akemi-user-acceptance-2026-10-13: original public QA header overflowed to 404 px at 320/390; fixed CSS and the clean 1.1.5 archive were measured, including actual menu open and close.",
+  "fence": "Deterministic CSS layout fence using the public WordPress block markup and checkout CSS. Does not run a model, contact form delivery, or the live WordPress menu JavaScript; those have separate acceptance evidence.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/wordpress-header-mobile.mjs"],
+    "needs": ["chrome"],
+    "timeout_s": 120
+  }
+}

@@ -1,0 +1,28 @@
+[
+  {
+    "assertionIds": [],
+    "edgeTags": ["happy"],
+    "effects": {
+      "containers": false,
+      "mail": false,
+      "model": true,
+      "reads": [],
+      "writes": []
+    },
+    "id": "QA-FLOWS-assistant-readonly-happy-assistant",
+    "itemIds": ["flow:assistant-readonly", "capability:ai-assistant-help"],
+    "kind": "pending",
+    "legacyIds": [],
+    "oracle": {
+      "invariant": "the assistant answers and guides but changes nothing",
+      "ref": "§6 AI assistant (`/help`)",
+      "source": "CONTEXT.md"
+    },
+    "pendingReason": "not scripted: needs model credentials and a before/after state fixture",
+    "prerequisites": [],
+    "redProof": null,
+    "ref": null,
+    "requirement": "AI assistant is read-only — assistant (happy)",
+    "targets": ["local"]
+  }
+]

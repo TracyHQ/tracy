@@ -1,0 +1,69 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Body text, borders, pill button fills, logo — the structural constant across every section"
+    },
+    "sage": {
+      "$value": "#788c8c",
+      "$type": "color",
+      "$description": "Sage — Dominant neutral for section backgrounds, form borders, and the shop canvas — carries the largest surface area on the site"
+    },
+    "cream": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Cream — Card surfaces, input fills, text on dark pill buttons — the only true white, used sparingly as a counterpoint to the painted section bands"
+    },
+    "terracotta": {
+      "$value": "#9f4920",
+      "$type": "color",
+      "$description": "Terracotta — Hero section background, circular product label accents — warm clay red that grounds the brand in earth and roast"
+    },
+    "lavender": {
+      "$value": "#a697c6",
+      "$type": "color",
+      "$description": "Lavender — Violet outline accent for tags, dividers, and focused UI edges"
+    },
+    "moss": {
+      "$value": "#5b9133",
+      "$type": "color",
+      "$description": "Moss — Green accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    },
+    "sunshine": {
+      "$value": "#fff78f",
+      "$type": "color",
+      "$description": "Sunshine — Surface band accent, subtle background wash — buttery yellow used as a section break between terracotta and sage"
+    },
+    "sky": {
+      "$value": "#d0eaf4",
+      "$type": "color",
+      "$description": "Sky — Testimonial section background — washed pale blue providing a cool, airy counterpoint to the warm dominant tones"
+    }
+  },
+  "font": {
+    "apercu-mono": {
+      "$value": "Apercu Mono",
+      "$type": "fontFamily",
+      "$description": "Sole UI typeface — all navigation, body copy, prices, buttons, labels, and links rendered in monospace. The 50px size is reserved for hero display lines; 20-24px is the working range for everything from button text to product names. Monospaced letterforms are a deliberate anti-corporate signal: labels read like typewriter tags stamped on coffee bags, not SaaS chrome."
+    },
+    "touchy-script-custom": {
+      "$value": "Touchy Script (custom)",
+      "$type": "fontFamily",
+      "$description": "Custom hand-drawn bouncy script used exclusively for the wordmark 'touchy coffee'. The letterforms are loose, slightly irregular, and bubble-like — the single brand-defining element that signals craft and personality before any product is shown."
+    },
+    "apercu-mono-bold": {
+      "$value": "Apercu Mono Bold",
+      "$type": "fontFamily",
+      "$description": "Apercu Mono Bold — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://touchycoffee.com",
+      "siteName": "Touchy Coffee",
+      "extractedAt": "2026-06-03T19:59:16.914Z",
+      "variant": "compact"
+    }
+  }
+}

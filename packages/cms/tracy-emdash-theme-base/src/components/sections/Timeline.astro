@@ -1,0 +1,91 @@
+---
+/**
+ * The ACM `timeline` block: a 52ch head and an ordered list of entries — a right-aligned marker
+ * column, a hairline with one dot per entry, then title and text. On a phone the marker sits above
+ * the title and the hairline moves to the left edge. `as="h1"` is the source's heading level.
+ */
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  eyebrow?: string
+  heading?: string
+  intro?: string
+  entries: Array<{ marker?: string; title?: string; text?: string }>
+  as?: 'h1' | 'h2'
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: { eyebrow?: string; heading?: string; intro?: string; entries?: string }
+}
+const { eyebrow, heading, intro, entries, as: Tag = 'h2', stamp, fields } = Astro.props
+const none = {}
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+const row = stamp && fields?.entries ? stamp.block(fields.entries) : none
+const sub = (k: string) => (stamp && fields?.entries ? stamp(`${fields.entries}.${k}`) : none)
+const list = entries.filter((e) => e?.title || e?.text)
+---
+
+<div class="wrap" data-block="timeline">
+	{(eyebrow || heading || intro) && (
+		<div class="mb-12 max-w-[52ch]">
+			{eyebrow && <p class="eyebrow eyebrow--acm text-fg-meta" {...at("eyebrow")}>{eyebrow}</p>}
+			{heading && <Tag class="h-section" {...at("heading")}>{heading}</Tag>}
+			{intro && <p class="lead mt-4" {...at("intro")}>{intro}</p>}
+		</div>
+	)}
+	<ol class="tl max-w-[72ch]">
+		{list.map((e) => (
+			<li class="tl-entry relative grid gap-y-2 py-6 sm:grid-cols-[6rem_minmax(0,1fr)] sm:gap-x-8" {...row}>
+				{e.marker && <p class="text-[14px] font-semibold tabular-nums tracking-[0.02em] text-fg-meta sm:text-right" {...sub("marker")}>{e.marker}</p>}
+				<div class:list={["min-w-0", !e.marker && "sm:col-start-2"]}>
+					{e.title && <h3 class="mb-2 text-[21px] font-semibold leading-[1.05] tracking-[-0.015em]" {...sub("title")}>{e.title}</h3>}
+					{e.text && <p class="text-[17px] leading-[1.47] text-fg-2" {...sub("text")}>{e.text}</p>}
+				</div>
+			</li>
+		))}
+	</ol>
+</div>
+
+<style>
+	/* The rail and its dots sit on the gutter between marker and body (6rem + half the 32px gap). */
+	.tl-entry {
+		--tl-x: calc(6rem + 16px);
+	}
+	.tl-entry::before {
+		content: "";
+		position: absolute;
+		inset-block: 0;
+		inset-inline-start: var(--tl-x);
+		width: 1px;
+		background: var(--color-line-soft);
+	}
+	.tl-entry:first-child::before {
+		inset-block-start: 24px;
+	}
+	.tl-entry:last-child::before {
+		inset-block-end: calc(100% - 24px - 0.6em);
+	}
+	.tl-entry::after {
+		content: "";
+		position: absolute;
+		inset-block-start: calc(24px + 0.55em);
+		inset-inline-start: calc(var(--tl-x) - 4px);
+		width: 9px;
+		height: 9px;
+		border-radius: 50%;
+		background: var(--color-bg);
+		box-shadow: 0 0 0 1px var(--color-line);
+	}
+	@media (max-width: 639px) {
+		.tl-entry {
+			--tl-x: 0px;
+			padding-inline-start: 24px;
+		}
+		.tl-entry::after {
+			inset-inline-start: -4px;
+			inset-block-start: calc(24px + 0.4em);
+		}
+	}
+</style>

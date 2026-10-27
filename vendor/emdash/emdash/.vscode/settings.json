@@ -1,0 +1,7 @@
+{
+	"editor.defaultFormatter": "oxc.oxc-vscode",
+	"[typescript]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode"
+	},
+	"typescript.tsdk": "node_modules/typescript/lib"
+}

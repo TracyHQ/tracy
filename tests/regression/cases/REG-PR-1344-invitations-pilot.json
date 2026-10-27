@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-1344-invitations-pilot",
+  "kind": "feat",
+  "title": "A pilot invitation goes only to its own customer after aMember says yes, once, within the budget and pacing; its unsubscribe link suppresses that address",
+  "pr": 1344,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the send ledger, config, unsubscribe wiring and mounted UI suites from this branch against a private PostgreSQL (TEST_DATABASE_URL), with the fake Google that counts every messages.send and a fake aMember."
+  ],
+  "expect": [
+    "In test mode the invitation door answers REAL_PILOT_OFF; in pilot mode one approved draft makes exactly one messages.send to the recipient's own address, with no [Test] prefix and no X-Tracy-Test header.",
+    "The message carries List-Unsubscribe with a one-click token, List-Unsubscribe-Post, the footer reason line and unsubscribe link; the placeholder is gone.",
+    "A second invitation to the same customer answers REAL_ALREADY_INVITED; aMember no plan answers REAL_NOT_MEMBER, an aMember error or no key answers REAL_MEMBERSHIP_UNKNOWN; a full budget answers REAL_PILOT_FULL; a second customer inside 180 s answers REAL_PILOT_PACING.",
+    "GET of the unsubscribe link changes nothing; the one-click POST writes one suppression row whose identity holds no address; a later send to that address answers REAL_SUPPRESSED; an unknown token answers 404.",
+    "Through the full app, the one-click POST with no cookie and no Origin is not refused by the cross-site guard.",
+    "Pilot without AMEMBER_API_KEY reads as test and lists what is missing.",
+    "Send to customer needs a second press and posts only requestKey and draftRevision."
+  ],
+  "selectors": {
+    "sendInvitation": "/api/ops/invitations/real/campaigns/:id/recipients/:rid/send-invitation",
+    "unsubscribe": "/invitations/unsubscribe/:token",
+    "oneClick": "/invitations/one-click/:token",
+    "suppression": "invitations_real_suppression"
+  },
+  "fence": "Fake Google and fake aMember only; no credential, no real mailbox, no customer address. Private PostgreSQL and a temporary key vault.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-send.test.mjs",
+      "apps/tracy-web/test/config.test.mjs",
+      "apps/tracy-web/test/notification-unsubscribe.test.mjs",
+      "packages/web/tracy-harness/test/invitations-real-flow.test.mjs"
+    ],
+    "tests": [
+      "a pilot invitation goes to the customer's own address after aMember says yes, with a live unsubscribe",
+      "a pilot invitation is refused without aMember yes, past the budget, inside pacing or when suppressed",
+      "the invitation unsubscribe doors are mounted and pass the cross-site guard without a session",
+      "Send to customer asks once more, then posts no address; the server picks the customer"
+    ]
+  }
+}

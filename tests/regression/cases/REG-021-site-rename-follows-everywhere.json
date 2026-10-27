@@ -1,0 +1,39 @@
+{
+  "id": "REG-021",
+  "kind": "fix",
+  "title": "After Settings › Site URL renames a site — Joomla, and WordPress whose address Tracy pinned in wp-config.php — the site tabs' chip titles, the tab header's site picker and the address's site= name the new address (no reload, and after one), the CMS answers at it, and both are renamed back the same way",
+  "pr": 818,
+  "area": "site-tabs/site-address",
+  "cms": ["jo", "wp"],
+  "needs": ["stand", "site:jo", "site:wp", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, DSH, PG, A and seat A's cookie COOKIE_A, api, pq. Case variables, for each SITE in two passes — the Joomla pass with KEY = scv2jo.scv2.tracy.test and WEBC = scv2jo-web-1, then the WordPress pass with KEY = scv2wp.scv2.tracy.test and WEBC = scv2wp-web-1 (sites seat A owns; a site key never changes): DOMAIN = the part of KEY after its first label (scv2.tracy.test); OLD = pq \"select coalesce(primary_name, site_key) from site where site_key='<KEY>'\" (the name the site has now); NEW = KEY when OLD differs from KEY (the site was renamed before: round 1 takes it back to its first name, round 2 returns it to OLD), else NEW = 'r21-' + the first label of KEY + '.' + DOMAIN. Before starting, pq \"select name from site_name where site_key='<KEY>' and state='applying'\" must print nothing; otherwise stop with BLOCKED note address-change-in-flight (an earlier change the host did not finish; it blocks every other name). WordPress pass only: docker exec WEBC grep -c \"define('WP_HOME'\" /var/www/html/wp-config.php must print 1 (Tracy's provisioning pins WP_HOME/WP_SITEURL there, render_wp_config.py); otherwise stop with BLOCKED note no-pinned-address.",
+    "Check the build: docker exec $DSH grep -c 'tracy-tab-link: site names' /desk-home/profiles/native/node_modules/@tracy/dsh-tab-link/lib/client.js must print >= 1; otherwise stop with BLOCKED note image-older-than-reg021.",
+    "Unit seams: node --test --test-reporter=tap packages/core/tracy-core/test/site-key.test.mjs packages/ui/tracy-sidebar/test/sites.test.mjs packages/site/tracy-my-sites/test/site-picker-rows.test.mjs apps/tracy-host/test/site-address.test.mjs",
+    "Browser: run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; connect Playwright (repo copy node_modules/.pnpm/playwright@1.63.0) with chromium.connectOverCDP('http://127.0.0.1:9222'), never chromium.launch(); use a NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}} with cookie {name:'tracy_sess', value:COOKIE_A, domain:COOKIE_DOMAIN, path:'/', httpOnly:true}; never close a page, a context or the browser.",
+    "Rename, twice: round 1 FROM = OLD, TO = NEW; round 2 FROM = NEW, TO = OLD (renamed back). Each round: page.goto(O + '/' + FROM + '/'); wait (<= 90 s) until page.url() contains '/s/session-' and the first [contenteditable='true'] is visible; SESSION_URL = page.url() without its query. page.goto(SESSION_URL + '?tab=tracy:team&site=' + FROM); wait for the first [contenteditable='true']; wait 4 s (a second site tab is open behind). page.goto(SESSION_URL + '?tab=tracy:site-settings&site=' + FROM); click .tv-site-address-box button (Change); fill .tv-site-address-form input with TO; click the first .tv-site-address-actions button (Check availability); wait (<= 30 s) for .tv-site-address-form [role='status']; click .tv-site-address-form button[type='submit'] and wait (<= 180 s) until new URL(page.url()).pathname starts with '/' + TO + '/' — the page moves there by itself, nobody reloads it. Wait for the first [contenteditable='true'], then 8 s. Record R = { site: new URL(page.url()).searchParams.get('site'), chips: the trimmed text of every [role='tab'], header: the trimmed text of the first .tracy-site-tabs button[aria-haspopup] (the tab header's site picker), stale: every visible text node or title/aria-label attribute on the page that contains FROM as a whole hostname (a match NOT preceded by a letter, a digit or '-': 'r21-scv2wp.…' does not contain 'scv2wp.…' in this sense) }.",
+    "Still in that round: page.reload(); wait for the first [contenteditable='true'], then 8 s; record R2 the same way as R.",
+    "After each round (read only): pq \"select primary_name from site where site_key='<KEY>'\"; pq \"select name from site_name where site_key='<KEY>' and state='applying'\"; curl -s -o /dev/null -w '%{http_code} %{redirect_url}' http://<TO>:34080/ (the stand's site port; take it from O); WordPress pass: docker exec WEBC grep -E \"define\\('WP_(HOME|SITEURL)'\" /var/www/html/wp-config.php."
+  ],
+  "expect": [
+    "The build check prints a count >= 1.",
+    "The unit seams exit 0 and the TAP ends with '# fail 0'.",
+    "Both passes, both rounds, R and R2: site === TO; the chip whose text starts with 'Settings · ' reads exactly 'Settings · ' + TO; no Team, Site changes or Settings chip contains FROM; header === TO; stale lists nothing except the Browser tab's chip (on a side card whose Browser chip is titled from the tab's site key — better-sidebar fork with BrowserTabTitle — that chip still shows the key; record it in the evidence, it is not this case's verdict).",
+    "After each round: primary_name = TO; no site_name row is 'applying'; the site answers at TO: 200, or a 301/302 whose redirect_url is on TO (Joomla sends / to its language prefix, /en/); WordPress pass: both defines read 'http://' + TO + ':<port>' (no trailing slash) — after round 2 the site, its name and its wp-config.php are back on OLD.",
+    "Before the second fix (03/10, scv2wp): Save answered 'The address change needs support', the host refused the apply with WP_ADDRESS_CONSTANT and the rollback with CHANGE_UNKNOWN, and site_name kept r21-scv2wp.scv2.tracy.test 'applying' for good (results/2026-10-03-83b426fbe.jsonl FAIL).",
+    "Before this change (develop 61df21023 + #814 on scv2, 03/10): site stayed FROM, the chips read 'Settings · FROM' / 'Team · FROM', the header showed FROM, and My Sites' row and its 'Open Chat with FROM' label showed FROM."
+  ],
+  "selectors": {
+    "change": ".tv-site-address-box button",
+    "nameInput": ".tv-site-address-form input",
+    "check": ".tv-site-address-actions button (first)",
+    "available": ".tv-site-address-form [role='status']",
+    "save": ".tv-site-address-form button[type='submit']",
+    "chip": "[role='tab'] (dsh dockkit strip)",
+    "header": ".tracy-site-tabs button[aria-haspopup] (first: TabHeader's site picker trigger)",
+    "renameDoor": "PUT /api/sites/<key>/address {name} (apps/tracy-web/src/sites/address.js)"
+  },
+  "evidence": "packages/core/tracy-core/test/site-key.test.mjs (siteNameFor, siteKeyFor, followedAddress); packages/ui/tracy-sidebar/test/sites.test.mjs (otherSites leaves a renamed open site out); packages/site/tracy-my-sites/test/site-picker-rows.test.mjs; apps/tracy-web/test/backup-restore.test.mjs (restore everything confirmed by the current name); apps/tracy-host/test/site-address.test.mjs (pinned defines renamed and restored, other shapes refused, rollback of a change never started); apps/tracy-web/test/site-address.test.mjs (refused apply → reason, never left applying)",
+  "fence": "@tracy/core/site-key: a site is KEYED by site_key (immutable) and SHOWN by siteNameFor(rows of /api/sites) = displayName, any name (aliases) finding the row. Tab titles, the site picker, My Sites and @tracy/dsh-tab-link's site= mirror all read the name from the shared /api/sites answer, so a rename reaches them on the page Settings moves to. Host (site-address.py): a WordPress copy's WP_HOME/WP_SITEURL plain literals in wp-config.php are rewritten with the home/siteurl options and restored on rollback; any other shape is refused with WP_ADDRESS_CONSTANT before anything is written; a rollback with no journal answers ok and leaves a tombstone, so tracy-web never keeps a refused change 'applying'."
+}

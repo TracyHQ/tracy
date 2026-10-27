@@ -1,0 +1,84 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#09101c",
+      "$type": "color",
+      "$description": "Midnight Ink — Page canvas, card backgrounds, primary surface — the near-black base that absorbs everything else"
+    },
+    "slate-depth": {
+      "$value": "#131d2f",
+      "$type": "color",
+      "$description": "Slate Depth — Elevated surface for buttons and interactive containers, one step above the canvas"
+    },
+    "steel-edge": {
+      "$value": "#1b273d",
+      "$type": "color",
+      "$description": "Steel Edge — Primary border color, link underlines, nav separators — defines structural edges at very high frequency"
+    },
+    "graphite-plate": {
+      "$value": "#3a4049",
+      "$type": "color",
+      "$description": "Graphite Plate — Secondary card surface, subtle elevation tier above Midnight Ink"
+    },
+    "slate-mist": {
+      "$value": "#647084",
+      "$type": "color",
+      "$description": "Slate Mist — Muted body text, helper copy, secondary labels — readable but recessive"
+    },
+    "ash-light": {
+      "$value": "#a1abbd",
+      "$type": "color",
+      "$description": "Ash Light — Icon fills, tertiary text, nav inactive states — the lightest non-white neutral"
+    },
+    "pale-mist": {
+      "$value": "#dce0e5",
+      "$type": "color",
+      "$description": "Pale Mist — Light-section borders, hairline dividers, outlines on light backgrounds"
+    },
+    "cloud": {
+      "$value": "#f0f2f5",
+      "$type": "color",
+      "$description": "Cloud — Lightest neutral border, soft dividers in light sections"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Light-section canvas, primary text on dark, inverted surface — dual-role neutral"
+    },
+    "signal-blue": {
+      "$value": "#2a4af5",
+      "$type": "color",
+      "$description": "Signal Blue — Primary action fill, brand-action emphasis — the only saturated button color, single violet-blue signal against the dark canvas"
+    },
+    "status-violet": {
+      "$value": "#7140fd",
+      "$type": "color",
+      "$description": "Status Violet — Violet text accent for links, tags, and emphasized short phrases"
+    },
+    "deep-teal": {
+      "$value": "#2a799b",
+      "$type": "color",
+      "$description": "Deep Teal — Accent hue in gradient washes, illustrative moments, secondary brand color in art; Brand gradient wash for decorative sections, hero accents, and section backgrounds"
+    },
+    "amber-glow": {
+      "$value": "#f6b03c",
+      "$type": "color",
+      "$description": "Amber Glow — Warm accent in gradient compositions and illustrative highlights — the yellow stop in tri-color gradients"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across every role. Inter is chosen for its monospace-adjacent neutrality — it doesn't compete with the device mockups that dominate the page. The aggressive negative tracking on display sizes (-0.021em at 88px) tightens headlines into dense blocks of type that feel machined rather than editorial. Weight 500 is the workhorse for UI; 700 is reserved for primary headlines and emphasis. No serif, no display face — the system is deliberately sans-only and mono-personality."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://status.app",
+      "siteName": "Status",
+      "extractedAt": "2026-06-03T19:22:22.652Z",
+      "variant": "compact"
+    }
+  }
+}

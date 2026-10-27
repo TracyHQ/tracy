@@ -1,0 +1,39 @@
+meta {
+  name: list pages
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.read",
+    "params": { "type": "page", "locale": "{{locale}}" }
+  }
+}
+
+script:post-response {
+  const rows = res.body && Array.isArray(res.body.contents) ? res.body.contents : [];
+  if (rows.length > 0 && rows[0].id) bru.setVar("contentId", rows[0].id);
+}
+
+docs {
+  # One page of the site's pages, in one locale
+
+  The component's own `tracy-content/v1` listing. `locale` comes from the environment
+  (`en` by default); change it to a locale `describe` listed.
+
+  Look for:
+  - `contents[]`: each record's `id`, `title`, `url`, `locale` and `native` (the CMS's own
+    records it is written through);
+  - `pagination.nextCursor`: present when there are more; pass it back as `cursor` with the
+    same filters to read the next page.
+
+  After the answer, the first record's `id` is saved as the runtime variable `contentId`,
+  which "one record" and "fields projection" use.
+}

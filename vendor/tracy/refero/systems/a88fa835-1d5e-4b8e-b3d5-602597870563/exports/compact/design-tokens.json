@@ -1,0 +1,64 @@
+{
+  "color": {
+    "void-black": {
+      "$value": "#060606",
+      "$type": "color",
+      "$description": "Void Black — Primary page canvas — the dominant background where all content floats; not pure black, but a warmthless near-black that keeps contrast at AAA"
+    },
+    "graphite-surface": {
+      "$value": "#141414",
+      "$type": "color",
+      "$description": "Graphite Surface — Elevated card and icon backgrounds — one step lighter than canvas, used to subtly separate surfaces without breaking the dark mood"
+    },
+    "smoke-border": {
+      "$value": "#202020",
+      "$type": "color",
+      "$description": "Smoke Border — Hairline borders and dividers — barely visible structural lines that define regions without adding visual weight"
+    },
+    "iron-mute": {
+      "$value": "#595959",
+      "$type": "color",
+      "$description": "Iron Mute — Muted text and secondary borders — body text at reduced emphasis, footer meta, tertiary labels"
+    },
+    "ash-gray": {
+      "$value": "#989898",
+      "$type": "color",
+      "$description": "Ash Gray — Secondary body text and medium-emphasis borders — the most-used neutral after white, for body copy and structural outlines"
+    },
+    "silver-whisper": {
+      "$value": "#b4b4b4",
+      "$type": "color",
+      "$description": "Silver Whisper — Light body text — softer than white for inline body content where pure white would feel too sharp"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary text, heading strokes, and all key borders — the brightest mark in the system, reserved for content that must read first"
+    },
+    "signal-yellow": {
+      "$value": "#ffe800",
+      "$type": "color",
+      "$description": "Signal Yellow — Yellow decorative accent for icons, marks, and small graphic details."
+    }
+  },
+  "font": {
+    "gtkotoheim": {
+      "$value": "gtKotoheim",
+      "$type": "fontFamily",
+      "$description": "All UI, body, navigation, button, and small-display text. Custom monospace-feeling sans with 'salt' alternate glyphs — weight 350 is the default body, 400 for slightly stronger emphasis. The only typeface for everything below display size."
+    },
+    "gtkotoheimcondensed": {
+      "$value": "gtKotoheimCondensed",
+      "$type": "fontFamily",
+      "$description": "Display headings only. Condensed cut at weight 300 with tight 1.0–1.1 leading and -0.01em tracking — these headlines whisper rather than shout, letting the vast negative space amplify their presence. Reserved for hero statements and section titles."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://koto.com",
+      "siteName": "Koto",
+      "extractedAt": "2026-06-03T21:44:05.858Z",
+      "variant": "compact"
+    }
+  }
+}

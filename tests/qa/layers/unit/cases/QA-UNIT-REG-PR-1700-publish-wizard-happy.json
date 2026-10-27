@@ -1,0 +1,59 @@
+{
+  "id": "QA-UNIT-REG-PR-1700-publish-wizard-happy",
+  "itemIds": ["regression:REG-PR-1700-publish-wizard"],
+  "requirement": "Publish is one step wizard: ZIP export asks for the emailed code before Download, and Sync from live reports its states in words",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1700-publish-wizard.json",
+    "ref": "PR #1700 (feat); fix evidence: none recorded",
+    "invariant": "S1: ZIP goes Prepare, Send code, then Download only once six digits are typed, then Downloaded; Sync never synced offers Sync now; a failed sync gives the reason in words, the support code and Try again; a Sync from live started from the menu starts no export.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs:140 require() with a computed specifier",
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs:42 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "ZIP: Prepare, Send code, then Download only once six digits are typed, and Downloaded",
+    "Sync, never synced: says so, and the footer button is Sync now",
+    "Sync, failed: the reason in words, the code for support, and Try again",
+    "Sync from live (menu): the sync is applied and said on the Sync step; no export is started"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1700-publish-wizard"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/core/tracy-core", "tracy-core"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1700-publish-wizard",
+    "pr": 1700,
+    "kind": "feat",
+    "area": "publish/wizard",
+    "file": "tests/regression/cases/REG-PR-1700-publish-wizard.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "ZIP: Prepare, Send code, then Download only once six digits are typed, and Downloaded",
+    "Sync, never synced: says so, and the footer button is Sync now",
+    "Sync, failed: the reason in words, the code for support, and Try again",
+    "Sync from live (menu): the sync is applied and said on the Sync step; no export is started"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d28732de-1b7a-4d37-b7aa-edfa7caf428b",
+  "status": "complete",
+  "name": "Raus",
+  "url": "https://styles.refero.design/style/d28732de-1b7a-4d37-b7aa-edfa7caf428b",
+  "sourceWebsite": "https://www.raus.life",
+  "extractedAt": "2026-06-03T16:50:55.593Z",
+  "capturedAt": "2026-10-08T05:17:51.445883+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Warm cabin journal on cream paper — every page a postcard from the woods.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/387bf985-ac5e-4fde-81ff-3cfe69748cf6.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c8a1578d-3301-4918-83be-b3f358361491.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/cdf519ca-9cd1-4471-889a-aac5f2ebdff7.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/823cb989-f9f2-4b29-b3a9-45e716a737b6.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/eac0a84b-182b-447a-a0d4-b8286d6e5f7f.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e0e5edc10217f166389370bae30556477f814ad134b1c415aff5134bfbd86963",
+      "bytes": 21456
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "123457a122bf725496e61be5b48c78df74da78c65a37e8ca376f81508488e30b",
+      "bytes": 148352
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6f5598592885358ecaea577baa6fa0d217003260344bc29c3379e6a2abc908f2",
+      "bytes": 18160
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e6bbb30e2f9ca9ddaf11e94f1b63ba74c02ddd3fcf3fbf24d82a4969f421fde3",
+      "bytes": 9158
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "932a38004e0a6829e612d9b1c82158701d69d45192377d330514ea3cd5f1b6cc",
+      "bytes": 13859
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "64787c4b405d825e526cfbb80faa2bfc3f702326d0d42222af6395655b98dbf0",
+      "bytes": 2633
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "9fb6e88de2403d404ba00baaab44c61b3644a6c3d1bc06ca8773b8c763d0d3be",
+      "bytes": 493
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "058171c6f49463144a73c1cf047a7aad793e01b24d6b6ba6b68c03175f77c5fc",
+      "bytes": 510
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b73c8d1637e2eafaf9685d004d45acaa8687db52f4f25523441c2b925ba94e4c",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a31e94bc8fbb058434a6c9a198efead910108a7f890fe3d52d1e1c90361f1a91",
+      "bytes": 45146
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9501d5a819469c530a076e01bec9fadf0f1e6553ca817815ee7d649d82398e50",
+      "bytes": 23436
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "60b78c11afa0f7aaa5fce224eec7dd6afd9a78fd3025edbae37b035c0892159a",
+      "bytes": 40745
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "5e9983437628ae9067f39084a5b91b2383cc9663f1052aede71030bcb72ed500",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "13f9386fb0f6d9b4237da522429d14642fa078f303976dfb6e853efdc773880f",
+      "bytes": 1692
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b1892e96bd99973ae031a2c7c45e97f0ea7938b765e354ec0a14ab31ca42cc56",
+      "bytes": 2240
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "194faa2f-2f69-4bbf-9e29-290f28fa8ca2",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "3461e90e-35d2-4269-9f11-cbe935f0a3a2",
+    "355d4b38-1a53-4544-911e-0f5073ab836b",
+    "46c8dbc5-47c8-4796-b94c-5e46dcda3532",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "5e9409c4-d130-42f3-b224-5bd66cdfbe28",
+    "5fbdad0a-d102-41c2-8253-f201ad6a6673",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "7b083729-e694-4b66-82a3-befb08451722",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "a4314209-7688-4750-842a-432c3918a21b",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "c2325884-4391-4688-85cd-e143f5107517",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d28732de-1b7a-4d37-b7aa-edfa7caf428b",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "e8589e7c-5ba9-4923-aa7f-0f1bf0d679be",
+    "f22f1195-837d-4b1d-a48c-9123b122bf87"
+  ]
+}

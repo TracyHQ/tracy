@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-bone-cream: #f6f4ee;
+  --color-true-black: #000000;
+  --color-warm-ash: #7b7a77;
+  --color-moss-signal: #298018;
+
+  /* Typography */
+  --font-studiopro: 'studioPro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-metropolis: 'Metropolis', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

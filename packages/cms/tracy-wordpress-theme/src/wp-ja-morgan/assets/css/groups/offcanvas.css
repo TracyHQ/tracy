@@ -1,0 +1,62 @@
+/* ---- Off-canvas sidebar and mobile menu: per-header-variant states (measured on the source stand) ---- */
+
+/* Active trail on pages that are not menu items themselves: the search results page marks
+   "Smart Search" and its group "Other Pages"; the tag list marks the group "Joomla Content". */
+body.search .t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container .wp-block-navigation-item > a[href*="smart-search"],
+body.search .t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container .wp-block-navigation-item > a[href*="smart-search"] .wp-block-navigation-item__label {
+	color: var(--ds-c-accent-text, var(--ja-accent));
+}
+body.search .t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container > .wp-block-navigation-item:has(a[href*="smart-search"]) > .wp-block-navigation-item__content,
+body.search .t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__container > .wp-block-navigation-item:has(a[href*="smart-search"]) > .wp-block-navigation-item__content .wp-block-navigation-item__label {
+	color: light-dark(var(--ds-c-accent-text, var(--ja-accent)), var(--ds-c-fg, #a7b0c2));
+}
+body.jm-parent-joomlart-content .t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container > .wp-block-navigation-item:has(a[href*="/joomlart-content/"]) > .wp-block-navigation-item__content,
+body.jm-parent-joomlart-content .t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__container > .wp-block-navigation-item:has(a[href*="/joomlart-content/"]) > .wp-block-navigation-item__content .wp-block-navigation-item__label {
+	color: light-dark(var(--ds-c-accent-text, var(--ja-accent)), var(--ds-c-fg, #a7b0c2));
+}
+
+/* home-style-2 sidebar: grey links and group labels in light, the style's green on Registration. */
+body.jm-route-home-style-2 .t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container .wp-block-navigation-item > .wp-block-navigation-item__content,
+body.jm-route-home-style-2 .t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container .wp-block-navigation-item > .wp-block-navigation-item__content .wp-block-navigation-item__label {
+	color: light-dark(var(--ds-c-fg, #777777), var(--ds-c-fg, #cdd4e0));
+}
+body.jm-route-home-style-2 .t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content,
+body.jm-route-home-style-2 .t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content .wp-block-navigation-item__label {
+	color: light-dark(var(--ds-c-fg, #777777), var(--ds-c-fg, #a7b0c2));
+}
+body.jm-route-home-style-2 .t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container .wp-block-navigation-item > a[href*="registration"],
+body.jm-route-home-style-2 .t3-off-canvas .jm-off-canvas-nav.wp-block-navigation .wp-block-navigation__container .wp-block-navigation-item > a[href*="registration"] .wp-block-navigation-item__label {
+	color: var(--ds-c-accent-text-hover, #21c674);
+}
+
+/* Styles 2-4: the sidebar header keeps the dark surface in dark mode (the style colour is light only). */
+html body:is(.jm-route-home-style-2, .jm-route-home-style-3, .jm-route-home-style-4) .t3-off-canvas div.t3-off-canvas-header.wp-block-group {
+	background: light-dark(var(--jm-secondary), var(--ds-c-ink, #0c1019));
+}
+
+/* Mobile menu (below 992 px): link colours per header variant, and style 2's wider inset. */
+@media (max-width: 991px) {
+	body.jm-route-home-style-2 .t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content,
+	body.jm-route-home-style-3 .t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+		color: var(--ds-c-fg, #777777);
+	}
+	body.jm-route-home-style-4 .t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+		color: var(--ds-c-fg, #aaaaaa);
+	}
+	body:is(.jm-route-home-style-2, .jm-route-home-style-3, .jm-route-home-style-4) .t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .current-menu-item > .wp-block-navigation-item__content,
+	body:is(.jm-route-home-style-2, .jm-route-home-style-3, .jm-route-home-style-4) .t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .current-menu-ancestor > .wp-block-navigation-item__content {
+		color: light-dark(var(--ds-c-accent-text, var(--jm-red)), var(--ja-accent));
+	}
+	body.jm-route-home-style-2 .t3-header .t3-mainnav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+}
+
+/* The block gap of the flow layout put 20 px above the close button, the panel body and the menu; the source has none. */
+.t3-off-canvas-header .close,
+.t3-off-canvas-body,
+.t3-off-canvas-body > nav,
+.t3-off-canvas-body > .jm-off-canvas-nav {
+	margin-block-start: 0;
+}

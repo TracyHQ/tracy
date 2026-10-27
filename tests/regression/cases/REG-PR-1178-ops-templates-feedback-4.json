@@ -1,0 +1,69 @@
+{
+  "id": "REG-PR-1178-ops-templates-feedback-4",
+  "kind": "fix",
+  "title": "Ops demos and listing: one press gives one demo job, a failed copy is torn down before a retry, removals settle, Listing unlocks from the Road, and Create listing no longer hangs on a third-party request",
+  "pr": 1178,
+  "area": "ops/templates",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the harness ops-templates-feedback tests against the Demos, ReleaseDemo, TemplateDetail and DesignInspiration screens.",
+    "Run the tracy-web ops-demos, ops-quickstarts and card-draft tests against a scratch PostgreSQL schema.",
+    "Run the tracy-host capture tests with a page whose load event never fires."
+  ],
+  "expect": [
+    "After a failed job, a new install holds every press until the new job is known, and a 409 DEMO_BUSY is printed without following anything.",
+    "A second install while one is in flight is refused by name and starts nothing; two installs arriving together start one job.",
+    "A retry after a failed install tears the broken copy down first, then provisions the new one.",
+    "The stale-copy refusal has a short guide and the card offers Remove; two presses send one DELETE; other failures keep Retry install alone.",
+    "A removal reads Removing while it runs and Not installed once done, also when the server no longer knows the job, and a screen opened mid-removal reads it as a removal from deployed.kind.",
+    "Once the demo is live the next page read unlocks the Listing card, following the same road the Road to live shows.",
+    "Generate card answers a Tracy reason (424 OUTLINE_FAILED) when the host cannot read the demo or never answers, never a bare gateway status, and the harness says it in words.",
+    "A model that fails, times out or never answers still returns the layouts that were read, with category and blurb empty and a why.",
+    "tracy-host outlines and shoots a page whose load never fires from its DOM with bounded waits, instead of failing at the goto limit."
+  ],
+  "selectors": {
+    "install": "POST /api/ops/demos/install",
+    "list": "GET /api/ops/demos",
+    "generate": "POST /api/ops/templates/:id/generate"
+  },
+  "fence": "Third-party requests in tracy-host captures get 5 s and are aborted; the site's own origin is never cut; goto waits for domcontentloaded and load/network idle are bounded graces.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/web/tracy-harness/test/ops-templates-feedback.test.mjs",
+      "apps/tracy-web/test/ops-demos.test.mjs",
+      "apps/tracy-web/test/ops-quickstarts.test.mjs",
+      "apps/tracy-web/test/card-draft.test.mjs",
+      "apps/tracy-host/test/capture.test.mjs"
+    ],
+    "tests": [
+      "1: after a failed job, a new install holds every press until the new job is known",
+      "1: the door saying a job is already running is printed, and nothing is followed",
+      "2: the stale-copy refusal has a guide, short and with no dashes",
+      "2: a demo that failed on the old copy offers Remove on the card; two presses send one DELETE",
+      "2: any other failure keeps the card to Retry install alone",
+      "3, 4: a removal reads \"Removing…\" while it runs, then \"Not installed\" once it is done",
+      "4: a removal whose job the server no longer knows still settles to \"Not installed\"",
+      "3: a screen opened mid-removal reads it as a removal",
+      "5: once the demo is live, the next page read unlocks the Listing card without F5",
+      "5: the lock follows the road the page drew, the same answer the Road to live shows",
+      "6: a gateway page instead of an answer is said in words, never \"the door answered 502\"",
+      "6: the door’s own reason is printed as it is",
+      "a second install while one is in flight is refused by name and starts nothing",
+      "two installs that arrive together start one job between them",
+      "a retry after a failed install tears the broken copy down first, then builds the new one",
+      "the listing says what kind of job is in flight, so a reload mid-removal reads as a removal",
+      "Generate card: a demo the host could not read answers a Tracy reason, never a bare gateway status",
+      "Generate card: a host that never answers is a Tracy reason too",
+      "Generate card: a model that fails or times out still answers the layouts that were read",
+      "a model that never answers is given up on, and says so",
+      "makeOutline: a page whose load never fires is still outlined from its DOM, with bounded waits",
+      "makeShoot: a page whose load never fires is shot with what has painted, not failed"
+    ],
+    "needs": ["postgres"]
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "da7c4464-f135-41fc-b635-99c6f4dc58e6",
+  "status": "complete",
+  "name": "Sprout Social",
+  "url": "https://styles.refero.design/style/da7c4464-f135-41fc-b635-99c6f4dc58e6",
+  "sourceWebsite": "https://sproutsocial.com",
+  "extractedAt": "2026-06-03T17:41:38.571Z",
+  "capturedAt": "2026-10-08T05:18:15.065146+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Green sprout on black slate. One vivid accent on a stark monochrome canvas, the color rationed to actions only, with confident geometric type that functions like wayfinding signage.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/203fee32-313d-402c-8f89-1b514304f8d0.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/945ff90d-247c-4c56-ac97-5f9c63006439.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a231c3df-3a40-4b80-a0f7-d2eb786508ec.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/db6f540e-c2c7-4974-a164-7e8e3fa41764.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/793f7a11-1607-4e54-93d4-c3d053129c42.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1c6263946ac755901a708cc507216b9db07c3735a847795090b4cceb838c5d62",
+      "bytes": 19897
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "52f0adfb9012a43edb3490fb76d0bc2807ccea501a3e0d09edbd522da745e741",
+      "bytes": 156230
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "652e4fc2f8803dd5a8ab2e19df58a2ec68a054fe61f689dc8fb9d0880eb82847",
+      "bytes": 18261
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9df4459070ed4a6b7e9f3058942bacd47af7903596faadd0a06bdcfb16967d02",
+      "bytes": 8480
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "045ae9de08ddd328414af94c996b425245a7d7761256c3338dad448676036e08",
+      "bytes": 11983
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "49e728dfc0a9f05b2c428fb15764eca4942527a1ef078aa0ab75b0ed79ac7614",
+      "bytes": 2013
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "6a78df357db4f1cd0a03c50d7cdfaa76cb9a93196e29c061267294390962e978",
+      "bytes": 385
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "aee2dd99823b8885f6f22378f57d2f83f9173b1760ae3889e6375155f5d1c2b4",
+      "bytes": 402
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b562d3c52c726454de387135d562d74ecba4052f71acca9b144994f04f8aba94",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3b6e9e47027fd06973f947a735725c0de6f6b9961829f3840159491834f6b940",
+      "bytes": 45950
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "fa9b1f93da8e4cd7239c97bded0d514cacd907d7e0814a7f07b957bb04472812",
+      "bytes": 25126
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "94bbbbcd90fadb95b0e9cddb205d9e96a2ae38cf962e885f3e988bd00f7368c4",
+      "bytes": 54096
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "9367ef2d7497dc5818de47b257f1aea87d6c427001a2601737e2a24b8796e087",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "164c4c51f142f5d9dd809c8770e50b776f20b2c497de004450e4c982bfa1d389",
+      "bytes": 1383
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "601a91b44c82adb88e59d2d095f20edf789b1ad1c4fb4ea6e969836722b3c91a",
+      "bytes": 1929
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "337ade6a-4bae-49ba-b4aa-8994ac805a81",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3e100552-a8ad-4179-b89a-6aa5113b92e1",
+    "542d4d5c-fd8f-4a8b-a4f7-4694728f7e12",
+    "62f89392-609d-45b7-b9df-7a5acd529864",
+    "736830b5-90b1-47b0-99dd-d79454a0d22a",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "9501cfdc-3eb3-4b64-90f6-9afdded48945",
+    "a6d39bad-6e32-462e-afce-67c9cb76cf40",
+    "b409c050-ab0f-4cf0-a388-95fd7072cd6a",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cbd8a058-6ecb-4f1b-9b5a-2bf2597826ee",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "da332394-784c-4df2-9e66-c3f7b1d28f28",
+    "da7c4464-f135-41fc-b635-99c6f4dc58e6",
+    "dba3eb4f-c1c2-437f-beb2-708e9d074729",
+    "e26cb9b0-f876-41ff-9f24-fd67a6b9776c",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8"
+  ]
+}

@@ -1,0 +1,53 @@
+name: English Contribution Policy
+
+on:
+  pull_request:
+    branches: [main, staging, develop]
+    types: [opened, reopened, edited, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: language-policy-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  language-policy:
+    name: language-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      # The validator and policy are immutable BASE bytes, never imports from the PR checkout.
+      - name: Check out the trusted policy
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted
+          persist-credentials: false
+          submodules: false
+
+      # Only Git data is read here. Do not run npm, hooks, builds or actions from this directory.
+      - name: Fetch the contribution and its complete history
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          path: candidate
+          persist-credentials: false
+          submodules: false
+
+      - name: Set up the trusted Node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: trusted/.node-version
+
+      - name: Require English in every new commit and the PR
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: >-
+          node trusted/scripts/check-language-policy.mjs
+          --repo candidate --base "$BASE" --head "$HEAD" --event "$GITHUB_EVENT_PATH"

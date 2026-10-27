@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-tour/j6/1.0.5",
+  "platform": "joomla",
+  "template": "ja_tour",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-tour",
+    "id": "quickstart/ja-tour/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.0.2"
+    },
+    "template": "ja_tour",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-tour-j6-webroot-1.0.5.tar.gz",
+        "bytes": 56627033,
+        "sha256": "2f3b941e6fbf9a699ed0c3a41df9c2b3503ae47bb759b9460570f7ba9d478b01"
+      },
+      "database": {
+        "file": "ja-tour-j6-database-1.0.5.sql.gz",
+        "bytes": 130123,
+        "sha256": "29bfedb07ff67bb4defd4f735b99cc13c9ae28535e6d09baaf9626c74a685d99"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-21T18:03:12.976Z",
+    "builtFrom": {
+      "from": "quickstart/ja-tour/j6@1.0.4",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 5 files replaced (templates/ja_tour/css, templates/ja_tour/scss); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-tour/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

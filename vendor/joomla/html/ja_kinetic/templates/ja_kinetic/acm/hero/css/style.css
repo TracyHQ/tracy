@@ -1,0 +1,177 @@
+/* ja_kinetic — ACM hero (style-1). Self-contained, block-scoped.
+   All color/type/spacing routed through design-spec CSS vars (--bg --surface
+   --heading --text --muted --border --primary --primary-ink --primary-hover
+   --shadow). Tokens flip per direction/theme on an ancestor (data-style/
+   data-theme + html.t4-dark); status colors are literal by design. */
+
+/* .pen HeroWrap iO4I9 is width:fill_container — the square-grid + the radial
+   primary glow are FULL-BLEED on the section wrapper, NOT clipped to the 1240
+   content column. Grid lines sit ON TOP of the radial glow; both flip per theme
+   (--grid token), the glow is a literal lime per the .pen (#A3E6351F). */
+.acm-hero {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(120% 100% at 80% 0%, rgba(163, 230, 53, .12), transparent 60%);
+  background-size: 34px 34px, 34px 34px, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+}
+
+.acm-hero .acm-hero-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 80px 32px 64px;
+}
+
+.acm-hero .hx-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.12fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.acm-hero .hx-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  letter-spacing: 2px;
+  color: var(--primary);
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+
+.acm-hero .hx-h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 52px;
+  line-height: 1.04;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 0 0 22px;
+  letter-spacing: -1.5px;
+}
+
+.acm-hero .hx-sub {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 0 0 32px;
+  max-width: 460px;
+}
+
+.acm-hero .hx-btnrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 34px;
+}
+
+.acm-hero .hx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 44px;              /* both buttons EXACTLY equal height (.pen primary ~44; cmd matched up from ~41) */
+  border-radius: 9px;
+  text-decoration: none;
+  cursor: pointer;
+  /* micro-interactions.md §3b BUTTON gesture — named properties only, no `all` */
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease, box-shadow .2s ease;
+}
+
+.acm-hero .hx-btn--primary {
+  gap: 8px;
+  background: var(--primary);
+  color: var(--primary-ink);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 0 22px;           /* vertical centering via fixed height + align-items center */
+}
+
+.acm-hero .hx-btn--primary:hover,
+.acm-hero .hx-btn--primary:focus-visible {
+  background: var(--primary-hover);
+  color: var(--primary-ink);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 77, 124, 15), .25);
+  outline: none;
+}
+
+.acm-hero .hx-btn--primary svg {
+  width: 16px;
+  height: 16px;
+}
+
+.acm-hero .hx-btn--ghost {
+  gap: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text);
+  font-size: 14px;
+  border: 1px solid var(--border);
+  padding: 0 18px;           /* border-box height:44 keeps the 1px border inside → same height as primary */
+}
+
+/* micro-interactions.md §3b ghost/secondary: border neutral -> border-color/color: var(--primary) on hover */
+.acm-hero .hx-btn--ghost:hover,
+.acm-hero .hx-btn--ghost:focus-visible {
+  color: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 77, 124, 15), .18);
+  outline: none;
+}
+
+.acm-hero .hx-btn--ghost .hx-prompt {
+  color: var(--primary);
+}
+
+.acm-hero .hx-trust {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.acm-hero .hx-trust span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* Visual: per-direction terminal-panel image (owner-swappable media field,
+   image_terminal / image_blueprint / image_signal). The exported PNG carries
+   its OWN window frame + rounded corners inside transparent alpha — so NO
+   template border / radius / box-shadow (would double the frame). Only a soft
+   drop-shadow that respects the image's alpha gives the design's elevation. */
+.acm-hero .hx-panelimg {
+  display: none;
+  width: 100%;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 20px 42px rgba(8, 12, 10, .35));
+}
+
+/* Terminal is the default direction; hidden only when blueprint/signal active. */
+.acm-hero .hx-panelimg.is-terminal { display: block; }
+html[data-style="blueprint"] .acm-hero .hx-panelimg.is-terminal,
+html[data-style="signal"]    .acm-hero .hx-panelimg.is-terminal { display: none; }
+html[data-style="blueprint"] .acm-hero .hx-panelimg.is-blueprint { display: block; }
+html[data-style="signal"]    .acm-hero .hx-panelimg.is-signal    { display: block; }
+
+/* --- responsive (ported from design-truth breakpoints) --- */
+@media (max-width: 860px) {
+  .acm-hero .hx-hero-grid { grid-template-columns: 1fr; }
+  .acm-hero .hx-h1 { font-size: 38px; }
+}
+@media (max-width: 620px) {
+  .acm-hero .acm-hero-inner { padding-left: 20px; padding-right: 20px; }
+  /* ease the 17px hero subcopy on small phones (no prior clamp) */
+  .acm-hero .hx-sub { font-size: 15px; }
+}
+
+/* Reduced motion (micro-interactions.md §4) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: .01ms !important; }
+}

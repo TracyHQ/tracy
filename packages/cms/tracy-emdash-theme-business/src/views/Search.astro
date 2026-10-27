@@ -1,0 +1,109 @@
+---
+import { getEmDashEntry, search } from 'emdash'
+import { wordsOf } from '@/lib/locale-words'
+import Base from '@/layouts/Base.astro'
+import type { Chrome } from '@/lib/chrome'
+import { fill, href, type Locale } from '@/lib/i18n'
+import { uiLocale } from '@/lib/ui'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+// Provenance stamps of the site chrome's fields (`src/lib/stamps.ts`); empty on an ordinary request.
+// A result names its entry by the search index, not by the reader Tracy's Content API uses, so the
+// rows carry none.
+const $site = stampFor(Astro.request, 'site', site)
+const q = (Astro.url.searchParams.get('q') ?? '').trim()
+const type = Astro.url.searchParams.get('type') ?? ''
+const PER = 10
+const COLLECTIONS = ['posts', 'projects', 'services', 'pages'] as const
+const labels: Record<string, string> = {}
+const [posts, projects, services] = await Promise.all([
+  getEmDashEntry('news_page', 'news', { locale }),
+  getEmDashEntry('projects_page', 'projects', { locale }),
+  getEmDashEntry('services_page', 'services', { locale })
+])
+labels.posts = posts.entry?.data.breadcrumb ?? 'News'
+labels.projects = projects.entry?.data.breadcrumb ?? 'Projects'
+labels.services = services.entry?.data.breadcrumb ?? 'Services'
+labels.pages = wordsOf(uiLocale(locale)).pages
+const { items: found } = q
+  ? await search(q, { collections: [...COLLECTIONS], locale, status: 'published', limit: 200 })
+  : { items: [] }
+const urlOf = (r: { collection: string; slug: string | null }) =>
+  href(
+    locale,
+    r.collection === 'posts'
+      ? `/news/${r.slug}`
+      : r.collection === 'projects'
+        ? `/projects/${r.slug}`
+        : r.collection === 'services'
+          ? `/services/${r.slug}`
+          : `/${r.slug}`
+  )
+// An item whose list page the customer unticked answers 404 unless a kept page still lists it (TCH #1013), so search
+// offers only the items that open (`src/lib/link-gate.ts`, the same answer the item's own view gives).
+const live = await liveLinks(Astro.request, locale, found.map(urlOf))
+const all = found.filter((r) => live(urlOf(r)))
+const counts: Record<string, number> = {}
+for (const r of all) counts[r.collection] = (counts[r.collection] ?? 0) + 1
+const filtered = type ? all.filter((r) => r.collection === type) : all
+const pages = Math.max(1, Math.ceil(filtered.length / PER))
+const page = Math.min(pages, Math.max(1, Number.parseInt(Astro.url.searchParams.get('page') ?? '1') || 1))
+const results = filtered.slice((page - 1) * PER, page * PER)
+const link = (t: string, n = 1) =>
+  `${href(locale, '/search')}?q=${encodeURIComponent(q)}${t ? `&type=${t}` : ''}${n > 1 ? `&page=${n}` : ''}`
+Astro.response.headers.set('cache-control', 'no-store')
+---
+
+<Base chrome={chrome} title={site.search_title} currentPath="/search" robots="noindex, follow">
+	<main class="container-site pb-[88px] pt-14">
+		<h1 class="h-kit mb-6" {...$site("search_title")}>{site.search_title}</h1>
+		<form action={href(locale, "/search")} method="get" class="mb-4 flex max-w-[640px]" role="search">
+			<input type="search" name="q" value={q} placeholder={site.search_placeholder} aria-label={site.search_title} {...$site("search_placeholder")} class="min-w-0 flex-1 rounded-l-[var(--ds-input-radius,0px)] border border-fg bg-card px-4 py-3.5 font-sans text-[16px] text-fg" />
+			{type && <input type="hidden" name="type" value={type} />}
+			<button type="submit" class="rounded-r-[var(--ds-input-radius,0px)] bg-ink px-[26px] font-sans text-[15.5px] font-semibold text-[color:var(--ds-c-on-ink,var(--color-white))]" {...$site("search_button")}>{site.search_button}</button>
+		</form>
+		{q && <p class="mb-9 text-[15px] text-fg-muted" {...$site("search_results_line")}>{fill(site.search_results_line, { count: filtered.length, query: q })}</p>}
+		<div class="flex flex-wrap items-start gap-14">
+			<div class="min-w-0 flex-[1_1_480px]">
+				{q && results.length === 0 && <p class="border-t border-line py-6 text-[15px] text-fg-meta">—</p>}
+				<div class="flex flex-col">
+					{results.map((r) => (
+						<a href={urlOf(r)} class="block border-t border-line py-[22px] hover:bg-signal-tint">
+							<div class="mb-[7px] text-[12px] font-semibold uppercase tracking-[.12em] text-signal-text">{labels[r.collection] ?? r.collection}</div>
+							<div class="mb-1.5 text-[21px] font-semibold tracking-[-.012em] text-fg">{r.title}</div>
+							{r.snippet && <p class="mb-1.5 text-[15px] leading-[1.6] text-fg-muted" set:html={r.snippet} />}
+						</a>
+					))}
+				</div>
+				{pages > 1 && (
+					<div class="mt-9 flex gap-1.5 border-t border-line pt-6">
+						{Array.from({ length: pages }, (_, i) => i + 1).map((n) => (n === page ? <span class="flex h-[38px] w-[38px] items-center justify-center bg-ink text-[14px] font-semibold text-[color:var(--ds-c-on-ink,var(--color-white))]">{n}</span> : <a href={link(type, n)} class="flex h-[38px] w-[38px] items-center justify-center border border-line text-[14px] text-fg">{n}</a>))}
+						{page < pages && <a href={link(type, page + 1)} class="flex h-[38px] items-center justify-center border border-line px-3.5 text-[14px] text-fg-meta" {...$site("search_next")}>{site.search_next}</a>}
+					</div>
+				)}
+			</div>
+			<aside class="flex flex-[1_1_260px] flex-col gap-6">
+				{q && (
+					<div class="border border-line-card p-5">
+						<div class="column-label mb-3.5" {...$site("search_filter_title")}>{site.search_filter_title}</div>
+						<div class="flex flex-col gap-[11px] text-[14.5px]">
+							<a href={link("")} class="flex items-center gap-2.5 text-fg"><span class:list={["tb-mark inline-block h-4 w-4 shrink-0", !type ? "bg-forest" : "border border-line-faint"]}></span>{site.all_label ?? "All"} ({all.length})</a>
+							{COLLECTIONS.filter((c) => counts[c]).map((c) => <a href={link(c)} class="flex items-center gap-2.5 text-fg"><span class:list={["tb-mark inline-block h-4 w-4 shrink-0", type === c ? "bg-forest" : "border border-line-faint"]}></span>{labels[c]} ({counts[c]})</a>)}
+						</div>
+					</div>
+				)}
+				<div class="border border-line-card p-5">
+					<div class="column-label mb-3" {...$site("search_popular_title")}>{site.search_popular_title}</div>
+					<div class="flex flex-wrap gap-[7px]" {...$site.block("search_popular")}>{((site.search_popular ?? []) as any[]).map((p) => <a href={`${href(locale, "/search")}?q=${encodeURIComponent(p.term)}`} class="chip !px-3 !py-1.5 !text-[13px]" {...$site("search_popular.term")}>{p.term}</a>)}</div>
+				</div>
+			</aside>
+		</div>
+	</main>
+</Base>

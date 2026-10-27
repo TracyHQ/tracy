@@ -1,0 +1,21 @@
+@theme {
+  /* Colors */
+  --color-peach-ground: #e1c19e;
+  --color-lime-pop: #e4ff60;
+  --color-lavender-card: #adabff;
+  --color-magenta-marker: #ea5da3;
+  --color-moss-link: #6fb853;
+  --color-sky-note: #7fb6e6;
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-fog-gray: #f6f6f6;
+
+  /* Typography */
+  --font-medium: 'Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-squadeasy-black-custom-display: 'SquadEasy Black (custom display)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-squadeasy-body-custom-sans: 'SquadEasy Body (custom sans)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-squadeasy-regular-custom-small-text: 'SquadEasy Regular (custom small text)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-squadeasy-sharpie-custom-handwriting: 'SquadEasy Sharpie (custom handwriting)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-epilogue: 'Epilogue', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

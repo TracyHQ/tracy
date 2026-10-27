@@ -1,0 +1,84 @@
+{
+  "color": {
+    "cocoa-husk": {
+      "$value": "#322312",
+      "$type": "color",
+      "$description": "Cocoa Husk — Primary page canvas, body text on light surfaces, large display type on pink fields"
+    },
+    "neon-orchid": {
+      "$value": "#ff77c9",
+      "$type": "color",
+      "$description": "Neon Orchid — Signature accent — massive display headlines on dark sections, body links, icon strokes, tag fills, the dominant brand voice"
+    },
+    "petal-wash": {
+      "$value": "#ffdfef",
+      "$type": "color",
+      "$description": "Petal Wash — Light section canvas, button label text on dark fields, badge text"
+    },
+    "plum-velvet": {
+      "$value": "#470b64",
+      "$type": "color",
+      "$description": "Plum Velvet — Deepest accent surface — section backgrounds that sit between the cocoa base and neon pink, creates tonal depth in the surface stack"
+    },
+    "bubblegum-blush": {
+      "$value": "#ffc2e1",
+      "$type": "color",
+      "$description": "Bubblegum Blush — Soft pink surface for cards, footer panels, and the lighter half of alternating section bands"
+    },
+    "lavender-haze": {
+      "$value": "#e2c9f8",
+      "$type": "color",
+      "$description": "Lavender Haze — Muted violet fill for decorative graphic elements, secondary illustration accent"
+    },
+    "magenta-spark": {
+      "$value": "#de8aff",
+      "$type": "color",
+      "$description": "Magenta Spark — Rare hot violet for standout card backgrounds — used sparingly to break the pink monotony"
+    },
+    "oxblood-rust": {
+      "$value": "#481d2a",
+      "$type": "color",
+      "$description": "Oxblood Rust — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "lilac-whisper": {
+      "$value": "#eee2ff",
+      "$type": "color",
+      "$description": "Lilac Whisper — Near-white lavender for button text and borders on dark surfaces, ghost-control labels"
+    },
+    "walnut-vein": {
+      "$value": "#5b4f41",
+      "$type": "color",
+      "$description": "Walnut Vein — Muted warm gray for badge borders and hairline dividers — a lighter cocoa for subtle structural lines"
+    }
+  },
+  "font": {
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    },
+    "gt-planar": {
+      "$value": "GT-Planar",
+      "$type": "fontFamily",
+      "$description": "Primary display and body typeface. Weight 300 is reserved for the 95px display headlines, weight 700 drives 42-59px section headings, weight 400 carries 16-22px body. Tight negative tracking at -0.04em on display and -0.02em on sub-display is a signature choice — the letters compress into each other for a sculptural, almost condensed feel"
+    },
+    "abcrepromono": {
+      "$value": "ABCReproMono",
+      "$type": "fontFamily",
+      "$description": "Monospaced micro-labels for uppercase eyebrow text above headlines, badge tags, and section markers. Line-height 0.79 is aggressive — these labels sit tight and act as typographic punctuation"
+    },
+    "suisseintl": {
+      "$value": "SuisseIntl",
+      "$type": "fontFamily",
+      "$description": "UI micro-text for nav links, icon-adjacent labels, and small interactive elements. Acts as a secondary voice to GT-Planar for interface chrome"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://shelby.ashfall.studio",
+      "siteName": "Shelby",
+      "extractedAt": "2026-06-03T21:40:10.080Z",
+      "variant": "compact"
+    }
+  }
+}

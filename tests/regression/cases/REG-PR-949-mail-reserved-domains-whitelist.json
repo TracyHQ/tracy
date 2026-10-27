@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-949-mail-reserved-domains-whitelist",
+  "kind": "fix",
+  "title": "The deployed mail transport sends nothing to reserved test domains, and the whitelist mail carries no joomlart.com link, no reader address and goes out once per address per day",
+  "pr": 949,
+  "area": "mail/beta",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/beta-waitlist-mail.test.mjs apps/tracy-web/test/mail-unavailable.test.mjs apps/tracy-web/test/web-languages.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"spam audit 05/10/2026: the deployed Resend transport sends nothing to a reserved test domain\"; \"the whitelist letter links to the bare whitelist page\"; \"one whitelist letter per address per day\"; \"the \\\"could not check yet\\\" letter is counted apart\"; \"betaMail: the whitelist mail in Spanish keeps the link\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Every named case is 'ok': the transport from transportFor makes no Resend call for example.test, example.org, sub.example.com, .invalid, .localhost or EXAMPLE.NET and logs no address, while notexample.com, example.com.vn, gmail.com and tracy.ai are sent; the whitelist mail's link is the bare whitelist URL with no reader address; three refusals for one address in one day mail once, another address and the next day mail again; joomlart.com is never an href and never a raw autolinkable string in the HTML."
+  ],
+  "selectors": {
+    "transport": "transportFor / isUndeliverableAddress in apps/tracy-web/src/mail/transport.js",
+    "mail": "betaMail in apps/tracy-web/src/mail/emails.js",
+    "queue": "sendOutcome in apps/tracy-web/src/lib/beta-login.js",
+    "rows": "rate_bucket (bucket beta-waitlist-mail:*)"
+  },
+  "evidence": "Resend API 05/10/2026: 326 of 695 mails in 30 days bounced, 310 on 04/10, all to e2e-*@example.test from DEV through the key production shares; Gmail filed 'Join the Tracy whitelist' in Spam while the sign-in code reached the Inbox.",
+  "fence": "The deployed transport refuses reserved recipient domains before any provider call; the beta queue's per-address daily bucket.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/beta-waitlist-mail.test.mjs",
+      "apps/tracy-web/test/mail-unavailable.test.mjs",
+      "apps/tracy-web/test/web-languages.test.mjs"
+    ],
+    "tests": [
+      "spam audit 05/10/2026: the deployed Resend transport sends nothing to a reserved test domain",
+      "the whitelist letter links to the bare whitelist page",
+      "one whitelist letter per address per day",
+      "the \"could not check yet\" letter is counted apart",
+      "betaMail: the whitelist mail in Spanish keeps the link"
+    ]
+  }
+}

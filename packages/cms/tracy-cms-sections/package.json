@@ -1,0 +1,17 @@
+{
+  "name": "@tracy/cms-sections",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The page sections both CMS themes ship — one source in WordPress block markup, styled once on the 56 OpenDesign token names; the build writes WordPress patterns and Joomla HTML snippets.",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/cms/tracy-cms-sections"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.3.3"
+  }
+}

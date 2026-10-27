@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-workspace-invite-escape",
+  "itemIds": [
+    "direct:workspace-invite:en",
+    "direct:workspace-invite:vi",
+    "direct:workspace-invite:de",
+    "direct:workspace-invite:it",
+    "direct:workspace-invite:fr",
+    "direct:workspace-invite:nl",
+    "direct:workspace-invite:zh",
+    "direct:workspace-invite:es"
+  ],
+  "requirement": "the workspace invitation to a person without an account: markup in a person-supplied name is escaped",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "hostile",
+    "invariant": "no live markup from user text"
+  },
+  "edgeTags": ["escape"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.direct.escape:workspace-invite"],
+  "redProof": null,
+  "legacyIds": []
+}

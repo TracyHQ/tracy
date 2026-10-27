@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-cobalt-signal: #002fff;
+  --color-pure-white: #ffffff;
+  --color-graphite: #171717;
+  --color-carbon: #070707;
+  --color-ink: #000000;
+  --color-fog: #ededed;
+  --color-mist: #b9b9b9;
+  --color-dove: #c3c3c3;
+  --color-iron: #696969;
+  --color-cobalt-mist: #00368c;
+
+  /* Typography */
+  --font-itc-garamond-std-light-narrow: 'ITC Garamond Std Light Narrow', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-graphik-medium: 'Graphik Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

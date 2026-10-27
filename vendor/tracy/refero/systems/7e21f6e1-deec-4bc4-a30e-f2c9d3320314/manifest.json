@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7e21f6e1-deec-4bc4-a30e-f2c9d3320314",
+  "status": "complete",
+  "name": "Home",
+  "url": "https://styles.refero.design/style/7e21f6e1-deec-4bc4-a30e-f2c9d3320314",
+  "sourceWebsite": "https://lego.com",
+  "extractedAt": "2026-04-11T19:15:24.282Z",
+  "capturedAt": "2026-10-08T05:13:58.728098+00:00",
+  "theme": "light",
+  "industry": null,
+  "description": "Primary-color toy aisle — the brightness of a freshly opened set box on a white table.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/58f38146-6089-452d-99ad-161d5a60c9d0.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6af2c022a1c549c016706f347b98bc1676f6b87776b3a06f2959f554531bf519",
+      "bytes": 22095
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "37d9286bf2d819efe33dea8601137cb488ce813b25009b4bf13ef83adc9affe1",
+      "bytes": 217375
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8de87d04952ea1ba1930361f0c61207011fd3df89ba5df7812b3d25f82ef7b7b",
+      "bytes": 43294
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b41205dbe39ce6e53e7bbaa4e128eadaf79044f1252eb834abc80c63a624ef1a",
+      "bytes": 13975
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "db3513f533c0b83e06d0b44dcdedc9aed9427b5a23e4ab28afbc3bd0a9f93f6a",
+      "bytes": 13765
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "da3d40ca9791b682f6f2c9089f6b15198ae0970e7e18d96db0b6f54d99331a3f",
+      "bytes": 4121
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "35b085e270422365d34707b3ef3341ef0d9735fe55b3b90f9d268d4c9f012b8e",
+      "bytes": 738
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "66838790225d78e04c746bc7ee85048fded22341dc3f22c3533834d8c4fdfb66",
+      "bytes": 755
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f51463fa95935a779abffadacaa22be9af01fe2da3fabb21f89e9cd0cfa5db1f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "cc7861043e06eb35851ac57f52e0bb1112a8e35e2ae8f4bb08b19b6b3e3f1edc",
+      "bytes": 56226
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "af89c725effe34c1d3be77fafab64e27bd7f33738f30c88ba7e9192e672963bc",
+      "bytes": 28423
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6b3a29b503afa80f50c4b826978bf9d26cd57e1328621be7295d0942842d7c67",
+      "bytes": 72619
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b2cc9e3647ff5b6bfb9bbbf094901636a17925fd4d37f22bd33a20aaed27f179",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c19975d498b074dd28b870ecb372c4a2d07da72af1c05da60a74b9ebb79acd4b",
+      "bytes": 1703
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "bda4272b9704bc4fb4329506aa515214c0b37cf1f5ac21a37d1c705151d39525",
+      "bytes": 2281
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "30dfffb4-ff6d-4128-b3e5-39046ba258f0",
+    "4bcd0728-0d28-4835-ba9f-d61554f797b1",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "5f39e778-d204-42a9-8b8b-a1519dbd3971",
+    "7e21f6e1-deec-4bc4-a30e-f2c9d3320314",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "a80507cb-afda-46dd-a2b9-ba91f3a78e78",
+    "b04c379c-7c33-4d69-8882-8d85d7768654",
+    "b5ca4e9a-2322-4796-b4c5-3b3bf194821f",
+    "c21fd0f0-1375-4094-83e7-0de484940100",
+    "c5326639-873a-4257-ad1a-7da9111e9286",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "c8c22958-ec50-47f1-aedc-a131d7aeb442",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "e7b37c82-239c-48d5-b293-79a2bfa235cc",
+    "efcb73cb-b84a-4ae7-9a2b-e1116f79f130",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

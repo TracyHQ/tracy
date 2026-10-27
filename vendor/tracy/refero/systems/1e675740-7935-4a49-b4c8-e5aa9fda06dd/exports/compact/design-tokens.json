@@ -1,0 +1,149 @@
+{
+  "color": {
+    "signal-blue": {
+      "$value": "#1871da",
+      "$type": "color",
+      "$description": "Signal Blue — Brand blue — decorative color blocks, icon fills, secondary borders, and the blue-tinted shadow that gives elevation its on-brand cast"
+    },
+    "pulse-green": {
+      "$value": "#1ec072",
+      "$type": "color",
+      "$description": "Pulse Green — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    },
+    "hot-pink": {
+      "$value": "#f6609f",
+      "$type": "color",
+      "$description": "Hot Pink — Vivid pink — decorative strokes, confetti blocks, and gradient underline washes"
+    },
+    "cotton-candy": {
+      "$value": "#ffb4ed",
+      "$type": "color",
+      "$description": "Cotton Candy — Pink action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "solar-yellow": {
+      "$value": "#ffbb38",
+      "$type": "color",
+      "$description": "Solar Yellow — Yellow accent — confetti blocks, gradient underlines, and warm decorative surfaces"
+    },
+    "ember-orange": {
+      "$value": "#ff5500",
+      "$type": "color",
+      "$description": "Ember Orange — Orange accent — decorative fills, strokes, and secondary button surfaces"
+    },
+    "forest-moss": {
+      "$value": "#31805a",
+      "$type": "color",
+      "$description": "Forest Moss — Deep green — heading text color, card backgrounds, and muted button surfaces that need an earthy chromatic weight"
+    },
+    "tangerine": {
+      "$value": "#ffa724",
+      "$type": "color",
+      "$description": "Tangerine — Warm orange — button backgrounds and body accent fills, slightly softer than Ember Orange"
+    },
+    "ultraviolet": {
+      "$value": "#9664d7",
+      "$type": "color",
+      "$description": "Ultraviolet — Purple accent — rare chromatic punctuation for buttons and decorative fills"
+    },
+    "deep-iris": {
+      "$value": "#0c4cbe",
+      "$type": "color",
+      "$description": "Deep Iris — Dark blue border — used for emphasis borders that need more weight than Signal Blue"
+    },
+    "azure": {
+      "$value": "#1f86ff",
+      "$type": "color",
+      "$description": "Azure — Lighter blue border — paired with Deep Iris in decorative border compositions"
+    },
+    "alert-red": {
+      "$value": "#c60808",
+      "$type": "color",
+      "$description": "Alert Red — Red action color for filled buttons, selected navigation states, and focused conversion moments. Use as a supporting accent, not as a status color"
+    },
+    "deep-moss": {
+      "$value": "#1c372a",
+      "$type": "color",
+      "$description": "Deep Moss — Dark text/footer — near-black with a green undertone, used for footer backgrounds and deep heading text"
+    },
+    "concrete": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Concrete — Hairline border — the dominant neutral border color, appearing on virtually every element"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text and filled CTA — all body and heading text, plus filled button backgrounds"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card and nav surface — opaque white for cards, navigation bar, and button text"
+    },
+    "carbon": {
+      "$value": "#101516",
+      "$type": "color",
+      "$description": "Carbon — Dark surface — footer background and inverted dark blocks, near-black with a slight teal undertone"
+    },
+    "mist": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Mist — Subtle background — off-white fill for sections that need separation from Paper without a visible border"
+    },
+    "pebble": {
+      "$value": "#bec6cc",
+      "$type": "color",
+      "$description": "Pebble — Secondary border — slightly darker than Concrete for borders that need more weight"
+    },
+    "ash": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Ash — Border and shadow base — mid-gray borders and shadow midtones"
+    },
+    "smoke": {
+      "$value": "#d7d7d7",
+      "$type": "color",
+      "$description": "Smoke — Background wash — light gray fill for inactive states and subtle surface differentiation"
+    },
+    "stone": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Stone — Icon border — medium gray for icon outlines that recede behind content"
+    },
+    "graphite": {
+      "$value": "#262d2f",
+      "$type": "color",
+      "$description": "Graphite — Dark card surface and stroke — deep neutral for inverted cards and decorative strokes"
+    },
+    "iron": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Iron — Muted text and icon fill — secondary text color, icon fills, and decorative strokes"
+    },
+    "slate": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Slate — Tertiary border and shadow — mid-gray for low-emphasis borders and shadow accents"
+    }
+  },
+  "font": {
+    "neue-haas-grotesk-display": {
+      "$value": "Neue Haas Grotesk Display",
+      "$type": "fontFamily",
+      "$description": "Primary typeface — the editorial voice of the brand. Drives the 244px display headline that defines the hero, all headings down to 14px nav links. The extreme range from 244px to 14px in a single family creates visual cohesion: one geometric grotesque doing everything from poster-scale headlines to micro-labels."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Secondary typeface — handles compact UI chrome: fine-print body text, captions, tabular data, and icon-adjacent labels below 16px. Frees the primary face to own the editorial moments."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.composer.trade",
+      "siteName": "Composer",
+      "extractedAt": "2026-06-03T20:12:16.457Z",
+      "variant": "compact"
+    }
+  }
+}

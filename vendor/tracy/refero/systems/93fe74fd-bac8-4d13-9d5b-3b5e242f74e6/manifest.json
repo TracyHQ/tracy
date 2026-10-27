@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "93fe74fd-bac8-4d13-9d5b-3b5e242f74e6",
+  "status": "complete",
+  "name": "Popcorn",
+  "url": "https://styles.refero.design/style/93fe74fd-bac8-4d13-9d5b-3b5e242f74e6",
+  "sourceWebsite": "https://popcorn.space",
+  "extractedAt": "2026-06-03T21:24:44.951Z",
+  "capturedAt": "2026-10-08T05:14:59.684302+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "warm broadsheet on cream paper — a near-monochrome editorial where a single serif headline does all the emotional work and everything else whispers in warm gray",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/48c53f6e-d8b9-4ed1-8e84-f8c91fd401da.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "35064089353787a4f36df86b8b88c456c93ac481968c65b7141095683d9ef079",
+      "bytes": 22108
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "a6966ad5d11ca73330b4d27e67796b486c788b79618814f0e39f942530a141d1",
+      "bytes": 59913
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "14227ff361cc297335425ab48175bd6c47dc00af9867021112ef28e0639f700f",
+      "bytes": 18398
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "680ce99548bf62c88deb9b3e7aaf85ecd05ff2d4a7df8bb7ae28f1ee783781ad",
+      "bytes": 12906
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "bc4f1a763c96755345cd8b997c13973ab5e14391fc9bf24b022c97775281fd58",
+      "bytes": 12964
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "8c12ed2176ac0b4e9d4b46f573a6fb7bac6aea1f680577309cdac6f0ad0067f0",
+      "bytes": 3012
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "9b85a1bab8e6c53061a10dd07dee4571cd2998368b6a3f09b21ded432eed4afe",
+      "bytes": 505
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "465a61bd9292dd21df8c474feb499c00cb4de3a4b3e95a338937c6b0477118a7",
+      "bytes": 775
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "93f1b584df0b6bffaa6109340847878bab2020eacbce25aa991ad7cd9af81d90",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d88f18268abe0b9d197203eb4a2be15f4ba9d13cd7faa808c8df6ab337f9990e",
+      "bytes": 46317
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9b408abacc758d80bd3d8269a3b0b881c90dd65a6b1e8a9f420851d5af08cc6d",
+      "bytes": 24305
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "2b277d4c5d9288c0f54ba8904ffc7003f0698e6f69c3c80e25a61191d8b1cb58",
+      "bytes": 56699
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6ace41f08bfb48d7bf57533c3d1b401adafdcca392c5238ed218d6a51abc05c9",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "64828de9aebde33890586dee57e663c2897c06c7720bdfdb055e13d6853245b5",
+      "bytes": 1744
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3c3f8783e5967b45e33e43910d0a1f390d245b69d9e8eb409b1199c4456a827a",
+      "bytes": 2658
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "0f0d4cb7-5109-4e81-8c8d-f6bd0441b27c",
+    "12255b63-e506-4bc1-a4cd-d05487de32f3",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "4d832c12-dd14-45b0-bba7-2d3bc25d8264",
+    "8d4b0738-c302-45c6-98c9-b3cd36e04613",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "93fe74fd-bac8-4d13-9d5b-3b5e242f74e6",
+    "9f9a4a4f-1a27-47ca-a65b-68b9850a84e4",
+    "c38d077b-3cdb-48c6-899c-e8a543508c31",
+    "c90e63f8-76c1-4159-9460-29e0d18751ae",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d6c2a911-45ed-4860-a992-43df22793c2a",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d"
+  ]
+}

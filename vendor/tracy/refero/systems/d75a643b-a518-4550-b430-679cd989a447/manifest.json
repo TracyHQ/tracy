@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d75a643b-a518-4550-b430-679cd989a447",
+  "status": "complete",
+  "name": "Freitag",
+  "url": "https://styles.refero.design/style/d75a643b-a518-4550-b430-679cd989a447",
+  "sourceWebsite": "https://freitag.ch/en_ID",
+  "extractedAt": "2026-06-03T18:51:44.979Z",
+  "capturedAt": "2026-10-08T05:18:04.529164+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Swiss industrial catalog — a printed manifest of truck tarpaulins laid flat on poured concrete, where the only color is the recycled product itself.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/753f1a2e-bf91-4e1b-a9a7-27d26b040d91.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/f70a4547-c22d-4114-a9ae-3eb8cd28907f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/0b4e75aa-32b7-40b0-99ac-77d8c9fca251.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a6e05044-58d7-4108-a97a-18db468fc687.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ade9c7fd-f5cf-40f9-8790-ad46a8a9540f.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "fe54eff8d4e6d4af65bc0802a918a53bc003f3a348c08d3f98238280445971c8",
+      "bytes": 22777
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7dbcbcbb082ed713bae747fd3c49fabe5734bccb285d2616b6050c9ce1e7dc20",
+      "bytes": 259943
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "99b654c19e9c38a33f3706ca1723e4358fffc445abf1b248be8867eb059da55c",
+      "bytes": 18780
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a781fcefead8baf93598e2e445529033cfbc679cd3b91dfe2666b89dd06cafd4",
+      "bytes": 11675
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f92d1f7428a51c691a2f931557b91d402b302d2879e91bf4ad84c98398c2ae60",
+      "bytes": 14196
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9cb4ce0991f648d6f25839f07e732c53ceae4b444913c53dc6eaa6e1a5b600e1",
+      "bytes": 3459
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "dfe4f69787d358a798e1e8e7aa90483f8d4cc65d789931ce85ce8fab0d484211",
+      "bytes": 980
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "45bf4c894f29a74412fcb7d9a2613c3eeb3eb313765003982527857f04735b39",
+      "bytes": 997
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "6fd772bcf98993098892234ab484789b5d6d725a72f148c64580c909e69d7fef",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8f57123e60e663c6da666558a5e4c962c7e6207a7fa3e0d0a3361fcb144a8ac0",
+      "bytes": 44611
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "cda93a8cfc7de8caac64012f0aa00511ac61f838d8d1298520c04dc8f2d79df3",
+      "bytes": 22655
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "7e92701c73372b37c83030589c728d2b210379843d23d88fde29e45dd886233f",
+      "bytes": 46796
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "1566b518e8f17dd24b6bdaac82710445b6148fcc70cb1f0d5e523c050b44a68b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "1dbb9edd792b87bf316d62d78a4718791b7636ff2672866bf77d6e1fb676682b",
+      "bytes": 1937
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "33c5d6ab6cddd38c3585ff57baf8bcc2819df88a3a22c3b3eda41db72c311f68",
+      "bytes": 2472
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "17824ea8-ac7d-42ca-97e2-9bf92ebea7e1",
+    "234e9a17-236d-4446-9d58-f83f6806d012",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "37f752a0-879e-4451-a4a4-0a82896e3890",
+    "39105d96-3cb1-497a-8f9f-507a1bed4d30",
+    "3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "a59e7f31-1fca-46c1-a6b0-8d1294b33a7c",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d75a643b-a518-4550-b430-679cd989a447",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f401f04f-c45b-4261-9441-f502c6569a29"
+  ]
+}

@@ -1,0 +1,269 @@
+{
+  "dos": [
+    "Use Iris Violet (#7373ff) for section backgrounds, outlined action borders, and heading accents — it is the only chromatic color and should appear at scale, not as a tiny dot.",
+    "Pair ABCMonumentGrotesk for all UI, nav, and headlines with BradfordLL for long-form body copy — the grotesque/serif contrast is the system's typographic signature.",
+    "Use 3px border-radius for buttons, tags, and links; 7px for inputs and cards; 44-64px for pill-shaped nav buttons only.",
+    "Build visual hierarchy with type size and color contrast, never with box-shadow — the design is flat and printed, not elevated.",
+    "Set body and nav text in ABCMonumentGrotesk with line-height 2.0-2.4 for generous row spacing in compact lists; collapse line-height to 1.02-1.15 at display sizes.",
+    "Let large Obsidian (#000000) shapes overlap content sections as graphic architecture — flat rectangles, half-circles, and irregular polygons placed behind or beside display text.",
+    "Use 1px Obsidian borders as the default divider and component outline; Iris Violet borders are reserved for the most important interactive elements."
+  ],
+  "donts": [
+    "Do not add box-shadow, blur, or drop-shadow effects to any component — the system is deliberately flat.",
+    "Do not use gradient fills — the palette is entirely solid color.",
+    "Do not introduce additional chromatic colors; the only saturated hue is Iris Violet.",
+    "Do not use Filled violet buttons as primary CTAs — the system uses outlined violet actions and neutral outlined buttons, not filled chromatic buttons.",
+    "Do not set body text in ABCMonumentGrotesk; serif (BradfordLL) is reserved for paragraphs to create the grotesque/serif rhythm.",
+    "Do not use large corner radii (12px+) on standard buttons, tags, or cards — only pill-shaped nav elements get 44px+ radii.",
+    "Do not place content on a colored background without considering the overlap behavior — sections are designed to layer, not sit in isolated containers."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#7373ff",
+      "name": "Iris Violet",
+      "role": "Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#23234d",
+      "name": "Deep Iris",
+      "role": "Decorative SVG fill for large geometric shapes and map elements — a darker register of the brand violet used for tonal depth inside illustrations, not for UI",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "role": "Primary text, hairline borders on neutral actions and nav dividers, and the fill for the monumental hero shapes that overlap the headline",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas, card surfaces, button text, and input backgrounds. The base layer everything else sits on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f2f2f2",
+      "name": "Ash Gray",
+      "role": "Subtle surface fill for link backgrounds, list rows, and secondary button states — a quiet wash that distinguishes hover/focus from pure white without introducing chroma",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e7e7e7",
+      "name": "Mist Gray",
+      "role": "Nav panel background and low-emphasis surface tone — sits one step below Ash Gray for the overlapping side panel",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed page with no fixed max-width containment; sections span edge to edge. The hero uses an Iris Violet background with massive overlapping Obsidian shapes carrying the '12' numeral and 'Berlin Biennale for Contemporary Art' display headline. Content sections alternate between white canvas and Iris Violet full-bleed bands. A dark side-nav panel overlaps the left edge from any position on the page. Below the hero, content flows as a compact, information-dense stack: program tags row, about paragraph, event cards in a grid (3 columns), venue cards, and a full-width venue map. Event cards alternate between white and Obsidian variants for rhythm. Spacing between sections is tight (32px) — the page reads as a single broadsheet, not as isolated screens.",
+  "imagery": "Imagery is minimal and graphic — the system itself is the visual. Large flat geometric shapes (rectangles, half-circles, polygons) in Obsidian and Iris Violet serve as the primary visual content, functioning as both layout structure and branding. Event cards and venue markers provide the only representational content. The map is stylized as a violet-tinted line drawing rather than a realistic map. No photography, no illustration, no 3D renders — the aesthetic is constructivist broadsheet, not image-heavy editorial.",
+  "similar": [
+    {
+      "why": "Same editorial broadsheet approach with high-contrast type, single accent color, and overlapping geometric hero blocks over flat color sections.",
+      "business": "ICA (Institute of Contemporary Arts)"
+    },
+    {
+      "why": "Museum site using Monument-Grotesk-family type, flat color blocks, and minimal border-radius on all components.",
+      "business": "MCA Chicago"
+    },
+    {
+      "why": "European biennale platform with constructivist layout — full-bleed violet/color sections, hairline borders, compact card grids, and display-scale numerals.",
+      "business": "Manifesta"
+    },
+    {
+      "why": "Contemporary art institution site that pairs a geometric grotesque for nav with serif for long-form text, and uses a single saturated brand color against black and white.",
+      "business": "Serpentine Galleries"
+    },
+    {
+      "why": "Berlin contemporary-art peer with flat-shape hero compositions, tight 4px-base spacing, and a design-forward rather than utility-first approach.",
+      "business": "KW Institute for Contemporary Art"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "3px",
+      "cards": "3-7px",
+      "inputs": "7px",
+      "buttons": "3px",
+      "navPills": "44px"
+    },
+    "elementGap": "5-12px",
+    "sectionGap": "32px",
+    "cardPadding": "12px",
+    "pageMaxWidth": "1440px"
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 0,
+      "purpose": "Base canvas and content card background"
+    },
+    {
+      "hex": "#f2f2f2",
+      "name": "Ash Gray",
+      "level": 1,
+      "purpose": "Subtle wash for list rows, link hovers, and soft button states"
+    },
+    {
+      "hex": "#e7e7e7",
+      "name": "Mist Gray",
+      "level": 2,
+      "purpose": "Overlapping side-panel surface, one step recessed from content"
+    },
+    {
+      "hex": "#7373ff",
+      "name": "Iris Violet",
+      "level": 3,
+      "purpose": "Section-background canvas for date/title blocks and event overlays"
+    },
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "level": 4,
+      "purpose": "Hero shape fills and full-bleed dark bands"
+    }
+  ],
+  "northStar": "Iris-and-ink broadsheet — violet skies over monumental black type on white paper.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 14,
+      "letterSpacing": 0.12
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 17
+    },
+    {
+      "role": "body-lg",
+      "size": 17,
+      "lineHeight": 20
+    },
+    {
+      "role": "subheading",
+      "size": 19,
+      "lineHeight": 23
+    },
+    {
+      "role": "heading-sm",
+      "size": 22,
+      "lineHeight": 23
+    },
+    {
+      "role": "heading",
+      "size": 25,
+      "lineHeight": 26
+    },
+    {
+      "role": "heading-lg",
+      "size": 29,
+      "lineHeight": 30
+    },
+    {
+      "role": "display",
+      "size": 32,
+      "lineHeight": 33,
+      "letterSpacing": -0.32
+    }
+  ],
+  "components": [
+    {
+      "name": "Overlapping Side Nav Panel",
+      "role": "Primary site navigation",
+      "description": "Dark Obsidian (#000000) panel that overlaps the left edge of the page when activated. Contains nav links in ABCMonumentGrotesk 16-17px, white text, with hairline 1px white dividers between groups. Secondary links (Visit, Contact, Press) sit in a white sub-bar at the top with black 1px borders. Language switcher and search field stack at the bottom. The panel is the most visually dominant UI element — it declares the system as editorial, not corporate."
+    },
+    {
+      "name": "Violet Outlined Action Button",
+      "role": "Primary interactive action",
+      "description": "Transparent fill with 1-2px Iris Violet (#7373ff) border, Iris Violet text, ABCMonumentGrotesk 14-16px weight 700. 3px corner radius, 5-7px vertical padding, 11-12px horizontal padding. Used for nav items, tag pills, and program links. The violet border IS the brand signal — there is no filled violet button variant in the system."
+    },
+    {
+      "name": "Neutral Outlined Button",
+      "role": "Secondary action",
+      "description": "White fill with 1px Obsidian border, black text, 3px radius, 3-6px vertical and 5-11px horizontal padding. ABCMonumentGrotesk 14-16px. Used for language switcher (EN/DE), utility links, and less prominent actions."
+    },
+    {
+      "name": "Pill Nav Button",
+      "role": "Top-bar utility actions (Guide, Menu)",
+      "description": "White fill, 1px Obsidian border, 44px corner radius (fully rounded), ABCMonumentGrotesk 14px. The 'Guide' and 'Menu' buttons that anchor the top-left of every screen."
+    },
+    {
+      "name": "Search Input",
+      "role": "Search field",
+      "description": "White fill, 1px Obsidian border, 7px corner radius, ABCMonumentGrotesk 16px placeholder. Magnifying-glass icon button in 16px to the right. 8-10px padding all sides."
+    },
+    {
+      "name": "Program Tag Pill",
+      "role": "Event category filter",
+      "description": "White fill, 1px Obsidian border, 3px radius, ABCMonumentGrotesk 12-14px weight 700 uppercase. Compact 2-3px vertical padding, 11-12px horizontal. Tags like 'Performance', 'Guided Tour' that sit inside event cards."
+    },
+    {
+      "name": "Event Card",
+      "role": "Program listing entry",
+      "description": "White surface, 1px Obsidian border, 3-7px radius, 12px padding. Date row in 12px uppercase, title in ABCMonumentGrotesk 19-25px, venue line in 12px. Some event cards have a dark Obsidian variant with white text and Iris Violet accents. Cards stack vertically and are information-dense rather than spacious."
+    },
+    {
+      "name": "Venue Card",
+      "role": "Venue directory entry",
+      "description": "White surface, 1px Obsidian border, 7px radius, 12-16px padding. Letter label (A, B, C) at top, venue name in ABCMonumentGrotesk 19-25px, action links (Info, Program, Artists, Directions) as small outlined buttons below. Compact, directory-card feel."
+    },
+    {
+      "name": "Hero Date Block",
+      "role": "Exhibition date display",
+      "description": "Iris Violet (#7373ff) full-bleed background section with large ABCMonumentGrotesk 29-32px text in Obsidian or white. Dates stack vertically with tight line-height. This is the brand's most identifiable surface — the violet sky over the event."
+    },
+    {
+      "name": "Overlapping Hero Type Block",
+      "role": "Display headline container",
+      "description": "Massive Obsidian (#000000) filled rectangles and half-circles that overlap the Iris Violet background, with ABCMonumentGrotesk 32px+ display text in Iris Violet sitting on top. The shapes ARE the layout — the '12' numeral and 'Berlin Biennale for Contemporary Art' title sit inside and beside these forms. This is the system's signature visual."
+    },
+    {
+      "name": "Language Switcher",
+      "role": "Locale selector",
+      "description": "Compact group of 3 outlined buttons (EN, DE, Easy Language), 3px radius, 1px Obsidian border, ABCMonumentGrotesk 12px. Sits at the bottom of the side nav panel."
+    },
+    {
+      "name": "Map Overlay",
+      "role": "Venue map",
+      "description": "Iris Violet background with deep iris line work for streets. White diamond-shaped venue markers labeled A–F. No conventional map chrome — the map is treated as a brand-colored graphic, not a utility."
+    },
+    {
+      "name": "Info Card",
+      "role": "About / descriptive text block",
+      "description": "White surface, no border or shadow, ABCMonumentGrotesk 19px for the 'About' label and BradfordLL 20-30px for the paragraph text. The serif body is the strongest typographic contrast in the system and signals 'readable content' vs. navigational chrome."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary grotesque used for nav, headings, event cards, buttons, and most UI labels. The geometric construction and tight tracking give the site its editorial, catalog-like authority. Weight 400 carries body and nav; 700 is reserved for section headings and emphasis. Line-heights collapse to near-1.0 at display sizes — the type sits as flat architectural mass on the page.",
+      "sizes": "12, 14, 16, 17, 19, 20, 22, 25, 29, 32px",
+      "family": "ABCMonumentGrotesk",
+      "weight": "400, 700",
+      "lineHeight": "1.02–1.20 for headings, 2.00–2.40 for nav and list rows",
+      "substitute": "Inter, Space Grotesk, or Neue Haas Grotesk",
+      "letterSpacing": "-0.01em at display sizes, -0.004em at body, 0.01em for uppercase UI labels"
+    },
+    {
+      "role": "Transitional serif used for long-form body copy, about-section paragraphs, and venue descriptions. Pairs with the grotesque to create a printed-publication rhythm — grotesque for chrome and headlines, serif for reading. The contrast between angular sans and humanist serif is the system's typographic signature.",
+      "sizes": "20, 23, 30px",
+      "family": "BradfordLL",
+      "weight": "400",
+      "lineHeight": "1.03–1.15",
+      "substitute": "Source Serif 4, Tiempos Text, or PT Serif",
+      "letterSpacing": "-0.01em"
+    }
+  ],
+  "description": "The 12th Berlin Biennale reads as an iris-and-ink broadsheet: white paper canvas, monumental black geometric forms, and a single saturated violet (#7373ff) that functions as sky, border, and accent simultaneously. The system is editorial and constructivist — overlapping rectangular shapes at display scale carry the brand, while a geometric grotesque (ABCMonumentGrotesk) pairs with a transitional serif (BradfordLL) to create a high-contrast, catalog-like rhythm. Interactions are tight and rectilinear: 3px corners, 4px base spacing, hairline black or violet borders, and almost no shadow or gradient — visual weight comes from type size and color, not elevation. The page is text- and information-dense rather than spacious, with compact nav, overlapping panels, and event cards stacked close together like a biennale program leaflet.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #000000\n- background: #ffffff\n- border: #000000 (neutral) or #7373ff (interactive)\n- accent: #7373ff (Iris Violet)\n- surface wash: #f2f2f2\n- primary action: #7373ff (outlined action border)\n\n**3-5 Example Component Prompts**\n\n1. Create a hero section: Iris Violet (#7373ff) full-bleed background. Display headline 'Berlin Biennale for Contemporary Art' in ABCMonumentGrotesk 32px weight 400, letter-spacing -0.32px, color #000000. Overlay two Obsidian (#000000) filled rectangles behind the text — one tall narrow rectangle left-aligned containing a '12' numeral in ABCMonumentGrotesk 32px Iris Violet, and one half-circle on the right. No box-shadow, no gradient.\n\n2. Create an outlined violet action button: 1px Iris Violet (#7373ff) border, transparent fill, text 'Tickets' in ABCMonumentGrotesk 14px weight 700, color #7373ff, 3px corner radius, 5px vertical padding, 11px horizontal padding. Group four such buttons in a horizontal row with 12px gap between them.\n\n3. Create an event card: white surface, 1px #000000 border, 3px radius, 12px padding all sides. Top row: date '18.9. SUNDAY 4 pm' in ABCMonumentGrotesk 12px weight 700 uppercase, letter-spacing 0.12px. Title 'Guided Tour (English)' in ABCMonumentGrotesk 22px weight 400, color #000000. Venue line 'Hamburger Bahnhof — Museum für Gegenwart — Berlin · Guided Tour' in ABCMonumentGrotesk 12px, color #000000. No shadow.\n\n4. Create a program tag pill: 1px #000000 border, white fill, text 'Performance' in ABCMonumentGrotesk 12px weight 700 uppercase, 3px radius, 3px vertical padding, 11px horizontal padding. Place two such tags side by side with 4px gap.\n\n5. Create a venue map section: Iris Violet (#7373ff) full-bleed background. White diamond-shaped markers (14px, rotated 45°) labeled A through F in ABCMonumentGrotesk 14px weight 700. Street network rendered as 1px #23234d lines on the violet background. No map controls, no legend, no zoom — the map is decorative, not functional."
+    }
+  ],
+  "elevationPhilosophy": "The system deliberately avoids box-shadow elevation. Visual hierarchy is built through type scale, color contrast, overlapping flat shapes, and hairline 1px borders. Components feel printed rather than floating."
+}

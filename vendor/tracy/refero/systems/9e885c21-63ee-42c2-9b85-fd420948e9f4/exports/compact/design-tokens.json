@@ -1,0 +1,64 @@
+{
+  "color": {
+    "white-screen": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White Screen — Page backgrounds, navigation surface, hero utility buttons, and light text over photographic imagery"
+    },
+    "charcoal-ink": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary headings, body copy, navigation labels, film titles, and dark iconography"
+    },
+    "mist-tile": {
+      "$value": "#f1f1f1",
+      "$type": "color",
+      "$description": "Mist Tile — Commenter strips, quiet linked-content tiles, and secondary surface blocks"
+    },
+    "lilac-wash": {
+      "$value": "#e4eaff",
+      "$type": "color",
+      "$description": "Lilac Wash — Pale icon tiles and restrained highlighted utility surfaces"
+    },
+    "divider-ash": {
+      "$value": "#eaeaea",
+      "$type": "color",
+      "$description": "Divider Ash — Hairline borders, search-field outlines, footer base surface, and quiet separators"
+    },
+    "metadata-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Metadata Gray — Film metadata, timestamps, muted helper copy, and inactive supporting labels"
+    },
+    "lavender-projector": {
+      "$value": "#a77eff",
+      "$type": "color",
+      "$description": "Lavender Projector — Brand mark, section-icon graphics, and large featured violet fields that punctuate the monochrome catalog"
+    },
+    "ultraviolet-type": {
+      "$value": "#6c00f4",
+      "$type": "color",
+      "$description": "Ultraviolet Type — Submission and account-label text, violet icon details, and brand-word emphasis against pale lilac surfaces"
+    }
+  },
+  "font": {
+    "cooperhewitt": {
+      "$value": "CooperHewitt",
+      "$type": "fontFamily",
+      "$description": "The editorial voice: use 800 at 54px for section and hero displays, 700 at 32px for footer calls, 700 at 18px for film titles, and 300 at 16px for bylines and reading copy. The condensed, rounded grotesk makes oversized titles feel like festival-program cover lines rather than generic product headings."
+    },
+    "jetbrainsmono": {
+      "$value": "JetBrainsMono",
+      "$type": "fontFamily",
+      "$description": "Use for all catalog metadata, genres, durations, navigation, utility buttons, and compact labels. Its 800 uppercase navigation at 14px with wide tracking makes the film archive feel indexed and machine-set beside the expressive CooperHewitt titles."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.shortverse.com",
+      "siteName": "Shortverse",
+      "extractedAt": "2026-09-20T22:05:44.287Z",
+      "variant": "compact"
+    }
+  }
+}

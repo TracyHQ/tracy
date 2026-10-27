@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "60b529c2-c0f7-49be-9a77-8d3762838f05",
+  "status": "complete",
+  "name": "Jp",
+  "url": "https://styles.refero.design/style/60b529c2-c0f7-49be-9a77-8d3762838f05",
+  "sourceWebsite": "https://jp.works",
+  "extractedAt": "2026-06-03T19:03:13.094Z",
+  "capturedAt": "2026-10-08T05:12:21.880445+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "Monochrome museum wall of templates — quiet, editorial, pill-shaped.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/5770e422-2400-478e-aca8-f3dd3883a963.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ab59ce64-866c-4a02-9ba3-abc17e59067d.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/fde78432-b41f-445c-87ee-bbcc6ee129ff.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/dcc9fe40-3f1a-443f-9399-f5ef551fbf53.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/473f345a-9f34-47d0-b1b1-1ea6fa47fd6c.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "a42d25455386a50e98a3355afdacff7a31349f2a0e9de244513b4dd222f3b2c7",
+      "bytes": 17289
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "393619363c52aa78b1cf1111fb4e26fda39a12c01e454c3ddecb8975e7af0eae",
+      "bytes": 91352
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f733aa413b164a4e6a663a3c2a13a84db52fb1984113ee41d40581a007da15da",
+      "bytes": 14299
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2275fa7ba233d2904f7bac4271e2b46dd543c6d612764ca6116e103361c8d2f5",
+      "bytes": 9206
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c4321640730be024652793fa2a7ca93fc5c9a4ba2cd2d409cea373ac77d74c8c",
+      "bytes": 10073
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d368370e5d3e1565cfa195bfa2417c984d7bfc882640b30b02f52e75e66d3498",
+      "bytes": 3064
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b44467004b2b603932474ef978a72fc3245685e7d496a03e2879dffa8ba800b1",
+      "bytes": 613
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f4ba83a542feca40bcf1b240420d7cecaf51171457ef4501a78555a2980698bb",
+      "bytes": 630
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "92b49a56d45c351295e1e69662aa2baa2fa963d35b0a6098f0eb4bbec9c57bfe",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ab21217b53bfe5cdae1d31a00afdf1f7698b496a47ab505bed97dec78ad15242",
+      "bytes": 39915
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ecd9a13d0dc477faa27be8be2496baa87651cbda5c1a49eb1a622cf417d996f9",
+      "bytes": 20241
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "fd42b59dc0aa177f6a38acda2a887b1875a4813f6c41323ec887286cded02f7d",
+      "bytes": 34686
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "5c760b7932abad2671473c513ec359dfadca4ca77b939af8b5774fcf43e4a25a",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "505fa6df217d6546bd432d874af2becc2a1eb43ead20e829fa2694a36686f452",
+      "bytes": 1343
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "2173aec2de2a7f742430dc41f1b5202d9ccd57e4d7c6d472aeebe1a668f5d782",
+      "bytes": 1846
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "12b3e1b6-31b9-4843-9b3b-8f39c9dd1474",
+    "14f10100-a102-427a-88d1-7cc80cbb332d",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "36de4683-cce3-4a01-820b-65ef8815747b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "60b529c2-c0f7-49be-9a77-8d3762838f05",
+    "653b7b25-f610-4a46-90e1-e3eed98b1f24",
+    "667c59e3-aaba-46e8-a2b3-255254328b6e",
+    "a21cf7a4-80e0-4f4a-9297-823a5180c2d3",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "a6bf8730-6515-4a47-9d5f-927e1e0c67d5",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b8ce0a90-40c6-4518-940c-8c97ccf9c1a0",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "bd62b51f-e1be-4e4f-b3d9-e9b91f817625",
+    "c4e125b6-e3a3-4509-b06f-f0169216a394",
+    "c8ca6c83-3197-4b19-af1c-b29d6f829c5f",
+    "ef545f0f-e7ad-4296-b3eb-65f8d045a5d9"
+  ]
+}

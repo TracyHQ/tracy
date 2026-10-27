@@ -1,0 +1,68 @@
+---
+/**
+ * /team — the people page (source: com_content category blog "People", `tracy-cardgrid`). Title
+ * and intro come from `team`; the profiles are every published `people` entry in `sort` order;
+ * under them, `notes_title` heads the posts filed under the `people` category (the two "notes"
+ * the source lists in the same grid).
+ */
+import { getEmDashCollection, getEmDashEntry, getEntriesByTerm } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import PersonCard from '@/components/site/PersonCard.astro'
+import PostCard from '@/components/site/PostCard.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { loadPosts } from '@/lib/posts'
+import { TEAM_NOTES_CATEGORY } from '@/lib/listed-children'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const [{ entry }, { entries }, tagged, posts] = await Promise.all([
+  getEmDashEntry('team', 'team', { locale }),
+  getEmDashCollection('people', { locale, status: 'published', limit: 100 } as any),
+  getEntriesByTerm('posts', 'category', TEAM_NOTES_CATEGORY, { locale }),
+  loadPosts(locale)
+])
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const t = entry.data as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'team', entry)
+const people = (entries as any[])
+  .map((e) => ({ slug: e.slug as string, data: e.data as Record<string, any> }))
+  .sort((a, b) => (a.data.sort ?? 0) - (b.data.sort ?? 0))
+// getEntriesByTerm's `id` is the entry SLUG, like `entry.id` elsewhere (measured on 0.37); the
+// cards need the row id + category too, which loadPosts already carries, so intersect on slug.
+const noteSlugs = new Set(tagged.map((e) => e.id))
+// A kept page keeps what it lists (TCH #1013, Akemi 08/10/2026): with Blog unticked these posts stay open because this
+// page lists them (`src/lib/listed-children.ts`, the same category the gate reads).
+const notes = posts.filter((p) => noteSlugs.has(p.slug))
+---
+
+<Base chrome={chrome} title={t.title} description={t.intro} currentPath="/team" content={{ collection: "team", id: entry.data.id, slug: "team", toPath: () => "/team" }}>
+	<main id="main" class="wrap pb-[var(--band-y)] pt-[var(--band-y)]">
+		<PageOwner stamp={$page} />
+		<header class="mb-8 max-w-[720px]">
+			<h1 class="h-page" {...$page("title")}>{t.title}</h1>
+			{t.intro && <p class="lead mt-4" {...$page("intro")}>{t.intro}</p>}
+		</header>
+		{people.length > 0 && (
+			<div class="grid-4" data-block="people">
+				{people.map((p) => <PersonCard person={p} locale={locale} site={site} />)}
+			</div>
+		)}
+		{notes.length > 0 && (
+			<section class="mt-20 border-t border-line-soft pt-12" data-block="team-notes">
+				{t.notes_title && <h2 class="h-section mb-8" {...$page("notes_title")}>{t.notes_title}</h2>}
+				<div class="card-grid">{notes.map((p) => <PostCard post={p} locale={locale} site={site} showMeta={false} />)}</div>
+			</section>
+		)}
+	</main>
+</Base>

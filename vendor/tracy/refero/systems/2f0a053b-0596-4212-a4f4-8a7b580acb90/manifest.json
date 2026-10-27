@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "2f0a053b-0596-4212-a4f4-8a7b580acb90",
+  "status": "complete",
+  "name": "KeepGrading",
+  "url": "https://styles.refero.design/style/2f0a053b-0596-4212-a4f4-8a7b580acb90",
+  "sourceWebsite": "https://www.keepgrading.com",
+  "extractedAt": "2026-06-03T20:43:23.352Z",
+  "capturedAt": "2026-10-08T05:09:50.780916+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "Polaroids scattered in a darkroom",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1005f133-10b7-4be8-88bb-60de98d588a5.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/04a011c0-4cb0-49a4-9fd1-8acfa77c61cf.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/7336afcc-41ae-4435-adad-693a8f1e2c2e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/d53e3a36-964b-4d09-8eab-de93026b4243.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/72ee2371-293c-4370-91f6-f16496942b2a.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7392ef5db273598b434afde6fae9998926b8d825a2083451780d940f5500150f",
+      "bytes": 14561
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6d4fc78a3972204bf3cde9db67143c3f61da88f90dd9e4089eb50bb7d242517e",
+      "bytes": 75957
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "06b7edb0b3298ac34007572480dcdc5961e328ae9622d74d91bfb30cd19d598e",
+      "bytes": 12438
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ee0be236270e8f7a2b9eac4bd445496d07fb464a67576303fcf95750b8225f90",
+      "bytes": 5432
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8e1b5f120d81324ecdd14a562f32aaf7f74d4464ebec640fa529dfe51852083f",
+      "bytes": 9787
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ea11531d0184f7c0f0b95a5a5e782a9177cf00bbaa73bf077f9b7cf816da167a",
+      "bytes": 2018
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2e45b53b2ade73eb170f257ce07ecc99648b4430b616f641716381f087f31c1c",
+      "bytes": 461
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2046a2302eab2660cde7fd33ebc5247de765b1db9ba71acca08054d57ba36d72",
+      "bytes": 478
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "07b96d9bdd37febcc4ffd39f576e7e67185c40cc2622b61d3a96ce3ff2644846",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4346effa0c376e3cbb840483a23dc547a303a557f79c5231053bc36fcc1d7b08",
+      "bytes": 38089
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "546e2a7a4c48ea1d180013ffa2d9e3ce9805e64cea7c0c4a3c55011e0f0d2ef8",
+      "bytes": 19918
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "4c2bebb3139a750a8958aef64faa6ad47fa7fe7983b775e2b7d3913eeea7b2ac",
+      "bytes": 26775
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "79512b47313761268414b10ff480baa4ded6f64a7b847fa962bb97bfa161a318",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c9a4cfba3248f76452d6aa6b9fa201d79cc9e82dd87c101efc133d1b0416c509",
+      "bytes": 875
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "fd797eeadf5a3d37abe0820dbd4e68cd2276be1b189dd5f7ecaa7df3c84b3226",
+      "bytes": 1282
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "02610b06-d16e-47bd-a1ea-18979a9ed4f5",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "2f0a053b-0596-4212-a4f4-8a7b580acb90",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "92857b05-1c01-4c7a-b196-beb4e4871998",
+    "9e3fde24-cc7d-4b96-a70a-7c172882aa8f",
+    "9fe18d8b-58b7-404d-bcc6-9e8a73b8862c",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "ab1b113a-ed21-4512-acc2-d10c8927c410",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "bd62b51f-e1be-4e4f-b3d9-e9b91f817625",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

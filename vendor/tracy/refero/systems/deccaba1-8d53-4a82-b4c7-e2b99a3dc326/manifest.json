@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "deccaba1-8d53-4a82-b4c7-e2b99a3dc326",
+  "status": "complete",
+  "name": "Yinka Ilori Studio",
+  "url": "https://styles.refero.design/style/deccaba1-8d53-4a82-b4c7-e2b99a3dc326",
+  "sourceWebsite": "https://yinkailori.com",
+  "extractedAt": "2026-06-03T20:23:10.494Z",
+  "capturedAt": "2026-10-08T05:18:23.074203+00:00",
+  "theme": "light",
+  "industry": "design",
+  "description": "West African textile gallery on blush paper",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b27edf4f-7450-44f9-b31f-37bb827b96de.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "aac96b06cb00e0ccbf0810f02d9a260b3c4c88848299b3425f1ae67190dc5634",
+      "bytes": 15857
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7820fce1d271a9b7e00fd6fde5b7e8ef5aece45335b456dc27d0f0c713cb18fa",
+      "bytes": 86010
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "49368a4108b09e6f12e55405416696d703ba7783d317da604b1dc629f5894a14",
+      "bytes": 13821
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "54fc61f6b001d31e3152de328233c52c5c5d48b316ebe67febfccda83384504c",
+      "bytes": 5027
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e0a608648fee4bd11bc9fdc2a70c1a7cd0ab26be797b5865b8c0f5e2ae3da30a",
+      "bytes": 10272
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2f061d3fbad4fa3bafc5cc70acaee894802504778c0bce11f3e3f301b0a78124",
+      "bytes": 1582
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "8d169e71f2e183d0313c74207b5d35a56f5c75638b6c3654cbcc8a7160741680",
+      "bytes": 426
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "fe0782a74706a3b621347442b86a74201a1f4ea741b4124d6f94c193f895e3d7",
+      "bytes": 443
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d23719437a33f781380252d9b77d465e34c72dbb7978c765e338efcba6ed327f",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "a24251bd20a47dde0ae5697e834961fe2dfb8159e31eb69254a30790d373cff1",
+      "bytes": 37706
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "02e155cc66c19300a684bcd1b74a9a913947c349aa2952d170931c81b5bad5f6",
+      "bytes": 19657
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "aaac3f339964d7e577df4803b03495a8b608bb4a27d9d220457498f7e5d9cc57",
+      "bytes": 23135
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "40ac3608edbc795255a41908c42aa637d150b42f459e4fefd254415b5a252706",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b3053d1fcf008f0422b5598b9e6e41a3c13d550e9491e90636404f0a828bfeed",
+      "bytes": 821
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3ae527121fc94c539dcd9607cafffa3dc96ca7762abd2296f55d1450bd2ed16c",
+      "bytes": 1221
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "11cfc460-807b-42c5-b10a-7b042c60f3e8",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "286b6ba8-a45d-48e0-b556-ff6aeac68058",
+    "2d43b251-ad01-4e59-9068-502457aa0592",
+    "36de4683-cce3-4a01-820b-65ef8815747b",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6d4ef8f4-badd-4e3c-a168-0cc89c833b26",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "9483a10e-e098-4f94-ae22-ab5a63702243",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb2e29c9-d20a-4b8d-8959-5b506f517ec4",
+    "c6e55968-fa2d-47c9-b833-2c4ad1e74906",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "deccaba1-8d53-4a82-b4c7-e2b99a3dc326",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916"
+  ]
+}

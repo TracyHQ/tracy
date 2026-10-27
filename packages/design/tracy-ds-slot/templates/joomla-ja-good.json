@@ -1,0 +1,364 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-good",
+  "release": "quickstart/ja-good/j6@1.0.0",
+  "minVersion": {
+    "quickstart/ja-good/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-good/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "roles": {
+    "page": "body",
+    "body": "p.mod-articles-category-introtext",
+    "section": "div.slide-layout.slide-1"
+  },
+  "discovered": {
+    "page": "body",
+    "body": "first body paragraph",
+    "section": "first padded full-width section, padding-top 60px"
+  },
+  "keepScopes": [".t3-topbar", ".brick-layout", ".brick-article-footer"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#555555",
+    "--fg-2": "#1a1a1a",
+    "--accent": "#3061ff",
+    "--accent-hover": "#0036e3",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#e8e8e8",
+    "--muted": "#356635",
+    "--font-display": "\"Faustina\", sans-serif",
+    "--font-body": "\"IBM Plex Sans\", sans-serif",
+    "--surface-warm": "#000000"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#555555",
+      "fg-2": "#1a1a1a",
+      "accent": "#3061ff",
+      "accent-hover": "#0036e3",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#e8e8e8",
+      "muted": "#356635"
+    },
+    {
+      "bg": "#ffffff",
+      "fg": "#555555",
+      "fg-2": "#1a1a1a",
+      "surface-warm": "#000000"
+    },
+    {
+      "accent": "#3061ff"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface-warm": "#080808",
+      "surface": "#fcf8e3",
+      "border": "#e5e5e5",
+      "border-soft": "#ebebeb",
+      "danger": "#dd4b39"
+    },
+    {
+      "surface": "#eeeeee",
+      "border": "#e0e2e3",
+      "surface-warm": "#0a0a0a",
+      "border-soft": "#f7f7f7"
+    },
+    {
+      "surface": "#f9f9f9",
+      "border": "#e3e3e3",
+      "border-soft": "#e5e7eb"
+    },
+    {
+      "surface": "#f8f8f8",
+      "border": "#dbdbdb"
+    },
+    {
+      "surface": "#f9f2f4",
+      "border": "#e1e1e1"
+    },
+    {
+      "surface": "#ededed"
+    },
+    {
+      "surface": "#f0f0f0"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (69 line colours, 80 text colours seen)",
+  "selectors": {
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn"],
+    "buttonPrimary": [".btn-primary"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["div.slide-layout.slide-1"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
+    "muted": "#t3-mainbody p, .t3-sl p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": "#t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar-left",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 27 tried (byte 5462); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#080808",
+      "uses": 92,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#000000",
+      "distance": 14
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 80,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#eeeeee",
+      "uses": 80,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 50,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 48,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e8e8",
+      "distance": 5
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 20,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e8e8",
+      "distance": 11
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 12,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 2
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 10,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 6
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 10,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e8e8",
+      "distance": 9
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#dbdbdb",
+      "uses": 10,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e8e8",
+      "distance": 23
+    },
+    {
+      "hex": "#dd4b39",
+      "uses": 10,
+      "kind": "fill",
+      "role": "danger",
+      "near": "#d9534f",
+      "distance": 24
+    },
+    {
+      "hex": "#ededed",
+      "uses": 7,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 17
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 6,
+      "kind": "line",
+      "role": "border",
+      "near": "#e8e8e8",
+      "distance": 12
+    },
+    {
+      "hex": "#0a0a0a",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface-warm",
+      "near": "#000000",
+      "distance": 17
+    },
+    {
+      "hex": "#f7f7f7",
+      "uses": 5,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 23
+    },
+    {
+      "hex": "#f0f0f0",
+      "uses": 5,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 12
+    },
+    {
+      "hex": "#e5e7eb",
+      "uses": 5,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 4
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the published release 1.0.1 (quickstart/ja-good/j6, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-good-j6 — 12/12, controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 93% or more of the page follows, checked by eye on the four systems' screenshots; measured on /index.php/home-layouts/home-news (measuredPage); with the earlier contract the category labels of the slideshow and the news-3/news-4 photo cards kept a fixed white link on the worn accent (1.9–2.6:1 under Moxie, MotherDuck and Toggl Track), the photo card's byline and date took the system's meta text on the photo (1.0–1.4:1 against the template's own 1.4–1.5:1), and the kept dark bands (header, brick layout) took the system text as their own colour — fixed by followRules (the label links take accent-on), sideRules (the card's byline keeps the template's grey) and keepColors (#555555 in the kept bands); the probe now skips Joomla 3's .element-invisible words and reads a positioned text layer over an in-flow photo off the photo; on phone the page scrolls sideways in the template's own default too. Earlier: measured 11/10/2026 (tasks/evidence/ds-contracts-batch3-2026-10-11/templates/ja-good-j6): default unchanged, no text made less readable than the template's own under the systems tried, 92% or more of the page follows; measured on /index.php/home-layouts/home-news (measuredPage): the quickstart's home page is a demo chooser with no running text; on phone the page scrolls sideways in the template's own default too (not the slot's)",
+  "measuredPage": "/index.php/home-layouts/home-news",
+  "contrastNote": "block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026; heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples) — added at the re-measure of 11/10/2026, the contract was ready on the four first-match probes only",
+  "followRules": {
+    ".article-slideshow .mod-articles-category-category a": {
+      "color": "accent-on"
+    },
+    ".ja-news-3 .news-big .mod-articles-category-category a": {
+      "color": "accent-on"
+    },
+    ".ja-news-4 .news-big .mod-articles-category-category a": {
+      "color": "accent-on"
+    },
+    ".t3-header:has(#t3-mainnav)": {
+      "background-color": "bg"
+    },
+    ".ja-theme-toggle": {
+      "color": "fg-2"
+    },
+    ".btn.off-canvas-toggle span": {
+      "background-color": "fg-2"
+    }
+  },
+  "followNote": "the category labels on the slideshow and the big news cards of the news-3 and news-4 layouts are painted with the accent, the label holding the accent's text (tokenized), but the link inside it keeps a fixed white: white on a light accent read 1.9–2.6:1 under Moxie, MotherDuck and Toggl Track — the link takes the accent's own text (accent-on). The brick layout's label keeps its fixed blue and white (not tokenized), so it is left out; 14/10/2026 (visual review, round 3): the header’s light/dark toggle (.ja-theme-toggle, its moon and sun drawn in currentColor) is set in the template’s literal #1a1a1a — its heading ink (fg-2) — so it stayed near black on the dark page of a dark system (Moxie: #1a1a1a on #000). It takes the system’s heading ink (fg-2), as the template’s own value is that role",
+  "sideRules": {
+    "light": {
+      ".ja-news-3 .news-big .article-info dd": {
+        "color": "#999999"
+      }
+    },
+    "dark": {
+      ".ja-news-3 .news-big .article-info dd": {
+        "color": "#999999"
+      },
+      ".t3-header:has(#t3-mainnav) .logo-img": {
+        "filter": "invert(1) hue-rotate(180deg)"
+      }
+    }
+  },
+  "sideRulesNote": "the photo cards of the news-3 layout set their byline and date (.article-info dd, the template's grey #999999) on the photo's lower part, already hard to read in the template's own look (1.4–1.5:1 on that photo); worn, they took the system's meta text and read 1.0–1.4:1 — on both sides of light they keep the template's own grey, so no system makes them worse",
+  "keepColors": {
+    ".t3-header": "rgb(85, 85, 85)",
+    ".brick-layout": "rgb(85, 85, 85)",
+    ".brick-article-footer": "rgb(85, 85, 85)"
+  },
+  "keepColorsNote": "the kept dark bands (.t3-header on #0a0a0a; .brick-layout and its .brick-article-footer on #000000) carry their own text colour #555555 that their pieces inherit; without it they took the system text (dark under a light system, on the bands' near-black) — the kept-band check counted 25–29 changed values in every worn view",
+  "bands": {
+    ".t3-topbar": {
+      "ground": "#0a0a0a",
+      "texts": ["#999999"],
+      "important": true
+    },
+    ".brick-layout": {
+      "ground": "#000000",
+      "texts": ["#999999", "#ffffff"],
+      "paint": {
+        ".brick-article": {
+          "background-color": "ground"
+        },
+        ".inner": {
+          "background-color": "ground"
+        },
+        ".item-image": {
+          "background-color": "ground"
+        },
+        ".brick-article-col": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/index.php/home-layouts/home-news): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the header (.t3-header) is no longer a band: it was drafted off the news home, whose template style paints it a black bar (#0a0a0a) with a white wordmark and a banner, the main menu below it; on every other page the template paints it white and the main menu sits inside it in a white box. As a band it wore the system’s ink on every page: on the inner pages a dark bar around the menu’s white box, the dark wordmark lost on it (visual review 14/10/2026). Now the header that holds the main menu takes the page colour (followRules) and its wordmark flips on a dark system (sideRules.dark: a contract filter there takes the place of the general logo rule); the news home’s black bar keeps the template’s neutral black under its white wordmark",
+  "literalsNote": "#999999: the bylines of the big news card sit on its photo, in the template’s own grey whatever the system",
+  "reviewV8Note": "15/10/2026 (look review v8): the phone menu’s bars are #1a1a1a in off-canvas.css (untokenized): on a dark system’s black header they vanished; they take the strong text like the menu’s other icons"
+}

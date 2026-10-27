@@ -1,0 +1,37 @@
+{
+  "source": "quickstart/ja-trip/j6@1.0.5 https://ja-trip-joomla.tracy.site/",
+  "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (Moxie)",
+  "scheme": "dark",
+  "capturedAt": "2026-10-14",
+  "note": "dark visitor: the template shows its light logo-dark/item-1.svg on #11151f; the slot inverts it onto the same dark header",
+  "plain": [
+    {
+      "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:1/div:1/div:1/a:1/span:2/img:1",
+      "at": "img.logo-img",
+      "src": "logo-dark/item-1.svg",
+      "filter": null,
+      "ground": {
+        "r": 17,
+        "g": 21,
+        "b": 31,
+        "a": 1
+      },
+      "ink": null
+    }
+  ],
+  "worn": [
+    {
+      "path": "div:2/div:1/div:1/div:2/header:1/div:1/div:1/div:1/div:1/a:1/span:2/img:1",
+      "at": "img.logo-img",
+      "src": "logo-dark/item-1.svg",
+      "filter": "invert(1) hue-rotate(180deg)",
+      "ground": {
+        "r": 17,
+        "g": 21,
+        "b": 31,
+        "a": 1
+      },
+      "ink": null
+    }
+  ]
+}

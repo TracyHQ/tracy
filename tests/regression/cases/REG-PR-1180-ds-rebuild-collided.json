@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1180-ds-rebuild-collided",
+  "kind": "fix",
+  "title": "The design-system re-releases other lines took the numbers of are rebuilt as the next free versions; a dev-mode-off build's contract lock says dev mode off; Tracy Base's QA contract validates against the source git has",
+  "pr": 1180,
+  "area": "design/slot",
+  "cms": ["jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: read packages/cms/tracy-joomla-quickstart/contracts/{ja-restaurant/j6/1.0.4,ja-resume/j6/1.0.2,ja-sensei/j6/1.0.2}/presentation-lock.json and count `devmode\\\":\\\"1` / `devmode\\\":\\\"0`; read each manifest.json (id, quickstart.version, parts); grep release-joomla.mjs for the lock replacement.",
+    "S2: loadContract() of joomla-ja-essence, joomla-ja-restaurant, joomla-ja-resume, joomla-ja-sensei, emdash-tracy-business, emdash-base (packages/design/tracy-ds-slot/src/library.mjs); contractFor() of apps/tracy-web/src/lib/ds-slot.js for ja-essence 1.0.5/1.0.6 and ja-restaurant 1.0.3/1.0.4.",
+    "S3: node --test tests/ds-slot-no-shipped-pins.test.mjs (cwd packages/cms/tracy-emdash-theme-business); read its package.json, template-profiles.json and the where-map.",
+    "S4: validateContract(qa.contract.json, vendor/joomla/html/tracy_base) of packages/cms/tracy-emdash-theme-base/tools/qa-contract.mjs.",
+    "S5: node --test test/design-system-door.test.mjs (cwd apps/tracy-web) and the five ds-slot library test files.",
+    "All of it: node tests/regression/scripts/REG-PR-1180-ds-rebuild-collided.mjs"
+  ],
+  "expect": [
+    "S1: the three locks have 0 template styles with dev mode on and 5 / 8 / 1 with it off; each manifest names its own id and version; ja-resume and ja-sensei 1.0.2 point at their 1.0.1 installer zips with the released SHA-256; ja-essence 1.0.6's webroot is 118f1b94…ffdda and its content map is 1.0.5's.",
+    "S2: all six ready; minVersion/maxVersion ja-essence 1.0.6/1.0.7, ja-restaurant 1.0.4/1.0.4, ja-resume and ja-sensei 1.0.1/1.0.3 (batch-2 releases, 68995730c1), Tracy Business 1.7.6/1.7.18, Tracy Base 0.5.0/0.5.3 (1.7.16 and 0.5.1 add sharp, TCH #1196; 1.7.17 and 0.5.3 change only the personalize tool, TCH #1297; 1.7.18 adds the two-mode slot, TCH #1321); JA Essence templateVars --t4-body-color = var(--ds-c-fg); 1.0.6 and 1.0.4 offered, 1.0.5 and 1.0.3 TEMPLATE_NEEDS_UPDATE.",
+    "S3: Tracy Business is 1.7.18 (1.7.15 + sharp + the personalize tool of TCH #1297 + the two-mode slot of TCH #1321), the no-shipped-pins test passes, template-profiles has 1.7.15 and the where-map names 1.7.15 with 1.7.14 verified.",
+    "S4: validateContract returns [] (revision 21: 254 files, the nine data/*.json that never reached git out of the inventory).",
+    "S5: both suites pass with 0 failures."
+  ],
+  "selectors": {
+    "release build": "packages/design/tracy-ds-slot/scripts/release-joomla.mjs step 4 (the lock)",
+    "contracts": "packages/design/tracy-ds-slot/templates/{joomla-ja-essence,joomla-ja-restaurant,joomla-ja-resume,joomla-ja-sensei,emdash-tracy-business,emdash-base}.json",
+    "themes": "packages/cms/tracy-emdash-theme-business/src/components/ui/*.tsx, src/views/Home.astro:85; packages/cms/tracy-emdash-theme-base/qa.contract.json"
+  },
+  "evidence": "tasks/evidence/ds-rebuild-collided-2026-10-11/README.md (measures, bind check on a JA Resume stand, builds).",
+  "fence": "No stand, no model, no network. The releases are not published here: ~/tracy-bench-work/RELEASE-DS-REBUILD.sh is for a person to run.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1180-ds-rebuild-collided.mjs"],
+    "needs": [],
+    "timeout_s": 900
+  }
+}

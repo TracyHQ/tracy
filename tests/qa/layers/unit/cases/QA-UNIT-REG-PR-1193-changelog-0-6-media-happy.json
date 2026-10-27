@@ -1,0 +1,82 @@
+{
+  "id": "QA-UNIT-REG-PR-1193-changelog-0-6-media-happy",
+  "itemIds": ["regression:REG-PR-1193-changelog-0-6-media"],
+  "requirement": "The 0.6 changelog page has one still or clip under every Highlight, and a markdown link in a Highlight ships to the app as plain text",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1193-changelog-0-6-media.json",
+    "ref": "PR #1193 (fix); fix evidence: none recorded",
+    "invariant": "S1: releaseNotesFromPage turns `[docs.tracy.ai](https://docs.tracy.ai/)` into `docs.tracy.ai`, still drops media lines and the Desktop only badge; every other release-notes-page test stays green. S2: every Highlight of 0.6.md has one media line; the four media files (two mp4+gif+poster sets, two webp stills) exist, fit the limits and have their media.json entry with provenance; no unused file. S3: notesForRelease for variant stable, version 0.6.0 lists no uncovered Highlight.",
+    "productSources": [
+      "apps/tracy-docs/scripts/media.mjs:328",
+      "packages/desktop/tracy-desktop/build/release-notes-page.mjs:638"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-docs/scripts/media.mjs:218 readFileSync() with a computed path",
+      "apps/tracy-docs/scripts/media.mjs:288 readFileSync() with a computed path",
+      "apps/tracy-docs/test/changelog-desktop.test.mjs:25 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:300 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:320 execFileSync() runs computed arguments",
+      "apps/tracy-docs/test/media.test.mjs:326 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:353 spawnSync() runs computed arguments",
+      "apps/tracy-docs/test/media.test.mjs:366 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:404 execFileSync() runs computed arguments",
+      "apps/tracy-docs/test/media.test.mjs:414 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:417 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:420 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:424 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:49 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:57 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:70 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:75 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:78 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:82 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:92 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:93 readFileSync() with a computed path",
+      "apps/tracy-docs/test/media.test.mjs:94 readFileSync() with a computed path",
+      "packages/desktop/tracy-desktop/build/release-notes-page.mjs:642 readFileSync() with a computed path",
+      "packages/desktop/tracy-desktop/build/release-notes-page.mjs:647 readFileSync() with a computed path",
+      "packages/desktop/tracy-desktop/test/release-notes-page.test.mjs:257 readFileSync() with a computed path",
+      "packages/desktop/tracy-desktop/test/release-notes-page.test.mjs:258 readFileSync() with a computed path",
+      "packages/desktop/tracy-desktop/test/release-notes-page.test.mjs:265 readFileSync() with a computed path",
+      "packages/desktop/tracy-desktop/test/release-notes-page.test.mjs:302 readFileSync() with a computed path",
+      "packages/desktop/tracy-desktop/test/release-notes-page.test.mjs:304 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1193-changelog-0-6-media.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1193-changelog-0-6-media"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/desktop/tracy-desktop", "tracy-desktop"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1193-changelog-0-6-media",
+    "pr": 1193,
+    "kind": "fix",
+    "area": "docs/changelog",
+    "file": "tests/regression/cases/REG-PR-1193-changelog-0-6-media.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/desktop/tracy-desktop/test/release-notes-page.test.mjs",
+    "apps/tracy-docs/test/changelog-desktop.test.mjs",
+    "apps/tracy-docs/test/media.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

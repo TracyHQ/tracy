@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-043-pending",
+  "itemIds": ["regression:REG-043"],
+  "requirement": "A comment sent to Tracy is resolved as Tracy when a write cites its latest send; a reply reopens it; Ask Tracy to edit all leaves a sent, unchanged comment unticked with Sent hh:mm; the chat report lists it",
+  "oracle": {
+    "source": "tests/regression/cases/REG-043-comment-auto-resolve-on-write.json",
+    "ref": "PR #822 (feat); fix evidence: 03/10: comments sent with Send all stayed open after Tracy did them; the next Send all ticked and re-sent them and Tracy redid the work (ADR 0025).",
+    "invariant": "S2: the sent list holds C with `at` = the send's time. S3: Apply answers ok:true; row C has status 'resolved', resolvedByTracy true, resolvedBy {accountId:'', email:'', name:'Tracy', initial:'T', tracy:true}, and its last send's answeredAt set. S4: parent.status 'pending' and parent.resolvedByTracy false; the sent list no longer holds C (new words after the send). S5: a row of a comment already sent with nothing new since is unticked and shows 'Sent HH:MM' (24-hour); U's row (never sent) is ticked and has no [data-sent-at]. S6 (when Tracy's write cites U's request number): the report door lists U with done true; the chat shows [data-tracy-comment-report] reading 'Done: 1 comment (reply to a comment if you want more changes)' with a line data-report-comment=U; row U is resolved with resolvedByTracy true. When no write cited it: the report lists U with done false and the chat reads \"Couldn't confirm: 1 comment\" — never 'not done' — and U stays open.",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer harness, needs stand, model"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:model"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-043"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "flaky-model", "owner:harness"],
+  "regression": {
+    "id": "REG-043",
+    "pr": 822,
+    "kind": "feat",
+    "area": "comments/auto-resolve",
+    "file": "tests/regression/cases/REG-043-comment-auto-resolve-on-write.json"
+  },
+  "ownerLayer": "harness",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": true,
+  "command": [],
+  "needs": ["stand", "model"]
+}

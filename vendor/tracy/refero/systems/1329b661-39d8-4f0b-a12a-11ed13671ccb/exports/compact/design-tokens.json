@@ -1,0 +1,114 @@
+{
+  "color": {
+    "lime-spark": {
+      "$value": "#bfff5a",
+      "$type": "color",
+      "$description": "Lime Spark — Primary action fill — CTA buttons, active tab pill, high-visibility highlights. Chartreuse against near-white creates immediate focus without the aggression of red or blue"
+    },
+    "cobalt-signal": {
+      "$value": "#1a67fd",
+      "$type": "color",
+      "$description": "Cobalt Signal — Link color, brand logo mark, nav active indicator. The only saturated blue in the system; used sparingly to mark interactivity in text and icon contexts"
+    },
+    "forest-depth": {
+      "$value": "#0b3d28",
+      "$type": "color",
+      "$description": "Forest Depth — Subdued heading and accent text on tinted surfaces — a darkened shade of the lime family used when the lime itself would be too loud"
+    },
+    "paper-white": {
+      "$value": "#fcfcfd",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surface base, input background, button text on lime. The system neutral; everything else floats on this"
+    },
+    "midnight-ink": {
+      "$value": "#1d2130",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary text and nav text, dominant border tone, icon strokes. A warm-tinted near-black that reads softer than pure #000 at body sizes"
+    },
+    "carbon": {
+      "$value": "#151720",
+      "$type": "color",
+      "$description": "Carbon — Body text color, dense list text. Slightly darker than Midnight Ink; the workhorse reading color"
+    },
+    "obsidian": {
+      "$value": "#0a0d16",
+      "$type": "color",
+      "$description": "Obsidian — Headline text and high-contrast fills. Reserved for display type and dark-section backgrounds where maximum ink weight is required"
+    },
+    "mist-gray": {
+      "$value": "#ebeef7",
+      "$type": "color",
+      "$description": "Mist Gray — Light dividers, list separators, subtle fill washes. The hairline-border neutral — appears on almost every section boundary"
+    },
+    "slate-edge": {
+      "$value": "#d5d9e8",
+      "$type": "color",
+      "$description": "Slate Edge — Card borders, shadow contributor, icon strokes on white. Sits one step darker than Mist Gray to give cards a defined perimeter without weight"
+    },
+    "silver-wash": {
+      "$value": "#d6d6d7",
+      "$type": "color",
+      "$description": "Silver Wash — Subtle fill on dark-mode elements and muted card backgrounds. Cool-tinted neutral for non-white surface variations"
+    },
+    "pewter": {
+      "$value": "#6b6d72",
+      "$type": "color",
+      "$description": "Pewter — Subdued helper text, secondary labels, muted borders on darker sections"
+    },
+    "graphite": {
+      "$value": "#474950",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text where Midnight Ink would be too heavy; caption-tier reading text"
+    },
+    "cyan-beam": {
+      "$value": "#46d8ff",
+      "$type": "color",
+      "$description": "Cyan Beam — Decorative gradient accent on feature cards and colored card glow shadows. Part of the multicolor stroke palette that traces the curved card top edges"
+    },
+    "mint-pulse": {
+      "$value": "#19f79a",
+      "$type": "color",
+      "$description": "Mint Pulse — Decorative gradient accent on feature cards and the card-glow color variant that pairs with green-themed cards"
+    },
+    "citron-wave": {
+      "$value": "#e5ed38",
+      "$type": "color",
+      "$description": "Citron Wave — Decorative gradient accent on feature cards — the yellow-green stroke that runs across pipeline and environment cards"
+    },
+    "orchid-glaze": {
+      "$value": "#ff9dec",
+      "$type": "color",
+      "$description": "Orchid Glaze — Decorative gradient accent on feature cards — the pink-magenta stroke on visual-review cards"
+    },
+    "amber-glow": {
+      "$value": "#ffc650",
+      "$type": "color",
+      "$description": "Amber Glow — Decorative gradient fill for testimonial cards and warm accent stroke on tunnel/domain cards"
+    },
+    "mint-tint": {
+      "$value": "#d8fbed",
+      "$type": "color",
+      "$description": "Mint Tint — Soft surface highlight wash — pale mint-tinted fills for highlighted zones and subtle background washes near lime accents"
+    }
+  },
+  "font": {
+    "ibm-plex-sans": {
+      "$value": "IBM Plex Sans",
+      "$type": "fontFamily",
+      "$description": "The single workhorse family. 400 for body and reading text, 500 for navigation and medium-emphasis labels, 600 for buttons and subheadings, 700 for the large display headline. The geometric humanist construction gives engineering copy a slightly industrial feel; the aggressive negative tracking on 48px and 80px sizes tightens headline metrics into dense, blocky statements that read as data, not as poetry."
+    },
+    "ibm-plex-mono": {
+      "$value": "IBM Plex Mono",
+      "$type": "fontFamily",
+      "$description": "Eyebrow labels and section-overline text (e.g. 'TRUSTED BY THE WORLD'S LEADING ENGINEERING TEAMS'). Wide tracking transforms short technical labels into stamp-like marks above headlines. Always uppercase, always 500 weight."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://buddy.works",
+      "siteName": "Buddy",
+      "extractedAt": "2026-06-03T16:32:49.718Z",
+      "variant": "compact"
+    }
+  }
+}

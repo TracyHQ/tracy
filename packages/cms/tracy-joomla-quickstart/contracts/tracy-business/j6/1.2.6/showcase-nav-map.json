@@ -1,0 +1,759 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v1",
+  "profileVersion": "1.0.0",
+  "contract": "tracy-business/j6/1.2.6",
+  "baseHash": "ddeeca2c92eb1f4accdd3785bdcf27d7f75a1afa6fcd6b5cfe52fd569748cbd0",
+  "baseFiles": {
+    "manifest.json": "d12fe761b02dec521bef5146b1e4cc4506ec79533ff115de34fb0a45d634e248",
+    "content-map.json": "55497d7a13229d24266dc2b61d75d6e574d1161f33644b46511003f3a91e073b",
+    "presentation-lock.json": "f7fdc481c4f1f8b3953663e80077f7380d727770a7c2cbad9a467f61442830d1"
+  },
+  "inputs": {},
+  "decisionsHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-615",
+      "identity": {
+        "path": "marketing-kit/styleguide",
+        "menutype": "tb-kit-en",
+        "language": "en-GB"
+      },
+      "label": "Style guide",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Style guide\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-616",
+      "identity": {
+        "path": "resources/res-styleguide",
+        "menutype": "tb-main-en",
+        "language": "en-GB"
+      },
+      "label": "Style guide",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Style guide\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-617",
+      "identity": {
+        "path": "resources/404",
+        "menutype": "tb-main-en",
+        "language": "en-GB"
+      },
+      "label": "404",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"404\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-648",
+      "identity": {
+        "path": "marketing-kit/styleguide",
+        "menutype": "tb-kit-ru",
+        "language": "ru-RU"
+      },
+      "label": "Style guide",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Style guide\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-649",
+      "identity": {
+        "path": "resources/res-styleguide",
+        "menutype": "tb-main-ru",
+        "language": "ru-RU"
+      },
+      "label": "Style guide",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"Style guide\" screen"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-650",
+      "identity": {
+        "path": "resources/404",
+        "menutype": "tb-main-ru",
+        "language": "ru-RU"
+      },
+      "label": "404",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.kit-screen",
+      "reason": "the template's own \"404\" screen"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-596",
+      "label": "Home",
+      "where": "tb-system/northgate-home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-597",
+      "label": "Search",
+      "where": "tb-system/search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-599",
+      "label": "Home",
+      "where": "tb-main-en/home",
+      "rule": "keep.homepage",
+      "reason": "home page (en-GB)"
+    },
+    {
+      "key": "menuItem-600",
+      "label": "About",
+      "where": "tb-main-en/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-601",
+      "label": "Services",
+      "where": "tb-main-en/services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-602",
+      "label": "Projects",
+      "where": "tb-main-en/projects",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-603",
+      "label": "News",
+      "where": "tb-main-en/news",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-604",
+      "label": "Contact",
+      "where": "tb-main-en/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-605",
+      "label": "Resources",
+      "where": "tb-main-en/resources",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-606",
+      "label": "Marketing Kit",
+      "where": "tb-kit-en/marketing-kit",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-607",
+      "label": "Newsletter",
+      "where": "tb-kit-en/marketing-kit/newsletter",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-608",
+      "label": "Newsletter",
+      "where": "tb-main-en/resources/res-newsletter",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-609",
+      "label": "Email",
+      "where": "tb-kit-en/marketing-kit/email",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-610",
+      "label": "Email",
+      "where": "tb-main-en/resources/res-email",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-611",
+      "label": "Form",
+      "where": "tb-kit-en/marketing-kit/form",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-612",
+      "label": "Form",
+      "where": "tb-main-en/resources/res-form",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-613",
+      "label": "Slide",
+      "where": "tb-kit-en/marketing-kit/slide",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-614",
+      "label": "Slide",
+      "where": "tb-main-en/resources/res-slide",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-618",
+      "label": "Careers",
+      "where": "tb-top-en/careers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-619",
+      "label": "Investors",
+      "where": "tb-top-en/investors",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-620",
+      "label": "Industrial park infrastructure",
+      "where": "tb-footer-services-en/service-infrastructure",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-621",
+      "label": "Pre-engineered buildings",
+      "where": "tb-footer-services-en/service-buildings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-622",
+      "label": "M&E engineering",
+      "where": "tb-footer-services-en/service-mep",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-623",
+      "label": "Maintenance & retrofit",
+      "where": "tb-footer-services-en/service-maintenance",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-624",
+      "label": "About us",
+      "where": "tb-footer-company-en/company-about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-625",
+      "label": "Projects",
+      "where": "tb-footer-company-en/company-projects",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-626",
+      "label": "News",
+      "where": "tb-footer-company-en/company-news",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-627",
+      "label": "Careers",
+      "where": "tb-footer-company-en/company-careers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-628",
+      "label": "Investor relations",
+      "where": "tb-footer-company-en/company-investors",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-629",
+      "label": "Terms",
+      "where": "tb-legal-en/terms",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-630",
+      "label": "Privacy",
+      "where": "tb-legal-en/privacy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-631",
+      "label": "Sitemap",
+      "where": "tb-legal-en/sitemap",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-632",
+      "label": "Главная",
+      "where": "tb-main-ru/home",
+      "rule": "keep.homepage",
+      "reason": "home page (ru-RU)"
+    },
+    {
+      "key": "menuItem-633",
+      "label": "О компании",
+      "where": "tb-main-ru/about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-634",
+      "label": "Услуги",
+      "where": "tb-main-ru/services",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-635",
+      "label": "Проекты",
+      "where": "tb-main-ru/projects",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-636",
+      "label": "Новости",
+      "where": "tb-main-ru/news",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-637",
+      "label": "Контакты",
+      "where": "tb-main-ru/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-638",
+      "label": "Ресурсы",
+      "where": "tb-main-ru/resources",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-639",
+      "label": "Marketing Kit",
+      "where": "tb-kit-ru/marketing-kit",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-640",
+      "label": "Newsletter",
+      "where": "tb-kit-ru/marketing-kit/newsletter",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-641",
+      "label": "Newsletter",
+      "where": "tb-main-ru/resources/res-newsletter",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-642",
+      "label": "Email",
+      "where": "tb-kit-ru/marketing-kit/email",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-643",
+      "label": "Email",
+      "where": "tb-main-ru/resources/res-email",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-644",
+      "label": "Form",
+      "where": "tb-kit-ru/marketing-kit/form",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-645",
+      "label": "Form",
+      "where": "tb-main-ru/resources/res-form",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-646",
+      "label": "Slide",
+      "where": "tb-kit-ru/marketing-kit/slide",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-647",
+      "label": "Slide",
+      "where": "tb-main-ru/resources/res-slide",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-651",
+      "label": "Вакансии",
+      "where": "tb-top-ru/careers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-652",
+      "label": "Акционерам",
+      "where": "tb-top-ru/investors",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-653",
+      "label": "Инфраструктура индустриальных парков",
+      "where": "tb-footer-services-ru/service-infrastructure",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-654",
+      "label": "Быстровозводимые корпуса",
+      "where": "tb-footer-services-ru/service-buildings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-655",
+      "label": "Инженерные системы",
+      "where": "tb-footer-services-ru/service-mep",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-656",
+      "label": "Эксплуатация и реконструкция",
+      "where": "tb-footer-services-ru/service-maintenance",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-657",
+      "label": "О компании",
+      "where": "tb-footer-company-ru/company-about",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-658",
+      "label": "Объекты",
+      "where": "tb-footer-company-ru/company-projects",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-659",
+      "label": "Новости",
+      "where": "tb-footer-company-ru/company-news",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-660",
+      "label": "Вакансии",
+      "where": "tb-footer-company-ru/company-careers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-661",
+      "label": "Акционерам",
+      "where": "tb-footer-company-ru/company-investors",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-662",
+      "label": "Условия",
+      "where": "tb-legal-ru/terms",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-663",
+      "label": "Политика конфиденциальности",
+      "where": "tb-legal-ru/privacy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-664",
+      "label": "Карта сайта",
+      "where": "tb-legal-ru/sitemap",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-695",
+      "label": "Open roles",
+      "where": "tb-top-en/careers/vacancies",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-696",
+      "label": "Site",
+      "where": "tb-top-en/careers/vacancies/site",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-697",
+      "label": "Design",
+      "where": "tb-top-en/careers/vacancies/design",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-698",
+      "label": "Estimating & procurement",
+      "where": "tb-top-en/careers/vacancies/estimating-procurement",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-699",
+      "label": "Office",
+      "where": "tb-top-en/careers/vacancies/office",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-700",
+      "label": "Открытые вакансии",
+      "where": "tb-top-ru/careers/vacancies",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-701",
+      "label": "Стройплощадка",
+      "where": "tb-top-ru/careers/vacancies/site",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-702",
+      "label": "Проектирование",
+      "where": "tb-top-ru/careers/vacancies/design",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-703",
+      "label": "ПТО и снабжение",
+      "where": "tb-top-ru/careers/vacancies/estimating-procurement",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-704",
+      "label": "Офис",
+      "where": "tb-top-ru/careers/vacancies/office",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "module-429",
+      "label": "[Tracy Business] Topbar - Links (en)",
+      "where": "mod_menu@topbar-r",
+      "rule": "keep.default",
+      "reason": "renders tb-top-en: 2 entries stay"
+    },
+    {
+      "key": "module-431",
+      "label": "[Tracy Business] Off-canvas - Main menu (en)",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders tb-main-en: 11 entries stay"
+    },
+    {
+      "key": "module-436",
+      "label": "Services",
+      "where": "mod_menu@footer-b",
+      "rule": "keep.default",
+      "reason": "renders tb-footer-services-en: 4 entries stay"
+    },
+    {
+      "key": "module-437",
+      "label": "Company",
+      "where": "mod_menu@footer-c",
+      "rule": "keep.default",
+      "reason": "renders tb-footer-company-en: 5 entries stay"
+    },
+    {
+      "key": "module-440",
+      "label": "[Tracy Business] Footer - Legal links (en)",
+      "where": "mod_menu@copyright",
+      "rule": "keep.default",
+      "reason": "renders tb-legal-en: 3 entries stay"
+    },
+    {
+      "key": "module-449",
+      "label": "[Tracy Business] Topbar - Links (ru)",
+      "where": "mod_menu@topbar-r",
+      "rule": "keep.default",
+      "reason": "renders tb-top-ru: 2 entries stay"
+    },
+    {
+      "key": "module-451",
+      "label": "[Tracy Business] Off-canvas - Main menu (ru)",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders tb-main-ru: 11 entries stay"
+    },
+    {
+      "key": "module-456",
+      "label": "Услуги",
+      "where": "mod_menu@footer-b",
+      "rule": "keep.default",
+      "reason": "renders tb-footer-services-ru: 4 entries stay"
+    },
+    {
+      "key": "module-457",
+      "label": "Компания",
+      "where": "mod_menu@footer-c",
+      "rule": "keep.default",
+      "reason": "renders tb-footer-company-ru: 5 entries stay"
+    },
+    {
+      "key": "module-460",
+      "label": "[Tracy Business] Footer - Legal links (ru)",
+      "where": "mod_menu@copyright",
+      "rule": "keep.default",
+      "reason": "renders tb-legal-ru: 3 entries stay"
+    },
+    {
+      "key": "module-818",
+      "label": "Main menu",
+      "where": "mod_menu@sitemap-page",
+      "rule": "keep.default",
+      "reason": "renders tb-main-en: 11 entries stay"
+    },
+    {
+      "key": "module-819",
+      "label": "Topbar menu",
+      "where": "mod_menu@sitemap-page",
+      "rule": "keep.default",
+      "reason": "renders tb-top-en: 7 entries stay"
+    },
+    {
+      "key": "module-820",
+      "label": "Footer — services",
+      "where": "mod_menu@sitemap-page",
+      "rule": "keep.default",
+      "reason": "renders tb-footer-services-en: 4 entries stay"
+    },
+    {
+      "key": "module-821",
+      "label": "Footer — company",
+      "where": "mod_menu@sitemap-page",
+      "rule": "keep.default",
+      "reason": "renders tb-footer-company-en: 5 entries stay"
+    },
+    {
+      "key": "module-822",
+      "label": "Footer — legal",
+      "where": "mod_menu@sitemap-page",
+      "rule": "keep.default",
+      "reason": "renders tb-legal-en: 3 entries stay"
+    },
+    {
+      "key": "module-832",
+      "label": "Main menu",
+      "where": "mod_menu@sitemap-page",
+      "rule": "keep.default",
+      "reason": "renders tb-main-ru: 11 entries stay"
+    },
+    {
+      "key": "module-833",
+      "label": "Topbar menu",
+      "where": "mod_menu@sitemap-page",
+      "rule": "keep.default",
+      "reason": "renders tb-top-ru: 7 entries stay"
+    },
+    {
+      "key": "module-834",
+      "label": "Footer — services",
+      "where": "mod_menu@sitemap-page",
+      "rule": "keep.default",
+      "reason": "renders tb-footer-services-ru: 4 entries stay"
+    },
+    {
+      "key": "module-835",
+      "label": "Footer — company",
+      "where": "mod_menu@sitemap-page",
+      "rule": "keep.default",
+      "reason": "renders tb-footer-company-ru: 5 entries stay"
+    },
+    {
+      "key": "module-836",
+      "label": "Footer — legal",
+      "where": "mod_menu@sitemap-page",
+      "rule": "keep.default",
+      "reason": "renders tb-legal-ru: 3 entries stay"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 6,
+    "modules": 0,
+    "kept": 92,
+    "unresolved": 0
+  }
+}

@@ -1,0 +1,351 @@
+{
+  "dos": [
+    "Use Tiempos Headline at weight 300 for all headlines and display numbers — never bold it up; the whisper-weight is the signature",
+    "Use Signal Blue (#397dff) exclusively for primary action buttons, active nav, and the announcement bar — it should appear in only 1-2 places per viewport",
+    "Apply Selecta positive tracking (0.025em) on all body and UI text 16px and below; tighten to Tiempos negative tracking above 20px",
+    "Use pill shapes (999px) for all interactive controls and 100px for nav items; reserve 20px radius for card surfaces only",
+    "Set body text to 16px Selecta weight 400 with 1.55 line-height as the universal default for paragraphs",
+    "Alternate between white (#ffffff) and Bone (#f5f5f4) section backgrounds to create rhythm without using shadows or color",
+    "Place product demo cards (chat, analytics, workflow) as floating overlays on full-bleed photographic backgrounds rather than inside bordered containers"
+  ],
+  "donts": [
+    "Do not bold Tiempos Headline — weight 300 is the only weight it ships in and bolding it destroys the editorial feel",
+    "Do not use Signal Blue for decorative elements, large surfaces, or text longer than a few words — its job is to mark the primary action and nothing else",
+    "Do not use shadows on content cards — the system prefers 1px #e5e5e5 hairline borders for surface definition; reserve shadows for cards floating over photography",
+    "Do not introduce additional accent colors — the palette is deliberately two-color (blue for action, orange for decoration) on a neutral canvas",
+    "Do not set headlines below 36px in Tiempos — the serif needs scale to read as editorial; below 20px switch to Selecta weight 500",
+    "Do not center-align body paragraphs longer than two lines — only headlines, CTAs, and short subheads use center alignment",
+    "Do not use square corners or small radii (4-8px) on visible surfaces — the system's softness is defined by 14/20/999px radii, and sharp corners feel foreign"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#ffffff",
+      "name": "Pure Canvas",
+      "role": "Page background, card surface, image mask — the baseline white everything else sits on",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f5f4",
+      "name": "Bone",
+      "role": "Alternate section background, subtle warm-off-white band between content blocks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#edeeee",
+      "name": "Mist",
+      "role": "Nav and section fills that need a barely-there elevation above canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e5e5",
+      "name": "Silk Border",
+      "role": "Hairline card and divider borders — defines surfaces without painting them",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d4d4d4",
+      "name": "Quill",
+      "role": "Link and secondary border treatment, lighter dividers inside dense blocks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a1a1a1",
+      "name": "Ash",
+      "role": "Muted helper text, disabled labels, low-emphasis icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#737373",
+      "name": "Pebble",
+      "role": "Body text and default neutral borders — the workhorse mid-gray",
+      "group": "neutral"
+    },
+    {
+      "hex": "#525252",
+      "name": "Slate",
+      "role": "Secondary text, button borders in outlined controls, sub-label icons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#404040",
+      "name": "Graphite",
+      "role": "Nav text, stronger body text for emphasis without going to black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#333333",
+      "name": "Iron",
+      "role": "Link text in dark contexts, strong card borders on featured surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#262626",
+      "name": "Charcoal",
+      "role": "Primary text and dark button fills — the near-black that keeps contrast warm",
+      "group": "neutral"
+    },
+    {
+      "hex": "#171717",
+      "name": "Midnight",
+      "role": "Display text, deepest heading weight, high-contrast inverse text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#397dff",
+      "name": "Signal Blue",
+      "role": "Violet action color for filled buttons, selected navigation states, and focused conversion moments.",
+      "group": "brand"
+    },
+    {
+      "hex": "#f55c15",
+      "name": "Ember Stroke",
+      "role": "Decorative borders, badge outlines, icon accents — warm orange that warms the cool white canvas without competing with Signal Blue",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff0000",
+      "name": "Alarm Red",
+      "role": "Red outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    }
+  ],
+  "layout": "Layout follows a centered max-width container at 1200px with generous outer padding (24-48px). The hero is a centered single-column stack: announcement bar → nav → headline → subtext → CTA pair → logo bar, with a large photographic section below that hosts a floating stat card and chat demo card. Sections alternate between full-width photographic blocks and centered content blocks, creating a rhythm of text↔image. The three-column feature triptych uses equal-width columns (1/3 each) with image-on-top, text-below. Testimonials use a 2×2 card grid with equal gaps. Navigation is a simple horizontal bar — no sidebar, no mega-menu, no sticky behavior beyond the announcement bar. Vertical rhythm is spacious: 96-120px between major sections, 24-48px between content blocks within a section. The overall feel is a long-scroll editorial page, not a dense product dashboard.",
+  "imagery": "Imagery is a mix of full-bleed editorial photography (aerial landscape shots of green fields and roads — wide, high-altitude, organic textures that contrast the geometric UI) and contained product screenshots (the chat demo, analytics dashboard, workflow canvas). The hero photography is desaturated and natural-toned, never stock-y or studio-lit; it feels like drone cinematography. Product screenshots sit on white cards with 20px radius and are treated as honest captures rather than marketing renders — they show the real interface. Icons are outline-style, 1.5px stroke, monochrome in #737373 or #525252, occasionally accented in Signal Blue or Ember Stroke. No 3D illustrations, no mascot characters, no decorative abstract shapes. The visual language is: real product, real photography, no decoration.",
+  "similar": [
+    {
+      "why": "Same editorial-weight serif headlines paired with a geometric sans body, pill-shaped controls, and a near-white canvas with a single saturated accent — both feel like premium tools, not SaaS apps",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar airy spacing, minimal use of shadows, hairline borders for surface definition, and a near-monochrome palette with one functional accent color",
+      "business": "Notion"
+    },
+    {
+      "why": "Same generous 1200px max-width centered layout, same magazine-meets-product rhythm of alternating photographic and text sections, same restrained two-color system",
+      "business": "Stripe"
+    },
+    {
+      "why": "Both use a humanist sans for UI paired with a display serif for editorial moments, pill-shaped buttons, and a white-canvas-plus-single-accent approach",
+      "business": "Framer"
+    },
+    {
+      "why": "Similar minimal color palette, generous vertical spacing, and a focus on letting one or two chromatic elements (their monochrome vs Voiceflow's blue) carry all visual emphasis",
+      "business": "Vercel"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "20px",
+      "buttons": "999px",
+      "navPills": "100px",
+      "smallCards": "14px",
+      "chatBubbles": "20px"
+    },
+    "elementGap": "12-24px",
+    "sectionGap": "96-120px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page base background"
+    },
+    {
+      "hex": "#f5f5f4",
+      "name": "Band",
+      "level": 1,
+      "purpose": "Alternate section background for rhythm"
+    },
+    {
+      "hex": "#edeeee",
+      "name": "Nav Fill",
+      "level": 2,
+      "purpose": "Navigation and elevated chrome surfaces"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 3,
+      "purpose": "Card and content surface, same as canvas but bordered"
+    },
+    {
+      "hex": "#f55c15",
+      "name": "Chat Surface",
+      "level": 4,
+      "purpose": "Featured product surface (chat demo card) tinted with ember"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 1px 3px rgba(23, 23, 23, 0.04), 0 8px 24px rgba(23, 23, 23, 0.06) — barely-there shadow that lifts the card off the photographic background without looking like a Material card",
+      "element": "Stat Card"
+    },
+    {
+      "style": "none — uses 1px #e5e5e5 border instead of shadow",
+      "element": "Testimonial Card"
+    },
+    {
+      "style": "0 4px 12px rgba(23, 23, 23, 0.08), 0 24px 48px rgba(23, 23, 23, 0.06) — the most elevated surface, floating over imagery",
+      "element": "Chat Demo Card"
+    }
+  ],
+  "northStar": "editorial whiteboard under daylight — serif whispers, pill controls glow blue.\n\n",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 13,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.33
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.55,
+      "letterSpacing": 0.4
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.47,
+      "letterSpacing": 0.45
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.34
+    },
+    {
+      "role": "heading",
+      "size": 40,
+      "lineHeight": 1.16,
+      "letterSpacing": -0.8
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1.13,
+      "letterSpacing": -1.12
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1,
+      "letterSpacing": -2.56
+    }
+  ],
+  "components": [
+    {
+      "name": "Pill Primary Button",
+      "role": "Primary call-to-action across hero, nav, and inline CTAs",
+      "description": "Background #397dff (Signal Blue), text #ffffff in Selecta 15px weight 500, letter-spacing 0.375px. Fully rounded at 999px. Padding 12px 20px. The blue is the only saturated fill in the entire system — every filled button in the design should use this exact color. Hover deepens the fill toward #2563eb."
+    },
+    {
+      "name": "Pill Ghost Button",
+      "role": "Secondary action paired beside primary",
+      "description": "Transparent background, 1px border in #262626, text #262626 in Selecta 15px weight 500. 999px radius. Padding 12px 20px. Sits beside the blue primary as a quieter alternative — the 'Sign up for free' or 'Read all stories' pattern."
+    },
+    {
+      "name": "Pill Inverse Button",
+      "role": "CTA used on dark or photographic backgrounds",
+      "description": "Background #ffffff, text #262626. Same 999px radius and Selecta 15px weight 500. Used when a surface is too busy for a ghost button to read."
+    },
+    {
+      "name": "Nav Pill Link",
+      "role": "Top-level navigation items in the header",
+      "description": "Selecta 15px weight 500, color #262626, padding 8px 14px, 100px border-radius. Active state uses Signal Blue text. Dropdown items appear as simple stacked text, no mega-menu."
+    },
+    {
+      "name": "Case Study Logo Bar",
+      "role": "Social proof strip showing customer brand marks",
+      "description": "Horizontal row of grayscale logos on #ffffff, separated by hairline #e5e5e5 dividers. Logos desaturated to neutral to keep visual noise low. One logo slot is highlighted with 'Choose case study' label and a subtle selected state."
+    },
+    {
+      "name": "Stat Card",
+      "role": "Hero-level metric highlight overlaid on a photographic background",
+      "description": "Semi-transparent white card (#ffffff at ~80% opacity) with no visible border, 14px radius, 24px padding. Headline number in Tiempos Headline 64px weight 300 color #171717. Label in Selecta 14px weight 400 color #525252. Reads like an editorial pull-quote floating over an image."
+    },
+    {
+      "name": "Feature Triptych Card",
+      "role": "Three-column 'Build / Launch / Iterate' feature panels",
+      "description": "Three image panels side by side, each with a small Tiempos Headline 20px weight 300 label (color #397dff) followed by Selecta 16px description text in #525252. The image panels have 14-20px radius and sit directly on the canvas without card chrome."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Customer quote with portrait and attribution",
+      "description": "White background, 1px #e5e5e5 border, 20px radius, 24px padding. Two-column internal layout: square portrait (90-120px, rounded 14px) on left, quote on right. Quote in Tiempos Headline 20px weight 300, attribution in Selecta 14px weight 500 (name) and 14px weight 400 (role). The serif quote carries the editorial voice."
+    },
+    {
+      "name": "Announcement Banner",
+      "role": "Top-of-page promotional strip",
+      "description": "Full-width Signal Blue (#397dff) band, 8-10px padding, white Selecta 14px text centered. Inline CTA link in white with underline. This is the only place Signal Blue appears as a surface fill rather than a button."
+    },
+    {
+      "name": "Chat Demo Card",
+      "role": "Product preview showing the AI agent conversation interface",
+      "description": "White card with 20px radius, 24px padding, subtle #e5e5e5 border. Contains alternating message bubbles: user messages in #262626 rounded bubbles with white text, agent messages in white with #262626 text and 1px border. Input bar at bottom with #f5f5f4 fill, placeholder text in #a1a1a1. This card is often overlaid on a photographic background (aerial landscape) to create a floating demo effect."
+    },
+    {
+      "name": "Resolution Analytics Card",
+      "role": "Dashboard-style product preview",
+      "description": "White card, 20px radius, 24px padding, 1px #e5e5e5 border. Contains a chart with line graph (Tiempos at 20px for axis labels, #737373 gridlines) and three KPI tiles below: large number in Tiempos Headline 36-48px weight 300 (green #16a34a for positive metrics), label in Selecta 13px weight 400 #525252."
+    },
+    {
+      "name": "Workflow Canvas Preview",
+      "role": "Product screenshot showing the node-based builder",
+      "description": "White card with 20px radius showing a dotted-grid background (#e5e5e5 dots) with a small floating 'Login' pill (dark #262626 bg, white text) and a Signal Blue 'Publish' button. Represents the visual builder surface."
+    },
+    {
+      "name": "Trust Bar",
+      "role": "Bottom social proof line above footer",
+      "description": "Single line of Selecta 14px weight 400 in #525252: 'Trusted by 4k+ customers worldwide with 4.8/5 rating, 200k+ users'. Rating and number values are in weight 500. Often paired with a ghost CTA button on the right."
+    },
+    {
+      "name": "Footer Nav Column",
+      "role": "Multi-column site map at page bottom",
+      "description": "Dark (#171717) background. Column headers in Selecta 14px weight 500 #ffffff. Links in Selecta 14px weight 400 #a1a1a1, hover to #ffffff. 24px vertical gap between links."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All display and heading copy — headlines, hero statements, section titles, large numbers. The single weight 300 is a deliberate anti-convention: instead of bold, Tiempos whispers, and the editorial serif does the work of authority through restraint rather than volume.",
+      "sizes": "20px, 36px, 40px, 48px, 56px, 64px",
+      "family": "Tiempos Headline",
+      "weight": "300",
+      "lineHeight": "1.00, 1.13, 1.14, 1.16, 1.20, 1.30",
+      "substitute": "'Source Serif 4' or 'Libre Caslon Text' at weight 300, fallback 'Georgia'",
+      "letterSpacing": "-2.56px at 64px, -0.8px at 40px, -0.34px at 20px (tightened tracking scales with size)",
+      "fontFeatureSettings": "'liga' on, 'kern' on"
+    },
+    {
+      "role": "All UI, body, navigation, button, badge, and caption text. Weight 400 is the body default, 500 for emphasized UI labels and nav items. The slightly open tracking (+0.025em) on small sizes gives the interface an airy, legible quality that pairs against the dense serif headlines.",
+      "sizes": "8px, 13px, 14px, 15px, 16px, 18px",
+      "family": "Selecta",
+      "weight": "400, 500",
+      "lineHeight": "0.80, 1.00, 1.16, 1.38, 1.44, 1.47, 1.50, 1.55, 1.75",
+      "substitute": "'Inter' or 'Söhne' for body, fallback system-ui sans-serif",
+      "letterSpacing": "0.4px at 16px, 0.325px at 13px, 1.44px at 8px (positive tracking that opens up small UI text)",
+      "fontFeatureSettings": "'tnum' on, 'ss01' on"
+    }
+  ],
+  "description": "Voiceflow operates as an editorial product canvas: a generous near-white surface where a whisper-weight serif (Tiempos Headline at 300) carries the voice and a humanist sans (Selecta) handles the machinery. The system is overwhelmingly achromatic — warm off-whites, graphite text, hairline borders — with a single vivid blue (#397dff) that acts as the 'on' switch for primary actions, and a burnt orange (#f55c15) that paints decorative strokes, badge outlines, and icon accents. Components are pill-shaped at the interactive level (999px buttons, 100px nav pills) and softly rounded at the surface level (20px cards), creating a language where controls feel touched and surfaces feel held. The overall rhythm is spacious, confident, and editorial — headlines breathe at 56–64px while body text sits at 16px with generous tracking, producing a magazine-meets-product aesthetic.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Primary text: #171717 (Midnight)\n- Body text: #737373 (Pebble)\n- Page background: #ffffff (Pure Canvas)\n- Card border: #e5e5e5 (Silk Border)\n- Accent / decorative: #f55c15 (Ember Stroke)\n- primary action: #397dff (filled action)\n\n3 Example Component Prompts:\n\n1. Hero Section: White canvas. Headline 'The operating system for AI customer experience' at 64px Tiempos Headline weight 300, color #171717, letter-spacing -2.56px, line-height 1.0. Subtext at 18px Selecta weight 400, color #525252. Two CTAs side by side: blue pill 'Book a demo' (#397dff bg, #ffffff text, 999px radius, 12px 20px padding, Selecta 15px weight 500) and ghost pill 'Sign up for free' (transparent bg, 1px #262626 border, #262626 text, 999px radius).\n\n2. Testimonial Card: White background, 1px #e5e5e5 border, 20px radius, 24px padding. Left: 100px square portrait photo with 14px radius. Right: Quote in Tiempos Headline 20px weight 300 color #171717, letter-spacing -0.34px. Attribution: name in Selecta 14px weight 500 #262626, role in Selecta 14px weight 400 #525252 below.\n\n3. Feature Triptych: Three equal-width columns, 24px gap. Each column: product screenshot card on top (20px radius, 1px #e5e5e5 border, white bg, 24px internal padding showing the actual UI). Below: label in Tiempos Headline 20px weight 300 #397dff, then description paragraph in Selecta 16px weight 400 #525252 with 1.55 line-height."
+    },
+    {
+      "title": "Typography Philosophy",
+      "content": "The two-font pairing is the system's most recognizable feature. Tiempos Headline (a contemporary editorial serif by Klim) carries every word meant to be read as thought: headlines, quotes, large numbers, section labels. Selecta (a humanist geometric sans) carries every word meant to be operated: buttons, nav, body, badges, captions. The contrast is not decorative — it is functional. When a user scans the page, the serif pulls the eye to meaning; the sans recedes into the interface. Weight 300 for Tiempos is the keystone choice: it forces the serif to do authority work through restraint, and it means the blue CTA button (weight 500 Selecta) is often the heaviest element on the page, which makes it the clear action target."
+    },
+    {
+      "title": "Color Philosophy",
+      "content": "The palette is built on a thesis: a system this product-focused (AI agent builder) should feel as calm as a notebook, not as loud as a SaaS landing page. The off-white canvas (#ffffff with #f5f5f4 and #edeeee bands) is warmer than pure white, reducing eye strain during long builder sessions. The neutrals form a full scale from #171717 to #e5e5e5, giving the system enough range to build complex UIs without ever leaving the grayscale. Signal Blue (#397dff) is the single chromatic interrupt — a cool, electric blue that says 'do this'. Ember Stroke (#f55c15) is the decorative counterweight — a burnt orange that appears on badge borders, icon strokes, and accent lines to warm the canvas without competing with the CTA. The 3% colorfulness measurement is a feature, not a limitation."
+    }
+  ]
+}

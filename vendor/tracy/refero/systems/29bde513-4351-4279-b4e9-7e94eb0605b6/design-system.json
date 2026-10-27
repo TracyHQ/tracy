@@ -1,0 +1,271 @@
+{
+  "dos": [
+    "Use #ffffff as the default canvas and #000000 for full-bleed hero, commerce-information, and footer bands.",
+    "Set navigation, labels, footer links, product descriptions, and inputs in Space Mono 12px-15px.",
+    "Set major category labels in avnier-font 55px/64.9px weight 500 with #000000 text on #ffffff.",
+    "Use 1px solid #000000 or #ffffff rules instead of card shadows to divide rows, fields, and footer zones.",
+    "Keep cards, image frames, buttons, and inputs at 0px radius.",
+    "Use 50px section gaps, 30px card padding where contained content needs an inset, and 10px gaps between compact control elements.",
+    "Keep product photography dark and near-monochrome; let any garment color remain contained inside the image."
+  ],
+  "donts": [
+    "Do not introduce saturated interface accents, gradients, colored status pills, or tinted button fills.",
+    "Do not round commerce controls beyond the circular floating close control.",
+    "Do not use soft drop shadows; use 1px rules and flat surface changes between #ffffff and #000000.",
+    "Do not set large headings in Space Mono when avnier-font is available.",
+    "Do not use lowercase or sentence-case for navigation, utility copy, category labels, and product metadata.",
+    "Do not turn every link into a filled button; preserve transparent text-and-arrow discovery links on both #000000 and #ffffff surfaces.",
+    "Do not place bright, high-key lifestyle photography beside the black equipment-room visual treatment."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Black",
+      "role": "Dark hero and footer surfaces, primary reading text on white, hairline rules, outlined controls, and the sole filled conversion button",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "White",
+      "role": "Page canvas, reversed text over black imagery, footer rules, outlined dark-surface fields, and utility-strip background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0a0a0a",
+      "name": "Charcoal Ink",
+      "role": "Subtle SVG and icon strokes within black visual compositions",
+      "group": "neutral"
+    },
+    {
+      "hex": "#737373",
+      "name": "Focus Gray",
+      "role": "Restrained input focus shadow",
+      "group": "neutral"
+    }
+  ],
+  "layout": "The page is full-bleed rather than container-bound. A dark split hero combines a product photograph on one side with product information and slider pagination on the other, followed by a white horizontal commerce-utility strip. The main content shifts to an expansive white editorial field, then a stack of oversized ruled category rows; dark photographic navigation tiles bridge into a black, multi-column footer. Navigation is a minimal top bar over the hero, while the footer uses a four-block service row, ruled link columns, newsletter field, and a final legal/payment row.",
+  "imagery": "Imagery is photographic and product-focused: close crops of bags, garments, production hardware, and work surfaces in low-key lighting. Images are full-bleed inside sharp rectangular panels, often so dark that equipment silhouettes merge with #000000 page sections. The visual role is atmosphere and proof of use rather than catalog isolation; purple or warm production-light color appears as a contained photographic event, not a UI accent. Icons are thin outlined white or black line drawings with a technical, equipment-label character.",
+  "similar": [
+    {
+      "why": "Shared industrial workwear framing, monochrome surfaces, technical typography, and equipment-oriented imagery.",
+      "business": "A-COLD-WALL*"
+    },
+    {
+      "why": "Shares functional garment storytelling through dark outdoor or equipment-led photography and utility-signage details.",
+      "business": "Nike ACG"
+    },
+    {
+      "why": "Similar workwear category architecture with direct product navigation and practical commerce information.",
+      "business": "Carhartt WIP"
+    },
+    {
+      "why": "Shares a product-first technical-clothing language where material detail and functional context carry the visuals.",
+      "business": "Stone Island"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "0px",
+      "images": "0px",
+      "inputs": "0px",
+      "buttons": "0px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "50px",
+    "cardPadding": "30px",
+    "pageMaxWidth": null
+  },
+  "industry": "ecommerce",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "White Canvas",
+      "level": 0,
+      "purpose": "Editorial content fields, category index, and commerce utility strips."
+    },
+    {
+      "hex": "#000000",
+      "name": "Black Stage",
+      "level": 1,
+      "purpose": "Hero information panel, dark photographic framing, service area, footer, and filled skip control."
+    }
+  ],
+  "northStar": "AVNIER — nocturnal film set. White production labels and sharp grid lines cut through black equipment-room imagery.",
+  "typeScale": [
+    {
+      "role": "utility-link",
+      "size": 12,
+      "family": "Space Mono",
+      "weight": 400,
+      "lineHeight": 1.4,
+      "letterSpacing": 0.996
+    },
+    {
+      "role": "body",
+      "size": 13,
+      "family": "Space Mono",
+      "weight": 400,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "footer-heading",
+      "size": 14,
+      "family": "Space Mono",
+      "weight": 400,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "account-label",
+      "size": 14,
+      "family": "Space Mono",
+      "weight": 400,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "image-panel-heading",
+      "size": 15,
+      "family": "avnier-font",
+      "weight": 500,
+      "lineHeight": 1.14,
+      "letterSpacing": 0
+    },
+    {
+      "role": "hero-heading",
+      "size": 25,
+      "family": "avnier-font",
+      "weight": 500,
+      "lineHeight": 1.18,
+      "letterSpacing": 0
+    },
+    {
+      "role": "editorial-heading",
+      "size": 33,
+      "family": "avnier-font",
+      "weight": 500,
+      "lineHeight": 1.3,
+      "letterSpacing": 0
+    },
+    {
+      "role": "category-heading",
+      "size": 55,
+      "family": "avnier-font",
+      "weight": 500,
+      "lineHeight": 1.18,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Hero Split Carousel",
+      "role": "Landing-page product feature",
+      "description": "Use a full-width black composition split between a dark product photograph and a black information panel. Set the product title in avnier-font 25px/29.5px weight 500 in #ffffff; set the supporting copy in Space Mono 13px, uppercase, #ffffff. Place a 1px #ffffff carousel rule beneath the copy with numbered stops and no rounded corners."
+    },
+    {
+      "name": "Minimal Top Navigation",
+      "role": "Public site navigation",
+      "description": "Place Space Mono 13px uppercase links in #ffffff across the top of the dark hero, with a centered white AVNIER wordmark and thin outlined search, account, and bag icons. Keep navigation controls unfilled and square."
+    },
+    {
+      "name": "Dark Hero Discovery Link",
+      "role": "Product-discovery link",
+      "description": "Render as #ffffff uppercase mono text beside a circular outlined play-arrow icon. Use a transparent background, 0px radius, no internal padding, and a 1px #ffffff outline only on the icon."
+    },
+    {
+      "name": "White Editorial Introduction",
+      "role": "Brand statement section",
+      "description": "Use a #ffffff full-width surface with a compact text block offset toward the left and extensive empty space around it. Set the main line in avnier-font 33px/42.9px weight 500, #000000, uppercase; use Space Mono 13px uppercase for the paragraph and an outlined black play-arrow link below."
+    },
+    {
+      "name": "Category Index Row",
+      "role": "Shop-category navigation",
+      "description": "Build full-width stacked rows on #ffffff with 1px solid #000000 top rules. Set labels in avnier-font 55px/64.9px weight 500, #000000, uppercase; place small count text beside the label and a right-aligned thin outlined triangular arrow. Use 0px corners and no card fill."
+    },
+    {
+      "name": "Editorial Image Tile",
+      "role": "Brand and method navigation",
+      "description": "Use edge-to-edge, sharp-cornered dark photographic tiles with text anchored at the lower left. Set the eyebrow in Space Mono 13px #ffffff and the title in avnier-font 15px/17.1px weight 500 #ffffff, followed by a simple right arrow."
+    },
+    {
+      "name": "Shipping Utility Strip",
+      "role": "Commerce reassurance row",
+      "description": "Use a #ffffff horizontal strip with Space Mono 13px uppercase #000000 text, separated by small plus signs. Keep the strip flat, unrounded, and tightly set around a 10px element gap."
+    },
+    {
+      "name": "Service Benefit Block",
+      "role": "Footer commerce information",
+      "description": "Place four compact blocks across a #000000 surface, each pairing a thin #ffffff line icon with Space Mono 12px uppercase #ffffff copy. Keep iconography outlined, monochrome, and separated from copy by 10px."
+    },
+    {
+      "name": "Footer Link Column",
+      "role": "Footer navigation",
+      "description": "Use a #000000 background, Space Mono 14px/20.02px #ffffff column titles, and smaller Space Mono links beneath. Divide the benefit row, link matrix, and legal row with 1px #ffffff rules."
+    },
+    {
+      "name": "Newsletter Email Field",
+      "role": "Footer signup input",
+      "description": "Use a transparent #000000-surface field with 1px solid #ffffff border, #ffffff text, 0px radius, and padding 15px 50px 15px 0px. Add a right-aligned outlined arrow submit affordance; preserve the uninterrupted rectangular silhouette."
+    },
+    {
+      "name": "Black Skip Button",
+      "role": "Accessibility shortcut",
+      "description": "Use a #000000 filled rectangular button with #ffffff Space Mono 15px uppercase text tracked at 1px. Apply padding 9px 30px 11px, 0px radius, and no visible border."
+    },
+    {
+      "name": "Close Control",
+      "role": "Floating overlay dismissal",
+      "description": "Use a compact circular #000000 control with a #ffffff diagonal-cross icon. This is the exception to the square control system: use a fully round silhouette only for floating dismiss actions."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Default operational type for navigation, product descriptions, buttons, shipping notices, form fields, footer lists, and small labels. Uppercase mono text turns commerce information into technical equipment markings.",
+      "sizes": "12px, 13px, 14px, 15px, 16px",
+      "family": "Space Mono",
+      "weight": "400",
+      "lineHeight": "1.20, 1.25, 1.40, 1.43, 1.80",
+      "substitute": "IBM Plex Mono",
+      "letterSpacing": "0.8px-2px at 12px-16px for tracked utility labels; use normal tracking for the 13px product description and 14px footer headings."
+    },
+    {
+      "role": "Custom display face for product headings, editorial introduction headings, image-panel titles, and oversized category rows. Its broad, compact letterforms keep a 55px category label feeling like industrial signage rather than a fashion serif statement.",
+      "sizes": "15px, 25px, 33px, 55px",
+      "family": "avnier-font",
+      "weight": "400, 500",
+      "lineHeight": "1.14, 1.18, 1.30, 1.50, 1.80",
+      "substitute": "Space Mono"
+    },
+    {
+      "role": "Rubik — detected in extracted data but not described by AI",
+      "sizes": "13px, 14px",
+      "family": "Rubik",
+      "weight": "400, 700",
+      "lineHeight": "1.25, 1.5"
+    },
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "13px",
+      "family": "Arial",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "GTStandard-M — detected in extracted data but not described by AI",
+      "sizes": "13px",
+      "family": "GTStandard-M",
+      "weight": "400",
+      "lineHeight": "1.5"
+    }
+  ],
+  "description": "AVNIER treats the storefront like a production call sheet: an almost binary black-and-white system, technical monospace utility text, and oversized custom-display category labels. Photography is deliberately dark, grainy, and equipment-focused, while purple product color remains inside imagery rather than escaping into the interface palette. Full-bleed black product and footer zones alternate with large, empty white editorial fields; every control stays square, outlined, and mechanically precise.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Black: #000000 — Dark hero and footer surfaces, primary reading text on white, hairline rules, outlined controls, and the sole filled conversion button\n- White: #ffffff — Page canvas, reversed text over black imagery, footer rules, outlined dark-surface fields, and utility-strip background\n- Charcoal Ink: #0a0a0a — Subtle SVG and icon strokes within black visual compositions\n- Focus Gray: #737373 — Restrained input focus shadow\n\nCreate a black split-carousel hero with a dark close-up product photograph on the left and a #000000 information panel on the right; set the white product heading in avnier-font 25px, weight 500, line-height 29.5px, and the supporting uppercase copy in Space Mono 13px.\nCreate a white brand-introduction section with an offset text block and broad empty canvas; set its black uppercase heading in avnier-font 33px, weight 500, line-height 42.9px, followed by Space Mono 13px copy and a black outlined play-arrow link.\nCreate a stacked shop-category index on #ffffff with 1px #000000 rules, black avnier-font 55px headings at weight 500 and 64.9px line-height, small counts, and right-edge outlined triangle arrows.\nCreate a #000000 newsletter footer module with Space Mono 14px white heading text and a transparent, 0px-radius email field outlined in #ffffff with 15px 50px 15px 0px padding."
+    }
+  ],
+  "elevationPhilosophy": "Keep surfaces physically flat. Structural separation comes from abrupt #ffffff/#000000 bands and 1px rules; the only depth cue is a restrained 0 0 0 1px outline on isolated controls and focused inputs."
+}

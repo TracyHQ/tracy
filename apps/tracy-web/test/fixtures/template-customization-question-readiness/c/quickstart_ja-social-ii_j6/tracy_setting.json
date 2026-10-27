@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "joomla",
+  "label": "JA Social II",
+  "version": "1.0.1",
+  "cms": "6.0.0",
+  "install": {
+    "webroot": {
+      "file": "ja-social-ii-j6-webroot-1.0.1.tar.gz",
+      "sha256": "799f93258bddd5bb474fda59c2769a0ac13177ef8eea1e236820b1bb693903ed"
+    },
+    "database": {
+      "file": "ja-social-ii-j6-database-1.0.1.sql.gz",
+      "sha256": "0206f9e3cfa5be7adf4a2b8e59a39bbf317aae8dc38d787a7a2a0cccb79f5cf8"
+    }
+  },
+  "template": "ja_social_ii"
+}

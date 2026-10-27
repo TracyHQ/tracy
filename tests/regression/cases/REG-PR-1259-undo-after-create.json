@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1259-undo-after-create",
+  "kind": "fix",
+  "title": "Undo is offered after a turn whose apply created a row (page, post, first postmeta)",
+  "pr": 1259,
+  "area": "web/undo",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap apps/tracy-web/test/turn-undo.test.mjs",
+    "S2: Read the line for the test whose name starts with 'a create-recorded write pairs with its content.update audit row'."
+  ],
+  "expect": [
+    "That test reports ok: a site_write recorded as content.create pairs with its content.update audit row, recovers the apply id and the turn's undo state is available (pre-fix: no pair, NOT_RECORDED/content)."
+  ],
+  "selectors": {},
+  "evidence": "Reproduced 4/4 on a WordPress dev site: create a page, write a post, set the first browser-tab title and meta description each answered 'Tracy has no record of some page edits it made'.",
+  "fence": "apps/tracy-web/src/sites/turn-undo.js: pairWrites keys a via=apply content.create write as content.update, the audit row's action.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/turn-undo.test.mjs"],
+    "tests": ["a create-recorded write pairs with its content.update audit row"]
+  }
+}

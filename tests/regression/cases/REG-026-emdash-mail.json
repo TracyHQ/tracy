@@ -1,0 +1,36 @@
+{
+  "id": "REG-026",
+  "kind": "fix",
+  "title": "A new EmDash site gets its mail path through the Tracy relay, or the provision refuses to mark it ready",
+  "pr": 827,
+  "area": "fleet/emdash-mail",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout (no stand, no database, no listener needed) run: node --test packages/fleet/tracy-fleet-operation/test/emdash-mail.test.mjs packages/fleet/tracy-fleet-operation/test/emdash-post-up.test.mjs",
+    "S2: Read the summary lines `pass` and `fail`, and every test line whose name starts with `mail`."
+  ],
+  "expect": [
+    "The run exits 0 and its summary reads `fail 0`.",
+    "emdash-mail.test.mjs: `an unconfigured site gets phpmail, the sender and the exclusive hook, then a readback` passes.",
+    "emdash-post-up.test.mjs: `mail (generic): configured after the token is stored and before ready, PAT off argv` and the same line for `mail (business)` pass.",
+    "emdash-post-up.test.mjs: `mail (generic): no shim, no relay variables, another label or a failed exec FAILS before the helper` and the same line for `mail (business)` pass.",
+    "emdash-post-up.test.mjs: `mail (demo through provision.sh): a framed demo is configured, and one without the shim still FAILS` and `mail (demo through deploy-quickstart.sh): no mail step on that road, and it says the demo mails nobody` pass."
+  ],
+  "selectors": {
+    "step": "_emdash_configure_mail in packages/fleet/tracy-fleet-operation/scripts/provision/platform/emdash.sh",
+    "helper": "packages/fleet/tracy-fleet-operation/scripts/provision/emdash/configure-mail.mjs",
+    "api": "GET /_emdash/api/admin/hooks/exclusive, PUT /_emdash/api/admin/hooks/exclusive/email:deliver, POST /_emdash/api/plugins/emdash-smtp/admin"
+  },
+  "evidence": "Issue #803 (source-confirmed, runtime-unverified): no provision step selected a mail provider. Before the fix the ten `mail (generic|business)` cases of emdash-post-up.test.mjs fail and emdash-mail.test.mjs cannot load its helper.",
+  "fence": "platform_post_up returns nonzero unless the running container shows the sendmail shim and relay variables and configure-mail.mjs exits 0; the helper adds only what is missing, reads it back, and refuses any answer it cannot read. Fake site and fake Docker: not a proof that a real site delivered a message.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/fleet/tracy-fleet-operation/test/emdash-mail.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/emdash-post-up.test.mjs"
+    ]
+  }
+}

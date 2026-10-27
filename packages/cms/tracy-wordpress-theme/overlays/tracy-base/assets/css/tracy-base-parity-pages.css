@@ -1,0 +1,713 @@
+/* tracy-base — inner-page parity with the Joomla source (Tracy Base j6): the page rhythm, the
+ * ACM blocks the pages share (pricing plans, accordion, CTA capsule, statistics, story chapter,
+ * features intro), titled articles and the service page sidebar, the design-system fixture pages
+ * and the landing pages' bands, as the Joomla pages compute them. Values measured on the Joomla
+ * site; colours are the variation's variables. Loaded after tracy-base.css and
+ * sections-extra.css. */
+
+/* ---- pricing page (acm-pricing): the source's plan cards — ring edge, 56px top room, the badge
+   above the name, the price and its period on one line, the action above the feature list, grey
+   ticks; the recommended plan on the warm surface with a muted ring. ---- */
+.tracy .acm-pricing .tracy-plans__grid { margin-top: 0; gap: 24px; }
+.tracy .acm-pricing .tracy-section__head { margin-bottom: 48px; }
+.tracy .acm-pricing .tracy-plan {
+  flex-flow: row wrap;
+  align-items: baseline;
+  align-content: flex-start;
+  column-gap: 8px;
+  row-gap: 12px;
+  padding: 56px 24px 24px;
+  border: 0;
+  box-shadow: 0 0 0 1px var(--wp--preset--color--border);
+}
+.tracy .acm-pricing .tracy-plan.is-hot {
+  position: relative;
+  padding-bottom: 32px;
+  background: var(--wp--preset--color--surface-warm);
+  box-shadow: 0 0 0 1px var(--wp--preset--color--muted);
+}
+.tracy .acm-pricing .tracy-plan > * { flex: 0 0 100%; margin: 0; }
+.tracy .acm-pricing .tracy-plan > p.tracy-eyebrow {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: auto;
+  padding: 4px 12px;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--wp--preset--color--muted);
+  background: color-mix(in oklab, var(--wp--preset--color--muted) 12%, transparent);
+  border-radius: var(--wp--custom--radius--pill);
+}
+.tracy .acm-pricing .tracy-plan > h3 { font-size: 21px; line-height: 1.05; letter-spacing: -0.015em; }
+.tracy .acm-pricing .tracy-plan > h3 + p { font-size: var(--wp--preset--font-size--sm); line-height: 1.47; color: var(--wp--preset--color--muted); }
+.tracy .acm-pricing .tracy-plan > p.tracy-plan__price {
+  flex: 0 0 auto;
+  margin-top: 8px;
+  font-size: 40px;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+.tracy .acm-pricing .tracy-plan > p.tracy-plan__price + p.tracy-meta { flex: 1 1 0; font-size: var(--wp--preset--font-size--sm); color: var(--wp--preset--color--muted); }
+.tracy .acm-pricing .tracy-plan > .tracy-actions { order: 1; margin: 8px 0; }
+.tracy .acm-pricing .tracy-plan > .tracy-plan__list { order: 2; display: flex; flex-direction: column; gap: 12px; padding: 0; list-style: none; }
+.tracy .acm-pricing .tracy-plan__list li.border-border-soft {
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  font-size: var(--wp--preset--font-size--sm);
+  line-height: 1.47;
+  color: var(--wp--preset--color--fg-2);
+}
+.tracy .acm-pricing .tracy-plan__list li::before { content: '✓'; flex: 0 0 16px; color: var(--wp--preset--color--muted); }
+.tracy .acm-pricing .tracy-plan .tracy-actions .wp-block-button { flex: 1 1 auto; }
+.tracy .acm-pricing .tracy-plan .tracy-actions .wp-block-button__link {
+  width: 100%;
+  padding: 12px 24px;
+  border: 0;
+  background: transparent;
+  color: var(--wp--preset--color--fg);
+  box-shadow: 0 0 0 1px var(--wp--preset--color--border);
+}
+.tracy .acm-pricing .tracy-plan.is-hot .tracy-actions .wp-block-button__link {
+  background: var(--wp--preset--color--accent);
+  color: var(--wp--preset--color--accent-on);
+  box-shadow: none;
+}
+
+/* ---- ACM accordion (pricing, FAQ, service pages): 884px list, a rule above each row, 24px rows,
+   a thin muted plus that loses its upright when open, the answer in the secondary text. The grey
+   variant is a 1024px rounded surface box right under the block before it. ---- */
+.tracy .acm-accordion .tracy-faq__list { max-width: 884px; margin-inline: auto; }
+.tracy .acm-accordion .tracy-faq__item { padding: 0; }
+.tracy .acm-accordion .tracy-faq__item summary { padding-block: 24px; gap: 24px; align-items: flex-start; }
+.tracy .acm-accordion .tracy-faq__item summary::after {
+  content: '';
+  flex: 0 0 16px;
+  height: 31px;
+  background:
+    linear-gradient(var(--wp--preset--color--muted), var(--wp--preset--color--muted)) center / 16px 1px no-repeat,
+    linear-gradient(var(--wp--preset--color--muted), var(--wp--preset--color--muted)) center / 1px 16px no-repeat;
+}
+.tracy .acm-accordion .tracy-faq__item[open] summary::after {
+  content: '';
+  background: linear-gradient(var(--wp--preset--color--muted), var(--wp--preset--color--muted)) center / 16px 1px no-repeat;
+}
+.tracy .acm-accordion .tracy-faq__item p { margin: 0; padding-bottom: 24px; max-width: min(680px, 100%); color: var(--wp--preset--color--fg-2); }
+.tracy .acm-accordion.bg-surface { background: transparent; }
+.tracy .acm-accordion.bg-surface > .tracy-section__inner { padding: 32px 24px; }
+.tracy .acm-accordion .tracy-section__head { margin-bottom: 48px; }
+.tracy .acm-accordion.bg-bg > .tracy-section__inner { padding: 0; background: transparent; }
+
+/* ---- ACM CTA capsule: a surface box with a ring edge, 48px inside, a 40px statement, the
+   primary pill and a plain text link. ---- */
+.tracy .acm-cta-capsule__box {
+  padding: 48px;
+  gap: 32px;
+  background: var(--wp--preset--color--surface);
+  border: 0;
+  border-radius: var(--wp--custom--radius--lg);
+  box-shadow: 0 0 0 1px var(--wp--preset--color--border);
+}
+.tracy .acm-cta-capsule__statement { font-size: 40px; line-height: 1.05; letter-spacing: -0.015em; font-weight: 600; }
+.tracy .acm-cta-capsule .tracy-btn--ghost .wp-block-button__link,
+.tracy .acm-cta-capsule .wp-block-button.is-style-outline .wp-block-button__link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--wp--preset--color--fg);
+  letter-spacing: -0.022em;
+}
+
+/* ---- page rhythm, as the Joomla main body draws it: 100px above and below the content (64px
+   from 641 to 1023px, 40px up to 640px), the first block 17px lower, 24px between blocks; each
+   ACM block then carries its own room: none above the first, 100px around the canvas blocks,
+   none below the last; the grey blocks are 32px boxes. No band rules between blocks. ---- */
+.tracy .tracy-main.tracy-page,
+.tracy .tracy-main.tracy-page-stack { padding-block: var(--wp--custom--section-y--desktop); }
+@media (max-width: 1023px) {
+  .tracy .tracy-main.tracy-page,
+  .tracy .tracy-main.tracy-page-stack { padding-block: var(--wp--custom--section-y--tablet); }
+}
+@media (max-width: 640px) {
+  .tracy .tracy-main.tracy-page,
+  .tracy .tracy-main.tracy-page-stack { padding-block: var(--wp--custom--section-y--phone); }
+}
+.tracy .tracy-main.tracy-page-stack > .wp-block-post-content > :first-child,
+.tracy .tracy-main.tracy-page :is(.tracy-page__body, .tracy-page__head) > :first-child { margin-top: 17px; }
+.tracy .tracy-main.tracy-page .tracy-page__head + * > :first-child,
+.tracy .tracy-main.tracy-page .tracy-page__head ~ .tracy-page__body > :first-child { margin-top: 0; }
+.tracy :is(.tracy-page-stack > .wp-block-post-content, .tracy-page .tracy-page__body) > :is(section.tracy-section, section.tracy-hero) {
+  margin-top: 24px;
+  padding-block: var(--wp--custom--section-y--desktop);
+  border-top: 0;
+  border-bottom: 0;
+}
+@media (max-width: 1023px) {
+  .tracy :is(.tracy-page-stack > .wp-block-post-content, .tracy-page .tracy-page__body) > :is(section.tracy-section, section.tracy-hero) { padding-block: var(--wp--custom--section-y--tablet); }
+}
+@media (max-width: 640px) {
+  .tracy :is(.tracy-page-stack > .wp-block-post-content, .tracy-page .tracy-page__body) > :is(section.tracy-section, section.tracy-hero) { padding-block: var(--wp--custom--section-y--phone); }
+}
+.tracy :is(.tracy-page-stack > .wp-block-post-content, .tracy-page .tracy-page__body) > :is(section.tracy-section, section.tracy-hero):first-child { margin-top: 17px; padding-top: 0; }
+.tracy :is(.tracy-page-stack > .wp-block-post-content, .tracy-page .tracy-page__body) > :is(section.tracy-section, section.tracy-hero):last-child { padding-bottom: 0; }
+.tracy :is(.tracy-page-stack > .wp-block-post-content, .tracy-page .tracy-page__body) > section.acm-carousel.bg-surface { padding-block: 32px; }
+.tracy :is(.tracy-page-stack > .wp-block-post-content, .tracy-page .tracy-page__body) > section.acm-accordion.bg-surface { padding-block: 0; }
+
+/* ---- titled pages (articles): the source's article body — paragraphs in the body size and text
+   colour (no lead), 48px above each 28px section heading, lists indented 24px. A titled page
+   with a featured image is the source's single article: title, image (rounded, 720 wide) and
+   body in one centred 720px column. ---- */
+.tracy.page-template-page-titled .tracy-page__body > p,
+.tracy.page-template-page-titled .tracy-page__main > p {
+  margin: 0 0 17px;
+  max-width: 720px;
+  font-size: var(--wp--preset--font-size--base);
+  line-height: var(--wp--custom--leading--body);
+  color: var(--wp--preset--color--fg);
+}
+.tracy.page-template-page-titled :is(.tracy-page__body, .tracy-page__main) > h2 { margin: 48px 0 8.5px; max-width: 720px; }
+.tracy.page-template-page-titled :is(.tracy-page__body, .tracy-page__main) > ul { margin: 24px 0 17px; padding-left: 24px; max-width: 720px; }
+.tracy.page-template-page-titled .tracy-page__title { margin-bottom: 17px; }
+@media (min-width: 1100px) {
+  .tracy.page-template-page-titled .tracy-container:has(> .tracy-page__media) {
+    max-width: calc(720px + 44px);
+  }
+}
+.tracy.page-template-page-titled .tracy-page__media { margin: 32px 0; }
+.tracy.page-template-page-titled .tracy-page__media img { border-radius: var(--ds-card-radius, var(--wp--custom--radius--lg)); }
+
+/* ---- a titled page with a sidebar (service detail): the main column 760px, the sidebar 231px
+   34px beside it and level with the top of the title; its list is plain 14px links with a rule
+   under each but the last, and no "Latest" label. ---- */
+@media (min-width: 1100px) {
+  .tracy.page-template-page-titled .tracy-page__body:has(> .tracy-page__columns) { max-width: none; margin-inline: 0; }
+  .tracy .tracy-page__body > .tracy-page__columns { gap: 34px; }
+  .tracy .tracy-page__columns > .tracy-page__main { flex: 0 0 760px !important; }
+  .tracy .tracy-page__columns > .tracy-page__sidebar { flex: 0 0 231px !important; }
+  .tracy.page-template-page-titled .tracy-page__columns > .tracy-page__sidebar { margin-top: -108px; }
+  /* Browse by tag has no title to sit beside: its columns share the page's 1024px content box. */
+  .tracy .tracy-page-stack > .wp-block-post-content > .tracy-page__columns { gap: 34px; max-width: var(--wp--custom--container--max); margin-inline: auto; }
+  /* The sidebar is pulled up beside the title, so the title wraps inside the main column: a wide
+     display face from a design system would otherwise run under the sidebar. */
+  .tracy .tracy-main.tracy-page:has(.tracy-page__columns) .tracy-page__head { max-width: 760px; }
+}
+.tracy .tracy-page__sidebar .tracy-aside__latest .wp-block-post {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--wp--preset--color--border-soft);
+}
+.tracy .tracy-page__sidebar .tracy-aside__latest .wp-block-post:first-child { padding-top: 0; }
+.tracy .tracy-page__sidebar .tracy-aside__latest .wp-block-post:last-child { border-bottom: 0; }
+.tracy .tracy-page__sidebar .tracy-aside__latest .wp-block-post-title { margin: 0; font-family: var(--wp--preset--font-family--body); font-size: var(--wp--preset--font-size--sm); font-weight: 400; line-height: 1.47; letter-spacing: -0.022em; }
+.tracy .tracy-page__sidebar .tracy-aside__latest .wp-block-post-title a { color: var(--wp--preset--color--fg); text-decoration: none; }
+.tracy .tracy-page__main > .acm-accordion.bg-surface,
+.tracy .tracy-page__main > .acm-cta-capsule { padding-inline: 0; }
+
+/* ---- design-system pages (style guide, typography, colour, spacing): the source's fixture —
+   a centred 720px column, the role names the fixture markup reads (--bg, --space-4, --radius-md)
+   mapped onto the variation's variables, the swatch grid, the spacing bars and radius samples,
+   and the 80px display sample. ---- */
+.tracy .tracy-fixture {
+  --bg: var(--wp--preset--color--bg);
+  --surface: var(--wp--preset--color--surface);
+  --fg: var(--wp--preset--color--fg);
+  --fg-2: var(--wp--preset--color--fg-2);
+  --muted: var(--wp--preset--color--muted);
+  --border: var(--wp--preset--color--border);
+  --accent: var(--wp--preset--color--accent);
+  --success: var(--wp--preset--color--success);
+  --warn: var(--wp--preset--color--warn);
+  --danger: var(--wp--preset--color--danger);
+  --space-2: var(--wp--preset--spacing--2);
+  --space-4: var(--wp--preset--spacing--4);
+  --space-6: var(--wp--preset--spacing--6);
+  --space-8: var(--wp--preset--spacing--8);
+  --space-12: var(--wp--preset--spacing--12);
+  --radius-sm: var(--wp--custom--radius--sm);
+  --radius-md: var(--wp--custom--radius--md);
+  --radius-lg: var(--wp--custom--radius--lg);
+  --radius-pill: var(--wp--custom--radius--pill);
+  max-width: var(--wp--custom--container--max);
+  margin: 0 auto;
+  line-height: normal;
+  letter-spacing: normal;
+}
+@media (min-width: 1100px) {
+  .tracy .tracy-page__body:has(> .tracy-fixture) { max-width: 720px; margin-inline: auto; }
+}
+.tracy .tracy-fixture + .tracy-fixture { margin-top: var(--wp--custom--section-y--desktop); }
+.tracy .tracy-fixture .tracy-fixture__title,
+.tracy h1.wp-block-heading.tracy-fixture__title,
+.tracy h2.wp-block-heading.tracy-fixture__title {
+  margin: 0 0 var(--wp--preset--spacing--6);
+  font-family: var(--wp--preset--font-family--display);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: var(--wp--custom--leading--tight);
+  letter-spacing: var(--wp--custom--tracking--display);
+}
+.tracy .tracy-fixture .type-stack { display: grid; gap: var(--wp--preset--spacing--4); max-width: 760px; }
+.tracy .tracy-fixture .type-stack > * { margin: 0; }
+.tracy .tracy-fixture p.eyebrow.wp-block-paragraph { text-align: start; margin-inline: 0; }
+.tracy .tracy-fixture .eyebrow { color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); font-size: var(--wp--preset--font-size--xs); line-height: normal; letter-spacing: var(--wp--custom--tracking--display); text-transform: uppercase; font-weight: 400; }
+.tracy .tracy-fixture .type-stack h2 { font-family: var(--wp--preset--font-family--display); font-weight: 700; font-size: 80px; line-height: var(--wp--custom--leading--tight); letter-spacing: var(--wp--custom--tracking--display); }
+.tracy .tracy-fixture .lede { color: var(--wp--preset--color--fg-2); font-size: 21px; line-height: var(--wp--custom--leading--body); }
+.tracy .tracy-fixture .body { color: var(--wp--preset--color--muted); font-size: var(--wp--preset--font-size--base); line-height: var(--wp--custom--leading--body); }
+.tracy .tracy-fixture .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--wp--preset--spacing--4); }
+.tracy .tracy-fixture .swatch {
+  overflow: hidden;
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--md);
+  background: var(--wp--preset--color--surface);
+  box-shadow: var(--wp--custom--elev--ring);
+}
+.tracy .tracy-fixture .color { height: 88px; background: var(--value, var(--wp--preset--color--surface)); }
+.tracy .tracy-fixture .meta { padding: var(--wp--preset--spacing--3); color: var(--wp--preset--color--muted); font-size: var(--wp--preset--font-size--sm); }
+.tracy .tracy-fixture .meta strong { display: block; margin-bottom: var(--wp--preset--spacing--1); color: var(--wp--preset--color--fg); }
+.tracy .tracy-fixture .stack { display: grid; gap: var(--wp--preset--spacing--3); margin-bottom: var(--wp--preset--spacing--8); }
+.tracy .tracy-fixture .row { display: grid; grid-template-columns: 120px 1fr; align-items: center; gap: var(--wp--preset--spacing--4); margin: 0; color: var(--wp--preset--color--muted); font-size: var(--wp--preset--font-size--sm); }
+.tracy .tracy-fixture .bar { height: var(--wp--preset--spacing--4); min-width: 2px; background: var(--wp--preset--color--accent); }
+.tracy .tracy-fixture .radii { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--wp--preset--spacing--4); }
+.tracy .tracy-fixture .radii article {
+  display: grid;
+  place-items: center;
+  min-height: 88px;
+  border: 1px solid var(--wp--preset--color--border);
+  background: var(--wp--preset--color--surface);
+  color: var(--wp--preset--color--fg-2);
+  font-size: var(--wp--preset--font-size--sm);
+  box-shadow: var(--wp--custom--elev--ring);
+}
+
+/* ---- landing pages (home variant, home variation): the source stacks full-width bands, each
+   100px top and bottom (60px when tight) on one of four grounds: canvas (the page), gray (the
+   surface), warm (the warm surface) and scene (the inverse ink, light text). The order is the
+   source's for each page; a page is told by its hero (centred or split). ---- */
+.tracy.page-template-page-landing .wp-block-post-content > :is(section.tracy-section, section.tracy-hero) {
+  margin: 0;
+  padding-block: var(--wp--custom--section-y--desktop);
+  border: 0;
+  background: var(--wp--preset--color--bg);
+}
+@media (max-width: 1023px) {
+  .tracy.page-template-page-landing .wp-block-post-content > :is(section.tracy-section, section.tracy-hero) { padding-block: var(--wp--custom--section-y--tablet); }
+}
+@media (max-width: 640px) {
+  .tracy.page-template-page-landing .wp-block-post-content > :is(section.tracy-section, section.tracy-hero) { padding-block: var(--wp--custom--section-y--phone); }
+}
+.tracy.page-template-page-landing:has(.acm-hero--centered) .wp-block-post-content > .acm-hero,
+.tracy.page-template-page-landing:has(.acm-hero--centered) .wp-block-post-content > .acm-statistics,
+.tracy.page-template-page-landing:has(.acm-hero--split) .wp-block-post-content > :is(.acm-features-intro, .acm-statistics, .acm-testimonials) {
+  background: var(--wp--preset--color--surface);
+}
+.tracy.page-template-page-landing:has(.acm-hero--centered) .wp-block-post-content > .acm-team,
+.tracy.page-template-page-landing:has(.acm-hero--split) .wp-block-post-content > .acm-story-chapter--media-right {
+  background: var(--wp--preset--color--surface-warm);
+}
+.tracy.page-template-page-landing:has(.acm-hero--centered) .wp-block-post-content > :is(.acm-story-chapter, .acm-cta-capsule),
+.tracy.page-template-page-landing:has(.acm-hero--split) .wp-block-post-content > :is(.acm-story-chapter--media-left, .acm-cta-capsule) {
+  background: var(--ds-c-ink, var(--wp--preset--color--black));
+  color: var(--ds-c-on-ink, var(--wp--preset--color--white));
+}
+/* On the scene band the quiet line and the ghost action read on the ink: under a design system the
+   line is the light ink colour toned down towards the ground and the action is the light ink colour
+   in a ring of it (the light-ground accent text is unreadable there). Without a system both ink roles
+   are unset, every mix below collapses to the source's muted line, accent action and border ring. */
+.tracy.page-template-page-landing:has(.acm-hero--centered) .wp-block-post-content > .acm-story-chapter .tracy-lead,
+.tracy.page-template-page-landing:has(.acm-hero--split) .wp-block-post-content > .acm-story-chapter--media-left .tracy-lead {
+  color: color-mix(in srgb, var(--ds-c-on-ink, var(--wp--preset--color--muted)) 82%, var(--ds-c-ink, var(--wp--preset--color--muted)));
+}
+.tracy.page-template-page-landing:has(.acm-hero--centered) .wp-block-post-content > .acm-story-chapter .tracy-btn--ghost .wp-block-button__link,
+.tracy.page-template-page-landing:has(.acm-hero--split) .wp-block-post-content > .acm-story-chapter--media-left .tracy-btn--ghost .wp-block-button__link {
+  color: var(--ds-c-on-ink, var(--ds-c-accent-text, var(--wp--preset--color--accent)));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ds-c-on-ink, var(--wp--preset--color--border)) 35%, var(--ds-c-ink, var(--wp--preset--color--border)));
+}
+.tracy.page-template-page-landing:has(.acm-hero--split) .wp-block-post-content > :is(.acm-statistics, .acm-clients) { padding-block: 60px; }
+/* A grey block inside a canvas band: the questions (home variant) and the warm plans (home
+   variation) fill the width between 100px of page ground above and below. */
+.tracy.page-template-page-landing .wp-block-post-content > :is(.acm-accordion.bg-surface, .acm-pricing--warm) {
+  margin-block: var(--wp--custom--section-y--desktop);
+}
+.tracy.page-template-page-landing .wp-block-post-content > .acm-accordion.bg-surface { background: var(--wp--preset--color--surface); }
+.tracy.page-template-page-landing .wp-block-post-content > .acm-pricing--warm { background: var(--wp--preset--color--surface-warm); }
+.tracy.page-template-page-landing .acm-accordion.bg-surface > .tracy-section__inner { padding: 0; background: transparent; }
+
+/* ---- ACM statistics: the source's figures — centred, a 40px value over a 14px muted caption,
+   no rules; a 28px head over them. ACM story chapter: two equal columns 48px apart, a 40px
+   statement, a 21px muted line, the action as a ringed pill; the picture in a ringed 18px frame.
+   On the inverse band the statement reads in the light ink colour. ---- */
+.tracy .acm-statistics__grid { gap: 48px 32px; text-align: center; }
+.tracy .acm-statistics .tracy-stat { padding-top: 0; border-top: 0; }
+.tracy .acm-statistics .tracy-stat > * { text-align: center; }
+.tracy .acm-statistics p.tracy-stat__n { margin: 0; font-size: 40px; font-weight: 600; line-height: 1.05; letter-spacing: -0.015em; }
+.tracy .acm-statistics p.tracy-stat__label { margin: 8px 0 0; font-size: var(--wp--preset--font-size--sm); color: var(--wp--preset--color--muted); }
+.tracy .acm-statistics .tracy-section__head h2 { font-size: 28px; line-height: 1.05; }
+.tracy .acm-story-chapter__grid { grid-template-columns: 1fr 1fr; column-gap: 48px; }
+.tracy .acm-story-chapter__text h2 { max-width: 445px; margin-bottom: 0; font-size: 40px; line-height: 1.05; letter-spacing: -0.015em; }
+.tracy .acm-story-chapter__text .tracy-lead { max-width: 607px; margin-top: 24px; font-size: 21px; color: var(--wp--preset--color--muted); }
+.tracy .acm-story-chapter__text .tracy-actions { margin-top: 32px; }
+.tracy .acm-story-chapter__text .tracy-btn--ghost .wp-block-button__link {
+  border: 0;
+  box-shadow: 0 0 0 1px var(--wp--preset--color--border);
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  background: transparent;
+}
+.tracy .acm-story-chapter__media { border-radius: var(--wp--custom--radius--lg); box-shadow: 0 0 0 1px var(--wp--preset--color--border); overflow: hidden; }
+.tracy .acm-story-chapter__media img { border-radius: var(--wp--custom--radius--md); }
+.tracy .wp-block-post-content > :is(.acm-story-chapter, .acm-cta-capsule)[class] h2 { color: inherit; }
+.tracy .acm-cta-capsule__box { color: var(--wp--preset--color--fg); }
+.tracy .acm-cta-capsule__box .acm-cta-capsule__statement { color: var(--wp--preset--color--fg); }
+
+/* ---- ACM features intro: a 717px head, the cards two to a row 20px apart, each on the warm
+   surface with a soft edge and a raised shadow, 24px inside; a 28px title, the text in the
+   secondary colour, the link plain 14px; no spotlight label (the pattern and the seeded page carry none). ---- */
+.tracy .acm-features-intro .tracy-section__head { max-width: 717px; margin-bottom: 0; }
+.tracy .acm-features-intro__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 48px; }
+.tracy .acm-features-intro__card {
+  gap: 16px;
+  padding: 24px;
+  background: var(--wp--preset--color--surface-warm);
+  border: 1px solid var(--wp--preset--color--border-soft);
+  border-radius: var(--wp--custom--radius--lg);
+  box-shadow: var(--wp--custom--elev--raised);
+}
+.tracy .acm-features-intro__card > * { margin: 0; }
+.tracy .acm-features-intro__card h3 { font-size: 28px; line-height: 1.05; }
+.tracy .acm-features-intro__card > p.text-fg-2 { font-size: var(--wp--preset--font-size--base); color: var(--wp--preset--color--fg-2); }
+.tracy .acm-features-intro__card-action a { font-size: var(--wp--preset--font-size--sm); color: var(--wp--preset--color--fg-2); text-decoration: none; }
+@media (max-width: 781px) {
+  .tracy .acm-features-intro__grid { grid-template-columns: minmax(0, 1fr); }
+}
+/* Client stories on the landing page: the head starts at the left, 717px, a 28px heading. */
+.tracy.page-template-page-landing .acm-testimonials .tracy-section__head { max-width: 717px; margin-inline: 0; text-align: start; }
+.tracy.page-template-page-landing .acm-testimonials .tracy-section__head > * { text-align: start; }
+.tracy.page-template-page-landing .acm-testimonials .tracy-section__head h2 { font-size: 28px; line-height: 1.05; margin-top: 12px; }
+
+/* ---- listing pages (a category blog in the source): cards three to a row 32px apart, each a
+   surface panel with a ring edge and the large radius; a 200px picture edge to edge, then 24px
+   inside with 12px between the title, the excerpt and a 14px "Read more" in the accent. The
+   seeded pages carry no category description or picture under the heading, and the cards no
+   category label. ---- */
+.tracy .tracy-query > .wp-block-post-template.tracy-grid { column-gap: 32px; row-gap: 32px; }
+.tracy .tracy-query .tracy-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: var(--wp--custom--radius--lg);
+  background: var(--wp--preset--color--surface);
+  box-shadow: var(--wp--custom--elev--ring);
+}
+.tracy .tracy-query .tracy-card__media { margin: 0; height: 200px; }
+.tracy .tracy-query .tracy-card__media img {
+  height: 200px !important;
+  aspect-ratio: auto !important;
+  border-radius: 0; /* ds-keep: the picture runs edge to edge; the card's own corner clips it */
+}
+.tracy .tracy-query .tracy-card__body { display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 24px; }
+.tracy .tracy-query .tracy-card__body > * { margin: 0; }
+.tracy .tracy-query .tracy-card__text .wp-block-post-excerpt__excerpt { margin: 8.5px 0 0; color: var(--wp--preset--color--fg-2); }
+.tracy .tracy-query .tracy-card__text .wp-block-post-excerpt__more-text { margin: 12px 0 0; }
+.tracy .tracy-query .wp-block-post-excerpt__more-link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--wp--preset--font-size--sm); letter-spacing: -0.005em; }
+.tracy .tracy-query > .wp-block-post-template > .wp-block-post { display: flex; }
+.tracy .tracy-query > .wp-block-post-template > .wp-block-post > .tracy-card { flex: 1 1 auto; }
+.tracy .tracy-page__body > h2.tracy-eyebrow:first-child { margin-bottom: 8.5px; }
+
+/* ---- phones (up to 640px), as the source sets them: page and article titles at 40px, the
+   hero's actions full width one above the other, tab panel headings at 28px, and the CTA
+   capsule as a column — 24px inside, a 28px statement, the actions full width. ---- */
+@media (max-width: 640px) {
+  .tracy h1.tracy-display.tracy-page__title.wp-block-post-title,
+  .tracy .tracy-page-stack > .wp-block-post-content > h2.tracy-eyebrow:first-child,
+  .tracy .tracy-page__body > h2.tracy-eyebrow:first-child,
+  .tracy .acm-hero h1.wp-block-heading { font-size: 40px; line-height: 1.05; }
+  .tracy .acm-hero .tracy-actions { flex-direction: column; align-items: stretch; gap: 13px; }
+  .tracy .acm-hero .tracy-actions .wp-block-button,
+  .tracy .acm-hero .tracy-actions .wp-block-button__link { width: 100%; }
+  .tracy .tracy-fixture .type-stack h2 { font-size: 40px; }
+  .tracy .acm-tabs__panel h3,
+  .tracy .acm-tabs__panel h2 { font-size: 28px; line-height: 1.05; }
+  .tracy .acm-cta-capsule__box { flex-direction: column; align-items: stretch; gap: 24px; padding: 24px; }
+  .tracy .acm-cta-capsule__statement { font-size: 28px; }
+  .tracy .acm-cta-capsule__box .tracy-actions { flex-direction: column; align-items: stretch; gap: 16px; }
+  .tracy .acm-cta-capsule__box .tracy-actions .wp-block-button,
+  .tracy .acm-cta-capsule__box .tracy-actions .wp-block-button__link { width: 100%; text-align: center; }
+  /* layout.css stacks every .tracy-grid to one column below 641px; the source's figures stay two
+     by two. */
+  .tracy .acm-statistics__grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .tracy .acm-accordion .tracy-faq__item summary { padding-block: 20px; gap: 16px; font-size: 17px; line-height: 1.47; }
+  .tracy .acm-accordion .tracy-faq__item summary::after { height: 25px; }
+  /* Contact: the heading and the form first, the contact details after them. */
+  .tracy .tracy-page__body:has(> .wpcf7):has(> .acm-contact-information) { display: flex; flex-direction: column; }
+  .tracy .tracy-page__body:has(> .wpcf7) > h2.wp-block-heading { order: 1; }
+  .tracy .tracy-page__body:has(> .wpcf7) > .wpcf7 { order: 2; }
+  .tracy .tracy-page__body:has(> .wpcf7) > .acm-contact-information { order: 3; }
+}
+
+/* ---- the Topics page (the source's category tree, regrouped by tracy-base-sections.js): cards
+   two to a row 24px apart, each a surface panel with a ring edge, 34px inside; the 22.6px title
+   over a rule, a round "+" at the end of the row when the topic has sub-topics; the line under it
+   14px in the secondary colour; sub-topics fold open below, one to a row (the page carries no pictures). ---- */
+.tracy .tracy-main.tracy-page-stack > .has-topics > .tracy-topics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: calc(var(--wp--custom--container--max) + 34px);
+  margin: 32px auto;
+  padding-inline: var(--wp--custom--container--gutter-desktop);
+  box-sizing: border-box;
+}
+.tracy .tracy-topics__card {
+  padding: 17px 34px;
+  border-radius: var(--wp--custom--radius--lg);
+  background: var(--wp--preset--color--surface);
+  box-shadow: var(--wp--custom--elev--ring);
+}
+.tracy .tracy-topics__children { display: grid; gap: 24px; margin-bottom: 17px; }
+.tracy .tracy-topics__children[hidden] { display: none; }
+.tracy .tracy-topics__children > .tracy-topics__card { background: var(--wp--preset--color--bg); }
+.tracy .tracy-topics h2.tracy-topics__title,
+.tracy .tracy-topics h3.tracy-topics__title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 17px;
+  padding: 0 0 17px;
+  border-bottom: 1px solid var(--wp--preset--color--border);
+  font-size: 22.6px;
+  line-height: 1.05;
+}
+.tracy .tracy-topics__title a { color: var(--wp--preset--color--fg); font-weight: 700; text-decoration: none; }
+.tracy .tracy-topics__toggle {
+  appearance: none;
+  display: grid;
+  place-items: center;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background:
+    linear-gradient(var(--wp--preset--color--fg), var(--wp--preset--color--fg)) center / 10px 1.5px no-repeat,
+    linear-gradient(var(--wp--preset--color--fg), var(--wp--preset--color--fg)) center / 1.5px 10px no-repeat,
+    var(--wp--preset--color--bg);
+  box-shadow: var(--wp--custom--elev--ring);
+}
+.tracy .tracy-topics__toggle[aria-expanded='true'] {
+  background:
+    linear-gradient(var(--wp--preset--color--fg), var(--wp--preset--color--fg)) center / 10px 1.5px no-repeat,
+    var(--wp--preset--color--bg);
+}
+.tracy .tracy-topics__toggle:focus-visible { outline: 0; box-shadow: var(--wp--custom--focus-ring); }
+.tracy .tracy-topics p.tracy-topics__desc {
+  max-width: 405px;
+  margin: 8.5px 0 34px;
+  font-size: var(--wp--preset--font-size--sm);
+  line-height: 1.47;
+  color: var(--wp--preset--color--fg-2);
+}
+@media (max-width: 781px) {
+  .tracy .tracy-main.tracy-page-stack > .has-topics > .tracy-topics { grid-template-columns: minmax(0, 1fr); padding-inline: var(--wp--custom--container--gutter-phone); }
+}
+
+/* ---- the date archive (the page that carries the archives block): the month list as the
+   source's row of 44px pill chips, then one post per row between rules — 32px above and below,
+   a 28px title, the excerpt in the secondary colour within 492px (the page's query prints no
+   picture, label or "Read more"). ---- */
+.tracy .wp-block-post-content > .wp-block-archives-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+.tracy .wp-block-post-content > .wp-block-archives-list li {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: var(--wp--custom--radius--pill);
+  box-shadow: var(--wp--custom--elev--ring);
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--wp--preset--color--muted);
+}
+.tracy .wp-block-post-content > .wp-block-archives-list a { color: var(--wp--preset--color--fg); text-decoration: none; }
+.tracy .wp-block-post-content:has(> .wp-block-archives) .tracy-query .wp-block-post-template { row-gap: 0; }
+.tracy .wp-block-post-content:has(> .wp-block-archives) .tracy-query .tracy-card {
+  margin-bottom: 25.5px;
+  padding: 32px 0;
+  border-radius: 0; /* ds-keep: an archive row is a ruled line, not a card */
+  border-bottom: 1px solid var(--wp--preset--color--border-soft);
+  background: none;
+  box-shadow: none;
+}
+.tracy .wp-block-post-content:has(> .wp-block-archives) .tracy-query .tracy-card__body { padding: 0; }
+.tracy .wp-block-post-content:has(> .wp-block-archives) .tracy-query .tracy-card__title { font-size: 28px; line-height: 1.05; }
+.tracy .wp-block-post-content:has(> .wp-block-archives) .tracy-query .wp-block-post-excerpt__excerpt { max-width: 492px; }
+.tracy .tracy-main.tracy-page-stack > .wp-block-post-content > .wp-block-archives-list:first-child { margin-top: 0; }
+@media (min-width: 1100px) {
+  .tracy .tracy-page-stack > .wp-block-post-content:has(> .wp-block-archives) > .tracy-query { max-width: var(--wp--custom--container--max); padding-inline: 0; }
+}
+
+/* ---- the contact form (Contact Form 7), as the source's contact form: 14px labels in the text
+   colour at weight 500, 8px above each field, fields 40px apart with 12px × 16px inside and an
+   8px corner, a 180px message box, a 20px consent box. ---- */
+.tracy .wpcf7-form > p { margin: 0 0 40px; }
+.tracy .wpcf7-form label { display: block; font-size: var(--wp--preset--font-size--sm); font-weight: 500; letter-spacing: -0.016em; color: var(--wp--preset--color--fg); }
+.tracy .wpcf7-form label > br { display: none; }
+.tracy .wpcf7-form label .wpcf7-form-control-wrap { display: block; margin-top: 8px; }
+.tracy .wpcf7-form :is(input[type='text'], input[type='email'], textarea) {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--ds-input-radius, var(--wp--custom--radius--sm));
+}
+.tracy .wpcf7-form textarea { height: 180px; }
+.tracy .wpcf7-form input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  margin: 3px 8px 0 0;
+  accent-color: var(--wp--preset--color--accent);
+}
+/* The contact details panel starts level with the form's note, 29px inside, its heading
+   24px above plain muted lines (no spaced capitals). */
+@media (min-width: 1100px) {
+  .tracy .tracy-page__body:has(> .wpcf7):has(> .acm-contact-information) > section.acm-contact-information { margin-top: 41px; padding-top: 29px; }
+}
+.tracy .acm-contact-information h2 { margin-bottom: 24px; }
+.tracy .acm-contact-information .tracy-eyebrow {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--base);
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.022em;
+  text-transform: none;
+  color: var(--wp--preset--color--muted);
+}
+.tracy p.acm-contact-information__email.font-display.text-xl { margin: 0 0 24px; font-family: var(--wp--preset--font-family--body); font-size: var(--wp--preset--font-size--base); color: var(--wp--preset--color--muted); }
+/* The form's note and its required marks, as the source's: "* Required field" in the muted colour
+   40px under the heading and above the first field, each required label's star in the danger colour. */
+.tracy .wpcf7-form > p.tracy-form-note { margin: 25px 0 17px; font-size: var(--wp--preset--font-size--sm); line-height: 1.47; color: var(--wp--preset--color--muted); }
+.tracy .wpcf7-form .tracy-required { color: var(--wp--preset--color--danger); }
+
+/* ---- search: the search page and the results template, as the source's Smart Search view. The
+   label above the field (14px, weight 500, 8px above it), a 51px field with 12px × 16px inside and
+   the input corner, the Search pill 12px beside it, 838px together; the results one per row
+   between hairlines (a 21px title, the excerpt in the secondary colour, the date in the quiet
+   colour); the empty state a warm panel with the button corner, its two lines centred. ---- */
+.tracy .tracy-search-form { max-width: 838px; margin: 0; }
+.tracy .tracy-main.tracy-page .tracy-page__body > .tracy-search-form:first-child { margin-top: 0; }
+.tracy .tracy-search-form .wp-block-search__label {
+  display: block;
+  margin: 0 0 8px;
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 500;
+  letter-spacing: -0.016em;
+  color: var(--wp--preset--color--fg);
+}
+.tracy .tracy-search-form .wp-block-search__inside-wrapper { display: flex; gap: 12px; align-items: center; padding: 0; border: 0; }
+.tracy .tracy-search-form .wp-block-search__input {
+  box-sizing: border-box;
+  min-height: 51px;
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--ds-input-radius, var(--wp--custom--radius--sm));
+  background: var(--wp--preset--color--bg);
+  color: var(--wp--preset--color--fg);
+  font-size: var(--wp--preset--font-size--base);
+}
+.tracy .tracy-search-form .wp-block-search__button { flex: none; min-height: 44px; margin: 0; padding: 12px 20px; font-size: var(--wp--preset--font-size--base); line-height: 1.2; }
+.tracy .tracy-results { margin-top: 48px; }
+.tracy .tracy-results__list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--wp--preset--color--border); }
+.tracy .tracy-result { display: flex; flex-direction: column; gap: 8px; padding-block: 24px; border-bottom: 1px solid var(--wp--preset--color--border-soft); }
+.tracy .tracy-result > * { margin: 0; }
+.tracy .tracy-result__title { font-size: var(--wp--preset--font-size--lg); line-height: 1.19; }
+.tracy .tracy-result__title a { color: var(--wp--preset--color--fg); text-decoration: none; }
+.tracy .tracy-result__title a:is(:hover, :focus-visible) { color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); }
+.tracy .tracy-result__text, .tracy .tracy-result__text p { margin: 0; color: var(--wp--preset--color--fg-2); }
+.tracy .tracy-result__meta { font-size: var(--wp--preset--font-size--sm); color: var(--wp--preset--color--meta); }
+.tracy .tracy-search-empty {
+  margin-top: 0;
+  padding: 17px;
+  border-radius: var(--wp--custom--radius--md);
+  background: var(--wp--preset--color--surface-warm);
+  color: var(--wp--preset--color--fg-2);
+  text-align: center;
+}
+.tracy .tracy-search-empty > * { margin: 0; }
+.tracy .tracy-search-empty__title { font-size: 31.6px; font-weight: 700; line-height: 1.05; color: var(--wp--preset--color--fg); }
+.tracy .tracy-search-empty__text { color: var(--wp--preset--color--muted); }
+
+/* ---- the Tags page: each tag a 56px chip with a ring edge and a 25px corner, 14px text, 25px
+   apart, every tag the same size (the page's tag cloud asks for 14px at both ends). ---- */
+.tracy .wp-block-tag-cloud.tracy-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+.tracy .tracy-page-stack > .wp-block-post-content > .wp-block-tag-cloud.tracy-chips {
+  box-sizing: border-box;
+  max-width: calc(var(--wp--custom--container--max) + var(--wp--custom--container--gutter-desktop) * 2);
+  margin-inline: auto;
+  padding-inline: var(--wp--custom--container--gutter-desktop);
+}
+@media (max-width: 781px) {
+  .tracy .tracy-page-stack > .wp-block-post-content > .wp-block-tag-cloud.tracy-chips { padding-inline: var(--wp--custom--container--gutter-phone); }
+}
+.tracy .wp-block-tag-cloud.tracy-chips a {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 56px;
+  margin: 0 8.5px;
+  padding: 8.5px 17px;
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--ds-pill-radius, 25px);
+  background: var(--wp--preset--color--bg);
+  box-shadow: var(--wp--custom--elev--ring);
+  color: var(--wp--preset--color--fg);
+  font-size: var(--wp--preset--font-size--sm) !important;
+  line-height: 1.2;
+  text-decoration: none;
+}
+.tracy .wp-block-tag-cloud.tracy-chips a:is(:hover, :focus-visible) { color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); }
+
+/* ---- Browse by tag: the tagged posts as title cards two to a row, 24px apart, in the 760px main
+   column: the surface with a ring edge and the card corner, 24px inside, a 17px title. ---- */
+.tracy .tracy-tagitems__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0; list-style: none; }
+.tracy .tracy-tagitem { height: 100%; box-sizing: border-box; margin: 0; padding: 24px; border-radius: var(--wp--custom--radius--lg); background: var(--wp--preset--color--surface); box-shadow: var(--wp--custom--elev--ring); }
+.tracy .tracy-tagitem__title { margin: 0; font-size: var(--wp--preset--font-size--base); font-weight: 500; line-height: 1.47; }
+.tracy .tracy-tagitem__title a { color: var(--wp--preset--color--fg); text-decoration: none; }
+.tracy .tracy-tagitem__title a:is(:hover, :focus-visible) { color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); }
+@media (max-width: 781px) {
+  .tracy .tracy-tagitems__grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- All articles: the source's row list, one 21px title per row between hairlines with 16px
+   above and below; then "Subcategories" (18px, 700) and its cards two to a row, each the surface
+   with the button corner, 24px inside, the title a 22.6px accent link over the 17px line. ---- */
+.tracy .tracy-rowlist { margin-top: 32px; }
+.tracy .tracy-rowlist__rows { margin: 0; padding: 0; list-style: none; }
+.tracy .tracy-rowlist__rows > li { margin: 0; padding: 16px 0; border-top: 1px solid var(--wp--preset--color--border-soft); }
+.tracy .tracy-rowlist__rows > li:last-child { border-bottom: 1px solid var(--wp--preset--color--border-soft); }
+.tracy .tracy-rowlist__title { margin: 0; font-size: var(--wp--preset--font-size--lg); font-weight: 400; line-height: 1.47; }
+.tracy .tracy-rowlist__title a { color: var(--wp--preset--color--fg); text-decoration: none; }
+.tracy .tracy-rowlist__title a:is(:hover, :focus-visible) { color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); }
+.tracy .tracy-subcats__title { margin: 48px 0 0; font-size: 18px; font-weight: 700; line-height: 1.1; }
+.tracy .tracy-subcats { display: grid; grid-template-columns: repeat(2, minmax(0, 500px)); gap: 24px; margin-top: 24px; }
+.tracy .tracy-subcat { margin: 0; padding: 24px; border-radius: var(--wp--custom--radius--md); background: var(--wp--preset--color--surface); }
+.tracy .tracy-subcat > * { margin: 0; }
+.tracy .tracy-subcat__title { font-size: 22.6px; font-weight: 500; line-height: 1.2; }
+.tracy .tracy-subcat__title a { color: var(--ds-c-accent-text, var(--wp--preset--color--accent)); text-decoration: none; }
+.tracy .tracy-subcat__text { margin-top: 12px; font-size: var(--wp--preset--font-size--base); color: var(--wp--preset--color--fg); }
+@media (max-width: 781px) {
+  .tracy .tracy-subcats { grid-template-columns: minmax(0, 1fr); }
+}

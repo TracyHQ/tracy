@@ -1,0 +1,69 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Body text, headings, nav links, hairline borders, and link underlines — the single type color across the entire system"
+    },
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Page background, card surfaces, reverse text on dark photographic regions"
+    },
+    "warm-linen": {
+      "$value": "#eee5da",
+      "$type": "color",
+      "$description": "Warm Linen — Soft section background, the first step off pure white — gives a page the warmth of unbleached paper"
+    },
+    "pale-sage": {
+      "$value": "#d8ddc6",
+      "$type": "color",
+      "$description": "Pale Sage — Tinted section panels, the dominant non-white canvas tone"
+    },
+    "driftwood": {
+      "$value": "#d8d0c5",
+      "$type": "color",
+      "$description": "Driftwood — Deeper warm section background, used when a panel needs to recede from Pale Sage"
+    },
+    "olive-stone": {
+      "$value": "#afb371",
+      "$type": "color",
+      "$description": "Olive Stone — Saturated warm section background — the deepest neutral step before any chromatic color enters"
+    },
+    "weathered-taupe": {
+      "$value": "#9c978a",
+      "$type": "color",
+      "$description": "Weathered Taupe — Muted section background, used sparingly as a quieter alternative to Olive Stone"
+    },
+    "soft-pebble": {
+      "$value": "#aaaaa4",
+      "$type": "color",
+      "$description": "Soft Pebble — Light warm-gray section background, the coolest of the earth-tone neutrals"
+    },
+    "garden-green": {
+      "$value": "#259558",
+      "$type": "color",
+      "$description": "Garden Green — Footer background only — the single chromatic accent in the system, used as a deliberate closing beat rather than a brand color spread across the UI"
+    }
+  },
+  "font": {
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Primary UI and editorial type — body copy, navigation, links, project captions, category filters, and all functional text. Weight 400 for body and metadata, weight 600 reserved for the wordmark and the few moments that need emphasis. The system stack ensures identical rendering across platforms without depending on a webfont."
+    },
+    "minion-3": {
+      "$value": "minion-3",
+      "$type": "fontFamily",
+      "$description": "Editorial accent serif — used for body paragraphs and select headings where a literary, book-page quality is desired. The contrast between this transitional serif and the geometric Helvetica mirrors the brand's positioning: strategy + craft, editorial + commercial."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://deux-ce.com",
+      "siteName": "Atelier Deux-Cé",
+      "extractedAt": "2026-06-03T20:25:01.824Z",
+      "variant": "compact"
+    }
+  }
+}

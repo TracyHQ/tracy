@@ -1,0 +1,73 @@
+import { defineMiddleware } from 'astro:middleware'
+import { contentOnlyRefusal } from './lib/content-only'
+import { DEFAULT_LOCALE, LOCALES } from './lib/i18n'
+import { hiddenLocaleRedirect, prefixedLocale } from './lib/locale-gate'
+import { servedLocales } from './lib/served-locales'
+
+/**
+ * Who may show this site inside a frame. Empty (the default, every customer site): nobody but the
+ * site itself — EmDash then sets `X-Frame-Options: SAMEORIGIN` on its own. Set on a DEMO site to the
+ * origins of Tracy's Design inspiration preview (`TRACY_FRAME_ANCESTORS="https://cowork.tracy.ai
+ * https://*.tracy.ai"`), which frames the live demo so a customer sees the site they will get.
+ *
+ * A header set here is honoured by EmDash's middleware, which sets its own security headers only
+ * when absent (`packages/core/src/astro/middleware.ts`, "set-if-absent"). `frame-ancestors` is the
+ * CSP directive browsers read for framing; `X-Frame-Options` cannot list origins, which is why the
+ * CSP form is the one that works.
+ */
+const FRAME_ANCESTORS = (process.env.TRACY_FRAME_ANCESTORS ?? '').trim()
+
+/**
+ * Canonical URL form: no trailing slash. `/about/` redirects (301) to `/about`, query string kept.
+ * EmDash's own routes are left alone; the admin owns its URL shapes.
+ */
+export const onRequest = defineMiddleware(async (context, next) => {
+  const { pathname, search } = context.url
+  // A Tracy quickstart site is content-only: a token caller (the agent's MCP road) may change the
+  // words and pictures, never the structure. Decided in `src/lib/content-only.ts`; the body is read
+  // from a clone so the MCP route still gets its own copy.
+  if (context.request.method === 'POST' && pathname === '/_emdash/api/mcp') {
+    let mcpBody: unknown = null
+    try {
+      mcpBody = await context.request.clone().json()
+    } catch {
+      // not JSON: nothing to decide on, the MCP route answers its own error
+    }
+    const refusal = contentOnlyRefusal({
+      pathname,
+      method: context.request.method,
+      // `emdash/locals` types `user` only; the auth middleware's own declaration adds `tokenScopes`
+      // (dist/astro/middleware/auth.d.mts) — read it as that shape.
+      tokenScopes: (context.locals as { tokenScopes?: string[] }).tokenScopes,
+      mcpBody,
+      env: process.env.TRACY_CONTENT_ONLY
+    })
+    if (refusal !== null)
+      return new Response(JSON.stringify(refusal.body), {
+        status: refusal.status,
+        headers: { 'content-type': 'application/json' }
+      })
+  }
+  if (pathname !== '/' && pathname.endsWith('/') && !pathname.startsWith('/_emdash/')) {
+    return context.redirect(`${pathname.slice(0, -1)}${search}`, 301)
+  }
+  // A language the customer did not choose is hidden (`src/lib/locale-gate.ts`): its URLs go to
+  // the same page in the default locale. Someone signed in to the admin, and a preview link, still
+  // see it — that is how a hidden language is checked before it is switched back on.
+  const gate = { locales: LOCALES, defaultLocale: DEFAULT_LOCALE }
+  if (
+    prefixedLocale(pathname, gate) !== null &&
+    !context.locals.user &&
+    !context.url.searchParams.has('_preview')
+  ) {
+    const to = hiddenLocaleRedirect(pathname, search, { ...gate, served: await servedLocales() })
+    if (to !== null) return context.redirect(to, 302)
+  }
+  const res = await next()
+  // The admin is never framed, whatever the demo setting says: a framed admin is a clickjacking
+  // surface, and nothing in the preview needs it.
+  if (FRAME_ANCESTORS !== '' && !pathname.startsWith('/_emdash/')) {
+    res.headers.set('Content-Security-Policy', `frame-ancestors 'self' ${FRAME_ANCESTORS}`)
+  }
+  return res
+})

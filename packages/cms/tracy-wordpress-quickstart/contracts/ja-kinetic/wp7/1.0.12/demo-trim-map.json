@@ -1,0 +1,2644 @@
+{
+  "schemaVersion": "tracy-quickstart-demo-trim/wordpress/v1",
+  "extensionVersion": "1.0.0",
+  "contract": "ja-kinetic/wp7/1.0.12",
+  "baseHash": "aa5b795fb68ee29902ece5c62f80d493926614ad438cadadf87388be6eaca5b6",
+  "baseFiles": {
+    "manifest.json": "90f786edf079bca5c7440c631e11e6466908165927d34feeb522c4b9cb53c370",
+    "content-map.json": "323d8e95fec1a856f11a5495c36cf33b97b8b10a8ba921575901e69cad90ad72",
+    "presentation-lock.json": "a456ca5f780c319c271c81cddbac313affe819a582544bbfb243fd7a09396da8"
+  },
+  "kept": [
+    {
+      "key": "page-3",
+      "kind": "page",
+      "id": 3,
+      "language": null,
+      "reason": "navigation 1776 opens it"
+    },
+    {
+      "key": "page-1740",
+      "kind": "page",
+      "id": 1740,
+      "language": null,
+      "reason": "contract maps it as page-home"
+    },
+    {
+      "key": "page-1741",
+      "kind": "page",
+      "id": 1741,
+      "language": null,
+      "reason": "contract maps it as page-pricing"
+    },
+    {
+      "key": "page-1743",
+      "kind": "page",
+      "id": 1743,
+      "language": null,
+      "reason": "navigation 1776 opens it"
+    },
+    {
+      "key": "page-1744",
+      "kind": "page",
+      "id": 1744,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1745",
+      "kind": "page",
+      "id": 1745,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1746",
+      "kind": "page",
+      "id": 1746,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1747",
+      "kind": "page",
+      "id": 1747,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1748",
+      "kind": "page",
+      "id": 1748,
+      "language": null,
+      "reason": "contract maps it as page-home-blueprint"
+    },
+    {
+      "key": "page-1749",
+      "kind": "page",
+      "id": 1749,
+      "language": null,
+      "reason": "contract maps it as page-home-signal"
+    },
+    {
+      "key": "page-1750",
+      "kind": "page",
+      "id": 1750,
+      "language": null,
+      "reason": "contract maps it as page-features"
+    },
+    {
+      "key": "page-1751",
+      "kind": "page",
+      "id": 1751,
+      "language": null,
+      "reason": "contract maps it as page-integrations"
+    },
+    {
+      "key": "page-1752",
+      "kind": "page",
+      "id": 1752,
+      "language": null,
+      "reason": "contract maps it as page-changelog"
+    },
+    {
+      "key": "page-1753",
+      "kind": "page",
+      "id": 1753,
+      "language": null,
+      "reason": "contract maps it as page-faq"
+    },
+    {
+      "key": "page-1754",
+      "kind": "page",
+      "id": 1754,
+      "language": null,
+      "reason": "contract maps it as page-about"
+    },
+    {
+      "key": "page-1755",
+      "kind": "page",
+      "id": 1755,
+      "language": null,
+      "reason": "contract maps it as page-team"
+    },
+    {
+      "key": "page-1756",
+      "kind": "page",
+      "id": 1756,
+      "language": null,
+      "reason": "contract maps it as page-contact"
+    },
+    {
+      "key": "page-1757",
+      "kind": "page",
+      "id": 1757,
+      "language": null,
+      "reason": "contract maps it as page-landing"
+    },
+    {
+      "key": "page-1758",
+      "kind": "page",
+      "id": 1758,
+      "language": null,
+      "reason": "navigation 1774 opens it"
+    },
+    {
+      "key": "page-1759",
+      "kind": "page",
+      "id": 1759,
+      "language": null,
+      "reason": "navigation 1774 opens it"
+    },
+    {
+      "key": "page-1760",
+      "kind": "page",
+      "id": 1760,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1761",
+      "kind": "page",
+      "id": 1761,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1762",
+      "kind": "page",
+      "id": 1762,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1763",
+      "kind": "page",
+      "id": 1763,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1764",
+      "kind": "page",
+      "id": 1764,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1765",
+      "kind": "page",
+      "id": 1765,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1766",
+      "kind": "page",
+      "id": 1766,
+      "language": null,
+      "reason": "navigation 1774 opens it"
+    },
+    {
+      "key": "page-1767",
+      "kind": "page",
+      "id": 1767,
+      "language": null,
+      "reason": "navigation 1774 opens it"
+    },
+    {
+      "key": "page-1768",
+      "kind": "page",
+      "id": 1768,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1769",
+      "kind": "page",
+      "id": 1769,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1770",
+      "kind": "page",
+      "id": 1770,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    },
+    {
+      "key": "page-1771",
+      "kind": "page",
+      "id": 1771,
+      "language": null,
+      "reason": "a page: the site structure stays"
+    }
+  ],
+  "hide": [
+    {
+      "key": "post-1500",
+      "kind": "post",
+      "id": 1500,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1501",
+      "kind": "post",
+      "id": 1501,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1502",
+      "kind": "post",
+      "id": 1502,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1503",
+      "kind": "post",
+      "id": 1503,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1504",
+      "kind": "post",
+      "id": 1504,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1505",
+      "kind": "post",
+      "id": 1505,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1506",
+      "kind": "post",
+      "id": 1506,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1507",
+      "kind": "post",
+      "id": 1507,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1508",
+      "kind": "post",
+      "id": 1508,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1509",
+      "kind": "post",
+      "id": 1509,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1510",
+      "kind": "post",
+      "id": 1510,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1511",
+      "kind": "post",
+      "id": 1511,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1512",
+      "kind": "post",
+      "id": 1512,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1514",
+      "kind": "post",
+      "id": 1514,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1515",
+      "kind": "post",
+      "id": 1515,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1516",
+      "kind": "post",
+      "id": 1516,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1518",
+      "kind": "post",
+      "id": 1518,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1519",
+      "kind": "post",
+      "id": 1519,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1520",
+      "kind": "post",
+      "id": 1520,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1521",
+      "kind": "post",
+      "id": 1521,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1522",
+      "kind": "post",
+      "id": 1522,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1523",
+      "kind": "post",
+      "id": 1523,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1524",
+      "kind": "post",
+      "id": 1524,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1525",
+      "kind": "post",
+      "id": 1525,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1526",
+      "kind": "post",
+      "id": 1526,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1527",
+      "kind": "post",
+      "id": 1527,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1528",
+      "kind": "post",
+      "id": 1528,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1529",
+      "kind": "post",
+      "id": 1529,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1530",
+      "kind": "post",
+      "id": 1530,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1531",
+      "kind": "post",
+      "id": 1531,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1532",
+      "kind": "post",
+      "id": 1532,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1533",
+      "kind": "post",
+      "id": 1533,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1534",
+      "kind": "post",
+      "id": 1534,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1535",
+      "kind": "post",
+      "id": 1535,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1536",
+      "kind": "post",
+      "id": 1536,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1537",
+      "kind": "post",
+      "id": 1537,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1538",
+      "kind": "post",
+      "id": 1538,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1539",
+      "kind": "post",
+      "id": 1539,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1540",
+      "kind": "post",
+      "id": 1540,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1541",
+      "kind": "post",
+      "id": 1541,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1542",
+      "kind": "post",
+      "id": 1542,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1543",
+      "kind": "post",
+      "id": 1543,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1544",
+      "kind": "post",
+      "id": 1544,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1545",
+      "kind": "post",
+      "id": 1545,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1546",
+      "kind": "post",
+      "id": 1546,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1547",
+      "kind": "post",
+      "id": 1547,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1548",
+      "kind": "post",
+      "id": 1548,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1549",
+      "kind": "post",
+      "id": 1549,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1550",
+      "kind": "post",
+      "id": 1550,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1551",
+      "kind": "post",
+      "id": 1551,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1552",
+      "kind": "post",
+      "id": 1552,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1553",
+      "kind": "post",
+      "id": 1553,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1554",
+      "kind": "post",
+      "id": 1554,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1555",
+      "kind": "post",
+      "id": 1555,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1556",
+      "kind": "post",
+      "id": 1556,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1557",
+      "kind": "post",
+      "id": 1557,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1558",
+      "kind": "post",
+      "id": 1558,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1559",
+      "kind": "post",
+      "id": 1559,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1560",
+      "kind": "post",
+      "id": 1560,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1561",
+      "kind": "post",
+      "id": 1561,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1562",
+      "kind": "post",
+      "id": 1562,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1563",
+      "kind": "post",
+      "id": 1563,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1564",
+      "kind": "post",
+      "id": 1564,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1565",
+      "kind": "post",
+      "id": 1565,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1566",
+      "kind": "post",
+      "id": 1566,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1567",
+      "kind": "post",
+      "id": 1567,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1568",
+      "kind": "post",
+      "id": 1568,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1569",
+      "kind": "post",
+      "id": 1569,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1570",
+      "kind": "post",
+      "id": 1570,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1571",
+      "kind": "post",
+      "id": 1571,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1572",
+      "kind": "post",
+      "id": 1572,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1573",
+      "kind": "post",
+      "id": 1573,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1574",
+      "kind": "post",
+      "id": 1574,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1575",
+      "kind": "post",
+      "id": 1575,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1576",
+      "kind": "post",
+      "id": 1576,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1577",
+      "kind": "post",
+      "id": 1577,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1578",
+      "kind": "post",
+      "id": 1578,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1579",
+      "kind": "post",
+      "id": 1579,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1580",
+      "kind": "post",
+      "id": 1580,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1581",
+      "kind": "post",
+      "id": 1581,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1582",
+      "kind": "post",
+      "id": 1582,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1583",
+      "kind": "post",
+      "id": 1583,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1584",
+      "kind": "post",
+      "id": 1584,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1585",
+      "kind": "post",
+      "id": 1585,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1586",
+      "kind": "post",
+      "id": 1586,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1587",
+      "kind": "post",
+      "id": 1587,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1588",
+      "kind": "post",
+      "id": 1588,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1589",
+      "kind": "post",
+      "id": 1589,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1590",
+      "kind": "post",
+      "id": 1590,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1591",
+      "kind": "post",
+      "id": 1591,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1592",
+      "kind": "post",
+      "id": 1592,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1593",
+      "kind": "post",
+      "id": 1593,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1594",
+      "kind": "post",
+      "id": 1594,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1595",
+      "kind": "post",
+      "id": 1595,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1596",
+      "kind": "post",
+      "id": 1596,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1597",
+      "kind": "post",
+      "id": 1597,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1598",
+      "kind": "post",
+      "id": 1598,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1599",
+      "kind": "post",
+      "id": 1599,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1600",
+      "kind": "post",
+      "id": 1600,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1601",
+      "kind": "post",
+      "id": 1601,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1602",
+      "kind": "post",
+      "id": 1602,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1603",
+      "kind": "post",
+      "id": 1603,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1604",
+      "kind": "post",
+      "id": 1604,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1605",
+      "kind": "post",
+      "id": 1605,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1606",
+      "kind": "post",
+      "id": 1606,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1607",
+      "kind": "post",
+      "id": 1607,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1608",
+      "kind": "post",
+      "id": 1608,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1609",
+      "kind": "post",
+      "id": 1609,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1610",
+      "kind": "post",
+      "id": 1610,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1611",
+      "kind": "post",
+      "id": 1611,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1612",
+      "kind": "post",
+      "id": 1612,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1613",
+      "kind": "post",
+      "id": 1613,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1614",
+      "kind": "post",
+      "id": 1614,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1615",
+      "kind": "post",
+      "id": 1615,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1616",
+      "kind": "post",
+      "id": 1616,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1617",
+      "kind": "post",
+      "id": 1617,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1618",
+      "kind": "post",
+      "id": 1618,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1619",
+      "kind": "post",
+      "id": 1619,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1620",
+      "kind": "post",
+      "id": 1620,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1621",
+      "kind": "post",
+      "id": 1621,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1622",
+      "kind": "post",
+      "id": 1622,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1623",
+      "kind": "post",
+      "id": 1623,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1624",
+      "kind": "post",
+      "id": 1624,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1625",
+      "kind": "post",
+      "id": 1625,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1626",
+      "kind": "post",
+      "id": 1626,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1627",
+      "kind": "post",
+      "id": 1627,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1628",
+      "kind": "post",
+      "id": 1628,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1629",
+      "kind": "post",
+      "id": 1629,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1630",
+      "kind": "post",
+      "id": 1630,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1631",
+      "kind": "post",
+      "id": 1631,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1632",
+      "kind": "post",
+      "id": 1632,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1633",
+      "kind": "post",
+      "id": 1633,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1634",
+      "kind": "post",
+      "id": 1634,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1635",
+      "kind": "post",
+      "id": 1635,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1636",
+      "kind": "post",
+      "id": 1636,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1637",
+      "kind": "post",
+      "id": 1637,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1638",
+      "kind": "post",
+      "id": 1638,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1639",
+      "kind": "post",
+      "id": 1639,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1640",
+      "kind": "post",
+      "id": 1640,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1641",
+      "kind": "post",
+      "id": 1641,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1642",
+      "kind": "post",
+      "id": 1642,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1643",
+      "kind": "post",
+      "id": 1643,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1644",
+      "kind": "post",
+      "id": 1644,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1645",
+      "kind": "post",
+      "id": 1645,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1646",
+      "kind": "post",
+      "id": 1646,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1647",
+      "kind": "post",
+      "id": 1647,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1648",
+      "kind": "post",
+      "id": 1648,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1649",
+      "kind": "post",
+      "id": 1649,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1650",
+      "kind": "post",
+      "id": 1650,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1651",
+      "kind": "post",
+      "id": 1651,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1652",
+      "kind": "post",
+      "id": 1652,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1653",
+      "kind": "post",
+      "id": 1653,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1654",
+      "kind": "post",
+      "id": 1654,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1655",
+      "kind": "post",
+      "id": 1655,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1656",
+      "kind": "post",
+      "id": 1656,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1657",
+      "kind": "post",
+      "id": 1657,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1658",
+      "kind": "post",
+      "id": 1658,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1659",
+      "kind": "post",
+      "id": 1659,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1660",
+      "kind": "post",
+      "id": 1660,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1661",
+      "kind": "post",
+      "id": 1661,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1662",
+      "kind": "post",
+      "id": 1662,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1663",
+      "kind": "post",
+      "id": 1663,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1664",
+      "kind": "post",
+      "id": 1664,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1665",
+      "kind": "post",
+      "id": 1665,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1666",
+      "kind": "post",
+      "id": 1666,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1667",
+      "kind": "post",
+      "id": 1667,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1668",
+      "kind": "post",
+      "id": 1668,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1669",
+      "kind": "post",
+      "id": 1669,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1670",
+      "kind": "post",
+      "id": 1670,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1671",
+      "kind": "post",
+      "id": 1671,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1672",
+      "kind": "post",
+      "id": 1672,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1673",
+      "kind": "post",
+      "id": 1673,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1674",
+      "kind": "post",
+      "id": 1674,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1675",
+      "kind": "post",
+      "id": 1675,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1676",
+      "kind": "post",
+      "id": 1676,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1677",
+      "kind": "post",
+      "id": 1677,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1678",
+      "kind": "post",
+      "id": 1678,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1679",
+      "kind": "post",
+      "id": 1679,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1680",
+      "kind": "post",
+      "id": 1680,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1681",
+      "kind": "post",
+      "id": 1681,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1682",
+      "kind": "post",
+      "id": 1682,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1683",
+      "kind": "post",
+      "id": 1683,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1684",
+      "kind": "post",
+      "id": 1684,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1685",
+      "kind": "post",
+      "id": 1685,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1686",
+      "kind": "post",
+      "id": 1686,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1687",
+      "kind": "post",
+      "id": 1687,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1688",
+      "kind": "post",
+      "id": 1688,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1689",
+      "kind": "post",
+      "id": 1689,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1690",
+      "kind": "post",
+      "id": 1690,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1691",
+      "kind": "post",
+      "id": 1691,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1692",
+      "kind": "post",
+      "id": 1692,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1693",
+      "kind": "post",
+      "id": 1693,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1694",
+      "kind": "post",
+      "id": 1694,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1695",
+      "kind": "post",
+      "id": 1695,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1696",
+      "kind": "post",
+      "id": 1696,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1697",
+      "kind": "post",
+      "id": 1697,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1698",
+      "kind": "post",
+      "id": 1698,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1699",
+      "kind": "post",
+      "id": 1699,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1700",
+      "kind": "post",
+      "id": 1700,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1701",
+      "kind": "post",
+      "id": 1701,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1702",
+      "kind": "post",
+      "id": 1702,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1703",
+      "kind": "post",
+      "id": 1703,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1704",
+      "kind": "post",
+      "id": 1704,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1705",
+      "kind": "post",
+      "id": 1705,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1706",
+      "kind": "post",
+      "id": 1706,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1707",
+      "kind": "post",
+      "id": 1707,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1708",
+      "kind": "post",
+      "id": 1708,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1709",
+      "kind": "post",
+      "id": 1709,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1710",
+      "kind": "post",
+      "id": 1710,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1711",
+      "kind": "post",
+      "id": 1711,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1712",
+      "kind": "post",
+      "id": 1712,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1713",
+      "kind": "post",
+      "id": 1713,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1714",
+      "kind": "post",
+      "id": 1714,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1715",
+      "kind": "post",
+      "id": 1715,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1716",
+      "kind": "post",
+      "id": 1716,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1717",
+      "kind": "post",
+      "id": 1717,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1718",
+      "kind": "post",
+      "id": 1718,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1719",
+      "kind": "post",
+      "id": 1719,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1720",
+      "kind": "post",
+      "id": 1720,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1721",
+      "kind": "post",
+      "id": 1721,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1722",
+      "kind": "post",
+      "id": 1722,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1723",
+      "kind": "post",
+      "id": 1723,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1724",
+      "kind": "post",
+      "id": 1724,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1725",
+      "kind": "post",
+      "id": 1725,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1726",
+      "kind": "post",
+      "id": 1726,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1727",
+      "kind": "post",
+      "id": 1727,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1728",
+      "kind": "post",
+      "id": 1728,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1729",
+      "kind": "post",
+      "id": 1729,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1730",
+      "kind": "post",
+      "id": 1730,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1731",
+      "kind": "post",
+      "id": 1731,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1732",
+      "kind": "post",
+      "id": 1732,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1733",
+      "kind": "post",
+      "id": 1733,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1734",
+      "kind": "post",
+      "id": 1734,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1735",
+      "kind": "post",
+      "id": 1735,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1736",
+      "kind": "post",
+      "id": 1736,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1737",
+      "kind": "post",
+      "id": 1737,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1783",
+      "kind": "post",
+      "id": 1783,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1784",
+      "kind": "post",
+      "id": 1784,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1787",
+      "kind": "post",
+      "id": 1787,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    },
+    {
+      "key": "post-1788",
+      "kind": "post",
+      "id": 1788,
+      "field": "post_status",
+      "from": "publish",
+      "to": "draft",
+      "language": "en",
+      "reason": "demo article no navigation opens"
+    }
+  ],
+  "counts": {
+    "hide": 240,
+    "kept": 32,
+    "languages": 1
+  }
+}

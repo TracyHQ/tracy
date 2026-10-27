@@ -1,0 +1,44 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — All text, the ARTWORLD wordmark, hairline structural borders, link strokes — the only mark-making color in the entire system"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, negative space between type, reverse text on the wordmark bar"
+    }
+  },
+  "font": {
+    "graphik-light": {
+      "$value": "Graphik Light",
+      "$type": "fontFamily",
+      "$description": "The invisible support system — body text, captions, metadata, role tags, the legend, the info link. Weight 300 is deliberately thin: it recedes so the Cardinal Fruit can dominate. This is the typographic equivalent of using whisper voice in a conversation where someone else is speaking. The consistent -0.065em letter-spacing tightens the already-light forms, giving the sans-serif an editorial density that prevents it from feeling like default UI text."
+    },
+    "cardinal-fruit-and-italic-classic-italic-variants": {
+      "$value": "Cardinal Fruit (and Italic / Classic Italic variants)",
+      "$type": "fontFamily",
+      "$description": "The editorial display voice — used for talent names, artist credits, and any moment of typographic expression. The italic variant carries the romantic, fashion-magazine feeling while the upright version provides structural headlines. Custom serif with high contrast strokes, used at extreme sizes (65–75px) to dominate the page. The whisper weight (300) on such a large serif is anti-convention: most editorial serifs use 400–700 here, but the light cuts create airier letterforms that feel more printed than digital."
+    },
+    "cardinal-fruit-italic": {
+      "$value": "Cardinal Fruit Italic",
+      "$type": "fontFamily",
+      "$description": "Cardinal Fruit Italic — detected in extracted data but not described by AI"
+    },
+    "cardinal-classic-italic": {
+      "$value": "Cardinal Classic Italic",
+      "$type": "fontFamily",
+      "$description": "Cardinal Classic Italic — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://artworld.agency",
+      "siteName": "ARTWORLD",
+      "extractedAt": "2026-06-03T20:41:49.027Z",
+      "variant": "compact"
+    }
+  }
+}

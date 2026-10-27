@@ -1,0 +1,64 @@
+{
+  "id": "QA-UNIT-REG-PR-926-wp-seo-title-own-meta-happy",
+  "itemIds": ["regression:REG-PR-926-wp-seo-title-own-meta"],
+  "requirement": "Changing only a WordPress page's search title never renames the page: the plugin's own meta where it prints, else said",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-926-wp-seo-title-own-meta.json",
+    "ref": "PR #926 (fix); fix evidence: 05/10/2026, Tracy Business wp7 with no SEO plugin: asked to change only what Google shows, the agent renamed the page (the only where.seo entry), which renamed the breadcrumb in <main>; the plugin's seo:{title} had written nothing, silently. Plugin side: TracyHQ/claude-cowork#119.",
+    "invariant": "0 failures in all three runs. A content.update {kind:\"postmeta\", key:\"_claude_cowork_seo_title\"} on WordPress resolves wpSeoMeta: on a Claude Cowork older than 0.18.0 with no SEO plugin it is refused SEO_TITLE_UNSUPPORTED (its next says the page title is the only title and renaming it renames the breadcrumb and heading); on 0.18.0+ it is sent, with a note when the title holds no site name. With Yoast SEO or Rank Math active the key becomes _yoast_wpseo_title / rank_math_title (description: _yoast_wpseo_metadesc / rank_math_description); with All in One SEO, SmartCrawl, SureRank or Jetpack with seo-tools it is refused SEO_PLUGIN_FIELDS. A post write's seo on an older plugin is refused (SEO_TITLE_UNSUPPORTED, or SEO_FIELD_DROPPED naming the SEO plugin's keys). The Tracy Business wp7 where-map offers the _claude_cowork_seo_title entry (kind postmeta, value '<new page part> – <site name>') before the post_title entry, which says the breadcrumb changes too.",
+    "productSources": [
+      "apps/tracy-web/src/lib/content-api.js:11",
+      "apps/tracy-web/src/sites/content-extend.js:324",
+      "apps/tracy-web/src/sites/content-where.js:94",
+      "apps/tracy-web/src/sites/route.js:566",
+      "packages/tools/tracy-site-tools/src/host/emdash.mjs:28",
+      "packages/tools/tracy-site-tools/src/host/legacy-refusal.mjs:11",
+      "packages/tools/tracy-site-tools/src/host/normalize.mjs:252",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:2582",
+      "packages/tools/tracy-site-tools/src/host/site.mjs:243",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:50",
+      "packages/tools/tracy-site-tools/src/host/wp-seo.mjs:19"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/sites/content-where.js:58 readFileSync() with a computed path",
+      "apps/tracy-web/test/content-where.test.mjs:42 readFileSync() with a computed path",
+      "apps/tracy-web/test/content-where.test.mjs:86 readFileSync() with a computed path",
+      "packages/site/tracy-site-build-core/src/host/build.mjs:111 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:263 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:301 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/src/host/site-context.mjs:304 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs:1420 readFileSync() with a computed path",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs:2100 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-926-wp-seo-title-own-meta.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-926-wp-seo-title-own-meta"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-926-wp-seo-title-own-meta",
+    "pr": 926,
+    "kind": "fix",
+    "area": "site-tools/wordpress-seo",
+    "file": "tests/regression/cases/REG-PR-926-wp-seo-title-own-meta.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-926-wp-seo-title-own-meta.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

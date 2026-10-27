@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "joomla",
+  "label": "JA Essence",
+  "version": "1.0.2",
+  "cms": "6.1.1",
+  "install": {
+    "webroot": {
+      "file": "ja-essence-j6-webroot-1.0.2.tar.gz",
+      "sha256": "2a3f04ef3b445705f91cc7ef796a904b8eb05c0e3328b20aa23834a70cf0c21e"
+    },
+    "database": {
+      "file": "ja-essence-j6-database-1.0.2.sql.gz",
+      "sha256": "da9899f819683fa8d65fa7a8f67ce3ccc005850de70a0573eca181755fef5d7e"
+    }
+  },
+  "template": "ja_essence"
+}

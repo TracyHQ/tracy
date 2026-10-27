@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1235-tracy-default-reads-images",
+  "kind": "fix",
+  "title": "A seat that keeps Tracy AI as Default can paste a picture: the seat-plan-tracy route reads what the deployment default reads",
+  "pr": 1235,
+  "area": "seat-plan/images",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test packages/ui/tracy-mode-picker/test/review-subscription-images.test.mjs",
+    "S2: Read the pass/fail counts and the tests named for Tracy AI kept as Default."
+  ],
+  "expect": [
+    "0 failures.",
+    "prepareCall('seat-plan-tracy', 'default') returns the deployment default's model info (inputModalities ['text','image'] for a vision default) with provider 'seat-plan-tracy' and id 'default'.",
+    "With no deployment default, a default that is itself seat-plan-*, or a default dsh cannot describe, seat-plan-tracy declares ['text'].",
+    "seat-plan-claude and seat-plan-glm still declare ['text'].",
+    "A Tracy AI pin answered with fallback streams the deployment default with the original messages, image reference included."
+  ],
+  "selectors": {
+    "function": "packages/ui/tracy-mode-picker/src/host/account-subscriptions.mjs AccountAdapter.resolveModel",
+    "test": "packages/ui/tracy-mode-picker/test/review-subscription-images.test.mjs"
+  },
+  "evidence": "Prod 12/10/2026 14:42: a seat with connections but Tracy AI as Default saw 'The current model does not support images'; an image that slipped through was projected to text before stream().",
+  "fence": "resolveModel for seat-plan-tracy delegates to llm.resolveModelInfo of the deployment default",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-mode-picker/test/review-subscription-images.test.mjs"
+    ],
+    "tests": [
+      "Tracy AI kept as Default reads pictures when the deployment default does (prod 12/10/2026)",
+      "Tracy AI kept as Default stays text-only when no deployment default can be described",
+      "a subscription vendor route stays text-only until its bytes are sent",
+      "a Tracy AI pin hands the deployment default the picture as the store reference it reads itself"
+    ]
+  }
+}

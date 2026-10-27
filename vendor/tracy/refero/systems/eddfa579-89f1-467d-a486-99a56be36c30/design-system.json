@@ -1,0 +1,351 @@
+{
+  "dos": [
+    "Use Forest Teal (#0f866c) as the only filled chromatic action color — never substitute blues, greens, or other hues for primary CTAs.",
+    "Set the primary CTA to a 9999px pill radius and pair it with a right-arrow icon for purchase actions.",
+    "Set display headlines in FS Kim at 46–64px with -0.016em letter-spacing; reserve Inter for everything below 32px.",
+    "Apply diffuse center-anchored shadows (rgba(0,0,0,0.12) 0px 0px 32px 0px) to all cards — never use directional offset drops.",
+    "Use the three soft accent surfaces (Peach Cream #ffe4d4, Warm Sand #f0eacf, Pale Mint #c3ece8) sparingly as decorative washes, not as functional backgrounds.",
+    "Set uppercase trust/guarantee labels in 10–12px Inter with 0.10–0.14em tracking for an institutional, confident voice.",
+    "Keep the canvas at Soft Canvas (#f7f8f9) and only escalate to pure white for cards and product surfaces."
+  ],
+  "donts": [
+    "Do not introduce a second chromatic accent color — the system is intentionally monochrome with one decision teal.",
+    "Do not use FS Kim below 18px or for UI controls — it is a display face only.",
+    "Do not use sharp 0–4px radii on cards; the system depends on 20–34px rounding for its soft, protected feel.",
+    "Do not apply heavy directional shadows or saturated glow effects — elevation must remain diffuse and ambient.",
+    "Do not use the red brand gradient outside the logo lockup — red is reserved for the shield emblem.",
+    "Do not place body text below 14px; the 10–12px range is reserved for uppercase tracked labels only.",
+    "Do not invert the teal/white relationship on buttons — teal is always the fill, white the text inside; ghost variants reverse border and text but never invert the fill."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#001d2f",
+      "name": "Midnight Navy",
+      "role": "Primary text, structural borders, heading strokes, nav separators, footer text — near-black with a cool cast gives authority without harshness",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7f8f9",
+      "name": "Soft Canvas",
+      "role": "Page background, muted section bands, secondary card surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Card surfaces, nav background, button text on dark fills, product mockup backings",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ccd2d5",
+      "name": "Hairline Gray",
+      "role": "List dividers, hairline borders, subtle separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dcdcdc",
+      "name": "Silver Edge",
+      "role": "Secondary borders and dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#adadad",
+      "name": "Steel Caption",
+      "role": "Badge borders, neutral fills, muted borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#667782",
+      "name": "Slate Body",
+      "role": "Secondary body text, muted helper copy, desaturated icon fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Button borders, icon fills, high-contrast text accents",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0f866c",
+      "name": "Forest Teal",
+      "role": "Primary action buttons, filled CTAs, active link color, brand emphasis — the single chromatic decision color; warm emerald reads as secure and confident without aggression",
+      "group": "brand"
+    },
+    {
+      "hex": "#00695c",
+      "name": "Deep Teal",
+      "role": "Teal outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#ffe4d4",
+      "name": "Peach Cream",
+      "role": "Warm accent card surface, soft highlight wash for feature callouts",
+      "group": "accent"
+    },
+    {
+      "hex": "#f0eacf",
+      "name": "Warm Sand",
+      "role": "Soft accent surface, nav highlight band, gentle warm wash",
+      "group": "accent"
+    },
+    {
+      "hex": "#c3ece8",
+      "name": "Pale Mint",
+      "role": "Light teal surface wash, nav highlight, brand-tinted decorative panel",
+      "group": "accent"
+    },
+    {
+      "hex": "#b7d1d0",
+      "name": "Sea Mist",
+      "role": "Card stroke accent, decorative outline on teal-themed cards",
+      "group": "accent"
+    },
+    {
+      "hex": "#da3940",
+      "name": "Brand Red",
+      "role": "ExpressVPN logo radial gradient stop — the red shield emblem",
+      "group": "brand",
+      "gradient": "radial-gradient(circle, rgb(218, 57, 64) 0px, rgb(176, 39, 45) 100%)"
+    },
+    {
+      "hex": "#b0272d",
+      "name": "Deep Red",
+      "role": "Outer stop of the brand logo radial gradient",
+      "group": "brand"
+    },
+    {
+      "hex": "#0c3956",
+      "name": "Twilight Navy",
+      "role": "Inner stop of the dark hero gradient band",
+      "group": "brand",
+      "gradient": "linear-gradient(261deg, rgb(12, 57, 86) 21.96%, rgb(0, 24, 39) 82.57%)"
+    }
+  ],
+  "layout": "Centered, max-width 1200px container with full-bleed section bands. Hero is vertically stacked: promo bar → nav → centered headline (FS Kim 64px) → subhead → filled teal CTA → trust badge row → phone mockup with overlapping feature cards. Below the hero, a 'One subscription. Complete protection.' section uses a single-line product family row of 5 evenly spaced icon+label tiles. FAQ section follows as a full-width centered list with hairline dividers, max-width ~800px. Section rhythm is spacious 64–80px vertical gaps on the off-white canvas. The navigation is a static top bar (not sticky) with a separate floating bottom-right chat widget and a fixed bottom cookie consent bar. No sidebar, no mega-menu — dropdowns reveal on hover with a subtle teal accent surface.",
+  "imagery": "Product visualization dominates over photography. The hero centers on a high-fidelity iPhone mockup of the VPN app with floating data cards (time protected, app shortcuts, transferred bytes) arranged in an overlapping constellation around it. Supporting visuals are flat 2D illustrations of the sister product family — simple two-tone icons in rounded square containers on pastel accent surfaces. No lifestyle photography, no abstract gradients beyond the brand red radial. Iconography throughout is line-and-fill hybrid: the red shield logo is a radial gradient mark, while functional UI icons (chevrons, arrows, globe) are single-color Midnight Navy line icons at 16–20px with 1.5–2px stroke. The visual density is text-and-illustration dominant with photography playing no role in the primary conversion path.",
+  "similar": [
+    {
+      "why": "Same light canvas with a single deep brand color (Nord uses deep blue, ExpressVPN uses forest teal) and diffuse card shadows for a trustworthy security-product feel.",
+      "business": "NordVPN"
+    },
+    {
+      "why": "Light background with restrained chromatic palette, pill-shaped CTAs, and generous spacing create the same calm, privacy-focused atmosphere.",
+      "business": "ProtonVPN"
+    },
+    {
+      "why": "Light SaaS surface with rounded 20–24px cards, diffuse ambient shadows, and a single decisive accent color on primary actions.",
+      "business": "1Password"
+    },
+    {
+      "why": "Bright, spacious, near-monochrome interface that uses a single warm accent for actions; both prioritize trust through visual restraint over spectacle.",
+      "business": "DuckDuckGo"
+    },
+    {
+      "why": "Centered max-width hero with a single display headline, pill-shaped buttons, and hairline-gray dividers structuring long content pages.",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "4px",
+      "cards": "24px",
+      "badges": "24px",
+      "buttons": "10px",
+      "largeCards": "34px",
+      "pillButtons": "9999px"
+    },
+    "elementGap": "24px",
+    "sectionGap": "64-80px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#f7f8f9",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Page-level background, creates a soft off-white field so pure white cards read as lifted"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Primary card and nav surface; product mockup backing"
+    },
+    {
+      "hex": "#c3ece8",
+      "name": "Accent Wash",
+      "level": 2,
+      "purpose": "Teal-tinted decorative band for nav highlights and brand callouts"
+    },
+    {
+      "hex": "#ffe4d4",
+      "name": "Warm Accent",
+      "level": 3,
+      "purpose": "Peach-tinted card surface for soft feature highlights"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.12) 0px 0px 32px 0px",
+      "element": "Standard Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.1) 0px 0px 15px 0px",
+      "element": "Subtle Card"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.12) 0px 4px 16px 0px",
+      "element": "Badge / Trust Pill"
+    }
+  ],
+  "northStar": "Fortress garden at dawn. A bright, spacious canopy of teal and ivory where dark navy anchors signal weight and warmth.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.8,
+      "letterSpacing": 1.4
+    },
+    {
+      "role": "badge",
+      "size": 12,
+      "lineHeight": 1.2,
+      "letterSpacing": 1.32
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.72
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.44
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.51
+    },
+    {
+      "role": "display",
+      "size": 64,
+      "lineHeight": 1.09,
+      "letterSpacing": -1.02
+    }
+  ],
+  "components": [
+    {
+      "name": "Promo Top Banner",
+      "role": "Sitewide announcement strip",
+      "description": "Full-bleed Forest Teal (#0f866c) background, white text at 14px Inter weight 500, horizontal padding 24px, vertically centered. Right-aligned CTA link in white with underline. No rounded corners. Optional illustration anchored left."
+    },
+    {
+      "name": "Primary Navigation Bar",
+      "role": "Top-level site navigation",
+      "description": "White (#ffffff) background, 64px height. Left: ExpressVPN wordmark with red radial-gradient shield icon. Center: Inter 14–16px weight 500 nav links in Midnight Navy (#001d2f), 10–24px horizontal spacing. Right: pill-shaped 'Get Started' ghost button — 1px Midnight Navy border, 10px radius, 14px 24px padding, 9999px alternate variant for primary CTA contexts. Globe icon for language switcher."
+    },
+    {
+      "name": "Ghost Pill CTA",
+      "role": "Secondary action button",
+      "description": "Forest Teal (#0f866c) 1px border, white fill, Midnight Navy text 14px Inter weight 600, 9999px radius (pill), 10px 24px padding, 13px line-height. Used for 'Get Started' and non-purchase actions."
+    },
+    {
+      "name": "Filled Pill CTA",
+      "role": "Primary purchase action",
+      "description": "Forest Teal (#0f866c) background, white text 14–16px Inter weight 600, 9999px radius, 14px 32px padding. The hero 'Get the Deal Now' button is the canonical example — the only place a solid teal fill should appear. Right-arrow icon adjacent to label."
+    },
+    {
+      "name": "Hero Headline Block",
+      "role": "Landing hero copy",
+      "description": "Centered, 64px FS Kim weight 700 in Midnight Navy, line-height 1.09, -0.016em tracking. Subhead in 20px Inter weight 400, Slate Body (#667782). Price emphasis uses Forest Teal inline highlight: '$2.79/mo' in teal against the navy headline."
+    },
+    {
+      "name": "Trust Badge Row",
+      "role": "Social proof strip",
+      "description": "Horizontal row of trust signals — App Store and Google Play star ratings (4.6+), CNET badge, review counts in 12px Inter weight 500 Slate Body. Optional gold star icons. Centered below hero with 16–24px vertical gap from CTA."
+    },
+    {
+      "name": "Product Feature Card",
+      "role": "Feature illustration card (Time Protected, App Shortcuts, etc.)",
+      "description": "White (#ffffff) surface, 24px radius, 32px padding, diffuse shadow rgba(0,0,0,0.12) 0 0 32px. 20px Inter weight 600 title in Midnight Navy, 14px Inter weight 400 Slate Body description. Mini chart or numeric figure (24px, weight 600) as data anchor. Cards arrange in a row of 4–5 overlapping the central phone mockup."
+    },
+    {
+      "name": "Phone Mockup Frame",
+      "role": "Central product visualization",
+      "description": "iPhone frame in pure white, ~340px wide, centered on hero. Screen shows VPN app UI: circular power button (teal), green-tinted connection confirmation, location chip ('Smart Location / Japan – Tokyo'), server stats. Positioned behind floating feature cards via z-index layering."
+    },
+    {
+      "name": "Product Family Card",
+      "role": "Cross-sell product tile (ExpressKeys, ExpressMailGuard, Identity Defender, ExpressAI)",
+      "description": "Rounded square icon container (64–80px) in Pale Mint, Sea Mist, or Peach Cream accent fill, 20px radius, paired with product name in 16px Inter weight 600 Midnight Navy and short descriptor. Arranged in a 5-column row with consistent 40px gap. Each icon is a simple 2-color illustration."
+    },
+    {
+      "name": "FAQ Accordion Row",
+      "role": "Expandable question/answer list",
+      "description": "Full-width rows, 16px vertical padding, 1px Hairline Gray (#ccd2d5) bottom border. Question text in 18px Inter weight 500 Midnight Navy, chevron icon right-aligned. Expanded body in 16px Inter weight 400 Slate Body, 24px top padding."
+    },
+    {
+      "name": "Live Chat Widget",
+      "role": "Persistent support entry point",
+      "description": "Floating bottom-right pill, white background, 34px radius, diffuse shadow rgba(0,0,0,0.12) 0 4px 16px. Red ExpressVPN shield icon at left, two-line copy: 'Need help? Chat with us!' (14px weight 600 Midnight Navy) and 'Online' (12px weight 500 Forest Teal with small green dot indicator)."
+    },
+    {
+      "name": "Cookie Consent Bar",
+      "role": "GDPR compliance notice",
+      "description": "Fixed bottom bar, white background, 14px Inter body text in Midnight Navy. 'Customize' outlined ghost button (Midnight Navy 1px border, 10px radius) paired with 'Accept' filled teal pill button (Forest Teal fill, white text, 10px radius). 16px horizontal padding on the action cluster."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Universal UI and body face — every navigation label, button, form field, list item, caption, and paragraph runs in Inter. Weight 500–600 is the workhorse for buttons and nav; weight 400 for body. 10–12px uppercase labels (trustee badges, guarantee copy) use generous 0.10–0.14em tracking for an institutional, trustworthy feel. Proportional alternates enabled for tighter number and punctuation fit.",
+      "sizes": "10px, 12px, 14px, 16px, 18px, 20px, 24px",
+      "family": "Inter",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.20, 1.33, 1.44, 1.50, 1.67, 1.72, 1.75, 1.80, 1.83, 1.90, 2.00",
+      "letterSpacing": "0.10em–0.14em for uppercase 10–14px labels; default 0 for body",
+      "fontFeatureSettings": "\"palt\""
+    },
+    {
+      "role": "Display and headline face — proprietary serif-influenced typeface carries the brand voice in the hero ('World's #1 VPN'), section titles, and large numerical pricing callouts. Tight -0.016em tracking at 46–64px tightens the silhouette and signals premium quality. Use a humanist serif like 'Source Serif Pro' or 'Tiempos Headline' as substitute.",
+      "sizes": "18px, 32px, 46px, 64px",
+      "family": "FS Kim",
+      "weight": "500, 700",
+      "lineHeight": "1.00, 1.09, 1.25",
+      "substitute": "Source Serif Pro",
+      "letterSpacing": "-0.016em at 32–64px",
+      "fontFeatureSettings": "\"palt\""
+    },
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "13px, 18px",
+      "family": "Arial",
+      "weight": "400, 700",
+      "lineHeight": "1.2, 1.45"
+    }
+  ],
+  "description": "ExpressVPN presents a light, spacious privacy interface that balances authority with approachability. The visual system pairs a deep midnight navy (#001d2f) for typography and structural borders with a warm forest teal (#0f866c) as the single decisive action color, creating a trust-through-restraint palette where chromatic color only appears as functional punctuation. Surfaces stay bright and flat with generous breathing room, and diffuse shadows on cards produce a gentle floating quality rather than hard elevation. The type system splits between a proprietary display face (FS Kim) for confident serif-leaning headlines and Inter for the entire UI vocabulary, producing a restrained tone: rounded cards in the 20–34px range, deeply pill-shaped CTAs, and soft pastel accent panels (peach, sand, mint) that occasionally surface warmth without disrupting the overall cool, protective mood.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- background: #f7f8f9 (Soft Canvas)\n- surface: #ffffff (Pure White)\n- text: #001d2f (Midnight Navy)\n- muted text: #667782 (Slate Body)\n- border: #ccd2d5 (Hairline Gray)\n- primary action: #0f866c (filled action)\n\n3 Example Component Prompts:\n\n1. Hero Headline Block: White background section. Display headline at 64px FS Kim weight 700, #001d2f, line-height 1.09, letter-spacing -1.02px. Inline price highlight '$2.79/mo' in #0f866c. Subhead at 20px Inter weight 400, #667782, line-height 1.44. Center-aligned, max-width 800px.\n\n2. Filled Pill CTA Button: Forest Teal (#0f866c) background, white text, 16px Inter weight 600, 9999px border-radius, 14px vertical and 32px horizontal padding, with a 16px right-arrow icon. Line-height 13px. Used for purchase actions only.\n\n3. Feature Card with Shadow: White (#ffffff) surface, 24px border-radius, 32px padding, shadow rgba(0,0,0,0.12) 0px 0px 32px 0px. Title 20px Inter weight 600 #001d2f. Description 14px Inter weight 400 #667782. 16px gap between title and body. Optional 24px numeric figure in weight 600 Midnight Navy at top."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is diffuse, not directional. All shadows are large-radius, low-opacity, center-anchored blurs rather than offset drops — this keeps the surface feeling like it is gently lit from the entire environment, reinforcing the calm, protected mood. No shadows use heavy directional offsets; cards seem to float on a luminous field rather than sit on a hard surface."
+}

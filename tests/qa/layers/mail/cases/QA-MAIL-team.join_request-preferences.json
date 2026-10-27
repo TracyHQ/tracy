@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.join_request-preferences",
+  "itemIds": [
+    "letter:team.join_request:en",
+    "letter:team.join_request:vi",
+    "letter:team.join_request:de",
+    "letter:team.join_request:it",
+    "letter:team.join_request:fr",
+    "letter:team.join_request:nl",
+    "letter:team.join_request:zh",
+    "letter:team.join_request:es"
+  ],
+  "requirement": "team.join_request: the recipient's Settings choice for its group is honoured; the locked group is not switchable",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 1, 8",
+    "invariant": "a channel the person turned off is dropped; Join requests is locked on"
+  },
+  "edgeTags": ["preferences"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.preferences#team.join_request:"],
+  "redProof": null,
+  "legacyIds": []
+}

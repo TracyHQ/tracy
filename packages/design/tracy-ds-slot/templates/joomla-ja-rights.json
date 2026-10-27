@@ -1,0 +1,291 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t4-ja",
+  "template": "joomla/ja-rights",
+  "release": "quickstart/ja-rights/j6@1.0.0",
+  "roles": {
+    "page": "body.site-default.navigation-default",
+    "display": "h1.slide-title.text-white",
+    "button-primary": "div.t4-header-r a.btn.btn-secondary",
+    "container": "div.container"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 80px",
+    "displayFace": "Space Grotesk 700, tracking 0em",
+    "button-primary": "the yellow call to action in the header (Rights paints its main button as .btn-secondary; the slider's green .btn-primary sits in a kept band)",
+    "container": "first content container, max-width 1312px",
+    "displayPhone": "the same heading at 390 on the published release: 28px"
+  },
+  "keepScopes": [".item-align-center", ".t4-footer", ".bg-white", ".bg-dark", ".bg-purple"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#fafafa",
+    "--fg": "#616161",
+    "--fg-2": "#212121",
+    "--accent": "#6d9051",
+    "--accent-hover": "#0a8d77",
+    "--surface": "#f8f9fa",
+    "--surface-warm": "#212121",
+    "--success": "#29a954",
+    "--warn": "#f3902a",
+    "--danger": "#dc3545",
+    "--border": "#616161",
+    "--muted": "#9e9e9e",
+    "--font-display": "\"Space Grotesk\", sans-serif",
+    "--font-body": "\"Space Grotesk\", sans-serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#fafafa",
+      "fg": "#616161",
+      "fg-2": "#212121",
+      "accent": "#6d9051",
+      "accent-hover": "#0a8d77",
+      "surface": "#f8f9fa",
+      "surface-warm": "#212121",
+      "success": "#29a954",
+      "warn": "#f3902a",
+      "danger": "#dc3545",
+      "border": "#f7f8f9",
+      "muted": "#9e9e9e"
+    },
+    {
+      "bg": "#fafafa",
+      "surface": "#ffffff",
+      "fg": "#616161",
+      "fg-2": "#172433",
+      "accent": "#ffbb00",
+      "accent-on": "#ffffff",
+      "surface-warm": "#2a2e27",
+      "border": "#616161"
+    },
+    {
+      "accent": "#ffbb00"
+    },
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    },
+    {
+      "surface": "#f7f8f9",
+      "danger": "#e93c4d",
+      "muted": "#9e9e9e",
+      "surface-warm": "#172433",
+      "border-soft": "#dee2e6",
+      "warn": "#f49a22",
+      "fg": "#616161"
+    },
+    {
+      "border-soft": "#e9ecef"
+    },
+    {
+      "fg-2": "#172433"
+    },
+    {
+      "bg": "#ffffff"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then etc/theme/default.json (light + *_dark keys), etc/site/default.json (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (60 line colours, 51 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.slide-title.text-white",
+    "heading": [".t4-section h2", "main h2"],
+    "button": [".btn", "a.btn.btn-secondary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-secondary"],
+    "container": [".t4-section .container", "div.container"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "accent-text": ".t4-section a:not([class*=btn]):not(:has(img))",
+    "muted": ".t4-section p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ".t4-section p, main p",
+    "footer": ".t4-footer a, .t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "off-canvas",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 16 tried (byte 6688); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#f7f8f9",
+      "uses": 24,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f8f9fa",
+      "distance": 2
+    },
+    {
+      "hex": "#e93c4d",
+      "uses": 19,
+      "kind": "custom",
+      "role": "danger",
+      "near": "#dc3545",
+      "distance": 17
+    },
+    {
+      "hex": "#9e9e9e",
+      "uses": 13,
+      "kind": "custom",
+      "role": "muted",
+      "near": "#9e9e9e",
+      "distance": 0
+    },
+    {
+      "hex": "#172433",
+      "uses": 13,
+      "kind": "custom",
+      "role": "surface-warm",
+      "near": "#212121",
+      "distance": 21
+    },
+    {
+      "hex": "#dee2e6",
+      "uses": 8,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#f49a22",
+      "uses": 6,
+      "kind": "fill",
+      "role": "warn",
+      "near": "#f3902a",
+      "distance": 13
+    },
+    {
+      "hex": "#e9ecef",
+      "uses": 6,
+      "kind": "custom",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#616161",
+      "uses": 4,
+      "kind": "custom",
+      "role": "fg",
+      "near": "#616161",
+      "distance": 0
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-bg-color": "#fafafa",
+    "--body-text-color": "#616161",
+    "--body-link-color": "#6d9051",
+    "--body-link-hover-color": "#0a8d77",
+    "--color-primary": "#6d9051",
+    "--color-secondary": "#ffbb00",
+    "--color-success": "#29a954",
+    "--color-info": "#0085ec",
+    "--color-warning": "#f3902a",
+    "--color-danger": "#dc3545",
+    "--color-light": "#f8f9fa",
+    "--color-dark": "#212121",
+    "--mainnav-text-color": "#212121",
+    "--mainnav-link-color": "#212121",
+    "--mainnav-link-hover-color": "#6d9051",
+    "--mainnav-link-active-color": "#6d9051",
+    "--footer-bg-color": "#212121",
+    "--footer-text-color": "rgba(255, 255, 255, 0.8)",
+    "--footer-link-color": "rgba(255, 255, 255, 0.8)",
+    "--footer-link-hover-color": "#ffffff",
+    "--headings-color": "#172433",
+    "--body-headings-color": "#172433"
+  },
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe on the published quickstart/ja-rights/j6 1.0.1 (installer sha256 ca069eb2…, the same file as the local build; tasks/evidence/ds-remeasure-4-2026-10-11/ja-rights-j6): first 8/12 — the campaign cards' red 'Ended' status (.text-danger #dc3545, which no system replaces) read 3.96:1 on MotherDuck's cream and 3.69:1 on Toggl Track's plum (4.53 on the template's white); it now stays red mixed toward the system's text colour (sideRules). Then 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0, no text under 4.5:1 worse than the template's own (lowest 4.85), 76% or more of the page follows, every contrast kind sampled in every view, dark and light screenshots looked at. Earlier: measured 11/10/2026 on quickstart/ja-rights/j6 1.0.0, stylesheets tokenized as 1.0.1 ships them (tasks/evidence/ds-contracts-r2b-2026-10-11/templates/ja-rights-j6): 12/12, controls 0 differences, no text made less readable than the template's own under the systems tried, 76% or more of the page follows; its main call to action is the yellow .btn-secondary (role re-pointed to the header's, its white !important text answered with buttonTextImportant), the feature cards' semantic-colour links read the readable accent (accentVars), its Bootstrap-utility panels (.bg-white, .bg-dark, .bg-purple), the photo slider and the footer stay the template's (keepScopes, keepText, keepDefaultsYield); its own page scrolls sideways at 390 px with no system, which the flow no longer holds against a system; checked by eye on the four systems' screenshots Re-verified 12/10/2026 on the unified probe (fix/ds-remeasure) on quickstart/ja-rights/j6 1.0.1: before, 10/12: on the phone the hero slider stood on its green-button slide under Moxie and MotherDuck (white on #6d9051 3.65, the template's own pair) and on the yellow-button slide under the default; measureStill now holds every carousel on its first slide. After: 12/12, controls 0, regressed 0, 76-88% follows (tasks/evidence/ds-reverify-c-2026-10-12/ja-rights)",
+  "extraNote": "#172433 is the heading navy its stylesheets paint as text (14 rules) and as --headings-color; #ffffff is the page's own colour too: its white cards (.features-item, the header) sit on a #fafafa page, so a white fill follows as the page, not as the surface (a light system's grey surface under the cards' green and blue links read them worse than the template's own)",
+  "templateVars": {
+    "--headings-color": "var(--ds-c-fg-2)",
+    "--body-headings-color": "var(--ds-c-fg-2)"
+  },
+  "keepText": [".bg-white", ".bg-dark", ".item-align-center", ".bg-purple"],
+  "keepScopesNote": "the slider (.item-align-center: text on its photos), the dark footer, and the two feature panels the template paints with Bootstrap's own utilities (.bg-white: white panel, page text; .bg-dark: #212121 panel, white text) — their fills come through rgba(var(--t4-white-rgb)) and --color-dark, which the slot does not repoint as a pair with their text, so each stays the template's whole (keepText gives the white panel and the slider their page text back; keepDefaultsYield lets the dark panel keep its own --headings-color: #fff); the purple panels (.bg-purple, a colour no system has: its white text and .btn-light 'View upcoming events' stay its own — under a dark system the light button turned the surface, dark on dark)",
+  "selectorsNote": "buttonTextImportant: its main call to action is .btn-secondary, whose text the template sets white !important (template.css .btn.btn-secondary): the accent's own text is written !important too, or white stays on a light accent",
+  "keepDefaultsYield": true,
+  "buttonTextImportant": true,
+  "accentVars": [
+    "--color-primary",
+    "--t4-primary",
+    "--body-link-color",
+    "--body-link-hover-color",
+    "--color-secondary",
+    "--color-info",
+    "--color-success"
+  ],
+  "accentVarsNote": "the family's link colours plus T4's semantic colours Rights paints link text with (template.css a.secondary / a.info / a.success: the feature cards' 'More About Us', 'Learn more', 'Send Money'): as TEXT they read the readable accent (tokenize.mjs accentVars); as fills they keep their roles (the family repoints --color-secondary to the surface: the card's own ground, so the yellow link was 1:1)",
+  "minVersion": {
+    "quickstart/ja-rights/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-rights/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "sideRules": {
+    "light": {
+      ".text-danger": {
+        "color": "color-mix(in srgb, var(--ds-c-danger) 75%, var(--ds-c-fg))!important"
+      }
+    },
+    "dark": {
+      ".text-danger": {
+        "color": "color-mix(in srgb, var(--ds-c-danger) 50%, var(--ds-c-fg))!important"
+      }
+    }
+  },
+  "sideNote": "the campaign cards' 'Ended' status is .text-danger (#dc3545, !important, 4.53:1 on the template's white page): no system names a danger colour, so it stayed #dc3545 on the worn page (MotherDuck's cream 3.96:1, Toggl Track's plum 3.69:1). It stays red, mixed toward the system's text colour (a quarter under a light system, half under a dark one) so it reads on the worn page",
+  "measureStill": true,
+  "measureNote": "measureStill (12/10/2026, unified-probe re-verify): the hero slider (.item-align-center, kept) showed its yellow-button slide on the default phone page and its green-button slide under Moxie and MotherDuck, so the template's own white-on-green button (3.65:1, the same pair the default desktop page paints) was judged against the yellow one; every carousel now stops on its first slide before each measure",
+  "bands": {
+    ".item-align-center": {
+      "ground": "#2a2e27",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    },
+    ".t4-footer": {
+      "ground": "#212121",
+      "texts": ["#d3d3d3", "#ffffff"],
+      "important": true
+    },
+    ".bg-white": {
+      "ground": "#ffffff",
+      "texts": ["#172433", "#616161"],
+      "important": true
+    },
+    ".bg-dark": {
+      "ground": "#212121",
+      "texts": ["#ffffff", "#d3d3d3"],
+      "important": true
+    },
+    ".bg-purple": {
+      "ground": "#7b4dd3",
+      "texts": ["#ffffff", "#e5dbf6"],
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours"
+}

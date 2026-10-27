@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1243-readiness-t4-font-settings-excluded-articles",
+  "kind": "fix",
+  "title": "LANG-2 fonts follow a T4 font setting to where css/tpl/theme.tpl.css writes it; PAGE-2 module ties skip excluded_articles",
+  "pr": 1243,
+  "area": "template-customization-question-readiness/rules",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run apps/tracy-web/test/template-customization-question-readiness-t4-font-settings.test.mjs (JA Tour 1.0.2 and JA Trip 1.0.5 theme.tpl.css, language-fonts.css and T4 profile).",
+    "S2: Run the PAGE-2 tests of apps/tracy-web/test/template-customization-question-readiness-g60.test.mjs (JA Essence j6 1.0.7 module 133 and its articles)."
+  ],
+  "expect": [
+    "S1: Frank Ruhl Libre (selectors) and Cookie (--font-special-family) are replaced on vi pages and LANG-2 has no font failure; without the replacement each still fails, named with its setting.",
+    "S2: module 133 passes with excluded_articles 37 (also as a list of lines) and fails on articles 25, 37 without it."
+  ],
+  "selectors": {
+    "tests": "apps/tracy-web/test/template-customization-question-readiness-t4-font-settings.test.mjs apps/tracy-web/test/template-customization-question-readiness-g60.test.mjs"
+  },
+  "evidence": "12/10/2026: green packs of ja-spa, ja-symphony, ja-trip, ja-tour failed LANG-2 and ja-essence j6 1.0.7 failed PAGE-2 on develop; all pass with this change",
+  "fence": "The T4 font setting reader and the PAGE-2 article module check, on files and rows of the JA Tour, Trip and Essence releases",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "apps/tracy-web/test/template-customization-question-readiness-t4-font-settings.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-g60.test.mjs"
+    ]
+  }
+}

@@ -1,0 +1,453 @@
+/* Hero showcase: the animated replay of the Tracy app that sits under the hero
+   buttons of the homepage, in place of the old video.
+
+   Two layers:
+   - the tab row and the stage box are site UI and use the site's own tokens,
+     so they follow the light / dark theme of the page;
+   - the app window inside the stage is a copy of the Tracy app's "Design
+     Template" page. It is drawn at a fixed 1280 x 696 (plus a 28px bar with
+     the three window dots) and scaled to the stage width by hero-showcase.js.
+     Its colours are the app's own (light), read from the live app, and never
+     follow the page theme. All its classes start with "hs-". */
+
+.hero-showcase {
+  width: min(69vw, 1344px);
+  margin: 30px 0 4px 50%;
+  transform: translateX(-50%);
+  text-align: left;
+}
+@media (max-width: 900px) { .hero-showcase { width: 100%; margin-left: 0; transform: none; } }
+@media (max-width: 560px) { .hero-showcase { margin-top: 22px; } }
+
+/* ---- Tab row ---------------------------------------------------------- */
+
+.hs-tabs {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 auto 8px;
+  max-width: 100%;
+}
+.hs-tabs::-webkit-scrollbar { display: none; }
+.hs-tabs-in {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  padding: 5px 5px 7px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+}
+.hs-tab-bg {
+  position: absolute;
+  top: 5px;
+  bottom: 7px;
+  left: 0;
+  width: 0;
+  border-radius: 10px;
+  background: var(--primary-soft);
+  transition: left .35s cubic-bezier(.2, .8, .2, 1), width .35s cubic-bezier(.2, .8, .2, 1);
+}
+.hs-tab {
+  position: relative;
+  flex: none;
+  margin: 0;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.hs-tab.is-active { color: var(--text); }
+.hs-tab:disabled { opacity: .45; cursor: default; }
+.hs-tab:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+.hs-progress {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+.hs-progress-fill { display: block; height: 100%; width: 0; background: var(--primary); }
+@media (max-width: 560px) {
+  .hs-tabs { justify-content: flex-start; }
+  .hs-tab { padding: 8px 12px; font-size: 14px; }
+}
+
+/* ---- Caption: one line between the tab row and the window ------------- */
+/* Site UI, not part of the app. Only a tab with more than one example fills
+   it (kit.note in hero-showcase.js), e.g. "Bring an existing site" then
+   "Create a new site" in Add site. The line keeps its height when empty so
+   the window never moves when a tab changes. */
+
+.hs-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 20px;
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+}
+.hs-note:not(:empty)::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+
+/* ---- Stage: the box the scaled window sits in ------------------------- */
+
+.hs-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1280 / 724;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+/* ---- App window (fixed 1280 x 724, scaled from the top-left corner) --- */
+
+.hs-win {
+  --a-fg: oklch(0.145 0 0);
+  --a-bg: oklch(1 0 0);
+  --a-muted: oklch(0.556 0 0);
+  --a-muted-bg: oklch(0.97 0 0);
+  --a-border: oklch(0.922 0 0);
+  --a-primary: oklch(0.588 0.136 37.4);
+  --a-on-primary: oklch(0.985 0 0);
+  --a-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+  --a-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 724px;
+  transform-origin: 0 0;
+  color: var(--a-fg);
+  background: var(--a-bg);
+  font-family: var(--a-sans);
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  pointer-events: none;
+}
+.hs-win :where(div, span, header, img, svg, i, b) { box-sizing: border-box; margin: 0; padding: 0; border: 0 solid; }
+.hs-win svg { display: block; flex: none; }
+.hs-win img { display: block; max-width: none; }
+
+.hs-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 12px;
+  background: var(--a-bg);
+  border-bottom: 1px solid var(--a-border);
+}
+.hs-bar i { width: 12px; height: 12px; border-radius: 50%; background: #ff5f57; box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .12); }
+.hs-bar i:nth-child(2) { background: #febc2e; }
+.hs-bar i:nth-child(3) { background: #28c840; }
+
+.hs-app { position: relative; width: 1280px; height: 696px; overflow: hidden; }
+/* One screen per tab, all in the same spot under the bar; only the tab on
+   show is drawn. Tabs 2-5 add theirs (.hs-screen) from their own files. */
+.hs-app.is-off { display: none; }
+.hs-screen { position: absolute; top: 28px; left: 0; }
+
+/* Library page ---------------------------------------------------------- */
+
+.hs-lib { position: absolute; inset: 0; overflow: hidden; }
+.hs-scroll { position: absolute; top: 0; left: 0; right: 0; padding-top: 57px; will-change: transform; }
+
+.hs-hdr {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 57px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--a-border);
+  background: oklch(1 0 0 / .95);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.hs-logo { height: 24px; width: auto; color: var(--a-fg); }
+.hs-hdr-title { color: var(--a-muted); font-size: 14px; line-height: 20px; }
+.hs-hdr-form { display: flex; align-items: center; gap: 8px; margin-left: auto; width: 544px; }
+.hs-input {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: 32px;
+  padding: 4px 10px;
+  border: 1px solid var(--a-border);
+  border-radius: 10px;
+  color: var(--a-muted);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.hs-showme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 104px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--a-primary);
+  color: var(--a-on-primary);
+  font-size: 14px;
+  font-weight: 500;
+  opacity: .5; /* disabled until something is typed, as in the app */
+}
+.hs-showme svg { width: 14px; height: 14px; }
+
+.hs-filters { display: flex; flex-direction: column; gap: 12px; padding: 12px; }
+.hs-row { display: flex; align-items: center; gap: 8px; }
+.hs-plat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 8px 0 10px;
+  border: 1px solid var(--a-border);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.hs-plat svg { width: 16px; height: 16px; }
+.hs-count { padding: 0 6px; border-radius: 999px; background: var(--a-muted-bg); color: var(--a-muted); font-size: 12px; line-height: 16px; font-variant-numeric: tabular-nums; }
+.hs-search {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex: 1;
+  height: 36px;
+  padding-left: 10px;
+  border: 1px solid var(--a-border);
+  border-radius: 10px;
+  color: var(--a-muted);
+  font-size: 14px;
+}
+.hs-search svg { width: 14px; height: 14px; }
+.hs-search span { padding-left: 6px; }
+.hs-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 138px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--a-border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.hs-cat svg { width: 14px; height: 14px; color: var(--a-muted); }
+.hs-showing { display: flex; align-items: center; min-height: 24px; color: var(--a-muted); font-size: 12px; line-height: 16px; }
+
+.hs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 0 12px 12px; }
+.hs-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--a-border);
+  border-radius: 14px;
+  background: var(--a-bg);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px -1px rgba(0, 0, 0, .1);
+}
+.hs-card-img { position: relative; height: 160px; overflow: hidden; background: var(--a-muted-bg); }
+.hs-card-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.hs-card-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .45); opacity: 0; transition: opacity .15s; }
+.hs-card-foot { display: flex; align-items: center; gap: 8px; padding: 10px; }
+.hs-card-text { flex: 1; min-width: 0; }
+.hs-card-name { overflow: hidden; font-size: 14px; font-weight: 600; line-height: 14px; white-space: nowrap; text-overflow: ellipsis; }
+.hs-card-cat { margin-top: 4px; overflow: hidden; color: var(--a-muted); font-size: 12px; line-height: 16px; white-space: nowrap; text-overflow: ellipsis; }
+.hs-card-plats { display: flex; align-items: center; gap: 4px; }
+.hs-card-plats svg { width: 14px; height: 14px; }
+.hs-card-open {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.hs-card-open span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--a-border);
+  border-radius: 999px;
+  background: oklch(1 0 0 / .9);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1);
+}
+.hs-card-open svg { width: 15px; height: 15px; color: var(--a-primary); }
+.hs-card.is-hover .hs-card-scrim, .hs-card.is-hover .hs-card-open { opacity: 1; }
+
+/* Preview modal --------------------------------------------------------- */
+
+.hs-overlay { position: absolute; inset: 0; z-index: 40; background: rgba(0, 0, 0, .1); opacity: 0; visibility: hidden; }
+.hs-dlg {
+  position: absolute;
+  top: 14px;
+  left: 13px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  width: 1254px;
+  height: 668px;
+  overflow: hidden;
+  border: 1px solid var(--a-border);
+  border-radius: 14px;
+  background: var(--a-bg);
+  opacity: 0;
+  visibility: hidden;
+}
+.hs-app.is-modal .hs-overlay, .hs-app.is-modal .hs-dlg { opacity: 1; visibility: visible; }
+
+.hs-dlg-head { position: relative; display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--a-border); }
+.hs-nav { display: flex; flex: none; align-items: center; padding: 2px; border: 1px solid var(--a-border); border-radius: 999px; }
+.hs-navb { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border: 1px solid transparent; border-radius: 999px; }
+.hs-navb svg { width: 15px; height: 15px; }
+.hs-navb.is-focus { border-color: var(--a-primary); }
+.hs-navb.is-hover { background: var(--a-muted-bg); }
+.hs-counter { width: 64px; color: var(--a-muted); font-size: 12px; line-height: 16px; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.hs-name { min-width: 0; overflow: hidden; font-size: 16px; font-weight: 600; line-height: 24px; white-space: nowrap; text-overflow: ellipsis; }
+.hs-create { display: flex; align-items: center; gap: 6px; margin: 0 32px 0 auto; }
+.hs-create > span { margin-right: 4px; color: var(--a-muted); font-size: 12px; line-height: 16px; }
+.hs-cbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--a-border);
+  border-radius: 8px;
+  background: var(--a-bg);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.hs-cbtn svg { width: 14px; height: 14px; }
+.hs-cbtn.is-off { opacity: .5; }
+.hs-cbtn.is-hover { background: var(--a-muted-bg); }
+.hs-close { position: absolute; top: 8px; right: 8px; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; }
+.hs-close svg { width: 16px; height: 16px; }
+
+.hs-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--a-border);
+  font-family: var(--a-mono);
+  font-size: 11px;
+  line-height: 15.7px;
+}
+.hs-pill { display: flex; align-items: center; gap: 6px; padding: 2px 10px; border: 1px solid var(--a-border); border-radius: 999px; color: var(--a-muted); }
+.hs-pill b { font-family: var(--a-sans); font-weight: 400; }
+.hs-pill i { font-style: normal; opacity: .7; }
+.hs-pill.is-on { border-color: var(--a-fg); background: var(--a-fg); color: var(--a-bg); }
+.hs-tools { display: flex; align-items: center; gap: 12px; margin-left: auto; color: var(--a-muted); font-family: var(--a-sans); }
+.hs-seg { display: flex; flex: none; align-items: center; gap: 2px; padding: 2px; border: 1px solid var(--a-border); border-radius: 999px; }
+.hs-seg.is-xs { font-size: 12px; line-height: 16px; }
+.hs-segb { display: flex; align-items: center; gap: 4px; padding: 2px 10px; border: 1px solid transparent; border-radius: 999px; color: var(--a-muted); }
+.hs-seg.is-xs .hs-segb { height: 24px; padding: 0 10px; }
+.hs-segb svg { width: 13px; height: 13px; }
+.hs-segb.is-14 svg { width: 14px; height: 14px; }
+.hs-segb.is-on { border-color: var(--a-fg); background: var(--a-fg); color: var(--a-bg); }
+.hs-segb.is-hover:not(.is-on) { background: oklch(0.145 0 0 / .1); color: var(--a-fg); }
+.hs-theme[hidden] { display: none; }
+.hs-demo { display: flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid var(--a-border); border-radius: 999px; color: var(--a-fg); }
+.hs-demo svg { width: 14px; height: 14px; }
+
+.hs-dlg-body { display: flex; flex: 1; min-height: 0; padding: 8px; background: oklch(0.97 0 0 / .4); }
+.hs-frame {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  border: 1px solid var(--a-border);
+  border-radius: 10px;
+  background: var(--a-bg);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px -1px rgba(0, 0, 0, .1);
+}
+.hs-frame > [data-shot], .hs-shot > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.hs-frame > [data-shot] { opacity: 0; }
+.hs-frame > .is-on { opacity: 1; }
+/* Home, Light: the page below its sticky header (67px of the app's 1220px
+   iframe, 1205px wide without the scrollbar), laid over the first shot and
+   slid up to scroll. The frame here is 1234px wide for the app's 1220.27, so
+   67 -> 67.75 and 1205 -> 1218.6. Header and scrollbar stay from the shot
+   underneath. Once scrolled, the page's header casts its shadow
+   (box-shadow 0 3px 5px rgba(0,0,0,.08), read on the live page). */
+.hs-dpage { position: absolute; top: 67.75px; left: 0; bottom: 0; width: 1218.6px; overflow: hidden; }
+.hs-dpage img { width: 100%; height: auto; will-change: transform; }
+.hs-dpage::before { content: ""; position: absolute; z-index: 1; top: -1px; left: 0; right: 0; height: 1px; box-shadow: 0 3px 5px rgba(0, 0, 0, .08); opacity: 0; transition: opacity .15s; }
+.hs-dpage.is-scrolled::before { opacity: 1; }
+.hs-dlg-foot { flex: none; height: 25px; border-top: 1px solid var(--a-border); }
+
+/* Mobile view: the app swaps the full-width frame for a centred phone frame,
+   so this shot is the whole preview body (1238 x 541 in the app), laid over
+   the body at its own size and centred. The page inside the phone is a taller
+   shot laid over the phone's screen (the app's iframe box: 390 x 517.5 at
+   423.6, 11.6 in the body, read 22/10/2026), minus the 15px scrollbar, which
+   stays from the frame shot; the script slides it up to scroll. */
+.hs-dlg-body { position: relative; }
+.hs-mobile {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 619px);
+  z-index: 3;
+  width: 1238px;
+  height: 100%; /* the body here is 539px tall, 2px short of the app's: crop the bottom */
+  overflow: hidden;
+  opacity: 0;
+}
+.hs-mobile.is-on { opacity: 1; }
+.hs-mobile > img { width: 1238px; height: auto; }
+.hs-mpage { position: absolute; left: 423.6px; top: 11.6px; width: 375px; height: 517.5px; overflow: hidden; }
+.hs-mpage img { width: 375px; height: auto; will-change: transform; }
+/* Dark, in Mobile: the same frame and page shot in the template's dark theme,
+   faded in over the light ones. */
+.hs-mobile .hs-mdark { position: absolute; top: 0; left: 0; opacity: 0; transition: opacity .22s ease-out; }
+.hs-mobile.is-dark .hs-mdark { opacity: 1; }
+
+/* Fake pointer: pointer.css (shared by every scene). */
+
+@media (prefers-reduced-motion: reduce) {
+  .hs-tab-bg, .hs-card-scrim, .hs-card-open { transition: none; }
+}
+
+/* Keep the full live template grid available through native scrolling. */
+.hs-lib{overflow-y:auto;overscroll-behavior:contain}.hs-scroll{position:relative}

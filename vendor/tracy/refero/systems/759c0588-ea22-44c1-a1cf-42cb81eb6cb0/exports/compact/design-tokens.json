@@ -1,0 +1,64 @@
+{
+  "color": {
+    "photo-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Photo Black — Body text, filled buttons, dark section backgrounds, nav text, borders, icon strokes — the dominant structural color across all surfaces"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, hero background, footer background, text on dark surfaces, nav fill — the primary light surface"
+    },
+    "fog-gray": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Fog Gray — Subtle alternate section backgrounds, hairline washes — barely-there surface differentiation"
+    },
+    "graphite": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, footer link text, muted labels — the first step down from body black"
+    },
+    "ash": {
+      "$value": "#b8b8b8",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, lighter secondary labels, disabled-adjacent text"
+    },
+    "silver": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Silver — Borders on ghost/outline buttons, subtle dividers, placeholder text"
+    },
+    "steel": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Steel — Mid-gray auxiliary text and borders"
+    },
+    "amber": {
+      "$value": "#f1a900",
+      "$type": "color",
+      "$description": "Amber — Yellow supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "goldenrod": {
+      "$value": "#ffbc3c",
+      "$type": "color",
+      "$description": "Goldenrod — Lighter amber variant for hover states, secondary accent surfaces — same hue family, one step lighter"
+    }
+  },
+  "font": {
+    "vsco-gothic": {
+      "$value": "VSCO Gothic",
+      "$type": "fontFamily",
+      "$description": "Single custom family used at every size — nav items at 13px tracked to 0.08-0.10em, body at 15-16px, product card titles at 24px, section headings at 36-54px, and hero display at 89-98px with -0.05em tracking. The narrow geometric letterforms with ligatures disabled give every text element a distinctive editorial-gallery feel, even at body sizes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://vsco.co",
+      "siteName": "VSCO®",
+      "extractedAt": "2026-06-03T19:54:01.012Z",
+      "variant": "compact"
+    }
+  }
+}

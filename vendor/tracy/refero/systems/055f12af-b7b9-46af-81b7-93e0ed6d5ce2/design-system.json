@@ -1,0 +1,251 @@
+{
+  "dos": [
+    "Use #b154f9 exclusively for filled CTAs, outlined CTAs, and active tab/link states — it is the system's only chromatic voice",
+    "Build hierarchy with size and tracking (16→80px, -0.01em on displays), never with bold weight — the font ships in weight 400 only",
+    "Use 8px radius for all buttons, cards, and small containers; 14px for larger panels; 30px only for hero-scale surfaces",
+    "Communicate elevation with 1px borders in Ink Black or Fog Gray, or with the Mist Gray (#f1f1f1) alt-surface — never with drop shadows",
+    "Let the 3D decorative objects carry all color in hero/section compositions; the surrounding UI must stay achromatic so the objects pop",
+    "Set the page canvas to #ffffff and the page max-width to 1200px centered; let vertical rhythm (80px section gaps) create the pacing",
+    "Reverse to #171717 with #ffffff text only in the footer — keep every other surface light"
+  ],
+  "donts": [
+    "Do not introduce a second brand color into the UI palette — the violet must remain the only chromatic accent",
+    "Do not use weight 600 or 700 — there is no bold; hierarchy must come from size",
+    "Do not apply drop shadows to cards, buttons, or modals — the system is deliberately flat",
+    "Do not use 4px or 12px radius on cards or buttons — stick to 8px / 14px / 30px",
+    "Do not set body text below 16px or above line-height 1.3 — the scale is opinionated",
+    "Do not place UI text in any of the decorative illustration hues (coral, mint, yellow, etc.) — those are artwork-only",
+    "Do not alternate dark and light section bands — the page is light throughout, with the footer as the single dark inversion"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#b154f9",
+      "name": "Bolt Violet",
+      "role": "Filled CTA backgrounds, link borders, active tab indicators — the sole chromatic signal in the system",
+      "group": "brand"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Primary text, headings, icon strokes, nav labels, all hairline borders and dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas, card surfaces, button text on filled CTAs, reversed text in dark zones",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f1f1f1",
+      "name": "Mist Gray",
+      "role": "Alt-surface tint for sub-sections, secondary card backgrounds, hover wash",
+      "group": "neutral"
+    },
+    {
+      "hex": "#171717",
+      "name": "Charcoal",
+      "role": "Footer background, near-black text where softer than pure ink is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6c6b6b",
+      "name": "Steel Gray",
+      "role": "Secondary/helper text, muted icons, disabled states, low-priority borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b3b3b3",
+      "name": "Fog Gray",
+      "role": "Subtle card borders, placeholder text, low-contrast dividers",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Centered max-width ~1200px container, full-bleed white canvas. The hero is a two-column composition: massive left-aligned display headline (64–80px) with a floating cluster of 3D decorative objects occupying the upper-right and center, and a smaller right-aligned subtext + filled violet CTA block in the lower-right. Below the hero, sections flow as single centered stacks or two-column text+visual blocks with 80px vertical gaps. The Workflows section uses a centered icon+headline opener followed by a full-width tab strip and content area. The FAQ section is a centered max-width column (~800px) of full-width accordion rows with hairline dividers. Navigation is a top bar, no sidebar, no sticky shadow. The single full-bleed dark surface is the footer.",
+  "imagery": "Imagery is dominated by 3D-rendered decorative objects: soft, rounded cubes and spheres in pastel-saturated hues (coral, lavender, mint, sky blue, butter yellow, pink) floating in composition with one another. They sit on pure white, occupy roughly 40–60% of hero/section real estate, and function purely as atmospheric brand texture — not as product screenshots or photography. No stock photography, no lifestyle imagery, no human figures. Iconography is monochrome black line/filled glyphs in small rounded squares (e.g., the Workflows icon tile). The 3D style is the visual signature: tactile, candy-like, and the only place saturated color is allowed.",
+  "similar": [
+    {
+      "why": "Same near-monochrome white canvas with a single signature color carrying all interactive state; same comfortable density and large display type.",
+      "business": "Stripe"
+    },
+    {
+      "why": "Same flat-surface philosophy with hairline borders instead of shadows, generous whitespace, and one chromatic accent per surface.",
+      "business": "Linear"
+    },
+    {
+      "why": "Same quiet white-base UI, weight-400-only typographic voice, rounded geometry, and decorative 3D illustration as atmospheric brand texture.",
+      "business": "Notion"
+    },
+    {
+      "why": "Same playful 3D decorative objects floating on white, large editorial display type at weight 400, and minimal chromatic UI palette.",
+      "business": "Framer"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "8px",
+      "buttons": "8px",
+      "hero panels": "30px",
+      "large containers": "14px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 0,
+      "purpose": "Page canvas, default card surface"
+    },
+    {
+      "hex": "#f1f1f1",
+      "name": "Mist Gray",
+      "level": 1,
+      "purpose": "Alt-section background, secondary surface"
+    },
+    {
+      "hex": "#171717",
+      "name": "Charcoal",
+      "level": 2,
+      "purpose": "Footer / dark surface"
+    }
+  ],
+  "northStar": "Quiet white atelier with one violet spark",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 16,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.01
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.01
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.01
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading",
+      "size": 48,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "heading-lg",
+      "size": 64,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.01
+    }
+  ],
+  "components": [
+    {
+      "name": "Filled Violet Button",
+      "role": "Primary action — 'Request a demo', submit",
+      "description": "Background #b154f9, text #ffffff, radius 8px, padding 14px 20px, weight 400 at 16–18px. The only filled button in the system."
+    },
+    {
+      "name": "Outlined Violet Button",
+      "role": "Secondary action — 'Get started' in nav",
+      "description": "Background #ffffff, border 1.5px #b154f9, text #b154f9, radius 8px, padding 14px 20px. Inverse of the filled variant — same hue, transparent fill."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Nav links, inline links",
+      "description": "No background, text #000000 at 16–18px, hover shifts to #b154f9. Underline only on hover."
+    },
+    {
+      "name": "Header / Top Nav",
+      "role": "Global navigation bar",
+      "description": "White background, 1px bottom border in Ink Black at low opacity. Left: wordmark logo. Center: text nav at 16–18px. Right: 'Log in' ghost link + outlined violet 'Get started' button. Padding ~21px vertical."
+    },
+    {
+      "name": "Hero Block",
+      "role": "First-screen headline and subtext",
+      "description": "Max-width ~1200px centered. Display headline 64–80px weight 400 with -0.01em tracking, left-aligned, black on white. Supporting subtext 18–24px, #000000, right-aligned or beside CTA. Filled violet CTA below subtext."
+    },
+    {
+      "name": "3D Decorative Object Cluster",
+      "role": "Atmospheric hero/section visuals",
+      "description": "Pastel gradient cubes/spheres in saturated hues (coral, lavender, mint, sky, yellow) rendered as 3D illustrations. Always floating, soft-shadow, no sharp edges. Purely decorative — never informational."
+    },
+    {
+      "name": "Feature Section Heading",
+      "role": "Section opener with icon + title",
+      "description": "Small black icon (~32–40px) in a rounded square, paired with a 48–64px weight-400 heading. Example: 'Workflows' with a black icon tile to its left."
+    },
+    {
+      "name": "Tab Strip",
+      "role": "In-section navigation (Workflows / Storefront / Dashboard)",
+      "description": "Horizontal pill-shaped tabs, each 8px radius, padding 10–14px vertical / 18–20px horizontal. Inactive: #ffffff bg, #000000 text, 1px border. Active: #b154f9 border or fill indicator."
+    },
+    {
+      "name": "Content Card",
+      "role": "Generic card container for features, pricing, content blocks",
+      "description": "Background #ffffff or #f1f1f1, 1px border in Fog Gray or Ink Black at low opacity, radius 8px, padding 20px. No drop shadow."
+    },
+    {
+      "name": "FAQ Accordion Row",
+      "role": "Expandable question/answer list",
+      "description": "Full-width row, 1px Ink Black bottom border (no top/left/right border), padding 20px vertical, question text 16–18px weight 400 #000000, chevron icon on the right in #000000. Expands inline with answer in #6c6b6b."
+    },
+    {
+      "name": "Footer",
+      "role": "Site footer",
+      "description": "Background #171717, text and links in #ffffff, generous vertical padding, multi-column link grid. Inverts the entire light system to near-black."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Regular — detected in extracted data but not described by AI",
+      "sizes": "16px, 18px, 24px, 32px, 48px, 64px, 80px",
+      "family": "Regular",
+      "weight": "400",
+      "lineHeight": "1.1, 1.2, 1.3",
+      "letterSpacing": "-0.01, 0.01, 0.02"
+    },
+    {
+      "role": "Single-weight grotesk used for every text role — body, headings, nav, buttons. A weight-400-only system is a deliberate signature: hierarchy is built through size and tracking, not boldness, producing a calm, editorial, anti-shout tone. Free substitute: Inter at 400, or Söhne Buch.",
+      "sizes": "16, 18, 24, 32, 48, 64, 80px",
+      "family": "Custom Sans (Krepling Regular)",
+      "weight": "400",
+      "lineHeight": "1.10–1.30",
+      "substitute": "Inter",
+      "letterSpacing": "-0.01em at 48–80px, 0.01em at 16–24px, 0.02em at small caps/labels"
+    }
+  ],
+  "description": "Krepling's design system is a near-monochrome canvas where black text and white surfaces carry the interface, and a single vivid violet (Bolt Violet) provides the only chromatic voice for actions, links, and interactive states. The layout breathes: generous whitespace, a comfortable density, and section rhythm built from large typographic jumps (16px → 80px) rather than colored bands. Surfaces are flat — borders and subtle background tints (#f1f1f1) define elevation; shadows are essentially absent. Rounded geometry is consistent (8px for cards/buttons, 14px for larger containers), reinforcing a soft, approachable feel. The system is counterweighted by playful 3D-rendered decorative objects in saturated hues — these are pure atmosphere, never UI tokens.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (primary): #000000\n- text (muted/helper): #6c6b6b\n- background: #ffffff\n- alt-surface: #f1f1f1\n- border (hairline): #000000 at low opacity or #b3b3b3\n- accent / primary action: #b154f9 (filled action)\n- primary action: #b154f9 (filled action)\n\n**3-5 Example Component Prompts**\n\n1. **Hero Section**: White #ffffff background, max-width 1200px centered. Display headline 'The world's most powerful commerce platform.' at 80px, weight 400, #000000, letter-spacing -0.01em, line-height 1.1, left-aligned. Subtext at 18px weight 400, #000000, placed right-aligned. Filled violet CTA 'Request a demo' below subtext: background #b154f9, text #ffffff, radius 8px, padding 14px 20px. Floating pastel 3D objects (coral/lavender/yellow cubes and spheres) in the upper-right quadrant — decorative only, no UI function.\n\n2. **Header Nav Bar**: White background, 1px bottom border in #000000 at 10% opacity, padding 21px vertical. Left: 'KREPLING' wordmark in #000000. Center: nav links (Features, Pricing, Company, Resources) at 16px weight 400, #000000. Right: 'Log in' ghost text link in #000000, then outlined violet 'Get started' button — background #ffffff, border 1.5px #b154f9, text #b154f9, radius 8px, padding 14px 20px.\n\n3. **Content Card**: Background #ffffff, border 1px in #b3b3b3, radius 8px, padding 20px. No shadow. Title at 24px weight 400 #000000, body at 16px weight 400 #6c6b6b.\n\n4. **Tab Strip**: Horizontal row of three tabs (Workflows, Storefront, Dashboard). Each tab radius 8px, padding 14px 20px. Inactive tab: background #ffffff, text #000000, 1px border in #b3b3b3. Active tab: background #ffffff, border 1.5px #b154f9, text #000000.\n\n5. **FAQ Accordion**: Full-width rows, 1px bottom border in #000000, padding 20px vertical. Question text 16px weight 400 #000000, chevron icon right-aligned in #000000. Expanded answer text 16px weight 400 #6c6b6b."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Gradients are not used on UI surfaces. They exist only inside the 3D decorative illustrations, where pastel endpoints blend softly (e.g. coral→lavender, sky→mint, lavender→peach, blue→violet). Never apply these to buttons, cards, or backgrounds."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is communicated through border weight (1px Ink Black at 8–10% opacity) and background tint shifts, never drop shadows. The flatness is deliberate: the 3D decorative elements supply the only depth in the experience."
+}

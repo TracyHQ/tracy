@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-page-cream: #f9f4f2;
+  --color-pure-white: #ffffff;
+  --color-charcoal-ink: #2d2c2b;
+  --color-graphite: #44423f;
+  --color-slate: #4b4c4d;
+  --color-stone: #63605d;
+  --color-driftwood: #c6c1b9;
+  --color-linen: #e2ded9;
+  --color-ash: #d0d0d0;
+  --color-soft-black: #000000;
+  --color-brand-orange: #f47d31;
+  --color-mindful-blue: #0061ef;
+  --color-sunbeam-yellow: #ffce00;
+  --color-deep-indigo: #3b197f;
+  --color-twilight-violet: #281466;
+  --color-plum: #5f2b89;
+  --color-mauve: #8144a8;
+  --color-celeste: #00a4ff;
+
+  /* Typography — Font Families */
+  --font-headspace-apercu: 'Headspace Apercu', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

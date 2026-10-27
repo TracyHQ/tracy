@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "07f5281d-2a18-4e12-a8ff-d54d3e03d198",
+  "status": "complete",
+  "name": "Essie Wine",
+  "url": "https://styles.refero.design/style/07f5281d-2a18-4e12-a8ff-d54d3e03d198",
+  "sourceWebsite": "https://www.essiewine.com",
+  "extractedAt": "2026-06-03T20:42:23.893Z",
+  "capturedAt": "2026-10-08T05:08:02.777576+00:00",
+  "theme": "mixed",
+  "industry": "other",
+  "description": "Dusty rose chapbook with mustard chapter breaks",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6ce2ccab-701e-4d58-aef8-99afcd439859.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/f1b0e5bd-8e8f-493d-8ee7-5b66a00e426a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/77017381-4680-45aa-91dd-cb9e0358e292.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/46a683f5-afc8-40c3-a196-7800f45fdb04.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ce38dce2-2b52-4fcd-add3-72a34de009d9.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2a1df50c1b98cc44f0bd7b18df57a64f8b9b24a8d9f80e2f86d3168bd08b322a",
+      "bytes": 19090
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "23177b6bc8e46b90775d33c679dd2952edcc5160df2bda091a48641033d1a6d8",
+      "bytes": 104666
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "cc04caf6864509472cad360d71016f63df0e5b5e078dc23ca2698b4495c00cfb",
+      "bytes": 16154
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7a1598e247c449324bf3e98e4e26afb8f365a96ae94a34e6ee7eadf719f04acd",
+      "bytes": 8088
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "da343f37aaf48f883a53503277f40b52d2e0886bf8c04b8292adb4938e9e3243",
+      "bytes": 12809
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2da360505ff0699cf41943cf85062e729fcc010fa62d675602275f14bbe34c5c",
+      "bytes": 3587
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "51373a3b658a3080c2265d827483ef4c2a4e6b0395de4350a7e9855690b4e938",
+      "bytes": 708
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c4993ff1d2a4ba592f71df5cef05308d5d76ca8a38ee6f0b9ccb86b03fe20cdd",
+      "bytes": 725
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "610e8182be3f0e242bca45be599fc65b0fc1819c8289d2e82fafe18e538345e6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "811a5411c1b22de503055cccd7ae32541d42007e97872cb005a53b464533f36f",
+      "bytes": 42616
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a63159a7269de87e527c61a8888740452d892c416b828e721148a8eea62c7b0c",
+      "bytes": 22020
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1b222af7c4af73370c0efca549de05db84dcda1a8c569795369e3ccf452da8cf",
+      "bytes": 35121
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "93878cc96834aa7472b9efb8babc5a2589527d91baea2df02f10c43bc370f9f6",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "641ae6b9dc39ad307d7df91fef41facbe17e3410ddb50af9ca5e4bc6b6c6962a",
+      "bytes": 1220
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "71880688e8f998acd8dacbd31b849dcbcea6c35526183ff681b12bda9216de64",
+      "bytes": 1733
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "07f5281d-2a18-4e12-a8ff-d54d3e03d198",
+    "17ce9ad2-f22d-4e48-92de-e28fb8551cc5",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "1f9089e1-4170-482f-b988-afe1124a70a9",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "34baa524-5d5b-4165-bbab-d01f05e6d6b9",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "a0244aab-0dba-45fe-a595-416c1f0715be",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b22f68eb-7ed1-47b6-995e-2c0afc79ac7e",
+    "b753dfda-cbe1-41e4-b341-b98d69c8422f",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "f240ed7d-d466-478e-bbce-6c93420dfd1c",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fields name="slideshow">
+    <fieldset name="basic">
+      <field name="auto-play" type="list" default="false"><option value="false">JNO</option></field>
+    </fieldset>
+    <fieldset name="basic2">
+      <field name="data" type="jalist">
+        <item name="title" type="text"/>
+        <item name="btn-link" type="text"/>
+      </field>
+    </fieldset>
+  </fields>
+</form>

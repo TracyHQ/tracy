@@ -1,0 +1,18 @@
+meta {
+  name: records list
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{site}}/records/article?limit=5
+  body: none
+  auth: inherit
+}
+
+docs {
+  # The CMS's own records
+
+  `content.list` for one kind (`article` on Joomla; use `post` on WordPress). Raw records: no
+  revision, no ETag. Needs a live seat only.
+}

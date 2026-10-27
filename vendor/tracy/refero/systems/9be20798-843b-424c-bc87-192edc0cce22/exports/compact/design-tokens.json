@@ -1,0 +1,94 @@
+{
+  "color": {
+    "sun-yellow": {
+      "$value": "#ffde3b",
+      "$type": "color",
+      "$description": "Sun Yellow — Primary action buttons, card highlights, decorative shapes, the signature pop — the only color with true filled-button authority"
+    },
+    "hot-pink": {
+      "$value": "#ff4dd5",
+      "$type": "color",
+      "$description": "Hot Pink — Decorative borders, accent shapes, image overlays — used as visual punctuation, never as fill"
+    },
+    "lime-burst": {
+      "$value": "#c1f32b",
+      "$type": "color",
+      "$description": "Lime Burst — Decorative strokes, border accents, secondary highlight — energetic counterweight to Sun Yellow"
+    },
+    "periwinkle": {
+      "$value": "#6483ff",
+      "$type": "color",
+      "$description": "Periwinkle — Card background, secondary action — the cool blue in an otherwise warm palette"
+    },
+    "spring-green": {
+      "$value": "#c6dc3c",
+      "$type": "color",
+      "$description": "Spring Green — Card backgrounds, nav highlights — warmer, more muted companion to Lime Burst"
+    },
+    "bubblegum": {
+      "$value": "#ee84d5",
+      "$type": "color",
+      "$description": "Bubblegum — Soft pink accent for secondary nav elements and tag pills"
+    },
+    "warm-linen": {
+      "$value": "#f1e8de",
+      "$type": "color",
+      "$description": "Warm Linen — Primary page canvas, soft shadow color, border tint — the warm cream that holds the whole system together"
+    },
+    "paper-white": {
+      "$value": "#fbf8f5",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, elevated content blocks — barely warmer than pure white, just enough to feel like paper"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color"
+    },
+    "charcoal": {
+      "$value": "#2f2c29",
+      "$type": "color",
+      "$description": "Charcoal — Dark hero section background, high-contrast text container — not pure black, a warmer near-black"
+    },
+    "stone": {
+      "$value": "#c3b7ac",
+      "$type": "color",
+      "$description": "Stone — Muted card backgrounds, secondary surfaces, neutral button fills"
+    },
+    "sand": {
+      "$value": "#eadcce",
+      "$type": "color",
+      "$description": "Sand — Warm neutral for soft fills, secondary card backgrounds"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, hairline borders, icon strokes, logo — the structural color, used at extreme scale"
+    },
+    "fog": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Fog — Muted borders, secondary dividers, disabled states"
+    }
+  },
+  "font": {
+    "ease-standard": {
+      "$value": "Ease Standard",
+      "$type": "fontFamily",
+      "$description": "Body, nav, labels, captions, button text — the workhorse at a single 400 weight with tight negative tracking"
+    },
+    "ease-display": {
+      "$value": "Ease Display",
+      "$type": "fontFamily",
+      "$description": "Display headlines, hero text, section titles, decorative logo — runs at 400 weight only, so display impact comes from extreme scale (up to 100px) and tight tracking, never from bolding"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://streamtime.net",
+      "siteName": "Streamtime",
+      "extractedAt": "2026-06-03T21:27:24.103Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1134-ds-contracts-r2c",
+  "kind": "feat",
+  "title": "JA Gamex, Helple, Kidscorner and Landscape (not ready in batch 3) wear a design system from their 1.0.1 builds: text on a picture is judged against the picture, and an installer release reads the slot through T4's style-template placeholders, which survive T4 writing its sheets again",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs test/release-manifest.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{gamex,helple,kidscorner,landscape}.json through loadContract.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template:'ja_<name>'}), {key:'quickstart/ja-<name>/j6', version}) for versions 1.0.1 and 1.0.0.",
+    "S4: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs <slug> --port 52751 --cdp 9761 --evidence <tmp> for ja-gamex then ja-landscape: release restored in Docker, stylesheets tokenized, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed.",
+    "S5: node packages/design/tracy-ds-slot/scripts/release-joomla.mjs quickstart/ja-helple/j6 --template joomla-ja-helple --out <tmp> --port 52753; list the zip; restore it with stand.mjs up --from-dir (port 52755), request /, /index.php/about, /index.php/blog, /index.php/contact twice; read media/t4/css/*.css; empty media/t4/css and media/t4/optimize, request the four pages twice again, read the sheets again; stand down.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-r2c.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: all four ready, readyNote naming tasks/evidence/ds-contracts-r2c-2026-10-11, minVersion {'quickstart/<slug>/j6': '1.0.1'}; helple and landscape have no t4SiteCss, t4Placeholders.__body_text_color 'fg' and a readyNote saying regeneration-checked; landscape's __color_primary is {fill:'accent', line:'accent', text:'fg-2'}; gamex selectors.groundPicture includes '.t4-content'; kidscorner inlineColours['#403d75'] = 'fg-2'.",
+    "S3: 1.0.1 → {contract:'joomla-ja-<name>'}; 1.0.0 → reason TEMPLATE_NEEDS_UPDATE, for each of the four.",
+    "S4: each: controls 0,0,0,0; no text under 4.5:1 that is worse than the template's own default; at least 60% of the painted page follows every system; ja-gamex measures at least one text on a picture (onPicture).",
+    "S5: the build exits 0; the zip carries templates/ja_helple/css/tpl/*.tpl.css and no administrator/cache/t4asset/; after the four pages render every media/t4/css/<n>.css contains var(--ds-c-, and again after the folder is emptied and T4 writes them anew."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-{gamex,helple,kidscorner,landscape}.json ready, minVersion, selectors.groundPicture, selectors.inkImages, selectors.pageText, selectors.onAccent, inlineColours, t4Placeholders",
+    "probe": "packages/design/tracy-ds-slot/scripts/flow.mjs contrastProbe / groundProbe (samples with onPicture)",
+    "t4 sheets": "templates/<tpl>/css/tpl/{theme,pattern}.tpl.css placeholders → media/t4/css/<style id>.css, rewritten when its md5 differs from cache/t4asset/<file>.txt (plugins/system/t4 Template::renderCustomCss)",
+    "joomla": "#__modules row title 'Tracy design system', module mod_custom, menuid 0; <style id=\"tracy-ds-slot\">"
+  },
+  "evidence": "tasks/evidence/ds-contracts-r2c-2026-10-11/README.md — per-template table, screenshots and flow.json of each measure on the 1.0.1 builds (11/10/2026).",
+  "fence": "Two of the four re-measured from the published 1.0.0 the way pass-joomla tokenizes it (the picture probe and t4Placeholders); all four were measured on their 1.0.1 builds in the evidence, Helple and Landscape again on builds rebuilt with t4Placeholders after T4 rewrote their sheets. The regeneration is checked on one build (JA Helple). Not covered: publishing (no upload is made) and the eye check of the screenshots.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-r2c.mjs"],
+    "needs": [],
+    "timeout_s": 5400
+  }
+}

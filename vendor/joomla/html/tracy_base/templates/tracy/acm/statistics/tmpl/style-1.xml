@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <title>Statistics Style 1</title>
+  <fields name="statistics">
+    <fieldset name="band" label="TPL_TRACY_BASE_ACM_STATISTICS_BAND_LABEL">
+      <field
+        name="eyebrow"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_STATISTICS_EYEBROW_LABEL"
+        description="TPL_TRACY_BASE_ACM_STATISTICS_EYEBROW_DESC"
+      />
+      <field
+        name="heading"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_STATISTICS_HEADING_LABEL"
+        description="TPL_TRACY_BASE_ACM_STATISTICS_HEADING_DESC"
+      />
+      <field
+        name="columns"
+        type="list"
+        default="4"
+        label="TPL_TRACY_BASE_ACM_STATISTICS_COLUMNS_LABEL"
+        description="TPL_TRACY_BASE_ACM_STATISTICS_COLUMNS_DESC"
+      >
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </field>
+    </fieldset>
+    <fieldset name="figures" label="TPL_TRACY_BASE_ACM_STATISTICS_FIGURES_LABEL" multiple="1">
+      <field
+        name="figure-value"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_STATISTICS_FIGURE_VALUE_LABEL"
+        description="TPL_TRACY_BASE_ACM_STATISTICS_FIGURE_VALUE_DESC"
+      />
+      <field
+        name="figure-caption"
+        type="text"
+        default=""
+        label="TPL_TRACY_BASE_ACM_STATISTICS_FIGURE_CAPTION_LABEL"
+        description="TPL_TRACY_BASE_ACM_STATISTICS_FIGURE_CAPTION_DESC"
+      />
+    </fieldset>
+  </fields>
+</form>

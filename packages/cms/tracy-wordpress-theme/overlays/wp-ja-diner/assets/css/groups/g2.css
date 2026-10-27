@@ -1,0 +1,109 @@
+/* Page group g2: the 404 screen. The source's error.php is a page of its own (no header, no footer) with its own
+   sheet, templates/ja_diner/css/error.css; its rules are carried here under the WordPress 404 body class. */
+body.error404 {
+	align-content: center;
+	background: var(--wp--preset--color--bg);
+	color: var(--ds-c-fg-2, light-dark(#222222, #f2eee8));
+	display: flex;
+	font-family: var(--ds-font-body, 'Work Sans', Helvetica, Arial, sans-serif);
+	font-size: 18px;
+	justify-content: center;
+	line-height: 1.7;
+	margin: 0;
+	min-height: 100vh;
+	padding: 0;
+}
+body.error404 .page-container {
+	left: 50%;
+	margin: 0 auto;
+	max-width: none;
+	position: absolute;
+	text-align: center;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+body.error404 .error-code {
+	display: block;
+	font-family: var(--ds-font-display, var(--ja-font-display, 'Eczar'), Helvetica, Arial, sans-serif);
+	font-size: 340px;
+	line-height: 1;
+}
+body.error404 .text-error span {
+	display: inline-block;
+	letter-spacing: -10px;
+}
+body.error404 .group-text {
+	display: block;
+}
+body.error404 .group-text .error-message h2 {
+	font-family: var(--ds-font-display, var(--ja-font-display, 'Eczar'), Helvetica, Arial, sans-serif);
+	font-size: 48px;
+	font-weight: 400;
+	line-height: 1;
+	margin: 0 0 24px;
+	position: relative;
+}
+body.error404 .group-text .error-message h2::before {
+	background: var(--ds-c-accent, #ffd33d);
+	bottom: -8px;
+	content: '';
+	display: block;
+	height: 18px;
+	left: 50%;
+	margin-bottom: 6px;
+	position: absolute;
+	transform: translateX(-50%);
+	width: 40%;
+}
+body.error404 .group-text .error-message h2 span {
+	position: relative;
+	z-index: 99;
+}
+body.error404 .group-text .error-message > p {
+	color: var(--ds-c-fg, light-dark(#555555, #c9c3ba));
+	display: block;
+	line-height: 1;
+	margin: 36px 0 0;
+}
+body.error404 .btn-home-page {
+	background-color: var(--ds-c-accent, #c36349);
+	color: var(--ds-c-accent-on, #fff);
+	display: inline-block;
+	font-size: 12px;
+	font-weight: 600;
+	margin-top: 24px;
+	padding: 17px 32px;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: all 0.4s ease;
+}
+body.error404 .btn-home-page:hover,
+body.error404 .btn-home-page:focus,
+body.error404 .btn-home-page:active {
+	background-color: var(--ds-c-accent-hover, #bb4f32);
+}
+@media screen and (max-width: 767px) {
+	body.error404 .error-code {
+		font-size: 190px;
+	}
+	body.error404 .group-text .error-message h2 {
+		font-size: 36px;
+	}
+	body.error404 .group-text .error-message h2::before {
+		height: 12px;
+	}
+}
+
+/* The source sizes its masthead title through `.ja-masthead-detail h3`; the masthead pattern prints an h1, so that
+   rule never reached it and the title kept the theme's heading size on narrow screens. */
+@media (max-width: 767px) {
+	.t3-masthead .ja-masthead .ja-masthead-detail .ja-masthead-title {
+		font-size: 36px;
+		line-height: 1.2;
+	}
+}
+
+/* The login module's icon boxes: the source paints them #e8e6e3 in a fixed value; in the dark theme they take the border tone. */
+.t3-sidebar .input-group-addon {
+	background-color: var(--ds-c-border, light-dark(#e8e6e3, #3d3833));
+}

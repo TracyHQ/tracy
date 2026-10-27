@@ -1,0 +1,72 @@
+{
+  "id": "REG-PR-1026-review-fixes",
+  "kind": "fix",
+  "title": "Review fixes of #1026: notes dated by the plugin's clock, Chinese quotes kept, no note rewritten without the customer's words, a separator in a note's text, the build tool of an open build, dryRun only for content.replace, read keeps dsh's line cap, EmDash picture undo by the whole value",
+  "pr": 1026,
+  "area": "site-tools/review-1026",
+  "cms": ["any"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. Work in the TCH checkout at the commit under test, with its dependencies installed (pnpm install) and the deepseek-harness submodule initialised.",
+    "S2: From the checkout root run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/site-notes.test.mjs packages/tools/tracy-site-tools/test/site-notes-wiring.test.mjs packages/tools/tracy-site-tools/test/deferred-tools.test.mjs packages/tools/tracy-site-tools/test/prefix-stability.test.mjs packages/tools/tracy-site-tools/test/receipt-echo.test.mjs packages/site/tracy-site-tabs/test/turn-open-hold.test.mjs scripts/test/file-tool-caps.test.mjs — keep the 'ok'/'not ok' lines and the exit code."
+  ],
+  "expect": [
+    "S2: every test named in run.tests reports ok, on any day (the wiring test sets the plugin's clock to 08/10/2026 and the kept note carries that date, not the real one).",
+    "A Chinese or Japanese quote counts as said when it holds at least 4 of its unspaced characters and is copied from the message; one or two words are not a quote.",
+    "An update or a remove whose said is missing, empty, too short, invented or taken from the old note is refused NOT_SAID and the note stays as it was; an update that quotes this message replaces the note's text and its quote.",
+    "A note whose text holds ' — said: \"' reads back from the file whole, with its quote unchanged.",
+    "On a WordPress site whose build is running, waiting, paused or failed, a new conversation is sent tracy_site_build_wordpress from its first step; with no build on record or a build done it waits as before; the design tools and the other platform's build tool stay hidden.",
+    "A tracy_site call with dryRun:true (in params or top level) is a look only for content.replace; theme.activate, extension.enable, theme.style, media.draw, db.rollback, template.siteSettings and content.update with dryRun still wait for the seal and count as changing the site.",
+    "No preset of either bundle sets readMaxLineLength, readMaxBytes or readLimit on tool-fs.",
+    "An EmDash content_update receipt shows a picture as its short view; a changed picture restores the live revision when there is one, otherwise the undo by value carries the whole old picture in undoData; an unchanged picture beside a short change forces no restore.",
+    "Every command exits 0."
+  ],
+  "selectors": {
+    "notes": "packages/tools/tracy-site-tools/src/host/site-notes.mjs (quoteIsSaid, applyNote update, LINE); src/host/index.ts captureWishes now",
+    "deferral": "packages/tools/tracy-site-tools/src/host/deferred-tools.mjs toolsToDefer keepRoads; site-context.mjs siteBuildOpen; index.ts agent/created",
+    "hold": "packages/site/tracy-site-tabs/src/host/turn.mjs siteCallWrote",
+    "presets": "scripts/gen-presets.ts (tool-fs keeps dsh's defaults)",
+    "receipt": "packages/tools/tracy-site-tools/src/host/emdash.mjs view, receiptOf"
+  },
+  "evidence": "Review of PR #1026 (09/10/2026): the wiring test was red on any day but 08/10 because captureWishes ignored config.now; probes showed a Chinese quote refused NOT_SAID, an update with no said rewriting n1 to any text, 'Use the slogan — said: \"hi\" always' parsed back cut, callMayWriteSite answering false for theme.activate with dryRun, the build tool hidden on a site whose build failed, and an EmDash undo by value writing mediaView's subset. Each test here fails on the commit before its fix.",
+  "fence": "Mechanism only: what the host stores, defers, holds and writes in the receipt. Not covered: whether a model then calls the build tool or quotes the customer well (a bench measure).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-force-exit",
+      "packages/tools/tracy-site-tools/test/site-notes.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-notes-wiring.test.mjs",
+      "packages/tools/tracy-site-tools/test/deferred-tools.test.mjs",
+      "packages/tools/tracy-site-tools/test/prefix-stability.test.mjs",
+      "packages/tools/tracy-site-tools/test/receipt-echo.test.mjs",
+      "packages/site/tracy-site-tabs/test/turn-open-hold.test.mjs",
+      "scripts/test/file-tool-caps.test.mjs"
+    ],
+    "tests": [
+      "🔒 a wish the customer typed is kept by the host, then sent once to the next message and the next conversation",
+      "a quote in a script written without spaces is measured in characters, and still must be typed",
+      "an op not tied to this message is refused NOT_SAID: update, said missing",
+      "an op not tied to this message is refused NOT_SAID: update, said empty",
+      "an op not tied to this message is refused NOT_SAID: update, said from the old note, not this message",
+      "an op not tied to this message is refused NOT_SAID: remove, said missing",
+      "update rewords a note only on the customer's words in this message",
+      "a note whose text holds the line separator reads back exactly as written",
+      "capture: a Chinese wish is kept on its own characters; an update with no words of this message is dropped",
+      "a road kept open keeps its tools from the first step",
+      "the build is open while it runs, waits, pauses or failed",
+      "🔒 on dsh’s own registry: a new conversation on a site whose build is open is sent its build tool from the first step",
+      "🔒 T-D: once the agent is made, nothing re-registers",
+      "callMayWriteSite and callChangedSite: a dryRun is a look only for content.replace",
+      "read keeps dsh's own caps in every preset",
+      "emdash picture undo: a changed picture, with a live revision: restore it",
+      "emdash picture undo: a changed picture, no live revision: by value, with the whole old picture",
+      "emdash picture undo: a picture removed, no live revision",
+      "emdash picture undo: a picture added where there was none",
+      "emdash picture undo: an unchanged picture beside a short change"
+    ]
+  }
+}

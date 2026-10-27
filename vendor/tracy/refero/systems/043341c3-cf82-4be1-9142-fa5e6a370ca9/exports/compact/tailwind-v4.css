@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-graphite-ink: #32302f;
+  --color-paper-white: #fcfcfc;
+  --color-linen-cream: #faf8f5;
+  --color-fog-veil: #f1f0f0;
+  --color-stone: #e4e2e1;
+  --color-pebble: #686664;
+  --color-onyx: #000000;
+  --color-charcoal: #09090a;
+  --color-bronze-field: #3a3525;
+
+  /* Typography */
+  --font-tiempos: 'Tiempos', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-the-future: 'The Future', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-wealthsimple-sans: 'Wealthsimple Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

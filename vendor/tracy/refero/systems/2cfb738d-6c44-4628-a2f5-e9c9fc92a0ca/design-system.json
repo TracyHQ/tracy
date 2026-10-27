@@ -1,0 +1,326 @@
+{
+  "dos": [
+    "Use Ember Orange (#ff6c02) for exactly one element per viewport: the primary CTA, a section tag, or the product frame border — never multiple at once",
+    "Set headings in Geist 600 with letter-spacing -0.04em at 48px and -0.05em at 60px; the tight tracking is what makes the type feel machined",
+    "Use 12px radius for cards and 4px radius for buttons; 9999px is reserved for tags, badges, and pills only",
+    "Define surfaces with 1px #252525 or #303030 hairline borders rather than shadows; the page should read as flat code-editor geometry",
+    "Anchor every section with a Section Tag Pill in Ember Orange before the headline — this is the system's repeating motif",
+    "Let product screenshots fill their containers edge-to-edge; the orange border is the only frame they need",
+    "Keep body text at 14–16px in Fog Gray (#909090) and reserve Bone White (#f3f3f3) for headlines and primary actions"
+  ],
+  "donts": [
+    "Never introduce a second warm color; orange is the only warm voice and adding red, yellow, or another orange-adjacent hue dilutes the single-accent system",
+    "Don't use drop shadows on cards, buttons, or navigation; the design rejects elevation as a visual signal",
+    "Don't set body text in Bone White (#f3f3f3) — use Fog Gray (#909090) for paragraphs to create the dim-product-canvas atmosphere",
+    "Avoid gradients on large surfaces; the only gradient is the orange→peach pair on template card accent bars",
+    "Don't use a border radius larger than 12px on cards or 4px on buttons; large radii read as friendly consumer apps, which this isn't",
+    "Never center-align body copy; BaseHub is editorial and left-aligned throughout, including descriptions and quotes",
+    "Don't use Glacier Blue (#55c2ff) for anything outside informational badges and status chips"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#ff6c02",
+      "name": "Ember Orange",
+      "role": "Primary CTAs, section tags, active nav, the glowing product frame, hand-drawn annotations, and the single decorative rule on the left margin — the one warm voice in an otherwise cold palette",
+      "group": "brand"
+    },
+    {
+      "hex": "#ff9b51",
+      "name": "Ember Glow",
+      "role": "Gradient stop paired with Ember Orange for the rare gradient surface (e.g. template card accent bars)",
+      "group": "brand",
+      "gradient": "linear-gradient(rgb(255, 108, 2), rgb(255, 155, 81))"
+    },
+    {
+      "hex": "#55c2ff",
+      "name": "Glacier Blue",
+      "role": "Blue state accent for badges, validation surfaces, and short status labels.",
+      "group": "semantic"
+    },
+    {
+      "hex": "#f3f3f3",
+      "name": "Bone White",
+      "role": "Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dedede",
+      "name": "Ash Gray",
+      "role": "Secondary text and lighter icon strokes on dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#909090",
+      "name": "Fog Gray",
+      "role": "Medium-contrast borders, control outlines, and structural separators.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#646464",
+      "name": "Slate Gray",
+      "role": "Muted metadata text, timestamp labels, tertiary icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#303030",
+      "name": "Iron Border",
+      "role": "Hairline dividers, code block borders, subtle list separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#252525",
+      "name": "Charcoal Edge",
+      "role": "Card borders, subtle frame edges, input field borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1b1b1b",
+      "name": "Graphite",
+      "role": "High-contrast neutral action fill for primary buttons on light surfaces.",
+      "group": "neutral"
+    },
+    {
+      "hex": "#121212",
+      "name": "Obsidian",
+      "role": "Card surface — one step above canvas, used for testimonial cards and elevated blocks",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0c0c0c",
+      "name": "Onyx",
+      "role": "Quote/testimonial card surface, link button background, the most common elevated surface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#040404",
+      "name": "Void",
+      "role": "Page canvas — the dominant page background",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Black",
+      "role": "Deepest surface for footer and image fill where absolute black is needed",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered container, full-viewport dark canvas behind it. Hero is left-aligned text stack (version tag pill → 60px headline → 14px subhead → button row) occupying roughly the left half, with the product screenshot occupying the right half on desktop. The decorative left margin rule at ~5% from edge is the only element that breaks out of the container. Feature sections below are single-column: section tag pill → 48px headline → 14px description → supporting visual, all left-aligned with 80px vertical gaps. The template gallery is a 3-column grid with equal-width cards. Section rhythm is consistent — no alternating bands, no dark/light switches — the entire page is one continuous dark surface.",
+  "imagery": "Product screenshots are the entire visual language. The hero is a borderless editor capture framed in an orange 2px stroke, not a stock photo or illustration. Secondary sections use customer logos (grayscale, single row) and template preview cards that are themselves product screenshots. The only decorative imagery is hand-drawn orange annotations ('PLAY WITH IT' with a curved arrow) layered over product captures — these are the brand's personality injection. No lifestyle photography, no 3D renders, no abstract gradients. Visual space is dominated by text and product UI, not by imagery.",
+  "similar": [
+    {
+      "why": "Same dark-mode editor-tool atmosphere with a single vivid accent, tight Geist-style tracking, hairline borders over shadows, and product screenshots as the hero",
+      "business": "Linear"
+    },
+    {
+      "why": "Near-black canvas, grayscale text scale, one warm accent color doing all the action work, and the same flat border-based surface elevation system",
+      "business": "Vercel"
+    },
+    {
+      "why": "Developer-tool aesthetic with monochrome palette, compact 4px/12px radii, tight letter-spacing on Geist-class type, and ornamental left margin accents",
+      "business": "Resend"
+    },
+    {
+      "why": "The editor-screenshot-as-hero approach, the 12px card radius, and the product-forward composition with minimal decoration",
+      "business": "Notion"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "12px",
+      "pills": "9999px",
+      "badges": "9999px",
+      "inputs": "8px",
+      "buttons": "4px",
+      "imageCards": "21px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#040404",
+      "name": "Void",
+      "level": 0,
+      "purpose": "Page canvas — the dominant background every section floats on"
+    },
+    {
+      "hex": "#000000",
+      "name": "Black",
+      "level": 1,
+      "purpose": "Deepest layer, used sparingly for footer and image fills"
+    },
+    {
+      "hex": "#0c0c0c",
+      "name": "Onyx",
+      "level": 2,
+      "purpose": "Testimonial and quote card surface, one step above canvas"
+    },
+    {
+      "hex": "#121212",
+      "name": "Obsidian",
+      "level": 3,
+      "purpose": "Elevated product blocks and secondary card surface"
+    },
+    {
+      "hex": "#1b1b1b",
+      "name": "Graphite",
+      "level": 4,
+      "purpose": "Button fills and highest elevation surface"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 4px 12px rgba(0, 0, 0, 0.4)",
+      "element": "Floating Chat Widget"
+    }
+  ],
+  "northStar": "midnight canvas, molten filament",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.4,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "heading-sm",
+      "size": 18,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.54
+    },
+    {
+      "role": "heading",
+      "size": 24,
+      "lineHeight": 1.23,
+      "letterSpacing": -0.72
+    },
+    {
+      "role": "heading-lg",
+      "size": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.96
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.14,
+      "letterSpacing": -1.92
+    },
+    {
+      "role": "display-xl",
+      "size": 60,
+      "lineHeight": 1.1,
+      "letterSpacing": -3
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Main conversion action (Get Started, Sign Up, Open in new tab)",
+      "description": "Ember Orange (#ff6c02) fill, Bone White (#f3f3f3) text, Geist 500 at 14px, 4px radius, 14px 16px padding. No shadow. The only filled button in the system — it should feel like flipping a switch in a dark room."
+    },
+    {
+      "name": "Secondary Outlined Button",
+      "role": "Companion action to a primary CTA (Schedule a Demo, Learn more)",
+      "description": "Transparent background, Fog Gray (#909090) 1px border, Fog Gray text, Geist 500 at 14px, 4px radius, 14px 16px padding. Visually quieter than the primary so the eye lands on the orange first."
+    },
+    {
+      "name": "Nav Login Button",
+      "role": "Low-emphasis action in the top navigation",
+      "description": "Graphite (#1b1b1b) fill, Bone White text, Geist 500 at 14px, 4px radius, 6px 12px padding. Sits next to the primary orange Sign Up button and stays subordinate."
+    },
+    {
+      "name": "Section Tag Pill",
+      "role": "Small label that opens a feature section (Editor, Branching, Playground)",
+      "description": "Transparent fill, Ember Orange 1px border, Ember Orange text, Geist 500 at 12px, 9999px radius, 6px 12px padding. Reads as a category marker rather than a button."
+    },
+    {
+      "name": "New Badge",
+      "role": "Annotation attached to a nav link indicating recent content",
+      "description": "Transparent fill, Fog Gray 1px border, Fog Gray text, Geist 500 at 11px, 4px radius, 2px 6px padding. Lives inline with the link it modifies."
+    },
+    {
+      "name": "Info Badge",
+      "role": "Status or environment indicator (playground warnings, branch labels)",
+      "description": "Transparent fill, Glacier Blue (#55c2ff) 1px border, Glacier Blue text, Geist 500 at 12px, 9999px radius, 4px 10px padding. The only place blue appears — reserved for informational context."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "Quote block from a customer, with author attribution",
+      "description": "Onyx (#0c0c0c) fill, no border, 12px radius, 24px padding. Quote mark icon in Bone White at the top, quote text in Bone White at 14px, author name in Fog Gray with avatar to the right. Flat surface — no shadow."
+    },
+    {
+      "name": "Template Card",
+      "role": "Selectable template preview in the template gallery",
+      "description": "Obsidian (#121212) fill, Charcoal Edge (#252525) 1px border, 12px radius, 0px internal padding (image fills the card). A 2px accent bar at the top in a brand color (purple, orange, or yellow from the template itself). Title in Bone White 16px semibold below the image, description in Fog Gray 14px regular."
+    },
+    {
+      "name": "Product Screenshot Frame",
+      "role": "The hero element below the headline — a live preview of the editor",
+      "description": "Void (#040404) fill, Ember Orange 2px border, 16px outer radius. The screenshot content is a real product capture, not a mockup. The orange border glow is what makes it feel like a hot ember on the dark canvas."
+    },
+    {
+      "name": "Feature Block Heading",
+      "role": "Large section title for each feature explainer",
+      "description": "Bone White text, Geist 600 at 48px, lineHeight 1.14, letter-spacing -0.04em. Followed by a description in Fog Gray 14–16px regular. Always preceded by a Section Tag Pill."
+    },
+    {
+      "name": "Logo Strip",
+      "role": "Social proof row of customer logos",
+      "description": "Logos rendered in Fog Gray (#909090) at consistent height (~20px), evenly spaced with 32px gaps, left-aligned within the page max width. 'Trusted by' label in Fog Gray 12px sits above."
+    },
+    {
+      "name": "Hand-drawn Annotation",
+      "role": "Playful callout pointing to a feature in the product screenshot",
+      "description": "Ember Orange (#ff6c02), thin stroke, casual handwritten appearance, always paired with an arrow pointing to the relevant UI element. Used sparingly — one per hero section maximum — to inject personality without cluttering the editorial layout."
+    },
+    {
+      "name": "Decorative Left Margin Rule",
+      "role": "Vertical guide line anchoring the page composition",
+      "description": "1px Ember Orange stroke, full viewport height, positioned at ~5% from the left edge. A small Ember Orange dot (4px circle) marks section starts along the rule. This is the only persistent visual element that repeats across all sections."
+    },
+    {
+      "name": "Floating Chat Widget",
+      "role": "Persistent support entry point in the bottom-right corner",
+      "description": "Ember Orange (#ff6c02) fill circle, 48px diameter, Bone White chat icon centered. Fixed position, bottom 24px, right 24px. Subtle drop shadow for separation from the canvas."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary UI and display typeface. Weight 600 for headlines, 500 for nav and sub-labels, 400 for body. The tight negative tracking (-0.05em at 60px tightening to -0.03em at 16px) gives the type a machined, geometric feel — Geist's tall x-height and open apertures keep small body text readable against #040404 without weight inflation. Display sizes use lineHeight 1.0–1.14 for editorial compression.",
+      "sizes": "11, 12, 13, 14, 16, 18, 24, 32, 48, 60",
+      "family": "Geist",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.0, 1.1, 1.14, 1.2, 1.23, 1.4, 1.5",
+      "substitute": "Inter",
+      "letterSpacing": "-0.05em at 60px, -0.04em at 48px, -0.03em at 16–32px, normal at 11–14px"
+    },
+    {
+      "role": "Code-adjacent micro-copy: version tags, branch labels, file paths, inline commit IDs. Only used at 13px / 400 with the same -0.03em tracking as body Geist — this consistency is what makes the mono feel native rather than a foreign insert.",
+      "sizes": "13",
+      "family": "Geist Mono",
+      "weight": "400",
+      "lineHeight": "1.5",
+      "substitute": "JetBrains Mono",
+      "letterSpacing": "-0.03em"
+    }
+  ],
+  "description": "BaseHub speaks a near-monochrome dialect: a near-black canvas, a grayscale text scale, and one molten orange accent that does the work of a full color system. The product is the hero — large borderless screenshots of the editor float in the dark rather than floating illustrations, and a thin vertical orange rule on the far left anchors every section like a margin note. Typography stays compressed and quiet: Geist at semibold for headlines, regular for body, with tight negative tracking at every size to make words feel machined rather than typeset. Surfaces are flat and hairline-bordered rather than shadowed, and a 12px card radius plus 4px button radius keep the geometry sharp and developer-tool familiar. The only warm note is the orange — used for CTAs, section tags, the glowing product frame, and hand-drawn annotations — and a cool blue (#55c2ff) reserved strictly for informational badges.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #f3f3f3 (primary), #909090 (body), #646464 (muted)\n- background: #040404 (canvas), #0c0c0c (card), #121212 (elevated)\n- border: #252525 (cards), #303030 (dividers), #1b1b1b (button fill)\n- accent: #ff6c02 (Ember Orange — single warm voice)\n- primary action: #ff6c02 (filled action)\n\n**3 Example Component Prompts**\n\n1. Create a Primary Action Button: #ff6c02 background, #303030 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. *Feature block*: #040404 canvas. Section tag pill in #ff6c02 (same as above). Headline — Geist 600 at 48px, #f3f3f3, letter-spacing -1.92px, line-height 1.14. Description — Geist 400 at 16px, #909090, max-width 640px. Testimonial card below — #0c0c0c fill, no border, 12px radius, 24px padding, quote text in #f3f3f3 14px, author in #909090 12px.\n\n3. *Template gallery*: 3-column grid, 24px gap. Each card — #121212 fill, #252525 1px border, 12px radius, 0px padding. Top accent bar — 2px tall, template-specific color (purple, orange, or yellow). Template screenshot fills the card body. Title below image — Geist 600 at 16px, #f3f3f3. Description — Geist 400 at 14px, #909090."
+    }
+  ],
+  "elevationPhilosophy": "BaseHub is deliberately anti-shadow: surfaces are defined by hairline #252525–#303030 borders and grayscale tone steps (#040404 → #0c0c0c → #121212 → #1b1b1b) rather than elevation. The only shadow in the system is the floating chat widget, which needs physical separation from the canvas. Every other component sits flat — the orange border on the product screenshot does the work a shadow would normally do. This is a developer-tool choice: it reads as a code editor, not a marketing site."
+}

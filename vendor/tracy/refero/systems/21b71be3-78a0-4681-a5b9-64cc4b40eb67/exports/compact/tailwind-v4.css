@@ -1,0 +1,17 @@
+@theme {
+  /* Colors */
+  --color-terracotta-seal: #b05a36;
+  --color-parchment: #fef9ef;
+  --color-aged-paper: #f5eee1;
+  --color-warm-taupe: #d1c9bf;
+  --color-ink: #2a2b2f;
+  --color-charcoal: #333333;
+  --color-graphite: #515151;
+  --color-ash: #808988;
+  --color-pure-black: #000000;
+
+  /* Typography */
+  --font-financier-display: 'Financier Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ftbase: 'Ftbase', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-fragment-mono: 'Fragment mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1479-wo-qa-needs-baseline",
+  "kind": "fix",
+  "title": "The demo QA gate never passes a demo without a trustworthy baseline, and holds the hand-off prompt until it has one",
+  "pr": 1479,
+  "area": "website-opportunities/qa",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: QA round with a lost baseline.",
+    "S2: a check the host could not judge.",
+    "S3: hand-off whose baseline read fails."
+  ],
+  "expect": [
+    "S1: needs-review, never passed.",
+    "S2: left to a person, no repair sent.",
+    "S3: no prompt sent; sweep reads again and sends it, or gives up."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/website-opportunities-demo-qa.test.mjs",
+    "code": "opportunities/demo-qa.js baselineTrust, qaOutcome, takeDueBaselines"
+  },
+  "evidence": "Review 19/10/2026: baseline null/empty made no-demo-pictures skip and no-demo-words compare against nothing, so demos kept template content and passed",
+  "fence": "An unjudged check is never a pass",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-demo-qa.test.mjs"
+    ],
+    "tests": [
+      "B1: a run whose baseline is lost ends needs-review without asking the host — never passed",
+      "B1: a round where a check could not be judged leaves the demo to a person, with no repair sent",
+      "B1: a baseline that could not be read holds the prompt; the sweep reads again and sends it, or gives up"
+    ],
+    "needs": ["postgres"]
+  }
+}

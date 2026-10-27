@@ -1,0 +1,74 @@
+{
+  "color": {
+    "forest-ink": {
+      "$value": "#003329",
+      "$type": "color",
+      "$description": "Forest Ink — Headlines, body copy, navigation text, illustration strokes, link color — the structural color that carries every page"
+    },
+    "chartreuse-sprig": {
+      "$value": "#e6ffa3",
+      "$type": "color",
+      "$description": "Chartreuse Sprig — Primary CTA button fill, feature card surfaces, highlight washes — the single accent that makes interactive elements feel switched on"
+    },
+    "deep-moss": {
+      "$value": "#042725",
+      "$type": "color",
+      "$description": "Deep Moss — Secondary action button, hover or pressed states where a darker counterweight to the lime CTA is needed"
+    },
+    "vivid-lime": {
+      "$value": "#9bff48",
+      "$type": "color",
+      "$description": "Vivid Lime — Decorative high-energy accent inside illustrations, hover halos, or emphasis marks — louder sibling of Chartreuse Sprig"
+    },
+    "mist-paper": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Mist Paper — Page canvas, hairline borders across cards/links/images, subtle section backgrounds — the surface that the design breathes on"
+    },
+    "white-sheet": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White Sheet — Card surfaces, elevated tiles, button backgrounds, inverse text on dark fills"
+    },
+    "graphite": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Graphite — Occasional true-black fills for SVG details and one dark button variant"
+    },
+    "sage-dust": {
+      "$value": "#52756e",
+      "$type": "color",
+      "$description": "Sage Dust — Muted helper text, secondary descriptions, caption-level copy where full Forest Ink would compete with the headline"
+    },
+    "pine-shadow": {
+      "$value": "#33544c",
+      "$type": "color",
+      "$description": "Pine Shadow — Tertiary text, subdued labels, low-priority annotations"
+    }
+  },
+  "font": {
+    "untitledsans": {
+      "$value": "UntitledSans",
+      "$type": "fontFamily",
+      "$description": "Primary interface typeface — UI controls, body, navigation, and display headings. The aggressively negative tracking at large sizes (up to -0.064em) tightens the letterforms into a near-poster density that makes even short headlines feel like brand statements. A 600 weight is reserved for emphasis and CTA labels."
+    },
+    "boogybrutposter": {
+      "$value": "BoogyBrutPoster",
+      "$type": "fontFamily",
+      "$description": "Decorative italic-display accent used for the hand-lettered-feel phrases that ride alongside the geometric headline ('for You & the Planet', 'Fast by nature', '& love'). The contrast between this organic, almost-calligraphic display and UntitledSans's clinical geometry is the site's signature typographic move."
+    },
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://heylow.world",
+      "siteName": "Hey Low",
+      "extractedAt": "2026-06-03T18:28:04.459Z",
+      "variant": "compact"
+    }
+  }
+}

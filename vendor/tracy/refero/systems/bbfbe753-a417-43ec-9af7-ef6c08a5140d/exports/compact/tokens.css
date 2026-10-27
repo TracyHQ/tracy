@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-snow: #ffffff;
+  --color-mist: #e5e7eb;
+  --color-slate: #858585;
+  --color-fog: #b3b3b3;
+
+  /* Typography — Font Families */
+  --font-cashsans: 'CashSans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

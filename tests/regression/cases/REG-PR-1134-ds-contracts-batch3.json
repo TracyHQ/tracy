@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1134-ds-contracts-batch3",
+  "kind": "feat",
+  "title": "Eleven JA Joomla quickstarts with no slot contract (batch 3) carry one: five ready and measured on their releases (Focus, Good, Healthcare, Insight, Justitia), five not ready with the reason, JA Intranet without one (its release answers 500 on Joomla 6); a switch-only release stands up and builds",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs test/release-manifest.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{focus,good,healthcare,insight,justitia,fresco,gamex,helple,kidscorner,landscape}.json through loadContract; look for templates/joomla-ja-intranet.json.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template})) for ja_focus, ja_justitia, ja_gamex, ja_intranet; and for ja_focus with the site's quickstart version 1.0.1 and 1.0.0.",
+    "S4: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs <slug> --port 52733 --cdp 9741 --evidence <tmp> for ja-focus (installer zip + tracy_setting.json only) then ja-justitia (t4Placeholders): release restored in Docker, stylesheets tokenized, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-batch3.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: the five are ready with a readyNote naming tasks/evidence/ds-contracts-batch3-2026-10-11; the other five, not ready in batch 3, are ready now (JA Fresco in round 2 r2b, REG-PR-1134-ds-contracts-r2b; Gamex, Helple, Kidscorner and Landscape in r2c, REG-PR-1134-ds-contracts-r2c); joomla-ja-intranet.json ready (absent in batch 3; added with the repaired 1.0.1, REG-PR-1134-ds-contracts-intranet); ja-justitia has no t4SiteCss, t4Placeholders.__body_text_color 'fg' and a readyNote saying regeneration-checked; ja-good has measuredPage '/index.php/home-layouts/home-news'; each of the five has minVersion {'quickstart/<slug>/j6': '1.0.1'}.",
+    "S3: {contract:'joomla-ja-focus'}, {contract:'joomla-ja-justitia'}, {contract:'joomla-ja-gamex'} (TEMPLATE_NOT_READY until round 2), {contract:'joomla-ja-intranet'} (TEMPLATE_HAS_NO_SLOT until the repaired re-release); ja_focus at 1.0.1 → the contract, at 1.0.0 → TEMPLATE_NEEDS_UPDATE.",
+    "S4: each: controls 0,0,0,0; no text under 4.5:1 that is worse than the template's own default; at least 60% of the painted page follows every system."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-*.json ready, readyNote, t4Placeholders, measuredPage, minVersion",
+    "switch-only release": "packages/design/tracy-ds-slot/src/release-manifest.mjs manifestFromSetting (stand.mjs, release-joomla.mjs)",
+    "joomla": "#__modules row title 'Tracy design system', module mod_custom, menuid 0; <style id=\"tracy-ds-slot\">"
+  },
+  "evidence": "tasks/evidence/ds-contracts-batch3-2026-10-11/README.md — per-template table, screenshots, flow.json of each measure (11/10/2026).",
+  "fence": "Two of the five ready templates re-measured (the switch-only path and t4Placeholders); the other three are in the evidence. Not covered: the re-releases built for upload (verified by release-batch.mjs verify, VERIFICATION.json in each pack) and publishing (no upload is made). Judging by eye (Gamex, Kidscorner) is in the evidence, not in a probe.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-batch3.mjs"],
+    "needs": [],
+    "timeout_s": 3600
+  }
+}

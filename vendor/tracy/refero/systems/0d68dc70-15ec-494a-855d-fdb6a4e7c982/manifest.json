@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+  "status": "complete",
+  "name": "Danilo Rodrigues",
+  "url": "https://styles.refero.design/style/0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+  "sourceWebsite": "https://danilorodrigues.com",
+  "extractedAt": "2026-06-03T20:29:10.776Z",
+  "capturedAt": "2026-10-08T05:08:10.779039+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "Neon flare in a black void — a single oversized lime disc burning against a perfectly black page, with white type drifting around it like caption text on a gallery wall.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1d3137d9-41cb-411f-af90-0847d3b0c4d3.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "1c29da5ad1e684b2b2d092a26c176da5d265010d5d7e3a700e55d5f683d6e882",
+      "bytes": 17625
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ea6a565a88167cf27e17673f9de0d695fd76d9e577872ac2edbbc0fd74189c34",
+      "bytes": 79262
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f7cc607210510223d75bceaf707b3e634cce2a54b51ccc6a69fe240f597bb8ce",
+      "bytes": 15067
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3521acc9620fb776c9c94bfdde5f06adb10d15093a5cf9b8481c3113c4ec6ea1",
+      "bytes": 6882
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "152b52ca9385be4d51293ce94db6246231a0c43a6fc8bebca4eb62a9676c2b7f",
+      "bytes": 11520
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "38c2d8ebd8b678251c545460544e380492f7c045a471e76272ef8545ced47280",
+      "bytes": 3138
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "85fb7bbc3eeff2dac9bf245f9cfb5db385fb496d72dd7611fa051f2d46180550",
+      "bytes": 545
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c33740c94257a3f4439e8934ad4915dc99afee8ccae42ed66f54c6291c42e900",
+      "bytes": 562
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "62a58fd7e0bee6508b36f71ef5a92b13bee2fa5f869f9b46d33687ee63287211",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8d340e0b8ebe495a55865f8b1a11eca7181bf04f5c7bdd494c746043e9737668",
+      "bytes": 40832
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "91de60eac6157c464998d97599ee8da4a4b57e0fd89418a34d9e731833de2fce",
+      "bytes": 20847
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "95acf226d3c7549b44dfd949c6927da970ee31a7c9aa6503162095807c090030",
+      "bytes": 26085
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "0ebcca3eaacd1f8ae2f9b08d280be25bda7512bce59c545e7858b5bf4dc0f326",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e5523f0a662480cbf105a6ce8be2bb3f7b378d3cc82c3317ca16d6600a9842c6",
+      "bytes": 1067
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "44c04d87f62d8ca77f9280cc78702e3669110864c44eca451e8f1fa0ea680b85",
+      "bytes": 1499
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "64ba8e77-d1be-48a2-a47d-bdd46e139b8f",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "8d1b6c70-e045-4ce6-891d-aba5d5c00e0d",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "af3641fb-7d3c-40f4-aba1-42770dfaf091",
+    "b1e82907-d1cf-46cd-8ae7-3561c5b15fd0",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "e06224b2-6d52-4d06-bbde-115cec719b47",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "f1b76a42-050e-4c9e-96e3-a77fbd718c68",
+    "f68dd3d8-e8fa-4d2c-8c59-28aba06c9d8a",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

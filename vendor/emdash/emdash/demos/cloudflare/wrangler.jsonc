@@ -1,0 +1,57 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "emdash-demo",
+	"main": "./src/worker.ts",
+	"compatibility_date": "2026-01-14",
+	// disable_nodejs_process_v2 needed until unenv fix lands in Pages
+	// See: https://github.com/withastro/astro/issues/14511
+	"compatibility_flags": ["nodejs_compat", "disable_nodejs_process_v2"],
+	// Native Workers Caching (edge HTML in front of the Worker). No zone ID or
+	// Cache Purge API token. Pair with cacheCloudflare() in astro.config.mjs.
+	// Purge from the Worker with cache.purge() from cloudflare:workers.
+	"cache": {
+		"enabled": true,
+	},
+	// Static assets served from dist/
+	"routes": [
+		{
+			"pattern": "demo.emdashcms.com",
+			"zone_name": "demo.emdashcms.com",
+			"custom_domain": true,
+		},
+	],
+	// D1 Database binding
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "emdash_db",
+		},
+	],
+	// R2 bucket for media storage
+	"r2_buckets": [
+		{
+			"binding": "MEDIA",
+			"bucket_name": "emdash-media",
+		},
+	],
+	// Cron triggers drive general maintenance.
+	"triggers": {
+		"crons": ["* * * * *"],
+	},
+	// Observability
+	"observability": {
+		"enabled": true,
+	},
+	// Worker Loader for plugin sandboxing
+	"worker_loaders": [
+		{
+			"binding": "LOADER",
+		},
+	],
+	"ai_search_namespaces": [
+		{
+			"binding": "AI_SEARCH",
+			"namespace": "default",
+		},
+	],
+}

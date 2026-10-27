@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-signal-red: #e32735;
+  --color-carbon: #0b0405;
+  --color-graphite: #150e0f;
+  --color-steel: #382e30;
+  --color-slate: #858182;
+  --color-chalk: #ffffff;
+  --color-foil: #000000;
+
+  /* Typography — Font Families */
+  --font-archivo: 'Archivo', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-space-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

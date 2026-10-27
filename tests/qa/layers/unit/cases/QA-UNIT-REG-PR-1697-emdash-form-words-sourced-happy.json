@@ -1,0 +1,86 @@
+{
+  "id": "QA-UNIT-REG-PR-1697-emdash-form-words-sourced-happy",
+  "itemIds": ["regression:REG-PR-1697-emdash-form-words-sourced"],
+  "requirement": "An EmDash form's words change through the form door and the form stays a form; a contact detail in the research's own words is collected; what follows a record's own words is not its structure",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1697-emdash-form-words-sourced.json",
+    "ref": "PR #1697 (fix); fix evidence: none recorded",
+    "invariant": "S1: forms/update carries the form with only those words changed (option values, names, recipients kept); every other call is refused BAD_CALL and nothing is written (a recipient key is dropped, never sent). S2: no COLLECTED_UNSOURCED for the research's details; the two others are COLLECTED_UNSOURCED. S3: passes; the machine status fails.",
+    "productSources": [
+      "apps/tracy-host/src/app.js:1138",
+      "apps/tracy-host/src/demo-qa.js:55",
+      "apps/tracy-web/src/host/client.js:34",
+      "apps/tracy-web/src/sites/agent-demo-inventory.js:626",
+      "packages/tools/tracy-site-tools/src/host/emdash-call.mjs:409",
+      "packages/tools/tracy-site-tools/src/host/emdash.mjs:2665",
+      "packages/tools/tracy-site-tools/src/host/exec.mjs:406",
+      "packages/tools/tracy-site-tools/src/host/wp-blocks.mjs:152",
+      "packages/wo/website-opportunities/domain/neutral-copy.mjs:29",
+      "packages/wo/website-opportunities/domain/slot-fill-manifest.mjs:12"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-host/src/ds-slot.js:439 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:440 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:582 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:583 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:584 readFile() with a computed path",
+      "apps/tracy-host/src/jobs.js:224 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:144 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:151 readFile() with a computed path",
+      "apps/tracy-host/src/provision.js:503 import() with a computed specifier",
+      "apps/tracy-host/src/site-files.js:413 readFile() with a computed path",
+      "apps/tracy-host/src/webroot.js:1628 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:919 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:995 open() with a computed path",
+      "packages/wo/website-opportunities/domain/neutral-copy.mjs:18 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "form_words sends the form back with only its words changed",
+    "form_words refuses what is not a word, an unknown field and another count of options, writing nothing",
+    "collected-used: a contact detail in the research’s own words is collected; one it never read still fails",
+    "EmDash: a reading time and a table of contents that follow the text, a lede written where there was none and a status a visitor reads keep the structure; a machine status does not"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1697-emdash-form-words-sourced"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1697-emdash-form-words-sourced",
+    "pr": 1697,
+    "kind": "fix",
+    "area": "website-opportunities/agent-demo",
+    "file": "tests/regression/cases/REG-PR-1697-emdash-form-words-sourced.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/emdash-forms.test.mjs",
+    "apps/tracy-host/test/demo-qa.test.mjs",
+    "apps/tracy-web/test/agent-demo-native-inventory.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "form_words sends the form back with only its words changed",
+    "form_words refuses what is not a word, an unknown field and another count of options, writing nothing",
+    "collected-used: a contact detail in the research’s own words is collected; one it never read still fails",
+    "EmDash: a reading time and a table of contents that follow the text, a lede written where there was none and a status a visitor reads keep the structure; a machine status does not"
+  ],
+  "timeoutS": 600
+}

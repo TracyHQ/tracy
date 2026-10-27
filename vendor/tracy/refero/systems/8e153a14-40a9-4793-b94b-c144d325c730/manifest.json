@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8e153a14-40a9-4793-b94b-c144d325c730",
+  "status": "complete",
+  "name": "Whimsical",
+  "url": "https://styles.refero.design/style/8e153a14-40a9-4793-b94b-c144d325c730",
+  "sourceWebsite": "https://whimsical.com",
+  "extractedAt": "2026-06-03T18:36:43.070Z",
+  "capturedAt": "2026-10-08T05:14:44.095574+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Deep plum ink on lavender mist — a creative studio notebook that thinks it's a technical whiteboard.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6cfcf88f-d1dd-42cf-bc42-b9940908308a.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/78a39163-af71-4ab0-95db-95d0223fb49f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a82d2ce9-29cf-4796-8d7a-7efa74f4b50a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/07f2a3f8-9222-4315-8789-879420c22acf.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/7fa911b6-480a-43b4-9b9c-efac624492de.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "cc8aa5ce830ca788b4bc1755fa6eaa132cd9c6c770b838dce47d6598306bcbad",
+      "bytes": 24544
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ea38b542597474470688cd3718b3ac42ba7a8194ad592623f44a377d4c53bcf7",
+      "bytes": 120573
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "c392f8fb3985d66f1e595910867642c5cd8574972c52a5493a1f52b6e1ef2003",
+      "bytes": 19717
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "acd06e49876e9a1a6d7c001e9043f6c1953a03ecf6a4e1c5c6eb8585fc9b68a3",
+      "bytes": 13394
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0502fdef910c78615e9c1fbb17f6e99e5bdc2002de27b3712cb6cc6c5a9a5705",
+      "bytes": 14291
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "5924d84e88bb02d90ff2c045aaf08546674f87c6d638aab5d4f8478895ae2b41",
+      "bytes": 4641
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e352e5b08bc36e0439da5f1b1b192e74149629df8875ed70cb80d4b19497fae1",
+      "bytes": 755
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9f87f92f7f0c1d35ed52c607ffc1957cf172e5528b38ed8e9a64658424cf2e4b",
+      "bytes": 1029
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5e940396bc3b222c06e913e0c9e49db17007909446397ffdb2237cd2e726ad39",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "56a099e2e341c7e6731f553bb3d2347a7819850f715be1bc3735d8e0f3df399c",
+      "bytes": 48196
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ca3432e5af457e3b87d9ce817c58e2c30aa8df6902b058fb6478ce63494a060c",
+      "bytes": 24969
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1ce924ca18387d107f83d55d3ac2140ff64839b88c989dedf0b1badcd867c430",
+      "bytes": 56494
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "423e9dcb1d2730303fa306c614bebef8edbf75da33ce9b518f4c293d0b3fa9e0",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6a6f20b8d88db9dca83fa73b2b6befdb2c4f8d12c1b471486c1630155dd708ec",
+      "bytes": 2220
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "49d0d3520eb707f5847c5a8613540ee7e638a62e6c0c6f88613519e357ce1fac",
+      "bytes": 3177
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "6b2777fd-7021-4a96-add3-ec4a32374214",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "a6d39bad-6e32-462e-afce-67c9cb76cf40",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "aaca1e02-7b5a-4c03-ac40-454f0d477356",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "d0f65d12-a8e6-4631-99f7-bb7cdcd5b6c5",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "source": "quickstart/ja-resume/j6@1.0.3 https://ja-resume-joomla.tracy.site/",
+  "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 (Moxie)",
+  "scheme": "light",
+  "capturedAt": "2026-10-14",
+  "note": "preview without scripts as develop serves it: .ja-animate blocks at opacity 0",
+  "plain": {
+    "hidden": [],
+    "total": 0
+  },
+  "worn": {
+    "hidden": [
+      {
+        "at": "ul.list-social.ja-animate",
+        "why": "opacity",
+        "top": 1000,
+        "area": 72104
+      },
+      {
+        "at": "h3.acm-title.ja-animate",
+        "why": "opacity",
+        "top": 1564,
+        "area": 16713
+      },
+      {
+        "at": "p.ja-animate",
+        "why": "opacity",
+        "top": 1797,
+        "area": 42000
+      },
+      {
+        "at": "p.ja-animate",
+        "why": "opacity",
+        "top": 2037,
+        "area": 42000
+      },
+      {
+        "at": "p.ja-animate",
+        "why": "opacity",
+        "top": 2278,
+        "area": 33600
+      },
+      {
+        "at": "p.ja-animate",
+        "why": "opacity",
+        "top": 2494,
+        "area": 42000
+      },
+      {
+        "at": "div.item-image.ja-animate",
+        "why": "opacity",
+        "top": 3747,
+        "area": 216600
+      },
+      {
+        "at": "div.item-image.ja-animate",
+        "why": "opacity",
+        "top": 3747,
+        "area": 102381
+      },
+      {
+        "at": "div.item-image.ja-animate",
+        "why": "opacity",
+        "top": 3747,
+        "area": 102381
+      },
+      {
+        "at": "div.item-image.ja-animate",
+        "why": "opacity",
+        "top": 4156,
+        "area": 102381
+      },
+      {
+        "at": "div.item-image.ja-animate",
+        "why": "opacity",
+        "top": 4156,
+        "area": 102381
+      },
+      {
+        "at": "div.item-image.ja-animate",
+        "why": "opacity",
+        "top": 4565,
+        "area": 216600
+      },
+      {
+        "at": "div.item-image.ja-animate",
+        "why": "opacity",
+        "top": 4565,
+        "area": 216600
+      },
+      {
+        "at": "div.item-image.ja-animate",
+        "why": "opacity",
+        "top": 4975,
+        "area": 102381
+      },
+      {
+        "at": "div.item-image.ja-animate",
+        "why": "opacity",
+        "top": 4975,
+        "area": 102381
+      },
+      {
+        "at": "h3.acm-title.ja-animate",
+        "why": "opacity",
+        "top": 5528,
+        "area": 19597
+      },
+      {
+        "at": "div.testimonial-text.ja-animate",
+        "why": "opacity",
+        "top": 5685,
+        "area": 134550
+      }
+    ],
+    "total": 17
+  }
+}

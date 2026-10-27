@@ -1,0 +1,389 @@
+{
+  "dos": [
+    "Use #0000ff as the sole chromatic action color — CTAs, active states, product surfaces, and chromatic borders all read from one swatch.",
+    "Push display sizes to 70px and above; tighten letter-spacing to -0.04em at those sizes so headlines read as blocks, not lines.",
+    "Engage Unica77 stylistic alternates (ss01–ss09) so headings, UI, and product mockups each pick a distinct voice from the same family.",
+    "Use 90–106px radii for hero cards and 14–24px for product and image containers — the spread is intentional, not lazy.",
+    "Drop to dark sections (#121212) with white text and 0px shadow when a band needs to feel like a showcase, not a page.",
+    "Pair the blue CTA with a small black-on-white secondary action — never two chromatic buttons side by side.",
+    "Anchor hero compositions with a single large-radius floating card or device frame so the layout feels three-dimensional."
+  ],
+  "donts": [
+    "Don't introduce a second saturated action color. If you need warmth, reach for the #fffc52 panel surface, not a red or orange button.",
+    "Don't use a soft shadow. The system commits to one heavy card shadow or none at all — no blur under 15px, no spread under 20px.",
+    "Don't set body text on tight tracking. Keep letter-spacing at 0 to +0.01em below 30px; only compress at display sizes.",
+    "Don't mix Druk XXCondensed and TAN-BUSTER on the same surface — each is a one-time spectacle and they cancel each other out.",
+    "Don't place chromatic text on chromatic backgrounds. Blue text on blue panels disappears; reserve #0000ff for fills and borders, not body copy.",
+    "Don't fill buttons with a gradient, glow, or glass effect. Filled flat #0000ff is the rule.",
+    "Don't use standard SaaS radii (6px, 8px, 12px) on hero cards. Commit to the oversized 76–106px family or stay sharp."
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#0000ff",
+      "name": "Electric Ink",
+      "role": "Primary CTA fill, active nav, product surface backgrounds, chromatic borders — the only saturated color that carries meaning",
+      "group": "brand"
+    },
+    {
+      "hex": "#00d37c",
+      "name": "Voltage Green",
+      "role": "Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Onyx",
+      "role": "Body text, headings, hairline borders, icon strokes — the dominant ink color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure",
+      "role": "Page canvas, card surface, button text, dark-section contrast text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#121212",
+      "name": "Carbon",
+      "role": "Dark-section background, deep UI surfaces, high-contrast text on light",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1e1e1e",
+      "name": "Slate",
+      "role": "Elevated dark surface inside dark sections, card on near-black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#bcc1c7",
+      "name": "Fog",
+      "role": "Quiet borders, disabled text, secondary icon strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#999999",
+      "name": "Ash",
+      "role": "Muted helper text, low-emphasis borders, placeholder color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#cfcfcf",
+      "name": "Smoke",
+      "role": "Divider lines, subtle card borders, input resting state",
+      "group": "neutral"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Bone",
+      "role": "Section band, soft surface fill behind cards",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f4f4f4",
+      "name": "Chalk",
+      "role": "Alternate section background, subtle grouping fill",
+      "group": "neutral"
+    },
+    {
+      "hex": "#fffc52",
+      "name": "Hi-Vis Yellow",
+      "role": "Accent panel surface, spotlight callout, tag fill — never text or border",
+      "group": "accent",
+      "gradient": "conic-gradient(rgb(87, 192, 241) 0%, rgb(74, 166, 232) 13%, rgb(134, 57, 162) 26%, rgb(239, 137, 159) 42%, rgb(234, 57, 42) 55%, rgb(239, 115, 53) 62%, rgb(245, 192, 68) 73%, rgb(245, 255, 84) 84%, rgb(160, 218, 83) 95%, rgb(87, 192, 241) 100%)"
+    }
+  ],
+  "layout": "The site is max-width contained (~1200px) on a pure white canvas, with frequent full-bleed dark bands breaking the rhythm. The hero is a centered headline stack with primary CTA and a composition of floating phone mockups, an abstract sphere, and small icon tiles bleeding to the edges. Mid-page sections are split text-left / product-right (alternating), with phone mockups filling the visual half. Feature sections collapse into 2- and 3-column card grids of oversized product cards. Dark inverted sections act as transitional showcases, followed by yellow accent panels. Vertical rhythm is comfortable — 80px section gaps with 30px card padding — and layout never feels dense. Navigation is a single thin top bar with a geometric wordmark and two text links.",
+  "imagery": "Imagery is overwhelmingly product UI, not photography. Phone mockups filled with blue, white, and black product screens do the heavy lifting across sections. The hero and scattered section accents use small floating icon tiles, abstract sphere renders (the conic-gradient orb is the only illustration in the system), and tight product crops against solid color backgrounds. No lifestyle photography, no candid scenes, no people. Iconography is monochrome line/fill at 1–1.5px stroke, contained in small rounded squares or pills. Imagery is text-dominant overall — visuals punctuate, they don't lead.",
+  "similar": [
+    {
+      "why": "Same monochrome canvas with one electric chromatic accent, oversized card radii, and a type system that mixes geometric sans for UI with display faces for hero moments.",
+      "business": "Linear"
+    },
+    {
+      "why": "High-contrast white-and-black page model with a single saturated action color, large radii, and an industrial-not-warm tone throughout.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Full-bleed dark sections breaking a white page, oversized product UI as the central visual, and tight display tracking on geometric type.",
+      "business": "Raycast"
+    },
+    {
+      "why": "Editorial-grade type mixing (serif accents, condensed display, monospace UI) inside a hard-contrast framework with a single hero color.",
+      "business": "Figma Config"
+    },
+    {
+      "why": "Playful use of large radii, accent panels, and a single conic-gradient sphere or orb as the system's only ornamental flourish.",
+      "business": "Arc Browser"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "hero": "76px",
+      "pill": "9999px",
+      "cards": "90px",
+      "image": "14px",
+      "small": "3px",
+      "medium": "24px",
+      "buttons": "18px",
+      "decorative": "35px",
+      "large-cards": "106px"
+    },
+    "elementGap": "13px",
+    "sectionGap": "80px",
+    "cardPadding": "30px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Default page background"
+    },
+    {
+      "hex": "#efefef",
+      "name": "Bone Band",
+      "level": 2,
+      "purpose": "Quiet section separator"
+    },
+    {
+      "hex": "#f4f4f4",
+      "name": "Chalk",
+      "level": 3,
+      "purpose": "Soft grouped surface"
+    },
+    {
+      "hex": "#fffc52",
+      "name": "Hi-Vis Accent",
+      "level": 4,
+      "purpose": "Spotlight / featured panel"
+    },
+    {
+      "hex": "#121212",
+      "name": "Carbon",
+      "level": 5,
+      "purpose": "Dark inverted section"
+    },
+    {
+      "hex": "#1e1e1",
+      "name": "Slate",
+      "level": 6,
+      "purpose": "Elevated dark card inside Carbon sections"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0 15px 20px 30px rgba(0, 0, 0, 0.3)",
+      "element": "Product detail card"
+    }
+  ],
+  "northStar": "Electric blueprint on matte paper — a monochrome architect's sheet that learned to glow blue. Pure black, pure white, one bolt of #0000ff.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.36
+    },
+    {
+      "role": "body-sm",
+      "size": 17,
+      "lineHeight": 1.36,
+      "letterSpacing": 0.01
+    },
+    {
+      "role": "subheading",
+      "size": 25,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "heading-sm",
+      "size": 30,
+      "lineHeight": 1.18,
+      "letterSpacing": -0.005
+    },
+    {
+      "role": "heading",
+      "size": 47,
+      "lineHeight": 1.05,
+      "letterSpacing": -0.04
+    },
+    {
+      "role": "heading-lg",
+      "size": 70,
+      "lineHeight": 0.96,
+      "letterSpacing": -0.04
+    },
+    {
+      "role": "display",
+      "size": 100,
+      "lineHeight": 0.92,
+      "letterSpacing": -0.04
+    },
+    {
+      "role": "mega-display",
+      "size": 248,
+      "lineHeight": 1.2,
+      "letterSpacing": 0
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "Single, unmistakable call to action",
+      "description": "Filled #0000ff background, white text, ~18px radius, 14px vertical / 28px horizontal padding. Label in Unica77 600 at 18px, optional trailing arrow glyph. Use this and only this for the page's main action per screen."
+    },
+    {
+      "name": "Ghost / Text Button",
+      "role": "Secondary action or link",
+      "description": "Transparent fill, 1px #000000 border, #000000 text. Same 18px radius and 14/28 padding as the primary. Hover swaps fill to #000000 and text to #ffffff."
+    },
+    {
+      "name": "Quantity Stepper",
+      "role": "Increment / decrement value",
+      "description": "Pill control, 1px #000000 border, 9999px radius. Interior shows '−  1  +' in Whyte Semi-Mono 500, 18px. Stepper can be stacked with a unit label (e.g. '500g', 'Columbia') in Whyte Semi-Mono 400 below."
+    },
+    {
+      "name": "Phone Mockup Frame",
+      "role": "Display product UI inside a device",
+      "description": "~90px outer radius, ~1px black stroke, overflow hidden. Interior is #0000ff or #ffffff. Used to show live SwiftUI components and is the central image on most marketing sections."
+    },
+    {
+      "name": "Product Detail Card",
+      "role": "E-commerce product showcase",
+      "description": "White surface, 90px radius, heavy rgba(0,0,0,0.3) shadow at 15/20/30 offset/spread. Image at top fills with bleed, then ~30px padding, Unica77 700 price at 35–47px, Unica77 400 product name at 21–25px, small-caps Whyte Semi-Mono category tag at 12–17px."
+    },
+    {
+      "name": "Yellow Accent Panel",
+      "role": "Featured content callout inside dark sections",
+      "description": "#fffc52 fill, no border, 90–106px radius. Holds large Unica77 or PP Neue Montreal display text in #000000. Sits flat against a Carbon (#121212) background — no shadow, contrast does the lifting."
+    },
+    {
+      "name": "Dark Section Panel",
+      "role": "Inverted content block",
+      "description": "#121212 background, 90px outer radius on the cards inside. White (#ffffff) text, Whyte Semi-Mono labels in #bcc1c7, headings in Unica77 600. Internal dark cards lift to #1e1e1e."
+    },
+    {
+      "name": "Floating Icon Tile",
+      "role": "Inline visual accent or social proof marker",
+      "description": "14–24px radius square or pill, white or carbon fill, 1px black border. Holds a single monochrome icon or tiny product image. Appears scattered around hero and section compositions."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "White or transparent, no border. Logo mark (geometric '□△' wordmark) in #000000 left, nav links in Unica77 500 at 18px, right. Sticky optional. No background blur — the page is quiet enough not to need it."
+    },
+    {
+      "name": "Price Block",
+      "role": "Prominent pricing display",
+      "description": "Unica77 700 at 45–60px, #000000 on white, or white on Carbon. Original price struck through in Whyte Semi-Mono 400 at 27px in #999999. Currency superscript at 0.5em."
+    },
+    {
+      "name": "Section Headline Stack",
+      "role": "Above-the-fold title + subtitle + CTA",
+      "description": "Two-line Unica77 700 headline at 70–100px with letter-spacing -0.04em, line-height 0.92–0.96. Subtitle in Unica77 400 at 25–30px, #000000. Primary CTA sits centered below the subtitle with 24–30px gap."
+    },
+    {
+      "name": "Hero Conic Sphere",
+      "role": "Decorative hero accent",
+      "description": "Round graphic with full conic gradient (blue → purple → red → orange → yellow → green → blue), no border, placed bottom-left of the hero composition. The only ornamental gradient in the system."
+    }
+  ],
+  "typography": [
+    {
+      "role": "UI chrome — monospace-flavored labels, nav links, small caps taglines, price text, code-adjacent captions. Its tabular geometry makes dense product UI legible without switching fonts",
+      "sizes": "12px, 17px, 18px, 21px, 25px, 27px, 30px, 34px, 35px",
+      "family": "Whyte Semi-Mono",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.06–1.36",
+      "substitute": "JetBrains Mono, IBM Plex Mono, GT America Mono",
+      "letterSpacing": "-0.0060em, 0.0100em, 0.0400em"
+    },
+    {
+      "role": "Primary voice — headings, body, nav, buttons, cards, hero. Engages stylistic alternates ss01–ss09 and 'salt' to differentiate product screenshots from marketing type",
+      "sizes": "18px, 21px, 22px, 23px, 26px, 27px, 28px, 30px, 31px, 32px, 35px, 38px, 40px, 47px, 51px, 53px, 58px, 62px, 67px, 70px, 100px, 110px",
+      "family": "Unica77",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "0.92–1.81 (tight at display, 1.20 at body)",
+      "substitute": "Söhne, Inter Display, Neue Haas Grotesk",
+      "letterSpacing": "-0.04em at 100px, -0.03em at 58–70px, 0em at 27–35px, +0.03–0.04em on small caps labels",
+      "fontFeatureSettings": "\"salt\" on, \"ss01\" on, \"ss02\" on, \"ss03\" on, \"ss04\" on, \"ss05\" on, \"ss07\" on, \"ss08\" on, \"ss09\" on"
+    },
+    {
+      "role": "Geometric headline counterpoint — used when the page needs a rounder, friendlier display than Unica77 can provide",
+      "sizes": "27px, 32px, 60px, 81px, 98px",
+      "family": "PP Neue Montreal",
+      "weight": "400, 500",
+      "lineHeight": "0.82–0.87",
+      "substitute": "Neue Montreal, Inter Display",
+      "letterSpacing": "-0.0300em, -0.0100em, 0.0100em"
+    },
+    {
+      "role": "Serif accent at hairline weights — editorial pull quotes and contrast moments. Thinness creates softness that breaks the industrial rigour",
+      "sizes": "27px, 36px, 60px",
+      "family": "Fraunces 72pt Soft / SuperSoft",
+      "weight": "100, 200",
+      "lineHeight": "1.06–1.35",
+      "substitute": "Fraunces, Tiempos Headline",
+      "fontFeatureSettings": "\"ss01\" on"
+    },
+    {
+      "role": "Hero-scale display — used once, for maximum typographic spectacle. Ultra-condensed verticals fill the viewport",
+      "sizes": "195px, 248px",
+      "family": "Druk XXCondensed Super",
+      "weight": "400",
+      "lineHeight": "1.20",
+      "substitute": "Druk Wide, Compacta"
+    },
+    {
+      "role": "Single decorative display moment — out-of-system character that signals craft over platform",
+      "sizes": "91px",
+      "family": "TAN-BUSTER",
+      "weight": "600",
+      "lineHeight": "1.18",
+      "substitute": "Tan Buster, Druk Wide",
+      "fontFeatureSettings": "\"ss01\" on"
+    },
+    {
+      "role": "Inter — detected in extracted data but not described by AI",
+      "sizes": "25px, 27px, 28px, 35px, 37px, 42px, 52px",
+      "family": "Inter",
+      "weight": "400, 500, 600",
+      "lineHeight": "0.98, 1.2, 1.38, 1.48",
+      "letterSpacing": "-0.004, -0.003"
+    },
+    {
+      "role": "ui-monospace — detected in extracted data but not described by AI",
+      "sizes": "26px",
+      "family": "ui-monospace",
+      "weight": "400",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "13px",
+      "family": "Arial",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.2"
+    },
+    {
+      "role": "Fraunces 72pt SuperSoft — detected in extracted data but not described by AI",
+      "sizes": "45px",
+      "family": "Fraunces 72pt SuperSoft",
+      "weight": "200",
+      "lineHeight": "1.06",
+      "letterSpacing": "-0.01",
+      "fontFeatureSettings": "\"ss01\""
+    }
+  ],
+  "description": "Moving Parts is a high-contrast tool for builders: matte white canvas, pure black ink, and one electric blue (#0000ff) that does all the chromatic work — filled buttons, borders, active states, and the product surfaces themselves. The type system is deliberately polyglot: Unica77 carries the voice everywhere (with eight stylistic alternates engaged), Whyte Semi-Mono handles UI chrome and labels, and display moments pivot to extreme display faces like Druk XXCondensed at 195–248px and Fraunces serifs at 100-weight thin. Hierarchy comes from font selection and weight, not size alone. Cards float with very large radii (76–106px), shadows are rare and heavy (rgba(0,0,0,0.3) 15px 20px 30px), and yellow (#fffc52) appears as a flat accent surface to break sections — never as text or decorative gradient. A single conic-gradient sphere anchors the hero as the only ornamental flourish; everything else stays industrial and quiet.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text: #000000\n- background: #ffffff\n- border: #000000 (1px hairlines) or #cfcfcf (quiet dividers)\n- accent: #fffc52 (panel surface only)\n- dark surface: #121212\n- primary action: #0000ff (filled action)\n\n## Example Component Prompts\n1. **Section headline + CTA block**: Centered stack on #ffffff. Unica77 700 at 70px in #000000, letter-spacing -0.04em, line-height 0.96. Subtitle in Unica77 400 at 25px, #000000, 30px below. Primary CTA below subtitle: filled #0000ff, 18px radius, 14px/28px padding, label in Unica77 600 18px #ffffff with a trailing → glyph.\n\n2. **Phone mockup with product UI**: 90px outer radius, 1px #000000 border, overflow hidden. Interior is #0000ff. Inside, a hanging product image centered, a 4-thumb horizontal row at 35px below, then 30px padding with small-caps Whyte Semi-Mono 500 12px category tag in #ffffff, Unica77 700 35px product name in #ffffff, Unica77 700 47px price in #ffffff.\n\n3. **Dark section with yellow accent panel**: Full-bleed #121212 background. Left half holds a 90px-radius #fffc52 panel containing Unica77 700 81px #000000 headline. Right half holds a phone mockup (#ffffff interior) with light product UI. 80px vertical gap above and below the section.\n\n4. **Quantity stepper with unit label**: Pill, 1px #000000 border, 9999px radius, 10px/16px padding. Inside: '−  1  +' in Whyte Semi-Mono 500 18px #000000. Stacked below: '500g' and 'Columbia' in Whyte Semi-Mono 400 17px #000000, left-aligned, 7px gap between rows.\n\n5. **Product detail card on white**: 90px radius, shadow 0 15px 20px 30px rgba(0,0,0,0.3). Top half is a product image with bleed. 30px padding below: small-caps Whyte Semi-Mono 500 12px #999999 tag, then Unica77 700 27px #000000 product name, then Unica77 700 47px #000000 price."
+    }
+  ],
+  "elevationPhilosophy": "Shadows are restrained and physical: one signature card shadow at 30px blur with 30px spread in 30% black. Most elevation comes from oversized radii and contrast jumps, not drop shadows. Dark sections use no shadow — flat fills and hairline borders do the work."
+}

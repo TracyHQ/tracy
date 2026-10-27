@@ -1,0 +1,10 @@
+:root {
+  /* Colors */
+  --color-black-void: #000000;
+  --color-paper-white: #ffffff;
+  --color-smoke: #4d4d4d;
+  --color-crimson-heat: #b62b1a;
+
+  /* Typography — Font Families */
+  --font-saans: 'Saans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

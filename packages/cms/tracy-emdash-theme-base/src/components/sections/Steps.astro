@@ -1,0 +1,28 @@
+---
+/** Numbered steps with a sketch illustration (how it works / process). */
+import Icon from '@/components/site/Icon.astro'
+import type { Stamp } from '@/lib/stamps'
+interface Props {
+  items: Array<{ icon?: string; number?: string; title: string; text: string }>
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the repeater field the rows come from. */
+  stamp?: Stamp
+  field?: string
+}
+const { items, stamp, field } = Astro.props
+const none = {}
+const row = stamp && field ? stamp.block(field) : none
+const sub = (k: string) => (stamp && field ? stamp(`${field}.${k}`) : none)
+---
+
+<div class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-[clamp(24px,4vw,48px)]" data-block="steps">
+	{items.map((it) => (
+		<div {...row}>
+			<div class="sketch box-content mb-5">{it.icon && <Icon name={it.icon} />}</div>
+			<div class="mb-2 flex items-center gap-3">
+				{it.number && <span class="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full bg-accent text-[13px] font-semibold text-accent-on" {...sub("number")}>{it.number}</span>}
+				<h3 class="h-card" {...sub("title")}>{it.title}</h3>
+			</div>
+			<p class="max-w-[34ch] text-[17px] leading-[1.47] text-fg-muted" {...sub("text")}>{it.text}</p>
+		</div>
+	))}
+</div>

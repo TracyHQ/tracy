@@ -1,0 +1,79 @@
+{
+  "color": {
+    "sprout-orange": {
+      "$value": "#ff4800",
+      "$type": "color",
+      "$description": "Sprout Orange — Primary CTAs, logo sprocket, active nav states, functional icons, and the period punctuation on hero headlines — the sole chromatic accent in the entire system"
+    },
+    "canvas-cream": {
+      "$value": "#fcfcfa",
+      "$type": "color",
+      "$description": "Canvas Cream — Page background, card surfaces, button text, light dividers"
+    },
+    "warm-parchment": {
+      "$value": "#f8f5ee",
+      "$type": "color",
+      "$description": "Warm Parchment — Alternating section backgrounds, navigation surface, soft-band separators that give the page a paper-stock warmth"
+    },
+    "ink": {
+      "$value": "#1f1f1f",
+      "$type": "color",
+      "$description": "Ink — Primary body text, headings, card borders, hairline dividers — the structural near-black used everywhere a line or label needs weight"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — High-contrast text on light surfaces, maximum-emphasis borders and icon fills"
+    },
+    "graphite": {
+      "$value": "#60605f",
+      "$type": "color",
+      "$description": "Graphite — Muted secondary text inside buttons and controls where full Ink weight would feel heavy"
+    },
+    "mist": {
+      "$value": "#cacac8",
+      "$type": "color",
+      "$description": "Mist — Disabled-state borders, inactive list markers, low-emphasis icon fills"
+    },
+    "peach-wash": {
+      "$value": "#fcded2",
+      "$type": "color",
+      "$description": "Peach Wash — Soft accent surface behind orange elements, badge backgrounds, gentle warm highlight zones that echo the brand orange at low intensity"
+    },
+    "deep-teal": {
+      "$value": "#042729",
+      "$type": "color",
+      "$description": "Deep Teal — Dark featured sections, inverted text on cream, occasional deep-surface moments that break the warm palette with cool contrast"
+    },
+    "sprocket-gradient": {
+      "$value": "#ff4900",
+      "$type": "color",
+      "$description": "Sprocket Gradient — Decorative brand gradient spanning warm peach through orange into magenta — used sparingly on featured artwork and highlight washes"
+    }
+  },
+  "font": {
+    "hubspot-sans": {
+      "$value": "HubSpot Sans",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface — nav, buttons, badges, body copy, links, card metadata. Weight 300 for light labels, 400 for body, 500 for emphasis. The narrow, geometric proportions keep dense interface rows feeling calm. Free substitute: Inter or General Sans."
+    },
+    "hubspot-serif": {
+      "$value": "HubSpot Serif",
+      "$type": "fontFamily",
+      "$description": "Section headings and subheadlines — a humanist serif with generous curves that reads editorial rather than corporate. Its single weight (500) forces hierarchy through size, not weight, which keeps the type system restrained. Free substitute: Source Serif 4 or PT Serif."
+    },
+    "hubspot-serif-page-header-human": {
+      "$value": "HubSpot Serif Page Header Human",
+      "$type": "fontFamily",
+      "$description": "Display-level hero headlines at 80px — the largest voice on the page, reserved for above-the-fold page headers. The humanist cut gives it warmth that a geometric display sans would lose. Free substitute: Source Serif 4 at 500 weight, scaled up."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.hubspot.com",
+      "siteName": "HubSpot",
+      "extractedAt": "2026-06-03T17:45:38.649Z",
+      "variant": "compact"
+    }
+  }
+}

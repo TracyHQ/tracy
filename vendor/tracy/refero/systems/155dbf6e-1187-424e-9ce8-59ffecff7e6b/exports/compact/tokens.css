@@ -1,0 +1,24 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-carbon: #121212;
+  --color-graphite: #333333;
+  --color-slate: #666666;
+  --color-ash: #808080;
+  --color-fog: #999999;
+  --color-pebble: #8b8c8f;
+  --color-smoke: #4d4d4d;
+  --color-charcoal-veil: #3d3d3d;
+  --color-dusk: #292929;
+  --color-paper: #faf8fd;
+  --color-bone: #f9f9fa;
+  --color-mist: #eaebee;
+  --color-ice-wash: #cfe7ed;
+  --color-iris-sweep: #4e6fff;
+  --gradient-iris-sweep: linear-gradient(88deg, #ee7cff 1.37%, #4e6fff 45.72%, #559cff 106.06%);
+  --color-orchid-edge: #ee7cff;
+  --color-sky-drift: #559cff;
+
+  /* Typography — Font Families */
+  --font-figtree: 'Figtree', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

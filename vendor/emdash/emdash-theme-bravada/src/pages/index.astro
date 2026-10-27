@@ -1,0 +1,217 @@
+---
+import {
+	getEmDashCollection,
+	getEmDashEntry,
+	getTermsForEntries,
+	getSiteSettings,
+} from "emdash";
+import Base from "../layouts/Base.astro";
+import PostCard from "../components/PostCard.astro";
+import RichText from "../components/RichText.astro";
+import { getReadingTime } from "../utils/reading-time";
+import { heroSlideImage } from "../utils/hero";
+import { resolveBlogSiteIdentity } from "../utils/site-identity";
+
+// Bravada's landing page shows a 6-post grid (#lp-posts) after the bands
+const POSTS_PER_PAGE = 6;
+
+// Bravada landing page: a page with slug "home" supplies the landing
+// bands (slider, icon blocks, boxes, text areas, portfolio,
+// testimonials — inserted as sections in the editor). Rendered
+// full-width above the posts; delete or unpublish the page to fall
+// back to a plain blog front page.
+const [{ entries: posts, cacheHint }, settings, homeResult] = await Promise.all([
+	getEmDashCollection("posts", {
+		orderBy: { published_at: "desc" },
+		limit: POSTS_PER_PAGE + 1, // +1 to detect "older posts" need
+	}),
+	getSiteSettings(),
+	getEmDashEntry("pages", "home"),
+]);
+const { siteTitle, siteTagline } = resolveBlogSiteIdentity(settings);
+const home = homeResult?.entry ?? null;
+
+if (Astro.cache?.enabled) {
+	Astro.cache.set(cacheHint);
+	if (homeResult?.cacheHint) Astro.cache.set(homeResult.cacheHint);
+}
+
+// The header floats transparent over the page when the landing content
+// leads with the Bravada slider (bravada-over-menu behavior)
+const firstBlock = home?.data.content?.[0];
+const overHero = firstBlock?._type === "bravada.hero";
+
+// Social preview image: the landing hero's first slide, else the logo.
+const heroImage = heroSlideImage(home?.data.content) ?? settings?.logo?.url ?? undefined;
+
+const visiblePosts = posts.slice(0, POSTS_PER_PAGE);
+const hasMorePosts = posts.length > POSTS_PER_PAGE;
+
+// Batched category + tag lookups (avoids per-entry N+1 queries);
+// bylines are already hydrated on entry.data.bylines.
+const entryIds = visiblePosts.map((p) => p.data.id);
+const [catsByEntry, tagsByEntry] = await Promise.all([
+	getTermsForEntries("posts", entryIds, "category"),
+	getTermsForEntries("posts", entryIds, "tag"),
+]);
+
+const cards = visiblePosts.map((post) => ({
+	post,
+	categories: (catsByEntry.get(post.data.id) ?? []).map((t) => ({
+		slug: t.slug,
+		label: t.label,
+	})),
+	tags: (tagsByEntry.get(post.data.id) ?? []).map((t) => ({
+		slug: t.slug,
+		label: t.label,
+	})),
+	bylines: post.data.bylines ?? [],
+}));
+---
+
+<Base title={siteTitle} description={siteTagline} image={heroImage} overHero={overHero}>
+	{
+		home?.data.content && (
+			<div class="landing-content">
+				<RichText value={home.data.content} />
+			</div>
+		)
+	}
+	{
+		posts.length === 0 ? (
+			<section class="empty-state">
+				<h2>No posts yet</h2>
+				<p>Create your first post in the admin panel.</p>
+				<a href="/_emdash/admin/content/posts/new" class="btn-gold">
+					Create a post
+				</a>
+			</section>
+		) : (
+			<section class="lp-posts">
+				<div class="lp-posts-inside">
+					<div class="posts-grid">
+						{cards.map(({ post, categories, tags, bylines }) => (
+							<PostCard
+								title={post.data.title ?? "Untitled"}
+								excerpt={post.data.excerpt}
+								featuredImage={post.data.featured_image}
+								href={`/posts/${post.id}`}
+								date={post.data.publishedAt ?? undefined}
+								readingTime={getReadingTime(post.data.content)}
+								categories={categories}
+								tags={tags}
+								bylines={bylines}
+							/>
+						))}
+					</div>
+					{hasMorePosts && (
+						<a class="older-posts" href="/posts">
+							More Posts
+						</a>
+					)}
+				</div>
+			</section>
+		)
+	}
+</Base>
+
+<style>
+	/* Landing bands manage their own width; anything else the editor
+	   drops on the home page (plain paragraphs, headings) gets a
+	   centered column. */
+	.landing-content > :global(*:not(.full-bleed)) {
+		max-width: var(--wide-width);
+		margin-inline: auto;
+		padding-inline: var(--spacing-6);
+	}
+
+	/* #lp-posts: article cards on the site background */
+	.lp-posts {
+		background: var(--color-bg);
+	}
+
+	.lp-posts-inside {
+		max-width: var(--wide-width);
+		margin: 0 auto;
+		padding: var(--spacing-12) var(--spacing-8) var(--spacing-16);
+	}
+
+	.posts-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: var(--spacing-8);
+	}
+
+	/* "More Posts" — Bravada's ajax-more outline button */
+	.older-posts {
+		position: relative;
+		display: table;
+		min-width: 150px;
+		margin: 3em auto 0;
+		outline: 2px solid;
+		padding: 0.2em 3em;
+		font-size: 0.9em;
+		font-weight: 700;
+		line-height: 3;
+		text-align: center;
+		text-decoration: none;
+		color: var(--color-teal);
+		transition: all 0.35s ease-out;
+	}
+
+	.older-posts::after {
+		content: "";
+		position: absolute;
+		z-index: 3;
+		inset: 0;
+		outline: 2px solid;
+		opacity: 1;
+		transition: 0.3s ease-out all;
+	}
+
+	.older-posts:hover {
+		opacity: 0.8;
+	}
+
+	.older-posts:hover::after {
+		transform: scale(1.25, 1.4);
+		opacity: 0;
+	}
+
+	/* Empty state */
+	.empty-state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--spacing-3);
+		text-align: center;
+		padding: var(--spacing-20) var(--spacing-6);
+		max-width: 400px;
+		margin: 0 auto;
+	}
+
+	.empty-state h2 {
+		font-size: var(--font-size-2xl);
+	}
+
+	.empty-state p {
+		color: var(--color-muted);
+	}
+
+	@media (max-width: 900px) {
+		.posts-grid {
+			grid-template-columns: repeat(2, 1fr);
+			gap: var(--spacing-6);
+		}
+	}
+
+	@media (max-width: 600px) {
+		.posts-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.lp-posts-inside {
+			padding: var(--spacing-8) var(--spacing-4) var(--spacing-12);
+		}
+	}
+</style>

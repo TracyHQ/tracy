@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1095-not-ready-templates-five-rules",
+  "kind": "feat",
+  "title": "A released JA Joomla quickstart that was not ready in #1087 (ja-trip/j6), restored from its release and tokenized with this tree's contract, wears four design systems: with no system it computes exactly what the release does, with one the page follows it and no text reads worse than in the template's own look",
+  "pr": 1095,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: node packages/design/tracy-ds-slot/scripts/audit.mjs.",
+    "S3: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs ja-trip: the release quickstart/ja-trip/j6 restored in Docker (fleet image tracy/web-joomla:6-apache-20260923-r1 + mariadb:11), the default snapped, every template stylesheet tokenized with templates/joomla-ja-trip.json and the joomla-t4-ja family (classifyText, primary triplet = readable accent), Moxie, MotherDuck, Toggl Track and Apple worn through the slot module, cleared.",
+    "Cleanup: every stand the script raised is taken down and its work folder removed."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: 'invariants: all hold'.",
+    "S3: 12/12 verdicts; both no-system controls 0 differences against the release; no measured text under 4.5:1 that is worse than the template's own default; at least 60% of the painted page follows every system."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-trip.json, joomla-t4-ja.json (classifyText, runtimeRgb)",
+    "tokenized": "var(--ds-c-<role>, <hex>) in templates/ja_trip/css/*.css",
+    "joomla": "#__modules row title 'Tracy design system', module mod_custom, menuid 0; <style id=\"tracy-ds-slot\">"
+  },
+  "evidence": "tasks/evidence/ds-slot-released-2026-10-09/README.md — rounds 4 and 5 (09/10/2026): 22 templates ready, 13 not, each with screenshots.",
+  "fence": "One template of the 22 re-measured. Not covered: the other templates (in the evidence, not re-run here), the next versions built for release (verified by release-batch.mjs verify, VERIFICATION.json in each pack), publishing (no upload is made).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1095-not-ready-templates-five-rules.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

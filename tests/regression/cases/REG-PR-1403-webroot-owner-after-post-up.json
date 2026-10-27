@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1403-webroot-owner-after-post-up",
+  "kind": "fix",
+  "title": "A Joomla site's webroot is the web user's again after the provision steps that run PHP as root; tracy-host's identity and derive passes run as the web user",
+  "pr": 1403,
+  "area": "provision/webroot-ownership",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read provision.sh's commands (comments left out) for own_webroot, platform_post_up and build_webroot_baseline.",
+    "S2: Read tracy-host's JOOMLA_EXEC and JOOMLA_DERIVE_EXEC."
+  ],
+  "expect": [
+    "S1: own_webroot runs once before the doors are installed and once between platform_post_up and the baseline.",
+    "S2: both exec into the site's web container with -u www-data."
+  ],
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/scripts/provision/provision.sh, apps/tracy-host/src/content-identity.js"
+  },
+  "evidence": "16/10/2026 local stand: the first page view after a Joomla build answered 500 \"Folder::create: Could not create directory … administrator/cache/t4core\"; joomla.sh runs joomla-contract-install.php and joomla-template-activate.php as root after the step-6 chown, and the Cowork plugin's own note says administrator/cache is a folder the web user cannot write",
+  "fence": "Static order of provision steps and the exec user; the Mac stand maps every owner to root, so the Linux effect is checked by the order, not by a page view",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/provision-baseline-order.test.mjs",
+      "apps/tracy-host/test/content-identity.test.mjs"
+    ],
+    "tests": [
+      "the webroot goes back to the web user after the post-up hook",
+      "runs once per site: WordPress and Joomla are set up"
+    ]
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "id": "QA-UNIT-REG-PR-1666-demo-check-background-happy",
+  "itemIds": ["regression:REG-PR-1666-demo-check-background"],
+  "requirement": "tracy_demo check runs in the background on tracy-web and dsh polls its result, so a check longer than the edge's ~100 s still reaches the agent and is counted once",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1666-demo-check-background.json",
+    "ref": "PR #1666 (fix); fix evidence: dev 24/10/2026: every tracy_demo check answered Cloudflare 524; the action stayed queued/fill",
+    "invariant": "S1: start answers running at once with one checkId; the second start joins it; status is running and nothing is counted yet; after the look finishes status carries pass:false and the looks-finished check under the same checkId, counted exactly once; after the action closes status still answers that checkId and check.start is AGENT_DEMO_ACTION_CLOSED; the silent check is DEMO_CHECK_LOST and not counted. S2: sends check.start then check.status until the result; falls back to one synchronous check; answers start's refusal or result without polling; DEMO_CHECK_RUNNING with running:true; TURN_STOPPED after one send; two failed polls are ridden through, six in a row are the answer, DEMO_CHECK_LOST is the answer at once.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/opportunities-build/agent-demo.js:1045",
+      "apps/tracy-web/src/opportunities-build/client-demo.js:32",
+      "apps/tracy-web/src/opportunities-build/demo-actions.js:77",
+      "apps/tracy-web/src/opportunities-build/demo-qa.js:736",
+      "apps/tracy-web/src/opportunities-build/demo-runner.js:62",
+      "apps/tracy-web/src/opportunities-build/handoff-service.js:11",
+      "apps/tracy-web/src/opportunities-build/handoff.js:474",
+      "apps/tracy-web/src/opportunities-build/journey-sql.js:8",
+      "apps/tracy-web/src/opportunities-build/revisions.js:55",
+      "apps/tracy-web/src/opportunities-build/site-content.js:123",
+      "apps/tracy-web/src/sites/agent-demo-inventory.js:534",
+      "packages/tools/tracy-site-tools/src/host/demo-lifecycle.mjs:78"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/db/index.js:52 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "client-send reserves real chat and one native user request before provision",
+    "check starts the server check and polls its status in short calls until it has a result",
+    "check against a tracy-web without check.start falls back to the one long check call",
+    "check answers a refusal or a finished result from start at once, never polling",
+    "check still running at the wait bound says so; Stop ends polling without another send",
+    "check polls through a few failed status calls on the way, then answers the last failure"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1666-demo-check-background"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1666-demo-check-background",
+    "pr": 1666,
+    "kind": "fix",
+    "area": "website-opportunities/agent-demo",
+    "file": "tests/regression/cases/REG-PR-1666-demo-check-background.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/website-opportunities-demo-runner.test.mjs",
+    "packages/tools/tracy-site-tools/test/demo-lifecycle.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "client-send reserves real chat and one native user request before provision",
+    "check starts the server check and polls its status in short calls until it has a result",
+    "check against a tracy-web without check.start falls back to the one long check call",
+    "check answers a refusal or a finished result from start at once, never polling",
+    "check still running at the wait bound says so; Stop ends polling without another send",
+    "check polls through a few failed status calls on the way, then answers the last failure"
+  ],
+  "timeoutS": 600
+}

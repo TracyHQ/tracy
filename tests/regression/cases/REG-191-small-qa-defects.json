@@ -1,0 +1,37 @@
+{
+  "id": "REG-191",
+  "kind": "fix",
+  "title": "Small defects of #811: Account says a failed read is a failure, a failed poster stops pulsing, the Account switch warns about Sign out, and the Ops rail links the API reference",
+  "pr": 910,
+  "area": "web/settings",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --import tsx --test --test-reporter=tap --test-timeout=120000 packages/site/tracy-my-sites/test/account-read.test.mjs packages/design/tracy-design-inspiration/test/poster-failure.test.mjs packages/web/tracy-harness/test/ops-small-defects.test.mjs packages/core/tracy-core/test/ui-switches.test.mjs",
+    "S2: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below.",
+    "S3: In each of packages/site/tracy-my-sites, packages/design/tracy-design-inspiration and packages/ui/tracy-settings run: node scripts/build-client.mjs --check and read its exit code."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "Every 'a failed read is said as a failure, not as signed out' test passes: a rejected request, an error status, an empty, HTML or malformed body, and an `email` that is missing, empty or not a string each show `state.failed` with an `action.retry` button and never `account.anonymous`.",
+    "'the door’s own signed-out answer (200, email: null) still reads as not signed in', 'a usable address shows the account and Sign out' and the three 'Try again' tests pass: only `email: null` on a 200 is signed out, and a retry asks `/auth/me` again and settles from the new answer.",
+    "'a poster that fails to load stops pulsing and leaves the no-picture ground, no broken image', 'the failure stays through a redraw with the same address', 'a new poster address after a failure is asked for, pulses and can load' and 'a new poster address that fails too ends on the no-picture ground' pass: after `error` on the poster there is no `img` and no `[data-poster-loading]` in the card.",
+    "'the preview’s live demo frame sends no referrer and is not sandboxed' passes: the frame's `referrerpolicy` is `no-referrer` and it has no `sandbox` attribute.",
+    "'the Ops rail carries exactly one link to the staff API reference, labelled API', 'a plain press on the API link is left to the browser: the SPA neither cancels it nor routes' and 'a modifier press on the API link stays a real link too' pass: one rail anchor has `href=\"/ops/api\"`, a press on it is not cancelled and writes no history entry.",
+    "'User Interface warns that Account off leaves no Sign out' and 'every switch that can take away the only Sign out says so before it is turned off' pass: `tracy-account` and `settings-button` both carry the warning in the exported catalogue, and /ops prints it while the switch is off.",
+    "S3 exits 0 in the three packages: each committed lib/client.js is the build of its source."
+  ],
+  "selectors": {
+    "account": "Settings › Account (`AccountSection` in packages/site/tracy-my-sites/src/client/index.tsx) reading GET /auth/me",
+    "poster": "`[data-poster-loading]` and `img` inside `DemoThumb` (packages/design/tracy-design-inspiration/src/client/DemoThumb.tsx)",
+    "demoFrame": "`iframe[referrerpolicy]` of `TemplateBody` (same package)",
+    "railLink": "`[data-slot=\"sidebar-content\"] a[href=\"/ops/api\"]` (packages/web/tracy-harness/src/App.tsx)",
+    "warning": "`warning` of `tracy-account` in packages/core/tracy-core/src/ui-switches/catalogue.json, printed by /ops/ui"
+  },
+  "evidence": "Issue #811 (F-S2-021, F-S5-014, F-S5-012, F-S2-011, F-S8-022); tasks/nhat-ky/2026-10-04-811-p3-small.md holds the red-on-base and green-on-branch counts.",
+  "fence": "Mechanism only, no stand: the real components run under node --test with linkedom and a stub fetch; the test fires the `load` and `error` events a browser would. Not covered: a real browser (painting, a real failed image request, the navigation to /ops/api), PostgreSQL, a real host or dsh, anything an edge adds, late or overlapping answers of /auth/me or of a poster.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-191.mjs"]
+  }
+}

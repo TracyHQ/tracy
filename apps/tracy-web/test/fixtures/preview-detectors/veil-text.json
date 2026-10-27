@@ -1,0 +1,1351 @@
+{
+  "about": "veil-text: probe data cut from the Add site preview of JA Essence WordPress 1.0.18 under Moxie, dark visitor scheme, 14/10/2026 (preview-check.mjs PREVIEW_DATA=1). broken: the worn page against the template's own; clean: the template's own page against itself.",
+  "broken": [
+    {
+      "source": "quickstart/ja-essence/wp7@1.0.18 refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0 dark",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Abstract Wonders: Exploring Line Art Com",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Faith Singleton",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Architectural Wonders: Line Art in Build",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Trevor Patrick",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Beauty in Simplicity: Exploring Line Art",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Alfonso Cortez",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Beyond Black and White: Adding Colors to",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Maxine Palmer",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 14, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Capturing Essence: Expressive Line Art T",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Eula Ward",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 14, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Dancing with Lines: Dynamic Line Art Exp",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Laverne Robbins",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Abstract Wonders: Exploring Line Art Com",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Faith Singleton",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 6.3
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Architectural Wonders: Line Art in Build",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Trevor Patrick",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 6.3
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Beauty in Simplicity: Exploring Line Art",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Alfonso Cortez",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 6.3
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Beyond Black and White: Adding Colors to",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Maxine Palmer",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 6.3
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 14, 2023",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Capturing Essence: Expressive Line Art T",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Eula Ward",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 6.3
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 14, 2023",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Dancing with Lines: Dynamic Line Art Exp",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Laverne Robbins",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 6.3
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 133,
+              "g": 130,
+              "b": 115,
+              "a": 1
+            },
+            "ground": {
+              "r": 96.5,
+              "g": 96,
+              "b": 93.5
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 1.63
+          }
+        ]
+      }
+    }
+  ],
+  "clean": [
+    {
+      "source": "quickstart/ja-essence/wp7@1.0.18 without a system",
+      "systemColours": [
+        "#000000",
+        "#1a1a1a",
+        "#060605",
+        "#f4efd4",
+        "#b7b39f",
+        "#858273",
+        "#868474",
+        "#7a786a",
+        "#84acfb",
+        "#93b6fb",
+        "#9fbefc"
+      ],
+      "plain": {
+        "data": [
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Abstract Wonders: Exploring Line Art Com",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Faith Singleton",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Architectural Wonders: Line Art in Build",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Trevor Patrick",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Beauty in Simplicity: Exploring Line Art",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Alfonso Cortez",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Beyond Black and White: Adding Colors to",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Maxine Palmer",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 14, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Capturing Essence: Expressive Line Art T",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Eula Ward",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 14, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Dancing with Lines: Dynamic Line Art Exp",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Laverne Robbins",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          }
+        ]
+      },
+      "worn": {
+        "data": [
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Abstract Wonders: Exploring Line Art Com",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Faith Singleton",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:1/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Architectural Wonders: Line Art in Build",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Trevor Patrick",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:2/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Beauty in Simplicity: Exploring Line Art",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Alfonso Cortez",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:3/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Beyond Black and White: Adding Colors to",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Maxine Palmer",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:4/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 14, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Capturing Essence: Expressive Line Art T",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Eula Ward",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:5/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 14, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/h3:1/a:1",
+            "at": "a",
+            "text": "Dancing with Lines: Dynamic Line Art Exp",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/div:2/div:1",
+            "at": "div.je-meta__author.wp-block-post-author-name",
+            "text": "Laverne Robbins",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          },
+          {
+            "path": "div:1/main:1/div:1/div:1/div:1/div:2/ul:1/li:6/div:1/div:1/div:2/div:2/time:1",
+            "at": "time",
+            "text": "June 9, 2023",
+            "fg": {
+              "r": 255,
+              "g": 255,
+              "b": 255,
+              "a": 1
+            },
+            "ground": {
+              "r": 64,
+              "g": 64,
+              "b": 64
+            },
+            "veil": "span.wp-block-cover__background.has-background-dim",
+            "ratio": 10.37
+          }
+        ]
+      }
+    }
+  ]
+}

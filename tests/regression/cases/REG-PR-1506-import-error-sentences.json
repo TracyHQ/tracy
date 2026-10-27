@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-1506-import-error-sentences",
+  "kind": "fix",
+  "title": "A refused Joomla import sign-in says Joomla needs the username, not the email; the operator signal records whether the username was an email and how the run came in, never the value",
+  "pr": 1506,
+  "area": "add-site/import",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Pick the sentence for invalid_credential with importErrorKey (packages/site/tracy-add-site/src/client/refusal.tsx) for a Joomla run, a WordPress run, a Joomla run whose refusal Tracy could not read (check message_unread), and no_backend_access on Joomla.",
+    "S2: Follow a run in the import wizard that ends with error invalid_credential on Joomla.",
+    "S3: Run a WordPress import with fetch mocked so the login POST answers 'The password you entered for the username is incorrect', once with username owner@shop.example and once with shopowner; read the run state and the queued operation result.",
+    "S4: Call run.signInRefusal and run.signInWay directly for account refusals, front-of-account refusals (admin_gate, mfa_required) and the three ways a run gets the code (password, pasted code, saved).",
+    "S5: Sanitize a diagnostic carrying username_is_email (and a stray sign_in) with tracy-web importDiagnostic, including a string username_is_email, an extra username field and an unknown sign_in, then render it with signalText.",
+    "S6: Run an import with neither a login nor a pasted code and nothing kept, so it fails with no diagnostic; post to tracy-web's import-result door a call_failed result with sign_in and no detail, one with an unknown sign_in, and a done result with sign_in."
+  ],
+  "expect": [
+    "S1: Joomla gets import_error_invalid_credential_joomla; WordPress keeps import_error_invalid_credential; message_unread stays import_error_signin_unclear; no_backend_access keeps its own sentence.",
+    "S2: the wizard shows the Joomla sentence.",
+    "S3: diagnostic is {at: login_post, check: invalid_credential, username_is_email: true|false}; the queued report carries sign_in: password beside that detail; neither the run state nor the report contains the username.",
+    "S4: only invalid_credential and no_backend_access gain username_is_email; owner@localhost is not an email shape; signInWay returns password, code, saved.",
+    "S5: a boolean username_is_email survives, everything else (including sign_in, which belongs to the result) is dropped; importSignIn keeps only password/code/saved; the alert ends with 'Sign-in: password · username is an email address' and contains no @.",
+    "S6: the queued report carries sign_in saved and no detail; the stored site.stuck row keeps sign_in and has no detail, its alert ends 'Reason: call_failed\\nSign-in: password' with no Where line; an unknown sign_in is not stored; the site.result row keeps sign_in."
+  ],
+  "selectors": {
+    "test": "packages/site/tracy-add-site/test/import-signin-data.test.mjs, packages/site/tracy-add-site/test/site-link-pacing.test.mjs, apps/tracy-web/test/beta-operation-signal.test.mjs",
+    "code": "refusal.tsx importErrorKey, import-wizard.tsx errorDetail.platform, run.ts signInRefusal/signInWay, diagnostic.mjs usernameIsEmail/DIAGNOSTIC_SIGN_INS, apps/tracy-web/src/lib/import-diagnostic.js importSignIn, sites/route.js import-result, ops-signal.js signIn"
+  },
+  "evidence": "A production Joomla customer's import stopped on invalid_credential (Joomla: 'Username and password do not match'); the customer most likely typed the email address, which Joomla's backend does not accept, and the sentence did not say so",
+  "fence": "the Joomla sentence for invalid_credential and the username_is_email/sign_in fields of the import diagnostic",
+  "run": {
+    "cwd": "packages/site/tracy-add-site",
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/import-signin-data.test.mjs",
+      "test/site-link-pacing.test.mjs"
+    ],
+    "tests": [
+      "a wrong password on Joomla says Joomla needs the username; WordPress keeps its sentence",
+      "a refused WordPress sign-in reports whether the username was an email and how the run came in, never the username",
+      "signInRefusal marks only a refused account, and signInWay names how the run came in",
+      "a run that fails with no diagnostic still reports how it came in, and no made-up detail"
+    ]
+  }
+}

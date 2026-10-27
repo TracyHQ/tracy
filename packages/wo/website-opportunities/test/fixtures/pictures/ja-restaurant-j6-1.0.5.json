@@ -1,0 +1,1581 @@
+{
+  "source": "ja-restaurant/j6/1.0.5/content-map.json",
+  "slots": [
+    {
+      "key": "module-98.0",
+      "entity": "module-98",
+      "type": "image",
+      "sample": "images/joomlart/slideshow/slide-1.jpg",
+      "label": "Slideshow / image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-98.1",
+      "entity": "module-98",
+      "type": "image",
+      "sample": "images/joomlart/slideshow/slide-2.jpg",
+      "label": "Slideshow / image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-98.2",
+      "entity": "module-98",
+      "type": "image",
+      "sample": "images/joomlart/slideshow/slide-3.jpg",
+      "label": "Slideshow / image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-100.2",
+      "entity": "module-100",
+      "type": "image",
+      "sample": "images/joomlart/hero/chef.png",
+      "label": "Welcome to RES Bar & Restaurant / hero-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-107.0",
+      "entity": "module-107",
+      "type": "image",
+      "sample": "images/joomlart/banner/banner-1.jpg",
+      "label": "Banner Custom",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-112.9",
+      "entity": "module-112",
+      "type": "image",
+      "sample": "images/joomlart/avatars/avt-1.jpg",
+      "label": "Happy customers / author-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-112.10",
+      "entity": "module-112",
+      "type": "image",
+      "sample": "images/joomlart/avatars/avt-2.jpg",
+      "label": "Happy customers / author-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-112.11",
+      "entity": "module-112",
+      "type": "image",
+      "sample": "images/joomlart/avatars/avt-2.jpg",
+      "label": "Happy customers / author-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-112.12",
+      "entity": "module-112",
+      "type": "image",
+      "sample": "images/joomlart/avatars/avt-2.jpg",
+      "label": "Happy customers / author-img",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-114.0",
+      "entity": "module-114",
+      "type": "image",
+      "sample": "https://www.google.com/maps?q=4+5th+Avenue%2C+Brooklyn%2C+NY+11217&output=embed",
+      "label": "[Contact] Map",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-115.0",
+      "entity": "module-115",
+      "type": "image",
+      "sample": "images/joomlart/gallery/big-photo-2.jpg",
+      "label": "Gallery / image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-115.1",
+      "entity": "module-115",
+      "type": "image",
+      "sample": "images/joomlart/gallery/big-photo-1.jpg",
+      "label": "Gallery / image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-115.2",
+      "entity": "module-115",
+      "type": "image",
+      "sample": "images/joomlart/gallery/big-photo-3.jpg",
+      "label": "Gallery / image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-119.21",
+      "entity": "module-119",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-1.jpg",
+      "label": "Sea food / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-119.22",
+      "entity": "module-119",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-2.jpg",
+      "label": "Sea food / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-119.23",
+      "entity": "module-119",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-3.jpg",
+      "label": "Sea food / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-119.24",
+      "entity": "module-119",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-4.jpg",
+      "label": "Sea food / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-119.25",
+      "entity": "module-119",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-5.jpg",
+      "label": "Sea food / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-119.26",
+      "entity": "module-119",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-6.jpg",
+      "label": "Sea food / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-119.27",
+      "entity": "module-119",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-7.jpg",
+      "label": "Sea food / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-120.30",
+      "entity": "module-120",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-1.jpg",
+      "label": "Icream and Juice / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-120.31",
+      "entity": "module-120",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-2.jpg",
+      "label": "Icream and Juice / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-120.32",
+      "entity": "module-120",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-3.jpg",
+      "label": "Icream and Juice / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-120.33",
+      "entity": "module-120",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-4.jpg",
+      "label": "Icream and Juice / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-120.34",
+      "entity": "module-120",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-6.jpg",
+      "label": "Icream and Juice / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-120.35",
+      "entity": "module-120",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-7.jpg",
+      "label": "Icream and Juice / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-120.36",
+      "entity": "module-120",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-8.jpg",
+      "label": "Icream and Juice / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-120.37",
+      "entity": "module-120",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-9.jpg",
+      "label": "Icream and Juice / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-120.38",
+      "entity": "module-120",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-10.jpg",
+      "label": "Icream and Juice / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-120.39",
+      "entity": "module-120",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-11.jpg",
+      "label": "Icream and Juice / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-121.2",
+      "entity": "module-121",
+      "type": "image",
+      "sample": "images/joomlart/hero/sam-1.png",
+      "label": "About us / img-features",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-128.0",
+      "entity": "module-128",
+      "type": "image",
+      "sample": "images/joomlart/avatars/chef-1.jpg",
+      "label": "Our Team / member-image",
+      "requiresEvidence": true
+    },
+    {
+      "key": "module-128.1",
+      "entity": "module-128",
+      "type": "image",
+      "sample": "images/joomlart/avatars/chef-2.jpg",
+      "label": "Our Team / member-image",
+      "requiresEvidence": true
+    },
+    {
+      "key": "module-128.2",
+      "entity": "module-128",
+      "type": "image",
+      "sample": "images/joomlart/avatars/chef-3.jpg",
+      "label": "Our Team / member-image",
+      "requiresEvidence": true
+    },
+    {
+      "key": "module-128.3",
+      "entity": "module-128",
+      "type": "image",
+      "sample": "images/joomlart/avatars/chef-4.jpg",
+      "label": "Our Team / member-image",
+      "requiresEvidence": true
+    },
+    {
+      "key": "module-132.0",
+      "entity": "module-132",
+      "type": "image",
+      "sample": "images/joomlart/map-contact.jpg",
+      "label": "Our History / image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-132.1",
+      "entity": "module-132",
+      "type": "image",
+      "sample": "images/joomlart/slideshow/slide-1.jpg",
+      "label": "Our History / image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-132.2",
+      "entity": "module-132",
+      "type": "image",
+      "sample": "images/joomlart/features-intro/intro-2.jpg",
+      "label": "Our History / image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-140.21",
+      "entity": "module-140",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-1.jpg",
+      "label": "Menu with Image / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-140.22",
+      "entity": "module-140",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-2.jpg",
+      "label": "Menu with Image / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-140.23",
+      "entity": "module-140",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-3.jpg",
+      "label": "Menu with Image / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-140.24",
+      "entity": "module-140",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-4.jpg",
+      "label": "Menu with Image / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-140.25",
+      "entity": "module-140",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-5.jpg",
+      "label": "Menu with Image / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-140.26",
+      "entity": "module-140",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-6.jpg",
+      "label": "Menu with Image / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-140.27",
+      "entity": "module-140",
+      "type": "image",
+      "sample": "images/joomlart/food/fd-7.jpg",
+      "label": "Menu with Image / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-141.30",
+      "entity": "module-141",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-1.jpg",
+      "label": "2 Column Menu / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-141.31",
+      "entity": "module-141",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-2.jpg",
+      "label": "2 Column Menu / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-141.32",
+      "entity": "module-141",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-3.jpg",
+      "label": "2 Column Menu / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-141.33",
+      "entity": "module-141",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-4.jpg",
+      "label": "2 Column Menu / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-141.34",
+      "entity": "module-141",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-6.jpg",
+      "label": "2 Column Menu / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-141.35",
+      "entity": "module-141",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-7.jpg",
+      "label": "2 Column Menu / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-141.36",
+      "entity": "module-141",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-8.jpg",
+      "label": "2 Column Menu / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-141.37",
+      "entity": "module-141",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-9.jpg",
+      "label": "2 Column Menu / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-141.38",
+      "entity": "module-141",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-10.jpg",
+      "label": "2 Column Menu / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-141.39",
+      "entity": "module-141",
+      "type": "image",
+      "sample": "images/joomlart/icream/ic-11.jpg",
+      "label": "2 Column Menu / dish-image",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-143.0",
+      "entity": "module-143",
+      "type": "image",
+      "sample": "images/joomlart/happyhours/hp-bg-1.jpg",
+      "label": "Happy Hours Style 1 / hp-bg",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-143.1",
+      "entity": "module-143",
+      "type": "image",
+      "sample": "images/joomlart/logo.png",
+      "label": "Happy Hours Style 1 / hp-brand",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-144.0",
+      "entity": "module-144",
+      "type": "image",
+      "sample": "images/joomlart/happyhours/hp-bg-2.jpg",
+      "label": "Happy Hours Style 2 / hp-bg",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-144.1",
+      "entity": "module-144",
+      "type": "image",
+      "sample": "images/joomlart/logo.png",
+      "label": "Happy Hours Style 2 / hp-brand",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-145.0",
+      "entity": "module-145",
+      "type": "image",
+      "sample": "images/joomlart/happyhours/hp-bg-3.jpg",
+      "label": "Happy Hours Style 3 / hp-bg",
+      "requiresEvidence": false
+    },
+    {
+      "key": "module-145.1",
+      "entity": "module-145",
+      "type": "image",
+      "sample": "images/joomlart/logo.png",
+      "label": "Happy Hours Style 3 / hp-brand",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-15.5",
+      "entity": "article-15",
+      "type": "image",
+      "sample": "images/joomlart/404-page.jpg",
+      "label": "404 page",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-16.5",
+      "entity": "article-16",
+      "type": "image",
+      "sample": "images/joomlart/offline-page.jpg",
+      "label": "Offline page",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-26.0",
+      "entity": "article-26",
+      "type": "image",
+      "sample": "images/joomlart/blog/rest-8.jpg",
+      "label": "History",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-28.6",
+      "entity": "article-28",
+      "type": "image",
+      "sample": "images/joomlart/features-intro/intro-7.jpg",
+      "label": "Phone Reservation",
+      "requiresEvidence": false
+    },
+    {
+      "key": "article-28.15",
+      "entity": "article-28",
+      "type": "image",
+      "sample": "images/joomlart/features-intro/intro-8.jpg",
+      "label": "Phone Reservation",
+      "requiresEvidence": false
+    }
+  ],
+  "pages": [
+    {
+      "entity": "menuItem-101",
+      "route": "homepage",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-97", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-98", "position": "slideshow", "published": "1" },
+        { "entity": "module-100", "position": "section-1", "published": "1" },
+        { "entity": "module-101", "position": "section-1", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-103", "position": "section-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-108", "position": "section-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-112", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-116", "position": "section-2", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-142", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-102",
+      "route": "your-profile",
+      "link": "index.php?option=com_users&view=profile&layout=edit",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-142", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-103",
+      "route": "2013-11-16-23-26-41",
+      "link": "administrator",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-142", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-104",
+      "route": "submit-an-article",
+      "link": "index.php?option=com_content&view=form&layout=edit",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-142", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-106",
+      "route": "template-settings",
+      "link": "index.php?option=com_config&view=templates",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-142", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-107",
+      "route": "site-settings",
+      "link": "index.php?option=com_config&view=config",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-142", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-108",
+      "route": "blog",
+      "link": "index.php?option=com_content&view=category&layout=blog&id=10",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-97", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-106", "position": "sidebar-2", "published": "0" },
+        { "entity": "module-107", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-109", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-109",
+      "route": "explore/j-pages",
+      "link": "",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-110",
+      "route": "explore",
+      "link": "",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-111",
+      "route": "explore/j-pages/login",
+      "link": "index.php?option=com_users&view=login",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-112",
+      "route": "explore/j-pages/registration",
+      "link": "index.php?option=com_users&view=registration",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-113",
+      "route": "explore/j-pages/user-profile",
+      "link": "index.php?option=com_users&view=profile",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-114",
+      "route": "contact",
+      "link": "",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-116",
+      "route": "explore/bonus-pages",
+      "link": "",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-117",
+      "route": "explore/j-pages/category-blog",
+      "link": "index.php?option=com_content&view=article&id=27",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-118",
+      "route": "explore/bonus-pages/offline-page",
+      "link": "index.php?option=com_content&view=article&id=16",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-119",
+      "route": "explore/bonus-pages/erro-page",
+      "link": "index.php?option=com_content&view=article&id=15",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-120",
+      "route": "explore/vik-restaurant",
+      "link": "",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-121",
+      "route": "explore/j-pages/reminder",
+      "link": "index.php?option=com_users&view=remind",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-122",
+      "route": "explore/j-pages/smart-search",
+      "link": "index.php?option=com_finder&view=search",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-97", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-109", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-112", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-131",
+      "route": "about-us",
+      "link": "index.php?option=com_content&view=article&id=17",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-121", "position": "section-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-126", "position": "section-1", "published": "1" },
+        { "entity": "module-128", "position": "section-1", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-132",
+      "route": "gallery",
+      "link": "index.php?option=com_content&view=category&layout=ja_restaurant:gallery&id=14",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-115", "position": "slideshow", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-133",
+      "route": "menu",
+      "link": "index.php?option=com_content&view=article&id=17",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-117", "position": "food-menu", "published": "1" },
+        { "entity": "module-118", "position": "section-1", "published": "1" },
+        { "entity": "module-119", "position": "food-menu", "published": "1" },
+        { "entity": "module-120", "position": "food-menu", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-134",
+      "route": "explore/j-pages/tagged-items",
+      "link": "index.php?option=com_tags&view=tag&id[0]=3&id[1]=4&id[2]=5",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-97", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-109", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-135",
+      "route": "explore/j-pages/featured-articles",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-136",
+      "route": "explore/j-pages/all-categories",
+      "link": "index.php?option=com_content&view=categories&id=10",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-137",
+      "route": "about-us/chefs",
+      "link": "index.php?option=com_content&view=article&id=25",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-128", "position": "section-1", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-138",
+      "route": "about-us/our-history",
+      "link": "index.php?option=com_content&view=article&id=26",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-130", "position": "section-2", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-132", "position": "section-2", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-140",
+      "route": "explore/vik-restaurant/make-reservation",
+      "link": "index.php?option=com_vikrestaurants&view=restaurants",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-141",
+      "route": "explore/vik-restaurant/vikmenu",
+      "link": "index.php?option=com_vikrestaurants&view=menuslist",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-142",
+      "route": "vikmenu",
+      "link": "index.php?Itemid=",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-143",
+      "route": "explore/vik-restaurant/tables-overview",
+      "link": "index.php?option=com_vikrestaurants&view=oversight",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-144",
+      "route": "explore/vik-restaurant/all-orders",
+      "link": "index.php?option=com_vikrestaurants&view=allorders",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-145",
+      "route": "explore/vik-restaurant/order",
+      "link": "index.php?option=com_vikrestaurants&view=order",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-146",
+      "route": "explore/vik-restaurant/take-away",
+      "link": "index.php?option=com_vikrestaurants&view=takeaway",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-147",
+      "route": "explore/bonus-pages/about-us-page",
+      "link": "index.php?Itemid=",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-148",
+      "route": "explore/bonus-pages/our-history",
+      "link": "index.php?Itemid=",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-150",
+      "route": "explore/themes",
+      "link": "",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-151",
+      "route": "explore/themes/blue-color",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-97", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-98", "position": "slideshow", "published": "1" },
+        { "entity": "module-100", "position": "section-1", "published": "1" },
+        { "entity": "module-101", "position": "section-1", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-103", "position": "section-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-108", "position": "section-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-112", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-116", "position": "section-2", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-152",
+      "route": "explore/themes/green-color",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-97", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-98", "position": "slideshow", "published": "1" },
+        { "entity": "module-100", "position": "section-1", "published": "1" },
+        { "entity": "module-101", "position": "section-1", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-103", "position": "section-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-108", "position": "section-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-112", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-116", "position": "section-2", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-153",
+      "route": "explore/themes/pink-color",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-97", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-98", "position": "slideshow", "published": "1" },
+        { "entity": "module-100", "position": "section-1", "published": "1" },
+        { "entity": "module-101", "position": "section-1", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-103", "position": "section-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-108", "position": "section-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-112", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-116", "position": "section-2", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-154",
+      "route": "explore/themes/purple-color",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-97", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-98", "position": "slideshow", "published": "1" },
+        { "entity": "module-100", "position": "section-1", "published": "1" },
+        { "entity": "module-101", "position": "section-1", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-103", "position": "section-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-108", "position": "section-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-112", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-116", "position": "section-2", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-155",
+      "route": "explore/themes/default-color",
+      "link": "index.php?Itemid=",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-97", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-98", "position": "slideshow", "published": "1" },
+        { "entity": "module-100", "position": "section-1", "published": "1" },
+        { "entity": "module-101", "position": "section-1", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-103", "position": "section-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-108", "position": "section-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-112", "position": "sidebar-2", "published": "1" },
+        { "entity": "module-116", "position": "section-2", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-159",
+      "route": "contact/open-table",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-160",
+      "route": "contact/phone-reservation",
+      "link": "index.php?option=com_content&view=article&id=28",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-161",
+      "route": "contact/vik-restaurants-reservation",
+      "link": "index.php?option=com_vikrestaurants&view=restaurants",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-162",
+      "route": "contact/contact-us",
+      "link": "index.php?option=com_contact&view=contact&id=1",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-114", "position": "masthead", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-163",
+      "route": "menu/simple-menu",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-139", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-164",
+      "route": "menu/menu-with-image",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-140", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-165",
+      "route": "menu/2-column-menu",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-141", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-166",
+      "route": "vikmenu/vik-restaurants-menu",
+      "link": "index.php?option=com_vikrestaurants&view=menuslist",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-167",
+      "route": "offers",
+      "link": "index.php?option=com_content&view=featured",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-143", "position": "section-1", "published": "1" },
+        { "entity": "module-144", "position": "section-1", "published": "1" },
+        { "entity": "module-145", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-168",
+      "route": "contact/happy-hours",
+      "link": "index.php?option=com_content&view=article&id=17",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-144", "position": "section-1", "published": "1" },
+        { "entity": "module-145", "position": "section-1", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    },
+    {
+      "entity": "menuItem-350",
+      "route": "explore/j-pages/reset-password",
+      "link": "index.php?option=com_users&view=reset",
+      "assignedModules": [
+        { "entity": "module-94", "position": "t3-topbar-1", "published": "1" },
+        { "entity": "module-99", "position": "masthead", "published": "1" },
+        { "entity": "module-102", "position": "tab-1", "published": "1" },
+        { "entity": "module-104", "position": "tab-1", "published": "1" },
+        { "entity": "module-111", "position": "tab-1", "published": "1" },
+        { "entity": "module-122", "position": "footer-1", "published": "1" },
+        { "entity": "module-123", "position": "footer-2", "published": "1" },
+        { "entity": "module-124", "position": "footer-3", "published": "1" },
+        { "entity": "module-131", "position": "off-canvas", "published": "1" },
+        { "entity": "module-146", "position": "footer", "published": "1" },
+        { "entity": "module-147", "position": "section-2", "published": "1" }
+      ]
+    }
+  ]
+}

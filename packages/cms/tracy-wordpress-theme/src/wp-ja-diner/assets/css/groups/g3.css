@@ -1,0 +1,643 @@
+/* wp-ja-diner g3: the Contact and account-page rules of the source's compiled template.css. The source scopes them with .view-contact / .com_users
+   on <html>, which WordPress does not print; the port scopes them with the page's own body class instead (rules copied as written). */
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody > .row {
+  margin: 0;
+}
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit {
+  margin: 0 auto;
+  padding: 108px 48px;
+}
+@media (max-width: 768px) {
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit {
+    padding: 0;
+  }
+}
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap h1,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration h1,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile h1,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit h1,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap legend,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration legend,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile legend,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit legend {
+  text-align: left;
+}
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap legend,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration legend,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile legend,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit legend {
+  border: none;
+  font-size: 60px;
+  font-family: var(--ds-font-display, var(--ja-font-display, "Eczar"), Georgia, "Times New Roman", Times, serif);
+}
+@media (max-width: 767px) {
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap legend,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration legend,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile legend,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit legend {
+    font-size: 36px;
+  }
+}
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap .star,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration .star,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile .star,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit .star {
+  color: var(--ds-c-accent-text, #ffcc00);
+}
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap .form-horizontal label,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration .form-horizontal label,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile .form-horizontal label,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit .form-horizontal label,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap #user-registration label,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration #user-registration label,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile #user-registration label,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit #user-registration label {
+  font-weight: 400;
+}
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap .form-horizontal input,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration .form-horizontal input,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile .form-horizontal input,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit .form-horizontal input,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap #user-registration input,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration #user-registration input,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile #user-registration input,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit #user-registration input {
+  background-color: var(--ds-c-surface, light-dark(#ffffff, #24211e));
+  box-shadow: none;
+  padding: 12px 18px;
+  width: 100%;
+}
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap .form-horizontal input:focus,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration .form-horizontal input:focus,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile .form-horizontal input:focus,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit .form-horizontal input:focus,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap #user-registration input:focus,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration #user-registration input:focus,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile #user-registration input:focus,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit #user-registration input:focus {
+  border-color: var(--ds-c-focus-ring, light-dark(#c2c0be, #5a544d));
+  box-shadow: none;
+}
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap .btn-default,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration .btn-default,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile .btn-default,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit .btn-default,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap .btn-small,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration .btn-small,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile .btn-small,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit .btn-small {
+  background-color: var(--ds-c-surface, light-dark(#ffffff, #24211e));
+  color: var(--ds-c-fg, light-dark(#222222, #f2eee8));
+  -webkit-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+}
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap .btn-default:hover,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration .btn-default:hover,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile .btn-default:hover,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit .btn-default:hover,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .login-wrap .btn-small:hover,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .registration .btn-small:hover,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile .btn-small:hover,
+body:is(.jm-route-login,.jm-route-registration,.jm-route-password-reset,.jm-route-username-reminder-request,.jm-route-user-profile,.jm-route-edit-user-profile) .t3-mainbody .profile-edit .btn-small:hover {
+  border-color: var(--ds-c-accent, #c36349);
+  background: var(--ds-c-accent, #c36349);
+  color: var(--ds-c-accent-on, #ffffff);
+}
+body.jm-route-contact-us .contact-links ul {
+  border: none;
+  margin-bottom: 0;
+}
+body.jm-route-contact-us .contact-links ul li {
+  display: inline-block;
+  margin: 8px 8px 0 0;
+}
+body.jm-route-contact-us .contact-links ul li:before {
+  display: none;
+}
+body.jm-route-contact-us .contact-links ul li a {
+  background-color: transparent;
+  border-radius: var(--ds-btn-radius, 0);
+  border: 1px solid var(--ds-c-border, light-dark(#e8e6e3, #3d3833));
+  color: var(--ds-c-fg, light-dark(#555555, #c9c3ba));
+  font-family: var(--ds-font-body, "Work Sans", Helvetica, Arial, sans-serif);
+  font-weight: 600;
+  padding: 12px;
+  text-transform: uppercase;
+  -webkit-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+  position: relative;
+}
+body.jm-route-contact-us .contact-links ul li a:before {
+  background: var(--ds-c-accent, #c36349);
+  content: '';
+  height: 0;
+  left: 0;
+  position: absolute;
+  top: 0;
+  -webkit-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+  width: 100%;
+}
+body.jm-route-contact-us .contact-links ul li a span {
+  position: relative;
+  z-index: 100;
+}
+body.jm-route-contact-us .contact-links ul li a:hover,
+body.jm-route-contact-us .contact-links ul li a:focus {
+  color: var(--ds-c-accent-on, #ffffff);
+}
+body.jm-route-contact-us .contact-links ul li a:hover:before,
+body.jm-route-contact-us .contact-links ul li a:focus:before {
+  height: 100%;
+}
+body.jm-route-contact-us .contact-links ul li a.button-facebook:before {
+  background: var(--ds-c-accent, #3b5999);
+}
+body.jm-route-contact-us .contact-links ul li a.button-pinterest:before {
+  background: var(--ds-c-accent, #bd081c);
+}
+body.jm-route-contact-us .contact-links ul li a.button-google:before {
+  background: var(--ds-c-accent, #dd4b39);
+}
+body.jm-route-contact-us .contact-links ul li a.button-twitter:before {
+  background: var(--ds-c-accent, #55acee);
+}
+body.jm-route-contact-us .contact-links ul li a.button-linkedin:before {
+  background: var(--ds-c-accent, #0077b5);
+}
+body.jm-route-contact-us .contact-links ul li a.button-instagram:before {
+  background: var(--ds-c-accent, #e4405f);
+}
+body.jm-route-contact-us #contact-form .form-control {
+  box-shadow: none;
+  padding: 12px 20px;
+  width: 100%;
+}
+body.jm-route-contact-us #contact-form .form-control:focus {
+  border-color: var(--ds-c-focus-ring, light-dark(#c2c0be, #5a544d));
+  box-shadow: none;
+}
+body.jm-route-contact-us #contact-form .form-control#jform_contact_message {
+  height: auto;
+  box-shadow: none;
+}
+body.jm-route-contact-us #contact-form legend {
+  border: none;
+  color: var(--ds-c-fg, light-dark(#333333, #e6e1d9));
+  font-size: 12px;
+  margin: 0;
+}
+body.jm-route-contact-us #contact-form label {
+  text-align: left;
+  font-weight: normal;
+  padding-top: 0;
+}
+body.jm-route-contact-us #contact-form .contact-name,
+body.jm-route-contact-us #contact-form .contact-email {
+  margin-top: 24px;
+}
+body.jm-route-contact-us #contact-form .contact-name label,
+body.jm-route-contact-us #contact-form .contact-email label {
+  display: inline-block;
+  padding: 0;
+  width: auto;
+  margin-bottom: 5px;
+}
+body.jm-route-contact-us #contact-form .form-group .checkbox #jform_contact_email_copy {
+  margin-left: 0;
+}
+body.jm-route-contact-us #contact-form .btn-send {
+  float: right;
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us #contact-form .btn-send {
+    float: left;
+    margin-top: 36px;
+  }
+}
+body.jm-route-contact-us .contact-miscinfo dd {
+  max-width: 100%;
+}
+body.jm-route-contact-us .contact-miscinfo dd .map-container {
+  margin-top: 0;
+  max-width: 100%;
+}
+body.jm-route-contact-us .contact-miscinfo dd p {
+  display: none;
+}
+body.jm-route-contact-us .contact-address {
+  margin: 0;
+}
+body.jm-route-contact-us .contact-address dd {
+  color: var(--ds-c-fg, light-dark(#555555, #c9c3ba));
+  margin: 0 0 12px;
+}
+body.jm-route-contact-us .contact-address dd:last-child {
+  margin: 0;
+}
+body.jm-route-contact-us .contact-address dd > span .fa {
+  font-size: 18px;
+  width: 16px;
+}
+body.jm-route-contact-us .contact-address dd > span > h4 {
+  color: #ffffff; /* ds-keep: words on a photo or dark scrim, they keep the template colour under every system */
+  display: inline-block;
+  font-weight: 400;
+  margin: 0;
+}
+body.jm-route-contact-us .contact-address dd > span .title,
+body.jm-route-contact-us .contact-address dd > span a {
+  display: block;
+  color: var(--ds-c-fg, light-dark(#555555, #c9c3ba));
+}
+body.jm-route-contact-us .contact-address dd .contact-webpage a {
+  color: var(--ds-c-fg, light-dark(#555555, #c9c3ba));
+  -webkit-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+}
+body.jm-route-contact-us .contact-address dd .contact-webpage a:hover {
+  color: #d9d9d9; /* ds-keep: words on a photo or dark scrim, they keep the template colour under every system */
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style {
+  position: relative;
+  padding: 96px 0;
+  overflow: hidden;
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us .t3-masthead .contact .plain-style {
+    padding: 0;
+  }
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information {
+  background: var(--ds-c-accent, #c36349);
+  color: var(--ds-c-accent-on, #ffffff);
+  max-width: 450px;
+  width: 100%;
+  margin: 0;
+  float: left;
+  padding: 36px;
+  position: relative;
+  z-index: 99;
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information {
+    max-width: 100%;
+  }
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .page-header {
+  border: none;
+  padding: 0;
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .page-header h1 {
+  color: var(--ds-c-info-text, #ffffff);
+  font-size: 60px;
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .page-header h1 {
+    font-size: 50px;
+  }
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .contact-address {
+  margin: 0;
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .contact-address dd {
+  margin: 0 0 24px;
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .contact-address dd:last-child {
+  margin: 0;
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .contact-address dd > span .fa {
+  font-size: 18px;
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .contact-address dd > span > h4 {
+  color: var(--ds-c-info-text, #ffffff);
+  display: inline-block;
+  font-weight: 400;
+  margin: 0;
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .contact-address dd > span .title,
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .contact-address dd > span a {
+  display: block;
+  margin-top: 6px;
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .contact-information .box-infor .map-container {
+  display: none;
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .google-map {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  max-width: 100%;
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us .t3-masthead .contact .plain-style .google-map {
+    position: static;
+    margin-bottom: 72px;
+  }
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .google-map .map-container {
+  margin: 0;
+  height: 100%;
+  max-width: 100%;
+}
+body.jm-route-contact-us .t3-masthead .contact .plain-style .google-map .map-container #ja-widget-map1 {
+  height: 100% !important;
+  overflow: visible;
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us .t3-masthead .contact .plain-style .google-map .map-container #ja-widget-map1 {
+    height: 250px !important;
+  }
+}
+body.jm-route-contact-us #users-profile-custom dt,
+body.jm-route-contact-us #users-profile-custom dd {
+  margin-bottom: 10px;
+}
+body.jm-route-contact-us #users-profile-custom .hasPopover {
+  margin-bottom: 0;
+}
+body.jm-route-contact-us #t3-section-top .t3-section {
+  padding-top: 72px;
+}
+body.jm-route-contact-us .plain .contact-plain .contact-us-content .title-contact {
+  display: none;
+}
+body.jm-route-contact-us .plain .contact-plain .group-email-link h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+body.jm-route-contact-us .plain .contact-plain .group-email-link .thumbnail {
+  padding: 0;
+  border: none;
+}
+body.jm-route-contact-us .plain .contact-plain .group-email-link .map-content h2 {
+  display: none;
+}
+body.jm-route-contact-us .plain .contact-plain .group-email-link .map-content .contact-miscinfo .contact-misc p {
+  display: block;
+}
+body.jm-route-contact-us .plain .contact-plain .group-email-link .group-content {
+  padding-right: 24px;
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us .plain .contact-plain .group-email-link .group-content {
+    padding-right: 0;
+  }
+}
+body.jm-route-contact-us .plain .contact-plain .group-email-link .content-links {
+  margin: 48px 0;
+}
+body.jm-route-contact-us .plain .contact-plain .group-email-link .content-links h2 {
+  margin-bottom: 8px;
+}
+body.jm-route-contact-us .tabs .page-header,
+body.jm-route-contact-us .sliders .page-header {
+  border-bottom: none;
+  margin: 48px 0;
+  padding: 0;
+}
+body.jm-route-contact-us .tabs .page-header h1,
+body.jm-route-contact-us .sliders .page-header h1 {
+  font-size: 75px;
+}
+body.jm-route-contact-us .tabs .map-container,
+body.jm-route-contact-us .sliders .map-container {
+  margin-bottom: 12px;
+}
+body.jm-route-contact-us .map-content dt,
+body.jm-route-contact-us .contact-miscinfo dt {
+  display: none;
+}
+body.jm-route-contact-us .map-content dd,
+body.jm-route-contact-us .contact-miscinfo dd {
+  margin: 0;
+}
+body.jm-route-contact-us #myTabContent .contact-us-content .main-content .title-contact,
+body.jm-route-contact-us #slide-contact .contact-us-content .main-content .title-contact {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding: 72px 0;
+  position: relative;
+  text-align: center;
+}
+body.jm-route-contact-us #myTabContent .contact-us-content .main-content .title-contact:before,
+body.jm-route-contact-us #slide-contact .contact-us-content .main-content .title-contact:before {
+  background: var(--ds-c-ink, #000000);
+  content: '';
+  height: 100%;
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+body.jm-route-contact-us #myTabContent .contact-us-content .main-content h1,
+body.jm-route-contact-us #slide-contact .contact-us-content .main-content h1 {
+  color: #ffffff; /* ds-keep: words on a photo or dark scrim, they keep the template colour under every system */
+  position: relative;
+  z-index: 100;
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us #myTabContent .contact-us-content .main-content h1,
+body.jm-route-contact-us #slide-contact .contact-us-content .main-content h1 {
+    font-size: 50px;
+  }
+}
+body.jm-route-contact-us #myTabContent .contact-us-content .main-content .contact-address,
+body.jm-route-contact-us #slide-contact .contact-us-content .main-content .contact-address {
+  position: relative;
+  z-index: 99;
+  margin: 0;
+}
+body.jm-route-contact-us #slide-contact .panel-body {
+  padding: 36px;
+}
+body.jm-route-contact-us #slide-contact .panel {
+  border-color: var(--ds-c-border, light-dark(#e8e6e3, #3d3833));
+  margin-bottom: 12px;
+}
+body.jm-route-contact-us #slide-contact .panel .panel-heading {
+  padding: 12px;
+}
+body.jm-route-contact-us #slide-contact .panel .panel-heading .panel-title {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+}
+body.jm-route-contact-us #slide-contact .panel .panel-heading .panel-title:hover {
+  color: var(--ds-c-accent-text-hover, light-dark(#c36349, #e08a70));
+}
+body.jm-route-contact-us #slide-contact .panel .panel-collapse {
+  border-top: 1px solid var(--ds-c-border, light-dark(#e8e6e3, #3d3833));
+  padding: 36px;
+}
+body.jm-route-contact-us #slide-contact .panel .panel-collapse .panel-body {
+  border: none;
+  padding: 0;
+}
+body.jm-route-contact-us #slide-contact .accordion-group {
+  border: 1px solid var(--ds-c-border, light-dark(#e8e6e3, #3d3833));
+  margin-bottom: 12px;
+  font-family: var(--ds-font-display, var(--ja-font-display, "Eczar"), Georgia, "Times New Roman", Times, serif);
+}
+body.jm-route-contact-us #slide-contact .accordion-group .accordion-heading {
+  background: var(--ds-c-surface, light-dark(#f5f5f5, #2a2723));
+  border-bottom: 1px solid var(--ds-c-border, light-dark(#e8e6e3, #3d3833));
+  font-size: 18px;
+  padding: 12px;
+}
+body.jm-route-contact-us #slide-contact .accordion-group .accordion-heading strong {
+  font-weight: 400;
+}
+body.jm-route-contact-us #slide-contact .accordion-group .accordion-heading a {
+  -webkit-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+  color: var(--ds-c-fg, light-dark(#333333, #e6e1d9));
+}
+body.jm-route-contact-us #slide-contact .accordion-group .accordion-heading a:hover {
+  color: var(--ds-c-accent-text-hover, light-dark(#c36349, #e08a70));
+}
+body.jm-route-contact-us #slide-contact .accordion-group #display-links {
+  border-top: none;
+  padding: 36px;
+}
+body.jm-route-contact-us #myTabTabs {
+  background: var(--ds-c-surface, light-dark(#ffffff, #24211e));
+  border: 1px solid var(--ds-c-border, light-dark(#e8e6e3, #3d3833));
+  overflow: hidden;
+  margin-bottom: 0;
+}
+body.jm-route-contact-us #myTabTabs li {
+  margin: 0;
+  padding: 12px 24px 0 24px;
+  position: relative;
+}
+body.jm-route-contact-us #myTabTabs li:before {
+  color: var(--ds-c-meta, light-dark(#999999, #8f887e));
+  font-size: 8px;
+  left: 0;
+  margin: 8px 0 0 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us #myTabTabs li:before {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us #myTabTabs li {
+    border-bottom: 1px solid var(--ds-c-border, light-dark(#e8e6e3, #3d3833));
+    text-align: center;
+    width: 100%;
+  }
+body.jm-route-contact-us #myTabTabs li:last-child {
+    border-bottom: none;
+  }
+}
+body.jm-route-contact-us #myTabTabs li a {
+  border: none;
+  border-radius: 0 ; /* ds-keep: square corner by design */
+  box-shadow: none;
+  background: transparent;
+  -webkit-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+}
+@media (max-width: 767px) {
+body.jm-route-contact-us #myTabTabs li a {
+    width: 100%;
+  }
+}
+body.jm-route-contact-us #myTabTabs li a:hover {
+  border: none;
+  box-shadow: none;
+  color: var(--ds-c-fg, light-dark(#333333, #e6e1d9));
+}
+body.jm-route-contact-us #myTabTabs li.active:before {
+  margin: 0;
+}
+body.jm-route-contact-us #myTabTabs li.active a {
+  border-bottom: 2px solid var(--ds-c-accent, #c36349);
+  color: var(--ds-c-fg, light-dark(#333333, #e6e1d9));
+  -webkit-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+  padding-bottom: 12px;
+}
+body.jm-route-contact-us #myTabContent {
+  border: 1px solid var(--ds-c-border, light-dark(#e8e6e3, #3d3833));
+  border-top: none;
+  background: var(--ds-c-surface, light-dark(#ffffff, #24211e));
+  padding: 36px;
+}
+.j50body.jm-route-contact-us dl {
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+.j50body.jm-route-contact-us .contact-position dt {
+  text-align: left;
+  width: 80px;
+}
+.j50body.jm-route-contact-us .contact-position dd {
+  margin: 0;
+}
+.j50body.jm-route-contact-us .contact-address dt {
+  display: inline-block;
+  width: 30px;
+  text-align: left;
+}
+.j50body.jm-route-contact-us .contact-address dt img {
+  width: 30px;
+  height: 30px;
+}
+.j50body.jm-route-contact-us .contact-address dt > span.fa {
+  font-family: var(--fa-style-family, "Font Awesome 6 Free");
+  font-weight: var(--fa-style, 900);
+  width: 16px;
+}
+.j50body.jm-route-contact-us .contact-address dt > span > h4 {
+  color: var(--ds-c-fg-2, light-dark(#222222, #f2eee8));
+  display: inline-block;
+  font-weight: 400;
+  margin: 0;
+}
+.j50body.jm-route-contact-us .contact-address dt > span .title,
+.j50body.jm-route-contact-us .contact-address dt > span a {
+  display: block;
+  color: var(--ds-c-fg, light-dark(#555555, #c9c3ba));
+}
+.j50body.jm-route-contact-us .contact-address dd {
+  color: var(--ds-c-fg, light-dark(#555555, #c9c3ba));
+  margin: 0 0 12px;
+}
+.j50body.jm-route-contact-us .contact-address dd:last-child {
+  margin: 0;
+}
+.j50body.jm-route-contact-us .contact-address dd .contact-webpage a {
+  color: var(--ds-c-fg, light-dark(#555555, #c9c3ba));
+  -webkit-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+}
+.j50body.jm-route-contact-us .contact-address dd .contact-webpage a:hover {
+  color: var(--ds-c-fg, #2f2f2f);
+}

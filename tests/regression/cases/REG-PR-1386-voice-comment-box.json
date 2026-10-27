@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-1386-voice-comment-box",
+  "kind": "feat",
+  "title": "The Browser tab's comment popover and Reply box have the chat box's microphone: the same component through the voice bridge, words live in the box, the box's own Enter after the last phrase, Esc keeps the box open, one box listening at a time",
+  "pr": 1386,
+  "area": "chat/voice",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout (dependencies installed, a Chrome or Playwright Chromium available) run: node --test --test-timeout=180000 packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs packages/ui/tracy-chat-input/test/voice-bridge.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'comment popover: the microphone in the text field, words live in the box, the paperclip and Note for team step aside, Done keeps the words' passes, and the comment box's text ends 'Thêm nút liên hệ dưới tiêu đề.'",
+    "'comment popover: Enter while speaking confirms the last phrase, then presses the box’s Enter once' and 'comment popover: Escape takes the dictated words back out and leaves the box open; the next Escape closes it' pass.",
+    "'two comment boxes: pressing the second microphone finishes the first, its words kept and nothing said' passes.",
+    "'the fork names the same key, event and version' passes."
+  ],
+  "selectors": {
+    "bridge": "window.__TRACY_VOICE_INPUT__ {version: 1, Component}; event tracy:voice-input-changed",
+    "box": "[data-voice-composer] (popover root, thread card compose area); [data-comment-voice] in the text field",
+    "fork": "vendor/tracy/dsh-better-sidebar/src/client/CommentVoice.tsx textDraft; voice-bridge.ts",
+    "test": "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs (page /comment)"
+  },
+  "evidence": "15/10/2026: voice in the comment popover, flow the same as in the chat box. Real dsh page and e2e screenshots: tasks/evidence/voice-comment-2026-10-15/.",
+  "fence": "VoiceInput.tsx COMPOSER / TEXT_AREA / claimVoice; voice-bridge.mjs publishVoiceInput; the fork's CommentVoice textDraft (revision-checked insertText)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=180000",
+      "packages/ui/tracy-chat-input/test/e2e/voice-input.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-bridge.test.mjs"
+    ],
+    "tests": [
+      "comment popover: the microphone in the text field, words live in the box, the paperclip and Note for team step aside, Done keeps the words",
+      "comment popover: Enter while speaking confirms the last phrase, then presses the box’s Enter once",
+      "comment popover: Escape takes the dictated words back out and leaves the box open; the next Escape closes it",
+      "comment popover: a microphone published after the box was drawn appears in it",
+      "two comment boxes: pressing the second microphone finishes the first, its words kept and nothing said",
+      "the fork names the same key, event and version",
+      "dictation: words appear live in the draft, the language heard is shown, Done keeps them"
+    ]
+  }
+}

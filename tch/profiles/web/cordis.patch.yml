@@ -1,0 +1,39 @@
+# TCH sandbox — dsh 0.1.2-alpha.1 + the Tracy plugin set. Port 51710 (NOT 51700 = the
+# production tunnel).
+#
+# Last layer, runs after every bundle. Only two kinds of thing remain here:
+#   1. values specific to THIS MACHINE (port, webroot path)
+#   2. decisions specific to this deployment (hiding operator screens)
+#
+# No row exists just to "state that a plugin is present" any more. Plugin identity is now owned
+# by @tracy/dsh-cowork-bundle; repeating `name:` here builds a second copy that silently drifts
+# when the bundle changes.
+- id: webserver
+  config:
+    host: 127.0.0.1
+    port: 51710
+
+# ── tracy-webroot-read: the CMS site reading tool ────────────────────────────────────
+# `webroot` points at a real WordPress for testing, so it is a value of THIS MACHINE, not of
+# the bundle: that row lives in `cordis.local.yml` next to this file (git-ignored, ./run.sh
+# loads it with `--patch`). A bare row (no `- insert:`) only EDITS the row the bundle inserted —
+# inserting it again makes a second row with the same id, and dsh REFUSES to boot.
+#
+#   - id: tracy-webroot-read
+#     config:
+#       webroot: /path/to/a/wordpress/webroot
+
+# ── dsh operator screens, not for customers ─────────────────────────────
+#
+# The two PLUGIN pages were turned BACK ON (30/08) — this is the operator's sandbox, and being
+# unable to see the plugin tree in the very sandbox built to inspect it is blinding yourself.
+#
+# ⚠ Do not copy this block as-is into a CUSTOMER profile. There those two pages must be off: they
+# let you install/uninstall plugins, i.e. run arbitrary code in the sidecar. Plugin Market was
+# measured overwriting `package.json` and DROPPING other dependencies twice in one morning.
+- id: ui-brand-official
+  disabled: true
+- id: ui-settings-models
+  disabled: true
+- id: ui-cordis
+  disabled: true

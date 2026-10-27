@@ -1,0 +1,89 @@
+{
+  "color": {
+    "coinbase-blue": {
+      "$value": "#0052ff",
+      "$type": "color",
+      "$description": "Coinbase Blue — Primary CTAs, logos, active states — the core brand identifier."
+    },
+    "interactive-blue": {
+      "$value": "#578bfa",
+      "$type": "color",
+      "$description": "Interactive Blue — Secondary links and interactive elements."
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary page background, text on dark surfaces."
+    },
+    "midnight": {
+      "$value": "#0a0b0d",
+      "$type": "color",
+      "$description": "Midnight — Dark section backgrounds, primary text."
+    },
+    "slate": {
+      "$value": "#5b616",
+      "$type": "color",
+      "$description": "Slate — Body text, secondary headings, footer links."
+    },
+    "ash": {
+      "$value": "#8a919",
+      "$type": "color",
+      "$description": "Ash — Helper text, disabled states, subtle UI text."
+    },
+    "frost": {
+      "$value": "#f7f8f9",
+      "$type": "color",
+      "$description": "Frost — Subtle light backgrounds, like the footer area."
+    },
+    "cloud": {
+      "$value": "#eef0f3",
+      "$type": "color",
+      "$description": "Cloud — Light background dividers or button hover states."
+    },
+    "pewter": {
+      "$value": "#dedfe2",
+      "$type": "color",
+      "$description": "Pewter — Borders between light sections."
+    },
+    "charcoal": {
+      "$value": "#141519",
+      "$type": "color",
+      "$description": "Charcoal — Alternative dark section background surface."
+    },
+    "positive-green": {
+      "$value": "#27ad75",
+      "$type": "color",
+      "$description": "Positive Green — Price increases, success messages."
+    },
+    "negative-red": {
+      "$value": "#f0616d",
+      "$type": "color",
+      "$description": "Negative Red — Price decreases, error messages."
+    }
+  },
+  "font": {
+    "coinbasedisplay": {
+      "$value": "CoinbaseDisplay",
+      "$type": "fontFamily",
+      "$description": "Used exclusively for large, impactful headlines (H1/H2). Its clean, slightly wide geometry gives headlines a declarative, confident presence."
+    },
+    "coinbasesans": {
+      "$value": "CoinbaseSans",
+      "$type": "fontFamily",
+      "$description": "The primary workhorse font for subheadings, buttons, and some body copy. The 600 weight is used for emphasis and smaller headings."
+    },
+    "coinbasetext": {
+      "$value": "CoinbaseText",
+      "$type": "fontFamily",
+      "$description": "Optimized for readability in dense UI and long-form text blocks. Its generous line-height makes paragraphs breathable."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://coinbase.com",
+      "siteName": "Coinbase Spain",
+      "extractedAt": "2026-04-11T17:43:55.835Z",
+      "variant": "compact"
+    }
+  }
+}

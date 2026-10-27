@@ -1,0 +1,109 @@
+{
+  "color": {
+    "sky-signal": {
+      "$value": "#67beff",
+      "$type": "color",
+      "$description": "Sky Signal — Blue action color for filled buttons, selected navigation states, and focused conversion moments"
+    },
+    "electric-iris": {
+      "$value": "#4288ff",
+      "$type": "color",
+      "$description": "Electric Iris — Outlined/ghost action border, inline link accent, focus rings — cooler and slightly deeper than Sky Signal"
+    },
+    "paper-white": {
+      "$value": "#fafbfc",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, primary surface, inverted text on dark bars"
+    },
+    "mist": {
+      "$value": "#f3f7fa",
+      "$type": "color",
+      "$description": "Mist — Subtle band backgrounds, section alternation, elevated surface tint"
+    },
+    "fog": {
+      "$value": "#f2f6fa",
+      "$type": "color",
+      "$description": "Fog — Card surface, soft fill behind product screenshots"
+    },
+    "linen": {
+      "$value": "#e5e8ec",
+      "$type": "color",
+      "$description": "Linen — Hairline dividers, faint borders, disabled surfaces"
+    },
+    "ash": {
+      "$value": "#efefef",
+      "$type": "color",
+      "$description": "Ash — Ghost button background, subtle hover fill"
+    },
+    "inkstone": {
+      "$value": "#292c3d",
+      "$type": "color",
+      "$description": "Inkstone — Primary text, strongest contrast — carries the 200-weight headlines"
+    },
+    "slate": {
+      "$value": "#3e4150",
+      "$type": "color",
+      "$description": "Slate — Body text, secondary headings, dense body copy"
+    },
+    "pewter": {
+      "$value": "#686a76",
+      "$type": "color",
+      "$description": "Pewter — Muted body text, helper text, inactive nav"
+    },
+    "graphite": {
+      "$value": "#7d7e7e",
+      "$type": "color",
+      "$description": "Graphite — Tertiary text, footer links, faint labels"
+    },
+    "silver": {
+      "$value": "#c2c3c8",
+      "$type": "color",
+      "$description": "Silver — Placeholder text, very faint borders, decorative strokes"
+    },
+    "obsidian": {
+      "$value": "#171719",
+      "$type": "color",
+      "$description": "Obsidian — Top announcement bar background, dark surface, inverted text fill"
+    },
+    "midnight": {
+      "$value": "#1e1e20",
+      "$type": "color",
+      "$description": "Midnight — Dark card surface, secondary dark fill"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "pp-neue-montreal": {
+      "$value": "PP Neue Montreal",
+      "$type": "fontFamily",
+      "$description": "Medium cut for UI controls, buttons, nav links, and small labels where the Book weight feels too quiet to anchor interaction"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "System-level fallback and small UI text — nav micro-labels, metadata, the smallest body sizes"
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced face for keyboard hints (the Hold/Space key chips), code, and technical micro-labels"
+    },
+    "ibm-plex-mono": {
+      "$value": "IBM Plex Mono",
+      "$type": "fontFamily",
+      "$description": "IBM Plex Mono — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://withaqua.com",
+      "siteName": "Aqua Voice",
+      "extractedAt": "2026-06-03T18:59:19.477Z",
+      "variant": "compact"
+    }
+  }
+}

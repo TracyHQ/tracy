@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7088d695-362b-4e09-b325-fa8136d4f350",
+  "status": "complete",
+  "name": "Duolingo",
+  "url": "https://styles.refero.design/style/7088d695-362b-4e09-b325-fa8136d4f350",
+  "sourceWebsite": "https://duolingo.com",
+  "extractedAt": "2026-07-03T02:54:54.809Z",
+  "capturedAt": "2026-10-08T05:13:13.596275+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Playful classroom mascot on white paper",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3eef8754-ff17-4c1c-98f8-7f9dc986d01f.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/15d4f4fc-0d36-4f22-bb4c-790b0b2951eb.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/81d97a69-fb9f-4a0a-aeeb-89e3fcc503f6.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b8a0d888-eae3-45f1-9ef1-dc4e56c66aef.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/f4ef9960-b394-465b-b178-11616649a4de.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "49893e524964154191ed70ad58c04c418cd0dc234cbe56066ea4896d59b82778",
+      "bytes": 16277
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "3e9a838a467727a8741b0a2581475662d6ba1e9c749c9b32024b8c3f74ef375d",
+      "bytes": 67297
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0f684ddec400d7146a3e0fae32e2568369f5a04f65529af16460f25a782770ab",
+      "bytes": 13348
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "26fda85c39f2b4542b23fa361c7bf9c493f140da0fd985414633edefcbd61866",
+      "bytes": 8860
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "deb2f9333c3dc6172dd4446c6f5dd8153b2136a99a84ee14ad3216c49b2f2c6c",
+      "bytes": 10514
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "ad3b899ad10bf97e255f1eb929dbe01197f5a72c1be95e284aebbf0e7019b9fd",
+      "bytes": 2825
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "dc85761e30278f739b8fc2bb6ff5a229ec612809a23cfafd04785889ce74e561",
+      "bytes": 585
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "cf7c9ec6fdeeb8620f60447fc223ed4000a3233c1d65a1198d96c05a682cd4d5",
+      "bytes": 602
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a49a248d8041dbed2bc8ca2c3b5df972cedf5e4e8092155e0704d18dc66d7bab",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b091ed1c4d93379ea5ffdcba3d1108bb244f4b1ed0f101f06e40fe85b8fbaa9a",
+      "bytes": 40527
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "548c57ad431c46ef312a2eb7e12607393b2b4e02b7d54e106c4beef03bb1557b",
+      "bytes": 21645
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "0c9042cb877f935d76523199c28efe389c855d6a7c6204d77258c6640db7b8d5",
+      "bytes": 44481
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "da1e02bcdacc29dabcbfce8b3216e0c656c0e93932bbd52859f4e2b426ddbf42",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a556661dba96727151a23616f2124f62ed344e64dcc6bf99e8cfd32c279fc23d",
+      "bytes": 1352
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "fc98252a94aae20cc0490e03b22084ea346351e8430f62305d021b26f89e05b5",
+      "bytes": 1856
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "162e9ba9-7487-4b57-aee8-0bbeadcc586d",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "476fea7c-d578-4625-b9e6-36e95faa6ca4",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "528eb1d4-8508-4dc6-87b4-c7b92d648dac",
+    "7088d695-362b-4e09-b325-fa8136d4f350",
+    "72b85d0a-1ff8-4dd3-b33a-f55aad6df5c9",
+    "79b4ebc4-30f6-45b6-b2d2-922e28e05ca9",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "90b8631c-4e2c-407e-86a3-d2bff456dc93",
+    "9130ad37-bf80-458f-b808-ac0ef6a8d1e9",
+    "95b472c5-fc07-46a8-a11f-c5432e290fcd",
+    "a80507cb-afda-46dd-a2b9-ba91f3a78e78",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b04c379c-7c33-4d69-8882-8d85d7768654",
+    "c03afcbd-96ed-4b7f-8d0a-277fc0042ba7",
+    "c21fd0f0-1375-4094-83e7-0de484940100",
+    "c57ba3f8-1d76-4660-8ba4-48ddce26e759",
+    "dae5e893-ca18-44c3-8f83-358cb52af237",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d"
+  ]
+}

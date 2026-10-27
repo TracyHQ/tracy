@@ -1,0 +1,50 @@
+{
+  "id": "REG-031",
+  "kind": "fix",
+  "title": "Pages tracy-web renders itself answer with hardening headers whose CSP still allows what the page loads, and the lane door POST /auth/otp/start spends the same per-inbox sign-in code budget as POST /login without spending /login's per-address one",
+  "pr": 834,
+  "area": "identity/sign-in",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL unset, run: node --test --test-timeout=30000 apps/tracy-web/test/security-headers.test.mjs apps/tracy-web/test/identity.test.mjs apps/tracy-web/test/lane-doors.test.mjs apps/tracy-web/test/hsts.test.mjs",
+    "S2: Read the pass/fail/skipped counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures, 0 skipped.",
+    "'#805: GET /login answers with every hardening header, in every language' passes: x-frame-options DENY, cache-control no-store, x-content-type-options nosniff, referrer-policy no-referrer, a content-security-policy with frame-ancestors 'none', for each of the eight web languages.",
+    "'#805: every state of the sign-in page is hardened — 400, 401, 429 and the code step' passes.",
+    "'#805: the provider buttons are forms, and the policy lets each one reach its provider' passes: form-action allows the Location of GET /signin/google and GET /signin/github.",
+    "'#805: the device pages keep refusing a frame, and gain the rest — 200, 400, 401, 403' passes.",
+    "'#805: the pages shown on a customer site’s address are hardened and stay framable' passes: no x-frame-options and no frame-ancestors on messagePage and unknownSitePage.",
+    "'#805: the /docs fallback page is hardened; the built documentation is served as it is' passes: a static docs file carries no content-security-policy.",
+    "'#805: the sixth code for one address in an hour is refused, mails nothing and keeps the last code' passes: 429 {code: 'RATE_LIMITED'}, 5 mails, the fifth code still verifies.",
+    "'#805: one host mails more than thirty different inboxes — the lane door is not person-sized' passes: thirty-one lane calls from one address to thirty-one inboxes all answer 200 and mail.",
+    "'#805: /login and the lane door spend ONE per-inbox budget, and separate per-address ones' passes: the sixth code for one inbox is refused through either door; thirty-one lane calls leave /login its thirty for the same address, and /login is refused at its thirty-first.",
+    "'#805: an unsigned, expired or malformed request spends nothing from either budget' passes: 401 and 400 answers, 0 mails, then the full five per inbox and three hundred per host are still available.",
+    "'#805: a rate table the database cannot answer refuses, it does not wave the mail through' passes: 429, 0 mails.",
+    "'#805: with the beta gate on, an over-limit request gets the same quiet answer and queues nothing' passes: nine 200 {ok: true} answers, five enqueues, the stored code untouched.",
+    "Since 11/10/2026 (J1.4, PR 1182) every hsts.test.mjs test passes: on Tracy's own https hostname every answer (a page, a JSON door, a 404, a relayed answer) carries exactly 'strict-transport-security: max-age=31536000' with no includeSubDomains or preload; a customer site hostname, a customer's own domain, the bare site domain and an http stand carry none."
+  ],
+  "selectors": {
+    "headers": "x-frame-options, content-security-policy, cache-control, x-content-type-options, referrer-policy",
+    "pages": "GET /login, POST /login (form), POST /verify (form), GET /signin, POST /signin/approve, GET /invite/:token, GET /:label/team, GET /:label/join, GET /ops/invite/:token, GET /ops, GET /docs/",
+    "door": "POST /auth/otp/start (x-tracy-actor) → 429 {code: 'RATE_LIMITED'}",
+    "function": "apps/tracy-web/src/lib/security-headers.js pageSecurityHeaders, renderedPage; apps/tracy-web/src/lib/login-mail-rate.js loginMailLimiter",
+    "test": "apps/tracy-web/test/security-headers.test.mjs, apps/tracy-web/test/lane-doors.test.mjs, apps/tracy-web/test/identity.test.mjs"
+  },
+  "evidence": "Issue #805: GET /login answered 200 with none of X-Frame-Options, Content-Security-Policy, Cache-Control, X-Content-Type-Options or Referrer-Policy (F-S1-020); six signed POST /auth/otp/start calls for one address answered 200 and mailed six codes, each replacing the last (F-S1-023).",
+  "fence": "The header set placed at each render site (never a middleware, so proxied and static HTML keep their own headers), the policy read from the response and checked against the resources and form targets parsed out of the rendered HTML, and the one limiter instance both mail doors count in before a code exists (shared per-inbox bucket; the lane door's own per-host bucket, never /login's per-address one). In-process routers with the memory identity store: no browser enforces the policy and no PostgreSQL counts the buckets.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=30000",
+      "apps/tracy-web/test/security-headers.test.mjs",
+      "apps/tracy-web/test/identity.test.mjs",
+      "apps/tracy-web/test/lane-doors.test.mjs",
+      "apps/tracy-web/test/hsts.test.mjs"
+    ]
+  }
+}

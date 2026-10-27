@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1540-import-keep-site-contract",
+  "kind": "fix",
+  "title": "Importing a Joomla site built from a quickstart keeps the one contract its params name: the slim package carries the version whose files the site serves, and a still-missing contract is named contract_unavailable",
+  "pr": 1540,
+  "area": "import/joomla",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/site/tracy-add-site/test/slim-package.test.mjs packages/site/tracy-add-site/test/import-gates.test.mjs"
+  ],
+  "expect": [
+    "S1: every test passes; a Tracy Business site under a 2 MB limit whose served template.css matches version 1.2.2 is sent a package under 2 MB holding exactly tracy-business/j6/1.2.2 and ends ok; a quickstart naming another contract keeps both; a site with no matching template keeps none; a contract still missing after the install ends install_failed with check contract_unavailable and its own sentence"
+  ],
+  "selectors": {
+    "host": "tracy-add-site joomla.ts installCowork contractsToKeep, slim-package.ts contractCandidates probePaths pickContracts packageForImport"
+  },
+  "evidence": "tasks/evidence/import-keep-site-contract/",
+  "fence": "An import never leaves a quickstart site's Claude Cowork without the contract its params name, and never sends a 2 MB host every version of a template",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/site/tracy-add-site/test/slim-package.test.mjs",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs"
+    ]
+  }
+}

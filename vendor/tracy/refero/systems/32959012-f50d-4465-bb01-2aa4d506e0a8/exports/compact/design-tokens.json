@@ -1,0 +1,64 @@
+{
+  "color": {
+    "netflix-red": {
+      "$value": "#e50914",
+      "$type": "color",
+      "$description": "Netflix Red — Brand logo, primary CTAs, active indicators — the single, powerful accent that drives action and defines identity."
+    },
+    "feature-card-gradient": {
+      "$value": "#1d153f",
+      "$type": "color",
+      "$description": "Feature Card Gradient — Background for secondary feature cards, adding a subtle, deep-space dimensionality without using shadows."
+    },
+    "deep-space": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Deep Space — Primary page and section backgrounds, creating a pure black canvas for content."
+    },
+    "graphite": {
+      "$value": "#2d2d2d",
+      "$type": "color",
+      "$description": "Graphite — Subtle background surfaces, component backgrounds."
+    },
+    "charcoal": {
+      "$value": "#414141",
+      "$type": "color",
+      "$description": "Charcoal — Component backgrounds, inactive elements."
+    },
+    "slate": {
+      "$value": "#5a5a5a",
+      "$type": "color",
+      "$description": "Slate — Borders on inputs and interactive elements."
+    },
+    "ash": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Ash — Placeholder text in input fields."
+    },
+    "silver": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Silver — Footer links and secondary, non-critical body copy."
+    },
+    "chalk-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Chalk White — All primary headings, body text, and icon fills."
+    }
+  },
+  "font": {
+    "netflix-sans": {
+      "$value": "Netflix Sans",
+      "$type": "fontFamily",
+      "$description": "The singular typographic voice of the brand. Its slightly condensed and geometric form scales from 13px body copy to massive 56px+ headlines, delivering information with clarity and confidence."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://netflix.com",
+      "siteName": "Netflix Spain",
+      "extractedAt": "2026-04-11T17:50:41.173Z",
+      "variant": "compact"
+    }
+  }
+}

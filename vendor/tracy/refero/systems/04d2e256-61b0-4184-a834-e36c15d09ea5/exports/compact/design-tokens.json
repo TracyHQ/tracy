@@ -1,0 +1,59 @@
+{
+  "color": {
+    "the-green": {
+      "$value": "#027b49",
+      "$type": "color",
+      "$description": "The Green — Full-bleed identity block for The Green property and any place or section it owns — deep forest green reads as architectural paint, not decoration"
+    },
+    "the-pink": {
+      "$value": "#f19ec8",
+      "$type": "color",
+      "$description": "The Pink — Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    },
+    "the-red": {
+      "$value": "#fa4d43",
+      "$type": "color",
+      "$description": "The Red — Full-bleed identity block and dramatic section background — vermillion red carries the most visual weight and anchors expanded menu states and signature moments"
+    },
+    "the-yellow": {
+      "$value": "#fbb833",
+      "$type": "color",
+      "$description": "The Yellow — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content"
+    },
+    "concrete": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Concrete — Page canvas and primary surface — the light gray ground every screen sits on, treated as a material (concrete, drywall) rather than a neutral"
+    },
+    "iron": {
+      "$value": "#1f1f1f",
+      "$type": "color",
+      "$description": "Iron — Primary text, pill button fills, and most structural borders — near-black rather than pure black, softer on the concrete canvas while keeping max contrast"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Hairline borders, icon strokes, and occasional deep accents where maximum bite is needed against the colored blocks"
+    }
+  },
+  "font": {
+    "kh-teka": {
+      "$value": "KH Teka",
+      "$type": "fontFamily",
+      "$description": "Primary display and heading face — the entire brand voice. Custom condensed sans set at 215px for the hero with letter-spacing -0.06em and line-height 0.70 so descenders kiss the next line and the word reads as a single architectural mass. Same family drops to 60px and 26px for sub-moments and 15–18px for in-line labels, always retaining negative tracking. This single family does every visible word on the site."
+    },
+    "system-sans-serif": {
+      "$value": "System sans-serif",
+      "$type": "fontFamily",
+      "$description": "Utility micro-copy only — availability text, small annotations, fine print. Used sparingly so KH Teka remains the brand voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://the1.amsterdam",
+      "siteName": "The1",
+      "extractedAt": "2026-06-03T19:28:42.221Z",
+      "variant": "compact"
+    }
+  }
+}

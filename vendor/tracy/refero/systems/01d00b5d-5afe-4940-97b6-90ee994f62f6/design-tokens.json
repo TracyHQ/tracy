@@ -1,0 +1,384 @@
+{
+  "color": {
+    "gallery-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Gallery Black — Dark page bands, navigation overlays, menu surfaces, and primary text"
+    },
+    "paper-cream": {
+      "$value": "#fbfaf6",
+      "$type": "color",
+      "$description": "Paper Cream — Primary canvas, light cards, reversed display type, navigation text, and hairline outlined controls"
+    },
+    "ink-charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Ink Charcoal — Text on pale utility controls and understated dark labels"
+    },
+    "mist-gray": {
+      "$value": "#e3e3e9",
+      "$type": "color",
+      "$description": "Mist Gray — Pale circular utility-control fills"
+    },
+    "input-ash": {
+      "$value": "#dadbdd",
+      "$type": "color",
+      "$description": "Input Ash — Form-field divider and border lines"
+    },
+    "card-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Card White — Portfolio tile and card surface within the Paper Cream canvas"
+    },
+    "azione-rust": {
+      "$value": "#813413",
+      "$type": "color",
+      "$description": "Azione Rust — Large editorial copy panels and branded content fields — an earthy counterpoint to cool campaign photography"
+    }
+  },
+  "font": {
+    "pp-editorial-old": {
+      "$value": "PP Editorial Old",
+      "$type": "fontFamily",
+      "$description": "Display headlines, oversized navigation title, client-name marquee, and prominent contact links. The unbolded high-contrast serif makes 72–100px statements feel like magazine typography rather than advertising sans headlines."
+    },
+    "saans-trial": {
+      "$value": "Saans TRIAL",
+      "$type": "fontFamily",
+      "$description": "Short hero positioning lines, editorial body copy, and form inputs. Its straightforward sans construction keeps the expressive PP Editorial Old from overtaking informational text."
+    },
+    "favorit-mono": {
+      "$value": "Favorit Mono",
+      "$type": "fontFamily",
+      "$description": "Uppercase navigation, buttons, service links, labels, and footer metadata. At 14px it uses 0.42px tracking, creating a compact utilitarian contrast against the ornamental serif."
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "Accessibility utility text and the thin close control."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Favorit Mono",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Favorit Mono",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Favorit Mono",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Favorit Mono",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Favorit Mono",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "system-ui",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "PP Editorial Old",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "system-ui",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Favorit Mono",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "base-5": {
+      "$value": {
+        "fontFamily": "Favorit Mono",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-5 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Saans TRIAL",
+        "fontSize": "19px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 19px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Saans TRIAL",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Saans TRIAL",
+        "fontSize": "28px",
+        "fontWeight": 400,
+        "lineHeight": 1.1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 28px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "PP Editorial Old",
+        "fontSize": "40px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 40px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "PP Editorial Old",
+        "fontSize": "72px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 72px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "PP Editorial Old",
+        "fontSize": "78px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 78px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "PP Editorial Old",
+        "fontSize": "100px",
+        "fontWeight": 400,
+        "lineHeight": 1.11,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 100px"
+    }
+  },
+  "spacing": {
+    "5": {
+      "$value": "5px",
+      "$type": "dimension",
+      "$description": "Spacing 5px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "10": {
+      "$value": "10px",
+      "$type": "dimension",
+      "$description": "Spacing 10px"
+    },
+    "11": {
+      "$value": "11px",
+      "$type": "dimension",
+      "$description": "Spacing 11px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "20": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Spacing 20px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "28": {
+      "$value": "28px",
+      "$type": "dimension",
+      "$description": "Spacing 28px"
+    },
+    "30": {
+      "$value": "30px",
+      "$type": "dimension",
+      "$description": "Spacing 30px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "50": {
+      "$value": "50px",
+      "$type": "dimension",
+      "$description": "Spacing 50px"
+    },
+    "60": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Spacing 60px"
+    }
+  },
+  "radius": {
+    "md": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "3xl": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "full": {
+      "$value": "1000px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "surface": {
+    "paper-canvas": {
+      "$value": "#fbfaf6",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page background and light content field."
+    },
+    "card-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 1: Portfolio tile surface."
+    },
+    "mist-utility-surface": {
+      "$value": "#e3e3e9",
+      "$type": "color",
+      "$description": "Surface level 2: Subtle circular utility-control fill."
+    },
+    "gallery-black-field": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Surface level 3: Navigation, footer, and dark overlay surface."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://azionepr.com",
+      "siteName": "Azione",
+      "extractedAt": "2026-09-20T19:25:37.974Z",
+      "variant": "extended"
+    }
+  }
+}

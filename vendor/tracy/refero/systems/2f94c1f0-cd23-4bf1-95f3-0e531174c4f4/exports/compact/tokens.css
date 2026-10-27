@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-wheat-cream: #e5dccd;
+  --color-harvest-copper: #ab5700;
+  --color-citron-beam: #e8e359;
+  --color-morning-glory: #7997ff;
+  --color-amber-glow: #d99623;
+  --color-forest-floor: #214534;
+  --color-deep-moss: #103d26;
+  --color-olive-branch: #568037;
+  --color-slate-bloom: #3d549c;
+  --color-coral-petal: #e99686;
+
+  /* Typography — Font Families */
+  --font-poppins: 'Poppins', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-parafina: 'Parafina', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-exposuretrial: 'ExposureTrial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gtstandard-m: 'GTStandard-M', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-itcavantgardegothicmedium: 'ITC_Avant_Garde_Gothic_Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

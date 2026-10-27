@@ -1,0 +1,346 @@
+{
+  "dos": [
+    "Set display headlines at 80–96px Instrument Sans weight 400 with line-height 0.75–0.92 and tracking between -2.32 and -3.17px — never let display text breathe loosely",
+    "Use 0px border-radius on every component — cards, buttons, badges, inputs are sharp rectangles, not rounded shapes",
+    "Apply uppercase Geist Mono 12px with +0.54px tracking for all nav links, button labels, and badge text — this is the system's typeset signature",
+    "Keep the canvas on #fffcf2 ivory; use #f0ecdf sandstone for alternating bands and #d0cec6 pebble for all hairline borders",
+    "Reserve honey yellow #f7cf49 for announcement bars, highlight badges, and one decorative block per section — never fill large surfaces",
+    "Use Instrument Sans at the full size range (14–96px) within a single composition; the extreme jumps create the editorial rhythm",
+    "Pair text in #141414 obsidian against #fffcf2 canvas for 17.9:1 AAA contrast — let body text live in #545454 graphite for hierarchy"
+  ],
+  "donts": [
+    "Never apply border-radius — this system is defined by its sharp, paper-like edges; rounded corners break the editorial stamp metaphor",
+    "Don't use #f7cf49 for body text or large fills — it loses contrast against cream; reserve it for small accent surfaces and borders",
+    "Avoid drop shadows or box-shadow elevation — depth comes from tonal shifts in the cream scale, never from blur effects",
+    "Don't introduce new accent hues beyond honey yellow, burnt umber, and powder blue — the 3% colorfulness budget is deliberate",
+    "Never set Instrument Sans body text above 20px or below 14px; mid-range sizes are reserved for headings and subheadings",
+    "Don't use centered text in body paragraphs — only the hero headline and section headings center; body stays left-aligned",
+    "Avoid tight letter-spacing on body text; the aggressive negative tracking applies only to display sizes 32px and above"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fffcf2",
+      "name": "Ivory Page",
+      "role": "Primary canvas — page background, card surfaces, light section bands",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0ecdf",
+      "name": "Sandstone",
+      "role": "Secondary surface — alternating bands, section dividers, subtle card fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d0cec6",
+      "name": "Pebble Border",
+      "role": "Hairline borders, button outlines, nav dividers, card edges",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a19c8c",
+      "name": "Driftwood",
+      "role": "Muted decorative borders and tonal accents where a softer line is needed",
+      "group": "neutral"
+    },
+    {
+      "hex": "#68655b",
+      "name": "Stone Mid",
+      "role": "Mid-neutral text, icon strokes, secondary borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#545454",
+      "name": "Graphite",
+      "role": "Body text, link borders, icon color — the workhorse neutral for readable content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#222222",
+      "name": "Charcoal",
+      "role": "Heading text, emphasized body copy, dark surface text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#141414",
+      "name": "Obsidian",
+      "role": "Primary action fill, strongest text, dominant border color — the visual anchor",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Jet Black",
+      "role": "SVG fills, icon strokes, maximum contrast accents",
+      "group": "neutral"
+    },
+    {
+      "hex": "#393737",
+      "name": "Smoke",
+      "role": "Decorative SVG fills and strokes — vector artwork on dark sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f7cf49",
+      "name": "Honey Yellow",
+      "role": "Primary brand accent — announcement bar, highlight badges, decorative blocks, the signature warm punctuation against cream",
+      "group": "brand"
+    },
+    {
+      "hex": "#492812",
+      "name": "Burnt Umber",
+      "role": "Dark warm accent — button fills in warm contexts, icon borders, tertiary buttons needing chromatic weight",
+      "group": "brand"
+    },
+    {
+      "hex": "#a9e1ff",
+      "name": "Powder Blue",
+      "role": "Cool accent — secondary CTA fills, info badges, test card backgrounds, the soft counterpoint to honey yellow",
+      "group": "brand"
+    },
+    {
+      "hex": "#8a8883",
+      "name": "Ash",
+      "role": "Subtle border accent, near-gray for dividers that need to recede",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered container with no full-bleed exception for colored bands. Hero is centered text-stack with a 96px headline and 560px-wide subtext, no hero image. The page alternates between cream (#fffcf2) and colored full-bleed sections — powder blue for testimonials, dark (#141414) for the footer. Product showcases break the container edge: device mockups sit on photographic backgrounds (wood grain, lined paper) that span full viewport width. Section rhythm is 64-80px vertical gaps with no visible dividers between bands. Navigation is a single fixed top bar with cream background and hairline bottom border. Content arrangement is mostly centered stacks and symmetric two-column splits; the tab bar (Meeting prep, Note-taking, etc.) is a full-width row of equal cells reading as a printed table. Card grids (integrations) use 12-column responsive layout. Overall density is spacious — generous whitespace, one idea per section, breathing room between headline and supporting content.",
+  "imagery": "Product photography dominates: real device mockups (phones, laptops) photographed on physical surfaces like wooden desks and lined paper, never on plain white. The wooden-grain hero background and notebook-paper footer texture ground the brand in tactile, analog materials. Photography is warm-toned, slightly desaturated, and always full-bleed. Small decorative color blocks (yellow squares, blue squares, black squares) appear as graphic stamps in section corners — abstract geometric accents that echo a print layout. Integration logos are the only flat-graphic element, displayed in a clean grid without frames. No illustrations, no 3D renders, no stock photography of people.",
+  "similar": [
+    {
+      "why": "Same warm cream-and-black editorial language with sharp corners, oversized centered headlines, and a single yellow accent appearing in small stamped accents rather than large fills",
+      "business": "Notion"
+    },
+    {
+      "why": "Shared preference for tight line-heights at display sizes and a near-achromatic palette with one chromatic accent; both use sharp-rectangle buttons with hairline borders",
+      "business": "Linear"
+    },
+    {
+      "why": "Cream-toned canvas, heavy black serif-adjacent sans display type, and a product surface that feels like reading a printed journal rather than using software",
+      "business": "Substack"
+    },
+    {
+      "why": "Notion-adjacent productivity aesthetic with warm neutrals, instrument-style sans, and flat surfaces defined by borders rather than shadows",
+      "business": "Cron"
+    },
+    {
+      "why": "Similar approach to hairlines and sharp geometry, with a comparable use of a single warm accent hue against a near-white canvas",
+      "business": "Stripe"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "0px",
+      "cards": "0px",
+      "badges": "0px",
+      "inputs": "0px",
+      "buttons": "0px"
+    },
+    "elementGap": "16-24px",
+    "sectionGap": "64-80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#fffcf2",
+      "name": "Ivory Page",
+      "level": 1,
+      "purpose": "Default page canvas — all editorial and product sections"
+    },
+    {
+      "hex": "#f0ecdf",
+      "name": "Sandstone Band",
+      "level": 2,
+      "purpose": "Alternating section background, subtle tonal shift within the cream scale"
+    },
+    {
+      "hex": "#a9e1ff",
+      "name": "Blue Feature Section",
+      "level": 3,
+      "purpose": "Full-width colored band for testimonials and feature highlights"
+    },
+    {
+      "hex": "#f7cf49",
+      "name": "Honey Accent",
+      "level": 4,
+      "purpose": "Saturated accent surface for announcement bars and highlight blocks"
+    },
+    {
+      "hex": "#141414",
+      "name": "Dark Footer",
+      "level": 5,
+      "purpose": "Inverted dark surface for footer and terminal sections"
+    }
+  ],
+  "northStar": "warm cream notebook with stamped yellow ink",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.54
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.09
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.71,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.35,
+      "letterSpacing": -0.18
+    },
+    {
+      "role": "heading-sm",
+      "size": 26,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.52
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.15,
+      "letterSpacing": -0.64
+    },
+    {
+      "role": "heading-lg",
+      "size": 44,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.88
+    },
+    {
+      "role": "heading-xl",
+      "size": 56,
+      "lineHeight": 1.05,
+      "letterSpacing": -1.12
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 0.92,
+      "letterSpacing": -2.32
+    },
+    {
+      "role": "display-lg",
+      "size": 96,
+      "lineHeight": 0.75,
+      "letterSpacing": -3.17
+    }
+  ],
+  "components": [
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page product announcement strip",
+      "description": "Full-width #f7cf49 honey yellow band. Left-aligned headline in Instrument Sans 14px medium #141414. Right-aligned uppercase Geist Mono 12px #141414 link with arrow. No padding above/below bar — sits flush against viewport edges with 12-16px internal padding. Sharp corners, no border."
+    },
+    {
+      "name": "Primary Navigation",
+      "role": "Site-wide header navigation",
+      "description": "Cream (#fffcf2) background, 1px #d0cec6 bottom border. Logo left (Quin mark + wordmark). Nav links center-right in uppercase Geist Mono 12px weight 400 with 0.54px tracking, color #545454. Right cluster: 'LOGIN' as text link and 'GET STARTED' as a 1px #d0cec6 outlined button with uppercase Geist Mono 12px label, 24px horizontal padding, 12px vertical padding, no radius."
+    },
+    {
+      "name": "Hero Headline",
+      "role": "Above-the-fold editorial headline",
+      "description": "Centered Instrument Sans 96px weight 400 in #141414, line-height 0.75, letter-spacing -3.17px. The extreme compression and whisper-weight at display size creates a poster-like authority. Subtext below in Instrument Sans 16px weight 400 #545454 at 1.71 line-height, max-width ~560px, centered."
+    },
+    {
+      "name": "Feature Tab Bar",
+      "role": "Horizontal tab selector for product features",
+      "description": "Row of equal-width tab cells separated by 1px #d0cec6 vertical borders. Active tab filled with honey yellow #f7cf49 background and Obsidian #141414 text. Inactive tabs: cream background, #545454 text. Labels in Instrument Sans 16px weight 500. No radius — tabs read as printed table cells."
+    },
+    {
+      "name": "Product Screenshot Frame",
+      "role": "Device mockup showcase on textured background",
+      "description": "Full-bleed image section with wood-grain photographic background. Phone or laptop mockup centered, screen showing app UI. Below the device, a floating pill-shaped caption in cream #fffcf2 with #141414 text, Instrument Sans 16px, no border. Decorative color blocks (small yellow and blue squares) anchor corners as graphic stamps."
+    },
+    {
+      "name": "Integration Logo Grid",
+      "role": "Partner/integration logo display",
+      "description": "Full-width grid of logo tiles on cream background, separated by 1px #f0ecdf borders. Each cell ~120px square, centered logo, no padding beyond internal centering. 12-column responsive grid collapsing to 6 then 4 columns. Section heading centered above in Instrument Sans 32px #141414."
+    },
+    {
+      "name": "Testimonial Block",
+      "role": "Customer quote on colored background",
+      "description": "Full-width section with powder blue #a9e1ff background. Quote text left-aligned in Instrument Sans 40px weight 400 #545454 (or #141414) at tight line-height. Attribution below in Instrument Sans 16px #545454. Product screenshot on right side with slight rotation for dynamism."
+    },
+    {
+      "name": "Stat Block",
+      "role": "Large numerical proof point",
+      "description": "Two-column stat display on cream or colored background. Oversized Instrument Sans 56-80px weight 400 #141414 for the number (e.g. '40+', '5x'). Caption below in Instrument Sans 16px weight 400 #545454. No dividers between number and label — relies on size contrast."
+    },
+    {
+      "name": "Filled Dark Button",
+      "role": "Primary action button (dark filled)",
+      "description": "1px #141414 border, #141414 fill, cream #fffcf2 text. Instrument Sans 16px weight 500. Padding 24px horizontal, 12-16px vertical. No radius — sharp rectangular stamp. Hover inverts: cream fill, dark text. Uppercase Geist Mono 12px label variant for nav CTAs."
+    },
+    {
+      "name": "Outlined Button",
+      "role": "Secondary action button (hairline outline)",
+      "description": "1px #d0cec6 border on #fffcf2 fill, #141414 text. Same dimensions and typography as filled button. No fill change on hover — border darkens to #141414. Used for 'GET DEMO' and 'LOGIN' actions."
+    },
+    {
+      "name": "CTA Pill Button (Blue)",
+      "role": "Tertiary accent action button",
+      "description": "Powder blue #a9e1ff fill, #141414 text, no border. Instrument Sans 16px weight 500, uppercase Geist Mono 12px variant. Same sharp-rectangle geometry as all other buttons. Used for 'TRY QUIN FREE' and in-product actions like 'Join meeting'."
+    },
+    {
+      "name": "Badge / Tag",
+      "role": "Small status or category label",
+      "description": "No border, no radius. Uppercase Geist Mono 12px weight 400 with 0.54-1.2px tracking. Background fills: #f7cf49 (honey), #a9e1ff (blue), or #eeeeee (neutral). Text in #141414. Padding 6-8px vertical, 8-12px horizontal. Sits inline with content as a typeset label."
+    },
+    {
+      "name": "Footer",
+      "role": "Site footer with dark background",
+      "description": "Dark section (#141414 or near-black) with cream #fffcf2 text. Column layout for link groups. Instrument Sans 14-16px for links, #fffcf2 text. Small print and copyright in Instrument Sans 12px #545454 or #d0cec6 on dark. Logo mark repeated in cream."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface for all editorial and UI text — display headlines compress to 0.75 with -3.17em tracking, body sits at 1.5–1.71 with relaxed tracking",
+      "sizes": "14, 16, 20, 26, 28, 32, 40, 44, 56, 80, 96",
+      "family": "Instrument Sans",
+      "weight": "400, 500, 600",
+      "lineHeight": "0.75–1.71",
+      "substitute": "Inter, DM Sans",
+      "letterSpacing": "-3.17px at 96px, -2.32px at 80px, -1.12px at 56px, -0.88px at 44px, -0.64px at 32px, -0.52px at 26px, -0.18px at 20px, -0.14px at 16px",
+      "fontFeatureSettings": "\"kern\", \"ss01\", \"ss03\", \"ss05\", \"ss07\", \"ss08\", \"ss12\""
+    },
+    {
+      "role": "Monospaced label face for nav items, buttons, badges, and tags — set uppercase with wide positive tracking to read as typeset stamps",
+      "sizes": "12, 14, 16, 26",
+      "family": "Geist Mono",
+      "weight": "300, 400",
+      "lineHeight": "1.0–2.0",
+      "substitute": "JetBrains Mono, IBM Plex Mono",
+      "letterSpacing": "0.92px at 16px, 0.54px at 12px, up to 0.2em on tag labels",
+      "fontFeatureSettings": "\"kern\", \"ss01\", \"ss03\", \"ss05\", \"ss07\", \"ss08\", \"ss12\""
+    },
+    {
+      "role": "Icon glyphs rendered at heavy weight — sharp geometric forms that match the editorial type system",
+      "sizes": "26, 40",
+      "family": "Font Awesome 7 Sharp",
+      "weight": "900",
+      "lineHeight": "1.0",
+      "substitute": "Lucide, Phosphor",
+      "letterSpacing": "0.0460em"
+    }
+  ],
+  "description": "Quin reads like a warm, paper-textured productivity journal — cream canvases, heavy black type, and two accent hues (honey yellow and powder blue) that feel hand-stamped rather than digitally applied. The system is overwhelmingly achromatic; warmth comes from the ivory page color (#fffcf2) and a sandstone neutral palette, not from hue. Hierarchy is built through Instrument Sans at extreme size jumps — 96px display headlines compress to 0.75 line-height with aggressive negative tracking, while body text breathes at 1.5–1.71. Every interface surface sits flat or uses a single hairline border; elevation is implied by tonal shifts in the cream scale, never by drop shadows. Geist Mono with wide positive tracking labels every interactive element, turning nav items, buttons, and badges into typeset stamps rather than chrome.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #141414 (obsidian)\n- background: #fffcf2 (ivory)\n- border: #d0cec6 (pebble)\n- accent: #f7cf49 (honey yellow)\n- secondary accent: #a9e1ff (powder blue)\n- primary action: #f7cf49 (filled action)\n\n**Example Component Prompts**\n\n1. Create a hero section: #fffcf2 background, no padding above nav. Centered headline 'Meet your dream assistant' at 96px Instrument Sans weight 400, #141414, line-height 0.75, letter-spacing -3.17px. Subtext at 16px Instrument Sans weight 400, #545454, max-width 560px, centered, line-height 1.71. No buttons in hero — let the headline carry it.\n\n2. Create a feature tab bar: full-width row of 7 equal cells on #fffcf2 background, 1px #d0cec6 vertical dividers between cells. Active cell filled #f7cf49 with #141414 text. Inactive cells cream background with #545454 text. Labels in Instrument Sans 16px weight 500. No radius, no shadow.\n\n3. Create a product screenshot frame: full-bleed section with wood-grain photographic background. Phone mockup centered showing app UI. Below the device, a floating caption in #fffcf2 cream with 1px #d0cec6 border, Instrument Sans 16px #141414 text, no radius, 12px 24px padding. Small #f7cf49 and #a9e1ff square stamps in opposing corners as decorative anchors.\n\n4. Create a testimonial block: full-width #a9e1ff powder blue background. Left half: quote in Instrument Sans 40px weight 400, #545454, tight line-height 1.1. Attribution below in Instrument Sans 16px #545454. Right half: laptop product screenshot with slight 3-degree rotation. 80px vertical padding.\n\n5. Create a stat block: two columns on #fffcf2 background. Left: '40+' in Instrument Sans 80px weight 400, #141414, line-height 0.92. Caption 'Hours of admin work offloaded each month' in Instrument Sans 16px #545454 below. No divider, no card frame — relies on size contrast alone."
+    }
+  ],
+  "elevationPhilosophy": "The system deliberately avoids drop shadows. Depth is communicated through a four-step cream scale (#fffcf2 → #f0ecdf → #d0cec6 → #a9e1ff) and hairline 1px borders in #d0cec6. Elevation is tonal, not spatial — cards on cream are implied by a single pixel border, not by blur or offset. This keeps the page feeling like printed paper rather than glass UI."
+}

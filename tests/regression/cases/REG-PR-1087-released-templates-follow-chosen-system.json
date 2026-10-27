@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1087-released-templates-follow-chosen-system",
+  "kind": "feat",
+  "title": "A released JA Joomla quickstart (ja-voyara/j6) and a released JA WordPress quickstart (ja-vega/wp7), restored from their releases, wear four design systems once their stylesheets are tokenized: with no system they compute exactly what the release does, with one the page follows it and no text reads worse than in the template's own look; the next Voyara version built from the release looks the same as the released one, served from its own archive",
+  "pr": 1087,
+  "area": "design/slot",
+  "cms": ["jo", "wp"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: node packages/design/tracy-ds-slot/scripts/audit.mjs.",
+    "S3: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs ja-voyara: the release quickstart/ja-voyara/j6 restored in Docker (fleet image tracy/web-joomla:6-apache-20260923-r1 + mariadb:11), the default snapped, every template stylesheet tokenized with templates/joomla-ja-voyara.json, Moxie, MotherDuck, Toggl Track and Apple worn through the slot module, cleared.",
+    "S4: node packages/design/tracy-ds-slot/scripts/pass-wordpress.mjs ja-vega: quickstart/ja-vega/wp7 restored (tracy/web-wordpress:php8.3-apache-20260923-r1), this tree's tokenized wp-ja-vega.css on it, the same four systems through the theme's variation door, cleared.",
+    "S5: node packages/design/tracy-ds-slot/scripts/release-joomla.mjs quickstart/ja-voyara/j6 builds the next version locally; stand.mjs --from-dir serves it from its own archive; its default page is snapped and compared with S3's snap of the release.",
+    "Cleanup: every stand the script raised is taken down and its work folder removed."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: 'invariants: all hold'.",
+    "S3 and S4, each: 12/12 verdicts; both no-system controls 0 differences against the release; no measured text under 4.5:1 that is worse than the template's own default; at least 60% of the painted page follows every system.",
+    "S5: the next version builds with tokenized stylesheets; served from its own archive, its default page has 0 computed differences and the same pixels as the release at 1440 and 390."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-voyara.json, wordpress-ja-vega.json (palette, kept bands, roles, text kinds)",
+    "tokenized": "var(--ds-c-<role>, <hex>) in templates/ja_voyara/css/*.css and overlays/wp-ja-vega/assets/css/wp-ja-vega.css",
+    "joomla": "#__modules row title 'Tracy design system', module mod_custom, menuid 0; <style id=\"tracy-ds-slot\">"
+  },
+  "evidence": "tasks/evidence/ds-slot-released-2026-10-09/README.md — every carded template measured on 09/10/2026, with screenshots, and the release verification of eight next versions.",
+  "fence": "Two templates of the 35 measured, and one next version. Not covered: the other templates (in the evidence, not re-run here), the build doors that will send a system on the fleet (none yet), publishing (no upload is made).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1087-released-templates-follow-chosen-system.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

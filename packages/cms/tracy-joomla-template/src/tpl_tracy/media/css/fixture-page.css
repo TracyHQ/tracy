@@ -1,0 +1,29 @@
+/* tpl_tracy — the only template stylesheet a fixture page loads.
+ * The page is the design system's own components.html, pixel for pixel as the preview showed it,
+ * so tracy.css, layout.css and sections.css stay out (their element rules would bleed in).
+ * What is left: the document margin the fixture's own body rule expects, no chrome, and a
+ * wrapper that reaches the bottom of the viewport the way a document's canvas does. */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body[data-page='fixture'] .tracy-header,
+body[data-page='fixture'] .tracy-footer,
+body[data-page='fixture'] .tracy-skip,
+body[data-page='fixture'] .tracy-sidebar,
+body[data-page='fixture'] #system-message-container:empty,
+body[data-page='artifact'] .tracy-header,
+body[data-page='artifact'] .tracy-footer,
+body[data-page='artifact'] .tracy-skip,
+body[data-page='artifact'] .tracy-sidebar,
+body[data-page='artifact'] #system-message-container:empty {
+  display: none;
+}
+
+.tracy-fixture,
+.tracy-artifact {
+  min-height: 100vh;
+}

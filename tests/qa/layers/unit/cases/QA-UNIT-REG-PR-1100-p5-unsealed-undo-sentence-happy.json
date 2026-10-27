@@ -1,0 +1,57 @@
+{
+  "id": "QA-UNIT-REG-PR-1100-p5-unsealed-undo-sentence-happy",
+  "itemIds": ["regression:REG-PR-1100-p5-unsealed-undo-sentence"],
+  "requirement": "A turn whose opening seal did not land in time says its start was not recorded, not that it is mixed with another request",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1100-p5-unsealed-undo-sentence.json",
+    "ref": "PR #1100 (fix); fix evidence: Local stand 09/10/2026, dskeepjo.tracy.test turn T4b: Undo refused with SHARED_CHANGE cause unsealed, and the card said \"This request's changes are mixed with another request's\" although no other request was on the site.",
+    "invariant": "S1 exits 0 and every test in run.tests reports ok. reasonWords({code: 'SHARED_CHANGE', cause: 'unsealed'}) reads \"When this request started, Tracy couldn't record the site in time, so it can't tell this request's file changes apart from earlier ones.\" and the card is blocked with Ask Tracy to revert. reasonWords for SHARED_CHANGE with cause apply-id or concurrent still reads \"This request's changes are mixed with another request's, so it can't be undone on its own.\"",
+    "productSources": [
+      "packages/core/tracy-core/src/site-tabs/revert-prompt.ts:236",
+      "packages/ui/tracy-chat-input/src/client/strings.ts:8",
+      "packages/ui/tracy-chat-input/src/client/turn-card.mjs:34",
+      "packages/ui/tracy-chat-input/src/client/turn-undo.mjs:6"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a change shared with another request: one sentence for both causes, and Ask Tracy to revert",
+    "a turn whose start was not recorded in time says so, not that another request is mixed in"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1100-p5-unsealed-undo-sentence"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-chat-input", "tracy-chat-input"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1100-p5-unsealed-undo-sentence",
+    "pr": 1100,
+    "kind": "fix",
+    "area": "site-changes/turn-undo",
+    "file": "tests/regression/cases/REG-PR-1100-p5-unsealed-undo-sentence.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-chat-input/test/turn-card.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a change shared with another request: one sentence for both causes, and Ask Tracy to revert",
+    "a turn whose start was not recorded in time says so, not that another request is mixed in"
+  ],
+  "timeoutS": 600
+}

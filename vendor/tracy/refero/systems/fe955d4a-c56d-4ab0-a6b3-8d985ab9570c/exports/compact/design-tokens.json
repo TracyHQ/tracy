@@ -1,0 +1,114 @@
+{
+  "color": {
+    "broadcast-burgundy": {
+      "$value": "#390a1a",
+      "$type": "color",
+      "$description": "Broadcast Burgundy — Hero backgrounds, primary dark surface — creates the theater-dark immersion that makes coral CTAs read as on-air signals"
+    },
+    "on-air-coral": {
+      "$value": "#f73b3b",
+      "$type": "color",
+      "$description": "On-Air Coral — Primary CTA buttons, active section labels — the single vivid signal against deep burgundy dark"
+    },
+    "hot-take-red": {
+      "$value": "#ff5340",
+      "$type": "color",
+      "$description": "Hot Take Red — Inline text highlights, secondary accent emphasis in body copy"
+    },
+    "plum-mid": {
+      "$value": "#651a39",
+      "$type": "color",
+      "$description": "Plum Mid — Nav hover states, secondary button backgrounds — one step lighter than Broadcast Burgundy for interactive depth"
+    },
+    "deep-violet": {
+      "$value": "#0c0b5f",
+      "$type": "color",
+      "$description": "Deep Violet — Inline links and callout text in light sections — a cool contrast to the otherwise warm palette"
+    },
+    "soft-violet": {
+      "$value": "#8787e0",
+      "$type": "color",
+      "$description": "Soft Violet — Underlord AI feature accent — used on AI chat interface send button"
+    },
+    "pale-peach": {
+      "$value": "#ffe8db",
+      "$type": "color",
+      "$description": "Pale Peach — Card backgrounds for feature cards in warm sections"
+    },
+    "blush-mist": {
+      "$value": "#f1eaed",
+      "$type": "color",
+      "$description": "Blush Mist — Card backgrounds for testimonial and feature content cards in light sections"
+    },
+    "studio-black": {
+      "$value": "#190308",
+      "$type": "color",
+      "$description": "Studio Black — Deepest background layer, nav overlay backgrounds"
+    },
+    "ink-dark": {
+      "$value": "#1a1a1a",
+      "$type": "color",
+      "$description": "Ink Dark — Body text, nav text — used across all surfaces"
+    },
+    "warm-parchment": {
+      "$value": "#faf8f7",
+      "$type": "color",
+      "$description": "Warm Parchment — Light section page backgrounds, button text on dark — deliberately off-white to maintain warmth against burgundy"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Button text on coral CTAs, card surfaces in chat UI"
+    },
+    "dusty-rose": {
+      "$value": "#a28993",
+      "$type": "color",
+      "$description": "Dusty Rose — Secondary body text, de-emphasized labels on dark surfaces"
+    },
+    "border-mauve": {
+      "$value": "#907580",
+      "$type": "color",
+      "$description": "Border Mauve — Card borders, dividers, input borders on dark surfaces"
+    },
+    "fog-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Fog Gray — Borders and dividers on light surfaces, button borders"
+    },
+    "muted-plum": {
+      "$value": "#583f4a",
+      "$type": "color",
+      "$description": "Muted Plum — Mid-dark card backgrounds in dark sections"
+    },
+    "steel-mauve": {
+      "$value": "#d1c7cb",
+      "$type": "color",
+      "$description": "Steel Mauve — Shadows, secondary text on light surfaces"
+    }
+  },
+  "font": {
+    "booton": {
+      "$value": "Booton",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse across UI — nav, body copy, buttons, captions, and feature labels. Weight 600 for subheadings and card titles; weight 400 for body and nav. The custom design gives it a warmth that distinguishes it from commodity grotesques like Inter."
+    },
+    "gamuth-display": {
+      "$value": "Gamuth Display",
+      "$type": "fontFamily",
+      "$description": "Hero and section headings only. A custom editorial serif — the signature choice that marks Descript as a content creation tool, not enterprise SaaS. Weight 400 at 88px is confident restraint; most SaaS hero fonts lean heavy."
+    },
+    "brett": {
+      "$value": "Brett",
+      "$type": "fontFamily",
+      "$description": "Section eyebrow labels only (e.g. 'AI VIDEO EDITOR', 'AI VIDEO AGENT'). Wide 0.04em tracking mimics broadcast chyron or print section slugs — the only place positive letter-spacing appears in the system."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://descript.com",
+      "siteName": "Descript",
+      "extractedAt": "2026-04-11T19:27:40.467Z",
+      "variant": "compact"
+    }
+  }
+}

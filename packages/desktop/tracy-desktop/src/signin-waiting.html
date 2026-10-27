@@ -1,0 +1,64 @@
+<!doctype html>
+<!--
+  Shown in the app window while a desktop sign-in round waits for the browser.
+
+  Static on purpose: it holds no secret and talks to nothing. The main process loads it with the
+  match code, the home origin, the words in the OS language, and — for an email sign-in — the
+  address typed, in the query string (src/waiting-page.js); the script below only copies them into
+  the page as text. The page never learns the round's client secret.
+
+  On a first run (`setup=1`) the same content sits inside the Setup frame of the first-run screen:
+  four steps, Sign in current, the other three locked until sign-in (tasks/todo-desktop-onboard-v2.md,
+  council c: the page stays local so the code and Cancel still show without a network).
+
+  Leaving it — the Cancel link, or any other navigation — cancels the round in the main process.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Finish signing in — Tracy Cowork</title>
+    <link rel="stylesheet" href="signin-waiting.css" />
+  </head>
+  <body>
+    <main id="plain">
+      <div class="content" id="content">
+        <h1 data-t="desktopWait.heading">Finish signing in in your browser</h1>
+        <p id="body" data-t="desktopWait.body">
+          Tracy opened in your browser. Check that it shows the same code as below, then approve.
+          This window continues by itself once you do.
+        </p>
+        <p class="match-label" data-t="desktopWait.matchLabel">The browser page must show this code:</p>
+        <div class="code" id="code" data-t-label="desktopWait.codeLabel" aria-label="Match code"></div>
+        <p class="waiting"><span class="spinner" aria-hidden="true"></span><span data-t="desktopWait.waiting">Waiting for the browser…</span></p>
+        <p><a id="cancel" href="#" data-t="desktopWait.cancel">Cancel</a></p>
+      </div>
+    </main>
+    <div class="setup" id="setup" role="dialog" aria-labelledby="setup-title" hidden>
+      <div class="setup-top">
+        <span class="logo-mark" aria-hidden="true">T</span><span class="logo-name">Tracy Cowork</span>
+        <span class="eyebrow" data-t="onboard.eyebrow">Welcome to Tracy Cowork</span>
+      </div>
+      <div class="columns">
+        <nav class="rail">
+          <div class="rail-head"><span class="rail-title" data-t="onboard.rail">Setup</span><span>0/4</span></div>
+          <div class="rail-row" aria-current="step"><span class="rail-mark">1</span><span data-t="onboard.stepSignIn">Sign in</span></div>
+          <div class="rail-row" aria-disabled="true" data-t-title="onboard.locked"><span class="rail-mark">2</span><span data-t="onboard.stepAi">Pick your AI account</span></div>
+          <div class="rail-row" aria-disabled="true" data-t-title="onboard.locked"><span class="rail-mark">3</span><span data-t="onboard.stepLook">Appearance &amp; language</span></div>
+          <div class="rail-row" aria-disabled="true" data-t-title="onboard.locked"><span class="rail-mark">4</span><span data-t="onboard.stepNotify">Notifications</span></div>
+        </nav>
+        <section class="pane">
+          <h2 id="setup-title" data-t="onboard.stepSignIn">Sign in</h2>
+          <p class="subtitle" data-t="onboard.signInSub">Sign in to Tracy Cowork.</p>
+          <div id="pane-body"></div>
+        </section>
+      </div>
+      <div class="setup-foot"><span data-t="onboard.locked">Sign in first to open the next steps.</span></div>
+    </div>
+    <script src="signin-waiting.js"></script>
+  </body>
+</html>

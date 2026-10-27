@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+  "status": "complete",
+  "name": "Bareis + Nicolaus",
+  "url": "https://styles.refero.design/style/e80c5b4a-fd03-460e-a577-49928a4ab5db",
+  "sourceWebsite": "https://www.bareis-nicolaus.com",
+  "extractedAt": "2026-06-03T18:58:13.400Z",
+  "capturedAt": "2026-10-08T05:18:53.725165+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "White chalk on black slate. A typographic control panel and a full-bleed visual index share one strict monochrome stage, with pill-shaped outlines as the only punctuation.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/089c1591-e148-489d-921d-57c122130df9.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/f0e0d913-2b9b-40ca-b7bb-b3da09065529.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/8096ebaa-e4dd-4fe2-a0d5-4154fac5a71b.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/ee5d583d-706a-47a6-a910-726fa36c26bb.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a718095a-435a-4813-aa24-5603724f71dd.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5aa2da59f821d626aae0f57def3365f0aaea7c0d76759ca0b8db10d41186b010",
+      "bytes": 16130
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "24d3aee1a04e0aaf46b9fa9c50eae2e77b2f07bbeced3c002f8833f3cd083ee3",
+      "bytes": 222539
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a3e73c88c7a881c24bbe9781e9ca6ae8f27b4895b94b8970a078108e0fcb4086",
+      "bytes": 13712
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "54b4ee1f0cf126d42df87393add7537287e68d711a591a2369f5d2c93852f645",
+      "bytes": 4908
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "82d3032d1b55844d5d0204260733373d756149a8d1b4ad02eece46c9e63eba3b",
+      "bytes": 10301
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "2ce0e7b65f1f53feb6bb7577e5993e91089713d868bd10b42e773bd568fa1c4b",
+      "bytes": 2065
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7f55f8649fa0c2858df7d95a3c92a7ef7c6554da3dd868f3b4cfc9481bef9f4a",
+      "bytes": 473
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "ec8658c5efc1827b7dae603e152ff17f8a64b53760cd320a835782aa8e34eb19",
+      "bytes": 490
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "e7a552afe2ca20b41f066bddd7bf0d9664355b255cb42815a5e7cd67f465d347",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "7e07e1c05dec760fff87427cbd2907190e48d5952dc3efc3f813fdc37e4c765c",
+      "bytes": 38508
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "b487271557aec272a896dbfb34cb24b36b65837d65bb0a7a1be8b1700adcccd7",
+      "bytes": 19819
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c88aa25a1488c6670e9bf39326802d741ed741e0fe0f6971e3ab098e0c7bafbd",
+      "bytes": 23672
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c83f3e0696544a46a934143d0c2acac2967d77e0e16b911fd6a246985ce28018",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "b97d8d50b6aa0a73e54cfd9644f126f2a2780cb025fd45c790136cf69a252c74",
+      "bytes": 860
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5a2b8aff3f0cd1e4e63ed842a125ad04ae8134f9f4bf41b860f061eb6af297e6",
+      "bytes": 1283
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "02610b06-d16e-47bd-a1ea-18979a9ed4f5",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36de4683-cce3-4a01-820b-65ef8815747b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "73359194-de93-436e-af53-81d4029f5e7a",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "81a66e75-23af-4525-8a4e-f4a54c2700e7",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "ab1b113a-ed21-4512-acc2-d10c8927c410",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d"
+  ]
+}

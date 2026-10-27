@@ -1,0 +1,23 @@
+---
+/** Page header used by list pages: H1 + lede, optional side image or count. */
+interface Props {
+  title: string
+  lede?: string
+  eyebrow?: string
+  aside?: string
+  class?: string
+}
+const { title, lede, eyebrow, aside, class: className = '' } = Astro.props
+---
+
+<section class:list={["container-site", className || "pb-9 pt-14"]}>
+	<div class="flex items-end justify-between gap-8">
+		<div class="max-w-[44em]">
+			{eyebrow && <div class="eyebrow mb-4">{eyebrow}</div>}
+			<h1 class="h-page mb-5">{title}</h1>
+			{lede && <p class="text-[17.5px] leading-[1.68] text-fg-2">{lede}</p>}
+		</div>
+		{aside && <div class="whitespace-nowrap text-[13.5px] text-fg-meta">{aside}</div>}
+	</div>
+	<slot />
+</section>

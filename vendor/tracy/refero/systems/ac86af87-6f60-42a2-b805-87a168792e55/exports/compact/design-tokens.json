@@ -1,0 +1,44 @@
+{
+  "color": {
+    "signal-orange": {
+      "$value": "#ff4501",
+      "$type": "color",
+      "$description": "Signal Orange — Brand color saturating hero text, navigation borders, section backgrounds, body text accents, and icon strokes — the only chromatic voice in the system; treated as both ink and fill"
+    },
+    "apricot-wash": {
+      "$value": "#ffefe9",
+      "$type": "color",
+      "$description": "Apricot Wash — Tertiary surface — soft peach band at the foot of white sections, footer background, subtle warmth under statement blocks"
+    },
+    "peach-mist": {
+      "$value": "#ffc2a9",
+      "$type": "color",
+      "$description": "Peach Mist — Hairline border accent on the orange field, low-contrast divider where #ff4501 would be too loud"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary canvas and card surface; text-on-orange and image borders"
+    },
+    "carbon-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Ink — SVG illustration fill, icon weight, photographic subjects — black only, never used for body text on white"
+    }
+  },
+  "font": {
+    "neuemontreal": {
+      "$value": "NeueMontreal",
+      "$type": "fontFamily",
+      "$description": "Single family carries the entire system. Weight 100 at 200px size is the signature — whisper-thin display type that becomes monumental through scale alone, not boldness. Weight 400 for body and navigation, weight 700 reserved for statement headlines and emphasis. Line-height compresses to 0.80 on the massive display sizes so the letterforms stack into a solid block."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://firstandforemost.co",
+      "siteName": "Firstandforemost",
+      "extractedAt": "2026-06-03T19:25:20.960Z",
+      "variant": "compact"
+    }
+  }
+}

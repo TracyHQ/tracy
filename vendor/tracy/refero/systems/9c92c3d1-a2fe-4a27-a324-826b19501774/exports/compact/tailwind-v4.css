@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-newsprint-cream: #f7f4ed;
+  --color-paper-white: #ffffff;
+  --color-ink: #242424;
+  --color-body-gray: #333333;
+  --color-button-black: #191919;
+  --color-marginalia-gray: #6b6b6b;
+
+  /* Typography */
+  --font-medium-content-sans-serif-font: 'medium-content-sans-serif-font', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-gt-super: 'GT Super', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-shne: 'Söhne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-charter-georgia-stack: 'Charter / Georgia stack', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-shne-extended: 'Söhne (extended)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sohne: 'sohne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

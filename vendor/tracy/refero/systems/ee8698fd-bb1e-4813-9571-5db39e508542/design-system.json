@@ -1,0 +1,365 @@
+{
+  "dos": [
+    "Use 6px radius for all buttons, inputs, and tags — the small radius is the system's structural signature",
+    "Pair #615fff Violet with white for the logo mark, link text, and active nav states — let it be the only chromatic element on chrome",
+    "Use Geist Mono at 30px weight 600 for any prominent numeric figure in illustrations — this is the hero data treatment",
+    "Build cards with a 1px Hairline (#e4e4e7) border plus the 3-step shadow stack (border + 4px/2px soft drop) — borders carry the weight, shadows whisper",
+    "Keep the page canvas #ffffff; let illustration mockups introduce color internally rather than using colored section backgrounds",
+    "Use the chromatic tag palette (Mint, Amber, Crimson, Sunburst, Ultraviolet, Iris) as small 24–32px badge overlays on cards — never as full-width elements",
+    "Set page max-width to 1280px and maintain 4-column to 2-column gallery grids with 8–12px gaps between cards"
+  ],
+  "donts": [
+    "Do not use colored section backgrounds — the canvas must stay white; color lives inside component cards only",
+    "Do not use heavy drop shadows or glow effects — elevation is a 3-step whisper, not a 10–20px drop",
+    "Do not exceed 30px for headings — this system communicates through compact hierarchy, not scale",
+    "Do not use large radii (32px+) on buttons, inputs, or tags — reserve them for feature-level cards only",
+    "Do not introduce more than one chromatic accent on any single chrome element — the violet is solo, tags are solo",
+    "Do not use #ec003f Crimson, #fe9a00 Amber, or #ffb900 Sunburst for body text or large fills — they are tag/badge-only",
+    "Do not center-align body copy or long descriptions — use left-align with max-width to preserve the gallery rhythm"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#615fff",
+      "name": "Signal Violet",
+      "role": "Logo mark, link text, icon accents, brand-colored borders and fills — the single chromatic anchor that signals the brand across an otherwise achromatic interface",
+      "group": "brand"
+    },
+    {
+      "hex": "#09090b",
+      "name": "Ink",
+      "role": "Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page background, card surface, button surface — the dominant canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e4e4e7",
+      "name": "Hairline",
+      "role": "Dividers, card borders, input borders, subtle structural separation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#52525c",
+      "name": "Graphite",
+      "role": "Secondary body text, descriptions, muted labels, caption text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#848485",
+      "name": "Slate",
+      "role": "Tertiary text, meta labels, inactive nav items, placeholder content",
+      "group": "neutral"
+    },
+    {
+      "hex": "#404040",
+      "name": "Charcoal",
+      "role": "Dark surface for filled buttons and emphasis panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "SVG icon fills, deepest contrast for illustration artwork",
+      "group": "neutral"
+    },
+    {
+      "hex": "#00bc7d",
+      "name": "Mint",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#0d542b",
+      "name": "Forest",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#fe9a00",
+      "name": "Amber",
+      "role": "Yellow supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffb900",
+      "name": "Sunburst",
+      "role": "Yellow supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#e17100",
+      "name": "Rust",
+      "role": "Orange supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#ec003f",
+      "name": "Crimson",
+      "role": "Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#82181a",
+      "name": "Maroon",
+      "role": "Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color",
+      "group": "accent"
+    },
+    {
+      "hex": "#8200db",
+      "name": "Ultraviolet",
+      "role": "Illustration accent violet, tag variant",
+      "group": "accent"
+    },
+    {
+      "hex": "#9810fa",
+      "name": "Iris",
+      "role": "Illustration accent purple, tag variant",
+      "group": "accent"
+    },
+    {
+      "hex": "#155dfc",
+      "name": "Cobalt",
+      "role": "Illustration accent blue, tag variant",
+      "group": "accent"
+    },
+    {
+      "hex": "#1c398e",
+      "name": "Midnight",
+      "role": "Illustration accent indigo, tag variant",
+      "group": "accent"
+    },
+    {
+      "hex": "#dfdfff",
+      "name": "Lilac Mist",
+      "role": "Soft violet surface wash, subtle card highlight",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed white page with a centered 1280px max-width content area. Top navigation is a fixed white bar with logo left, nav links center-right, CTA far right. The page header is a single centered line ('Tailark Pro Illustrations' + muted count) with generous vertical breathing room above and below. The gallery is a responsive grid: 4 columns on wide screens, collapsing to 2–3 columns on narrower viewports, with 8–12px gaps and tall card aspect ratios. Cards are uniform in size creating a strict modular rhythm. No alternating section bands, no hero image, no testimonials — the layout is gallery-grid purity, letting the component mockups be the only visual content. The page reads as a museum wall: white, flat, precise, with the objects (illustration cards) arranged in perfect columns.",
+  "imagery": "The site is a gallery of illustrated UI component mockups — the imagery IS the product. Each card contains a miniature, self-contained UI scene: invoice cards, currency tags, loyalty program cards, chat notifications, spending limit banners. Mockups are rendered in flat 2D with soft shadows, monoline structure, and restrained color washes (soft yellows, mints, lavenders as background fills within mockups). Icons are outlined or filled in Ink at 16–20px. There is no photography, no 3D, no human imagery — the visual language is pure product UI rendered at miniature scale, presented like specimens in a museum case.",
+  "similar": [
+    {
+      "why": "Same ultra-clean white canvas, 1px hairline borders, near-black filled CTAs, and system-sans typography — the documentation site aesthetic applied to a component gallery",
+      "business": "shadcn/ui"
+    },
+    {
+      "why": "Shared Geist Mono for numeric data, minimal radius (6px), and the same white-on-black CTA pattern with hairline separators in navigation",
+      "business": "Vercel Geist"
+    },
+    {
+      "why": "Both present component illustrations in a strict grid gallery with 12–16px card radii, hairline borders, and compact system-sans labels",
+      "business": "Untitled UI"
+    },
+    {
+      "why": "Component-library marketplace layout with centered page titles, 4-column gallery grids, and colored tag overlays on white illustration cards",
+      "business": "Magic UI"
+    },
+    {
+      "why": "Same museum-wall approach to showcasing UI components — white canvas, generous vertical rhythm, illustration mockups as the sole visual content",
+      "business": "Aceternity UI"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "6px",
+      "cards": "12px",
+      "inputs": "6px",
+      "buttons": "6px",
+      "featureCards": "32px",
+      "galleryCards": "16px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "48px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Page Canvas",
+      "level": 0,
+      "purpose": "Dominant page background"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card Surface",
+      "level": 1,
+      "purpose": "Component illustration cards on the gallery — same white as canvas, distinguished only by hairline border and shadow"
+    },
+    {
+      "hex": "#fef3c6",
+      "name": "Soft Wash",
+      "level": 2,
+      "purpose": "Subtle colored backgrounds within illustration mockups"
+    },
+    {
+      "hex": "#b1eede",
+      "name": "Mint Wash",
+      "level": 3,
+      "purpose": "Illustration highlight surface"
+    },
+    {
+      "hex": "#09090b",
+      "name": "Charcoal Button",
+      "level": 4,
+      "purpose": "Filled CTA button surface — only dark surface in the system"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "oklab(0.141 0.00136173 -0.00480696 / 0.05) 0px 0px 0px 1px",
+      "element": "Buttons"
+    },
+    {
+      "style": "oklab(0 0 0 / 0.075) 0px 0px 0px 1px",
+      "element": "Cards (resting)"
+    },
+    {
+      "style": "oklab(0 0 0 / 0.075) 0px 0px 0px 1px, oklab(0 0 0 / 0.065) 0px 4px 6px -1px, oklab(0 0 0 / 0.065) 0px 2px 4px -2px",
+      "element": "Cards (elevated)"
+    },
+    {
+      "style": "oklab(0 0 0 / 0.075) 0px 0px 0px 1px, oklab(0 0 0 / 0.065) 0px 10px 15px -3px, oklab(0 0 0 / 0.065) 0px 4px 6px -4px",
+      "element": "Cards (hover/lifted)"
+    }
+  ],
+  "northStar": "white gallery wall with violet sparks — a curated component museum",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.43
+    },
+    {
+      "role": "heading-sm",
+      "size": 18,
+      "lineHeight": 1.56
+    },
+    {
+      "role": "heading",
+      "size": 20,
+      "lineHeight": 1.63
+    },
+    {
+      "role": "display",
+      "size": 30,
+      "lineHeight": 1.2
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Navigation Bar",
+      "role": "Global site header",
+      "description": "Fixed white bar with 1px Hairline (#e4e4e7) bottom border. Left: violet logo mark + 'Tailark Pro' wordmark. Center-right: search icon, theme toggle, nav links (Illustrations, Blocks, Pages, Pricing, Docs) at 13–14px weight 500 in Graphite (#52525c), active link in Ink. Right: 'Login' text link + 'Get Tailark Pro' filled black CTA at 6px radius, 12px padding vertical, 16px horizontal, white text weight 500."
+    },
+    {
+      "name": "Page Header",
+      "role": "Section title block",
+      "description": "Centered single-line title at 30px weight 600 in Ink, with a large muted count number ('123') at 30px weight 300 in Slate (#848485) appended inline. Generous vertical padding (~48–64px) above and below."
+    },
+    {
+      "name": "Illustration Gallery Card",
+      "role": "Showcase tile for a component illustration",
+      "description": "White card, 12px radius, 1px Hairline border + soft 4px shadow. No explicit padding — the illustration mockup fills the card edge-to-edge with internal whitespace. The illustration mockup is a white mini-canvas (~160–200px square) with its own internal layout, topped or bottomed by a colored tag."
+    },
+    {
+      "name": "Color Tag Badge",
+      "role": "Label overlay on illustration cards",
+      "description": "Small pill or rectangle at 6px radius, positioned at bottom-right or bottom-left of the illustration card. Variants include: Mint (#00bc7d) solid fill white text, Amber (#fe9a00) solid fill white text, Crimson (#ec003f) solid fill white text, Sunburst (#ffb900) solid fill Ink text, Ultraviolet (#8200db) solid fill white text, and a '123' count tag in a light gray. ~6px vertical, 8–10px horizontal padding, 11–12px text weight 500."
+    },
+    {
+      "name": "Filled Dark CTA Button",
+      "role": "Primary action button (Get Tailark Pro)",
+      "description": "Ink (#09090b) background, white text, 6px radius, 12px vertical × 16px horizontal padding, 13–14px weight 500. No visible border — relies on contrast alone. Inner 1px oklab-tinted inset shadow at 5% opacity adds subtle definition."
+    },
+    {
+      "name": "Ghost Text Button",
+      "role": "Secondary navigation action (Login)",
+      "description": "Transparent background, Graphite (#52525c) text, no border, 13–14px weight 500. Sits inline beside the filled CTA without competing."
+    },
+    {
+      "name": "Outline Tag / Pill",
+      "role": "Selectable filter or label tag",
+      "description": "White background, 1px Hairline border, 6px radius, 12px text weight 500 in Ink. Used for category filters or metadata pills."
+    },
+    {
+      "name": "Search Input",
+      "role": "Command/search field in nav",
+      "description": "Transparent or subtle background, 6px radius, 13–14px text. Magnifying glass icon left-aligned. Borderless or with 1px Hairline at 5% opacity inset shadow."
+    },
+    {
+      "name": "Illustration Mini-Mockup — Invoice Card",
+      "role": "Component preview artwork (finance domain)",
+      "description": "White inner card, 12px radius, soft shadow, containing invoice number at 10–12px Geist Mono weight 400, large amount in 30px Geist Mono weight 600 in Ink, and form fields (To, From, Address) with Hairline underlines. Demonstrates a data-heavy finance component."
+    },
+    {
+      "name": "Illustration Mini-Mockup — Invoice Tag Trio",
+      "role": "Component preview artwork (currency tags)",
+      "description": "Three overlapping currency tags (BTC, USD, EURO) fanned at slight rotation. Each tag is white with 12px radius, 1px Hairline border, 2–4px gap between tags, with monospace text in Mint/Forest or Cobalt."
+    },
+    {
+      "name": "Illustration Mini-Mockup — Loyalty Program Card",
+      "role": "Component preview artwork (promotional)",
+      "description": "White card with 'Loyalty program' text, two 'Start Date' mini-cards side by side each with a colored top accent bar (Cobalt, Ultraviolet), 8px radius, 12px padding."
+    },
+    {
+      "name": "Illustration Mini-Mockup — Chat Notification",
+      "role": "Component preview artwork (social/notification)",
+      "description": "White card with avatar circle, name in 14px weight 600 Ink, message body at 12–13px weight 400 Graphite. Mint dot indicator for unread. 12px radius card, 16px padding."
+    },
+    {
+      "name": "Illustration Mini-Mockup — Spending Limit Banner",
+      "role": "Component preview artwork (alert/warning)",
+      "description": "White card with 'Spending Limit' title weight 600, supporting text at 12–13px Graphite, and a progress bar in Cobalt at ~40% fill on a Hairline track. 16px radius."
+    },
+    {
+      "name": "Stat Row",
+      "role": "Metadata display row",
+      "description": "Inline label-value pair: label at 12px Graphite weight 400, value at 12–13px Ink weight 600, separated by ~8px gap. Used in footer/status contexts."
+    }
+  ],
+  "typography": [
+    {
+      "role": "All UI text — body at 14px/1.43, labels and tags at 12px/1.33, navigation at 13–14px, subheadings at 16–18px, and display headings at 30px. The 30px display step is notably restrained — this system does not shout at scale; it informs through compact hierarchy",
+      "sizes": "10px, 11px, 12px, 13px, 14px, 16px, 18px, 20px, 30px",
+      "family": "ui-sans-serif (system: Inter / Geist Sans / SF Pro)",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.20–1.71",
+      "substitute": "Inter, Geist Sans, system-ui",
+      "letterSpacing": "normal throughout"
+    },
+    {
+      "role": "Numeric data displays (invoice amounts, invoice numbers, code labels, metrics) — the monospace brings technical precision to data-heavy illustration cards. 10–12px for inline code/metric tags, 24–30px for prominent figures",
+      "sizes": "10px, 12px, 24px, 30px",
+      "family": "Geist Mono",
+      "weight": "100, 400, 600",
+      "lineHeight": "1.20–1.50",
+      "substitute": "JetBrains Mono, IBM Plex Mono, ui-monospace"
+    },
+    {
+      "role": "Mulish — detected in extracted data but not described by AI",
+      "sizes": "14px",
+      "family": "Mulish",
+      "weight": "400",
+      "lineHeight": "1.43"
+    }
+  ],
+  "description": "Tailark Pro is a gallery-grade component library interface: near-pure white canvas, hairline-bordered cards, and compact system-sans typography that recedes to let illustrated UI snippets breathe. A single vivid violet (#615fff) anchors the brand across icons, links, and the logo mark, while illustration previews introduce controlled chromatic punctuation — greens, oranges, yellows, reds — as colored tags, icons, and accent fills within the mockups. Surfaces are distinguished by 1px oklab-tinted borders and very soft 3–4 step shadows rather than heavy elevation, producing a flat, architecturally precise rhythm. Components are lightweight, monoline, and unembellished — the aesthetic echoes shadcn/ui and Geist-era Tailwind documentation, treating the white page as a museum wall for the components themselves.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text (primary): #09090b\n- text (secondary): #52525c\n- text (tertiary/muted): #848485\n- background: #ffffff\n- border (hairline): #e4e4e7\n- accent (brand): #615fff\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n\n1. **Illustration Gallery Card**: 12px radius, 1px #e4e4e7 border, soft 3-step shadow stack (border + 4px/-1px + 2px/-2px at 6.5% black). White background. 160–200px square inner canvas. No padding — the inner UI mockup fills the card. A colored tag (e.g. Mint #00bc7d fill, white text, 6px radius, 6px/10px padding) sits at bottom-right.\n\n2. **Filled Dark Button**: #09090b background, white text, 6px radius, 12px vertical × 16px horizontal padding, 13px weight 500. No visible border — 1px oklab inset shadow at 5% opacity for subtle definition.\n\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n4. **Page Header**: centered single line, 30px weight 600 #09090b with a large muted count number appended inline at 30px weight 300 #848485. 48–64px vertical padding above and below.\n\n5. **Stat Row**: label at 12px #52525c weight 400, value at 13px #09090b weight 600, separated by 8px gap. Used in footer/status metadata contexts.\n"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "color": {
+    "warm-white": {
+      "$value": "#f0eeeb",
+      "$type": "color",
+      "$description": "Warm White — Page canvas, light-on-dark text, navigation text, pale action fills, and hero overlay copy"
+    },
+    "off-black": {
+      "$value": "#292827",
+      "$type": "color",
+      "$description": "Off Black — Primary text, dark sections, footer surfaces, and dark photographic overlays"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Deepest media treatment and black feature surfaces"
+    },
+    "graphite": {
+      "$value": "#393837",
+      "$type": "color",
+      "$description": "Graphite — Large dark conversion panels and pill-shaped destination controls"
+    },
+    "charcoal": {
+      "$value": "#30302f",
+      "$type": "color",
+      "$description": "Charcoal — Alternate dark filled controls"
+    },
+    "light-gray": {
+      "$value": "#d6d3ce",
+      "$type": "color",
+      "$description": "Light Gray — Utility card surfaces and quiet diagram panels"
+    },
+    "bright-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bright White — Raised media and content-card surfaces"
+    },
+    "middle-gray": {
+      "$value": "#938f89",
+      "$type": "color",
+      "$description": "Middle Gray — Secondary copy, section numerals, and hairline strokes"
+    },
+    "pale-steel": {
+      "$value": "#c2bfba",
+      "$type": "color",
+      "$description": "Pale Steel — Medium-contrast borders, control outlines, and structural separators. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "agility-diatype": {
+      "$value": "Agility Diatype",
+      "$type": "fontFamily",
+      "$description": "Primary interface and editorial family. Use 400-weight display faces at 62px/0.93 with -1.86px tracking and 36px/1.0 with -1.08px tracking; the compressed tracking and light weight make large statements feel engineered rather than promotional. Use 700 at 19px/1.2 for compact feature headings."
+    },
+    "agility-diatype-mono": {
+      "$value": "Agility Diatype Mono",
+      "$type": "fontFamily",
+      "$description": "Technical label family for uppercase eyebrows, compact section identifiers, button labels, and small metadata. Its 700-weight 12px setting with 0.72px or 0.96px tracking turns ordinary labels into equipment markings."
+    },
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "Secondary fallback treatment for isolated badge or utility copy."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.agilityrobotics.com/solutions/digit-5",
+      "siteName": "Digit 5",
+      "extractedAt": "2026-09-20T22:16:21.191Z",
+      "variant": "compact"
+    }
+  }
+}

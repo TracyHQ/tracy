@@ -1,0 +1,760 @@
+/**
+ * adaptSandboxEntry() Tests
+ *
+ * Tests the in-process adapter that converts standard-format plugins
+ * ({ hooks, routes }) into ResolvedPlugin instances compatible with HookPipeline.
+ *
+ */
+
+import { describe, it, expect, vi } from "vitest";
+
+import type { PluginDescriptor } from "../../../src/astro/integration/runtime.js";
+import type { SandboxedPlugin } from "../../../src/plugin-types.js";
+import { adaptSandboxEntry } from "../../../src/plugins/adapt-sandbox-entry.js";
+
+/**
+ * Create a mock hook handler with a loose signature. The strict
+ * mapped type on `SandboxedPlugin` ties handler shape to hook name;
+ * tests building fixtures across many hooks construct each entry as
+ * the union, so a single mock factory returns a handler typed as
+ * `() => Promise<unknown>` and TypeScript widens when assigned.
+ */
+function mockHandler(): () => Promise<void> {
+	return vi.fn(async () => {});
+}
+
+function createDescriptor(overrides?: Partial<PluginDescriptor>): PluginDescriptor {
+	return {
+		id: "test-plugin",
+		version: "1.0.0",
+		entrypoint: "@test/plugin",
+		format: "standard",
+		...overrides,
+	};
+}
+
+describe("adaptSandboxEntry", () => {
+	describe("basic adaptation", () => {
+		it("produces a ResolvedPlugin with correct id and version", () => {
+			const def: SandboxedPlugin = {
+				hooks: {},
+				routes: {},
+			};
+			const descriptor = createDescriptor({ id: "my-plugin", version: "2.1.0" });
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.id).toBe("my-plugin");
+			expect(result.version).toBe("2.1.0");
+		});
+
+		it("adapts an empty definition", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.hooks).toEqual({});
+			expect(result.routes).toEqual({});
+			expect(result.capabilities).toEqual([]);
+			expect(result.allowedHosts).toEqual([]);
+			expect(result.storage).toEqual({});
+		});
+
+		it("carries capabilities from descriptor", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				capabilities: ["content:read", "network:request"],
+			});
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.capabilities).toEqual(["content:read", "network:request"]);
+		});
+
+		it("carries allowedHosts from descriptor", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				allowedHosts: ["api.example.com", "*.cdn.com"],
+			});
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.allowedHosts).toEqual(["api.example.com", "*.cdn.com"]);
+		});
+
+		it("carries storage config from descriptor", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				storage: {
+					events: { indexes: ["timestamp", "type"] },
+					logs: { indexes: ["level"] },
+				},
+			});
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.storage).toEqual({
+				events: { indexes: ["timestamp", "type"] },
+				logs: { indexes: ["level"] },
+			});
+		});
+
+		it("carries admin pages from descriptor", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				adminPages: [{ path: "/settings", label: "Settings", icon: "gear" }],
+			});
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.admin.pages).toEqual([{ path: "/settings", label: "Settings", icon: "gear" }]);
+		});
+
+		it("carries admin widgets from descriptor", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				adminWidgets: [{ id: "status", title: "Status", size: "half" }],
+			});
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.admin.widgets).toEqual([{ id: "status", title: "Status", size: "half" }]);
+		});
+
+		it("carries portable text blocks from descriptor", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				portableTextBlocks: [
+					{
+						type: "faq",
+						label: "FAQ",
+						icon: "list",
+						category: "Sections",
+						fields: [
+							{
+								type: "repeater",
+								action_id: "items",
+								label: "Questions",
+								item_label: "Question",
+								fields: [
+									{ type: "text_input", action_id: "q", label: "Question" },
+									{ type: "text_input", action_id: "a", label: "Answer", multiline: true },
+								],
+							},
+						],
+					},
+				],
+			});
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.admin.portableTextBlocks).toEqual(descriptor.portableTextBlocks);
+		});
+
+		it("carries field widgets from descriptor", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				fieldWidgets: [
+					{
+						name: "color-picker",
+						label: "Color Picker",
+						fieldTypes: ["string"],
+					},
+				],
+			});
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.admin.fieldWidgets).toEqual(descriptor.fieldWidgets);
+		});
+
+		it("leaves admin block config undefined when the descriptor omits it", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.admin.portableTextBlocks).toBeUndefined();
+			expect(result.admin.fieldWidgets).toBeUndefined();
+		});
+	});
+
+	describe("hook adaptation", () => {
+		it("resolves a bare function hook with defaults", () => {
+			const handler = vi.fn();
+			const def: SandboxedPlugin = {
+				hooks: {
+					"content:afterSave": handler,
+				},
+			};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			const hook = result.hooks["content:afterSave"];
+			expect(hook).toBeDefined();
+			expect(hook!.handler).toBe(handler);
+			expect(hook!.priority).toBe(100);
+			expect(hook!.timeout).toBe(5000);
+			expect(hook!.dependencies).toEqual([]);
+			expect(hook!.errorPolicy).toBe("abort");
+			expect(hook!.exclusive).toBe(false);
+			expect(hook!.pluginId).toBe("test-plugin");
+		});
+
+		it("resolves a config object hook with custom settings", () => {
+			const handler = vi.fn();
+			const def: SandboxedPlugin = {
+				hooks: {
+					"content:beforeSave": {
+						handler,
+						priority: 1,
+						timeout: 10000,
+						dependencies: ["other-plugin"],
+						errorPolicy: "continue",
+						exclusive: false,
+					},
+				},
+			};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			const hook = result.hooks["content:beforeSave"];
+			expect(hook).toBeDefined();
+			expect(hook!.handler).toBe(handler);
+			expect(hook!.priority).toBe(1);
+			expect(hook!.timeout).toBe(10000);
+			expect(hook!.dependencies).toEqual(["other-plugin"]);
+			expect(hook!.errorPolicy).toBe("continue");
+		});
+
+		it("resolves multiple hooks", () => {
+			const def: SandboxedPlugin = {
+				hooks: {
+					"content:beforeSave": mockHandler(),
+					"content:afterSave": { handler: mockHandler(), priority: 200 },
+					"content:afterDelete": mockHandler(),
+					"media:afterUpload": mockHandler(),
+					"plugin:install": mockHandler(),
+				},
+			};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.hooks["content:beforeSave"]).toBeDefined();
+			expect(result.hooks["content:afterSave"]).toBeDefined();
+			expect(result.hooks["content:afterDelete"]).toBeDefined();
+			expect(result.hooks["media:afterUpload"]).toBeDefined();
+			expect(result.hooks["plugin:install"]).toBeDefined();
+		});
+
+		it("sets pluginId on all hooks from descriptor", () => {
+			const def: SandboxedPlugin = {
+				hooks: {
+					"content:beforeSave": mockHandler(),
+					"content:afterSave": { handler: mockHandler() },
+				},
+			};
+			const descriptor = createDescriptor({ id: "my-plugin" });
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.hooks["content:beforeSave"]!.pluginId).toBe("my-plugin");
+			expect(result.hooks["content:afterSave"]!.pluginId).toBe("my-plugin");
+		});
+
+		it("resolves exclusive hooks", () => {
+			const handler = vi.fn();
+			const def: SandboxedPlugin = {
+				hooks: {
+					"email:deliver": {
+						handler,
+						exclusive: true,
+					},
+				},
+			};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.hooks["email:deliver"]!.exclusive).toBe(true);
+		});
+
+		it("throws on unknown hook names", () => {
+			const def: SandboxedPlugin = {
+				hooks: {
+					"unknown:hook": mockHandler(),
+				},
+			};
+			const descriptor = createDescriptor();
+
+			expect(() => adaptSandboxEntry(def, descriptor)).toThrow("unknown hook");
+		});
+
+		it("applies default config for partial config objects", () => {
+			const handler = vi.fn();
+			const def: SandboxedPlugin = {
+				hooks: {
+					"content:afterSave": {
+						handler,
+						priority: 200,
+						// timeout, dependencies, errorPolicy, exclusive use defaults
+					},
+				},
+			};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			const hook = result.hooks["content:afterSave"];
+			expect(hook!.priority).toBe(200);
+			expect(hook!.timeout).toBe(5000);
+			expect(hook!.dependencies).toEqual([]);
+			expect(hook!.errorPolicy).toBe("abort");
+			expect(hook!.exclusive).toBe(false);
+		});
+	});
+
+	describe("route adaptation", () => {
+		it("wraps standard two-arg route handler into single-arg RouteContext handler", async () => {
+			const standardHandler = vi.fn().mockResolvedValue({ ok: true });
+
+			const def: SandboxedPlugin = {
+				routes: {
+					status: {
+						handler: standardHandler,
+					},
+				},
+			};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.routes.status).toBeDefined();
+
+			// Simulate calling the adapted handler with a RouteContext-like object
+			const mockCtx = {
+				input: { foo: "bar" },
+				request: new Request("http://localhost/test"),
+				requestMeta: { ip: null, userAgent: null, referer: null, geo: null },
+				ui: { surface: "admin-page", locale: "ar", direction: "rtl" },
+				plugin: { id: "test-plugin", version: "1.0.0" },
+				kv: {} as any,
+				storage: {} as any,
+				log: {} as any,
+				site: { name: "", url: "", locale: "en" },
+				url: (p: string) => p,
+			};
+
+			await result.routes.status.handler(mockCtx as any);
+
+			// Verify the standard handler was called with (routeCtx, pluginCtx)
+			expect(standardHandler).toHaveBeenCalledTimes(1);
+			const [routeCtx, pluginCtx] = standardHandler.mock.calls[0];
+			expect(routeCtx.input).toEqual({ foo: "bar" });
+			expect(routeCtx.request).toBeDefined();
+			expect(routeCtx.requestMeta).toBeDefined();
+			expect(routeCtx.ui).toEqual({ surface: "admin-page", locale: "ar", direction: "rtl" });
+			// pluginCtx should be the stripped PluginContext (without route-specific fields)
+			expect(pluginCtx.plugin.id).toBe("test-plugin");
+			expect(pluginCtx.kv).toBeDefined();
+			expect(pluginCtx.log).toBeDefined();
+			// Route-specific fields should NOT leak into pluginCtx
+			expect(pluginCtx).not.toHaveProperty("input");
+			expect(pluginCtx).not.toHaveProperty("request");
+			expect(pluginCtx).not.toHaveProperty("requestMeta");
+			expect(pluginCtx).not.toHaveProperty("ui");
+		});
+
+		it("calls standard-format (definePlugin) handlers with the public single-arg RouteContext (#2079)", async () => {
+			const singleArgHandler = vi.fn().mockResolvedValue({ ok: true });
+
+			// A definePlugin(...) default export carries `id` — the format
+			// signal. Its route handlers are authored against the public
+			// single-arg RouteContext contract.
+			const def = {
+				id: "standard-plugin",
+				version: "1.0.0",
+				routes: {
+					ping: {
+						handler: singleArgHandler,
+					},
+				},
+			};
+			const descriptor = createDescriptor({ id: "standard-plugin" });
+
+			// eslint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- deliberately passing a definePlugin-shaped definition through the sandbox adapter, as the trusted plugins:[] path does
+			const result = adaptSandboxEntry(def as unknown as SandboxedPlugin, descriptor);
+
+			const request = new Request("http://localhost/ping");
+			const mockCtx = {
+				input: { foo: "bar" },
+				request,
+				requestMeta: { ip: null, userAgent: null, referer: null, geo: null },
+				plugin: { id: "standard-plugin", version: "1.0.0" },
+				kv: {} as any,
+				storage: { things: { query: vi.fn() } } as any,
+				log: {} as any,
+				site: { name: "", url: "", locale: "en" },
+				url: (p: string) => p,
+			};
+
+			await result.routes.ping.handler(mockCtx as any);
+
+			// The handler must receive the FULL RouteContext as its only
+			// argument — including capability surfaces like storage — with
+			// the real WHATWG Request, not the flattened sandbox shape.
+			expect(singleArgHandler).toHaveBeenCalledTimes(1);
+			expect(singleArgHandler.mock.calls[0]).toHaveLength(1);
+			const [ctx] = singleArgHandler.mock.calls[0];
+			expect(ctx).toBe(mockCtx);
+			expect(ctx.storage.things).toBeDefined();
+			expect(ctx.request).toBe(request);
+		});
+
+		it("keeps the two-arg flattened convention for sandbox-format definitions (no id)", async () => {
+			const twoArgHandler = vi.fn().mockResolvedValue({ ok: true });
+
+			const def: SandboxedPlugin = {
+				routes: { ping: { handler: twoArgHandler } },
+			};
+
+			const result = adaptSandboxEntry(def, createDescriptor());
+
+			const mockCtx = {
+				input: {},
+				request: new Request("http://localhost/ping", { headers: { "x-demo": "1" } }),
+				requestMeta: { ip: null, userAgent: null, referer: null, geo: null },
+				plugin: { id: "test-plugin", version: "1.0.0" },
+				kv: {} as any,
+				storage: {} as any,
+				log: {} as any,
+				site: { name: "", url: "", locale: "en" },
+				url: (p: string) => p,
+			};
+
+			await result.routes.ping.handler(mockCtx as any);
+
+			const [routeCtx, pluginCtx] = twoArgHandler.mock.calls[0];
+			// Sandbox contract: flattened plain-object request, not a Request.
+			expect(routeCtx.request.headers["x-demo"]).toBe("1");
+			expect(routeCtx.request).not.toBeInstanceOf(Request);
+			expect(pluginCtx.storage).toBeDefined();
+		});
+
+		it("applies declared sandbox header restrictions in-process", async () => {
+			const handler = vi.fn().mockResolvedValue({ ok: true });
+			const def: SandboxedPlugin = {
+				routes: {
+					webhook: {
+						request: { body: "bytes", headers: ["x-signature"] },
+						handler,
+					},
+				},
+			};
+			const result = adaptSandboxEntry(def, createDescriptor());
+			await result.routes.webhook.handler({
+				input: new Uint8Array(),
+				request: new Request("http://localhost/webhook", {
+					headers: {
+						authorization: "Bearer secret",
+						"cf-access-authenticated-user-email": "person@example.com",
+						cookie: "session=secret",
+						"x-hidden": "secret",
+						"x-signature": "sha256=test",
+					},
+				}),
+				requestMeta: { ip: null, userAgent: null, referer: null, geo: null },
+				plugin: { id: "test-plugin", version: "1.0.0" },
+				kv: {} as any,
+				storage: {} as any,
+				log: {} as any,
+				site: { name: "", url: "", locale: "en" },
+				url: (path: string) => path,
+			} as any);
+
+			expect(handler.mock.calls[0]?.[0].request.headers).toEqual({
+				"x-signature": "sha256=test",
+			});
+		});
+
+		it("passes the authenticated caller into routeCtx.user, not pluginCtx", async () => {
+			const standardHandler = vi.fn().mockResolvedValue({ ok: true });
+
+			const def: SandboxedPlugin = {
+				routes: {
+					whoami: { handler: standardHandler },
+				},
+			};
+			const result = adaptSandboxEntry(def, createDescriptor());
+
+			const caller = {
+				id: "u1",
+				email: "a@b.c",
+				name: "A",
+				role: 2,
+				createdAt: "2026-01-01T00:00:00.000Z",
+			};
+			const mockCtx = {
+				input: {},
+				request: new Request("http://localhost/test"),
+				requestMeta: { ip: null, userAgent: null, referer: null, geo: null },
+				user: caller,
+				plugin: { id: "test-plugin", version: "1.0.0" },
+				kv: {} as any,
+				storage: {} as any,
+				log: {} as any,
+				site: { name: "", url: "", locale: "en" },
+				url: (p: string) => p,
+			};
+
+			await result.routes.whoami.handler(mockCtx as any);
+
+			const [routeCtx, pluginCtx] = standardHandler.mock.calls[0];
+			expect(routeCtx.user).toEqual(caller);
+			expect(pluginCtx).not.toHaveProperty("user");
+		});
+
+		it("preserves public flag on routes", () => {
+			const def: SandboxedPlugin = {
+				routes: {
+					webhook: {
+						handler: vi.fn(),
+						public: true,
+					},
+				},
+			};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.routes.webhook.public).toBe(true);
+		});
+
+		it("preserves cacheControl on routes", () => {
+			const def: SandboxedPlugin = {
+				routes: {
+					catalog: {
+						handler: vi.fn(),
+						public: true,
+						cacheControl: "public, max-age=60",
+					},
+				},
+			};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.routes.catalog.cacheControl).toBe("public, max-age=60");
+		});
+
+		it("adapts multiple routes", () => {
+			const def: SandboxedPlugin = {
+				routes: {
+					status: { handler: vi.fn() },
+					sync: { handler: vi.fn() },
+					"admin/settings": { handler: vi.fn() },
+				},
+			};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(Object.keys(result.routes)).toEqual(["status", "sync", "admin/settings"]);
+		});
+	});
+
+	describe("capability normalization", () => {
+		it("normalizes content:write to include content:read", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({ capabilities: ["content:write"] });
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.capabilities).toContain("content:write");
+			expect(result.capabilities).toContain("content:read");
+		});
+
+		it("normalizes content:revisions:read to include content:read", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({ capabilities: ["content:revisions:read"] });
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.capabilities).toContain("content:revisions:read");
+			expect(result.capabilities).toContain("content:read");
+		});
+
+		it("normalizes media:write to include media:read", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({ capabilities: ["media:write"] });
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.capabilities).toContain("media:write");
+			expect(result.capabilities).toContain("media:read");
+		});
+
+		it("normalizes comments:moderate to include comments:read", () => {
+			const result = adaptSandboxEntry(
+				{},
+				createDescriptor({ capabilities: ["comments:moderate"] }),
+			);
+			expect(result.capabilities).toEqual(["comments:moderate", "comments:read"]);
+		});
+
+		it("normalizes network:request:unrestricted to include network:request", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({ capabilities: ["network:request:unrestricted"] });
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			expect(result.capabilities).toContain("network:request:unrestricted");
+			expect(result.capabilities).toContain("network:request");
+		});
+
+		it("does not duplicate implied capabilities", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				capabilities: ["content:read", "content:write"],
+			});
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			const readCount = result.capabilities.filter((c) => c === "content:read").length;
+			expect(readCount).toBe(1);
+		});
+
+		it.each([
+			["taxonomies:write", "taxonomies:read"],
+			["redirects:write", "redirects:read"],
+		] as const)("implies %s -> %s", (declared, implied) => {
+			const result = adaptSandboxEntry({}, createDescriptor({ capabilities: [declared] }));
+			expect(result.capabilities).toEqual(expect.arrayContaining([declared, implied]));
+		});
+
+		it("throws on invalid capability", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				capabilities: ["invalid:capability"],
+			});
+
+			expect(() => adaptSandboxEntry(def, descriptor)).toThrow("Invalid capability");
+		});
+
+		// ── Deprecation alias layer ────────────────────────────────
+		// Sandboxed plugins arrive via descriptors generated by older
+		// builds (or older bundle versions). The adapter must accept
+		// deprecated names and silently rewrite to canonical names so
+		// the runtime only sees the new shape.
+
+		it("rewrites all deprecated capability names to current names", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				capabilities: [
+					"read:content",
+					"write:content",
+					"read:media",
+					"write:media",
+					"read:users",
+					"network:fetch",
+					"network:fetch:any",
+					"email:provide",
+					"email:intercept",
+					"page:inject",
+				],
+			});
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			// Canonical names present
+			expect(result.capabilities).toContain("content:read");
+			expect(result.capabilities).toContain("content:write");
+			expect(result.capabilities).toContain("media:read");
+			expect(result.capabilities).toContain("media:write");
+			expect(result.capabilities).toContain("users:read");
+			expect(result.capabilities).toContain("network:request");
+			expect(result.capabilities).toContain("network:request:unrestricted");
+			expect(result.capabilities).toContain("hooks.email-transport:register");
+			expect(result.capabilities).toContain("hooks.email-events:register");
+			expect(result.capabilities).toContain("hooks.page-fragments:register");
+
+			// Deprecated names absent
+			for (const old of [
+				"read:content",
+				"write:content",
+				"read:media",
+				"write:media",
+				"read:users",
+				"network:fetch",
+				"network:fetch:any",
+				"email:provide",
+				"email:intercept",
+				"page:inject",
+			]) {
+				expect(result.capabilities).not.toContain(old);
+			}
+		});
+
+		it("deduplicates when both deprecated and current names are present", () => {
+			const def: SandboxedPlugin = {};
+			const descriptor = createDescriptor({
+				capabilities: ["read:content", "content:read"],
+			});
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			const readCount = result.capabilities.filter((c) => c === "content:read").length;
+			expect(readCount).toBe(1);
+		});
+
+		it("warns that a descriptor declares deprecated capability names", () => {
+			const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+			try {
+				adaptSandboxEntry(
+					{},
+					createDescriptor({ id: "legacy-sandboxed-entry", capabilities: ["page:inject"] }),
+				);
+
+				expect(warn).toHaveBeenCalledOnce();
+				const message = String(warn.mock.calls[0]?.[0]);
+				expect(message).toContain('"legacy-sandboxed-entry"');
+				expect(message).toContain("page:inject → hooks.page-fragments:register");
+			} finally {
+				warn.mockRestore();
+			}
+		});
+	});
+
+	describe("integration with HookPipeline", () => {
+		it("produces hooks compatible with HookPipeline registration", () => {
+			// HookPipeline stores hooks as ResolvedHook<unknown> internally.
+			// The adapted hooks must have the expected shape.
+			const handler = vi.fn().mockResolvedValue(undefined);
+			const def: SandboxedPlugin = {
+				hooks: {
+					"content:afterSave": {
+						handler,
+						priority: 50,
+					},
+				},
+			};
+			const descriptor = createDescriptor();
+
+			const result = adaptSandboxEntry(def, descriptor);
+
+			// Verify the hook shape matches what HookPipeline expects
+			const hook = result.hooks["content:afterSave"]!;
+			expect(typeof hook.handler).toBe("function");
+			expect(typeof hook.priority).toBe("number");
+			expect(typeof hook.timeout).toBe("number");
+			expect(Array.isArray(hook.dependencies)).toBe(true);
+			expect(typeof hook.errorPolicy).toBe("string");
+			expect(typeof hook.exclusive).toBe("boolean");
+			expect(typeof hook.pluginId).toBe("string");
+		});
+	});
+});

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-phio/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_phio",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-phio",
+    "id": "quickstart/ja-phio/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_phio",
+    "parts": {
+      "installer": {
+        "file": "ja-phio-j6-quickstart-1.0.2.zip",
+        "bytes": 64415122,
+        "sha256": "96beef36a950bba508b5acd59f9ac99c744d13c0e85d86d2ee564cc5d2dd0a4d"
+      }
+    },
+    "release": "quickstart/ja-phio/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,155 @@
+/*
+ * Tracy — ACM block `timeline`
+ * ------------------------------------------------------------------------------------------------
+ * Self-contained and block-scoped to `.acm-timeline`; mod_ja_acm loads it directly. Every value
+ * reads a token, so dark needs no rules here.
+ *
+ * The rule between the marker column and the entries is drawn ONCE, by the list, and the dots sit
+ * on it. Drawing a border on each entry instead would double the line at every junction — the same
+ * fat-rule problem the chrome hairline had.
+ */
+
+.acm-timeline {
+  padding-block: var(--tracy-band-y);
+  border: 0;
+}
+
+.acm-timeline--canvas { background: var(--bg); }
+.acm-timeline--warm   { background: var(--surface-warm); }
+.acm-timeline--gray   { background: var(--surface); }
+
+.acm-timeline .tracy-timeline__head {
+  max-width: 52ch;
+  margin-block-end: var(--space-12);
+}
+
+.acm-timeline .tracy-timeline__eyebrow {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tracy-quiet, var(--meta));
+}
+
+.acm-timeline .tracy-timeline__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+.acm-timeline .tracy-timeline__intro {
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-body);
+  color: var(--muted);
+}
+
+/* ── The list ───────────────────────────────────────────────────────────────── */
+.acm-timeline .tracy-timeline__list {
+  --tracy-timeline-gutter: var(--space-8);
+  --tracy-timeline-dot: 9px;
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 72ch;
+}
+
+.acm-timeline .tracy-timeline__entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 0 var(--tracy-timeline-gutter);
+  padding-block: var(--space-6);
+}
+
+/*
+ * The rule and the dot both hang off the ENTRY, but the rule spans the full row height and the
+ * dots land on it, so consecutive entries produce one continuous line rather than a stack of
+ * segments with seams.
+ */
+.acm-timeline .tracy-timeline__entry::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(6rem + (var(--tracy-timeline-gutter) / 2));
+  inline-size: 1px;
+  background: var(--border-soft);
+}
+
+.acm-timeline .tracy-timeline__entry:first-child::before { inset-block-start: var(--space-6); }
+.acm-timeline .tracy-timeline__entry:last-child::before  { inset-block-end: calc(100% - var(--space-6) - 0.6em); }
+
+.acm-timeline .tracy-timeline__entry::after {
+  content: "";
+  position: absolute;
+  inset-block-start: calc(var(--space-6) + 0.55em);
+  inset-inline-start: calc(6rem + (var(--tracy-timeline-gutter) / 2) - (var(--tracy-timeline-dot) / 2) + 0.5px);
+  inline-size: var(--tracy-timeline-dot);
+  block-size: var(--tracy-timeline-dot);
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.acm-timeline .tracy-timeline__marker {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--leading-body);
+  letter-spacing: 0.02em;
+  color: var(--tracy-quiet, var(--meta));
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.acm-timeline .tracy-timeline__body { min-inline-size: 0; }
+
+.acm-timeline .tracy-timeline__title {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+.acm-timeline .tracy-timeline__text {
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--fg-2);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 575.98px) {
+  .acm-timeline .tracy-timeline__list { --tracy-timeline-gutter: var(--space-6); }
+
+  .acm-timeline .tracy-timeline__heading { font-size: var(--text-xl); }
+  .acm-timeline .tracy-timeline__intro   { font-size: var(--text-base); }
+
+  /* The marker moves above its entry: a 6rem column beside 40ch of text is most of a phone. */
+  .acm-timeline .tracy-timeline__entry {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    padding-inline-start: var(--space-6);
+  }
+
+  .acm-timeline .tracy-timeline__marker { text-align: start; }
+
+  .acm-timeline .tracy-timeline__entry::before { inset-inline-start: 0; }
+
+  .acm-timeline .tracy-timeline__entry::after {
+    inset-inline-start: calc((var(--tracy-timeline-dot) / 2) * -1 + 0.5px);
+    inset-block-start: calc(var(--space-6) + 0.4em);
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "id": "QA-UNIT-REG-PR-1589-add-site-stepped-pages-happy",
+  "itemIds": ["regression:REG-PR-1589-add-site-stepped-pages"],
+  "requirement": "Add site keeps choices through separate create and import pages, preview selection and Review edits",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1589-add-site-stepped-pages.json",
+    "ref": "PR #1589 (feat); fix evidence: none recorded",
+    "invariant": "Create visits Platform, Starting design, optional Design system, Site address, Customize and Review while preserving entered choices. Import detects the entered address before confirming the platform, validates each page and keeps both Back navigation and Review edits working. The gallery requests thumbnails and its preview remains inside the wizard, pages only filtered designs, selects a design and closes on Use.",
+    "productSources": ["packages/site/tracy-add-site/src/client/create-navigation.mjs:31"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs:39 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs:89 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/e2e/create-platform-ui.test.mjs:111 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/e2e/create-platform-ui.test.mjs:54 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/e2e/create-platform-ui.test.mjs:68 execFileSync() passes packages/site/tracy-add-site/src/client/add-site.css to node; not proven to run it",
+      "packages/site/tracy-add-site/test/e2e/create-platform-ui.test.mjs:91 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "ordinary Continue advances once and a review edit returns directly to Review",
+    "import pages validate detection, method selection, Back and Review edits",
+    "bare entry starts with Adding, choice cards advance, and Back keeps the platform",
+    "the starting gallery requests thumbnails without loading a full desktop shot",
+    "Open preview stays in the wizard, frames the demo and Use selects and closes",
+    "preview pager walks only the filtered designs and selection stays on step three"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1589-add-site-stepped-pages"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-add-site", "tracy-add-site"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1589-add-site-stepped-pages",
+    "pr": 1589,
+    "kind": "feat",
+    "area": "add-site/stepped-pages",
+    "file": "tests/regression/cases/REG-PR-1589-add-site-stepped-pages.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=60000",
+    "packages/site/tracy-add-site/test/create-navigation.test.mjs",
+    "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs",
+    "packages/site/tracy-add-site/test/e2e/create-platform-ui.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "ordinary Continue advances once and a review edit returns directly to Review",
+    "import pages validate detection, method selection, Back and Review edits",
+    "bare entry starts with Adding, choice cards advance, and Back keeps the platform",
+    "the starting gallery requests thumbnails without loading a full desktop shot",
+    "Open preview stays in the wizard, frames the demo and Use selects and closes",
+    "preview pager walks only the filtered designs and selection stays on step three"
+  ],
+  "timeoutS": 600
+}

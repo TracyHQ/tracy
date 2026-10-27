@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-pure-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-warm-charcoal: #393939;
+  --color-blush-card: #e8c4c0;
+
+  /* Typography — Font Families */
+  --font-font1: 'font1', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-custom-display-serif: 'Custom Display Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-custom-body-serif: 'Custom Body Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-font2: 'font2', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-sans-serif: 'ui-sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

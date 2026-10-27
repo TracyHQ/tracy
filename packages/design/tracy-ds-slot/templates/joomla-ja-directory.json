@@ -1,0 +1,405 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-directory",
+  "release": "quickstart/ja-directory/j6@1.0.1",
+  "roles": {
+    "page": "body",
+    "display": "h1.item-title",
+    "heading": "div.col-header.text-center h2",
+    "body": "div.col-header.text-center p",
+    "button-primary": "a.btn.btn-block",
+    "section": "div.section-inner.section-grey",
+    "input": "#email_field_398"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 54px",
+    "displayFace": "Open Sans 500, tracking 0em",
+    "heading": "first section heading: 24px",
+    "body": "running text the template does not weigh itself (the slider lead p.item-desc is 300 by the template)",
+    "button-primary": "first filled, coloured call to action: rgb(29, 155, 220)",
+    "section": "first padded full-width section, padding-top 78px",
+    "input": "first text field",
+    "displayPhone": "the same heading at 390 on the published release: 14px"
+  },
+  "keepScopes": [".t3-footer", ".t3-header", ".t3-slideshow", ".col-featured", "#t3-footnav", ".jamasshead"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#7c828a",
+    "--fg-2": "#ffffff",
+    "--accent": "#1d9bdc",
+    "--accent-hover": "#146b98",
+    "--surface": "#f7f7f7",
+    "--meta": "#8c959f",
+    "--success": "#4db18d",
+    "--warn": "#f0ad4e",
+    "--danger": "#cc0000",
+    "--border": "#eeeeee",
+    "--muted": "#4c5560",
+    "--font-display": "\"Open Sans\", sans-serif",
+    "--font-body": "\"Open Sans\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#ffffff",
+      "fg": "#7c828a",
+      "fg-2": "#26292d",
+      "accent": "#1d9bdc",
+      "accent-hover": "#146b98",
+      "surface": "#f7f7f7",
+      "meta": "#8c959f",
+      "success": "#4db18d",
+      "warn": "#f0ad4e",
+      "danger": "#cc0000",
+      "border": "#eeeeee",
+      "muted": "#4c5560"
+    },
+    {
+      "bg": "#1d9bdc",
+      "fg": "#ffffff",
+      "fg-2": "#ffffff",
+      "accent": "#1d9bdc",
+      "accent-on": "#ffffff",
+      "surface-warm": "#ffffff"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "surface": "#eeeeee",
+      "border-soft": "#dce2e8",
+      "accent-hover": "#1675a6",
+      "accent": "#2aabd2"
+    },
+    {
+      "border-soft": "#e6e6e6",
+      "surface": "#fcf8e3",
+      "accent-hover": "#13658f"
+    },
+    {
+      "border-soft": "#e5e5e5",
+      "surface": "#f9f9f9",
+      "accent-hover": "#1f7e9a"
+    },
+    {
+      "border-soft": "#e1e1e1",
+      "surface": "#f4f4f4"
+    },
+    {
+      "surface": "#f7fafe",
+      "border-soft": "#e0e2e3"
+    },
+    {
+      "surface": "#f3f3f3"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (71 line colours, 88 text colours seen)",
+  "selectors": {
+    "displaySize": "h1.item-title",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-block"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-block"],
+    "container": ["#t3-mainbody .container, .container"],
+    "section": ["div.section-inner.section-grey"],
+    "bodyFace": ["body"]
+  },
+  "contrast": {
+    "muted": "span.big-number, ul > li.row0",
+    "body": "div.col-header.text-center p, #t3-mainbody p",
+    "footer": ".t3-footer a, #t3-footer a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4)",
+    "text": "body :is(p, li, a, span, small, label, td, dd, blockquote, figcaption)",
+    "block": "body div:not(:has(div, p, ul, ol, table, section, article, img, svg, picture, h1, h2, h3, h4, h5, h6, form, iframe, video, style, script, link))"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "languageswitcherload",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 20 tried (byte 5472); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 80,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 16
+    },
+    {
+      "hex": "#dce2e8",
+      "uses": 30,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#e6e6e6",
+      "uses": 28,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 8
+    },
+    {
+      "hex": "#1675a6",
+      "uses": 21,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#146b98",
+      "distance": 17
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 16,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 21
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 10,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#13658f",
+      "uses": 10,
+      "kind": "fill",
+      "role": "accent-hover",
+      "near": "#146b98",
+      "distance": 11
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 3
+    },
+    {
+      "hex": "#e1e1e1",
+      "uses": 8,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 16
+    },
+    {
+      "hex": "#f4f4f4",
+      "uses": 8,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 5
+    },
+    {
+      "hex": "#f7fafe",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 8
+    },
+    {
+      "hex": "#f3f3f3",
+      "uses": 6,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#f7f7f7",
+      "distance": 7
+    },
+    {
+      "hex": "#1f7e9a",
+      "uses": 4,
+      "kind": "line",
+      "role": "accent-hover",
+      "near": "#146b98",
+      "distance": 22
+    },
+    {
+      "hex": "#2aabd2",
+      "uses": 4,
+      "kind": "line",
+      "role": "accent",
+      "near": "#1d9bdc",
+      "distance": 23
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 4,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {},
+  "ready": true,
+  "readyNote": "re-measured 11/10/2026 with the per-element probe (flow.mjs: every visible heading, text and text-holding div judged on the paint under it, text over a photo against the photo) on the 1.0.1 release build itself (~/tracy-bench-work/release/ds-batch1/ja-directory/release, stood up from its own files): tasks/evidence/ds-remeasure-2-2026-10-11/ja-directory-j6 — 12/12, controls 0 differences, no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple at 1440 and 390, 62% or more of the page follows, checked by eye on the four systems' screenshots; with the earlier contract the dark header, the hero slider on its photos, the gold price column and the footer-module band held followed text on unfollowed grounds (1.03–2.9:1) — those four bands are now kept whole (keepScopes, keepColors). Earlier: measured 11/10/2026 on the local build of ja-directory/j6 1.0.1 (tasks/evidence/ds-contracts-batch1-2026-10-11/ja-directory-j6): 16/16 with Moxie, MotherDuck, Toggl Track, Apple, Stripe and Spotify, controls 0 differences, no text made less readable than the template's own (kinds measured: muted, body, footer), 83% or more of the page follows; without a system 1.0.1 computes exactly what 1.0.0 does; the dark footer (.t3-footer) is kept whole, the light grey section follows as the surface; the body probe reads the pricing text, not the slider lead the template sets at 300. Re-verified 12/10/2026 with the unified probe (fix/ds-remeasure flow.mjs) on the published ja-directory 1.0.1 release (Moxie, MotherDuck, Toggl Track, Apple; 1440 and 390): 12/12 verdicts on the second run (the first run's one control difference, an input appearing on the no-system phone view before any system was applied, did not repeat), controls 0 differences, no text below 4.5:1 worse than the template's own, 62-93% of the page follows, every kind sampled; MotherDuck and Apple desktop checked by eye: tasks/evidence/ds-reverify-a-2026-10-12/ja-directory-j6",
+  "contrastNote": "the home page has no #t3-mainbody text: the pricing descriptions (body), the stats numbers and module lists (muted) and the footer are what a reader reads (11/10/2026); no text on the home page is set in the accent colour, so no accent-text probe; block: text set straight in a div that holds only inline content (a hero title, an eyebrow) — outside the heading and text kinds, added at the re-measure of 11/10/2026; heading and text: every visible heading and text element, judged element by element against the same element in the template’s own look (flow.mjs samples) — added at the re-measure of 11/10/2026, the contract was ready on the four first-match probes only",
+  "keepNote": "the dark footer (.t3-footer, a literal #1e2024) is kept whole; .section-grey is a light grey section (#f7f7f7, the surface), not an inverse band, so it follows. Re-measure 11/10/2026: the header (.t3-header, a literal #26292d), the hero slider on its photos (.t3-slideshow) and the featured price column (.col-featured, literal yellows #fbe57c / #fbf2d2) and the dark band of footer modules above the footer (#t3-footnav, #26292d) are kept too — under the worn systems their texts followed while their grounds did not: menu and logo 1.15–1.25:1 on the dark header under Apple and MotherDuck, its quick-contact lines 2.7–2.9:1 under MotherDuck and Apple, the gold column's text 1.03–2.3:1 on its yellow under Moxie and Toggl Track",
+  "minVersion": {
+    "quickstart/ja-directory/j6": "1.0.1"
+  },
+  "keepColors": {
+    ".t3-footer": "rgb(85, 85, 85)",
+    ".t3-header": "rgb(124, 130, 138)",
+    ".t3-slideshow": "rgb(124, 130, 138)",
+    ".col-featured": "rgb(124, 130, 138)",
+    "#t3-footnav": "rgb(109, 113, 124)",
+    ".jamasshead": "rgb(255, 255, 255)"
+  },
+  "maxVersion": {
+    "quickstart/ja-directory/j6": "1.0.3"
+  },
+  "maxVersionNote": "1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "bands": {
+    ".t3-footer": {
+      "ground": "#1e2024",
+      "texts": ["#8c959f", "#6d717c"],
+      "important": true,
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text-2"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text-2"
+        }
+      }
+    },
+    ".t3-header": {
+      "ground": "#26292d",
+      "texts": ["#ffffff"],
+      "important": true,
+      "paint": {
+        ".logo-text, .logo-text a, .logo-text span": {
+          "color": "text"
+        }
+      }
+    },
+    ".t3-slideshow": {
+      "ground": "#ffffff",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true,
+      "paint": {
+        ".owl-dots .owl-dot span": {
+          "background-color": "text"
+        },
+        ".owl-dots .owl-dot.active span": {
+          "background-color": "accent-fill"
+        },
+        ".owl-nav div": {
+          "border-color": "text",
+          "color": "text"
+        }
+      }
+    },
+    ".col-featured": {
+      "ground": "#fbe57c",
+      "texts": [],
+      "kind": "brand",
+      "repaint": true,
+      "root": false,
+      "important": true,
+      "paint": {
+        ".col-header, .col-body, .col-footer, .big-number": {
+          "background-color": "ground"
+        },
+        ".col-header, .col-header h2, .big-number, .big-number *, .col-body li, .col-body li i": {
+          "color": "text"
+        }
+      }
+    },
+    "#t3-footnav": {
+      "ground": "#26292d",
+      "texts": ["#e6edf3", "#6d717c"],
+      "important": true,
+      "kind": "ink",
+      "repaint": true,
+      "paint": {
+        "&": {
+          "color": "text"
+        },
+        ":is(li, small, p)": {
+          "color": "text-2"
+        },
+        ".module": {
+          "background-color": "ground"
+        },
+        ".acym__user__edit__email": {
+          "background-color": "ground",
+          "border-color": "text-2"
+        },
+        ".module-title, .module-title span": {
+          "color": "text"
+        }
+      }
+    },
+    ".section-inner.equal-height.section-primary.no-padding": {
+      "ground": "#1d9bdc",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "brand",
+      "words": [".section-title span", ".container-sm p"]
+    },
+    ".jamasshead": {
+      "ground": "#555555",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "important": true
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; the inner pages masthead (.jamasshead, JA Masshead module: a photo under white title and breadcrumb) is a picture band: its words stay white on the photo; under a light system they took its dark text and read 2.3-2.6:1 on the dark photo (JA Directory /contact-us and /news under Stripe, inner pages measured 14/10/2026)",
+  "followRules": {
+    ".tag-count.badge": {
+      "background-color": "surface",
+      "color": "fg"
+    },
+    ".address-contact .address-detail li > div.highlight": {
+      "background-color": "accent",
+      "color": "accent-on"
+    },
+    ".address-contact .address-detail li > div.highlight :is(strong, .fa, a)": {
+      "color": "accent-on"
+    }
+  },
+  "followNote": "the tag counts of the news pages (.tag-count.badge) keep Bootstrap 3 light info ground #d9edf7 while their words follow the system: under Moxie its light text read 1.04:1 on it (inner pages measured 14/10/2026); the badge takes the system surface under its text; 15/10/2026 (final measure, the contact page): the highlighted contact card (.address-detail li > div.highlight) is the template's brand green, which its sheet reads as the success colour (kept under every system), with its words in fg: the system's cream on that green under Moxie, 2.27:1. The card wears the system's accent with the accent's own words",
+  "contractNotes1317": "13/10/2026 (#1317): the footer and footnav kept their grey words (#8c959f, #6d717c) while their ground followed; both repaint them with the system text. The featured package header (Gold, #fbe57c) and its price fill take the accent fill and the panel ground; the newsletter module and its field take the footnav ground. Second run (21:46): the price block (.big-number) took the panel ground while its white words stayed (white on white under Stripe, 1:1); its words take the band text. Round 4 (14/10): the price words still came out white on the panel ground (1.0-1.09:1 under BMW and Stripe): the header fill's own word rule (.col-header :is(h1-h6, p, span…), white on the accent fill) out-ranked the price block's paint, which named only its descendants; the price block and everything in it now take the band text through a .col-header selector that out-ranks it. Under Moxie the slideshow's dots and arrows (white and #d6d6d6 on the photo) take the light words of the picture band and its accent fill, the footnav module titles (#e6edf3) the band text, and the header's text logo the header's band text.",
+  "sideRules": {
+    "dark": {
+      ".uber-cliens .client-img": {
+        "background-color": "#ffffff"
+      }
+    }
+  },
+  "reviewV8Note": "15/10/2026 (look review v8): the Gold pricing card was recorded with the page’s grey and kept its literal yellow body and footer: it is a brand band that repaints its words, its header, body, footer and price on the worn ground. The contact page’s masthead title inherited the system’s text from .t3-masthead before the band reset (navy on the photo under Stripe): its colour is given back. Under a dark system the partner logos (dark lettering on transparent pictures) stand on white cells"
+}

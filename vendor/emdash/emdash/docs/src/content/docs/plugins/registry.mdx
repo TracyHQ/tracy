@@ -1,0 +1,62 @@
+---
+title: The plugin registry
+description: Discover, review, and install sandboxed plugins from the EmDash registry.
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+The plugin registry is the supported catalog for sandboxed plugins. Anyone can browse published plugins at [plugins.emdashcms.com](https://plugins.emdashcms.com). Administrators can review and install them from the **Registry** section of the EmDash admin panel.
+
+EmDash uses the hosted registry at `https://registry.emdashcms.com` by default when the site has an enabled plugin sandbox.
+
+## Plugin public names
+
+Every registry plugin has a public name made from its publisher's current Atmosphere account handle and its package slug. For example, a package with the slug `my-gallery` published by `example.com` appears as `@example.com/my-gallery`.
+
+The public name appears in registry results and under **Plugins** after installation. Select it to open the plugin detail page, or paste the complete name into registry search to find that exact package. EmDash resolves the handle to the publisher's stable account identifier before loading the package.
+
+If the handle conclusively stops resolving back to the publisher, EmDash displays **INVALID HANDLE** and prevents new installation from the package detail page. Existing installations remain in their current state so an identity lookup cannot disable a running site. Review the installed plugin and contact its publisher before updating it. A temporary lookup failure displays the stable publisher identifier with **Handle unavailable** instead of reporting an invalid handle.
+
+## Enable registry installs
+
+To install plugins from the registry, configure storage and an available sandbox runner. Complete the platform-specific [plugin sandbox setup](/deployment/plugin-sandbox/) first.
+
+Add the Cloudflare sandbox runner to the `emdash()` configuration in `astro.config.mjs`:
+
+```typescript title="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import { sandbox } from "@emdash-cms/cloudflare";
+import emdash from "emdash/astro";
+
+export default defineConfig({
+	integrations: [
+		emdash({
+			sandboxRunner: sandbox(),
+		}),
+	],
+});
+```
+
+EmDash displays the **Registry** catalog after the sandbox runner is configured. See the [`registry` configuration reference](/reference/configuration/#registry) to select a different aggregator, set registry policy, or disable discovery.
+
+## Install a registry plugin
+
+<Steps>
+
+1. Open **Registry** in the admin panel.
+2. Search by title, description, or a complete public name such as `@example.com/my-gallery`, then open the plugin's detail page.
+3. Select a release and review its publisher, metadata, requested permissions, and verification status.
+4. Select **Install**.
+5. Review the verification status and permissions in the consent dialog, then confirm.
+
+</Steps>
+
+Before showing the consent dialog, EmDash checks the downloaded bundle's checksum, name, version, and permissions. If the publisher requires build provenance, EmDash verifies that evidence too. Installation stops if a check fails. The consent dialog shows the verification status and exact permissions before installation.
+
+Registry updates repeat these checks. An update waits for confirmation when it adds permissions or MCP tools, or changes a route from authenticated to public. Uninstalling removes the bundle and preserves plugin storage data unless you select **Also delete plugin storage data**. See [Installing plugins](/plugins/installing/#update-a-plugin) for the shared update and uninstall steps.
+
+## Related pages
+
+- [Querying the registry](/plugins/registry-client/) documents the experimental read-only discovery client.
+- [Bundling and publishing](/plugins/creating-plugins/publishing/) covers publishing a sandboxed plugin.
+- [Capabilities and security](/plugins/creating-plugins/capabilities/) describes the sandbox permission model.

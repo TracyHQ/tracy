@@ -1,0 +1,733 @@
+/* wp-ja-restaurant: what WordPress's block markup changes under the source's own rules (assets/css/source/, D-10).
+   The parts, templates and patterns carry the source's class names (t3-topbar, t3-header, t3-mainnav, t3-section,
+   acm-*), so this sheet only (1) takes away the spacing WordPress's block layouts add, (2) draws the core blocks that
+   stand in for Joomla markup (navigation, site logo, search, buttons) the way the source draws its own, and (3) the
+   port's own pieces: the light / dark switch and the Vietnamese face. Measured on the source 20/10/2026 (:8381). */
+
+/* ---------- 1. Block layout spacing: the source spaces its blocks itself ---------- */
+.wp-site-blocks > *,
+.wp-site-blocks > * + *,
+.jr-flow > * + *,
+:where(.t3-topbar, .t3-header, .t3-mainnav, .t3-footer, .t3-off-canvas, .jr-main, .t3-section, .t3-masthead, .t3-mainbody) :where(.is-layout-flow, .is-layout-constrained) > * {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+.wp-site-blocks {
+  padding: 0;
+}
+/* the page's top-level sections sit flush, as the source's stacked wraps do */
+.entry-content.jr-page-content > * {
+  margin-block: 0;
+}
+body,
+.jr-main.t3-wrapper {
+  /* off-canvas.css paints .t3-wrapper with the ink colour for the panel's push effect; here it is the page */
+  background-color: var(--wp--preset--color--bg);
+}
+.wp-block-group.container {
+  box-sizing: border-box;
+}
+:where(.wp-block-group).container::before,
+:where(.wp-block-group).container::after {
+  content: none;
+}
+.jr-main {
+  display: flow-root;
+}
+/* Headings inside the content keep the source's margins (bootstrap h1–h3 30/15, h4–h6 15/15), not the block gap. */
+.t3-content :where(h1, h2, h3) {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+.t3-content :where(h4, h5, h6) {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.t3-content p {
+  margin: 0 0 15px;
+}
+
+/* ---------- 2. Top bar and logo ---------- */
+.t3-topbar {
+  height: 50px;
+  line-height: 50px;
+  font-family: var(--ds-font-ui, 'Roboto Mono', sans-serif);
+}
+.t3-topbar .open-time {
+  margin: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+@media (max-width: 991px) {
+  .t3-topbar .open-time {
+    padding-left: 10px;
+    font-size: 12px;
+  }
+}
+.t3-header .logo {
+  text-align: center;
+  padding-bottom: 9px; /* the source's logo sits on an inline baseline: 119 px box under a 110 px picture */
+}
+.t3-header .wp-block-site-logo {
+  display: flex;
+  justify-content: center;
+  line-height: 16px;
+}
+.t3-header .wp-block-site-logo img {
+  width: 178px;
+  height: auto;
+}
+.t3-header .jr-logo--dark {
+  display: none;
+}
+:root[data-theme='dark'] .t3-header .jr-logo--light {
+  display: none;
+}
+:root[data-theme='dark'] .t3-header .jr-logo--dark {
+  display: flex;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .t3-header .jr-logo--light {
+    display: none;
+  }
+  :root:not([data-theme]) .t3-header .jr-logo--dark {
+    display: flex;
+  }
+}
+/* The name stands in where no logo is given (the dark spot until a dark-ground logo is set, D-08). */
+.t3-header .wp-block-site-logo :where(.wp-block-site-title, a:not(:has(img))) {
+  font-family: var(--ds-font-display, Teko, sans-serif);
+  font-size: 58px;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--fg);
+}
+@media (max-width: 991px) {
+  .t3-header .wp-block-site-logo img {
+    width: 78px;
+  }
+}
+
+/* ---------- 3. Main menu: core/navigation drawn as the T3 megamenu ---------- */
+.t3-mainnav > .container {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+.t3-mainnav .jr-mainmenu {
+  flex: 1 1 auto;
+  margin: 0;
+  border: 2px solid var(--ds-c-border, light-dark(#615e59, #3a352f));
+  font-family: var(--ds-font-ui, 'Roboto Mono', sans-serif);
+}
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container {
+  width: 100%;
+  min-height: 80px;
+  border: 0;
+  position: relative;
+  justify-content: center;
+  gap: 10px; /* the source's inline-block items are a whitespace apart */
+  padding-left: 80px;
+}
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .wp-block-navigation-item {
+  position: relative;
+}
+/* A dropdown opens under its own item, left-aligned with it, as the source's (Explore's mega panel is centred on it). */
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .has-child > .wp-block-navigation__submenu-container {
+  left: 0;
+}
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+  display: block;
+  padding: 25px 15px;
+  color: var(--ds-c-on-ink, #ffffff);
+  font-size: 14px;
+  line-height: 30px;
+  text-transform: uppercase;
+}
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .wp-block-navigation-item:is(.current-menu-item, .current-menu-ancestor, :hover, :focus-within) > .wp-block-navigation-item__content,
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content[aria-current='page'] {
+  color: var(--ds-c-accent-text, #ffd33d);
+}
+/* The small diamond under the current / open / hovered item (the source's .navbar-default .navbar-nav > li.active::before). */
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .wp-block-navigation-item:is(.current-menu-item, .current-menu-ancestor, :hover, :focus-within)::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  background-color: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+  transform: rotate(45deg);
+}
+/* Home: the house icon in its own 80 px cell on the left, as the source's is-home item. */
+.t3-mainnav .jr-mainmenu .wp-block-home-link,
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .wp-block-navigation-item:first-child:not(.has-child) {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  border-right: 2px solid var(--ds-c-border, light-dark(#615e59, #3a352f));
+}
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .wp-block-navigation-item:first-child:not(.has-child) > .wp-block-navigation-item__content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  font-size: 0;
+  color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .wp-block-navigation-item:first-child:not(.has-child) > .wp-block-navigation-item__content::before {
+  content: '\f015';
+  font-family: FontAwesome;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--ds-c-on-ink, #ffffff);
+}
+/* The caret after a parent's label, white, yellow when open or current. */
+/* The submenu button is the caret after the parent's label (the source's em.caret): white, yellow when open or current. */
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .has-child > .wp-block-navigation-item__content {
+  padding-right: 0;
+}
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .has-child > .wp-block-navigation-submenu__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* source: label, a space (8.4px), em.caret margin-left 2px, 8px wide; then the link's 15px padding */
+  width: 19px;
+  height: 80px;
+  margin: 0 15px 0 0;
+  padding: 0 0 0 11px;
+  color: var(--ds-c-on-ink, #ffffff);
+  cursor: pointer;
+}
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .has-child > .wp-block-navigation-submenu__toggle svg {
+  display: none;
+}
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .has-child > .wp-block-navigation-submenu__toggle::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-top: 4px dashed;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .has-child:is(.current-menu-ancestor, :hover, :focus-within) > .wp-block-navigation-submenu__toggle {
+  color: var(--ds-c-accent-text, #ffd33d);
+}
+.t3-mainnav .jr-mainmenu .wp-block-navigation__submenu-container .wp-block-navigation-submenu__toggle {
+  display: none;
+}
+/* The dropdown: a white panel under the band, its links in Noticia Text. */
+.t3-mainnav .jr-mainmenu .wp-block-navigation__submenu-container {
+  background: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+  color: var(--wp--preset--color--fg);
+  border: 0;
+  padding: 30px 25px;
+  min-width: 200px;
+  top: 100%;
+  font-family: var(--ds-font-body, 'Noticia Text', serif);
+  font-size: 15px;
+  text-transform: none;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+.t3-mainnav .jr-mainmenu .wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+  padding: 3px 0;
+  color: var(--wp--preset--color--fg);
+}
+.t3-mainnav .jr-mainmenu .wp-block-navigation__submenu-container .wp-block-navigation-item__content:hover,
+.t3-mainnav .jr-mainmenu .wp-block-navigation__submenu-container .current-menu-item > .wp-block-navigation-item__content {
+  color: var(--ds-c-accent-text, light-dark(#d24a24, #e8693f));
+}
+/* Explore: the source's 720 px mega panel, its groups as columns with their title over their links. */
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .has-child > .wp-block-navigation__submenu-container:has(> .has-child) {
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
+  gap: 0 40px;
+  width: 720px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+/* Below the container's 1170 px breakpoint the 720 px panel, centred on an item that sits in the right half of the band,
+   would end past the viewport edge and (hidden or not) widen the page; there it hangs from its item's right edge instead. */
+@media (max-width: 1199px) {
+  .t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .has-child > .wp-block-navigation__submenu-container:has(> .has-child) {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+}
+.t3-mainnav .jr-mainmenu .wp-block-navigation__submenu-container > .has-child > .wp-block-navigation-item__content {
+  font-family: var(--ds-font-ui, 'Roboto Mono', sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  pointer-events: none;
+  margin-bottom: 10px;
+}
+.t3-mainnav .jr-mainmenu .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container {
+  position: static;
+  visibility: inherit; /* `visible` here made the lists of a closed panel catch the pointer over its neighbours */
+  opacity: 1;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  padding: 0;
+  box-shadow: none;
+  transform: none;
+  background: transparent;
+}
+/* The switch the port adds (D-03), on the right of the band. */
+.t3-mainnav .theme-toggle {
+  /* out of the flow: the menu row is centred in the band as the source's is, with no switch taking room */
+  position: absolute;
+  top: 30px;
+  right: 20px;
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 2px solid var(--ds-c-border, light-dark(#615e59, #3a352f));
+  color: var(--ds-c-on-ink, #ffffff);
+  cursor: pointer;
+}
+.theme-toggle .theme-toggle__sun {
+  display: none;
+}
+:root[data-theme='dark'] .theme-toggle .theme-toggle__sun {
+  display: block;
+}
+:root[data-theme='dark'] .theme-toggle .theme-toggle__moon {
+  display: none;
+}
+.t3-mainnav .theme-toggle:focus-visible,
+.t3-mainnav .off-canvas-toggle:focus-visible {
+  outline: 1px solid var(--ds-c-accent-text, #ffd33d);
+  outline-offset: 0;
+}
+/* The off-canvas button: phones and tablets only, as the source's. */
+.t3-mainnav .off-canvas-toggle {
+  display: none;
+  width: 40px;
+  height: 44px;
+  padding: 0 10px;
+  background: transparent;
+  border: 2px solid var(--ds-c-border, light-dark(#615e59, #3a352f));
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+.t3-mainnav .off-canvas-toggle span {
+  display: block;
+  height: 2px;
+  background: var(--ds-c-on-ink, #ffffff);
+}
+@media (max-width: 991px) {
+  .t3-mainnav .jr-mainmenu {
+    display: none;
+  }
+  .t3-mainnav .off-canvas-toggle {
+    display: inline-flex;
+  }
+  .t3-mainnav > .container {
+    justify-content: flex-start;
+  }
+  /* the port's own switch rides on the band's right edge, not on a row of its own */
+  .t3-mainnav .theme-toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin: 0;
+  }
+  .t3-header .logo {
+    padding-bottom: 0;
+  }
+}
+
+/* The source's `.t3-mainnav + .t3-slideshow`: the first slide band rides up under the menu band. */
+.entry-content > .acm-slideshow:first-child,
+.jr-album-top > .acm-slideshow:first-child {
+  position: relative;
+  z-index: 2;
+  margin-top: -55px;
+}
+@media (max-width: 991px) {
+  .entry-content > .acm-slideshow:first-child,
+  .jr-album-top > .acm-slideshow:first-child {
+    margin-top: -35px;
+  }
+}
+@media (max-width: 767px) {
+  .entry-content > .acm-slideshow:first-child,
+  .jr-album-top > .acm-slideshow:first-child {
+    margin-top: 0;
+  }
+}
+
+/* ---------- 4. Off-canvas: the main menu in a panel from the left ---------- */
+.t3-off-canvas {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 250px;
+  z-index: 1001;
+  overflow-y: auto;
+  background: light-dark(var(--ds-c-ink, #222222), var(--ds-c-ink, #11100e));
+  color: var(--ds-c-on-ink, #ffffff);
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition: transform 0.3s, visibility 0.3s;
+}
+/* The navigation block gives an opened submenu `visibility: visible` of its own, which wins over the closed panel's
+   `hidden`: the links stayed painted-visible to anything reading their computed style while the panel stood off screen.
+   A closed panel hides every descendant too, flipping at the end of the slide. */
+:root:not(.jm-off-canvas-open) .t3-off-canvas * {
+  visibility: hidden !important;
+  transition: visibility 0.3s;
+}
+:root.jm-off-canvas-open .t3-off-canvas {
+  transform: none;
+  visibility: visible;
+}
+.t3-off-canvas .t3-off-canvas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  background: var(--ds-c-accent, #d24a24);
+  padding-left: 15px;
+}
+.t3-off-canvas .t3-off-canvas-header-title {
+  margin: 0;
+  font-family: var(--ds-font-ui, 'Roboto Mono', sans-serif);
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--ds-c-on-ink, #ffffff);
+}
+.t3-off-canvas .close {
+  width: 50px;
+  height: 50px;
+  border: 0;
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--ds-c-on-ink, #ffffff);
+  font-size: 24px;
+  cursor: pointer;
+}
+/* The source's panel sheet draws a dimming layer (`::after`, 20% black) over the whole closed panel and removes it when the
+   body has `off-canvas-open`; here the open mark is on the root, so the layer is removed on that. Left in place it covered
+   the panel and swallowed every tap, the close button's included. */
+:root.jm-off-canvas-open .t3-off-canvas::after {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+.t3-off-canvas .t3-off-canvas-body,
+.t3-off-canvas .jm-off-canvas-nav,
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__container {
+  display: block;
+  width: 100%;
+  margin-block: 0;
+}
+/* The source's rows: a top-level link is 50 px high, set 2 px apart with a 1 px rule above (not the first); a submenu
+   sits 25 px in from each side (a third level 15 px further) and its links are 14 px, 46 px high. */
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation-item {
+  display: block;
+  position: relative;
+  margin-block: 0;
+}
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__container > .wp-block-navigation-item + .wp-block-navigation-item {
+  margin-top: 2px;
+  border-top: 1px solid color-mix(in srgb, var(--ds-c-on-ink, #ffffff) 10%, transparent);
+}
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation-item__content {
+  display: block;
+  padding: 10px 15px;
+  color: var(--ds-c-on-ink, #ffffff);
+  font-size: 16px;
+  line-height: 30px;
+}
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__submenu-container {
+  position: static;
+  visibility: visible;
+  opacity: 1;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  padding: 13px 25px;
+}
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__container > .has-child > .wp-block-navigation__submenu-container {
+  border-top: 1px solid color-mix(in srgb, var(--ds-c-on-ink, #ffffff) 10%, transparent);
+}
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container {
+  padding: 0 15px;
+}
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__submenu-container .wp-block-navigation-item {
+  border: 0;
+  margin: 0;
+}
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__submenu-container .wp-block-navigation-item .wp-block-navigation-item__content {
+  /* core makes a submenu link a flex row; the source's is a block of inline text (arrow + label on one line box) */
+  display: block;
+  padding: 10px 30px;
+  font-size: 14px;
+  line-height: 26px;
+}
+/* A submenu heading (the source's `nav-header`) is set in capitals. */
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__submenu-container .has-child > .wp-block-navigation-item__content {
+  text-transform: uppercase;
+}
+/* The caret that opens a submenu sits at the right end of its row, as the source's does, not on a line of its own. */
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation-submenu__toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 50px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  color: var(--ds-c-on-ink, #ffffff);
+}
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation-submenu__toggle svg {
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
+}
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__submenu-container .wp-block-navigation-submenu__toggle {
+  height: 46px;
+}
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+  position: relative;
+}
+/* The arrow stands in the link's own left padding (the source's), so the label starts 30 px in and wraps as the source's does. */
+.t3-off-canvas .jm-off-canvas-nav .wp-block-navigation__submenu-container .wp-block-navigation-item__content::before {
+  content: '\2192';
+  position: absolute;
+  left: 0;
+}
+.t3-off-canvas .jm-off-canvas-nav .current-menu-item > .wp-block-navigation-item__content {
+  color: var(--ds-c-accent-text, #d24a24);
+}
+
+/* the article tags (div.tags, blog.php): words on the accent fill read the fill's text role (the carried .label paints #fff) */
+.tags .label-info,
+.tags a.label-info:hover,
+.tags a.label-info:focus {
+  color: var(--ds-c-accent-on, #ffffff);
+}
+
+/* ---------- 5. Footer: the source's own markup (row > col-lg-4 > module > module-inner), so template.css gives the layout ---------- */
+.t3-footer.wp-block-group > *,
+.t3-footer .wp-block-group > :not(.t3-module, .module-title, .copyright) {
+  margin-block: 0;
+}
+.jr-footer {
+  padding-top: 0;
+  padding-bottom: 0;
+  border-top: 0;
+}
+.t3-footer .module-ct {
+  display: flow-root;
+}
+.t3-footer .wp-block-group.module-ct > p {
+  margin-bottom: 15px;
+}
+/* the source prints the Get Direction link bare after the paragraph, so nothing follows it */
+.t3-footer .wp-block-group.module-ct > p:has(> a:only-child) {
+  margin-bottom: 0;
+}
+/* the source keeps a 60x30 box under the copyright for the (hidden) T3 logo; the row keeps the same room */
+.t3-copyright .row::after {
+  content: "";
+  display: block;
+  clear: both;
+  height: 30px;
+}
+.t3-copyright p.copyright {
+  margin-bottom: 30px;
+}
+.t3-copyright .copyright a {
+  color: var(--ds-c-accent-on-ink, #ffd33d);
+}
+
+/* ---------- 6. Back to top (inc/extra.php prints the button; the carried source rules place and scale it, wp-ja-restaurant.js sets `affix`) ---------- */
+.back-to-top .btn {
+  display: inline-block;
+  line-height: 1;
+}
+@media (max-width: 991px) {
+  .back-to-top {
+    display: none;
+  }
+}
+
+/* ---------- 7. The section frame every ACM pattern carries (the template's modChrome_T3section, S-8) ----------
+   root  .t3-section-module.mod-<style>[.jr-boxed][.jr-bg-*]  >  figure.jr-section-bg (the module background, an Image block)
+         >  .t3-section-inner [> .container when jr-boxed]  >  h2.t3-section-title + p.t3-section-description + .t3-section-ct */
+.t3-section-module {
+  position: relative;
+}
+.t3-section-module > .jr-section-bg {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.t3-section-module > .jr-section-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+.t3-section-module.jr-bg-bottom-right > .jr-section-bg {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.t3-section-module.jr-bg-bottom-right > .jr-section-bg img {
+  /* background-size auto: the picture's own size (the width/height attributes), pinned to the corner;
+     width:100% would let WordPress's sizes="auto" stretch it to the section width */
+  width: 500px;
+  width: attr(width px, 500px);
+  max-width: 100%;
+  height: auto;
+  flex: none;
+  object-fit: none;
+}
+.t3-section-module.jr-bg-fixed > .jr-section-bg {
+  clip-path: inset(0);
+}
+.t3-section-module.jr-bg-fixed > .jr-section-bg img {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+}
+.t3-section-module > .t3-section-inner {
+  position: relative;
+  z-index: 1;
+}
+.t3-section-module .t3-section-title,
+.t3-section-module .t3-section-description {
+  text-align: center;
+}
+@media (max-width: 767px) {
+  .t3-section-module > .jr-section-bg,
+  .t3-section-module.jr-bg-bottom-right > .jr-section-bg {
+    display: none;
+  }
+}
+
+
+/* The menu band stays above the slideshow and the masthead that ride up 55 px under it (the source's .t3-mainnav z-index 10). */
+.jr-header {
+  position: relative;
+  z-index: 10;
+  /* no ground of its own: the slideshow / masthead picture shows beside the menu band, from y 268 as the source's does */
+  background: transparent;
+}
+
+/* The contact page's map (pattern acm-contact-map-default): the rules the source module carries inline. */
+.contact-map {
+  padding-top: 55px;
+}
+.contact-map iframe {
+  display: block;
+  width: 100%;
+  height: 450px;
+  border: 0;
+}
+@media (max-width: 991px) {
+  .contact-map {
+    padding-top: 35px;
+  }
+}
+@media (max-width: 767px) {
+  .contact-map {
+    padding-top: 0;
+  }
+}
+
+/* The source's off-canvas sheet stacks its page wrapper (.t3-wrapper, z-index 99) above everything; on WordPress the
+   wrapper is the main block after the header part, so it would cover the menu band and catch its clicks. */
+.jr-main.t3-wrapper {
+  z-index: auto;
+}
+
+/* The dropdown keeps the pointer while it travels from the label to the panel: the panel's top edge reaches up over the
+   band's 2 px frame (measured by review/mega-hover: the panel closed at the frame line, y 313), and Escape closes it
+   (assets/js/wp-ja-restaurant.js marks the item; WordPress's hover rule would keep it open). */
+.t3-mainnav .jr-mainmenu > .wp-block-navigation__container > .has-child > .wp-block-navigation__submenu-container::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -16px;
+  height: 16px;
+}
+.t3-mainnav .jr-mainmenu .has-child.jm-submenu-closed > .wp-block-navigation__submenu-container {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* No frame lines of WordPress's own on the header part and on pictures drawn as backgrounds (the source paints them as
+   CSS backgrounds; the carried `figure` rule would frame the Image block). */
+.jr-header,
+.jr-masthead-bg,
+.jr-section-bg {
+  border: 0;
+}
+
+/* ---------- Dark: native controls and the disabled button (round 3) ---------- */
+/* The root already carries color-scheme: dark; a checked checkbox or radio is still the browser's blue, so the accent is named. */
+:root[data-theme='dark'] :is(input[type='checkbox'], input[type='radio']) {
+  accent-color: var(--ds-c-accent, var(--wp--preset--color--accent));
+}
+/* The disabled default button is the surface's own fill at 65% in the dark, which reads as the enabled one at rest:
+   a flat, dashed outline says "not available". */
+:root[data-theme='dark'] .btn:is(.disabled, [disabled], :disabled) {
+  background-color: transparent;
+  border-style: dashed;
+  border-color: var(--ds-c-border, var(--wp--preset--color--border));
+  box-shadow: none;
+}
+
+/* ---------- Dark: the page-title picture ---------- */
+/* The source has no dark theme, so its masthead picture keeps full daytime brightness and the thin subtitle sinks into
+   it. In the dark a scrim of the page colour sits between the picture (z 0) and the title block (z 2). Light is untouched. */
+:root[data-theme='dark'] .t3-masthead .ja-masthead::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: color-mix(in srgb, var(--wp--preset--color--bg) 62%, transparent);
+  pointer-events: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .t3-masthead .ja-masthead::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-color: color-mix(in srgb, var(--wp--preset--color--bg) 62%, transparent);
+    pointer-events: none;
+  }
+}

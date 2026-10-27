@@ -1,0 +1,293 @@
+{
+  "dos": [
+    "Use Waldenburg at weight 300 for all display headlines 32px+; never apply bold or semibold weights to it — the whisper-weight is the brand's signature restraint.",
+    "Set all buttons, tags, and tab pills to 9999px radius; the pill shape is non-negotiable and defines the system's most recognizable component.",
+    "Use #000000 filled buttons paired with #fdfcfc outline buttons as the only button hierarchy — do not introduce colored CTA fills.",
+    "Reserve #0447ff violet and #ff4704 orange exclusively for product visuals (audio spheres, product icons, illustration accents); never apply them to UI text, borders, or interactive elements.",
+    "Use 1px solid #ebe8e4 hairline borders for section separation; prefer borders over drop shadows for the flat editorial feel.",
+    "Apply -0.02em letter-spacing on all Waldenburg headlines at 32px+ and +0.01em tracking on Inter body at 14–16px — the opposite tracking directions create a deliberate contrast between display and body.",
+    "Stack surfaces as eggshell → taupe → stone; never use pure white or pure gray — warmth is the system's defining tonal quality."
+  ],
+  "donts": [
+    "Do not bold or semibold Waldenburg — the weight-300 whisper is the brand's most distinctive choice and bolding destroys it.",
+    "Do not use violet #0447ff or orange #ff4704 for buttons, links, badges, or any interactive UI element; these colors are decoration-only.",
+    "Do not add heavy drop shadows; the system uses near-invisible 1px shadows only — no blurred elevation effects.",
+    "Do not introduce new accent colors beyond the two product-visual sparks; the palette is intentionally 97% achromatic.",
+    "Do not use sharp corners (<8px) on cards or feature panels; the 20–24px radii are a signature.",
+    "Do not use pure white #ffffff for backgrounds; always use #fdfcfc eggshell to maintain the warm paper-like canvas.",
+    "Do not use display-weight fonts (anything heavier than Waldenburg 300) for body copy; Inter 400/500 owns everything below 24px."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#fdfcfc",
+      "name": "Eggshell",
+      "role": "Page canvas, button surfaces, card surfaces — warm off-white rather than clinical white avoids digital glare and gives the site a paper-like calm",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f5f3f1",
+      "name": "Warm Taupe",
+      "role": "Section bands, feature cards, and secondary surface level — one step deeper than eggshell, creates quiet separation without borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ebe8e4",
+      "name": "Stone",
+      "role": "Hairline borders, dividers, icon plate backgrounds — warm gray that sits between taupe and mid-gray without feeling cold",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink",
+      "role": "Primary text, filled buttons, nav, links — pure black anchors the otherwise warm palette and creates the system's only hard contrast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#44403b",
+      "name": "Graphite",
+      "role": "Strong secondary text, section labels — barely-warm dark gray for text that needs weight without true-black harshness",
+      "group": "neutral"
+    },
+    {
+      "hex": "#777169",
+      "name": "Smoke",
+      "role": "Body text, muted descriptions, caption labels — mid warm-gray; the dominant readable-but-quiet voice across cards and feature copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a59f97",
+      "name": "Ash",
+      "role": "Faintest helper text, tertiary descriptions — the softest gray, used when text should feel like a footnote",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0447ff",
+      "name": "Violet Spark",
+      "role": "Product visual accent — appears inside audio sphere illustrations and decorative product icons only; never used for UI chrome",
+      "group": "brand"
+    },
+    {
+      "hex": "#ff4704",
+      "name": "Ember Orange",
+      "role": "Product visual accent — second sphere color and product icon highlight; paired with Violet Spark inside artwork, never in buttons or links",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-width sections flow vertically in a single max-width 1280px centered column with 64px outer gutters. Hero is asymmetric: left-aligned headline at 48px Waldenburg, right-aligned body description, with two pill buttons stacked below the headline. Below the hero, a large feature panel with tab navigation spans the full content width. Sections alternate between eggshell canvas and taupe band backgrounds with 96–125px vertical gaps. Footer is a compact single band. Navigation is a minimal top bar — no sticky behavior, no mega-menu. Content rhythm is editorial: generous whitespace, one major visual per section, no card grids below the trust section.",
+  "imagery": "Product visuals dominate the imagery language: large soft-edged audio sphere gradients (200px+ circles with radial violet-to-orange-to-pink blends) serve as the hero graphic. Logos in the trust section appear in low-contrast grayscale against the eggshell canvas. Photography is minimal — no lifestyle or product photography detected. Iconography is sparse and monochrome (black outlined or filled icons, no chromatic icons). The visual system feels more like a design publication than a product catalog — editorial restraint over marketing spectacle.",
+  "similar": [
+    {
+      "why": "Same whisper-weight display headlines paired with monochrome UI and pill-shaped buttons; both achieve authority through typographic restraint rather than color.",
+      "business": "Linear"
+    },
+    {
+      "why": "Same near-white warm canvas with stark black text and pill buttons; both use minimal color and let typography carry the brand.",
+      "business": "Vercel"
+    },
+    {
+      "why": "Same editorial restraint with hairline borders, generous whitespace, and accent colors reserved for illustrations rather than UI chrome.",
+      "business": "Stripe"
+    },
+    {
+      "why": "Same warm off-white palette with taupe secondary surfaces and pill-shaped interactive elements; both feel like paper rather than glass.",
+      "business": "Notion"
+    },
+    {
+      "why": "Same Bauhaus-influenced minimalism with whisper-weight headlines and a 97% achromatic palette that lets single accent colors feel significant.",
+      "business": "Framer"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "20px",
+      "inputs": "4px",
+      "buttons": "9999px",
+      "large-cards": "24px",
+      "small-elements": "4-10px"
+    },
+    "elementGap": "8-16px",
+    "sectionGap": "96-125px",
+    "cardPadding": "32px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "ai",
+  "surfaces": [
+    {
+      "hex": "#fdfcfc",
+      "name": "Eggshell Canvas",
+      "level": 1,
+      "purpose": "Base page background — warm off-white that reads as paper, not screen"
+    },
+    {
+      "hex": "#f5f3f1",
+      "name": "Warm Taupe",
+      "level": 2,
+      "purpose": "Section bands and card surfaces that need to sit one step above the canvas without a border"
+    },
+    {
+      "hex": "#ebe8e4",
+      "name": "Stone Plate",
+      "level": 3,
+      "purpose": "Icon plates, subtle elevated backgrounds — slightly deeper than taupe for small isolated elements"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0, 0, 0, 0.4) 0px 0px 1px 0px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px 2px 4px 0px",
+      "element": "Buttons and elevated cards"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.075) 0px 0px 0px 0.5px inset",
+      "element": "Inset borders / focus halos"
+    }
+  ],
+  "northStar": "Warm cream editorial with whispered headlines. A Bauhaus studio notebook — eggshell paper, black ink, a single violet and orange spark for product moments.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.14
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.16
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.6
+    },
+    {
+      "role": "body-lg",
+      "size": 20,
+      "lineHeight": 1.35
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.13,
+      "letterSpacing": -0.64
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.17,
+      "letterSpacing": -0.72
+    },
+    {
+      "role": "display",
+      "size": 48,
+      "lineHeight": 1.08,
+      "letterSpacing": -0.96
+    }
+  ],
+  "components": [
+    {
+      "name": "Filled Pill Button",
+      "role": "Primary action",
+      "description": "Black (#000000) fill, white text, 9999px radius, 16px horizontal padding, Inter 14px/500. 1px solid #e5e5e5 border (legacy support). Used for 'Sign up', 'Create an AI agent', 'Learn more'. The pill shape is the system's most recognizable component."
+    },
+    {
+      "name": "Outline Pill Button",
+      "role": "Secondary action",
+      "description": "White (#fdfcfc) fill, black text, 9999px radius, 14px horizontal padding, Inter 14px/500. 1px solid #e5e5e5 border. Used for 'Contact sales', 'Log in'. Lower visual weight than the filled variant — pairs beside it without competing."
+    },
+    {
+      "name": "Ghost Link Button",
+      "role": "Tertiary navigation or in-text action",
+      "description": "Transparent fill, black text, 9999px radius, Inter 14px/500. 1px solid #e5e5e5 border. Used for nav items and inline actions. No visible fill until hover."
+    },
+    {
+      "name": "Feature Card (Taupe)",
+      "role": "Feature showcase panel",
+      "description": "#f5f3f1 warm taupe fill, 20px radius, 32px horizontal padding, no shadow, no border. The dominant card pattern (22 occurrences). Flat, quiet, sits on the canvas without elevation."
+    },
+    {
+      "name": "White Card with Whisper Shadow",
+      "role": "Elevated content card",
+      "description": "White (#fdfcfc) fill, 20px radius, 16px all-side padding, three-layer whisper shadow (1px hard edge + 1px blur + 4px blur at 4% opacity). Used sparingly — only when a card needs to sit above other content with subtle separation."
+    },
+    {
+      "name": "Large Feature Card",
+      "role": "Hero feature block",
+      "description": "#f5f3f1 fill, 24px radius (slightly larger than standard 20px), generous internal padding. Used for flagship feature showcases that need more visual breathing room."
+    },
+    {
+      "name": "Tab Pill",
+      "role": "Product switcher in feature panels",
+      "description": "White fill, black text, 9999px radius, 1px border. Active state marked by a small colored dot (orange for ElevenCreative, teal for ElevenAgents, gray for ElevenAPI). Tabs sit inline above the card content."
+    },
+    {
+      "name": "Hairline Divider",
+      "role": "Section separation",
+      "description": "1px solid #ebe8e4 stone-colored line. Preferred over whitespace when sections need explicit separation. Used 54 times across the page — the most common border pattern."
+    },
+    {
+      "name": "Audio Sphere Visual",
+      "role": "Product showcase graphic",
+      "description": "Large circular gradient sphere (roughly 200px diameter) with soft radial gradients blending violet #0447ff, orange #ff4704, pink, and warm tones. Centered play-button overlay. No hard edges — these are the system's signature visual and appear 3x in a carousel row."
+    },
+    {
+      "name": "Logo Wordmark",
+      "role": "Brand identity",
+      "description": "Black text reading 'ElevenLabs' in Inter bold/semibold. Consistent across header and footer. No icon mark — the wordmark alone carries the brand."
+    },
+    {
+      "name": "Top Nav Bar",
+      "role": "Primary navigation",
+      "description": "Transparent on eggshell canvas, 50px height. Logo left, nav links center-left (Inter 14px), auth buttons right (outline 'Log in' + filled 'Sign up'). No background fill — the nav is invisible until scroll."
+    },
+    {
+      "name": "Trust Logo Grid",
+      "role": "Social proof section",
+      "description": "6-column grid of partner logos (Twilio, Disney, KPN, NVIDIA, Meta, etc.) rendered in grayscale at low contrast. Logos sit on the eggshell canvas with generous padding — not boxed in cards. 'Read all stories' outline button top-right."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display and heading type only. Used at 48/36/32px with weight 300 — the ultra-light weight is anti-convention; most sites use 600-700, this whisper-weight creates authority through restraint. Tight -0.02em tracking pulls letters closer at large sizes. Substitute: \"Inter\" weight 300, or \"Söhne\" light as a premium alternative.",
+      "sizes": "32px, 36px, 48px",
+      "family": "Waldenburg",
+      "weight": "300",
+      "lineHeight": "1.08–1.17",
+      "substitute": "Inter (300) or Söhne Light",
+      "letterSpacing": "-0.96px at 48px, -0.72px at 36px, -0.64px at 32px (-0.0200em throughout)",
+      "fontFeatureSettings": "\"ss01\" on if available"
+    },
+    {
+      "role": "Everything outside display: body, nav, buttons, links, captions, inputs, cards. Weight 400 is the default; weight 500 reserved for buttons and emphasized links. Sizes span 10–20px with relaxed line-heights (1.47–1.6) that give paragraphs breathing room. Slight +0.01em tracking (0.0100em) at 14–16px sizes adds legibility at small sizes.",
+      "sizes": "10px, 12px, 13px, 14px, 15px, 16px, 18px, 20px",
+      "family": "Inter",
+      "weight": "400, 500",
+      "lineHeight": "1.20–2.06",
+      "substitute": "Inter or system-ui",
+      "letterSpacing": "0.0100em at 14/15/16px sizes, normal elsewhere"
+    },
+    {
+      "role": "Code-adjacent or technical micro-copy at 13px — used sparingly (freq=28) for technical labels or metadata. Single weight, generous 1.69 line-height.",
+      "sizes": "13px",
+      "family": "Geist Mono",
+      "weight": "400",
+      "lineHeight": "1.69",
+      "substitute": "JetBrains Mono or IBM Plex Mono"
+    }
+  ],
+  "description": "ElevenLabs runs on a warm-white minimalism: an off-white eggshell canvas (#fdfcfc) holding black type and a single layer of warm taupe surfaces (#f5f3f1). The brand voice is quiet and confident — whisper-weight Waldenburg at 300 carves display headlines with extreme tightness (-0.02em), while Inter at 400/500 carries everything else with calm neutrality. Two accent sparks — vivid violet #0447ff and vivid orange #ff4704 — only ignite inside product visuals (audio spheres, product icons), never as UI chrome. Components stay flat or barely elevated with hairline 1px borders, generous 20px radii on cards, and fully-pilled 9999px buttons. The system feels like a Bauhaus studio on cream paper: restrained, editorial, and technically precise.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #000000 (primary), #777169 (body), #a59f97 (caption)\n- background: #fdfcfc (canvas), #f5f3f1 (card surface)\n- border: #ebe8e4 (hairline), #e5e5e5 (button border)\n- accent: #0447ff (violet spark — product visuals only)\n- accent: #ff4704 (ember orange — product visuals only)\n- primary action: #000000 (filled action)\n\n**3-5 Example Component Prompts**\n\n1. Create a hero headline: 'Bringing technology to life' at 48px Waldenburg weight 300, color #000000, letter-spacing -0.96px, line-height 1.08. Left-aligned on #fdfcfc canvas.\n\n2. Create a primary button: 'Sign up' — 9999px radius, #000000 fill, white text, Inter 14px/500, 16px horizontal padding, 1px solid #e5e5e5 border.\n\n3. Create a secondary button: 'Contact sales' — 9999px radius, #fdfcfc fill, #000000 text, Inter 14px/500, 14px horizontal padding, 1px solid #e5e5e5 border.\n\n4. Create a feature card: #f5f3f1 fill, 20px radius, 32px horizontal padding, no shadow. Title at 36px Waldenburg 300, description at 16px Inter 400 in #777169.\n\n5. Create an audio sphere visual: 200px circle with radial-gradient blending #0447ff, #ff4704, and pink, no hard edge. Center play icon in white circle 48px diameter."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is whisper-quiet. The system prefers hairline 1px borders (54 occurrences) over drop shadows. When shadows do appear, they're nearly invisible: a 1px hard edge plus two near-transparent blur layers totaling <5% opacity. The intent is to suggest depth without ever creating visible 'lift' — surfaces feel flush to the paper rather than floating above it."
+}

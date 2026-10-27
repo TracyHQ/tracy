@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-vellum-sand: #f4e6cd;
+  --color-pressed-linen: #edddc3;
+  --color-aged-ink: #1e211e;
+  --color-charcoal-black: #000000;
+  --color-twilight-bronze: #8f774b;
+  --color-hayfield: #ba9d6a;
+  --color-wheat-sheaf: #d6bd97;
+
+  /* Typography — Font Families */
+  --font-pp-neue-montreal: 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

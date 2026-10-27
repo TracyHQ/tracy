@@ -1,0 +1,131 @@
+/* tokens.css — written by scripts/theme-tokens.mjs of the tracy-wordpress-theme skill.
+ * Design contract: tasks/ja-impact-wp7/spec/design-contract.json (id wp-ja-impact, revision 2), variant desktop-light.
+ * Fallback: vendor/tracy/od-design-system/systems/apple/tokens.css.
+ *
+ * 23 tokens MEASURED from the contract, 1 DERIVED (contrast-checked), 32 taken from the fallback — the block at the
+ * end says which is which. A fallback value is a guess standing in until a rule measures it.
+ * Schema: the 56 custom properties the theme generator accepts (TOKEN_NAMES in its build.mjs).
+ */
+
+:root {
+  --bg:                        #ffffff; /* measured */
+  --surface:                   #fbfbfb; /* measured: --t4-bg-item (card/field surface, design-system.md) — hand-corrected, S-01 */
+  --surface-warm:              #fff9ef; /* measured: --color-light (bg-light bands, design contract tokens) — hand-corrected, S-01 */
+  --fg:                        #495057; /* measured */
+  --fg-2:                      #1d3677; /* measured */
+  --muted:                     #6c757d; /* measured: --color-secondary — hand-corrected, S-01 */
+  --meta:                      #6c757d; /* measured: --color-secondary — hand-corrected, S-01 */
+  --border:                    #e9ecef; /* measured */
+  --border-soft:               #e8e8ed; /* fallback */
+  --accent:                    #0cb76d; /* measured */
+  --accent-on:                 #ffffff; /* measured: .btn-success text colour (white on the green, 2.62:1 — kept as the source draws it, D-03) — hand-corrected, S-02 */
+  --accent-hover:              #0cb76d; /* measured: source hover keeps the colour and drops opacity to .85 (theme.tpl.css:171-180) — hand-corrected, S-01 */
+  --accent-active:             #0cb76d; /* measured: as hover — hand-corrected, S-01 */
+  --success:                   #0cb76d; /* measured */
+  --warn:                      #f48a29; /* measured: --color-warning — hand-corrected, S-01 */
+  --danger:                    #dc3545; /* measured: --color-danger — hand-corrected, S-01 */
+  --font-display:              "Readex Pro"; /* measured */
+  --font-body:                 "Readex Pro"; /* measured */
+  --font-mono:                 "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Monaco, Consolas, monospace; /* fallback */
+  --text-xs:                   12px; /* fallback */
+  --text-sm:                   16px; /* measured */
+  --text-base:                 16px; /* measured */
+  --text-lg:                   18px; /* measured */
+  --text-xl:                   24px; /* measured */
+  --text-2xl:                  28px; /* measured */
+  --text-3xl:                  40px; /* measured */
+  --text-4xl:                  72px; /* measured */
+  --leading-body:              1.6; /* measured */
+  --leading-tight:             1.2; /* measured */
+  --tracking-display:          -0.02em; /* measured */
+  --space-1:                   4px; /* fallback */
+  --space-2:                   8px; /* fallback */
+  --space-3:                   12px; /* fallback */
+  --space-4:                   16px; /* fallback */
+  --space-5:                   20px; /* fallback */
+  --space-6:                   24px; /* fallback */
+  --space-8:                   32px; /* fallback */
+  --space-12:                  48px; /* fallback */
+  --radius-sm:                 8px; /* measured: $border-radius — hand-corrected, S-01 */
+  --radius-md:                 8px; /* measured: $border-radius — hand-corrected, S-01 */
+  --radius-lg:                 8px; /* measured: $border-radius — hand-corrected, S-01 */
+  --radius-pill:               980px; /* fallback */
+  --elev-flat:                 none; /* fallback */
+  --elev-ring:                 0 0 0 1px var(--border); /* fallback */
+  --elev-raised:               0 12px 32px rgba(0, 0, 0, 0.08); /* fallback */
+  --focus-ring:                0 0 0 4px color-mix(in oklab, var(--accent), transparent 65%); /* fallback */
+  --motion-fast:               150ms; /* fallback */
+  --motion-base:               220ms; /* fallback */
+  --ease-standard:             cubic-bezier(0.28, 0, 0.22, 1); /* fallback */
+  --section-y-desktop:         128px; /* measured: rule section-rhythm paddingTop at 1440 — hand-corrected, S-01 */
+  --section-y-tablet:          48px; /* measured: section-rhythm below 1200 px (design-system.md) — hand-corrected, S-01 */
+  --section-y-phone:           48px; /* measured: rule section-rhythm paddingTop at mobile-light — hand-corrected, S-01 */
+  --container-max:             1376px; /* measured */
+  --container-gutter-desktop:  16px; /* measured */
+  --container-gutter-tablet:   16px; /* measured: container paddingLeft — hand-corrected, S-01 */
+  --container-gutter-phone:    16px; /* measured */
+}
+
+/* Provenance — every token once; "measured" came from a contract rule or its token map,
+ * "fallback" from the fallback file and is a GUESS until a rule measures it.
+ *
+ * measured (23):
+ *   --bg                        rule body-colors (body) backgroundColor
+ *   --surface                   rule bs-card (.t4-main-body .card) backgroundColor
+ *   --surface-warm              rule footer-band (#t4-footnav) backgroundColor
+ *   --fg                        rule body-colors (body) color
+ *   --fg-2                      rule heading-h1 (.t4-main-body h1) color
+ *   --border                    rule bs-card (.t4-main-body .card) borderTopColor
+ *   --accent                    rule btn-success (.acm-hero .btn-success) backgroundColor
+ *   --success                   rule btn-success (.acm-hero .btn-success) backgroundColor
+ *   --font-display              rule heading-h1 (.t4-main-body h1) fontFamily
+ *   --font-body                 rule body-type (body) fontFamily
+ *   --text-sm                   rule heading-h6 (.t4-main-body h6) fontSize
+ *   --text-base                 rule body-type (body) fontSize
+ *   --text-lg                   rule heading-h5 (.t4-main-body h5) fontSize
+ *   --text-xl                   rule heading-h4 (.t4-main-body h4) fontSize
+ *   --text-2xl                  rule heading-h3 (.t4-main-body h3) fontSize
+ *   --text-3xl                  rule heading-h2 (.t4-main-body h2) fontSize
+ *   --text-4xl                  rule heading-h1 (.t4-main-body h1) fontSize
+ *   --leading-body              rule body-type (body) lineHeight
+ *   --leading-tight             rule heading-h1 (.t4-main-body h1) lineHeight
+ *   --tracking-display          rule heading-h1 (.t4-main-body h1) letterSpacing
+ *   --container-max             rule container (.t4-section-inner.container) maxWidth
+ *   --container-gutter-desktop  rule container (.t4-section-inner.container) paddingLeft
+ *   --container-gutter-phone    rule container (.t4-section-inner.container) paddingLeft at mobile-light
+ * derived (1):
+ *   --accent-on                 contrast: measured #ffffff (rule btn-success (.acm-hero .btn-success) color) is 2.62:1 on --accent #0cb76d, below 4.5:1; used #000000 (8.01:1)
+ * fallback (32):
+ *   --muted                     apple/tokens.css
+ *   --meta                      apple/tokens.css
+ *   --border-soft               apple/tokens.css
+ *   --accent-hover              apple/tokens.css
+ *   --accent-active             apple/tokens.css
+ *   --warn                      apple/tokens.css
+ *   --danger                    apple/tokens.css
+ *   --font-mono                 apple/tokens.css
+ *   --text-xs                   apple/tokens.css
+ *   --space-1                   apple/tokens.css
+ *   --space-2                   apple/tokens.css
+ *   --space-3                   apple/tokens.css
+ *   --space-4                   apple/tokens.css
+ *   --space-5                   apple/tokens.css
+ *   --space-6                   apple/tokens.css
+ *   --space-8                   apple/tokens.css
+ *   --space-12                  apple/tokens.css
+ *   --radius-sm                 apple/tokens.css
+ *   --radius-md                 apple/tokens.css
+ *   --radius-lg                 apple/tokens.css
+ *   --radius-pill               apple/tokens.css
+ *   --elev-flat                 apple/tokens.css
+ *   --elev-ring                 apple/tokens.css
+ *   --elev-raised               apple/tokens.css
+ *   --focus-ring                apple/tokens.css
+ *   --motion-fast               apple/tokens.css
+ *   --motion-base               apple/tokens.css
+ *   --ease-standard             apple/tokens.css
+ *   --section-y-desktop         apple/tokens.css
+ *   --section-y-tablet          apple/tokens.css
+ *   --section-y-phone           apple/tokens.css
+ *   --container-gutter-tablet   apple/tokens.css
+ */

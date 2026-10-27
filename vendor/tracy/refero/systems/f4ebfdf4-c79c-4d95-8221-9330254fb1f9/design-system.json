@@ -1,0 +1,348 @@
+{
+  "dos": [
+    "Use Saiga 800–1000 weight for any display headline above 32px; pair it with tight negative tracking per the type scale",
+    "Apply #7622d7 as a concentrated accent — filled pills, link text, active icon strokes — not as broad surface fills",
+    "Layer surfaces using the lavender stack: #ffffff → #f9f5ff → #f0e6fa, never introduce neutral grays for section backgrounds",
+    "Use 32px border-radius for all primary interactive elements (buttons, tag-like links) to reinforce the pill language",
+    "Set button padding to 12px 16px and maintain 700 weight DM Sans for filled CTAs to preserve the compact confident button",
+    "Let headings and body copy sit directly on white with no card wrappers — only surround content in lavender cards when the content needs visual grouping",
+    "Use 1px hairline borders in #e4e4e7 for structural separation; avoid box-shadows to maintain the flat precise feel"
+  ],
+  "donts": [
+    "Don't use Saiga at weights below 700 or for body copy — its geometric character only works at scale",
+    "Don't dilute #7622d7 with opacity washes, tints, or desaturated variants for backgrounds; the violet must remain a single committed hue",
+    "Don't use square corners (0–4px) for any user-facing interactive element; the system is built on 8px minimum and 32px for actions",
+    "Don't apply box-shadows to cards or buttons — separation comes from fill color and 1px borders only",
+    "Don't mix #000000 and #121214 arbitrarily; reserve #000000 for the highest-emphasis headings and #121214 for secondary dark text and dark surfaces",
+    "Don't introduce additional accent hues; lime green (#94e022) and gold (#ffefa7) are reserved for status/emphasis only, never for decoration",
+    "Don't stretch DM Sans beyond 36px — display moments always belong to Saiga"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#7622d7",
+      "name": "Hero Violet",
+      "role": "Primary action fills, active nav, link text, icon strokes, key borders — concentrated violet that signals interactivity and energy against the achromatic canvas",
+      "group": "brand"
+    },
+    {
+      "hex": "#f9f5ff",
+      "name": "Lavender Wash",
+      "role": "Soft section backgrounds, card fills, hover surfaces — barely-there violet tint that creates atmospheric depth without committing to color",
+      "group": "brand"
+    },
+    {
+      "hex": "#f0e6fa",
+      "name": "Lilac Bloom",
+      "role": "Slightly stronger lavender for tagged surfaces, highlighted cards, badge backgrounds",
+      "group": "brand"
+    },
+    {
+      "hex": "#e6d5fe",
+      "name": "Periwinkle Veil",
+      "role": "Outlined action borders, soft decorative borders, glow/shadow tints — a mid-violet for quieter emphasis",
+      "group": "brand"
+    },
+    {
+      "hex": "#000000",
+      "name": "Ink Black",
+      "role": "Primary headings, dominant body text, high-contrast borders, footer surfaces — the load-bearing neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#121214",
+      "name": "Carbon",
+      "role": "Secondary headings, dark UI blocks, badge text on light fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#27272a",
+      "name": "Graphite",
+      "role": "Input field text, subdued body text, card detail labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5a5b5f",
+      "name": "Iron",
+      "role": "Mid-tone icon strokes, secondary metadata, less prominent UI labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#71717a",
+      "name": "Slate",
+      "role": "Muted body text, helper text, placeholder text, tertiary labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#a9a9b2",
+      "name": "Mist",
+      "role": "Input borders, disabled states, de-emphasized dividers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e4e4e7",
+      "name": "Fog",
+      "role": "Hairline dividers, card borders, structural separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Page canvas, card surfaces, button text on violet fills, input fields",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffefa7",
+      "name": "Highlight Gold",
+      "role": "Accent surface for special callouts, limited-use highlight wash (badge spotlight or feature emphasis)",
+      "group": "accent"
+    },
+    {
+      "hex": "#94e022",
+      "name": "Lime Pulse",
+      "role": "Green action color for filled buttons, selected navigation states, and focused conversion moments",
+      "group": "accent"
+    },
+    {
+      "hex": "#9a58fc",
+      "name": "Aurora Violet",
+      "role": "Gradient stops for hero washes and decorative banners",
+      "group": "brand",
+      "gradient": "linear-gradient(90deg, #9a58fc, #70ddff, #e6d5fe, #bafc58, #9a58fc)"
+    }
+  ],
+  "layout": "Page is a centered max-width container (~1200px) with full-width sections. The hero is a centered single-column stack: eyebrow pill, massive two-line Saiga headline, subheadline paragraph, single primary CTA. Below the hero sits a full-bleed cinematic image band, then a compact social proof row, then a mascot-led transition into a 3-column audience card grid (equal-width cards, 24px gutter, identical structure). The customer logo strip is a single full-width row with chevron controls. Section rhythm is consistent: 80px vertical gaps between major bands, alternating white and #f9f5ff/lavender backgrounds create gentle visual separation. Navigation is a minimal top bar: logo left, three or four text links center, search + login right. No sidebar, no sticky header complexity. Content is always centered on the page axis; asymmetric layouts are absent.",
+  "imagery": "Imagery is product-led and illustration-augmented. The hero uses a wide cinematic photograph (person at desk with tablet) softened by a duotone-like overlay of violet and cyan — a stylized composite of floating app icons (calendar, job board, data, messaging) suggests a connected ecosystem. Below the hero, audience cards embed realistic product UI mockups (dashboard snippets, mobile screens, candidate profiles) rendered with soft drop-shadow or floating depth against lavender fills. A small green character mascot appears as a section accent between the hero and the audience cards. Iconography throughout is two-tone filled glyphs in app-icon style, used in the hero photograph and in product cards. Photography is warm-toned, slightly desaturated, and treated with colored overlay washes rather than raw edges.",
+  "similar": [
+    {
+      "why": "Same single-violet accent strategy with pill CTAs and centered SaaS hero patterns",
+      "business": "Deel"
+    },
+    {
+      "why": "Identical lavender surface layering and minimal-border card treatment",
+      "business": "Rippling"
+    },
+    {
+      "why": "HR/people-ops space with light canvas, violet brand accent, and rounded pill buttons",
+      "business": "Gusto"
+    },
+    {
+      "why": "Clean white SaaS hero with single-color accent and flat component treatment",
+      "business": "BambooHR"
+    },
+    {
+      "why": "Disciplined typographic hierarchy with weight contrast as the primary design move",
+      "business": "Linear"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "9999px",
+      "cards": "12px",
+      "badges": "8px",
+      "inputs": "8px",
+      "buttons": "32px",
+      "listItems": "8px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 0,
+      "purpose": "Primary page canvas and base reference surface"
+    },
+    {
+      "hex": "#f9f5ff",
+      "name": "Lavender Mist",
+      "level": 1,
+      "purpose": "Soft section background that hints at violet without being explicit"
+    },
+    {
+      "hex": "#f0e6fa",
+      "name": "Lilac Bloom",
+      "level": 2,
+      "purpose": "Highlighted cards, tagged surfaces, elevated callouts"
+    },
+    {
+      "hex": "#e6d5fe",
+      "name": "Aurora Wash",
+      "level": 3,
+      "purpose": "Decorative gradient surface, hero ambient backgrounds"
+    },
+    {
+      "hex": "#ffefa7",
+      "name": "Highlight Gold",
+      "level": 4,
+      "purpose": "Special accent surface for limited-use emphasis"
+    }
+  ],
+  "northStar": "violet ink on white parchment",
+  "typeScale": [
+    {
+      "role": "tiny",
+      "size": 10,
+      "lineHeight": 1
+    },
+    {
+      "role": "small",
+      "size": 12,
+      "lineHeight": 1.67
+    },
+    {
+      "role": "caption",
+      "size": 14,
+      "lineHeight": 1.55
+    },
+    {
+      "role": "body-sm",
+      "size": 16,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.43
+    },
+    {
+      "role": "subheading",
+      "size": 32,
+      "lineHeight": 1.14,
+      "letterSpacing": -0.096
+    },
+    {
+      "role": "heading-sm",
+      "size": 38,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.19
+    },
+    {
+      "role": "heading",
+      "size": 42,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.25
+    },
+    {
+      "role": "heading-lg",
+      "size": 60,
+      "lineHeight": 1.08,
+      "letterSpacing": -0.42
+    },
+    {
+      "role": "display",
+      "size": 80,
+      "lineHeight": 1.06,
+      "letterSpacing": -0.64
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Pill Button",
+      "role": "Main call-to-action (Request a demo, Learn more)",
+      "description": "Filled #7622d7 background, #ffffff text, 32px border-radius (full pill), 12px 16px padding, DM Sans 14–16px weight 700. Arrow icon in white at trailing edge. No shadow — depth comes from the saturated fill against the achromatic canvas."
+    },
+    {
+      "name": "Outlined Ghost Button",
+      "role": "Secondary action on light surfaces",
+      "description": "Transparent fill, 1px #e6d5fe border, #7622d7 text, 32px radius, 12px 16px padding, DM Sans 14px weight 600. Inherits a Periwinkle Veil border to keep the violet language even when the button doesn't commit to a fill."
+    },
+    {
+      "name": "Dark Pill Button",
+      "role": "Inverse CTA (e.g. notification bar 'Learn more')",
+      "description": "White fill, #000000 text, 32px radius, 6px 12px padding, DM Sans 13–14px weight 600. The notification bar's compact white pill is the smallest-scale button variant — it sits on a dark violet band and reads as a single bright spot."
+    },
+    {
+      "name": "Hero Section",
+      "role": "Above-the-fold headline and CTA",
+      "description": "White canvas, centered content stack. Eyebrow label in DM Sans 12–14px weight 500 with #7622d7 text inside a #f9f5ff rounded pill (1px border). Display headline in Saiga 80px weight 900, #000000, letter-spacing -0.64px, two-line stack. Subheadline in DM Sans 18px weight 400, #27272a, max-width ~640px. Primary CTA centered below."
+    },
+    {
+      "name": "Audience Card",
+      "role": "Three-column persona cards (For Businesses / Employees / Job Seekers)",
+      "description": "#f9f6ff or #f0e6fa background, 12–20px radius, 24px padding. Bold black title in Saiga 32px, primary violet 'Learn more' pill button. Product screenshot or illustration inset below. No shadow — separation is achieved through the lavender fill and 1px #e4e4e7 border at most."
+    },
+    {
+      "name": "Notification Bar",
+      "role": "Top promotional strip",
+      "description": "Dark violet background (~#2d0a5 or near-black violet), white DM Sans 13–14px text, 6–8px vertical padding, centered horizontally. Contains a compact white pill CTA at the right."
+    },
+    {
+      "name": "Social Proof Strip",
+      "role": "Review platform logos beneath hero",
+      "description": "White background, single row of platform marks (Capterra, Trustpilot, Google) with small star ratings in DM Sans 12px weight 400 #5a5b5f. No card wrapper — logos sit directly on the canvas with 32–48px horizontal gaps."
+    },
+    {
+      "name": "Customer Logo Carousel",
+      "role": "Brand trust strip",
+      "description": "Section with small uppercase eyebrow label 'TRUSTED BY 300K+ HAPPY CUSTOMERS' in DM Sans 12px weight 600 #71717a, letter-spacing +0.5px. Logos rendered in monochrome #27272a or #5a5b5f, evenly spaced in a single row with chevron navigation arrows on either end."
+    },
+    {
+      "name": "Text Input",
+      "role": "Form fields",
+      "description": "1px #e4e4e7 border, 8px radius, 12px 16px padding. Placeholder in #a9a9b2 DM Sans 14–16px. Active value in #27272a. Focus state shifts border to #7622d7 with optional subtle #e6d5fe ring."
+    },
+    {
+      "name": "Tag / Pill Badge",
+      "role": "Inline labels, taxonomy tags",
+      "description": "9999px radius, 4–8px vertical padding, 8–12px horizontal padding, DM Sans 10–12px weight 500. Filled variants: #f9f5ff bg with #7622d7 text. Outlined: 1px #e6d5fe border with #7622d7 text."
+    },
+    {
+      "name": "Footer Link List",
+      "role": "Site map navigation",
+      "description": "DM Sans 14–16px weight 400 #71717a link color, 8–12px row gap. Hover shifts to #7622d7. No underlines; weight contrast signals interactivity."
+    },
+    {
+      "name": "Star Rating Cluster",
+      "role": "Review display (Capterra, Trustpilot)",
+      "description": "5 stars in #ffefa7 gold with hollow-fill star for partial rating, followed by DM Sans 12px weight 400 #5a5b5f descriptor. Stars are typically 12–14px glyphs, no text between them."
+    },
+    {
+      "name": "Region Switcher",
+      "role": "Country selector in header",
+      "description": "Outlined button with 1px #e4e4e7 border, 8px radius, DM Sans 14px weight 400, #27272a text. Country name in bold, 'Change Region' label in normal weight inside a small dropdown container."
+    }
+  ],
+  "typography": [
+    {
+      "role": "UI and body workhorse. Weight 400 for body copy, 500 for emphasized text, 600 for subheadings, 700 for compact button labels. Neutral letter-spacing (normal) keeps long-form readable. Handles everything Saiga leaves behind — navigation, form fields, cards, tables, footnotes.",
+      "sizes": "10px, 12px, 14px, 16px, 18px, 24px, 28px, 36px",
+      "family": "DM Sans",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.00–1.67",
+      "substitute": "Inter (400, 500, 600, 700)"
+    },
+    {
+      "role": "Display and heading typeface. Custom geometric sans at extreme weights (800–1000) creates near-black slab headlines. Tight negative tracking (-0.002em to -0.008em) tightens letterforms at scale. Used only for marketing-facing headlines and the largest type moments — never for UI or body text.",
+      "sizes": "32px, 38px, 42px, 60px, 80px",
+      "family": "Saiga",
+      "weight": "800, 900, 1000",
+      "lineHeight": "1.06–1.14",
+      "substitute": "Plus Jakarta Sans (800, 900)",
+      "letterSpacing": "-0.64px at 80px, -0.42px at 60px, -0.252px at 42px, -0.19px at 38px, -0.096px at 32px"
+    },
+    {
+      "role": "Arial — detected in extracted data but not described by AI",
+      "sizes": "13px, 16px",
+      "family": "Arial",
+      "weight": "400, 600",
+      "lineHeight": "1, 1.2"
+    }
+  ],
+  "description": "Employment Hero projects a confident, AI-forward HR platform identity built on extreme typographic weight contrast: Saiga at 800–1000 weight delivers near-black display headlines that dominate white canvases, while DM Sans at 400–500 keeps interface text light and approachable. The visual system is anchored by a single vivid violet (#7622d7) that appears as compact filled pills, thin borders, and icon strokes — never as broad color washes — creating a 'punctuation' effect where color marks intent rather than fills space. Surfaces layer in three violet-tinted steps (#ffffff → #f9f5ff → #f0e6fa) giving the impression of a very pale lavender atmosphere without ever feeling decorative. Components are deliberately geometric: 32px pill buttons, 8–12px card corners, generous 16–24px padding, and 1px hairline borders over soft backgrounds — the result feels like a precise technical document that learned to wear soft clothing.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- text (primary): #000000\n- text (secondary): #27272a\n- text (muted): #71717a\n- background: #ffffff\n- surface (soft): #f9f5ff\n- surface (accent): #f0e6fa\n- border (hairline): #e4e4e7\n- accent (brand): #7622d7\n- primary action: #7622d7 (filled action)\n\n## Example Component Prompts\n\n1. Create a Primary Action Button: #7622d7 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n2. **Audience Card**: #f0e6fa background, 12px radius, 24px padding. Title in Saiga 32px weight 800, #000000, letter-spacing -0.096px. Subtitle in DM Sans 16px weight 400, #27272a. Filled violet 'Learn more' pill button (#7622d7, 32px radius, white text, 700 weight). Product screenshot inset below the text block with soft natural integration.\n\n\n4. **Social Proof Row**: White background, single horizontal row, 48px gaps between platform logos (Capterra, Trustpilot, Google). Stars in #ffefa7 gold, DM Sans 12px weight 400 #5a5b5f for rating labels.\n\n5. **Customer Logo Strip**: Eyebrow label 'TRUSTED BY 300K+ HAPPY CUSTOMERS' — DM Sans 12px weight 600, #71717a, letter-spacing +0.5px, centered. Logo row in monochrome #27272a, evenly spaced, with light chevron nav controls on either end."
+    },
+    {
+      "title": "Gradient System",
+      "content": "Gradients are used sparingly and always in the brand-violet family. The primary multi-stop gradient runs #9a58fc → #70ddff → #e6d5fe → #bafc58 → #9a58fc, suitable for hero ambient backgrounds, decorative banners, or section transition washes. A radial variant pairs #9a58fc with #70ddff for circular spotlight effects. Soft linear washes transition from white (#ffffff) to #e6d5fe for upward-fading section backgrounds. Gradients are never applied to text, never used as button fills, and should occupy at most 10–15% of any given page's visual area."
+    }
+  ],
+  "elevationPhilosophy": "The system is essentially flat. Elevation is communicated through fill color shifts in the lavender surface stack (white → #f9f5ff → #f0e6fa) and 1px hairline borders in #e4e4e7. No drop shadows are used on cards, buttons, or any interactive element. The only shadow-like effect detected (#e6d5fe glow on certain hover states) is a soft violet tint, not a directional shadow. This flatness is deliberate: it keeps the heavy Saiga headlines as the sole focal point and prevents the interface from feeling layered or busy."
+}

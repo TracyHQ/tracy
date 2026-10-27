@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1741-wo-handoff-menu-items",
+  "kind": "feat",
+  "title": "WO hands Tracy the menu with its prices (never posts as dishes), the business's logo, colours, links and posts, and a dish photo only when the match is accepted",
+  "pr": 1741,
+  "area": "website-opportunities/hand-off",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/wo/website-opportunities/test/tracy-request.test.mjs — toDemoRequest from a brief with menu items and posts, against a host that announces nothing and one that announces every part",
+    "S2: node --test apps/tracy-web/test/wo-public-demos.test.mjs — GET /v1/demos/options, then POST /v1/demos with item size, price scale and photo, a logo, colours, links and a post; read wo_profile, wo_media, wo_source, then revisionForAction's brief",
+    "S3: node --test packages/wo/website-opportunities/test/domain-dish-photos.test.mjs — matchDishPhotos / confirmDishPhoto on accented, overlapping, generic, multi-dish and vision-labelled cases",
+    "S4: node --test apps/tracy-web/test/website-opportunities-handoff-pictures.test.mjs — leftoverPictures with an accepted dish photo among larger pictures"
+  ],
+  "expect": [
+    "S1: business.items are the brief's menu items with their printed price; no post text is an item; a photo caption is its own caption, never 'food'; a host without items.priceScale gets no price for a dish whose menu prints shortened prices",
+    "S2: options.accepts lists items.size, items.priceScale, items.photo, brand, links, posts; the profile keeps size and priceScale, the item photo as a candidate (how 'sender'), the logo as its own picture, booking as unverified; a post never becomes a menu item; the brief carries all of it, the sender's dish photo still a candidate",
+    "S3: 'Bánh bò' never matches 'Bánh bơ'; the longest name masks the shorter; a post naming two dishes names no photo; vision saying menu board, person or room drops a candidate; a sender photo is accepted only by vision",
+    "S4: the accepted dish photo is handed to the agent first"
+  ],
+  "selectors": {
+    "seam": "toDemoRequest(place, brief, choice, media, accepts); GET/POST /v1/demos; matchDishPhotos, confirmDishPhoto, acceptedDishPhotos (domain/dish-photos.mjs); leftoverPictures(media, onSite, first)"
+  },
+  "evidence": "origin/develop 97a8f2fa3e: tracy-request.js itemsOf(research.content) sent posts as business.items and public-demos.js stored them as menuItems without prices",
+  "fence": "a photo is a dish's photo only when accepted (menu card or Tracy vision); the client sends only the parts the host announces",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/wo-handoff-menu-items.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 300
+  }
+}

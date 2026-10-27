@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "29bde513-4351-4279-b4e9-7e94eb0605b6",
+  "status": "complete",
+  "name": "AVNIER",
+  "url": "https://styles.refero.design/style/29bde513-4351-4279-b4e9-7e94eb0605b6",
+  "sourceWebsite": "https://avnier.com",
+  "extractedAt": "2026-09-20T19:23:28.614Z",
+  "capturedAt": "2026-10-08T05:09:35.684866+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "AVNIER — nocturnal film set. White production labels and sharp grid lines cut through black equipment-room imagery.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/a070c32c-2200-4c0b-9802-f181b92f7670.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/cbeee6de-1bf2-4918-9242-490798e1ffa6.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e0fd5685-77ea-443d-957e-e10f369f8518.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3d68e891-e962-41d1-a083-db033a426a79.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/fda9d03d-4ae9-47b4-b698-fa62efe2f177.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "6ea50a2e6e150d1bc5dd52e30cac8f6549b776f9b97331aa22836cb26c4c7e4e",
+      "bytes": 18743
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "20d562db0593b3b270d8662021bfc26775c0e7d5079b65b55fc49b701ce119d3",
+      "bytes": 175048
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a955aff3d393e25cc1cfd13cb77a2040eb642a8471a5c398e93d5fc46cfbbe42",
+      "bytes": 14328
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "65ae0c0b23105331acbe3243850e5c523ef1ee5010e6ad2b9d96071e60211f93",
+      "bytes": 12861
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b9815b8b4f9ebfec4450e8bb414965d840d78f797eec1a60d5187361938b1e93",
+      "bytes": 10684
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4be1d8cc14362c2b091aaa2b0e2fd64bb9e6f35b33d7640fedd724841fb8c1f5",
+      "bytes": 2229
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e76318a19840f60dcc801961b0f0bb623700b9be3dd8a441d16afca8f01ffb89",
+      "bytes": 760
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "cf5a91527cadd0b1784ed87e3a8f171d28f1b82acfe80a5859a6f8988a180f0d",
+      "bytes": 777
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5af14c77d65913c7812071e9b203ca9eaaa10a922a151a3053009fa1bfc6e3bf",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "740dec3e0568ff5bd0c2e6787f164fb80e9d2936a0e81a264cf35c756ae8cdc6",
+      "bytes": 38983
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "199c734ac7c3bff0a7dff8102bc8a2bbc585af704e4f0c46cfe7d34772677dc6",
+      "bytes": 20227
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e4b78cd2f571f8b7258939089d290b765e8e2297a303b4e34c4317f5639946e4",
+      "bytes": 37607
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b6b0f16f9a2952e41c5c1dad3dde9abf593b7e6b777c9d0647de5eaffd27eaa7",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "98bcd8dac2a7714fcd2e03eac0281757abb5702fca872883903fb7395cbe6a4e",
+      "bytes": 2054
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "57de92936c97abbaff8b7f9e2971a82e132d9d829e0f5694db391b302498d29e",
+      "bytes": 2479
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ecfea58-c1f3-4671-806d-5ae0eb779f38",
+    "234e9a17-236d-4446-9d58-f83f6806d012",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "29bde513-4351-4279-b4e9-7e94eb0605b6",
+    "4433dfe7-315a-4459-bfd7-f59ccdc09bad",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4c637873-7632-46c0-ac36-5744efa00444",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "79d83fce-84bf-4e12-8039-5d283c98917c",
+    "8f623d19-51f6-4da2-bc45-05573cc98283",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d75a643b-a518-4550-b430-679cd989a447",
+    "d7ace114-0548-41f5-a2ff-2afbf32be94d",
+    "f1a690c7-234d-4ee9-9806-5790934e7043"
+  ]
+}

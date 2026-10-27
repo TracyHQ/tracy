@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-bone-white: #ffffff;
+  --color-ash-gray: #838383;
+  --color-alarm-red: #ed1c24;
+
+  /* Typography — Font Families */
+  --font-brasparz-variable: 'Brasparz Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neuehaas: 'NeueHaas', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-trajan-style-serif-editorial-credits-not-in-extracted-data-but-visible: 'Trajan-style serif (editorial credits, not in extracted data but visible)', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "workshop-black": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Workshop Black — Page background, primary canvas — the dark surface the type sits on"
+    },
+    "platen-gray": {
+      "$value": "#292929",
+      "$type": "color",
+      "$description": "Platen Gray — Raised surface for buttons, hover fills, interactive plate"
+    },
+    "bone": {
+      "$value": "#d0d0d0",
+      "$type": "color",
+      "$description": "Bone — Default body text, link strokes, hairline rules, icon outlines"
+    },
+    "ash": {
+      "$value": "#a0a0a0",
+      "$type": "color",
+      "$description": "Ash — Secondary text, metadata, subdued borders and captions"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Headings, display type, high-contrast text, image borders"
+    },
+    "acid-flash": {
+      "$value": "#d9ff00",
+      "$type": "color",
+      "$description": "Acid Flash — Green outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "office": {
+      "$value": "Office",
+      "$type": "fontFamily",
+      "$description": "Sole typeface — used for navigation, body, buttons, specimens, and display. The foundry sells custom type so the UI type IS the product showcase. Weights 400 (regular) for UI and body, 700 (bold) for the large display announcement and emphasis."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.riptype.xyz",
+      "siteName": "Riptype Foundry",
+      "extractedAt": "2026-06-03T22:06:14.473Z",
+      "variant": "compact"
+    }
+  }
+}

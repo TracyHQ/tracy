@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e02671e1-ba31-465f-bb7f-b124bf91ab5e",
+  "status": "complete",
+  "name": "Champions4good",
+  "url": "https://styles.refero.design/style/e02671e1-ba31-465f-bb7f-b124bf91ab5e",
+  "sourceWebsite": "https://www.champions4good.club",
+  "extractedAt": "2026-06-03T19:53:34.032Z",
+  "capturedAt": "2026-10-08T05:18:26.683437+00:00",
+  "theme": "dark",
+  "industry": "other",
+  "description": "midnight sports broadside — a vintage club poster screaming from a plum-dark wall",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/2cab2c66-7f83-426c-94e7-692be6f23fa7.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5584ac782c6ff4ec74954f822be3506837f7c861d7dfd68c745e31099cd14f2c",
+      "bytes": 17694
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "869f4adc68856f06f1f769a6a3c8d2310ffa288bdf9c5f1d7b15133b8f694994",
+      "bytes": 76893
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8f5e2cc0d1e42b22f39a3a848ff554b72777584bc7b052ace8c818318860d033",
+      "bytes": 14549
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ca8260ab7e916ecd8c13115dde4bb8e5093b32abd22349e611b6be7e62694e30",
+      "bytes": 10109
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "91f3741fcfbe2ccba44f5699b8c86abfc5f097e4b38890d7a058b75b2f165ce0",
+      "bytes": 10715
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "32f42ddd516d2f9168f1299da22cb8df95a45c2a562dd50b3557807c34fdc860",
+      "bytes": 3147
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "eaa8898f283dd3a57f0d10508ffb462a60b2f8d2be6c315cd9aa23a3839e9d3f",
+      "bytes": 767
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2fb1792c06e48fe23510d0a4888d9ecd5e2e0b2e39f9622617febc85e3801bd2",
+      "bytes": 784
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9057ea4a8aa31a88853f3eb87d1e343ab91fe7d918ac68a5c5926c65d092c083",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8d6e757b88fccb537b01d7cab95b89d92147d2aa026abc850e56212c2d6f08c8",
+      "bytes": 40727
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "d7fb17608cff5c3c05749129537954a766f126647024e02f2d22b87da795a242",
+      "bytes": 20682
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d511b0316334fb1b0319c62dbd8b136a7f55c8f14a21fce4d85cde05e45bb362",
+      "bytes": 35098
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "df00774c5abc8f5c9afb4d6d91c9c83b1d80fe9d0d33fc531b1858dee3460c53",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2a6549cf21ebd10438ce1b5400b7304f6b60b7a79af66391bd0499c7da755911",
+      "bytes": 1651
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "3dfdc8a6be7d0e1b224d8fd640da660eb05566a1e42f1df50ccc179a71ce36d9",
+      "bytes": 2236
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "05053a60-1964-4154-9d58-ebdf6352ed3a",
+    "0d914ef0-fa84-4c60-a9aa-cef0b5eb6e5d",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "523d3e7b-b0a2-4979-a626-00f1487b6e4d",
+    "604af0f7-b4c3-4921-93af-9da03df81493",
+    "6a5f9438-7ae6-4743-a0bd-f9087d467eff",
+    "6b4e6620-5c06-4dc1-931b-82265116f6f2",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "9117a4f5-6171-44ad-aa85-a387a5d80620",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "af3641fb-7d3c-40f4-aba1-42770dfaf091",
+    "d577e44e-bc63-4cbe-b759-25262d089b95",
+    "d7a73e16-4b3e-4b9d-aef2-2c31a9db7457",
+    "e02671e1-ba31-465f-bb7f-b124bf91ab5e",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "fd36c7c7-4f8c-4d2a-9346-72e3d8403f01"
+  ]
+}

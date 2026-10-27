@@ -1,0 +1,30 @@
+{
+  "id": "QA-STATIC-emdash-kit-sync-happy",
+  "itemIds": ["gate:emdash-kit-sync"],
+  "requirement": "Gate emdash-kit-sync (scripts/check-emdash-kit-sync.ts) exits 0 on the current tree and goes red on a tree that breaks the rule it enforces.",
+  "oracle": {
+    "source": "scripts/check-emdash-kit-sync.ts",
+    "ref": "header comment",
+    "invariant": "The tree satisfies the rule stated in the header comment of scripts/check-emdash-kit-sync.ts; the gate exits 0 only then.",
+    "productSources": ["scripts/check-all.ts:254", "scripts/check-emdash-kit-sync.ts:18"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["node", "tsx (node_modules)"],
+  "assertionIds": ["static.emdash-kit-sync.exit-0"],
+  "redProof": null,
+  "legacyIds": [],
+  "gate": "emdash-kit-sync",
+  "command": ["pnpm", "exec", "tsx", "scripts/check-all.ts", "--only", "emdash-kit-sync"],
+  "successMarker": "check-all: 1 gate(s) passed",
+  "gateScript": "scripts/check-emdash-kit-sync.ts",
+  "mode": "run",
+  "mutations": []
+}

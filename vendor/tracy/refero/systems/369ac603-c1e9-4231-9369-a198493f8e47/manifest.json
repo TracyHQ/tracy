@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "369ac603-c1e9-4231-9369-a198493f8e47",
+  "status": "complete",
+  "name": "Hyper Foundation",
+  "url": "https://styles.refero.design/style/369ac603-c1e9-4231-9369-a198493f8e47",
+  "sourceWebsite": "https://hyperliquid.xyz",
+  "extractedAt": "2026-06-03T19:20:38.025Z",
+  "capturedAt": "2026-10-08T05:10:13.751591+00:00",
+  "theme": "dark",
+  "industry": "crypto",
+  "description": "Living emerald sanctuary — a deep forest vault where a single luminous mint glow breathes through organic, shadowed forms.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b689977d-636e-45af-a0cb-315c8260452f.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d14e3826-db7e-4101-b110-0d6f2569fba2.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/5b54ed32-06a1-469d-bcae-f95d7e23f775.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3d3a3f45-9c44-43ff-874e-68572895e42d.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4c5e5b0a-95d4-46b8-943b-c89a9e724ba4.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "732f234ca2e36bf72b8849b72572698da332a650081c548d3d338528331c6042",
+      "bytes": 19909
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f012339d98933cb8553508a7342088fa36d6616fbc34e96adb994625e4e18188",
+      "bytes": 78984
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "99dabc9ceb84bea50be2d290723ae13010628a02bb32a5eb7c17769ae1cf3f55",
+      "bytes": 16768
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7408fbc5cf0d1f93cb07f0bc11585872329ea0f243c4e0138c6f4cb70901dd66",
+      "bytes": 9286
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0ccc64e1a31258bbd6cf3db81abf954556d73d5cbf2fd440f049a8acd9d8e8ec",
+      "bytes": 11791
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9a507ecd1b8bcbeaf39732e98a3ec8e8f6c3aa2207d00cc9fc15e02e92f43b68",
+      "bytes": 3305
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "a9ef6c9b86e655a6af62c0a9643485e1d2e2d431cf20a29a8fc7b3e810e3ae46",
+      "bytes": 607
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "cde9b09eec29acdcebc2897ad5d9580e7bacc829e083d8b69370cec2bd35d6b3",
+      "bytes": 624
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "7c10d2e203eca6b967e1c3290e2c81bb74859eee2425cabbb8aa4cd68fcc8565",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "54a9c0b9064f34171f098c6c64066e67c1dadf39c7a648a8f26e31192f412b2a",
+      "bytes": 44601
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "bc7627a482933e1cdfd03546f4f52a96e28006877c5ebb10793c7ce5721374a1",
+      "bytes": 23354
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "fed39522f0c692be39ec4c53e9cba00caaa0f1d84b90610f1d37ac89b0be6b77",
+      "bytes": 41105
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4ceadb4c1881ad76c5e598c3e4304dc223ccf92dd4d8f0c0b1f44407f053bc3a",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "fc3dec1fd7073bb9d89a2072b5c450749b6d281757b0c2669fc1f9808d7b8dd2",
+      "bytes": 1571
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "09efb54cabe731289126384e58a3fcea51c99e8b549edabcd8c2b9fd805ed938",
+      "bytes": 2082
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "227ff379-9b46-44fc-8ff1-37e0472239a6",
+    "369ac603-c1e9-4231-9369-a198493f8e47",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "5d273906-0110-48cf-99cd-63a72eb9c586",
+    "74be1036-f867-4cee-959a-a9a9129111c0",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "80d7ef36-ed7e-48bb-b558-f772eb40106f",
+    "834ce97f-61f2-4b12-bf5c-e9fad2544456",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "af3641fb-7d3c-40f4-aba1-42770dfaf091",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "c55d2f24-deb1-44c1-9846-66a3523beb29",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344"
+  ]
+}

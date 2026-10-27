@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form><title>Contact Information</title><fields name="contact-information"><fieldset name="content" label="TPL_TRACY_CONTACT_CONTENT">
+<field name="heading" type="text" label="TPL_TRACY_CONTACT_HEADING" default="" />
+<field name="email" type="email" label="TPL_TRACY_CONTACT_EMAIL" default="" />
+<field name="email-label" type="text" label="TPL_TRACY_CONTACT_EMAIL_LABEL" default="" />
+<field name="notice" type="textarea" label="TPL_TRACY_CONTACT_NOTICE" default="" />
+<field name="social-heading" type="text" label="TPL_TRACY_CONTACT_SOCIAL_HEADING" default="" />
+<field name="unavailable-label" type="text" label="TPL_TRACY_CONTACT_UNAVAILABLE_LABEL" default="" />
+</fieldset><fieldset name="socials" label="TPL_TRACY_CONTACT_SOCIALS" multiple="1"><field name="social-label" type="text" label="TPL_TRACY_CONTACT_LABEL" /><field name="social-url" type="url" label="TPL_TRACY_CONTACT_URL" /></fieldset></fields></form>

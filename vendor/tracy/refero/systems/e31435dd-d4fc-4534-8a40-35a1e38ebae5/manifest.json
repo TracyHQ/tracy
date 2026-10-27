@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e31435dd-d4fc-4534-8a40-35a1e38ebae5",
+  "status": "complete",
+  "name": "Digit 5",
+  "url": "https://styles.refero.design/style/e31435dd-d4fc-4534-8a40-35a1e38ebae5",
+  "sourceWebsite": "https://www.agilityrobotics.com/solutions/digit-5",
+  "extractedAt": "2026-09-20T22:16:21.191Z",
+  "capturedAt": "2026-10-08T05:18:35.491662+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Agility — robot workshop at dusk. Warm-white technical documentation emerges from a near-black machine bay, with soft industrial photography and restrained instrument-panel details.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/16b3e340-84d0-40cf-9b44-4be37ebf0634.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/729e2340-2fbc-43e3-afe1-ba99db0d0b98.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/29f0daac-f8b0-48d2-a8cc-03a625a92857.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f0a43427-eb9e-4fe8-b8b5-a0dd94c54229.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/a04e59f8-9b20-4e68-8897-dfcd11ad974d.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "4a09850ecf86843f0e379aeaeb95aebcb8398e4657c7c25724905aebe0a1f0b2",
+      "bytes": 19711
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "cc7b721501a3853d9eb40d7f3a5a3632128e6893bae630ff6e2f87d766a9e8a0",
+      "bytes": 60117
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "dcc58758fa94fcc3a670ff6ad424bcc3c7de702cb9e76da6d11e2e3a2dd1358b",
+      "bytes": 15960
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f60b62f73188ab4e9d1cf29afca1f685a7b9e09bebf6bc524d1b1c10ad548eb1",
+      "bytes": 12584
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4603deab29c8716e70de94337595c8b23d5037e918ff0778247196528b58b16b",
+      "bytes": 11413
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "043719dfbaeab711d9a56d27a11b4abf0c22b7bc92290b60061e8dae044802fb",
+      "bytes": 2830
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "817b7b2aa72635ce74823115c3adfd3358d62759df6235e8af2d85b08c666072",
+      "bytes": 717
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "bde281b382c756787df1d61162dfbc4cb0c036d5997fb11a77380650c556331c",
+      "bytes": 734
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "16a29086a1f8059b04c59171338c068abb83e2b32530430e9baf2c5c28ed4718",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "65418ce091bfc8538b91f1e8cf76bead1ed2e5798dcd79dd22cbda2c6267a1e3",
+      "bytes": 41785
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "70005dbe9e534fd527d380f1723103ea0f010d8e00cb1d8211e1e37b05d2a26e",
+      "bytes": 22081
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8215505285463c0ad6e19675ac04416ab4fdcfa7bedfd8b285acc90d1dc21b3e",
+      "bytes": 45475
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "9c93af5185b288e62b5fe1bfbe53a6b5dda2961d220bdbd005123ab7f871dc0b",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5bf83395270b741d7172385da4731627260a91c9f0f76e9220b0023e8747b338",
+      "bytes": 1988
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "8289597aea3a5b3240b744262cc412e0b5179a52f22b23e7c31a8e2559219085",
+      "bytes": 2580
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1ab79e76-a07f-48fd-8e93-0a0fee12abd7",
+    "2997507c-ba60-4653-b217-3eca4858dec8",
+    "2d78835a-fffe-4416-8e3d-ac37207fbd6b",
+    "30dfffb4-ff6d-4128-b3e5-39046ba258f0",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "46781641-8afd-4b01-9f67-06046b6eda71",
+    "46e06f73-c4d2-4ddc-ad8f-34cdfeacc839",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "7aa1dbff-f5f1-4a64-9dba-f4caad7f1ebf",
+    "7b083729-e694-4b66-82a3-befb08451722",
+    "8f623d19-51f6-4da2-bc45-05573cc98283",
+    "a44424b2-2f87-47f4-b6a5-28b556ed7497",
+    "a9941737-7a01-47b0-b187-df2bb16b27d8",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b458ca1a-70f0-4f85-b745-f879a4d08457",
+    "c6136c4a-9e89-4dc5-93d3-e1adf58dbc2f",
+    "e31435dd-d4fc-4534-8a40-35a1e38ebae5",
+    "e81d4724-9615-4159-8678-cef35f986cab",
+    "e9a1c1e1-2c35-47c0-864f-d1e9fea57579",
+    "ee403055-480e-4bd4-9216-07c9ae2dde2e",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

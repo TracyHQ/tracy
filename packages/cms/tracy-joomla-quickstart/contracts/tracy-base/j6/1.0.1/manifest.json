@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-base/j6/1.0.1",
+  "platform": "joomla",
+  "template": "tracy",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "tracy-base/j6",
+    "version": "1.0.1",
+    "platform": "joomla",
+    "platformVersion": "6.1.1",
+    "template": "tracy",
+    "parts": {
+      "webroot": {
+        "file": "tracy-base-j6-webroot-1.0.1.tar.gz",
+        "bytes": 60597505,
+        "sha256": "c588f137a3486becf0ff4c3dc5e4e80ef3a9c6fa01ab1fb46b48b61bd87ede6b"
+      },
+      "database": {
+        "file": "tracy-base-j6-database-1.0.1.sql.gz",
+        "bytes": 206848,
+        "sha256": "ef5bc194f48a4445c02d913a28e19838ed039efa96e0127e859d51176a09ab91"
+      }
+    }
+  },
+  "coworkContractVersion": "0.19.1",
+  "mode": "content-only"
+}

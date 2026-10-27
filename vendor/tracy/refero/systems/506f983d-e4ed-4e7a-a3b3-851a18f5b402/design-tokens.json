@@ -1,0 +1,457 @@
+{
+  "color": {
+    "void-canvas": {
+      "$value": "#050608",
+      "$type": "color",
+      "$description": "Void Canvas — Page backgrounds and uninterrupted full-bleed section canvas"
+    },
+    "ink-surface": {
+      "$value": "#0a0b0f",
+      "$type": "color",
+      "$description": "Ink Surface — Inset page regions, dark filled controls, and low-level card surfaces"
+    },
+    "charcoal-panel": {
+      "$value": "#0f1219",
+      "$type": "color",
+      "$description": "Charcoal Panel — Product-demo panels, card fills, dark text on white controls, and structural borders"
+    },
+    "steel-panel": {
+      "$value": "#151822",
+      "$type": "color",
+      "$description": "Steel Panel — Raised dark controls and secondary panel layers"
+    },
+    "slate-edge": {
+      "$value": "#1f1e2a",
+      "$type": "color",
+      "$description": "Slate Edge — Fine borders around dark demo panes, tabs, and outlined controls"
+    },
+    "cloud-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Cloud White — High-emphasis headings, icons, filled action surfaces, and logo marks"
+    },
+    "frost-text": {
+      "$value": "#dee1ea",
+      "$type": "color",
+      "$description": "Frost Text — Lead paragraphs and lower-emphasis navigation text"
+    },
+    "misted-slate": {
+      "$value": "#b2b8cd",
+      "$type": "color",
+      "$description": "Misted Slate — Muted body copy, inactive tabs, secondary links, and product-interface labels"
+    },
+    "quiet-slate": {
+      "$value": "#8f94a6",
+      "$type": "color",
+      "$description": "Quiet Slate — Metadata, subdued icons, and tertiary product-interface text"
+    },
+    "signal-violet": {
+      "$value": "#7064f2",
+      "$type": "color",
+      "$description": "Signal Violet — Brand symbol, selected product icons, and violet light sources — a narrowly deployed signal against the black canvas"
+    },
+    "violet-atmosphere": {
+      "$value": "#9182f8",
+      "$type": "color",
+      "$description": "Violet Atmosphere — Soft demo-edge illumination and decorative feature-section washes"
+    },
+    "slate-lift": {
+      "$value": "#5d6890",
+      "$type": "color",
+      "$description": "Slate Lift — Subtle upward background haze behind contained product visuals"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Use throughout. Weight 500 carries navigation, labels, and display headings; 400 carries explanatory copy; 600 is reserved for compact feature titles and high-emphasis white controls. The 500-weight 48px display treatment is intentionally quieter than a 700-weight marketing headline."
+    }
+  },
+  "typography": {
+    "sm": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "13px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.43,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.43,
+        "letterSpacing": "0.05em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 500,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "18px",
+        "fontWeight": 700,
+        "lineHeight": 1.56,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 18px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "lineHeight": 1.56,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 18px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "18px",
+        "fontWeight": 600,
+        "lineHeight": 1.56,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 18px"
+    },
+    "lg-4": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "19px",
+        "fontWeight": 600,
+        "lineHeight": 1.26,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-4 at 19px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "23px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 23px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "24px",
+        "fontWeight": 500,
+        "lineHeight": 1.63,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 24px"
+    },
+    "2xl-3": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.63,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-3 at 24px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "36px",
+        "fontWeight": 500,
+        "lineHeight": 1.11,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 36px"
+    },
+    "4xl-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "36px",
+        "fontWeight": 600,
+        "lineHeight": 1.11,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl-2 at 36px"
+    },
+    "4xl-3": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "36px",
+        "fontWeight": 500,
+        "lineHeight": 1.38,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl-3 at 36px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "48px",
+        "fontWeight": 500,
+        "lineHeight": 1.38,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 48px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "48px",
+        "fontWeight": 500,
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 48px"
+    }
+  },
+  "spacing": {
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "48": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Spacing 48px"
+    },
+    "56": {
+      "$value": "56px",
+      "$type": "dimension",
+      "$description": "Spacing 56px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "unit": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Border radius lg"
+    },
+    "xl": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "3xl": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    },
+    "full": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    }
+  },
+  "shadow": {
+    "xl": {
+      "$value": "rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
+      "$type": "shadow",
+      "$description": "Shadow elevation xl"
+    },
+    "subtle": {
+      "$value": "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle"
+    },
+    "subtle-2": {
+      "$value": "rgba(0, 0, 0, 0.4) 0px 0px 0px 1px, rgba(0, 0, 0, 0.3) 0px 20px 25px -5px, rgba(0, 0, 0, 0.3) 0px 8px 10px -6px",
+      "$type": "shadow",
+      "$description": "Shadow elevation subtle-2"
+    }
+  },
+  "surface": {
+    "void-canvas": {
+      "$value": "#050608",
+      "$type": "color",
+      "$description": "Surface level 0: Full-page background and wide section bands."
+    },
+    "ink-surface": {
+      "$value": "#0a0b0f",
+      "$type": "color",
+      "$description": "Surface level 1: Subtle inset surfaces and low-level cards."
+    },
+    "charcoal-panel": {
+      "$value": "#0f1219",
+      "$type": "color",
+      "$description": "Surface level 2: Product UI panels and prominent dark cards."
+    },
+    "steel-panel": {
+      "$value": "#151822",
+      "$type": "color",
+      "$description": "Surface level 3: Raised control and nested-panel layers."
+    },
+    "slate-edge": {
+      "$value": "#1f1e2a",
+      "$type": "color",
+      "$description": "Surface level 4: One-pixel dark-surface borders and panel separation."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://featurebase.app",
+      "siteName": "Featurebase",
+      "extractedAt": "2026-09-24T17:35:11.555Z",
+      "variant": "extended"
+    }
+  }
+}

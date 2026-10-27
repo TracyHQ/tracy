@@ -1,0 +1,79 @@
+{
+  "color": {
+    "espresso-ink": {
+      "$value": "#482317",
+      "$type": "color",
+      "$description": "Espresso Ink — Primary text, headings, nav links, body copy, and outlined button borders — a warm dark brown that replaces pure black and gives the whole system a softer, editorial voice"
+    },
+    "fog-border": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Fog Border — Hairline borders, dividers, input outlines, and icon strokes across cards, nav, and body containers"
+    },
+    "cream-canvas": {
+      "$value": "#fafafa",
+      "$type": "color",
+      "$description": "Cream Canvas — Page background and card surfaces — the off-white that everything sits on, warmer than pure white"
+    },
+    "lime-spark": {
+      "$value": "#ecf956",
+      "$type": "color",
+      "$description": "Lime Spark — Green action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "lilac-whisper": {
+      "$value": "#efd8f0",
+      "$type": "color",
+      "$description": "Lilac Whisper — Decorative pastel surface used inside product mockups and gradient washes — soft lavender that recedes behind content"
+    },
+    "mint-tint": {
+      "$value": "#c6e57d",
+      "$type": "color",
+      "$description": "Mint Tint — Decorative pastel surface — light green used in card backgrounds and gradient endpoints"
+    },
+    "lemon-cream": {
+      "$value": "#f3fb9a",
+      "$type": "color",
+      "$description": "Lemon Cream — Decorative pastel surface — pale lemon used in testimonial card washes and gradient stops"
+    },
+    "sky-hush": {
+      "$value": "#b1dcfc",
+      "$type": "color",
+      "$description": "Sky Hush — Decorative pastel surface — muted blue used as occasional card background accent"
+    }
+  },
+  "font": {
+    "favorit": {
+      "$value": "Favorit",
+      "$type": "fontFamily",
+      "$description": "Body text, links, nav items, card content — same family as ABC Favorit with slightly looser line-height (1.5) for reading comfort"
+    },
+    "tobias": {
+      "$value": "Tobias",
+      "$type": "fontFamily",
+      "$description": "Display serif for hero and section headlines — large sizes with tight tracking (-0.02em) create editorial gravitas. The light weight (300) is anti-convention for hero text; most sites use 600-700, this whisper-weight signals confidence and restraint"
+    },
+    "abc-favorit": {
+      "$value": "ABC Favorit",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body typeface — neo-grotesque with slight warmth, weight 350 for body and 400 for emphasis. Tight tracking (-0.02em) at larger sizes gives headings a compressed, modern feel"
+    },
+    "favorit-bold": {
+      "$value": "Favorit-Bold",
+      "$type": "fontFamily",
+      "$description": "Emphasis headings and subheads — bold weight with aggressive tracking (-0.037em) creates a tight, assertive counterpoint to the light serif displays"
+    },
+    "favorit-regular": {
+      "$value": "Favorit-Regular",
+      "$type": "fontFamily",
+      "$description": "Favorit-Regular — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.theleap.co",
+      "siteName": "The Leap",
+      "extractedAt": "2026-06-03T17:50:07.625Z",
+      "variant": "compact"
+    }
+  }
+}

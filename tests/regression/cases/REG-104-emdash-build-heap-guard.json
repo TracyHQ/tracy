@@ -1,0 +1,27 @@
+{
+  "id": "REG-104",
+  "kind": "fix",
+  "title": "The EmDash image build keeps an 8 GB Node heap for the build stage even when upstream's Dockerfile sets its own heap line after COPY, and the guard fails on any other value instead of matching any heap line",
+  "pr": 902,
+  "area": "fleet/emdash-build",
+  "cms": ["em"],
+  "needs": ["linux-or-docker"],
+  "flaky_model": false,
+  "steps": [
+    "No stand. Run on Linux, or on macOS inside a container: docker run --rm -v \"$PWD/packages/fleet/tracy-fleet-operation:/w\" -w /w node:22 bash -c 'git config --global --add safe.directory \"*\"; node --test test/emdash-build-image.test.mjs' — record PASS_N, FAIL_N, SKIP_N from the summary lines (`# pass N` / `# fail N` / `# skipped N` in TAP output when stdout is not a TTY, `ℹ pass N` otherwise).",
+    "Apply the script's patch to a copy of the pinned upstream Dockerfile: cp vendor/emdash/emdash/Dockerfile $Q/Dockerfile; then with GNU sed: sed -i 's|^ENV NODE_OPTIONS=--max-old-space-size=[0-9]*|ENV NODE_OPTIONS=--max-old-space-size=8192|' $Q/Dockerfile. Record HEAP_LINES = grep -c 'max-old-space-size=' $Q/Dockerfile and HEAP_8G = grep -c 'max-old-space-size=8192' $Q/Dockerfile.",
+    "Read the script: GUARD_COUNT = grep -c HEAP_8G packages/fleet/tracy-fleet-operation/scripts/provision/emdash/build-image.sh (the count guard names this variable); OLD_GUARD = grep -c \"grep -q 'max-old-space-size'\" packages/fleet/tracy-fleet-operation/scripts/provision/emdash/build-image.sh."
+  ],
+  "expect": [
+    "PASS_N === 5, FAIL_N === 0, SKIP_N === 0 (the two heap cases ran, not skipped).",
+    "HEAP_LINES === 1 and HEAP_8G === 1 on emdash@1.1.0's Dockerfile (upstream's 4096 line rewritten, no second line).",
+    "GUARD_COUNT >= 1 and OLD_GUARD === 0 (the count guard replaced the presence guard)."
+  ],
+  "selectors": {
+    "script": "packages/fleet/tracy-fleet-operation/scripts/provision/emdash/build-image.sh",
+    "test": "packages/fleet/tracy-fleet-operation/test/emdash-build-image.test.mjs"
+  },
+  "evidence": "tasks/todo-dsh-core-0-2-0.md §5 (agent C, 04/10/2026): emdash@1.1.0's Dockerfile sets ENV NODE_OPTIONS=--max-old-space-size=4096 after COPY . ., so the 8 GB line the script inserted under FROM deps AS build was overridden and `grep -q 'max-old-space-size'` stayed green on the upstream line.",
+  "fence": "build-image.sh rewrites an existing build-stage heap line to 8192 (or inserts one), then requires every heap line in the Dockerfile to be 8192 (count check), failing the build otherwise.",
+  "run": { "cmd": ["node", "tests/regression/scripts/REG-104.mjs"] }
+}

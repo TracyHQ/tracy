@@ -1,0 +1,90 @@
+{
+  "id": "QA-UNIT-REG-PR-1138-help-in-chat-happy",
+  "itemIds": ["regression:REG-PR-1138-help-in-chat"],
+  "requirement": "Help in the chat: suggestions leave at the next message, a bare /help after the chat began asks back, one orange button stops Help first and the agent second, /help is a claimed token (answers carry a rating again since PR #1188)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1138-help-in-chat.json",
+    "ref": "PR #1138 (fix); fix evidence: tasks/evidence/help-in-chat-2026-10-11/ (before/after screenshots on a real dsh page, measures in after-measures.txt)",
+    "invariant": "S1: the suggestions row is removed; only the question row stays. S2: two askBack rows (the person's /help and one sentence), no suggestions row, no request. S3: streamingRowOf names the row while it streams and nothing after stop; the answer row is 'stopped' with the text that arrived; the waiting questions are 'stopped' and never sent; a later question is sent. S4: every source test passes (the row has no stop button; since PR #1188 a finished answer carries dsh's action row, REG-PR-1188-answer-actions). S5: since PR #1188 the answer id and rating come back on a restore and from the done event; a press posts POST /api/assistant/turns/:id/rating (REG-PR-1188-answer-actions). S6: hover/press use --dsw-alias-button-primary-hover (darker terracotta), no blue info hover; focus is a 1px --ring outline with no box-shadow.",
+    "productSources": [
+      "packages/brand/tracy-brand/src/client/styles.ts:9",
+      "packages/ui/tracy-assistant/src/client/help.ts:493",
+      "packages/ui/tracy-assistant/src/client/strings.ts:10",
+      "packages/ui/tracy-assistant/src/client/styles.ts:9",
+      "vendor/tracy/deepseek-harness/packages/client/ui-chat/src/client/chat/MessageIconActions.module.css:5",
+      "vendor/tracy/deepseek-harness/packages/client/ui-conversation/src/client/skeleton/InputBar.module.css:2"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/ui/tracy-assistant/test/help-ui.test.mjs:73 require() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the suggestions row goes away once a question is typed",
+    "pressing a suggestion asks it and takes the suggestions away",
+    "dropGreeting takes the suggestions away",
+    "once the chat has begun, a bare /help is answered like a chat message",
+    "streamingRowOf names the Help row being written",
+    "the stop of the chat box stops the answer being written",
+    "a Help row has no stop button of its own",
+    "the stop takes the seat of dsh primary",
+    "a bare /help after the chat began draws the person /help",
+    "/help claims its token in the chat box",
+    "Stop ends all of Help",
+    "one orange button",
+    "hover and press of the round button use the darker terracotta",
+    "focus of the round button is one 1px terracotta stroke",
+    "rating: the answer id comes from done"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1138-help-in-chat"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/ui/tracy-assistant", "tracy-assistant"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1138-help-in-chat",
+    "pr": 1138,
+    "kind": "fix",
+    "area": "assistant/help",
+    "file": "tests/regression/cases/REG-PR-1138-help-in-chat.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/ui/tracy-assistant/test/help.test.mjs",
+    "packages/ui/tracy-assistant/test/help-ui.test.mjs",
+    "packages/brand/tracy-brand/test/composer-primary-css.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the suggestions row goes away once a question is typed",
+    "pressing a suggestion asks it and takes the suggestions away",
+    "dropGreeting takes the suggestions away",
+    "once the chat has begun, a bare /help is answered like a chat message",
+    "streamingRowOf names the Help row being written",
+    "the stop of the chat box stops the answer being written",
+    "a Help row has no stop button of its own",
+    "the stop takes the seat of dsh primary",
+    "a bare /help after the chat began draws the person /help",
+    "/help claims its token in the chat box",
+    "Stop ends all of Help",
+    "one orange button",
+    "hover and press of the round button use the darker terracotta",
+    "focus of the round button is one 1px terracotta stroke",
+    "rating: the answer id comes from done"
+  ],
+  "timeoutS": 600
+}

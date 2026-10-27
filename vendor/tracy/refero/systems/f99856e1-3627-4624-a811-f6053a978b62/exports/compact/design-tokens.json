@@ -1,0 +1,89 @@
+{
+  "color": {
+    "deep-forest": {
+      "$value": "#000a06",
+      "$type": "color",
+      "$description": "Deep Forest — Page background, hero canvas, footer — near-black with a barely-perceptible green undertone that ties the surface to the mint accent"
+    },
+    "pine-bark": {
+      "$value": "#0a1a14",
+      "$type": "color",
+      "$description": "Pine Bark — Card and secondary surface background — sits one step above the canvas, used for product mockup containers, nested panels, and dark secondary buttons"
+    },
+    "charcoal": {
+      "$value": "#161818",
+      "$type": "color",
+      "$description": "Charcoal — Elevated card surface, modals, and overlaid containers — used when a component must visibly float above the Pine Bark layer"
+    },
+    "abyssal-indigo": {
+      "$value": "#01051b",
+      "$type": "color",
+      "$description": "Abyssal Indigo — Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis."
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary text color on dark surfaces, inverted button text, icon strokes, and the dark-theme default for all reading copy"
+    },
+    "ash-gray": {
+      "$value": "#5e6262",
+      "$type": "color",
+      "$description": "Ash Gray — Muted body text, helper copy, and secondary descriptive text on dark surfaces"
+    },
+    "smoke": {
+      "$value": "#828282",
+      "$type": "color",
+      "$description": "Smoke — Tertiary text and subdued labels on dark surfaces"
+    },
+    "silver": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Silver — Light borders, dividers, and hairline rules on lighter or mid-tone surfaces"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Maximum-contrast text, outline button borders, and the dark-side baseline that all neutrals are calibrated against"
+    },
+    "electric-mint": {
+      "$value": "#7affb4",
+      "$type": "color",
+      "$description": "Electric Mint — Green action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "mint-whisper": {
+      "$value": "#e3ffef",
+      "$type": "color",
+      "$description": "Mint Whisper — Pale mint accent for decorative borders, outline strokes, and subtle highlight washes — the low-saturation companion to Electric Mint used when the full vivid tone would be too loud"
+    },
+    "bioluminescent-bloom": {
+      "$value": "#0a3a2b",
+      "$type": "color",
+      "$description": "Bioluminescent Bloom — Supporting palette color for small decorative accents when the core palette needs contrast. Do not promote it to the primary CTA color"
+    },
+    "pine-to-abyss": {
+      "$value": "#0f3a2b",
+      "$type": "color",
+      "$description": "Pine-to-Abyss — Linear green-to-black wash used on secondary atmospheric blocks and footer transitions"
+    }
+  },
+  "font": {
+    "euclid-circular-a": {
+      "$value": "Euclid Circular A",
+      "$type": "fontFamily",
+      "$description": "Sole UI typeface — used for headlines at 300 (the anti-convention whisper-weight that creates authority through restraint rather than volume), body at 400, nav and subheads at 500, and emphasis at 700. The geometric, open apertures feel engineered rather than literary, matching the agentic product voice. Tight negative tracking on display sizes and slight positive tracking on small text forms a clear two-zone rhythm: large text compresses, small text breathes."
+    },
+    "onsite-semimono": {
+      "$value": "Onsite SemiMono",
+      "$type": "fontFamily",
+      "$description": "Monospace companion for inline code, candidate count badges, data labels, and any numeric or technical micro-copy where tabular alignment matters"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://metaview.ai",
+      "siteName": "Metaview",
+      "extractedAt": "2026-06-03T18:25:36.140Z",
+      "variant": "compact"
+    }
+  }
+}

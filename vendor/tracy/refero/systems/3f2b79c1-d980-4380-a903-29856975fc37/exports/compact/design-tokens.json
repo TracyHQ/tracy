@@ -1,0 +1,59 @@
+{
+  "color": {
+    "parchment": {
+      "$value": "#dbdad7",
+      "$type": "color",
+      "$description": "Parchment — Page canvas and hairline borders — the warm off-white that unifies every surface and defines every divider at 1px"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, input fields, pill button fills — pure white sits one level above the warm canvas"
+    },
+    "sand": {
+      "$value": "#e6e4e0",
+      "$type": "color",
+      "$description": "Sand — Secondary surface for table rows, inset panels, and tonal contrast between stacked cards"
+    },
+    "ink": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Ink — Primary text, icons, and logo — near-black for maximum contrast against parchment and paper"
+    },
+    "smoke": {
+      "$value": "#616161",
+      "$type": "color",
+      "$description": "Smoke — Secondary text, muted labels, chart axis lines, non-active icon strokes"
+    },
+    "charcoal": {
+      "$value": "#18181b",
+      "$type": "color",
+      "$description": "Charcoal — Primary action fill — dark filled buttons and active navigation state, white text reverses on top"
+    },
+    "moss": {
+      "$value": "#4caf50",
+      "$type": "color",
+      "$description": "Moss — Green text accent for links, tags, and emphasized short phrases"
+    }
+  },
+  "font": {
+    "hedvig-letters-sans": {
+      "$value": "Hedvig Letters Sans",
+      "$type": "fontFamily",
+      "$description": "Body text, navigation, labels, buttons, and mid-weight headings. The positive letter-spacing (0.05em at small sizes, 0.025em at large) creates a distinctive editorial voice — most interfaces tighten spacing as size grows, this one widens it. Weight 400 for prose, 500 for labels and nav links."
+    },
+    "hedvig-letters-serif": {
+      "$value": "Hedvig Letters Serif",
+      "$type": "fontFamily",
+      "$description": "Display headings and section titles. The serif/sans contrast is the signature editorial moment — 72px serif with -0.025em tracking sits above spaced sans-serif body. Weight stays at 400 even at display size; the font carries authority through form, not weight."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://midday.ai",
+      "siteName": "Midday",
+      "extractedAt": "2026-06-03T17:01:00.411Z",
+      "variant": "compact"
+    }
+  }
+}

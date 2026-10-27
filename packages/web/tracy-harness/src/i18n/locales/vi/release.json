@@ -1,0 +1,18 @@
+{
+  "release.blurb": "Mọi thứ cần kiểm trước và sau khi một bản mới ra. Các dòng đánh dấu {ok}, {fix}, {check} hoặc {note} được máy chủ này đo mỗi lần tải; phần còn lại bạn tự tick. Dấu tick chỉ nằm trong trình duyệt này, cho release này.",
+  "release.checkAgain": "Kiểm lại",
+  "release.done": "Xong {done} / {total}",
+  "release.footer": "Đo lúc {when} trên {origin}. Máy chủ này không thấy môi trường của tracy-host và tracy-dsh: các dòng đó ghi lệnh cần chạy.",
+  "release.local": "Đây là stand tại máy: không có gì ở đây cần sửa. Checklist dành cho dev, staging và production, nơi thiếu một biến là thiếu thật.",
+  "release.onlyOpen": "Chỉ những mục chưa xong",
+  "release.readFailed": "Không đọc được checklist.",
+  "release.state.fail": "Sửa",
+  "release.state.info": "Ghi chú",
+  "release.state.pass": "OK",
+  "release.state.warn": "Kiểm",
+  "release.title": "Checklist release",
+  "release.toCheck_one": "{count} cần kiểm",
+  "release.toCheck_other": "{count} cần kiểm",
+  "release.toFix_one": "{count} cần sửa",
+  "release.toFix_other": "{count} cần sửa"
+}

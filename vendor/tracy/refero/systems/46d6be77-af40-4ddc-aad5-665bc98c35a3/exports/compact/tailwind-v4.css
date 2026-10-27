@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-porcelain-cream: #fcf6ec;
+  --color-espresso-ink: #2e2521;
+  --color-parchment-border: #d3ccc3;
+  --color-stone-haze: #cec1b2;
+  --color-ivory-sand: #f4e8d7;
+  --color-daylight-wash: #fdf0c7;
+  --color-peach-wash: #fdc6b3;
+  --color-sunlit-stone-gradient: #c4b3a3;
+
+  /* Typography */
+  --font-systemia: 'Systemia', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-azeret-mono: 'Azeret Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

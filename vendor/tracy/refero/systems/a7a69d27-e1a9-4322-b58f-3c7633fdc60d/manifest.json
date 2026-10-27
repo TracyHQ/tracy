@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a7a69d27-e1a9-4322-b58f-3c7633fdc60d",
+  "status": "complete",
+  "name": "Carrot",
+  "url": "https://styles.refero.design/style/a7a69d27-e1a9-4322-b58f-3c7633fdc60d",
+  "sourceWebsite": "https://carrot.tech",
+  "extractedAt": "2026-06-03T22:02:30.136Z",
+  "capturedAt": "2026-10-08T05:15:53.205222+00:00",
+  "theme": "light",
+  "industry": "saas",
+  "description": "Activist poster on a single sheet of acid-lime paper — confident, flat, and slightly loud.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/08cef181-ac91-423d-b01b-de41565ecd4f.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c0fca660054761c534e5da0323b8c71686b424371e5bf08b0f6e545d098be813",
+      "bytes": 18096
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b2825d3f19ef506c4bba3893105b705e95e7ecbd5d7a0aec97b133ffce352d51",
+      "bytes": 107976
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "112481f317a3c3023171b270987d0746652c212cf9a07cfef477ef8f7a042882",
+      "bytes": 15495
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "871d4055b3a9ee1cd21313643db4701261aaccd6cc7f2da267c04f98ba98037c",
+      "bytes": 7310
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "53efef1711db74caff816e78d48d8696513e3e923dde5d7e2bdd88ff4ab19f5d",
+      "bytes": 11602
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "097c4eaac5680989f2f306eb58c55aae12787b977ec7c3df96179ccd5f04c098",
+      "bytes": 2114
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "6c0c623e2a928dd37126f59505f056f28c24baecc0c066bc3b131e7f23e9f244",
+      "bytes": 423
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e1e4615abfcd26de29218634f735aa4603c1d96b79526688513803309dd24e80",
+      "bytes": 440
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "3b9f0adf76aa2aa7e56d8e88009f01ebc31c07308c0769bf95284857c195a80e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8921aabd12e8e45f42e3f3498dc79a19d97dad6714a9ea121b1932b29cef3e89",
+      "bytes": 42114
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "800991ebd496bbe78be680a2347a246820ddb7bdd3405fb0a0f7848dffe71fd9",
+      "bytes": 22053
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "261e31140656d7deae34d9faf7fbd350d2eefb8cbb77bfed802ad851fd00dbff",
+      "bytes": 31662
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ab9cd3208610e1b74e9ae6637bb3e433fc69d06f054f3140657eb298bd760899",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c42eb518b290d2f8823bb54d37a8a64715d91b450e024c7602d32c8c6f592c04",
+      "bytes": 1139
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0069e9d6427c6aa40f34ad08130aba4939c72fd7e4825d5e076c5ac9a49c4880",
+      "bytes": 1655
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "45c4f990-e6b4-472d-89a4-06870ac17b9f",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "5ef5e1ff-3cb3-4383-9f66-26474409d9ae",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "a7a69d27-e1a9-4322-b58f-3c7633fdc60d",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "c60a19c1-259a-4001-95d9-6a3826f5c06e",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cd723d5a-e7ea-4e4c-a3bb-6cf56e05057a",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d6c2a911-45ed-4860-a992-43df22793c2a",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

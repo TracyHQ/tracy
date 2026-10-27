@@ -1,0 +1,109 @@
+{
+  "color": {
+    "blush-cream": {
+      "$value": "#f3eae5",
+      "$type": "color",
+      "$description": "Blush Cream — Primary page canvas — warm off-white with a rosy undertone that gives every section a paper-stock feel rather than a digital white"
+    },
+    "deep-indigo": {
+      "$value": "#000647",
+      "$type": "color",
+      "$description": "Deep Indigo — Violet wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces on the dark hero, button text fills, and inverse typography on dark bands"
+    },
+    "graphite": {
+      "$value": "#3e3c43",
+      "$type": "color",
+      "$description": "Graphite — Primary body text and high-emphasis headings on light surfaces — a near-black with a hint of warmth rather than a cold #000"
+    },
+    "mid-stone": {
+      "$value": "#7a7780",
+      "$type": "color",
+      "$description": "Mid Stone — Muted secondary text, badge labels, and input helper copy"
+    },
+    "coral-pop": {
+      "$value": "#ff7e85",
+      "$type": "color",
+      "$description": "Coral Pop — Primary filled CTA background on light sections — the single warm action color that punctuates the cream canvas"
+    },
+    "electric-violet": {
+      "$value": "#0e1889",
+      "$type": "color",
+      "$description": "Electric Violet — Headline gradient anchor and brand-defining deep accent — used at the start of gradient text fills (violet → magenta → coral)"
+    },
+    "magenta": {
+      "$value": "#dd59cf",
+      "$type": "color",
+      "$description": "Magenta — Mid-stop in headline gradient fills — the vivid pink bridge between violet and coral that gives gradient headlines their signature tri-color arc"
+    },
+    "sunset-coral": {
+      "$value": "#ff7399",
+      "$type": "color",
+      "$description": "Sunset Coral — Gradient headline end-stop and accent strokes in illustrations — a hotter pink than Coral Pop, reserved for type treatments"
+    },
+    "deep-teal": {
+      "$value": "#206871",
+      "$type": "color",
+      "$description": "Deep Teal — Secondary brand anchor — used for headings and icon strokes, providing the cool counterpoint to all the warm pinks and corals"
+    },
+    "bright-teal": {
+      "$value": "#118391",
+      "$type": "color",
+      "$description": "Bright Teal — Lighter teal companion for heading treatments and badge icons"
+    },
+    "persimmon": {
+      "$value": "#ffa541",
+      "$type": "color",
+      "$description": "Persimmon — Illustration accent — a warm orange that appears in brush-stroke artwork and icon details"
+    },
+    "muted-lilac": {
+      "$value": "#7c80ad",
+      "$type": "color",
+      "$description": "Muted Lilac — Outlined/ghost link and button border color — the soft violet used for secondary text-link treatments throughout the page"
+    },
+    "fern-green": {
+      "$value": "#40ac76",
+      "$type": "color",
+      "$description": "Fern Green — Green state accent for badges, validation surfaces, and short status labels."
+    },
+    "bubblegum-wash": {
+      "$value": "#fdd7f5",
+      "$type": "color",
+      "$description": "Bubblegum Wash — Decorative pastel surface — soft pink fill for feature-card backgrounds and illustration halos"
+    },
+    "mint-wash": {
+      "$value": "#bdedd5",
+      "$type": "color",
+      "$description": "Mint Wash — Decorative pastel surface — mint green fill used in feature illustration backgrounds"
+    },
+    "peach-wash": {
+      "$value": "#fdd5c3",
+      "$type": "color",
+      "$description": "Peach Wash — Decorative pastel surface — peach fill for illustration backgrounds and soft card zones"
+    }
+  },
+  "font": {
+    "mabry-pro": {
+      "$value": "Mabry Pro",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface — the brand-defining font. Used at 43–83px for section headlines (with tight 0.93–1.06 line-heights creating a poster-like density) and at 16–20px with positive 0.2em tracking for nav items, buttons, and labels. The 0.2em tracking on UI text is signature: it makes even small text feel intentional and editorial rather than utilitarian."
+    },
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "Body and UI text — paragraph copy at 16–18px/1.40–1.56, card descriptions at 14–15px, and supporting subheadings at 20–26px. The system fallback pairing keeps body text neutral so the Mabry Pro headlines can carry the brand voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://moderne.st",
+      "siteName": "Home",
+      "extractedAt": "2026-06-03T18:19:41.701Z",
+      "variant": "compact"
+    }
+  }
+}

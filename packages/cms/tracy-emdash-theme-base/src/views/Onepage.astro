@@ -1,0 +1,167 @@
+---
+/**
+ * /onepage — the source's "Home - Onepage": one page of anchored sections under its own header
+ * and footer (`Base bare`), every string from the `onepage` entry.
+ */
+import { getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { mediaUrl } from '@/lib/media'
+import OnepageHeader from '@/components/site/OnepageHeader.astro'
+import OnepageFooter from '@/components/site/OnepageFooter.astro'
+import Photo from '@/components/site/Photo.astro'
+import SectionHead from '@/components/sections/SectionHead.astro'
+import CardList from '@/components/sections/CardList.astro'
+import FeatureRows from '@/components/sections/FeatureRows.astro'
+import Steps from '@/components/sections/Steps.astro'
+import TeamCards from '@/components/sections/TeamCards.astro'
+import FaqList from '@/components/sections/FaqList.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { entry } = await getEmDashEntry('onepage', 'onepage', { locale })
+if (!entry) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const o = entry.data as Record<string, any>
+const { site } = chrome
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'onepage', entry)
+const $site = stampFor(Astro.request, 'site', site)
+// In-page anchors and external URLs pass through; site-relative paths take the locale prefix.
+const link = (url: unknown): string =>
+  typeof url === 'string' && url.startsWith('/') ? href(locale, url) : String(url ?? '')
+// A link into a page the customer unticked goes on its own; the section stays (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(Astro.request, locale, [
+  o.hero_cta1_url,
+  o.hero_cta2_url,
+  o.contact_cta_url,
+  o.contact_back_url,
+  site.contact_url || '/contact'
+])
+const navItems = (o.nav_items ?? []) as Array<{ label: string; anchor: string }>
+const footerLinks = (o.footer_links ?? []) as Array<{ label: string; anchor: string }>
+// The product parts carry `cta_*`; FeatureRows reads `link_*`.
+const productParts = ((o.product_parts ?? []) as any[]).map((p) => ({
+  icon: p.icon,
+  kicker: p.kicker,
+  title: p.title,
+  text: p.text,
+  link_label: p.cta_label,
+  link_url: link(p.cta_url)
+}))
+const heroTitle = [o.hero_title_a, o.hero_title_b].filter(Boolean)
+// The field each printed title line comes from, in the same order.
+const heroTitleFields = ['hero_title_a', 'hero_title_b'].filter((k) => o[k])
+// The onepage header and footer print fields of this entry and of the site chrome.
+const headerMarks = {
+  brand: o.nav_brand ? $page('nav_brand') : $site('brand_name'),
+  sub: $page('nav_sub'),
+  item: $page('nav_items.label'),
+  contactLabel: $site('contact_label')
+}
+const footerMarks = {
+  brand: $page('footer_brand'),
+  link: $page('footer_links.label'),
+  note: $page('footer_note'),
+  credit: $page('footer_credit'),
+  notice: $site('notice'),
+  backToTop: $site('back_to_top')
+}
+---
+
+<Base chrome={chrome} title={o.title} description={o.hero_lead} image={mediaUrl(o.hero_image)} currentPath="/onepage" content={{ collection: "onepage", id: entry.data.id, slug: "onepage", toPath: () => "/onepage" }} bare>
+	<OnepageHeader brand={o.nav_brand || site.brand_name} sub={o.nav_sub} homeUrl={href(locale, "/")} items={navItems} toggleLabel={o.nav_toggle_label || `${site.theme_dark_label} / ${site.theme_light_label}`} contactLabel={site.contact_label} contactUrl={live(site.contact_url || "/contact") ? link(site.contact_url || "/contact") : ""} menuLabel={site.menu_label} marks={headerMarks} logoDark={site.logo_dark} />
+	<main id="main" class="[&>section]:scroll-mt-20">
+		<PageOwner stamp={$page} />
+		<section class="band" id="introduction">
+			<div class="wrap text-center">
+				{o.hero_eyebrow && <span class="eyebrow" {...$page("hero_eyebrow")}>{o.hero_eyebrow}</span>}
+				{heroTitle.length > 0 && (
+					<h1 class="h-hero mx-auto max-w-[640px]">
+						{heroTitle.map((line, i) => <span class:list={["block", i === 0 && "md:whitespace-nowrap"]} {...$page(heroTitleFields[i])}>{line}</span>)}
+					</h1>
+				)}
+				{o.hero_lead && <p class="lead mx-auto mt-6 max-w-[720px]" {...$page("hero_lead")}>{o.hero_lead}</p>}
+				{(o.hero_cta1_label || o.hero_cta2_label) && (
+					<div class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+						{o.hero_cta1_label && live(o.hero_cta1_url) && (o.hero_cta1_url ? <a href={link(o.hero_cta1_url)} class="btn btn-primary" {...$page("hero_cta1_label")}>{o.hero_cta1_label}</a> : <span class="btn btn-primary" {...$page("hero_cta1_label")}>{o.hero_cta1_label}</span>)}
+						{o.hero_cta2_label && live(o.hero_cta2_url) && (o.hero_cta2_url ? <a href={link(o.hero_cta2_url)} class="text-[17px] text-accent" {...$page("hero_cta2_label")}>{o.hero_cta2_label}</a> : <span class="text-[17px] text-accent" {...$page("hero_cta2_label")}>{o.hero_cta2_label}</span>)}
+					</div>
+				)}
+				<Photo image={o.hero_image} stamp={$page("hero_image")} alt={o.hero_image_alt} class="mt-14 aspect-[3/2] rounded-[var(--ds-card-radius,18px)] md:aspect-[16/9]" width={1536} height={1024} priority />
+			</div>
+		</section>
+		<section class="band" id="about">
+			<div class="wrap grid gap-8 md:grid-cols-[minmax(0,4fr)_minmax(0,5fr)] md:gap-12">
+				<div>
+					{o.about_eyebrow && <span class="eyebrow" {...$page("about_eyebrow")}>{o.about_eyebrow}</span>}
+					{o.about_title && <h2 class="h-section" {...$page("about_title")}>{o.about_title}</h2>}
+				</div>
+				<div>
+					{o.about_text_1 && <p class="lead" {...$page("about_text_1")}>{o.about_text_1}</p>}
+					{o.about_text_2 && <p class="mt-5 text-[17px] leading-[1.47] text-fg-muted" {...$page("about_text_2")}>{o.about_text_2}</p>}
+					{((o.about_chips ?? []) as any[]).filter((c) => c.label).length > 0 && (
+						<div class="mt-7 flex flex-wrap gap-2.5">
+							{((o.about_chips ?? []) as any[]).filter((c) => c.label).map((c) => <span class="inline-flex items-center rounded-[var(--ds-pill-radius,980px)] border border-line px-4 py-2 text-[12px] text-fg-2" {...$page("about_chips.label")}>{c.label}</span>)}
+						</div>
+					)}
+				</div>
+			</div>
+		</section>
+		<section class="band border-y border-line-soft" id="services">
+			<div class="wrap">
+				<SectionHead eyebrow={o.services_eyebrow} title={o.services_title} lead={o.services_lead} stamp={$page} fields={{ eyebrow: "services_eyebrow", title: "services_title", lead: "services_lead" }} />
+				<CardList items={o.services_items ?? []} block="services" stamp={$page} field="services_items" />
+			</div>
+		</section>
+		<section class="band border-b border-line-soft" id="product">
+			<div class="wrap">
+				<SectionHead eyebrow={o.product_eyebrow} title={o.product_title} lead={o.product_lead} stamp={$page} fields={{ eyebrow: "product_eyebrow", title: "product_title", lead: "product_lead" }} />
+				<FeatureRows items={productParts} stamp={$page} field="product_parts" linkField="cta_label" />
+			</div>
+		</section>
+		<section class="band" id="process">
+			<div class="wrap">
+				<SectionHead eyebrow={o.process_eyebrow} title={o.process_title} lead={o.process_lead} stamp={$page} fields={{ eyebrow: "process_eyebrow", title: "process_title", lead: "process_lead" }} />
+				<Steps items={o.process_steps ?? []} stamp={$page} field="process_steps" />
+			</div>
+		</section>
+		{(o.team_members ?? []).length > 0 && (
+		<section class="band" id="team">
+			<div class="wrap">
+				<SectionHead eyebrow={o.team_eyebrow} title={o.team_title} lead={o.team_lead} stamp={$page} fields={{ eyebrow: "team_eyebrow", title: "team_title", lead: "team_lead" }} />
+				<TeamCards items={o.team_members ?? []} stamp={$page} field="team_members" />
+			</div>
+		</section>
+		)}
+		<section class="band border-y border-line-soft" id="faq">
+			<div class="wrap">
+				<SectionHead eyebrow={o.faq_eyebrow} title={o.faq_title} stamp={$page} fields={{ eyebrow: "faq_eyebrow", title: "faq_title" }} />
+				<FaqList items={o.faq_items ?? []} stamp={$page} field="faq_items" />
+			</div>
+		</section>
+		<section class="band" id="contact">
+			<div class="wrap text-center">
+				{o.contact_kicker && <span class="eyebrow" {...$page("contact_kicker")}>{o.contact_kicker}</span>}
+				{o.contact_title && <h2 class="h-section mx-auto max-w-[560px]" {...$page("contact_title")}>{o.contact_title}</h2>}
+				{o.contact_text && <p class="lead mx-auto mt-5 max-w-[720px]" {...$page("contact_text")}>{o.contact_text}</p>}
+				{((o.contact_cta_label && live(o.contact_cta_url)) || (o.contact_back_label && live(o.contact_back_url))) && (
+					<div class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+						{o.contact_cta_label && live(o.contact_cta_url) && (o.contact_cta_url ? <a href={link(o.contact_cta_url)} class="btn btn-primary" {...$page("contact_cta_label")}>{o.contact_cta_label}</a> : <span class="btn btn-primary" {...$page("contact_cta_label")}>{o.contact_cta_label}</span>)}
+						{o.contact_back_label && live(o.contact_back_url) && (o.contact_back_url ? <a href={link(o.contact_back_url)} class="text-[17px] text-accent" {...$page("contact_back_label")}>{o.contact_back_label}</a> : <span class="text-[17px] text-accent" {...$page("contact_back_label")}>{o.contact_back_label}</span>)}
+					</div>
+				)}
+			</div>
+		</section>
+	</main>
+	<OnepageFooter brand={o.footer_brand} brandUrl="#introduction" links={footerLinks} note={o.footer_note} credit={o.footer_credit} notice={site.notice} backToTop={site.back_to_top} marks={footerMarks} />
+</Base>

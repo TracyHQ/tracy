@@ -1,0 +1,246 @@
+/* =============================================================================
+   ja_kinetic — Article archive (com_content/archive, Itemid=251) overlay
+   .pen: kehnH  (full-width grid masthead → 3-col body: BY MONTH rail · post-row
+   list · TAGS cloud). Markup in html/com_content/archive/{default,default_items}.php.
+   Tokens flip light↔dark + per-direction via css/darkmode.css, so NO dark block
+   needed — every colour routes through a design token.
+   ============================================================================= */
+
+/* T4 page-heading / body padding reset (this view owns its masthead). */
+body.item-251 .t4-masthead { display: none; }
+body.item-251 .t4-main-body { padding-top: 0; }
+
+body.item-251 .hx-archive { display: block; width: 100%; }
+
+/* ── full-width masthead ──────────────────────────────────────────────────── */
+body.item-251 .hx-archmast {
+  position: relative;
+  padding-block: 60px 52px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 75% 60% at 50% 0%, color-mix(in srgb, var(--primary) 6%, transparent) 0%, transparent 60%),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
+}
+body.item-251 .hx-archmast__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+/* breadcrumb */
+body.item-251 .hx-archmast__bc {
+  display: flex;
+  gap: 6px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 400;
+}
+body.item-251 .hx-archmast__bc .hx-bc-home {
+  color: var(--text);
+  text-decoration: none;
+}
+body.item-251 .hx-archmast__bc .hx-bc-home:hover { color: var(--primary); }
+body.item-251 .hx-archmast__bc .hx-bc-tail { color: var(--muted); }
+
+/* eyebrow pill */
+body.item-251 .hx-archmast__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 5px 12px;
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  border-radius: 100px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+body.item-251 .hx-archmast__dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--primary); flex-shrink: 0;
+}
+
+body.item-251 .hx-archmast__title {
+  margin: 0;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -1.3px;
+  color: var(--heading);
+}
+body.item-251 .hx-archmast__sub {
+  margin: 0;
+  max-width: 600px;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 27px;
+  color: var(--text);
+}
+
+/* ── body grid ────────────────────────────────────────────────────────────── */
+body.item-251 .hx-arch-section { padding-block: 56px 72px; }
+body.item-251 .hx-arch-grid {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 240px;
+  align-items: start;
+  gap: 32px;
+}
+
+body.item-251 .hx-arch-grid--notags { grid-template-columns: 220px minmax(0, 1fr); }
+
+/* shared rail chrome (months + tags) */
+body.item-251 .hx-arch-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+body.item-251 .hx-arch-rail__h {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* BY MONTH rows */
+body.item-251 .hx-monthrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+body.item-251 .hx-monthrow__m {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--text);
+  transition: color .15s;
+}
+body.item-251 .hx-monthrow__c {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+body.item-251 .hx-monthrow:hover .hx-monthrow__m { color: var(--heading); }
+body.item-251 .hx-monthrow.is-active .hx-monthrow__m { color: var(--primary); font-weight: 500; }
+body.item-251 .hx-monthrow.is-active .hx-monthrow__c { color: var(--primary); }
+
+/* post-row list */
+body.item-251 .hx-archrows,
+body.item-251 .hx-arch-list { display: flex; flex-direction: column; gap: 12px; width: 100%; min-width: 0; }
+body.item-251 .hx-archrow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: border-color .15s;
+}
+body.item-251 .hx-archrow:hover { border-color: color-mix(in srgb, var(--primary) 45%, var(--border)); }
+body.item-251 .hx-archrow__tc {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+body.item-251 .hx-archrow__t {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--heading);
+}
+body.item-251 .hx-archrow__m {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+}
+body.item-251 .hx-archrow__cat,
+body.item-251 .hx-archrow__sep,
+body.item-251 .hx-archrow__m time { color: var(--muted); }
+body.item-251 .hx-archrow__arr {
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: color .15s, transform .15s;
+}
+body.item-251 .hx-archrow:hover .hx-archrow__arr { color: var(--primary); transform: translateX(2px); }
+body.item-251 .hx-archrow:hover .hx-archrow__t { color: var(--heading); }
+
+body.item-251 .hx-arch-empty {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 15px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* TAGS cloud */
+body.item-251 .hx-tagcloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+body.item-251 .hx-tagchip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color .15s, color .15s;
+}
+body.item-251 .hx-tagchip:hover {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+  color: var(--heading);
+}
+
+/* pagination */
+body.item-251 .hx-arch-pagination { margin-top: 24px; }
+
+/* ── responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 980px) {
+  body.item-251 .hx-arch-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  body.item-251 .hx-arch-list { order: 2; }
+  body.item-251 .hx-arch-months { order: 1; }
+  body.item-251 .hx-arch-tags { order: 3; }
+}
+@media (max-width: 620px) {
+  body.item-251 .hx-archmast { padding-block: 44px 38px; }
+  body.item-251 .hx-archmast__title { font-size: 30px; letter-spacing: -0.8px; }
+  body.item-251 .hx-archmast__sub { font-size: 15px; line-height: 24px; }
+  body.item-251 .hx-arch-section { padding-block: 40px 56px; }
+}

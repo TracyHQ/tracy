@@ -1,0 +1,39 @@
+{
+  "id": "QA-UNIT-REG-008-pending",
+  "itemIds": ["regression:REG-008"],
+  "requirement": "An EmDash chat update is recorded with its entry as target and named in Site changes",
+  "oracle": {
+    "source": "tests/regression/cases/REG-008-emdash-write-has-target.json",
+    "ref": "PR #772 (fix); fix evidence: apps/tracy-web/test/component.test.mjs",
+    "invariant": "Both build checks print a count >= 1. If every via='emdash-mcp' row of TURN has action 'content_replace' → BLOCKED note agent-used-content-replace (that job names no single entry by design); otherwise every check below applies. site_write has a row action='content_update', via='emdash-mcp', outcome='ok', actor=A, target kind='posts', target id=POST_ID (before #772 the same row carried target NULL: QA-A10-em r1, scv2em). API item: origin.source='chat', description.key='resource.op', description.params.type='post', description.params.id=POST_ID (before #772: description.key='change.recorded' with params.operations=1). API item: description.params.op='update' when every ok emdash-mcp row of TURN is content_update. API item: effects.content.resources has an entry with type='post', id=POST_ID and 'update' in ops; effects.content.operations=0. The row's description text names the post by its new title REG-008-<RUN>-edited and never shows the bare POST_ID (en reads 'Updated post “REG-008-<RUN>-edited”'; since #900 E3.2, a ULID is never shown — before it read 'Updated post <POST_ID>').",
+    "productSourceGap": "no deterministic run, so no code to follow; owner layer harness, needs stand, site:em, model, seat:owner"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:stand", "need:site:em", "need:model", "need:seat:owner"],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-008"],
+  "kind": "no-run",
+  "area": "regression-no-run",
+  "areas": ["regression-no-run", "flaky-model", "owner:harness"],
+  "regression": {
+    "id": "REG-008",
+    "pr": 772,
+    "kind": "fix",
+    "area": "site-changes/record",
+    "file": "tests/regression/cases/REG-008-emdash-write-has-target.json"
+  },
+  "ownerLayer": "harness",
+  "ownerSource": "tests/qa/inventory/legacy-map.json",
+  "flakyModel": true,
+  "command": [],
+  "needs": ["stand", "site:em", "model", "seat:owner"]
+}

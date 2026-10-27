@@ -1,0 +1,453 @@
+---
+/**
+ * bravada.portfolio — Bravada's landing-page portfolio (.lp-portfolio):
+ * a filter bar over a grid of project cards. Each card is a square
+ * image hovering over a white caption plate (Playfair teal title, gold
+ * on hover, italic taxonomy line). Hovering lifts the image with a
+ * deep shadow and zooms it while the plate dips. Filtering is
+ * client-side, driven by each item's tags.
+ */
+import SectionHeader from "../SectionHeader.astro";
+
+interface PortItem {
+	image?: string;
+	imageAlt?: string;
+	title?: string;
+	tags?: string[];
+	url?: string;
+}
+
+interface PortfolioNode {
+	title?: string;
+	description?: string;
+	columns?: number;
+	items?: PortItem[];
+	/** Optional trailing outline button ("All portfolios") */
+	more?: { label: string; url: string };
+}
+
+// astro-portabletext hands custom type components the block as `node`
+const { node } = Astro.props as { node: PortfolioNode };
+const { title, description, columns = 4, items = [], more } = node;
+const cols = Math.min(Math.max(columns, 2), 4);
+const filters = [...new Set(items.flatMap((i) => i.tags ?? []))];
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+// Local /images/demo/*.jpg assets ship pre-built AVIF/WebP siblings.
+function modernSources(src?: string) {
+	if (!src?.startsWith("/images/")) return null;
+	return { avif: src.replace(/\.jpg$/, ".avif"), webp: src.replace(/\.jpg$/, ".webp") };
+}
+---
+
+<section class="lp-portfolio full-bleed" id="lp-portfolio">
+	<SectionHeader title={title} description={description} />
+	<div class="lp-portfolio-inside" style={`--lp-port-cols: ${cols}`}>
+		{
+			filters.length > 0 && (
+				<div class="lp-port-filter">
+					<a href="#" class="active" data-filter="*">
+						All
+					</a>
+					{filters.map((f) => (
+						<a href="#" data-filter={slug(f)}>
+							{f}
+						</a>
+					))}
+				</div>
+			)
+		}
+		<div class="lp-port-grid">
+			{
+				items.map((item) => (
+					<div
+						class="lp-port aos"
+						data-types={(item.tags ?? []).map(slug).join(" ")}
+					>
+						<a href={item.url ?? "#"} aria-label={item.title}>
+							<div class="lp-port-image">
+								{item.image && (() => {
+									const sources = modernSources(item.image);
+									return sources ? (
+										<picture>
+											<source srcset={sources.avif} type="image/avif" />
+											<source srcset={sources.webp} type="image/webp" />
+											<img src={item.image} alt={item.imageAlt ?? ""} loading="lazy" />
+										</picture>
+									) : (
+										<img src={item.image} alt={item.imageAlt ?? ""} loading="lazy" />
+									);
+								})()}
+							</div>
+							<div class="lp-port-content">
+								{item.tags && item.tags.length > 0 && (
+									<ul class="lp-port-tax">
+										{item.tags.map((t) => (
+											<li>{t}</li>
+										))}
+									</ul>
+								)}
+								{item.title && <h4 class="lp-port-title">{item.title}</h4>}
+							</div>
+						</a>
+					</div>
+				))
+			}
+		</div>
+		{
+			more?.url && (
+				<a class="lp-port-readmore" href={more.url}>
+					{more.label}
+				</a>
+			)
+		}
+	</div>
+</section>
+
+<script>
+	// Masonry-like filtering, like the demo's #portfolio-masonry: exiting
+	// cards leave the flow as absolutely positioned ghosts and fade out,
+	// surviving cards FLIP-slide to their new grid slots, entering cards
+	// fade in.
+	const DURATION = 450;
+	for (const bar of document.querySelectorAll<HTMLElement>(".lp-port-filter")) {
+		const grid = bar.parentElement?.querySelector<HTMLElement>(".lp-port-grid");
+		if (!grid) continue;
+		let settleTimer: ReturnType<typeof setTimeout> | undefined;
+		bar.addEventListener("click", (e) => {
+			const link = (e.target as HTMLElement).closest("a[data-filter]");
+			if (!link) return;
+			e.preventDefault();
+			const filter = link.getAttribute("data-filter") ?? "*";
+			bar.querySelectorAll("a").forEach((a) =>
+				a.classList.toggle("active", a === link)
+			);
+			// Settle any animation still in flight from a previous click so
+			// its pending timeout can't hide a card the new filter shows.
+			clearTimeout(settleTimer);
+			for (const c of grid.querySelectorAll<HTMLElement>(".lp-port")) {
+				if (c.classList.contains("is-exiting")) {
+					c.classList.remove("is-exiting");
+					c.style.cssText = "display: none";
+				} else if (c.classList.contains("is-entering")) {
+					c.classList.remove("is-entering");
+					c.style.transition = "";
+					c.style.transform = "";
+					c.style.opacity = "";
+				}
+			}
+			const cards = [...grid.querySelectorAll<HTMLElement>(".lp-port")];
+			const first = new Map(cards.map((c) => [c, c.getBoundingClientRect()]));
+			const gridRect = grid.getBoundingClientRect();
+			const matches = (c: HTMLElement) =>
+				filter === "*" || (c.dataset.types ?? "").split(" ").includes(filter);
+
+			for (const c of cards) {
+				const wasHidden = c.style.display === "none";
+				if (!matches(c) && !wasHidden) {
+					const r = first.get(c)!;
+					c.classList.add("is-exiting");
+					c.style.position = "absolute";
+					c.style.left = `${r.left - gridRect.left}px`;
+					c.style.top = `${r.top - gridRect.top}px`;
+					c.style.width = `${r.width}px`;
+				} else if (matches(c) && wasHidden) {
+					c.style.display = "";
+					c.classList.add("is-entering");
+				}
+			}
+
+			// Invert: surviving cards start translated back at their old spot
+			for (const c of cards) {
+				if (c.classList.contains("is-exiting") || c.classList.contains("is-entering")) continue;
+				if (c.style.display === "none") continue;
+				const f = first.get(c)!;
+				const l = c.getBoundingClientRect();
+				const dx = f.left - l.left;
+				const dy = f.top - l.top;
+				if (dx || dy) {
+					c.style.transition = "none";
+					c.style.transform = `translate(${dx}px, ${dy}px)`;
+				}
+			}
+
+			// Play
+			requestAnimationFrame(() =>
+				requestAnimationFrame(() => {
+					for (const c of cards) {
+						if (c.classList.contains("is-exiting")) {
+							c.style.opacity = "0";
+							c.style.transform = "scale(0.9)";
+							continue;
+						}
+						if (c.style.display === "none") continue;
+						c.style.transition = `transform ${DURATION}ms ease, opacity ${DURATION}ms ease`;
+						c.style.transform = "";
+						if (c.classList.contains("is-entering")) c.style.opacity = "1";
+					}
+				})
+			);
+
+			settleTimer = setTimeout(() => {
+				for (const c of cards) {
+					if (c.classList.contains("is-exiting")) {
+						c.classList.remove("is-exiting");
+						c.style.cssText = "display: none";
+					} else if (c.style.display !== "none") {
+						c.classList.remove("is-entering");
+						c.style.transition = "";
+						c.style.transform = "";
+						c.style.opacity = "";
+					}
+				}
+			}, DURATION + 40);
+		});
+	}
+</script>
+
+<style>
+	.lp-portfolio {
+		overflow: hidden;
+		background-color: var(--tint-warm);
+	}
+
+	.lp-portfolio-inside {
+		max-width: var(--wide-width);
+		margin: 0 auto;
+		padding: var(--band-y) var(--band-x);
+	}
+
+	/* Theme: side padding tapers 2.5em -> 2em (<=1152px) -> 1em
+	   (<=640px), the same schedule every landing section runs
+	   (style.css lists .lp-portfolio-inside in all three rules). This
+	   band was left flat at 2.5em, so at 390pt the filter bar and the
+	   grid sat at 40 against the theme's 14. */
+	@media (max-width: 1152px) {
+		.lp-portfolio-inside {
+			padding-left: 2em;
+			padding-right: 2em;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.lp-portfolio-inside {
+			padding-left: 1em;
+			padding-right: 1em;
+		}
+	}
+
+	/* Filter bar (demo #portfolio-filter): transparent with a 2px grey
+	   outline, bold uppercase links, gold active item */
+	.lp-port-filter {
+		display: table;
+		margin: 2em auto;
+		padding: 0.5em 0.6em;
+		border: 2px solid light-dark(var(--fg), var(--border));
+		background: transparent;
+		text-align: center;
+	}
+
+	.lp-port-filter a {
+		margin: 0 0.3em;
+		padding: 0.3em 0.75em;
+		font-size: 0.9em;
+		font-weight: 700;
+		text-transform: uppercase;
+		text-decoration: none;
+		color: light-dark(var(--fg-2), var(--fg-2));
+		transition: 0.2s ease-out color;
+	}
+
+	.lp-port-filter a.active {
+		color: var(--color-gold);
+	}
+
+	.lp-port-filter a:hover {
+		color: var(--color-teal);
+	}
+
+	.lp-port-grid {
+		position: relative;
+		display: grid;
+		grid-template-columns: repeat(var(--lp-port-cols, 4), 1fr);
+	}
+
+	/* Filter animation states */
+	.lp-port.is-exiting {
+		z-index: 0;
+		pointer-events: none;
+		transition:
+			opacity 0.45s ease,
+			transform 0.45s ease;
+	}
+
+	.lp-port.is-entering {
+		opacity: 0;
+	}
+
+	/* Inside a page sheet (demo jetpack-portfolio page) the section sits
+	   flush on the white main: no bleed, no tinted band, no extra pad */
+	:global(.page-article) .lp-portfolio {
+		width: auto;
+		margin-inline: 0;
+		background: transparent;
+	}
+
+	:global(.page-article) .lp-portfolio-inside {
+		max-width: none;
+		padding: 0;
+	}
+
+	.lp-port {
+		position: relative;
+		z-index: 0;
+		padding: 0 10px 30px;
+	}
+
+	.lp-port:hover {
+		z-index: 99;
+	}
+
+	.lp-port > a {
+		display: block;
+		text-decoration: none;
+	}
+
+	.lp-port-image {
+		position: relative;
+		z-index: 1;
+		top: 20px;
+		overflow: hidden;
+		display: block;
+		margin: 0 auto;
+		transition: 0.3s ease all;
+	}
+
+	.lp-port-image img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 1;
+		object-fit: cover;
+		transform: scale(1);
+		transition: 0.3s ease all;
+	}
+
+	.lp-port:hover .lp-port-image {
+		top: -5px;
+		box-shadow: 0 0 30px 10px color-mix(in srgb, var(--fg) 20%, transparent);
+	}
+
+	.lp-port:hover .lp-port-image img {
+		transform: scale(1.35);
+	}
+
+	.lp-port-content {
+		position: relative;
+		top: 0;
+		z-index: 2;
+		display: flex;
+		flex-flow: column;
+		padding: 2em 1em 1.5em;
+		text-align: center;
+		background: var(--color-surface);
+		box-shadow:
+			0 -10px 20px -5px color-mix(in srgb, var(--fg) 20%, transparent),
+			0 10px 20px color-mix(in srgb, var(--fg) 5%, transparent);
+		transition: 0.3s ease all;
+	}
+
+	.lp-port:hover .lp-port-content {
+		top: 10px;
+	}
+
+	.lp-port-title {
+		order: 10;
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 1.3em;
+		font-weight: 400;
+		line-height: 1.2;
+		/* Demo: gold titles that go teal on hover */
+		color: var(--color-gold);
+		transition: 0.2s ease-out all;
+	}
+
+	.lp-port:hover .lp-port-title {
+		color: var(--color-teal);
+	}
+
+	.lp-port-tax {
+		order: 5;
+		display: inline-block;
+		margin: 0 0 0.4em;
+		padding: 0;
+		list-style: none;
+		font-size: 1em;
+		line-height: 1.1;
+	}
+
+	.lp-port-tax li {
+		display: inline;
+		font-style: italic;
+		/* Demo: gold tag line, no dimming */
+		color: var(--color-gold);
+	}
+
+	.lp-port-tax li:not(:last-child)::after {
+		content: "·";
+		padding: 0 5px;
+		font-weight: 700;
+	}
+
+	/* "All portfolios" — teal double-outline button */
+	.lp-port-readmore {
+		position: relative;
+		display: table;
+		min-width: 150px;
+		margin: 2em auto 1em;
+		outline: 2px solid;
+		padding: 0.2em 3em;
+		font-size: 0.9em;
+		font-weight: 700;
+		text-align: center;
+		text-decoration: none;
+		line-height: 3;
+		color: var(--color-teal);
+		transition: all 0.35s ease-out;
+	}
+
+	.lp-port-readmore::after {
+		content: "";
+		position: absolute;
+		z-index: 3;
+		inset: 0;
+		outline: 2px solid;
+		opacity: 1;
+		transition: 0.3s ease-out all;
+	}
+
+	.lp-port-readmore:hover {
+		opacity: 0.8;
+	}
+
+	.lp-port-readmore:hover::after {
+		transform: scale(1.25, 1.4);
+		opacity: 0;
+	}
+
+	@media (max-width: 900px) {
+		.lp-port-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 600px) {
+		.lp-port-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.lp-port {
+			padding: 0 0 30px;
+		}
+	}
+</style>

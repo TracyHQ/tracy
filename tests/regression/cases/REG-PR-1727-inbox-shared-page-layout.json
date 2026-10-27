@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1727-inbox-shared-page-layout",
+  "kind": "feat",
+  "title": "Inbox tab on the shared page layout: it spans the panel with the title row on top and the filter under the lead, no centred card, at every width; Mark all as read still works",
+  "pr": 1727,
+  "area": "inbox/layout",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Open the Inbox tab at 390, 430, 600, 900 and 1440 px wide.",
+    "S2: Read where the title row, the lead, the filter group and the lists sit.",
+    "S3: Press Mark all as read."
+  ],
+  "expect": [
+    "S1: the Inbox spans the panel width; there is no centred card.",
+    "S2: the title row is on top, the filter group sits under the lead, the lists follow.",
+    "S3: the unread count clears and the button rests disabled."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-inbox/src/client/inbox.tsx, packages/site/tracy-inbox/src/client/styles.ts",
+    "dom": ".tracy-inbox-lead, .tracy-inbox-markall, .tracy-inbox-list, [role=\"group\"]",
+    "tool": "Playwright e2e of the Inbox page in a harness (test/e2e/inbox-fits-panel.test.mjs)"
+  },
+  "evidence": "Before the change the Inbox drew its content in a centred card, unlike the other tabs; the owner reviewed the new layout on the local stand",
+  "fence": "The real Inbox client in a Playwright harness page with stubbed data; the dsh host page around it is not loaded",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=60000",
+      "packages/site/tracy-inbox/test/e2e/inbox-fits-panel.test.mjs"
+    ],
+    "tests": [
+      "the Inbox spans the panel at 390px, title row on top, filter under the lead",
+      "the Inbox spans the panel at 1440px, title row on top, filter under the lead",
+      "Mark all as read still clears the count and then rests disabled"
+    ]
+  }
+}

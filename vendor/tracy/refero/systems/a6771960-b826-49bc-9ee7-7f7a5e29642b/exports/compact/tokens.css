@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-charcoal: #414141;
+  --color-ink-black: #000000;
+  --color-graphite: #737373;
+  --color-fog: #c1c1c1;
+  --color-off-white: #fafafa;
+  --color-obsidian: #111111;
+  --color-ember: #f35815;
+  --color-signal-blue: #0b6ec5;
+  --color-amber: #f2b600;
+
+  /* Typography — Font Families */
+  --font-ui-monospace: 'ui-monospace', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

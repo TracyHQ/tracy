@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1408-ops-unmeasured-v9",
+  "kind": "fix",
+  "title": "A release with no measurement at the current preview probe shows only 'Not measured with preview probe v9', prompts the measure commands, and stays locked",
+  "pr": 1408,
+  "area": "design-system/readiness",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Check a release whose VERIFICATION.json carries a measurement of another version (no file of its own version) and summarize it.",
+    "S2: Check JA Directory Joomla 1.0.3 (its committed measurement file at preview probe v9) on five rules and summarize it.",
+    "S3: Build the road of a release not live whose stored check carries a previewProbe gap, ask the publish door, and ask the same road for a live line.",
+    "S4: Ask the /ops guide for step design-system code ds-not-at-probe."
+  ],
+  "expect": [
+    "S1: grade null, 0/0, no must-fix, worth-fixing or not-measured groups; notAtProbe { current 9, measured null } whose measure text runs stand up, flow --measure-version, preview-check --write, stand down.",
+    "S2: no previewProbe on any result; a grade, total 5, measuredOn 1.0.3 and findings stamped 'preview probe v9'.",
+    "S3: step todo ds-not-at-probe, never ds-ready; Publish blocked by design-system with DESIGN_SYSTEM_NOT_READY '1.0.2 is not measured with preview probe v9'; a live line warns with the same code.",
+    "S4: title 'Design system · Not measured with preview probe v9', no rule groups, and the prompt's second line is the measure command."
+  ],
+  "selectors": {
+    "tool": "apps/tracy-web/test/template-design-system-readiness.test.mjs",
+    "evidence": "apps/tracy-web/test/road-to-live.test.mjs"
+  },
+  "evidence": "dev /ops 16/10/2026: JA Donate Joomla 1.0.6 (no measurement file) read 'Design system · C · 8/44 passed · 29 must fix · 8 not measured yet', prompt opening with VARS-1; reproduced with check-runner.mjs on the release files",
+  "fence": "readiness summary, road step and /ops guide; no stand, no Postgres",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/template-design-system-readiness.test.mjs",
+      "apps/tracy-web/test/road-to-live.test.mjs"
+    ]
+  }
+}

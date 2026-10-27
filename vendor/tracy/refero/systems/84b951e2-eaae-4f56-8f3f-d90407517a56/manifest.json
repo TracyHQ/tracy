@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "84b951e2-eaae-4f56-8f3f-d90407517a56",
+  "status": "complete",
+  "name": "Current",
+  "url": "https://styles.refero.design/style/84b951e2-eaae-4f56-8f3f-d90407517a56",
+  "sourceWebsite": "https://current.com",
+  "extractedAt": "2026-06-03T22:10:38.631Z",
+  "capturedAt": "2026-10-08T05:14:19.974572+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Editorial gallery in black and white. A whisper-thin headline floats on white paper beside a saturated photograph — banking as a magazine spread, not a dashboard.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0b7c0c1e-21e1-4f66-988f-00b27d03543d.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5f996803417d8f76e8468f06f7bb2667d36dd3323863f13241be53f2afd0cdbd",
+      "bytes": 20741
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "cbce5239e75d585bdbfee3df116440536904401efb3accb310ab4121f8301130",
+      "bytes": 101988
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b58e41fdaf2d30937080d76eab58ead586c0c914e2929275803d6498f7ca33f9",
+      "bytes": 17655
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "31bfa59a1f4f9beee48bb4495b5cdf1bc8124cbf72ee93ccb99e16dbe3b52e6f",
+      "bytes": 11653
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "754215549da52bac2b667d7cd031aeb508d6da4d62bc8dbb0fc815569b66c297",
+      "bytes": 13465
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "08cea0da5dfb2d8841cc65010ff43cf57eaafe346c084f59c630cfb85d2bcf20",
+      "bytes": 2212
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c3770fc3f44f10bb6ac822159b1ffcb0729e25b85cc53e148c2d034acfbdb403",
+      "bytes": 473
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2b51d5e1219b365406ddb082a672c6ce3c2744261f6be523a839ab8173d6b5e7",
+      "bytes": 614
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5051b8a3a019812bd123976d92d8b110452cb7d791a63db54ba70782b84c2add",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "bd72dc299e941f5867bb50d68635f5d33acc81aff60b30877804c625b8dff3ad",
+      "bytes": 44522
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "7428139ee7d5e03db4790190e2dc45f3f0e280e359e6063dbb37c856d7f3c3c2",
+      "bytes": 23657
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e0ff38176dac012fe94eaf4e6f3618443db46f09bc5bbbb68b28ac202bf2cb4f",
+      "bytes": 46586
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "df904cc6a97ac3785375643879eaef031574eace29a220e27447cf7b377eb14f",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "685723ea535bb90637c4cb590423963fac7e21fa9fbeb6f38e8ec6d7bf30d7ea",
+      "bytes": 1740
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c484a17da7802ebf7865a219c83f521889e2425ea7ba5cf3e477852d2e2f4941",
+      "bytes": 2453
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1f32d914-6fdd-4692-b4fc-fcee2c414766",
+    "2c05cf8d-97c5-4f35-96ef-eb53fc03ea81",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "715a3ad2-5b6d-421f-b72b-3aa6fec86351",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "850ee61c-4ecd-4558-9c0c-fab99721b34c",
+    "8cf4a580-bfb6-4090-a899-f734ffe62370",
+    "964b9215-396b-492c-abec-7bd778d7b1c9",
+    "9d16aa65-cef7-4bf7-83c8-91837a248cd9",
+    "a3161c3c-26d4-425b-aaa3-4fc3f06b77ee",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "c1f7749f-319b-491b-8243-22050e85994f",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "f1a2100a-7cda-4787-b8af-5c5edcfcdff0"
+  ]
+}

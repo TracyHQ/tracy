@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* 🔒 An `@source` pointing at nothing makes Tailwind say NOTHING — it just scans less, and what disappears
+   are classes that live only inside library components. `scripts/check-tailwind-source.ts` guards it. */
+@source "./";
+@source "../../../ui/tracy-ui/src";
+/* The Customize question tab draws the customer's own questions sheet (`cms/CustomerQuestionsPreview.tsx`): the
+   classes of that plugin and of the shared ask form it is made of must be generated here too, or the sheet renders bare. */
+@source "../../../site/tracy-add-site/src/client";
+@source "../../../site/tracy-site-build-core/src/client";
+
+@import "@tracy/ui/tokens.css";
+
+/* Dark is the `.dark` class the theme switch puts on <html> (`shell/theme.tsx`), not the OS media
+   query Tailwind defaults to: a person who picks Light on a dark computer must get light `dark:`
+   utilities too. Same variant as the design bench (`packages/dev/tracy-design/src/style.css`). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Do NOT load `dsh-bridge.css`: this surface does not live in the dsh page. It is mode A on
+   Tracy's own hostname, so tokens come straight from `tokens.css`. */
+
+/* Tailwind v4 paints an uncoloured `border-b` in currentColor, so every table row and header line
+   drawn by `@tracy/ui` came out black here. shadcn's own base layer sets this default; without it
+   each component would have to repeat `border-border`. */
+@layer base {
+  *, ::after, ::before, ::backdrop, ::file-selector-button { border-color: var(--color-border, currentColor); }
+}
+
+html, body, #root { height: 100%; }

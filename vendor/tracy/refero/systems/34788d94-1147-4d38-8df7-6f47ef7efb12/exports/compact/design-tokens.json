@@ -1,0 +1,74 @@
+{
+  "color": {
+    "inkwell-navy": {
+      "$value": "#151b31",
+      "$type": "color",
+      "$description": "Inkwell Navy — Primary buttons, dominant text and borders, dark feature card backgrounds — the workhorse near-black that reads as softer and warmer than pure #000"
+    },
+    "coral-emphasis": {
+      "$value": "#ff5858",
+      "$type": "color",
+      "$description": "Coral Emphasis — Accent text for key words in headlines, emphasis highlights, and selective links — warm red against navy creates playful energy without corporate aggression"
+    },
+    "mint-pulse": {
+      "$value": "#86e0c1",
+      "$type": "color",
+      "$description": "Mint Pulse — Green state accent for badges, validation surfaces, and short status labels."
+    },
+    "butter-yellow": {
+      "$value": "#fedf89",
+      "$type": "color",
+      "$description": "Butter Yellow — Top announcement banner, highlight washes — warm pastel yellow for friendly alerts that don't shout"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, hairline borders, icon strokes — sits between navy and pure black for less-load-bearing elements"
+    },
+    "slate": {
+      "$value": "#6d6f75",
+      "$type": "color",
+      "$description": "Slate — Muted helper text, subdued borders, caption-level content — the cool gray for de-emphasized UI"
+    },
+    "ash-canvas": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Ash Canvas — Page background — warm light gray that lifts white cards without the coldness of pure white"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Card surfaces, button labels, overlapping panels — the surface layer above the Ash Canvas"
+    },
+    "pure-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Ink — Maximum-emphasis icons, strongest borders, logo mark — used sparingly where absolute contrast is required"
+    },
+    "warm-stone": {
+      "$value": "#e8e7e5",
+      "$type": "color",
+      "$description": "Warm Stone — Card drop-shadow tint — warm desaturated beige replaces cold black shadows for a paper-like depth"
+    }
+  },
+  "font": {
+    "grifter": {
+      "$value": "GRIFTER",
+      "$type": "fontFamily",
+      "$description": "Display and brand-voice headings — hero, section openers, decorative labels. The chunky hand-printed character carries the notebook personality. Slightly loosened tracking (0.03em) keeps it readable at display scale."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All UI and body text — buttons, navigation, body copy, card content, badges, form labels. Tight tracking (-0.01em) at all sizes creates a compact, efficient reading rhythm. The 108px outlier likely powers a single oversized hero element."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://tracky.so",
+      "siteName": "Tracky",
+      "extractedAt": "2026-06-03T19:09:19.849Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "action.cancel": "Cancelar edición",
+  "action.clear": "Borrar objetivo",
+  "action.edit": "Editar objetivo",
+  "action.pause": "Pausar objetivo",
+  "action.resume": "Reanudar objetivo",
+  "action.save": "Guardar objetivo",
+  "commandInput.aria": "Entrada de comandos",
+  "objective.aria": "Contenido del objetivo",
+  "phase.active": "Objetivo en curso",
+  "phase.active.disarmed": "Objetivo inactivo",
+  "phase.blocked": "Objetivo bloqueado",
+  "phase.paused": "Objetivo en pausa"
+}

@@ -1,0 +1,75 @@
+{
+  "id": "QA-UNIT-REG-PR-1685-showcase-installer-all-conflict-happy",
+  "itemIds": ["regression:REG-PR-1685-showcase-installer-all-conflict"],
+  "requirement": "Installer-built Joomla quickstarts are owed the showcase phase, and a phase that left every owner as it was settles failed",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1685-showcase-installer-all-conflict.json",
+    "ref": "PR #1685 (fix); fix evidence: Dev matrix after #1674: JA Fresco j6 built through the installer kept its showcase (no receipt); JA Diner wp7 logged applied while every navigation was a conflict",
+    "invariant": "S1: every named test passes: an installer-shaped quickstart this run builds writes the receipt and the bind runs the phase; a resumed build keeps its request id; a re-run on a built site is not owed the phase; a status whose skipped object names every owner as left settles the phase failed, not applied.",
+    "productSources": [
+      "packages/fleet/tracy-fleet-operation/scripts/provision/joomla-bootstrap.php:8",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/platform/joomla.sh:6",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/platform/wordpress.sh:11",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/provision.sh:23",
+      "packages/fleet/tracy-fleet-operation/scripts/provision/quickstart.py:3"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:1849 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:1852 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:2296 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs:61 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:1073 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:128 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:199 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:200 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:833 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs:976 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "owners the status leaves as they were are named; all of them left is a failed phase, not applied",
+    "an installer-shaped quickstart this run builds is owed its showcase phase, and the bind runs it",
+    "an installer-shaped quickstart resumed before its build finished keeps the request id it was given",
+    "a re-run on an installer-shaped site already built is not owed the phase, and says so"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1685-showcase-installer-all-conflict"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/fleet/tracy-fleet-operation", "tracy-fleet-operation"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1685-showcase-installer-all-conflict",
+    "pr": 1685,
+    "kind": "fix",
+    "area": "quickstart/showcase-nav",
+    "file": "tests/regression/cases/REG-PR-1685-showcase-installer-all-conflict.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs",
+    "packages/fleet/tracy-fleet-operation/test/wordpress-quickstart.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "owners the status leaves as they were are named; all of them left is a failed phase, not applied",
+    "an installer-shaped quickstart this run builds is owed its showcase phase, and the bind runs it",
+    "an installer-shaped quickstart resumed before its build finished keeps the request id it was given",
+    "a re-run on an installer-shaped site already built is not owed the phase, and says so"
+  ],
+  "timeoutS": 600
+}

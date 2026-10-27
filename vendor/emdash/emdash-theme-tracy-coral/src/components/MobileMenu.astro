@@ -1,0 +1,613 @@
+---
+/**
+ * Bravada fullscreen burger menu (nav#mobile-menu): a teal layer with
+ * Playfair links dropping in staggered, collapsible submenus, a giant
+ * search input, and gold social glyphs. Toggled by the header's
+ * hamburger via the body.burgermenu-active class.
+ *
+ * Self-contained: fetches its own menu (falling back to the primary
+ * menu) and social menu, and annotates the active branch with the
+ * shared nav-section helpers. The header's hamburger and the
+ * body.burgermenu-active header-state rules live in Base.
+ */
+import { getMenu } from "emdash";
+import SearchGlyph from "./SearchGlyph.astro";
+import SocialIcon from "./SocialIcon.astro";
+import { createInSection, annotateMenu } from "../utils/nav-section";
+
+// Admins can customize the burger menu independently (Menus → "mobile");
+// it falls back to the primary menu when no mobile menu is defined.
+const primary = await getMenu("primary");
+const mobileMenu = (await getMenu("mobile")) ?? primary;
+const socialMenu = await getMenu("social");
+
+const inSection = createInSection(Astro.url.pathname);
+const mobileItems = annotateMenu(mobileMenu?.items ?? [], inSection);
+---
+
+<nav id="mobile-menu" aria-label="Mobile" hidden>
+	<ul id="mobile-nav">
+		<li class="mobile-search">
+			<div class="mobile-search-shell">
+				<form
+					class="mobile-search-form"
+					action="/search"
+					method="get"
+					role="search"
+				>
+				<button type="submit" class="mobile-search-submit" aria-label="Search">
+					<span class="msi msi-a" aria-hidden="true">
+						<SearchGlyph />
+					</span>
+					<span class="msi msi-b" aria-hidden="true">
+						<SearchGlyph />
+					</span>
+				</button>
+					<input
+						type="search"
+						name="q"
+						class="mobile-search-input"
+						placeholder="Search"
+						aria-label="Search"
+					/>
+				</form>
+			</div>
+		</li>
+		{
+			mobileItems.map((item) => (
+				<li
+					class:list={[
+						"mobile-item",
+						{
+							"has-children": item.children.length > 0,
+							current: item.isCurrent || item.isAncestor,
+						},
+					]}
+				>
+					<a
+						href={item.url}
+						target={item.target}
+						class:list={[{ "toggled-on": item.isAncestor }]}
+					>
+						<span>{item.label}</span>
+					</a>
+					{item.children.length > 0 && (
+						<>
+							<button
+								type="button"
+								class:list={["dropdown-toggle", { "toggle-on": item.isAncestor }]}
+								aria-expanded={item.isAncestor ? "true" : "false"}
+								aria-label={`Expand ${item.label}`}
+							>
+								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+							</button>
+							<ul class:list={["mobile-sub-menu", { "toggled-on": item.isAncestor }]}>
+								{item.children.map((child) => (
+									<li class:list={[{ "has-children": child.children.length > 0 }]}>
+										<a
+											href={child.url}
+											target={child.target}
+											class:list={[{ "toggled-on": child.isAncestor }]}
+										>
+											<span>{child.label}</span>
+										</a>
+										{child.children.length > 0 && (
+											<>
+												<button
+													type="button"
+													class:list={["dropdown-toggle", { "toggle-on": child.isAncestor }]}
+													aria-expanded={child.isAncestor ? "true" : "false"}
+													aria-label={`Expand ${child.label}`}
+												>
+													<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+												</button>
+												<ul class:list={["mobile-sub-menu", { "toggled-on": child.isAncestor }]}>
+													{child.children.map((grand) => (
+														<li>
+															<a href={grand.url} target={grand.target}>
+																<span>{grand.label}</span>
+															</a>
+														</li>
+													))}
+												</ul>
+											</>
+										)}
+									</li>
+								))}
+							</ul>
+						</>
+					)}
+				</li>
+			))
+		}
+	</ul>
+	{
+		socialMenu && socialMenu.items.length > 0 && (
+			<div class="mobile-socials">
+				{socialMenu.items.map((item) => (
+					<a
+						href={item.url}
+						target={item.target}
+						title={item.label}
+						rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
+					>
+						<span class="social-swap">
+							<span class="icon-a">
+								<SocialIcon label={item.label} size={20} />
+							</span>
+							<span class="icon-b" aria-hidden="true">
+								<SocialIcon label={item.label} size={20} />
+							</span>
+						</span>
+						<span class="sr-only">{item.label}</span>
+					</a>
+				))}
+			</div>
+		)
+	}
+</nav>
+
+<script>
+	// Bravada fullscreen burger menu (cryoutMobileMenuInit): fade the
+	// teal layer in, drop items in with staggered delays, morph the
+	// hamburger into an X, collapse submenus behind dropdown toggles.
+	// This component owns the menu's open state and the body classes.
+	// It never touches the hamburger — SiteHeader dispatches "nav:toggle"
+	// to ask for a change, and we broadcast "nav:change" so the header can
+	// mirror aria-expanded. The body.burgermenu-active class stays the CSS
+	// contract both components style against.
+	import { inertOutside } from "../utils/inert-background";
+
+	const mobileMenu = document.getElementById("mobile-menu");
+	let isOpen = false;
+
+	// Releases the background inerting applied while the menu is open.
+	let releaseBackground: (() => void) | null = null;
+
+	// Staggered entrance (theme: transition-delay = 0.03s * index, with
+	// the social icons continuing the sequence as individual entries).
+	// Skipped under reduced motion: a fullscreen layer whose items drop in
+	// one by one is the most vestibular-hostile thing the theme does.
+	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+	if (!prefersReducedMotion.matches) {
+		mobileMenu
+			?.querySelectorAll<HTMLElement>("#mobile-nav > li, .mobile-socials a")
+			.forEach((el, i) => {
+				el.style.transitionDelay = `${0.03 * i}s`;
+			});
+	}
+
+	function setOpen(open: boolean, restoreFocus = false) {
+		if (!mobileMenu || open === isOpen) return;
+		isOpen = open;
+		if (open) {
+			mobileMenu.hidden = false;
+			// Contain focus in the layer. The hamburger is kept alive: it is
+			// the menu's only close control and the last stop in the theme's
+			// tab loop, so inerting the whole header would strand keyboard
+			// users inside the menu.
+			const hamburger = document.querySelector(".hamburger");
+			releaseBackground = inertOutside(
+				hamburger ? [mobileMenu, hamburger] : [mobileMenu],
+			);
+			requestAnimationFrame(() =>
+				requestAnimationFrame(() => {
+					document.body.classList.add("burgermenu-active", "noscroll");
+					// Theme: opening moves focus to the search input
+					mobileMenu
+						.querySelector<HTMLInputElement>(".mobile-search-input")
+						?.focus();
+				})
+			);
+		} else {
+			document.body.classList.remove("burgermenu-active", "noscroll");
+			// Release before the caller restores focus to the hamburger.
+			releaseBackground?.();
+			releaseBackground = null;
+			setTimeout(() => {
+				if (!isOpen) mobileMenu.hidden = true;
+			}, 500);
+		}
+		document.dispatchEvent(
+			new CustomEvent("nav:change", { detail: { open, restoreFocus } })
+		);
+	}
+
+	document.addEventListener("nav:toggle", () => setOpen(!isOpen, true));
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape" && isOpen) setOpen(false, true);
+	});
+	// Theme tab loop: the search input is the first tab stop, the
+	// hamburger the last. Shift+Tab from the input wraps to the burger
+	// (via the header); the header dispatches "nav:focus-first" when
+	// Tab wraps forward off the burger.
+	document.addEventListener("nav:focus-first", () => {
+		mobileMenu
+			?.querySelector<HTMLInputElement>(".mobile-search-input")
+			?.focus();
+	});
+	mobileMenu?.addEventListener("keydown", (e) => {
+		if (!isOpen || e.key !== "Tab" || !e.shiftKey) return;
+		const input = mobileMenu.querySelector(".mobile-search-input");
+		if (document.activeElement === input) {
+			e.preventDefault();
+			document.dispatchEvent(new CustomEvent("nav:focus-last"));
+		}
+	});
+	// Theme behavior on link click: nothing. The overlay stays put and
+	// the navigation replaces the page — no exit animation plays. Only
+	// same-page hash links dismiss the menu (there is no page load to
+	// hide it), matching cryoutMobileMenuInit. Placeholder "#" parents
+	// don't navigate — clicking the label toggles its submenu like the
+	// chevron does (our one divergence from the theme's inert parents).
+	mobileMenu?.querySelectorAll("a").forEach((a) => {
+		a.addEventListener("click", (e) => {
+			const href = a.getAttribute("href") ?? "";
+			if (href === "#") {
+				e.preventDefault();
+				a.closest("li")
+					?.querySelector<HTMLButtonElement>(".dropdown-toggle")
+					?.click();
+				return;
+			}
+			if (href.startsWith("#") || (a.hash && a.pathname === location.pathname)) {
+				setOpen(false);
+			}
+		});
+	});
+
+	// Submenu accordions. Closing a parent cascades closed through all
+	// nested levels (theme cryoutInitNav resets toggles, links, and
+	// sub-lists of every descendant).
+	mobileMenu
+		?.querySelectorAll<HTMLButtonElement>(".dropdown-toggle")
+		.forEach((btn) => {
+			btn.addEventListener("click", () => {
+				const li = btn.closest("li");
+				const sub = li?.querySelector(":scope > .mobile-sub-menu");
+				const link = li?.querySelector(":scope > a");
+				const open = btn.classList.toggle("toggle-on");
+				sub?.classList.toggle("toggled-on", open);
+				link?.classList.toggle("toggled-on", open);
+				btn.setAttribute("aria-expanded", String(open));
+				if (!open && sub) {
+					sub.querySelectorAll(".toggled-on, .toggle-on").forEach((el) => {
+						el.classList.remove("toggled-on", "toggle-on");
+						if (el.matches(".dropdown-toggle"))
+							el.setAttribute("aria-expanded", "false");
+					});
+				}
+			});
+		});
+</script>
+
+<style>
+	/* Fullscreen mobile menu (nav#mobile-menu): teal layer, fade in,
+	   items drop in staggered (delays set inline by script) */
+	#mobile-menu {
+		position: fixed;
+		inset: 0;
+		z-index: 998;
+		display: flex;
+		flex-flow: column;
+		align-items: center;
+		justify-content: center;
+		overflow-y: auto;
+		overflow-x: hidden;
+		/* Theme customizer sets padding-top 117px so overflowing menus
+		   start below the fixed header (the layer stays centered when
+		   content fits) */
+		padding: 117px 2em 2em;
+		background: var(--color-submenu-bg);
+		color: var(--accent-on);
+		opacity: 0;
+		pointer-events: none;
+		transition: 0.5s ease-out opacity;
+	}
+
+	#mobile-menu[hidden] {
+		display: none;
+	}
+
+	:global(body.burgermenu-active) #mobile-menu {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	/* Theme side menu (.side-section/.side-menu): a left-aligned column
+	   centered on the layer — 400px minimum, growing to 35vw on wide
+	   screens. It flexes between the top padding and the bottom-pinned
+	   socials, scrolling internally (hidden scrollbars) when the menu
+	   is taller than the space, so every item stays reachable. The
+	   menu and socials centre together as one group (theme layout);
+	   the socials only sit near the page bottom when a long menu
+	   pushes them there. */
+	#mobile-nav {
+		min-width: 400px;
+		max-width: 35vw;
+		flex: 0 1 auto;
+		min-height: 0;
+		overflow-y: auto;
+		overflow-x: hidden;
+		scrollbar-width: none;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		text-align: left;
+	}
+
+	#mobile-nav::-webkit-scrollbar {
+		width: 0;
+		background: transparent;
+	}
+
+	@media (max-width: 480px) {
+		#mobile-nav {
+			min-width: 0;
+			max-width: 400px;
+			width: 100%;
+		}
+	}
+
+	#mobile-nav > li {
+		position: relative;
+		margin-bottom: min(4vw, 1.75em);
+		line-height: 1.1;
+		opacity: 0;
+		transform: translateY(-30px);
+		transition: 0.2s ease-out all;
+	}
+
+	:global(body.burgermenu-active) #mobile-nav > li {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	/* The layer still fades, but items appear in place rather than flying
+	   in from off-screen (the JS also drops the stagger delays). */
+	@media (prefers-reduced-motion: reduce) {
+		#mobile-nav > li,
+		.mobile-socials a {
+			transform: none;
+			transition-property: opacity;
+		}
+
+		.mobile-sub-menu,
+		.mobile-sub-menu.toggled-on {
+			transition: none;
+		}
+
+		#mobile-nav .dropdown-toggle {
+			transition: none;
+		}
+	}
+
+	#mobile-nav .mobile-item a {
+		display: inline-block;
+		font-family: var(--font-heading);
+		font-size: clamp(1.3rem, 5vw, 2.5em);
+		font-weight: 700;
+		color: var(--accent-on);
+		text-decoration: none;
+		transition: 0.3s ease-out color;
+	}
+
+	#mobile-nav .mobile-item a:hover,
+	#mobile-nav .mobile-item.current > a {
+		color: var(--color-gold);
+	}
+
+	/* Nested chevrons anchor to their own row */
+	#mobile-nav .mobile-sub-menu li.has-children {
+		position: relative;
+	}
+
+	#mobile-nav .dropdown-toggle {
+		position: absolute;
+		top: 0;
+		right: 2px;
+		border: 0;
+		padding: 0.5em 1em;
+		background: transparent;
+		color: var(--accent-on);
+		cursor: pointer;
+		transform: rotateX(0);
+		transition: 0.6s all ease-in-out;
+	}
+
+	#mobile-nav .dropdown-toggle.toggle-on {
+		transform: rotateX(-180deg);
+	}
+
+	#mobile-nav .has-children > a.toggled-on {
+		border-bottom: 3px solid;
+	}
+
+	/* Theme submenu reveal: max-height 0.5s ease-in-out + opacity to
+	   0.9 over 0.3s. Keep it display:block always — toggling display
+	   would kill the transition — and gate focus with visibility. */
+	/* The submenu adds NO margins of its own, open or closed — measured
+	   on the theme at 390px, expanding keeps one continuous rhythm: the
+	   li margins alone space every row (top items pitch 39.4, sub items
+	   36.4, boundaries identical). */
+	.mobile-sub-menu {
+		max-height: 0;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		overflow: hidden;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			0.5s max-height ease-in-out,
+			0.3s opacity ease-in-out,
+			0.3s visibility ease-in-out;
+	}
+
+	.mobile-sub-menu.toggled-on {
+		max-height: 1500px;
+		/* One li-margin's worth of air above the group (the theme's ul
+		   margin-top); below, the parent li's own margin is the only
+		   spacing — the theme collapses everything else away */
+		margin-top: min(4vw, 1em);
+		opacity: 0.9;
+		visibility: visible;
+		transition:
+			0.5s max-height ease-in-out,
+			0.3s 0.2s opacity ease-in-out;
+	}
+
+	/* Theme nested items: 32px vs the 40px top level, same 28px
+	   spacing, no indent */
+	.mobile-sub-menu li {
+		margin-bottom: min(4vw, 1.75rem);
+	}
+
+	.mobile-sub-menu li:last-child {
+		margin-bottom: 0;
+	}
+
+	#mobile-nav .mobile-item .mobile-sub-menu a {
+		font-size: clamp(1.1rem, 4vw, 2rem);
+	}
+
+	/* Burger-menu search (theme #mobile-nav .searchform): a giant
+	   Playfair input with only a 2px underline, transparent
+	   background, and the search glyph sitting at the left. Powered
+	   by EmDash LiveSearch — suggestions drop in below; Enter with
+	   no suggestion focused jumps to /search?q=… */
+	.mobile-search {
+		position: relative;
+		z-index: 10;
+		width: 100%;
+		/* The input's intrinsic width must not inflate the menu column
+		   past the theme's 400px (fit-content counts an input's
+		   character-based size even when width is 100%) */
+		contain: inline-size;
+	}
+
+	.mobile-search-shell {
+		position: relative;
+		display: block;
+		width: 100%;
+	}
+
+	/* Theme .searchsubmit: a real search button (2em box, 1.4em wide)
+	   anchored at the input's bottom-left; its glyph centres in the box,
+	   floating above the underline and spanning baseline to cap height
+	   of the 2.5em placeholder. Two stacked icons swap on form hover —
+	   the visible one drops away, the double scales in (.4s). */
+	.mobile-search-submit {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		z-index: 9;
+		height: 64px;
+		width: 45px;
+		border: 0;
+		padding: 0;
+		background: transparent;
+		color: inherit;
+		cursor: pointer;
+	}
+
+	.msi :global(svg) {
+		width: 29px;
+		height: 29px;
+	}
+
+	.msi {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 18px;
+		display: flex;
+		justify-content: center;
+		transition: 0.4s all;
+	}
+
+	.msi-b {
+		z-index: 1;
+		opacity: 0;
+		transform: translateY(-20px) scale(0.25);
+	}
+
+	.mobile-search-shell:hover .msi-a {
+		opacity: 0;
+		transform: translateY(20px) scale(0.25);
+	}
+
+	.mobile-search-shell:hover .msi-b {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+
+	.mobile-search-form {
+		display: block;
+		width: 100%;
+	}
+
+	.mobile-search-input {
+		display: block;
+		width: 100% !important;
+		border: 0 !important;
+		border-bottom: 2px solid !important;
+		border-radius: 0 !important;
+		/* Theme input metrics: fixed 2.5em Playfair with 1.2em left
+		   padding clearing the 2em magnifier */
+		padding: 0 0 0.4em 1.2em !important;
+		background: transparent !important;
+		font-family: var(--font-heading) !important;
+		font-size: 2.5em !important;
+		/* Theme metrics are content-box (1.2em text + .4em padding);
+		   with our border-box sizing the height must include the
+		   padding and border, or the glyphs clip once the field is
+		   focused — a display bug the original theme itself has */
+		height: calc(1.6em + 2px) !important;
+		/* Theme input is Playfair regular — the 400 face is loaded
+		   explicitly in astro.config.mjs; without it the browser
+		   substitutes 500 and the placeholder renders fatter */
+		font-weight: 400 !important;
+		line-height: 1.2;
+		color: inherit !important;
+	}
+
+	.mobile-search-input:focus {
+		outline: none;
+	}
+
+	.mobile-search-input::placeholder {
+		color: inherit;
+		opacity: 1;
+	}
+
+	/* Theme: gold social glyphs in their own block (source .side-socials
+	   sits outside the menu list), directly below the menu — the group
+	   centres together on the layer. The row itself sits still; each
+	   icon slides in from the left with its own stagger slot,
+	   continuing the menu items' sequence. */
+	.mobile-socials {
+		flex-shrink: 0;
+		display: flex;
+		justify-content: center;
+		gap: 2.2em;
+		margin-top: 1em;
+	}
+
+	.mobile-socials a {
+		display: inline-flex;
+		color: var(--color-gold);
+		opacity: 0;
+		transform: translateX(-30px);
+		transition: 0.2s ease-out all;
+	}
+
+	.mobile-socials a:hover {
+		color: var(--accent-on);
+	}
+
+	:global(body.burgermenu-active) .mobile-socials a {
+		opacity: 1;
+		transform: translateX(0);
+	}
+</style>

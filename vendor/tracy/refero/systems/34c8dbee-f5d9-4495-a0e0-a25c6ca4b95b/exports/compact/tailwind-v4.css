@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-pen-blue: #478cd0;
+  --color-highlighter-yellow: #fff7ca;
+  --color-reader-orange: #fb9100;
+  --color-paper-white: #ffffff;
+  --color-ink: #1f1f1f;
+  --color-page-mist: #f1f5f8;
+  --color-deep-slate: #2d2f33;
+  --color-true-black: #000000;
+
+  /* Typography */
+  --font-charter: 'Charter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mulish: 'Mulish', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

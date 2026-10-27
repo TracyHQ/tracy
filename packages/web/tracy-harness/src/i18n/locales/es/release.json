@@ -1,0 +1,18 @@
+{
+  "release.blurb": "Todo lo que hay que comprobar antes y después de publicar una versión nueva. Las líneas marcadas {ok}, {fix}, {check} o {note} las mide este servidor en cada carga; marque el resto a mano. Las marcas se quedan en este navegador, solo para esta release.",
+  "release.checkAgain": "Comprobar de nuevo",
+  "release.done": "{done} / {total} hechos",
+  "release.footer": "Medido el {when} en {origin}. El entorno de tracy-host y tracy-dsh no es visible para este servidor: esas líneas indican el comando que hay que ejecutar.",
+  "release.local": "Este es un stand local: aquí no hay nada que corregir. La checklist es para dev, staging y producción, donde una variable que falta es una falta real.",
+  "release.onlyOpen": "Solo lo que no está hecho",
+  "release.readFailed": "No se pudo leer la checklist.",
+  "release.state.fail": "Corregir",
+  "release.state.info": "Nota",
+  "release.state.pass": "OK",
+  "release.state.warn": "Comprobar",
+  "release.title": "Checklist de release",
+  "release.toCheck_one": "{count} por comprobar",
+  "release.toCheck_other": "{count} por comprobar",
+  "release.toFix_one": "{count} por corregir",
+  "release.toFix_other": "{count} por corregir"
+}

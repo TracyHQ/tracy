@@ -1,0 +1,57 @@
+# The fleet's ear — the only door from outside into this machine (ADR 0049).
+#
+# The only caller is the relay `seats.tracy.ai`, signed with FLEET_RELAY_SECRET in
+# /etc/tracy/hooks.env — the SAME value as seat-registry's secret; changing it means changing both ends.
+# No WEBHOOK_SECRET and no repos.json: this fleet does not listen to GitHub (ADR 0004).
+#
+# Listens on 127.0.0.1:8091. Reaches the world through cloudflared; no port is opened.
+[Unit]
+Description=Tracy fleet ear (provision, teardown, webroot)
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/tracy-fleet/hooks/tracy-hooks.py
+EnvironmentFile=/etc/tracy/hooks.env
+Restart=always
+RestartSec=3
+# It runs `docker` and writes /srv/tracy so it needs root; whatever can be tightened without blocking the work is.
+NoNewPrivileges=yes
+
+# 🔒 DO NOT ADD `ProtectHome=` OR `PrivateTmp=` HERE. Both once stood right here, and both
+# broke exactly the main job of this ear.
+#
+# Those two flags make systemd build the unit its own MOUNT NAMESPACE, and that namespace gets
+# *slave* propagation: the host's mounts flow in, mounts the service creates do NOT flow
+# out. But `provision/attach-site.sh` runs under this ear, and its job is exactly to
+# `mount --bind` the site folder into /srv/tracy-sites so the host's dsh sees the new site (ADR 0014).
+# So with those flags every bind exists in one place only: inside the ear's namespace.
+#
+# ⚠ AND IT BREAKS WHILE STILL REPORTING SUCCESS — that is the expensive part. `attach-site.sh` checks with
+# `mountpoint -q`, from INSIDE that namespace, so the check is right and it prints
+# `==> attached /site/<label>` entirely truthfully. /etc/fstab is a FILE, not a
+# mount, so the two fstab lines are really written to the host, and a `mount` typed by hand afterwards runs
+# at once — enough for the investigator to conclude, wrongly, that the script never mounted.
+#
+# The symptom on the user's side: the workspace picker opens an EMPTY folder. No error, no log,
+# not a single line anywhere.
+#
+# Measured 08/09/2026 on the dev machine, site `dev-lantern`: the host `mnt:[4026531841]` saw no bind,
+# the ear's `mnt:[4026532448]` saw both.
+#
+# ⚠ `MountFlags=shared` DOES NOT help — tried and measured. systemd 255 accepts the setting
+# (`systemctl show -p MountFlags` answers `shared`), but it builds the namespace by `MS_SLAVE`-ing the
+# root FIRST and only then marking it shared, so the new peer group holds only that namespace and mounts
+# still do not reach the host. The only way is not to create a namespace: drop both flags entirely.
+#
+# What is lost is small and what is gained is the whole feature: this service runs as root and drives docker, so
+# a private /tmp and a hidden /home add no real boundary — the fleet's real boundaries
+# are `TRACY-FLEET-EGRESS`, docker-proxy, and the path fence in
+# `packages/tools/tracy-subprocess-docker`.
+#
+# 🔒 IT DOES NOT SHOW WHEN TESTED BY HAND. A `provision.sh` typed from an ssh session runs in the host namespace
+# and mounts in the right place; it only breaks when it goes through the product. So acceptance must be a site created
+# from the UI, then `docker exec tracy-dsh ls /site/<label>` — not a run by hand.
+
+[Install]
+WantedBy=multi-user.target

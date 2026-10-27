@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --color-ink: #2a2b3f;
+  --color-obsidian: #202230;
+  --color-graphite: #33364a;
+  --color-slate: #3d4055;
+  --color-steel: #595c73;
+  --color-fog: #9194ac;
+  --color-mist: #b7b9cd;
+  --color-chalk: #d1d2e0;
+  --color-porcelain: #e9eaf2;
+  --color-paper: #f6f7f9;
+  --color-canvas: #ffffff;
+  --color-aubergine: #6d28d2;
+  --color-lavender-haze: #c0c4fc;
+  --color-ember: #c4710d;
+
+  /* Typography — Font Families */
+  --font-udemy-sans: 'Udemy Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

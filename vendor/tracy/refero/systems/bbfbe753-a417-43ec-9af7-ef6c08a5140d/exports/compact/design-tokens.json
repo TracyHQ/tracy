@@ -1,0 +1,44 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, inverted surfaces, display type on light blocks"
+    },
+    "snow": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Snow — Primary text, high-contrast headings, logo lockup fills"
+    },
+    "mist": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Mist — Hairline dividers, section borders, card outlines, link borders — the only structural separator in the system"
+    },
+    "slate": {
+      "$value": "#858585",
+      "$type": "color",
+      "$description": "Slate — Muted body text, secondary labels, list items, metadata"
+    },
+    "fog": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Fog — Tertiary text, disabled states, icon strokes, subtle UI annotations"
+    }
+  },
+  "font": {
+    "cashsans": {
+      "$value": "CashSans",
+      "$type": "fontFamily",
+      "$description": "All text — Cash App's custom geometric sans. The 400 weight handles body and utility; 500 for sub-labels and nav; 700 reserved for extreme display moments. The type scale is deliberately bimodal: micro (10–16px) for functional UI and monumental (86–122px) for editorial display, with nothing in between."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://design.cash.app",
+      "siteName": "Design",
+      "extractedAt": "2026-06-03T20:45:31.948Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "anonymous": {
+    "GET /auth/me": {
+      "kind": "documented",
+      "status": 200,
+      "jsonNull": ["email", "defaultSite", "face"],
+      "source": "ROUTE_DOCS GET /auth/me @fa4dc66a5 `answers`: \"all null when nobody is signed in\"; QA plan §4 (api): /auth/me allows anonymous with null fields"
+    },
+    "POST /auth/signout": {
+      "kind": "gap",
+      "reason": "the reference says auth=session but states no refusal for a signed-out caller; signing out is idempotent, so 200 is not shown to be a defect",
+      "status": 200,
+      "source": "ROUTE_DOCS POST /auth/signout @fa4dc66a5"
+    }
+  },
+  "wrong-method": {},
+  "csrf-origin": {},
+  "other-tenant": {
+    "POST /me/sites/{key}/join-request": {
+      "reason": "the door exists for a person with no seat on the site: it records a request to join a site the person was not invited to",
+      "source": "ROUTE_DOCS POST /me/sites/:key/join-request @fa4dc66a5"
+    },
+    "POST /me/workspaces/{id}/join-request": {
+      "reason": "the door exists for a person who is not in the workspace: it records a request to join",
+      "source": "ROUTE_DOCS POST /me/workspaces/:id/join-request @fa4dc66a5"
+    },
+    "GET /api/sites/{key}/workspace": {
+      "reason": "any signed-in person may ask which workspace a site belongs to",
+      "source": "ROUTE_DOCS GET /api/sites/:key/workspace @fa4dc66a5 (\"Any signed-in person may ask\")"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "produced.label": "Tệp tạo ra",
+  "produced.more": "+ {count} tệp",
+  "produced.moreOne": "+ 1 tệp",
+  "produced.open": "Mở {name}",
+  "produced.showInFolder": "Hiện trong thư mục"
+}

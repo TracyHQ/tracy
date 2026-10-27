@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-void-black: #020202;
+  --color-surface-black: #000000;
+  --color-charcoal-hairline: #292a2c;
+  --color-bone-white: #ffffff;
+  --color-ash-gray: #9b9b9b;
+
+  /* Typography — Font Families */
+  --font-opx-medium: 'OPX-Medium', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-open-sans: 'Open Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-untitled: 'Untitled', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helvetica: 'Helvetica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

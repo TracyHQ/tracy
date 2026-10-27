@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --color-carbon-ink: #1a211e;
+  --color-paper-white: #ffffff;
+  --color-true-black: #000000;
+  --color-obsidian: #0c0c0c;
+  --color-fog: #eef1f0;
+  --color-mist: #e0e0e0;
+  --color-graphite: #606562;
+  --color-ash-border: #cccfcd;
+  --color-slate: #363537;
+  --color-pewter: #4e4e4e;
+  --color-ember-red: #cc2e39;
+
+  /* Typography — Font Families */
+  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-exposure-style-serif-exposure-10: 'Exposure-style serif (Exposure-10)', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-bryant-style-condensed-sans-bryant: 'Bryant-style condensed sans (bryant)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-exposure-10: 'Exposure-10', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

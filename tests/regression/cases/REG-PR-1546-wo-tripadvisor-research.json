@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1546-wo-tripadvisor-research",
+  "kind": "feat",
+  "title": "TripAdvisor Research uses SerpApi first, ordered fallbacks and attributed review photos",
+  "pr": 1546,
+  "area": "website-opportunities/research",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "steps": [
+    "Run the deterministic regression script against the feature checkout with its own test PostgreSQL server; no live paid provider calls."
+  ],
+  "expect": [
+    "Every selected Node test passes with zero failures, cancellations or skipped tests.",
+    "Unique branch identity requires corroboration; same restaurant name and city may supply attributed reviews across branches without a website or identity merge.",
+    "A new source enriches a fresh snapshot once; successful old data survives provider errors.",
+    "Budget refusal pauses before network, resume uses the search checkpoint once and cancelled leases do not publish.",
+    "Settings keeps keys private and uses only key status for Test.",
+    "TripAdvisor reviews reach brief and handoff rendering, require source/author attribution and remain outside business fact evidence.",
+    "Website-only prefetch never starts paid enrichment and campaign control errors propagate.",
+    "OneAPI primary success never spends Litescrape quota; a same-brand association can succeed without exact branch evidence, while provider failures use isolated fallback attempts.",
+    "HTTP 200 application failures are not empty matches; budget, lease and cancellation never trigger fallback.",
+    "Pinned identity and unknown-attempt checkpoints survive fallback and refresh without mixing branches or double charging.",
+    "Customer Research reaches Details and an attributed brief; unavailable optional reviews add no empty section or provider quota error.",
+    "SerpApi primary success uses exactly search/place/reviews with no fallback; its HTTP200 errors and exact place ID echoes are validated.",
+    "Gallery and review-attached photos use standard media storage and survive profile, customer Details, revision manifest and demo build with source credit.",
+    "Author profile/avatar and same-review photo associations survive provider-switch refresh; reviewer avatars never become venue media.",
+    "An ordinary Research retries an earlier not-found result after the matching policy upgrade without refreshing current Google data.",
+    "SerpApi returns up to twenty TripAdvisor reviews in one request and retains the twentieth through shared profile and brief.",
+    "Refresh reuses a previously accepted TripAdvisor ID without search, revalidates the listing and preserves old data on identity mismatch.",
+    "User Research collects up to twenty Google Maps menu photos with cached identifiers, preserving official Google facts and source credit through profile, brief and demo manifest.",
+    "Menu discovery uses at most three provider calls initially, one for a cached refresh and zero for a fresh snapshot; optional quota errors stay hidden and budget resume reuses successful steps."
+  ],
+  "selectors": {
+    "script": "tests/regression/scripts/REG-PR-1546-wo-tripadvisor-research.mjs"
+  },
+  "fence": "One shared place job, existing lease and cost ledger, server-owned Google matching facts, optional-source freshness, source-specific quotations and attribution checks.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1546-wo-tripadvisor-research.mjs"],
+    "needs": ["postgres"]
+  },
+  "flaky_model": false
+}

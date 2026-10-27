@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-gallery-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-near-black: #090909;
+  --color-rule-gray: #e9e9e9;
+  --color-studio-gray: #f3f3f3;
+  --color-inactive-gray: #aaaaaa;
+  --color-butter-ticket: #faedbc;
+
+  /* Typography — Font Families */
+  --font-helveticanowvar: 'HelveticaNowVar', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

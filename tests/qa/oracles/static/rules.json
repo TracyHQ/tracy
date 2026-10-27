@@ -1,0 +1,65 @@
+{
+  "about": "Boundary rules each gate enforces. Quoted from CLAUDE.md (section named in `ref`), the ADR or the doc the gate's own header cites. A gate without an entry here falls back to the header comment of its script (oracle source = that script, ref = 'header').",
+  "rules": [
+    {
+      "gates": ["self-contained"],
+      "source": "CLAUDE.md",
+      "ref": "§2 rule 1",
+      "invariant": "Only two ways out of the tree: NPMJS or WORKSPACE. No link: / file: / portal: / absolute paths in package.json, cordis*.yml, .npmrc, pnpm-workspace.yaml."
+    },
+    {
+      "gates": ["plugin-identity"],
+      "source": "CLAUDE.md",
+      "ref": "§2 rule 2",
+      "invariant": "Plugin identity declared in three places must match: package.json name, cordis row, bundle id."
+    },
+    {
+      "gates": ["bundles"],
+      "source": "CLAUDE.md",
+      "ref": "§2 rule 3",
+      "invariant": "lib/client.js is committed and equals a clean rebuild of its source; a stale bundle ships stale code to customers."
+    },
+    {
+      "gates": ["passwords-core-diff"],
+      "source": "CLAUDE.md",
+      "ref": "§2 rule 5",
+      "invariant": "vendor/ is others' code changed only through its own -tracy.N path; dsh-passwords guards the sign-in gate of every surface."
+    },
+    {
+      "gates": ["language"],
+      "source": "CLAUDE.md",
+      "ref": "§7 language rule",
+      "invariant": "Code files and anything outsiders can read are in English; Vietnamese belongs to doc files and conversation."
+    },
+    {
+      "gates": ["vocabulary", "kept-terms"],
+      "source": "docs/references/vocabulary.md",
+      "ref": "banned words and canonical vocabulary",
+      "invariant": "On-screen and public text uses the canonical vocabulary and none of the four banned words."
+    },
+    {
+      "gates": ["interface-languages", "dsh-locale"],
+      "source": "CLAUDE.md",
+      "ref": "§9 i18n",
+      "invariant": "Every language in Settings > Language is complete on Tracy's and dsh's screens; an English string added or reworded is translated in every language in the same change."
+    },
+    {
+      "gates": ["skills"],
+      "source": "CLAUDE.md",
+      "ref": "§10 agent skills",
+      "invariant": ".claude/skills/ is a symlink mirror of .agents/skills/; a real copy is a second truth that drifts."
+    },
+    {
+      "gates": ["tests"],
+      "source": "CLAUDE.md",
+      "ref": "§6 gates",
+      "invariant": "Every test file belongs to exactly one run group and every group is green."
+    },
+    {
+      "gates": ["lint"],
+      "source": "CLAUDE.md",
+      "ref": "§4 commands",
+      "invariant": "oxlint, typecheck and format check are clean (non-mutating, exactly what pnpm test:lint runs)."
+    }
+  ]
+}

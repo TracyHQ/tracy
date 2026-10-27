@@ -1,0 +1,1062 @@
+{
+  "src": "j-1ibzqi content.contract inspect, 24/09 ($S/structure/inspect.json); tracy-business/j6/1.1.0",
+  "answer": {
+    "ok": true,
+    "contract": "tracy-business/j6/1.1.0",
+    "revision": "530cd9278d1ee3561056b978d43ec7f05d1d2a8ff64eb773bfe65ede69e9fef7",
+    "languages": [],
+    "job": null,
+    "slots": [
+      {
+        "key": "module-428.0",
+        "entity": "module-428",
+        "type": "url",
+        "label": "[Tracy Business] Topbar - Contacts (en)",
+        "current": "tel:88005506790",
+        "sample": "tel:88005506790",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-428.1",
+        "entity": "module-428",
+        "type": "text",
+        "label": "[Tracy Business] Topbar - Contacts (en)",
+        "current": "Hotline: 8 800 550-67-90",
+        "sample": "Hotline: 8 800 550-67-90",
+        "maxCharacters": 68,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-428.2",
+        "entity": "module-428",
+        "type": "url",
+        "label": "[Tracy Business] Topbar - Contacts (en)",
+        "current": "mailto:info@northgate-ind.ru",
+        "sample": "mailto:info@northgate-ind.ru",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-428.3",
+        "entity": "module-428",
+        "type": "text",
+        "label": "[Tracy Business] Topbar - Contacts (en)",
+        "current": "info@northgate-ind.ru",
+        "sample": "info@northgate-ind.ru",
+        "maxCharacters": 62,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-428.4",
+        "entity": "module-428",
+        "type": "text",
+        "label": "[Tracy Business] Topbar - Contacts (en)",
+        "current": "Vorsino Industrial Park, Kaluga Region",
+        "sample": "Vorsino Industrial Park, Kaluga Region",
+        "maxCharacters": 96,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-435.0",
+        "entity": "module-435",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (en)",
+        "current": "NG",
+        "sample": "NG",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-435.1",
+        "entity": "module-435",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (en)",
+        "current": "NORTHGATE",
+        "sample": "NORTHGATE",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-435.2",
+        "entity": "module-435",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (en)",
+        "current": "Northgate Industrial JSC. Design–build main contractor for industrial facilities in Russia since 2004.",
+        "sample": "Northgate Industrial JSC. Design–build main contractor for industrial facilities in Russia since 2004.",
+        "maxCharacters": 224,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-435.3",
+        "entity": "module-435",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (en)",
+        "current": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO admission No. 214",
+        "sample": "INN 4003xxxxxx · OGRN 10440xxxxxxxx · SRO admission No. 214",
+        "maxCharacters": 138,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-435.4",
+        "entity": "module-435",
+        "type": "text",
+        "label": "[Tracy Business] Footer - Brand (en)",
+        "current": "Vorsino Industrial Park, plot 12, Kaluga Region",
+        "sample": "Vorsino Industrial Park, plot 12, Kaluga Region",
+        "maxCharacters": 114,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.0",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / eyebrow",
+        "current": "Established 2004",
+        "sample": "Established 2004",
+        "maxCharacters": 52,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.1",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / title",
+        "current": "Toyota Hanoi Motors",
+        "sample": "Building the groundwork for",
+        "maxCharacters": 74,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.2",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / title-accent",
+        "current": "— your authorised Toyota dealer",
+        "sample": "next-generation plants",
+        "maxCharacters": 64,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.3",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / lead",
+        "current": "Authorised Toyota dealer in Hanoi: new cars, servicing and test drives.",
+        "sample": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "maxCharacters": 326,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.4",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / btn-1-text",
+        "current": "View new cars",
+        "sample": "See our capabilities",
+        "maxCharacters": 60,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.5",
+        "entity": "module-441",
+        "type": "url",
+        "label": "[Tracy Business] Home - Hero (en) / btn-1-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.6",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / btn-2-text",
+        "current": "Download company profile (PDF)",
+        "sample": "Download company profile (PDF)",
+        "maxCharacters": 80,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.7",
+        "entity": "module-441",
+        "type": "url",
+        "label": "[Tracy Business] Home - Hero (en) / btn-2-link",
+        "current": "images/northgate/decks/en/corporate-2026.pdf",
+        "sample": "images/northgate/decks/en/corporate-2026.pdf",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.8",
+        "entity": "module-441",
+        "type": "image",
+        "label": "[Tracy Business] Home - Hero (en) / image",
+        "current": "images/northgate/hero-ru.png",
+        "sample": "images/northgate/hero-ru.png",
+        "maxCharacters": 255,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.9",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / image-alt",
+        "current": "",
+        "sample": "",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.10",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-value",
+        "current": "380+",
+        "sample": "380+",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.11",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-value",
+        "current": "1.2M m²",
+        "sample": "1.2M m²",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.12",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-value",
+        "current": "22 years",
+        "sample": "22 years",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.13",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-value",
+        "current": "0",
+        "sample": "0",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.14",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-label",
+        "current": "Projects delivered",
+        "sample": "Projects delivered",
+        "maxCharacters": 56,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.15",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-label",
+        "current": "Built area",
+        "sample": "Built area",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.16",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-label",
+        "current": "Industry experience",
+        "sample": "Industry experience",
+        "maxCharacters": 58,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-441.17",
+        "entity": "module-441",
+        "type": "text",
+        "label": "[Tracy Business] Home - Hero (en) / stat-label",
+        "current": "Serious incidents in 2025",
+        "sample": "Serious incidents in 2025",
+        "maxCharacters": 70,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.0",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / eyebrow",
+        "current": "What we do",
+        "sample": "What we do",
+        "maxCharacters": 40,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.1",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / title",
+        "current": "Four core service lines",
+        "sample": "Four core service lines",
+        "maxCharacters": 66,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.2",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / all-text",
+        "current": "All services →",
+        "sample": "All services →",
+        "maxCharacters": 48,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.3",
+        "entity": "module-442",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (en) / all-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.4",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-title",
+        "current": "Industrial park infrastructure",
+        "sample": "Industrial park infrastructure",
+        "maxCharacters": 80,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.5",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-title",
+        "current": "Pre-engineered buildings",
+        "sample": "Pre-engineered buildings",
+        "maxCharacters": 68,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.6",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-title",
+        "current": "M&E engineering",
+        "sample": "M&E engineering",
+        "maxCharacters": 50,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.7",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-title",
+        "current": "Maintenance & retrofit",
+        "sample": "Maintenance & retrofit",
+        "maxCharacters": 64,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.8",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-desc",
+        "current": "Earthworks, internal roads, water supply and wastewater treatment, turnkey.",
+        "sample": "Earthworks, internal roads, water supply and wastewater treatment, turnkey.",
+        "maxCharacters": 170,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.9",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-desc",
+        "current": "Structural design, fabrication and erection of steel frames spanning up to 45 m.",
+        "sample": "Structural design, fabrication and erection of steel frames spanning up to 45 m.",
+        "maxCharacters": 180,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.10",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-desc",
+        "current": "Substations, compressed air, HVAC and fire protection to NFPA standards.",
+        "sample": "Substations, compressed air, HVAC and fire protection to NFPA standards.",
+        "maxCharacters": 164,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.11",
+        "entity": "module-442",
+        "type": "text",
+        "label": "[Tracy Business] Home - Services (en) / item-desc",
+        "current": "Long-term maintenance contracts and capacity upgrades on live production lines.",
+        "sample": "Long-term maintenance contracts and capacity upgrades on live production lines.",
+        "maxCharacters": 178,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.12",
+        "entity": "module-442",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (en) / item-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.13",
+        "entity": "module-442",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (en) / item-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.14",
+        "entity": "module-442",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (en) / item-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      },
+      {
+        "key": "module-442.15",
+        "entity": "module-442",
+        "type": "url",
+        "label": "[Tracy Business] Home - Services (en) / item-link",
+        "current": "index.php?Itemid=601",
+        "sample": "index.php?Itemid=601",
+        "maxCharacters": 2048,
+        "requiresEvidence": false
+      }
+    ],
+    "pages": [
+      {
+        "entity": "menuItem-599",
+        "route": "home",
+        "assignedModules": [
+          {
+            "entity": "module-425",
+            "position": "language-switcher"
+          },
+          {
+            "entity": "module-427",
+            "position": "search"
+          },
+          {
+            "entity": "module-428",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-429",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-430",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-431",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-432",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-433",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-434",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-435",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-436",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-437",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-438",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-439",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-440",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-441",
+            "position": "banner"
+          },
+          {
+            "entity": "module-442",
+            "position": "top-a"
+          },
+          {
+            "entity": "module-443",
+            "position": "top-b"
+          },
+          {
+            "entity": "module-444",
+            "position": "top-c"
+          },
+          {
+            "entity": "module-445",
+            "position": "top-d"
+          },
+          {
+            "entity": "module-446",
+            "position": "bottom-a"
+          },
+          {
+            "entity": "module-447",
+            "position": "bottom-b"
+          },
+          {
+            "entity": "module-448",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-449",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-450",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-451",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-452",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-453",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-454",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-455",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-456",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-457",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-458",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-459",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-460",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-816",
+            "position": "error-page"
+          },
+          {
+            "entity": "module-830",
+            "position": "error-page"
+          }
+        ]
+      },
+      {
+        "entity": "menuItem-604",
+        "route": "contact",
+        "assignedModules": [
+          {
+            "entity": "module-425",
+            "position": "language-switcher"
+          },
+          {
+            "entity": "module-426",
+            "position": "breadcrumbs"
+          },
+          {
+            "entity": "module-427",
+            "position": "search"
+          },
+          {
+            "entity": "module-428",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-429",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-430",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-431",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-432",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-433",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-434",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-435",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-436",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-437",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-438",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-439",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-440",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-448",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-449",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-450",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-451",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-452",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-453",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-454",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-455",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-456",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-457",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-458",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-459",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-460",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-809",
+            "position": "contact-page"
+          },
+          {
+            "entity": "module-810",
+            "position": "contact-page"
+          },
+          {
+            "entity": "module-811",
+            "position": "contact-page"
+          },
+          {
+            "entity": "module-812",
+            "position": "contact-page"
+          },
+          {
+            "entity": "module-813",
+            "position": "contact-page"
+          },
+          {
+            "entity": "module-816",
+            "position": "error-page"
+          },
+          {
+            "entity": "module-830",
+            "position": "error-page"
+          }
+        ]
+      },
+      {
+        "entity": "menuItem-632",
+        "route": "home",
+        "assignedModules": [
+          {
+            "entity": "module-425",
+            "position": "language-switcher"
+          },
+          {
+            "entity": "module-427",
+            "position": "search"
+          },
+          {
+            "entity": "module-428",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-429",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-430",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-431",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-432",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-433",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-434",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-435",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-436",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-437",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-438",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-439",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-440",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-448",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-449",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-450",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-451",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-452",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-453",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-454",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-455",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-456",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-457",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-458",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-459",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-460",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-461",
+            "position": "banner"
+          },
+          {
+            "entity": "module-462",
+            "position": "top-a"
+          },
+          {
+            "entity": "module-463",
+            "position": "top-b"
+          },
+          {
+            "entity": "module-464",
+            "position": "top-c"
+          },
+          {
+            "entity": "module-465",
+            "position": "top-d"
+          },
+          {
+            "entity": "module-466",
+            "position": "bottom-a"
+          },
+          {
+            "entity": "module-467",
+            "position": "bottom-b"
+          },
+          {
+            "entity": "module-816",
+            "position": "error-page"
+          },
+          {
+            "entity": "module-830",
+            "position": "error-page"
+          }
+        ]
+      },
+      {
+        "entity": "menuItem-637",
+        "route": "contact",
+        "assignedModules": [
+          {
+            "entity": "module-425",
+            "position": "language-switcher"
+          },
+          {
+            "entity": "module-426",
+            "position": "breadcrumbs"
+          },
+          {
+            "entity": "module-427",
+            "position": "search"
+          },
+          {
+            "entity": "module-428",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-429",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-430",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-431",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-432",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-433",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-434",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-435",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-436",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-437",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-438",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-439",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-440",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-448",
+            "position": "topbar-l"
+          },
+          {
+            "entity": "module-449",
+            "position": "topbar-r"
+          },
+          {
+            "entity": "module-450",
+            "position": "header-cta"
+          },
+          {
+            "entity": "module-451",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-452",
+            "position": "off-canvas"
+          },
+          {
+            "entity": "module-453",
+            "position": "mega-2"
+          },
+          {
+            "entity": "module-454",
+            "position": "mega-3"
+          },
+          {
+            "entity": "module-455",
+            "position": "footer-a"
+          },
+          {
+            "entity": "module-456",
+            "position": "footer-b"
+          },
+          {
+            "entity": "module-457",
+            "position": "footer-c"
+          },
+          {
+            "entity": "module-458",
+            "position": "footer-d"
+          },
+          {
+            "entity": "module-459",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-460",
+            "position": "copyright"
+          },
+          {
+            "entity": "module-816",
+            "position": "error-page"
+          },
+          {
+            "entity": "module-823",
+            "position": "contact-page"
+          },
+          {
+            "entity": "module-824",
+            "position": "contact-page"
+          },
+          {
+            "entity": "module-825",
+            "position": "contact-page"
+          },
+          {
+            "entity": "module-826",
+            "position": "contact-page"
+          },
+          {
+            "entity": "module-827",
+            "position": "contact-page"
+          },
+          {
+            "entity": "module-830",
+            "position": "error-page"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "REG-009",
+  "kind": "fix",
+  "title": "Open chat marks the message only after it has scrolled into the viewport",
+  "pr": 772,
+  "area": "site-changes/open-chat",
+  "cms": ["any"],
+  "needs": ["stand", "site:any", "seat:owner", "fixture:chat-session-with-3-later-turns"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, WEB, DSH, A and seat A's cookie COOKIE_A, pq (SELECT/WITH only). Case variables: KEY = site key of any site where seat A is owner (e.g. scv2wp.scv2.tracy.test); RUN=$(date +%s).",
+    "Check the build: docker exec $DSH grep -c 'getBoundingClientRect().top,viewport' /desk-home/profiles/native/node_modules/@tracy/dsh-site-tabs/lib/client.js must print a number >= 1; otherwise stop with BLOCKED note image-older-than-1bf428e65.",
+    "Fixture: TURN|SESSION|MSG = pq \"select s.turn_id, s.session_id, s.prompt_message_id from site_turn s where s.site_key='$KEY' and s.actor='$A' and s.prompt_message_id is not null and (select count(*) from site_turn t where t.session_id=s.session_id and t.turn>s.turn) >= 3 order by (s.files > 0 or exists (select 1 from site_write w where w.turn_id=s.turn_id and w.outcome='ok')) desc, s.opened_at desc limit 1\".",
+    "Only if the fixture query returned nothing: in a new context page.goto(ORIGIN+'/'+KEY), wait for '/s/session-' and the first [contenteditable='true'], send 'Do not change anything on the site. Reply with the single word OK. REG-009-' + RUN + '-m1', then three times 'Do not change anything on the site. Reply with the numbers 1 to 40, one per line. REG-009-' + RUN + '-m' + N (N = 2..4), each by the README § Send a chat message recipe (box = [data-composer-input='true']; box.fill(text); wait until box.textContent() === text; box.press('Enter'); wait until box.textContent() === ''; never click, Meta+A, Backspace, page.keyboard.insertText in one go: the composer drops the text, 7/7 on scv2 03/10), and after each wait until the newest site_turn row of A on KEY is not 'open' (at most 10 min, else BLOCKED note model-down); then rerun the fixture query (still empty → BLOCKED note no-fixture).",
+    "Browser: run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; connect Playwright (repo copy node_modules/.pnpm/playwright@1.63.0) with chromium.connectOverCDP('http://127.0.0.1:9222'), never chromium.launch(); every run uses a NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}, reducedMotion:'no-preference'} (smooth scrolling is required: under reduced motion the scroll is instant and the old bug cannot show) with cookie {name:'tracy_sess', value:COOKIE_A, domain:COOKIE_DOMAIN, path:'/', httpOnly:true}; never close a page, a context or the browser (let the script exit).",
+    "Recorder: before any goto, call context.addInitScript(({msg}) => { window.qa = {samples: [], cover: null, sawCover: false}; const sel = '[data-chat-node-key*=\"input-message' + msg + '\"]'; const sample = () => { const c = document.querySelector('.tracy-boot-cover'); if (c) qa.sawCover = true; if (qa.sawCover && qa.cover === null && (!c || getComputedStyle(c).opacity === '0')) qa.cover = performance.now(); const n = document.querySelector(sel); if (n) { const b = n.getBoundingClientRect(); qa.samples.push({t: performance.now(), top: Math.round(b.top), vh: innerHeight, flash: n.hasAttribute('data-tracy-msg-flash')}); } }; new MutationObserver(sample).observe(document, {subtree: true, childList: true, attributes: true, attributeFilter: ['data-tracy-msg-flash']}); setInterval(sample, 50); }, {msg: MSG}).",
+    "Runs 1-3 (cold, link road): for each run make a new context with the recorder, page.goto(ORIGIN+'/'+KEY+'/s/'+SESSION+'?tracy-msg='+MSG), wait 14 s, then read window.qa, page.url() and document.querySelectorAll('[data-tracy-msg-flash]').length.",
+    "Run 4 (press inside Tracy): page through curl -s -H \"Cookie: tracy_sess=$COOKIE_A\" -H \"Origin: $ORIGIN\" \"$ORIGIN/api/sites/$KEY/activity?version=2&filter=chat&limit=50\" (follow nextCursor, at most 20 pages) for the item with id = TURN, conversation.mine = true and conversation.promptMessageId = MSG; none → record run 4 as skipped with note no-row. Otherwise: new context with the recorder; page.goto(ORIGIN+'/'+KEY) and wait for '/s/session-' and [contenteditable='true']; goto page.url() with searchParams tab=tracy:changes and site=KEY; wait for [data-site-changes-v2] until no [data-site-changes-v2] [data-reading] remains; find li.tv-activity-event[data-event='<TURN>'] (README § Find a row in Site changes: at most 30 times — row present → stop; .tv-activity-more gone → the list ended; its button enabled → click it once, never while it reads 'Loading…' (disabled); wait 2 s, then wait (<= 90 s) until the row exists, .tv-activity-more is gone, or the button is enabled again); click its [data-cell='source'] [data-quick-open='chat']; wait 12 s; read window.qa and the URL of the page whose URL contains '/s/'+SESSION (the same page, or a new one if dsh fell back to a window; record which).",
+    "For each run compute marked = qa.samples with flash = true, first = marked[0], last = the last of marked, pre = qa.samples with t < first.t."
+  ],
+  "expect": [
+    "The build check prints a count >= 1.",
+    "Each run: qa.samples is non-empty when read (else BLOCKED note fixture-session-missing).",
+    "Each run: at least one pre sample has top < 0 or top >= vh, i.e. the message started outside the viewport (else BLOCKED note weak-fixture).",
+    "Each run: marked has at least 1 sample.",
+    "Each run: every marked sample has 0 <= top < vh, first included (before #772 the first marked sample sat at top -1780 with vh 1000 on 3/3 cold opens, QA-B03 r1; after: top 94, 49/49 samples in view, QA-B03 r2).",
+    "Runs 1-3: qa.sawCover = true, qa.cover is set, first.t >= qa.cover and first.t - qa.cover <= 4000 ms.",
+    "Each run: last.t - first.t <= 3000 ms (FLASH_MS 2400) and no element carries data-tracy-msg-flash when read.",
+    "Runs 1-3: the final page.url() has no tracy-msg parameter and its path contains '/s/' + SESSION; run 4: the measured page's path contains '/s/' + SESSION."
+  ],
+  "selectors": {
+    "messageNode": "[data-chat-node-key*='input-message<promptMessageId>']",
+    "flashAttr": "data-tracy-msg-flash (set for FLASH_MS 2400 ms)",
+    "bootCover": ".tracy-boot-cover",
+    "messageLink": "/<siteKey>/s/<sessionId>?tracy-msg=<promptMessageId>",
+    "quickOpenChat": "li.tv-activity-event[data-event='<turnId>'] [data-cell='source'] [data-quick-open='chat']",
+    "clientMarker": "'getBoundingClientRect().top,viewport' in /desk-home/profiles/native/node_modules/@tracy/dsh-site-tabs/lib/client.js (dsh container)",
+    "turnRecord": "site_turn(turn_id, session_id, turn, prompt_message_id, actor, files)",
+    "activityApi": "GET /api/sites/:key/activity?version=2&filter=chat → items[].conversation{sessionId, promptMessageId, mine}"
+  },
+  "evidence": "packages/site/tracy-site-tabs/test/conversation-scroll.test.mjs",
+  "fence": "conversation-scroll.mjs revealMessage sets data-tracy-msg-flash only after settled() has seen the message node's getBoundingClientRect().top inside [0, innerHeight) and unchanged between two polls (bounded by SETTLE_MS 1500), instead of at the start of the smooth scroll."
+}

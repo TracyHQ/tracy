@@ -1,0 +1,100 @@
+{
+  "id": "QA-UNIT-REG-PR-1697-checks-agree-with-the-build-happy",
+  "itemIds": ["regression:REG-PR-1697-checks-agree-with-the-build"],
+  "requirement": "A demo build's checks no longer fail what the build was asked to do, the picture to replace is named where it lives, a map link to the template's street fails, and the logo is the business's own and stays transparent",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1697-checks-agree-with-the-build.json",
+    "ref": "PR #1697 (fix); fix evidence: none recorded",
+    "invariant": "S1: the renamed tag, the newline, the null key and the class-less picture pass; more tags, the lost block and the lost figure fail. S2: the finding names the /about-us record and the block numbered as content.get {outline:true} numbers it; banner-1 is named in no record (no `in`), its sized copy rest-1-768x384 is. S3: search links pass; the timeline years are no phone; only the template street's map link fails (kind map). S4: the logo stays PNG with a clear corner, the photo is a JPEG; the logo naming the place is chosen. S5: the stored part and its two rows pass; the extra category fails; the older starting read still compares every row (the two rows fail there, the unchanged site passes). S6: \"bar & restaurant\" and \"est. 1982\" fail; \"Our Bakery\" and \"Mon - Fri\" pass.",
+    "productSources": [
+      "apps/tracy-host/src/app.js:1138",
+      "apps/tracy-host/src/demo-qa.js:55",
+      "apps/tracy-web/src/host/client.js:34",
+      "apps/tracy-web/src/lib/picture-cut.js:108",
+      "apps/tracy-web/src/sites/agent-demo-inventory.js:626",
+      "apps/tracy-web/src/wo-host.js:36",
+      "packages/tools/tracy-site-tools/src/host/wp-blocks.mjs:152",
+      "packages/wo/website-opportunities/domain/neutral-copy.mjs:29",
+      "packages/wo/website-opportunities/domain/slot-fill-manifest.mjs:12"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-host/src/ds-slot.js:439 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:440 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:582 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:583 readFile() with a computed path",
+      "apps/tracy-host/src/ds-slot.js:584 readFile() with a computed path",
+      "apps/tracy-host/src/jobs.js:224 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:144 readFile() with a computed path",
+      "apps/tracy-host/src/look-css.js:151 readFile() with a computed path",
+      "apps/tracy-host/src/provision.js:503 import() with a computed specifier",
+      "apps/tracy-host/src/site-files.js:413 readFile() with a computed path",
+      "apps/tracy-host/src/webroot.js:1628 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:919 open() with a computed path",
+      "apps/tracy-host/src/webroot.js:995 open() with a computed path",
+      "packages/wo/website-opportunities/domain/neutral-copy.mjs:18 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a WordPress tag renamed is the same tag; a post given more tags differs",
+    "WordPress: a template part the build stores is the same part, and the rows WordPress files it under are not the site’s relations",
+    "blank space around and between tags is no structure; a lost block still is",
+    "a key holding null is a key left out; a key holding a value is not",
+    "a WordPress picture written without its wp-image class is the same picture; a lost figure is not",
+    "picturesWhere names the record and the WordPress block of each template picture, numbered as the outline is",
+    "cta-real: a link searching this site is a search suggestion, a booking word or not; off the site it is not",
+    "facts-from-brief: a map link searching another street fails; the held street, a place name or no address held do not",
+    "keepAlpha keeps a transparent logo transparent (PNG); without it the cut stays a JPEG",
+    "a logo naming the place wins over a larger sister brand, read or unread",
+    "no-demo-words: a short template heading with a word that is neither the brief’s nor the site’s furniture is copy left"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1697-checks-agree-with-the-build"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1697-checks-agree-with-the-build",
+    "pr": 1697,
+    "kind": "fix",
+    "area": "website-opportunities/agent-demo",
+    "file": "tests/regression/cases/REG-PR-1697-checks-agree-with-the-build.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/agent-demo-native-inventory.test.mjs",
+    "apps/tracy-host/test/demo-qa.test.mjs",
+    "apps/tracy-web/test/picture-cut.test.mjs",
+    "apps/tracy-web/test/opportunities-place-logo.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a WordPress tag renamed is the same tag; a post given more tags differs",
+    "WordPress: a template part the build stores is the same part, and the rows WordPress files it under are not the site’s relations",
+    "blank space around and between tags is no structure; a lost block still is",
+    "a key holding null is a key left out; a key holding a value is not",
+    "a WordPress picture written without its wp-image class is the same picture; a lost figure is not",
+    "picturesWhere names the record and the WordPress block of each template picture, numbered as the outline is",
+    "cta-real: a link searching this site is a search suggestion, a booking word or not; off the site it is not",
+    "facts-from-brief: a map link searching another street fails; the held street, a place name or no address held do not",
+    "keepAlpha keeps a transparent logo transparent (PNG); without it the cut stays a JPEG",
+    "a logo naming the place wins over a larger sister brand, read or unread",
+    "no-demo-words: a short template heading with a word that is neither the brief’s nor the site’s furniture is copy left"
+  ],
+  "timeoutS": 600
+}

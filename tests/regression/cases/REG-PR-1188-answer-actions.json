@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1188-answer-actions",
+  "kind": "fix",
+  "title": "One action row under the last finished answer of any kind: a Help answer and a / command result end with dsh's copy, thumbs, branch and clock like an agent reply, until a new request is sent",
+  "pr": 1188,
+  "area": "assistant/help",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Help controller: a question streams and finishes (done carries the answer's turn id); press thumbs up, the server refuses, press thumbs down twice.",
+    "S2: Help controller: restore a conversation with a rated answer and a cut question; a question finishes and a bare /help is answered after the chat began, with a fake clock.",
+    "S3: answerTextOf for every row state (done, streaming, queued, stopped with words, refused before a word, askBack, greeting, tip).",
+    "S4: The plugin source: the row is dsh's ctx.chatLocal.AnswerActions with the answer text, time, anchor to branch at and the rating named by dsh's feedback namespace; a question and the reply to a bare /help are upserted with exchange: true (the suggestions and the tip are not); the start-screen strip wraps each row in a flow item (data-chat-exchange for an exchange) and offers no branch; tracy-brand gives every [data-actions-reveal] button a 1px focus stroke.",
+    "S5: Fork 0.2.0-rc.2-tracy.42 (vendor/tracy/deepseek-harness): vitest packages/client/ui-chat answer-actions, chat-view (settled command and /compact), conversation-node-definitions (settledSeq), chat-font-axis-styles (one row out)."
+  ],
+  "expect": [
+    "S1: the row gets answerId from done; a press shows the rating at once and posts {rating} to /api/assistant/turns/<id>/rating; a refusal puts it back; pressing the recorded rating posts {rating: null} and clears it.",
+    "S2: the restored answer carries answerId, rating and at (epoch ms of the stored answer); a bad date carries no at; a live answer's at is the clock when it finished; the askBack row's at is the clock when it was given.",
+    "S3: text for done, stopped-with-words and askBack; null otherwise.",
+    "S4: every source test passes; the focus rule is outline 1px solid var(--ring) with no box-shadow.",
+    "S5: the fork specs pass (CI=true corepack pnpm install --ignore-scripts --frozen-lockfile inside the submodule first)."
+  ],
+  "selectors": {
+    "files": "packages/ui/tracy-assistant/src/client/{help.ts,HelpNode.tsx,index.tsx}, vendor/tracy/deepseek-harness/packages/client/ui-chat/src/client/{chat/AnswerActions.tsx,chat/LocalAnswerActions.tsx,chat/CommandNodeView.tsx,chat/MessageIconActions.module.css}",
+    "attributes": "[data-answer-actions], [data-actions-reveal='always'], [data-chat-exchange], [data-turn-tail]",
+    "door": "POST /api/assistant/turns/:id/rating"
+  },
+  "evidence": "tasks/evidence/answer-actions-2026-10-12/ (before/after screenshots on a real dsh page: agent reply, /help answer, / command result, row kept while typing, row moved after a new request, hover and focus)",
+  "fence": "Which answer keeps its row out is the fork's CSS rule over data-actions-reveal and later flow items; Help's rating goes through tracy-web's own door, never dsh's message feedback.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-assistant/test/help.test.mjs",
+      "packages/ui/tracy-assistant/test/help-ui.test.mjs",
+      "packages/brand/tracy-brand/test/composer-primary-css.test.mjs"
+    ],
+    "tests": [
+      "rating: the answer id comes from done",
+      "rating a row that has no answer id yet does nothing",
+      "a restored answer brings back its id, its rating and when it was written",
+      "an answer carries the time it finished",
+      "the action row shows under a finished answer only",
+      "a finished answer ends with dsh's own action row",
+      "on the start screen each Help row sits in a flow item of its own",
+      "a question and the reply to a bare /help are upserted as an exchange",
+      "the action row under an answer takes focus as one 1px stroke",
+      "dsh's row sits as far under a Help answer as under an agent reply"
+    ]
+  }
+}

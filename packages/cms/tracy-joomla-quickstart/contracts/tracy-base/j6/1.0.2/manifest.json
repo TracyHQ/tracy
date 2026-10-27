@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-base/j6/1.0.2",
+  "platform": "joomla",
+  "template": "tracy",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "tracy-base",
+    "id": "tracy-base/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "tracy",
+    "framework": "t4",
+    "prefix": "tr_",
+    "parts": {
+      "webroot": {
+        "file": "tracy-base-j6-webroot-1.0.2.tar.gz",
+        "bytes": 72738990,
+        "sha256": "824175ee4e2401dea34cca90207f44d01be0b9bc3db98252b9bf1886aca45c3c"
+      },
+      "database": {
+        "file": "tracy-base-j6-database-1.0.2.sql.gz",
+        "bytes": 206388,
+        "sha256": "985ae67780bae3e76d8adb69608720e24ce721a8da208a6b30ba1e96d33842c9"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-07T21:00:43.707Z",
+    "builtFrom": {
+      "site": "tbase",
+      "tag": "tracy-base/j6",
+      "by": "tracy-dev"
+    },
+    "release": "tracy-base/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.0",
+  "mode": "content-recommendation"
+}

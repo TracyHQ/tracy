@@ -1,0 +1,109 @@
+---
+title: Getting started with MCP
+description: Choose your AI app, connect one Tracy website, and make your first read.
+---
+
+import McpSetup from '../../../components/McpSetup.astro';
+import { Aside, CardGrid, LinkCard, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+Connect once, then work on your website in a conversation. Start with a read before asking for your first change.
+
+## What you need
+
+- A Tracy account that can sign in at [cowork.tracy.ai](https://cowork.tracy.ai/).
+- A website hosted or imported into Tracy, with an **accepted Editor or Owner invitation**.
+- An AI app with the connection option described in its guide. Your app's account or workspace policy may limit custom connections.
+
+Use a sample website for your first edit. You do not need an OpenAI developer organization just to use an available Tracy listing.
+
+## Choose your app
+
+<div className="tracy-mcp-client-tabs">
+<Tabs>
+<TabItem label="ChatGPT">
+
+Connect Tracy through the listing when available, or through your account's custom MCP connection flow. Sign in to Tracy, choose one website, then enable Tracy in your chat.
+
+[Open the ChatGPT instructions →](/mcp/clients/chatgpt/)
+
+</TabItem>
+<TabItem label="Claude">
+
+Add a custom connector in **Settings → Connectors**, enter the Tracy MCP address, and complete sign-in. This guide covers hosted Claude at claude.ai.
+
+[Open the Claude instructions →](/mcp/clients/claude/)
+
+</TabItem>
+<TabItem label="Claude Code">
+
+Add the public Tracy client, then open `/mcp` in Claude Code to authenticate. Keep callback port `17832` available.
+
+<McpSetup client="claude-code" />
+
+[Open the Claude Code guide →](/mcp/clients/claude-code/)
+
+</TabItem>
+<TabItem label="Cursor">
+
+Merge this entry into your project configuration, then use Cursor's connection control to sign in to Tracy.
+
+<McpSetup client="cursor" />
+
+[Open the Cursor guide →](/mcp/clients/cursor/)
+
+</TabItem>
+<TabItem label="Codex">
+
+Merge this configuration into your Codex config, then run `codex mcp login tracy`. Keep callback port `17833` available.
+
+<McpSetup client="codex" />
+
+[Open the Codex guide →](/mcp/clients/codex/)
+
+</TabItem>
+<TabItem label="Other clients">
+
+Your client needs Streamable HTTP and a compatible OAuth flow. Review the requirements before configuring it.
+
+[Check other client requirements →](/mcp/clients/other/)
+
+</TabItem>
+</Tabs>
+</div>
+
+## Connect your website
+
+```text wrap title="Tracy MCP server URL"
+https://cowork.tracy.ai/mcp
+```
+
+<Steps>
+
+1. **Add Tracy in your AI app.** Follow the guide for that app and start the connection.
+2. **Sign in on cowork.tracy.ai.** Use the Tracy account that has access to the website.
+3. **Check the connection request.** Confirm the app identity, choose the correct website, and read the requested access before connecting.
+4. **Return to your AI app.** Enable Tracy for the conversation and run the read below.
+
+</Steps>
+
+<Aside type="tip" title="Check the website before editing">
+If your website is missing from the selection, check the Tracy account and accept your site invitation. Reconnecting cannot grant a stronger role.
+</Aside>
+
+## Try your first read
+
+```text wrap title="Prompt"
+Which Tracy website is connected? Show its name and the pages available there.
+Do not change anything.
+```
+
+A successful connection returns the connected website and real page information through Tracy tools. A general explanation of MCP, a saved server URL, or an OAuth success message alone does not confirm a successful tool call.
+
+## Make a small change
+
+Once you have verified the website, follow [Working with your site](/mcp/working-with-your-site/) to read a specific record, change one field, and verify or undo it.
+
+<CardGrid>
+  <LinkCard title="Try an example" description="Copy a prompt for a focused website task." href="/mcp/examples/" />
+  <LinkCard title="Connection not working?" description="Check the exact error and the next step." href="/mcp/troubleshooting/" />
+</CardGrid>

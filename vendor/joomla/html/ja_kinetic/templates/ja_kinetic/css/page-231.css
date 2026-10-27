@@ -1,0 +1,465 @@
+/* =============================================================
+   ja_kinetic — Tags index (com_tags.tags, body.item-231)
+   Pixel-perfect overlay vs Pencil kinetic.pen:
+     dark-desktop  wRlC6  |  light-desktop lLbgs
+     mobile-dark   XzGqM  |  mobile-light  VHStT
+   Auto-loaded last (after darkmode.css) via index.php cache-busted
+   ?cb= link; ALL rules scoped to body.item-231.
+   ============================================================= */
+
+/* ══════════════════════════════════════════════════════════════
+   0. LAYOUT GAP FIX (P58 + com-tags margin)
+   .t4-main-body adds 48px padding-top + T4 section wrapping.
+   .com-tags has 32px margin-top from base styles.
+   Design wants masthead FLUSH to header — zero both.
+   ══════════════════════════════════════════════════════════════ */
+body.item-231 .t4-main-body {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+body.item-231 .com-tags {
+    margin-top: 0 !important;
+}
+
+
+/* ──────────────────────────────────────────────────────────────
+   ALPHA-TINT COMPANIONS (lime primary, theme-aware)
+   No --primary-rgb in the base theme; define alpha helpers here.
+   ────────────────────────────────────────────────────────────── */
+body.item-231 {
+    /* design-system §A: pill / tint surfaces are FIXED brand lime in BOTH
+       themes — no olive re-tint in light. Pin to lime-alpha. */
+    --p-a08: rgba(163, 230, 53, 0.082);
+    --p-a25: rgba(163, 230, 53, 0.25);
+}
+html.t4-dark body.item-231 {
+    --p-a08: rgba(163, 230, 53, 0.082);
+    --p-a25: rgba(163, 230, 53, 0.25);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   1. MASTHEAD (.pen wRlC6)
+   ══════════════════════════════════════════════════════════════ */
+
+body.item-231 .com-tags__masthead {
+    /* Horizontal gutter is owned by the inner .hx-container (32/20). Keep this
+       band's H-padding at 0 or it STACKS → 64px double-gutter (guide §5.14). */
+    padding: 66px 0 58px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+}
+
+/* --- Masthead bg: light --- */
+body.item-231 .com-tags__masthead {
+    background:
+        radial-gradient(ellipse 150% 120% at 50% 0%, rgba(163, 230, 53, 0.059) 0%, #F2F5EE 55%),
+        linear-gradient(rgba(16, 20, 15, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 20, 15, 0.04) 1px, transparent 1px);
+    background-size: auto, 30px 30px, 30px 30px;
+    /* Override hx-grid-bg single-axis background-image */
+    background-image:
+        radial-gradient(ellipse 150% 120% at 50% 0%, rgba(163, 230, 53, 0.059) 0%, #F2F5EE 55%),
+        linear-gradient(rgba(16, 20, 15, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 20, 15, 0.04) 1px, transparent 1px);
+}
+
+/* --- Masthead bg: dark --- */
+html.t4-dark body.item-231 .com-tags__masthead {
+    background:
+        radial-gradient(ellipse 150% 120% at 50% 0%, rgba(163, 230, 53, 0.059) 0%, #161B18 55%),
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px) !important;
+    background-size: auto, 30px 30px, 30px 30px !important;
+    background-image:
+        radial-gradient(ellipse 150% 120% at 50% 0%, rgba(163, 230, 53, 0.059) 0%, #161B18 55%),
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px) !important;
+}
+
+body.item-231 .kinetic-tags-mast-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* ── Eyebrow pill ──
+   Uses the shared hx-eyebrow/kinetic-eyebrow class; override size + pill shape. */
+body.item-231 .kinetic-tags-eyebrow {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    /* .pen: pill tint FIXED brand lime in both themes; only label+dot flip. */
+    background: rgba(163, 230, 53, 0.078);
+    border: 1px solid rgba(163, 230, 53, 0.251);
+    border-radius: 100px;
+    /* Font: .pen 11.5px (not the base 12.5px) */
+    font-size: 11.5px !important;
+    letter-spacing: 1.5px !important;
+    margin: 0;  /* remove base hx-eyebrow bottom margin; gap owns spacing */
+}
+body.item-231 .kinetic-tags-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary);
+    flex-shrink: 0;
+}
+
+/* ── h1 ── */
+body.item-231 .kinetic-tags-h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 46px !important;
+    font-weight: 700;
+    letter-spacing: -1.3px;
+    line-height: 1.08;
+    color: var(--heading);
+    max-width: 760px;
+    margin: 0;
+}
+
+/* ── Subtitle ── */
+body.item-231 .kinetic-tags-sub {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text);
+    max-width: 600px;
+    margin: 0;
+    text-align: center;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   2. TAG CLOUD BODY SECTION
+   ══════════════════════════════════════════════════════════════ */
+
+body.item-231 .kinetic-tags-body {
+    background: var(--bg);
+    /* H-padding 0 — the inner .hx-container owns the gutter so the cloud band
+       lines up EXACTLY with the masthead's canonical 1240/centered container. */
+    padding: 64px 0 80px !important;
+}
+
+/* Container: same canonical band as the masthead (1240 cap, centered, 32 gutter)
+   so the pills sit inside the content band and align with the title above —
+   the cloud still left-aligns its pills WITHIN this band. */
+body.item-231 .com-tags__cloud-wrap .hx-container {
+    display: block;
+    max-width: 1240px !important;
+    margin: 0 auto !important;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+}
+
+/* Cloud list: left-aligned pills (not centered like the container) */
+body.item-231 .kinetic-tags-cloud-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-start;
+    align-items: center;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+body.item-231 .com-tags__cloud-item {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   3. TAG PILLS
+   ══════════════════════════════════════════════════════════════ */
+
+/* Base (light) pill
+   MICRO-INTERACTION: PILL gesture — neutral border/bg → primary tint on
+   hover/focus (LIST ROW / LINK feel per build-docs/micro-interactions.md §3d/3c). */
+body.item-231 .kinetic-tags-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 9999px;
+    background: #FFFFFF;
+    border: 1px solid #E4E8E0;
+    text-decoration: none;
+    transition: border-color .15s ease, background-color .15s ease;
+}
+body.item-231 .kinetic-tags-pill:hover,
+body.item-231 .kinetic-tags-pill:focus-visible {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 8%, #FFFFFF);
+    text-decoration: none;
+    outline: none;
+}
+
+/* Dark pill: [DARK-STUCK-LIGHT] prevention — explicit dark bg + border */
+html.t4-dark body.item-231 .kinetic-tags-pill {
+    background: #121614 !important;
+    border-color: #232A27 !important;
+}
+html.t4-dark body.item-231 .kinetic-tags-pill:hover,
+html.t4-dark body.item-231 .kinetic-tags-pill:focus-visible {
+    border-color: var(--primary) !important;
+    background: color-mix(in srgb, var(--primary) 10%, #121614) !important;
+    outline: none;
+}
+
+body.item-231 .com-tags__pill-label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--text);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* [FONT-MONO-MISSING] prevention: explicit font-family. */
+body.item-231 .com-tags__pill-count {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--muted);
+    letter-spacing: 0;
+}
+
+/* Suppress any base T4/BS styles on the cloud list anchor */
+body.item-231 .kinetic-tags-cloud-list a.kinetic-tags-pill,
+body.item-231 .kinetic-tags-cloud-list a.kinetic-tags-pill:visited {
+    color: inherit; /* prevent primary-link-leak ([PRIMARY-LINK-LEAK]) */
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   4. MOBILE (≤767.98px)
+   ══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767.98px) {
+
+    /* Masthead: smaller padding — H-padding stays 0 (inner .hx-container owns
+       the mobile gutter; 24px here would stack → 44px double-gutter, §5.14). */
+    body.item-231 .com-tags__masthead {
+        padding: 44px 0 38px;
+    }
+
+    body.item-231 .kinetic-tags-mast-inner {
+        gap: 14px;
+    }
+
+    body.item-231 .kinetic-tags-eyebrow {
+        font-size: 11px !important;
+    }
+
+    body.item-231 .kinetic-tags-h1 {
+        font-size: 33px !important;
+        letter-spacing: -1px;
+        max-width: 100%;
+    }
+
+    body.item-231 .kinetic-tags-sub {
+        font-size: 15px;
+        max-width: 100%;
+    }
+
+    /* Body section: smaller padding — H stays 0 (inner .hx-container owns the
+       20px mobile gutter; 20 here would double it). */
+    body.item-231 .kinetic-tags-body {
+        padding: 40px 0 64px !important;
+    }
+    body.item-231 .com-tags__cloud-wrap .hx-container {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    body.item-231 .kinetic-tags-pill {
+        padding: 10px 16px;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   5. SUPPRESS BASE COM_TAGS STYLES that conflict with the design
+   ══════════════════════════════════════════════════════════════ */
+
+/* Remove any inline font-size scaling Joomla/T4 might add via JS */
+body.item-231 .kinetic-tags-pill,
+body.item-231 .kinetic-tags-cloud-list a {
+    font-size: initial !important; /* reset JS-set inline style */
+}
+/* Re-apply our explicit sizes after the reset above */
+body.item-231 .com-tags__pill-label {
+    font-size: 14px !important;
+}
+body.item-231 .com-tags__pill-count {
+    font-size: 11px !important;
+}
+
+/* Suppress default list styling from base BS/T4 */
+body.item-231 .com-tags__cloud-item {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Prevent t4-section-inner from capping the content row */
+body.item-231 .com-tags__cloud-wrap .t4-section-inner {
+    max-width: none;
+    padding: 0;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   6. SINGLE TAG (view=tag, body.item-231 .com-tags-tag)
+   Each tagged item = a surface CARD: green category eyebrow (mono caps)
+   + Space-Grotesk title + "date · author" meta + a right chevron.
+   No filter form / no display-num / no type badge (handled in the override).
+   Scoped to .com-tags-tag so the all-tags cloud above is untouched.
+   ══════════════════════════════════════════════════════════════ */
+
+body.item-231 .com-tags-tag .com-tags__list-wrap {
+    background: var(--bg);
+    /* H-padding 0 — the inner .hx-container owns the 32/20 gutter; 32 here
+       stacks → 64px double-gutter (guide §5.14). */
+    padding: 56px 0 72px !important;
+}
+body.item-231 .com-tags-tag .com-tags__list-wrap .hx-container {
+    display: block;
+}
+
+body.item-231 .com-tags-tag .com-tags__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    border: 0;
+}
+
+/* The card itself (whole-row <a>) */
+body.item-231 .com-tags-tag .hx-tagcard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color .15s ease, background .15s ease;
+}
+/* Hover/focus: highlight border + chevron, NO box movement ([HOVER-JUMP] safe) */
+body.item-231 .com-tags-tag .hx-tagcard:hover,
+body.item-231 .com-tags-tag .hx-tagcard:focus-visible {
+    border-color: var(--primary);
+    background: var(--elevated);
+    outline: none;
+}
+body.item-231 .com-tags-tag .hx-tagcard:hover .com-tags__row-title,
+body.item-231 .com-tags-tag .hx-tagcard:focus-visible .com-tags__row-title {
+    color: var(--primary);
+}
+body.item-231 .com-tags-tag .hx-tagcard:hover .com-tags__row-chevron,
+body.item-231 .com-tags-tag .hx-tagcard:focus-visible .com-tags__row-chevron {
+    color: var(--primary);
+}
+
+body.item-231 .com-tags-tag .com-tags__row-main {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+/* Category eyebrow color flips olive↔lime per theme (via --primary) */
+body.item-231 .com-tags-tag .com-tags__row-eyebrow {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--primary);
+}
+
+body.item-231 .com-tags-tag .com-tags__row-title {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -.3px;
+    color: var(--heading);
+    transition: color .15s ease;
+}
+
+/* Meta row: date · author */
+body.item-231 .com-tags-tag .com-tags__row-meta {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 2px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12.5px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: .2px;
+    color: var(--muted);
+}
+body.item-231 .com-tags-tag .com-tags__row-date,
+body.item-231 .com-tags-tag .com-tags__row-author,
+body.item-231 .com-tags-tag .com-tags__row-dot {
+    color: var(--muted);
+}
+
+body.item-231 .com-tags-tag .com-tags__row-chevron {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    color: var(--muted);
+    transition: color .15s ease;
+}
+body.item-231 .com-tags-tag .com-tags__row-chevron svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+body.item-231 .com-tags-tag .com-tags__row--unpublished {
+    opacity: .55;
+}
+
+/* Mobile (≤767.98px): tighter card padding, smaller title */
+@media (max-width: 767.98px) {
+    body.item-231 .com-tags-tag .com-tags__list-wrap {
+        padding: 40px 0 56px !important;
+    }
+    body.item-231 .com-tags-tag .hx-tagcard {
+        padding: 18px 18px;
+        gap: 14px;
+    }
+    body.item-231 .com-tags-tag .com-tags__row-title {
+        font-size: 16.5px;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   MICRO-INTERACTIONS — reduced-motion guard (build-docs/micro-interactions.md §4)
+   ══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+    body.item-231 .kinetic-tags-pill,
+    body.item-231 .com-tags-tag .hx-tagcard,
+    body.item-231 .com-tags-tag .hx-tagcard * {
+        transition-duration: .01ms !important;
+    }
+}

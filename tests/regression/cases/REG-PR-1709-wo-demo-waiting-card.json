@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-1709-wo-demo-waiting-card",
+  "kind": "feat",
+  "title": "The open server keeps a waiting-for-you demo active with its chat link, and the Build card says Open in Tracy to finish the demo",
+  "pr": 1709,
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "area": "wo/tracy-builder",
+  "steps": ["S1: Run the package builder suite and the Build card view-model suite."],
+  "expect": [
+    "S1: both pass; the follow-to-ready test passes through waiting-for-you; the waiting card test passes."
+  ],
+  "selectors": {
+    "function": "tracyBuildView in packages/wo/website-opportunities/ui/public/tracy-view-models.js",
+    "tool": "tests/regression/scripts/REG-PR-1709-wo-demo-waiting-card.mjs"
+  },
+  "evidence": "Decision 25/10/2026 (option i): the seller’s AI finishes the demo in Tracy’s chat",
+  "fence": "waiting-for-you on the open server and its card",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1709-wo-demo-waiting-card.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

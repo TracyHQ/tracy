@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "b58d92f6-68a8-4358-8fc9-6ea58e6d483b",
+  "status": "complete",
+  "name": "Brex",
+  "url": "https://styles.refero.design/style/b58d92f6-68a8-4358-8fc9-6ea58e6d483b",
+  "sourceWebsite": "https://brex.com",
+  "extractedAt": "2026-06-03T17:18:35.523Z",
+  "capturedAt": "2026-10-08T05:16:31.623934+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "White concrete, single ember — a clinical financial instrument where one orange spark does all the talking.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/403e867e-a873-4b01-8175-33edf6bfde0b.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/7b7dffdb-cfd2-4e62-a335-4d71f53f6dc1.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f690d768-a8a2-4511-9612-38800a491ccc.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/54d0b45d-3e8a-476c-b63c-c8f6609e4fa9.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/77a3746c-d3a7-4ba7-85da-2ad7b72363fe.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "37e362eaab9e1364bc910fd496e8f7f1992104abe8689cccf3022e6714400103",
+      "bytes": 20647
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "ed6af7deda16eb231f2ae923e9607021ee80cf16dbf3798db53c538872cbc951",
+      "bytes": 116243
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d9e8c66d3baf0b1790298ac690fbf30d77afe70af00ec4658225b86086fcb755",
+      "bytes": 17796
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0942d716f77f2e94f2234dbad2bb4ce2678aaba95ccc504935e73dd3226b5550",
+      "bytes": 12086
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "fe8059e92dd71bd7a2b2026a6a4276baf3733693201cf047fbda330fd5d55260",
+      "bytes": 13864
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "b4b5f371e36b947e026f9ba54a35e6f9fcd0224ee0288cd746a139415dd56aac",
+      "bytes": 3419
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7a16802a48a874d53b19b06cf732e431467b93eeb6e617803211ceb6671e00d9",
+      "bytes": 543
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "64ef532ff364b8fcf8da9878fa3daa4479ba9b01de76fb485b7ef7cd9630c748",
+      "bytes": 560
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "610e559f9ee3fc13b661a4ad5406a3f31251d5670a17e24bf20600242cf0a997",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1fb3a0b9deae9427b82eef72e1e80c6a2881136c36b57c069307c1cbde324ae6",
+      "bytes": 44872
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "2ef7f46a742376a3059ef3be11543d93ee51c2a388dcbcc7a22d5e397f59502c",
+      "bytes": 22986
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f136b1e93c923036e89ac8853a2f8fbeaaa097434b4d2281076412a038219ff2",
+      "bytes": 41213
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6ad5de6f77e71c1cfd841eace995777b3354c768068283dd636d786f0fa91a10",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "db9e47383795abc32cf6fabdb87fc6fd21658425493e48e0930bab10275579f2",
+      "bytes": 1498
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "217efa2642e80cacf3a225e4b94412749439ecf08060b0731f84128e459cc300",
+      "bytes": 2090
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "1e675740-7935-4a49-b4c8-e5aa9fda06dd",
+    "1f32d914-6fdd-4692-b4fc-fcee2c414766",
+    "2e24c0ca-dd46-4519-b66e-cc03701d3b8c",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "7c38e84b-aea0-4c8f-b3e9-60b994ee6c6b",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a0630421-7b66-48b4-aa14-6194a3b2c2b9",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "b58d92f6-68a8-4358-8fc9-6ea58e6d483b",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8"
+  ]
+}

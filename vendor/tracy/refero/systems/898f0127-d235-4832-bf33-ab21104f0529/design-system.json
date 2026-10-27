@@ -1,0 +1,266 @@
+{
+  "dos": [
+    "Use #3d6a99 exclusively for filled CTA buttons, active states, and check icons — it is the system's only chromatic note",
+    "Invert to white surfaces for any commerce/pricing zone; the rest of the page must stay black",
+    "Set buttons to 8px radius and pill elements to 100px radius — never mix intermediate values",
+    "Apply 0.083–0.1em positive letter-spacing on labels, badges, and small-caps text for the cinematic marquee quality",
+    "Keep the page background pure #000000 with no overlays, gradients, or dim layers in content areas",
+    "Use weight 300–400 for headlines; reserve 600–700 for prices, CTAs, and emphasis only",
+    "Maintain generous vertical rhythm: 64px between sections, 24px card padding, 16px between elements"
+  ],
+  "donts": [
+    "Never use drop shadows — depth comes from surface color polarity, not elevation",
+    "Don't introduce additional accent colors — the system is monochrome plus one blue",
+    "Avoid backgrounds lighter than #050409 outside of pricing cards",
+    "Don't use letter-spacing tighter than -0.01em on small text; the system breathes outward, not inward",
+    "Never place white buttons on white pricing cards or blue buttons on blue surfaces — polarity must flip",
+    "Don't add gradients, glass effects, or blur — the aesthetic is flat cinema-dark",
+    "Avoid using #3d6a99 for large decorative areas; it should stay as precise interactive punctuation, not fill backgrounds"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "role": "Page background, hero canvas, navigation surface — the default darkness that lets poster art and white text feel illuminated",
+      "group": "neutral"
+    },
+    {
+      "hex": "#050409",
+      "name": "Smoke",
+      "role": "Near-black secondary surface, subtle elevation layer above pure black for section separation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b8b6bb",
+      "name": "Ash Mist",
+      "role": "Muted helper text, secondary body copy, disabled icon strokes — readable but recedes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#89868e",
+      "name": "Iron Veil",
+      "role": "Tertiary text, inactive border outlines on controls",
+      "group": "neutral"
+    },
+    {
+      "hex": "#999999",
+      "name": "Faded Print",
+      "role": "Lowest-priority metadata, footnote-level text and borders",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Snow",
+      "role": "Primary text, pricing card surfaces, icon fills, pill backgrounds — the dominant positive value in the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0e0a17",
+      "name": "Eclipse Indigo",
+      "role": "Near-black heading accent, subtle border tint for heading underlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3d6a99",
+      "name": "Signal Blue",
+      "role": "Primary CTA fill, active link color, brand accent on icons and borders — the single chromatic note that powers all interactivity",
+      "group": "brand"
+    },
+    {
+      "hex": "#71b8f2",
+      "name": "Glacier Beam",
+      "role": "Blue text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed cinematic layout. The hero is a max-edge poster grid with centered logo and CTA floating over it — no container, no card. Below the fold: centered single-column stack with max-width 1280px. The pricing section breaks the dark pattern with a 4-column card grid on white surfaces, providing a stark polarity shift. Category tiles are 6 equal columns. Content carousels use a horizontal scroll model with chevron controls. Navigation is a transparent floating bar with no background fill. Section rhythm: dark band → light pricing band → dark content bands, creating a three-act visual structure.",
+  "imagery": "Content poster art is the entire visual identity. The hero is a dense, slightly perspective-tilted grid of real HBO Max show and movie posters — ten or more visible at once with no breathing room between them, creating a wall-of-content effect. Category tiles use full-bleed poster stills with overlaid text. No lifestyle photography, no abstract illustration, no 3D renders. Photography treatment: high-saturation, cinematic color grading inherited from the source material. Icons are minimal — simple checkmark outlines and chevron arrows, no decorative iconography.",
+  "similar": [
+    {
+      "why": "Same dark-canvas streaming aesthetic with content poster grids as the dominant visual unit, and sparse UI chrome that lets artwork carry the brand",
+      "business": "Netflix"
+    },
+    {
+      "why": "Similar dark-mode entertainment layout with category carousels and single-accent CTA buttons against near-black backgrounds",
+      "business": "Disney+"
+    },
+    {
+      "why": "Identical black-canvas minimalism with a single white wordmark and full-bleed content imagery, relying on weight contrast rather than color",
+      "business": "Apple TV+"
+    },
+    {
+      "why": "Dark immersive interface where content art tiles carry the visual weight and the UI recedes into monochrome backgrounds with minimal accent color",
+      "business": "Spotify"
+    },
+    {
+      "why": "Similar streaming-tier pricing card grid with polarity-inverted white cards on a dark page and single blue CTA accent",
+      "business": "Hulu"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "4.5px",
+      "cards": "4.5px",
+      "pills": "100px",
+      "images": "8px",
+      "buttons": "8px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "64px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "media",
+  "surfaces": [
+    {
+      "hex": "#000000",
+      "name": "Obsidian Canvas",
+      "level": 1,
+      "purpose": "Full-page background, hero section base"
+    },
+    {
+      "hex": "#050409",
+      "name": "Smoke Surface",
+      "level": 2,
+      "purpose": "Subtle section separator, slightly elevated dark panel"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Snow Card",
+      "level": 3,
+      "purpose": "Pricing tier cards, feature panels — inverted polarity for commerce zones"
+    },
+    {
+      "hex": "#3d6a99",
+      "name": "Signal Blue Accent",
+      "level": 4,
+      "purpose": "Active CTA buttons, selected toggle state"
+    }
+  ],
+  "northStar": "Cinema lobby at midnight. Pure black walls, one cool blue exit sign, and movie posters glowing from every surface.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.6,
+      "letterSpacing": 0.83
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.25
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.2
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.23
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.11
+    },
+    {
+      "role": "heading",
+      "size": 28,
+      "lineHeight": 1.1
+    },
+    {
+      "role": "heading-lg",
+      "size": 35,
+      "lineHeight": 1
+    },
+    {
+      "role": "display",
+      "size": 56,
+      "lineHeight": 0.8
+    }
+  ],
+  "components": [
+    {
+      "name": "Signal Blue CTA Button",
+      "role": "Primary call-to-action for sign-up, plan selection, and key conversion points",
+      "description": "Filled #3d6a99 background, white text at 14px weight 600, 8px border-radius, 12px vertical × 16px horizontal padding. Uppercase or sentence case. Letter-spacing 0.083em. Used for 'Sign Up Now', 'Select Plan'."
+    },
+    {
+      "name": "Ghost Outline Button",
+      "role": "Secondary CTA, nav actions against dark backgrounds",
+      "description": "Transparent fill, 1px solid white border, white text weight 600, 8px radius, 10px vertical × 16px horizontal padding. Used for 'Sign Up Now' in the header against dark hero."
+    },
+    {
+      "name": "Pricing Tier Card",
+      "role": "Subscription plan display with feature list and price",
+      "description": "White (#ffffff) surface on black page — full polarity inversion. 4.5px border-radius, 24px padding, checkmark icons in blue (#3d6a99) for feature items, bold price at 28px weight 700, '/month' suffix in lighter weight. Bottom-right Signal Blue Select Plan button."
+    },
+    {
+      "name": "Category Tile",
+      "role": "Genre/content category navigation cards",
+      "description": "Full-bleed poster image background, 8px radius, overlay text at bottom: category name in white weight 600, 'for' label in muted white, content title in uppercase small-caps. Used for Movies, Family, Drama, Comedy, Action, True Crime."
+    },
+    {
+      "name": "Billing Toggle",
+      "role": "Monthly/Yearly plan period switcher",
+      "description": "Pill-shaped (100px radius) container with two segments. Active segment: white background, black text. Inactive: transparent, white text. 24px horizontal × 12px vertical padding per segment. SAVE badge floats above in #3d6a99."
+    },
+    {
+      "name": "Header Navigation",
+      "role": "Top-level site navigation and auth actions",
+      "description": "Transparent over hero, minimal. HBO Max logo left (white, stacked). Right side: 'Sign In' text link + 'Sign Up Now' ghost button. No background bar — floats directly on dark hero."
+    },
+    {
+      "name": "Content Hero Grid",
+      "role": "Full-bleed poster wall above the fold",
+      "description": "Dense grid of content poster art (10+ columns on desktop), slight tilt/perspective effect, poster images edge-to-edge. Logo + pricing copy + CTA centered over the grid with no card or panel — text sits directly on the artwork."
+    },
+    {
+      "name": "Feature Check Item",
+      "role": "Line item within pricing cards listing plan capabilities",
+      "description": "Blue (#3d6a99) checkmark icon at 14px, followed by dark text weight 400 at 14px. Consistent 8px vertical gap between items. Unchecked items: empty circle outline in same blue."
+    },
+    {
+      "name": "Carousel Section Header",
+      "role": "Genre section titles with horizontal scroll affordance",
+      "description": "Centered title at 28px weight 400, flanked by left/right arrow chevrons in muted gray. Adjacent dimmed genre labels scroll into view. Letter-spacing 0.083em for cinematic feel."
+    },
+    {
+      "name": "Section Heading",
+      "role": "Major page section titles like 'Pick Your Perfect Plan'",
+      "description": "White text at 28px weight 400, centered alignment, generous 64px vertical breathing room above and below. Subtext at 16px weight 400 in #b8b6bb muted gray."
+    },
+    {
+      "name": "Annual Savings Link",
+      "role": "Yearly pricing callout below monthly price",
+      "description": "'Or pay €X/year and save €Y' in blue (#3d6a99) text link at 12px weight 400, with right-arrow chevron. Sits directly below the /month price line."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Custom sans-serif. Weights 300–400 carry the bulk of body and headline work; 600–700 reserved for prices and CTAs; 100 used for ultra-light display moments. Positive letter-spacing (0.083–0.1em) on small labels gives cinematic, marquee-poster feel.",
+      "sizes": "10, 12, 13, 14, 16, 18, 19, 20, 24, 26, 28, 35, 37, 44, 56",
+      "family": "Max Sans",
+      "weight": "100, 300, 400, 600, 700",
+      "lineHeight": "0.80, 1.00, 1.10, 1.11, 1.20, 1.23, 1.25, 1.35, 1.60, 1.96",
+      "substitute": "Inter, Helvetica Neue, or Söhne",
+      "letterSpacing": "+0.83px at 10px, +1.0px at 12px, +1.6px at 16px",
+      "fontFeatureSettings": "\"locl\" 0"
+    }
+  ],
+  "description": "HBO Max is a cinema-dark streaming interface: deep black canvas, content poster art as the primary visual unit, and a single steel-blue accent that powers every interactive element. The design is deliberately sparse — white text floats on black, pricing cards flip the polarity to white-on-light to signal commerce zones, and typography does the heavy lifting through size and spacing rather than color. Components stay flat and minimal: 8px-radius buttons, hairline borders, no shadows, no gradients. The custom Max Sans typeface carries a slight positive letter-spacing on small labels, giving even utility text a cinematic, editorial quality.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #ffffff\n- background: #000000\n- border: #050409\n- accent: #3d6a99\n- link/hover: #71b8f2\n- primary action: #3d6a99 (filled action)\n\n**3-5 Example Component Prompts**\n\n1. **Hero Section**: Full-bleed #000000 background with a 10-column grid of poster images filling the viewport. Centered white HBO Max logo at 56px weight 300, letter-spacing 0.083em. Below: 'Start streaming with HBO Max plans from €6.99/month' at 16px weight 400 white. Signal Blue CTA button: #3d6a99 fill, white text 14px weight 600, 8px radius, 12px 24px padding, letter-spacing 0.083em.\n\n2. **Pricing Card**: White (#ffffff) surface, 4.5px radius, 24px padding. Plan name 'Standard' at 20px weight 400. Feature list: #3d6a99 checkmark icons at 14px with dark body text. Price '€10.99' at 28px weight 700, '/month' suffix at 14px weight 400. Signal Blue Select Plan button (8px radius) bottom-right. Annual savings link in #3d6a99 at 12px below price.\n\n3. **Category Tile**: Full-bleed poster image, 8px radius, 200px height. Bottom overlay: category name 'Drama' in white 20px weight 600, 'HBO ORIGINAL' label in uppercase 10px weight 400 white at 0.1em tracking, content title 'EUPHORIA' in 12px weight 400.\n\n4. **Billing Toggle**: 100px-radius pill, 2px border in #050409. 'MONTHLY' active: white fill, black text 14px weight 600. 'YEARLY' inactive: transparent, white text. SAVE 16% badge above in #3d6a99 with white text 10px weight 600.\n\n5. **Carousel Header**: 'DISCOVER THE GREATEST' eyebrow at 12px weight 400 #b8b6bb, letter-spacing 0.1em. Genre name 'Epics' at 35px weight 300 white, centered. Left/right #89868e chevron arrows flanking, 24px from text."
+    },
+    {
+      "title": "Polarity System",
+      "content": "The defining structural principle is surface polarity inversion. The page lives in #000000 darkness. Commerce zones (pricing) flip to #ffffff light. Active states use #3d6a99 blue as the single chromatic signal. Never blend these zones with gradients, overlays, or transitional surfaces — the contrast between black, white, and blue IS the visual system. Cards on black feel like illuminated screens; cards on white feel like printed pages. This binary approach eliminates ambiguity about where the user is in the conversion funnel."
+    }
+  ],
+  "elevationPhilosophy": "No shadows. Depth is communicated exclusively through surface color polarity shifts — white cards on black background create contrast-based elevation, never drop shadows. This keeps the cinema-dark aesthetic pure: no fake light sources, only true surface contrast."
+}

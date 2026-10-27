@@ -1,0 +1,22 @@
+meta {
+  name: revert WRITE
+  type: http
+  seq: 15
+}
+
+post {
+  url: {{baseUrl}}/v1/sites/{{site}}/applies/{{applyId}}/revert
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  applyId: bruno-record-1
+}
+
+docs {
+  # WRITES: undo one apply
+
+  `apply.revert`: puts back, newest first, everything recorded under `applyId` and answers
+  `{reverted}`. The way to clean up after "record patch", "record delete" or "contract apply".
+}

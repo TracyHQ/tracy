@@ -1,0 +1,37 @@
+meta {
+  name: changes since
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.read",
+    "params": { "changedSince": "{{version}}" }
+  }
+}
+
+script:post-response {
+  if (res.body && res.body.version) bru.setVar("version", res.body.version);
+}
+
+docs {
+  # What changed since a version
+
+  Compares the site now with the walk `version` names and answers a
+  `tracy-content-changes/v1` document: `changed[]` (edited or new pages, with `native`),
+  `removed[]` and the new `version`, which is saved so the next call asks from here.
+
+  Look for:
+  - empty `changed` and `removed` when nothing moved;
+  - `409 CONTENT_SNAPSHOT_EXPIRED`: Tracy no longer holds that walk (too old, another seat, or
+    a restart). Run "view pages" again and use its `version`.
+
+  `changedSince` takes only `locale`; the locale must match the walk the version came from.
+}

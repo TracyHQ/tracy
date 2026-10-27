@@ -1,0 +1,162 @@
+{
+  "_note": "Pinned oracles for the infra layer. `anchors` are verbatim excerpts that must still occur in the named file; if one vanishes the oracle has drifted and every case that cites it becomes PENDING. `strength`: spec = an approved document states the rule; intent = the author's own header/comment states the intent (not independent of the code's author, flagged in reports); external = a public specification outside the repo.",
+  "oracles": {
+    "signed-channel": {
+      "strength": "spec",
+      "invariant": "tracy-host answers only /_host/* calls carrying an HMAC signature over method, path, body, timestamp and a one-time nonce; anything else is refused and has no effect",
+      "anchors": [
+        { "file": "SYSTEM.md", "excerpt": "Accepts only `/_host/*` calls HMAC-signed by `tracy-web`" },
+        {
+          "file": "docs/adr/0001-seat-door-and-enforcement-boundary.md",
+          "excerpt": "timestamp and a single-use nonce"
+        }
+      ]
+    },
+    "caller-verbs": {
+      "strength": "spec",
+      "invariant": "the caller (tracy-web host client) uses POST for every door and GET only for /_host/jobs/:id; any other verb must not reach a handler",
+      "anchors": [
+        { "file": "apps/tracy-web/src/host/client.js", "excerpt": "path: `/_host${path}`" },
+        { "file": "apps/tracy-web/src/host/client.js", "excerpt": "path: `/_host/jobs/${jobId}`" }
+      ]
+    },
+    "refuse-before-effect": {
+      "strength": "intent",
+      "invariant": "a signed call whose body is not valid JSON is refused with a 4xx before any command is started or any file/job record is written",
+      "anchors": [
+        { "file": "SYSTEM.md", "excerpt": "Everything that touches the host's disk and Docker" },
+        { "file": "CLAUDE.md", "excerpt": "**Say what you can't do.**" }
+      ]
+    },
+    "docker-name-grammar": {
+      "strength": "external",
+      "invariant": "a site label becomes the Docker compose project and container name `<label>-web-1`; Docker container names match [a-zA-Z0-9][a-zA-Z0-9_.-]+, so a label containing '/', '..', a leading '-', whitespace, ';' or a newline cannot name a site and must be refused before it reaches a script path",
+      "external": "https://docs.docker.com/reference/cli/docker/container/run/ (--name: container names are limited to [a-zA-Z0-9][a-zA-Z0-9_.-])",
+      "anchors": [
+        { "file": "apps/tracy-host/src/provision.js", "excerpt": "charset a Docker container name allows" }
+      ]
+    },
+    "deploy-drain": {
+      "strength": "intent",
+      "invariant": "while a deploy waits to replace tracy-host, no new job is accepted (HOST_UPDATING); a marker left by a dead deploy must not block new sites for good",
+      "anchors": [
+        { "file": "deploy/scripts/deploy-tracy-stack.sh", "excerpt": "AND NO NEW JOB STARTS WHILE IT WAITS" },
+        {
+          "file": "apps/tracy-host/src/jobs.js",
+          "excerpt": "A deploy that dies without removing it must not block every new site for good"
+        }
+      ]
+    },
+    "job-key-contract": {
+      "strength": "intent",
+      "invariant": "the same jobKey always names the same job on this host; asking again (lost response, double press) starts no second provision.sh racing the first over one webroot",
+      "anchors": [
+        { "file": "apps/tracy-host/src/app.js", "excerpt": "provision.sh` racing the first over one webroot" }
+      ]
+    },
+    "job-id-shape": {
+      "strength": "intent",
+      "invariant": "a job id is 12 hex characters (random) or `k` + 20 hex (keyed); a poll for any other id answers 404 and never reads a file outside the jobs directory",
+      "anchors": [{ "file": "apps/tracy-host/src/app.js", "excerpt": "is 12 hex characters, this is 21" }]
+    },
+    "job-restart": {
+      "strength": "intent",
+      "invariant": "jobs left queued/running by a dead process are marked failed on restart; finished jobs are untouched; a poller never reads a torn record",
+      "anchors": [
+        {
+          "file": "apps/tracy-host/src/jobs.js",
+          "excerpt": "Mark them failed, with the reason, so the poll answers"
+        },
+        { "file": "apps/tracy-host/src/jobs.js", "excerpt": "no reader ever sees a partial file" }
+      ]
+    },
+    "teardown-footprint": {
+      "strength": "spec",
+      "invariant": "removing a site goes through teardown and removes its whole footprint (stack, volumes, ingress/egress rule, network, directory, backups) while leaving every other site untouched; a failure is reported, never claimed as success",
+      "anchors": [
+        {
+          "file": "docs/references/running-tracy-locally.md",
+          "excerpt": "remove a site through the teardown door"
+        },
+        {
+          "file": "docs/adr/0024-backup-is-a-complete-restore-point.md",
+          "excerpt": "deleting the site deletes the backups"
+        },
+        {
+          "file": "packages/fleet/tracy-fleet-operation/scripts/provision/teardown.sh",
+          "excerpt": "teardown — remove a site's whole footprint from this host"
+        }
+      ]
+    },
+    "go-live-switch": {
+      "strength": "intent",
+      "invariant": "go-live flips a copy between draft and live in both directions; the way back to draft is cheap and repeatable; mail egress is blocked in draft and open when live",
+      "anchors": [
+        {
+          "file": "packages/fleet/tracy-fleet-operation/scripts/provision/go-live.sh",
+          "excerpt": "flip a copy between DRAFT and LIVE, in both directions"
+        }
+      ]
+    },
+    "backup-full-needs-hash": {
+      "strength": "spec",
+      "invariant": "a restore point is `full` only when the host proves the dump exists and matches its recorded hash; a missing, truncated or altered dump is never reported as restorable",
+      "anchors": [
+        { "file": "SYSTEM.md", "excerpt": "It is called `full` only when the host can prove" },
+        {
+          "file": "docs/adr/0024-backup-is-a-complete-restore-point.md",
+          "excerpt": "Point with a trailer but the dump file missing / wrong sha256"
+        }
+      ]
+    },
+    "inventory-reconcile-schedule": {
+      "strength": "spec",
+      "invariant": "the warm-pool reconciler runs at boot and then about every 30 s (configurable), to recover events a dead process lost",
+      "anchors": [
+        {
+          "file": "tasks/todo-inventory-va-seed-theo-brief.md",
+          "excerpt": "periodic reconciliation lúc boot và khoảng 30 giây (cấu hình được)"
+        }
+      ]
+    },
+    "cron-lifecycle": {
+      "strength": "intent",
+      "invariant": "cron.start() schedules the sweeps (hourly expired-row sweep, daily 03:17 host sweep) once per process; stop() clears every timer; advisory locks are released even when a sweep fails",
+      "anchors": [
+        {
+          "file": "apps/tracy-web/src/cron.js",
+          "excerpt": "Start both jobs: `sweepExpired` every hour, `sweepHosts` once a day at 03:17 local time."
+        },
+        {
+          "file": "apps/tracy-web/src/cron.js",
+          "excerpt": "clears both timers — call on shutdown, or a test process never exits."
+        },
+        { "file": "apps/tracy-web/src/cron.js", "excerpt": "advisory locks are session-scoped in" }
+      ]
+    },
+    "dockerfile-copy-semantics": {
+      "strength": "external",
+      "invariant": "COPY from a build context keeps the source's mode bits and, without --chown/--chmod, leaves the file root-owned: a 0600 file is unreadable by a non-root runtime user unless a chown/chmod makes it readable; a COPY source excluded by .dockerignore or absent from the context fails the build or lands nothing",
+      "external": "https://docs.docker.com/reference/dockerfile/#copy (permissions: files keep source mode; --chown, --chmod) and https://docs.docker.com/build/concepts/context/#dockerignore-files",
+      "anchors": [{ "file": ".dockerignore", "excerpt": "`CopyIgnoredFile`" }]
+    },
+    "stand-lifecycle": {
+      "strength": "spec",
+      "invariant": "a site provisions to ready, goes live and back to draft, is torn down leaving nothing, and a backup restores both file bytes and database rows",
+      "external": "tests/qa plan §4 `infra` (qa-suite plan.md); SYSTEM.md §6 for backup",
+      "anchors": [{ "file": "SYSTEM.md", "excerpt": "It is called `full` only when the host can prove" }]
+    },
+    "legacy-unbound": {
+      "strength": "intent",
+      "invariant": "existing suites are evidence only: their expected values were written by the product's authors and are not pinned to an independent specification",
+      "anchors": [{ "file": "CLAUDE.md", "excerpt": "**Green gates ≠ correct**" }]
+    },
+    "linux-fence": {
+      "strength": "spec",
+      "invariant": "the Docker/iptables fence between sites is enforced by the Linux kernel; it can only be proven on a Linux host with the privileges to inspect it",
+      "anchors": [
+        { "file": "CLAUDE.md", "excerpt": "`packages/tools/tracy-subprocess-docker/src/route.mjs`" }
+      ]
+    }
+  }
+}

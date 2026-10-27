@@ -1,0 +1,74 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Ink — Primary text, nav links, button labels, footer copy — the near-black (not pure) gives the page a slightly warmer, printed feel rather than a screen feel"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, input fills, button text on dark — the clean base against which warm off-white sections layer"
+    },
+    "atelier-white": {
+      "$value": "#f7f7f2",
+      "$type": "color",
+      "$description": "Atelier White — Light supporting surface for subtle backgrounds and section separation."
+    },
+    "linen": {
+      "$value": "#eaeae6",
+      "$type": "color",
+      "$description": "Linen — Deeper warm neutral for tertiary sections, input borders, subtle dividers — sits one step below Atelier White in the surface stack"
+    },
+    "stone": {
+      "$value": "#898989",
+      "$type": "color",
+      "$description": "Stone — Supporting neutral for secondary UI, dividers, and muted labels."
+    },
+    "graphite": {
+      "$value": "#484847",
+      "$type": "color",
+      "$description": "Graphite — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "pebble": {
+      "$value": "#bababa",
+      "$type": "color",
+      "$description": "Pebble — Input field borders, form field outlines, subtle structural dividers"
+    },
+    "smoke": {
+      "$value": "#818181",
+      "$type": "color",
+      "$description": "Smoke — Disabled button text and inactive state labels"
+    },
+    "charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Charcoal — Long-form body text in editorial blocks where the slightly lighter tone than Ink reduces visual weight over long reads"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — SVG icon fills, logo lockup, strict black-tone elements where maximum contrast is required"
+    }
+  },
+  "font": {
+    "margiela-sans": {
+      "$value": "Margiela Sans",
+      "$type": "fontFamily",
+      "$description": "All UI text, navigation, buttons, labels, captions. The custom sans is the structural voice of the system. Weights 375-500 handle body and nav; 600-700 appear in micro-labels at the upper edge. The extreme letter-spacing (0.067-0.125em) applied to the smaller sizes is a signature choice — uppercase micro-text at 8-12px breathes like engraved metalwork rather than digital UI. The narrow weight range (no display-weight condensation) means type never yells; hierarchy comes from tracking and size, not boldness."
+    },
+    "margiela-serif": {
+      "$value": "Margiela Serif",
+      "$type": "fontFamily",
+      "$description": "The wordmark 'Maison Margiela Paris', editorial pull-quotes, product name captions, and serif body in select sections. Single weight (400) only, with hairline negative tracking (-0.004 to -0.002em) that makes the serif feel drawn rather than typeset. It appears sparingly — when it does, it signals a shift from UI to editorial register."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://maisonmargiela.com",
+      "siteName": "Maisonmargiela",
+      "extractedAt": "2026-06-03T17:51:49.332Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-blush-paper: #f1e9e7;
+  --color-carbon-ink: #000000;
+  --color-bone-white: #ffffff;
+  --color-fossil-gray: #7b7f83;
+  --color-signal-blue: #0058fe;
+
+  /* Typography — Font Families */
+  --font-copernicus: 'Copernicus', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helvetica: 'Helvetica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

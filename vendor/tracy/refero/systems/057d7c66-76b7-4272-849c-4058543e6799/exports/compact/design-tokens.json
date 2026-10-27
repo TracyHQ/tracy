@@ -1,0 +1,79 @@
+{
+  "color": {
+    "anger-orange": {
+      "$value": "#ff4100",
+      "$type": "color",
+      "$description": "Anger Orange — Primary brand canvas and surface fill — hero backgrounds, section dividers, and headline text. The entire site is painted in this color; restraint is not the goal"
+    },
+    "sun-yellow": {
+      "$value": "#ffc700",
+      "$type": "color",
+      "$description": "Sun Yellow — Display type, starburst badges, and decorative graphic fills. Sits on top of orange sections for maximum contrast and excitement"
+    },
+    "royal-blue": {
+      "$value": "#1573dd",
+      "$type": "color",
+      "$description": "Royal Blue — Outlined link and icon border color — used as a chromatic accent stroke for interactive elements and decorative icon outlines against the orange field"
+    },
+    "charcoal": {
+      "$value": "#292a2c",
+      "$type": "color",
+      "$description": "Charcoal — Primary text and structural border color. Near-black but slightly warm — softer than pure black, used for body copy, dividers, and image borders"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Button borders, link text, and SVG fills. Reserved for the sharpest contrast moments where pure black is needed over lighter surfaces"
+    },
+    "blush-peach": {
+      "$value": "#fdbeba",
+      "$type": "color",
+      "$description": "Blush Peach — Soft secondary surface — pastel section background that breaks the orange dominance and introduces a calmer band for content"
+    },
+    "cream": {
+      "$value": "#fee3c1",
+      "$type": "color",
+      "$description": "Cream — Softest surface tint and decorative shape fill in pink sections. Functions as a quiet third surface level above blush"
+    },
+    "lemon-cream": {
+      "$value": "#f6e653",
+      "$type": "color",
+      "$description": "Lemon Cream — Secondary yellow used in decorative shapes and softer accent fills where pure sun-yellow would be too aggressive"
+    }
+  },
+  "font": {
+    "rightgrotesk-spatialblack-webfont": {
+      "$value": "rightgrotesk-spatialblack-webfont",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface. Ultra-wide, compressed-black sans with near-zero leading (0.89) that makes headlines read as solid slabs. This is the signature voice — every page must use it for its loudest statements."
+    },
+    "nimbus-sans-extended-bold": {
+      "$value": "nimbus-sans-extended-bold",
+      "$type": "fontFamily",
+      "$description": "Secondary body emphasis type. Heavy negative tracking at 23px gives a chunky condensed feel for subheadings or emphasized inline copy."
+    },
+    "nimbus-sans-extended-regular": {
+      "$value": "nimbus-sans-extended-regular",
+      "$type": "fontFamily",
+      "$description": "Extended sans for body and subheading roles where rightgrotesk would be too heavy. Tight 0.89 leading on the 36px size is an intentional match to the display voice."
+    },
+    "open-sans": {
+      "$value": "Open Sans",
+      "$type": "fontFamily",
+      "$description": "Readable body and hero paragraph text. At 1.67 leading on 22px, it's the quiet voice for longer passages; at 1.00 on 18px, it acts as a dense label."
+    },
+    "obviously-condensed-semibold": {
+      "$value": "obviously-condensed-semibold",
+      "$type": "fontFamily",
+      "$description": "Link and CTA typeface. Condensed semibold for narrow, punchy action labels."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://lamannabakery.com",
+      "siteName": "Lamanna",
+      "extractedAt": "2026-06-03T17:40:16.304Z",
+      "variant": "compact"
+    }
+  }
+}

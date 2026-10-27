@@ -1,0 +1,33 @@
+{
+  "pages": {
+    "/login-form": { "view": "page-login" },
+    "/registration-form": { "view": "page-register" },
+    "/lost-password": { "view": "page-password" },
+    "/profile": { "view": "page-account" },
+    "/product": { "view": "page" }
+  },
+  "seeded": {
+    "/login-form": { "id": 106, "url": "http://s/login-form/" },
+    "/registration-form": { "id": 107, "url": "http://s/registration-form/" },
+    "/lost-password": { "id": 109, "url": "http://s/lost-password/" },
+    "/profile": { "id": 108, "url": "http://s/profile/" },
+    "/product": { "id": 5, "url": "http://s/product/" }
+  },
+  "items": [
+    { "label": "Login Form", "url": "/login-form", "published": true, "children": [] },
+    { "label": "Registration Form", "url": "/registration-form", "published": true, "children": [] },
+    { "label": "Lost Password", "url": "/lost-password", "published": true, "children": [] },
+    {
+      "label": "Account",
+      "url": null,
+      "published": true,
+      "children": [
+        { "label": "Profile", "url": "/profile", "published": true, "children": [] },
+        { "label": "Hidden", "url": "/login-form", "published": false, "children": [] }
+      ]
+    },
+    { "label": "Product", "url": "/product", "published": true, "children": [] },
+    { "label": "Elsewhere", "url": "/not-declared", "published": true, "children": [] },
+    { "label": "Ext", "url": "https://example.com", "published": true, "children": [] }
+  ]
+}

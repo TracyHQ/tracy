@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "2e67105f-9f9a-45b5-9281-29734e753bd6",
+  "status": "complete",
+  "name": "Hume AI",
+  "url": "https://styles.refero.design/style/2e67105f-9f9a-45b5-9281-29734e753bd6",
+  "sourceWebsite": "https://hume.ai",
+  "extractedAt": "2026-06-03T15:53:25.681Z",
+  "capturedAt": "2026-10-08T05:09:49.645587+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "Scientific pastel instrument panel. A calm white laboratory where near-black typography measures soft watercolor data washes.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c52bdea9-9b39-4390-8eaa-af83b4dbea55.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5db51d85-5827-472d-add0-04648f04126b.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/26138ade-479d-449b-ae9c-ffabd172b781.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/01ebfa78-13aa-414e-90ff-16ef8156c545.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5da2375f-f966-4c0b-bfad-52c549e8dfa7.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "258894c5e50b2ff22d09b12892027fca50656aed629adee6934786dd254f615c",
+      "bytes": 23557
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6393e9abe127c7ee7adc8186f0fe1cfd388ba38d396ecad683911ae0a380fa1c",
+      "bytes": 93178
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "19cb956bed57f3eba38e202707993b5affffcc0e3ac4d20921e5a734c8327a57",
+      "bytes": 20256
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "0f986fd86a2aed449bea65da56e13cd9667735c386c7fe39e99fc9bafe0e91c6",
+      "bytes": 10662
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "28744db2079ce5a9631b1a1e6b803701009a15ed977b9b793bfc4a39a41e0590",
+      "bytes": 15586
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c1eaa715a699d3e30cdc6691be4c68812bc26fbce23a72dd1a85ff325246aa24",
+      "bytes": 3503
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "8416870843e340d8fc3cbc067ba8bc0868df62545e6f7de8b8c770ee132c256e",
+      "bytes": 600
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7ec84be3e4f50962c5fff68e75262ef5280a11ad57856b0df6c7299fc8502e33",
+      "bytes": 699
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c6a96529712fd2f0cde65bd1056a8efd6f09cf1ca6147baf3313d0896c0b4d9b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5006df1e4b38500f8ddc1e0c645e27e7e8ae5b5039668f39aee414848bf66294",
+      "bytes": 49639
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ab223593f5d9f7a2265914ee5a9738921cf12261741eb9c24d590ab73ab5a19b",
+      "bytes": 26513
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "daa8f9e551f25e9c10b1269a49f047c66ac793d9e78683d30b6db9882dec7892",
+      "bytes": 56354
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4ee0eeca86e0c77515414c1b81e96acfc8ae53e252e8de9feb86a88f39409813",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6cee9588921f63db2bfe8e2858f9a46040d8e24682f8e7ce31e6cf235f0ee9bb",
+      "bytes": 1693
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0aeb8c037a3c6083b070a8e0a0ebee85388026d7aa8faf5b1141d43ca1a382d7",
+      "bytes": 2394
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "1ab79e76-a07f-48fd-8e93-0a0fee12abd7",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "2e67105f-9f9a-45b5-9281-29734e753bd6",
+    "312423bf-72ea-42fb-b8f5-ab0104e778f3",
+    "32845f27-6b24-48be-af25-8e664f826b30",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "73cd9a6a-f861-4376-a3e1-e12f83c8960e",
+    "8872694d-261d-4eb4-b355-fb39ee4c37ad",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "9342e89b-c2fe-4acf-9993-53b44e0c13b5",
+    "95913740-3ff7-45ec-a05b-4acf040850a0",
+    "a6950b49-8ce4-4330-9499-26ca08061599",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "f1bff240-fa05-41db-9ae1-b165ea6ea2cb",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

@@ -1,0 +1,7 @@
+#!/bin/bash
+# The only command that runs a lane's test code again (plan §4.10): always inside the lane's
+# `test` fence. Usage: scripts/qa/rerun <lane> <pr> [<case id> | <path>] [--run-id <id>] [--json]
+#                      scripts/qa/rerun --self-check
+set -euo pipefail
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec node "$here/lib/rerun.mjs" "$@"

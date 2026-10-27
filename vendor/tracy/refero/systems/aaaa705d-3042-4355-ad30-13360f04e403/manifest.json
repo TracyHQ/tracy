@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "aaaa705d-3042-4355-ad30-13360f04e403",
+  "status": "complete",
+  "name": "Passionfroot",
+  "url": "https://styles.refero.design/style/aaaa705d-3042-4355-ad30-13360f04e403",
+  "sourceWebsite": "https://www.passionfroot.me",
+  "extractedAt": "2026-06-03T22:08:16.147Z",
+  "capturedAt": "2026-10-08T05:16:01.709980+00:00",
+  "theme": "mixed",
+  "industry": "saas",
+  "description": "Twilight cloud library on warm parchment. A serif headline drifts above cream cards lit by a violet-to-coral sky, where a pastel mascot peeks from the corner.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/bb0a1dce-3ccc-41dc-bcc8-d77aa81981c2.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b5f415fd999f7a46dc0d6ba5e9761a72443786bf2c959b5f1d9976584d15623a",
+      "bytes": 33178
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "eb5d1e243f3738d70bdeae87c4acf09a851bd3593c09140fb280811db41c5991",
+      "bytes": 122705
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "a6261def4306fdeb67c11f1b8c4a969d2d8a4cc8f20cf19e924206fe68ce178b",
+      "bytes": 25410
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6ae93100d0e8ae02109749a4aa2e59d6f85417f6d5c7c69ed6702d04a0fe64c1",
+      "bytes": 24623
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e61f66c7768db5b25d8d861d6c6d78ee8f9e48cdb3a73c27791c931de1d23c90",
+      "bytes": 19684
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "094b4aca410a5c012021e367f331a58724e98d0422491dd8a10c4b0b8b994b9f",
+      "bytes": 7711
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "880466daa2a7a04994efb846b64792f1cff45f3f2ece2cb77f650f849859e2ce",
+      "bytes": 1140
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5452ed9d27dd5eed6eaac72fc14b0f0b716e854ea50c10ec93d8c3b8ce3e71b7",
+      "bytes": 1157
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ac26c225ae4eb4a91ab919fe1ac74e32f530251d5bf4533cac0737666303fd56",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "cc581cc0368d48a805000a7c31dc4387d79ae31f702699eb66017f3ef5b718bd",
+      "bytes": 54861
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "08fb95c786952ec0f4dbf62259630f434c61e22941fd4f34c9b5e391c24f0c75",
+      "bytes": 28636
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5e79dfc4429638542826a6a7a07d810fb8b1c0ce7fd8e7c568aab48cf54cd9c7",
+      "bytes": 86914
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d5ab3fa704a6942b1c148c612ff653fe5f7f95a9b3d025d81601065c3fecfc20",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "3c3a97e2bb1197fb8b0d703edcf049c8dcbdc0646db4749c6bdf326bdcbf9ba9",
+      "bytes": 3756
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "78a54204d6c3a92a3ab7f2ea89d39beb2f471783bbe108298f2073873b22f023",
+      "bytes": 4372
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1f782141-d407-4c27-8cee-2246720a9f42",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "2ffd50d4-93b7-4acf-9bc2-e86e61b63f27",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "8e153a14-40a9-4793-b94b-c144d325c730",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "ad529e8a-3427-4152-bed9-6ec5097f25b6",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "c21fd0f0-1375-4094-83e7-0de484940100",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d"
+  ]
+}

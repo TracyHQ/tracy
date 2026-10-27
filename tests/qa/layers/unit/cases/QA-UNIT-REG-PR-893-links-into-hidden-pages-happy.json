@@ -1,0 +1,98 @@
+{
+  "id": "QA-UNIT-REG-PR-893-links-into-hidden-pages-happy",
+  "itemIds": ["regression:REG-PR-893-links-into-hidden-pages"],
+  "requirement": "Apply leaves no link or menu entry leading to a page it hid (Joomla aliases and slot links, WordPress hrefs)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-links-into-hidden-pages.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026 local stand, Tracy Business j6, en-gb + vi-vn, Apply: the footer's 'Our bakes' and 'News' entries (aliases of items 602/603 the demo trim unpublished) and their vi copies led to 404: 4 dead in-site links on a 20-page crawl. After the fix: 0 (menuStranded 2, linksMoved 2 on each run).",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests'. All named cases are 'ok': alias/link menu entries leading only to an item the trim took off or the customer unticked are unpublished in the tidy batch (a parent with live children is kept); contract link slots into items the tidy-up took off (the judge hides none since PR #1040) are taken off through empty_links where the site marks them emptyLink (others are left and said, never moved to the contact page; rule changed 08/10/2026, TCH #1013), with a set-aside retry; on WordPress (rule changed 08/10/2026, TCH #1013), a button or a block url into a drafted page is taken off (a slot's block hidden), a link in a sentence keeps its words without the anchor, and nothing is sent to the contact page.",
+    "productSources": [
+      "apps/tracy-web/src/lib/contracts.js:244",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:62",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:772",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:494",
+      "apps/tracy-web/src/sites/brief-engines/pictures.js:63",
+      "apps/tracy-web/src/sites/brief-engines/wp-blocks.js:243",
+      "apps/tracy-web/src/sites/brief-engines/wp-residue.js:818",
+      "apps/tracy-web/src/sites/brief-normalize.js:403",
+      "apps/tracy-web/src/sites/route.js:730",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:292"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contract-copy.js:42 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:25 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:43 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-blog-articles.js:115 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:54 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:55 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-languages.js:247 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-site-strings.js:35 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:814 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:361 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:367 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:368 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:392 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:25 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:3063 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:165 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:198 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:300 readFileSync() with a computed path",
+      "packages/cms/tracy-seeder/src/plan-joomla-contract.mjs:614 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a menu entry that only leads to a page the trim took off or the customer unticked goes with it",
+    "a link the site will not take off is set aside by name and the others still go",
+    "a page hidden after the trim is named to the same rule",
+    "a link in a page or a part that leads to a page the sweep drafts"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-links-into-hidden-pages"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-links-into-hidden-pages",
+    "pr": 893,
+    "kind": "fix",
+    "area": "sites/apply",
+    "file": "tests/regression/cases/REG-PR-893-links-into-hidden-pages.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/brief-joomla.test.mjs",
+    "apps/tracy-web/test/brief-wp-residue.test.mjs",
+    "packages/cms/tracy-seeder/test/plan-dead-links.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a menu entry that only leads to a page the trim took off or the customer unticked goes with it",
+    "a link the site will not take off is set aside by name and the others still go",
+    "a page hidden after the trim is named to the same rule",
+    "a link in a page or a part that leads to a page the sweep drafts"
+  ],
+  "timeoutS": 600
+}

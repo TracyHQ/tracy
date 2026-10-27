@@ -1,0 +1,19 @@
+{
+  "keptText": [
+    "page-homepage.hero.hero-address",
+    "page-blue-color.hero.hero-address",
+    "page-green-color.hero.hero-address",
+    "page-pink-color.hero.hero-address",
+    "page-purple-color.hero.hero-address",
+    "page-about-us.teams.module-intro",
+    "page-offers.happyhours.hp-info",
+    "page-offers.happyhours.hp-other-info",
+    "page-our-history.text-banner.text",
+    "part-header.header.open-time",
+    "part-footer.footer.copyright"
+  ],
+  "demoCompanyNames": [
+    "JA Restaurant",
+    "RES Bar & Restaurant"
+  ]
+}

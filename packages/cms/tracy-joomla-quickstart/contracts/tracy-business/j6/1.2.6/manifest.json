@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-business/j6/1.2.6",
+  "platform": "joomla",
+  "template": "tracy_business",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "tracy-business/j6",
+    "version": "1.2.6",
+    "platform": "joomla",
+    "platformVersion": "6.1.1",
+    "template": "tracy_business",
+    "coworkVersion": "0.16.11",
+    "contract": "tracy-business/j6/1.2.5",
+    "writeDoor": "disabled-until-provision",
+    "languages": {
+      "live": [
+        "af-ZA",
+        "be-BY",
+        "bg-BG",
+        "ca-ES",
+        "cs-CZ",
+        "cy-GB",
+        "da-DK",
+        "de-DE",
+        "el-GR",
+        "en-GB",
+        "es-ES",
+        "et-EE",
+        "fi-FI",
+        "fr-FR",
+        "ga-IE",
+        "hr-HR",
+        "hu-HU",
+        "it-IT",
+        "ja-JP",
+        "ka-GE",
+        "lo-LA",
+        "lt-LT",
+        "lv-LV",
+        "ms-MY",
+        "nb-NO",
+        "nl-NL",
+        "pl-PL",
+        "pt-BR",
+        "pt-PT",
+        "ro-RO",
+        "ru-RU",
+        "sk-SK",
+        "sl-SI",
+        "sr-RS",
+        "sr-YU",
+        "sv-SE",
+        "ta-IN",
+        "th-TH",
+        "tr-TR",
+        "uk-UA",
+        "vi-VN",
+        "zh-CN",
+        "zh-TW"
+      ],
+      "installedNotEnabled": []
+    },
+    "parts": {
+      "webroot": {
+        "file": "tracy-business-j6-webroot-1.2.6.tar.gz",
+        "bytes": 88296322,
+        "sha256": "40aced149273812ddaeec58b6134f3dcc037c1e35187323b1f920be6e9c4e274"
+      },
+      "database": {
+        "file": "tracy-business-j6-database-1.2.6.sql.gz",
+        "bytes": 1191923,
+        "sha256": "c441667e7b570a895edfb50e8dcfbc3e95ab13fe1c4f4191f617e758b3afc4d2"
+      }
+    },
+    "note": "The 1.2.1 site with the template patches of tch packages/cms/tracy-joomla-quickstart/template-patches/tracy_business for the Template Customization Question Readiness check (TPL_ keys for the chrome words and the sample slide deck, the Vietnamese cut of Archivo and Newsreader) and three demo database fixes (module 810 row label in English, the hidden alt link of the 43 Request a deck modules, article dates and ordering without ties). The webroot carries Claude Cowork 0.16.11 and provision installs the pinned plugin.",
+    "createdAt": "2026-10-19T18:52:08.547Z",
+    "builtFrom": {
+      "from": "tracy-business/j6@1.2.5",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 65 files replaced (templates/tracy_business/templateDetails.xml, templates/tracy_business/css, templates/tracy_business/fonts, templates/tracy_business/html, templates/tracy_business/js, templates/tracy_business/scss, templates/tracy_business/etc, templates/tracy_business/language, templates/tracy_business/acm); stylesheets read the worn design system (--ds-c-*)"
+    }
+  },
+  "coworkContractVersion": "0.24.27",
+  "mode": "content-recommendation"
+}

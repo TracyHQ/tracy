@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "d83fd0b1-afde-41ff-b970-c622bfed9f59",
+  "status": "complete",
+  "name": "MANNA",
+  "url": "https://styles.refero.design/style/d83fd0b1-afde-41ff-b970-c622bfed9f59",
+  "sourceWebsite": "https://www.mannaarchitects.com",
+  "extractedAt": "2026-06-03T20:42:05.874Z",
+  "capturedAt": "2026-10-08T05:18:08.001362+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Architecture monograph at golden hour — warm bone pages, rust accent panels, and oversized grotesk display type floating over full-bleed photography.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ff6f7773-c013-4a1d-a4f1-5b75b7dee239.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8989e43958c51884ee7420bb03d4d008c988d19560babbb15d6d8c6d68593856",
+      "bytes": 14349
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8001622dec979bfa9252bd484ccab31be42651fa991134eb53ec622cb36bc318",
+      "bytes": 269713
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "84d78c83edaf509939bab7600a88a65692a929c556ea34a78b683a1749f3c502",
+      "bytes": 12516
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7ec535058122357439403eba47aaf840e496a814e13ce3ce3815908230b57199",
+      "bytes": 3512
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "3275528223283896929eb64ae5211ebcd78fcaba457f92eb69104669508e2e56",
+      "bytes": 8931
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1d6282b14af97c39f3d96215639ce92c1a10717f6e8da2b5b08ce1f38896c63a",
+      "bytes": 1615
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "65f6ea27e29d68bcc387aedfb9fc585c8464358894c2ffbfad15be9215d7613f",
+      "bytes": 373
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "4b317e72dad23f966faf450857ddad4afc868273c9d444578dbd1bd7414c2199",
+      "bytes": 390
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c26ace9abf67cc8fd32666bb8bd19e3892ac65e7617f22a9cbda8961fb3b9803",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4d559cd5af94200dda825f9efbecd0b0a9406ab54551ea3c2206f03140d2294c",
+      "bytes": 35614
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1d67b7fc7ce3d576762b2a1e0778f89b699f3e8545286ed291ec150589ffc96e",
+      "bytes": 18393
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "311e4e82c251fb3794a7e095240d879455d8aa1cad88a04e8bacdf607280cedc",
+      "bytes": 19430
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "d0010c24ab86e170189b5943f333bec912cbd05c78d93c7fb1f8ddfe6260a079",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "77bd57357e98ec2d1668e1d7270e15897ff7437b00901d15c43879af5d234a4e",
+      "bytes": 695
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "180dfa5a73e7e9d6876e8313b6f9c658fc77ce6e8bbe6e58e763ab618c2418bb",
+      "bytes": 1102
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "16be276a-d8ce-484e-8f7a-cbbb09f717f7",
+    "295beab5-cd8a-473b-ab7d-3df6cda30231",
+    "4040f97b-42cf-49ef-ab2d-a77c00fe8285",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "5e9409c4-d130-42f3-b224-5bd66cdfbe28",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "670869ea-9576-4f9d-af3a-038910f8b9b8",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "8d8d5861-dee0-431b-826d-56f3fa4e1f84",
+    "a90dbcb6-e42c-4992-a83b-94879699dd4f",
+    "bc4b420c-be08-4165-95a3-c8338b5a9c3c",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "d83fd0b1-afde-41ff-b970-c622bfed9f59",
+    "e48b2dd0-328a-42ab-ad0f-ed24901bac4c",
+    "e6c20874-c6f9-4c31-b6b2-2cb27cbf15f2",
+    "f22a5ad1-2770-48d5-aff4-d1aaf0b789b8",
+    "f451c085-f048-4c9c-ae3b-03acc88320ab",
+    "ffd5932b-c78c-491b-b03e-78ebeb6b0a1b"
+  ]
+}

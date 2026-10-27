@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1573-invitations-send-stats-per-campaign",
+  "kind": "fix",
+  "title": "Per-group send numbers on the Send tab belong to the open campaign only",
+  "pr": 1573,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": ["Run the send ledger suite against a private PostgreSQL (TEST_DATABASE_URL) from this branch."],
+  "expect": [
+    "GET /sending?campaign=<id> answers groups counted for that campaign only.",
+    "Without ?campaign, and for another campaign, groups is empty."
+  ],
+  "selectors": {
+    "sending": "/api/ops/invitations/real/sending"
+  },
+  "evidence": "On dev on 22/10/2026 the JomSocial win-back Send tab showed 'A: expired 2025 to now: 301 sent' while that campaign had sent none: the numbers were the Tracy campaign's group_1.",
+  "fence": "Private test database only; no mailbox, no customer address.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-send.test.mjs"
+    ],
+    "tests": ["estimated clicks: with the switch on"]
+  }
+}

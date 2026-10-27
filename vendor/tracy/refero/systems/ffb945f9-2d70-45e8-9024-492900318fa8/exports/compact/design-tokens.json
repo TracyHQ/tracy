@@ -1,0 +1,54 @@
+{
+  "color": {
+    "carbon": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Carbon — Page canvas and section backgrounds — near-true-black maximizes the contrast pop of white type and saturated accent blocks"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Primary text, display headlines, borders, and link strokes — the only voice for the majority of the page"
+    },
+    "voltage-cyan": {
+      "$value": "#1ef0e4",
+      "$type": "color",
+      "$description": "Voltage Cyan — Accent card backgrounds, highlight panels — flat saturated cyan that screams against the dark canvas, reserved for project cards and editorial callout blocks"
+    },
+    "plasma-magenta": {
+      "$value": "#e91e8c",
+      "$type": "color",
+      "$description": "Plasma Magenta — Display text on cyan cards, decorative script flourishes — hot pink/magenta used only as ink-on-cyan contrast or as editorial accent"
+    },
+    "ember": {
+      "$value": "#ff3a1a",
+      "$type": "color",
+      "$description": "Ember — Supporting palette color for small decorative accents when the core palette needs contrast."
+    }
+  },
+  "font": {
+    "azeret-mono": {
+      "$value": "Azeret Mono",
+      "$type": "fontFamily",
+      "$description": "Monospace system voice — navigation, metadata, UI labels, footer text. Brings a developer-terminal identity that matches the frontend-developer positioning"
+    },
+    "azeretmono-display-variant": {
+      "$value": "AzeretMono (display variant)",
+      "$type": "fontFamily",
+      "$description": "Oversized condensed display headlines (ROU HUN FAN, UI DEV, DESIGN, MOTION & FRONTEND). The extreme scale and bold weight turn the page into a typographic poster — type IS the design"
+    },
+    "ephidona": {
+      "$value": "Ephidona",
+      "$type": "fontFamily",
+      "$description": "Calligraphic editorial script for section labels (PROJECTS). Counter-typography that breaks the geometric/mono discipline with human handwriting — the anti-machine flourish that signals personal craft over automated output"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://flowen.me",
+      "siteName": "Freelance frontend UI developer and designer, Rou Hun Fan",
+      "extractedAt": "2026-06-03T21:23:41.675Z",
+      "variant": "compact"
+    }
+  }
+}

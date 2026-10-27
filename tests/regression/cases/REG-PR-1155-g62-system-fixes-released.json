@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1155-g62-system-fixes-released",
+  "kind": "fix",
+  "title": "The g62 system fixes of the seven questions hold (demo labels translated, only the customer's names kept, distinct FULL post titles and intros, EmDash Vietnamese font subsets, kit words, seed languages, BLANK keeps the demo's file button, FULL drops the demo's social lines, audit dedupes one article on two routes) and ship with their releases: Claude Cowork for Joomla 0.24.14, Tracy Business EmDash 1.7.10, Tracy SaaS EmDash 1.4.7 pinned",
+  "pr": 1155,
+  "area": "sites/brief",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/translate-lines-demo-names.test.mjs and packages/cms/tracy-seeder/test/plan-joomla-language-demo-names.test.mjs (a model that keeps any \"J!\" words whatever it is told).",
+    "S2: node --test apps/tracy-web/test/{joomla-posts-g61,wp-post-titles-g61}.test.mjs (titles and intros a model keeps repeating, About-like or demo-translated).",
+    "S3: node --test the EmDash themes' tests/font-subsets.test.mjs and tests/personalize-facts.test.mjs (Business, SaaS, Base), and the Business theme's tests/{kit-component-words,seed-language-leftovers,personalize-demo-files-seed}.test.mjs.",
+    "S4: node --test scripts/test/template-customization-question-readiness-built-site.test.mjs (one Joomla article reached by two routes is one post).",
+    "S5: read both quickstarts.json: every Joomla pin's Claude Cowork version, and the tracy-business/emdash and tracy-saas/emdash entries."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped or cancelled.",
+    "S2: every test passes, none skipped or cancelled.",
+    "S3: every test passes, none skipped or cancelled.",
+    "S4: every test passes, none skipped or cancelled.",
+    "S5: every Joomla pin on Claude Cowork 0.24.14; tracy-business/emdash 1.7.10 and tracy-saas/emdash 1.4.7, source and state files named for that version with a GitHub asset id."
+  ],
+  "selectors": {
+    "tests": "tests/regression/scripts/REG-PR-1155-g62-system-fixes-released.mjs",
+    "batch-prompt": "SYSTEM and translateMarked in packages/cms/tracy-seeder/src/plan-joomla-language.mjs",
+    "audit": "articleOf in scripts/lib/template-customization-question-readiness-built-site/content.mjs",
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-12-tcqr-g62-fixes.md",
+  "fence": "The language and post fallbacks every engine takes when the model disobeys, the EmDash fonts, seed and personalize rules, the built-site audit, and the releases this repository pins for them.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1155-g62-system-fixes-released.mjs"],
+    "needs": []
+  }
+}

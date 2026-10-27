@@ -1,0 +1,310 @@
+{
+  "dos": [
+    "Use Forest Canopy #214538 exclusively for the primary filled CTA, active tab state, and the 5-star rating — never as a wide background block or decorative wash.",
+    "Apply Girott (or its substitute) at 168px uppercase for the single hero headline only. Do not reuse the display face for section headings — Graphik 600/700 at 30-48px carries all secondary headlines.",
+    "Set border-radius to 4px for buttons, 8px for cards/inputs/images, and 9999px for circular avatars. Mixing radii outside this triad breaks the system's precision.",
+    "Use hairline #e4e5e6 borders as the primary structural separator. Reserve soft shadows (the double-layer 25px+10px stack) exclusively for product mockup images that need to feel lifted off the page.",
+    "Set body text to Studio Ink #151e1b and helper text to Graphite Body #4d4d4f. Never use pure #000 for body — the slight green tint keeps the text in conversation with the brand.",
+    "Apply the negative letter-spacing pattern: -0.08px at 16px scaling up to -0.96px at 60px. Tight tracking is part of the editorial voice — relaxed spacing at display sizes will flatten the typography.",
+    "Use the single dark photographic band as a one-time inversion between white sections. The page should feel 90% white — adding more dark sections dilutes the contrast."
+  ],
+  "donts": [
+    "Don't introduce additional chromatic colors beyond Link Green #208619 and Citrus Note #faefc3. Any new hue competes with the single Forest Canopy identity.",
+    "Don't use bold (700) weight for body or button text — Graphik 500 is the heaviest UI weight. Reserve 700 for section headings only.",
+    "Don't apply heavy drop shadows to cards or UI elements. The system uses shadows only on product mockup images; cards rely on hairline borders, not elevation.",
+    "Don't set button border-radius above 4px. The sharp-ish 4px button paired with 8px cards is a deliberate contrast — pill-shaped buttons break the editorial precision.",
+    "Don't use the display Girott face below 100px. Its condensed stencil character loses impact at small sizes and overlaps with Graphik 700's territory.",
+    "Don't use Citrus Note #faefc3 as a CTA, badge, or status color — it is a card surface only. Using it for alerts or warnings would mislabel its tone.",
+    "Don't stretch the page beyond 1200px max-width or use full-bleed sections for content layouts. The dark hero band is the only full-width element; everything else is contained."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#214538",
+      "name": "Forest Canopy",
+      "role": "Primary brand action — CTA button fills, nav text, active tab indicators, brand icons, link hovers, section headings. Deep botanical green against white gives every action weight without aggression",
+      "group": "brand"
+    },
+    {
+      "hex": "#151e1b",
+      "name": "Studio Ink",
+      "role": "Primary body and heading text. Slightly green-tinted near-black reads as quieter than pure #000, harmonizing with the brand green instead of fighting it",
+      "group": "neutral"
+    },
+    {
+      "hex": "#4d4d4f",
+      "name": "Graphite Body",
+      "role": "Secondary and helper text — descriptions, captions, supporting copy under headings and feature labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e4e5e6",
+      "name": "Ash Border",
+      "role": "Default hairline border for cards, inputs, nav containers, list dividers, and button outlines. The structural skeleton of the interface",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f4f4f4",
+      "name": "Fog Surface",
+      "role": "Subtle background for tab buttons, list rows, and secondary button borders. One step darker than white to delineate zones without elevation",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5ede9",
+      "name": "Moss Wash",
+      "role": "Soft green-tinted card surface — used for stat cards and feature tiles where a faint brand color cue is needed without commitment to a filled green block",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Page canvas, card surfaces, button text on dark green fills, icon knockouts. The dominant background across the entire site",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Cast Iron",
+      "role": "Icon fills and select heading text where maximum contrast is needed. Used sparingly — mostly for decorative SVG icon weight",
+      "group": "neutral"
+    },
+    {
+      "hex": "#faefc3",
+      "name": "Citrus Note",
+      "role": "Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content.",
+      "group": "accent"
+    },
+    {
+      "hex": "#208619",
+      "name": "Link Green",
+      "role": "Green text accent for links, tags, and emphasized short phrases. Do not promote it to the primary CTA color",
+      "group": "accent"
+    }
+  ],
+  "layout": "The page follows a max-width 1200px centered container with a single full-bleed dark band as inversion. The hero is a two-column split: massive Girott headline + supporting paragraph + CTA on the left (60%), product mockup card overlapping on the right (40%). Sections are stacked vertically with 80px gaps, alternating between white and very-light-gray. The feature row is a 5-column equal grid of icon + label + description, centered. The directory listing section uses a 4-column grid of platform cards. Testimonials are a 3-column grid of centered text. The dark band breaks the rhythm with a full-bleed photographic background and left-aligned text overlay. Navigation is a flat top bar (not sticky), white with no border. The overall density is comfortable — generous whitespace between sections, no dense information blocks, each section gets room to breathe.",
+  "imagery": "Imagery is used sparingly and with a documentary feel. The single dark hero band features a photographic overlay of a real podcaster in their studio (lifestyle, candid, not staged), treated with a dark scrim to integrate with white text. Product mockups — dashboard panels and mobile app screens — appear as crisp UI screenshots on white with soft shadows, cropped tightly to the device frame. The 5-star testimonial logos (Apple Podcasts, Spotify, YouTube, Amazon Music, iHeart, TuneIn, Pocket Casts) appear in their native brand colors as social proof, the only place multicolored logos are permitted. Feature icons are 24px outlined line icons in Forest Canopy green, stroke weight ~1.5px, never filled. There are no decorative illustrations, abstract graphics, or 3D renders — the visual identity is photographic + UI-screenshot + line-icon, nothing else.",
+  "similar": [
+    {
+      "why": "Same editorial display-headline + clean white-canvas approach, with a single full-bleed photographic dark band as rhythm-breaking inversion",
+      "business": "Squarespace"
+    },
+    {
+      "why": "Same quiet-white + single-accent-color treatment, generous whitespace, and the sense that the product speaks for itself without marketing density",
+      "business": "Substack"
+    },
+    {
+      "why": "Same creator-tools audience, single dark green as brand action color, comfortable density with hairline-border card chrome",
+      "business": "ConvertKit"
+    },
+    {
+      "why": "Same 1200px max-width centered container, soft double-layer product mockup shadows, and restrained chromatic palette where color appears only as functional punctuation",
+      "business": "Stripe (earlier eras)"
+    },
+    {
+      "why": "Same deep-saturated primary brand color against white canvas, hairline border system, and 5-column feature row pattern",
+      "business": "Klaviyo"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tabs": "8px",
+      "cards": "8px",
+      "inputs": "8px",
+      "avatars": "9999px",
+      "buttons": "4px",
+      "featureCards": "12px"
+    },
+    "elementGap": "16px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 0,
+      "purpose": "Base canvas — page background, section backgrounds, most card surfaces"
+    },
+    {
+      "hex": "#f4f4f4",
+      "name": "Fog Surface",
+      "level": 1,
+      "purpose": "Subtle alt-row and tab button background, delineates zones without elevation"
+    },
+    {
+      "hex": "#e5ede9",
+      "name": "Moss Wash",
+      "level": 2,
+      "purpose": "Brand-tinted card surface for stat tiles and feature highlights"
+    },
+    {
+      "hex": "#faefc3",
+      "name": "Citrus Note",
+      "level": 3,
+      "purpose": "Warm highlight cards for tips, callouts, and promotional blocks"
+    },
+    {
+      "hex": "#151e1b",
+      "name": "Studio Ink",
+      "level": 4,
+      "purpose": "Dark band surfaces — used in the single dark photographic hero section for inversion"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "0px 20px 25px -5px rgba(0,0,0,0.1), 0px 8px 10px -6px rgba(0,0,0,0.1)",
+      "element": "Product Mockup Card (dashboard/mobile showcase)"
+    },
+    {
+      "style": "0px 10px 36px 0px rgba(0,0,0,0.16)",
+      "element": "Feature highlight card (rare, large spotlight blocks)"
+    }
+  ],
+  "northStar": "Botanical broadcast studio — a forest-green command console on white paper, anchored by a massive condensed-serif headline that reads like a magazine cover for audio.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.042
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.08
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.43,
+      "letterSpacing": -0.108
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.33,
+      "letterSpacing": -0.192
+    },
+    {
+      "role": "heading",
+      "size": 30,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.3
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.576
+    },
+    {
+      "role": "display",
+      "size": 168,
+      "lineHeight": 1,
+      "letterSpacing": 13.9
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "role": "The single filled brand action — used for 'Get Started Free' and signup flows.",
+      "description": "Background #214538, text #ffffff, Graphik 500 at 16px, 4px border-radius, 13px vertical × 20px horizontal padding. No border. Sits high-contrast against white. Tight tracking (-0.08px) and medium weight (500) — not bold, so the button feels confident rather than shouty."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Secondary navigation and inline body links.",
+      "description": "No background, no border. Text #214538 at 16px Graphik 500. Underline on hover only. Lives next to the primary CTA in the nav and hero."
+    },
+    {
+      "name": "Tab Filter Pill",
+      "role": "Category filter for reviews and content lists.",
+      "description": "8px border-radius, 10px vertical × 20px horizontal padding. Default: 1px border #e4e5e6, text #151e1b, background #ffffff. Active: background #214538, text #ffffff, no border. Inactive hover: background #f4f4f4. Graphik 500 at 14px."
+    },
+    {
+      "name": "Feature Icon Tile",
+      "role": "Feature row items in the product overview — 'Podcast Hosting', 'Fan Mail', 'Mobile', etc.",
+      "description": "Centered layout. Icon: 24px line icon in #214538, stroke weight ~1.5px, outlined style (never filled). Heading: Graphik 600 at 18px, #151e1b. Description: Graphik 400 at 15px, #4d4d4f, max-width ~200px. No card chrome — the icon and text float directly on white."
+    },
+    {
+      "name": "Product Mockup Card",
+      "role": "Showcases the Buzzsprout dashboard and mobile app within the hero area.",
+      "description": "White background, 8px border-radius, soft elevation: 0px 20px 25px -5px rgba(0,0,0,0.1) + 0px 8px 10px -6px rgba(0,0,0,0.1). Contains nested rounded panels (12-20px radius) representing device frames. The double-layer shadow creates a subtle lifted-but-floating effect rather than a heavy drop."
+    },
+    {
+      "name": "Listing Status Card",
+      "role": "Shows directory listing status (Spotify, Apple Podcasts, YouTube, etc.) with logos and 'Listed' badges.",
+      "description": "White background, 8px border-radius, 1px border #e4e5e6. Logo area: centered brand logo (native colors). Status badge: 'Listed' = #208619 text on white with checkmark icon; 'Get Listed' = #151e1b text on white. No padding symmetry — generous 24px top/bottom."
+    },
+    {
+      "name": "Testimonial Card",
+      "role": "5-star review cards from real podcasters.",
+      "description": "Centered text on white, no card background or border. Five #214538 star icons (filled, 16px) in a row. Quote heading: Graphik 600 at 18px, #151e1b. Body: Graphik 400 at 14px, #4d4d4f. Attribution: Graphik 400 italic at 12px, #4d4d4f. The absence of a card border makes testimonials feel like editorial pull-quotes, not UI widgets."
+    },
+    {
+      "name": "Stat Highlight Card",
+      "role": "Promotes '400,000+ podcasters launched' type numbers.",
+      "description": "Uses Moss Wash #e5ede9 background with 8px border-radius and 24px padding. Number: Graphik 700 at 48px, #214538, letter-spacing -0.576px. Label: Graphik 400 at 14px, #4d4d4f. The green-tinted background ties the stat to brand without requiring a full green block."
+    },
+    {
+      "name": "Dark Band Section",
+      "role": "Full-width dark photographic break section — 'Keep podcasting, even when you hit roadblocks'.",
+      "description": "Full-bleed background image at 30-40% opacity overlay over #151e1b. Headline: Graphik 700 at 35-48px, #ffffff, letter-spacing -0.4px. Subtext: Graphik 400 at 16px, #ffffff at 80% opacity. Section padding: 80px vertical. This is the only dark inversion on the page — used to punctuate, not to dominate."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation.",
+      "description": "White background, no border-bottom (or hairline 1px #e4e5e6). Logo left (Buzzsprout wordmark in #214538 with green leaf icon). Nav links center: Graphik 500 at 15px, #151e1b, 20-24px horizontal spacing. Right cluster: 'Log In' ghost text link + Primary CTA Button (4px radius, slightly smaller 13px×17px padding). Total height ~64-72px."
+    },
+    {
+      "name": "Highlight Tip Card",
+      "role": "Warm yellow callout cards for tips, pro features, or 'did you know' blocks.",
+      "description": "Background #faefc3, 8px border-radius, 20px padding. Text: Graphik 500 at 16px, #151e1b. The muted yellow reads as 'sticky note' — informal and helpful, never alarming."
+    },
+    {
+      "name": "Input Field",
+      "role": "Text inputs in forms.",
+      "description": "1px border #e4e5e6, 8px border-radius, 12px vertical × 16px horizontal padding. Background #ffffff. Placeholder text: #4d4d4f at Graphik 400 16px. Focus: border darkens to #214538. No shadow on focus — the border color change is the only state signal."
+    },
+    {
+      "name": "Star Rating Display",
+      "role": "5-star rating display above testimonials.",
+      "description": "Five 16px filled stars in #214538, 4px horizontal gap. No background container. The brand green stars (not gold/yellow) make ratings feel like a brand asset rather than a generic review widget."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display headline — used for the hero statement at 168px, uppercase, +0.083em tracking. A condensed editorial serif that converts a SaaS homepage into a magazine cover. Free substitute: Oswald Bold or Bebas Neue if Girott is unavailable, but the condensed stencil-serif character is the signature.",
+      "sizes": "168px",
+      "family": "Girott",
+      "weight": "600",
+      "lineHeight": "1.00",
+      "substitute": "Bebas Neue, Oswald, or Antonio",
+      "letterSpacing": "13.9px (0.083em at 168px)"
+    },
+    {
+      "role": "Primary interface typeface — body, headings, nav, buttons, cards. Weights 400/500 carry body and UI; 600/700 are reserved for section headings and emphasis. Negative letter-spacing tightens geometric forms at larger sizes, giving a precise editorial feel rather than a friendly rounded look. Free substitute: Inter (closest open-source match) or Manrope.",
+      "sizes": "10px, 12px, 14px, 15px, 16px, 18px, 20px, 24px, 25px, 30px, 35px, 48px, 50px, 60px",
+      "family": "Graphik",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.10–1.50 (tight for headlines, 1.50 for body, 2.50 for loose lists)",
+      "substitute": "Inter, Manrope, or Söhne",
+      "letterSpacing": "-0.96px at 60px, -0.65px at 50px, -0.576px at 48px, -0.385px at 35px, -0.30px at 30px, -0.225px at 25px, -0.192px at 24px, -0.14px at 20px, -0.108px at 18px, -0.08px at 16px, -0.042px at 14px, normal at 12px and below"
+    }
+  ],
+  "description": "Buzzsprout's design language is a quiet, editorial command center for audio creators: a white canvas overlaid with a single deep botanical green (#214538) that carries every brand action and headline. The interface is deliberately sparse, leaning on generous whitespace, hairline #e4e5e6 borders, and soft 8px radii to build a sense of calm professionalism. Typography is the signature element — a condensed serif display face (Girott) shouting at 168px sits against the practical geometric sans (Graphik) handling everything else, creating a magazine-meets-dashboard tension. Color is used as punctuation, not decoration: green appears only on CTAs, active states, brand marks, and key links, while body text stays in a near-black green-tinted ink (#151e1b) and helper copy drops to #4d4d4f. The rhythm alternates between bright white product sections and a single dark photographic band, giving the page a focused, almost meditative feel rather than a marketing-firehose energy.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #151e1b (Studio Ink)\n- background: #ffffff (Paper White)\n- border: #e4e5e6 (Ash Border)\n- accent: #214538 (Forest Canopy)\n- primary action: #214538 (filled action)\n- highlight card: #faefc3 (Citrus Note)\n\n**3-5 Example Component Prompts**\n\n1. **Hero Section**: White background. Display headline at 168px Girott weight 600, uppercase, #214538, letter-spacing 13.9px. Subtext at 18px Graphik 400, #4d4d4f. Primary CTA: #214538 background, white text, Graphik 500 16px, 4px radius, 13px×20px padding. Supporting product mockup card on the right with the double-layer soft shadow (0px 20px 25px -5px rgba(0,0,0,0.1) + 0px 8px 10px -6px rgba(0,0,0,0.1)).\n\n2. **5-Column Feature Row**: White background, 80px section gap above. Five equal columns. Each column: 24px outlined line icon in #214538 (1.5px stroke), Graphik 600 at 18px heading in #151e1b below, Graphik 400 at 15px description in #4d4d4f below that, max-width 200px.\n\n3. **Tab Filter Bar**: Centered horizontal row of pill tabs. Default tab: 1px border #e4e5e6, #ffffff background, #151e1b text at Graphik 500 14px, 8px radius, 10px×20px padding. Active tab: #214538 background, #ffffff text, no border. 16px gap between tabs.\n\n4. **Testimonial Card**: No card chrome — floats on white. Five 16px filled stars in #214538 with 4px gap. Quote heading: Graphik 600 at 18px, #151e1b, centered. Body: Graphik 400 at 14px, #4d4d4f, centered. Attribution: Graphik 400 italic at 12px, #4d4d4f, centered.\n\n5. **Dark Band Section**: Full-bleed photographic background at 40% opacity over #151e1b. Section padding 80px vertical. Headline: Graphik 700 at 48px, #ffffff, letter-spacing -0.576px. Subtext: Graphik 400 at 16px, #ffffff at 80% opacity. This is the only dark section on the page."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is almost entirely absent from this design system. Cards, inputs, tabs, and list rows rely on 1px hairline #e4e5e6 borders for definition, not shadows. The only sanctioned use of box-shadow is on product mockup images floating within the hero — where the double-layer shadow (25px + 10px) creates a subtle, paper-like lift rather than a heavy Material-style elevation. This restraint is deliberate: the system feels printed rather than skeuomorphic, editorial rather than app-like."
+}

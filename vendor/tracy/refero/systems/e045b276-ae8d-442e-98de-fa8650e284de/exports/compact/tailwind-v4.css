@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-pure-black: #000000;
+  --color-soft-black: #101010;
+  --color-bone-white: #ffffff;
+  --color-fog-gray: #a0a0a0;
+  --color-graphite: #484848;
+  --color-scarlet-signal: #e4002b;
+  --color-rose-brand-spectrum: #e85a5a;
+
+  /* Typography */
+  --font-nextbook: 'NextBook', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-circular-std: 'Circular Std', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

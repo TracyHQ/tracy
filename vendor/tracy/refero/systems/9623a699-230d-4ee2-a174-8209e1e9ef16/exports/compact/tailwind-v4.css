@@ -1,0 +1,18 @@
+@theme {
+  /* Colors */
+  --color-page-cream: #fffef2;
+  --color-ink-black: #191918;
+  --color-rule-black: #000000;
+  --color-warm-stone: #75756f;
+  --color-linen-beige: #edece0;
+  --color-ash-gray: #bab9b0;
+  --color-amber-signal: #fcaa2d;
+
+  /* Typography */
+  --font-sans-serif: 'sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-parabole-trial: 'Parabole Trial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-decima-mono-pro: 'Decima Mono Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-parabole-trial-regular-text: 'Parabole Trial Regular Text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-parabole-trial-regular-display: 'Parabole Trial Regular Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-karla: 'Karla', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

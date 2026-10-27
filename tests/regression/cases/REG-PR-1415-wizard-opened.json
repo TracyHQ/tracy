@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-1415-wizard-opened",
+  "kind": "feat",
+  "title": "An opening of the Add site form is recorded by its id (POST /api/sites/wizard), and the Create it led to carries the same id on site.create",
+  "pr": 1415,
+  "area": "add-site/usage",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: POST /api/sites/wizard signed out, with no id, a bad id; then twice with the same id (once upper-cased).",
+    "S2: POST /api/sites with that wizardId; then another with a malformed one.",
+    "S3: The add-site client: wizardOpened, then createSite with the id; and a wizardOpened whose fetch throws.",
+    "S4: Mount the form twice in the same tab within milliseconds (measured on the stand 17/10), then after half an hour, then after a started Create."
+  ],
+  "expect": [
+    "S1: 401, 400 INVALID_WIZARD_ID; one wizard.opened {wizard_id, where} for the id.",
+    "S2: site.create carries wizard_id; the malformed one creates the site and keeps no id.",
+    "S3: POST /api/sites/wizard {wizardId, where} then POST /api/sites with wizardId; a refusal or a thrown fetch says nothing.",
+    "S4: the two quick mounts share one id; half an hour later, or after a Create started, a new id; a tab with no or refusing storage still gets an id."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/route.js (wizardIdOf, /api/sites/wizard, claimOwnership); packages/site/tracy-add-site/src/client/create.ts, wizard.tsx"
+  },
+  "evidence": "Plan tasks/todo-do-dung-that.md U4; council 17/10/2026: leaving the form before Create is lost unless recorded now; the stand acceptance 17/10 found one opening mounting the form twice, 12 ms apart, with two ids",
+  "fence": "Never in the customer's way: the form does not wait, a malformed id is never a refusal",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=wizard",
+      "apps/tracy-web/test/sites-route.test.mjs",
+      "packages/site/tracy-add-site/test/error-next-step.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "POST /api/sites/wizard records one wizard.opened per id",
+      "the wizard tells tracy-web it opened",
+      "one opening of the wizard keeps one id across mounts"
+    ]
+  }
+}

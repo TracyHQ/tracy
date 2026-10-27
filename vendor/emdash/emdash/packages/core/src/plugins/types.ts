@@ -1,0 +1,2298 @@
+/**
+ * Plugin System Types v2
+ *
+ * New plugin API with:
+ * - Single unified context shape for all hooks and routes
+ * - Paginated storage queries (no async iterators)
+ * - Unified KV API (replaces settings + options)
+ * - Explicit ctx.http and ctx.log
+ *
+ */
+
+import type { Permission } from "@emdash-cms/auth";
+import type { ConfirmDialog, Element, PluginUiContext } from "@emdash-cms/blocks";
+// The plugin capability vocabulary, the legacy-rename map, and the manifest
+// shape are authored once in @emdash-cms/plugin-types and shared between core
+// (the manifest reader at install/runtime) and @emdash-cms/plugin-cli (the
+// manifest writer at bundle/publish time).
+//
+// We import-and-re-export here so existing internal callers keep working
+// (e.g. `import { PluginCapability } from "../plugins/types.js"`).
+import {
+	CAPABILITY_RENAMES,
+	capabilitiesToDeclaredAccess,
+	declaredAccessToCapabilities,
+	isDeprecatedCapability,
+	normalizeCapabilities,
+	normalizeCapability,
+	type CurrentPluginCapability,
+	type DeclaredAccess,
+	type DeprecatedPluginCapability,
+	type ManifestHookEntry,
+	type ManifestMcpTool,
+	type ManifestRouteEntry,
+	type PluginMcpManifestConfig,
+	type PluginCapability,
+	type PluginEditorDraftAccess,
+	type PluginEditorDraftFieldSelector,
+	type PluginFormData,
+	type PluginRouteBodyMode,
+	type PluginRouteQuery,
+	type PluginRouteRequest,
+	type PluginStorageConfig,
+	type RouteOptions,
+	type StorageCollectionConfig,
+} from "@emdash-cms/plugin-types";
+import type { JSX } from "astro/jsx-runtime";
+import type { z } from "astro/zod";
+// =============================================================================
+// Core Types
+// =============================================================================
+
+import type { ContentFieldFilters } from "../content-list-query.js";
+import type { FieldType, FieldValidation, FieldWidgetOptions } from "../schema/types.js";
+
+export type {
+	ContentFieldFilterScalar,
+	ContentFieldFilterValue,
+	ContentFieldFilters,
+	ContentFieldInFilter,
+	ContentFieldRangeFilter,
+} from "../content-list-query.js";
+
+export {
+	CAPABILITY_RENAMES,
+	capabilitiesToDeclaredAccess,
+	declaredAccessToCapabilities,
+	isDeprecatedCapability,
+	normalizeCapabilities,
+	normalizeCapability,
+	type CurrentPluginCapability,
+	type DeclaredAccess,
+	type DeprecatedPluginCapability,
+	type ManifestHookEntry,
+	type ManifestMcpTool,
+	type ManifestRouteEntry,
+	type PluginMcpManifestConfig,
+	type PluginCapability,
+	type PluginEditorDraftAccess,
+	type PluginEditorDraftFieldSelector,
+	type PluginStorageConfig,
+	type StorageCollectionConfig,
+};
+
+export const PLUGIN_CAPABILITY_IMPLICATIONS: ReadonlyArray<
+	readonly [PluginCapability, PluginCapability]
+> = [
+	["content:write", "content:read"],
+	["content:revisions:read", "content:read"],
+	["taxonomies:write", "taxonomies:read"],
+	["content:publish", "content:read"],
+	["media:write", "media:read"],
+	["comments:moderate", "comments:read"],
+	["redirects:write", "redirects:read"],
+	["network:request:unrestricted", "network:request"],
+];
+
+export function normalizePluginCapabilities(
+	capabilities: readonly PluginCapability[],
+): PluginCapability[];
+export function normalizePluginCapabilities(capabilities: readonly string[]): string[];
+export function normalizePluginCapabilities(capabilities: readonly string[]): string[] {
+	const normalized = new Set(normalizeCapabilities(capabilities));
+	for (const [granted, implied] of PLUGIN_CAPABILITY_IMPLICATIONS) {
+		if (normalized.has(granted)) normalized.add(implied);
+	}
+	return [...normalized];
+}
+
+const WARNED_DEPRECATED_CAPABILITY_PLUGINS = Symbol.for(
+	"emdash:warned-deprecated-capability-plugins",
+);
+
+/**
+ * Warn, once per plugin per process, that a plugin declares deprecated
+ * capability names. Call with the plugin's raw, un-normalized capabilities.
+ */
+export function warnDeprecatedPluginCapabilities(
+	pluginId: string,
+	capabilities: readonly string[],
+): void {
+	const deprecated = capabilities.filter(isDeprecatedCapability);
+	if (deprecated.length === 0) return;
+
+	const g = globalThis as Record<symbol, unknown>;
+	// eslint-disable-next-line typescript/no-unsafe-type-assertion -- globalThis singleton pattern (see request-context.ts)
+	const warned = (g[WARNED_DEPRECATED_CAPABILITY_PLUGINS] ??= new Set<string>()) as Set<string>;
+	if (warned.has(pluginId)) return;
+	warned.add(pluginId);
+
+	const renames = deprecated.map((cap) => `${cap} → ${CAPABILITY_RENAMES[cap]}`).join(", ");
+	console.warn(
+		`[emdash] Plugin "${pluginId}" declares deprecated capability names (${renames}). ` +
+			"They still work, but support will be removed in a future major release. " +
+			"Update the plugin, or ask its author to publish a version that uses the current names.",
+	);
+}
+
+// =============================================================================
+// Storage Types
+// =============================================================================
+//
+// `StorageCollectionConfig` and `PluginStorageConfig` are re-exported above
+// from `@emdash-cms/plugin-types`. The manifest carries these shapes
+// verbatim; both this package (reader) and plugin-cli (writer) agree on
+// the same types via the shared package.
+
+/**
+ * Query filter operators
+ */
+export interface RangeFilter {
+	gt?: number | string;
+	gte?: number | string;
+	lt?: number | string;
+	lte?: number | string;
+}
+
+export interface InFilter {
+	in: Array<string | number>;
+}
+
+export interface StartsWithFilter {
+	startsWith: string;
+}
+
+/**
+ * Where clause value types
+ */
+export type WhereValue =
+	| string
+	| number
+	| boolean
+	| null
+	| RangeFilter
+	| InFilter
+	| StartsWithFilter;
+
+/**
+ * Where clause for storage queries
+ */
+export type WhereClause = Record<string, WhereValue>;
+
+/**
+ * Query options for storage.query()
+ */
+export interface QueryOptions {
+	where?: WhereClause;
+	orderBy?: Record<string, "asc" | "desc">;
+	/** Default 50, max 100 */
+	limit?: number;
+	cursor?: string;
+}
+
+/**
+ * Paginated result (used by storage.query, content.list, media.list)
+ */
+export interface PaginatedResult<T> {
+	items: T[];
+	cursor?: string;
+	hasMore: boolean;
+}
+
+export interface VersionedValue<T = unknown> {
+	value: T;
+	/** Opaque host revision, valid only for the key from which it was read. */
+	revision: string;
+}
+
+export type ConditionalWriteResult = { applied: true; revision: string } | { applied: false };
+
+export interface ConditionalDeleteResult {
+	applied: boolean;
+}
+
+/**
+ * A single per-field integer delta for {@link StorageCollection.updateIf}.
+ *
+ * `inc`/`dec` values must be safe integers, enforced at runtime with
+ * `Number.isSafeInteger` (which also rejects `NaN`/`Infinity`), because a TS
+ * `number` cannot forbid float literals. Deltas are applied entirely in-SQL
+ * over the stored value with `COALESCE(<value>, 0) ± n`, so a delta on a
+ * missing or JSON-`null` field starts from `0` (never corrupts the document).
+ *
+ * `updateIf` does NOT clamp: a `dec` can drive a field negative when the
+ * `where` guard doesn't cover the delta magnitude (e.g. stock `2` with
+ * `where: { stock: { gte: 1 } }` and `delta: { stock: { dec: 3 } }` → `-1`,
+ * `applied: true`). The guard is the caller's responsibility — pair a `dec: k`
+ * with a `gte: k` guard to prevent underflow.
+ */
+export type NumericDelta = { inc: number } | { dec: number };
+
+/**
+ * Arguments to {@link StorageCollection.updateIf}.
+ *
+ * `where` reuses the {@link QueryOptions} `WhereClause` verbatim — the guard is
+ * evaluated in-SQL with the same numeric-correct, total comparisons as
+ * `query()`. An empty `where: {}` emits no guard, i.e. it matches the row
+ * unconditionally (update-if-row-exists) — a footgun in the no-oversell case,
+ * where a real predicate (e.g. `{ stock: { gte: 1 } }`) is what you want.
+ *
+ * At least one of `set` / `delta` must be present (a runtime error is thrown
+ * otherwise). A field may not appear in both `set` and `delta` in the same
+ * call. `set` and `delta` are separate arguments (not a union) so a wholesale
+ * value that happens to look like `{ inc: 5 }` is never mistaken for a delta.
+ */
+export interface UpdateIfArgs<T> {
+	/**
+	 * Guard evaluated in-SQL; identical semantics to `query({ where })`. An
+	 * empty `{}` means "match the row unconditionally (no guard)".
+	 */
+	where: WhereClause;
+	/** Wholesale field values merged into the stored JSON document. */
+	set?: Partial<T>;
+	/** Per-field integer deltas applied in-SQL (`COALESCE(base, 0) ± n`). */
+	delta?: { [K in keyof T]?: NumericDelta };
+}
+
+/**
+ * Result of {@link StorageCollection.updateIf}.
+ *
+ * `applied: false` intentionally conflates "row absent" and "guard failed": a
+ * single-statement guarded `UPDATE` cannot distinguish them, and the caller
+ * should not need to. `updateIf` is update-only — it never inserts a missing
+ * row.
+ */
+export type UpdateIfResult<T> = { applied: true; data: T } | { applied: false };
+
+/**
+ * Storage collection interface - the API exposed to plugins
+ * No async iterators - all operations return promises with pagination
+ */
+export interface StorageCollection<T = unknown> {
+	// Basic CRUD
+	get(id: string): Promise<T | null>;
+	put(id: string, data: T): Promise<void>;
+	delete(id: string): Promise<boolean>;
+	exists(id: string): Promise<boolean>;
+	/** A stored JSON null returns an envelope with value: null; only an absent row returns null. */
+	getVersioned(id: string): Promise<VersionedValue<T> | null>;
+	/** A null expected revision creates only when absent. Errors reject; conflicts return applied: false. */
+	compareAndSet(
+		id: string,
+		expectedRevision: string | null,
+		data: T,
+	): Promise<ConditionalWriteResult>;
+	compareAndDelete(id: string, expectedRevision: string): Promise<ConditionalDeleteResult>;
+
+	// Batch operations
+	getMany(ids: string[]): Promise<Map<string, T>>;
+	putMany(items: Array<{ id: string; data: T }>): Promise<void>;
+	deleteMany(ids: string[]): Promise<number>;
+
+	// Query - always paginated
+	query(options?: QueryOptions): Promise<PaginatedResult<{ id: string; data: T }>>;
+	count(where?: WhereClause): Promise<number>;
+
+	// Conditional write (single-statement, atomic per row).
+	/**
+	 * Predicate-guarded atomic update. Applies `set`/`delta` to the row `id`
+	 * only if it exists and the `where` guard matches, in a single guarded
+	 * `UPDATE … RETURNING`. This is the no-oversell primitive: the guard and the
+	 * arithmetic live in one statement, so N concurrent guarded decrements
+	 * serialize correctly. `applied: false` means the row was absent OR the
+	 * guard failed (the two are intentionally indistinguishable). Non-object
+	 * documents, invalid counters and unsafe arithmetic results also fail the
+	 * guard. Never inserts.
+	 *
+	 * Serialization failures and deadlocks throw `StorageSerializationError`.
+	 * Retry the write with a bounded policy; restart an explicit transaction
+	 * before retrying its operations.
+	 */
+	updateIf(id: string, args: UpdateIfArgs<T>): Promise<UpdateIfResult<T>>;
+}
+
+/**
+ * Plugin storage context - typed based on declared collections
+ */
+export type PluginStorage<T extends PluginStorageConfig> = {
+	[K in keyof T]: StorageCollection;
+};
+
+// =============================================================================
+// Context APIs
+// =============================================================================
+
+/**
+ * Plugin-scoped key-value state.
+ *
+ * Convention:
+ * - `state:*` - Internal plugin state (not shown to users)
+ * - `cache:*` - Reusable computed or remote data
+ *
+ * The `settings:*` namespace remains a compatibility alias through EmDash
+ * 0.x. New code uses `PluginContext.settings` for user configuration.
+ */
+export interface KVAccess {
+	get<T>(key: string): Promise<T | null>;
+	getVersioned<T>(key: string): Promise<VersionedValue<T> | null>;
+	/** A null expected revision creates only when absent. Errors reject; conflicts return applied: false. */
+	compareAndSet(
+		key: string,
+		expectedRevision: string | null,
+		value: unknown,
+	): Promise<ConditionalWriteResult>;
+	compareAndDelete(key: string, expectedRevision: string): Promise<ConditionalDeleteResult>;
+	set(key: string, value: unknown): Promise<void>;
+	delete(key: string): Promise<boolean>;
+	list(prefix?: string): Promise<Array<{ key: string; value: unknown }>>;
+}
+
+/** Plugin settings. Fields declared as `secret` in `admin.settingsSchema` are encrypted. */
+export interface SettingsAccess {
+	get<T>(key: string): Promise<T | null>;
+	getVersioned<T>(key: string): Promise<VersionedValue<T> | null>;
+	compareAndSet(
+		key: string,
+		expectedRevision: string | null,
+		value: unknown,
+	): Promise<ConditionalWriteResult>;
+	compareAndDelete(key: string, expectedRevision: string): Promise<ConditionalDeleteResult>;
+	set(key: string, value: unknown): Promise<void>;
+	delete(key: string): Promise<boolean>;
+	list(prefix?: string): Promise<Array<{ key: string; value: unknown }>>;
+}
+
+/**
+ * SEO metadata for a content item, as stored in the core SEO panel.
+ *
+ * Only present on items in collections with `has_seo = 1`. For collections
+ * without SEO enabled, `ContentItem.seo` is `undefined`.
+ */
+export interface ContentItemSeo {
+	title: string | null;
+	description: string | null;
+	image: string | null;
+	canonical: string | null;
+	noIndex: boolean;
+}
+
+/**
+ * SEO input accepted by content write operations.
+ *
+ * All fields are optional — only fields that are present overwrite existing
+ * values. An empty object is treated as a no-op.
+ */
+export interface ContentItemSeoInput {
+	title?: string | null;
+	description?: string | null;
+	image?: string | null;
+	canonical?: string | null;
+	noIndex?: boolean;
+}
+
+/**
+ * Content item returned from content API
+ */
+export interface ContentItem {
+	id: string;
+	type: string;
+	slug: string | null;
+	status: string;
+	locale: string | null;
+	data: Record<string, unknown>;
+	/**
+	 * SEO metadata, populated when the collection has SEO enabled
+	 * (`has_seo = 1`). `undefined` for non-SEO collections.
+	 */
+	seo?: ContentItemSeo;
+	createdAt: string;
+	updatedAt: string;
+	publishedAt: string | null;
+	/** Scheduled publication time, if set (e.g. scheduled items or scheduled draft changes). */
+	scheduledAt?: string | null;
+	authorId?: string | null;
+	translationGroup?: string | null;
+	liveRevisionId?: string | null;
+	draftRevisionId?: string | null;
+	version?: number;
+}
+
+export interface ContentTranslationSummary {
+	id: string;
+	locale: string | null;
+	slug: string | null;
+	status: string;
+	updatedAt: string;
+}
+
+export interface ContentRevisionInfo {
+	id: string;
+	collection: string;
+	entryId: string;
+	data: Record<string, unknown>;
+	createdAt: string;
+}
+
+export interface FieldSchemaInfo {
+	slug: string;
+	label: string;
+	type: FieldType;
+	required: boolean;
+	unique: boolean;
+	default?: unknown;
+	validation?: FieldValidation;
+	widget?: string;
+	options?: FieldWidgetOptions;
+	searchable: boolean;
+	indexed: boolean;
+	translatable: boolean;
+	sortOrder: number;
+}
+
+export interface CollectionSchemaInfo {
+	slug: string;
+	label: string;
+	labelSingular: string | null;
+	description: string | null;
+	supports: string[];
+	hasSeo: boolean;
+	titleField: string | null;
+	dateField: string | null;
+	urlPattern: string | null;
+	routable: boolean;
+	hidden: boolean;
+	fields: FieldSchemaInfo[];
+}
+
+export interface SchemaAccess {
+	listCollections(): Promise<CollectionSchemaInfo[]>;
+	getCollection(slug: string): Promise<CollectionSchemaInfo | null>;
+}
+
+export interface ContentListWhere {
+	/** Exact match on `status` (e.g. `"published"`, `"draft"`). */
+	status?: string;
+	/** Exact match on `locale` (e.g. `"en"`, `"fr-CA"`). */
+	locale?: string;
+	/** AND-combined filters over custom fields explicitly marked as indexed. */
+	fieldFilters?: ContentFieldFilters;
+}
+
+/**
+ * Content list options
+ */
+export interface ContentListOptions {
+	limit?: number;
+	cursor?: string;
+	orderBy?: Record<string, "asc" | "desc">;
+	where?: ContentListWhere;
+}
+
+/**
+ * Input accepted by `content.create` / `content.update`.
+ *
+ * Most entries are field slugs mapped to their values. The reserved `seo`
+ * key is extracted and routed to the core SEO panel (the `_emdash_seo`
+ * table), matching the shape accepted by the REST API. Passing `seo` for a
+ * collection that does not have SEO enabled throws a validation error.
+ */
+export type ContentWriteInput = Record<string, unknown> & {
+	seo?: ContentItemSeoInput;
+};
+
+/** Options accepted by `content.create`. */
+export interface ContentCreateOptions {
+	/** Locale for the new content row. Defaults to the configured site locale, then `en`. */
+	locale?: string;
+	/** Existing row in the same collection whose translation group the new row joins. */
+	translationOf?: string;
+}
+
+export type PluginContentCreateCallback = (
+	pluginId: string,
+	collection: string,
+	data: ContentWriteInput,
+	options?: ContentCreateOptions & {
+		/** Save-hook origin supplied by sandbox transports to prevent hook re-entry. */
+		originHook?: "content:beforeSave" | "content:afterSave";
+		sandboxOrigin?: true;
+	},
+) => Promise<ContentItem>;
+
+/**
+ * Taxonomy definition returned from the taxonomy API (e.g. "category", "tag").
+ */
+export interface TaxonomyDefInfo {
+	name: string;
+	label: string;
+	labelSingular: string | null;
+	hierarchical: boolean;
+	/** Collections this taxonomy is attached to (e.g. `["posts"]`). */
+	collections: string[];
+	locale: string;
+}
+
+/**
+ * Taxonomy term returned from the taxonomy API. Flat shape — for hierarchical
+ * taxonomies the tree is reconstructed via `parentId` (which stores the
+ * parent's locale-agnostic `translationGroup`).
+ */
+export interface TaxonomyTermInfo {
+	id: string;
+	/** Taxonomy name this term belongs to (e.g. "category"). */
+	taxonomy: string;
+	slug: string;
+	label: string;
+	parentId: string | null;
+	/** Term metadata as edited in the admin (`description` etc.). */
+	data: Record<string, unknown> | null;
+	locale: string;
+	translationGroup: string | null;
+}
+
+/**
+ * Options accepted by taxonomy read operations. Omitting `locale` returns
+ * rows for every locale.
+ */
+export interface TaxonomyReadOptions {
+	locale?: string;
+}
+
+export interface TaxonomyTermCreateInput {
+	label: string;
+	slug?: string;
+	parentId?: string | null;
+	description?: string;
+	locale?: string;
+	translationOf?: string;
+}
+
+/**
+ * Content access interface - capability-gated
+ */
+export interface ContentAccess {
+	// Read operations (requires read:content)
+	get(collection: string, id: string): Promise<ContentItem | null>;
+	list(collection: string, options?: ContentListOptions): Promise<PaginatedResult<ContentItem>>;
+	getTranslations?(
+		collection: string,
+		id: string,
+	): Promise<{ translationGroup: string; translations: ContentTranslationSummary[] }>;
+	getPublicUrl?(collection: string, id: string): Promise<string | null>;
+	listRevisions?(
+		collection: string,
+		id: string,
+		options?: { limit?: number },
+	): Promise<ContentRevisionInfo[]>;
+	getRevision?(
+		collection: string,
+		id: string,
+		revisionId: string,
+	): Promise<ContentRevisionInfo | null>;
+
+	// Write operations (requires write:content) - optional on interface
+	create?(
+		collection: string,
+		data: ContentWriteInput,
+		options?: ContentCreateOptions,
+	): Promise<ContentItem>;
+	update?(collection: string, id: string, data: ContentWriteInput): Promise<ContentItem>;
+	delete?(collection: string, id: string): Promise<boolean>;
+	getVersioned?(collection: string, id: string): Promise<VersionedContentItem | null>;
+	publish?(
+		collection: string,
+		id: string,
+		options: { _rev: string },
+	): Promise<VersionedContentItem>;
+	unpublish?(
+		collection: string,
+		id: string,
+		options: { _rev: string },
+	): Promise<VersionedContentItem>;
+	schedule?(
+		collection: string,
+		id: string,
+		options: { scheduledAt: string; _rev: string },
+	): Promise<VersionedContentItem>;
+	unschedule?(
+		collection: string,
+		id: string,
+		options: { _rev: string },
+	): Promise<VersionedContentItem>;
+	getTrashedVersioned?(collection: string, id: string): Promise<VersionedContentItem | null>;
+	restore?(
+		collection: string,
+		id: string,
+		options: { _rev: string },
+	): Promise<VersionedContentItem>;
+}
+
+export interface VersionedContentItem {
+	item: ContentItem;
+	_rev: string;
+}
+
+export interface ContentPublicationAccess extends ContentAccess {
+	getVersioned(collection: string, id: string): Promise<VersionedContentItem | null>;
+	publish(collection: string, id: string, options: { _rev: string }): Promise<VersionedContentItem>;
+	unpublish(
+		collection: string,
+		id: string,
+		options: { _rev: string },
+	): Promise<VersionedContentItem>;
+	schedule(
+		collection: string,
+		id: string,
+		options: { scheduledAt: string; _rev: string },
+	): Promise<VersionedContentItem>;
+	unschedule(
+		collection: string,
+		id: string,
+		options: { _rev: string },
+	): Promise<VersionedContentItem>;
+}
+
+export interface ContentRestoreAccess {
+	getTrashedVersioned(collection: string, id: string): Promise<VersionedContentItem | null>;
+	restore(collection: string, id: string, options: { _rev: string }): Promise<VersionedContentItem>;
+}
+
+/**
+ * Taxonomy access interface — capability-gated on `taxonomies:read`.
+ */
+export interface TaxonomyAccess {
+	/** List taxonomy definitions. */
+	getAll(options?: TaxonomyReadOptions): Promise<TaxonomyDefInfo[]>;
+	/** All terms of a taxonomy, ordered by label. */
+	getTerms(taxonomy: string, options?: TaxonomyReadOptions): Promise<TaxonomyTermInfo[]>;
+	/** Terms assigned to a content entry, optionally scoped to one taxonomy. */
+	getEntryTerms(
+		collection: string,
+		entryId: string,
+		options?: TaxonomyReadOptions & { taxonomy?: string },
+	): Promise<TaxonomyTermInfo[]>;
+	createTerm?(taxonomy: string, input: TaxonomyTermCreateInput): Promise<TaxonomyTermInfo>;
+	addEntryTerms?(
+		collection: string,
+		entryId: string,
+		taxonomy: string,
+		termIds: string[],
+	): Promise<TaxonomyTermInfo[]>;
+	removeEntryTerms?(
+		collection: string,
+		entryId: string,
+		taxonomy: string,
+		termIds: string[],
+	): Promise<TaxonomyTermInfo[]>;
+}
+
+/** Taxonomy mutations available with `taxonomies:write`. */
+export interface TaxonomyAccessWithWrite extends TaxonomyAccess {
+	createTerm(taxonomy: string, input: TaxonomyTermCreateInput): Promise<TaxonomyTermInfo>;
+	addEntryTerms(
+		collection: string,
+		entryId: string,
+		taxonomy: string,
+		termIds: string[],
+	): Promise<TaxonomyTermInfo[]>;
+	removeEntryTerms(
+		collection: string,
+		entryId: string,
+		taxonomy: string,
+		termIds: string[],
+	): Promise<TaxonomyTermInfo[]>;
+}
+
+/**
+ * Public byline profile returned from the byline API. Omits the linked user
+ * account, guest flag, and custom field values.
+ */
+export interface BylineInfo {
+	id: string;
+	slug: string;
+	displayName: string;
+	bio: string | null;
+	websiteUrl: string | null;
+	/** Media ID of the avatar image. Resolve it with `ctx.media.get()`. */
+	avatarMediaId: string | null;
+	locale: string;
+	/** Locale-agnostic identity shared by every translation of the byline. */
+	translationGroup: string;
+}
+
+/** A byline credited on a content entry. */
+export interface BylineCreditInfo {
+	byline: BylineInfo;
+	sortOrder: number;
+	roleLabel: string | null;
+	/**
+	 * `explicit` for a credit assigned in the editor; `inferred` when the entry
+	 * has no credits and the byline linked to the entry's author is used.
+	 */
+	source: "explicit" | "inferred";
+}
+
+export interface BylineListOptions {
+	/** Match one locale. Omit to list every locale. */
+	locale?: string;
+	/** Page size, clamped to 1–100. Defaults to 50. */
+	limit?: number;
+	cursor?: string;
+}
+
+/** Byline credits for one entry in a batched lookup. */
+export interface EntryBylineCredits {
+	entryId: string;
+	bylines: BylineCreditInfo[];
+}
+
+/**
+ * Byline access interface — capability-gated on `bylines:read`.
+ */
+export interface BylineAccess {
+	/** Get a byline by its row ID. */
+	get(id: string): Promise<BylineInfo | null>;
+	/** List bylines, newest first. */
+	list(options?: BylineListOptions): Promise<PaginatedResult<BylineInfo>>;
+	/**
+	 * Bylines credited on up to 100 entries of one collection, in the order the
+	 * IDs were given. Duplicate IDs are returned once. Credits resolve at each
+	 * entry's own locale, matching what the site renders. Trashed and missing
+	 * entries have no credits.
+	 */
+	getEntriesBylines(collection: string, entryIds: string[]): Promise<EntryBylineCredits[]>;
+}
+
+export type RedirectStatus = 301 | 302 | 307 | 308 | 410 | 451;
+
+export interface RedirectInfo {
+	id: string;
+	source: string;
+	destination: string;
+	type: RedirectStatus;
+	isPattern: boolean;
+	enabled: boolean;
+	hits: number;
+	lastHitAt: string | null;
+	groupName: string | null;
+	auto: boolean;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface VersionedRedirect {
+	redirect: RedirectInfo;
+	/** Opaque host revision. Pass it back unchanged for update or delete. */
+	_rev: string;
+}
+
+export interface RedirectListOptions {
+	limit?: number;
+	cursor?: string;
+	search?: string;
+	group?: string;
+	enabled?: boolean;
+	auto?: boolean;
+}
+
+export interface RedirectCreateInput {
+	source: string;
+	destination?: string;
+	type?: RedirectStatus;
+	enabled?: boolean;
+	groupName?: string | null;
+}
+
+export interface RedirectUpdateInput {
+	source?: string;
+	destination?: string;
+	type?: RedirectStatus;
+	enabled?: boolean;
+	groupName?: string | null;
+}
+
+export interface RedirectAccess {
+	list(options?: RedirectListOptions): Promise<PaginatedResult<RedirectInfo>>;
+	get(id: string): Promise<VersionedRedirect | null>;
+	create?(input: RedirectCreateInput): Promise<VersionedRedirect>;
+	update?(id: string, input: RedirectUpdateInput & { _rev: string }): Promise<VersionedRedirect>;
+	delete?(id: string, options: { _rev: string }): Promise<boolean>;
+}
+
+export interface RedirectAccessWithWrite extends RedirectAccess {
+	create(input: RedirectCreateInput): Promise<VersionedRedirect>;
+	update(id: string, input: RedirectUpdateInput & { _rev: string }): Promise<VersionedRedirect>;
+	delete(id: string, options: { _rev: string }): Promise<boolean>;
+}
+
+/**
+ * Full content access with write operations
+ */
+export interface ContentAccessWithWrite extends ContentAccess {
+	create(
+		collection: string,
+		data: ContentWriteInput,
+		options?: ContentCreateOptions,
+	): Promise<ContentItem>;
+	update(collection: string, id: string, data: ContentWriteInput): Promise<ContentItem>;
+	delete(collection: string, id: string): Promise<boolean>;
+}
+
+/**
+ * Media item returned from media API
+ */
+export interface MediaItem {
+	id: string;
+	filename: string;
+	mimeType: string;
+	size: number | null;
+	url: string;
+	createdAt: string;
+	width?: number | null;
+	height?: number | null;
+	alt?: string | null;
+	caption?: string | null;
+	focalX?: number | null;
+	focalY?: number | null;
+	blurhash?: string | null;
+	dominantColor?: string | null;
+	folderId?: string | null;
+	status?: "ready";
+}
+
+export interface MediaBytes {
+	bytes: Uint8Array;
+	filename: string;
+	mimeType: string;
+	size: number;
+	contentHash?: string;
+}
+
+export interface MediaMetadataPatch {
+	alt?: string | null;
+	caption?: string | null;
+	focalX?: number | null;
+	focalY?: number | null;
+}
+
+/**
+ * Media list options
+ */
+export interface MediaListOptions {
+	limit?: number;
+	cursor?: string;
+	mimeType?: string; // Filter by mime type prefix, e.g., "image/"
+}
+
+/**
+ * Media access interface - capability-gated
+ */
+export interface MediaAccess {
+	// Read operations (requires read:media)
+	get(id: string): Promise<MediaItem | null>;
+	list(options?: MediaListOptions): Promise<PaginatedResult<MediaItem>>;
+	/** Read ready media bytes, bounded by the caller's limit and the host maximum. */
+	readBytes?(id: string, options?: { maxBytes?: number }): Promise<MediaBytes>;
+	/** Change only alt text, caption, or the complete focal-point pair. */
+	updateMetadata?(id: string, patch: MediaMetadataPatch): Promise<MediaItem>;
+
+	// Write operations (requires write:media) - optional on interface
+	getUploadUrl?(
+		filename: string,
+		contentType: string,
+	): Promise<{ uploadUrl: string; mediaId: string }>;
+	/**
+	 * Upload media bytes directly. Preferred in sandboxed mode where
+	 * plugins cannot make external requests to a presigned URL.
+	 * Returns the created media item.
+	 */
+	upload?(
+		filename: string,
+		contentType: string,
+		bytes: ArrayBuffer,
+	): Promise<{ mediaId: string; storageKey: string; url: string }>;
+	delete?(id: string): Promise<boolean>;
+}
+
+/**
+ * Full media access with write operations
+ */
+export interface MediaAccessWithWrite extends MediaAccess {
+	getUploadUrl(
+		filename: string,
+		contentType: string,
+	): Promise<{ uploadUrl: string; mediaId: string }>;
+	upload(
+		filename: string,
+		contentType: string,
+		bytes: ArrayBuffer,
+	): Promise<{ mediaId: string; storageKey: string; url: string }>;
+	delete(id: string): Promise<boolean>;
+}
+
+/**
+ * HTTP client interface - requires network:request capability
+ */
+export interface HttpAccess {
+	/**
+	 * Fetch an allowed external URL and return a buffered response.
+	 * Decoded request and response bodies are each limited to 8 MiB.
+	 */
+	fetch(url: string, init?: RequestInit): Promise<Response>;
+}
+
+/**
+ * Logger interface - always available
+ */
+export interface LogAccess {
+	debug(message: string, data?: unknown): void;
+	info(message: string, data?: unknown): void;
+	warn(message: string, data?: unknown): void;
+	error(message: string, data?: unknown): void;
+}
+
+// =============================================================================
+// Site & User Access
+// =============================================================================
+
+/**
+ * Site information available to all plugins
+ */
+export interface SiteInfo {
+	/** Site name (from settings) */
+	name: string;
+	/** Site URL (from settings or request) */
+	url: string;
+	/** Site locale (from settings, defaults to "en") */
+	locale: string;
+	/**
+	 * Astro's `trailingSlash` routing policy, from the host's Astro config.
+	 * Plugins that build absolute URLs (sitemap, canonical, hreflang) should
+	 * honor this so the URLs they emit match what the site serves. `createSiteInfo`
+	 * always populates it (defaulting to `"ignore"`, Astro's default); it is
+	 * optional on the type so pre-existing `SiteInfo` construction stays valid.
+	 */
+	trailingSlash?: "always" | "never" | "ignore";
+}
+
+/**
+ * Read-only user information exposed to plugins.
+ * Sensitive fields (password hashes, sessions, passkeys) are excluded.
+ */
+export interface UserInfo {
+	id: string;
+	email: string;
+	name: string | null;
+	role: number;
+	createdAt: string;
+}
+
+/**
+ * User access interface - requires read:users capability
+ */
+export interface UserAccess {
+	/** Get a user by ID */
+	get(id: string): Promise<UserInfo | null>;
+	/** Get a user by email */
+	getByEmail(email: string): Promise<UserInfo | null>;
+	/** List users with optional filters */
+	list(opts?: { role?: number; limit?: number; cursor?: string }): Promise<{
+		items: UserInfo[];
+		nextCursor?: string;
+	}>;
+}
+
+export type PluginCommentStatus = "approved" | "pending" | "spam";
+
+/** Comment data exposed by the explicit personal-data `comments:read` capability. */
+export interface PluginComment {
+	id: string;
+	collection: string;
+	contentId: string;
+	parentId: string | null;
+	authorName: string;
+	authorEmail: string;
+	body: string;
+	status: PluginCommentStatus;
+	ipHash: string | null;
+	userAgent: string | null;
+	moderationMetadata: Record<string, unknown> | null;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface CommentListOptions {
+	status?: PluginCommentStatus;
+	collection?: string;
+	contentId?: string;
+	limit?: number;
+	cursor?: string;
+}
+
+export interface CommentCountOptions {
+	status?: PluginCommentStatus;
+	collection?: string;
+	contentId?: string;
+}
+
+export interface CommentAccess {
+	get(id: string): Promise<PluginComment | null>;
+	list(options?: CommentListOptions): Promise<PaginatedResult<PluginComment>>;
+	count(options?: CommentCountOptions): Promise<number>;
+	setStatus?(
+		id: string,
+		status: PluginCommentStatus,
+		options: { expectedStatus: PluginCommentStatus },
+	): Promise<PluginComment>;
+}
+
+// =============================================================================
+// Plugin Context
+// =============================================================================
+
+/**
+ * The unified plugin context - same shape for all hooks and routes
+ */
+export interface PluginContext<TStorage extends PluginStorageConfig = PluginStorageConfig> {
+	/** Plugin metadata */
+	plugin: {
+		id: string;
+		version: string;
+	};
+
+	/** Storage collections - only if plugin declares storage */
+	storage: PluginStorage<TStorage>;
+
+	/** Key-value store for internal state */
+	kv: KVAccess;
+
+	/** Plugin settings. Secret schema fields are encrypted by the host. */
+	settings: SettingsAccess;
+
+	/** Content access - only if read:content or write:content capability */
+	content?: ContentAccess | ContentAccessWithWrite;
+	/** Schema discovery - only if schema:read capability */
+	schema?: SchemaAccess;
+
+	/** Taxonomy access - only if a taxonomy capability is declared. */
+	taxonomies?: TaxonomyAccess | TaxonomyAccessWithWrite;
+
+	/** Byline access - only if bylines:read capability */
+	bylines?: BylineAccess;
+
+	/** Redirect access - only if redirects:read or redirects:write capability */
+	redirects?: RedirectAccess | RedirectAccessWithWrite;
+
+	/** Media access - only if read:media or write:media capability */
+	media?: MediaAccess | MediaAccessWithWrite;
+
+	/** HTTP client - only if network:request capability */
+	http?: HttpAccess;
+
+	/** Logger - always available */
+	log: LogAccess;
+
+	/** Site information - always available */
+	site: SiteInfo;
+
+	/** URL helper - generates absolute URLs from paths. Always available. */
+	url(path: string): string;
+
+	/** User access - only if read:users capability */
+	users?: UserAccess;
+
+	/** Comment access — only if comments:read or comments:moderate is declared. */
+	comments?: CommentAccess;
+
+	/** Cron task scheduling - always available, scoped to plugin */
+	cron?: CronAccess;
+
+	/** Email access - only if email:send capability and a provider is configured */
+	email?: EmailAccess;
+}
+
+// =============================================================================
+// Cron Types
+// =============================================================================
+
+/**
+ * Cron access interface �� always available on plugin context, scoped to plugin.
+ */
+export interface CronAccess {
+	/** Schedule a recurring or one-shot task */
+	schedule(name: string, opts: { schedule: string; data?: Record<string, unknown> }): Promise<void>;
+	/** Cancel a scheduled task */
+	cancel(name: string): Promise<void>;
+	/** List this plugin's scheduled tasks */
+	list(): Promise<CronTaskInfo[]>;
+}
+
+/**
+ * Task info returned from CronAccess.list()
+ */
+export interface CronTaskInfo {
+	name: string;
+	schedule: string;
+	nextRunAt: string;
+	lastRunAt: string | null;
+}
+
+/**
+ * Event passed to the `cron` hook handler
+ */
+export interface CronEvent {
+	name: string;
+	data?: Record<string, unknown>;
+	scheduledAt: string;
+}
+
+/**
+ * Cron hook handler type
+ */
+export type CronHandler = (event: CronEvent, ctx: PluginContext) => Promise<void>;
+
+// =============================================================================
+// Email Types
+// =============================================================================
+
+/**
+ * Email access interface — requires `email:send` capability.
+ * Undefined when no `email:deliver` provider is configured.
+ *
+ * Related capabilities:
+ * - `email:send` — grants ctx.email (this interface)
+ * - `email:provide` — allows registering the `email:deliver` exclusive hook
+ * - `email:intercept` — allows registering `email:beforeSend` / `email:afterSend` hooks
+ */
+export interface EmailAccess {
+	send(message: EmailMessage): Promise<void>;
+}
+
+/**
+ * Email message shape
+ */
+export interface EmailMessage {
+	to: string;
+	/** Additional visible recipients. */
+	cc?: string[];
+	/** Address that replies go to instead of the sender. */
+	replyTo?: string;
+	subject: string;
+	text: string;
+	html?: string;
+}
+
+/**
+ * Event passed to email:beforeSend hooks (middleware — transform, validate, cancel)
+ */
+export interface EmailBeforeSendEvent {
+	message: EmailMessage;
+	/** Where the email originated — "system" for auth emails, plugin ID for plugin emails */
+	source: string;
+}
+
+/**
+ * Event passed to email:deliver hook (exclusive — exactly one provider delivers)
+ */
+export interface EmailDeliverEvent {
+	message: EmailMessage;
+	source: string;
+}
+
+/**
+ * Event passed to email:afterSend hooks (logging, analytics, fire-and-forget)
+ */
+export interface EmailAfterSendEvent {
+	message: EmailMessage;
+	source: string;
+}
+
+/**
+ * Handler type for email:beforeSend hooks.
+ * Returns modified message, or false to cancel delivery.
+ */
+export type EmailBeforeSendHandler = (
+	event: EmailBeforeSendEvent,
+	ctx: PluginContext,
+) => Promise<EmailMessage | false>;
+
+/**
+ * Handler type for email:deliver hooks (exclusive provider).
+ */
+export type EmailDeliverHandler = (event: EmailDeliverEvent, ctx: PluginContext) => Promise<void>;
+
+/**
+ * Handler type for email:afterSend hooks (fire-and-forget).
+ */
+export type EmailAfterSendHandler = (
+	event: EmailAfterSendEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+// =============================================================================
+// Comment Types
+// =============================================================================
+
+/**
+ * Collection comment settings (read from _emdash_collections)
+ */
+export interface CollectionCommentSettings {
+	commentsEnabled: boolean;
+	commentsModeration: "all" | "first_time" | "none";
+	commentsClosedAfterDays: number;
+	commentsAutoApproveUsers: boolean;
+}
+
+/**
+ * Event passed to comment:beforeCreate hooks (middleware — transform, enrich, reject)
+ */
+export interface CommentBeforeCreateEvent {
+	comment: {
+		collection: string;
+		contentId: string;
+		parentId: string | null;
+		authorName: string;
+		authorEmail: string;
+		authorUserId: string | null;
+		body: string;
+		ipHash: string | null;
+		userAgent: string | null;
+	};
+	/** Metadata bag — plugins can attach signals for the moderator */
+	metadata: Record<string, unknown>;
+}
+
+/**
+ * Event passed to comment:moderate hook (exclusive — decides initial status)
+ */
+export interface CommentModerateEvent {
+	comment: CommentBeforeCreateEvent["comment"];
+	metadata: Record<string, unknown>;
+	collectionSettings: CollectionCommentSettings;
+	/** Number of prior approved comments from this email address */
+	priorApprovedCount: number;
+}
+
+/**
+ * Moderation decision returned by the comment:moderate handler
+ */
+export interface ModerationDecision {
+	status: "approved" | "pending" | "spam";
+	/** Optional reason for admin visibility */
+	reason?: string;
+}
+
+/**
+ * Stored comment shape (full record with id, status, timestamps)
+ */
+export interface StoredComment {
+	id: string;
+	collection: string;
+	contentId: string;
+	parentId: string | null;
+	authorName: string;
+	authorEmail: string;
+	authorUserId: string | null;
+	body: string;
+	status: string;
+	moderationMetadata: Record<string, unknown> | null;
+	createdAt: string;
+	updatedAt: string;
+}
+
+/**
+ * Event passed to comment:afterCreate hooks (fire-and-forget)
+ */
+export interface CommentAfterCreateEvent {
+	comment: StoredComment;
+	metadata: Record<string, unknown>;
+	/** The content item the comment is on */
+	content: { id: string; collection: string; slug: string; title?: string };
+	/** The content author (for notifications) */
+	contentAuthor?: { id: string; name: string | null; email: string };
+}
+
+/**
+ * Event passed to comment:afterModerate hooks (fire-and-forget, admin status change)
+ */
+export interface CommentAfterModerateEvent {
+	comment: StoredComment;
+	previousStatus: string;
+	newStatus: string;
+	/** The admin who moderated */
+	moderator: { id: string; name: string | null };
+	/** Identifies whether an administrator or a plugin initiated the transition. */
+	origin?: { source: "admin"; userId: string } | { source: "plugin"; pluginId: string };
+}
+
+/**
+ * Handler type for comment:beforeCreate hooks.
+ * Returns modified event, or false to reject the comment.
+ */
+export type CommentBeforeCreateHandler = (
+	event: CommentBeforeCreateEvent,
+	ctx: PluginContext,
+) => Promise<CommentBeforeCreateEvent | false | void>;
+
+/**
+ * Handler type for comment:moderate hook (exclusive provider).
+ */
+export type CommentModerateHandler = (
+	event: CommentModerateEvent,
+	ctx: PluginContext,
+) => Promise<ModerationDecision>;
+
+/**
+ * Handler type for comment:afterCreate hooks (fire-and-forget).
+ */
+export type CommentAfterCreateHandler = (
+	event: CommentAfterCreateEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+/**
+ * Handler type for comment:afterModerate hooks (fire-and-forget).
+ */
+export type CommentAfterModerateHandler = (
+	event: CommentAfterModerateEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+// =============================================================================
+// Hook Types
+// =============================================================================
+
+/**
+ * Hook configuration
+ */
+export interface HookConfig<THandler> {
+	/** Explicit ordering - lower numbers run first (default: 100) */
+	priority?: number;
+	/** Max execution time in ms (default: 5000) */
+	timeout?: number;
+	/** Run after these plugins */
+	dependencies?: string[];
+	/** Error handling policy */
+	errorPolicy?: "continue" | "abort";
+	/**
+	 * Mark this hook as exclusive — only one plugin can be the active provider.
+	 * Exclusive hooks skip the priority pipeline and dispatch only to the
+	 * admin-selected provider. Used for email:deliver, search, image optimization, etc.
+	 */
+	exclusive?: boolean;
+	/** The hook handler */
+	handler: THandler;
+}
+
+/**
+ * Acting user that triggered a content hook. Present for authenticated
+ * saves; absent for unauthenticated or internal writes.
+ */
+export interface ActorInfo {
+	readonly id: string;
+	readonly role: number;
+	readonly source?: "api" | "mcp" | "visual-editor";
+}
+
+export type ContentActionOrigin =
+	| { source: "api" | "mcp" | "visual-editor" }
+	| { source: "plugin"; pluginId: string }
+	| { source: "scheduler" }
+	| { source: "system" };
+
+export type ContentPolicyDecision = void | { cancel: true; reason: string };
+
+/**
+ * Content hook event
+ */
+export interface ContentHookEvent {
+	content: Record<string, unknown>;
+	collection: string;
+	isNew: boolean;
+	/**
+	 * ID of the existing item on `content:beforeSave` for an update. Absent on
+	 * creates, where the ID is assigned when the save completes, and on
+	 * `content:afterSave`, where `content.id` carries it.
+	 */
+	id?: string;
+	/**
+	 * The acting user for this save. Carries the same authenticated identity
+	 * used to set the revision author, so plugins (e.g. audit logs) can record
+	 * who made the change.
+	 */
+	actor?: ActorInfo;
+	/**
+	 * Locale of the entry being saved: the resolved target locale on a create,
+	 * the stored entry's locale on an update.
+	 */
+	locale?: string;
+	/**
+	 * ID of the source entry when a create comes from the translation flow.
+	 * Absent on updates and on creates that start a new translation group.
+	 */
+	translationOf?: string;
+}
+
+/** Locale details a save passes to its `content:beforeSave` and `content:afterSave` hooks. */
+export interface ContentSaveHookDetails {
+	locale?: string;
+	translationOf?: string;
+}
+
+/**
+ * Content delete hook event
+ */
+export interface ContentDeleteEvent {
+	id: string;
+	collection: string;
+	/** `true` when the content is permanently deleted (not just trashed). */
+	permanent: boolean;
+}
+
+/**
+ * Content state-change hook event (fired after publish, unpublish, restore,
+ * schedule, or unschedule).
+ */
+export interface ContentStateChangeEvent {
+	content: Record<string, unknown>;
+	collection: string;
+}
+
+/**
+ * Content publish/unpublish hook event.
+ */
+export type ContentPublishStateChangeEvent = ContentStateChangeEvent;
+
+/**
+ * Content restore hook event.
+ */
+export type ContentRestoreStateChangeEvent = ContentStateChangeEvent;
+
+/**
+ * Content schedule/unschedule hook event.
+ */
+export type ContentScheduleStateChangeEvent = ContentStateChangeEvent;
+
+export interface ContentPolicyEvent extends ContentStateChangeEvent {
+	origin: ContentActionOrigin;
+	actor?: ActorInfo;
+}
+
+export interface ContentSchedulePolicyEvent extends ContentPolicyEvent {
+	scheduledAt: string;
+}
+
+/**
+ * Media hook event
+ */
+export interface MediaUploadEvent {
+	file: { name: string; type: string; size: number };
+}
+
+/**
+ * Media after upload event
+ */
+export interface MediaAfterUploadEvent {
+	media: MediaItem;
+}
+
+/**
+ * Lifecycle hook event
+ */
+export interface LifecycleEvent {
+	// Empty for install/activate/deactivate
+}
+
+/**
+ * Uninstall hook event
+ */
+export interface UninstallEvent {
+	deleteData: boolean;
+}
+
+// Hook handler types - all receive (event, ctx) with unified context
+export type ContentBeforeSaveHandler = (
+	event: ContentHookEvent,
+	ctx: PluginContext,
+) => Promise<Record<string, unknown> | void>;
+
+export type ContentAfterSaveHandler = (
+	event: ContentHookEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+export type ContentBeforeDeleteHandler = (
+	event: ContentDeleteEvent,
+	ctx: PluginContext,
+) => Promise<boolean | void>;
+
+export type ContentAfterDeleteHandler = (
+	event: ContentDeleteEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+export type ContentBeforePublishHandler = (
+	event: ContentPolicyEvent,
+	ctx: PluginContext,
+) => Promise<ContentPolicyDecision>;
+
+export type ContentBeforeScheduleHandler = (
+	event: ContentSchedulePolicyEvent,
+	ctx: PluginContext,
+) => Promise<ContentPolicyDecision>;
+
+export type ContentBeforeUnpublishHandler = (
+	event: ContentPolicyEvent,
+	ctx: PluginContext,
+) => Promise<ContentPolicyDecision>;
+
+export type ContentAfterPublishHandler = (
+	event: ContentPublishStateChangeEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+export type ContentAfterUnpublishHandler = (
+	event: ContentPublishStateChangeEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+export type ContentAfterRestoreHandler = (
+	event: ContentRestoreStateChangeEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+export type ContentAfterScheduleHandler = (
+	event: ContentScheduleStateChangeEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+export type ContentAfterUnscheduleHandler = (
+	event: ContentScheduleStateChangeEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+/**
+ * Event for `byline:afterSave`, fired after a byline profile or one of its
+ * locale translations is created or updated.
+ */
+export interface BylineAfterSaveEvent {
+	byline: BylineInfo;
+	isNew: boolean;
+}
+
+/**
+ * Event for `byline:afterDelete`, fired after a byline row is deleted. When it
+ * was the last locale of its translation group, its credits have already been
+ * removed from every entry.
+ */
+export interface BylineAfterDeleteEvent {
+	byline: BylineInfo;
+}
+
+export type BylineAfterSaveHandler = (
+	event: BylineAfterSaveEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+export type BylineAfterDeleteHandler = (
+	event: BylineAfterDeleteEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+export type MediaBeforeUploadHandler = (
+	event: MediaUploadEvent,
+	ctx: PluginContext,
+) => Promise<{ name: string; type: string; size: number } | void>;
+
+export type MediaAfterUploadHandler = (
+	event: MediaAfterUploadEvent,
+	ctx: PluginContext,
+) => Promise<void>;
+
+export type LifecycleHandler = (event: LifecycleEvent, ctx: PluginContext) => Promise<void>;
+
+export type UninstallHandler = (event: UninstallEvent, ctx: PluginContext) => Promise<void>;
+
+// =============================================================================
+// Public Page Contribution Types
+// =============================================================================
+
+/** Placement targets for page fragment contributions */
+export type PagePlacement = "head" | "body:start" | "body:end";
+
+/**
+ * A single breadcrumb trail item. Used by `PublicPageContext.breadcrumbs`
+ * so themes can publish breadcrumb trails that SEO plugins consume.
+ */
+export interface BreadcrumbItem {
+	/** Display name for this crumb (e.g. "Home", "Blog", "My Post"). */
+	name: string;
+	/** Absolute or root-relative URL for this crumb. */
+	url: string;
+}
+
+/**
+ * Describes the page being rendered. Passed to page hooks so plugins
+ * can decide what to contribute without fetching content themselves.
+ */
+export interface PublicPageContext {
+	url: string;
+	path: string;
+	locale: string | null;
+	kind: "content" | "custom";
+	pageType: string;
+	/** Full document title for the rendered page */
+	title: string | null;
+	/** Page-only title for OG/Twitter/JSON-LD headline output */
+	pageTitle?: string | null;
+	description: string | null;
+	canonical: string | null;
+	image: string | null;
+	content?: {
+		collection: string;
+		id: string;
+		slug: string | null;
+	};
+	/** SEO meta for base metadata generation in EmDashHead */
+	seo?: {
+		ogTitle?: string | null;
+		ogDescription?: string | null;
+		ogImage?: string | null;
+		robots?: string | null;
+	};
+	/** Article metadata for Open Graph article: tags */
+	articleMeta?: {
+		publishedTime?: string | null;
+		modifiedTime?: string | null;
+		author?: string | null;
+	};
+	/** Site name for structured data and og:site_name */
+	siteName?: string;
+	/**
+	 * Optional breadcrumb trail for this page, root first. When set,
+	 * SEO plugins should use this verbatim rather than deriving a trail
+	 * from `path`. Themes typically populate this at the point they
+	 * build the context (e.g. from a content hierarchy walk, taxonomy
+	 * lookup, or per-`pageType` routing logic).
+	 *
+	 * Semantics for consumers:
+	 *   - `undefined` — theme has no opinion; consumer falls back to
+	 *     its own derivation.
+	 *   - `[]` — this page has no breadcrumbs (e.g. homepage); consumer
+	 *     should skip `BreadcrumbList` emission entirely.
+	 *   - Non-empty array — used verbatim for `BreadcrumbList` output.
+	 */
+	breadcrumbs?: BreadcrumbItem[];
+	/** Public-facing site URL (origin) for structured data */
+	siteUrl?: string;
+}
+
+// ── page:metadata ───────────────────────────────────────────────
+
+export interface PageMetadataEvent {
+	page: PublicPageContext;
+}
+
+/**
+ * Allowed rel values for link contributions.
+ * This is a security-critical allowlist -- sandboxed plugins can only inject
+ * link tags with these rel values. Adding "stylesheet", "prefetch", "prerender"
+ * etc. would allow sandboxed plugins to inject external resources.
+ */
+export type PageMetadataLinkRel =
+	| "canonical"
+	| "alternate"
+	| "author"
+	| "license"
+	| "nlweb"
+	| "site.standard.document";
+
+export type PageMetadataContribution =
+	| { kind: "meta"; name: string; content: string; key?: string }
+	| { kind: "property"; property: string; content: string; key?: string }
+	| { kind: "link"; rel: PageMetadataLinkRel; href: string; hreflang?: string; key?: string }
+	| {
+			kind: "jsonld";
+			id?: string;
+			graph: Record<string, unknown> | Array<Record<string, unknown>>;
+	  };
+
+export type PageMetadataHandler = (
+	event: PageMetadataEvent,
+	ctx: PluginContext,
+) =>
+	| PageMetadataContribution
+	| PageMetadataContribution[]
+	| null
+	| Promise<PageMetadataContribution | PageMetadataContribution[] | null>;
+
+// ── page:fragments (trusted-only) ──────────────────────────────
+
+export interface PageFragmentEvent {
+	page: PublicPageContext;
+}
+
+export type PageFragmentContribution =
+	| {
+			kind: "external-script";
+			placement: PagePlacement;
+			src: string;
+			async?: boolean;
+			defer?: boolean;
+			attributes?: Record<string, string>;
+			key?: string;
+	  }
+	| {
+			kind: "inline-script";
+			placement: PagePlacement;
+			code: string;
+			attributes?: Record<string, string>;
+			key?: string;
+	  }
+	| {
+			kind: "html";
+			placement: PagePlacement;
+			html: string;
+			key?: string;
+	  };
+
+export type PageFragmentHandler = (
+	event: PageFragmentEvent,
+	ctx: PluginContext,
+) =>
+	| PageFragmentContribution
+	| PageFragmentContribution[]
+	| null
+	| Promise<PageFragmentContribution | PageFragmentContribution[] | null>;
+
+/**
+ * Plugin hooks definition
+ */
+export interface PluginHooks {
+	// Lifecycle hooks
+	"plugin:install"?: HookConfig<LifecycleHandler> | LifecycleHandler;
+	"plugin:activate"?: HookConfig<LifecycleHandler> | LifecycleHandler;
+	"plugin:deactivate"?: HookConfig<LifecycleHandler> | LifecycleHandler;
+	"plugin:uninstall"?: HookConfig<UninstallHandler> | UninstallHandler;
+
+	// Content hooks
+	"content:beforeSave"?: HookConfig<ContentBeforeSaveHandler> | ContentBeforeSaveHandler;
+	"content:afterSave"?: HookConfig<ContentAfterSaveHandler> | ContentAfterSaveHandler;
+	"content:beforeDelete"?: HookConfig<ContentBeforeDeleteHandler> | ContentBeforeDeleteHandler;
+	"content:afterDelete"?: HookConfig<ContentAfterDeleteHandler> | ContentAfterDeleteHandler;
+	"content:beforePublish"?: HookConfig<ContentBeforePublishHandler> | ContentBeforePublishHandler;
+	"content:beforeSchedule"?:
+		| HookConfig<ContentBeforeScheduleHandler>
+		| ContentBeforeScheduleHandler;
+	"content:beforeUnpublish"?:
+		| HookConfig<ContentBeforeUnpublishHandler>
+		| ContentBeforeUnpublishHandler;
+	"content:afterPublish"?: HookConfig<ContentAfterPublishHandler> | ContentAfterPublishHandler;
+	"content:afterUnpublish"?:
+		| HookConfig<ContentAfterUnpublishHandler>
+		| ContentAfterUnpublishHandler;
+	"content:afterRestore"?: HookConfig<ContentAfterRestoreHandler> | ContentAfterRestoreHandler;
+	"content:afterSchedule"?: HookConfig<ContentAfterScheduleHandler> | ContentAfterScheduleHandler;
+	"content:afterUnschedule"?:
+		| HookConfig<ContentAfterUnscheduleHandler>
+		| ContentAfterUnscheduleHandler;
+
+	// Media hooks
+	"media:beforeUpload"?: HookConfig<MediaBeforeUploadHandler> | MediaBeforeUploadHandler;
+	"media:afterUpload"?: HookConfig<MediaAfterUploadHandler> | MediaAfterUploadHandler;
+
+	// Cron hook
+	cron?: HookConfig<CronHandler> | CronHandler;
+
+	// Email hooks
+	"email:beforeSend"?: HookConfig<EmailBeforeSendHandler> | EmailBeforeSendHandler;
+	"email:deliver"?: HookConfig<EmailDeliverHandler> | EmailDeliverHandler;
+	"email:afterSend"?: HookConfig<EmailAfterSendHandler> | EmailAfterSendHandler;
+
+	// Comment hooks
+	"comment:beforeCreate"?: HookConfig<CommentBeforeCreateHandler> | CommentBeforeCreateHandler;
+	"comment:moderate"?: HookConfig<CommentModerateHandler> | CommentModerateHandler;
+	"comment:afterCreate"?: HookConfig<CommentAfterCreateHandler> | CommentAfterCreateHandler;
+	"comment:afterModerate"?: HookConfig<CommentAfterModerateHandler> | CommentAfterModerateHandler;
+	"byline:afterSave"?: HookConfig<BylineAfterSaveHandler> | BylineAfterSaveHandler;
+	"byline:afterDelete"?: HookConfig<BylineAfterDeleteHandler> | BylineAfterDeleteHandler;
+
+	// Public page hooks
+	"page:metadata"?: HookConfig<PageMetadataHandler> | PageMetadataHandler;
+	"page:fragments"?: HookConfig<PageFragmentHandler> | PageFragmentHandler;
+}
+
+/**
+ * Hook names
+ */
+/**
+ * Hook name in a manifest. Core's exhaustive union of recognised hook names,
+ * derived from the `PluginHooks` registry. The serialised manifest carries
+ * these as opaque strings; this stricter type is only used for type-checking
+ * inside core. `ManifestHookEntry` is re-exported from
+ * `@emdash-cms/plugin-types` near the top of this file.
+ */
+export type HookName = keyof PluginHooks;
+
+/**
+ * Resolved hook with normalized config
+ */
+export interface ResolvedHook<THandler> {
+	priority: number;
+	timeout: number;
+	dependencies: string[];
+	errorPolicy: "continue" | "abort";
+	/** Whether this hook is exclusive (provider pattern) */
+	exclusive: boolean;
+	handler: THandler;
+	pluginId: string;
+}
+
+// =============================================================================
+// Request Metadata Types
+// =============================================================================
+
+/**
+ * Geographic location information derived from the request.
+ * Available when running on Cloudflare Workers (via the `cf` object).
+ */
+export interface GeoInfo {
+	country: string | null;
+	region: string | null;
+	city: string | null;
+}
+
+/**
+ * Normalized request metadata available to plugin route handlers.
+ * Extracted from request headers and platform-specific properties.
+ */
+export interface RequestMeta {
+	ip: string | null;
+	userAgent: string | null;
+	referer: string | null;
+	geo: GeoInfo | null;
+}
+
+// =============================================================================
+// Route Types
+// =============================================================================
+
+/**
+ * Route handler context extends plugin context with request-specific data
+ */
+export interface RouteContext<TInput = unknown> extends PluginContext {
+	/** Validated input from request body */
+	input: TInput;
+	/** Original request */
+	request: Request;
+	/** Normalized request metadata (IP, user agent, geo) */
+	requestMeta: RequestMeta;
+	/** Host-attested context for a validated Block Kit request. */
+	ui?: PluginUiContext;
+	/**
+	 * Authenticated caller, if the route is private. The host has already
+	 * authenticated and authorized this user before dispatch, so the value
+	 * is trustworthy — unlike a user id read from the request body.
+	 *
+	 * `undefined` for public routes (which skip auth entirely) and for
+	 * token-authed requests where no user is bound to the token.
+	 *
+	 * Not gated by the `users:read` capability: this is the caller's own
+	 * identity for the current request, not a user directory lookup.
+	 */
+	user?: UserInfo;
+}
+
+/**
+ * Route definition
+ */
+export interface PluginRoute<TInput = unknown> extends Omit<RouteOptions, "request"> {
+	/** Zod schema for input validation */
+	input?: z.ZodType<TInput>;
+	/**
+	 * Mark this route as publicly accessible (no authentication required).
+	 * Public routes skip session/token auth and CSRF checks.
+	 */
+	public?: boolean;
+	/** RBAC permission required to invoke the route. Legacy routes default to plugins:manage. */
+	permission?: Permission;
+	/**
+	 * `Cache-Control` header value for successful GET responses, e.g.
+	 * `"public, max-age=60, stale-while-revalidate=300"`. Only honored on
+	 * routes that are also `public: true` — authenticated responses always
+	 * keep the default `private, no-store`. Errors are never cached.
+	 */
+	cacheControl?: string;
+	/** Bounded request parsing and incoming-header declaration. */
+	request?: PluginRouteRequest;
+	/** Route handler */
+	handler: { bivarianceHack(ctx: RouteContext<TInput>): Promise<unknown> }["bivarianceHack"];
+}
+
+export type PluginRouteInput<TMode extends PluginRouteBodyMode> = TMode extends "none"
+	? PluginRouteQuery
+	: TMode extends "text"
+		? string
+		: TMode extends "bytes"
+			? Uint8Array
+			: TMode extends "form-data"
+				? PluginFormData
+				: unknown;
+
+export type PluginRouteDefinition<TMode extends PluginRouteBodyMode = PluginRouteBodyMode> = Omit<
+	PluginRoute<PluginRouteInput<TMode>>,
+	"request"
+> & {
+	request: PluginRouteRequest & { body: TMode };
+};
+
+export interface PluginMcpToolDefinition {
+	description: string;
+	route: string;
+	input: z.ZodType;
+	output?: z.ZodType;
+	destructive?: boolean;
+}
+
+export interface PluginMcpConfig {
+	tools: Record<string, PluginMcpToolDefinition>;
+}
+
+// =============================================================================
+// Plugin Definition
+// =============================================================================
+
+/**
+ * Admin page definition
+ */
+export interface PluginAdminPage {
+	path: string;
+	label: string;
+	icon?: string;
+}
+
+/**
+ * Dashboard widget definition
+ */
+export interface PluginDashboardWidget {
+	id: string;
+	size?: "full" | "half" | "third";
+	title?: string;
+}
+
+export interface PluginEditorPanel {
+	id: string;
+	title: string;
+	route: string;
+	collections?: string[];
+	order?: number;
+	draft?: PluginEditorDraftAccess;
+}
+
+export interface PluginEditorAction {
+	id: string;
+	label: string;
+	route: string;
+	placement: "toolbar" | "overflow";
+	collections?: string[];
+	style?: "default" | "danger";
+	confirm?: ConfirmDialog;
+	draft?: PluginEditorDraftAccess;
+}
+
+/**
+ * Settings field types (for admin UI generation)
+ */
+export type SettingFieldType =
+	| "string"
+	| "number"
+	| "boolean"
+	| "select"
+	| "secret"
+	| "url"
+	| "email";
+
+export interface BaseSettingField {
+	type: SettingFieldType;
+	label: string;
+	description?: string;
+}
+
+export interface StringSettingField extends BaseSettingField {
+	type: "string";
+	default?: string;
+	multiline?: boolean;
+}
+
+export interface NumberSettingField extends BaseSettingField {
+	type: "number";
+	default?: number;
+	min?: number;
+	max?: number;
+}
+
+export interface BooleanSettingField extends BaseSettingField {
+	type: "boolean";
+	default?: boolean;
+}
+
+export interface SelectSettingField extends BaseSettingField {
+	type: "select";
+	options: Array<{ value: string; label: string }>;
+	default?: string;
+}
+
+export interface SecretSettingField extends BaseSettingField {
+	type: "secret";
+}
+
+export interface UrlSettingField extends BaseSettingField {
+	type: "url";
+	default?: string;
+	placeholder?: string;
+}
+
+export interface EmailSettingField extends BaseSettingField {
+	type: "email";
+	default?: string;
+	placeholder?: string;
+}
+
+export type SettingField =
+	| StringSettingField
+	| NumberSettingField
+	| BooleanSettingField
+	| SelectSettingField
+	| SecretSettingField
+	| UrlSettingField
+	| EmailSettingField;
+
+/**
+ * Block Kit element for block editing fields.
+ * This is the `Element` discriminated union from `@emdash-cms/blocks`.
+ * Plugin authors should use `@emdash-cms/blocks` builder functions to create these.
+ */
+export type PortableTextBlockField = Element;
+
+/**
+ * Configuration for a Portable Text block type contributed by a plugin
+ */
+export interface PortableTextBlockConfig {
+	/** Block type name (must match the `_type` in Portable Text) */
+	type: string;
+	/** Human-readable label shown in slash commands and modals */
+	label: string;
+	/** Icon key (e.g., "video", "code", "link", "link-external") */
+	icon?: string;
+	/** Description shown in slash command menu */
+	description?: string;
+	/** Placeholder text for the URL input */
+	placeholder?: string;
+	/** Block Kit form fields for the editing UI. If declared, replaces the simple URL input. */
+	fields?: PortableTextBlockField[];
+	/**
+	 * Optional. Display category in the slash menu. Defaults to "Embeds".
+	 *
+	 * Plugin authors should pick a meaningful category that reflects what the
+	 * block actually is — e.g. "Sections", "Marketing", "Media", "Embeds",
+	 * "Layout". Blocks with the same category are grouped together in the
+	 * editor's slash menu.
+	 */
+	category?: string;
+}
+
+/**
+ * Configuration for a field widget type contributed by a plugin.
+ * A field widget provides a custom editing UI for a schema field.
+ * The field references the widget via `widget: "pluginId:widgetName"`.
+ */
+export interface FieldWidgetConfig {
+	/** Widget name (without plugin ID prefix) */
+	name: string;
+	/** Human-readable label for the admin UI */
+	label: string;
+	/** Which field types this widget can edit (e.g., ["json", "string"]) */
+	fieldTypes: FieldType[];
+	/** Block Kit elements for sandboxed rendering. Omit for trusted plugins using React. */
+	elements?: Element[];
+}
+
+/**
+ * Admin configuration
+ */
+export interface PluginAdminConfig {
+	/** Module specifier for admin UI exports (e.g., "@emdash-cms/plugin-audit-log/admin") */
+	entry?: string;
+	/** Settings schema for auto-generated UI */
+	settingsSchema?: Record<string, SettingField>;
+	/** Admin pages */
+	pages?: PluginAdminPage[];
+	/** Dashboard widgets */
+	widgets?: PluginDashboardWidget[];
+	/** Saved-entry Block Kit panels. */
+	editorPanels?: PluginEditorPanel[];
+	/** Saved-entry host-rendered actions. */
+	editorActions?: PluginEditorAction[];
+	/** Portable Text block types this plugin provides */
+	portableTextBlocks?: PortableTextBlockConfig[];
+	/** Field widget types this plugin provides */
+	fieldWidgets?: FieldWidgetConfig[];
+}
+
+/**
+ * Plugin definition - input to definePlugin()
+ */
+export interface PluginDefinition<TStorage extends PluginStorageConfig = PluginStorageConfig> {
+	/** Unique plugin identifier */
+	id: string;
+	/** Plugin version (semver) */
+	version: string;
+
+	/** Declared capabilities */
+	capabilities?: PluginCapability[];
+
+	/** Allowed hosts for network:request (wildcards supported: *.example.com) */
+	allowedHosts?: string[];
+
+	/** Storage collections with indexes */
+	storage?: TStorage;
+
+	/** Hooks */
+	hooks?: PluginHooks;
+
+	/** API routes */
+	routes?: Record<string, PluginRoute>;
+
+	/** Routes explicitly exposed as agent-callable MCP tools. */
+	mcp?: PluginMcpConfig;
+
+	/** Admin UI configuration */
+	admin?: PluginAdminConfig;
+}
+
+/**
+ * Resolved plugin - after definePlugin() processing
+ */
+export interface ResolvedPlugin<TStorage extends PluginStorageConfig = PluginStorageConfig> {
+	id: string;
+	version: string;
+	capabilities: PluginCapability[];
+	allowedHosts: string[];
+	storage: TStorage;
+	hooks: ResolvedPluginHooks;
+	routes: Record<string, PluginRoute>;
+	mcp?: PluginMcpConfig;
+	admin: PluginAdminConfig;
+}
+
+/**
+ * Resolved hooks with normalized config
+ */
+export interface ResolvedPluginHooks {
+	"plugin:install"?: ResolvedHook<LifecycleHandler>;
+	"plugin:activate"?: ResolvedHook<LifecycleHandler>;
+	"plugin:deactivate"?: ResolvedHook<LifecycleHandler>;
+	"plugin:uninstall"?: ResolvedHook<UninstallHandler>;
+	"content:beforeSave"?: ResolvedHook<ContentBeforeSaveHandler>;
+	"content:afterSave"?: ResolvedHook<ContentAfterSaveHandler>;
+	"content:beforeDelete"?: ResolvedHook<ContentBeforeDeleteHandler>;
+	"content:afterDelete"?: ResolvedHook<ContentAfterDeleteHandler>;
+	"content:beforePublish"?: ResolvedHook<ContentBeforePublishHandler>;
+	"content:beforeSchedule"?: ResolvedHook<ContentBeforeScheduleHandler>;
+	"content:beforeUnpublish"?: ResolvedHook<ContentBeforeUnpublishHandler>;
+	"content:afterPublish"?: ResolvedHook<ContentAfterPublishHandler>;
+	"content:afterUnpublish"?: ResolvedHook<ContentAfterUnpublishHandler>;
+	"content:afterRestore"?: ResolvedHook<ContentAfterRestoreHandler>;
+	"content:afterSchedule"?: ResolvedHook<ContentAfterScheduleHandler>;
+	"content:afterUnschedule"?: ResolvedHook<ContentAfterUnscheduleHandler>;
+	"media:beforeUpload"?: ResolvedHook<MediaBeforeUploadHandler>;
+	"media:afterUpload"?: ResolvedHook<MediaAfterUploadHandler>;
+	cron?: ResolvedHook<CronHandler>;
+	"email:beforeSend"?: ResolvedHook<EmailBeforeSendHandler>;
+	"email:deliver"?: ResolvedHook<EmailDeliverHandler>;
+	"email:afterSend"?: ResolvedHook<EmailAfterSendHandler>;
+	"comment:beforeCreate"?: ResolvedHook<CommentBeforeCreateHandler>;
+	"comment:moderate"?: ResolvedHook<CommentModerateHandler>;
+	"comment:afterCreate"?: ResolvedHook<CommentAfterCreateHandler>;
+	"comment:afterModerate"?: ResolvedHook<CommentAfterModerateHandler>;
+	"byline:afterSave"?: ResolvedHook<BylineAfterSaveHandler>;
+	"byline:afterDelete"?: ResolvedHook<BylineAfterDeleteHandler>;
+	"page:metadata"?: ResolvedHook<PageMetadataHandler>;
+	"page:fragments"?: ResolvedHook<PageFragmentHandler>;
+}
+
+// =============================================================================
+// Plugin Admin Exports
+// =============================================================================
+
+/**
+ * What a plugin exports from its /admin entrypoint
+ * Uses generic component type to avoid React dependency
+ */
+export interface PluginAdminExports {
+	widgets?: Record<string, JSX.Element>;
+	pages?: Record<string, JSX.Element>;
+	fields?: Record<string, JSX.Element>;
+}
+
+// =============================================================================
+// Sandbox Types
+// =============================================================================
+
+/**
+ * Plugin manifest — the metadata portion of a plugin bundle, used for
+ * sandboxed plugins loaded from the marketplace.
+ *
+ * This interface is core's stricter version of the manifest contract: it
+ * uses the exhaustive `HookName` union and core's typed `PluginAdminConfig`.
+ * The wire-shape lives in `@emdash-cms/plugin-types` as `PluginManifest`
+ * with looser types (so the registry CLI can serialise hook names it
+ * doesn't know about). Both must stay structurally compatible: every value
+ * of this type must be assignable to the shared one. The static assertion
+ * below catches any drift at compile time.
+ */
+export interface PluginManifest {
+	id: string;
+	version: string;
+	/**
+	 * The trust contract (see `@emdash-cms/plugin-types`). Authoritative;
+	 * `capabilities`/`allowedHosts` are derived from it at the parse boundary
+	 * via `reconcileManifestAccess`. Optional during the wire-format migration.
+	 */
+	declaredAccess?: DeclaredAccess;
+	capabilities: PluginCapability[];
+	allowedHosts: string[];
+	storage: PluginStorageConfig;
+	/** Hook declarations — either plain name strings or structured objects */
+	hooks: Array<ManifestHookEntry | HookName>;
+	/** Route declarations — either plain name strings or structured objects */
+	routes: Array<ManifestRouteEntry | string>;
+	mcp?: PluginMcpManifestConfig;
+	admin: PluginAdminConfig;
+}
+
+// Type-level guard: core's `PluginManifest` is intentionally a SUBTYPE of
+// the shared wire shape (`@emdash-cms/plugin-types` `PluginManifest`). The
+// wire shape uses looser types like `string` for hook names so the registry
+// CLI can serialise plugins targeting hook versions this core doesn't yet
+// know about. Core narrows `string` to `HookName` and `Record<string,
+// unknown>` to `PluginAdminConfig` because core's loader actually executes
+// against those types.
+//
+// We assert one direction at compile time: `core extends shared`. The
+// reverse direction (`shared extends core`) intentionally does NOT hold
+// because shared is wider -- a manifest written against the wire shape
+// could carry a hook name core doesn't know. That runtime narrowing is the
+// job of `manifest-schema.ts` (zod-validated, called at every JSON.parse
+// of a manifest.json), not of the type system. The static check below
+// catches the OTHER failure mode: core adding a required field or
+// non-assignable type that the wire shape doesn't allow.
+//
+// `type X = never` is itself legal as a type alias, so the assertion has to
+// be in a value position (`const _check: T = true`) for the compiler to
+// error when T resolves to `never`. Don't replace this with a bare type
+// alias.
+type _AssertManifestCompat =
+	PluginManifest extends import("@emdash-cms/plugin-types").PluginManifest ? true : never;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _MANIFEST_COMPAT: _AssertManifestCompat = true;

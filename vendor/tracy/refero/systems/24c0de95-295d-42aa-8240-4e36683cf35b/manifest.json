@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "24c0de95-295d-42aa-8240-4e36683cf35b",
+  "status": "complete",
+  "name": "NGLORA",
+  "url": "https://styles.refero.design/style/24c0de95-295d-42aa-8240-4e36683cf35b",
+  "sourceWebsite": "https://aesop.com",
+  "extractedAt": "2026-04-11T17:53:01.853Z",
+  "capturedAt": "2026-10-08T05:09:25.438216+00:00",
+  "theme": "light",
+  "industry": null,
+  "description": "NGLORA - Apothecary's Formulary. A meticulously organized space where typography and product photography are treated with scientific precision.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7c1782be-4d1a-4072-a5bc-11a5d2dfc493.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/97c022a6-581a-4763-8091-927ee073f246.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/9d76359d-5789-4bfb-82b8-f107981c38ff.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/516f112b-d82b-43cb-adaf-01a35764c67e.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/93bb61eb-403f-4e05-9a54-f6851f60aacb.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "2ce1e818e208e3f1f2996b52b636a1d336c0241eac065fb69b6d2b6cb47c2eda",
+      "bytes": 12843
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f3943f198b8ec4f4d957f37616f95e17ec1c135d88ff57a6d2f45a67378ff201",
+      "bytes": 100845
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6427189be0ba3ccf5c5027373ab9b653813d14d9e02449a5f1b32c663dc7f344",
+      "bytes": 22903
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f8e4e6e7ca62f037cc86146d01040ce8be72d6d894e6f443c6f39c283cc8b341",
+      "bytes": 12528
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c3786d4a6e450e20b867288c825353cb277f0c0fa1a9e27985facd2689730714",
+      "bytes": 7363
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "94393ff2fe6073c51f3d664887facc8286649be9765fbce44060c94872075e9d",
+      "bytes": 2013
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "77891d203d898520bd7ed9e371ef016a5dcf3508bea89433eba7ba3619349ae2",
+      "bytes": 531
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3601e912f8237240e9ac41356719d147ee3ec433fc4dce87d422944872a34014",
+      "bytes": 548
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a15cab838de688917f90f3c2315078d3b9c37e1a207ad44d9ecba9efa682b088",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "09dbd68af474927d2838acdf93da5ca86e9b970446a7cdd8139f3f1ef8fa7129",
+      "bytes": 43548
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c5708b96e600e14f0154c96f18f3d1a82019f4b44b9d54e9598d62eb3c5aa285",
+      "bytes": 22222
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "d627645cf3f2d979ad1609d88566388e884e8a956a5680dca1d06b884ffec663",
+      "bytes": 48233
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "0404ab12b6154cfa00729d95be870f2e2c6ea9e016707a436146555315c4251e",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "59c0877139f856116d46a39048286ecc35934394aa94ca2d0e4591ed8ce9ed2b",
+      "bytes": 1092
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4d989beb47fda25479db215362aa5bb20008b7036487d5f83c38df58d60d92d1",
+      "bytes": 1456
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "24c0de95-295d-42aa-8240-4e36683cf35b",
+    "3b080dc3-1992-43fe-91d6-2a721f934435",
+    "3f56ea4d-ed9d-4a36-8fb5-a801519ef80b",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "5681f7b6-c665-44b8-a065-da7180133149",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f3f7122e-d8d3-48f7-9d9d-df6e71545010",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

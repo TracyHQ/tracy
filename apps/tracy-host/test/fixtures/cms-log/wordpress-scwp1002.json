@@ -1,0 +1,87 @@
+{
+  "ok": true,
+  "platform": "wordpress",
+  "installed": true,
+  "now": "2026-10-01 21:08:13",
+  "maxId": 7,
+  "reset": false,
+  "rows": [
+    {
+      "id": 1,
+      "at": "2026-10-01 21:02:03",
+      "user_id": 8,
+      "user_name": "owner@example.test",
+      "type": "updated_option",
+      "resource_type": "option",
+      "resource_id": "blogdescription",
+      "resource_title": "Tagline",
+      "op": "update"
+    },
+    {
+      "id": 2,
+      "at": "2026-10-01 21:07:17",
+      "user_id": 0,
+      "user_name": "",
+      "type": "wp_after_insert_post",
+      "resource_type": "post",
+      "resource_id": "2108",
+      "resource_title": "Scheduled by WP-CLI, published by WP-Cron",
+      "op": "update"
+    },
+    {
+      "id": 3,
+      "at": "2026-10-01 21:07:54",
+      "user_id": 8,
+      "user_name": "owner@example.test",
+      "type": "wp_after_insert_post",
+      "resource_type": "page",
+      "resource_id": "50",
+      "resource_title": "Style guide A16 A13",
+      "op": "update"
+    },
+    {
+      "id": 4,
+      "at": "2026-10-01 21:07:55",
+      "user_id": 8,
+      "user_name": "owner@example.test",
+      "type": "add_attachment",
+      "resource_type": "attachment",
+      "resource_id": "2111",
+      "resource_title": "a13-photo",
+      "op": "upload"
+    },
+    {
+      "id": 5,
+      "at": "2026-10-01 21:07:57",
+      "user_id": 8,
+      "user_name": "owner@example.test",
+      "type": "activated_plugin",
+      "resource_type": "plugin",
+      "resource_id": "hello.php",
+      "resource_title": "Hello Dolly",
+      "op": "activate"
+    },
+    {
+      "id": 6,
+      "at": "2026-10-01 21:07:58",
+      "user_id": 8,
+      "user_name": "owner@example.test",
+      "type": "deactivated_plugin",
+      "resource_type": "plugin",
+      "resource_id": "hello.php",
+      "resource_title": "Hello Dolly",
+      "op": "deactivate"
+    },
+    {
+      "id": 7,
+      "at": "2026-10-01 21:08:05",
+      "user_id": 9,
+      "user_name": "Minh Tran (A13)",
+      "type": "wp_after_insert_post",
+      "resource_type": "page",
+      "resource_id": "48",
+      "resource_title": "Services (WP-CLI A16) (Minh)",
+      "op": "update"
+    }
+  ]
+}

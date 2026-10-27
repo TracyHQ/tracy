@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/category-card-part",
+  "version": "0.1.0",
+  "title": "Category card part",
+  "category": "design",
+  "icon": "id",
+  "description": "One piece of the Engineering category card (`.hxcat-row`, `category/thumbs_item.php:48-58`) that no core block renders in the source's shape: `cover` — the intro image as the row's `background-image` on an empty span (`is-empty` when the post has none), not a `figure > img`; `eyebrow` — the post's category title, upper-cased server-side (`strtoupper($item->category_title)`), plain text rather than `core/post-terms`' link (an `<a>` inside the row's own `<a>` is split apart by the HTML parser); `meta` — author and `M j` date joined into ONE text node with \" · \", not two elements.",
+  "textdomain": "wp-ja-kinetic",
+  "attributes": {
+    "part": {
+      "type": "string",
+      "enum": ["cover", "eyebrow", "meta"],
+      "default": "meta"
+    }
+  },
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

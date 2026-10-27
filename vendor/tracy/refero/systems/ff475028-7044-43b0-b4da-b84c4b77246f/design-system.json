@@ -1,0 +1,151 @@
+{
+  "dos": [
+    "Use Gallery Black #000000 as the uninterrupted page, navigation, and gallery-gutter background.",
+    "Set measured interface text in Helveesti 14px, weight 400, 18.2px line-height, and 0.84px letter-spacing.",
+    "Transform navigation, captions, and project identifiers to uppercase.",
+    "Use 25px horizontal navigation padding and 15px vertical navigation padding within the 48px top bar.",
+    "Keep gallery cards at 0px internal padding and use 15px radius only to clip featured image containers.",
+    "Use 20px as the standard caption inset and immediate element gap; separate major gallery groups by 72px.",
+    "Keep photo overlays as bare Projection White #ffffff text with no backing chip or translucent panel."
+  ],
+  "donts": [
+    "Do not use a light page canvas or off-white card surface in place of Gallery Black #000000.",
+    "Do not introduce colored accents, gradients, semantic badges, or filled conversion buttons.",
+    "Do not set interface labels below or above the measured 14px Helveesti treatment.",
+    "Do not use heavy font weights for navigation, captions, or project labels; keep them at weight 400.",
+    "Do not round navigation controls, captions, or ordinary gallery tiles; reserve 15px rounding for clipped featured media.",
+    "Do not add card borders, drop shadows, or floating surface layers around photographs.",
+    "Do not replace the oversized BAM Selected display mark with the Helveesti interface font."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#000000",
+      "name": "Gallery Black",
+      "role": "Page background, navigation field, gallery gutters, and media-stage canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Projection White",
+      "role": "Navigation, editorial labels, captions, logo lettering, and image-overlay text",
+      "group": "neutral"
+    },
+    {
+      "hex": "#999999",
+      "name": "Index Gray",
+      "role": "Muted secondary index text and subdued metadata",
+      "group": "neutral"
+    }
+  ],
+  "layout": "The page is a full-bleed black portfolio sequence with a four-way top navigation bar spanning the upper edge. The opening screen places an oversized centered BAM Selected display lockup over a soft, grayscale, black-fading visual field; it is followed by a featured portfolio composition in which a centered white identity lockup overlaps two tall side-by-side photographs. Subsequent work should continue as edge-led image modules on black, using sparse image-edge captions and 72px separation between major project groups rather than contained text sections. The navigation remains visually minimal, with the active section marked only by an underline.",
+  "imagery": "Photography is the primary content: automotive motion shots, low-angle lifestyle portraiture, and monochrome or naturally muted campaign imagery. Images are oversized and nearly edge-to-edge, with no decorative frames; featured pairs are contained by a single 15px rounded outer crop while internal image edges remain hard. The first visual is treated as an abstracted, blurred grayscale atmosphere, while portfolio photography stays raw and cinematic. White, widely tracked labels sit directly on the media as project identifiers, making imagery occupy far more space than explanatory copy.",
+  "similar": [
+    {
+      "why": "Uses restrained typography, expansive negative space, and image-led editorial pacing rather than interface-heavy promotion.",
+      "business": "Aesop"
+    },
+    {
+      "why": "Shares the black-field presentation, white typographic overlays, and cinema-like prioritization of imagery.",
+      "business": "MUBI"
+    },
+    {
+      "why": "Shares experimental oversized display typography set against sparse, art-directed page composition.",
+      "business": "Bureau Borsche"
+    },
+    {
+      "why": "Uses full-bleed visual storytelling and minimal white navigation over dark media stages.",
+      "business": "NOWNESS"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "0px",
+      "links": "0px",
+      "images": "15px",
+      "navigation": "0px"
+    },
+    "elementGap": "20px",
+    "sectionGap": "72px",
+    "cardPadding": "0px",
+    "pageMaxWidth": null
+  },
+  "industry": "agency",
+  "northStar": "gallery projection after midnight. Black canvas, blown-up white lettering, and cinematic image pairs make the site feel like a projected portfolio rather than a conventional editorial grid.",
+  "typeScale": [
+    {
+      "role": "navigation-and-editorial-label",
+      "size": 14,
+      "family": "Helveesti",
+      "weight": 400,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.84
+    }
+  ],
+  "components": [
+    {
+      "name": "Four-Column Top Navigation",
+      "role": "Persistent portfolio navigation",
+      "description": "Set on Gallery Black with a 48px-tall band, 15px vertical padding, and 25px horizontal edge padding. Distribute the four navigation groups across the full width; use Projection White Helveesti 14px/18.2px, weight 400, uppercase, with 0.84px tracking."
+    },
+    {
+      "name": "Active Navigation Label",
+      "role": "Current gallery category",
+      "description": "Use the same Projection White Helveesti 14px/18.2px uppercase label as the top navigation, adding a thin white underline directly beneath the active text. Keep the label background transparent and radius 0px."
+    },
+    {
+      "name": "Editorial Navigation Label",
+      "role": "Inactive category and contact link",
+      "description": "Use transparent background, no border, 0px radius, and Projection White Helveesti 14px/18.2px with 0.84px tracking. Do not introduce filled navigation buttons."
+    },
+    {
+      "name": "BAM Selected Display Lockup",
+      "role": "Opening-page identity mark",
+      "description": "Render as a large custom high-contrast serif wordmark in Projection White on Gallery Black; stack the two words tightly and let it dominate the opening viewport. This is display artwork, not a Helveesti heading; preserve its flared serif letterforms and do not replace it with a bold grotesk."
+    },
+    {
+      "name": "Atmospheric Intro Backdrop",
+      "role": "Opening visual field behind the display lockup",
+      "description": "Use full-bleed grayscale moving-image or photography treatment that falls from pale gray at the top into Gallery Black at the lower field. Keep edges square, overlays absent, and place the Projection White display lockup above it."
+    },
+    {
+      "name": "Rounded Split Portfolio Pair",
+      "role": "Featured project entry",
+      "description": "Place two equal visual panes side by side on Gallery Black with a narrow black gutter. Clip the outer media container with 15px corners; retain unpadded image content and no shadow."
+    },
+    {
+      "name": "Portfolio Media Tile",
+      "role": "Automotive, portrait, or campaign image",
+      "description": "Use photographic media edge to edge inside its pane with 0px internal padding and no border. In paired featured entries, inherit the 15px clipping of the parent container; standalone gallery media remains unframed against Gallery Black."
+    },
+    {
+      "name": "Image Edge Caption",
+      "role": "Project name and collaborator identifier",
+      "description": "Overlay small Projection White Helveesti at 14px/18.2px, weight 400, uppercase, and 0.84px tracking directly on photography. Keep the caption background transparent, borderless, and inset using the 20px element-gap token."
+    },
+    {
+      "name": "Centered Portfolio Identifier",
+      "role": "BAM title and discipline line over gallery media",
+      "description": "Center the white BAM Selected lockup over the top of a featured media pair, with a smaller Helveesti 14px/18.2px uppercase descriptor beneath it. Use no panel, blur, shadow, or badge behind the type."
+    }
+  ],
+  "typography": [
+    {
+      "role": "The sole measured interface face for uppercase navigation, project metadata, captions, and small editorial labels. Its 0.06em tracking turns plain sans-serif text into widely spaced catalogue notation.",
+      "sizes": "14px",
+      "family": "Helveesti",
+      "weight": "400",
+      "lineHeight": "1.30",
+      "substitute": "Inter",
+      "letterSpacing": "0.84px at 14px"
+    }
+  ],
+  "description": "BAM Photographers frames editorial automotive and lifestyle imagery against an uninterrupted black field, with white type behaving as a sparse navigational layer rather than a content block. The opening uses a monumental, high-contrast serif BAM Selected wordmark over a blurred grayscale atmosphere; portfolio content then cuts to edge-led photography with only small all-caps identifiers. Helveesti at 14px with unusually open 0.84px tracking gives navigation, captions, and labels a consistent art-book index quality.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Gallery Black: #000000 — Page background, navigation field, gallery gutters, and media-stage canvas\n- Projection White: #ffffff — Navigation, editorial labels, captions, logo lettering, and image-overlay text\n- Index Gray: #999999 — Muted secondary index text and subdued metadata\n\nCreate a 48px Gallery Black #000000 top navigation with four widely distributed Helveesti labels in Projection White #ffffff, 14px weight 400, 18.2px line-height, 0.84px tracking, 15px vertical padding, and 25px horizontal padding; underline only the active label.\nCreate a full-viewport Gallery Black #000000 opening with a blurred grayscale photographic field fading into black and an oversized centered Projection White #ffffff custom high-contrast serif BAM Selected wordmark; do not use Helveesti for the display mark.\nCreate a featured portfolio pair as two tall edge-to-edge campaign photographs with a narrow Gallery Black #000000 gutter and one shared 15px rounded outer crop; overlay bare Projection White #ffffff project labels in Helveesti 14px weight 400 with 0.84px tracking.\nCreate a centered identity overlay above the featured images with the white BAM Selected display lockup and a smaller Projection White #ffffff Helveesti descriptor at 14px/18.2px, uppercase, 0.84px tracking; use no backing panel or shadow."
+    }
+  ],
+  "elevationPhilosophy": "Surfaces stay flush to Gallery Black: images gain separation through black gutters, crop, and occasional 15px clipping rather than shadows, borders, or raised panels."
+}

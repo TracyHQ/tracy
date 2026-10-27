@@ -1,0 +1,14 @@
+{
+	"name": "@emdash-cms/i18n-dashboard",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "pnpm -w exec lunaria build",
+		"preview": "pnpm -w exec lunaria preview",
+		"deploy": "pnpm run build && wrangler deploy"
+	},
+	"devDependencies": {
+		"@types/node": "catalog:",
+		"wrangler": "catalog:"
+	}
+}

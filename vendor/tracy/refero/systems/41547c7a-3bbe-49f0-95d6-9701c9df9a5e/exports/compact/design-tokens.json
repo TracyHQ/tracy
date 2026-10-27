@@ -1,0 +1,119 @@
+{
+  "color": {
+    "signal-violet": {
+      "$value": "#5e51f8",
+      "$type": "color",
+      "$description": "Signal Violet — Primary brand color — hero backgrounds, CTAs, interactive states, logo mark. The electric quality (vivid, high-chroma) makes every surface it touches feel charged."
+    },
+    "deep-nebula": {
+      "$value": "#251544",
+      "$type": "color",
+      "$description": "Deep Nebula — Hero section footer tone and gradient terminus. Paired with Signal Violet for the dark-to-darker hero gradient that creates depth within the purple field."
+    },
+    "iris-mid": {
+      "$value": "#4b41c6",
+      "$type": "color",
+      "$description": "Iris Mid — Button shadow underlay and hover states on the hero. Creates tactile depth on dark surfaces via box-shadow layering."
+    },
+    "soft-amethyst": {
+      "$value": "#cfcbfd",
+      "$type": "color",
+      "$description": "Soft Amethyst — Secondary headline text on dark violet backgrounds — brand color carried into typography so the hero never loses chromatic identity."
+    },
+    "lavender-mist": {
+      "$value": "#d5a8f5",
+      "$type": "color",
+      "$description": "Lavender Mist — Pill button accent variant — appears as a pastel contrast button against the violet hero. Black text on this color delivers AAA contrast with brand warmth."
+    },
+    "powder-violet": {
+      "$value": "#d7d3fd",
+      "$type": "color",
+      "$description": "Powder Violet — Feature card illustration tints and ghost typography in the white sections — keeps brand hue present without saturating light backgrounds."
+    },
+    "periwinkle-glow": {
+      "$value": "#867dfa",
+      "$type": "color",
+      "$description": "Periwinkle Glow — Icon fills and glow halos (box-shadow on interactive elements). The lighter violet relative of Signal Violet — used for SVG fills and hover glow effects."
+    },
+    "celestial-cyan": {
+      "$value": "#99eeff",
+      "$type": "color",
+      "$description": "Celestial Cyan — Decorative accent surface — appears sparingly as a cool counterpoint to the warm violet system."
+    },
+    "ink": {
+      "$value": "#0f172a",
+      "$type": "color",
+      "$description": "Ink — Primary heading text on white sections."
+    },
+    "slate": {
+      "$value": "#475569",
+      "$type": "color",
+      "$description": "Slate — Body text on white sections, secondary navigation labels."
+    },
+    "steel": {
+      "$value": "#808a99",
+      "$type": "color",
+      "$description": "Steel — Tertiary body copy, fine print, disabled states."
+    },
+    "fog": {
+      "$value": "#94a3b8",
+      "$type": "color",
+      "$description": "Fog — Icon strokes, placeholder text, muted UI elements."
+    },
+    "ash-border": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Ash Border — Card borders, section dividers, input borders on light surfaces."
+    },
+    "chalk": {
+      "$value": "#f8fafc",
+      "$type": "color",
+      "$description": "Chalk — Page background for feature sections."
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, nav background, text on dark hero."
+    },
+    "carbon": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Carbon — CTA button fill on the hero (the dark pill that contrasts with the violet field), high-contrast body text."
+    },
+    "deep-violet-text": {
+      "$value": "#312e58",
+      "$type": "color",
+      "$description": "Deep Violet Text — Body copy within violet/dark sections where pure white would be too harsh."
+    },
+    "hero-gradient": {
+      "$value": "#5e51f8",
+      "$type": "color",
+      "$description": "Hero Gradient — Full-bleed hero background — Signal Violet to Deep Nebula vertical gradient with radial glow at top center."
+    }
+  },
+  "font": {
+    "nan-jaune-midi-bold": {
+      "$value": "NaN Jaune Midi Bold",
+      "$type": "fontFamily",
+      "$description": "Hero and section display headlines exclusively. The custom font's chunky stroke contrast and tight tracking at display sizes creates broadcast-title energy — unmistakable at a glance, nothing Inter could replicate. The aggressive negative tracking (-0.054em at 56px) squeezes letters into a dense typographic block that reads as a single graphic unit."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All UI text: navigation, body copy, subheadings, card titles, buttons, captions. Weight 700 at 24-30px for section subheadings; weight 600 at 18-20px for card headers; weight 500 at 14-16px for body and UI labels. The utilitarian pairing with NaN Jaune Midi is intentional — Inter stays invisible so the display font commands full attention."
+    },
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "System fallback at 12px for fine-print labels and browser-rendered micro text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://tella.tv",
+      "siteName": "Tella",
+      "extractedAt": "2026-04-11T19:25:42.180Z",
+      "variant": "compact"
+    }
+  }
+}

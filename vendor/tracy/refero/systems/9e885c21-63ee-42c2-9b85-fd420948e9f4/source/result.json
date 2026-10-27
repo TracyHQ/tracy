@@ -1,0 +1,1555 @@
+{
+  "meta": {
+    "url": "https://www.shortverse.com",
+    "siteName": "Shortverse",
+    "extractedAt": "2026-09-20T22:05:44.287Z",
+    "durationMs": 65669,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "elementCount": 1097,
+    "telemetry": {
+      "enrichment": {
+        "componentHtmlStatus": "pending",
+        "attempts": 0
+      }
+    }
+  },
+  "raw": {
+    "colors": {
+      "tokens": [
+        {
+          "hex": "#ffffff",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 1.0000000000000002
+          },
+          "contexts": [
+            "other",
+            "nav",
+            "button",
+            "link",
+            "body",
+            "heading"
+          ],
+          "frequency": 101,
+          "confidence": 1,
+          "prominence": 31645812.101268858,
+          "properties": [
+            "backgroundColor",
+            "color",
+            "borderColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "body/color": 4,
+            "link/color": 11,
+            "other/fill": 29,
+            "other/color": 2,
+            "heading/color": 1,
+            "link/borderColor": 1,
+            "nav/backgroundColor": 2,
+            "other/backgroundColor": 27,
+            "button/backgroundColor": 24
+          }
+        },
+        {
+          "hex": "#eaeaea",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.9370488987176951
+          },
+          "contexts": [
+            "nav",
+            "button",
+            "footer"
+          ],
+          "frequency": 9,
+          "confidence": 1,
+          "prominence": 3539846.577911973,
+          "properties": [
+            "borderColor",
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "nav/borderColor": 4,
+            "button/borderColor": 4,
+            "footer/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#a77eff",
+          "oklch": {
+            "c": 0.1848450002984673,
+            "h": 295.84241165915057,
+            "l": 0.6898324379605932
+          },
+          "contexts": [
+            "other",
+            "nav"
+          ],
+          "frequency": 14,
+          "confidence": 1,
+          "prominence": 1800295.1864564053,
+          "properties": [
+            "backgroundColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "nav/fill": 10,
+            "other/fill": 3,
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#000000",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "confidence": 1,
+          "prominence": 1314631.2965981557,
+          "properties": [
+            "backgroundColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 1,
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#f3987e",
+          "oklch": {
+            "c": 0.11615362333032628,
+            "h": 36.71842758903477,
+            "l": 0.7667356717771918
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "confidence": 1,
+          "prominence": 829440,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#262626",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.26861827698438745
+          },
+          "contexts": [
+            "nav",
+            "button",
+            "body",
+            "heading",
+            "link",
+            "other"
+          ],
+          "frequency": 149,
+          "confidence": 1,
+          "prominence": 316528.2840007431,
+          "properties": [
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "nav/color": 4,
+            "body/color": 52,
+            "link/color": 45,
+            "other/fill": 23,
+            "button/color": 24,
+            "heading/color": 1
+          }
+        },
+        {
+          "hex": "#f1f1f1",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.9581468870268093
+          },
+          "contexts": [
+            "other",
+            "link"
+          ],
+          "frequency": 30,
+          "confidence": 1,
+          "prominence": 173396.87086354062,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "link/backgroundColor": 20,
+            "other/backgroundColor": 10
+          }
+        },
+        {
+          "hex": "#999999",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.6829534013134412
+          },
+          "contexts": [
+            "other",
+            "link",
+            "body",
+            "nav"
+          ],
+          "frequency": 87,
+          "confidence": 1,
+          "prominence": 48219.65703312743,
+          "properties": [
+            "color",
+            "backgroundColor",
+            "fill"
+          ],
+          "usageCounts": {
+            "nav/fill": 2,
+            "body/color": 20,
+            "link/color": 54,
+            "other/color": 10,
+            "body/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#b2b2b2",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 0.7635757140646726
+          },
+          "contexts": [
+            "body"
+          ],
+          "frequency": 2,
+          "confidence": 1,
+          "prominence": 47377.699071556795,
+          "properties": [
+            "color"
+          ],
+          "usageCounts": {
+            "body/color": 2
+          }
+        },
+        {
+          "hex": "#e4eaff",
+          "oklch": {
+            "c": 0.02911421259804429,
+            "h": 273.1029650805554,
+            "l": 0.9387935099530424
+          },
+          "contexts": [
+            "button",
+            "body"
+          ],
+          "frequency": 13,
+          "confidence": 1,
+          "prominence": 23902.574200677638,
+          "properties": [
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "body/backgroundColor": 12,
+            "button/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#6c00f4",
+          "oklch": {
+            "c": 0.28336236976577306,
+            "h": 289.0637769639965,
+            "l": 0.4978607539669246
+          },
+          "contexts": [
+            "button",
+            "nav",
+            "other"
+          ],
+          "frequency": 4,
+          "confidence": 1,
+          "prominence": 14577.06457970286,
+          "properties": [
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "nav/color": 1,
+            "other/fill": 1,
+            "button/color": 2
+          }
+        },
+        {
+          "hex": "#0036c9",
+          "oklch": {
+            "c": 0.22885007644740282,
+            "h": 263.53227815032403,
+            "l": 0.4272831469007933
+          },
+          "contexts": [
+            "other"
+          ],
+          "frequency": 22,
+          "confidence": 1,
+          "prominence": 7296.505435119962,
+          "properties": [
+            "fill"
+          ],
+          "usageCounts": {
+            "other/fill": 22
+          }
+        }
+      ],
+      "isDarkMode": false,
+      "colorfulness": 0.05760754485109851,
+      "contrastPairs": [
+        {
+          "level": "AAA",
+          "ratio": 21,
+          "background": "#000000",
+          "foreground": "#ffffff"
+        },
+        {
+          "level": "AAA",
+          "ratio": 18.59,
+          "background": "#f1f1f1",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 17.51,
+          "background": "#e4eaff",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 17.46,
+          "background": "#eaeaea",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 15.13,
+          "background": "#ffffff",
+          "foreground": "#262626"
+        },
+        {
+          "level": "AAA",
+          "ratio": 13.4,
+          "background": "#f1f1f1",
+          "foreground": "#262626"
+        },
+        {
+          "level": "AAA",
+          "ratio": 12.62,
+          "background": "#e4eaff",
+          "foreground": "#262626"
+        },
+        {
+          "level": "AAA",
+          "ratio": 12.58,
+          "background": "#eaeaea",
+          "foreground": "#262626"
+        },
+        {
+          "level": "AAA",
+          "ratio": 9.9,
+          "background": "#000000",
+          "foreground": "#b2b2b2"
+        },
+        {
+          "level": "AAA",
+          "ratio": 9.6,
+          "background": "#f3987e",
+          "foreground": "#000000"
+        },
+        {
+          "level": "AAA",
+          "ratio": 8.86,
+          "background": "#ffffff",
+          "foreground": "#0036c9"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.84,
+          "background": "#f1f1f1",
+          "foreground": "#0036c9"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.39,
+          "background": "#e4eaff",
+          "foreground": "#0036c9"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.37,
+          "background": "#000000",
+          "foreground": "#999999"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.36,
+          "background": "#eaeaea",
+          "foreground": "#0036c9"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.14,
+          "background": "#b2b2b2",
+          "foreground": "#262626"
+        },
+        {
+          "level": "AAA",
+          "ratio": 7.13,
+          "background": "#ffffff",
+          "foreground": "#6c00f4"
+        },
+        {
+          "level": "AA",
+          "ratio": 6.92,
+          "background": "#f3987e",
+          "foreground": "#262626"
+        },
+        {
+          "level": "AA",
+          "ratio": 6.32,
+          "background": "#f1f1f1",
+          "foreground": "#6c00f4"
+        },
+        {
+          "level": "AA",
+          "ratio": 5.95,
+          "background": "#e4eaff",
+          "foreground": "#6c00f4"
+        }
+      ]
+    },
+    "shapes": {
+      "radii": [
+        {
+          "value": 5,
+          "contexts": [
+            "body",
+            "nav",
+            "button"
+          ],
+          "frequency": 36
+        },
+        {
+          "value": 9999,
+          "contexts": [
+            "button",
+            "other",
+            "icon"
+          ],
+          "frequency": 36
+        },
+        {
+          "value": 8,
+          "contexts": [
+            "body",
+            "other"
+          ],
+          "frequency": 12
+        }
+      ],
+      "shadows": []
+    },
+    "spacing": {
+      "tokens": [
+        {
+          "value": 2,
+          "contexts": [
+            "other",
+            "heading"
+          ],
+          "frequency": 22,
+          "properties": [
+            "paddingLeft",
+            "marginBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingLeft|other",
+            "marginBottom|heading"
+          ]
+        },
+        {
+          "value": 4,
+          "contexts": [
+            "button",
+            "other"
+          ],
+          "frequency": 104,
+          "properties": [
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap",
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|button",
+            "paddingBottom|button",
+            "rowGap|button",
+            "columnGap|button",
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 7,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 2,
+          "properties": [
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|nav",
+            "paddingBottom|nav"
+          ]
+        },
+        {
+          "value": 8,
+          "contexts": [
+            "button",
+            "other",
+            "badge"
+          ],
+          "frequency": 52,
+          "properties": [
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom",
+            "paddingLeft",
+            "marginBottom",
+            "rowGap",
+            "columnGap",
+            "marginTop",
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|button",
+            "paddingRight|button",
+            "paddingBottom|button",
+            "paddingLeft|button",
+            "marginBottom|other",
+            "rowGap|other",
+            "columnGap|other",
+            "marginTop|badge",
+            "marginRight|badge",
+            "marginBottom|badge",
+            "marginLeft|badge"
+          ]
+        },
+        {
+          "value": 9,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 11,
+          "properties": [
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "marginTop|body"
+          ]
+        },
+        {
+          "value": 12,
+          "contexts": [
+            "button",
+            "heading",
+            "other"
+          ],
+          "frequency": 112,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "marginBottom",
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "rowGap|button",
+            "columnGap|button",
+            "marginBottom|heading",
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other",
+            "marginBottom|other"
+          ]
+        },
+        {
+          "value": 14,
+          "contexts": [
+            "nav",
+            "other"
+          ],
+          "frequency": 8,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|nav",
+            "paddingLeft|nav",
+            "paddingBottom|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 16,
+          "contexts": [
+            "nav",
+            "heading",
+            "other",
+            "button"
+          ],
+          "frequency": 146,
+          "properties": [
+            "paddingTop",
+            "paddingBottom",
+            "marginBottom",
+            "rowGap",
+            "columnGap",
+            "marginRight",
+            "paddingRight",
+            "paddingLeft",
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|nav",
+            "paddingBottom|nav",
+            "marginBottom|heading",
+            "rowGap|other",
+            "columnGap|other",
+            "marginRight|other",
+            "paddingRight|button",
+            "paddingLeft|button",
+            "paddingBottom|other",
+            "marginTop|other"
+          ]
+        },
+        {
+          "value": 18,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 4,
+          "properties": [
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|body",
+            "paddingRight|body",
+            "paddingBottom|body",
+            "paddingLeft|body"
+          ]
+        },
+        {
+          "value": 20,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 12,
+          "properties": [
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        },
+        {
+          "value": 21,
+          "contexts": [
+            "button"
+          ],
+          "frequency": 4,
+          "properties": [
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|button",
+            "paddingLeft|button"
+          ]
+        },
+        {
+          "value": 24,
+          "contexts": [
+            "nav",
+            "button",
+            "other"
+          ],
+          "frequency": 27,
+          "properties": [
+            "rowGap",
+            "columnGap",
+            "paddingRight",
+            "paddingLeft",
+            "marginTop",
+            "marginBottom",
+            "marginRight",
+            "marginLeft",
+            "paddingTop",
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "rowGap|nav",
+            "columnGap|nav",
+            "paddingRight|button",
+            "paddingLeft|button",
+            "marginTop|other",
+            "marginBottom|other",
+            "marginRight|other",
+            "marginLeft|other",
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 27,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 3,
+          "properties": [
+            "marginRight"
+          ],
+          "propertyContextPairs": [
+            "marginRight|heading"
+          ]
+        },
+        {
+          "value": 32,
+          "contexts": [
+            "other",
+            "body"
+          ],
+          "frequency": 51,
+          "properties": [
+            "paddingTop",
+            "paddingBottom",
+            "marginBottom",
+            "marginRight",
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingBottom|other",
+            "marginBottom|other",
+            "marginRight|other",
+            "marginBottom|body",
+            "paddingRight|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 40,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 2,
+          "properties": [
+            "paddingRight",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|nav",
+            "paddingLeft|nav"
+          ]
+        },
+        {
+          "value": 43,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 12,
+          "properties": [
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other",
+            "paddingRight|other",
+            "paddingBottom|other",
+            "paddingLeft|other"
+          ]
+        },
+        {
+          "value": 60,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 2,
+          "properties": [
+            "marginRight",
+            "marginLeft"
+          ],
+          "propertyContextPairs": [
+            "marginRight|other",
+            "marginLeft|other"
+          ]
+        },
+        {
+          "value": 64,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 4,
+          "properties": [
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|other"
+          ]
+        },
+        {
+          "value": 140,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 20,
+          "properties": [
+            "paddingBottom"
+          ],
+          "propertyContextPairs": [
+            "paddingBottom|other"
+          ]
+        },
+        {
+          "value": 141,
+          "contexts": [
+            "other",
+            "link"
+          ],
+          "frequency": 40,
+          "properties": [
+            "marginTop"
+          ],
+          "propertyContextPairs": [
+            "marginTop|other",
+            "marginTop|link"
+          ]
+        }
+      ],
+      "density": "comfortable",
+      "baseUnit": 4
+    },
+    "gradients": [],
+    "typography": {
+      "fonts": [
+        {
+          "family": "CooperHewitt",
+          "source": "custom",
+          "weights": [
+            300,
+            500,
+            600,
+            700,
+            800
+          ],
+          "frequency": 768,
+          "fontFeatureSettings": []
+        },
+        {
+          "family": "JetBrainsMono",
+          "source": "custom",
+          "weights": [
+            300,
+            400,
+            700,
+            800
+          ],
+          "frequency": 238,
+          "fontFeatureSettings": []
+        }
+      ],
+      "scale": {
+        "base": 16,
+        "name": "Major Second",
+        "ratio": 1.125,
+        "confidence": 1
+      },
+      "steps": [
+        {
+          "size": 12,
+          "family": "JetBrainsMono",
+          "weight": 300,
+          "contexts": [
+            "other",
+            "body",
+            "link"
+          ],
+          "frequency": 143,
+          "lineHeight": 1.4,
+          "letterSpacing": 0.012,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 12,
+          "family": "JetBrainsMono",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 10,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 12,
+          "family": "JetBrainsMono",
+          "weight": 800,
+          "contexts": [
+            "button",
+            "icon"
+          ],
+          "frequency": 40,
+          "lineHeight": 1.5,
+          "letterSpacing": 0.093,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "JetBrainsMono",
+          "weight": 800,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 6,
+          "lineHeight": 1.3,
+          "letterSpacing": 0.08,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "CooperHewitt",
+          "weight": 300,
+          "contexts": [
+            "nav"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "JetBrainsMono",
+          "weight": 800,
+          "contexts": [
+            "button",
+            "icon"
+          ],
+          "frequency": 4,
+          "lineHeight": 1.5,
+          "letterSpacing": 0.08,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "JetBrainsMono",
+          "weight": 800,
+          "contexts": [
+            "nav",
+            "body"
+          ],
+          "frequency": 3,
+          "lineHeight": 1,
+          "letterSpacing": 0.08,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "JetBrainsMono",
+          "weight": 800,
+          "contexts": [
+            "button",
+            "icon"
+          ],
+          "frequency": 4,
+          "lineHeight": 3.59,
+          "letterSpacing": 0.08,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "CooperHewitt",
+          "weight": 300,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 10,
+          "lineHeight": 1.3,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "CooperHewitt",
+          "weight": 600,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 10,
+          "lineHeight": 1.3,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "JetBrainsMono",
+          "weight": 300,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.4,
+          "letterSpacing": 0.08,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "CooperHewitt",
+          "weight": 500,
+          "contexts": [
+            "other",
+            "body",
+            "link"
+          ],
+          "frequency": 66,
+          "lineHeight": 1.7,
+          "letterSpacing": 0.011,
+          "textTransform": "none"
+        },
+        {
+          "size": 14,
+          "family": "JetBrainsMono",
+          "weight": 700,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 2,
+          "lineHeight": 2.44,
+          "letterSpacing": 0.088,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 14,
+          "family": "JetBrainsMono",
+          "weight": 700,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 8,
+          "lineHeight": 1.7,
+          "letterSpacing": 0.088,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 16,
+          "family": "CooperHewitt",
+          "weight": 300,
+          "contexts": [
+            "other",
+            "nav",
+            "button",
+            "image",
+            "icon",
+            "body",
+            "link",
+            "badge",
+            "footer"
+          ],
+          "frequency": 573,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "CooperHewitt",
+          "weight": 300,
+          "contexts": [
+            "other",
+            "body",
+            "link"
+          ],
+          "frequency": 8,
+          "lineHeight": 1.25,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "JetBrainsMono",
+          "weight": 700,
+          "contexts": [
+            "other",
+            "list"
+          ],
+          "frequency": 11,
+          "lineHeight": 2.13,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 16,
+          "family": "JetBrainsMono",
+          "weight": 300,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 4,
+          "lineHeight": 2.13,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 18,
+          "family": "CooperHewitt",
+          "weight": 700,
+          "contexts": [
+            "other",
+            "body"
+          ],
+          "frequency": 20,
+          "lineHeight": 1.5,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 18,
+          "family": "CooperHewitt",
+          "weight": 300,
+          "contexts": [
+            "body",
+            "link",
+            "icon"
+          ],
+          "frequency": 13,
+          "lineHeight": 1.3,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 18,
+          "family": "CooperHewitt",
+          "weight": 700,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 20,
+          "lineHeight": 1.3,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 18,
+          "family": "CooperHewitt",
+          "weight": 700,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 20,
+          "lineHeight": 1.2,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 24,
+          "family": "CooperHewitt",
+          "weight": 700,
+          "contexts": [
+            "heading",
+            "link"
+          ],
+          "frequency": 4,
+          "lineHeight": 1.3,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 32,
+          "family": "CooperHewitt",
+          "weight": 700,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.5,
+          "letterSpacing": 0.019,
+          "textTransform": "none"
+        },
+        {
+          "size": 54,
+          "family": "CooperHewitt",
+          "weight": 800,
+          "contexts": [
+            "heading",
+            "link"
+          ],
+          "frequency": 4,
+          "lineHeight": 1,
+          "letterSpacing": 0.011,
+          "textTransform": "none"
+        },
+        {
+          "size": 54,
+          "family": "CooperHewitt",
+          "weight": 800,
+          "contexts": [
+            "heading",
+            "link"
+          ],
+          "frequency": 6,
+          "lineHeight": 0.88,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        }
+      ]
+    }
+  },
+  "designSystem": {
+    "dos": [
+      "Use #ffffff as the main page canvas and #262626 for all default reading and heading text.",
+      "Set section displays in CooperHewitt 54px/800; use 0.88 line-height for the compact editorial heading treatment.",
+      "Set film titles in CooperHewitt 18px/700 and catalog metadata in JetBrainsMono 12px/300 uppercase with 0.14px tracking.",
+      "Use JetBrainsMono 14px/800 uppercase with 1.12px tracking for navigation and button labels.",
+      "Use 5px radius for rectangular buttons and inputs, 8px for pale icon tiles, and 9999px only for circular or pill utilities.",
+      "Keep film stills sharp-cornered and separate thumbnail cards with 12px gaps.",
+      "Reserve #6c00f4 text and #a77eff fields for brand navigation, submission language, and section-icon punctuation."
+    ],
+    "donts": [
+      "Do not use #a77eff as a universal filled primary-button background; public viewing controls are #ffffff with #262626 text.",
+      "Do not round film thumbnails, poster stills, or horizontal catalog cards beyond the 0px image-tile treatment.",
+      "Do not replace JetBrainsMono metadata with CooperHewitt or remove its uppercase 0.14px tracking at 12px.",
+      "Do not use a generic 16px/600 sans-serif for section headers; use CooperHewitt 54px/800.",
+      "Do not use shadows to turn every catalog item into a floating card; use #eaeaea borders and #f1f1f1 surface blocks.",
+      "Do not introduce saturated colors beyond Lavender Projector #a77eff and Ultraviolet Type #6c00f4.",
+      "Do not apply pill radii to rectangular navigation, search, or submission controls; retain the 5px corner geometry."
+    ],
+    "theme": "light",
+    "colors": [
+      {
+        "hex": "#ffffff",
+        "name": "White Screen",
+        "role": "Page backgrounds, navigation surface, hero utility buttons, and light text over photographic imagery",
+        "group": "neutral"
+      },
+      {
+        "hex": "#262626",
+        "name": "Charcoal Ink",
+        "role": "Primary headings, body copy, navigation labels, film titles, and dark iconography",
+        "group": "neutral"
+      },
+      {
+        "hex": "#f1f1f1",
+        "name": "Mist Tile",
+        "role": "Commenter strips, quiet linked-content tiles, and secondary surface blocks",
+        "group": "neutral"
+      },
+      {
+        "hex": "#e4eaff",
+        "name": "Lilac Wash",
+        "role": "Pale icon tiles and restrained highlighted utility surfaces",
+        "group": "neutral"
+      },
+      {
+        "hex": "#eaeaea",
+        "name": "Divider Ash",
+        "role": "Hairline borders, search-field outlines, footer base surface, and quiet separators",
+        "group": "neutral"
+      },
+      {
+        "hex": "#999999",
+        "name": "Metadata Gray",
+        "role": "Film metadata, timestamps, muted helper copy, and inactive supporting labels",
+        "group": "neutral"
+      },
+      {
+        "hex": "#a77eff",
+        "name": "Lavender Projector",
+        "role": "Brand mark, section-icon graphics, and large featured violet fields that punctuate the monochrome catalog",
+        "group": "brand"
+      },
+      {
+        "hex": "#6c00f4",
+        "name": "Ultraviolet Type",
+        "role": "Submission and account-label text, violet icon details, and brand-word emphasis against pale lilac surfaces",
+        "group": "brand"
+      }
+    ],
+    "layout": "The page begins with a shallow full-width white navigation bar, then a full-bleed cinematic spotlight image with left-aligned white editorial copy over a dark gradient. Below, the site becomes a broad white catalog: titled modules sit in a vertical sequence, recent comments use multiple text columns, and film programs run as wide horizontal thumbnail rails that visibly continue beyond the viewport. Section headers are left-aligned with a colored icon tile and a compact see-all link; the closing area separates a violet invitation panel from a quieter #eaeaea footer surface. The information density is comfortable inside modules, but the horizontal rails are deliberately compact and archive-like.",
+    "imagery": "Photography is the primary visual language: full-bleed cinematic stills lead the hero, while smaller raw rectangular film frames form dense horizontal editorial rails. Images are dark, moody, and narrative rather than lifestyle-oriented; the hero uses a black left-side overlay so white text can sit directly on the still. Graphics are limited to compact violet outlined section icons, mono play and arrow glyphs, and the lavender wordmark; imagery occupies large horizontal bands but text remains the organizing structure.",
+    "similar": [
+      {
+        "why": "Shares the editorial cinema catalog structure of prominent film stills, restrained metadata, and text-led curation.",
+        "business": "MUBI"
+      },
+      {
+        "why": "Shares the film-community pattern of activity commentary paired with title-centric browsing modules.",
+        "business": "Letterboxd"
+      },
+      {
+        "why": "Shares the use of full-width moody film imagery as the dominant entry point before editorial content modules.",
+        "business": "NOWNESS"
+      },
+      {
+        "why": "Shares festival and filmmaker utility navigation, but Shortverse expresses it with condensed editorial display type and violet brand punctuation.",
+        "business": "FilmFreeway"
+      }
+    ],
+    "spacing": {
+      "radius": {
+        "cards": "8px",
+        "icons": "9999px",
+        "pills": "9999px",
+        "badges": "0px",
+        "inputs": "5px",
+        "buttons": "5px",
+        "imageTiles": "0px"
+      },
+      "elementGap": "16px",
+      "sectionGap": "27px",
+      "cardPadding": "16px",
+      "pageMaxWidth": null
+    },
+    "industry": "media",
+    "surfaces": [
+      {
+        "hex": "#ffffff",
+        "name": "White Screen",
+        "level": 0,
+        "purpose": "Primary navigation and catalog canvas."
+      },
+      {
+        "hex": "#f1f1f1",
+        "name": "Mist Tile",
+        "level": 1,
+        "purpose": "Commenter strips and subdued linked-content surfaces."
+      },
+      {
+        "hex": "#e4eaff",
+        "name": "Lilac Wash",
+        "level": 2,
+        "purpose": "Pale icon tiles and submission-control surface."
+      },
+      {
+        "hex": "#eaeaea",
+        "name": "Divider Ash",
+        "level": 3,
+        "purpose": "Footer base, borders, and surface transitions."
+      },
+      {
+        "hex": "#a77eff",
+        "name": "Lavender Projector",
+        "level": 4,
+        "purpose": "Large featured brand panel."
+      }
+    ],
+    "northStar": "Shortverse — projector beam on white. Let a single full-width film still create the opening drama, then return to a bright editorial index of titles, metadata, and thumbnail strips.",
+    "typeScale": [
+      {
+        "role": "film-metadata",
+        "size": 12,
+        "family": "JetBrainsMono",
+        "weight": 300,
+        "lineHeight": 1.4,
+        "letterSpacing": 0.144
+      },
+      {
+        "role": "nav-label",
+        "size": 14,
+        "family": "JetBrainsMono",
+        "weight": 800,
+        "lineHeight": 1,
+        "letterSpacing": 1.12
+      },
+      {
+        "role": "body",
+        "size": 16,
+        "family": "CooperHewitt",
+        "weight": 300,
+        "lineHeight": 1.4,
+        "letterSpacing": 0
+      },
+      {
+        "role": "film-title",
+        "size": 18,
+        "family": "CooperHewitt",
+        "weight": 700,
+        "lineHeight": 1.3,
+        "letterSpacing": 0
+      },
+      {
+        "role": "footer-heading",
+        "size": 32,
+        "family": "CooperHewitt",
+        "weight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": 0.608
+      },
+      {
+        "role": "hero-display",
+        "size": 54,
+        "family": "CooperHewitt",
+        "weight": 800,
+        "lineHeight": 1,
+        "letterSpacing": 0.594
+      },
+      {
+        "role": "section-display",
+        "size": 54,
+        "family": "CooperHewitt",
+        "weight": 800,
+        "lineHeight": 0.88,
+        "letterSpacing": 0
+      }
+    ],
+    "components": [
+      {
+        "name": "Top Catalog Navigation",
+        "role": "Persistent public-site header",
+        "description": "Use a #ffffff bar with a 1px #eaeaea bottom border. Set category and account labels in JetBrainsMono 14px/800, uppercase, 1.12px tracking, with #262626 text and 16px control gaps."
+      },
+      {
+        "name": "Header Search Field",
+        "role": "Film, people, and festival search",
+        "description": "Use a #ffffff input with a 1px #eaeaea border, 5px radius, and 14px horizontal padding. Keep placeholder text muted in #999999 and use a compact #262626 search icon."
+      },
+      {
+        "name": "Lavender Submission Button",
+        "role": "Header submission link",
+        "description": "Set the control on #e4eaff with #6c00f4 JetBrainsMono 14px/800 uppercase text at 1.12px tracking. Use a 5px radius and 4px 24px padding."
+      },
+      {
+        "name": "Hero Spotlight Frame",
+        "role": "Featured-film introduction",
+        "description": "Build a wide photographic frame with a black-to-transparent left overlay that leaves the film image visible on the right. Set all overlay copy in #ffffff: 24px/700 CooperHewitt for the spotlight line, 54px/800 at 1.0 line-height with 0.6px tracking for the title, and 12px/300 JetBrainsMono uppercase metadata."
+      },
+      {
+        "name": "White Watch-Film Button",
+        "role": "Hero viewing control",
+        "description": "Use a #ffffff rectangular control with #262626 JetBrainsMono 14px/800 uppercase copy and 1.12px tracking. Apply a 1px rgba(0,0,0,0.15) border, 5px radius, and 0px 20.88px padding; place a solid #262626 play triangle before the label."
+      },
+      {
+        "name": "Hero Slide Dots",
+        "role": "Spotlight carousel pagination",
+        "description": "Use small #ffffff and #999999 circular indicators with 9999px radius across the lower edge of the hero image. Keep the row tight on a 4px rhythm."
+      },
+      {
+        "name": "Editorial Section Header",
+        "role": "Catalog section introduction",
+        "description": "Pair a 54px/800 CooperHewitt #262626 heading at 0.88 line-height with an 8px-radius #e4eaff icon tile. Use #6c00f4 for the outlined section icon and place a JetBrainsMono uppercase see-all link nearby."
+      },
+      {
+        "name": "Comment Column",
+        "role": "Recent audience-comment module",
+        "description": "Use a text-first column with a CooperHewitt 18px/700 #262626 film title, 16px/300 #262626 comment copy, and 12px spacing between stacked text groups. Avoid card outlines around the main comment text."
+      },
+      {
+        "name": "Commenter Activity Strip",
+        "role": "Compact commenter attribution",
+        "description": "Place avatar, name, comment status, and timestamp in a #f1f1f1 strip with 5px radius and 16px padding. Use #262626 for the name and #999999 for compact supporting metadata."
+      },
+      {
+        "name": "Film Thumbnail Card",
+        "role": "Horizontal editorial film catalog card",
+        "description": "Use a sharp-cornered 16:9 still with no visible radius, then stack a #262626 CooperHewitt 18px/700 title, a smaller creator line, and #999999 JetBrainsMono 12px/300 uppercase genre/year/runtime metadata. Separate image and text with 8px, and retain 12px gaps between cards."
+      },
+      {
+        "name": "See-All Text Link",
+        "role": "Section-level catalog expansion",
+        "description": "Set this as #262626 JetBrainsMono uppercase text with wide 1.12px tracking and a compact right-pointing chevron. Keep the background transparent, borderless, and square-cornered."
+      },
+      {
+        "name": "Circular Carousel Control",
+        "role": "Thumbnail-rail navigation",
+        "description": "Use a #ffffff circular button with 50% radius, 8px padding, and a 1px #eaeaea border. Center a #262626 directional glyph within the control."
+      },
+      {
+        "name": "Violet Join Banner",
+        "role": "Closing participation panel",
+        "description": "Use a broad #a77eff featured field for the final invitation, with #ffffff CooperHewitt 32px/700 text at 48px line-height and 0.6px tracking. Keep the callout distinct from the #eaeaea footer base rather than carrying violet through every lower-page element."
+      },
+      {
+        "name": "Pill Utility Marker",
+        "role": "Small icon or count control",
+        "description": "Use 9999px radius with 8px padding for compact circular or pill utility controls. Keep the default surface #ffffff, text #262626, and border 1px #eaeaea."
+      }
+    ],
+    "typography": [
+      {
+        "role": "The editorial voice: use 800 at 54px for section and hero displays, 700 at 32px for footer calls, 700 at 18px for film titles, and 300 at 16px for bylines and reading copy. The condensed, rounded grotesk makes oversized titles feel like festival-program cover lines rather than generic product headings.",
+        "sizes": "14px, 16px, 18px, 24px, 32px, 54px",
+        "family": "CooperHewitt",
+        "weight": "300, 500, 600, 700, 800",
+        "lineHeight": "0.88, 1.00, 1.20, 1.25, 1.30, 1.40, 1.50, 1.70",
+        "substitute": "Barlow Semi Condensed",
+        "letterSpacing": "Normal for section displays; 0.6px at 32px and 54px display treatments."
+      },
+      {
+        "role": "Use for all catalog metadata, genres, durations, navigation, utility buttons, and compact labels. Its 800 uppercase navigation at 14px with wide tracking makes the film archive feel indexed and machine-set beside the expressive CooperHewitt titles.",
+        "sizes": "12px, 14px, 16px",
+        "family": "JetBrainsMono",
+        "weight": "300, 400, 700, 800",
+        "lineHeight": "1.00, 1.30, 1.40, 1.50, 1.70, 2.13, 2.44",
+        "substitute": "IBM Plex Mono",
+        "letterSpacing": "0.14px at 12px metadata; 1.12px at 14px uppercase navigation and buttons."
+      }
+    ],
+    "description": "Shortverse pairs an editorial film-magazine canvas with a cinema-scale spotlight treatment: stark white content bands, oversized condensed display type, and dark photographic hero frames. CooperHewitt headlines arrive dense and emphatic while JetBrainsMono turns navigation, metadata, and utility controls into technical film-catalog labels. Vivid violet is held back for the wordmark, iconography, and submission affordances; the rest of the interface relies on black, white, pale-gray comment tiles, and unrounded film stills.",
+    "customSections": [
+      {
+        "title": "Agent Prompt Guide",
+        "content": "Quick Color Reference:\n- White Screen: #ffffff — Page backgrounds, navigation surface, hero utility buttons, and light text over photographic imagery\n- Charcoal Ink: #262626 — Primary headings, body copy, navigation labels, film titles, and dark iconography\n- Mist Tile: #f1f1f1 — Commenter strips, quiet linked-content tiles, and secondary surface blocks\n- Lilac Wash: #e4eaff — Pale icon tiles and restrained highlighted utility surfaces\n- Divider Ash: #eaeaea — Hairline borders, search-field outlines, footer base surface, and quiet separators\n- Metadata Gray: #999999 — Film metadata, timestamps, muted helper copy, and inactive supporting labels\n- Lavender Projector: #a77eff — Brand mark, section-icon graphics, and large featured violet fields that punctuate the monochrome catalog\n- Ultraviolet Type: #6c00f4 — Submission and account-label text, violet icon details, and brand-word emphasis against pale lilac surfaces\n\nCreate a full-bleed featured-film hero using a dark cinematic still, a black left overlay, #ffffff CooperHewitt 54px/800 title text at 1.0 line-height with 0.6px tracking, and #ffffff JetBrainsMono 12px/300 uppercase metadata with 0.14px tracking.\nCreate a catalog section header on White Screen with an 8px Lilac Wash icon tile, Ultraviolet Type outlined icon, and a Charcoal Ink CooperHewitt 54px/800 heading at 0.88 line-height.\nCreate a horizontal film rail of sharp 0px-corner stills, 12px card gaps, Charcoal Ink CooperHewitt 18px/700 titles, and Metadata Gray JetBrainsMono 12px/300 uppercase film details.\nCreate a Lavender Projector closing banner with #ffffff CooperHewitt 32px/700 text at 48px line-height and 0.6px tracking, above a Divider Ash footer surface."
+      }
+    ],
+    "elevationPhilosophy": "Keep the catalog largely flat: hierarchy comes from photographic contrast, surface shifts, and 1px #eaeaea or rgba(0,0,0,0.15) borders. Where an icon needs separation, use the restrained 0 2px 0 rgba(0,0,0,0.25) drop-shadow rather than diffuse card shadows."
+  },
+  "screenshot": {
+    "url": "https://images.refero.design/styles/refero.design/image/27cd2696-b730-443f-9077-0fe66ffeb8b4.jpg",
+    "thumbnail": "https://images.refero.design/styles/refero.design/image/fdd637bf-bbad-404a-9d3c-7c57130eaaf8.jpg"
+  }
+}

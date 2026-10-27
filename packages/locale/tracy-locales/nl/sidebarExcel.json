@@ -1,0 +1,17 @@
+{
+  "charts": "grafieken",
+  "conditionalFormatting": "voorwaardelijke opmaak",
+  "encoding": "Deze tekstcodering kon niet worden gelezen. Sla het bestand op als UTF-8 of UTF-16 met een BOM en probeer het opnieuw.",
+  "featureSeparator": ", ",
+  "formulaWarning": "Deze werkmap bevat formules. Weergegeven resultaten kunnen ontbreken of onjuist zijn.",
+  "images": "afbeeldingen",
+  "invalid": "Dit spreadsheet kon niet worden geopend. Controleer de indeling, de inhoud of de wachtwoordbeveiliging.",
+  "language": "en",
+  "loading": "Document renderen...",
+  "retry": "Opnieuw proberen",
+  "shapes": "vormen",
+  "timeout": "Het openen van deze werkmap duurde te lang. Probeer een kleiner bestand.",
+  "title": "Spreadsheet",
+  "tooLarge": "Deze werkmap overschrijdt de maximale grootte voor een voorbeeld.",
+  "unsupportedNotice": "Dit voorbeeld ondersteunt {features} in deze werkmap niet. Open de werkmap in een systeemapplicatie voor de volledige weergave."
+}

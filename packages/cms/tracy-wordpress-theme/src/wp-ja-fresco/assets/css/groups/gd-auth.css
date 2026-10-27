@@ -1,0 +1,221 @@
+/* Group D: the account forms (inc/groups/gd.php), drawn as the source's com_users sign-in and registration
+   forms (measured 21/10 at 390, 768, 992 and 1440 px): a tinted box centred in the container (550 px for
+   sign-in, 650 px for registration), labels above 14/21 fields, 32 px between field groups. */
+.jf-auth {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: var(--jf-container);
+	margin-inline: auto;
+	padding-inline: var(--jf-gutter);
+}
+.jf-auth .login-wrap,
+.jf-auth .registration {
+	box-sizing: border-box;
+	max-width: 550px;
+	margin: 0 auto;
+	padding: 64px;
+	background: var(--jf-wash-4);
+}
+.jf-auth .registration {
+	max-width: 650px;
+}
+@media (max-width: 991.98px) {
+	.jf-auth .login-wrap,
+	.jf-auth .registration {
+		padding: 48px 32px;
+	}
+}
+@media (max-width: 767.98px) {
+	.jf-auth .login-wrap,
+	.jf-auth .registration {
+		padding: 48px 24px;
+	}
+}
+.jf-auth form,
+.jf-auth fieldset {
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.jf-auth .control-group {
+	margin: 0 0 32px;
+}
+.jf-auth .control-label {
+	padding: 0 5px 8px 0;
+}
+.jf-auth .control-label label {
+	display: inline-block;
+	margin: 0 0 4px;
+	line-height: 1;
+}
+.jf-auth .registration .control-label label {
+	margin: 0;
+}
+.jf-auth .star,
+.jf-auth .red {
+	color: var(--jf-c-danger);
+}
+.jf-auth .red {
+	font-weight: 700;
+}
+.jf-auth .form-control {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	padding: 10px 24px;
+	font-family: var(--jf-font-body);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 21px;
+	color: var(--jf-heading);
+	appearance: none;
+	background-color: var(--jf-wash-6);
+	background-clip: padding-box;
+	border: 1px solid var(--jf-line);
+	border-radius: var(--jf-radius);
+}
+.jf-auth .form-control:focus {
+	border-color: var(--ds-c-border-soft, rgba(255, 255, 255, 0.08));
+	outline: 0;
+}
+.jf-auth .input-group {
+	position: relative;
+	display: flex;
+	align-items: stretch;
+	width: 100%;
+}
+.jf-auth .input-group .form-control {
+	flex: 1 1 auto;
+	width: 1%;
+	min-width: 0;
+}
+/* The eye button sits inside the field's right edge, as the source's. */
+.jf-auth .input-password-toggle {
+	position: absolute;
+	top: 1px;
+	right: 0;
+	bottom: 1px;
+	margin: 0;
+	padding: 10px 16px 10px 0;
+	border: 0;
+	background: transparent;
+	color: var(--jf-heading);
+	cursor: pointer;
+}
+.jf-auth .jf-eye {
+	display: block;
+	width: 18px;
+	height: 18px;
+	fill: currentColor;
+}
+.jf-auth .login-remember {
+	margin: 0 0 32px;
+}
+.jf-auth .form-check {
+	display: flex;
+	align-items: center;
+	margin: 0;
+	padding: 0 0 0 24px;
+}
+.jf-auth .form-check-input {
+	box-sizing: border-box;
+	width: 20px;
+	height: 20px;
+	margin: 0 4px 0 -21px;
+	background-color: var(--jf-wash-6);
+	border: 1px solid var(--jf-wash-6);
+	border-radius: var(--ds-input-radius, 3.5px);
+	appearance: none;
+	vertical-align: middle;
+}
+.jf-auth .form-check-input:checked {
+	background: var(--jf-accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3E%3C/svg%3E") center / 100% no-repeat;
+	border-color: var(--jf-accent);
+}
+.jf-auth .form-check-label {
+	margin: 0 0 0 8px;
+}
+.jf-auth .login-submit {
+	margin: 0 0 16px;
+}
+.jf-auth .login-submit .btn {
+	width: 100%;
+}
+.jf-auth .other-links {
+	max-width: 400px;
+	margin: 0 auto;
+}
+.jf-auth .other-links ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-align: center;
+	line-height: 1.5;
+}
+.jf-auth .other-links li {
+	display: inline-block;
+	padding: 0 8px;
+}
+.jf-auth .other-links a {
+	color: var(--jf-text);
+	font-size: 14px;
+	text-decoration: none;
+	transition: all 0.2s ease-in-out;
+}
+.jf-auth .other-links a:hover {
+	color: var(--ds-c-accent-text-hover, var(--jf-accent));
+}
+/* Registration: the legend is the section's heading (the source's h3 step in the display face), the
+   required-field note 8 px above the first field, Register and Cancel side by side. */
+.jf-auth .registration fieldset {
+	position: relative;
+	margin: 0 0 24px;
+	padding: 48px 0 0;
+}
+.jf-auth .registration legend {
+	position: absolute;
+	top: -5px;
+	left: 0;
+	margin: 0 0 24px;
+	padding: 0;
+	font-family: var(--jf-font-display);
+	font-size: var(--jf-h3);
+	font-weight: 400;
+	line-height: 1.2;
+	letter-spacing: 1px;
+	color: var(--jf-heading);
+}
+.jf-auth .registration .field-spacer {
+	margin-bottom: 8px;
+}
+.jf-auth .registration .control-label {
+	line-height: 1;
+}
+.jf-auth .registration .com-users-registration__submit {
+	margin-bottom: 0;
+}
+.jf-auth a.btn {
+	display: inline-block;
+	box-sizing: border-box;
+	padding: 10px 24px;
+	border: 1px solid currentColor;
+	border-radius: var(--jf-radius);
+	font-family: var(--jf-font-body);
+	font-size: 14px;
+	line-height: 21px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+.jf-auth a.btn-danger {
+	background: var(--jf-c-danger);
+	border-color: var(--jf-c-danger);
+	color: var(--ds-c-danger-text, #fff);
+}
+.jf-auth a.btn-danger:hover,
+.jf-auth a.btn-danger:focus-visible {
+	opacity: 0.85;
+}

@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1184-web-onboard-first-run",
+  "kind": "feat",
+  "title": "Getting started on the web: shown once per account, reopened from the account menu; the desktop app keeps four steps",
+  "pr": 1184,
+  "area": "onboard/first-run",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run apps/tracy-web/test/onboarding-door.test.mjs with TEST_DATABASE_URL — GET /api/onboarding is null for a new account; POST records once (idempotent); GET then answers that time; no session is 401; a same-site POST is 403 CSRF_ORIGIN.",
+    "S2: run packages/ui/tracy-onboard/test/mount.test.mjs — the plugin as dsh loads it into jsdom on the web (no desktop bridge) and in the desktop app (bridge protocol 2)."
+  ],
+  "expect": [
+    "S1: exit 0, 0 failures, 0 skipped.",
+    "S2: exit 0, 0 failures; the web shows 3 steps once when the flag is null and POSTs on Done; a closed account sees nothing on load and the Getting started menu row reopens it; the onboarding switch off hides screen and row; the desktop app still shows 4 steps once per device and also POSTs /api/onboarding on close."
+  ],
+  "selectors": {
+    "doors": "GET /api/onboarding, POST /api/onboarding",
+    "dom": "[data-tracy-onboard], [data-rail-step], [data-menu-item='getting-started']",
+    "switch": "onboarding (packages/core/tracy-core/src/ui-switches/catalogue.json)"
+  },
+  "fence": "Whether the web shows the Getting started screen is the account's (account.onboarding_completed_at), never the browser's; closing it records the account on both surfaces; the web never shows a notifications step it cannot keep; the operator switch hides it everywhere.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/onboarding-door.test.mjs",
+      "packages/ui/tracy-onboard/test/mount.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "a new account has not closed the screen; POST records it once and GET then says when",
+      "POST from a customer page on a sibling host is refused by the cross-site guard",
+      "the web, an account that never closed it: three steps, \"Popular\" with no scan, Done on Appearance records the account",
+      "the web, an account that closed it: nothing drawn; the account menu row \"Getting started\" reopens it",
+      "the operator switched Getting started off: no screen on first run, no menu row, the menu reopens nothing",
+      "the desktop app: still four steps and once per device; a close records the account too, never the account read"
+    ]
+  }
+}

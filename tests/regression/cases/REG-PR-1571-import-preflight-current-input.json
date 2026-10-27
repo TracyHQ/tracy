@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1571-import-preflight-current-input",
+  "kind": "fix",
+  "title": "Import first-pass platform checks and current admin-address guidance",
+  "pr": 1571,
+  "area": "add-site/import-preflight",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the command in run.cmd from this checkout with dependencies installed. The browser renders the actual ImportWizard and controls read-only preflight responses.",
+    "Keep the site field focused while detection is delayed; edit site/platform during an earlier request; enter an unreachable admin URL on another host and path."
+  ],
+  "expect": [
+    "Continue is disabled before and during current preflight; the first mismatch stays on step 1 with Switch to WordPress primary and Continue with Joomla.",
+    "Changing address or platform invalidates prior results and stale replies cannot release Continue.",
+    "Admin guidance label and href exactly match the entered address, including custom host, path, query, and fragment; external target and rel stay safe."
+  ],
+  "selectors": {
+    "site": "input[placeholder=\"yoursite.com\"]",
+    "preflight": "[data-import-preflight]",
+    "guidance": "[data-import-problem=\"pf2.unreachable\"] a"
+  },
+  "evidence": "Develop acceptance of PR #1555: case 2 bypassed the first mismatch; case 20 displayed wordpress.org/administrator while linking to the newly typed unreachable admin URL. Both new browser assertions fail on origin/develop 1b339a7556 before source changes.",
+  "fence": "Real ImportWizard, preflight state, and rich-text renderer in Chromium; read-only detection and ownership doors are controlled for deterministic timing. Does not start an import or exercise CMS credentials.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=60000",
+      "packages/site/tracy-add-site/test/e2e/import-preflight.test.mjs"
+    ],
+    "tests": [
+      "the first delayed platform result keeps Continue disabled until the mismatch choice is shown",
+      "changing the address or platform immediately invalidates the earlier preflight result",
+      "unreachable admin guidance displays and links the exact address currently entered"
+    ],
+    "timeout_s": 180
+  }
+}

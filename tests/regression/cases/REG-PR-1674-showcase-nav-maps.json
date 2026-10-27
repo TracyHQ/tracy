@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1674-showcase-nav-maps",
+  "kind": "feat",
+  "title": "Showcase-navigation maps are current, hide only, and keep the account and search entries of Diner WP and Morgan WP",
+  "pr": 1674,
+  "area": "quickstart/showcase-nav",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node scripts/build-joomla-showcase-nav.mjs --check and node scripts/build-wordpress-showcase-nav.mjs --check.",
+    "S2: Read every showcase-nav-map.json under packages/cms/tracy-joomla-quickstart/contracts and packages/cms/tracy-wordpress-quickstart/contracts; list operations whose op is not one of menuItem.param, module.published, templateStyle.megaSubRemove, templateStyle.megaColumnRemove, navigation.removeLink, templatePart.setNavigationRef, templatePart.removeBlock, and menuItem.param operations that do not set menu_show to \"0\" from \"1\" or unset.",
+    "S3: In the ja-diner/wp7/1.0.1 and ja-morgan/wp7/1.1.16 maps, read the labels of navigation.removeLink operations and whether any templatePart.setNavigationRef or templatePart.removeBlock operation exists; check a removeLink targets the drawer navigation (Diner 278, Morgan 160).",
+    "S4: In the ja-smallbiz/j6/1.0.4 map, check for a templateStyle.megaColumnRemove operation.",
+    "S5: Run node --test on packages/fleet/tracy-fleet-operation/test/joomla-contract-bind.test.mjs, wordpress-quickstart.test.mjs and joomla-contract-fetch.test.mjs; read the test names for a showcase phase whose apply or revert is lost or refused, a half-applied phase, a started phase with a missing token or a malformed or missing receipt: provisioning continues with one \"!! showcase navigation:\" line and the receipt settled failed; an inspect that no longer confirms after the revert stays fatal."
+  ],
+  "expect": [
+    "S1: both exit 0.",
+    "S2: at least 40 maps found; no operation listed.",
+    "S3: neither map removes Login or Smart Search; neither repoints or removes a header drawer; each removes at least one link inside its drawer navigation.",
+    "S4: present."
+  ],
+  "selectors": {
+    "files": "packages/cms/tracy-{joomla,wordpress}-quickstart/contracts/*/*/*/showcase-nav-map.json",
+    "tool": "tests/regression/scripts/REG-PR-1674-showcase-nav-maps.mjs"
+  },
+  "evidence": "Before this change a customer install kept the template's demo navigation; an earlier map of Diner WP and Morgan WP swapped or removed the drawer holding the real Login and Smart Search pages",
+  "fence": "Static read of the committed maps plus the builders' own staleness check; plugin behaviour is covered by the claude-cowork suites and real-stand runs",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1674-showcase-nav-maps.mjs"]
+  }
+}

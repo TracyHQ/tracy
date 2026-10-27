@@ -1,0 +1,9 @@
+:root {
+  /* Colors */
+  --color-obsidian-canvas: #171717;
+  --color-chalk: #ffffff;
+  --color-ash: #9a9a9a;
+
+  /* Typography — Font Families */
+  --font-helveticanowdisplay-light: 'HelveticaNowDisplay-Light', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

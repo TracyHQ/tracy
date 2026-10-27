@@ -1,0 +1,60 @@
+{
+  "id": "QA-UNIT-REG-PR-1479-stop-sends-nothing-more-happy",
+  "itemIds": ["regression:REG-PR-1479-stop-sends-nothing-more"],
+  "requirement": "Stop keeps a site call that was not yet sent from being sent; a write already on the wire is not sent twice",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1479-stop-sends-nothing-more.json",
+    "ref": "PR #1479 (fix); fix evidence: Review 19/10/2026: no site tool read the turn's abort signal; a write waiting for the lease landed up to 100 s after Stop while the session log said the call was aborted",
+    "invariant": "S1: the call answers TURN_STOPPED at once and nothing more is sent. S2: the write runs to its answer and no second send follows; a lost answer stays unknown. S3: the write on the wire lands; no later write or undo is sent. S4: nothing runs in the site container.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/lib/index.js:45749",
+      "packages/tools/tracy-site-tools/src/host/look-style.mjs:133",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:269"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "🔒 C2: Stop while the write waits for the lease — nothing more is sent, at once",
+    "🔒 C2: Stop while a write is on the wire — it runs to its answer, and no second send follows (a lost answer stays unknown)",
+    "🔒 C2: Stop during a replace across several records — the write on the wire lands, no later write or undo is sent",
+    "🔒 C2: a tracy_emdash call after Stop runs nothing in the site container"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1479-stop-sends-nothing-more"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1479-stop-sends-nothing-more",
+    "pr": 1479,
+    "kind": "fix",
+    "area": "site-changes/stop",
+    "file": "tests/regression/cases/REG-PR-1479-stop-sends-nothing-more.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/tools/tracy-site-tools/test/handler.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "🔒 C2: Stop while the write waits for the lease — nothing more is sent, at once",
+    "🔒 C2: Stop while a write is on the wire — it runs to its answer, and no second send follows (a lost answer stays unknown)",
+    "🔒 C2: Stop during a replace across several records — the write on the wire lands, no later write or undo is sent",
+    "🔒 C2: a tracy_emdash call after Stop runs nothing in the site container"
+  ],
+  "timeoutS": 600
+}

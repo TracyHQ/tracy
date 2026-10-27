@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-nova/j6/1.0.5",
+  "platform": "joomla",
+  "template": "ja_nova",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-nova",
+    "id": "quickstart/ja-nova/j6",
+    "version": "1.0.5",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_nova",
+    "parts": {
+      "installer": {
+        "file": "ja-nova-j6-quickstart-1.0.5.zip",
+        "bytes": 63784670,
+        "sha256": "0d4537389ff2e7af569bf85c9bd87a0ad3a5055b9de034ab1ea4fb1029a33b6d"
+      }
+    },
+    "release": "quickstart/ja-nova/j6",
+    "repository": "JoomlArt-Products/ja-products",
+    "createdAt": "2026-10-09T16:14:59.109Z",
+    "builtFrom": {
+      "from": "quickstart/ja-nova/j6@1.0.4",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    }
+  },
+  "coworkContractVersion": "0.21.0",
+  "mode": "content-recommendation"
+}

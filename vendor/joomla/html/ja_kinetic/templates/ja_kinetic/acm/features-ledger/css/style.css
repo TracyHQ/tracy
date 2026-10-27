@@ -1,0 +1,386 @@
+/* Kinetic — Features Ledger ACM block (self-contained, block-scoped).
+   All color/type/spacing routes through the template design tokens, so light +
+   dark resolve automatically with the active [data-style]/[data-theme] / html.t4-dark. */
+
+.acm-features-ledger {
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--text);
+}
+.acm-features-ledger .hx-section {
+  padding: 80px 0;
+}
+.acm-features-ledger .hx-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+/* ---- shared head ---- */
+.acm-features-ledger .hx-fl-head {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+.acm-features-ledger .hx-eyebrow {
+  margin: 0 0 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.acm-features-ledger .hx-h2 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 38px;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--heading);
+}
+.acm-features-ledger .hx-fl-sub {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* ---- layout: stats (.hx-stats card grid) ---- */
+.acm-features-ledger .hx-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.acm-features-ledger .hx-stat {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 30px 28px;
+}
+.acm-features-ledger .hx-stat-val {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 44px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  color: var(--heading);
+}
+.acm-features-ledger .hx-stat-lab {
+  margin-top: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.acm-features-ledger .hx-stat-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+.acm-features-ledger .hx-stat-icon {
+  display: inline-flex;
+  color: var(--primary);
+}
+.acm-features-ledger .hx-stat-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.acm-features-ledger .hx-stat-title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--heading);
+}
+.acm-features-ledger .hx-stat-text {
+  margin: 10px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* ---- layout: ledger (.hx-specrow rows) ---- */
+/* LIST ROW gesture (micro-interactions.md §3d): subtle bg tint + primary
+   border on hover, no lift. The row's own border-bottom (and border-top on
+   the first row) stay neutral at rest and pick up the accent only on hover
+   of THAT row — never a permanent highlight on any sibling. */
+.acm-features-ledger .hx-specrow {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 24px;
+  align-items: center;
+  padding: 26px 10px;
+  border-bottom: 1px solid var(--border);
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.acm-features-ledger .hx-specrows > .hx-specrow:first-child {
+  border-top: 1px solid var(--border);
+}
+.acm-features-ledger .hx-specrow:hover {
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+  border-color: var(--primary);
+}
+.acm-features-ledger .hx-spec-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.acm-features-ledger .hx-spec-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.acm-features-ledger .hx-spec-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--primary);
+  margin-top: 2px;
+}
+.acm-features-ledger .hx-spec-icon svg {
+  width: 22px;
+  height: 22px;
+}
+.acm-features-ledger .hx-spec-title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--heading);
+}
+.acm-features-ledger .hx-spec-text {
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
+}
+.acm-features-ledger .hx-spec-stat {
+  text-align: right;
+  white-space: nowrap;
+}
+.acm-features-ledger .hx-spec-stat-val {
+  display: block;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--heading);
+}
+.acm-features-ledger .hx-spec-stat-lab {
+  display: block;
+  margin-top: 2px;
+  font-family: "JetBrains Mono", monospace;
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---- responsive (mirror design-truth breakpoints) ---- */
+@media (max-width: 620px) {
+  .acm-features-ledger .hx-section {
+    padding: 56px 0;
+  }
+  .acm-features-ledger .hx-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .acm-features-ledger .hx-h2 {
+    font-size: 27px;
+    letter-spacing: -0.6px;
+  }
+  .acm-features-ledger .hx-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .acm-features-ledger .hx-stats {
+    grid-template-columns: 1fr;
+  }
+  .acm-features-ledger .hx-specrow {
+    grid-template-columns: 1fr auto;
+  }
+  .acm-features-ledger .hx-specrow > .hx-spec-num {
+    display: none;
+  }
+}
+
+/* ---- layout: metrics (.pen Home StatsWrap w2B58 — production-metrics card) ---- */
+.acm-features-ledger.layout-metrics .hx-section {
+  padding: 80px 0;
+}
+.acm-features-ledger.layout-metrics .hx-container {
+  max-width: none;
+}
+.acm-features-ledger .hx-metrics-card {
+  max-width: 1240px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.acm-features-ledger .hx-metrics-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  /* design $elevated = #F2F5EE light / #161B18 dark; the body --elevated token is set
+     darker in dark (#0F1311), so use --chrome-elevated which equals the design value. */
+  background: var(--chrome-elevated);
+  border-bottom: 1px solid var(--border);
+}
+.acm-features-ledger .hx-metrics-cardlabel {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.acm-features-ledger .hx-metrics-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--primary);
+  white-space: nowrap;
+}
+.acm-features-ledger .hx-metrics-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--primary);
+}
+.acm-features-ledger .hx-metrics-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.acm-features-ledger .hx-metric-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px 26px;
+}
+.acm-features-ledger .hx-metric-col + .hx-metric-col {
+  border-left: 1px solid var(--border);
+}
+.acm-features-ledger .hx-metric-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.acm-features-ledger .hx-metric-value {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  color: var(--heading);
+  white-space: nowrap;
+}
+.acm-features-ledger .hx-metric-desc {
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--text);
+}
+
+/* metrics — tablet (.pen Home StatsWrap c76ae @768: elevated band, 4-in-row, smaller type) */
+@media (max-width: 991.98px) {
+  .acm-features-ledger.layout-metrics .hx-section {
+    padding: 40px 0;
+    background: var(--chrome-elevated);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .acm-features-ledger.layout-metrics .hx-container {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .acm-features-ledger .hx-metric-col {
+    padding: 24px 20px;
+    gap: 8px;
+  }
+  .acm-features-ledger .hx-metric-value {
+    font-size: 30px;
+    letter-spacing: -1.2px;
+  }
+  .acm-features-ledger .hx-metric-label {
+    font-size: 10px;
+  }
+  .acm-features-ledger .hx-metric-desc {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
+
+/* metrics — mobile (.pen Home StatsWrap lUf1I @390: 2x2 grid inside the card) */
+@media (max-width: 767.98px) {
+  .acm-features-ledger.layout-metrics .hx-section {
+    padding: 40px 0;
+  }
+  .acm-features-ledger.layout-metrics .hx-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .acm-features-ledger .hx-metrics-head {
+    padding: 14px 20px;
+  }
+  .acm-features-ledger .hx-metrics-cardlabel {
+    font-size: 10px;
+    letter-spacing: 1.2px;
+  }
+  .acm-features-ledger .hx-metrics-badge {
+    font-size: 10px;
+  }
+  .acm-features-ledger .hx-metric-col {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding: 22px 20px;
+    gap: 6px;
+  }
+  .acm-features-ledger .hx-metric-col + .hx-metric-col {
+    border-left: 0;
+  }
+  .acm-features-ledger .hx-metric-col:nth-child(2n) {
+    border-left: 1px solid var(--border);
+  }
+  .acm-features-ledger .hx-metric-col:nth-child(n + 3) {
+    border-top: 1px solid var(--border);
+  }
+  .acm-features-ledger .hx-metric-value {
+    font-size: 32px;
+    letter-spacing: -1.2px;
+  }
+  .acm-features-ledger .hx-metric-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+  .acm-features-ledger .hx-metric-desc {
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+}
+
+/* ---- reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .acm-features-ledger * {
+    transition-duration: .01ms !important;
+  }
+}

@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-parchment: #fffef2;
+  --color-charcoal: #333333;
+  --color-ink-black: #000000;
+  --color-carbon: #252525;
+  --color-stone: #666666;
+  --color-slate: #d6d5cc;
+  --color-alabaster: #ffffff;
+  --color-umber: #945c26;
+
+  /* Typography — Font Families */
+  --font-suisseintl: 'SuisseIntl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-zapf-humanist: 'Zapf-Humanist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

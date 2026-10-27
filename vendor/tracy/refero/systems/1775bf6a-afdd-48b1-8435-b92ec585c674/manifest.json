@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "1775bf6a-afdd-48b1-8435-b92ec585c674",
+  "status": "complete",
+  "name": "Hardworkclub",
+  "url": "https://styles.refero.design/style/1775bf6a-afdd-48b1-8435-b92ec585c674",
+  "sourceWebsite": "https://www.hardworkclub.com",
+  "extractedAt": "2026-06-03T21:38:44.624Z",
+  "capturedAt": "2026-10-08T05:08:42.432604+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "midnight black-box theater — a dark room where one round blue light glows above a stage, and the only thing louder than the silence is the film playing",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/0817aac4-0440-48d6-a001-e27ff837a32f.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e3e30ab12443705eb7c7e3526b1eb0b14cd1d8384b74861bce7dac55aec48f5b",
+      "bytes": 16075
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "abee08b311fbdc789f99921d4245af33e4502121765c3db756b21df75dbc8f87",
+      "bytes": 58152
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1373cc220219a410cc64be45605afe3681e33dd4a6e847416e40f76c9e2fc2ab",
+      "bytes": 13094
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2cb285bf4983f1fffc4d828b458b617306c3cad6381fb97255ca8616a0e5c617",
+      "bytes": 7022
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "6c6698202470c3d251a5c5b1793584c1acac58ed22c2fc0ad66fa9b18b2f7b7f",
+      "bytes": 10491
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "1d48f669ac5178e24d4ca834dd5e01a73658b55ce3bb65a9f9f5bd1ce5e5f1ca",
+      "bytes": 2072
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "07554dee23a71ac19776105e8140ee3b7f2789cb2f29dd40a6335d147cb83f92",
+      "bytes": 443
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "81f60dd62bed338917bcff2d881180bc02602e979c0367e4457752846e972ab9",
+      "bytes": 460
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "0cac564b483e2c2e2ebfda3eaf2f2b9932bffadf2f7b3728e6f7ad53e4359e6d",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "16c0c7fb5ac8f3af76fe76e89ee84173c22bcc318fbcd40820b237b90bf39d41",
+      "bytes": 38562
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "634608cb7ee164dff9714fcf41e15c31962d479c5bfb6bd3d666450a84285147",
+      "bytes": 19826
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "5a5fcc150b373e17f1f47043df24d5a1b89920ddc366d510542d10b6294a269e",
+      "bytes": 28216
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "0909dee69e216efaac7cb7debb9596e0d0bca0f1440ab3df8b408f7beb4eed86",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "559010298d89cfc123316d65591ac2c04a5e1f6fe627bfdd0caf82e35cb54ea5",
+      "bytes": 1179
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "df21d5258a2b408e36c3af3d1578597929deb8db75a6b4bc92424ae937990307",
+      "bytes": 1665
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "004f4856-4b01-4c23-a9fb-866303d5013b",
+    "02610b06-d16e-47bd-a1ea-18979a9ed4f5",
+    "1775bf6a-afdd-48b1-8435-b92ec585c674",
+    "1bd3b2ba-9ad9-44ed-9130-03f9d94de821",
+    "1cb31aee-608e-4dec-a44d-5745e4fd6bab",
+    "4c19bf7b-d5e8-4e2a-b3e3-69a9bde19b7a",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "565bfc50-3a19-4224-9a4c-125edaeb7bef",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "64ba8e77-d1be-48a2-a47d-bdd46e139b8f",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "905beb8c-9788-4ff4-888b-13370cacd4b0",
+    "9e3fde24-cc7d-4b96-a70a-7c172882aa8f",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "c406697b-677f-40c7-a3a2-10ea545278f1",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1",
+    "f1b76a42-050e-4c9e-96e3-a77fbd718c68"
+  ]
+}

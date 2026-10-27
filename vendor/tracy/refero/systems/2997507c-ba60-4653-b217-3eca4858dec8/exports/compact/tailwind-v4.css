@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-lab-white: #ffffff;
+  --color-figure-black: #0c0c0c;
+  --color-absolute-black: #000000;
+  --color-machine-gray: #6d6d6d;
+  --color-calibration-gray: #cecece;
+
+  /* Typography */
+  --font-pp-neue-machina-plain: 'pp-neue-machina-plain', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-neue-haas-grot-text: 'neue-haas-grot-text', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

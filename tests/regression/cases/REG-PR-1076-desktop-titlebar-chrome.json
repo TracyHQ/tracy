@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1076-desktop-titlebar-chrome",
+  "kind": "feat",
+  "title": "Desktop app (macOS): the window's top row is one chrome strip with no column border through the traffic lights, content on a card below it",
+  "pr": 1076,
+  "area": "desktop/window-chrome",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test on packages/desktop/tracy-desktop/test/shell-build.test.mjs: the built preload marks html[data-desktop-sidebar-rail] and html[data-desktop-chrome=integrated] on macOS only, and the dsh fork sheets (ui-layout AppFrame, ui-conversation ConversationRoot, ui-dockkit, ui-sidebar-right) still answer that mark, as does @tracy/dsh-sidebar's rail rule."
+  ],
+  "expect": [
+    "S1: every test passes, in particular 'the preload asks dsh for the kept rail and the integrated chrome row, on macOS only' and 'dsh still answers the integrated chrome mark the preload sets, and Tracy's rail follows it'."
+  ],
+  "selectors": {
+    "mark": "html[data-platform='darwin'][data-desktop-chrome='integrated'] (packages/desktop/tracy-desktop/shell/preload.ts)",
+    "card": "[data-dsh-center-col]::before from --dsh-chrome-height (44px), radius --dsh-content-radius (12px)",
+    "strip rows": "header[data-window-drag], [data-dockkit-strip], .tsb-window-strip"
+  },
+  "evidence": "tasks/evidence/desktop-titlebar-chrome/ (geometry.mjs 8 states before/after, extra.mjs, drag-check.sh native drag, web-regression.mjs)",
+  "fence": "The integrated chrome is an opt-in dsh fork mode keyed on a mark only the Mac app's preload sets; a dsh upgrade that drops the mode, or a preload that stops setting it, fails here instead of silently bringing back the line through the traffic lights",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/desktop/tracy-desktop/test/shell-build.test.mjs"
+    ],
+    "tests": [
+      "the preload asks dsh for the kept rail and the integrated chrome row, on macOS only",
+      "dsh still answers the integrated chrome mark the preload sets, and Tracy's rail follows it",
+      "the preload carries dsh's platform mark and shortcut bridge"
+    ]
+  }
+}

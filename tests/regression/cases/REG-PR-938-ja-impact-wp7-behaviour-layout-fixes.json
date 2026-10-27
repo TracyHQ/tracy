@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-938-ja-impact-wp7-behaviour-layout-fixes",
+  "kind": "fix",
+  "title": "JA Impact wp7 1.0.4: field focus, forms, drawer, back-to-top and footer icons behave and look like the Joomla source",
+  "pr": 938,
+  "area": "wordpress-theme/wp-ja-impact",
+  "cms": ["wp"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: A WordPress site running the wp-ja-impact theme under test (local stand restored from the quickstart pack) and the Joomla source (local stand from quickstart/ja-impact/j6, installed with its sample data and its web fonts loading; freeze the hit counter of article 12 so Hits chips do not drift between runs).",
+    "S2: From the TCH checkout run: node vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/scripts/visual/site-sweep.mjs --site <site> --source <source> --run-root tasks/ja-impact-wp7 --zip <theme.zip> --concurrency 3 --settle-ms 4000 --out <dir> (all ten checks; about 13 minutes).",
+    "S3: Run: node tasks/ja-impact-wp7/tools/measure101.mjs --site <site> --source <source> --out <dir> as the regression group (27 checks of 1.0.1 plus highlight and drawer-back; about 7 minutes)."
+  ],
+  "expect": [
+    "site-sweep: all ten checks pass with 0 defects on every route; the rows the dossier records as decided (D-13, D-27, D-32, D-39, D-43) are listed as not counted, and the not-measured causes recorded as not-measurable (no-counterpart-section, icon-covered, form-purpose-unknown, touch-control-not-found) carry their hand measurement.",
+    "measure101: TOTAL 39/39 pass."
+  ],
+  "selectors": {
+    "tool": "tasks/ja-impact-wp7/review.config.json",
+    "evidence": "tasks/ja-impact-wp7/release/fix-measure.json"
+  },
+  "evidence": "Sweeps of 05/10/2026 against a local copy of the Joomla source: baseline on the 1.0.3 restore passed 3 of 10 checks (defects in overflow..first-interaction); 1.0.4 on the clean restore passes 10 of 10 with 0 defects",
+  "fence": "Browser-measured behaviour of the shipped theme against the source; decided differences are not asserted to zero"
+}

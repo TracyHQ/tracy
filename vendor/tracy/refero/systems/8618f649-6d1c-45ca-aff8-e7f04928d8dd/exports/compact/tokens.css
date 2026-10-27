@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-paper: #ffffff;
+  --color-charcoal: #2f2f2f;
+  --color-ash: #898989;
+  --color-fog: #dddddd;
+  --color-slate: #999999;
+
+  /* Typography — Font Families */
+  --font-clarkson: 'Clarkson', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-clarkson-serif: 'Clarkson Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-system-sans-serif: 'System sans-serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

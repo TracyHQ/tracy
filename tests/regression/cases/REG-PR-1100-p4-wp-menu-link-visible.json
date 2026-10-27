@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1100-p4-wp-menu-link-visible",
+  "kind": "fix",
+  "title": "WordPress page.create: a menu link is reported as shown only where a visitor sees it (desktop and phone widths), and a theme's own header row of links gets the new link too",
+  "pr": 1100,
+  "area": "site-tools/page-create",
+  "cms": ["wp"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/page-create.test.mjs",
+    "S2: Record the exit code, the '# pass', '# fail', '# skipped' lines and the result of the tests named below."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# skipped 0'.",
+    "'WordPress: a header that draws its own row of links gets the new link there too, and the receipt says where it shows' is ok: on a tracy-base-like header (navigation block ref 68 hidden on desktop, a row of tracy-header__link paragraphs, Services drawn as a mega menu) the writes are post, post, templatePart:header under one apply_id; the row reads Home, About, Common questions /common-questions/, Projects, News; verified[1] is 'its menu link shows on / at desktop 1440 and phone 390 behind its menu button'; apply.revert hands the header back to the theme file.",
+    "'WordPress: a menu link a desktop visitor cannot see is said so, with the widths it shows at, and the receipt does not call it in the menu' is ok: with no row, only two writes; verified[1] is the menuDesktopHidden sentence (why 'display:none on <ul.wp-block-navigation__container.is-responsive>', widths 'phone 390 behind its menu button'); next is receiptMenuHidden, without 'in the menu after'; a header whose navigation block names another menu (ref 70) is not written.",
+    "The WordPress FAQ test and the three Joomla page.create tests are ok with the new menu line 'its menu link shows on <home> at desktop 1440 and phone 390'."
+  ],
+  "selectors": {
+    "verify": "menuLinkSeen / verifyPage in packages/tools/tracy-site-tools/src/host/page-create.mjs, fed by lookSetMeasure (index.ts)",
+    "write": "content.update {kind:'templatePart', key:'header', fields:{content}} (wordpressHeaderRow)"
+  },
+  "evidence": "dskeepwp (tracy-base wp7), rebuilt stand 10/10/2026: page.create added 'Đối tác' to wp_navigation 137 only; tracy-base's desktop header is .tracy-header__links (where 'Dịch vụ' had been added by hand), the navigation block is hidden above 781px; the receipt said 'its menu link shows on /doi-tac/'. Read-only browser check on the stand: at 1440 'Đối tác' is hidden (display:none on ul.wp-block-navigation__container.is-responsive), 'Dịch vụ' is shown; at 390 both sit in the closed overlay.",
+  "fence": "Mechanism only, over the WordPress component fake with a tracy-base-like header part and a fake of the site browser's one-element read. Not covered: the real in-container browser (its read is the one page.look {style} already uses).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/page-create.test.mjs"
+    ],
+    "tests": [
+      "WordPress: a header that draws its own row of links gets the new link there too, and the receipt says where it shows",
+      "WordPress: a menu link a desktop visitor cannot see is said so, with the widths it shows at, and the receipt does not call it in the menu",
+      "WordPress: the FAQ page in the theme's own section markup",
+      "Joomla: the article joins the category of the page it follows"
+    ]
+  }
+}

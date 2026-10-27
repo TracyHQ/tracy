@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1100-p6-business-link-buttons-keep-their-kind",
+  "kind": "fix",
+  "title": "Tracy Business under a worn system: only a filled button takes the accent fill; its outline and text-link buttons (is-style-outline, is-style-link) keep their kind and read the readable accent",
+  "pr": 1100,
+  "area": "design/slot",
+  "cms": ["wp"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/design/tracy-ds-slot run: node --test --test-reporter=tap test/cms.test.mjs",
+    "S2: Record the exit code, '# fail' and the result of the test named in expect."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "'WordPress: an outline or text-link button keeps its kind — only a filled button takes the accent fill' is ok: in the MotherDuck variation for templates/wordpress-tracy-business.json every selector of the primary-button rule contains '.wp-block-button:not(.is-style-outline):not(.is-style-link) > ', and the accent-text rule names '.tracy .wp-block-button.is-style-link .wp-block-button__link' (stopped at the kept bands)."
+  ],
+  "selectors": {
+    "contract": "templates/wordpress-tracy-business.json selectors.buttonPrimary; templates/wordpress-tracy-base.json selectors.accentText",
+    "theme": "overlays/wp-tracy-business/assets/css/sections.css .wp-block-button.is-style-link (accent text, underline)"
+  },
+  "evidence": "tasks/evidence/followups-2026-10-10/p6-dsdata/tracy-business-links.txt and tracy-business-services-*.png: on the restored tracy-business/wp7 release under MotherDuck, 'All services →' was a filled #6fc2ff pill; with the narrowed selector it is transparent with #4d6c84 text (4.63:1), verdicts 8/12 before and after, controls 0.",
+  "fence": "which Tracy Business buttons the system fills; not their shapes (the button rule still reaches every button)",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/cms.test.mjs"],
+    "cwd": "packages/design/tracy-ds-slot",
+    "tests": [
+      "WordPress: an outline or text-link button keeps its kind — only a filled button takes the accent fill"
+    ]
+  }
+}

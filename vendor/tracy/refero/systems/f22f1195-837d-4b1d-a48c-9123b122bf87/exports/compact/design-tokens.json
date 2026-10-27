@@ -1,0 +1,79 @@
+{
+  "color": {
+    "cream-paper": {
+      "$value": "#faf5f1",
+      "$type": "color",
+      "$description": "Cream Paper — Page background, nav surface, warm canvas base"
+    },
+    "soft-linen": {
+      "$value": "#fefffa",
+      "$type": "color",
+      "$description": "Soft Linen — Card surface, slightly brighter than canvas for subtle elevation"
+    },
+    "ink-black": {
+      "$value": "#0e0f0a",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, borders, icons — near-black with a subtle green undertone that warms the entire palette"
+    },
+    "midnight-black": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Midnight Black — Body text fallback, secondary borders"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Button text on filled terracotta, pure white highlights"
+    },
+    "warm-sand": {
+      "$value": "#e5e1d6",
+      "$type": "color",
+      "$description": "Warm Sand — Muted section dividers, secondary card backgrounds, beige illustration fills"
+    },
+    "olive-grove": {
+      "$value": "#3d4128",
+      "$type": "color",
+      "$description": "Olive Grove — Hero panel background, dark accent surface — earthy green-black anchors the brand and gives the chartreuse somewhere to glow"
+    },
+    "chartreuse-spark": {
+      "$value": "#e1f079",
+      "$type": "color",
+      "$description": "Chartreuse Spark — Green action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "terracotta-cta": {
+      "$value": "#de7653",
+      "$type": "color",
+      "$description": "Terracotta CTA — Orange action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "coral-outline": {
+      "$value": "#e7573d",
+      "$type": "color",
+      "$description": "Coral Outline — Outlined/ghost CTA variant, secondary action borders — a deeper, redder cousin of terracotta for outlined button treatment"
+    },
+    "deep-olive": {
+      "$value": "#24280f",
+      "$type": "color",
+      "$description": "Deep Olive — Input field text, deepest green-black for hairline borders on dark surfaces"
+    }
+  },
+  "font": {
+    "times-now": {
+      "$value": "Times Now",
+      "$type": "fontFamily",
+      "$description": "Display headlines, hero copy, section titles. The signature choice: weights 200-300 with extreme negative tracking (up to -7.7px at 120px) create compressed, editorial-cover typography. One italic word per headline is underlined in chartreuse — this handwritten-style emphasis is the brand's most recognizable typographic gesture. Use only for display and hero copy."
+    },
+    "founders-grotesk": {
+      "$value": "Founders Grotesk",
+      "$type": "fontFamily",
+      "$description": "Body text, UI controls, navigation, buttons, captions, supporting headlines. The workhorse: 16px at weight 400 for body, 14px for nav and secondary text, 12px for micro-labels, 10px for fine print. The slight negative tracking even at small sizes (e.g. -0.13px at 16px) gives text a crisp, considered quality. Weight 500 reserved for emphasis within UI."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://kindsight.io",
+      "siteName": "Kindsight",
+      "extractedAt": "2026-06-03T19:56:07.105Z",
+      "variant": "compact"
+    }
+  }
+}

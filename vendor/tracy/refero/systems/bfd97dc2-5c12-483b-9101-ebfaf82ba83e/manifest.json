@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "bfd97dc2-5c12-483b-9101-ebfaf82ba83e",
+  "status": "complete",
+  "name": "BitcoinOS",
+  "url": "https://styles.refero.design/style/bfd97dc2-5c12-483b-9101-ebfaf82ba83e",
+  "sourceWebsite": "https://bitcoinos.build",
+  "extractedAt": "2026-06-03T21:35:50.589Z",
+  "capturedAt": "2026-10-08T05:16:58.451308+00:00",
+  "theme": "dark",
+  "industry": "crypto",
+  "description": "Obsidian monolith with a burning yellow sigil — BitcoinOS is a crypto project whose interface looks like a declaration carved in stone, with cinematic 3D worlds bleeding in at the edges.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/c4adcedc-a535-4c42-987f-14a2aac85f58.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b3a755412ddc623ac176b0caefb70c1f4b304fce0686d4419f56f617cd4144ea",
+      "bytes": 23272
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "dbba3bbb6f1967a5be048ff5208dcffd086d52180a97f369f426e49ab86a2b74",
+      "bytes": 165858
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ad63119d32a750ab59601b9a1464f3257d183d7106110db015dd073e8e5499bf",
+      "bytes": 19415
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d79af0f2f1843fa162b31e172a1528990f9c1db7dfe8038eba06ca5ea839ec01",
+      "bytes": 8507
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "999732ded3426e6d2070dd78fec4906ab1bff6d4f8ab79ac554adaecb78617ac",
+      "bytes": 14588
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "3d2efc6930ecd7b3d1908052f57a4fdf5798de7302b5bc29281d8464499e8cf5",
+      "bytes": 3035
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "32345dda1eba3b38ab9112c8a5982f49cc3f0342fb9e60f4f3886b7a05704f64",
+      "bytes": 744
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7b3337390778f4d8e97d8695daa301179b8d91d21faa1e80119398cf6a27b8ea",
+      "bytes": 761
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a6080f71f7c709df462e5d2988ff96d24d8fa8aba973e2b6de7dd972d6619672",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e1a0ab254cf84ecb24a08141056a6cf0cedc8cb180e964d96c2b8a63e75a013b",
+      "bytes": 45761
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c89471ede0a0f441e1d2d4ea19b77ae41531f94ab65ea9d28e79133b35ab1ee1",
+      "bytes": 23585
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ccb8b40e4a03984e8b1e61ef9a11b05f4e2ce1d83a1adfe8412a8e330fc1ad7b",
+      "bytes": 41985
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "932df99e9a179e0e2a547e89da633adcb21b5dbf881ed91fd09a65bb09b55789",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e0a8a2e0dc14ea07608095a12ad2ac841ba765333f6ef7f72eb95db3745b229d",
+      "bytes": 1728
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "02381ebd5f30079bac7979937d57312ed67d922de220253bacb9d67c470b6141",
+      "bytes": 2350
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "227ff379-9b46-44fc-8ff1-37e0472239a6",
+    "4433dfe7-315a-4459-bfd7-f59ccdc09bad",
+    "530eb4cf-7e75-4833-95c9-746818050db7",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "60ee0386-cfad-409a-8310-762bfc2e4816",
+    "834ce97f-61f2-4b12-bf5c-e9fad2544456",
+    "8401cb26-91a3-4b46-941e-1c75790821eb",
+    "9b9b0ca1-5067-4115-b62f-ee0e43d1f37f",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "ad48f4ad-42c0-4c91-a189-fa7a73a7a9e9",
+    "bfd97dc2-5c12-483b-9101-ebfaf82ba83e",
+    "c55d2f24-deb1-44c1-9846-66a3523beb29",
+    "c809190a-035c-458d-87ed-4758807dd84e",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "f493133e-e289-4fb1-9729-f611d9816aae",
+    "f65c3888-2eb3-41a1-87b3-f410b667097e",
+    "fd2e0187-e67b-4869-8cfd-9de9e58d2868"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "REG-093",
+  "kind": "feat",
+  "title": "Comment read marks are what the reader saw: a reply written after the reader's list was read and before their mark arrived stays unread; opening the thread again reads it; Mark as unread files null; opening a thread reads the reader's Inbox rows about the replies it showed, never one about a later reply",
+  "pr": 877,
+  "area": "comments/read-marks",
+  "cms": ["any"],
+  "needs": ["stand", "seat:owner", "seat:editor"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, DSH, A (owner) and B (editor) with cookies COOKIE_A, COOKIE_B, api, pq. Case variable: KEY = (prefer a WordPress site, e.g. r1w1734, whose home page answers 200 through Chrome within 10 s; never an EmDash site that answered 502 or timed out earlier in this run) a site key where A holds an accepted owner seat and B an accepted editor seat (from GET /api/team as A). HOME = the site's home page address as the Browser tab opens it (the site's address from GET /api/sites, path '/').",
+    "Check the schema and the build: pq \"select count(*) from information_schema.columns where table_name = 'site_comment_read' and column_name = 'seen_n'\" must print 1, otherwise stop with BLOCKED note db-without-migration-059; docker exec $DSH grep -c 'seenN' /desk-home/profiles/native/node_modules/@tracy/dsh-chat-input/lib/client.js must print a number >= 1, otherwise stop with BLOCKED note image-without-read-marks-by-number.",
+    "Seed the thread: as A, api a POST /api/sites/KEY/comments {\"url\": HOME, \"element\": null, \"locate\": null, \"text\": \"REG-062 <ISO now>: root by A\"} -> ROOT (comment.id, comment.n). As B, api b POST /api/sites/KEY/comments {\"url\": HOME, \"element\": null, \"locate\": null, \"replyTo\": ROOT.id, \"text\": \"REG-062: reply k by B\"} -> K (id, n). HTTP 200/201 each.",
+    "A reads the thread: api a GET /api/sites/KEY/comments -> LIST_A; SEEN = the largest n of the rows of LIST_A whose id is ROOT.id or whose replyTo is ROOT.id and whose author.email is not A's (must equal K.n).",
+    "Between the read and the mark: as B, api b POST /api/sites/KEY/comments {\"url\": HOME, \"element\": null, \"locate\": null, \"replyTo\": ROOT.id, \"text\": \"REG-062: reply k+1 by B\"} -> K1 (id, n).",
+    "A's mark arrives late: api a POST /api/sites/KEY/comments/ROOT.id/read {\"seenN\": SEEN} -> MARK_1. Then api a GET /api/sites/KEY/comments/reads -> READS_1 (the row with id ROOT.id). Then api a GET /api/notifications -> INBOX_1: the comment.reply rows whose data.commentId is K.id or K1.id, with readAt.",
+    "Opened again with k+1 on screen: api a GET /api/sites/KEY/comments -> LIST_A2; SEEN2 = the same largest n as step 4 over LIST_A2 (must equal K1.n). api a POST /api/sites/KEY/comments/ROOT.id/read {\"seenN\": SEEN2} -> MARK_2; api a GET /api/notifications -> INBOX_2 (the same two rows).",
+    "Never lowered, never past the thread: api a POST /api/sites/KEY/comments/ROOT.id/read {\"seenN\": K.n} -> MARK_3; api a POST /api/sites/KEY/comments/ROOT.id/read {\"seenN\": K1.n + 1000} -> MARK_4; api a POST /api/sites/KEY/comments/ROOT.id/read {} -> BAD (status and body).",
+    "Mark as unread: api a POST /api/sites/KEY/comments/ROOT.id/unread -> UNREAD; pq \"select seen_n is null from site_comment_read where comment_id = '<ROOT.id>'\" -> NULL_ROW.",
+    "Browser as A (the dot follows the number): connect Playwright over CDP as the README says (never chromium.launch()); NEW context {locale:'en-US', viewport:{width:1440,height:1000}} with cookie tracy_sess = COOKIE_A; page.goto(ORIGIN + '/' + KEY + '/?open=browser&page=%2F&mode=interactive'); open the Comments tab, choose 'All pages', and wait (<= 60 s) for the row [data-comment='<ROOT.id>'] to carry data-unread (marked unread in step 9). Click the row; wait (<= 15 s) for POST /api/sites/KEY/comments/ROOT.id/read -> 200 and record its request body as BODY_UI; poll (<= 20 s) until the row has no data-unread. Then as B, api b POST a reply {\"replyTo\": ROOT.id, \"text\": \"REG-062: reply k+2 by B\"} -> K2; poll (<= 45 s) until the row carries data-unread again -> DOT_BACK.",
+    "Clean up: as A, api a DELETE /api/sites/KEY/comments/ROOT.id; as B, api b DELETE each of K.id, K1.id, K2.id (soft delete) -> 200."
+  ],
+  "expect": [
+    "Both build checks pass (1 and >= 1).",
+    "SEEN === K.n and K1.n > K.n (numbers grow in the order written).",
+    "MARK_1.read deep-equals {id: ROOT.id, seenN: K.n}; READS_1.seenN === K.n — so K1 (n above the mark, written by B) is unread for A.",
+    "INBOX_1: the K row has readAt set, the K1 row has readAt null (written after what A's list showed).",
+    "SEEN2 === K1.n; MARK_2.read.seenN === K1.n; INBOX_2: both rows have readAt set.",
+    "MARK_3.read.seenN === K1.n (not lowered); MARK_4.read.seenN === the thread's largest n at that moment (K1.n, not K1.n + 1000); BAD is 400 with code COMMENT_BAD_INPUT and field 'seenN'.",
+    "UNREAD deep-equals {read: {id: ROOT.id, seenN: null}}; NULL_ROW === 't'.",
+    "BODY_UI parses to {seenN: K1.n} (the tab sends the number it drew, its own replies not counted); the row lost data-unread after the click; DOT_BACK: the row carries data-unread again after B's reply k+2.",
+    "No page error or console.error on the dsh pages whose message names tracy-chat-input, tracy-inbox or @tracy/core, and no HTTP >= 400 to /api/sites/KEY/comments (any sub-path) or /api/notifications (chrome-watch --errors --page KEY --json after the loads). Requests of the site’s own origin (KEY:8080 pages and assets, net::ERR_CACHE_MISS on back/forward, third-party analytics ERR_ABORTED) and errors of other doors are the site’s or another line’s: list them in the notes, do not fail on them."
+  ],
+  "selectors": {
+    "chatInputBuild": "/desk-home/profiles/native/node_modules/@tracy/dsh-chat-input/lib/client.js (dsh container)",
+    "row": "[data-comment='<id>'][data-unread]",
+    "doors": "GET /api/sites/:key/comments · GET /api/sites/:key/comments/reads → {reads: [{id, seenN}]} · POST /api/sites/:key/comments/:id/read {seenN} → {read: {id, seenN}} · POST …/:id/unread → {read: {id, seenN: null}} · GET /api/notifications"
+  },
+  "fence": "059-site-comment-read-seen-n.sql: site_comment_read.seen_n (null = Mark as unread; read_at dropped). comments.js mark(): the mark sits on rootOf(id), least(seenN, the thread's largest n), greatest with the stored one, then comment-notify.js opened() (R4) reads the reader's comment.* rows with ref thread:<root> and data.n <= the mark. Client: comment-view.mjs seenOf / unreadOf (by n, any depth), comment-reads.mjs sends {seenN} and keeps marks filed while /reads was on its way."
+}

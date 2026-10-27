@@ -1,0 +1,14 @@
+{
+  "name": "@tracy/joomla-template",
+  "version": "0.1.1",
+  "private": true,
+  "type": "module",
+  "description": "Joomla 5/6 site template tpl_tracy: one template whose look is one of the 152 OpenDesign design systems, chosen by a template style parameter.",
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check",
+    "test": "node --test test/*.test.mjs",
+    "test:ci": "node --import tsx ../../../scripts/ci/turbo-setup.mjs --check --task-part owner=packages/cms/tracy-joomla-template"
+  }
+}

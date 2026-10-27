@@ -1,0 +1,3052 @@
+/* wp-tracy-business — the chrome the source theme has no rule for: the top bar, the two-row
+ * header (brand, navigation, mega panel, search, quote button), the theme toggle, the footer grid
+ * and strip, the news cards, the breadcrumb band, and the square buttons. Loaded after tracy.css
+ * and layout.css on every page kind but the design pages.
+ *
+ * Every colour, size and shadow is a WordPress variable of the theme's token set (theme.json from
+ * overlays/wp-tracy-business/tokens.css) or a brand constant from settings.custom.tracy.brand;
+ * there is no literal colour here to go out of step with the dark set in theme.overlay.json.
+ * Sizes the Northgate source draws off the token scale (13px top bar, 14.5px nav, 9px tagline)
+ * are written as calc() on the nearest token so they still follow a size change.
+ *
+ * Two brand constants carry the surfaces that do NOT flip in dark — the source keeps its top bar,
+ * its filled buttons and its footer band the same in both schemes: `green` (#14483A, top bar and
+ * filled buttons) and `ink` (#14171A, the footer band; the dark set moves it to #0A0C0D as the
+ * source does). `paper` is the design's fixed white: the greys of the fixed-dark footer and top
+ * bar are mixed from it, never from --wp--preset--color--fg, which flips. */
+
+/* ---- shared box: the chrome shares the sections' box — the container max is the CONTENT
+   width and the gutter sits outside it, so the brand, the footer columns and every section start
+   on one line. ---- */
+
+.tracy-header {
+  position: relative;
+  background: var(--wp--custom--tracy--brand--header);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+}
+
+.tracy-header__inner,
+.tracy-footer__inner,
+.tracy-topbar__inner,
+.tracy-mega__inner {
+  max-width: calc(var(--wp--custom--container--max) + (var(--wp--custom--container--gutter-desktop) * 2));
+  margin-inline: auto;
+  padding-inline: var(--wp--custom--container--gutter-desktop);
+}
+
+/* tracy.css draws .tracy-container as the container max with the gutter INSIDE it, so its content
+   is two gutters narrower than a section's; here it takes the chrome's box, so the breadcrumb, the
+   listing head and the article start on the sections' line (x=100 at 1440, as the source). */
+.tracy .tracy-container {
+  max-width: calc(var(--wp--custom--container--max) + (var(--wp--custom--container--gutter-desktop) * 2));
+}
+
+/* ---- top bar: a thin green band — hotline, email, address on the left; the Careers and
+   Investors links, the language switcher and the theme toggle on the right, separated by thin
+   rules. Green in both schemes. ---- */
+
+.tracy-topbar {
+  background: var(--wp--custom--tracy--brand--green);
+  color: color-mix(in oklab, var(--wp--custom--tracy--brand--paper) 78%, var(--wp--custom--tracy--brand--green));
+  font-size: calc(var(--wp--preset--font-size--sm) - 1px);
+  line-height: 1.2;
+}
+
+.tracy-topbar__inner {
+  padding-block: calc(var(--wp--preset--spacing--2) + 1px);
+  gap: var(--wp--preset--spacing--2) var(--wp--preset--spacing--4);
+  align-items: center;
+}
+
+.tracy-topbar__contacts {
+  gap: var(--wp--preset--spacing--2) var(--wp--preset--spacing--6);
+}
+
+.tracy-topbar__item {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.tracy-topbar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tracy-topbar a:hover {
+  color: var(--wp--custom--tracy--brand--paper);
+}
+
+.tracy-topbar__tools {
+  align-items: center;
+  gap: var(--wp--preset--spacing--4);
+}
+
+/* The Careers · Investors links: the navigation block, inline, no padding, the bar's colour. */
+/* WordPress 7.1 prints the block's classes on the <ul> as well as on the <nav>, and tracy.css
+   sets the item gap on that <ul> at four classes; the same shape, one class deeper, wins here. */
+.tracy .tracy-topbar__nav.wp-block-navigation__container.wp-block-navigation,
+.tracy .tracy-topbar__nav .wp-block-navigation__container.wp-block-navigation {
+  gap: var(--wp--preset--spacing--4);
+}
+
+.tracy-topbar__nav .wp-block-navigation-item__content {
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  text-decoration: none;
+}
+
+.tracy-topbar__nav .wp-block-navigation-item__content:hover {
+  color: var(--wp--custom--tracy--brand--paper);
+}
+
+/* Thin rules between the link group, the switcher and the toggle — the source's "|". */
+.tracy-topbar__lang,
+.tracy-theme-toggle {
+  position: relative;
+  padding-inline-start: var(--wp--preset--spacing--4);
+}
+
+.tracy-topbar__lang::before,
+.tracy-theme-toggle::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  width: 1px;
+  height: 14px;
+  transform: translateY(-50%);
+  background: color-mix(in oklab, var(--wp--custom--tracy--brand--paper) 40%, var(--wp--custom--tracy--brand--green));
+}
+
+/* ---- the language switcher ------------------------------------------------------------------
+   Two shapes, chosen in inc/extra.php by the LENGTH of the list, never by the viewport:
+   up to 8 languages an anchored dropdown; from 9 a modal <dialog> with a filter box and a grid
+   of `auto-fill` 190px columns. The wide shape is never anchored — a panel wider than the
+   control, placed inside chrome whose ancestors the theme does not own, is the shape that
+   produced four separate clipping defects in one afternoon on the Joomla edition (21/09/2026).
+   `showModal()` puts it in the top layer, where no overflow, transform or z-index can reach it. */
+
+.tracy-topbar__lang {
+  align-items: center;
+}
+
+.tracy-topbar__lang:not(:has(.tracy-lang)):not(:has(.tracy-topbar__switcher)) {
+  display: none;
+}
+
+.tracy-lang {
+  position: static;
+  line-height: 1.2;
+}
+
+.tracy-lang__toggle {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--wp--custom--tracy--brand--paper);
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tracy-lang__toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring, 0 0 0 2px currentColor);
+}
+
+.tracy-lang__caret {
+  font-size: 9px;
+  opacity: .7;
+}
+
+.tracy-lang__flag {
+  display: inline-flex;
+  width: 16px;
+}
+
+.tracy-lang__flag img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The panel, in both shapes. `:not([open])` is what keeps a <dialog> out of the flow — it has no
+   `hidden` attribute to lean on once the platform is opening it. */
+.tracy-lang__panel {
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--wp--preset--color--border, var(--ds-c-border, #d8d3c9));
+  background: var(--wp--preset--color--surface, var(--ds-c-surface, #fbfaf7));
+  color: var(--wp--preset--color--fg, var(--ds-c-fg, #14171a));
+  box-shadow: 0 14px 30px rgb(20 23 26 / 22%);
+  max-height: min(80vh, 620px);
+  overflow: auto;
+}
+
+.tracy-lang__panel:not([open]) {
+  display: none;
+}
+
+.tracy-lang__panel::backdrop {
+  background: rgb(20 23 26 / 55%);
+}
+
+/* The anchored shape (≤ 8 languages): one column under the control. */
+.tracy-lang:not(.tracy-lang--modal) .tracy-lang__panel {
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-start: 100%;
+  min-width: 190px;
+  z-index: 70;
+}
+
+/* The wide shape (≥ 9 languages). `inset: 0` + `margin: auto` is what centres a fixed box, and
+   NOTHING may reset an edge after it — a trailing `right: auto` left over from the anchored
+   shape cancels two of the four and drops the dialog in a corner. The edges are written once. */
+.tracy-lang--modal .tracy-lang__panel {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(92vw, 640px);
+  max-width: none;
+  border-radius: var(--ds-card-radius, 14px);
+}
+
+.tracy-lang__menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tracy-lang--modal .tracy-lang__menu {
+  display: grid;
+  /* Column count is left to `auto-fill`: the grid takes as many 190px columns as the dialog's
+     width allows, which is one number the stylesheet never has to guess. */
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+}
+
+.tracy-lang__item {
+  margin: 0;
+  border-block-end: 1px solid var(--wp--preset--color--border, var(--ds-c-border, #d8d3c9));
+}
+
+.tracy-lang--modal .tracy-lang__item {
+  border-inline-end: 1px solid var(--wp--preset--color--border, var(--ds-c-border, #d8d3c9));
+}
+
+.tracy-lang__item[hidden] {
+  display: none;
+}
+
+.tracy-lang__item a {
+  display: flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--2);
+  padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--4);
+  color: inherit;
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.tracy-lang__item a:hover {
+  background: var(--wp--preset--color--surface-warm, rgb(0 0 0 / 5%));
+  color: inherit;
+}
+
+.tracy-lang__item .tracy-lang__name {
+  flex: 1;
+  min-width: 0;
+}
+
+.tracy-lang__item.is-active .tracy-lang__check {
+  font-weight: 700;
+}
+
+.tracy-lang__search {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: var(--wp--preset--spacing--3);
+  border-block-end: 1px solid var(--wp--preset--color--border, var(--ds-c-border, #d8d3c9));
+  background: var(--wp--preset--color--surface, var(--ds-c-surface, #fbfaf7));
+}
+
+.tracy-lang__search-input {
+  width: 100%;
+  padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--3);
+  border: 1px solid var(--wp--preset--color--border, var(--ds-c-border, #d8d3c9));
+  border-radius: var(--ds-input-radius, 0);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.tracy-lang__empty {
+  margin: 0;
+  padding: var(--wp--preset--spacing--4);
+  font-size: var(--wp--preset--font-size--sm);
+}
+
+/* Flag + code only below 768px; the full name stays in the DOM so the accessible name never
+   changes with the viewport (the button carries its own aria-label besides). */
+.tracy-lang__code {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .tracy-lang__toggle .tracy-lang__name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .tracy-lang__code {
+    display: inline;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+}
+
+/* ---- theme toggle: a crescent and a word — "Dark" while the page is light, "Light" while it is
+   dark; the word is set by assets/js/wp-tracy-business-dark.js from the effective scheme. ---- */
+
+.tracy-theme-toggle {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--2);
+  margin: 0;
+  padding-block: 0;
+  padding-inline-end: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tracy-theme-toggle:hover {
+  color: var(--wp--custom--tracy--brand--paper);
+}
+
+.tracy-theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+.tracy-theme-toggle__icon {
+  display: block;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  box-shadow: inset -4px -3px 0 0 currentColor;
+}
+
+/* ---- header row: brand start, the menu pushed to the end, then the search button and the
+   quote button. One row at the tablet width and above; the menu group is stretched to the
+   header's full height so a mega panel hung from the header's bottom edge starts exactly where
+   its trigger box ends. ---- */
+
+.tracy-header__inner {
+  min-height: calc(var(--wp--preset--spacing--12) + var(--wp--preset--spacing--8) + var(--wp--preset--spacing--1));
+  padding-block: var(--wp--preset--spacing--3);
+  gap: var(--wp--preset--spacing--4) var(--wp--preset--spacing--5);
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.tracy-header__brand {
+  align-items: center;
+  gap: calc(var(--wp--preset--spacing--3) + 2px);
+  flex: 0 0 auto;
+}
+
+.tracy-header__brand .tracy-logo img {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+
+/* The monogram square: drawn until a site logo is uploaded — the logo block then takes its
+   place (a site logo that renders hides the mark). */
+.tracy-brand__mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  /* The logo follows a worn system (Akemi, 15/10/2026): the template's green, paper and body face by
+     default; under a system the contract paints the header mark in the page's text pair turned
+     (followRules), as the footer mark wears its band's pair turned. */
+  background: var(--wp--custom--tracy--brand--green);
+  color: var(--wp--custom--tracy--brand--paper);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: calc(var(--wp--preset--font-size--lg) + 1px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.tracy-header__brand .tracy-logo:not(:empty) + .tracy-brand__mark {
+  display: none;
+}
+
+/* A mark with no letters (no site title at all) draws nothing: never an empty filled square. Stronger
+   than the theme rules below that show the mark again (the dark header, the missing light logo). */
+html .tracy-brand__mark:empty {
+  display: none !important;
+}
+
+/* The identity logo (`<img data-tracy-identity="site.logo">`, inc/identity.php): a void element is
+   always :empty, so it takes the `[hidden]` the renderer sets when the site has no logo instead —
+   drawn when it has a src, and then the mark beside it steps back, as for the site-logo block. */
+.tracy-header__brand img.tracy-logo:not([hidden]) {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+
+.tracy-header__brand img.tracy-logo:not([hidden]) + .tracy-brand__mark {
+  display: none;
+}
+
+/* A site with no logo renders the identity logo with the [hidden] attribute and an empty src. The browser's own
+   [hidden] rule is only a default, and tracy.css sets display: block on every img under .tracy, so the empty image
+   was drawn as a broken-image icon with the site name as its alt text, 160 x 25 px beside the monogram (measured
+   03/10/2026 on a new site, with and without Apply). An author rule of this specificity puts [hidden] back. */
+.tracy-header__brand img.tracy-logo[hidden] {
+  display: none;
+}
+
+.tracy-brand__text {
+  display: grid;
+  gap: 3px;
+}
+
+.tracy .tracy-brand,
+.tracy .tracy-brand a {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: calc(var(--wp--preset--font-size--lg) + 2px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+.tracy-brand__tagline {
+  margin: 0;
+  font-size: calc(var(--wp--preset--font-size--xs) - 3px);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--wp--preset--color--meta);
+  white-space: nowrap;
+}
+
+.tracy-header__menu {
+  align-self: stretch;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: var(--wp--preset--spacing--4);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The navigation block: the source's row — 14.5px, medium, no box, a 2px rule under the
+   current page in the brand orange, the rule going neutral on hover. tracy.css draws a tinted
+   box and an accent rule; these restate what the source renders. */
+.tracy-header__menu .tracy-nav {
+  align-self: center;
+}
+
+.tracy .tracy-header__menu .tracy-nav.wp-block-navigation__container.wp-block-navigation,
+.tracy .tracy-header__menu .tracy-nav .wp-block-navigation__container.wp-block-navigation {
+  gap: var(--wp--preset--spacing--4);
+  flex-wrap: nowrap;
+}
+
+.tracy .tracy-nav .wp-block-navigation-item__content {
+  padding: calc(var(--wp--preset--spacing--1) + 2px) 0;
+  border-radius: 0; /* ds-keep: an underlined menu link, a corner would bend its rule */
+  border-bottom: 2px solid transparent;
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+  font-weight: 500;
+  color: var(--wp--preset--color--fg-2);
+  white-space: nowrap;
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard),
+    border-color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy .tracy-nav .wp-block-navigation-item__content:hover {
+  background: transparent;
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+  border-bottom-color: var(--wp--preset--color--border);
+}
+
+/* One rule for every "current" class WordPress may print (item, ancestor, parent, page parent):
+   the source underlines the open page's item in the brand orange — "Home", "News" and the open
+   "Resources" alike. tracy.css marks the same classes with an inset accent shadow, which showed
+   through as a second, green underline wherever the class was not covered here (fast-5 N-415537). */
+.tracy .tracy-nav [class*='current-menu-'] > .wp-block-navigation-item__content,
+.tracy .tracy-nav [class*='current_page_'] > .wp-block-navigation-item__content,
+.tracy .tracy-nav .current-menu-item > .wp-block-navigation-item__content,
+.tracy .tracy-nav .current-menu-ancestor > .wp-block-navigation-item__content {
+  box-shadow: none;
+  color: var(--wp--preset--color--fg);
+  font-weight: 600;
+  border-bottom-color: var(--wp--custom--tracy--brand--orange);
+}
+
+.tracy-header__actions {
+  align-items: center;
+  gap: calc(var(--wp--preset--spacing--2) + 2px);
+  flex: 0 0 auto;
+}
+
+/* The search: an icon-only button, 38px square, a thin border — the input slides out on click
+   (core's button-only behaviour). */
+.tracy .tracy-header__search .wp-block-search__button {
+  width: 38px;
+  height: 38px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--ds-btn-radius, 0);
+  background: transparent;
+  color: var(--wp--preset--color--fg-2);
+  cursor: pointer;
+}
+
+.tracy .tracy-header__search .wp-block-search__button:hover {
+  background: transparent;
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+  border-color: var(--wp--preset--color--accent);
+}
+
+.tracy-header__search .wp-block-search__button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.tracy-header__search .wp-block-search__inside-wrapper {
+  border: 0;
+}
+
+.tracy-header__search.wp-block-search__searchfield-hidden .wp-block-search__inside-wrapper {
+  gap: 0;
+}
+
+.tracy-header__search .wp-block-search__input {
+  height: 38px;
+  padding-inline: var(--wp--preset--spacing--3);
+  border: 1px solid var(--wp--preset--color--border);
+  border-inline-end: 0;
+  border-radius: var(--ds-input-radius, 0);
+  background: var(--wp--preset--color--surface);
+  color: var(--wp--preset--color--fg);
+  font-size: var(--wp--preset--font-size--sm);
+}
+
+.tracy-header__cta .wp-block-button__link {
+  font-size: var(--wp--preset--font-size--sm);
+  padding: calc(var(--wp--preset--spacing--3) - 1px) var(--wp--preset--spacing--5);
+}
+
+/* ---- buttons: the source's shape — square, 14px semibold, 11px × 20px. The filled button is
+   the brand green with white text in BOTH schemes (accent goes mint in dark for links, the
+   button does not follow); the outline button is ink text in a 1px ink ring; the orange style
+   is the CTA colour of the source's hero and inline calls. ---- */
+
+.tracy .wp-block-button__link,
+.tracy .wp-block-search__button {
+  padding: calc(var(--wp--preset--spacing--3) - 1px) var(--wp--preset--spacing--5);
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 600;
+  line-height: 1.2;
+  border: 1px solid var(--wp--custom--tracy--brand--green);
+  border-radius: var(--ds-btn-radius, 0);
+  background: var(--wp--custom--tracy--brand--green);
+  color: var(--wp--preset--color--accent-on);
+  box-shadow: none;
+}
+
+.tracy .wp-block-button__link:hover,
+.tracy .wp-block-search__button:hover {
+  background: color-mix(in oklab, var(--wp--custom--tracy--brand--green) 84%, var(--wp--custom--tracy--brand--ink));
+  border-color: color-mix(in oklab, var(--wp--custom--tracy--brand--green) 84%, var(--wp--custom--tracy--brand--ink));
+  color: var(--wp--preset--color--accent-on);
+  box-shadow: none;
+}
+
+.tracy .wp-block-button.is-style-outline .wp-block-button__link,
+.tracy .tracy-btn--ghost .wp-block-button__link {
+  background: transparent;
+  color: var(--wp--preset--color--fg);
+  border-color: var(--wp--preset--color--fg);
+  box-shadow: none;
+}
+
+.tracy .wp-block-button.is-style-outline .wp-block-button__link:hover,
+.tracy .tracy-btn--ghost .wp-block-button__link:hover {
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+  border-color: var(--wp--preset--color--accent);
+  background: transparent;
+  box-shadow: none;
+}
+
+.tracy .wp-block-button.is-style-orange .wp-block-button__link {
+  background: var(--ds-c-accent, var(--wp--custom--tracy--brand--orange));
+  border-color: var(--ds-c-accent, var(--wp--custom--tracy--brand--orange));
+  color: var(--wp--preset--color--accent-on);
+}
+
+.tracy .wp-block-button.is-style-orange .wp-block-button__link:hover {
+  background: color-mix(in oklab, var(--ds-c-accent, var(--wp--custom--tracy--brand--orange)) 86%, var(--wp--custom--tracy--brand--ink));
+  border-color: color-mix(in oklab, var(--ds-c-accent, var(--wp--custom--tracy--brand--orange)) 86%, var(--wp--custom--tracy--brand--ink));
+}
+
+.tracy .wp-block-button__link:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+/* ---- mega menu: the Resources trigger sits in the navigation row and opens a full-width panel
+   of three columns — the marketing kit, recent projects, the latest news. ---- */
+
+.tracy-mega {
+  position: static;
+  display: flex;
+  align-items: center;
+}
+
+.tracy-mega__trigger {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin: 0;
+  font: inherit;
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--wp--preset--spacing--1) + 2px);
+  padding: calc(var(--wp--preset--spacing--1) + 2px) 0;
+  color: var(--wp--preset--color--fg-2);
+  transition: color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard),
+    border-color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-mega__trigger:hover,
+.tracy-mega.is-open > .tracy-mega__trigger {
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+  border-bottom-color: var(--wp--preset--color--border);
+}
+
+/* The page being read is one of the panel's links: the trigger carries the current-item rule, as
+   the navigation block's own items do (render.php sets `is-current`). */
+.tracy-mega.is-current > .tracy-mega__trigger {
+  color: var(--wp--preset--color--fg);
+  font-weight: 600;
+  border-bottom-color: var(--wp--custom--tracy--brand--orange);
+}
+
+.tracy-mega__trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--wp--custom--focus-ring);
+}
+
+/* The caret: the source's small "▼". */
+.tracy-mega__caret::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--wp--preset--color--meta);
+  transform: translateY(-1px);
+  transition: transform var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-mega.is-open > .tracy-mega__trigger .tracy-mega__caret::before {
+  transform: translateY(-1px) rotate(180deg);
+}
+
+/* The panel: full width of the header, hung from its bottom edge, painted only while open. The
+   class is toggled by wp-tracy-business-mega.js; no :hover rule, so what opens it is one contract. */
+.tracy-mega__panel {
+  display: none;
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  z-index: 30;
+  background: var(--wp--custom--tracy--brand--header);
+  border-top: 1px solid var(--wp--preset--color--border);
+  border-bottom: 1px solid color-mix(in oklab, var(--wp--preset--color--border) 80%, var(--wp--preset--color--fg));
+  box-shadow: var(--wp--custom--elev--raised);
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy-mega.is-open > .tracy-mega__panel {
+  display: block;
+}
+
+.tracy-mega__inner {
+  padding-block: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--1)) var(--wp--preset--spacing--8);
+}
+
+.tracy-mega__columns {
+  gap: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--2));
+  margin: 0;
+}
+
+.tracy-mega__title {
+  margin: 0 0 var(--wp--preset--spacing--4);
+  padding-bottom: calc(var(--wp--preset--spacing--2) + 2px);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: calc(var(--wp--preset--font-size--xs) - 1px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wp--custom--tracy--brand--orange);
+}
+
+/* Kit and project lists: a title and a note per row, rows ruled, a 2px orange rule on the
+   left of the hovered row. */
+.tracy-mega__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.tracy-mega__links li {
+  margin: 0;
+  padding: calc(var(--wp--preset--spacing--2) + 2px);
+  border-bottom: 1px solid var(--wp--preset--color--border-soft);
+  border-left: 2px solid transparent;
+  transition: border-color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-mega__links li:hover {
+  border-left-color: var(--wp--custom--tracy--brand--orange);
+}
+
+.tracy-mega__links a {
+  display: block;
+  font-size: calc(var(--wp--preset--font-size--base) - 0.5px);
+  font-weight: 600;
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+.tracy-mega__links a:hover {
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+}
+
+.tracy-mega__note {
+  display: block;
+  margin-top: 2px;
+  font-size: calc(var(--wp--preset--font-size--sm) - 1px);
+  color: var(--wp--preset--color--meta);
+}
+
+/* The news column: title and date on one row, rows ruled, then the "All resources →" link. */
+.tracy-mega__post {
+  padding-block: calc(var(--wp--preset--spacing--2) + 2px);
+  border-bottom: 1px solid var(--wp--preset--color--border-soft);
+  gap: calc(var(--wp--preset--spacing--3) + 2px);
+  align-items: baseline;
+}
+
+.tracy-mega__post .wp-block-post-title {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+.tracy-mega__post .wp-block-post-title a {
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+.tracy-mega__post .wp-block-post-title a:hover {
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+}
+
+.tracy-mega__post .wp-block-post-date {
+  flex: 0 0 auto;
+  font-size: calc(var(--wp--preset--font-size--xs) + 0.5px);
+  color: var(--wp--preset--color--meta);
+  white-space: nowrap;
+}
+
+.tracy-mega__feature {
+  margin: 0;
+  color: var(--wp--preset--color--muted);
+}
+
+.tracy-mega__all {
+  margin: calc(var(--wp--preset--spacing--3) + 2px) 0 0;
+  font-size: var(--wp--preset--font-size--sm);
+  font-weight: 600;
+}
+
+.tracy-mega__all a {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  text-decoration: none;
+  border-bottom: 1px solid var(--wp--preset--color--accent);
+  padding-bottom: 2px;
+}
+
+/* In the Site Editor the panel is always open and sits in the flow, so its columns can be edited. */
+.tracy-mega--editing > .tracy-mega__panel {
+  display: block;
+  position: static;
+  box-shadow: none;
+}
+
+/* ---- breadcrumb band: a warm strip under the header on listings and articles. ---- */
+
+.tracy-crumbs {
+  background: var(--wp--preset--color--surface-warm);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+  margin-bottom: calc(var(--wp--preset--spacing--12) + var(--wp--preset--spacing--2));
+}
+
+.tracy-crumbs .wp-block-breadcrumbs {
+  padding-block: calc(var(--wp--preset--spacing--3) + 2px);
+  font-size: calc(var(--wp--preset--font-size--sm) - 0.5px);
+  color: var(--wp--preset--color--meta);
+}
+
+/* A crumb link is a plain link in the source: the link colour at the body weight, inside the
+   band's 13.5px grey (parity 15/09, en-article "Engineering"). */
+.tracy-crumbs .wp-block-breadcrumbs a {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  font-weight: 400;
+  text-decoration: none;
+}
+
+/* On the page templates the band is the last thing before the page's own first section (the
+   about hero sits right under it in the source), so its margin goes; the fixture pages take their
+   top space from the stack below. */
+.tracy-crumbs--flush {
+  margin-bottom: 0;
+}
+
+.tracy-crumbs .wp-block-breadcrumbs a:hover {
+  color: var(--wp--custom--tracy--brand--orange);
+}
+
+.tracy-crumbs .wp-block-breadcrumbs__separator {
+  color: var(--wp--preset--color--border);
+  padding-inline: calc(var(--wp--preset--spacing--2) + 2px);
+}
+
+.tracy-crumbs .wp-block-breadcrumbs__item[aria-current] {
+  color: var(--wp--preset--color--fg);
+  font-weight: 500;
+}
+
+/* The listings and the article open with the band, so their own top padding goes. The article
+   is the source's left column — its measure, flush with the container's left edge, not centred. */
+.tracy .tracy-listing,
+.tracy .tracy-main:has(> .tracy-crumbs) .tracy-article {
+  padding-top: 0;
+}
+
+.tracy .tracy-article-wrap .tracy-article {
+  margin-inline: 0;
+}
+
+/* ---- listing head: the display title in the serif, a lead, then the category chips — the
+   first ("All", the listing itself) filled ink, the rest outlined. ---- */
+
+/* The listing title: the source's `clamp(32px, 4vw, 48px)` — 48 at 1440, 32 at 390 (fast-5
+   N-f866b3: a fixed 48 was three lines there). */
+.tracy .tracy-listing__head .tracy-display {
+  font-size: clamp(32px, 4vw, calc(var(--wp--preset--font-size--xxxxl) - 16px));
+  font-weight: 400;
+  margin-bottom: calc(var(--wp--preset--spacing--2) + 2px);
+  text-wrap: balance;
+}
+
+.tracy-listing__head .tracy-lead {
+  font-size: calc(var(--wp--preset--font-size--base) + 0.5px);
+  color: var(--wp--preset--color--muted);
+  max-width: none;
+  margin-bottom: var(--wp--preset--spacing--6);
+}
+
+.tracy-chips-row {
+  margin: 0 0 calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--2));
+  padding: 0 0 var(--wp--preset--spacing--6);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+  gap: var(--wp--preset--spacing--2);
+}
+
+.tracy-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp--preset--spacing--2);
+}
+
+.tracy-chips li,
+.tracy-chips__all {
+  margin: 0;
+}
+
+.tracy-chips__all a,
+.tracy-chips a {
+  display: inline-block;
+  padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--4);
+  border: 1px solid var(--wp--preset--color--border);
+  font-size: calc(var(--wp--preset--font-size--sm) - 0.5px);
+  font-weight: 500;
+  color: var(--wp--preset--color--fg-2);
+  text-decoration: none;
+  transition: border-color var(--wp--custom--motion--fast) var(--wp--custom--ease--standard);
+}
+
+.tracy-chips__all a:hover,
+.tracy-chips a:hover {
+  border-color: var(--wp--preset--color--accent);
+  color: var(--wp--preset--color--fg);
+}
+
+/* The chip of the listing being read is filled: "All" on the news index (the posts page: body
+   class `blog` — its page kind is `listing`, not `home`), the category on its archive. */
+.tracy-page-home .tracy-chips__all a,
+.tracy.blog .tracy-chips__all a,
+.tracy-chips .current-cat > a {
+  background: var(--wp--custom--tracy--brand--ink);
+  border-color: var(--wp--custom--tracy--brand--ink);
+  color: var(--wp--preset--color--accent-on);
+  font-weight: 600;
+}
+
+.tracy-listing__search {
+  max-width: 36rem;
+}
+
+/* The search field: the design's flat input — surface fill, 1px border, no radius. */
+.tracy .tracy-listing__search .wp-block-search__input {
+  padding-inline: var(--wp--preset--spacing--3);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--ds-input-radius, 0);
+  background: var(--wp--preset--color--surface);
+  color: var(--wp--preset--color--fg);
+}
+
+/* Display headings are the serif at regular weight, as every Northgate title is. */
+.tracy .tracy-display {
+  font-weight: 400;
+}
+
+/* The search page: its title is a step under the news index — the source's `clamp(30px, 3.7vw,
+   44px)` — and its button is the ink fill at 15.5px, not the chrome's green (full-1, 6 rows). In
+   dark the button keeps the brand green with white text: the source's ink there is #0A0C0D, a
+   hole in the page (D24.20, the same call as the 404's search button). */
+.tracy.search .tracy-listing__head .tracy-display {
+  font-size: clamp(30px, 3.7vw, calc(var(--wp--preset--font-size--xxxxl) - 20px));
+}
+
+.tracy.search .tracy-listing__search .wp-block-search__button {
+  background: var(--wp--custom--tracy--brand--ink);
+  border-color: var(--wp--custom--tracy--brand--ink);
+  color: var(--wp--preset--color--accent-on);
+  font-size: calc(var(--wp--preset--font-size--base) - 0.5px);
+}
+
+html[data-theme='dark'] .tracy.search .tracy-listing__search .wp-block-search__button {
+  background: var(--wp--custom--tracy--brand--green);
+  border-color: var(--wp--custom--tracy--brand--green);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) .tracy.search .tracy-listing__search .wp-block-search__button {
+    background: var(--wp--custom--tracy--brand--green);
+    border-color: var(--wp--custom--tracy--brand--green);
+  }
+}
+
+/* ---- news cards: the source's grid — a bordered 16:9 image, an orange uppercase eyebrow, a
+   semibold title in the link colour, the excerpt, the date. No box around the card. ---- */
+
+.tracy-news__grid {
+  gap: var(--wp--preset--spacing--8) calc(var(--wp--preset--spacing--6) + var(--wp--preset--spacing--1));
+}
+
+.tracy-news-card {
+  min-width: 0;
+}
+
+.tracy-news-card__media {
+  margin: 0 0 var(--wp--preset--spacing--4);
+  border: 1px solid var(--wp--preset--color--border);
+  background: var(--wp--preset--color--surface-warm);
+  /* The frame carries the card corner and clips its picture: rounding the img alone drew a rounded
+     picture inside a square outline under a system with a card radius (Figma /news, 15/10/2026). */
+  border-radius: var(--ds-card-radius, 0);
+  overflow: hidden;
+}
+
+.tracy-news-card__media img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.tracy-news-card__eyebrow {
+  margin: 0 0 var(--wp--preset--spacing--2);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--wp--custom--tracy--brand--orange);
+}
+
+.tracy-news-card__eyebrow a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The news list's card title: the source's 20px at 1.32 (parity 14/09, 8 rows at 16.5px). */
+.tracy-news-card__title {
+  margin: 0 0 var(--wp--preset--spacing--2);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: calc(var(--wp--preset--font-size--lg) + 2px);
+  font-weight: 600;
+  line-height: 1.32;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+
+.tracy-news-card__title a {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  text-decoration: none;
+}
+
+.tracy-news-card__title a:hover {
+  color: var(--wp--custom--tracy--brand--orange);
+}
+
+.tracy-news-card__text {
+  margin: 0 0 calc(var(--wp--preset--spacing--2) + 2px);
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+  line-height: 1.6;
+  color: var(--wp--preset--color--muted);
+  text-wrap: pretty;
+}
+
+.tracy-news-card__text p {
+  margin: 0;
+}
+
+.tracy-news-card__text .wp-block-post-excerpt__more-text {
+  display: none;
+}
+
+.tracy-news-card__date {
+  font-size: calc(var(--wp--preset--font-size--sm) - 1px);
+  color: var(--wp--preset--color--meta);
+}
+
+.tracy .tracy-pagination {
+  margin-top: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--2));
+  padding-top: var(--wp--preset--spacing--6);
+  border-top: 1px solid var(--wp--preset--color--border);
+  font-size: var(--wp--preset--font-size--sm);
+}
+
+.tracy-pagination a {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  text-decoration: none;
+}
+
+/* The library card (tracy/cards, the category listings): the source's card title is the sans
+   at 21px semibold, not the display serif. */
+.tracy .tracy-card__title {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: calc(var(--wp--preset--font-size--lg) + 3px);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* ---- article: an orange eyebrow, the serif title in regular weight, a ruled meta line, the
+   featured image square-cornered, then "More news" as three cards. ---- */
+
+/* No eyebrow in this design is monospace (the source's are Archivo 12px 600 uppercase, orange on
+   a card, grey elsewhere); the base stylesheet's mono eyebrow is overridden wholesale. */
+.tracy .tracy-eyebrow,
+.tracy .tracy-eyebrow a {
+  font-family: var(--wp--preset--font-family--body);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.tracy .tracy-card .tracy-eyebrow,
+.tracy .tracy-card .tracy-eyebrow a,
+.tracy .tracy-result .tracy-eyebrow,
+.tracy .tracy-result .tracy-eyebrow a {
+  color: var(--wp--custom--tracy--brand--orange);
+}
+
+.tracy-eyebrow--orange,
+.tracy-eyebrow--orange a {
+  font-family: var(--wp--preset--font-family--body);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--wp--custom--tracy--brand--orange);
+}
+
+/* The article title: the source's `clamp(34px, 4.4vw, 52px)` at 1.08 and -0.028em (parity 15/09:
+   the floor was 40 and the leading the display's 1.02 — 34 / 56.16px at 1440 in the source). */
+.tracy .tracy-article__title {
+  font-size: clamp(34px, 4.4vw, calc(var(--wp--preset--font-size--xxxl) + 12px));
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+  margin: 0 0 var(--wp--preset--spacing--5);
+  text-wrap: balance;
+}
+
+.tracy-article__meta {
+  padding-block: var(--wp--preset--spacing--4);
+  border-top: 1px solid var(--wp--preset--color--border);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+  font-size: calc(var(--wp--preset--font-size--sm) - 0.5px);
+  color: var(--wp--preset--color--meta);
+}
+
+.tracy-article__meta a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tracy-article__meta .wp-block-post-author-name {
+  color: var(--wp--preset--color--fg);
+  font-weight: 600;
+}
+
+/* The byline as the source draws it: a 42px round avatar, the author's name in bold on the
+   first line, and under it one grey line "Head of Structures · 28 Jul 2026 · 7 min read". The
+   core/post-author block and its content wrapper are flattened (display: contents) so the name,
+   the bio, the date and the reading time are all items of the meta row; the name takes the
+   whole first line, the avatar hangs at the left of both lines. */
+.tracy-article__meta:has(.tracy-article__author) {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0;
+  row-gap: 2px;
+  padding-left: calc(42px + var(--wp--preset--spacing--4));
+  min-height: calc(42px + 2 * var(--wp--preset--spacing--4));
+}
+
+.tracy-article__meta .tracy-article__author,
+.tracy-article__meta .tracy-article__author .wp-block-post-author__content {
+  display: contents;
+}
+
+.tracy-article__meta .tracy-article__author .wp-block-post-author__avatar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--wp--preset--color--border) 60%, var(--wp--preset--color--bg));
+}
+
+.tracy-article__meta .tracy-article__author .wp-block-post-author__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.tracy-article__meta .tracy-article__author .wp-block-post-author__name {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+  font-weight: 600;
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy-article__meta .tracy-article__author .wp-block-post-author__bio {
+  margin: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.tracy-article__meta .tracy-article__author .wp-block-post-author__bio p {
+  margin: 0;
+  display: inline;
+}
+
+/* The separators: none before the name (first line), one before every item of the second line. */
+.tracy-article__meta:has(.tracy-article__author) > * + *::before,
+.tracy-article__meta:has(.tracy-article__author) .wp-block-post-author__name::before {
+  content: none;
+}
+
+.tracy-article__meta:has(.tracy-article__author) .tracy-article__author + *::before,
+.tracy-article__meta:has(.tracy-article__author) .wp-block-post-date + *::before {
+  content: '·';
+  margin-inline: 6px;
+}
+
+.tracy .tracy-article__media img {
+  border-radius: 0; /* ds-keep: the article's lead picture spans the column, square on purpose */
+}
+
+.tracy-article__media figcaption {
+  margin-top: var(--wp--preset--spacing--3);
+  font-size: calc(var(--wp--preset--font-size--sm) - 1px);
+  color: var(--wp--preset--color--meta);
+}
+
+.tracy-related {
+  padding-block: var(--wp--custom--section-y--desktop);
+  border-top: 1px solid var(--wp--preset--color--border);
+}
+
+/* "Related articles": the source's `clamp(24px, 2.6vw, 30px)` (parity 15/09: 28 → 30 at 1440,
+   28 → 24 at 390). */
+.tracy-related__title {
+  margin: 0 0 var(--wp--preset--spacing--8);
+  font-size: clamp(var(--wp--preset--font-size--xl) + 2px, 2.6vw, calc(var(--wp--preset--font-size--xxl) + 2px));
+  font-weight: 400;
+}
+
+/* A related card is one anchor in the source and its title is ink at 16.5px / 1.4 — not the news
+   grid's 20px link-green title (parity 15/09, "Choosing sandwich roof panels" on every stage). */
+.tracy .tracy-related .tracy-news-card__title {
+  font-size: calc(var(--wp--preset--font-size--base) + 0.5px);
+  line-height: 1.4;
+}
+
+.tracy .tracy-related .tracy-news-card__title a {
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy .tracy-related .tracy-news-card__title a:hover {
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+}
+
+.tracy-404 .wp-block-buttons {
+  margin-top: var(--wp--preset--spacing--6);
+}
+
+/* ---- page stack: the templates whose content is the source page as blocks (email, form,
+   newsletter, slide, style guide) and the plain page template. A stack whose blocks are flat —
+   a heading, a paragraph, the source's own grids — gets the source's container: the content max,
+   the gutter outside it (content-box, as every inline container of the source is written), and
+   a section's vertical rhythm. A stack of sections (about, contact) gets nothing: each section
+   carries its own box. Measured 14/09: without this the six fixture pages ran edge to edge. ---- */
+
+.tracy .tracy-page-stack > .wp-block-post-content:not(:has(> .wtb-section, > section)) {
+  box-sizing: content-box;
+  max-width: var(--wp--custom--container--max);
+  margin-inline: auto;
+  padding: var(--wp--custom--section-y--tablet) var(--wp--custom--container--gutter-desktop) var(--wp--custom--section-y--desktop);
+}
+
+/* The source's own markup at the phone width. The source has no media query, and several of its
+   blocks run wider than 390: the about page's history grid, the style guide's module map (fixed
+   columns, 659px) and its four-column table. A top-level block wider than the page scrolls inside
+   its own box rather than widening the page (full-1, 6 rows of horizontal overflow) — that box is
+   the whole answer, and the ONLY thing this media query needs to do.
+
+   NOT `overflow-wrap: anywhere` on the grid cells (full-2). It bought the same missing horizontal
+   scroll at a price three lenses read at 390 (full-5 N-75f16e, N-7648f8, N-6aa34f, N-46bb91,
+   N-2e8c48, N-cd0ea5): words broke mid-glyph in every narrow cell — "Founde/d", «Основ/ание»,
+   "LO/CAT/ION", and the module map's component label one letter per line, 21 lines. `overflow-wrap`
+   INHERITS, so one declaration on a grid cell reached every descendant of it: the careers job
+   table, the investor table and the newsletter's footer links broke too, on pages no note named.
+   The source at the same width breaks none of them — its cells simply let a long word spill into
+   the grid's 28px gap, and the scroll box above absorbs the few pixels that leaves.
+
+   Measured 15/09 on all 34 pages at 390: 0 words split, no page scrolls sideways, and the ten Fast
+   Gate pages are geometrically identical (every element's box, before and after). */
+@media (max-width: 639px) {
+  .tracy .wp-block-post-content > [data-dc-tpl] {
+    overflow-x: auto;
+  }
+
+  /* The style guide's §6 table is the one verbatim block written as a data table: four columns of
+     bare `fr`, which is the source saying these tracks never shrink below their own content (every
+     other repeated row grid in the export declares `minmax(0px, …)` — free to squeeze). Held to
+     that, each cell keeps its line and the block scrolls: 674 inside 324 at 390, the page still
+     390 (full-5 N-00aced; at 325 every cell wrapped three and four times and the row trebled).
+     The `display: grid` is what keeps the columns lined up across rows — one auto track sized to
+     the widest row's max-content, so every row stretches to the same width. */
+  .tracy .wp-block-post-content > [data-dc-tpl]:has(> [style*='grid-template-columns: 2fr 1fr 1fr 1fr']) {
+    display: grid;
+  }
+
+  .tracy .wp-block-post-content [data-dc-tpl][style*='grid-template-columns: 2fr 1fr 1fr 1fr'] {
+    min-width: max-content;
+  }
+}
+
+/* The source's inline containers (`max-width: 1240px; padding: 88px 32px`) are laid out under
+   its own `* { box-sizing: border-box }`: 1176 of content inside a 1240 box. The theme's reset is
+   the same box, so the declaration needs nothing — and must get nothing. 14/09 made these
+   content-box (1240 of content) because the pattern sections were 1240 wide then; the container
+   token is 1176 since 15/09 (fast-5 N-c02e7a), and both now start on the source's line, x=132. */
+.tracy .wp-block-post-content [data-dc-tpl][style*='max-width'] {
+  box-sizing: border-box;
+}
+
+/* The source's pictures are <image-slot> elements filling a fixed-height frame; the spec-pack
+   writes them as <img data-image-slot> inside that frame (`height: 200px; position: relative`).
+   Without the slot's own box rule the image kept its natural height and ran out of the frame —
+   over the caption under it, and over the next card (visual-qa 14/09: the article's two-up figure,
+   the related cards, the newsletter's header picture). The slot's rule, restated.
+
+   NOT `position: absolute; inset: 0` (round 1): that needs a positioned frame, and the style
+   guide's circular frame is a plain flex box — the picture's containing block became the page,
+   and a broken picture's alt text sat over the topbar at 0,0 (visual-5). `height: 100%` against
+   the frame's fixed height fills it the same way and never leaves the frame. */
+.tracy .wp-block-post-content img[data-image-slot] {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: cover;
+  border-radius: 0; /* ds-keep: a picture slot of page content, its frame is the content's own */
+  overflow: hidden;
+  /* A picture that fails to load stays an empty frame: alt text is not painted, and Chromium's
+     broken-image glyph is covered by the pseudo-element it renders only on a failed <img>. */
+  color: transparent;
+  font-size: 0;
+}
+
+.tracy .wp-block-post-content img[data-image-slot]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--wp--preset--color--surface-warm);
+}
+
+/* shape="circle": the source sizes it inline (150px) and the spec-pack drops that style. */
+.tracy .wp-block-post-content img[data-image-slot="circle"] {
+  width: 150px;
+  height: 150px;
+  flex: none;
+  border-radius: 50%;
+}
+
+/* Inside the source's own markup a heading is what its inline style says and otherwise what the
+   source's body gives it — the sans, the section's colour (the ink band of the Leadership grid,
+   the beige panel), normal leading — never theme.json's page defaults, which put the display
+   serif on a card title and painted "Leadership" ink on ink (measured 14/09). The source declares
+   no heading rule at all: its h1/h2 carry the serif inline. */
+.tracy .wp-block-post-content [data-dc-tpl] :is(h1, h2, h3, h4, h5, h6) {
+  font-family: inherit;
+  line-height: normal;
+  letter-spacing: normal;
+  color: inherit;
+}
+
+/* The fixture pages' title: the source's `clamp(30px, 3.7vw, 44px)` in the serif at regular
+   weight — theme.json's h1 is 700 (full-1, 24 rows on email, form and style guide). Then a lead
+   paragraph under it: the source's 16.5px grey. */
+.tracy .tracy-page-stack .wp-block-post-content > h1.wp-block-heading {
+  font-size: clamp(30px, 3.7vw, calc(var(--wp--preset--font-size--xxxl) + 4px));
+  font-weight: 400;
+}
+
+.tracy .tracy-page-stack .wp-block-post-content > h1.wp-block-heading + p.wp-block-paragraph {
+  font-size: calc(var(--wp--preset--font-size--base) + 0.5px);
+  color: var(--wp--preset--color--muted);
+}
+
+/* The style guide's seven section labels ("1 · Module position map"): the converter kept them as
+   h2, the source sets them as 13px letter-spaced uppercase labels in the caption grey. */
+.tracy .tracy-page-stack--style-guide .wp-block-post-content > h2.wp-block-heading {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: calc(var(--wp--preset--font-size--xs) + 1px);
+  /* The source's label in full: 700 at 0.18em over a 1px rule with 12px under the text and 24px
+     below the rule (full-1, 28 rows at 600). */
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--wp--preset--color--meta);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+  padding-bottom: var(--wp--preset--spacing--3);
+  margin: 0 0 var(--wp--preset--spacing--6);
+}
+
+/* Every later label sits under a verbatim block that carries `margin-bottom: 56px`, so only the
+   FIRST one has nothing above it but the page lead — 0 of box and 23px of leading, which reads as
+   a third line of the lead (full-5 N-1f694a, four axes, EN and RU; the source leaves 63px at 1440
+   and 65 at 390). The same 56 the source's blocks leave, so the rhythm is one value everywhere. */
+.tracy .tracy-page-stack--style-guide .wp-block-post-content > p + h2.wp-block-heading {
+  margin-top: 56px;
+}
+
+/* The page lead of the reference page runs the full 1176 container — ~110 characters a line at
+   1440, half as long again as reading wants; the source holds it to ~720 and breaks it over two
+   lines (full-5 N-2d52a8). */
+.tracy .tracy-page-stack--style-guide .wp-block-post-content > h1.wp-block-heading + p.wp-block-paragraph {
+  max-width: 720px;
+}
+
+/* §3 Colour: a swatch whose fill happens to BE the page behind it draws as an empty frame — Paper
+   #F5F3EE on the light page (0 apart), Ink #14171A on the dark one (4/5/6 apart, and at 390-dark
+   it reads as a missing tile). The source gives three of the six a border and three none. A
+   hairline mixed from the page's own foreground shows all four edges of all six in either scheme,
+   and paints over no part of the colour being shown (full-5 N-07dbef). */
+.tracy .wp-block-post-content [data-dc-tpl][style*='height: 88px'] {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--wp--preset--color--fg) 28%, transparent);
+}
+
+/* The form library's stepper is "step 2 of 3" and the source gives it two values: the current step
+   in Signal, everything else in Line — so the step already WALKED and the step still to come are
+   the same bar and the same grey label, on the one page whose whole job is to show a control's
+   states (full-5 N-701a76). Three states, three values: done is the brand green with an ink label,
+   current keeps the source's Signal, to come keeps Line. Only the first child is "done" — a bar is
+   only ever behind the current one here, and the row is written in document order. */
+.tracy
+  .wp-block-post-content
+  [data-dc-tpl][style*='grid-template-columns: repeat(3, 1fr)']
+  > [style*='border-top: 3px solid var(--wp--preset--color--border)']:first-child {
+  /* `!important` because the value being corrected is an inline `border-top` shorthand written by
+     the canvas export; nothing short of it reaches a declaration in the style attribute. */
+  border-top-color: var(--wtb-green) !important;
+  color: var(--wp--preset--color--fg-2) !important;
+}
+
+/* The email page's template list reads as a picker — four ruled rows — but the panel beside it can
+   only ever show the first ("Subject: Request 2026-0841 is in progress"), and no row said it was
+   the one on screen (full-5 N-53fe09). The marker the theme already speaks: the open navigation
+   item's weight and its Signal underline. The preview is the source's own static markup, so the
+   row it belongs to is the first one. */
+.tracy .wp-block-post-content [data-dc-tpl][style*='flex: 1 1 260px'] > a:first-of-type {
+  box-shadow: inset 0 -2px 0 0 var(--wp--custom--tracy--brand--orange);
+}
+
+.tracy .wp-block-post-content [data-dc-tpl][style*='flex: 1 1 260px'] > a:first-of-type > span:first-child {
+  /* The row's own inline `font-weight: 600` is a style-attribute declaration. */
+  font-weight: 700 !important;
+}
+
+/* Two frames of the source that cut their own picture. The newsletter preview's header frame is
+   190px in a 506px column — 2.66:1 over a 900×560 photograph, so `cover` took a sixth off the top
+   and the bottom (full-5 N-76dc05); the style guide's first frame is LABELLED "16:9 frame" and is
+   1.9:1 (N-406408) — the one place on the site where a frame is the thing being documented, so it
+   has to be the ratio it names. Both give the ratio and let the height follow it. */
+.tracy
+  .tracy-page-stack--newsletter
+  .wp-block-post-content
+  [data-dc-tpl][style*='height: 190px']:has(> img[data-image-slot]) {
+  height: auto !important;
+  aspect-ratio: 3 / 2;
+}
+
+.tracy .tracy-page-stack--newsletter .wp-block-post-content [data-dc-tpl][style*='height: 190px'] > img[data-image-slot] {
+  object-fit: contain;
+}
+
+.tracy .wp-block-post-content [data-dc-tpl][style*='height: 200px']:has(> #tp-gd-1) {
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+}
+
+/* The newsletter card's own input: the source paints it a shade DARKER than the forest card around
+   it, and its placeholder is the browser's grey on both (full-5 N-d46e11 — under dark the preset
+   flipped to mint and the empty field became the brightest thing on the page). The card does not
+   flip in dark, so neither does the field; the placeholder takes the card's own body green. */
+.tracy .wp-block-post-content input[style*='background: var(--wp--preset--color--accent-hover)']::placeholder {
+  color: var(--wp--custom--tracy--brand--green-text);
+  opacity: 1;
+}
+
+/* ---- split pages: the article, the news index and the search results are content | aside, a
+   340px aside (templates set the column width). Values read off the source render 14/09:
+   the aside is a column of cards 28px apart, sticky under the header on the article; a card is a
+   1px rule with 22px padding; its label is the 12px letter-spaced eyebrow in ink. ---- */
+
+.tracy .tracy-split {
+  align-items: flex-start;
+}
+
+.tracy-split__main {
+  min-width: 0;
+}
+
+/* The article fills its column; tracy.css's 72ch measure was for the single-column page. */
+.tracy .tracy-split__main .tracy-article {
+  max-width: none;
+}
+
+.tracy-aside {
+  display: grid;
+  gap: calc(var(--wp--preset--spacing--6) + var(--wp--preset--spacing--1));
+}
+
+.tracy-split--article .tracy-aside {
+  position: sticky;
+  top: calc(var(--wp--preset--spacing--12) * 2.5);
+}
+
+.tracy-aside__card {
+  border: 1px solid var(--wp--preset--color--border);
+  background: var(--wp--preset--color--surface);
+  padding: calc(var(--wp--preset--spacing--5) + 2px);
+}
+
+.tracy-aside__label {
+  margin: 0 0 calc(var(--wp--preset--spacing--3) + 2px);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: var(--wp--preset--color--fg);
+}
+
+/* The lists in a card (table of contents, categories, filters): no bullets, no indent. */
+.tracy-aside .wp-block-list,
+.tracy-aside .wp-block-categories-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tracy-aside .wp-block-list li,
+.tracy-aside .wp-block-categories-list li {
+  margin: 0;
+}
+
+/* Table of contents: a 2px rule on the left of each entry, the section being read in orange and
+   bold (the filler in inc/extra.php marks it aria-current), 14.5px at 1.4. */
+.tracy-aside__toc-list {
+  display: grid;
+  gap: calc(var(--wp--preset--spacing--2) + 2px);
+}
+
+.tracy-aside__toc-list a {
+  display: block;
+  padding-left: var(--wp--preset--spacing--3);
+  border-left: 2px solid color-mix(in srgb, var(--wp--preset--color--border) 50%, var(--wp--preset--color--border-soft));
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+  line-height: 1.4;
+  color: var(--wp--preset--color--muted);
+  text-decoration: none;
+}
+
+.tracy-aside__toc-list a:hover,
+.tracy-aside__toc-list a[aria-current] {
+  border-left-color: var(--wp--custom--tracy--brand--orange);
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy-aside__toc-list a[aria-current] {
+  font-weight: 600;
+}
+
+/* Categories and filters: ruled rows, the count in the light grey at the end of the row. */
+.tracy-aside__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--3);
+  padding-block: calc(var(--wp--preset--spacing--2) + 1px);
+  border-bottom: 1px solid var(--wp--preset--color--border-soft);
+  font-size: calc(var(--wp--preset--font-size--sm) + 1px);
+  color: color-mix(in srgb, var(--wp--preset--color--meta) 55%, var(--wp--preset--color--bg));
+}
+
+.tracy-aside__list li:last-child {
+  border-bottom: 0;
+}
+
+/* A category row is a plain link in the source: the link colour (parity 15/09; the count keeps
+   the light grey). */
+.tracy-aside__list a {
+  flex: 1 1 auto;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  text-decoration: none;
+}
+
+.tracy-aside__list a:hover {
+  color: var(--wp--custom--tracy--brand--orange);
+}
+
+/* Downloads: the file's name, then its type and size at the end of the row in the light grey. */
+.tracy-aside__downloads-list a {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--3);
+  align-items: baseline;
+}
+
+.tracy-aside__filetype {
+  flex: none;
+  font-size: var(--wp--preset--font-size--xs);
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--wp--preset--color--meta) 55%, var(--wp--preset--color--bg));
+}
+
+.tracy-aside__filters-list li {
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+}
+
+.tracy-aside__filters-list a[aria-current] {
+  font-weight: 600;
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+/* Latest articles: a 64px square thumbnail, the title in the sans at 14.5/600, the date under it. */
+.tracy-aside__latest-list {
+  display: grid;
+  gap: var(--wp--preset--spacing--4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tracy-aside__latest-list > li {
+  margin: 0;
+}
+
+.tracy .tracy-aside__latest-item {
+  gap: var(--wp--preset--spacing--3);
+  align-items: flex-start;
+}
+
+.tracy-aside__latest-media {
+  flex: 0 0 auto;
+  width: 64px;
+  margin: 0;
+  border: 1px solid var(--wp--preset--color--border);
+  /* The frame carries the card corner and clips its picture: rounding the img alone drew a rounded
+     picture inside a square outline under a system with a card radius (Figma /news, 15/10/2026). */
+  border-radius: var(--ds-card-radius, 0);
+  overflow: hidden;
+}
+
+.tracy-aside__latest-media img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+}
+
+.tracy-aside__latest-body {
+  min-width: 0;
+}
+
+.tracy .tracy-aside__latest-title {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: calc(var(--wp--preset--font-size--sm) + 1px);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.tracy-aside__latest-title a {
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+.tracy-aside__latest-title a:hover {
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+}
+
+.tracy-aside__latest-date {
+  margin-top: var(--wp--preset--spacing--1);
+  font-size: calc(var(--wp--preset--font-size--xs) + 0.5px);
+  color: var(--wp--preset--color--meta);
+}
+
+/* The aside's search: the design's flat input, the icon button beside it. */
+.tracy-aside__search-form .wp-block-search__inside-wrapper {
+  border: 0;
+}
+
+/* The call card: the ink panel — a serif title at 21px, the copy in the warm grey, an orange
+   button across the card. Ink in both schemes, like the footer band. */
+.tracy .tracy-aside__cta {
+  background: var(--wp--custom--tracy--brand--ink);
+  border-color: var(--wp--custom--tracy--brand--ink);
+  color: var(--wp--custom--tracy--brand--paper);
+  padding: var(--wp--preset--spacing--6);
+}
+
+.tracy .tracy-aside__cta-title {
+  margin: 0 0 calc(var(--wp--preset--spacing--2) + 2px);
+  font-family: var(--wp--preset--font-family--display);
+  font-size: calc(var(--wp--preset--font-size--lg) + 3px);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: var(--wp--custom--tracking--display);
+  color: inherit;
+  text-wrap: balance;
+}
+
+/* The news sidebar's subscribe card is brand green in the source (#14483a), its copy in a pale
+   green, the email field a darker green with a lighter rule, the orange button across the card.
+   🔒 It fills from the brand GREEN custom, not from the accent preset. In dark the accent is mint
+   (#7fbfa6) — a text and link colour, as theme.overlay.json says — and filling a card with it put
+   near-white copy on mint at 1.76:1 (measured 15/09, dark stages of the Fast Gate). The green
+   custom keeps the same card in both schemes, like the ink panel above it. */
+.tracy .tracy-aside__subscribe {
+  background: var(--wp--custom--tracy--brand--green);
+  border-color: var(--wp--custom--tracy--brand--green);
+  color: var(--wp--custom--tracy--brand--paper);
+}
+
+.tracy .tracy-aside__subscribe .tracy-aside__cta-title {
+  font-size: var(--wp--preset--font-size--xl);
+  line-height: 1.25;
+}
+
+/* The copy on green is the source's #BFD4CB (parity 15/09) — a brand constant, since no mix of
+   paper and green lands on it. */
+.tracy .tracy-aside__subscribe .tracy-aside__cta-text {
+  color: var(--wp--custom--tracy--brand--green-text);
+}
+
+.tracy .tracy-aside__subscribe .wpcf7-form {
+  display: block;
+}
+
+.tracy .tracy-aside__subscribe .wpcf7-form > p {
+  margin: 0;
+}
+
+.tracy .tracy-aside__subscribe .wpcf7-form .wtb-form__field {
+  font-size: 0;
+  color: transparent;
+}
+
+.tracy .tracy-aside__subscribe .wpcf7-form .wtb-form__field > .wpcf7-form-control-wrap {
+  margin-top: 0;
+}
+
+/* The same :not() chain as the form's base rule in sections.css, so this one outweighs it. */
+.tracy .tracy-aside__subscribe .wpcf7-form input:not([type='submit']):not([type='checkbox']):not([type='radio']):not([type='file']) {
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+  padding: 11px 12px;
+  margin-bottom: 10px;
+  /* The source's field on the green card: #0E3B2F inside a #3D6B5C rule, white text — the brand
+     constants, fixed in both schemes like the card. Mixed from the accent preset it went mint in
+     dark (#8dbaa5, fast-5 N-46a904 / N-e729f1): a light slab that read as a second button. */
+  border-color: var(--ds-c-border, var(--wp--custom--tracy--brand--green-rule));
+  background: var(--ds-c-surface, var(--wp--custom--tracy--brand--green-deep));
+  color: var(--ds-c-fg, var(--wp--preset--color--accent-on));
+}
+
+/* Under a design system the field is the system's field: its card face, its text and its muted words
+   for the placeholder, a pair the slot keeps at 4.5:1. The green-deep slab became the accent's pressed
+   shade, and the placeholder (paper mixed into green: the ink's words into the accent) read 1.3:1 on
+   it, light on light blue (Moxie dark, 15/10/2026). Without a system every role is unset and the
+   brand constants stay. */
+.tracy .tracy-aside__subscribe .wpcf7-form input::placeholder {
+  color: var(--ds-c-muted, color-mix(in srgb, var(--wp--custom--tracy--brand--paper) 60%, var(--wp--custom--tracy--brand--green)));
+}
+
+.tracy .tracy-aside__subscribe .wpcf7-form .wtb-form__actions {
+  margin-top: 0;
+}
+
+.tracy .tracy-aside__subscribe .wpcf7-form input[type='submit'] {
+  width: 100%;
+  padding: 12px;
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+}
+
+/* Under a design system the card's green IS the accent (--ds-c-accent), and so was the submit's
+   fill: the Subscribe button vanished into the card, only its word left (Figma, 15/10/2026). On the
+   card it wears the accent pair turned, the accent's own text colour as its fill and the accent as
+   its word, readable on the card and in itself by construction (the footer monogram's rule).
+   Without a system the roles are unset: the two --tas-* below are then invalid and every value
+   falls back to the orange button it had. */
+.tracy .tracy-aside__subscribe .wpcf7-form {
+  --tas-submit: var(--ds-c-accent-on);
+  --tas-submit-hover: color-mix(in srgb, var(--ds-c-accent-on) 86%, var(--ds-c-accent));
+}
+
+.tracy .tracy-aside__subscribe .wpcf7-form input[type='submit']:where(:not(:disabled)) {
+  background: var(--tas-submit, var(--ds-c-accent, var(--wtb-orange)));
+  color: var(--ds-c-accent, var(--wp--preset--color--accent-on));
+}
+
+.tracy .tracy-aside__subscribe .wpcf7-form input[type='submit']:where(:not(:disabled)):hover {
+  background: var(--tas-submit-hover, color-mix(in srgb, var(--wtb-orange) 88%, var(--wp--preset--color--fg)));
+}
+
+.tracy .tracy-aside__subscribe .wpcf7-form .wpcf7-response-output {
+  margin-top: 10px;
+  border-color: var(--wp--custom--tracy--brand--green-rule);
+}
+
+/* The copy on the ink card: the source's #B9B5AC, the text grey on ink. */
+.tracy-aside__cta-text {
+  margin: 0 0 var(--wp--preset--spacing--4);
+  font-size: var(--wp--preset--font-size--sm);
+  line-height: 1.6;
+  color: var(--wp--custom--tracy--brand--ink-text);
+  text-wrap: pretty;
+}
+
+.tracy .tracy-aside__cta-actions,
+.tracy .tracy-aside__cta-actions .wp-block-button {
+  width: 100%;
+}
+
+.tracy .tracy-aside__cta-actions .wp-block-button .wp-block-button__link {
+  display: block;
+  width: 100%;
+  padding: var(--wp--preset--spacing--3);
+  text-align: center;
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+}
+
+/* Popular searches: small outlined chips, 13px, 7px apart. */
+.tracy .tracy-aside__chips {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  gap: calc(var(--wp--preset--spacing--2) - 1px);
+}
+
+.tracy .tracy-aside__chips .tracy-chips__all a {
+  padding: calc(var(--wp--preset--spacing--1) + 2px) var(--wp--preset--spacing--3);
+  font-size: calc(var(--wp--preset--font-size--sm) - 1px);
+  font-weight: 400;
+  background: transparent;
+  border-color: var(--wp--preset--color--border);
+  color: var(--wp--preset--color--fg-2);
+}
+
+.tracy .tracy-aside__chips .tracy-chips__all a:hover {
+  border-color: var(--wp--preset--color--accent);
+  color: var(--wp--preset--color--fg);
+}
+
+/* ---- the news index: the sticky post as a wide card (picture left, copy right), then the grid
+   two across, then the pagination row with the range count on the right. ---- */
+
+.tracy .tracy-featured__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tracy .tracy-featured__list > li {
+  margin: 0;
+}
+
+.tracy .tracy-featured-card {
+  gap: calc(var(--wp--preset--spacing--6) + var(--wp--preset--spacing--1));
+  align-items: center;
+  margin-bottom: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--3));
+  border: 1px solid var(--wp--preset--color--border);
+  background: var(--wp--preset--color--surface);
+  /* The card is the frame (its border): it carries the corner and clips the picture, which is not
+     rounded on its own (a rounded picture in a square card, Figma /news, 15/10/2026). */
+  border-radius: var(--ds-card-radius, 0);
+  overflow: hidden;
+}
+
+.tracy-featured-card__media {
+  margin: 0;
+  align-self: stretch;
+}
+
+.tracy-featured-card__media a,
+.tracy-featured-card__media img {
+  display: block;
+  height: 100%;
+  min-height: 290px;
+  object-fit: cover;
+}
+
+.tracy-featured-card__body {
+  padding: calc(var(--wp--preset--spacing--6) + var(--wp--preset--spacing--1)) calc(var(--wp--preset--spacing--6) + var(--wp--preset--spacing--1)) calc(var(--wp--preset--spacing--6) + var(--wp--preset--spacing--1)) 0;
+}
+
+.tracy .tracy-featured-card__title {
+  margin: 0 0 var(--wp--preset--spacing--3);
+  font-family: var(--wp--preset--font-family--display);
+  /* The source's `clamp(24px, 2.6vw, 30px)` (parity 15/09: a fixed 30 at 390 against its 24). */
+  font-size: clamp(var(--wp--preset--font-size--xl) + 2px, 2.6vw, calc(var(--wp--preset--font-size--xxl) + 2px));
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* D24.13: the featured title is a link like the four grid cards under it — link colour, orange on
+   hover — so the card says it opens the article (interaction lens, fast-5: ink serif, no arrow,
+   no underline, nothing said so). */
+.tracy-featured-card__title a {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  text-decoration: none;
+}
+
+.tracy-featured-card__title a:hover {
+  color: var(--wp--custom--tracy--brand--orange);
+}
+
+.tracy-featured-card .tracy-news-card__text {
+  margin-bottom: calc(var(--wp--preset--spacing--4) + 2px);
+  font-size: calc(var(--wp--preset--font-size--base) - 0.5px);
+  line-height: 1.65;
+}
+
+.tracy .tracy-featured-card__meta {
+  gap: var(--wp--preset--spacing--2);
+  font-size: calc(var(--wp--preset--font-size--sm) - 0.5px);
+}
+
+.tracy .tracy-featured-card__meta > * + *::before {
+  content: '· ';
+}
+
+.tracy .tracy-news__grid--2 {
+  gap: var(--wp--preset--spacing--8) calc(var(--wp--preset--spacing--6) + var(--wp--preset--spacing--1));
+}
+
+.tracy .tracy-listing__foot {
+  margin-top: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--2));
+  padding-top: var(--wp--preset--spacing--6);
+  border-top: 1px solid var(--wp--preset--color--border);
+  gap: var(--wp--preset--spacing--3) var(--wp--preset--spacing--6);
+  align-items: center;
+}
+
+.tracy .tracy-listing__foot .tracy-pagination {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.tracy-listing__count {
+  font-size: calc(var(--wp--preset--font-size--sm) - 0.5px);
+  color: var(--wp--preset--color--meta);
+  white-space: nowrap;
+}
+
+/* ---- search results: the count line under the field, then a ruled list — an orange kind
+   label, the title in the sans at 21px semibold, the excerpt, the date. ---- */
+
+.tracy-search__count {
+  margin: var(--wp--preset--spacing--4) 0 0;
+  font-size: calc(var(--wp--preset--font-size--sm) + 1px);
+  color: var(--wp--preset--color--muted);
+}
+
+.tracy .tracy-results__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tracy .tracy-results__list > li {
+  margin: 0;
+}
+
+.tracy-result {
+  padding-block: calc(var(--wp--preset--spacing--5) + 2px);
+  border-top: 1px solid var(--wp--preset--color--border);
+}
+
+.tracy-result__kind {
+  margin-bottom: calc(var(--wp--preset--spacing--1) + 3px);
+  letter-spacing: 0.12em;
+}
+
+.tracy .tracy-result__title {
+  margin: 0 0 calc(var(--wp--preset--spacing--1) + 2px);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: calc(var(--wp--preset--font-size--lg) + 3px);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+}
+
+/* D24.13 on the search page: a result title is a link and says so in the link colour, orange on
+   hover — the same default the featured news title took. Ink with no underline said nothing, while
+   the sidebar filters of the SAME page were accent (full-5 N-cc3c8e, three axes). */
+.tracy-result__title a {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+  text-decoration: none;
+}
+
+.tracy-result__title a:hover {
+  color: var(--wp--custom--tracy--brand--orange);
+}
+
+.tracy-result__text {
+  margin: 0 0 calc(var(--wp--preset--spacing--1) + 2px);
+  font-size: calc(var(--wp--preset--font-size--sm) + 1px);
+  line-height: 1.6;
+  color: var(--wp--preset--color--muted);
+}
+
+.tracy-result__text p {
+  margin: 0;
+}
+
+.tracy-result__text .wp-block-post-excerpt__more-text {
+  display: none;
+}
+
+.tracy .tracy-result__meta {
+  font-size: calc(var(--wp--preset--font-size--sm) - 1px);
+  color: color-mix(in srgb, var(--wp--preset--color--bg) 22%, var(--wp--preset--color--meta));
+}
+
+/* ---- the article head and foot: the lede in the serif at 22px, the byline with the author in
+   bold, the previous/next pair as two ruled cells (no underline, the label in caps). ---- */
+
+.tracy .tracy-article__lede {
+  margin: 0 0 calc(var(--wp--preset--spacing--6) + var(--wp--preset--spacing--1));
+  max-width: 44em;
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--xl);
+  line-height: 1.5;
+  color: var(--wp--preset--color--fg-2);
+}
+
+.tracy .tracy-article__lede p {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.tracy .tracy-article__lede .wp-block-post-excerpt__more-text {
+  display: none;
+}
+
+.tracy-article__meta > * + *::before {
+  content: '· ';
+}
+
+.tracy .tracy-article__tags {
+  margin-top: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--2));
+  padding-top: var(--wp--preset--spacing--6);
+  border-top: 1px solid var(--wp--preset--color--border);
+  font-size: calc(var(--wp--preset--font-size--sm) - 1px);
+  color: var(--wp--preset--color--meta);
+}
+
+.tracy .tracy-article__tags a {
+  display: inline-block;
+  margin: 0 var(--wp--preset--spacing--1) var(--wp--preset--spacing--1) 0;
+  padding: calc(var(--wp--preset--spacing--1) + 3px) calc(var(--wp--preset--spacing--3) + 1px);
+  border: 1px solid var(--wp--preset--color--border);
+  color: var(--wp--preset--color--fg-2);
+  text-decoration: none;
+}
+
+.tracy .tracy-article__tags a:hover {
+  border-color: var(--wp--preset--color--accent);
+  color: var(--wp--preset--color--fg);
+}
+
+.tracy .tracy-post-nav {
+  gap: 1px;
+  margin-top: calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--2));
+  background: var(--wp--preset--color--border);
+  border: 1px solid var(--wp--preset--color--border);
+}
+
+.tracy .tracy-post-nav__link {
+  background: var(--wp--preset--color--bg);
+  padding: calc(var(--wp--preset--spacing--5) + 2px);
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+}
+
+.tracy .tracy-post-nav__link a {
+  display: block;
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+.tracy .tracy-post-nav__link .post-navigation-link__label {
+  display: block;
+  margin-bottom: var(--wp--preset--spacing--2);
+  font-size: var(--wp--preset--font-size--xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--meta);
+}
+
+/* The title keeps its words whole: the columns block sets `word-break: break-word` on the whole
+   column, and at 390 «инфраструктуру» broke in the middle with no hyphen (fast-5 N-f1a13c). The
+   language's own hyphenation instead, balanced across its lines. */
+.tracy .tracy-post-nav__link .post-navigation-link__title {
+  display: block;
+  font-size: calc(var(--wp--preset--font-size--base) + 0.5px);
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: auto;
+  text-wrap: balance;
+}
+
+.tracy .tracy-post-nav__link a:hover .post-navigation-link__title {
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+}
+
+.tracy .tracy-post-nav__link--next {
+  text-align: right;
+}
+
+/* Running headings of the article: the source's 27px at 1440 (clamp 22–27), with room under the
+   sticky header when a contents link jumps to them. */
+.tracy .tracy-prose h2 {
+  font-size: clamp(var(--wp--preset--font-size--xl), 2.3vw, calc(var(--wp--preset--font-size--xxl) - 1px));
+  letter-spacing: -0.018em;
+  scroll-margin-top: calc(var(--wp--preset--spacing--12) * 2);
+}
+
+/* Running headings balanced across their lines: "…into the building / foundation" hung one word
+   on its second line (fast-5 N-bbd8cb — the source does the same, and the rule is to do better). */
+.tracy .tracy-prose h2,
+.tracy .tracy-prose h3 {
+  text-wrap: balance;
+}
+
+@media (max-width: 781px) {
+  .tracy-split--article .tracy-aside {
+    position: static;
+  }
+
+  .tracy .tracy-featured-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tracy-featured-card__body {
+    padding: var(--wp--preset--spacing--5);
+  }
+}
+
+/* ---- footer: the ink band holding four columns (about, services, company, contact), then a
+   thin strip with the copyright line and the legal links. Ink in both schemes; every grey is
+   the design's white mixed into the band. ---- */
+
+.tracy .tracy-footer {
+  padding-block: 0;
+  border-top: 0;
+  background: var(--wp--custom--tracy--brand--ink);
+  color: var(--wp--custom--tracy--brand--ink-text);
+  font-size: calc(var(--wp--preset--font-size--sm) + 0.5px);
+  line-height: 1.7;
+}
+
+.tracy-footer__band {
+  padding-block: calc(var(--wp--preset--spacing--12) + var(--wp--preset--spacing--4)) calc(var(--wp--preset--spacing--8) + var(--wp--preset--spacing--2));
+}
+
+.tracy-footer__columns {
+  gap: var(--wp--preset--spacing--12);
+  margin: 0;
+}
+
+.tracy-footer__brand {
+  align-items: center;
+  gap: var(--wp--preset--spacing--3);
+  margin-bottom: calc(var(--wp--preset--spacing--4) + 2px);
+}
+
+.tracy-brand__mark--footer {
+  width: 36px;
+  height: 36px;
+  background: var(--wp--custom--tracy--brand--orange);
+  font-size: calc(var(--wp--preset--font-size--base) + 1px);
+}
+
+.tracy .tracy-footer__wordmark {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--wp--custom--tracy--brand--paper);
+}
+
+.tracy-footer__text {
+  margin: 0 0 calc(var(--wp--preset--spacing--4) + 2px);
+  max-width: 32em;
+}
+
+.tracy-footer__legal {
+  margin: 0;
+  font-size: calc(var(--wp--preset--font-size--sm) - 0.5px);
+  color: color-mix(in oklab, var(--wp--custom--tracy--brand--paper) 52%, var(--wp--custom--tracy--brand--ink));
+}
+
+.tracy-footer__title {
+  margin: 0 0 var(--wp--preset--spacing--4);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wp--custom--tracy--brand--paper);
+}
+
+/* The link columns: the source's 10px gap between links at the line's natural height — a 26px
+   pitch. The band's 1.7 leading is for its paragraph; on the lists it made 35px rows and a footer
+   50px taller than the source (fast-5 N-195a2b). */
+.tracy-footer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: calc(var(--wp--preset--spacing--2) + 2px);
+  line-height: 1.15;
+}
+
+.tracy-footer__list li {
+  margin: 0;
+}
+
+.tracy-footer__list a,
+.tracy-footer__line a,
+.tracy-footer__links .wp-block-navigation-item__content {
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tracy-footer__list a:hover,
+.tracy-footer__line a:hover,
+.tracy-footer__links .wp-block-navigation-item__content:hover {
+  color: var(--wp--custom--tracy--brand--paper);
+}
+
+.tracy .tracy-footer__links.wp-block-navigation__container.wp-block-navigation,
+.tracy .tracy-footer__links .wp-block-navigation__container.wp-block-navigation {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(var(--wp--preset--spacing--2) + 2px);
+  line-height: 1.15;
+}
+
+.tracy-footer__line {
+  margin: 0 0 calc(var(--wp--preset--spacing--2) + 2px);
+}
+
+/* The survey link: white, semibold, a thin rule under it — the source's "Book a site survey →". */
+.tracy-footer__links--survey {
+  margin-block: calc(var(--wp--preset--spacing--2) + 2px);
+}
+
+.tracy-footer__links--survey .wp-block-navigation-item__content {
+  color: var(--wp--custom--tracy--brand--paper);
+  font-weight: 600;
+  padding-bottom: 2px;
+  border-bottom: 1px solid color-mix(in oklab, var(--wp--custom--tracy--brand--paper) 28%, var(--wp--custom--tracy--brand--ink));
+}
+
+.tracy-footer__links--survey .wp-block-navigation-item__content::after {
+  content: ' →';
+}
+
+/* The social chips: small outlined buttons on the band. */
+.tracy .tracy-footer__social {
+  margin-top: var(--wp--preset--spacing--2);
+  gap: var(--wp--preset--spacing--2);
+}
+
+.tracy .tracy-footer .tracy-footer__social .wp-block-button .wp-block-button__link {
+  padding: calc(var(--wp--preset--spacing--2) - 1px) var(--wp--preset--spacing--3);
+  font-size: calc(var(--wp--preset--font-size--sm) - 1px);
+  font-weight: 600;
+  color: color-mix(in oklab, var(--wp--custom--tracy--brand--paper) 88%, var(--wp--custom--tracy--brand--ink));
+  border-color: color-mix(in oklab, var(--wp--custom--tracy--brand--paper) 16%, var(--wp--custom--tracy--brand--ink));
+  background: transparent;
+}
+
+.tracy .tracy-footer .tracy-footer__social .wp-block-button .wp-block-button__link:hover {
+  color: var(--wp--custom--tracy--brand--paper);
+  border-color: color-mix(in oklab, var(--wp--custom--tracy--brand--paper) 40%, var(--wp--custom--tracy--brand--ink));
+}
+
+.tracy-footer__strip {
+  border-top: 1px solid color-mix(in oklab, var(--wp--custom--tracy--brand--paper) 12%, var(--wp--custom--tracy--brand--ink));
+}
+
+.tracy-footer__strip-inner {
+  padding-block: var(--wp--preset--spacing--5);
+  gap: var(--wp--preset--spacing--3) var(--wp--preset--spacing--6);
+  font-size: calc(var(--wp--preset--font-size--sm) - 0.5px);
+  color: color-mix(in oklab, var(--wp--custom--tracy--brand--paper) 52%, var(--wp--custom--tracy--brand--ink));
+}
+
+.tracy-footer__note {
+  margin: 0;
+}
+
+.tracy-footer__meta {
+  gap: var(--wp--preset--spacing--5);
+}
+
+.tracy-footer__meta p {
+  margin: 0;
+}
+
+.tracy-footer__meta a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tracy-footer__meta a:hover {
+  color: var(--wp--custom--tracy--brand--paper);
+}
+
+/* The strip's Sitemap link is a menu now (one per language), drawn as the plain link it replaced. */
+.tracy .tracy-footer__sitemap.wp-block-navigation {
+  gap: var(--wp--preset--spacing--5);
+  font-size: inherit;
+}
+
+.tracy-footer__sitemap .wp-block-navigation-item__content {
+  padding: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The Sitemap page: one column per group — Company, Pages, News — as the EmDash edition lays it out. */
+.tracy-sitemap {
+  padding-block: var(--wp--preset--spacing--8) var(--wp--preset--spacing--12);
+}
+
+.tracy-sitemap__groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--wp--preset--spacing--8);
+  margin-top: var(--wp--preset--spacing--8);
+}
+
+.tracy-sitemap__title {
+  margin: 0 0 var(--wp--preset--spacing--4);
+  padding-bottom: var(--wp--preset--spacing--3);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+  font-size: var(--wp--preset--font-size--xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tracy-sitemap__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp--preset--spacing--2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tracy-sitemap__list a {
+  color: var(--wp--preset--color--fg);
+  text-decoration: none;
+}
+
+.tracy-sitemap__list a:hover {
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+}
+
+/* ---- tablet: the gutter narrows, the header row stays one line. ---- */
+
+@media (max-width: 1024px) {
+  .tracy-header__inner,
+  .tracy-footer__inner,
+  .tracy-topbar__inner,
+  .tracy-mega__inner {
+    max-width: calc(var(--wp--custom--container--max) + (var(--wp--custom--container--gutter-tablet) * 2));
+    padding-inline: var(--wp--custom--container--gutter-tablet);
+  }
+
+  .tracy-header__menu {
+    gap: var(--wp--preset--spacing--3);
+  }
+
+  .tracy .tracy-header__menu .tracy-nav.wp-block-navigation__container.wp-block-navigation,
+  .tracy .tracy-header__menu .tracy-nav .wp-block-navigation__container.wp-block-navigation {
+    gap: var(--wp--preset--spacing--3);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .tracy-footer__band {
+    padding-block: var(--wp--preset--spacing--12) var(--wp--preset--spacing--8);
+  }
+
+  .tracy-footer__columns {
+    gap: var(--wp--preset--spacing--8);
+  }
+
+  .tracy-news__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---- small screens: below the tablet width the navigation block's overlay button takes the
+   menu's place; the mega block goes with the desktop row — its pages are in the menu the
+   hamburger holds. The top bar wraps into lines, as the source's does.
+
+   Core switches the navigation block to its overlay at 600px (style.min.css of WordPress 7.1:
+   `@media (min-width:600px)` hides the open button and lays the menu inline). A six-item row
+   plus the quote button does not fit between 600 and 781, so the two core rules are restated
+   here for that band, two classes stronger, and the overlay runs up to the tablet width. ---- */
+
+@media (max-width: 781px) {
+  .tracy-header__menu .tracy-mega {
+    display: none;
+  }
+
+  .tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container-open:not(.always-shown) {
+    display: flex;
+  }
+
+  .tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container:not(.hidden-by-default):not(.is-menu-open) {
+    display: none;
+  }
+
+  /* The open overlay: core paints it white with black text unless the block has a background;
+     here it wears the header's surface and the theme's text, in both schemes, with the links
+     as a left-aligned column at body size. */
+  .tracy-header__menu .tracy-nav.wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container.is-menu-open:not(.disable-default-overlay) {
+    background-color: var(--wp--custom--tracy--brand--header);
+    color: var(--wp--preset--color--fg);
+    padding: var(--wp--preset--spacing--5) var(--wp--custom--container--gutter-phone);
+  }
+
+  .tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+    align-items: flex-start;
+  }
+
+  .tracy .tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container.items-justified-right,
+  .tracy .tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container {
+    align-items: flex-start;
+    align-self: flex-start;
+    margin-inline-start: 0;
+    gap: var(--wp--preset--spacing--2);
+  }
+
+  .tracy .tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content {
+    font-size: var(--wp--preset--font-size--lg);
+    color: var(--wp--preset--color--fg);
+  }
+
+  .tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container-open,
+  .tracy-header__menu .tracy-nav .wp-block-navigation__responsive-container-close {
+    color: var(--wp--preset--color--fg);
+  }
+
+  .tracy-header__inner {
+    flex-wrap: wrap;
+    gap: var(--wp--preset--spacing--3) var(--wp--preset--spacing--4);
+  }
+
+  .tracy-header__brand {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .tracy-header__menu {
+    flex: 0 0 auto;
+    order: 2;
+    align-self: center;
+  }
+
+  .tracy-header__actions {
+    order: 3;
+    flex: 1 1 100%;
+    justify-content: flex-end;
+  }
+
+  .tracy-topbar__inner {
+    justify-content: flex-start;
+  }
+
+  .tracy-topbar__tools {
+    flex-wrap: wrap;
+    row-gap: var(--wp--preset--spacing--2);
+  }
+
+  .tracy .tracy-topbar__nav.wp-block-navigation__container.wp-block-navigation,
+  .tracy .tracy-topbar__nav .wp-block-navigation__container.wp-block-navigation {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 640px) {
+  .tracy-header__inner,
+  .tracy-footer__inner,
+  .tracy-topbar__inner,
+  .tracy-mega__inner {
+    max-width: calc(var(--wp--custom--container--max) + (var(--wp--custom--container--gutter-phone) * 2));
+    padding-inline: var(--wp--custom--container--gutter-phone);
+  }
+
+  .tracy-header__inner {
+    gap: var(--wp--preset--spacing--2);
+  }
+
+  .tracy-header__cta .wp-block-button__link {
+    padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--3);
+    font-size: calc(var(--wp--preset--font-size--sm) - 1px);
+  }
+
+  .tracy-header__search {
+    display: none;
+  }
+
+  /* The other languages keep their flag only, so the tools row still fits one line as the
+     source's "English ▼" does. */
+  .tracy-topbar__switcher .lang-item:not(.current-lang) a span {
+    display: none;
+  }
+
+  .tracy-footer__columns {
+    flex-wrap: wrap;
+  }
+
+  .tracy-footer__columns > .wp-block-column {
+    flex-basis: 100% !important;
+  }
+
+  .tracy-news__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tracy-related {
+    padding-block: var(--wp--custom--section-y--phone);
+  }
+}
+
+/* ---- article body: the source sets its running headings and related-post titles in Archivo 600,
+   not the display serif (visual-qa 14/09, 63 deltas on h2/h3 inside the post) — the serif stays for
+   h1 and section headings. Links inside the post body carry the brand green as on the source. ---- */
+
+.tracy .tracy-prose h2,
+.tracy .tracy-prose h3,
+.tracy .tracy-related h3 {
+  font-family: var(--wp--preset--font-family--body);
+  font-weight: 600;
+}
+
+/* 🔒 The ACCENT preset, not the brand green custom. The two are the same #14483a in light — the
+   source's link colour — but the custom is the FILL that stays green in both schemes (chrome
+   buttons), while the accent flips to mint in dark. A link is text: painted from the custom it
+   came out #14483a on #101214, 1.80:1 (measured 15/09, first dark run). */
+.tracy .tracy-prose a:not(.wp-block-button__link),
+.tracy .tracy-related a {
+  color: var(--ds-c-accent-text, var(--wp--preset--color--accent));
+}
+
+/* tracy.css underlines a bare anchor in running text. The anchors the source authored — tag
+   chips, the previous/next cards, the related titles, share buttons (they carry the export's
+   data-dc-tpl) — are its own components and it underlines none of them. */
+.tracy .tracy-prose a[data-dc-tpl]:not([class]) {
+  text-decoration: none;
+}
+
+/* The running text of the article body is the source's #242830 (its dark map #DDDAD3) — one step
+   lighter than the page's ink, which the source keeps for headings and the pull-quote. The palette
+   has no token between fg and fg-2, so the seeder writes the body's paragraphs and lists with the
+   nearest one, `color: var(--wp--preset--color--fg)`, inline. An inline value is out of a
+   stylesheet's reach, but the variable it reads is not: inside the body the fg preset points at
+   the brand's prose colour, and the pull-quote — the one seeded fg that the source paints ink —
+   gets the page's value back through a copy taken above the body (fast-6, 30 rows of p on the
+   EN and RU article at every stage). Headings never read the preset; they inherit the page's ink. */
+.tracy {
+  --wtb-page-ink: var(--wp--preset--color--fg);
+}
+
+.tracy .tracy-prose {
+  --wp--preset--color--fg: var(--wp--custom--tracy--brand--prose);
+}
+
+.tracy .tracy-prose blockquote {
+  --wp--preset--color--fg: var(--wtb-page-ink);
+}
+
+/* =====================================================================================
+   Visual QA fast-5 (15/09), templates-patterns round — rules for the classes the templates and
+   parts of that round changed or lean on. One block at the end of the file, so the tokens-css
+   round's edits above and these never touch the same lines.
+   ===================================================================================== */
+
+/* WordPress 7.1's block-library ships `.screen-reader-text` only as `.skip-link.screen-reader-text`
+   (measured 15/09 on common.min.css of the stand): the search block's label — which core marks
+   screen-reader-text whenever `showLabel` is off — printed as a visible "Search" above the header
+   button, under the sidebar widget's own heading and above the 404 field. The utility every block
+   theme is expected to define, in core's own shape. */
+.screen-reader-text {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The breadcrumb separator belongs to the crumb AFTER it, not before: core draws it as
+   `li:not(:last-child)::after`, so when the list wrapped at 390 a line ended in "Engineering /"
+   and the title crumb dropped alone. Drawn as `li + li::before`, the slash always travels with
+   the crumb it introduces. (The `__separator` class the rule above styles is not in 7.1's markup.) */
+.tracy-crumbs .wp-block-breadcrumbs li:not(:last-child)::after {
+  content: none;
+}
+
+.tracy-crumbs .wp-block-breadcrumbs li + li::before {
+  content: var(--separator, '/');
+  margin: 0 0.5em;
+  opacity: 0.7;
+}
+
+/* Listing head (home.html, category.html): the lead and the post count on one row, the count
+   right-aligned on the lead's baseline as the source's "48 articles". The row carries the lead's
+   bottom margin so the count sits on the text line, not 24px under it. */
+.tracy-listing__head .tracy-listing__intro {
+  margin-bottom: var(--wp--preset--spacing--6);
+}
+
+.tracy-listing__head .tracy-listing__intro > .tracy-lead {
+  flex: 1 1 auto;
+  max-width: 44em;
+  margin-bottom: 0;
+}
+
+/* One class deeper than the flex layout's `> * { margin: 0 }`, so the count keeps its auto margin
+   and sits at the right even when it wraps under the lead. */
+.tracy-listing__intro > .tracy-listing__intro-count {
+  margin-inline-start: auto;
+}
+
+/* The category chips: "All" is a paragraph and the categories block a <ul>, both items of the
+   chips row — so the whole <ul> wrapped as one item and "All" stood alone on a line at 390. The
+   list is flattened into the row; every chip wraps on its own. */
+.tracy-chips-row > .tracy-chips {
+  display: contents;
+}
+
+/* The listing search (news sidebar, 404, results page): one attached control — no gap between the
+   field and the button, the field's right rule dropped, as the header search already does. */
+.tracy .tracy-listing__search .wp-block-search__inside-wrapper {
+  gap: 0;
+}
+
+.tracy .tracy-listing__search .wp-block-search__input {
+  border-inline-end: 0;
+}
+
+.tracy .tracy-listing__search .wp-block-search__button {
+  margin-left: 0;
+}
+
+/* The featured card's meta: the flex gap sat before the dot and nothing after it, so "·" glued
+   to the following word. The dot carries its own trailing space, equal to the gap before it. */
+.tracy .tracy-featured-card__meta > * + *::before {
+  content: '·';
+  margin-inline-end: var(--wp--preset--spacing--2);
+}
+
+/* The article byline's second line opens with the role. When the author has none (the Russian
+   author, seeded without a role), the date must not inherit the separator the role would have
+   carried — otherwise the line begins with "·". */
+.tracy-article__meta:has(.tracy-article__author) .tracy-article__author + *::before {
+  content: none;
+}
+
+.tracy-article__meta:has(.wp-block-post-author__bio:not(:empty)) .tracy-article__author + *::before {
+  content: '·';
+  margin-inline: 6px;
+}
+
+/* The share group (single.html): three 32px squares — in · f · copy — pinned to the right of the
+   byline, across both of its lines, the way the avatar hangs at its left. The row reserves the
+   width so a long role line wraps before the buttons, not under them. */
+.tracy-article__meta {
+  position: relative;
+}
+
+.tracy-article__meta:has(.tracy-article__share) {
+  padding-right: calc(3 * 32px + 2 * var(--wp--preset--spacing--2) + var(--wp--preset--spacing--4));
+}
+
+.tracy-article__share {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: var(--wp--preset--spacing--2);
+}
+
+.tracy .tracy-article__share-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--ds-btn-radius, 0);
+  background: transparent;
+  color: var(--wp--preset--color--fg-2);
+  font: inherit;
+  font-size: calc(var(--wp--preset--font-size--sm) - 0.5px);
+  /* Regular, as the source's three squares (they inherit the body's 400; fast-6, 6 rows). */
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tracy .tracy-article__share-link:hover,
+.tracy .tracy-article__share-link.is-done {
+  border-color: var(--wp--preset--color--accent);
+  color: var(--ds-c-accent-text-hover, var(--wp--preset--color--accent));
+}
+
+/* D24.9: "Related articles" lives INSIDE the article column as on the source — a 2-column grid
+   under the previous/next pager, its rule on the column's own line. It was a full-width band with
+   its own container and a viewport-wide border (layout lens, fast-5); the band, its padding and
+   the ::before rule that container carried are gone with it. */
+.tracy .tracy-related {
+  border-top: 1px solid var(--wp--preset--color--border);
+  padding-top: var(--wp--preset--spacing--8);
+  padding-bottom: 0;
+  margin-top: var(--wp--preset--spacing--8);
+}
+
+/* The footer's registry line: each item (INN, OGRN, the SRO admission) stays whole; only the
+   " · " gaps may break. At 390 the last item broke between "admission" and "No. 214". */
+.tracy-footer__legal-item {
+  white-space: nowrap;
+}
+
+@media (max-width: 781px) {
+  /* With the aside stacked under the article, a table of contents after the whole body is a
+     list of links to places the reader has passed; it goes. The call card under it stays. */
+  .tracy-split--article .tracy-aside__toc {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Previous/next as two full-width cells, one above the other: two 150px columns broke the
+     English titles into four lines and the Russian "инфраструктуру" in the middle of the word. */
+  .tracy .tracy-post-nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tracy .tracy-post-nav__link--next {
+    text-align: left;
+  }
+
+  /* The share group under the byline instead of beside it: the reserved right margin made the
+     role line wrap, and the wrapped line opened with "·" — the very shape N-e79c30 reported. */
+  .tracy-article__meta:has(.tracy-article__share) {
+    padding-right: 0;
+  }
+
+  .tracy-article__share {
+    position: static;
+    transform: none;
+    flex: 1 1 100%;
+    margin-top: var(--wp--preset--spacing--3);
+  }
+
+  .tracy .tracy-related {
+    padding-top: var(--wp--preset--spacing--6);
+    margin-top: var(--wp--preset--spacing--6);
+  }
+
+  /* The header's second row at the phone width: the search button and the quote button together,
+     the button filling what is left — instead of the button alone at the right of 250px of
+     nothing, and no search at all (the source keeps search + quote on one row). */
+  .tracy-header__search {
+    display: block;
+  }
+
+  .tracy-header__actions {
+    justify-content: flex-start;
+  }
+
+  .tracy-header__cta {
+    flex: 1 1 auto;
+  }
+
+  .tracy-header__cta .wp-block-button {
+    width: 100%;
+  }
+
+  .tracy-header__cta .wp-block-button__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 38px;
+  }
+
+  /* The top bar's tools at the phone width: the thin rules and their 16px go, the gap tightens —
+     with them the Russian row ("Вакансии Акционерам · flags Русский · ☾ Dark") measured 396px
+     against 358 available and wrapped, opening its second line with a bare "|". Without them it
+     is 340px, one line. */
+  .tracy-topbar__tools {
+    gap: var(--wp--preset--spacing--3);
+  }
+
+  .tracy-topbar__lang,
+  .tracy-theme-toggle {
+    padding-inline-start: 0;
+  }
+
+  .tracy-topbar__lang::before,
+  .tracy-theme-toggle::before {
+    display: none;
+  }
+}
+
+/* The byline at the phone width: role, date and reading time each on a line of their own, no
+   separators. The row's second line (role · date · time) wrapped inside its flex items, and the
+   dot — drawn ::before the item that wrapped — opened the next line ("· 1 min read", RU article
+   at 390, typography lens fast-8). A dot that cannot land at a line start is a dot that is not
+   drawn where the line may break. */
+@media (max-width: 639px) {
+  .tracy-article__meta:has(.tracy-article__author) > * + *::before,
+  .tracy-article__meta:has(.wp-block-post-author__bio:not(:empty)) .tracy-article__author + *::before,
+  .tracy-article__meta:has(.tracy-article__author) .wp-block-post-date + *::before {
+    content: none;
+    margin: 0;
+  }
+
+  .tracy-article__meta:has(.tracy-article__author) .wp-block-post-date,
+  .tracy-article__meta:has(.tracy-article__author) .wp-block-post-time-to-read {
+    flex-basis: 100%;
+  }
+}
+
+/* The footer's registry line: the dots travel with the item AFTER them, so a wrap never leaves
+   "OGRN … ·" hanging at a line's end (typography lens, fast-8). */
+.tracy-footer__legal-sep {
+  white-space: nowrap;
+}
+
+/* The crumb is a flex item centred vertically by core; on a two-line crumb its slash floated
+   between the lines (typography lens, fast-8 at 390). The slash sits on the first line. */
+.tracy-crumbs .wp-block-breadcrumbs li {
+  align-items: baseline;
+}
+
+.tracy-crumbs .wp-block-breadcrumbs li + li::before {
+  align-self: baseline;
+}
+
+/* The client logos at every width: the wordmark fills the tile (D24 images lens, fast-8 — at
+   1440 the PNG drew at 48–64px in a 116px tile, a ~6px wordmark). The phone rule already did
+   this under 640; the desktop tile now gets the same treatment. */
+.wtb-gallery__media {
+  width: 100%;
+}
+
+.wtb-gallery__media img {
+  width: 100%;
+  height: auto;
+  max-height: calc(var(--wp--preset--spacing--12) + var(--wp--preset--spacing--2));
+  object-fit: contain;
+}
+
+/* The article page's sidebar, stacked under the article on narrow screens, sat flush on the
+   footer: the article column carries the page's bottom padding and the aside comes after it
+   (colour lens, fast-10 — two #0C2B23 fills touching in dark). The wrap keeps the rhythm when the
+   columns stack. */
+@media (max-width: 1023px) {
+  .tracy .tracy-article-wrap {
+    padding-bottom: var(--wp--custom--section-y--phone);
+  }
+}
+
+/* The 404 body is seeded as wtb sections (a hero with its own gutter) inside the template's
+   container — two gutters, the copy at x=64 on a 390 screen (layout lens, fast-10). Under the
+   two-column width the container steps aside and the sections carry the measure the way they do
+   on every other page. At the two-column width the container IS the grid (sections.css), so it
+   keeps its box: there the link column drops its own gutter instead — its card ended 32px short
+   of the container's right edge (fast-11), and a container without a box ran the page edge to
+   edge (fast-13). */
+@media (max-width: 1023px) {
+  .tracy .tracy-404.tracy-container {
+    padding-inline: 0;
+    max-width: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tracy .tracy-404 > .wtb-links {
+    padding-inline: 0;
+  }
+}
+
+/* The breadcrumb at the phone width shows the path, not the page: the current page is the h1
+   right under it, and a long title crumb wrapped with its slash alone on a line (layout and
+   typography lenses, fast-10, disagreeing on which line the slash should hang from — the answer
+   is neither). Three crumbs fit one line. Only a crumb that is at least the third goes: a
+   two-crumb page (news, slide) kept its band and lost its only name, showing "Home" alone
+   (layout lens, fast-11). */
+@media (max-width: 639px) {
+  .tracy-crumbs .wp-block-breadcrumbs li:nth-child(n + 3)[aria-current],
+  .tracy-crumbs .wp-block-breadcrumbs li:nth-child(n + 3):last-child:has([aria-current]) {
+    display: none;
+  }
+}
+
+/* The featured card's meta at the phone width: date, author and reading time each on a line,
+   no separators — the same answer as the article byline; a dot drawn before the item that
+   wrapped opened the line (typography lens, fast-10). */
+@media (max-width: 639px) {
+  .tracy .tracy-featured-card__meta > * + *::before {
+    content: none;
+    margin: 0;
+  }
+
+  .tracy .tracy-featured-card__meta > * {
+    flex-basis: 100%;
+  }
+
+  /* The RU utility row: the toggle's word ("Dark") dropped alone to a fourth line once the
+     gutter grew to 32; the icon says it. */
+  .tracy-theme-toggle__text {
+    display: none;
+  }
+}
+
+/* ---- top bar: one line at every width, nothing removed -----------------------------------------
+   Two decisions, both Lee's (21–22/09/2026), and they pull against each other until the row is
+   allowed to scroll:
+
+   · WHICH of a customer's contact details a visitor sees is a decision about the SITE, not about
+     a layout — so nothing here is ever `display: none`, at any width.
+   · The two controls a reader looks for in a fixed corner — the language switcher and the theme
+     toggle — sit at the RIGHT EDGE at every width, so they must not travel onto a wrapped line.
+
+   The bar therefore never wraps: the contacts group scrolls sideways inside its own box and the
+   tools group is pinned to the end. `min-width: 0` has to repeat down the whole chain — a flex
+   item defaults to `min-width: auto`, "never smaller than my content", and ONE link in the chain
+   that still has it makes the row draw over the edge instead of scrolling.
+   These rules are written two classes deep because the block editor prints the group's own
+   `flex-wrap` from `layout` into `.wp-container-*`, which is one class. ---- */
+
+.tracy .tracy-topbar__inner {
+  flex-wrap: nowrap;
+  gap: var(--wp--preset--spacing--3);
+  min-width: 0;
+}
+
+.tracy .tracy-topbar__contacts {
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  gap: 0 var(--wp--preset--spacing--5);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tracy .tracy-topbar__contacts::-webkit-scrollbar {
+  display: none;
+}
+
+.tracy .tracy-topbar__contacts > * {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  white-space: nowrap;
+}
+
+/* The right-hand cluster: never shrink, never wrap, always last on the line. */
+.tracy .tracy-topbar__tools {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  margin-inline-start: auto;
+  min-width: 0;
+}
+
+/* 12px across the bar: it buys back roughly 80px on a phone, which is most of what a three-item
+   contact row needs before it has to scroll at all. */
+@media (max-width: 767px) {
+  .tracy-topbar {
+    font-size: 12px;
+  }
+
+  .tracy .tracy-topbar__contacts {
+    gap: 0 var(--wp--preset--spacing--4);
+  }
+
+  /* The topbar's own utility links (Careers · Investors) are menu items, not contact details;
+     they stay, and travel with the scrolling row rather than crowding the two controls. */
+  .tracy .tracy-topbar__tools {
+    gap: var(--wp--preset--spacing--3);
+  }
+}
+
+/* The dark header (1.1.6): the logo for a dark background (option tracy_logo_dark, `<img data-tracy-identity=
+   "site.logoDark">` after the mark) takes the light logo's place; with no dark logo the dark header shows the monogram
+   beside the name, never the light logo, which would vanish on #15181A. */
+.tracy-header__brand img.tracy-logo-dark { display: none; }
+html[data-theme='dark'] .tracy-header__brand img.tracy-logo:not([hidden]) { display: none; }
+html[data-theme='dark'] .tracy-header__brand img.tracy-logo + .tracy-brand__mark { display: grid; }
+html[data-theme='dark'] .tracy-header__brand img.tracy-logo-dark:not([hidden]) { display: block; height: 40px; width: auto; }
+html[data-theme='dark'] .tracy-header__brand .tracy-brand__mark:has(+ img.tracy-logo-dark:not([hidden])) { display: none; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) .tracy-header__brand img.tracy-logo:not([hidden]) { display: none; }
+  html:not([data-theme]) .tracy-header__brand img.tracy-logo + .tracy-brand__mark { display: grid; }
+  html:not([data-theme]) .tracy-header__brand img.tracy-logo-dark:not([hidden]) { display: block; height: 40px; width: auto; }
+  html:not([data-theme]) .tracy-header__brand .tracy-brand__mark:has(+ img.tracy-logo-dark:not([hidden])) { display: none; }
+}

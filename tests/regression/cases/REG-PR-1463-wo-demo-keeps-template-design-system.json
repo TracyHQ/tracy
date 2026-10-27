@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-1463-wo-demo-keeps-template-design-system",
+  "kind": "feat",
+  "title": "A WO demo keeps the design system its template wears: the record is written at provision, the agent is told to keep it, and the QA gate holds the look",
+  "pr": 1463,
+  "area": "website-opportunities/design-system",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: resolve the design record a template press gives a site from what its archive wears (catalogue on Joomla/WordPress, name-only on EmDash, quickstart from the contract, nothing when unresolved).",
+    "S2: build a brief whose template wears Apple and render its markdown for the agent; render the hand-off prompt on the three CMS, with and without a page plan.",
+    "S3: take a QA baseline off a handed-over page and judge the page after the agent repainted it through custom.css, a new <style> block, an inline style, and an EmDash rebuild."
+  ],
+  "expect": [
+    "S1: Joomla/WordPress catalogue → {id, source: catalog, name, tokens from the map, tokensFrom tracy-web:design-tokens.json}; EmDash catalogue → tokens null; quickstart → the contract's tokens; none/unknown → record null with TEMPLATE_WEARS_NONE / DESIGN_UNRESOLVED.",
+    "S2: the brief keeps template.designSystem and validates; the markdown says 'Design system: Apple (`apple`, catalog) — bound to the template. Tracy keeps it' and prints no Colours/Fonts; acceptance holds the system; the prompt's rule 1 ends with 'preserve its bound design system' on every CMS and rule 8 names that CMS's look doors as the ones not to change colours through; 'restyle it with the brief's brand colours' appears nowhere.",
+    "S3: the handed-over page passes its own baseline; --ds-c-bg/--ds-c-fg redefined in custom.css fail with before/after; a colour or font rule in custom.css fails, a margin rule and a var() reference pass; a rebuilt _astro bundle with new rules passes, one with a changed token fails; a new #wp-custom-css block and an inline background-color fail."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/design-at-provision.js, apps/tracy-web/src/lib/site-design.js, apps/tracy-host/src/demo-qa.js, vendor/tracy/tracy-website-opportunities/domain/brief.mjs, vendor/tracy/tracy-website-opportunities/domain/agent-prompt.mjs",
+    "dom": ""
+  },
+  "evidence": "PR 1463; stand wo2 (19/10/2026): three Tracy Base demos with site_design empty and no docs/agents/design.json; opal-moon-bistro-j-base-2 templates/tracy/css/custom.css set every --ds-c-* token from Facebook photo colours",
+  "fence": "writeSiteDesignIfAbsent never overwrites; provisionDesignRecord never invents a ruler; checkLookKept holds tokens and new paint against the hand-off baseline",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/design-at-provision.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief.test.mjs",
+      "packages/wo/website-opportunities/test/domain-agent-prompt.test.mjs"
+    ],
+    "tests": [
+      "a catalogue system on WordPress or Joomla: the catalogue tokens are the ruler, frozen at provision",
+      "a catalogue system on EmDash: the name is bound, the tokens are read from the site later, never the catalogue map",
+      "a quickstart look carries its own tokens, read off the release that declared it",
+      "a template that wears none, or whose look could not be resolved, writes nothing and says why",
+      "look-kept: the look Tracy handed over is held — tokens, new colour or font rules, <style> blocks and inline styles (plan wo-design-follows-template)",
+      "the template’s design system travels with the brief by name only, and the agent’s markdown says who keeps it",
+      "acceptance holds the template’s design system when the brief names one",
+      "the agent keeps the template’s design system: no restyle from brand observations, through any door (council 19/10/2026)",
+      "the look doors are named per CMS as the doors NOT to change colours through; layout CSS stays plain, the compiled CSS untouched"
+    ]
+  }
+}

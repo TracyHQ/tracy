@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-1264-capture-shot-deadline",
+  "kind": "fix",
+  "title": "A listing shot on a slow demo host keeps its own deadline: a timed-out shot is stopped and names its phase, and the waits fit what is left",
+  "pr": 1264,
+  "area": "ops/capture",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-host/test/capture.test.mjs",
+    "S2: Read the exit code and the fail/skipped counts."
+  ],
+  "expect": [
+    "The run exits 0 with 0 failures and 0 skipped tests.",
+    "A shot that outlives its box rejects with 'shot timed out after <ms>ms while <phase>' and its AbortSignal is aborted; ok and failed shots both carry ms and timings.",
+    "With a 10 s deadline no wait before the pictures asks for more than 2000 ms; with a 3 s deadline none runs and a picture still comes back.",
+    "Aborting a shot closes its browser context."
+  ],
+  "selectors": {
+    "route": "runCapture in apps/tracy-host/src/capture.js",
+    "shooter": "makeShoot in apps/tracy-host/src/browser.js",
+    "door": "POST /api/ops/templates/:templateId/capture (stored[].timings, failed[].timings)"
+  },
+  "evidence": "cowork.tracy.site 12/10/2026 after #1262: ja-vogue j6 /index.php/category-2 'shot timed out after 30000ms' at 1440 and 390 on fleet01; the same capture takes 9-11 s from a Mac mini.",
+  "fence": "The real runCapture and makeShoot over a fake Playwright. Not exercised: Chromium, fleet01's load.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1264-capture-shot-deadline.mjs"],
+    "needs": []
+  }
+}

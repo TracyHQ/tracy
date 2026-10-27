@@ -1,0 +1,212 @@
+/* wp-ja-restaurant: acm/timeline/css/style.css of the JA Restaurant 1.0.6 Joomla template (GPL v3, JoomlArt), carried rule for rule by tasks/ja-restaurant-wp7/tools/port-css.mjs (DECISIONS D-10). Colours read light-dark(<source>, <derived dark, D-03>); do not edit by hand, re-run the tool. */
+.acm-timeline {
+  position: relative;
+  margin-top: 50px;
+}
+.acm-timeline .timeline-list {
+  margin: 0 auto;
+  position: relative;
+  width: 900px;
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .acm-timeline .timeline-list {
+    padding: 0 30px;
+  }
+}
+.acm-timeline .item-row {
+  padding-left: 50%;
+  margin-bottom: 75px;
+}
+.acm-timeline .item-row:before,
+.acm-timeline .item-row:after {
+  display: table;
+  content: " ";
+}
+.acm-timeline .item-row:after {
+  clear: both;
+}
+.acm-timeline .item-row .timeline-item {
+  margin-left: 60px;
+}
+.acm-timeline .item-row .timeline-item .item-content {
+  position: relative;
+  background: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+  padding: 30px;
+}
+.acm-timeline .item-row .timeline-item .item-content:before {
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid var(--ds-c-border-soft, light-dark(#ffffff, #3a352f));
+  content: "";
+  right: 100%;
+  top: 15px;
+  position: absolute;
+}
+@media screen and (max-width: 767px) {
+  .acm-timeline .item-row .timeline-item .item-content:before {
+    border-right: 10px solid var(--ds-c-border-soft, light-dark(#ffffff, #3a352f)) !important;
+    border-left: 0 !important;
+    right: 100% !important;
+    left: auto !important;
+  }
+}
+.acm-timeline .item-row .timeline-item .item-title {
+  font-size: 28px;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-top: 30px;
+  margin-bottom: 0;
+}
+.acm-timeline .item-row .timeline-item .item-icon {
+  font-size: 23px;
+  line-height: 29px;
+  position: absolute;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  background: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+  margin-left: -25px;
+  border-radius: 50%;
+  text-align: center;
+  padding: 10px;
+}
+@media screen and (max-width: 767px) {
+  .acm-timeline .item-row .timeline-item .item-icon {
+    left: 0;
+    margin-left: 20px;
+    margin-top: 40px;
+  }
+}
+.acm-timeline:before {
+  width: 3px;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  content: "";
+  background: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+}
+@media screen and (max-width: 767px) {
+  .acm-timeline:before {
+    left: 44px;
+  }
+}
+@media screen and (max-width: 991px) {
+  .acm-timeline .timeline-list {
+    width: 100% !important;
+  }
+}
+@media screen and (max-width: 767px) {
+  .acm-timeline .timeline-list .item-body.text-right {
+    text-align: left !important;
+  }
+}
+@media screen and (max-width: 767px) {
+  .acm-timeline .timeline-list .item-body .media-object.pull-right {
+    float: left !important;
+    margin-left: 0 !important;
+    margin-right: 15px !important;
+    padding-left: 0 !important;
+  }
+}
+@media screen and (max-width: 767px) {
+  .acm-timeline .timeline-list .item-row {
+    padding-left: 0;
+    margin-bottom: 50px;
+  }
+}
+.acm-timeline .timeline-list .item-row:first-child .item-icon {
+  background: var(--ds-c-accent, #d24a24);
+  color: var(--ds-c-accent-on, #ffffff);
+}
+@media screen and (max-width: 767px) {
+  .acm-timeline .timeline-list .item-row .timeline-item {
+    margin-right: 20px !important;
+    margin-left: 90px !important;
+  }
+}
+.acm-timeline .timeline-list .item-row .timeline-item .item-content {
+  position: relative;
+  background: var(--ds-c-surface, light-dark(#ffffff, #26231f));
+  padding: 50px;
+}
+@media (max-width: 767px) {
+  .acm-timeline .timeline-list .item-row .timeline-item .item-content {
+    padding: 30px;
+  }
+}
+.acm-timeline .timeline-list .item-row .timeline-item .item-content:before {
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid var(--ds-c-border-soft, light-dark(#ffffff, #3a352f));
+  content: "";
+  right: 100%;
+  top: 15px;
+  position: absolute;
+}
+@media screen and (max-width: 767px) {
+  .acm-timeline .timeline-list .item-row .timeline-item .item-content:before {
+    border-right: 10px solid var(--ds-c-border-soft, light-dark(#ffffff, #3a352f)) !important;
+    border-left: 0 !important;
+    right: 100% !important;
+    left: auto !important;
+  }
+}
+.acm-timeline .timeline-list .item-row .timeline-item .item-date {
+  position: absolute;
+  right: 50%;
+  text-align: right;
+  padding: 15px 50px 10px 0;
+  font-size: 22px;
+  left: 0;
+  line-height: 1;
+  letter-spacing: 2px;
+  font-family: var(--ds-font-body, var(--ja-font-sans-serif, "Teko"), sans-serif);
+}
+@media (max-width: 767px) {
+  .acm-timeline .timeline-list .item-row .timeline-item .item-date {
+    position: relative !important;
+    text-align: left !important;
+    right: 0 !important;
+    left: 0 !important;
+    padding: 10px !important;
+  }
+}
+.acm-timeline .timeline-list .item-row:nth-child(2n) {
+  padding-left: 0;
+  padding-right: 50%;
+}
+@media screen and (max-width: 767px) {
+  .acm-timeline .timeline-list .item-row:nth-child(2n) {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+.acm-timeline .timeline-list .item-row:nth-child(2n) .timeline-item {
+  margin-left: 0;
+  margin-right: 60px;
+}
+.acm-timeline .timeline-list .item-row:nth-child(2n) .timeline-item .item-date {
+  position: absolute;
+  left: 50%;
+  right: 0;
+  text-align: left;
+  padding: 15px 0 10px 50px;
+}
+@media screen and (max-width: 767px) {
+  .acm-timeline .timeline-list .item-row:nth-child(2n) .timeline-item .item-date {
+    position: relative;
+  }
+}
+.acm-timeline .timeline-list .item-row:nth-child(2n) .timeline-item .item-content:before {
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid var(--ds-c-border-soft, light-dark(#ffffff, #3a352f));
+  border-right: 0;
+  content: "";
+  left: 100%;
+  right: auto;
+  top: 15px;
+  position: absolute;
+}

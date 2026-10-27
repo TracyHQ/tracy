@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tch:qa:schema:case:1",
+  "title": "Tracy QA case manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "itemIds",
+    "requirement",
+    "oracle",
+    "edgeTags",
+    "targets",
+    "effects",
+    "prerequisites",
+    "assertionIds",
+    "redProof",
+    "legacyIds"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^QA-[A-Z0-9]+-[^\\s]+$" },
+    "itemIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "controlId": { "type": "string", "minLength": 1 },
+    "requirement": { "type": "string", "minLength": 1 },
+    "oracle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "ref", "invariant"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "ref": { "type": "string", "minLength": 1 },
+        "invariant": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 }
+      }
+    },
+    "edgeTags": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "dimensions": { "type": "object" },
+    "area": { "type": "string", "minLength": 1 },
+    "targets": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["local", "dev", "prod"] }
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reads", "writes", "mail", "model", "containers"],
+      "properties": {
+        "reads": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "writes": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "mail": { "type": "boolean" },
+        "model": { "type": "boolean" },
+        "containers": { "type": "boolean" }
+      }
+    },
+    "prerequisites": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "command": { "type": "string", "minLength": 1 },
+    "assertionIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "fixtures": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "redProof": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/redProof" }]
+    },
+    "legacyIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+  },
+  "$defs": {
+    "redProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ref", "assertionId", "log"],
+      "properties": {
+        "kind": { "enum": ["commit", "mutation"] },
+        "ref": { "type": "string", "minLength": 1 },
+        "assertionId": { "type": "string", "minLength": 1 },
+        "log": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

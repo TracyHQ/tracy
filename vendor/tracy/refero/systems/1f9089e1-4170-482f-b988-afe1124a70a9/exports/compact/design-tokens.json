@@ -1,0 +1,49 @@
+{
+  "color": {
+    "oxblood-ink": {
+      "$value": "#4a0a05",
+      "$type": "color",
+      "$description": "Oxblood Ink — All body text, headings, links, borders, outlined actions, and footer type — the singular chromatic voice; warmth and gravity without aggression"
+    },
+    "cream-paper": {
+      "$value": "#fafaf9",
+      "$type": "color",
+      "$description": "Cream Paper — Primary page background; the warm off-white that gives the site its paper-stock feel"
+    },
+    "aged-linen": {
+      "$value": "#f8f7f1",
+      "$type": "color",
+      "$description": "Aged Linen — Secondary surface, subtle card backgrounds, and pill-tag fills — slightly greener/warmer than the page, used for soft differentiation"
+    },
+    "warm-stone": {
+      "$value": "#bcb6a6",
+      "$type": "color",
+      "$description": "Warm Stone — Muted background wash and tertiary surface — the only mid-tone neutral, used sparingly for section backgrounds"
+    },
+    "dusty-clay": {
+      "$value": "#a2827f",
+      "$type": "color",
+      "$description": "Dusty Clay — Muted captions, helper text, and de-emphasized UI labels. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "mier-a": {
+      "$value": "Mier A",
+      "$type": "fontFamily",
+      "$description": "Primary UI and body sans — used for navigation, body copy, captions, dates, links, and all functional text. Weight 400 only; the system trusts size and color contrast to carry hierarchy, never weight. Substitute: Inter or Untitled Sans (free: Inter)."
+    },
+    "caslon-ionic": {
+      "$value": "Caslon Ionic",
+      "$type": "fontFamily",
+      "$description": "Sole serif — reserved exclusively for category names, journal headlines, and brand wordmark at 24px. The single appearance of a classical letterform creates a literary counterpoint to the neo-grotesque UI. Substitute: Cormorant Garamond or Libre Caslon Text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.incommonwith.com",
+      "siteName": "Incommonwith",
+      "extractedAt": "2026-06-03T19:06:51.699Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "header": "Dựng trên {site}",
+  "question": "\"{task}\" hỏng ở bước {n} trên {total}. Chạy lại bước đó chứ?",
+  "retry": "Thử lại bước này",
+  "retryWhy": "Chạy lại từ chỗ nó dừng.",
+  "leave": "Để đó đã",
+  "leaveWhy": "Giữ nguyên site. Nút Thử lại vẫn ở tab Build.",
+  "signIn": "Đăng nhập lại rồi thử lại",
+  "signInWhy": "Bước này bị từ chối vì không có ai đang đăng nhập phía sau nó. Tải lại trang rồi chọn mục này.",
+  "stages": {
+    "check": "Kiểm tra site",
+    "theme": "Cài giao diện",
+    "style": "Áp phong cách",
+    "copy": "Viết chữ cho bạn",
+    "seed": "Dựng các trang",
+    "shot": "Chụp một tấm",
+    "skipped": "{task} (bỏ qua)",
+    "plugin": "Cài plugin dịch",
+    "copyLang": "Viết chữ bằng {lang}",
+    "seedPages": "Dựng {n} trang",
+    "styleWaiting": "Áp phong cách (Tracy làm bước này)"
+  },
+  "progress": {
+    "covers": "{done} trên {total} tấm ảnh",
+    "posts": "đang viết blog",
+    "sections": "đang viết trang"
+  },
+  "langNameLower": true,
+  "provision": {
+    "creating": "Tạo site",
+    "fetching": "Tải các file của site",
+    "baseline": "Ghi lại điểm xuất phát của các file",
+    "database": "Khởi động cơ sở dữ liệu",
+    "importing": "Nhập cơ sở dữ liệu",
+    "configuring": "Cấu hình site",
+    "failed": "Thiết lập site đã dừng: {detail}. Bấm Thử lại trong tab Build.",
+    "failedBare": "Thiết lập site đã dừng. Bấm Thử lại trong tab Build."
+  }
+}

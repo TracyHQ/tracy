@@ -1,0 +1,71 @@
+---
+title: Tracy API
+description: Đọc và sửa một website do Tracy lưu trữ — Joomla, WordPress hay EmDash — qua HTTPS, bằng một khoá gắn với chính ghế của bạn trên site đó.
+template: splash
+hero:
+  tagline: Một REST API duy nhất cho mọi website Tracy lưu trữ. Khoá gắn với ghế của bạn, các tài nguyên bạn đã quen — page, content, record — và mọi lượt ghi đều hoàn tác được.
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: Bắt đầu nhanh
+      link: /vi/quickstart/
+      icon: right-arrow
+    - text: Tham chiếu API
+      link: /vi/reference/
+      icon: open-book
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+## Năm phút làm được gì
+
+1. Tạo một khoá API trong **Settings → API keys** của site bạn đang giữ ghế.
+2. `GET /v1/me` — xem khoá đang hành động với tư cách ai, trên site nào, với những scope nào.
+3. `GET /v1/sites/{key}/pages` — liệt kê các page đã xuất bản của site cùng id content của chúng.
+4. `PATCH /v1/sites/{key}/records/{kind}/{id}` — đổi một tiêu đề, được ghi lại dưới một `apply_id`.
+5. `POST /v1/sites/{key}/applies/{apply_id}/revert` — trả lại như cũ.
+
+Trang [Bắt đầu nhanh](/vi/quickstart/) đi qua đúng năm lời gọi này bằng `curl`.
+
+<CardGrid>
+  <Card title="Khoá gắn với ghế" icon="seti:lock">
+    Một khoá hành động với tư cách người đã tạo nó, trên một site, với tối đa những bộ công cụ mà vai của người đó được cấp. Thu hồi một ghế là thu hồi mọi khoá đi cùng ghế ấy. Xem [Xác thực](/vi/authentication/).
+  </Card>
+  <Card title="Một hình dạng cho ba CMS" icon="puzzle">
+    Page, content, block và field đọc giống nhau trên Joomla, WordPress và EmDash. Record là chính các hàng dữ liệu của CMS, dành cho lúc bạn cần đến chúng. Xem [Khái niệm](/vi/concepts/).
+  </Card>
+  <Card title="Mọi lượt ghi đều hoàn tác được" icon="rocket">
+    Mỗi thay đổi được ghi lại dưới một `apply_id`; `POST …/applies/{id}/revert` trả lại mọi thứ đã ghi dưới id đó, mới nhất trước.
+  </Card>
+  <Card title="Có phiên bản, có nhật ký thay đổi" icon="document">
+    API mang `v1` trong đường dẫn. Phần thêm mới có một dòng ghi ngày trong [nhật ký thay đổi](/vi/changelog/); đổi nghĩa là một phiên bản mới.
+  </Card>
+</CardGrid>
+
+## Hệ thống được tổ chức thế nào
+
+```text
+Bearer trk_…  (you, your agent, a partner's integration)      cookie tracy_sess (a browser on cowork.*)
+      |  /v1/*  — Bearer only, no cookie                              |  /api/sites/{key}/apply, /api/me/keys
+  api.tracy.ai ── API host ── allowlist ──┐                           |
+                 └─ /docs/api/<document>   (this site: docs.tracy.ai) |
+                                          ▼                           ▼
+                        applyDoor(siteKey, action, params, principal)   ← ONE path: seat · effective permissions ∩ scopes · lease · audit
+                                          |
+                  Claude Cowork plugin (Joomla, WordPress) · Tracy reader (EmDash)
+```
+
+- **`api.tracy.ai`** trả lời `/v1/*` và ba tài liệu cho máy đọc dưới `/docs/api/` (OpenAPI, plugin Claude Cowork, llms.txt). Bộ tài liệu này và tham chiếu tương tác nằm ở **`docs.tracy.ai`**. Không gì khác: đăng nhập, workspace và bộ công cụ Ops nằm trên hostname riêng của Tracy và ở cả hai nơi đều trả lời `404 NOT_ON_THIS_HOST`.
+- **Một cửa duy nhất.** Mỗi route `/v1` là một bí danh mỏng của một action trên cửa Apply — đúng con đường agent của Tracy đi: bạn là ai (người sở hữu khoá), ghế của bạn cho phép gì, lease ghi của site, và audit log.
+- **Site là bên trả lời.** Trên Joomla và WordPress, lời gọi đến plugin Claude Cowork cài trên site; trên EmDash, đến bộ đọc riêng của Tracy. Điều site từ chối được trả về cho bạn dưới dạng một [lỗi](/vi/reference/errors/) đã được ghi thành tài liệu.
+
+## Mọi thứ nằm ở đâu
+
+| | |
+|---|---|
+| Base URL | `https://api.tracy.ai/v1` (môi trường phát triển: `https://api.tracy.site/v1`) |
+| OpenAPI 3.1 | [`/api/openapi.json`](/api/openapi.json) |
+| Tham chiếu tương tác | [`/api/reference/`](/api/reference/) |
+| Cho mô hình ngôn ngữ | [`/api/llms.txt`](/api/llms.txt) |
+| Kiểm tra sức khoẻ | `GET /health` → `{ "ok": true }` |

@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1429-ds-batch2-dot2-measured-clean",
+  "kind": "feat",
+  "title": "Design system batch 2 (dot 2): the eighteen templates' committed probe-v10 measurements judge clean, the probe-v10 detectors keep their real catches and drop the false ones, and lane.mjs keeps every lane on its own ports",
+  "pr": 1429,
+  "area": "design-system/readiness",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Judge each dot-2 template's committed design-system-measurement.json (contracts/<slug>/j6/<version>/) with judgeMeasurement and preview-system-issues.json, as /ops judges it.",
+    "S2: Run the ACCENT-LEAK, PREVIEW-PARITY, empty-block and Joomla module size tests the line added.",
+    "S3: Run the lane port table and lane contract tests."
+  ],
+  "expect": [
+    "S1: every one of the 18 templates leaves 0 rules failing; only SCREEN-1 may warn (a first screen that is all picture).",
+    "S2: real leaks, parity differences and empty blocks are still found; the approved templates and the fixed states pass; JA Impact fits its module under every system and a module that fits keeps its bytes.",
+    "S3: no port repeats within or across lanes 1..15; a release is measured through the contract a site built from it wears."
+  ],
+  "selectors": {
+    "tool": "tests/regression/scripts/REG-PR-1429-ds-batch2-dot2-measured-clean.mjs",
+    "evidence": "packages/cms/tracy-joomla-quickstart/contracts/*/j6/*/design-system-measurement.json"
+  },
+  "evidence": "Committed v10 measurements of the batch-2 line plus the unit tests over the detectors and the slot emitter it changed",
+  "fence": "Measurement judging and detector logic in tracy-web and tracy-ds-slot; does not drive a stand or a browser",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1429-ds-batch2-dot2-measured-clean.mjs"],
+    "timeout_s": 600
+  }
+}

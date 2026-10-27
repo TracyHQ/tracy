@@ -1,0 +1,82 @@
+{
+  "id": "QA-UNIT-REG-PR-1350-fact-rows-together-happy",
+  "itemIds": ["regression:REG-PR-1350-fact-rows-together"],
+  "requirement": "A repeated Joomla fact row (branch city and address, team member, client, counter) is filled whole from evidence or kept demo",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1350-fact-rows-together.json",
+    "ref": "PR #1350 (fix); fix evidence: 14/10/2026 acceptance of #1331 on dev, site g66-accept-tbjoomla (Tracy Business Joomla 1.2.3): /en/contact Branches rows read \"Dubai: 7/22 Derbenevskaya emb., 8th floor\", \"Dubai: Lipetsk SEZ, 6 Tekhnologichesky proezd\", \"Dubai: Fabrication yard, Zavolzhye IP\"; each gated cell was judged alone and \"Dubai\" is a verbatim piece of the brief.",
+    "invariant": "S1: no Branches city or addr cell is written; the rows keep the demo. S2: no Branches cell is written: one value in the same field of several rows is one fact. S3: the named branch's city and address are written; the city without an address is not. S4: the Branches module is three city+addr rows, the heading is no row, the site identity is no row, a team row missing its role is dropped.",
+    "productSources": [
+      "apps/tracy-web/src/lib/contracts.js:244",
+      "apps/tracy-web/src/lib/fact-fields.js:152",
+      "apps/tracy-web/src/lib/template-customization-question-readiness/readers/font-declarations.js:19",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:772",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:494",
+      "apps/tracy-web/src/sites/brief-engines/pictures.js:63",
+      "apps/tracy-web/src/sites/brief-normalize.js:403",
+      "apps/tracy-web/src/sites/route.js:730"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/src/lib/contract-copy.js:42 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:145 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/contracts.js:79 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/seeder.js:71 import() with a computed specifier",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:25 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/showcase-nav-map.js:43 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:189 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:245 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:28 readFileSync() with a computed path",
+      "apps/tracy-web/src/lib/slot-roles.js:83 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-blog-articles.js:115 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:54 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-kit.js:55 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-languages.js:247 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-site-strings.js:35 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla-tidy.js:814 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:361 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:367 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:368 readFileSync() with a computed path",
+      "apps/tracy-web/src/sites/brief-engines/joomla.js:392 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:25 readFileSync() with a computed path",
+      "apps/tracy-web/test/brief-joomla.test.mjs:3063 readFileSync() with a computed path",
+      "apps/tracy-web/test/fact-fields.test.mjs:46 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1350-fact-rows-together.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1350-fact-rows-together"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1350-fact-rows-together",
+    "pr": 1350,
+    "kind": "fix",
+    "area": "joomla-contract/evidence",
+    "file": "tests/regression/cases/REG-PR-1350-fact-rows-together.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=120000",
+    "apps/tracy-web/test/brief-joomla.test.mjs",
+    "apps/tracy-web/test/fact-fields.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

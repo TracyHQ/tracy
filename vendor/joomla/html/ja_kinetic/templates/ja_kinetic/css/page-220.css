@@ -1,0 +1,325 @@
+/* ==============================================================
+   ja_kinetic — Changelog page (Itemid 220) pixel-parity overlay
+   .pen: zUGk5 (dark-desktop) · SFAE1 (light-desktop)
+         j0Ihsh (mobile-dark) · N7P6Nx (mobile-light)
+
+   ALL rules scoped to body.item-220. This file is auto-loaded
+   by index.php with a filemtime() cache-bust query param.
+   DO NOT edit shared scss / css/template.css / css/darkmode.css
+   / acm/page-masthead / acm/incident-timeline / acm/cta from here.
+   ============================================================== */
+
+/* ============================================================
+   Alpha-tint tokens for the eyebrow pill + release badges.
+   .pen SFAE1 (light) AND zUGk5 (dark): the pill/badge tint BG and
+   border stay FIXED lime (#A3E635 @8% / @25%) in BOTH themes — only
+   the SOLID foreground (label text, dot) flips to olive in light via
+   var(--primary). This is the [DARK-ACCENT-NOT-FLIPPED · tint-bg]
+   pattern: tint backgrounds keep the fixed brand hue; foregrounds flip.
+   ============================================================ */
+body.item-220 {
+  --p-a08: rgba(163, 230, 53, 0.082);
+  --p-a25: rgba(163, 230, 53, 0.25);
+}
+
+/* ============================================================
+   1. MASTHEAD (module 212, acm-page-masthead)
+   .pen zUGk5 / h3INaR:
+   - Section bg: --elevated (design fill end #161B18 ≈ --elevated).
+     Grid lines from .hx-grid-bg use background-image and compose
+     transparently on top of background-color — no conflict.
+   - Eyebrow: pill (lima/olive tint bg + border, radius 100,
+     dot ::before). SYS1 already set mono font + uppercase.
+     Per-page overrides: inline-flex alignment, pill geometry.
+   - Sub: max-width 600px (shared 640px), lh 1.6 (shared 1.55).
+   ============================================================ */
+
+/* Masthead section bg: the .pen radial fades to the FIXED elevated
+   surface #F2F5EE (light) / #161B18 (dark) = var(--chrome-elevated)
+   (LOCKED DECISION: design $elevated surfaces use --chrome-elevated;
+   the body --elevated #0F1311 is too dark vs the .pen #161B18). */
+body.item-220 .acm-page-masthead .hx-section {
+  background-color: var(--chrome-elevated);
+}
+
+body.item-220 .acm-page-masthead .hx-mast-sub {
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+body.item-220 .acm-page-masthead .hx-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background: var(--p-a08);
+  border: 1px solid var(--p-a25);
+  border-radius: 100px;
+  margin: 0 0 16px;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+  color: var(--primary);
+}
+body.item-220 .acm-page-masthead .hx-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   2. RELEASE TIMELINE (module 213, acm-incident-timeline)
+   .pen zUGk5 / PBAY5 (List):
+
+   The block normally renders a horizontal 4-col status-step grid
+   (connector line + icon node + time + phase + title + text).
+   The design shows a VERTICAL 2-col ledger instead. No section head
+   (eyebrow/h2 hidden). No connector line. No icon node.
+
+   STRUCTURAL NOTE: The design shows badge chips (NEW/IMPROVED/FIXED)
+   per-item. These are NOT emitted by the block template HTML.
+   Cannot add via CSS. Reported as SHARED-BLOCK-STRUCTURAL defect
+   → acm/incident-timeline/tmpl/style-1.php needs a step_badge field.
+   ============================================================ */
+
+body.item-220 .acm-incident-timeline .hx-section {
+  background: var(--bg);
+  border-top: none !important;
+  border-bottom: none !important;
+  /* Zero the base .hx-section { padding-block: 80px } rule; all
+     vertical space comes from acm-incident-inner padding. */
+  padding: 0;
+}
+
+/* Inner container: 820px = design List width; margin: auto centers it. */
+body.item-220 .acm-incident-timeline .acm-incident-inner {
+  max-width: 820px;
+  padding-top: 64px;
+  padding-bottom: 72px;
+  padding-left: 0;
+  padding-right: 0;
+  /* Override template.css @620px { .hx-container { padding-inline: 20px !important } }
+     At ≤620px the !important 20px rule fires; mobile block (below) also sets 20px → no conflict. */
+}
+
+/* Hide section head (eyebrow + h2 not in design) */
+body.item-220 .acm-incident-timeline .acm-incident-head {
+  display: none;
+}
+
+/* Horizontal 4-col flex/grid → vertical block (children become grid rows) */
+body.item-220 .acm-incident-timeline .hx-incident {
+  display: block;
+}
+
+/* Each release row → 2-col CSS grid.
+   Right col stacks: badge (row1) → title (row2) → body (row3).
+   Left col: version (row1) + date (row2). */
+body.item-220 .acm-incident-timeline .hx-inc-cell {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  grid-template-rows: auto auto auto;
+  column-gap: 24px;
+  row-gap: 0;
+  align-items: start;
+  /* Override base position: relative + padding-top: 60px */
+  position: static;
+  padding: 36px 0;
+  border-bottom: 1px solid var(--border);
+  /* Unset base flex: 1 0 0 (irrelevant once parent is block, but explicit) */
+  flex: none;
+  min-width: 0;
+}
+body.item-220 .acm-incident-timeline .hx-inc-cell:first-child {
+  padding-top: 0;
+}
+body.item-220 .acm-incident-timeline .hx-inc-cell:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+body.item-220 .acm-incident-timeline .hx-inc-line {
+  display: none;
+}
+
+body.item-220 .acm-incident-timeline .hx-inc-head {
+  grid-column: 1;
+  grid-row: 1;
+  position: static;  /* base is position: absolute */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  margin-bottom: 0;
+}
+
+body.item-220 .acm-incident-timeline .hx-inc-node {
+  display: none;
+}
+
+/* Version text: Space Grotesk 18/700/--heading (base: JM 12/700/--primary) */
+body.item-220 .acm-incident-timeline .hx-inc-time {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--heading);
+  letter-spacing: normal;
+  line-height: 1.3;
+}
+
+/* .hx-inc-phase = date */
+body.item-220 .acm-incident-timeline .hx-inc-phase {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  text-transform: none;
+  letter-spacing: normal;
+  margin-bottom: 0;
+  padding-top: 2px;
+}
+
+/* Badge chip: NEW / IMPROVED / FIXED */
+body.item-220 .acm-incident-timeline .hx-inc-badge {
+  grid-column: 2;
+  grid-row: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  padding: 3px 10px;
+  margin: 0 0 8px;
+  background: var(--p-a08);
+  border: 1px solid var(--p-a25);
+  border-radius: 100px;
+}
+body.item-220 .acm-incident-timeline .hx-inc-badge-l {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 1;
+  color: var(--primary);
+  text-transform: none;
+  white-space: nowrap;
+}
+
+body.item-220 .acm-incident-timeline .hx-inc-title {
+  grid-column: 2;
+  grid-row: 2;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--heading);
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+  margin: 0 0 8px;
+  padding: 0;
+}
+
+body.item-220 .acm-incident-timeline .hx-inc-text {
+  grid-column: 2;
+  grid-row: 3;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.65;
+  padding-right: 0;
+  margin: 0;
+}
+
+/* ============================================================
+   3. MOBILE OVERRIDES  (≤ 767.98px)
+   .pen j0Ihsh (dark) / N7P6Nx (light)
+   ============================================================ */
+
+@media (max-width: 767.98px) {
+  /* Masthead */
+  body.item-220 .acm-page-masthead .hx-section {
+    padding-top: 44px;
+    padding-bottom: 38px;
+  }
+
+  /* Masthead horizontal padding: override !important 20px global rule */
+  body.item-220 .acm-page-masthead .hx-container {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  /* H1 mobile: 33px /-1px (base @860px: 38px, @620px reuses) */
+  body.item-220 .acm-page-masthead .hx-h1 {
+    font-size: 33px;
+    letter-spacing: -1px;
+  }
+
+  /* Sub mobile: 15px (shared @620px: 16px) */
+  body.item-220 .acm-page-masthead .hx-mast-sub {
+    font-size: 15px;
+  }
+
+  body.item-220 .acm-incident-timeline .acm-incident-inner {
+    max-width: none;
+    padding-top: 40px;
+    padding-bottom: 56px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* Item: version + date side-by-side (auto | 1fr), then badge,
+     then title + body — each full width. */
+  body.item-220 .acm-incident-timeline .hx-inc-cell {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto auto auto;
+    column-gap: 10px;
+    row-gap: 12px;
+    padding: 28px 0;
+    align-items: baseline;
+  }
+  body.item-220 .acm-incident-timeline .hx-inc-cell:first-child {
+    padding-top: 0;
+  }
+
+  body.item-220 .acm-incident-timeline .hx-inc-head {
+    grid-column: 1;
+    grid-row: 1;
+    flex-direction: row;
+  }
+  body.item-220 .acm-incident-timeline .hx-inc-time {
+    font-size: 17px;
+  }
+
+  body.item-220 .acm-incident-timeline .hx-inc-phase {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: baseline;
+    padding-top: 0;
+  }
+
+  /* No bottom margin — the grid row-gap (12px) provides spacing. */
+  body.item-220 .acm-incident-timeline .hx-inc-badge {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin: 0;
+  }
+
+  body.item-220 .acm-incident-timeline .hx-inc-title {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    font-size: 18px;
+    margin: 0;
+  }
+
+  body.item-220 .acm-incident-timeline .hx-inc-text {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    font-size: 14.5px;
+    margin: 0;
+  }
+}

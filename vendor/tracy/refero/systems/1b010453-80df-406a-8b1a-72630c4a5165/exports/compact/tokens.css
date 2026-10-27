@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-charcoal: #080808;
+  --color-graphite: #222222;
+  --color-mid-ink: #292929;
+  --color-steel: #696969;
+  --color-fog: #999999;
+  --color-ash: #b2b2b2;
+  --color-slate: #8d8d8d;
+  --color-mist: #cccccc;
+  --color-silk: #e4e4e7;
+  --color-bone: #fafafa;
+  --color-cream: #f4f4f5;
+
+  /* Typography — Font Families */
+  --font-aspekta: 'Aspekta', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-fasthand: 'Fasthand', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-aspekta-500: 'Aspekta 500', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

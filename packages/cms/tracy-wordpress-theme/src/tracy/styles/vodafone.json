@@ -1,0 +1,242 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "title": "Vodafone",
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#f4f4f4"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "#fff1f1"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "#1f1f1f"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "#4a4d4e"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "#6f7375"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "#a61218"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "#d8d8d8"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "#eeeeee"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#e60000"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "color-mix(in oklab, var(--wp--preset--color--accent), black 8%)"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "color-mix(in oklab, var(--wp--preset--color--accent), black 14%)"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "#008a00"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "#f5b400"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "#bd0000"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "\"Vodafone\", \"Vodafone Rg\", Arial, sans-serif"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "\"Vodafone\", \"Vodafone Rg\", Arial, sans-serif"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "ui-monospace, \"SF Mono\", Menlo, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "12px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "14px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "16px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "19px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "24px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "36px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "48px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "68px"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "1200px",
+      "wideSize": "1200px"
+    },
+    "custom": {
+      "leading": {
+        "body": "1.48",
+        "tight": "1.08"
+      },
+      "tracking": {
+        "display": "-0.015em"
+      },
+      "sectionY": {
+        "desktop": "96px",
+        "tablet": "68px",
+        "phone": "48px"
+      },
+      "radius": {
+        "sm": "8px",
+        "md": "16px",
+        "lg": "24px",
+        "pill": "9999px"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0 18px 44px rgba(0, 0, 0, 0.12)"
+      },
+      "focusRing": "0 0 0 4px rgba(230, 0, 0, 0.22)",
+      "motion": {
+        "fast": "150ms",
+        "base": "220ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.2, 0, 0, 1)"
+      },
+      "container": {
+        "max": "1200px",
+        "gutterDesktop": "36px",
+        "gutterTablet": "24px",
+        "gutterPhone": "16px"
+      },
+      "tracy": {
+        "inspiration": "vodafone"
+      }
+    }
+  }
+}

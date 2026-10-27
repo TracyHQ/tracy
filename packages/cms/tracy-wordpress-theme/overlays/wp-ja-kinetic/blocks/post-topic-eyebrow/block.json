@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-ja-kinetic/post-topic-eyebrow",
+  "version": "0.1.0",
+  "title": "Post topic eyebrow",
+  "category": "design",
+  "icon": "tag",
+  "description": "The blog-listing row eyebrow (`.hx-blogcat`, `category/blog_item.php:38-39`): the article's FIRST tag by assignment order (`$this->hxRowTopics`, built from `tag_date ASC`), falling back to the category title only when the article carries no tags. NOT the category — a plain `wp:post-terms(category)` (what this block replaces) shows the wrong value whenever the post has any tag.",
+  "textdomain": "wp-ja-kinetic",
+  "attributes": {
+    "className": {
+      "type": "string",
+      "default": "hx-blogcat"
+    },
+    "categoryOnly": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "reusable": false,
+    "anchor": false
+  },
+  "render": "file:./render.php"
+}

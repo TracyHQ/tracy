@@ -1,0 +1,4488 @@
+{
+  "$comment": "Raw navigation markup of the release, captured by capture-navigation-source.mjs from its own database archive. Input of scripts/build-wordpress-showcase-nav.mjs; never edit by hand.",
+  "schemaVersion": "tracy-quickstart-navigation-source/wordpress/v1",
+  "contract": "ja-kinetic/wp7/1.0.12",
+  "database": {
+    "file": "ja-kinetic-wp7-database-1.0.12.sql.gz",
+    "sha256": "0799919bfc1c764249b7d2175a6c4091e8bc6bf8bf17bdfcdc7787ecac0eb150"
+  },
+  "stylesheet": "wp-ja-kinetic",
+  "frontPage": 1740,
+  "navigations": [
+    {
+      "id": 1772,
+      "slug": "mainmenu",
+      "title": "mainmenu",
+      "language": "en",
+      "sha256": "d2e54a0926b481cbff86e753c034b3aa3cca83239fe9407ad2300a9c2b2582cd",
+      "content": "<!-- wp:navigation-link {\"label\":\"Pricing\",\"type\":\"page\",\"id\":1741,\"url\":\"https://quickstart.invalid/pricing/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 1773,
+      "slug": "footer-product",
+      "title": "footer-product",
+      "language": "en",
+      "sha256": "584a0c2b419a8cc35dd2ba5e5951a6eff5ac29a313bd82d39e6461c9aa592761",
+      "content": "<!-- wp:navigation-link {\"label\":\"Features\",\"type\":\"page\",\"id\":1750,\"url\":\"https://quickstart.invalid/product/features/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Pricing\",\"type\":\"page\",\"id\":1741,\"url\":\"https://quickstart.invalid/pricing/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Integrations\",\"type\":\"page\",\"id\":1751,\"url\":\"https://quickstart.invalid/product/integrations/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Changelog\",\"type\":\"page\",\"id\":1752,\"url\":\"https://quickstart.invalid/product/changelog/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 1774,
+      "slug": "footer-dev",
+      "title": "footer-dev",
+      "language": "en",
+      "sha256": "09af808f6765bcdb7b9359236e471105d9834202977c0cb95bd7c88de8db67df",
+      "content": "<!-- wp:navigation-link {\"label\":\"Blog\",\"type\":\"page\",\"id\":1766,\"url\":\"https://quickstart.invalid/product/blog/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"KineticQL\",\"type\":\"page\",\"id\":1758,\"url\":\"https://quickstart.invalid/pages/kineticql/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Search\",\"type\":\"page\",\"id\":1767,\"url\":\"https://quickstart.invalid/?page_id=1767\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"All Tags\",\"type\":\"page\",\"id\":1759,\"url\":\"https://quickstart.invalid/pages/tags/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 1775,
+      "slug": "footer-company",
+      "title": "footer-company",
+      "language": "en",
+      "sha256": "443cbd11a821ed77650d7ff6da594aaf45c88473c371d9be6a9585a2eec68195",
+      "content": "<!-- wp:navigation-link {\"label\":\"About\",\"type\":\"page\",\"id\":1754,\"url\":\"https://quickstart.invalid/company/about/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Team\",\"type\":\"page\",\"id\":1755,\"url\":\"https://quickstart.invalid/company/team/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"FAQ\",\"type\":\"page\",\"id\":1753,\"url\":\"https://quickstart.invalid/product/faq/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact\",\"type\":\"page\",\"id\":1756,\"url\":\"https://quickstart.invalid/company/contact/\",\"kind\":\"post-type\"} /-->"
+    },
+    {
+      "id": 1776,
+      "slug": "legal",
+      "title": "legal",
+      "language": "en",
+      "sha256": "5d0495d6d29e4a397720cc45b00e0776bd41cc069428d4f3c95f020fcee82db0",
+      "content": "<!-- wp:navigation-link {\"label\":\"Privacy Policy\",\"type\":\"page\",\"id\":3,\"url\":\"https://quickstart.invalid/privacy-policy/\",\"kind\":\"post-type\"} /-->\n<!-- wp:navigation-link {\"label\":\"Terms of Service\",\"type\":\"page\",\"id\":1743,\"url\":\"https://quickstart.invalid/terms-of-service/\",\"kind\":\"post-type\"} /-->"
+    }
+  ],
+  "templateParts": [
+    {
+      "id": 1777,
+      "slug": "header",
+      "theme": "wp-ja-kinetic",
+      "area": "header",
+      "sha256": "2d4ba41f179a7c59dd3c9692175edd23f36f4f4ec4160cedd53a655f37a1f693",
+      "content": "<!-- wp:group {\"tagName\":\"div\",\"className\":\"tracy-header__inner\",\"layout\":{\"type\":\"flex\",\"justifyContent\":\"space-between\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__inner\">\n<!-- wp:group {\"className\":\"tracy-header__left\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__left\">\n<!-- wp:group {\"className\":\"tracy-header__brand\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__brand\">\n<!-- wp:site-logo {\"width\":26,\"shouldSyncIcon\":false,\"className\":\"tracy-logo tracy-logo\\u002d\\u002dlight tracy-logo-bare\"} /-->\n<!-- wp:site-logo {\"width\":26,\"shouldSyncIcon\":false,\"className\":\"tracy-logo tracy-logo\\u002d\\u002ddark tracy-logo-bare\"} /-->\n<!-- wp:site-title {\"level\":0,\"className\":\"tracy-brand\"} /-->\n<!-- wp:site-tagline {\"className\":\"tracy-header__slogan\"} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"tracy-header__menu\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__menu\">\n<!-- wp:navigation {\"className\":\"tracy-nav\",\"overlayMenu\":\"always\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\"}} -->\n<!-- wp:navigation-submenu {\"label\":\"Home\",\"type\":\"custom\",\"url\":\"#\"} -->\n<!-- wp:navigation-link {\"label\":\"Terminal\",\"url\":\"/\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Blueprint\",\"url\":\"/home-menu/home-blueprint\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Signal\",\"url\":\"/home-menu/home-signal\",\"type\":\"custom\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"Product\",\"type\":\"custom\",\"url\":\"#\"} -->\n<!-- wp:navigation-link {\"label\":\"Features\",\"url\":\"/product/features\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Integrations\",\"url\":\"/product/integrations\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Changelog\",\"url\":\"/product/changelog\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Blog\",\"url\":\"/product/blog\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"FAQ\",\"url\":\"/product/faq\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"All Categories\",\"url\":\"/product/all-categories\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Article Archive\",\"url\":\"/product/article-archive\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Our Writers\",\"url\":\"/product/authors\",\"type\":\"custom\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-link {\"label\":\"Pricing\",\"url\":\"/pricing\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-submenu {\"label\":\"Company\",\"type\":\"custom\",\"url\":\"#\"} -->\n<!-- wp:navigation-link {\"label\":\"About\",\"url\":\"/company/about\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Team\",\"url\":\"/company/team\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Contact\",\"url\":\"/company/contact\",\"type\":\"custom\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-submenu {\"label\":\"Pages\",\"type\":\"custom\",\"url\":\"#\"} -->\n<!-- wp:navigation-link {\"label\":\"Landing\",\"url\":\"/pages/landing\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Single Article\",\"url\":\"/pages/kineticql\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"All Tags\",\"url\":\"/pages/tags\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Search\",\"url\":\"/pages/search\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Login\",\"url\":\"/pages/login\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Register\",\"url\":\"/pages/register\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Password Reset\",\"url\":\"/pages/reset\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Username Reminder\",\"url\":\"/pages/remind\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Engineering\",\"url\":\"/pages/engineering\",\"type\":\"custom\"} /-->\n<!-- wp:navigation-link {\"label\":\"Author\",\"url\":\"/pages/author\",\"type\":\"custom\"} /-->\n<!-- /wp:navigation-submenu -->\n<!-- wp:navigation-link {\"label\":\"Sign in\",\"url\":\"/pages/login\",\"type\":\"custom\",\"className\":\"tracy-nav__signin\"} /-->\n<!-- wp:navigation-link {\"label\":\"Start free\",\"url\":\"/pages/register\",\"type\":\"custom\",\"className\":\"tracy-nav__cta\"} /-->\n<!-- /wp:navigation -->\n<!-- wp:group {\"className\":\"tracy-header__links\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__links\">\n<!-- wp:wp-ja-kinetic/mega-menu {\"label\":\"Home\",\"className\":\"tracy-mega--compact\"} -->\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Home Styles</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/\">Terminal</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/home-menu/home-blueprint\">Blueprint</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/home-menu/home-signal\">Signal</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n<!-- /wp:wp-ja-kinetic/mega-menu -->\n<!-- wp:wp-ja-kinetic/mega-menu {\"label\":\"Product\"} -->\n<!-- wp:columns {\"className\":\"tracy-mega__columns\"} -->\n<div class=\"wp-block-columns tracy-mega__columns\">\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Platform</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/product/features\">Features</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/product/integrations\">Integrations</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/product/changelog\">Changelog</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Content</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/product/blog\">Blog</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/product/article-archive\">Article Archive</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Discover</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/product/all-categories\">All Categories</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/product/authors\">Our Writers</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:column -->\n</div>\n<!-- /wp:columns -->\n<!-- /wp:wp-ja-kinetic/mega-menu -->\n<!-- wp:paragraph {\"className\":\"tracy-header__link\"} -->\n<p class=\"tracy-header__link\"><a href=\"/pricing\">Pricing</a></p>\n<!-- /wp:paragraph -->\n<!-- wp:wp-ja-kinetic/mega-menu {\"label\":\"Company\",\"className\":\"tracy-mega--compact\"} -->\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Company</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/company/about\">About</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/company/team\">Team</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/company/contact\">Contact</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n<!-- /wp:wp-ja-kinetic/mega-menu -->\n<!-- wp:wp-ja-kinetic/mega-menu {\"label\":\"Pages\"} -->\n<!-- wp:columns {\"className\":\"tracy-mega__columns\"} -->\n<div class=\"wp-block-columns tracy-mega__columns\">\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Account</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/pages/login\">Login</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/pages/register\">Register</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/pages/reset\">Password Reset</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/pages/remind\">Username Reminder</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Content</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/pages/engineering\">Engineering</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/pages/kineticql\">Single Article</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/pages/author\">Author</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-mega__title\"} -->\n<h3 class=\"wp-block-heading tracy-mega__title\">Discover</h3>\n<!-- /wp:heading -->\n<!-- wp:list {\"className\":\"tracy-mega__links\"} -->\n<ul class=\"wp-block-list tracy-mega__links\">\n<!-- wp:list-item -->\n<li><a href=\"/pages/tags\">All Tags</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/pages/search\">Search</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/pages/landing\">Landing</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:column -->\n</div>\n<!-- /wp:columns -->\n<!-- /wp:wp-ja-kinetic/mega-menu -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"tracy-header__actions\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-header__actions\">\n<!-- wp:paragraph {\"className\":\"tracy-header__signin\"} -->\n<p class=\"tracy-header__signin\"><a href=\"/pages/login\">Sign in</a></p>\n<!-- /wp:paragraph -->\n<!-- wp:buttons {\"className\":\"tracy-header__cta\"} -->\n<div class=\"wp-block-buttons tracy-header__cta\">\n<!-- wp:button -->\n<div class=\"wp-block-button\"><a class=\"wp-block-button__link wp-element-button\" href=\"/pages/register\">Start free<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path><path d=\"m12 5 7 7-7 7\"></path></svg></a></div>\n<!-- /wp:button -->\n</div>\n<!-- /wp:buttons -->\n<!-- wp:html -->\n<button type=\"button\" class=\"tracy-theme-toggle\" data-tracy-theme-toggle aria-label=\"Toggle dark mode\" aria-pressed=\"false\" title=\"Toggle light / dark\"><svg class=\"tracy-theme-toggle__sun\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></line></svg><svg class=\"tracy-theme-toggle__moon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg></button>\n<!-- /wp:html -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n"
+    },
+    {
+      "id": 1778,
+      "slug": "footer",
+      "theme": "wp-ja-kinetic",
+      "area": "footer",
+      "sha256": "35511477f130383148c8d4ae3d29964980f9c2d6f38a7d6cd21189b9528da868",
+      "content": "<!-- wp:group {\"tagName\":\"div\",\"className\":\"tracy-footer__band\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group tracy-footer__band\">\n<!-- wp:group {\"className\":\"tracy-footer__inner\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group tracy-footer__inner\">\n<!-- wp:columns {\"isStackedOnMobile\":false,\"className\":\"tracy-footer__columns\"} -->\n<div class=\"wp-block-columns is-not-stacked-on-mobile tracy-footer__columns\">\n<!-- wp:column {\"width\":\"34%\",\"className\":\"tracy-footer__brand\"} -->\n<div class=\"wp-block-column tracy-footer__brand\" style=\"flex-basis:34%\">\n<!-- wp:group {\"className\":\"tracy-footer__lock\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-footer__lock\">\n<!-- wp:site-logo {\"width\":24,\"shouldSyncIcon\":false,\"className\":\"tracy-footer__logo tracy-footer__logo\\u002d\\u002dlight tracy-logo-bare\"} /-->\n<!-- wp:site-logo {\"width\":24,\"shouldSyncIcon\":false,\"className\":\"tracy-footer__logo tracy-footer__logo\\u002d\\u002ddark tracy-logo-bare\"} /-->\n<!-- wp:site-title {\"level\":0,\"className\":\"tracy-brand\"} /-->\n</div>\n<!-- /wp:group -->\n<!-- wp:paragraph {\"className\":\"tracy-footer__blurb\"} -->\n<p class=\"tracy-footer__blurb\">Observability without the overhead. Logs, metrics and traces on one fast timeline.</p>\n<!-- /wp:paragraph -->\n<!-- wp:group {\"className\":\"tracy-footer__social\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\"}} -->\n<div class=\"wp-block-group tracy-footer__social\">\n<!-- wp:html -->\n<a class=\"tracy-footer__social-tile\" href=\"https://github.com/kinetic-labs\" aria-label=\"Source\" title=\"Source\" target=\"_blank\" rel=\"noopener noreferrer\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m18 16 4-4-4-4\"></path><path d=\"m6 8-4 4 4 4\"></path><path d=\"m14.5 4-5 16\"></path></g></svg></a>\n<!-- /wp:html -->\n<!-- wp:html -->\n<a class=\"tracy-footer__social-tile\" href=\"mailto:hello@kineticlabs.dev\" aria-label=\"Email\" title=\"Email\" target=\"_blank\" rel=\"noopener noreferrer\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8\"></path></g></svg></a>\n<!-- /wp:html -->\n<!-- wp:html -->\n<a class=\"tracy-footer__social-tile\" href=\"/category/field-notes-from-the-on-call/feed/\" aria-label=\"RSS feed\" title=\"RSS feed\" target=\"_blank\" rel=\"noopener noreferrer\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11a9 9 0 0 1 9 9\"></path><path d=\"M4 4a16 16 0 0 1 16 16\"></path><circle cx=\"5\" cy=\"19\" r=\"1\"></circle></g></svg></a>\n<!-- /wp:html -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-footer__title\"} -->\n<h3 class=\"wp-block-heading tracy-footer__title\">Product</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":1773,\"metadata\":{\"name\":\"nav.footer-product\"},\"className\":\"tracy-footer__links\",\"overlayMenu\":\"never\",\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-footer__title\"} -->\n<h3 class=\"wp-block-heading tracy-footer__title\">Developers</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":1774,\"metadata\":{\"name\":\"nav.footer-dev\"},\"className\":\"tracy-footer__links\",\"overlayMenu\":\"never\",\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:column -->\n<!-- wp:column -->\n<div class=\"wp-block-column\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-footer__title\"} -->\n<h3 class=\"wp-block-heading tracy-footer__title\">Company</h3>\n<!-- /wp:heading -->\n<!-- wp:navigation {\"ref\":1775,\"metadata\":{\"name\":\"nav.footer-company\"},\"className\":\"tracy-footer__links\",\"overlayMenu\":\"never\",\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"}} /-->\n</div>\n<!-- /wp:column -->\n</div>\n<!-- /wp:columns -->\n<!-- wp:group {\"tagName\":\"div\",\"className\":\"tracy-footer__news\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group tracy-footer__news\">\n<!-- wp:group {\"className\":\"tracy-footer__news-row\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\"}} -->\n<div class=\"wp-block-group tracy-footer__news-row\">\n<!-- wp:group {\"className\":\"tracy-footer__news-intro\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group tracy-footer__news-intro\">\n<!-- wp:heading {\"level\":3,\"className\":\"tracy-footer__news-title\"} -->\n<h3 class=\"wp-block-heading tracy-footer__news-title\">Monthly dispatch</h3>\n<!-- /wp:heading -->\n<!-- wp:paragraph {\"className\":\"tracy-footer__news-desc\"} -->\n<p class=\"tracy-footer__news-desc\">Incident retros, query tips and product news. No spam, unsubscribe anytime.</p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- wp:acymailing/subscription-form {\"title\":\"\",\"className\":\"tracy-footer__news-form\"} /-->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"tagName\":\"div\",\"className\":\"tracy-footer__strip\",\"layout\":{\"type\":\"default\"}} -->\n<div class=\"wp-block-group tracy-footer__strip\">\n<!-- wp:group {\"className\":\"tracy-footer__bottom\",\"layout\":{\"type\":\"flex\",\"justifyContent\":\"space-between\",\"flexWrap\":\"wrap\"}} -->\n<div class=\"wp-block-group tracy-footer__bottom\">\n<!-- wp:paragraph {\"className\":\"tracy-footer__copy\"} -->\n<p class=\"tracy-footer__copy\">© {year} {site.title}. All rights reserved.</p>\n<!-- /wp:paragraph -->\n<!-- wp:list {\"className\":\"tracy-footer__legal\"} -->\n<ul class=\"wp-block-list tracy-footer__legal\">\n<!-- wp:list-item -->\n<li><a href=\"/privacy-policy\">Privacy</a></li>\n<!-- /wp:list-item -->\n<!-- wp:list-item -->\n<li><a href=\"/terms-of-service\">Terms</a></li>\n<!-- /wp:list-item -->\n</ul>\n<!-- /wp:list -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:html -->\n<button type=\"button\" id=\"back-to-top\" class=\"tracy-back-to-top\" aria-label=\"Back to top\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><polyline points=\"18 15 12 9 6 15\"></polyline></svg></button>\n<!-- /wp:html -->\n"
+    }
+  ],
+  "themeParts": [],
+  "linkedPosts": [
+    {
+      "id": 3,
+      "type": "page",
+      "status": "publish",
+      "slug": "privacy-policy",
+      "blocks": [
+        "core/heading",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 1741,
+      "type": "page",
+      "status": "publish",
+      "slug": "pricing",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/details",
+        "core/group",
+        "core/heading",
+        "core/list",
+        "core/list-item",
+        "core/paragraph",
+        "core/table"
+      ]
+    },
+    {
+      "id": 1743,
+      "type": "page",
+      "status": "publish",
+      "slug": "terms-of-service",
+      "blocks": [
+        "core/heading",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 1750,
+      "type": "page",
+      "status": "publish",
+      "slug": "features",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 1751,
+      "type": "page",
+      "status": "publish",
+      "slug": "integrations",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 1752,
+      "type": "page",
+      "status": "publish",
+      "slug": "changelog",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 1753,
+      "type": "page",
+      "status": "publish",
+      "slug": "faq",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/details",
+        "core/group",
+        "core/heading",
+        "core/paragraph"
+      ]
+    },
+    {
+      "id": 1754,
+      "type": "page",
+      "status": "publish",
+      "slug": "about",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/quote",
+        "core/social-link",
+        "core/social-links"
+      ]
+    },
+    {
+      "id": 1755,
+      "type": "page",
+      "status": "publish",
+      "slug": "team",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/image",
+        "core/paragraph",
+        "core/social-link",
+        "core/social-links"
+      ]
+    },
+    {
+      "id": 1756,
+      "type": "page",
+      "status": "publish",
+      "slug": "contact",
+      "blocks": [
+        "core/button",
+        "core/buttons",
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "wp-ja-kinetic/kinetic-contact-form"
+      ]
+    },
+    {
+      "id": 1758,
+      "type": "page",
+      "status": "publish",
+      "slug": "kineticql",
+      "blocks": [
+        "core/heading",
+        "core/html",
+        "core/list",
+        "core/list-item",
+        "core/paragraph",
+        "core/quote"
+      ]
+    },
+    {
+      "id": 1759,
+      "type": "page",
+      "status": "publish",
+      "slug": "tags",
+      "blocks": [
+        "core/tag-cloud"
+      ]
+    },
+    {
+      "id": 1766,
+      "type": "page",
+      "status": "publish",
+      "slug": "blog",
+      "blocks": [
+        "core/group",
+        "core/heading",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous"
+      ]
+    },
+    {
+      "id": 1767,
+      "type": "page",
+      "status": "draft",
+      "slug": "search",
+      "blocks": [
+        "core/group",
+        "core/paragraph",
+        "core/post-excerpt",
+        "core/post-featured-image",
+        "core/post-template",
+        "core/post-terms",
+        "core/post-title",
+        "core/query",
+        "core/query-no-results",
+        "core/query-pagination",
+        "core/query-pagination-next",
+        "core/query-pagination-numbers",
+        "core/query-pagination-previous",
+        "core/search"
+      ]
+    }
+  ],
+  "listings": [
+    {
+      "id": 1759,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/tag-cloud",
+          "taxonomy": "post_tag"
+        }
+      ]
+    },
+    {
+      "id": 1766,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              98,
+              100,
+              101,
+              102,
+              103,
+              104,
+              105
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 1768,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 1769,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 1770,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {
+            "category": [
+              100
+            ]
+          },
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    },
+    {
+      "id": 1771,
+      "type": "page",
+      "language": "en",
+      "blocks": [
+        {
+          "block": "core/query",
+          "postType": "post",
+          "inherit": false,
+          "taxQuery": {},
+          "taxExclude": {},
+          "author": [],
+          "search": "",
+          "sticky": "",
+          "exclude": [],
+          "offset": 0,
+          "perPage": 12,
+          "pages": 0,
+          "paginated": true,
+          "order": "desc",
+          "orderBy": "date",
+          "termLinks": [
+            "category"
+          ],
+          "unsupported": []
+        }
+      ]
+    }
+  ],
+  "listedPosts": [
+    {
+      "id": 1500,
+      "type": "post",
+      "slug": "why-unified-telemetry-beats-three-dashboards",
+      "author": 122,
+      "date": "2026-06-19 21:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          109,
+          112
+        ]
+      }
+    },
+    {
+      "id": 1501,
+      "type": "post",
+      "slug": "the-anatomy-of-a-five-minute-mttr",
+      "author": 124,
+      "date": "2026-06-12 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ]
+      }
+    },
+    {
+      "id": 1502,
+      "type": "post",
+      "slug": "postmortems-that-people-actually-read",
+      "author": 122,
+      "date": "2026-06-18 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1503,
+      "type": "post",
+      "slug": "how-we-cut-ingest-latency-by-60",
+      "author": 122,
+      "date": "2026-06-17 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          114
+        ]
+      }
+    },
+    {
+      "id": 1504,
+      "type": "post",
+      "slug": "structured-logs-are-a-database-treat-them-like-one",
+      "author": 122,
+      "date": "2026-06-16 21:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          113
+        ]
+      }
+    },
+    {
+      "id": 1505,
+      "type": "post",
+      "slug": "high-cardinality-metrics-without-the-bill-shock",
+      "author": 122,
+      "date": "2026-06-26 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1506,
+      "type": "post",
+      "slug": "changelog-smarter-alert-routing-quieter-pagers",
+      "author": 122,
+      "date": "2026-06-15 21:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          117
+        ]
+      }
+    },
+    {
+      "id": 1507,
+      "type": "post",
+      "slug": "from-zero-to-dashboards-in-five-minutes-with-the-cli",
+      "author": 122,
+      "date": "2026-06-23 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          112
+        ]
+      }
+    },
+    {
+      "id": 1508,
+      "type": "post",
+      "slug": "writing-your-first-kineticql-query",
+      "author": 125,
+      "date": "2026-04-15 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ]
+      }
+    },
+    {
+      "id": 1509,
+      "type": "post",
+      "slug": "alert-fatigue-is-a-design-problem-not-a-people-problem",
+      "author": 122,
+      "date": "2026-06-25 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          117
+        ]
+      }
+    },
+    {
+      "id": 1510,
+      "type": "post",
+      "slug": "cutting-p95-by-40-a-checkout-api-retro",
+      "author": 123,
+      "date": "2026-06-18 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ]
+      }
+    },
+    {
+      "id": 1511,
+      "type": "post",
+      "slug": "tracing-across-async-boundaries",
+      "author": 123,
+      "date": "2026-05-19 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ]
+      }
+    },
+    {
+      "id": 1512,
+      "type": "post",
+      "slug": "tail-based-sampling-without-the-storage-bill",
+      "author": 126,
+      "date": "2026-05-02 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ]
+      }
+    },
+    {
+      "id": 1514,
+      "type": "post",
+      "slug": "introducing-tail-based-sampling-for-traces",
+      "author": 126,
+      "date": "2026-05-28 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ]
+      }
+    },
+    {
+      "id": 1515,
+      "type": "post",
+      "slug": "smarter-alert-routing-quieter-pagers",
+      "author": 126,
+      "date": "2026-06-04 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ]
+      }
+    },
+    {
+      "id": 1516,
+      "type": "post",
+      "slug": "from-zero-to-dashboards-in-five-minutes",
+      "author": 125,
+      "date": "2026-05-21 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ]
+      }
+    },
+    {
+      "id": 1518,
+      "type": "post",
+      "slug": "the-slo-that-finally-stuck",
+      "author": 123,
+      "date": "2026-06-02 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ]
+      }
+    },
+    {
+      "id": 1519,
+      "type": "post",
+      "slug": "error-budgets-without-the-politics",
+      "author": 125,
+      "date": "2026-05-09 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ]
+      }
+    },
+    {
+      "id": 1520,
+      "type": "post",
+      "slug": "on-call-rotations-that-do-not-burn-people-out",
+      "author": 126,
+      "date": "2026-04-03 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ]
+      }
+    },
+    {
+      "id": 1521,
+      "type": "post",
+      "slug": "on-call-without-the-dread",
+      "author": 123,
+      "date": "2026-05-05 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ]
+      }
+    },
+    {
+      "id": 1522,
+      "type": "post",
+      "slug": "what-carrying-the-pager-taught-us-about-product",
+      "author": 124,
+      "date": "2026-04-26 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ]
+      }
+    },
+    {
+      "id": 1523,
+      "type": "post",
+      "slug": "cardinality-budgets-a-practical-guide-to-label-hygiene",
+      "author": 123,
+      "date": "2026-02-09 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1524,
+      "type": "post",
+      "slug": "the-four-golden-signals-and-the-fifth-everyone-forgets",
+      "author": 124,
+      "date": "2026-02-18 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1525,
+      "type": "post",
+      "slug": "exemplars-the-missing-link-between-metrics-and-traces",
+      "author": 125,
+      "date": "2026-03-02 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1526,
+      "type": "post",
+      "slug": "how-we-survived-a-retry-storm-and-rewrote-our-backoff",
+      "author": 126,
+      "date": "2026-03-11 21:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1527,
+      "type": "post",
+      "slug": "log-sampling-that-keeps-the-needles-and-drops-the-hay",
+      "author": 123,
+      "date": "2026-03-20 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1528,
+      "type": "post",
+      "slug": "writing-runbooks-your-future-self-will-thank-you-for",
+      "author": 124,
+      "date": "2026-03-29 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1529,
+      "type": "post",
+      "slug": "dashboards-as-code-version-review-ship",
+      "author": 125,
+      "date": "2026-04-06 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1530,
+      "type": "post",
+      "slug": "the-p99-latency-trap-and-how-to-escape-it",
+      "author": 126,
+      "date": "2026-04-14 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1531,
+      "type": "post",
+      "slug": "alert-routing-with-kineticql-from-noise-to-signal",
+      "author": 123,
+      "date": "2026-04-22 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1532,
+      "type": "post",
+      "slug": "what-opentelemetry-gets-right-and-where-it-bites",
+      "author": 124,
+      "date": "2026-05-01 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1533,
+      "type": "post",
+      "slug": "instrumenting-a-monolith-without-slowing-it-down",
+      "author": 125,
+      "date": "2026-05-08 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1534,
+      "type": "post",
+      "slug": "the-cost-of-a-curious-query-your-observability-bill-explained",
+      "author": 126,
+      "date": "2026-05-15 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1535,
+      "type": "post",
+      "slug": "service-level-objectives-for-teams-that-hate-meetings",
+      "author": 123,
+      "date": "2026-05-23 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1536,
+      "type": "post",
+      "slug": "blameless-postmortems-the-facilitator-s-playbook",
+      "author": 124,
+      "date": "2026-05-30 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1537,
+      "type": "post",
+      "slug": "trace-based-testing-catching-regressions-before-prod",
+      "author": 125,
+      "date": "2026-06-05 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1538,
+      "type": "post",
+      "slug": "how-we-cut-pager-volume-70-in-a-single-quarter",
+      "author": 126,
+      "date": "2026-06-11 21:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1539,
+      "type": "post",
+      "slug": "correlating-logs-and-traces-with-one-join-in-kineticql",
+      "author": 123,
+      "date": "2026-06-18 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1540,
+      "type": "post",
+      "slug": "capacity-planning-from-telemetry-not-spreadsheets",
+      "author": 124,
+      "date": "2026-06-24 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1541,
+      "type": "post",
+      "slug": "the-on-call-handoff-checklist-that-actually-works",
+      "author": 125,
+      "date": "2026-06-30 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1542,
+      "type": "post",
+      "slug": "metrics-logs-traces-and-now-continuous-profiling",
+      "author": 126,
+      "date": "2026-07-04 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1543,
+      "type": "post",
+      "slug": "detecting-slow-leaks-memory-goroutines-and-file-handles",
+      "author": 123,
+      "date": "2026-07-08 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1544,
+      "type": "post",
+      "slug": "building-an-incident-timeline-automatically-from-telemetry",
+      "author": 124,
+      "date": "2026-07-12 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ]
+      }
+    },
+    {
+      "id": 1545,
+      "type": "post",
+      "slug": "the-3am-page-that-turned-out-to-be-a-clock-skew-bug",
+      "author": 123,
+      "date": "2026-01-08 03:45:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1546,
+      "type": "post",
+      "slug": "what-i-learned-running-my-first-incident-as-commander",
+      "author": 122,
+      "date": "2026-01-15 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1547,
+      "type": "post",
+      "slug": "the-pager-that-never-should-have-fired-a-false-positive-autopsy",
+      "author": 123,
+      "date": "2026-01-22 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1548,
+      "type": "post",
+      "slug": "carrying-the-pager-during-a-hurricane-lessons-in-redundancy",
+      "author": 125,
+      "date": "2026-01-29 20:15:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1549,
+      "type": "post",
+      "slug": "debugging-a-retry-storm-at-2am-with-half-my-brain-asleep",
+      "author": 122,
+      "date": "2026-02-05 02:20:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1550,
+      "type": "post",
+      "slug": "the-slack-thread-that-saved-an-incident-async-on-call-done-right",
+      "author": 122,
+      "date": "2026-02-12 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1551,
+      "type": "post",
+      "slug": "how-a-single-dropped-index-took-down-checkout-for-40-minutes",
+      "author": 122,
+      "date": "2026-02-19 19:40:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          120
+        ]
+      }
+    },
+    {
+      "id": 1552,
+      "type": "post",
+      "slug": "six-months-of-on-call-taught-me-to-trust-dashboards-over-gut-feeling",
+      "author": 123,
+      "date": "2026-02-26 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          112
+        ]
+      }
+    },
+    {
+      "id": 1553,
+      "type": "post",
+      "slug": "the-night-our-runbook-lied-to-us",
+      "author": 125,
+      "date": "2026-03-05 22:10:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1554,
+      "type": "post",
+      "slug": "chasing-a-memory-leak-that-only-appeared-on-tuesdays",
+      "author": 122,
+      "date": "2026-03-12 08:50:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1555,
+      "type": "post",
+      "slug": "what-breaks-first-notes-from-50-incident-reviews",
+      "author": 123,
+      "date": "2026-03-19 09:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1556,
+      "type": "post",
+      "slug": "the-on-call-rotation-that-finally-stopped-burning-us-out",
+      "author": 125,
+      "date": "2026-03-26 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1557,
+      "type": "post",
+      "slug": "a-dns-ttl-nobody-remembered-set-off-a-three-hour-chase",
+      "author": 122,
+      "date": "2026-04-02 13:15:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1558,
+      "type": "post",
+      "slug": "how-i-learned-to-page-myself-less-a-personal-alert-audit",
+      "author": 123,
+      "date": "2026-04-09 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1559,
+      "type": "post",
+      "slug": "the-incident-that-started-with-a-green-dashboard",
+      "author": 122,
+      "date": "2026-04-16 11:05:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1560,
+      "type": "post",
+      "slug": "handing-off-a-live-incident-across-time-zones-without-losing-context",
+      "author": 123,
+      "date": "2026-04-23 16:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1561,
+      "type": "post",
+      "slug": "the-day-a-rollout-evicted-half-our-on-call-runbook",
+      "author": 122,
+      "date": "2026-04-30 15:20:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          119
+        ]
+      }
+    },
+    {
+      "id": 1562,
+      "type": "post",
+      "slug": "three-false-alarms-and-one-real-fire-a-friday-night-on-call-log",
+      "author": 123,
+      "date": "2026-05-07 23:10:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1563,
+      "type": "post",
+      "slug": "what-carrying-the-pager-for-a-year-taught-me-about-writing-better-alerts",
+      "author": 123,
+      "date": "2026-05-14 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1564,
+      "type": "post",
+      "slug": "the-postmortem-that-changed-how-we-page-people",
+      "author": 122,
+      "date": "2026-05-21 10:45:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1565,
+      "type": "post",
+      "slug": "tracing-a-checkout-failure-through-five-services-before-coffee",
+      "author": 122,
+      "date": "2026-05-28 07:45:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          111
+        ]
+      }
+    },
+    {
+      "id": 1566,
+      "type": "post",
+      "slug": "the-incident-where-the-dashboard-was-right-and-i-wasn-t",
+      "author": 123,
+      "date": "2026-06-04 15:50:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1567,
+      "type": "post",
+      "slug": "rotating-off-call-after-a-bad-quarter-how-we-recovered-as-a-team",
+      "author": 125,
+      "date": "2026-06-11 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1568,
+      "type": "post",
+      "slug": "a-postgres-connection-pool-exhausted-live-at-11pm",
+      "author": 122,
+      "date": "2026-06-18 23:05:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          120
+        ]
+      }
+    },
+    {
+      "id": 1569,
+      "type": "post",
+      "slug": "the-on-call-week-where-nothing-went-wrong-and-what-that-taught-me",
+      "author": 123,
+      "date": "2026-06-25 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1570,
+      "type": "post",
+      "slug": "reading-the-timeline-back-how-we-rebuilt-an-incident-from-raw-traces",
+      "author": 122,
+      "date": "2026-07-01 10:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          111
+        ]
+      }
+    },
+    {
+      "id": 1571,
+      "type": "post",
+      "slug": "five-minutes-to-mitigate-the-anatomy-of-a-fast-recovery",
+      "author": 123,
+      "date": "2026-07-06 10:25:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1572,
+      "type": "post",
+      "slug": "what-i-wish-someone-told-me-before-my-first-on-call-shift",
+      "author": 125,
+      "date": "2026-07-08 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1573,
+      "type": "post",
+      "slug": "how-the-columnar-store-packs-metric-points-into-128-point-chunks",
+      "author": 123,
+      "date": "2026-01-06 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1574,
+      "type": "post",
+      "slug": "why-kineticql-picks-hash-join-over-merge-join-for-trace-log-correlation",
+      "author": 124,
+      "date": "2026-01-13 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          111,
+          113
+        ]
+      }
+    },
+    {
+      "id": 1575,
+      "type": "post",
+      "slug": "capping-cardinality-at-the-write-path-before-it-reaches-the-index",
+      "author": 123,
+      "date": "2026-01-20 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1576,
+      "type": "post",
+      "slug": "buffering-spans-in-memory-the-cost-model-behind-tail-based-sampling",
+      "author": 124,
+      "date": "2026-01-27 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          111,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1577,
+      "type": "post",
+      "slug": "dictionary-encoding-label-sets-cutting-metrics-storage-by-61",
+      "author": 123,
+      "date": "2026-02-03 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1578,
+      "type": "post",
+      "slug": "from-otlp-to-wal-anatomy-of-the-ingestion-hot-path",
+      "author": 124,
+      "date": "2026-02-10 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          109,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1579,
+      "type": "post",
+      "slug": "indexing-labels-without-one-inverted-index-per-series",
+      "author": 125,
+      "date": "2026-02-17 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          116,
+          119
+        ]
+      }
+    },
+    {
+      "id": 1580,
+      "type": "post",
+      "slug": "the-cost-based-planner-how-kineticql-estimates-row-counts-before-scanning",
+      "author": 123,
+      "date": "2026-02-24 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          111,
+          112
+        ]
+      }
+    },
+    {
+      "id": 1581,
+      "type": "post",
+      "slug": "exemplars-under-the-hood-pinning-a-bucket-to-a-trace-id",
+      "author": 124,
+      "date": "2026-03-03 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          111,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1582,
+      "type": "post",
+      "slug": "parsing-structured-logs-at-ingest-vs-at-query-time",
+      "author": 123,
+      "date": "2026-03-10 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          113
+        ]
+      }
+    },
+    {
+      "id": 1583,
+      "type": "post",
+      "slug": "joining-spans-to-logs-the-trace-id-and-time-window-algorithm",
+      "author": 124,
+      "date": "2026-03-17 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          111,
+          113
+        ]
+      }
+    },
+    {
+      "id": 1584,
+      "type": "post",
+      "slug": "downsampling-rollups-and-how-the-planner-picks-a-resolution",
+      "author": 123,
+      "date": "2026-03-24 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1585,
+      "type": "post",
+      "slug": "watermarks-and-late-arriving-data-in-the-ingest-pipeline",
+      "author": 124,
+      "date": "2026-03-31 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          109,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1586,
+      "type": "post",
+      "slug": "pushdown-how-summarize-and-where-move-into-the-storage-layer",
+      "author": 123,
+      "date": "2026-04-07 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          112,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1587,
+      "type": "post",
+      "slug": "a-bloom-filter-index-for-trace-id-lookups-at-40m-spans-day",
+      "author": 124,
+      "date": "2026-04-14 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          111,
+          112
+        ]
+      }
+    },
+    {
+      "id": 1588,
+      "type": "post",
+      "slug": "segment-compaction-merging-small-chunks-without-stalling-queries",
+      "author": 125,
+      "date": "2026-04-21 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          112,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1589,
+      "type": "post",
+      "slug": "the-write-ahead-log-durability-without-doubling-ingest-latency",
+      "author": 123,
+      "date": "2026-04-28 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          109,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1590,
+      "type": "post",
+      "slug": "sharding-traces-by-trace-id-vs-by-service-a-storage-tradeoff",
+      "author": 124,
+      "date": "2026-05-05 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          111,
+          119
+        ]
+      }
+    },
+    {
+      "id": 1591,
+      "type": "post",
+      "slug": "vectorized-execution-batching-kineticql-operators-over-column-batches",
+      "author": 123,
+      "date": "2026-05-12 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          112,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1592,
+      "type": "post",
+      "slug": "retention-tiers-hot-ssd-warm-object-storage-and-the-tier-aware-scan",
+      "author": 124,
+      "date": "2026-05-19 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1593,
+      "type": "post",
+      "slug": "building-the-query-planner-s-join-order-search",
+      "author": 123,
+      "date": "2026-05-26 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          111,
+          112
+        ]
+      }
+    },
+    {
+      "id": 1594,
+      "type": "post",
+      "slug": "span-deduplication-when-otel-collectors-retry",
+      "author": 124,
+      "date": "2026-06-02 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          109,
+          111
+        ]
+      }
+    },
+    {
+      "id": 1595,
+      "type": "post",
+      "slug": "the-exemplar-sampler-choosing-which-points-earn-a-trace-link",
+      "author": 125,
+      "date": "2026-06-09 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          111,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1596,
+      "type": "post",
+      "slug": "compressing-high-cardinality-label-dictionaries-with-a-shared-vocabulary",
+      "author": 123,
+      "date": "2026-06-16 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1597,
+      "type": "post",
+      "slug": "how-kineticql-resolves-by-clauses-into-group-keys",
+      "author": 124,
+      "date": "2026-06-23 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          112,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1598,
+      "type": "post",
+      "slug": "backpressure-what-happens-when-ingestion-outruns-compaction",
+      "author": 123,
+      "date": "2026-06-30 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          109,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1599,
+      "type": "post",
+      "slug": "profiling-data-as-a-fourth-signal-storing-stack-traces-as-flame-graph-deltas",
+      "author": 125,
+      "date": "2026-07-02 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1600,
+      "type": "post",
+      "slug": "the-math-behind-our-sampling-error-bounds-for-approximate-summarize",
+      "author": 124,
+      "date": "2026-07-08 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          100
+        ],
+        "post_tag": [
+          115,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1601,
+      "type": "post",
+      "slug": "the-retry-storm-that-took-checkout-down-for-eleven-minutes",
+      "author": 123,
+      "date": "2026-01-12 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1602,
+      "type": "post",
+      "slug": "five-minutes-to-detect-four-to-fix-anatomy-of-a-fast-mttr",
+      "author": 125,
+      "date": "2026-01-16 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1603,
+      "type": "post",
+      "slug": "the-missing-index-that-turned-a-routine-deploy-into-a-forty-minute-outage",
+      "author": 123,
+      "date": "2026-01-21 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114,
+          120
+        ]
+      }
+    },
+    {
+      "id": 1604,
+      "type": "post",
+      "slug": "cutting-p95-by-40-on-the-checkout-api-the-full-retro",
+      "author": 124,
+      "date": "2026-01-28 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1605,
+      "type": "post",
+      "slug": "the-cache-stampede-that-took-down-three-services-at-once",
+      "author": 123,
+      "date": "2026-02-03 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1606,
+      "type": "post",
+      "slug": "the-alerting-blind-spot-that-let-a-2am-outage-run-for-47-minutes",
+      "author": 125,
+      "date": "2026-02-09 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1607,
+      "type": "post",
+      "slug": "the-cron-job-that-ran-twice-a-leader-election-postmortem",
+      "author": 123,
+      "date": "2026-02-17 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          119
+        ]
+      }
+    },
+    {
+      "id": 1608,
+      "type": "post",
+      "slug": "connection-pool-exhaustion-the-3am-page-nobody-wanted",
+      "author": 125,
+      "date": "2026-02-24 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1609,
+      "type": "post",
+      "slug": "twenty-minutes-dark-a-dns-ttl-postmortem",
+      "author": 123,
+      "date": "2026-03-04 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1610,
+      "type": "post",
+      "slug": "the-certificate-that-expired-on-a-friday",
+      "author": 124,
+      "date": "2026-03-11 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1611,
+      "type": "post",
+      "slug": "gc-pause-storms-how-one-bad-flag-doubled-our-p99",
+      "author": 125,
+      "date": "2026-03-18 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1612,
+      "type": "post",
+      "slug": "kafka-consumer-lag-the-backlog-that-ate-our-slo",
+      "author": 123,
+      "date": "2026-03-26 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1613,
+      "type": "post",
+      "slug": "the-canary-that-never-got-traffic",
+      "author": 125,
+      "date": "2026-04-02 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1614,
+      "type": "post",
+      "slug": "clock-skew-jwts-and-a-wave-of-401s",
+      "author": 123,
+      "date": "2026-04-09 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1615,
+      "type": "post",
+      "slug": "the-n-1-query-that-shipped-on-a-tuesday",
+      "author": 124,
+      "date": "2026-04-16 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114,
+          120
+        ]
+      }
+    },
+    {
+      "id": 1616,
+      "type": "post",
+      "slug": "autoscaling-flapped-for-six-hours-a-capacity-postmortem",
+      "author": 125,
+      "date": "2026-04-23 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114,
+          119
+        ]
+      }
+    },
+    {
+      "id": 1617,
+      "type": "post",
+      "slug": "the-webhook-retry-storm-from-a-partner-integration",
+      "author": 123,
+      "date": "2026-05-01 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1618,
+      "type": "post",
+      "slug": "replica-lag-and-the-stale-reads-nobody-caught",
+      "author": 125,
+      "date": "2026-05-08 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114,
+          120
+        ]
+      }
+    },
+    {
+      "id": 1619,
+      "type": "post",
+      "slug": "the-load-balancer-that-sent-all-traffic-to-one-az",
+      "author": 123,
+      "date": "2026-05-15 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1620,
+      "type": "post",
+      "slug": "readable-postmortems-the-incident-we-almost-misdiagnosed",
+      "author": 125,
+      "date": "2026-05-22 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          113
+        ]
+      }
+    },
+    {
+      "id": 1621,
+      "type": "post",
+      "slug": "the-blameless-postmortem-playbook-tested-live",
+      "author": 123,
+      "date": "2026-06-02 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1622,
+      "type": "post",
+      "slug": "s3-throttling-took-our-ingest-pipeline-sideways",
+      "author": 124,
+      "date": "2026-06-10 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1623,
+      "type": "post",
+      "slug": "the-health-check-that-flapped-400-pods",
+      "author": 125,
+      "date": "2026-06-17 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          119
+        ]
+      }
+    },
+    {
+      "id": 1624,
+      "type": "post",
+      "slug": "mtls-cert-rotation-the-sidecar-that-stopped-trusting-itself",
+      "author": 123,
+      "date": "2026-06-24 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1625,
+      "type": "post",
+      "slug": "the-rolling-deploy-that-dropped-connections-for-ninety-seconds",
+      "author": 125,
+      "date": "2026-07-01 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114
+        ]
+      }
+    },
+    {
+      "id": 1626,
+      "type": "post",
+      "slug": "spot-reclamation-cascade-losing-a-third-of-the-fleet-at-once",
+      "author": 123,
+      "date": "2026-07-03 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114,
+          119
+        ]
+      }
+    },
+    {
+      "id": 1627,
+      "type": "post",
+      "slug": "the-rate-limiter-that-rate-limited-itself",
+      "author": 125,
+      "date": "2026-07-06 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1628,
+      "type": "post",
+      "slug": "graphql-resolver-storm-the-dashboard-that-took-down-the-api",
+      "author": 124,
+      "date": "2026-07-08 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          101
+        ],
+        "post_tag": [
+          110,
+          114,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1629,
+      "type": "post",
+      "slug": "tail-based-sampling-for-traces-is-now-generally-available",
+      "author": 126,
+      "date": "2026-01-08 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          111,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1630,
+      "type": "post",
+      "slug": "why-we-built-continuous-profiling-into-the-trace-store-not-a-separate-product",
+      "author": 124,
+      "date": "2026-01-15 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          114,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1631,
+      "type": "post",
+      "slug": "dashboards-as-code-your-kineticql-dashboards-now-live-in-git",
+      "author": 126,
+      "date": "2026-01-22 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          112
+        ]
+      }
+    },
+    {
+      "id": 1632,
+      "type": "post",
+      "slug": "alert-routing-gets-a-brain-routing-rules-written-in-kineticql",
+      "author": 124,
+      "date": "2026-01-29 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          117
+        ]
+      }
+    },
+    {
+      "id": 1633,
+      "type": "post",
+      "slug": "sso-and-scim-are-now-generally-available",
+      "author": 126,
+      "date": "2026-02-05 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          112
+        ]
+      }
+    },
+    {
+      "id": 1634,
+      "type": "post",
+      "slug": "introducing-cost-controls-budgets-alerts-and-per-team-ingest-caps",
+      "author": 125,
+      "date": "2026-02-12 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          118
+        ]
+      }
+    },
+    {
+      "id": 1635,
+      "type": "post",
+      "slug": "kineticql-gets-joins-across-signal-types",
+      "author": 124,
+      "date": "2026-02-19 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          109,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1636,
+      "type": "post",
+      "slug": "why-we-didn-t-build-a-second-query-language-for-logs",
+      "author": 126,
+      "date": "2026-02-26 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          109,
+          113
+        ]
+      }
+    },
+    {
+      "id": 1637,
+      "type": "post",
+      "slug": "first-party-receivers-for-kubernetes-postgres-and-kafka",
+      "author": 124,
+      "date": "2026-03-05 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          109,
+          119,
+          120
+        ]
+      }
+    },
+    {
+      "id": 1638,
+      "type": "post",
+      "slug": "q1-changelog-sampling-profiling-and-a-faster-query-planner",
+      "author": 126,
+      "date": "2026-03-12 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          111,
+          112
+        ]
+      }
+    },
+    {
+      "id": 1639,
+      "type": "post",
+      "slug": "why-on-call-experience-became-our-product-roadmap-s-filter",
+      "author": 126,
+      "date": "2026-03-19 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1640,
+      "type": "post",
+      "slug": "exemplars-one-click-from-a-metric-spike-to-the-trace-that-caused-it",
+      "author": 124,
+      "date": "2026-03-26 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          111,
+          114,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1641,
+      "type": "post",
+      "slug": "we-killed-the-dashboard-nobody-looked-at-and-built-this-instead",
+      "author": 126,
+      "date": "2026-04-02 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          112
+        ]
+      }
+    },
+    {
+      "id": 1642,
+      "type": "post",
+      "slug": "opentelemetry-parity-the-native-agent-is-now-optional",
+      "author": 124,
+      "date": "2026-04-09 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          109
+        ]
+      }
+    },
+    {
+      "id": 1643,
+      "type": "post",
+      "slug": "cardinality-budgets-turning-a-limit-into-a-feature",
+      "author": 125,
+      "date": "2026-04-16 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1644,
+      "type": "post",
+      "slug": "announcing-hx-a-terminal-dashboard-for-on-call",
+      "author": 126,
+      "date": "2026-04-23 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          112
+        ]
+      }
+    },
+    {
+      "id": 1645,
+      "type": "post",
+      "slug": "why-sampling-shipped-before-compaction-a-roadmap-sequencing-story",
+      "author": 126,
+      "date": "2026-05-04 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          118
+        ]
+      }
+    },
+    {
+      "id": 1646,
+      "type": "post",
+      "slug": "from-beta-to-ga-what-six-months-of-customers-taught-us-about-tail-based-sampling",
+      "author": 124,
+      "date": "2026-05-11 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          111,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1647,
+      "type": "post",
+      "slug": "saved-queries-and-query-history-land-in-kineticql",
+      "author": 126,
+      "date": "2026-05-18 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          109,
+          112
+        ]
+      }
+    },
+    {
+      "id": 1648,
+      "type": "post",
+      "slug": "alert-routing-that-reads-your-on-call-schedule-not-just-severity-labels",
+      "author": 124,
+      "date": "2026-05-26 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1649,
+      "type": "post",
+      "slug": "we-shipped-a-cost-model-before-we-shipped-a-cost-cutter",
+      "author": 125,
+      "date": "2026-06-03 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          118
+        ]
+      }
+    },
+    {
+      "id": 1650,
+      "type": "post",
+      "slug": "saml-rollout-notes-what-actually-broke-when-we-turned-on-sso",
+      "author": 126,
+      "date": "2026-06-10 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          112
+        ]
+      }
+    },
+    {
+      "id": 1651,
+      "type": "post",
+      "slug": "the-economics-of-one-store-why-we-don-t-split-metrics-logs-and-traces",
+      "author": 124,
+      "date": "2026-06-17 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          113,
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1652,
+      "type": "post",
+      "slug": "continuous-profiling-ships-without-a-second-agent",
+      "author": 124,
+      "date": "2026-06-24 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          116
+        ]
+      }
+    },
+    {
+      "id": 1653,
+      "type": "post",
+      "slug": "what-200-internal-dashboards-taught-us-before-we-shipped-dashboards-as-code",
+      "author": 126,
+      "date": "2026-07-01 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          112
+        ]
+      }
+    },
+    {
+      "id": 1654,
+      "type": "post",
+      "slug": "multi-region-ingest-the-feature-that-took-a-year-and-shouldn-t-have-surprised-us",
+      "author": 124,
+      "date": "2026-07-03 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          114
+        ]
+      }
+    },
+    {
+      "id": 1655,
+      "type": "post",
+      "slug": "retention-tiers-hot-warm-cold-and-the-bill-each-one-saves-you",
+      "author": 126,
+      "date": "2026-07-06 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          113,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1656,
+      "type": "post",
+      "slug": "why-alert-fatigue-is-a-product-bug-not-a-tuning-problem",
+      "author": 125,
+      "date": "2026-07-08 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          102
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1657,
+      "type": "post",
+      "slug": "instrumenting-your-first-service-with-the-kinetic-sdk",
+      "author": 123,
+      "date": "2026-01-05 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          109,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1658,
+      "type": "post",
+      "slug": "from-zero-to-a-dashboard-in-five-minutes",
+      "author": 126,
+      "date": "2026-01-14 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          112,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1659,
+      "type": "post",
+      "slug": "setting-up-your-first-alert-in-kinetic",
+      "author": 123,
+      "date": "2026-01-20 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          117
+        ]
+      }
+    },
+    {
+      "id": 1660,
+      "type": "post",
+      "slug": "adding-tracing-to-a-legacy-monolith-without-a-rewrite",
+      "author": 123,
+      "date": "2026-01-27 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          109,
+          111
+        ]
+      }
+    },
+    {
+      "id": 1661,
+      "type": "post",
+      "slug": "sampling-logs-without-losing-the-signal",
+      "author": 126,
+      "date": "2026-02-03 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          113
+        ]
+      }
+    },
+    {
+      "id": 1662,
+      "type": "post",
+      "slug": "connecting-a-kubernetes-cluster-to-kinetic",
+      "author": 124,
+      "date": "2026-02-09 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          116,
+          119
+        ]
+      }
+    },
+    {
+      "id": 1663,
+      "type": "post",
+      "slug": "connecting-your-postgres-instance-for-query-level-tracing",
+      "author": 123,
+      "date": "2026-02-13 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          114,
+          120
+        ]
+      }
+    },
+    {
+      "id": 1664,
+      "type": "post",
+      "slug": "exporting-telemetry-data-to-your-own-data-lake",
+      "author": 126,
+      "date": "2026-02-19 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          113,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1665,
+      "type": "post",
+      "slug": "setting-up-your-first-slo-in-kinetic",
+      "author": 123,
+      "date": "2026-02-25 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          115
+        ]
+      }
+    },
+    {
+      "id": 1666,
+      "type": "post",
+      "slug": "dashboards-as-code-version-controlling-your-kinetic-views",
+      "author": 126,
+      "date": "2026-03-04 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          112
+        ]
+      }
+    },
+    {
+      "id": 1667,
+      "type": "post",
+      "slug": "building-a-terminal-dashboard-with-the-kinetic-cli",
+      "author": 124,
+      "date": "2026-03-10 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          112,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1668,
+      "type": "post",
+      "slug": "joining-traces-and-logs-in-a-single-kineticql-query",
+      "author": 123,
+      "date": "2026-03-17 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          111,
+          113
+        ]
+      }
+    },
+    {
+      "id": 1669,
+      "type": "post",
+      "slug": "setting-a-cardinality-budget-before-it-sets-you",
+      "author": 123,
+      "date": "2026-03-24 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          116,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1670,
+      "type": "post",
+      "slug": "turning-on-tail-based-sampling-for-a-single-service",
+      "author": 126,
+      "date": "2026-03-29 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          111,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1671,
+      "type": "post",
+      "slug": "wiring-exemplars-from-a-metric-back-to-a-trace",
+      "author": 123,
+      "date": "2026-04-04 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          111,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1672,
+      "type": "post",
+      "slug": "routing-alerts-by-service-owner-with-kineticql",
+      "author": 124,
+      "date": "2026-04-10 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1673,
+      "type": "post",
+      "slug": "turning-on-continuous-profiling-for-a-go-service",
+      "author": 126,
+      "date": "2026-04-16 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          116
+        ]
+      }
+    },
+    {
+      "id": 1674,
+      "type": "post",
+      "slug": "configuring-the-opentelemetry-collector-for-kinetic",
+      "author": 123,
+      "date": "2026-04-22 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          109
+        ]
+      }
+    },
+    {
+      "id": 1675,
+      "type": "post",
+      "slug": "structured-logging-conventions-that-make-queries-fast",
+      "author": 123,
+      "date": "2026-04-28 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          113
+        ]
+      }
+    },
+    {
+      "id": 1676,
+      "type": "post",
+      "slug": "building-a-golden-signals-dashboard-from-scratch",
+      "author": 126,
+      "date": "2026-05-01 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          112,
+          114,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1677,
+      "type": "post",
+      "slug": "assembling-a-request-timeline-from-three-signal-types-by-hand",
+      "author": 124,
+      "date": "2026-05-09 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          110,
+          111,
+          113
+        ]
+      }
+    },
+    {
+      "id": 1678,
+      "type": "post",
+      "slug": "writing-runbooks-your-alerts-can-actually-link-to",
+      "author": 123,
+      "date": "2026-05-18 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1679,
+      "type": "post",
+      "slug": "querying-your-own-ingest-cost-before-the-invoice-does",
+      "author": 126,
+      "date": "2026-05-27 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          118
+        ]
+      }
+    },
+    {
+      "id": 1680,
+      "type": "post",
+      "slug": "migrating-dashboards-from-prometheus-to-kineticql",
+      "author": 123,
+      "date": "2026-06-05 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          109,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1681,
+      "type": "post",
+      "slug": "building-a-follow-the-sun-dashboard-for-multi-region-services",
+      "author": 124,
+      "date": "2026-06-14 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          110,
+          112
+        ]
+      }
+    },
+    {
+      "id": 1682,
+      "type": "post",
+      "slug": "building-an-on-call-handoff-dashboard-from-scratch",
+      "author": 126,
+      "date": "2026-06-24 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          110,
+          112
+        ]
+      }
+    },
+    {
+      "id": 1683,
+      "type": "post",
+      "slug": "writing-a-trace-based-test-for-your-checkout-flow",
+      "author": 123,
+      "date": "2026-07-08 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          103
+        ],
+        "post_tag": [
+          111
+        ]
+      }
+    },
+    {
+      "id": 1684,
+      "type": "post",
+      "slug": "the-slo-that-finally-stuck-picking-targets-people-actually-believe",
+      "author": 123,
+      "date": "2026-01-06 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1685,
+      "type": "post",
+      "slug": "better-runbooks-turning-tribal-knowledge-into-a-page-anyone-can-run",
+      "author": 123,
+      "date": "2026-01-20 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1686,
+      "type": "post",
+      "slug": "reducing-pager-volume-a-90-day-plan",
+      "author": 123,
+      "date": "2026-02-03 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1687,
+      "type": "post",
+      "slug": "golden-signals-plus-one-adding-saturation-to-the-big-four",
+      "author": 123,
+      "date": "2026-02-10 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1688,
+      "type": "post",
+      "slug": "incident-command-101-who-does-what-in-the-first-15-minutes",
+      "author": 125,
+      "date": "2026-02-17 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1689,
+      "type": "post",
+      "slug": "reliability-reviews-the-meeting-that-isn-t-a-status-update",
+      "author": 125,
+      "date": "2026-02-24 11:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1690,
+      "type": "post",
+      "slug": "toil-reduction-measuring-the-work-nobody-wants-to-do",
+      "author": 123,
+      "date": "2026-03-03 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1691,
+      "type": "post",
+      "slug": "alert-hygiene-deleting-the-alerts-nobody-acts-on",
+      "author": 123,
+      "date": "2026-03-10 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1692,
+      "type": "post",
+      "slug": "writing-an-error-budget-policy-that-survives-a-launch-deadline",
+      "author": 126,
+      "date": "2026-03-17 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1693,
+      "type": "post",
+      "slug": "multi-window-burn-rate-alerts-fast-and-slow-together",
+      "author": 123,
+      "date": "2026-03-24 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1694,
+      "type": "post",
+      "slug": "slos-without-meetings-setting-targets-from-data-not-a-war-room",
+      "author": 125,
+      "date": "2026-03-31 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          112,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1695,
+      "type": "post",
+      "slug": "building-a-sane-on-call-rotation-from-scratch",
+      "author": 123,
+      "date": "2026-04-07 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1696,
+      "type": "post",
+      "slug": "the-pager-audit-three-months-of-alerts-in-one-afternoon",
+      "author": 123,
+      "date": "2026-04-14 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1697,
+      "type": "post",
+      "slug": "runbook-rot-keeping-procedures-from-going-stale",
+      "author": 123,
+      "date": "2026-04-21 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1698,
+      "type": "post",
+      "slug": "setting-an-slo-for-a-service-nobody-agreed-to-own",
+      "author": 125,
+      "date": "2026-04-28 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1699,
+      "type": "post",
+      "slug": "capacity-headroom-how-much-slack-is-enough",
+      "author": 126,
+      "date": "2026-05-05 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1700,
+      "type": "post",
+      "slug": "cutting-toil-with-automation-you-can-actually-justify",
+      "author": 123,
+      "date": "2026-05-12 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1701,
+      "type": "post",
+      "slug": "alert-routing-that-respects-sleep",
+      "author": 125,
+      "date": "2026-05-19 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1702,
+      "type": "post",
+      "slug": "training-the-second-seat-growing-more-incident-commanders",
+      "author": 125,
+      "date": "2026-05-26 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1703,
+      "type": "post",
+      "slug": "slis-that-measure-what-users-actually-feel",
+      "author": 123,
+      "date": "2026-06-02 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          116
+        ]
+      }
+    },
+    {
+      "id": 1704,
+      "type": "post",
+      "slug": "the-on-call-rotation-math-how-many-engineers-do-you-need",
+      "author": 125,
+      "date": "2026-06-09 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1705,
+      "type": "post",
+      "slug": "burn-rate-alerts-vs-threshold-alerts-why-you-need-both",
+      "author": 123,
+      "date": "2026-06-16 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1706,
+      "type": "post",
+      "slug": "quarterly-capacity-planning-without-the-spreadsheet-marathon",
+      "author": 126,
+      "date": "2026-06-23 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1707,
+      "type": "post",
+      "slug": "the-error-budget-freeze-when-to-actually-pull-the-brake",
+      "author": 125,
+      "date": "2026-06-30 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1708,
+      "type": "post",
+      "slug": "escalation-policies-that-do-not-wake-the-wrong-person",
+      "author": 123,
+      "date": "2026-07-01 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1709,
+      "type": "post",
+      "slug": "retiring-an-alert-a-short-ritual-that-saves-a-lot-of-sleep",
+      "author": 123,
+      "date": "2026-07-08 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          115,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1710,
+      "type": "post",
+      "slug": "why-we-stopped-asking-who-broke-it",
+      "author": 125,
+      "date": "2026-01-08 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1711,
+      "type": "post",
+      "slug": "the-rotation-we-rebuilt-after-burning-out-our-best-engineer",
+      "author": 124,
+      "date": "2026-01-15 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1712,
+      "type": "post",
+      "slug": "what-carrying-the-pager-taught-us-about-the-roadmap",
+      "author": 126,
+      "date": "2026-01-22 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1713,
+      "type": "post",
+      "slug": "hiring-sres-when-nobody-s-resume-says-sre",
+      "author": 125,
+      "date": "2026-01-29 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1714,
+      "type": "post",
+      "slug": "running-reliability-across-five-time-zones",
+      "author": 124,
+      "date": "2026-02-05 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1715,
+      "type": "post",
+      "slug": "psychological-safety-is-a-metric-not-a-vibe",
+      "author": 125,
+      "date": "2026-02-12 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1716,
+      "type": "post",
+      "slug": "the-incident-review-that-changed-how-we-hire",
+      "author": 124,
+      "date": "2026-02-19 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1717,
+      "type": "post",
+      "slug": "career-growth-for-people-who-fix-things-nobody-sees",
+      "author": 125,
+      "date": "2026-02-26 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1718,
+      "type": "post",
+      "slug": "the-quarter-we-finally-fixed-on-call-dread",
+      "author": 124,
+      "date": "2026-03-05 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1719,
+      "type": "post",
+      "slug": "the-night-we-almost-lost-our-best-sre-to-a-bad-rotation",
+      "author": 125,
+      "date": "2026-03-12 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1720,
+      "type": "post",
+      "slug": "blameless-doesn-t-mean-consequence-free",
+      "author": 124,
+      "date": "2026-03-19 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1721,
+      "type": "post",
+      "slug": "what-six-months-of-on-call-retros-taught-us-about-trust",
+      "author": 125,
+      "date": "2026-03-26 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1722,
+      "type": "post",
+      "slug": "the-interview-question-that-predicts-good-incident-commanders",
+      "author": 126,
+      "date": "2026-04-02 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1723,
+      "type": "post",
+      "slug": "building-a-culture-where-a-junior-engineer-can-page-a-vp",
+      "author": 124,
+      "date": "2026-04-09 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1724,
+      "type": "post",
+      "slug": "why-we-pay-an-on-call-stipend-and-why-it-isn-t-enough",
+      "author": 125,
+      "date": "2026-04-16 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1725,
+      "type": "post",
+      "slug": "the-postmortem-nobody-wanted-to-write",
+      "author": 124,
+      "date": "2026-04-23 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1726,
+      "type": "post",
+      "slug": "the-follow-the-sun-rotation-that-actually-works",
+      "author": 125,
+      "date": "2026-05-01 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1727,
+      "type": "post",
+      "slug": "what-we-learned-promoting-our-first-sre-to-staff-engineer",
+      "author": 124,
+      "date": "2026-05-08 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1728,
+      "type": "post",
+      "slug": "the-handoff-meeting-we-almost-cut-and-why-we-kept-it",
+      "author": 125,
+      "date": "2026-05-15 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1729,
+      "type": "post",
+      "slug": "blameless-postmortems-don-t-work-if-your-manager-reads-them",
+      "author": 126,
+      "date": "2026-05-22 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1730,
+      "type": "post",
+      "slug": "how-we-measure-on-call-load-before-someone-has-to-say-something",
+      "author": 124,
+      "date": "2026-06-01 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          117
+        ]
+      }
+    },
+    {
+      "id": 1731,
+      "type": "post",
+      "slug": "the-sre-career-ladder-we-wrote-after-losing-two-engineers",
+      "author": 125,
+      "date": "2026-06-08 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1732,
+      "type": "post",
+      "slug": "what-a-bad-incident-commander-taught-us-about-training",
+      "author": 124,
+      "date": "2026-06-15 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1733,
+      "type": "post",
+      "slug": "remote-reliability-trust-before-tooling",
+      "author": 125,
+      "date": "2026-06-22 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1734,
+      "type": "post",
+      "slug": "the-on-call-rotation-math-nobody-teaches-you",
+      "author": 126,
+      "date": "2026-07-01 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1735,
+      "type": "post",
+      "slug": "why-our-best-incident-retros-happen-a-week-later-not-a-day-later",
+      "author": 124,
+      "date": "2026-07-03 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1736,
+      "type": "post",
+      "slug": "hiring-for-calm-under-pressure-not-just-kubernetes-trivia",
+      "author": 125,
+      "date": "2026-07-05 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110
+        ]
+      }
+    },
+    {
+      "id": 1737,
+      "type": "post",
+      "slug": "what-sustainable-on-call-actually-costs-and-who-pays-it",
+      "author": 124,
+      "date": "2026-07-08 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          105
+        ],
+        "post_tag": [
+          110,
+          118
+        ]
+      }
+    },
+    {
+      "id": 1783,
+      "type": "post",
+      "slug": "five-minute-mttr",
+      "author": 122,
+      "date": "2026-06-19 09:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1784,
+      "type": "post",
+      "slug": "first-kineticql",
+      "author": 122,
+      "date": "2026-06-14 21:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          98
+        ],
+        "post_tag": [
+          109,
+          113
+        ]
+      }
+    },
+    {
+      "id": 1787,
+      "type": "post",
+      "slug": "error-budgets-without-the-politics-2026",
+      "author": 125,
+      "date": "2026-01-13 10:30:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    },
+    {
+      "id": 1788,
+      "type": "post",
+      "slug": "on-call-rotations-that-do-not-burn-people-out-2026",
+      "author": 125,
+      "date": "2026-01-27 14:00:00",
+      "language": "en",
+      "terms": {
+        "category": [
+          104
+        ],
+        "post_tag": [
+          110,
+          115
+        ]
+      }
+    }
+  ],
+  "terms": [
+    {
+      "id": 97,
+      "taxonomy": "category",
+      "slug": "uncategorised",
+      "parent": 0
+    },
+    {
+      "id": 98,
+      "taxonomy": "category",
+      "slug": "field-notes-from-the-on-call",
+      "parent": 0
+    },
+    {
+      "id": 99,
+      "taxonomy": "category",
+      "slug": "legal",
+      "parent": 0
+    },
+    {
+      "id": 100,
+      "taxonomy": "category",
+      "slug": "engineering",
+      "parent": 98
+    },
+    {
+      "id": 101,
+      "taxonomy": "category",
+      "slug": "incident-retros",
+      "parent": 98
+    },
+    {
+      "id": 102,
+      "taxonomy": "category",
+      "slug": "product",
+      "parent": 98
+    },
+    {
+      "id": 103,
+      "taxonomy": "category",
+      "slug": "tutorials",
+      "parent": 98
+    },
+    {
+      "id": 104,
+      "taxonomy": "category",
+      "slug": "practice",
+      "parent": 98
+    },
+    {
+      "id": 105,
+      "taxonomy": "category",
+      "slug": "culture",
+      "parent": 98
+    },
+    {
+      "id": 109,
+      "taxonomy": "post_tag",
+      "slug": "opentelemetry",
+      "parent": 0
+    },
+    {
+      "id": 110,
+      "taxonomy": "post_tag",
+      "slug": "incident",
+      "parent": 0
+    },
+    {
+      "id": 111,
+      "taxonomy": "post_tag",
+      "slug": "tracing",
+      "parent": 0
+    },
+    {
+      "id": 112,
+      "taxonomy": "post_tag",
+      "slug": "dashboards",
+      "parent": 0
+    },
+    {
+      "id": 113,
+      "taxonomy": "post_tag",
+      "slug": "logs",
+      "parent": 0
+    },
+    {
+      "id": 114,
+      "taxonomy": "post_tag",
+      "slug": "latency",
+      "parent": 0
+    },
+    {
+      "id": 115,
+      "taxonomy": "post_tag",
+      "slug": "slo",
+      "parent": 0
+    },
+    {
+      "id": 116,
+      "taxonomy": "post_tag",
+      "slug": "metrics",
+      "parent": 0
+    },
+    {
+      "id": 117,
+      "taxonomy": "post_tag",
+      "slug": "alerting",
+      "parent": 0
+    },
+    {
+      "id": 118,
+      "taxonomy": "post_tag",
+      "slug": "cost",
+      "parent": 0
+    },
+    {
+      "id": 119,
+      "taxonomy": "post_tag",
+      "slug": "kubernetes",
+      "parent": 0
+    },
+    {
+      "id": 120,
+      "taxonomy": "post_tag",
+      "slug": "postgres",
+      "parent": 0
+    }
+  ],
+  "stickyPosts": [
+    1500,
+    1503,
+    1571,
+    1600,
+    1621,
+    1629,
+    1684,
+    1710,
+    1783
+  ]
+}

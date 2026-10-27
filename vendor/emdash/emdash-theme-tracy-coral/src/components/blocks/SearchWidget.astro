@@ -1,0 +1,24 @@
+---
+/**
+ * bravada.search — the sidebar search widget: the shared SearchForm
+ * (theme .searchform) at sidebar scale.
+ */
+import SearchForm from "../SearchForm.astro";
+
+interface SearchNode {
+	placeholder?: string;
+}
+
+const { node } = Astro.props as { node: SearchNode };
+const placeholder = node.placeholder ?? "Search";
+---
+
+<SearchForm placeholder={placeholder} class="bravada-search" />
+
+<style>
+	/* Sidebar scale: the control's em values stay at the 16px root even
+	   though the sidebar inherits a smaller font */
+	:global(.bravada-search) {
+		font-size: var(--font-size-base);
+	}
+</style>

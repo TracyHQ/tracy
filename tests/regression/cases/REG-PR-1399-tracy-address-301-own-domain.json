@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-1399-tracy-address-301-own-domain",
+  "kind": "fix",
+  "title": "The Tracy address of a published site with a connected own domain sends visitors and crawlers to that domain with a 301",
+  "pr": 1399,
+  "area": "sites/own-domain",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: On the Tracy address of a published site with a connected own domain, send a GET and a HEAD as someone without a seat (no Tracy session), e.g. GET /blog/?p=2.",
+    "S2: On the same address, send: a POST; a GET as a seat holder; GET /wp-admin/, /wp-login.php, /wp-json/ (WordPress), /administrator/ (Joomla); a GET with Authorization; a GET under /__tracy/; a Design system preview frame; a GET carrying Tracy's own read mark.",
+    "S3: Send an anonymous GET to the Tracy address of a draft site, of a site with no own domain, and of a site whose domain is still being connected."
+  ],
+  "expect": [
+    "S1: 301, Location https://<own domain> with the same path and query, cache-control no-store; the site is not asked (pre-fix: 200 with the site's page and a canonical pointing at the Tracy address).",
+    "S2: each is proxied to the site as before (no 301); every Design system preview answer carries x-robots-tag noindex, nofollow; the read mark is not passed on to the CMS.",
+    "S3: served at the Tracy address as before, no redirect."
+  ],
+  "selectors": {},
+  "evidence": "Measured 15/10/2026 on production: a published site with a connected own domain answered 200 at its Tracy address, also to a Googlebot user agent, with rel=canonical and robots.txt on the Tracy address. Parent commit of the fix: 200 for an anonymous GET in the router test; after the fix: 301 to the own domain.",
+  "fence": "apps/tracy-web/src/bar/route.js: the 301 block before proxying on the Tracy address (staysOnTracyAddress, isDsPreviewFrame, isOwnRead); apps/tracy-web/src/sites/address.js connectedOwnDomain; apps/tracy-web/src/lib/own-read.js.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1399-tracy-address-301-own-domain.mjs"]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1700-publish-wizard",
+  "kind": "feat",
+  "title": "Publish is one step wizard: ZIP export asks for the emailed code before Download, and Sync from live reports its states in words",
+  "pr": 1700,
+  "area": "publish/wizard",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs (DOM render of the wizard steps with stub doors)."
+  ],
+  "expect": [
+    "S1: ZIP goes Prepare, Send code, then Download only once six digits are typed, then Downloaded; Sync never synced offers Sync now; a failed sync gives the reason in words, the support code and Try again; a Sync from live started from the menu starts no export."
+  ],
+  "selectors": {
+    "files": "packages/core/tracy-core/src/site-tabs/publish/"
+  },
+  "fence": "Wizard states are read from the rendered DOM with stubbed doors",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs"
+    ],
+    "tests": [
+      "ZIP: Prepare, Send code, then Download only once six digits are typed, and Downloaded",
+      "Sync, never synced: says so, and the footer button is Sync now",
+      "Sync, failed: the reason in words, the code for support, and Try again",
+      "Sync from live (menu): the sync is applied and said on the Sync step; no export is started"
+    ]
+  }
+}

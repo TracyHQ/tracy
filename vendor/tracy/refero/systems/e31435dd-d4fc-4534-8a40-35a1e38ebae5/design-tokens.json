@@ -1,0 +1,460 @@
+{
+  "color": {
+    "warm-white": {
+      "$value": "#f0eeeb",
+      "$type": "color",
+      "$description": "Warm White — Page canvas, light-on-dark text, navigation text, pale action fills, and hero overlay copy"
+    },
+    "off-black": {
+      "$value": "#292827",
+      "$type": "color",
+      "$description": "Off Black — Primary text, dark sections, footer surfaces, and dark photographic overlays"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Deepest media treatment and black feature surfaces"
+    },
+    "graphite": {
+      "$value": "#393837",
+      "$type": "color",
+      "$description": "Graphite — Large dark conversion panels and pill-shaped destination controls"
+    },
+    "charcoal": {
+      "$value": "#30302f",
+      "$type": "color",
+      "$description": "Charcoal — Alternate dark filled controls"
+    },
+    "light-gray": {
+      "$value": "#d6d3ce",
+      "$type": "color",
+      "$description": "Light Gray — Utility card surfaces and quiet diagram panels"
+    },
+    "bright-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bright White — Raised media and content-card surfaces"
+    },
+    "middle-gray": {
+      "$value": "#938f89",
+      "$type": "color",
+      "$description": "Middle Gray — Secondary copy, section numerals, and hairline strokes"
+    },
+    "pale-steel": {
+      "$value": "#c2bfba",
+      "$type": "color",
+      "$description": "Pale Steel — Medium-contrast borders, control outlines, and structural separators. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "agility-diatype": {
+      "$value": "Agility Diatype",
+      "$type": "fontFamily",
+      "$description": "Primary interface and editorial family. Use 400-weight display faces at 62px/0.93 with -1.86px tracking and 36px/1.0 with -1.08px tracking; the compressed tracking and light weight make large statements feel engineered rather than promotional. Use 700 at 19px/1.2 for compact feature headings."
+    },
+    "agility-diatype-mono": {
+      "$value": "Agility Diatype Mono",
+      "$type": "fontFamily",
+      "$description": "Technical label family for uppercase eyebrows, compact section identifiers, button labels, and small metadata. Its 700-weight 12px setting with 0.72px or 0.96px tracking turns ordinary labels into equipment markings."
+    },
+    "helvetica-neue": {
+      "$value": "Helvetica Neue",
+      "$type": "fontFamily",
+      "$description": "Secondary fallback treatment for isolated badge or utility copy."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "Agility Diatype Mono",
+        "fontSize": "12px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 12px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "Agility Diatype Mono",
+        "fontSize": "12px",
+        "fontWeight": 700,
+        "lineHeight": 1,
+        "letterSpacing": "0.06em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 12px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "Agility Diatype Mono",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0.06em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 12px"
+    },
+    "xs-4": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.016em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-4 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Agility Diatype Mono",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 13px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.015em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 13px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 13px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "13px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 13px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "13px",
+        "fontWeight": 400,
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 13px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 14px"
+    },
+    "sm-7": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-7 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Helvetica Neue",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.013em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 15px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "15px",
+        "fontWeight": 400,
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 15px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "lg": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "19px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg at 19px"
+    },
+    "lg-2": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "19px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-2 at 19px"
+    },
+    "lg-3": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "19px",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step lg-3 at 19px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Agility Diatype Mono",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "28px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 28px"
+    },
+    "4xl": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "36px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 4xl at 36px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "62px",
+        "fontWeight": 400,
+        "lineHeight": 0.93,
+        "letterSpacing": "-0.03em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 62px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Agility Diatype",
+        "fontSize": "120px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.04em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 120px"
+    }
+  },
+  "spacing": {
+    "5": {
+      "$value": "5px",
+      "$type": "dimension",
+      "$description": "Spacing 5px"
+    },
+    "6": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "Spacing 6px"
+    },
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "10": {
+      "$value": "10px",
+      "$type": "dimension",
+      "$description": "Spacing 10px"
+    },
+    "11": {
+      "$value": "11px",
+      "$type": "dimension",
+      "$description": "Spacing 11px"
+    },
+    "12": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Spacing 12px"
+    },
+    "13": {
+      "$value": "13px",
+      "$type": "dimension",
+      "$description": "Spacing 13px"
+    },
+    "15": {
+      "$value": "15px",
+      "$type": "dimension",
+      "$description": "Spacing 15px"
+    },
+    "18": {
+      "$value": "18px",
+      "$type": "dimension",
+      "$description": "Spacing 18px"
+    },
+    "30": {
+      "$value": "30px",
+      "$type": "dimension",
+      "$description": "Spacing 30px"
+    },
+    "50": {
+      "$value": "50px",
+      "$type": "dimension",
+      "$description": "Spacing 50px"
+    },
+    "55": {
+      "$value": "55px",
+      "$type": "dimension",
+      "$description": "Spacing 55px"
+    },
+    "88": {
+      "$value": "88px",
+      "$type": "dimension",
+      "$description": "Spacing 88px"
+    },
+    "100": {
+      "$value": "100px",
+      "$type": "dimension",
+      "$description": "Spacing 100px"
+    },
+    "143": {
+      "$value": "143px",
+      "$type": "dimension",
+      "$description": "Spacing 143px"
+    },
+    "150": {
+      "$value": "150px",
+      "$type": "dimension",
+      "$description": "Spacing 150px"
+    }
+  },
+  "radius": {
+    "sm": {
+      "$value": "2px",
+      "$type": "dimension",
+      "$description": "Border radius sm"
+    },
+    "md": {
+      "$value": "6px",
+      "$type": "dimension",
+      "$description": "Border radius md"
+    },
+    "xl": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    },
+    "3xl": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Border radius 3xl"
+    }
+  },
+  "surface": {
+    "warm-white-canvas": {
+      "$value": "#f0eeeb",
+      "$type": "color",
+      "$description": "Surface level 0: Primary page background and light dark-section typography."
+    },
+    "light-gray-utility-surface": {
+      "$value": "#d6d3ce",
+      "$type": "color",
+      "$description": "Surface level 1: Capability cards and quiet technical panels."
+    },
+    "bright-white-raised-surface": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 2: Contained media and content cards."
+    },
+    "graphite-destination-surface": {
+      "$value": "#393837",
+      "$type": "color",
+      "$description": "Surface level 3: Large dark conversion panels."
+    },
+    "off-black-depth-surface": {
+      "$value": "#292827",
+      "$type": "color",
+      "$description": "Surface level 4: Hero overlays, dark sections, and footer."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.agilityrobotics.com/solutions/digit-5",
+      "siteName": "Digit 5",
+      "extractedAt": "2026-09-20T22:16:21.191Z",
+      "variant": "extended"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1139-desktop-onboarding-bridge",
+  "kind": "feat",
+  "title": "Desktop bridge v2: AI tool detection answers ids and statuses only, first-run state round-trips through preferences.json",
+  "pr": 1139,
+  "area": "desktop/onboarding",
+  "cms": ["any"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the unit suites of the new bridges in packages/desktop/tracy-desktop (agent-manifest, shell-path, agent-detect, agents-bridge, onboarding-bridge, notify-bridge, bridge-guard, preferences).",
+    "S2: launch the app from source on the stand with TRACY_DESKTOP_ONBOARDING=again; from the page call tracyDesktop.app.agents.detect(['claude','grok','no-such-id']) until scanComplete, call detect('claude') with a bare string, then onboarding.get, onboarding.close({outcome:'dismissed', picked:'claude'}) and onboarding.get again; read the profile's preferences.json. Needs the desktop app runnable from source on this machine (the script says CANNOT RUN otherwise)."
+  ],
+  "expect": [
+    "S1: every suite exits 0 with 0 failures.",
+    "S2: protocolVersion is 2; claude is found once scanComplete is true; no-such-id is unsupported; every result has exactly id and status; the bare string is a TypeError; closedAt is null before close and a number after; preferences.json carries onboarding.outcome 'dismissed' and still a boolean autoCheck."
+  ],
+  "selectors": {
+    "bridge": "window.tracyDesktop.app.agents.detect / onboarding.get / onboarding.close",
+    "file": "<profile>/preferences.json"
+  },
+  "fence": "The bridge returns statuses, never paths or PATH; ids are validated in main; the first-run state is device-local and survives the updater's own writes.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1139-desktop-onboarding-bridge.mjs"],
+    "needs": ["stand"],
+    "timeout_s": 300
+  }
+}

@@ -1,0 +1,822 @@
+//
+// Tracy Business — system pages: Contact (com_contact), Search (com_finder), 404 (error.php),
+// Style guide, Sitemap. Numbers measured on Contact.html / Search.html / 404.html /
+// Style guide.html at 1440; the source has no media queries and relies on auto-fit grids, so the
+// phone step is written here explicitly. Colours are tokens; the only literals are the ink-band
+// greys the source hard-codes (#F5F3EE text, #2A2E32 rule, #8A8780 meta) and the four
+// system-message tones, which come from the token layer's --tb-info/success/warn/danger pairs.
+//
+
+// ---------------------------------------------------------------- shared: bordered box + eyebrow
+.tb-sysbox {
+  border: 1px solid var(--border);
+  padding: 24px;
+
+  &__eyebrow {
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    line-height: 1.2;
+    margin: 0 0 16px;
+    text-transform: uppercase;
+  }
+}
+
+// the ink button the search bars use (chrome only has forest/signal/outline)
+.tb-btn--ink {
+  background: var(--tb-ink-fill);
+  border-color: var(--tb-ink-fill);
+  color: var(--tb-on-ink-fill);
+
+  &:hover { background: var(--tb-ink-fill-hover); border-color: var(--tb-ink-fill-hover); color: var(--tb-on-ink-fill); }
+}
+
+// a button that follows its field (the search bar, the investor sign-up) takes the field's corner,
+// not the pill of a free-standing call to action: the design system slot skips it the same way (at
+// .tb-btn's weight, so a glued bar's own corners below still win)
+:where(input, select, textarea) + .tb-btn { border-radius: var(--ds-input-radius, 0); }
+
+.tb-btn--lg { font-size: 15.5px; line-height: 17px; padding: 15px 32px; }
+.tb-btn--outline.tb-btn--lg { padding: 15px 24px; }
+
+.tb-btn--disabled {
+  background: var(--tb-disabled-bg);
+  border-color: var(--tb-disabled-bg);
+  color: var(--tb-disabled-fg);
+  cursor: not-allowed;
+}
+
+.tb-req { color: var(--tb-signal); }
+
+// the info notice: paper-green box with a forest rule on the left
+.tb-notice {
+  align-items: flex-start;
+  background: var(--tb-info-bg);
+  border-left: 3px solid var(--tb-info);
+  color: var(--tb-info-fg);
+  display: flex;
+  gap: 12px;
+  margin: 0 0 24px;
+  padding: 14px 16px;
+
+  &__i { color: var(--accent); flex-shrink: 0; font-size: 14px; font-weight: 700; line-height: 1.55; }
+  p { font-size: 14.5px; line-height: 1.55; margin: 0; }
+}
+
+// ---------------------------------------------------------------- form controls (the design's field)
+.tb-form {
+  .tb-field__label,
+  legend.tb-field__label {
+    color: var(--fg);
+    display: block;
+    float: none;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    line-height: 1.1;
+    margin: 0 0 8px;
+    width: auto;
+  }
+
+  .form-control,
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--ds-input-radius, 0);
+    box-shadow: none;
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.2;
+    padding: 12px 13px;
+    width: 100%;
+
+    &::placeholder { color: var(--tb-meta); opacity: 1; }
+    &:focus { background: var(--surface-warm); border-color: var(--accent); outline: 0; }
+    &.invalid { background: var(--tb-danger-bg); border-color: var(--danger); }
+  }
+
+  textarea { min-height: 130px; resize: vertical; }
+
+  &__grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; }
+  }
+
+  .tb-field-group { margin: 0 0 20px; }
+
+  // fields a plugin injects (privacy consent, captcha) arrive with core markup: same label, inline check
+  .tb-field-group > label.required,
+  .tb-field-group > label:not(.tb-field__label) {
+    color: var(--fg); display: block; font-size: 13px; font-weight: 600; letter-spacing: .04em; line-height: 1.1; margin: 0 0 8px;
+    a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border-soft); &:hover { color: var(--accent); } }
+    .star { color: var(--tb-signal); }
+  }
+  .form-check { align-items: flex-start; display: flex; gap: 12px; margin: 0; min-height: 0; padding: 0; }
+  .form-check-input { background: var(--surface-warm); border: 1px solid var(--tb-meta-2); border-radius: var(--ds-input-radius, 0); flex-shrink: 0; height: 18px; margin: 0; width: 18px; &:checked { background-color: var(--accent-fill); border-color: var(--accent-fill); } }
+  .form-check-label { color: var(--fg-2); font-size: 14px; line-height: 1.4; }
+  .tb-field-group .form-control-feedback,
+  .tb-field-group .invalid-feedback { color: var(--danger); font-size: 13px; margin-top: 6px; }
+
+  &__actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .tb-check { align-items: center; display: flex; gap: 12px; margin: 0 0 20px; }
+}
+
+// subject chips = a real radio group; the input is visually hidden, the label is the chip
+.tb-chipradio {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+
+  &__list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  &__input {
+    height: 1px; margin: -1px; opacity: 0; overflow: hidden; position: absolute; width: 1px;
+  }
+
+  &__chip {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+    padding: 10px 16px;
+  }
+
+  &__input:checked + &__chip {
+    background: var(--tb-band-forest-bg);
+    border-color: var(--tb-band-forest-bg);
+    color: var(--ds-c-accent-on, #fff);
+    font-weight: 600;
+  }
+
+  &__input:focus-visible + &__chip { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
+
+// ---------------------------------------------------------------- Contact page
+.tb-contact-page .tb-pageintro { padding-bottom: 40px; padding-top: 56px; }
+
+.tb-contact {
+  align-items: start;
+  display: grid;
+  gap: 56px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding-bottom: 88px;
+
+  // the source keeps two 320px columns down to 768 and gets cramped; one column below 992 reads better
+  @include media-breakpoint-down(lg) { gap: 32px; grid-template-columns: 1fr; padding-bottom: 56px; }
+
+  &__card {
+    background: var(--surface-warm);
+    border: 1px solid var(--border);
+    padding: 36px;
+
+    @include media-breakpoint-down(sm) { padding: 24px 20px; }
+  }
+
+  &__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+  }
+
+  .contact-error { color: var(--danger); font-size: 14px; margin: 0 0 16px; }
+}
+
+// head office — ink box
+.tb-hq {
+  background: var(--tb-ink-band);
+  color: var(--ds-c-on-ink, #F5F3EE);
+  padding: 30px;
+
+  &__eyebrow {
+    color: var(--tb-ds-on-ink-meta, var(--ds-c-on-ink, #8A8780));
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    margin: 0 0 14px;
+    text-transform: uppercase;
+  }
+
+  &__addr { font-size: 16.5px; line-height: 1.65; margin: 0 0 18px; }
+
+  &__rows { display: flex; flex-direction: column; gap: 10px; margin: 0; }
+
+  &__row {
+    border-top: 1px solid var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2A2E32));
+    display: flex;
+    font-size: 15.5px;
+    gap: 16px;
+    justify-content: space-between;
+    padding-top: 10px;
+
+    dt { color: var(--tb-ds-on-ink-meta, var(--ds-c-on-ink, #8A8780)); font-weight: 400; margin: 0; }
+    dd { margin: 0; text-align: right; }
+    a { color: var(--ds-c-on-ink, #F5F3EE); text-decoration: none; &:hover { color: var(--ds-c-on-ink, #fff); text-decoration: underline; } }
+  }
+}
+
+// map frame — 260px tall, image covers
+.tb-map {
+  border: 1px solid var(--border);
+  height: 260px;
+  overflow: hidden;
+
+  &__img, &__frame { border: 0; display: block; height: 100%; object-fit: cover; width: 100%; }
+}
+
+// branches
+.tb-branches {
+  &__list { display: flex; flex-direction: column; gap: 14px; list-style: none; margin: 0; padding: 0; }
+  &__row { border-bottom: 1px solid var(--border-soft); margin: 0; padding-bottom: 14px; }
+  &__city { color: var(--fg); display: block; font-size: 15.5px; font-weight: 600; line-height: 1.15; }
+  &__addr { color: var(--muted); display: block; font-size: 14px; line-height: 1.5; margin-top: 4px; }
+}
+
+// social profiles — 2×3 cards on a hairline grid
+.tb-social-cards {
+  &__intro { color: var(--muted); font-size: 14px; line-height: 1.6; margin: -4px 0 16px; }
+
+  &__grid {
+    background: var(--border-soft);
+    border: 1px solid var(--border-soft);
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; }
+  }
+}
+
+.tb-social-card {
+  background: var(--bg);
+  color: var(--fg);
+  display: block;
+  min-width: 0;
+  padding: 15px 16px;
+  text-decoration: none;
+
+  &__head { align-items: baseline; display: flex; gap: 10px; justify-content: space-between; }
+  &__name { color: var(--fg); font-size: 15.5px; font-weight: 600; line-height: 1.15; }
+  &__arrow { color: var(--tb-signal); font-size: 12px; font-weight: 600; }
+  &__handle { color: var(--accent); display: block; font-size: 13.5px; line-height: 1.15; margin-top: 3px; overflow-wrap: anywhere; }
+  &__desc { color: var(--meta); display: block; font-size: 13px; line-height: 1.5; margin-top: 6px; }
+  &__url { color: var(--tb-meta); display: block; font-size: 12px; line-height: 1.2; margin-top: 8px; overflow-wrap: anywhere; }
+
+  a#{&}:hover &__name { color: var(--accent); }
+}
+
+// ---------------------------------------------------------------- Search page
+.tb-search {
+  padding: 56px 0 88px;
+
+  @include media-breakpoint-down(md) { padding: 32px 0 56px; }
+
+  &__title {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: clamp(30px, 3.7vw, 44px);
+    font-weight: 400;
+    letter-spacing: -.025em;
+    line-height: 1.1;
+    margin: 0 0 24px;
+  }
+
+  &__line { color: var(--muted); font-size: 15px; line-height: 1.2; margin: 14px 0 36px; }
+  &__sep { color: var(--tb-meta); }
+
+  &__body {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 56px;
+
+    @include media-breakpoint-down(md) { gap: 32px; }
+  }
+
+  &__main { flex: 1 1 480px; min-width: 0; }
+  &__aside { display: flex; flex: 1 1 260px; flex-direction: column; gap: 24px; min-width: 0; }
+
+  &__explained { color: var(--muted); font-size: 15px; margin: 0 0 16px; a { color: var(--accent); } }
+
+  &__empty { border-top: 1px solid var(--border); padding-top: 24px; }
+  &__empty-title { color: var(--fg); font-family: var(--font-display); font-size: 28px; font-weight: 400; margin: 0 0 8px; }
+  &__empty p { color: var(--muted); font-size: 15.5px; margin: 0; }
+}
+
+// the wide search bar — field with an ink border, ink button glued to it
+.tb-searchbar {
+  display: flex;
+  max-width: 640px;
+
+  &__input {
+    background: var(--surface-warm);
+    border: 1px solid var(--tb-ink);
+    border-radius: var(--ds-input-radius, 0) 0 0 var(--ds-input-radius, 0);
+    border-right: 0;
+    box-shadow: none;
+    color: var(--fg);
+    flex: 1 1 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.2;
+    min-width: 0;
+    padding: 14px 16px;
+
+    &::placeholder { color: var(--tb-meta); opacity: 1; }
+    &:focus { border-color: var(--accent); outline: 0; }
+  }
+
+  &__btn { border-radius: 0 var(--ds-input-radius, 0) var(--ds-input-radius, 0) 0; font-size: 15.5px; line-height: 17px; padding: 0 26px; }
+
+  // autosuggest wraps the field in <div class="awesomplete"> at runtime — keep that wrapper the flex item
+  .awesomplete { display: flex; flex: 1 1 0; min-width: 0; > input { width: 100%; } }
+  .awesomplete > ul { border-radius: var(--ds-card-radius, 0); box-shadow: var(--elev-raised); font-size: 15px; }
+}
+
+// result rows — nested under .tb-search so the base/Tracy .result-item rules (padding, bottom border) lose
+.tb-search #search-results, .tb-search .com-finder__results { border: 0; margin: 0; padding: 0; }
+.tb-search .tb-results { border-bottom: 1px solid var(--border); margin: 0; }
+
+.tb-search #search-results .tb-result {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 0;
+  padding: 22px 0;
+
+  &__kind { letter-spacing: .12em; margin: 0 0 8px; }
+
+  &__title {
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -.012em;
+    line-height: 1.15;
+    margin: 0 0 8px;
+
+    a { color: inherit; text-decoration: none; &:hover { color: var(--accent); } }
+  }
+
+  &__text { color: var(--muted); font-size: 15px; line-height: 1.6; margin: 0 0 6px; }
+  &__url { color: var(--tb-ink-band-meta); font-size: 13px; line-height: 1.2; margin: 0; overflow-wrap: anywhere; }
+}
+
+// Joomla pagination, drawn as the design's 38px squares
+.tb-search__pagination {
+  padding-top: 24px;
+
+  .pagination { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+  .page-item { margin: 0; }
+
+  .page-link,
+  .page-item > span {
+    align-items: center;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--ds-input-radius, 0);
+    color: var(--fg);
+    display: flex;
+    font-size: 14px;
+    height: 38px;
+    justify-content: center;
+    line-height: 1;
+    min-width: 38px;
+    padding: 0 12px;
+    text-decoration: none;
+
+    &:hover { border-color: var(--accent); color: var(--accent); }
+  }
+
+  .page-item.active .page-link,
+  .page-item.active > span { background: var(--tb-ink-fill); border-color: var(--tb-ink-fill); color: var(--tb-on-ink-fill); font-weight: 600; }
+  .page-item.disabled { display: none; }
+  .page-item.disabled.active { display: block; }
+  .pagination-end, .pagination-start { display: none; }
+}
+
+// filter by section — links styled as the design's ticked squares; the active one is a filled forest square
+.tb-filterbox {
+  padding: 20px;
+
+  &__list { display: flex; flex-direction: column; gap: 11px; list-style: none; margin: 0; padding: 0; }
+  li { margin: 0; }
+
+  &__item {
+    align-items: center;
+    color: var(--fg);
+    display: flex;
+    font-size: 14.5px;
+    gap: 10px;
+    line-height: 1.15;
+    text-decoration: none;
+
+    &:hover { color: var(--accent); }
+    &.is-active { font-weight: 500; }
+  }
+
+  &__box { border: 1px solid var(--tb-meta-2); display: inline-block; flex-shrink: 0; height: 16px; width: 16px; }
+  &__item.is-active &__box { background: var(--tb-band-forest-bg); border-color: var(--tb-band-forest-bg); }
+}
+
+.tb-chipbox {
+  padding: 20px;
+  &__chips { gap: 7px; }
+  .tb-chip { font-size: 13px; padding: 6px 12px; }
+}
+
+// ---------------------------------------------------------------- 404
+.tb-errorpage { padding: 0; }
+
+.tb-404 {
+  align-items: center;
+  display: grid;
+  gap: 64px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 110px 0 120px;
+
+  @include media-breakpoint-down(lg) { gap: 40px; grid-template-columns: 1fr; padding: 56px 0 72px; }
+
+  &--bare { grid-template-columns: 1fr; }
+
+  &__code {
+    color: var(--tb-signal);
+    font-family: var(--font-display);
+    font-size: clamp(80px, 12vw, 130px);
+    letter-spacing: -.04em;
+    line-height: .9;
+    margin: 0 0 24px;
+  }
+
+  &__title {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.4vw, 40px);
+    font-weight: 400;
+    letter-spacing: -.02em;
+    line-height: 1.15;
+    margin: 0 0 14px;
+  }
+
+  &__text { color: var(--muted); font-size: 17px; line-height: 1.65; margin: 0 0 30px; max-width: 36em; }
+
+  &__search {
+    display: flex;
+    margin: 0 0 30px;
+    max-width: 420px;
+
+    .tb-btn { border-radius: 0 var(--ds-input-radius, 0) var(--ds-input-radius, 0) 0; font-size: 15px; line-height: 17px; padding: 0 24px; }
+  }
+
+  &__input {
+    background: var(--surface-warm);
+    border: 1px solid var(--tb-ink);
+    border-radius: var(--ds-input-radius, 0) 0 0 var(--ds-input-radius, 0);
+    border-right: 0;
+    color: var(--fg);
+    flex: 1 1 0;
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    min-width: 0;
+    padding: 14px 15px;
+
+    &::placeholder { color: var(--tb-meta); opacity: 1; }
+    &:focus { border-color: var(--accent); outline: 0; }
+  }
+
+  &__back { margin: 0; .tb-textlink { font-size: 15px; } }
+
+  &__aside { background: var(--surface-warm); border: 1px solid var(--border); min-width: 0; }
+
+  &__aside-title {
+    border-bottom: 1px solid var(--border);
+    color: var(--fg);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    line-height: 1.2;
+    margin: 0;
+    padding: 20px 24px;
+    text-transform: uppercase;
+  }
+
+  &__list { list-style: none; margin: 0; padding: 0; li { margin: 0; } }
+
+  &__row {
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--fg);
+    display: flex;
+    font-size: 16px;
+    gap: 16px;
+    justify-content: space-between;
+    line-height: 1.2;
+    padding: 18px 24px;
+    text-decoration: none;
+
+    li:last-child & { border-bottom: 0; }
+  }
+
+  a#{&}__row:hover { color: var(--accent); }
+  &__arrow { color: var(--tb-meta); flex-shrink: 0; }
+  a:hover &__arrow { color: var(--accent); }
+}
+
+// ---------------------------------------------------------------- Style guide
+.tb-guide {
+  padding-bottom: 40px;
+
+  &__sec { margin: 0 0 48px; }
+
+  &__h {
+    border-bottom: 1px solid var(--border);
+    color: var(--meta);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    line-height: 1.2;
+    margin: 0 0 24px;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  &__meta { color: var(--meta); font-size: 12.5px; line-height: 1.2; }
+
+  // §1 — position map; scrolls sideways on a phone instead of widening the page
+  &__mapwrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  &__map {
+    background: var(--surface-warm);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 620px;
+    padding: 20px;
+  }
+
+  &__row { display: grid; gap: 12px; }
+  &__row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  &__row--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  &__row--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  &__row--121 { grid-template-columns: 1fr 2fr 1fr; }
+  &__row--main { grid-template-columns: 200px 1fr 260px; }
+
+  // §2 — type scale
+  &__type {
+    align-items: baseline;
+    display: grid;
+    gap: 16px 28px;
+    grid-template-columns: minmax(110px, 150px) minmax(0, 1fr);
+    margin: 0;
+
+    dt { color: var(--meta); font-size: 12.5px; font-weight: 400; line-height: 1.2; }
+    dd { margin: 0; min-width: 0; }
+
+    @include media-breakpoint-down(sm) { grid-template-columns: 1fr; gap: 6px 0; dt { margin-top: 12px; } }
+  }
+
+  &__type-sample {
+    color: var(--fg);
+    overflow-wrap: anywhere;
+
+    &--h1 { font-family: var(--font-display); font-size: clamp(34px, 4.4vw, 52px); letter-spacing: -.028em; line-height: 1.08; }
+    &--h2 { font-family: var(--font-display); font-size: clamp(28px, 3.4vw, 40px); letter-spacing: -.02em; line-height: 1.1; }
+    &--h3 { font-size: 20px; font-weight: 600; letter-spacing: -.012em; line-height: 1.2; }
+    &--body { color: var(--fg-2); font-size: 17.5px; line-height: 1.72; max-width: 44em; }
+    &--eyebrow { color: var(--tb-signal); font-size: 12px; font-weight: 600; letter-spacing: .18em; line-height: 1.2; text-transform: uppercase; }
+    &--meta { color: var(--meta); font-size: 13px; line-height: 1.2; }
+  }
+
+  // §3 — colour
+  &__colours {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li { margin: 0; }
+    strong { color: var(--fg); display: block; font-size: 13px; font-weight: 600; line-height: 1.2; margin-top: 8px; }
+    .tb-guide__meta { display: block; margin-top: 4px; }
+  }
+
+  &__swatch { border: 1px solid var(--border); display: block; height: 88px; }
+
+  // §4 — buttons and forms (static samples: spans, not controls)
+  &__forms {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  &__buttons { align-items: flex-start; display: flex; flex-direction: column; gap: 16px; }
+  &__buttons .tb-btn { font-size: 15px; line-height: 16px; padding: 14px 26px; }
+  &__buttons .tb-textlink { font-size: 15px; }
+
+  &__inputs { display: flex; flex-direction: column; gap: 16px; }
+
+  // §5 — messages are joomla-alert, styled below for the whole site
+  &__alerts { display: flex; flex-direction: column; gap: 12px; }
+
+  // §7 — frames
+  &__frames {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  }
+}
+
+// position cell
+.tb-pos {
+  background: var(--surface);
+  border: 1px dashed var(--tb-line-3);
+  color: var(--fg);
+  font-size: 12px;
+  letter-spacing: .1em;
+  line-height: 1.2;
+  min-width: 0;
+  padding: 14px;
+  text-align: center;
+
+  &--center { align-items: center; display: flex; justify-content: center; min-height: 180px; }
+  &--tall { padding: 26px 16px; }
+  &--ink { background: var(--tb-ink-band); border: 0; color: var(--ds-c-on-ink, #fff); letter-spacing: .14em; padding: 12px 16px; }
+  &--ink2 { background: var(--ds-c-ink, #222629); border: 0; color: var(--ds-c-on-ink, #C9C6BE); }
+  &--meta { color: var(--ds-c-meta, #8A8780); }
+  &--signal { background: var(--tb-band-signal-bg); border: 0; color: var(--ds-c-accent-on, #fff); letter-spacing: .14em; }
+  &--forest { background: var(--tb-band-forest-bg); border: 0; color: var(--ds-c-accent-on, #fff); letter-spacing: .14em; }
+  &--ink, &--signal, &--forest, .tb-guide__row--121 > & { text-transform: uppercase; }
+}
+
+// static field samples (spans drawn as the three input states + a textarea)
+.tb-field--sample {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--tb-meta);
+  display: block;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.2;
+  padding: 12px 13px;
+
+  &.is-focus { background: var(--surface-warm); border-color: var(--accent); }
+  &.is-error { background: var(--tb-danger-bg); border-color: var(--danger); color: var(--danger); }
+}
+.tb-field--area { min-height: 84px; }
+.tb-field__error { color: var(--danger); display: block; font-size: 13px; line-height: 1.2; margin-top: 6px; }
+
+// Joomla system messages, site-wide: a left rule in the tone colour on the tone's paper.
+// The custom element's own stylesheet sets radius, icon and a 1rem margin; this is the design's flat box.
+joomla-alert {
+  --jsalert-box-shadow: none;
+  border: 0;
+  border-left: 3px solid var(--tb-info);
+  border-radius: var(--ds-card-radius, 0);
+  box-shadow: none;
+  color: var(--tb-info-fg);
+  display: block;
+  font-size: 15px;
+  line-height: 1.4;
+  margin: 0;
+  padding: 14px 18px;
+
+  &, &[type="info"] { background: var(--tb-info-bg); border-left-color: var(--tb-info); color: var(--tb-info-fg); }
+  &[type="success"] { background: var(--tb-success-bg); border-left-color: var(--success); color: var(--tb-success-fg); }
+  &[type="warning"] { background: var(--tb-warn-bg); border-left-color: var(--warn); color: var(--tb-warn-fg); }
+  &[type="danger"], &[type="error"] { background: var(--tb-danger-bg); border-left-color: var(--danger); color: var(--tb-danger-fg); }
+
+  .alert-heading { font-size: 12px; font-weight: 700; letter-spacing: .12em; margin: 0 0 4px; text-transform: uppercase; }
+  .alert-wrapper, .alert-message { color: inherit; }
+  .joomla-alert--close, .joomla-alert-button--close { color: inherit; opacity: .6; &:hover { opacity: 1; } }
+}
+#system-message-container { display: flex; flex-direction: column; gap: 12px; }
+#system-message-container:not(:empty) { margin: 0 0 24px; }
+
+// data table — ink header, hairline rows; wrapper scrolls on a phone
+.tb-table-wrap { border: 1px solid var(--border); background: var(--surface-warm); overflow-x: auto; }
+
+.tb-table {
+  border-collapse: collapse;
+  margin: 0;
+  min-width: 560px;
+  width: 100%;
+
+  thead th {
+    background: var(--tb-ink-band);
+    border: 0;
+    color: var(--ds-c-on-ink, #fff);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    padding: 13px 18px;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  tbody th, tbody td {
+    border: 0;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 15px;
+    line-height: 1.2;
+    padding: 14px 18px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  tbody th { color: var(--fg); font-weight: 400; width: 40%; }
+  tbody td { color: var(--muted); }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+}
+
+// image frames: cover · contain on white · round portrait
+.tb-frame {
+  margin: 0;
+
+  &__box {
+    align-items: center;
+    border: 1px solid var(--border);
+    display: flex;
+    height: 200px;
+    justify-content: center;
+    overflow: hidden;
+
+    img { display: block; height: 100%; object-fit: cover; width: 100%; }
+  }
+
+  &--contain &__box { background: var(--ds-c-surface, #fff); }
+  &--contain &__box img { object-fit: contain; padding: 16px; }
+  &--avatar &__box img { border-radius: 50%; height: 150px; width: 150px; }
+
+  // T4 paints every figcaption as an overlay bar; this one is a plain caption line
+  figcaption {
+    background: none; color: var(--meta); display: block; font-size: 12.5px; letter-spacing: 0; line-height: 1.2;
+    margin-top: 8px; padding: 0; position: static; text-align: left; text-transform: none;
+  }
+}
+
+// ---------------------------------------------------------------- Sitemap
+.tb-sitemap {
+  display: grid;
+  gap: 40px 48px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  padding: 0 0 72px;
+
+  &__col { min-width: 0; }
+
+  &__title {
+    border-bottom: 1px solid var(--border);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    line-height: 1.2;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .navbar { background: none; border: 0; display: block; min-height: 0; padding: 0; }
+  .navbar-nav { display: block; }
+  .nav-item { display: block; margin: 0; }
+  .nav-link, .nav-header {
+    color: var(--fg-2);
+    display: block;
+    font-size: 15px;
+    line-height: 1.3;
+    padding: 6px 0;
+    text-decoration: none;
+  }
+  a.nav-link:hover { color: var(--accent); }
+  .nav-header { color: var(--fg); font-weight: 600; }
+  .dropdown-menu, ul ul {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0 0 4px 16px;
+    position: static;
+  }
+  .dropdown-item { background: none; color: var(--fg-2); display: block; font-size: 14px; padding: 4px 0; white-space: normal; &:hover { color: var(--accent); } }
+  .dropdown-toggle::after, .caret { display: none; }
+}

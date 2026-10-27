@@ -1,0 +1,66 @@
+name: New data source
+description: Propose a provider that can answer a research question (find places, reviews, social pages, web search, ...).
+labels: [plugin:source, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A data source is code that runs with network access and with users' API keys, so we agree on it
+        before anyone writes it. See docs/plugins.md, section "Data sources".
+  - type: input
+    id: provider
+    attributes:
+      label: Provider
+      description: Name and website of the service.
+    validations:
+      required: true
+  - type: dropdown
+    id: group
+    attributes:
+      label: Which question does it answer?
+      description: The capability groups listed in domain/capabilities.mjs.
+      options:
+        - Find places in an area
+        - Web search
+        - Website content
+        - Facebook page
+        - Instagram profile
+        - TikTok profile
+        - YouTube channel
+        - Tripadvisor reviews
+        - Google reviews
+        - Menu links
+        - Menu photos
+        - Menu dishes and prices
+        - A new group (explain below)
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why this provider
+      description: Coverage (countries, business types), price, quality compared with existing providers.
+    validations:
+      required: true
+  - type: textarea
+    id: terms
+    attributes:
+      label: Terms of use
+      description: Link the provider's terms. Does it allow storing results? For how long? Any attribution rules?
+    validations:
+      required: true
+  - type: dropdown
+    id: key
+    attributes:
+      label: Does it need an API key?
+      options:
+        - "Yes"
+        - "No (public endpoint)"
+    validations:
+      required: true
+  - type: checkboxes
+    id: willing
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to write the source and its tests.

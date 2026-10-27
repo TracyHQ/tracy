@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1181-create-retry-provision",
+  "kind": "fix",
+  "title": "Site creation: a failed build retries instead of IDEMPOTENCY_CONFLICT, Joomla installs only on the MariaDB that stays up, and deleting a site mid-build ends its provision job",
+  "pr": 1181,
+  "area": "sites/create",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL set, run: node tests/regression/scripts/REG-PR-1181-create-retry-provision.mjs",
+    "S2: Read one ok/not ok line per check."
+  ],
+  "expect": [
+    "P-1: a nameless claim whose provision failed, pressed again with the same build id and draft label, answers 202 attempt 2 with a second host provision; the same build id with another design still answers 409 IDEMPOTENCY_CONFLICT.",
+    "P-2: provision.sh waits until the db service answers skip_networking=0 (the server that stays up) before the dump import and the Joomla CLI installer; a server that stays the temporary one never passes.",
+    "P-3: DELETE /api/sites/:key on a site whose provision job is still open leaves that job row state=failed, step=site-deleted, detail.code=SITE_DELETED, and the quiet-jobs sweep does not reopen it; a job that had already ended keeps its state; another site's open job is untouched."
+  ],
+  "selectors": {
+    "door": "POST /api/sites, POST /api/sites/claim, DELETE /api/sites/:key",
+    "table": "site_creation, job"
+  },
+  "evidence": "tasks/todo-sau-mot-ngon-ngu.md:20, tasks/todo-demo-trim.md:161, issue #888 items 2 and 3",
+  "fence": "nameless check in POST /api/sites (sites/route.js); tracy_db_wait_ready in scripts/lib/db-ready.sh; deleteTornDownSite in sites/publish-store.js",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1181-create-retry-provision.mjs"],
+    "needs": ["postgres"]
+  }
+}

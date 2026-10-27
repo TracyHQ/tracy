@@ -1,0 +1,14 @@
+@theme {
+  /* Colors */
+  --color-paper-white: #ffffff;
+  --color-ink-black: #000000;
+  --color-mist-gray: #d4d6dd;
+  --color-violet-ink: #3502ff;
+  --color-lavender-wash: #c2b3ff;
+  --color-lavender-whisper: #d7ccff;
+  --color-deep-iris: #5d35ff;
+
+  /* Typography */
+  --font-scope: 'Scope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-signifier: 'Signifier', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,44 @@
+{
+  "color": {
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, type knocked out of black panels"
+    },
+    "ink-black": {
+      "$value": "#212529",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, bold panels, the dominant non-white surface — carries a barely-perceptible cool tint that softens it from pure #000"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Button strokes, logo fill, and the heaviest typographic moments where absolute zero contrast is required"
+    },
+    "hairline-gray": {
+      "$value": "#e4e4e4",
+      "$type": "color",
+      "$description": "Hairline Gray — Dividers, card borders, image outlines, table rules — the only mid-tone in the system"
+    }
+  },
+  "font": {
+    "whyte": {
+      "$value": "Whyte",
+      "$type": "fontFamily",
+      "$description": "Single-weight type system. 95px display headlines for the wordmark and section titles carry the brand's editorial weight; 18–20px reads as body and meta; 16px as captions and link lists. The single weight (400) at all sizes is a signature choice — no bold, no light, the hierarchy is built through SIZE, not stroke. Substitute with Inter, Söhne, or Neue Haas Grotesk."
+    },
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "System fallback for environments where Whyte is unavailable; inherits macOS/iOS native rhythm. Use only as the last-resort stack, not the primary voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://intracbr.com.au",
+      "siteName": "Intra",
+      "extractedAt": "2026-06-03T19:21:52.602Z",
+      "variant": "compact"
+    }
+  }
+}

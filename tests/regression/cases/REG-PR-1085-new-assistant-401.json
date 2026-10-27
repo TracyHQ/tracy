@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1085-new-assistant-401",
+  "kind": "fix",
+  "title": "A fresh seat (signed in, no account record or site yet) loads /new/ and Help's restore answers an empty conversation, not 401",
+  "pr": 1085,
+  "area": "assistant/help",
+  "cms": ["any"],
+  "needs": ["stand"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Mint a tracy_sess cookie for a never-seen address reg1085-<ms>@example.test with the stand's SESSION_SECRET.",
+    "S2: GET $O/api/assistant/conversation?session=reg1085 with that cookie.",
+    "S3: In a new browser context carrying the cookie, open $O/new/ and record the status of every response whose path is /api/assistant/conversation, waiting for the first one (<= 120 s) and 5 s after it."
+  ],
+  "expect": [
+    "S2 answers HTTP 200 with conversationId null and turns [].",
+    "The page calls /api/assistant/conversation at least once and every call answers below 400 (before the fix: 401 NOT_SIGNED_IN on every load)."
+  ],
+  "selectors": {
+    "door": "GET /api/assistant/conversation?session=<agent session id> in apps/tracy-web/src/assistant/route.js",
+    "caller": "restoreTurns in packages/ui/tracy-assistant/src/client/help.ts"
+  },
+  "evidence": "09/10/2026 on the private stand tracy-srd and on dsh-passwords 2.7.7-tracy.5: every /new/ load by a fresh seat logged a 401 on /api/assistant/conversation. Cause: signedIn() in assistant/route.js answered NOT_SIGNED_IN when the signed session's email had no account row.",
+  "fence": "The real tracy-web door and the real /new/ page of the stand. A real email-code sign-in creates the account row first, so this guards a signed session the account book does not know yet (minted sessions, any future door that signs in before writing the row).",
+  "run": {
+    "cmd": [
+      "node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "tests/regression/playwright.config.mjs",
+      "tests/regression/specs/REG-PR-1085-new-assistant-401.spec.mjs"
+    ],
+    "needs": ["stand", "chrome"]
+  }
+}

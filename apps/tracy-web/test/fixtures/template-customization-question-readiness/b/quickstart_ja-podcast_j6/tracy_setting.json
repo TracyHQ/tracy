@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "joomla",
+  "label": "JA Podcast",
+  "version": "1.0.1",
+  "cms": "6.1.1",
+  "template": "ja_podcast",
+  "install": {
+    "installer": {
+      "file": "ja-podcast-j6-quickstart-1.0.1.zip",
+      "sha256": "b76b80ab5fe74fa0df68127275a8acb21aed87a46ab8981dce00b5a975233449"
+    }
+  }
+}

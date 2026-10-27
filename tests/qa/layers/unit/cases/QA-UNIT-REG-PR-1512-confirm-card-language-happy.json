@@ -1,0 +1,65 @@
+{
+  "id": "QA-UNIT-REG-PR-1512-confirm-card-language-happy",
+  "itemIds": ["regression:REG-PR-1512-confirm-card-language"],
+  "requirement": "A confirm card names the record Tracy read, says yes/no and the call's own verb in the conversation's language, and is never shown in the door's English to another language; writes carry the record's title",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1512-confirm-card-language.json",
+    "ref": "PR #1512 (fix); fix evidence: Local stand 20/10/2026: EmDash dskeepem typed request got 'This takes one of your posts off your site's pages. Go ahead?'; Joomla dsl4mo by Voice got 'This deletes something from your site.' read aloud, the spoken 'Dong y' matched no option (screens in ~/tracy-bench-work/voice-mode/runs-1480).",
+    "invariant": "Exit 0, 0 failures. untranslatedConfirmCard(confirmQuestion(key, sentence), 'Vietnamese') names the question id as still in English and asks for Vietnamese; the same card with a Vietnamese question and options passes; 'English' and '' pass; a question whose id does not start with confirm- passes. site-call: a delete asks 'This deletes \"<title>\" from your site.' with the title read by content.get; an unreadable record answers TARGET_UNREAD and nothing is deleted; a hide card saying delete, or swapped buttons, is refused in Vietnamese. emdash: content_unpublish asks with the entry's title read by content_get; an unreadable entry answers TARGET_UNREAD. handler: a write's Apply call carries x-tracy-write-title only with the title read for the same kind and id; a read carries none.",
+    "productSources": [
+      "packages/tools/tracy-site-tools/lib/index.js:45749",
+      "packages/tools/tracy-site-tools/src/host/call-memory.mjs:1819",
+      "packages/tools/tracy-site-tools/src/host/confirm-words.mjs:74",
+      "packages/tools/tracy-site-tools/src/host/emdash-call.mjs:938",
+      "packages/tools/tracy-site-tools/src/host/emdash.mjs:343",
+      "packages/tools/tracy-site-tools/src/host/lease-wait.mjs:73",
+      "packages/tools/tracy-site-tools/src/host/legacy-refusal.mjs:14",
+      "packages/tools/tracy-site-tools/src/host/look-style.mjs:133",
+      "packages/tools/tracy-site-tools/src/host/site.mjs:1229",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:269"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/tools/tracy-site-tools/test/site-call.test.mjs:1913 the file does not parse"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1512-confirm-card-language.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1512-confirm-card-language"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/tools/tracy-site-tools", "tracy-site-tools"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1512-confirm-card-language",
+    "pr": 1512,
+    "kind": "fix",
+    "area": "site-tools/confirm",
+    "file": "tests/regression/cases/REG-PR-1512-confirm-card-language.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-timeout=400000",
+    "packages/tools/tracy-site-tools/test/call-memory.test.mjs",
+    "packages/tools/tracy-site-tools/test/confirm-words.test.mjs",
+    "packages/tools/tracy-site-tools/test/site-call.test.mjs",
+    "packages/tools/tracy-site-tools/test/emdash-call.test.mjs",
+    "packages/tools/tracy-site-tools/test/handler.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

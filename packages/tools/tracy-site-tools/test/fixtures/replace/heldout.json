@@ -1,0 +1,1930 @@
+{
+  "$comment": "P8 held-out set (PLAN v2 §4 P8): every quoted or position case of bench/cases-v3.json that is a change of words, as the call the customer's words ask for, on the three bench sites' baseline pages (read-only GET 25/09/2026 09:10, matching every derived baseline value). pageSays = what the PAGE alone decides when every visible link or block is its own stored value (verdict and [where, block] of each place), read by hand from an independent HTML reader; the engines (P9–P11) add their stores and must reach the oracle. Never shown to the failed-trace reviewer (PLAN v2 §6.4).",
+  "sites": {
+    "benchjoomla01": {
+      "platform": "joomla",
+      "template": "tracy-business j6 1.2.0, sealed",
+      "paths": {
+        "home": "/en/",
+        "about": "/en/about",
+        "contact": "/en/contact"
+      }
+    },
+    "benchwp01": {
+      "platform": "wordpress",
+      "template": "wp7 1.1.0, sealed marker",
+      "paths": {
+        "home": "/",
+        "about": "/about/",
+        "contact": "/contact/"
+      }
+    },
+    "benchemdash01": {
+      "platform": "emdash",
+      "template": "emdash 1.3.0",
+      "paths": {
+        "home": "/",
+        "about": "/about",
+        "contact": "/contact"
+      }
+    }
+  },
+  "cases": [
+    {
+      "case": "C01",
+      "also": ["C15", "C16", "C30", "C33", "C61", "C65"],
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi tiêu đề lớn ở đầu trang chủ thành \"Built for the way you work\". Không đổi gì khác.",
+      "call": {
+        "find": "Building the groundwork for next-generation plants",
+        "replace": "Built for the way you work"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Built for the way you work"],
+          "gone": ["Building the groundwork for next-generation plants"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"]]
+      }
+    },
+    {
+      "case": "C17",
+      "also": ["C02", "C62"],
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi chữ \"{cta1}\" thành \"Get a free quote\".",
+      "call": {
+        "find": "See our capabilities",
+        "replace": "Get a free quote"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Get a free quote"],
+          "gone": ["See our capabilities"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "div"]]
+      }
+    },
+    {
+      "case": "C26",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Bỏ nút thứ hai ở phần đầu trang chủ (nút \"{cta2}\").",
+      "call": {
+        "find": "Download company profile (PDF)",
+        "replace": ""
+      },
+      "oracle": {
+        "home": {
+          "gone": ["Download company profile (PDF)"],
+          "has": ["See our capabilities"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "VALUE_NOT_ALLOWED",
+        "rule": "cannot-empty",
+        "places": []
+      }
+    },
+    {
+      "case": "C03",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Ở phần danh sách dịch vụ trên trang chủ (bốn mục đánh số 01 đến 04), đổi câu mô tả của mục 02 thành \"Design, fabrication and installation by one team.\"",
+      "call": {
+        "find": "Structural design, fabrication and erection of steel frames spanning up to 45 m.",
+        "replace": "Design, fabrication and installation by one team."
+      },
+      "oracle": {
+        "home": {
+          "has": ["Design, fabrication and installation by one team."],
+          "gone": ["Structural design, fabrication and erection of steel frames spanning up to 45 m."]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C18",
+      "also": ["C64"],
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Sửa tiêu đề \"{projects}\" trên trang chủ thành \"Featured projects\".",
+      "call": {
+        "find": "Selected projects",
+        "replace": "Featured projects"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Featured projects"],
+          "gone": ["Selected projects"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h2"]]
+      }
+    },
+    {
+      "case": "C19",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi câu hỏi lớn ở dải kêu gọi gần cuối trang chủ (\"{ctaBand}\") thành \"Ready to start your project?\"",
+      "call": {
+        "find": "Need a budget estimate for an upcoming build?",
+        "replace": "Ready to start your project?"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Ready to start your project?"],
+          "gone": ["Need a budget estimate for an upcoming build?"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h2"]]
+      }
+    },
+    {
+      "case": "C52",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi con số \"{stat1}\" ở dãy số liệu trên trang chủ thành \"400+\".",
+      "call": {
+        "find": "380+",
+        "replace": "400+"
+      },
+      "oracle": {
+        "home": {
+          "has": ["400+"],
+          "gone": ["380+"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "dt"]]
+      }
+    },
+    {
+      "case": "C05",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi dòng chữ nhỏ nằm dưới tên công ty ở logo đầu trang thành \"Trusted since 2004\".",
+      "call": {
+        "find": "Industrial infrastructure",
+        "replace": "Trusted since 2004",
+        "where": "header"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Trusted since 2004"],
+          "gone": ["Industrial infrastructure"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["header", "div"]]
+      }
+    },
+    {
+      "case": "C21",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Địa chỉ công ty đổi thành \"12 Nguyen Hue, District 1, Ho Chi Minh City\". Cập nhật ở đầu trang và chân trang.",
+      "call": {
+        "find": "Vorsino Industrial Park, plot 12, Kaluga Region",
+        "replace": "12 Nguyen Hue, District 1, Ho Chi Minh City",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["12 Nguyen Hue, District 1, Ho Chi Minh City"],
+          "gone": ["Vorsino Industrial Park, plot 12, Kaluga Region"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "li"], ["footer", "p"]]
+      }
+    },
+    {
+      "case": "C22",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Giờ làm việc mới là \"Mon–Sat, 8:00–17:00\". Sửa ở chân trang.",
+      "call": {
+        "find": "Mon–Fri, 9:00–18:00 (MSK)",
+        "replace": "Mon–Sat, 8:00–17:00",
+        "where": "footer"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Mon–Sat, 8:00–17:00"],
+          "gone": ["Mon–Fri, 9:00–18:00 (MSK)"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["footer", "li"]]
+      }
+    },
+    {
+      "case": "C23",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Sửa dòng bản quyền ở cuối trang thành \"© 2026 Tracy Demo Co.\"",
+      "call": {
+        "find": "© 2026 Northgate Industrial.",
+        "replace": "© 2026 Tracy Demo Co.",
+        "where": "footer"
+      },
+      "oracle": {
+        "home": {
+          "has": ["© 2026 Tracy Demo Co."],
+          "gone": ["© 2026 Northgate Industrial."]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["footer", "div"]]
+      }
+    },
+    {
+      "case": "C04",
+      "also": ["C20", "C60", "C63"],
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi số hotline của công ty thành 0909 123 456 ở mọi chỗ nó hiện trên site.",
+      "call": {
+        "find": "8 800 550-67-90",
+        "replace": "0909 123 456",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["0909 123 456"],
+          "gone": ["8 800 550-67-90"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "li"], ["footer", "li"]]
+      }
+    },
+    {
+      "case": "C10",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi email liên hệ thành hello@example.vn ở mọi chỗ trên site (đầu trang, chân trang và trang Liên hệ).",
+      "call": {
+        "find": "sales@northgate-ind.ru",
+        "replace": "hello@example.vn",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["hello@example.vn"],
+          "gone": ["sales@northgate-ind.ru"]
+        },
+        "contact": {
+          "has": ["hello@example.vn"],
+          "gone": ["sales@northgate-ind.ru"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "li"], ["footer", "li"]]
+      }
+    },
+    {
+      "case": "C10",
+      "site": "benchjoomla01",
+      "path": "/en/contact",
+      "page": "pages/joomla-contact.html",
+      "prompt": "Đổi email liên hệ thành hello@example.vn ở mọi chỗ trên site (đầu trang, chân trang và trang Liên hệ).",
+      "call": {
+        "find": "sales@northgate-ind.ru",
+        "replace": "hello@example.vn",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["hello@example.vn"],
+          "gone": ["sales@northgate-ind.ru"]
+        },
+        "contact": {
+          "has": ["hello@example.vn"],
+          "gone": ["sales@northgate-ind.ru"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "li"], ["main", "dd"], ["footer", "li"]]
+      }
+    },
+    {
+      "case": "C06",
+      "also": ["C63"],
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi tên mục \"News\" trên menu chính thành \"Insights\".",
+      "call": {
+        "find": "News",
+        "replace": "Insights",
+        "where": "header"
+      },
+      "oracle": {
+        "home": {
+          "linkText": ["Insights"],
+          "fewerLinks": ["News"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["header", "li"]]
+      }
+    },
+    {
+      "case": "C34",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi chữ \"Careers\" thành \"Jobs\".",
+      "call": {
+        "find": "Careers",
+        "replace": "Jobs"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Jobs"]
+        }
+      },
+      "askOk": true,
+      "pageSays": {
+        "verdict": "AMBIGUOUS",
+        "places": [["topbar", "li"], ["footer", "li"]]
+      }
+    },
+    {
+      "case": "C35",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi tiêu đề cột \"Company\" ở chân trang thành \"Our company\".",
+      "call": {
+        "find": "Company",
+        "replace": "Our company",
+        "where": "footer"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Our company"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["footer", "h3"]]
+      }
+    },
+    {
+      "case": "C45",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi tên trang \"About\" thành \"Our story\", cả trên menu.",
+      "call": {
+        "find": "About",
+        "replace": "Our story",
+        "where": "header"
+      },
+      "oracle": {
+        "home": {
+          "linkText": ["Our story"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["header", "li"]]
+      }
+    },
+    {
+      "case": "C07",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Thêm câu \"All work comes with a 5-year warranty.\" vào cuối đoạn mô tả ngắn ngay dưới tiêu đề lớn ở trang chủ. Giữ nguyên phần chữ đang có.",
+      "call": {
+        "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "replace": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia. All work comes with a 5-year warranty."
+      },
+      "oracle": {
+        "home": {
+          "has": [
+            "All work comes with a 5-year warranty.",
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia."
+          ]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C32",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Rút gọn đoạn mô tả dưới tiêu đề trang chủ còn một câu ngắn.",
+      "call": {
+        "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "replace": "Industrial sites designed and built by one contractor."
+      },
+      "oracle": {
+        "home": {
+          "gone": [
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia."
+          ]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C40",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Xoá đoạn mô tả ngắn ngay dưới tiêu đề lớn ở trang chủ, chỉ giữ tiêu đề và hai nút.",
+      "call": {
+        "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "replace": ""
+      },
+      "oracle": {
+        "home": {
+          "gone": [
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia."
+          ],
+          "has": ["See our capabilities"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C11",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Viết lại phần \"Why ...\" trên trang chủ (ba lý do nên chọn chúng tôi): giữ nguyên ba ý, nhưng viết lại câu mô tả của từng ý cho ngắn gọn và thân thiện hơn.",
+      "call": {
+        "changes": [
+          {
+            "find": "Drawing revision cycles cut to under 48 hours.",
+            "replace": "Revised drawings back within two days."
+          },
+          {
+            "find": "Safety procedures independently audited every six months.",
+            "replace": "Safety audited by outsiders twice a year."
+          },
+          {
+            "find": "Performance guarantees issued on every contract above RUB 150M.",
+            "replace": "Every contract over RUB 150M comes with a performance guarantee."
+          }
+        ]
+      },
+      "oracle": {
+        "home": {
+          "goneAtLeast": {
+            "n": 2,
+            "of": "{why}"
+          }
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"], ["main", "p"], ["main", "p"]]
+      }
+    },
+    {
+      "case": "C46",
+      "site": "benchjoomla01",
+      "path": "/en/about",
+      "page": "pages/joomla-about.html",
+      "prompt": "Trên trang About, đổi tiêu đề lớn thành \"Who we are\".",
+      "call": {
+        "find": "Building Russian industrial infrastructure since 2004",
+        "replace": "Who we are"
+      },
+      "oracle": {
+        "about": {
+          "has": ["Who we are"],
+          "gone": ["Building Russian industrial infrastructure since 2004"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"]]
+      }
+    },
+    {
+      "case": "C28",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Đổi hotline thành 0909 123 456 và email liên hệ thành hello@example.vn.",
+      "call": {
+        "changes": [
+          {
+            "find": "8 800 550-67-90",
+            "replace": "0909 123 456"
+          },
+          {
+            "find": "sales@northgate-ind.ru",
+            "replace": "hello@example.vn"
+          }
+        ],
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["0909 123 456", "hello@example.vn"],
+          "gone": ["8 800 550-67-90", "sales@northgate-ind.ru"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "li"], ["footer", "li"], ["topbar", "li"], ["footer", "li"]]
+      }
+    },
+    {
+      "case": "C29",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Ở phần đầu trang chủ: đổi tiêu đề lớn thành \"Built for the way you work\", đổi nút chính thành \"Get a free quote\", và thêm câu \"All work comes with a 5-year warranty.\" vào cuối đoạn mô tả.",
+      "call": {
+        "changes": [
+          {
+            "find": "Building the groundwork for next-generation plants",
+            "replace": "Built for the way you work"
+          },
+          {
+            "find": "See our capabilities",
+            "replace": "Get a free quote"
+          },
+          {
+            "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+            "replace": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia. All work comes with a 5-year warranty."
+          }
+        ]
+      },
+      "oracle": {
+        "home": {
+          "has": ["Built for the way you work", "Get a free quote", "All work comes with a 5-year warranty."],
+          "gone": ["Building the groundwork for next-generation plants", "See our capabilities"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"], ["main", "div"], ["main", "p"]]
+      }
+    },
+    {
+      "case": "C12",
+      "site": "benchjoomla01",
+      "path": "/en/",
+      "page": "pages/joomla-home.html",
+      "prompt": "Dịch phần đầu trang chủ sang tiếng Việt: tiêu đề lớn, đoạn mô tả ngay dưới và chữ trên hai nút. Viết đè lên chữ tiếng Anh hiện tại, không cài thêm ngôn ngữ mới.",
+      "call": {
+        "changes": [
+          {
+            "find": "Building the groundwork for next-generation plants",
+            "replace": "Xây nền móng cho những nhà máy thế hệ mới"
+          },
+          {
+            "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+            "replace": "Tổng thầu thiết kế – thi công hạ tầng khu công nghiệp, nhà xưởng và hệ thống kỹ thuật tại 14 vùng của Trung và Volga nước Nga."
+          },
+          {
+            "find": "See our capabilities",
+            "replace": "Xem năng lực của chúng tôi"
+          },
+          {
+            "find": "Download company profile (PDF)",
+            "replace": "Tải hồ sơ công ty (PDF)"
+          }
+        ]
+      },
+      "oracle": {
+        "home": {
+          "gone": [
+            "Building the groundwork for next-generation plants",
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+            "See our capabilities"
+          ],
+          "h1Vietnamese": true
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"], ["main", "p"], ["main", "div"], ["main", "div"]]
+      }
+    },
+    {
+      "case": "C01",
+      "also": ["C15", "C16", "C30", "C33", "C61", "C65"],
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi tiêu đề lớn ở đầu trang chủ thành \"Built for the way you work\". Không đổi gì khác.",
+      "call": {
+        "find": "Building the groundwork for next-generation plants",
+        "replace": "Built for the way you work"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Built for the way you work"],
+          "gone": ["Building the groundwork for next-generation plants"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"]]
+      }
+    },
+    {
+      "case": "C17",
+      "also": ["C02", "C62"],
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi chữ \"{cta1}\" thành \"Get a free quote\".",
+      "call": {
+        "find": "See our capabilities",
+        "replace": "Get a free quote"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Get a free quote"],
+          "gone": ["See our capabilities"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "div"]]
+      }
+    },
+    {
+      "case": "C26",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Bỏ nút thứ hai ở phần đầu trang chủ (nút \"{cta2}\").",
+      "call": {
+        "find": "Download company profile (PDF)",
+        "replace": ""
+      },
+      "oracle": {
+        "home": {
+          "gone": ["Download company profile (PDF)"],
+          "has": ["See our capabilities"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "VALUE_NOT_ALLOWED",
+        "rule": "cannot-empty",
+        "places": []
+      }
+    },
+    {
+      "case": "C03",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Ở phần danh sách dịch vụ trên trang chủ (bốn mục đánh số 01 đến 04), đổi câu mô tả của mục 02 thành \"Design, fabrication and installation by one team.\"",
+      "call": {
+        "find": "Structural design, fabrication and erection of steel frames spanning up to 45 m.",
+        "replace": "Design, fabrication and installation by one team."
+      },
+      "oracle": {
+        "home": {
+          "has": ["Design, fabrication and installation by one team."],
+          "gone": ["Structural design, fabrication and erection of steel frames spanning up to 45 m."]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C18",
+      "also": ["C64"],
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Sửa tiêu đề \"{projects}\" trên trang chủ thành \"Featured projects\".",
+      "call": {
+        "find": "Selected projects",
+        "replace": "Featured projects"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Featured projects"],
+          "gone": ["Selected projects"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h2"]]
+      }
+    },
+    {
+      "case": "C19",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi câu hỏi lớn ở dải kêu gọi gần cuối trang chủ (\"{ctaBand}\") thành \"Ready to start your project?\"",
+      "call": {
+        "find": "Need a budget estimate for an upcoming build?",
+        "replace": "Ready to start your project?"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Ready to start your project?"],
+          "gone": ["Need a budget estimate for an upcoming build?"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h2"]]
+      }
+    },
+    {
+      "case": "C52",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi con số \"{stat1}\" ở dãy số liệu trên trang chủ thành \"400+\".",
+      "call": {
+        "find": "380+",
+        "replace": "400+"
+      },
+      "oracle": {
+        "home": {
+          "has": ["400+"],
+          "gone": ["380+"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C05",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi dòng chữ nhỏ nằm dưới tên công ty ở logo đầu trang thành \"Trusted since 2004\".",
+      "call": {
+        "find": "Industrial infrastructure",
+        "replace": "Trusted since 2004",
+        "where": "header"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Trusted since 2004"],
+          "gone": ["Industrial infrastructure"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["header", "p"]]
+      }
+    },
+    {
+      "case": "C21",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Địa chỉ công ty đổi thành \"12 Nguyen Hue, District 1, Ho Chi Minh City\". Cập nhật ở đầu trang và chân trang.",
+      "call": {
+        "find": "Vorsino Industrial Park, Kaluga Region",
+        "replace": "12 Nguyen Hue, District 1, Ho Chi Minh City",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["12 Nguyen Hue, District 1, Ho Chi Minh City"],
+          "gone": ["Vorsino Industrial Park, Kaluga Region"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "p"]]
+      }
+    },
+    {
+      "case": "C22",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Giờ làm việc mới là \"Mon–Sat, 8:00–17:00\". Sửa ở chân trang.",
+      "call": {
+        "find": "Mon–Fri, 9:00–18:00 (MSK)",
+        "replace": "Mon–Sat, 8:00–17:00",
+        "where": "footer"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Mon–Sat, 8:00–17:00"],
+          "gone": ["Mon–Fri, 9:00–18:00 (MSK)"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["footer", "p"]]
+      }
+    },
+    {
+      "case": "C23",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Sửa dòng bản quyền ở cuối trang thành \"© 2026 Tracy Demo Co.\"",
+      "call": {
+        "find": "© 2026 Northgate Industrial JSC.",
+        "replace": "© 2026 Tracy Demo Co.",
+        "where": "footer"
+      },
+      "oracle": {
+        "home": {
+          "has": ["© 2026 Tracy Demo Co."],
+          "gone": ["© 2026 Northgate Industrial JSC."]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["footer", "p"]]
+      }
+    },
+    {
+      "case": "C04",
+      "also": ["C20", "C60", "C63"],
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi số hotline của công ty thành 0909 123 456 ở mọi chỗ nó hiện trên site.",
+      "call": {
+        "find": "8 800 550-67-89",
+        "replace": "0909 123 456",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["0909 123 456"],
+          "gone": ["8 800 550-67-89"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "p"], ["footer", "p"]]
+      }
+    },
+    {
+      "case": "C10",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi email liên hệ thành hello@example.vn ở mọi chỗ trên site (đầu trang, chân trang và trang Liên hệ).",
+      "call": {
+        "find": "info@northgate-ind.ru",
+        "replace": "hello@example.vn",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["hello@example.vn"],
+          "gone": ["info@northgate-ind.ru"]
+        },
+        "contact": {
+          "has": ["hello@example.vn"],
+          "gone": ["info@northgate-ind.ru"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "p"]]
+      }
+    },
+    {
+      "case": "C10",
+      "site": "benchwp01",
+      "path": "/contact/",
+      "page": "pages/wordpress-contact.html",
+      "prompt": "Đổi email liên hệ thành hello@example.vn ở mọi chỗ trên site (đầu trang, chân trang và trang Liên hệ).",
+      "call": {
+        "find": "info@northgate-ind.ru",
+        "replace": "hello@example.vn",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["hello@example.vn"],
+          "gone": ["info@northgate-ind.ru"]
+        },
+        "contact": {
+          "has": ["hello@example.vn"],
+          "gone": ["info@northgate-ind.ru"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "p"]]
+      }
+    },
+    {
+      "case": "C06",
+      "also": ["C63"],
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi tên mục \"News\" trên menu chính thành \"Insights\".",
+      "call": {
+        "find": "News",
+        "replace": "Insights",
+        "where": "header"
+      },
+      "oracle": {
+        "home": {
+          "linkText": ["Insights"],
+          "fewerLinks": ["News"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["header", "li"]]
+      }
+    },
+    {
+      "case": "C34",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi chữ \"Careers\" thành \"Jobs\".",
+      "call": {
+        "find": "Careers",
+        "replace": "Jobs"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Jobs"]
+        }
+      },
+      "askOk": true,
+      "pageSays": {
+        "verdict": "AMBIGUOUS",
+        "places": [["topbar", "li"], ["footer", "li"]]
+      }
+    },
+    {
+      "case": "C35",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi tiêu đề cột \"Company\" ở chân trang thành \"Our company\".",
+      "call": {
+        "find": "Company",
+        "replace": "Our company",
+        "where": "footer"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Our company"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["footer", "h3"]]
+      }
+    },
+    {
+      "case": "C45",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi tên trang \"About\" thành \"Our story\", cả trên menu.",
+      "call": {
+        "find": "About",
+        "replace": "Our story",
+        "where": "header"
+      },
+      "oracle": {
+        "home": {
+          "linkText": ["Our story"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["header", "li"]]
+      }
+    },
+    {
+      "case": "C07",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Thêm câu \"All work comes with a 5-year warranty.\" vào cuối đoạn mô tả ngắn ngay dưới tiêu đề lớn ở trang chủ. Giữ nguyên phần chữ đang có.",
+      "call": {
+        "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "replace": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia. All work comes with a 5-year warranty."
+      },
+      "oracle": {
+        "home": {
+          "has": [
+            "All work comes with a 5-year warranty.",
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia."
+          ]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C32",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Rút gọn đoạn mô tả dưới tiêu đề trang chủ còn một câu ngắn.",
+      "call": {
+        "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "replace": "Industrial sites designed and built by one contractor."
+      },
+      "oracle": {
+        "home": {
+          "gone": [
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia."
+          ]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C40",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Xoá đoạn mô tả ngắn ngay dưới tiêu đề lớn ở trang chủ, chỉ giữ tiêu đề và hai nút.",
+      "call": {
+        "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "replace": ""
+      },
+      "oracle": {
+        "home": {
+          "gone": [
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia."
+          ],
+          "has": ["See our capabilities"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C11",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Viết lại phần \"Why ...\" trên trang chủ (ba lý do nên chọn chúng tôi): giữ nguyên ba ý, nhưng viết lại câu mô tả của từng ý cho ngắn gọn và thân thiện hơn.",
+      "call": {
+        "changes": [
+          {
+            "find": "Drawing revision cycles cut to under 48 hours.",
+            "replace": "Revised drawings back within two days."
+          },
+          {
+            "find": "Safety procedures independently audited every six months.",
+            "replace": "Safety audited by outsiders twice a year."
+          },
+          {
+            "find": "Performance guarantees issued on every contract above RUB 150M.",
+            "replace": "Every contract over RUB 150M comes with a performance guarantee."
+          }
+        ]
+      },
+      "oracle": {
+        "home": {
+          "goneAtLeast": {
+            "n": 2,
+            "of": "{why}"
+          }
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"], ["main", "p"], ["main", "p"]]
+      }
+    },
+    {
+      "case": "C46",
+      "site": "benchwp01",
+      "path": "/about/",
+      "page": "pages/wordpress-about.html",
+      "prompt": "Trên trang About, đổi tiêu đề lớn thành \"Who we are\".",
+      "call": {
+        "find": "Building Russian industrial infrastructure since 2004",
+        "replace": "Who we are"
+      },
+      "oracle": {
+        "about": {
+          "has": ["Who we are"],
+          "gone": ["Building Russian industrial infrastructure since 2004"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"]]
+      }
+    },
+    {
+      "case": "C28",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Đổi hotline thành 0909 123 456 và email liên hệ thành hello@example.vn.",
+      "call": {
+        "changes": [
+          {
+            "find": "8 800 550-67-89",
+            "replace": "0909 123 456"
+          },
+          {
+            "find": "info@northgate-ind.ru",
+            "replace": "hello@example.vn"
+          }
+        ],
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["0909 123 456", "hello@example.vn"],
+          "gone": ["8 800 550-67-89", "info@northgate-ind.ru"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "p"], ["footer", "p"], ["topbar", "p"]]
+      }
+    },
+    {
+      "case": "C29",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Ở phần đầu trang chủ: đổi tiêu đề lớn thành \"Built for the way you work\", đổi nút chính thành \"Get a free quote\", và thêm câu \"All work comes with a 5-year warranty.\" vào cuối đoạn mô tả.",
+      "call": {
+        "changes": [
+          {
+            "find": "Building the groundwork for next-generation plants",
+            "replace": "Built for the way you work"
+          },
+          {
+            "find": "See our capabilities",
+            "replace": "Get a free quote"
+          },
+          {
+            "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+            "replace": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia. All work comes with a 5-year warranty."
+          }
+        ]
+      },
+      "oracle": {
+        "home": {
+          "has": ["Built for the way you work", "Get a free quote", "All work comes with a 5-year warranty."],
+          "gone": ["Building the groundwork for next-generation plants", "See our capabilities"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"], ["main", "div"], ["main", "p"]]
+      }
+    },
+    {
+      "case": "C12",
+      "site": "benchwp01",
+      "path": "/",
+      "page": "pages/wordpress-home.html",
+      "prompt": "Dịch phần đầu trang chủ sang tiếng Việt: tiêu đề lớn, đoạn mô tả ngay dưới và chữ trên hai nút. Viết đè lên chữ tiếng Anh hiện tại, không cài thêm ngôn ngữ mới.",
+      "call": {
+        "changes": [
+          {
+            "find": "Building the groundwork for next-generation plants",
+            "replace": "Xây nền móng cho những nhà máy thế hệ mới"
+          },
+          {
+            "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+            "replace": "Tổng thầu thiết kế – thi công hạ tầng khu công nghiệp, nhà xưởng và hệ thống kỹ thuật tại 14 vùng của Trung và Volga nước Nga."
+          },
+          {
+            "find": "See our capabilities",
+            "replace": "Xem năng lực của chúng tôi"
+          },
+          {
+            "find": "Download company profile (PDF)",
+            "replace": "Tải hồ sơ công ty (PDF)"
+          }
+        ]
+      },
+      "oracle": {
+        "home": {
+          "gone": [
+            "Building the groundwork for next-generation plants",
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+            "See our capabilities"
+          ],
+          "h1Vietnamese": true
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"], ["main", "p"], ["main", "div"], ["main", "div"]]
+      }
+    },
+    {
+      "case": "C01",
+      "also": ["C15", "C16", "C30", "C33", "C61", "C65"],
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi tiêu đề lớn ở đầu trang chủ thành \"Built for the way you work\". Không đổi gì khác.",
+      "call": {
+        "find": "Building the groundwork for next-generation plants",
+        "replace": "Built for the way you work"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Built for the way you work"],
+          "gone": ["Building the groundwork for next-generation plants"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"]]
+      }
+    },
+    {
+      "case": "C17",
+      "also": ["C02", "C62"],
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi chữ \"{cta1}\" thành \"Get a free quote\".",
+      "call": {
+        "find": "See our capabilities",
+        "replace": "Get a free quote"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Get a free quote"],
+          "gone": ["See our capabilities"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "div"]]
+      }
+    },
+    {
+      "case": "C26",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Bỏ nút thứ hai ở phần đầu trang chủ (nút \"{cta2}\").",
+      "call": {
+        "find": "Download company profile (PDF)",
+        "replace": ""
+      },
+      "oracle": {
+        "home": {
+          "gone": ["Download company profile (PDF)"],
+          "has": ["See our capabilities"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "VALUE_NOT_ALLOWED",
+        "rule": "cannot-empty",
+        "places": []
+      }
+    },
+    {
+      "case": "C03",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Ở phần danh sách dịch vụ trên trang chủ (bốn mục đánh số 01 đến 04), đổi câu mô tả của mục 02 thành \"Design, fabrication and installation by one team.\"",
+      "call": {
+        "find": "Structural design, fabrication and erection of steel frames spanning up to 45 m.",
+        "replace": "Design, fabrication and installation by one team."
+      },
+      "oracle": {
+        "home": {
+          "has": ["Design, fabrication and installation by one team."],
+          "gone": ["Structural design, fabrication and erection of steel frames spanning up to 45 m."]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C18",
+      "also": ["C64"],
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Sửa tiêu đề \"{projects}\" trên trang chủ thành \"Featured projects\".",
+      "call": {
+        "find": "Selected projects",
+        "replace": "Featured projects"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Featured projects"],
+          "gone": ["Selected projects"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h2"]]
+      }
+    },
+    {
+      "case": "C19",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi câu hỏi lớn ở dải kêu gọi gần cuối trang chủ (\"{ctaBand}\") thành \"Ready to start your project?\"",
+      "call": {
+        "find": "Need a budget estimate for an upcoming build?",
+        "replace": "Ready to start your project?"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Ready to start your project?"],
+          "gone": ["Need a budget estimate for an upcoming build?"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h2"]]
+      }
+    },
+    {
+      "case": "C52",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi con số \"{stat1}\" ở dãy số liệu trên trang chủ thành \"400+\".",
+      "call": {
+        "find": "380+",
+        "replace": "400+"
+      },
+      "oracle": {
+        "home": {
+          "has": ["400+"],
+          "gone": ["380+"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "div"]]
+      }
+    },
+    {
+      "case": "C05",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi dòng chữ nhỏ nằm dưới tên công ty ở logo đầu trang thành \"Trusted since 2004\".",
+      "call": {
+        "find": "Industrial infrastructure",
+        "replace": "Trusted since 2004",
+        "where": "header"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Trusted since 2004"],
+          "gone": ["Industrial infrastructure"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["header", "div"]]
+      }
+    },
+    {
+      "case": "C21",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Địa chỉ công ty đổi thành \"12 Nguyen Hue, District 1, Ho Chi Minh City\". Cập nhật ở đầu trang và chân trang.",
+      "call": {
+        "find": "Vorsino Industrial Park, Kaluga Region",
+        "replace": "12 Nguyen Hue, District 1, Ho Chi Minh City",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["12 Nguyen Hue, District 1, Ho Chi Minh City"],
+          "gone": ["Vorsino Industrial Park, Kaluga Region"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "li"]]
+      }
+    },
+    {
+      "case": "C22",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Giờ làm việc mới là \"Mon–Sat, 8:00–17:00\". Sửa ở chân trang.",
+      "call": {
+        "find": "Mon–Fri, 9:00–18:00 (MSK)",
+        "replace": "Mon–Sat, 8:00–17:00",
+        "where": "footer"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Mon–Sat, 8:00–17:00"],
+          "gone": ["Mon–Fri, 9:00–18:00 (MSK)"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["footer", "div"]]
+      }
+    },
+    {
+      "case": "C23",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Sửa dòng bản quyền ở cuối trang thành \"© 2026 Tracy Demo Co.\"",
+      "call": {
+        "find": "© 2026 Northgate Industrial JSC. Emdash CMS Template by Tracy.ai",
+        "replace": "© 2026 Tracy Demo Co.",
+        "where": "footer"
+      },
+      "oracle": {
+        "home": {
+          "has": ["© 2026 Tracy Demo Co."],
+          "gone": ["© 2026 Northgate Industrial JSC. Emdash CMS Template by Tracy.ai"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["footer", "div"]]
+      }
+    },
+    {
+      "case": "C04",
+      "also": ["C20", "C60", "C63"],
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi số hotline của công ty thành 0909 123 456 ở mọi chỗ nó hiện trên site.",
+      "call": {
+        "find": "8 800 550-67-89",
+        "replace": "0909 123 456",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["0909 123 456"],
+          "gone": ["8 800 550-67-89"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "li"], ["footer", "div"]]
+      }
+    },
+    {
+      "case": "C10",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi email liên hệ thành hello@example.vn ở mọi chỗ trên site (đầu trang, chân trang và trang Liên hệ).",
+      "call": {
+        "find": "info@northgate-ind.ru",
+        "replace": "hello@example.vn",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["hello@example.vn"],
+          "gone": ["info@northgate-ind.ru"]
+        },
+        "contact": {
+          "has": ["hello@example.vn"],
+          "gone": ["info@northgate-ind.ru"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "li"]]
+      }
+    },
+    {
+      "case": "C10",
+      "site": "benchemdash01",
+      "path": "/contact",
+      "page": "pages/emdash-contact.html",
+      "prompt": "Đổi email liên hệ thành hello@example.vn ở mọi chỗ trên site (đầu trang, chân trang và trang Liên hệ).",
+      "call": {
+        "find": "info@northgate-ind.ru",
+        "replace": "hello@example.vn",
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["hello@example.vn"],
+          "gone": ["info@northgate-ind.ru"]
+        },
+        "contact": {
+          "has": ["hello@example.vn"],
+          "gone": ["info@northgate-ind.ru"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "li"]]
+      }
+    },
+    {
+      "case": "C06",
+      "also": ["C63"],
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi tên mục \"News\" trên menu chính thành \"Insights\".",
+      "call": {
+        "find": "News",
+        "replace": "Insights",
+        "where": "header"
+      },
+      "oracle": {
+        "home": {
+          "linkText": ["Insights"],
+          "fewerLinks": ["News"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["header", "nav"]]
+      }
+    },
+    {
+      "case": "C34",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi chữ \"Careers\" thành \"Jobs\".",
+      "call": {
+        "find": "Careers",
+        "replace": "Jobs"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Jobs"]
+        }
+      },
+      "askOk": true,
+      "pageSays": {
+        "verdict": "AMBIGUOUS",
+        "places": [["topbar", "li"], ["footer", "div"]]
+      }
+    },
+    {
+      "case": "C35",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi tiêu đề cột \"Company\" ở chân trang thành \"Our company\".",
+      "call": {
+        "find": "Company",
+        "replace": "Our company",
+        "where": "footer"
+      },
+      "oracle": {
+        "home": {
+          "has": ["Our company"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["footer", "div"]]
+      }
+    },
+    {
+      "case": "C45",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi tên trang \"About\" thành \"Our story\", cả trên menu.",
+      "call": {
+        "find": "About",
+        "replace": "Our story",
+        "where": "header"
+      },
+      "oracle": {
+        "home": {
+          "linkText": ["Our story"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["header", "nav"]]
+      }
+    },
+    {
+      "case": "C07",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Thêm câu \"All work comes with a 5-year warranty.\" vào cuối đoạn mô tả ngắn ngay dưới tiêu đề lớn ở trang chủ. Giữ nguyên phần chữ đang có.",
+      "call": {
+        "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "replace": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia. All work comes with a 5-year warranty."
+      },
+      "oracle": {
+        "home": {
+          "has": [
+            "All work comes with a 5-year warranty.",
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia."
+          ]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C32",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Rút gọn đoạn mô tả dưới tiêu đề trang chủ còn một câu ngắn.",
+      "call": {
+        "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "replace": "Industrial sites designed and built by one contractor."
+      },
+      "oracle": {
+        "home": {
+          "gone": [
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia."
+          ]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C40",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Xoá đoạn mô tả ngắn ngay dưới tiêu đề lớn ở trang chủ, chỉ giữ tiêu đề và hai nút.",
+      "call": {
+        "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+        "replace": ""
+      },
+      "oracle": {
+        "home": {
+          "gone": [
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia."
+          ],
+          "has": ["See our capabilities"]
+        }
+      },
+      "refuseOk": true,
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"]]
+      }
+    },
+    {
+      "case": "C11",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Viết lại phần \"Why ...\" trên trang chủ (ba lý do nên chọn chúng tôi): giữ nguyên ba ý, nhưng viết lại câu mô tả của từng ý cho ngắn gọn và thân thiện hơn.",
+      "call": {
+        "changes": [
+          {
+            "find": "Drawing revision cycles cut to under 48 hours.",
+            "replace": "Revised drawings back within two days."
+          },
+          {
+            "find": "Safety procedures independently audited every six months.",
+            "replace": "Safety audited by outsiders twice a year."
+          },
+          {
+            "find": "Performance guarantees issued on every contract above RUB 150M.",
+            "replace": "Every contract over RUB 150M comes with a performance guarantee."
+          }
+        ]
+      },
+      "oracle": {
+        "home": {
+          "goneAtLeast": {
+            "n": 2,
+            "of": "{why}"
+          }
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "p"], ["main", "p"], ["main", "p"]]
+      }
+    },
+    {
+      "case": "C46",
+      "site": "benchemdash01",
+      "path": "/about",
+      "page": "pages/emdash-about.html",
+      "prompt": "Trên trang About, đổi tiêu đề lớn thành \"Who we are\".",
+      "call": {
+        "find": "Building Russian industrial infrastructure since 2004",
+        "replace": "Who we are"
+      },
+      "oracle": {
+        "about": {
+          "has": ["Who we are"],
+          "gone": ["Building Russian industrial infrastructure since 2004"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"]]
+      }
+    },
+    {
+      "case": "C28",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Đổi hotline thành 0909 123 456 và email liên hệ thành hello@example.vn.",
+      "call": {
+        "changes": [
+          {
+            "find": "8 800 550-67-89",
+            "replace": "0909 123 456"
+          },
+          {
+            "find": "info@northgate-ind.ru",
+            "replace": "hello@example.vn"
+          }
+        ],
+        "all": true
+      },
+      "oracle": {
+        "home": {
+          "has": ["0909 123 456", "hello@example.vn"],
+          "gone": ["8 800 550-67-89", "info@northgate-ind.ru"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["topbar", "li"], ["footer", "div"], ["topbar", "li"]]
+      }
+    },
+    {
+      "case": "C29",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Ở phần đầu trang chủ: đổi tiêu đề lớn thành \"Built for the way you work\", đổi nút chính thành \"Get a free quote\", và thêm câu \"All work comes with a 5-year warranty.\" vào cuối đoạn mô tả.",
+      "call": {
+        "changes": [
+          {
+            "find": "Building the groundwork for next-generation plants",
+            "replace": "Built for the way you work"
+          },
+          {
+            "find": "See our capabilities",
+            "replace": "Get a free quote"
+          },
+          {
+            "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+            "replace": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia. All work comes with a 5-year warranty."
+          }
+        ]
+      },
+      "oracle": {
+        "home": {
+          "has": ["Built for the way you work", "Get a free quote", "All work comes with a 5-year warranty."],
+          "gone": ["Building the groundwork for next-generation plants", "See our capabilities"]
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"], ["main", "div"], ["main", "p"]]
+      }
+    },
+    {
+      "case": "C12",
+      "site": "benchemdash01",
+      "path": "/",
+      "page": "pages/emdash-home.html",
+      "prompt": "Dịch phần đầu trang chủ sang tiếng Việt: tiêu đề lớn, đoạn mô tả ngay dưới và chữ trên hai nút. Viết đè lên chữ tiếng Anh hiện tại, không cài thêm ngôn ngữ mới.",
+      "call": {
+        "changes": [
+          {
+            "find": "Building the groundwork for next-generation plants",
+            "replace": "Xây nền móng cho những nhà máy thế hệ mới"
+          },
+          {
+            "find": "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+            "replace": "Tổng thầu thiết kế – thi công hạ tầng khu công nghiệp, nhà xưởng và hệ thống kỹ thuật tại 14 vùng của Trung và Volga nước Nga."
+          },
+          {
+            "find": "See our capabilities",
+            "replace": "Xem năng lực của chúng tôi"
+          },
+          {
+            "find": "Download company profile (PDF)",
+            "replace": "Tải hồ sơ công ty (PDF)"
+          }
+        ]
+      },
+      "oracle": {
+        "home": {
+          "gone": [
+            "Building the groundwork for next-generation plants",
+            "Design–build main contractor for industrial park infrastructure, factory buildings and engineering systems across 14 regions of Central and Volga Russia.",
+            "See our capabilities"
+          ],
+          "h1Vietnamese": true
+        }
+      },
+      "pageSays": {
+        "verdict": "WRITE",
+        "places": [["main", "h1"], ["main", "p"], ["main", "div"], ["main", "div"]]
+      }
+    }
+  ]
+}

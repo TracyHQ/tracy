@@ -1,0 +1,327 @@
+{
+  "dos": [
+    "Use Lime Spark (#dee948) exclusively for the single primary action on any given page — it must be the only warm color visible",
+    "Set all display headlines at 43px or above with negative tracking between -0.017em and -0.02em; the inward pull is what makes Suisse Intl feel machined",
+    "Layer surfaces by color alone: Aubergine canvas → Royal Plum band → Lilac Mist card → Frost panel; never reach for a drop shadow to create depth",
+    "Use the Pale Lilac 1px inset ring (#d0c6f0) on any interactive control that needs a defined edge on a dark surface",
+    "Keep button radius at 40px and pill controls at 64px — the large radius is part of Front's silhouette",
+    "Use #d0c6f0 (Pale Lilac) for secondary body text on dark surfaces instead of plain gray — it stays on-brand",
+    "Anchor all spacing to the 8px base: 8/16/24/32/48/80 for gaps, padding, and section rhythm"
+  ],
+  "donts": [
+    "Don't use Lime Spark for anything other than the primary action fill — it loses its power if it appears on more than one element per screen",
+    "Don't add drop shadows to cards or buttons — depth comes from the color stack, not elevation",
+    "Don't set body text in pure white on the Aubergine canvas for long passages — use Pale Lilac (#d0c6f0) for subtext to reduce harshness",
+    "Don't mix two violet button fills on the same surface — pick Royal Plum (#5b1f76) or Aubergine (#300c41) for the section, not both",
+    "Don't set display headlines at weight 700 or 800 — Suisse Intl weight 500 with tight tracking is the Front voice; bold would break the instrument-tone",
+    "Don't use the 10px or 12px sizes for anything other than metadata, badges, or legal text — anything readable should start at 14px",
+    "Don't introduce a new accent color — the system is Aubergine + Lime; any third chromatic breaks the one-spark rule"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#300c41",
+      "name": "Aubergine",
+      "role": "Page canvas, hero backgrounds, nav background — the single dominant surface color that gives Front its unmistakable identity",
+      "group": "brand"
+    },
+    {
+      "hex": "#5b1f76",
+      "name": "Royal Plum",
+      "role": "Pink supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#dee948",
+      "name": "Lime Spark",
+      "role": "Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "accent"
+    },
+    {
+      "hex": "#8034bf",
+      "name": "Bright Violet",
+      "role": "Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "accent"
+    },
+    {
+      "hex": "#b375f4",
+      "name": "Lavender Glow",
+      "role": "Decorative borders, accent strokes on illustrations, gradient terminus in the chat widget",
+      "group": "accent"
+    },
+    {
+      "hex": "#1c1e20",
+      "name": "Ink",
+      "role": "Primary body and heading text on light surfaces — near-black with a faint warm cast",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f0f4fe",
+      "name": "Frost",
+      "role": "Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e2dcf6",
+      "name": "Pale Lilac",
+      "role": "Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dedfe2",
+      "name": "Stone",
+      "role": "Borders on light surfaces, table dividers, inactive outlines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5b5d63",
+      "name": "Slate",
+      "role": "Secondary text, helper copy, metadata labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#7c8088",
+      "name": "Pewter",
+      "role": "Tertiary text, placeholder copy, disabled labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8e929b",
+      "name": "Ash",
+      "role": "Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0d1d39",
+      "name": "Midnight Navy",
+      "role": "Violet supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d0c6f0",
+      "name": "Lavender Whisper",
+      "role": "Inset focus ring color, soft hover wash, tinted shadow on elevated cards",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1d1f04",
+      "name": "Deep Olive",
+      "role": "Rare dark text accent on the lime button and light surfaces with maximum contrast",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Max-width 1200px centered for content, but the page itself is full-bleed across the Aubergine canvas. The hero is a centered text stack with display headline, lilac subtext, and a two-button row, with an email card mockup floating to the lower right as a product preview. Below the hero, a Royal Plum band carries the customer logo strip as a full-width social proof moment. The overall page rhythm is: dark hero → lighter purple band → content sections. Navigation is a single sticky top bar, no sidebar, no mega-menu — the product and resources links appear to be simple dropdowns. The chat widget is a fixed floating element in the bottom-right corner, present on every screen.",
+  "imagery": "Product visualization is Front's dominant visual language: email thread mockups, chat inbox previews, and workflow cards float as Lilac Mist rectangles on the Aubergine canvas, often at a subtle angle to suggest dimension without a shadow. The illustrations are flat UI snapshots, not 3D renders or lifestyle photography. Customer logos appear as white wordmarks on the Royal Plum band, no frames or treatments. The chat widget itself is the most decorative element — a lavender gradient card with pill-shaped options. No hero photography, no stock imagery, no abstract graphics: the product UI is the visual content.",
+  "similar": [
+    {
+      "why": "Same dark purple-to-lavender surface stack, same reliance on a single warm accent (Linear's purple-pink vs Front's lime), same flat cards without drop shadows, same tight neo-grotesque typography",
+      "business": "Linear"
+    },
+    {
+      "why": "Both use minimal hero compositions with a single product mockup floating off-center, both rely on color layering rather than elevation, both use a single accent against a monochrome field",
+      "business": "Notion"
+    },
+    {
+      "why": "Shared customer-operations space and both use purple as a primary brand surface; Intercom's blue-purple gradients map to Front's lilac-to-violet card treatments",
+      "business": "Intercom"
+    },
+    {
+      "why": "Same dark-canvas product UI language, same preference for 1px hairline borders over shadows, same tightly tracked neo-grotesque headlines",
+      "business": "Attio"
+    },
+    {
+      "why": "Both lean on a single saturated dark background with one accent color, both use generous 40-64px pill radii on controls, both keep product UI as the visual centerpiece rather than hero photography",
+      "business": "Vercel"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "20px",
+      "pills": "64px",
+      "inputs": "10px",
+      "buttons": "40px",
+      "chatWidget": "20px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#300c41",
+      "name": "Aubergine Canvas",
+      "level": 0,
+      "purpose": "Base page and hero background — the dominant dark plum that sets the mood"
+    },
+    {
+      "hex": "#5b1f76",
+      "name": "Royal Plum Band",
+      "level": 1,
+      "purpose": "Lighter purple sections, nav, card backgrounds that need to lift off the canvas"
+    },
+    {
+      "hex": "#e2dcf6",
+      "name": "Lilac Mist",
+      "level": 2,
+      "purpose": "Light card surfaces floating on the dark sections — the interface layer where most product UI lives"
+    },
+    {
+      "hex": "#f0f4fe",
+      "name": "Frost Panel",
+      "level": 3,
+      "purpose": "Highest elevation cards, modal surfaces, and white-light UI on light sections"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "none — flat fill, depth implied by color contrast against the plum background",
+      "element": "Lime CTA button"
+    },
+    {
+      "style": "none — depth created by the lavender gradient fill, not a drop shadow",
+      "element": "Chat widget card"
+    },
+    {
+      "style": "rgb(208, 198, 240) 0px 0px 0px 1px inset — a hairline lilac ring replaces conventional drop shadow",
+      "element": "Interactive controls (outlined buttons, inputs)"
+    }
+  ],
+  "northStar": "Midnight plum control room, one lime spark. Deep aubergine walls, lavender mist borders, and a single chartreuse beacon that pulls every eye.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.33,
+      "letterSpacing": 0.003
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.43,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 20,
+      "lineHeight": 1.4,
+      "letterSpacing": -0.01
+    },
+    {
+      "role": "heading-sm",
+      "size": 25,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.25
+    },
+    {
+      "role": "heading",
+      "size": 36,
+      "lineHeight": 1.19,
+      "letterSpacing": -0.54
+    },
+    {
+      "role": "heading-lg",
+      "size": 43,
+      "lineHeight": 1.17,
+      "letterSpacing": -0.73
+    },
+    {
+      "role": "display",
+      "size": 62,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.24
+    }
+  ],
+  "components": [
+    {
+      "name": "Lime Primary Action",
+      "role": "The single dominant CTA across all pages — the one element that should always be the most visible",
+      "description": "Fill #dee948 lime, text #0d1d39 in Suisse Intl 500 at 16px, 9999px implied pill radius (rendered as 40px from the data), horizontal padding 24px, vertical padding 12px. No border, no shadow. Sits directly on the Aubergine canvas so the lime-to-plum contrast does all the visual work."
+    },
+    {
+      "name": "Outlined Ghost Action",
+      "role": "Secondary CTA paired with the lime button on dark surfaces",
+      "description": "Transparent fill, 1px border in #e2dcf6 (Pale Lilac), text #ffffff in Suisse Intl 500 at 16px, 40px radius, 24px horizontal / 12px vertical padding. The pale lilac border replaces the conventional drop shadow — it glows softly against the plum without competing with the lime."
+    },
+    {
+      "name": "Filled Plum Nav Button",
+      "role": "Header-level action that sits in the dark navigation bar",
+      "description": "Fill #300c41 (same as canvas, defined by a 1px Pale Lilac inset ring), text #ffffff, 40px radius, padding 10px 20px. Reads as a recessed slot in the nav rather than a raised button."
+    },
+    {
+      "name": "Ghost Nav Button",
+      "role": "Tertiary header action next to the filled nav button",
+      "description": "Transparent fill, 1px Pale Lilac border (#e2dcf6), white text, 40px radius, same padding as the filled nav button. Mirror of the hero ghost action at smaller scale."
+    },
+    {
+      "name": "Chat Widget Card",
+      "role": "Persistent floating helper in the bottom-right corner",
+      "description": "Lavender gradient card (#b375f4 → #d0c6f0), 20px radius, ~320px wide, with a purple Front icon mark at top, white 'Welcome to Front!' heading at 20px weight 500, a stack of white pill options (Get a Demo, Pricing, Product Tour, Chat with our AI Virtual Rep) at 40px radius, and a small purple send icon button in the corner. Internal padding 20px, gap between options 8px."
+    },
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page single-line notification",
+      "description": "Lime fill #dee948, text #0d1d39 in Suisse Intl 14px weight 500, centered, full-bleed, padding 8px vertical. Underlined inline link in the same dark color. This is the only place lime appears as a background surface rather than a button fill."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Sticky header with logo, product links, and two CTAs",
+      "description": "Background #300c41 (Aubergine), 64-72px height, padding 16px horizontal. Logo on the left in lavender gradient. Center nav links in white at 15px weight 500 with 32px gaps. Right cluster: 'Sign in' as plain white text, then the filled plum button, then the ghost button. No visible border or shadow — the nav floats on the same plum canvas."
+    },
+    {
+      "name": "Hero Section",
+      "role": "First-screen value proposition with dual CTA",
+      "description": "Full-width Aubergine (#300c41) background, 80-120px vertical padding, centered text stack. Display headline at 62px weight 500 in white, tracking -1.24px, max-width ~900px. Sub-headline at 17-20px weight 400 in #d0c6f0 (Pale Lilac) — the lilac subtext on plum is signature, avoiding plain gray. Two-button row with 16px gap: lime primary + ghost secondary. Below: three tab-style links ('Cross-team coordination', 'Multi-step workflows', 'AI command center') with the active tab underlined in white."
+    },
+    {
+      "name": "Email Card Mockup",
+      "role": "Product visualization card embedded in the hero/feature section",
+      "description": "Lilac Mist (#e2dcf6) fill, 20px radius, padding 20px, with a white inner email thread card. Avatar circle (40px), sender name in Ink 16px weight 500, subject in Slate 14px, message body in Ink 15px. Floating at a slight angle on the Aubergine background to suggest depth without a drop shadow."
+    },
+    {
+      "name": "Customer Logo Strip",
+      "role": "Social proof band below the hero",
+      "description": "Sits on a lighter purple band (#5b1f76 Royal Plum). Left-aligned 'Trusted by 9,000+ companies' label in white at 14px. Logos in white at ~60% opacity, 32px height, distributed horizontally with 48-80px gaps. No borders or dividers between logos."
+    },
+    {
+      "name": "Pill Tab Indicator",
+      "role": "Active state underline for the three hero feature tabs",
+      "description": "2px white underline below the active tab text, 24px width, centered under the label. Inactive tabs have no underline. Tab labels in white at 16px weight 500, 32px horizontal gap between tabs."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface across all UI — body, headings, buttons, navigation. The custom neo-grotesque gives Front its machined, Swiss-instrument feel; weight 500 carries both body and display, so the system relies on tracking and size to create hierarchy rather than weight contrast.",
+      "sizes": "10, 12, 14, 15, 16, 17, 20, 25, 30, 36, 43, 52, 62px",
+      "family": "Suisse Intl",
+      "weight": "400, 500",
+      "lineHeight": "1.20 body, 1.10 display",
+      "substitute": "Inter, Helvetica Neue, or Aktiv Grotesk",
+      "letterSpacing": "Display sizes pull inward aggressively: -0.02em at 62px (-1.24px), -0.019em at 52px (-0.99px), -0.017em at 43px (-0.73px), -0.015em at 36px (-0.54px), -0.01em at 25px (-0.25px). Body and small sizes track neutral or slightly open."
+    },
+    {
+      "role": "Rare serif accent — appears as a single contextual flourish, not a structural face",
+      "sizes": "25px",
+      "family": "Suisse Works",
+      "weight": "500",
+      "lineHeight": "1.20",
+      "substitute": "Tiempos Text or Source Serif Pro",
+      "letterSpacing": "-0.0100em"
+    }
+  ],
+  "description": "Front operates in a deep-plum command-center language: a single saturated purple (#300c41) carries the page, lighter lavender cards float above it, and one electric lime accent punches through the darkness as the only warm color. Typography is neo-grotesque and tightly tracked, with display sizes at weight 500 pulling inward at -0.02em so headlines feel machined rather than drawn. Surfaces are flat — no drop shadows, only a hairline 1px inset ring in pale lilac (#d0c6f0) to define interactive edges. The overall rhythm is confident and dense: rounded pill controls (40-64px radius), compact 8/16/24px spacing, and dark-on-dark layering that makes the lime CTA feel switched on.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Text: #1c1e20 (Ink) on light, #ffffff on dark, #d0c6f0 (Pale Lilac) for subtext on dark\n- Background: #300c41 (Aubergine) for dark sections, #ffffff for light sections\n- Border: #d0c6f0 (Pale Lilac) on dark, #dedfe2 (Stone) on light\n- Accent: #b375f4 (Lavender Glow) for decorative\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n\n1. **Build the hero section**: Full-bleed #300c41 Aubergine background, 100px vertical padding. Centered headline in white Suisse Intl weight 500 at 62px, letter-spacing -1.24px, max-width 900px. Subtext below in #d0c6f0 Pale Lilac at 17px weight 400, max-width 640px. Two-button row, 16px gap: first button is Lime Spark (#dee948) fill with #0d1d39 text, 40px radius, 12px 24px padding; second button is transparent with 1px #e2dcf6 border, white text, same dimensions.\n\n2. **Build the email card mockup**: Lilac Mist (#e2dcf6) card, 20px radius, 20px padding, 380px wide. Inside: 40px circular avatar top-left, sender name 'Eva Rogers' in Ink #1c1e20 at 16px weight 500, subject 'Subject: Reroute shipment' in Slate #5b5d63 at 14px. Message body in Ink at 15px weight 400 with 8px gap between lines. Place this card at a 3-4deg rotation on the Aubergine hero.\n\n3. **Build the chat widget**: 320px wide floating card, 20px radius, lavender gradient fill from #b375f4 top to #d0c6f0 bottom, 20px padding, fixed bottom-right. Top: small purple Front 'F' icon. Heading 'Welcome to Front!' in white at 20px weight 500. Four stacked pill options below, each 40px radius, white fill, Ink text at 15px weight 500, 8px vertical gap between pills. Bottom-right: 40px circle purple (#8034bf) send icon button.\n\n4. **Build the customer logo strip**: Full-width Royal Plum (#5b1f76) band, 60px vertical padding. Left-aligned 'Trusted by 9,000+ companies' in white at 14px weight 500. To its right, 5-6 white wordmark logos at 60% opacity, 32px height, distributed with 64px gaps across the remaining width.\n\n5. **Build the announcement bar**: Full-bleed Lime Spark (#dee948), 8px vertical padding, centered text. 'New research: B2B teams spend 3 hours coordinating for every 1 hour solving.' in Ink #0d1d39 at 14px weight 500, followed by underlined inline link 'Read the report' in the same color."
+    }
+  ],
+  "elevationPhilosophy": "Front deliberately avoids drop shadows. Depth is communicated through color layering alone — the Aubergine canvas sits behind Royal Plum bands, which sit behind Lilac Mist cards. The only shadow-like effect is a 1px inset lilac ring (#d0c6f0) on interactive controls, which reads as a precision outline rather than elevation. This keeps the interface feeling flat, modern, and immediate."
+}

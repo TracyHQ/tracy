@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-deep-lagoon: #004449;
+  --color-electric-iris: #483cff;
+  --color-parchment: #fffef0;
+  --color-ink-black: #000000;
+  --color-mint-wash: #d7ffc2;
+  --color-lime-pulse: #0bff80;
+
+  /* Typography */
+  --font-pp-mori: 'PP Mori', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,238 @@
+/* =============================================================================
+ * ja_kinetic — Single AUTHOR archive (com_content view=author layout=author)
+ * Scoped to `.hx-author` (html/com_content/author/author.php + author_posts.php).
+ * Loaded by that override via addStyleSheet for EVERY author (Itemid-proof, so
+ * authors with no dedicated menu item still style). Source: pencil/kinetic.pen
+ * frame W2cdQ. Tokens carry light + dark + the three directions.
+ * ============================================================================= */
+
+.hx-author { --hx-au-avatar-bg: rgba(77, 124, 15, 0.11); }
+html.t4-dark .hx-author { --hx-au-avatar-bg: rgba(163, 230, 53, 0.145); }
+
+.hx-author { font-family: "IBM Plex Sans", sans-serif; color: var(--text); }
+
+/* P58: kill the T4 main-body gap above the full-bleed masthead */
+.t4-section.t4-main-body:has(.hx-author) { padding-top: 0 !important; }
+
+/* ── Masthead ─────────────────────────────────────────────────────────────── */
+.hx-author__head {
+  padding-top: 60px;
+  padding-bottom: 52px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 75% 60% at 50% 0%, rgba(163, 230, 53, 0.059) 0%, var(--elevated) 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+html.t4-dark .hx-author__head {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse 75% 60% at 50% 0%, rgba(163, 230, 53, 0.059) 0%, #161B18 55%);
+  background-size: 30px 30px, 30px 30px, 100% 100%;
+}
+.hx-author__head-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.hx-author__bc {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+}
+.hx-author__bc-home { color: var(--text); text-decoration: none; }
+.hx-author__bc-home:hover { color: var(--primary); }
+.hx-author__bc-trail { color: var(--muted); }
+.hx-author__bc-link { color: var(--muted); text-decoration: none; }
+.hx-author__bc-link:hover { color: var(--primary); }
+
+/* eyebrow pill (shared visual; duplicated from page-252.css) */
+.hx-au-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  background: rgba(163, 230, 53, 0.08);
+  border: 1px solid rgba(163, 230, 53, 0.25);
+}
+html:not(.t4-dark) .hx-au-pill {
+  background: rgba(77, 124, 15, 0.08);
+  border-color: rgba(77, 124, 15, 0.28);
+}
+.hx-au-pill__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+.hx-au-pill__t {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.hx-author__title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 46px;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -1.3px;
+  text-align: center;
+  color: var(--heading);
+}
+.hx-author__sub {
+  margin: 0;
+  max-width: 600px;
+  font-size: 17px;
+  line-height: 27px;
+  text-align: center;
+  color: var(--text);
+}
+
+/* ── Body: aside identity card + post cards ───────────────────────────────── */
+.hx-author__body { padding-block: 56px 72px; background: var(--bg); }
+.hx-author__inner {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.hx-auaside {
+  width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.hx-auaside .hx-auav--lg { width: 88px; height: 88px; }
+.hx-auaside .hx-auav--lg .hx-auav__i { font-size: 30px; }
+
+.hx-auav {
+  border-radius: 50%;
+  background: var(--hx-au-avatar-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.hx-auav__i {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+.hx-auav__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.hx-auaside__nm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 0 14px;
+}
+.hx-auaside__n {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--heading);
+  text-align: center;
+}
+.hx-auaside__meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  color: var(--muted);
+  text-align: center;
+}
+.hx-auaside__bio {
+  margin: 0;
+  width: 100%;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text);
+  text-align: center;
+}
+
+.hx-auposts {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.hx-auposts__empty { margin: 0; color: var(--muted); }
+
+.hx-aupost {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 22px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-decoration: none;
+  transition: border-color .15s, background .15s;
+}
+.hx-aupost:hover { border-color: var(--primary); background: var(--elevated); }
+.hx-aupost__tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.hx-aupost__t {
+  margin: 0;
+  width: 100%;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--heading);
+  transition: color .15s;
+}
+.hx-aupost:hover .hx-aupost__t { color: var(--primary); }
+.hx-aupost__e {
+  margin: 0;
+  width: 100%;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text);
+}
+.hx-aupost__m {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .hx-author__inner { flex-direction: column; gap: 28px; }
+  .hx-auaside { width: 100%; }
+  .hx-author__title { font-size: 36px; letter-spacing: -1px; }
+}
+@media (max-width: 620px) {
+  .hx-author__head { padding-top: 44px; padding-bottom: 28px; }
+  .hx-author__body { padding-block: 40px 52px; }
+  .hx-author__sub { font-size: 16px; }
+}

@@ -1,0 +1,41 @@
+/* ModeBar parity: dsh-better-sidebar/sidebar.module.css on origin/develop.
+   Keep the animated spans and captured snapshot geometry; share product colors. */
+.hs-win {
+  --mode-fg: oklch(.145 0 0);
+  --mode-active: oklch(.97 0 0);
+  --mode-fill: color-mix(in oklab, var(--mode-fg) 6%, transparent);
+  --mode-muted: color-mix(in oklab, var(--mode-fg) 58%, transparent);
+  --mode-line: color-mix(in oklab, var(--mode-fg) 14%, transparent);
+}
+:root[data-theme="dark"] .hs-win {
+  --mode-fg: oklch(.985 0 0);
+  --mode-active: oklch(.269 0 0);
+}
+/* Specificity also overrides the replay's broad dark snapshot skin. */
+:root[data-theme] .hs-win :is(.hs3-mode, .hs4-s104:has(> .hs4-s108)) {
+  background: var(--mode-fill);
+  border: 0;
+  border-radius: 8px;
+}
+:root[data-theme] .hs-win .hs3-mode > span,
+:root[data-theme] .hs-win .hs4-s104:has(> .hs4-s108) > div {
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: var(--mode-muted);
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 500;
+}
+:root[data-theme] .hs-win .hs3-mode > span.is-on,
+:root[data-theme] .hs-win .hs4-s104:has(> .hs4-s108) > .hs4-s108 {
+  background: var(--mode-active);
+  color: var(--mode-fg);
+  box-shadow: 0 0 0 1px var(--mode-line);
+}
+:root[data-theme] .hs-win .hs3-mode > span.is-hover:not(.is-on) {
+  color: var(--mode-fg);
+}
+/* Snapshot SVGs and labels otherwise retain their captured light colors. */
+:root[data-theme] .hs-win .hs4-s104:has(> .hs4-s108) :is(svg, span) { color: inherit; }
+:root[data-theme] .hs-win .hs4-s104:has(> .hs4-s108) svg { stroke: currentColor; }

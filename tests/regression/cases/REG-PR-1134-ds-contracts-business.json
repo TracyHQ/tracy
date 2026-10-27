@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1134-ds-contracts-business",
+  "kind": "feat",
+  "title": "Tracy Business wears a design system on WordPress and Joomla too: the WordPress contract is ready (the header and the signal orange follow the system, links painted with the accent fill read the readable accent, the kept bands keep their look) and Joomla Tracy Business has a contract whose module sits in the first position the template renders",
+  "pr": 1134,
+  "area": "design-system/contracts",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/design/tracy-ds-slot/test/cms.test.mjs apps/tracy-web/test/design-system-door.test.mjs",
+    "S2: Run: node packages/design/tracy-ds-slot/scripts/audit.mjs",
+    "S3: Read the result of each test named below and the last line of S2."
+  ],
+  "expect": [
+    "0 failures in S1.",
+    "'WordPress Tracy Business: the header and the signal orange follow the system; the kept bands get them back' passes.",
+    "'Joomla Tracy Business: the template keeps its own names and sizes; they point at the worn colours' passes.",
+    "'a template maps to its slot contract; one without a contract says why' passes: wp-tracy-business → wordpress-tracy-business, tracy_business → joomla-tracy-business.",
+    "'Tracy Business on WordPress and Joomla: the door emits what each contract wears a system with' passes (Joomla module position off-canvas).",
+    "S2 prints 'invariants: all hold' and names the ready WordPress/Joomla template contracts it ran every offered system through."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/wordpress-tracy-business.json, packages/design/tracy-ds-slot/templates/joomla-tracy-business.json",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf(...))"
+  },
+  "evidence": "tasks/evidence/ds-contracts-business-2026-10-11/README.md (stand flow per CMS: default, 14 systems, clear; role checks, contrast, kept bands, screenshots)",
+  "fence": "Which contract a Tracy Business site gets, what each contract makes the emitters write (repointed template variables, kept-band give-backs, readable-accent text selectors, the Joomla module position), and that every offered system of both libraries goes through each ready template contract without unsafe output. No stand, no model.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/design/tracy-ds-slot/test/cms.test.mjs",
+      "apps/tracy-web/test/design-system-door.test.mjs"
+    ],
+    "tests": [
+      "WordPress Tracy Business: the header and the signal orange follow the system; the kept bands get them back",
+      "Joomla Tracy Business: the template keeps its own names and sizes; they point at the worn colours",
+      "a template maps to its slot contract; one without a contract says why",
+      "Tracy Business on WordPress and Joomla: the door emits what each contract wears a system with"
+    ]
+  }
+}

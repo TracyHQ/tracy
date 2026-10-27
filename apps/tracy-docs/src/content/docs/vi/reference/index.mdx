@@ -1,0 +1,28 @@
+---
+title: Tham chiếu API
+description: Tham chiếu OpenAPI tương tác của Tracy API, và các tài liệu thô nó được dựng từ — openapi.json, llms.txt và tài liệu của plugin Claude Cowork.
+tableOfContents: false
+---
+
+Tham chiếu bên dưới được dựng trực tiếp từ tài liệu OpenAPI 3.1 mà `tracy-web` tự xây cho mình, nên
+không bao giờ lệch sau các route. **Test request** gửi lời gọi tới host API với khoá bạn dán vào — khoá ở lại trong tab của bạn và
+không được lưu ở đâu. Mở riêng nó tại [`/api/reference/`](/api/reference/).
+
+<iframe
+  class="tracy-reference-frame"
+  src="/api/reference/"
+  title="Tracy API reference"
+  loading="lazy"
+></iframe>
+
+## Các tài liệu
+
+| | |
+|---|---|
+| [`/api/openapi.json`](/api/openapi.json) | Tài liệu OpenAPI 3.1 của API công khai — mọi route, tham số, body, câu trả lời và lời từ chối; `servers[0]` là host API. |
+| [`/api/llms.txt`](/api/llms.txt) | Cùng bản tham chiếu ấy dưới dạng văn bản thuần theo định dạng [llms.txt](https://llmstxt.org), mỗi operation một dòng, để mô hình ngôn ngữ đọc. |
+| [`/api/claude-cowork.json`](/api/claude-cowork.json) | Bề mặt HTTP của plugin Claude Cowork trên một site Joomla hay WordPress của khách — cửa action của nó và `/content.json` — dưới dạng tài liệu OpenAPI. |
+
+Tham chiếu đánh dấu mỗi action Apply bằng **bộ công cụ** nó cần (`content`, `code`, `site`,
+`lifecycle`) và release plugin trả lời nó; các cột ấy lấy từ chính các bảng của cửa Apply, và đó là lý
+do chúng nằm trong tham chiếu chứ không ở trang [Tương thích](/vi/reference/compatibility/).

@@ -1,0 +1,59 @@
+{
+  "color": {
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Page canvas, section backgrounds, project card fills — the void everything else floats on"
+    },
+    "soft-black": {
+      "$value": "#101010",
+      "$type": "color",
+      "$description": "Soft Black — Subtle surface elevation over the pure black canvas, card backgrounds in tight stacks"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Primary text, headings, hairline borders, nav text — the only light in the room"
+    },
+    "fog-gray": {
+      "$value": "#a0a0a0",
+      "$type": "color",
+      "$description": "Fog Gray — Secondary text, metadata, captions, image borders, inactive labels"
+    },
+    "graphite": {
+      "$value": "#484848",
+      "$type": "color",
+      "$description": "Graphite — Footer borders, section dividers, rare structural lines that recede into the dark"
+    },
+    "scarlet-signal": {
+      "$value": "#e4002b",
+      "$type": "color",
+      "$description": "Scarlet Signal — Supporting palette color for small decorative accents when the core palette needs contrast."
+    },
+    "rose-brand-spectrum": {
+      "$value": "#e85a5a",
+      "$type": "color",
+      "$description": "Rose Brand Spectrum — Brand color exploration panel — a pink-to-black swatch that walks from #f5a5a5 → #e85a5a → #d42020 → #7a0a0a → #2a0606 → #000000 as a literal brand-color system reveal"
+    }
+  },
+  "font": {
+    "nextbook": {
+      "$value": "NextBook",
+      "$type": "fontFamily",
+      "$description": "The studio's own custom display and text face. Weight 300 whispers in section headings and 80px display; weight 400 carries body, labels, and nav. Used across every context — hero, body, heading, link, list, icon, footer."
+    },
+    "circular-std": {
+      "$value": "Circular Std",
+      "$type": "fontFamily",
+      "$description": "Referenced inside project case studies (the 'AaBbCc 1234' specimen tile) as a client font example — not part of Studio Oker's own UI system"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://oker.com",
+      "siteName": "Studio Oker",
+      "extractedAt": "2026-06-03T21:03:14.903Z",
+      "variant": "compact"
+    }
+  }
+}

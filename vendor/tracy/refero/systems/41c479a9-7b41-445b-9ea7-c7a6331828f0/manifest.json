@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "41c479a9-7b41-445b-9ea7-c7a6331828f0",
+  "status": "complete",
+  "name": "Signal Messenger",
+  "url": "https://styles.refero.design/style/41c479a9-7b41-445b-9ea7-c7a6331828f0",
+  "sourceWebsite": "https://signal.org",
+  "extractedAt": "2026-06-03T19:38:05.159Z",
+  "capturedAt": "2026-10-08T05:10:53.078518+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Frosted privacy glass. A nearly white room washed in pale blue light, with one vivid blue line marking every door you can open.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7b793d13-837f-4807-b0e5-f8fa83acd7f9.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/2546c70b-313b-4fc5-bee7-3e128a965c01.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/0273708d-8b77-4038-bd73-ce33867729de.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/a9579abc-1765-4891-9b6e-cc5a5ee9ed27.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/c686eeb8-0fb8-4d82-8ea3-f5b2427db479.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "4c0c20292107e4181c360e87db78d5eb7c8f5938b3fceb1902a2b7c0b189965a",
+      "bytes": 20759
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "5701d9984d3b5d6bb25b6ec0d3b4ef99ffe4fef546bef478bbb264ad598ac64d",
+      "bytes": 138388
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "45fab123dbd355c9bccede61a6fc3a5509f930fe35dec8b885a9e215f256c205",
+      "bytes": 19104
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "14415afa64ce0c2872949d3c4f838c049c83337984ba9bef733cb59ddae2f2ed",
+      "bytes": 7418
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "677b921a912375de4806df27759bc340e0f1cbde1ef05868702009f48bffb35f",
+      "bytes": 12915
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "601acecfc6dacd1ccc403b8dbf27f0fe2ade399e5e053d046b3a8c6c304488d9",
+      "bytes": 3161
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3fae4e78350b1069fc8117bc3a88b6e3aef4a22961cf9789129d377f116d5420",
+      "bytes": 571
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d11f35ce174b43ef5a84a9bc729d5b844cbd9d13249db1de38bd990ba5cabea0",
+      "bytes": 588
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ebf10da81cad32a5c2944193d5e8c7db3d468f9afcce3cd76475ee3ad5050b95",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "2ba6df2de73a40fbd7accd2cd6e71f0e8a247838682a911d6d567b94e0616070",
+      "bytes": 44278
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "4e4c6a0d93d806aba0dba7a799bf85da92c0b13f41d14c6e6f407f4283968e5f",
+      "bytes": 22850
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "77698edd31afc814c5e293c80c2fc41ede05f89d05600e3ccb8bd51f7b137d34",
+      "bytes": 35072
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ef3119cf8a12c4540d6c5c309e6a4d83493ebbf9fdb68db2ffed464a15888649",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e875494578efc31a8e47c5f6f1d6d93c70734829a46736ea7e78eb5beb6da58d",
+      "bytes": 1159
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "424a4066eaa0a26f4660d4ff93acb377123af24c188fd153a8749df38a23d623",
+      "bytes": 1715
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "03b3d707-2a30-4f53-a524-347d1b70eb2c",
+    "063be10d-593d-4c81-a99e-a7543737b9db",
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "41547c7a-3bbe-49f0-95d6-9701c9df9a5e",
+    "41c479a9-7b41-445b-9ea7-c7a6331828f0",
+    "63c0e759-3175-4f62-a8e3-b9e285f9e998",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "742b500d-3e10-4daa-bb89-d0d26272e5f6",
+    "a0244aab-0dba-45fe-a595-416c1f0715be",
+    "ca4708f7-7175-4da2-a47f-ce8f5e601f99",
+    "caca412f-7fc7-4510-aacc-5664d4f8ce9f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "d9a60077-619a-4cb7-95ed-0c428c2b51ed",
+    "da6ad92d-4f29-4f92-a59a-3a46295d0d1c",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "eeeb6ac9-fc07-4965-935a-e1989ed831f1",
+    "effca480-81fb-4b8f-ab9c-3aa8c219c82a"
+  ]
+}

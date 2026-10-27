@@ -1,0 +1,53 @@
+{
+  "id": "QA-UNIT-REG-PR-1109-auto-merge-unknown-mergeable-happy",
+  "itemIds": ["regression:REG-PR-1109-auto-merge-unknown-mergeable"],
+  "requirement": "Auto-merge reads a PR again while GitHub still computes its mergeability instead of turning a green PR away",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1109-auto-merge-unknown-mergeable.json",
+    "ref": "PR #1109 (fix); fix evidence: none recorded",
+    "invariant": "A first read with mergeable: null followed by a clean read reaches the exact-head gate and merges after one wait. A PR whose mergeability stays unknown after four reads is reported as mergeability-unknown and never reaches the gate or the merge. A closed PR is read once, without retries. Every earlier guard (draft, reviews, head change, expired verdict, App token) still blocks the merge.",
+    "productSources": ["scripts/auto-merge-develop.mjs:9", "scripts/check-pr-merge.mjs:92"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "mergeability still being computed is read again before the PR is judged",
+    "mergeability that stays unknown is reported as such and never reaches the gate",
+    "automatic merge is restricted to ready same-repository develop PRs with known clean mergeability",
+    "draft, review, branch and head changes after the gate prevent merge",
+    "a verdict expiring during the last review reads never reaches merge"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1109-auto-merge-unknown-mergeable"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "scripts", "scripts"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1109-auto-merge-unknown-mergeable",
+    "pr": 1109,
+    "kind": "fix",
+    "area": "ci/auto-merge",
+    "file": "tests/regression/cases/REG-PR-1109-auto-merge-unknown-mergeable.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "scripts/test/auto-merge-develop.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "mergeability still being computed is read again before the PR is judged",
+    "mergeability that stays unknown is reported as such and never reaches the gate",
+    "automatic merge is restricted to ready same-repository develop PRs with known clean mergeability",
+    "draft, review, branch and head changes after the gate prevent merge",
+    "a verdict expiring during the last review reads never reaches merge"
+  ],
+  "timeoutS": 600
+}

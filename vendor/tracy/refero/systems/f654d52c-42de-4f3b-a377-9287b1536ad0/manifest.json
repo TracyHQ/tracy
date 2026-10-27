@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "f654d52c-42de-4f3b-a377-9287b1536ad0",
+  "status": "complete",
+  "name": "NCDA",
+  "url": "https://styles.refero.design/style/f654d52c-42de-4f3b-a377-9287b1536ad0",
+  "sourceWebsite": "https://ncda.biz",
+  "extractedAt": "2026-06-03T19:39:26.456Z",
+  "capturedAt": "2026-10-08T05:19:40.072257+00:00",
+  "theme": "mixed",
+  "industry": "agency",
+  "description": "Architectural monograph in negative space. The NCDA wordmark at 62px is cropped by the viewport edge, turning a logo into a wall.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/f9fe88ba-1adb-4c11-8d06-71dd182c3856.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c78c6e8ddc3207af781a7891d4a4e4be046f1221cc6fddd5e18da751b95f162f",
+      "bytes": 16897
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d53ab55208eb2acad4a47cbdde0d184ce5d900599480fca2e816c4d8332151ef",
+      "bytes": 54170
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "9900dc49f8e8aa8926493c6b4c859a26f3ea78fa11817052184d8649ab81218c",
+      "bytes": 14248
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "9e46b3544755356be00a68fca105a2635683eb2dfa2cf52ae68cc247df87c68c",
+      "bytes": 6085
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "795af7447882960f453a7022efef6ff71b0bb7bf9d99b7044d9c81eec06ba4ab",
+      "bytes": 10868
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "c10f62b6bfda1bddc6d1c18a06d6091b8d05f7e0464a29ea8fdee06fce9b0e69",
+      "bytes": 1929
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "643c496d60a7c442380ef3409b64b917dd61a6c854bd0d2b963df28c97279345",
+      "bytes": 399
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0313f8b86d07b150fb5f757377363633c6fef9feedcd3e39f0218de478ec3cb2",
+      "bytes": 416
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "9331282e2255e259c4af1c44d4e440a25907ddca2707ca9245c10ce8ca9657c4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "db63ecb900ed6728caaabaf6caab6bb4b4577d1840ef5ac94dbc1150a5aa046b",
+      "bytes": 38696
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e085ab3215ad5919473156ae920103af41b14e8e944bd3fd6504baa023098fe7",
+      "bytes": 19760
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "78d25f16a1f597e8e7c8c3540dfd78ba6322a333160a3256c4659b5165677769",
+      "bytes": 25966
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "40c1bf823e54e6f067cb007932a1d17b482676a1905a22d3627f40f29b405c1a",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c4d90d0ccff0901142d9c896d73cdada51e3e28de3dffb5c651c9b3787284664",
+      "bytes": 1054
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b0dc6cb3f431c92e9948d287f5a02a5ebc2930997449fd9ea29c689098c51a5e",
+      "bytes": 1445
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "17e5ff99-38c1-4ad6-8910-648f5798b3a5",
+    "190d4a0b-0353-4fc8-be09-affa6e977146",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "565bfc50-3a19-4224-9a4c-125edaeb7bef",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5c9743ad-fe33-4d21-9185-db012f6f96c7",
+    "5e9409c4-d130-42f3-b224-5bd66cdfbe28",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6f428c12-ba43-48e3-9a52-299ec1ce509b",
+    "7d66c966-6cee-4c82-b2e4-2bf1ca7b2ccd",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "8d8d5861-dee0-431b-826d-56f3fa4e1f84",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "c072c00a-ee7f-4160-bd06-645cca12f7a8",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "f654d52c-42de-4f3b-a377-9287b1536ad0",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761"
+  ]
+}

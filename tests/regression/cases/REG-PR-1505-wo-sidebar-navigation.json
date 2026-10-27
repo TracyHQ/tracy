@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1505-wo-sidebar-navigation",
+  "kind": "feat",
+  "title": "WO sidebar separates its four views and their addresses while navigation guards retain history",
+  "pr": 1505,
+  "area": "website-opportunities/ops",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the real mounted App sidebar tests together with WO address and browser-history navigation-guard tests through run.cmd.",
+    "Require the named mounted-sidebar test, separate Research and legacy Dubai-anchor test, view-scoped Settings address test and zero suite failures."
+  ],
+  "expect": [
+    "Four WO links belong to one Website Opportunities sidebar group, separate from Invitations.",
+    "Research and legacy Dubai anchors resolve to Research; Places and Settings keep their own addresses.",
+    "Cancelled navigation and history traversal preserve the current editor; accepted navigation changes its route.",
+    "All selected tests pass without skip."
+  ],
+  "selectors": {
+    "sidebar": "[data-slot=sidebar-content]",
+    "rightPanel": "[data-slot=sidebar-inset]",
+    "research": "#dubai-pilot",
+    "active": "[aria-current=page]"
+  },
+  "fence": "Mounted production App with linkedom, production address parser and navigation guard. No browser layout, pixel overflow, live API or settings-draft persistence is proved by this command; the previous manual acceptance remains in the change journal.",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "packages/web/tracy-harness/test/ops-small-defects.test.mjs",
+      "packages/web/tracy-harness/test/wo-address.test.mjs",
+      "packages/web/tracy-harness/test/navigation-guard.test.mjs"
+    ],
+    "tests": [
+      "Website Opportunities has four distinct view links in its own sidebar group",
+      "Research is a separate view and old Dubai anchors still open it",
+      "each view reads and writes only its own section; Settings writes only view=settings"
+    ]
+  }
+}

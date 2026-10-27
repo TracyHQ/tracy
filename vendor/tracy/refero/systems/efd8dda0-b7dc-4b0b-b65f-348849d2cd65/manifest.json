@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+  "status": "complete",
+  "name": "Glossier",
+  "url": "https://styles.refero.design/style/efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+  "sourceWebsite": "https://glossier.com",
+  "extractedAt": "2026-06-03T19:12:24.093Z",
+  "capturedAt": "2026-10-08T05:19:17.241514+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Sunlit beauty editorial — paper white, ink black, one flash of yellow",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/93ba745e-a298-434a-80e6-3dda3b215834.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/349138fa-144a-4d5d-9746-b636d4d3a303.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a48c400d-b2fa-4b43-880b-086b8654dfce.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/341dff7c-58d9-414e-af8d-0536b3b3e3b1.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/38966590-168f-4a1a-a24c-febf75d252ea.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e44365f24defb41202c0a776a91175f7ed9f648839d0a133906e514bc0a3e077",
+      "bytes": 18620
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "6197e0bfd3bc92c6c739fe3a779fcd1ebced4f8d3eeac459f42d623905959c78",
+      "bytes": 144873
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "15794a49eed9b953fce4a38d270ea0fe4716fba45dda189090f9d4515d9eea30",
+      "bytes": 15519
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3ef1ae54cf6580a9b62dc7be848503758ebda1dd1b6faab57bffe0ba0b51f340",
+      "bytes": 12737
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "ba23c2179eea56cfc16b481f5cc32763fe6fa72cf0da1672bfef3c0f768b0bf0",
+      "bytes": 12231
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6e3fffa88e32d2f15c26121169c3ec4945edbedf2b84863faae6e396ecfb905d",
+      "bytes": 3400
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7171d30e02b5e1c3ead8a0e39296b0ba12081b0c29d5f2e9a2714ff9e87ae290",
+      "bytes": 671
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "e1647d688b81b9e52d9054fb9ab3c675a441db569fbfde60a8278e7fa24a7d9f",
+      "bytes": 688
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "176633cd538e6676415a73e7dfbf4a2c596a271360cd0cbed0ce2cf9133dcd08",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3148dbd0764a4ddba5db94ea21f6e529ae57b79b1b2ded8d0bdf3d0583834d4d",
+      "bytes": 43420
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "411913c75512641128a9ff346e0df161a0af8c40f6e6d542a12b089ca3757fe5",
+      "bytes": 23094
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "98b937b0103283ef0230804a6de2105dab52a3db1baac0f33dfe54e46e5615c0",
+      "bytes": 54902
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "32e196ddf715634f6d47b464bc163bb180d6e1245fd9ebe8a59abc5009959faf",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "84e3005cdaca599b0ffa097495d9f813871bfd010a808a66e52e7d8a8036194b",
+      "bytes": 1454
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "132c2afba2c7a5ce8a9654cefda63364c9292c793856b21bea6928040b394b37",
+      "bytes": 1964
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0b9da6ef-bec5-4073-90af-66c67e72f2a4",
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "1e93f444-0b01-4412-aa2b-877be5ef08d7",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "39105d96-3cb1-497a-8f9f-507a1bed4d30",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "6fb648be-cc69-4a84-a798-9f0f006922a0",
+    "71717c5a-324a-40ed-8a09-9a35df74f1d3",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "79d83fce-84bf-4e12-8039-5d283c98917c",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "a4dcee26-dd31-415a-ac99-64299959e7f1",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "c2fadeda-8ef3-4ab2-9909-ffdf02ab0a24",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "e00519a1-7b8a-4171-b49b-550c64a57d3c",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "eb3bf6c1-a18f-4d72-801e-50c2cdbbaa21",
+    "efd8dda0-b7dc-4b0b-b65f-348849d2cd65",
+    "f1a690c7-234d-4ee9-9806-5790934e7043"
+  ]
+}

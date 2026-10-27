@@ -1,0 +1,64 @@
+{
+  "color": {
+    "bee-ink": {
+      "$value": "#21200b",
+      "$type": "color",
+      "$description": "Bee Ink — Headlines, body text, hairline borders, dark surface panels, and outlined action borders"
+    },
+    "pioneer-yellow": {
+      "$value": "#ffd900",
+      "$type": "color",
+      "$description": "Pioneer Yellow — Navigation links, icon marks, colored content fields, and dark-surface button text — vivid yellow makes the near-black/yellow pairing unmistakably Bee"
+    },
+    "lavender-memory": {
+      "$value": "#d2c4ff",
+      "$type": "color",
+      "$description": "Lavender Memory — Feature-card surfaces and occasional supporting text treatment; this cool interruption prevents the yellow-and-ink system from becoming monochrome"
+    },
+    "putty": {
+      "$value": "#e5e0dd",
+      "$type": "color",
+      "$description": "Putty — Large card surfaces and the dominant warm-gray page canvas"
+    },
+    "paper": {
+      "$value": "#f7f3f1",
+      "$type": "color",
+      "$description": "Paper — Light card surfaces and filled light outlined-action backgrounds"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Occasional deepest media or card surface"
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Hero text over photography and the lightest canvas surface"
+    },
+    "recruiter-indigo": {
+      "$value": "#150a45",
+      "$type": "color",
+      "$description": "Recruiter Indigo — Full-width recruitment and announcement strip behind white text"
+    }
+  },
+  "font": {
+    "fff-acidgrotesk": {
+      "$value": "Fff Acidgrotesk",
+      "$type": "fontFamily",
+      "$description": "The signature display and interface face: use 700 for 48-96px headlines, 700 at 19px for compact section statements, and 500 for navigation, controls, and feature labels. The 96px display tracking is aggressively tight, making large words read as one dense graphic form rather than separate letters."
+    },
+    "inter-variable": {
+      "$value": "Inter Variable",
+      "$type": "fontFamily",
+      "$description": "Use for explanatory paragraphs, introductory copy, and small supporting information. At 16px/1.8 it creates a calm, spacious counterweight to Acidgrotesk’s compressed, emphatic headings."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.bee.computer",
+      "siteName": "Bee",
+      "extractedAt": "2026-09-20T19:29:54.519Z",
+      "variant": "compact"
+    }
+  }
+}

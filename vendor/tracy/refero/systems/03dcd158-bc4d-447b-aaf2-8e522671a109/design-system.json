@@ -1,0 +1,346 @@
+{
+  "dos": [
+    "Use #010314 as the universal canvas — never introduce a lighter background for page-level surfaces",
+    "Reserve #b88cff for links, icons, and gradient termini — it is the encryption key, not a fill color",
+    "Set headline tracking to -0.025em at 48px+ display sizes; tighten as type scales up",
+    "Apply 19.2px radius to the floating nav and 16px to content cards; use 9999px for all CTA buttons and tags",
+    "Layer shadows with the violet-tinted shadow stack (rgba(190,167,255,0.24) inset + rgba(0,0,0,0.25) drop) for cards, not generic gray shadows",
+    "Use Roboto Mono 0.400em-tracked uppercase for all eyebrow/category labels under 14px",
+    "Alternate between Void Canvas sections and Gradient Hero Bands to create the encrypted-chamber rhythm"
+  ],
+  "donts": [
+    "Do not introduce a light theme — the dark canvas is the brand's identity",
+    "Do not use #6633ee as a flat fill for large surfaces — it belongs inside gradients and the logo only",
+    "Do not use pure #ffffff for body text — use #dfe1f4 or #ececfb to avoid harsh contrast on the near-black canvas",
+    "Do not apply the same radius everywhere — 8px for badges/buttons, 12px for cards, 19.2px for nav, 24px+ for hero shapes",
+    "Do not use generic gray shadows — the violet-tinted shadow stack is what makes the depth feel encrypted",
+    "Do not use Roobert for body copy below 18px — switch to Inter for readability at UI sizes",
+    "Do not center-align long-form body paragraphs — center only headlines and short CTA clusters"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#010314",
+      "name": "Void Canvas",
+      "role": "Primary page background, hero canvas — near-black with a blue-violet undertone, not a true neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#171825",
+      "name": "Obsidian Surface",
+      "role": "Elevated panels, nav bar, secondary cards — one step up from canvas, reads as a subtle surface tier",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2a2b3a",
+      "name": "Slate Layer",
+      "role": "Card backgrounds, input fields, inset panels — the main surface level for content containers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#343543",
+      "name": "Carbon Border",
+      "role": "Hairline borders, dividers, card edges — barely visible structural lines on dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#5e6077",
+      "name": "Ash Text",
+      "role": "Muted helper text, disabled labels, tertiary metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#9fa2b9",
+      "name": "Fog Text",
+      "role": "Secondary body text, inactive icons, subdued UI labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#babcd2",
+      "name": "Mist Text",
+      "role": "Link resting state, sub-labels, low-emphasis body",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dfe1f4",
+      "name": "Lunar White",
+      "role": "Primary body and heading text — a cool off-white, the dominant readable surface in the system",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ececfb",
+      "name": "Frost White",
+      "role": "High-contrast text, hover states, icon highlights — the brightest text in the hierarchy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Pure White",
+      "role": "Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b88cff",
+      "name": "Ultraviolet Key",
+      "role": "Brand accent — links, highlight icons, gradient termini, the signature violet that signals encryption",
+      "group": "brand"
+    },
+    {
+      "hex": "#6633ee",
+      "name": "Deep Iris",
+      "role": "Brand gradient anchor — hero gradient origin, logo violet, saturated primary brand tone",
+      "group": "brand"
+    },
+    {
+      "hex": "#8e64ff",
+      "name": "Amethyst Glow",
+      "role": "Mid-gradient violet, hover states on brand elements, secondary accent fills",
+      "group": "brand"
+    },
+    {
+      "hex": "#2e2a4c",
+      "name": "Shadow Iris",
+      "role": "Tinted shadows and border accents — gives depth a violet cast rather than pure black",
+      "group": "accent"
+    },
+    {
+      "hex": "#1f1d3a",
+      "name": "Plum Depth",
+      "role": "Deep accent backgrounds, violet-tinted shadow layers, card hover glows",
+      "group": "accent"
+    },
+    {
+      "hex": "#f92672",
+      "name": "Code Rose",
+      "role": "Code syntax highlighting (Monokai-style keywords), inline emphasis in code blocks",
+      "group": "accent"
+    }
+  ],
+  "layout": "Max-width 1200px centered container, but hero sections break to full-bleed. Hero is a centered headline stack over a full-bleed dark canvas with the credit-card visualization floating left. Below the hero, a trust logo cloud spans full-width. Sections alternate between dark canvas and luminous gradient bands (radial violet → white arches) that act as visual room-changers. Content sections use a 2-column split (text-left, visual-right) pattern. Product features arrange as 4-column icon grids. Code examples sit in single-column card blocks. Navigation is a floating pill bar anchored to the top, never a full-width strip.",
+  "imagery": "Visual language is dominated by 3D abstract renders and gradient washes rather than photography. The hero centerpiece is a credit card illustration paired with a cascade of encrypted character glyphs, suggesting tokenization. Product feature cards use isometric 3D cube/hexagon shapes in violet-to-blue gradients. The gradient hero bands are full-bleed radial washes of ultraviolet that arch over content like light through a cathedral window. Icons are thin-stroke line-art in violet (#b88cff) or white, never filled. The overall feel is diagrammatic and cryptographic — the visual is the data, not a metaphor for it.",
+  "similar": [
+    {
+      "why": "Same near-black canvas with a single bright white pill CTA, and tight letter-spaced display headlines over gradient hero washes",
+      "business": "Vercel"
+    },
+    {
+      "why": "Identical floating pill nav pattern and dark-mode UI with violet-tinted accent glow, plus inset shadow stacks on cards",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar developer-first product presentation with gradient hero bands, code snippet cards, and a trust logo cloud mid-page",
+      "business": "Stripe"
+    },
+    {
+      "why": "Same encrypted-vault aesthetic: deep canvas, violet accent, terminal/code-forward typography, and pill-shaped navigation",
+      "business": "Railway"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "nav": "19.2px",
+      "hero": "38.4px",
+      "cards": "16px",
+      "badges": "8px",
+      "inputs": "12px",
+      "buttons": "9999px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "devtools",
+  "surfaces": [
+    {
+      "hex": "#010314",
+      "name": "Void Canvas",
+      "level": 0,
+      "purpose": "Primary page background, hero base — the deepest surface in the stack"
+    },
+    {
+      "hex": "#171825",
+      "name": "Obsidian Panel",
+      "level": 1,
+      "purpose": "Floating nav bar, secondary panels, inset containers"
+    },
+    {
+      "hex": "#2a2b3a",
+      "name": "Slate Card",
+      "level": 2,
+      "purpose": "Content cards, feature tiles, input fields, the standard card surface"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Frost Surface",
+      "level": 3,
+      "purpose": "Primary action buttons, inverted card sections, maximum-emphasis elements"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(0,0,0,0.25) 0px 8px 16px -4px, rgba(0,0,0,0.25) 0px 4px 8px -2px, rgba(0,0,0,0.2) 0px 1px 2px 0px, rgba(190,167,255,0.24) 0px 0px 0px 1.5px inset",
+      "element": "Content Card"
+    },
+    {
+      "style": "rgba(255,255,255,0.2) 0px 1px 0px 0px inset, rgba(0,0,0,0.12) 0px -1px 24px 0px inset, rgba(0,0,0,0.08) 0px 0px 16px 0px inset, rgba(0,0,0,0.2) 0px 0px 0px 1px, rgba(0,0,0,0.2) 0px 1px 2px 0px, rgba(0,0,0,0.2) 0px 2px 4px 0px",
+      "element": "Elevated Card (hero / feature)"
+    },
+    {
+      "style": "rgba(0,0,0,0.12) 0px 0px 0px 1px inset",
+      "element": "Badge / Pill"
+    }
+  ],
+  "northStar": "Encrypted vault behind ultraviolet light — a dark crypt where one violet beam reveals everything.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.55,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body",
+      "size": 14,
+      "lineHeight": 1.76,
+      "letterSpacing": 0
+    },
+    {
+      "role": "body-lg",
+      "size": 16,
+      "lineHeight": 1.94,
+      "letterSpacing": 0
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.18
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.36
+    },
+    {
+      "role": "heading",
+      "size": 32,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.64
+    },
+    {
+      "role": "heading-lg",
+      "size": 48,
+      "lineHeight": 1.13,
+      "letterSpacing": -1.2
+    },
+    {
+      "role": "display",
+      "size": 56,
+      "lineHeight": 1.13,
+      "letterSpacing": -1.4
+    }
+  ],
+  "components": [
+    {
+      "name": "Floating Pill Navigation",
+      "role": "Primary site navigation",
+      "description": "Pill-shaped nav bar (19.2px radius) floating over the hero with #171825 background, 1px white-alpha inset highlight on top edge. Contains logo left, centered link cluster, CTA right. Padding approximately 8px 12px internally with 13px gap between links."
+    },
+    {
+      "name": "Primary CTA Button (Pill)",
+      "role": "Main call-to-action",
+      "description": "White background (#ffffff), dark text (#010314), Inter 13–14px weight 500, pill radius (9999px), padding 8px 16px. Subtle inset shadow at top. The inversion against the dark canvas makes it the brightest element on screen."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Secondary navigation or inline link",
+      "description": "No background, #ececfb or #dfe1f4 text, Inter weight 500, with a right-arrow chevron (→) suffix. Used for 'Get Started' and 'View our docs' alongside the primary pill CTA."
+    },
+    {
+      "name": "Hero Credit Card Visualization",
+      "role": "Hero centerpiece",
+      "description": "Rounded card (24px radius) with white-to-violet gradient, chip, card number, and contactless icon. Positioned left of a vertical violet glow beam (#6633ee → #ffffff radial) and a cascade of encrypted characters (#847fa1) suggesting tokenization."
+    },
+    {
+      "name": "Product Feature Card",
+      "role": "Feature explanation container",
+      "description": "Dark card (#2a2b3a background), 12px radius, 24px padding. Contains a violet-tinted icon or 3D cube illustration, bold heading, and 2–3 line description. Multi-layer shadow with inset violet glow (rgba(190,167,255,0.24) 1px inset) gives an encrypted-chamber depth."
+    },
+    {
+      "name": "Code Snippet Card",
+      "role": "Developer-facing code example",
+      "description": "Dark card with frosted-glass treatment, tabbed header (Checkout.jsx | theme.js), syntax-highlighted code using Monokai-like palette (#f92672 keywords, #b88cff strings, #ececfb variables). Roboto Mono 12–13px, 1px border #343543, 12px radius."
+    },
+    {
+      "name": "Trust Logo Cloud",
+      "role": "Social proof band",
+      "description": "Two-row grid of partner/client logos on transparent background, rendered in #dfe1f4 or white monochrome. Centered caption below in muted gray: 'Global leaders trust Evervault to secure their most sensitive payment data'."
+    },
+    {
+      "name": "Product Icon Grid",
+      "role": "Product line overview",
+      "description": "8-column horizontal grid of square icon tiles (each ~48×48px) on rounded dark containers. Icons are violet-tinted line-art. Labels below in Inter 11px caption. Used to enumerate the product suite (PCI, Payments, Card, Network, etc.)."
+    },
+    {
+      "name": "Gradient Hero Band",
+      "role": "Section background",
+      "description": "Full-bleed gradient zone transitioning from #6633ee radial at top-center fading to white at bottom edge (radial-gradient 130% 120% at 50% 0px). Creates a luminous arch over content sections — the visual signature of page transitions."
+    },
+    {
+      "name": "Eyebrow Label Pill",
+      "role": "Section category indicator",
+      "description": "Small rounded badge (8px radius), #2a2b3a background, 1px inset border. Text in Roboto Mono 11–12px with 0.400em letter-spacing, uppercase, #ececfb color. Used for 'Built for Developers' and similar categorical labels."
+    },
+    {
+      "name": "Logo Wordmark",
+      "role": "Brand identity in nav/footer",
+      "description": "Custom Evervault logo: three horizontal bars forming an 'E' shape (varying lengths) + 'evervault' wordmark in Roobert or Inter weight 500, all in #dfe1f4 on dark canvas."
+    },
+    {
+      "name": "Announcement Bar",
+      "role": "Top-of-page notification",
+      "description": "Full-width thin bar (2–3px vertical padding), centered text in Inter 12–13px, #dfe1f4. No background tint — sits directly on the canvas. Icon prefix + 'Learn more →' link suffix."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Headlines and display text — the brand's signature face. Aggressive negative tracking at large sizes makes characters pull into each other, creating a custom-display feel no system font replicates. Use for h1–h3, hero copy, and section titles.",
+      "sizes": "12, 13, 14, 16, 18, 24, 32, 48, 52, 56",
+      "family": "Roobert",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.00, 1.13, 1.25, 1.30",
+      "substitute": "Inter Tight or Manrope",
+      "letterSpacing": "-0.010em to -0.025em (tightens as size grows; -0.025em at 56px display, -0.010em at 14px body)",
+      "fontFeatureSettings": "\"kern\", \"liga\", \"salt\""
+    },
+    {
+      "role": "Body text, navigation, buttons, UI labels, footer copy. The workhorse face for everything below the headline tier. Weight 580 is an uncommon mid-weight that fills the gap between 500 and 600 for UI emphasis.",
+      "sizes": "9, 11, 12, 13, 14, 15, 16",
+      "family": "Inter",
+      "weight": "400, 500, 580",
+      "lineHeight": "1.00, 1.55, 1.75, 1.76, 1.94, 2.00",
+      "substitute": "Inter (native)",
+      "fontFeatureSettings": "\"kern\", \"liga\", \"salt\""
+    },
+    {
+      "role": "Code snippets, terminal output, technical labels. The 0.400em tracking at small sizes is a deliberate eyebrow/label pattern for uppercase micro-copy like 'Built for Developers'.",
+      "sizes": "10, 12, 15, 18, 20",
+      "family": "Roboto Mono",
+      "weight": "400, 500, 600",
+      "lineHeight": "1.00, 1.21, 1.40, 1.50",
+      "substitute": "JetBrains Mono or IBM Plex Mono",
+      "letterSpacing": "-0.050em at small sizes, 0.400em for all-caps micro-labels (tracking-out for eyebrow text)",
+      "fontFeatureSettings": "\"kern\", \"liga\", \"salt\""
+    }
+  ],
+  "description": "Evervault is a nocturnal crypto-vault interface: an almost-black canvas pierced by ultraviolet light, where every surface feels like brushed obsidian. The palette is 95% achromatic, leaning on cool gray-violet tints (#dfe1f4, #ececfb) rather than pure white, with a single vivid violet (#b88cff) acting as the encryption key — it appears on links, icons, gradient washes, and a glowing portal in the hero. Typography is the brand's quiet flex: Roobert for headlines with aggressive negative tracking that pulls characters into each other, Inter for body/UI at a comfortable density, and Roboto Mono for code that signals developer-first credibility. Components are floating and layered — a pill-shaped nav bar, 12–16px-radius cards with inset shadow stacks, pill CTAs — and the layout alternates between deep canvas and luminous gradient bands to create a sense of moving through encrypted chambers.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n\n- **Canvas**: #010314\n- **Primary text**: #dfe1f4\n- **High-emphasis text**: #ececfb\n- **Muted text**: #9fa2b9 / #5e6077\n- **Card surface**: #2a2b3a\n- **Border**: #343543\n- **Brand accent**: #b88cff\n- **primary action: no distinct CTA color\n\n## Example Component Prompts\n\n**1. Hero Section (centered headline)**\nNo distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.\n\n**2. Product Feature Card**\nBackground #2a2b3a, 12px radius, 24px padding. Shadow: rgba(0,0,0,0.25) 0px 8px 16px -4px with rgba(190,167,255,0.24) 0px 0px 0px 1.5px inset. Violet line icon (24px, #b88cff) at top. Heading at 18px Roobert weight 500, #ececfb. Body at 14px Inter weight 400, #9fa2b9, line-height 1.76.\n\n**3. Floating Pill Navigation**\nBackground #171825, 19.2px radius, 8px 12px padding, 1px rgba(255,255,255,0.1) inset top border. Links in Inter 13px weight 500, #dfe1f4, 13px gap. White pill button on right (#ffffff, #010314 text, 9999px radius, 6px 12px padding).\n\n**4. Code Snippet Block**\nBackground #2a2b3a, 12px radius, 16px padding. Tabs in Roboto Mono 12px weight 500, #9fa2b9 (inactive) / #ececfb (active). Code in Roboto Mono 12px, line-height 1.50. Keywords in #f92672, strings in #b88cff, variables in #ececfb. 1px #343543 border.\n\n**5. Eyebrow Label Pill**\nBackground #2a2b3a, 8px radius, 6px 10px padding. Text in Roboto Mono 11px weight 500, uppercase, letter-spacing 4.4px (0.400em), color #ececfb. Inset border: rgba(0,0,0,0.12) 0px 0px 0px 1px."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is violet-tinted, not gray. Every shadow stack includes an inset glow in rgba(190,167,255,0.24) to make depth feel like it's emitting from within the card rather than falling on it. The system avoids pure black drop shadows — even the dark values lean warm-violet (rgba(46,42,76)) so that even shadow reads as part of the brand."
+}

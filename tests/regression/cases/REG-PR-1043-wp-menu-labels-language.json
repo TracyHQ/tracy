@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1043-wp-menu-labels-language",
+  "kind": "fix",
+  "title": "WordPress menu labels follow the site's written language, links and buttons to an unticked page are removed (not relinked to Contact) and its child pages drafted, Joomla articles of an unticked category unpublished, JA Resort j6 asks only the dark logo, and a Tracy Business Joomla site written in one other language declares it",
+  "pr": 1043,
+  "area": "add-site/questions",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test apps/tracy-web/test/brief-wp-residue.test.mjs apps/tracy-web/test/brief-wordpress.test.mjs apps/tracy-web/test/brief-wp-unlink.test.mjs apps/tracy-web/test/brief-wp-kept-pages.test.mjs",
+    "S2: Run: node --test apps/tracy-web/test/brief-brand-joomla.test.mjs apps/tracy-web/test/fit-questions.test.mjs apps/tracy-web/test/template-profiles.test.mjs",
+    "S3: Run: node --test apps/tracy-web/test/brief-joomla.test.mjs apps/tracy-web/test/joomla-unticked-articles.test.mjs",
+    "S4: Read the exit code and the fail/skipped counts of each run."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures and 0 skipped tests.",
+    "With template.language set, the judge is asked for every menu label in that language and every label it returns is written; without it the judge keeps the old question.",
+    "Submenu labels and labels of a menu written inside a template part are read and relabelled like wp_navigation links, through the sweep's one residue apply id.",
+    "A link, button, or header/footer item that leads to an unticked page is removed, not relinked to the contact page; a contract slot button is hidden through blockVisibility; child pages and posts of an unticked page are drafted (Tracy Base WP 1.1.2 fixtures).",
+    "JA Resort j6 1.0.1 asks the customer only the dark logo (logos: dark) and the dark logo is written to site_logo.",
+    "A two-edition Joomla site (Tracy Business) written in one language other than en-GB calls sourceLanguage.set with written: true after multilingual.retire, writes the footer module titles in that language, and a plugin without that door leaves a note while the words are still written.",
+    "Joomla articles of a category whose page was unticked are unpublished."
+  ],
+  "selectors": {
+    "judge": "apps/tracy-web/src/sites/brief-engines/wp-residue.js judgeSite",
+    "sweep": "apps/tracy-web/src/sites/brief-engines/wp-residue.js sweepWordPress",
+    "engine": "apps/tracy-web/src/sites/brief-engines/wordpress.js",
+    "resort_profile": "apps/tracy-web/src/lib/template-profiles.json quickstart/ja-resort/j6",
+    "joomla_source_language": "apps/tracy-web/src/sites/brief-engines/joomla-languages.js",
+    "unlink": "apps/tracy-web/src/sites/brief-engines/wp-unlink.js",
+    "joomla_articles": "apps/tracy-web/src/sites/brief-engines/joomla-articles.js"
+  },
+  "evidence": "Measured on cowork.tracy.site 08/10/2026 (site tamq-8w-bizwp, Tracy Business wp7, develop 5a53926ca, plugin 0.18.3): Vietnamese pages under English menus Home / About / Careers / Investor relations / Book a site survey. Tracy Base WP (tamq-9w-tbwp, tamq-9w-tbwp2, 1.1.2): Pricing unticked, the desktop header still showed Pricing pointing at /resources/contact/. JA Resort (tamq-9j-res): every logo spot printed the dark logo, the light one was never used. Tracy Business j6 1.2.1 stand (Joomla 6.1.1): a Vietnamese site kept lang=en-gb and English footer headings.",
+  "fence": "Units over the judge and the sweep with a fake model. Not exercised here: a live build on the dev surface after merge, the model's actual labels.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1043-wp-menu-labels-language.mjs"],
+    "needs": []
+  }
+}

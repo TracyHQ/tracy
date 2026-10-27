@@ -1,0 +1,11 @@
+@theme {
+  /* Colors */
+  --color-charcoal-ink: #212529;
+  --color-pure-press: #000000;
+  --color-bone-white: #ffffff;
+
+  /* Typography */
+  --font-studio-feixen-sans-writer-book-regular: 'Studio Feixen Sans Writer Book Regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-studio-feixen-sans-writer: 'Studio Feixen Sans Writer', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-studio-feixen-sans: 'Studio Feixen Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

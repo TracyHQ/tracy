@@ -1,0 +1,99 @@
+{
+  "id": "QA-UNIT-REG-PR-1699-sync-copy-load-race-happy",
+  "itemIds": ["regression:REG-PR-1699-sync-copy-load-race"],
+  "requirement": "Sync from live reads the copy's database into its scratch schema even while the copy is still settling after a chat turn (a table dropped, purged, created or truncated during the read is a change to read again, not a stop); a real stop names the server's error with no value of the site",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1699-sync-copy-load-race.json",
+    "ref": "PR #1699 (fix); fix evidence: tasks/nhat-ky/2026-10-25-sync-copy-load-race.md",
+    "invariant": "S1: a site table or a _tracy_trash_ table dropped between the list and the dump: load_ours returns 0 and the scratch schema holds every table of the site S1: a table created after the list is in the scratch schema (never left out silently) S1: a TRUNCATE during the dump (Error 1412) is read again: load_ours returns 0 S1: a copy busy for ~3 s (snapshots, a listed table dropped and made again, rows written) loads once it settles: return 0 S1: a broken view still stops (return 2) and LOAD_OURS_WHY carries 1356 with no table or view name S1: db_error_line keeps the error code, cuts at the first quote, skips the docker client's warnings S2: merge's MERGE_FAILED for the copy's load carries LOAD_OURS_WHY",
+    "productSources": [
+      "packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-live-push.sh:32",
+      "packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-sync.sh:58"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:106 spawnSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:173 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:174 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:176 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:185 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:186 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:188 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:194 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:195 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:199 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:200 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:201 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:208 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:209 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:216 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:224 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:225 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:229 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:245 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:265 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:268 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:33 spawnSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:86 spawnSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:87 execFileSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs:95 spawnSync() runs a computed command",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-scratch-load.test.mjs:79 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-scratch-load.test.mjs:80 spawnSync() runs a computed path",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-scratch-load.test.mjs:85 spawnSync() runs a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the copy at rest loads whole",
+    "a table that goes between the list and its dump",
+    "a table that comes after the list",
+    "a table emptied by TRUNCATE while the dump reads",
+    "a copy the server cannot read still stops",
+    "a copy busy for a few seconds after a chat turn",
+    "the reason is the first error line",
+    "both scripts check their scratch loads by hand"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1699-sync-copy-load-race"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/fleet/tracy-fleet-operation", "tracy-fleet-operation"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1699-sync-copy-load-race",
+    "pr": 1699,
+    "kind": "fix",
+    "area": "sync/live",
+    "file": "tests/regression/cases/REG-PR-1699-sync-copy-load-race.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs",
+    "packages/fleet/tracy-fleet-operation/test/live-sync-scratch-load.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the copy at rest loads whole",
+    "a table that goes between the list and its dump",
+    "a table that comes after the list",
+    "a table emptied by TRUNCATE while the dump reads",
+    "a copy the server cannot read still stops",
+    "a copy busy for a few seconds after a chat turn",
+    "the reason is the first error line",
+    "both scripts check their scratch loads by hand"
+  ],
+  "timeoutS": 600
+}

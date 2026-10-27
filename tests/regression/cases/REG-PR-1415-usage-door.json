@@ -1,0 +1,59 @@
+{
+  "id": "REG-PR-1415-usage-door",
+  "kind": "feat",
+  "title": "/api/ops/usage folds turns and the Add site funnel by the rules agreed with the council, leaves out demo sites and staff, and shows the words only to named readers, each read audited",
+  "pr": 1415,
+  "area": "ops/usage",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: The folds on hand-made rows: change kinds, thresholds, Wilson rates, endings, the four signals and their aged denominators, the funnel.",
+    "S2: GET /api/ops/usage as a customer, as staff, with a demo site's turn and a staff member's turn in the window.",
+    "S3: GET /api/ops/usage/turns as staff not named, as a named reader, with a bad group.",
+    "S4: A moment undo, a whole-site restore, a tab row revert and a chat row revert.",
+    "S5: Funnel with a site made before visits were recorded, and with none recorded yet.",
+    "S6: Seed provider token totals, genuine zero, missing and partial measurements, 19/20 measured requests, staff and demo requests, and previous-period requests in an isolated database. Compare KPI, every CMS, daily/hourly buckets and customer leaderboard to independent SQL across 270 period/CMS/audience/demo combinations."
+  ],
+  "expect": [
+    "S1: below 20 no rate and no median, p90 from 100; a day-long signal counts only what is a day old; a follow-up is not called a failure.",
+    "S2: 403 for the customer; demo and staff turns left out; no words and no address in the answer; canReadText false.",
+    "S3: 403 for the unnamed staff seat; 400 INVALID_GROUP; the sample with the request as typed and no address; one audit row ops.usage.read-turns.",
+    "S4: the moment undo is the turn's (fromSiteChanges); restores 1, row reverts 1 — the chat revert is not counted.",
+    "S5: the older site counts as created and for first requests, never as a site nobody opened; with no visit recorded yet, nothing is counted as opened.",
+    "S6: Token totals, coverage, partial counts and nearest-rank medians match SQL for 24h, 7/14/30 days, All time and custom dates; median is absent at 19 and present at 20. Missing tokens stay null and recorded zero stays zero. The leaderboard always excludes staff/demo and sitesChanged counts distinct changed site incarnations. Current and previous values use equal observed bounds."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/ops/usage.js; apps/tracy-web/src/config.js (USAGE_TEXT_READERS)"
+  },
+  "evidence": "Plan tasks/todo-do-dung-that.md U5–U6; council answer ~/tracy-bench-work/usage-measure/council-answer1.md (17/10/2026); stand acceptance 17/10: 'Opened the site' read 3/422 before the fix",
+  "fence": "Read only; never the customer's words outside the named readers",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/ops-usage.test.mjs",
+      "apps/tracy-web/test/ops-usage-tokens.test.mjs",
+      "apps/tracy-web/test/ops-usage-token-matrix.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "changeKind:",
+      "kindsOf:",
+      "quantiles and rate",
+      "summarizeTurns:",
+      "summarizeFunnel:",
+      "GET /api/ops/usage: staff only",
+      "GET /api/ops/usage/turns: only the named readers",
+      "GET /api/ops/usage: Site changes undos",
+      "summarizeFunnel: a site made before visits were recorded",
+      "token totals distinguish unknown requests",
+      "tokens per request uses the shared nearest-rank median minimum",
+      "token KPI, daily/hourly chart, CMS and customer leaderboard",
+      "token previous period and custom periods",
+      "real token queries match independent SQL"
+    ]
+  }
+}

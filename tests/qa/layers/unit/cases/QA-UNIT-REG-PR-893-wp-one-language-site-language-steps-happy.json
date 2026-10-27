@@ -1,0 +1,52 @@
+{
+  "id": "QA-UNIT-REG-PR-893-wp-one-language-site-language-steps-happy",
+  "itemIds": ["regression:REG-PR-893-wp-one-language-site-language-steps"],
+  "requirement": "A one-language WordPress site answers 'single' to the language steps of Apply and Build instead of failing",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-wp-one-language-site-language-steps.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026, local stand, develop b21c158bc: Apply on the Design inspiration card ja-kinetic (WordPress, no Polylang) wrote the text, then site_brief ended 'failed': 'this site has no translation plugin, so it has no editions to retire'.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 10). The named case is 'ok': retire, relabel and site language answer status 'single' on the plugin's 'unavailable' + 'no translation plugin' answer, and another 'unavailable' answer still rejects.",
+    "productSources": [
+      "packages/cms/tracy-seeder/src/wordpress-contract-door.mjs:241",
+      "packages/cms/tracy-seeder/src/wordpress-language-catalog.mjs:26"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/cms/tracy-seeder/test/wordpress-contract-door.test.mjs:501 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-893-wp-one-language-site-language-steps.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-wp-one-language-site-language-steps"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/cms/tracy-seeder", "tracy-seeder"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-wp-one-language-site-language-steps",
+    "pr": 893,
+    "kind": "fix",
+    "area": "seeder/wordpress-languages",
+    "file": "tests/regression/cases/REG-PR-893-wp-one-language-site-language-steps.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/cms/tracy-seeder/test/wordpress-contract-door.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

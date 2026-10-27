@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-paper-gray: #f3f3f4;
+  --color-carbon-ink: #131314;
+  --color-cloud-white: #ffffff;
+  --color-divider-ash: #e0dfdf;
+  --color-muted-graphite: #66646d;
+  --color-disabled-steel: #838384;
+  --color-voltage-lime: #befc65;
+
+  /* Typography — Font Families */
+  --font-neuemontreal: 'NeueMontreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

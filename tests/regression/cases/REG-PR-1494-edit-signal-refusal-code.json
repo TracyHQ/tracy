@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1494-edit-signal-refusal-code",
+  "kind": "fix",
+  "title": "A refused edit or undo records the refusal code in the ops signal, including the string error code the Claude Cowork engine sends",
+  "pr": 1494,
+  "area": "ops/signals",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Call refusalCodeOf with {code:'X'}, {ok:false,error:'unknown_action'} and {error:{code:'Y'}}.",
+    "S2: Call it with an answer that names no code, and with a code longer than 64 characters carrying control characters.",
+    "S3: Record site.edit and site.undo through createOpsSignal with a refusal field."
+  ],
+  "expect": [
+    "S1: X, unknown_action and Y.",
+    "S2: null; then the code without control characters, at most 64 characters.",
+    "S3: both rows keep refusal; site.edit still drops moment, site.undo keeps moment."
+  ],
+  "selectors": {
+    "code": "refusalCodeOf in apps/tracy-web/src/sites/refusal-code.js, used by applyDoor in apps/tracy-web/src/sites/route.js; FIELDS in apps/tracy-web/src/lib/ops-signal.js"
+  },
+  "evidence": "Before this change every refused edit was recorded with refusal: null, because the engine sends error as a string and applyDoor read error.code",
+  "fence": "The helper and the signal field filter without Postgres. Not exercised: a live engine answer through applyDoor.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/refusal-code.test.mjs"],
+    "cwd": "apps/tracy-web",
+    "tests": [
+      "the code is read from each of the three refusal shapes",
+      "an answer that names no code is null",
+      "a code is bounded and carries no control characters",
+      "a refused edit and a refused undo both keep their code through the signal field filter"
+    ]
+  }
+}

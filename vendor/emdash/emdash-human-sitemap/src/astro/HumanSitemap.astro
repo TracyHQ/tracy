@@ -1,0 +1,199 @@
+---
+import { buildHumanSitemapData } from "../data.js";
+import { loadHumanSitemapSettings, resolveHumanSitemapOptions } from "../settings.js";
+import type { HumanSitemapProps, HumanSitemapSection } from "../types.js";
+import HumanSitemapTree from "./HumanSitemapTree.astro";
+
+const props = Astro.props as HumanSitemapProps;
+const settings = await loadHumanSitemapSettings();
+const options = resolveHumanSitemapOptions(settings, props);
+const sections = await buildHumanSitemapData(options);
+const componentId = `human-sitemap-${crypto.randomUUID()}`;
+
+function formatSectionCount(section: HumanSitemapSection): string {
+  const count = section.totalCount;
+  if (typeof count !== "number") return "";
+
+  if (section.kind === "menu") {
+    return `${count} ${count === 1 ? "link" : "links"}`;
+  }
+
+  if (section.kind === "taxonomy") {
+    return `${count} ${count === 1 ? "term" : "terms"}`;
+  }
+
+  return `${count} ${count === 1 ? "entry" : "entries"}`;
+}
+---
+
+{sections.length > 0 && (
+  <nav
+    class:list={[
+      "emdash-human-sitemap",
+      options.className,
+      options.layout === "expanded"
+        ? "emdash-human-sitemap--expanded"
+        : "emdash-human-sitemap--compact",
+    ]}
+    aria-label={options.title ?? "Human sitemap"}
+  >
+    {options.title !== null && (
+      <header class="emdash-human-sitemap__header">
+        <h2 id={componentId} class="emdash-human-sitemap__title">{options.title}</h2>
+      </header>
+    )}
+
+    <div class="emdash-human-sitemap__sections">
+      {sections.map((section, index) => {
+        const sectionId = `${componentId}-${index}`;
+        return (
+          <section class="emdash-human-sitemap__section" aria-labelledby={sectionId}>
+            <div class="emdash-human-sitemap__section-header">
+              <h3 id={sectionId} class="emdash-human-sitemap__section-title">
+                {section.label}
+              </h3>
+              {options.showCounts && typeof section.totalCount === "number" && (
+                <span class="emdash-human-sitemap__section-count">
+                  {formatSectionCount(section)}
+                </span>
+              )}
+            </div>
+
+            <HumanSitemapTree
+              items={section.items}
+              layout={options.layout}
+              showCounts={options.showCounts}
+            />
+
+            {section.hasOverflow && (
+              <p class="emdash-human-sitemap__section-meta">
+                {section.viewAllLink ? (
+                  <a class="emdash-human-sitemap__view-all" href={section.viewAllLink.href}>
+                    {section.viewAllLink.label ?? `View all ${section.label.toLowerCase()}`}
+                  </a>
+                ) : (
+                  `Showing the first ${section.renderedCount} items.`
+                )}
+              </p>
+            )}
+          </section>
+        );
+      })}
+    </div>
+  </nav>
+)}
+
+<style is:global>
+  .emdash-human-sitemap {
+    --emdash-human-sitemap-border: rgba(15, 23, 42, 0.12);
+    --emdash-human-sitemap-muted: rgb(71, 85, 105);
+    --emdash-human-sitemap-surface: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.94));
+    --emdash-human-sitemap-pill: rgba(37, 99, 235, 0.1);
+    --emdash-human-sitemap-pill-text: rgb(30, 64, 175);
+    display: grid;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--emdash-human-sitemap-border);
+    border-radius: 1rem;
+    background: var(--emdash-human-sitemap-surface);
+    box-shadow: 0 20px 40px -32px rgba(15, 23, 42, 0.45);
+  }
+
+  .emdash-human-sitemap__header {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+
+  .emdash-human-sitemap__title,
+  .emdash-human-sitemap__section-title {
+    margin: 0;
+    line-height: 1.15;
+  }
+
+  .emdash-human-sitemap__lead,
+  .emdash-human-sitemap__item-description,
+  .emdash-human-sitemap__section-meta {
+    margin: 0;
+    color: var(--emdash-human-sitemap-muted);
+  }
+
+  .emdash-human-sitemap__sections {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .emdash-human-sitemap__section {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 0.875rem;
+    background: rgba(255, 255, 255, 0.88);
+  }
+
+  .emdash-human-sitemap__section-header,
+  .emdash-human-sitemap__item-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .emdash-human-sitemap__section-count,
+  .emdash-human-sitemap__item-count {
+    flex-shrink: 0;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: var(--emdash-human-sitemap-pill);
+    color: var(--emdash-human-sitemap-pill-text);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .emdash-human-sitemap__list {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .emdash-human-sitemap__list--nested {
+    margin-top: 0.6rem;
+    padding-left: 1rem;
+    border-left: 1px solid rgba(148, 163, 184, 0.2);
+  }
+
+  .emdash-human-sitemap__item {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .emdash-human-sitemap__link,
+  .emdash-human-sitemap__view-all {
+    color: rgb(15, 23, 42);
+    font-weight: 600;
+    text-decoration: none;
+    text-underline-offset: 0.18em;
+  }
+
+  .emdash-human-sitemap__link:hover,
+  .emdash-human-sitemap__link:focus-visible,
+  .emdash-human-sitemap__view-all:hover,
+  .emdash-human-sitemap__view-all:focus-visible {
+    color: rgb(37, 99, 235);
+    text-decoration: underline;
+  }
+
+  .emdash-human-sitemap--compact .emdash-human-sitemap__item-description {
+    display: none;
+  }
+
+  @media (min-width: 60rem) {
+    .emdash-human-sitemap__sections {
+      grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+      align-items: start;
+    }
+  }
+</style>

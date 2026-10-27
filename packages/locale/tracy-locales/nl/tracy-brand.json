@@ -1,0 +1,20 @@
+{
+  "appearance.dark": "Donker",
+  "appearance.light": "Licht",
+  "appearance.system": "Systeem",
+  "appearance.title": "Weergave",
+  "font.code.description": "Codeblokken en de terminal",
+  "font.code.title": "Codelettertype",
+  "font.default": "Standaard",
+  "font.global.description": "Tekst in de hele interface",
+  "font.global.title": "Algemeen lettertype",
+  "fontSize.decrease": "Lettergrootte verkleinen",
+  "fontSize.description": "Beïnvloedt alleen de gespreksinhoud",
+  "fontSize.increase": "Lettergrootte vergroten",
+  "fontSize.title": "Lettergrootte",
+  "hero.title": "Wat wilt u vandaag veranderen?",
+  "primary.description": "Accentkleur voor knoppen, links en selectie",
+  "primary.hex": "Hexkleur",
+  "primary.swatch": "{color} gebruiken",
+  "primary.title": "Primaire kleur"
+}

@@ -1,0 +1,459 @@
+{
+  "about": "Shared test vectors for the site-access assertion (tasks/todo-tch-opensource.md, signature-contract section). The signer (apps/tracy-web/src/bar/site-access.js) must reproduce every `sign` entry byte for byte; both verifiers (WordPress tracy-access.php, Joomla TracyAccess) must give every `verify` entry its `expect`. Expected values were computed by openssl over hand-written canonical JSON, not by the signer.",
+  "context": "tracy-site-access.v1.",
+  "headers": {
+    "assert": "x-tracy-assert",
+    "sig": "x-tracy-sig"
+  },
+  "limits": {
+    "maxTtl": 60,
+    "skew": 30,
+    "nonceMin": 16,
+    "nonceMax": 64,
+    "assertMax": 4096
+  },
+  "key": {
+    "kid": "k1-test",
+    "site": "p0acc-wpa",
+    "hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+  },
+  "sign": [
+    {
+      "name": "owner opening the admin",
+      "claims": {
+        "email": "owner@example.test",
+        "exp": 1790000030,
+        "host": "p0acc-wpa.tracy.test:8080",
+        "iat": 1790000000,
+        "kid": "k1-test",
+        "method": "GET",
+        "nonce": "AAECAwQFBgcICQoLDA0ODw",
+        "role": "owner",
+        "site": "p0acc-wpa",
+        "target": "/wp-admin/?x=1",
+        "tier": "editor",
+        "v": 1
+      },
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8"
+    },
+    {
+      "name": "anonymous viewer (no seat): email and role empty, tier guest",
+      "claims": {
+        "email": "",
+        "exp": 1790000030,
+        "host": "p0acc-wpa.tracy.test:8080",
+        "iat": 1790000000,
+        "kid": "k1-test",
+        "method": "POST",
+        "nonce": "EBESExQVFhcYGRobHB0eHw",
+        "role": "",
+        "site": "p0acc-wpa",
+        "target": "/",
+        "tier": "guest",
+        "v": 1
+      },
+      "assert": "eyJlbWFpbCI6IiIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJQT1NUIiwibm9uY2UiOiJFQkVTRXhRVkZoY1lHUm9iSEIwZUh3Iiwicm9sZSI6IiIsInNpdGUiOiJwMGFjYy13cGEiLCJ0YXJnZXQiOiIvIiwidGllciI6Imd1ZXN0IiwidiI6MX0",
+      "sig": "USt8u-LbQxifgCuuAUvN54LkTMq5xBPl3KrLdF9P8ig"
+    },
+    {
+      "name": "non-ASCII email, slashes and quotes stay unescaped except the quote",
+      "claims": {
+        "email": "zoë@example.test",
+        "exp": 1790000030,
+        "host": "shop.example.com",
+        "iat": 1790000000,
+        "kid": "k1-test",
+        "method": "GET",
+        "nonce": "ICEiIyQlJicoKSorLC0uLw",
+        "role": "editor",
+        "site": "p0acc-wpa",
+        "target": "/caf%C3%A9/?next=/a/b&q=\"x\"",
+        "tier": "editor",
+        "v": 1
+      },
+      "assert": "eyJlbWFpbCI6Inpvw6tAZXhhbXBsZS50ZXN0IiwiZXhwIjoxNzkwMDAwMDMwLCJob3N0Ijoic2hvcC5leGFtcGxlLmNvbSIsImlhdCI6MTc5MDAwMDAwMCwia2lkIjoiazEtdGVzdCIsIm1ldGhvZCI6IkdFVCIsIm5vbmNlIjoiSUNFaUl5UWxKaWNvS1NvckxDMHVMdyIsInJvbGUiOiJlZGl0b3IiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL2NhZiVDMyVBOS8_bmV4dD0vYS9iJnE9XCJ4XCIiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "L2pamjBJe-NmIKQ-_7LQJFSVAiV4B9QNCTKaBrrr-ak"
+    }
+  ],
+  "verify": [
+    {
+      "name": "valid owner assertion",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "accept"
+    },
+    {
+      "name": "valid anonymous assertion",
+      "assert": "eyJlbWFpbCI6IiIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJQT1NUIiwibm9uY2UiOiJFQkVTRXhRVkZoY1lHUm9iSEIwZUh3Iiwicm9sZSI6IiIsInNpdGUiOiJwMGFjYy13cGEiLCJ0YXJnZXQiOiIvIiwidGllciI6Imd1ZXN0IiwidiI6MX0",
+      "sig": "USt8u-LbQxifgCuuAUvN54LkTMq5xBPl3KrLdF9P8ig",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "POST",
+        "target": "/",
+        "now": 1790000010
+      },
+      "expect": "accept"
+    },
+    {
+      "name": "valid non-ASCII assertion",
+      "assert": "eyJlbWFpbCI6Inpvw6tAZXhhbXBsZS50ZXN0IiwiZXhwIjoxNzkwMDAwMDMwLCJob3N0Ijoic2hvcC5leGFtcGxlLmNvbSIsImlhdCI6MTc5MDAwMDAwMCwia2lkIjoiazEtdGVzdCIsIm1ldGhvZCI6IkdFVCIsIm5vbmNlIjoiSUNFaUl5UWxKaWNvS1NvckxDMHVMdyIsInJvbGUiOiJlZGl0b3IiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL2NhZiVDMyVBOS8_bmV4dD0vYS9iJnE9XCJ4XCIiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "L2pamjBJe-NmIKQ-_7LQJFSVAiV4B9QNCTKaBrrr-ak",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "shop.example.com",
+        "method": "GET",
+        "target": "/caf%C3%A9/?next=/a/b&q=\"x\"",
+        "now": 1790000010
+      },
+      "expect": "accept"
+    },
+    {
+      "name": "host compared case-insensitively",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "P0ACC-WPA.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "accept"
+    },
+    {
+      "name": "last second inside the skew after exp",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000060
+      },
+      "expect": "accept"
+    },
+    {
+      "name": "one second past exp + skew",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000061
+      },
+      "expect": "expired"
+    },
+    {
+      "name": "iat at most skew in the future",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1789999970
+      },
+      "expect": "accept"
+    },
+    {
+      "name": "iat more than skew in the future",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1789999969
+      },
+      "expect": "future"
+    },
+    {
+      "name": "signature with its first character changed",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "AgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "signature"
+    },
+    {
+      "name": "signature with non-canonical trailing bits (decodes to the same bytes)",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I9",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "signature"
+    },
+    {
+      "name": "signed with another key",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "VAlddY5gT5EU3Ev_mhpHWZRJ4QPG2Jc3QZr8j2xvw_w",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "signature"
+    },
+    {
+      "name": "assertion swapped for another signed one, signature kept",
+      "assert": "eyJlbWFpbCI6IiIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJQT1NUIiwibm9uY2UiOiJFQkVTRXhRVkZoY1lHUm9iSEIwZUh3Iiwicm9sZSI6IiIsInNpdGUiOiJwMGFjYy13cGEiLCJ0YXJnZXQiOiIvIiwidGllciI6Imd1ZXN0IiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "signature"
+    },
+    {
+      "name": "signature header empty",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "malformed"
+    },
+    {
+      "name": "assertion header empty",
+      "assert": "",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "malformed"
+    },
+    {
+      "name": "assertion with base64 padding",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0=",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "malformed"
+    },
+    {
+      "name": "assertion that is not base64url",
+      "assert": "+yJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "malformed"
+    },
+    {
+      "name": "signed bytes that are not JSON",
+      "assert": "bm90IGpzb24gYXQgYWxs",
+      "sig": "ssKKiy3o7ZwNotzvPHs727Xp3cyFRIHXLe4vIla2rtg",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "malformed"
+    },
+    {
+      "name": "version 2",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IlFFRkNRMFJGUmtkSVNVcExURTFPVHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6Mn0",
+      "sig": "ZNva9rxPeGNQLqXLt9zooOaWuBXYQMeRYkDN9eydDMM",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "version"
+    },
+    {
+      "name": "tier that is not editor/viewer/guest",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IlVGRlNVMVJWVmxkWVdWcGJYRjFlWHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiYWRtaW4iLCJ2IjoxfQ",
+      "sig": "2KE_aq_zyV0E3MuqnPnSvmnWslsmem0aB3Vb-YXElfY",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "claims"
+    },
+    {
+      "name": "nonce shorter than 16 characters",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6ImFiYyIsInJvbGUiOiJvd25lciIsInNpdGUiOiJwMGFjYy13cGEiLCJ0YXJnZXQiOiIvd3AtYWRtaW4vP3g9MSIsInRpZXIiOiJlZGl0b3IiLCJ2IjoxfQ",
+      "sig": "PZGomsmwN98WWbnuLq5lWkudzoQQRYJOcrBxW4Hmqy0",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "claims"
+    },
+    {
+      "name": "exp as a string",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6IjE3OTAwMDAwMzAiLCJob3N0IjoicDBhY2Mtd3BhLnRyYWN5LnRlc3Q6ODA4MCIsImlhdCI6MTc5MDAwMDAwMCwia2lkIjoiazEtdGVzdCIsIm1ldGhvZCI6IkdFVCIsIm5vbmNlIjoiWUdGaVkyUmxabWRvYVdwcmJHMXVidyIsInJvbGUiOiJvd25lciIsInNpdGUiOiJwMGFjYy13cGEiLCJ0YXJnZXQiOiIvd3AtYWRtaW4vP3g9MSIsInRpZXIiOiJlZGl0b3IiLCJ2IjoxfQ",
+      "sig": "QlOgTOAT47bmquaXfAEfdxGNWPh3PMi8MnIuk3r2xtA",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "claims"
+    },
+    {
+      "name": "lifetime of 61 seconds",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDA2MSwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6Ik1ERXlNelExTmpjNE9UbzdQRDAtUHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "q_3OmHpO5A9E1bpA-JpMWaKu6SFz6bLxLoo7U8IC8Gw",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "ttl"
+    },
+    {
+      "name": "another kid than the site holds",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k2-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "kid"
+    },
+    {
+      "name": "another site than this one",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpb",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "site"
+    },
+    {
+      "name": "another host than the request names",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpb.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "host"
+    },
+    {
+      "name": "another method than the request",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "POST",
+        "target": "/wp-admin/?x=1",
+        "now": 1790000010
+      },
+      "expect": "method"
+    },
+    {
+      "name": "another target than the request",
+      "assert": "eyJlbWFpbCI6Im93bmVyQGV4YW1wbGUudGVzdCIsImV4cCI6MTc5MDAwMDAzMCwiaG9zdCI6InAwYWNjLXdwYS50cmFjeS50ZXN0OjgwODAiLCJpYXQiOjE3OTAwMDAwMDAsImtpZCI6ImsxLXRlc3QiLCJtZXRob2QiOiJHRVQiLCJub25jZSI6IkFBRUNBd1FGQmdjSUNRb0xEQTBPRHciLCJyb2xlIjoib3duZXIiLCJzaXRlIjoicDBhY2Mtd3BhIiwidGFyZ2V0IjoiL3dwLWFkbWluLz94PTEiLCJ0aWVyIjoiZWRpdG9yIiwidiI6MX0",
+      "sig": "hgjrYOh68PqcukYZh_fGeRPkBSwF1IJAkfOJFuVv7I8",
+      "request": {
+        "site": "p0acc-wpa",
+        "kid": "k1-test",
+        "host": "p0acc-wpa.tracy.test:8080",
+        "method": "GET",
+        "target": "/wp-admin/",
+        "now": 1790000010
+      },
+      "expect": "target"
+    }
+  ]
+}

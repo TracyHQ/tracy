@@ -1,0 +1,42 @@
+{
+  "id": "REG-062",
+  "kind": "fix",
+  "title": "Tracy's own EmDash media uploads (media.upload and tracy_emdash media_upload) are reported with the media id and never show as Unknown in Site changes",
+  "pr": 869,
+  "area": "site-changes/record",
+  "cms": ["em"],
+  "needs": ["stand", "site:em", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), PG, WEB, DSH, A and seat A's cookie COOKIE_A, pq (SELECT/WITH only). Case variables: KEY and LABEL = site key and container prefix of an EmDash site where seat A is owner, whose site declares @emdash-cms/plugin-audit-log (check: docker exec $LABEL-web-1 grep -c plugin-audit-log /app/astro.config.mjs must print >= 1; else BLOCKED note no-audit-log). LIB_SRC = packages/tools/tracy-site-tools/lib/index.js of THIS checkout (the commit under test); HARNESS = tasks/evidence/emdash-attribution/act-as-person.mjs of this checkout. On the shared stand (ORIGIN http://tracy.test:8080): PG=tracy-postgres-1, WEB=tracy-tracy-web-1, DSH=tracy-dsh; mint COOKIE_A inside $WEB with /opt/tracy-web/src/lib/session.js mintSession(A, SESSION_SECRET.split(\",\")[0]) (SESSION_SECRET is in $WEB env; never print it); the measured site is KEY=c1em1004.tracy.test, LABEL=c1em1004, A=emattr-a@example.test.",
+    "Check the web build: docker exec $WEB grep -c 'TRACY_EMDASH_TOOLS_OF_OP' /opt/tracy-web/src/sites/activity-source.js must print >= 1; otherwise stop with BLOCKED note web-older-than-this-fix.",
+    "Copy the lib under test beside the live one, never over it: docker cp $LIB_SRC $DSH:/desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.reg062.js and docker cp $HARNESS $DSH:/tmp/act-as-person.mjs. Remove both at the end of the case, whatever the verdict.",
+    "Two pictures no site holds yet (EmDash deduplicates by content hash, and a deduplicated upload logs nothing): RUN=$(date +%s). In $DSH, as the user that owns /site/$LABEL, write a 1x1 PNG whose one pixel is derived from RUN to /site/$LABEL/reg062-$RUN.png (node: zlib.deflateSync of the scanline, zlib.crc32 for each chunk), and print the base64 of a second 1x1 PNG with a different pixel as B64. Remove /site/$LABEL/reg062-$RUN.png at the end of the case, whatever the verdict.",
+    "Before: POST $O/api/sites/$KEY/cms-log/pull (cookie A, Origin $O, Content-Type application/json, body {}), then U0 = counts.unknown of GET $O/api/sites/$KEY/activity?version=2&filter=all&limit=1 (cookie A). Set W0=$(pq \"select coalesce(max(id),0) from site_write where site_key='$KEY'\").",
+    "Upload both, as seat A's own conversation would: docker exec -e SESSION=session-reg062-$RUN $DSH node /tmp/act-as-person.mjs /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.reg062.js $LABEL $A '[{\"site\":{\"action\":\"media.upload\",\"params\":{\"file\":\"reg062-'$RUN'.png\"}}},{\"tool\":\"media_upload\",\"arguments\":{\"filename\":\"reg062-'$RUN'-b.png\",\"contentType\":\"image/png\",\"base64\":\"'$B64'\"}}]'. M1 = id of the first answer (answer.id), M2 = answer.result.item.id of the second.",
+    "Wait 6 s (the collector settles rows younger than 5 s), then POST $O/api/sites/$KEY/cms-log/pull as above (repeat once after 6 s if 'pulled' is 0).",
+    "Read pq \"select action, outcome, via, actor, target->>'kind', target->>'id' from site_write where site_key='$KEY' and id > $W0 order by id\" and pq \"select resource_id, op, cms_actor is null or cms_actor = 'null'::jsonb, cursor_key from site_cms_change where site_key='$KEY' and source='emdash-audit-log' and resource_type='media' and resource_id in ('$M1','$M2') order by id\".",
+    "After: GET $O/api/sites/$KEY/activity?version=2&filter=all&limit=100 (cookie A; follow nextCursor, at most 5 pages) and GET $O/api/sites/$KEY/cms-log?limit=100 (cookie A).",
+    "Clean up the two library items through the same harness: '[{\"tool\":\"media_delete\",\"arguments\":{\"id\":\"'$M1'\"}},{\"tool\":\"media_delete\",\"arguments\":{\"id\":\"'$M2'\"}}]' (each delete's question is answered by the harness); wait 6 s, pull once more and read counts.unknown again (U2)."
+  ],
+  "expect": [
+    "The web build check prints >= 1; both upload answers have ok:true and name an id (M1, M2 distinct).",
+    "site_write gained exactly two rows from the uploads, in order: action 'media_upload', outcome 'ok', via 'emdash-mcp', actor A, target kind 'media', target id M1; then the same with target id M2 (before the fix: no row at all for media.upload, and a row with target null for tracy_emdash media_upload).",
+    "site_cms_change holds exactly one 'upload' row for M1 and one for M2, both with no account (EmDash 1.0.1's audit-log logs every upload with no user).",
+    "counts.unknown after the uploads = U0 (before the fix: U0 + 2).",
+    "No V2 item has evidence.cmsRecordRef naming either upload row ('emdash-audit-log:<cursor_key>'), and the cms-log door lists neither.",
+    "The cleanup: two more site_write rows, action 'media_delete', outcome 'ok', target {kind 'media', id M1 / M2}; site_cms_change gains no delete row for M1 or M2 (EmDash fires no hook for a media delete); U2 = U0.",
+    "index.reg062.js, /tmp/act-as-person.mjs and /site/$LABEL/reg062-$RUN.png are gone from $DSH at the end."
+  ],
+  "selectors": {
+    "harness": "tasks/evidence/emdash-attribution/act-as-person.mjs — tracy_emdash (and, written {site:{…}}, tracy_site) calls as one person, signed with MCP_TRACY_ACTOR_SECRET",
+    "changedDoor": "POST /api/sites/:key/changed body {tool:'media_upload', via:'emdash-mcp', target:{kind:'media', id}}",
+    "writeRecord": "site_write.target jsonb {kind:'media', id}",
+    "cmsLog": "site_cms_change(source='emdash-audit-log', op='upload', resource_type='media', resource_id, cms_actor)",
+    "rule": "notTracyOwnCmsDelete + TRACY_EMDASH_TOOLS_OF_OP in apps/tracy-web/src/sites/activity-source.js (V2 list + counts, V1 list, cms-log door)",
+    "activityApi": "GET /api/sites/:key/activity?version=2 → counts{unknown}, items[].evidence.cmsRecordRef",
+    "pullDoor": "POST /api/sites/:key/cms-log/pull"
+  },
+  "evidence": "tasks/evidence/emdash-attribution/findings.md §3 (media rows); tests: apps/tracy-web/test/activity-source.test.mjs (C1 media), packages/tools/tracy-site-tools/test/emdash.test.mjs and handler.test.mjs (C1 media).",
+  "fence": "tracy-site-tools reports every EmDash media write it makes — tracy_emdash media_upload/media_update/media_delete and tracy_site media.upload/media.draw — with target {kind:'media', id}; a CMS media upload (or delete) row with no account is left out of every Site changes read when Tracy's successful media writes of that site + id + op are at least as many — by id, never by time; more CMS rows than Tracy writes keep all of them unknown."
+}

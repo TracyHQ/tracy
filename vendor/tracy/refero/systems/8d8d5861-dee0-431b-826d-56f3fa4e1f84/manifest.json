@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8d8d5861-dee0-431b-826d-56f3fa4e1f84",
+  "status": "complete",
+  "name": "IDHEAL",
+  "url": "https://styles.refero.design/style/8d8d5861-dee0-431b-826d-56f3fa4e1f84",
+  "sourceWebsite": "https://idheal.fr",
+  "extractedAt": "2026-06-03T21:08:01.797Z",
+  "capturedAt": "2026-10-08T05:14:43.750100+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "Architectural editorial masthead on white marble. Display type that could be 2 meters tall in print, single photography frames, and chromatic accents drawn with a fine-point pen.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e59020c2-63e3-416b-8343-3d785ea6e565.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "8faefbc927cdfc5460077c7dd3534de2ad8a3c63201801394deb4070cd536f02",
+      "bytes": 21892
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "705807a820e544b28d16d7ce538720a13f2a86401df295a649cd631704fa5e2b",
+      "bytes": 145004
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "fd64d81b81dd24896e8459b2c0280137fc2485a9cd7d9de5ad4deed9b4e771f2",
+      "bytes": 16699
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "a80d94e6144fbb50af437660debabba35e7faa823bbf66ca727a1c9ba1bec1be",
+      "bytes": 13587
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0d048cef3655c19d501c375fa82eddcf1ef0b5b2dca9fcd12bde256159f5ab76",
+      "bytes": 12695
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a44485aa5ca6bd246a1bab0c95e7daf90de1c7d3e23a7bbf74a22c31efb34fda",
+      "bytes": 3853
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "dfe29ea03f2f864a628e782a0be61c878df9f1da570976ec070fc4c672d9f873",
+      "bytes": 1383
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9b731e09d709cd7e903265e5bb21cdf8302ad0da778284e259f46cfb3460b489",
+      "bytes": 1400
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8d03850cea01b11010b48731308102dc612207c9f34e5c45682f3c3ebb352014",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8b4023657456080616a1581ad5c9fd054aedb84325225e2910e1087d200fa70d",
+      "bytes": 41406
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "74485a836389e6c6fc6123be432c1f89f5bd04f6cbac1fc7aa099a8fd71700af",
+      "bytes": 21091
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "3502ab1686a367908ee0ec22e3526311b08a4662e1fd7a99a94cf91024a542ad",
+      "bytes": 44851
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7977d623ead30a3dbe74262988200a0e0b25e21f9558b6cda7ce7b2c21ec1247",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "0435be0ee56147514fc1c30829758843e89f9fd6c8189782646a37cc957ad2bd",
+      "bytes": 2352
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "fbe1d8cbfb0bc0d0b780807045b077ddaef4611de11d5952d1dbf3505c5d52fe",
+      "bytes": 2814
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "15d57573-513b-49aa-91c7-1b7f87bb1a55",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4040f97b-42cf-49ef-ab2d-a77c00fe8285",
+    "597355de-6167-4f37-8f14-b3897919a94c",
+    "5e9409c4-d130-42f3-b224-5bd66cdfbe28",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "73359194-de93-436e-af53-81d4029f5e7a",
+    "7d66c966-6cee-4c82-b2e4-2bf1ca7b2ccd",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "8d8d5861-dee0-431b-826d-56f3fa4e1f84",
+    "9e2dceb8-0c87-45db-8830-9df961b02b32",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c90b584e-de5b-4971-9e13-8ab991bd96c0",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "febf1c02-2c4d-46e6-ad16-8ee2a99ae0d5",
+    "ffd5932b-c78c-491b-b03e-78ebeb6b0a1b"
+  ]
+}

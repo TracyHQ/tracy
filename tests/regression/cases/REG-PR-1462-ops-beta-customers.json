@@ -1,0 +1,67 @@
+{
+  "id": "REG-PR-1462-ops-beta-customers",
+  "kind": "feat",
+  "title": "User Data Analytics \u203a Signals lists each new customer with their sites, requests, agent changes and active days",
+  "pr": 1462,
+  "area": "ops/beta",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Seed a customer who signs in, imports a site that fails once then builds and goes live, gives 2 requests on it and 1 on a demo site, gets 3 agent changes, 1 failed change and 1 undo, and is active on two days; seed a second customer who only signs in, a staff seat and a sign-in before the window. GET /api/ops/beta/customers?days=7 as staff.",
+    "S2: Fold site signals: an import with only an exported result; a create stuck twice; a create then deleted.",
+    "S3: GET /api/ops/beta/customers with days=5, as a stranger, and without a session.",
+    "S4: Record provider usage including cache, missing and failed attempts; retry and reorder close snapshots. Dry-run and apply a native V4 history backfill on an isolated database.",
+    "S5: Delay archive request delivery until its abort deadline has already fired, then delete the site through the real route.",
+    "S6: Recover a cached import over HTTPS while driving the importer with the mocked Date and timers used by the SiteLink tests.",
+    "S7: Run ops-signal-site-history, beta-waitlist-mail, beta-operation-signal, refusal-code, signals-definitions and app-statistic-overview tests with an isolated PostgreSQL database and node --import tsx --test. Do not use shared Docker.",
+    "S8: Mount the shared Ops rail; fold its active group, navigate, and toggle the User Data Analytics header with a saved Beta fold key.",
+    "S9: Read the full filtered first-sign-in growth cohort before the customer table cap; exercise ordered owned-site activation, both timing thresholds, mature and pending retention, source/CMS/status filtering, staff exclusion and reused site lifetimes.",
+    "S10: Read Desktop growth before pagination; exercise copy/account/opening subsets, unknown platform/version shares, immutable opened-version history, first-contact days and account UUID search."
+  ],
+  "expect": [
+    "S1: 200; total 2; rows newest first; the importer's site reads imported, built, 1 failure, live; requests 2 (demo left out); edits done 3, failed 1, undone 1; activeDays both days; tokens null; no request words in the answer.",
+    "S2: pending; stuck with 2 failures; deleted.",
+    "S3: days 14 with empty rows; 403 for the stranger; 302 without a session.",
+    "S4: Cache counts once, reasoning is not added twice; measured zero differs from unknown; partial coverage is explicit; retries replace snapshots and older source sequences cannot overwrite newer usage; dry-run writes nothing and apply touches only exact listed sites, once.",
+    "S5: The fake unreachable archive host rejects the already-aborted signal like fetch; deletion answers within its original bound instead of hanging the test until the runner timeout.",
+    "S6: Recovery keeps its source identity and the two engine calls remain at least 1000 ms apart on the mocked clock; removing the pacing still makes the assertion fail.",
+    "S7: Repeated blocked decisions survive mail throttling/failure and request coalescing; retries do not invalidate newer OTPs. Only successful undo counts completed; failed/unknown outcomes stay separate. Domain reuse separates owner/CMS/state and demo history remains excluded after deletion. Unknown legacy classification stays excluded and disclosed. Partial-period and latest-state comparisons are neutral and explicit; loaded-subset search/sort scope is disclosed.",
+    "S8: Every header is a native collapsible button; the active group accepts collapse and preserves the choice across navigation. The User Data Analytics label retains the Beta storage key, so existing preferences survive the rename.",
+    "S9: More than 200 matching people remain in aggregates; activation requires the exact person, ready site lifetime and successful request evidence. Both medians are absent at n=19 and match independent SQL percentile_disc at n=20. Retention excludes incomplete windows and preserves Pending. Unclassified history is disclosed and never called confirmed inactivity.",
+    "S10: Shares include Unknown and sum to the filtered denominator. Opening events retain their recorded account and version after later account/version changes; current-link funnel and immutable adoption remain distinct. Account UUID search retains matching activity. No download-to-copy conversion is inferred."
+  ],
+  "selectors": {
+    "file": "apps/tracy-web/src/ops/beta.js",
+    "test": "apps/tracy-web/test/ops-beta.test.mjs",
+    "screen": "packages/web/tracy-harness/src/beta/Signals.tsx"
+  },
+  "evidence": "Production 19/10/2026: per-customer facts (sites built, requests, active days) were read by hand from the database; the customers query run read-only on production listed 36 first sign-ins in 14 days with staff seats left out",
+  "fence": "customerSite() folds a site's signals to built, stuck, deleted or pending, and the customers door counts only, never the customer's words",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/ops-beta.test.mjs",
+      "apps/tracy-web/test/turn-token-usage.test.mjs",
+      "apps/tracy-web/test/turn-token-backfill.test.mjs",
+      "packages/site/tracy-site-tabs/test/token-usage.test.mjs",
+      "apps/tracy-web/test/sites-route.test.mjs",
+      "packages/site/tracy-add-site/test/handover-recovery.test.mjs",
+      "apps/tracy-web/test/ops-signal-site-history.test.mjs",
+      "apps/tracy-web/test/beta-waitlist-mail.test.mjs",
+      "apps/tracy-web/test/beta-operation-signal.test.mjs",
+      "apps/tracy-web/test/refusal-code.test.mjs",
+      "packages/web/tracy-harness/test/signals-definitions.test.mjs",
+      "packages/web/tracy-harness/test/app-statistic-overview.test.mjs",
+      "packages/web/tracy-harness/test/ops-small-defects.test.mjs",
+      "apps/tracy-web/test/ops-signal-growth.test.mjs",
+      "apps/tracy-web/test/app-statistic-growth.test.mjs",
+      "packages/web/tracy-harness/test/app-statistic-state.test.mjs"
+    ],
+    "needs": ["postgres"]
+  }
+}

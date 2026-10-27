@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1179-ds-reverify-b",
+  "kind": "fix",
+  "title": "Eighteen ready Joomla slot contracts (JA Donate to JA Landscape) re-verified with the unified probe on the release their minVersion names: fifteen hold, three fixed by eye (JA Fresco logo, JA Impact hero intro, JA Kidscorner hero width)",
+  "pr": 1179,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-{ja-donate,ja-educatsy,ja-ego,ja-essence,ja-eventcamp,ja-fit,ja-focus,ja-fresco,ja-gamex,ja-good,ja-healthcare,ja-helple,ja-impact,ja-insight,ja-justitia,ja-kidscorner,ja-kinetic,ja-landscape}.json through loadContract and each evidence summary.json under tasks/evidence/ds-reverify-b-2026-10-12/<slug>-j6 (fix/summary.json for the three fixed).",
+    "S3: build the module sheet (joomlaSlot) under Moxie (dark) and Apple (light) for JA Fresco, JA Impact and JA Kidscorner.",
+    "S4: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf(...), {key, version}) for each at its minVersion and at the version before it.",
+    "All of it: node tests/regression/scripts/REG-PR-1179-ds-reverify-b.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: each of the eighteen is ready, its minVersion is the release measured (ja-donate 1.0.2, ja-essence 1.0.6, ja-kinetic 1.0.4, the others 1.0.1), its maxVersion is at or above it; its evidence summary has controls [0,0,0,0], no lowContrast and every follows >= 0.5; the three fixed name the evidence folder in their readyNote.",
+    "S3: JA Fresco's light sheet gives .navbar-brand .logo-img filter:invert(1), its dark sheet has no .logo-img rule; JA Impact's light sheet gives .acm-hero.style-1 .description color:var(--ds-c-bg), its dark sheet has none; JA Kidscorner's container max-width rule names div.features-image div.owl-carousel.owl-theme and no bare div.owl-carousel.owl-theme.",
+    "S4: each at its minVersion -> {contract:'joomla-<slug>'}; the version before -> reason TEMPLATE_NEEDS_UPDATE."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-<slug>.json ready, minVersion, maxVersion, sideRules, selectors.container",
+    "door": "apps/tracy-web/src/lib/ds-slot.js contractFor / templateKeyOf"
+  },
+  "evidence": "tasks/evidence/ds-reverify-b-2026-10-12/README.md — per-template table (pass, follows, controls, eye check, held/fixed), report.md and summary.json of each flow run, the fix runs and header/hero crops (12/10/2026).",
+  "fence": "The measures on Docker stands are in the evidence, not re-run here (each takes 5-10 min on the shared VM). Not covered: judging by eye (the three fixes were seen in screenshots, not by the probe).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1179-ds-reverify-b.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

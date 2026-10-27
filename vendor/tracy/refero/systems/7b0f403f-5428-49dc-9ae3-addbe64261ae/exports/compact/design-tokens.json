@@ -1,0 +1,84 @@
+{
+  "color": {
+    "signal-blue": {
+      "$value": "#0077ff",
+      "$type": "color",
+      "$description": "Signal Blue — Primary CTA fill, active nav state, single accent across the entire interface — the only saturated color permitted on chrome, everything else recedes to monochrome"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card surfaces, button text on Signal Blue, pill navigation fill — the default surface at every level"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Primary text, icon strokes, hairline borders, logo mark — the dominant typographic and structural color"
+    },
+    "hairline": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Hairline — Borders, dividers, card edges, input outlines, image frames — the structural skeleton running through the entire system"
+    },
+    "smoke": {
+      "$value": "#b8b8b8",
+      "$type": "color",
+      "$description": "Smoke — Shadow tint, secondary border accent, button box-shadow base — the only non-black/white value used in elevation"
+    },
+    "graphite": {
+      "$value": "#525252",
+      "$type": "color",
+      "$description": "Graphite — Secondary body text, muted link color, list items — readable but clearly secondary to Ink"
+    },
+    "ash": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, icon strokes at rest, placeholder content, button secondary labels"
+    },
+    "mercury": {
+      "$value": "#a3a3a3",
+      "$type": "color",
+      "$description": "Mercury — Decorative SVG strokes, disabled icon state, subtle ornamental linework"
+    },
+    "slate": {
+      "$value": "#ababab",
+      "$type": "color",
+      "$description": "Slate — Quiet border accent, nearly invisible dividers in dense layouts"
+    },
+    "ember": {
+      "$value": "#f97316",
+      "$type": "color",
+      "$description": "Ember — Decorative illustration accent, warm icon fill — permitted only in graphics, never on chrome"
+    },
+    "amber": {
+      "$value": "#f59e0b",
+      "$type": "color",
+      "$description": "Amber — Decorative illustration accent, warm icon fill — pairs with Ember in artwork"
+    },
+    "crimson": {
+      "$value": "#ef4444",
+      "$type": "color",
+      "$description": "Crimson — Red text accent for links, tags, and emphasized short phrases"
+    },
+    "deep-signal": {
+      "$value": "#2563eb",
+      "$type": "color",
+      "$description": "Deep Signal — Secondary blue used only in illustrations and icon sets — not an interface color"
+    }
+  },
+  "font": {
+    "intervariable": {
+      "$value": "InterVariable",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all contexts — body, headings, nav, buttons, inputs, cards. Tracking tightened globally to -0.025em which makes even 12px body text feel engineered rather than casual. The 62px display size is the only moment of typographic drama, used sparingly for hero statements; everything else lives at 16px or below, reinforcing the tool-like density."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://shuttle.zip/about",
+      "siteName": "Shuttle",
+      "extractedAt": "2026-06-03T19:03:47.879Z",
+      "variant": "compact"
+    }
+  }
+}

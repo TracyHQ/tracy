@@ -1,0 +1,61 @@
+{
+  "id": "QA-UNIT-REG-PR-1181-brand-door-503-json-brand-happy",
+  "itemIds": ["regression:REG-PR-1181-brand-door-503-json-brand"],
+  "requirement": "The public brand door answers 503 JSON LANE_UNAVAILABLE when the guest lane is missing, unreachable, silent or answers 502/504 — never a status Cloudflare swaps for its own text/plain 502",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1181-brand-door-503-json-brand.json",
+    "ref": "PR #1181 (fix); fix evidence: #811 F-S5-001; 11/10/2026 curl https://cowork.tracy.site/design-inspiration/api/brand/example.com → 502 text/plain 'error code: 502' from Cloudflare, while the origin on the dev machine answered 502 application/json LANE_UNAVAILABLE (GUEST_SITE_KEY unset there).",
+    "invariant": "S1 exits 0 with '# fail 0'. With no guestSiteKey, a throwing lane fetch, a throwing guest-session mint, a lane 502/504 and a lane that never answers, GET /design-inspiration/api/brand/<host> answers 503 application/json {code: 'LANE_UNAVAILABLE'} with the translated message; a lane's own JSON 404 still passes through. A guest-session mint that never answers is cut off within laneTimeoutMs and answered 503 LANE_UNAVAILABLE (before review fix L2 it hung for good), and a lane answer whose body streams on past laneTimeoutMs is delivered whole (before: the timeout signal errored the body halfway).",
+    "productSources": [
+      "apps/tracy-web/src/public/design-page.js:136",
+      "apps/tracy-web/src/public/route.js:77"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/public/route.js:50 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "the brand door is unavailable, not crashed, with no guestSiteKey configured",
+    "the brand door answers 503 JSON, not a crash, when the guest lane cannot be reached",
+    "the brand door answers 503 JSON when minting the guest session throws",
+    "a lane 502/504 is answered as 503 JSON, never passed through for the edge to replace",
+    "a guest lane that never answers is cut off and answered as 503 JSON",
+    "a guest session mint that never answers is cut off and answered as 503 JSON",
+    "a lane answer whose body streams past the time limit is delivered whole"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1181-brand-door-503-json-brand"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1181-brand-door-503-json-brand",
+    "pr": 1181,
+    "kind": "fix",
+    "area": "tracy-web/design-inspiration/brand",
+    "file": "tests/regression/cases/REG-PR-1181-brand-door-503-json-brand.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/public.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "the brand door is unavailable, not crashed, with no guestSiteKey configured",
+    "the brand door answers 503 JSON, not a crash, when the guest lane cannot be reached",
+    "the brand door answers 503 JSON when minting the guest session throws",
+    "a lane 502/504 is answered as 503 JSON, never passed through for the edge to replace",
+    "a guest lane that never answers is cut off and answered as 503 JSON",
+    "a guest session mint that never answers is cut off and answered as 503 JSON",
+    "a lane answer whose body streams past the time limit is delivered whole"
+  ],
+  "timeoutS": 600
+}

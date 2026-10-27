@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c55d2f24-deb1-44c1-9846-66a3523beb29",
+  "status": "complete",
+  "name": "Codex.io",
+  "url": "https://styles.refero.design/style/c55d2f24-deb1-44c1-9846-66a3523beb29",
+  "sourceWebsite": "https://www.codex.io",
+  "extractedAt": "2026-06-03T22:38:16.616Z",
+  "capturedAt": "2026-10-08T05:17:16.749676+00:00",
+  "theme": "mixed",
+  "industry": "crypto",
+  "description": "Citrine beacon in void — a glowing lime cube anchoring a dark room, with thin white type and scattered node rings floating around it.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/bdd019cc-4421-4b76-bbb5-2bfbc31212bc.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/7475c7fc-0a20-4107-9f81-08468c6c242f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e944533a-6fb9-439a-adba-d78c4fa87b35.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3e26bac9-f291-4f05-a0f4-9d07e0b88d6b.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/13666a83-0413-402b-88d5-91d988565077.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "64e384ccc376afab15bfbbb1b00c5835f80a29f9323b987556fea7497e9541d4",
+      "bytes": 20905
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b0c579c673dfa48b76a7ad6407289944000cf66f127984ec1ab62026ee62acb5",
+      "bytes": 104363
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1e35efe5d39026d56a65f953d20c6add0d3b71906ee38b57511fac45a33ae761",
+      "bytes": 18510
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "10262ad439dc907fc04ab13b4c2d725edcde91434c6d50ee86b8a0d857c61cc8",
+      "bytes": 10221
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "37365b2d0a34d9c98bf0048f979adb17865f45af28bdf00805cbb96507a337b5",
+      "bytes": 13735
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "986f5888c260cbfeb6787a7c9bce710c0153f87fa2905858d0f35c3d2072db45",
+      "bytes": 3052
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "ae1ac79e4c8f8d37b2e28c16d92ba78b27df3025ad6d877d7c3542e0de124621",
+      "bytes": 515
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "fa686ff5b98cc08a6c2ea3f56adebcc8a5ed27670338dd69f19b254247f3f838",
+      "bytes": 532
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "2c952f57199831eebbec3d6176711303b9bce909cf4e2376cf2214f69c357c88",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "37562dc2d79440920f7be6439dbd1d5dd5a3f261242b0ccc59355ffd5784fc94",
+      "bytes": 46681
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "592c80139d8cf4bba7f9d6a2d1f1b6a08db0df043787b999d3288b6f6a34291f",
+      "bytes": 24824
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f2c14f4f6f8206b5eea749185b301360daf41b7cd051346165b28258dc1f189b",
+      "bytes": 53044
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b1f2f8f41ce106ff28d1e95be8b4eb24bfff5375c1e329fbb713c9e93a30f57c",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6f324c9d2b51ee7c4d962521c6405d54750a92688ffa2d01bd399ea7cc1ec797",
+      "bytes": 1612
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c47fce493d3dfea9002c178c15d785829eb6341bf7131de3b8702e93b20a44d6",
+      "bytes": 2168
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "109e52eb-e70f-493e-9527-84d672b00c7b",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "227ff379-9b46-44fc-8ff1-37e0472239a6",
+    "350b1557-56f0-4361-8c8b-b7a88081982b",
+    "369ac603-c1e9-4231-9369-a198493f8e47",
+    "371df039-a090-402b-b2e4-21ab38e07625",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "530eb4cf-7e75-4833-95c9-746818050db7",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "60ee0386-cfad-409a-8310-762bfc2e4816",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "74be1036-f867-4cee-959a-a9a9129111c0",
+    "834ce97f-61f2-4b12-bf5c-e9fad2544456",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "a79b6a74-6b67-4c9f-9d69-bff80869b943",
+    "a8c07777-ae41-4b69-9aa7-b05700ff7a14",
+    "bd96c1a6-32ba-42e0-bd5c-23c70a23142c",
+    "c55d2f24-deb1-44c1-9846-66a3523beb29",
+    "d271a6c4-942f-4abf-a3de-66795f15f031",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "fd2e0187-e67b-4869-8cfd-9de9e58d2868"
+  ]
+}

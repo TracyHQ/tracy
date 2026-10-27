@@ -1,0 +1,44 @@
+{
+  "color": {
+    "carbon-canvas": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Canvas — Page backgrounds, section canvases, card surfaces in dark sections"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color"
+    },
+    "ash-veil": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Ash Veil — Subtle borders, hairline dividers, light-mode card surfaces, light section backgrounds"
+    },
+    "smoke": {
+      "$value": "#bfbfbf",
+      "$type": "color",
+      "$description": "Smoke — Secondary text, muted captions, supporting metadata on dark surfaces"
+    },
+    "iron-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Iron Gray — Tertiary text, placeholders, disabled state text, publication/attribution labels"
+    }
+  },
+  "font": {
+    "circularxx": {
+      "$value": "circularXx",
+      "$type": "fontFamily",
+      "$description": "Single-family system used everywhere. Display sizes (47-53px) carry dramatic -3.18px to -2.35px tracking that compresses letterforms into near-monoline blocks; body sizes hold -0.32px to -0.26px tracking. The 450 weight is the signature — lighter than typical medium, thicker than regular — giving headlines a precise, engineered feel. Font feature 'ss08' is globally active."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://analogue.co",
+      "siteName": "Analogue",
+      "extractedAt": "2026-06-03T17:24:20.630Z",
+      "variant": "compact"
+    }
+  }
+}

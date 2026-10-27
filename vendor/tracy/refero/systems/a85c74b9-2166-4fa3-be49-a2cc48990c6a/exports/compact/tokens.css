@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-warm-paper: #fcfcfc;
+  --color-deep-ink: #000000;
+  --color-press-black: #1c1c1c;
+  --color-charcoal-trace: #262626;
+  --color-ash: #a8a8a8;
+  --color-dusty-mauve: #6c5f7d;
+  --color-pale-sage: #cee6cc;
+
+  /* Typography — Font Families */
+  --font-crimson-pro: 'Crimson Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-azeret-mono: 'Azeret Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-system-sans-serif: 'System Sans-Serif', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

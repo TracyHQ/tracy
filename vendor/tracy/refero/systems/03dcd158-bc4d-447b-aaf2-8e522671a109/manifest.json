@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "03dcd158-bc4d-447b-aaf2-8e522671a109",
+  "status": "complete",
+  "name": "Evervault",
+  "url": "https://styles.refero.design/style/03dcd158-bc4d-447b-aaf2-8e522671a109",
+  "sourceWebsite": "https://evervault.com",
+  "extractedAt": "2026-06-03T20:48:08.220Z",
+  "capturedAt": "2026-10-08T05:07:52.592227+00:00",
+  "theme": "dark",
+  "industry": "devtools",
+  "description": "Encrypted vault behind ultraviolet light — a dark crypt where one violet beam reveals everything.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/21968a22-8f95-4001-9793-e510549505a7.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c097ab9cbae40c1c9f81113349523d222d4b5709949e7eb691f7cad1c8a96288",
+      "bytes": 25822
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9ce96fb64a929142f06d11a940988671e2abb26b92ffec630b1f41641bc603f3",
+      "bytes": 151918
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "fec5212b30cfbb189d7fd61d626ac3374e502adb71a85c091fcb81c2670617a0",
+      "bytes": 18198
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "881e80be9e1707534033b2f3a05e2f98baba5e7774ab7d3874709343591d2e23",
+      "bytes": 22205
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c07110539148499b9b5390f77220136f890c7afec0645dc7b4924e385b136f23",
+      "bytes": 13250
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "10188f81d884094d88c025ec685920ee317e1a337513b421da810dec1bfcce8e",
+      "bytes": 4453
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "719911030d0ef3e41e4c007e370aac3300b96c3b642596fe2b5671c632bda4ab",
+      "bytes": 899
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "f23811c919c3c79f63b900ba53a9bcb63169d506d789f051bc0bb9d90d3714b1",
+      "bytes": 916
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c766748591e8594d9880b8c4f9f5b5c4b3ee519553b2e69986e6958f59cf375b",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "fa0f4a2dd92cd700b1572f971cb217ffa68a16a3123f0a61f1ba4e9d6ee9ac69",
+      "bytes": 48561
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9015057031bba3093a90357d89d8a0d7c574a8c66966f9c2bf87631c263eeacd",
+      "bytes": 25490
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "33aa469ab0eaa726261dd69d48fa945df5e004021f6d3edc110824d699670de4",
+      "bytes": 68305
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "af69e565f6716e0bcd2821c99a42eb903c7fa7aa89813518d92f72bae8db81bf",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6bb050e7cf94a5e39bbc5f77b6700c8b63dfaea8083c7462838003893b2e5ce9",
+      "bytes": 3624
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "cb7d8d7ed8e445e21db4277a942e6585ea7b742824c48f89377b6799144daa39",
+      "bytes": 4255
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "03dcd158-bc4d-447b-aaf2-8e522671a109",
+    "0d914ef0-fa84-4c60-a9aa-cef0b5eb6e5d",
+    "0ed40a3a-2541-4ffa-acdd-f1170858bc5d",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "1ae4bcfe-c613-42fc-aab7-f9583381e7cc",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "4ce66adb-ed8b-4e71-8066-15d92c4d2be0",
+    "6bd8007f-01bc-46cc-8599-b396a39c1474",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "722f32e7-8217-4808-843d-b454eea7320a",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "834ce97f-61f2-4b12-bf5c-e9fad2544456",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "a74d60e1-0a09-48a1-8721-13f1f45727f1",
+    "c81d2be0-05b7-4755-8046-f2d19fbc448c",
+    "d018e81d-6bb6-4445-86d7-39fd6be7e74d",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e352ec32-830a-4650-b7c2-d32a5f559f7e",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344"
+  ]
+}

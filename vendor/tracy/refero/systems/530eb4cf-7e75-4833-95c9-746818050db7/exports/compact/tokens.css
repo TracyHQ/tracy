@@ -1,0 +1,19 @@
+:root {
+  /* Colors */
+  --color-electric-blue: #0000ff;
+  --color-wireframe-green: #098551;
+  --color-carbon: #000000;
+  --color-pure-white: #ffffff;
+  --color-ash: #f2f2f2;
+  --color-graphite: #323232;
+  --color-slate: #717886;
+  --color-fog: #999999;
+  --color-mist: #b1b7c3;
+
+  /* Typography — Font Families */
+  --font-doto: 'Doto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-coinbase-sans: 'Coinbase Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-coinbase-display: 'Coinbase Display', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-coinbase-mono: 'Coinbase Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-base-sans: 'Base Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

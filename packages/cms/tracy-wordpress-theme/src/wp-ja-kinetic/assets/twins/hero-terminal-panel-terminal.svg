@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 490" font-family="'JetBrains Mono', ui-monospace, monospace">
+<rect x="1" y="1" width="1318" height="488" rx="26" fill="#0C110F" stroke="#1B201E" stroke-width="2"/>
+<path d="M2 80V27A25 25 0 0 1 27 2H1293A25 25 0 0 1 1318 27V80Z" fill="#111514"/>
+<rect x="2" y="79" width="1316" height="2" fill="#1B201E"/>
+<circle cx="43" cy="41" r="11" fill="#E5484D"/><circle cx="76" cy="41" r="11" fill="#F5A623"/><circle cx="109" cy="41" r="11" fill="#30A46C"/>
+<text x="144" y="49" font-size="24" fill="#959A98">kinetic tail --service=checkout-api</text>
+<circle cx="1214" cy="41" r="6" style="fill:var(--ds-c-accent-on-ink,#A3E635)"/>
+<text x="1286" y="49" font-size="22" letter-spacing="1.5" text-anchor="end" style="fill:var(--ds-c-accent-on-ink,#A3E635)">LIVE</text>
+<g font-size="26" xml:space="preserve">
+<text x="34" y="135"><tspan fill="#6E7472">14:32:01 </tspan><tspan fill="#30A46C">INFO </tspan><tspan fill="#D7DBDA">checkout-api </tspan><tspan fill="#8D9492">200 · 84ms</tspan></text>
+<text x="34" y="183"><tspan fill="#6E7472">14:32:01 </tspan><tspan fill="#30A46C">INFO </tspan><tspan fill="#D7DBDA">cart-api </tspan><tspan fill="#8D9492">200 · 112ms</tspan></text>
+<text x="34" y="231"><tspan fill="#6E7472">14:32:02 </tspan><tspan fill="#F5A623">WARN </tspan><tspan fill="#D7DBDA">payment-api </tspan><tspan fill="#F5A623">503 · retry 1/3</tspan></text>
+<text x="34" y="279"><tspan fill="#6E7472">14:32:02 </tspan><tspan fill="#E5484D">ERROR </tspan><tspan fill="#D7DBDA">payment-api </tspan><tspan fill="#E5484D">gateway timeout</tspan></text>
+<text x="34" y="327"><tspan fill="#6E7472">14:32:03 </tspan><tspan fill="#30A46C">INFO </tspan><tspan fill="#D7DBDA">payment-api </tspan><tspan fill="#8D9492">200 · 410ms</tspan></text>
+</g>
+<rect x="2" y="368" width="1316" height="2" fill="#1B201E"/>
+<g fill="#2B3A32">
+<rect x="32" y="441" width="12" height="20" rx="1"/>
+<rect x="50" y="429" width="12" height="32" rx="1"/>
+<rect x="68" y="437" width="12" height="24" rx="1"/>
+<rect x="86" y="417" width="12" height="44" rx="1"/>
+<rect x="104" y="425" width="12" height="36" rx="1"/>
+<rect x="122" y="409" width="12" height="52" rx="1"/>
+<rect x="140" y="433" width="12" height="28" rx="1"/>
+<rect x="158" y="401" width="12" height="60" rx="1"/>
+<rect x="176" y="421" width="12" height="40" rx="1"/>
+<rect x="194" y="413" width="12" height="48" rx="1"/>
+<rect x="212" y="429" width="12" height="32" rx="1"/>
+<rect x="230" y="405" width="12" height="56" rx="1"/>
+<rect x="248" y="437" width="12" height="24" rx="1"/>
+<rect x="266" y="392" width="12" height="69" rx="1" style="fill:var(--ds-c-accent-on-ink,#A3E635)"/>
+<rect x="284" y="425" width="12" height="36" rx="1"/>
+<rect x="302" y="417" width="12" height="44" rx="1"/>
+<rect x="320" y="433" width="12" height="28" rx="1"/>
+<rect x="338" y="409" width="12" height="52" rx="1"/>
+</g>
+<text x="1288" y="453" font-size="22" fill="#8E9593" text-anchor="end">1.2M events/min</text>
+</svg>

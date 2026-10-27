@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1182-site-changes-setup-and-api-source",
+  "kind": "fix",
+  "title": "Site changes: a brief's writes read Type Tracy setup (one row per run), a seat key's writes read API, a /v1 revert is its own row — from provenance the Apply door recorded, never from a missing session",
+  "pr": 1182,
+  "area": "site-changes/source",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Call the Apply door as a person with a setup run (applyAs … { setupRun }), then without one; read site_write.origin/origin_ref.",
+    "S2: Call it with a seat key principal, and over HTTP as a chat whose x-tracy-session looks like a key's (key:<16>); read origin.",
+    "S3: Call apply.revert with a key; read the row's target.",
+    "S4: Classify writes in JS (classifyWrites) and through the V2 SQL CASE on the same rows: setup run writes, a session-less write with no record, key writes with and without origin api, a key's revert."
+  ],
+  "expect": [
+    "S1: origin 'setup', origin_ref the run, actor the person; the call without a run has origin null.",
+    "S2: the key's write has origin 'api' and origin_ref the key id; the chat's has origin null.",
+    "S3: target {reverts: <apply id>}, origin 'api'.",
+    "S4: JS and SQL agree: setup:<run> is ONE row of source setup; the session-less write with no record stays unknown; session:key:<id> with origin api is api, without it unknown; the revert is its own write:<id> row of source api."
+  ],
+  "selectors": {
+    "tests": "apps/tracy-web/test/site-write-origin.test.mjs, apps/tracy-web/test/activity-source.test.mjs",
+    "columns": "site_write.origin, site_write.origin_ref (094-site-write-origin.sql)"
+  },
+  "evidence": "tasks/evidence/e2e-full-dev/2026-10-04/TRIAGE-2026-10-11.md rows 2 and 4 (g65-* brief runs: 7/49/154 Unknown rows)",
+  "fence": "Apply door records origin from the principal and applyAs only; activity-source classifies only on that record",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-write-origin.test.mjs",
+      "apps/tracy-web/test/activity-source.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "sweep 4: a write made for a person from their brief is recorded as Tracy setup, under its run",
+      "sweep 2: a seat key’s write is recorded as the key’s; a chat header shaped like a key’s is not",
+      "sweep 2: a revert names the change it takes back",
+      "sweep 4: Tracy setup only from the provenance the door recorded",
+      "sweep 2: an API key write is API only when the door recorded it as the key’s",
+      "every other table: turns, writes, outside rows and operations classify the same in SQL and JS"
+    ]
+  }
+}

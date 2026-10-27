@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1026-write-receipts",
+  "kind": "feat",
+  "title": "A write's receipt says what it wrote: a contract apply names each slot's new value (a picture by its file name) and its place, a WordPress block write the words its read-back found, an EmDash picture by id, file name and alt, menu_set_items its labels and receipt line; a read right after a clean receipt carries one line that the receipt was the check",
+  "pr": 1026,
+  "area": "harness/write-receipts",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. Work in the TCH checkout at the commit under test, with its dependencies installed (pnpm install) and the deepseek-harness submodule initialised.",
+    "S2: From the checkout root run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/receipt-echo.test.mjs — keep the 'ok'/'not ok' lines and the exit code."
+  ],
+  "expect": [
+    "S2: every test named in run.tests reports ok. An accepted WordPress or Joomla content.contract apply answers wrote {slot: value} (≤ 8 slots, ≤ 80 chars, a picture by its file name) and, on Joomla, in [the places, once, with their language]; a refused apply names nothing. A WordPress block write answers holds only when the body read back holds every edited block's words. An EmDash picture field's before/after is {id, filename, alt, width, height}, its undo still EmDash's revision_restore. menu_set_items answers {name, itemCount, labels, next} and claims labels only when EmDash counted exactly the items sent. A tracy_site or tracy_emdash read made right after a clean receipt, in the same turn, carries afterWrite (one line, once); not after a warning, an unchecked or unshown result, a next asking for a read, a refusal, another call between, a new turn, or for a head read; the read itself always answers as before.",
+    "Every command exits 0."
+  ],
+  "selectors": {
+    "receipts": "packages/tools/tracy-site-tools/src/host/receipt-echo.mjs (contractWrote, bodyHolds, mediaView, menuSetReceipt, createAfterWrite)",
+    "wiring": "site-call.mjs contractCall + verifyBody; emdash.mjs view() + shapeAnswer menu_set_items; index.ts sawSiteCall in the tracy_site and tracy_emdash execute wrappers",
+    "test": "packages/tools/tracy-site-tools/test/receipt-echo.test.mjs"
+  },
+  "evidence": "Harness profile 09/10/2026 (candidate 6), re-measured on the traces: after the LAST write of a turn the agent read the site in 14/144 cp5k turns (18 calls) and 17/54 tc-d writing turns (59 calls, 46 of them after file edits or rebuilds, which have no receipt). The reads a receipt could answer: 6 page.look after a contract picture apply (WP, Joomla), page.look + 2 curl after an EmDash picture update, 2 page.text after a WordPress block write — 10 steps, 11 calls, 36 s model + 26 s tool, 327k prompt tokens. content.replace, whose receipt already names each place before/after, was followed by no read in 87 turns. Receipt size replayed on the traces: contract apply median 720 -> 802 chars, EmDash picture update 1,299 -> 869 (cp5k total -24k chars), menu_set_items 144 -> 404.",
+  "fence": "Mechanism only: what the receipts carry, that nothing is claimed the door did not write or read back, and when the after-write line is added. Not covered: whether a model then skips the read (a bench measure, flaky by nature).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/receipt-echo.test.mjs"
+    ],
+    "tests": [
+      "echoValue: words collapsed and cut, a picture by its file name, anything else as JSON",
+      "contractWrote: every slot with its value, the rest counted; the places named once, without the field",
+      "bodyHolds: the edited blocks’ words only when the body read back holds every one of them",
+      "mediaView: a media object as its id, file name, alt and size; anything else is not one",
+      "menuSetReceipt: EmDash’s count, the labels set in order when it counted exactly those, and the receipt line",
+      "wordpress: an accepted contract apply names what it wrote, and the places, in a short receipt",
+      "wordpress: a refused apply names nothing as written",
+      "joomla: an accepted contract apply names what it wrote, and the places, in a short receipt",
+      "joomla: a refused apply names nothing as written",
+      "wordpress: a block write says the words the body read back now holds",
+      "wordpress: words the site did not keep are never shown as held",
+      "emdash: a picture field’s receipt shows the picture before and after by file name and alt, shorter",
+      "emdash: menu_set_items answers as a receipt, with the labels set",
+      "afterWrite: which read right after which receipt carries the line — one table for the three CMS",
+      "afterWrite: one line, once per receipt, never a refusal; other conversations are their own"
+    ]
+  }
+}

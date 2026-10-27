@@ -1,0 +1,242 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+  "version": 3,
+  "title": "WeChat Design System",
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "#ededed"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#f7f7f7"
+        },
+        {
+          "slug": "surface-warm",
+          "name": "Surface warm",
+          "color": "var(--wp--preset--color--surface)"
+        },
+        {
+          "slug": "fg",
+          "name": "Foreground",
+          "color": "#1a1a1a"
+        },
+        {
+          "slug": "fg-2",
+          "name": "Foreground 2",
+          "color": "var(--wp--preset--color--fg)"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "#888888"
+        },
+        {
+          "slug": "meta",
+          "name": "Meta",
+          "color": "var(--wp--preset--color--muted)"
+        },
+        {
+          "slug": "border",
+          "name": "Border",
+          "color": "#e0e0e0"
+        },
+        {
+          "slug": "border-soft",
+          "name": "Border soft",
+          "color": "var(--wp--preset--color--border)"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#07c160"
+        },
+        {
+          "slug": "accent-on",
+          "name": "On accent",
+          "color": "#ffffff"
+        },
+        {
+          "slug": "accent-hover",
+          "name": "Accent hover",
+          "color": "#10b160"
+        },
+        {
+          "slug": "accent-active",
+          "name": "Accent active",
+          "color": "#059050"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "#07c160"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "#fab702"
+        },
+        {
+          "slug": "danger",
+          "name": "Danger",
+          "color": "#fa5151"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "-apple-system, BlinkMacSystemFont, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", \"Helvetica Neue\", Helvetica, Arial, sans-serif"
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "-apple-system, BlinkMacSystemFont, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans SC\", \"Helvetica Neue\", Helvetica, Arial, sans-serif"
+        },
+        {
+          "slug": "mono",
+          "name": "Mono",
+          "fontFamily": "ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, Monaco, Consolas, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "XS",
+          "size": "11px"
+        },
+        {
+          "slug": "sm",
+          "name": "SM",
+          "size": "13px"
+        },
+        {
+          "slug": "base",
+          "name": "Base",
+          "size": "15px"
+        },
+        {
+          "slug": "lg",
+          "name": "LG",
+          "size": "16px"
+        },
+        {
+          "slug": "xl",
+          "name": "XL",
+          "size": "18px"
+        },
+        {
+          "slug": "xxl",
+          "name": "2XL",
+          "size": "24px"
+        },
+        {
+          "slug": "xxxl",
+          "name": "3XL",
+          "size": "32px"
+        },
+        {
+          "slug": "xxxxl",
+          "name": "4XL",
+          "size": "48px"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "slug": "1",
+          "name": "1",
+          "size": "4px"
+        },
+        {
+          "slug": "2",
+          "name": "2",
+          "size": "8px"
+        },
+        {
+          "slug": "3",
+          "name": "3",
+          "size": "12px"
+        },
+        {
+          "slug": "4",
+          "name": "4",
+          "size": "16px"
+        },
+        {
+          "slug": "5",
+          "name": "5",
+          "size": "20px"
+        },
+        {
+          "slug": "6",
+          "name": "6",
+          "size": "24px"
+        },
+        {
+          "slug": "8",
+          "name": "8",
+          "size": "32px"
+        },
+        {
+          "slug": "12",
+          "name": "12",
+          "size": "48px"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "1200px",
+      "wideSize": "1200px"
+    },
+    "custom": {
+      "leading": {
+        "body": "1.6",
+        "tight": "1.3"
+      },
+      "tracking": {
+        "display": "-0.01em"
+      },
+      "sectionY": {
+        "desktop": "72px",
+        "tablet": "48px",
+        "phone": "32px"
+      },
+      "radius": {
+        "sm": "4px",
+        "md": "8px",
+        "lg": "16px",
+        "pill": "9999px"
+      },
+      "elev": {
+        "flat": "none",
+        "ring": "0 0 0 1px var(--wp--preset--color--border)",
+        "raised": "0 1px 2px rgba(0, 0, 0, 0.06)"
+      },
+      "focusRing": "0 0 0 3px color-mix(in oklab, var(--wp--preset--color--accent), transparent 70%)",
+      "motion": {
+        "fast": "100ms",
+        "base": "200ms"
+      },
+      "ease": {
+        "standard": "cubic-bezier(0.25, 0.1, 0.25, 1)"
+      },
+      "container": {
+        "max": "1200px",
+        "gutterDesktop": "24px",
+        "gutterTablet": "16px",
+        "gutterPhone": "16px"
+      },
+      "tracy": {
+        "inspiration": "wechat"
+      }
+    }
+  }
+}

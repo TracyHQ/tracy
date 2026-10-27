@@ -1,0 +1,13 @@
+# Every ten minutes, and once at boot if a window was missed. Ten rather than sixty because this is
+# how long a brand extracted on one host waits before the other host's lanes can see it.
+[Unit]
+Description=Tracy fleet: ten-minute brand publish
+
+[Timer]
+OnCalendar=*:0/10
+RandomizedDelaySec=1min
+Persistent=true
+Unit=tracy-brands-sync.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-1606-sync-read-after-unchanged-files",
+  "kind": "fix",
+  "title": "The read after a sync that found no live file moved still gets the last fingerprint and database, so a sync with nothing changed answers in seconds instead of reading the whole site",
+  "pr": 1606,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test --test-name-pattern=\"did not move since the import\" packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs"
+  ],
+  "expect": [
+    "S1: the first sync takes the import as the live files' tree; the next read is handed the last fingerprint and database with no manifest, and answers unchanged by fingerprint"
+  ],
+  "selectors": {
+    "host": "webroot-sync.sh read_live LIVE_FINGERPRINT LIVE_BASE_DUMP"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-22-sync-read-after-unchanged-files.md",
+  "fence": "A sync that read no file never makes the next one read the whole live site",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=did not move since the import",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs"
+    ]
+  }
+}

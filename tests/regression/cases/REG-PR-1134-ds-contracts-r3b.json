@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1134-ds-contracts-r3b",
+  "kind": "feat",
+  "title": "Round 3 of the JA Joomla j6 slot contracts (r3b): JA Aiga, JA Alpha, JA Artsy and JA Athena, not ready in round 1, wear a design system from their 1.0.1 re-release",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/contracts.test.mjs test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-{aiga,alpha,artsy,athena}.json through loadContract; build the module sheet (joomlaSlot) for JA Aiga under Toggl Track and MotherDuck, JA Alpha under Moxie, JA Artsy under MotherDuck, JA Athena under Moxie; tokenize a JA Alpha style-template rule with its t4Placeholders; read scripts/flow.mjs.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template:'ja_<name>'}), {key:'quickstart/ja-<name>/j6', version}) for each, at 1.0.1 and at 1.0.0.",
+    "S4: node packages/design/tracy-ds-slot/scripts/pass-joomla.mjs ja-artsy --port 53662 --cdp 9872 --evidence <tmp> (release restored in Docker, stylesheets tokenized, Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed).",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-r3b.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: all four ready, minVersion {'quickstart/ja-<name>/j6': '1.0.1'}, readyNote naming tasks/evidence/ds-contracts-r3b-2026-10-11/templates/ja-<name>-j6, no t4SiteCss; JA Aiga's dark sheet has color:color-mix(in srgb, var(--ds-c-fg) 35%, #ffffff) and its light sheet {color:var(--ds-c-bg)} and {background-color:var(--ds-c-fg)}; '.category-name a{background:__color_primary}.link-primary{color:__color_primary !important}' tokenizes to var(--ds-c-accent, __color_primary) and var(--ds-c-accent-text, __color_primary); JA Alpha's sheet sets --primary_light:var(--ds-c-surface); JA Artsy's sheet has a '.t4-palette-mainnav .navbar-nav > li.active > a:not(' rule and color:var(--ds-c-accent-text)!important; JA Athena's sheet has a :where(.t4-section-5,.t4-footnav,.features-content) rule and keepDefaults --heading-color #333333; flow.mjs reads a ::before ground (cover).",
+    "S3: at 1.0.1 {contract:'joomla-ja-<name>'}; at 1.0.0 reason TEMPLATE_NEEDS_UPDATE.",
+    "S4: verdicts 12/12, controls 0,0,0,0, no text under 4.5:1 worse than the template's own, lowest page share following ≥ 0.5."
+  ],
+  "selectors": {
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-{aiga,alpha,artsy,athena}.json ready, minVersion, sideRules, t4Placeholders, templateVars, followRules, selectors.onAccent, selectors.inkImages, keepColors, keepDefaultsYield",
+    "probe": "scripts/flow.mjs bgOf/cover"
+  },
+  "evidence": "tasks/evidence/ds-contracts-r3b-2026-10-11/README.md: each template measured on 1.0.0 tokenized in place (T4 writing its sheets again from the tokenized style template) and on its 1.0.1 build stood up from its own zip; desktop and phone screenshots checked by eye.",
+  "fence": "which r3b templates are offered and the contract fields and library changes that made them pass; not the release upload (RELEASE-DS-R3B.sh, a person runs it)",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-r3b.mjs"],
+    "needs": [],
+    "timeout_s": 3000
+  }
+}

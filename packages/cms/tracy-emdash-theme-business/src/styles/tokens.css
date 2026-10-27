@@ -1,0 +1,197 @@
+/*
+ * Northgate design tokens -- every value read from the source canvas (`<style>` block shared by all
+ * 34 pages, plus the Style guide page). Light values on :root, dark values under
+ * html[data-theme="dark"], exactly the pairs the source's dark rules map. See
+ * tasks/emdash-northgate/visual-contract.md §1 for the table with provenance.
+ */
+@theme {
+	--font-sans: var(--ds-font-body, var(--font-archivo), system-ui, sans-serif);
+	--font-serif: var(--ds-font-display, var(--font-newsreader), Georgia, serif);
+	/* shadcn's base corner; nothing compiles from it today. `--radius-none` is not declared: Tailwind's
+	   `rounded-none` is a static 0, and a corner role must never round a component that asked for none. */
+	--radius: var(--ds-card-radius, 0px);
+
+	/* The site's colours are the tokens below and nothing else (ADR 0023): Tailwind's ~240 default
+	   colours (`text-red-500`, `bg-slate-100`…) are switched off, so a class naming one compiles to
+	   nothing instead of to a colour this design never chose. The two defaults the template uses —
+	   `text-white` on dark surfaces, `bg-black/50` behind dialogs — are declared again as its own
+	   tokens with Tailwind's exact values, so no page changes colour.
+	   tests/color-palette.test.mjs holds both halves. */
+	--color-*: initial;
+	--color-white: #ffffff;
+	--color-black: #000000;
+
+	--color-paper: var(--ds-c-bg, #f5f3ee);
+	--color-paper-2: var(--ds-c-surface-warm, #edeae2);
+	--color-card: var(--ds-c-surface, #ffffff);
+	--color-ink: var(--ds-c-ink, #14171a);
+	/* Forest is two roles with one default: a GROUND (bands, the header CTA, checked controls) and a
+	   TEXT/line colour (links, labels, prices). A worn design system sets them apart: the ground reads
+	   the accent band, the text reads the readable accent. Use bg-forest for the first, text-forest-text
+	   for the second. */
+	--color-forest: var(--ds-c-accent-band, #14483a);
+	--color-forest-text: var(--ds-c-accent-text, #14483a);
+	/* Links and forest-coloured text: forest in light, the source's mint in dark (tokens.css dark block). */
+	--color-link: var(--color-forest-text);
+	--color-link-hover: var(--ds-c-accent-text-hover, var(--color-signal-text));
+	--color-forest-deep: var(--tb-ds-forest-deep, var(--ds-c-accent-band, #0e3b2f));
+	--color-forest-line: var(--tb-ds-forest-line, var(--ds-c-on-accent-band, #3d6b5c));
+	/* Signal, like forest, is a GROUND (primary buttons, chips, rules) and a TEXT colour (eyebrows,
+	   required marks, hovers): bg-/border-signal read the accent fill, text-signal-text the readable accent. */
+	--color-signal: var(--ds-c-accent, #da5a2a);
+	--color-signal-text: var(--ds-c-accent-text, #da5a2a);
+	--color-signal-tint: var(--tb-ds-signal-tint, var(--ds-c-accent, rgba(218, 90, 42, 0.1)));
+	--color-line: var(--ds-c-border, #dcd7cc);
+	--color-line-soft: var(--ds-c-border-soft, #e4dfd6);
+	/* The rim of a card or panel and the lines of a card grid: the soft border role. Unworn it is the
+	   line the cards always drew. */
+	--color-line-card: var(--ds-c-border-soft, #dcd7cc);
+	--color-line-strong: var(--ds-c-border, #c9c3b6);
+	--color-line-faint: var(--ds-c-border-soft, #b4afa4);
+	--color-fg: var(--ds-c-fg, #14171a);
+	--color-fg-body: var(--ds-c-fg, #242830);
+	--color-fg-2: var(--ds-c-fg-2, #3d4045);
+	--color-fg-muted: var(--ds-c-muted, #5a5952);
+	--color-fg-meta: var(--ds-c-meta, #6b6a64);
+	/* Faint/fainter raised from the source's #a8a49b/#b4afa4 (2.2:1 on paper) to clear 3:1 on paper and paper-2;
+	   Lee's decision 14/09 (TODO-visual-qa §3c) -- still visibly lighter than meta. */
+	--color-fg-faint: var(--ds-c-meta, #7f7b74);
+	--color-fg-fainter: var(--ds-c-meta, #86827a);
+	--color-on-ink: var(--ds-c-on-ink, #f5f3ee);
+	--color-on-ink-muted: var(--tb-ds-on-ink-muted, var(--ds-c-on-ink, #b9b5ac));
+	--color-on-ink-meta: var(--tb-ds-on-ink-meta, var(--ds-c-on-ink, #8a8780));
+	--color-on-ink-line: var(--tb-ds-on-ink-line, var(--ds-c-on-ink, #2a2e32));
+	--color-on-ink-line-2: var(--tb-ds-on-ink-line-2, var(--ds-c-on-ink, #35383b));
+	--color-on-ink-line-3: var(--tb-ds-on-ink-line-3, var(--ds-c-on-ink, #4a4d50));
+	/* Soft text on ink surfaces (footer chips, calendar rows): the source keeps #E4DFD6 in both themes,
+	   unlike --color-line-soft which flips to a dark line and turned this text invisible in dark. */
+	--color-on-ink-soft: var(--tb-ds-on-ink-soft, var(--ds-c-on-ink, #e4dfd6));
+	/* Body text of a forest band (the band's own colour, the same value as --color-on-ink). */
+	--color-on-forest-band: var(--ds-c-on-accent-band, #f5f3ee);
+	--color-on-forest: var(--ds-c-on-accent-band, #cfe0d8);
+	--color-on-forest-muted: var(--ds-c-on-accent-band, #bfd4cb);
+	--color-on-forest-faint: var(--tb-ds-on-forest-faint, var(--ds-c-on-accent-band, #9fc3b4));
+	--color-on-forest-line: var(--tb-ds-on-forest-line, var(--ds-c-on-accent-band, #5e8a79));
+	--color-avatar: var(--ds-c-surface-warm, #e0dbd1);
+	--color-chip-disabled: var(--ds-c-disabled-bg, #e4dfd6);
+	/* Text of a disabled field: the faint text value, as the role of a disabled control. */
+	--color-disabled-fg: var(--ds-c-disabled-fg, #7f7b74);
+	/* The rule of an informational notice: the readable forest, read as the info state. */
+	--color-info: var(--ds-c-info, var(--color-forest-text));
+	--color-info-bg: var(--ds-c-info-bg, #e8f0eb);
+	--color-info-fg: var(--ds-c-info-text, #22453a);
+	--color-success: var(--ds-c-success, #2e7d32);
+	--color-success-bg: var(--ds-c-success-bg, #e9f2e9);
+	--color-success-fg: var(--ds-c-success-text, #1f4a22);
+	--color-warning: var(--ds-c-warn, #c8891b);
+	--color-warning-bg: var(--ds-c-warn-bg, #fbf2e2);
+	--color-warning-fg: var(--ds-c-warn-text, #6b4a0e);
+	--color-error: var(--ds-c-danger, #c0392b);
+	--color-error-bg: var(--ds-c-danger-bg, #fcf3f2);
+	--color-error-fg: var(--ds-c-danger-text, #7a2016);
+	--color-focus-ring: var(--ds-c-focus-ring, #cfe0d8);
+	--color-page-bg: var(--ds-c-bg, #f5f3ee);
+
+	/* shadcn semantic tokens, mapped onto the design (DECISIONS D6, visual-contract §1) */
+	--color-background: var(--color-paper);
+	--color-foreground: var(--color-fg);
+	--color-primary: var(--color-signal);
+	--color-primary-foreground: var(--ds-c-accent-on, #ffffff);
+	--color-secondary: var(--color-forest);
+	--color-secondary-foreground: var(--ds-c-on-accent-band, #ffffff);
+	--color-muted: var(--color-paper-2);
+	--color-muted-foreground: var(--color-fg-meta);
+	--color-accent: var(--color-signal-tint);
+	--color-accent-foreground: var(--color-fg);
+	--color-popover: var(--color-paper);
+	--color-popover-foreground: var(--color-fg);
+	--color-card-foreground: var(--color-fg);
+	--color-border: var(--color-line);
+	--color-input: var(--color-line);
+	--color-ring: var(--color-focus-ring);
+	--color-destructive: var(--color-error);
+
+	--container-site: 1240px;
+	--shadow-menu: 0 14px 30px rgba(20, 23, 26, 0.22);
+	--shadow-mega: 0 18px 40px rgba(20, 23, 26, 0.12);
+}
+
+/*
+ * Shades a worn design system derives from its own roles, as the slot contract mixes them. They are
+ * defined only while a system is worn (html[data-ds-worn], Base.astro and the preview door), so with
+ * no design system every token above that reads one falls back to the template's own value: the
+ * default look does not change. Each role read keeps the template's own value as its fallback (DEF-1).
+ */
+:root[data-ds-worn] {
+	/* the ink band's quieter words: a system whose accent is dark (Airbnb, Eddie, ElevenLabs) gets a mid-grey
+	   ink band (#5c5c5c-#6d6d6d) so its accent button still stands out there, and the template's own steps
+	   (88/84/70%) read 3.46-4.25:1 on it (CON-1, 1.7.22). 96/94/92% keep a step and read 4.5:1 on the
+	   lightest such band (white on #6d6d6d is 5.25:1) */
+	--tb-ds-on-ink-soft: color-mix(in srgb, var(--ds-c-on-ink, #f5f3ee) 96%, var(--ds-c-ink, #14171a));
+	--tb-ds-on-ink-muted: color-mix(in srgb, var(--ds-c-on-ink, #f5f3ee) 94%, var(--ds-c-ink, #14171a));
+	--tb-ds-on-ink-meta: color-mix(in srgb, var(--ds-c-on-ink, #f5f3ee) 92%, var(--ds-c-ink, #14171a));
+	--tb-ds-on-ink-line: color-mix(in srgb, var(--ds-c-on-ink, #f5f3ee) 12%, var(--ds-c-ink, #14171a));
+	--tb-ds-on-ink-line-2: color-mix(in srgb, var(--ds-c-on-ink, #f5f3ee) 18%, var(--ds-c-ink, #14171a));
+	--tb-ds-on-ink-line-3: color-mix(in srgb, var(--ds-c-on-ink, #f5f3ee) 26%, var(--ds-c-ink, #14171a));
+	--tb-ds-forest-deep: color-mix(in srgb, var(--ds-c-accent-band, #14483a) 82%, black);
+	--tb-ds-forest-line: color-mix(in srgb, var(--ds-c-on-accent-band, #cfe0d8) 35%, var(--ds-c-accent-band, #14483a));
+	--tb-ds-on-forest-faint: color-mix(in srgb, var(--ds-c-on-accent-band, #cfe0d8) 80%, var(--ds-c-accent-band, #14483a));
+	/* the CTA links' underline on the band (and the Topbar divider, see global.css .tb-topbar-divider): 60%
+	   keeps them at least as readable as the template's own pair (#5e8a79 on #14483a, 2.67:1); 45% fell to
+	   2.44:1 under Spotify, 2.52:1 under Moxie; 75% made the underline a hard line on Figma's dark band (BORDER-1) */
+	--tb-ds-on-forest-line: color-mix(in srgb, var(--ds-c-on-accent-band, #cfe0d8) 60%, var(--ds-c-accent-band, #14483a));
+	--tb-ds-signal-tint: color-mix(in srgb, var(--ds-c-accent, #da5a2a) 10%, transparent);
+}
+
+html[data-theme="dark"] {
+	--color-page-bg: var(--ds-c-bg, #101214);
+	--color-paper: var(--ds-c-bg, #15181a);
+	--color-paper-2: var(--ds-c-surface-warm, #1c2023);
+	--color-card: var(--ds-c-surface, #191c1f);
+	/* dark: the ink bands (hero, footer) sit a hair off the page (1.10:1), so a worn system gives them its quiet
+	   raised ground; its ink role is a card surface on a dark system (1.21:1 under Moxie: grey blocks, GROUND-2) */
+	--color-ink: var(--ds-c-surface-warm, #0a0c0d);
+	--color-forest-deep: var(--tb-ds-forest-deep, var(--ds-c-accent-band, #0c2b23));
+	--color-line: var(--ds-c-border, #2c3033);
+	--color-line-card: var(--ds-c-border-soft, #2c3033);
+	--color-line-soft: var(--ds-c-border-soft, #24282b);
+	--color-line-strong: var(--ds-c-border, #33383c);
+	--color-forest-line: var(--tb-ds-forest-line, var(--ds-c-on-accent-band, #33383c)); /* source: inputs on the forest band take the strong line in dark */
+	--color-line-faint: var(--ds-c-border-soft, #3a3f43);
+	--color-fg: var(--ds-c-fg, #eceae4);
+	--color-fg-body: var(--ds-c-fg, #dddad3);
+	--color-fg-2: var(--ds-c-fg-2, #c7c4bd);
+	--color-fg-muted: var(--ds-c-muted, #a9a6a0);
+	--color-fg-meta: var(--ds-c-meta, #96938c);
+	--color-fg-faint: var(--ds-c-meta, #807d77);
+	--color-fg-fainter: var(--ds-c-meta, #6e6b66);
+	--color-avatar: var(--ds-c-surface-warm, #2a2e31);
+	--color-chip-disabled: var(--ds-c-disabled-bg, #24282b);
+	--color-disabled-fg: var(--ds-c-disabled-fg, #807d77);
+	--color-info-bg: var(--ds-c-info-bg, #14241e);
+	--color-info-fg: var(--ds-c-info-text, #9ed3bc);
+	--color-success-bg: var(--ds-c-success-bg, #16261c);
+	--color-success-fg: var(--ds-c-success-text, #a6d6a9);
+	--color-warning-bg: var(--ds-c-warn-bg, #2c2517);
+	--color-warning-fg: var(--ds-c-warn-text, #ddb769);
+	--color-error-bg: var(--ds-c-danger-bg, #2b1a19);
+	--color-error-fg: var(--ds-c-danger-text, #f0a296);
+	--color-link: var(--ds-c-accent-text, #7fbfa6);
+	--color-link-hover: var(--ds-c-accent-text-hover, #f0865a);
+	--color-hover-accent: var(--ds-c-accent-text-hover, #8fccb2);
+	--color-background: var(--color-paper);
+	--color-foreground: var(--color-fg);
+	--color-muted: var(--color-paper-2);
+	--color-muted-foreground: var(--color-fg-meta);
+	--color-popover: var(--color-paper);
+	--color-popover-foreground: var(--color-fg);
+	--color-card-foreground: var(--color-fg);
+	--color-border: var(--color-line);
+	--color-input: var(--color-line);
+}
+/* The source flips forest-coloured TEXT to mint in dark (labels, prices, "View project"); chrome
+ * links (nav, footer, buttons) keep their own colours. A blanket `a { color }` here once painted
+ * every button label mint (qa-7, 200 browser cases) -- links read --color-link from the base rule. */
+html[data-theme="dark"] .text-forest-text {
+	color: var(--color-link);
+}

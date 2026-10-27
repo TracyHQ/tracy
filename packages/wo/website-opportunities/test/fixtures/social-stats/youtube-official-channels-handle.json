@@ -1,0 +1,30 @@
+{
+  "kind": "youtube#channelListResponse",
+  "pageInfo": {
+    "totalResults": 1,
+    "resultsPerPage": 5
+  },
+  "items": [
+    {
+      "kind": "youtube#channel",
+      "id": "UCI3ZB0OvndmJYP3S5fBBfGL",
+      "statistics": {
+        "viewCount": "143240927814",
+        "subscriberCount": "522000000",
+        "hiddenSubscriberCount": false,
+        "videoCount": "1007"
+      },
+      "contentDetails": {
+        "relatedPlaylists": {
+          "likes": "",
+          "uploads": "UUI3ZB0OvndmJYP3S5fBBfGL"
+        }
+      },
+      "snippet": {
+        "title": "Example Creator",
+        "customUrl": "@examplecreator",
+        "publishedAt": "2012-02-20T00:43:50Z"
+      }
+    }
+  ]
+}

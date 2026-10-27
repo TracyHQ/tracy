@@ -1,0 +1,30 @@
+/* Tailwind source for the add-site tab. Same recipe as tracy-settings/src/client/settings.css:
+   theme + utilities only, NO preflight — this column lives inside dsh's page. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@tracy/ui/tokens.css';
+@source './';
+/* The radio card (ChoiceOption) and the ask form's other pieces are core's; scan them from its source. */
+@source '../../../tracy-site-build-core/src/client/ask-form';
+/* The language picker of the popup's language question (and of the ask form's long list). */
+@source '../../../tracy-site-build-core/src/client/LanguageBox.tsx';
+@source '../../../../ui/tracy-ui/src';
+/* The link rows and mode switch of Build it from my business are shared with Website Opportunities. */
+@source '../../../../ui/tracy-wo-views/src/link-rows.tsx';
+/* The Categories menu of the design system sheet is core's Popover: its panel's classes live there. */
+@source '../../../../core/tracy-core/src/site-tabs/Popover.tsx';
+@source '../../../../core/tracy-core/src/wizard-shell';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS. Every Tracy sheet
+   shares one page and the same class names, so one sheet left on the OS default repaints the others'
+   elements too (measured 30/09: this sheet's dark:hidden hid My Sites' light CMS logo). */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* No preflight here either: the UA paints a button grey, and a ghost Button or an InputGroupButton draws no background
+   of its own, so in Build it from my business the row remove, Add another link and Back showed as grey blocks
+   (measured on dev in dark, 26/10/2026). The same reset Website Opportunities gives its Find box, scoped to this door
+   and placed in base, so every utility class on a @tracy/ui button still wins. */
+@layer base {
+  .tas-own button { background-color: transparent; border-width: 0; padding: 0; }
+}

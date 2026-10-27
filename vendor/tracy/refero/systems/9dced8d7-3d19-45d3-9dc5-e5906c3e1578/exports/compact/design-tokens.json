@@ -1,0 +1,74 @@
+{
+  "color": {
+    "courtroom-ink": {
+      "$value": "#121719",
+      "$type": "color",
+      "$description": "Courtroom Ink — Page canvas, primary background — near-black with a faint cool tint, not pure black; sets the midnight tone"
+    },
+    "lectern-surface": {
+      "$value": "#222729",
+      "$type": "color",
+      "$description": "Lectern Surface — Elevated card and panel surfaces sitting one step above the canvas; used for feature cards and link hovers"
+    },
+    "document-drawer": {
+      "$value": "#2b3133",
+      "$type": "color",
+      "$description": "Document Drawer — Input field backgrounds, form controls — one level above card surfaces to read as recessed"
+    },
+    "manuscript-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Manuscript White — Primary headings, body text on dark surfaces, ghost-button borders, and inverted text on coral CTAs"
+    },
+    "parchment": {
+      "$value": "#f1f3f4",
+      "$type": "color",
+      "$description": "Parchment — Light surface variant for cards on dark, light-mode button text, and subtle off-white highlights"
+    },
+    "ashen-type": {
+      "$value": "#909394",
+      "$type": "color",
+      "$description": "Ashen Type — Medium-contrast borders, control outlines, and structural separators."
+    },
+    "smoke": {
+      "$value": "#acaeaf",
+      "$type": "color",
+      "$description": "Smoke — Tertiary text, disabled states, and lighter dividers — sits between Ashen Type and Manuscript White"
+    },
+    "coral-verdict": {
+      "$value": "#f94d1e",
+      "$type": "color",
+      "$description": "Coral Verdict — Primary action buttons (Book a Demo, Try Free) — the only warm hue on the page; signals decision points without aggression"
+    },
+    "indigo-statute": {
+      "$value": "#7834b5",
+      "$type": "color",
+      "$description": "Indigo Statute — Accent for select feature cards and section highlights — used sparingly to add editorial weight, never on actions"
+    },
+    "cyan-margin": {
+      "$value": "#029cff",
+      "$type": "color",
+      "$description": "Cyan Margin — Inline links, logo gradient, and decorative icon strokes — cool counterpoint to the warm coral primary"
+    }
+  },
+  "font": {
+    "arizona-mix": {
+      "$value": "Arizona Mix",
+      "$type": "fontFamily",
+      "$description": "Display headlines and section titles only. Weight 500 medium — not bold — lets the serifs do the work. Aggressive negative tracking (-0.04em at 77px shrinking to -0.02em at 28px) tightens the letterforms into an editorial, almost newspaper-headline feel. This is the signature choice: a custom serif in a SaaS context replaces the usual geometric sans and signals premium legal authority."
+    },
+    "soehne": {
+      "$value": "Soehne",
+      "$type": "fontFamily",
+      "$description": "All UI, body, button, badge, input, and subheading text. Neutral grotesque with even proportions; weight 400 for body, 500–600 for UI labels and buttons, 700 reserved for emphasis. Consistent -0.01em tracking across all sizes. The quiet counterpart to the loud display serif — Soehne is the workhorse, Arizona Mix is the voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.spellbook.legal",
+      "siteName": "Spellbook",
+      "extractedAt": "2026-06-03T22:04:23.170Z",
+      "variant": "compact"
+    }
+  }
+}

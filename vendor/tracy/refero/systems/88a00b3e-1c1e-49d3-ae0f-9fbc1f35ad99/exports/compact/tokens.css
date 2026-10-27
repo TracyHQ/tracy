@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-royal-violet: #2f115b;
+  --gradient-royal-violet: linear-gradient(90deg, #3b1572 0%, #1a0d3f 100%);
+  --color-midnight-plum: #1a0d3f;
+  --color-iris: #3b1572;
+  --color-slate-mute: #5e5777;
+  --color-ember-orange: #ff4b11;
+  --color-white: #ffffff;
+  --color-cream-wash: #fff2e8;
+  --color-peach-blush: #ffdacf;
+
+  /* Typography — Font Families */
+  --font-dm-serif-display: 'DM Serif Display', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-manrope: 'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

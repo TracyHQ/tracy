@@ -1,0 +1,57 @@
+{
+  "id": "REG-PR-1599-live-sync-qa-fixes",
+  "kind": "fix",
+  "title": "Sync from live: field values, versions and 404 rows follow a renumbered record, synced files belong to the webroot's owner, a sync cut off by a deploy says so and is settled by the next press, and a busy live site is named as busy",
+  "pr": 1599,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs packages/fleet/tracy-fleet-operation/test/webroot-own.test.mjs (needs a docker daemon for mariadb:11)",
+    "S2: TEST_DATABASE_URL=… node --test --test-reporter=tap apps/tracy-web/test/live-sync.test.mjs",
+    "S3: node --test --test-reporter=tap packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs"
+  ],
+  "expect": [
+    "S1: 'field values, versions and 404 log rows follow a renumbered article; neither log holds the sync' passes: live's article 3 → 4 carries its fields_values rows (item_id '4'), its #__history row comes over under a new version_id with item_id com_content.article.4, both #__redirect_links rows are kept, nothing is held; an extension's VARCHAR and TEXT item_id pointing at the renumbered article is held.",
+    "S1: 'the customer’s live changes and the agent’s copy changes both end up in the copy' passes: every path the sync wrote and every folder it made is chowned to the webroot's uid:gid.",
+    "S1: the three 'a cut-off apply' tests pass: nothing written → untouched, an agent's edit since kept; only the sync's writes → rolled back to Before restore, also when the next read is LIVE_BUSY; edited since → APPLY_INTERRUPTED_KEPT and nothing written; in place → finished, also after the 24 h sweep, and a large file edited since is not written over.",
+    "S1: 'a path under a symlinked folder that leaves the webroot is not chowned; a link itself is' passes; every flow test passes with a docker CLI that warns on stderr.",
+    "S1: 'a live site that kept changing is answered LIVE_BUSY; any other failed read LIVE_READ_FAILED' passes.",
+    "S2: 'a sync cut off by a host restart says so, and the next press starts at once (#1563)' and 'a live site that kept changing is filed LIVE_BUSY, also from a host that wraps it (#1564)' pass.",
+    "S3: 'every code the host or the door can end a sync with has words of its own or the generic sentence' passes: SYNC_INTERRUPTED, APPLY_INTERRUPTED_KEPT and LIVE_BUSY each have their own sentence."
+  ],
+  "selectors": {
+    "engine": "packages/fleet/tracy-fleet-operation/scripts/lib/live_sync.py POLICIES.joomla.entities (fields_values, ucm_base, history, redirect_links), IdMap.unhandled_refs",
+    "files": "lib/webroot-repo-git.sh tracy_webroot_own, webroot-git.sh restore_reset, webroot-sync.sh after_apply",
+    "recovery": "webroot-sync.sh recover_first / recover_apply / files_state, <private>/sync/applying.json",
+    "door": "apps/tracy-web/src/sites/live-sync.js read() SYNC_INTERRUPTED, failedCode",
+    "panel": "packages/site/tracy-my-sites/src/client/live-sync-panel.tsx failureText",
+    "backup": "lib/site-backup.sh _tracy_dump_mysql table count"
+  },
+  "evidence": "QA on cowork.tracy.site 21/10/2026, seven sync rounds on an imported Joomla 4.4 site: issues #1560, #1561, #1562, #1563, #1564.",
+  "fence": "A renumbered live record takes everything that names it along; files a sync writes are the web user's; a sync a restart cut off never leaves a half-applied copy; the owner is told the real reason a sync stopped.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs",
+      "apps/tracy-web/test/live-sync.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/webroot-own.test.mjs",
+      "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "field values, versions and 404 log rows follow a renumbered article",
+      "the customer’s live changes and the agent’s copy changes both end up in the copy",
+      "a cut-off apply",
+      "a live site that kept changing is answered LIVE_BUSY",
+      "a sync cut off by a host restart says so",
+      "a live site that kept changing is filed LIVE_BUSY",
+      "every code the host or the door can end a sync with has words of its own",
+      "a path under a symlinked folder that leaves the webroot is not chowned"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#090909",
+      "$type": "color",
+      "$description": "Ink — Primary text, hairlines, card and input borders, list dividers, link underlines — the dominant dark anchor of the system"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Icon fills, heading underlines, occasional deep accents where maximum weight is needed"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Page background, card surface, text on filled buttons, button borders for ghost controls"
+    },
+    "linen": {
+      "$value": "#efefed",
+      "$type": "color",
+      "$description": "Linen — Section band background, elevated card surface, the warm neutral that gives the white space its temperature"
+    },
+    "ash": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Ash — Footer divider, hairline rules where Ink would be too heavy"
+    },
+    "cobalt-pulse": {
+      "$value": "#0057f3",
+      "$type": "color",
+      "$description": "Cobalt Pulse — Single primary action fill per page — the only chromatic punctuation, reserved for the decisive CTA and never used decoratively"
+    },
+    "ember-signal": {
+      "$value": "#ff5102",
+      "$type": "color",
+      "$description": "Ember Signal — Rare secondary action or notification accent — a warm counterpoint to Cobalt Pulse, used at most once per surface"
+    }
+  },
+  "font": {
+    "sana-sans": {
+      "$value": "Sana Sans",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across the entire system — display headlines at 83px set weight 500 with -2.5% tracking for a carved, architectural feel; section headings at 48px weight 500 with -0.96px tracking; body copy at 15-16px weight 400 with barely-perceptible negative tracking. The font is geometric and humanist, and the refusal to go above weight 500 is deliberate: confidence comes from restraint, not boldness."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sanalabs.com",
+      "siteName": "Superintelligence for work",
+      "extractedAt": "2026-06-03T15:01:01.229Z",
+      "variant": "compact"
+    }
+  }
+}

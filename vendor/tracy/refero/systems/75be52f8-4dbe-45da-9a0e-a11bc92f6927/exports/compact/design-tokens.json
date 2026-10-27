@@ -1,0 +1,54 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#f7f3f0",
+      "$type": "color",
+      "$description": "Bone — Page canvas, card surfaces, dark-section text — warm off-white that keeps the page from feeling clinical"
+    },
+    "obsidian": {
+      "$value": "#131713",
+      "$type": "color",
+      "$description": "Obsidian — Primary text on light canvas, dark-section backgrounds, inverse-surface text — near-black with a barely-perceptible green undertone"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Hairline borders, dividers, link strokes — the structural outline color; appears 1340× as border, defining every panel edge"
+    },
+    "ash": {
+      "$value": "#bebcb9",
+      "$type": "color",
+      "$description": "Ash — Secondary borders, inactive dividers — a step lighter than Carbon for de-emphasized edges"
+    },
+    "graphite": {
+      "$value": "#858582",
+      "$type": "color",
+      "$description": "Graphite — Muted helper text, secondary metadata, label text — sits at AA on dark and fails on light, so it belongs in the dark sections and monospace stamps"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "bagoss-standard": {
+      "$value": "Bagoss Standard",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for headings, subheadings, and body — weights 385 and 520 are near-custom; the 520 medium at 59-63px with -0.02em tracking is the display voice, the 400 at 14-20px is body"
+    },
+    "general-grotesque-mono": {
+      "$value": "General Grotesque Mono",
+      "$type": "fontFamily",
+      "$description": "All-caps metadata, category labels, footer blocks — the 0.10em positive tracking at 9-10px is the signature stamp: every nav item, tagline, and micro-label uses it"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.smilingwolf.co.uk",
+      "siteName": "Smiling Wolf",
+      "extractedAt": "2026-06-03T21:32:41.879Z",
+      "variant": "compact"
+    }
+  }
+}

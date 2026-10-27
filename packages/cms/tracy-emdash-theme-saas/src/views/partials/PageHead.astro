@@ -1,0 +1,64 @@
+---
+/**
+ * Title band of an inner page (DECISIONS D18): grid background, breadcrumb, page title. The source's
+ * article frame also prints a byline, a category chip and related posts; those describe Joomla's
+ * storage of the page as an article (installer admin, "Uncategorised"), not the page, and are omitted.
+ */
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  title: string
+  /** The page entry's stamps (`src/lib/stamps.ts`); the title is its `title` field. */
+  stamp?: Stamp
+}
+const { title, stamp } = Astro.props
+---
+
+<header class="page-head k-grid-bg">
+	<div class="k-container page-head-inner">
+		<nav class="crumbs" aria-label="Breadcrumb">
+			<a href="/">Home</a>
+			<span aria-hidden="true">/</span>
+			<span aria-current="page">{title}</span>
+		</nav>
+		<h1 class="page-title" {...stamp?.('title')}>{title}</h1>
+	</div>
+</header>
+
+<style>
+	.page-head {
+		background-color: var(--k-elevated);
+		border-bottom: 1px solid var(--k-border);
+	}
+	.page-head-inner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 14px;
+		padding-block: 56px 60px;
+		text-align: center;
+	}
+	.crumbs {
+		display: flex;
+		gap: 6px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		color: var(--k-muted);
+	}
+	.crumbs a:hover {
+		color: var(--k-primary);
+	}
+	.page-title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: clamp(30px, 3vw, 38px);
+		line-height: 1.1;
+		letter-spacing: -1px;
+		color: var(--k-heading);
+	}
+	@media (max-width: 767px) {
+		.page-head-inner {
+			padding-block: 40px 44px;
+		}
+	}
+</style>

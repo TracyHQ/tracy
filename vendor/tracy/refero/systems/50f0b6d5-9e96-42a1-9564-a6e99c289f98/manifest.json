@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "50f0b6d5-9e96-42a1-9564-a6e99c289f98",
+  "status": "complete",
+  "name": "Numbered",
+  "url": "https://styles.refero.design/style/50f0b6d5-9e96-42a1-9564-a6e99c289f98",
+  "sourceWebsite": "https://numbered.studio",
+  "extractedAt": "2026-06-03T21:37:08.390Z",
+  "capturedAt": "2026-10-08T05:11:34.793579+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "fashion editorial on black velvet. A near-black runway where a single face fills the frame and the only marks are white ink and a whispered bronze thread.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ab03cbf4-5b9a-49d6-8af7-c8066f72cddc.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d7cd6988e001378f8d82a404a39aafdfa1e25314b2db882b55a62dcd1985676d",
+      "bytes": 15866
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "22e21f1e5cd69683d09c68481f887bb1e16153257aef15cfe78f87a21a24f654",
+      "bytes": 231460
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "47eeeef09fd855ed2819e4f8d08fcbd03d5471a2eb851f63ef876a0c231586bf",
+      "bytes": 12782
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "159b5adbf29dd6a1e781dda63cadc542c666a368e7ed7668e5a68c0f75e291f1",
+      "bytes": 7069
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "cd0a03a006d74205687b2781e5bbb7e637fc1e749cbc6f9e5cabc2e81de5d212",
+      "bytes": 9859
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "908ea072676aab53103eeb66d3684913f8708dc417453ea148da26436b7b87d5",
+      "bytes": 2383
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3076776128f7dd36564a6d9e7ea22ee34911825dc1f9183e2ad731f5306d4490",
+      "bytes": 594
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "312aa1c204eac7f1e2a6c84e24afa852c8935c32edbfb7360d168fe8159a3c8e",
+      "bytes": 611
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "13bf36eacda6a2c306b70b69e8b8ef820c34858c8325fc538b80bc25c19fd498",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "0e4406b3068aab86067b55a28182cc268fc3720fbb27ad905e8ba49ea09ce219",
+      "bytes": 37604
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ab45a5a0da5ff641aa2bb43ea1c662f2875209555f088e218f250907ba9f18b2",
+      "bytes": 19351
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "07acdbeebf49550bfd3fbb3e14c08a59389123cbfa84000fb65a40ad4672738e",
+      "bytes": 25536
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6411411e786a57f68da52cdd08119cd196c937d71e52d2ee93c9192afff027a3",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9fce61b7479f722acc940ce7944002e636cc6313502f06380562399cc1ec4bce",
+      "bytes": 1069
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "b484ed73e057026e825f8749c62e776316adc24798222a03a905375a29e8b94d",
+      "bytes": 1566
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "50f0b6d5-9e96-42a1-9564-a6e99c289f98",
+    "58a36cba-3fc4-48fa-a7d9-7f14592b7857",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "94c4fc51-4323-4f06-a4a4-27517e190445",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "c0a3f588-74b7-4fad-b557-1fc7cd7bd777",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "f63b4703-db8b-4bc9-8d8f-17262b12d4b3",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318"
+  ]
+}

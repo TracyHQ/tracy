@@ -1,0 +1,1372 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "wordpress-tracy-base",
+  "template": "wordpress/wp-ja-nova",
+  "minVersion": {
+    "wp-ja-nova": "1.1.11"
+  },
+  "maxVersion": {
+    "wp-ja-nova": "1.1.17"
+  },
+  "maxVersionNote": "1.1.15 13/10/2026: the dark half of every light-dark() whose light half reads the slot reads it too (darkArms, feat/ds-every-template-3), so a dark system no longer shows the template's own dark colours; unworn, both halves compute what they did. 1.1.12 checked 11/10/2026 (ds-minversion-audit): 82 var(--ds-c- reads as 1.1.11; the css change is one CSS content word; 1.1.13 checked 12/10/2026 (published-templates-green): the same var(--ds-*) reads as 1.1.12 and tracy_apply_inspiration kept; every role class is still drawn by the theme or the demo; the theme change is words, dates, fonts and links, no colour 13/10/2026: 1.1.14 = 1.1.13 with the theme's other stylesheets tokenized (TDSR CSS-2, fix/tdsr-css2); measured with flow.mjs before release. 1.1.16 16/10/2026 (#1375): a status colour set as text (the shared sections' plan ticks and form notes, the theme's own .text-danger, .text-success and required marks) reads the readable shade the slot makes for the worn page (--ds-c-<status>-text); unworn, every value is the theme's own. 1.1.17 19/10/2026 (dot 3, feat/ds-dot3-a2): the theme reads every standard role variable itself (var(--ds-*, <its own value>), role scan 0 unresolved, design-system-roles.json on quickstart 1.1.13); unworn the same computed styles as 1.1.16; shipped in quickstart/ja-nova/wp7 1.1.13.",
+  "release": "quickstart/ja-nova/wp7",
+  "baseTokensFile": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-nova/tokens.css",
+  "roles": {
+    "page": "body.home.wp-singular",
+    "display": "h1.wp-block-heading.jn-hero__title",
+    "heading": "h2.wp-block-heading.jn-feature__title",
+    "body": "p.jn-feature__desc.wp-block-paragraph",
+    "button-primary": "a.wp-block-button__link.wp-element-button",
+    "container": "#acm-hero-111",
+    "section": "#acm-features-intro-112"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 40px",
+    "displayFace": "Golos Text 700, tracking 0em",
+    "heading": "first section heading: 32px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(94, 72, 219)",
+    "container": "first content container, max-width 1376px",
+    "section": "first padded full-width section, padding-top 128px"
+  },
+  "keepScopes": [".jn-cta-bar", ".tracy-footer", ".jn-stat"],
+  "extraPalettes": [
+    {
+      "accent": "#0d6efd",
+      "accent-hover": "#0a58ca",
+      "accent-active": "#0a53be",
+      "fg": "#212529",
+      "fg-2": "#343a40",
+      "muted": "#6c757d",
+      "meta": "#adb5bd",
+      "surface": "#f8f9fa",
+      "border": "#dee2e6",
+      "border-soft": "#e9ecef",
+      "success": "#198754",
+      "warn": "#ffc107",
+      "danger": "#dc3545",
+      "surface-warm": "#e9ecef"
+    }
+  ],
+  "selectors": {
+    "display": "h1.wp-block-heading.jn-hero__title, .tracy-display",
+    "heading": ["main h2.wp-block-heading"],
+    "buttonPrimary": [".tracy a.wp-block-button__link.wp-element-button"],
+    "bodyFace": [
+      "body.tracy",
+      ".tracy p:not(:where([class*=\"brand\"], [class*=\"logo\"], .wp-block-site-title))",
+      ".tracy li"
+    ],
+    "container": [".tracy #acm-hero-111"],
+    "section": [".tracy #acm-features-intro-112"],
+    "cardLike": [".jn-pricing__tab"]
+  },
+  "templateVars": {
+    "--jn-heading": "var(--ds-c-fg-2)",
+    "--jn-text": "var(--ds-c-fg)",
+    "--jn-muted": "var(--ds-c-muted)",
+    "--jn-surface": "var(--ds-c-surface)",
+    "--jn-raised": "var(--ds-c-bg)",
+    "--jn-raised-2": "var(--ds-c-surface)",
+    "--jn-line": "var(--ds-c-border)",
+    "--jn-line-2": "var(--ds-c-border-soft)",
+    "--jn-link": "var(--ds-c-accent-text)",
+    "--jn-link-hover": "var(--ds-c-accent-text-hover)",
+    "--jn-card-text": "var(--ds-c-fg)",
+    "--jn-tint-purple": "var(--ds-c-surface)",
+    "--jn-tint-green": "var(--ds-c-surface)",
+    "--jn-purple": "var(--ds-c-accent)",
+    "--jn-purple-text": "var(--ds-c-accent-text)"
+  },
+  "templateVarsNote": "wp-ja-nova.css declares its colours once at :root as light-dark(var(--ds-c-<role>, <light>), <dark literal>) and the bands read --jn-*: a dark system's html{color-scheme:dark} took the dark literals (Moxie: the accordion's #1e232b raised ground, its text the meta colour, 4.09-4.18:1), and the kept bands, which read --jn-purple resolved at :root, followed the system (re-measured 11/10/2026). Each --jn-* names its role; the kept bands get the template's light values back (keepDefaults)",
+  "followRules": {
+    ":is(.jn-a1-green, .jn-a1-purple, .jn-a1-red, .jn-a1-yellow, .jn-a1-cyan) .jn-accent--1, :is(.jn-a2-green, .jn-a2-purple, .jn-a2-red, .jn-a2-yellow, .jn-a2-cyan) .jn-accent--2": {
+      "color": "accent-text"
+    },
+    ":is(.cta-purple, .cta-cyan, .cta-orange, .cta-red, .cta-green, .cta-yellow):not(.jn-expertise__label)": {
+      "color": "accent-text"
+    },
+    ".jn-sec.bg-purple :is(h1, h2, h3, .jn-sec__title, .jn-feature__more-text, .jn-feature__desc, .jn-feature__item-desc, .jn-cta__desc):not(.jn-marquee__item *)": {
+      "color": "accent-on"
+    },
+    ".jn-pricing__tab": {
+      "color": "accent-text"
+    },
+    ".jn-pricing__tab.is-active": {
+      "background-color": "bg"
+    },
+    ".jn-pricing__tab:hover": {
+      "background-color": "bg"
+    },
+    ".jn-pricing__price": {
+      "color": "accent-text"
+    },
+    ".jn-accent:not(.jn-teams *)": {
+      "color": "accent-text"
+    },
+    ".jn-service__menu .current-menu-item > .wp-block-navigation-item__content": {
+      "background-color": "bg"
+    },
+    ".jn-auth #loginform .login-username label::after, .jn-auth #loginform .login-password label::after, .jn-auth .jn-reg__required, .jn-auth .jn-reg__star": {
+      "color": "danger-text"
+    },
+    ".jn-card-date, .jn-card-date time, .jn-latest__date, .jn-latest__date time": {
+      "color": "accent-text"
+    },
+    ".jn-contact-card--phone .jn-contact-card__title, .jn-contact-info__accent": {
+      "color": "accent-text"
+    },
+    ".jn-expertise__label.cta-purple::before": {
+      "background-color": "accent"
+    },
+    ".jn-expertise__label.cta-green::before": {
+      "background-color": "success-text"
+    },
+    ".jn-expertise__label.cta-red::before": {
+      "background-color": "danger-text"
+    },
+    ".jn-expertise__label.cta-yellow::before": {
+      "background-color": "warn-text"
+    }
+  },
+  "keepColors": {
+    ".jn-stat": "rgba(19,21,21,0.7)"
+  },
+  "followNote": "the purple band (.jn-sec.bg-purple) is filled with the accent and writes white on it: on Moxie's, MotherDuck's and Toggl Track's light accents it read 1.94-2.56:1, so its text takes the accent's own text colour (not the tag pills of its marquee, .jn-marquee__item, which sit on their own raised ground: under Apple their titles went white on white, under Toggl Track near-black on dark, found by eye 12/10/2026); the pricing tabs wrote the accent as text (1.68:1 on MotherDuck), and the active tab sits on a literal purple tint (light-dark(#efedfc, #262c36)): Apple's readable accent read 4.28:1 there, so the active and hovered tab take the page ground. The stat cards keep the template's look (keepScopes .jn-stat): their red number (#ef3867, 3.61:1 on the template's own #f7f7f7) reads worse on any system's surface; they paint no text colour of their own, so keepColors gives them the template's page text back. The coloured words of its headings (.jn-accent, green, purple, red, yellow or cyan by the section's .jn-a1-*/.jn-a2-* class: \"We make\" in the hero, \"investigation\" in the feature heading) kept the template's green and cyan under every system, two accents beside the system's own (eye check 13/10/2026): they take the readable accent on the page, the band's accent on the cyan-accented purple band and the news band, as the call bar's already did; the black ones stay black; the same goes for the words coloured per row (.cta-red and its kin: \"Start building\" over the services, red under every light system, eye check 13/10/2026), not the expertise labels, whose dots are the rows' own colours on purpose 19/10/2026 (probe v10, dot 3): the social marks (footer, contact, share) follow the system: the footer tiles take the footer band words with its ground for the glyph, the page ones the accent pair (finisher rule: social links with their own colours follow the system).",
+  "contrast": {
+    "accent-text": "main .tracy-eyebrow, main a:not([class*=button]):not(:has(img))",
+    "muted": "main .has-muted-color, main .tracy-section__head p",
+    "body": "main p",
+    "card-text": "main .tracy-card p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "keepDefaults": {
+    "--wp--preset--color--bg": "light-dark(#ffffff,#14171c)",
+    "--wp--preset--color--surface": "light-dark(#f7f7f7,#1a1e25)",
+    "--wp--preset--color--surface-warm": "light-dark(#212529,#14171c)",
+    "--wp--preset--color--fg": "light-dark(rgba(19,21,21,0.7),#c2c9d2)",
+    "--wp--preset--color--fg-2": "light-dark(#333333,#eef1f6)",
+    "--wp--preset--color--muted": "light-dark(#6c757d,#8b94a0)",
+    "--wp--preset--color--meta": "light-dark(#6c757d,#8b94a0)",
+    "--wp--preset--color--border": "light-dark(rgba(0,0,0,0.1),#2e353f)",
+    "--wp--preset--color--border-soft": "light-dark(rgba(0,0,0,0.1),#2e353f)",
+    "--wp--preset--color--accent": "light-dark(#5e48db,#5e48db)",
+    "--wp--preset--color--accent-on": "light-dark(#ffffff,#ffffff)",
+    "--wp--preset--color--accent-hover": "light-dark(#3014cc,#b6a9ff)",
+    "--wp--preset--color--accent-active": "light-dark(#371bd3,#9d8cff)",
+    "--wp--preset--color--success": "#16a34a",
+    "--wp--preset--color--warn": "#eab308",
+    "--wp--preset--color--danger": "#dc2626",
+    "--jn-heading": "#333333",
+    "--jn-text": "rgba(19,21,21,0.7)",
+    "--jn-muted": "#6c757d",
+    "--jn-surface": "#f7f7f7",
+    "--jn-raised": "#ffffff",
+    "--jn-raised-2": "#fafafa",
+    "--jn-line": "rgba(0,0,0,0.1)",
+    "--jn-line-2": "#e9ecef",
+    "--jn-link": "#5e48db",
+    "--jn-link-hover": "#3014cc",
+    "--jn-card-text": "#212529",
+    "--jn-tint-purple": "#efedfc",
+    "--jn-tint-green": "#e6f6f0",
+    "--jn-purple": "#5e48db",
+    "--jn-purple-text": "#5e48db"
+  },
+  "sideRules": {
+    "light": {
+      ".jn-latest__items li:first-child .jn-latest__date, .jn-latest__items li:first-child .jn-latest__date time": {
+        "color": "color-mix(in srgb, var(--ds-c-accent) 35%, #ffffff)"
+      },
+      ".jn-feature__more-icon img, .jn-marquee__icon img, .jn-feature__item-icon img, .jn-card__icon img": {
+        "filter": "grayscale(1)"
+      },
+      ".jn-accent::before": {
+        "filter": "grayscale(1)"
+      },
+      ".jn-card.cta-highlight": {
+        "background-color": "var(--ds-c-accent-band)",
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".jn-card.cta-highlight :is(h2, h3, h4, p, a, span, li)": {
+        "color": "var(--ds-c-on-accent-band) !important"
+      },
+      ".jn-auth .jn-reg__register, .jn-position__toggle, .jn-position__more": {
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".jn-article__nav a:hover, .jn-pager-row a.tracy-pager__link:hover, .jn-pager-row .is-current .tracy-pager__link": {
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".jn-auth #loginform .input, .jn-auth .jn-reg .input, .jn-page .jn-search .wp-block-search__input, .jn-tagged__limit": {
+        "border-color": "var(--ds-c-border)",
+        "background-color": "var(--ds-c-bg)"
+      },
+      ".jn-search-band__form .wp-block-search__input": {
+        "border": "1px solid var(--ds-c-border)",
+        "background-color": "var(--ds-c-bg)"
+      },
+      ".jn-tagged__search": {
+        "border-radius": "var(--ds-btn-radius)",
+        "overflow": "hidden",
+        "border": "1px solid var(--ds-c-border)",
+        "background-color": "var(--ds-c-bg)"
+      },
+      ".jn-tagged__search input, .jn-tagged__search .jn-tagged__button": {
+        "border-radius": "0 !important",
+        "border-color": "transparent",
+        "margin-inline-start": "0"
+      },
+      ".jn-tagged__button--search": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".jn-tagged__button--search:hover": {
+        "background-color": "var(--ds-c-accent-hover)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".jn-tagged__button--clear": {
+        "background-color": "var(--ds-c-muted)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".jn-tagged__button--clear:hover": {
+        "background-color": "var(--ds-c-fg)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".tracy-btn--ghost .wp-block-button__link": {
+        "background-color": "var(--ds-c-surface)",
+        "border-color": "var(--ds-c-border)",
+        "color": "var(--ds-c-fg-2)"
+      },
+      ".tracy-btn--ghost .wp-block-button__link:hover": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 12%, var(--ds-c-surface))",
+        "color": "var(--ds-c-fg-2)"
+      },
+      ".jn-sec.bg-purple": {
+        "background-color": "var(--ds-c-accent-band)"
+      },
+      ".jn-sec.bg-purple :is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=button])):not(.jn-marquee__item, .jn-marquee__item *)": {
+        "color": "var(--ds-c-on-accent-band) !important"
+      },
+      ".t4-typo-example .btn-sm": {
+        "align-self": "center !important"
+      },
+      ".t4-typo-example .btn": {
+        "border-radius": "var(--ds-btn-radius) !important"
+      },
+      ".t4-typo-example .badge.rounded-pill": {
+        "border-radius": "999px !important"
+      },
+      ".t4-typo-example .btn-primary": {
+        "background-color": "var(--ds-c-accent) !important",
+        "border-color": "var(--ds-c-accent) !important",
+        "color": "var(--ds-c-accent-on) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-primary:hover, .t4-typo-example .btn-primary:focus, .t4-typo-example .btn-primary:active, .t4-typo-example .btn-primary.active": {
+        "background-color": "var(--ds-c-accent-hover) !important",
+        "border-color": "var(--ds-c-accent-hover) !important",
+        "color": "var(--ds-c-accent-on) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-primary, .t4-typo-example .text-bg-primary": {
+        "background-color": "var(--ds-c-accent) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".t4-typo-example .bg-primary :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-primary :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".t4-typo-example .card.bg-primary, .t4-typo-example .card.bg-primary .card-header, .t4-typo-example .card.bg-primary .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-secondary": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 32%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-fg) 32%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-secondary:hover, .t4-typo-example .btn-secondary:focus, .t4-typo-example .btn-secondary:active, .t4-typo-example .btn-secondary.active": {
+        "background-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-fg) 32%, var(--ds-c-bg)) 85%, var(--ds-c-fg)) !important",
+        "border-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-fg) 32%, var(--ds-c-bg)) 85%, var(--ds-c-fg)) !important",
+        "color": "var(--ds-c-fg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-secondary, .t4-typo-example .text-bg-secondary": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 32%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .bg-secondary :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-secondary :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .card.bg-secondary, .t4-typo-example .card.bg-secondary .card-header, .t4-typo-example .card.bg-secondary .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-light": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 20%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-fg) 20%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-light:hover, .t4-typo-example .btn-light:focus, .t4-typo-example .btn-light:active, .t4-typo-example .btn-light.active": {
+        "background-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-fg) 20%, var(--ds-c-bg)) 85%, var(--ds-c-fg)) !important",
+        "border-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-fg) 20%, var(--ds-c-bg)) 85%, var(--ds-c-fg)) !important",
+        "color": "var(--ds-c-fg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-light, .t4-typo-example .text-bg-light": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 20%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .bg-light :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-light :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .card.bg-light, .t4-typo-example .card.bg-light .card-header, .t4-typo-example .card.bg-light .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-dark": {
+        "background-color": "color-mix(in srgb, var(--ds-c-ink) 70%, var(--ds-c-fg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-ink) 70%, var(--ds-c-fg)) !important",
+        "color": "var(--ds-c-on-ink) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-dark:hover, .t4-typo-example .btn-dark:focus, .t4-typo-example .btn-dark:active, .t4-typo-example .btn-dark.active": {
+        "background-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-ink) 70%, var(--ds-c-fg)) 85%, var(--ds-c-on-ink)) !important",
+        "border-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-ink) 70%, var(--ds-c-fg)) 85%, var(--ds-c-on-ink)) !important",
+        "color": "var(--ds-c-on-ink) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-dark, .t4-typo-example .text-bg-dark": {
+        "background-color": "color-mix(in srgb, var(--ds-c-ink) 70%, var(--ds-c-fg)) !important",
+        "color": "var(--ds-c-on-ink) !important"
+      },
+      ".t4-typo-example .bg-dark :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-dark :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-on-ink) !important"
+      },
+      ".t4-typo-example .card.bg-dark, .t4-typo-example .card.bg-dark .card-header, .t4-typo-example .card.bg-dark .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-success": {
+        "background-color": "var(--ds-c-success-text) !important",
+        "border-color": "var(--ds-c-success-text) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-success:hover, .t4-typo-example .btn-success:focus, .t4-typo-example .btn-success:active, .t4-typo-example .btn-success.active": {
+        "background-color": "color-mix(in srgb, var(--ds-c-success-text) 85%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-success-text) 85%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-success, .t4-typo-example .text-bg-success": {
+        "background-color": "var(--ds-c-success-text) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-success :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-success :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .card.bg-success, .t4-typo-example .card.bg-success .card-header, .t4-typo-example .card.bg-success .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-danger": {
+        "background-color": "var(--ds-c-danger-text) !important",
+        "border-color": "var(--ds-c-danger-text) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-danger:hover, .t4-typo-example .btn-danger:focus, .t4-typo-example .btn-danger:active, .t4-typo-example .btn-danger.active": {
+        "background-color": "color-mix(in srgb, var(--ds-c-danger-text) 85%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-danger-text) 85%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-danger, .t4-typo-example .text-bg-danger": {
+        "background-color": "var(--ds-c-danger-text) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-danger :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-danger :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .card.bg-danger, .t4-typo-example .card.bg-danger .card-header, .t4-typo-example .card.bg-danger .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-warning": {
+        "background-color": "var(--ds-c-warn-text) !important",
+        "border-color": "var(--ds-c-warn-text) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-warning:hover, .t4-typo-example .btn-warning:focus, .t4-typo-example .btn-warning:active, .t4-typo-example .btn-warning.active": {
+        "background-color": "color-mix(in srgb, var(--ds-c-warn-text) 85%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-warn-text) 85%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-warning, .t4-typo-example .text-bg-warning": {
+        "background-color": "var(--ds-c-warn-text) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-warning :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-warning :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .card.bg-warning, .t4-typo-example .card.bg-warning .card-header, .t4-typo-example .card.bg-warning .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-info": {
+        "background-color": "var(--ds-c-info-text) !important",
+        "border-color": "var(--ds-c-info-text) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-info:hover, .t4-typo-example .btn-info:focus, .t4-typo-example .btn-info:active, .t4-typo-example .btn-info.active": {
+        "background-color": "color-mix(in srgb, var(--ds-c-info-text) 85%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-info-text) 85%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-info, .t4-typo-example .text-bg-info": {
+        "background-color": "var(--ds-c-info-text) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-info :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-info :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .card.bg-info, .t4-typo-example .card.bg-info .card-header, .t4-typo-example .card.bg-info .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-primary": {
+        "color": "var(--ds-c-accent-text) !important",
+        "border-color": "var(--ds-c-accent-text) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-primary:hover, .t4-typo-example .btn-outline-primary:focus, .t4-typo-example .btn-outline-primary:active, .t4-typo-example .btn-outline-primary.active": {
+        "color": "var(--ds-c-accent-on) !important",
+        "border-color": "var(--ds-c-accent) !important",
+        "background-color": "var(--ds-c-accent) !important"
+      },
+      ".t4-typo-example .btn-outline-secondary": {
+        "color": "var(--ds-c-muted) !important",
+        "border-color": "var(--ds-c-muted) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-secondary:hover, .t4-typo-example .btn-outline-secondary:focus, .t4-typo-example .btn-outline-secondary:active, .t4-typo-example .btn-outline-secondary.active": {
+        "color": "var(--ds-c-fg) !important",
+        "border-color": "var(--ds-c-surface-warm) !important",
+        "background-color": "var(--ds-c-surface-warm) !important"
+      },
+      ".t4-typo-example .btn-outline-light": {
+        "color": "var(--ds-c-muted) !important",
+        "border-color": "var(--ds-c-muted) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-light:hover, .t4-typo-example .btn-outline-light:focus, .t4-typo-example .btn-outline-light:active, .t4-typo-example .btn-outline-light.active": {
+        "color": "var(--ds-c-fg) !important",
+        "border-color": "var(--ds-c-surface) !important",
+        "background-color": "var(--ds-c-surface) !important"
+      },
+      ".t4-typo-example .btn-outline-dark": {
+        "color": "var(--ds-c-fg) !important",
+        "border-color": "var(--ds-c-fg) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-dark:hover, .t4-typo-example .btn-outline-dark:focus, .t4-typo-example .btn-outline-dark:active, .t4-typo-example .btn-outline-dark.active": {
+        "color": "var(--ds-c-on-ink) !important",
+        "border-color": "var(--ds-c-ink) !important",
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".t4-typo-example .btn-outline-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "border-color": "var(--ds-c-success-text) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-success:hover, .t4-typo-example .btn-outline-success:focus, .t4-typo-example .btn-outline-success:active, .t4-typo-example .btn-outline-success.active": {
+        "color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-text) !important"
+      },
+      ".t4-typo-example .btn-outline-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "border-color": "var(--ds-c-danger-text) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-danger:hover, .t4-typo-example .btn-outline-danger:focus, .t4-typo-example .btn-outline-danger:active, .t4-typo-example .btn-outline-danger.active": {
+        "color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-text) !important"
+      },
+      ".t4-typo-example .btn-outline-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "border-color": "var(--ds-c-warn-text) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-warning:hover, .t4-typo-example .btn-outline-warning:focus, .t4-typo-example .btn-outline-warning:active, .t4-typo-example .btn-outline-warning.active": {
+        "color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-text) !important"
+      },
+      ".t4-typo-example .btn-outline-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "border-color": "var(--ds-c-info-text) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-info:hover, .t4-typo-example .btn-outline-info:focus, .t4-typo-example .btn-outline-info:active, .t4-typo-example .btn-outline-info.active": {
+        "color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-text) !important"
+      },
+      ".t4-typo-example .text-primary": {
+        "color": "var(--ds-c-accent-text) !important"
+      },
+      ".t4-typo-example .text-secondary": {
+        "color": "var(--ds-c-muted) !important"
+      },
+      ".t4-typo-example .text-dark": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .text-success": {
+        "color": "var(--ds-c-success-text) !important"
+      },
+      ".t4-typo-example .text-danger": {
+        "color": "var(--ds-c-danger-text) !important"
+      },
+      ".t4-typo-example .text-warning": {
+        "color": "var(--ds-c-warn-text) !important"
+      },
+      ".t4-typo-example .text-info": {
+        "color": "var(--ds-c-info-text) !important"
+      },
+      ".t4-typo-example .text-light": {
+        "color": "var(--ds-c-muted) !important"
+      },
+      ".t4-typo-example .bg-primary.text-dark, .t4-typo-example .bg-primary.text-white, .t4-typo-example .bg-primary[class*=\"text-\"]": {
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".t4-typo-example .bg-secondary.text-dark, .t4-typo-example .bg-secondary.text-white, .t4-typo-example .bg-secondary[class*=\"text-\"]": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .bg-light.text-dark, .t4-typo-example .bg-light.text-white, .t4-typo-example .bg-light[class*=\"text-\"]": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .bg-dark.text-dark, .t4-typo-example .bg-dark.text-white, .t4-typo-example .bg-dark[class*=\"text-\"]": {
+        "color": "var(--ds-c-on-ink) !important"
+      },
+      ".t4-typo-example .bg-success.text-dark, .t4-typo-example .bg-success.text-white, .t4-typo-example .bg-success[class*=\"text-\"]": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-danger.text-dark, .t4-typo-example .bg-danger.text-white, .t4-typo-example .bg-danger[class*=\"text-\"]": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-warning.text-dark, .t4-typo-example .bg-warning.text-white, .t4-typo-example .bg-warning[class*=\"text-\"]": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-info.text-dark, .t4-typo-example .bg-info.text-white, .t4-typo-example .bg-info[class*=\"text-\"]": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example mark": {
+        "background-color": "var(--ds-c-warn-bg) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-primary": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 12%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-accent) 35%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-primary .alert-link, .t4-typo-example .alert-primary a": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-secondary": {
+        "background-color": "var(--ds-c-surface-warm) !important",
+        "border-color": "var(--ds-c-border) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-secondary .alert-link, .t4-typo-example .alert-secondary a": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-light": {
+        "background-color": "var(--ds-c-surface) !important",
+        "border-color": "var(--ds-c-border) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-light .alert-link, .t4-typo-example .alert-light a": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-dark": {
+        "background-color": "color-mix(in srgb, var(--ds-c-ink) 18%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-ink) 40%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-dark .alert-link, .t4-typo-example .alert-dark a": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-success": {
+        "background-color": "var(--ds-c-success-bg) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-success-text) 35%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-success-text) !important"
+      },
+      ".t4-typo-example .alert-success .alert-link, .t4-typo-example .alert-success a": {
+        "color": "var(--ds-c-success-text) !important"
+      },
+      ".t4-typo-example .alert-danger": {
+        "background-color": "var(--ds-c-danger-bg) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-danger-text) 35%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-danger-text) !important"
+      },
+      ".t4-typo-example .alert-danger .alert-link, .t4-typo-example .alert-danger a": {
+        "color": "var(--ds-c-danger-text) !important"
+      },
+      ".t4-typo-example .alert-warning": {
+        "background-color": "var(--ds-c-warn-bg) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-warn-text) 35%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-warn-text) !important"
+      },
+      ".t4-typo-example .alert-warning .alert-link, .t4-typo-example .alert-warning a": {
+        "color": "var(--ds-c-warn-text) !important"
+      },
+      ".t4-typo-example .alert-info": {
+        "background-color": "var(--ds-c-info-bg) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-info-text) 35%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-info-text) !important"
+      },
+      ".t4-typo-example .alert-info .alert-link, .t4-typo-example .alert-info a": {
+        "color": "var(--ds-c-info-text) !important"
+      },
+      ".t4-typo-example .progress": {
+        "background-color": "var(--ds-c-surface-warm) !important"
+      },
+      ".t4-typo-example .progress-bar:not([class*=\"bg-\"])": {
+        "background-color": "var(--ds-c-accent) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".t4-typo-example .page-link": {
+        "color": "var(--ds-c-accent-text) !important",
+        "background-color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-border) !important"
+      },
+      ".t4-typo-example .page-link:hover, .t4-typo-example .page-link:focus": {
+        "color": "var(--ds-c-accent-text-hover) !important",
+        "background-color": "var(--ds-c-surface) !important",
+        "border-color": "var(--ds-c-border) !important"
+      },
+      ".t4-typo-example .page-item.active .page-link, .t4-typo-example .page-link.active, .t4-typo-example .active .page-link": {
+        "color": "var(--ds-c-accent-on) !important",
+        "background-color": "var(--ds-c-accent) !important",
+        "border-color": "var(--ds-c-accent) !important"
+      },
+      ".t4-typo-example .page-item.disabled .page-link, .t4-typo-example .page-link.disabled, .t4-typo-example .disabled .page-link": {
+        "color": "var(--ds-c-muted) !important",
+        "background-color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-border) !important"
+      },
+      ".jn-sec.bg-green": {
+        "background-color": "var(--ds-c-accent-band)"
+      },
+      ".jn-sec.bg-green :is(.jn-sec__title, .jn-sec__head p, .jn-sec__head span)": {
+        "color": "var(--ds-c-on-accent-band) !important"
+      },
+      ".jn-news__content, .jn-news__content :is(p, span, a, div, h3, h4, strong)": {
+        "color": "#ffffff !important"
+      },
+      ".jn-news__date, .jn-news__date time": {
+        "color": "color-mix(in srgb, var(--ds-c-accent) 35%, #ffffff) !important"
+      },
+      ".tracy .jn-sec.bg-purple .wp-block-button.tracy-btn--primary .wp-block-button__link": {
+        "background-color": "var(--ds-c-on-accent-band) !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-purple .wp-block-button.tracy-btn--primary .wp-block-button__link:hover": {
+        "background-color": "color-mix(in srgb, var(--ds-c-on-accent-band) 85%, var(--ds-c-accent-band)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-on-accent-band) 85%, var(--ds-c-accent-band)) !important",
+        "color": "var(--ds-c-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-purple .wp-block-button.tracy-btn--ghost .wp-block-button__link": {
+        "background-color": "transparent !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-on-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-purple .wp-block-button.tracy-btn--ghost .wp-block-button__link:hover": {
+        "background-color": "var(--ds-c-on-accent-band) !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-green .wp-block-button.tracy-btn--ghost .wp-block-button__link": {
+        "background-color": "transparent !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-on-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-green .wp-block-button.tracy-btn--ghost .wp-block-button__link:hover": {
+        "background-color": "var(--ds-c-on-accent-band) !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-green .wp-block-button.tracy-btn--primary .wp-block-button__link": {
+        "background-color": "var(--ds-c-on-accent-band) !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-accent-band) !important"
+      },
+      ".jn-auth .jn-reg__cancel:hover": {
+        "background-color": "color-mix(in srgb, var(--ds-c-danger) 85%, #000000)",
+        "border-color": "color-mix(in srgb, var(--ds-c-danger) 85%, #000000)"
+      },
+      ".jn-contact-card::after, .jn-contact-info__accent::after": {
+        "filter": "grayscale(1)"
+      },
+      ".jn-share__links .wp-social-link, .jn-contact-links .wp-social-link, .jn-search-band__social .wp-social-link": {
+        "background-color": "var(--ds-c-accent)"
+      },
+      ".jn-share__links .wp-social-link :is(a, svg), .jn-contact-links .wp-social-link :is(a, svg), .jn-search-band__social .wp-social-link :is(a, svg)": {
+        "color": "var(--ds-c-accent-on) !important",
+        "fill": "var(--ds-c-accent-on) !important"
+      },
+      "body.tracy .jn-pricing__list li::before": {
+        "background": "var(--ds-c-accent-text)",
+        "mask": "url(\"data:image/svg+xml,%3Csvg%20width%3D%2721%27%20height%3D%2720%27%20viewBox%3D%270%200%2021%2020%27%20fill%3D%27none%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cpath%20d%3D%27M4.92141%2015.7452C4.20235%2015.0262%204.67928%2013.5165%204.31328%2012.632C3.93387%2011.715%202.54166%2010.9769%202.54166%209.99997C2.54166%209.02301%203.93388%208.285%204.31328%207.36803C4.67928%206.48346%204.20235%204.97382%204.92141%204.25476C5.64048%203.53569%207.15012%204.01262%208.03469%203.64662C8.95168%203.26722%209.68971%201.875%2010.6667%201.875C11.6436%201.875%2012.3817%203.26722%2013.2986%203.64663C14.1832%204.01263%2015.6928%203.5357%2016.4119%204.25476C17.131%204.97382%2016.654%206.48346%2017.02%207.36804C17.3994%208.28502%2018.7917%209.02305%2018.7917%2010C18.7917%2010.977%2017.3994%2011.715%2017.02%2012.632C16.654%2013.5165%2017.131%2015.0262%2016.4119%2015.7452C15.6928%2016.4643%2014.1832%2015.9874%2013.2986%2016.3534C12.3816%2016.7328%2011.6436%2018.125%2010.6666%2018.125C9.68966%2018.125%208.95166%2016.7328%208.03469%2016.3534C7.15011%2015.9874%205.64048%2016.4643%204.92141%2015.7452Z%27%20stroke%3D%27%23000%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%2F%3E%3Cpath%20d%3D%27M14.1042%208.125L9.5208%2012.5L7.22916%2010.3125%27%20stroke%3D%27%23000%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%2F%3E%3C%2Fsvg%3E\") center / 20px 20px no-repeat"
+      }
+    },
+    "dark": {
+      ".jn-logo--light": {
+        "display": "none"
+      },
+      ".jn-logo--dark": {
+        "display": "block"
+      },
+      ".jn-latest__items li:first-child .jn-latest__date, .jn-latest__items li:first-child .jn-latest__date time": {
+        "color": "color-mix(in srgb, var(--ds-c-accent) 35%, #ffffff)"
+      },
+      ".jn-feature__more-icon img, .jn-marquee__icon img, .jn-feature__item-icon img, .jn-card__icon img": {
+        "filter": "grayscale(1)"
+      },
+      ".jn-accent::before": {
+        "filter": "grayscale(1)"
+      },
+      ".jn-card.cta-highlight": {
+        "background-color": "var(--ds-c-accent-band)",
+        "color": "var(--ds-c-on-accent-band)"
+      },
+      ".jn-card.cta-highlight :is(h2, h3, h4, p, a, span, li)": {
+        "color": "var(--ds-c-on-accent-band) !important"
+      },
+      ".jn-auth .jn-reg__register, .jn-position__toggle, .jn-position__more": {
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".jn-article__nav a:hover, .jn-pager-row a.tracy-pager__link:hover, .jn-pager-row .is-current .tracy-pager__link": {
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".jn-auth #loginform .input, .jn-auth .jn-reg .input, .jn-page .jn-search .wp-block-search__input, .jn-tagged__limit": {
+        "border-color": "var(--ds-c-border)",
+        "background-color": "var(--ds-c-bg)"
+      },
+      ".jn-search-band__form .wp-block-search__input": {
+        "border": "1px solid var(--ds-c-border)",
+        "background-color": "var(--ds-c-bg)"
+      },
+      ".jn-tagged__search": {
+        "border-radius": "var(--ds-btn-radius)",
+        "overflow": "hidden",
+        "border": "1px solid var(--ds-c-border)",
+        "background-color": "var(--ds-c-bg)"
+      },
+      ".jn-tagged__search input, .jn-tagged__search .jn-tagged__button": {
+        "border-radius": "0 !important",
+        "border-color": "transparent",
+        "margin-inline-start": "0"
+      },
+      ".jn-tagged__button--search": {
+        "background-color": "var(--ds-c-accent)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".jn-tagged__button--search:hover": {
+        "background-color": "var(--ds-c-accent-hover)",
+        "color": "var(--ds-c-accent-on)"
+      },
+      ".jn-tagged__button--clear": {
+        "background-color": "var(--ds-c-muted)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".jn-tagged__button--clear:hover": {
+        "background-color": "var(--ds-c-fg)",
+        "color": "var(--ds-c-bg)"
+      },
+      ".tracy-btn--ghost .wp-block-button__link": {
+        "background-color": "var(--ds-c-surface)",
+        "border-color": "var(--ds-c-border)",
+        "color": "var(--ds-c-fg-2)"
+      },
+      ".tracy-btn--ghost .wp-block-button__link:hover": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 12%, var(--ds-c-surface))",
+        "color": "var(--ds-c-fg-2)"
+      },
+      ".jn-sec.bg-purple": {
+        "background-color": "var(--ds-c-accent-band)"
+      },
+      ".jn-sec.bg-purple :is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=button])):not(.jn-marquee__item, .jn-marquee__item *)": {
+        "color": "var(--ds-c-on-accent-band) !important"
+      },
+      ".t4-typo-example .btn-sm": {
+        "align-self": "center !important"
+      },
+      ".t4-typo-example .btn": {
+        "border-radius": "var(--ds-btn-radius) !important"
+      },
+      ".t4-typo-example .badge.rounded-pill": {
+        "border-radius": "999px !important"
+      },
+      ".t4-typo-example .btn-primary": {
+        "background-color": "var(--ds-c-accent) !important",
+        "border-color": "var(--ds-c-accent) !important",
+        "color": "var(--ds-c-accent-on) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-primary:hover, .t4-typo-example .btn-primary:focus, .t4-typo-example .btn-primary:active, .t4-typo-example .btn-primary.active": {
+        "background-color": "var(--ds-c-accent-hover) !important",
+        "border-color": "var(--ds-c-accent-hover) !important",
+        "color": "var(--ds-c-accent-on) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-primary, .t4-typo-example .text-bg-primary": {
+        "background-color": "var(--ds-c-accent) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".t4-typo-example .bg-primary :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-primary :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".t4-typo-example .card.bg-primary, .t4-typo-example .card.bg-primary .card-header, .t4-typo-example .card.bg-primary .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-secondary": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 32%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-fg) 32%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-secondary:hover, .t4-typo-example .btn-secondary:focus, .t4-typo-example .btn-secondary:active, .t4-typo-example .btn-secondary.active": {
+        "background-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-fg) 32%, var(--ds-c-bg)) 85%, var(--ds-c-fg)) !important",
+        "border-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-fg) 32%, var(--ds-c-bg)) 85%, var(--ds-c-fg)) !important",
+        "color": "var(--ds-c-fg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-secondary, .t4-typo-example .text-bg-secondary": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 32%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .bg-secondary :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-secondary :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .card.bg-secondary, .t4-typo-example .card.bg-secondary .card-header, .t4-typo-example .card.bg-secondary .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-light": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 20%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-fg) 20%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-light:hover, .t4-typo-example .btn-light:focus, .t4-typo-example .btn-light:active, .t4-typo-example .btn-light.active": {
+        "background-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-fg) 20%, var(--ds-c-bg)) 85%, var(--ds-c-fg)) !important",
+        "border-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-fg) 20%, var(--ds-c-bg)) 85%, var(--ds-c-fg)) !important",
+        "color": "var(--ds-c-fg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-light, .t4-typo-example .text-bg-light": {
+        "background-color": "color-mix(in srgb, var(--ds-c-fg) 20%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .bg-light :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-light :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .card.bg-light, .t4-typo-example .card.bg-light .card-header, .t4-typo-example .card.bg-light .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-dark": {
+        "background-color": "color-mix(in srgb, var(--ds-c-ink) 70%, var(--ds-c-fg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-ink) 70%, var(--ds-c-fg)) !important",
+        "color": "var(--ds-c-on-ink) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-dark:hover, .t4-typo-example .btn-dark:focus, .t4-typo-example .btn-dark:active, .t4-typo-example .btn-dark.active": {
+        "background-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-ink) 70%, var(--ds-c-fg)) 85%, var(--ds-c-on-ink)) !important",
+        "border-color": "color-mix(in srgb, color-mix(in srgb, var(--ds-c-ink) 70%, var(--ds-c-fg)) 85%, var(--ds-c-on-ink)) !important",
+        "color": "var(--ds-c-on-ink) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-dark, .t4-typo-example .text-bg-dark": {
+        "background-color": "color-mix(in srgb, var(--ds-c-ink) 70%, var(--ds-c-fg)) !important",
+        "color": "var(--ds-c-on-ink) !important"
+      },
+      ".t4-typo-example .bg-dark :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-dark :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-on-ink) !important"
+      },
+      ".t4-typo-example .card.bg-dark, .t4-typo-example .card.bg-dark .card-header, .t4-typo-example .card.bg-dark .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-success": {
+        "background-color": "var(--ds-c-success-text) !important",
+        "border-color": "var(--ds-c-success-text) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-success:hover, .t4-typo-example .btn-success:focus, .t4-typo-example .btn-success:active, .t4-typo-example .btn-success.active": {
+        "background-color": "color-mix(in srgb, var(--ds-c-success-text) 85%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-success-text) 85%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-success, .t4-typo-example .text-bg-success": {
+        "background-color": "var(--ds-c-success-text) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-success :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-success :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .card.bg-success, .t4-typo-example .card.bg-success .card-header, .t4-typo-example .card.bg-success .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-danger": {
+        "background-color": "var(--ds-c-danger-text) !important",
+        "border-color": "var(--ds-c-danger-text) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-danger:hover, .t4-typo-example .btn-danger:focus, .t4-typo-example .btn-danger:active, .t4-typo-example .btn-danger.active": {
+        "background-color": "color-mix(in srgb, var(--ds-c-danger-text) 85%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-danger-text) 85%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-danger, .t4-typo-example .text-bg-danger": {
+        "background-color": "var(--ds-c-danger-text) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-danger :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-danger :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .card.bg-danger, .t4-typo-example .card.bg-danger .card-header, .t4-typo-example .card.bg-danger .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-warning": {
+        "background-color": "var(--ds-c-warn-text) !important",
+        "border-color": "var(--ds-c-warn-text) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-warning:hover, .t4-typo-example .btn-warning:focus, .t4-typo-example .btn-warning:active, .t4-typo-example .btn-warning.active": {
+        "background-color": "color-mix(in srgb, var(--ds-c-warn-text) 85%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-warn-text) 85%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-warning, .t4-typo-example .text-bg-warning": {
+        "background-color": "var(--ds-c-warn-text) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-warning :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-warning :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .card.bg-warning, .t4-typo-example .card.bg-warning .card-header, .t4-typo-example .card.bg-warning .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-info": {
+        "background-color": "var(--ds-c-info-text) !important",
+        "border-color": "var(--ds-c-info-text) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .btn-info:hover, .t4-typo-example .btn-info:focus, .t4-typo-example .btn-info:active, .t4-typo-example .btn-info.active": {
+        "background-color": "color-mix(in srgb, var(--ds-c-info-text) 85%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-info-text) 85%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-bg) !important",
+        "opacity": "1 !important"
+      },
+      ".t4-typo-example .bg-info, .t4-typo-example .text-bg-info": {
+        "background-color": "var(--ds-c-info-text) !important",
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-info :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer), .t4-typo-example .text-bg-info :is(h1, h2, h3, h4, h5, h6, p, .card-header, .card-body, .card-title, .card-text, .card-footer)": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .card.bg-info, .t4-typo-example .card.bg-info .card-header, .t4-typo-example .card.bg-info .card-footer": {
+        "border-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-primary": {
+        "color": "var(--ds-c-accent-text) !important",
+        "border-color": "var(--ds-c-accent-text) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-primary:hover, .t4-typo-example .btn-outline-primary:focus, .t4-typo-example .btn-outline-primary:active, .t4-typo-example .btn-outline-primary.active": {
+        "color": "var(--ds-c-accent-on) !important",
+        "border-color": "var(--ds-c-accent) !important",
+        "background-color": "var(--ds-c-accent) !important"
+      },
+      ".t4-typo-example .btn-outline-secondary": {
+        "color": "var(--ds-c-muted) !important",
+        "border-color": "var(--ds-c-muted) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-secondary:hover, .t4-typo-example .btn-outline-secondary:focus, .t4-typo-example .btn-outline-secondary:active, .t4-typo-example .btn-outline-secondary.active": {
+        "color": "var(--ds-c-fg) !important",
+        "border-color": "var(--ds-c-surface-warm) !important",
+        "background-color": "var(--ds-c-surface-warm) !important"
+      },
+      ".t4-typo-example .btn-outline-light": {
+        "color": "var(--ds-c-muted) !important",
+        "border-color": "var(--ds-c-muted) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-light:hover, .t4-typo-example .btn-outline-light:focus, .t4-typo-example .btn-outline-light:active, .t4-typo-example .btn-outline-light.active": {
+        "color": "var(--ds-c-fg) !important",
+        "border-color": "var(--ds-c-surface) !important",
+        "background-color": "var(--ds-c-surface) !important"
+      },
+      ".t4-typo-example .btn-outline-dark": {
+        "color": "var(--ds-c-fg) !important",
+        "border-color": "var(--ds-c-fg) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-dark:hover, .t4-typo-example .btn-outline-dark:focus, .t4-typo-example .btn-outline-dark:active, .t4-typo-example .btn-outline-dark.active": {
+        "color": "var(--ds-c-on-ink) !important",
+        "border-color": "var(--ds-c-ink) !important",
+        "background-color": "var(--ds-c-ink) !important"
+      },
+      ".t4-typo-example .btn-outline-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "border-color": "var(--ds-c-success-text) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-success:hover, .t4-typo-example .btn-outline-success:focus, .t4-typo-example .btn-outline-success:active, .t4-typo-example .btn-outline-success.active": {
+        "color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-text) !important"
+      },
+      ".t4-typo-example .btn-outline-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "border-color": "var(--ds-c-danger-text) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-danger:hover, .t4-typo-example .btn-outline-danger:focus, .t4-typo-example .btn-outline-danger:active, .t4-typo-example .btn-outline-danger.active": {
+        "color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-text) !important"
+      },
+      ".t4-typo-example .btn-outline-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "border-color": "var(--ds-c-warn-text) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-warning:hover, .t4-typo-example .btn-outline-warning:focus, .t4-typo-example .btn-outline-warning:active, .t4-typo-example .btn-outline-warning.active": {
+        "color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-text) !important"
+      },
+      ".t4-typo-example .btn-outline-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "border-color": "var(--ds-c-info-text) !important",
+        "background-color": "transparent !important"
+      },
+      ".t4-typo-example .btn-outline-info:hover, .t4-typo-example .btn-outline-info:focus, .t4-typo-example .btn-outline-info:active, .t4-typo-example .btn-outline-info.active": {
+        "color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-text) !important"
+      },
+      ".t4-typo-example .text-primary": {
+        "color": "var(--ds-c-accent-text) !important"
+      },
+      ".t4-typo-example .text-secondary": {
+        "color": "var(--ds-c-muted) !important"
+      },
+      ".t4-typo-example .text-dark": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .text-success": {
+        "color": "var(--ds-c-success-text) !important"
+      },
+      ".t4-typo-example .text-danger": {
+        "color": "var(--ds-c-danger-text) !important"
+      },
+      ".t4-typo-example .text-warning": {
+        "color": "var(--ds-c-warn-text) !important"
+      },
+      ".t4-typo-example .text-info": {
+        "color": "var(--ds-c-info-text) !important"
+      },
+      ".t4-typo-example .text-light": {
+        "color": "var(--ds-c-muted) !important"
+      },
+      ".t4-typo-example .bg-primary.text-dark, .t4-typo-example .bg-primary.text-white, .t4-typo-example .bg-primary[class*=\"text-\"]": {
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".t4-typo-example .bg-secondary.text-dark, .t4-typo-example .bg-secondary.text-white, .t4-typo-example .bg-secondary[class*=\"text-\"]": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .bg-light.text-dark, .t4-typo-example .bg-light.text-white, .t4-typo-example .bg-light[class*=\"text-\"]": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .bg-dark.text-dark, .t4-typo-example .bg-dark.text-white, .t4-typo-example .bg-dark[class*=\"text-\"]": {
+        "color": "var(--ds-c-on-ink) !important"
+      },
+      ".t4-typo-example .bg-success.text-dark, .t4-typo-example .bg-success.text-white, .t4-typo-example .bg-success[class*=\"text-\"]": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-danger.text-dark, .t4-typo-example .bg-danger.text-white, .t4-typo-example .bg-danger[class*=\"text-\"]": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-warning.text-dark, .t4-typo-example .bg-warning.text-white, .t4-typo-example .bg-warning[class*=\"text-\"]": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example .bg-info.text-dark, .t4-typo-example .bg-info.text-white, .t4-typo-example .bg-info[class*=\"text-\"]": {
+        "color": "var(--ds-c-bg) !important"
+      },
+      ".t4-typo-example mark": {
+        "background-color": "var(--ds-c-warn-bg) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-primary": {
+        "background-color": "color-mix(in srgb, var(--ds-c-accent) 12%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-accent) 35%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-primary .alert-link, .t4-typo-example .alert-primary a": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-secondary": {
+        "background-color": "var(--ds-c-surface-warm) !important",
+        "border-color": "var(--ds-c-border) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-secondary .alert-link, .t4-typo-example .alert-secondary a": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-light": {
+        "background-color": "var(--ds-c-surface) !important",
+        "border-color": "var(--ds-c-border) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-light .alert-link, .t4-typo-example .alert-light a": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-dark": {
+        "background-color": "color-mix(in srgb, var(--ds-c-ink) 18%, var(--ds-c-bg)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-ink) 40%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-dark .alert-link, .t4-typo-example .alert-dark a": {
+        "color": "var(--ds-c-fg) !important"
+      },
+      ".t4-typo-example .alert-success": {
+        "background-color": "var(--ds-c-success-bg) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-success-text) 35%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-success-text) !important"
+      },
+      ".t4-typo-example .alert-success .alert-link, .t4-typo-example .alert-success a": {
+        "color": "var(--ds-c-success-text) !important"
+      },
+      ".t4-typo-example .alert-danger": {
+        "background-color": "var(--ds-c-danger-bg) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-danger-text) 35%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-danger-text) !important"
+      },
+      ".t4-typo-example .alert-danger .alert-link, .t4-typo-example .alert-danger a": {
+        "color": "var(--ds-c-danger-text) !important"
+      },
+      ".t4-typo-example .alert-warning": {
+        "background-color": "var(--ds-c-warn-bg) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-warn-text) 35%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-warn-text) !important"
+      },
+      ".t4-typo-example .alert-warning .alert-link, .t4-typo-example .alert-warning a": {
+        "color": "var(--ds-c-warn-text) !important"
+      },
+      ".t4-typo-example .alert-info": {
+        "background-color": "var(--ds-c-info-bg) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-info-text) 35%, var(--ds-c-bg)) !important",
+        "color": "var(--ds-c-info-text) !important"
+      },
+      ".t4-typo-example .alert-info .alert-link, .t4-typo-example .alert-info a": {
+        "color": "var(--ds-c-info-text) !important"
+      },
+      ".t4-typo-example .progress": {
+        "background-color": "var(--ds-c-surface-warm) !important"
+      },
+      ".t4-typo-example .progress-bar:not([class*=\"bg-\"])": {
+        "background-color": "var(--ds-c-accent) !important",
+        "color": "var(--ds-c-accent-on) !important"
+      },
+      ".t4-typo-example .page-link": {
+        "color": "var(--ds-c-accent-text) !important",
+        "background-color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-border) !important"
+      },
+      ".t4-typo-example .page-link:hover, .t4-typo-example .page-link:focus": {
+        "color": "var(--ds-c-accent-text-hover) !important",
+        "background-color": "var(--ds-c-surface) !important",
+        "border-color": "var(--ds-c-border) !important"
+      },
+      ".t4-typo-example .page-item.active .page-link, .t4-typo-example .page-link.active, .t4-typo-example .active .page-link": {
+        "color": "var(--ds-c-accent-on) !important",
+        "background-color": "var(--ds-c-accent) !important",
+        "border-color": "var(--ds-c-accent) !important"
+      },
+      ".t4-typo-example .page-item.disabled .page-link, .t4-typo-example .page-link.disabled, .t4-typo-example .disabled .page-link": {
+        "color": "var(--ds-c-muted) !important",
+        "background-color": "var(--ds-c-bg) !important",
+        "border-color": "var(--ds-c-border) !important"
+      },
+      ".jn-sec.bg-green": {
+        "background-color": "var(--ds-c-accent-band)"
+      },
+      ".jn-sec.bg-green :is(.jn-sec__title, .jn-sec__head p, .jn-sec__head span)": {
+        "color": "var(--ds-c-on-accent-band) !important"
+      },
+      ".jn-news__content, .jn-news__content :is(p, span, a, div, h3, h4, strong)": {
+        "color": "#ffffff !important"
+      },
+      ".jn-news__date, .jn-news__date time": {
+        "color": "color-mix(in srgb, var(--ds-c-accent) 35%, #ffffff) !important"
+      },
+      ".tracy .jn-sec.bg-purple .wp-block-button.tracy-btn--primary .wp-block-button__link": {
+        "background-color": "var(--ds-c-on-accent-band) !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-purple .wp-block-button.tracy-btn--primary .wp-block-button__link:hover": {
+        "background-color": "color-mix(in srgb, var(--ds-c-on-accent-band) 85%, var(--ds-c-accent-band)) !important",
+        "border-color": "color-mix(in srgb, var(--ds-c-on-accent-band) 85%, var(--ds-c-accent-band)) !important",
+        "color": "var(--ds-c-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-purple .wp-block-button.tracy-btn--ghost .wp-block-button__link": {
+        "background-color": "transparent !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-on-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-purple .wp-block-button.tracy-btn--ghost .wp-block-button__link:hover": {
+        "background-color": "var(--ds-c-on-accent-band) !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-green .wp-block-button.tracy-btn--ghost .wp-block-button__link": {
+        "background-color": "transparent !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-on-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-green .wp-block-button.tracy-btn--ghost .wp-block-button__link:hover": {
+        "background-color": "var(--ds-c-on-accent-band) !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-accent-band) !important"
+      },
+      ".tracy .jn-sec.bg-green .wp-block-button.tracy-btn--primary .wp-block-button__link": {
+        "background-color": "var(--ds-c-on-accent-band) !important",
+        "border-color": "var(--ds-c-on-accent-band) !important",
+        "color": "var(--ds-c-accent-band) !important"
+      },
+      ".jn-sec.bg-light, .jn-sec.bg-purple-light, .jn-sec.bg-green-light, .jn-search-band, .jn-position, .jn-related--projects": {
+        "background-color": "var(--ds-c-surface-warm)"
+      },
+      ".jn-auth .jn-reg__cancel:hover": {
+        "background-color": "color-mix(in srgb, var(--ds-c-danger) 85%, #000000)",
+        "border-color": "color-mix(in srgb, var(--ds-c-danger) 85%, #000000)"
+      },
+      ".jn-contact-card::after, .jn-contact-info__accent::after": {
+        "filter": "grayscale(1)"
+      },
+      ".jn-share__links .wp-social-link, .jn-contact-links .wp-social-link, .jn-search-band__social .wp-social-link": {
+        "background-color": "var(--ds-c-accent)"
+      },
+      ".jn-share__links .wp-social-link :is(a, svg), .jn-contact-links .wp-social-link :is(a, svg), .jn-search-band__social .wp-social-link :is(a, svg)": {
+        "color": "var(--ds-c-accent-on) !important",
+        "fill": "var(--ds-c-accent-on) !important"
+      },
+      "body.tracy .jn-pricing__list li::before": {
+        "background": "var(--ds-c-accent-text)",
+        "mask": "url(\"data:image/svg+xml,%3Csvg%20width%3D%2721%27%20height%3D%2720%27%20viewBox%3D%270%200%2021%2020%27%20fill%3D%27none%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cpath%20d%3D%27M4.92141%2015.7452C4.20235%2015.0262%204.67928%2013.5165%204.31328%2012.632C3.93387%2011.715%202.54166%2010.9769%202.54166%209.99997C2.54166%209.02301%203.93388%208.285%204.31328%207.36803C4.67928%206.48346%204.20235%204.97382%204.92141%204.25476C5.64048%203.53569%207.15012%204.01262%208.03469%203.64662C8.95168%203.26722%209.68971%201.875%2010.6667%201.875C11.6436%201.875%2012.3817%203.26722%2013.2986%203.64663C14.1832%204.01263%2015.6928%203.5357%2016.4119%204.25476C17.131%204.97382%2016.654%206.48346%2017.02%207.36804C17.3994%208.28502%2018.7917%209.02305%2018.7917%2010C18.7917%2010.977%2017.3994%2011.715%2017.02%2012.632C16.654%2013.5165%2017.131%2015.0262%2016.4119%2015.7452C15.6928%2016.4643%2014.1832%2015.9874%2013.2986%2016.3534C12.3816%2016.7328%2011.6436%2018.125%2010.6666%2018.125C9.68966%2018.125%208.95166%2016.7328%208.03469%2016.3534C7.15011%2015.9874%205.64048%2016.4643%204.92141%2015.7452Z%27%20stroke%3D%27%23000%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%2F%3E%3Cpath%20d%3D%27M14.1042%208.125L9.5208%2012.5L7.22916%2010.3125%27%20stroke%3D%27%23000%27%20stroke-width%3D%271.5%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%2F%3E%3C%2Fsvg%3E\") center / 20px 20px no-repeat"
+      }
+    }
+  },
+  "sideNote": "under a dark worn page the header shows the theme's dark logo spot (.jn-logo--dark: the dark logo, or the site name as text when none is set, inc/brand-logo.php), as the theme itself does under data-theme=dark: its light logo picture (dark letters) sank into a dark system's header (seen by eye 12/10/2026 under Moxie and Toggl Track). 14/10/2026 (look review v6): the green and red words kept the template's hues on a light page (below), a second and third accent beside the system's in one heading (\"We make\" green, \"Start building\" red-pink): every coloured heading word now takes the readable accent moved two fifths toward the text, the purple words' rule; the deepened literals that follow are history. Before: on a light worn page the headings' green words (--jn-green #04ad68, 2.92:1 on the template's white; the hero's first words) take a deeper green of the same hue (#037a49, 4.7:1 on cream): on MotherDuck's cream they read 2.56 (12/10/2026, every text judged); the red words (--jn-red #ef3867, 3.87:1 on the template's white) take a deeper red of the same hue (#c8174a, 5:1 on cream): on MotherDuck's cream they read 3.18-3.38 (re-measured 12/10/2026 with every heading and text judged). The headings' purple words (--jn-purple-text, the readable accent) sit on the template's light lavender pictures as well as on the page: there the readable accent read 3.99-4.11:1 (Apple, MotherDuck; the template's own 4.7-5.06), so on a light worn page they are the readable accent moved two fifths toward the system's text (a quarter toward its heading colour, MotherDuck's mid grey, still read 4.18-4.19:1 on its lavender picture)",
+  "ready": true,
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-ja-nova): 12/12 on every release measured, controls 0 differences, lowest text 4.54:1, 87% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: re-measured 11/10/2026 with the per-element probe on theme 1.1.11 (its minVersion) over the ja-nova/wp7 1.1.10 content (tasks/evidence/ds-remeasure-6-2026-10-11/wordpress-ja-nova): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, kept bands unchanged, no text under 4.5:1 made worse than the template's own, 87-96% of the page follows, screenshots read by a person. The new probe first FAILED it 4/12: white on the purple band once the band wore a light accent (1.94-2.56:1), the accent written as text on the pricing tabs and stat numbers (1.68-4.31:1), the stylesheet's light-dark() colours taking their dark arms under a dark system, and the kept bands following the accent. Fixed by templateVars (each --jn-* names its role), keepDefaults/keepColors, followRules and keepScopes .jn-stat. First measured 09/10/2026 (tasks/evidence/ds-slot-released-2026-10-09/templates/ja-nova-wp7)",
+  "bands": {
+    ".jn-cta-bar": {
+      "ground": "#5e48db",
+      "texts": ["#ffffff"],
+      "paint": {
+        ".jn-accent": {
+          "color": "accent"
+        },
+        "&": {
+          "color": "text"
+        },
+        ":is(h1, h2, h3, h4, h5, h6, p, li, span, small, strong, em, label, a:not([class*=btn]):not([class*=button]))": {
+          "color": "text"
+        },
+        ".tracy-btn--ghost .wp-block-button__link": {
+          "background-color": "ground",
+          "border-color": "text",
+          "color": "text"
+        },
+        ".tracy-btn--ghost .wp-block-button__link:hover": {
+          "background-color": "text",
+          "border-color": "text",
+          "color": "ground"
+        }
+      },
+      "kind": "brand",
+      "repaint": true
+    },
+    ".tracy-footer": {
+      "ground": "#212529",
+      "texts": ["#c9cacb", "#bdbebf"],
+      "paint": {
+        ".jn-social .wp-social-link": {
+          "background-color": "text"
+        },
+        ".jn-social .wp-social-link a": {
+          "color": "ground"
+        }
+      }
+    },
+    ".jn-stat": {
+      "ground": "#f7f7f7",
+      "texts": ["#333333", "#575858"],
+      "paint": {
+        ".jn-stat__number": {
+          "color": "accent"
+        },
+        "&": {
+          "color": "text"
+        },
+        ".jn-stat__title": {
+          "color": "text"
+        },
+        ".jn-stat__desc": {
+          "color": "text-2"
+        }
+      },
+      "kind": "panel",
+      "repaint": true
+    },
+    ".jn-sec.bg-yellow": {
+      "ground": "#f8ab11",
+      "texts": ["#ffffff"],
+      "fill": true,
+      "kind": "brand",
+      "words": [".jn-teams__desc", ".jn-teams__desc *", ".jn-sec__title"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours. .jn-sec.bg-yellow (14/10/2026): the page content sets the teams section on the template's yellow #f8ab11 (/about-us-2, \"This is why industry our team is so famous!\"), its heading a #ffffff literal in the system's light weight, 1.9:1 under Moxie and Stripe: a fill of the brand kind, its heading takes the words the system sets on that ground, its button is judged on it",
+  "contractNotes1317": "13/10/2026 (#1317): the purple feature and call bands kept their white words (66 left paints) and the stats panel its ink words while their ground followed (78% under Moxie); they repaint their words with the system text, cyan marks and the stat numbers with the accent, the news dates with the accent; the pink accents outside the bands follow the accent text. The footer social icons keep their brand colours on purpose. Second run (21:46): the accent marks follow the accent text everywhere but on the orange teams block (.jn-teams keeps its own #f8ab11: Spotify green on it 1.01:1).",
+  "contractNotes1315": "14/10/2026 (#1315, two modes): on the derived light side of a dark system the news cards' dates, painted the band's accent made readable on the band's light ground, sat black on their photos (1.22:1 under Spotify): they keep the theme's own red, the template's pair on its photos; the pricing price (the theme's literal yellow, 1.53:1 on Moxie's derived cream panel) takes the system's readable accent",
+  "innerNote": "15/10/2026 (v10 inner measure, /illustration 10/12): the service page's menu marks its current item with a literal lavender tint (.jn-service__menu .current-menu-item > .wp-block-navigation-item__content: light-dark(#efedfc, #262c36)): under a system it stayed lavender on a light side and the template's slate on a dark one, where the readable accent read 4.37:1 (Stripe's derived navy page, #262c36 item). It takes the page ground like its sibling items (--jn-raised), keeping its accent rim and its bold readable-accent words, as the pricing tabs do: 4.53:1 or more under all 1334 systems on both sides (5.41:1 there).",
+  "keptButtons": {
+    ".jn-cta-bar": {
+      "ground": "#5e48db",
+      "buttons": [".tracy-btn--primary > .wp-block-button__link"]
+    }
+  },
+  "paletteKeep": [
+    {
+      "selector": ".jn-news__item",
+      "reason": "the latest news cards lay their date, title, author and excerpt on the post photograph under a black gradient (.jn-news__item::after): white words on a picture, kept white like the template"
+    }
+  ],
+  "probe10Note": "19/10/2026 (dot 3, preview probe v10, measured on the published quickstart 1.1.12 with the released theme 1.1.16 that running sites update to): the purple band is .bg-purple, not .jn-a1-cyan (About us sets .jn-a1-cyan on a white feature section, which the old band filled with the accent and white words under every system), and no longer a kept band: the purple sections and the news section wear the system band pair (accent-band, on-accent-band), their primary button inverted and their ghost an outline; the news cards keep their white words on the photographs (paletteKeep .jn-news__item), the dates there a light tint of the accent (Joomla twin 1.0.8); the kept call bar and news keep only their primary button for keptButtons, the ghost an outline of the band words; the T4 typography showcase wears the system roles like the shared Bootstrap role block on Joomla; the coloured heading words take the readable accent itself (the 60% mix toward the text lost its hue under Moxie, HIER-1); required marks the danger text shade, post dates the readable accent, Expertise dots the status shades; the illustrations (feature, marquee, service icons, heading stickers, contact icons) go neutral grey (WordPress has no in-page SVG tone filter like the Joomla twin); the Services highlight card the band pair; words on accent fills the accent words; field lines the system line; the Tagged Items search one framed control; ghost buttons the system surface; dark: the bands the template lifts a hair (bg-light, bg-purple-light, bg-green-light, search band, positions, related projects) the warm surface; the social marks follow the system; the Cancel hover the danger shade."
+}

@@ -1,0 +1,163 @@
+{
+  "app": {
+    "addSite": "添加 Site",
+    "collapse": "收起侧栏",
+    "expand": "展开侧栏",
+    "inbox": "收件箱",
+    "launchpad": "Launchpad",
+    "loading": "加载中…",
+    "signInUnavailable": "这个界面暂时没有登录入口。",
+    "switchWorkspace": "切换 workspace",
+    "workspace": "Sitespace",
+    "workspaces": "Sitespaces",
+    "yourWorkspace": "你的 workspace"
+  },
+  "common": {
+    "add": "添加 Site",
+    "cancel": "取消",
+    "close": "关闭",
+    "collapse": "收起",
+    "comingSoon": "即将推出",
+    "copy": "复制地址",
+    "expand": "展开",
+    "open": "打开",
+    "settings": "设置",
+    "signIn": "登录",
+    "signOut": "退出登录",
+    "tryAgain": "重试",
+    "chat": "Chat"
+  },
+  "home": {
+    "account": "账号",
+    "empty": {
+      "body": "你被邀请加入的 Site 会显示在这里。",
+      "title": "还没有 Site"
+    },
+    "error": {
+      "body": "检查网络后重试。",
+      "title": "无法加载你的 site。"
+    },
+    "noAgent": "这个 Site 的 Agent 还没有接入 cowork.tracy.ai。",
+    "role": {
+      "admin": "Admin",
+      "developer": "Developer",
+      "editor": "Editor",
+      "owner": "Owner"
+    },
+    "status": {
+      "invite": "邀请",
+      "invitedBy": "{{name}} 邀请了你",
+      "invitedByTeam": "你的团队邀请了你",
+      "requested": "已申请",
+      "waiting": "等待 admin 批准你的申请",
+      "working": "正在这个 Site 上工作"
+    },
+    "subtitle": "选择一个 Site，和它的 Agent 一起工作。",
+    "title": "你的 Site"
+  },
+  "settings": {
+    "account": "用户设置",
+    "appearance": "外观",
+    "email": "Email",
+    "emailNote": "这里不创建账号 —— 你用团队给你的席位登录。",
+    "language": "语言",
+    "preferences": "偏好设置",
+    "signOutConfirm": "确定要退出登录吗？重新进入需要发送到席位 email 的验证码。",
+    "sites": "Site",
+    "theme": "Theme",
+    "themeDark": "深色",
+    "themeLight": "浅色",
+    "themeSystem": "跟随系统",
+    "title": "设置"
+  },
+  "site": {
+    "addresses": "这个 Site 的地址",
+    "agent": "Site Agent",
+    "agentPane": "agent",
+    "back": "返回 Site 列表",
+    "bridge": {
+      "off": "页面桥未连接",
+      "on": "页面桥已连接"
+    },
+    "changes": {
+      "apply": "应用到 live site",
+      "copyFrom": "副本时间：{{when}}",
+      "count_one": "{{count}} 处改动",
+      "count_other": "{{count}} 处改动",
+      "filesChanged_one": "Preview 上有 {{count}} 个 file 改动",
+      "filesChanged_other": "Preview 上有 {{count}} 个 file 改动",
+      "noBaseline": "这个 Site 还没有可对比的基线。",
+      "noBaselineWhy": "建立基线需要在所有 Site 共用的机器上遍历整个 Site。",
+      "nothing": "自上一个 Release 以来没有改动。",
+      "recordFailed": "无法记录这些改动。",
+      "recordedNothing": "没有需要记录的内容。",
+      "recorded_one": "已记录 {{count}} 处改动。",
+      "recorded_other": "已记录 {{count}} 处改动。",
+      "recording": "正在记录…",
+      "refresh": "刷新改动列表",
+      "revert": "把 Site 恢复到这里",
+      "unavailable": "无法访问该 Site 在 fleet 上的副本。"
+    },
+    "changesAndHistory": "改动与历史",
+    "context": {
+      "copy": "复制到 chat",
+      "dismiss": "关闭",
+      "nothingOverflows": "没有元素溢出其容器。",
+      "overflow": "溢出扫描",
+      "overflowList": "溢出容器的元素，最严重的在前：",
+      "picked": "选中的元素",
+      "pointedAt": "用户指向的元素："
+    },
+    "doorLive": "Live site",
+    "doorPreview": "Preview",
+    "drawer": {
+      "close": "关闭 Site 状态面板",
+      "title": "Site 状态"
+    },
+    "editing": "正在编辑",
+    "fleetSilent": "fleet 没有响应。",
+    "fleetUnreachable": "无法访问 fleet",
+    "general": {
+      "addresses": "地址",
+      "agentNameNote": "同时也是这个 Site 上 Agent 的名字。",
+      "liveSite": "Live site",
+      "notYours": "这个 Site 不在你的列表里。",
+      "role": "你的角色",
+      "roleNote": "你在这个 Site 上的席位。",
+      "thisSite": "这个 Site",
+      "tracyCopy": "Tracy 的副本"
+    },
+    "hideChanges": "隐藏改动",
+    "history": {
+      "dateUnknown": "日期未知",
+      "hoursAgo": "{{count}} 小时前",
+      "justNow": "刚刚",
+      "latest": "最新",
+      "minutesAgo": "{{count}} 分钟前",
+      "none": "还没有 Release。Release 需要有人为某个状态命名；这个 Site 还没有被命名的状态。",
+      "unavailable": "无法读取该 Site 的历史。",
+      "unversioned": "这个 Site 还没有纳入版本管理。"
+    },
+    "historyBack": "后退",
+    "historyForward": "前进",
+    "noAddress": "这个 Site 还没有可显示的地址。",
+    "openInBrowser": "在浏览器中打开",
+    "openInNewTab": "在新 tab 中打开 site",
+    "otherWorkspace": "这个 Site 在另一个 workspace 里。",
+    "preview": "Site preview",
+    "record": "记录",
+    "refresh": "刷新",
+    "reload": "重新加载 Site 面板",
+    "showChanges": "显示改动",
+    "sitePane": "live site",
+    "switchTo": "切换到 {{name}}",
+    "tab": {
+      "changes": "改动",
+      "files": "File",
+      "history": "历史",
+      "scan": "扫描"
+    },
+    "thatWorkspace": "那个 workspace",
+    "toggleTools": "切换工具面板"
+  }
+}

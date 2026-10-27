@@ -1,0 +1,574 @@
+[
+  {
+    "page": "/resources/marketing-samples",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "file": "resources-marketing-samples__desktop-light.png"
+  },
+  {
+    "page": "/resources/marketing-samples",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "file": "resources-marketing-samples__desktop-dark.png"
+  },
+  {
+    "page": "/resources/marketing-samples",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "file": "resources-marketing-samples__mobile-light.png"
+  },
+  {
+    "page": "/resources/marketing-samples",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "file": "resources-marketing-samples__mobile-dark.png"
+  },
+  {
+    "page": "marketing/newsletter",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-light.html",
+    "file": "marketing-newsletter__desktop-light.png"
+  },
+  {
+    "page": "marketing/newsletter",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-dark.html",
+    "file": "marketing-newsletter__desktop-dark.png"
+  },
+  {
+    "page": "marketing/newsletter",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-light.html",
+    "file": "marketing-newsletter__mobile-light.png"
+  },
+  {
+    "page": "marketing/newsletter",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-dark.html",
+    "file": "marketing-newsletter__mobile-dark.png"
+  },
+  {
+    "page": "marketing/email",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-light.html",
+    "file": "marketing-email__desktop-light.png"
+  },
+  {
+    "page": "marketing/email",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-dark.html",
+    "file": "marketing-email__desktop-dark.png"
+  },
+  {
+    "page": "marketing/email",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-light.html",
+    "file": "marketing-email__mobile-light.png"
+  },
+  {
+    "page": "marketing/email",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-dark.html",
+    "file": "marketing-email__mobile-dark.png"
+  },
+  {
+    "page": "marketing/poster",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-light.html",
+    "file": "marketing-poster__desktop-light.png"
+  },
+  {
+    "page": "marketing/poster",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-dark.html",
+    "file": "marketing-poster__desktop-dark.png"
+  },
+  {
+    "page": "marketing/poster",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-light.html",
+    "file": "marketing-poster__mobile-light.png"
+  },
+  {
+    "page": "marketing/poster",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-dark.html",
+    "file": "marketing-poster__mobile-dark.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "file": "marketing-deck__desktop-light.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-1",
+    "counter": "01 / 11",
+    "file": "marketing-deck__desktop-light__slide-01.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-2",
+    "counter": "02 / 11",
+    "file": "marketing-deck__desktop-light__slide-02.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-3",
+    "counter": "03 / 11",
+    "file": "marketing-deck__desktop-light__slide-03.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-4",
+    "counter": "04 / 11",
+    "file": "marketing-deck__desktop-light__slide-04.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-5",
+    "counter": "05 / 11",
+    "file": "marketing-deck__desktop-light__slide-05.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-6",
+    "counter": "06 / 11",
+    "file": "marketing-deck__desktop-light__slide-06.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-7",
+    "counter": "07 / 11",
+    "file": "marketing-deck__desktop-light__slide-07.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-8",
+    "counter": "08 / 11",
+    "file": "marketing-deck__desktop-light__slide-08.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-9",
+    "counter": "09 / 11",
+    "file": "marketing-deck__desktop-light__slide-09.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-10",
+    "counter": "10 / 11",
+    "file": "marketing-deck__desktop-light__slide-10.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-11",
+    "counter": "11 / 11",
+    "file": "marketing-deck__desktop-light__slide-11.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "file": "marketing-deck__desktop-dark.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-1",
+    "counter": "01 / 11",
+    "file": "marketing-deck__desktop-dark__slide-01.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-2",
+    "counter": "02 / 11",
+    "file": "marketing-deck__desktop-dark__slide-02.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-3",
+    "counter": "03 / 11",
+    "file": "marketing-deck__desktop-dark__slide-03.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-4",
+    "counter": "04 / 11",
+    "file": "marketing-deck__desktop-dark__slide-04.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-5",
+    "counter": "05 / 11",
+    "file": "marketing-deck__desktop-dark__slide-05.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-6",
+    "counter": "06 / 11",
+    "file": "marketing-deck__desktop-dark__slide-06.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-7",
+    "counter": "07 / 11",
+    "file": "marketing-deck__desktop-dark__slide-07.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-8",
+    "counter": "08 / 11",
+    "file": "marketing-deck__desktop-dark__slide-08.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-9",
+    "counter": "09 / 11",
+    "file": "marketing-deck__desktop-dark__slide-09.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-10",
+    "counter": "10 / 11",
+    "file": "marketing-deck__desktop-dark__slide-10.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-11",
+    "counter": "11 / 11",
+    "file": "marketing-deck__desktop-dark__slide-11.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "file": "marketing-deck__mobile-light.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-1",
+    "counter": "01 / 11",
+    "file": "marketing-deck__mobile-light__slide-01.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-2",
+    "counter": "02 / 11",
+    "file": "marketing-deck__mobile-light__slide-02.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-3",
+    "counter": "03 / 11",
+    "file": "marketing-deck__mobile-light__slide-03.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-4",
+    "counter": "04 / 11",
+    "file": "marketing-deck__mobile-light__slide-04.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-5",
+    "counter": "05 / 11",
+    "file": "marketing-deck__mobile-light__slide-05.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-6",
+    "counter": "06 / 11",
+    "file": "marketing-deck__mobile-light__slide-06.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-7",
+    "counter": "07 / 11",
+    "file": "marketing-deck__mobile-light__slide-07.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-8",
+    "counter": "08 / 11",
+    "file": "marketing-deck__mobile-light__slide-08.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-9",
+    "counter": "09 / 11",
+    "file": "marketing-deck__mobile-light__slide-09.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-10",
+    "counter": "10 / 11",
+    "file": "marketing-deck__mobile-light__slide-10.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "state": "slide-11",
+    "counter": "11 / 11",
+    "file": "marketing-deck__mobile-light__slide-11.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "file": "marketing-deck__mobile-dark.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-1",
+    "counter": "01 / 11",
+    "file": "marketing-deck__mobile-dark__slide-01.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-2",
+    "counter": "02 / 11",
+    "file": "marketing-deck__mobile-dark__slide-02.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-3",
+    "counter": "03 / 11",
+    "file": "marketing-deck__mobile-dark__slide-03.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-4",
+    "counter": "04 / 11",
+    "file": "marketing-deck__mobile-dark__slide-04.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-5",
+    "counter": "05 / 11",
+    "file": "marketing-deck__mobile-dark__slide-05.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-6",
+    "counter": "06 / 11",
+    "file": "marketing-deck__mobile-dark__slide-06.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-7",
+    "counter": "07 / 11",
+    "file": "marketing-deck__mobile-dark__slide-07.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-8",
+    "counter": "08 / 11",
+    "file": "marketing-deck__mobile-dark__slide-08.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-9",
+    "counter": "09 / 11",
+    "file": "marketing-deck__mobile-dark__slide-09.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-10",
+    "counter": "10 / 11",
+    "file": "marketing-deck__mobile-dark__slide-10.png"
+  },
+  {
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "state": "slide-11",
+    "counter": "11 / 11",
+    "file": "marketing-deck__mobile-dark__slide-11.png"
+  },
+  {
+    "page": "marketing/form",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html",
+    "file": "marketing-form__desktop-light.png"
+  },
+  {
+    "page": "marketing/form",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html",
+    "state": "submitted",
+    "status": {
+      "hidden": false,
+      "text": "Nothing was sent. This form has no recipient and the sample does not deliver messages.",
+      "action": null,
+      "url": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html"
+    },
+    "file": "marketing-form__desktop-light__submitted.png"
+  },
+  {
+    "page": "marketing/form",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html",
+    "file": "marketing-form__desktop-dark.png"
+  },
+  {
+    "page": "marketing/form",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html",
+    "state": "submitted",
+    "status": {
+      "hidden": false,
+      "text": "Nothing was sent. This form has no recipient and the sample does not deliver messages.",
+      "action": null,
+      "url": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html"
+    },
+    "file": "marketing-form__desktop-dark__submitted.png"
+  },
+  {
+    "page": "marketing/form",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html",
+    "file": "marketing-form__mobile-light.png"
+  },
+  {
+    "page": "marketing/form",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html",
+    "state": "submitted",
+    "status": {
+      "hidden": false,
+      "text": "Nothing was sent. This form has no recipient and the sample does not deliver messages.",
+      "action": null,
+      "url": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html"
+    },
+    "file": "marketing-form__mobile-light__submitted.png"
+  },
+  {
+    "page": "marketing/form",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html",
+    "file": "marketing-form__mobile-dark.png"
+  },
+  {
+    "page": "marketing/form",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html",
+    "state": "submitted",
+    "status": {
+      "hidden": false,
+      "text": "Nothing was sent. This form has no recipient and the sample does not deliver messages.",
+      "action": null,
+      "url": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html"
+    },
+    "file": "marketing-form__mobile-dark__submitted.png"
+  },
+  {
+    "page": "marketing/typography",
+    "variant": "desktop-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-light.html",
+    "file": "marketing-typography__desktop-light.png"
+  },
+  {
+    "page": "marketing/typography",
+    "variant": "desktop-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-dark.html",
+    "file": "marketing-typography__desktop-dark.png"
+  },
+  {
+    "page": "marketing/typography",
+    "variant": "mobile-light",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-light.html",
+    "file": "marketing-typography__mobile-light.png"
+  },
+  {
+    "page": "marketing/typography",
+    "variant": "mobile-dark",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-dark.html",
+    "file": "marketing-typography__mobile-dark.png"
+  }
+]

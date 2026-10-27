@@ -1,0 +1,103 @@
+---
+/** Numbered pager: first/previous, a window of ten pages, next/last, and an optional counter line. */
+import { ui } from '@/lib/ui'
+
+interface Props {
+  page: number
+  pages: number
+  url: (n: number) => string
+  counter?: string
+  /** Numbered buttons shown at once; a narrow column passes fewer so the counter keeps its row. */
+  window?: number
+  /** Stored locale of the page: the button names follow the site's language (`src/lib/ui.ts`). */
+  locale?: string
+}
+const { page, pages, url, counter, window: WINDOW = 10, locale = 'en' } = Astro.props
+const { w } = ui(locale)
+const start = Math.max(1, Math.min(page - Math.floor(WINDOW / 2) + 1, pages - WINDOW + 1))
+const end = Math.min(pages, start + WINDOW - 1)
+const nums = Array.from({ length: end - start + 1 }, (_, i) => start + i)
+const head = [
+  { label: '«', aria: w.firstPage, target: 1, off: page === 1 },
+  { label: '‹', aria: w.previousPage, target: page - 1, off: page === 1 }
+]
+const tail = [
+  { label: '›', aria: w.nextPage, target: page + 1, off: page === pages },
+  { label: '»', aria: w.lastPage, target: pages, off: page === pages }
+]
+---
+
+{
+	pages > 1 && (
+		<nav class="pager" aria-label={w.pagination}>
+			<ul>
+				{head.map((e) => (
+					<li>{e.off ? <span class="box off" aria-hidden="true">{e.label}</span> : <a class="box" href={url(e.target)} aria-label={e.aria}>{e.label}</a>}</li>
+				))}
+				{nums.map((n) => (
+					<li>{n === page ? <span class="box current" aria-current="page">{n}</span> : <a class="box" href={url(n)}>{n}</a>}</li>
+				))}
+				{tail.map((e) => (
+					<li>{e.off ? <span class="box off" aria-hidden="true">{e.label}</span> : <a class="box" href={url(e.target)} aria-label={e.aria}>{e.label}</a>}</li>
+				))}
+			</ul>
+			{counter && <p class="counter">{counter}</p>}
+		</nav>
+	)
+}
+
+<style>
+	.pager {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		margin-top: 32px;
+		padding-top: 24px;
+		border-top: 1px solid var(--k-border);
+	}
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.box {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 36px;
+		height: 36px;
+		padding: 0 10px;
+		border: 1px solid var(--k-border);
+		border-radius: 8px;
+		background: var(--k-surface);
+		font-family: var(--font-mono);
+		font-size: 13px;
+		color: var(--k-text);
+		transition: border-color 0.15s, color 0.15s;
+	}
+	a.box:hover {
+		border-color: var(--k-primary);
+		color: var(--k-heading);
+	}
+	.current {
+		background: var(--k-primary-fill);
+		border-color: var(--k-primary);
+		color: var(--k-primary-ink);
+	}
+	.off {
+		color: var(--k-muted);
+		opacity: 0.6;
+	}
+	.counter {
+		margin: 0 0 0 auto;
+		white-space: nowrap;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		color: var(--k-muted);
+	}
+</style>

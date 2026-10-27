@@ -1,0 +1,12 @@
+@theme {
+  /* Colors */
+  --color-ink: #000000;
+  --color-gallery-white: #ffffff;
+  --color-graphite: #333333;
+  --color-ash: #808080;
+
+  /* Typography */
+  --font-neuehaasdisplay: 'Neuehaasdisplay', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inferi: 'Inferi', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-suisseintl: 'Suisseintl', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

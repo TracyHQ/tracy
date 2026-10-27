@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "643f90ba-dc30-428b-a145-26f02fe70551",
+  "status": "complete",
+  "name": "Sneak in Peace",
+  "url": "https://styles.refero.design/style/643f90ba-dc30-428b-a145-26f02fe70551",
+  "sourceWebsite": "https://www.sneakinpeace.com",
+  "extractedAt": "2026-06-03T18:50:49.270Z",
+  "capturedAt": "2026-10-08T05:12:32.190632+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Editorial gallery behind frosted glass. A single muted fashion film bleeds edge-to-edge while every interactive surface — tabs, now-playing card, product tiles — hovers in a translucent white panel pinned to the right edge, as if pinned to a museum vitrine.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/9797493f-2b66-4943-9051-50a841b92ed7.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ab8add46-c819-45d3-85c6-52d49b75d4ac.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/783d0bc5-1ddb-41e9-af49-7d3be9952840.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/afab1c8a-05a2-4901-b9d6-87db925c8c28.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/8018b270-0c6a-4f9e-bba0-9c0e7bd3f6f6.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "4645bf1c984443380c089053ef064967d25e455939a058a1338164a1fc5aae9a",
+      "bytes": 18431
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7aef616a5c17d134f974ff6f628746eac810d0d7db65721cf7b7ed5f0a356a03",
+      "bytes": 102776
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "9184ed77f1fb687eab2576a579153421468fc5c0e789e6b8f7b4147c6994889a",
+      "bytes": 15685
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "fcfe109734e981e3ebe5e5eaf7c19a104630f3a410377caf7ca1f76de76f25e5",
+      "bytes": 9985
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "f8956213a717784ea0891ea3d416f07149a0840a76b379fdede226779cf7a801",
+      "bytes": 11660
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "af90543451b17ddf42b1b8f6e1160393a8cffb4ae5763cab6db1d93bf7c69453",
+      "bytes": 3062
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "bb6d1df748566c8041a0cd4534e79fd62d2d74ce3a3f1d4e98cf629a82d752c6",
+      "bytes": 568
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0817e1a7a3863f56893b1c8b994e1944d0d09efa12c60c3e44fcf95281aa1bc3",
+      "bytes": 585
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "160d2ecef392c56e433087f00078d666b51cd008c3bbced5144b70cdd20287b0",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d806e7d65b35e49ec6c51c4075f30f66d447c11a1b415e5d23aa1ff8efc9d585",
+      "bytes": 41820
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1125b85dc6b6b890b580b1cb11008e1e947a3e79f92739cb7d69c574113a483b",
+      "bytes": 21536
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "ed12b976ede052c9e83aea3a9da5bec988df4a5b61bc20f731bacab9281f6b93",
+      "bytes": 42083
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "7d3d06e3fb9ba786b7bf62c8838761c3b26ef9e61c497c1169c975c7053e0c8e",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "73ef07f17de5820ce90aee1f6625b25f32e866dfac4923ca848fe3903e1fc115",
+      "bytes": 1276
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "43f47bed605c2ff7ba8f7488e07996675180561d1b83ddf2279b9c8c70c4b413",
+      "bytes": 1777
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ecfea58-c1f3-4671-806d-5ae0eb779f38",
+    "0ed4e85f-f3e9-438c-bc34-2a726863c602",
+    "1287abc9-da90-410d-a997-96b8b11ad646",
+    "16a8de02-a4c6-4077-9d3a-ef6b5c10db12",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "3e70af05-a07f-4c11-98ca-6ecb4765e967",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "643f90ba-dc30-428b-a145-26f02fe70551",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "7b28c99e-ed17-451b-a39e-bd4722bc43f5",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "edc0c03e-8c20-4e22-badd-2735fcb9f4a8",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "fa157687-ee42-443e-a992-5f8a3fcdd48f"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "failed": "No se puede mostrar el PDF: {message}",
+  "loading": "Renderizando documento...",
+  "pageImage": "Página {page} del PDF",
+  "password": "Este PDF requiere una contraseña. No se admiten vistas previas de archivos protegidos con contraseña.",
+  "rendering": "Renderizando página…",
+  "retry": "Reintentar",
+  "title": "PDF",
+  "unsupported": "La vista previa del PDF requiere el contenido completo del archivo.",
+  "workerFailed": "El proceso de renderizado del PDF no pudo continuar. Vuelva a intentarlo.",
+  "zoomControls": "Controles de zoom",
+  "zoomFitWidth": "Ajustar al ancho",
+  "zoomIn": "Acercar",
+  "zoomMenu": "Elegir el zoom",
+  "zoomOut": "Alejar",
+  "zoomValue": "{percent} %"
+}

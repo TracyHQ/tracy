@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-void: #0a0a0a;
+  --color-chalk: #f7f7f7;
+  --color-ivory: #ebebeb;
+  --color-ash: #7c7c7c;
+  --color-graphite: #4d4d4d;
+  --color-smoke: #707070;
+  --color-steel: #616161;
+  --color-charcoal: #585858;
+
+  /* Typography — Font Families */
+  --font-wand-ui-pro: 'Wand UI Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

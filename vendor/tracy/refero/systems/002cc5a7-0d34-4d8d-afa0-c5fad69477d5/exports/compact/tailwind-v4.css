@@ -1,0 +1,10 @@
+@theme {
+  /* Colors */
+  --color-ink: #1a1a17;
+  --color-paper: #ffffff;
+  --color-ash: #5f5f5d;
+
+  /* Typography */
+  --font-nyght-serif: 'Nyght Serif', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-switzer: 'Switzer', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

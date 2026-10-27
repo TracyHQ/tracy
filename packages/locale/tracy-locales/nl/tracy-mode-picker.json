@@ -1,0 +1,15 @@
+{
+  "group.mode": "Modus",
+  "group.platform": "Platform",
+  "lockedHint": "Deze session heeft al een geschiedenis. Modus en platform gelden alleen voor een nieuwe session",
+  "noDescription": "Geen beschrijving",
+  "platform.adds": "voegt {tools} tool · {skills} skill toe",
+  "platform.nothingYet": "nog niets: agents werken alleen op basis van hun modus",
+  "platform.siteRuns": "deze site draait op {platform}",
+  "role.designer": "Ontwerper",
+  "role.developer": "Ontwikkelaar",
+  "role.seo-geo": "SEO/GEO",
+  "role.writer": "Schrijver",
+  "seatHint": "Modus en platform voor de volgende session",
+  "switchRefused": "{name} is geweigerd: {reason}"
+}

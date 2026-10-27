@@ -1,0 +1,201 @@
+/* Tracy Cowork design tokens, mapped onto dsh's aliases.
+
+   📖 The RULES for using them are in /DESIGN.md — two CSS modes, three selector tiers, a quick lookup table. This file
+   holds the VALUES and records WHY each decision was measured the way it was; DESIGN.md holds the RULES. Changing a
+   rule here without changing it there creates two sources of truth.
+
+
+   SHAPE: each shadcn variable = `var(--dsw-alias-<name>, <old shadcn value>)`. The alias wins when
+   present; the old value stays as the fallback so components also render outside dsh.
+
+   WHY IT CHANGED (measured 30/08/2026). This file used to carry shadcn's static values and switched light/dark
+   with `.dark, :root[data-theme="dark"]`. Both halves broke inside dsh:
+
+     1. Static values have nothing to do with dsh's theme, so Tracy's page kept its colours when
+        the user changed theme.
+     2. More important: **dsh never sets `.dark` or `data-theme`**. The package
+        `@deepseek-ai/dsh-client-ui-theme` switches to dark with `[data-ds-dark-theme]` (7 places in
+        the package itself). Tracy's selector waited for a signal that does not exist, so the `.dark` block was dead
+        code — and a visual review does not see it, because on a light background everything looks right.
+
+   The mapping fixes both at once: dsh's aliases change BY THEMSELVES under `[data-ds-dark-theme]`, so no
+   dark block is needed here any more. Variables that are not mapped (chart) keep their own dark block, and its
+   selector was fixed to match the real signal.
+
+   🔒 BRAND IS NOT MAPPED. `--primary`/`--ring` keep Tracy's terracotta instead of taking `--dsw-alias-brand-primary`.
+   It is Tracy's colour, not DeepSeek's: following the brand alias would mean Tracy's buttons change
+   brand with the dsh skin. Backgrounds, text, borders and states are the opposite — they must blend into
+   the host page.
+
+   🔒 DECLARED ON `:root, body`, NOT JUST `:root`. `var()` is resolved WHERE THE VARIABLE IS DECLARED, not
+   where it is used. dsh sets `--dsw-alias-*` on `<body>` (measured 30/08: empty on `:root`, `#151517` on
+   `body`), so a `:root` block would resolve every alias to EMPTY, take the light fallback, then inherit
+   that light value down the whole tree — even while dsh is in dark mode. The symptom was exactly what was
+   seen: a white nav next to dsh's dark cards, text fading out.
+
+   `body` is a child of `:root`, so it wins for everything inside; the `:root` block stays as the fallback
+   for consumers without dsh's body.
+
+   The alias names are guarded by `scripts/check-dsh-tokens.ts`: a typo is hidden by the fallback, the colour stays put when
+   the theme changes, and there is no error. That gate reads the installed `@deepseek-ai/dsh-client-ui-theme`. */
+:root, body {
+  --radius: 0.625rem;
+
+  /* Backgrounds: base is the page, layer-1/2 are increasingly raised surfaces. */
+  --background: var(--dsw-alias-bg-base, oklch(1 0 0));
+  --foreground: var(--dsw-alias-label-primary, oklch(0.145 0 0));
+  --card: var(--dsw-alias-bg-layer-1, oklch(1 0 0));
+  --card-foreground: var(--dsw-alias-label-primary, oklch(0.145 0 0));
+  --popover: var(--dsw-alias-bg-layer-2, oklch(1 0 0));
+  --popover-foreground: var(--dsw-alias-label-primary, oklch(0.145 0 0));
+
+  /* Brand: NOT mapped — see the note at the top of the file. Terracotta is the system-wide primary
+     (since 14/09/2026), the same value as tracy-brand's DEFAULT_PRIMARY; Tracy blue is retired. */
+  --primary: oklch(0.588 0.136 37.4); /* Tracy terracotta (#bf5b3d) */
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.588 0.136 37.4);
+
+  --secondary: var(--dsw-alias-bg-layer-2, oklch(0.97 0 0));
+  --secondary-foreground: var(--dsw-alias-label-primary, oklch(0.205 0 0));
+  --muted: var(--dsw-alias-bg-layer-2, oklch(0.97 0 0));
+  --muted-foreground: var(--dsw-alias-label-tertiary, oklch(0.556 0 0));
+  --accent: var(--dsw-alias-bg-layer-2, oklch(0.97 0 0));
+  --accent-foreground: var(--dsw-alias-label-primary, oklch(0.205 0 0));
+
+  --destructive: var(--dsw-alias-state-error-primary, oklch(0.577 0.245 27.325));
+  --warning: var(--dsw-alias-state-warn-primary, oklch(0.769 0.188 70.08));
+  --success: var(--dsw-alias-state-success-primary, oklch(0.696 0.17 162.48));
+
+  --border: var(--dsw-alias-border-l1, oklch(0.922 0 0));
+  --input: var(--dsw-alias-border-l2, oklch(0.922 0 0));
+
+  /* Sidebar: dsh has no alias of its own for the side column, so it uses the same background/border scale. */
+  --sidebar: var(--dsw-alias-bg-layer-1, oklch(0.985 0 0));
+  --sidebar-foreground: var(--dsw-alias-label-primary, oklch(0.145 0 0));
+  --sidebar-primary: var(--dsw-alias-label-primary, oklch(0.205 0 0));
+  --sidebar-primary-foreground: var(--dsw-alias-label-primary-inverted, oklch(0.985 0 0));
+  --sidebar-accent: var(--dsw-alias-bg-layer-2, oklch(0.97 0 0));
+  --sidebar-accent-foreground: var(--dsw-alias-label-primary, oklch(0.205 0 0));
+  --sidebar-border: var(--dsw-alias-border-l1, oklch(0.922 0 0));
+  --sidebar-ring: var(--dsw-alias-border-l2, oklch(0.708 0 0));
+
+  /* Data palette: dsh provides no equivalent alias, so Tracy's values stay. */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+}
+
+/* Only chart still needs a dark block, and its selector matches EXACTLY the signal dsh emits. `.dark` stays for
+   consumers outside dsh; `[data-ds-dark-theme]` is what actually switches on inside dsh. */
+
+/* DARK MODE WHEN RUNNING OUTSIDE dsh — same mapping, DIFFERENT FALLBACK.
+   Inside dsh, `--dsw-alias-*` is present and always wins, so this block changes nothing: dsh already
+   switches light/dark through those same aliases. Outside dsh (the `@tracy/design` bench running on
+   Vite, or a later Storybook) the aliases are empty and the fallback decides — so the fallback here
+   must be the DARK value, while the `:root, body` block keeps the light values.
+   CSS cannot say "if the variable is undefined then…"; `var(--x, <fallback>)` IS that
+   statement, and this is the place it is used for exactly that. */
+/* 🔒 `.dark body` AND `:root[data-theme="dark"] body` ARE NOT REDUNDANT — measured 02/09/2026 on the design bench.
+   The light block above is declared on `:root, body`. The switch puts `.dark` on `<html>`, so if this
+   block were declared only on `<html>` the inheritance chain would read:
+
+       html.dark   --popover: oklch(0.205 …)   ← dark, right
+       body        --popover: oklch(1 0 0)     ← light, AND IT WINS for every descendant
+
+   CSS variables inherit, so the NEARER ancestor wins — and `body` is nearer than `html`. Result: the whole design
+   bench renders light while the class, the switch and the values on `<html>` all say dark. No error,
+   just wrong colours; and a check that reads the class stays GREEN. Guarded by `scripts/test/tokens-dark-covers-body.test.ts`.
+
+   Do not fix it by removing `body` from the light block: dsh emits `--dsw-alias-*` on `<body>`, so a
+   `:root`-only block would resolve every alias to empty and fall back to light RIGHT INSIDE dsh (DESIGN.md §1).
+   `[data-ds-dark-theme]` is a flag dsh sets on `<body>` itself, so it already covers it. */
+[data-ds-dark-theme], .dark, .dark body, :root[data-theme="dark"], :root[data-theme="dark"] body {
+  --background: var(--dsw-alias-bg-base, oklch(0.145 0 0));
+  --foreground: var(--dsw-alias-label-primary, oklch(0.985 0 0));
+  --card: var(--dsw-alias-bg-layer-1, oklch(0.205 0 0));
+  --card-foreground: var(--dsw-alias-label-primary, oklch(0.985 0 0));
+  --popover: var(--dsw-alias-bg-layer-2, oklch(0.205 0 0));
+  --popover-foreground: var(--dsw-alias-label-primary, oklch(0.985 0 0));
+  --secondary: var(--dsw-alias-bg-layer-2, oklch(0.269 0 0));
+  --secondary-foreground: var(--dsw-alias-label-primary, oklch(0.985 0 0));
+  --muted: var(--dsw-alias-bg-layer-2, oklch(0.269 0 0));
+  --muted-foreground: var(--dsw-alias-label-tertiary, oklch(0.708 0 0));
+  --accent: var(--dsw-alias-bg-layer-2, oklch(0.269 0 0));
+  --accent-foreground: var(--dsw-alias-label-primary, oklch(0.985 0 0));
+  --destructive: var(--dsw-alias-state-error-primary, oklch(0.704 0.191 22.216));
+  --warning: var(--dsw-alias-state-warn-primary, oklch(0.828 0.189 84.429));
+  --border: var(--dsw-alias-border-l1, oklch(1 0 0 / 10%));
+  --input: var(--dsw-alias-border-l2, oklch(1 0 0 / 15%));
+  --sidebar: var(--dsw-alias-bg-layer-1, oklch(0.205 0 0));
+  --sidebar-foreground: var(--dsw-alias-label-primary, oklch(0.985 0 0));
+  --sidebar-accent: var(--dsw-alias-bg-layer-2, oklch(0.269 0 0));
+  --sidebar-accent-foreground: var(--dsw-alias-label-primary, oklch(0.985 0 0));
+  --sidebar-border: var(--dsw-alias-border-l1, oklch(1 0 0 / 10%));
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+/* 🔒 DO NOT ADD GLOBAL RULES TO THIS FILE.
+   There used to be `html, body, #root { height: 100%; margin: 0 }` here — right for tracy-infra's
+   `apps/web`, where this library served a SPA that owned the whole page. In the DSH-as-core architecture
+   no page belongs to Tracy any more: every consumer is a plugin living INSIDE the dsh interface,
+   so a rule aimed at `html`/`body` would reach outside the plugin's part and touch screens dsh draws.
+   Removed on 30/08/2026, when `@tracy/dsh-ui-gallery` — the first consumer — exposed it.
+   Page height and margins are the application's business, not a token file's. */
+
+/* `cn-rtl-flip` — the one base-nova class that has no definition in the registry.
+
+   `pagination`, `breadcrumb` and `sidebar` all hang it on their chevrons. It is not a Tailwind
+   utility and not a token: it lives in the CSS of ui.shadcn.com, which the registry does not
+   ship. Left undefined the pages still build and still look right in English — the arrows simply
+   stop mirroring under `dir="rtl"`, and nothing reports it.
+
+   Written as a plain rule, not `@utility`, on purpose: a plain rule survives a consumer that has
+   no Tailwind pass, and it cannot be dropped by a `@source` that fails to reach these files. */
+[dir='rtl'] .cn-rtl-flip {
+  transform: scaleX(-1);
+}

@@ -1,0 +1,84 @@
+{
+  "color": {
+    "parchment-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Parchment Canvas — Page backgrounds, card surfaces, inverse text on dark fills"
+    },
+    "onyx": {
+      "$value": "#0c1018",
+      "$type": "color",
+      "$description": "Onyx — Primary body text, headings, input text, icon fills — blue-shifted near-black replaces pure #000 across the interface"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Footer text, heavy display accents, icon strokes — reserved for maximum weight moments"
+    },
+    "charred-umber": {
+      "$value": "#1e1310",
+      "$type": "color",
+      "$description": "Charred Umber — Footer surface, dark contrast bands, gradient origin stop — warm dark anchors the bottom of the spectrum"
+    },
+    "slate-veil": {
+      "$value": "#6d7074",
+      "$type": "color",
+      "$description": "Slate Veil — Secondary headings, subdued labels, inactive nav — desaturated mid-gray for quiet hierarchy"
+    },
+    "ash-mist": {
+      "$value": "#9e9fa3",
+      "$type": "color",
+      "$description": "Ash Mist — Supporting neutral for secondary UI, dividers, and muted labels."
+    },
+    "dawn-arc": {
+      "$value": "#5a769f",
+      "$type": "color",
+      "$description": "Dawn Arc — Brand signature — represents the iconic hero gradient (charred umber → steel twilight → warm parchment); used in gradient washes, atmospheric overlays, and the gradient-text reveal effect on display headlines"
+    },
+    "ember-radiance": {
+      "$value": "#ed9454",
+      "$type": "color",
+      "$description": "Ember Radiance — Accent warmth for radial gradient highlights and hover-state glows — the golden-hour counterpoint to the cool steel-blue arc"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "serrif-condensed": {
+      "$value": "Serrif Condensed",
+      "$type": "fontFamily",
+      "$description": "Display headlines — only used at 64-72px for hero and section-opening statements. Condensed letterforms with negative tracking create editorial masthead weight without boldness; the 1.05 line-height lets lines stack tightly into monumental blocks. This font carries the brand's voice at maximum volume."
+    },
+    "saans-variable": {
+      "$value": "Saans Variable",
+      "$type": "fontFamily",
+      "$description": "Body, navigation, buttons, inputs, subheadings — the workhorse. Weight 300 whispers, 400 speaks, 500-570 emphasi zes. Variable axis allows fluid weight shifts. Tight -0.01em tracking across all sizes; line-height tightens to 1.0 for UI labels and opens to 1.4 for paragraph body."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Inter — detected in extracted data but not described by AI"
+    },
+    "saans-medium": {
+      "$value": "Saans Medium",
+      "$type": "fontFamily",
+      "$description": "Saans Medium — detected in extracted data but not described by AI"
+    },
+    "saans-regular": {
+      "$value": "Saans Regular",
+      "$type": "fontFamily",
+      "$description": "Saans Regular — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://newgenre.studio",
+      "siteName": "New Genre",
+      "extractedAt": "2026-06-03T16:09:05.659Z",
+      "variant": "compact"
+    }
+  }
+}

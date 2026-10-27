@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "9f228e72-997a-4410-9190-68359028e3d0",
+  "status": "complete",
+  "name": "Craft Docs",
+  "url": "https://styles.refero.design/style/9f228e72-997a-4410-9190-68359028e3d0",
+  "sourceWebsite": "https://craft.do",
+  "extractedAt": "2026-04-11T17:34:08.934Z",
+  "capturedAt": "2026-10-08T05:15:24.400285+00:00",
+  "theme": "light",
+  "industry": null,
+  "description": "Digital Scrapbook Collage. The design feels like a thoughtful, tactile scrapbook where structured digital notes meet soft, organic textures.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8e18bdc4-071d-4c8c-8f78-18a90f44eb01.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/a46cbe24-fe37-4527-bd21-e51c96d43c61.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/bf177d03-1dd1-404a-9dff-615dae084524.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/51822098-aeb4-486f-82d2-c9f9b4711459.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/94b522f4-bc5f-4e89-bd66-c5519def0d91.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "4f2acbc238a22efbc532a06b16736f8f6a2d2820917c91c713c92f151e31775f",
+      "bytes": 17458
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "fe5d184251a09470ea246c2335d4251fb6ffa82c85d6c17f7b3e4fb72f8c9122",
+      "bytes": 148404
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "11100cca33fbfc549ce6351caa3dcdd04f1d6af2581925d403563bc2fe8644fc",
+      "bytes": 27819
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "b1d465dca734205e7901d2209fc972a54bfdc3727d5c46db93a3c6ecdad0c85d",
+      "bytes": 20050
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "baf2f9a8c7382d163aa66270696eafde8106bdf2f60a76f66b8fb3384713f4c4",
+      "bytes": 8631
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a4aec939b4cfccf3d7d50db01327d598db8e08495d3a4f983feac49e2d93f700",
+      "bytes": 3041
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "6d73a6c8de608097130fc0fd1a393eae65eaa20ad216a0b1250efc0480299b54",
+      "bytes": 665
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9e4c5219b491f5730087e2b387e1acce5ef5515b647ad83144dd387b94d05f14",
+      "bytes": 776
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a31d81c2c439d4a6d0e691204dabdccea7cc2c2905092e40eb2f6e0228ed1003",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ddb4edcb2e2e09428ed381caa2f2c56a75ac049542c518832b2155bec12a37f2",
+      "bytes": 49187
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "7f4b8817bbac76ca5a4fca4316b42fdee17eeec26c4dac2925917afdad0b6a21",
+      "bytes": 25459
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "2afb2acd6d962c9aba52d00a19c98280238c930595b292ef57e9d4e35316a9c4",
+      "bytes": 74038
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "72f61b4e801001d655eb2598b54e83eaeffe4b8fe525eb935c47597c36cfd4d4",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "04502ce0c9a90f36e6d3178a30be664b78285ed7490b78fdd92e5495da804a4b",
+      "bytes": 2407
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "6f82cecb4299c77279842cf2f0fd30a263baea69fa09b1d5250eed1c8479ad45",
+      "bytes": 2935
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1b13360a-cdca-4798-969d-57ebb20a3b30",
+    "24d3b281-04a6-4cc7-8a74-634b08472291",
+    "2b41e7c4-1e8c-4ea2-a87f-51e24c57886e",
+    "2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+    "2db41cd9-c898-4f59-b704-3042c0d87f45",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "47c9e353-bed3-4d6c-8316-63a2db5cc377",
+    "4caadb3c-3865-4a4d-9e1a-46478ac71078",
+    "5618f26a-4df6-42cb-8081-15e4318b54ff",
+    "5bfe6c1d-1b15-4f8d-b0c9-677a33291c5d",
+    "5d8ad116-b3d8-4890-a969-5b856b35c678",
+    "67cdbe0a-a9d5-4a41-91a6-5b26550efc69",
+    "71451d9e-9a8a-4858-9a91-fbe44047e110",
+    "7829a500-242b-4932-b42d-7ce40c254101",
+    "8b91f4c9-74e5-4925-90a3-3dd31fd5725e",
+    "9be20798-843b-424c-bc87-192edc0cce22",
+    "9f228e72-997a-4410-9190-68359028e3d0",
+    "cbb335e5-c8df-49be-a0fc-0ec5dfa0d61f",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ea8a4150-e062-4c0e-94ca-668a3033eb63"
+  ]
+}

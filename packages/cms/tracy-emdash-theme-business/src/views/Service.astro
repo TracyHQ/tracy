@@ -1,0 +1,72 @@
+---
+// One service. The source has no detail page (content-gaps G2): this composes the card's own
+// four fields with the page chrome and the Services page CTA -- nothing is added (DECISIONS D12).
+import { getEmDashCollection, getEmDashEntry } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor, stampsFor } from '@/lib/stamps'
+import { childLive, liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+}
+const { chrome, locale, slug } = Astro.props
+const { site } = chrome
+const [{ entry }, pageRes] = await Promise.all([
+  getEmDashEntry('services', slug, { locale }),
+  getEmDashEntry('services_page', 'services', { locale })
+])
+// A child goes with its list page: Services unticked, /services/<slug> answers 404 like /services, unless a page the customer kept still lists it (TCH #1013).
+const reachable = await childLive(Astro.request, locale, `/services/${slug}`)
+if (!entry || entry.data.status !== 'published' || !reachable) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const sv = entry.data as Record<string, any>
+const sp = (pageRes.entry?.data ?? {}) as Record<string, any>
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request.
+const $page = stampFor(Astro.request, 'services', entry)
+const $sp = stampFor(Astro.request, 'services_page', pageRes.entry)
+const $site = stampFor(Astro.request, 'site', site)
+// A button into an unticked page goes on its own; its section stays (TCH #1013, `src/lib/link-gate.ts`).
+const ctaUrl = sp.cta_url || href(locale, '/contact')
+const live = await liveLinks(Astro.request, locale, [ctaUrl])
+const $ = stampsFor(Astro.request)
+const { entries: others } = await getEmDashCollection('services', {
+  locale,
+  status: 'published',
+  orderBy: { sort: 'asc' },
+  limit: 50
+})
+---
+
+<Base chrome={chrome} title={sv.title} description={sv.description} currentPath={`/services/${slug}`} content={{ collection: "services", id: entry.data.id, slug, toPath: (s) => `/services/${s}` }}>
+	<main>
+		<PageOwner stamp={$page} />
+		<Breadcrumb items={[{ label: site.home_label, url: href(locale, "/"), stamp: $site("home_label") }, { label: sp.breadcrumb ?? "", url: href(locale, "/services"), stamp: $sp("breadcrumb") }, { label: sv.title, stamp: $page("title") }]} />
+		<!-- The service list reads as a tab row: the active chip is this service and its panel follows. -->
+		<section class="container-site pt-12">
+			<div class="column-label mb-3.5 text-fg-meta" {...$sp("services_title")}>{sp.services_title}</div>
+			<nav class="flex flex-wrap gap-2 border-b border-line pb-6" aria-label={sp.services_title}>
+				{others.map((o: any) => (o.slug === slug ? <span class="chip-active" aria-current="page" {...$("services", o)("title")}>{o.data.title}</span> : <a href={href(locale, `/services/${o.slug}`)} class="chip" {...$("services", o)("title")}>{o.data.title}</a>))}
+			</nav>
+		</section>
+		<section class="container-site grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-14 pb-20 pt-12">
+			<div>
+				<h1 class="h-page mb-5" {...$page("title")}>{sv.title}</h1>
+				<p class="text-[17.5px] leading-[1.68] text-fg-2" {...$page("description")}>{sv.description}</p>
+				{sv.term && <div class="mt-6 border-t border-line pt-3 text-[13.5px] font-semibold text-forest-text" {...$page("term")}>{sv.term}</div>}
+			</div>
+			<div class="border border-line-card bg-paper-2 p-7">
+				<div class="mb-3 text-[11.5px] font-bold uppercase tracking-[.14em] text-forest-text" {...$sp("includes_label")}>{sp.includes_label}</div>
+				{(sv.includes ?? []).map((i: any) => <div class="grid grid-cols-[18px_1fr] gap-[9px] border-b border-line-soft py-2.5 text-[15px] leading-[1.5] text-fg-2" {...$page.block("includes")}><span class="text-signal-text">·</span><span {...$page("includes.item")}>{i.item}</span></div>)}
+				{live(ctaUrl) && <a href={ctaUrl} class="btn-primary mt-6" {...$sp("cta_button")}>{sp.cta_button}</a>}
+			</div>
+		</section>
+	</main>
+</Base>

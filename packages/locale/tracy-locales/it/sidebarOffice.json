@@ -1,0 +1,17 @@
+{
+  "busy": "L’anteprima Office è occupata. Riprovi tra poco.",
+  "changed": "Il file è cambiato durante la lettura. Riapra l’anteprima.",
+  "closeDetails": "Chiudi dettagli dei font",
+  "failed": "La conversione Office non ha prodotto un PDF utilizzabile. Controlli il file e riprovi.",
+  "invalid": "Impossibile visualizzare l’anteprima di questo file Office. Potrebbe essere danneggiato, protetto da password o avere l’estensione sbagliata.",
+  "loading": "Rendering del documento...",
+  "missingFontsCount": "Font: {count}",
+  "missingFontsDescription": "Questi font non sono disponibili per l’anteprima. Testo e layout potrebbero differire dal documento originale.",
+  "missingFontsTitle": "Font mancanti",
+  "retry": "Riprova",
+  "timeout": "La conversione Office ha superato il tempo limite. Riprovi.",
+  "title": "Documento Office",
+  "tooLarge": "Il file Office o il PDF convertito supera il limite di dimensione dell’anteprima. Riduca la dimensione del file o modifichi la configurazione dell’anteprima.",
+  "unavailable": "Le anteprime Office non sono disponibili. Attivi il servizio di anteprima dei documenti sul computer su cui è in esecuzione Tracy Cowork.",
+  "viewMissingFonts": "Font mancanti: {count}. Faccia clic per visualizzarli."
+}

@@ -1,0 +1,22 @@
+{
+  "id": "REG-PR-1190-essence-106-row-note",
+  "kind": "fix",
+  "title": "The JA Essence j6 1.0.6 profile row reads as a stylesheet-only rebuild of 1.0.5, like every other such row",
+  "pr": 1190,
+  "area": "quickstarts/readiness",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: Run apps/tracy-web/test/template-profiles.test.mjs."],
+  "expect": [
+    "S1: 'a release rebuilt only to tokenize its stylesheets has its own row' passes: the 1.0.6 note starts 'Same logos and content as 1.0.5;'."
+  ],
+  "selectors": {},
+  "evidence": "develop after 8bd969cf1a: tests 1/2 red on every PR, the 1.0.6 note began 'As 1.0.5 (same site and database);'",
+  "fence": "a rebuilt release's row equals its source's row except for a note that starts with the fixed sentence",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/template-profiles.test.mjs"],
+    "cwd": "apps/tracy-web",
+    "tests": ["a release rebuilt only to tokenize its stylesheets has its own row"]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1713-agent-css-where-it-renders",
+  "kind": "fix",
+  "title": "CSS the agent writes on a WordPress site goes where the page loads it and is checked there: Tracy's design pages print Additional CSS, a custom_css write is read back on the home page, look.set refuses a page that prints none, page.look says whether a rule for an absent selector is loaded",
+  "pr": 1713,
+  "area": "site-tools/look",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test packages/cms/tracy-wordpress-theme/test/additional-css.test.mjs (PHP through a local php or docker)",
+    "S2: node --test packages/tools/tracy-site-tools/test/additional-css-check.test.mjs",
+    "S3: node --test packages/tools/tracy-site-tools/test/look-set.test.mjs packages/tools/tracy-site-tools/test/look-style.test.mjs packages/tools/tracy-site-tools/test/site-context.test.mjs"
+  ],
+  "expect": [
+    "S1: every built theme target hooks tracy_design_page_styles at wp_enqueue_scripts 100; on an artifact or fixture page it dequeues global-styles AND adds wp_custom_css_cb at wp_head 101; on a home or section page it does neither",
+    "S2: a content.update of a custom_css post on WordPress is detected (type read before, or post_type in the call); a home page printing neither <style id=\"wp-custom-css\"> nor the rule gives ok:true with warning ADDITIONAL_CSS_NOT_PRINTED and a next saying not to call it done (undo kept); a page carrying the rule answers additionalCss:printed with the receipt untouched; an unread page is additionalCss:unchecked",
+    "S3: look.set on a page that prints none of a non-empty Additional CSS answers LOOK_SET_NOT_PRINTED, writes nothing, keeps no undo and names the last theme stylesheet the page loads; page.look with a selector no element matches says whether a stylesheet of the page holds a rule for it; the LOOK rules carry the not-printed and customer-named-file clauses and the check for CSS the page does not load"
+  ],
+  "selectors": {
+    "theme": "tracy_design_page_styles in src/*/functions.php",
+    "host": "additional-css-check.mjs ADDITIONAL_CSS_NOT_PRINTED; look-set.mjs LOOK_SET_NOT_PRINTED; look-style.mjs findTarget"
+  },
+  "evidence": "https://github.com/TracyHQ/tch/issues/1710",
+  "fence": "A CSS write is never answered as done for CSS the page does not load",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-wordpress-theme/test/additional-css.test.mjs",
+      "packages/tools/tracy-site-tools/test/additional-css-check.test.mjs",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs",
+      "packages/tools/tracy-site-tools/test/look-style.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs"
+    ],
+    "tests": [
+      "every built theme hooks its design-page styles by name",
+      "🔒 a fixture or artifact page drops global-styles AND prints the Additional CSS",
+      "additionalCssSent: the CSS a WordPress write saves",
+      "cssOnPage: where the page prints Additional CSS",
+      "🔒 withAdditionalCssCheck: a page that does not print the rule",
+      "withAdditionalCssCheck: printed",
+      "🔒 WordPress: a page that does not print the Additional CSS it has is refused",
+      "🔒 a selector no element matches says whether a stylesheet this page loads holds a rule",
+      "modes: per platform, a mode with a shell gets the shell roads"
+    ],
+    "timeout_s": 900
+  }
+}

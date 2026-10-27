@@ -1,0 +1,58 @@
+{
+  "id": "REG-033",
+  "kind": "fix",
+  "title": "Copy and counts follow the vocabulary (154 design inspirations, Provider presets, Verify code, Request to join, sign-in code, Team tab), both vocabulary gates reject the plural of a banned phrase, and the Settings dialog owns focus and Escape one layer at a time",
+  "pr": 835,
+  "area": "vocabulary/copy",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout (pnpm install done) run: node --test --test-timeout=120000 scripts/test/vocabulary-copy.test.mjs scripts/test/check-web-languages.test.mjs apps/tracy-web/test/page-shell.test.mjs apps/tracy-web/test/otp.test.mjs apps/tracy-web/test/seats-pages.test.mjs apps/tracy-web/test/access-email-design.test.mjs apps/tracy-web/test/web-languages.test.mjs packages/ui/tracy-settings/test/settings-modal-render.test.mjs packages/ui/tracy-settings/test/settings-focus.test.mjs packages/core/tracy-core/test/popover-escape.test.mjs",
+    "S2: Read the pass/fail/skipped counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures and 0 skipped.",
+    "'the count of design inspirations' passes: the public page's meta description, both operator hints in the UI switch catalogue and the two package descriptions state the number of systems in vendor/tracy/od-design-system/catalog.json and say 'design inspirations'; the plugin's strings table carries no three-digit count.",
+    "'the vocabulary gates and \"Agent preset\"' passes: scripts/check-vocabulary.ts and scripts/check-language.ts each exit non-zero on a fixture holding only the singular, only the plural, upper case, mixed case, or the phrase inside a sentence, and exit zero on longer words that merely contain it and on 'Provider presets'.",
+    "'the verify button names the code, in every language', 'the plain sign-in subject says \"code\", never \"OTP\", in every language', 'asking to join is one request, worded the same on the heading and the button, in every language' and 'the page that says where inviting moved names the Team tab as dsh titles it, in every language' pass.",
+    "'signInCodeMail: a code that fails its shape check never reaches the subject line' passes: the fallback subject is 'Your sign-in code'.",
+    "'joinPage: a site key carrying markup is escaped in the heading and the title' passes.",
+    "'the three unused English-only helpers are gone, with the table only they read' and 'the token contract is cited where it lives, and it names the file that carries it out' pass.",
+    "'opening moves focus into the dialog, onto the section that is open', 'Tab on the last control wraps to the first; disabled and hidden controls are never the last', 'Shift+Tab on the first control wraps to the last one a keyboard can reach' and 'closing by the close button returns focus to the opener, every time' pass.",
+    "'controls hidden by CSS alone are not stops: Tab on the last visible control still wraps' passes.",
+    "'Tab between two controls inside the dialog is moved by the dialog too, never left to the browser', 'a positive tabindex after the last ordinary control: Tab on that last control wraps, it does not leave', 'a radio group is one stop: the checked radio, or the first one when none is checked', 'a disabled fieldset disables its form controls, not its first legend and not its links' and 'a stop that turns focus down is passed over, forward and back, and Tab still lands inside' pass.",
+    "'the public API reference states the same count, in the same words' and 'no route summary or description still says \"Ask to join\" or \"Ask for access\"' pass.",
+    "'Escape with the language menu open closes the menu only; the next Escape closes Settings' passes.",
+    "'two open menus: one press closes the one opened last, the next press the other', 'two menus from two separate bundles: the one opened last still closes first' and 'unmounting an open menu removes its listener: a later Escape reaches the parent' pass."
+  ],
+  "selectors": {
+    "dialog": "[role=\"dialog\"][aria-modal=\"true\"]",
+    "menu": "[role=\"menu\"]",
+    "menuButton": "[aria-controls]",
+    "currentSection": ".ts-nav[aria-current=\"page\"]",
+    "metaDescription": "packages/web/tracy-design-page/index.html meta[name=description]",
+    "catalogue": "vendor/tracy/od-design-system/catalog.json systems.length",
+    "gates": "scripts/check-vocabulary.ts, scripts/check-language.ts",
+    "strings": "apps/tracy-web/src/lib/i18n/strings.js login.verify, mail.signInSubjectPlain, seats.askForAccess, seats.joinHeading, seats.teamMovedBody"
+  },
+  "evidence": "Issue #807: the public meta and two operator hints said '152 design systems' while the catalogue holds 154; 'Agent presets' passed both vocabulary gates because their patterns were singular; sign-in and team pages said 'Verify', 'Ask for access', 'Ask to join', 'Your sign-in OTP' and 'My Sites tab'; three exported page-shell helpers had no caller; the Settings dialog claimed aria-modal without moving, trapping or returning focus, and one Escape closed the Language menu and Settings together. Red runs before the fix were logged outside the repository (task artifact logs 807-red-before-fix.log: 40 of 140 cases failing on 551a86c8a plus the new tests only; 807-round2-red-before-fix.log: 8 of 145 failing before the review-round fixes; 807-round3-red-before-fix.log: 8 of 24 settings-focus cases failing while the dialog still left Tab between two of its controls to the browser); the counts cannot be re-derived from the repository alone, only by restoring the pre-fix source under these tests.",
+  "fence": "The count read from the catalogue file, the two gates run as subprocesses on isolated fixtures, the tracy-web string table and its seven translations, and the real Settings and Popover components mounted with React into jsdom with DOM key events. jsdom has no layout and does not move focus on Tab by itself; the dialog takes every Tab press and moves focus by hand, so each case asserts where focus landed. That the order it walks equals a browser's own Tab order was measured once by hand in headless Chrome 154 (task artifact log 807-round3-browser-tab-check.log, outside the repository, not run by CI): 14 stops, both directions, three laps each, never outside the dialog. No case in this file runs in a real browser; Firefox and Safari were not measured; Tab pressed inside an iframe within a section does not reach the dialog; OTP box width at 390 px (F-S1-019) and the landing page's section count (F-S6-011) are not covered.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=120000",
+      "scripts/test/vocabulary-copy.test.mjs",
+      "scripts/test/check-web-languages.test.mjs",
+      "apps/tracy-web/test/page-shell.test.mjs",
+      "apps/tracy-web/test/otp.test.mjs",
+      "apps/tracy-web/test/seats-pages.test.mjs",
+      "apps/tracy-web/test/access-email-design.test.mjs",
+      "apps/tracy-web/test/web-languages.test.mjs",
+      "packages/ui/tracy-settings/test/settings-modal-render.test.mjs",
+      "packages/ui/tracy-settings/test/settings-focus.test.mjs",
+      "packages/core/tracy-core/test/popover-escape.test.mjs"
+    ]
+  }
+}

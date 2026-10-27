@@ -1,0 +1,17 @@
+:root {
+  /* Colors */
+  --color-analyst-yellow: #FFCC00;
+  --color-orchid-cta: #B074CE;
+  --color-brand-green: #20A277;
+  --color-glacier: #2DCBDC;
+  --color-midnight-ink: #000000;
+  --color-warm-cream: #FAF9F5;
+  --color-cloud-white: #FFFFFF;
+  --color-slate-body: #646462;
+  --color-fog-border: #CDCCC9;
+
+  /* Typography — Font Families */
+  --font-serrif-condensed: 'Serrif Condensed', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-unica77: 'Unica77', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-aeonik-fono: 'Aeonik Fono', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

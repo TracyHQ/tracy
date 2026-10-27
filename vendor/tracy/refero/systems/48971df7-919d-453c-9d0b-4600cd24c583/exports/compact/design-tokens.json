@@ -1,0 +1,69 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, primary background — the ground everything sits on"
+    },
+    "carbon": {
+      "$value": "#08090b",
+      "$type": "color",
+      "$description": "Carbon — Elevated card surfaces, nav text, deep backgrounds one step above the canvas"
+    },
+    "graphite": {
+      "$value": "#232323",
+      "$type": "color",
+      "$description": "Graphite — Card and button borders — the hairline skeleton that defines structure"
+    },
+    "slate-mist": {
+      "$value": "#89898d",
+      "$type": "color",
+      "$description": "Slate Mist — Subtle background fills, muted surface overlays"
+    },
+    "fog": {
+      "$value": "#b3b3b5",
+      "$type": "color",
+      "$description": "Fog — Muted body text, secondary copy, icon fills — readable but recedes"
+    },
+    "ash": {
+      "$value": "#c1c5c8",
+      "$type": "color",
+      "$description": "Ash — Icon strokes, tertiary text, soft fills"
+    },
+    "bone": {
+      "$value": "#dddddd",
+      "$type": "color",
+      "$description": "Bone — Light body text variant on dark surfaces"
+    },
+    "chalk": {
+      "$value": "#e2e8f0",
+      "$type": "color",
+      "$description": "Chalk — Primary hairline border color — dividers, card edges, input borders; the most-used border in the system"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Light neutral action fill for buttons on dark surfaces."
+    },
+    "signal-green": {
+      "$value": "#22c550",
+      "$type": "color",
+      "$description": "Signal Green — Supporting palette color for small decorative accents when the core palette needs contrast."
+    }
+  },
+  "font": {
+    "neue": {
+      "$value": "Neue",
+      "$type": "fontFamily",
+      "$description": "Sole typeface across all surfaces. Weight 300 for display and hero headlines — deliberately light, anti-convention for a technical product, creating authority through restraint. Weight 400 for body copy. Weight 500 for nav, labels, and emphasized UI text. Weight 700 reserved for high-emphasis callouts. Tight negative tracking scales with size: -0.028em at 60px tightens large headlines into a single visual mass; tracking relaxes to near-zero at body sizes. The full range from 11px captions to 60px display gives the system a wide, confident scale without ever feeling like two different typefaces."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://trunk.io",
+      "siteName": "Trunk",
+      "extractedAt": "2026-06-03T21:48:00.085Z",
+      "variant": "compact"
+    }
+  }
+}

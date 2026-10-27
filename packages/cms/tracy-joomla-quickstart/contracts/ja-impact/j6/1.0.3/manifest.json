@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-impact/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_impact",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-impact",
+    "id": "quickstart/ja-impact/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_impact",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-impact-j6-webroot-1.0.3.tar.gz",
+        "bytes": 56400877,
+        "sha256": "81edd132ad7105958731551918acd0377565ebb4ee5ac9049329226fb4f7d992"
+      },
+      "database": {
+        "file": "ja-impact-j6-database-1.0.3.sql.gz",
+        "bytes": 109066,
+        "sha256": "40fedaa61b63c576c001d6f968d1433d200171d3b8cf82b74bc409738161a57e"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-15T16:55:28.146Z",
+    "builtFrom": {
+      "from": "quickstart/ja-impact/j6@1.0.2",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-impact/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.32",
+  "mode": "content-recommendation"
+}

@@ -1,0 +1,28 @@
+meta {
+  name: budgeted listing
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.read",
+    "params": { "type": "page", "maxBytes": 8192 }
+  }
+}
+
+docs {
+  # A listing held to a byte budget
+
+  `maxBytes` caps the size of the answer, in bytes (an integer from 8192 to 262144). The
+  component pages by it: what does not fit comes on the next page, behind a cursor.
+
+  Look for: fewer records than "list pages" returned, and `pagination.nextCursor` to continue.
+  A value outside the range answers `400 CONTENT_BAD_QUERY`.
+}

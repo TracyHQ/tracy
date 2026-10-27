@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1629-onboarding-tour",
+  "kind": "fix",
+  "title": "New customers complete the approved two-stage onboarding tour",
+  "pr": 1629,
+  "area": "onboarding/tour",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the onboarding package test suite on this branch.",
+    "Exercise first-run start choices, the ten-step ready-site tour, real composer actions, Edit selection and acknowledged Comment submission.",
+    "Render the registered overlay with the Vietnamese lookup; walk translated navigation and all three composer chip sends. Exercise localized Edit and selected-box Send with matching acknowledgements."
+  ],
+  "expect": [
+    "The start screen exposes three choices and uses the real Create a new site control.",
+    "The ready-site tour keeps ten consecutive counters when start cards unmount.",
+    "Edit only advances after actual mode, selection and an acknowledged send.",
+    "Composer chips submit through the current session input actions, and completion is remembered.",
+    "Tour headings, body, navigation, progress aria labels and interpolated counters use the supplied locale lookup; every composer chip sends its displayed translated text.",
+    "Translated Edit and selected-box Send controls advance the tour; people-only notes, other requests and send intent without acknowledgement cannot advance it."
+  ],
+  "selectors": {
+    "stage": "[data-tour-stage]",
+    "step": "[data-tour-step]",
+    "composer": "[data-composer-input=\"true\"]"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-onboard/test/connect-panel.test.mjs",
+      "packages/ui/tracy-onboard/test/flow.test.mjs",
+      "packages/ui/tracy-onboard/test/help-row.test.mjs",
+      "packages/ui/tracy-onboard/test/language-note.test.mjs",
+      "packages/ui/tracy-onboard/test/menu-row.test.mjs",
+      "packages/ui/tracy-onboard/test/mount.test.mjs",
+      "packages/ui/tracy-onboard/test/rail.test.mjs",
+      "packages/ui/tracy-onboard/test/scan.test.mjs",
+      "packages/ui/tracy-onboard/test/steps-render.test.mjs",
+      "packages/ui/tracy-onboard/test/surface.test.mjs"
+    ],
+    "tests": [
+      "a new web account enters step 1 directly",
+      "site tour skips unavailable controls",
+      "the first screen has three choices",
+      "site story keeps ten consecutive counters",
+      "Edit waits for actual mode, selection and acknowledged send",
+      "selected-box Enter accepts only its own successful request",
+      "the registered overlay passes its Vietnamese lookup",
+      "Vietnamese site tour translates navigation",
+      "Vietnamese Edit controls and selected-box Send"
+    ]
+  }
+}

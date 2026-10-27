@@ -1,0 +1,79 @@
+{
+  "color": {
+    "acid-lime": {
+      "$value": "#05c92f",
+      "$type": "color",
+      "$description": "Acid Lime — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "sticker-yellow": {
+      "$value": "#fcea59",
+      "$type": "color",
+      "$description": "Sticker Yellow — Decorative accent card backgrounds, icon fills, confetti highlights on hero and feature spreads"
+    },
+    "cotton-pink": {
+      "$value": "#ffd0e2",
+      "$type": "color",
+      "$description": "Cotton Pink — Decorative accent card backgrounds, soft chromatic punctuation on feature layouts"
+    },
+    "powder-blue": {
+      "$value": "#a7cbf6",
+      "$type": "color",
+      "$description": "Powder Blue — Decorative accent card backgrounds, informational callout surfaces"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, primary icon strokes, hairline borders, filled download button in nav"
+    },
+    "carbon": {
+      "$value": "#0f0f0f",
+      "$type": "color",
+      "$description": "Carbon — Secondary dark surface, button borders, card borders, strong interactive strokes"
+    },
+    "ash-gray": {
+      "$value": "#5a585a",
+      "$type": "color",
+      "$description": "Ash Gray — Muted body text, link borders, nav sublabels, secondary icon strokes"
+    },
+    "slate-gray": {
+      "$value": "#6e726e",
+      "$type": "color",
+      "$description": "Slate Gray — Helper text, low-emphasis borders, tertiary metadata"
+    },
+    "paper-white": {
+      "$value": "#f9faf9",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, primary background, FAQ item surfaces"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, input fields, elevated content panels"
+    },
+    "bone": {
+      "$value": "#ecefec",
+      "$type": "color",
+      "$description": "Bone — Nav pill background, FAQ accordion rows, soft card surfaces, muted chips"
+    },
+    "plaster": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Plaster — Input field backgrounds, subtle disabled surfaces"
+    }
+  },
+  "font": {
+    "tomato-grotesk": {
+      "$value": "Tomato Grotesk",
+      "$type": "fontFamily",
+      "$description": "The single typeface carrying the entire brand — a custom geometric grotesque deployed at extreme display sizes (up to 176px) with aggressively tight leading (0.77–0.80) that makes headlines feel like architectural cutouts rather than composed type. Weight 600 at display, 500 at body and UI. The tight line-height at hero scale is the signature: it stacks 'Take' and 'Ctrl.' into a single visual block."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://ctrl.xyz",
+      "siteName": "Secure and powerful crypto wallet | Ctrl Wallet",
+      "extractedAt": "2026-06-03T19:42:48.578Z",
+      "variant": "compact"
+    }
+  }
+}

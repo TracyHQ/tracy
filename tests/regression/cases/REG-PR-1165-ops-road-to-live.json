@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1165-ops-road-to-live",
+  "kind": "feat",
+  "title": "The template page on /ops shows the road to live of each release, a failed demo install says why, and an EmDash demo or stock site with no owner sends mail from its relay address",
+  "pr": 1165,
+  "area": "ops/templates",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1165-ops-road-to-live.mjs"],
+    "needs": ["postgres"],
+    "timeout_s": 900
+  },
+  "steps": [
+    "S1: From the repo root with TEST_DATABASE_URL set, run: node --test apps/tracy-web/test/road-to-live.test.mjs apps/tracy-web/test/ops-quickstarts.test.mjs apps/tracy-web/test/ops-demos.test.mjs apps/tracy-web/test/inventory-prepare.test.mjs apps/tracy-web/test/inventory-advance.test.mjs",
+    "S2: Run: node --test apps/tracy-host/test/provision.test.mjs packages/fleet/tracy-fleet-operation/test/emdash-post-up.test.mjs packages/fleet/tracy-fleet-operation/test/joomla-installer-error.test.mjs",
+    "S3: Run tsc --noEmit -p packages/web/tracy-harness/tsconfig.json, then node --test packages/web/tracy-harness/test/*.test.mjs",
+    "S4: Read the exit code and the fail/skipped counts of each run, and the named tests."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures and 0 skipped tests; tsc exits 0.",
+    "S1: road has seven steps in the order release, install-file, contract, demo, listing, published, polish, each {step, state, code, params, blockedBy?}; ja-restaurant on dev reads release ok, no contract (the one step to do), demo failed on 1.0.0 and blocked by contract, no listing and blocked by demo; an install file the door refuses holds contract, demo, listing and Publish.",
+    "S1: a sweep-driven demo redeploy keeps the presser, never names demo-sweep@tracy as owner, and sends mailSender <label>@SITE_MAIL_DOMAIN; a stock EmDash instance carries its relay sender and names no owner; with no site mail domain no sender is invented.",
+    "S1: a failed demo or stock build records the reason the host log gives (the configure-mail: line or the Joomla installer's error), never the generic refusal or the usage synopsis.",
+    "S2: tracy-host passes mailSender to provision.sh as --mail-sender (no flag when absent); emdash.sh uses it only when there is no owner email; joomla.sh prints '!! installer: <message>' on a CLI installer failure.",
+    "S3: every failed demo gets the two steps Press Retry install twice and Still failing? Send the reason to the dev team; a mail failure adds the fact line Fixed on 11/10/2026, so a retry should pass; any other reason adds none."
+  ],
+  "selectors": {
+    "road_door": "GET /api/ops/quickstarts (road on each row)",
+    "publish_door": "POST /api/ops/quickstart/inspiration/publish",
+    "road_module": "apps/tracy-web/src/lib/road-to-live.js",
+    "sender": "apps/tracy-web/src/lib/site-relay-sender.js",
+    "guides": "packages/web/tracy-harness/src/cms/demo-failure-guides.ts"
+  },
+  "evidence": "11/10/2026, reviewing ja-restaurant on dev as a new admin: the Problems panel did not say where to start, a failed demo was invisible without a listing, and the NO_CONTRACT refusal pointed at a command that cannot capture an unpublished template. #827: EmDash demos failed at configure-mail with sender demo-sweep@tracy, stock sites with NO_SENDER.",
+  "fence": "The road module and doors over a real Postgres, tracy-host's provision argv and the fleet shell scripts' parsing in node:test, and the harness guides as pure modules. Not exercised: a real demo install or Retry install on a host, the EmDash mail step on a real site, Save listing and Publish in a browser."
+}

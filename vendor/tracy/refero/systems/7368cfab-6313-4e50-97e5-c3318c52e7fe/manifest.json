@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7368cfab-6313-4e50-97e5-c3318c52e7fe",
+  "status": "complete",
+  "name": "Heptabase",
+  "url": "https://styles.refero.design/style/7368cfab-6313-4e50-97e5-c3318c52e7fe",
+  "sourceWebsite": "https://heptabase.com",
+  "extractedAt": "2026-09-24T17:39:07.447Z",
+  "capturedAt": "2026-10-08T05:13:24.857645+00:00",
+  "theme": "light",
+  "industry": "productivity",
+  "description": "Sunlit research desk. Warm paper-like surfaces, charcoal controls, and floating research windows make the interface feel like an organized study space rather than a software dashboard.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/4c28072d-0c57-43c1-93a5-f45f98c29e01.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/163a2849-995b-4cbb-979e-0607b2c21978.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/739fa539-ee39-4d92-9f2a-df243ac1754c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/e5a4f716-3e1a-45be-a687-9314826978b3.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/ee7af08d-e65a-4613-87d7-a14c3854c028.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d3579b38658e91977e2ef06f94b36ddd483756fc9f6b95fd3bd8f77695ab4eaf",
+      "bytes": 22803
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "773816c98463c9ebbcf4e817dff7492a5f984e4d1f47712473ef0c47129d9f74",
+      "bytes": 102319
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "31b1e541ae984e478a3ecf6858fa322774757f2a8e2f85299acbfbe17a1b7002",
+      "bytes": 17021
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6c4b1cdadd215d2b9dd97fc8e690fb884d517558737c9bf4305a306bf011aff8",
+      "bytes": 14906
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "29c1c8047e7634f32408e2c2ca64c6f4879ffb90dc837ad0e9db2650f7b8d27a",
+      "bytes": 12098
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7f23b557f6f27c882bd7f232691be5b180468d1fd4c005c006734a25ede7a643",
+      "bytes": 3040
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "eb5883fcc8ac2a0dc1ec7fc26654857974caa34b19543ebe84bb0d35021196f3",
+      "bytes": 738
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d970e7a13325de1e9617e577ef9c4033fa24a36145d27df87c4cc77c5fbc32af",
+      "bytes": 755
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f4656c9fb4850be1e6955abe787c0a3102981509b9512a216918e42400c8d2d6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "54c14b5d725a368a67a029bffcb28549a4130c45bac894abba23cdc830a7d53f",
+      "bytes": 45073
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "1331b7066d4cd902f34a16d7f300fba50b260703801972f33b66a62e8a638331",
+      "bytes": 24043
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "740eea841aed3c1a51f1e08535315dca00e2eaab8846959c3709298f6aa52342",
+      "bytes": 68185
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "0366e1472c4f03a6d034d879f5744b1598112c8cd449a44c20150c03a28c9a75",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "731a98a4d5c80cb419047454dd8ff2215e8dfa1b206d20e3989ad014b1e6a0a1",
+      "bytes": 2711
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "5a5a9e007b443e80d66b88ff6548b3a5473daf94586807d209bdcf462f48fab7",
+      "bytes": 3399
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "001480cb-05f4-4802-be39-84b942169481",
+    "1c1d3939-8d82-4907-aa3c-c9b2fcfbab4f",
+    "29567671-da1e-4f85-ae52-8b611fecc384",
+    "2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "376baf20-9ace-405d-bf4a-086016f2b1e3",
+    "3e32db74-a61d-4e72-93b8-1fb949af2c00",
+    "56cd3725-3ff0-459e-894d-5da58d1fc549",
+    "586b97ac-f687-46ba-bbf7-31031cfcc110",
+    "5d8ad116-b3d8-4890-a969-5b856b35c678",
+    "607c2098-bbbb-40bb-b23e-adf2b72c63dd",
+    "67cdbe0a-a9d5-4a41-91a6-5b26550efc69",
+    "68d18deb-bb09-4258-8024-001af9c844c0",
+    "729ba7a8-35d5-44f3-abc0-1078ff6a3467",
+    "7368cfab-6313-4e50-97e5-c3318c52e7fe",
+    "754ad72f-9abd-43df-ac72-c6abf2036ed4",
+    "cafcbe97-58eb-4331-9a0a-c5e6969e8a04",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "ced1c98f-d489-48f7-a01f-1fa59a07b706",
+    "f4ef80f4-f6e5-4aea-8045-f99efaf208b8",
+    "fabacd2a-acb6-46c4-939c-4a464df15440"
+  ]
+}

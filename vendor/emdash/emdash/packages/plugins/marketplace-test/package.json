@@ -1,0 +1,47 @@
+{
+	"name": "@emdash-cms/plugin-marketplace-test",
+	"private": true,
+	"version": "0.2.1",
+	"description": "Maximal sandboxed plugin fixture for registry, consent, runtime, and admin testing",
+	"type": "module",
+	"main": "dist/index.mjs",
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs",
+			"types": "./dist/index.d.mts"
+		},
+		"./sandbox": "./dist/plugin.mjs"
+	},
+	"files": [
+		"dist",
+		"emdash-plugin.jsonc"
+	],
+	"scripts": {
+		"build": "node node_modules/@emdash-cms/plugin-cli/dist/index.mjs build",
+		"dev": "emdash-plugin dev",
+		"typecheck": "tsgo --noEmit"
+	},
+	"keywords": [
+		"emdash",
+		"cms",
+		"plugin",
+		"test",
+		"registry"
+	],
+	"author": "Matt Kane",
+	"license": "MIT",
+	"dependencies": {
+		"emdash": "workspace:*",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@emdash-cms/plugin-cli": "workspace:*",
+		"tsdown": "catalog:",
+		"typescript": "catalog:"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/emdash-cms/emdash.git",
+		"directory": "packages/plugins/marketplace-test"
+	}
+}

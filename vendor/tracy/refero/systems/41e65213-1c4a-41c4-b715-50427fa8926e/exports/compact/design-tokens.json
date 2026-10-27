@@ -1,0 +1,104 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#1e2532",
+      "$type": "color",
+      "$description": "Ink — Body text, primary copy, icon strokes, footer text — the default ink across all running content"
+    },
+    "carbon": {
+      "$value": "#0f141e",
+      "$type": "color",
+      "$description": "Carbon — Headlines, headings, footer brand mark — darker than Ink for emphasis lift on large type"
+    },
+    "pencil": {
+      "$value": "#656e83",
+      "$type": "color",
+      "$description": "Pencil — Secondary body text, descriptions, helper copy — sits between Ink and Fog"
+    },
+    "fog": {
+      "$value": "#828ba2",
+      "$type": "color",
+      "$description": "Fog — Muted metadata, captions, inactive nav items, subtle icon tint"
+    },
+    "haze": {
+      "$value": "#9fa6bb",
+      "$type": "color",
+      "$description": "Haze — List dividers, lightest neutral text, disabled borders"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page background, card surfaces, button text on colored fills — the base canvas"
+    },
+    "mist": {
+      "$value": "#f7f9fc",
+      "$type": "color",
+      "$description": "Mist — Hero section wash, feature row background, subtle surface lift below cards"
+    },
+    "lavender-wash": {
+      "$value": "#f1f2ff",
+      "$type": "color",
+      "$description": "Lavender Wash — Tinted section background for tool/feature blocks — barely-there violet breath"
+    },
+    "chalk": {
+      "$value": "#d9deeb",
+      "$type": "color",
+      "$description": "Chalk — Hairline borders, nav separators, card outlines on tinted backgrounds"
+    },
+    "ash": {
+      "$value": "#e7eaf4",
+      "$type": "color",
+      "$description": "Ash — Subtle button borders, ghost-control outlines, secondary surface"
+    },
+    "signal-blue": {
+      "$value": "#1a91f0",
+      "$type": "color",
+      "$description": "Signal Blue — Blue supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "deep-signal": {
+      "$value": "#016fd0",
+      "$type": "color",
+      "$description": "Deep Signal — Hover/pressed state of Signal Blue, darker link color for visited emphasis"
+    },
+    "iris": {
+      "$value": "#5660e8",
+      "$type": "color",
+      "$description": "Iris — Decorative icon accent, step indicator strokes, secondary highlight on cards"
+    },
+    "midnight": {
+      "$value": "#1a1c6a",
+      "$type": "color",
+      "$description": "Midnight — Dark template preview surface, deep contrast callout — the only near-black accent beyond Ink"
+    },
+    "mint-whisper": {
+      "$value": "#e7f4ed",
+      "$type": "color",
+      "$description": "Mint Whisper — Light supporting surface for subtle backgrounds and section separation. Use as a supporting accent, not as a status color"
+    },
+    "blush-whisper": {
+      "$value": "#ffebe4",
+      "$type": "color",
+      "$description": "Blush Whisper — Light supporting surface for subtle backgrounds and section separation. Use as a supporting accent, not as a status color"
+    },
+    "rose-whisper": {
+      "$value": "#edd7df",
+      "$type": "color",
+      "$description": "Rose Whisper — Supporting neutral for secondary UI, dividers, and muted labels. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "tt-commons": {
+      "$value": "TT Commons",
+      "$type": "fontFamily",
+      "$description": "Single-family system covering everything from 14px helper text to 67px display headlines. The custom geometric sans is the brand's voice; its 0.96–1.00 line-height on display sizes is anti-convention (most sites use 1.1+) and produces the tight, poster-like headline feel. 0.1290em tracking appears on small uppercase micro-labels; 0.0210em is the default body rhythm."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://resume.io",
+      "siteName": "Free Resume Builder",
+      "extractedAt": "2026-06-03T17:56:45.791Z",
+      "variant": "compact"
+    }
+  }
+}

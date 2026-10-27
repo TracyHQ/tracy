@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "7f7d3ff7-7a74-40f1-9098-a946ce53d4d4",
+  "status": "complete",
+  "name": "Grove AI",
+  "url": "https://styles.refero.design/style/7f7d3ff7-7a74-40f1-9098-a946ce53d4d4",
+  "sourceWebsite": "https://www.grovetrials.com",
+  "extractedAt": "2026-06-03T20:09:22.333Z",
+  "capturedAt": "2026-10-08T05:14:02.679359+00:00",
+  "theme": "light",
+  "industry": "ai",
+  "description": "clinical journal in morning light — a single green word anchors a page of measured prose",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/935e08c3-f6fd-43ef-8922-4e033bb4ef37.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ece3b7e0-7df3-4fb3-95c8-06bffa413225.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/d50391c8-557b-481b-bf78-1fabeb840bf7.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/98fde14f-a231-4695-9137-e53c6732c6e8.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/6fd3a6df-d4e2-4613-9108-8357fae7a884.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "3134cc5b158dcab1d9993e829fce7b76a43b1e6f205c0e844914776dbb2cb2c9",
+      "bytes": 24240
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8bad12784354c6bb58eb7e83a1bfeedbf6df7d6e1c827530b631124af3dfd859",
+      "bytes": 91712
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "951e86716a65c06d1054841bee6396679baa7e6872dc31d0306bef3941186a11",
+      "bytes": 19181
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "79efcc0b4a11946907610ea65d26d190933fd8fe802197996613319541b7c496",
+      "bytes": 15446
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4b3f863ad823956b396646c00b6b17bfeb43b97e8db383244b04dcb36b5d491a",
+      "bytes": 14392
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7b910fae95395fb3884b04f37bf9de913418fbd4bf3dde742caa2fc9f56a13e8",
+      "bytes": 3725
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "3a9b3e5c7d8c65d8c0c8f39ccbd77ec584808787a9fbc1857b4b179187165685",
+      "bytes": 914
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3a88763bc213d8a5f2504d4071491985aa678a1d8a5b6eb110c6b85acca859fa",
+      "bytes": 931
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "719a96730c4f731b02fc0bf0f8e4b57cfd73902c14075564e74795214a9b3e80",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "3600e11484b39cf0b12f4b121b88125150a11f2430ed48a864f7d0add1be74a2",
+      "bytes": 47404
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a503e029ec9d5820f9cab6c347aefcd69946c91a344cc6f85fb266d40d9a75eb",
+      "bytes": 24693
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9d0eedeaa8edc1aceb32cf5bb97e8c7bbad70cdffa8331fdde9255f7b6047df6",
+      "bytes": 53653
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4f06f8b2ed79dc617a374ef8b4f243fa720cf02f5425e707797c87303c67d8e6",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "028cc05a47623ae98b24dbf65633d21c2ba8f8ae9f463bf4f45d13f45c7cedb0",
+      "bytes": 2423
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "59d38326c5a4df2f50f0029c24f5f6b779f8f5437506ea460e2cd25621f74aed",
+      "bytes": 3081
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "04109c48-f591-4110-9739-622243d4ecc2",
+    "0f7da1b2-9d06-4ef5-b5a8-ef7f92e57ab2",
+    "14cc44e6-41bf-4178-b834-fc61bfeed4ae",
+    "18975f37-2e5d-47ca-9367-8b201d20390d",
+    "3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+    "461da0f0-fde6-46bc-8137-7eca006260a8",
+    "46781641-8afd-4b01-9f67-06046b6eda71",
+    "51a9246f-9238-47dd-b254-48983b8713a2",
+    "577eb7d8-3555-4378-83df-0cebebc4782f",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "7f7d3ff7-7a74-40f1-9098-a946ce53d4d4",
+    "80099f79-72b7-4367-b2e9-6a3d4a3e9e6a",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "81bd6ad6-b02b-4fb3-a600-91ecf8324171",
+    "8b4a1a95-9dbf-4565-ace7-c4cf48eb028a",
+    "a81607e2-254f-4f53-b357-68c39c9cfc03",
+    "b44b0bb2-4ba3-4599-9706-3c3e0c8c2522",
+    "b6f25b86-ffcf-42f1-9f37-5e37d08cb4ce",
+    "dc541737-8bf2-4b31-b729-0352f696e82f",
+    "e9f5e976-53f7-42f5-a882-4e63b3c2f734",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

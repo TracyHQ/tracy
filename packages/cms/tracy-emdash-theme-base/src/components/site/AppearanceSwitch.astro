@@ -1,0 +1,71 @@
+---
+/**
+ * Light / Dark control for the marketing sample frames (source: the `Appearance` <select> of the
+ * ACM `marketing-samples` toolbar). It owns the only script of the kit: the chosen appearance is
+ * written to every `[data-sample-frame]` on the page as `<key>-<theme>.html`, and until the reader
+ * picks one the frames follow the site theme (`html[data-theme]`), including when the header
+ * toggle flips it.
+ */
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  label?: string | null
+  lightLabel?: string | null
+  darkLabel?: string | null
+  /** Provenance stamps (`src/lib/stamps.ts`): the entry, and the field each prop is read from. */
+  stamp?: Stamp
+  fields?: { label?: string; lightLabel?: string; darkLabel?: string }
+}
+const { label, lightLabel, darkLabel, stamp, fields } = Astro.props
+const none = {}
+const at = (k: keyof NonNullable<Props['fields']>) => {
+  const f = fields?.[k]
+  return stamp && f ? stamp(f) : none
+}
+---
+
+<div class="flex items-center gap-2 text-[14px] text-fg-muted" data-sample-appearance role="group" aria-label={label ?? undefined}>
+	{label && <span {...at("label")}>{label}</span>}
+	<span class="inline-flex overflow-hidden rounded-[var(--ds-pill-radius,var(--radius-pill))] border border-line bg-bg">
+		<button type="button" class="px-3 py-1 text-fg aria-pressed:bg-accent aria-pressed:text-accent-on" data-sample-theme="light" aria-pressed="false" {...at("lightLabel")}>{lightLabel}</button>
+		<button type="button" class="px-3 py-1 text-fg aria-pressed:bg-accent aria-pressed:text-accent-on" data-sample-theme="dark" aria-pressed="false" {...at("darkLabel")}>{darkLabel}</button>
+	</span>
+</div>
+
+<script>
+	// One controller per page: every switch and every frame share the chosen appearance.
+	const root = document.documentElement
+	const frames = () => document.querySelectorAll<HTMLIFrameElement>('[data-sample-frame]')
+	const buttons = () => document.querySelectorAll<HTMLButtonElement>('[data-sample-theme]')
+	let chosen: 'light' | 'dark' | null = null
+	const current = () => chosen ?? (root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light')
+	const apply = () => {
+		const theme = current()
+		frames().forEach((f) => {
+			const key = f.dataset.sampleFrame
+			const src = `${f.dataset.sampleBase}${key}-${theme}.html`
+			// Swap only once the current document has finished loading: replacing the src mid-load
+			// aborts that request, and an aborted sub-resource is a finding for the acceptance gate.
+			if (f.getAttribute('src') !== src) {
+				if (f.dataset.loaded === '1') f.setAttribute('src', src)
+				else f.addEventListener('load', () => { f.dataset.loaded = '1'; apply() }, { once: true })
+			}
+			// Open / download links next to the frame follow the same document.
+			f.closest('[data-sample]')?.querySelectorAll<HTMLAnchorElement>('[data-sample-link]').forEach((a) => a.setAttribute('href', src))
+		})
+		buttons().forEach((b) => b.setAttribute('aria-pressed', b.dataset.sampleTheme === theme ? 'true' : 'false'))
+	}
+	frames().forEach((f) => {
+		if (f.dataset.loaded !== '1') f.addEventListener('load', () => { f.dataset.loaded = '1' }, { once: true })
+	})
+	buttons().forEach((b) =>
+		b.addEventListener('click', () => {
+			chosen = b.dataset.sampleTheme === 'dark' ? 'dark' : 'light'
+			apply()
+		})
+	)
+	new MutationObserver(() => {
+		if (!chosen) apply()
+	}).observe(root, { attributes: true, attributeFilter: ['data-theme'] })
+	apply()
+</script>

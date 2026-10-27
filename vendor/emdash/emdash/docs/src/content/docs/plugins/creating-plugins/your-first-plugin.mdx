@@ -1,0 +1,247 @@
+---
+title: Your first sandboxed plugin
+description: Scaffold, register, and run a sandboxed plugin that responds to content saves.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+This tutorial creates a sandboxed plugin that records content-save events and exposes a small health route. You will scaffold the package with the plugin CLI, add one hook and one route, register the plugin with an EmDash site, and confirm that both handlers run.
+
+If you have not chosen a plugin format, read [Choosing a plugin format](/plugins/creating-plugins/choosing-a-format/) first.
+
+## Prerequisites
+
+You need:
+
+- Node.js and pnpm;
+- an EmDash site with a [sandbox runner](/deployment/plugin-sandbox/) configured; and
+- an [Atmosphere account](/plugins/creating-plugins/publishing/#your-atmosphere-account) handle or DID for the manifest's publisher field.
+
+## Scaffold the plugin
+
+<Steps>
+
+1. Run the plugin scaffolder from the directory that will contain the new project.
+
+   ```sh
+   pnpm dlx @emdash-cms/plugin-cli init save-log
+   ```
+
+   The command asks for the publisher, author, security contact, and source repository, then shows a project summary before creating this structure:
+
+   ```text
+   save-log/
+   ├── .agents/
+   │   └── skills -> ../skills
+   ├── .claude/
+   │   ├── CLAUDE.md -> ../AGENTS.md
+   │   └── skills -> ../skills
+   ├── AGENTS.md
+   ├── emdash-plugin.jsonc
+   ├── package.json
+   ├── pnpm-workspace.yaml
+   ├── README.md
+   ├── skills/
+   │   └── creating-plugins/SKILL.md
+   ├── src/
+   │   └── plugin.ts
+   ├── tests/
+   │   └── plugin.test.ts
+   ├── tsconfig.json
+   ├── vitest.config.ts
+   └── .gitignore
+   ```
+
+2. Install the generated package's dependencies.
+
+   ```sh
+   cd save-log
+   pnpm install
+   ```
+
+</Steps>
+
+## Define the plugin's access and storage
+
+`emdash-plugin.jsonc` contains the plugin's identity, registry information, and trust contract. Add the `content:read` capability because `content:afterSave` exposes saved content to the plugin. Declare an `events` storage collection so the hook can keep a queryable record of each save.
+
+The following manifest contains the fields used in this tutorial. Keep the publisher, author, and security values produced by the scaffolder.
+
+```jsonc title="emdash-plugin.jsonc"
+{
+	"$schema": "./node_modules/@emdash-cms/plugin-cli/schemas/emdash-plugin.schema.json",
+
+	"slug": "save-log",
+	"publisher": "did:plc:abc123def456",
+
+	"license": "MIT",
+	"author": { "name": "Jane Doe", "url": "https://example.com" },
+	"security": { "email": "security@example.com" },
+	"description": "Records content-save events.",
+
+	"capabilities": ["content:read"],
+	"allowedHosts": [],
+	"storage": {
+		"events": { "indexes": ["savedAt"] },
+	},
+}
+```
+
+The `content:read` declaration tells the site operator that the hook receives saved content and is required when this plugin format runs in process. Accessing `ctx.storage.events` would throw if the collection were absent. [The manifest reference](/plugins/creating-plugins/manifest/) explains the remaining fields and validation rules.
+
+## Add the hook and route
+
+Replace the generated `src/plugin.ts` with the following runtime definition:
+
+```typescript title="src/plugin.ts"
+import type { SandboxedPlugin } from "emdash/plugin";
+
+const plugin: SandboxedPlugin = {
+	hooks: {
+		"content:afterSave": {
+			handler: async (event, ctx) => {
+				const savedAt = new Date().toISOString();
+				const contentId = String(event.content.id);
+				await ctx.storage.events.put(`${savedAt}:${contentId}`, {
+					savedAt,
+					collection: event.collection,
+					contentId,
+				});
+
+				ctx.log.info("Content save recorded", {
+					collection: event.collection,
+					contentId,
+				});
+			},
+		},
+	},
+
+	routes: {
+		health: {
+			public: true,
+			handler: async (_routeCtx, ctx) => {
+				return { ok: true, plugin: ctx.plugin.id };
+			},
+		},
+	},
+};
+
+export default plugin;
+```
+
+`src/plugin.ts` assigns the definition to a `SandboxedPlugin`-typed constant and exports it as default. The annotation gives the hook and route their parameter types without adding the EmDash runtime to the bundle or producing package-manager-specific declaration paths.
+
+Hook handlers receive `(event, ctx)`. Route handlers receive `(routeCtx, ctx)`. The `health` route is public and read-only, so it can be checked without an admin session. Public routes are internet-facing; [API routes](/plugins/creating-plugins/api-routes/#authentication-and-csrf) explains the authentication and browser-origin rules before you expose real data or mutations.
+
+## Update the generated test
+
+The scaffolded test invokes the original `hello` route through the Worker Loader transport host. Replace it with a test for the `health` route:
+
+```typescript title="tests/plugin.test.ts"
+import { afterEach, describe, expect, it } from "vitest";
+
+import { createPluginTestHost, type PluginTestHost } from "@emdash-cms/plugin-test";
+
+let host: PluginTestHost | undefined;
+
+afterEach(async () => {
+	await host?.dispose();
+	host = undefined;
+});
+
+describe("health route", () => {
+	it("identifies the running plugin", async () => {
+		host = await createPluginTestHost();
+		const result = await host.invokeRoute("health");
+		expect(result).toEqual({ ok: true, plugin: "save-log" });
+	});
+});
+```
+
+The test builds the plugin and invokes the route through Worker Loader and `PluginBridge`. The [sandboxed plugin testing guide](/plugins/creating-plugins/testing/) covers hooks, content fixtures, storage assertions, and the limits of local workerd tests.
+
+## Validate and build
+
+Run the generated test, validate the manifest, and build the npm artifacts.
+
+```sh
+pnpm run validate
+pnpm run typecheck
+pnpm run test
+pnpm run build
+```
+
+The build creates:
+
+- `dist/plugin.mjs`, containing the hook and route code;
+- `dist/manifest.json`, containing the runtime manifest and the discovered hook and route names; and
+- `dist/index.mjs`, the default-exported descriptor that a site imports.
+
+`dist/` is generated output. The scaffold excludes it from Git because the plugin build recreates it.
+
+## Register the plugin
+
+Install the local package in your EmDash site. Run this command from the site's directory and adjust the relative path if the projects are not siblings.
+
+```sh
+pnpm add file:../save-log
+```
+
+Import the generated default export in `astro.config.mjs` and add it to `sandboxed`:
+
+```javascript title="astro.config.mjs"
+import { defineConfig } from "astro/config";
+import emdash from "emdash/astro";
+import saveLog from "save-log";
+
+export default defineConfig({
+	integrations: [
+		emdash({
+			sandboxed: [saveLog],
+			sandboxRunner: "@emdash-cms/sandbox-workerd/sandbox",
+		}),
+	],
+});
+```
+
+This example uses the Node.js workerd runner. Keep the runner already configured by your site if it uses Cloudflare Workers or another supported setup.
+
+<Aside type="caution" title="A runner is required">
+	EmDash skips plugins in `sandboxed` when the configured runner is unavailable. Follow [Plugin
+	Sandbox](/deployment/plugin-sandbox/) to configure the Node.js or Cloudflare runner before testing
+	the plugin.
+</Aside>
+
+## Run the plugin
+
+Start both development processes:
+
+1. Run `pnpm dev` in the plugin directory. The CLI rebuilds the plugin when its source or manifest changes.
+2. Run the site's development command in the site directory.
+
+Open the following route on the site:
+
+```text
+http://localhost:4321/_emdash/api/plugins/save-log/health
+```
+
+The response contains the standard API envelope and the value returned by the plugin:
+
+```json
+{
+	"success": true,
+	"data": { "ok": true, "plugin": "save-log" },
+}
+```
+
+Save an entry in the EmDash admin. The site log contains `Content save recorded`, and the hook writes one item to the plugin's `events` collection.
+
+## Continue building
+
+- [Hooks](/plugins/creating-plugins/hooks/) explains hook events, capabilities, ordering, and errors.
+- [API routes](/plugins/creating-plugins/api-routes/) covers validation, permissions, public routes, and MCP exposure.
+- [Block Kit](/plugins/creating-plugins/block-kit/) adds an admin page without shipping browser JavaScript.
+- [Settings](/plugins/creating-plugins/settings/) stores site-specific plugin configuration.
+- [Storage](/plugins/creating-plugins/storage/) covers indexed queries and pagination.
+- [Testing](/plugins/creating-plugins/testing/) covers direct sandbox transport tests and runtime-backed host-action tests.
+- [Bundling and publishing](/plugins/creating-plugins/publishing/) publishes the plugin to the registry.

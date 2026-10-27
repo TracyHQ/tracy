@@ -1,0 +1,1023 @@
+{
+  "$comment": "Where Tracy Business wp7 (block theme wp-tracy-business, Polylang, Contact Form 7) keeps each topic, read off its contract profiles (content-map, inventory, presentation-lock), the theme files whose bytes the lock pins, and pages captured from a 1.1.0 site (tracy-site-tools test fixtures); every entry carries its proof and test/content-where.test.mjs re-reads them. Left out, not provable here: Open Graph, canonical and JSON-LD (no shipped file prints them, no SEO plugin is inventoried; a meta description only the Claude Cowork plugin prints, from 0.18.0), robots.txt, sitemap and blog_public, an analytics place, the Contact Form 7 recipient, and which menu the 1.2.0 and 1.3.0 header renders (its navigation blocks carry no ref).",
+  "schemaVersion": "tracy-content-where/v1",
+  "platform": "wordpress",
+  "quickstart": "tracy-business/wp7",
+  "versions": ["1.1.0", "1.2.0", "1.3.0", "1.3.1", "1.3.2"],
+  "topics": {
+    "pages": [
+      {
+        "what": "A new page: a post of type page whose body is the theme's own text section (heading, then one title + text pair per question). The receipt gives its id; a bare draft is not a page.",
+        "where": {
+          "kind": "post",
+          "field": "post_content"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "post",
+              "fields": {
+                "post_type": "page",
+                "post_title": "<title>",
+                "post_name": "<slug>",
+                "post_status": "publish",
+                "post_content": "<!-- wp:group {\"tagName\":\"section\",\"className\":\"wtb-section wtb-text\"} -->\n<section class=\"wp-block-group wtb-section wtb-text\">\n<!-- wp:group {\"className\":\"wtb-inner wtb-text__inner\"} -->\n<div class=\"wp-block-group wtb-inner wtb-text__inner\">\n<!-- wp:group {\"className\":\"wtb-text__copy\"} -->\n<div class=\"wp-block-group wtb-text__copy\">\n<!-- wp:group {\"className\":\"wtb-head\"} -->\n<div class=\"wp-block-group wtb-head\">\n<!-- wp:heading {\"className\":\"wtb-heading\"} -->\n<h2 class=\"wp-block-heading wtb-heading\"><page heading></h2>\n<!-- /wp:heading -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n<!-- wp:group {\"className\":\"wtb-text__list\"} -->\n<div class=\"wp-block-group wtb-text__list\">\n<!-- wp:group {\"className\":\"wtb-text__point\"} -->\n<div class=\"wp-block-group wtb-text__point\">\n<!-- wp:paragraph {\"className\":\"wtb-text__point-title\"} -->\n<p class=\"wtb-text__point-title\"><question></p>\n<!-- /wp:paragraph -->\n<!-- wp:paragraph {\"className\":\"wtb-text__point-text\"} -->\n<p class=\"wtb-text__point-text\"><answer></p>\n<!-- /wp:paragraph -->\n</div>\n<!-- /wp:group -->\n<!-- one more wtb-text__point group per further heading and paragraph -->\n</div>\n<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n</section>\n<!-- /wp:group -->"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One page per language: write each language's copy as its own page.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/patterns/section-text.php",
+            "has": "class=\"wtb-text__point-title\"",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/patterns/section-text.php"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/patterns/section-text.php",
+            "has": "class=\"wtb-text__point-text\"",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/patterns/section-text.php"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/patterns/section-text.php",
+            "has": "class=\"wtb-text__point-text\"",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/patterns/section-text.php"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/patterns/section-text.php",
+            "has": "class=\"wtb-text__point-text\"",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/patterns/section-text.php"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/patterns/section-text.php",
+            "has": "class=\"wtb-text__point-text\"",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/patterns/section-text.php"
+            }
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/normalize.mjs",
+            "has": "  'menu_order',\n  'post_type',"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/surface.mjs",
+            "has": "without one it CREATES a post"
+          }
+        ]
+      },
+      {
+        "what": "Then its menu link: add a navigation-link block to the Header menu (nav post 68) where wanted: content.get outline:true numbers its blocks and gives rev; +<i> inserts before block i, +<count> appends.",
+        "versions": ["1.1.0"],
+        "where": {
+          "kind": "post",
+          "id": 68,
+          "field": "post_content"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "post",
+              "id": 68,
+              "rev": "<rev of that read>",
+              "blocks": {
+                "+<i>": "<!-- wp:navigation-link {\"label\":\"<title>\",\"type\":\"page\",\"id\":<page id>,\"url\":\"<page url>\",\"kind\":\"post-type\"} /-->"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One navigation post per language; the other language's page goes in its twin post.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/site.json",
+            "has": "wp:navigation-link {\\\"label\\\":\\\"Home\\\",\\\"type\\\":\\\"page\\\",\\\"id\\\":42"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/surface.mjs",
+            "has": "{rev, blocks:{\"<i>\":\"<markup>\"|null, \"+<i>\":\"<markup>\""
+          }
+        ]
+      }
+    ],
+    "seo": [
+      {
+        "what": "Only a page's search title: post meta _claude_cowork_seo_title, the whole <title> (keep its ' – <site name>' end); page title, breadcrumb and heading stay. Claude Cowork 0.18.0+ (tracy_site info).",
+        "where": {
+          "kind": "postmeta",
+          "key": "_claude_cowork_seo_title"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "postmeta",
+              "id": "<the page's post id>",
+              "key": "_claude_cowork_seo_title",
+              "fields": {
+                "value": "<new page part> – <site name>"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One post per language (Polylang): write the meta on each language's post; editions.json lists their ids.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/wp-seo.mjs",
+            "has": "title: '_claude_cowork_seo_title',"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/wp-seo.mjs",
+            "has": "since: '0.18.0'"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/wp-seo-meta.json",
+            "has": "wordpress/cowork/lib/SeoFields.php TITLE_KEY"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/about.html",
+            "has": "<title>About &#8211; Northgate</title>"
+          }
+        ]
+      },
+      {
+        "what": "A page's own part of <title> ('<page title> – <site name>'): the post title, which its breadcrumb (and a news post's H1) also print. Before Claude Cowork 0.18.0 the only road: say those change too.",
+        "where": {
+          "kind": "post",
+          "field": "post_title"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "post",
+              "id": "<the page's post id>",
+              "fields": {
+                "post_title": "<new title>"
+              }
+            }
+          }
+        },
+        "languages": "One post per language (Polylang); editions.json lists each language's post ids.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/replace-wordpress.mjs",
+            "has": "else if (region === 'title') ids = [`post:${ownPage}.title`, 'option:blogname', 'option:blogdescription']"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/about.html",
+            "has": "<title>About &#8211; Northgate</title>"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/about.html",
+            "has": "<li><span aria-current=\"page\">About</span></li></ol></nav>"
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/templates/page.html",
+            "has": "<!-- wp:breadcrumbs {\"showHomeItem\":true,\"showCurrentItem\":true",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/page.html"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/templates/page.html",
+            "has": "<!-- wp:breadcrumbs {\"showHomeItem\":true,\"showCurrentItem\":true",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/page.html"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/templates/page.html",
+            "has": "<!-- wp:breadcrumbs {\"showHomeItem\":true,\"showCurrentItem\":true",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/page.html"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/templates/page.html",
+            "has": "<!-- wp:breadcrumbs {\"showHomeItem\":true,\"showCurrentItem\":true",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/page.html"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/templates/page.html",
+            "has": "<!-- wp:breadcrumbs {\"showHomeItem\":true,\"showCurrentItem\":true",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/page.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/templates/single.html",
+            "has": "<!-- wp:post-title {\"level\":1,",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/single.html"
+            }
+          }
+        ]
+      },
+      {
+        "what": "Meta description of one page (the theme prints none): post meta _claude_cowork_seo_description, printed by Claude Cowork 0.18.0+ while no SEO plugin runs; older plugins have no place: say so.",
+        "where": {
+          "kind": "postmeta",
+          "key": "_claude_cowork_seo_description"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "postmeta",
+              "id": "<the page's post id>",
+              "key": "_claude_cowork_seo_description",
+              "fields": {
+                "value": "<up to 160 characters>"
+              },
+              "apply_id": "<new id>"
+            }
+          }
+        },
+        "languages": "One post per language (Polylang): write the meta on each language's post; editions.json lists their ids.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/wp-seo.mjs",
+            "has": "description: '_claude_cowork_seo_description',"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/wp-seo-meta.json",
+            "has": "\"description\": \"_claude_cowork_seo_description\""
+          }
+        ]
+      },
+      {
+        "what": "Site name: after ' – ' on inner pages and first on the home page's <title> (option blogname, contract slot site.name).",
+        "where": {
+          "slot": "site.name",
+          "option": "blogname"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.contract",
+            "params": {
+              "operation": "apply",
+              "changes": {
+                "site.name": "<new site name>"
+              }
+            }
+          }
+        },
+        "languages": "Polylang serves it per language: another language's value is written as '<edition>::site.name'.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/home.html",
+            "has": "<title>Northgate &#8211; Industrial infrastructure</title>"
+          },
+          {
+            "file": "packages/cms/tracy-seeder/src/wordpress-contract-door.mjs",
+            "has": "export const TRANSLATED_OPTIONS = ['blogname', 'blogdescription']"
+          }
+        ]
+      },
+      {
+        "what": "Tagline: the second part of the home page's <title> (option blogdescription, contract slot site.tagline).",
+        "where": {
+          "slot": "site.tagline",
+          "option": "blogdescription"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.contract",
+            "params": {
+              "operation": "apply",
+              "changes": {
+                "site.tagline": "<new tagline>"
+              }
+            }
+          }
+        },
+        "languages": "Polylang serves it per language: another language's value is written as '<edition>::site.tagline'.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-seeder/src/wordpress-contract-door.mjs",
+            "has": "written as `<edition>::<slot>`"
+          }
+        ]
+      },
+      {
+        "what": "hreflang links: one per language that has a copy of the page, from Polylang's translation groups; nothing else stores them.",
+        "where": {
+          "derived": "Polylang translation groups"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.language",
+            "params": {
+              "id": "<post id>",
+              "lang": "<language slug>",
+              "translations": {
+                "<language slug>": "<post id>"
+              }
+            }
+          }
+        },
+        "languages": "Each language is its own post in one translation group.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/home.html",
+            "has": "hreflang=\"en\" />"
+          }
+        ]
+      }
+    ],
+    "design": [
+      {
+        "what": "The theme ships ONE style variation, wp-tracy-business; theme.style applies it (a global-styles write), so it is no road to another look.",
+        "where": {
+          "file": ".webroot/wp-content/themes/wp-tracy-business/styles/wp-tracy-business.json"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "theme.style",
+            "params": {
+              "style": "wp-tracy-business"
+            }
+          }
+        },
+        "languages": "Shared by every language.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/inspirations.json",
+            "has": "\"wp-tracy-business\"",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/inspirations.json"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/inspirations.json",
+            "has": "\"wp-tracy-business\"",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/inspirations.json"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/inspirations.json",
+            "has": "\"wp-tracy-business\"",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/inspirations.json"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/inspirations.json",
+            "has": "\"wp-tracy-business\"",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/inspirations.json"
+            }
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/inspirations.json",
+            "has": "\"wp-tracy-business\"",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/inspirations.json"
+            }
+          },
+          {
+            "file": "packages/site/tracy-site-build-wordpress/src/host/stages.mjs",
+            "has": "a global-styles write"
+          }
+        ]
+      },
+      {
+        "what": "Colours, fonts, sizes: theme.json; in var(--ds-…, value) edit the value. The orange is settings.custom.tracy.brand.orange AND palette warn: change both. Never CSS in the global-styles record.",
+        "where": {
+          "file": ".webroot/wp-content/themes/wp-tracy-business/theme.json"
+        },
+        "door": {
+          "tool": "edit",
+          "call": {
+            "path": ".webroot/wp-content/themes/wp-tracy-business/theme.json"
+          }
+        },
+        "languages": "Shared by every language.",
+        "proof": [
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1theme.json"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1theme.json"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1theme.json"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1theme.json"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1theme.json"
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/theme.json",
+            "has": "\"orange\": \"var(--ds-c-accent-text, #da5a2a)\""
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/theme.json",
+            "has": "\"slug\": \"warn\""
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/about.html",
+            "has": "var(--wp--preset--color--warn)"
+          }
+        ]
+      },
+      {
+        "what": "Header, footer and page CSS of the theme.",
+        "where": {
+          "file": ".webroot/wp-content/themes/wp-tracy-business/assets/css/wp-tracy-business.css"
+        },
+        "door": {
+          "tool": "edit",
+          "call": {
+            "path": ".webroot/wp-content/themes/wp-tracy-business/assets/css/wp-tracy-business.css"
+          }
+        },
+        "languages": "Shared by every language.",
+        "proof": [
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1assets~1css~1wp-tracy-business.css"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1assets~1css~1wp-tracy-business.css"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1assets~1css~1wp-tracy-business.css"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1assets~1css~1wp-tracy-business.css"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1assets~1css~1wp-tracy-business.css"
+          }
+        ]
+      },
+      {
+        "what": "One section's look (buttons, headings, bands): rules in assets/css/sections.css, scoped by body class; header, footer and chrome are in wp-tracy-business.css.",
+        "where": {
+          "file": ".webroot/wp-content/themes/wp-tracy-business/assets/css/sections.css"
+        },
+        "door": {
+          "tool": "edit",
+          "call": {
+            "path": ".webroot/wp-content/themes/wp-tracy-business/assets/css/sections.css"
+          }
+        },
+        "languages": "Shared by every language.",
+        "proof": [
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1assets~1css~1sections.css"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1assets~1css~1sections.css"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1assets~1css~1sections.css"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1assets~1css~1sections.css"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+            "at": "/files/wp-content~1themes~1wp-tracy-business~1assets~1css~1sections.css"
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-theme/src/wp-tracy-business/assets/css/sections.css",
+            "has": ".wtb-hero__heading {"
+          }
+        ]
+      }
+    ],
+    "menus": [
+      {
+        "what": "Menus are wp_navigation posts: 68 Header, 69 Top bar, 70 Company, 71 Contact (footer); each language has its twin '<slug>-<language>' (72 tracy-ru). The header part names them by ref.",
+        "versions": ["1.1.0"],
+        "where": {
+          "kind": "post",
+          "id": 68,
+          "field": "post_content"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "post",
+              "id": 68,
+              "fields": {
+                "post_content": "<the whole navigation body, changed>"
+              }
+            }
+          }
+        },
+        "languages": "One navigation post per language, told apart by the slug suffix.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/inventory.json",
+            "has": "\"slug\": \"tracy-ru\""
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/site.json",
+            "has": "\\\"ref\\\":69"
+          }
+        ]
+      },
+      {
+        "what": "Link lists written into the header and footer template parts (the Resources mega menu, the footer Services list).",
+        "versions": ["1.1.0"],
+        "where": {
+          "kind": "templatePart",
+          "id": 80
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "templatePart",
+              "key": "header",
+              "fields": {
+                "content": "<the whole part, changed>",
+                "title": "Header"
+              }
+            }
+          }
+        },
+        "languages": "One header and one footer for every language.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/site.json",
+            "has": "Resources"
+          }
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "what": "The contact form's fields and labels: Contact Form 7 form 25 (its _form post meta), embedded in the English contact page; the Russian page embeds its twin 303.",
+        "where": {
+          "kind": "postmeta",
+          "id": 25,
+          "key": "_form"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "postmeta",
+              "id": 25,
+              "key": "_form",
+              "fields": {
+                "value": "<the whole form template, changed>"
+              }
+            }
+          }
+        },
+        "languages": "One form per language page.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/contact.html",
+            "has": "wpcf7-f25-p39-o1"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/site.json",
+            "has": "\"_form\": \"<div class=\\\"wtb-form__grid wtb-form__grid--2\\\">"
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-quickstart/scripts/apply-base-changes.php",
+            "has": "[contact-form-7 id=\\\"303\\\""
+          }
+        ],
+        "versions": ["1.1.0", "1.2.0"]
+      },
+      {
+        "what": "The contact form's fields and labels: Contact Form 7 form 25 (its _form post meta), the one form every language's contact page embeds; the Russian twin 303 is gone.",
+        "where": {
+          "kind": "postmeta",
+          "id": 25,
+          "key": "_form"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "postmeta",
+              "id": 25,
+              "key": "_form",
+              "fields": {
+                "value": "<the whole form template, changed>"
+              }
+            }
+          }
+        },
+        "languages": "One form for every language: its labels are shared by every contact page.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-wordpress-quickstart/scripts/apply-base-changes.php",
+            "has": "The Russian Contact page embeds form 25 too, and form 303 (its Russian twin) is removed."
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-quickstart/scripts/apply-base-changes.php",
+            "has": "Form 25, the one Contact form every language embeds"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/site.json",
+            "has": "\"_form\": \"<div class=\\\"wtb-form__grid wtb-form__grid--2\\\">"
+          }
+        ],
+        "versions": ["1.3.0", "1.3.1", "1.3.2"]
+      },
+      {
+        "what": "The newsletter form in the news sidebar: Contact Form 7 form 349 (its _form post meta), placed by the theme file parts/sidebar-news.html.",
+        "where": {
+          "kind": "postmeta",
+          "id": 349,
+          "key": "_form"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "postmeta",
+              "id": 349,
+              "key": "_form",
+              "fields": {
+                "value": "<the whole form template, changed>"
+              }
+            }
+          }
+        },
+        "languages": "The sidebar is one for every language.",
+        "proof": [
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/parts/sidebar-news.html",
+            "has": "[contact-form-7 title=\"Newsletter\"]",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/parts/sidebar-news.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/parts/sidebar-news.html",
+            "has": "[contact-form-7 title=\"Newsletter\"]",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/parts/sidebar-news.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/parts/sidebar-news.html",
+            "has": "[contact-form-7 title=\"Newsletter\"]",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/parts/sidebar-news.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/parts/sidebar-news.html",
+            "has": "[contact-form-7 title=\"Newsletter\"]",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/parts/sidebar-news.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/parts/sidebar-news.html",
+            "has": "[contact-form-7 title=\"Newsletter\"]",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/parts/sidebar-news.html"
+            }
+          }
+        ]
+      },
+      {
+        "what": "Turn the contact form off: take the [contact-form-7 …] shortcode out of the core/html block of each language's contact page (39 in English). Back on: apply.revert with that write's apply_id.",
+        "where": { "kind": "post", "id": 39, "block": "core/html", "holds": "[contact-form-7 id=…]" },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "post",
+              "id": 39,
+              "rev": "<the rev content.get {kind:\"post\", id:39, outline:true} answers>",
+              "blocks": {
+                "<i of the core/html block that outline lists>": {
+                  "find": "<the [contact-form-7 …] shortcode as content.get {…, block:i} shows it>",
+                  "replace": ""
+                }
+              }
+            }
+          }
+        },
+        "languages": "Each language's contact page holds its own shortcode (content.read view pages lists the pages): write them in one request, so one apply_id puts every page back.",
+        "proof": [
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/inventory.json",
+            "at": "/posts/12/id",
+            "equals": 39
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/inventory.json",
+            "at": "/posts/12/entity",
+            "equals": "page-contact"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/inventory.json",
+            "at": "/posts/12/id",
+            "equals": 39
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/inventory.json",
+            "at": "/posts/12/entity",
+            "equals": "page-contact"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/inventory.json",
+            "at": "/posts/12/id",
+            "equals": 39
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/inventory.json",
+            "at": "/posts/12/entity",
+            "equals": "page-contact"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/inventory.json",
+            "at": "/posts/12/id",
+            "equals": 39
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/inventory.json",
+            "at": "/posts/12/entity",
+            "equals": "page-contact"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/inventory.json",
+            "at": "/posts/12/id",
+            "equals": 39
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/inventory.json",
+            "at": "/posts/12/entity",
+            "equals": "page-contact"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/contact.html",
+            "has": "wpcf7-f25-p39-o1"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/site.json",
+            "has": "\\n[contact-form-7 id=\\\"25\\\" title=\\\"Contact\\\"]\\n</div>"
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-quickstart/scripts/apply-base-changes.php",
+            "has": "Form 25, the one Contact form every language embeds"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/surface.mjs",
+            "has": "a value {find,replace} (find stands once in it)"
+          },
+          {
+            "file": "packages/tools/tracy-site-tools/src/host/surface.mjs",
+            "has": "apply.revert undoes one apply to the byte"
+          }
+        ]
+      }
+    ],
+    "strings": [
+      {
+        "what": "Header and footer words (Hotline, Request a quote, Resources, column titles, copyright): the header and footer template parts.",
+        "where": {
+          "kind": "templatePart"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.update",
+            "params": {
+              "kind": "templatePart",
+              "key": "footer",
+              "fields": {
+                "content": "<the whole part, changed>",
+                "title": "Footer"
+              }
+            }
+          }
+        },
+        "languages": "One header and one footer for every language.",
+        "proof": [
+          {
+            "file": "packages/tools/tracy-site-tools/test/fixtures/replace/wordpress/site.json",
+            "has": "Request a quote"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/presentation-lock.json",
+            "at": "/templateParts/footer"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/presentation-lock.json",
+            "at": "/templateParts/footer"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/presentation-lock.json",
+            "at": "/templateParts/footer"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/presentation-lock.json",
+            "at": "/templateParts/footer"
+          },
+          {
+            "json": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+            "at": "/templateParts/footer"
+          }
+        ]
+      },
+      {
+        "what": "Words the theme's templates print (404 'Page not found', 'Related articles' under a post): theme files.",
+        "where": {
+          "file": ".webroot/wp-content/themes/wp-tracy-business/templates/single.html"
+        },
+        "door": {
+          "tool": "edit",
+          "call": {
+            "path": ".webroot/wp-content/themes/wp-tracy-business/templates/single.html"
+          }
+        },
+        "languages": "One file for every language.",
+        "proof": [
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/templates/single.html",
+            "has": "Related articles",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.1.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/single.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/templates/single.html",
+            "has": "Related articles",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/single.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/templates/single.html",
+            "has": "Related articles",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/single.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/templates/single.html",
+            "has": "Related articles",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/single.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/templates/single.html",
+            "has": "Related articles",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/single.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/templates/404.html",
+            "has": "Page not found",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/404.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/templates/404.html",
+            "has": "Page not found",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/404.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/templates/404.html",
+            "has": "Page not found",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/404.html"
+            }
+          },
+          {
+            "file": "apps/tracy-web/test/fixtures/where/wp-tracy-business-released/templates/404.html",
+            "has": "Page not found",
+            "release": {
+              "lock": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/presentation-lock.json",
+              "as": "wp-content/themes/wp-tracy-business/templates/404.html"
+            }
+          }
+        ]
+      },
+      {
+        "what": "Site identity (name, legal name, slogan, monogram, phone, e-mail, address, hours, social links): fields of option tracy_site_identity, one contract slot each.",
+        "versions": ["1.2.0", "1.3.0", "1.3.1", "1.3.2"],
+        "where": {
+          "slot": ["identity.contact.phone", "identity.name"],
+          "option": "tracy_site_identity"
+        },
+        "door": {
+          "tool": "tracy_site",
+          "call": {
+            "action": "content.contract",
+            "params": {
+              "operation": "apply",
+              "changes": {
+                "identity.contact.phone": "<new phone>"
+              }
+            }
+          }
+        },
+        "languages": "One value for every language: a field of an option has no edition.",
+        "proof": [
+          {
+            "file": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.2.0/content-map.json",
+            "has": "\"option\": \"tracy_site_identity\""
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.0/content-map.json",
+            "has": "\"option\": \"tracy_site_identity\""
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.1/content-map.json",
+            "has": "\"option\": \"tracy_site_identity\""
+          },
+          {
+            "file": "packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.2/content-map.json",
+            "has": "\"option\": \"tracy_site_identity\""
+          }
+        ]
+      }
+    ]
+  }
+}

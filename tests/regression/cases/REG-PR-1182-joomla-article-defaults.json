@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1182-joomla-article-defaults",
+  "kind": "fix",
+  "title": "A Joomla article created through the Apply door has a real author and keeps a T4 home page up, and Site changes records it under its new id as a create",
+  "pr": 1182,
+  "area": "sites/apply/joomla-article-create",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: TCH half (this repo, Postgres): run the two apply-door tests in apps/tracy-web/test/component.test.mjs named in `run.tests`. The fake Claude Cowork plugin answers `{ok:true, kind:'article', id:76, created:true}` to `content.update` kind article id 0, then `{created:false}` for an update and `{created:true}` with no id.",
+    "S2: plugin half (repo TracyHQ/claude-cowork, PR #169, until a release carrying it is pinned): download quickstart/ja-impact/j6 `ja-impact-j6-quickstart-1.0.1.zip` from JoomlArt-Products/ja-products and run `T4_INSTALLER=<zip> joomla/cowork/tests/e2e/article-create.sh` in a checkout of that PR (docker). It builds JA Impact with Joomla's CLI installer, creates one published article with an image through the door in each category the home page lists with T4's author block, and reads the rows and the home page."
+  ],
+  "expect": [
+    "S1: the create's `site_write` row has action `content.create` and target `{kind:'article', id:'76', fields:['title']}`; the audit line keeps action `content.update`.",
+    "S1: an update, and a create whose answer names no usable id, keep action `content.update` and the call's own id ('5', '0').",
+    "S2: every new row has created_by = the first active Super User (never 0), modified_by the same, publish_up set, and valid JSON in attribs/metadata/urls/images; each new article's page and the home page answer 200 ('every check passed')."
+  ],
+  "selectors": {
+    "door": "POST /api/sites/:key/apply {action:'content.update', params:{kind:'article', id:0, fields}}",
+    "row": "site_write.action, site_write.target (apps/tracy-web/src/sites/route.js createdIdOf/recordApply)",
+    "plugin": "JoomlaSiteWriter::articleCreateDefaults / articleAuthorId (TracyHQ/claude-cowork joomla/cowork/com_claudecowork/site/src/Controller/JoomlaSiteWriter.php)"
+  },
+  "evidence": "tasks/evidence/e2e-full-dev/2026-10-04/R-jo/bugs/J5.8.md (dev e2ef-jo, JA Impact j6: article 76 created_by 0, home page 500 implode() null given; Site changes said article \"0\" update). Reproduced 11/10/2026 on JA Impact j6 1.0.1 with plugin main ae96119: tasks/evidence/tracy-site-sweep/l4-joomla-article/ (stack: AuthorModel.php:380 <- getAuthor(0) <- T4 Author.php:55 <- ja_impact masonry-layout.php:67; e2e before 10 checks failed, after every check passed).",
+  "fence": "Mechanism only: what the door records for a create, and (S2) what the plugin writes for a new article and that the T4 home page renders it. `run` covers S1 only: S2 needs docker and a claude-cowork checkout, which this repo's runner does not have; its result is the e2e log in the evidence folder. Not covered: what the model chooses to write.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/component.test.mjs"],
+    "cwd": "apps/tracy-web",
+    "needs": ["postgres"],
+    "tests": [
+      "apply: a write that CREATED a row is recorded under the new id and as a create",
+      "apply: an update, or a create whose answer names no usable id, keeps the call id and action"
+    ]
+  }
+}

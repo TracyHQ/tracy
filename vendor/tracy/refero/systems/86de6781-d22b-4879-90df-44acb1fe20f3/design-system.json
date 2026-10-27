@@ -1,0 +1,239 @@
+{
+  "dos": [
+    "Use Signal Coral (#ee585a) exclusively for filled CTAs, inline text links, notification dots, and the floating filter pill — never as a background wash, never on large surface areas",
+    "Set all type in Aeonik (or Inter/Satoshi substitute) at -0.011em letter-spacing regardless of size — the consistent tight tracking is part of the brand voice",
+    "Apply 32px border-radius to all cards, buttons, and containers — this large radius is signature and defines the soft, modern feel",
+    "Use Ink (#121212) for all text and borders instead of pure #000000 — the warmth keeps the near-monochrome palette from feeling harsh",
+    "Limit shadows to the single token rgba(72,72,74,0.16) 0px 2px 32px 0px, applied only to cards and floating elements",
+    "Maintain 10px element gaps and 24px card padding as the base rhythm — jump to 48px for section separation",
+    "Let the wordmark or display heading carry visual weight; keep supporting UI quiet and monochrome"
+  ],
+  "donts": [
+    "Don't introduce additional accent colors — the 1% colorfulness is deliberate; Signal Coral is the only chromatic note allowed",
+    "Don't use sharp corners (0-4px radius) on any container — the 32px radius defines the system",
+    "Don't apply drop shadows to text, nav, or inline elements — shadows are reserved for cards and floating pills only",
+    "Don't use pure #000000 for body text — always use #121212 to maintain the soft contrast ratio (18.7:1)",
+    "Don't set display type at loose or normal letter-spacing — the -0.011em tight tracking is non-negotiable",
+    "Don't fill large background areas with Signal Coral — it loses impact at scale and should remain a small functional accent",
+    "Don't add gradients, textures, or decorative imagery — the system is deliberately flat and typographic"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#121212",
+      "name": "Ink",
+      "role": "Primary text, card borders, icon strokes, hairline dividers. A warm near-black chosen over #000 to soften contrast against white without losing authority",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "role": "Hairline borders, dividers, input outlines, and card edges on light surfaces. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#dbdada",
+      "name": "Fog",
+      "role": "Ambient shadow tint, muted background washes, subtle surface elevation. Carries the 0.16-alpha shadow that lifts cards off the canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8e8e93",
+      "name": "Slate",
+      "role": "Secondary body text, de-emphasized metadata, inactive nav borders, helper copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Obsidian",
+      "role": "Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ee585a",
+      "name": "Signal Coral",
+      "role": "Filled CTA backgrounds (action buttons, filter pills), inline text links, notification dot, hover/focus glow. The sole chromatic accent — one warm red against matte white creates urgency without aggression",
+      "group": "brand"
+    }
+  ],
+  "layout": "Full-bleed layout with the wordmark stretching nearly edge-to-edge in the hero, establishing maximum typographic impact immediately. Below the hero, a 3-column responsive grid of font preview cards with generous 24-32px gutters. Content max-width approximately 1320px centered on the canvas. Section rhythm: the hero is a single expansive band, followed by a tighter grid section. Navigation is a minimal top bar with right-aligned utility cluster. No sidebar, no mega-menu, no sticky elements beyond the floating filter pill. The page reads top-to-bottom as: monumental wordmark → short descriptive paragraph → dense specimen grid. Asymmetric only in the hero's near-full-bleed scale; the grid below is symmetric and evenly spaced.",
+  "imagery": "No photography, no illustration, no abstract graphics. The only visual content beyond UI chrome is typographic specimens — oversized 'Aa' glyphs rendered directly in the interface as the product itself. Icons are minimal outlined glyphs (search, profile, hamburger, ninja mark) drawn in Ink at 24px with thin consistent stroke weight, monoline style. The wordmark functions as the hero image. Visual density is extremely low — text and specimens dominate, the rest is whitespace.",
+  "similar": [
+    {
+      "why": "Same near-monochrome gallery treatment for type specimens, oversized 'Aa' previews, and large border-radius on specimen cards",
+      "business": "Pangram Pangram"
+    },
+    {
+      "why": "Editorial type-foundry presentation with white canvas, single-weight typography, and type specimens as the primary visual",
+      "business": "Klim Type Foundry"
+    },
+    {
+      "why": "Near-monochrome minimalist interface with quiet chrome and a single accent color reserved for interactive elements",
+      "business": "Are.na"
+    },
+    {
+      "why": "Compact dense UI with generous border-radius, near-black text on white, and a single restrained accent palette",
+      "business": "Linear"
+    },
+    {
+      "why": "Type-specimen-first layout with specimen cards on white, minimal chrome, and no decorative imagery",
+      "business": "Velvetyne Type Foundry"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "32px",
+      "links": "16px",
+      "pills": "9999px",
+      "buttons": "32px"
+    },
+    "elementGap": "10px",
+    "sectionGap": "48px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1320px"
+  },
+  "industry": "design",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Base page background, full-bleed"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Card",
+      "level": 1,
+      "purpose": "Font preview tiles, content panels — same hex as canvas but separated by shadow"
+    },
+    {
+      "hex": "#dbdada",
+      "name": "Shadow Tint",
+      "level": 2,
+      "purpose": "Ambient gray carried in card shadows at 0.16 alpha"
+    },
+    {
+      "hex": "#ee585a",
+      "name": "Action Surface",
+      "level": 3,
+      "purpose": "Filled CTAs, floating filter button, notification dot"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(72, 72, 74, 0.16) 0px 2px 32px 0px",
+      "element": "Font Preview Card"
+    }
+  ],
+  "northStar": "Type museum on white marble — a near-black wordmark, a whisper of coral, and everything else recedes.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.13
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.15
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.18
+    },
+    {
+      "role": "subheading",
+      "size": 24,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.26
+    },
+    {
+      "role": "heading-sm",
+      "size": 32,
+      "lineHeight": 1.14,
+      "letterSpacing": -0.35
+    },
+    {
+      "role": "heading",
+      "size": 44,
+      "lineHeight": 1.15,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "display",
+      "size": 120,
+      "lineHeight": 1,
+      "letterSpacing": -1.32
+    }
+  ],
+  "components": [
+    {
+      "name": "Font Preview Card",
+      "role": "Grid tile displaying a single typeface specimen",
+      "description": "White surface (#ffffff) on Canvas, 32px border-radius, ambient shadow rgba(72,72,74,0.16) 0px 2px 32px 0px. Centered specimen at ~120px Aeonik weight 700 in Ink (#121212) dominates the card. Below: font name in 16px weight 500 Ink, foundry and style count/price in 12-14px Slate (#8e8e93). Internal padding 24px, specimen area ~60% of card height."
+    },
+    {
+      "name": "Primary CTA Button (Filled)",
+      "role": "Action trigger — filter, submit, navigate",
+      "description": "Signal Coral (#ee585a) background, white (#ffffff) text, Aeonik 500 at 14-16px, 32px border-radius, 16px vertical × 24px horizontal padding. No border. Sits at full saturation against the monochrome canvas — the coral is the only chromatic voice in the room."
+    },
+    {
+      "name": "Ghost Text Link",
+      "role": "Inline navigation and secondary affordances",
+      "description": "Signal Coral (#ee585a) text in Aeonik 500 at 16px with an external-arrow glyph (↗). No underline, no background, no border. Inline within body copy or as standalone link. 16px border-radius on any container."
+    },
+    {
+      "name": "Floating Filter Pill",
+      "role": "Sticky filter trigger for typeface grid",
+      "description": "Signal Coral (#ee585a) filled pill, white text reading 'Filter typefaces' with a dropdown caret icon, 9999px border-radius (full pill), 10-12px vertical × 20px horizontal padding. Floats over grid content at fixed position."
+    },
+    {
+      "name": "Top Navigation Bar",
+      "role": "Primary site navigation",
+      "description": "Transparent/Canvas background, 56px horizontal padding. Left: small ninja mark icon. Right cluster: 'Fonts' (active, weight 500 Ink), 'Bookmarks' (weight 400 Slate), search icon, profile icon, hamburger — all 24px outlined icons in Ink with 24-32px gap between items."
+    },
+    {
+      "name": "Hero Wordmark",
+      "role": "Brand statement and page identity",
+      "description": "Full-bleed 'FONTS NINJA' set in Aeonik 700 at ~120px, Ink (#121212), tracking -1.32px, line-height 1.0. Near-edge-to-edge horizontal span. A 12px Signal Coral notification dot sits at the top-right of the final 'A' — a single pop of color that says 'new' without a badge or banner."
+    },
+    {
+      "name": "Notification Dot",
+      "role": "Status indicator on wordmark and possibly nav elements",
+      "description": "12px diameter circle, Signal Coral (#ee585a), no border, no shadow. Positioned as a superscript overlay."
+    },
+    {
+      "name": "Metadata Label",
+      "role": "Supporting text — foundry name, style count, price",
+      "description": "Aeonik 400 at 12-14px, Slate (#8e8e93). Two-column layout within cards: left-aligned descriptor, right-aligned price/style count. 10px gap between label and value."
+    },
+    {
+      "name": "Body Paragraph",
+      "role": "Hero subtext and descriptive copy",
+      "description": "Aeonik 400 at 16-24px, Ink (#121212), line-height 1.5, max-width constrained to ~50-60ch. Inline links adopt Ghost Text Link styling."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Sole typeface across all UI. 700 for the monumental wordmark and large display headings, 500 for medium-emphasis labels and nav, 400 for body and metadata. Tight -0.011em tracking across all sizes tightens the geometric forms and gives the wordmark its dense, packed look.",
+      "sizes": "12, 14, 16, 24, 32, 44px",
+      "family": "Aeonik",
+      "weight": "400, 500, 700",
+      "lineHeight": "1.00–1.50",
+      "substitute": "Inter, Satoshi, or General Sans",
+      "letterSpacing": "-0.011em (consistent across all sizes, roughly -0.13px at 12px through -0.48px at 44px)"
+    }
+  ],
+  "description": "Fonts Ninja is a near-monochrome gallery for letterforms, where the only chromatic note is a single warm coral that punctuates action. The canvas is near-white and stays quiet; type is the protagonist, presented at extreme scale and paired with generous negative space. Cards are soft-cornered white panels floating on a barely-there shadow, and every interactive element earns its color — most UI is ink-on-paper, and the coral appears only when something wants to be clicked. Density is compact but the layout breathes because margins are large and rhythm is measured in 10px and 24px increments rather than tight 4-8px stacks.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- text: #121212 (Ink)\n- background: #ffffff (Canvas)\n- border: #121212 (Ink) at 1px\n- accent: #ee585a (Signal Coral)\n- primary action: #ee585a (filled action)\n- muted: #8e8e93 (Slate)\n\n**3-5 Example Component Prompts**\n\n1. *Hero wordmark section*: Full-bleed white canvas. Set 'FONTS NINJA' in Aeonik weight 700 at 120px, color #121212, letter-spacing -1.32px, line-height 1.0, stretching nearly edge-to-edge. Place a 12px diameter #ee585a circle at the top-right corner of the final letter as a notification dot. Below at 48px gap, add a body paragraph: Aeonik 400 at 24px, #121212, line-height 1.5, max-width 60ch. Inline the phrase 'Browse our library' as #ee585a Aeonik 500 with an external-arrow glyph (↗).\n\n2. *Font preview card*: White (#ffffff) surface, 32px border-radius, shadow rgba(72,72,74,0.16) 0px 2px 32px 0px. Centered specimen of 'Aa' at 120px Aeonik weight 700 in #121212 occupying the top 60% of the card. Bottom section with 24px internal padding: font name in Aeonik 500 16px #121212 on the left, style count in Aeonik 400 14px #8e8e93 on the right. Second row: foundry name in Aeonik 400 12px #8e8e93.\n\n3. Create a Primary Action Button: #ee585a background, #000000 text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.\n\n4. *Top navigation bar*: White transparent background, 56px horizontal padding. Left: 24px outlined ninja mark icon in #121212. Right cluster with 32px gaps: 'Fonts' (Aeonik 500 16px #121212), 'Bookmarks' (Aeonik 400 16px #8e8e93), search icon, profile icon, hamburger icon — all 24px outlined in #121212.\n\n5. *Typography grid section*: 3-column CSS grid with 24px gap, cards as described above. Section padding 48px top/bottom. Each card 32px border-radius with the single shadow token."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is reserved exclusively for font preview cards. Everything else — buttons, nav, links, the wordmark — sits flat on the canvas. The single shadow token is a soft, wide-spread (32px blur) ambient haze with low alpha (0.16), which lifts cards just enough to read as physical objects without adding visual weight. The shadow color is a desaturated cool gray, not a warm or branded tint, keeping the system feeling neutral and editorial."
+}

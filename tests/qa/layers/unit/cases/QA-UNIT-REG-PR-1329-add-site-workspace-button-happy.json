@@ -1,0 +1,49 @@
+{
+  "id": "QA-UNIT-REG-PR-1329-add-site-workspace-button-happy",
+  "itemIds": ["regression:REG-PR-1329-add-site-workspace-button"],
+  "requirement": "Creating a site from an existing workspace keeps the ready screen until the new workspace is opened",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1329-add-site-workspace-button.json",
+    "ref": "PR #1329 (fix); fix evidence: none recorded",
+    "invariant": "The add-site wizard started from an existing site stays on that site after the new site's agent is ready. The Open the workspace button remains visible and clicking it navigates to the new site's workspace. The /new/ flow keeps its existing automatic navigation behavior.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs:39 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs:89 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["creating from an existing site keeps the ready screen until the new workspace is opened"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1329-add-site-workspace-button"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-add-site", "tracy-add-site"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1329-add-site-workspace-button",
+    "pr": 1329,
+    "kind": "fix",
+    "area": "site/add-site",
+    "file": "tests/regression/cases/REG-PR-1329-add-site-workspace-button.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/site/tracy-add-site/test/e2e/add-site-wizard.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": ["creating from an existing site keeps the ready screen until the new workspace is opened"],
+  "timeoutS": 600
+}

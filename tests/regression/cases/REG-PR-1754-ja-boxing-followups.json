@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1754-ja-boxing-followups",
+  "kind": "fix",
+  "title": "JA Boxing follow-ups: generic categories keep their name, seeder sends temperature, chat prices stay text",
+  "pr": 1754,
+  "area": "joomla-brief/categories, seeder/model, chat/markdown",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/joomla-categories-section-labels.test.mjs apps/tracy-web/test/joomla-blog-categories.test.mjs (a leaf category titled Classes is not asked nor renamed; demo topics still are).",
+    "S2: node --test packages/cms/tracy-seeder/test/model-temperature.test.mjs (temperature 0 and 0.4 reach the request body; unset sends none).",
+    "S3 (fork, inside vendor/tracy/deepseek-harness after its own install): ./node_modules/.bin/vitest run packages/client/ui-primitives/tests/markdown-dollar-amounts.client.spec.tsx.",
+    "S4 (dev, after deploy): ask Tracy in a site chat for an answer with \"$49 per month and $99 per year\"."
+  ],
+  "expect": [
+    "S1-S3: every test passes.",
+    "S4: the prices read as plain text; no KaTeX element in the reply."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/brief-engines/joomla-categories.js; packages/cms/tracy-seeder/src/model.mjs; vendor/tracy/deepseek-harness/packages/client/ui-primitives/src/markdown/dollarAmounts.ts",
+    "functions": "tradeNames (isGenericNavLabel filter); chat (temperature); dollarAmounts"
+  },
+  "evidence": "saigon-iron-boxing.tracy.site (25/10/2026): main menu and category Classes renamed Boxing Basics; Tracy chat drew $ amounts as a formula; seeder chat() body had no temperature.",
+  "fence": "Pure functions and a parser extension; the dev check S4 is by hand or Playwright.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/joomla-categories-section-labels.test.mjs",
+      "apps/tracy-web/test/joomla-blog-categories.test.mjs",
+      "packages/cms/tracy-seeder/test/model-temperature.test.mjs"
+    ]
+  }
+}

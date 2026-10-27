@@ -1,0 +1,56 @@
+{
+  "id": "REG-PR-1698-pd-demos-door",
+  "kind": "feat",
+  "title": "POST /v1/demos: an account token asks for a demo; idempotent, capped at live demos per account, model budget, guarded photo fetch, nothing written on refusal",
+  "pr": 1698,
+  "area": "website-opportunities/public-demos",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Drive /v1/demos through its routes on a scratch Postgres (account token faked with part A's signature, network and object store faked).",
+    "S2: Validate website-opportunities/demo-request/v1 in the open package."
+  ],
+  "expect": [
+    "S1: same key + body → same demo, other body → 409 IDEMPOTENCY_KEY_REUSED; concurrent and after-crash retries make one demo.",
+    "S1: the 21st live demo → 409 DEMO_LIMIT_REACHED {live:20, limit:20}; deleting one makes room; at the cap only one of concurrent requests wins.",
+    "S1: over the model budget → 503 SPONSOR_BUDGET_EXHAUSTED before accepting; an own AI account reserves 0 cents.",
+    "S1: bad schema / oversize / private or redirected-private photo URL → 4xx with no row and no stored object; a seat key → 403; accountId/siteKey/ownSite in the body refused by field.",
+    "S1: cancel before the build frees the slot, after keeps it; ready only with QA passed; polling never moves the retention dates.",
+    "S2: unknown fields (verified, provenance, objectKey, accountId) are refused by path."
+  ],
+  "selectors": {
+    "door": "POST /v1/demos, GET /v1/demos, GET /v1/demos/options, GET /v1/demos/:id, POST /v1/demos/:id/cancel",
+    "settings": "GET|PUT /api/ops/wo/public-demos"
+  },
+  "evidence": "apps/tracy-web/test/wo-public-demos.test.mjs and packages/wo/website-opportunities/test/domain-demo-request.test.mjs",
+  "fence": "The door's validation, idempotency, live cap, budget and SSRF guard; the build itself is the existing demo runner's",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-public-demos.test.mjs",
+      "packages/wo/website-opportunities/test/domain-demo-request.test.mjs"
+    ],
+    "tests": [
+      "a demo request becomes the account",
+      "a retry with the same key and body",
+      "concurrent sends of one key make one demo",
+      "a send that died before its commit",
+      "the 21st live demo is refused 409",
+      "at 19 live demos, concurrent new requests",
+      "the model budget refuses",
+      "cancel before the site frees the slot",
+      "bad schema, an oversize body, a private photo URL",
+      "a body naming the account, a site or ownSite",
+      "a seat key is refused 403",
+      "retention dates come from the WO demo clock",
+      "ready needs QA passed",
+      "the server answers /v1/demos on the api host only",
+      "a field the contract does not name is refused by its path"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 600
+  }
+}

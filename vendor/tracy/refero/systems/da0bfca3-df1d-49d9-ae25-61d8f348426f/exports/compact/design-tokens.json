@@ -1,0 +1,69 @@
+{
+  "color": {
+    "brand-blue": {
+      "$value": "#145fe4",
+      "$type": "color",
+      "$description": "Brand Blue — Primary CTAs, active links, focus indicators — the single point of interactive confirmation."
+    },
+    "hero-fade": {
+      "$value": "#145fe4",
+      "$type": "color",
+      "$description": "Hero Fade — Hero background — creates a deep, atmospheric transition from dark space to brand blue."
+    },
+    "white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "White — Main content backgrounds, card surfaces, text on dark backgrounds."
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Primary text on light backgrounds."
+    },
+    "deep-space": {
+      "$value": "#1d1d21",
+      "$type": "color",
+      "$description": "Deep Space — Hero and footer backgrounds."
+    },
+    "void": {
+      "$value": "#242529",
+      "$type": "color",
+      "$description": "Void — Secondary dark surfaces."
+    },
+    "graphite": {
+      "$value": "#303136",
+      "$type": "color",
+      "$description": "Graphite — Secondary text on light backgrounds, navigation links."
+    },
+    "ash": {
+      "$value": "#d7d7db",
+      "$type": "color",
+      "$description": "Ash — Borders on light backgrounds, disabled states."
+    },
+    "warning-tan": {
+      "$value": "#cbb88",
+      "$type": "color",
+      "$description": "Warning Tan — Top announcement banner background — a muted, temporary accent for site-wide notices."
+    }
+  },
+  "font": {
+    "agilesans": {
+      "$value": "agileSans",
+      "$type": "fontFamily",
+      "$description": "The primary brand font, used for everything from display headlines to body copy. Its tight negative letter-spacing at large sizes creates a dense, architectural look. Lighter weights (300) are reserved for the largest headlines, creating authority through restraint, while mid-weights (400, 500) are used for body copy and UI elements."
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "Used for minor body text, likely as a fallback or for specific cross-platform UI contexts where the custom font might not load."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://1password.com",
+      "siteName": "Passwords",
+      "extractedAt": "2026-04-11T17:49:18.534Z",
+      "variant": "compact"
+    }
+  }
+}

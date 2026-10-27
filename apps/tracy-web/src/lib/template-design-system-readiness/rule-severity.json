@@ -1,0 +1,348 @@
+{
+  "schemaVersion": "tracy-readiness-severity/v1",
+  "about": "How a failing rule of the Template Design System Readiness check weighs on the Road to live step Design system. must-fix: a customer who presses Design system gets a broken or unreadable site, or a customer who never presses it loses the template's look; it holds Publish of a template not yet live. worth-fixing: the button refuses politely, or the site wears the system with a leftover; it only warns. question: the part of the template the rule is about. text: the one plain line /ops shows when the rule fails. reason: why the rule is in its group, from the spec (tasks/spec-template-design-system-readiness.md). Edit this file to move a rule; no code change is needed.",
+  "rules": {
+    "SLOT-1": {
+      "group": "worth-fixing",
+      "question": "Slot contract",
+      "text": "No ready slot contract, so the Design system button refuses sites built from it.",
+      "reason": "The button already refuses such a site politely (TEMPLATE_HAS_NO_SLOT); a template without the feature is not broken, so it does not hold Publish (council 12/10/2026)."
+    },
+    "SLOT-2": {
+      "group": "worth-fixing",
+      "question": "Slot contract",
+      "text": "This version was never checked against the slot, so the button refuses new sites.",
+      "reason": "The door refuses an unchecked version (TEMPLATE_VERSION_UNCHECKED) rather than offering it; the customer is told, nothing breaks."
+    },
+    "CSS-1": {
+      "group": "must-fix",
+      "question": "Stylesheets",
+      "text": "A stylesheet paints the template's colours without reading the slot.",
+      "reason": "A release rebuilt from untokenized source keeps literal light fills while a dark system turns the text light: unreadable pages for the customer who pressed the button."
+    },
+    "CSS-2": {
+      "group": "worth-fixing",
+      "question": "Stylesheets",
+      "text": "Some palette colours do not follow the system (literals, or the wrong role).",
+      "reason": "The page wears the system with a few spots in the template's colours: a leftover, not a break."
+    },
+    "DEF-1": {
+      "group": "must-fix",
+      "question": "Default look",
+      "text": "A slot read has no fallback, so sites without a system lose the template's look.",
+      "reason": "Every site that never pressed the button would render that property with nothing: the whole customer base, not only the ones who chose a system."
+    },
+    "BAND-1": {
+      "group": "worth-fixing",
+      "question": "Bands",
+      "text": "Some bands keep the template's colours under every system.",
+      "reason": "The site wears the system everywhere else and stays readable, but the kept bands make the first screen look unchanged (12/10/2026: \"it is still the old UI\"). Worth fixing while the `bands` key of the slot is not on develop; move it to must-fix once it is."
+    },
+    "PLAT-1": {
+      "group": "must-fix",
+      "question": "Slot reader",
+      "text": "The template lacks the part of the slot its CMS needs, so the button changes nothing.",
+      "reason": "The button would report success while the page never loads the system: the customer sees no change and cannot tell why."
+    },
+    "VARS-1": {
+      "group": "must-fix",
+      "question": "Role variables",
+      "text": "The quickstart does not declare every role variable, or still hardcodes a role.",
+      "fix": "Make the template read each standard role variable (packages/design/tracy-ds-slot/src/role-variables.mjs) with its own value as the fallback, var(--ds-c-bg, <its value>), replace every hardcoded colour, radius or font that plays a role, then package the quickstart with the role scanner so the release carries design-system-roles.json.",
+      "reason": "Roadmap step 2 (15/10/2026): a design system only sets values; frame, spacing and layout stay the template's. A role the template does not read, or a literal left in its place, is what the emitter patches today with followRules and shapeRules, and each patch misses a spot the customer sees in the system's colours or corners. Not scanned yet holds Publish like an unmeasured preview: a release nobody scanned is not known to declare them."
+    },
+    "TEXT-1": {
+      "group": "worth-fixing",
+      "question": "Stylesheets",
+      "text": "A text colour reads a ground role of the slot (the accent fill, the page, a surface, the ink band, a status fill) instead of a text role.",
+      "fix": "Paint the words with the text role of that ground: --ds-c-accent-text (and -hover) for accent words, --ds-c-accent-on or --ds-c-on-ink for words on a fill or a band, --ds-c-accent-on-ink for accent words on an ink band, --ds-c-<status>-text for a status.",
+      "reason": "20/10/2026, code review of JA Restaurant: a text color read var(--ds-c-accent) in the ja-products sources. A fill role is only held to contrast as a ground, so under a system with a light accent (or a dark page) those words fade. A leftover on some systems, not a break of every page, so it does not hold Publish. Static, so it runs on Check again with no measurement."
+    },
+    "PIC-1": {
+      "group": "must-fix",
+      "question": "Pictures",
+      "text": "An icon shown as a picture is drawn in the template's brand colour, so no system can recolour it.",
+      "fix": "Draw the icon so the page paints it: inline SVG with currentColor (or var(--ds-c-accent, <its colour>)), or a mask painted with var(--ds-c-accent, <its colour>), instead of an <img> or a background picture; or recolour it in the slot contract until the template is released again.",
+      "reason": "The static twin of ACCENT-LEAK, which only sees the page the preview probe measures. A customer who presses Design system sees the template's own accent left on every icon of that page under every system (JA Kinetic WP's Integrations icons, lime under Moxie, 20/10/2026), the same leak ACCENT-LEAK holds as must-fix. Static, so it runs on Check again without a new measurement or a probe version."
+    },
+    "ROLE-1": {
+      "group": "must-fix",
+      "question": "Built site",
+      "text": "Roles do not wear the system.",
+      "reason": "Only a built site tells; listed so the panel and the skill name the measurement."
+    },
+    "SCREEN-1": {
+      "group": "worth-fixing",
+      "question": "Built site",
+      "text": "The first screen does not visibly change.",
+      "reason": "Only a built site tells; the static twin is BAND-1."
+    },
+    "CON-1": {
+      "group": "must-fix",
+      "question": "Built site",
+      "text": "Some text is unreadable under a system.",
+      "reason": "Only a built site tells."
+    },
+    "UNDO-1": {
+      "group": "must-fix",
+      "question": "Built site",
+      "text": "No system or Undo does not give back the template.",
+      "reason": "Only a built site tells; the static twin is DEF-1."
+    },
+    "FONT-1": {
+      "group": "worth-fixing",
+      "question": "Built site",
+      "text": "The system's fonts do not load.",
+      "reason": "Only a built site tells; the system's fallback faces still read."
+    },
+    "IDENT-1": {
+      "group": "worth-fixing",
+      "question": "Built site",
+      "text": "The logo or brand mark is empty, missing, shrunk or unreadable under a system.",
+      "reason": "Measured on a built site. Worth fixing in phase 1; moves to must-fix with SCREEN-1 after the first green sweep (spec decision 11, 13/10/2026)."
+    },
+    "MODE-1": {
+      "group": "worth-fixing",
+      "question": "Built site",
+      "text": "The page is light under a dark system, or dark under a light one.",
+      "reason": "Measured on a built site: the ground luminance against the system's dark flag. A mismatch is a leftover of the template's own mode, the page still reads."
+    },
+    "MODE-2": {
+      "group": "worth-fixing",
+      "question": "Built site",
+      "text": "The template's light/dark switch disappears, or its second mode does not follow the system.",
+      "reason": "Measured on a built site. A template with two modes keeps both under a system (13/10/2026: hiding the switch is a bug); the derived mode is judged without must-fix rules (spec decision 10)."
+    },
+    "MODE-3": {
+      "group": "must-fix",
+      "question": "Light and dark",
+      "text": "The template has a light and a dark scheme, but the Add site popup offers no Light | Dark choice.",
+      "fix": "Set modes: true in the template's slot contract (packages/design/tracy-ds-slot/templates/<contract>.json) and make the emitter write the system's own side under the template's matching scheme and the other side derived from it, as joomla-tracy-business and wordpress-tracy-base do; keep the light/dark switch shown (MODE-2), then measure both modes again.",
+      "reason": "15/10/2026: the popup shows Light | Dark only for a contract with modes: true; a template with two schemes whose contract keeps one look shows the customer one side only, so they pick a system without seeing what half their visitors get. Read from the release and this server (the contract's darkTokens, the measurement's themeToggle or derived mode, a dark stylesheet of the template), so no built site is needed."
+    },
+    "TPL-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "The template's own colours stay visible in the preview under a system.",
+      "reason": "14/10/2026: a block, a glare band or a brand-coloured text of the template's own on a page wearing a system is what the customer sees first in Add site; the auto palette maps every colour by its role, so only a picture may stay, with its reason."
+    },
+    "CON-2": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "Some text of the preview is unreadable under a system.",
+      "reason": "Judged on the preview a visitor sees, only for text the system made unreadable (a text already unreadable on the template's own page is the template's)."
+    },
+    "BTN-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A button loses its shape under a system.",
+      "fix": "Give the button's fill or border a role apart from its ground, make its corner read --ds-btn-radius (or the corner the slot gives the system's buttons) on the box the visitor sees, wrapper included, and its fill and outline read the button roles (--ds-c-accent, --ds-c-accent-on). A dark button of the template (btn-dark, a dark neutral fill) stays darker than the accent: map it to an inverse or outline role, not to the lightest surface.",
+      "reason": "A button whose fill or border vanishes into its ground, or that keeps a square corner or a colour of its own where the system's buttons are rounded and in its roles, still works but no longer reads as the system's button. 14/10/2026: Tracy Base WordPress showed square black boxes on the blue CTA band under Moxie (the .tracy-btn--inverse wrapper paints a square around the pill). Must-fix from 14/10/2026: the eye check of the preview does not pass a page whose buttons lost the system's shape, since that is what the customer sees first. 14/10/2026, fleet01 after PR 1356: JA Podcast's and JA Prodex's btn-dark (\"Start Listening\", \"Get started\", \"View pricing\") became cream pills, the lightest fill of the page and louder than the accent; \"Start Listening\" kept a white label at 1.16:1."
+    },
+    "PREV-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "The preview is not the page alone: a second document, fonts that fail, or empty blocks.",
+      "reason": "14/10/2026: demos printed a Joomla error page after their own page and icon fonts were refused cross-origin, so the preview looked broken whatever the system."
+    },
+    "DEMO-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "No live demo on this server, so the Add site panel offers no design system for this template.",
+      "reason": "14/10/2026: Tracy SaaS EmDash had no demo, the preview door answered 409 NO_DEMO and the panel showed no picker while /ops passed it. The preview is read from the live demo, so without one the customer never sees the feature. Not a rule of the release files: the road asks this server whether it has the demo."
+    },
+    "IDENT-2": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "The logo vanishes on its new ground in the preview under a system.",
+      "reason": "Moxie audit 14/10/2026: ja-trip and ja-vogue had their light logo inverted onto a dark header, nova, prodex, rent and sensei kept a dark logo on the system's dark band; a site without its name is the first thing the customer sees in Add site."
+    },
+    "FONT-2": {
+      "group": "worth-fixing",
+      "question": "Preview",
+      "text": "Some text keeps the template's own fonts while the page wears the system's.",
+      "reason": "Moxie audit 14/10/2026: ja-space (Metropolis), ja-trip and ja-vogue mixed two type systems on one page; it reads, but the look is half the system's."
+    },
+    "PREV-2": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "Blocks stay hidden in the preview, waiting for a scroll-reveal script.",
+      "reason": "Moxie audit 14/10/2026: ja-phio, ja-seven and ja-resume showed a blank page with only the menu, because their data-aos / .ja-animate blocks stay at opacity 0 when no script runs; the customer cannot judge what they cannot see."
+    },
+    "GRAD-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A gradient keeps a stop in the template's colours under a system.",
+      "fix": "Point every stop of the gradient at the slot (a role per stop, or the palette rule of its selector), not only the first.",
+      "reason": "14/10/2026: ja-space's button went periwinkle to coral and ja-trip's headings periwinkle to template cyan and purple; a gradient half in each design is the template's colour in the most visible places (buttons, headings, heroes), as TPL-1."
+    },
+    "SHAPE-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "An SVG or CSS shape keeps the template's colours under a system.",
+      "fix": "Paint the shape with a slot variable (fill/stroke of the SVG, background or border of the pseudo-element), or currentColor. Pictures (raster images) are left out: no stylesheet can recolour them.",
+      "reason": "14/10/2026: ja-mood's section wedges cut a light grey and an indigo band across a black page; a shape is a block the role swap does not reach, so it holds Publish like a kept block (TPL-1)."
+    },
+    "MOCK-1": {
+      "group": "worth-fixing",
+      "question": "Preview",
+      "text": "A colour written by hand into the markup does not follow the system.",
+      "fix": "Replace the literal in the markup (bg-[#…], style=\"color:…\") with a token class or var(--…) the slot sets, then rebuild the demo content.",
+      "reason": "14/10/2026: Tracy Base on EmDash kept its blue mock chart bars next to the system's accent. The page wears the system with a leftover, small in area and readable: worth fixing, it does not break the page."
+    },
+    "ACC-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A whole section is painted in the system's accent and its text does not read on it.",
+      "fix": "Map that section's ground to a surface role, not the accent, or give its texts the on-accent role.",
+      "reason": "14/10/2026: ja-vital's services band, timetable and footnav (about 2,500 px of periwinkle) carried labels at 1.07:1; a customer who presses Design system gets sections nobody can read."
+    },
+    "CLIP-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A button collapses, cuts its label, or changes size under a system.",
+      "fix": "Give the button a minimum size and keep its font size and padding when the slot sets the system's radius and type; make its own rules read the slot's button padding and line height instead of adding them to the template's, and keep a block its band stretches square (or let it hug its label) so the system's pill radius does not turn it into a giant pill.",
+      "reason": "14/10/2026: ja-trip's hero Search shrank to 42 x 14 px with no label and ja-voyara's newsletter button showed \"Subs\"; JA Resort's header BOOK NOW!, a 330 x 120 px block its header stretches, became a 330 x 120 px pill over the header under Moxie. Unlike BTN-1 (a button that loses its fill but still reads), the button no longer reads or covers its band."
+    },
+    "GROUND-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A large block or a full-width strip sits on a neutral ground the system does not paint.",
+      "fix": "Map that block's ground to a ground role of the slot (--ds-c-bg, --ds-c-surface or --ds-c-muted), not to a text colour, and drop the template's own neutral fill.",
+      "reason": "14/10/2026, dev after PR 1356: JA Vega WordPress kept a pure black hero, header and stats band on Moxie's cream page (black is Moxie's text colour, so TPL-1 took it for the system's), JA Kinetic Joomla and JA Resort Joomla wore a grey no role of Moxie paints, with black strips cutting across it; the eye saw a page in two systems while every rule passed."
+    },
+    "EMPTY-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A block of the preview shows nothing although its content is in the page.",
+      "fix": "Give the words of the block the text role of its ground, load its pictures without a script (a real src, not only data-src), and give its cards a border or surface role apart from the ground.",
+      "reason": "14/10/2026, dev after PR 1356: JA Resort Joomla under Moxie showed a flat grey slab of about 1440 x 288 px in the blog area where five items sat unseen; PREV-1 reads only boxes with no content at all, so a block whose content is there but unseen passed."
+    },
+    "FORM-1": {
+      "group": "worth-fixing",
+      "question": "Preview",
+      "text": "A form field keeps the browser's or the template's look under a system.",
+      "fix": "Paint the fields from the slot: background var(--ds-c-surface) or var(--ds-c-bg), color var(--ds-c-fg), border var(--ds-c-border).",
+      "reason": "14/10/2026, dev after PR 1356: JA Vega WordPress's footer newsletter fields stayed the browser's small white boxes (grey on the dark scheme) on Moxie's dark footer; the form still works, so it does not hold Publish, but it is the first thing a visitor types into."
+    },
+    "IDENT-3": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "Two logos show in the header or footer of the preview under a system.",
+      "fix": "Keep one logo visible per region: hide the extra copy (a drawer or mobile logo, the other scheme's variant) with a CSS rule the preview loads, not a script, and make sure the slot does not override that rule.",
+      "reason": "14/10/2026: JA Vega WordPress under Moxie, light visitor scheme, showed two Vega logos side by side in the header (the drawer's copy); the first thing the customer sees in Add site is a doubled brand."
+    },
+    "HIER-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "Words the template highlights read quieter than the text around them under a system.",
+      "fix": "Paint the highlighted words (the span, strong, em or accent class inside the heading or paragraph) with the slot's accent, var(--ds-c-accent), or the full text role, var(--ds-c-fg), never the muted text role.",
+      "reason": "14/10/2026, fleet01 after PR 1356: under Moxie the words JA Nova, Phio, Prodex and Podcast Joomla highlight (\"We make\", \"Start building\", \"1200+\") went from the template's green or purple to a khaki dimmer than the cream text beside them; the words the template points at became the quietest of the line, the hierarchy inverted."
+    },
+    "HIER-2": {
+      "group": "worth-fixing",
+      "question": "Preview",
+      "text": "A heading reads quieter than the body text on its ground under a system.",
+      "fix": "Paint the headings with the full text role, var(--ds-c-fg), or the accent, not the muted text role, so the biggest type stays the strongest.",
+      "reason": "14/10/2026, fleet01 after PR 1356: under Moxie JA Phio's hero headline and JA Prodex's hero went to a khaki dimmer than the cream body text beside them. It can come from the system's own heading colour, so it does not hold Publish, but /ops must say it."
+    },
+    "LAYOUT-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A container is squeezed, or buttons run into each other, under a system.",
+      "fix": "Scope the slot rule that reaches the container's width, margin or columns to the elements it was meant for, and give rows of buttons a gap and room to wrap so they never cover each other.",
+      "reason": "14/10/2026, fleet01 after PR 1: JA Sensei Joomla's hero container went from 1296 to 603 px wide under Moxie and pushed its headline onto the illustration, JA Vital's services sat in a half-width column, JA Symphony's Tickets and Rspv pills wrapped onto each other; every colour was the system's, so every colour rule passed."
+    },
+    "LAYOUT-2": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A large link, banner or card shrinks under a system.",
+      "fix": "Keep the slot's button rules (padding, line height, radius) off blocks the template draws as banners or cards, or give the block its own height and radius back.",
+      "reason": "14/10/2026, fleet01 after PR 1: a 1260 x 186 px banner link of JA Sensei Joomla became a 56 px tall pill under Moxie; button-size reads buttons only, so a banner reduced to a pill passed."
+    },
+    "LAYOUT-3": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A row, column or form group of the template moves under a system: a one-line row wraps, a child changes line, order or side, a grid changes its column count, or a field or button changes width.",
+      "fix": "Keep the slot's rules off the box metrics that lay the row out (padding, font size, line height, letter spacing, width, display of form controls and row children); the slot changes colours, faces, radii and shadows only.",
+      "reason": "14/10/2026, on JA Kinetic WordPress and Joomla: the footer's newsletter row, one line on the template's page, broke a different way under each system (the form under the description and left-aligned, or the field shrunk with a line of words before the button); every colour was the system's and every box kept its size, so no rule read it. Wearing a system must not break the template's original layout."
+    },
+    "GROUND-2": {
+      "group": "worth-fixing",
+      "question": "Preview",
+      "text": "A full-width band the template lifts a hair off the page stands out as a block under a system.",
+      "fix": "Map the template's raised ground (its elevated variable) to the system's quiet raised surface (--ds-c-surface-warm), not to its card surface.",
+      "reason": "14/10/2026, on JA Kinetic Joomla under Moxie dark: the timeline band and the footer, 1.07:1 off the page on the template's own page, became grey blocks (#1a1a1a, 1.21:1) on the black page while the WordPress twin stayed one page. The page still reads, so it does not hold Publish."
+    },
+    "HEADER-1": {
+      "group": "worth-fixing",
+      "question": "Preview",
+      "text": "A fixed or sticky header has no ground, so the content shows through it as the page scrolls.",
+      "fix": "Give the fixed header a ground role of the slot (background var(--ds-c-bg) or var(--ds-c-surface)) in the preview, where no script turns it solid on scroll.",
+      "reason": "14/10/2026, fleet01 after PR 1: JA Social II Joomla's fixed header ran over the photos and text below it while scrolling; the page still reads at the top, so it does not hold Publish (a text the overlap makes unreadable is CON-2's)."
+    },
+    "ICON-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "An icon control (a menu toggle, an icon button) vanishes into its ground under a system.",
+      "fix": "Paint the control's bars, glyph or SVG with the text role of the ground it sits on (--ds-c-fg, or --ds-c-accent-on on an accent fill), not the ground's own role.",
+      "reason": "14/10/2026, dev after PR 1356: JA Spa Joomla under Moxie painted its sidebar hamburger's bars the sidebar's own #1a1a1a (1:1); the visitor cannot find the menu, so the site cannot be navigated."
+    },
+    "HOVER-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A button or a link becomes unreadable on hover or focus under a system.",
+      "fix": "Give the :hover and :focus rules of that button or link a fill and a text role that read together (--ds-c-accent with --ds-c-accent-on, or --ds-c-fg on --ds-c-bg), not a ground role with the template's own white or black.",
+      "reason": "14/10/2026, dev after PR 1356: JA Seven Joomla under Moxie turned \"Start your project now\" cream with white words on hover (1.16:1); the label disappears exactly when the visitor points at it."
+    },
+    "HOVER-2": {
+      "group": "worth-fixing",
+      "question": "Preview",
+      "text": "A button or a link looks the same on hover or focus as at rest under a system, while the template changes it.",
+      "fix": "Give the :hover and :focus rules a role apart from the rest one: --ds-c-surface-hover for a grey ground on a surface, --ds-c-accent-hover for an accent fill, --ds-c-accent-text-hover for accent words.",
+      "reason": "20/10/2026, code review of JA Restaurant: on its dark variants a grey button or row and its grey hover both read the surface role, so under a system the pointer changes nothing. The page still reads, so it does not hold Publish. Added within preview probe 10: a file measured before it reads Not measured yet for this rule, outside the step's numbers."
+    },
+    "BORDER-1": {
+      "group": "worth-fixing",
+      "question": "Preview",
+      "text": "Grid or card lines on a dark ground are far harder than the system draws its borders.",
+      "fix": "Map the line to the border role of the slot (--ds-c-border), not to the text colour, so grid and card rims stay as faint as the system draws them.",
+      "reason": "14/10/2026, dev after PR 1356: JA Space, JA Vogue and JA Voyara Joomla under Moxie ruled their logo grid, section grid and cards in Moxie's cream text colour on #1a1a1a. The page reads, so it does not hold Publish; a line in a template colour is TPL-1's."
+    },
+    "FOREIGN-1": {
+      "group": "must-fix",
+      "question": "Preview",
+      "text": "A colour shows that is neither the system's nor the template's.",
+      "fix": "Find the rule that paints that colour (a preset or a role mapped to a stale value) and point it at a slot role.",
+      "reason": "14/10/2026, dev after PR 1356: JA Nova WordPress under refero 2bd7363d (light) painted its accent words crimson #c8174a, a colour neither that system nor JA Nova's own page paints with; the customer sees a colour they never chose, which says the role map is wrong."
+    }
+  },
+  "rulesFromProbe": {
+    "10": {
+      "ACCENT-LEAK": {
+        "group": "must-fix",
+        "question": "Preview",
+        "text": "A place keeps the template's own brand colour under a system.",
+        "fix": "Point the rule that paints it at the slot's accent (var(--ds-c-accent) and its -text / -on shades, the template's colour as the fallback); a picture drawn in the brand colour becomes a mask or a gradient painted with the accent under a system.",
+        "reason": "17/10/2026, the review of batch 2: JA Phio's stats ellipses and feature icons stayed red, JA Tour's bands and pictures stayed blue under Mailchimp, JA Impact's green and orange stayed on hovers and badges, JA Vega's Get started now band and hero glow stayed blue under a pink system. Every other rule passed; the customer sees two brands on one page. Judged from preview probe 10."
+      },
+      "PREVIEW-PARITY": {
+        "group": "must-fix",
+        "question": "Preview",
+        "text": "The Design system popup shows the template differently from the page after Try on (icons as empty squares, fonts not loaded, a carousel or block laid out apart).",
+        "fix": "Make the popup load what the page loads (the icon and text fonts its stylesheets name, the scripts that lay out its carousels), then measure again with lane.mjs.",
+        "reason": "17/10/2026, on the local cluster: JA Essence's hero carousel showed two cut slides and JA Vital's and Podcast's icons empty squares in the popup, while Try on drew them right; a customer choosing a system takes that for a broken template."
+      }
+    }
+  },
+  "unmeasured": {
+    "group": "worth-fixing",
+    "text": "Not measured yet.",
+    "reason": "Phase 1 (spec decision 11): a built-site rule with no measurement file for the published version counts as not passed and shows grade C, but does not hold Publish until the first sweep is green on every published line. Then set group to must-fix: an unmeasured version is held like a failing must-fix rule."
+  },
+  "unmeasuredPreview": {
+    "group": "must-fix",
+    "text": "The Add site preview of this version is not measured yet.",
+    "reason": "Phase switch for the preview rules (every rule whose question is Preview, the four of PR 1356 and every later detector), same pattern as unmeasured: worth-fixing would warn only, must-fix holds Publish of a release not yet live. Switched on 14/10/2026 (PR 2 \"/ops shows every template error when wearing a design system\") once every published line carried a preview measurement: a new release without one is held, because an unmeasured preview is exactly how a broken Add site preview reached customers."
+  }
+}

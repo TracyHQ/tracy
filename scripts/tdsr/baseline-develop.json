@@ -1,0 +1,52 @@
+{
+  "measuredAt": "2026-10-14T13:39:56.511Z",
+  "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+  "counts": ["kept", "glare", "keptText", "lowText", "lostButtons"],
+  "tags": [
+    "quickstart/ja-impact/wp7",
+    "quickstart/ja-essence/wp7",
+    "quickstart/ja-morgan/wp7",
+    "quickstart/ja-nova/wp7",
+    "quickstart/ja-vega/wp7",
+    "tracy-base/wp7",
+    "quickstart/ja-kinetic/wp7",
+    "tracy-business/wp7",
+    "quickstart/ja-kinetic/j6",
+    "tracy-business/j6",
+    "quickstart/ja-resort/j6",
+    "quickstart/ja-impact/j6",
+    "quickstart/ja-essence/j6"
+  ],
+  "rows": {
+    "light": {
+      "ja-essence-j6": [0, 0, 0, 0, 1],
+      "ja-essence-wp7": [0, 0, 0, 0, 0],
+      "ja-impact-j6": [0, 1, 12, 16, 0],
+      "ja-impact-wp7": [3, 0, 1, 0, 0],
+      "ja-kinetic-j6": [0, 0, 0, 5, 0],
+      "ja-kinetic-wp7": [0, 0, 1, 8, 0],
+      "ja-morgan-wp7": [1, 0, 1, 0, 0],
+      "ja-nova-wp7": [1, 0, 3, 0, 0],
+      "ja-resort-j6": [0, 0, 5, 0, 0],
+      "ja-vega-wp7": [0, 0, 0, 0, 0],
+      "tracy-base-wp7": [0, 0, 0, 0, 0],
+      "tracy-business-j6": [0, 0, 0, 0, 0],
+      "tracy-business-wp7": [0, 0, 0, 1, 0]
+    },
+    "dark": {
+      "ja-essence-j6": [0, 0, 0, 0, 1],
+      "ja-essence-wp7": [0, 0, 0, 0, 0],
+      "ja-impact-j6": [0, 1, 12, 16, 0],
+      "ja-impact-wp7": [3, 1, 4, 0, 2],
+      "ja-kinetic-j6": [0, 0, 0, 5, 0],
+      "ja-kinetic-wp7": [0, 0, 1, 0, 0],
+      "ja-morgan-wp7": [1, 0, 0, 0, 0],
+      "ja-nova-wp7": [1, 0, 4, 0, 1],
+      "ja-resort-j6": [0, 0, 5, 0, 0],
+      "ja-vega-wp7": [0, 0, 0, 8, 0],
+      "tracy-base-wp7": [0, 0, 1, 0, 0],
+      "tracy-business-j6": [0, 0, 0, 0, 0],
+      "tracy-business-wp7": [0, 1, 0, 1, 0]
+    }
+  }
+}

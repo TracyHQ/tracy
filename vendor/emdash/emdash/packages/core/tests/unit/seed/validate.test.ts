@@ -1,0 +1,1348 @@
+import { describe, it, expect } from "vitest";
+
+import type { SeedFile } from "../../../src/seed/types.js";
+import { validateSeed } from "../../../src/seed/validate.js";
+
+describe("validateSeed", () => {
+	describe("basic validation", () => {
+		it("should reject non-object input", () => {
+			expect(validateSeed(null)).toMatchObject({
+				valid: false,
+				errors: ["Seed must be an object"],
+			});
+
+			expect(validateSeed("string")).toMatchObject({
+				valid: false,
+				errors: ["Seed must be an object"],
+			});
+		});
+
+		it("should require version field", () => {
+			const result = validateSeed({});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("Seed must have a version field");
+		});
+
+		it("should reject unsupported versions", () => {
+			const result = validateSeed({ version: "2" });
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("Unsupported seed version: 2");
+		});
+
+		it("should accept valid minimal seed", () => {
+			const result = validateSeed({ version: "1" });
+			expect(result.valid).toBe(true);
+			expect(result.errors).toHaveLength(0);
+		});
+	});
+
+	describe("defaultLocale validation", () => {
+		it("should accept an omitted defaultLocale", () => {
+			const result = validateSeed({ version: "1" });
+			expect(result.valid).toBe(true);
+		});
+
+		it("should accept a non-en defaultLocale", () => {
+			const result = validateSeed({ version: "1", defaultLocale: "de" });
+			expect(result.valid).toBe(true);
+			expect(result.errors).toHaveLength(0);
+		});
+
+		it("should reject a non-string defaultLocale", () => {
+			const result = validateSeed({ version: "1", defaultLocale: 5 });
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"defaultLocale: must be a non-empty string with no leading or trailing whitespace",
+			);
+		});
+
+		it("should reject an empty defaultLocale", () => {
+			const result = validateSeed({ version: "1", defaultLocale: "" });
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"defaultLocale: must be a non-empty string with no leading or trailing whitespace",
+			);
+		});
+
+		it("should reject a whitespace-padded defaultLocale", () => {
+			const result = validateSeed({ version: "1", defaultLocale: " de " });
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"defaultLocale: must be a non-empty string with no leading or trailing whitespace",
+			);
+		});
+	});
+
+	describe("collection validation", () => {
+		it("should require collections to be an array", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: "not an array",
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("collections must be an array");
+		});
+
+		it("should require collection slug", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [{ label: "Posts", fields: [] }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("collections[0]: slug is required");
+		});
+
+		it("should require collection label", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [{ slug: "posts", fields: [] }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("collections[0]: label is required");
+		});
+
+		it("should validate slug format", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [{ slug: "My Posts", label: "Posts", fields: [] }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]).toContain("must start with a letter");
+		});
+
+		it("should reject duplicate collection slugs", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{ slug: "posts", label: "Posts", fields: [] },
+					{ slug: "posts", label: "Posts Again", fields: [] },
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain('collections[1].slug: duplicate collection slug "posts"');
+		});
+
+		it("should reject a non-boolean routable value", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [{ slug: "posts", label: "Posts", routable: "false", fields: [] }],
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("collections[0].routable: must be a boolean");
+		});
+
+		it("rejects an icon name longer than the API accepts", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [{ slug: "posts", label: "Posts", icon: "x".repeat(65), fields: [] }],
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("collections[0].icon: must be at most 64 characters");
+		});
+
+		it("should require fields to be an array", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [{ slug: "posts", label: "Posts", fields: "not array" }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("collections[0].fields: must be an array");
+		});
+
+		it("should validate field properties", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [{ slug: "title" }], // missing label and type
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("collections[0].fields[0]: label is required");
+			expect(result.errors).toContain("collections[0].fields[0]: type is required");
+		});
+
+		it("should reject invalid field types", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [{ slug: "title", label: "Title", type: "invalid" }],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]).toContain('unsupported field type "invalid"');
+		});
+
+		it("should reject indexed portableText fields", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [{ slug: "content", label: "Content", type: "portableText", indexed: true }],
+					},
+				],
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				'collections[0].fields[0].indexed: type "portableText" cannot be indexed',
+			);
+		});
+
+		it("should reject an indexed reference field that names a target collection", () => {
+			// The target makes the field storage-less on apply, leaving no column.
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{
+								slug: "author",
+								label: "Author",
+								type: "reference",
+								indexed: true,
+								validation: { targetCollection: "authors" },
+							},
+						],
+					},
+				],
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"collections[0].fields[0].indexed: a reference field with a targetCollection stores no column to index",
+			);
+		});
+
+		it("should accept an indexed reference field with no target collection", () => {
+			// The shape a seed had before relations existed: a plain entry-id column,
+			// which a content-list filter can be served from.
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{
+								slug: "author",
+								label: "Author",
+								type: "reference",
+								indexed: true,
+								options: { collection: "authors" },
+							},
+						],
+					},
+				],
+			});
+
+			expect(result.valid).toBe(true);
+		});
+
+		it("should reject non-boolean indexed values", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{
+								slug: "title",
+								label: "Title",
+								type: "string",
+								indexed: "false",
+							},
+						],
+					},
+				],
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("collections[0].fields[0].indexed: must be a boolean");
+		});
+
+		it("should accept indexed false for non-indexable fields", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{
+								slug: "title",
+								label: "Title",
+								type: "portableText",
+								indexed: false,
+							},
+						],
+					},
+				],
+			});
+
+			expect(result.valid).toBe(true);
+			expect(result.errors).toHaveLength(0);
+		});
+
+		it("should reject duplicate field slugs", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{ slug: "title", label: "Title", type: "string" },
+							{ slug: "title", label: "Title 2", type: "string" },
+						],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]).toContain('duplicate field slug "title"');
+		});
+
+		it("should accept valid collection with fields", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{
+								slug: "title",
+								label: "Title",
+								type: "string",
+								required: true,
+								indexed: true,
+							},
+							{ slug: "content", label: "Content", type: "portableText" },
+						],
+					},
+				],
+			});
+			expect(result.valid).toBe(true);
+			expect(result.errors).toHaveLength(0);
+		});
+
+		it("should reject list columns that do not reference collection fields", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						admin: { listColumns: ["priority"] },
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+				],
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				'collections[0].admin.listColumns[0]: references unknown field "priority"',
+			);
+		});
+
+		it("should reject more than four list columns", () => {
+			const fields = ["title", "priority", "owner", "region", "category"].map((slug) => ({
+				slug,
+				label: slug,
+				type: "string",
+			}));
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						admin: { listColumns: fields.map((field) => field.slug) },
+						fields,
+					},
+				],
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"collections[0].admin.listColumns: must contain at most 4 items",
+			);
+		});
+
+		it("should reject a non-boolean quick-action setting", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						admin: { quickCreate: "no" },
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+				],
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("collections[0].admin.quickCreate: must be a boolean");
+		});
+	});
+
+	describe("relation validation", () => {
+		const relation = {
+			slug: "post_authors",
+			parentCollection: "posts",
+			childCollection: "authors",
+			parentLabel: "Posts",
+			childLabel: "Authors",
+		};
+
+		it("accepts a complete relation", () => {
+			const result = validateSeed({
+				version: "1",
+				relations: [{ ...relation, maxChildrenPerParent: 3, maxParentsPerChild: null }],
+			});
+
+			expect(result.valid).toBe(true);
+		});
+
+		it("requires both ends and both labels", () => {
+			const result = validateSeed({ version: "1", relations: [{ slug: "post_authors" }] });
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("relations[0]: parentCollection is required");
+			expect(result.errors).toContain("relations[0]: childCollection is required");
+			expect(result.errors).toContain("relations[0]: parentLabel is required");
+			expect(result.errors).toContain("relations[0]: childLabel is required");
+		});
+
+		it("rejects a slug that is not usable as an identifier", () => {
+			const result = validateSeed({
+				version: "1",
+				relations: [{ ...relation, slug: "Post-Authors" }],
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]).toContain("relations[0].slug");
+		});
+
+		it("rejects a duplicate slug", () => {
+			const result = validateSeed({ version: "1", relations: [relation, { ...relation }] });
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain('relations[1].slug: duplicate relation slug "post_authors"');
+		});
+
+		it("rejects a limit that is not a positive integer", () => {
+			const result = validateSeed({
+				version: "1",
+				relations: [{ ...relation, maxChildrenPerParent: 0, maxParentsPerChild: 1.5 }],
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"relations[0].maxChildrenPerParent: must be a positive integer, or null for unlimited",
+			);
+			expect(result.errors).toContain(
+				"relations[0].maxParentsPerChild: must be a positive integer, or null for unlimited",
+			);
+		});
+
+		it("rejects relations that are not an array", () => {
+			const result = validateSeed({ version: "1", relations: {} });
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("relations must be an array");
+		});
+	});
+
+	describe("taxonomy validation", () => {
+		it("should require taxonomy name", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [{ label: "Categories", hierarchical: true, collections: [] }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("taxonomies[0]: name is required");
+		});
+
+		it("should require taxonomy label", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [{ name: "category", hierarchical: true, collections: [] }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("taxonomies[0]: label is required");
+		});
+
+		it("should require hierarchical field", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [{ name: "category", label: "Categories", collections: [] }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("taxonomies[0]: hierarchical is required");
+		});
+
+		it("should warn about taxonomy with no collections", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						name: "category",
+						label: "Categories",
+						hierarchical: true,
+						collections: [],
+					},
+				],
+			});
+			expect(result.valid).toBe(true);
+			expect(result.warnings).toContain(
+				'taxonomies[0].collections: taxonomy "category" is not assigned to any collections',
+			);
+		});
+
+		it("should reject duplicate taxonomy names", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						name: "category",
+						label: "Categories",
+						hierarchical: true,
+						collections: ["posts"],
+					},
+					{
+						name: "category",
+						label: "Categories 2",
+						hierarchical: true,
+						collections: ["posts"],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain('taxonomies[1].name: duplicate taxonomy name "category"');
+		});
+
+		it("lets a translation omit its structure only when it points at the same taxonomy", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						id: "genre:en",
+						name: "genre",
+						label: "Genres",
+						hierarchical: false,
+						collections: ["posts"],
+						locale: "en",
+					},
+					{ name: "genre", label: "Géneros", locale: "es", translationOf: "genre:en" },
+					{ name: "gattung", label: "Gattungen", locale: "de", translationOf: "genre:en" },
+				],
+			});
+			expect(result.errors).toEqual([
+				'taxonomies[2].translationOf: "genre:en" is not an entry of taxonomy "gattung", so hierarchical and collections are required',
+			]);
+		});
+
+		it("checks a translation's term parents against its taxonomy's hierarchy", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						id: "topic:en",
+						name: "topic",
+						label: "Topics",
+						hierarchical: true,
+						collections: ["posts"],
+						locale: "en",
+						terms: [{ slug: "news", label: "News" }],
+					},
+					{
+						name: "topic",
+						label: "Temas",
+						locale: "es",
+						translationOf: "topic:en",
+						terms: [
+							{ slug: "noticias", label: "Noticias" },
+							{ slug: "local", label: "Local", parent: "noticias" },
+							{ slug: "mundo", label: "Mundo", parent: "missing" },
+						],
+					},
+				],
+			});
+			expect(result.warnings).toEqual([]);
+			expect(result.errors).toEqual([
+				'taxonomies[1].terms[2].parent: parent term "missing" not found in taxonomy',
+			]);
+		});
+
+		it("checks term parents against the hierarchy at the end of a translation chain", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						id: "topic:en",
+						name: "topic",
+						label: "Topics",
+						hierarchical: true,
+						collections: ["posts"],
+						locale: "en",
+					},
+					{
+						id: "topic:es",
+						name: "topic",
+						label: "Temas",
+						locale: "es",
+						translationOf: "topic:en",
+					},
+					{
+						name: "topic",
+						label: "Sujets",
+						locale: "fr",
+						translationOf: "topic:es",
+						terms: [
+							{ slug: "actualites", label: "Actualités" },
+							{ slug: "locales", label: "Locales", parent: "actualites" },
+						],
+					},
+				],
+			});
+			expect(result.warnings).toEqual([]);
+			expect(result.errors).toEqual([]);
+		});
+
+		it("requires the structure when a translation chain loops", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						id: "topic:en",
+						name: "topic",
+						label: "Topics",
+						locale: "en",
+						translationOf: "topic:es",
+					},
+					{
+						id: "topic:es",
+						name: "topic",
+						label: "Temas",
+						locale: "es",
+						translationOf: "topic:en",
+					},
+				],
+			});
+			expect(result.errors).toEqual([
+				'taxonomies[0].translationOf: the translationOf chain from "topic:es" loops, so hierarchical and collections are required',
+				'taxonomies[1].translationOf: the translationOf chain from "topic:en" loops, so hierarchical and collections are required',
+			]);
+		});
+
+		it("warns when a translation declares a structure other than the one it takes", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						id: "topic:en",
+						name: "topic",
+						label: "Topics",
+						hierarchical: true,
+						collections: ["posts"],
+						locale: "en",
+					},
+					{
+						name: "topic",
+						label: "Temas",
+						hierarchical: false,
+						collections: ["posts"],
+						locale: "es",
+						translationOf: "topic:en",
+					},
+				],
+			});
+			expect(result.errors).toEqual([]);
+			expect(result.warnings).toEqual([
+				"taxonomies[1]: hierarchical and collections come from taxonomies[0], so the values declared here are ignored",
+			]);
+		});
+
+		it("warns when entries that declare one taxonomy's structure disagree", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						name: "topic",
+						label: "Topics",
+						hierarchical: true,
+						collections: ["posts", "pages"],
+						locale: "en",
+					},
+					{
+						name: "topic",
+						label: "Temas",
+						hierarchical: true,
+						collections: ["posts"],
+						locale: "es",
+					},
+					{
+						name: "topic",
+						label: "Sujets",
+						hierarchical: true,
+						collections: ["pages", "posts"],
+						locale: "fr",
+					},
+				],
+			});
+			expect(result.errors).toEqual([]);
+			expect(result.warnings).toEqual([
+				'taxonomies[1]: hierarchical and collections differ from taxonomies[0]; every locale of taxonomy "topic" shares them, so only one entry\'s values apply',
+			]);
+		});
+
+		it("should validate term properties", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						name: "category",
+						label: "Categories",
+						hierarchical: true,
+						collections: ["posts"],
+						terms: [{ slug: "news" }], // missing label
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("taxonomies[0].terms[0]: label is required");
+		});
+
+		it("should reject duplicate term slugs", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						name: "category",
+						label: "Categories",
+						hierarchical: true,
+						collections: ["posts"],
+						terms: [
+							{ slug: "news", label: "News" },
+							{ slug: "news", label: "News 2" },
+						],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]).toContain('duplicate term slug "news"');
+		});
+
+		it("should reject self-referencing parent", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						name: "category",
+						label: "Categories",
+						hierarchical: true,
+						collections: ["posts"],
+						terms: [{ slug: "news", label: "News", parent: "news" }],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"taxonomies[0].terms[0].parent: term cannot be its own parent",
+			);
+		});
+
+		it("should reject invalid parent reference", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						name: "category",
+						label: "Categories",
+						hierarchical: true,
+						collections: ["posts"],
+						terms: [{ slug: "news", label: "News", parent: "nonexistent" }],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				'taxonomies[0].terms[0].parent: parent term "nonexistent" not found in taxonomy',
+			);
+		});
+
+		it("should warn about parent on non-hierarchical taxonomy", () => {
+			const result = validateSeed({
+				version: "1",
+				taxonomies: [
+					{
+						name: "tag",
+						label: "Tags",
+						hierarchical: false,
+						collections: ["posts"],
+						terms: [{ slug: "news", label: "News", parent: "other" }],
+					},
+				],
+			});
+			expect(result.valid).toBe(true);
+			expect(result.warnings[0]).toContain("is not hierarchical, parent will be ignored");
+		});
+	});
+
+	describe("menu validation", () => {
+		it("should require menu name and label", () => {
+			const result = validateSeed({
+				version: "1",
+				menus: [{ items: [] }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("menus[0]: name is required");
+			expect(result.errors).toContain("menus[0]: label is required");
+		});
+
+		it("should reject duplicate menu names", () => {
+			const result = validateSeed({
+				version: "1",
+				menus: [
+					{ name: "primary", label: "Primary", items: [] },
+					{ name: "primary", label: "Primary 2", items: [] },
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain('menus[1].name: duplicate menu name "primary"');
+		});
+
+		it("should validate menu item types", () => {
+			const result = validateSeed({
+				version: "1",
+				menus: [
+					{
+						name: "primary",
+						label: "Primary",
+						items: [{ type: "invalid" }],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]).toContain('must be "custom", "page", "post"');
+		});
+
+		it("should require url for custom items", () => {
+			const result = validateSeed({
+				version: "1",
+				menus: [
+					{
+						name: "primary",
+						label: "Primary",
+						items: [{ type: "custom", label: "Link" }],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("menus[0].items[0]: url is required for custom menu items");
+		});
+
+		it("should require ref for page/post items", () => {
+			const result = validateSeed({
+				version: "1",
+				menus: [
+					{
+						name: "primary",
+						label: "Primary",
+						items: [{ type: "page", label: "About" }],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"menus[0].items[0]: ref is required for page/post menu items",
+			);
+		});
+
+		it("should validate nested menu items", () => {
+			const result = validateSeed({
+				version: "1",
+				menus: [
+					{
+						name: "primary",
+						label: "Primary",
+						items: [
+							{
+								type: "custom",
+								url: "/about",
+								label: "About",
+								children: [{ type: "page" }], // missing ref
+							},
+						],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"menus[0].items[0].items[0]: ref is required for page/post menu items",
+			);
+		});
+
+		it("should warn about menu refs not in content", () => {
+			const result = validateSeed({
+				version: "1",
+				menus: [
+					{
+						name: "primary",
+						label: "Primary",
+						items: [{ type: "page", ref: "about" }],
+					},
+				],
+				content: {
+					pages: [{ id: "home", slug: "home", data: { title: "Home" } }],
+				},
+			});
+			expect(result.valid).toBe(true);
+			expect(result.warnings).toContain(
+				'Menu item references content "about" which is not in the seed file',
+			);
+		});
+	});
+
+	describe("widget area validation", () => {
+		it("should require widget area name and label", () => {
+			const result = validateSeed({
+				version: "1",
+				widgetAreas: [{ widgets: [] }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("widgetAreas[0]: name is required");
+			expect(result.errors).toContain("widgetAreas[0]: label is required");
+		});
+
+		it("should reject duplicate widget area names", () => {
+			const result = validateSeed({
+				version: "1",
+				widgetAreas: [
+					{ name: "sidebar", label: "Sidebar", widgets: [] },
+					{ name: "sidebar", label: "Sidebar 2", widgets: [] },
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain('widgetAreas[1].name: duplicate widget area name "sidebar"');
+		});
+
+		it("should validate widget types", () => {
+			const result = validateSeed({
+				version: "1",
+				widgetAreas: [
+					{
+						name: "sidebar",
+						label: "Sidebar",
+						widgets: [{ type: "invalid" }],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors[0]).toContain('must be "content", "menu", or "component"');
+		});
+
+		it("should require menuName for menu widgets", () => {
+			const result = validateSeed({
+				version: "1",
+				widgetAreas: [
+					{
+						name: "sidebar",
+						label: "Sidebar",
+						widgets: [{ type: "menu", title: "Nav" }],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"widgetAreas[0].widgets[0]: menuName is required for menu widgets",
+			);
+		});
+
+		it("should require componentId for component widgets", () => {
+			const result = validateSeed({
+				version: "1",
+				widgetAreas: [
+					{
+						name: "sidebar",
+						label: "Sidebar",
+						widgets: [{ type: "component", title: "Recent Posts" }],
+					},
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"widgetAreas[0].widgets[0]: componentId is required for component widgets",
+			);
+		});
+	});
+
+	describe("redirect validation", () => {
+		it("should require redirects to be an array", () => {
+			const result = validateSeed({
+				version: "1",
+				redirects: "not an array",
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("redirects must be an array");
+		});
+
+		it("should require source and destination", () => {
+			const result = validateSeed({
+				version: "1",
+				redirects: [{}],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("redirects[0]: source is required");
+			expect(result.errors).toContain("redirects[0]: destination is required");
+		});
+
+		it("should validate redirect source and destination paths", () => {
+			const result = validateSeed({
+				version: "1",
+				redirects: [{ source: "https://example.com", destination: "//external" }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"redirects[0].source: must be a path starting with / (no protocol-relative URLs, path traversal, or newlines)",
+			);
+			expect(result.errors).toContain(
+				"redirects[0].destination: must be a path starting with / (no protocol-relative URLs, backslash prefixes, path traversal, or control characters)",
+			);
+		});
+
+		it("should validate redirect type", () => {
+			const result = validateSeed({
+				version: "1",
+				redirects: [{ source: "/old", destination: "/new", type: 303 }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("redirects[0].type: must be 301, 302, 307, or 308");
+		});
+
+		it("should reject duplicate redirect sources", () => {
+			const result = validateSeed({
+				version: "1",
+				redirects: [
+					{ source: "/old", destination: "/new" },
+					{ source: "/old", destination: "/newer" },
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain('redirects[1].source: duplicate redirect source "/old"');
+		});
+
+		it("should reject destinations a browser would resolve off-site", () => {
+			const result = validateSeed({
+				version: "1",
+				redirects: [
+					{ source: "/a", destination: "/\\evil.example" },
+					{ source: "/b", destination: "/\t/evil.example" },
+				],
+			});
+			expect(result.valid).toBe(false);
+			for (const i of [0, 1]) {
+				expect(result.errors).toContain(
+					`redirects[${i}].destination: must be a path starting with / (no protocol-relative URLs, backslash prefixes, path traversal, or control characters)`,
+				);
+			}
+		});
+
+		it("should reject malformed source patterns", () => {
+			const result = validateSeed({
+				version: "1",
+				redirects: [
+					{ source: "/[a][b][c][d][e][f]", destination: "/new" },
+					{ source: "/docs/[...rest]/edit", destination: "/new" },
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"redirects[0].source: invalid pattern: Each segment can contain at most one placeholder",
+			);
+			expect(result.errors).toContain(
+				"redirects[1].source: invalid pattern: Catch-all [...param] must be in the last segment",
+			);
+		});
+
+		it("should reject destination placeholders the source does not capture", () => {
+			const result = validateSeed({
+				version: "1",
+				redirects: [{ source: "/old/[slug]", destination: "/new/[id]" }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				"redirects[0].destination: Destination references [id] which is not captured in the source pattern",
+			);
+		});
+
+		it("should accept valid redirects", () => {
+			const result = validateSeed({
+				version: "1",
+				redirects: [
+					{ source: "/old", destination: "/new" },
+					{ source: "/temp", destination: "/next", type: 302, enabled: false },
+					{ source: "/blog/[year]/[...path]", destination: "/posts/[year]/[...path]" },
+				],
+			});
+			expect(result.valid).toBe(true);
+			expect(result.errors).toHaveLength(0);
+		});
+	});
+
+	describe("content validation", () => {
+		it("should require content to be an object", () => {
+			const result = validateSeed({
+				version: "1",
+				content: [],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("content must be an object (collection -> entries)");
+		});
+
+		it("should require content entries to be arrays", () => {
+			const result = validateSeed({
+				version: "1",
+				content: { posts: "not array" },
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("content.posts: must be an array");
+		});
+
+		it("should require entry id and slug", () => {
+			const result = validateSeed({
+				version: "1",
+				content: {
+					posts: [{ data: { title: "Hello" } }],
+				},
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("content.posts[0]: id is required");
+			expect(result.errors).toContain("content.posts[0]: slug is required");
+		});
+
+		it("allows a slugless entry in a non-routable collection", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "blocks",
+						label: "Blocks",
+						routable: false,
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+				],
+				content: {
+					blocks: [{ id: "hero", data: { title: "Hero" }, status: "published" }],
+				},
+			});
+
+			expect(result.valid).toBe(true);
+			expect(result.errors).toEqual([]);
+		});
+
+		it("rejects a whitespace-only slug in a routable collection", () => {
+			const result = validateSeed({
+				version: "1",
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [{ slug: "title", label: "Title", type: "string" }],
+					},
+				],
+				content: {
+					posts: [{ id: "empty", slug: "   ", data: { title: "Empty" } }],
+				},
+			});
+
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("content.posts[0]: slug is required");
+		});
+
+		it("should require entry data to be an object", () => {
+			const result = validateSeed({
+				version: "1",
+				content: {
+					posts: [{ id: "hello", slug: "hello", data: "not object" }],
+				},
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("content.posts[0]: data must be an object");
+		});
+
+		it("should reject duplicate entry ids", () => {
+			const result = validateSeed({
+				version: "1",
+				content: {
+					posts: [
+						{ id: "hello", slug: "hello", data: { title: "Hello" } },
+						{ id: "hello", slug: "hello-2", data: { title: "Hello 2" } },
+					],
+				},
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				'content.posts[1].id: duplicate entry id "hello" in collection "posts"',
+			);
+		});
+
+		it("should validate byline references in content entries", () => {
+			const result = validateSeed({
+				version: "1",
+				bylines: [{ id: "editorial", slug: "editorial", displayName: "Editorial" }],
+				content: {
+					posts: [
+						{
+							id: "post-1",
+							slug: "hello",
+							data: { title: "Hello" },
+							bylines: [{ byline: "missing" }],
+						},
+					],
+				},
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain(
+				'content.posts[0].bylines[0].byline: references unknown byline "missing"',
+			);
+		});
+	});
+
+	describe("byline validation", () => {
+		it("should require byline id, slug, and displayName", () => {
+			const result = validateSeed({
+				version: "1",
+				bylines: [{ slug: "editorial" }],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain("bylines[0]: id is required");
+			expect(result.errors).toContain("bylines[0]: displayName is required");
+		});
+
+		it("should reject duplicate byline ids and slugs", () => {
+			const result = validateSeed({
+				version: "1",
+				bylines: [
+					{ id: "editorial", slug: "editorial", displayName: "Editorial" },
+					{ id: "editorial", slug: "editorial", displayName: "Editorial 2" },
+				],
+			});
+			expect(result.valid).toBe(false);
+			expect(result.errors).toContain('bylines[1].id: duplicate byline id "editorial"');
+			expect(result.errors).toContain('bylines[1].slug: duplicate byline slug "editorial"');
+		});
+	});
+
+	describe("full seed validation", () => {
+		it("should accept a complete valid seed", () => {
+			const seed: SeedFile = {
+				version: "1",
+				meta: {
+					name: "Blog Starter",
+					description: "A simple blog template",
+				},
+				settings: {
+					title: "My Blog",
+					tagline: "Thoughts and ideas",
+				},
+				collections: [
+					{
+						slug: "posts",
+						label: "Posts",
+						fields: [
+							{ slug: "title", label: "Title", type: "string", required: true },
+							{ slug: "content", label: "Content", type: "portableText" },
+						],
+					},
+					{
+						slug: "pages",
+						label: "Pages",
+						fields: [
+							{ slug: "title", label: "Title", type: "string", required: true },
+							{ slug: "content", label: "Content", type: "portableText" },
+						],
+					},
+				],
+				taxonomies: [
+					{
+						name: "category",
+						label: "Categories",
+						hierarchical: true,
+						collections: ["posts"],
+						terms: [
+							{ slug: "news", label: "News" },
+							{ slug: "tutorials", label: "Tutorials" },
+						],
+					},
+				],
+				menus: [
+					{
+						name: "primary",
+						label: "Primary Navigation",
+						items: [
+							{ type: "custom", url: "/", label: "Home" },
+							{ type: "page", ref: "about" },
+						],
+					},
+				],
+				redirects: [
+					{ source: "/old-about", destination: "/about" },
+					{ source: "/legacy-feed", destination: "/rss.xml", type: 308, groupName: "import" },
+				],
+				widgetAreas: [
+					{
+						name: "sidebar",
+						label: "Sidebar",
+						widgets: [
+							{
+								type: "component",
+								componentId: "core:recent-posts",
+								props: { count: 5 },
+							},
+						],
+					},
+				],
+				content: {
+					pages: [
+						{
+							id: "about",
+							slug: "about",
+							status: "published",
+							data: { title: "About", content: [] },
+						},
+					],
+					posts: [
+						{
+							id: "hello",
+							slug: "hello-world",
+							status: "published",
+							data: { title: "Hello World", content: [] },
+							taxonomies: { category: ["news"] },
+						},
+					],
+				},
+			};
+
+			const result = validateSeed(seed);
+			expect(result.valid).toBe(true);
+			expect(result.errors).toHaveLength(0);
+		});
+	});
+});

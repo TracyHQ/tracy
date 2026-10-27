@@ -1,0 +1,54 @@
+{
+  "color": {
+    "void": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "bone": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone — Primary text, heading strokes, nav links, icon strokes, badge fills, logo type — the only high-contrast value in the system"
+    },
+    "soot": {
+      "$value": "#050505",
+      "$type": "color",
+      "$description": "Soot — Subtle tonal break from pure black for nested surfaces and hairline borders that need to feel present without breaking the dark mode"
+    },
+    "ember-coral": {
+      "$value": "#e1695e",
+      "$type": "color",
+      "$description": "Ember Coral — Accent warmth for marquee display moments, logo gradient highlight, and select project card color treatments — borrowed from the work, never applied to UI chrome"
+    },
+    "burnt-sienna": {
+      "$value": "#573332",
+      "$type": "color",
+      "$description": "Burnt Sienna — Deep warm surface for warm-toned project cards and content imagery containers — the shadow side of the coral accent"
+    }
+  },
+  "font": {
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse — body copy at 16px/400, secondary headings at 23px/400, nav and links at 16px/400, and the massive 52px/300 hero logo treatment. Weight 300 is the default for large display: whisper-thin against the heavy black canvas creates a neon-on-velvet tension."
+    },
+    "times-new-roman": {
+      "$value": "Times New Roman",
+      "$type": "fontFamily",
+      "$description": "Display serif for editorial pull-quotes and manifesto text — the 60px size with -0.05em tracking creates a fashion-magazine weight that contrasts Helvetica's geometric neutrality. Used sparingly for sentences that need gravitas."
+    },
+    "courier-new": {
+      "$value": "Courier New",
+      "$type": "fontFamily",
+      "$description": "Monospace for tags, badges, index numbers, and micro-labels — the 0.10em positive tracking turns utility text into graphic texture, like film slate markings"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.stinkstudios.com",
+      "siteName": "Stink Studios",
+      "extractedAt": "2026-06-03T21:42:02.371Z",
+      "variant": "compact"
+    }
+  }
+}

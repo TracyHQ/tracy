@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-ink-carbon: #2e2a2b;
+  --color-paper-white: #ffffff;
+  --color-whisper-taupe: #afa697;
+  --color-bone-cream: #e6dcd4;
+  --color-lampblack: #212121;
+  --color-signal-orange: #fe5431;
+  --color-amber-pulse: #ff8000;
+
+  /* Typography — Font Families */
+  --font-good-sans: 'Good Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

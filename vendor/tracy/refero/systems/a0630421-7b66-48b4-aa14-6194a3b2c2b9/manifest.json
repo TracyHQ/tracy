@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a0630421-7b66-48b4-aa14-6194a3b2c2b9",
+  "status": "complete",
+  "name": "Fey",
+  "url": "https://styles.refero.design/style/a0630421-7b66-48b4-aa14-6194a3b2c2b9",
+  "sourceWebsite": "https://www.fey.com",
+  "extractedAt": "2026-06-03T17:41:40.011Z",
+  "capturedAt": "2026-10-08T05:15:29.252288+00:00",
+  "theme": "dark",
+  "industry": "fintech",
+  "description": "Nocturnal Bloomberg terminal, matte-black with luminous type",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d0dc6b33-5970-43e5-af34-5c9694b45b13.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/49c61cd8-0979-4922-8b03-ecc8d88215a7.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/76569cd0-d38a-4e06-ab72-6a6013d15e0e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/650b9d61-f104-461b-bb11-eca38919af73.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/8b7589f4-0520-4fd5-9aba-ca8a782140ee.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "04ca96c7640525a8356d2839e4220057f3d25da2ff747fead8ca8e7a671a77d4",
+      "bytes": 23069
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "40687973aacf0c9445623fd4cb7485e5c28d8cf73a5645b1cc3786cb068ad521",
+      "bytes": 88403
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "670380b30bac3fe7a992dd05d33ad4cdafbe28a3722a8ba13e2cf49be3651b20",
+      "bytes": 18980
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "40bf8910c5e094b304b9f2373ab8bd0ead93c81fd26da2b719956413826debc9",
+      "bytes": 17515
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "1e08f26890a7d235cfd2c801824197a00ae1ce9814263358d684c316db8a494c",
+      "bytes": 14631
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "b14121bda07eb1c1f77fbc7a7dd0d7267a2783d03f0afce2400e4aa460b2bf4f",
+      "bytes": 4046
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0ef0262b8805ed87d802d2ceb3fce16e0fa13a1c04f3c091213e1896edea1de5",
+      "bytes": 621
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "572be84067a222f6250f0505e6b08c879fac1d05959783e20beec2819871dae5",
+      "bytes": 942
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "52e5bd13463e0d534915588f0b658cec895c44fac0bbd723703fa42fdf408487",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ba874e50a62abc5e8e9dff9f6b07f6729bc8c774c9569e0c3f5dd4096c5b35b8",
+      "bytes": 47671
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "9e90cf9355878f866024da237c28ad3689098566b85efcf4e5d0eae723a3e603",
+      "bytes": 24962
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "8e8a0796c00d8b9dcac9470f27c4a29164bac4c48a9e11d6f83f155270e99e19",
+      "bytes": 64523
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "f75cc7e91ad596dedab8a7f4dea6b338765ec784661c0a52749449b39fc5fe4a",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2d08533df5ffd73c105959b71bf8d93763f339a4eec6d41cb5f9a8b9e948c0fe",
+      "bytes": 1956
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "36c3da0abc950683fb73a1c051e1186ce515b1ac7f2e14be4f0f837bc3ba9cce",
+      "bytes": 2829
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0e971626-ca51-45ba-acf6-35a53c561b2c",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "11fed738-a5b5-4509-b4e2-3295ceab3604",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "715a3ad2-5b6d-421f-b72b-3aa6fec86351",
+    "7c38e84b-aea0-4c8f-b3e9-60b994ee6c6b",
+    "91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+    "9d16aa65-cef7-4bf7-83c8-91837a248cd9",
+    "a0630421-7b66-48b4-aa14-6194a3b2c2b9",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "a79b6a74-6b67-4c9f-9d69-bff80869b943",
+    "c1f7749f-319b-491b-8243-22050e85994f",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e"
+  ]
+}

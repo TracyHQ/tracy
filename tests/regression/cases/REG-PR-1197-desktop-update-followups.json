@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-1197-desktop-update-followups",
+  "kind": "fix",
+  "title": "Desktop-update follow-ups from the 11/10 dev acceptance: the docs host's Scalar page lets the edge analytics beacon load; the API host answers /.well-known/* with a plain 404 instead of a 302 to /login; the docs sidebar lists the API changelog once (Changelog › API); a desktop product window that cannot load its page shows a local \"can't connect\" page with Retry instead of a blank chrome-error page",
+  "pr": 1197,
+  "area": "desktop-update/followups",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the command in `run.cmd`.",
+    "S2: Read the result of each test named in `run.tests`.",
+    "S3: Run `node --test packages/desktop/tracy-desktop/test/shell-strings.test.mjs` and read its summary."
+  ],
+  "expect": [
+    "0 failures.",
+    "Every test named in run.tests reports ok: the reference page's CSP names static.cloudflareinsights.com in script-src and cloudflareinsights.com in connect-src and nothing wider; GET/HEAD/POST /.well-known/<x> on the API host is 404 with no Location and `private, no-store`, even with a catch-all that redirects mounted after the gate; the sidebar names /changelog/ once, under Changelog › API; a main-frame did-fail-load (not ERR_ABORTED, http(s) URL) shows the unreachable page with Retry to the failed Tracy address (or the window's home when the failed address is off Tracy), a sub-frame failure or a local page failure shows nothing.",
+    "Every one of the eight shell languages carries the four unreachable.* words with the English placeholders."
+  ],
+  "selectors": {
+    "function": "apps/tracy-web/src/api-reference/route.js cspFor; apps/tracy-web/src/app.js API host block (/.well-known/*); apps/tracy-docs/sidebar.mjs TREE; packages/desktop/tracy-desktop/src/load-failure.js retryTarget, unreachableQuery, watchLoadFailure; src/main.js createWindow",
+    "page": "packages/desktop/tracy-desktop/src/unreachable.html + unreachable.js",
+    "strings": "packages/desktop/tracy-desktop/src/shell-strings.json unreachable.title, unreachable.body, unreachable.detail, unreachable.retry"
+  },
+  "fence": "The Scalar page's CSP takes the two beacon hosts from lib/security-headers.js (EDGE_BEACON_SCRIPT, EDGE_BEACON_REPORT), the same constants the rendered pages use; the API host's /.well-known/* handler is registered right after the host gate, before every domain router; the desktop window is replaced only for a main-frame failure of an http(s) page that is not ERR_ABORTED. No network, no database, no build, no Electron window.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/api-reference-route.test.mjs",
+      "apps/tracy-web/test/api-host.test.mjs",
+      "apps/tracy-docs/test/sidebar.test.mjs",
+      "packages/desktop/tracy-desktop/test/load-failure.test.mjs"
+    ],
+    "tests": [
+      "the page may call the API host and nothing else: connect-src names it, scripts stay self",
+      "the edge analytics beacon Cloudflare injects may load and report — exactly its two hosts (DT-2)",
+      "API host: an unpublished /.well-known/* file is a plain 404, never a redirect to sign-in (DT-3)",
+      "the sidebar reads Get started · Using Tracy · Desktop app · Changelog · For developers",
+      "every page appears once in the sidebar: the API changelog only under Changelog › API (DT-4)",
+      "the main frame failing to load a Tracy page shows the page, Retry going back to that page",
+      "a sub-frame failing never replaces the window (a site preview, an embedded page)",
+      "ERR_ABORTED is a navigation someone stopped, not a failure: nothing is shown",
+      "a local page of the shell failing (file:, data:, about:) is left alone, so the page cannot loop",
+      "Retry stays on Tracy: a main-frame failure elsewhere retries the window’s home page",
+      "the page is handed the Retry address, the error code and its words in the system language",
+      "an OS language outside the eight: English",
+      "the page draws exactly the unreachable.* words the table holds"
+    ]
+  }
+}

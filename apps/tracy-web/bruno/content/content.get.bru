@@ -1,0 +1,31 @@
+meta {
+  name: content.get
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.get",
+    "params": { "kind": "{{nativeKind}}", "id": "{{nativeId}}" }
+  }
+}
+
+docs {
+  # One CMS record, in the CMS's own shape
+
+  Where `content.read` answers Tracy's common shape, `content.get` answers the record as the
+  CMS stores it (a WordPress post, a Joomla article, menu item or module, an EmDash entry).
+
+  `nativeKind` and `nativeId` come from a page's `native[0]` in "view pages"
+  (content.read folder); run that first. A record named by `key` rather than `id` (a WordPress
+  template part) needs `"key"` in place of `"id"`.
+
+  Look for: `ok: true` and `item` holding the raw record. The field names differ per CMS.
+}

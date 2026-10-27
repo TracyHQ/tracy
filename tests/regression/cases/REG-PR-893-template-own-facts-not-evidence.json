@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-893-template-own-facts-not-evidence",
+  "kind": "fix",
+  "title": "The fact guard does not take the template's own phone, mailbox, street, price or year as evidence; past the drop cap the worst lines still go",
+  "pr": 893,
+  "area": "sites/apply/guard",
+  "cms": ["wp", "jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-guard.test.mjs apps/tracy-web/test/brief-wordpress.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"a fact the slot’s own sample carries is not evidence: only what the customer said is\"; \"a line that keeps the template's own fact is not written: it is asked again, and the honest line goes in\"; \"more lines with no honest replacement than may be taken off: the ones naming the template’s company go first, never none\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 69).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): ungrounded() accepts a fact only from the brief, never from the slot's own sample; a WordPress line that keeps the template's fact is asked again and the honest line goes in; past MAX_DROPS (30) lines with no honest replacement the 30 naming the template's company or repeating its facts are taken off first, never none."
+  ],
+  "selectors": {
+    "guard": "ungrounded(value, sample, facts) in apps/tracy-web/src/sites/brief-engines/guard.js",
+    "engine": "MAX_DROPS in apps/tracy-web/src/sites/brief-engines/wordpress.js"
+  },
+  "evidence": "Ledger L09, 05/10/2026 (code reading guard.js): a line the model rewrote around the template's own hotline or mailbox passed the guard because the fact was in the slot's sample; review then found the 30-drop cap all-or-nothing. Reds 927c4259a, d05594467; fixes 6b0b0c8d1, e040deb77.",
+  "fence": "Only facts of the brief count, for phones, emails, streets, prices and years alike.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-guard.test.mjs",
+      "apps/tracy-web/test/brief-wordpress.test.mjs"
+    ],
+    "tests": [
+      "a fact the slot’s own sample carries is not evidence: only what the customer said is",
+      "a line that keeps the template's own fact is not written: it is asked again, and the honest line goes in",
+      "more lines with no honest replacement than may be taken off: the ones naming the template’s company go first, never none"
+    ]
+  }
+}

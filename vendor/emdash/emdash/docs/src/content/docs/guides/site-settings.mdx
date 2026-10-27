@@ -1,0 +1,182 @@
+---
+title: Site Settings
+description: Read site identity, display, social, and SEO settings in Astro templates.
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+Site settings hold values that apply across the site. Templates can use them for site identity, pagination, date handling, social profiles, and search metadata.
+
+## Configure settings
+
+Open **Settings** in the EmDash admin, then choose the page for the values you need:
+
+- **General** contains the site title, tagline, logo, favicon, public URL, posts per page, date format, and timezone.
+- **Social** contains profile handles for the supported social services.
+- **SEO** contains the title separator, default social image, verification values, and `robots.txt` content. See [Built-in SEO Features](/guides/seo/) for what each one does.
+
+<Steps>
+
+1. Open the relevant settings page.
+
+2. Enter the values used by the site's templates and metadata.
+
+3. Save the page, then reload a public page that renders those settings.
+
+</Steps>
+
+Settings are optional until configured. A template should provide a suitable fallback for any value it requires.
+
+## Read settings in a layout
+
+Use `getSiteSettings()` when a layout needs several values. It returns the configured keys as a partial object and resolves media references before returning them.
+
+The following base layout uses site identity settings and lets `EmDashHead` apply the configured favicon, default social image, and site-wide verification metadata:
+
+```astro title="src/layouts/Base.astro"
+---
+import { getSiteSettings } from "emdash";
+import { createPublicPageContext } from "emdash/page";
+import { EmDashHead } from "emdash/ui";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const settings = await getSiteSettings();
+const siteTitle = settings.title ?? "My site";
+const fullTitle = title ? `${title} — ${siteTitle}` : siteTitle;
+const pageDescription = description ?? settings.tagline;
+
+const page = createPublicPageContext({
+  Astro,
+  kind: "custom",
+  pageType: "website",
+  title: fullTitle,
+  pageTitle: title ?? siteTitle,
+  description: pageDescription,
+  siteName: siteTitle,
+});
+---
+
+<!doctype html>
+<html lang={Astro.currentLocale ?? "en"}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{fullTitle}</title>
+    <EmDashHead page={page} />
+  </head>
+  <body>
+    <header>
+      <a href="/" aria-label={siteTitle}>
+        {settings.logo?.url ? (
+          <img
+            src={settings.logo.url}
+            alt={settings.logo.alt ?? siteTitle}
+            width={settings.logo.width}
+            height={settings.logo.height}
+          />
+        ) : (
+          siteTitle
+        )}
+      </a>
+      {settings.tagline && <p>{settings.tagline}</p>}
+    </header>
+
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+```
+
+`EmDashHead` also calls `getSiteSettings()`. Request caching makes that call reuse the layout's result rather than run another settings query.
+
+On a server-rendered content page, pass the content reference to `createPublicPageContext()` and fetch the entry with `getEmDashEntry()`. `EmDashHead` then applies the entry's SEO panel values over site defaults. See [Render SEO metadata on a content page](/guides/seo/#render-seo-metadata-on-a-content-page) for the complete content-page pattern.
+
+## Read one setting
+
+Use `getSiteSetting()` when a component needs one value and its parent has not already fetched the settings object.
+
+The following component formats a timestamp in the configured timezone:
+
+```astro title="src/components/PostDate.astro"
+---
+import { getSiteSetting } from "emdash";
+
+interface Props {
+  date: Date;
+}
+
+const { date } = Astro.props;
+const timezone = await getSiteSetting("timezone") ?? "UTC";
+const formatted = new Intl.DateTimeFormat(Astro.currentLocale, {
+  dateStyle: "long",
+  timeZone: timezone,
+}).format(date);
+---
+
+<time datetime={date.toISOString()}>{formatted}</time>
+```
+
+The `dateFormat` setting is a pattern string such as `MMMM d, yyyy`. `Intl.DateTimeFormat` does not consume that syntax; use a formatting library that supports pattern strings when the template needs to apply it exactly.
+
+## Render social profiles
+
+Social settings store handles or usernames rather than complete links. The template decides which profiles to show and turns each configured value into the service's URL.
+
+The following component renders the configured X and GitHub profiles:
+
+```astro title="src/components/SocialLinks.astro"
+---
+import { getSiteSetting } from "emdash";
+
+const social = await getSiteSetting("social");
+const xHandle = social?.twitter?.replace(/^@/, "");
+---
+
+{(xHandle || social?.github) && (
+  <nav aria-label="Social profiles">
+    <ul>
+      {xHandle && (
+        <li>
+          <a href={`https://x.com/${xHandle}`} rel="me noopener" target="_blank">
+            X
+          </a>
+        </li>
+      )}
+      {social?.github && (
+        <li>
+          <a
+            href={`https://github.com/${social.github}`}
+            rel="me noopener"
+            target="_blank"
+          >
+            GitHub
+          </a>
+        </li>
+      )}
+    </ul>
+  </nav>
+)}
+```
+
+Apply the same pattern to the configured Facebook, Instagram, LinkedIn, and YouTube values. Those fields store the page, profile, channel, or handle value entered in the admin; the theme remains responsible for the public URL format.
+
+## Use media settings
+
+The logo, favicon, and default social image are stored as media references. On read, EmDash adds the current URL and any known content type, width, and height. If the referenced media item has been deleted, those resolved values can be absent, so check `url` before rendering an image.
+
+Remove one of these images in the admin with its **Remove** button. API and MCP clients can remove `logo`, `favicon`, or `seo.defaultOgImage` by setting that field to `null`; omitting a field leaves its current value unchanged. The same applies to the fields inside `seo` and `social`: send only the fields you want to change, and send an empty string to clear a text field.
+
+Site settings hold one logo and one favicon. A dark image variant belongs to an EmDash image field, where the editor can choose the counterpart and the `Image` component can switch between them. See [Dark Mode](/guides/dark-mode/#dark-image-variants) for that pattern.
+
+<Aside type="tip">
+	Read the settings object once in a base layout when several nested components need it. Calls made
+	later in the same request reuse the cached result.
+</Aside>
+
+The [runtime API reference](/reference/api/#site-settings) documents the setting keys and query return types. For programmatic changes, authenticate with a Bearer token and add `X-EmDash-Request: 1` to every state-changing request. See the [settings endpoints](/reference/rest-api/#settings-endpoints) for request bodies and responses.

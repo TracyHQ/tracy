@@ -1,0 +1,15 @@
+-- When the site itself last changed — the time behind "New version ready" on everybody's Refresh
+-- button (`siteChangedAt` on `GET /api/sites/:key/comments`, contract
+-- `tasks/evidence/comment-people/contract.md` § H1, rule 5 of `tasks/todo-comment-people.md`).
+--
+-- Written in the same statement as the audit row of a successful write (`auditSiteWrite`,
+-- `sites/store.js`): the Apply door's `recordApply` for a call that changes the site, and
+-- `POST /api/sites/:key/changed` for a `tracy_emdash` write, which reaches the EmDash site's own MCP
+-- server and never passes the Apply door. So the stamp equals that audit row's `at`.
+--
+-- 🔒 A COLUMN, NOT A QUERY ON `audit`. The comment list is polled every 15 s by every open Browser
+-- tab; answering from `audit` (no site index, and none may be added in a migration — see
+-- `023-site-write-lease.sql`) walked the table back until the site's last write, and the whole table
+-- for a site never written. No backfill for the same reason: null reads "not changed since the page
+-- loaded", which is what the Refresh button compares against anyway.
+alter table site add column last_write_at timestamptz;

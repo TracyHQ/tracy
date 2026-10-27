@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-893-joomla-page-title-description-owners",
+  "kind": "fix",
+  "title": "Joomla Apply: page titles and descriptions the release ships give way to the owner's name and own words",
+  "pr": 893,
+  "area": "sites/apply/joomla",
+  "cms": ["jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap apps/tracy-web/test/brief-joomla.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of each case whose name starts with: \"a template's own title and description in its menu entries give way to the owner's name and words, in the tidy-up's transaction\"; \"an entry the tidy-up takes off is not written a title, and an owner who wrote nothing gets no description\"; \"only a value the release itself ships is the template's: one that names the owner inside the template's words still goes, one of somebody else's stays\"; \"a release that ships no lock tells the owner's words by their name as a word, not as letters inside another\"; \"the menu is read once, whole: the judge, the entries that lead to a page that is off and the page titles share it\"; \"a menu the site will not hand over is said once, and the rest of Apply goes on\"; \"a home page's description is the owner's own description, never their answers to the questions\"; \"a description is cut whole: never inside a character, at a sentence that is one, else at a word\"; \"the owner's words go on the home page of the language they wrote in and the one every language shares; another edition's home keeps no template description\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 55).",
+    "Every named case is 'ok' (none 'not ok', none '# SKIP'): a menu entry's page_title / menu-meta_description equal to a value the release's lock ships is replaced in the tidy-up's transaction (home: the business name and the owner's own description, other entries emptied); a value of somebody else's stays, an entry taken off is not retitled, the menu is read once and a refused menu is said once; the description comes from brief.about only, is cut whole by code point at a sentence or a word, and goes on the home entry of the language the owner wrote in and the shared one."
+  ],
+  "selectors": {
+    "steps": "shippedPageMeta, readMenu, pageMetaSteps, ownExcerpt in apps/tracy-web/src/sites/brief-engines/joomla-tidy.js",
+    "params": "menu item params page_title, menu-meta_description (content.batch of the tidy-up)"
+  },
+  "evidence": "05/10/2026 local stand, Apply on ja-vega (Joomla): every word of the home page was the customer's but <title> and meta description still read 'JA Vega - Modern Joomla Template...' (ledger L24; 33 of 42 Joomla releases set one or both on a published entry, 27 on home). Reds b0bcd3380, 95b4422e7, e30e12f4b; fixes 1d52898c7, 43b44bd4c, e3b90c489. Not covered: Global Configuration's MetaDesc and sitename (no plugin door).",
+  "fence": "Only values the release itself ships are replaced; the owner's description is never invented, never their answers to the questions, never cut inside a character; params are written back whole with every other setting kept.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/brief-joomla.test.mjs"],
+    "tests": [
+      "a template's own title and description in its menu entries give way to the owner's name and words, in the tidy-up's transaction",
+      "an entry the tidy-up takes off is not written a title, and an owner who wrote nothing gets no description",
+      "only a value the release itself ships is the template's: one that names the owner inside the template's words still goes, one of somebody else's stays",
+      "a release that ships no lock tells the owner's words by their name as a word, not as letters inside another",
+      "the menu is read once, whole: the judge, the entries that lead to a page that is off and the page titles share it",
+      "a menu the site will not hand over is said once, and the rest of Apply goes on",
+      "a home page's description is the owner's own description, never their answers to the questions",
+      "a description is cut whole: never inside a character, at a sentence that is one, else at a word",
+      "the owner's words go on the home page of the language they wrote in and the one every language shares; another edition's home keeps no template description"
+    ]
+  }
+}

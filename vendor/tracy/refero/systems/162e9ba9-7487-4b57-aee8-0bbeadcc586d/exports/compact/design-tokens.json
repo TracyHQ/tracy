@@ -1,0 +1,99 @@
+{
+  "color": {
+    "studio-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Studio Black — Primary text, dark section backgrounds, nav background on scroll — full-spectrum black with no tint creates maximum contrast against white sections"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Page background, card surfaces, text on dark sections, button fills"
+    },
+    "deep-ink": {
+      "$value": "#0b1215",
+      "$type": "color",
+      "$description": "Deep Ink — Body text on white backgrounds, button text on white buttons — near-black with the faintest cool tint"
+    },
+    "graphite-stroke": {
+      "$value": "#394649",
+      "$type": "color",
+      "$description": "Graphite Stroke — Border color on white buttons, secondary text, dividers"
+    },
+    "fog-border": {
+      "$value": "#e0e0e0",
+      "$type": "color",
+      "$description": "Fog Border — Input borders, card dividers, subtle separators"
+    },
+    "ash-mid": {
+      "$value": "#757575",
+      "$type": "color",
+      "$description": "Ash Mid — Placeholder text in inputs, secondary metadata"
+    },
+    "charcoal-surface": {
+      "$value": "#232424",
+      "$type": "color",
+      "$description": "Charcoal Surface — Elevated dark card backgrounds on black sections — one step lighter than pure black to create surface depth without shadows"
+    },
+    "skill-green": {
+      "$value": "#55da9b",
+      "$type": "color",
+      "$description": "Skill Green — Primary CTA button fill, brand accent — a muted-vivid green that reads warm against black and cool against white, avoiding both danger and safety connotations"
+    },
+    "neon-pulse": {
+      "$value": "#00ff84",
+      "$type": "color",
+      "$description": "Neon Pulse — Checkmark icons on feature lists, active fill states — saturated to near-glow, appears only as small marks on black backgrounds where luminosity hits hardest"
+    },
+    "electric-cyan": {
+      "$value": "#24c2f2",
+      "$type": "color",
+      "$description": "Electric Cyan — Secondary accent, stat highlights, animated elements on dark sections"
+    },
+    "creator-violet": {
+      "$value": "#6927ef",
+      "$type": "color",
+      "$description": "Creator Violet — Hover state backgrounds, link accent on specialized flows"
+    },
+    "deep-violet": {
+      "$value": "#5620c1",
+      "$type": "color",
+      "$description": "Deep Violet — Active/pressed state for violet interactive elements"
+    },
+    "facebook-blue": {
+      "$value": "#1877f2",
+      "$type": "color",
+      "$description": "Facebook Blue — Facebook social login icon fill — brand color of the platform, not Skillshare's own"
+    },
+    "google-red": {
+      "$value": "#ea4335",
+      "$type": "color",
+      "$description": "Google Red — Google 'G' logo fill in social login button"
+    },
+    "warning-amber": {
+      "$value": "#f6b60b",
+      "$type": "color",
+      "$description": "Warning Amber — Star ratings, achievement indicators"
+    }
+  },
+  "font": {
+    "gt-walsheim-pro": {
+      "$value": "GT Walsheim Pro",
+      "$type": "fontFamily",
+      "$description": "Every UI element — headlines at 700 weight with 0.90 line-height produce a stacked poster effect at 46–48px. Body at 400/16px with 1.50 line-height. Buttons and labels at 500–600. Weight 100 appears only in decorative or watermark contexts. The custom font brings rounded geometric terminals that soften the stark black/white palette."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "System fallback only — appears in legal/fine-print contexts where custom font fails to load. Not an intentional typographic choice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://skillshare.com",
+      "siteName": "Skillshare",
+      "extractedAt": "2026-04-11T19:16:57.861Z",
+      "variant": "compact"
+    }
+  }
+}

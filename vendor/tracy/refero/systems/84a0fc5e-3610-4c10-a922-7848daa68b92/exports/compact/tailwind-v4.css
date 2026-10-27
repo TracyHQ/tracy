@@ -1,0 +1,15 @@
+@theme {
+  /* Colors */
+  --color-bee-ink: #21200b;
+  --color-pioneer-yellow: #ffd900;
+  --color-lavender-memory: #d2c4ff;
+  --color-putty: #e5e0dd;
+  --color-paper: #f7f3f1;
+  --color-true-black: #000000;
+  --color-white: #ffffff;
+  --color-recruiter-indigo: #150a45;
+
+  /* Typography */
+  --font-fff-acidgrotesk: 'Fff Acidgrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-inter-variable: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

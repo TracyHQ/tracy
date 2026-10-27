@@ -1,0 +1,176 @@
+//
+// Tracy Base — ACM block `cta-capsule`
+// ------------------------------------------------------------------------------------------------
+// Source for css/style.css. Self-contained and block-scoped to `.acm-cta-capsule`; it is NOT
+// @imported into scss/_all.scss, because mod_ja_acm loads an ACM block's own css/style.css itself.
+//
+// Not one literal colour appears below, and every size, space and radius reads a design-spec token
+// from scss/_tokens-base.scss (:root, light), which scss/darkmode.scss remaps under the dark hook
+// html[data-theme="dark"], html.t4-dark. That remap is why this file carries NO dark rules at all:
+// the block bakes nothing a token cannot reach, so dark mirrors light for free.
+//
+// Compile: lessc less/style.less css/style.css
+//
+
+.acm-cta-capsule {
+  // Panel padding. The stadium's curve eats the corners, so the inline padding has to clear it:
+  // at the panel's natural desktop height (~200px) the 980px radius clamps to ~100px per side, and
+  // the copy sits well inside that once it is inset by a step-12 plus a step-8.
+  --tracy-cta-pad-inline: calc(var(--space-12) + var(--space-8));
+
+  // Body-side optical tracking. design-spec §3 names --tracking-display for headings and 0 for
+  // body; the reference fixture tightens its `.lead` a hair below that, and the support line is
+  // the same voice, so the value is pinned here once instead of typed as a literal below.
+  --tracy-lead-tracking: -0.011em;
+
+  // Section rhythm. --tracy-band-y is itself re-pointed at the tablet / phone steps by the
+  // template's own :root media queries, so this single declaration is already responsive.
+  padding-block: var(--tracy-band-y);
+
+  // No background of its own: the block sits on whichever surface the layout row paints, and the
+  // panel below supplies the contrast. Section separation is contrast-led, never rule-led
+  // (design-spec §4).
+  background: transparent;
+  color: var(--fg);
+}
+
+// ── The capsule panel ───────────────────────────────────────────────────────────────────────────
+// --radius-pill is the 980px token. DESIGN.md §5 names it for "signature elongated CTA forms", so
+// at panel scale it is the design's own vocabulary, not a flourish. Emphasis comes from the
+// surface step (--surface on a --bg band) contained by the 1px ring — never from a second accent
+// and never from a shadow (design-spec §2 and §4).
+.acm-cta-capsule .tracy-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--tracy-cta-pad-inline);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  box-shadow: var(--tracy-ring);
+}
+
+.acm-cta-capsule .tracy-cta__copy > * + * {
+  margin-block-start: var(--space-3);
+}
+
+// The h2 tier — design-spec §3 gives --text-2xl to the story-chapter statement, and this is the
+// same editorial voice one chapter later. 20ch is the measure that keeps it to two lines beside
+// the action.
+.acm-cta-capsule .tracy-cta__statement {
+  margin: 0;
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+.acm-cta-capsule .tracy-cta__support {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-lg);
+  line-height: 1.38;
+  letter-spacing: var(--tracy-lead-tracking);
+  color: var(--muted);
+}
+
+.acm-cta-capsule .tracy-cta__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex: 0 0 auto;
+}
+
+// The capsule geometry comes from the template's own .btn / .btn-primary (scss/_base.scss), which
+// already carry --tracy-capsule. Only the press feedback DESIGN.md §4 asks for is added, and
+// it is scoped to the block so it cannot leak into chrome buttons.
+.acm-cta-capsule .tracy-cta__btn {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  transition: background var(--motion-fast) var(--ease-standard),
+              color var(--motion-fast) var(--ease-standard),
+              transform var(--motion-fast) var(--ease-standard);
+}
+
+.acm-cta-capsule .tracy-cta__btn:active {
+  transform: scale(0.98);
+}
+
+.acm-cta-capsule .tracy-cta__btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+// Ink, not blue. The capsule already spends the region's one accent use; a second blue here would
+// put two competing actions on the same colour (design-spec §2). The blue returns on hover, where
+// it is a state rather than a standing use.
+.acm-cta-capsule .tracy-cta__link {
+  font-size: var(--text-base);
+  line-height: 1.2;
+  color: var(--fg);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--motion-fast) var(--ease-standard);
+}
+
+.acm-cta-capsule .tracy-cta__link:hover,
+.acm-cta-capsule .tracy-cta__link:focus-visible {
+  color: var(--accent-hover);
+  text-decoration: underline;
+  text-underline-offset: var(--space-1);
+}
+
+.acm-cta-capsule .tracy-cta__link:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+
+// ── Responsive ──────────────────────────────────────────────────────────────────────────────────
+// Breakpoints are DESIGN.md §8. Once the panel stacks it stops being wide-and-short, and a 980px
+// radius on a tall box reads as a lozenge rather than the signature capsule — so it steps down to
+// the 18px card / module-frame tier the same §5 scale names. This is the radius tiering DESIGN.md
+// §7 asks for, not a flattening of it.
+@media (max-width: 991px) {
+  .acm-cta-capsule .tracy-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+    padding: var(--space-8);
+    border-radius: var(--radius-lg);
+  }
+
+  .acm-cta-capsule .tracy-cta__statement {
+    max-width: 24ch;
+  }
+}
+
+@media (max-width: 639px) {
+  .acm-cta-capsule .tracy-cta__statement {
+    font-size: var(--text-xl);
+    max-width: none;
+  }
+
+  .acm-cta-capsule .tracy-cta__support {
+    font-size: var(--text-base);
+  }
+
+  .acm-cta-capsule .tracy-cta__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-4);
+    width: 100%;
+  }
+
+  .acm-cta-capsule .tracy-cta__btn {
+    justify-content: center;
+  }
+
+  .acm-cta-capsule .tracy-cta__link {
+    text-align: center;
+  }
+}

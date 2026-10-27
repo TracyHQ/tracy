@@ -1,0 +1,28 @@
+{
+  "id": "QA-MAIL-preference-group-resolved-reopened-unsubscribe",
+  "itemIds": ["preference-group:resolved-reopened"],
+  "requirement": "letters of group resolved-reopened carry a working unsubscribe header",
+  "oracle": {
+    "source": "tests/qa/oracles/mail/oracle.json",
+    "ref": "groups",
+    "invariant": "RFC 8058 headers for switchable groups only"
+  },
+  "edgeTags": ["unsubscribe"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.unsubscribe-header#comment.resolved:|comment.reopened:"],
+  "redProof": null,
+  "legacyIds": []
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "734ab03c-a326-43e3-a463-c5f90247404f",
+  "status": "complete",
+  "name": "Dopper",
+  "url": "https://styles.refero.design/style/734ab03c-a326-43e3-a463-c5f90247404f",
+  "sourceWebsite": "https://dopper.com",
+  "extractedAt": "2026-06-03T17:16:10.083Z",
+  "capturedAt": "2026-10-08T05:13:24.676571+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Sunlit cream lagoon with a vivid blue current. A warm beige expanse where one electric blue channel and full-bleed candy-bright cards cut through like sunlight on water.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/abe99ae5-c7e3-4b1d-ab71-8d6061b4cdf3.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "105cb6690767091c865b5998314048af1d729158148241a38698bf49e15ee4f6",
+      "bytes": 19455
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "3f2b7e87e7bcf24b243e39c1e847a1154527834817972bc3762ceeeaa1d2f084",
+      "bytes": 39922
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "37c5123f222cf5691cf3021ac02793e931681e19823389e9e2aef8a5fab8f99c",
+      "bytes": 16634
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "8e1f6ad6fef84b915a186777fcaa183384680b8275fd3e5e532e1357433f42d8",
+      "bytes": 9115
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7aa4cbf04c7973bda1f6b8a3ee18a2cbd010734374bdd53bb8092612eda23e39",
+      "bytes": 12594
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "76d7c7e05c35a6aa1bc989221a276a49b13f592c5956dcd903553237c2c1f963",
+      "bytes": 3396
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "87642029170b8433a7156fba837db10d9c2d4a9fe49c9d4cc290026e24ee6c71",
+      "bytes": 747
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "baa1596f204ef5f1bbdfdb41b037a4617eec7b305887952514646e5544cfaa0e",
+      "bytes": 865
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "1e69c2b32170143633fa8ec90af1d01b69b9f585c20fbc847787205fbdd593bb",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "f87cfb1325b1840ba281a3dd186db3f9ccd1702893c27c10bd4b55318aaae63d",
+      "bytes": 42827
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "29c386810798b4be5c4698cbf60214a612586968c9b49c364d197b3a3c7d2873",
+      "bytes": 22141
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "91ee5c98d9e452ab460d4fd60c35efb5dd1d1dc040e180c23166b7713dc428c9",
+      "bytes": 37700
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4da75edde3e0de7597047f5a2e76a5564666dce17741b596b841455a2132ef9e",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "42664cbec1405d029c910ead361ab5de0dd4083115ceaae574941b6d4a040af0",
+      "bytes": 1538
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4f61e98bb60a919d4cfa0c052d6b7c155c645d414faec79900bb4c79253229ee",
+      "bytes": 2188
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1329b661-39d8-4f0b-a12a-11ed13671ccb",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "26a9840f-f128-4cfc-84a5-feb7db1bf577",
+    "357e6fee-72db-40cf-b858-254b802018bd",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "5ec4eb4f-a37c-4787-b4c1-de49e01770e7",
+    "5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
+    "734ab03c-a326-43e3-a463-c5f90247404f",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "9eeab5f0-eece-4898-a1d2-2db48ac2bc7d",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "aaaa705d-3042-4355-ad30-13360f04e403",
+    "b52981ce-fdb2-4ba0-86bb-f5ce0c27a9c6",
+    "bc7458ba-6b81-4f3e-ab5a-4126ee1eaf80",
+    "c6ec55c7-0bd9-47c5-a4d2-669b7790c9cc",
+    "d1ca41ff-1bcc-4081-b1fd-bdcf380ba749",
+    "d7fb1721-1878-4cbb-a24b-051800557c75",
+    "e6b53c1e-644b-4300-b42f-0e64905d1443",
+    "e9001d5a-504d-47ed-aef0-d0d35fa86418",
+    "f73ce3e0-4452-4b21-b36f-6fde27de2cd6"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "QA-UNIT-REG-PR-1696-wo-hub-per-account-hub-happy",
+  "itemIds": ["regression:REG-PR-1696-wo-hub-per-account-hub"],
+  "requirement": "Per-account research asks the shared hub before paying for Place Details, and a revoked hub copy leaves its briefs",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1696-wo-hub-per-account-hub.json",
+    "ref": "PR #1696 (feat); fix evidence: Before: only the shared place path read the hub; per-account research always paid Google",
+    "invariant": "S1: 0 Place Details calls; the brief research's googlePlace has the hub's name and via hub. S2: the brief research has no googlePlace and hubRevoked of length 1.",
+    "productSources": [
+      "packages/wo/website-opportunities/src/brief-research.js:196",
+      "packages/wo/website-opportunities/src/hub/revocations.js:121",
+      "packages/wo/website-opportunities/src/hub/tokens.js:26",
+      "packages/wo/website-opportunities/src/schema/index.js:67",
+      "packages/wo/website-opportunities/src/standalone/config.js:31",
+      "packages/wo/website-opportunities/src/standalone/operator-principal.js:10",
+      "packages/wo/website-opportunities/src/standalone/server.js:70"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/wo/website-opportunities/src/schema/index.js:28 readFile() with a computed path",
+      "packages/wo/website-opportunities/src/standalone/disk-objects.js:55 createReadStream() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "per-account research reads the hub before paying for Place Details too",
+    "a business removed on the hub leaves the client cache"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1696-wo-hub-per-account-hub"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/wo/website-opportunities", "website-opportunities"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1696-wo-hub-per-account-hub",
+    "pr": 1696,
+    "kind": "feat",
+    "area": "website-opportunities/hub",
+    "file": "tests/regression/cases/REG-PR-1696-wo-hub-per-account-hub.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/wo/website-opportunities/test/hub-wiring.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "per-account research reads the hub before paying for Place Details too",
+    "a business removed on the hub leaves the client cache"
+  ],
+  "timeoutS": 600
+}

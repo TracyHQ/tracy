@@ -1,0 +1,280 @@
+//
+// Tracy Base — ACM block `hero`
+// ------------------------------------------------------------------------------------------------
+// Source for css/style.css. Self-contained and block-scoped to `.acm-hero`; it is NOT @imported
+// into scss/_all.scss, because mod_ja_acm loads an ACM block's own css/style.css itself.
+//
+// Not one literal colour appears below, and every size, space and radius reads a design-spec token
+// from scss/_tokens-base.scss (:root, light), which scss/darkmode.scss remaps under the dark hook
+// html[data-theme="dark"], html.t4-dark. That remap is why this file carries almost no dark rules:
+// dark mirrors light for free. The one exception is flagged where it appears.
+//
+// Two styles share this sheet: `.style-1` is the split masthead with the status aside (the
+// reference fixture's #hero region verbatim), `.style-2` is the centered home-2 variant.
+//
+// Compile: lessc less/style.less css/style.css
+//
+
+.acm-hero {
+  // The eyebrow's positive tracking. design-spec §3 only names --tracking-display (negative, for
+  // headings), so the fixture's own `.eyebrow` value is pinned here once instead of being repeated.
+  --tracy-eyebrow-tracking: 0.08em;
+
+  // Body-side optical tracking. design-spec §3 names --tracking-display for headings and 0 for
+  // body, but the reference fixture tightens its `.lead` and `.badge` a hair below that; both
+  // values are pinned here once rather than repeated as literals down the sheet.
+  --tracy-lead-tracking: -0.011em;
+  --tracy-badge-tracking: -0.01em;
+
+  // Section rhythm. The hero is the first chapter, so it opens wider than a mid-page band — the
+  // same 1.4x lead-in scss/_base.scss gives .tracy-hero. --tracy-band-y is itself
+  // re-pointed at the tablet / phone steps by the template's :root media queries, so this single
+  // declaration is already responsive.
+  padding-block: calc(var(--tracy-band-y) * 1.4) var(--tracy-band-y);
+
+  // No background and no border of its own: the hero sits on whichever surface the layout row
+  // paints, and chapters are separated by that surface change, never by a rule (design-spec §4).
+  background: transparent;
+  color: var(--fg);
+}
+
+// ── The split grid — fixture .hero-grid ─────────────────────────────────────────────────────────
+// align-items: end sits the status card on the copy's baseline rather than centring it, which is
+// what makes the aside read as an annotation of the headline instead of a second column.
+.acm-hero .tracy-hero__grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: var(--space-12);
+  align-items: end;
+}
+
+// ── Copy column — fixture .stack-4 ──────────────────────────────────────────────────────────────
+.acm-hero .tracy-hero__copy > * + * {
+  margin-block-start: var(--space-4);
+}
+
+// Accent use 1 of 2. design-spec §2 caps the blue at two visible uses per screen and the hero is
+// where they are meant to be spent: this eyebrow, and the primary capsule below.
+.acm-hero .tracy-hero__eyebrow {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: var(--tracy-eyebrow-tracking);
+}
+
+.acm-hero .tracy-hero__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg);
+}
+
+// style-1 headline column is ~1.3fr of a 1024px core, so the display tier that fits it is
+// --text-3xl — the size the reference fixture renders. style-2 gets --text-4xl further down,
+// where the headline owns the full core.
+.acm-hero.style-1 .tracy-hero__title {
+  font-size: var(--text-3xl);
+}
+
+// The fixture caps the lead at exactly 52ch; design-spec §6 repeats that measure for the article
+// view, so it is the template's reading measure, not a hero-only number.
+.acm-hero .tracy-hero__lead {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-lg);
+  line-height: 1.38;
+  letter-spacing: var(--tracy-lead-tracking);
+  color: var(--fg-2);
+}
+
+.acm-hero .tracy-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-block-start: var(--space-6);
+}
+
+// The capsule geometry itself comes from the template's own .btn / .btn-primary / .btn-secondary
+// (scss/_base.scss), which already carry --tracy-capsule. Only the press feedback that
+// DESIGN.md §4 asks for ("active controls commonly reduce scale") is added here, scoped to the
+// block so it cannot leak into chrome buttons.
+.acm-hero .tracy-hero__actions .btn {
+  transition: background var(--motion-fast) var(--ease-standard),
+              color var(--motion-fast) var(--ease-standard),
+              transform var(--motion-fast) var(--ease-standard);
+}
+
+.acm-hero .tracy-hero__actions .btn:active {
+  transform: scale(0.98);
+}
+
+.acm-hero .tracy-hero__actions .btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+// .btn-secondary carries the 1px containment ring as its own box-shadow, so a bare focus halo
+// would erase the button's outline at the exact moment it has focus. Both shadows are stacked
+// instead — the ring first, the halo outside it.
+.acm-hero .tracy-hero__actions .btn-secondary:focus-visible {
+  box-shadow: var(--tracy-ring), var(--focus-ring);
+}
+
+// The fixture's own `.icon` size for a glyph riding inside a capsule action.
+.acm-hero .tracy-hero__arrow {
+  width: var(--space-4);
+  height: var(--space-4);
+  flex: 0 0 auto;
+}
+
+// ── Status aside — fixture .hero-meta ───────────────────────────────────────────────────────────
+// Containment is the 1px ring, never a shadow (design-spec §4). The card lifts to --bg so it reads
+// as a raised note on any band the row paints.
+.acm-hero .tracy-hero__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  border: 1px solid var(--border); box-shadow: none;
+}
+
+.acm-hero .tracy-hero__meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.acm-hero .tracy-hero__meta-label {
+  font-size: var(--text-sm);
+  color: var(--fg);
+}
+
+.acm-hero .tracy-hero__note {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.acm-hero .tracy-hero__note kbd {
+  padding: var(--space-1) calc(var(--space-1) + var(--space-2));
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  box-shadow: var(--tracy-ring);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--fg-2);
+}
+
+// ── Status badge ────────────────────────────────────────────────────────────────────────────────
+// Semantic, not accent: --success / --muted do not count against the two-blue budget, and the
+// semantic trio holds unchanged on both grounds (design-spec §2).
+.acm-hero .tracy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: var(--tracy-badge-tracking);
+}
+
+.acm-hero .tracy-badge--success {
+  color: var(--success);
+  background: color-mix(in oklab, var(--success), transparent 90%);
+}
+
+.acm-hero .tracy-badge--muted {
+  color: var(--muted);
+  background: color-mix(in oklab, var(--muted), transparent 88%);
+}
+
+// The dot is the fixture's 6px. That step is deliberately absent from the 4/8/12/16/20/24/32/48
+// scale (design-spec §4), so it is expressed as half a step rather than typed as a literal.
+.acm-hero .tracy-badge__dot {
+  width: calc(var(--space-3) / 2);
+  height: calc(var(--space-3) / 2);
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 auto;
+}
+
+// ── style-2: centered, no aside ─────────────────────────────────────────────────────────────────
+.acm-hero.style-2 {
+  text-align: center;
+}
+
+.acm-hero.style-2 .tracy-hero__copy {
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+// The headline owns the full core here, so it steps up to the display tier design-spec §3 assigns
+// to the home hero line. 18ch keeps it to the two or three lines the tier was measured for.
+.acm-hero.style-2 .tracy-hero__title {
+  max-width: 18ch;
+  margin-inline: auto;
+  font-size: var(--text-4xl);
+}
+
+.acm-hero.style-2 .tracy-hero__lead {
+  margin-inline: auto;
+}
+
+.acm-hero.style-2 .tracy-hero__actions {
+  justify-content: center;
+}
+
+// ── Responsive ──────────────────────────────────────────────────────────────────────────────────
+// Breakpoints are DESIGN.md §8: the grid collapses at the 1023px tablet-wide edge, and the display
+// tiers step down one rung each at 1023px and 639px, mirroring scss/_base.scss.
+@media (max-width: 1023px) {
+  .acm-hero .tracy-hero__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .acm-hero.style-2 .tracy-hero__title {
+    font-size: var(--text-3xl);
+  }
+}
+
+@media (max-width: 639px) {
+  .acm-hero.style-1 .tracy-hero__title,
+  .acm-hero.style-2 .tracy-hero__title {
+    font-size: var(--text-2xl);
+  }
+
+  .acm-hero .tracy-hero__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+// ── Dark ────────────────────────────────────────────────────────────────────────────────────────
+// The only thing in this block a token remap cannot reach. The badge fill is a color-mix of a
+// SEMANTIC token against transparency, and --success / --muted are unchanged in dark by design
+// (design-spec §2). A 10% wash that reads as a soft chip on white is all but invisible on
+// --bg #000, so dark mirrors light by lifting the mix, not by changing the colour.
+html[data-theme="dark"] .acm-hero .tracy-badge--success,
+html.t4-dark .acm-hero .tracy-badge--success {
+  background: color-mix(in oklab, var(--success), transparent 78%);
+}
+
+html[data-theme="dark"] .acm-hero .tracy-badge--muted,
+html.t4-dark .acm-hero .tracy-badge--muted {
+  background: color-mix(in oklab, var(--muted), transparent 78%);
+}

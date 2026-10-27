@@ -1,0 +1,49 @@
+{
+  "id": "QA-UNIT-REG-PR-1676-local-login-autofill-happy",
+  "itemIds": ["regression:REG-PR-1676-local-login-autofill"],
+  "requirement": "On the local stand an email address is enough to sign in: the page fills the code it shows and sends it once",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1676-local-login-autofill.json",
+    "ref": "PR #1676 (fix); fix evidence: none recorded",
+    "invariant": "S1: one /login, then exactly one /verify with the shown code, then the page goes to next. S2: one /verify with that code on load, then next. S3: only /login; nothing is verified without a person.",
+    "productSources": ["apps/tracy-web/src/identity/pages.js:80"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "on the local stand an address is enough: the shown code is filled and sent, and the page goes on",
+    "a code page the server drew with the local code signs in on load",
+    "without the local preview the code step waits for a person"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1676-local-login-autofill"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1676-local-login-autofill",
+    "pr": 1676,
+    "kind": "fix",
+    "area": "identity/login",
+    "file": "tests/regression/cases/REG-PR-1676-local-login-autofill.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/local-login-autofill.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "on the local stand an address is enough: the shown code is filled and sent, and the page goes on",
+    "a code page the server drew with the local code signs in on load",
+    "without the local preview the code step waits for a person"
+  ],
+  "timeoutS": 600
+}

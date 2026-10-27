@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-obsidian: #101010;
+  --color-void: #000000;
+  --color-carbon: #1a1a1a;
+  --color-graphite: #272727;
+  --color-smoke: #403f3f;
+  --color-ash: #bababa;
+  --color-snow: #fffafa;
+
+  /* Typography — Font Families */
+  --font-review-condensed: 'Review Condensed', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-review: 'Review', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-kalice: 'Kalice', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times-system: 'Times (system)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

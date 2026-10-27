@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "017ce823-c338-417d-849d-497c97701c4c",
+  "status": "complete",
+  "name": "Simone Sniekers",
+  "url": "https://styles.refero.design/style/017ce823-c338-417d-849d-497c97701c4c",
+  "sourceWebsite": "https://www.simonesniekers.com",
+  "extractedAt": "2026-06-03T20:09:15.893Z",
+  "capturedAt": "2026-10-08T05:07:44.367389+00:00",
+  "theme": "light",
+  "industry": "agency",
+  "description": "A single editorial photograph breathes behind whisper-thin black captions — the image does all the work, the UI almost disappears.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/e107b577-da27-465b-989d-1a017c954281.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "5aaabe8824bb10ab5fe60ca3b23e12a191455d170c2738628261e47e6ef0af2e",
+      "bytes": 11954
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "7676d4fec59ffcdca7414e8b46d6ea6488e29cbebb5046bd01a8e1daf4f3b2c9",
+      "bytes": 53251
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "16c91b4e50ef3da2741d24dc11333f0eb49ad40e26c4c387c96b2aa9ed8eabd0",
+      "bytes": 10713
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "5f31e93d1c72e5c749c3a58d5f68d699c2a3c16c118e4836ced442948c7c560c",
+      "bytes": 3974
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "34cfa190cb03d1bc43e7e2222002b6b0c0895f2cb123ae6d7687579dc959cd85",
+      "bytes": 7666
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "293d26a81ef69761bbdb86a9f115b8fc7b6c6ca5bf138745d120d74d6e08be85",
+      "bytes": 3028
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "af8cd98a8ea38d9b6d81bd3dc0bc425fbabe0d665030840ccd55f408aa9b2a12",
+      "bytes": 562
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c975ae4b4206a7d9defa9a2a4361fe323b217f06019e854d72bc4fa593d170b6",
+      "bytes": 579
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "992295b103cf3464c14eb7973460c51f86a7a6090a7e5335ed16c963987cd2e4",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d5f3d9c576d1e1dd143b43eee885dcfecea6fa6f1ca6d8f20a798f52924f62c1",
+      "bytes": 35501
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "233bc01b9fc85097f856719cdb2f8c2e60537be2133819fa0cedeb95c781db5b",
+      "bytes": 18588
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "088cee0a7b1f64304efc608113f3cc8ecff17e61113a5357baa981da6f325a02",
+      "bytes": 29158
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "4479fd874b134af0f890421a7b9c2c36d67bd56ba3710337fa10c041cbb39a40",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a132d17b9ab9e668c807151a25cdc940d5ca1d0588be8f7ed121d8f272f45bd5",
+      "bytes": 728
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "6ab35717efc8cf337b7d5693a59715666e50eefd6a3309166b9914ffc22ffbed",
+      "bytes": 1007
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "017ce823-c338-417d-849d-497c97701c4c",
+    "139c4bee-396d-494c-baf0-fe211bf4928d",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2fd71e12-12fc-4346-8281-52afe12bb951",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "4244637b-e27b-4962-b586-cb3ac605e5aa",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "50f0b6d5-9e96-42a1-9564-a6e99c289f98",
+    "58a36cba-3fc4-48fa-a7d9-7f14592b7857",
+    "5fd2cdc0-05ac-4290-b67c-72e7525a532c",
+    "67c60ee4-ac38-41ee-834e-ed2a92146417",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "7b28c99e-ed17-451b-a39e-bd4722bc43f5",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "81a66e75-23af-4525-8a4e-f4a54c2700e7",
+    "837ba115-568f-4ada-8182-3dc100c8b3e4",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "ab1b113a-ed21-4512-acc2-d10c8927c410",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed"
+  ]
+}

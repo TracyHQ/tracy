@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a6791bc8-c49d-4e7a-a09d-877afcd04c25",
+  "status": "complete",
+  "name": "Oakâme",
+  "url": "https://styles.refero.design/style/a6791bc8-c49d-4e7a-a09d-877afcd04c25",
+  "sourceWebsite": "https://www.oakame.com",
+  "extractedAt": "2026-06-03T17:29:32.935Z",
+  "capturedAt": "2026-10-08T05:15:45.771956+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Sunlit Provençal atelier carved in warm stone",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/854629ce-cbd5-4165-bef5-8ffceaae3e73.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/09428d5c-521a-457a-8af6-ad0a0c9b7916.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/48062485-fdb3-4686-834f-5e61f83d58c1.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/7a889a9f-a725-44be-80ba-8e8b38957f9f.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/9401229d-ecde-4b7c-8ff2-e6b9a116d5d0.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e5cb3ae3bdde9d61675d8f391a652e13c54fa4fc5b4d3d0185b15cec7d9d0d11",
+      "bytes": 20784
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b4300b233c72781caace7537af6b21e9c5153ecfe65166903fbefdf82cf3356a",
+      "bytes": 202988
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "03448c41d210c7ed80fa88f496e9a99aee539c741690940ab53538fe05c3a6d4",
+      "bytes": 18418
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "19e17e7c7976f94ab23751783409481d43ed3ce33753edaf6e5ef49a7c36f377",
+      "bytes": 8600
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "12965629c7d87d14a87603f8e6f6cd0a21311299179badf1b6dca93495a92f8f",
+      "bytes": 13520
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "f68c5b2bc43da6327b77df7a8dc4f6fe9e51d7a41f30101f9b3229218a340790",
+      "bytes": 1846
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "7fbb53524ff09bde1bf892bcd7544e04bc3cbbf0f6693b85985174e65410a413",
+      "bytes": 303
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c9bc67bd45c2dec24af680db16cf7c5048734c94d5afcbd8a9b10a4138041e53",
+      "bytes": 320
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "c803054dc64fa9f1c7392e7186330f33efde0b43fa13896b7bbf9313cc2091d5",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "ef55092f68e98f0bf0679d0316302b1b2cf5addc58cbc8bfe8c27cd9ef84ece5",
+      "bytes": 43296
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5b5c648ee0c6e847d1de4849ea544b38f197928eb8c3816d1cdc1fd3c46e278f",
+      "bytes": 22747
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "222b2f9db44ea6ec34956dd5a202d962ab3d768fdab7d22ec1caf859f9386b66",
+      "bytes": 40991
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "6eb39b2b391400de960a0555ba64dbd91a3449b82fd3c88394f6a6143e188d16",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6baeca5da33dfe1db511e5dfbf78707d700c2435a174930d79d5b0f90f2998ea",
+      "bytes": 1291
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "de175c2176bda549a697a93829606ce12c0686167021c956e48bb2a075bcb131",
+      "bytes": 1773
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1f9089e1-4170-482f-b988-afe1124a70a9",
+    "2a830d03-cebc-48f0-a50f-ad78168c5026",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "31903c2b-99bf-4fa8-8c92-238858f3563c",
+    "34534515-c044-4d37-940d-44352d62ee44",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "4aa6d64c-fa61-4b21-8ad6-3d7130ed5161",
+    "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "5fbdad0a-d102-41c2-8253-f201ad6a6673",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "811f0fc6-3353-4ed6-bf3e-c98b261dcc1c",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "a6791bc8-c49d-4e7a-a09d-877afcd04c25",
+    "b376d42c-b2cb-4a52-8cec-ebf19cf1883f",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268"
+  ]
+}

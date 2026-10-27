@@ -1,0 +1,28 @@
+{
+  "id": "QA-STATIC-rule-focus-halo-invalid",
+  "itemIds": ["rule:focus-halo"],
+  "requirement": "No Tracy surface paints a focus halo (ring-2/ring-3/ring-ring/50, translucent 0 0 0 Npx box-shadow).",
+  "oracle": {
+    "source": "CLAUDE.md",
+    "ref": "§8 UI, focus rule; DESIGN.md §5 grep command",
+    "invariant": "Focus is one 1px stroke that changes colour, never a halo.",
+    "productSourceGap": "no gate or product code enforces the rule: only CLAUDE.md §8 and DESIGN.md §5 state it"
+  },
+  "edgeTags": ["invalid"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [],
+  "redProof": null,
+  "legacyIds": ["REG-PR-927-focus-no-halo"],
+  "gate": null,
+  "command": [],
+  "mode": "no-gate",
+  "mutations": []
+}

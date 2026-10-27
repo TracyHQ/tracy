@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e7b37c82-239c-48d5-b293-79a2bfa235cc",
+  "status": "complete",
+  "name": "IKEA",
+  "url": "https://styles.refero.design/style/e7b37c82-239c-48d5-b293-79a2bfa235cc",
+  "sourceWebsite": "https://www.ikea.com",
+  "extractedAt": "2026-06-03T20:49:37.912Z",
+  "capturedAt": "2026-10-08T05:18:50.651562+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "sunlit Swedish flat-pack showroom",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6c0dfb07-df90-46f2-99ac-b6d81a8089a4.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/c7df58f2-1e4d-4470-8db9-0f7032963db0.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e5348757-56b8-4249-954d-14b7598dff40.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/2d390173-a69a-4c71-b44e-f2039c5a7f16.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/2427d8df-674c-4e2e-8145-c8b852d97993.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b6a561b184ac34bb370ce9f1eda954e2ba2f05c91aa12e46c303e290ae1121b2",
+      "bytes": 16451
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "068431a88bad11b905278e0bcd042b38c8023093b132ae449726981003cce902",
+      "bytes": 82866
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "606aa41f5a9cef5f7c101c64ec87a356e55d02cda0eccf75f68c82cfe0aa3b4b",
+      "bytes": 14575
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "f25a9df9df7c247bc40305e4030beb6002b03e2c7682fc0ba596a0c5e80dcbf5",
+      "bytes": 6961
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "2252605b96e3ccaec993ec19506b7f2b0f2c4c01b0fdd1547508858e14038e07",
+      "bytes": 10355
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "0a71badcfdfdf2088e802546ae2e64f982bdd1771e455b077e709bdaca46f5c7",
+      "bytes": 2335
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2f09cad451519e6e99ffd567d52244d88a3475f103e99bacf95fc954409be996",
+      "bytes": 417
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "28f4b757357d2b5141cfc9600e5d864e10502776f9a88d2c4594c534d686b399",
+      "bytes": 434
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "2852a13bcf1e4dd34c2134dbd138c4761d91f64375bbd1ea67875ec8dd6c3bb8",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "e716efbb552ffbfdf83ff8dfd0ef00df92b9f43eff248522dea8d5e7fb5e3927",
+      "bytes": 40643
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0690c3b4ea2cbde8cab57d205d0c3e68700a7e23e5020fd1df622d3936d582f9",
+      "bytes": 21270
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "1f1d2b615e15b64c49d43c9d36c42ff86a102fcc37abcc208b662d95323ed910",
+      "bytes": 38338
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "66883e195a715c49db3fd0091bef89c9e9b9f15f879b0eeccff0ab26c4ea8bb9",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "4252949e4bcaaffe04e974f9c0aeebfcfa3cdfdb4f7655261a817df29487abaf",
+      "bytes": 963
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "201bb363dc6b3835c7d29cdec092a3e0e2db790a6481a10171985ccd79621a28",
+      "bytes": 1513
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4e7daadc-3dc4-4211-bf25-626ea7b216e6",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "5f39e778-d204-42a9-8b8b-a1519dbd3971",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "7e21f6e1-deec-4bc4-a30e-f2c9d3320314",
+    "96845df2-7ddb-420a-814e-c339f95a6554",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "aecf9dda-5cba-4dc7-9e73-59b65d895cdf",
+    "b43fdb3c-85e9-4282-9262-1d3deb4b679d",
+    "c8c22958-ec50-47f1-aedc-a131d7aeb442",
+    "d1941450-00be-4988-beaa-76bb68ae09ff",
+    "d69af89b-cb31-426d-b9aa-c21d127b8947",
+    "d7096101-d33c-43b8-8b0b-d9dfff802db2",
+    "d75a643b-a518-4550-b430-679cd989a447",
+    "e7b37c82-239c-48d5-b293-79a2bfa235cc",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "f1a690c7-234d-4ee9-9806-5790934e7043"
+  ]
+}

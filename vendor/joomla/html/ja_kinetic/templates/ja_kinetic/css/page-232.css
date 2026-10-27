@@ -1,0 +1,550 @@
+/* ================================================================
+   ja_kinetic — Search page (body.item-232) — per-page CSS overlay
+   Loaded LAST by index.php (after darkmode.css) with filemtime cache-bust.
+   ALL rules scoped to body.item-232 to prevent bleed.
+   Dark-mode overrides via html.t4-dark body.item-232.
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   0. Strip T4 section padding so masthead is flush under header
+   ---------------------------------------------------------------- */
+body.item-232 .t4-main-body {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* ----------------------------------------------------------------
+   0b. Hide the T4 LAYOUT masthead (#t4-masthead → h2.t4-masthead-title).
+   The menu item sets page_heading="Search Kinetic"; T4's masthead SECTION
+   renders that heading INDEPENDENTLY of show_page_heading, duplicating the
+   designed finder hero h1 (.kinetic-finder__title, which IS gated on
+   show_page_heading=1). Keep the finder hero (show_page_heading stays 1) and
+   suppress the T4 layout masthead here so only ONE "Search Kinetic" remains.
+   ---------------------------------------------------------------- */
+body.item-232 #t4-masthead,
+body.item-232 .t4-section.t4-masthead {
+  display: none !important;
+}
+
+/* ----------------------------------------------------------------
+   1. MASTHEAD — full-bleed gradient hero
+   Replaces the card look (border-radius:16px, all-sides border)
+   with a full-bleed gradient matching the .pen W4W7oB / HvfM2.
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder__masthead {
+  background: radial-gradient(
+    ellipse 150% 140% at 50% 0%,
+    color-mix(in srgb, var(--primary) 6%, transparent) 0%,
+    var(--elevated) 60%
+  ) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  padding: 66px 32px 58px !important;
+  margin: 0 !important;
+  text-align: center;
+}
+
+/* ----------------------------------------------------------------
+   2. MASTHEAD INNER — widened from 720px to 820px per design
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder__masthead-inner {
+  max-width: 820px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ----------------------------------------------------------------
+   3. EYEBROW — transform span into design pill
+   Text content "// smart search" stays (SHARED-ISSUE for copy);
+   visual is converted to pill with dot::before.
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-eyebrow {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px !important;
+  background: color-mix(in srgb, var(--primary) 8%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent) !important;
+  border-radius: 100px !important;
+  font-family: "JetBrains Mono", ui-monospace, monospace !important;
+  font-size: 11.5px !important;
+  font-weight: 400 !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  color: var(--primary) !important;
+  margin-bottom: 0 !important;
+}
+body.item-232 .kinetic-finder .kinetic-eyebrow::before {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary) !important;
+  flex-shrink: 0;
+}
+
+/* ----------------------------------------------------------------
+   4. PAGE HEADING H1 (rendered after DB fix sets show_page_heading=1)
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__title {
+  font-family: "Space Grotesk", sans-serif !important;
+  font-size: 46px !important;
+  font-weight: 700 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -1.3px !important;
+  color: var(--heading) !important;
+  margin: 0 !important;
+  max-width: 760px;
+  text-align: center;
+}
+
+/* ----------------------------------------------------------------
+   5. FORM — full width within masthead inner
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__form,
+body.item-232 .com-finder__form {
+  width: 100%;
+  max-width: 820px;
+}
+
+/* ----------------------------------------------------------------
+   6. SEARCH FIELD BOX — the visible pill bar
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__field {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px;
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 4px 4px 4px 16px !important;
+  box-shadow: var(--shadow);
+}
+
+/* ----------------------------------------------------------------
+   7. P28 — awesomplete flex-grow fix
+   awesomplete.js wraps #q in <div class="awesomplete">;
+   that div gets display:inline-block and flex:0 1 auto from the
+   browser + awesomplete.css → input collapses to ~216 px.
+   Fix: make it flex:1 1 auto so it fills the remaining bar.
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .awesomplete {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  display: block !important;
+  position: relative;
+}
+body.item-232 .kinetic-finder .awesomplete > input {
+  width: 100% !important;
+}
+
+/* ----------------------------------------------------------------
+   8. INPUT — transparent inside the bar
+   Overrides the template.css !important block that gives the input
+   a surface bg + 1 px border + 8 px radius (auth-field match).
+   body.item-232 prefix adds specificity to beat those !important rules.
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder #q,
+body.item-232 .kinetic-finder input.js-finder-search-query,
+body.item-232 .kinetic-finder input[type="search"],
+body.item-232 .kinetic-finder input[type="text"],
+body.item-232 .kinetic-finder .kinetic-finder__input {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: var(--heading) !important;
+  font-family: "IBM Plex Sans", sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  padding: 10px 0 !important;
+  width: 100% !important;
+  box-shadow: none !important;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+body.item-232 .kinetic-finder #q::placeholder,
+body.item-232 .kinetic-finder .kinetic-finder__input::placeholder {
+  color: var(--muted) !important;
+  font-family: "IBM Plex Sans", sans-serif !important;
+}
+body.item-232 .kinetic-finder #q:focus,
+body.item-232 .kinetic-finder input.js-finder-search-query:focus {
+  border-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* ----------------------------------------------------------------
+   8b. LEADING SEARCH ICON (inline lucide SVG)
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__icon {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--muted) !important;
+}
+body.item-232 .kinetic-finder .kinetic-finder__icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* ----------------------------------------------------------------
+   8c. ADVANCED SEARCH TOGGLE + FIELDSET — hidden.
+   The .pen Search Box (W4W7oB) is a clean [icon][input][Search] pill
+   with NO advanced toggle. The filters aren't part of the design, so
+   suppress the toggle button and the advanced fieldset (kept in markup
+   for functional fallback but not shown).
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__advtoggle,
+body.item-232 .kinetic-finder .kinetic-finder__advanced,
+body.item-232 .kinetic-finder #advancedSearch {
+  display: none !important;
+}
+
+/* ----------------------------------------------------------------
+   9. SUBMIT BUTTON
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__submit {
+  flex: 0 0 auto !important;
+  border-radius: 9px !important;
+  padding: 11px 20px !important;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------
+   10. ADVANCED TOGGLE (minor — not in design but keep functional)
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__advtoggle {
+  font-size: 13px !important;
+  color: var(--muted) !important;
+  margin: 10px auto 0 !important;
+}
+
+/* ----------------------------------------------------------------
+   11. RESULTS SECTION — only renders when query.search === true.
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__results,
+body.item-232 .com-finder__results {
+  background: var(--bg) !important;
+  padding: 56px 32px 72px !important;
+  /* Base com_finder ships `.com-finder__results{border-top:1px solid #e9ecef;margin-top:1.5rem}`
+     — a hardcoded LIGHT hairline that leaks into dark as a 2nd grey line, plus a 24px gap
+     below the masthead's own (#232A27) divider. Kill both; the masthead border is the seam. */
+  border-top: 0 !important;
+  margin-top: 0 !important;
+}
+body.item-232 .kinetic-finder .kinetic-finder__results > *,
+body.item-232 .com-finder__results > * {
+  max-width: 820px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* ----------------------------------------------------------------
+   11a. TOP RESULT-COUNT line (.pen BodyWrap `count`: "N results for "q"")
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__resultcount {
+  font-family: "JetBrains Mono", ui-monospace, monospace !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: var(--muted) !important;
+  /* keep the auto side-margins from the `.__results > *` centering rule, or the
+     count line left-aligns (gut 32) out of step with the centered 820 list. */
+  margin: 0 auto 4px !important;
+}
+
+/* 11b. EXPLAINED query text ("metrics is required") — NOT in the .pen
+   (the clean count line replaces it). Hide it so only the count shows. The
+   SUGGESTED "did you mean" branch is a separate render path; if it ever fires
+   it inherits the muted mono style below before the display:none on the
+   explained container — kept minimal to match the .pen's single count line. */
+body.item-232 .kinetic-finder .kinetic-finder__explained {
+  display: none !important;
+}
+/* Hide the auto-generated <br id="highlighter-start/end"> spacer gaps so the
+   list sits tight under the count line (matches the .pen 24px inner gap). */
+body.item-232 .kinetic-finder #highlighter-start,
+body.item-232 .kinetic-finder #highlighter-end {
+  display: none !important;
+}
+
+/* ----------------------------------------------------------------
+   12. EMPTY STATE
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__empty {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 56px 40px !important;
+  text-align: center !important;
+}
+body.item-232 .kinetic-finder .kinetic-finder__empty h2 {
+  font-family: "Space Grotesk", sans-serif !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  color: var(--heading) !important;
+  margin: 0 0 10px !important;
+}
+body.item-232 .kinetic-finder .kinetic-finder__empty .hx-muted {
+  font-size: 15px !important;
+  color: var(--muted) !important;
+  margin: 0 !important;
+}
+
+/* ----------------------------------------------------------------
+   13. RESULTS LIST — no outer bordered container; each result is its own card.
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__list,
+body.item-232 .kinetic-finder .search-results {
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  display: flex !important;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ----------------------------------------------------------------
+   14. INDIVIDUAL RESULT CARD
+   MICRO-INTERACTION: CARD gesture (3a, no lift — tight vertical stack) —
+   neutral border → primary border + elevated bg on hover/focus.
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-result {
+  display: block !important;
+  padding: 20px 22px !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-top: 1px solid var(--border) !important; /* cancel :first-child { border-top:0 } */
+  border-radius: 12px !important;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+body.item-232 .kinetic-finder .kinetic-result:first-child {
+  border-top: 1px solid var(--border) !important;
+}
+body.item-232 .kinetic-finder .kinetic-result:hover,
+body.item-232 .kinetic-finder .kinetic-result:focus-within {
+  background: var(--elevated) !important;
+  border-color: var(--primary) !important;
+}
+
+/* ----------------------------------------------------------------
+   15. RESULT BODY — flex column to allow meta reorder
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-result__body {
+  display: flex !important;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+/* Hide result image (design doesn't use thumbnails in results) */
+body.item-232 .kinetic-finder .kinetic-result__image {
+  display: none !important;
+}
+
+/* ----------------------------------------------------------------
+   16. META ROW — order:-1 moves URL above title
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-result__meta {
+  order: -1 !important;
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: baseline;
+  margin-bottom: 6px !important;
+  font-family: "JetBrains Mono", ui-monospace, monospace !important;
+  font-size: 11px !important;
+  color: var(--primary) !important;
+}
+body.item-232 .kinetic-finder .kinetic-result__url {
+  color: var(--primary) !important;
+  font-family: "JetBrains Mono", ui-monospace, monospace !important;
+  font-size: 11px !important;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+/* Date hidden — design doesn't show publish date in results */
+body.item-232 .kinetic-finder .kinetic-result__date {
+  display: none !important;
+}
+
+/* ----------------------------------------------------------------
+   17. RESULT TITLE (template.css had 19px / 700 — overridden here)
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-result__title {
+  font-family: "Space Grotesk", sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  color: var(--heading) !important;
+  margin: 0 0 6px !important;
+}
+body.item-232 .kinetic-finder .kinetic-result__title a {
+  color: var(--heading) !important;
+  text-decoration: none;
+  transition: color .15s ease;
+}
+body.item-232 .kinetic-finder .kinetic-result:hover .kinetic-result__title a,
+body.item-232 .kinetic-finder .kinetic-result:focus-within .kinetic-result__title a {
+  color: var(--primary) !important;
+}
+body.item-232 .kinetic-finder .kinetic-result__title a:focus-visible {
+  outline: none;
+  color: var(--primary) !important;
+}
+
+/* ----------------------------------------------------------------
+   18. TAXONOMY CHIPS — hidden (design doesn't show them)
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-result__tax {
+  display: none !important;
+}
+
+/* ----------------------------------------------------------------
+   19. RESULT EXCERPT
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-result__text,
+body.item-232 .kinetic-finder .result-text {
+  font-family: "IBM Plex Sans", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+  color: var(--text) !important;
+  margin: 0 !important;
+}
+
+/* ----------------------------------------------------------------
+   20. HIGHLIGHT SPANS (injected by finder behaviour)
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .highlight,
+body.item-232 .kinetic-finder span.highlight {
+  background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
+  color: var(--primary) !important;
+  font-weight: 600 !important;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+/* ----------------------------------------------------------------
+   21. PAGINATION
+   ---------------------------------------------------------------- */
+body.item-232 .kinetic-finder .kinetic-finder__pagination {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 24px !important;
+}
+body.item-232 .kinetic-finder .kinetic-finder__counter {
+  font-family: "JetBrains Mono", ui-monospace, monospace !important;
+  font-size: 12px !important;
+  color: var(--muted) !important;
+  margin: 0 !important;
+}
+
+/* [PER-VIEW-PAGINATION-DARK-MISSING] — BS5 .page-link gets white bg
+   in dark because Bootstrap hardcodes background-color on .page-link.
+   Override with surface token here. */
+html.t4-dark body.item-232 .kinetic-finder .pagination .page-link {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+html.t4-dark body.item-232 .kinetic-finder .pagination .page-item.active .page-link {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-ink) !important;
+}
+html.t4-dark body.item-232 .kinetic-finder .pagination .page-item.disabled .page-link {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--muted) !important;
+  opacity: .5;
+}
+
+/* ----------------------------------------------------------------
+   22. [DARK-STUCK-LIGHT] — awesomplete suggestion dropdown
+   awesomplete.css uses hardcoded white bg on > ul.
+   Override for dark mode.
+   ---------------------------------------------------------------- */
+html.t4-dark body.item-232 .kinetic-finder .awesomplete > ul {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
+}
+html.t4-dark body.item-232 .kinetic-finder .awesomplete > ul::before {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+html.t4-dark body.item-232 .kinetic-finder .awesomplete > ul > li {
+  color: var(--text) !important;
+}
+html.t4-dark body.item-232 .kinetic-finder .awesomplete > ul > li:hover,
+html.t4-dark body.item-232 .kinetic-finder .awesomplete > ul > li[aria-selected="true"] {
+  background: var(--elevated) !important;
+  color: var(--heading) !important;
+}
+html.t4-dark body.item-232 .kinetic-finder .awesomplete mark {
+  background: color-mix(in srgb, var(--primary) 30%, transparent) !important;
+  color: var(--primary) !important;
+}
+
+/* ----------------------------------------------------------------
+   23. MOBILE — 390 px target; breakpoint 767.98 px
+   ---------------------------------------------------------------- */
+@media (max-width: 767.98px) {
+  body.item-232 .kinetic-finder__masthead {
+    padding: 44px 24px 38px !important;
+  }
+  body.item-232 .kinetic-finder__masthead-inner {
+    gap: 14px !important;
+  }
+  body.item-232 .kinetic-finder .kinetic-eyebrow {
+    font-size: 11px !important;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__title {
+    font-size: 33px !important;
+    letter-spacing: -1px !important;
+    max-width: 100% !important;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__results,
+  body.item-232 .com-finder__results {
+    padding: 36px 20px 56px !important;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__field {
+    padding: 4px 4px 4px 14px !important;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__submit {
+    padding: 11px 18px !important;
+  }
+  body.item-232 .kinetic-finder .kinetic-result {
+    padding: 18px 20px !important;
+  }
+  body.item-232 .kinetic-finder .kinetic-finder__pagination {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ----------------------------------------------------------------
+   MICRO-INTERACTIONS — reduced-motion guard (build-docs/micro-interactions.md §4)
+   ---------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  body.item-232 .kinetic-finder .kinetic-result,
+  body.item-232 .kinetic-finder .kinetic-result * {
+    transition-duration: .01ms !important;
+  }
+}

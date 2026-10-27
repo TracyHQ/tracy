@@ -1,0 +1,44 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, and the only background color used across the system"
+    },
+    "pencil-gray": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Pencil Gray — Faded helper text and secondary metadata — recedes so primary content carries weight"
+    }
+  },
+  "font": {
+    "diagramatika-display": {
+      "$value": "Diagramatika Display",
+      "$type": "fontFamily",
+      "$description": "Oversized display headlines and landmark letters (the 80px V–A–C spread) — a custom geometric face held at weight 400, so the monumental size carries presence without bold weight, letting the letterforms do the work. Substitute: Space Grotesk or any wide geometric sans."
+    },
+    "diagramatika-text": {
+      "$value": "Diagramatika Text",
+      "$type": "fontFamily",
+      "$description": "Body prose, captions, navigation labels, and secondary headings — pairs with Display at a more human scale, keeping a single weight across the system. Substitute: Inter or Söhne."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Falls back for form controls and button labels where the custom face is unavailable; stays at weight 400 to preserve the flat typographic voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://sreda.v-a-c.org",
+      "siteName": "V–A–C Sreda",
+      "extractedAt": "2026-06-03T20:20:50.378Z",
+      "variant": "compact"
+    }
+  }
+}

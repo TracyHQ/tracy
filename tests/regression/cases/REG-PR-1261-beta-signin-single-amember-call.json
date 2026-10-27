@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1261-beta-signin-single-amember-call",
+  "kind": "fix",
+  "title": "Two concurrent beta sign-ins of one address call aMember once, even when one cache read returns after the other finished",
+  "pr": 1261,
+  "area": "beta/access",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository root run: node --test --test-name-pattern='does not call the API again' apps/tracy-web/test/beta-operation-signal.test.mjs",
+    "S2: From the repository root run: node --test --test-name-pattern='entityLanguages|language' packages/cms/tracy-seeder/test/*.test.mjs"
+  ],
+  "expect": [
+    "S1: exit 0, 1 test passed, 0 failed: the fake membership API was called exactly once for two sign-ins whose cache reads were forced into the losing order.",
+    "S2: exit 0, 0 failed: entity languages read from the content map are unchanged by the per-file cache."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/beta-operation-signal.test.mjs",
+    "code": "apps/tracy-web/src/lib/beta-access.js"
+  },
+  "evidence": "12/10/2026: apps/tracy-web full suite on a loaded machine had `cache lasts 10 minutes, coalesces concurrent requests` red with 2 !== 1; the new test is red on the old beta-access.js (2 !== 1) and green on the fix",
+  "fence": "The memory-cache re-read in membership() before calling the membership API",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=does not call the API again",
+      "apps/tracy-web/test/beta-operation-signal.test.mjs"
+    ]
+  }
+}

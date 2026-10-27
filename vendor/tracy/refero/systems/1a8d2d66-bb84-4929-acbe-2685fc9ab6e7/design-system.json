@@ -1,0 +1,190 @@
+{
+  "dos": [
+    "Use Vermillion (#d15022) for all display type, headings, and navigation — it is the only chromatic voice in the system",
+    "Set all type at weight 800 — the system never steps down to medium or regular; 29px bold IS the body weight",
+    "Use Helvetica Now Display Condensed 800 at 72px+ with lineHeight 0.95 for any display or section-spanning text",
+    "Use 0px border-radius on every element — images, buttons, tags, cards all have hard rectangular edges",
+    "Frame every photograph with a 1-2px Pure Black (#000000) border",
+    "Let display type bleed to viewport edges — never constrain with max-width or padding around the name lockup",
+    "Use Acid Mint (#75dfb5) as a full-bleed section background, never as a card surface or accent fill"
+  ],
+  "donts": [
+    "Don't introduce a second body weight below 800 — medium and regular have no place in this system",
+    "Don't add drop shadows, gradients, or any elevation — the system is completely flat",
+    "Don't use rounded corners on images, buttons, or containers — 0px radius is non-negotiable",
+    "Don't constrain the layout to a max-width container — the editorial poster aesthetic requires full-bleed",
+    "Don't add a third color — the palette is strictly Vermillion, Acid Mint, Black, and White",
+    "Don't separate type and photography into stacked rows — they should overlap and share the same plane",
+    "Don't use a standard sans-serif at body sizes — even 18px and 29px text must be 800 weight to match the system's volume"
+  ],
+  "theme": "mixed",
+  "colors": [
+    {
+      "hex": "#d15022",
+      "name": "Vermillion",
+      "role": "Display type, navigation, outlined action borders, section headings — burnt orange against white and mint creates the system's only chromatic voice; it carries every heading, every link, and the massive name lockup",
+      "group": "brand"
+    },
+    {
+      "hex": "#75dfb5",
+      "name": "Acid Mint",
+      "role": "Green action color for filled buttons, selected navigation states, and focused conversion moments",
+      "group": "brand"
+    },
+    {
+      "hex": "#000000",
+      "name": "Pure Black",
+      "role": "Image borders, hairline dividers, secondary borders, and body-text outlines where Vermillion isn't used — the structural ink that frames every photograph",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "role": "Primary canvas behind image collages and the opening viewport — flat, untextured, the gallery wall on which the photographs are pinned",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed editorial layout with no max-width container. The page alternates between two modes: (1) Paper White canvas with a collage of bordered editorial photographs arranged asymmetrically, with Vermillion display type bleeding behind/through the images, and (2) Acid Mint full-bleed sections where massive Vermillion display type fills the viewport with body text below. Navigation is minimal — 'D — L' top-left, 'Menu' top-right with 20px viewport padding. No sticky header, no sidebar, no card grids. Sections transition by full-bleed color change rather than by dividers or whitespace gaps. The hero pattern is the massive display name lockup that fills the first viewport, functioning simultaneously as logo, heading, and background architecture.",
+  "imagery": "Editorial fashion and portrait photography in full color, high-production shoots. Images are presented as hard rectangular crops (0px radius) with 1-2px black borders, placed asymmetrically with deliberate overlap against massive type. The photography style is punchy, saturated, magazine-quality — studio portraits, backstage moments, staged fashion narratives. Images function as both content and collage composition, sharing the plane with display type rather than sitting in tidy cards or grids. The visual density is image-heavy in the opening section, with type dominating the mint-background sections.",
+  "similar": [
+    {
+      "why": "Same editorial poster aesthetic with oversized condensed display type overlapping photography, and a fearless use of high-contrast color fields (mint, orange) as full-bleed backgrounds",
+      "business": "Flaunt Magazine"
+    },
+    {
+      "why": "Extreme typographic confidence — 800-weight display type that fills the viewport, zero rounded corners, flat color sections, and editorial image arrangement",
+      "business": "Bureau Cool"
+    },
+    {
+      "why": "Portfolio sites that use condensed ultra-bold display type as the primary visual element, with photography placed against or through the type rather than in separate containers",
+      "business": "Misha Hollenbach / Hotel Design"
+    },
+    {
+      "why": "Punk-zine sensibility expressed at scale: brutalist type choices, limited two-color palette, and image collages that break grid conventions",
+      "business": "The Garbage Magazine"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "tags": "0px",
+      "cards": "0px",
+      "images": "0px",
+      "buttons": "0px"
+    },
+    "elementGap": "20px",
+    "sectionGap": "50px",
+    "cardPadding": "0px",
+    "pageMaxWidth": null
+  },
+  "industry": "agency",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Paper White",
+      "level": 0,
+      "purpose": "Primary canvas for the opening viewport and image collage sections — the gallery wall"
+    },
+    {
+      "hex": "#75dfb5",
+      "name": "Acid Mint",
+      "level": 1,
+      "purpose": "Full-bleed section background for bio, about, and content-heavy pages — the only saturated surface"
+    }
+  ],
+  "northStar": "Punk broadsheet at billboard scale — a flat acid-mint field cracked open by a slab of vermillion condensed type the size of a car door.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 10,
+      "lineHeight": 1.6,
+      "letterSpacing": -0.1
+    },
+    {
+      "role": "body",
+      "size": 18,
+      "lineHeight": 1.6,
+      "letterSpacing": -0.18
+    },
+    {
+      "role": "heading",
+      "size": 29,
+      "lineHeight": 1,
+      "letterSpacing": -0.29
+    },
+    {
+      "role": "display",
+      "size": 72,
+      "lineHeight": 0.95,
+      "letterSpacing": -0.72
+    }
+  ],
+  "components": [
+    {
+      "name": "Display Name Lockup",
+      "role": "Site-defining typographic element",
+      "description": "Vermillion (#d15022) Helvetica Now Display Condensed 800 at 72px+, lineHeight 0.95, letter-spacing -0.01em, bleeding past viewport edges. The text 'Danielle Levitt' (or 'Levitt' alone) fills the entire screen width and functions as both identity mark and page background. White or mint sits behind it depending on the section. Zero padding around the type — it touches every edge."
+    },
+    {
+      "name": "Image Collage Block",
+      "role": "Editorial photo arrangement on white canvas",
+      "description": "Editorial photographs placed on Paper White (#ffffff) with deliberate asymmetric overlap. Each image carries a 0px radius (hard rectangular edges) and is framed by a Pure Black (#000000) border approximately 1-2px thick. Images overlap the Vermillion display type, with the text remaining visible behind/beside — type and photography occupy the same plane rather than stacking."
+    },
+    {
+      "name": "Bio Statement Block",
+      "role": "Primary descriptive text",
+      "description": "Set in Helvetica Now Display 800 at 29px, lineHeight 1.0, Vermillion (#d15022) on Acid Mint (#75dfb5) or Paper White. Bold weight at 29px reads as display type, not body — the system doesn't have a 'comfortable' reading mode. Letter-spacing -0.01em tightens into a dense paragraph block. Centered or left-aligned, depending on the section."
+    },
+    {
+      "name": "Minimal Navigation",
+      "role": "Site wayfinding",
+      "description": "Two pieces only: 'D — L' top-left, 'Menu' top-right, both in Vermillion (#d15022) Helvetica Now Display 800 at 18px, 20px padding from viewport edges. No nav bar, no logo, no tagline — the massive display name IS the logo. Hairline 1px Pure Black border may separate the nav from the canvas."
+    },
+    {
+      "name": "Outlined Action Link",
+      "role": "Outlined/ghost link treatment",
+      "description": "Vermillion (#d15022) 1-2px border, transparent fill, Vermillion text. No background fill — this is a bordered link, not a filled button. Padding approximately 12px 24px. Text in Helvetica Now Display 800 at 18px. The outlined approach is the system's only action style; there are no filled CTA buttons."
+    },
+    {
+      "name": "Full-Bleed Section Background",
+      "role": "Page-level color band",
+      "description": "Entire viewport filled with Acid Mint (#75dfb5) or Paper White (#ffffff). No max-width container, no card surfaces, no rounded corners. The background IS the section — there is no separation between 'background' and 'surface'. Vermillion display type sits directly on the colored field."
+    },
+    {
+      "name": "Image Frame Border",
+      "role": "Photograph containment",
+      "description": "Every photograph receives a 0px-radius Pure Black (#000000) border of approximately 1-2px on all sides. No drop shadows, no rounded corners — the hard black line acts as the image's edge against white or mint. The framing is consistent across all images regardless of aspect ratio."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Body emphasis, navigation labels, sub-headings, image captions, link text — the non-display workhorse at 29px bold for the bio statement and 18px for running text. The 800 weight everywhere (no medium, no regular) is a signature choice: the system never steps down from maximum volume.",
+      "sizes": "10px, 18px, 29px",
+      "family": "Helvetica Now Display",
+      "weight": "800",
+      "lineHeight": "0.95, 1.0, 1.6",
+      "substitute": "Inter 800 or Archivo Black",
+      "letterSpacing": "-0.01em consistently — at 29px that is -0.29px, at 18px -0.18px, at 10px -0.1px"
+    },
+    {
+      "role": "Display name lockup and section-spanning hero type — the ultra-condensed bold at 72px+ fills viewports and overlaps photography. The condensation is the brand's signature: standard Helvetica at 800 wouldn't create the same monolithic, poster-scale letters that define the site's identity.",
+      "sizes": "72px",
+      "family": "Helvetica Now Display Condensed",
+      "weight": "800",
+      "lineHeight": "0.95",
+      "substitute": "Anton, Oswald 700, or Bebas Neue for the same condensed impact",
+      "letterSpacing": "-0.01em at 72px = -0.72px, tightening the already-narrow glyphs further into a single massed shape"
+    }
+  ],
+  "description": "Danielle Levitt's portfolio operates as an oversized editorial broadsheet: white and acid-mint canvases carry massive condensed display type in #d15022 vermillion that functions as both content and architecture. The visual system is brutally limited — burnt orange, mint green, black, and white are the only colors, and the type weights are uniformly 800, creating a single gravitational pull across every page. Photography is arranged in deliberate asymmetric collages that sit on, over, or through the type — never in uniform grids or tidy cards. The aesthetic is punk-poster meets fashion editorial: type screams, layouts breathe, and the UI chrome is reduced to two words — 'D — L' and 'Menu' — with the display lettering itself acting as the page structure.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference:**\n- Text/Heading: #d15022 (Vermillion)\n- Background (light section): #ffffff (Paper White)\n- Background (accent section): #75dfb5 (Acid Mint)\n- Borders/Image frames: #000000 (Pure Black)\n- Outlined action border: #d15022 (Vermillion)\n- primary action: #d15022 (outlined action border)\n\n**Example Component Prompts:**\n\n1. **Display Name Lockup**: Full-bleed section. Background: #75dfb5 (Acid Mint). Text: 'Danielle Levitt' in Helvetica Now Display Condensed 800, 72px, #d15022 (Vermillion), lineHeight 0.95, letter-spacing -0.72px. Text bleeds to viewport edges. No padding, no max-width.\n\n2. **Image Collage Block**: White (#ffffff) canvas. Three editorial photographs at varied sizes (roughly 200x300, 350x250, 250x350px), each with 0px radius and 1.5px #000000 border. Images overlap each other asymmetrically, with a 72px Helvetica Now Display Condensed 800 #d15022 text element positioned behind one of the images, partially visible.\n\n3. **Bio Statement**: Acid Mint (#75dfb5) full-bleed background. Text: 'Danielle Levitt is a film director and photographer whose work covers two decades of documenting music, art, fashion, and celebrity.' Set in Helvetica Now Display 800, 29px, #d15022 (Vermillion), lineHeight 1.0, letter-spacing -0.29px. Centered, with 20px margin-top from the display lockup above.\n\n4. **Outlined Link**: Transparent background. 1.5px #d15022 (Vermillion) border, 12px 24px padding. Text: 'Studio:' in Helvetica Now Display 800, 18px, #d15022, letter-spacing -0.18px. No fill, no shadow.\n\n5. **Navigation Bar**: Paper White (#ffffff) background, 20px padding from viewport edges. Top-left: 'D — L' in Helvetica Now Display 800, 18px, #d15022. Top-right: 'Menu' in the same style. 1px #000000 bottom border."
+    },
+    {
+      "title": "Type as Architecture",
+      "content": "In this system, display type is not a content element — it is a structural surface. The massive 72px+ condensed lettering at lineHeight 0.95 fills viewports and overlaps photographs, meaning the type and the imagery share the same z-plane. When generating pages, treat the display name lockup as you would a background image: full-bleed, edge-touching, and composable with other elements. The 0.95 lineHeight is critical — it causes ascenders and descenders to almost touch, creating a dense typographic mass rather than spaced lines. Combined with the -0.72px letter-spacing at 72px, the result is a single monolithic word-shape that reads as image, not text, at a distance."
+    }
+  ],
+  "elevationPhilosophy": "The system is completely flat. No drop shadows, no glow effects, no gradient fills. Spatial separation is achieved through hard color contrast (white/mint/vermillion fields) and overlapping placement rather than elevation. The 1-2px Pure Black image borders are the only 'shadow-like' element, and they function as containment, not depth."
+}

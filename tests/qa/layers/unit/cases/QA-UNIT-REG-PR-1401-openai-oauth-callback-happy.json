@@ -1,0 +1,64 @@
+{
+  "id": "QA-UNIT-REG-PR-1401-openai-oauth-callback-happy",
+  "itemIds": ["regression:REG-PR-1401-openai-oauth-callback"],
+  "requirement": "Complete browser consent with the observed OpenAI callback and strict Origin validation",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1401-openai-oauth-callback.json",
+    "ref": "PR #1401 (fix); fix evidence: none recorded",
+    "invariant": "The valid request redirects to sign-in and preserves its exact callback and resource without minting a session. Every invalid callback returns 400 invalid_request without a redirect. Both browser submissions carry the exact Tracy Origin and return the expected 303 callback. Allow stores one site-bound code, Cancel stores none. No referrer reaches the foreign fixture; null and foreign Origins remain 403 without additional codes.",
+    "productSources": [
+      "apps/tracy-web/src/lib/session.js:101",
+      "apps/tracy-web/src/mcp/clients.js:7",
+      "apps/tracy-web/src/mcp/oauth.js:28"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "apps/tracy-web/test/e2e/mcp-consent.test.mjs:14 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "OpenAI Portal callback reaches sign-in instead of invalid_request",
+    "OpenAI callback lookalikes and the obsolete callback are refused without redirect",
+    "browser consent allow: same-origin POST passes the strict Origin check without leaking a referrer",
+    "browser consent deny: same-origin POST passes the strict Origin check without leaking a referrer"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1401-openai-oauth-callback"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1401-openai-oauth-callback",
+    "pr": 1401,
+    "kind": "fix",
+    "area": "mcp/oauth",
+    "file": "tests/regression/cases/REG-PR-1401-openai-oauth-callback.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/mcp-callback.test.mjs",
+    "apps/tracy-web/test/e2e/mcp-consent.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "OpenAI Portal callback reaches sign-in instead of invalid_request",
+    "OpenAI callback lookalikes and the obsolete callback are refused without redirect",
+    "browser consent allow: same-origin POST passes the strict Origin check without leaking a referrer",
+    "browser consent deny: same-origin POST passes the strict Origin check without leaking a referrer"
+  ],
+  "timeoutS": 600
+}

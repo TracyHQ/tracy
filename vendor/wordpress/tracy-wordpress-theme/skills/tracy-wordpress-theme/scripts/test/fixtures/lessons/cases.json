@@ -1,0 +1,14 @@
+{
+  "host-disk": { "positive": { "statfs": "low" }, "negative": { "statfs": "high", "expect": "resolved" } },
+  "spec-cat-slug": { "positive": {}, "negative": { "expect": "resolved" } },
+  "spec-list-class": { "positive": {}, "negative": { "expect": "resolved" } },
+  "spec-li-img": { "positive": {}, "negative": { "expect": "resolved" } },
+  "spec-img-pct": { "positive": {}, "negative": { "expect": "resolved" } },
+  "spec-post-template": { "positive": {}, "negative": { "expect": "resolved" } },
+  "spec-template-file": { "positive": {}, "negative": { "expect": "resolved" } },
+  "spec-orphan-modules": { "positive": {}, "negative": { "expect": "resolved" } },
+  "theme-overlay-meta": { "positive": {}, "negative": { "expect": "na" } },
+  "theme-block-path": { "positive": {}, "negative": { "expect": "resolved" } },
+  "theme-docs-marker": { "positive": {}, "negative": { "expect": "resolved" } },
+  "pack-modes": { "positive": { "pack": "0600" }, "negative": { "pack": "policy", "expect": "resolved" } }
+}

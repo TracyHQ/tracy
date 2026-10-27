@@ -1,0 +1,94 @@
+{
+  "color": {
+    "electric-violet": {
+      "$value": "#1100ff",
+      "$type": "color",
+      "$description": "Electric Violet — Brand accent — vivid glow halos behind product cards, focus ring washes, decorative shadow tint. Appears sparingly as a soft aura, never as a filled surface or text color"
+    },
+    "ink-violet": {
+      "$value": "#19154e",
+      "$type": "color",
+      "$description": "Ink Violet — Link color and ghost-action border — underlined hyperlinks, outlined action borders, link text. The only chromatic text color in the system"
+    },
+    "press-black": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Press Black — Primary action background, heading text, nav backgrounds. Used for filled CTA buttons and the heaviest typographic weight in the system"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Universal border color and high-emphasis text. The system draws most structural borders in pure black at hairline weights"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, button text on dark fills, inverse text. The dominant background throughout"
+    },
+    "newsprint": {
+      "$value": "#f3f3f3",
+      "$type": "color",
+      "$description": "Newsprint — Subtle surface lift — secondary card backgrounds, hover fills, input resting states. One step off white for quiet differentiation"
+    },
+    "graphite": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Graphite — Muted body text, helper text, secondary labels, nav inactive items. The workhorse gray for de-emphasized content"
+    },
+    "slate": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Slate — Secondary heading text, emphasized body copy, card titles. One step lighter than Press Black for sub-headlines"
+    },
+    "pewter": {
+      "$value": "#404040",
+      "$type": "color",
+      "$description": "Pewter — Tertiary text, nav secondary items, metadata. Between Graphite and Slate in the gray scale"
+    },
+    "ash": {
+      "$value": "#b3b3b3",
+      "$type": "color",
+      "$description": "Ash — Medium-contrast borders, control outlines, and structural separators. Do not promote it to the primary CTA color"
+    },
+    "smoke": {
+      "$value": "#737373",
+      "$type": "color",
+      "$description": "Smoke — Subtle borders, icon stroke at reduced weight, tertiary metadata text"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "gt-alpina-light": {
+      "$value": "GT Alpina Light",
+      "$type": "fontFamily",
+      "$description": "Display serif for hero headlines and section titles — the signature typographic choice. Weight 300 at 80px with -0.02em letter-spacing creates a literary, anti-SaaS gravity. No other productivity app uses a light serif at this scale; it positions Fabric as a thinking tool, not a dashboard."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Body, UI labels, nav items, button text, and subheadings. Weight 400 for body, 500 for emphasis, 600 for button labels and strong UI elements. Negative tracking (-0.01em to -0.02em) at larger sizes tightens the geometric forms for a compact, efficient feel."
+    },
+    "manrope": {
+      "$value": "Manrope",
+      "$type": "fontFamily",
+      "$description": "Decorative heading weight — appears in badge labels and small-caps-style category tags. Used sparingly to add visual weight without serif gravitas."
+    },
+    "system-ui": {
+      "$value": "system-ui",
+      "$type": "fontFamily",
+      "$description": "Micro-copy and icon-adjacent labels. System fallback ensures pixel-perfect rendering for tiny utility text."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://fabric.so",
+      "siteName": "Fabric",
+      "extractedAt": "2026-06-03T21:46:17.289Z",
+      "variant": "compact"
+    }
+  }
+}

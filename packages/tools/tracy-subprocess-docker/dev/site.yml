@@ -1,0 +1,34 @@
+# packages/tools/tracy-subprocess-docker/dev/site.yml
+# One more WordPress site, shaped like the fleet lays a site out. The compose PROJECT name is the
+# site label, so the container comes out as `<label>-web-1` — the name the provider execs into.
+# Start it with:
+#   TRACY_SITES_ROOT=… LABEL=<label> PORT=<host port> docker compose -p <label> -f site.yml up -d
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: wp
+      MARIADB_USER: wp
+      MARIADB_PASSWORD: wp
+  web:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    image: tracy/web-dev:latest
+    depends_on: [db]
+    # See compose.yml's web service for why: web-clone's Chromium runs with no
+    # `--disable-dev-shm-usage` of its own, and Docker's default 64 MB /dev/shm is a real-page
+    # crash waiting to happen.
+    shm_size: 512m
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: wp
+      WORDPRESS_DB_NAME: wp
+    ports:
+      - '127.0.0.1:${PORT}:80'
+    volumes:
+      - ${TRACY_SITES_ROOT}/${LABEL}/.webroot:/var/www/html
+      - ${TRACY_SITES_ROOT}/${LABEL}:/site/${LABEL}
+      - ${TRACY_SITES_ROOT}/${LABEL}/.webroot:/site/${LABEL}/.webroot

@@ -1,0 +1,48 @@
+{
+  "id": "QA-UNIT-REG-PR-1002-add-site-card-three-lines-happy",
+  "itemIds": ["regression:REG-PR-1002-add-site-card-three-lines"],
+  "requirement": "The Customize your site card is a palette badge beside three single lines at every width (title + Optional, the count N questions / X of N answered, the description), the whole card is the button with a muted chevron, it never shows the answers, and the standard sets' name hint is no longer \"Claude Studio\"",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1002-add-site-card-three-lines.json",
+    "ref": "PR #1002 (fix); fix evidence: 07/10/2026, review of the card shipped in #998 (issue #1001): three-line card on a narrow panel listing the customer's answers; leftover Claude Studio hint on Business name.",
+    "invariant": "S1 exits 0 with 0 failures and 0 skipped tests. At 260, 320, 380, 480 and 900px the card draws exactly 3 text lines, before and after answering; [data-questions-count=\"1\"] is alone on line 2 and never clipped; lines 2 and 3 (.tas-qcard-l2, .tas-qcard-l3) start at the left edge of line 1 (.tas-qcard-l1); the icon badge (.tas-qcard-badge) is left of all three lines and the chevron (.tas-qcard-go) right of them, both centred across the three; there is no progress ring; the card's aria-label is 'Customize your site, 4 questions. Open' (then '..., 2 of 4 answered. Edit'); hovering turns its border to the primary colour. Nothing answered the count reads '4 questions' and the card 'Receive a site tailored to you.'; after answering the count reads '2 of 4 answered' and the card contains neither 'Bakery' nor 'Golden Crust'. After a change of template the kept/dropped line ([data-questions-note=\"1\"]) is absent from the card and present in the sheet. No name hint in the six question files contains 'Claude Studio' or 'Tiệm bánh Cô Ba'; the en hint is 'Write it the way customers should see it, for example \"Harbor Build & Repair\".' In de, vi and fr at 260 and 320px line 1 stays one line with the Optional tag whole (the title gives way first) and the card keeps 3 lines.",
+    "productSourceGap": "no product file is imported, read or run through a supported form in the command's test files (see tests/qa/layers/unit/lib/sources.mjs)",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:28 import() with a computed specifier",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:42 execFileSync() passes packages/site/tracy-add-site/src/client/add-site.css to node; not proven to run it",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:640 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:65 readFileSync() with a computed path",
+      "packages/site/tracy-add-site/test/e2e/create-brief-sheet.test.mjs:83 readFileSync() with a computed path",
+      "tests/regression/scripts/REG-PR-1002-add-site-card-three-lines.mjs:42 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1002-add-site-card-three-lines.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1002-add-site-card-three-lines"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression"],
+  "style": "script",
+  "regression": {
+    "id": "REG-PR-1002-add-site-card-three-lines",
+    "pr": 1002,
+    "kind": "fix",
+    "area": "add-site/questions",
+    "file": "tests/regression/cases/REG-PR-1002-add-site-card-three-lines.json"
+  },
+  "command": ["node", "tests/regression/scripts/REG-PR-1002-add-site-card-three-lines.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

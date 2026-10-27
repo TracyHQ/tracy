@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1427-editorial-input-preflight",
+  "kind": "fix",
+  "title": "Quickstart editorial preflights exact wire inputs and splits only oversized batches",
+  "pr": 1427,
+  "area": "website-opportunities/quickstart-first",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the three declared Node test suites."],
+  "expect": [
+    "Oversized batches split deterministically while every requested field and immutable source remains included.",
+    "All batches preflight before any provider dispatch; an unshrinkable single-field request makes zero paid calls.",
+    "Admitted batch inputs retain their prior hashes and repair requests preflight without resetting attempt history."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/brief-engines/quickstart-editorial.js, apps/tracy-web/src/opportunities/quickstart-model.js"
+  },
+  "fence": "Uses the same qualityExecutionInput and qualityCallBudget as paid dispatch; no increased token or monetary limits.",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/brief-quickstart-first.test.mjs"],
+    "needs": []
+  }
+}

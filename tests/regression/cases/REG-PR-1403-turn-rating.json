@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1403-turn-rating",
+  "kind": "feat",
+  "title": "A Good or Bad on Tracy's answer is kept beside the turn it answered (site_turn.rating), sent by the host dsh signed as the person who typed — the note never leaves the conversation",
+  "pr": 1403,
+  "area": "chat/turn-rating",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: ratingOf over a put with categories, a put with a legacy category, a delete, an invalid rating and other events; ratedTurn over a log of two turns typed by two people.",
+    "S2: The built site-tabs plugin hears session/event with a rating of an open conversation, session/event with another event, and feedback/committed with a delete for a conversation dsh had not loaded.",
+    "S3: POST /api/sites/:key/turn/rating for an opened turn with negative + task-result, then null; then a turn the site does not hold, a rating 'meh', a category '<b>', a turn id that is not one."
+  ],
+  "expect": [
+    "S1: the rating and its categories only; null rating for a delete; none for the rest; the turn of the rated answer and the person who typed before it.",
+    "S2: exactly two POSTs to /turn/rating signed as that turn's typist — {turnId session-r1:2, negative, [task-result]} and {turnId session-r2:2, null, []} — and the note in none of them.",
+    "S3: 200 and the row holds negative, [task-result], rated_at; null clears all three; then 404 TURN_UNKNOWN, 400, 400, 400."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-site-tabs/src/host/{rating.mjs,index.ts}, apps/tracy-web/src/sites/{route.js,turns.js}, apps/tracy-web/src/db/migrations/113-site-turn-rating.sql",
+    "dom": ""
+  },
+  "evidence": "Plan #1403 item 13 (code read 16/10/2026): dsh's message feedback writes feedback/message-put to the conversation's log only; no reader on the host, so ratings could not be measured with their turns",
+  "fence": "Only the judgement and its categories; the turn must be this site's",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-timeout=600000",
+      "packages/site/tracy-site-tabs/test/rating.test.mjs",
+      "apps/tracy-web/test/sites-route.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "ratingOf: the rating and its categories, never the note; a delete takes it back; anything else is none",
+      "ratedTurn: the turn whose answer was rated, and who typed the request before it",
+      "the built plugin sends a rating of an open conversation, and of one dsh had not loaded, to the turn it answered",
+      "POST /api/sites/:key/turn/rating: a Good or Bad kept beside the turn, taken back by null; nothing but this site's turns"
+    ]
+  }
+}

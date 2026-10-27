@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1050-emdash-unticked-page-kept-lister",
+  "kind": "fix",
+  "title": "EmDash: an unticked page takes its links, home block and child pages; a child a kept page still lists stays reachable",
+  "pr": 1050,
+  "area": "add-site/questions",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test packages/cms/tracy-emdash-theme-business/tests/page-gate.test.mjs packages/cms/tracy-emdash-theme-saas/tests/page-gate.test.mjs packages/cms/tracy-emdash-theme-base/tests/page-gate.test.mjs",
+    "S2: Read the exit code and the fail count."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures.",
+    "page-records.ts is the same file in the three themes; a link into an unticked page record is not live, a child of it is live only when the listed set (kept pages) names it, and the unticked page itself never is.",
+    "SaaS seed, Blog unticked: every Engineering post and the six category views of All categories (with their posts) are listed; posts only in the blog's root category, tag views and author pages are not; with Engineering and All categories unticked too, nothing is listed.",
+    "Business seed, News unticked with Investors kept: exactly the four disclosures Investors shows are listed. Base seed, Blog unticked with Team kept: exactly the Team notes.",
+    "Buttons into an unticked page (content sections, header, footer, 404, sitemap, search, Business kit mockups) sit under live(...); child views answer 404 through the same gate."
+  ],
+  "selectors": {
+    "gate": "linkChecker / sitePath in src/lib/page-records.ts of each EmDash theme",
+    "listed": "listedChildren in src/lib/listed-children.ts of each EmDash theme",
+    "kit": "src/components/kit/Kit{Newsletter,Email,Slides}.astro of tracy-emdash-theme-business"
+  },
+  "evidence": "Dev, Tracy Business 1.7.1 (tamq-9e-bizvi): Projects unticked, /projects answered 404 but the home page still drew 10 project links and /projects/<slug> opened. Decision 08/10/2026 (#1013): links into an unticked page go, its children go too, except a child a kept page still lists (SaaS: Blog unticked, Engineering / All categories kept).",
+  "fence": "Units on the pure gate and each template's seed, plus source checks of the wiring. Not exercised here: a running site (done by hand for the PR with clean installs and a link crawl), the dev surface.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/cms/tracy-emdash-theme-business/tests/page-gate.test.mjs",
+      "packages/cms/tracy-emdash-theme-saas/tests/page-gate.test.mjs",
+      "packages/cms/tracy-emdash-theme-base/tests/page-gate.test.mjs"
+    ],
+    "needs": []
+  }
+}

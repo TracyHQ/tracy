@@ -1,0 +1,64 @@
+{
+  "color": {
+    "blush-field": {
+      "$value": "#f8d4d4",
+      "$type": "color",
+      "$description": "Blush Field — Hero section background, full-bleed section dividers, decorative border washes — the warm pastel that sets the emotional temperature for the whole site"
+    },
+    "vermilion-mark": {
+      "$value": "#eb4726",
+      "$type": "color",
+      "$description": "Vermilion Mark — Sole chromatic accent — brand wordmark, link underlines, arrow icons, scroll indicator. One warm note against all the near-monochrome"
+    },
+    "mint-accent": {
+      "$value": "#d2fdd1",
+      "$type": "color",
+      "$description": "Mint Accent — Rare card or section background — the only cool note permitted, used sparingly for tonal variety"
+    },
+    "charcoal-ink": {
+      "$value": "#282828",
+      "$type": "color",
+      "$description": "Charcoal Ink — Primary body text, heading text, default borders, icon strokes — the workhorse warm-black neutral"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, content section backgrounds, floating pill nav fill"
+    },
+    "jet-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Jet Black — Strong borders, high-emphasis text, icon fills — the maximum-contrast neutral"
+    },
+    "bone-gray": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Bone Gray — Subtle off-white surface for nested content blocks beneath white sections"
+    }
+  },
+  "font": {
+    "custom47163": {
+      "$value": "custom_47163",
+      "$type": "fontFamily",
+      "$description": "Primary body and heading face — used for all UI text, section headlines, links, and the scroll indicator. The custom face brings a distinctive ampersand ligature and a slightly humanist warmth that keeps the editorial tone approachable rather than austere. Substitutes: Söhne, GT America, Maison Neue."
+    },
+    "custom47178": {
+      "$value": "custom_47178",
+      "$type": "fontFamily",
+      "$description": "Exclusive display wordmark face — the 'Worth' hero text only. A custom commissioned face at exhibition scale with extreme tight tracking. This is the signature element: no other text on the site approaches this scale. Substitutes: Söhne Breit, GT America Compressed, Druk Wide."
+    },
+    "apple-system": {
+      "$value": "-apple-system",
+      "$type": "fontFamily",
+      "$description": "System font fallback for icons, the small 'Agency' label in the floating pill, and micro-UI elements where the custom face isn't loaded. Kept neutral so the custom face can carry all the brand expression."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://worth.agency",
+      "siteName": "Worth Agency",
+      "extractedAt": "2026-06-03T17:23:21.286Z",
+      "variant": "compact"
+    }
+  }
+}

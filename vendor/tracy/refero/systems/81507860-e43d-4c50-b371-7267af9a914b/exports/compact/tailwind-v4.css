@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-bone-white: #ffffff;
+  --color-lamp-black: #000000;
+  --color-ash-gray: #dddddd;
+  --color-concrete-gray: #cccccc;
+  --color-smoke-gray: #b3b3b3;
+  --color-graphite: #808080;
+  --color-iron-gray: #aaaaaa;
+
+  /* Typography */
+  --font-mediumllweb: 'MediumLLWeb', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

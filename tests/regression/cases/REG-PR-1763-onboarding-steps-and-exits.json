@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1763-onboarding-steps-and-exits",
+  "kind": "feat",
+  "title": "The Welcome popup and the two tour stages record each scene or step reached and how the showing ended (POST /api/onboarding/step)",
+  "pr": 1763,
+  "area": "usage/onboarding",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: POST /api/onboarding/step signed out; then {runId, flow: welcome, step} for steps 1, 2, 2; then end escape, then end close, at step 2; then a tour-site end skip at publish.",
+    "S2: POST bodies off the closed lists: no runId, a bad runId, flow checkout, flow toString, welcome step 9, tour-start step publish, welcome end skip, tour-site end cta.",
+    "S3: Render the Welcome popup, press ArrowRight twice, then Escape.",
+    "S4: First-run tour on a screen with only Create a new site: press Skip. Site tour: press Skip at the first step shown.",
+    "S5: Compare the client's SCENES, START_STEPS and SITE_STEPS with ONBOARD_FLOWS in apps/tracy-web/src/onboarding/usage.js."
+  ],
+  "expect": [
+    "S1: 401; three 200; onboard.step rows for steps 1 and 2 only; one onboard.exit row, end escape at step 2; a tour-site exit row.",
+    "S2: 400 with INVALID_RUN_ID, INVALID_FLOW, INVALID_STEP or INVALID_END as listed; no onboard.step or onboard.exit row.",
+    "S3: one runId; steps 1, 2, 3 then end escape at step 3.",
+    "S4: tour-start tells createsite then createsite:skip, never template; tour-site ends as skip at the step shown.",
+    "S5: equal lists; ends close/escape/cta for welcome and done/skip/escape/gone for the tours."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/onboarding/route.js (/api/onboarding/step), onboarding/usage.js; packages/ui/tracy-onboard/src/client/usage.ts, Welcome.tsx, Tour.tsx"
+  },
+  "evidence": "Asked 26/10/2026 after the Welcome popup (#1731) and the tour (#1629) shipped: only 'closed at' was kept, so a finished tour and a skipped one read the same",
+  "fence": "Usage never stands in the person's way: nothing waits on it; only listed flows, steps and ends are kept; one end per showing",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=onboarding/step|tells|every scene and tour step|a step and an end",
+      "apps/tracy-web/test/onboarding-door.test.mjs",
+      "packages/ui/tracy-onboard/test/mount.test.mjs",
+      "packages/ui/tracy-onboard/test/usage.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "POST /api/onboarding/step keeps one step per showing and step",
+      "POST /api/onboarding/step refuses what is not on the closed lists",
+      "the Welcome popup tells each scene it reached",
+      "Skip on the first-run tour tells the step it was at",
+      "the site tour tells each step it reached",
+      "every scene and tour step the guides can name is on the server",
+      "a step and an end go to the door as JSON"
+    ]
+  }
+}

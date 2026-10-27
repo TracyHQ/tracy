@@ -1,0 +1,854 @@
+{
+  "$comment": "Spec sectionType → the wp-tracy-business pattern that renders it, field by field, for the seeder's renderTypedSection (skills/tracy-wordpress-theme/scripts/seed.mjs). UNIFORM SCHEMA, the same for every type: metadata.name = <type>.eyebrow · <type>.heading (level from fields.headingLevel) · <type>.intro · <type>.cta.<n> (a core/button: text + href) · <type>.img · items in a wrapper <type>.item.<n> (no role; cloned or removed to the item count) whose children are <type>.item.<n>.title|text|meta|img|href. A block is located by name, never by position. A field the spec leaves empty removes its block; a field the pattern has no block for is listed in the report, not dropped silently. \"dropped\" names spec fields a pattern deliberately does not carry, and why. \"styles\" adds root classes when a page matches (\"when\"). The CSS is assets/css/sections.css, which replaces the source theme's sheet of the same path and is enqueued by functions.php as tracy-sections — no extra enqueue needed.",
+  "schemaVersion": "wp-tracy-business-patterns-map/v1",
+  "namespace": "wp-tracy-business",
+  "noise": {
+    "introRepeatsItem": "an intro equal to an item's text is the extractor reading the first card; it is dropped",
+    "ctaRepeatsItem": "a cta whose text equals an item's title is that item's own link; it leaves the ctas and gives the item its href when the item has none"
+  },
+  "types": {
+    "hero": {
+      "pattern": "wp-tracy-business/section-hero",
+      "root": ".wtb-hero",
+      "item": "hero.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "hero.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "hero.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "hero.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "hero.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "ctas": {
+          "block": "core/button",
+          "path": "hero.cta.<n>",
+          "attr": "text+href",
+          "repeat": "ctas",
+          "note": "text → the button label, href → its link; the buttons row is cloned to the count, removed when empty"
+        },
+        "img": {
+          "block": "core/image",
+          "path": "hero.img",
+          "attr": "src+alt",
+          "repeat": null
+        },
+        "items.title": {
+          "block": "core/paragraph",
+          "path": "hero.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.text": {
+          "block": "core/paragraph",
+          "path": "hero.item.<n>.text",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.meta": {
+          "block": "core/paragraph",
+          "path": "hero.item.<n>.meta",
+          "attr": "content",
+          "repeat": "items"
+        }
+      },
+      "styles": {
+        "404": {
+          "when": {
+            "view": "404"
+          },
+          "add": ["wtb-hero--404"],
+          "note": "the 404 page: the eyebrow is the giant orange \"404\"; the pattern's image and figure band are hidden by CSS and the seeder drops them"
+        }
+      },
+      "dropped": {}
+    },
+    "stats": {
+      "pattern": "wp-tracy-business/section-stats",
+      "root": ".wtb-stats",
+      "item": "stats.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "stats.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "stats.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "stats.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "stats.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "items.title": {
+          "block": "core/paragraph",
+          "path": "stats.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.text": {
+          "block": "core/paragraph",
+          "path": "stats.item.<n>.text",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.meta": {
+          "block": "core/paragraph",
+          "path": "stats.item.<n>.meta",
+          "attr": "content",
+          "repeat": "items"
+        }
+      },
+      "note": "title = the figure, text = its label, meta = a footnote"
+    },
+    "services": {
+      "pattern": "wp-tracy-business/section-services",
+      "root": ".wtb-services",
+      "item": "services.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "services.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "services.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "services.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "services.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "ctas": {
+          "block": "core/button",
+          "path": "services.cta.<n>",
+          "attr": "text+href",
+          "repeat": "ctas",
+          "note": "text → the button label, href → its link; the buttons row is cloned to the count, removed when empty"
+        },
+        "items.meta": {
+          "block": "core/paragraph",
+          "path": "services.item.<n>.meta",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.title": {
+          "block": "core/heading",
+          "path": "services.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.text": {
+          "block": "core/paragraph",
+          "path": "services.item.<n>.text",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.href": {
+          "block": "core/paragraph",
+          "path": "services.item.<n>.href",
+          "attr": "href",
+          "repeat": "items"
+        }
+      },
+      "note": "meta = the ordinal (01–04); a card without one is numbered by CSS",
+      "dropped": {
+        "img": "the source cards carry no image"
+      }
+    },
+    "projects": {
+      "pattern": "wp-tracy-business/section-projects",
+      "root": ".wtb-projects",
+      "item": "projects.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "projects.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "projects.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "projects.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "projects.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "ctas": {
+          "block": "core/button",
+          "path": "projects.cta.<n>",
+          "attr": "text+href",
+          "repeat": "ctas",
+          "note": "text → the button label, href → its link; the buttons row is cloned to the count, removed when empty"
+        },
+        "items.img": {
+          "block": "core/image",
+          "path": "projects.item.<n>.img",
+          "attr": "src+alt",
+          "repeat": "items"
+        },
+        "items.meta": {
+          "block": "core/paragraph",
+          "path": "projects.item.<n>.meta",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.title": {
+          "block": "core/heading",
+          "path": "projects.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.text": {
+          "block": "core/paragraph",
+          "path": "projects.item.<n>.text",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.href": {
+          "block": "core/paragraph",
+          "path": "projects.item.<n>.href",
+          "attr": "href",
+          "repeat": "items"
+        }
+      },
+      "note": "the first card is tall (4:5 image), the rest short. Two things the source section carries that the pattern does not: (1) the filter chips (All · Factories · Infrastructure · M&E) — `fields.filters` — are <span>s with a hover and no handler in the source, so the pattern renders none rather than a fake control (accepted gap G-W7; a real filter needs a type per card and a script, a link chip has no destination); (2) the first card's own \"Read the case study →\" reaches the spec as a second section cta (`fields.ctas[1]`) and renderTypedSection clones it into the header row next to \"All projects →\" — a cta whose text is a card link's label is that card's link, and the seeder must drop it the way it drops a cta equal to an item's title"
+    },
+    "news": {
+      "pattern": "wp-tracy-business/section-news",
+      "root": ".wtb-news",
+      "item": null,
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "news.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "news.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "news.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "news.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "ctas": {
+          "block": "core/button",
+          "path": "news.cta.<n>",
+          "attr": "text+href",
+          "repeat": "ctas",
+          "note": "text → the button label, href → its link; the buttons row is cloned to the count, removed when empty"
+        }
+      },
+      "dropped": {
+        "items": "the band is a Query Loop of the site's three latest posts (newest first; with Polylang, the page language's): a spec's news cards are those posts, written as posts, not copied into the band",
+        "img": "a card's picture is its post's featured image"
+      },
+      "note": "the head is the only thing written into the page; the cards are drawn from the posts at render, and the band is left out while there is no post. The news index page is the home template, a query too"
+    },
+    "cta": {
+      "pattern": "wp-tracy-business/section-cta",
+      "root": ".wtb-cta",
+      "item": null,
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "cta.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "cta.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "cta.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "cta.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "ctas": {
+          "block": "core/button",
+          "path": "cta.cta.<n>",
+          "attr": "text+href",
+          "repeat": "ctas",
+          "note": "text → the button label, href → its link; the buttons row is cloned to the count, removed when empty"
+        }
+      },
+      "dropped": {
+        "items": "the items of a cta section are its own button labels again",
+        "img": "the source has none"
+      },
+      "styles": {
+        "panel": {
+          "when": {
+            "view": "page",
+            "id": ["about-en-10", "about-ru-10", "careers-en-8", "careers-ru-8"]
+          },
+          "add": ["wtb-cta--panel"],
+          "note": "the About and Careers closing calls: in the source a beige panel inside the container — ink heading, orange button, the second call a plain green text link — where the front page's is the green band. `when` names the sections (seed.mjs styleApplies matches `id` since af24bcf); a view-only match painted the services, investor-relations and projects calls beige too, and those are ink in the source (style `ink`)"
+        },
+        "ink": {
+          "when": {
+            "view": "page",
+            "id": [
+              "services-en-7",
+              "services-ru-7",
+              "projects-en-7",
+              "projects-ru-7",
+              "investor-relations-en-9",
+              "investor-relations-ru-9"
+            ]
+          },
+          "add": ["wtb-cta--ink"],
+          "note": "the Services, Projects and Investor relations closing calls: an ink band (#14171a) with paper heading and orange button in the source, not the front page's green. The class is the hook; its rules belong in assets/css/sections.css next to `.wtb-cta--panel`"
+        }
+      }
+    },
+    "team": {
+      "pattern": "wp-tracy-business/section-team",
+      "root": ".wtb-team",
+      "item": "team.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "team.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "team.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "team.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "team.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "items.img": {
+          "block": "core/image",
+          "path": "team.item.<n>.img",
+          "attr": "src+alt",
+          "repeat": "items"
+        },
+        "items.title": {
+          "block": "core/heading",
+          "path": "team.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.text": {
+          "block": "core/paragraph",
+          "path": "team.item.<n>.text",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.meta": {
+          "block": "core/paragraph",
+          "path": "team.item.<n>.meta",
+          "attr": "content",
+          "repeat": "items"
+        }
+      },
+      "note": "title = name, meta = role (orange, first), text = one-line bio — the spec-pack extracts the role as `meta` and the bio as `text`, and the pattern names its blocks to match (full-2: the slots were swapped and every card showed the bio in orange)"
+    },
+    "contact": {
+      "pattern": "wp-tracy-business/section-contact",
+      "root": ".wtb-contact",
+      "item": "contact.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "contact.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "contact.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "contact.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "contact.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "ctas": {
+          "block": "core/button",
+          "path": "contact.cta.<n>",
+          "attr": "text+href",
+          "repeat": "ctas",
+          "note": "text → the button label, href → its link; the buttons row is cloned to the count, removed when empty"
+        },
+        "items.title": {
+          "block": "core/paragraph",
+          "path": "contact.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.text": {
+          "block": "core/paragraph",
+          "path": "contact.item.<n>.text",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.meta": {
+          "block": "core/paragraph",
+          "path": "contact.item.<n>.meta",
+          "attr": "content",
+          "repeat": "items"
+        }
+      },
+      "note": "items are the rows of the ink head-office card: title = label, text = value",
+      "dropped": {
+        "img": "the contact page map belongs to the form section"
+      }
+    },
+    "form": {
+      "pattern": "wp-tracy-business/section-form",
+      "root": ".wtb-form",
+      "item": "form.item.<n>",
+      "fields": {
+        "intro": {
+          "block": "core/paragraph",
+          "path": "form.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "embed": {
+          "block": "core/shortcode",
+          "path": "form.embed",
+          "attr": "content",
+          "repeat": null
+        },
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "form.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "form.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "form.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "img": {
+          "block": "core/image",
+          "path": "form.img",
+          "attr": "src+alt",
+          "repeat": null
+        },
+        "items.title": {
+          "block": "core/paragraph",
+          "path": "form.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.text": {
+          "block": "core/paragraph",
+          "path": "form.item.<n>.text",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.meta": {
+          "block": "core/paragraph",
+          "path": "form.item.<n>.meta",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.href": {
+          "block": "core/paragraph",
+          "path": "form.item.<n>.href",
+          "attr": "href",
+          "repeat": "items"
+        }
+      },
+      "note": "embed = the Contact Form 7 shortcode, pointed at the seeded form (its title); items = the contact channels on the right",
+      "dropped": {
+        "ctas": "the form's own Send / Clear buttons live in the CF7 form, not the pattern"
+      }
+    },
+    "gallery": {
+      "pattern": "wp-tracy-business/section-gallery",
+      "root": ".wtb-gallery",
+      "item": "gallery.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "gallery.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "gallery.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "gallery.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "gallery.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "items.img": {
+          "block": "core/image",
+          "path": "gallery.item.<n>.img",
+          "attr": "src+alt",
+          "repeat": "items"
+        },
+        "items.title": {
+          "block": "core/paragraph",
+          "path": "gallery.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        }
+      },
+      "titleTo": "eyebrow",
+      "itemsFromImages": true,
+      "note": "one item per spec image when the section lists images and no items (the logo strip); the section title (the label the extractor keeps only in `title`) lands in the eyebrow"
+    },
+    "slide": {
+      "pattern": "wp-tracy-business/section-slide",
+      "root": ".wtb-slide",
+      "item": "slide.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "slide.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "slide.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "slide.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "slide.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "ctas": {
+          "block": "core/button",
+          "path": "slide.cta.<n>",
+          "attr": "text+href",
+          "repeat": "ctas",
+          "note": "text → the button label, href → its link; the buttons row is cloned to the count, removed when empty"
+        },
+        "items.img": {
+          "block": "core/image",
+          "path": "slide.item.<n>.img",
+          "attr": "src+alt",
+          "repeat": "items"
+        },
+        "items.title": {
+          "block": "core/heading",
+          "path": "slide.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.text": {
+          "block": "core/paragraph",
+          "path": "slide.item.<n>.text",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.meta": {
+          "block": "core/paragraph",
+          "path": "slide.item.<n>.meta",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.href": {
+          "block": "core/paragraph",
+          "path": "slide.item.<n>.href",
+          "attr": "href",
+          "repeat": "items"
+        }
+      },
+      "note": "title/text left, meta (file · size) and a download link right; an item image shows as a thumbnail"
+    },
+    "text": {
+      "pattern": "wp-tracy-business/section-text",
+      "root": ".wtb-text",
+      "item": "text.item.<n>",
+      "fields": {
+        "img": {
+          "block": "core/image",
+          "path": "text.img",
+          "attr": "src+alt",
+          "repeat": null
+        },
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "text.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "text.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "text.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "text.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "ctas": {
+          "block": "core/button",
+          "path": "text.cta.<n>",
+          "attr": "text+href",
+          "repeat": "ctas",
+          "note": "text → the button label, href → its link; the buttons row is cloned to the count, removed when empty"
+        },
+        "items.title": {
+          "block": "core/paragraph",
+          "path": "text.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.text": {
+          "block": "core/paragraph",
+          "path": "text.item.<n>.text",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.meta": {
+          "block": "core/paragraph",
+          "path": "text.item.<n>.meta",
+          "attr": "content",
+          "repeat": "items"
+        }
+      },
+      "note": "with an image the section becomes a split (illustration left, copy right); items are the arrow list",
+      "styles": {
+        "media-end": {
+          "when": {
+            "view": "page",
+            "id": [
+              "about-en-2",
+              "about-ru-2",
+              "about-en-6",
+              "about-ru-6",
+              "about-en-9",
+              "about-ru-9",
+              "careers-en-2",
+              "careers-ru-2",
+              "careers-en-7",
+              "careers-ru-7",
+              "project-detail-en-2",
+              "project-detail-ru-2"
+            ]
+          },
+          "add": ["wtb-text--media-end"],
+          "note": "the inner-page splits whose picture FOLLOWS the copy in the source (about hero, Where we work, Safety, careers hero and Life on our sites, project detail). Named one by one: the projects page's flagship section (projects-*-3) is picture-first and a view-only match used to flip it; the front page's Why Northgate keeps the illustration first with no style"
+        },
+        "specs": {
+          "when": {
+            "id": ["project-detail-en-2", "project-detail-ru-2", "projects-en-3", "projects-ru-3"]
+          },
+          "add": ["wtb-text--specs"],
+          "note": "a spec sheet: every item's title is a short label (Client, Region, Area, Duration) and the value under it is the bold line — the reverse of a feature list. CSS `.wtb-text--specs` in sections.css. Not Dividends (investor-relations-*-7) or Indicative pricing (services-*-6): there the title IS the bold value. Not Key figures (investor-relations-*-4): that is a four-column table the extractor cannot carry as items, it must stay verbatim"
+        },
+        "ink": {
+          "when": {
+            "id": ["investor-relations-en-7", "investor-relations-ru-7"]
+          },
+          "add": ["wtb-text--ink"],
+          "note": "Dividends: an ink band (#14171a) in the source — paper title, lede in the band grey, priced rows with white values. CSS `.wtb-text--ink` in sections.css (written full-1, hooked full-2). Named by id: the project detail opening sheet is ink too but through `media-end` + `specs` together, and every other text section sits on paper or the warm surface"
+        },
+        "card": {
+          "when": {
+            "id": ["about-en-9", "about-ru-9"]
+          },
+          "add": ["wtb-text--card"],
+          "note": "Safety (D23.3): in the source not a split but a small beige card — border, 28px padding, title clamp(22px, 2.5vw, 28px), 16/1.68 copy, a 200px image box after the copy — the second column of the Accreditations grid (source section 1051, which the spec-pack cut in two: about-*-8 verbatim, about-*-9 typed). The class is the hook; its rules belong in assets/css/sections.css. \"Beside\" cannot come from a class on this section alone: the two halves are sibling blocks, so either the spec keeps 1051 whole or the page grid pairs them"
+        }
+      }
+    },
+    "links": {
+      "pattern": "wp-tracy-business/section-links",
+      "root": ".wtb-links",
+      "item": "links.item.<n>",
+      "fields": {
+        "eyebrow": {
+          "block": "core/paragraph",
+          "path": "links.eyebrow",
+          "attr": "content",
+          "repeat": null
+        },
+        "heading": {
+          "block": "core/heading",
+          "path": "links.heading",
+          "attr": "content",
+          "repeat": null
+        },
+        "headingLevel": {
+          "block": "core/heading",
+          "path": "links.heading",
+          "attr": "level",
+          "repeat": null
+        },
+        "intro": {
+          "block": "core/paragraph",
+          "path": "links.intro",
+          "attr": "content",
+          "repeat": null
+        },
+        "items.title": {
+          "block": "core/paragraph",
+          "path": "links.item.<n>.title",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.text": {
+          "block": "core/paragraph",
+          "path": "links.item.<n>.text",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.meta": {
+          "block": "core/paragraph",
+          "path": "links.item.<n>.meta",
+          "attr": "content",
+          "repeat": "items"
+        },
+        "items.href": {
+          "block": "core/paragraph",
+          "path": "links.item.<n>.title",
+          "attr": "href",
+          "repeat": "items",
+          "note": "the title is the link"
+        }
+      },
+      "note": "untyped sections detected by shape: a container of ≥2 <a> rows with at most one leading label; each row → item (title = link text, meta = trailing text, href)",
+      "shape": "links",
+      "styles": {
+        "files": {
+          "when": {
+            "id": ["investor-relations-en-5#1", "investor-relations-ru-5#1"]
+          },
+          "add": ["wtb-links--files"],
+          "note": "Reports and presentations: the rows are downloads in the source — title 600, an orange ↓ after the title — where the disclosures list under it (investor-relations-*-6) keeps 500 with the same markup. A shape-detected section renders as `<moduleId>#<group>` (seed.mjs renderTypedEntry), so the id carries the group suffix. CSS `.wtb-links--files` in sections.css (written full-1, hooked full-2)"
+        }
+      }
+    }
+  }
+}

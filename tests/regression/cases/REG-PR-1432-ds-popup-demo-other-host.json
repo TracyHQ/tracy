@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1432-ds-popup-demo-other-host",
+  "kind": "fix",
+  "title": "Add site Design system popup: a demo on another host than tracy-web's gets the static worn page, not an unworn live frame",
+  "pr": 1432,
+  "area": "design-system/preview",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the door test file apps/tracy-web/test/design-system-preview-door.test.mjs, filtered to the case named 'another host'."
+  ],
+  "expect": [
+    "S1: the case passes: live=1 for a demo whose host is not the server's answers text/html carrying tracy-ds-slot, and a demo on the server's host still answers the live JSON."
+  ],
+  "selectors": {
+    "door": "GET /api/design-system/preview?quickstart=&platform=&id=&live=1",
+    "dep": "mountDesignSystemPreview liveServed"
+  },
+  "evidence": "18/10/2026 on dev: the popup for JA Vega/Tour/Morgan (demos on fleet01) framed the demo with no tracy-ds-slot; fleet01 serves them straight through its tunnel, never through the site proxy that lays the system in",
+  "fence": "The preview door's liveServed gate (demo.host === config.hostName) before the live frame",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=another host",
+      "apps/tracy-web/test/design-system-preview-door.test.mjs"
+    ]
+  }
+}

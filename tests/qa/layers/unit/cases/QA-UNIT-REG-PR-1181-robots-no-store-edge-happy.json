@@ -1,0 +1,57 @@
+{
+  "id": "QA-UNIT-REG-PR-1181-robots-no-store-edge-happy",
+  "itemIds": ["regression:REG-PR-1181-robots-no-store-edge"],
+  "requirement": "A published site's robots.txt goes out no-store, so an edge cache cannot keep it after the site is unpublished",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1181-robots-no-store-edge.json",
+    "ref": "PR #1181 (fix); fix evidence: Measured 11/10/2026: curl -sI https://business-joomla.tracy.site/robots.txt answered cache-control: max-age=14400, cf-cache-status: HIT; the origin (tracy-web on dev) sent no cache-control for Joomla and public, max-age=86400 for EmDash. A draft site's robots.txt (tracy-web, no-store) answers cf-cache-status: BYPASS.",
+    "invariant": "Every 'R-1:' test reports ok: a proxied /robots.txt answers cache-control: no-store whether the CMS sent public, max-age=86400 (EmDash), nothing (Joomla/Apache), an Expires or CDN-only lifetime headers, on GET and HEAD, on the Tracy address and on a customer's own domain; any other file keeps the CMS's cache header (pre-fix: the CMS header went out unchanged).",
+    "productSources": ["apps/tracy-web/src/bar/site-proxy.js:530"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "R-1: a published robots.txt the CMS marks public for a day (EmDash) goes out no-store",
+    "R-1: a published robots.txt with no cache header at all (Joomla/Apache) goes out no-store",
+    "R-1: an Expires the CMS sets on robots.txt does not outlive the no-store",
+    "R-1: a CDN-only lifetime header (read by the edge before Cache-Control) is dropped",
+    "R-1: HEAD answers the same cache header as GET",
+    "R-1: on a customer own domain (issue 1037) the projected robots.txt is no-store too",
+    "R-1: any other file keeps the cache header the CMS chose"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1181-robots-no-store-edge"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1181-robots-no-store-edge",
+    "pr": 1181,
+    "kind": "fix",
+    "area": "web/site-proxy",
+    "file": "tests/regression/cases/REG-PR-1181-robots-no-store-edge.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/robots-cache.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "R-1: a published robots.txt the CMS marks public for a day (EmDash) goes out no-store",
+    "R-1: a published robots.txt with no cache header at all (Joomla/Apache) goes out no-store",
+    "R-1: an Expires the CMS sets on robots.txt does not outlive the no-store",
+    "R-1: a CDN-only lifetime header (read by the edge before Cache-Control) is dropped",
+    "R-1: HEAD answers the same cache header as GET",
+    "R-1: on a customer own domain (issue 1037) the projected robots.txt is no-store too",
+    "R-1: any other file keeps the cache header the CMS chose"
+  ],
+  "timeoutS": 600
+}

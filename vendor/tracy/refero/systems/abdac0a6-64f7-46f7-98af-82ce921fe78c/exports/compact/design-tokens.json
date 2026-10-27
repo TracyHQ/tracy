@@ -1,0 +1,84 @@
+{
+  "color": {
+    "electric-cobalt": {
+      "$value": "#0000ff",
+      "$type": "color",
+      "$description": "Electric Cobalt — Primary brand color — display headings, section rules, outlined action borders, form field borders, large-type stamps. The dominant chromatic voice on the page, used wherever the brand needs to announce itself"
+    },
+    "press-orange": {
+      "$value": "#ff3500",
+      "$type": "color",
+      "$description": "Press Orange — Secondary brand color — the duotone partner to Electric Cobalt, used in the product mockup illustrations and as a filled action accent. Reads as warm against the cool blue, creating a two-color print-poster tension"
+    },
+    "stock-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Stock White — Page background, card surfaces, input fills, text on dark/colored fills. The entire canvas — there is no off-white or gray alternative"
+    },
+    "press-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Press Black — Navigation text, footer text, fine metadata labels, small caps, SVG fill in the specimen imagery. Used sparingly — only for utility type under ~16px where the massive display type doesn't dominate"
+    }
+  },
+  "font": {
+    "gt-america-intl": {
+      "$value": "GT America Intl",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for everything — display, headings, body, nav, buttons, inputs. The signature choice: a single weight (400) scaled across an enormous range (12px to 900px). The site refuses to use bold/black weights; visual weight comes purely from size. Tight tracking (-0.04em) at large sizes creates headline compression; positive tracking (0.03em) at small sizes aids legibility for micro-labels"
+    },
+    "gt-america-intl-mono": {
+      "$value": "GT America Intl Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced companion — used for specimen data tables, test strips showing character sets, and technical metadata. Wider tracking (0.06em) at display sizes to compensate for mono's denser rhythm"
+    },
+    "gt-america-japanese": {
+      "$value": "GT America Japanese",
+      "$type": "fontFamily",
+      "$description": "GT America Japanese — detected in extracted data but not described by AI"
+    },
+    "gt-america-thai-looped": {
+      "$value": "GT America Thai Looped",
+      "$type": "fontFamily",
+      "$description": "GT America Thai Looped — detected in extracted data but not described by AI"
+    },
+    "gt-america-thai-loopless": {
+      "$value": "GT America Thai Loopless",
+      "$type": "fontFamily",
+      "$description": "GT America Thai Loopless — detected in extracted data but not described by AI"
+    },
+    "gt-america-contrast": {
+      "$value": "GT America Contrast",
+      "$type": "fontFamily",
+      "$description": "GT America Contrast — detected in extracted data but not described by AI"
+    },
+    "gt-america-tradchinese": {
+      "$value": "GT America TradChinese",
+      "$type": "fontFamily",
+      "$description": "GT America TradChinese — detected in extracted data but not described by AI"
+    },
+    "gt-america-intl-italic": {
+      "$value": "GT America Intl Italic",
+      "$type": "fontFamily",
+      "$description": "GT America Intl Italic — detected in extracted data but not described by AI"
+    },
+    "gt-america-simpchinese": {
+      "$value": "GT America SimpChinese",
+      "$type": "fontFamily",
+      "$description": "GT America SimpChinese — detected in extracted data but not described by AI"
+    },
+    "gt-america-intl-latin-subset": {
+      "$value": "GT America Intl Latin Subset",
+      "$type": "fontFamily",
+      "$description": "GT America Intl Latin Subset — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.gt-america.com",
+      "siteName": "Gt-america",
+      "extractedAt": "2026-06-03T20:51:16.004Z",
+      "variant": "compact"
+    }
+  }
+}

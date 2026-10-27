@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.approved-deduplicate",
+  "itemIds": [
+    "letter:team.approved:en",
+    "letter:team.approved:vi",
+    "letter:team.approved:de",
+    "letter:team.approved:it",
+    "letter:team.approved:fr",
+    "letter:team.approved:nl",
+    "letter:team.approved:zh",
+    "letter:team.approved:es"
+  ],
+  "requirement": "team.approved: a recipient listed several times gets one row and one letter",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "decision 4",
+    "invariant": "one row per recipient"
+  },
+  "edgeTags": ["deduplicate"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.dedupe#team.approved:"],
+  "redProof": null,
+  "legacyIds": []
+}

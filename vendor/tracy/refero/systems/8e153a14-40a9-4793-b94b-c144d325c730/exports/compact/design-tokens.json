@@ -1,0 +1,94 @@
+{
+  "color": {
+    "deep-plum": {
+      "$value": "#250835",
+      "$type": "color",
+      "$description": "Deep Plum — Primary action fill, nav borders, headline text, card borders — the structural workhorse. High-contrast against white (18:1) lets it function as both color and text simultaneously"
+    },
+    "dark-mauve": {
+      "$value": "#473054",
+      "$type": "color",
+      "$description": "Dark Mauve — Secondary text and outlined action borders, muted plum that steps back from Deep Plum without leaving the family"
+    },
+    "vivid-violet": {
+      "$value": "#ab2fed",
+      "$type": "color",
+      "$description": "Vivid Violet — Accent link color, icon stroke — the brightest chromatic in the UI, used sparingly to mark interactive text and product iconography"
+    },
+    "vivid-blue": {
+      "$value": "#0283ec",
+      "$type": "color",
+      "$description": "Vivid Blue — Secondary accent on icons and flowchart elements — pairs with Vivid Violet to give the product canvas its dual-accent personality"
+    },
+    "electric-indigo": {
+      "$value": "#4b38ee",
+      "$type": "color",
+      "$description": "Electric Indigo — Tertiary accent on icons, occasionally used in flowchart node color alongside Vivid Blue"
+    },
+    "warm-gray-purple": {
+      "$value": "#6a5b72",
+      "$type": "color",
+      "$description": "Warm Gray Purple — Muted body text, list dividers, secondary borders — stays in the plum family at lower chroma to avoid breaking the monochrome discipline"
+    },
+    "lavender-mist": {
+      "$value": "#ebe6ee",
+      "$type": "color",
+      "$description": "Lavender Mist — Default border and divider color, low-contrast page texture — the neutral that replaces what most sites would do in #e5e5e5"
+    },
+    "soft-white": {
+      "$value": "#f5f4f5",
+      "$type": "color",
+      "$description": "Soft White — Card surface slightly off-white to lift cards off the canvas without going full gray"
+    },
+    "plum-shadow": {
+      "$value": "#cdc7d1",
+      "$type": "color",
+      "$description": "Plum Shadow — Box-shadow base tone — shadows are plum-tinted (rgba(37,8,53,…)) so elevation reads as on-brand even at low opacity"
+    },
+    "lavender-wash": {
+      "$value": "#decaff",
+      "$type": "color",
+      "$description": "Lavender Wash — Decorative card and heading highlight wash — the lightest purple tint, used as background accent on badges and inline highlights"
+    },
+    "blush-bloom": {
+      "$value": "#e9bded",
+      "$type": "color",
+      "$description": "Blush Bloom — Hero gradient warm stop, decorative card surface — the pinker end of the lavender family used in gradient transitions and product showcase backgrounds"
+    },
+    "sky-mist": {
+      "$value": "#bbcfe4",
+      "$type": "color",
+      "$description": "Sky Mist — Cool decorative surface — the blue-tinted neutral used in card backgrounds and gradient cool stops to balance the purple warmth"
+    },
+    "plum-to-pink-wash": {
+      "$value": "#ba59ff",
+      "$type": "color",
+      "$description": "Plum to Pink Wash — Decorative gradient wash — purple-to-pink spectrum used in hero backgrounds and marketing sections"
+    },
+    "aurora-gradient": {
+      "$value": "#3ca1ff",
+      "$type": "color",
+      "$description": "Aurora Gradient — Full-bleed section gradient — blue→violet→pink sweep used on logo band and feature section dividers"
+    }
+  },
+  "font": {
+    "agrandir": {
+      "$value": "Agrandir",
+      "$type": "fontFamily",
+      "$description": "Display headlines only. Used at 48-96px for hero and section titles, 24px for large card titles. The 700 weight at huge sizes is confident but not heavy — character widths are wide and the negative tracking (-0.01em) tightens the silhouette. Single weight means hierarchy comes from size alone, not weight contrast. Substitute: Recoleta, Gilroy Bold, or Manrope 800 if Agrandir is unavailable."
+    },
+    "manrope": {
+      "$value": "Manrope",
+      "$type": "fontFamily",
+      "$description": "UI body font — handles everything below display: nav, buttons (400-600), body copy (400 at 14-16px), small labels (9-13px), and the occasional subheading (32px). Wide weight range allows three-tier hierarchy within UI text. Letter-spacing opens up to 0.15em on small labels (badges, 'NEW' tags) for an all-caps tracked feel. Substitute: Inter, DM Sans."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://whimsical.com",
+      "siteName": "Whimsical",
+      "extractedAt": "2026-06-03T18:36:43.070Z",
+      "variant": "compact"
+    }
+  }
+}

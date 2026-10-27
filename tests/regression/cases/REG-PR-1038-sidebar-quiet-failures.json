@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1038-sidebar-quiet-failures",
+  "kind": "fix",
+  "title": "The sidebar never pins a red failure strip on a customer page, and stays silent when DSH's tab registry unloads under a re-sync",
+  "pr": 1038,
+  "area": "sidebar/native",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root run: node tests/regression/scripts/REG-PR-1038-sidebar-quiet-failures.mjs (the fork's vitest over tests/native-host-teardown.spec.ts and tests/no-diagnostic-strip.spec.ts: a real cordis fiber carrying the fork's real SidebarRightTabRegistry, unloaded, then a tab-policy reset that re-lists Files and a new tab type)."
+  ],
+  "expect": [
+    "S1 exits 0 with 5 passed and 0 failed.",
+    "After the host fiber unloads, neither the Files relist nor the new registration reaches reportFailure or console.error.",
+    "A live registry that refuses a duplicate id is still reported as 'register git'.",
+    "The client failure reporter only logs to the console; it never creates or appends a page element."
+  ],
+  "selectors": {
+    "function": "`registerNativeSurface` / `attempt` / `isInactiveContext` in vendor/tracy/dsh-better-sidebar/src/client/native/index.ts",
+    "error": "CordisError code INACTIVE_EFFECT ('cannot create effect on inactive context')"
+  },
+  "evidence": "Desktop app (native profile), 08/10/2026 10:13 after a restart of dsh and the app: white window with the strip '[dsh-better-sidebar] native relist files error: cannot create effect on inactive context'.",
+  "fence": "Mechanism only: the surface's handling of a registry whose fiber is gone, and the source of the failure reporter. Not covered: the live race (host unloading while Tracy's followTabPolicy disposer resets the policy) — not reproduced on a running native profile in 1 dsh restart + 13 HMR reloads.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1038-sidebar-quiet-failures.mjs"]
+  }
+}

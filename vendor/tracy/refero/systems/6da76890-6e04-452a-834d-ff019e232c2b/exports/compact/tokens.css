@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-ink: #000000;
+  --color-sage: #788c8c;
+  --color-cream: #ffffff;
+  --color-terracotta: #9f4920;
+  --color-lavender: #a697c6;
+  --color-moss: #5b9133;
+  --color-sunshine: #fff78f;
+  --color-sky: #d0eaf4;
+
+  /* Typography — Font Families */
+  --font-apercu-mono: 'Apercu Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-touchy-script-custom: 'Touchy Script (custom)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apercu-mono-bold: 'Apercu Mono Bold', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

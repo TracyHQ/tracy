@@ -1,0 +1,1 @@
+<script>(function(){var h=document.documentElement;if(!window.matchMedia||!window.matchMedia('(prefers-reduced-motion: no-preference)').matches)return;h.classList.add('tracy-motion');window.setTimeout(function(){if(!window.TracyMotionStarted)h.classList.remove('tracy-motion')},3000)})()</script>

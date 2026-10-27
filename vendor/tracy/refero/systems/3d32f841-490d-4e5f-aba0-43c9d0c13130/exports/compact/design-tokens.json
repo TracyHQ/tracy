@@ -1,0 +1,79 @@
+{
+  "color": {
+    "press-ink": {
+      "$value": "#110000",
+      "$type": "color",
+      "$description": "Press Ink — Primary text, dark hero surfaces, filled pill buttons, navigation dots — near-black with a warm undertone replaces the cold #000000 to keep the palette feeling printed rather than digital"
+    },
+    "aged-parchment": {
+      "$value": "#fdfbee",
+      "$type": "color",
+      "$description": "Aged Parchment — Page canvas, body text on dark surfaces, filled button backgrounds — the warm off-white that gives the entire site its paper-like quality"
+    },
+    "newsprint-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Newsprint White — Card surfaces, elevated panels, button text on dark fills"
+    },
+    "wheat-field": {
+      "$value": "#f3f0d6",
+      "$type": "color",
+      "$description": "Wheat Field — Accent surface, secondary button fill, soft highlight wash — a desaturated straw tone that sits between parchment and olive"
+    },
+    "fog": {
+      "$value": "#e5e5e5",
+      "$type": "color",
+      "$description": "Fog — Hairline borders, dividers, card edges — the structural neutral that defines component boundaries at 1px weight"
+    },
+    "dusty-brick": {
+      "$value": "#8d7d7d",
+      "$type": "color",
+      "$description": "Dusty Brick — Muted secondary text, small labels — warm gray-brown that recedes without going cold"
+    },
+    "ash": {
+      "$value": "#bebcb3",
+      "$type": "color",
+      "$description": "Ash — Subtle image borders, soft shadow base — warm gray for non-critical structural lines"
+    },
+    "stone": {
+      "$value": "#d2d0c6",
+      "$type": "color",
+      "$description": "Stone — Card shadow base tone, subtle elevation warmth"
+    },
+    "alert-red": {
+      "$value": "#d50000",
+      "$type": "color",
+      "$description": "Alert Red — Data emphasis blocks, statistics backgrounds, alarm callouts — the only chromatic color in the system, reserved for moments when numbers must cut through the editorial calm"
+    }
+  },
+  "font": {
+    "die-grotesk-d": {
+      "$value": "Die Grotesk D",
+      "$type": "fontFamily",
+      "$description": "Display and heading — weight 700 only, the single heaviest voice in the system. Used at enormous sizes (96–170px) with extremely tight line-heights (0.84–0.96) that make headlines stack into solid editorial blocks. This is the voice that shouts."
+    },
+    "die-grotesk-b": {
+      "$value": "Die Grotesk B",
+      "$type": "fontFamily",
+      "$description": "Mid-scale headings and emphasized body — the bridge between display and text. Slight negative tracking (-0.019em) tightens medium sizes without making them feel clinical."
+    },
+    "die-grotesk-a": {
+      "$value": "Die Grotesk A",
+      "$type": "fontFamily",
+      "$description": "Body text, navigation, buttons, links, lists, cards — the workhorse. Negative tracking (-0.02em to -0.03em) at body sizes keeps the grotesque feeling sharp. Weight 600 is available for inline emphasis."
+    },
+    "geist-mono": {
+      "$value": "Geist Mono",
+      "$type": "fontFamily",
+      "$description": "Monospaced labels, section markers, micro-copy — the only monospace voice. Wide tracking (+0.06em) gives it a typewriter/telegraph quality that signals 'official data' or 'system label'."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://realfood.gov",
+      "siteName": "Eat Real Food",
+      "extractedAt": "2026-06-03T21:50:04.420Z",
+      "variant": "compact"
+    }
+  }
+}

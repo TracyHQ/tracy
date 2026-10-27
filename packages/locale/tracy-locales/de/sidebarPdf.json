@@ -1,0 +1,17 @@
+{
+  "failed": "PDF kann nicht angezeigt werden: {message}",
+  "loading": "Dokument wird gerendert...",
+  "pageImage": "PDF-Seite {page}",
+  "password": "Dieses PDF erfordert ein Passwort. Vorschauen passwortgeschützter Dateien werden nicht unterstützt.",
+  "rendering": "Seite wird gerendert…",
+  "retry": "Erneut versuchen",
+  "title": "PDF",
+  "unsupported": "Die PDF-Vorschau benötigt den vollständigen Dateiinhalt.",
+  "workerFailed": "Der PDF-Renderprozess konnte nicht fortgesetzt werden. Bitte versuchen Sie es erneut.",
+  "zoomControls": "Zoom-Steuerung",
+  "zoomFitWidth": "An Breite anpassen",
+  "zoomIn": "Vergrößern",
+  "zoomMenu": "Zoomstufe wählen",
+  "zoomOut": "Verkleinern",
+  "zoomValue": "{percent} %"
+}

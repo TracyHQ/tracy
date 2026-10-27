@@ -1,0 +1,79 @@
+{
+  "color": {
+    "electric-cobalt": {
+      "$value": "#000aff",
+      "$type": "color",
+      "$description": "Electric Cobalt — New In badges, active nav pill, current-slide indicator, claim moments — the only chromatic signal in the system, used sparingly so it reads as activation not decoration"
+    },
+    "pale-iris": {
+      "$value": "#e5e7ff",
+      "$type": "color",
+      "$description": "Pale Iris — New Color badge fill, soft highlight wash, tinted surface for variant callouts — a desaturated ghost of the cobalt that whispers color without breaking the monochrome regime"
+    },
+    "ink-black": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, default borders, icon strokes, hairline dividers — the dominant structural color across headings, lists, and links"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color"
+    },
+    "plaster": {
+      "$value": "#ecedee",
+      "$type": "color",
+      "$description": "Plaster — Secondary surface for product cards, nav bar background, soft elevation tier above the canvas"
+    },
+    "slate": {
+      "$value": "#a1a4aa",
+      "$type": "color",
+      "$description": "Slate — Card border tone, neutral button fill, muted button border — the gray that defines card edges without darkening them"
+    },
+    "fog": {
+      "$value": "#d7d7d7",
+      "$type": "color",
+      "$description": "Fog — Light card border, divider lines, inactive surface tint"
+    },
+    "graphite": {
+      "$value": "#444955",
+      "$type": "color",
+      "$description": "Graphite — List and navigation borders, structural dividers between rows and cells"
+    },
+    "ash": {
+      "$value": "#737780",
+      "$type": "color",
+      "$description": "Ash — Secondary text, muted body copy, de-emphasized metadata, link rest state"
+    },
+    "charcoal": {
+      "$value": "#3b3b3b",
+      "$type": "color",
+      "$description": "Charcoal — Body text alternate, subtle dark surface for inset blocks"
+    }
+  },
+  "font": {
+    "roobert": {
+      "$value": "Roobert",
+      "$type": "fontFamily",
+      "$description": "Primary brand typeface — used for everything from 13px body to 128px hero. The -0.04em tracking is consistent across all sizes, pulling the lowercase wordmark into a tight, sculpted mass. Weights escalate by context: 400 for body and UI, 500 for emphasized labels, 600 for product names, 700 for large display."
+    },
+    "space-mono": {
+      "$value": "Space Mono",
+      "$type": "fontFamily",
+      "$description": "Technical metadata — prices (€189,00), Top 10 rank numerals, ticker marks, shop name credits. Drops in where the page needs to feel like a spec sheet rather than marketing copy."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.zellerfeld.com",
+      "siteName": "Zellerfeld",
+      "extractedAt": "2026-06-03T21:23:21.446Z",
+      "variant": "compact"
+    }
+  }
+}

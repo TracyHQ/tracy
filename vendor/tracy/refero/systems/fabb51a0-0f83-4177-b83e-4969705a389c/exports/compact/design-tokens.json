@@ -1,0 +1,59 @@
+{
+  "color": {
+    "bracket-pink": {
+      "$value": "#f50db4",
+      "$type": "color",
+      "$description": "Bracket Pink — Pink outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "graphite-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Graphite Black — Primary text, icon fills, team-name boxes, score text — the typographic and structural anchor"
+    },
+    "page-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Page White — Page canvas, inverted text on dark or pink nodes"
+    },
+    "off-black": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Off-Black — Secondary headings and subdued text — softer than pure black for non-critical labels"
+    },
+    "wire-gray": {
+      "$value": "#f2f2f2",
+      "$type": "color",
+      "$description": "Wire Gray — Hairline borders, divider rules, bracket connector lines, card outlines — the structural skeleton of the entire diagram"
+    },
+    "blush-wash": {
+      "$value": "#fef4ff",
+      "$type": "color",
+      "$description": "Blush Wash — Soft pink-tinted surface for highlighted match cards and accent panel backgrounds — pink diluted almost to white"
+    }
+  },
+  "font": {
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "System sans-serif for body text, team names, labels, and UI chrome. Small scale (12–16px) and tight line-heights keep the bracket compact; weight 500–600 for labels, 400 for secondary text. Substitute: Inter, -apple-system, or any geometric sans."
+    },
+    "ui-monospace": {
+      "$value": "ui-monospace",
+      "$type": "fontFamily",
+      "$description": "Monospace for all numerical scores, stage labels (R16, QF, SF), the UNISWAP CUP wordmark, and the central VS separator. Weight 700 at 32px for hero match scores with -0.02em tracking; weight 500 at 12px for stage markers. This monospace handling is signature — numbers and stages read like broadcast graphics, not body text. Substitute: JetBrains Mono, IBM Plex Mono, SF Mono."
+    },
+    "basel": {
+      "$value": "Basel",
+      "$type": "fontFamily",
+      "$description": "Custom brand face used sparingly for select body text passages — a single weight (500) suggests Basel Grotesk or a geometric grotesque chosen for its even, technical character. Substitute: Inter or Söhne at weight 500."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://unicup.uniswap.org",
+      "siteName": "Uniswap Cup",
+      "extractedAt": "2026-06-03T20:45:14.175Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,55 @@
+/* Forms plugin markup (ec-form-*) dressed in the design's field styles. Loaded only with the form. */
+/* container-type lets the half-field breakpoint below react to the SPACE THE FORM ACTUALLY HAS,
+   not the viewport: the form sits in a narrow sidebar column at both 768px and 390px (the page's
+   own outer grid puts it beside the contact-info column), so a viewport media query cannot tell
+   a cramped half field from a roomy one -- see the @container rule below. */
+.ec-form { display: grid; gap: 20px; container-type: inline-size; }
+.ec-form .ec-form-page { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border: 0; padding: 0; margin: 0; min-width: 0; }
+.ec-form .ec-form-field { grid-column: span 2; min-width: 0; }
+/* The plugin sizes a half field as `calc(50% - gap)` of the row; inside our two-column grid that
+   halves it again. The grid column is the width -- and `min-width: 0` keeps it a track boundary
+   the browser is allowed to shrink to, not a lower bound the input's own min-content can escape. */
+.ec-form .ec-form-field--half { grid-column: span 1; width: 100%; min-width: 0; }
+/* The design keeps half fields side by side at every width the sidebar layout produces --
+   verified against the design source at both 768px and 390px (N-6c4849): the outer contact
+   grid puts the form in its own ~250px-wide column at 768 (two columns of minmax(320px,1fr)
+   fit side by side) and collapses to one column at 390, but the form's own box lands at almost
+   the same ~250px width either way, so a viewport-driven guess can't tell those two cases
+   apart -- only the measured container width can, and it's ~250px in both. The half fields
+   there are ~115px each; placeholders were shortened (N-295573: "Company name" clipped to
+   "Company nai") so the longest of them ("Ivan Petrov", ~103px with padding) clears that with
+   room to spare. This threshold is only a safety net for a narrower host than either tested
+   width -- below it a half field would drop under ~100px, too narrow for any of the shortened
+   placeholders -- so stack there instead of shrinking the input further. */
+@container (max-width: 220px) { .ec-form .ec-form-field--half { grid-column: span 2; } }
+.ec-form .ec-form-label { display: block; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 7px; }
+.ec-form .ec-form-required { color: var(--color-signal-text); margin-left: 2px; }
+.ec-form .ec-form-input, .ec-form input[type="text"], .ec-form input[type="email"], .ec-form input[type="tel"], .ec-form select, .ec-form textarea {
+	width: 100%; font-family: var(--font-sans); font-size: 15px; padding: 12px 13px; border: 1px solid var(--color-line); border-radius: var(--ds-input-radius, 0);
+	background: var(--color-paper); color: var(--color-fg);
+}
+.ec-form textarea { min-height: 130px; resize: vertical; }
+.ec-form .ec-form-input:focus { outline: 2px solid var(--color-focus-ring); border-color: var(--color-forest-text); background: var(--color-card); }
+.ec-form .ec-form-input[aria-invalid="true"], .ec-form-field.has-error .ec-form-input { border-color: var(--color-error); background: var(--color-error-bg); }
+/* The plugin stacks radios in a column; the design is a row of toggle buttons (source: Request type). */
+.ec-form .ec-form-radio-group { display: flex; flex-direction: row; flex-wrap: wrap; gap: 8px; border: 0; padding: 0; margin: 0; }
+.ec-form .ec-form-radio-label { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; border: 1px solid var(--color-line); color: var(--color-fg-2); padding: 10px 16px; cursor: pointer; }
+.ec-form .ec-form-radio-label:has(input:checked) { background: var(--color-forest); color: var(--ds-c-on-accent-band, #fff); border-color: var(--color-forest); font-weight: 600; }
+.ec-form .ec-form-radio-label input { position: absolute; opacity: 0; width: 0; height: 0; }
+.ec-form .ec-form-field--file .ec-form-input { border: 1px dashed var(--color-line-strong); background: var(--color-paper); padding: 22px; text-align: center; font-size: 14.5px; font-weight: 600; }
+.ec-form .ec-form-field--file .ec-form-help { display: block; text-align: center; }
+.ec-form .ec-form-help { display: block; font-size: 13px; color: var(--color-fg-meta); margin-top: 6px; }
+.ec-form .ec-form-checkbox-label { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--color-fg-2); }
+.ec-form .ec-form-checkbox-label input { width: 18px; height: 18px; border: 1px solid var(--color-line-faint); background: var(--color-card); accent-color: var(--color-forest); flex-shrink: 0; }
+.ec-form .ec-form-error { display: block; font-size: 13px; color: var(--color-error); margin-top: 6px; }
+.ec-form .ec-form-error:empty { display: none; }
+/* Action row: submit and the secondary "Clear form" (reset) side by side, as in the source. */
+.ec-form .ec-form-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.ec-form .ec-form-reset { font-family: var(--font-sans); background: transparent; border: 1px solid var(--color-line); color: var(--color-fg-2); font-size: 15.5px; font-weight: 600; padding: 15px 24px; cursor: pointer; border-radius: var(--ds-btn-radius, 0); }
+.ec-form .ec-form-reset:hover { border-color: var(--color-forest-text); }
+.ec-form .ec-form-submit, .ec-form button[type="submit"] { justify-self: start; font-family: var(--font-sans); background: var(--color-signal); color: var(--ds-c-accent-on, #fff); border: 0; font-size: 15.5px; font-weight: 600; padding: 15px 32px; cursor: pointer; border-radius: var(--ds-btn-radius, 0); }
+.ec-form .ec-form-submit:disabled { opacity: 0.6; }
+.ec-form .ec-form-status { border-left: 3px solid var(--color-info); background: var(--color-info-bg); color: var(--color-info-fg); padding: 14px 18px; font-size: 15px; }
+.ec-form .ec-form-status--success { border-color: var(--color-success); background: var(--color-success-bg); color: var(--color-success-fg); }
+.ec-form .ec-form-status--error { border-color: var(--color-error); background: var(--color-error-bg); color: var(--color-error-fg); }
+.ec-form .ec-form-status:empty { display: none; }

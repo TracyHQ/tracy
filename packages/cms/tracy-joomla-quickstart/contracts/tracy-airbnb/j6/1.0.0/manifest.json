@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "tracy-airbnb/j6/1.0.0",
+  "platform": "joomla",
+  "template": "tracy_airbnb",
+  "quickstart": {
+    "schemaVersion": "tracy-design-pack/v1",
+    "release": "tracy-airbnb/j6",
+    "version": "1.0.0",
+    "platform": "joomla",
+    "platformVersion": "6.1.1",
+    "template": "tracy_airbnb",
+    "base": {
+      "release": "tracy-apple/j6",
+      "version": "1.1.0",
+      "parts": {
+        "webroot": {
+          "file": "tracy-apple-j6-webroot-1.1.0.tar.gz",
+          "bytes": 58407213,
+          "sha256": "90e91e51af5c3dde6f731997e35f0d48ed381c6bfef82fe7f726a92f27f3e4eb",
+          "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-webroot-1.1.0.tar.gz"
+        },
+        "database": {
+          "file": "tracy-apple-j6-database-1.1.0.sql.gz",
+          "bytes": 191683,
+          "sha256": "20e3987b05ce77b9ca37ab8add76492cd7d5efcf3fc6a3f6832ae99c6b9537ba",
+          "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-database-1.1.0.sql.gz"
+        }
+      }
+    },
+    "activation": "tracy-airbnb/j6/1.0.0",
+    "parts": {
+      "template": {
+        "file": "tpl_tracy_airbnb-j6-1.0.0.zip",
+        "bytes": 841866,
+        "sha256": "10785c4754b1be4439971d2b7013a5ab9edec9d94e41cd651f10776bf5d50e22",
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-airbnb%2Fj6/tpl_tracy_airbnb-j6-1.0.0.zip"
+      }
+    }
+  },
+  "receiverVersion": "0.14.0",
+  "mode": "content-only"
+}

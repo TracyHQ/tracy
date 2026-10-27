@@ -1,0 +1,16 @@
+@theme {
+  /* Colors */
+  --color-tabloid-orange: #ff9e00;
+  --color-deep-capsule-navy: #020507;
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-cool-gray: #d2dce1;
+  --color-iron-gray: #666666;
+  --color-ash: #b3b3b3;
+  --color-smoke: #cccccc;
+
+  /* Typography */
+  --font-px-grotesk: 'Px Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-apercu-mono-pro: 'Apercu Mono Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-swimclub-custom-pixelbitmap-face: 'Swimclub (custom pixel/bitmap face)', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

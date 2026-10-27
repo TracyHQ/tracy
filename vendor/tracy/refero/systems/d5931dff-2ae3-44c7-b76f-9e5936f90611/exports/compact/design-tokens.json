@@ -1,0 +1,99 @@
+{
+  "color": {
+    "ink-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink Black — Body text, button fills, hairline borders, slider tracks, active states — the single dominant tone that gives every specimen its anchor"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, input fills, button text on dark fills"
+    },
+    "foam-gray": {
+      "$value": "#ebedee",
+      "$type": "color",
+      "$description": "Foam Gray — Subtle surface lift and low-contrast dividers when a row needs to separate from pure white without using ink"
+    },
+    "concrete-gray": {
+      "$value": "#b7b7b7",
+      "$type": "color",
+      "$description": "Concrete Gray — Medium-contrast borders, control outlines, and structural separators."
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Secondary surfaces and darker neutral blocks when a row needs more weight than white but less than pure black"
+    },
+    "mid-ink": {
+      "$value": "#18181d",
+      "$type": "color",
+      "$description": "Mid Ink — Near-black with a barely-perceptible cool cast — used where pure #000000 would feel flat against the slightly warm page"
+    },
+    "ash": {
+      "$value": "#858585",
+      "$type": "color",
+      "$description": "Ash — Quiet link text and low-emphasis labels"
+    }
+  },
+  "font": {
+    "sterlingvf": {
+      "$value": "SterlingVF",
+      "$type": "fontFamily",
+      "$description": "Workhorse for all UI chrome: navigation, labels, slider values, button text, font metadata, links. The weight 300 is reserved for quiet labels; 400 reads as the default body voice; 500 only appears on active or selected states. A barely-positive tracking (0.017em) at 12–14px gives small caps a calm, typeset quality rather than a screen-reading feel."
+    },
+    "sterling": {
+      "$value": "Sterling",
+      "$type": "fontFamily",
+      "$description": "Static fallback face for the same UI roles as SterlingVF, used where variable axes aren't needed (icons, simple buttons). Carries a slightly wider tracking than the variable sibling to stay legible at very small sizes."
+    },
+    "formative": {
+      "$value": "Formative",
+      "$type": "fontFamily",
+      "$description": "Showcase serif. Drawn at 158px as the hero specimen, its tight -0.02em tracking and unit line-height let the letterforms touch shoulder-to-shoulder — a wall of type, not a line of type."
+    },
+    "voyager": {
+      "$value": "Voyager",
+      "$type": "fontFamily",
+      "$description": "Showcase display face. The -0.10em tracking is the design's most extreme optical choice — letters collapse into each other at 158px to form a continuous black bar, a deliberate counterpoint to the breathable Sterling UI text."
+    },
+    "blokvf": {
+      "$value": "BlokVF",
+      "$type": "fontFamily",
+      "$description": "Geometric display specimen. Uses normal letter-spacing — the only showcase face that doesn't pull tight — because its blocky geometry already has built-in density."
+    },
+    "arbeitprocontrastvf": {
+      "$value": "ArbeitProContrastVF",
+      "$type": "fontFamily",
+      "$description": "High-contrast serif specimen, shown in the hero photograph as a printed type-on-monitor mockup — the only showcase face presented through photography rather than as raw type on the page."
+    },
+    "anthrovf": {
+      "$value": "AnthroVF",
+      "$type": "fontFamily",
+      "$description": "Humanist sans specimen at display scale, pairing weight 400 and tight tracking to show a softer counterpoint to Blok's geometry."
+    },
+    "apexvf": {
+      "$value": "ApexVF",
+      "$type": "fontFamily",
+      "$description": "Display specimen with the loosest line-height of the showcase set, letting ascenders and descenders breathe vertically."
+    },
+    "arbeittechnikvf": {
+      "$value": "Arbeittechnikvf",
+      "$type": "fontFamily",
+      "$description": "Technical/industrial specimen, tight tracking and unit line-height so its monoline forms read as a structural element."
+    },
+    "work-sans": {
+      "$value": "Work Sans",
+      "$type": "fontFamily",
+      "$description": "Failsafe for any environment where the custom Sterling face cannot load — never the primary voice, but the only Google face in the system."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://studiofew.com",
+      "siteName": "Studio Few",
+      "extractedAt": "2026-06-03T17:46:03.719Z",
+      "variant": "compact"
+    }
+  }
+}

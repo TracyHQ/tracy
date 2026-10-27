@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1030-own-domain-review-findings",
+  "kind": "fix",
+  "title": "An own domain: a bare domain is refused with what to enter instead, an unproved name is held for 72 hours only, and the site-connect-domain switch closes the doors that start one",
+  "pr": 1030,
+  "area": "sites/own-domain",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout, with TEST_DATABASE_URL pointing at a throwaway Postgres, run: node --test --test-reporter=tap apps/tracy-web/test/site-address.test.mjs",
+    "S2: Record the exit code and the result of the three cases named in `run.tests`."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "S2: all three are 'ok': PUT /api/sites/{key}/address answers 400 DOMAIN_APEX_UNSUPPORTED with a `www.` suggestion for a registrable domain and writes nothing; a pending reservation whose TXT record was never read ok lets its name go after 72 hours on the database's clock, another site can reserve it and the first holder reads it as lapsed; with the switch off reserve, availability and verify answer 403 OWN_DOMAIN_DISABLED while a domain the site already has stays readable and removable."
+  ],
+  "selectors": {
+    "door": "apps/tracy-web/src/sites/address.js",
+    "migration": "apps/tracy-web/src/db/migrations/077-site-own-domain-hold.sql",
+    "switch": "site-connect-domain (packages/core/tracy-core/src/ui-switches/catalogue.json)"
+  },
+  "evidence": "Found by reading the code after the own-domain feature reached develop (c999b8370): `candidate` accepted any name of two or more labels, a pending row was inserted with no proof and nothing but its holder's DELETE removed it, and no server code read the switch.",
+  "fence": "Whether an external domain pointed at the tunnel name is served over HTTPS, the host scripts and the publish flow are not covered by this case.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/site-address.test.mjs"],
+    "needs": ["postgres"],
+    "tests": [
+      "a bare (registrable) domain is refused by its own code with the subdomain to enter instead — before anything is written or asked",
+      "a reservation whose ownership was never proven stops holding the name after 72 hours: another site may take it (a new token), and the first sees it lapsed",
+      "with the site-connect-domain switch off, the doors that start an own domain refuse by name; a domain the site has stays shown and can be removed"
+    ]
+  }
+}

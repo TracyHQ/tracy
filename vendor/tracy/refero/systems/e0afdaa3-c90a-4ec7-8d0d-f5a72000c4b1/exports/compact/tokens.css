@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-drawing-ink: #0a1217;
+  --color-paper: #ffffff;
+  --color-drafting-gray: #f1f1f1;
+  --color-hairline: #e6e7e8;
+  --color-stone: #85898b;
+  --color-graphite: #54595d;
+  --color-archive-black: #000000;
+  --color-signal-lime: #cdfe00;
+  --color-blueprint-wash: #dceaf8;
+  --color-material-wash: #f4e3cd;
+  --color-site-wash: #ddefe2;
+  --color-review-status: #5b4678;
+  --color-input-status: #9a6700;
+  --color-complete-status: #1a7f55;
+  --color-plan-blue: #24476b;
+
+  /* Typography — Font Families */
+  --font-aspekta: 'Aspekta', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-monospace: 'ui-monospace', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

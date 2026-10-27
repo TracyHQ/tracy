@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1100-p2-look-nth-receipt",
+  "kind": "fix",
+  "title": "nth counts from 0 and the agent is told so where it reads it; look.set's answer names the element it matched and its place among the matches",
+  "pr": 1100,
+  "area": "site-tools/look",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/tools/tracy-site-tools run: node --test --test-reporter=tap test/look-style.test.mjs test/look-set.test.mjs test/site-context.test.mjs",
+    "S2: Read the tests named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0.",
+    "findTarget refuses nth past the matches with '… so there is no #1 (nth counts from 0: the first is 0)', and page.look's refusal keeps that hint whole; styleRequest's next and the page.look call in the tracy_site description (wordpress, joomla, emdash) say 'nth?:0 = the first'.",
+    "look.set {target:{text:'Start a conversation', nth:1}} on two matches answers element '<a#mod-custom-233.btn.btn-primary> \"Start a conversation\" — match 2 of 2 (nth:1; nth:0 is the first)'; one match reads '— the only match', a partial one '— the closest partial match of the words'; a refusal after the read names the element too; LOOK_SET_CALL says 'nth?:0 = the first'.",
+    "The LOOK line of the site context (Joomla and WordPress) shows look.set's target as '{text|selector, nth?:0 = the first}'."
+  ],
+  "selectors": {
+    "code": "packages/tools/tracy-site-tools/src/host/look-set.mjs matchedElement, LOOK_SET_CALL; look-style.mjs findTarget, BAD_STYLE_NEXT; site-context.mjs LOOK_SET; surface.mjs picturesBlock"
+  },
+  "evidence": "dskeepwp / dskeepjo 09–10/10/2026: the agent passed nth:1 for 'the first button' three times — a failed call on WordPress T3, the second 'Start a conversation' (#mod-custom-233) changed instead of the hero's on Joomla T3, the wrong button then a self-revert on Joomla T4b.",
+  "fence": "the call shape says nth is 0-based, and the write's receipt shows which element and which match it hit",
+  "run": {
+    "cwd": "packages/tools/tracy-site-tools",
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/look-style.test.mjs",
+      "test/look-set.test.mjs",
+      "test/site-context.test.mjs"
+    ],
+    "tests": [
+      "🔒 nth counts from 0, and every place the agent reads it says so",
+      "🔒 the receipt names the element it matched and its place"
+    ]
+  }
+}

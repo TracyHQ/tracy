@@ -1,0 +1,11 @@
+:root {
+  /* Colors */
+  --color-ink-black: #111111;
+  --color-paper-white: #ffffff;
+  --color-smoke: #4f4f4f;
+  --color-bronze-veil: #bc9873;
+
+  /* Typography — Font Families */
+  --font-aktiv-web-custom-substitute-inter-tight-or-shne: 'aktiv-web (custom) / substitute: Inter Tight or Söhne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-editorial-display-serif-not-captured-in-data-visible-in-hero-wordmark: 'Editorial display serif (not captured in data — visible in hero wordmark)', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}

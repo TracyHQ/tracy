@@ -1,0 +1,180 @@
+//
+// Tracy — reconciliations between layers
+// ---------------------------------------------
+// Imported LAST, after the component layer and both override layers. Nothing here is new design:
+// each rule settles a collision that only exists because two correct layers meet on one element.
+// Every entry names the scanner that found it, so a later change can re-check rather than guess.
+
+// A filter chip that is ALSO the primary button: `.tracy-chip` sets the resting label colour
+// and, being imported after the component layer, it won the cascade — so the Archive page's
+// "Filter" button wore --fg-2 on the accent fill (contrast-audit, 2.77 in dark). A button's label
+// belongs to the button.
+.tracy-chip.btn-primary,
+.tracy-chip.btn.btn-primary {
+  color: var(--accent-on);
+}
+
+// The T4 base sheet caps EVERY field at `max-width: 240px` (.form-control, and again inside
+// #login-form). A `width: 100%` cannot beat a max-width, so contact, search, registration and the
+// profile forms were all rendering quarter-width fields no matter what the override layers asked
+// for. Reported by the com_users builder after it hit the same wall from the other side.
+.form-control,
+.form-select,
+#login-form .mod-login__username input,
+#login-form .mod-login__password input {
+  max-width: none;
+}
+
+// Bootstrap's compiled `.form-control:focus` bakes `color:#1d1d1f; background-color:#ffffff`, so the
+// FIRST thing a dark-mode visitor sees is a white box — Joomla autofocuses the login username.
+// The component layer only restated border and ring, which left the two literals standing.
+.form-control:focus,
+.form-select:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+textarea:focus {
+  background-color: var(--bg);
+  color: var(--fg);
+  // …and the ring, for the same reason. The component layer declares the focus ring on
+  // `input[type="text"]` etc, which is (0,1,1) and loses to Bootstrap's `.form-control:focus` at
+  // (0,2,0) — so the visible result was Bootstrap's own ring computed to an oklab colour at alpha
+  // 0.0085, invisible at 0.8% opacity. `select` was worse: it appears in NO focus rule at all, so
+  // it resolved to `outline-style: none` and a keyboard user got no indicator whatsoever. The
+  // design system has had `--focus-ring` since day one; nothing was reaching the controls with it.
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+
+// Same story one layer down: T4's generated per-style sheet paints the framework buttons from
+// --color-* and loads after template.css. darkmode.scss remaps those names, but a page that also
+// carries a 0-3-0 rule from an override layer needs the label to follow too.
+.btn.btn-primary { color: var(--accent-on); }
+html .btn.btn-secondary,
+html .tracy-btn--secondary {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--ds-c-accent-text, var(--accent));
+  box-shadow: var(--tracy-ring);
+}
+html .btn.btn-secondary:hover { background-color: var(--surface); color: var(--ds-c-accent-text-hover, var(--accent-hover)); }
+
+// Two T4 legacy rules paint the blog card's "read more" link and the "more articles" list with
+// LIGHT-ramp literals baked by Sass (`p.readmore .btn { background-color: #f5f5f7 }`,
+// `.items-more .nav-tabs > li > a { background: #fbfbfd }`), and `p.readmore .btn` outranks the
+// override layer's `.tracy-postcard__action .btn-readmore` by one type selector. In dark that
+// left accent text on a light-mode chip — contrast-audit at 2.77 and 1.05 on /pages/services and
+// /pages/team. Same selectors, later in the cascade, tokens instead of literals.
+p.readmore .btn,
+p.readmore .btn.btn-readmore {
+  background-color: transparent;
+  color: var(--ds-c-accent-text, var(--accent));
+  padding: 0;
+}
+
+p.readmore .btn:hover,
+p.readmore .btn.btn-readmore:hover {
+  background-color: transparent;
+  color: var(--ds-c-accent-text-hover, var(--accent-hover));
+}
+
+.items-more .nav-tabs > li > a {
+  background: var(--surface-warm);
+  color: var(--fg);
+  border-radius: var(--radius-sm);
+}
+
+.items-more .nav-tabs > li > a:hover {
+  background: var(--surface);
+  color: var(--ds-c-accent-text, var(--accent));
+}
+
+// Bootstrap's `.nav-tabs` draws a bottom rule in a LIGHT-ramp literal; under the blog's
+// "more articles" list that rule is a seam between sections, which this design never draws
+// (border-scan on /pages/services and /pages/team, the last finding on each).
+.items-more .nav-tabs,
+.com-content-category-blog__links.nav-tabs {
+  border-bottom: 0;
+}
+
+// ── Craft repairs found by the Phase 8b design review ───────────────────────────────────────────
+
+// #7 The "Recommended" badge sat in flow, so the middle pricing card — and everything in it —
+// dropped 44px below its neighbours and hung 53px past them. Take it out of flow and reserve its
+// height on every card, so all three line up whichever one is flagged.
+.acm-pricing .tracy-plan,
+.acm-pricing .tracy-plan--featured,
+.acm-pricing .tracy-plan--recommended {
+  position: relative;
+  // Same top inset on all three, flagged or not: the recommended card had 32px against the others'
+  // 24px, which is the 8px that was left after taking the badge out of flow.
+  padding-top: calc(var(--space-6) + var(--space-8));
+}
+
+.tracy-plan__badge {
+  position: absolute;
+  top: var(--space-6);
+  left: var(--space-6);
+  margin: 0;
+}
+
+// #8 The CTA shell wore --radius-pill (980px). At 196px tall that clamps to 98px semicircles and
+// the copy, inset 80px, sits inside the curve; on a narrow column it degrades into an egg.
+// DESIGN.md §5 puts "larger module and spotlight containers" at 28-36px — 980px is the BUTTON
+// tier. This is that value, named once.
+.tracy-cta,
+.acm-cta-capsule .tracy-cta {
+  /* Falls back only if the style layer did not generate one — the value belongs to the design
+     system, not to this file. */
+  --tracy-shell-radius: var(--radius-lg, 18px);
+
+  border-radius: var(--tracy-shell-radius);
+  padding: var(--space-12) var(--space-12);
+}
+
+// #15 Only the first feature card carried an eyebrow, so its title started 20px lower than the
+// other two and the row read as misaligned.
+.tracy-features-intro__spotlight { display: none; }
+
+// #14 The hero lead sat directly under an 176px headline with no separation, so its cap-height
+// landed ~2px below the headline's descenders.
+.tracy-hero__lead { margin-top: var(--space-4); }
+
+// The slogan rendered inline beside the mark and collided with it. A wordmark carries the name
+// already; the tagline belongs in the page, not in 21px of chrome.
+.tracy-nav .site-slogan { display: none; }
+
+// The curated footer columns carry their own heading, because the module chrome in these positions
+// renders none.
+.tracy-footlinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li + li { margin-top: var(--space-2); }
+  a { color: var(--muted); }
+  a:hover { color: var(--fg); }
+}
+
+.tracy-footlinks__title {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--fg);
+}
+
+// At 390 the header's right-hand cluster — the owner's CTA module, the theme toggle, the two
+// T4 toggles — pushed the page 21px wider than the viewport (self-check gate, every page). The
+// mark and the drawer are what a phone header needs; the CTA is one tap away inside the drawer.
+@media (max-width: 575.98px) {
+  .tracy-nav .t4-header-r > .moduletable,
+  .tracy-nav .t4-header-r > .custom { display: none; }
+
+  .tracy-nav .header-wrap { gap: var(--space-2); }
+  .tracy-nav .navbar-brand { min-width: 0; }
+  .tracy-logo svg { height: 26px; }
+}

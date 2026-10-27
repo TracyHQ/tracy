@@ -1,0 +1,28 @@
+/* Tailwind source for the three site tabs. Same recipe as tracy-my-sites/src/client/my-sites.css:
+   theme + utilities only, NO preflight — these tabs live inside dsh's page. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@tracy/ui/tokens.css';
+/* The plugin's own `tv-*` rules, in a file of their own so `@tracy/design`'s Storybook can load them
+   without a second Tailwind entry (`Pages/In dsh/Site tabs`). */
+@import './site-tabs-rules.css';
+@source './';
+@source '../../../../ui/tracy-ui/src';
+@source '../../../../core/tracy-core/src';
+/* The Publish tab's kind step draws the ask form's radio card (`ChoiceOption`). */
+@source '../../../../site/tracy-site-build-core/src/client/ask-form';
+
+/* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS — the same line as
+   the My Sites, Design inspiration and Build sheets, so dark variants turn with the app's switch. */
+@custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));
+
+/* Mode B has no preflight: the UA still paints buttons grey with black text and form controls in
+   their own font. Scoped to this plugin's root and placed in `base`, so every utility class on a
+   `@tracy/ui` component still wins. */
+@layer base {
+  .tracy-site-tabs button, .tracy-site-tabs input, .tracy-site-tabs select, .tracy-site-tabs textarea { background-color: transparent; color: inherit; font: inherit; border-width: 0; padding: 0; }
+  /* The root too: a dialog carries `tracy-site-tabs` on its own popup, and its `w-full p-4` must stay
+     inside the viewport (QA-I15: content-box made it 394px wide at 360). */
+  .tracy-site-tabs, .tracy-site-tabs * { box-sizing: border-box; }
+}

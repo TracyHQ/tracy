@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1026-tool-output-caps",
+  "kind": "feat",
+  "title": "File tool results the model reads are capped where the measured tail is: grep 100 matches and 1,000-byte previews, bash lines at 2,000 and outputs at 12,000 with the whole output kept in the session's spill file; read keeps dsh's own caps",
+  "pr": 1026,
+  "area": "harness/tool-output",
+  "cms": ["any"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. Work in the TCH checkout at the commit under test, with its dependencies installed (pnpm install) and the deepseek-harness submodule initialised.",
+    "S2: From the checkout root run: node --test --test-reporter=tap scripts/test/file-tool-caps.test.mjs packages/tools/tracy-subprocess-docker/test/output-bound.test.mjs — keep the 'ok'/'not ok' lines and the exit code."
+  ],
+  "expect": [
+    "S2: every test named in run.tests reports ok. Both bundles' twelve presets set tool-fs-search grepMaxMatches 100 and grepMaxLineBytes 1000 (sampleOverCapGlobResults false kept), each a field dsh's tool still declares and lower than its default; no preset sets a read cap on tool-fs (readMaxLineLength, readMaxBytes, readLimit stay dsh's: a 1,000-character line cap was reverted in review because read cannot page inside a line, Writer and SEO/GEO have no shell to reach the rest, and a whole-file write rebuilt from a cut line would corrupt the file); no Tracy file overrides dsh-base's spill-policy (maxInlineTokens 12500). A bash output within 2,000 characters a line and 12,000 in all is untouched; a longer line keeps its start and its length; a longer output keeps its head and tail by whole lines and counts the rest; the exit/timeout markers stay last; the whole output is saved through the spill store under the session and call, and the notice names its file and how to print one part of a long line; with no store, a failing store or no session nothing is cut; other tools, program sub-calls, value replacements and image results pass untouched; the provider registers the bound on tools/post-execute.",
+    "Every command exits 0."
+  ],
+  "selectors": {
+    "presets": "scripts/gen-presets.ts rowLines (tool-fs-search; tool-fs keeps dsh's defaults) -> packages/bundle/tracy-{cowork,native}/presets.patch.yml",
+    "bash": "packages/tools/tracy-subprocess-docker/src/output-bound.mjs (boundBashOutput, boundBashResult); index.js registerOutputBound",
+    "test": "scripts/test/file-tool-caps.test.mjs, packages/tools/tracy-subprocess-docker/test/output-bound.test.mjs"
+  },
+  "evidence": "Harness profile 09/10/2026 (candidate 8): tool results carried to later steps are 27-29% of all prompt tokens. Simulated on 1,980 bench sessions (24/09-05/10/2026): bash 55 of 2,255 calls cut, 696k of 4.07M characters (17%); grep 54 of 434 calls, 255k characters (21.5%, 27% carried); read 14 of 565 calls, 43k characters (1.7%), dropped in review. bash and grep together: about 4.4% of all carried tool-result characters.",
+  "fence": "Mechanism only: what the model is shown of a file tool or bash result, that the whole bash output is saved first and nothing is cut when it cannot be. Not covered: whether a model then needs one more call to reach what was left out (a bench measure, flaky by nature).",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/test/file-tool-caps.test.mjs",
+      "packages/tools/tracy-subprocess-docker/test/output-bound.test.mjs"
+    ],
+    "tests": [
+      "every preset of both bundles that mounts a file tool sets its cap",
+      "read keeps dsh's own caps in every preset: a long template line stays readable whole",
+      "grep still keeps its glob setting next to the new caps",
+      "each cap is a field dsh's tool reads, lower than dsh's own default",
+      "Tracy leaves dsh-base's spill-policy cap alone",
+      "the caps are the measured ones",
+      "an output within both caps is left as it is",
+      "a minified line keeps its start and its length",
+      "a cut never splits a surrogate pair",
+      "a long output keeps its head and its tail by whole lines",
+      "the status markers stay the last lines, after the notice",
+      "the notice names the saved file",
+      "boundBashResult saves the WHOLE output under the session",
+      "the content dsh accepted is read when the decision carries none of its own",
+      "no store, a failing store, or no session: nothing is cut",
+      "other tools, program sub-calls, value replacements, blocks and images pass untouched",
+      "the provider registers the bound on tools/post-execute"
+    ]
+  }
+}

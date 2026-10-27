@@ -1,0 +1,44 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, all surface backgrounds"
+    },
+    "chalk": {
+      "$value": "#e2e2e2",
+      "$type": "color",
+      "$description": "Chalk — Primary text, nav links, ghost-button borders, hairline rules, footer text — the only foreground color in the system"
+    },
+    "graphite": {
+      "$value": "#3d3d3d",
+      "$type": "color",
+      "$description": "Graphite — Subtle button borders and secondary dividers that recede against the canvas"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Inverted button surface (ghost buttons flipped to filled) and rare high-contrast accents"
+    }
+  },
+  "font": {
+    "figmasans": {
+      "$value": "figmaSans",
+      "$type": "fontFamily",
+      "$description": "The single typeface carrying every UI surface — body, nav, button, hero, footer. Only weight 400 is used; hierarchy is built through size alone, not weight contrast. The 80px display weight uses line-height 0.95, letting lines nearly touch — this near-zero leading is the signature move and only works because figmaSans is a custom geometric sans with no visible ascender/descender collision. Tight letter-spacing (-0.03em at display, -0.02em at body) tightens optical color across the page."
+    },
+    "figmamono": {
+      "$value": "figmaMono",
+      "$type": "fontFamily",
+      "$description": "Sparingly used for inline button labels and icon-adjacent text where a monospaced voice is needed. Letter-spacing is normal — monospaced faces should not be artificially tracked."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://config.figma.com/events/figma-config-2022",
+      "siteName": "Figma Config",
+      "extractedAt": "2026-06-03T18:01:59.688Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples",
+  "contractHash": "b54fc5f3117b836fbdb1bbe0ada8bf0fd885827f261729a33048681954874a10",
+  "surfaces": [
+    {
+      "id": "marketing/newsletter-light.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#newsletter",
+      "appearance": "light",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-light.html",
+      "documentTitle": "Tracy Apple — Newsletter",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:09.862Z",
+      "bodyBackground": "rgb(255, 255, 255)",
+      "bodyColor": "rgb(29, 29, 31)",
+      "visibleCharacters": 1134,
+      "images": [],
+      "linkTargets": [
+        "/resources/contact",
+        "/services/website-strategy",
+        "/services/brand-and-interface-design",
+        "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+        "/services"
+      ],
+      "forms": []
+    },
+    {
+      "id": "marketing/newsletter-dark.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#newsletter",
+      "appearance": "dark",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-dark.html",
+      "documentTitle": "Tracy Apple — Newsletter",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:09.936Z",
+      "bodyBackground": "rgb(0, 0, 0)",
+      "bodyColor": "rgb(248, 248, 248)",
+      "visibleCharacters": 1134,
+      "images": [],
+      "linkTargets": [
+        "/resources/contact",
+        "/services/website-strategy",
+        "/services/brand-and-interface-design",
+        "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+        "/services"
+      ],
+      "forms": []
+    },
+    {
+      "id": "marketing/email-light.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#email",
+      "appearance": "light",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/email-light.html",
+      "documentTitle": "Tracy Apple — Email",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:10.031Z",
+      "bodyBackground": "rgb(255, 255, 255)",
+      "bodyColor": "rgb(29, 29, 31)",
+      "visibleCharacters": 1213,
+      "images": [],
+      "linkTargets": [
+        "/services/website-development",
+        "/services/content-and-photography",
+        "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+        "/resources/contact"
+      ],
+      "forms": []
+    },
+    {
+      "id": "marketing/email-dark.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#email",
+      "appearance": "dark",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/email-dark.html",
+      "documentTitle": "Tracy Apple — Email",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:10.107Z",
+      "bodyBackground": "rgb(0, 0, 0)",
+      "bodyColor": "rgb(248, 248, 248)",
+      "visibleCharacters": 1213,
+      "images": [],
+      "linkTargets": [
+        "/services/website-development",
+        "/services/content-and-photography",
+        "/services/10-event-invitation-emails-best-practices-and-examples-you-can-steal",
+        "/resources/contact"
+      ],
+      "forms": []
+    },
+    {
+      "id": "marketing/poster-light.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#poster",
+      "appearance": "light",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/poster-light.html",
+      "documentTitle": "Tracy Apple — Poster",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:10.233Z",
+      "bodyBackground": "rgb(255, 255, 255)",
+      "bodyColor": "rgb(29, 29, 31)",
+      "visibleCharacters": 483,
+      "images": [],
+      "linkTargets": ["/resources/contact"],
+      "forms": []
+    },
+    {
+      "id": "marketing/poster-dark.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#poster",
+      "appearance": "dark",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/poster-dark.html",
+      "documentTitle": "Tracy Apple — Poster",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:10.431Z",
+      "bodyBackground": "rgb(0, 0, 0)",
+      "bodyColor": "rgb(248, 248, 248)",
+      "visibleCharacters": 483,
+      "images": [],
+      "linkTargets": ["/resources/contact"],
+      "forms": []
+    },
+    {
+      "id": "marketing/deck-light.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#deck",
+      "appearance": "light",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+      "documentTitle": "Tracy Apple — Deck",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:10.708Z",
+      "bodyBackground": "rgb(255, 255, 255)",
+      "bodyColor": "rgb(29, 29, 31)",
+      "visibleCharacters": 3829,
+      "images": [
+        {
+          "src": "/images/demo/members/mem-1.jpg",
+          "alt": "Illustrative portrait for Adam Hale",
+          "loaded": true
+        },
+        {
+          "src": "/images/demo/members/mem-2.jpg",
+          "alt": "Illustrative portrait for Peter Lang",
+          "loaded": true
+        },
+        {
+          "src": "/images/demo/members/mem-3.jpg",
+          "alt": "Illustrative portrait for Sofia Lindqvist",
+          "loaded": true
+        },
+        {
+          "src": "/images/demo/members/mem-4.jpg",
+          "alt": "Illustrative portrait for Lucas Meyer",
+          "loaded": true
+        }
+      ],
+      "linkTargets": ["/resources/contact", "/services"],
+      "forms": []
+    },
+    {
+      "id": "marketing/deck-dark.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#deck",
+      "appearance": "dark",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+      "documentTitle": "Tracy Apple — Deck",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:10.995Z",
+      "bodyBackground": "rgb(0, 0, 0)",
+      "bodyColor": "rgb(248, 248, 248)",
+      "visibleCharacters": 3829,
+      "images": [
+        {
+          "src": "/images/demo/members/mem-1.jpg",
+          "alt": "Illustrative portrait for Adam Hale",
+          "loaded": true
+        },
+        {
+          "src": "/images/demo/members/mem-2.jpg",
+          "alt": "Illustrative portrait for Peter Lang",
+          "loaded": true
+        },
+        {
+          "src": "/images/demo/members/mem-3.jpg",
+          "alt": "Illustrative portrait for Sofia Lindqvist",
+          "loaded": true
+        },
+        {
+          "src": "/images/demo/members/mem-4.jpg",
+          "alt": "Illustrative portrait for Lucas Meyer",
+          "loaded": true
+        }
+      ],
+      "linkTargets": ["/resources/contact", "/services"],
+      "forms": []
+    },
+    {
+      "id": "marketing/form-light.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#form",
+      "appearance": "light",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html",
+      "documentTitle": "Tracy Apple — Enquiry form",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:11.218Z",
+      "bodyBackground": "rgb(255, 255, 255)",
+      "bodyColor": "rgb(29, 29, 31)",
+      "visibleCharacters": 1163,
+      "images": [],
+      "linkTargets": ["/resources/contact"],
+      "forms": [
+        {
+          "action": null,
+          "method": null
+        }
+      ]
+    },
+    {
+      "id": "marketing/form-dark.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#form",
+      "appearance": "dark",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html",
+      "documentTitle": "Tracy Apple — Enquiry form",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:11.320Z",
+      "bodyBackground": "rgb(0, 0, 0)",
+      "bodyColor": "rgb(248, 248, 248)",
+      "visibleCharacters": 1163,
+      "images": [],
+      "linkTargets": ["/resources/contact"],
+      "forms": [
+        {
+          "action": null,
+          "method": null
+        }
+      ]
+    },
+    {
+      "id": "marketing/typography-light.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#typography",
+      "appearance": "light",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/typography-light.html",
+      "documentTitle": "Type and colour at Tracy Apple",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:11.635Z",
+      "bodyBackground": "rgb(255, 255, 255)",
+      "bodyColor": "rgb(29, 29, 31)",
+      "visibleCharacters": 2008,
+      "images": [],
+      "linkTargets": [],
+      "forms": []
+    },
+    {
+      "id": "marketing/typography-dark.html",
+      "pageUrl": "http://127.0.0.1:8212/resources/marketing-samples#typography",
+      "appearance": "dark",
+      "documentUrl": "http://127.0.0.1:8212/media/tracy-marketing/typography-dark.html",
+      "documentTitle": "Type and colour at Tracy Apple",
+      "selector": ".tracy-marketing__preview → [data-field], [data-field-href|src|alt]",
+      "capturedAt": "2026-09-12T12:13:11.687Z",
+      "bodyBackground": "rgb(0, 0, 0)",
+      "bodyColor": "rgb(248, 248, 248)",
+      "visibleCharacters": 2008,
+      "images": [],
+      "linkTargets": [],
+      "forms": []
+    }
+  ]
+}

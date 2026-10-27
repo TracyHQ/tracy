@@ -1,0 +1,79 @@
+{
+  "id": "QA-UNIT-REG-PR-1509-pic-1-icons-and-kept-band-roles-happy",
+  "itemIds": ["regression:REG-PR-1509-pic-1-icons-and-kept-band-roles"],
+  "requirement": "The /ops Design system step fails an icon picture drawn in the template's brand hue (PIC-1, static, per side), and a kept band resets every slot colour role, including bands named with combinators",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1509-pic-1-icons-and-kept-band-roles.json",
+    "ref": "PR #1509 (fix); fix evidence: Under Moxie on dev 20/10/2026: JA Kinetic WP 1.0.11 /product/integrations/ icons stayed lime (dark) / olive (light) while /ops graded the release A; JA Symphony J6 hero title and JA Donate footer turned cream instead of white inside kept bands. PIC-1 over 39 open releases found 7 true failures, all fixed in this PR.",
+    "invariant": "S1 exits 0 with '# fail 0'. 'PIC-1 is registered for every CMS, owned by the template, and must-fix' is ok. 'PIC-1 fails the Kinetic WP Integrations icons: a lime <img> SVG of the media library' is ok (the JA Kinetic WP 1.0.11 case: stroke #A3E635 SVG uploads shown through <img>). 'PIC-1 passes an icon the slot contract turns ink, and fails one it only inverts' is ok. 'PIC-1 counts a sideRules recolour only on its own side: a picture fixed on one side still fails' is ok. 'a kept band resets every colour role the slot defines, so the template’s own colours win there' is ok (keepRules in src/tokens56.mjs resets all ROLE_VARIABLES, not 22 of 36). 'a kept band named with a combinator is reset and stops the slot rules like any other' is ok (JA Resort .owl-item > .item).",
+    "productSources": [
+      "apps/tracy-web/src/lib/template-design-system-readiness/index.js:157",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/icon-refs.js:93",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/recolour-rules.js:21",
+      "apps/tracy-web/src/lib/template-design-system-readiness/readers/svg-paint.js:138",
+      "apps/tracy-web/src/lib/template-design-system-readiness/severity.js:196",
+      "packages/design/tracy-ds-slot/src/library.mjs:5",
+      "packages/design/tracy-ds-slot/src/probe.mjs:8",
+      "packages/design/tracy-ds-slot/src/role-variables.mjs:28",
+      "packages/design/tracy-ds-slot/src/tokenize.mjs:92",
+      "packages/design/tracy-ds-slot/src/tokens56.mjs:161"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/design/tracy-ds-slot/src/library.mjs:104 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/library.mjs:116 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/library.mjs:71 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/src/library.mjs:88 readFileSync() with a computed path",
+      "packages/design/tracy-ds-slot/test/tokenize.test.mjs:368 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "PIC-1 is registered for every CMS, owned by the template, and must-fix",
+    "PIC-1 fails the Kinetic WP Integrations icons: a lime <img> SVG of the media library",
+    "PIC-1 passes an icon the slot contract turns ink, and fails one it only inverts",
+    "PIC-1 counts a sideRules recolour only on its own side: a picture fixed on one side still fails",
+    "a kept band resets every colour role the slot defines, so the template’s own colours win there",
+    "a kept band named with a combinator is reset and stops the slot rules like any other"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1509-pic-1-icons-and-kept-band-roles"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1509-pic-1-icons-and-kept-band-roles",
+    "pr": 1509,
+    "kind": "fix",
+    "area": "design/readiness",
+    "file": "tests/regression/cases/REG-PR-1509-pic-1-icons-and-kept-band-roles.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "apps/tracy-web/test/template-design-system-readiness-pic-1.test.mjs",
+    "packages/design/tracy-ds-slot/test/tokenize.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "PIC-1 is registered for every CMS, owned by the template, and must-fix",
+    "PIC-1 fails the Kinetic WP Integrations icons: a lime <img> SVG of the media library",
+    "PIC-1 passes an icon the slot contract turns ink, and fails one it only inverts",
+    "PIC-1 counts a sideRules recolour only on its own side: a picture fixed on one side still fails",
+    "a kept band resets every colour role the slot defines, so the template’s own colours win there",
+    "a kept band named with a combinator is reset and stops the slot rules like any other"
+  ],
+  "timeoutS": 600
+}

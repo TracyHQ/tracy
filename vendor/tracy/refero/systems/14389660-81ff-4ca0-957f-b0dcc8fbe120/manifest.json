@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+  "status": "complete",
+  "name": "Kraken",
+  "url": "https://styles.refero.design/style/14389660-81ff-4ca0-957f-b0dcc8fbe120",
+  "sourceWebsite": "https://kraken.com",
+  "extractedAt": "2026-06-03T17:56:15.571Z",
+  "capturedAt": "2026-10-08T05:08:31.596352+00:00",
+  "theme": "light",
+  "industry": "crypto",
+  "description": "violet ledger on frosted glass — a precise financial document where one electric purple ink does all the talking.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/aaaf83f4-c83e-4604-b8e6-cb00679396a4.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/bf7c6e50-b435-41bd-a6c2-6a69f0a5f2bf.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/8b81cc0e-196f-4870-87ba-9499e55067f0.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/7c18e062-703b-4925-83c2-6522a53ce0fb.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/eaf717ba-4a5d-4a2b-9241-8655478171f1.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "afa7ed8aae99c410c74c3f2ced37672e6e0cb362bf6935b43fec37ba2dea0961",
+      "bytes": 22458
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "9a89bd2bb799735f43432a34a91247094653535abe8bdb7bcbf3821513f8150a",
+      "bytes": 89957
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "75c3eec114c162f675c41c5fea160db07ec33bc9c4b9605494b667ef20571077",
+      "bytes": 19129
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "2cd55b7f2287834f68006747a574c6b6feee608df7cdc1d30319aab4a02a6689",
+      "bytes": 11543
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "3577e760ef04bbfa6c1e77aebfe19828bc411b0cbda10c86ac67443a324c79d6",
+      "bytes": 14297
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "7cfed8e92b42c1dcd64be956831fd9d7589f7da0f3d735e00fb437a48128bdd3",
+      "bytes": 4326
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f43e59735a8b6ddd12554145a4d24a194db68595a160123d68c5aba5e57a08e3",
+      "bytes": 890
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "5a86ce47900155aa4f4a73a33fa61b4aa94caaff2bfba64c034721c581211c98",
+      "bytes": 907
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "44fad5672d0118e7c8a8628a9cc7d20d25802a6c937f06004ce57b7f137f25e6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "b38ad9c9668e84eb2d6317f010d133f1ed80da802f9a689b7ff81e940dbcfdac",
+      "bytes": 46403
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "762b166d910ec218acccdd43e2ccf5fc056af10870f1d61a99f5717322764919",
+      "bytes": 23844
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f7ec398a9ac7bf15741f02c3fd7cc84e494b315153c1b1b8edfb623f78fd9bf8",
+      "bytes": 45173
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "fe7bbf59825e1777730f57c0566d9dbe77834057007c40764f5ff60389cdf5a0",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "cb15b32fe7a29888e3f0544d10c11aac5f8f03fccfa9b468151d0e4c34aa0f93",
+      "bytes": 1909
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ce4dc493657520e55c40d7fb61511b85e842976a5b6bbcbd34889aad25a6fc19",
+      "bytes": 2532
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "7c38e84b-aea0-4c8f-b3e9-60b994ee6c6b",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "c25e8eb5-634d-4aca-b30b-d8ba5a50dc5a",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a"
+  ]
+}

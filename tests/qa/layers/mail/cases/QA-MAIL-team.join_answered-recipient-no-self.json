@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.join_answered-recipient-no-self",
+  "itemIds": [
+    "letter:team.join_answered:en",
+    "letter:team.join_answered:vi",
+    "letter:team.join_answered:de",
+    "letter:team.join_answered:it",
+    "letter:team.join_answered:fr",
+    "letter:team.join_answered:nl",
+    "letter:team.join_answered:zh",
+    "letter:team.join_answered:es"
+  ],
+  "requirement": "team.join_answered: nobody is notified of their own action",
+  "oracle": {
+    "source": "docs/adr/0026-inbox-and-email-notifications.md",
+    "ref": "R2 and decision 3",
+    "invariant": "never notify the person who acted"
+  },
+  "edgeTags": ["recipient"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.notify.no-self#team.join_answered:"],
+  "redProof": null,
+  "legacyIds": []
+}

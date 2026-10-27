@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-rust-hearth: #892500;
+  --color-blush-whisper: #ea9195;
+  --color-linen: #ffffff;
+  --color-raw-silk: #f9f6f2;
+  --color-sand-plaster: #eee5d9;
+  --color-charcoal-ink: #0e0e0e;
+  --color-stone: #868686;
+  --color-ash: #b7b7b7;
+  --color-frost: #d7d7d7;
+
+  /* Typography — Font Families */
+  --font-raleway: 'Raleway', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-poppins: 'Poppins', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

@@ -1,0 +1,74 @@
+{
+  "color": {
+    "lilac-mist": {
+      "$value": "#f8f6fe",
+      "$type": "color",
+      "$description": "Lilac Mist — Page canvas and hero backgrounds — a barely-there lavender tint keeps the light theme from feeling sterile and gives Bolt its signature pastel warmth"
+    },
+    "midnight-ink": {
+      "$value": "#04091a",
+      "$type": "color",
+      "$description": "Midnight Ink — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "deep-navy": {
+      "$value": "#111426",
+      "$type": "color",
+      "$description": "Deep Navy — Dark section backgrounds (centered statement block, footer) and dark badge fills — slightly lighter than Midnight Ink to create a two-tone dark system"
+    },
+    "slate": {
+      "$value": "#454a66",
+      "$type": "color",
+      "$description": "Slate — Secondary text and icon strokes — cool mid-gray for descriptions, helper text, and inactive iconography"
+    },
+    "fog": {
+      "$value": "#8e92af",
+      "$type": "color",
+      "$description": "Fog — Gray accent for outlined action borders, linked labels, and lightweight interactive emphasis."
+    },
+    "periwinkle": {
+      "$value": "#d3d7ed",
+      "$type": "color",
+      "$description": "Periwinkle — Hairline borders, subtle dividers, and soft surface tints on the light canvas — barely visible structural lines"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, input fields, and inverse text on dark backgrounds"
+    },
+    "bolt-blue": {
+      "$value": "#006cff",
+      "$type": "color",
+      "$description": "Bolt Blue — Primary action fill, active nav state, brand word emphasis inside headlines, and the lightning-bolt icon mark — a saturated electric blue that carries the entire brand identity"
+    },
+    "steel-border": {
+      "$value": "#262a42",
+      "$type": "color",
+      "$description": "Steel Border — Input and form field borders — a darker neutral that defines interactive containers without competing with the brand blue"
+    }
+  },
+  "font": {
+    "agrandir-bolt": {
+      "$value": "agrandir-bolt",
+      "$type": "fontFamily",
+      "$description": "Brand display face — used for the BOLT wordmark, hero headlines, and footer masthead. A custom geometric sans with lightning-bolt cutouts in the B character; this is the brand's voice at all display scales. At 70px hero size it commands attention without feeling heavy; at 10px nav size it acts as a compact brand mark. Letter-spacing stays uniformly -0.020em regardless of size, keeping the geometric forms optically tight."
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Functional UI typeface — all body text, nav links, button labels, form fields, footer links, and secondary headings. Inter's geometric neutrality lets agrandir-bolt own the brand voice. Weight 500 is the default for nav and buttons; 400 for body copy; 600-700 for emphasis. The negative letter-spacing tightens at larger sizes, keeping even 20px subheadings feeling compact and intentional rather than airy."
+    },
+    "google-sans": {
+      "$value": "Google Sans",
+      "$type": "fontFamily",
+      "$description": "Micro-label and small-caps utility text — appears sparingly for tracking labels and metadata"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.bolt.com",
+      "siteName": "Bolt",
+      "extractedAt": "2026-06-03T20:04:25.925Z",
+      "variant": "compact"
+    }
+  }
+}

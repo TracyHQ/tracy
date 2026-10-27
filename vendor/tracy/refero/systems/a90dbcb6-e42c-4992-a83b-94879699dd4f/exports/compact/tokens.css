@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-bone: #f2f2f2;
+  --color-graphite: #181818;
+  --color-ink: #000000;
+  --color-ash: #6e6e6e;
+  --color-vermillion: #fc523b;
+
+  /* Typography — Font Families */
+  --font-garamond: 'Garamond', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-helvetica: 'Helvetica', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-times: 'Times', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

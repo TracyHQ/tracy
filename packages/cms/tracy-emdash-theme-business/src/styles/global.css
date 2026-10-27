@@ -1,0 +1,564 @@
+/*
+ * Storefront stylesheet. Imported ONLY by src/layouts/Base.astro (public pages).
+ * The EmDash admin at /_emdash/admin is a separate app and must never receive Tailwind's
+ * preflight or these tokens -- see DECISIONS D6.
+ */
+@import "tailwindcss";
+@import "./tokens.css";
+
+@custom-variant dark (&:where(html[data-theme="dark"], html[data-theme="dark"] *));
+
+@layer base {
+	html {
+		font-family: var(--ds-font-body, var(--font-archivo), system-ui, sans-serif);
+		/* a worn design system's body weight (lib/ds-slot.ts); unset, the browser's normal */
+		font-weight: var(--ds-weight-body, normal);
+		-webkit-font-smoothing: antialiased;
+		color: var(--color-fg);
+		background: var(--color-paper);
+	}
+	body {
+		margin: 0;
+		background: var(--color-paper);
+		color: var(--color-fg);
+	}
+	/* Headings on the page ground read the heading role while a system is worn. With no design system
+	   --tb-heading is not set and a heading inherits, exactly as before; on a band the text role of the
+	   band wins, so every band clears it. A heading with its own colour class keeps that class (utilities win). */
+	:root[data-ds-worn] {
+		--tb-heading: var(--ds-c-heading, #14171a);
+	}
+	.band-ink,
+	.bg-ink,
+	.bg-forest,
+	.bg-forest-deep,
+	.bg-signal {
+		--tb-heading: initial;
+	}
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		color: var(--tb-heading, inherit);
+	}
+	html[data-theme="dark"] body {
+		background: var(--color-page-bg);
+	}
+	a {
+		color: var(--color-link);
+		text-decoration: none;
+	}
+	a:hover {
+		color: var(--color-link-hover);
+	}
+	::selection {
+		background: var(--color-signal);
+		color: var(--ds-c-accent-on, #fff);
+	}
+	/* Search result snippets wrap matched words in <mark> (emdash's search()); replace the
+	   browser default yellow with the design system's signal tint. */
+	mark {
+		background: var(--color-signal-tint);
+		color: inherit;
+	}
+	html[data-theme="dark"] img.ng-photo {
+		filter: brightness(0.82) saturate(0.88);
+	}
+}
+
+/* The customer's logo (src/components/site/BrandLogo.astro): a spot drawn for one theme is hidden in the other.
+   Unlayered and important, so no utility on the same element can bring it back. */
+html[data-theme="dark"] .brand-when-light,
+html:not([data-theme="dark"]) .brand-when-dark {
+	display: none !important;
+}
+
+/* Places that play another role while a design system is worn than the class that draws them with
+   none (probe v10, 18/10/2026; carried by the slot contract for 1.7.20-1.7.22, read here from 1.7.23).
+   Worn-only (html[data-ds-worn]), so with no design system nothing here applies and the default look
+   is unchanged (DEF-1). Unlayered, so they win over the utility that draws the default.
+   - .tb-meta-on-card: the kit form's step labels and region arrow are drawn in the ink band's meta
+     words on the card (1.91:1 under Moxie and Figma light, CON-2): they read the page's meta words.
+   - .tb-mark: the empty filled marks (kit form check, search filter, kit slides timeline dots) fill
+     with the accent band, which a dark system lowers into the page (LAYOUT-3): they take the text
+     colour, which stands out on every ground and keeps the timeline's current dot (the accent) apart.
+   - .tb-quote: the header's call to action (and its phone menu copy) on the page ground fills with
+     the accent band (Figma dark: 1.07:1 on its page): it takes the readable accent text, 4.5:1 or more
+     off the page by construction, with the page colour for its words, as the template draws it. The
+     accent itself is not used (Mailchimp light's yellow sits 1.32:1 on its white page).
+   - .tb-header-search: the square search button beside that call to action takes the system's
+     button corner, so the header row keeps one shape (BTN-1).
+   - .tb-chip-on-band: the home page's "All" chip is filled with the accent band (!bg-forest) but wrote
+     the ink band's words, 3.0-3.96:1 under Mailchimp, Linear and the dark sides (CON-1): it takes the
+     accent band's own words.
+   - .tb-topbar-divider: the Topbar's "|" divider is a glyph in the band line colour; the line mix (60%)
+     reads 2.49:1 under Airbnb's dark side (grey band #898989), under the template's own 2.67:1 (CON-1):
+     the glyph mixes 75% (3.15:1 there), the underlines keep the quieter line (BORDER-1). */
+:root[data-ds-worn] .tb-meta-on-card {
+	color: var(--ds-c-meta, var(--color-on-ink-meta));
+}
+:root[data-ds-worn] .tb-mark.bg-forest {
+	background-color: var(--ds-c-fg, var(--color-fg));
+}
+:root[data-ds-worn] .btn-forest.tb-quote,
+:root[data-ds-worn] .btn-forest.tb-quote:hover {
+	background: var(--ds-c-accent-text, var(--color-forest));
+	color: var(--ds-c-bg, var(--color-paper));
+}
+:root[data-ds-worn] .chip-active.tb-chip-on-band,
+:root[data-ds-worn] .chip-active.tb-chip-on-band:hover {
+	color: var(--ds-c-on-accent-band, var(--ds-c-on-ink, #fff));
+}
+:root[data-ds-worn] .tb-topbar-divider {
+	color: color-mix(in srgb, var(--ds-c-on-accent-band, #cfe0d8) 75%, var(--ds-c-accent-band, #14483a));
+}
+:root[data-ds-worn] .tb-header-search {
+	border-radius: var(--ds-btn-radius, 0);
+}
+
+/* Recurring patterns of the design, named once. Values from visual-contract.md §2–§3. */
+@layer components {
+	.container-site {
+		max-width: var(--container-site);
+		margin-inline: auto;
+		padding-inline: 32px;
+	}
+	.eyebrow {
+		font-size: 12px;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		font-weight: 600;
+		color: var(--color-signal-text);
+	}
+	.eyebrow-sm {
+		font-size: 11px;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		font-weight: 700;
+		color: var(--color-signal-text);
+	}
+	.column-label {
+		font-size: 12px;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		font-weight: 700;
+	}
+	/* --ds-*: a worn design system (lib/ds-slot.ts); unset, each falls back to this template's own value */
+	.h-hero {
+		font-family: var(--font-serif);
+		font-size: var(--ds-size-display, clamp(38px, 5.4vw, 64px));
+		line-height: var(--ds-leading-display, 1.02);
+		font-weight: var(--ds-weight-display, 400);
+		letter-spacing: var(--ds-tracking-display, -0.025em);
+		text-wrap: pretty;
+	}
+	.h-page {
+		font-family: var(--font-serif);
+		font-size: clamp(32px, 4.2vw, 50px);
+		line-height: 1.08;
+		font-weight: 400;
+		letter-spacing: -0.025em;
+		text-wrap: pretty;
+	}
+	.h-list {
+		font-family: var(--font-serif);
+		font-size: clamp(32px, 4vw, 48px);
+		line-height: 1.1;
+		font-weight: 400;
+		letter-spacing: -0.025em;
+	}
+	.h-kit {
+		font-family: var(--font-serif);
+		font-size: clamp(30px, 3.7vw, 44px);
+		line-height: 1.1;
+		font-weight: 400;
+		letter-spacing: -0.025em;
+	}
+	.h-article {
+		font-family: var(--font-serif);
+		font-size: clamp(34px, 4.4vw, 52px);
+		line-height: 1.08;
+		font-weight: 400;
+		letter-spacing: -0.028em;
+		text-wrap: pretty;
+	}
+	.h-section-lg {
+		font-family: var(--font-serif);
+		font-size: var(--ds-size-heading, clamp(28px, 3.4vw, 40px));
+		line-height: 1.15;
+		font-weight: var(--ds-weight-heading, 400);
+		letter-spacing: -0.02em;
+		text-wrap: pretty;
+	}
+	.h-section {
+		font-family: var(--font-serif);
+		font-size: var(--ds-size-heading, clamp(26px, 3vw, 36px));
+		line-height: 1.15;
+		font-weight: var(--ds-weight-heading, 400);
+		letter-spacing: -0.02em;
+		text-wrap: pretty;
+	}
+	.h-section-sm {
+		font-family: var(--font-serif);
+		font-size: var(--ds-size-heading, clamp(24px, 2.8vw, 32px));
+		line-height: 1.2;
+		font-weight: var(--ds-weight-heading, 400);
+		letter-spacing: -0.02em;
+		text-wrap: pretty;
+	}
+	.h-card-lg {
+		font-family: var(--font-serif);
+		font-size: clamp(24px, 2.6vw, 30px);
+		line-height: 1.2;
+		font-weight: 400;
+		letter-spacing: -0.02em;
+	}
+	.h-body {
+		font-size: clamp(22px, 2.3vw, 27px);
+		font-weight: 600;
+		letter-spacing: -0.018em;
+	}
+	.btn-primary {
+		display: inline-block;
+		line-height: normal; /* source: normal; Tailwind's 1.5 added 6-7px of height */
+		background: var(--color-signal);
+		color: var(--ds-c-accent-on, #fff);
+		font-size: 15.5px;
+		font-weight: var(--ds-weight-button, 600);
+		padding: var(--ds-btn-pad-y, 15px) var(--ds-btn-pad-x, 30px);
+		border-radius: var(--ds-btn-radius, 0);
+	}
+	.btn-primary:hover {
+		color: var(--ds-c-accent-on, #fff);
+		background: var(--ds-c-accent-hover, #c94f24);
+	}
+	/* A primary button on the accent band (bg-forest) is the accent button itself: the slot's accent band
+	   is the accent moved until that button stands out on it 3:1 (role-values.mjs). The turned-over pair
+	   (the band's light words as a fill) was a light slab on every dark page (glare, TPL-1, 16/10/2026). */
+	.btn-forest {
+		display: inline-block;
+		line-height: normal; /* source: normal; Tailwind's 1.5 added 6-7px of height */
+		background: var(--color-forest);
+		color: var(--ds-c-on-accent-band, #fff);
+		font-size: 14px;
+		font-weight: var(--ds-weight-button, 600);
+		padding: 11px 20px;
+		border-radius: var(--ds-btn-radius, 0);
+		white-space: nowrap;
+	}
+	.btn-forest:hover {
+		/* source: the header CTA does not change under the pointer */
+		color: var(--ds-c-on-accent-band, #fff);
+		background: var(--color-forest);
+	}
+	.btn-outline-ink {
+		display: inline-block;
+		line-height: normal; /* source: normal; Tailwind's 1.5 added 6-7px of height */
+		border: 1px solid var(--color-on-ink-line-3);
+		color: var(--color-on-ink);
+		font-size: 15px;
+		font-weight: 600;
+		padding: 15px 28px;
+		border-radius: var(--ds-btn-radius, 0);
+	}
+	.btn-outline-ink:hover {
+		color: var(--color-on-ink);
+		border-color: var(--color-on-ink);
+	}
+	.link-underline {
+		font-size: 14px;
+		font-weight: 600;
+		border-bottom: 1px solid var(--color-forest-text);
+		padding-bottom: 2px;
+		white-space: nowrap;
+		color: var(--color-fg);
+	}
+	.link-underline:hover {
+		color: var(--color-link);
+	}
+	html[data-theme="dark"] .link-underline {
+		color: var(--color-fg);
+		border-bottom-color: var(--ds-c-accent-text, #7fbfa6);
+	}
+	html[data-theme="dark"] .link-underline:hover {
+		color: var(--color-hover-accent);
+	}
+	.chip {
+		display: inline-block;
+		line-height: normal; /* source: normal; Tailwind's 1.5 added 6-7px of height */
+		font-size: 13.5px;
+		font-weight: 500;
+		border: 1px solid var(--color-line);
+		color: var(--color-fg-2);
+		padding: 8px 16px;
+		border-radius: var(--ds-pill-radius, 0);
+		white-space: nowrap;
+	}
+	.chip:hover {
+		color: var(--color-fg-2);
+		border-color: var(--color-forest-text);
+	}
+	.chip-active {
+		display: inline-block;
+		line-height: normal; /* source: normal; Tailwind's 1.5 added 6-7px of height */
+		font-size: 13.5px;
+		font-weight: 600;
+		background: var(--color-ink);
+		color: var(--ds-c-on-ink, #fff);
+		padding: 8px 16px;
+		border-radius: var(--ds-pill-radius, 0);
+		white-space: nowrap;
+	}
+	.chip-active:hover {
+		color: var(--ds-c-on-ink, #fff);
+	}
+	.grid-lines {
+		display: grid;
+		gap: 1px;
+		background: var(--color-line-card);
+		border: 1px solid var(--color-line-card);
+	}
+	.grid-lines > * {
+		background: var(--color-paper);
+	}
+	.photo-frame {
+		position: relative;
+		border: 1px solid var(--color-line-card);
+		background: var(--color-paper-2);
+		overflow: hidden;
+	}
+	/* Astro's responsive-image CSS sets height:auto + aspect-ratio on the <img>; the frame owns
+	   the box here, so the image must fill it. */
+	.photo-frame > img,
+	.photo-frame > picture,
+	.photo-frame > picture > img,
+	.photo-frame img[data-astro-image] {
+		position: absolute !important;
+		inset: 0 !important;
+		width: 100% !important;
+		height: 100% !important;
+		max-width: none !important;
+		aspect-ratio: auto !important;
+		object-fit: cover !important;
+	}
+	.photo-frame.contain img {
+		object-fit: contain !important;
+		padding: 8px;
+		background: var(--ds-c-surface, #fff);
+	}
+	html[data-theme="dark"] .photo-frame.contain img {
+		background: var(--color-paper-2);
+	}
+	.photo-placeholder {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 12.5px;
+		color: var(--color-fg-faint);
+		text-align: center;
+		padding: 12px;
+	}
+	.band-ink {
+		background: var(--color-ink);
+		color: var(--color-on-ink);
+	}
+	/* The readable accent is read on the page; on an ink band (the hero's accent line, the kickers of
+	   the ink cards) it reads the accent made readable on the ink. Unworn both are the signal. */
+	.band-ink,
+	.bg-ink {
+		--color-signal-text: var(--ds-c-accent-on-ink, var(--ds-c-accent-text, #da5a2a));
+	}
+	.band-paper2 {
+		background: var(--color-paper-2);
+		border-top: 1px solid var(--color-line);
+		border-bottom: 1px solid var(--color-line);
+	}
+	.breadcrumb {
+		background: var(--color-paper-2);
+		border-bottom: 1px solid var(--color-line);
+		font-size: 13.5px;
+		color: var(--color-fg-meta);
+	}
+	.breadcrumb a {
+		color: var(--color-link);
+	}
+	.breadcrumb .sep {
+		color: var(--color-line-faint);
+		margin-inline: 10px;
+	}
+	.breadcrumb .current {
+		color: var(--color-fg);
+		font-weight: 500;
+	}
+	.nav-link {
+		display: inline-block;
+		line-height: normal; /* source: normal; Tailwind's 1.5 added 6-7px of height */
+		font-size: 14.5px;
+		font-weight: 500;
+		color: var(--color-fg-2);
+		padding: 6px 0;
+		border-bottom: 2px solid transparent;
+		white-space: nowrap;
+	}
+	.nav-link:hover {
+		color: var(--color-link);
+		border-bottom-color: var(--color-line);
+	}
+	.nav-link[aria-current="page"],
+	.nav-link.is-active {
+		font-weight: 600;
+		color: var(--color-fg);
+		border-bottom-color: var(--color-signal);
+	}
+	/* The active item keeps its colour and signal underline under the pointer (source, both themes). */
+	.nav-link[aria-current="page"]:hover,
+	.nav-link.is-active:hover,
+	html[data-theme="dark"] .nav-link[aria-current="page"]:hover,
+	html[data-theme="dark"] .nav-link.is-active:hover {
+		color: var(--color-fg);
+		border-bottom-color: var(--color-signal);
+	}
+	html[data-theme="dark"] .nav-link:hover {
+		color: var(--color-hover-accent);
+		border-bottom-color: var(--ds-c-border-soft, #3a3f43);
+	}
+	.field-label {
+		display: block;
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		margin-bottom: 7px;
+	}
+	.field-input {
+		width: 100%;
+		font-family: var(--font-sans);
+		font-size: 15px;
+		padding: 12px 13px;
+		border: 1px solid var(--color-line);
+		border-radius: var(--ds-input-radius, 0);
+		background: var(--color-paper);
+		color: var(--color-fg);
+	}
+	.field-input:focus {
+		outline: 2px solid var(--color-focus-ring);
+		border-color: var(--color-forest-text);
+		background: var(--color-card);
+	}
+	.field-input.is-error {
+		border-color: var(--color-error);
+		background: var(--color-error-bg);
+	}
+	.prose-article p {
+		font-size: 17.5px;
+		line-height: 1.72;
+		color: var(--color-fg-body);
+		margin: 0 0 22px;
+	}
+	.prose-article h2 {
+		font-size: clamp(22px, 2.3vw, 27px);
+		font-weight: 600;
+		letter-spacing: -0.018em;
+		margin: 38px 0 14px;
+		scroll-margin-top: 100px;
+	}
+	.prose-article blockquote {
+		margin: 32px 0;
+		padding: 24px 28px;
+		border-left: 3px solid var(--color-signal);
+		background: var(--color-paper-2);
+	}
+	.prose-article blockquote p {
+		font-family: var(--font-serif);
+		font-size: 22px;
+		line-height: 1.5;
+		margin: 0;
+		color: var(--color-fg);
+	}
+	.prose-article ul {
+		font-size: 17.5px;
+		line-height: 1.7;
+		color: var(--color-fg-body);
+		margin: 0 0 22px;
+		padding-left: 22px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		list-style: disc;
+	}
+	.prose-article figure {
+		margin: 0;
+	}
+	.prose-article figcaption {
+		font-size: 12.5px;
+		color: var(--color-fg-meta);
+		margin-top: 8px;
+	}
+	.prose-article .figures {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 20px;
+		margin: 32px 0;
+	}
+	/* source: each paired illustration sits in a 200px framed box (fit cover) */
+	.prose-article .figures img {
+		width: 100%;
+		height: 200px;
+		object-fit: cover;
+		border: 1px solid var(--color-line);
+	}
+	/* Horizontal scroller for wide data tables (Investors "Key indicators", the kit style
+	   guide "Tables" demo) -- source: Investor relations.html / Style guide.html wrap the
+	   same financial table in overflow-x:auto (~line 1862) rather than shrinking columns
+	   below readability. RU labels run wider than EN, so at narrow widths the table can
+	   still exceed the wrapper even after the compact sizing in Investors.astro /
+	   KitStyleGuide.astro -- this must scroll for real, not silently crop the last column.
+	   The right-edge shadow uses the classic background-attachment: local/scroll pairing
+	   (Lea Verou's scroll-shadow technique): the "cover" layer travels WITH the table's own
+	   content (local) while the "shadow" layer stays pinned to the wrapper's edge (scroll),
+	   so the shadow is only ever exposed while there is more column off to the right --
+	   pure CSS, no JS, self-updating as the viewport or content changes. */
+	.table-scroll {
+		--table-scroll-surface: var(--color-card);
+		position: relative;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		background-repeat: no-repeat;
+		background-size: 32px 100%, 16px 100%;
+		background-position: 100% 0, 100% 0;
+		background-image:
+			linear-gradient(to left, var(--table-scroll-surface) 50%, transparent),
+			linear-gradient(to left, rgba(20, 23, 26, 0.2), transparent);
+		background-attachment: local, scroll;
+	}
+	html[data-theme="dark"] .table-scroll {
+		background-image:
+			linear-gradient(to left, var(--table-scroll-surface) 50%, transparent),
+			linear-gradient(to left, rgba(0, 0, 0, 0.45), transparent);
+	}
+	/* Numeric/date columns must not break mid-value (RU thousands use a literal space,
+	   e.g. "62 000 м²") -- everything else keeps the browser's default wrap so long RU
+	   labels ("Чистый долг / EBITDA", "ИП «Ворсино», 3-я очередь") reflow instead of
+	   forcing the column wider than its content needs. */
+	.data-table .is-num {
+		white-space: nowrap;
+	}
+	/* A worn system's phone sizes (lib/ds-slot.ts); unset, each class keeps its own clamp */
+	@media (max-width: 639px) {
+		.h-hero {
+			font-size: var(--ds-size-display-phone, var(--ds-size-display, clamp(38px, 5.4vw, 64px)));
+		}
+		.h-section-lg {
+			font-size: var(--ds-size-heading-phone, var(--ds-size-heading, clamp(28px, 3.4vw, 40px)));
+		}
+		.h-section {
+			font-size: var(--ds-size-heading-phone, var(--ds-size-heading, clamp(26px, 3vw, 36px)));
+		}
+		.h-section-sm {
+			font-size: var(--ds-size-heading-phone, var(--ds-size-heading, clamp(24px, 2.8vw, 32px)));
+		}
+	}
+}

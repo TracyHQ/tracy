@@ -1,0 +1,128 @@
+//
+// Tracy Base — ACM block `clients`
+// ------------------------------------------------------------------------------------------------
+// Source for css/style.css. Self-contained and block-scoped to `.acm-clients`; it is NOT @imported
+// into scss/_all.scss, because mod_ja_acm loads an ACM block's own css/style.css.
+//
+// Every colour, size, space and radius reads a design-spec token from scss/_tokens-base.scss, which
+// scss/darkmode.scss remaps under the dark hook — so light and dark come from one set of rules.
+//
+// Compile: lessc less/style.less css/style.css
+//
+
+.acm-clients {
+  // Local knobs, derived from spec tokens, not invented numbers.
+  --tracy-clients-mark-h: var(--space-8);       // logo cap height: the 32px step of the scale
+  --tracy-clients-mark-rest: 0.55;              // resting opacity of a muted mark
+  --tracy-eyebrow-tracking: 0.08em;             // matches the reference fixture's `.eyebrow`
+
+  // A logo row is a rest stop, not a chapter: --space-12 rather than the full --tracy-band-y.
+  padding-block: var(--space-12);
+
+  // No background and NO border-bottom. design-spec §4 — transitions between bands are surface
+  // changes, never rules. This is the single easiest thing to get wrong in this design.
+  background: transparent;
+  color: var(--fg);
+}
+
+// Muted, NOT var(--accent): the accent budget is spent on the hero and the CTA, not here.
+.acm-clients .tracy-clients__eyebrow {
+  margin: 0 0 var(--space-6);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--tracy-eyebrow-tracking);
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--tracy-quiet, var(--meta));
+}
+
+.acm-clients .tracy-clients {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6) var(--space-12);
+}
+
+.acm-clients .tracy-clients__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  opacity: var(--tracy-clients-mark-rest);
+  filter: grayscale(1);
+  transition:
+    opacity var(--motion-fast) var(--ease-standard),
+    filter var(--motion-fast) var(--ease-standard);
+}
+
+// No border and no box-shadow on the mark itself — editability-standards §4 and design-spec §4
+// ("containment is a ring, never a shadow", and a logo needs no containment at all).
+.acm-clients .tracy-clients__mark img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: var(--tracy-clients-mark-h);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+// Fallback for a mark with no image yet: the brand name set in the display face.
+.acm-clients .tracy-clients__wordmark {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+  color: var(--muted);
+}
+
+.acm-clients a.tracy-clients__mark:hover,
+.acm-clients a.tracy-clients__mark:focus-visible {
+  opacity: 1;
+  filter: none;
+}
+
+.acm-clients a.tracy-clients__mark:hover .tracy-clients__wordmark,
+.acm-clients a.tracy-clients__mark:focus-visible .tracy-clients__wordmark {
+  color: var(--fg);
+}
+
+// design-spec §4 — never outline:none without the focus ring replacing it.
+.acm-clients a.tracy-clients__mark:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+
+// The one rule dark genuinely needs. A mark held at 55% over white still reads; the same mark held
+// at 55% over Absolute Black loses its edges, so the resting rung lifts. Dark mirrors light — same
+// relationship, one rung along — rather than inventing a different treatment.
+html[data-theme="dark"] .acm-clients,
+html.t4-dark .acm-clients,
+[data-bs-theme="dark"] .acm-clients {
+  --tracy-clients-mark-rest: 0.72;
+}
+
+@media (max-width: 1023px) {
+  .acm-clients .tracy-clients {
+    gap: var(--space-5) var(--space-8);
+  }
+}
+
+@media (max-width: 639px) {
+  .acm-clients {
+    --tracy-clients-mark-h: var(--space-6);
+  }
+
+  .acm-clients .tracy-clients {
+    gap: var(--space-4) var(--space-6);
+  }
+
+  .acm-clients .tracy-clients__wordmark {
+    font-size: var(--text-base);
+  }
+}

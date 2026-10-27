@@ -1,0 +1,52 @@
+{
+  "id": "REG-029",
+  "kind": "fix",
+  "title": "Undoing a chat turn asks first inside the card, runs one undo at a time per chat, reads the chat fresh before offering Undo, counts only a verified undo as done, and keeps undos of unknown outcome apart from refusals",
+  "pr": 829,
+  "area": "chat/interrupted-card",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-timeout=30000 packages/ui/tracy-chat-input/test/turn-undo-card.test.mjs packages/ui/tracy-chat-input/test/turn-undo.test.mjs packages/ui/tracy-chat-input/test/turn-card.test.mjs apps/tracy-web/test/turn-undo.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "'Cancel sends nothing and goes back to the card' passes: 0 POSTs to /api/sites/<key>/turns/undo.",
+    "'Undo asks inside the card, sends one POST for the latest turn, re-reads, reloads the preview, then shows Undone' passes.",
+    "'in flight: a second confirm starts no second POST, and no other card of the chat can start an undo' passes: exactly one POST.",
+    "'a card shown for another chat, or back to one, draws no Undo until a fresh read of that chat answered' passes.",
+    "'outcomes: done, partial, refused with its code, and every kind of silence as unsure' passes: a 2xx that is not a turns-undo answer, a 5xx with no answer and a thrown fetch are unsure, never refused.",
+    "'a refusal leaves a line and reloads no preview' passes.",
+    "In apps/tracy-web/test/turn-undo.test.mjs every test passes, including the ones on revertOutcome (only {ok: true} from apply.revert is a revert; COMPONENT_UNREACHABLE and COMPONENT_BAD_RESPONSE are unsure) and on runUndo stopping at the first step that did not verifiably succeed."
+  ],
+  "selectors": {
+    "door": "POST /api/sites/:key/turns/undo {session, turnId, scope}",
+    "function": "packages/ui/tracy-chat-input/src/client/turn-undo.mjs undoTurn, createTurnsBook; apps/tracy-web/src/sites/turn-undo.js revertOutcome, fileOutcome, runUndo",
+    "test": "packages/ui/tracy-chat-input/test/turn-undo-card.test.mjs"
+  },
+  "evidence": "Issue #802: one press on Undo all sent one apply.revert per change with no question, and refusals were shown as a count only; a 200 with an unreadable body counted as reverted. Since feat/undo-turn-card (06/10/2026) the per-turn card replaces the Undo all card and the reverts run on the server; this case keeps the same fences on the new path.",
+  "fence": "The card's confirm gate and per-chat in-flight guard, the fresh read required after a change of chat, the client's outcome rule (done / partial / refused / unsure), and the server's rule that only {ok: true} from apply.revert and a verified restore commit count as undone. Mounted with fixtures for fetch: no live site.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=30000",
+      "packages/ui/tracy-chat-input/test/turn-undo-card.test.mjs",
+      "packages/ui/tracy-chat-input/test/turn-undo.test.mjs",
+      "packages/ui/tracy-chat-input/test/turn-card.test.mjs",
+      "apps/tracy-web/test/turn-undo.test.mjs"
+    ],
+    "tests": [
+      "Cancel sends nothing and goes back to the card",
+      "Undo asks inside the card, sends one POST for the latest turn",
+      "in flight: a second confirm starts no second POST",
+      "a card shown for another chat, or back to one, draws no Undo until a fresh read",
+      "outcomes: done, partial, refused with its code, and every kind of silence as unsure",
+      "a refusal leaves a line and reloads no preview",
+      "revertOutcome"
+    ]
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "17ce9ad2-f22d-4e48-92de-e28fb8551cc5",
+  "status": "complete",
+  "name": "Fallen Grape",
+  "url": "https://styles.refero.design/style/17ce9ad2-f22d-4e48-92de-e28fb8551cc5",
+  "sourceWebsite": "https://www.fallengrape.com",
+  "extractedAt": "2026-06-03T15:57:06.846Z",
+  "capturedAt": "2026-10-08T05:08:43.740432+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Sun-drenched vineyard at golden hour. Warm cream paper, walnut ink, terracotta warmth — a wine label breathed into a full interface.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/cc0e7025-6a44-4cdb-8b6a-6d9059bc5082.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/0cc00fd3-0f8a-47d1-bbef-1549c4311b23.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/026bbb76-5679-4edf-88cd-9ebe538b3b5a.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/25337f5b-ac65-4b49-bbb3-c6ba86685ad9.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/10fbc6dc-18a1-45c5-afae-b07cc94eae7e.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "9a0b043118478ab0f3dddb1a2f78e6b7aac5fe4524f2dbc8c4c6ffb1f6c7279e",
+      "bytes": 19913
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "897052cdd0999108bf456bbbe464cd90c42da7d2e2c499c3ec231832310fdc17",
+      "bytes": 114118
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "fcc4049ca5e9536aeabb80cbcea8dc17b6c7d1e873d39ee3bebcd202b631b929",
+      "bytes": 16258
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ef8c3321cd83bba75c405e5f92dd4cf291208fbf7f12e0541192dd7bf4728dcc",
+      "bytes": 10550
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4d57c92d87298864ad13a8d1a7dc946d9629855ba373bd5bc115f28e603a318a",
+      "bytes": 12551
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "bb874085f9406983269af3966ea13e75d57ba4d96dbb4b490407acb97eab8a54",
+      "bytes": 3239
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "9c6a2e13b451fd9f7adf2a5891a8cdf3dbbed94dadede8c2a02e265a370f5bf3",
+      "bytes": 689
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d2be8bfd0e22a93d9678181af7df1c6408951780dea42e30eb143b4df05bc209",
+      "bytes": 706
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f35633429e62eda7353107228b53f8dafc6b84d25c0da582278551786148a663",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5d1b0a16f2b6a201e925d7b299e6d9517dc3ffb2419bdefb8659835f2be6a47a",
+      "bytes": 42432
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "161854b57320cef2e4e2f0bc63f90fc620c4f335c7006ab7d8314c69bd06d04a",
+      "bytes": 22233
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "bc804f3d48d6f9550129333aec890af2fe8203aaa580de710c38d64e490582cd",
+      "bytes": 42374
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "76e8f4d5d643df542afdd51fe0c25390ab59e8be9954c3d7fb1ff58803135651",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "dc6ed1dba618af136499e3c0f4438a2e7dacb82cc3d080a383def3399d02bf87",
+      "bytes": 1654
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ed6d5130598e5506218e7b709655cf3181414a4cb5d504fda1a177fda704fcf1",
+      "bytes": 2102
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "07f5281d-2a18-4e12-a8ff-d54d3e03d198",
+    "0fc184f7-6143-4303-8e3d-0e2f075f76b2",
+    "156462ab-7b11-4029-be45-c2dba853e894",
+    "17ce9ad2-f22d-4e48-92de-e28fb8551cc5",
+    "18e2c0b4-f29c-4e84-90b0-1d8066b59409",
+    "1995b916-d3f1-4b13-8eb0-c1317ab63ccb",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "2f94c1f0-cd23-4bf1-95f3-0e531174c4f4",
+    "430813c0-f0c7-434f-92ef-d3a0780ba734",
+    "5076959f-f849-4b50-8f8a-2040d4756f98",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "76483bd1-37d3-4fb9-889b-aecf27b08b83",
+    "765e6ba8-af87-4519-afb7-774ceedc463d",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "a6791bc8-c49d-4e7a-a09d-877afcd04c25",
+    "e327d332-270d-4779-a55c-cd82b8624d2a",
+    "e9001d5a-504d-47ed-aef0-d0d35fa86418",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2a84e0f-cf77-41fa-ade0-b062a3a42495"
+  ]
+}

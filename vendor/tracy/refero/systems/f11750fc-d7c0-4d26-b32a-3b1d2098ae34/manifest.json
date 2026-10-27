@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "f11750fc-d7c0-4d26-b32a-3b1d2098ae34",
+  "status": "complete",
+  "name": "DJI",
+  "url": "https://styles.refero.design/style/f11750fc-d7c0-4d26-b32a-3b1d2098ae34",
+  "sourceWebsite": "https://dji.com",
+  "extractedAt": "2026-06-03T16:42:12.976Z",
+  "capturedAt": "2026-10-08T05:19:20.016200+00:00",
+  "theme": "mixed",
+  "industry": "ecommerce",
+  "description": "aerospace black canvas with a single electric blue thrust",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/924a80ab-30a0-4907-a86e-bead1f43883f.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/61ce0e17-2616-4f4e-98a4-5dc72e00f030.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f0ec6bb0-3072-4520-96f9-b6131dcf3400.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/62849a87-21f2-4b7a-b20e-fd9bbbe20a34.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/6cc3a0f1-02b2-441e-8944-60743f6904fa.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "18afbf17e167857b54a3ffaaf846b6706e53a63315ed259dcced0ed9e445afe2",
+      "bytes": 18626
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "3998180796778791660dcf17150775a852bf01941aba55992dbf41e3b2ca1eb0",
+      "bytes": 63930
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "ee6162b837df9a45e0db0f5cd61df3693e4f8700b424d7b6f87700ac99b17b88",
+      "bytes": 15817
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e53c299f5259e2ec8a20f66e443d6be068531ce2ad96027e6000fb01b8d83d2e",
+      "bytes": 13198
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "b230bbeee92af1bb3b73886ca266eea96faee5dd62b0f25ebed24c99ad147434",
+      "bytes": 11329
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d16fa40986338e5db98bdbaa2e99b534ed3f7f9fb89b33a55f990ce04941535a",
+      "bytes": 2821
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "80395dc04d268225f3817eeb1cb59c7f65faa70d12a1dcd993ce4dad1028f107",
+      "bytes": 560
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "72948b1120e8283aa7adfc7ebb1f23a7f332678e380291689d1f59e92317d4c2",
+      "bytes": 577
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5bdd4967629113ec1814b8c820dc47258df5ce7b35d6e6e6788205f5e834a943",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "dabbc339af862dbc5da6cb4d3ceb58cb66e7e451cb67f1381c367e84da31f6c3",
+      "bytes": 41723
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "f9280a97adef56ca2c8713d182524780031c3b59f0a7c0a60dee2132b34f9bcf",
+      "bytes": 21364
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "525c3f6e0807e76dbe1715ab8bda652937adb72dee91f726d9de5588e973e33b",
+      "bytes": 42533
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "28cbe1c721f4a763f48b491b390f8afc3c99d0bbf1d30c61222db9bf33e7da08",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "7dcad87ecadc965fccdbda67a4590655e2b328179d28b979b455b4653b5f14ea",
+      "bytes": 1639
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a342125a694827f4434674e8ac5e7d2e6e1d60a3ad7122bf62fe8344931a324a",
+      "bytes": 2228
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "022cf675-42d1-44e7-953a-68facc802117",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "40be36d7-7fe6-4451-9f2d-7ceccfd43be8",
+    "4887c681-d4e6-41d3-b83c-5650cf925ee9",
+    "4a248569-2b5a-4416-bb2a-c78890218b9f",
+    "569ba4c0-0431-44fb-92df-0dbea7f3e63d",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6607e4ff-2de6-4a6a-a7ed-53a9e4b550b9",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "96845df2-7ddb-420a-814e-c339f95a6554",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "98ab0172-9474-43b5-9055-98cf1a6a2401",
+    "a48ef430-8c6a-42d8-8c53-ab7bb43cf33b",
+    "a4f123f2-cd4b-4d26-998f-a3d3ee158024",
+    "bf523387-03fc-4243-86ca-25af34daa0ce",
+    "c1052d8d-3663-46a4-a882-e50d9b8a1166",
+    "c9cabb96-32fa-4896-837a-f2497ce1c856",
+    "cfcd001c-e812-4126-9bdf-1f16b68d182e",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "f11750fc-d7c0-4d26-b32a-3b1d2098ae34",
+    "f61cf515-ccd5-4494-bdd1-be9fe4d7258c"
+  ]
+}

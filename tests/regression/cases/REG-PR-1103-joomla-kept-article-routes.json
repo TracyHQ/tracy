@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1103-joomla-kept-article-routes",
+  "kind": "fix",
+  "title": "Joomla untick: an article a kept page still shows keeps an entry the router finds, so its links stop answering 404",
+  "pr": 1103,
+  "area": "site-build/joomla-tidy",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand and no site. From the TCH checkout run: node --test apps/tracy-web/test/joomla-kept-article-routes.test.mjs apps/tracy-web/test/joomla-unticked-articles.test.mjs apps/tracy-web/test/brief-joomla.test.mjs",
+    "S2: joomla-kept-article-routes reads the JA Essence j6 1.0.3 presentation lock (packages/cms/tracy-joomla-quickstart/contracts/ja-essence/j6/1.0.3), unticks entries 142 (Category Style 1, Health catid 9) and 139 (Video), and checks every article that stays published against a model of Joomla's menu lookup (article entry, else an entry of its category or a category above it) after the tidy-up's writes.",
+    "S3: brief-joomla runs the whole Joomla brief engine against a fake site with a featured front page and an unticked category list, and reads the content.batch the tidy-up sends.",
+    "S4: Read the node:test summary lines (pass / fail counts) and every failing test name."
+  ],
+  "expect": [
+    "S4: fail 0.",
+    "Essence 1.0.3 with 142 and 139 unticked: articles 21, 22, 24, 25, 26 are unpublished; articles 15, 18, 19, 20 (featured on the front page) are named in routes; no published article is left without an entry the router finds.",
+    "The route writes are a menutype tracy-article-routes (only when no entry carries it yet) and one menuItem per article: id 0, view=article link, parent_id 1, published 1, type component, params menu_show 0, alias = the article alias (with the article id appended when a top-level entry holds it).",
+    "Engine run: the menutype and menuItem creates ride in the same single content.batch as the unpublished menu entry and articles; times.articlesRouted = 1."
+  ],
+  "selectors": {
+    "seam": "articlesGoing(...).routes and routeSteps({ rows, articles }) in apps/tracy-web/src/sites/brief-engines/joomla-article-routes.js",
+    "door": "content.batch operations { kind: 'menutype' | 'menuItem', id: 0, fields }"
+  },
+  "evidence": "Step 5.5 of the Template Customization Question Readiness spec on dev (cowork.tracy.site), 10/10/2026: g55-ess-j-full (JA Essence j6 1.0.3, Category Style 1 and Detail > Video unticked) linked /index.php/pages/j-content/category-blog/capturing-essence-expressive-line-art-techniques (404) from the kept Category Blog page; the same article answered 200 at /index.php?view=article&id=20; g55-ess-j-blank (nothing unticked) linked it at /index.php/category/category-style-1/... (200).",
+  "fence": "articlesGoing names kept articles with no route left (joomla-articles.js); the Joomla tidy-up writes routeSteps in its transaction (joomla.js). Pure function tests over a real release lock and a fake door: no live Joomla router ran.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/joomla-kept-article-routes.test.mjs",
+      "apps/tracy-web/test/joomla-unticked-articles.test.mjs",
+      "apps/tracy-web/test/brief-joomla.test.mjs"
+    ]
+  }
+}

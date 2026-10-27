@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+  "status": "complete",
+  "name": "Shares",
+  "url": "https://styles.refero.design/style/cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+  "sourceWebsite": "https://shares.io",
+  "extractedAt": "2026-06-03T16:55:41.484Z",
+  "capturedAt": "2026-10-08T05:17:38.287935+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Ivory terminal with violet pulse — a clinical white workspace where one color marks every deliberate action.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/1b03baa0-faca-4822-b02f-80e898b2aec1.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/caefe3ec-69b0-4808-b760-87d3902b4b49.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/5a6f1d7f-c064-4bf2-ba48-c9bb7d109cad.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f8e2c63f-0bb7-47e7-8dba-a5d01d5304b1.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/4c6c5f1d-69c4-476f-a646-977c68e359fc.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c33aa0efa9d4a325145ebab95f7f128c89bd4f9da29b6b1f07abb1266dc9fa71",
+      "bytes": 19322
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "57a71868439dad920c41e4dfebdb2d24caa10f07d1fb0a9df8454e78b38a2b84",
+      "bytes": 91071
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "2c8d9065d2975da1ccc79d62a6818f4c9f3c555969a650aaafd6b4037466e3d2",
+      "bytes": 16446
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "289af763d90049bc04603f6c3fc6c9abd725895999ce5d526cf8e5869d8ddaf3",
+      "bytes": 10986
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "73daf124f4337609004cd04f436c03cd3dd852f05f83642f5f96552f9ccdd6d0",
+      "bytes": 12177
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a7e9411e73ab9aa0618e0a33a4de15c3f5f734000df10285d1f93f8dc7c74fa2",
+      "bytes": 2774
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "4321a36913f1b7326a729077db8bd50bbbdf3f5ad59fb49dca89238de72e0ad1",
+      "bytes": 561
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "41bf9e33730d4be4cd4f12e1113846561649fc177eff18885ff50870602a0963",
+      "bytes": 578
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "61506d0800513e8f63951bd30b55536510cff06df3981062e55dbfe747fc74d0",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "28dfebdcea553240f549ba55397dc82921df931f89ba1820146f9ca80d0d204b",
+      "bytes": 43349
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "7ed92d3a6122d08fd51c4bbe41dc04fdf3a80b878107a0eb3ed87f712227872f",
+      "bytes": 22573
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "53b563de5146d639e5cfd66003d9be0531a11fd6bba998ecbc25aa69b0c284d2",
+      "bytes": 44083
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "93b91f18a833920a5d10e70c2b58c9eb7997031f9f0f2c546be0681d434b15b3",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5d1f91d8b2265414cf348b5f9a976551f26cce15a70cb112011ca561869c7028",
+      "bytes": 1653
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "daaaa385856c3419bb8286d62484b66299ea3481311b9c4787e2f712df7c6d2a",
+      "bytes": 2212
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "123a15b8-4e17-4812-83ec-899cce45db5b",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "6221ba67-26e7-4657-91b7-efd77cbb1f12",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "7c38e84b-aea0-4c8f-b3e9-60b994ee6c6b",
+    "86a6814d-2485-4fad-b6fd-56c2d0a23620",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "a0630421-7b66-48b4-aa14-6194a3b2c2b9",
+    "a5c06875-c374-4af3-923b-6e66a5d58493",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "c25e8eb5-634d-4aca-b30b-d8ba5a50dc5a",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "f1a2100a-7cda-4787-b8af-5c5edcfcdff0"
+  ]
+}

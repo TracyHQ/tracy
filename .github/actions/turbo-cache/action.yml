@@ -1,0 +1,45 @@
+# Starts Turborepo's remote cache for this job (12/10/2026): `scripts/ci/turbo-cache-server.mjs`
+# (no dependency, ~0.2 s to start) on 127.0.0.1:43901, backed by the Cloudflare R2 bucket in the
+# four TURBO_CACHE_S3_* secrets, with a random bearer token per job. Needs the repository checked
+# out. Exports TURBO_API, TURBO_TOKEN, TURBO_TEAM and TRACY_DSH_COMMIT.
+#
+# 🔒 IT NEVER FAILS THE JOB. A cache that does not start leaves Turbo on its local cache: a test row
+# then runs every task it was given, and the plan job sees every task as missing — both fail closed.
+name: Turbo remote cache
+description: Start the Turbo remote cache (R2) for this job
+inputs:
+  endpoint: { description: R2 S3 endpoint, required: true }
+  bucket: { description: R2 bucket, required: true }
+  access-key: { description: R2 access key id, required: true }
+  secret-key: { description: R2 secret access key, required: true }
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        S3_ENDPOINT: ${{ inputs.endpoint }}
+        S3_BUCKET: ${{ inputs.bucket }}
+        S3_ACCESS_KEY: ${{ inputs.access-key }}
+        S3_SECRET_KEY: ${{ inputs.secret-key }}
+      run: |
+        set -uo pipefail
+        echo "TRACY_DSH_COMMIT=$(git rev-parse HEAD:vendor/tracy/deepseek-harness)" >> "$GITHUB_ENV"
+        echo "TURBO_TELEMETRY_DISABLED=1" >> "$GITHUB_ENV"
+        if [ -z "${S3_ENDPOINT:-}" ] || [ -z "${S3_BUCKET:-}" ]; then
+          echo "::warning::Turbo remote cache: the TURBO_CACHE_S3_* secrets are not set; local cache only"
+          exit 0
+        fi
+        TOKEN="$(openssl rand -hex 24)"
+        echo "::add-mask::$TOKEN"
+        PORT=43901 TURBO_TOKEN="$TOKEN" nohup node scripts/ci/turbo-cache-server.mjs > "$RUNNER_TEMP/turbo-cache.log" 2>&1 &
+        for _ in $(seq 1 50); do
+          if curl -sf -o /dev/null -H "Authorization: Bearer $TOKEN" http://127.0.0.1:43901/v8/artifacts/status; then
+            { echo "TURBO_API=http://127.0.0.1:43901"; echo "TURBO_TOKEN=$TOKEN"; echo "TURBO_TEAM=tracy-ci"; } >> "$GITHUB_ENV"
+            echo "Turbo remote cache up"
+            exit 0
+          fi
+          sleep 0.2
+        done
+        echo "::warning::Turbo remote cache did not start; local cache only"
+        tail -20 "$RUNNER_TEMP/turbo-cache.log" || true
+        exit 0

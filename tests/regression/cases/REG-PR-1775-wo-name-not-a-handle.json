@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-1775-wo-name-not-a-handle",
+  "kind": "fix",
+  "title": "A social profile name equal to its handle is never suggested as the business name; the logo text in title case is",
+  "pr": 1775,
+  "area": "website-opportunities/name",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the business name domain tests with the claims of dev opportunity 5a1e2b3c: Google and magicpin say Padel & Tennis Coach, the Instagram profile name and handle are harbour.sportclub, the logo reads HARBOUR SPORT CLUB.",
+    "S2: Run the same claims with no logo text.",
+    "S3: Run nameClaimsOf on an Instagram row whose profile name equals its handle."
+  ],
+  "expect": [
+    "S1: the suggested name is Harbour Sport Club, never harbour.sportclub.",
+    "S2: today's name (Padel & Tennis Coach) stays; a handle is never suggested.",
+    "S3: the profile name is recorded as the handle only, and the read with the logo suggests Harbour Sport Club."
+  ],
+  "selectors": {
+    "files": "packages/wo/website-opportunities/test/{domain-business-name,business-name-research}.test.mjs"
+  },
+  "fence": "Pure domain functions, no network and no Postgres",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-business-name.test.mjs",
+      "packages/wo/website-opportunities/test/business-name-research.test.mjs"
+    ],
+    "tests": [
+      "Harbour Sport Club: a profile name equal to its handle is never shown; the logo text in title case is",
+      "sources agreeing through a handle with no logo text",
+      "a real display name beats the logo text; isSameHandle and logoNameSpelling",
+      "nameClaimsOf: an Instagram name equal to its handle is the handle, not a display name"
+    ]
+  }
+}

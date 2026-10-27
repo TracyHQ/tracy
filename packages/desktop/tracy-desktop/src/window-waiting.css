@@ -1,0 +1,16 @@
+:root {
+  color-scheme: light dark;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #f9fafb;
+  -webkit-app-region: drag;
+}
+@media (prefers-color-scheme: dark) {
+  html,
+  body {
+    background: #1b1b1c;
+  }
+}

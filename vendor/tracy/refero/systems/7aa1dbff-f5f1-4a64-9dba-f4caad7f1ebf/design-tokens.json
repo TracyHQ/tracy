@@ -1,0 +1,345 @@
+{
+  "color": {
+    "gallery-white": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Gallery White — Page canvas, light section bands, footer background"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Overlay type, white order pills, light media and control surfaces"
+    },
+    "charcoal-field": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal Field — Dark hero and dark feature-section backgrounds"
+    },
+    "graphite": {
+      "$value": "#474747",
+      "$type": "color",
+      "$description": "Graphite — Primary editorial text and dark filled order controls"
+    },
+    "quiet-gray": {
+      "$value": "#8f8f8f",
+      "$type": "color",
+      "$description": "Quiet Gray — Secondary labels, subdued links, inactive supporting UI"
+    },
+    "steel-gray": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Steel Gray — Inactive local-navigation labels"
+    },
+    "ink": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Ink — Unfilled control text and highest-emphasis dark text"
+    },
+    "control-mist": {
+      "$value": "#d6d6d6",
+      "$type": "color",
+      "$description": "Control Mist — Muted pill-control fills and subdued control states"
+    }
+  },
+  "font": {
+    "abcdiatype": {
+      "$value": "ABCDiatype",
+      "$type": "fontFamily",
+      "$description": "Default reading, product descriptions, utility buttons, pricing detail, and small spaced navigation. Normal tracking carries body copy; 10px uppercase labels expand to 1.28px tracking."
+    },
+    "abcdiatypemedium": {
+      "$value": "ABCDiatypeMedium",
+      "$type": "fontFamily",
+      "$description": "The 56px section headline is medium rather than bold, allowing the photography to carry the visual weight; 11px uppercase navigation uses the same family with measured spacing."
+    },
+    "abcdiatypebold": {
+      "$value": "ABCDiatypeBold",
+      "$type": "fontFamily",
+      "$description": "Use for compact product names, emphasized inline identifiers, and the 24px hero product title; reserve the 2.2px tracked 11px treatment for compact labels."
+    },
+    "ui-sans-serif": {
+      "$value": "ui-sans-serif",
+      "$type": "fontFamily",
+      "$description": "ui-sans-serif — detected in extracted data but not described by AI"
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "10px",
+        "fontWeight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 10px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "10px",
+        "fontWeight": 400,
+        "lineHeight": 1.6,
+        "letterSpacing": "0.128em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 10px"
+    },
+    "xs-3": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "10px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0.128em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-3 at 10px"
+    },
+    "xs-4": {
+      "$value": {
+        "fontFamily": "ABCDiatypeMedium",
+        "fontSize": "11px",
+        "fontWeight": 500,
+        "lineHeight": 1.82,
+        "letterSpacing": "0.08em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-4 at 11px"
+    },
+    "xs-5": {
+      "$value": {
+        "fontFamily": "ABCDiatypeBold",
+        "fontSize": "11px",
+        "fontWeight": 700,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.2em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-5 at 11px"
+    },
+    "xs-6": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-6 at 12px"
+    },
+    "xs-7": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-7 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "ui-sans-serif",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "base-4": {
+      "$value": {
+        "fontFamily": "ABCDiatypeBold",
+        "fontSize": "16px",
+        "fontWeight": 700,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-4 at 16px"
+    },
+    "base-5": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-5 at 16px"
+    },
+    "xl": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "20px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl at 20px"
+    },
+    "xl-2": {
+      "$value": {
+        "fontFamily": "ABCDiatypeBold",
+        "fontSize": "20px",
+        "fontWeight": 700,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xl-2 at 20px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "ABCDiatypeBold",
+        "fontSize": "24px",
+        "fontWeight": 700,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "ABCDiatype",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.3,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 24px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "ABCDiatypeMedium",
+        "fontSize": "56px",
+        "fontWeight": 500,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 56px"
+    }
+  },
+  "spacing": {
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "80": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Spacing 80px"
+    },
+    "unit": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "full": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    }
+  },
+  "surface": {
+    "gallery-white": {
+      "$value": "#f7f7f7",
+      "$type": "color",
+      "$description": "Surface level 0: Default page canvas, light sections, and footer"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 1: Overlay text and bright pill surfaces"
+    },
+    "control-mist": {
+      "$value": "#d6d6d6",
+      "$type": "color",
+      "$description": "Surface level 2: Subdued utility-control fill"
+    },
+    "charcoal-field": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Surface level 3: Dark photographic and feature-section field"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.1x.tech/neo",
+      "siteName": "1X Tech",
+      "extractedAt": "2026-09-20T22:15:06.310Z",
+      "variant": "extended"
+    }
+  }
+}

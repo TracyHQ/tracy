@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "cef25151-078c-4631-8f02-4f204f071b8b",
+  "status": "complete",
+  "name": "entire studios",
+  "url": "https://styles.refero.design/style/cef25151-078c-4631-8f02-4f204f071b8b",
+  "sourceWebsite": "https://entirestudios.com",
+  "extractedAt": "2026-06-03T17:03:33.246Z",
+  "capturedAt": "2026-10-08T05:17:41.921545+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Concrete-walled fashion zine — an editorial runway printed on warm cream paper, where photography is the only luxury.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/7239c662-3857-4bca-b6a0-ac857c7b2d41.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/443bdca8-c4da-4e2e-923b-e296378e7510.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/9474f6ca-ec44-4cae-8544-e42984568d68.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/d8f0056d-8b56-4ea1-bb22-10d17122ef67.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/b9ddc678-1ca6-497e-8c03-4a2512eb1b6a.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "4979cc7ff8efa46eed8655c6683b6a49e3992b85afed905e37a0a69de2997395",
+      "bytes": 13063
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d1bbd7c74e28c7a7fc99b2d26c81c34f8a74b06071942503745934b92f2a2206",
+      "bytes": 120190
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "8818c226a781ca1f902c2b40b81671d308384476022a0bac2b73c12fffc49de4",
+      "bytes": 11925
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "1ac6b7810debcd52de11e357f4c6f4f050c8d62d8829334e021e92307e0166de",
+      "bytes": 2819
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "0f7d1a0fe0cee1734392814cb68cce9d5c86c324c07ed5ad59eb7b1ae21ee3f4",
+      "bytes": 9782
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "49d6e9a501b6686d176f5dde16810b9134f4580d1995a4fff132e251ac69ce89",
+      "bytes": 1210
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "b99879f8a13517e2752d12e6824337f0a7671bef3a60adb5fcad4af76289c8bc",
+      "bytes": 227
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "0fb60aadf33b1b4c088f3fd3cd9f76f68f7d427b35fee596a915fb0ba3a13190",
+      "bytes": 244
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4f0ee777a09271751e5a9570ff9229df72f284ed4427582274762108b0a4d107",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "5eb8019c5f002db0665ef6434c0470c167957d7badf2b6b81e904dc93aa04195",
+      "bytes": 35068
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "a595735efc6ca8c7ae50be0f278e32eb7db550698ef6efeb2f6650e93918b963",
+      "bytes": 18295
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "dbd78c8b51eae69affa70644bbee33f1589dfd619148e0258fd643c776defe3e",
+      "bytes": 17255
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "ca044181ec7a66e8176c313d9ad34065c96d397a58825a4296ca16c33383e30b",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "9668ad996ef9af6e9fc770e0ab132b239d4206967c36b83621f2be8245d441d3",
+      "bytes": 477
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d35b964b5ddc6121ba1231bae571528cd2fc79453b8b2c24ababbea024d53772",
+      "bytes": 839
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0ecfea58-c1f3-4671-806d-5ae0eb779f38",
+    "234e9a17-236d-4446-9d58-f83f6806d012",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2fd71e12-12fc-4346-8281-52afe12bb951",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "597355de-6167-4f37-8f14-b3897919a94c",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "6cf3aec4-d028-44b0-b634-cc93e6c08e3c",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "7b28c99e-ed17-451b-a39e-bd4722bc43f5",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "ba0e947f-0ffa-4ea9-b483-86c981a42464",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "e6c20874-c6f9-4c31-b6b2-2cb27cbf15f2",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f401f04f-c45b-4261-9441-f502c6569a29",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "fa157687-ee42-443e-a992-5f8a3fcdd48f"
+  ]
+}

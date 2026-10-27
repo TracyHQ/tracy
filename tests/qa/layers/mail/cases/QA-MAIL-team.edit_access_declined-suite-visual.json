@@ -1,0 +1,23 @@
+{
+  "id": "QA-MAIL-team.edit_access_declined-suite-visual",
+  "itemIds": ["letter:team.edit_access_declined:en", "letter:team.edit_access_declined:vi"],
+  "requirement": "a person looks at team.edit_access_declined in English and Vietnamese: layout, clipping, wording and tone",
+  "oracle": {
+    "source": "approved copy (spec #809); tests/qa/oracles/mail",
+    "ref": "contact sheet",
+    "invariant": "only a person can accept look and wording"
+  },
+  "edgeTags": [],
+  "targets": ["local"],
+  "effects": {
+    "reads": [],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["playwright-chromium"],
+  "assertionIds": ["manual:contact-sheet:team.edit_access_declined"],
+  "redProof": null,
+  "legacyIds": []
+}

@@ -1,0 +1,49 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Page canvas, deep surface — the void everything floats on"
+    },
+    "bone-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Bone White — Primary type, nav pill borders, active state fill, hairlines, iconography"
+    },
+    "ash-gray": {
+      "$value": "#838383",
+      "$type": "color",
+      "$description": "Ash Gray — Muted secondary text, inactive nav labels, tertiary metadata"
+    },
+    "alarm-red": {
+      "$value": "#ed1c24",
+      "$type": "color",
+      "$description": "Alarm Red — Hero detonation block — the only chromatic moment, used as full-bleed surface against black. Makes monochrome feel like a held breath before a shout"
+    }
+  },
+  "font": {
+    "brasparz-variable": {
+      "$value": "Brasparz Variable",
+      "$type": "fontFamily",
+      "$description": "Signature display face for hero detonations and the wordmark. Used at extreme viewport-bleeding sizes with line-height crushed to 0.70 so letterforms overlap vertically. The aggressive negative tracking (down to -0.079em at 360px) tightens characters into a single sculptural mass. Custom stylistic sets ss01 and ss02 are explicitly DISABLED (set to 0) — the raw geometric forms are the brand, no alternates allowed"
+    },
+    "neuehaas": {
+      "$value": "NeueHaas",
+      "$type": "fontFamily",
+      "$description": "Body, navigation, UI labels. The 40px weight 700 serves as mid-scale editorial heading. Weight 400 at 19-20px carries paragraph and caption duties. Features calt, case, liga, ss01, ss02 all active — the only font allowed to flex stylistic alternates"
+    },
+    "trajan-style-serif-editorial-credits-not-in-extracted-data-but-visible": {
+      "$value": "Trajan-style serif (editorial credits, not in extracted data but visible)",
+      "$type": "fontFamily",
+      "$description": "Small-caps credit lines under the display block — classical serif at tiny size creates editorial gravitas against the brutalist type"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://charlielemaignan.com",
+      "siteName": "Charlie",
+      "extractedAt": "2026-06-03T17:23:27.749Z",
+      "variant": "compact"
+    }
+  }
+}

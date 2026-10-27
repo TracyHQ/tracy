@@ -1,0 +1,71 @@
+---
+title: Tracy API
+description: Lies und ändere eine von Tracy gehostete Website — Joomla, WordPress oder EmDash — über HTTPS mit einem Schlüssel, der an deinen eigenen Sitz auf dieser Site gebunden ist.
+template: splash
+hero:
+  tagline: Eine REST-API für jede Website, die Tracy hostet. Ein Schlüssel, der an deinen Sitz gebunden ist, Ressourcen, die du schon kennst — Seiten, Inhalte, Datensätze — und jeder Schreibvorgang rückgängig zu machen.
+  actions:
+    # Hero links are written as-is (Starlight prefixes only sidebar slugs with `base`); with
+    # `base: '/'` they are plain root paths.
+    - text: Schnellstart
+      link: /de/quickstart/
+      icon: right-arrow
+    - text: API-Referenz
+      link: /de/reference/
+      icon: open-book
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+## Was du in fünf Minuten erledigen kannst
+
+1. Erstelle einen API-Schlüssel unter **Settings → API keys** der Site, auf der du einen Sitz hältst.
+2. `GET /v1/me` — prüfe, als wer der Schlüssel handelt, auf welcher Site und mit welchen Scopes.
+3. `GET /v1/sites/{key}/pages` — liste die veröffentlichten Seiten der Site mit ihren Inhalts-IDs auf.
+4. `PATCH /v1/sites/{key}/records/{kind}/{id}` — ändere einen Titel, protokolliert unter einer `apply_id`.
+5. `POST /v1/sites/{key}/applies/{apply_id}/revert` — mach es wieder rückgängig.
+
+Der [Schnellstart](/de/quickstart/) geht genau diese fünf Aufrufe mit `curl` durch.
+
+<CardGrid>
+  <Card title="Sitzgebundene Schlüssel" icon="seti:lock">
+    Ein Schlüssel handelt als die Person, die ihn erstellt hat, auf einer Site, mit höchstens den Werkzeugsätzen, die die Rolle dieser Person gewährt. Wird ein Sitz widerrufen, werden alle seine Schlüssel mit widerrufen. Siehe [Authentifizierung](/de/authentication/).
+  </Card>
+  <Card title="Eine Form für drei CMS" icon="puzzle">
+    Seiten, Inhalte, Blöcke und Felder lesen sich auf Joomla, WordPress und EmDash gleich. Datensätze sind die eigenen Zeilen des CMS, für die Fälle, in denen du sie brauchst. Siehe [Konzepte](/de/concepts/).
+  </Card>
+  <Card title="Jeder Schreibvorgang ist rückgängig zu machen" icon="rocket">
+    Jede Änderung wird unter einer `apply_id` protokolliert; `POST …/applies/{id}/revert` stellt alles wieder her, was darunter geschrieben wurde, das Neueste zuerst.
+  </Card>
+  <Card title="Versioniert, mit Changelog" icon="document">
+    Die API trägt `v1` im Pfad. Ergänzungen bekommen eine datierte Zeile im [Changelog](/de/changelog/); eine Bedeutungsänderung ist eine neue Version.
+  </Card>
+</CardGrid>
+
+## Wie das System aufgebaut ist
+
+```text
+Bearer trk_…  (you, your agent, a partner's integration)      cookie tracy_sess (a browser on cowork.*)
+      |  /v1/*  — Bearer only, no cookie                              |  /api/sites/{key}/apply, /api/me/keys
+  api.tracy.ai ── API host ── allowlist ──┐                           |
+                 └─ /docs/api/<document>   (this site: docs.tracy.ai) |
+                                          ▼                           ▼
+                        applyDoor(siteKey, action, params, principal)   ← ONE path: seat · effective permissions ∩ scopes · lease · audit
+                                          |
+                  Claude Cowork plugin (Joomla, WordPress) · Tracy reader (EmDash)
+```
+
+- **`api.tracy.ai`** beantwortet `/v1/*` und die drei maschinenlesbaren Dokumente unter `/docs/api/` (OpenAPI, Claude-Cowork-Plugin, llms.txt). Diese Dokumentation und die interaktive Referenz liegen auf **`docs.tracy.ai`**. Sonst nichts: Anmeldung, Workspace und Ops-Werkzeuge leben auf Tracys eigenem Hostnamen und antworten auf beiden mit `404 NOT_ON_THIS_HOST`.
+- **Eine Tür.** Jede `/v1`-Route ist ein dünner Alias für eine Aktion der Apply-Tür — derselbe Weg, den der Tracy-Agent nimmt: wer du bist (der Inhaber des Schlüssels), was dein Sitz erlaubt, die Schreib-Lease der Site und das Audit-Log.
+- **Die Site antwortet.** Auf Joomla und WordPress erreicht der Aufruf das auf der Site installierte Claude-Cowork-Plugin; auf EmDash Tracys eigenen Reader. Was die Site ablehnt, kommt als dokumentierter [Fehler](/de/reference/errors/) zu dir zurück.
+
+## Wo was liegt
+
+| | |
+|---|---|
+| Basis-URL | `https://api.tracy.ai/v1` (Entwicklung: `https://api.tracy.site/v1`) |
+| OpenAPI 3.1 | [`/api/openapi.json`](/api/openapi.json) |
+| Interaktive Referenz | [`/api/reference/`](/api/reference/) |
+| Für Sprachmodelle | [`/api/llms.txt`](/api/llms.txt) |
+| Health | `GET /health` → `{ "ok": true }` |

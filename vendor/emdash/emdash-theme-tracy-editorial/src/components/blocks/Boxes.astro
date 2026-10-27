@@ -1,0 +1,468 @@
+---
+import { tintStyle } from "../../utils/tint";
+/**
+ * bravada.boxes — Bravada's landing-page featured boxes (.lp-boxes),
+ * in the demo's three flavours:
+ *   "static":   white cards with a rotated gold tape strip on top,
+ *               image zoom + card lift on hover (lp-boxes-static)
+ *   "animated": text pinned over the image, teal overlay ramps up and
+ *               the image slow-zooms 2s while the excerpt unfolds
+ *               (lp-boxes-animated)
+ *   "overlay":  white overlay washes in and centered text drops in,
+ *               staggered (lp-boxes-animated2)
+ * All sit on a tinted full-bleed band with an accent backdrop strip
+ * (gold or teal, alternating in the demo) behind the grid.
+ */
+import SectionHeader from "../SectionHeader.astro";
+
+interface BoxItem {
+	image?: string;
+	imageAlt?: string;
+	title?: string;
+	text?: string;
+	url?: string;
+}
+
+interface BoxesNode {
+	title?: string;
+	description?: string;
+	variant?: "static" | "animated" | "overlay";
+	/** Grid columns on desktop (2–4). Default 4 (static) / 3 (animated). */
+	columns?: number;
+	/** Backdrop strip color behind the grid */
+	accent?: "gold" | "teal";
+	/** Band background tint */
+	tint?: string;
+	items?: BoxItem[];
+}
+
+// astro-portabletext hands custom type components the block as `node`
+const { node } = Astro.props as { node: BoxesNode };
+const {
+	title,
+	description,
+	variant = "animated",
+	accent = variant === "animated" ? "teal" : "gold",
+	tint,
+	items = [],
+} = node;
+const cols = Math.min(Math.max(node.columns ?? (variant === "animated" ? 3 : 4), 2), 4);
+---
+
+<section
+	class:list={["lp-boxes", "full-bleed", `lp-boxes-${variant}`]}
+	style={tintStyle(tint)}
+>
+	<SectionHeader title={title} description={description} />
+	<div
+		class:list={["lp-boxes-inside", `accent-${accent}`, `lp-rows-${cols}`]}
+		style={`--lp-box-cols: ${cols}`}
+	>
+		{
+			items.map((box) => (
+				<div class="lp-box aos">
+					<div class="lp-box-inside">
+						<div class="lp-box-image">
+							{box.url && (
+								<a
+									class="lp-box-imagelink"
+									href={box.url}
+									aria-label={box.title}
+								/>
+							)}
+							{box.image && (
+								<img src={box.image} alt={box.imageAlt ?? ""} loading="lazy" />
+							)}
+						</div>
+						{/* Sibling of the image (demo markup): the image box is
+						    overflow:hidden, so the tape must live outside it to
+						    extend past the card top */}
+						<span class="box-overlay" />
+						<div class="lp-box-content">
+							<div class="lp-box-text">
+								{box.title && (
+									<h4 class="lp-box-title">
+										{box.url ? (
+											<a href={box.url}>{box.title}</a>
+										) : (
+											box.title
+										)}
+									</h4>
+								)}
+								{box.text && (
+									<div class="lp-box-text-inside">
+										<span>{box.text}</span>
+									</div>
+								)}
+								{box.url && (
+									<a class="lp-box-readmore" href={box.url}>
+										<span>Read More</span>
+										<em class="sr-only">{`“${box.title ?? ""}”`}</em>
+									</a>
+								)}
+							</div>
+						</div>
+					</div>
+				</div>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.lp-boxes {
+		overflow: hidden;
+		background-color: var(--tint-boxes);
+	}
+
+	/* Accent backdrop strip behind the grid */
+	/* Demo overlay boxes sit flush edge-to-edge */
+	.lp-boxes-overlay .lp-boxes-inside {
+		gap: 0;
+	}
+
+	.lp-boxes-inside {
+		position: relative;
+		display: grid;
+		grid-template-columns: repeat(var(--lp-box-cols, 3), 1fr);
+		gap: 2%;
+		max-width: var(--wide-width);
+		margin: 3em auto;
+		padding: var(--band-y) var(--band-x);
+	}
+
+	.lp-boxes-inside::before {
+		content: "";
+		position: absolute;
+		left: 2.5em;
+		top: 0;
+		width: calc(100% - 5em);
+		height: 100%;
+		opacity: 0.5;
+	}
+
+	/* Accent backdrop strip: full accent in light like the demo; in dark
+	   a translucent wash, so the strip recedes and the (full-gold) tape
+	   pieces stay readable where they cross it */
+	.lp-boxes-inside.accent-gold::before {
+		background-color: light-dark(var(--color-gold), color-mix(in srgb, var(--fg) 22%, transparent));
+	}
+
+	.lp-boxes-inside.accent-teal::before {
+		background-color: light-dark(
+			var(--color-teal-solid),
+			color-mix(in srgb, var(--fg) 28%, transparent)
+		);
+	}
+
+	.lp-box {
+		position: relative;
+		background-color: var(--color-surface);
+	}
+
+	.lp-box-inside {
+		position: relative;
+		top: 0;
+		transition: 0.25s ease-out all;
+	}
+
+	.lp-box-image {
+		position: relative;
+		overflow: hidden;
+	}
+
+	.lp-box-image img {
+		position: relative;
+		z-index: 1;
+		display: block;
+		width: 100%;
+		height: 250px;
+		object-fit: cover;
+	}
+
+	.lp-box-imagelink {
+		position: absolute;
+		z-index: 12;
+		inset: 0;
+	}
+
+	.lp-box-title {
+		margin: 0;
+		font-family: var(--font-heading);
+		font-size: 1.3em;
+		line-height: 1.5;
+		font-weight: 400;
+		color: var(--color-heading);
+		transition: 0.2s ease-out all;
+	}
+
+	.lp-box-title a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.lp-box-title:hover {
+		color: var(--color-gold);
+	}
+
+	.lp-box-text-inside {
+		margin: 1em 0;
+		line-height: 1.7;
+	}
+
+
+	.lp-box-readmore {
+		position: relative;
+		display: block;
+		margin: 1.1em 0 0.55em;
+		font-weight: 700;
+		font-size: 0.9em;
+		text-decoration: none;
+		color: var(--color-gold);
+		transition: 0.2s ease-out all;
+	}
+
+	/* ---------- static (lp-boxes-static): tape strip + lift ---------- */
+	.lp-boxes-static .lp-box {
+		text-align: center;
+	}
+
+	.lp-boxes-static .lp-box:hover .lp-box-inside,
+	.lp-boxes-static .lp-box:focus-within .lp-box-inside {
+		top: -10px;
+	}
+
+	.lp-boxes-static .box-overlay {
+		position: absolute;
+		z-index: 21;
+		left: 0;
+		right: 0;
+		top: -7px;
+		width: 33%;
+		height: 14px;
+		margin: 0 auto;
+		background-color: var(--color-gold);
+		opacity: 0.6;
+		pointer-events: none;
+		transform: rotate(4deg);
+		transition: 0.5s all ease-out;
+	}
+
+	.lp-boxes-static .lp-box:nth-child(odd) .box-overlay {
+		transform: rotate(-3deg);
+	}
+
+	.lp-boxes-static .lp-box:hover .box-overlay {
+		opacity: 1;
+	}
+
+	.lp-boxes-static .lp-box-image img {
+		transform: scale(1);
+		transition: 0.25s all ease-out;
+	}
+
+	.lp-boxes-static .lp-box:hover .lp-box-image img {
+		transform: scale(1.1);
+	}
+
+	.lp-boxes-static .lp-box-text {
+		padding: 2em;
+	}
+
+	/* ------- animated (lp-boxes-animated): teal overlay + zoom ------- */
+	.lp-boxes-animated .lp-box,
+	.lp-boxes-overlay .lp-box {
+		overflow: hidden;
+	}
+
+	.lp-boxes-animated .lp-box-image img,
+	.lp-boxes-overlay .lp-box-image img {
+		height: 300px;
+		transition: 2s ease-out all;
+	}
+
+	.lp-boxes-animated .lp-box:hover .lp-box-image img,
+	.lp-boxes-animated .lp-box:focus-within .lp-box-image img,
+	.lp-boxes-overlay .lp-box:hover .lp-box-image img,
+	.lp-boxes-overlay .lp-box:focus-within .lp-box-image img {
+		transform: scale(1.5);
+	}
+
+	.lp-boxes-animated .box-overlay,
+	.lp-boxes-overlay .box-overlay {
+		position: absolute;
+		z-index: 10;
+		inset: 0;
+		opacity: 0.1;
+		transition: 0.5s ease-out all;
+		pointer-events: none;
+	}
+
+	.lp-boxes-animated .box-overlay {
+		background-color: var(--color-teal-solid);
+	}
+
+	.lp-boxes-animated .lp-box:hover .box-overlay,
+	.lp-boxes-animated .lp-box:focus-within .box-overlay,
+	.lp-boxes-overlay .lp-box:hover .box-overlay,
+	.lp-boxes-overlay .lp-box:focus-within .box-overlay {
+		opacity: 0.95;
+	}
+
+	.lp-boxes-animated .lp-box-content {
+		position: absolute;
+		z-index: 30;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+	}
+
+	.lp-boxes-animated .lp-box-text {
+		padding: 1em 2em;
+		color: var(--accent-on);
+	}
+
+	.lp-boxes-animated .lp-box-title {
+		display: inline;
+		font-weight: 700;
+		line-height: 1.1;
+		color: var(--accent-on);
+		background-image: var(--gold-scrim);
+		background-repeat: no-repeat;
+		background-size: 100% 0.5em;
+		background-position: 0 100%;
+	}
+
+	.lp-boxes-animated .lp-box-text-inside {
+		max-height: 0;
+		overflow: hidden;
+		transition: 2s ease-out all;
+	}
+
+	.lp-boxes-animated .lp-box:hover .lp-box-text-inside,
+	.lp-boxes-animated .lp-box:focus-within .lp-box-text-inside {
+		max-height: 400px;
+	}
+
+	.lp-boxes-animated .lp-box-readmore > span {
+		opacity: 0.7;
+	}
+
+	.lp-boxes-animated .lp-box-readmore:hover > span {
+		opacity: 1;
+	}
+
+	/* Demo shows only the title until hover: Read More expands with the
+	   text, which also keeps it from overflowing the fixed-height card
+	   on small screens */
+	.lp-boxes-animated .lp-box-readmore {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+		opacity: 0;
+		transition: 2s ease-out all;
+	}
+
+	.lp-boxes-animated .lp-box:hover .lp-box-readmore,
+	.lp-boxes-animated .lp-box:focus-within .lp-box-readmore {
+		max-height: 3em;
+		margin: 1.1em 0 0.55em;
+		opacity: 1;
+	}
+
+	/* ------ overlay (lp-boxes-animated2): white wash, centered ------ */
+	.lp-boxes-overlay .box-overlay {
+		background-color: var(--accent-on);
+	}
+
+	.lp-boxes-overlay .lp-box-content {
+		position: absolute;
+		z-index: 30;
+		inset: 0;
+	}
+
+	.lp-boxes-overlay .lp-box-text {
+		position: absolute;
+		top: 50%;
+		width: 100%;
+		padding: 1em 2em;
+		text-align: center;
+		transform: translateY(-50%);
+	}
+
+	.lp-boxes-overlay .lp-box-title,
+	.lp-boxes-overlay .lp-box-text-inside > span,
+	.lp-boxes-overlay .lp-box-readmore {
+		opacity: 0;
+		transform: translateY(-40px);
+		transition: 0.3s all ease-out;
+	}
+
+	/* Demo overlay text sits on the WHITE wash in both color schemes:
+	   ink title with the gold highlighter strip, grey body — pinned
+	   colors, not theme tokens, or dark mode puts light text on white */
+	.lp-boxes-overlay .lp-box-title {
+		display: inline;
+		font-weight: 700;
+		color: var(--fg);
+		background-image: var(--gold-scrim);
+		background-repeat: no-repeat;
+		background-size: 100% 0.5em;
+		background-position: 0 100%;
+		transition-delay: 0.05s;
+	}
+
+	.lp-boxes-overlay .lp-box-text-inside > span {
+		display: block;
+		color: var(--fg);
+		transition-delay: 0.1s;
+	}
+
+	.lp-boxes-overlay .lp-box-readmore {
+		transition-delay: 0.15s;
+	}
+
+	.lp-boxes-overlay .lp-box:hover .lp-box-title,
+	.lp-boxes-overlay .lp-box:hover .lp-box-text-inside > span,
+	.lp-boxes-overlay .lp-box:hover .lp-box-readmore,
+	.lp-boxes-overlay .lp-box:focus-within .lp-box-title,
+	.lp-boxes-overlay .lp-box:focus-within .lp-box-text-inside > span,
+	.lp-boxes-overlay .lp-box:focus-within .lp-box-readmore {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.lp-box-image img,
+		.box-overlay,
+		.lp-box-inside,
+		.lp-box-text-inside {
+			transition: none !important;
+		}
+
+		.lp-box:hover .lp-box-image img {
+			transform: none !important;
+		}
+	}
+
+	@media (max-width: 900px) {
+		.lp-boxes-inside {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 600px) {
+		/* Demo mobile: boxes run flush edge-to-edge with no gaps; the
+		   accent strip peeks only above/below the stack */
+		.lp-boxes-inside {
+			grid-template-columns: 1fr;
+			gap: 0;
+			padding: 2em 0;
+		}
+
+		.lp-boxes-inside::before {
+			left: 0;
+			width: 100%;
+		}
+	}
+</style>

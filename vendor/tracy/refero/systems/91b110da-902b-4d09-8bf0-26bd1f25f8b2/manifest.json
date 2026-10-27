@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+  "status": "complete",
+  "name": "Copilot Money",
+  "url": "https://styles.refero.design/style/91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+  "sourceWebsite": "https://copilot.money",
+  "extractedAt": "2026-06-03T22:39:04.016Z",
+  "capturedAt": "2026-10-08T05:14:55.515798+00:00",
+  "theme": "dark",
+  "industry": "fintech",
+  "description": "Scattered neon tags over a midnight vault — a black canvas where a few candy-colored labels drift at playful angles, each glowing like an airport departure sign.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/be31bc45-1bf2-416e-a762-9693c04bdbc8.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/512ca845-5856-4188-988f-f8de956c6f1a.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/113ab5f0-2f52-489b-95a6-6535a0f3978c.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/c7e0a5db-7234-464f-a95c-5127d7fa862a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5d753801-0afe-456d-8726-4cce5626dd34.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d7f034157def825ba6eafc707dc34a668ee24ddabf239cee1e79be882a09d5a2",
+      "bytes": 26076
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "1175c30b74d2118e9b9ff1d7268e427b769067b975f27dd2156fcd66a64e77c0",
+      "bytes": 110763
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "5045247f970dd4e54bd6720bdc19b0977f5280af65dd38784597c11efbab7450",
+      "bytes": 20322
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c94a2b4256f22d8344a669c7a27648f65b5a8b1853d6e495089eda8e2ad318fa",
+      "bytes": 18555
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "8d1e4e5601ac1cca9d40008b34aacf9ddf6d8bf8ed4b13e81d1d3dd34e384097",
+      "bytes": 15085
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "6a086fbc96d7fc59837163800d27c5a80d39ae915eb973640bd1cc9177c02833",
+      "bytes": 5344
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "f204f6d20c4c2bc204b8d9f90eb9a2a1040b6e3d2a608cfdf94df57025da809c",
+      "bytes": 1185
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "50e0d61c6dee2905007515cfb8429ec74c277fce18b322ebda1695f0d9659b50",
+      "bytes": 1202
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ffcc4d03081cc1c9c84b75b9a89a117559b793de92fb93026c948ff38c648c08",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "75bd8c7eab209481d13c3d8da0ded1f42cc0519164a5fd9f8dc61a856d134a65",
+      "bytes": 50494
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8610fee3e53264259d2e1ab23c13a1dd04c96d5448a6c0afc634bfa75b450d8d",
+      "bytes": 26799
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "6501d7364aca341bbf8e51f9f85e51a52795d81f98735b98a025666ad0c5e945",
+      "bytes": 76911
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8f4efda28691cc409b91aeb4470270c9435b0f72910c57a9af0c3b2cc0c7ae96",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a922529c31f11f35530d2c547596837a30462cde933979efdd198749f3b1f84e",
+      "bytes": 2999
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f978234f0e10b9d17569a54ed31d4bda60e964820b51ca95333db3a41d378898",
+      "bytes": 3665
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "08c0ead0-1899-47b4-bfdc-865ab459bbe5",
+    "0d0de64c-1891-4984-9e12-8976e042ce11",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "2c05cf8d-97c5-4f35-96ef-eb53fc03ea81",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "680cf16b-0093-473b-854f-f1de9af5e698",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "91b110da-902b-4d09-8bf0-26bd1f25f8b2",
+    "a0630421-7b66-48b4-aa14-6194a3b2c2b9",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "b0d80806-b724-4ed1-a1d1-074edd3c9bc9",
+    "c1f7749f-319b-491b-8243-22050e85994f",
+    "c60f05ff-2420-4a24-92db-80c4b6a74683",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c"
+  ]
+}

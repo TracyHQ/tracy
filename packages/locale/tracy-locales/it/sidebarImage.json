@@ -1,0 +1,13 @@
+{
+  "failed": "Impossibile visualizzare questa immagine.",
+  "loading": "Rendering del documento...",
+  "preview": "Anteprima immagine: {name}",
+  "title": "Immagine",
+  "unsupported": "L’anteprima dell’immagine richiede il contenuto completo del file.",
+  "zoomControls": "Controlli dello zoom",
+  "zoomFitWidth": "Adatta alla larghezza",
+  "zoomIn": "Ingrandisci",
+  "zoomMenu": "Scegli lo zoom",
+  "zoomOut": "Riduci",
+  "zoomValue": "{percent}%"
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "227ff379-9b46-44fc-8ff1-37e0472239a6",
+  "status": "complete",
+  "name": "Altius",
+  "url": "https://styles.refero.design/style/227ff379-9b46-44fc-8ff1-37e0472239a6",
+  "sourceWebsite": "https://www.altiuslabs.xyz",
+  "extractedAt": "2026-06-03T21:39:22.697Z",
+  "capturedAt": "2026-10-08T05:09:18.950416+00:00",
+  "theme": "dark",
+  "industry": "crypto",
+  "description": "Molten embers on obsidian. A blockchain command center lit from within by coral fire, where dark surfaces breathe warm light through hairline gaps and inset glows.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/27b643c5-afe9-4bb4-aed5-5c7dcde86385.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/d7968ea5-cad3-492e-abd8-ec2c92f9afb4.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/8d292e45-3977-4573-a24e-29d7d84f75a5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/d7be6a2d-e1ac-40f9-bb86-2fc3402278f7.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/b44bbc39-f1a1-4c1e-b1ec-a1138ed2f1e2.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "ed0b05b83e5dabe551c5e5b53cb646d5e8d30b12cd633d8fb6a1407e6040693f",
+      "bytes": 20995
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "623a1b3b4b1a26db2482b41165492fabd3f7b3fa9b5d95573c99885f775d52a0",
+      "bytes": 85042
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6353944119e0ccab1c23f8d9ab9c7e74ea755c723359cf585a1453ed2b0b8be4",
+      "bytes": 18549
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "e74aaf52c803211cc55fac4597e8049591ead77389d8b32fbd6ef75233f7919a",
+      "bytes": 9812
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "283f38a16d7f74bc171d3bd0e76949bf50464b6560c2b131c73b86c9b6cbf26e",
+      "bytes": 12872
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9388b84b4b043542412ddb3d8ddaed00a4c8c4dac53748df8f0615c884a6a8e8",
+      "bytes": 3656
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d029c3947f23322df4610f39a6a3e95107ae5516ee9fa2ee4881ee62a1b5271a",
+      "bytes": 606
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "3d15c6ac4fa0307c05ecb15551671518ddb5b51377c23d193d71705e51b112b3",
+      "bytes": 623
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "b247701a82ee7ac648742ed66db2e23815d25438865eb7c7a5fe9e1d70f51f55",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "2bd47914657bf25c56bd026ba16fa50ed82acb0487b68d4140e5bbfd4078772c",
+      "bytes": 44991
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "0231738d9ac8f038ca77c6cbaad2573dde85e536ae4674786a2f5a6e47203e41",
+      "bytes": 23492
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "79176010b222e035e93295900a7c0611a95e6bf2bdde668e794d888cbcc1ed61",
+      "bytes": 44647
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "69ccccc40dd88e6d62cfa5c0ae87c263f1de8c4f8c6b9b99a3f4a37e4f6f8c70",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "8a3509daf8900eb8ab32cc1611ef641932a74db89dfff08bcfe47753110532e1",
+      "bytes": 1497
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d257baa8c40f60d642a8f5648ea2324fbc5ed754c8dccc2eff86173a27fee83c",
+      "bytes": 2040
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "109e52eb-e70f-493e-9527-84d672b00c7b",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "227ff379-9b46-44fc-8ff1-37e0472239a6",
+    "369ac603-c1e9-4231-9369-a198493f8e47",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "5d273906-0110-48cf-99cd-63a72eb9c586",
+    "60ee0386-cfad-409a-8310-762bfc2e4816",
+    "834ce97f-61f2-4b12-bf5c-e9fad2544456",
+    "8b5cfe6d-a2bd-4edb-854e-9185cec46c09",
+    "c01ccb7b-46c9-487c-8a4e-0e9d6627f0d6",
+    "c55d2f24-deb1-44c1-9846-66a3523beb29",
+    "d4c51049-58eb-404a-9fcb-f195928b1c99",
+    "da6ad92d-4f29-4f92-a59a-3a46295d0d1c",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344",
+    "f493133e-e289-4fb1-9729-f611d9816aae",
+    "fd2e0187-e67b-4869-8cfd-9de9e58d2868",
+    "fe8cdcf9-c850-4d52-be07-5ad269bf9ebf"
+  ]
+}

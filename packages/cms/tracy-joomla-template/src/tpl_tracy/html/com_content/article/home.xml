@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <layout title="TPL_TRACY_LAYOUT_HOME" option="TPL_TRACY_LAYOUT_HOME_OPTION">
+        <message>TPL_TRACY_LAYOUT_HOME_DESC</message>
+    </layout>
+    <!-- The hero fields live in the article's attribs, next to article_layout, so the admin form
+         keeps them when an editor saves the article. The seeder writes the same keys. -->
+    <fields name="attribs">
+        <fieldset name="tracy_hero" label="TPL_TRACY_LAYOUT_HOME">
+            <field name="hero_eyebrow" type="text" label="TPL_TRACY_HERO_EYEBROW" />
+            <field name="hero_headline" type="text" label="TPL_TRACY_HERO_HEADLINE" />
+            <field name="hero_sub" type="textarea" rows="3" label="TPL_TRACY_HERO_SUB" />
+            <field name="hero_cta_label" type="text" label="TPL_TRACY_HERO_CTA_LABEL" />
+            <field name="hero_cta_url" type="text" label="TPL_TRACY_HERO_CTA_URL" />
+            <field name="hero_cta2_label" type="text" label="TPL_TRACY_HERO_CTA2_LABEL" />
+            <field name="hero_cta2_url" type="text" label="TPL_TRACY_HERO_CTA2_URL" />
+        </fieldset>
+    </fields>
+</metadata>

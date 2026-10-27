@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1103-about-blank-keeps-template",
+  "kind": "fix",
+  "title": "About left blank: no model rewrites the template from the name alone and no picture is drawn, on WordPress, EmDash and Joomla",
+  "pr": 1103,
+  "area": "site-build/brief",
+  "cms": ["wp", "em", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand and no site. From the TCH checkout run: node --test --test-name-pattern=\"About blank\" apps/tracy-web/test/brief-wordpress.test.mjs apps/tracy-web/test/brief-emdash.test.mjs apps/tracy-web/test/brief-joomla.test.mjs",
+    "S2: Each test runs its CMS brief engine against a fake site with a business name, About left blank, a working text model and a picture model, and counts the model calls and pictures.",
+    "S3: Read the node:test summary lines (tests / pass / fail) and every failing test name."
+  ],
+  "expect": [
+    "S3: tests 4 or more, fail 0.",
+    "WordPress and Joomla: no line is written by a model and no picture is drawn; only the demo company's name (D9 rename) changes; the report carries the note 'About was left blank, so the template keeps its own words and pictures; only the company name was changed'.",
+    "EmDash: planMenuLabels is never called (no menu label is judged from the name) and the tool gets no picture door.",
+    "A site written in one other language with About blank still has its source edition written in that language."
+  ],
+  "selectors": {
+    "seam": "aboutGiven(brief) and ABOUT_BLANK_NOTE in apps/tracy-web/src/sites/brief-engines/shared.js, read by wordpress.js, emdash.js and joomla.js",
+    "door": "the engines' model and picture doors (fake text and image models in the tests)"
+  },
+  "evidence": "TCQR spec ABOUT-3, K6, K7, D9 on dev (cowork.tracy.site), 10/10/2026: g55-ess-wp-blank and g55-biz-emd-blank, a name and About blank, turned '@Grazia on instagram' into 'Bakery gallery', menu 'Services' into 'Baked goods', and drew bakery pictures over the demo's.",
+  "fence": "Engine tests over fake sites and fake models; no live CMS or model ran.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=About blank",
+      "apps/tracy-web/test/brief-wordpress.test.mjs",
+      "apps/tracy-web/test/brief-emdash.test.mjs",
+      "apps/tracy-web/test/brief-joomla.test.mjs"
+    ]
+  }
+}

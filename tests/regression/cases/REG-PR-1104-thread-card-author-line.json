@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1104-thread-card-author-line",
+  "kind": "fix",
+  "title": "A comment thread card whose newest message is taller than its list opens at that message's top (author line in view)",
+  "pr": 1104,
+  "area": "comments/thread-card",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In vendor/tracy/dsh-better-sidebar run the vitest file tests/comment-people-layer.spec.tsx, filtered to 'the newest message taller than the list'."
+  ],
+  "expect": [
+    "S1: one message on an element taller than the frame (\"On body\", card capped to THREAD_CARD_MIN): the message's top edge is not above the list's top edge (its face and author line are in view).",
+    "S1: a four-message thread whose newest reply is taller than the list: the list stands at that reply's top, scrolled past the earlier messages."
+  ],
+  "selectors": {
+    "card": "[data-thread]",
+    "list": "[data-thread-list]",
+    "message": "[data-message]"
+  },
+  "evidence": "Measured on dev 09/10/2026 (account-menu acceptance hc-faces-hca-pin2.jpg): a 160px card On body showed only the lower half of the author's face; the list was aimed at scrollHeight",
+  "fence": "newestTop() in ThreadCard (vendor/tracy/dsh-better-sidebar/src/client/CommentLayer.tsx)",
+  "run": {
+    "cmd": [
+      "npx",
+      "vitest",
+      "run",
+      "tests/comment-people-layer.spec.tsx",
+      "-t",
+      "the newest message taller than the list"
+    ],
+    "cwd": "vendor/tracy/dsh-better-sidebar"
+  }
+}

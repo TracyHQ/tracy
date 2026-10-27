@@ -1,0 +1,9 @@
+:root {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-bone-white: #f2e9de;
+  --color-dusty-rose: #ddc9c0;
+
+  /* Typography — Font Families */
+  --font-sofia-pro: 'Sofia Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

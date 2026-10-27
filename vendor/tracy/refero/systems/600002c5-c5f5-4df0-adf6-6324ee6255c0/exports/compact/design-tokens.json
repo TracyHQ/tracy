@@ -1,0 +1,49 @@
+{
+  "color": {
+    "carbon": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Carbon — Primary text, body copy, nav links, icons, logo wordmark, footer surface, and the near-black anchoring tone for the entire monochrome system"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page canvas, card backgrounds, product tile surfaces, input fields, and the dominant background that makes photography the only chromatic voice"
+    },
+    "ash-gray": {
+      "$value": "#b6b6b6",
+      "$type": "color",
+      "$description": "Ash Gray — Subtle icon strokes, secondary borders, search underline at rest, placeholder ghost text in inputs — the quietest non-text neutral"
+    },
+    "stone": {
+      "$value": "#f5f5f5",
+      "$type": "color",
+      "$description": "Stone — Hover wash on nav strips, secondary surface tone for utility bars and announcement backgrounds, the softest surface lift in the stack"
+    },
+    "graphite": {
+      "$value": "#727272",
+      "$type": "color",
+      "$description": "Graphite — Muted helper text, inactive form borders, disabled icon strokes — the mid-gray that signals de-emphasis without losing legibility"
+    },
+    "smoke": {
+      "$value": "#e6e6e6",
+      "$type": "color",
+      "$description": "Smoke — Hairline dividers between product rows, thin section separators, the barely-visible structural line in an otherwise seamless layout"
+    }
+  },
+  "font": {
+    "farfetch-basis": {
+      "$value": "Farfetch Basis",
+      "$type": "fontFamily",
+      "$description": "Custom geometric sans-serif used for everything user-facing: nav links at 13–15px/400, body and product labels at 15px/400, section titles at 22–30px/400, and the FARFETCH wordmark at 700. The 400-weight-only headings are a deliberate anti-bold move — section titles rest at regular weight, confident without shouting, while 700 is reserved for the wordmark and the most emphatic category labels. The custom geometry brings even stroke contrast and subtle humanist warmth that a system Helvetica wouldn't."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://farfetch.com",
+      "siteName": "FARFETCH España",
+      "extractedAt": "2026-06-03T17:15:01.137Z",
+      "variant": "compact"
+    }
+  }
+}

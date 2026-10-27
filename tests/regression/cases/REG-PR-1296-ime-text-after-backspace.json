@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1296-ime-text-after-backspace",
+  "kind": "fix",
+  "title": "The chat composer keeps the text an input method inserts right after its own Backspaces (Telex \"toi\" + \"o\" gives \"tôi\", not \"t\")",
+  "pr": 1296,
+  "area": "dsh/composer",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read the pinned fork's packages/client/ui-conversation/src/client/input/editor/runtime.ts.",
+    "S2: Read the fork package.json version.",
+    "S3: In vendor/tracy/deepseek-harness run vitest on packages/client/ui-conversation/tests/type-after-backspace.client.spec.ts."
+  ],
+  "expect": [
+    "S1: registerTypeAfterBackspace(editor: LexicalEditor) is defined, register() installs it right after registerPlainText(this.editor), and an insertText whose target ranges include a non-collapsed one is left to Lexical.",
+    "S2: the version is -tracy.47 or later.",
+    "S3: 3 of 3 pass. On the old pin 6ae58956eb (tracy.46) the input-method case gives 't' instead of 'tôi'."
+  ],
+  "selectors": {
+    "files": "vendor/tracy/deepseek-harness/packages/client/ui-conversation/src/client/input/editor/runtime.ts, vendor/tracy/deepseek-harness/packages/client/ui-conversation/tests/type-after-backspace.client.spec.ts"
+  },
+  "evidence": "Local stand 13/10/2026, Chrome macOS via CDP: 'toi' + 2 Backspaces + insertText 'ôi' left 't' on tracy.46.",
+  "fence": "The composer's handling of insertText after a handled Backspace: caret insertions are kept, range replacements stay suppressed.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1296-ime-text-after-backspace.mjs"]
+  }
+}

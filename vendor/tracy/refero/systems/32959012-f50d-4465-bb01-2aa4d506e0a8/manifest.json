@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "32959012-f50d-4465-bb01-2aa4d506e0a8",
+  "status": "complete",
+  "name": "Netflix Spain",
+  "url": "https://styles.refero.design/style/32959012-f50d-4465-bb01-2aa4d506e0a8",
+  "sourceWebsite": "https://netflix.com",
+  "extractedAt": "2026-04-11T17:50:41.173Z",
+  "capturedAt": "2026-10-08T05:10:01.374417+00:00",
+  "theme": "dark",
+  "industry": null,
+  "description": "The Infinite Digital Shelf. A cinematic experience where an endless library of content is presented against a pure black, theatrical backdrop.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/ad093659-4d00-40ed-bf3c-c4767f76692e.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/65a0bdf8-e90c-4b41-9602-f928dbeb7d42.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a3411df0-c7b8-4637-ab26-5708c9927a3e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/f3dcd21d-350c-4bae-beda-d82ef7aa43a4.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/9e2f6777-67b1-47e9-9180-350e1a8bbc85.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "f8e832c77e796af014a065f6102a1ec245e11b29393fdde8c1214428aa28ee4d",
+      "bytes": 13049
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "92429c0accf57743978c72aceb74f8806be1472512d679f5aa0aaaef8a69f21f",
+      "bytes": 168406
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6085f2285b6c871b0ed190e0d35faeb8ca8c194887a3be782c06ee51a6dc9800",
+      "bytes": 19948
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "4a9860fc029606786c049bca08232d6fd3ef119c50bf1b019c6317c78f7f1d23",
+      "bytes": 9212
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "95689eb51a46397d822b528b3b016eaeb32b7e85bc31a6b44789ac9720c46999",
+      "bytes": 7739
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "aaa5d27b0cfacd71049cb4698bdf897c2a4dc08cb6317912539ae7c3b924f857",
+      "bytes": 2165
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "d8c6d7261009463f200da4311caeb7dd0ee119a101e683a3cdc12acfa617996e",
+      "bytes": 449
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "7ed95d860114cf2805c324f8cd6128a775a9372a9767ddfebd69d96358bd6b58",
+      "bytes": 545
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "f79a16d01fa2d49b0909e320a6edb31478a3805edd2e2bd931c3d7c9fa00087a",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "76311b4045b98e2e98562a6e3a2fae06b4f741e0557b3879373afd7ef4d78523",
+      "bytes": 42353
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "fd5a51fbe3c690208bc9c18493a9fdd44587f3f56ea8569753740d61af9651cd",
+      "bytes": 21371
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "51f1a9b895321234c0977fad0472883b16cb4c73ebb68cdc0fc7ba882890b694",
+      "bytes": 40484
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b71e2c8f23534f7e5ac540387c56e7b7394e56c592c378799c465f08ccf924fa",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "a3d274b2a4b4129ac8a781f51e3fc03aa219675303049a312531afe55ce2c115",
+      "bytes": 1132
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "c673085d2ac513dc08ff4e6d3d8dfe52250a7687836a0b268047154f92bfdbaa",
+      "bytes": 1605
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0e4d933c-aa07-4787-9884-40a0e6c338e4",
+    "13b74e34-b824-4d1d-bd2c-bb9bfbc2d6e1",
+    "1514a95f-878c-4d4d-bb14-99d1b83f6227",
+    "1bd3b2ba-9ad9-44ed-9130-03f9d94de821",
+    "1f69df96-675d-4ee0-aa85-e085d9d39981",
+    "30c3aa18-4323-4448-8ddd-3ca933fe5780",
+    "32959012-f50d-4465-bb01-2aa4d506e0a8",
+    "35f89ccd-614d-4f8f-9cce-bb94309df237",
+    "4367b4cd-b002-4719-a418-cbce020f0d33",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6afa22a6-bec8-47c3-b5ee-5d11d64902cb",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "80b2cc74-62c5-4898-bc2b-12aa94ed2943",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "898f0127-d235-4832-bf33-ab21104f0529",
+    "905beb8c-9788-4ff4-888b-13370cacd4b0",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "cc59e195-fed0-4928-96d1-303752786073",
+    "d98dea0b-00a4-4c15-b4a9-d196e2c3e4b4",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "e586b296-bfac-4e93-add2-daa384712b39"
+  ]
+}

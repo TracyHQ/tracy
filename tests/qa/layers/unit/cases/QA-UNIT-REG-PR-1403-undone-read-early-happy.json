@@ -1,0 +1,63 @@
+{
+  "id": "QA-UNIT-REG-PR-1403-undone-read-early-happy",
+  "itemIds": ["regression:REG-PR-1403-undone-read-early"],
+  "requirement": "From a conversation's second turn on, the agent's first step reads the undone list from turn/undone at once instead of waiting for the open's seal; the first write still waits for the open",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1403-undone-read-early.json",
+    "ref": "PR #1403 (fix); fix evidence: 16/10/2026 local stand, a Joomla conversation's second turn: step 1 started 3.4 s after turn start, waiting for the open (previous turn's sweep + seal); the seal reaches 12–15 s under load. undoneSince reads only the previous turn's row",
+    "invariant": "S1: the step's undone list is the list turn/undone answered, before the open answers. S2: the write is held until the open answers (the seal guarantee does not move). S3: the 404 falls back to the open's list; a first turn never asks turn/undone.",
+    "productSources": [
+      "packages/core/tracy-core/src/chat-wait/index.mjs:17",
+      "packages/site/tracy-site-tabs/src/host/turn-record.mjs:412",
+      "packages/site/tracy-site-tabs/src/host/turn.mjs:168",
+      "packages/ui/tracy-chat-input/src/client/comment-turn.mjs:1511"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/site/tracy-site-tabs/test/turn-open-hold.test.mjs:415 import() with a computed specifier"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "from the second turn on the step's undone list comes from turn/undone at once",
+    "the open answers the turns the person undid since the last turn",
+    "🔒 option A: the next turn's first write waits until tracy-web says the earlier moment ended"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1403-undone-read-early"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/site/tracy-site-tabs", "tracy-site-tabs"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1403-undone-read-early",
+    "pr": 1403,
+    "kind": "fix",
+    "area": "site-changes/turn-open",
+    "file": "tests/regression/cases/REG-PR-1403-undone-read-early.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/site/tracy-site-tabs/test/turn-record.test.mjs",
+    "packages/site/tracy-site-tabs/test/turn-open-hold.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "from the second turn on the step's undone list comes from turn/undone at once",
+    "the open answers the turns the person undid since the last turn",
+    "🔒 option A: the next turn's first write waits until tracy-web says the earlier moment ended"
+  ],
+  "timeoutS": 600
+}

@@ -1,0 +1,84 @@
+{
+  "color": {
+    "signal-orange": {
+      "$value": "#e4822e",
+      "$type": "color",
+      "$description": "Signal Orange — Primary canvas — the full-viewport page background that changes on refresh; this is the design system"
+    },
+    "olive-ink": {
+      "$value": "#4f503e",
+      "$type": "color",
+      "$description": "Olive Ink — Primary text, headline color, and the only outlined action accent (outlined-button borders, link underlines) — warm dark green-brown that pairs with the orange field without competing chroma"
+    },
+    "oxblood": {
+      "$value": "#b13225",
+      "$type": "color",
+      "$description": "Oxblood — Alternating surface variation — one of the page colors the background can take on refresh"
+    },
+    "burnt-sienna": {
+      "$value": "#c97f40",
+      "$type": "color",
+      "$description": "Burnt Sienna — Alternating surface variation — secondary warm shade the canvas can adopt"
+    },
+    "near-black": {
+      "$value": "#081618",
+      "$type": "color",
+      "$description": "Near Black — Alternating surface variation — deep cool surface the canvas can adopt, creates the darkest mode of the page"
+    },
+    "pearl": {
+      "$value": "#feccc0",
+      "$type": "color",
+      "$description": "Pearl — Soft warm highlight — one of the lighter surface variations the canvas can adopt"
+    },
+    "sage-mist": {
+      "$value": "#99aa91",
+      "$type": "color",
+      "$description": "Sage Mist — Soft cool surface variation — one of the muted color states the canvas cycles through"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Album cover backgrounds, deep text on light surface states"
+    },
+    "ink": {
+      "$value": "#161616",
+      "$type": "color",
+      "$description": "Ink — Album cover backgrounds and heavy dark surface tone"
+    },
+    "charcoal": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Charcoal — Album cover and card backgrounds within the grid"
+    },
+    "ash": {
+      "$value": "#8d8d8d",
+      "$type": "color",
+      "$description": "Ash — Mid-neutral for muted helper text and secondary surface states"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Album cover backgrounds, text on dark surface states"
+    }
+  },
+  "font": {
+    "helvetica-lt-pro": {
+      "$value": "Helvetica LT Pro",
+      "$type": "fontFamily",
+      "$description": "The sole typeface across all text — display, heading, body, button, link. A single weight (400 regular) is used at every scale, which is the most distinctive typographic choice on the site. The whisper-regular giant-size headlines are anti-convention; most poster/editorial sites use 700–900 for display type, and using the book weight at 137px makes the headline feel stamped rather than shouted — authority through stillness."
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Helvetica — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://albumcolors.com",
+      "siteName": "2020",
+      "extractedAt": "2026-06-03T21:45:03.975Z",
+      "variant": "compact"
+    }
+  }
+}

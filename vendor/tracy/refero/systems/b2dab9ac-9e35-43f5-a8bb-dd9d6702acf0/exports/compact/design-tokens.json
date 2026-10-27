@@ -1,0 +1,84 @@
+{
+  "color": {
+    "electric-iris": {
+      "$value": "#6248ff",
+      "$type": "color",
+      "$description": "Electric Iris — Violet action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "soft-lilac": {
+      "$value": "#b8adf5",
+      "$type": "color",
+      "$description": "Soft Lilac — Decorative icon strokes, subtle border accents, secondary violet UI"
+    },
+    "iris-mist": {
+      "$value": "#e0daff",
+      "$type": "color",
+      "$description": "Iris Mist — Hover wash on violet buttons, soft chip backgrounds, tinted surface"
+    },
+    "ink": {
+      "$value": "#161616",
+      "$type": "color",
+      "$description": "Ink — Primary text, primary outline-button border, dark CTA text on light surfaces, icon strokes"
+    },
+    "graphite": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Graphite — Secondary dark text, body text on light surfaces"
+    },
+    "slate": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Slate — Muted image labels, dim link text, tertiary content"
+    },
+    "iron": {
+      "$value": "#4d4d4c",
+      "$type": "color",
+      "$description": "Iron — Subheadings, mid-emphasis labels, structural borders on dark sections"
+    },
+    "fog": {
+      "$value": "#686868",
+      "$type": "color",
+      "$description": "Fog — Muted helper text, meta labels, link text, badge text, secondary copy"
+    },
+    "bone": {
+      "$value": "#e4e2df",
+      "$type": "color",
+      "$description": "Bone — Hairline card borders, image placeholder backgrounds, soft dividers"
+    },
+    "cream": {
+      "$value": "#f1f0ee",
+      "$type": "color",
+      "$description": "Cream — Page canvas, icon stroke backgrounds, neutral badge fills, base surface"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Card surfaces, elevated panels, input fields, button backgrounds"
+    },
+    "acid-lemon": {
+      "$value": "#f0f41a",
+      "$type": "color",
+      "$description": "Acid Lemon — Occasional high-energy accent wash on dark surfaces, highlight tags"
+    }
+  },
+  "font": {
+    "relative": {
+      "$value": "Relative",
+      "$type": "fontFamily",
+      "$description": "All UI text — display headlines at 224/96/56/48px weight 500, body at 16–18px weight 400, captions at 12–14px weight 400. The single-family approach is deliberate: by keeping every level inside Relative, the brand avoids the 'body sans vs display sans' split most sites fall into, creating a unified typographic voice. Tight tracking (-0.02em to -0.03em) on all display sizes gives the large headlines a compressed, confident stance without becoming stencil-like."
+    },
+    "relative-faux": {
+      "$value": "Relative Faux",
+      "$type": "fontFamily",
+      "$description": "Reserved for the largest display moment (the secondary 'Ship faster' hero). A faux/display variant with slightly looser proportions, used once per page as a typographic exclamation point. Distinguishes that one moment from the standard Relative display weight elsewhere."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://relume.io",
+      "siteName": "Relume",
+      "extractedAt": "2026-06-03T19:35:23.514Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "color": {
+    "aubergine-ink": {
+      "$value": "#1b0624",
+      "$type": "color",
+      "$description": "Aubergine Ink — Primary text, heading borders, and brand character — the slight warm-purple undertone replaces conventional near-black, giving Duna a distinctive almost-black that is neither pure black nor navy"
+    },
+    "espresso": {
+      "$value": "#160f0c",
+      "$type": "color",
+      "$description": "Espresso — Primary action fill — filled buttons (Get started, Schedule a demo). Slightly warmer and darker than Aubergine Ink, used exclusively for interactive surfaces that need to feel pressed-into the page"
+    },
+    "warm-ash": {
+      "$value": "#766a7c",
+      "$type": "color",
+      "$description": "Warm Ash — Muted secondary text and subtle borders — a desaturated warm gray that softens long-form copy without competing with the primary text"
+    },
+    "graphite": {
+      "$value": "#444444",
+      "$type": "color",
+      "$description": "Graphite — Body text variant, icon strokes, input borders — the workhorse neutral for non-heading content"
+    },
+    "stone": {
+      "$value": "#898683",
+      "$type": "color",
+      "$description": "Stone — Tertiary text and dividers — a lighter warm gray for labels, metadata, and less important copy"
+    },
+    "onyx": {
+      "$value": "#0d0d0d",
+      "$type": "color",
+      "$description": "Onyx — Icon fills and select text instances — the deepest near-black in the scale, reserved for graphic emphasis"
+    },
+    "smoke": {
+      "$value": "#1a1816",
+      "$type": "color",
+      "$description": "Smoke — Icon borders, card edge cases, and dark UI elements — a warm-tinted dark for graphical components"
+    },
+    "charcoal": {
+      "$value": "#292421",
+      "$type": "color",
+      "$description": "Charcoal — Heading borders and dark decorative fills — a warm brown-black for borders on headings and subtle structural elements"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Primary surface — cards, buttons, and the dominant page background"
+    },
+    "linen": {
+      "$value": "#f7f7f5",
+      "$type": "color",
+      "$description": "Linen — Warm canvas background — the off-white page tint that gives the entire system its warm, paper-like atmosphere instead of clinical pure white"
+    },
+    "bone": {
+      "$value": "#edece7",
+      "$type": "color",
+      "$description": "Bone — Card surfaces and subtle elevated panels — a barely-warm cream for cards sitting on the Linen canvas"
+    },
+    "mist": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Mist — Input field background — the only functional surface tint that signals a fillable area"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "gt-america": {
+      "$value": "GT America",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all UI — body at 400, emphasis at 500, display at 400 with aggressive negative tracking. The compressed, geometric forms at large sizes give headlines an editorial, almost legal-document authority rather than the typical rounded SaaS friendliness."
+    },
+    "gt-america-regular": {
+      "$value": "GT America Regular",
+      "$type": "fontFamily",
+      "$description": "GT America Regular — detected in extracted data but not described by AI"
+    },
+    "gt-america-trial-rg": {
+      "$value": "GT America Trial Rg",
+      "$type": "fontFamily",
+      "$description": "GT America Trial Rg — detected in extracted data but not described by AI"
+    },
+    "gt-america-trial-md": {
+      "$value": "GT America Trial Md",
+      "$type": "fontFamily",
+      "$description": "GT America Trial Md — detected in extracted data but not described by AI"
+    },
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "Inter — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://duna.com",
+      "siteName": "Duna",
+      "extractedAt": "2026-06-03T17:17:21.465Z",
+      "variant": "compact"
+    }
+  }
+}

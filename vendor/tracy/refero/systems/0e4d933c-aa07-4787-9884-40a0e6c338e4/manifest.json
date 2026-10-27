@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "0e4d933c-aa07-4787-9884-40a0e6c338e4",
+  "status": "complete",
+  "name": "Netflix Spain",
+  "url": "https://styles.refero.design/style/0e4d933c-aa07-4787-9884-40a0e6c338e4",
+  "sourceWebsite": "https://www.netflix.com",
+  "extractedAt": "2026-06-03T22:05:43.990Z",
+  "capturedAt": "2026-10-08T05:08:12.637824+00:00",
+  "theme": "dark",
+  "industry": "media",
+  "description": "A black cinema lobby with one red exit sign.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3b62f5fa-13cf-489a-9f98-9ba781c06dd3.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/2f3b738e-4906-4299-8249-e1b3849a480f.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/4462068d-8683-4140-9573-20f60bd44c58.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/d32dd36e-e590-4185-be1e-1205b794c5d6.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0064b8f1-c049-46ab-af2a-02bb3f066893.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "d565e8ee0d585747ff23e6ea82207b7b3439eef6d7f846ce280aa93d47c42132",
+      "bytes": 19706
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "be3d5463a5544396928d743bfc5ce5ac115b34907f28182a93a0d33434a0af5f",
+      "bytes": 168712
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "caaff6d082d0d0f13e935844eda259a149c8381b980b61c2e6b9da7533449256",
+      "bytes": 17162
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "c0169bf4f76381ffa17493ed604470ed85f5113a4dc73c1a45695a5cde5b902c",
+      "bytes": 11191
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "feb50667ff12e128d6ec0e19b0a07d635d0a259588c1376a3fa5f12751d4778b",
+      "bytes": 12869
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "4b92a03c9dbeac1aaf0c20e1dbe1df378ca5980370ae5c8577160c659fc645bb",
+      "bytes": 3644
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e6762d13f92a2330a6173d046c95b11d42c8431f40bed21c40949012ba4625d7",
+      "bytes": 583
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2ebe5d0fc5d34f36a28e67299ce21662d0050bedf8062b708fcc9a2bf9b9e50a",
+      "bytes": 876
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "50e35c64707ad842a673766c4207c2e03c269ae3fa60817d5ede3e11a6dd35f9",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "8dfcd1da25b7dbd84cbaf12911986158a7fdba4a3e36ba90295e06ede5ffcd43",
+      "bytes": 43464
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "c1dbd10f4350016146a606e270d9f5f971642f2660bdfebe48bbe2647462d7d3",
+      "bytes": 22313
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "c322cd0c99c019e9e8aca9f42644466a87a7620bf96552e71f4c8810aead5afe",
+      "bytes": 44843
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3b6db48500e1b47039e1dd5b264eae2638bff2ebfaa0a031e268ba1823108343",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "2230760c4b43774fb4e2d73d2554b44e7d565ac45b82668541a14d5a990b26aa",
+      "bytes": 1313
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "7328fcf6b7d54acc4c2b4a011a418075171d915cd9da5c61ba1baeaea2d9e4e6",
+      "bytes": 2202
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0e4d933c-aa07-4787-9884-40a0e6c338e4",
+    "1514a95f-878c-4d4d-bb14-99d1b83f6227",
+    "1a8ba699-24cb-4b35-8db1-c595c578199c",
+    "1bd3b2ba-9ad9-44ed-9130-03f9d94de821",
+    "30c3aa18-4323-4448-8ddd-3ca933fe5780",
+    "32959012-f50d-4465-bb01-2aa4d506e0a8",
+    "35f89ccd-614d-4f8f-9cce-bb94309df237",
+    "3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+    "4367b4cd-b002-4719-a418-cbce020f0d33",
+    "607e0dbf-e2fc-45c9-b939-946b8981c156",
+    "6afa22a6-bec8-47c3-b5ee-5d11d64902cb",
+    "764b6a64-c233-4e0f-b8e1-bc01e2f8aa16",
+    "8618f649-6d1c-45ca-aff8-e7f04928d8dd",
+    "898f0127-d235-4832-bf33-ab21104f0529",
+    "905beb8c-9788-4ff4-888b-13370cacd4b0",
+    "96eae189-95ad-4a38-83d1-840497e5daf3",
+    "be6c7488-9cea-43db-bb28-2606f53ade14",
+    "cc59e195-fed0-4928-96d1-303752786073",
+    "d98dea0b-00a4-4c15-b4a9-d196e2c3e4b4",
+    "da7e5084-9e5d-4eb2-bb10-4c2d7733a56e",
+    "e586b296-bfac-4e93-add2-daa384712b39"
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "color": {
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, heading type, dark icons, and the strongest foreground layer"
+    },
+    "carbon": {
+      "$value": "#121212",
+      "$type": "color",
+      "$description": "Carbon — Filled primary buttons, active nav state, dark surface fill"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Secondary headings, button labels on light surfaces, heavy icon strokes"
+    },
+    "slate": {
+      "$value": "#666666",
+      "$type": "color",
+      "$description": "Slate — Body secondary text, helper copy, muted metadata"
+    },
+    "ash": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Ash — Tertiary text, disabled states, placeholder copy, subtle borders"
+    },
+    "fog": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Fog — Inactive icons, low-emphasis dividers, shadow tinting"
+    },
+    "pebble": {
+      "$value": "#8b8c8f",
+      "$type": "color",
+      "$description": "Pebble — Icon strokes on neutral surfaces, muted glyph color"
+    },
+    "smoke": {
+      "$value": "#4d4d4d",
+      "$type": "color",
+      "$description": "Smoke — Heavy body text where Obsidian feels too sharp, small caption emphasis"
+    },
+    "charcoal-veil": {
+      "$value": "#3d3d3d",
+      "$type": "color",
+      "$description": "Charcoal Veil — Navigation bar text and borders — the dark nav strip registers as a separate layer"
+    },
+    "dusk": {
+      "$value": "#292929",
+      "$type": "color",
+      "$description": "Dusk — Deep surface fill for elevated dark blocks and image overlays"
+    },
+    "paper": {
+      "$value": "#faf8fd",
+      "$type": "color",
+      "$description": "Paper — Page canvas — barely-there warm/lavender tint that separates the site from pure white"
+    },
+    "bone": {
+      "$value": "#f9f9fa",
+      "$type": "color",
+      "$description": "Bone — Card surfaces, secondary panels, subtle raised containers"
+    },
+    "mist": {
+      "$value": "#eaebee",
+      "$type": "color",
+      "$description": "Mist — Hairline borders, divider rules, button outlines, input borders"
+    },
+    "ice-wash": {
+      "$value": "#cfe7ed",
+      "$type": "color",
+      "$description": "Ice Wash — Pale cool-blue background tint for highlighted cards and feature panels"
+    },
+    "iris-sweep": {
+      "$value": "#4e6fff",
+      "$type": "color",
+      "$description": "Iris Sweep — Brand logo gradient midpoint — the wordmark's signature purple-to-blue sweep"
+    },
+    "orchid-edge": {
+      "$value": "#ee7cff",
+      "$type": "color",
+      "$description": "Orchid Edge — Brand logo gradient start — warm violet anchor of the wordmark sweep"
+    },
+    "sky-drift": {
+      "$value": "#559cff",
+      "$type": "color",
+      "$description": "Sky Drift — Brand logo gradient end — cool blue terminus of the wordmark sweep"
+    }
+  },
+  "font": {
+    "figtree": {
+      "$value": "Figtree",
+      "$type": "fontFamily",
+      "$description": "Single-family system: 700 carries the hero and section headlines at 48–60px with tight tracking, 600 handles subheadings and prominent labels at 24–34px, 500 covers button labels and emphasized body at 16–18px, 400 runs body and caption copy at 13–16px. The geometric, low-contrast character of Figtree keeps the all-black type from feeling oppressive."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://pixso.net",
+      "siteName": "Pixso",
+      "extractedAt": "2026-06-03T20:18:25.824Z",
+      "variant": "compact"
+    }
+  }
+}

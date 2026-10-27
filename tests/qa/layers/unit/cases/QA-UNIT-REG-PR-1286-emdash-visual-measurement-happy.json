@@ -1,0 +1,69 @@
+{
+  "id": "QA-UNIT-REG-PR-1286-emdash-visual-measurement-happy",
+  "itemIds": ["regression:REG-PR-1286-emdash-visual-measurement"],
+  "requirement": "Visual QA respects hidden roles, verified fragment status and occluded border geometry",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1286-emdash-visual-measurement.json",
+    "ref": "PR #1286 (fix); fix evidence: Independent responsive r10 observed 34 false nav/CTA findings plus null-response fragment navigation failure. Baseline and fixed fixture output are retained in acceptance evidence. Contact r12 false seam aligned sticky header bottom with an occluded input border at document y629.",
+    "invariant": "Hidden roles are absent on both sides; a genuinely visible source-only role still produces a parity finding. Same-document navigation preserves independently verified HTTP status; a real 404 never passes as 200. A border proven covered by an opaque surface or border is ignored; real visible, offscreen and nested seams still produce findings.",
+    "productSources": [
+      "packages/cms/tracy-emdash-theme-base/tools/qa-browser.mjs:29",
+      "packages/cms/tracy-emdash-theme-base/tools/visual-lib.mjs:74"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:248 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:328 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:337 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:389 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:454 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:456 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:486 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:557 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:664 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:717 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:731 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:744 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:757 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:793 readFileSync() with a computed path",
+      "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs:885 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:chrome"],
+  "assertionIds": ["REG-PR-1286-emdash-visual-measurement.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1286-emdash-visual-measurement"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/cms/tracy-emdash-theme-base", "tracy-emdash-theme-base"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1286-emdash-visual-measurement",
+    "pr": 1286,
+    "kind": "fix",
+    "area": "site-editing/template-acceptance",
+    "file": "tests/regression/cases/REG-PR-1286-emdash-visual-measurement.json"
+  },
+  "command": [
+    "env",
+    "RENDER_CHROME_CHANNEL=chrome",
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern=hidden responsive nav|same-document fragment navigation|seam scanning ignores",
+    "packages/cms/tracy-emdash-theme-base/tests/visual.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["chrome"],
+  "tests": [],
+  "timeoutS": 90
+}

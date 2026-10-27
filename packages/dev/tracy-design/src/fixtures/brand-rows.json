@@ -1,0 +1,206 @@
+[
+  {
+    "id": "brand:lucaswp.tracy.ai",
+    "host": "lucaswp.tracy.ai",
+    "kind": "own",
+    "slug": "lucaswp-tracy-ai",
+    "name": "lucaswp.tracy.ai",
+    "category": "Your brand",
+    "description": "Tracy pairs an AI agent with each of your sites — armed with the skills of the teams who operate these platforms best. It reads, checks and proposes; you approve what ships.",
+    "vi": false,
+    "nav": "top-left",
+    "hero": "centered",
+    "source": {
+      "url": "https://lucaswp.tracy.ai/",
+      "finalUrl": "https://lucaswp.tracy.ai/",
+      "extractedAt": "2026-09-06T04:03:36.562Z",
+      "thin": false,
+      "blocked": false
+    },
+    "refined": [
+      "name: \"One desk for every site you run.\" → \"lucaswp.tracy.ai\" (the title is a sentence; using the hostname)"
+    ],
+    "counts": {
+      "colors": 21,
+      "fonts": 0,
+      "logos": 1,
+      "headings": 18,
+      "engineFiles": 18,
+      "slots": 151
+    },
+    "brand": {
+      "name": "lucaswp.tracy.ai",
+      "tagline": "One desk for every site you run.",
+      "logo": null,
+      "colors": [
+        {
+          "role": "background",
+          "hex": "#ffffff"
+        },
+        {
+          "role": "surface",
+          "hex": "#f5f5f5"
+        },
+        {
+          "role": "foreground",
+          "hex": "#000000"
+        },
+        {
+          "role": "muted",
+          "hex": "#8c8c8c"
+        },
+        {
+          "role": "border",
+          "hex": "#dbdbdb"
+        },
+        {
+          "role": "accent",
+          "hex": "#0071e3"
+        },
+        {
+          "role": "accent-secondary",
+          "hex": "#0066cc"
+        }
+      ],
+      "display": "Inter",
+      "body": "Inter",
+      "imagery": []
+    }
+  },
+  {
+    "id": "brand:linear.app",
+    "host": "linear.app",
+    "kind": "reference",
+    "slug": "linear",
+    "name": "Linear",
+    "category": "Reference",
+    "description": "Purpose-built for planning and building products with AI agents.",
+    "vi": false,
+    "nav": "top-left",
+    "hero": "centered",
+    "source": {
+      "url": "https://linear.app/",
+      "finalUrl": "https://linear.app/",
+      "extractedAt": "2026-09-06T04:03:39.181Z",
+      "thin": false,
+      "blocked": false
+    },
+    "refined": [
+      "name: \"Linear – The system for product development\" → \"Linear\" (from the shortest title segment)"
+    ],
+    "counts": {
+      "colors": 19,
+      "fonts": 0,
+      "logos": 5,
+      "headings": 15,
+      "engineFiles": 18,
+      "slots": 151
+    },
+    "brand": {
+      "name": "Linear",
+      "tagline": "The product development system for teams and agents The product development system for teams and agents The product development system for teams and agents",
+      "logo": null,
+      "colors": [
+        {
+          "role": "background",
+          "hex": "#ffffff"
+        },
+        {
+          "role": "surface",
+          "hex": "#f5f5f5"
+        },
+        {
+          "role": "foreground",
+          "hex": "#000000"
+        },
+        {
+          "role": "muted",
+          "hex": "#8c8c8c"
+        },
+        {
+          "role": "border",
+          "hex": "#dbdbdb"
+        },
+        {
+          "role": "accent",
+          "hex": "#e4f222"
+        },
+        {
+          "role": "accent-secondary",
+          "hex": "#27a644"
+        }
+      ],
+      "display": "Inter",
+      "body": "Inter",
+      "imagery": []
+    }
+  },
+  {
+    "id": "brand:stripe.com",
+    "host": "stripe.com",
+    "kind": "reference",
+    "slug": "stripe",
+    "name": "Stripe",
+    "category": "Reference",
+    "description": "Stripe is a financial services platform that helps all types of businesses accept payments, build flexible billing models, and manage money movement.",
+    "vi": false,
+    "nav": "top-left",
+    "hero": "centered",
+    "source": {
+      "url": "https://stripe.com/",
+      "finalUrl": "https://stripe.com/ae",
+      "extractedAt": "2026-09-06T04:03:44.814Z",
+      "thin": false,
+      "blocked": false
+    },
+    "refined": [
+      "name: \"Stripe | Financial Infrastructure to Grow Your Revenue\" → \"Stripe\" (from the shortest title segment)"
+    ],
+    "counts": {
+      "colors": 26,
+      "fonts": 3,
+      "logos": 6,
+      "headings": 32,
+      "engineFiles": 18,
+      "slots": 151
+    },
+    "brand": {
+      "name": "Stripe",
+      "tagline": "Financial infrastructure to grow your revenue. Accept payments, offer financial services, and implement custom revenue models—from your first transaction to your billionth.",
+      "logo": null,
+      "colors": [
+        {
+          "role": "background",
+          "hex": "#000000"
+        },
+        {
+          "role": "surface",
+          "hex": "#0a0a0a"
+        },
+        {
+          "role": "foreground",
+          "hex": "#ffffff"
+        },
+        {
+          "role": "muted",
+          "hex": "#737373"
+        },
+        {
+          "role": "border",
+          "hex": "#242424"
+        },
+        {
+          "role": "accent",
+          "hex": "#1c1e54"
+        },
+        {
+          "role": "accent-secondary",
+          "hex": "#031323"
+        }
+      ],
+      "display": "sohne-var",
+      "body": "sohne-var",
+      "imagery": []
+    }
+  }
+]

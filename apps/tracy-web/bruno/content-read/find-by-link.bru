@@ -1,0 +1,31 @@
+meta {
+  name: find by link
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.read",
+    "params": { "view": "pages", "url": "{{pageLink}}" }
+  }
+}
+
+docs {
+  # Which page a link shows
+
+  The same walk as "view pages", kept to the pages a link points at. The link may be written
+  the way a customer pastes it: without a scheme, with tracking parameters, with or without a
+  trailing slash.
+
+  `pageLink` is set by "view pages"; replace it with any link on the site to try others.
+
+  Look for: `link` echoed back, and `pages[]` holding the match (empty when no page answers
+  that link).
+}

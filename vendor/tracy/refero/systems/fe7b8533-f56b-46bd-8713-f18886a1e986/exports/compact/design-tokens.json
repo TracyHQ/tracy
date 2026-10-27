@@ -1,0 +1,74 @@
+{
+  "color": {
+    "horizon-navy": {
+      "$value": "#001733",
+      "$type": "color",
+      "$description": "Horizon Navy — Primary text, nav text, heading fills, dark image borders, section backgrounds — the dominant ink of the system, never pure black"
+    },
+    "signal-blue": {
+      "$value": "#006aed",
+      "$type": "color",
+      "$description": "Signal Blue — Primary action backgrounds, filled CTA buttons, active nav state, circular icon buttons, link accents on dark surfaces — vivid cobalt that earns the click; Signature gradient for brand-defining moments — the only place cyan appears, anchoring the visual identity"
+    },
+    "cyan-dawn": {
+      "$value": "#18dcdc",
+      "$type": "color",
+      "$description": "Cyan Dawn — Gradient stop for the Aurora signature gradient — never used as a solid fill, only as the opening note of the spectrum"
+    },
+    "slate-whisper": {
+      "$value": "#68748d",
+      "$type": "color",
+      "$description": "Slate Whisper — Secondary body text, muted helper copy, inactive meta — cool gray that recedes behind Horizon Navy"
+    },
+    "graphite-dim": {
+      "$value": "#464e5d",
+      "$type": "color",
+      "$description": "Graphite Dim — Tertiary text and link borders in body contexts — a half-step darker than Slate for slight emphasis"
+    },
+    "fog": {
+      "$value": "#d1d6e0",
+      "$type": "color",
+      "$description": "Fog — Heading underline, hairline borders on text-adjacent elements — the lightest visible stroke in the system"
+    },
+    "mist": {
+      "$value": "#e6e9f0",
+      "$type": "color",
+      "$description": "Mist — Section dividers, card borders, footer separators — barely-there cool gray for structural separation"
+    },
+    "hailstone": {
+      "$value": "#f3f4f8",
+      "$type": "color",
+      "$description": "Hailstone — Card surfaces, secondary panel backgrounds, subtle highlight washes — the first step off pure white"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, nav background, card fill, button text on Signal Blue — the base everything else floats on"
+    },
+    "coal": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Coal — Icon fills on light surfaces, full-bleed dark section fallback, logo mark — used sparingly, Horizon Navy handles most dark work"
+    }
+  },
+  "font": {
+    "inter": {
+      "$value": "Inter",
+      "$type": "fontFamily",
+      "$description": "All interface and editorial type — Inter is the only typeface. Weight 500 for nav and labels, weight 400 for body, weight 600 for emphasis inside body. The extreme size range (12px caption to 90px display) with tight tracking on the large end makes Inter feel architectural rather than friendly; it carries the highway-at-dawn feel."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://aurora.tech",
+      "siteName": "Aurora",
+      "extractedAt": "2026-06-03T19:00:05.482Z",
+      "variant": "compact"
+    }
+  }
+}

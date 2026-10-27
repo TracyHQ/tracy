@@ -1,0 +1,18 @@
+:root {
+  /* Colors */
+  --color-pitch-black: #141414;
+  --color-warm-cream: #fdf9f0;
+  --color-charcoal-900: #232323;
+  --color-bone-gray: #eeeeee;
+  --color-acid-lime: #c7ff69;
+  --color-ember-orange: #ff6d38;
+  --color-iris-violet: #7a78ff;
+  --color-toxic-green: #00a652;
+  --color-cobalt-blue: #478bff;
+  --color-schoolbus-yellow: #ffc412;
+  --color-lilac-mist: #ccccff;
+
+  /* Typography — Font Families */
+  --font-oldschoolgrotesk: 'OldschoolGrotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-aeonik: 'Aeonik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

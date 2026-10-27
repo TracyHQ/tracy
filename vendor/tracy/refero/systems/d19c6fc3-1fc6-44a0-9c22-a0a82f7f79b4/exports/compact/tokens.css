@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-pure-white: #ffffff;
+  --color-absolute-black: #000000;
+  --color-mid-graphite: #333333;
+  --color-light-silver: #cccccc;
+  --color-hyper-blue: #0000ff;
+
+  /* Typography — Font Families */
+  --font-studiofeixensans: 'Studiofeixensans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

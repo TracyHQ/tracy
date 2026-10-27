@@ -1,0 +1,37 @@
+{
+  "id": "QA-MAIL-team.invite_cancelled-happy-links",
+  "itemIds": [
+    "letter:team.invite_cancelled:en",
+    "letter:team.invite_cancelled:vi",
+    "letter:team.invite_cancelled:de",
+    "letter:team.invite_cancelled:it",
+    "letter:team.invite_cancelled:fr",
+    "letter:team.invite_cancelled:nl",
+    "letter:team.invite_cancelled:zh",
+    "letter:team.invite_cancelled:es"
+  ],
+  "requirement": "team.invite_cancelled links absolutely to the deployment: no button, plus the manage link",
+  "oracle": {
+    "source": "apps/tracy-web/src/mail/letters/team.js and comments.js header comments (approved copy, spec #809)",
+    "ref": "per-kind button, facts and \"never mailed\" rules",
+    "invariant": "button: none; footer carries Manage notifications"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": [
+      "apps/tracy-web/src/mail",
+      "apps/tracy-web/src/notifications",
+      "apps/tracy-web/src/lib",
+      "apps/tracy-web/src/identity"
+    ],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["mail.letter.links#team.invite_cancelled:"],
+  "redProof": null,
+  "legacyIds": []
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "tracy-refero-snapshot/v1",
+  "status": "complete-public-discovery",
+  "startedAt": "2026-10-08T05:07:41.447941+00:00",
+  "finishedAt": "2026-10-08T05:20:07.083805+00:00",
+  "source": "https://styles.refero.design",
+  "authorization": {
+    "basis": "User reports separate license agreement and authorizes full acquisition and local vendor storage",
+    "confirmedDate": "2026-10-08",
+    "agreementTextStored": false
+  },
+  "count": 1342,
+  "discoveredCount": 1342,
+  "catalogSha256": "0e29982adb29118ae2aeac8e51a1ab17b21fe8870702ded80d480b9c8be50ef8",
+  "exporterSha256": "2518ee03388ba8e5a9e883db75e0e7fd991e48609e6fa8c0934b90e44b0e2877",
+  "scope": "All style UUIDs in public sitemaps, collection pages and linked style pages; private or unlisted records cannot be enumerated through the denied gallery API.",
+  "captureStartedAt": "2026-10-08T05:07:35.335866+00:00",
+  "captureFinishedAt": "2026-10-08T05:20:05.551222+00:00",
+  "verificationStatus": "PASS",
+  "sitemapStableAtEnd": true
+}

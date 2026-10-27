@@ -1,0 +1,49 @@
+{
+  "name": "@lexingtonthemes/astro-image-inspector",
+  "version": "0.2.4",
+  "description": "Astro Dev Toolbar app to inspect images on hover: actual size, render size, and warnings",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "astro": ">=4.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "astro": "^5.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "astro",
+    "astro-integration",
+    "withastro",
+    "dev-toolbar",
+    "devtools",
+    "images",
+    "inspector",
+    "lexingtonthemes"
+  ],
+  "homepage": "https://github.com/Lexington-Themes/astro-image-inspector",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lexington-Themes/astro-image-inspector.git"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

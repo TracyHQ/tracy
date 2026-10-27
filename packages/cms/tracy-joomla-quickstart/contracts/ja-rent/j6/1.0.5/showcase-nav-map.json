@@ -1,0 +1,596 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v2",
+  "profileVersion": "1.0.0",
+  "contract": "ja-rent/j6/1.0.5",
+  "baseHash": "b6a01c4c7f604836727a7eb51ace00b868e2d29226684babd36e176c268f89c1",
+  "baseFiles": {
+    "manifest.json": "867ffe4dfe4f54160bc0aba30003e2a1e93883bc9e7aa603cfe65aa58920243b",
+    "content-map.json": "7cc7e6e3d1a0f2a354f87c2cbb7df413c5e9e658115859a5932c1be756a58b8c",
+    "presentation-lock.json": "056b29de1d363afc2d45bca2864fc92c8e7f3d8ddd11ccd08f4806a51a5f6bf1"
+  },
+  "inputs": {},
+  "decisionsHash": "728744a22d2bef03e4086dbdb91bd4d6b7d45cfc1dff9d107b646ee7b6f67ccf",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-126",
+      "identity": {
+        "path": "explore/joomla-pages/login-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Login Page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-128",
+      "identity": {
+        "path": "explore/joomla-pages",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Joomla! Pages",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-133",
+      "identity": {
+        "path": "explore/joomla-pages/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Joomla! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views))"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-142",
+      "identity": {
+        "path": "explore/joomla-pages/404-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "404 page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-143",
+      "identity": {
+        "path": "explore/joomla-pages/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Joomla! Pages\": the Joomla sample-pages branch of the JA demo (error/offline/typography, sample content views)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-144",
+      "identity": {
+        "path": "explore/features/shortcodes",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Shortcodes",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Shortcodes\" demonstrates the template's content shortcodes; it is not a page of the business"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-151",
+      "identity": {
+        "path": "explore/joomla-pages/registration-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Registration Page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-156",
+      "identity": {
+        "path": "user-site-showcase",
+        "menutype": "usefull-links",
+        "language": "*"
+      },
+      "label": "User site showcase",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"User site showcase\" links to JoomlArt's gallery of other customers' sites, not to this business"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-171",
+      "identity": {
+        "path": "explore/colors",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Colors",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Colors\" lists the template's colour variants of the home page"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-172",
+      "identity": {
+        "path": "explore/colors/orange-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Orange Color",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Colors\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-173",
+      "identity": {
+        "path": "explore/colors/green-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Green Color",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Colors\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-174",
+      "identity": {
+        "path": "explore/colors/yellow-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Yellow Color",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Colors\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-175",
+      "identity": {
+        "path": "explore/colors/default-color",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Default Color",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (\"Colors\" lists the template's colour variants of the home page)"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-9",
+      "identity": {
+        "title": "Ja_Rent - Default",
+        "template": "ja_rent",
+        "client_id": "0"
+      },
+      "label": "Ja_Rent - Default · Explore · column 128",
+      "style": {
+        "id": 9,
+        "template": "ja_rent"
+      },
+      "menutype": "mainmenu",
+      "item": 178,
+      "column": 128,
+      "path": "mm_config.mainmenu.item-178.sub.rows[item=128]",
+      "before": "01b8e143e7562ac58b0ea5c340e3fd67ce775705c03ad3df3b86ac96a13a2671",
+      "after": "2b0a3b5231d43191ecc3b4e554c260462c618b39c6d8038f0e03cc3020534dfb",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-128 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-9",
+      "identity": {
+        "title": "Ja_Rent - Default",
+        "template": "ja_rent",
+        "client_id": "0"
+      },
+      "label": "Ja_Rent - Default · Explore · column 171",
+      "style": {
+        "id": 9,
+        "template": "ja_rent"
+      },
+      "menutype": "mainmenu",
+      "item": 178,
+      "column": 171,
+      "path": "mm_config.mainmenu.item-178.sub.rows[item=171]",
+      "before": "2b0a3b5231d43191ecc3b4e554c260462c618b39c6d8038f0e03cc3020534dfb",
+      "after": "a88509fa7c8b59a47916a7a0a657109b2e7647b6b63b2cbec0bb0808551ceb68",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-171 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "Ja_Rent - Features Intro",
+        "template": "ja_rent",
+        "client_id": "0"
+      },
+      "label": "Ja_Rent - Features Intro · Explore · column 128",
+      "style": {
+        "id": 10,
+        "template": "ja_rent"
+      },
+      "menutype": "mainmenu",
+      "item": 178,
+      "column": 128,
+      "path": "mm_config.mainmenu.item-178.sub.rows[item=128]",
+      "before": "283d1a9c84c7395f8f53cac5faecb87e10975d0466918154f38198073e699347",
+      "after": "69a39a11cecdf0a8eacba2d9132ee331015750f8d3883de82d72b771396ce1a7",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-128 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "Ja_Rent - Features Intro",
+        "template": "ja_rent",
+        "client_id": "0"
+      },
+      "label": "Ja_Rent - Features Intro · Explore · column 171",
+      "style": {
+        "id": 10,
+        "template": "ja_rent"
+      },
+      "menutype": "mainmenu",
+      "item": 178,
+      "column": 171,
+      "path": "mm_config.mainmenu.item-178.sub.rows[item=171]",
+      "before": "69a39a11cecdf0a8eacba2d9132ee331015750f8d3883de82d72b771396ce1a7",
+      "after": "16692184219d023b7f6ad3a540cb01a0175744a010f4cc74aefb135942db1856",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-171 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-11",
+      "identity": {
+        "title": "Ja_Rent - Orange",
+        "template": "ja_rent",
+        "client_id": "0"
+      },
+      "label": "Ja_Rent - Orange · Explore · column 128",
+      "style": {
+        "id": 11,
+        "template": "ja_rent"
+      },
+      "menutype": "mainmenu",
+      "item": 178,
+      "column": 128,
+      "path": "mm_config.mainmenu.item-178.sub.rows[item=128]",
+      "before": "985b72a8f7b7f02ad67845b602b08c8a6cff712130f43682589530c934a56fe0",
+      "after": "be5a1269ff8c617eb134567a6d06ef8fe6a11b2819e41e5185122cc33a81b988",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-128 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-11",
+      "identity": {
+        "title": "Ja_Rent - Orange",
+        "template": "ja_rent",
+        "client_id": "0"
+      },
+      "label": "Ja_Rent - Orange · Explore · column 171",
+      "style": {
+        "id": 11,
+        "template": "ja_rent"
+      },
+      "menutype": "mainmenu",
+      "item": 178,
+      "column": 171,
+      "path": "mm_config.mainmenu.item-178.sub.rows[item=171]",
+      "before": "be5a1269ff8c617eb134567a6d06ef8fe6a11b2819e41e5185122cc33a81b988",
+      "after": "44de16a5c1c69e63c7245676eed95665e7259b98c2d249278d74bb3a74f0cc1a",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-171 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "Ja_Rent - Green",
+        "template": "ja_rent",
+        "client_id": "0"
+      },
+      "label": "Ja_Rent - Green · Explore · column 128",
+      "style": {
+        "id": 12,
+        "template": "ja_rent"
+      },
+      "menutype": "mainmenu",
+      "item": 178,
+      "column": 128,
+      "path": "mm_config.mainmenu.item-178.sub.rows[item=128]",
+      "before": "d53fc5ef8e3fbd51efc73ad2d5f14e3f3bd6cb8e2c621230974dc677619ebd6a",
+      "after": "6ad2e44928f96c8c6b568e5ba5e2eeb23dafc35d9996ca7f209bfe28a46c9617",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-128 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "Ja_Rent - Green",
+        "template": "ja_rent",
+        "client_id": "0"
+      },
+      "label": "Ja_Rent - Green · Explore · column 171",
+      "style": {
+        "id": 12,
+        "template": "ja_rent"
+      },
+      "menutype": "mainmenu",
+      "item": 178,
+      "column": 171,
+      "path": "mm_config.mainmenu.item-178.sub.rows[item=171]",
+      "before": "6ad2e44928f96c8c6b568e5ba5e2eeb23dafc35d9996ca7f209bfe28a46c9617",
+      "after": "14398ccb639e2214b93ddb2e20bc57fb33dd78d74a64ea71246db71cdcb8e148",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-171 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-13",
+      "identity": {
+        "title": "Ja_Rent - Yellow",
+        "template": "ja_rent",
+        "client_id": "0"
+      },
+      "label": "Ja_Rent - Yellow · Explore · column 128",
+      "style": {
+        "id": 13,
+        "template": "ja_rent"
+      },
+      "menutype": "mainmenu",
+      "item": 178,
+      "column": 128,
+      "path": "mm_config.mainmenu.item-178.sub.rows[item=128]",
+      "before": "4bfd2d7feeaa48a7c60622893ef6cba43437c19900c3b392bf798bd2ffc6ec74",
+      "after": "20c36c60e26d3a951eaa1301fc3aa01411203ce3ee8790d9d5448d46a4f8de33",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-128 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    },
+    {
+      "op": "templateStyle.megaColumnRemove",
+      "key": "templateStyle-13",
+      "identity": {
+        "title": "Ja_Rent - Yellow",
+        "template": "ja_rent",
+        "client_id": "0"
+      },
+      "label": "Ja_Rent - Yellow · Explore · column 171",
+      "style": {
+        "id": 13,
+        "template": "ja_rent"
+      },
+      "menutype": "mainmenu",
+      "item": 178,
+      "column": 171,
+      "path": "mm_config.mainmenu.item-178.sub.rows[item=171]",
+      "before": "20c36c60e26d3a951eaa1301fc3aa01411203ce3ee8790d9d5448d46a4f8de33",
+      "after": "838e6d8cc65adae3b0347870b6377bd52d81f14fef9ad41ce6f9faf8a9540bfc",
+      "rule": "hide.mega-column-of-hidden-items",
+      "reason": "the column headed by menuItem-171 holds only entries that leave the navigation; T3 starts the first column at the first shown child but ends it at the next head, so the panel would list the other columns twice; the columns left in its row are re-spread over the row's old width"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/home",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-122",
+      "label": "Blog",
+      "where": "mainmenu/explore/features/joomla-blog-style-1",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-134",
+      "label": "Template Info",
+      "where": "usefull-links/template-info",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-135",
+      "label": "Support Forum",
+      "where": "usefull-links/support-forum",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-136",
+      "label": "T3 Framework",
+      "where": "usefull-links/t3-framework",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-137",
+      "label": "Template Preview",
+      "where": "usefull-links/template-preview",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-138",
+      "label": "Documentation",
+      "where": "usefull-links/documentation",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-141",
+      "label": "About us",
+      "where": "mainmenu/explore/features/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-145",
+      "label": "About us",
+      "where": "footnav-1/foot-about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-146",
+      "label": "Privacy policy",
+      "where": "footnav-1/privacy-policy",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-147",
+      "label": "Terms and Conditions",
+      "where": "footnav-1/terms-and-conditions",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-149",
+      "label": "Careers",
+      "where": "footnav-1/careers",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-155",
+      "label": "Buy now",
+      "where": "usefull-links/buy-now",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-167",
+      "label": "Features",
+      "where": "mainmenu/explore/features",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-170",
+      "label": "Contact Us",
+      "where": "mainmenu/contact-us",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-178",
+      "label": "Explore",
+      "where": "mainmenu/explore",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-367",
+      "label": "Smart Search",
+      "where": "mainmenu/explore/features/smart-search",
+      "rule": "keep.functional-default",
+      "reason": "opens com_finder (view=search): a working feature stays unless decided"
+    },
+    {
+      "key": "module-113",
+      "label": "Usefull Links",
+      "where": "mod_menu@footer-3",
+      "rule": "keep.default",
+      "reason": "renders usefull-links: 6 entries stay"
+    },
+    {
+      "key": "module-114",
+      "label": "JA Rent",
+      "where": "mod_menu@footer-1",
+      "rule": "keep.default",
+      "reason": "renders footnav-1: 4 entries stay"
+    },
+    {
+      "key": "module-115",
+      "label": "Off Canvas",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 8 entries stay"
+    },
+    {
+      "key": "module-143",
+      "label": "Error menu",
+      "where": "mod_menu@error-menu",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 3 entries stay"
+    }
+  ],
+  "unresolved": [
+    {
+      "key": "menuItem-157",
+      "label": "J! Blog Style 2",
+      "where": "mainmenu/explore/features/joomla-blog-style-2",
+      "rule": "unresolved.showcase-word",
+      "reason": "\"J! Blog Style 2\" names a showcase branch"
+    }
+  ],
+  "counts": {
+    "menuItems": 13,
+    "modules": 0,
+    "megaColumns": 10,
+    "kept": 21,
+    "unresolved": 1
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-1070-deleted-site-closes-invitations",
+  "kind": "fix",
+  "title": "Deleting a site closes the invitations and requests still open on it, so the Inbox no longer offers an Accept that can only fail",
+  "pr": 1070,
+  "area": "notifications/inbox",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Start a throwaway PostgreSQL (for example: docker run -d --rm --name reg1070-pg -e POSTGRES_PASSWORD=t -p 127.0.0.1:55432:5432 postgres:16-alpine) and wait until pg_isready answers.",
+    "S2: From the TCH checkout run: TEST_DATABASE_URL=postgres://postgres:t@127.0.0.1:55432/postgres node --test --test-reporter=tap apps/tracy-web/test/site-event-notifications.test.mjs",
+    "S3: Read the exit code, the `# pass`, `# fail`, `# skipped` and `# cancelled` lines and the tests named below, then stop the PostgreSQL container."
+  ],
+  "expect": [
+    "S2 exits 0 with 0 failures, 0 skipped, 0 cancelled.",
+    "'T13: deleting the site closes the invitations and requests still open on it' passes: after DELETE /api/sites/<key>, no team.invited, team.join_request or team.edit_access_request row of that site has settled_at null, and the invitee's GET /api/notifications returns the invitation with settledAt set and no data.outcome.",
+    "'T13: deleting the site tells every other member; the rows outlive the site' still passes."
+  ],
+  "selectors": {
+    "door": "DELETE /api/sites/<key> -> closeBook in apps/tracy-web/src/sites/route.js -> settleSite (notifications/notify.js) -> settleBySite (notifications/store.js)",
+    "inbox": "GET /api/notifications -> notifications[].settledAt; the Inbox client shows Accept/Decline only while settledAt is null (packages/site/tracy-inbox/src/client/rows.ts)"
+  },
+  "evidence": "09/10/2026, desktop app on dev: Inbox card 'e2ef-a invited you as an Editor on e2ef-jo.tracy.site', Accept answered 'That did not go through. Try again.'. Dev Postgres: site e2ef-jo.tracy.site absent (team.site_deleted 04/10 19:09), two team.invited rows for it with settled_at null; 9 such rows on 8 deleted sites in all. The new test fails on develop 03ff2a3a52 without the src/ change and passes with it.",
+  "fence": "Mechanism only: the delete door under node --test with a faked host teardown and a real PostgreSQL. Not covered: the Inbox rendering itself (it reads settledAt, unchanged), and migration 082 on a live database (it runs once at deploy; the test database migrates from zero with it).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1070-deleted-site-closes-invitations.mjs"],
+    "needs": ["postgres"]
+  }
+}

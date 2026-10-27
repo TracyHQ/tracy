@@ -1,0 +1,155 @@
+---
+/**
+ * Taxonomy index: categories as cards, tags as a pill cloud. Only terms that have published posts
+ * are listed, with counts taken from the same posts the lists show.
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import { stampFor } from '@/lib/stamps'
+import Icon from '@/components/Icon.astro'
+import Masthead from '@/components/blog/Masthead.astro'
+import Chips from '@/components/blog/Chips.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { uiCount } from '@/lib/ui-words'
+import type { ComposedPage } from '@/lib/sections'
+import { categoryPath, countBy, loadPosts, loadTerms, pageFilter, tagPath } from '@/lib/posts'
+import { categoryIcon } from '@/lib/category-icons'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path: string
+  page: ComposedPage
+  taxonomy: 'category' | 'tag'
+}
+const { chrome, locale, path, page, taxonomy } = Astro.props
+// The template's own words, in the site's language (`src/lib/ui.ts`).
+const { tag, w } = ui(locale)
+const [posts, terms] = await Promise.all([loadPosts(locale), loadTerms(locale, taxonomy)])
+const counts = countBy(posts, (p) =>
+  taxonomy === 'category' ? (p.category ? [p.category.slug] : []) : p.tags.map((t) => t.slug)
+)
+const used = terms.filter((t) => counts.get(t.slug))
+const tags = [...used].sort((a, b) => a.label.localeCompare(b.label))
+// A page filter (`category:<parent>`) lists that term's children — the blog's topics, without the
+// blog's own root category. Without a filter, every category that has posts.
+const filter = taxonomy === 'category' ? await pageFilter(locale, page) : null
+const parent = filter?.kind === 'category' ? terms.find((t) => t.slug === filter.value) : undefined
+const cards = parent ? (parent.children ?? []) : used
+
+// Provenance stamps (`src/lib/stamps.ts`): the page entry owns the page and stamps its head. Empty on
+// an ordinary request.
+const $page = stampFor(Astro.request, 'pages', { slug: page.slug, data: { id: page.id } })
+const headMarks = { title: $page(page.heading ? 'heading' : 'title'), sub: $page('sub') }
+---
+
+<Base chrome={chrome} title={page.title} currentPath={path} style={page.style}>
+	<PageOwner stamp={$page} />
+	<Masthead marks={headMarks} title={page.heading || page.title} sub={page.sub} eyebrow={taxonomy === 'category' ? w.blog : w.tags} band={taxonomy === 'category'} size={taxonomy === 'category' ? 'categories' : 'tags'} />
+	<section class="body">
+		<div class="k-container">
+			{
+				taxonomy === 'category' ? (
+					<div class="grid">
+						{cards.map((t) => {
+							const n = counts.get(t.slug) ?? 0
+							const description = (t as { description?: string }).description
+							return (
+								<a class="card" href={href(locale, categoryPath(t.slug))}>
+									<span class="hd">
+										<span class="tile">
+											<Icon name={categoryIcon(t.slug)} size={20} />
+										</span>
+										<span class="count">
+											{uiCount(tag, w.posts, n)}
+										</span>
+									</span>
+									<span class="name">{t.label}</span>
+									{description && <span class="desc">{description}</span>}
+								</a>
+							)
+						})}
+					</div>
+				) : (
+					<Chips size="lg" items={tags.map((t) => ({ label: t.label, href: href(locale, tagPath(t.slug)), count: counts.get(t.slug) }))} />
+				)
+			}
+		</div>
+	</section>
+</Base>
+
+<style>
+	.body {
+		padding: 64px 0 80px;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 18px;
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		padding: 26px 24px;
+		background: var(--k-surface);
+		border: 1px solid var(--k-border);
+		border-radius: 14px;
+		transition: border-color 0.15s;
+	}
+	.card:hover {
+		border-color: color-mix(in srgb, var(--k-primary) 45%, var(--k-border));
+	}
+	.hd {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+	.tile {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 11px;
+		/* Pale tint of the direction's bright accent (source #F3FCE5 on the white card) — D33. */
+		background: color-mix(in srgb, var(--k-tint) 13%, transparent);
+		color: var(--k-primary);
+	}
+	.count {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		color: var(--k-muted);
+	}
+	.name {
+		font-family: var(--font-heading);
+		font-size: 18px;
+		line-height: 1.25;
+		font-weight: 600;
+		color: var(--k-heading);
+	}
+	.card:hover .name {
+		color: var(--k-primary);
+	}
+	.desc {
+		font-size: 14px;
+		line-height: 1.55;
+		color: var(--k-text);
+	}
+	@media (max-width: 991px) {
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 620px) {
+		.body {
+			padding: 40px 0 56px;
+		}
+		.grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

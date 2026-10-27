@@ -1,0 +1,40 @@
+{
+  "id": "REG-099",
+  "kind": "fix",
+  "title": "After a site rename the Browser tab moves to the new host with no reload (WordPress and Joomla); a comment reopened by a reply after Tracy's write loses \"Done by Tracy\"; translated Site changes Source labels wrap instead of being cut, and a long restore dialog title stays clear of its close button",
+  "pr": 899,
+  "area": "site-tabs/site-address",
+  "cms": ["wp", "jo"],
+  "needs": ["stand", "site:wp", "site:jo", "seat:owner", "browser:cdp-9222", "playwright"],
+  "flaky_model": false,
+  "steps": [
+    "Stand: the SHARED local stand, not scv2. O = http://tracy.test:8080, COOKIE_DOMAIN = tracy.test, WEB = tracy-tracy-web-1, DSH = tracy-dsh, PG = tracy-postgres-1. Q = a fresh directory under tests/regression/.runs/ (chmod 700). Sites and seats (owners already): WP = e2e3js.tracy.test with seat e2e3-js-a@example.test; JO = scjo1002.tracy.test and SC = scwp1002.tracy.test with seat site-changes-e2e@example.test. Mint each seat's cookie inside WEB without printing it: docker exec WEB node --input-type=module -e \"const {mintSession}=await import('/opt/tracy-web/src/lib/session.js'); process.stdout.write(await mintSession(process.argv[1], process.env.SESSION_SECRET.split(',')[0]))\" <email> > $Q/cookie-<wp|sc>.txt; chmod 600; curl -s -o /dev/null -w '%{http_code}' -H \"Cookie: tracy_sess=$(cat $Q/cookie-wp.txt)\" $O/auth/me must print 200 (same for cookie-sc).",
+    "Preconditions (read only), each must hold or stop with BLOCKED and the note given: for KEY in e2e3js.tracy.test and scjo1002.tracy.test, docker exec PG psql -U tracy -d tracy -At -c \"select name from site_name where site_key='<KEY>' and state in ('applying','pending')\" prints nothing (address-change-in-flight); docker exec PG psql -U tracy -d tracy -At -c \"select coalesce(primary_name, site_key) from site where site_key='<KEY>'\" prints KEY itself (site-renamed-before: name it in the evidence and stop); docker exec e2e3js-web-1 grep -c \"define('WP_HOME'\" /var/www/html/wp-config.php prints 1 (no-pinned-address). Build: docker exec DSH grep -c seedUrl /desk-home/profiles/native/node_modules/dsh-better-sidebar/lib/client.js prints >= 1 (image-older-than-reg096).",
+    "Unit seams, from this checkout: node --test --test-reporter=tap packages/ui/tracy-chat-input/test/comment-auto-resolve.test.mjs; node --test --test-reporter=tap --test-name-pattern=E10.2 packages/site/tracy-site-tabs/test/e2e/changes-v2.test.mjs (a real Chromium over the plugin's built CSS, every interface language's words); in vendor/tracy/dsh-better-sidebar: VITE_CONFIG_NATIVE_IGNORE_WARNING=true ./node_modules/.bin/vitest run tests/native-surface.spec.ts.",
+    "Browser: chrome-watch --status, start chrome-watch if nothing serves 127.0.0.1:9222. The probe is tasks/evidence/rename-comment-ui-e2e-0410/stand-probe.mjs (connectOverCDP, a new context per run, never closes anything). Environment for every run: PLAYWRIGHT_MODULE = the absolute path of node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/index.mjs in this checkout, ORIGIN = O, COOKIE_DOMAIN = tracy.test, OUT = $Q/probe. Each run prints one JSON line, then PASS or FAIL.",
+    "E7.2c, WordPress: COOKIE_FILE=$Q/cookie-wp.txt node <probe> rename e2e3js.tracy.test r96-e2e3js.tracy.test, then (always, even after a FAIL, to put the site back) COOKIE_FILE=$Q/cookie-wp.txt node <probe> rename r96-e2e3js.tracy.test e2e3js.tracy.test. Joomla: the same two runs with COOKIE_FILE=$Q/cookie-sc.txt for scjo1002.tracy.test and r96-scjo1002.tracy.test. Each run opens the site's Browser tab, renames in Settings › Site URL, waits for the page to move to the new name by itself, clicks the Browser chip and reads the Browser tab's address field and frame for up to 10 s, with a mark on the document that a reload would erase.",
+    "E4.4b: COOKIE_FILE=$Q/cookie-wp.txt node <probe> comments e2e3js.tracy.test — the probe answers GET /api/sites/<key>/comments itself (comment #2: sent, answered by a write of Tracy's at 18:27:41, then a reply at 18:28:40 reopened it, status pending; comment #3: sent and answered, nothing since) and reads each row's .tv-ci-tag data-tag in the Comments tab. Nothing is written to the site or to Tracy.",
+    "E10.2: COOKIE_FILE=$Q/cookie-sc.txt node <probe> layout scwp1002.tracy.test vi-VN, then the same with de-DE (the interface follows the browser's language).",
+    "After every rename pair (read only): docker exec PG psql -U tracy -d tracy -At -c \"select coalesce(primary_name, site_key) from site where site_key='<KEY>'\"; docker exec PG psql -U tracy -d tracy -At -c \"select name, state from site_name where site_key='<KEY>' and state in ('applying','pending')\"; curl -s -o /dev/null -w '%{http_code} %{redirect_url}' http://<KEY>:8080/; docker exec e2e3js-web-1 grep -E \"define\\('WP_(HOME|SITEURL)'\" /var/www/html/wp-config.php. Then chrome-watch --errors --since 15m --page e2e3js and keep the output as evidence."
+  ],
+  "expect": [
+    "Preconditions hold and the build check prints a count >= 1.",
+    "The three unit seams exit 0 (TAP '# fail 0'; vitest 'Tests  N passed', no failed).",
+    "All four rename runs print PASS: after.inputs and after.frames name the TO host, reloaded is false, ms <= 10000. Before this fix (stand 7ab09f35, 04/10): the chip read the new name but address field and frame stayed on the FROM host ('STAYED' after 10.5 s), and the WordPress page on the old host loaded fonts and script modules from the new one, blocked by CORS.",
+    "After each pair: the site's name is KEY again, no site_name row is applying or pending, http://<KEY>:8080/ answers 200 (WordPress) or 301 to /en/ (Joomla), and wp-config.php's WP_HOME and WP_SITEURL read http://e2e3js.tracy.test:8080. The error log has no CORS line from the renamed host after the first rename run.",
+    "comments prints PASS: comment #2's tag is not 'done' (it reads 'note'), comment #3's tag is 'done' ('Done by Tracy'). Before this fix both were 'done'.",
+    "Both layout runs print PASS: lang is vi / de, at least one Source label listed, cut is empty. Before this fix: vi cut 'Khung chat' (7 rows), de cut 'Kommentar' (2 rows)."
+  ],
+  "selectors": {
+    "browserHost": "[data-dsh-native-tab-host] input, [data-dsh-native-tab-host] iframe (src)",
+    "browserChip": "[role='tab'] whose whole text is the new host",
+    "change": ".tv-site-address-box button | .tv-site-address-heading button",
+    "nameInput": ".tv-site-address-form input",
+    "save": ".tv-site-address-form button[type='submit']",
+    "commentTag": ".tv-ci-tag[data-tag]",
+    "sourceCell": "[data-cell='source'] .tv-activity-cell-text",
+    "dialogTitle": "[role=dialog] [data-slot='dialog-title'] vs [data-slot='dialog-close']"
+  },
+  "evidence": "tasks/evidence/e2e-dev-0410 (worktree e2e-dev-0410): bugs.md items 5 (E4.4b), 6 (E7.2c, E11.d), 11 (E10.2 c, d); vendor/tracy/dsh-better-sidebar/tests/native-surface.spec.ts ('keeps an address a plugin wrote over the url seed…'); packages/ui/tracy-chat-input/test/comment-auto-resolve.test.mjs ('…reopened by a reply, loses \"Done by Tracy\"…'); packages/site/tracy-site-tabs/test/e2e/changes-v2.test.mjs ('E10.2: …').",
+  "fence": "dsh-better-sidebar NativeTabRecords.ensure: only a url seed that differs from the one last applied (View.seedUrl) is a navigation, so a plugin's updateTab({meta:{url}}) — tracy-tab-link's followRenamedSites — survives the re-render it causes. tracy-chat-input statusOf: 'done' needs no reply in the thread written after the send's answeredAt (a reply reopens the thread on the server). tracy-site-tabs site-tabs-rules.css: the Source cell wraps in the wide grid; a site-tabs dialog with a Close keeps its header 28px clear and its title at line-height 1.35."
+}

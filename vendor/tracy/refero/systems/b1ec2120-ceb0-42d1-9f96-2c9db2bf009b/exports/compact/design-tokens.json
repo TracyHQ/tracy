@@ -1,0 +1,49 @@
+{
+  "color": {
+    "index-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Index Ink — Primary text, announcement bar background, dark feature cards, map silhouettes, hairline borders. The dominant structural color — used where ink would go on a printed page"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, body backgrounds, inverted text on dark surfaces. The base layer of the entire system"
+    },
+    "highlighter-yellow": {
+      "$value": "#ffd600",
+      "$type": "color",
+      "$description": "Highlighter Yellow — Yellow wash for highlight backgrounds, decorative bands, and soft emphasis behind content."
+    }
+  },
+  "font": {
+    "itcgaramondstdltcond": {
+      "$value": "ITCGaramondStdLtCond",
+      "$type": "fontFamily",
+      "$description": "Display headlines and editorial body. The condensed light Garamond at 75–80px is the brand's voice — narrow proportions and hairline weight make it feel printed, not digital. The 2.10 line-height appears for tall stacked address blocks. Free substitute: Cormorant Garamond Light (condensed cut if available), or Playfair Display Light as a looser alternative."
+    },
+    "abcdiatypelight": {
+      "$value": "ABCDiatypeLight",
+      "$type": "fontFamily",
+      "$description": "UI text, navigation, labels, buttons, body, input. The workhorse sans — geometric and clean with tight negative tracking at display sizes. Small sizes get slight positive tracking for legibility. Free substitute: Inter, or Söhne if licensed."
+    },
+    "indexlogotype": {
+      "$value": "IndexLogotype",
+      "$type": "fontFamily",
+      "$description": "The wordmark 'Index' in the top-left navigation. A custom logotype only used at this single placement — not a body font. Do not substitute for headlines."
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Falls back to system Times for unstyled content. Not a brand choice — system fallback only."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://index-space.org",
+      "siteName": "Index",
+      "extractedAt": "2026-06-03T21:50:47.852Z",
+      "variant": "compact"
+    }
+  }
+}

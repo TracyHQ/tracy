@@ -1,0 +1,356 @@
+{
+  "dos": [
+    "Use Labil Grotesk Variable at weight 400 for headings up to 56px — restraint at large sizes is the signature",
+    "Apply weight 900 uppercase at 84px only for poster/display moments, not regular section titles",
+    "Use the pastel palette (Petal Pink, Mint Green, Canary Yellow, Soft Violet) as flat card fills for category differentiation — never as decoration or gradients",
+    "Set border-radius to 8px on buttons and 12px on cards — these two values define the entire shape language",
+    "Use #111111 (Ink) for primary action buttons and #272625 (Charcoal) for dark surface backgrounds",
+    "Apply negative letter-spacing proportional to size: -0.05em at 56px, scaling down to 0 at body text",
+    "Alternate light sections (#ffffff / #f6f5f3) with dark panels (#272625 / #10054d) for visual rhythm"
+  ],
+  "donts": [
+    "Don't use weight 500 or 700 for large headings — weight 400 at 44-56px is the signature, not 600-700",
+    "Don't apply shadows to pastel category cards — the flat color IS the elevation",
+    "Don't use the pastel colors as gradients — they are flat solid fills for taxonomy coding",
+    "Don't set border-radius above 12px on cards or below 8px on buttons — the system uses exactly these two values",
+    "Don't use #000000 pure black for text — #111111 (Ink) is the primary text color with subtle warmth",
+    "Don't add drop shadows to cards on white backgrounds — use 1px borders or hairline insets instead",
+    "Don't use color for decoration on dark sections — reserve Phoenix Orange for hero gradient origins and brand moments"
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#e8400d",
+      "name": "Phoenix Orange",
+      "role": "Brand accent, hero gradient origin, marketing highlights — vivid warm orange that gives the brand its identity; Hero background gradient — radial wash from phoenix orange through cream to violet",
+      "group": "brand",
+      "gradient": "radial-gradient(386.06% 162.79% at 3.76985% -12.1005%, rgb(232, 64, 13) 0%, rgb(255, 238, 216) 31.14%, rgb(208, 178, 255) 81.98%)"
+    },
+    {
+      "hex": "#10054d",
+      "name": "Midnight Indigo",
+      "role": "Deep brand surface, feature card backgrounds, text on light cards — the dark counterweight to the bright accents",
+      "group": "brand"
+    },
+    {
+      "hex": "#272625",
+      "name": "Charcoal",
+      "role": "Secondary dark surface, testimonial card backgrounds, dark UI panels — warm-tinted near-black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#111111",
+      "name": "Ink",
+      "role": "Primary text, heading color, filled action button background — near-black with slight warmth",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Canvas White",
+      "role": "Primary page background, card surface, text on dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#f6f5f3",
+      "name": "Cream Wash",
+      "role": "Soft surface tint, secondary card backgrounds, muted section backgrounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#6d6c6b",
+      "name": "Ash",
+      "role": "Muted body text, secondary labels, helper copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b1b1af",
+      "name": "Stone",
+      "role": "Hairline borders, subtle dividers, muted placeholder",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ecebea",
+      "name": "Pearl",
+      "role": "Subtle button backgrounds, hover states on ghost controls",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffd7f0",
+      "name": "Petal Pink",
+      "role": "Pastel accent card surface — category-coded color tile",
+      "group": "accent"
+    },
+    {
+      "hex": "#b7efb2",
+      "name": "Mint Green",
+      "role": "Pastel accent card surface — category-coded color tile",
+      "group": "accent"
+    },
+    {
+      "hex": "#ffef99",
+      "name": "Canary Yellow",
+      "role": "Pastel accent card surface — category-coded color tile",
+      "group": "accent"
+    },
+    {
+      "hex": "#e2ddfd",
+      "name": "Soft Violet",
+      "role": "Pastel accent card surface — category-coded color tile",
+      "group": "accent"
+    },
+    {
+      "hex": "#99fff9",
+      "name": "Aqua",
+      "role": "Gradient endpoint, hero highlight wash",
+      "group": "accent"
+    },
+    {
+      "hex": "#2e2460",
+      "name": "Indigo Deep",
+      "role": "Dark input field background, form surface on dark sections",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Centered max-width ~1200px container with full-bleed sections that alternate between white and dark backgrounds. Hero is split: centered headline + subtext + email capture stacked vertically, with gradient atmosphere behind. Video container below hero spans near-full container width. Feature sections use 3-4 column card grids with pastel color-coded tiles. Testimonial section is full-bleed dark with masonry-style quote cards. Footer is dark with centered headline and CTA. Navigation is sticky at top with frosted-glass blur on scroll.",
+  "imagery": "Hand-drawn line illustrations with loose, sketchy quality — the rocket/spaceship motif appears as a black outlined drawing with minimal fill. Hero uses a warm radial gradient (orange → cream → violet) as a soft atmospheric backdrop rather than a photographic image. Product screenshots are presented in dark-framed video containers with rounded corners. Customer logos are monochrome black on white in a clean 4-column grid. Overall: minimal photography, relies on illustrated personality + gradient washes + product UI captures.",
+  "similar": [
+    {
+      "why": "Same weight-400-at-large-sizes typographic restraint and minimal dark accent approach, though Linear leans dark while Amplemarket is light",
+      "business": "Linear"
+    },
+    {
+      "why": "Similar generous whitespace, off-white canvas, and quiet monochrome-with-pastel-punctuation palette for category surfaces",
+      "business": "Notion"
+    },
+    {
+      "why": "Same flat pastel card system for feature taxonomy, large weight-400 geometric headings, and minimal elevation philosophy",
+      "business": "Framer"
+    },
+    {
+      "why": "Shared editorial-meets-product feel with negative-tracked display headings and warm dark surfaces contrasting light sections",
+      "business": "Pitch"
+    },
+    {
+      "why": "Similar playful brand accent (orange) against a clean off-white canvas with geometric grotesque type at restrained weights",
+      "business": "Raycast"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "12px",
+      "small": "4px",
+      "badges": "9999px",
+      "inputs": "12px",
+      "buttons": "8px"
+    },
+    "elementGap": "8-12px",
+    "sectionGap": "80-120px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "saas",
+  "surfaces": [
+    {
+      "hex": "#ffffff",
+      "name": "Canvas",
+      "level": 0,
+      "purpose": "Primary page background"
+    },
+    {
+      "hex": "#f6f5f3",
+      "name": "Cream Wash",
+      "level": 1,
+      "purpose": "Soft secondary surface, alternating section bands"
+    },
+    {
+      "hex": "#ffd7f0",
+      "name": "Pastel Tiles",
+      "level": 2,
+      "purpose": "Color-coded category cards (taxonomy system)"
+    },
+    {
+      "hex": "#10054d",
+      "name": "Midnight Indigo",
+      "level": 3,
+      "purpose": "Brand feature surface, deep accent cards"
+    },
+    {
+      "hex": "#272625",
+      "name": "Charcoal",
+      "level": 4,
+      "purpose": "Dark testimonial and footer surfaces"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(17, 17, 17, 0.02) 0px -6px 6px 0px, rgba(17, 17, 17, 0.01) 0px -23px 9px 0px",
+      "element": "White cards"
+    },
+    {
+      "style": "rgba(17, 17, 17, 0.12) 0px 26px 60px -6px, rgba(17, 17, 17, 0.02) 0px 28px 28px -14px, rgba(17, 17, 17, 0.04) 0px 6px 6px -3px, rgba(17, 17, 17, 0.04) 0px 1px 1px -0.5px",
+      "element": "Featured cards"
+    },
+    {
+      "style": "rgba(17, 17, 17, 0.05) 0px 0px 0px 1px inset",
+      "element": "Hairline insets"
+    }
+  ],
+  "northStar": "Sunlit workspace with scattered confetti",
+  "typeScale": [
+    {
+      "role": "eyebrow",
+      "size": 10,
+      "lineHeight": 1,
+      "letterSpacing": 0.3
+    },
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1
+    },
+    {
+      "role": "body-sm",
+      "size": 14,
+      "lineHeight": 1.3
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1
+    },
+    {
+      "role": "body-lg",
+      "size": 20,
+      "lineHeight": 1.3,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "subheading",
+      "size": 28,
+      "lineHeight": 1.1,
+      "letterSpacing": -0.476
+    },
+    {
+      "role": "heading-sm",
+      "size": 36,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.08
+    },
+    {
+      "role": "heading",
+      "size": 44,
+      "lineHeight": 1.1,
+      "letterSpacing": -1.76
+    },
+    {
+      "role": "heading-lg",
+      "size": 56,
+      "lineHeight": 1,
+      "letterSpacing": -2.8
+    },
+    {
+      "role": "display",
+      "size": 84,
+      "lineHeight": 0.8,
+      "letterSpacing": -2.52
+    }
+  ],
+  "components": [
+    {
+      "name": "Primary Filled Button",
+      "role": "Main call-to-action, highest-emphasis interactive element",
+      "description": "Background #111111 (Ink), text #ffffff, no border, border-radius 8px, padding 12px 16px. Label in 16px Labil Grotesk weight 400. Used for 'Get free trial' and 'Get started' actions. Pair with white-outlined secondary beside it."
+    },
+    {
+      "name": "Ghost Navigation Button",
+      "role": "Secondary CTA in navigation and footer",
+      "description": "Transparent background, text rgba(255,255,255,0.6) on dark surfaces, no border, border-radius 8px, padding 12px 16px. Inverts to Ink text on light surfaces. Used for 'Open app' in nav."
+    },
+    {
+      "name": "Neutral Filled Button",
+      "role": "Tertiary action on light surfaces",
+      "description": "Background #ecebea (Pearl), text #111111 (Ink), no border, border-radius 8px, padding 12px 16px. Subtler alternative to the primary filled button when a secondary action needs more presence than ghost."
+    },
+    {
+      "name": "White Pill Badge",
+      "role": "Logo lockup with brand mark",
+      "description": "Background #ffffff, text #111111, border #ffffff, border-radius 12px, padding 6px 6px 6px 14px. Small icon-prefixed badge used for the Amplemarket logo lockup and similar brand marks."
+    },
+    {
+      "name": "Email Capture Input",
+      "role": "Hero email signup field",
+      "description": "Background #ffffff, text #111111, 1px border rgba(17,17,17,0.08), border-radius 12px, padding 0 16px. Field height ~48px. Joined inline with primary filled button — input fills flex space, button sits at right."
+    },
+    {
+      "name": "Pastel Category Card",
+      "role": "Feature/category showcase tile",
+      "description": "Flat color fill from the pastel palette (Petal Pink, Mint Green, Canary Yellow, Soft Violet), border-radius 12px, padding 16px 20px. No shadow, no border. Color IS the differentiation — these are color-coded taxonomy tiles for product capabilities."
+    },
+    {
+      "name": "Dark Testimonial Card",
+      "role": "Customer quote on dark sections",
+      "description": "Background #272625 (Charcoal), border-radius 12px, padding 8px. Subtle inset — no drop shadow. White text, small avatar with name in 14px and title in #6d6c6b Ash."
+    },
+    {
+      "name": "Light Feature Card",
+      "role": "Feature content card on light sections",
+      "description": "Background #ffffff, border-radius 12px, padding 16px 20px. Minimal elevation using rgba(17,17,17,0.02) ambient shadow or none at all. Borders are hairline 1px rgba(17,17,17,0.08) when present."
+    },
+    {
+      "name": "Logo Grid Card",
+      "role": "Customer logo with migration caption",
+      "description": "Transparent or #ffffff background, border-radius 12px, padding ~20px. Centered logo above small caption 'Migrated off [competitor]' in Ash #6d6c6b. Part of 4-column grid."
+    },
+    {
+      "name": "Sticky Navigation Bar",
+      "role": "Top-level page navigation",
+      "description": "Transparent to #ffffff on scroll, height ~62px, horizontal layout with logo left, center links (Product, Why us, Resources, Customers, Pricing), and dual-action cluster right (ghost + filled). Backdrop blur 16-32px on scroll for frosted-glass effect over content."
+    },
+    {
+      "name": "Hero Video Container",
+      "role": "Large embedded media frame below hero text",
+      "description": "Black background (#000000), border-radius ~12px, full-width within max-width container, aspect ratio ~16:9. Contains video player with centered play button."
+    },
+    {
+      "name": "Dark Section Panel",
+      "role": "Full-bleed dark content sections (testimonials, footer)",
+      "description": "Background #272625 or #10054d (Midnight Indigo), full viewport width, internal padding 80-120px vertical. White text (#ffffff), Ash #6d6c6b for secondary copy. Creates a dramatic light-to-dark rhythm against the predominantly white page."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary typeface — geometric grotesque with variable weight axis. Weight 400 for all body, nav, and most headings (unusual restraint at large sizes); weight 900 reserved for poster-size 84px display headlines set uppercase. Negative letter-spacing scales aggressively with size: -0.05em at 56px, -0.04em at 44px, -0.03em at 36px. Body and small UI text tracks at normal or near-zero.",
+      "sizes": "8, 10, 12, 14, 16, 18, 20, 24, 28, 36, 44, 56, 84",
+      "family": "Labil Grotesk Variable",
+      "weight": "400, 500, 700, 900",
+      "lineHeight": "0.8, 1.0, 1.1, 1.2, 1.3, 1.4",
+      "substitute": "Inter, DM Sans, or General Sans Variable",
+      "letterSpacing": "-0.05em at 56px; -0.04em at 44px; -0.03em at 36px; -0.02em at 24-28px; -0.017em at 28px; -0.011em at 20px; +0.03em at 10px uppercase; +0.025em at 8px",
+      "fontFeatureSettings": "\"ss02\" on, \"ss01\" on"
+    }
+  ],
+  "description": "Amplemarket uses a warm, editorial-meets-product language: off-white canvas with a soft cream wash, generous breathing room, and dark near-black type that reads like printed ink. The visual signature is a multi-hue pastel palette — petal pink, mint green, canary yellow, violet, cyan — used as flat card and section backgrounds rather than decoration, creating a 'color-coded' taxonomy of product areas. A vivid phoenix-orange accent grounds the brand identity against a charcoal secondary surface (#272625). Type is set in a geometric grotesque (Labil Grotesk) with aggressive negative tracking on display sizes, where weight 900 84px uppercase headlines act as poster titles and weight 400 44–56px headlines feel calm and confident. The overall mood is light, airy, and approachable — a productivity tool that doesn't feel like enterprise software.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Text (primary): #111111\n- Background (canvas): #ffffff\n- Surface (soft): #f6f5f3\n- Border (hairline): rgba(17,17,17,0.08)\n- Accent (brand): #e8400d (Phoenix Orange)\n- primary action: no distinct CTA color\n\n**Example Component Prompts**\n\n1. Hero headline: \"84px Labil Grotesk Variable weight 900, uppercase, #111111, letter-spacing -2.52px, line-height 0.8. Place over a radial gradient background from #e8400d through #ffeed8 to #d0b2ff.\"\n\n2. Section heading: \"56px Labil Grotesk Variable weight 400, #111111, letter-spacing -2.8px, line-height 1.0. Calmer than the display weight — this is the default for all section titles.\"\n\n3. Category feature card: \"Flat fill #ffd7f0 (Petal Pink), border-radius 12px, padding 20px, no shadow. Title in 24px weight 400 #111111. Color is the differentiator — no borders or elevation needed.\"\n\n4. Email capture input: \"White background, 1px border rgba(17,17,17,0.08), border-radius 12px, padding 0 16px, height 48px. Placeholder text in #6d6c6b. Join inline with a filled Ink button (#111111) at the right edge.\"\n\n5. Dark testimonial card: \"Background #272625, border-radius 12px, padding 20px. Quote text in #ffffff at 16px. Name in 14px white, role in 12px #6d6c6b. Avatar circle 32px at top-left.\""
+    },
+    {
+      "title": "Pastel Taxonomy System",
+      "content": "The five pastel colors (Petal Pink #ffd7f0, Mint Green #b7efb2, Canary Yellow #ffef99, Soft Violet #e2ddfd, Aqua #99fff9) are not decorative — they form a category-coding system. Each product pillar (Intelligence, Lead Generation, Engagement, Deliverability) maps to one color, and feature cards within that pillar inherit the color. Never use these as gradients, hover states, or accent text — they are flat surface fills for flat taxonomy tiles."
+    },
+    {
+      "title": "Typography Weight Philosophy",
+      "content": "Labil Grotesk Variable is used almost exclusively at weight 400 — even at 44px and 56px heading sizes. This is anti-convention: most brands push weight 600-700 for authority at large sizes. Amplemarket achieves authority through restraint — the whisper-weight headlines feel confident because they don't shout. Weight 900 is reserved for 84px display headlines set in uppercase, creating a poster-like moment. Weights 500 and 700 exist in the variable font but are rarely deployed."
+    },
+    {
+      "title": "Letter-Spacing Scale",
+      "content": "Letter-spacing tracks aggressively negative on display sizes and tightens proportionally as size decreases: -2.52px at 84px, -2.8px at 56px, -1.76px at 44px, -1.08px at 36px, -0.48px at 24px, -0.4px at 20px. Small UI text inverts to positive tracking: +0.3px at 10px uppercase eyebrow, +0.25px at 8px. Body text at 14-16px sits at normal tracking. This tight optical scaling gives geometric typefaces their characteristic compressed-but-readable character."
+    },
+    {
+      "title": "Animation Philosophy",
+      "content": "Motion is expressive but not showy: standard duration 0.25s with ease timing for micro-interactions, cubic-bezier(0.23, 1, 0.32, 1) for entrance animations on scroll. Sticky nav uses backdrop-filter blur (16-32px) transitioning from transparent to frosted white on scroll. Radial gradient hero has subtle scale/opacity animation. Transitions focus on transform and opacity — never animating layout properties."
+    }
+  ],
+  "elevationPhilosophy": "Elevation is used sparingly — most cards sit flat with no shadow. The system relies on color contrast (pastel fills, dark surfaces) and 1px hairline borders for separation rather than heavy drop shadows. When shadows appear, they are low-opacity and diffuse, never sharp."
+}

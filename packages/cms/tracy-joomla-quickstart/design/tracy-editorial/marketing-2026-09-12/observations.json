@@ -1,0 +1,4806 @@
+[
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/resources/marketing-samples",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T12:12:51.872Z",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "width": 1440,
+    "height": 900,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "22px",
+              "paddingRight": "22px",
+              "height": "80px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": []
+      },
+      {
+        "id": "page-title",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "56px",
+              "fontWeight": "700",
+              "lineHeight": "58.8px",
+              "letterSpacing": "-0.84px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": []
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      },
+      {
+        "id": "page-eyebrow",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "12px",
+              "fontWeight": "400",
+              "lineHeight": "17.64px",
+              "letterSpacing": "0.96px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-caption",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > p:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > div:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > p:nth-child(5)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-muted",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(1)",
+            "styles": {
+              "color": "rgb(110, 110, 115)"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > p:nth-child(1)",
+            "styles": {
+              "color": "rgb(110, 110, 115)"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > p:nth-child(5)",
+            "styles": {
+              "color": "rgb(110, 110, 115)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-canvas",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1)",
+            "styles": {
+              "paddingTop": "48px",
+              "paddingLeft": "24px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-tabs",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2)",
+            "styles": {
+              "gap": "8px",
+              "paddingBottom": "20px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-tab",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(1)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(2)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(3)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(4)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(5)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(6)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-preview",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > iframe:nth-child(4)",
+            "styles": {
+              "borderRadius": "18px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/resources/marketing-samples",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T12:12:53.384Z",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "width": 1440,
+    "height": 900,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "22px",
+              "paddingRight": "22px",
+              "height": "80px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": []
+      },
+      {
+        "id": "page-title",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "56px",
+              "fontWeight": "700",
+              "lineHeight": "58.8px",
+              "letterSpacing": "-0.84px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": []
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      },
+      {
+        "id": "page-eyebrow",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "12px",
+              "fontWeight": "400",
+              "lineHeight": "17.64px",
+              "letterSpacing": "0.96px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-caption",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > p:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > div:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > p:nth-child(5)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-muted",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(1)",
+            "styles": {
+              "color": "rgb(135, 135, 139)"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > p:nth-child(1)",
+            "styles": {
+              "color": "rgb(135, 135, 139)"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > p:nth-child(5)",
+            "styles": {
+              "color": "rgb(135, 135, 139)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-canvas",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1)",
+            "styles": {
+              "paddingTop": "48px",
+              "paddingLeft": "24px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-tabs",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2)",
+            "styles": {
+              "gap": "8px",
+              "paddingBottom": "20px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-tab",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(1)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(2)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(3)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(4)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(5)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(6)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-preview",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > iframe:nth-child(4)",
+            "styles": {
+              "borderRadius": "18px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/resources/marketing-samples",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T12:12:54.499Z",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "width": 390,
+    "height": 844,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "16px",
+              "paddingRight": "16px",
+              "height": "48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": []
+      },
+      {
+        "id": "page-title",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": []
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      },
+      {
+        "id": "page-eyebrow",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "12px",
+              "fontWeight": "400",
+              "lineHeight": "17.64px",
+              "letterSpacing": "0.96px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-caption",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > p:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > div:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > p:nth-child(5)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-muted",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(1)",
+            "styles": {
+              "color": "rgb(110, 110, 115)"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > p:nth-child(1)",
+            "styles": {
+              "color": "rgb(110, 110, 115)"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > p:nth-child(5)",
+            "styles": {
+              "color": "rgb(110, 110, 115)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-canvas",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1)",
+            "styles": {
+              "paddingTop": "32px",
+              "paddingLeft": "12px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-tabs",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2)",
+            "styles": {
+              "gap": "4px",
+              "paddingBottom": "20px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-tab",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(1)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(2)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(3)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(4)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(5)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(6)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-preview",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > iframe:nth-child(4)",
+            "styles": {
+              "borderRadius": "8px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "/resources/marketing-samples",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T12:12:55.704Z",
+    "url": "http://127.0.0.1:8212/resources/marketing-samples",
+    "width": 390,
+    "height": 844,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "header-container",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1)",
+            "styles": {
+              "paddingLeft": "16px",
+              "paddingRight": "16px",
+              "height": "48px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "theme-toggle",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > header:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)",
+            "styles": {
+              "width": "44px",
+              "height": "44px",
+              "borderRadius": "50%"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heading-family",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontWeight": "700"
+            }
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "elements": []
+      },
+      {
+        "id": "page-title",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "section",
+        "elements": []
+      },
+      {
+        "id": "card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "20px",
+              "fontWeight": "700",
+              "lineHeight": "21px",
+              "letterSpacing": "-0.3px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "compact-card",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > section:nth-child(1) > div:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "guide-label",
+        "elements": []
+      },
+      {
+        "id": "lead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(3)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "21px",
+              "lineHeight": "30.87px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "body-copy",
+        "elements": []
+      },
+      {
+        "id": "guide-spacing",
+        "elements": []
+      },
+      {
+        "id": "guide-swatch",
+        "elements": []
+      },
+      {
+        "id": "page-eyebrow",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "12px",
+              "fontWeight": "400",
+              "lineHeight": "17.64px",
+              "letterSpacing": "0.96px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-caption",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > p:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > div:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > p:nth-child(5)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "14px",
+              "fontWeight": "400",
+              "lineHeight": "20.58px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-muted",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > p:nth-child(1)",
+            "styles": {
+              "color": "rgb(135, 135, 139)"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > div:nth-child(3) > p:nth-child(1)",
+            "styles": {
+              "color": "rgb(135, 135, 139)"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > p:nth-child(5)",
+            "styles": {
+              "color": "rgb(135, 135, 139)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-canvas",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1)",
+            "styles": {
+              "paddingTop": "32px",
+              "paddingLeft": "12px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-tabs",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2)",
+            "styles": {
+              "gap": "4px",
+              "paddingBottom": "20px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-tab",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(1)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(2)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(3)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(4)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(5)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > nav:nth-child(2) > a:nth-child(6)",
+            "styles": {
+              "borderRadius": "980px",
+              "fontSize": "17px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "marketing-preview",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(1) > div:nth-child(1) > section:nth-child(1) > iframe:nth-child(4)",
+            "styles": {
+              "borderRadius": "8px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/newsletter",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T12:12:56.156Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/newsletter",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T12:12:56.587Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/newsletter",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T12:12:57.037Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/newsletter",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T12:12:57.462Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/newsletter-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(9) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 4,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/email",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T12:12:57.954Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/email",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T12:12:58.376Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/email",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T12:12:58.800Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/email",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T12:12:59.231Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/email-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/poster",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T12:12:59.869Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "poster-focal",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "46.9531px",
+              "fontWeight": "700",
+              "lineHeight": "49.3008px",
+              "letterSpacing": "-0.704297px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 1,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/poster",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T12:13:00.547Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "poster-focal",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "46.9531px",
+              "fontWeight": "700",
+              "lineHeight": "49.3008px",
+              "letterSpacing": "-0.704297px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 1,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/poster",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T12:13:01.018Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "poster-focal",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "27.1875px",
+              "fontWeight": "700",
+              "lineHeight": "28.5469px",
+              "letterSpacing": "-0.407813px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 1,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/poster",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T12:13:01.467Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/poster-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "poster-focal",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "27.1875px",
+              "fontWeight": "700",
+              "lineHeight": "28.5469px",
+              "letterSpacing": "-0.407813px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 1,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/deck",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T12:13:02.269Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-cover",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "99.8438px",
+              "fontWeight": "700",
+              "lineHeight": "104.836px",
+              "letterSpacing": "-1.49766px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-title",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(7) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(11) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-item",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 21,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/deck",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T12:13:03.423Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-cover",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "99.8438px",
+              "fontWeight": "700",
+              "lineHeight": "104.836px",
+              "letterSpacing": "-1.49766px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-title",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(7) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(11) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "49.9219px",
+              "fontWeight": "700",
+              "lineHeight": "52.418px",
+              "letterSpacing": "-0.748828px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-item",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "34.9453px",
+              "fontWeight": "700",
+              "lineHeight": "36.6926px",
+              "letterSpacing": "-0.52418px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 21,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/deck",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T12:13:03.899Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-cover",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-title",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(7) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(11) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-item",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 21,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/deck",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T12:13:04.370Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/deck-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-cover",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-title",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(7) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(11) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "deck-item",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(8) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(4) > h3:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(1) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(2) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(10) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > article:nth-child(3) > h3:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      }
+    ],
+    "coverageCount": 21,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/form",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T12:13:04.993Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/form",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T12:13:05.957Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/form",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T12:13:06.599Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/form",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T12:13:07.034Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/form-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h1:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 2,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/typography",
+    "variant": "desktop-light",
+    "capturedAt": "2026-09-12T12:13:07.503Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-light.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > header:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 6,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/typography",
+    "variant": "desktop-dark",
+    "capturedAt": "2026-09-12T12:13:08.010Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-dark.html",
+    "width": 1440,
+    "height": 900,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 1440,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > header:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "40px",
+              "fontWeight": "700",
+              "lineHeight": "42px",
+              "letterSpacing": "-0.6px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 6,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/typography",
+    "variant": "mobile-light",
+    "capturedAt": "2026-09-12T12:13:08.480Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-light.html",
+    "width": 390,
+    "height": 844,
+    "mode": "light",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#ffffff",
+      "--fg": "#1d1d1f",
+      "--surface": "#f5f5f7",
+      "--muted": "#6e6e73",
+      "--border": "#d2d2d7",
+      "--accent": "#0071e3",
+      "--accent-on": "#ffffff",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(29, 29, 31)",
+              "backgroundColor": "rgb(255, 255, 255)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > header:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 6,
+    "unclassified": []
+  },
+  {
+    "contractId": "tracy-apple-design",
+    "contractHash": "e7cc2cdb9c94f1d5d1a8505f432731d3c5da358114521365a7b36eeefb9e4bee",
+    "page": "marketing/typography",
+    "variant": "mobile-dark",
+    "capturedAt": "2026-09-12T12:13:08.945Z",
+    "url": "http://127.0.0.1:8212/media/tracy-marketing/typography-dark.html",
+    "width": 390,
+    "height": 844,
+    "mode": "dark",
+    "fontsReady": true,
+    "identityMatches": 1,
+    "scrollWidth": 390,
+    "tokens": {
+      "--bg": "#000000",
+      "--fg": "#f8f8f8",
+      "--surface": "#1d1d1f",
+      "--muted": "#87878b",
+      "--border": "#2f2f30",
+      "--accent": "#2997ff",
+      "--accent-on": "#000000",
+      "--space-4": "16px",
+      "--space-6": "24px",
+      "--space-8": "32px",
+      "--container-max": "1024px",
+      "--text-base": "17px",
+      "--text-4xl": "80px",
+      "--leading-body": "1.47",
+      "--radius-md": "12px"
+    },
+    "rules": [
+      {
+        "id": "body",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif, Inter, \"Inter Tight\", sans-serif",
+              "fontSize": "17px",
+              "fontWeight": "400",
+              "lineHeight": "24.99px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page-colors",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "color": "rgb(248, 248, 248)",
+              "backgroundColor": "rgb(0, 0, 0)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-shell",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2)",
+            "styles": {
+              "boxSizing": "border-box"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-headline",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > header:nth-child(1) > h1:nth-child(2)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "28px",
+              "fontWeight": "700",
+              "lineHeight": "29.4px",
+              "letterSpacing": "-0.42px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-subhead",
+        "elements": [
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(2) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(3) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(4) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(5) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          },
+          {
+            "path": "html:nth-child(1) > body:nth-child(2) > div:nth-child(1) > section:nth-child(6) > h2:nth-child(1)",
+            "styles": {
+              "fontFamily": "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+              "fontSize": "21px",
+              "fontWeight": "700",
+              "lineHeight": "22.05px",
+              "letterSpacing": "-0.315px"
+            }
+          }
+        ]
+      },
+      {
+        "id": "artifact-item",
+        "elements": []
+      }
+    ],
+    "coverageCount": 6,
+    "unclassified": []
+  }
+]

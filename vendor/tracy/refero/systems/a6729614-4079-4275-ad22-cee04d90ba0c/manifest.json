@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "a6729614-4079-4275-ad22-cee04d90ba0c",
+  "status": "complete",
+  "name": "Spécialiste Belge",
+  "url": "https://styles.refero.design/style/a6729614-4079-4275-ad22-cee04d90ba0c",
+  "sourceWebsite": "https://misuko.be",
+  "extractedAt": "2026-06-03T19:17:01.327Z",
+  "capturedAt": "2026-10-08T05:15:44.614951+00:00",
+  "theme": "light",
+  "industry": "other",
+  "description": "Linen-bound brand cookbook. Warm cream paper, black ink, single whispered serif, no decoration beyond the page edge.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/6baddc0a-1be1-45e5-bd1f-675ffd8ae822.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/a045dc97-e0a7-494a-a6c2-16f4c26878d9.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/e922d963-df40-4cd6-9b91-695912d82bc5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/3ecec073-db61-4d83-a355-3cbf2ed0b34a.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/5d291c2a-e188-4fc4-b0ec-02ad23f717e1.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "442c001216b9d26c44fc13fa9ccd974210cb9661fe4f9fceeff9461ee4cb7789",
+      "bytes": 17465
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "d6f1bc59cc2a5dd47db13486a3174ceb3dadfd347c205c955aaee461a5c522ee",
+      "bytes": 110334
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "f5e40d4905f682cda83e8e15fa4971138eeb587c4a149e94a2fff6e8135a58f2",
+      "bytes": 14903
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d7aa2c07b1dab289da055e408dca9484012a9ad0a00171965ea3cecaa54f2e9b",
+      "bytes": 8217
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "70daac004e2300612948a5bd9f773ba20c6b5febd145cff363f1d9d68e63d44e",
+      "bytes": 11607
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "64d517843bc9b49f398ba03839cccdea61c07e0cb48b91261fa7cee049bab36f",
+      "bytes": 1855
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "006d6a7ce2aebe4aa6cd9e2d41cea83ef826da957e1cc1198ee78fada346a851",
+      "bytes": 308
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "93f2e26f7dce302659d806f85f5d2188788b144ff9d031a79ae5d73e31893c87",
+      "bytes": 325
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "36824062ff6063413865edef798237ed93e0ef1f49f6c678572027db1f2890c2",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "670f4837e3669de22e07f1b88f5020ce57570c88b051b09ffc30e303188697d9",
+      "bytes": 41233
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "ddc4c2bd938d2ff1fe68bba7371916cb2f35d2173bef0eb6161a17feea80c56e",
+      "bytes": 21417
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "0b0a68d5eda7b7a2052b74bf31ab6234469d857c22b5b77df53d1383477cc8fd",
+      "bytes": 35591
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "367ac927ac25f9462386f468f7010caf70ae1ea2a4c8cafc0adcfabc6957b128",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "6d5462bfcea2381766fe3b16adc15689ef6cc2cc6497e64fe6752920e5ff431c",
+      "bytes": 1171
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a0ee19c0f176228cfacd3e013a0ee4a5b5a1c56c409032bb8a2959c0dfda0d77",
+      "bytes": 1640
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "1d51a2db-18fc-4de3-bff7-d1e73ace8b6e",
+    "1f9089e1-4170-482f-b988-afe1124a70a9",
+    "2230ba53-445e-411d-b483-16410a072639",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "588b79ff-97ee-4e90-951e-401ece6c5fe1",
+    "645d7583-8391-455b-83d2-c95fb7fe91dc",
+    "76483bd1-37d3-4fb9-889b-aecf27b08b83",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7ad5549e-9baa-4fda-ac43-79d568a86b98",
+    "84c9c7ab-c0b5-437f-b2bf-dc2fd8a61681",
+    "a6729614-4079-4275-ad22-cee04d90ba0c",
+    "b13069df-7475-4b51-a734-621e3da75f8b",
+    "b2ace2c1-d6ee-4d57-915e-901224cded11",
+    "d2c0ed7b-c649-4d77-91de-1bd69dd10a9e",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "e68d2972-4344-4954-b00c-56fdf97d9de4",
+    "e6fb72b4-877d-46ab-8f94-590b971d4dc1",
+    "e854a4f7-4243-44a7-92e2-e22db22bef1b",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f3f7122e-d8d3-48f7-9d9d-df6e71545010"
+  ]
+}

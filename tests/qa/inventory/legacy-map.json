@@ -1,0 +1,4257 @@
+[
+  {
+    "id": "F-S1-001",
+    "kind": "audit-finding",
+    "owner": "flows",
+    "basis": "text:flow"
+  },
+  {
+    "id": "F-S1-002",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S1-003",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S1-004",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S1-005",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S1-006",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S1-007",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S1-008",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S1-009",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S1-010",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S1-011",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S1-012",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S1-013",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S1-014",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S1-015",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S1-016",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S1-017",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S1-018",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S1-019",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S1-020",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S1-021",
+    "kind": "audit-finding",
+    "owner": "infra",
+    "basis": "path:infra"
+  },
+  {
+    "id": "F-S1-022",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S1-023",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S1-024",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S1-025",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S1-026",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S1-027",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S2-001",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S2-002",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S2-003",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S2-004",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S2-005",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S2-006",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S2-007",
+    "kind": "audit-finding",
+    "owner": "unit",
+    "basis": "group:core"
+  },
+  {
+    "id": "F-S2-008",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S2-009",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S2-010",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S2-011",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S2-012",
+    "kind": "audit-finding",
+    "owner": "unit",
+    "basis": "group:core"
+  },
+  {
+    "id": "F-S2-013",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S2-014",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S2-015",
+    "kind": "audit-finding",
+    "owner": "unit",
+    "basis": "group:core"
+  },
+  {
+    "id": "F-S2-016",
+    "kind": "audit-finding",
+    "owner": "harness",
+    "basis": "path:harness"
+  },
+  {
+    "id": "F-S2-017",
+    "kind": "audit-finding",
+    "owner": "unit",
+    "basis": "group:core"
+  },
+  {
+    "id": "F-S2-018",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S2-019",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S2-020",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S2-021",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S3-001",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S3-002",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S3-003",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S3-004",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S3-005",
+    "kind": "audit-finding",
+    "owner": "flows",
+    "basis": "text:flow"
+  },
+  {
+    "id": "F-S3-006",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S3-007",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S3-008",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S3-009",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S3-010",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S3-011",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S3-012",
+    "kind": "audit-finding",
+    "owner": "harness",
+    "basis": "path:harness"
+  },
+  {
+    "id": "F-S3-013",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S3-014",
+    "kind": "audit-finding",
+    "owner": "harness",
+    "basis": "path:harness"
+  },
+  {
+    "id": "F-S3-015",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S3-016",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S3-017",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S3-018",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S3-019",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S3-020",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S3-021",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S3-022",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S4-001",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S4-002",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S4-003",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S4-004",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S4-005",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S4-006",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S4-007",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S4-008",
+    "kind": "audit-finding",
+    "owner": "infra",
+    "basis": "path:infra"
+  },
+  {
+    "id": "F-S4-009",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S4-010",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S4-011",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S4-012",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S4-013",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S5-001",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-002",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S5-003",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-004",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-005",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-006",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-007",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-008",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-009",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-010",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-011",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-012",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-013",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-014",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-015",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-016",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S5-017",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S5-018",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S6-001",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S6-002",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S6-003",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S6-004",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S6-005",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S6-006",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S6-007",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S6-008",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S6-009",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S6-010",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S6-011",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S6-012",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S6-013",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S6-014",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S6-015",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S6-016",
+    "kind": "audit-finding",
+    "owner": "infra",
+    "basis": "path:infra"
+  },
+  {
+    "id": "F-S6-017",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S7-001",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S7-002",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S7-003",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S7-004",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S7-005",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S7-006",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S7-007",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S7-008",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S7-009",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S7-010",
+    "kind": "audit-finding",
+    "owner": "infra",
+    "basis": "path:infra"
+  },
+  {
+    "id": "F-S7-011",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S7-012",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S7-013",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S7-014",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S7-015",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S7-016",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S8-001",
+    "kind": "audit-finding",
+    "owner": "harness",
+    "basis": "path:harness"
+  },
+  {
+    "id": "F-S8-002",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S8-003",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S8-004",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S8-005",
+    "kind": "audit-finding",
+    "owner": "infra",
+    "basis": "path:infra"
+  },
+  {
+    "id": "F-S8-006",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S8-007",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S8-008",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S8-009",
+    "kind": "audit-finding",
+    "owner": "mail",
+    "basis": "text:mail"
+  },
+  {
+    "id": "F-S8-010",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S8-011",
+    "kind": "audit-finding",
+    "owner": "ui",
+    "basis": "group:ui"
+  },
+  {
+    "id": "F-S8-012",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S8-013",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S8-014",
+    "kind": "audit-finding",
+    "owner": "harness",
+    "basis": "path:harness"
+  },
+  {
+    "id": "F-S8-015",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S8-016",
+    "kind": "audit-finding",
+    "owner": "infra",
+    "basis": "path:infra"
+  },
+  {
+    "id": "F-S8-017",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S8-018",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S8-019",
+    "kind": "audit-finding",
+    "owner": "cms",
+    "basis": "group:cms"
+  },
+  {
+    "id": "F-S8-020",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "F-S8-021",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S8-022",
+    "kind": "audit-finding",
+    "owner": "harness",
+    "basis": "path:harness"
+  },
+  {
+    "id": "F-S8-023",
+    "kind": "audit-finding",
+    "owner": "api",
+    "basis": "text:api"
+  },
+  {
+    "id": "F-S8-024",
+    "kind": "audit-finding",
+    "owner": "related",
+    "basis": "fallback:no-rule-matched"
+  },
+  {
+    "id": "QA-CMS-001",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-002",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-002-01",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-002-02",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-002-03",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-002-04",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-002-05",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-002-06",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-002-07",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-002-08",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-003",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-004",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-004-01",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-004-02",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-004-03",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-004-04",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-004-05",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-004-06",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-004-07",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-004-08",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-004-09",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-005",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-006",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-007",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-008",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-009",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-010",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-011",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-012",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-013",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-014",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-015",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-016",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-017",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-018",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-019",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-020",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-021",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-022",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-023",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-024",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-025",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-026",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-027",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-028",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-029",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-030",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CMS-031",
+    "kind": "audit-item",
+    "owner": "cms",
+    "basis": "group:CMS"
+  },
+  {
+    "id": "QA-CORE-001",
+    "kind": "audit-item",
+    "owner": "unit",
+    "basis": "group:CORE"
+  },
+  {
+    "id": "QA-CORE-002",
+    "kind": "audit-item",
+    "owner": "unit",
+    "basis": "group:CORE"
+  },
+  {
+    "id": "QA-CORE-003",
+    "kind": "audit-item",
+    "owner": "unit",
+    "basis": "group:CORE"
+  },
+  {
+    "id": "QA-CORE-004",
+    "kind": "audit-item",
+    "owner": "unit",
+    "basis": "group:CORE"
+  },
+  {
+    "id": "QA-CORE-005",
+    "kind": "audit-item",
+    "owner": "unit",
+    "basis": "group:CORE"
+  },
+  {
+    "id": "QA-DSH-001",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-002",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-003",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-004",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-005",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-006",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-007",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-008",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-009",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-010",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-011",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-012",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-013",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-014",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-015",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-016",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-017",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-018",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-019",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-020",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-021",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-022",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-023",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-024",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-025",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-026",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-027",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-028",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-029",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-030",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-031",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-032",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-033",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-034",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-035",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-036",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-037",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-038",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-039",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-040",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-041",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-042",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-043",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-044",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-045",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-046",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-047",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-048",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-049",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-050",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-051",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-052",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-053",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-DSH-054",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:DSH"
+  },
+  {
+    "id": "QA-MAIL-001",
+    "kind": "audit-item",
+    "owner": "mail",
+    "basis": "group:MAIL"
+  },
+  {
+    "id": "QA-MAIL-002",
+    "kind": "audit-item",
+    "owner": "mail",
+    "basis": "group:MAIL"
+  },
+  {
+    "id": "QA-MAIL-003",
+    "kind": "audit-item",
+    "owner": "mail",
+    "basis": "group:MAIL"
+  },
+  {
+    "id": "QA-MAIL-004",
+    "kind": "audit-item",
+    "owner": "mail",
+    "basis": "group:MAIL"
+  },
+  {
+    "id": "QA-MAIL-005",
+    "kind": "audit-item",
+    "owner": "mail",
+    "basis": "group:MAIL"
+  },
+  {
+    "id": "QA-MAIL-006",
+    "kind": "audit-item",
+    "owner": "mail",
+    "basis": "group:MAIL"
+  },
+  {
+    "id": "QA-MAIL-007",
+    "kind": "audit-item",
+    "owner": "mail",
+    "basis": "group:MAIL"
+  },
+  {
+    "id": "QA-MAIL-008",
+    "kind": "audit-item",
+    "owner": "mail",
+    "basis": "group:MAIL"
+  },
+  {
+    "id": "QA-OPS-001",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-002",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-003",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-004",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-005",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-006",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-007",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-008",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-009",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-010",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-011",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-012",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-013",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-014",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-015",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-016",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-017",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-018",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-019",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-020",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-021",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-022",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-023",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-024",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-025",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-026",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-OPS-027",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:OPS"
+  },
+  {
+    "id": "QA-PUB-001",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-PUB-002",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-PUB-003",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-PUB-004",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-PUB-005",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-PUB-006",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-PUB-007",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-PUB-008",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-PUB-009",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-PUB-010",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-PUB-011",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:PUB"
+  },
+  {
+    "id": "QA-REF-001",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-01",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-02",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-03",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-04",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-05",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-06",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-07",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-08",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-09",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-10",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-11",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-12",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-13",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-14",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-15",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-16",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-17",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-18",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-19",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-20",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-21",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-22",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-23",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-24",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-25",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-26",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-27",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-28",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-29",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-30",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-001-31",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-002",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-003",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-004",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-005",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-006",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-REF-007",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:REF"
+  },
+  {
+    "id": "QA-SSR-001",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-002",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-003",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-004",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-005",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-006",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-007",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-008",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-009",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-010",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-011",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-012",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-013",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-014",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-015",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-016",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-017",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-018",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-019",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-020",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "QA-SSR-021",
+    "kind": "audit-item",
+    "owner": "ui",
+    "basis": "group:SSR"
+  },
+  {
+    "id": "J0",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J1",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J10",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J11",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J12",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J13",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J14",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J2a",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J2b",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J2c",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev",
+    "note": "no executable case: import has no suite-owned source yet (plan §5 Q4)"
+  },
+  {
+    "id": "J3",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J4a",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J4b",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J4c",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J5",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J6",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J7",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J8",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "J9",
+    "kind": "journey",
+    "owner": "flows",
+    "basis": "registry:e2e-dev"
+  },
+  {
+    "id": "REG-001",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-002",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-003",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-004",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-005",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-006",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-007",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "needs:model"
+  },
+  {
+    "id": "REG-008",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "needs:model"
+  },
+  {
+    "id": "REG-009",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-010",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "needs:model"
+  },
+  {
+    "id": "REG-011",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-012",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-013",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-014",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "needs:model"
+  },
+  {
+    "id": "REG-015",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-016",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-017",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-018",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "needs:model"
+  },
+  {
+    "id": "REG-019",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-020",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-021",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-022",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-023",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-024",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-026",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-027",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-028",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-029",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-030",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-031",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-032",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-033",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-034",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-036",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-037",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-038",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-039",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-040",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-041",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-042",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-043",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "needs:model"
+  },
+  {
+    "id": "REG-044",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-045",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-046",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "needs:model"
+  },
+  {
+    "id": "REG-047",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-048",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-051",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-052",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-053",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-054",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-055",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-056",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-057",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-058",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-059",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-060",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-061",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-062",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-063",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-064",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-065",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-066",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-067",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-068",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "needs:model"
+  },
+  {
+    "id": "REG-091",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-092",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-093",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-094",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-095",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-096",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-097",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "needs:model"
+  },
+  {
+    "id": "REG-098",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-099",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-100",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-103",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "needs:model"
+  },
+  {
+    "id": "REG-104",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-110",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-111",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-112",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-113",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-114",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-190",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-191",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-192",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-200",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-201",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-202",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-203",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1000-ai-door-no-silent-env-fallback",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1002-add-site-card-three-lines",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1003-ja-nova-wp7-theme-name-1-1-9",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-1004-ja-vega-wp7-theme-name-1-1-11",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-1005-ja-kinetic-wp7-theme-name-1-1-8",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-1006-ja-impact-wp7-theme-name-1-0-6",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-1007-ja-morgan-wp7-theme-name-1-1-10",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-1008-ja-essence-wp7-layout-fixes-1-0-8",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-1009-help-queue-not-stuck-after-limit",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1014-desktop-signin-handoff",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1015-claude-oauth-redirect",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1015-desktop-app-settings",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1015-model-plan-section",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1015-password-page-whole-language",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1015-plan-model-per-conversation",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1015-plan-signin-fleet-refused",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1015-run-refuses-stale-dsh-build",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1016-help-verification-fixes",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1019-seven-default-questions",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1021-ai-leftovers-actor-symlink-tokens",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1022-brand-pages-language-joomla-emdash",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1023-wp-brief-seeder-image-import",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1024-seven-questions-phase-4-5",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1026-defer-redesign-tools",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1026-delete-translation-group",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1026-review-fixes",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1026-short-road",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1026-site-notes",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1026-tool-output-caps",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1026-turn-open-off-step",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1026-write-receipts",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1027-help-strip-keeps-chat-box-on-screen",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1029-site-publish-screen",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1030-own-domain-review-findings",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1031-help-start-screen-and-copy",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1032-own-domain-bare-name-hint",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1034-hide-only-unticked-pages",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1034-seven-questions-phase-6-fixes",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1035-test-suite-honest-shards",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1038-sidebar-quiet-failures",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1039-help-strip-aligns-with-chat-box",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1040-seven-questions-phase-7-fixes",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1041-lane-door-live-seat-only",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1041-three-seat-roles",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1043-wp-menu-labels-language",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1045-discord-link-doors",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1047-joomla-unticked-buttons-hide",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1048-own-domain-routing",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1049-stop-beside-send",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1050-emdash-unticked-page-kept-lister",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1052-ops-ci-exact-head",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1054-viewer-live-role",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1055-invitations-sandbox",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1057-harness-survey-fences",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1058-site-wears-chosen-design-system",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1064-desktop-link-routing",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1066-harness-review-fixes",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1068-wordpress-joomla-wear-chosen-design-system",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1070-deleted-site-closes-invitations",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1071-harness-survey-followup",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1072-invitations-template-review",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1073-desktop-dev-profile-and-release-preflight",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1074-desktop-auto-update",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1075-my-sites-scroll-last-row",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1075-site-switcher-submenu-in-viewport",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1076-desktop-titlebar-chrome",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1078-desktop-multi-window",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1079-model-plan-language-fallback",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1080-ops-ci-delivery-coverage",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1082-account-menu",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1082-seat-theme-language-persist",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1083-blank-logo-keeps-template-logo",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1083-emdash-blank-language-no-locale-hidden",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1083-emdash-unticked-page-every-edition",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1083-joomla-kept-tags",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1083-template-customization-question-readiness",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1085-boot-cover-keeps-later-wrappers",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1085-new-assistant-401",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1085-new-page-passwords-prefix",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1085-passwords-mount-followups",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1085-site-row-delete-site",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1086-desktop-universal-dmg",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1087-released-templates-follow-chosen-system",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1088-desktop-help-about",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1089-harness-secrets-readonly-looks",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1090-released-quickstart-contracts-agree",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1094-account-photo-from-sign-in",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1094-chat-bubble-fail-closed",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1094-phone-rail-reachable",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1094-seat-sidebar-git-off",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1094-sidebar-git-safe",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1095-not-ready-templates-five-rules",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1096-turn-undo-wordpress-looks",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1097-help-about-notes-height",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1100-p1-help-knows-queue-stop-and-lasting-wishes",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1100-p10-released-theme-number-not-reused",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-1100-p11-pin-joomla-cowork",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1100-p2-look-global-styles-tie",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p2-look-logical-layered-important",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p2-look-nested-rule",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p2-look-nth-receipt",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p2-look-shorthand-winner",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p2-look-undo-no-empty-post",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p3-agent-told-ds-slot",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p3-look-hand-edit-remeasure",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p3-rebuild-flags-pins",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p3-slot-relative-look",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p4-joomla-page-style",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p4-joomla-ticked-links",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1100-p4-joomla-untrimmed-links-off",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1100-p4-wp-menu-link-visible",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p4-wp-page-h1",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p5-late-seal-proves-start",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1100-p5-next-write-waits-for-moment",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1100-p5-unsealed-undo-sentence",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1100-p6-business-link-buttons-keep-their-kind",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1100-p6-joomla-kept-band-keeps-its-buttons",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1100-p6-kept-band-keeps-its-buttons",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1100-p6-ready-templates-measure-12",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1100-p6-stand-down-removes-volumes",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1100-p6-stylesheet-rereleases-have-profile-rows",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1100-p6-tokenized-theme-css-is-current",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1100-p8-dsh-stale-own-pid-lock",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-1100-p9-emdash-business-1-7-6",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1100-pool-drop-logged",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1102-help-about-notes-cap",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1103-about-blank-keeps-template",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1103-emdash-menu-kit-language-share-card",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1103-joomla-kept-article-routes",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1103-wp-form-id-titles-essence-1011",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1104-ai-accounts-row-first-open",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1104-deleted-site-name-reusable",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1104-settings-dialog-fits-360",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1104-thread-card-author-line",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-1107-wp-part-buttons-emdash-kept-title-labels",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1108-wp-part-named-lines-site-language",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1109-auto-merge-unknown-mergeable",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1115-signing-setup-passwords",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1120-invitations-source-readiness",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1121-app-statistic-identity-and-counts",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-1122-customization-keeps-template-where-unanswered",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1126-ja-essence-j6-1-0-4-pinned",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1127-desktop-windows-server",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-1128-g58-fixes-released",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-1129-signin-joomlart",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-893-apply-grace-after-site-up",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-apply-ids-kept-on-site-brief",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-apply-takes-off-pages-not-picked",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-baseline-repo-no-detached-gc",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-PR-893-bind-failure-says-why",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-PR-893-db-dump-imported-into-server-that-stays",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-PR-893-emdash-business-no-demo-post",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-893-emdash-business-no-empty-heading-no-hidden-alternate",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-893-emdash-cleanup-outlives-run",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-893-emdash-forms-mail-account-without-valid-email",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-emdash-hidden-languages-entries-unpublished",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-emdash-kit-pages-hidden",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-893-emdash-tool-gets-template-answers-and-capped-languages",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-failed-teardown-reason-reaches-deleter",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-joomla-contact-no-account-email",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-joomla-identity-facts-encoded-tokens",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-893-joomla-menu-orphans-and-dead-link-entries",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-893-joomla-one-language-template-owners-language",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-joomla-page-title-description-owners",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-joomla-planner-compact-input",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-893-joomla-unreadable-batch-and-icon-markup",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-893-links-into-hidden-pages",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-other-answers-reach-planners-and-judges",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-quiet-jobs-settled-from-the-host",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-893-restore-checks-database-before-touching-site",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-PR-893-teardown-dir-that-will-not-go-keeps-network-steps",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-PR-893-teardown-removes-site-network",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-PR-893-template-own-facts-not-evidence",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-tracy-host-teardown-job-dirs",
+    "kind": "regression",
+    "owner": "infra",
+    "basis": "area:infra"
+  },
+  {
+    "id": "REG-PR-893-wp-apply-sweeps-chosen-language-copies",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-wp-demo-contact-links-lead-to-customer",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-wp-form-recipient-typed-else-account",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-wp-one-language-site-language-steps",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-893-wp-other-languages-own-words",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-893-wp-planned-links-site-and-plugin",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-893-wp-theme-title-description-metas",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-922-community-help-link",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-924-help-pill-follows-column",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-926-compact-site-reads",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-926-fixed-prompt-smaller",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-926-head-pointer-every-mode",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-926-look-set-one-call",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-926-page-create-menu-entry",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-926-page-look-viewport-hidden",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-926-turn-close-after-door-wait",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-926-where-contact-form-switch",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-926-where-map-pointer-every-mode",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-926-wp-apply-writes-site-mailboxes",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-926-wp-replace-identity-tokens",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-926-wp-seo-title-own-meta",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-927-focus-no-halo",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-928-ja-essence-wp7-behaviour-fixes",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-929-login-invalid-email-red",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-935-ja-nova-wp7-behaviour-layout-fixes",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-936-sign-in-source",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-937-demo-banner-offered-only",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-938-ja-impact-wp7-behaviour-layout-fixes",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-940-ops-beta-screens",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-941-ja-morgan-wp7-behaviour-layout-fixes",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-942-ja-kinetic-wp7-behaviour-layout-fixes",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-943-ja-vega-wp7-behaviour-layout-fixes",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-944-ja-kinetic-wp7-contact-recipient",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-945-assistant-human-handoff",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-945-assistant-scoped-to-asker",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-948-site-publish-flow",
+    "kind": "regression",
+    "owner": "unit",
+    "basis": "fallback:unit"
+  },
+  {
+    "id": "REG-PR-949-mail-reserved-domains-whitelist",
+    "kind": "regression",
+    "owner": "mail",
+    "basis": "area:mail"
+  },
+  {
+    "id": "REG-PR-958-turn-undo-engine",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-960-tracy-assertion-service",
+    "kind": "regression",
+    "owner": "harness",
+    "basis": "area:harness"
+  },
+  {
+    "id": "REG-PR-961-ai-rewrite-always-writes",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-962-help-pill-clears-chevron",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-964-sidebar-files-new-session-cwd",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-966-help-command-barrier",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-968-undo-note-for-agent",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-968-undo-preview-reload",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-970-site-changes-undo",
+    "kind": "regression",
+    "owner": "flows",
+    "basis": "area:flows"
+  },
+  {
+    "id": "REG-PR-971-undo-toolbar-sync",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-972-ops-waitlist",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-973-mail-footer-terms",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-977-confirmation-how-it-works-link",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-986-ja-vega-wp7-layout-fixes-1-1-10",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-987-ja-kinetic-wp7-footer-fixes-1-1-7",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-989-ja-morgan-wp7-layout-fixes-1-1-9",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-991-ja-nova-wp7-layout-fixes-1-1-8",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-992-csp-form-action-whitelist",
+    "kind": "regression",
+    "owner": "api",
+    "basis": "area:api"
+  },
+  {
+    "id": "REG-PR-996-ja-impact-wp7-layout-fixes-1-0-5",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  },
+  {
+    "id": "REG-PR-998-add-site-questions-sheet",
+    "kind": "regression",
+    "owner": "ui",
+    "basis": "area:ui"
+  },
+  {
+    "id": "REG-PR-999-wp-theme-display-name",
+    "kind": "regression",
+    "owner": "cms",
+    "basis": "area:cms"
+  }
+]

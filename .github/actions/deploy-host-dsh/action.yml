@@ -1,0 +1,230 @@
+# The deploy steps, written once because dev and production must not drift.
+#
+# Two jobs call this: `deploy-dev` and `deploy-prod`. They differ in exactly two things — the
+# runner label that picks the machine, and the environment name that records the deploy. If the
+# steps were copied into both, the day somebody fixes one is the day the two stop matching, and
+# the half nobody fixed is production.
+#
+# Everything the deploy actually DOES is in `deploy-host-dsh.sh`, not here: this file only carries
+# the image to the host and copies the fleet files into place first. See the header of that script
+# for why (a deploy you can only run by pushing to GitHub is a deploy you cannot read on the night
+# it half-finishes).
+name: Deploy tracy-dsh to this host
+description: Ship the fleet dsh files, pull the image, bring it up, prove it answers, or roll back.
+
+inputs:
+  image:
+    description: Image repository, e.g. ghcr.io/tracyhq/tracy-dsh
+    required: true
+  tag:
+    description: Image tag to deploy
+    required: true
+  token:
+    description: GITHUB_TOKEN, used to pull from GHCR and discarded with the job
+    required: true
+  registry:
+    description: >-
+      Where this host pulls from: ghcr (the default, the GITHUB_TOKEN in `token`) or ecr (the AWS ECR
+      mirror, logged in with the aws-* inputs below). The caller passes the environment's
+      vars.PULL_REGISTRY; empty means ghcr.
+    required: false
+    default: 'ghcr'
+  ecr-image-prefix:
+    description: ECR registry plus repository prefix, e.g. 123456789012.dkr.ecr.us-east-1.amazonaws.com/lab3-image/tracy-ai (ecr only)
+    required: false
+    default: ''
+  aws-region:
+    description: Region of the ECR registry (ecr only)
+    required: false
+    default: ''
+  aws-access-key-id:
+    description: The environment's pull-only ECR key id, secrets.ECR_PULL_AWS_ACCESS_KEY_ID (ecr only)
+    required: false
+    default: ''
+  aws-secret-access-key:
+    description: The environment's pull-only ECR secret, secrets.ECR_PULL_AWS_SECRET_ACCESS_KEY (ecr only)
+    required: false
+    default: ''
+  mirror-result:
+    description: needs.mirror-to-ecr.result of the calling job; ecr refuses to deploy unless it is success
+    required: false
+    default: ''
+
+outputs:
+  image:
+    description: The tracy-dsh repository this deploy pulled (the input, or its ECR name)
+    value: ${{ steps.reg.outputs.image }}
+
+runs:
+  using: composite
+  steps:
+    # 🔒 ghcr (the default) changes nothing: the repositories are the inputs as given and every
+    # command below is the one this action always ran. ecr swaps the registry part of each repository
+    # for `ecr-image-prefix` (same image name, same tag) and refuses unless this run's mirror job
+    # copied the tags to ECR. First, so a wrong setting stops the job before anything on this host
+    # changes.
+    - name: Choose the registry to pull from
+      id: reg
+      shell: bash
+      env:
+        REGISTRY: ${{ inputs.registry }}
+        ECR_PREFIX: ${{ inputs.ecr-image-prefix }}
+        MIRROR: ${{ inputs.mirror-result }}
+        HAS_KEY: ${{ inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != '' && inputs.aws-region != '' }}
+        IMAGE_IN: ${{ inputs.image }}
+      run: |
+        set -euo pipefail
+        case "${REGISTRY:-ghcr}" in
+          ghcr)
+            echo "registry=ghcr" >> "$GITHUB_OUTPUT"
+            echo "image=$IMAGE_IN" >> "$GITHUB_OUTPUT"
+            ;;
+          ecr)
+            [ "$MIRROR" = success ] || { echo "::error::PULL_REGISTRY=ecr but the mirror-to-ecr job of this run did not succeed (${MIRROR:-not run}) — the tag may not be in ECR"; exit 1; }
+            [ "$HAS_KEY" = true ] || { echo "::error::PULL_REGISTRY=ecr but ECR_PULL_AWS_ACCESS_KEY_ID / ECR_PULL_AWS_SECRET_ACCESS_KEY / AWS_REGION are not set for this environment"; exit 1; }
+            case "$ECR_PREFIX" in *.dkr.ecr.*.amazonaws.com/?*) ;; *) echo "::error::ecr-image-prefix '$ECR_PREFIX' is not <registry>/<path>"; exit 1 ;; esac
+            echo "registry=ecr" >> "$GITHUB_OUTPUT"
+            echo "ecr_host=${ECR_PREFIX%%/*}" >> "$GITHUB_OUTPUT"
+            echo "image=$ECR_PREFIX/${IMAGE_IN##*/}" >> "$GITHUB_OUTPUT"
+            echo "pulling from ECR: $ECR_PREFIX/${IMAGE_IN##*/}"
+            ;;
+          *) echo "::error::PULL_REGISTRY is ghcr or ecr, not '$REGISTRY'"; exit 1 ;;
+        esac
+
+    # ⚠ THE FLEET FILES SHIP FROM HERE, NOT FROM `tracy-infra`.
+    #
+    # `/opt/tracy-fleet/` on a host is filled by tracy-infra's `deploy/fleet-receive.sh`, and its
+    # ALLOWED list does not carry `dsh/` — measured 07/09: neither host has host-dsh.yml,
+    # host-dsh-init.sh, or the haproxy config. Waiting on another repository to add three
+    # directories would make every fix to the socket proxy a cross-repo request.
+    #
+    # These four travel together on purpose. host-dsh.yml mounts the haproxy config by a path
+    # relative to ITSELF; a compose file that arrives without it makes compose create an empty
+    # directory at that path and haproxy start with no rules — the socket proxy is the entire
+    # boundary between one customer's site and another's.
+    - name: Put the fleet dsh files in place
+      shell: bash
+      run: |
+        set -euo pipefail
+        install -d -m 0755 /opt/tracy-fleet/dsh
+        install -m 0644 packages/fleet/tracy-fleet-operation/dsh/host-dsh.yml               /opt/tracy-fleet/dsh/
+        install -m 0644 packages/fleet/tracy-fleet-operation/dsh/docker-proxy.haproxy.cfg   /opt/tracy-fleet/dsh/
+        install -m 0644 packages/fleet/tracy-fleet-operation/dsh/host-dsh.env.example       /opt/tracy-fleet/dsh/
+        install -m 0755 packages/fleet/tracy-fleet-operation/dsh/host-dsh-init.sh           /opt/tracy-fleet/dsh/
+        install -m 0755 packages/fleet/tracy-fleet-operation/dsh/deploy-host-dsh.sh         /opt/tracy-fleet/dsh/
+        # Not optional: the deploy refuses to run without it, because a deploy that skips the
+        # profile seed pulls a new image and leaves every seat on the previous build's plugins.
+        install -m 0755 packages/fleet/tracy-fleet-operation/dsh/seed-profile.sh            /opt/tracy-fleet/dsh/
+        install -m 0755 packages/fleet/tracy-fleet-operation/dsh/backup-host-dsh.sh         /opt/tracy-fleet/dsh/
+        ls -la /opt/tracy-fleet/dsh/
+
+    # 🔒 THE PROVISION SCRIPTS SHIP TOO, BECAUSE UNTIL 08/09 NOTHING CARRIED THEM AT ALL.
+    #
+    # `provision.sh` sources four files from `../lib/`, and the dev host had no `lib/` directory —
+    # nor `tools/`, nor `webroot/`. Whoever brought the machine up copied ONE of the four
+    # directories. Every gate was green, the image deployed, the seat book answered, and the first
+    # real "Create a site" died in under a tenth of a second on
+    #
+    #   provision.sh: line 109: ../lib/web-image.sh: No such file or directory
+    #
+    # The file that failed was byte-identical to the repo. What was missing were its neighbours,
+    # and nothing in the repository had a route to a host to notice.
+    #
+    # ⚠ NO `--delete`, AND THAT IS DELIBERATE. A fleet host carries files this repository does not
+    # know about — `tracy-infra` fills parts of `/opt/tracy-fleet/` too, and production hosts have
+    # been running longer than this directory has existed. Copying over what we own is a fix;
+    # removing what we do not recognise is how a deploy takes a production host apart.
+    #
+    # `hooks/` is NOT synced here on purpose: the two variants are named after machines but are two
+    # different ROLES (see tasks/quyet-dinh-merge-main-vao-develop.md §C5), the right one is chosen
+    # when a host is built, and it runs under a systemd unit. Overwriting it from a deploy would
+    # swap a host's role on a push.
+    - name: Put the fleet provision scripts in place
+      shell: bash
+      run: |
+        set -euo pipefail
+        SRC=packages/fleet/tracy-fleet-operation/scripts
+        for dir in lib provision tools webroot; do
+          [ -d "$SRC/$dir" ] || { echo "::error::$SRC/$dir missing from the checkout"; exit 1; }
+          install -d -m 0755 "/opt/tracy-fleet/$dir"
+          # Say what CHANGES before changing it. A deploy that silently rewrites a running host's
+          # scripts is one nobody can read on the night it goes wrong.
+          for f in "$SRC/$dir"/*; do
+            [ -f "$f" ] || continue
+            dest="/opt/tracy-fleet/$dir/$(basename "$f")"
+            if [ ! -e "$dest" ]; then echo "  + $dir/$(basename "$f")"
+            elif ! cmp -s "$f" "$dest"; then echo "  ~ $dir/$(basename "$f")"
+            fi
+          done
+          cp -a "$SRC/$dir"/. "/opt/tracy-fleet/$dir/"
+        done
+        chmod +x /opt/tracy-fleet/lib/*.sh /opt/tracy-fleet/tools/*.sh /opt/tracy-fleet/provision/*.sh 2>/dev/null || true
+
+        # The four `provision.sh` actually sources. Assert rather than hope: this step exists
+        # because their absence was invisible until a customer-facing press failed.
+        for f in publish-excludes site-apache-conf web-image webroot-htaccess; do
+          [ -f "/opt/tracy-fleet/lib/$f.sh" ] || { echo "::error::lib/$f.sh did not land"; exit 1; }
+        done
+        echo "fleet scripts: $(ls /opt/tracy-fleet/lib | wc -l) lib, $(ls /opt/tracy-fleet/provision | wc -l) provision, $(ls /opt/tracy-fleet/tools | wc -l) tools, $(ls /opt/tracy-fleet/webroot | wc -l) webroot"
+
+    # The registry credential lives for the length of this job and is then logged out. No host in
+    # the fleet stores a GHCR token, which is the reason the deploy runs here rather than being
+    # pushed at the host from somewhere else.
+    - name: Log in to GHCR
+      if: steps.reg.outputs.registry == 'ghcr'
+      shell: bash
+      run: echo '${{ inputs.token }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+    # The keys reach the login step alone, as step env: not configure-aws-credentials, which would
+    # export them to every later step of the job, the deploy script on this host included.
+    # amazon-ecr-login masks the password and runs `docker login`; the logout step below and the
+    # action's own post step both log out again.
+    - name: Log in to ECR
+      if: steps.reg.outputs.registry == 'ecr'
+      uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        AWS_REGION: ${{ inputs.aws-region }}
+
+    - name: Deploy
+      shell: bash
+      env:
+        DSH_IMAGE: ${{ steps.reg.outputs.image }}
+      run: /opt/tracy-fleet/dsh/deploy-host-dsh.sh --tag '${{ inputs.tag }}'
+
+    # Every deploy pulls a new image and nothing used to remove the old ones: on 24/09/2026 the dev
+    # machine held 467 images and a 99% disk, and the next deploy died mid-fetch with no error.
+    # Only after a green deploy, and never able to turn it red (`deploy/scripts/prune-old-images.sh`).
+    - name: Remove images this host can pull back
+      if: success()
+      shell: bash
+      run: bash deploy/scripts/prune-old-images.sh --repo '${{ steps.reg.outputs.image }}' --keep-env /etc/tracy/host-dsh.env:DSH_IMAGE_TAG || echo "::warning::image prune failed; the deploy stands"
+
+    - name: Log out of GHCR
+      if: always()
+      shell: bash
+      run: docker logout ghcr.io || true
+
+    - name: Log out of ECR
+      if: always() && steps.reg.outputs.registry == 'ecr'
+      shell: bash
+      run: docker logout '${{ steps.reg.outputs.ecr_host }}' || true
+
+    - name: Report
+      if: always()
+      shell: bash
+      run: |
+        # One `--format` per line: a Go template with embedded newlines ends the YAML block scalar
+        # it is written inside, and the parse error names a line thirty below the cause.
+        {
+          echo "### ${{ runner.name }}"
+          echo
+          echo '```'
+          docker inspect tracy-dsh --format 'image:   {{.Config.Image}}' 2>/dev/null \
+            || echo 'tracy-dsh is not running on this host'
+          docker inspect tracy-dsh --format 'status:  {{.State.Status}} / {{if .State.Health}}{{.State.Health.Status}}{{else}}no healthcheck{{end}}, restarts {{.RestartCount}}' 2>/dev/null || true
+          docker inspect tracy-dsh --format 'started: {{.State.StartedAt}}' 2>/dev/null || true
+          docker exec tracy-dsh printenv TRACY_SOURCE_COMMIT 2>/dev/null | sed 's/^/commit:  /' || true
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"

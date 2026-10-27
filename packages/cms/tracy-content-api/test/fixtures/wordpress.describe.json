@@ -1,0 +1,1845 @@
+{
+  "$comment": "Profile extraction, not a live response. blockKinds: packages/cms/tracy-content-api/describe-map.mjs wordpressSlotField + slotBlockKinds over content-map.json: kind = entity.kind; key = target.block (metadata.name) for a page slot, target.option or \"<option>.<field>\" for an option slot; constraints stated only where every slot of the field agrees; the map has no requiresEvidence. Locales are the entity languages of the content map. types follow the content-api-v1 section 4 table (page, option/template part shared); counts are unknown. Site id/url are synthetic.",
+  "schemaVersion": "tracy-content-describe/v1",
+  "view": "authenticated",
+  "site": {
+    "id": "s-fixture-wordpress",
+    "name": null,
+    "url": "https://example.invalid",
+    "defaultLocale": "en",
+    "locales": ["en"]
+  },
+  "provenance": {
+    "quickstartTag": "tracy-business/wp7",
+    "quickstartVersion": "1.2.0",
+    "contractId": "tracy-business/wp7/1.2.0",
+    "contractHash": null
+  },
+  "protocol": {
+    "selected": "tracy-content/v1",
+    "relayExtensions": ["writable", "constraints", "next", "protocol"],
+    "cowork": {
+      "kind": "wordpress",
+      "capability": "v1"
+    }
+  },
+  "scope": "published",
+  "i18n": {
+    "mode": "entity",
+    "defaultLocale": "en",
+    "locales": ["en"],
+    "fallback": null
+  },
+  "presentation": {
+    "state": "unlocked",
+    "reason": "content recommendation: keep the design baseline in contract profile tracy-business/wp7/1.2.0"
+  },
+  "permissions": {
+    "role": "owner",
+    "toolsets": {
+      "content": true,
+      "code": true,
+      "site": true,
+      "lifecycle": true
+    },
+    "read": true,
+    "apply": true,
+    "note": "This seat may apply slot writes through tracy_site content.contract."
+  },
+  "types": [
+    {
+      "type": "page",
+      "count": null
+    },
+    {
+      "type": "shared",
+      "count": null
+    }
+  ],
+  "blockKinds": [
+    {
+      "kind": "option",
+      "label": null,
+      "root": null,
+      "nestable": null,
+      "fields": [
+        {
+          "key": "blogname",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "blogdescription",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 70,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "tracy_site_identity.name",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.legalName",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 120,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.slogan",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 200,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.monogram",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 4,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.contact.email",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 120,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.contact.phone",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 40,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.contact.tel",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 24,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.contact.address",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 200,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.contact.hours",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.social.facebook",
+          "type": "url",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.social.instagram",
+          "type": "url",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.social.linkedin",
+          "type": "url",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.social.tiktok",
+          "type": "url",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        },
+        {
+          "key": "tracy_site_identity.social.youtube",
+          "type": "url",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": true
+          }
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "label": null,
+      "root": null,
+      "nestable": null,
+      "fields": [
+        {
+          "key": "hero.eyebrow",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.heading",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 100,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.intro",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 306,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.cta.1",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.cta.2",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.item.1.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.item.1.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.item.2.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.item.2.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.item.3.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.item.3.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.item.4.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.item.4.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.eyebrow",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.heading",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.cta.1",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.1.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.1.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.1.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.2.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.2.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.2.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.3.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.3.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.3.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.4.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.4.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.item.4.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.heading",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.cta.1",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.1.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.1.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.1.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 204,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.1.href",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.2.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.2.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.2.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 162,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.2.href",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.3.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.3.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.3.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 128,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.3.href",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.eyebrow",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.heading",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.1.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.1.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.2.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.2.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.3.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.3.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "cta.heading",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "cta.intro",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "cta.cta.1",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.heading",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.cta.1",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.1.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.1.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 104,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.1.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 122,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.1.href",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.2.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.2.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 110,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.2.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 126,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.2.href",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.3.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.3.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 96,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.3.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 120,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.3.href",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "gallery.eyebrow",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.intro",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "stats.item.1.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "stats.item.1.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "stats.item.2.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "stats.item.2.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "stats.item.3.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "stats.item.3.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "stats.item.4.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "stats.item.4.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "services.intro",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 558,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.4.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.4.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.heading",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.1.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.1.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.1.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 110,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.2.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.2.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.2.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 134,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.3.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.3.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.3.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 98,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.4.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.4.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.4.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 82,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "cta.cta.2",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "stats.item.2.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.1.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.2.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.3.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.4.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.cta.1",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "contact.heading",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "contact.intro",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 172,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "contact.item.1.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "contact.item.1.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 144,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "contact.item.2.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "contact.item.2.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "contact.item.3.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "contact.item.3.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "contact.item.4.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "contact.item.4.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "links.heading",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "links.item.1.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "links.item.1.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "links.item.2.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": null,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "links.item.2.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "links.item.3.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "links.item.3.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "links.item.4.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "links.item.4.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.5.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.5.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.6.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.item.6.text",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.4.meta",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.4.title",
+          "type": "text",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 80,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "hero.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.1.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.2.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.3.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "text.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.1.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.2.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "news.item.3.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "gallery.item.1.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "gallery.item.2.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "gallery.item.3.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "gallery.item.4.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "gallery.item.5.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.1.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.2.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.3.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "team.item.4.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        },
+        {
+          "key": "projects.item.4.img",
+          "type": "image",
+          "translatable": null,
+          "writable": true,
+          "constraints": {
+            "maxCharacters": 255,
+            "requiresEvidence": null,
+            "emptyAllowed": null
+          }
+        }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "ai.tracy.content.read",
+      "version": "1"
+    },
+    {
+      "name": "ai.tracy.content.describe",
+      "version": "1"
+    },
+    {
+      "name": "ai.tracy.content.slot-write",
+      "version": "1"
+    }
+  ],
+  "guidance": "Read content with content.read, then write one slot with tracy_site content.contract operation apply, using the next call a writable field carries. Respect maxCharacters and requiresEvidence. The quickstart’s design is a recommendation: reuse its sections and styles; new text 0.75×–1.25× the length it replaces.",
+  "links": {
+    "read": "/content.json",
+    "schema": "urn:tracy:content:v1"
+  }
+}

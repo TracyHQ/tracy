@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "fb4cfe58-00b5-4e6a-b251-0c65e60b6649",
+  "status": "complete",
+  "name": "Cassette",
+  "url": "https://styles.refero.design/style/fb4cfe58-00b5-4e6a-b251-0c65e60b6649",
+  "sourceWebsite": "https://cassettemusic.com",
+  "extractedAt": "2026-06-03T18:27:04.829Z",
+  "capturedAt": "2026-10-08T05:19:53.089790+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "Neon cassette on black velvet. A single hi-vis yellow burns against a warm-black void, the way a tape label glows under a single bulb in a dark room.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/9555c35e-c72b-4db0-a38d-aa9460b2bee8.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/8ed76713-309a-43b5-9d69-13779b33c7d0.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/f7a381e4-6d51-4041-a20f-ad2585ddf0e5.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/0f676f45-9857-4686-9e88-e46472c444e8.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/bcb5c660-9856-4e76-acc3-96990d332946.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "e2dc8217acae6251ac295e0c03af9ed547daf267348fdfd37e1a0d847bebc4f7",
+      "bytes": 17721
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c63d63b30799eccf8bbe17a981057e2983f0b3f6dc1f73a1e39ada8ee51f956a",
+      "bytes": 233591
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "4948bf1056b5a1c3933a7de1beac038281a3b430ddd36c8f16e883f5a595cf94",
+      "bytes": 15430
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "fd36e6056fd72fe97190c5159cfec7cfbf5232d090910c8e70410c54d63df4cc",
+      "bytes": 6674
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "7a9a05e733f7ebad7efc569f1d2d37ed7c3f2cfbc3e5471280fdeabf921996b1",
+      "bytes": 12481
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "bce840d5a3bcdc83fee3c2a0a1026f862d0d314d60f830bb9a3eceb8e11bd63d",
+      "bytes": 2500
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "2c074ccd61755fa9e2b8d7fc8acc27e4aa631f46507aea82a21cf04a6aba83bc",
+      "bytes": 458
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "a04e60652167bb39d1da3b57e4453b4133e96f4b7c8fcb04b38d7c9c725c488a",
+      "bytes": 475
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "4c36b73d89d2f2ac2e9e8942651651945a181350292c1e3fcf0f7f7d5cd5567e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "90637bd8989b6a359315fd20daf12a39d909aab8b426360459bd93e897a07a5f",
+      "bytes": 41424
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "bf5efc73d048ef31c9ee22bbd8d38d8521f800cf09566501eab1fa481e3adce5",
+      "bytes": 21652
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e3e0ec16e58d4b4f7619ca150e9b7938b23062ce135e5f046f07d2e30dff2abe",
+      "bytes": 37650
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "58e46d35289fb7261be77a09822735f86946d1c558fe81937ea7e5ac8c7b877e",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "58feadf94d1c8fb11443e0dbf3d6698756219130782c4e64ef2d3861d76c1884",
+      "bytes": 967
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "157c764c45915f8a9f9cb730b98f358022d8df831bed91a0895d38d7bd9a0987",
+      "bytes": 1431
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "031056ff-7af1-46db-8daa-115f731c5d26",
+    "045e9f2b-91d3-44cc-bc99-1ce5f3fd4ed6",
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "170a690b-7424-4c2e-9d08-975725cf9261",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "3677bc04-7461-4aa4-aec7-5291bac41b0b",
+    "3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "5183054c-4c6e-4ecf-bd90-f7d794d5eb17",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "64ba8e77-d1be-48a2-a47d-bdd46e139b8f",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "b7fc2173-c9b1-45ed-bd3a-9999320b3248",
+    "bab34295-03fc-4993-ae42-b440fe78647b",
+    "c2702938-b670-414c-ba47-94618212085e",
+    "d04a3970-45f0-4030-8375-d0d26c083c0f",
+    "d1f5ece3-ec6c-467d-8a59-51ee259cc023",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7",
+    "fb4cfe58-00b5-4e6a-b251-0c65e60b6649",
+    "ff8f39ee-a10e-4a9d-a94d-6993c6084060"
+  ]
+}

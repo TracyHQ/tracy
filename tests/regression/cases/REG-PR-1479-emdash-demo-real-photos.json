@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-1479-emdash-demo-real-photos",
+  "kind": "fix",
+  "title": "Image-only CMS adapters place sourced photos through native contract shapes and preserve editor/revision fences",
+  "pr": 1479,
+  "area": "site-brief/pictures",
+  "cms": ["em", "jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: an opportunity-built EmDash site with own photos is applied.",
+    "S2: a site with no own photos.",
+    "S3: run the image-only adapter with a suitable photograph beyond the first 24; replay after success, after a known draft, and after a published gallery readback failure.",
+    "S4: clear an image as an editor, change its schema, lose a PUT response after commit, hide a parent page, and simulate a prose writer clearing the image.",
+    "S5: inspect the WordPress contract as native keyed slot values, then replace a real photo; simulate an editor change before upload and between upload and contract write."
+  ],
+  "expect": [
+    "S1: both runs get --no-images and no image key.",
+    "S2: drawing as before.",
+    "S3: sourced media is uploaded and read back; text stays unchanged; replay does not upload again or repeat an acknowledged publication.",
+    "S4: editor changes and unknown mutations fail closed; hidden detail routes are excluded; a later prose image change cannot pass verification.",
+    "S5: the keyed WordPress inspection writes only image slots and verifies readback; both editor changes refuse replacement."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/brief-emdash-real-pictures.test.mjs",
+    "code": "sites/brief-engines/emdash.js realPictures, app.js createSitePictures for EmDash"
+  },
+  "evidence": "Review 19/10/2026: WordPress/Joomla stopped drawing when the place had photos; EmDash did not",
+  "fence": "EmDash follows the same real-photos rule",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brief-emdash-real-pictures.test.mjs",
+      "apps/tracy-web/test/brief-emdash-picture-stage.test.mjs",
+      "apps/tracy-web/test/brief-contract-picture-stage.test.mjs"
+    ],
+    "tests": [
+      "an opportunity-built EmDash site with the restaurant’s own photographs draws no picture, in the warm-up nor on the site",
+      "a site with no photographs of its own — none collected, not an opportunity’s, or a reader that fails — draws as before",
+      "a real photo beyond the first 24 is eligible, without a text plan or a model call",
+      "an editor clearing an image before a retry is never filled back in",
+      "a lost PUT response is uncertain and cannot be adopted as an owned draft",
+      "a published gallery receipt reconciles generated row UUIDs after a failed readback",
+      "the final read-only fence rejects images replaced by a later prose writer",
+      "wordpress: image-only phase uses shared selection/crop and writes no text",
+      "wordpress: an editor change refuses image replacement before upload",
+      "wordpress: changes between upload and contract write are not a new baseline"
+    ]
+  }
+}

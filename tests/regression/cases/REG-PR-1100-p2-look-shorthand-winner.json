@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1100-p2-look-shorthand-winner",
+  "kind": "fix",
+  "title": "page.look names the rule that really wins a shorthand (padding, margin, border-radius…) side by side, and look.set beats every rule that wins a part of it",
+  "pr": 1100,
+  "area": "site-tools/look",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/tools/tracy-site-tools run: node --test --test-reporter=tap test/look-style.test.mjs test/look-set.test.mjs",
+    "S2: Read the result of the tests named in run.tests: resolveStyles on the dskeepwp hero button cascade (test/look-cascade-fixture.mjs — global styles' own padding-* (0,1,0), the agent's `padding:14px 25px` (0,7,0), the design-system slot's padding-top/-right/-bottom/-left (0,8,0)), and look.set on the readings it makes."
+  ],
+  "expect": [
+    "S1 exits 0.",
+    "page.look's `padding` names the slot's `:root:root:root:root:root:root .tracy .wp-block-button__link` with set 'padding-top: 7px; padding-right: 21px; padding-bottom: 7px; padding-left: 21px' — never the agent's losing shorthand rule; `padding-top` and a shorthand-vs-shorthand `border-radius` read as before.",
+    "When different rules win different sides, `parts` names each group with its rule and sheet, the latest in the cascade leads, a side no rule sets is its own part, and the answer's next says a change must beat each.",
+    "look.set scope element writes a rule more specific than (0,8,0) holding `padding: 14px 25px`; scope site refuses a shorthand split across rules (naming each) and, for one rule setting its sides from tokens, appends the shorthand to that rule and sets no token to a two-value padding."
+  ],
+  "selectors": {
+    "code": "packages/tools/tracy-site-tools/src/host/look-style.mjs resolveStyles (LONGHANDS, winnerFor); look-set.mjs winnersOf",
+    "fixture": "packages/tools/tracy-site-tools/test/look-cascade-fixture.mjs"
+  },
+  "evidence": "dskeepwp 09/10/2026: the slot wrote padding-top/-bottom:7px, padding-left/-right:21px at (0,8,0); the agent's Additional CSS `padding:14px 25px` (0,7,0) lost, computed stayed 7px 21px, page.look named the agent's rule as the winner and the agent told the customer the button was bigger.",
+  "fence": "resolveStyles resolves a shorthand longhand by longhand (namesFor covers every shorthand of a longhand); look.set beats the most specific winner at or after the latest sheet",
+  "run": {
+    "cwd": "packages/tools/tracy-site-tools",
+    "cmd": ["node", "--test", "--test-reporter=tap", "test/look-style.test.mjs", "test/look-set.test.mjs"],
+    "tests": [
+      "🔒 a shorthand is read side by side",
+      "a shorthand whose sides different rules win: each group named",
+      "🔒 WordPress wearing a design system: a padding change beats the slot",
+      "a shorthand whose sides different rules win: the element rule beats the most specific",
+      "scope \"site\" on a shorthand its rule sets side by side from tokens"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+:root {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-charcoal: #3d3d3d;
+  --color-concrete: #9e9e9e;
+  --color-ash: #b5b5b5;
+  --color-smoke: #8d8d8d;
+  --color-paper-white: #ffffff;
+  --color-bone: #f0eeed;
+  --color-liberty-navy: #142161;
+  --color-signal-red: #ba2223;
+
+  /* Typography — Font Families */
+  --font-ntneuss: 'NTNeuss', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-recklessneue-book: 'RecklessNeue-Book', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

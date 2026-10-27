@@ -1,0 +1,185 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "joomla/tracy-base",
+  "minVersion": {
+    "tracy-base/j6": "1.0.2",
+    "tracy-apple/j6": "1.3.0"
+  },
+  "maxVersion": {
+    "tracy-base/j6": "1.0.5",
+    "tracy-apple/j6": "1.3.1"
+  },
+  "maxVersionNote": "16/10/2026 (feat/ds-role-variables): tracy-apple/j6 1.3.1 = 1.3.0 with the template reading the standard role variables and the readable accent (the Tracy Base 1.0.3 -> 1.0.5 source changes laid over Apple's own, the two templates share the same sources but for a few rules), same database, verified from its own archive against 1.3.0 as released. tracy-base/j6 1.0.5 = 1.0.4 with the text the template painted with its accent fill reading the readable accent (scss + tokenize), same database, verified from its own archive against 1.0.4 as released (0 computed differences). tracy-base/j6 1.0.4 = 1.0.3 with the template read the standard role variables at its source (template-patches/role-variables-tracy-base laid over it, tokenized with this contract), two demo edits in the database (the social proof kicker reads the readable accent; the team avatars carry their own names' initials); the role scan clean (design-system-roles.json, 0 unresolved), verified from its own archive against 1.0.3 as released.",
+  "applies": "one site module (mod_custom, position header-r, first, every page, chrome none) holding the slot sheet and its font link — created and changed through Claude Cowork's content.update kind module + moduleAssignment, no template file touched (T4 reads its own custom-code params only from etc/global.json, which the presentation lock holds)",
+  "baseSystem": "od:apple",
+  "module": {
+    "title": "Tracy design system",
+    "position": "header-r",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "header-r is the first module position of both header blocks (header-1, header-2: every layout), rendered raw; the slot is parsed before every element under it, so nothing paints in the template's look first and then transitions (measured 09/10: in `footer` the landing CTA kept the template's blue — its transition:all ran from the first paint)"
+  },
+  "roles": {
+    "page": "body",
+    "display": ".tracy-native-landing [data-od-block=\"hero\"] h1",
+    "heading": ".tracy-native-landing .section-head h2",
+    "body": ".tracy-native-landing [data-od-block=\"hero\"] p",
+    "button-primary": ".tracy-native-landing [data-od-block=\"hero\"] a[href]",
+    "container": ".tracy-native-landing .wrap",
+    "section": ".tracy-native-landing section.section"
+  },
+  "tokenScope": ":root, html[data-theme=\"dark\"], html.t4-dark, [data-bs-theme=\"dark\"]",
+  "runtime": {
+    "--body-bg-color": "var(--bg)",
+    "--body-text-color": "var(--fg)",
+    "--body-link-color": "var(--ds-c-accent-text)",
+    "--body-link-hover-color": "var(--ds-c-accent-text-hover)",
+    "--color-primary": "var(--accent)",
+    "--color-secondary": "var(--surface)",
+    "--color-success": "var(--success)",
+    "--color-info": "var(--accent)",
+    "--color-warning": "var(--warn)",
+    "--color-danger": "var(--danger)",
+    "--color-light": "var(--surface)",
+    "--color-dark": "var(--fg)",
+    "--mainnav-text-color": "var(--fg)",
+    "--mainnav-link-color": "var(--fg)",
+    "--mainnav-link-hover-color": "var(--ds-c-accent-text)",
+    "--mainnav-link-active-color": "var(--ds-c-accent-text)",
+    "--footer-bg-color": "var(--surface)",
+    "--footer-text-color": "var(--meta)",
+    "--footer-link-color": "var(--muted)",
+    "--footer-link-hover-color": "var(--fg)"
+  },
+  "brandScope": ".tracy-native-landing",
+  "brandVars": {
+    "--brand-color-primary": "var(--accent)",
+    "--brand-color-primary-hover": "var(--accent-hover)",
+    "--brand-color-primary-active": "var(--accent-active)",
+    "--brand-color-primary-contrast": "var(--accent-on)",
+    "--brand-color-primary-ink": "var(--ds-accent-text, var(--accent))",
+    "--brand-color-primary-text": "var(--ds-accent-text, var(--fg))",
+    "--brand-color-primary-bg": "var(--surface)",
+    "--brand-color-primary-bg-hover": "color-mix(in srgb, var(--accent) 25%, var(--bg))",
+    "--brand-color-primary-border": "color-mix(in srgb, var(--accent) 45%, var(--bg))",
+    "--brand-color-primary-border-hover": "color-mix(in srgb, var(--accent) 60%, var(--bg))",
+    "--brand-color-info": "var(--accent)",
+    "--brand-color-info-bg": "color-mix(in srgb, var(--accent) 10%, var(--bg))",
+    "--brand-color-info-border": "color-mix(in srgb, var(--accent) 45%, var(--bg))",
+    "--brand-color-link": "var(--ds-accent-text, var(--accent))",
+    "--brand-color-link-hover": "var(--ds-accent-text-hover, var(--accent-hover))",
+    "--brand-color-link-active": "var(--ds-accent-text, var(--accent-active))",
+    "--brand-color-text": "var(--fg)",
+    "--brand-color-warning": "color-mix(in srgb, var(--warn) 65%, var(--fg))",
+    "--brand-color-text-secondary": "var(--muted)",
+    "--brand-color-text-tertiary": "var(--muted)",
+    "--brand-color-text-quaternary": "var(--muted)",
+    "--brand-color-bg-container": "var(--bg)",
+    "--brand-color-bg-elevated": "var(--bg)",
+    "--brand-color-bg-layout": "var(--bg)",
+    "--brand-color-border": "var(--border)",
+    "--brand-color-border-secondary": "var(--border-soft)",
+    "--brand-color-fill": "var(--border)",
+    "--brand-color-fill-secondary": "var(--border-soft)",
+    "--brand-color-fill-tertiary": "var(--surface)",
+    "--brand-color-fill-quaternary": "var(--surface-warm)",
+    "--brand-font-family": "var(--font-body)",
+    "--brand-font-family-code": "var(--font-mono)",
+    "--brand-primary-palette-1": "color-mix(in srgb, var(--accent) 10%, var(--bg))",
+    "--brand-primary-palette-2": "color-mix(in srgb, var(--accent) 28%, var(--bg))",
+    "--brand-primary-palette-3": "color-mix(in srgb, var(--accent) 46%, var(--bg))",
+    "--brand-primary-palette-4": "color-mix(in srgb, var(--accent) 64%, var(--bg))",
+    "--brand-primary-palette-5": "color-mix(in srgb, var(--accent) 82%, var(--bg))",
+    "--brand-primary-palette-6": "var(--accent)",
+    "--brand-primary-palette-7": "color-mix(in srgb, var(--accent) 82%, var(--fg))",
+    "--brand-primary-palette-8": "color-mix(in srgb, var(--accent) 64%, var(--fg))",
+    "--brand-primary-palette-9": "color-mix(in srgb, var(--accent) 46%, var(--fg))",
+    "--brand-primary-palette-10": "color-mix(in srgb, var(--accent) 28%, var(--fg))"
+  },
+  "brandFromSlot": {
+    "--brand-border-radius": "--ds-btn-radius",
+    "--brand-border-radius-lg": "--ds-card-radius",
+    "--brand-border-radius-sm": "--ds-input-radius",
+    "--brand-font-weight-strong": "--ds-weight-button"
+  },
+  "modes": true,
+  "modesNote": "the template has a light/dark switch ([data-tracy-theme-toggle]; js/darkmode.js sets data-theme, data-bs-theme and html.t4-dark together, index.php sets them before paint): the module sheet writes the system's own side under the template's matching mode and the other side derived from it (src/derive.mjs, src/sides.mjs, keyed on data-theme), and does not hide the switch (Akemi 13/10/2026: hiding it is a bug; MODE-2). Tracy Airbnb, the same template under another element, inherits it",
+  "selectors": {
+    "display": ".tracy-native-landing h1",
+    "headingsAll": [".tracy-native-landing :is(h1, h2, h3, h4)", ".t4-section :is(h1, h2, h3)"],
+    "body": ["body"],
+    "themeToggle": "[data-tracy-theme-toggle]",
+    "landingButton": [
+      ".tracy-native-landing a[style*=\"--brand-control-height\"]",
+      ".tracy-native-landing .op-button"
+    ],
+    "accentText": [".tracy-native-landing .kicker"],
+    "eyebrow": [".kicker"],
+    "cardLike": [".zig-visual"]
+  },
+  "specificity": "Rules are prefixed :root×6 (0,6,0): above every template rule, below an element's own inline style.",
+  "brandNote": "re-measured 12/10/2026 with every heading and text judged: the landing's third- and fourth-rank text (--brand-color-text-tertiary and -quaternary, both the template's meta grey, 3.51-3.62:1 on its own white) took each system's meta (the fourth a lighter mix of it), made to be faint (Moxie 2.11:1, MotherDuck 2.63, Toggl Track 2.46, Apple 2.15): it takes the system's muted. The highlighted card's ground (--brand-color-primary-bg) is the template's surface again, not a 10% accent tint, where the system's muted read 4.16-4.43:1. The star rating's warning yellow (1.92:1 on the template's white) is mixed a third toward the system's text, so it darkens on a light page and lightens on a dark one (Apple 1.76:1 before). 15/10/2026: the landing's ground (--brand-color-bg-layout) is the page (var(--bg)), as the published template's own native-landing.css sets it; the system's surface there drew the landing as a #212121 block between a #141414 header and body (Figma dark) and #f5f5f5 against white (light). The ten accent steps (--brand-primary-palette-1 to -10, the hero chart bars) are the system's accent moved toward the page (steps 1 to 5) and toward the text (7 to 10), step 6 the accent: light to dark on a light page and dark to light on a dark one, like the template's own two ramps; never derived, they stayed the template's Apple blue under every system",
+  "followRules": {
+    ":is(.tracy-hero__eyebrow, .tracy-features-intro__eyebrow, .tracy-chapter__action, .tracy-btn--secondary, .btn-secondary)": {
+      "color": "accent-text"
+    },
+    ".tracy-plan__badge": {
+      "color": "fg"
+    }
+  },
+  "sideRules": {
+    "light": {
+      ".tracy-band--scene :is(.tracy-chapter__action, .tracy-btn--secondary)": {
+        "color": "var(--ds-c-on-ink)"
+      },
+      ".tracy-badge--success": {
+        "color": "#15803d"
+      },
+      ".tracy-band--scene .tracy-chapter__support": {
+        "color": "color-mix(in srgb, var(--ds-c-on-ink) 90%, var(--ds-c-ink))"
+      }
+    },
+    "dark": {
+      ".tracy-band--scene": {
+        "--tracy-scene-bg": "var(--ds-c-bg)",
+        "--tracy-scene-fg": "var(--ds-c-fg)"
+      },
+      ".tracy-card .tracy-features-intro__card-text": {
+        "color": "color-mix(in srgb, var(--ds-c-muted) 50%, var(--ds-c-fg))"
+      }
+    }
+  },
+  "sideNote": "Tracy Base (tracy-base/j6 1.0.4, preview measured 16/10/2026): its scene bands (.tracy-band--scene) are the ink band, black on the template's light page and flush with its black page in its dark look (1.00:1). On a dark side the system's ink is a lifted surface (Moxie dark #1a1a1a on #000000, 1.21:1, GROUND-2): there they take the system's page and its text colour, as the template's dark look keeps them. On a light side the chapter's support line in a scene band took the system's muted, made for a light page (#595959 on black, 3.0:1 under refero 5fd3b3b4): it is the band's own words mixed toward its ink. Tracy Apple 1.3.1 (16/10/2026, built-site run at probe v9): its scene bands read the system's ink as Tracy Base's do, so the rules 1.3.0 needed for a band that stayed black (the support line the template's #86868b, the action line and secondary button the accent itself) read 1.43:1 on Airbnb's grey ink (#6d6d6d) and 3.02-3.97:1 on the darker inks (Stripe, Pitch, Figma, Apple, Voiceflow): in a scene band on a light side the action line and the secondary button take the band's own words (on-ink) and the support line is those words mixed 10% toward the ink (Airbnb's grey ink: 4.85:1; the 60% mix read 2.6:1 there), which also holds on 1.3.0's black band. On a dark side the feature cards' text (muted on a lifted card) read 3.62-4.49:1 under Moxie, Spotify, Linear and every derived dark side (the template's own is higher): it is the muted mixed halfway toward the page text. T4's link variables (--body-link-color and its hover, the main menu's hover and active) read the readable accent: the accent fill painted the category list's subcategory titles #6786c4 on #eae5cc under Moxie (2.87:1, CON-2).",
+  "formTokens": {
+    "--tracy-capsule-pad": "var(--space-3) var(--space-5)"
+  },
+  "formTokensNote": "Tracy Base sizes every .btn from --tracy-capsule-pad, which the slot sets from the system's button padding: inside a form it is the template's own value (css/styles/base.css), so a field's button keeps the field's 44px (Moxie: 34px beside 44px fields on sign-in, search and contact, LAYOUT-3, 16/10/2026). Tracy Apple shares this contract; its own value was not measured here.",
+  "followNote": "Tracy Apple's page modules (tracy-apple/j6 1.3.0, re-measured 12/10/2026 with every heading and text judged): the hero and features eyebrows, the chapter's action line and the secondary buttons paint the accent as text (MotherDuck's light blue 1.62-1.94:1): they take the readable accent; the plan card's badge is muted on a grey chip (3.73:1 on the template, 3.46 under MotherDuck): it takes the page text. On a light worn page the black chapter band (#t4-section-4) keeps the accent itself for its action line and secondary button (the readable accent is made for a light page: 3.79:1 on that black under MotherDuck), and its support line, which took the system's muted (3.88:1 on black, the template's own 4.14), is the template's lighter grey (#86868b), and the green success badge a deeper green (2.31:1 on MotherDuck's chip, the template's own 2.63)",
+  "landingFromSlot": {
+    "--native-title-size": "--ds-size-display",
+    "--native-section-size": "--ds-size-heading",
+    "--tracking-display": "--ds-tracking-display",
+    "--leading-tight": "--ds-leading-display",
+    "--tracy-capsule": "--ds-btn-radius"
+  },
+  "landingFromSlotPhone": {
+    "--native-title-size": "--ds-size-display-phone",
+    "--native-section-size": "--ds-size-heading-phone"
+  },
+  "tokenFromSlot": {
+    "--tracy-capsule": "--ds-btn-radius"
+  },
+  "landingNote": "native-landing.css (the brand-engine landing) sizes h1/h2, tracking, leading, the CTA capsule and section rhythm from template tokens with !important; the CTA weight is a literal 400 !important, so the slot's button weight is the one rule written !important — where the template already forces it",
+  "contrast": {
+    "accent-text": ".tracy-native-landing .kicker",
+    "muted": ".tracy-native-landing [data-od-block=\"hero\"] p",
+    "body": ".tracy-native-landing .section p",
+    "footer": ".t4-footnav a",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "minVersionNote": "tracy-apple/j6 installs this same template (element tracy): measured 11/10/2026 on Tracy Apple 1.3.0 as released (tasks/evidence/ds-contracts-batch1-2026-10-11/tracy-apple-j6): 12/12 with Moxie, Toggl Track, Stripe and Spotify, controls 0, footer text 4.51:1 or better, 97-100% of the page follows. Its home is not the native landing, so only the page roles and the footer are probed there; the screenshots were read by eye",
+  "readyNote": "re-measured again 12/10/2026 with the final probe, every heading, text and block of text judged (tasks/evidence/ds-remeasure-6-2026-10-11/joomla-tracy-base, tasks/evidence/ds-remeasure-6-2026-10-11/joomla-tracy-base-apple): 12/12 on every release measured, controls 0 differences, lowest text 4.51:1, 97% or more of the page follows, no text under 4.5:1 worse than the template's own, dark- and light-system screenshots read by a person. Before that: ",
+  "literalsNote": "#15803d: a success badge, a status colour"
+}

@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-1291-publish-domain-guards",
+  "kind": "feat",
+  "title": "Publish tab: Connect domain on a draft site asks to publish first instead of opening the domain form; Back to draft warns, per connected domain, that its visitors no longer reach the site",
+  "pr": 1291,
+  "area": "site-tabs/publish",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/core/tracy-core/test/site-publish-dom.test.mjs (the real PublishView bundled into jsdom over a fetch double).",
+    "S2: Read the exit code and the result of each named test."
+  ],
+  "expect": [
+    "S1 exits 0 with 0 failures.",
+    "On a draft site, pressing [data-action=\"connect-domain\"] opens no form[data-form] and opens a [role=\"alertdialog\"] holding domains.publishFirstTitle and domains.publishFirstBody; no POST go-live is sent by that press.",
+    "Pressing [data-confirm=\"live\"] in that dialog sends exactly one POST go-live with body {\"op\":\"live\"} and the dialog closes; Cancel closes it and sends nothing.",
+    "On a live site, Connect domain still opens form[data-form=\"domain\"].",
+    "Back to draft on a live site with a connected domain shows domains.draftStops naming that domain on a [data-line=\"draft-domain\"] line that carries the class tv-domain-note-alert."
+  ],
+  "selectors": {
+    "connect": "[data-own-domain-entry] [data-action=\"connect-domain\"]",
+    "dialog": "[role=\"alertdialog\"], [data-confirm=\"live\"], [data-confirm=\"draft\"]",
+    "draft_domain": "[data-line=\"draft-domain\"].tv-domain-note-alert"
+  },
+  "evidence": "Vincent, 13/10/2026: Connect domain on a draft site should say the site must be published first; Back to draft after a domain is connected should warn that the domain stops working.",
+  "fence": "The real Publish tab bundle in jsdom over a fetch double. Not exercised: tracy-web's doors, a real browser, the dsh page around the tab.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/core/tracy-core/test/site-publish-dom.test.mjs"
+    ],
+    "tests": [
+      "Connect domain on a draft site asks to publish first",
+      "Connect domain on a draft site, Cancel",
+      "Connect domain: the Owner of a site with no domain of its own opens a form for one",
+      "connecting on a site that is already live is one more publish"
+    ]
+  }
+}

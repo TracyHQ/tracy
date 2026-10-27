@@ -1,0 +1,94 @@
+{
+  "color": {
+    "phoenix-orange": {
+      "$value": "#e8400d",
+      "$type": "color",
+      "$description": "Phoenix Orange — Brand accent, hero gradient origin, marketing highlights — vivid warm orange that gives the brand its identity; Hero background gradient — radial wash from phoenix orange through cream to violet"
+    },
+    "midnight-indigo": {
+      "$value": "#10054d",
+      "$type": "color",
+      "$description": "Midnight Indigo — Deep brand surface, feature card backgrounds, text on light cards — the dark counterweight to the bright accents"
+    },
+    "charcoal": {
+      "$value": "#272625",
+      "$type": "color",
+      "$description": "Charcoal — Secondary dark surface, testimonial card backgrounds, dark UI panels — warm-tinted near-black"
+    },
+    "ink": {
+      "$value": "#111111",
+      "$type": "color",
+      "$description": "Ink — Primary text, heading color, filled action button background — near-black with slight warmth"
+    },
+    "canvas-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Canvas White — Primary page background, card surface, text on dark surfaces"
+    },
+    "cream-wash": {
+      "$value": "#f6f5f3",
+      "$type": "color",
+      "$description": "Cream Wash — Soft surface tint, secondary card backgrounds, muted section backgrounds"
+    },
+    "ash": {
+      "$value": "#6d6c6b",
+      "$type": "color",
+      "$description": "Ash — Muted body text, secondary labels, helper copy"
+    },
+    "stone": {
+      "$value": "#b1b1af",
+      "$type": "color",
+      "$description": "Stone — Hairline borders, subtle dividers, muted placeholder"
+    },
+    "pearl": {
+      "$value": "#ecebea",
+      "$type": "color",
+      "$description": "Pearl — Subtle button backgrounds, hover states on ghost controls"
+    },
+    "petal-pink": {
+      "$value": "#ffd7f0",
+      "$type": "color",
+      "$description": "Petal Pink — Pastel accent card surface — category-coded color tile"
+    },
+    "mint-green": {
+      "$value": "#b7efb2",
+      "$type": "color",
+      "$description": "Mint Green — Pastel accent card surface — category-coded color tile"
+    },
+    "canary-yellow": {
+      "$value": "#ffef99",
+      "$type": "color",
+      "$description": "Canary Yellow — Pastel accent card surface — category-coded color tile"
+    },
+    "soft-violet": {
+      "$value": "#e2ddfd",
+      "$type": "color",
+      "$description": "Soft Violet — Pastel accent card surface — category-coded color tile"
+    },
+    "aqua": {
+      "$value": "#99fff9",
+      "$type": "color",
+      "$description": "Aqua — Gradient endpoint, hero highlight wash"
+    },
+    "indigo-deep": {
+      "$value": "#2e2460",
+      "$type": "color",
+      "$description": "Indigo Deep — Dark input field background, form surface on dark sections"
+    }
+  },
+  "font": {
+    "labil-grotesk-variable": {
+      "$value": "Labil Grotesk Variable",
+      "$type": "fontFamily",
+      "$description": "Primary typeface — geometric grotesque with variable weight axis. Weight 400 for all body, nav, and most headings (unusual restraint at large sizes); weight 900 reserved for poster-size 84px display headlines set uppercase. Negative letter-spacing scales aggressively with size: -0.05em at 56px, -0.04em at 44px, -0.03em at 36px. Body and small UI text tracks at normal or near-zero."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.amplemarket.com",
+      "siteName": "Amplemarket",
+      "extractedAt": "2026-07-03T03:12:58.514Z",
+      "variant": "compact"
+    }
+  }
+}

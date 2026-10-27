@@ -1,0 +1,59 @@
+{
+  "color": {
+    "cream-paper": {
+      "$value": "#f1f0ee",
+      "$type": "color",
+      "$description": "Cream Paper — Page canvas and large surface fills; warm off-white sets the editorial paper tone"
+    },
+    "pure-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Ink — Primary text, nav links, icon strokes, footer metadata, logo marks — maximum contrast against cream"
+    },
+    "charcoal-press": {
+      "$value": "#252525",
+      "$type": "color",
+      "$description": "Charcoal Press — Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color"
+    },
+    "bone-gray": {
+      "$value": "#dbdad9",
+      "$type": "color",
+      "$description": "Bone Gray — Quiet divider tone, subtle background blocks, low-emphasis surfaces — barely visible, only there for separation"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Inverse text on dark blocks, occasional clean card surfaces when maximum contrast is needed"
+    }
+  },
+  "font": {
+    "as-therma-bold-condensed": {
+      "$value": "AS Therma Bold Condensed",
+      "$type": "fontFamily",
+      "$description": "Hero and section display headlines; the screaming condensed grotesque that defines the brand voice. Set tight (lh 0.80) with aggressive negative tracking so letters nearly collide — the type itself is the decoration"
+    },
+    "pp-neue-montreal-mono-medium": {
+      "$value": "PP Neue Montreal Mono Medium",
+      "$type": "fontFamily",
+      "$description": "Labels, metadata, nav items, project tags, marquee text, footer technical copy. The mono voice carries all secondary information and is the only text in the system with stylized alternates (ss04, ss07, ss08, zero) plus case and discretionary ligatures — it reads as editorial chrome"
+    },
+    "pp-neue-montreal-semibold": {
+      "$value": "PP Neue Montreal SemiBold",
+      "$type": "fontFamily",
+      "$description": "Body paragraphs and longer-form copy in the About section; SemiBold weight at 18px reads as confident editorial prose, not corporate body text"
+    },
+    "sans-serif-system": {
+      "$value": "sans-serif (system)",
+      "$type": "fontFamily",
+      "$description": "Smallest utility text and legacy fallback. Used sparingly where the mono voice is not appropriate; rarely the primary choice"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://duties.xyz",
+      "siteName": "Duties.xyz",
+      "extractedAt": "2026-06-03T18:47:38.049Z",
+      "variant": "compact"
+    }
+  }
+}

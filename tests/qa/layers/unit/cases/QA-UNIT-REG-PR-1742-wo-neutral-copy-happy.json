@@ -1,0 +1,58 @@
+{
+  "id": "QA-UNIT-REG-PR-1742-wo-neutral-copy-happy",
+  "itemIds": ["regression:REG-PR-1742-wo-neutral-copy"],
+  "requirement": "WO resolves missing facts to approved neutral wording in the site language and validates slot provenance",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1742-wo-neutral-copy.json",
+    "ref": "PR #1742 (feat); fix evidence: none recorded",
+    "invariant": "Every neutral key used by the vocabulary and sidecars resolves in all ten site languages; unknown locales fall back to English. Contact requires a contact page, email or phone; Call requires a phone even when its policy omits the requirement. Step indices 0 and 1 render 01 and 02; missing facts never create people, prices, claims or forbidden filler. The manifest accepts the four supported states and rejects duplicate slots, invalid fields and contradictory provenance. All tests pass.",
+    "productSources": [
+      "packages/wo/website-opportunities/domain/neutral-copy.mjs:70",
+      "packages/wo/website-opportunities/domain/place-content-roles.mjs:133",
+      "packages/wo/website-opportunities/domain/slot-fill-manifest.mjs:18"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/wo/website-opportunities/domain/neutral-copy.mjs:18 readFileSync() with a computed path",
+      "packages/wo/website-opportunities/test/domain-neutral-copy.test.mjs:46 readFileSync() with a computed path",
+      "scripts/test/wo-neutral-copy-sidecars.test.mjs:15 readFileSync() with a computed path",
+      "scripts/test/wo-neutral-copy-sidecars.test.mjs:18 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["REG-PR-1742-wo-neutral-copy.exit-0"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1742-wo-neutral-copy"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/wo/website-opportunities", "website-opportunities"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1742-wo-neutral-copy",
+    "pr": 1742,
+    "kind": "feat",
+    "area": "website-opportunities/neutral-copy",
+    "file": "tests/regression/cases/REG-PR-1742-wo-neutral-copy.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/wo/website-opportunities/test/domain-neutral-copy.test.mjs",
+    "packages/wo/website-opportunities/test/domain-slot-fill-manifest.test.mjs",
+    "scripts/test/wo-neutral-copy-sidecars.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [],
+  "timeoutS": 600
+}

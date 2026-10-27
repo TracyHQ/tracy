@@ -1,0 +1,178 @@
+// -----------------------------------------------------------------------------------------
+// Tracy Business — rules that must come LAST in template.css.
+// These blocks were appended to the end of the compiled css/template.css by hand on the build
+// machine (no Sass there; 1.2.1 dark-logo pair, then the language switcher and topbar rules).
+// Imported last from _all.scss so a compile reproduces the order the released site paints with.
+// -----------------------------------------------------------------------------------------
+
+/* Dark-mode logo pair (html/layouts/t4/element/logo.php, html/mod_custom/default.php): a bitmap
+   logo shows in light mode, its .d-dark counterpart (site_logo_dark, or the lockup when there is
+   none) in dark mode. The footer is dark in both modes, so its brand shows site_logo_dark, else
+   the lockup. Uploaded logos keep their proportions inside the lockup height. */
+.tb-brand .d-dark { display: none; }
+html.t4-dark .tb-brand .d-light { display: none; }
+html.t4-dark .tb-brand .d-dark { display: inline-flex; align-items: center; gap: inherit; }
+.tb-brand img.tb-brand__logo { width: auto; height: auto; max-width: 100%; max-height: 44px; }
+.tb-footbrand__logo { display: inline-block; }
+.tb-footbrand__logo img { display: block; width: auto; height: auto; max-width: 100%; max-height: 48px; }
+
+/* ---- language switcher: two shapes, and the second one is a modal --------------------------- */
+/* `tb.php` adds `--modal` past 8 languages. Under that the panel stays the anchored dropdown it
+   always was; past it the SAME <dialog> opens with showModal() at every width — top layer, so no
+   ancestor's transform, overflow or z-index can move or clip it. Column count is `auto-fill`:
+   the grid fits as many 190px tracks as the dialog is wide, and no breakpoint names a number. */
+.tb-topbar .mod-languages dialog.tb-lang__panel {
+  background: var(--tb-chrome-bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 14px 30px rgba(20, 23, 26, .22);
+  color: var(--fg);
+  display: flex;
+  flex-direction: column;
+  margin: 9px 0 0;
+  max-width: calc(100vw - 32px);
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: auto;
+  z-index: 70;
+}
+.tb-topbar .mod-languages dialog.tb-lang__panel:not([open]) { display: none; }
+.tb-topbar .mod-languages dialog.tb-lang__panel::backdrop { background: rgba(20, 23, 26, .55); }
+
+/* `__menu` was the floating panel in an earlier life and kept `position:absolute; top:100%`.
+   Inside the dialog it must be an ordinary flow child, or it leaves the flex column and the panel
+   collapses to the height of the filter box. */
+.tb-topbar .mod-languages .tb-lang__menu {
+  display: grid;
+  grid-template-columns: minmax(190px, 1fr);
+  inset: auto;
+  list-style: none;
+  margin: 0;
+  max-height: min(60vh, 520px);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0;
+  position: static;
+}
+
+/* The modal shape, at every width. */
+.tb-topbar .mod-languages .tb-lang--modal dialog.tb-lang__panel {
+  /* `inset: 0` + `margin: auto` is what centres a fixed box. NOTHING may reset an edge after it:
+     a trailing `right: auto; top: auto` — carried over from the anchored shape — cancels two of
+     the four and the dialog lands in the bottom-left corner. That mistake was made twice in one
+     afternoon (21/09/2026), so the edges are written once, here, and the anchored variant above
+     sets its own without a shorthand. */
+  border-radius: var(--ds-card-radius, 14px);
+  inset: 0;
+  margin: auto;
+  max-height: min(80vh, 620px);
+  max-width: none;
+  position: fixed;
+  width: min(92vw, 640px);
+}
+.tb-topbar .mod-languages .tb-lang--modal .tb-lang__menu {
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  max-height: calc(min(80vh, 620px) - 62px);
+}
+.tb-topbar .mod-languages .tb-lang__search {
+  background: var(--tb-chrome-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.tb-topbar .mod-languages .tb-lang__search-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font-size: 14px;
+  padding: 8px 10px;
+  width: 100%;
+}
+.tb-topbar .mod-languages .tb-lang__empty {
+  color: var(--muted, var(--fg));
+  font-size: 14px;
+  margin: 0;
+  padding: 14px;
+}
+.tb-topbar .mod-languages .tb-lang__item[hidden] { display: none; }
+.tb-topbar .mod-languages .tb-lang--modal .tb-lang__item { border-right: 1px solid var(--border-soft); }
+
+/* Flag + code only on a phone; the full name stays in the DOM for the accessible name. */
+.tb-topbar .mod-languages .tb-lang__code { display: none; }
+@media (max-width: 767px) {
+  .tb-topbar .mod-languages .tb-lang__toggle .tb-lang__name {
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+  .tb-topbar .mod-languages .tb-lang__code {
+    display: inline;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+}
+
+/* ---- topbar contacts on a phone ------------------------------------------------------------- */
+/* An earlier pass hid the address below 768px and the email below 520px to keep the bar to two
+   rows. Reverted: which of a customer's contact details reach a visitor is a decision about the
+   SITE, not about a layout, and centring the list solves the lopsidedness that prompted it. All
+   three items stay; they wrap, and the bar grows a row on a narrow screen. */
+
+/* ---- topbar: the two controls stay on the right at every width ------------------------------ */
+/* `__inner` is `space-between`, so on a wide screen the right group already sits right. Once it
+   WRAPS the group starts a new line at the left margin and the language switcher and theme toggle
+   travel with it — the two controls a reader looks for in a fixed corner end up in a different
+   place on every viewport. Give the wrapped group the full line and push the controls to its end,
+   leaving the utility links where they read first. */
+/* No breakpoint: the topbar wraps when its CONTENT stops fitting, and that width moves with the
+   language — measured 21/09/2026 it wrapped at ~1032px in French, nowhere near any breakpoint a
+   stylesheet could name. Letting the right group grow and end-align makes the two controls sit on
+   the right edge whether the bar is one row or two, without anyone guessing a number. */
+.tb-topbar .tb-topbar__group--right {
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+
+/* ---- topbar contacts on a phone: as many rows as they need, nothing cut ------------------- */
+/* Until 13/10/2026 the three items sat on ONE scrolled row with a fade at the right edge: at 390px
+   the address read "Vorsino Indu…" and nothing said the rest was there (TCH #1318). A customer's
+   hotline, mailbox and address are facts a visitor came for; the row now wraps and the bar grows a
+   row or two on a phone, and a long address or e-mail breaks inside the word rather than past the
+   edge. Which details show is the site's decision; the layout cuts none of them. */
+@media (max-width: 767px) {
+  .tb-topbar .tb-topbar__group--left {
+    flex: 1 1 100%;
+    justify-content: center;
+    min-width: 0;                 /* a flex child will not shrink below content without this */
+  }
+  /* `min-width: 0` has to repeat down the whole chain: a flex item defaults to `min-width: auto`,
+     which means "never smaller than my content", and one link in the chain that still has it makes
+     the row 526px wide inside a 372px parent — drawn over the edge instead of scrolled. Measured
+     21/09/2026 at 469px. `.custom` is the wrapper mod_custom renders. */
+  .tb-topbar .tb-topbar__group--left > .custom { min-width: 0; max-width: 100%; }
+  .tb-topbar .tb-contacts {
+    max-width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    font-size: 12px;
+    gap: 4px 14px;
+    justify-content: center;
+    overflow: visible;
+  }
+  .tb-topbar .tb-contacts > li {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    text-align: center;
+    white-space: normal;
+  }
+}

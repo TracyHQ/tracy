@@ -1,0 +1,34 @@
+{
+  "color": {
+    "bone": {
+      "$value": "#e7ecea",
+      "$type": "color",
+      "$description": "Bone — Page canvas, card surfaces, image gutters — warm off-white that reads as heavy cream paper or raw plaster, not digital gray"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Reverse text on dark announcement bar, reverse logo overlays on photography"
+    }
+  },
+  "font": {
+    "space-mono": {
+      "$value": "Space Mono",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for nav, links, body, labels, and logo lockup. Monospace at weight 400 — the only font — creates a technical, editorial voice; the rigid monospaced rhythm signals fashion-zine rather than commerce."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://entirestudios.com",
+      "siteName": "entire studios",
+      "extractedAt": "2026-06-03T17:03:33.246Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "51b5d80e-d898-4d70-bd16-9e50406e014c",
+  "status": "complete",
+  "name": "Cards Against Humanity",
+  "url": "https://styles.refero.design/style/51b5d80e-d898-4d70-bd16-9e50406e014c",
+  "sourceWebsite": "https://www.cardsagainsthumanity.com",
+  "extractedAt": "2026-06-03T20:21:29.002Z",
+  "capturedAt": "2026-10-08T05:11:38.990146+00:00",
+  "theme": "dark",
+  "industry": "media",
+  "description": "Scattered playing cards on a velvet game table — the design language is the game itself, not a wrapper around it.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/8ca89cf1-bf81-4812-b410-131d23e91790.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/9fe99379-f843-4693-8d95-a813c24cd8cb.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/17df7d36-cfd5-4610-99dd-11c794d56c69.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/6827b45e-5628-4f2b-9e19-f22e73a6c47c.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0ef20175-78e9-406d-908b-8c8e12e01993.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "beaf2d23be3a130e25cb56aa6ed1e2c2c9ea5a37e134a8a680ec6706019456da",
+      "bytes": 19977
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "b9370513f491ad0c515a450a0569412bae7a47395ada00d4e6ceb27aae09737b",
+      "bytes": 72851
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "d8733801c9515858c41a7244864f767f9f8f5d85b41913f16d92781db05bff2d",
+      "bytes": 16501
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "7ae0977b22321460d8b762a514f1cd6375210ad9e1a2fa1538fa852965a09551",
+      "bytes": 12739
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c626bb46f7fb53409629225f5463b417fc44063b950b181979ec8eafc6abc0fb",
+      "bytes": 12261
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a5ce197866857ec6edf863568b0fe908d71498f4bcc4abb87cba35210cee4858",
+      "bytes": 3278
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "e64a0c1fc1e3cc164891d21b99506aa7d5dc461ef94e81e96b391bfb02f55b7a",
+      "bytes": 714
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2edf6ac2cb9f1f01b6bb74dccd1a2265896770c6319230553177a5e7a936960f",
+      "bytes": 731
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "03abbfbd2f8467b5b4d03d96caca38d73c088a07c38503eef4b707c61449c861",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "86a40eb118eb780f470cc6c006c945667314c2884bfffeddfe000410a0869594",
+      "bytes": 42622
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "17675a3b2a682583f5360fac5367e99fdb131dbc7f0226515d09232eca38a129",
+      "bytes": 22639
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "9d483b1746ccac524728d219b8667c9da9fb984f98160c5e51c80633d9c02958",
+      "bytes": 49073
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "b2cf6b11c5ee3c630ae7b514add796a925c8f5a7f319bb945cadc734eea40d7a",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "92f251f8c4680c4ab824cf249b95e62505c94c0b4cdd44e2ce4fe3b6f805ec7a",
+      "bytes": 1807
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "d46e2e612087db269cfd99ad397d78aad2dc910888be4d490fa5e659407b2293",
+      "bytes": 2320
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "1e675740-7935-4a49-b4c8-e5aa9fda06dd",
+    "2175034b-96d7-417e-886f-ff5a4d8551ae",
+    "4c33d8fe-81d5-46cb-9dc1-dd231be1c9ec",
+    "51b5d80e-d898-4d70-bd16-9e50406e014c",
+    "528eb1d4-8508-4dc6-87b4-c7b92d648dac",
+    "54bfd692-3299-48ab-8cf5-784e632227b1",
+    "604af0f7-b4c3-4921-93af-9da03df81493",
+    "667c59e3-aaba-46e8-a2b3-255254328b6e",
+    "694723e9-0df7-4b9f-ba07-83fc598532d6",
+    "6ec18fa7-41ff-41e0-8824-94f6fa104a75",
+    "786f99e5-8c40-4205-a878-bf006b330f4e",
+    "7d254296-6817-487a-a58c-4d5eca89cbf3",
+    "917048a3-53b3-44e6-ab33-faefc4dcc9df",
+    "9fd54812-6eb1-4445-83e6-124af21387db",
+    "a1b78a21-a304-482b-8ce5-f612d95d44fe",
+    "c01ccb7b-46c9-487c-8a4e-0e9d6627f0d6",
+    "c445eb73-e403-4a00-8b90-f454c9181fd6",
+    "cef9a300-8513-46c2-9c2c-c0016e5a5d30",
+    "f23e132d-3bfb-498d-a2e4-6d069b4dbc59",
+    "f93ac72e-73b2-4b2c-80eb-351ddfa56f4d",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

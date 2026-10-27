@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-1427-pagination-contact-evidence",
+  "kind": "fix",
+  "title": "Pagination remains interface state and locally labelled phone paragraphs match frozen contact facts",
+  "pr": 1427,
+  "area": "website-opportunities/quickstart-first",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the three declared Node test suites."],
+  "expect": [
+    "Complete sequential 1..N navigation groups with internal hrefs remain byte-preserved interface numbers.",
+    "Navigation with handlers, controls, forms or business prose is not inferred technical pagination.",
+    "A phone paragraph can use the nearest local Helpline or Support label; only exact typed business.phone is accepted."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/brief-engines/quickstart-technical-text.js, apps/tracy-web/src/sites/brief-engines/quickstart-editorial.js"
+  },
+  "fence": "No template names or classes; all input hashes, source guards and native structure remain unchanged.",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/brief-quickstart-first.test.mjs"],
+    "needs": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1159-g64-blog-plan-released",
+  "kind": "fix",
+  "title": "The g64 system fixes of the seven questions hold (WordPress and Joomla FULL demo blogs planned as a whole, one brief per published post, each post written from its own brief through the real Apply door and checked against disobedient models; the title and post tests moved to that flow; EmDash labels the model hands back unchanged or half translated asked again and reported) and ship with their releases: Tracy Business EmDash 1.7.12 and Tracy SaaS EmDash 1.4.9 pinned",
+  "pr": 1159,
+  "area": "sites/brief",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test apps/tracy-web/test/{joomla-blog-plan-g63,wp-blog-plan-g63}.test.mjs (models that give every brief the same About story, echo lorem, cut titles into sentence tails, return filler, and one that never obeys).",
+    "S2: node --test apps/tracy-web/test/{post-title-stage-g62,wp-posts-g62,joomla-posts-g62,joomla-posts-g61,wp-post-titles-g61,joomla-article-titles,joomla-demo-articles,brief-wp-posts}.test.mjs.",
+    "S3: node --test the EmDash themes' tests/personalize-labels-echoed.test.mjs and tests/personalize-labels.test.mjs (Business, SaaS, Base) and the kit's copies (a model that echoes labels, drops keys, or half translates once and always).",
+    "S4: read both quickstarts.json: the tracy-business/emdash and tracy-saas/emdash entries."
+  ],
+  "expect": [
+    "S1: every test passes, none skipped or cancelled.",
+    "S2: every test passes, none skipped or cancelled.",
+    "S3: every test passes, none skipped or cancelled.",
+    "S4: tracy-business/emdash 1.7.12 and tracy-saas/emdash 1.4.9, source and state files named for that version with a GitHub asset id."
+  ],
+  "selectors": {
+    "tests": "tests/regression/scripts/REG-PR-1159-g64-blog-plan-released.mjs",
+    "blog-plan": "apps/tracy-web/src/sites/brief-engines/blog-plan.js",
+    "title-stage": "apps/tracy-web/src/sites/brief-engines/post-title-stage.js and post-title-faults.js",
+    "labels": "translateLabels in the EmDash themes' tools/personalize.mjs",
+    "pins": "apps/tracy-web/src/quickstarts.json and its fleet copy"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-12-tcqr-g64-fixes.md",
+  "fence": "The blog plan every WordPress and Joomla FULL build takes, the post title stage behind it, the EmDash label re-asks and report, and the EmDash releases this repository pins for them.",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1159-g64-blog-plan-released.mjs"],
+    "needs": []
+  }
+}

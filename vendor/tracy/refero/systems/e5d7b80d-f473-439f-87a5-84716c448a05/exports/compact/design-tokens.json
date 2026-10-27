@@ -1,0 +1,84 @@
+{
+  "color": {
+    "cursor-green": {
+      "$value": "#27f795",
+      "$type": "color",
+      "$description": "Cursor Green — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "hover-green": {
+      "$value": "#008060",
+      "$type": "color",
+      "$description": "Hover Green — Green supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color"
+    },
+    "terminal-red": {
+      "$value": "#800000",
+      "$type": "color",
+      "$description": "Terminal Red — Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Primary text and headlines. Maximum contrast against the near-black canvas for immediate legibility"
+    },
+    "void-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Void Black — Deepest surface layer for hero backgrounds and video poster frames, one step darker than the page canvas"
+    },
+    "console-black": {
+      "$value": "#0a0a0a",
+      "$type": "color",
+      "$description": "Console Black — Primary page canvas — the dominant background of every screen. A hair above true black to soften OLED contrast"
+    },
+    "panel-charcoal": {
+      "$value": "#151515",
+      "$type": "color",
+      "$description": "Panel Charcoal — First elevated surface — used for embedded media frames and video containers that need to sit above the page canvas"
+    },
+    "card-graphite": {
+      "$value": "#262626",
+      "$type": "color",
+      "$description": "Card Graphite — Testimonial and content card backgrounds. Two steps above the canvas, enough lift to separate without casting shadow"
+    },
+    "border-smoke": {
+      "$value": "#353535",
+      "$type": "color",
+      "$description": "Border Smoke — Hairline borders, input fields, and dividers. Defines component edges without competing with content"
+    },
+    "muted-ash": {
+      "$value": "#8d8d8d",
+      "$type": "color",
+      "$description": "Muted Ash — Secondary body text, descriptions, and sub-labels — the voice for anything supporting but not starring in the hierarchy"
+    },
+    "tertiary-fog": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Tertiary Fog — Tertiary text and disabled-state labels. The faintest human voice before falling into silence"
+    },
+    "highlight-mist": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Highlight Mist — Bright border accent used on emphasized outlined elements like the active workflow step"
+    }
+  },
+  "font": {
+    "roboto": {
+      "$value": "Roboto",
+      "$type": "fontFamily",
+      "$description": "Prose and headlines. Weight 400 for body and descriptions, weight 600 for primary CTA button text, weight 700 reserved for the 64px display headline. The tight negative tracking at 64px tightens the headline into a single confident block."
+    },
+    "roboto-mono": {
+      "$value": "Roboto Mono",
+      "$type": "fontFamily",
+      "$description": "Tags, badges, code labels, workflow step indicators, and monospaced stat figures. The extreme -0.084em tracking at 56px is anti-convention — monospace usually stays loose, but this tightens the digits into a dense data block that feels engineered, not displayed."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://tinybird.co",
+      "siteName": "Tinybird",
+      "extractedAt": "2026-06-03T19:20:51.731Z",
+      "variant": "compact"
+    }
+  }
+}

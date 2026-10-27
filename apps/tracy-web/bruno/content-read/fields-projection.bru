@@ -1,0 +1,28 @@
+meta {
+  name: fields projection
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/sites/{{site}}/apply
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "action": "content.read",
+    "params": { "id": "{{contentId}}", "fields": "title,url" }
+  }
+}
+
+docs {
+  # One record, only the fields asked for
+
+  The same record as "one record", cut to `title` and `url`. Use it to see how much smaller
+  an answer gets when only a few fields are needed.
+
+  Look for: an answer with just those fields. An unknown field name answers
+  `400 CONTENT_BAD_QUERY` naming it.
+}

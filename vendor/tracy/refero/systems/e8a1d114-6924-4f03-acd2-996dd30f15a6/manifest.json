@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e8a1d114-6924-4f03-acd2-996dd30f15a6",
+  "status": "complete",
+  "name": "Monzo",
+  "url": "https://styles.refero.design/style/e8a1d114-6924-4f03-acd2-996dd30f15a6",
+  "sourceWebsite": "https://monzo.com",
+  "extractedAt": "2026-06-03T20:05:20.171Z",
+  "capturedAt": "2026-10-08T05:18:56.423988+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Warm coral on cool mint paper — confident restraint with a single hot accent.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/b905956e-d3bd-4c5e-a5e2-c51047ad9bfb.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c1794432390376f0c79ee1c2d0af6869f598cf39b868821192b3663639be5d4d",
+      "bytes": 20825
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "39fc25329a6eb8029c5a6fe0acef486fc9953db3b0e887974ef11dc9349d0130",
+      "bytes": 120067
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b1c2a1a1bfa89ad22d3c7e3cb01c006055212bf995d8aba3bd19821763cf2c57",
+      "bytes": 17927
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "68296fda71b38c4d8e4d5801ffb868a82de7e10e4d73339159a8ba3ef7e860e5",
+      "bytes": 14138
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "4f2a47ff5ea8c76bb20c33cf74774349a7b16846c1144175a4f7825c8cf2b897",
+      "bytes": 13456
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "3239855192f2fe90e6ae6419bda7e15ad835d6cf044507bfbc0f2e2c9e7438d0",
+      "bytes": 3537
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "70a239fbc7f0f634d402c951809beefbe50a93aca30cf59f09c893e30acce5c3",
+      "bytes": 641
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "28de32d88b6d3eeea277a52c930785eef0188c0e8a49a07bd7f3fe12f36ab7c9",
+      "bytes": 658
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "19dfadff106ff3b80537bdfedc268400c4fa8e22234892a7892181f732426502",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "4b1f636d8008384da419980d6b17aae8c9f06b39ce4e4914fb6e1848371777d3",
+      "bytes": 45272
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "aaecb2c11ac0d416fae6baa41d5ee527d6e0090cd334d0d635b2d1c338a4503b",
+      "bytes": 23575
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "998eb58f693cfcd9854362cb3578ef9233d3163aa2d70365f4cada4e6336c8c5",
+      "bytes": 50856
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "a3e908e115d244627003b5c9ce2d367bac2ff7501f869038b2c51f0d321033b0",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "fcb84bc422bc5f9d6a65d482c1949d31bc0ff873c884d7147c56b8c29bf17526",
+      "bytes": 1625
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ad9d2df0c24de76beb19d4027aacdfaeb486354a86ceb9a28ed51ef78cf46a9e",
+      "bytes": 2274
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "1f32d914-6fdd-4692-b4fc-fcee2c414766",
+    "2c05cf8d-97c5-4f35-96ef-eb53fc03ea81",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "3634d5eb-ccfa-4881-b234-3dd735fb7ae4",
+    "367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+    "48ae4f04-21cb-4ab3-8752-33b626a48c95",
+    "49dba9e1-0d9d-4997-805a-bfea7525252d",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "73ec75d6-edec-4ed2-bc09-debb261b6ee0",
+    "84b951e2-eaae-4f56-8f3f-d90407517a56",
+    "8cf4a580-bfb6-4090-a899-f734ffe62370",
+    "a3161c3c-26d4-425b-aaa3-4fc3f06b77ee",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "a9dd8050-c03a-4901-b7fa-a9cc0ca54812",
+    "c25e8eb5-634d-4aca-b30b-d8ba5a50dc5a",
+    "e8a1d114-6924-4f03-acd2-996dd30f15a6",
+    "e9f07a27-bdd4-4f6a-8132-329d014aa5f4",
+    "f08f9870-2018-4c0b-80d4-0b2e525ff49c",
+    "f1a2100a-7cda-4787-b8af-5c5edcfcdff0"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "joomla",
+  "label": "JA Voyara",
+  "version": "1.0.4",
+  "cms": "6.1.2",
+  "install": {
+    "webroot": {
+      "file": "ja-voyara-j6-webroot-1.0.4.tar.gz",
+      "sha256": "a04c50e3c82ac5d5e2fb42687d7742bc7969f51d69ee19431563846e122fc5a9"
+    },
+    "database": {
+      "file": "ja-voyara-j6-database-1.0.4.sql.gz",
+      "sha256": "c57af8d30dbe6c663a1d2df98a721103b73ffe23aaee52c1c73aabbe69a22937"
+    }
+  },
+  "template": "ja_voyara"
+}

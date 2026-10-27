@@ -1,0 +1,210 @@
+{
+  "source": "quickstart/ja-essence/wp7@1.0.18",
+  "pages": ["/", "/contact", "/home/home-1/", "/home/home-2/"],
+  "page": "#f8f8ff",
+  "rules": [
+    [
+      ":where(.wp-block-social-links.is-style-logos-only) .wp-social-link-facebook",
+      "color",
+      "accent-text",
+      0
+    ],
+    [
+      ":where(.wp-block-social-links.is-style-logos-only) .wp-social-link-instagram",
+      "color",
+      "accent-text",
+      0
+    ],
+    [":where(.wp-block-social-links.is-style-logos-only) .wp-social-link-x", "color", "fg", 0],
+    [
+      ".wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container",
+      "background-color",
+      "bg",
+      0
+    ],
+    [".wp-block-navigation:not(.has-text-color) .wp-block-navigation__submenu-container", "color", "fg", 0],
+    [":where(.wp-block-search__button)", "border-top-color", "border", 0],
+    [":where(.wp-block-search__button)", "border-right-color", "border", 0],
+    [":where(.wp-block-search__button)", "border-bottom-color", "border", 0],
+    [":where(.wp-block-search__button)", "border-left-color", "border", 0],
+    [":where(.wp-block-search__input)", "border-top-color", "border", 0],
+    [":where(.wp-block-search__input)", "border-right-color", "border", 0],
+    [":where(.wp-block-search__input)", "border-bottom-color", "border", 0],
+    [":where(.wp-block-search__input)", "border-left-color", "border", 0],
+    [":where(.wp-block-search__button-inside .wp-block-search__inside-wrapper)", "background-color", "bg", 0],
+    [
+      ":where(.wp-block-search__button-inside .wp-block-search__inside-wrapper)",
+      "border-top-color",
+      "border",
+      0
+    ],
+    [
+      ":where(.wp-block-search__button-inside .wp-block-search__inside-wrapper)",
+      "border-right-color",
+      "border",
+      0
+    ],
+    [
+      ":where(.wp-block-search__button-inside .wp-block-search__inside-wrapper)",
+      "border-bottom-color",
+      "border",
+      0
+    ],
+    [
+      ":where(.wp-block-search__button-inside .wp-block-search__inside-wrapper)",
+      "border-left-color",
+      "border",
+      0
+    ],
+    [
+      ".wp-block-cover .has-background-dim:not([class*=\"-background-color\"]), .wp-block-cover-image .has-background-dim:not([class*=\"-background-color\"]), .wp-block-cover-image.has-background-dim:not([class*=\"-background-color\"]), .wp-block-cover.has-background-dim:not([class*=\"-background-color\"])",
+      "background-color",
+      "band",
+      0
+    ],
+    [".screen-reader-text:focus", "color", "fg", 0],
+    [".screen-reader-text:focus", "background-color", "surface", 0],
+    [".skip-link.screen-reader-text:focus", "color", "fg", 0],
+    [".skip-link.screen-reader-text:focus", "background-color", "surface", 0],
+    [".je-btn-dark .wp-block-button__link", "color", "on-band", 0],
+    [".je-btn-dark .wp-block-button__link", "background-color", "band", 0],
+    [".je-lead__title a", "color", "muted", 0],
+    [
+      ".je-lead__card .je-meta, .je-lead__card .je-meta a, .je-lead__card .je-meta__author, .je-lead__card .je-meta__date",
+      "color",
+      "muted",
+      0
+    ],
+    [".je-lead__card .je-lead__title a", "color", "muted", 0],
+    [".je-nav .wp-block-navigation__submenu-container", "background-color", "band", 0],
+    [".je-drill-arrow::before", "border-bottom-color", "border", 0],
+    [".je-drill-arrow::before", "border-left-color", "border", 0],
+    [".je-pagination__counter", "color", "fg", 0],
+    [".je-pagination__link", "color", "fg", 0],
+    [".je-pagination__item.is-active .je-pagination__link", "color", "on-accent", 0],
+    [".je-media-icon", "background-color", "bg", 0],
+    [".je-lead__card .je-badge a", "background-color", "bg", 0],
+    [
+      ".je-lead__card .je-meta .wp-block-post-author-name, .je-lead__card .je-meta .wp-block-post-author-name::before, .je-lead__card .je-meta > * + ::before",
+      "color",
+      "muted",
+      0
+    ],
+    [".wpcf7 form .wpcf7-response-output", "border-top-color", "accent", 0],
+    [".wpcf7 form .wpcf7-response-output", "border-right-color", "accent", 0],
+    [".wpcf7 form .wpcf7-response-output", "border-bottom-color", "accent", 0],
+    [".wpcf7 form .wpcf7-response-output", "border-left-color", "accent", 0],
+    [".wpcf7-spinner", "background-color", "band", 0],
+    [".wpcf7-spinner::before", "background-color", "bg", 0],
+    [".je-contactcard", "background-color", "bg", 0],
+    [
+      ".je-contactcard input[type=\"text\"], .je-contactcard input[type=\"email\"], .je-contactcard textarea",
+      "background-color",
+      "bg",
+      0
+    ],
+    [".je-contactcard .wpcf7-submit", "background-color", "accent", 0],
+    [".je-side--social .je-social__link .wp-block-button__link", "color", "on-accent", 0],
+    [".je-side--social .je-social__link .wp-block-button__link::after", "background-color", "bg", 0],
+    [
+      ".je-side--social .je-social__item:nth-child(1) .wp-block-button__link",
+      "background-color",
+      "accent",
+      0
+    ],
+    [
+      ".je-side--social .je-social__item:nth-child(2) .wp-block-button__link",
+      "background-color",
+      "accent",
+      0
+    ],
+    [
+      ".je-side--social .je-social__item:nth-child(3) .wp-block-button__link",
+      "background-color",
+      "accent",
+      0
+    ],
+    [
+      ".je-side--social .je-social__item:nth-child(4) .wp-block-button__link",
+      "background-color",
+      "accent",
+      0
+    ],
+    [".je-prose .wp-block-tag-cloud a.tag-cloud-link", "background-color", "band", 0],
+    [".je-side--num .je-side__items > li:nth-child(2) .je-mini--num::before", "color", "accent-text", 0],
+    [".je-side--num .je-side__items > li:nth-child(3) .je-mini--num::before", "color", "accent-text", 0],
+    [".je-side--num .je-side__items > li:nth-child(4) .je-mini--num::before", "color", "accent-text", 0],
+    [".je-nl input[type=\"email\"]", "background-color", "bg", 0],
+    [".je-nl input[type=\"email\"]:focus-visible", "outline-color", "border", 0],
+    [".je-nl .wpcf7-submit", "color", "on-band", 0],
+    [".je-nl .wpcf7-submit", "background-color", "band", 0],
+    [".je-nl .wpcf7-submit:hover", "background-color", "band", 0],
+    [".je-nl .wpcf7-submit:focus-visible", "outline-color", "border", 0],
+    [".je-nl__terms a", "color", "on-accent", 0],
+    [".je-nl .wpcf7-response-output", "color", "on-accent", 0],
+    [".je-tagcloud li a, .je-tagcloud li a.tag-cloud-link", "background-color", "bg", 0],
+    [".je-tagcloud li:nth-child(1) a::before", "background-color", "accent", 0],
+    [".je-tagcloud li:nth-child(2) a::before", "background-color", "accent", 0],
+    [".je-tagcloud li:nth-child(4) a::before", "background-color", "accent", 0],
+    [".je-tagcloud li:nth-child(5) a::before", "background-color", "accent", 0],
+    [
+      ".je-prose .wp-block-tag-cloud li a.tag-cloud-link, .wp-block-tag-cloud li a.tag-cloud-link",
+      "background-color",
+      "bg",
+      0
+    ],
+    [".je-nl input[type=\"email\"]:focus-visible", "outline-color", "accent", 0],
+    [".je-slug-home-2 .je-sec--choice .je-vcard .je-badge a", "background-color", "bg", 0]
+  ],
+  "vars": [
+    ["--wp-block-synced-color", "accent"],
+    ["--wp-admin-theme-color", "accent"],
+    ["--wp-admin-theme-color-darker-10", "accent"],
+    ["--wp-admin-theme-color-darker-20", "accent"],
+    ["--wp--preset--color--pale-pink", "accent"],
+    ["--wp--preset--color--vivid-red", "accent"],
+    ["--wp--preset--color--luminous-vivid-orange", "accent"],
+    ["--wp--preset--color--luminous-vivid-amber", "accent"],
+    ["--wp--preset--color--light-green-cyan", "accent"],
+    ["--wp--preset--color--vivid-green-cyan", "accent"],
+    ["--wp--preset--color--pale-cyan-blue", "accent"],
+    ["--wp--preset--color--vivid-cyan-blue", "accent"],
+    ["--wp--preset--color--vivid-purple", "accent"],
+    ["--wp--preset--color--accent", "accent"],
+    ["--wp--preset--color--accent-hover", "accent-text"],
+    ["--wp--preset--color--accent-active", "accent-text"],
+    ["--wp--preset--color--success", "accent"],
+    ["--wp--preset--color--warn", "accent"],
+    ["--wp--preset--color--danger", "accent"]
+  ],
+  "inline": [],
+  "colours": {
+    "#0866ff": "accent-text",
+    "#f00075": "accent-text",
+    "#000000": "fg",
+    "#ffffff": "bg",
+    "#cccccc": "border",
+    "#949494": "border",
+    "#444444": "fg",
+    "#dddddd": "surface",
+    "#eeeeee": "surface",
+    "#212529": "band",
+    "#1a2130": "band",
+    "#adb5bd": "border",
+    "#f8f8ff": "bg",
+    "#00a0d2": "accent",
+    "#23282d": "band",
+    "#fbfbfc": "bg",
+    "#4d6bff": "accent",
+    "#1877f2": "accent",
+    "#1da1f2": "accent",
+    "#e4405f": "accent",
+    "#f9b439": "accent",
+    "#222a3b": "band",
+    "#20c997": "accent-text",
+    "#fd7e14": "accent-text",
+    "#6f42c1": "accent-text",
+    "#dc3545": "accent",
+    "#86b7fe": "accent"
+  }
+}

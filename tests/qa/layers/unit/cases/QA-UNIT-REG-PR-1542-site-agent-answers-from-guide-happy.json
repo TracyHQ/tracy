@@ -1,0 +1,82 @@
+{
+  "id": "QA-UNIT-REG-PR-1542-site-agent-answers-from-guide-happy",
+  "itemIds": ["regression:REG-PR-1542-site-agent-answers-from-guide"],
+  "requirement": "A customer's question about Tracy itself reaches the site agent's guide: the guide door tells an Owner the step the Domains card shows, tells an Editor to ask an Owner without the TXT value, hides an article whose switch is off, and every customer-visible switch has an article",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1542-site-agent-answers-from-guide.json",
+    "ref": "PR #1542 (feat); fix evidence: 21/10/2026 (Vincent): a customer who could not connect their own domain asked the agent in the chat, which knew nothing of Tracy; /help told every own domain 'routing and TLS not available yet'. The agent half (a real model, 24 plain-chat questions on WordPress, Joomla and EmDash) is measured on the tracy-guide stand and written in tasks/evidence-agent-tracy-guide/.",
+    "invariant": "S1: all tests pass, including the Vietnamese question 'trỏ DNS sao' finding the own-domain article. S2: the Owner's lines name the missing TXT/CNAME and the value DNS found; the Editor and the Viewer never receive the TXT value and are told an Owner is needed; recheck by an Editor changes nothing and says NOT_SITE_OWNER; with the switch off no article is offered. S3: tracy_guide is not in DEFERRED_NAMES or PLATFORM_ONLY_TOOLS; the description is 520 characters or fewer; the rule is in the context of WordPress, Joomla and EmDash. S4: each gap is named in the gate's message.",
+    "productSources": [
+      "apps/tracy-web/src/db/index.js:25",
+      "apps/tracy-web/src/lib/guide.js:135",
+      "apps/tracy-web/src/lib/ui-setting.js:16",
+      "apps/tracy-web/src/sites/address.js:1258",
+      "apps/tracy-web/src/sites/guide.js:43",
+      "apps/tracy-web/src/sites/site-domain-provider.js:149",
+      "packages/tools/tracy-site-tools/src/host/deferred-tools.mjs:59",
+      "packages/tools/tracy-site-tools/src/host/guide-tool.mjs:25",
+      "packages/tools/tracy-site-tools/src/host/surface.mjs:72",
+      "scripts/check-guide-coverage.mjs:46"
+    ],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": ["apps/tracy-web/src/db/index.js:52 readFile() with a computed path"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["need:postgres"],
+  "assertionIds": [
+    "a customer asking about their own domain finds the domain article, in English or Vietnamese",
+    "no domain yet: the agent is told the site answers at its Tracy address only, and links to Publish",
+    "a viewer or an editor is not given the TXT value, and is told to ask an Owner",
+    "recheck is the Check again button: it reads DNS, records it, and the answer shows the new reading",
+    "only an Owner can recheck; anyone else gets the stored state and the reason",
+    "the operator turned Connect domain off: the agent is not offered the article",
+    "it is sent from the first step: not deferred and not hidden for a platform",
+    "a miss is an answer that says do not know, never an invention",
+    "a new switch with neither an article nor an exemption is red, and says what to do"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1542-site-agent-answers-from-guide"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1542-site-agent-answers-from-guide",
+    "pr": 1542,
+    "kind": "feat",
+    "area": "site-agent/guide",
+    "file": "tests/regression/cases/REG-PR-1542-site-agent-answers-from-guide.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-concurrency=1",
+    "apps/tracy-web/test/guide.test.mjs",
+    "apps/tracy-web/test/site-guide.test.mjs",
+    "packages/tools/tracy-site-tools/test/guide-tool.test.mjs",
+    "scripts/test/check-guide-coverage.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": ["postgres"],
+  "tests": [
+    "a customer asking about their own domain finds the domain article, in English or Vietnamese",
+    "no domain yet: the agent is told the site answers at its Tracy address only, and links to Publish",
+    "a viewer or an editor is not given the TXT value, and is told to ask an Owner",
+    "recheck is the Check again button: it reads DNS, records it, and the answer shows the new reading",
+    "only an Owner can recheck; anyone else gets the stored state and the reason",
+    "the operator turned Connect domain off: the agent is not offered the article",
+    "it is sent from the first step: not deferred and not hidden for a platform",
+    "a miss is an answer that says do not know, never an invention",
+    "a new switch with neither an article nor an exemption is red, and says what to do"
+  ],
+  "timeoutS": 600
+}

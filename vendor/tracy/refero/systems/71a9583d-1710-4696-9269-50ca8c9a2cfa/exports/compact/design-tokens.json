@@ -1,0 +1,84 @@
+{
+  "color": {
+    "electric-cobalt": {
+      "$value": "#2f59f8",
+      "$type": "color",
+      "$description": "Electric Cobalt — Primary action fills, active nav links, icon accents, link underlines. The only chromatic button color in the system — cobalt against the warm bone canvas makes every CTA feel switched on"
+    },
+    "ember-orange": {
+      "$value": "#ff632a",
+      "$type": "color",
+      "$description": "Ember Orange — Orange outline accent for tags, dividers, and focused UI edges. Do not promote it to the primary CTA color"
+    },
+    "volt-lime": {
+      "$value": "#eaff00",
+      "$type": "color",
+      "$description": "Volt Lime — Promotional and urgency surfaces: top sale bar, Subscribe & Save tags, sale-bubble accents on product cards. Reads as a highlighter against the warm canvas — use sparingly, never as a section background"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Primary text, hairline borders, logo, icon strokes. The structural backbone — used aggressively for borders and dividers rather than reserving it for text alone"
+    },
+    "bone": {
+      "$value": "#f5f4f1",
+      "$type": "color",
+      "$description": "Bone — Page canvas and quiet section backgrounds. Warm off-white that gives the system its sunlit feel; never pure white at the page level"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Elevated card surfaces, input fields, and any element that needs to sit forward of the bone canvas. Always a surface, never a text color"
+    },
+    "concrete": {
+      "$value": "#eeeeee",
+      "$type": "color",
+      "$description": "Concrete — Soft borders, dividers, and secondary surface fills. Quieter than Obsidian when a hairline needs to recede"
+    },
+    "ash": {
+      "$value": "#707170",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, secondary metadata, star-rating inactive state, and low-emphasis form labels"
+    },
+    "graphite": {
+      "$value": "#171717",
+      "$type": "color",
+      "$description": "Graphite — Slightly softened near-black for headings and dark UI surfaces where pure Obsidian feels too aggressive; button hover states on dark"
+    },
+    "mist": {
+      "$value": "#e3e3e3",
+      "$type": "color",
+      "$description": "Mist — Faint borders and disabled input outlines — one step lighter than Concrete for tertiary edges"
+    },
+    "pebble": {
+      "$value": "#d9d9d9",
+      "$type": "color",
+      "$description": "Pebble — Disabled button background, out-of-stock product card state. The only neutral allowed to function as an action fill, and only for disabled"
+    }
+  },
+  "font": {
+    "founders-grotesk": {
+      "$value": "Founders Grotesk",
+      "$type": "fontFamily",
+      "$description": "Primary typeface for body, headings, and product copy. Used across nearly every context — body, nav, hero, card, button, footer, heading. The geometric grotesque carries the brand voice: tight line-heights at large sizes (1.04–1.17 above 32px) make headlines feel like block letters slapped on the page rather than flowing paragraphs."
+    },
+    "gt-planar": {
+      "$value": "GT Planar",
+      "$type": "fontFamily",
+      "$description": "Secondary typeface for fine print, sale tags, form labels, and dense UI metadata in the 10–14px range. A quieter geometric companion to Founders Grotesk — use it wherever a label needs to whisper instead of speak."
+    },
+    "font-awesome-5-pro": {
+      "$value": "Font Awesome 5 Pro",
+      "$type": "fontFamily",
+      "$description": "Font Awesome 5 Pro — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://supermush.com",
+      "siteName": "SuperMush",
+      "extractedAt": "2026-06-03T18:21:44.028Z",
+      "variant": "compact"
+    }
+  }
+}

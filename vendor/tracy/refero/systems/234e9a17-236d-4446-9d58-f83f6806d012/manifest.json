@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "234e9a17-236d-4446-9d58-f83f6806d012",
+  "status": "complete",
+  "name": "Acne Studios",
+  "url": "https://styles.refero.design/style/234e9a17-236d-4446-9d58-f83f6806d012",
+  "sourceWebsite": "https://acnestudios.com",
+  "extractedAt": "2026-06-03T18:15:17.678Z",
+  "capturedAt": "2026-10-08T05:09:21.583353+00:00",
+  "theme": "light",
+  "industry": "ecommerce",
+  "description": "Minimalist gallery white space with bold photographic moments — a fashion magazine laid flat on marble.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/2ecd8111-aa58-494c-9540-b0689b97ed7d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/4d14f06d-ca8f-49ad-a24b-6891069a3400.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/bc717f00-aa1f-4c3e-ab67-324e0625ef2f.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/fe2a1f22-636b-43ee-9fe8-a4080436ed58.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/442d36d5-2368-4b74-993e-88909ec7eaf6.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "54fccae38f697bb9af2e6e25c5d31358a2fc1d81b74e27eb1eb1198c9dcecacb",
+      "bytes": 14605
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "f0385b62f6a9141b839b0a3092458879ae61c7632e14f97f446ba9299c243180",
+      "bytes": 206168
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "7058e2b762a57cb435ce9331fbf6ecaec74bc8dfdd529e7603da071d4a357943",
+      "bytes": 12021
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "6a7b996fcae73bcd747e1469d8e6bd2498f7872e8eb0143fd99a0da152fabb87",
+      "bytes": 5579
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "37dfa0db94e6b2f130e521c11b79f95eb5924391597c44f5505e7c829a38f484",
+      "bytes": 9513
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d4f17ae2081667b51130be4ee83f40941c2f25ead1f0fedc6e2a1938d19f7650",
+      "bytes": 2344
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "620d2be043e3336143ece289f294fbc0180a0e2307515d70b9a7ca1997abd22a",
+      "bytes": 654
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "395acc61b39ed4850f842d4dc77e4bbc86b4d712bc21b81488f8dc3661930edb",
+      "bytes": 671
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "89a5b2169aae7fe5585dec44ebb1d086c101eb12086351ed481515cdd4dbafae",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "d81f1d4fc797294807598afa8562a7378717949035c7ef71763d364b5b729f1a",
+      "bytes": 36911
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "e68cb71907e11b581ea337f3d02dd125280c4074649faf085213e8c02db76115",
+      "bytes": 18857
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "70e6273d67c10d23bbcc820077c98c44043aaf79f29ed294dc484a2121c1e62c",
+      "bytes": 21675
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "87770bf74aebc70056e34c5718a2595a5a14ee97ae8cc403091b4d130617bc3a",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "c3f7a75b0e8a49ca6d76365a0402fa19cef7b324b8f83f3a23aa392c70fda0cc",
+      "bytes": 974
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "4f830c11459082476efb819e0ace333352d74de37d43e8e3607fad288f4ef5d2",
+      "bytes": 1355
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "234e9a17-236d-4446-9d58-f83f6806d012",
+    "243a3dde-80a8-47a9-87f8-c549726ec6f3",
+    "2b9e90ad-51d9-4f29-8f7e-a343dc741eab",
+    "2e4ce685-9f49-47a3-9577-bc4f196bd8f7",
+    "2fd71e12-12fc-4346-8281-52afe12bb951",
+    "34b4856c-cc2b-4164-ab90-1b87cf8e0213",
+    "3c605c8e-daf2-4d46-94d7-2cb705a93b7b",
+    "43400d73-ca89-4750-8fa6-78cd2c661943",
+    "44a6d2a5-16ef-42cd-a69c-33a7af16638d",
+    "6f3fb64d-d4c9-4ec1-86a1-7983e5180985",
+    "78ac71e1-cd4c-4b4d-bac5-e7e6c65cd3fa",
+    "7922b756-2d0f-4a58-8fa6-39d40264fe66",
+    "7b28c99e-ed17-451b-a39e-bd4722bc43f5",
+    "a54e5114-bfb1-44ce-ab07-a133a1226117",
+    "cdc4a162-cefa-49a1-81e7-4857e421ae24",
+    "cef25151-078c-4631-8f02-4f204f071b8b",
+    "d531f0ec-ea94-4a40-b568-3073ff2bd8ed",
+    "f1a690c7-234d-4ee9-9806-5790934e7043",
+    "f2bf6db7-37b6-4394-be97-6bbb2c45c268",
+    "f401f04f-c45b-4261-9441-f502c6569a29",
+    "fa157687-ee42-443e-a992-5f8a3fcdd48f"
+  ]
+}

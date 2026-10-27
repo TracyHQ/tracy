@@ -1,0 +1,79 @@
+{
+  "color": {
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Primary text, all borders and dividers, nav and link strokes — the structural black of every UI line"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Page and card surfaces, reverse text on dark overlays"
+    },
+    "charcoal": {
+      "$value": "#1a1818",
+      "$type": "color",
+      "$description": "Charcoal — Body text on light surfaces where true black reads too clinical — used for paragraph copy and descriptions"
+    },
+    "graphite": {
+      "$value": "#818181",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, caption labels, size selector, muted metadata"
+    },
+    "ash": {
+      "$value": "#9d9d9d",
+      "$type": "color",
+      "$description": "Ash — Hairline list dividers and subtle separators within type family navigation"
+    },
+    "bone": {
+      "$value": "#d6d6d6",
+      "$type": "color",
+      "$description": "Bone — Light section dividers, subtle structural borders"
+    }
+  },
+  "font": {
+    "main-onsite": {
+      "$value": "Main Onsite",
+      "$type": "fontFamily",
+      "$description": "Main Onsite — detected in extracted data but not described by AI"
+    },
+    "onsite": {
+      "$value": "Onsite",
+      "$type": "fontFamily",
+      "$description": "Primary UI typeface for body, nav, buttons, links, captions, and headings — used at every interface scale from 11px micro-labels to 40px section titles. The wide letter-spacing range (0.015em–0.080em) gives small text a museum-label quality; the custom 400 weight keeps the entire interface at one calm voice."
+    },
+    "avec-sharp-ceno-meso-gestura-rework": {
+      "$value": "Avec Sharp / Ceno / Meso / Gestura / Rework",
+      "$type": "fontFamily",
+      "$description": "Display specimens — each font is showcased at a single massive 251px size as the product being sold. These are page heroes, not UI text. The tight 0.001em letter-spacing lets the display type breathe at its own proportions while the UI chrome (Onsite) keeps wide tracking for contrast."
+    },
+    "ceno": {
+      "$value": "Ceno",
+      "$type": "fontFamily",
+      "$description": "Ceno — detected in extracted data but not described by AI"
+    },
+    "meso": {
+      "$value": "Meso",
+      "$type": "fontFamily",
+      "$description": "Meso — detected in extracted data but not described by AI"
+    },
+    "gestura": {
+      "$value": "Gestura",
+      "$type": "fontFamily",
+      "$description": "Gestura — detected in extracted data but not described by AI"
+    },
+    "rework": {
+      "$value": "Rework",
+      "$type": "fontFamily",
+      "$description": "Rework — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://socio-type.com",
+      "siteName": "Sociotype",
+      "extractedAt": "2026-06-03T14:59:19.335Z",
+      "variant": "compact"
+    }
+  }
+}

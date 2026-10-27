@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "e352ec32-830a-4650-b7c2-d32a5f559f7e",
+  "status": "complete",
+  "name": "aave.com",
+  "url": "https://styles.refero.design/style/e352ec32-830a-4650-b7c2-d32a5f559f7e",
+  "sourceWebsite": "https://aave.com",
+  "extractedAt": "2026-06-03T17:49:28.188Z",
+  "capturedAt": "2026-10-08T05:18:36.411330+00:00",
+  "theme": "mixed",
+  "industry": "crypto",
+  "description": "neon violet threading twilight — a light lavender noon collapses into a midnight product surface, and one electric violet is the only color that survives the transition.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/3a5a8036-2feb-45a1-ac41-b9ce77960f9d.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/5d673401-88ab-4a94-bd04-38c15268e2f3.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/076038eb-0f52-4a42-a7ef-c932d6f5b8a2.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/78073263-4874-4bcb-8aba-3b24e4063f58.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/0ea1ed4f-b89c-4c1c-b3f8-b0a0d6bbe83d.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c905f39c39881cf79861c29c8650aa79e28cb4cc7d7e5adae87038c1b705ad85",
+      "bytes": 20703
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "65db89292e52bc1f3dce5366f89d919382e88d8a046742ab4b322455cad641e0",
+      "bytes": 84265
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "b53a63feaaacd7f918010bb1db8172c27c4d46b8afcc06ca1d47072bcac0816d",
+      "bytes": 17896
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "93d4b579bca98f957459d81f93f83eb799d9d55821e5b9ec8ff17913f89c5d87",
+      "bytes": 14220
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5f57f0f27008248483233826cc7a44312527e2fac34d6f071abaed28cc76205e",
+      "bytes": 12902
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "82ceef77b9ea05bbc0ffa3cf827088b1b8c0b54fa1d215e8211ca8e008f4e23b",
+      "bytes": 2858
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "0b37f14efb2c0cda0af5c2f61f13b03884b1352255397473c60f368f3991afef",
+      "bytes": 565
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "9e83b9755a5ad415119d6f8b23cca335147193e92b5d7d211d215b77f327d854",
+      "bytes": 582
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "5ecdb13e82daf4a57dac75824738c3e6151b471c354657100799729628341d1a",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "aaccb81f78be6c108c2a1e0019479449f3e3dbca4e9d83168d10294fcfe72dbd",
+      "bytes": 46297
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "068a81557482814b1fb18943aada9712ee54b6258702e8e9ca360dff87bd8a06",
+      "bytes": 24470
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "46c63c70e6a503eeac5b36d776159ab0214070a9fb9ffe9ccc8899ffc1c1aeca",
+      "bytes": 57482
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "c37ca32cd9f1a6ae415b735f0c1e09d91fc8f4050146a6c8dd3823bbf5250e45",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "3e5243172c889e4b3c65306729932415efd2ccd55ade833e741475bff30080d8",
+      "bytes": 1703
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "ae5320692cb22f49cd75732599c95e45237aaf07f35ce34efb9cfd6dd4897dcf",
+      "bytes": 2413
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "029d3ce0-0fe5-4a8c-99c4-4f9d704f1c60",
+    "03dcd158-bc4d-447b-aaf2-8e522671a109",
+    "0d914ef0-fa84-4c60-a9aa-cef0b5eb6e5d",
+    "10654184-eb92-4b75-a7af-bd92bc6cdc5c",
+    "11fed738-a5b5-4509-b4e2-3295ceab3604",
+    "14389660-81ff-4ca0-957f-b0dcc8fbe120",
+    "1ae4bcfe-c613-42fc-aab7-f9583381e7cc",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "5b188bcc-95f6-45b4-b0af-1c78e2ef05f2",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "78d9ece2-9033-479a-997a-ede94fc87fda",
+    "8065e38a-cdb7-4645-b168-98e6f80e7118",
+    "834ce97f-61f2-4b12-bf5c-e9fad2544456",
+    "8ce08850-085e-4954-a2f0-16acfb8dce23",
+    "9cc537fc-97d8-4632-8703-f9aa296c2206",
+    "a037c352-4315-4650-a16c-08392ffca597",
+    "bab34295-03fc-4993-ae42-b440fe78647b",
+    "cd293b92-71a3-4cc2-a56b-0fa60425b42a",
+    "e1f18a7e-5af1-46b3-8f89-bce6c78b80d4",
+    "e352ec32-830a-4650-b7c2-d32a5f559f7e",
+    "e8c604cc-1c8d-42a3-aeca-fcfc25e70344"
+  ]
+}

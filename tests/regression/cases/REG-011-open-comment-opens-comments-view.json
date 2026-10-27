@@ -1,0 +1,49 @@
+{
+  "id": "REG-011",
+  "kind": "fix",
+  "title": "Open comment also opens the conversation's Comments view in the chat column",
+  "pr": 775,
+  "area": "site-changes/open-comment",
+  "cms": ["wp", "jo"],
+  "needs": ["stand", "site:wp", "site:jo", "seat:owner", "fixture:comment-row"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), COOKIE_DOMAIN, PG, WEB, DSH, A and seat A's cookie COOKIE_A, pq (SELECT/WITH only). Case variables: run once per CMS in cms, KEY = site key of a WordPress or Joomla site where seat A is owner (e.g. scv2wp.scv2.tracy.test, scv2jo.scv2.tracy.test); RUN=$(date +%s).",
+    "Check the build: docker exec $DSH grep -c 'tracy:comments-open' /desk-home/profiles/native/node_modules/@tracy/dsh-site-tabs/lib/client.js must print a number >= 1; otherwise stop with BLOCKED note image-older-than-79addca39.",
+    "Fixture: page through curl -s -H \"Cookie: tracy_sess=$COOKIE_A\" -H \"Origin: $ORIGIN\" \"$ORIGIN/api/sites/$KEY/activity?version=2&filter=comment&limit=50\" (follow nextCursor, at most 20 pages) and take the newest item whose comment.id is non-empty and comment.deleted is not true and for which pq \"select status, coalesce(reply_to::text,'') from site_comment where id='<comment.id>'\" returns a status other than 'resolved' and an empty reply_to; set ITEM = item.id, COMMENT_ID = item.comment.id, PAGE_URL = item.comment.url.",
+    "Only if no fixture was found (model-dependent, en-US UI): in a new context open ORIGIN+'/'+KEY+'/?open=browser&page=/&mode=interactive', press getByRole('button',{name:/^Comments/}) then 'Start commenting', click the first h1 inside the site iframe, type 'REG-011-' + RUN + ' shorten this heading', press 'Note for team', then 'Ask Tracy', tick only that comment and press 'Ask Tracy to edit'; wait until the newest site_turn row of A on KEY is not 'open' (at most 10 min); rerun the fixture step (still none → BLOCKED note no-comment-row).",
+    "Browser: run chrome-watch --status and start chrome-watch if nothing serves 127.0.0.1:9222; connect Playwright (repo copy node_modules/.pnpm/playwright@1.63.0) with chromium.connectOverCDP('http://127.0.0.1:9222'), never chromium.launch(); every run uses a NEW context {locale:'en-US', colorScheme:'light', viewport:{width:1440,height:1000}, reducedMotion:'no-preference'} with cookie {name:'tracy_sess', value:COOKIE_A, domain:COOKIE_DOMAIN, path:'/', httpOnly:true}; never close a page, a context or the browser (let the script exit).",
+    "Recorder: before any goto, call context.addInitScript(() => { window.qa = {lists: [], opens: []}; addEventListener('tracy:comment-list', (e) => { const d = e.detail || {}; qa.lists.push({t: performance.now(), sessionId: d.sessionId, active: d.active, url: d.url, thread: d.thread}); }); addEventListener('tracy:comments-open', (e) => { const d = e.detail || {}; qa.opens.push({t: performance.now(), keys: Object.keys(d).sort(), sessionId: d.sessionId}); }); }).",
+    "Run A (press inside Tracy): new context with the recorder; page.goto(ORIGIN+'/'+KEY) and wait (<= 90 s) until page.url() contains '/s/session-' and the first [contenteditable='true'] is visible; goto page.url() with searchParams tab=tracy:changes and site=KEY; wait for [data-site-changes-v2] until no [data-site-changes-v2] [data-reading] remains; find li.tv-activity-event[data-event='<ITEM>'] (README § Find a row in Site changes: at most 30 times — row present → stop; .tv-activity-more gone → the list ended; its button enabled → click it once, never while it reads 'Loading…' (disabled); wait 2 s, then wait (<= 90 s) until the row exists, .tv-activity-more is gone, or the button is enabled again; list ended without the row → FAIL note row-not-in-list); HREF = getAttribute('href') of its [data-cell='source'] [data-quick-open='comment']; start counting context 'page' events; click that arrow.",
+    "Run A: wait until qa.lists has an entry with active === true and thread === COMMENT_ID (at most 30 s), then 3 s more; read page.url(), window.qa, getBoundingClientRect() of [data-tracy-comments], aria-selected of [data-conversation-tabs] [role='tab'][data-view='tracy-comments'], whether [data-tracy-comments] .tv-ci[data-comment='<COMMENT_ID>'] exists and has data-selected, getBoundingClientRect() of [data-thread='<COMMENT_ID>'] with innerHeight, page.frames().map(f => f.url()) and the 'page' event count.",
+    "Run B (cold link): new context with the recorder; start counting context 'page' events; page.goto(ORIGIN + HREF); wait (<= 90 s) until page.url() contains '/s/session-'; then do the same wait and the same reads as run A."
+  ],
+  "expect": [
+    "The build check prints a count >= 1.",
+    "new URL(HREF, ORIGIN) has open='browser', mode='edit', comment=COMMENT_ID and a page parameter equal to PAGE_URL's path (plus its query, if any).",
+    "Run A and B: 0 context 'page' events (nothing opens in a new window).",
+    "Run A and B: qa.lists has an entry with active=true and thread=COMMENT_ID within 30 s.",
+    "Run A and B: qa.opens has exactly 1 entry, its keys = ['sessionId'] (the Browser toolbar's own event also carries tabId), its sessionId equals the '/s/<id>' path segment of page.url(), and its t >= the t of the first qa.lists entry with thread=COMMENT_ID (before #775: qa.opens is empty).",
+    "Run A and B: [data-tracy-comments] exists with width > 0 and height > 0 (before #775: absent, the chat column stayed on the start screen, FAIL x4 on scv2wp /about/ and scv2jo /en/about; after: 353x863).",
+    "Run A and B: [data-conversation-tabs] [role='tab'][data-view='tracy-comments'] has aria-selected='true'.",
+    "Run A and B: [data-tracy-comments] .tv-ci[data-comment='<COMMENT_ID>'] exists and has the data-selected attribute.",
+    "Run A and B: [data-thread='<COMMENT_ID>'] exists with top >= 0 and bottom <= innerHeight.",
+    "Run A and B: one frame URL contains PAGE_URL's host and pathname.",
+    "Run B: page.url() has no comment parameter (it is taken off once read, by design)."
+  ],
+  "selectors": {
+    "row": "li.tv-activity-event[data-event='<itemId>'][data-source='comment']",
+    "openCommentArrow": "[data-cell='source'] [data-quick-open='comment']",
+    "commentsView": "[data-tracy-comments]",
+    "commentsTab": "[data-conversation-tabs] [role='tab'][data-view='tracy-comments']",
+    "commentItem": "[data-tracy-comments] .tv-ci[data-comment='<commentId>'][data-selected]",
+    "threadCard": "[data-thread='<commentId>']",
+    "listEvent": "window 'tracy:comment-list' detail {sessionId, tabId, active, url, thread, comments}",
+    "openEvent": "window 'tracy:comments-open' detail {sessionId} from site-tabs; the Browser toolbar sends {sessionId, tabId}",
+    "commentLink": "/<siteKey>/?open=browser&page=<path>&mode=edit&comment=<commentId>",
+    "activityApi": "GET /api/sites/:key/activity?version=2&filter=comment → items[].comment{id, url, deleted}",
+    "clientMarker": "'tracy:comments-open' in /desk-home/profiles/native/node_modules/@tracy/dsh-site-tabs/lib/client.js (dsh container)"
+  },
+  "evidence": "packages/site/tracy-site-tabs/test/comment-reveal.test.mjs",
+  "fence": "comment-reveal.mjs calls openComments(list.sessionId) exactly once when the Browser tab's tracy:comment-list names the comment's thread as open, dispatching window 'tracy:comments-open' {sessionId}, which tracy-chat-input turns into the selected Comments view ([data-tracy-comments])."
+}

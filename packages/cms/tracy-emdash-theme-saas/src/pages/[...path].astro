@@ -1,0 +1,82 @@
+---
+/**
+ * One router. Composed pages are found by their `path` field (pages collection); the blog family has
+ * fixed shapes. Unknown paths render the 404 view with a 404 status. Route table:
+ * tasks/emdash-ja-kinetic/architecture.md §3.
+ */
+export const prerender = false
+import { LOCALES, splitPath } from '@/lib/i18n'
+import { loadChrome } from '@/lib/chrome'
+import { loadPageByPath } from '@/lib/sections'
+import { viewFound } from '@/lib/posts'
+import { liveLinks, RECORDS } from '@/lib/link-gate'
+import { pageRecordFor } from '@/lib/page-records'
+import Sections from '@/views/Sections.astro'
+import NotFound from '@/views/NotFound.astro'
+import Blog from '@/views/Blog.astro'
+import Article from '@/views/Article.astro'
+import Terms from '@/views/Terms.astro'
+import Archive from '@/views/Archive.astro'
+import Authors from '@/views/Authors.astro'
+import Search from '@/views/Search.astro'
+import Legal from '@/views/Legal.astro'
+
+const { locale, path } = splitPath(Astro.url.pathname)
+const chrome = await loadChrome(locale)
+const segs = path.split('/').filter(Boolean)
+const SLUG = /^[a-z0-9][a-z0-9._-]*$/
+
+type View = { component: any; props: Record<string, unknown> } | null
+let view: View = null
+
+const page = await loadPageByPath(locale, path)
+if (page) {
+  if (page.view === 'category') view = { component: Blog, props: { page } }
+  else if (page.view === 'search') view = { component: Search, props: { page } }
+  else if (page.view === 'date') view = { component: Archive, props: { page } }
+  else if (page.view === 'author') view = { component: Authors, props: { page } }
+  else if (path === '/product/all-categories')
+    view = { component: Terms, props: { page, taxonomy: 'category' } }
+  else if (path === '/pages/tags') view = { component: Terms, props: { page, taxonomy: 'tag' } }
+  else if (path === '/pages/helixql') view = { component: Article, props: { page } }
+  else if (page.sections.length === 0) view = { component: Legal, props: { page } }
+  else view = { component: Sections, props: { page } }
+} else if (segs[0] === 'product' && segs[1] === 'blog') {
+  if (segs.length === 3 && SLUG.test(segs[2])) view = { component: Article, props: { slug: segs[2] } }
+  else if (segs.length === 4 && segs[2] === 'category' && SLUG.test(segs[3]))
+    view = { component: Blog, props: { category: segs[3] } }
+  else if (segs.length === 4 && segs[2] === 'tag' && SLUG.test(segs[3]))
+    view = { component: Blog, props: { tag: segs[3] } }
+} else if (segs[0] === 'product' && segs[1] === 'authors' && segs.length === 3 && SLUG.test(segs[2])) {
+  view = { component: Blog, props: { author: segs[2] } }
+}
+
+// A child of a page the customer unticked answers 404 with it (TCH #1013): `/product/blog/<post>`, its category, tag
+// and author views, and the blog's own system pages (archive, writers, tags, search) go when the blog page is off,
+// the same record whose own path answers 404 above. A page that IS the record answered already (`page` is null).
+const record = pageRecordFor(path, RECORDS, LOCALES)
+if (view && record && record.slug !== page?.slug && !(await liveLinks(Astro.request, locale, [path]))(path))
+  view = null
+
+// A status set inside a view arrives after streaming has started and is ignored, so the router decides
+// whether a blog-family URL resolves (unknown slug, term or author, a page past the end) — with the same
+// lookups the views use (src/lib/posts.ts), so the two cannot disagree.
+const BLOG_VIEWS = new Map<any, Parameters<typeof viewFound>[1]>([
+  [Blog, 'Blog'],
+  [Article, 'Article'],
+  [Archive, 'Archive'],
+  [Search, 'Search'],
+  [Authors, 'Authors']
+])
+if (
+  view &&
+  BLOG_VIEWS.has(view.component) &&
+  !(await viewFound(locale, BLOG_VIEWS.get(view.component)!, view.props, Astro.url))
+)
+  view = null
+
+const Component = view?.component ?? NotFound
+if (!view) Astro.response.status = 404
+---
+
+<Component chrome={chrome} locale={locale} path={path} {...(view?.props ?? {})} />

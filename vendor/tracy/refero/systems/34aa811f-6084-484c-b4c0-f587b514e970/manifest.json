@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "34aa811f-6084-484c-b4c0-f587b514e970",
+  "status": "complete",
+  "name": "Charlie",
+  "url": "https://styles.refero.design/style/34aa811f-6084-484c-b4c0-f587b514e970",
+  "sourceWebsite": "https://charlielemaignan.com",
+  "extractedAt": "2026-06-03T17:23:27.749Z",
+  "capturedAt": "2026-10-08T05:10:06.635562+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "Monastery stone-cut typography on obsidian. A portfolio that uses one red wall to make silence deafening.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/573f819d-2389-49d8-aaee-a8cc5f5d7816.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ed92bf50-1522-47c8-ae24-08ebbeec4bfc.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/700a5268-ff0f-433e-8c35-d198db966400.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/ef5d598f-fac1-423e-9b10-51261d3c6318.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/969b1e68-d32b-4c41-b1c1-735c4a568094.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "fbf6e387b221d507a46042055d80dc4f94c14c120acf3e0e5dc2bac9418f922e",
+      "bytes": 15922
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "c09a11e46ead49431315d30b9448c8a8c7d92bb184d67f7da16304fc5b137bee",
+      "bytes": 79545
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "86da08c37c9078683b0ce95c8e0e21f54f736eb5f7fcdbf57e5cb5ae023a5a36",
+      "bytes": 12668
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "db44a6f20472a57475c51faf21b267a788ea91a7db5cd47433575062f519336e",
+      "bytes": 7074
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "c5c3fbe3ad296e0bdc018b29540bcba69b587c0b522171506ea02ef6b97134b9",
+      "bytes": 9642
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "d71180e016f5b057fe5b08c68b938538489b99c635e9c8ee2c202381fe803d06",
+      "bytes": 2318
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "9a4922e5e6bb47caabe856cbe875b8ab1f611f1323ff21df275af11e8dca8315",
+      "bytes": 649
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "d97f9b995a7e3af502ad8968f9cc52399e825f8ad2530cd771522029a31312e5",
+      "bytes": 666
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "04973a9596351e52ab9aeac7f217768b1f5c347a378c9a6e17e8dc3cec7899e6",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "1a6aa279839ccae669a2eda2e2172047a4db0719a6064b9b90d9fb980a884d30",
+      "bytes": 38291
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "8a363a82e31f4894cc317217a4d396e1aa005bb8457b0d254ec00cba15bef1c3",
+      "bytes": 19560
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "900578f3b88e65c538f4fecb750eb2d178f4ff9363f8746c478d47cb9537735c",
+      "bytes": 23249
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "5abf4aa10a705eab32b870a36219349da0afa15afb70167103ee719073759f25",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "e1b9165deb645a86fd5e0d758328b75f9f250824bf2da01fe3b25a7bb161aabe",
+      "bytes": 1255
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "19b1d9796cd0e36d2c83224f500ee0e49b1347ba4f9a651106670c817231d825",
+      "bytes": 1678
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "02610b06-d16e-47bd-a1ea-18979a9ed4f5",
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "34aa811f-6084-484c-b4c0-f587b514e970",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "717a2f6f-bc7d-4f9a-adcb-1465fdf77c9a",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "86b56f02-57da-48a1-a647-fda9bbdf2c97",
+    "9fe18d8b-58b7-404d-bcc6-9e8a73b8862c",
+    "b1e82907-d1cf-46cd-8ae7-3561c5b15fd0",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bb63a015-b018-4bd9-be66-0973ac6be753",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e75b3106-fc5b-4bb8-8d7d-a7ab224fd27d",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ffb945f9-2d70-45e8-9024-492900318fa8"
+  ]
+}

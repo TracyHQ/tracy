@@ -1,0 +1,22 @@
+:root {
+  /* Colors */
+  --color-iris-violet: #7451f2;
+  --color-deep-iris: #5952a1;
+  --color-cobalt-info: #0072c6;
+  --color-powder-blue: #d6e5ff;
+  --color-graphite-ink: #272727;
+  --color-slate: #5d5d5d;
+  --color-ash: #4f4f4f;
+  --color-mauve-dust: #a69ea7;
+  --color-fog: #858585;
+  --color-charcoal-hairline: #333333;
+  --color-mist: #e0e0e0;
+  --color-soft-snow: #f6f6f6;
+  --color-paper-white: #ffffff;
+  --color-pure-black: #000000;
+
+  /* Typography — Font Families */
+  --font-lustria: 'Lustria', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-martian-mono: 'Martian Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

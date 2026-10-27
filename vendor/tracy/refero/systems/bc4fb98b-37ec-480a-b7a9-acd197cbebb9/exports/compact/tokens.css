@@ -1,0 +1,31 @@
+:root {
+  /* Colors */
+  --color-obsidian-ground: #000000;
+  --color-deep-charcoal: #19191c;
+  --color-graphite: #343434;
+  --color-iron: #474749;
+  --color-ash: #757577;
+  --color-slate: #8c8c8;
+  --color-silver: #a3a3a4;
+  --color-fog: #bababb;
+  --color-pure-white: #ffffff;
+  --color-electric-blue: #18a3fa;
+  --color-violet-pulse: #7b61ff;
+  --color-iris: #6b57ff;
+  --color-amethyst: #8473ff;
+  --color-deep-violet: #2e106a;
+  --color-neon-pink: #f31199;
+  --color-magenta-glow: #5a1fd0;
+  --color-nebula-violet: #5a1fd0;
+  --gradient-nebula-violet: linear-gradient(130deg, rgb(90, 31, 208) 10%, rgba(46, 16, 106, 0) 70%);
+  --color-aurora-teal: #08deaa;
+  --gradient-aurora-teal: linear-gradient(90deg, rgb(8, 222, 170) -12.99%, rgb(0, 170, 250) 176.77%);
+  --color-hero-blue-glow: #0047fd;
+  --gradient-hero-blue-glow: radial-gradient(87.36% 97.44% at 54.14% 23.32%, rgba(0, 71, 253, 0.8) 0px, rgba(0, 71, 253, 0.8) 15%, rgba(0, 0, 0, 0) 75%);
+  --color-danger-red: #f45c4a;
+  --color-success-green: #4dbb5f;
+  --color-warning-amber: #f3c033;
+
+  /* Typography — Font Families */
+  --font-jetbrains-sans: 'JetBrains Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

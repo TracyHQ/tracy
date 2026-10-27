@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-abyss-black: #070708;
+  --color-pure-white: #ffffff;
+  --color-steel-gray: #8f8f93;
+  --color-carbon: #000000;
+  --color-electric-cobalt: #1954ec;
+  --gradient-electric-cobalt: linear-gradient(135deg, rgb(0, 204, 255), rgb(12, 146, 246) 43%, rgb(25, 84, 236) 75%, rgb(25, 84, 236));
+
+  /* Typography — Font Families */
+  --font-graphik: 'Graphik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-darius: 'Darius', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

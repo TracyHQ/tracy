@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-1336-tdsr-contracts-round-4",
+  "kind": "feat",
+  "title": "Round 4 of #1317: ten published Joomla rows (JA Donate, Spa, Social II, Mood, Essence, Vega, Vogue, Resume, Symphony, Resort) pass ROLE-1 at the 85% floor by contract alone, and the Tracy Base measurement lives only where /ops reads it",
+  "pr": 1336,
+  "area": "ops/road-to-live/design-system",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read packages/cms/tracy-joomla-quickstart/contracts/<row>/j6/<published version>/design-system-measurement.json for the ten rows and score each with judgeMeasurement (packages/design/tracy-ds-slot/src/measurement.mjs).",
+    "S2: List packages/cms/tracy-joomla-quickstart/contracts/{tracy,tracy-base}/j6 and packages/cms/tracy-wordpress-quickstart/contracts/{tracy,tracy-base}/wp7."
+  ],
+  "expect": [
+    "S1: every file is a valid tdsr-measurement/v1 of the published version; ROLE-1 pass, UNDO-1 pass, CON-1 not failed on every row.",
+    "S2: tracy-base/j6/1.0.3 and tracy-base/wp7/1.1.4 hold the measurement; no contracts/tracy/ folder exists."
+  ],
+  "selectors": {
+    "files": "packages/cms/tracy-joomla-quickstart/contracts/{ja-donate/j6/1.0.5,ja-spa/j6/1.0.5,ja-social-ii/j6/1.0.3,ja-mood/j6/1.0.2,ja-essence/j6/1.0.7,ja-vega/j6/1.0.5,ja-vogue/j6/1.0.5,ja-resume/j6/1.0.3,ja-symphony/j6/1.0.2,ja-resort/j6/1.0.4}/design-system-measurement.json",
+    "contracts": "packages/design/tracy-ds-slot/templates/joomla-ja-{donate,spa,social-ii,mood,essence,vega,vogue,resume,symphony,resort}.json contractNotes1317 'Round 4 (14/10)'"
+  },
+  "evidence": "Before this PR the ten files scored ROLE-1 fail (page follows 60-85% under Moxie, Stripe or BMW; JA Symphony's button-primary missed on every view), and two Tracy Base files sat under contracts/tracy/, a folder treeMeasurementFiles never reads",
+  "fence": "The threshold (followsFloor 0.85) and every template are unchanged; IDENT-1 (empty logo) still fails on JA Essence, Resume and Social II: a template defect for #1318",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1336-tdsr-contracts-round-4.mjs"]
+  }
+}

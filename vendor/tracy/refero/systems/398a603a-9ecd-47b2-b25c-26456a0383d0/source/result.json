@@ -1,0 +1,757 @@
+{
+  "meta": {
+    "url": "https://beings.co",
+    "siteName": "Beings",
+    "extractedAt": "2026-09-20T19:30:28.623Z",
+    "durationMs": 67742,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "elementCount": 171,
+    "telemetry": {
+      "enrichment": {
+        "componentHtmlStatus": "pending",
+        "attempts": 0
+      }
+    }
+  },
+  "raw": {
+    "colors": {
+      "tokens": [
+        {
+          "hex": "#fff4ec",
+          "oklch": {
+            "c": 0.015951690002015458,
+            "h": 58.64127645925721,
+            "l": 0.9735556469490682
+          },
+          "contexts": [
+            "other",
+            "body"
+          ],
+          "frequency": 27,
+          "confidence": 1,
+          "prominence": 46223549.24798538,
+          "properties": [
+            "backgroundColor",
+            "color",
+            "fill"
+          ],
+          "usageCounts": {
+            "body/color": 13,
+            "other/fill": 10,
+            "other/color": 3,
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#ffffff",
+          "oklch": {
+            "c": 0,
+            "h": 0,
+            "l": 1.0000000000000002
+          },
+          "contexts": [
+            "link",
+            "other",
+            "body"
+          ],
+          "frequency": 17,
+          "confidence": 1,
+          "prominence": 40094550.28589308,
+          "properties": [
+            "color",
+            "backgroundColor"
+          ],
+          "usageCounts": {
+            "link/color": 1,
+            "body/backgroundColor": 15,
+            "other/backgroundColor": 1
+          }
+        },
+        {
+          "hex": "#1b0800",
+          "oklch": {
+            "c": 0.041061978463251055,
+            "h": 53.637835192888936,
+            "l": 0.16309493470022357
+          },
+          "contexts": [
+            "link",
+            "button",
+            "other",
+            "heading",
+            "body"
+          ],
+          "frequency": 26,
+          "confidence": 1,
+          "prominence": 5546100.782523469,
+          "properties": [
+            "color",
+            "backgroundColor",
+            "stroke"
+          ],
+          "usageCounts": {
+            "body/color": 15,
+            "link/color": 5,
+            "button/color": 2,
+            "other/stroke": 1,
+            "heading/color": 1,
+            "other/backgroundColor": 2
+          }
+        },
+        {
+          "hex": "#f6c9a1",
+          "oklch": {
+            "c": 0.07349336308686705,
+            "h": 63.25054246983373,
+            "l": 0.8654632174286333
+          },
+          "contexts": [
+            "heading",
+            "body"
+          ],
+          "frequency": 4,
+          "confidence": 1,
+          "prominence": 463586.87571283116,
+          "properties": [
+            "color"
+          ],
+          "usageCounts": {
+            "body/color": 1,
+            "heading/color": 3
+          }
+        }
+      ],
+      "isDarkMode": false,
+      "colorfulness": 0.06545947854077476,
+      "contrastPairs": [
+        {
+          "level": "AAA",
+          "ratio": 19.42,
+          "background": "#1b0800",
+          "foreground": "#ffffff"
+        },
+        {
+          "level": "AAA",
+          "ratio": 17.94,
+          "background": "#1b0800",
+          "foreground": "#fff4ec"
+        },
+        {
+          "level": "AAA",
+          "ratio": 12.75,
+          "background": "#1b0800",
+          "foreground": "#f6c9a1"
+        },
+        {
+          "level": "fail",
+          "ratio": 1.52,
+          "background": "#ffffff",
+          "foreground": "#f6c9a1"
+        },
+        {
+          "level": "fail",
+          "ratio": 1.41,
+          "background": "#fff4ec",
+          "foreground": "#f6c9a1"
+        },
+        {
+          "level": "fail",
+          "ratio": 1.08,
+          "background": "#ffffff",
+          "foreground": "#fff4ec"
+        }
+      ]
+    },
+    "shapes": {
+      "radii": [],
+      "shadows": []
+    },
+    "spacing": {
+      "tokens": [
+        {
+          "value": 6,
+          "contexts": [
+            "other",
+            "body"
+          ],
+          "frequency": 12,
+          "properties": [
+            "marginBottom",
+            "paddingLeft",
+            "paddingTop"
+          ],
+          "propertyContextPairs": [
+            "marginBottom|other",
+            "paddingLeft|body",
+            "paddingTop|other"
+          ]
+        },
+        {
+          "value": 8,
+          "contexts": [
+            "link"
+          ],
+          "frequency": 4,
+          "properties": [
+            "paddingTop",
+            "paddingRight",
+            "paddingBottom",
+            "paddingLeft"
+          ],
+          "propertyContextPairs": [
+            "paddingTop|link",
+            "paddingRight|link",
+            "paddingBottom|link",
+            "paddingLeft|link"
+          ]
+        },
+        {
+          "value": 12,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 18,
+          "properties": [
+            "paddingRight",
+            "paddingLeft",
+            "paddingTop",
+            "paddingBottom",
+            "rowGap",
+            "columnGap"
+          ],
+          "propertyContextPairs": [
+            "paddingRight|other",
+            "paddingLeft|other",
+            "paddingTop|other",
+            "paddingBottom|other",
+            "rowGap|other",
+            "columnGap|other"
+          ]
+        }
+      ],
+      "density": "comfortable",
+      "baseUnit": 6
+    },
+    "gradients": [],
+    "typography": {
+      "fonts": [
+        {
+          "family": "Die Grotesk B SemiBold",
+          "source": "custom",
+          "weights": [
+            400
+          ],
+          "frequency": 120,
+          "fontFeatureSettings": [
+            "\"kern\", \"ss01\", \"ss02\", \"ss03\", \"ss04\""
+          ]
+        },
+        {
+          "family": "Die Grotesk B Bold",
+          "source": "custom",
+          "weights": [
+            400
+          ],
+          "frequency": 32,
+          "fontFeatureSettings": [
+            "\"kern\", \"ss01\", \"ss02\", \"ss03\", \"ss04\""
+          ]
+        },
+        {
+          "family": "Die Grotesk B Black",
+          "source": "custom",
+          "weights": [
+            400
+          ],
+          "frequency": 4,
+          "fontFeatureSettings": [
+            "\"kern\", \"ss01\", \"ss02\", \"ss03\", \"ss04\""
+          ]
+        },
+        {
+          "family": "Bonto",
+          "source": "custom",
+          "weights": [
+            400
+          ],
+          "frequency": 3,
+          "fontFeatureSettings": [
+            "\"kern\", \"ss01\" 0, \"ss02\", \"ss03\" 0, \"ss04\" 0"
+          ]
+        },
+        {
+          "family": "Die Grotesk C Black",
+          "source": "custom",
+          "weights": [
+            400
+          ],
+          "frequency": 2,
+          "fontFeatureSettings": [
+            "\"kern\", \"ss01\", \"ss02\", \"ss03\", \"ss04\""
+          ]
+        }
+      ],
+      "scale": {
+        "base": 16,
+        "name": "Perfect Fourth",
+        "ratio": 1.333,
+        "confidence": 1
+      },
+      "steps": [
+        {
+          "size": 12,
+          "family": "Die Grotesk B Bold",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "link",
+            "button",
+            "body"
+          ],
+          "frequency": 29,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 12,
+          "family": "Die Grotesk B SemiBold",
+          "weight": 400,
+          "contexts": [
+            "body"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 12,
+          "family": "Die Grotesk B Black",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 4,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "uppercase"
+        },
+        {
+          "size": 15,
+          "family": "Die Grotesk B SemiBold",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "link",
+            "image"
+          ],
+          "frequency": 87,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Die Grotesk B SemiBold",
+          "weight": 400,
+          "contexts": [
+            "other"
+          ],
+          "frequency": 1,
+          "lineHeight": 1.4,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 16,
+          "family": "Die Grotesk B SemiBold",
+          "weight": 400,
+          "contexts": [
+            "other",
+            "body",
+            "link"
+          ],
+          "frequency": 30,
+          "lineHeight": 1.1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 22,
+          "family": "Die Grotesk B Bold",
+          "weight": 400,
+          "contexts": [
+            "heading",
+            "body"
+          ],
+          "frequency": 3,
+          "lineHeight": 1.1,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 30,
+          "family": "Die Grotesk C Black",
+          "weight": 400,
+          "contexts": [
+            "heading"
+          ],
+          "frequency": 2,
+          "lineHeight": 1.18,
+          "letterSpacing": 0,
+          "textTransform": "none"
+        },
+        {
+          "size": 66,
+          "family": "Bonto",
+          "weight": 400,
+          "contexts": [
+            "heading",
+            "link"
+          ],
+          "frequency": 3,
+          "lineHeight": 1,
+          "letterSpacing": -0.03,
+          "textTransform": "none"
+        }
+      ]
+    }
+  },
+  "designSystem": {
+    "dos": [
+      "Use Paper White #ffffff as the primary canvas and Milk Paper #fff4ec as the warm secondary surface.",
+      "Set public navigation and text controls in uppercase Die Grotesk B Bold at 12px with 16.8px line-height.",
+      "Use 0px radius for buttons, navigation links, and portrait media.",
+      "Reserve Bonto at 66px/66px with -1.99px tracking for isolated section-scale words.",
+      "Place Talent Peach #f6c9a1 type only on Cocoa Ink #1b0800 or Home Umber #381a06 surfaces.",
+      "Keep repeated local spacing on the 6px base unit, using 12px for adjacent control and copy gaps.",
+      "Use Fine Grey #999999 only as thin unfilled circular linework or subdued interface detail."
+    ],
+    "donts": [
+      "Do not use rounded cards, pill buttons, or any radius above the documented 0px geometry.",
+      "Do not set Talent Peach #f6c9a1 text on Paper White #ffffff or Milk Paper #fff4ec.",
+      "Do not introduce drop shadows beneath portrait blocks, header controls, or editorial sections.",
+      "Do not replace the 66px Bonto display treatment with a generic bold sans-serif headline.",
+      "Do not turn transparent 12px navigation controls into filled buttons without a documented section-specific surface.",
+      "Do not use bright blue, green, or red status colors; the system stays within Cocoa Ink #1b0800 and its peach-to-umber range.",
+      "Do not use soft rounded stock imagery; crop portraits close and retain sharp rectangular edges."
+    ],
+    "theme": "light",
+    "colors": [
+      {
+        "hex": "#ffffff",
+        "name": "Paper White",
+        "role": "Primary page canvas, header background, and bright media surround",
+        "group": "neutral"
+      },
+      {
+        "hex": "#fff4ec",
+        "name": "Milk Paper",
+        "role": "Warm light surface for talent pages, partner labels, and soft text on dark sections",
+        "group": "neutral"
+      },
+      {
+        "hex": "#1b0800",
+        "name": "Cocoa Ink",
+        "role": "Primary text, navigation, outlined controls, logo treatment, and dark surface",
+        "group": "neutral"
+      },
+      {
+        "hex": "#f6c9a1",
+        "name": "Talent Peach",
+        "role": "Talent-section display text and supporting copy on Cocoa Ink — the muted peach makes dark editorial panels feel human rather than corporate",
+        "group": "brand"
+      },
+      {
+        "hex": "#381a06",
+        "name": "Home Umber",
+        "role": "Deep brown feature-section surface for high-contrast editorial statements",
+        "group": "brand"
+      },
+      {
+        "hex": "#fae3cf",
+        "name": "Join Blush",
+        "role": "Pale peach participation and joining surface",
+        "group": "accent"
+      },
+      {
+        "hex": "#78492d",
+        "name": "Shortlist Clay",
+        "role": "Shortlist area surface and dark-on-light warm brown emphasis",
+        "group": "accent"
+      },
+      {
+        "hex": "#fdf4ed",
+        "name": "Shortlist Cream",
+        "role": "Text on Shortlist Clay surfaces",
+        "group": "neutral"
+      },
+      {
+        "hex": "#ffe2cc",
+        "name": "Peach Wash",
+        "role": "Secondary pale warm surface",
+        "group": "accent"
+      },
+      {
+        "hex": "#db9a68",
+        "name": "Profile Copper",
+        "role": "Profile dark-theme text and small warm highlight",
+        "group": "accent"
+      },
+      {
+        "hex": "#999999",
+        "name": "Fine Grey",
+        "role": "Hairline decorative circles and subdued interface marks",
+        "group": "neutral"
+      }
+    ],
+    "layout": "The page opens on a Paper White #ffffff canvas with a thin, widely distributed utility header and an enormous dark identity wordmark spanning most of the viewport. The first content composition is asymmetric: a large, tightly cropped portrait anchors the left while a compact 22px introductory heading occupies the open white area to the right. Subsequent sections behave like an editorial collage rather than a card grid, placing large raw-edge portraits in offset two-column arrangements over warm light and brown fields; fine circular outlines bridge image and negative-space boundaries. The page is spacious and image-led, with minimal navigation, large uninterrupted media rectangles, and occasional full-width dark statement bands.",
+    "imagery": "Photography is the central visual language: high-contrast portraits of people are tightly cropped, often allowing hair, shoulders, and faces to exceed the apparent frame. Images are large, raw rectangular blocks with no rounding, no device mockups, and little visual separation from the page; their role is talent showcase rather than background decoration. The page is text-dominant only in the masthead and dark declaration panels, while most visual weight belongs to documentary/editorial portrait crops. Graphics are limited to thin mono circular outlines that overlap media and adjacent negative space.",
+    "similar": [
+      {
+        "why": "Shares the editorial use of oversized typography, direct portrait photography, and expansive white space.",
+        "business": "The Gentlewoman"
+      },
+      {
+        "why": "Uses graphic-scale wordmarks and image-led compositions with intentionally sparse interface chrome.",
+        "business": "A24"
+      },
+      {
+        "why": "Shares the gallery-like treatment of creative work, sharp media framing, and typography-led page structure.",
+        "business": "It’s Nice That"
+      },
+      {
+        "why": "Uses tightly cropped human portraiture and editorial layouts where photography carries the visual hierarchy.",
+        "business": "Dazed"
+      }
+    ],
+    "spacing": {
+      "radius": {
+        "links": "0px",
+        "images": "0px",
+        "buttons": "0px"
+      },
+      "elementGap": "12px",
+      "sectionGap": "",
+      "cardPadding": "",
+      "pageMaxWidth": null
+    },
+    "industry": "other",
+    "surfaces": [
+      {
+        "hex": "#ffffff",
+        "name": "Paper White",
+        "level": 0,
+        "purpose": "Primary page canvas and header surface."
+      },
+      {
+        "hex": "#fff4ec",
+        "name": "Milk Paper",
+        "level": 1,
+        "purpose": "Warm talent-area and light editorial surface."
+      },
+      {
+        "hex": "#fae3cf",
+        "name": "Join Blush",
+        "level": 2,
+        "purpose": "Pale peach participation surface."
+      },
+      {
+        "hex": "#1b0800",
+        "name": "Cocoa Ink",
+        "level": 3,
+        "purpose": "Dark text field and high-contrast surface."
+      },
+      {
+        "hex": "#381a06",
+        "name": "Home Umber",
+        "level": 4,
+        "purpose": "Deep editorial statement-panel surface."
+      }
+    ],
+    "northStar": "portrait gallery on warm paper. Build with monumental type, tightly cropped human photography, and sharp rectangular compositions punctuated by pale peach and dark cocoa fields.",
+    "typeScale": [
+      {
+        "role": "nav-control",
+        "size": 12,
+        "family": "Die Grotesk B Bold",
+        "weight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": 0
+      },
+      {
+        "role": "body",
+        "size": 12,
+        "family": "Die Grotesk B SemiBold",
+        "weight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": 0
+      },
+      {
+        "role": "skip-link",
+        "size": 15,
+        "family": "Die Grotesk B SemiBold",
+        "weight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": 0
+      },
+      {
+        "role": "partner-label",
+        "size": 16,
+        "family": "Die Grotesk B SemiBold",
+        "weight": 400,
+        "lineHeight": 1.1,
+        "letterSpacing": 0
+      },
+      {
+        "role": "intro-heading",
+        "size": 22,
+        "family": "Die Grotesk B Bold",
+        "weight": 400,
+        "lineHeight": 1.1,
+        "letterSpacing": 0
+      },
+      {
+        "role": "statement-heading",
+        "size": 30,
+        "family": "Die Grotesk C Black",
+        "weight": 400,
+        "lineHeight": 1.18,
+        "letterSpacing": 0
+      },
+      {
+        "role": "display-title",
+        "size": 66,
+        "family": "Bonto",
+        "weight": 400,
+        "lineHeight": 1,
+        "letterSpacing": -1.98
+      }
+    ],
+    "components": [
+      {
+        "name": "Utility Header",
+        "role": "Top-level public navigation",
+        "description": "Use a Paper White #ffffff horizontal bar with Cocoa Ink #1b0800 12px Die Grotesk B Bold navigation labels, 16.8px line-height, uppercase text, and 8px internal link padding."
+      },
+      {
+        "name": "Text Navigation Link",
+        "role": "Public-section and brand navigation",
+        "description": "Render as transparent text in Cocoa Ink #1b0800, Die Grotesk B Bold at 12px/16.8px, uppercase, with 0px radius and 8px padding. Do not add a filled background."
+      },
+      {
+        "name": "Transparent Utility Button",
+        "role": "Playback and shortlist controls",
+        "description": "Use transparent background, Cocoa Ink #1b0800 text and border color, 0px radius, 0px padding, and uppercase Die Grotesk B Bold at 12px/16.8px."
+      },
+      {
+        "name": "Skip Link",
+        "role": "Keyboard-accessible route into page content",
+        "description": "Place White #ffffff Die Grotesk B SemiBold text at 15px/21px on a Cocoa Ink #1b0800 focus surface."
+      },
+      {
+        "name": "Intro Copy Block",
+        "role": "Talent-directory introduction",
+        "description": "Set the heading in Cocoa Ink #1b0800 using Die Grotesk B Bold at 22px with 24.2px line-height; pair only with compact 12px/16.8px Die Grotesk B SemiBold support copy."
+      },
+      {
+        "name": "Bonto Display Title",
+        "role": "Section-scale identity wordmark",
+        "description": "Set a single short word in Bonto at 66px/66px with -1.99px tracking. Use Talent Peach #f6c9a1 when the title sits on Home Umber #381a06."
+      },
+      {
+        "name": "Dark Editorial Statement Panel",
+        "role": "High-emphasis narrative section",
+        "description": "Use Home Umber #381a06 as the full panel surface; set the main statement in Talent Peach #f6c9a1 using Die Grotesk C Black at 30px/35.25px, with supporting copy in Die Grotesk B SemiBold at 12px/16.8px."
+      },
+      {
+        "name": "Sharp Portrait Media Block",
+        "role": "Talent showcase imagery",
+        "description": "Use high-contrast, tightly cropped portrait photography in a raw rectangular frame with 0px image radius. Surround against Paper White #ffffff or Milk Paper #fff4ec; do not add card borders or shadows."
+      },
+      {
+        "name": "Orbital Line Motif",
+        "role": "Editorial divider and image overlap device",
+        "description": "Overlay a single oversized Fine Grey #999999 circular hairline across the boundary of a sharp portrait block and adjacent empty surface. Keep the interior transparent and avoid filling the circle."
+      },
+      {
+        "name": "Shortlist Surface",
+        "role": "Warm saved-talent area",
+        "description": "Use Shortlist Clay #78492d as the surface with Shortlist Cream #fdf4ed text in Die Grotesk B SemiBold at 16px/17.6px; retain square 0px geometry."
+      },
+      {
+        "name": "Partner Name Label",
+        "role": "Funding and partner acknowledgement",
+        "description": "Set Milk Paper #fff4ec text in Die Grotesk B SemiBold at 16px/17.6px on Cocoa Ink #1b0800 or Home Umber #381a06."
+      }
+    ],
+    "typography": [
+      {
+        "role": "Workhorse reading and utility face for compact body copy, links, skip navigation, and partner names. Its 12px and 16px settings retain a blunt, compact texture instead of expanding into conventional airy sans-serif body text.",
+        "sizes": "12px, 15px, 16px",
+        "family": "Die Grotesk B SemiBold",
+        "weight": "400",
+        "lineHeight": "1.10, 1.40",
+        "substitute": "Space Grotesk",
+        "letterSpacing": "normal",
+        "fontFeatureSettings": "\"kern\", \"ss01\", \"ss02\", \"ss03\", \"ss04\""
+      },
+      {
+        "role": "Navigation, text controls, brand links, and the 22px introductory heading. Keep the nominal 400 weight mapping: visual boldness comes from the bespoke face rather than a CSS 700 value.",
+        "sizes": "12px, 22px",
+        "family": "Die Grotesk B Bold",
+        "weight": "400",
+        "lineHeight": "1.10, 1.40",
+        "substitute": "Archivo",
+        "letterSpacing": "normal",
+        "fontFeatureSettings": "\"kern\", \"ss01\", \"ss02\", \"ss03\", \"ss04\""
+      },
+      {
+        "role": "Rare 12px emphatic micro-label treatment.",
+        "sizes": "12px",
+        "family": "Die Grotesk B Black",
+        "weight": "400",
+        "lineHeight": "1.40",
+        "substitute": "Archivo Black",
+        "letterSpacing": "normal",
+        "fontFeatureSettings": "\"kern\", \"ss01\", \"ss02\", \"ss03\", \"ss04\""
+      },
+      {
+        "role": "30px statement heading for dark, warm-toned editorial panels. The black cut gives short declarations a dense, carved texture.",
+        "sizes": "30px",
+        "family": "Die Grotesk C Black",
+        "weight": "400",
+        "lineHeight": "1.18",
+        "substitute": "Archivo Black",
+        "letterSpacing": "normal",
+        "fontFeatureSettings": "\"kern\", \"ss01\", \"ss02\", \"ss03\", \"ss04\""
+      },
+      {
+        "role": "Display face for the 66px Talent title and major identity-scale words. The tight tracking and single-line leading make the lettering read as a graphic slab rather than ordinary headline text.",
+        "sizes": "66px",
+        "family": "Bonto",
+        "weight": "400",
+        "lineHeight": "1.00",
+        "substitute": "Anton",
+        "letterSpacing": "-1.99px at 66px",
+        "fontFeatureSettings": "\"kern\", \"ss01\" 0, \"ss02\", \"ss03\" 0, \"ss04\" 0"
+      }
+    ],
+    "description": "Beings combines oversized, almost poster-like black typography with sharp-edged editorial portraiture and warm skin-tone section fields. The white opening canvas is interrupted by deep brown and peach editorial panels, where compact uppercase navigation sits far quieter than the imagery and type. The system gives visual authority to representation-led photography: faces are cropped close, media blocks are large and unrounded, and thin circular linework creates a recurring gallery-layout gesture.",
+    "customSections": [
+      {
+        "title": "Agent Prompt Guide",
+        "content": "Quick Color Reference:\n- Paper White: #ffffff — Primary page canvas, header background, and bright media surround\n- Milk Paper: #fff4ec — Warm light surface for talent pages, partner labels, and soft text on dark sections\n- Cocoa Ink: #1b0800 — Primary text, navigation, outlined controls, logo treatment, and dark surface\n- Talent Peach: #f6c9a1 — Talent-section display text and supporting copy on Cocoa Ink — the muted peach makes dark editorial panels feel human rather than corporate\n- Home Umber: #381a06 — Deep brown feature-section surface for high-contrast editorial statements\n- Join Blush: #fae3cf — Pale peach participation and joining surface\n- Shortlist Clay: #78492d — Shortlist area surface and dark-on-light warm brown emphasis\n- Shortlist Cream: #fdf4ed — Text on Shortlist Clay surfaces\n- Peach Wash: #ffe2cc — Secondary pale warm surface\n- Profile Copper: #db9a68 — Profile dark-theme text and small warm highlight\n- Fine Grey: #999999 — Hairline decorative circles and subdued interface marks\n\nCreate a Paper White #ffffff landing composition with a compact 12px/16.8px uppercase Die Grotesk B Bold navigation row in Cocoa Ink #1b0800, then a monumental Cocoa Ink identity wordmark and a sharp-edged portrait crop.\nCreate an asymmetric talent-introduction block: a raw 0px-radius portrait on Milk Paper #fff4ec at left and a Cocoa Ink #1b0800 heading in Die Grotesk B Bold at 22px/24.2px in the adjacent white space.\nCreate a Home Umber #381a06 editorial statement panel with Talent Peach #f6c9a1 statement text in Die Grotesk C Black at 30px/35.25px and 12px/16.8px Die Grotesk B SemiBold supporting copy.\nCreate a section title on Home Umber #381a06 using the Bonto display face at 66px/66px with -1.99px tracking in Talent Peach #f6c9a1; overlap one Fine Grey #999999 unfilled circular hairline across a nearby sharp portrait.\nCreate a Shortlist Clay #78492d saved-talent panel with Shortlist Cream #fdf4ed 16px/17.6px Die Grotesk B SemiBold labels and square, shadowless geometry."
+      }
+    ],
+    "elevationPhilosophy": "Surfaces are separated by hard image edges, white space, warm field changes, and thin orbital strokes rather than shadows. Portraits should look placed on a printed editorial spread, not raised as interface cards."
+  },
+  "screenshot": {
+    "url": "https://images.refero.design/styles/refero.design/image/99067be2-304e-4164-91ca-2d786c326361.jpg",
+    "thumbnail": "https://images.refero.design/styles/refero.design/image/5890e444-9c1b-4623-83cb-2b9adb460b6a.jpg"
+  }
+}

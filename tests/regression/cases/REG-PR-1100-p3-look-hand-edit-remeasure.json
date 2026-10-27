@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1100-p3-look-hand-edit-remeasure",
+  "kind": "fix",
+  "title": "Every platform's LOOK line tells the agent to read the element back with page.look after a hand-written look change, before telling the customer it is done",
+  "pr": 1100,
+  "area": "agent/look",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["checkout"],
+  "flaky_model": false,
+  "steps": [
+    "S1: No stand, no browser, no model. In the TCH checkout at the commit under test, with dependencies installed (pnpm install), run: node --test --test-reporter=tap packages/tools/tracy-site-tools/test/ds-slot-worn.test.mjs",
+    "S2: Record the result of the three 'LOOK line: a change by hand is read back' tests."
+  ],
+  "expect": [
+    "For wordpress, joomla and emdash, a mode with a shell gets in its LOOK line: 'After a change by hand, read the element again with `page.look` and tell the customer the value it now shows — never that it is done without that reading.'",
+    "A mode without a shell (Writer) does not get that sentence.",
+    "The three tests are ok and the run exits 0."
+  ],
+  "selectors": {
+    "line": "packages/tools/tracy-site-tools/src/host/site-context.mjs LOOK_CHECK / lookLine"
+  },
+  "evidence": "Stand 09–10/10/2026, WordPress T3: the agent wrote a look by hand and claimed success without reading the computed value back.",
+  "fence": "Mechanism only: the rule's text in the context. Not covered: whether the model follows it.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/ds-slot-worn.test.mjs"
+    ],
+    "tests": [
+      "LOOK line: a change by hand is read back with page.look before the customer is told: wordpress",
+      "LOOK line: a change by hand is read back with page.look before the customer is told: joomla",
+      "LOOK line: a change by hand is read back with page.look before the customer is told: emdash"
+    ]
+  }
+}

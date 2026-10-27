@@ -1,0 +1,13 @@
+:root {
+  /* Colors */
+  --color-burnt-wine: #38141b;
+  --color-ink-stone: #262626;
+  --color-warm-parchment: #e0ded8;
+  --color-white: #ffffff;
+
+  /* Typography — Font Families */
+  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-legquinne-vf: 'Legquinne VF', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-basis-grotesque-pro: 'Basis Grotesque Pro', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-basisgrotesquepro-500: 'Basisgrotesquepro 500', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

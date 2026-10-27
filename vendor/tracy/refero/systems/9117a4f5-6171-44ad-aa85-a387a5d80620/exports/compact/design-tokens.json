@@ -1,0 +1,99 @@
+{
+  "color": {
+    "void-indigo": {
+      "$value": "#040723",
+      "$type": "color",
+      "$description": "Void Indigo — Page background, primary surface — near-black with a violet undertone that makes the whole canvas feel tinted rather than neutral"
+    },
+    "abyss-plum": {
+      "$value": "#140f33",
+      "$type": "color",
+      "$description": "Abyss Plum — Elevated card surface, shadow tone — a step lighter than Void Indigo, used to lift cards off the canvas with violet ambient"
+    },
+    "onyx": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Onyx — Deep contrast surface for cards, input fills, and the darkest band behind photo content"
+    },
+    "glacier": {
+      "$value": "#e4ebf3",
+      "$type": "color",
+      "$description": "Glacier — Off-white section backgrounds, light card surfaces — cool-tinted to harmonize with the violet system"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Primary text on dark surfaces, button labels, image overlays — the dominant non-background color in the system"
+    },
+    "smoke": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Smoke — Secondary/muted body text, disabled labels"
+    },
+    "ash": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Ash — Tertiary text and subtle borders on light sections"
+    },
+    "graphite": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Graphite — Image borders, input strokes, secondary link text on light surfaces"
+    },
+    "charcoal": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal — Button borders on light surfaces, heavy text emphasis"
+    },
+    "cinder": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Cinder — Input field borders, form dividers"
+    },
+    "pulse-blue": {
+      "$value": "#3898ec",
+      "$type": "color",
+      "$description": "Pulse Blue — Primary filled action background (CTA buttons, active nav) — the only chromatic fill in the system, acts as the single notification LED against the dark canvas"
+    },
+    "iris": {
+      "$value": "#755eff",
+      "$type": "color",
+      "$description": "Iris — Outlined action border, secondary accent — the violet identity color applied to ghost buttons and decorative strokes"
+    },
+    "lavender-lightning": {
+      "$value": "#aa57ff",
+      "$type": "color",
+      "$description": "Lavender Lightning — Outlined action border, gradient start — lighter violet for tertiary buttons and gradient origins"
+    },
+    "neon-sprout": {
+      "$value": "#0be014",
+      "$type": "color",
+      "$description": "Neon Sprout — Link borders, icon borders, active state highlights — vivid green used sparingly as functional punctuation on links and tags"
+    },
+    "dusk-fade": {
+      "$value": "#47246a",
+      "$type": "color",
+      "$description": "Dusk Fade — Gradient mid-stop — deep violet that bridges bright lavender to black in hero gradient washes"
+    }
+  },
+  "font": {
+    "avenir": {
+      "$value": "Avenir",
+      "$type": "fontFamily",
+      "$description": "Primary typeface across all contexts — headings, body, navigation, buttons, cards. Light 300 for large display headings creates a soft documentary feel; bold 700 for buttons and tag labels; regular 400 for body and supporting text."
+    },
+    "poppins": {
+      "$value": "Poppins",
+      "$type": "fontFamily",
+      "$description": "Rare single-use bold label — appears on one decorative badge/button context, providing a geometric contrast to Avenir's humanist curves"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://promlyapp.com",
+      "siteName": "Promly",
+      "extractedAt": "2026-06-03T20:20:58.148Z",
+      "variant": "compact"
+    }
+  }
+}

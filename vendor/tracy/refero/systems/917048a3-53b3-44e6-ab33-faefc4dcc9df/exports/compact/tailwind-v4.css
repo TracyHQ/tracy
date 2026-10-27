@@ -1,0 +1,13 @@
+@theme {
+  /* Colors */
+  --color-kippo-pink: #ee1f66;
+  --color-void-black: #000000;
+  --color-carbon: #29292a;
+  --color-ash: #333333;
+  --color-ghost-white: #ffffff;
+  --color-sunset-gradient: #ffc400;
+  --color-terminal-cyan: #33beff;
+
+  /* Typography */
+  --font-source-code-pro: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

@@ -1,0 +1,255 @@
+{
+  "dos": [
+    "Use #000000 as the only page background — never substitute near-blacks like #0a0a0a or #111111; the absolute void is intentional.",
+    "Apply 0px border-radius to every element — buttons, cards, inputs, badges, all components. Any rounded corner breaks the system.",
+    "Reserve #ff4d00 exclusively for the active nav state. Never use it on buttons, CTAs, icons, or decorative elements.",
+    "Set display type (38px+) with font-feature-settings: 'ss01' and letter-spacing at minimum -0.02em, scaling to -0.04em at 76-87px.",
+    "Use 1px solid #454545 borders on grid tiles and 1px solid #e5e7eb on interactive elements (buttons, nav items) — these two border shades create a two-tier hierarchy.",
+    "Maintain Geist as the single typeface across all sizes from 12px caption to 87px display — no secondary or decorative fonts.",
+    "Use #c4c4c4 for body copy under headlines rather than full white, creating luminosity hierarchy through brightness rather than size alone."
+  ],
+  "tags": [
+    "void-dark",
+    "monochromatic",
+    "display-type-dominant",
+    "zero-radius",
+    "single-accent",
+    "grid-dense",
+    "typographic-identity",
+    "brutalist-minimal",
+    "monofont",
+    "high-contrast"
+  ],
+  "donts": [
+    "Never add box-shadows, drop-shadows, or glows — the design has zero elevation; depth is created by type scale and color, not shadow.",
+    "Never use rounded corners — not 2px, not 4px. The 0px radius is non-negotiable across every component.",
+    "Never introduce a secondary typeface — not for decorative headlines, not for code blocks, not for quotes.",
+    "Never place #ff4d00 on backgrounds, fills, or decorative shapes — it exists only as a 1-element text color signal.",
+    "Never use white (#ffffff) for body-level descriptive text — use #c4c4c4 or #757575 to preserve the display headline as the luminance peak.",
+    "Never add gradients to backgrounds or text — the system is flat, matte, and binary in its color application.",
+    "Never apply padding greater than 16px to inline or small components — the spacing system is compact (4px base unit) and dense grid arrangements should not breathe excessively."
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#ff4d00",
+      "name": "Ember Signal",
+      "role": "Active nav state only — appears on a single interactive element as a hot indicator, never used for buttons or CTAs; its rarity is the feature",
+      "group": "accent"
+    },
+    {
+      "hex": "#000000",
+      "name": "Void",
+      "role": "Page background, button fill, SVG fills — absolute black, not near-black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Chalk",
+      "role": "Primary text, nav labels, button text, body copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e5e7eb",
+      "name": "Fog",
+      "role": "Border color across nav, cards, buttons, logo grid dividers — the structural skeleton visible against black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c4c4c4",
+      "name": "Ash",
+      "role": "Secondary text, subheadings, de-emphasized body copy, SVG fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#757575",
+      "name": "Graphite",
+      "role": "Tertiary text, muted labels, icon fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#454545",
+      "name": "Carbon",
+      "role": "Card/tile border color — used on logo grid cells to define structure without brightness",
+      "group": "neutral"
+    },
+    {
+      "hex": "#2e2e2",
+      "name": "Obsidian",
+      "role": "Subtle element backgrounds, hover states, SVG fills",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1a1a1a",
+      "name": "Cinder",
+      "role": "Input backgrounds, input borders — the only surface that differs from absolute black",
+      "group": "neutral"
+    },
+    {
+      "hex": "#666666",
+      "name": "Smudge",
+      "role": "SVG illustration fills, decorative icon tones",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Full-bleed #000000 canvas with no max-width constraint on the hero. Navigation is a fixed top bar with wordmark left, links centered, contact CTA right. First viewport is entirely black with only nav visible plus 'Scroll to Explore' bottom-center — a theatrical reveal before content appears. Below the fold: full-width display headline spanning the viewport, then a constrained-width (~350px) body paragraph column left-aligned. Client logo section uses an 8-column equal-width grid with collapsed 1px borders (#454545) — cells share borders, no gaps, creating a dense mesh. Section rhythm is generous between major sections (128px gap) but internally compact. No alternating light/dark bands — entire page maintains the void background throughout.",
+  "imagery": "Client logos are white SVG monochrome renderings on transparent backgrounds, set into a rigid bordered grid — no breathing room, no hover state photographs. No photography, no illustration, no 3D. The visual language is purely typographic and iconographic. Logo tiles function as inventory catalog entries rather than showcase moments. The page is text-dominant to an extreme degree: the hero is 100% type against black, zero imagery. Icon style where present is minimal outlined/filled mono-white SVGs at small sizes. The design deliberately resists atmospheric imagery — the void IS the art direction.",
+  "similar": [
+    {
+      "why": "Geist typeface, absolute dark backgrounds, single accent color reserved for active states, zero-radius component shapes",
+      "business": "Linear"
+    },
+    {
+      "why": "Pure black canvas, white-only type hierarchy, monochromatic neutral palette with single vivid accent, flat surface philosophy",
+      "business": "Vercel"
+    },
+    {
+      "why": "Single typeface used across all sizes, typographic identity as the primary visual design, no decorative imagery",
+      "business": "Rauno / Personal studios"
+    },
+    {
+      "why": "Compressed display type at aggressive sizes, zero-radius brutalist components, irreverent copy paired with restrained visual system",
+      "business": "MSCHF"
+    },
+    {
+      "why": "Geist font, pure black backgrounds, #e5e7eb border system for structural grid elements, minimal chromatic palette",
+      "business": "Resend"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "0px",
+      "badges": "0px",
+      "global": "0px — zero radius everywhere, no exceptions",
+      "inputs": "0px",
+      "buttons": "0px"
+    },
+    "elementGap": "8px",
+    "sectionGap": "128px",
+    "cardPadding": "16px",
+    "pageMaxWidth": "1280px"
+  },
+  "category": "agency",
+  "northStar": "Void print shop at 3am — massive compressed type bleeding off a pitch-black canvas, one ember of orange light on the nav, everything else white or ghost-gray.",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 12,
+      "lineHeight": 1.5
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.23,
+      "letterSpacing": -0.4
+    },
+    {
+      "role": "heading",
+      "size": 24,
+      "lineHeight": 1.07,
+      "letterSpacing": -0.48
+    },
+    {
+      "role": "heading-lg",
+      "size": 38,
+      "lineHeight": 1,
+      "letterSpacing": -1.14
+    },
+    {
+      "role": "display",
+      "size": 87,
+      "lineHeight": 0.89,
+      "letterSpacing": -3.48
+    }
+  ],
+  "components": [
+    {
+      "html": "<style>:root{--color-ember-signal:#ff4d00;--color-void:#000000;--color-chalk:#ffffff;--color-fog:#e5e7eb;--color-ash:#c4c4c4;--color-graphite:#757575;--color-carbon:#454545;--color-cinder:#1a1a1a;--font-geist:'Geist',Inter,'Helvetica Neue',sans-serif}</style><div style=\"background:var(--color-void);padding:40px 0;font-family:var(--font-geist);width:600px;box-sizing:border-box;\"><p style=\"color:var(--color-graphite);font-size:13px;font-weight:400;text-align:center;margin:0 0 24px 0;font-family:var(--font-geist);letter-spacing:0;\">Trusted by Visionaries</p><div style=\"display:grid;grid-template-columns:repeat(4,1fr);border-left:1px solid var(--color-carbon);border-top:1px solid var(--color-carbon);\"><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:14px;font-weight:600;font-family:var(--font-geist);letter-spacing:-0.02em;\">▲ Vercel</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:14px;font-weight:600;font-family:var(--font-geist);letter-spacing:-0.02em;\">NEXT.js</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:14px;font-weight:500;font-family:var(--font-geist);\">⬡ Linear</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:14px;font-weight:500;font-family:var(--font-geist);\">CURSOR</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:14px;font-weight:400;font-family:var(--font-geist);letter-spacing:0.05em;\">scale</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:13px;font-weight:500;font-family:var(--font-geist);\">WorldLabs</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:12px;font-weight:600;font-family:var(--font-geist);letter-spacing:-0.01em;\">IIElevenLabs</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:13px;font-weight:500;font-family:var(--font-geist);\">✦ Cognition</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:16px;font-weight:400;font-family:Georgia,serif;font-style:italic;\">Harvey</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:13px;font-weight:500;font-family:var(--font-geist);\">⊞ baseten</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:11px;font-weight:600;font-family:var(--font-geist);letter-spacing:0.02em;\">▲▲ Black Forest Labs</span></div><div style=\"border-right:1px solid var(--color-carbon);border-bottom:1px solid var(--color-carbon);height:72px;display:flex;align-items:center;justify-content:center;\"><span style=\"color:var(--color-chalk);font-size:13px;font-weight:500;font-family:var(--font-geist);\">⦿ Profound</span></div></div></div>",
+      "name": "Client Logo Grid",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<style>:root{--color-ember-signal:#ff4d00;--color-void:#000000;--color-chalk:#ffffff;--color-fog:#e5e7eb;--color-ash:#c4c4c4;--color-graphite:#757575;--color-carbon:#454545;--color-cinder:#1a1a1a;--font-geist:'Geist',Inter,'Helvetica Neue',sans-serif}</style><div style=\"background:var(--color-void);padding:32px 24px 40px 24px;font-family:var(--font-geist);width:600px;box-sizing:border-box;\"><h1 style=\"color:var(--color-chalk);font-size:76px;font-weight:600;line-height:0.90;letter-spacing:-0.04em;font-family:var(--font-geist);font-feature-settings:'ss01' on;margin:0 0 32px 0;padding:0;\">A digital studio &amp; branding powerhouse making cool shit that performs.</h1><p style=\"color:var(--color-ash);font-size:15px;font-weight:400;line-height:1.5;font-family:var(--font-geist);margin:0;max-width:340px;padding:0;\">We partner with the world's most ambitious startups, scale-ups and brands to unlock their true potential and growth through the convergence of creativity, design, and technology.</p></div>",
+      "name": "Display Headline with Body Copy",
+      "role": "",
+      "description": ""
+    },
+    {
+      "html": "<style>:root{--color-ember-signal:#ff4d00;--color-void:#000000;--color-chalk:#ffffff;--color-fog:#e5e7eb;--color-ash:#c4c4c4;--color-graphite:#757575;--color-carbon:#454545;--color-cinder:#1a1a1a;--font-geist:'Geist',Inter,'Helvetica Neue',sans-serif}</style><div style=\"background:var(--color-void);border-bottom:1px solid var(--color-carbon);width:600px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;font-family:var(--font-geist);\"><span style=\"color:var(--color-chalk);font-size:16px;font-weight:600;font-family:var(--font-geist);letter-spacing:-0.02em;white-space:nowrap;\">basement.</span><nav style=\"display:flex;align-items:center;gap:20px;\"><a href=\"#\" style=\"color:var(--color-ember-signal);font-size:13px;font-weight:500;font-family:var(--font-geist);text-decoration:none;\">Home</a><a href=\"#\" style=\"color:var(--color-chalk);font-size:13px;font-weight:500;font-family:var(--font-geist);text-decoration:none;\">Services</a><a href=\"#\" style=\"color:var(--color-chalk);font-size:13px;font-weight:500;font-family:var(--font-geist);text-decoration:none;\">Showcase<sup style=\"color:var(--color-graphite);font-size:10px;font-weight:400;\">(25)</sup></a><a href=\"#\" style=\"color:var(--color-chalk);font-size:13px;font-weight:500;font-family:var(--font-geist);text-decoration:none;\">People</a><a href=\"#\" style=\"color:var(--color-chalk);font-size:13px;font-weight:500;font-family:var(--font-geist);text-decoration:none;\">Blog<sup style=\"color:var(--color-graphite);font-size:10px;font-weight:400;\">(27)</sup></a><a href=\"#\" style=\"color:var(--color-chalk);font-size:13px;font-weight:500;font-family:var(--font-geist);text-decoration:none;\">Lab</a></nav><a href=\"#\" style=\"color:var(--color-chalk);font-size:13px;font-weight:500;font-family:var(--font-geist);text-decoration:none;background:var(--color-void);border:1px solid var(--color-fog);padding:4px 8px;border-radius:0px;white-space:nowrap;\">Contact Us</a></div>",
+      "name": "Nav Bar Strip",
+      "role": "",
+      "description": ""
+    },
+    {
+      "name": "Ghost Navigation Link",
+      "role": "Primary nav items",
+      "description": "Transparent background, #ffffff text at 13px Geist weight 500, no padding, no border, no radius. Active state: color switches to #ff4d00 — the only place this accent appears in the entire system."
+    },
+    {
+      "name": "Contact Us Button",
+      "role": "Primary CTA in nav",
+      "description": "#000000 background, #ffffff text at 13px Geist weight 500, 0px border-radius, 4px padding all sides, border: 1px solid #e5e7eb. Sharp-cornered box against the black nav bar — distinguishable only by the border rectangle."
+    },
+    {
+      "name": "Scroll to Explore Label",
+      "role": "Scroll prompt / ambient CTA",
+      "description": "Transparent background, #ffffff text at 15px Geist weight 400, accompanied by a down-arrow glyph. No button chrome. Sits at the bottom center of the full-black hero viewport."
+    },
+    {
+      "name": "Client Logo Tile",
+      "role": "Social proof grid cell",
+      "description": "Transparent background, 1px solid #454545 border, 0px radius, 0px explicit padding (content centered within equal-width grid cell). White SVG logo fills. Grid layout 8-wide, dense tessellation — no gaps between cells, borders collapse against adjacent tiles."
+    },
+    {
+      "name": "Section Label",
+      "role": "Small contextual headers (e.g. 'Trusted by Visionaries')",
+      "description": "#757575 text at 13px Geist weight 400, no decoration. Appears above content blocks as a muted classifier — lighter than body text, heavier than captions."
+    },
+    {
+      "name": "Display Headline",
+      "role": "Hero primary heading",
+      "description": "#ffffff text at 87px Geist weight 600, line-height 0.89, letter-spacing -0.04em, font-feature-settings 'ss01'. Full-width block, text wraps to fill viewport width. The dominant visual element of the page — no decoration, no underline, no gradient — pure compressed type mass."
+    },
+    {
+      "name": "Body Paragraph",
+      "role": "Descriptive sub-headline body copy",
+      "description": "#c4c4c4 text at 15px Geist weight 400, line-height 1.5. Set in a constrained column (~300-350px width) beneath the display headline. The gray-down from white creates visual subordination without a size change."
+    },
+    {
+      "name": "Text Input",
+      "role": "Form input fields",
+      "description": "#1a1a1a background, #1a1a1a border (flush — border blends with background), #ffffff text at 15px Geist weight 400, 0px border-radius, 4px horizontal padding, 0px vertical padding. The input surface is the only non-black background in the system."
+    },
+    {
+      "name": "Nav Badge / Count",
+      "role": "Numeric label on nav items (e.g. showcase item count)",
+      "description": "Small superscript or inline badge in #757575 at 12px Geist weight 400. No background, no border, no radius. Purely typographic count indicator."
+    },
+    {
+      "name": "Wordmark",
+      "role": "Brand logo in nav",
+      "description": "'basement.' in #ffffff Geist weight 600 at ~16px. The period is part of the brand mark. No icon, no logomark — logotype only."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Single font family across all type — nav, body, display, headings, labels. The 87px weight-600 headline at 0.89 line-height is the system's signature: text taller than its own cap-height spacing, letters colliding at scale. -0.04em letter-spacing at display sizes crushes the tracking until characters nearly touch. 'ss01' feature flag activates alternate glyph forms distinct to Geist. Using one face for everything from 12px captions to 87px display creates a monolithic typographic voice — zero genre-mixing.",
+      "sizes": "12px, 13px, 15px, 16px, 20px, 24px, 38px, 76px, 87px",
+      "family": "Geist",
+      "weight": "400, 500, 600",
+      "lineHeight": "0.89–1.50 (tightest at largest sizes: 0.89 at 87px, 0.90 at 76px)",
+      "substitute": "Inter, Helvetica Neue",
+      "letterSpacing": "-0.04em at 76-87px, -0.03em at 38px, -0.02em at 20-24px",
+      "fontFeatureSettings": "\"ss01\" on"
+    }
+  ],
+  "description": "Pure void aesthetic — the page opens as a black rectangle with a single orange nav item and a whispered 'Scroll to Explore', then erupts into massive display type at 87px. The #000000 canvas is absolute, not 'dark gray' — no surface gradients, no depth layers, no decorative noise. Geist at 87px weight 600 with -0.04em letter-spacing is the visual anchor: compressed, wide, mechanical. The single accent, #ff4d00 ember orange, appears only on the active nav item — never on CTAs, never on buttons — making it feel like an indicator light, not a brand color. Grid-bordered client logo tiles in #454545 create a dense, file-cabinet inventory feel against pure black.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "**Quick Color Reference**\n- Text (primary): #ffffff\n- Text (secondary): #c4c4c4\n- Text (tertiary/muted): #757575\n- Background: #000000\n- Borders (structural): #454545\n- Borders (interactive): #e5e7eb\n- Active accent: #ff4d00 (nav only)\n- Input surface: #1a1a1a\n\n**Example Component Prompts**\n\n1. Hero Section: Full-viewport #000000 background. Headline at 87px Geist weight 600, #ffffff, line-height 0.89, letter-spacing -3.5px, font-feature-settings 'ss01'. Sub-body paragraph at 15px Geist weight 400, #c4c4c4, line-height 1.5, max-width 350px, positioned below headline. 'Scroll to Explore' label at 15px #ffffff centered bottom of viewport.\n\n2. Navigation Bar: #000000 background, full-width. Wordmark 'basement.' in #ffffff Geist weight 600 16px left-aligned. Nav links at 13px Geist weight 500 #ffffff centered, active item in #ff4d00. 'Contact Us' button right-aligned: #000000 fill, 1px solid #e5e7eb border, 0px radius, 4px padding, #ffffff text 13px weight 500.\n\n3. Client Logo Grid: 8-column grid, cells sharing 1px solid #454545 collapsed borders, 0px radius, #000000 background. Each cell contains white SVG logo centered. No gaps — borders collapse. Grid spans full content width.\n\n4. Text Input Field: #1a1a1a background and border-color, 0px border-radius, 4px horizontal padding, 0px vertical padding, #ffffff text at 15px Geist weight 400. The input surface is the only non-void background in the system.\n\n5. Section Label + Content Block: Section label at 13px Geist weight 400 #757575, above heading. Heading at 38px Geist weight 600 #ffffff letter-spacing -1.14px line-height 1.0. 128px margin-top between major sections."
+    }
+  ],
+  "elevationPhilosophy": "Zero elevation — no shadows, no raised surfaces, no blurs. The entire interface exists on one Z plane. Depth is constructed exclusively through type scale contrast (12px vs 87px) and luminance contrast (white vs #757575 vs black). This flatness is structural: adding any shadow would imply a surface that doesn't exist in this void."
+}

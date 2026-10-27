@@ -1,0 +1,30 @@
+{
+  "id": "QA-STATIC-agent-tools-happy",
+  "itemIds": ["gate:agent-tools"],
+  "requirement": "Gate agent-tools (scripts/build-agent-tools.mjs --check) exits 0 on the current tree and goes red on a tree that breaks the rule it enforces.",
+  "oracle": {
+    "source": "scripts/build-agent-tools.mjs",
+    "ref": "header comment",
+    "invariant": "The tree satisfies the rule stated in the header comment of scripts/build-agent-tools.mjs; the gate exits 0 only then.",
+    "productSources": ["scripts/check-all.ts:176", "scripts/build-agent-tools.mjs:22"]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": [],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": ["node", "tsx (node_modules)"],
+  "assertionIds": ["static.agent-tools.exit-0"],
+  "redProof": null,
+  "legacyIds": [],
+  "gate": "agent-tools",
+  "command": ["pnpm", "exec", "tsx", "scripts/check-all.ts", "--only", "agent-tools"],
+  "successMarker": "check-all: 1 gate(s) passed",
+  "gateScript": "scripts/build-agent-tools.mjs",
+  "mode": "run",
+  "mutations": []
+}

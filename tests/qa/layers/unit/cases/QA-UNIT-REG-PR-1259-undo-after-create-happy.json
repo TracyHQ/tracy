@@ -1,0 +1,41 @@
+{
+  "id": "QA-UNIT-REG-PR-1259-undo-after-create-happy",
+  "itemIds": ["regression:REG-PR-1259-undo-after-create"],
+  "requirement": "Undo is offered after a turn whose apply created a row (page, post, first postmeta)",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-1259-undo-after-create.json",
+    "ref": "PR #1259 (fix); fix evidence: Reproduced 4/4 on a WordPress dev site: create a page, write a post, set the first browser-tab title and meta description each answered 'Tracy has no record of some page edits it made'.",
+    "invariant": "That test reports ok: a site_write recorded as content.create pairs with its content.update audit row, recovers the apply id and the turn's undo state is available (pre-fix: no pair, NOT_RECORDED/content).",
+    "productSources": ["apps/tracy-web/src/sites/turn-undo.js:661"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command"
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": false
+  },
+  "prerequisites": [],
+  "assertionIds": ["a create-recorded write pairs with its content.update audit row"],
+  "redProof": null,
+  "legacyIds": ["REG-PR-1259-undo-after-create"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "apps/tracy-web", "tracy-web"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-1259-undo-after-create",
+    "pr": 1259,
+    "kind": "fix",
+    "area": "web/undo",
+    "file": "tests/regression/cases/REG-PR-1259-undo-after-create.json"
+  },
+  "command": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/turn-undo.test.mjs"],
+  "cwd": ".",
+  "needs": [],
+  "tests": ["a create-recorded write pairs with its content.update audit row"],
+  "timeoutS": 600
+}

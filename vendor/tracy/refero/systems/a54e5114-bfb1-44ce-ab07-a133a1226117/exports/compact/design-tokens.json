@@ -1,0 +1,114 @@
+{
+  "color": {
+    "carbon-ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon Ink — Primary text, filled action buttons, icon strokes, hairlines — the dominant ink across the entire interface"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Page canvas, card surfaces, text on dark fills, image backgrounds"
+    },
+    "soft-mist": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Soft Mist — Subtle surface alternation, disabled states, skeleton backgrounds, light dividers"
+    },
+    "warm-fog": {
+      "$value": "#f0efe7",
+      "$type": "color",
+      "$description": "Warm Fog — Off-white surface variant for subtle banding between product rows and editorial sections"
+    },
+    "blush-sand": {
+      "$value": "#f5ebd5",
+      "$type": "color",
+      "$description": "Blush Sand — Warm cream surface for editorial highlight sections and seasonal accents"
+    },
+    "smoke-charcoal": {
+      "$value": "#333333",
+      "$type": "color",
+      "$description": "Smoke Charcoal — Secondary text, input borders, subdued UI chrome"
+    },
+    "onyx": {
+      "$value": "#1d1d1d",
+      "$type": "color",
+      "$description": "Onyx — Dark borders and separators for elevated surfaces and inverted UI. Do not promote it to the primary CTA color"
+    },
+    "stone-gray": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Stone Gray — Placeholder backgrounds, image placeholder fills, neutral swatch defaults"
+    },
+    "slate": {
+      "$value": "#2f3440",
+      "$type": "color",
+      "$description": "Slate — Cool charcoal for product photography backgrounds and muted editorial surfaces"
+    },
+    "olive-drab": {
+      "$value": "#636355",
+      "$type": "color",
+      "$description": "Olive Drab — Warm muted surface for product photography contexts"
+    },
+    "maroon-clay": {
+      "$value": "#523037",
+      "$type": "color",
+      "$description": "Maroon Clay — Warm muted surface for product photography contexts"
+    },
+    "deep-iris": {
+      "$value": "#222845",
+      "$type": "color",
+      "$description": "Deep Iris — Cool muted surface for product photography contexts"
+    },
+    "pewter": {
+      "$value": "#677284",
+      "$type": "color",
+      "$description": "Pewter — Cool gray for product photography contexts"
+    },
+    "driftwood": {
+      "$value": "#dfccbe",
+      "$type": "color",
+      "$description": "Driftwood — Warm beige for product photography contexts"
+    },
+    "pale-tide": {
+      "$value": "#badce4",
+      "$type": "color",
+      "$description": "Pale Tide — Cool pastel surface for editorial accent sections"
+    }
+  },
+  "font": {
+    "favorit": {
+      "$value": "Favorit",
+      "$type": "fontFamily",
+      "$description": "Brand and UI typeface — used across all navigation, headings, body, buttons, inputs, and product cards. Custom monoline sans-serif with tight tracking (0.025em). Substitutes: Inter, Söhne, or Neue Haas Grotesk. The whisper-weight 400 at 30px for hero headlines is a signature choice — most fashion sites use display serifs or bold weights, but Adanola's regular-weight headlines in a clean sans feel like editorial captions rather than advertising slogans."
+    },
+    "nunito-sans": {
+      "$value": "Nunito Sans",
+      "$type": "fontFamily",
+      "$description": "Secondary fallback for form inputs and minor chrome elements"
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "System fallback for legacy email and content blocks"
+    },
+    "swym-font": {
+      "$value": "swym-font",
+      "$type": "fontFamily",
+      "$description": "swym-font — detected in extracted data but not described by AI"
+    },
+    "source-sans-pro": {
+      "$value": "Source Sans Pro",
+      "$type": "fontFamily",
+      "$description": "Source Sans Pro — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://adanola.com",
+      "siteName": "Adanola",
+      "extractedAt": "2026-06-03T19:46:06.786Z",
+      "variant": "compact"
+    }
+  }
+}

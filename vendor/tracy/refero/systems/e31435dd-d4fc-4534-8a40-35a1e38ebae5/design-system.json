@@ -1,0 +1,306 @@
+{
+  "dos": [
+    "Use #f0eeeb as the default page canvas and #292827 as the default text color.",
+    "Set display headlines in Agility Diatype 400 with negative tracking: 62px uses -1.86px and 36px uses -1.08px.",
+    "Set all technical eyebrows and compact action labels in Agility Diatype Mono 700 at 12px/12px with 0.72px tracking.",
+    "Use 12px radius for cards, clipped media, and navigation containers; use 6px radius for compact buttons.",
+    "Use #d6d3ce utility cards with no box shadow and 18px bottom padding.",
+    "Use #393837 24px-radius panels only for large dark destination controls with #f0eeeb text.",
+    "Keep standard component gaps at 18px and section gaps at 55px."
+  ],
+  "donts": [
+    "Do not introduce saturated UI colors; the interface palette remains neutral from #f0eeeb through #000000.",
+    "Do not use a 9999px pill radius; only large destination panels use the 24px pill treatment.",
+    "Do not add drop shadows to #ffffff or #d6d3ce cards.",
+    "Do not set public navigation in generic system sans-serif; use Agility Diatype 14px/14px with -0.14px tracking.",
+    "Do not use 600-700 weight for large display headlines; use Agility Diatype 400 at 62px or 36px.",
+    "Do not place light-section copy on pure white by default; reserve #ffffff for contained cards and use #f0eeeb for the surrounding canvas.",
+    "Do not use border radii larger than 12px for media cards, utility cards, or compact buttons."
+  ],
+  "theme": "light",
+  "colors": [
+    {
+      "hex": "#f0eeeb",
+      "name": "Warm White",
+      "role": "Page canvas, light-on-dark text, navigation text, pale action fills, and hero overlay copy",
+      "group": "neutral"
+    },
+    {
+      "hex": "#292827",
+      "name": "Off Black",
+      "role": "Primary text, dark sections, footer surfaces, and dark photographic overlays",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "True Black",
+      "role": "Deepest media treatment and black feature surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#393837",
+      "name": "Graphite",
+      "role": "Large dark conversion panels and pill-shaped destination controls",
+      "group": "neutral"
+    },
+    {
+      "hex": "#30302f",
+      "name": "Charcoal",
+      "role": "Alternate dark filled controls",
+      "group": "neutral"
+    },
+    {
+      "hex": "#d6d3ce",
+      "name": "Light Gray",
+      "role": "Utility card surfaces and quiet diagram panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bright White",
+      "role": "Raised media and content-card surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#938f89",
+      "name": "Middle Gray",
+      "role": "Secondary copy, section numerals, and hairline strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c2bfba",
+      "name": "Pale Steel",
+      "role": "Medium-contrast borders, control outlines, and structural separators. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    }
+  ],
+  "layout": "The page begins with a full-bleed, near-black robot-film hero and a floating translucent navigation bar. Hero copy sits low and left over the footage, while a small playback control occupies the lower-right edge. The page then shifts to a warm-white editorial canvas: a narrow technical eyebrow aligns left while an oversized introduction block is offset to the right, followed by a wide rounded industrial photograph. Explanatory content uses a three-column row of equal #d6d3ce utility cards, then returns to large rounded media modules and dark conversion/footer bands. The structure is spacious and vertically paced, using uninterrupted canvas areas rather than frequent ruled dividers.",
+  "imagery": "Imagery is product-focused industrial photography and cinematic robot footage rather than lifestyle scenes. The hero uses an extreme, low-key machine crop with black negative space and narrow pools of green, amber, and white reflected light; the robot is treated as a monumental moving object. Interior imagery is contained in wide 12px-radius panels and shifts to pale, slightly misted factory or workwear crops. Graphics inside utility cards are monochrome, thin outlined diagrams with dotted placeholder blocks, functioning as explanatory system diagrams rather than decoration. The page is text-dominant outside these large image moments; icons are sparse, small, and mostly monochrome.",
+  "similar": [
+    {
+      "why": "Uses oversized tightly tracked sans-serif typography, sparse monochrome surfaces, and industrial product photography.",
+      "business": "Nothing"
+    },
+    {
+      "why": "Shares equipment-label typography, technical diagram language, and a physical-product-first visual composition.",
+      "business": "Teenage Engineering"
+    },
+    {
+      "why": "Pairs humanoid robotics imagery with dark cinematic hero treatment and restrained monochrome interface framing.",
+      "business": "Figure AI"
+    },
+    {
+      "why": "Uses large light-weight display typography and roomy light editorial sections broken by contained visual modules.",
+      "business": "Figma"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "12px",
+      "icons": "2px",
+      "pills": "24px",
+      "buttons": "6px",
+      "navigation": "12px"
+    },
+    "elementGap": "18px",
+    "sectionGap": "55px",
+    "cardPadding": "18px",
+    "pageMaxWidth": null
+  },
+  "industry": "other",
+  "surfaces": [
+    {
+      "hex": "#f0eeeb",
+      "name": "Warm White Canvas",
+      "level": 0,
+      "purpose": "Primary page background and light dark-section typography."
+    },
+    {
+      "hex": "#d6d3ce",
+      "name": "Light Gray Utility Surface",
+      "level": 1,
+      "purpose": "Capability cards and quiet technical panels."
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Bright White Raised Surface",
+      "level": 2,
+      "purpose": "Contained media and content cards."
+    },
+    {
+      "hex": "#393837",
+      "name": "Graphite Destination Surface",
+      "level": 3,
+      "purpose": "Large dark conversion panels."
+    },
+    {
+      "hex": "#292827",
+      "name": "Off Black Depth Surface",
+      "level": 4,
+      "purpose": "Hero overlays, dark sections, and footer."
+    }
+  ],
+  "northStar": "Agility — robot workshop at dusk. Warm-white technical documentation emerges from a near-black machine bay, with soft industrial photography and restrained instrument-panel details.",
+  "typeScale": [
+    {
+      "role": "hero-eyebrow",
+      "size": 12,
+      "family": "Agility Diatype Mono",
+      "weight": 700,
+      "lineHeight": 1,
+      "letterSpacing": 0.96
+    },
+    {
+      "role": "technical-label",
+      "size": 12,
+      "family": "Agility Diatype Mono",
+      "weight": 700,
+      "lineHeight": 1,
+      "letterSpacing": 0.72
+    },
+    {
+      "role": "nav",
+      "size": 14,
+      "family": "Agility Diatype",
+      "weight": 400,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.14
+    },
+    {
+      "role": "interface-text",
+      "size": 19,
+      "family": "Agility Diatype",
+      "weight": 400,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.19
+    },
+    {
+      "role": "feature-heading",
+      "size": 19,
+      "family": "Agility Diatype",
+      "weight": 700,
+      "lineHeight": 1.2,
+      "letterSpacing": -0.19
+    },
+    {
+      "role": "card-heading",
+      "size": 28,
+      "family": "Agility Diatype",
+      "weight": 400,
+      "lineHeight": 1,
+      "letterSpacing": -0.56
+    },
+    {
+      "role": "section-heading",
+      "size": 36,
+      "family": "Agility Diatype",
+      "weight": 400,
+      "lineHeight": 1,
+      "letterSpacing": -1.08
+    },
+    {
+      "role": "hero-heading",
+      "size": 62,
+      "family": "Agility Diatype",
+      "weight": 400,
+      "lineHeight": 0.93,
+      "letterSpacing": -1.86
+    }
+  ],
+  "components": [
+    {
+      "name": "Translucent Global Navigation",
+      "role": "Floating public-site navigation over dark hero media.",
+      "description": "Use a rounded 12px bar with #e8e3d8b3 translucent tan fill, 57px backdrop blur, and #f0eeeb navigation text in Agility Diatype 14px/14px, weight 400, -0.14px tracking. Keep item gaps at 10px and use 6px rounded compact controls inside the bar."
+    },
+    {
+      "name": "Hero Media Stage",
+      "role": "Opening full-bleed product-film container.",
+      "description": "Set machine photography against #000000 or #292827 with a strong dark overlay; overlay #f0eeeb monospace eyebrow text at 12px/12px, weight 700, 0.96px tracking and a #f0eeeb display headline at 62px/57.66px, weight 400, -1.86px tracking. Keep controls minimal and place the pause indicator at the lower edge."
+    },
+    {
+      "name": "Warm White Compact Button",
+      "role": "Light filled link control on dark media and dark surfaces.",
+      "description": "Fill with #f0eeeb, set #292827 label text in Agility Diatype Mono 12px/12px weight 700 with 0.72px tracking, use 6px radius, and apply 13px vertical by 15px horizontal padding."
+    },
+    {
+      "name": "Black Outline Button",
+      "role": "Dark media control with a light perimeter.",
+      "description": "Use rgba(0, 0, 0, 0.8) fill, #f0eeeb text and a 1px #f0eeeb border; set 6px radius and 15px padding on every side."
+    },
+    {
+      "name": "Graphite Pill Destination Panel",
+      "role": "Large paired conversion destination.",
+      "description": "Use #393837 fill with #f0eeeb text, a 1px #f0eeeb border, 24px radius, and 18px padding on every side. Keep the entire panel clickable rather than nesting a second filled control."
+    },
+    {
+      "name": "Utility Diagram Card",
+      "role": "Three-up explanatory capability card.",
+      "description": "Use #d6d3ce background, 12px radius, no shadow, 18px bottom padding, and generous 88.3281px top space for the title and diagram. Pair a 28px/28px Agility Diatype 400 heading with compact dark body copy, then anchor thin #292827 outlined diagram blocks near the bottom."
+    },
+    {
+      "name": "White Media Card",
+      "role": "Contained video, resource, or product-image panel.",
+      "description": "Use #ffffff fill, 12px radius, no box shadow, and full-bleed imagery clipped to the rounded edge."
+    },
+    {
+      "name": "Rounded Editorial Image",
+      "role": "Large contained industrial photograph between text sections.",
+      "description": "Use a 12px radius with the image cropped edge-to-edge; favor washed, pale factory imagery on #f0eeeb sections and preserve the photograph's soft low-contrast treatment."
+    },
+    {
+      "name": "Technical Section Eyebrow",
+      "role": "Section index and category marker.",
+      "description": "Set uppercase Agility Diatype Mono at 12px/12px, weight 700, with 0.72px tracking in #292827 on light sections and #f0eeeb on dark sections. Use it above the content with an 18px gap."
+    },
+    {
+      "name": "Text-First Introduction Block",
+      "role": "Offset editorial introduction beside a technical label.",
+      "description": "Use a small mono eyebrow on the left and a large text column on the right; set the main copy in Agility Diatype 36px/36px, weight 400, -1.08px tracking, in #292827. Keep the surrounding #f0eeeb canvas uninterrupted by card borders."
+    },
+    {
+      "name": "Dark Resource Footer",
+      "role": "Closing navigation and resource region.",
+      "description": "Use a #292827 background with #f0eeeb headings and links, preserving the 12px uppercase mono label treatment for category markers. Avoid elevation; divide groups with spacing and thin #938f89 strokes."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Primary interface and editorial family. Use 400-weight display faces at 62px/0.93 with -1.86px tracking and 36px/1.0 with -1.08px tracking; the compressed tracking and light weight make large statements feel engineered rather than promotional. Use 700 at 19px/1.2 for compact feature headings.",
+      "sizes": "12px, 13px, 14px, 15px, 16px, 19px, 28px, 36px, 62px, 120px",
+      "family": "Agility Diatype",
+      "weight": "400, 700",
+      "lineHeight": "0.93, 1.00, 1.20, 1.25",
+      "substitute": "Inter",
+      "letterSpacing": "-4.8px at 120px, -1.86px at 62px, -1.08px at 36px, -0.56px at 28px, -0.19px at 19px, -0.14px at 14px",
+      "fontFeatureSettings": "\"ss01\", \"ss07\", \"ss09\", \"ss10\", \"ss11\""
+    },
+    {
+      "role": "Technical label family for uppercase eyebrows, compact section identifiers, button labels, and small metadata. Its 700-weight 12px setting with 0.72px or 0.96px tracking turns ordinary labels into equipment markings.",
+      "sizes": "12px, 13px, 24px",
+      "family": "Agility Diatype Mono",
+      "weight": "400, 700",
+      "lineHeight": "1.00",
+      "substitute": "IBM Plex Mono",
+      "letterSpacing": "0.36px at 12px for regular mono labels; 0.72px at 12px for standard uppercase labels; 0.96px at 12px for hero eyebrows",
+      "fontFeatureSettings": "\"ss01\", \"ss07\", \"ss09\", \"ss10\", \"ss11\""
+    },
+    {
+      "role": "Secondary fallback treatment for isolated badge or utility copy.",
+      "sizes": "15px",
+      "family": "Helvetica Neue",
+      "weight": "400",
+      "lineHeight": "1.50",
+      "substitute": "Arial",
+      "letterSpacing": "-0.195px at 15px"
+    }
+  ],
+  "description": "Agility frames industrial robotics as a sequence of cinematic machine studies and precise technical diagrams. A warm-white canvas carries near-black typography, while the opening hero drops into a black, low-key robot film with oversized white type; color is deliberately almost absent so material, motion, and engineering forms hold attention. The custom Diatype family alternates tightly tracked display text with uppercase monospace labels, and rounded 12px panels organize explanatory content without shadows.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "Quick Color Reference:\n- Warm White: #f0eeeb — Page canvas, light-on-dark text, navigation text, pale action fills, and hero overlay copy\n- Off Black: #292827 — Primary text, dark sections, footer surfaces, and dark photographic overlays\n- True Black: #000000 — Deepest media treatment and black feature surfaces\n- Graphite: #393837 — Large dark conversion panels and pill-shaped destination controls\n- Charcoal: #30302f — Alternate dark filled controls\n- Light Gray: #d6d3ce — Utility card surfaces and quiet diagram panels\n- Bright White: #ffffff — Raised media and content-card surfaces\n- Middle Gray: #938f89 — Secondary copy, section numerals, and hairline strokes\n- Pale Steel: #c2bfba — Medium-contrast borders, control outlines, and structural separators. Do not promote it to the primary CTA color\n\nCreate a full-bleed Hero Media Stage using low-key robot footage over #000000; overlay a #f0eeeb 12px/12px Agility Diatype Mono 700 eyebrow with 0.96px tracking and a #f0eeeb 62px/57.66px Agility Diatype 400 heading with -1.86px tracking, plus a Warm White Compact Button.\nCreate a warm-white #f0eeeb editorial introduction with a left-aligned Technical Section Eyebrow and right-offset #292827 Agility Diatype 36px/36px 400 copy tracked at -1.08px.\nCreate three equal Utility Diagram Cards in #d6d3ce with 12px radius, 88.3281px top space, #292827 28px/28px headings tracked at -0.56px, and thin outlined technical diagrams along the bottom.\nCreate two Graphite Pill Destination Panels using #393837, #f0eeeb text, 24px radius, 1px #f0eeeb borders, and 18px padding.\nCreate a contained industrial video card on #ffffff with 12px clipped corners and no shadow; pair it with a #292827 36px display heading rather than a colored promotional banner."
+    }
+  ],
+  "elevationPhilosophy": "Surfaces separate through warm neutral shifts, clipped 12px geometry, and photographic contrast rather than cast shadows. The navigation is the exception: translucency and heavy backdrop blur create depth without a visible shadow."
+}

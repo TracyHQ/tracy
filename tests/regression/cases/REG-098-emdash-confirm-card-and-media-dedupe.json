@@ -1,0 +1,33 @@
+{
+  "id": "REG-098",
+  "kind": "fix",
+  "title": "A delete's question under a confirm- id Tracy never wrote is stopped before it is shown, and re-uploading a picture already in the EmDash library keeps that item's alt",
+  "pr": 901,
+  "area": "site-tools/emdash",
+  "cms": ["em"],
+  "needs": ["stand", "site:em", "seat:owner"],
+  "flaky_model": false,
+  "steps": [
+    "Common setup (tests/regression/README.md § Common setup): ORIGIN (= O), PG, DSH, A, pq (SELECT/WITH only). On the shared stand (ORIGIN http://tracy.test:8080): PG=tracy-postgres-1, DSH=tracy-dsh; the measured site is KEY=c1em1004.tracy.test, LABEL=c1em1004, A=emattr-a@example.test (owner there). LIB_SRC = packages/tools/tracy-site-tools/lib/index.js of THIS checkout (the commit under test); HARNESS = tasks/evidence/e2e-dev-misc-0410/reg098.mjs of this checkout.",
+    "Copy the lib under test beside the live one, never over it: docker cp $LIB_SRC $DSH:/desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.reg098.js and docker cp $HARNESS $DSH:/tmp/reg098.mjs. Remove both at the end of the case, whatever the verdict (docker cp leaves /tmp/reg098.mjs owned by root: docker exec -u root $DSH rm -f /tmp/reg098.mjs).",
+    "RUN=$(date +%s); W0=$(pq \"select coalesce(max(id),0) from site_write where site_key='$KEY'\").",
+    "Run the harness as the site folder's owner (www-data, the container's default user): docker exec -e SESSION=session-reg098-$RUN $DSH node /tmp/reg098.mjs /desk-home/profiles/native/node_modules/@tracy/dsh-site-tools/lib/index.reg098.js $LABEL $A $RUN; keep its stdout (one JSON object) and exit code. It creates a draft post 'REG-098 <RUN>', asks to delete it (CONFIRM_FIRST), offers the plugin's tools/pre-execute an ask_user_question card with the refusal's question under the id 'confirm-delete', then under the refusal's own id; answers that one yes and deletes; then writes one 1x1 PNG twice under two names, uploads both with tracy_site media.upload {file, alt} (alts 'REG-098 first' and 'REG-098 second'), reads the item with media_get and deletes it.",
+    "Read pq \"select action, outcome, target->>'kind', target->>'id' from site_write where site_key='$KEY' and id > $W0 order by id\"."
+  ],
+  "expect": [
+    "The harness exits 0 and prints verdict PASS with nine checks, all true: postCreated, confirmFirst, forgedDenied, ownPasses, deletedAfterYes, firstIsNew, againDeduplicated, altKept, mediaCleaned.",
+    "forgedDenied: the 'confirm-delete' card is answered {kind:'deny'} and never reaches the next listener; its reason names \"confirm-delete\" and the refusal's own id (steps.refused.ask.questions[0].id). Before the fix: {kind:'allow'} — the card was shown and the customer's yes to it opened nothing (dev e2e E5.e4: three refusals, the article stayed online).",
+    "ownPasses: the refusal's own id with reworded text passes to the next listener; deletedAfterYes: the delete with confirm:true after that yes answers ok:true.",
+    "againDeduplicated: the second upload answers ok:true, deduplicated:true, the first upload's id, alt starting 'not stored: ' and naming \"REG-098 first\", and a next that says media_update of its alt changes it everywhere it shows. Before the fix: the same answer as a new upload, no word of the alt not stored. altKept: media_get still reads alt 'REG-098 first'.",
+    "site_write gained, in order: content_create ok, content_delete ok, exactly ONE media_upload ok with target id = steps.first.id (the deduplicated second upload reports nothing), and media_delete ok for that id.",
+    "index.reg098.js and /tmp/reg098.mjs are gone from $DSH at the end; no reg098-* file is left in /site/$LABEL."
+  ],
+  "selectors": {
+    "harness": "tasks/evidence/e2e-dev-misc-0410/reg098.mjs — tracy_emdash / tracy_site calls and the plugin's tools/pre-execute and tools/result listeners as one person, signed with MCP_TRACY_ACTOR_SECRET",
+    "guard": "createCallMemory().confirmCardRefusal in packages/tools/tracy-site-tools/src/host/call-memory.mjs, wired in the tools/pre-execute listener of src/host/index.ts (stderr 'site-tools: DENY guard=confirm-card')",
+    "dedupe": "mediaUpload in src/host/upload.mjs (answer deduplicated, alt, next) fed by emdashUpload in src/host/index.ts (EmDash handleMediaUpload {item, deduplicated:true})",
+    "writeRecord": "site_write(action, outcome, target jsonb)"
+  },
+  "evidence": "Dev e2e 04/10/2026 E5.e4 (~/TCH-worktrees/e2e-dev-0410/tasks/evidence/e2e-dev-0410/bugs.md #4): session-2df54f27 on e2e04-em — ask_user_question id 'confirm-delete' answered 'Yes, go ahead' at 18:49:11Z, then content_delete {…, locale:'en', confirm:true} answered CONFIRM_FIRST four times (seq 129–168); media.upload returned the hero item 01M3PJRPQKF2ARBKGSTW09N8TV and the agent's media_update changed its alt. Tests: packages/tools/tracy-site-tools/test/call-memory.test.mjs (E5.e4), test/confirm-card-wiring.test.mjs, test/upload.test.mjs (E5.e4).",
+  "fence": "An ask_user_question question id with the 'confirm-' prefix is Tracy's to give: a card holding one that is not the question of a refused call still waiting in this conversation is denied before it is shown, naming the waiting id; an EmDash upload that EmDash answers deduplicated says so, keeps the existing item's alt, and is not reported as a write."
+}

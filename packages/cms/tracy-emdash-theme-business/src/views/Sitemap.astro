@@ -1,0 +1,101 @@
+---
+// HTML sitemap composed from the menus and the published collections; /sitemap.xml is EmDash's.
+import { getEmDashCollection } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import Breadcrumb from '@/components/site/Breadcrumb.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor, stampsFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+// Provenance stamps (`src/lib/stamps.ts`): empty on an ordinary request. Menu links carry none: the
+// Content API does not project menus.
+const $site = stampFor(Astro.request, 'site', site)
+const $ = stampsFor(Astro.request)
+type Row = { label: string; url: string; stamp?: Record<string, string> }
+const title = chrome.footerLegal.find((i) => i.url.endsWith('sitemap'))?.label ?? 'Sitemap'
+const [services, projects, posts] = await Promise.all([
+  getEmDashCollection('services', { locale, status: 'published', orderBy: { sort: 'asc' }, limit: 100 }),
+  getEmDashCollection('projects', { locale, status: 'published', orderBy: { sort: 'asc' }, limit: 200 }),
+  getEmDashCollection('posts', { locale, status: 'published', orderBy: { date: 'desc' }, limit: 500 })
+])
+// A group is titled by the menu item of its list page, found by URL (an unticked page's item is gone, so a position
+// would name its neighbour). News unticked yet some posts still listed by a kept page (Investors): the News page's own
+// breadcrumb from its unpublished row titles them (TCH #1013).
+const menuLabel = (path: string) => chrome.primary.find((i) => i.url === href(locale, path))?.label
+const newsTitle =
+  menuLabel('/news') ??
+  (
+    (await getEmDashCollection('news_page', { locale, status: 'draft', limit: 1 } as any)).entries[0]
+      ?.data as any
+  )?.breadcrumb ??
+  'News'
+const groups = [
+  {
+    title: site.footer_company_title,
+    stamp: $site('footer_company_title'),
+    items: [...chrome.primary, ...chrome.topbar] as Row[]
+  },
+  { title: site.kit_title, stamp: $site('kit_title'), items: chrome.kit as Row[] },
+  {
+    title: site.footer_services_title,
+    stamp: $site('footer_services_title'),
+    items: services.entries.map(
+      (s: any): Row => ({
+        label: s.data.title,
+        url: href(locale, `/services/${s.slug}`),
+        stamp: $('services', s)('title')
+      })
+    )
+  },
+  {
+    title: menuLabel('/projects') ?? 'Projects',
+    items: projects.entries.map(
+      (p: any): Row => ({
+        label: p.data.title,
+        url: href(locale, `/projects/${p.slug}`),
+        stamp: $('projects', p)('title')
+      })
+    )
+  },
+  {
+    title: newsTitle,
+    items: posts.entries.map(
+      (p: any): Row => ({
+        label: p.data.title,
+        url: href(locale, `/news/${p.slug}`),
+        stamp: $('posts', p)('title')
+      })
+    )
+  },
+  { title: title, items: chrome.footerLegal as Row[] }
+] as Array<{ title: string; stamp?: Record<string, string>; items: Row[] }>
+// A link into an unticked page, or into one of its children, is not listed (TCH #1013, `src/lib/link-gate.ts`).
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  groups.flatMap((g) => g.items.map((i) => i.url))
+)
+for (const g of groups) g.items = g.items.filter((i) => live(i.url))
+---
+
+<Base chrome={chrome} title={title} currentPath="/sitemap">
+	<main>
+		<Breadcrumb items={[{ label: site.home_label, url: href(locale, "/"), stamp: $site("home_label") }, { label: title }]} />
+		<div class="container-site grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-12 pb-[96px] pt-14">
+			<h1 class="h-page col-span-full">{title}</h1>
+			{groups.filter((g) => g.items.length > 0).map((g) => (
+				<div>
+					<div class="column-label mb-4 border-b border-line pb-3" {...g.stamp}>{g.title}</div>
+					<ul class="flex flex-col gap-2 text-[15px]">{g.items.map((i) => <li><a href={i.url} class="text-fg hover:text-forest-text" {...i.stamp}>{i.label}</a></li>)}</ul>
+				</div>
+			))}
+		</div>
+	</main>
+</Base>

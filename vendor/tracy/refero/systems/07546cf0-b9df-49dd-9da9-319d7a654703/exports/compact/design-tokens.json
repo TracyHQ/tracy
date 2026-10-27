@@ -1,0 +1,79 @@
+{
+  "color": {
+    "midnight-ink": {
+      "$value": "#161345",
+      "$type": "color",
+      "$description": "Midnight Ink — Primary brand navy — CTA buttons, dark section backgrounds, active nav, logo wordmark. Filled pill buttons carry white text on this surface; dark testimonial/footer bands use it as the full-bleed canvas"
+    },
+    "cocoa-bean": {
+      "$value": "#321004",
+      "$type": "color",
+      "$description": "Cocoa Bean — Primary text and headline color across the entire site — body copy, navigation, product names, prices, and the hero headline. This warm near-black replaces the typical neutral-black and gives the brand its human, non-corporate feel"
+    },
+    "ember-orange": {
+      "$value": "#ff7f00",
+      "$type": "color",
+      "$description": "Ember Orange — Vivid accent for product highlights, badge borders, and select link underlines. Used sparingly as functional punctuation — never as a full surface — to draw the eye to a specific callout without competing with the navy CTA"
+    },
+    "blush-petal": {
+      "$value": "#ffcfdb",
+      "$type": "color",
+      "$description": "Blush Petal — Hero section background and product-line wash. Sets the emotional tone for the first screen — warm, soft, pet-friendly. Returns in lighter tints for cards and decorative strips"
+    },
+    "sky-powder": {
+      "$value": "#d7ecff",
+      "$type": "color",
+      "$description": "Sky Powder — Press/logo bar background and alternate section wash. Cool counterpoint to the warm blush — gives the page rhythm as sections alternate pink and blue bands"
+    },
+    "mint-tide": {
+      "$value": "#60c4bf",
+      "$type": "color",
+      "$description": "Mint Tide — Calming-aid product accent and tertiary section wash. Closes the trio of pastel section colors (pink, blue, teal) that map to the product SKUs"
+    },
+    "cloud-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Cloud White — Page canvas and card surface base. The default background; also the inverse color for text on navy buttons and dark sections"
+    },
+    "fog-gray": {
+      "$value": "#f9f9f9",
+      "$type": "color",
+      "$description": "Fog Gray — Card and product-tile background. One shade below the white canvas — enough to lift a card off the page without a border or shadow"
+    },
+    "ash-border": {
+      "$value": "#ebebeb",
+      "$type": "color",
+      "$description": "Ash Border — Hairline borders, dividers, input outlines, and subtle icon strokes. Always 1px. The system uses this in place of shadow to separate layers"
+    },
+    "stone-mute": {
+      "$value": "#999999",
+      "$type": "color",
+      "$description": "Stone Mute — Muted helper text, secondary labels, and disabled-state chrome. Never the primary text color"
+    }
+  },
+  "font": {
+    "larsseit": {
+      "$value": "Larsseit",
+      "$type": "fontFamily",
+      "$description": "Primary workhorse — body copy, product names, prices, button labels, navigation, form fields. Carries positive letter-spacing (~0.025–0.071em) that gives even small sizes an open, airy feel. Weight 500 anchors emphasis, 600 reserved for button text."
+    },
+    "athletics": {
+      "$value": "Athletics",
+      "$type": "fontFamily",
+      "$description": "Display and editorial headlines — hero statements, section titles, and the oversized endorsement quotes. Tight line-heights (as low as 0.72) and wide tracking (0.05–0.10em) give it a magazine-cover weight. This is the voice that makes \"Hi! We love your dog.\" and \"Loved by Pets, Endorsed by Vets\" land."
+    },
+    "monosten": {
+      "$value": "Monosten",
+      "$type": "fontFamily",
+      "$description": "Micro-copy and tag accents — small all-caps detail labels. 0.30em letter-spacing pushes the type to feel like stamped/engraved marks on packaging."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://petfinn.com",
+      "siteName": "Finn",
+      "extractedAt": "2026-06-03T18:22:40.546Z",
+      "variant": "compact"
+    }
+  }
+}

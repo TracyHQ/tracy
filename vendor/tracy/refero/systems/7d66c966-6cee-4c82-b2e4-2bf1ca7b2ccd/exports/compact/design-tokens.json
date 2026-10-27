@@ -1,0 +1,44 @@
+{
+  "color": {
+    "charcoal-canvas": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Charcoal Canvas — Page background, the dominant surface across all sections and the base layer behind full-bleed photography"
+    },
+    "bone": {
+      "$value": "#f8f8f8",
+      "$type": "color",
+      "$description": "Bone — All body text, meta labels, navigation dots, and the dominant hairline border color — serves as the single foreground tone in this near-monochrome system"
+    },
+    "graphite": {
+      "$value": "#2a2b2d",
+      "$type": "color",
+      "$description": "Graphite — Secondary icon strokes, subtle list dividers, and muted fill details — sits one step darker than the canvas for low-contrast decoration"
+    },
+    "ash": {
+      "$value": "#757577",
+      "$type": "color",
+      "$description": "Ash — Inactive or resting state for navigation dots and quiet UI affordances"
+    }
+  },
+  "font": {
+    "neue-haas-unica": {
+      "$value": "Neue Haas Unica",
+      "$type": "fontFamily",
+      "$description": "The sole text family for all UI copy: meta labels at 16px, body at 18px, list/links at 24px, subheadings at 27px, section headings at 36px. Weight 400 is default; 700 is reserved for emphasis in the meta block and active labels. The 1.10 lineHeight on 36px headings creates tight, architectural vertical rhythm."
+    },
+    "display-custom-or-system-fallback": {
+      "$value": "Display (custom or system fallback)",
+      "$type": "fontFamily",
+      "$description": "Reserved exclusively for the two program words ('IMAGINE', 'PROGRAM') that span the full viewport width and bleed past both edges. This face is wide, heavy, with rounded terminals — it is the visual signature of the entire site and carries the brand's identity more than any other element. When recreating, use a heavy extended grotesque (e.g. Obviously Wide Black, Neue Machina Black) at a size that forces letter cropping at the viewport edges."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://iad-lab.ch",
+      "siteName": "Iad-lab",
+      "extractedAt": "2026-06-03T21:06:52.967Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "src": "claude-cowork origin/main 2aa7840, wordpress/cowork/lib/class-claude-cowork-writers.php",
+  "columns": {
+    "lines": "35-51 POST_FIELDS (write_post keeps these, :628-645)",
+    "fields": [
+      "post_title",
+      "post_content",
+      "post_excerpt",
+      "post_status",
+      "post_name",
+      "post_parent",
+      "menu_order",
+      "post_type",
+      "post_date",
+      "post_category",
+      "tags_input"
+    ]
+  },
+  "beside": {
+    "lines": "718-747 write_beyond_the_row",
+    "fields": ["categories", "tags", "featured_image_id", "template", "seo"]
+  }
+}

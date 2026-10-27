@@ -1,0 +1,64 @@
+{
+  "color": {
+    "forest-command": {
+      "$value": "#2d9b4c",
+      "$type": "color",
+      "$description": "Forest Command — Primary CTA fills, active nav indicators, footer link accents, tag chips — the single chromatic heartbeat of the system; warm green against matte black creates urgency without aggression"
+    },
+    "mint-boarding-pass": {
+      "$value": "#d3ffc3",
+      "$type": "color",
+      "$description": "Mint Boarding Pass — Green wash for highlight backgrounds, decorative bands, and soft emphasis behind content."
+    },
+    "champagne-beige": {
+      "$value": "#e7d5ba",
+      "$type": "color",
+      "$description": "Champagne Beige — Hero illustration backdrop and premium accent panel — warm near-neutral that introduces tonal warmth inside predominantly black/green compositions"
+    },
+    "linen-cream": {
+      "$value": "#e4e9dc",
+      "$type": "color",
+      "$description": "Linen Cream — Light-section page background — slightly green-tinted off-white that keeps light pages feeling on-brand rather than clinical"
+    },
+    "parchment": {
+      "$value": "#efefe7",
+      "$type": "color",
+      "$description": "Parchment — Card surfaces in light sections, secondary fills, ghost-button borders — warmer than pure white, pairs with linen cream for a two-tier light surface stack"
+    },
+    "obsidian": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Obsidian — Dominant dark canvas, 1px structural borders everywhere, button text on green fills, all text on light surfaces — the structural black that carries the system"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Headline and body text on dark sections, card surfaces elevated above black backgrounds, reverse borders on light sections"
+    },
+    "carbon": {
+      "$value": "#020202",
+      "$type": "color",
+      "$description": "Carbon — Near-black variant for subtle text/background differentiation where pure #000 would be too flat — imperceptible shift that softens edges in dense text blocks"
+    }
+  },
+  "font": {
+    "labour-grotesk": {
+      "$value": "Labour Grotesk",
+      "$type": "fontFamily",
+      "$description": "Primary system font at a single weight — used for navigation, body, buttons, card titles, footer, and the massive 435px hero display. The decision to lock to weight 400 instead of ranging 300–700 is the signature: it forces hierarchy through size and tracking, not weight, producing a uniform, confident, almost monoline voice. The 435px size is a single decorative display moment, not a functional text size."
+    },
+    "reckless-neue": {
+      "$value": "Reckless Neue",
+      "$type": "fontFamily",
+      "$description": "Editorial serif at ultra-light 250 weight — appears only on large blog and content headings. The choice of weight 250 (near-hairline) instead of the conventional 400–500 is anti-SaaS: headlines whisper rather than declare authority, creating a magazine-editorial contrast against Labour Grotesk's steady functional voice."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.trawelt.com",
+      "siteName": "Trawelt",
+      "extractedAt": "2026-06-03T21:25:17.078Z",
+      "variant": "compact"
+    }
+  }
+}

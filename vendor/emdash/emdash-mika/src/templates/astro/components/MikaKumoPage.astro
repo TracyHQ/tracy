@@ -1,0 +1,80 @@
+---
+// mika-template-version: 0.1.1
+import { Badge, Link, Text } from "@cloudflare/kumo";
+import MikaKumoAppFrame from "./MikaKumoAppFrame";
+import "../styles/kumo.css";
+
+interface Props {
+  title: string;
+  brandLabel?: string;
+  description?: string;
+  eyebrow?: string;
+  documentTitle?: string;
+  backHref?: string;
+  backLabel?: string;
+  pageSize?: "default" | "narrow";
+  cartItemCount?: number;
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const {
+  title,
+  brandLabel,
+  description,
+  eyebrow,
+  documentTitle = title,
+  backHref,
+  backLabel = "Back",
+  pageSize = "default",
+  cartItemCount = 0,
+  class: className,
+  ...attrs
+} = Astro.props;
+const hasHeaderSlot = Astro.slots.has("header");
+const currentPath = Astro.url.pathname;
+const cartLabel = cartItemCount > 0 ? `Cart (${cartItemCount})` : "Cart";
+---
+
+<html lang="en" data-theme="kumo">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{documentTitle}</title>
+    <slot name="head" />
+  </head>
+  <body>
+    <MikaKumoAppFrame
+      title={title}
+      brandLabel={brandLabel}
+      currentPath={currentPath}
+      cartItemCount={cartItemCount}
+    >
+      <main
+        {...attrs}
+        data-mika-kumo-page
+        data-mika-page-size={pageSize}
+        class:list={["mika-kumo-page", className]}
+      >
+        <header class="mika-kumo-header">
+          <div class="mika-kumo-title-row">
+            <div class="mika-kumo-kicker">
+              {backHref && <Link href={backHref}>{backLabel}</Link>}
+              {eyebrow && <Badge variant="secondary">{eyebrow}</Badge>}
+            </div>
+            <nav class="mika-kumo-header-actions" aria-label="Page shortcuts">
+              <Link href="/cart" variant="plain">{cartLabel}</Link>
+              <Link href="/account" variant="plain">Account</Link>
+            </nav>
+          </div>
+          <Text as="h1" variant="heading1">{title}</Text>
+          {description && (
+            <Text as="p" variant="secondary" size="lg">{description}</Text>
+          )}
+          {hasHeaderSlot && <slot name="header" />}
+        </header>
+        <slot />
+      </main>
+    </MikaKumoAppFrame>
+  </body>
+</html>

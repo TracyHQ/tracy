@@ -1,0 +1,60 @@
+{
+  "id": "QA-UNIT-REG-PR-893-teardown-dir-that-will-not-go-keeps-network-steps-happy",
+  "itemIds": ["regression:REG-PR-893-teardown-dir-that-will-not-go-keeps-network-steps"],
+  "requirement": "A private directory teardown cannot remove no longer stops it before the site's SMTP rule, network and job records",
+  "oracle": {
+    "source": "tests/regression/cases/REG-PR-893-teardown-dir-that-will-not-go-keeps-network-steps.json",
+    "ref": "PR #893 (fix); fix evidence: 05/10/2026, twice: deleting a site whose install had failed stopped at teardown step 3 (bare rm -rf under set -e: 'Directory not empty' on webroot-baseline.git), so its SMTP rule, its <label>_default network and /24 and its private directory all stayed on the host (ledger L14b, reproduced 1/1). Red 6c8278be0 (exit 1 at step 3, no iptables call, network left), fix 57f76e126.",
+    "invariant": "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 23). Every named case is 'ok' (none 'not ok', none '# SKIP'): a directory that will not go at first is tried once more after a short wait and the teardown finishes; one that never goes is reported with rm's reason, steps 4 (subnet SMTP rule), 4b (network) and 5 still run, and the run exits 1 naming what is left instead of torn_down=1; the site's own network still goes and only that one.",
+    "productSources": ["packages/fleet/tracy-fleet-operation/scripts/provision/teardown.sh:39"],
+    "productSourcesScope": "file-level: the files the case imports, reads or runs (declaration line, or the first code line); the invariant is exercised through them, the executed assertion is the case command",
+    "productSourcesUnresolved": [
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs:195 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs:196 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs:207 readFileSync() with a computed path",
+      "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs:365 readFileSync() with a computed path"
+    ]
+  },
+  "edgeTags": ["happy"],
+  "targets": ["local"],
+  "effects": {
+    "reads": ["repository tree"],
+    "writes": ["run dir under QA_ARTIFACT_ROOT: logs/, tmp/<case> (the child TMPDIR, removed after the run)"],
+    "mail": false,
+    "model": false,
+    "containers": true
+  },
+  "prerequisites": [],
+  "assertionIds": [
+    "a private directory that will not go at first is tried once more after a short wait, and the teardown finishes",
+    "a private directory that never goes: the steps after it still run, and the teardown fails naming it",
+    "the site's own network goes with it, and only that one; a network still in use is a teardown that did not finish"
+  ],
+  "redProof": null,
+  "legacyIds": ["REG-PR-893-teardown-dir-that-will-not-go-keeps-network-steps"],
+  "kind": "regression",
+  "area": "regression",
+  "areas": ["regression", "packages/fleet/tracy-fleet-operation", "tracy-fleet-operation"],
+  "style": "node-tap",
+  "regression": {
+    "id": "REG-PR-893-teardown-dir-that-will-not-go-keeps-network-steps",
+    "pr": 893,
+    "kind": "fix",
+    "area": "fleet/teardown",
+    "file": "tests/regression/cases/REG-PR-893-teardown-dir-that-will-not-go-keeps-network-steps.json"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "packages/fleet/tracy-fleet-operation/test/teardown-volumes.test.mjs"
+  ],
+  "cwd": ".",
+  "needs": [],
+  "tests": [
+    "a private directory that will not go at first is tried once more after a short wait, and the teardown finishes",
+    "a private directory that never goes: the steps after it still run, and the teardown fails naming it",
+    "the site's own network goes with it, and only that one; a network still in use is a teardown that did not finish"
+  ],
+  "timeoutS": 600
+}

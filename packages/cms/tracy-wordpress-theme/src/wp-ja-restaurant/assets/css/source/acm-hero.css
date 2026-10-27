@@ -1,0 +1,67 @@
+/* wp-ja-restaurant: acm/hero/css/style.css of the JA Restaurant 1.0.6 Joomla template (GPL v3, JoomlArt), carried rule for rule by tasks/ja-restaurant-wp7/tools/port-css.mjs (DECISIONS D-10). Colours read light-dark(<source>, <derived dark, D-03>); do not edit by hand, re-run the tool. */
+.acm-hero {
+  text-align: center;
+}
+.acm-hero .hero-content {
+  z-index: 2;
+  position: relative;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 992px) {
+  .acm-hero .hero-content {
+    width: 595px;
+  }
+}
+.acm-hero .hero-intro {
+  font-weight: 300;
+}
+.acm-hero .hero-heading {
+  color: var(--ds-c-fg, light-dark(#333333, #f0ece2));
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  background: url("../../img/stars.png") no-repeat center bottom;
+  padding-bottom: 30px;
+  position: relative;
+  line-height: 1.1;
+}
+@media (max-width: 767px) {
+  .acm-hero .hero-heading {
+    letter-spacing: 3px;
+    font-size: 46px;
+  }
+}
+.acm-hero .hero-heading:before {
+  content: "";
+  background-color: var(--ds-c-bg, #ffd33d);
+  position: absolute;
+  width: 400px;
+  height: 60px;
+  left: 50%;
+  margin-left: -200px;
+  top: 30px;
+  z-index: -1;
+}
+@media (max-width: 767px) {
+  .acm-hero .hero-heading:before {
+    width: 300px;
+    margin-left: -150px;
+  }
+}
+.acm-hero .hero-intro a {
+  color: var(--ds-c-accent-text, #bc4220);
+  border-bottom: 2px solid rgba(58, 53, 47, 0.1) ; /* ds-keep: translucent hairline tint over the content, part of the template drawing */
+}
+.acm-hero .hero-intro a:hover,
+.acm-hero .hero-intro a:focus,
+.acm-hero .hero-intro a:active {
+  color: var(--ds-c-accent-text-hover, light-dark(#913319, #f08a63));
+}
+.acm-hero .hero-intro {
+  font-size: 16px;
+  margin-bottom: 45px;
+}
+.ft-info .acm-hero .hero-intro {
+  display: block;
+}

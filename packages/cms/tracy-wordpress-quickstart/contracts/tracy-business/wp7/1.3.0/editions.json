@@ -1,0 +1,687 @@
+{
+  "schemaVersion": "tracy-quickstart-editions/wordpress/v1",
+  "contract": "tracy-business/wp7/1.3.0",
+  "baseHash": "ee54927ea18ed26c6b125988fbd9dbad15e3f34efb9dac168ac7a6e5e59673bd",
+  "source": {
+    "language": "en",
+    "locale": "en_US",
+    "tag": "en-us"
+  },
+  "locales": {
+    "af": {
+      "locale": "af",
+      "tag": "af",
+      "wpLocale": "af",
+      "ids": {
+        "page-home": 600,
+        "page-about": 605,
+        "page-services": 595,
+        "page-projects": 596,
+        "page-contact": 603,
+        "page-careers": 604,
+        "page-investor-relations": 599,
+        "page-project-detail": 597
+      },
+      "missing": []
+    },
+    "be": {
+      "locale": "bel",
+      "tag": "bel",
+      "wpLocale": "bel",
+      "ids": {
+        "page-home": 625,
+        "page-about": 630,
+        "page-services": 620,
+        "page-projects": 621,
+        "page-contact": 628,
+        "page-careers": 629,
+        "page-investor-relations": 624,
+        "page-project-detail": 622
+      },
+      "missing": []
+    },
+    "bg": {
+      "locale": "bg_BG",
+      "tag": "bg-bg",
+      "wpLocale": "bg_BG",
+      "ids": {
+        "page-home": 650,
+        "page-about": 655,
+        "page-services": 645,
+        "page-projects": 646,
+        "page-contact": 653,
+        "page-careers": 654,
+        "page-investor-relations": 649,
+        "page-project-detail": 647
+      },
+      "missing": []
+    },
+    "ca": {
+      "locale": "ca",
+      "tag": "ca",
+      "wpLocale": "ca",
+      "ids": {
+        "page-home": 675,
+        "page-about": 680,
+        "page-services": 670,
+        "page-projects": 671,
+        "page-contact": 678,
+        "page-careers": 679,
+        "page-investor-relations": 674,
+        "page-project-detail": 672
+      },
+      "missing": []
+    },
+    "cs": {
+      "locale": "cs_CZ",
+      "tag": "cs-cz",
+      "wpLocale": "cs_CZ",
+      "ids": {
+        "page-home": 700,
+        "page-about": 705,
+        "page-services": 695,
+        "page-projects": 696,
+        "page-contact": 703,
+        "page-careers": 704,
+        "page-investor-relations": 699,
+        "page-project-detail": 697
+      },
+      "missing": []
+    },
+    "cy": {
+      "locale": "cy",
+      "tag": "cy",
+      "wpLocale": "cy",
+      "ids": {
+        "page-home": 725,
+        "page-about": 730,
+        "page-services": 720,
+        "page-projects": 721,
+        "page-contact": 728,
+        "page-careers": 729,
+        "page-investor-relations": 724,
+        "page-project-detail": 722
+      },
+      "missing": []
+    },
+    "da": {
+      "locale": "da_DK",
+      "tag": "da-dk",
+      "wpLocale": "da_DK",
+      "ids": {
+        "page-home": 750,
+        "page-about": 755,
+        "page-services": 745,
+        "page-projects": 746,
+        "page-contact": 753,
+        "page-careers": 754,
+        "page-investor-relations": 749,
+        "page-project-detail": 747
+      },
+      "missing": []
+    },
+    "de": {
+      "locale": "de_DE",
+      "tag": "de-de",
+      "wpLocale": "de_DE",
+      "ids": {
+        "page-home": 575,
+        "page-about": 555,
+        "page-services": 545,
+        "page-projects": 546,
+        "page-contact": 553,
+        "page-careers": 554,
+        "page-investor-relations": 549,
+        "page-project-detail": 547
+      },
+      "missing": []
+    },
+    "el": {
+      "locale": "el",
+      "tag": "el",
+      "wpLocale": "el",
+      "ids": {
+        "page-home": 776,
+        "page-about": 781,
+        "page-services": 771,
+        "page-projects": 772,
+        "page-contact": 779,
+        "page-careers": 780,
+        "page-investor-relations": 775,
+        "page-project-detail": 773
+      },
+      "missing": []
+    },
+    "en": {
+      "locale": "en_US",
+      "tag": "en-us",
+      "wpLocale": "en_US",
+      "ids": {
+        "page-home": 42,
+        "page-about": 37,
+        "page-services": 48,
+        "page-projects": 46,
+        "page-contact": 39,
+        "page-careers": 38,
+        "page-investor-relations": 43,
+        "page-project-detail": 45
+      },
+      "missing": []
+    },
+    "es": {
+      "locale": "es_ES",
+      "tag": "es-es",
+      "wpLocale": "es_ES",
+      "ids": {
+        "page-home": 801,
+        "page-about": 806,
+        "page-services": 796,
+        "page-projects": 797,
+        "page-contact": 804,
+        "page-careers": 805,
+        "page-investor-relations": 800,
+        "page-project-detail": 798
+      },
+      "missing": []
+    },
+    "et": {
+      "locale": "et",
+      "tag": "et",
+      "wpLocale": "et",
+      "ids": {
+        "page-home": 826,
+        "page-about": 831,
+        "page-services": 821,
+        "page-projects": 822,
+        "page-contact": 829,
+        "page-careers": 830,
+        "page-investor-relations": 825,
+        "page-project-detail": 823
+      },
+      "missing": []
+    },
+    "fi": {
+      "locale": "fi",
+      "tag": "fi",
+      "wpLocale": "fi",
+      "ids": {
+        "page-home": 851,
+        "page-about": 856,
+        "page-services": 846,
+        "page-projects": 847,
+        "page-contact": 854,
+        "page-careers": 855,
+        "page-investor-relations": 850,
+        "page-project-detail": 848
+      },
+      "missing": []
+    },
+    "fr": {
+      "locale": "fr_FR",
+      "tag": "fr-fr",
+      "wpLocale": "fr_FR",
+      "ids": {
+        "page-home": 876,
+        "page-about": 881,
+        "page-services": 871,
+        "page-projects": 872,
+        "page-contact": 879,
+        "page-careers": 880,
+        "page-investor-relations": 875,
+        "page-project-detail": 873
+      },
+      "missing": []
+    },
+    "hr": {
+      "locale": "hr",
+      "tag": "hr",
+      "wpLocale": "hr",
+      "ids": {
+        "page-home": 901,
+        "page-about": 906,
+        "page-services": 896,
+        "page-projects": 897,
+        "page-contact": 904,
+        "page-careers": 905,
+        "page-investor-relations": 900,
+        "page-project-detail": 898
+      },
+      "missing": []
+    },
+    "hu": {
+      "locale": "hu_HU",
+      "tag": "hu-hu",
+      "wpLocale": "hu_HU",
+      "ids": {
+        "page-home": 926,
+        "page-about": 931,
+        "page-services": 921,
+        "page-projects": 922,
+        "page-contact": 929,
+        "page-careers": 930,
+        "page-investor-relations": 925,
+        "page-project-detail": 923
+      },
+      "missing": []
+    },
+    "it": {
+      "locale": "it_IT",
+      "tag": "it-it",
+      "wpLocale": "it_IT",
+      "ids": {
+        "page-home": 951,
+        "page-about": 956,
+        "page-services": 946,
+        "page-projects": 947,
+        "page-contact": 954,
+        "page-careers": 955,
+        "page-investor-relations": 950,
+        "page-project-detail": 948
+      },
+      "missing": []
+    },
+    "ja": {
+      "locale": "ja",
+      "tag": "ja",
+      "wpLocale": "ja",
+      "ids": {
+        "page-home": 976,
+        "page-about": 981,
+        "page-services": 971,
+        "page-projects": 972,
+        "page-contact": 979,
+        "page-careers": 980,
+        "page-investor-relations": 975,
+        "page-project-detail": 973
+      },
+      "missing": []
+    },
+    "ka": {
+      "locale": "ka_GE",
+      "tag": "ka-ge",
+      "wpLocale": "ka_GE",
+      "ids": {
+        "page-home": 1001,
+        "page-about": 1006,
+        "page-services": 996,
+        "page-projects": 997,
+        "page-contact": 1004,
+        "page-careers": 1005,
+        "page-investor-relations": 1000,
+        "page-project-detail": 998
+      },
+      "missing": []
+    },
+    "lo": {
+      "locale": "lo",
+      "tag": "lo",
+      "wpLocale": "lo",
+      "ids": {
+        "page-home": 1026,
+        "page-about": 1031,
+        "page-services": 1021,
+        "page-projects": 1022,
+        "page-contact": 1029,
+        "page-careers": 1030,
+        "page-investor-relations": 1025,
+        "page-project-detail": 1023
+      },
+      "missing": []
+    },
+    "lt": {
+      "locale": "lt_LT",
+      "tag": "lt-lt",
+      "wpLocale": "lt_LT",
+      "ids": {
+        "page-home": 1501,
+        "page-about": 1506,
+        "page-services": 1496,
+        "page-projects": 1497,
+        "page-contact": 1504,
+        "page-careers": 1505,
+        "page-investor-relations": 1500,
+        "page-project-detail": 1498
+      },
+      "missing": []
+    },
+    "lv": {
+      "locale": "lv",
+      "tag": "lv",
+      "wpLocale": "lv",
+      "ids": {
+        "page-home": 1526,
+        "page-about": 1531,
+        "page-services": 1521,
+        "page-projects": 1522,
+        "page-contact": 1529,
+        "page-careers": 1530,
+        "page-investor-relations": 1525,
+        "page-project-detail": 1523
+      },
+      "missing": []
+    },
+    "ms": {
+      "locale": "ms_MY",
+      "tag": "ms-my",
+      "wpLocale": "ms_MY",
+      "ids": {
+        "page-home": 1571,
+        "page-about": 1576,
+        "page-services": 1566,
+        "page-projects": 1567,
+        "page-contact": 1574,
+        "page-careers": 1575,
+        "page-investor-relations": 1570,
+        "page-project-detail": 1568
+      },
+      "missing": []
+    },
+    "nb": {
+      "locale": "nb_NO",
+      "tag": "nb-no",
+      "wpLocale": "nb_NO",
+      "ids": {
+        "page-home": 1596,
+        "page-about": 1601,
+        "page-services": 1591,
+        "page-projects": 1592,
+        "page-contact": 1599,
+        "page-careers": 1600,
+        "page-investor-relations": 1595,
+        "page-project-detail": 1593
+      },
+      "missing": []
+    },
+    "nl": {
+      "locale": "nl_NL",
+      "tag": "nl-nl",
+      "wpLocale": "nl_NL",
+      "ids": {
+        "page-home": 1621,
+        "page-about": 1626,
+        "page-services": 1616,
+        "page-projects": 1617,
+        "page-contact": 1624,
+        "page-careers": 1625,
+        "page-investor-relations": 1620,
+        "page-project-detail": 1618
+      },
+      "missing": []
+    },
+    "pl": {
+      "locale": "pl_PL",
+      "tag": "pl-pl",
+      "wpLocale": "pl_PL",
+      "ids": {
+        "page-home": 1646,
+        "page-about": 1651,
+        "page-services": 1641,
+        "page-projects": 1642,
+        "page-contact": 1649,
+        "page-careers": 1650,
+        "page-investor-relations": 1645,
+        "page-project-detail": 1643
+      },
+      "missing": []
+    },
+    "pt-br": {
+      "locale": "pt_BR",
+      "tag": "pt-br",
+      "wpLocale": "pt_BR",
+      "ids": {
+        "page-home": 1671,
+        "page-about": 1676,
+        "page-services": 1666,
+        "page-projects": 1667,
+        "page-contact": 1674,
+        "page-careers": 1675,
+        "page-investor-relations": 1670,
+        "page-project-detail": 1668
+      },
+      "missing": []
+    },
+    "pt-pt": {
+      "locale": "pt_PT",
+      "tag": "pt-pt",
+      "wpLocale": "pt_PT",
+      "ids": {
+        "page-home": 1696,
+        "page-about": 1701,
+        "page-services": 1691,
+        "page-projects": 1692,
+        "page-contact": 1699,
+        "page-careers": 1700,
+        "page-investor-relations": 1695,
+        "page-project-detail": 1693
+      },
+      "missing": []
+    },
+    "ro": {
+      "locale": "ro_RO",
+      "tag": "ro-ro",
+      "wpLocale": "ro_RO",
+      "ids": {
+        "page-home": 1721,
+        "page-about": 1726,
+        "page-services": 1716,
+        "page-projects": 1717,
+        "page-contact": 1724,
+        "page-careers": 1725,
+        "page-investor-relations": 1720,
+        "page-project-detail": 1718
+      },
+      "missing": []
+    },
+    "ru": {
+      "locale": "ru_RU",
+      "tag": "ru-ru",
+      "wpLocale": "ru_RU",
+      "ids": {
+        "page-home": 47,
+        "page-about": 54,
+        "page-services": 63,
+        "page-projects": 62,
+        "page-contact": 56,
+        "page-careers": 55,
+        "page-investor-relations": 59,
+        "page-project-detail": 61
+      },
+      "missing": [
+        "page-about:stats.item.2.meta",
+        "page-home:projects.cta.1",
+        "page-home:projects.heading",
+        "page-home:projects.item.1.href",
+        "page-home:projects.item.1.img",
+        "page-home:projects.item.1.meta",
+        "page-home:projects.item.1.text",
+        "page-home:projects.item.1.title",
+        "page-home:projects.item.2.href",
+        "page-home:projects.item.2.img",
+        "page-home:projects.item.2.meta",
+        "page-home:projects.item.2.text",
+        "page-home:projects.item.2.title",
+        "page-home:projects.item.3.href",
+        "page-home:projects.item.3.img",
+        "page-home:projects.item.3.meta",
+        "page-home:projects.item.3.text",
+        "page-home:projects.item.3.title"
+      ]
+    },
+    "sk": {
+      "locale": "sk_SK",
+      "tag": "sk-sk",
+      "wpLocale": "sk_SK",
+      "ids": {
+        "page-home": 1746,
+        "page-about": 1751,
+        "page-services": 1741,
+        "page-projects": 1742,
+        "page-contact": 1749,
+        "page-careers": 1750,
+        "page-investor-relations": 1745,
+        "page-project-detail": 1743
+      },
+      "missing": []
+    },
+    "sl": {
+      "locale": "sl_SI",
+      "tag": "sl-si",
+      "wpLocale": "sl_SI",
+      "ids": {
+        "page-home": 1771,
+        "page-about": 1776,
+        "page-services": 1766,
+        "page-projects": 1767,
+        "page-contact": 1774,
+        "page-careers": 1775,
+        "page-investor-relations": 1770,
+        "page-project-detail": 1768
+      },
+      "missing": []
+    },
+    "sr": {
+      "locale": "sr_RS",
+      "tag": "sr-rs",
+      "wpLocale": "sr_RS",
+      "ids": {
+        "page-home": 1796,
+        "page-about": 1801,
+        "page-services": 1791,
+        "page-projects": 1792,
+        "page-contact": 1799,
+        "page-careers": 1800,
+        "page-investor-relations": 1795,
+        "page-project-detail": 1793
+      },
+      "missing": []
+    },
+    "sv": {
+      "locale": "sv_SE",
+      "tag": "sv-se",
+      "wpLocale": "sv_SE",
+      "ids": {
+        "page-home": 1821,
+        "page-about": 1826,
+        "page-services": 1816,
+        "page-projects": 1817,
+        "page-contact": 1824,
+        "page-careers": 1825,
+        "page-investor-relations": 1820,
+        "page-project-detail": 1818
+      },
+      "missing": []
+    },
+    "ta": {
+      "locale": "ta_IN",
+      "tag": "ta-in",
+      "wpLocale": "ta_IN",
+      "ids": {
+        "page-home": 1846,
+        "page-about": 1851,
+        "page-services": 1841,
+        "page-projects": 1842,
+        "page-contact": 1849,
+        "page-careers": 1850,
+        "page-investor-relations": 1845,
+        "page-project-detail": 1843
+      },
+      "missing": []
+    },
+    "th": {
+      "locale": "th",
+      "tag": "th",
+      "wpLocale": "th",
+      "ids": {
+        "page-home": 1871,
+        "page-about": 1876,
+        "page-services": 1866,
+        "page-projects": 1867,
+        "page-contact": 1874,
+        "page-careers": 1875,
+        "page-investor-relations": 1870,
+        "page-project-detail": 1868
+      },
+      "missing": []
+    },
+    "tr": {
+      "locale": "tr_TR",
+      "tag": "tr-tr",
+      "wpLocale": "tr_TR",
+      "ids": {
+        "page-home": 1896,
+        "page-about": 1901,
+        "page-services": 1891,
+        "page-projects": 1892,
+        "page-contact": 1899,
+        "page-careers": 1900,
+        "page-investor-relations": 1895,
+        "page-project-detail": 1893
+      },
+      "missing": []
+    },
+    "uk": {
+      "locale": "uk",
+      "tag": "uk",
+      "wpLocale": "uk",
+      "ids": {
+        "page-home": 1921,
+        "page-about": 1926,
+        "page-services": 1916,
+        "page-projects": 1917,
+        "page-contact": 1924,
+        "page-careers": 1925,
+        "page-investor-relations": 1920,
+        "page-project-detail": 1918
+      },
+      "missing": []
+    },
+    "vi": {
+      "locale": "vi",
+      "tag": "vi",
+      "wpLocale": "vi",
+      "ids": {
+        "page-home": 1946,
+        "page-about": 1951,
+        "page-services": 1941,
+        "page-projects": 1942,
+        "page-contact": 1949,
+        "page-careers": 1950,
+        "page-investor-relations": 1945,
+        "page-project-detail": 1943
+      },
+      "missing": []
+    },
+    "zh-cn": {
+      "locale": "zh_CN",
+      "tag": "zh-cn",
+      "wpLocale": "zh_CN",
+      "ids": {
+        "page-home": 1971,
+        "page-about": 1976,
+        "page-services": 1966,
+        "page-projects": 1967,
+        "page-contact": 1974,
+        "page-careers": 1975,
+        "page-investor-relations": 1970,
+        "page-project-detail": 1968
+      },
+      "missing": []
+    },
+    "zh-tw": {
+      "locale": "zh_TW",
+      "tag": "zh-tw",
+      "wpLocale": "zh_TW",
+      "ids": {
+        "page-home": 1996,
+        "page-about": 2001,
+        "page-services": 1991,
+        "page-projects": 1992,
+        "page-contact": 1999,
+        "page-careers": 2000,
+        "page-investor-relations": 1995,
+        "page-project-detail": 1993
+      },
+      "missing": []
+    }
+  }
+}

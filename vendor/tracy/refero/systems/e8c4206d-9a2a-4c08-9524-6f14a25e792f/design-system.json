@@ -1,0 +1,343 @@
+{
+  "dos": [
+    "Use Signal Mint #3cffd0 for all section labels, author bylines, active states, and the subscribe button — it is the only chromatic voice and must stay consistent",
+    "Set display headlines in Manuka weight 900 at 60–107px with line-height 0.80 for editorial impact — never substitute a regular weight at this scale",
+    "Use Fk Roman Standard for article body and Poly Sans for all UI chrome — the serif/sans split is the system's mode-switch",
+    "Apply 0.10–0.15em letter-spacing on Poly Sans Mono 11–12px for all uppercase metadata, timestamps, and category labels",
+    "Pin the vertical Verge wordmark to the left margin as a persistent typographic frame — it defines the page's structural identity",
+    "Use the inset teal top border (rgb(60,255,208) 0px -1px 0px 0px inset) on interactive link rows to signal hover/active without changing layout",
+    "Reserve #5200ff and #ff3d00 exclusively for Most Popular and Podcasts section cards — never apply them to text or UI controls"
+  ],
+  "donts": [
+    "Do not use Signal Mint on body text or large areas — it is a punctuation color, not a fill",
+    "Do not set display headlines below 56px — Manuka 900 only earns its weight at scale",
+    "Do not use Fk Roman Standard for navigation, buttons, or labels — it is reading-mode only",
+    "Do not add drop shadows to cards — the system uses inset top borders and color blocks, not elevation",
+    "Do not round card corners above 20px or button corners above 24px — these values define the system's geometric vocabulary",
+    "Do not use the violet or red-orange fills outside their assigned sections — they are category markers, not generic accents",
+    "Do not use the Forest green #309875 as a primary accent — it is a secondary signal for specific category labels only"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#131313",
+      "name": "Charcoal",
+      "role": "Page canvas, primary background, inverted sections",
+      "group": "neutral"
+    },
+    {
+      "hex": "#000000",
+      "name": "Onyx",
+      "role": "Deepest darks, shadows, text on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Primary text, inverted surfaces, light icons",
+      "group": "neutral"
+    },
+    {
+      "hex": "#313131",
+      "name": "Iron",
+      "role": "Elevated card surface, image-adjacent panels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#272727",
+      "name": "Graphite",
+      "role": "Supporting neutral for secondary UI, dividers, and muted labels. Do not promote it to the primary CTA color",
+      "group": "neutral"
+    },
+    {
+      "hex": "#949494",
+      "name": "Fog",
+      "role": "Supporting neutral for secondary UI, dividers, and muted labels",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e9e9e9",
+      "name": "Mist",
+      "role": "Light hairline borders, high-contrast meta text on dark",
+      "group": "neutral"
+    },
+    {
+      "hex": "#c9c9c9",
+      "name": "Silver",
+      "role": "Tertiary text, subdued metadata",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3cffd0",
+      "name": "Signal Mint",
+      "role": "Teal supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color",
+      "group": "brand"
+    },
+    {
+      "hex": "#5200ff",
+      "name": "Ultraviolet",
+      "role": "Most Popular section card background, ranked-list emphasis",
+      "group": "accent"
+    },
+    {
+      "hex": "#ff3d00",
+      "name": "Heat Red",
+      "role": "Podcasts section card background, audio content emphasis",
+      "group": "accent"
+    },
+    {
+      "hex": "#309875",
+      "name": "Forest",
+      "role": "Secondary green accent for category labels and subdued highlights",
+      "group": "accent"
+    }
+  ],
+  "layout": "Full-bleed dark canvas with a persistent vertical 'Verge' wordmark on the far left serving as a typographic left margin. Top horizontal nav bar with logo, category links, subscribe button, and account actions. Hero occupies the upper-left content area at large scale, with a 'Top Stories' numbered list stacked in the right column. Below: alternating content sections — 'Free to Read' dark card, a teal pill toggle, then a 2-column layout pairing article stream (left) with colored section cards (Most Popular in violet, Podcasts in red-orange) on the right. Section rhythm is dictated by color block transitions, not dividers. Content density is comfortable — generous vertical breathing room between sections, compact within list rows.",
+  "imagery": "Editorial news photography dominates: spacecraft interiors, product shots, political figures, event coverage. Full-bleed images in the hero, 60×60px square crops in numbered lists, landscape thumbnails in article cards. Treatment is natural and unfiltered — high contrast, no duotone or color grading. No illustrations, no 3D renders, no abstract graphics. Photography is the visual product; the UI recedes around it.",
+  "similar": [
+    {
+      "why": "Same dark-canvas editorial layout with massive display headlines and a single accent color for interactive elements",
+      "business": "Wired"
+    },
+    {
+      "why": "Dark tech-news aesthetic with compact dense list items and serif article bodies alongside sans-serif UI chrome",
+      "business": "Ars Technica"
+    },
+    {
+      "why": "Near-identical dark mode treatment with teal/cyan accent for links and section labels, numbered story lists with right-side thumbnails",
+      "business": "Engadget"
+    },
+    {
+      "why": "Dark editorial news layout with bold display type and monochrome chrome punctuated by a single chromatic accent",
+      "business": "The Intercept"
+    },
+    {
+      "why": "Sister publication sharing the dark canvas + colored section card pattern (violet and red blocks) and vertical brand wordmark on the left margin",
+      "business": "Vox"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "20px",
+      "pills": "9999px",
+      "images": "3px",
+      "inputs": "4px",
+      "buttons": "24px"
+    },
+    "elementGap": "10-20px",
+    "sectionGap": "48-64px",
+    "cardPadding": "20px",
+    "pageMaxWidth": "1280px"
+  },
+  "industry": "media",
+  "surfaces": [
+    {
+      "hex": "#131313",
+      "name": "Canvas",
+      "level": 1,
+      "purpose": "Page background, primary dark surface"
+    },
+    {
+      "hex": "#272727",
+      "name": "Card",
+      "level": 2,
+      "purpose": "Elevated panels, button surfaces"
+    },
+    {
+      "hex": "#313131",
+      "name": "Image Card",
+      "level": 3,
+      "purpose": "Image-adjacent panels, list-item dividers"
+    },
+    {
+      "hex": "#5200ff",
+      "name": "Colored Section",
+      "level": 4,
+      "purpose": "Most Popular section card fill"
+    },
+    {
+      "hex": "#ff3d00",
+      "name": "Colored Section",
+      "level": 5,
+      "purpose": "Podcasts section card fill"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgb(60, 255, 208) 0px -1px 0px 0px inset",
+      "element": "Link rows, list items"
+    },
+    {
+      "style": "rgb(0, 0, 0) 0px -1px 0px 0px inset",
+      "element": "Inactive link states"
+    }
+  ],
+  "northStar": "Midnight control room, mint alerts",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.2,
+      "letterSpacing": 1.1
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": 0.3
+    },
+    {
+      "role": "subheading",
+      "size": 18,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.36
+    },
+    {
+      "role": "heading-sm",
+      "size": 20,
+      "lineHeight": 1.3,
+      "letterSpacing": 0.4
+    },
+    {
+      "role": "heading",
+      "size": 24,
+      "lineHeight": 1.2,
+      "letterSpacing": 0.48
+    },
+    {
+      "role": "heading-lg",
+      "size": 34,
+      "lineHeight": 1.1,
+      "letterSpacing": 0.68
+    },
+    {
+      "role": "display",
+      "size": 60,
+      "lineHeight": 0.8,
+      "letterSpacing": 0.6
+    },
+    {
+      "role": "display-xl",
+      "size": 107,
+      "lineHeight": 0.8,
+      "letterSpacing": 1.07
+    }
+  ],
+  "components": [
+    {
+      "name": "Top Navigation Bar",
+      "role": "Persistent site header with logo, section links, and account actions",
+      "description": "Horizontal bar at #131313 canvas. Verge wordmark left, horizontal nav links (Tech, Reviews, Science, Entertainment, AI, Policy) in Poly Sans 16px weight 400 white. A filled teal subscribe button (#3cffd0 fill, #000000 text, Poly Sans Mono 11px weight 600, 0.10em tracking, 10px 20px padding, 4px radius) on the right. A 'SIGN IN' text link in Poly Sans 11px weight 500 white and a hamburger menu icon. Top edge carries a 1px teal inset border on hover-active nav items."
+    },
+    {
+      "name": "Vertical Verge Wordmark",
+      "role": "Persistent left-margin brand frame",
+      "description": "The word 'Verge' rotated 90° and pinned to the left edge of the page. Set in Manuka weight 900 at a very large size (60–107px), white #ffffff. Serves as a constant typographic column rather than a traditional header logo — a signature structural element that defines the page's left margin."
+    },
+    {
+      "name": "Hero Story Card",
+      "role": "Lead story with full-bleed image and overlay headline",
+      "description": "Large editorial photograph filling the left content column. Overlay headline at the lower-left in Manuka weight 900, 60–90px, #ffffff, line-height 0.80. Subhead in Fk Roman Standard 20px weight 400 #949494. Author byline in Poly Sans 11px weight 500 #3cffd0 (teal) with a date and comment count in Poly Sans 11px weight 400 #949494. No border or background — the image is the surface."
+    },
+    {
+      "name": "Teal Section Label",
+      "role": "Uppercase header for content sections (Top Stories, Free to read)",
+      "description": "Set in Poly Sans 20px weight 500 #3cffd0, 0.02em letter-spacing. A short two- or three-word label — no underline, no icon, no border. The teal color is the entire signal; it reads as a quiet editorial flag, not a heading."
+    },
+    {
+      "name": "Numbered Story List Item",
+      "role": "Ranked story in a list (Top Stories, Most Popular, Podcasts)",
+      "description": "Row layout: number on the far left in Poly Sans 16px weight 700 #3cffd0 (teal), title in Poly Sans 18px weight 700 #ffffff, author byline in Poly Sans 11px weight 500 #3cffd0 (teal), date in Poly Sans 11px weight 400 #949494, and a chat-bubble icon with comment count. A 60×60px thumbnail at 3px radius on the right. Each row separated by a 1px hairline divider in #313131 or section-card color."
+    },
+    {
+      "name": "Teal Pill Toggle",
+      "role": "Switch between 'Today's Stream' and 'Following' content views",
+      "description": "A pill-shaped toggle with 24px radius (fully rounded). Active state: #3cffd0 background, #000000 text in Poly Sans Mono 12px weight 700, 0.10em tracking. Inactive state: #131313 background, #ffffff text with a 1px #e9e9e9 border. The teal active state is the system's only filled-color moment in the navigation surface."
+    },
+    {
+      "name": "Most Popular Card (Violet)",
+      "role": "Ranked list section with violet background fill",
+      "description": "Full section card at #5200ff background, 20px corner radius, 20px internal padding. Section label 'MOST POPULAR' in Poly Sans Mono 11px weight 600 #ffffff at 0.10em tracking. Numbered list items with white titles, teal numbers (#3cffd0), and meta in #ffffff at reduced opacity. The violet fill is the second-strongest color moment after teal."
+    },
+    {
+      "name": "Podcasts Card (Red)",
+      "role": "Audio content section with red-orange background fill",
+      "description": "Full section card at #ff3d00 background, 20px corner radius, 20px internal padding. Section label 'PODCASTS' in Poly Sans Mono 11px weight 600 #ffffff. A 'SEE ALL PODCASTS →' link top-right in white. Numbered list items with white titles, teal numbers, and author/date meta. Functions as a color-coded content category, not a generic panel."
+    },
+    {
+      "name": "Free to Read Card",
+      "role": "Daily-refresh editorial newsletter section",
+      "description": "Dark elevated card at #1f1f1f or #272727 surface (subtly lighter than the #131313 canvas), 20px corner radius, 20px internal padding. Teal 'Free to read' label at top, white 'REFRESHES DAILY AT 1PM EDT' subtitle in Poly Sans Mono 11px. List items with square thumbnail on left (3px radius), title in Poly Sans 18px weight 700 white, and author in teal."
+    },
+    {
+      "name": "Article Story Card",
+      "role": "Standard editorial card with image and text",
+      "description": "Horizontal layout: square or landscape thumbnail on the right (3px radius), text block on the left. Headline in Poly Sans 18–20px weight 700 #ffffff. Author and date meta in Poly Sans 11px — author in teal #3cffd0, date in #949494. Comment count with chat icon. No card background or border — sits directly on the #131313 canvas."
+    },
+    {
+      "name": "Author Byline + Avatar",
+      "role": "Byline with circular avatar and author name",
+      "description": "Small circular avatar (24–32px) followed by author name in Poly Sans 11px weight 500 #3cffd0. Date and time stamp in Poly Sans 11px weight 400 #949494. The teal author name is one of the most repeated teal moments on the page."
+    },
+    {
+      "name": "Subscribe Button (Teal)",
+      "role": "Filled teal call-to-action in top nav",
+      "description": "Small filled button: #3cffd0 background, #000000 text, Poly Sans Mono 11px weight 700 at 0.10em tracking, label 'SUBSCRIBE', 4px corner radius, 10px 20px padding. The single filled-color interactive element against the #131313 nav bar."
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display headlines for hero and feature stories — ultra-heavy, near-zero leading creates editorial impact at the largest scale",
+      "sizes": "60px, 90px, 107px",
+      "family": "Manuka",
+      "weight": "900",
+      "lineHeight": "0.80",
+      "substitute": "Druk Wide Bold, Knockout 90, GT America Compressed Black",
+      "letterSpacing": "0.01em"
+    },
+    {
+      "role": "Primary UI font — nav, section headers, list items, card titles; tracks wide at small sizes (0.06–0.15em) for ALL-CAPS labels and tight at body sizes",
+      "sizes": "9px, 10px, 11px, 12px, 13px, 15px, 16px, 18px, 19px, 20px, 24px, 34px",
+      "family": "Poly Sans",
+      "weight": "300, 400, 500, 700",
+      "lineHeight": "1.00–1.60",
+      "substitute": "Inter, Untitled Sans, Söhne",
+      "letterSpacing": "0.02em at 16px, 0.06em at 13px, 0.10em at 11px, 0.15em at 9–10px"
+    },
+    {
+      "role": "Article body text — serif distinguishes reading mode from navigation; slight negative tracking tightens running text",
+      "sizes": "16px, 20px, 24px",
+      "family": "Fk Roman Standard",
+      "weight": "400",
+      "lineHeight": "1.20, 1.30",
+      "substitute": "Source Serif Pro, Tiempos Text, Lora",
+      "letterSpacing": "-0.01em"
+    },
+    {
+      "role": "Metadata, category tags, timestamps — monospaced feel with wide letter-spacing (0.10–0.125em) for technical/journalistic texture",
+      "sizes": "11px, 12px",
+      "family": "Poly Sans Mono",
+      "weight": "400, 500, 600, 700",
+      "lineHeight": "1.18, 1.20, 1.30, 2.00",
+      "substitute": "JetBrains Mono, IBM Plex Mono, Geist Mono",
+      "letterSpacing": "0.10em at 11px, 0.125em at 12px"
+    },
+    {
+      "role": "System fallback for non-critical UI copy",
+      "sizes": "16px",
+      "family": "ui-sans-serif",
+      "weight": "400",
+      "lineHeight": "1.10–1.50",
+      "substitute": "system-ui, -apple-system, Segoe UI",
+      "letterSpacing": "normal"
+    }
+  ],
+  "description": "The Verge reads as a late-night newsroom: a near-black canvas where type carries the weight and teal appears only as functional punctuation. The Signal Mint accent (#3cffd0) marks everything that is alive — section labels, author bylines, active states, the subscribe button — while the rest of the page stays achromatic. Display headlines run at Manuka weight 900, 60–107px, creating editorial impact at near-zero line-height, then article bodies switch to Fk Roman Standard serif to separate reading mode from chrome. The vertical 'Verge' wordmark pinned to the left margin is the page's most distinctive structural element — a constant typographic frame, not a logo. Violet (#5200ff) and red-orange (#ff3d00) appear only as section-card fills (Most Popular, Podcasts), giving the monochrome feed two moments of color without breaking the dark mood.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\n- Text: #ffffff\n- Background: #131313\n- Border: #e9e9e9 (light hairline) or #313131 (dark divider)\n- Accent: #3cffd0 (Signal Mint)\n- Surface elevated: #313131\n- primary action: no distinct CTA color\n\n## Example Component Prompts\n\n1. **Top navigation bar**: #131313 background. Horizontal nav links in Poly Sans 16px weight 400 #ffffff. Filled teal button (#3cffd0 background, #000000 text, Poly Sans Mono 11px weight 700, 0.10em letter-spacing, 10px 20px padding, 4px radius) labeled 'SUBSCRIBE' on the right.\n\n2. **Hero story**: large full-bleed editorial image. Overlaid headline in Manuka weight 900, 60–90px, #ffffff, line-height 0.80. Subhead in Fk Roman Standard 20px weight 400 #949494. Author byline in Poly Sans 11px weight 500 #3cffd0, date in Poly Sans 11px weight 400 #949494.\n\n3. **Numbered story list item**: row layout. Number in Poly Sans 16px weight 700 #3cffd0 on the far left. Title in Poly Sans 18px weight 700 #ffffff. Author in Poly Sans 11px weight 500 #3cffd0. Date in Poly Sans 11px weight 400 #949494 with a comment-count icon. 60×60px thumbnail at 3px radius on the right. Inset teal top border (1px) on the row.\n\n4. **Most Popular section card**: #5200ff background, 20px corner radius, 20px padding. Section label 'MOST POPULAR' in Poly Sans Mono 11px weight 600 #ffffff, 0.10em letter-spacing. Numbered list items with white titles and teal #3cffd0 numbers.\n\n5. **Stream/Following pill toggle**: 24px radius (fully rounded). Active state: #3cffd0 background, #000000 text in Poly Sans Mono 12px weight 700. Inactive state: #131313 background, #ffffff text with 1px #e9e9e9 border."
+    }
+  ],
+  "elevationPhilosophy": "The system avoids drop shadows entirely. Instead, interactivity is signaled by inset top borders — a 1px teal edge that appears above links and list items, functioning as a colored underline without shifting layout. Elevation is communicated through surface lightness (#131313 canvas → #272727 card → #313131 image-adjacent) and through full-color section fills (violet, red-orange), not through shadow stacks."
+}

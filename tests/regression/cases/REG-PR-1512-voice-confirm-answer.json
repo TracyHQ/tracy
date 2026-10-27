@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1512-voice-confirm-answer",
+  "kind": "fix",
+  "title": "A spoken clear yes or no answers Tracy's confirm- card in any interface language (first or second option); other words ask the same card again; plan approval by voice reads only verified locales' narrowed phrases",
+  "pr": 1512,
+  "area": "voice/answer",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run the run.cmd below.",
+    "S2: Read the exit code and the pass/fail counts."
+  ],
+  "expect": [
+    "Exit 0, 0 failures.",
+    "spokenAnswer on a confirm- card with options 'Yes, go ahead'/'No, keep it': 'Đồng ý.' selects 'Yes, go ahead', 'Không.' selects 'No, keep it'; 'Ừ.', 'Ok.' and 'Không giữ lại.' return null (asked again, nothing sent); a card whose id does not start with confirm- keeps the words as custom; 'Huỷ.', 'Cancel.', '取消。' select 'No, keep it' and never stop the turn (with no confirm- card, 'Cancel.' still stops it); '是的。' to the card is answered after the usual wait, not the unfinished-sentence wait; an unmatched answer re-reads the card followed by 'Please say yes or no.'; a yes (or the go-ahead label) begun during the card's reading or in its tail, or 'Yes or no.' right after '…Please say yes or no.', answers nothing and says nothing (asked once more after a silence; dropped again, 'I could not hear your answer clearly. Please answer on screen.' is said once and nothing more is asked), while 'Yes.' said after the reading and a quiet moment answers; 'No.', 'Huỷ.', 'Không.' said right after the line, or during the reading, answer 'No, keep it' at once.",
+    "isPlanApproval: 'Approuver ce plan', 'Plan genehmigen.', 'Tôi không duyệt kế hoạch này.', 'Don’t approve the plan.', 'Approve this plan?' are false; planChange('Change the plan to') and planChange('Pas het plan aan.') are 'what'; PLAN_VOICE_LOCALES is empty and voice-mode sends a plan to the chat when the interface locale is not in it."
+  ],
+  "selectors": {
+    "answer": "packages/ui/tracy-chat-input/src/client/voice-answer.mjs spokenAnswer / confirmAnswer",
+    "words": "packages/ui/tracy-chat-input/src/client/voice-turn-taking.mjs confirmReply, isPlanApproval, planChange, PLAN_VOICE_LOCALES",
+    "wiring": "packages/ui/tracy-chat-input/src/client/voice-mode.mjs sendWords (askAgain), planByVoice, answerPlan"
+  },
+  "evidence": "Local stand 20/10/2026: Joomla dsl4mo by Voice, a confirm- card with English options was read aloud, the spoken 'Đồng ý.' matched no option, and the agent opened a card of its own (screens in ~/tracy-bench-work/voice-mode/runs-1480). Council a6-codex D4, D5.1.",
+  "fence": "The pure word matchers and the voice conversation driven with stand-ins (no speech service). Not exercised: real speech-to-text, the live page.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-chat-input/test/voice-turn-taking.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-answer.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-mode.test.mjs",
+      "packages/ui/tracy-chat-input/test/voice-speak-text.test.mjs"
+    ],
+    "needs": []
+  }
+}

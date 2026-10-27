@@ -1,0 +1,74 @@
+{
+  "color": {
+    "blush-cream": {
+      "$value": "#fff4f2",
+      "$type": "color",
+      "$description": "Blush Cream — Page canvas — warm off-white that sets the editorial tone and makes the deep-indigo text read like printed ink on heavy paper"
+    },
+    "pure-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure White — Card surfaces, nav background, button fills on light backgrounds — stacked above the cream canvas to create depth without shadow"
+    },
+    "ink-violet": {
+      "$value": "#090335",
+      "$type": "color",
+      "$description": "Ink Violet — Primary text, headings, filled CTA buttons, nav links, hairline borders — the single dominant color of the entire interface; near-black with a violet undertone gives headings personality without abandoning readability"
+    },
+    "coral-flame": {
+      "$value": "#fc736c",
+      "$type": "color",
+      "$description": "Coral Flame — Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color"
+    },
+    "peach-whisper": {
+      "$value": "#ffb0a1",
+      "$type": "color",
+      "$description": "Peach Whisper — Orange decorative accent for icons, marks, and small graphic details. Do not promote it to the primary CTA color"
+    },
+    "deep-navy": {
+      "$value": "#132645",
+      "$type": "color",
+      "$description": "Deep Navy — Illustration detail fill (SVG artwork) — cooler sibling of Ink Violet used inside drawings to add tonal range to the editorial illustrations"
+    },
+    "graphite": {
+      "$value": "#434352",
+      "$type": "color",
+      "$description": "Graphite — Secondary nav text and nav borders — a softer alternative to Ink Violet for tertiary labels and dividers"
+    },
+    "silver-mist": {
+      "$value": "#8993a2",
+      "$type": "color",
+      "$description": "Silver Mist — Muted nav borders and inactive control outlines"
+    },
+    "hairline": {
+      "$value": "#d8d8d8",
+      "$type": "color",
+      "$description": "Hairline — Hairline link underlines and subtle dividers"
+    },
+    "zinc-mute": {
+      "$value": "#71717d",
+      "$type": "color",
+      "$description": "Zinc Mute — Helper text and tertiary metadata"
+    }
+  },
+  "font": {
+    "gilroy": {
+      "$value": "Gilroy",
+      "$type": "fontFamily",
+      "$description": "Primary interface typeface — body text, navigation, buttons, card labels, footer. Geometric sans with tight tracking gives UI elements a confident, contemporary voice."
+    },
+    "georgia": {
+      "$value": "Georgia",
+      "$type": "fontFamily",
+      "$description": "Headline and hero typeface — a classical serif reserved for editorial moments. The serif/sans pairing is the site's most distinctive typographic decision: Georgia carries warmth and craft, Gilroy carries clarity and UI density. Mixing these creates an indie-magazine feel that distinguishes Podcorn from generic SaaS layouts."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://podcorn.com",
+      "siteName": "Podcorn",
+      "extractedAt": "2026-06-03T20:17:13.707Z",
+      "variant": "compact"
+    }
+  }
+}

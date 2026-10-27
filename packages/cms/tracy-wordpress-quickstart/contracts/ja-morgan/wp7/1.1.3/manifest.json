@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-morgan/wp7/1.1.3",
+  "platform": "wordpress",
+  "theme": "wp-ja-morgan",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-morgan/wp7",
+    "version": "1.1.3",
+    "platform": "wordpress",
+    "platformVersion": "7.1.2",
+    "phpVersion": "8.3.35",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-ja-morgan",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "ja-morgan-wp7-webroot-1.1.3.tar.gz",
+        "bytes": 63940607,
+        "sha256": "cd94f94f016a06f497dc83b683f769916062885669282d588a943895c18afd03",
+        "githubAssetId": 603740512,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-morgan%2Fwp7/ja-morgan-wp7-webroot-1.1.3.tar.gz"
+      },
+      "database": {
+        "file": "ja-morgan-wp7-database-1.1.3.sql.gz",
+        "bytes": 67917,
+        "sha256": "4e822664e888c1b56d06f644cec1aa8451a024b91aef17e61d507221ecf38419",
+        "githubAssetId": 603747634,
+        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-morgan%2Fwp7/ja-morgan-wp7-database-1.1.3.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.17.2",
+  "mode": "content-recommendation"
+}

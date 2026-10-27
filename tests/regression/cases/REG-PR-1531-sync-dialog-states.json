@@ -1,0 +1,18 @@
+{
+  "id": "REG-PR-1531-sync-dialog-states",
+  "kind": "fix",
+  "title": "The Sync from live dialog always says what is going on (checking, couldn't check, not available and why, not synced, syncing with its steps, up to date, needs a decision, couldn't sync and why) and draws no button that cannot act",
+  "pr": 1531,
+  "area": "import/live-sync",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: node --test packages/site/tracy-my-sites/test/live-sync-dialog.test.mjs"],
+  "expect": [
+    "S1: every test passes: one status per phase, the footer button worded from it, absent where it could not act, a refused press said in words"
+  ],
+  "selectors": { "ui": "[data-live-sync-phase], [data-live-sync-step], [data-sync-now]" },
+  "evidence": "tasks/evidence/sync-dialog/",
+  "fence": "The dialog never renders an empty status: every answer of GET /api/sites/:key/sync, and a failed one, has words on screen",
+  "run": { "cmd": ["node", "--test", "packages/core/tracy-core/test/publish-sync-zip-dom.test.mjs"] }
+}

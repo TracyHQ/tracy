@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --color-forest-green: #278458;
+  --color-charcoal: #444340;
+  --color-soft-gray: #f8f8f8;
+  --color-warm-gray: #9a988b;
+  --color-hairline-gray: #eeeeee;
+  --color-paper-white: #ffffff;
+  --color-ink-black: #000000;
+
+  /* Typography — Font Families */
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-libre-baskerville: 'Libre Baskerville', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

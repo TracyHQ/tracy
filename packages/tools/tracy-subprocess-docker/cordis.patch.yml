@@ -1,0 +1,8 @@
+# Inserts its own row. The profile/bundle loading it must disable dsh-base's `subprocess` row
+# (two `ctx.subprocess` registrations throw at boot) and load @tracy/dsh-sandbox-docker in place
+# of `sandbox`, or every confined command arrives without a stamp and runs as www-data.
+# The sites root needs no config here: the plugin reads `TRACY_SITES_ROOT` from the environment
+# and falls back to `/site`, so this file stays plain YAML.
+- insert:
+    - id: tracy-subprocess-docker
+      name: '@tracy/dsh-subprocess-docker'

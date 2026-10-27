@@ -1,0 +1,311 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-kidscorner",
+  "release": "quickstart/ja-kidscorner/j6@1.0.0",
+  "roles": {
+    "page": "body",
+    "display": "h1",
+    "heading": "div.section-title h2",
+    "body": "p.lead",
+    "button-primary": "a.btn.btn-primary",
+    "card": "div.ext-field-flex.ext-field-list",
+    "container": "div.container"
+  },
+  "discovered": {
+    "page": "body",
+    "display": "largest heading near the top: 90px",
+    "displayFace": "Fredoka One 400, tracking 0em",
+    "heading": "first section heading: 60px",
+    "body": "first body paragraph",
+    "button-primary": "first filled, coloured call to action: rgb(254, 130, 89)",
+    "card": "repeated rounded box ×3",
+    "container": "first content container, max-width 1620px",
+    "displayPhone": "the same heading at 390 on the published release: 20px"
+  },
+  "keepScopes": [".t3-topbar", ".t3-footer", ".mod-bg-secondary"],
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#fdf9ef",
+    "--fg": "#858687",
+    "--fg-2": "#403d75",
+    "--accent": "#fe8259",
+    "--accent-hover": "#fe8259",
+    "--surface": "#ffffff",
+    "--meta": "#999999",
+    "--success": "#37d1b7",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#eeeeee",
+    "--muted": "#555555",
+    "--font-display": "\"Fredoka One\", sans-serif",
+    "--font-body": "\"Rubik\", sans-serif",
+    "--accent-on": "#ffffff",
+    "--surface-warm": "#403d75"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "bg": "#fdf9ef",
+      "fg": "#858687",
+      "fg-2": "#403d75",
+      "accent": "#fe8259",
+      "accent-hover": "#fe8259",
+      "surface": "#f7f7f7",
+      "meta": "#999999",
+      "success": "#37d1b7",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f",
+      "border": "#eeeeee",
+      "muted": "#555555"
+    },
+    {
+      "bg": "#fdf9ef",
+      "surface": "#ffffff",
+      "fg": "#858687",
+      "fg-2": "#403d75",
+      "accent": "#fe8259",
+      "accent-on": "#ffffff",
+      "border": "#eeeeee",
+      "surface-warm": "#403d75"
+    },
+    {
+      "accent": "#403d75"
+    },
+    {
+      "accent": "#337ab7",
+      "accent-hover": "#23527c",
+      "accent-active": "#286090",
+      "fg": "#333333",
+      "fg-2": "#222222",
+      "muted": "#777777",
+      "meta": "#999999",
+      "surface": "#f5f5f5",
+      "border": "#dddddd",
+      "border-soft": "#eeeeee",
+      "success": "#5cb85c",
+      "warn": "#f0ad4e",
+      "danger": "#d9534f"
+    },
+    {
+      "bg": "#eeeeee",
+      "surface": "#f9f9f9",
+      "border-soft": "#e5e5e5",
+      "border": "#fdf9ef"
+    },
+    {
+      "bg": "#fcf8e3",
+      "border-soft": "#e0e2e3"
+    },
+    {
+      "bg": "#f8f8f8",
+      "border-soft": "#e3e3e3"
+    },
+    {
+      "bg": "#f9f2f4",
+      "border-soft": "#ebebeb"
+    },
+    {
+      "bg": "#fff6df"
+    }
+  ],
+  "baseNote": "painted on the default home page (discover.mjs), then T3 less/variables*.less (colours and faces); border and muted measured as the most painted line / grey text in css/*.css (78 line colours, 87 text colours seen)",
+  "selectors": {
+    "displaySize": "h1",
+    "heading": [".t3-wrapper h2", "main h2"],
+    "button": [".btn", "a.btn.btn-primary"],
+    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "card": ["div.ext-field-flex.ext-field-list", ".card"],
+    "container": ["#t3-mainbody .container, .container", "div.features-image div.owl-carousel.owl-theme"],
+    "bodyFace": ["body"],
+    "inkImages": [".logo-image img.logo-img"],
+    "cardLike": [".t3-section", ".program-detail", ".event-detail", ".t3-module", ".module-inner"]
+  },
+  "contrast": {
+    "accent-text": ":is(#t3-mainbody, .t3-sl, .t3-sections, .t3-mast, .t3-spotlight, .t3-wrapper > .wrap:not(.t3-footer):not(.t3-topbar)) a:not([class*=btn]):not(:has(img))",
+    "muted": ":is(#t3-mainbody, .t3-sl, .t3-sections, .t3-mast, .t3-spotlight, .t3-wrapper > .wrap:not(.t3-footer):not(.t3-topbar)) p:not([class*=hero]):not([class*=banner]):not([class*=slide])",
+    "body": ":is(#t3-mainbody, .t3-sl, .t3-sections, .t3-mast, .t3-spotlight, .t3-wrapper > .wrap:not(.t3-footer):not(.t3-topbar)) p",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "topbar-left",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "the earliest position this template renders on its home page, of 17 tried (byte 4413); pass-joomla.mjs"
+  },
+  "nearPalette": [
+    {
+      "hex": "#eeeeee",
+      "uses": 108,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fdf9ef",
+      "distance": 19
+    },
+    {
+      "hex": "#fcf8e3",
+      "uses": 44,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fdf9ef",
+      "distance": 12
+    },
+    {
+      "hex": "#f9f9f9",
+      "uses": 32,
+      "kind": "fill",
+      "role": "surface",
+      "near": "#ffffff",
+      "distance": 10
+    },
+    {
+      "hex": "#e5e5e5",
+      "uses": 28,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 9
+    },
+    {
+      "hex": "#fdf9ef",
+      "uses": 15,
+      "kind": "line",
+      "role": "border",
+      "near": "#eeeeee",
+      "distance": 19
+    },
+    {
+      "hex": "#e0e2e3",
+      "uses": 12,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 14
+    },
+    {
+      "hex": "#f8f8f8",
+      "uses": 12,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fdf9ef",
+      "distance": 10
+    },
+    {
+      "hex": "#f9f2f4",
+      "uses": 6,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fdf9ef",
+      "distance": 9
+    },
+    {
+      "hex": "#e3e3e3",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 12
+    },
+    {
+      "hex": "#ebebeb",
+      "uses": 6,
+      "kind": "line",
+      "role": "border-soft",
+      "near": "#e8e8ed",
+      "distance": 5
+    },
+    {
+      "hex": "#fff6df",
+      "uses": 6,
+      "kind": "fill",
+      "role": "bg",
+      "near": "#fdf9ef",
+      "distance": 16
+    }
+  ],
+  "nearNote": "near variants the stylesheets paint, each in the role its property allows (tokenize.mjs --suggest --near 24): added as palettes, read by a person",
+  "keepDefaults": {
+    "--body-text-color": "#858687"
+  },
+  "keepNote": "the footer is an inverse band (#3b386f) the page keeps whole, its inherited text too (keepText): under MotherDuck and Apple its links took the system accent on the template's own dark ground (1.91:1); the indigo activity band (.mod-bg-secondary, #403d75) is kept whole as well — its fill had taken the accent role, so a light system accent sat under its white text (1.94–2.56:1, 11/10/2026)",
+  "contrastNote": "the home page has no #t3-mainbody: its content sits in T3 section, mast and spotlight blocks, so the probes read those too",
+  "ready": true,
+  "readyNote": "re-verified 12/10/2026 with the unified probe (flow.mjs) on the published 1.0.1 (tasks/evidence/ds-reverify-b-2026-10-12/ja-kidscorner-j6): 5/12 as before (role misses only: content width, the carousel sets its own; Toggl Track body weight), controls 0, kept 0, no text under 4.5:1, 79-94% follows; the eye saw the full-width hero carousel shrink to the system's container width and sit left with a blank strip on its right (MotherDuck 1232 px, Apple 1024 px of 1440; already so in round 3): selectors.container named every div.owl-carousel.owl-theme, the hero's too, and the slot gives those only a max-width; narrowed to the role's own carousel (div.features-image div.owl-carousel.owl-theme), measured again 5/12 with the same role misses and the hero spanning the page as in the default under MotherDuck and Apple (…/fix); earlier: re-measured 11/10/2026 with the round-3 probe (text judged per element, paint stack under each text) on the 1.0.1 build stood up from its own zip (tasks/evidence/ds-remeasure-3-2026-10-11/templates/ja-kidscorner-j6): controls 0, kept bands unchanged, no text under 4.5:1 worse than the template's own under Moxie, MotherDuck, Toggl Track and Apple, 79–94% of the page follows, every contrast kind sampled, dark and light screenshots read by eye; role misses unchanged (content width, Toggl Track body weight); earlier: measured 11/10/2026 on the 1.0.1 build (tasks/evidence/ds-contracts-r2c-2026-10-11/templates/ja-kidscorner-j6/final-1.0.1): default unchanged (0 differences, desktop and phone, before and after), no text made less readable than the template's own under Moxie, MotherDuck, Toggl Track and Apple, kept bands unchanged, 78% or more of the page follows, and the dark and light screenshots read by eye; the role checks that miss are the content width (the hero carousel sets its own) and Toggl Track's body weight",
+  "keepText": [".t3-footer"],
+  "inlineColours": {
+    "#403d75": "fg-2",
+    "#fe8259": "accent-text",
+    "#8c8bac": "muted"
+  },
+  "keepDefaultsNote": "T3 has no runtime colour variables: only the page text the released page computes (#858687), which the footer band inherits and keepText gives back",
+  "minVersion": {
+    "quickstart/ja-kidscorner/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-kidscorner/j6": "1.0.2"
+  },
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "inlineNote": "the demo content writes its section titles, kickers and one caption colour inline (style=\"color:#403d75\" …): inlineColours gives each its role, or the titles stayed indigo on a dark system's page (round 1, judged by eye); the logo is a dark-ink image, inverted with hues kept under a dark system (selectors.inkImages)",
+  "bands": {
+    ".t3-topbar": {
+      "ground": "#403d75",
+      "texts": ["#b1afd2"],
+      "important": true
+    },
+    ".t3-footer": {
+      "ground": "#403d75",
+      "texts": ["#ffffff"],
+      "picture": false,
+      "paint": {
+        ".mod-custom p a": {
+          "color": "accent"
+        },
+        ".module small a": {
+          "color": "accent"
+        },
+        ".footer-inner": {
+          "background-color": "ground"
+        },
+        ".t3-module .module-inner": {
+          "background-color": "card"
+        }
+      },
+      "important": true,
+      "vars": {
+        "--kc-band-ground": "ground",
+        "--kc-band-text": "text"
+      }
+    },
+    ".mod-bg-secondary": {
+      "ground": "#403d75",
+      "texts": ["#8c8bac", "#ffffff"],
+      "picture": false,
+      "paint": {
+        ".icon": {
+          "background-color": "accent-fill"
+        }
+      },
+      "important": true
+    },
+    ".ja-masthead": {
+      "ground": "#403d75",
+      "texts": ["#ffffff"],
+      "important": true,
+      "fill": true,
+      "kind": "ink",
+      "words": [".ja-masthead-title"]
+    },
+    ".box-welcome": {
+      "ground": "#403d75",
+      "texts": ["#ffffff"],
+      "fill": true,
+      "kind": "brand",
+      "words": [".content-text", ".title-header h2"]
+    }
+  },
+  "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent; the purple bands (.mod-bg-secondary, the \"Largest Indoor Activity Centre\" section, and the footer, painted by .footer-inner) were drafted as pictures for their background image, but bg-decor.png is a transparent pattern of faint white shapes over the template’s flat #403d75: as pictures they kept the template purple under every system (visual review 14/10/2026), and the footer’s accent links, judged on a photo that runs lighter, came out near black on the purple (1.8:1 under 13 of the 15 featured systems). They are bands of the system’s (picture: false): the footer’s ground is its .footer-inner, its three module cards (.t3-module .module-inner, a darker purple of their own) take the band ground, and its links the accent made readable on it. The drafted .module-inner fill was removed (it named every module of the site); the inner pages’ page-title band (.ja-masthead, the same purple, its title white on a ground that took a light accent) is a fill whose title takes the words that read on the system’s ground; 14/10/2026 (visual review, round 3): the footer’s three module cards took the footer’s own ground and were no longer set apart from it (the template draws them a step off its purple: #3b386f on #403d75). The footer band hands its worn ground and words to two variables (vars --kc-band-ground / --kc-band-text, read inside the band where --ds-c-* are reset) and the cards are the ground moved 10% toward the band’s words (sideRules, both sides): a step lighter on a dark ground, darker on a light one, never a colour of a system",
+  "rolesNote": "container: the first div.container (13/10/2026) — the features carousel measured before sits in a grid column and never shows the page width",
+  "sideNote": "14/10/2026 (visual review, round 3): footer module cards — see bandsNote (.t3-footer); 15/10/2026 (final measure on the develop merge): the cards were the band ground mixed a tenth toward the band's words, white on Notion's blue at 3.91:1 on 10 of 15 systems: they take the band's card role (bands.mjs), a tenth away from its words",
+  "reviewV8Note": "15/10/2026 (look review v8): the About page’s welcome box (.box-welcome) is tokenized to the accent while its words stay white: a fill band, so its words take the accent’s own text"
+}

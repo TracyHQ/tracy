@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1700-site-changes-timeline",
+  "kind": "feat",
+  "title": "Site changes is a vertical timeline: every row shows a chevron and toggles, and change and backup rows share one actions column edge",
+  "pr": 1700,
+  "area": "site-changes/timeline",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run packages/site/tracy-site-tabs/test/e2e/changes-v2.test.mjs (headless Chromium against the built Site changes bundle with a stub door)."
+  ],
+  "expect": [
+    "S1: chevron, title and meta line stay put when a row opens and closes; one right edge for the actions of change and backup rows in a 1440px pane; every row toggles aria-expanded; no ... button when its menu would be empty and Undo shows without hover."
+  ],
+  "selectors": {
+    "files": "packages/core/tracy-core/src/site-tabs/ActivityEventRow.tsx, packages/core/tracy-core/src/site-tabs/BackupRow.tsx"
+  },
+  "fence": "Row geometry and the actions column are measured in the DOM, not read from copy",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=60000",
+      "packages/site/tracy-site-tabs/test/e2e/changes-v2.test.mjs"
+    ],
+    "tests": [
+      "the actions column: one right edge for change and backup rows in a 1440px pane",
+      "every row shows a chevron before it is opened, and pressing the row toggles aria-expanded",
+      "no … button on a row whose menu would be empty; Undo is on screen without hover"
+    ]
+  }
+}

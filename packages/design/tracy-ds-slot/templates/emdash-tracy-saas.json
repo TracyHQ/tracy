@@ -1,0 +1,86 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "emdash/tracy-saas",
+  "release": "tracy-saas/emdash-0.x@1.4.10",
+  "applies": "the same data/ds-slot.css as tracy-base, read per request by the theme's lib/ds-slot.ts (Tracy SaaS 1.4.10 and later); every colour of the theme's three directions × two themes (styles/tokens.css, --k-*) reads var(--ds-c-<role>, <its own hex>), so the slot writes only the --ds-c-* pairs, the faces and the --ds-* sizes",
+  "discovered": {
+    "display": "the hero heading at 1440 on the published release: 52px",
+    "displayPhone": "the same heading at 390 on the published release: 38px",
+    "displayFace": "Space Grotesk 700, tracking -0.029em",
+    "heading": "first section heading at 1440: 38px"
+  },
+  "discoveredNote": "read 14/10/2026 off the published release with no system worn (the v6 measure's baseline/default.json): the hero line's size on a desktop and a phone, its first family (an Astro font family name without its hash suffix), weight and letter spacing, and the first section heading. Until then emdashCss gave the slot no template sizes, so Eddie's 80px Inter 600 stood a five-line tower in tracy-base's centred hero column and six lines in Tracy Business's half-width one (look review v6)",
+  "readsComponents": true,
+  "readsComponentsNote": "the theme reads the slot's type and shape tokens (--ds-weight-*, --ds-size-*, --ds-tracking-display, --ds-leading-display, --ds-btn-radius, --ds-card-radius), so the emitter reads them off an OpenDesign system's reference page (components.html) as for Tracy Business (#1309). Measured 14/10/2026 on the released 1.4.12 without it: ROLE-1 failed under BMW, Stripe and Spotify (the template's own 700 weights, sizes and 9px button radius stayed)",
+  "modes": true,
+  "modesNote": "the theme has a light/dark switch (.k-theme-toggle, data-theme on html): the slot emits the system's own side under the side the system is and the other side derived from it (src/derive.mjs), and keeps the switch (Akemi 13/10/2026: hiding it is a bug; MODE-2, which failed on the released 1.4.12: the switch disappeared on every view). The theme opens on the system's side from 1.4.14 (lib/ds-slot.ts reads the sheet's mode line; a choice made under a system is stored under kinetic-theme@<id>, UNDO-1)",
+  "templateVars": {
+    "--radius-ghost": "var(--ds-btn-radius, 9px)"
+  },
+  "templateNote": "nothing to repoint: the theme's --k-* variables read --ds-c-* themselves (primary as text → accent-text, as a fill → accent through --k-primary-fill, its ink → accent-on); an empty map still makes the emitter write the --ds-c-* pairs as literals; 15/10/2026: the call band's buttons (Cta.astro .cta-btn and its ghost), the plan buttons (Pricing.astro .cta, .inc-btn) and .k-btn-ghost round with --radius-ghost, a 9px literal of tokens.css, not the --ds-btn-radius the hero and header buttons read: under Moxie the header's Start free was a pill and the call band's Start free a 9px box (v10 /product/features and /pages/helixql: button-primary.borderTopLeftRadius 9px against 1000px / Stripe's 4px, desktop and phone). --radius-ghost now reads the system's button radius, the template's 9px where the system states none (still literal: the footer's subscribe button, 9px, and FaqSupport's .btn, 10px)",
+  "fontVars": {
+    "display": ["--font-heading"]
+  },
+  "fontNote": "headings read Tailwind's --font-heading (Space Grotesk); the body reads --font-sans, which the emitter already sets",
+  "selectors": {
+    "themeToggle": ".k-theme-toggle"
+  },
+  "baseSystem": "od:apple",
+  "baseTokens": {
+    "--bg": "#0a0d0c",
+    "--fg": "#9aa6a1",
+    "--fg-2": "#f2f5f3",
+    "--muted": "#5f6b66",
+    "--surface": "#121614",
+    "--surface-warm": "#0f1311",
+    "--border": "#232a27",
+    "--accent": "#a3e635",
+    "--accent-on": "#0a0d0c",
+    "--accent-hover": "#bcf25a"
+  },
+  "baseNote": "the Terminal direction in its default dark theme, what the home page paints (styles/tokens.css)",
+  "roles": {
+    "page": "body",
+    "display": "main h1.hero-title",
+    "heading": "main h2.bento-title",
+    "body": "main p.hero-sub",
+    "button-primary": "main a.k-btn-primary",
+    "card": "main .k-card",
+    "container": "main .k-container:not(.narrow)"
+  },
+  "bandText": {
+    ".cta--card": {
+      "ground": ["surface-warm", "surface"],
+      "tint": 0.12,
+      "colour": "accent-text",
+      "text": [".cta-eyebrow"]
+    },
+    ".hero": {
+      "ground": ["bg"],
+      "tint": 0.12,
+      "colour": "accent-text",
+      "text": [".hero-eyebrow"]
+    }
+  },
+  "bandTextNote": "the call-to-action card (Cta.astro, look `card`) paints elevated → surface with 12% of --k-primary (the readable accent) at the top; its eyebrow in that same accent was proven on the page only: re-measured 11/10/2026 with the per-element probe it read 4.43 under MotherDuck and 4.27 under Apple. It takes the readable accent moved the least toward black or white that reads 4.5:1 on all four of those grounds (src/emit.mjs bandTextRules); the hero lays a 12% tint of its accent over the page in a radial glow under its eyebrow, which the readable accent is made for the plain page: 4.47:1 under Pitch on a phone (final measure 14/10/2026); the eyebrow reads on the page and on the tinted page",
+  "contrast": {
+    "accent-text": "main .k-eyebrow, main .k-chip",
+    "muted": "main .hero-trust, main .strip-caption, main .k-muted",
+    "body": "main p",
+    "card-text": "main .k-card p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": true,
+  "readyNote": "measured 12/10/2026 on the built Tracy SaaS 1.4.11 release (never served; 1.4.12 is the same src/ plus sharp as a direct dependency, TCH #1182, re-checked with Apple on its built release) (tracy-saas-emdash-quickstart-1.4.11.zip + its state, restored on Node as a host does; tasks/evidence/tracy-saas-1-4-11-2026-10-12) with the per-element probe: 18/18 with Moxie, MotherDuck, Toggl Track, Apple, Stripe, Spotify and Linear, controls 0 differences, 97% or more of the page follows, lowest text contrast 4.57, no text less readable than the template's own (the call-to-action eyebrow takes bandText); without a system 0 of 4,484 painted values differ from the published 1.4.10 on seven pages at 1440 and 390. Earlier: measured 11/10/2026 on a local build of 1.4.5 (ds-contracts batch 1, 18/18 with the older probe). Releases 1.4.5 to 1.4.10 that were published came from the line without src/lib/ds-slot.ts (#1013's 1.4.10 included), so 1.4.11 is the first release that wears a system. Then: re-measured 12/10/2026 with the current probe, every heading, text and block of text judged, on the reader as this branch carries it (packages/cms/tracy-emdash-theme-saas packed with tools/distribution.mjs; its src, public and seed byte-identical to the 1.4.11 build, ~/tracy-bench-work/release/saas-1.4.11/pack, the first release that wears the slot; tasks/evidence/ds-remeasure-6-2026-10-11/emdash-tracy-saas): 12/12 with Moxie, MotherDuck, Toggl Track and Apple, controls 0 differences, 97% or more of the page follows, lowest text 4.57:1, no text under 4.5:1 worse than the template's own, screenshots read by a person. The published 1.4.10 has no reader (4/12, 4% of the page follows), so a site on it is told to update.",
+  "sectionNote": "no section role: every home band sets its own padding (88px bento, 80/64 hero…), the template's rhythm stays",
+  "minVersion": {
+    "tracy-saas/emdash-0.x": "1.4.12"
+  },
+  "maxVersion": {
+    "tracy-saas/emdash-0.x": "1.4.14"
+  },
+  "maxVersionNote": "1.4.13 (TCH #1297, 13/10/2026) is 1.4.12 with only tools/personalize.mjs changed (Name left blank, a contact page unticked): src/ byte-identical, the same reader; 1.4.14 (branch feat/tdsr-emdash-base-saas, 14/10/2026) is 1.4.13 plus the two-mode slot: lib/ds-slot.ts reads the sheet's mode line (the same reader as Tracy Business 1.7.18), Base.astro opens on the system's side from it, ThemeToggle.astro keeps a choice made under a system under kinetic-theme@<id>; every stylesheet byte-identical to 1.4.13, re-measured on the release build (contracts/1.4.14)",
+  "rolesNote": "15/10/2026 (v10 inner measure, /pages/helixql and /product/features 4/12): the container role named the article masthead's reading column on /pages/helixql (blog/Masthead.astro `.k-container.inner.narrow`, max-width 820px, 756px of content) where the system's 1200 (Moxie) / 1320 (Stripe) was asked; it now skips the narrow masthead and reads the page's own container, as on the home page. The button role read the closing call's primary button (Cta.astro .cta-btn), see templateNote"
+}

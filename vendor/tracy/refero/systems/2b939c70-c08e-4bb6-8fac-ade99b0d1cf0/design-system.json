@@ -1,0 +1,327 @@
+{
+  "dos": [
+    "Use Migra 58px weight 500 with 0.048em tracking for all section-level display headlines — this is the brand's voice",
+    "Set body text at Inter 16px weight 400 with line-height 1.5 for comfortable reading rhythm",
+    "Apply the dual-layer shadow stack (rgba(4,4,7,0.25) 0 2px 4px + rgba(4,4,7,0.4) 0 8px 24px) to all floating UI elements like command bars and modals",
+    "Maintain 8px radius for cards and 4px radius for buttons — this 2:1 ratio is consistent across the system",
+    "Use #8a8c93 as the default border color at 1px width — it is the most-used token in the system (1357 occurrences) and defines visual structure",
+    "Center all hero and section content; Lazy is a symmetrical, meditative layout — never left-align primary headlines",
+    "Pair every serif headline with a sans-serif subhead in #8a8c93 — the contrast between Migra and Inter creates Lazy's editorial-meets-UI identity"
+  ],
+  "donts": [
+    "Never introduce chromatic colors — the entire system is achromatic by design; adding a blue or green would break the editorial register",
+    "Never use solid-fill CTA buttons; all action buttons are ghost/outlined with #62646a borders to maintain the quiet aesthetic",
+    "Never set body text tighter than -0.005em letter-spacing or display text looser than 0.138em — the tracking curve is the system",
+    "Never use Migra below 21px — at smaller sizes the serif loses its editorial character and becomes noise",
+    "Never add drop shadows stronger than the documented two values — Lazy floats softly, never projects hard edges",
+    "Never left-align serif display headlines — they must be centered to maintain the typeset manuscript metaphor",
+    "Never use white (#ffffff) as a background; white is reserved for primary text and the note-preview card contrast moment"
+  ],
+  "theme": "dark",
+  "colors": [
+    {
+      "hex": "#26272c",
+      "name": "Carbon Canvas",
+      "role": "Page background, hero canvas, section grounds",
+      "group": "neutral"
+    },
+    {
+      "hex": "#0a0a0a",
+      "name": "Obsidian",
+      "role": "Deepest borders, shadow cores, overlaid text on light surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#1a1b1f",
+      "name": "Inkwell",
+      "role": "Secondary surface tint, input fills, subtle elevation step above canvas",
+      "group": "neutral"
+    },
+    {
+      "hex": "#3b3c3e",
+      "name": "Graphite Card",
+      "role": "Elevated card surfaces, modal panels, floating UI containers",
+      "group": "neutral"
+    },
+    {
+      "hex": "#8a8c93",
+      "name": "Pewter",
+      "role": "Primary hairline borders, structural dividers, most-used neutral",
+      "group": "neutral"
+    },
+    {
+      "hex": "#62646a",
+      "name": "Slate",
+      "role": "Secondary borders, link underlines, subdued UI strokes",
+      "group": "neutral"
+    },
+    {
+      "hex": "#535355",
+      "name": "Ash",
+      "role": "Badge borders, tertiary separators, muted structural lines",
+      "group": "neutral"
+    },
+    {
+      "hex": "#e0e0e0",
+      "name": "Bone",
+      "role": "Light card borders, high-contrast dividers, icon strokes on dark surfaces",
+      "group": "neutral"
+    },
+    {
+      "hex": "#b8b8b8",
+      "name": "Chalk",
+      "role": "Muted body borders, low-emphasis separators",
+      "group": "neutral"
+    },
+    {
+      "hex": "#ffffff",
+      "name": "Paper",
+      "role": "Primary heading text, high-contrast body text, emphasis borders",
+      "group": "neutral"
+    }
+  ],
+  "layout": "Lazy follows a full-bleed dark canvas with centered content blocks. The page reads as vertical scroll through typographic acts: each section is a centered composition with a serif label, serif headline, sans subhead, and one focal UI element. Max-width is 1200px for the content column, but the canvas extends edge-to-edge. The hero occupies a full viewport with the command bar centered and a radial light effect drawing the eye. Subsequent sections are 80px vertical gaps with the same centered axis. There is no left/right alternation, no sidebar, no grid of cards — each section is a single editorial spread. Navigation is a minimal top bar with no background fill.",
+  "imagery": "Lazy uses almost no traditional imagery — the visual system is type-driven and UI-driven. The only ",
+  "similar": [
+    {
+      "why": "Same centered, single-focal-element-per-section hero pattern with a command bar as the hero UI",
+      "business": "Notion"
+    },
+    {
+      "why": "Dark-mode productivity tool with extreme typographic restraint and Inter as the UI workhorse font",
+      "business": "Linear"
+    },
+    {
+      "why": "Full-bleed dark canvas with centered editorial compositions and generous vertical rhythm between sections",
+      "business": "Vercel"
+    },
+    {
+      "why": "Serif-and-sans typography pairing on a dark canvas that reads as editorial rather than SaaS",
+      "business": "Read.cv"
+    },
+    {
+      "why": "Monochrome, type-driven visual system where structure and whitespace carry all hierarchy",
+      "business": "Are.na"
+    }
+  ],
+  "spacing": {
+    "radius": {
+      "cards": "8px",
+      "input": "8px",
+      "pills": "100px",
+      "modals": "12px",
+      "buttons": "4px"
+    },
+    "elementGap": "14px",
+    "sectionGap": "80px",
+    "cardPadding": "24px",
+    "pageMaxWidth": "1200px"
+  },
+  "industry": "productivity",
+  "surfaces": [
+    {
+      "hex": "#26272c",
+      "name": "Carbon Canvas",
+      "level": 0,
+      "purpose": "Base page background for all sections"
+    },
+    {
+      "hex": "#1a1b1f",
+      "name": "Inkwell",
+      "level": 1,
+      "purpose": "Recessed inputs, subtle inset surfaces, secondary canvas tint"
+    },
+    {
+      "hex": "#0a0a0a",
+      "name": "Obsidian",
+      "level": 2,
+      "purpose": "Deepest border, shadow anchor, maximum contrast for text"
+    },
+    {
+      "hex": "#3b3c3",
+      "name": "Graphite Card",
+      "level": 3,
+      "purpose": "Elevated card surfaces, floating command bars, modal panels"
+    }
+  ],
+  "elevation": [
+    {
+      "style": "rgba(4, 4, 7, 0.25) 0px 2px 4px 0px, rgba(4, 4, 7, 0.4) 0px 8px 24px 0px",
+      "element": "Command Bar / Floating Input"
+    },
+    {
+      "style": "rgba(0, 0, 0, 0.12) 0px 12px 12px 0px",
+      "element": "Card with soft drop"
+    }
+  ],
+  "northStar": "Midnight typeset manuscript",
+  "typeScale": [
+    {
+      "role": "caption",
+      "size": 11,
+      "lineHeight": 1.45,
+      "letterSpacing": 0.138
+    },
+    {
+      "role": "body",
+      "size": 16,
+      "lineHeight": 1.5,
+      "letterSpacing": -0.08
+    },
+    {
+      "role": "serif-label",
+      "size": 21,
+      "lineHeight": 1.25,
+      "letterSpacing": 0.546
+    },
+    {
+      "role": "heading-sm",
+      "size": 24,
+      "lineHeight": 1.25,
+      "letterSpacing": -0.504
+    },
+    {
+      "role": "heading",
+      "size": 28,
+      "lineHeight": 1.23,
+      "letterSpacing": -0.756
+    },
+    {
+      "role": "display",
+      "size": 55,
+      "lineHeight": 1.09,
+      "letterSpacing": -2.475
+    },
+    {
+      "role": "serif-display",
+      "size": 58,
+      "lineHeight": 1.09,
+      "letterSpacing": 2.784
+    }
+  ],
+  "components": [
+    {
+      "AI": "Pricing",
+      "name": "Top Navigation",
+      "role": "Persistent header bar with brand, nav links, auth actions",
+      "description": "Full-width transparent bar over canvas. Logo (icon + ",
+      "in Inter 13px weight 500. Right side": "Log in",
+      "Lazy\" wordmark) at far left. Center nav": "Capture",
+      "text link + outlined \"Get Lazy\" button. All text in #ffffff or #8a8c93. No background fill": "borders"
+    },
+    {
+      "name": "Outlined CTA Button",
+      "role": "Primary call-to-action in header and inline contexts",
+      "description": "Ghost button: transparent background, 1px border in #62646a, 4px radius, padding 6px 14px. Text Inter 13px weight 500, #ffffff. The border is the affordance, not a fill — this button never uses solid color, maintaining the monochrome discipline."
+    },
+    {
+      "name": "Command Bar",
+      "role": "Central hero element — the product's capture interface demonstrated inline",
+      "description": "Floating card on canvas: 8px radius, background #3b3c3 with 40% black shadow stack. Internal input area with placeholder ",
+      "Not something down or hit / for lazy commands\" in #62646a Inter 14px. Right-aligned \"Capture\" button. Card is 600px wide": "centered"
+    },
+    {
+      "name": "Serif Section Label",
+      "role": "Small uppercase tagline above section headlines",
+      "description": "Migra 21px weight 500, letter-spacing 0.026em, color #8a8c93. Centered above display headline. The positive tracking on serif gives it a printed-typeset quality, contrasting the sans-serif body. Used as section markers like "
+    },
+    {
+      "name": "Serif Display Headline",
+      "role": "Primary section headline in editorial serif",
+      "description": "Migra 58px weight 500, letter-spacing 0.048em, line-height 1.09, color #ffffff. Centered, max-width 800px. The headline reads like a book chapter title — this is Lazy's signature type choice. Below it sits a lighter-weight subhead in the same serif."
+    },
+    {
+      "name": "Sans Display Headline",
+      "role": "Hero headline that pairs with the serif subhead",
+      "description": "Inter 55px weight 300, letter-spacing -0.045em, line-height 1.10, color #ffffff. The whisper-weight (300) is deliberate — Lazy doesn't shout. Pairs with a subhead at 16-20px Inter 400 in #8a8c93."
+    },
+    {
+      "name": "Note Preview Card",
+      "role": "Embedded article/note preview in interactive sections",
+      "description": "Light-toned card (simulating a note app): background #ffffff or very light gray, 8px radius, padding 14-24px, subtle shadow. Content includes bold title ",
+      "A Meta-Layer for Notes\"": "gray body text"
+    },
+    {
+      "name": "Inline Tag",
+      "role": "Small contextual label or category marker",
+      "description": "Inter 12px weight 500, padding 2px 8px, 4px radius, border 1px solid #535355, color #8a8c93. Outlined only — no fill. Functions as a quiet metadata marker."
+    },
+    {
+      "name": "Demo Link",
+      "role": "Inline text link to interactive product demo",
+      "description": "Inter 14px weight 500, color #ffffff, underline on hover. Preceded by descriptive text in #8a8c93. Example: "
+    },
+    {
+      "name": "Floating Orb / Cursor Indicator",
+      "role": "Interactive cursor or loading indicator overlay",
+      "description": "Circular dark element (#0a0a0a) approximately 120-160px diameter, positioned absolutely over content during interaction states. Casts no shadow itself but sits above cards to suggest a cursor following a user's attention. Unique to Lazy's interaction model."
+    },
+    {
+      "name": "Radial Light Wash",
+      "role": "Hero section background glow effect",
+      "description": "Concentric circular gradient emanating from center of hero — brightest at core fading to canvas. Creates a "
+    }
+  ],
+  "typography": [
+    {
+      "role": "Display headlines and section labels — the only serif in the system, giving Lazy its editorial identity",
+      "sizes": "21px, 58px",
+      "family": "Migra",
+      "weight": "500",
+      "lineHeight": "1.09, 1.25",
+      "substitute": "Fraunces, Source Serif Pro, or Cormorant Garamond",
+      "letterSpacing": "0.026em at 21px, 0.048em at 58px — positive tracking is anti-convention for serif, making labels feel architectural and headlines feel set rather than typed"
+    },
+    {
+      "role": "Ultra-light display weight for large UI headlines, pairing with Migra serif in hero",
+      "sizes": "11px, 12px, 13px, 14px, 16px, 20px, 24px, 28px, 55px",
+      "family": "Inter",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.09, 1.10, 1.20, 1.23, 1.25, 1.38, 1.43, 1.50, 1.57, 1.60, 1.83, 2.00",
+      "letterSpacing": "-0.045em at 55px — extreme negative tracking compensates for thin strokes"
+    },
+    {
+      "role": "Body text, descriptions, and subheads — comfortable reading at 16px with generous 1.5 line-height",
+      "sizes": "11px, 12px, 13px, 14px, 16px, 20px, 24px, 28px, 55px",
+      "family": "Inter",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.09, 1.10, 1.20, 1.23, 1.25, 1.38, 1.43, 1.50, 1.57, 1.60, 1.83, 2.00",
+      "letterSpacing": "-0.0450em, -0.0420em, -0.0360em, -0.0310em, -0.0250em, -0.0210em, -0.0170em, -0.0050em, -0.0040em, 0.1380em"
+    },
+    {
+      "role": "Navigation, labels, button text, micro-copy — the workhorse UI weight",
+      "sizes": "11px, 12px, 13px, 14px, 16px, 20px, 24px, 28px, 55px",
+      "family": "Inter",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.09, 1.10, 1.20, 1.23, 1.25, 1.38, 1.43, 1.50, 1.57, 1.60, 1.83, 2.00",
+      "letterSpacing": "-0.0450em, -0.0420em, -0.0360em, -0.0310em, -0.0250em, -0.0210em, -0.0170em, -0.0050em, -0.0040em, 0.1380em"
+    },
+    {
+      "role": "Emphasis in body copy, strong button text, active state indicators",
+      "sizes": "11px, 12px, 13px, 14px, 16px, 20px, 24px, 28px, 55px",
+      "family": "Inter",
+      "weight": "300, 400, 500, 600",
+      "lineHeight": "1.09, 1.10, 1.20, 1.23, 1.25, 1.38, 1.43, 1.50, 1.57, 1.60, 1.83, 2.00",
+      "letterSpacing": "-0.0450em, -0.0420em, -0.0360em, -0.0310em, -0.0250em, -0.0210em, -0.0170em, -0.0050em, -0.0040em, 0.1380em"
+    }
+  ],
+  "description": "Lazy speaks in a whisper-dark, almost monastic register: deep charcoal canvas, near-achromatic borders, and headlines set in a refined serif that feels like editorial print transplanted into a productivity tool. The entire palette stays within three values of gray — no chromatic accents, no decorative gradients on text — letting structure and serif weight carry all hierarchy. Components float on the canvas with soft, low-opacity shadows rather than hard borders, evoking a darkroom where objects glow rather than reflect. Information density is intentionally sparse; one focal element per viewport, generous negative space, and serif type at 55-58px that anchors every section like a magazine pull quote.",
+  "customSections": [
+    {
+      "title": "Agent Prompt Guide",
+      "content": "## Quick Color Reference\\n- text (primary): #ffffff\\n- text (muted): #8a8c93\\n- background: #26272c\\n- card surface: #3b3c3e\\n- border: #8a8c93 (1px)\\n- primary action: no distinct CTA color"
+    },
+    {
+      "title": "Typography Philosophy",
+      "content": "Lazy runs a two-font system: Migra (serif) for editorial moments, Inter (sans) for everything else. The serif is never used for body text, navigation, or UI labels — it appears only in display headlines and section labels. This separation creates a clear register shift: when the user sees serif, they are reading a statement; when they see Inter, they are using the product. Inter operates across four weights (300/400/500/600) with weight 300 reserved exclusively for the hero display headline — the lightest weight says "
+    },
+    {
+      "title": "Shadow & Elevation Philosophy",
+      "content": "Lazy uses exactly two shadow patterns and nothing else. The soft card shadow (rgba(0,0,0,0.12) 0 12px 12px) is a single-layer ambient lift for content cards. The floating UI shadow (rgba(4,4,7,0.25) 0 2px 4px + rgba(4,4,7,0.4) 0 8px 24px) is a two-layer stack for elements that float above the canvas — command bars, modals, interactive overlays. The 0.4 opacity in the second layer is high for a shadow, but it works because the canvas is already dark; the shadow reads as depth, not darkness. There are no colored shadows, no glows, no inner shadows. Elevation is communicated by lift, not by border emphasis."
+    }
+  ],
+  "no illustrations": "no decorative graphics. The product IS the visual content.\"",
+  "the embedded note preview card": "and the interactive cursor orb. The radial light wash in the hero is a CSS gradient",
+  "imagery\" is simulated product UI": "the floating command bar in the hero",
+  "not a photograph. When notes or articles are previewed": "they appear as light-toned cards on the dark canvas — creating a paper-on-darkroom contrast that makes content feel like a physical artifact placed in a void. There are no photographs"
+}

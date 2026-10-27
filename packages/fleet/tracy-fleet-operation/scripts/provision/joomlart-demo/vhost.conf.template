@@ -1,0 +1,44 @@
+server {
+	listen 80;
+	listen 443;
+
+	#SSL
+	ssl_certificate /data/webserver/ssl/live/demo.joomlart.com/fullchain.pem;
+        ssl_certificate_key     /data/webserver/ssl/live/demo.joomlart.com/privkey.pem;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+
+	server_name @SLUG@.demo.joomlart.com;
+	port_in_redirect off;
+	server_name_in_redirect off;
+	root /data/www/site.demo.joomlart.com/public_html/@SLUG@;
+	index index.php index.html index.htm;
+	#access_log  off;
+	access_log  /data/logs/nginx/@SLUG@.demo.joomlart.com-access.log;
+	error_log  /data/logs/nginx/@SLUG@.demo.joomlart.com-error.log;
+
+	# Support Clean (aka Search Engine Friendly) URLs
+	location / {
+		try_files $uri $uri/ /index.php?$args;
+	}
+
+
+	# Basic configuration
+	include global/basic.conf;
+
+	# Security joomla
+	#include global/security.conf;
+
+	# PHP
+	location ~ \.php$ {
+		#try_files $uri =404;
+		fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+		fastcgi_pass jademo_fpm83;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_read_timeout 600s;
+		fastcgi_buffers 256 256k; 
+		fastcgi_buffer_size 128k;
+		include fastcgi_params;
+		fastcgi_intercept_errors on;
+	}
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "8cf4a580-bfb6-4090-a899-f734ffe62370",
+  "status": "complete",
+  "name": "Duna",
+  "url": "https://styles.refero.design/style/8cf4a580-bfb6-4090-a899-f734ffe62370",
+  "sourceWebsite": "https://duna.com",
+  "extractedAt": "2026-06-03T17:17:21.465Z",
+  "capturedAt": "2026-10-08T05:14:39.640059+00:00",
+  "theme": "light",
+  "industry": "fintech",
+  "description": "Sunset watercolor on warm marble — a single painted landscape over a quiet, editorial compliance document.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/5897f13a-d5f6-404c-ba62-9ab5f9e0f74c.jpg",
+    "previewVideoUrl": null,
+    "previewVideoPosterUrl": null,
+    "previewVideoDetailUrl": null,
+    "previewVideoDetailPosterUrl": null
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "c89c712baef341d9a830346db7f67f4a0d7ef4c92812c50a451cc2301e2153df",
+      "bytes": 23356
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "8d80a30b5f4f89fc10bf6ea36ce64d497e2780498b8a9701220e07f898a6f584",
+      "bytes": 132806
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "1f6b585757cb9a262062f27846e554ec92c30a78a7750c49fa9af9cbbb400cbd",
+      "bytes": 18242
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "10cce457f0a1d7b1892d6f32f8f4e3488368c300eb2cfb406b3f11eab579e8ab",
+      "bytes": 14818
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "5e7ec282af6be986194c7a8e99d264cf01fadf0021d2e9b0889c9c1591707792",
+      "bytes": 13732
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "9375cf91acc1bda748b01b9c73c52057cb7b55781dbde2df4093bc6c824c9aaf",
+      "bytes": 4347
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "45e6914439212a040220fe7c444f8a4fe925801bc5483d56ea1a06198ca763b6",
+      "bytes": 1190
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2d1f180d2a3270cd6316dbb85604d1299c25c87e34f9aceeebab2bad41ffa1ff",
+      "bytes": 1207
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "8f84a0e30c78d87d6397f072ef1efe7979f10173b413ecbfede197e09650f25e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "88f31a187f7f21168a37566c735a149b9e1eea31d7bb2e2abc546519285faf74",
+      "bytes": 45856
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "589134a3cad117c1b2c9b033f8df6e1655cca750e52f717bed7f7360f677bc9c",
+      "bytes": 23869
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "e8cac0fb31bc5f1f3720acdf7e6fb0155a4209cee0c1c084a884da458b08d10a",
+      "bytes": 54507
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3e08a7a194c632ba7dc2d2da2de6b2ae617ca56e4adde4f5d1ce8b32dbf83c94",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "5c1b56a3201d6bb80a6a150dea8c72fe46e0fd127b9daa81c3f20c57fa8cc694",
+      "bytes": 2542
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f8b2a75aa136e048ad947ae42c5582025629456222b5b5c5a4a9014825543163",
+      "bytes": 3092
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "077aecd0-4401-4696-a196-164d74ac8746",
+    "0e971626-ca51-45ba-acf6-35a53c561b2c",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "1b010453-80df-406a-8b1a-72630c4a5165",
+    "1f32d914-6fdd-4692-b4fc-fcee2c414766",
+    "2eab438d-32cd-40c2-b160-1e4127dac569",
+    "3172cd4d-118a-4a16-a259-6b634d32322e",
+    "34d438ad-0647-471e-9a6f-7c1fa29d5df6",
+    "3f2b79c1-d980-4380-a903-29856975fc37",
+    "48e5de76-05d5-4c4e-a269-c7c245b291ec",
+    "4e3aa524-b146-416c-907f-382c079ea80c",
+    "63d44e1f-e3e9-40dc-bba4-1aa6efc4db87",
+    "707a9081-3d1d-4a0b-b1aa-b58b3fab09af",
+    "859d51e6-fc3f-45e0-a4c4-fe280c400ca7",
+    "8cf4a580-bfb6-4090-a899-f734ffe62370",
+    "964b9215-396b-492c-abec-7bd778d7b1c9",
+    "9d16aa65-cef7-4bf7-83c8-91837a248cd9",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "cc43cfe3-195b-4081-b586-c42db054a466",
+    "f99aca3e-5289-4595-a7cc-77a72052f4b8",
+    "fb459c9d-c089-4d0b-b5b0-d147b1c4ebd7"
+  ]
+}

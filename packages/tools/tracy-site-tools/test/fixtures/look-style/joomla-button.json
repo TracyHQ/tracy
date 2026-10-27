@@ -1,0 +1,1121 @@
+{
+  "source": "benchjoomla02 /en/ \"See our capabilities\" — Chromium CDP CSS.getMatchedStylesForNode, desktop 1440×900, light; captured 28/09/2026, minimized to the asked properties and the custom properties their var()s reach",
+  "props": ["color", "background-color", "font-family", "font-size", "font-weight"],
+  "info": {
+    "el": "<a.tb-btn.tb-btn--signal>",
+    "text": "See our capabilities",
+    "matches": 1,
+    "how": "exact",
+    "hidden": false,
+    "computed": {
+      "color": "rgb(255, 255, 255)",
+      "background-color": "rgb(218, 90, 42)",
+      "font-family": "Archivo, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "font-size": "14px",
+      "font-weight": "600"
+    },
+    "hex": {
+      "color": "#ffffff",
+      "background-color": "#da5a2a"
+    },
+    "paint": 0,
+    "chain": [
+      "<div.tb-hero__actions>",
+      "<div.tb-hero__copy>",
+      "<div.tb-container.tb-hero__grid>",
+      "<section#tb-hero-441.ja-acm.acm-tb-hero>",
+      "<div#t4-hero.t4-section.t4-hero>",
+      "<div.t4-content-inner>",
+      "<div.t4-content>",
+      "<div.t4-wrapper.c-offcanvas-content-wrap>",
+      "<body.site-tracy-business.navigation-tracy-business>",
+      "<html.j6>"
+    ]
+  },
+  "matched": {
+    "matchedCSSRules": [
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "user-agent",
+          "selectorList": {
+            "text": "a:-webkit-any-link",
+            "selectors": [
+              {
+                "text": "a:-webkit-any-link"
+              }
+            ]
+          },
+          "style": {
+            "cssProperties": [
+              {
+                "name": "color",
+                "value": "-webkit-link"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-68082-6",
+          "selectorList": {
+            "text": "a",
+            "selectors": [
+              {
+                "text": "a",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "style": {
+            "cssProperties": [
+              {
+                "name": "color",
+                "value": "rgba(var(--t4-link-color-rgb),var(--t4-link-opacity,1))",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "color",
+                "value": "rgba(var(--t4-link-color-rgb),var(--t4-link-opacity,1))"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-68082-6",
+          "selectorList": {
+            "text": "a",
+            "selectors": [
+              {
+                "text": "a",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "style": {
+            "cssProperties": [
+              {
+                "name": "color",
+                "value": "#0071e3",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "color",
+                "value": "rgb(0, 113, 227)"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-68082-6",
+          "selectorList": {
+            "text": "a",
+            "selectors": [
+              {
+                "text": "a",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "style": {
+            "cssProperties": [
+              {
+                "name": "color",
+                "value": "var(--accent)",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "color",
+                "value": "var(--accent)"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-68082-6",
+          "selectorList": {
+            "text": "a",
+            "selectors": [
+              {
+                "text": "a",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "style": {
+            "cssProperties": [
+              {
+                "name": "color",
+                "value": "var(--body-link-color)",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "color",
+                "value": "var(--body-link-color)"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-68082-6",
+          "selectorList": {
+            "text": ".tb-btn",
+            "selectors": [
+              {
+                "text": ".tb-btn",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "style": {
+            "cssProperties": [
+              {
+                "name": "font-family",
+                "value": "var(--font-body)",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "font-size",
+                "value": "14px",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "font-weight",
+                "value": "600",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "font-family",
+                "value": "var(--font-body)"
+              },
+              {
+                "name": "font-size",
+                "value": "14px"
+              },
+              {
+                "name": "font-weight",
+                "value": "600"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "matchingSelectors": [0],
+        "rule": {
+          "origin": "regular",
+          "styleSheetId": "style-sheet-68082-6",
+          "selectorList": {
+            "text": ".tb-btn--signal",
+            "selectors": [
+              {
+                "text": ".tb-btn--signal",
+                "range": {
+                  "startLine": 0
+                }
+              }
+            ]
+          },
+          "style": {
+            "cssProperties": [
+              {
+                "name": "background",
+                "value": "var(--tb-band-signal-bg)",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "color",
+                "value": "#fff",
+                "range": {
+                  "startLine": 0
+                }
+              },
+              {
+                "name": "background-color",
+                "value": ""
+              },
+              {
+                "name": "color",
+                "value": "rgb(255, 255, 255)"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "inherited": [
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-6",
+              "selectorList": {
+                "text": ".tb-hero",
+                "selectors": [
+                  {
+                    "text": ".tb-hero",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "background",
+                    "value": "var(--tb-ink-band)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "#ECEAE4",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": ""
+                  },
+                  {
+                    "name": "color",
+                    "value": "rgb(236, 234, 228)"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-6",
+              "selectorList": {
+                "text": ".t4-content",
+                "selectors": [
+                  {
+                    "text": ".t4-content",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "background-color",
+                    "value": "var(--body-bg-color)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": "var(--body-bg-color)"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "matchedCSSRules": []
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-6",
+              "selectorList": {
+                "text": "body",
+                "selectors": [
+                  {
+                    "text": "body",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "font-family",
+                    "value": "var(--t4-body-font-family)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-size",
+                    "value": "var(--t4-body-font-size)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-weight",
+                    "value": "var(--t4-body-font-weight)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--t4-body-color)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": "var(--t4-body-bg)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--t4-body-font-family)"
+                  },
+                  {
+                    "name": "font-size",
+                    "value": "var(--t4-body-font-size)"
+                  },
+                  {
+                    "name": "font-weight",
+                    "value": "var(--t4-body-font-weight)"
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--t4-body-color)"
+                  },
+                  {
+                    "name": "background-color",
+                    "value": "var(--t4-body-bg)"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-6",
+              "selectorList": {
+                "text": "body",
+                "selectors": [
+                  {
+                    "text": "body",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "font-weight",
+                    "value": "400",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-weight",
+                    "value": "400"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-6",
+              "selectorList": {
+                "text": "body",
+                "selectors": [
+                  {
+                    "text": "body",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "background",
+                    "value": "var(--bg)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--fg)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--font-body)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-size",
+                    "value": "var(--text-base)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": ""
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--fg)"
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--font-body)"
+                  },
+                  {
+                    "name": "font-size",
+                    "value": "var(--text-base)"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-6",
+              "selectorList": {
+                "text": "body",
+                "selectors": [
+                  {
+                    "text": "body",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "background-color",
+                    "value": "var(--body-bg-color)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--body-text-color)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--body-font-family)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-size",
+                    "value": "var(--body-font-size)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-weight",
+                    "value": "var(--body-font-weight)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "background-color",
+                    "value": "var(--body-bg-color)"
+                  },
+                  {
+                    "name": "color",
+                    "value": "var(--body-text-color)"
+                  },
+                  {
+                    "name": "font-family",
+                    "value": "var(--body-font-family)"
+                  },
+                  {
+                    "name": "font-size",
+                    "value": "var(--body-font-size)"
+                  },
+                  {
+                    "name": "font-weight",
+                    "value": "var(--body-font-weight)"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "matchedCSSRules": [
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-6",
+              "selectorList": {
+                "text": "html",
+                "selectors": [
+                  {
+                    "text": "html",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "font-size",
+                    "value": "var(--body-font-size)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "font-size",
+                    "value": "var(--body-font-size)"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0, 1],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-6",
+              "selectorList": {
+                "text": ":root, [data-bs-theme=\"light\"]",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "text": "[data-bs-theme=light]",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--t4-font-sans-serif",
+                    "value": "system-ui,-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",\"Liberation Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\"",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--t4-body-font-family",
+                    "value": "var(--t4-font-sans-serif)",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--t4-body-font-size",
+                    "value": "1.0625rem",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--t4-body-font-weight",
+                    "value": "400",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--t4-body-color",
+                    "value": "#1d1d1f",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--t4-body-bg",
+                    "value": "#fff",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--t4-link-color-rgb",
+                    "value": "0,113,227",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--t4-font-sans-serif",
+                    "value": "system-ui,-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",\"Liberation Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\""
+                  },
+                  {
+                    "name": "--t4-body-font-family",
+                    "value": "var(--t4-font-sans-serif)"
+                  },
+                  {
+                    "name": "--t4-body-font-size",
+                    "value": "1.0625rem"
+                  },
+                  {
+                    "name": "--t4-body-font-weight",
+                    "value": "400"
+                  },
+                  {
+                    "name": "--t4-body-color",
+                    "value": "#1d1d1f"
+                  },
+                  {
+                    "name": "--t4-body-bg",
+                    "value": "#fff"
+                  },
+                  {
+                    "name": "--t4-link-color-rgb",
+                    "value": "0,113,227"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-6",
+              "selectorList": {
+                "text": ":root",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--body-bg-color",
+                    "value": "#F5F3EE",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--body-text-color",
+                    "value": "#14171A",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--body-link-color",
+                    "value": "#14483A",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--body-bg-color",
+                    "value": "#F5F3EE"
+                  },
+                  {
+                    "name": "--body-text-color",
+                    "value": "#14171A"
+                  },
+                  {
+                    "name": "--body-link-color",
+                    "value": "#14483A"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-6",
+              "selectorList": {
+                "text": ":root",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 0
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--body-font-family",
+                    "value": "Archivo,system-ui,-apple-system,\"Segoe UI\",Roboto,sans-serif",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--body-font-size",
+                    "value": "17.5px",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--body-font-weight",
+                    "value": "400",
+                    "range": {
+                      "startLine": 0
+                    }
+                  },
+                  {
+                    "name": "--body-font-family",
+                    "value": "Archivo,system-ui,-apple-system,\"Segoe UI\",Roboto,sans-serif"
+                  },
+                  {
+                    "name": "--body-font-size",
+                    "value": "17.5px"
+                  },
+                  {
+                    "name": "--body-font-weight",
+                    "value": "400"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-1",
+              "selectorList": {
+                "text": ":root",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 6
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--tb-ink",
+                    "value": "#14171A",
+                    "range": {
+                      "startLine": 8
+                    }
+                  },
+                  {
+                    "name": "--tb-forest",
+                    "value": "#14483A",
+                    "range": {
+                      "startLine": 9
+                    }
+                  },
+                  {
+                    "name": "--tb-paper",
+                    "value": "#F5F3EE",
+                    "range": {
+                      "startLine": 11
+                    }
+                  },
+                  {
+                    "name": "--tb-ink-band",
+                    "value": "#14171A",
+                    "range": {
+                      "startLine": 33
+                    }
+                  },
+                  {
+                    "name": "--bg",
+                    "value": "var(--tb-paper)",
+                    "range": {
+                      "startLine": 51
+                    }
+                  },
+                  {
+                    "name": "--fg",
+                    "value": "var(--tb-ink)",
+                    "range": {
+                      "startLine": 54
+                    }
+                  },
+                  {
+                    "name": "--accent",
+                    "value": "var(--tb-forest)",
+                    "range": {
+                      "startLine": 60
+                    }
+                  },
+                  {
+                    "name": "--font-body",
+                    "value": "Archivo, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+                    "range": {
+                      "startLine": 70
+                    }
+                  },
+                  {
+                    "name": "--text-base",
+                    "value": "17.5px",
+                    "range": {
+                      "startLine": 75
+                    }
+                  },
+                  {
+                    "name": "--tb-ink",
+                    "value": "#14171A"
+                  },
+                  {
+                    "name": "--tb-forest",
+                    "value": "#14483A"
+                  },
+                  {
+                    "name": "--tb-paper",
+                    "value": "#F5F3EE"
+                  },
+                  {
+                    "name": "--tb-ink-band",
+                    "value": "#14171A"
+                  },
+                  {
+                    "name": "--bg",
+                    "value": "var(--tb-paper)"
+                  },
+                  {
+                    "name": "--fg",
+                    "value": "var(--tb-ink)"
+                  },
+                  {
+                    "name": "--accent",
+                    "value": "var(--tb-forest)"
+                  },
+                  {
+                    "name": "--font-body",
+                    "value": "Archivo, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif"
+                  },
+                  {
+                    "name": "--text-base",
+                    "value": "17.5px"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-1",
+              "selectorList": {
+                "text": ":root",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 164
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--tb-band-signal-bg",
+                    "value": "#DA5A2A",
+                    "range": {
+                      "startLine": 168
+                    }
+                  },
+                  {
+                    "name": "--tb-band-signal-bg",
+                    "value": "#DA5A2A"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "matchingSelectors": [0],
+            "rule": {
+              "origin": "regular",
+              "styleSheetId": "style-sheet-68082-1",
+              "selectorList": {
+                "text": ":root",
+                "selectors": [
+                  {
+                    "text": ":root",
+                    "range": {
+                      "startLine": 199
+                    }
+                  }
+                ]
+              },
+              "style": {
+                "cssProperties": [
+                  {
+                    "name": "--t4-body-bg",
+                    "value": "var(--bg)",
+                    "range": {
+                      "startLine": 200
+                    }
+                  },
+                  {
+                    "name": "--t4-body-color",
+                    "value": "var(--fg)",
+                    "range": {
+                      "startLine": 202
+                    }
+                  },
+                  {
+                    "name": "--t4-body-bg",
+                    "value": "var(--bg)"
+                  },
+                  {
+                    "name": "--t4-body-color",
+                    "value": "var(--fg)"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "painter": null,
+  "sheets": {
+    "style-sheet-68082-6": {
+      "styleSheetId": "style-sheet-68082-6",
+      "sourceURL": "http://benchjoomla02.tracy.test:51710/media/t4/optimize/css/922f8a66bb95f7c0754372275b5d854f.css?cde5177c628e2f688dfba6299d487490",
+      "origin": "regular",
+      "isInline": false,
+      "ownerNode": 55
+    },
+    "style-sheet-68082-1": {
+      "styleSheetId": "style-sheet-68082-1",
+      "sourceURL": "http://benchjoomla02.tracy.test:51710/templates/tracy_business/css/styles/tracy-business.css?1790608697",
+      "origin": "regular",
+      "isInline": false,
+      "ownerNode": 50
+    }
+  }
+}

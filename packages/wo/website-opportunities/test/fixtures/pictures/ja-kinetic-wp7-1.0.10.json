@@ -1,0 +1,214 @@
+{
+  "source": "ja-kinetic/wp7/1.0.10/content-map.json",
+  "slots": [
+    {
+      "key": "home.bento.tile-image.1",
+      "entity": "page-home",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/bento-telemetry-chart.webp",
+      "label": "home — bento.tile-image.1",
+      "target": { "block": "bento.tile-image.1", "attr": "src" }
+    },
+    {
+      "key": "home.testimonials.avatar.1",
+      "entity": "page-home",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/priya-raman.jpg",
+      "label": "home — testimonials.avatar.1",
+      "target": { "block": "testimonials.avatar.1", "attr": "src" }
+    },
+    {
+      "key": "home.testimonials.avatar.2",
+      "entity": "page-home",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/marcus-lee.jpg",
+      "label": "home — testimonials.avatar.2",
+      "target": { "block": "testimonials.avatar.2", "attr": "src" }
+    },
+    {
+      "key": "home.testimonials.avatar.3",
+      "entity": "page-home",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/sofia-alvarez.jpg",
+      "label": "home — testimonials.avatar.3",
+      "target": { "block": "testimonials.avatar.3", "attr": "src" }
+    },
+    {
+      "key": "home-blueprint.bento.tile-image.1",
+      "entity": "page-home-blueprint",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/bento-telemetry-chart.webp",
+      "label": "home-blueprint — bento.tile-image.1",
+      "target": { "block": "bento.tile-image.1", "attr": "src" }
+    },
+    {
+      "key": "home-blueprint.testimonials.avatar.1",
+      "entity": "page-home-blueprint",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/priya-raman.jpg",
+      "label": "home-blueprint — testimonials.avatar.1",
+      "target": { "block": "testimonials.avatar.1", "attr": "src" }
+    },
+    {
+      "key": "home-blueprint.testimonials.avatar.2",
+      "entity": "page-home-blueprint",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/marcus-lee.jpg",
+      "label": "home-blueprint — testimonials.avatar.2",
+      "target": { "block": "testimonials.avatar.2", "attr": "src" }
+    },
+    {
+      "key": "home-blueprint.testimonials.avatar.3",
+      "entity": "page-home-blueprint",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/sofia-alvarez.jpg",
+      "label": "home-blueprint — testimonials.avatar.3",
+      "target": { "block": "testimonials.avatar.3", "attr": "src" }
+    },
+    {
+      "key": "home-signal.bento.tile-image.1",
+      "entity": "page-home-signal",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/bento-telemetry-chart.webp",
+      "label": "home-signal — bento.tile-image.1",
+      "target": { "block": "bento.tile-image.1", "attr": "src" }
+    },
+    {
+      "key": "home-signal.testimonials.avatar.1",
+      "entity": "page-home-signal",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/priya-raman.jpg",
+      "label": "home-signal — testimonials.avatar.1",
+      "target": { "block": "testimonials.avatar.1", "attr": "src" }
+    },
+    {
+      "key": "home-signal.testimonials.avatar.2",
+      "entity": "page-home-signal",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/marcus-lee.jpg",
+      "label": "home-signal — testimonials.avatar.2",
+      "target": { "block": "testimonials.avatar.2", "attr": "src" }
+    },
+    {
+      "key": "home-signal.testimonials.avatar.3",
+      "entity": "page-home-signal",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/sofia-alvarez.jpg",
+      "label": "home-signal — testimonials.avatar.3",
+      "target": { "block": "testimonials.avatar.3", "attr": "src" }
+    },
+    {
+      "key": "about.teams.avatar.1",
+      "entity": "page-about",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/dana-whitfield.jpg",
+      "label": "about — teams.avatar.1",
+      "target": { "block": "teams.avatar.1", "attr": "src" }
+    },
+    {
+      "key": "about.teams.avatar.2",
+      "entity": "page-about",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/arjun-mehta.jpg",
+      "label": "about — teams.avatar.2",
+      "target": { "block": "teams.avatar.2", "attr": "src" }
+    },
+    {
+      "key": "about.teams.avatar.3",
+      "entity": "page-about",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/lena-park.jpg",
+      "label": "about — teams.avatar.3",
+      "target": { "block": "teams.avatar.3", "attr": "src" }
+    },
+    {
+      "key": "about.teams.avatar.4",
+      "entity": "page-about",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/tomas-rivera.jpg",
+      "label": "about — teams.avatar.4",
+      "target": { "block": "teams.avatar.4", "attr": "src" }
+    },
+    {
+      "key": "team.teams.avatar.1",
+      "entity": "page-team",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/dana-whitfield.jpg",
+      "label": "team — teams.avatar.1",
+      "target": { "block": "teams.avatar.1", "attr": "src" }
+    },
+    {
+      "key": "team.teams.avatar.2",
+      "entity": "page-team",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/arjun-mehta.jpg",
+      "label": "team — teams.avatar.2",
+      "target": { "block": "teams.avatar.2", "attr": "src" }
+    },
+    {
+      "key": "team.teams.avatar.3",
+      "entity": "page-team",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/lena-park.jpg",
+      "label": "team — teams.avatar.3",
+      "target": { "block": "teams.avatar.3", "attr": "src" }
+    },
+    {
+      "key": "team.teams.avatar.4",
+      "entity": "page-team",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/tomas-rivera.jpg",
+      "label": "team — teams.avatar.4",
+      "target": { "block": "teams.avatar.4", "attr": "src" }
+    },
+    {
+      "key": "team.teams.avatar.5",
+      "entity": "page-team",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/marcus-lee.jpg",
+      "label": "team — teams.avatar.5",
+      "target": { "block": "teams.avatar.5", "attr": "src" }
+    },
+    {
+      "key": "team.teams.avatar.6",
+      "entity": "page-team",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/sofia-alvarez.jpg",
+      "label": "team — teams.avatar.6",
+      "target": { "block": "teams.avatar.6", "attr": "src" }
+    },
+    {
+      "key": "team.teams.avatar.7",
+      "entity": "page-team",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/priya-raman.jpg",
+      "label": "team — teams.avatar.7",
+      "target": { "block": "teams.avatar.7", "attr": "src" }
+    },
+    {
+      "key": "landing.testimonials.avatar.1",
+      "entity": "page-landing",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/priya-raman.jpg",
+      "label": "landing — testimonials.avatar.1",
+      "target": { "block": "testimonials.avatar.1", "attr": "src" }
+    },
+    {
+      "key": "landing.testimonials.avatar.2",
+      "entity": "page-landing",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/marcus-lee.jpg",
+      "label": "landing — testimonials.avatar.2",
+      "target": { "block": "testimonials.avatar.2", "attr": "src" }
+    },
+    {
+      "key": "landing.testimonials.avatar.3",
+      "entity": "page-landing",
+      "type": "image",
+      "sample": "wp-content/uploads/2026/09/sofia-alvarez.jpg",
+      "label": "landing — testimonials.avatar.3",
+      "target": { "block": "testimonials.avatar.3", "attr": "src" }
+    }
+  ],
+  "pages": []
+}

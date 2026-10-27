@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-trip/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_trip",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-trip",
+    "id": "quickstart/ja-trip/j6",
+    "version": "1.0.3",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.1"
+    },
+    "template": "ja_trip",
+    "framework": "t4",
+    "prefix": "jd_",
+    "parts": {
+      "webroot": {
+        "file": "ja-trip-j6-webroot-1.0.3.tar.gz",
+        "bytes": 65982898,
+        "sha256": "419a83209f0f8b3d319fee82860c7b948bc2275deccc6c3b8e7935ad31f710b0"
+      },
+      "database": {
+        "file": "ja-trip-j6-database-1.0.3.sql.gz",
+        "bytes": 106653,
+        "sha256": "28a6262361616d67069ac29ebdb691693216a7c4f55697f972e4eee5f15f6a23"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-10-07T20:29:55.549Z",
+    "builtFrom": {
+      "site": "trip",
+      "tag": "quickstart/ja-trip/j6",
+      "by": "tracy-dev"
+    },
+    "release": "quickstart/ja-trip/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.0",
+  "mode": "content-recommendation"
+}

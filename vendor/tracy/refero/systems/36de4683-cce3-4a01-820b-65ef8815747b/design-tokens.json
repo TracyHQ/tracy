@@ -1,0 +1,382 @@
+{
+  "color": {
+    "gallery-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Gallery White — Page canvas, header field, testimonial background, and unframed content surfaces"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Headlines, body copy, logo, filled conversion buttons, accordion labels, and monochrome marks"
+    },
+    "paper-gray": {
+      "$value": "#f6f6f6",
+      "$type": "color",
+      "$description": "Paper Gray — Pill navigation backgrounds, quiet swatches, subdued icon containers, and low-contrast secondary surfaces"
+    },
+    "quiet-gray": {
+      "$value": "#878787",
+      "$type": "color",
+      "$description": "Quiet Gray — Muted attribution, supporting metadata, and secondary logo treatment"
+    },
+    "availability-green": {
+      "$value": "#189e48",
+      "$type": "color",
+      "$description": "Availability Green — Small availability dots and live-capacity copy — a restrained signal against the otherwise achromatic interface"
+    }
+  },
+  "font": {
+    "sans-serif": {
+      "$value": "sans-serif",
+      "$type": "fontFamily",
+      "$description": "sans-serif — detected in extracted data but not described by AI"
+    },
+    "rhymes-text-light": {
+      "$value": "Rhymes Text Light",
+      "$type": "fontFamily",
+      "$description": "Primary editorial display face for multi-line section headlines. The 300 weight and aggressive -3.36px at 56px or -4.32px at 72px tracking make statements feel typeset rather than interface-generated."
+    },
+    "rhymes-text-light-italic": {
+      "$value": "Rhymes Text Light Italic",
+      "$type": "fontFamily",
+      "$description": "Italic interruption within Rhymes display headlines; use for one emotionally weighted word or closing phrase, not an entire paragraph. Its -3.36px at 56px and -5.04px at 72px tracking lets the italic splice lock tightly into the upright headline."
+    },
+    "saans-regular": {
+      "$value": "Saans Regular",
+      "$type": "fontFamily",
+      "$description": "Functional sans for body copy, labels, proof copy, and occasional oversized sans emphasis inside display lines. The 70px word treatment is deliberately a near-peer to the 72px Rhymes line, creating a blunt sans-versus-serif contrast."
+    },
+    "saans-medium": {
+      "$value": "Saans Medium",
+      "$type": "fontFamily",
+      "$description": "Compact emphasis for small labels and utility text without turning the interface into a bold sans system."
+    },
+    "satoshi": {
+      "$value": "Satoshi",
+      "$type": "fontFamily",
+      "$description": "Tiny metadata inside portfolio imagery and embedded visual artifacts."
+    }
+  },
+  "typography": {
+    "xs": {
+      "$value": {
+        "fontFamily": "sans-serif",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs at 12px"
+    },
+    "xs-2": {
+      "$value": {
+        "fontFamily": "Satoshi",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.2,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step xs-2 at 12px"
+    },
+    "sm": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm at 14px"
+    },
+    "sm-2": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.71,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-2 at 14px"
+    },
+    "sm-3": {
+      "$value": {
+        "fontFamily": "Saans Medium",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-3 at 14px"
+    },
+    "sm-4": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.29,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-4 at 14px"
+    },
+    "sm-5": {
+      "$value": {
+        "fontFamily": "Saans Medium",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "lineHeight": 1.29,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-5 at 14px"
+    },
+    "sm-6": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.21,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step sm-6 at 14px"
+    },
+    "base": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base at 16px"
+    },
+    "base-2": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-2 at 16px"
+    },
+    "base-3": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "16px",
+        "fontWeight": 700,
+        "lineHeight": 1.5,
+        "letterSpacing": "0em"
+      },
+      "$type": "typography",
+      "$description": "Typography step base-3 at 16px"
+    },
+    "2xl": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "lineHeight": 1.33,
+        "letterSpacing": "-0.01em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl at 24px"
+    },
+    "2xl-2": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "26px",
+        "fontWeight": 400,
+        "lineHeight": 2.27,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 2xl-2 at 26px"
+    },
+    "5xl": {
+      "$value": {
+        "fontFamily": "Rhymes Text Light",
+        "fontSize": "56px",
+        "fontWeight": 300,
+        "lineHeight": 1.05,
+        "letterSpacing": "-0.06em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl at 56px"
+    },
+    "5xl-2": {
+      "$value": {
+        "fontFamily": "Rhymes Text Light Italic",
+        "fontSize": "56px",
+        "fontWeight": 300,
+        "lineHeight": 1.05,
+        "letterSpacing": "-0.06em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-2 at 56px"
+    },
+    "5xl-3": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "70px",
+        "fontWeight": 400,
+        "lineHeight": 1.03,
+        "letterSpacing": "-0.07em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-3 at 70px"
+    },
+    "5xl-4": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "70px",
+        "fontWeight": 400,
+        "lineHeight": 1.03,
+        "letterSpacing": "-0.02em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-4 at 70px"
+    },
+    "5xl-5": {
+      "$value": {
+        "fontFamily": "Rhymes Text Light",
+        "fontSize": "72px",
+        "fontWeight": 300,
+        "lineHeight": 1,
+        "letterSpacing": "-0.06em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-5 at 72px"
+    },
+    "5xl-6": {
+      "$value": {
+        "fontFamily": "Saans Regular",
+        "fontSize": "72px",
+        "fontWeight": 400,
+        "lineHeight": 1,
+        "letterSpacing": "-0.07em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-6 at 72px"
+    },
+    "5xl-7": {
+      "$value": {
+        "fontFamily": "Rhymes Text Light Italic",
+        "fontSize": "72px",
+        "fontWeight": 300,
+        "lineHeight": 1,
+        "letterSpacing": "-0.07em"
+      },
+      "$type": "typography",
+      "$description": "Typography step 5xl-7 at 72px"
+    }
+  },
+  "spacing": {
+    "8": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Spacing 8px"
+    },
+    "16": {
+      "$value": "16px",
+      "$type": "dimension",
+      "$description": "Spacing 16px"
+    },
+    "24": {
+      "$value": "24px",
+      "$type": "dimension",
+      "$description": "Spacing 24px"
+    },
+    "32": {
+      "$value": "32px",
+      "$type": "dimension",
+      "$description": "Spacing 32px"
+    },
+    "40": {
+      "$value": "40px",
+      "$type": "dimension",
+      "$description": "Spacing 40px"
+    },
+    "56": {
+      "$value": "56px",
+      "$type": "dimension",
+      "$description": "Spacing 56px"
+    },
+    "64": {
+      "$value": "64px",
+      "$type": "dimension",
+      "$description": "Spacing 64px"
+    },
+    "unit": {
+      "$value": "8px",
+      "$type": "dimension",
+      "$description": "Base spacing unit"
+    }
+  },
+  "radius": {
+    "xl": {
+      "$value": "12px",
+      "$type": "dimension",
+      "$description": "Border radius xl"
+    },
+    "xl-2": {
+      "$value": "15px",
+      "$type": "dimension",
+      "$description": "Border radius xl-2"
+    },
+    "2xl": {
+      "$value": "20px",
+      "$type": "dimension",
+      "$description": "Border radius 2xl"
+    },
+    "full": {
+      "$value": "50px",
+      "$type": "dimension",
+      "$description": "Border radius full"
+    },
+    "full-2": {
+      "$value": "60px",
+      "$type": "dimension",
+      "$description": "Border radius full-2"
+    },
+    "full-3": {
+      "$value": "80px",
+      "$type": "dimension",
+      "$description": "Border radius full-3"
+    },
+    "full-4": {
+      "$value": "9999px",
+      "$type": "dimension",
+      "$description": "Border radius full-4"
+    }
+  },
+  "surface": {
+    "gallery-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Surface level 0: Page background, content field, header, testimonials, and base component surface."
+    },
+    "paper-gray": {
+      "$value": "#f6f6f6",
+      "$type": "color",
+      "$description": "Surface level 1: Low-emphasis navigation pills, utility chips, and restrained decorative blocks."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://bajgartoffice.com",
+      "siteName": "Bajgart Office",
+      "extractedAt": "2026-09-20T19:27:08.127Z",
+      "variant": "extended"
+    }
+  }
+}

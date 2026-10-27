@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ea0d7b5a-c887-4b6b-9260-6ca4d1fd7caa",
+  "status": "complete",
+  "name": "Maëlan Le Meur",
+  "url": "https://styles.refero.design/style/ea0d7b5a-c887-4b6b-9260-6ca4d1fd7caa",
+  "sourceWebsite": "https://maelanlemeur.com",
+  "extractedAt": "2026-06-03T21:08:28.717Z",
+  "capturedAt": "2026-10-08T05:19:02.485786+00:00",
+  "theme": "mixed",
+  "industry": "agency",
+  "description": "Museum wall, warm parchment and tobacco — a portfolio printed on bone-colored paper with ink-black display type and deep umber chapter breaks.",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/24b14217-5d8c-4993-adb1-b5e87a72d290.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/ccb404fe-104f-498e-8eda-d5e01df40c4c.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/37539a81-9065-4d40-82ed-7bfaf81a461b.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/bb7a10db-7dde-42d7-b234-3dc7b52d96a7.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/986defa8-b4a4-4ec2-97ac-3ae67892ae2d.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "7c4cd5d11831252b33e6e862efe7cf5179e9b357fb5a1a9d191db2ce3c8b946e",
+      "bytes": 16022
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "56df443400124058fa9cbe62d3dac323551517c8bd6c4aa792778398760899c3",
+      "bytes": 27834
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "6386bf60598633d8acabfdd7c3eea898e94b35b3ca654e650d7c01945b465fd2",
+      "bytes": 13685
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "d01cb4977dbc8a5581d5080fcbda415962ff31236cbcca9ea8cabb997b1fd995",
+      "bytes": 7718
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e0257294bf16c7625669b256e1e3d991dacdaf658c30d63df6f9d9b25e5648e7",
+      "bytes": 9973
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "21050007eefee3f6c855f4dd0130b308009984d53cdfd41dde227a3251198f5e",
+      "bytes": 2032
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "08826372260786569eef487b06504769ef76d7f6a7621923edc2327d28bbf703",
+      "bytes": 348
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "2ee2fbb562c0d99ef18844687808eb9ec2e44973a8e77f4b9e1ed5d9ff0bfb01",
+      "bytes": 365
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "03840cdbdd0f68705ffbcea34fe3bc1b7c3621c60a048a2236da679abcf1183e",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "72449ba17367100df8749e9d8a230708d3db2ed82db09cb28ad6dea449bccf0f",
+      "bytes": 37483
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "3acd085014d6fa3ded77bf6d6bfd99340f502942d5557c976220dba7e6ed1240",
+      "bytes": 19313
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "297e3757eb009503bb9a303064eaa9251f56075d80c4a926a3b207106566599c",
+      "bytes": 25584
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "033a2f90e1f7a8b2ce83da5ae384c07be030e29f4989665fc32daef1ca79d170",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "eec356c075f829f698158104b0f30161fcac4a6f70efa57b1cc43d5cf9cc11b5",
+      "bytes": 1031
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "a74f89a6c3cabdd31d9a245924ca0f50d2c9576333db3afc7ba298553048cf94",
+      "bytes": 1480
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0a2bcda6-b5b9-463d-bc8d-2c7ccaa2b776",
+    "34aa811f-6084-484c-b4c0-f587b514e970",
+    "36fb90f7-3547-4dfd-a34e-592aa140078a",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "717a2f6f-bc7d-4f9a-adcb-1465fdf77c9a",
+    "7afd842e-44d4-4f01-9ef5-683c31d820c9",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "8ac43b3b-7139-4777-bc77-217614e01e89",
+    "a85c74b9-2166-4fa3-be49-a2cc48990c6a",
+    "a90dbcb6-e42c-4992-a83b-94879699dd4f",
+    "b1e82907-d1cf-46cd-8ae7-3561c5b15fd0",
+    "b8fd5772-ac2b-4bfd-b5e5-d182261b09c5",
+    "bb63a015-b018-4bd9-be66-0973ac6be753",
+    "c47654a9-7d7a-4b2c-8e0a-cd9296719c69",
+    "cd3546fc-b6d0-4ec9-8624-580549af347d",
+    "cffa5959-4283-41d2-ad11-bada2d731419",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "e8eda526-d686-4e45-a60d-61b6503a8eda",
+    "ea0d7b5a-c887-4b6b-9260-6ca4d1fd7caa",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "ff4b9eff-dc0b-4886-bd65-c2f5e9069318"
+  ]
+}

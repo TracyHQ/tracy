@@ -1,0 +1,716 @@
+/* ---- Phone and tablet layout of the pages measured at 390 px (light and dark) ----
+   Values are read from the source stand at 390 px; the desktop rules stay untouched. */
+
+/* ---- Section titles: 28/35 on phones (source), 36/45 above ---- */
+@media (max-width: 767px) {
+	body .jm-acm h2.jm-module-title,
+	body .jm-acm h3.jm-module-title,
+	body .jm-acm h3.jm-ft-desc,
+	body:is(.jm-route-home-style-2, .jm-route-home-style-3, .jm-route-home-style-4, .jm-route-about-us, .jm-route-services-page) .jm-acm h3.jm-module-title,
+	body:is(.jm-route-home-style-2, .jm-route-home-style-3, .jm-route-home-style-4, .jm-route-about-us, .jm-route-services-page) .jm-acm h3.jm-ft-desc {
+		font-size: 28px;
+		line-height: 35px;
+	}
+	/* Masthead title: 36 px with a 1.5 line box; the typography-like pages keep 1.25 */
+	body .ja-masthead-title.wp-block-post-title,
+	body .ja-masthead .ja-masthead-title,
+	body:is(.jm-route-about-us, .jm-route-services-page) .ja-masthead-title {
+		font-size: 36px;
+		line-height: 54px;
+	}
+	body:is(.jm-route-typography, .jm-route-error-page, .jm-route-offline-page) .ja-masthead-title.wp-block-post-title,
+	body .jm-article-masthead .ja-masthead-title.wp-block-post-title {
+		line-height: 45px;
+	}
+	/* The testimonial section title keeps 36/45 on phones in the source */
+	body .jm-acm .acm-testimonial.style-3 h3.jm-module-title {
+		font-size: 36px;
+		line-height: 45px;
+	}
+}
+
+/* ---- Sliders clip their own track, as the source carousel does ---- */
+@media (max-width: 991px) {
+	.acm-testimonial,
+	.acm-slideshow {
+		overflow-x: clip;
+	}
+}
+
+/* ---- Features grids stack below the desktop layout ---- */
+@media (max-width: 991px) {
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 > .section-title {
+		max-width: none;
+		padding-right: 0;
+	}
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .acm-feature-slide.tracy-motion-carousel {
+		margin: 0;
+	}
+}
+/* The four tiles of Features style 4 stay one to a row below 1200 px and keep the picture beside the text down to 768 px,
+   as the source's do (audit 03/10, defect 9: the 50 % columns squeezed the text 280 px wide and 24 px past the screen). */
+@media (max-width: 1199px) {
+	.acm-features.style-4 .jm-tiles > .col {
+		flex: 0 0 100%;
+	}
+	.acm-features.style-4 .content-wrap {
+		padding: 60px;
+	}
+}
+@media (max-width: 767px) {
+	.acm-features.style-4 .features-item,
+	.acm-features.style-4 .col:nth-child(-n + 2) .features-item {
+		flex-direction: column;
+	}
+	.acm-features.style-4 .img-intro {
+		flex: 0 0 400px;
+		height: 400px;
+	}
+	.acm-features.style-4 .content-wrap {
+		flex: 0 0 auto;
+		padding: 30px;
+	}
+}
+@media (max-width: 767px) {
+	body:is(.jm-route-home-style-4, .jm-route-about-us) .acm-features.style-1 .features-item {
+		flex: 0 0 100%;
+		min-height: 0;
+	}
+}
+
+/* ---- Tagged items: one column, picture inside the column ---- */
+@media (max-width: 767px) {
+	.tag-category .tracy-grid.cat-list {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.tag-category .item-image {
+		margin: 0 !important;
+	}
+}
+
+/* ---- Home style 2 header on phones: logo row, then the navy menu bar (the source layout) ---- */
+@media (max-width: 991px) {
+	body.jm-route-home-style-2 .t3-topbar {
+		box-sizing: border-box;
+		height: 42px;
+		background: var(--jm-bg);
+		color: var(--ds-c-muted, #aaaaaa);
+		border: 1px solid var(--ds-c-border, #eaeaea);
+	}
+	body.jm-route-home-style-2 .t3-topbar > .container {
+		height: 40px;
+	}
+	body.jm-route-home-style-2 .t3-topbar .wp-block-social-links .wp-social-link {
+		border-color: var(--ds-c-border, #eaeaea);
+		color: var(--ds-c-muted, #aaaaaa);
+	}
+	body.jm-route-home-style-2 .t3-header {
+		height: auto;
+		margin-bottom: -30px;
+		background: transparent;
+	}
+	body.jm-route-home-style-2 .t3-header > .container {
+		flex-wrap: wrap;
+		height: auto;
+		padding-top: 30px;
+	}
+	body.jm-route-home-style-2 .t3-header .logo {
+		order: 1;
+		line-height: 33.3px;
+		margin-bottom: 30px;
+	}
+	body.jm-route-home-style-2 .t3-header .header-inner {
+		order: 3;
+		flex: 0 0 100%;
+		position: relative;
+		justify-content: flex-end;
+		height: 60px;
+		border-radius: var(--ds-card-radius, 4px);
+		background: var(--jm-secondary);
+	}
+	body.jm-route-home-style-2 .headright {
+		height: 60px;
+	}
+	body.jm-route-home-style-2 .theme-toggle,
+	body.jm-route-home-style-2 .off-canvas-toggle,
+	body.jm-route-home-style-2 .t3-mainnav .wp-block-navigation__responsive-container-open {
+		width: 60px;
+		height: 60px;
+		margin: 0;
+		border-radius: 0; /* ds-keep: square on purpose: the toggle sits flush in the header row, as the source */
+		background: transparent;
+		color: var(--ds-c-on-ink, #ffffff);
+	}
+	body.jm-route-home-style-2 .off-canvas-toggle {
+		padding: 21px 22px;
+	}
+}
+/* Style 2 below 768 px: the logo takes its own centred row (the info row is hidden); from 768 px it sits at the left of the info row. */
+@media (max-width: 767px) {
+	body.jm-route-home-style-2 .t3-header .logo {
+		flex: 0 0 100%;
+		text-align: center;
+	}
+}
+
+/* ---- Home styles 3 and 4 below 992 px: the header is transparent over the hero with white controls ----
+   The source draws the same has-hero header at every width: 60 px tall plus a 1 px rule, the logo 15 px from the left
+   edge, and 60 px controls (theme toggle 36 px) ending flush at the right edge; style 4 also shows its search as a
+   60 px box. The hero pulls up under the header by 91 px (style 3: 61 px on phones) and keeps its content 120 px below
+   the top of the page, as there. */
+@media (max-width: 991px) {
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .t3-header {
+		box-sizing: border-box;
+		height: 61px;
+		margin-bottom: -91px;
+		background: transparent;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* ds-keep: a faint line of light over the photograph, drawn for the picture, not a role */
+	}
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .t3-header > .container {
+		max-width: none;
+		width: 100%;
+		height: 60px;
+		padding: 0 0 0 15px;
+	}
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .t3-header .header-inner,
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .headright {
+		height: 60px;
+	}
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .t3-header .logo {
+		height: 60px;
+		padding-right: 15px;
+		line-height: 60px;
+	}
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .t3-header .logo a,
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .theme-toggle,
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .head-search .wp-block-search__button {
+		color: #ffffff;
+	}
+	body.jm-route-home-style-3 .t3-header .logo {
+		border-right: 1px solid rgba(255, 255, 255, 0.1);
+	}
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .off-canvas-toggle,
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .t3-mainnav .wp-block-navigation__responsive-container-open {
+		box-sizing: border-box;
+		flex-shrink: 0;
+		width: 60px;
+		height: 60px;
+		margin: 0;
+		padding: 0;
+		border-radius: 0; /* ds-keep: square on purpose: the toggle sits flush in the header row, as the source */
+		background: transparent;
+		color: #ffffff; /* ds-keep: words over the photograph: the picture keeps its tones under a system, so its words keep the template white */
+	}
+	body.jm-route-home-style-3 .off-canvas-toggle {
+		border-right: 1px solid rgba(255, 255, 255, 0.2); /* ds-keep: a faint line of light over the photograph, drawn for the picture, not a role */
+	}
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .off-canvas-toggle {
+		margin-left: 6px;
+	}
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .jm-sections > .acm-hero:first-child {
+		padding-top: 150px;
+	}
+	/* Style 4 shows the search at every width: a 60 px box with a rule at its left. */
+	body.jm-route-home-style-4 .head-search.wp-block-search {
+		display: flex;
+		box-sizing: border-box;
+		width: 60px;
+		height: 60px;
+		margin: 0 0 0 6px;
+		border-left: 1px solid rgba(255, 255, 255, 0.1); /* ds-keep: a faint line of light over the photograph, drawn for the picture, not a role */
+	}
+	body.jm-route-home-style-4 .head-search .wp-block-search__inside-wrapper,
+	body.jm-route-home-style-4 .head-search .wp-block-search__button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	/* The source's 30 px search icon sits at the top-left of its 60 px box, not centred in it. */
+	body.jm-route-home-style-4 .head-search .wp-block-search__inside-wrapper {
+		align-items: flex-start;
+		justify-content: flex-start;
+	}
+	body.jm-route-home-style-4 .head-search .wp-block-search__button {
+		flex: 0 0 30px;
+		width: 30px;
+		height: 30px;
+		margin: 0;
+		background: transparent;
+	}
+	/* On a 320 px phone the row is wider than the screen: the search box and the theme toggle give way. */
+	body.jm-route-home-style-4 .t3-header .header-inner,
+	body.jm-route-home-style-4 .headright,
+	body.jm-route-home-style-4 .head-search.wp-block-search,
+	body.jm-route-home-style-4 .head-search .wp-block-search__inside-wrapper,
+	body:is(.jm-route-home-style-3, .jm-route-home-style-4) .theme-toggle {
+		flex-shrink: 1;
+		min-width: 0;
+	}
+}
+@media (max-width: 767px) {
+	body.jm-route-home-style-3 .t3-header {
+		margin-bottom: -61px;
+	}
+}
+
+/* ---- Statement band: the source's col-md-* columns stack below 992 px (title block, then text) ---- */
+@media (max-width: 991px) {
+	.acm-features.style-6 .row {
+		flex-wrap: wrap;
+	}
+	.acm-features.style-6 .col-md-4,
+	.acm-features.style-6 .col-md-8 {
+		flex: 0 0 100%;
+	}
+}
+/* ---- Statement band text and counters on phones ---- */
+@media (max-width: 767px) {
+	/* Below 768 px the source's testimonial slide ends 32 px under its title (52 px from there up). */
+	.acm-testimonial.style-1 .testimonial-item {
+		padding-bottom: 32px;
+	}
+	.acm-testimonial.style-1 .testimonial-item:has(.action-link-icon) {
+		padding-bottom: 97px;
+	}
+	.acm-features.style-6 .col-md-8 {
+		padding: 0 15px;
+	}
+	.acm-statics.style-1 .row {
+		flex-wrap: wrap;
+	}
+	.acm-statics.style-1 .col {
+		flex: 0 0 100%;
+	}
+	.acm-statics.style-1 .number {
+		font-size: 36px;
+		line-height: 45px;
+	}
+}
+
+/* ---- Narrow screens (the intrinsic probe at 320-414 px, 03/10/2026): none of these existed in the source ---- */
+/* About and Services draw the team as four columns at every width (the rule above wins over the general ones); the source goes to two columns, then one. */
+@media (max-width: 991px) {
+	body:is(.jm-route-about-us, .jm-route-services-page) .item-page .acm-teams .jm-cards {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+@media (max-width: 767px) {
+	body:is(.jm-route-about-us, .jm-route-services-page) .item-page .acm-teams .jm-cards {
+		grid-template-columns: 1fr;
+	}
+	/* The statement box keeps 90 px of padding on each side; at 320 px that left an 80 px column and the button broke into 11 lines. */
+	.acm-features.style-5 .group-item {
+		padding: 45px 15px;
+	}
+	.acm-features.style-5 .btn-action .wp-block-button__link {
+		white-space: nowrap;
+	}
+	/* A quote slide is as wide as the column less the 30 px gap, not a fixed 390 px (it was cut at 15 px). */
+	.acm-testimonial.style-3 .testimonial-item {
+		flex-basis: calc(100% - 30px);
+	}
+}
+
+/* ---- statics counters: the source's 100 px padding under 1200 px and its two-column row from 768 to 991 px (measured 03/10/2026) ---- */
+@media (max-width: 1199px) {
+	.acm-statics.style-1 .statics-item {
+		padding: 100px 0;
+	}
+	.acm-statics.style-1 .number {
+		font-size: 36px;
+		line-height: 45px;
+	}
+}
+/* Stacked on phones the source's counter cell is 276 px, one more than the 100 + 75 + 100 of the padded rows. */
+@media (max-width: 767px) {
+	.acm-statics.style-1 .statics-item {
+		padding-bottom: 101px;
+	}
+}
+@media (min-width: 768px) and (max-width: 991px) {
+	.acm-statics.style-1 .row {
+		flex-wrap: wrap;
+	}
+	.acm-statics.style-1 .col {
+		flex: 0 0 50%;
+	}
+}
+
+/* ---- features-intro style-3 (picture half, text half): the source's three layouts (measured 03/10/2026) ----
+   from 1200 px the picture is its own size, centred in its half; 992-1199 px narrows the text to 470 px with half the padding;
+   below 992 px the halves stack, picture first, the picture at the column width and its own proportions. */
+.acm-features.style-3 .features-image img {
+	inset: auto;
+	top: 50%;
+	left: 50%;
+	width: auto;
+	height: auto;
+	max-width: none;
+	transform: translate(-50%, -50%);
+	object-fit: fill;
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+	.acm-features.style-3 .features-content {
+		max-width: 470px;
+		padding: 60px 0 60px 90px;
+	}
+	.content-left .acm-features.style-3 .features-content {
+		margin-left: auto;
+		padding: 60px 90px 60px 0;
+	}
+}
+@media (max-width: 991px) {
+	.acm-features.style-3 {
+		grid-template-columns: 1fr;
+		min-height: 0;
+	}
+	.acm-features.style-3 .features-image,
+	.content-left .acm-features.style-3 .features-image {
+		order: 0 !important;
+		min-height: 0;
+		overflow: visible;
+	}
+	.acm-features.style-3 .features-image img {
+		position: static;
+		transform: none;
+		width: 100%;
+		height: auto;
+		max-width: 100%;
+	}
+	.acm-features.style-3 .features-content,
+	.content-left .acm-features.style-3 .features-content {
+		max-width: 720px;
+		margin: 0 auto;
+		padding: 60px 0;
+	}
+	.content-left .acm-features.style-3 .features-content {
+		padding-right: 90px;
+	}
+}
+@media (max-width: 767px) {
+	.acm-features.style-3 .features-content,
+	.content-left .acm-features.style-3 .features-content {
+		padding: 60px 15px;
+	}
+}
+
+/* ---- teams: two columns from 768 to 1199 px (the source's col-sm-6 / col-md-6; four columns only from 1200 px) ---- */
+@media (min-width: 992px) and (max-width: 1199px) {
+	.acm-teams .jm-cards.acm-teams--cols-4 {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* ---- clients: the source's 100 px cells with 12.5 px padding on phones; the logo keeps 152 px and overflows its cell, centred ---- */
+@media (max-width: 767px) {
+	.acm-cliens .client-item {
+		box-sizing: content-box;
+		height: 100px;
+		padding: 12.5px 0;
+	}
+}
+
+/* ---- hero: the source's 28 px title from 991 px down and its 100/75 px padding on phones (measured on Home Style 2) ---- */
+@media (max-width: 991px) {
+	.acm-hero :where(h1, h2) {
+		font-size: 28px;
+		line-height: 35px;
+	}
+}
+@media (max-width: 767px) {
+	.acm-hero.hero-large {
+		padding: 100px 0 75px;
+	}
+	/* The source's closing call-to-action band: 75 px above and below, 10 px at the sides, and its container keeps 15 px
+	   gutters, so the title wraps to two lines (measured on the front page at 320-576 px). */
+	.acm-hero.hero-normal {
+		padding: 75px 10px;
+	}
+	.acm-hero.hero-normal > .container {
+		padding-inline: 15px;
+	}
+}
+
+/* ---- features-intro style-1: the stacked layout of the source (title column 520 px wide, then the cards) ---- */
+@media (max-width: 991px) {
+	.acm-features.style-1 {
+		grid-template-columns: 1fr;
+	}
+	.acm-features.style-1 > .section-title {
+		max-width: 520px;
+		padding-right: 30px;
+		margin-bottom: 60px;
+	}
+	.acm-features.style-1 .acm-feature-slide.tracy-motion-carousel {
+		margin: 0 15px;
+	}
+}
+@media (max-width: 767px) {
+	.acm-features.style-1 > .section-title {
+		margin-bottom: 30px;
+	}
+}
+
+/* ---- features-intro style-2: boxes with 30 px padding on phones (60/30/30 px from 768 px) ---- */
+@media (max-width: 767px) {
+	.acm-features.style-2 .features-item {
+		padding: 30px;
+	}
+	.style-normal .acm-features.style-2 .features-item {
+		padding: 0;
+	}
+}
+
+/* ---- testimonials style-1 cards on phones: 25 px side padding and picture gap (45 px from 768 px) ---- */
+@media (max-width: 767px) {
+	.acm-testimonial.style-1 .testimonial-img {
+		margin-bottom: 25px;
+	}
+	.acm-testimonial.style-1 h4 {
+		margin-inline: 25px;
+	}
+	.acm-testimonial.style-1 p:not(.action-link-icon, .label-highlight) {
+		margin-inline: 25px;
+	}
+}
+
+/* ---- teams: the "Join Our Team" button is the full column width on phones, with 25 px padding ---- */
+@media (max-width: 767px) {
+	.acm-teams .teams-action {
+		margin-top: 30px;
+	}
+	.acm-teams .teams-action .wp-block-button,
+	.acm-teams .teams-action .wp-block-button__link {
+		width: 100%;
+		box-sizing: border-box;
+		text-align: center;
+	}
+	.acm-teams .teams-action .wp-block-button__link {
+		padding: 25px;
+	}
+}
+
+/* ---- quick contact on phones: one field per row, 15 px apart, the button in its own padded cell (the source's xs list) ---- */
+@media (max-width: 767px) {
+	.jm-quick-contact {
+		margin: 0;
+	}
+	.jm-quick-contact .jm-field,
+	.jm-quick-contact .jm-field--half {
+		flex: 0 0 100%;
+		padding: 0 0 15px;
+	}
+	.jm-quick-contact .jm-field:has(.btn) {
+		flex: 0 0 auto;
+		padding: 35px 7.5px 0;
+	}
+}
+
+/* Below 768 px the intro signature sits 34 px under its title, not 48 (the source's title is one line shorter). */
+@media (max-width: 767px) {
+	.acm-features.style-4 .jm-ft-sign {
+		margin-top: 34px;
+	}
+}
+
+/* From 481 px the source's xs list keeps a 495 px column of 353 px cells, 76 px apart (25 above, 15 below the 36 px input). */
+@media (min-width: 481px) and (max-width: 767px) {
+	.jm-quick-contact {
+		max-width: 495px;
+		padding-top: 25px;
+	}
+	.jm-quick-contact .jm-field,
+	.jm-quick-contact .jm-field--half {
+		flex: 0 0 353px;
+		padding: 25px 15px 15px 0;
+	}
+	.jm-quick-contact .jm-field:has(textarea) {
+		padding-right: 7px;
+	}
+	.jm-quick-contact .jm-field:has(.btn) {
+		flex: 0 0 auto;
+		padding: 35px 7.5px 0;
+	}
+}
+
+@media (max-width: 991px) {
+	.acm-features.style-3 .features-content > .section-title {
+		max-width: 520px;
+	}
+}
+
+/* ---- testimonials style-3 (quote cards): the track sits in the 1170/970/750 px container with 30 px between cards, three cards in view
+   from 992 px, two from 768 px, one below; a pointer under each quote (measured on Home Style 2, 03/10/2026) ---- */
+.acm-testimonial.style-3 {
+	overflow: hidden;
+}
+.acm-testimonial.style-3 .testimonial-content {
+	box-sizing: border-box;
+	width: min(1230px, calc(100% - 30px));
+	margin-inline: auto;
+	overflow: visible;
+}
+.acm-testimonial.style-3 .tracy-motion-track {
+	gap: 0;
+}
+.acm-testimonial.style-3 .testimonial-item {
+	flex: 0 0 calc((100% - 60px) / 3);
+	margin-right: 30px;
+}
+.acm-testimonial.style-3 .lead-desc {
+	position: relative;
+}
+.acm-testimonial.style-3 .lead-desc::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	width: 0;
+	height: 0;
+	margin-left: -15px;
+	border: 15px solid transparent;
+	border-top-color: var(--jm-card);
+	border-bottom: 0;
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+	.acm-testimonial.style-3 .testimonial-content {
+		width: 940px;
+	}
+}
+@media (min-width: 768px) and (max-width: 991px) {
+	.acm-testimonial.style-3 .testimonial-content {
+		width: 720px;
+	}
+}
+@media (max-width: 1199px) {
+	.acm-testimonial.style-3 .lead-desc {
+		padding: 25px;
+		min-height: 0;
+	}
+}
+@media (max-width: 991px) {
+	.acm-testimonial.style-3 .testimonial-item {
+		flex-basis: calc((100% - 30px) / 2);
+	}
+}
+@media (max-width: 767px) {
+	.acm-testimonial.style-3 .testimonial-item {
+		flex-basis: 100%;
+		margin-right: 30px;
+	}
+}
+
+@media (max-width: 767px) {
+	.align-left .acm-features.style-2 > .section-title {
+		margin-bottom: 30px;
+	}
+}
+
+/* ---- slideshow: the titled tabs are a desktop control; below 992 px the source draws plain dots over the picture ---- */
+@media (max-width: 991px) {
+	.jm-slide-tabs {
+		display: none;
+	}
+	.acm-slideshow .tracy-motion-dots {
+		position: absolute !important;
+		width: auto;
+		height: auto;
+		overflow: visible;
+		clip: auto;
+		left: 0;
+		right: 0;
+		bottom: 20px;
+		margin: 0;
+	}
+}
+
+/* ---- testimonials style-2 on phones: a 60 px avatar above the quote ---- */
+@media (max-width: 767px) {
+	.acm-testimonial.style-2 .testimonial-avatar {
+		width: 60px;
+		height: 60px;
+		margin: 0 0 15px !important;
+	}
+	.acm-testimonial.style-2 .testimonial-avatar img {
+		width: 60px;
+		height: 60px;
+	}
+	.acm-testimonial.style-2 .testimonial-content-wrap {
+		padding-top: 0;
+	}
+}
+
+@media (max-width: 767px) {
+	.acm-testimonial.style-2 .testimonial-item {
+		gap: 0;
+		align-items: flex-start;
+	}
+}
+
+/* ---- the dropdown caret of the main menu: the source's 8 x 4 px solid triangle in the link's colour, in a 24 px button (the core chevron is gone) ---- */
+@media (min-width: 992px) {
+	.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle {
+		color: light-dark(var(--jm-heading), var(--ds-c-fg, #cdd4e0));
+		transform: translateX(8px);
+	}
+	.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle svg {
+		display: none;
+	}
+	.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle::before {
+		content: "";
+		width: 0;
+		height: 0;
+		border: 4px solid transparent;
+		border-top-color: currentColor;
+		border-bottom: 0;
+	}
+	.t3-mainnav .wp-block-navigation__container > .current-menu-ancestor > .wp-block-navigation-submenu__toggle,
+	.t3-mainnav .wp-block-navigation__container > .current-menu-item > .wp-block-navigation-submenu__toggle {
+		color: var(--ds-c-accent-text, var(--jm-red));
+	}
+	.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-submenu:hover > .wp-block-navigation-submenu__toggle,
+	.t3-mainnav .wp-block-navigation__container > .wp-block-navigation-submenu:focus-within > .wp-block-navigation-submenu__toggle {
+		color: light-dark(var(--ds-c-accent-text, var(--jm-red)), var(--ds-c-fg, #cdd4e0));
+	}
+}
+
+/* ---- teams with three columns (the page previews of the home page): a 480 px frame (368 px on phones) over the picture at its own
+   proportions, top-aligned; two columns below 1200 px, one below 768 px (measured on the home page, 03/10/2026) ---- */
+.acm-teams .jm-cards.acm-teams--cols-3 .avatar {
+	height: 480px;
+	overflow: hidden;
+}
+.acm-teams .jm-cards.acm-teams--cols-3 .avatar img {
+	display: block;
+	width: 100%;
+	height: auto;
+	object-fit: fill;
+}
+@media (max-width: 1199px) {
+	.acm-teams .jm-cards.acm-teams--cols-3 {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+@media (max-width: 767px) {
+	.acm-teams .jm-cards.acm-teams--cols-3 {
+		grid-template-columns: 1fr;
+	}
+	.acm-teams .jm-cards.acm-teams--cols-3 .avatar {
+		height: 420px;
+	}
+}
+@media (max-width: 480px) {
+	.acm-teams .jm-cards.acm-teams--cols-3 .avatar {
+		height: 368px;
+	}
+}
+
+/* ---- about-us team grid: the source's row has a -15 px bottom margin that pulls the section padding up on phones ---- */
+@media (max-width: 767px) {
+	body.jm-route-about-us .acm-teams.style-1 {
+		margin-bottom: -14px;
+	}
+}

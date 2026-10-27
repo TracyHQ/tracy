@@ -1,0 +1,311 @@
+# EmDash SEO Plugin
+
+[![CI](https://github.com/jdevalk/emdash-plugin-seo/actions/workflows/ci.yml/badge.svg)](https://github.com/jdevalk/emdash-plugin-seo/actions/workflows/ci.yml)
+[![Lint](https://github.com/jdevalk/emdash-plugin-seo/actions/workflows/lint.yml/badge.svg)](https://github.com/jdevalk/emdash-plugin-seo/actions/workflows/lint.yml)
+[![npm](https://img.shields.io/npm/v/@jdevalk/emdash-plugin-seo)](https://www.npmjs.com/package/@jdevalk/emdash-plugin-seo)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178c6.svg)](https://www.typescriptlang.org/)
+[![EmDash Plugin](https://img.shields.io/badge/EmDash-plugin-orange.svg)](https://github.com/emdash-cms/emdash)
+
+An SEO plugin for [EmDash CMS](https://github.com/emdash-cms/emdash) that generates meta tags, Open Graph, Twitter Cards, canonical URLs, robots directives, and JSON-LD schema markup via the `page:metadata` hook.
+
+> **Requires `emdash@^0.5.0`.** Earlier EmDash versions are missing the `ContentItem.slug`/`status`/`locale` fields and the `where` filter on `ContentListOptions` that `llms.txt`, schema map, and Fuzzy Redirects rely on.
+>
+> **Fuzzy Redirects** suggestions work, but automatic source-path capture on 404s is still tracked in [emdash-cms/emdash#525](https://github.com/emdash-cms/emdash/discussions/525) — until that lands, you'll see the `/404` path in the log rather than the original requested URL.
+
+## Features
+
+- **Meta descriptions** with configurable fallback chain
+- **Meta robots** with `max-snippet`, `max-image-preview`, and `max-video-preview` directives; `noindex` for search/utility pages; omitted on 404
+- **Canonical URLs** — absolute, normalized, with trailing slash and pagination support
+- **Open Graph** — `og:title` without site name suffix, `og:type: article` for content pages, full set of OG tags
+- **Twitter Cards** — `summary_large_image` when image present, site handle from settings
+- **JSON-LD schema graph** with linked nodes:
+  - `Person` or `Organization` (configurable), with `publishingPrinciples`
+  - `WebSite` with `SearchAction` and optional `SiteNavigationElement`
+  - `Blog` entity (when blog URL is configured)
+  - `WebPage` (`CollectionPage` for archives, `ProfilePage` for `/about`), with `about`, copyright, and license fields
+  - `BlogPosting` with author `Person` (for content pages), linked to `Blog` when configured
+  - `ImageObject` for primary page images
+  - `BreadcrumbList` with a back-reference from `WebPage`
+- **Breadcrumbs** — derived from the URL path by default, with segment label overrides (`/blog/` → "Blog") and per-`pageType` rule overrides both editable in the admin UI. `@id` scheme matches [joost.blog](https://joost.blog) via `@jdevalk/seo-graph-core`
+- **hreflang alternates** — for multilingual EmDash sites (Astro `i18n` + `translation_group`), one `<link rel="alternate" hreflang="…">` per published sibling plus an automatic `x-default`, with BCP 47 tag normalization (`fr-ca` → `fr-CA`). Zero cost on single-locale sites
+- **llms.txt** *(experimental)* — exposes an index of published content at the plugin's `llms/txt` route, following the small-form [llms.txt spec](https://llmstxt.org). Enabled by default; flip the setting to disable. Only the plain `llms.txt` file is supported; the `llms-full.txt` variant is not implemented
+- **Schema map** *(experimental)* — exposes a list of every published URL backed by schema markup at the plugin's `schema/map` route, ready to be wired to a `/schemamap.xml` Astro endpoint for agent/crawler discovery
+- **Fuzzy Redirects** — admin tool that mines the core 404 log, ranks live URLs by path similarity (Levenshtein + token overlap + last-segment match), and lets you one-click create a 301 redirect for the best target. Catches moved slugs, typos in inbound links, and punctuation drift without having to write regex rules
+- **NLWeb `<link>` tag** — when the **NLWeb endpoint URL** setting is set, every rendered page carries `<link rel="nlweb" href="…">` advertising the site's conversational endpoint for agent discovery. Requires EmDash with [emdash-cms/emdash#523](https://github.com/emdash-cms/emdash/pull/523) merged; older versions drop the contribution silently
+- **IndexNow** — on publish, on edits to an already-published page, on unpublish, and on permanent delete, submits the affected URL to [IndexNow](https://www.indexnow.org) so Bing, Yandex, Seznam, Naver, and Yep recrawl immediately. Opt-in via a single toggle in the settings UI; the key is generated and persisted automatically on first use
+- **Admin settings UI** — auto-generated from `settingsSchema` for configuring Person/Organization identity, social profiles, title separator, and default description
+
+## Installation
+
+Copy the `src/` directory into your EmDash theme's `plugins/seo/` directory, or install from this repo:
+
+```bash
+# In your emdash theme directory
+cp -r path/to/emdash-plugin-seo/src plugins/seo/src
+cp path/to/emdash-plugin-seo/package.json plugins/seo/package.json
+```
+
+## Usage
+
+Register the plugin in your `astro.config.mjs`:
+
+```typescript
+import { seoPlugin } from "./plugins/seo/src/index.ts";
+
+export default defineConfig({
+  integrations: [
+    emdash({
+      plugins: [seoPlugin()],
+    }),
+  ],
+});
+```
+
+Then configure your site identity and social profiles in the EmDash admin under **Plugins > SEO > Settings**.
+
+## Settings
+
+| Setting | Description |
+|---------|-------------|
+| Site represents | Person or Organization |
+| Title separator | Character between page title and site name (em dash, pipe, hyphen, dot) |
+| Default meta description | Fallback for pages without their own |
+| Person name / bio / image / job title / URL | Person schema fields |
+| Organization name / logo URL | Organization schema fields |
+| Social URLs | Twitter/X, Facebook, LinkedIn, Instagram, YouTube, GitHub, Bluesky, Mastodon, Wikipedia |
+| Publishing principles URL | Link to editorial policy page |
+| Copyright year | Year copyright was first asserted |
+| License URL | Content license (e.g. Creative Commons) |
+| Blog URL / name | Enables `Blog` schema entity linked to `BlogPosting` nodes |
+| Navigation items | JSON array of `{name, url}` for `SiteNavigationElement` schema |
+| Breadcrumb segment labels | `segment → display label` overrides (e.g. `blog → Blog`) |
+| Breadcrumb page type rules | Per-`pageType` ordered crumb lists, JSON-edited, for themes that need full control over trail shape |
+| IndexNow submission | Submit published/unpublished URLs to IndexNow. Disabled by default |
+| llms.txt (experimental) | Expose an `llms.txt` index of published content. Enabled by default |
+| llms.txt site description | Optional blockquote text at the top of `llms.txt`. Falls back to the default meta description |
+
+## Multilingual sites (hreflang)
+
+When your site has more than one locale configured in Astro's `i18n` block and content entries are linked via `translation_group`, the plugin automatically emits hreflang annotations for each content page. No configuration required — it activates as soon as `isI18nEnabled()` returns true.
+
+```js
+// astro.config.mjs
+export default defineConfig({
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "fr", "nl"],
+    routing: { prefixDefaultLocale: false },
+  },
+  integrations: [emdash({ plugins: [seoPlugin()] })],
+});
+```
+
+A 3-locale post at `/hello/`, with published French (`/fr/bonjour/`) and Dutch (`/nl/hallo/`) translations in the same `translation_group`, renders:
+
+```html
+<link rel="alternate" hreflang="en"        href="https://example.com/hello/">
+<link rel="alternate" hreflang="fr"        href="https://example.com/fr/bonjour/">
+<link rel="alternate" hreflang="nl"        href="https://example.com/nl/hallo/">
+<link rel="alternate" hreflang="x-default" href="https://example.com/hello/">
+```
+
+Only published siblings are included. Drafts, scheduled entries, and siblings whose locale is no longer in your Astro config are dropped. If the page has fewer than two published locales, no hreflang tags are emitted (a single-locale page has no meaningful alternates).
+
+### Region-specific locales (`fr-CA` vs `fr-FR`)
+
+If you need region-specific hreflang, use the BCP 47 code as the locale path directly:
+
+```js
+i18n: {
+  defaultLocale: "en",
+  locales: ["en", "fr-ca", "fr-fr"],
+}
+```
+
+URLs become `/fr-ca/…` and `/fr-fr/…`, and the emitted `hreflang` attributes are normalized to conventional casing (`fr-CA`, `fr-FR`). EmDash core currently drops Astro's object-form `{ path, codes }` shape at the integration boundary, so the code-as-path workaround is the supported path for region tags in this plugin version.
+
+## IndexNow
+
+When enabled via the **IndexNow submission** setting, the plugin submits
+the canonical URL of a content item whenever it changes in a way search
+engines should re-crawl:
+
+- **Published, or edited while published** (`content:afterPublish` +
+  `content:afterSave`) — so both first publish and later edits to a live
+  page are picked up. A per-URL 60-second debounce collapses the duplicate
+  these two fire at the publish moment and absorbs autosave bursts.
+- **Unpublished** (`content:afterUnpublish`) — pings the now-dead URL so
+  engines see the 404/410.
+- **Permanently deleted** (`content:afterDelete`, only when the delete is
+  permanent rather than a trash) — the delete event carries no slug, so
+  published saves cache an `id → url` mapping in plugin KV that the delete
+  handler resolves, submits, and then clears.
+
+A 32-character hex key is minted on first use and persisted in plugin KV.
+
+The front-end Astro site must serve the key-verification file at
+`/<key>.txt`. Fetch the key from the plugin's `indexnow/key` route and
+wire a route on the Astro side using
+[`createIndexNowKeyRoute`](https://www.npmjs.com/package/@jdevalk/astro-seo-graph):
+
+```ts
+// src/pages/[your-key-here].txt.ts
+import { createIndexNowKeyRoute } from '@jdevalk/astro-seo-graph';
+
+export const GET = createIndexNowKeyRoute({ key: 'your-key-here' });
+```
+
+> **Deploy the key file before enabling the toggle.** IndexNow verifies
+> host ownership on every submission by fetching
+> `https://<host>/<key>.txt`. Submissions sent before the key file is
+> reachable in production are rejected (HTTP 403) and the key gets
+> marked invalid — you'll have to delete the stored key from plugin KV
+> and mint a new one. Ship the Astro route, deploy, confirm the `.txt`
+> loads over HTTPS, *then* flip the **IndexNow submission** toggle.
+
+When rejections occur, the plugin logs on `ctx.log.warn` but does not
+throw — transitions still succeed locally.
+
+## llms.txt (experimental)
+
+> **Experimental.** Shape, settings, and exposed API may change in a
+> minor release. Only the small-form `llms.txt` is implemented; the
+> `llms-full.txt` variant is out of scope for now.
+
+The plugin generates an [`llms.txt`](https://llmstxt.org) index of all
+published content, grouped by collection label, and exposes it on the
+plugin route `llms/txt`. It's on by default — disable it via the
+**llms.txt (experimental)** setting if you don't want the file exposed. Each collection contributes one `##` section of
+bulleted `- [Title](URL): description` entries; only collections with a
+`urlPattern` are included.
+
+Serve it from your Astro site by creating an endpoint that proxies the
+plugin route:
+
+```ts
+// src/pages/llms.txt.ts
+import type { APIRoute } from "astro";
+
+export const GET: APIRoute = async ({ request }) => {
+  const origin = new URL(request.url).origin;
+  const res = await fetch(`${origin}/_emdash/api/plugins/seo/llms/txt`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  });
+  const { enabled, body } = (await res.json()) as { enabled: boolean; body: string };
+  if (!enabled) return new Response("Not found", { status: 404 });
+  return new Response(body, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+};
+```
+
+Alternatively, import `buildLlmsTxt` from this plugin and assemble the
+body yourself from `getEmDashCollection()` results if you want full
+control over sectioning, ordering, or filtering.
+
+## Fuzzy Redirects
+
+The plugin ships an admin page (**SEO → Fuzzy Redirects**) that turns
+the core 404 log into a prioritized redirect work queue. For every
+path that's been requested and returned 404, the tool:
+
+1. Fetches the current list of published URLs via the plugin's own
+   `schema/map` route.
+2. Scores each live URL against the 404'd path using a composite
+   similarity metric (Levenshtein on the full path, token-overlap
+   Jaccard, and a tokenized last-segment match bonus).
+3. Shows the top matches with their scores and a free-text override
+   field, and a **Create redirect** button that creates a 301 via the
+   core `/_emdash/api/redirects` endpoint.
+
+A minimum-score slider tunes aggressiveness — drop it to see weaker
+matches, raise it to hide noise. Created redirects are grouped under
+`seo-fuzzy-suggester` so you can audit or bulk-remove them later.
+
+No configuration needed; the tool appears as soon as the plugin is
+installed and the 404 log has entries.
+
+> **Interim implementation.** The tool currently requires manual
+> review before a redirect is created. A future version will use the
+> proposed `notfound` hook ([emdash-cms/emdash#525](https://github.com/emdash-cms/emdash/discussions/525))
+> to suggest-or-apply redirects automatically on 404 — same matching
+> logic, automatic trigger.
+
+## Schema map (experimental)
+
+> **Experimental.** Shape and exposed API may change in a minor
+> release. Per-URL schema endpoints (`/schema/<slug>.json`) are not
+> implemented yet — they depend on a core helper being discussed
+> upstream.
+
+Every published page on an EmDash site carries a JSON-LD schema graph
+in its `<head>`. Agents and crawlers that want to enumerate those pages
+without scraping every HTML document need a *schema map* — the same
+idea as `sitemap.xml`, but scoped to "URLs that have structured data."
+
+The plugin exposes the raw list at `schema/map` as JSON:
+
+```json
+{
+  "items": [
+    { "url": "https://example.com/blog/hello/", "collection": "blog", "updatedAt": "2026-02-01T00:00:00Z" },
+    { "url": "https://example.com/about/",      "collection": "pages", "updatedAt": "2026-01-03T00:00:00Z" }
+  ]
+}
+```
+
+Wire it to `/schemamap.xml` at your site root with a small Astro
+endpoint. The route is public — no auth needed on the fetch:
+
+```ts
+// src/pages/schemamap.xml.ts
+import type { APIRoute } from "astro";
+
+interface SchemaMapEntry {
+  url: string;
+  collection: string;
+  updatedAt: string;
+}
+
+export const GET: APIRoute = async ({ request }) => {
+  const origin = new URL(request.url).origin;
+  const res = await fetch(`${origin}/_emdash/api/plugins/seo/schema/map`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  });
+  const { items } = (await res.json()) as { items: SchemaMapEntry[] };
+
+  const urls = items
+    .map(
+      ({ url, updatedAt }) =>
+        `  <url><loc>${url}</loc><lastmod>${updatedAt}</lastmod></url>`,
+    )
+    .join("\n");
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>`;
+
+  return new Response(xml, {
+    headers: { "Content-Type": "application/xml; charset=utf-8" },
+  });
+};
+```
+
+## Requirements
+
+Requires EmDash with support for running `page:metadata` hooks on public pages for anonymous visitors (fixed in [emdash-cms/emdash#119](https://github.com/emdash-cms/emdash/pull/119)).
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/jdevalk/.github/blob/main/CONTRIBUTING.md) for guidelines.
+
+If you find a security vulnerability, please follow the [security policy](SECURITY.md) instead of opening a public issue.
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.

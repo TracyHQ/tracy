@@ -1,0 +1,20 @@
+{
+  "id": "REG-PR-1656-sync-menu-wordpress",
+  "kind": "fix",
+  "title": "An imported WordPress site offers Sync from live in its More menu, like an imported Joomla site; EmDash and sites not imported do not",
+  "pr": 1656,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: node --test packages/site/tracy-my-sites/test/site-toolbar-state.test.mjs"],
+  "expect": [
+    "S1: syncsFromLive is true for imported joomla and wordpress, false for emdash and for a site not imported"
+  ],
+  "selectors": {
+    "client": "site-toolbar-state.ts SYNC_FROM_LIVE_PLATFORMS syncsFromLive; index.tsx More menu row"
+  },
+  "evidence": "tasks/nhat-ky/2026-10-24-sync-menu-wordpress.md",
+  "fence": "Every platform the sync door serves is offered in the menu, from one list",
+  "run": { "cmd": ["node", "--test", "packages/site/tracy-my-sites/test/site-toolbar-state.test.mjs"] }
+}

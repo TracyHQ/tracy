@@ -1,0 +1,64 @@
+{
+  "color": {
+    "hot-signal": {
+      "$value": "#ff2c6b",
+      "$type": "color",
+      "$description": "Hot Signal — Red action color for filled buttons, selected navigation states, and focused conversion moments."
+    },
+    "carbon": {
+      "$value": "#191818",
+      "$type": "color",
+      "$description": "Carbon — Primary text, heading text, border lines, icon strokes — near-black with a faint warm cast; the dominant neutral carrying all structural information"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Light neutral action fill for buttons on dark surfaces."
+    },
+    "concrete": {
+      "$value": "#e8e6e3",
+      "$type": "color",
+      "$description": "Concrete — Page background, hero canvas, section bands — the warm neutral that defines the site's atmosphere; slightly desaturated and warm-toned, not cool gray"
+    },
+    "ash": {
+      "$value": "#8c8b8b",
+      "$type": "color",
+      "$description": "Ash — Muted helper text, secondary borders, caption labels — warm mid-gray for non-load-bearing information"
+    },
+    "smoke": {
+      "$value": "#808080",
+      "$type": "color",
+      "$description": "Smoke — Tertiary text, disabled states, inactive borders — sits between Ash and Carbon in the warm-gray scale"
+    },
+    "slate": {
+      "$value": "#d1d5dc",
+      "$type": "color",
+      "$description": "Slate — Cooler secondary card surface, placeholder or empty-state panels — the only cool-tinted neutral, used sparingly to separate distinct UI layers"
+    },
+    "ink": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Ink — Pure black for icons and link borders where maximum contrast is required — used selectively, not as a general text color"
+    }
+  },
+  "font": {
+    "zagma": {
+      "$value": "Zagma",
+      "$type": "fontFamily",
+      "$description": "Display and heading typeface — all hero headlines, section titles, and large editorial copy. The 0.85 line-height at 150px is the signature: type stacks into tight, sculptural blocks rather than airy paragraphs. Negative tracking tightens with scale (from -0.020em at 40px to -0.048em at 150px) to keep large glyphs from feeling spaced-out."
+    },
+    "neuehaas": {
+      "$value": "NeueHaas",
+      "$type": "fontFamily",
+      "$description": "UI and body text — nav items, button labels, captions, helper text, link text. Set at micro sizes (10–15px) with slightly open tracking (+0.010em to +0.020em) to stay legible at small scale. Weight 500 reserved for nav and button emphasis; 400 for everything else."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://waabi.ai",
+      "siteName": "Waabi",
+      "extractedAt": "2026-06-03T21:48:39.751Z",
+      "variant": "compact"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "c406697b-677f-40c7-a3a2-10ea545278f1",
+  "status": "complete",
+  "name": "International Magic",
+  "url": "https://styles.refero.design/style/c406697b-677f-40c7-a3a2-10ea545278f1",
+  "sourceWebsite": "https://intmagic.com",
+  "extractedAt": "2026-06-03T21:16:36.868Z",
+  "capturedAt": "2026-10-08T05:17:10.475021+00:00",
+  "theme": "dark",
+  "industry": "agency",
+  "description": "midnight gallery wall — a single spotlight, a piece of work, and a wall of black velvet",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/98f0a0d8-79ef-4538-bd79-dac1804e1d5e.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/f63b9d4c-a112-4002-894f-0fb4dbfc4e16.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/a035246f-d267-408a-8e92-f7b898bf77fb.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/843d5060-2ecd-4684-9c09-cb76e36a4c38.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/7412f5a5-24ab-4381-9f67-16db8f51c00e.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "bcd86ff72a29c341f61d41f010e6bd57aa096a74f64a3fef04e8dd1723107828",
+      "bytes": 15199
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "223fbccf16b5e7fce1736a8c891009e717ff0f302a3208a4b5be4ddbfe7c2083",
+      "bytes": 24702
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "0b2fd2575a3f832f466a17b0c7499ee758d33ca2e4629fab02627469d12a22f4",
+      "bytes": 13188
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "ac47b9e328a7c75e47973c80650e8f3542459b62eccdb5521dc2d20a86267fe5",
+      "bytes": 6761
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "2fd2080336b3b48d1e33db1f55d454e4d469ec4fe5ab23e4eed695c475834b4a",
+      "bytes": 10146
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "bc19670c3ce8f1a11571e5dbb81d2e024a81683f7649278b6f41a9b41731aaee",
+      "bytes": 2354
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "c779de89297035f837a97e823e377fb7a245ee8e79f394692d807fe809334358",
+      "bytes": 386
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c36e171b68abc21a205304e9fd5c0344a606148c3cb72e5e2a6c9dc71a0f8787",
+      "bytes": 403
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "d6404afc7c87924ccc0349d761b7592bc234114a2969cfb68c355d7f0623c0d1",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "9d3c5911a39a3188ecc44c00d0b702701dd243869518defc2882e274c0c1e317",
+      "bytes": 38992
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "5c912b6f2845d4a31265c5f30c1287ef320b4882b9acbf64a7fc82d81d6717ef",
+      "bytes": 19941
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "f90db29cc6b240e65dbb73493923ad0356dd2a2a2bb9412d916d98314d6782d7",
+      "bytes": 27845
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8486392948428f41b1b7830f90c183a999d0c4c6b886ae0f34cd22ce0c650f18",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "ff913df0783a354f8773c3214f0e5046ab8fc1afa96754b344b2970e8b4f00e4",
+      "bytes": 1094
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "443d13c1a54baf4cef0c5b15497af10797cc453e61a2593e344006d9d4447132",
+      "bytes": 1630
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "004f4856-4b01-4c23-a9fb-866303d5013b",
+    "02610b06-d16e-47bd-a1ea-18979a9ed4f5",
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "1775bf6a-afdd-48b1-8435-b92ec585c674",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "4f76756b-0f06-47a3-baad-d3846b23e132",
+    "565bfc50-3a19-4224-9a4c-125edaeb7bef",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5b405eec-67ba-4dd0-8dab-ace000151a78",
+    "64ba8e77-d1be-48a2-a47d-bdd46e139b8f",
+    "6eb778ca-6808-4cc6-ac8a-7beea5a25c36",
+    "8875b14e-c59a-492f-8780-8027a480f21c",
+    "8e26bf8a-44b8-4fe1-9b4b-188dd5827c0f",
+    "a6b2d6dc-7d71-4d2d-af3e-b34a8b665744",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "bd395e2e-58a8-4626-acfa-9be8d6cdf604",
+    "c406697b-677f-40c7-a3a2-10ea545278f1",
+    "e287e026-3433-4a1d-9b23-9a65f8b9c138",
+    "e2e9b80c-b548-4f86-a4d7-7a6b07d1c2e1",
+    "f1b76a42-050e-4c9e-96e3-a77fbd718c68"
+  ]
+}

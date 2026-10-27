@@ -1,0 +1,15 @@
+:root {
+  /* Colors */
+  --color-ink-black: #000000;
+  --color-paper-white: #ffffff;
+  --color-canvas-gray: #f2f2f2;
+  --color-hairline-gray: #e5e7eb;
+  --color-body-gray: #5a5e62;
+  --color-muted-gray: #b2b2b2;
+  --color-deep-navy: #0f1ea1;
+  --color-sky-blue: #8fbaff;
+  --color-pale-lavender: #cfd2ec;
+
+  /* Typography — Font Families */
+  --font-soehne: 'Soehne', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

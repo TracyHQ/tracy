@@ -1,0 +1,54 @@
+{
+  "color": {
+    "bone-cream": {
+      "$value": "#f6f4ee",
+      "$type": "color",
+      "$description": "Bone Cream — Page background, card surfaces, button fills, input fields. The signature warm off-white that defines the entire visual field — never pure white, always slightly toasted"
+    },
+    "true-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "True Black — Primary text, hairline borders, icons, nav, button outlines, footer. Drawn at full saturation — no softened grays for type"
+    },
+    "warm-ash": {
+      "$value": "#7b7a77",
+      "$type": "color",
+      "$description": "Warm Ash — Secondary text, muted metadata, breadcrumb separators, helper labels. Sits at AA contrast against bone cream for body text"
+    },
+    "moss-signal": {
+      "$value": "#298018",
+      "$type": "color",
+      "$description": "Moss Signal — Green outline accent for tags, dividers, and focused UI edges. Use as a supporting accent, not as a status color"
+    }
+  },
+  "font": {
+    "studiopro": {
+      "$value": "studioPro",
+      "$type": "fontFamily",
+      "$description": "All interface type — body, nav, buttons, headings, product names, prices, footer. The custom neo-grotesque carries the entire identity. Weight 600 for product names and section headers, 700 for the centered wordmark, 400 for everything else. The 'case' feature and full alternates set (ss03, ss06–ss09) are signature — they reshape the letterforms subtly to feel printed rather than rendered."
+    },
+    "arial": {
+      "$value": "Arial",
+      "$type": "fontFamily",
+      "$description": "Arial — detected in extracted data but not described by AI"
+    },
+    "times": {
+      "$value": "Times",
+      "$type": "fontFamily",
+      "$description": "Times — detected in extracted data but not described by AI"
+    },
+    "metropolis": {
+      "$value": "Metropolis",
+      "$type": "fontFamily",
+      "$description": "Metropolis — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://baggu.com",
+      "siteName": "Baggu",
+      "extractedAt": "2026-06-03T20:06:53.266Z",
+      "variant": "compact"
+    }
+  }
+}

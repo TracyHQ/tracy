@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "ccbb774f-d1a9-4cc6-b1be-31379ba0baf1",
+  "status": "complete",
+  "name": "Sandclock",
+  "url": "https://styles.refero.design/style/ccbb774f-d1a9-4cc6-b1be-31379ba0baf1",
+  "sourceWebsite": "https://www.sandclock.org",
+  "extractedAt": "2026-06-03T19:24:02.480Z",
+  "capturedAt": "2026-10-08T05:17:37.743270+00:00",
+  "theme": "dark",
+  "industry": "crypto",
+  "description": "DeFi command terminal at midnight — green signal lights on a matte black console",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/d3f8d559-15e9-4936-8e7d-e3257b0802b6.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/2cea6882-377a-4b9a-81e0-8113d9aaaac2.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/2bb658fd-3b65-44ac-aa3c-b3f88669962f.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/b8b2e649-9115-4e70-9ab9-ee5865da6145.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/958f43d5-68dd-488c-aaa7-0511f290454f.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "645280c9a2f958974e07a7b96d2bce0671ad9a7362e3adfca9843b8064813db0",
+      "bytes": 18704
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "56cefa8f9f905e1a7f52c310bd108d9216aae6d324c19885a49b084a8907aa75",
+      "bytes": 78937
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "282cc3487ded9c89b868172676cc174cb1fcb210cb1836ad8d5f7c157c183aa5",
+      "bytes": 15653
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "efcf1e25f190843da1ca7b778bba519ac8ffc0d1997edda9d1c015bdcd110225",
+      "bytes": 8061
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "e22525a800755b91328fea69c0cb2e9247687371fb194fddcba3fd28cf36d695",
+      "bytes": 12342
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "a5319956180d19deb493267ffffdbb33d6827e08efc99c4229ed9afd039605cd",
+      "bytes": 2946
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "815d06d8b49016bd9345f8e02c71c2b01f874dd60152e040312715ae18839f1b",
+      "bytes": 569
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "c349a664dec71ebe5dc78a87a77da59a518876bb9731aac83c5bbfe1eacc2c57",
+      "bytes": 586
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "a6a37041f97b3acb0b625a5d3e4f9ebe436a1d27d683a65bf71e0a5aa4b28920",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "75f96b9babaabcc62dd64d80d7d70c20ca6bf48de3e3d427b85d293627648343",
+      "bytes": 43040
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "31a5b200766472925c85b3f8882c2d4a7b04b1a016c136f9972d79c993b16a1d",
+      "bytes": 22393
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "28ee8e2b7375f2bebec0e5a61d25a6881194b62f101836c4c6a5ccf790e71552",
+      "bytes": 37574
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "8bdf89fdd72cb5136f1ccb25bf5eb01c7f1c9fa7645e43653c93e48f49d21aec",
+      "bytes": 473
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "647d3a603decb3fc999e403cc43e7fc2414637257ee79c67a018025df578dfab",
+      "bytes": 1509
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "01dc66dad6c13ea12e6616b145ba68f564831a5043973a2024228e0141115d14",
+      "bytes": 1989
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0acef011-07da-4416-b874-ccdd675140f6",
+    "0e971626-ca51-45ba-acf6-35a53c561b2c",
+    "0ed40a3a-2541-4ffa-acdd-f1170858bc5d",
+    "109e52eb-e70f-493e-9527-84d672b00c7b",
+    "10a77cbd-7847-4e1b-a09e-447ebad0f7c6",
+    "11fed738-a5b5-4509-b4e2-3295ceab3604",
+    "1ad4f49f-275a-4268-8ed1-677dc3c6e475",
+    "21cfe0c1-778d-4613-9f47-a5718eb929b3",
+    "227ff379-9b46-44fc-8ff1-37e0472239a6",
+    "46bca11b-6920-4d70-8dd7-c4e3dbc123c7",
+    "573fe0d5-8f0b-4c59-bae3-3f2e67cc63f0",
+    "5d273906-0110-48cf-99cd-63a72eb9c586",
+    "60ee0386-cfad-409a-8310-762bfc2e4816",
+    "61f1902f-6da3-4af7-b046-3b08bc1377f6",
+    "a0630421-7b66-48b4-aa14-6194a3b2c2b9",
+    "a76ec6ba-20b3-495c-9d89-1e58281e79e7",
+    "a79b6a74-6b67-4c9f-9d69-bff80869b943",
+    "c75603c7-492d-4c26-9744-9acc22fe6225",
+    "ccbb774f-d1a9-4cc6-b1be-31379ba0baf1",
+    "d271a6c4-942f-4abf-a3de-66795f15f031",
+    "f4636c5b-1342-48b2-b9b1-a82e2182440e"
+  ]
+}

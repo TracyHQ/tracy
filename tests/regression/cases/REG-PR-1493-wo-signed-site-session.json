@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-1493-wo-signed-site-session",
+  "kind": "feat",
+  "title": "A durable WO chat is only allocated through the HMAC-signed door; the browser cannot pick a new ID",
+  "pr": 1493,
+  "area": "website-opportunities/outreach-v3",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Call chat allocation with and without a signature, with a wrong role/folder/preset; retry with a fresh nonce; send a new ID over browser RPC.",
+    "Use an ID granted to another seat; revoke while a native RPC is pending; call an old/missing web allocator."
+  ],
+  "expect": [
+    "Only the owner of exactly one site folder is allocated; a retry keeps the same ID and sends no prompt; a new browser ID gets 403 and no session/create reaches upstream.",
+    "A grant/revoke conflict gives no new grant and no successful token/cookie.",
+    "The web never falls back to a random chat or raw browser RPC when the signed allocator fails or is too old.",
+    "Before the prompt there must be a baseline of the same seat holding exactly the chat and folder; missing, closed or wrong-folder means no prompt."
+  ],
+  "selectors": {
+    "files": "vendor/tracy/dsh-passwords/src/tracy/site-session.ts, vendor/tracy/dsh-passwords/src/tracy/seat-door.ts, apps/tracy-web/src/lib/site-session-ahead.js"
+  },
+  "fence": "HMAC+nonce, owner/site scope, native identity, exclusive grant and a credential-version re-check after the RPC; the core browser fence is unchanged.",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "vendor/tracy/dsh-passwords/test/tracy/site-session.test.ts",
+      "vendor/tracy/dsh-passwords/test/tracy/native-session.test.ts",
+      "vendor/tracy/dsh-passwords/test/tracy/seat-door.test.ts",
+      "apps/tracy-web/test/site-session-ahead.test.mjs"
+    ],
+    "tests": [
+      "signed site allocation holds one identity across retries; browser-chosen IDs remain refused",
+      "a site allocation cannot grant another account",
+      "revocation while native site allocation is waiting prevents a grant and token",
+      "site allocation accepts only one signed owner folder and the server-held WO identity",
+      "a durable site session uses the signed allocation twice with one identity and fresh nonces",
+      "an unavailable or older signed site allocator never falls back to a random browser chat",
+      "a server-held chat must appear in the same seat baseline and exact site folder",
+      "closed and missing baselines fail closed with a bounded wait",
+      "prompt waits for the filtered baseline and never sends for a foreign folder"
+    ]
+  }
+}

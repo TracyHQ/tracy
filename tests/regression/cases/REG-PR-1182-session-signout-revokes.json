@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1182-session-signout-revokes",
+  "kind": "fix",
+  "title": "Sign-out ends the session on the server: a copied tracy_sess cookie no longer signs in or renews, while sessions minted before the change keep working until they expire",
+  "pr": 1182,
+  "area": "identity/session",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --test --test-reporter=tap apps/tracy-web/test/session-revocation.test.mjs apps/tracy-web/test/session.test.mjs",
+    "S2: Read the lines for the tests named in expect."
+  ],
+  "expect": [
+    "'a cookie used after sign-out no longer signs anyone in' is ok: GET /auth/me with the cookie answers the email, POST /auth/signout with it answers 200, the same cookie on GET /auth/me then answers email null (pre-fix: still the email, for up to 72 h).",
+    "'a signed-out session cannot be renewed back to life' is ok: after sign-out and more than an hour, GET /auth/me answers email null and sets no cookie.",
+    "'a renewed cookie belongs to the same sign-in' is ok: signing out with the pre-renewal cookie also ends the renewed one.",
+    "'signing out one sign-in leaves another sign-in of the same person alone' is ok.",
+    "'a token minted before jti existed is still accepted until it expires' is ok, and 'renewing an old jti-less token hands out one that sign-out can end' is ok.",
+    "'the wire format is the one every signed-in browser is already holding' is ok."
+  ],
+  "selectors": {
+    "doors": "POST /auth/signout, GET /auth/me",
+    "function": "apps/tracy-web/src/lib/session.js mintSession/readSession/revokeSessionsIn; apps/tracy-web/src/lib/session-revocation.js"
+  },
+  "evidence": "E2E 04/10/2026 J1.3 (tasks/evidence/e2e-full-dev/2026-10-04): an old tracy_sess cookie still signed in after POST /auth/signout on cowork.tracy.site.",
+  "fence": "Every token carries a jti kept across renewals; sign-out writes it to session_revocation (memory book without a database); every read of the cookie through lib/session.js refuses a revoked jti, so every door and the renewal in /auth/me refuse it. jti-less tokens are not revocable and expire on their own clock.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/session-revocation.test.mjs",
+      "apps/tracy-web/test/session.test.mjs"
+    ],
+    "tests": [
+      "a cookie used after sign-out no longer signs anyone in",
+      "a signed-out session cannot be renewed back to life",
+      "a renewed cookie belongs to the same sign-in",
+      "signing out one sign-in leaves another sign-in of the same person alone",
+      "a token minted before jti existed is still accepted until it expires",
+      "renewing an old jti-less token hands out one that sign-out can end",
+      "the wire format is the one every signed-in browser is already holding"
+    ]
+  }
+}

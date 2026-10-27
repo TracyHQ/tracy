@@ -1,0 +1,79 @@
+{
+  "color": {
+    "signal-pink": {
+      "$value": "#ff0169",
+      "$type": "color",
+      "$description": "Signal Pink — Gradient origin — Instagram brand gradient start point, the chromatic anchor in the system"
+    },
+    "plasma-magenta": {
+      "$value": "#d300c5",
+      "$type": "color",
+      "$description": "Plasma Magenta — Gradient midpoint — bridges hot pink into ultraviolet, used in the brand gradient only"
+    },
+    "ultraviolet": {
+      "$value": "#7638fa",
+      "$type": "color",
+      "$description": "Ultraviolet — Gradient terminus — deep violet end of the Instagram brand gradient, the cool counterweight"
+    },
+    "hot-magenta": {
+      "$value": "#f689ff",
+      "$type": "color",
+      "$description": "Hot Magenta — Full-bleed color panel — left half of the hero split, the loudest single surface in the system"
+    },
+    "lavender-mist": {
+      "$value": "#c4a4f7",
+      "$type": "color",
+      "$description": "Lavender Mist — Full-bleed accent band — right half of the hero split and secondary color sections, softens the magenta"
+    },
+    "graphite": {
+      "$value": "#1c1e21",
+      "$type": "color",
+      "$description": "Graphite — Body text, button borders, list dividers, nav borders — the primary near-black for all text and hairline rules"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Specimen letterforms, Instagram camera icon outlines, high-contrast graphic moments — flat black with no warmth"
+    },
+    "paper-white": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper White — Content canvas, text on color panels, button text, input backgrounds — the neutral ground that lets color panels pop"
+    },
+    "hairline-gray": {
+      "$value": "#cccccc",
+      "$type": "color",
+      "$description": "Hairline Gray — Subtle button borders and disabled-state rules"
+    },
+    "link-indigo": {
+      "$value": "#385898",
+      "$type": "color",
+      "$description": "Link Indigo — Violet accent for outlined action borders, linked labels, and lightweight interactive emphasis. Do not promote it to the primary CTA color"
+    }
+  },
+  "font": {
+    "instagram-sans": {
+      "$value": "Instagram Sans",
+      "$type": "fontFamily",
+      "$description": "The brand's custom geometric sans. Used for everything from 12px captions to 389px specimen hero letterforms. Single weight 400 across the entire scale — the typeface achieves personality through geometry and tight negative tracking rather than weight contrast. Letter-spacing tightens as size grows: -0.02em at body, -0.03em at 32–46px, -0.035em at 62px and above."
+    },
+    "instagram-sans-headline": {
+      "$value": "Instagram Sans Headline",
+      "$type": "fontFamily",
+      "$description": "Distinct variant for the 468px mega-specimen display — looser tracking (-0.006em) than the base family because at 468px the tight tracking would close letter apertures. Used only for the largest type specimen on the page."
+    },
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "System fallback appearing at 12px (likely OS-rendered small text) and 224px (possible secondary specimen). Treat as fallback only — Instagram Sans is the intended primary at all sizes."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://about.instagram.com/brand/type",
+      "siteName": "Instagram Sans Typeface",
+      "extractedAt": "2026-06-03T19:49:08.194Z",
+      "variant": "compact"
+    }
+  }
+}

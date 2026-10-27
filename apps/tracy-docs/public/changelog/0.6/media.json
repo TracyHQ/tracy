@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "docs-home",
+    "version": "0.6.0",
+    "highlight": "Documentation and the changelog now live at [docs.tracy.ai](https://docs.tracy.ai/), written for people first; the API reference has its own section there.",
+    "recordedAt": "2026-10-12T07:23:54.625Z",
+    "capturedWith": "The docs home as production serves it (docs.tracy.ai, stable 0.6.0), headless Chrome, the whole page at 1280 css px wide, 2×, light; pnpm docs:media add: ffmpeg 9.0.2 libx264 crf 26, gifski 1.34.0, cwebp 1.5.0",
+    "files": {
+      "image": "/changelog/0.6/docs-home.webp"
+    }
+  },
+  {
+    "slug": "quit-to-install",
+    "version": "0.6.0",
+    "highlight": "Updates install when you quit the app. There is no \"Restart now\" dialog any more, and no update is ever lost to \"Later\".",
+    "recordedAt": "2026-10-12T07:23:53.034Z",
+    "capturedWith": "Tracy Cowork 0.6.0 (stable build 20261012T061930Z-f6012d7, the universal dmg the stable feed publishes), renamed and re-signed as a test copy whose update channel is a test name (the stable channel refuses remote debugging) and whose origin is a private stand built from main f6012d7618, the tree cowork.tracy.ai runs, TRACY_DESKTOP_ALLOW_CDP=1 on macOS, offered 0.6.0 by a local signed test feed while it said 0.5.1 (the same 0.6.0 bytes under the older number, without release notes as the real 0.5.1 ships none); Help & about screencast at 12 fps over the DevTools protocol, cut where the app was quit (the install itself happens with no window) and reopened; pnpm docs:media add: ffmpeg 9.0.2 libx264 crf 26, gifski 1.34.0, cwebp 1.5.0",
+    "files": {
+      "mp4": "/changelog/0.6/quit-to-install.mp4",
+      "gif": "/changelog/0.6/quit-to-install.gif",
+      "poster": "/changelog/0.6/posters/quit-to-install.jpg"
+    }
+  },
+  {
+    "slug": "whats-new",
+    "version": "0.6.0",
+    "highlight": "Help & about shows what's new in the version you are running, with a link to the full changelog.",
+    "recordedAt": "2026-10-12T07:23:53.229Z",
+    "capturedWith": "Tracy Cowork 0.6.0 (stable build 20261012T061930Z-f6012d7, the universal dmg the stable feed publishes), renamed and re-signed as a test copy whose update channel is a test name (the stable channel refuses remote debugging) and whose origin is a private stand built from main f6012d7618, the tree cowork.tracy.ai runs, TRACY_DESKTOP_ALLOW_CDP=1 on macOS, right after it updated itself to 0.6.0 from a local signed test feed; DevTools protocol screenshot, cropped to the dialog; pnpm docs:media add: ffmpeg 9.0.2 libx264 crf 26, gifski 1.34.0, cwebp 1.5.0",
+    "files": {
+      "image": "/changelog/0.6/whats-new.webp"
+    }
+  },
+  {
+    "slug": "first-run-setup",
+    "version": "0.6.0",
+    "highlight": "A new first-run setup: sign in, connect your AI account, pick your language and look, and check notifications, all in one place.",
+    "recordedAt": "2026-10-12T07:23:54.479Z",
+    "capturedWith": "Tracy Cowork 0.6.0 (stable build 20261012T061930Z-f6012d7, the universal dmg the stable feed publishes), renamed and re-signed as a test copy whose update channel is a test name (the stable channel refuses remote debugging) and whose origin is a private stand built from main f6012d7618, the tree cowork.tracy.ai runs, TRACY_DESKTOP_ALLOW_CDP=1 on macOS, first launch on a fresh profile against that stand; the sign-in step is shown, then the window is signed in with a session for a test account (set over the DevTools protocol, the browser round skipped) and the steps that follow; DevTools protocol screencast at 12 fps; pnpm docs:media add: ffmpeg 9.0.2 libx264 crf 26, gifski 1.34.0, cwebp 1.5.0",
+    "files": {
+      "mp4": "/changelog/0.6/first-run-setup.mp4",
+      "gif": "/changelog/0.6/first-run-setup.gif",
+      "poster": "/changelog/0.6/posters/first-run-setup.jpg"
+    }
+  },
+  {
+    "slug": "ai-accounts-default",
+    "version": "0.6.0",
+    "highlight": "Settings › AI accounts shows the same account cards as Getting started: your default account, Tracy AI as one of them, and the fallbacks you can reorder.",
+    "recordedAt": "2026-10-12T07:25:07.779Z",
+    "capturedWith": "cowork.tracy.site (dev deployment, develop 0ce5141de0; its Settings › AI accounts view is the one main f6012d7618 ships in 0.6.0 — the two differ only in the browser sign-in form, not shown here), a test seat with Claude and GitHub Copilot connected (no production seat has an AI account connected); headless Chrome 1280x940 css px, DevTools protocol screenshots of the Settings dialog at 2x, about 17 a second, resampled to 24 fps; the round pointer is drawn into the page for the recording; pnpm docs:media add: ffmpeg 9.0.2 libx264 crf 26, gifski 1.34.0",
+    "files": {
+      "mp4": "/changelog/0.6/ai-accounts-default.mp4",
+      "gif": "/changelog/0.6/ai-accounts-default.gif",
+      "poster": "/changelog/0.6/posters/ai-accounts-default.jpg"
+    }
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-tracy-business/mega-menu",
+  "version": "0.1.0",
+  "title": "Mega menu",
+  "category": "design",
+  "icon": "menu-alt",
+  "description": "A header trigger that opens a full-width panel of columns — link lists, the latest posts, a search field. Opens on hover, focus or click; the columns are edited in place.",
+  "keywords": ["menu", "navigation", "mega", "header"],
+  "textdomain": "wp-tracy-business",
+  "attributes": {
+    "label": { "type": "string", "default": "Menu" }
+  },
+  "supports": {
+    "html": false,
+    "inserter": true,
+    "reusable": false,
+    "anchor": false
+  },
+  "editorScript": "file:./editor.js",
+  "render": "file:./render.php"
+}

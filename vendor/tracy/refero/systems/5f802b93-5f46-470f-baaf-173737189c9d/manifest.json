@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "tracy-refero-snapshot-style/v1",
+  "id": "5f802b93-5f46-470f-baaf-173737189c9d",
+  "status": "complete",
+  "name": "Alejandro Mejias",
+  "url": "https://styles.refero.design/style/5f802b93-5f46-470f-baaf-173737189c9d",
+  "sourceWebsite": "https://www.alejandromejias.com.au",
+  "extractedAt": "2026-06-03T18:04:02.626Z",
+  "capturedAt": "2026-10-08T05:12:15.094862+00:00",
+  "theme": "mixed",
+  "industry": "agency",
+  "description": "Acid-lit brutalist atelier, acid yellow against obsidian and bone white",
+  "media": {
+    "screenshotUrl": "https://images.refero.design/styles/refero.design/image/9aab4d0b-976c-4d28-b7bf-2c740bb165cc.jpg",
+    "previewVideoUrl": "https://images.refero.design/styles/refero.design/video/df59f6d0-3954-4957-94f8-9533f17be391.mp4",
+    "previewVideoPosterUrl": "https://images.refero.design/styles/refero.design/image/be4172c4-4239-405c-ba21-353e65329c4e.jpg",
+    "previewVideoDetailUrl": "https://images.refero.design/styles/refero.design/video/bb63a443-48a6-48c1-888c-02ef37e8017b.mp4",
+    "previewVideoDetailPosterUrl": "https://images.refero.design/styles/refero.design/image/eb20fdbb-6f94-4f4c-8aa7-b48503851e10.jpg"
+  },
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "b08a5ab4265eaf5aeb52c87bbd94dadcf4e0da6f40b7bd7ba4f7fea75d934b3b",
+      "bytes": 23064
+    },
+    {
+      "path": "assets/screenshot.jpg",
+      "sha256": "17c7ee80a83e5b7d7fb3cbe05ba37f8feebe0a5205a8b6af920ff0a54cff5799",
+      "bytes": 102267
+    },
+    {
+      "path": "design-system.json",
+      "sha256": "9fd146fda4e13a491b025d0a1ee2055a8e229db02b7136dc2ba0eb9b365120c8",
+      "bytes": 19636
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3904d1a23755620eeabb7e70df6fc5a73fb26bfb5de5420fd959a9c0d9a83eb5",
+      "bytes": 9029
+    },
+    {
+      "path": "exports/compact/DESIGN.md",
+      "sha256": "fb5dddc5026d292592d7bbb53e957cb8a06c020196710d544fa6ad2709155cef",
+      "bytes": 14074
+    },
+    {
+      "path": "exports/compact/design-tokens.json",
+      "sha256": "16f52f9f6d3a89c049deb3aa4452a8aa5de6160b70b04a23c3410dab4c0f31c3",
+      "bytes": 3120
+    },
+    {
+      "path": "exports/compact/tailwind-v4.css",
+      "sha256": "942a0ad7c878da718777f7b06a6c1a4344fd2b9e415f1f803c8f70dc0de141a5",
+      "bytes": 915
+    },
+    {
+      "path": "exports/compact/tokens.css",
+      "sha256": "eede6dd0eb0644509da1b6e00c4c15cac0b22abece3f21454a062cfec3b76de2",
+      "bytes": 932
+    },
+    {
+      "path": "source/http.json",
+      "sha256": "ad26bf08876a33b403612870304f33253ff7b9165f12b97792878d9ed3d67912",
+      "bytes": 404
+    },
+    {
+      "path": "source/page.html.gz",
+      "sha256": "2a9995a06707c84bd9e8b9fc1e04140a1717528b276d37c70d6ecf2e606886d5",
+      "bytes": 45918
+    },
+    {
+      "path": "source/react-flight.txt.gz",
+      "sha256": "78eb681d65d5d1730c67fb84f99f60f74215d5bbf9159cffc6e16c11623926b6",
+      "bytes": 23768
+    },
+    {
+      "path": "source/result.json",
+      "sha256": "223a765f224a5d3f406da986c3283fd34fb20e7cfa71f08c52ae46d5a514ae96",
+      "bytes": 40184
+    },
+    {
+      "path": "source/screenshot-http.json",
+      "sha256": "3d41ab5361f22a5f1dc4847a55290308d6419eb86cb36c8862099e0db43e9785",
+      "bytes": 474
+    },
+    {
+      "path": "tailwind-v4.css",
+      "sha256": "cf1b4a63fbc8b29dd26bc78fa8008af3c1a1c833e1812abb9a0d5967d9ae26c2",
+      "bytes": 1868
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "f57cdaef5acded5264c3c1d495c6209c24630f1b66519109ed356aeea051c540",
+      "bytes": 2458
+    }
+  ],
+  "exportParity": "exact",
+  "linkedStyles": [
+    "0d68dc70-15ec-494a-855d-fdb6a4e7c982",
+    "19d4103a-9f4a-49f0-ad7d-af6588bab904",
+    "24c54bfb-959d-4ca3-b274-e76ba823f3c0",
+    "274e85fb-a34d-4e41-9369-be03065b971b",
+    "34aa811f-6084-484c-b4c0-f587b514e970",
+    "4d4772a3-e1da-415f-a6d7-658dcefdcecd",
+    "58c0af12-8706-428f-8282-482d57d7b90e",
+    "5f802b93-5f46-470f-baaf-173737189c9d",
+    "6036b661-3886-4f76-a5e6-bb8960eb7db5",
+    "7f6799d9-0733-4523-9a94-036b9ad3bf28",
+    "a7530405-e523-4268-bba5-ef13549fd61c",
+    "b1e82907-d1cf-46cd-8ae7-3561c5b15fd0",
+    "b1ec0888-1dbe-439c-bccd-ba2c39effb70",
+    "e045b276-ae8d-442e-98de-fa8650e284de",
+    "e80c5b4a-fd03-460e-a577-49928a4ab5db",
+    "ee403055-480e-4bd4-9216-07c9ae2dde2e",
+    "f1b76a42-050e-4c9e-96e3-a77fbd718c68",
+    "f8ab25e8-87c1-4d7b-a633-daf3ea39b916",
+    "f8c92b6b-a3a7-4141-ae61-3d865a106761",
+    "fdc0f631-442c-466d-ab79-e1fff2bfdb7d",
+    "ffb945f9-2d70-45e8-9024-492900318fa8"
+  ]
+}

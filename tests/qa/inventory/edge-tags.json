@@ -1,0 +1,110 @@
+{
+  "source": "Master plan §3 'Fixed checklist per item kind' (qa-suite-plan/plan.md), copied verbatim. A tag may be dropped only as N-A with reason AND a source proving it does not apply; lack of time, environment or knowledge is not N-A.",
+  "common": ["happy", "empty", "invalid", "boundary", "dependency-failure", "repeat", "cleanup"],
+  "kinds": {
+    "api-host": [
+      "anonymous",
+      "expired-auth",
+      "wrong-role",
+      "other-tenant",
+      "wrong-method",
+      "malformed-body",
+      "encoding-injection",
+      "csrf-origin",
+      "pagination",
+      "rate-limit",
+      "concurrent",
+      "partial-write",
+      "cancel-timeout",
+      "no-secret-leak"
+    ],
+    "unit-component": [
+      "null-missing",
+      "min-max",
+      "unicode",
+      "time-boundary",
+      "ordering",
+      "duplicate",
+      "exception",
+      "state-transition"
+    ],
+    "ui-ux": [
+      "loading",
+      "empty",
+      "success",
+      "error",
+      "offline",
+      "disabled",
+      "permission",
+      "keyboard",
+      "focus",
+      "dialog-recovery",
+      "overflow",
+      "console-network",
+      "language-theme-viewport"
+    ],
+    "flow": [
+      "new-returning",
+      "role-change",
+      "double-submit",
+      "reload-resume",
+      "back-navigation",
+      "retry",
+      "concurrent-seat",
+      "interrupted",
+      "rollback",
+      "cleanup"
+    ],
+    "harness-tool": [
+      "schema-invalid",
+      "unknown-tool",
+      "routing",
+      "missing-cwd",
+      "traversal",
+      "symlink",
+      "other-site",
+      "host-path",
+      "permission-escalation",
+      "tool-failure",
+      "stream-failure",
+      "cancel",
+      "audit-effect"
+    ],
+    "infra-script": [
+      "cold-warm",
+      "idempotent",
+      "restart",
+      "stale-lock",
+      "disk-permission",
+      "partial-failure",
+      "retry",
+      "rollback",
+      "resource-leak",
+      "version-mismatch"
+    ],
+    "cms-release": [
+      "fresh-install",
+      "restore",
+      "edit-readback",
+      "missing-asset",
+      "bad-hash",
+      "mixed-version",
+      "missing-contract",
+      "upgrade-compat",
+      "secret-scrub",
+      "archive-path"
+    ],
+    "mail": [
+      "recipient",
+      "locale",
+      "escape",
+      "token-expired",
+      "token-replay",
+      "transport-failure",
+      "deduplicate",
+      "preferences",
+      "unsubscribe",
+      "no-secret-leak"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "color": {
+    "pure-canvas": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Pure Canvas — Page and surface background — the entire interface lives on this single white plane"
+    },
+    "ink-black": {
+      "$value": "#1c1c1c",
+      "$type": "color",
+      "$description": "Ink Black — Primary text, product titles, icon strokes, outlined button borders — the only chromatic dark in the system"
+    },
+    "graphite": {
+      "$value": "#232323",
+      "$type": "color",
+      "$description": "Graphite — Secondary text, meta labels, footer copy — a near-identical companion to Ink Black for subtle hierarchy steps"
+    },
+    "slate-mute": {
+      "$value": "#5f6368",
+      "$type": "color",
+      "$description": "Slate Mute — Muted helper text, tertiary metadata, disabled states"
+    },
+    "hairline-gray": {
+      "$value": "#e5e7eb",
+      "$type": "color",
+      "$description": "Hairline Gray — Hairline dividers, card separators, input borders, table rules — the sole structural line color, used at 1px"
+    },
+    "pure-black": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Pure Black — Maximum-contrast text and icon fills where the deepest dark is needed"
+    }
+  },
+  "font": {
+    "helvetica": {
+      "$value": "Helvetica",
+      "$type": "fontFamily",
+      "$description": "Sole typeface for every UI text element — navigation, section headings, product titles, prices, buttons, and body copy. Weight 700 for section headers and product names creates the only typographic distinction in the system; weight 400 handles everything else. The 15px body / 20px header pairing is unusually small, reinforcing a catalog-card density rather than a marketing-page density."
+    },
+    "gtstandard-m": {
+      "$value": "GTStandard-M",
+      "$type": "fontFamily",
+      "$description": "GTStandard-M — detected in extracted data but not described by AI"
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://www.counter-print.co.uk",
+      "siteName": "Counterprint",
+      "extractedAt": "2026-06-03T21:19:01.888Z",
+      "variant": "compact"
+    }
+  }
+}

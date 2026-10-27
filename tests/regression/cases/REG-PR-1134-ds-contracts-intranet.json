@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1134-ds-contracts-intranet",
+  "kind": "feat",
+  "title": "JA Intranet, whose release 1.0.0 answers 500 on Joomla 6, gets a repaired re-release 1.0.1 (T3 3.3.2, the 67 missing core extension rows, compat6 aliases on, T3 dev mode off, tokenized stylesheets) and a ready slot contract that wears from 1.0.1",
+  "pr": 1134,
+  "area": "design/slot",
+  "cms": ["jo"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test test/tokenize.test.mjs test/slot.test.mjs test/cms.test.mjs test/release-manifest.test.mjs (cwd packages/design/tracy-ds-slot).",
+    "S2: read templates/joomla-ja-intranet.json through loadContract.",
+    "S3: apps/tracy-web/src/lib/ds-slot.js contractFor(templateKeyOf({platform:'joomla', template:'ja_intranet'}), {key:'quickstart/ja-intranet/j6', version}) for 1.0.1 and 1.0.0.",
+    "S4: when quickstart/ja-intranet/j6's tracy_setting.json names 1.0.1, stand it up as published; otherwise rebuild 1.0.1: node packages/design/tracy-ds-slot/scripts/release-joomla.mjs quickstart/ja-intranet/j6 --template joomla-ja-intranet --out <tmp>/build --overlay <plugins/system/t3 unzipped from the published ja-focus-j6-quickstart.zip> --sql tasks/evidence/ds-contracts-intranet-2026-10-11/repair/custom-append.sql. Stand it (stand.mjs up … --from-dir <tmp>/build/release --port 52734), curl every href=\"/…\" link of the home page, take it down; then pass-joomla.mjs ja-intranet --port 52734 --cdp 9742 --no-tokenize [--from-dir <tmp>/build/release]: Moxie, MotherDuck, Toggl Track and Apple worn, cleared, stand removed.",
+    "All of it: node tests/regression/scripts/REG-PR-1134-ds-contracts-intranet.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, none skipped.",
+    "S2: ready true; minVersion {'quickstart/ja-intranet/j6': '1.0.1'}; readyNote names tasks/evidence/ds-contracts-intranet-2026-10-11; module.position 'footer'; keepScopes contains '.alert'; selectors.onAccent contains '.blog .category-info .page-subheader'; t3DevmodeOff true; no selectors.displaySize.",
+    "S3: 1.0.1 → {contract:'joomla-ja-intranet'}; 1.0.0 → reason TEMPLATE_NEEDS_UPDATE.",
+    "S4: (rebuild) release-joomla.mjs reports to '1.0.1' and devmodeOff 11; the home page answers 200 on Joomla 6 (stand.mjs) and every one of its ≥ 20 linked pages answers 200; pass-joomla.mjs: controls 0,0,0,0; no text under 4.5:1 worse than the template's own default; at least 60% of the painted page follows every system."
+  ],
+  "selectors": {
+    "contract": "packages/design/tracy-ds-slot/templates/joomla-ja-intranet.json ready, minVersion, module.position, keepScopes, selectors.onAccent, t3DevmodeOff",
+    "repair": "packages/design/tracy-ds-slot/scripts/release-joomla.mjs --overlay --sql (--no-tokenize, --devmode-off); release-batch.mjs build --overlay --sql, verify --baseline",
+    "joomla": "#__modules row title 'Tracy design system', module mod_custom, position footer, menuid 0; <style id=\"tracy-ds-slot\">; #__extensions behaviour/compat6 enabled, params classes_aliases 1"
+  },
+  "evidence": "tasks/evidence/ds-contracts-intranet-2026-10-11/README.md — the 500 of 1.0.0, the repair, VERIFICATION.json of 1.0.1 against the repair alone, the measure of 1.0.1 (11/10/2026).",
+  "fence": "Covers the repair being reproducible from the published 1.0.0 and the measured verdict. Not covered: publishing (the release script ~/tracy-bench-work/RELEASE-DS-INTRANET.sh is run by a person), the Login-layout pages (no slot position), and existing fleet sites built from 1.0.0 (none can have provisioned: the install failed before 23/09 and fails its front-page check since).",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1134-ds-contracts-intranet.mjs"],
+    "needs": [],
+    "timeout_s": 5400
+  }
+}

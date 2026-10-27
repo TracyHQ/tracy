@@ -1,0 +1,16 @@
+<!doctype html>
+<!--
+  The spare window's page (src/window-pool.js): what a second window shows from the moment it appears
+  until Tracy's page has loaded in it. Local and inert on purpose — no script, no request, no text to
+  translate — so a spare waiting in the background never runs Tracy (a hidden window still counts as
+  visible to its page) and never opens a sign-in.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'" />
+    <title>Tracy Cowork</title>
+    <link rel="stylesheet" href="window-waiting.css" />
+  </head>
+  <body></body>
+</html>

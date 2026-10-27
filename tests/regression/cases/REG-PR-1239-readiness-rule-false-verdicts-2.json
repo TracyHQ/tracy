@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-1239-readiness-rule-false-verdicts-2",
+  "kind": "fix",
+  "title": "PAGE-4/PAGE-7 map an EmDash page slug to its path, ABOUT-2 skips kept-picture alt text, PAGE-5 skips unrendered ACM buttons, LANG-2 fonts read only loaded T3 stylesheets",
+  "pr": 1239,
+  "area": "template-customization-question-readiness/rules",
+  "cms": ["jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run apps/tracy-web/test/template-customization-question-readiness-tracy-base-emdash.test.mjs (Tracy Base EmDash 0.5.2 pack data).",
+    "S2: Run apps/tracy-web/test/template-customization-question-readiness-acm-buttons.test.mjs (JA Impact and JA Tour contracts retyped as --link-fields-by-role, their ACM layouts).",
+    "S3: Run apps/tracy-web/test/template-customization-question-readiness-t3-stylesheets.test.mjs (JA Mood 1.0.1 stylesheets and template styles)."
+  ],
+  "expect": [
+    "S1: PAGE-4 and PAGE-7 pass on services_page at path services, and fail when RECORDS lacks the path or holds only an alias key; ABOUT-2 passes without the 46 kept-picture alt lines, and fails on the alt of a redrawn picture and on uncovered prose.",
+    "S2: an empty btn-link-2 whose button the layout does not print is not flagged; a '#' btn-link and an empty link on a captioned, printed button still fail.",
+    "S3: css/rtl and an unused colour theme are not read; a theme a published menu item's style sets is read."
+  ],
+  "selectors": {
+    "tests": "apps/tracy-web/test/template-customization-question-readiness-{tracy-base-emdash,acm-buttons,t3-stylesheets}.test.mjs"
+  },
+  "evidence": "12/10/2026: Tracy Base EmDash 0.5.2 (PR #1238) failed PAGE-4/PAGE-7 on services_page and needed 46 alt lines in keptText; the Joomla agent saw PAGE-5 on JA Impact 110, JA Nova 111, JA Tour 98/131 after --link-fields-by-role and LANG-2 reading css/rtl and inactive themes; whole gallery before/after: no verdict changed state",
+  "fence": "The rule functions themselves, on fixtures cut from the releases, the Tracy Base pack and the contracts in the tree",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-force-exit",
+      "apps/tracy-web/test/template-customization-question-readiness-tracy-base-emdash.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-acm-buttons.test.mjs",
+      "apps/tracy-web/test/template-customization-question-readiness-t3-stylesheets.test.mjs"
+    ]
+  }
+}

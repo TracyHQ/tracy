@@ -1,0 +1,73 @@
+{
+  "id": "REG-PR-1172-changelog-media",
+  "kind": "feat",
+  "title": "A changelog Highlight carries one still or one clip (mp4 + gif + poster) with its provenance in media.json, or a no-media comment saying why; a stable X.Y.0 prepare refuses a Highlight with neither; release notes and the raw markdown stay text; the docs build writes changelog.json",
+  "pr": 1172,
+  "area": "docs/changelog",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test on packages/desktop/tracy-desktop/test/release-notes-page.test.mjs (media lines in the page format, notes without them).",
+    "S2: Run node --test on apps/tracy-docs/test/media.test.mjs (file checks, media.json both ways, docs:media add for a still and a clip) and packages/desktop/tracy-desktop/test/debug-switches.test.mjs (TRACY_DESKTOP_ALLOW_CDP).",
+    "S3: Run node --test on apps/tracy-docs/test/raw-changelog.test.mjs and changelog-desktop.test.mjs (raw copy without media, changelog.json, the committed pages and their media).",
+    "S4: Run node --test on packages/desktop/tracy-desktop/test/release.test.mjs (prepare of X.Y.0 reads the Highlights media: stable refuses, dev warns, the manifest lists notes.noMedia)."
+  ],
+  "expect": [
+    "S1: a Highlight with an image or a clip under it ships the same notes as without it; one indented media line per bullet, English alt text, under /changelog/<this X.Y>/, the clip's poster at posters/<same name>.jpg, only in Highlights; the five-Highlights limit counts bullets, not media lines; every Highlight is covered by its media line or a <!-- no-media: <English reason> --> comment (an empty reason, media and no-media together, or no-media outside Highlights are named); notesForRelease of a stable X.Y.0 refuses with the list of uncovered Highlights (file + first words), a dev X.Y.0 warns with the same list, a patch release does not re-check Highlights; a no-media comment never changes the 0.5.0/0.5.1 notes or their sha256.",
+    "S2: limits are stills 500 KB / 1600 px, clips H.264 2 MB / 10 s / 1600 px, gifs 3 MB / 1200 px / 10-15 fps, posters 150 KB; a file over a limit, of another type or not what its name says is named; a page's media without files or without its media.json entry, an entry or a file no page uses, an entry whose highlight, version, recordedAt, capturedWith or files are wrong are named; add writes webp, or an H.264 mp4 (crf 26) + a gifski GIF at 12 fps + the first frame as poster, within limits, and the media.json entry, and refuses a highlight that is not on the page. A packaged build refuses a remote-debugging switch unless TRACY_DESKTOP_ALLOW_CDP=1 and its channel is not stable; the stable channel ignores the switch and says so.",
+    "S3: the raw X.Y.md copy has no media line and no no-media comment; changelog.json lists every page newest first with title, released, plain-text highlights, the first media (a clip as its gif) and the page URL, absolute on the docs site; every committed page passes, every image and clip it shows exists, fits and has its media.json entry.",
+    "S4: prepare of a stable 0.3.0 whose Highlight has neither media nor no-media is refused before checkout or build and writes nothing; a dev build of it warns and ships the page notes; a no-media Highlight lands in manifest.notes.noMedia with its reason while notes.text stays the bullet alone."
+  ],
+  "selectors": {
+    "page": "apps/tracy-docs/src/content/docs/changelog/desktop/<X.Y>.md, ## Highlights",
+    "media": "apps/tracy-docs/public/changelog/<X.Y>/{<slug>.webp|<slug>.mp4,<slug>.gif,posters/<slug>.jpg}, media.json",
+    "commands": "pnpm docs:media add <input> --page X.Y --name <slug> --highlight \"…\"; pnpm docs:media check",
+    "feed": "<DOCS_ORIGIN>/changelog/desktop/changelog.json"
+  },
+  "fence": "releaseNotesFromPage drops every line that starts like media or a no-media comment (isPageOnlyLine), so the frozen notes and their sha256 never change when either is added; notesForRelease refuses a stable X.Y.0 whose Highlight has neither; pageProblems and changelogMediaProblems keep page, files and media.json in step both ways",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/desktop/tracy-desktop/test/release-notes-page.test.mjs",
+      "apps/tracy-docs/test/media.test.mjs",
+      "packages/desktop/tracy-desktop/test/debug-switches.test.mjs",
+      "apps/tracy-docs/test/raw-changelog.test.mjs",
+      "apps/tracy-docs/test/changelog-desktop.test.mjs",
+      "packages/desktop/tracy-desktop/test/release.test.mjs"
+    ],
+    "tests": [
+      "a Highlight with an image or a video under it ships as the same text",
+      "a page with one image or video under a Highlight is in the format",
+      "media under a Highlight is one indented line in the one shape",
+      "media sits under a Highlight only",
+      "six media lines do not count as Highlights",
+      "the limits: stills 500 KB",
+      "a file is refused when it is another type",
+      "a still and a clip under their Highlights",
+      "every image or clip on a page has its files and its entry",
+      "media.json says where each one came from",
+      "add makes a screenshot fit",
+      "add takes a slug for a name and a Highlight that is on the page",
+      "add makes a clip from screenshots",
+      "the raw copy carries no image or video line",
+      "changelog.json lists every release newest first",
+      "astro build writes changelog.json next to the raw pages",
+      "every image or video under a Highlight is served from public/changelog/X.Y/ and fits",
+      "TRACY_DESKTOP_ALLOW_CDP=1 lets a dev or test build take a debug port",
+      "gifInfo reads a GIF",
+      "each Highlight is covered by its media line or by a no-media comment",
+      "a no-media comment sits under a Highlight, alone, with an English reason",
+      "a no-media comment never reaches the notes a release ships",
+      "stable X.Y.0 is refused while a Highlight has no image, no clip and no no-media comment",
+      "a dev build of X.Y.0 warns with the same list",
+      "a no-media Highlight passes and is listed with its reason",
+      "a patch release does not look at the Highlights again",
+      "a no-media comment stays on the web page",
+      "the manifest lists the Highlights that have no picture or clip",
+      "stable X.Y.0 with a Highlight that has no picture, no clip and no no-media comment is refused before building"
+    ]
+  }
+}

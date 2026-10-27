@@ -1,0 +1,84 @@
+{
+  "color": {
+    "ink": {
+      "$value": "#222222",
+      "$type": "color",
+      "$description": "Ink — Primary text, filled buttons, nav strokes, icon fills — near-black rather than pure black to soften the interface"
+    },
+    "paper": {
+      "$value": "#ffffff",
+      "$type": "color",
+      "$description": "Paper — Base canvas, card surfaces, button text on dark fills"
+    },
+    "bone": {
+      "$value": "#fff9f3",
+      "$type": "color",
+      "$description": "Bone — Warm off-white secondary surface, subtle background tints behind sections"
+    },
+    "smoke": {
+      "$value": "#7a7876",
+      "$type": "color",
+      "$description": "Smoke — Muted helper text, secondary button text, disabled labels"
+    },
+    "carbon": {
+      "$value": "#000000",
+      "$type": "color",
+      "$description": "Carbon — Pure black reserved for icon fills and maximum-contrast accents"
+    },
+    "iris": {
+      "$value": "#c094e4",
+      "$type": "color",
+      "$description": "Iris — Primary chromatic accent — data bar fills, brand gradient anchor, link color — violet carries the only sustained saturation in the UI; Sole vivid accent — horizontal bar chart fills, hero gradient, brand wordmark moments"
+    },
+    "blush": {
+      "$value": "#fce0ee",
+      "$type": "color",
+      "$description": "Blush — Pastel pink surface wash — category tile backgrounds, data card tints"
+    },
+    "rose-mist": {
+      "$value": "#fdebf7",
+      "$type": "color",
+      "$description": "Rose Mist — Softest pink surface — subtle section tints, card backgrounds"
+    },
+    "meringue": {
+      "$value": "#ffe9cf",
+      "$type": "color",
+      "$description": "Meringue — Warm peach surface — category tiles, dataset swatches, complementary pastel"
+    },
+    "mint": {
+      "$value": "#daf7ee",
+      "$type": "color",
+      "$description": "Mint — Mint pastel surface — category tiles, complementary data swatch"
+    },
+    "seafoam": {
+      "$value": "#cef1e1",
+      "$type": "color",
+      "$description": "Seafoam — Green-tinted pastel surface — category swatch, soft data background"
+    },
+    "slate-plum": {
+      "$value": "#574853",
+      "$type": "color",
+      "$description": "Slate Plum — Cool dark plum for body text and dark-on-light icon strokes"
+    }
+  },
+  "font": {
+    "fellix": {
+      "$value": "Fellix",
+      "$type": "fontFamily",
+      "$description": "Primary interface and display typeface — geometric grotesque with unusually low contrast; weight 520 is a near-medium custom step that gives headlines substance without going bold, weight 400 handles body. Tracking sits tight at -0.025em across the scale, which is anti-convention for a sans and makes even 48px headlines feel compact and scientific rather than airy or editorial."
+    },
+    "pp-fraktion-mono": {
+      "$value": "PP Fraktion Mono",
+      "$type": "fontFamily",
+      "$description": "Monospace lab-label voice — uppercase column headers, tag chips, dataset captions, metric labels. Tracking opens up to +0.025em and ligatures/contextual alternates are explicitly disabled, producing a deliberately clinical, index-card feel that contrasts the tight sans. The 'COMBINED', 'DATASET COMPOSITION', 'BLOG POST' eyebrows are the signature use."
+    }
+  },
+  "$extensions": {
+    "com.refero.extraction": {
+      "url": "https://hume.ai",
+      "siteName": "Hume AI",
+      "extractedAt": "2026-06-03T15:53:25.681Z",
+      "variant": "compact"
+    }
+  }
+}
